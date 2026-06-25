@@ -44,3 +44,4 @@ scripts/migration-auto-fix.cjs
 v6-ui-assets/
 tmp_mock_test.png
 tests/mock_validation.py
+patch-bundle.patch
