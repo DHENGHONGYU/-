@@ -1,0 +1,219 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e5]:
+        - img [ref=e6]
+        - generic [ref=e9]:
+          - paragraph [ref=e10]: V6 Pro
+          - paragraph [ref=e11]: 智能投研系统
+      - navigation [ref=e12]:
+        - generic [ref=e13]:
+          - paragraph [ref=e14]: 系统
+          - link "仪表盘" [ref=e15] [cursor=pointer]:
+            - /url: "#/"
+            - img [ref=e16]
+            - generic [ref=e21]: 仪表盘
+          - link "驾驶舱" [ref=e22] [cursor=pointer]:
+            - /url: "#/cockpit"
+            - img [ref=e23]
+            - generic [ref=e26]: 驾驶舱
+          - link "数据管理" [ref=e27] [cursor=pointer]:
+            - /url: "#/data"
+            - img [ref=e28]
+            - generic [ref=e31]: 数据管理
+          - link "本地知识库" [ref=e32] [cursor=pointer]:
+            - /url: "#/knowledge"
+            - img [ref=e33]
+            - generic [ref=e35]: 本地知识库
+          - link "AI助手" [ref=e36] [cursor=pointer]:
+            - /url: "#/ai-assistant"
+            - img [ref=e37]
+            - generic [ref=e49]: AI助手
+        - paragraph [ref=e50]: 功能模块
+        - generic [ref=e51]:
+          - button "数据采集及接口" [active] [ref=e52] [cursor=pointer]:
+            - img [ref=e53]
+            - generic [ref=e57]: 数据采集及接口
+            - img [ref=e205]
+          - generic [ref=e207]:
+            - link "数据工场" [ref=e208] [cursor=pointer]:
+              - /url: "#/data-hub"
+              - img [ref=e209]
+              - generic [ref=e212]: 数据工场
+            - link "股票池管理" [ref=e213] [cursor=pointer]:
+              - /url: "#/stock-pool"
+              - img [ref=e214]
+              - generic [ref=e218]: 股票池管理
+            - link "七维采集" [ref=e219] [cursor=pointer]:
+              - /url: "#/seven-dim"
+              - img [ref=e220]
+              - generic [ref=e224]: 七维采集
+            - link "采集任务" [ref=e225] [cursor=pointer]:
+              - /url: "#/collect-task"
+              - img [ref=e226]
+              - generic [ref=e228]: 采集任务
+            - link "智能资讯" [ref=e229] [cursor=pointer]:
+              - /url: "#/news"
+              - img [ref=e230]
+              - generic [ref=e233]: 智能资讯
+            - link "抓取引擎" [ref=e234] [cursor=pointer]:
+              - /url: "#/fetcher"
+              - img [ref=e235]
+              - generic [ref=e239]: 抓取引擎
+        - button "智能AI体调度" [ref=e61] [cursor=pointer]:
+          - img [ref=e62]
+          - generic [ref=e70]: 智能AI体调度
+          - img [ref=e71]
+        - button "行业个股分析" [ref=e74] [cursor=pointer]:
+          - img [ref=e75]
+          - generic [ref=e77]: 行业个股分析
+          - img [ref=e78]
+        - button "交易及持仓" [ref=e81] [cursor=pointer]:
+          - img [ref=e82]
+          - generic [ref=e85]: 交易及持仓
+          - img [ref=e86]
+      - button [ref=e89] [cursor=pointer]:
+        - img [ref=e90]
+    - generic [ref=e93]:
+      - banner [ref=e94]:
+        - generic [ref=e95]:
+          - link "数据采集及接口" [ref=e250] [cursor=pointer]:
+            - /url: "#/data-hub"
+            - img [ref=e251]
+            - text: 数据采集及接口
+          - generic [ref=e253]: /
+          - heading "数据工场" [level=1] [ref=e254]
+        - generic [ref=e97]:
+          - generic [ref=e98]: AI Agent 就绪
+          - img [ref=e99]
+      - main [ref=e101]:
+        - link "返回 数据采集及接口 首页" [ref=e256] [cursor=pointer]:
+          - /url: "#/data-hub"
+          - img [ref=e257]
+          - text: 返回 数据采集及接口 首页
+        - generic [ref=e259]:
+          - generic [ref=e260]:
+            - generic [ref=e261]:
+              - heading "数据采集及接口" [level=1] [ref=e262]
+              - paragraph [ref=e263]: V3.0模块一 · 6大子模块 · 七维数据架构 · 轻量化存储策略
+            - generic [ref=e264]:
+              - img
+              - text: AI Agent就绪
+          - generic [ref=e265]:
+            - tablist [ref=e266]:
+              - tab "模块总览" [selected] [ref=e267] [cursor=pointer]
+              - tab "数据看板" [ref=e268] [cursor=pointer]
+              - tab "七维状态" [ref=e269] [cursor=pointer]
+              - tab "数据导出" [ref=e270] [cursor=pointer]
+            - tabpanel "模块总览" [ref=e271]:
+              - generic [ref=e272]:
+                - generic [ref=e274]:
+                  - img [ref=e275]
+                  - generic [ref=e279]:
+                    - paragraph [ref=e280]: 32只
+                    - paragraph [ref=e281]: 自选股
+                - generic [ref=e283]:
+                  - img [ref=e284]
+                  - generic [ref=e288]:
+                    - paragraph [ref=e289]: 7/7
+                    - paragraph [ref=e290]: 七维度
+                - generic [ref=e292]:
+                  - img [ref=e293]
+                  - generic [ref=e295]:
+                    - paragraph [ref=e296]: 12,456条
+                    - paragraph [ref=e297]: 存储数据
+                - generic [ref=e299]:
+                  - img [ref=e300]
+                  - generic [ref=e302]:
+                    - paragraph [ref=e303]: AKShare(主)
+                    - paragraph [ref=e304]: 数据源
+              - generic [ref=e305]:
+                - link "股票池管理 自选股管理 / 分组管理 / 导入导出 32只自选股 · 4个分组" [ref=e306] [cursor=pointer]:
+                  - /url: "#/stock-pool"
+                  - generic [ref=e309]:
+                    - img [ref=e311]
+                    - generic [ref=e315]:
+                      - generic [ref=e316]:
+                        - heading "股票池管理" [level=3] [ref=e317]
+                        - img [ref=e318]
+                      - paragraph [ref=e320]: 自选股管理 / 分组管理 / 导入导出
+                      - paragraph [ref=e321]: 32只自选股 · 4个分组
+                - link "七维采集 7维度选择 / 参数配置 / 5方向策略模板 7维度 · 5策略模板 · 3小时更新" [ref=e322] [cursor=pointer]:
+                  - /url: "#/seven-dim"
+                  - generic [ref=e325]:
+                    - img [ref=e327]
+                    - generic [ref=e331]:
+                      - generic [ref=e332]:
+                        - heading "七维采集" [level=3] [ref=e333]
+                        - img [ref=e334]
+                      - paragraph [ref=e336]: 7维度选择 / 参数配置 / 5方向策略模板
+                      - paragraph [ref=e337]: 7维度 · 5策略模板 · 3小时更新
+                - link "采集任务 进度监控 / 状态卡片 / 评分卡片即时反馈 3个任务运行中 · 12,456条数据" [ref=e338] [cursor=pointer]:
+                  - /url: "#/collect-task"
+                  - generic [ref=e341]:
+                    - img [ref=e343]
+                    - generic [ref=e345]:
+                      - generic [ref=e346]:
+                        - heading "采集任务" [level=3] [ref=e347]
+                        - img [ref=e348]
+                      - paragraph [ref=e350]: 进度监控 / 状态卡片 / 评分卡片即时反馈
+                      - paragraph [ref=e351]: 3个任务运行中 · 12,456条数据
+                - link "智能资讯 新闻索引 / 研报中心 / 情感分析(轻量化) 156条今日资讯 · 89%关联率" [ref=e352] [cursor=pointer]:
+                  - /url: "#/news"
+                  - generic [ref=e355]:
+                    - img [ref=e357]
+                    - generic [ref=e360]:
+                      - generic [ref=e361]:
+                        - heading "智能资讯" [level=3] [ref=e362]
+                        - img [ref=e363]
+                      - paragraph [ref=e365]: 新闻索引 / 研报中心 / 情感分析(轻量化)
+                      - paragraph [ref=e366]: 156条今日资讯 · 89%关联率
+                - link "抓取引擎 通用适配层 / 多数据源 / 自动清洗 3个数据源 · 98.5%成功率" [ref=e367] [cursor=pointer]:
+                  - /url: "#/fetcher"
+                  - generic [ref=e370]:
+                    - img [ref=e372]
+                    - generic [ref=e376]:
+                      - generic [ref=e377]:
+                        - heading "抓取引擎" [level=3] [ref=e378]
+                        - img [ref=e379]
+                      - paragraph [ref=e381]: 通用适配层 / 多数据源 / 自动清洗
+                      - paragraph [ref=e382]: 3个数据源 · 98.5%成功率
+                - link "本地存储 7维JSON + meta.json / 数据看板 / 导出 5维全量 + 2维轻量化" [ref=e383] [cursor=pointer]:
+                  - /url: "#/data"
+                  - generic [ref=e386]:
+                    - img [ref=e388]
+                    - generic [ref=e390]:
+                      - generic [ref=e391]:
+                        - heading "本地存储" [level=3] [ref=e392]
+                        - img [ref=e393]
+                      - paragraph [ref=e395]: 7维JSON + meta.json / 数据看板 / 导出
+                      - paragraph [ref=e396]: 5维全量 + 2维轻量化
+              - generic [ref=e397]:
+                - generic [ref=e399]:
+                  - img [ref=e400]
+                  - text: 数据流水线 (模块一数据流)
+                - generic [ref=e403]:
+                  - generic [ref=e404]:
+                    - generic [ref=e405]: 股票池管理
+                    - img [ref=e406]
+                  - generic [ref=e408]:
+                    - generic [ref=e409]: 七维采集
+                    - img [ref=e410]
+                  - generic [ref=e412]:
+                    - generic [ref=e413]: 抓取引擎
+                    - img [ref=e414]
+                  - generic [ref=e416]:
+                    - generic [ref=e417]: 数据清洗
+                    - img [ref=e418]
+                  - generic [ref=e420]:
+                    - generic [ref=e421]: 本地存储
+                    - img [ref=e422]
+                  - generic [ref=e424]:
+                    - generic [ref=e425]: 智能资讯
+                    - img [ref=e426]
+                  - generic [ref=e429]: 分析层
+  - link "Kimi Kimi Agent" [ref=e202] [cursor=pointer]:
+    - /url: https://www.kimi.com/agent
+    - img "Kimi" [ref=e203]
+    - generic [ref=e204]: Kimi Agent
+    - img

@@ -1,0 +1,269 @@
+import { getDefaultTradingConfig } from '@/config/tradingConfig'
+import type { SignalDirection } from '@/config/tradingConfig'
+import { dataLayer } from '@/data/dataLayer'
+import type { DailyQuotes, KlineBar, Signal, SignalSnapshot } from '@/data/types'
+import { generateId } from '@/data/db'
+
+export type TradingSignal = Signal
+
+function computeMA(values: number[], period: number): number | undefined {
+  if (values.length < period) return undefined
+  const slice = values.slice(-period)
+  return slice.reduce((a, b) => a + b, 0) / period
+}
+
+function computeRSI14(closes: number[]): number | undefined {
+  if (closes.length < 15) return undefined
+  const window = closes.slice(-15)
+  let gains = 0
+  let losses = 0
+  for (let i = 1; i < window.length; i++) {
+    const delta = window[i]! - window[i - 1]!
+    if (delta > 0) gains += delta
+    else losses -= delta
+  }
+  if (losses === 0) return 100
+  const rs = gains / losses
+  return 100 - 100 / (1 + rs)
+}
+
+function computeVolumeRatio(history: KlineBar[]): number | undefined {
+  if (history.length < 21) return undefined
+  const recent = history[history.length - 1]!.volume
+  const avg = history.slice(-21, -1).reduce((sum, bar) => sum + bar.volume, 0) / 20
+  if (avg === 0) return undefined
+  return recent / avg
+}
+
+function computeMACDDirection(closes: number[]): 'red' | 'green' | 'neutral' {
+  if (closes.length < 35) return 'neutral'
+  const ema = (values: number[], period: number): number => {
+    const k = 2 / (period + 1)
+    let result: number = values[0]!
+    for (let i = 1; i < values.length; i++) {
+      result = values[i]! * k + result * (1 - k)
+    }
+    return result
+  }
+  const ema12 = ema(closes.slice(-12), 12)
+  const ema26 = ema(closes.slice(-26), 26)
+  const diff = ema12 - ema26
+  // 简化：只用当前 DIF 正负判断方向
+  return diff > 0 ? 'red' : diff < 0 ? 'green' : 'neutral'
+}
+
+function buildSnapshot(_stock: unknown, quotes: DailyQuotes): SignalSnapshot {
+  const closes = quotes.history.map((bar) => bar.close)
+  const ma20 = computeMA(closes, 20)
+  const ma60 = computeMA(closes, 60)
+  const latest = quotes.latest.close
+  return {
+    pePercentile: undefined,
+    pbPercentile: undefined,
+    priceToMA20: ma20 !== undefined && ma20 !== 0 ? (latest - ma20) / ma20 : undefined,
+    priceToMA60: ma60 !== undefined && ma60 !== 0 ? (latest - ma60) / ma60 : undefined,
+    volumeRatio: computeVolumeRatio(quotes.history),
+    rsi14: computeRSI14(closes),
+    macdDirection: computeMACDDirection(closes),
+  }
+}
+
+function generateBuySignals(snapshot: SignalSnapshot): TradingSignal[] {
+  const signals: TradingSignal[] = []
+  const config = getDefaultTradingConfig().signalThresholds
+
+  // buy_safety_margin：基于绝对估值启发式（因历史百分位数据缺失）
+  // if (stock.pe !== undefined && stock.pb !== undefined) {
+  //   // 保守映射：PE < 15 且 PB < 2 视为安全边际
+  // }
+
+  // buy_dip：价格低于 MA20 8% 且 RSI < 30
+  if (
+    snapshot.priceToMA20 !== undefined &&
+    snapshot.priceToMA20 < -config.dipToMA20Pct / 100 &&
+    snapshot.rsi14 !== undefined &&
+    snapshot.rsi14 < config.dipRsi14Max
+  ) {
+    signals.push({
+      id: '',
+      symbol: '',
+      direction: 'buy',
+      type: 'buy_dip',
+      confidence: 0.55,
+      rationale: `价格低于 MA20 ${(snapshot.priceToMA20 * 100).toFixed(1)}%，RSI14 ${snapshot.rsi14.toFixed(1)} 处于超卖区间`,
+      snapshot,
+      createdAt: 0,
+    })
+  }
+
+  // buy_pivot：突破 MA20 + 放量 + MACD 红柱
+  if (
+    snapshot.priceToMA20 !== undefined &&
+    snapshot.priceToMA20 > 0 &&
+    snapshot.volumeRatio !== undefined &&
+    snapshot.volumeRatio > config.pivotVolumeRatioMin &&
+    snapshot.macdDirection === 'red'
+  ) {
+    signals.push({
+      id: '',
+      symbol: '',
+      direction: 'buy',
+      type: 'buy_pivot',
+      confidence: 0.65,
+      rationale: `价格站上 MA20，量比 ${snapshot.volumeRatio.toFixed(2)}，MACD 红柱`,
+      snapshot,
+      createdAt: 0,
+    })
+  }
+
+  return signals
+}
+
+function generateSellSignals(
+  snapshot: SignalSnapshot,
+  history: KlineBar[],
+): TradingSignal[] {
+  const signals: TradingSignal[] = []
+  const config = getDefaultTradingConfig().signalThresholds
+  const latest = history[history.length - 1]!.close
+
+  // sell_profit_taking：价格高于 MA20 15% 且 RSI > 70
+  if (
+    snapshot.priceToMA20 !== undefined &&
+    snapshot.priceToMA20 > config.profitTakingToMA20Pct / 100 &&
+    snapshot.rsi14 !== undefined &&
+    snapshot.rsi14 > config.profitTakingRsi14Min
+  ) {
+    signals.push({
+      id: '',
+      symbol: '',
+      direction: 'sell',
+      type: 'sell_profit_taking',
+      confidence: 0.55,
+      rationale: `价格高于 MA20 ${(snapshot.priceToMA20 * 100).toFixed(1)}%，RSI14 ${snapshot.rsi14.toFixed(1)} 处于超买区间`,
+      snapshot,
+      createdAt: 0,
+    })
+  }
+
+  // sell_trailing_stop：从近期最高点回撤 10%
+  const highest = Math.max(...history.slice(-60).map((bar) => bar.high))
+  if (highest > 0 && (highest - latest) / highest > config.trailingStopDrawdownPct / 100) {
+    signals.push({
+      id: '',
+      symbol: '',
+      direction: 'sell',
+      type: 'sell_trailing_stop',
+      confidence: 0.7,
+      rationale: `从近期高点 ${highest.toFixed(2)} 回撤 ${(((highest - latest) / highest) * 100).toFixed(1)}%`,
+      snapshot,
+      createdAt: 0,
+    })
+  }
+
+  return signals
+}
+
+/**
+ * 为单只股票生成交易信号
+ */
+export async function generateSignalsForSymbol(
+  symbol: string,
+): Promise<TradingSignal[]> {
+  const normalized = symbol.trim().toUpperCase()
+  const stock = await dataLayer.stocks.get(normalized)
+  const quotes = await dataLayer.dailyQuotes.get(normalized)
+
+  if (!stock) {
+    return []
+  }
+
+  if (!quotes || quotes.history.length < 20) {
+    return [
+      {
+        id: generateId(),
+        symbol: normalized,
+        direction: 'watch',
+        type: 'watch',
+        confidence: 0.1,
+        rationale: '行情数据不足，保持观察',
+        snapshot: {},
+        createdAt: Date.now(),
+      },
+    ]
+  }
+
+  const snapshot = buildSnapshot(stock, quotes)
+  const buySignals = generateBuySignals(snapshot)
+  const sellSignals = generateSellSignals(snapshot, quotes.history)
+  const rawSignals = [...buySignals, ...sellSignals]
+
+  const now = Date.now()
+  const signals: TradingSignal[] = rawSignals.map((s) => ({
+    ...s,
+    id: generateId(),
+    symbol: normalized,
+    createdAt: now,
+  }))
+
+  // 综合共振：同方向多个独立信号时生成 composite
+  const buyCount = signals.filter((s) => s.direction === 'buy').length
+  const sellCount = signals.filter((s) => s.direction === 'sell').length
+
+  if (buyCount >= 2) {
+    const baseConfidence = Math.max(...signals.filter((s) => s.direction === 'buy').map((s) => s.confidence))
+    signals.push({
+      id: generateId(),
+      symbol: normalized,
+      direction: 'buy',
+      type: 'composite_buy',
+      confidence: Math.min(1, baseConfidence + 0.2 * (buyCount - 1)),
+      rationale: `共振：同时触发 ${buyCount} 个买入信号`,
+      snapshot,
+      createdAt: now,
+    })
+  }
+
+  if (sellCount >= 2) {
+    const baseConfidence = Math.max(...signals.filter((s) => s.direction === 'sell').map((s) => s.confidence))
+    signals.push({
+      id: generateId(),
+      symbol: normalized,
+      direction: 'sell',
+      type: 'composite_sell',
+      confidence: Math.min(1, baseConfidence + 0.2 * (sellCount - 1)),
+      rationale: `共振：同时触发 ${sellCount} 个卖出信号`,
+      snapshot,
+      createdAt: now,
+    })
+  }
+
+  if (signals.length === 0) {
+    signals.push({
+      id: generateId(),
+      symbol: normalized,
+      direction: 'hold',
+      type: 'hold',
+      confidence: 0.15,
+      rationale: '无明确信号，建议持有/观望',
+      snapshot,
+      createdAt: now,
+    })
+  }
+
+  return signals
+}
+
+/**
+ * 从一组信号中挑选最强信号（买入优先于卖出，再按置信度）
+ */
+export function pickStrongestSignal(signals: TradingSignal[]): TradingSignal | undefined {
+  if (signals.length === 0) return undefined
+  const priority: Record<SignalDirection, number> = { buy: 3, sell: 2, watch: 1, hold: 0 }
+  return signals.slice().sort((a, b) => {
+    const pa = priority[a.direction] ?? 0
+    const pb = priority[b.direction] ?? 0
+    if (pa !== pb) return pb - pa
+    return b.confidence - a.confidence
+  })[0]
+}

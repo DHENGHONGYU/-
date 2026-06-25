@@ -1,0 +1,570 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e5]:
+        - img [ref=e6]
+        - generic [ref=e9]:
+          - paragraph [ref=e10]: V6 Pro
+          - paragraph [ref=e11]: 智能投研系统
+      - navigation [ref=e12]:
+        - generic [ref=e13]:
+          - paragraph [ref=e14]: 系统
+          - link "仪表盘" [ref=e15] [cursor=pointer]:
+            - /url: "#/"
+            - img [ref=e16]
+            - generic [ref=e21]: 仪表盘
+          - link "驾驶舱" [ref=e22] [cursor=pointer]:
+            - /url: "#/cockpit"
+            - img [ref=e23]
+            - generic [ref=e26]: 驾驶舱
+          - link "数据管理" [ref=e27] [cursor=pointer]:
+            - /url: "#/data"
+            - img [ref=e28]
+            - generic [ref=e31]: 数据管理
+          - link "本地知识库" [ref=e32] [cursor=pointer]:
+            - /url: "#/knowledge"
+            - img [ref=e33]
+            - generic [ref=e35]: 本地知识库
+          - link "AI助手" [ref=e36] [cursor=pointer]:
+            - /url: "#/ai-assistant"
+            - img [ref=e37]
+            - generic [ref=e49]: AI助手
+        - paragraph [ref=e50]: 功能模块
+        - generic [ref=e51]:
+          - button "数据采集及接口" [active] [ref=e52] [cursor=pointer]:
+            - img [ref=e53]
+            - generic [ref=e57]: 数据采集及接口
+            - img [ref=e205]
+          - generic [ref=e207]:
+            - link "数据工场" [ref=e208] [cursor=pointer]:
+              - /url: "#/data-hub"
+              - img [ref=e209]
+              - generic [ref=e212]: 数据工场
+            - link "股票池管理" [ref=e213] [cursor=pointer]:
+              - /url: "#/stock-pool"
+              - img [ref=e214]
+              - generic [ref=e218]: 股票池管理
+            - link "七维采集" [ref=e219] [cursor=pointer]:
+              - /url: "#/seven-dim"
+              - img [ref=e220]
+              - generic [ref=e224]: 七维采集
+            - link "采集任务" [ref=e225] [cursor=pointer]:
+              - /url: "#/collect-task"
+              - img [ref=e226]
+              - generic [ref=e228]: 采集任务
+            - link "智能资讯" [ref=e229] [cursor=pointer]:
+              - /url: "#/news"
+              - img [ref=e230]
+              - generic [ref=e233]: 智能资讯
+            - link "抓取引擎" [ref=e234] [cursor=pointer]:
+              - /url: "#/fetcher"
+              - img [ref=e235]
+              - generic [ref=e239]: 抓取引擎
+        - button "智能AI体调度" [ref=e61] [cursor=pointer]:
+          - img [ref=e62]
+          - generic [ref=e70]: 智能AI体调度
+          - img [ref=e71]
+        - button "行业个股分析" [ref=e74] [cursor=pointer]:
+          - img [ref=e75]
+          - generic [ref=e77]: 行业个股分析
+          - img [ref=e78]
+        - button "交易及持仓" [ref=e81] [cursor=pointer]:
+          - img [ref=e82]
+          - generic [ref=e85]: 交易及持仓
+          - img [ref=e86]
+      - button [ref=e89] [cursor=pointer]:
+        - img [ref=e90]
+    - generic [ref=e93]:
+      - banner [ref=e94]:
+        - generic [ref=e95]:
+          - link "数据采集及接口" [ref=e250] [cursor=pointer]:
+            - /url: "#/data-hub"
+            - img [ref=e251]
+            - text: 数据采集及接口
+          - generic [ref=e253]: /
+          - heading "七维采集" [level=1] [ref=e807]
+        - generic [ref=e97]:
+          - generic [ref=e98]: AI Agent 就绪
+          - img [ref=e99]
+      - main [ref=e101]:
+        - link "返回 数据采集及接口 首页" [ref=e256] [cursor=pointer]:
+          - /url: "#/data-hub"
+          - img [ref=e257]
+          - text: 返回 数据采集及接口 首页
+        - generic [ref=e808]:
+          - generic [ref=e809]:
+            - generic [ref=e810]:
+              - heading "七维采集" [level=1] [ref=e811]
+              - paragraph [ref=e812]: 已选 3/7 维度 · 3维全量 + 0维轻量化
+            - link "查看采集任务" [ref=e813] [cursor=pointer]:
+              - /url: "#/collect-task"
+              - button "查看采集任务" [ref=e814]:
+                - text: 查看采集任务
+                - img
+          - generic [ref=e815]:
+            - generic [ref=e817]:
+              - img [ref=e818]
+              - text: 预设策略模板 (5方向)
+            - generic [ref=e821]:
+              - button "价值投资 关注基本面与估值，适合长期持有 4维 · 252天历史" [ref=e822] [cursor=pointer]:
+                - img [ref=e825]
+                - paragraph [ref=e829]: 价值投资
+                - paragraph [ref=e830]: 关注基本面与估值，适合长期持有
+                - paragraph [ref=e831]: 4维 · 252天历史
+              - button "成长投资 关注成长性与动量，适合中短期 5维 · 126天历史" [ref=e832] [cursor=pointer]:
+                - img [ref=e835]
+                - paragraph [ref=e838]: 成长投资
+                - paragraph [ref=e839]: 关注成长性与动量，适合中短期
+                - paragraph [ref=e840]: 5维 · 126天历史
+              - button "防御配置 关注稳定性与股息，适合保守型 4维 · 504天历史" [ref=e841] [cursor=pointer]:
+                - img [ref=e844]
+                - paragraph [ref=e846]: 防御配置
+                - paragraph [ref=e847]: 关注稳定性与股息，适合保守型
+                - paragraph [ref=e848]: 4维 · 504天历史
+              - button "周期轮动 关注行业景气度与资金流向 5维 · 252天历史" [ref=e849] [cursor=pointer]:
+                - img [ref=e852]
+                - paragraph [ref=e855]: 周期轮动
+                - paragraph [ref=e856]: 关注行业景气度与资金流向
+                - paragraph [ref=e857]: 5维 · 252天历史
+              - button "全维度 采集全部七维数据，最全面 7维 · 756天历史" [ref=e858] [cursor=pointer]:
+                - img [ref=e861]
+                - paragraph [ref=e862]: 全维度
+                - paragraph [ref=e863]: 采集全部七维数据，最全面
+                - paragraph [ref=e864]: 7维 · 756天历史
+          - generic [ref=e865]:
+            - generic [ref=e867]:
+              - generic [ref=e869]:
+                - img [ref=e870]
+                - text: 维度选择
+              - generic [ref=e874]:
+                - generic [ref=e875]:
+                  - img [ref=e877]
+                  - generic [ref=e881]:
+                    - generic [ref=e882]:
+                      - generic [ref=e883]: "01"
+                      - generic [ref=e884]: 基本信息
+                      - generic [ref=e885]: 全量
+                    - paragraph [ref=e886]: 公司概况/财务摘要/估值指标
+                    - generic [ref=e887]:
+                      - generic [ref=e888]: 公司名称
+                      - generic [ref=e889]: 所属行业
+                      - generic [ref=e890]: 总市值
+                      - generic [ref=e891]: PE
+                      - generic [ref=e892]: PB
+                      - generic [ref=e893]: ROE
+                      - generic [ref=e894]: 股息率
+                  - switch [checked] [ref=e895] [cursor=pointer]
+                - generic [ref=e896]:
+                  - img [ref=e898]
+                  - generic [ref=e901]:
+                    - generic [ref=e902]:
+                      - generic [ref=e903]: "02"
+                      - generic [ref=e904]: K线数据
+                      - generic [ref=e905]: 全量
+                    - paragraph [ref=e906]: 日线/周线/月线/成交量/成交额
+                    - generic [ref=e907]:
+                      - generic [ref=e908]: 开盘价
+                      - generic [ref=e909]: 收盘价
+                      - generic [ref=e910]: 最高价
+                      - generic [ref=e911]: 最低价
+                      - generic [ref=e912]: 成交量
+                      - generic [ref=e913]: 成交额
+                      - generic [ref=e914]: MA5/MA20
+                  - switch [checked] [ref=e915] [cursor=pointer]
+                - generic [ref=e916]:
+                  - img [ref=e918]
+                  - generic [ref=e922]:
+                    - generic [ref=e923]:
+                      - generic [ref=e924]: "03"
+                      - generic [ref=e925]: 筹码分布
+                      - generic [ref=e926]: 全量
+                    - paragraph [ref=e927]: 股东户数/千股千评/机构持仓
+                    - generic [ref=e928]:
+                      - generic [ref=e929]: 股东户数
+                      - generic [ref=e930]: 户均持股
+                      - generic [ref=e931]: 千股千评
+                      - generic [ref=e932]: 机构持仓
+                      - generic [ref=e933]: 十大流通股东
+                  - switch [checked] [ref=e934] [cursor=pointer]
+                - generic [ref=e935]:
+                  - img [ref=e937]
+                  - generic [ref=e939]:
+                    - generic [ref=e940]:
+                      - generic [ref=e941]: "04"
+                      - generic [ref=e942]: 重大事项
+                      - generic [ref=e943]: 轻量化
+                    - paragraph [ref=e944]: 公告/财报/重组/诉讼/股权变动
+                    - generic [ref=e945]:
+                      - generic [ref=e946]: 公告标题
+                      - generic [ref=e947]: 公告摘要
+                      - generic [ref=e948]: 事件类型
+                      - generic [ref=e949]: 发布日期
+                      - generic [ref=e950]: 原文链接
+                  - switch [ref=e951] [cursor=pointer]
+                - generic [ref=e952]:
+                  - img [ref=e954]
+                  - generic [ref=e956]:
+                    - generic [ref=e957]:
+                      - generic [ref=e958]: "05"
+                      - generic [ref=e959]: 热点新闻
+                      - generic [ref=e960]: 轻量化
+                    - paragraph [ref=e961]: 财经新闻/行业新闻/公司新闻
+                    - generic [ref=e962]:
+                      - generic [ref=e963]: 新闻标题
+                      - generic [ref=e964]: 摘要
+                      - generic [ref=e965]: 来源
+                      - generic [ref=e966]: 发布日期
+                      - generic [ref=e967]: 原文链接
+                  - switch [ref=e968] [cursor=pointer]
+                - generic [ref=e969]:
+                  - img [ref=e971]
+                  - generic [ref=e974]:
+                    - generic [ref=e975]:
+                      - generic [ref=e976]: "06"
+                      - generic [ref=e977]: 行业竞品
+                      - generic [ref=e978]: 轻量化
+                    - paragraph [ref=e979]: 行业排名/竞品对比/ETF关联
+                    - generic [ref=e980]:
+                      - generic [ref=e981]: 行业排名
+                      - generic [ref=e982]: 竞品数据
+                      - generic [ref=e983]: ETF规模
+                      - generic [ref=e984]: ETF基金数
+                      - generic [ref=e985]: 行业统计
+                  - switch [ref=e986] [cursor=pointer]
+                - generic [ref=e987]:
+                  - img [ref=e989]
+                  - generic [ref=e993]:
+                    - generic [ref=e994]:
+                      - generic [ref=e995]: "07"
+                      - generic [ref=e996]: 关联指数
+                      - generic [ref=e997]: 轻量化
+                    - paragraph [ref=e998]: 所属指数/ETF跟踪/规模数据
+                    - generic [ref=e999]:
+                      - generic [ref=e1000]: 所属指数
+                      - generic [ref=e1001]: ETF代码
+                      - generic [ref=e1002]: ETF规模(亿)
+                      - generic [ref=e1003]: 跟踪基金数
+                      - generic [ref=e1004]: 指数涨跌幅
+                  - switch [ref=e1005] [cursor=pointer]
+            - generic [ref=e1006]:
+              - generic [ref=e1007]:
+                - generic [ref=e1009]:
+                  - img [ref=e1010]
+                  - text: 参数配置
+                - generic [ref=e1013]:
+                  - generic [ref=e1014]:
+                    - generic [ref=e1015]: 目标股票
+                    - textbox "输入股票代码，逗号分隔" [ref=e1016]: 600519, 000858, 300750
+                    - paragraph [ref=e1017]: 多个代码用逗号分隔
+                  - generic [ref=e1018]:
+                    - generic [ref=e1019]: 历史数据天数
+                    - generic [ref=e1020]:
+                      - spinbutton [ref=e1021]: "252"
+                      - generic [ref=e1022]: 天
+                    - paragraph [ref=e1023]: 252天≈1年 · 504天≈2年 · 756天≈3年
+                  - generic [ref=e1024]:
+                    - generic [ref=e1025]: 数据源
+                    - generic [ref=e1026]:
+                      - generic [ref=e1027]: AKShare (主)
+                      - generic [ref=e1028]: Tushare
+                      - generic [ref=e1029]: JQData
+                  - generic [ref=e1030]:
+                    - generic [ref=e1031]: 更新策略
+                    - generic [ref=e1032]:
+                      - img [ref=e1033]
+                      - generic [ref=e1036]: 每3小时自动更新 (盘中)
+                    - paragraph [ref=e1037]: 适合个人投资者，非高频场景
+                  - generic [ref=e1038]:
+                    - generic [ref=e1039]:
+                      - generic [ref=e1040]: 预估数据量
+                      - generic [ref=e1041]: ~378KB/只
+                    - generic [ref=e1042]:
+                      - generic [ref=e1043]: 预估时间
+                      - generic [ref=e1044]: ~15秒/只
+              - button "开始采集" [ref=e1045] [cursor=pointer]:
+                - img
+                - text: 开始采集
+          - generic [ref=e1046]:
+            - generic [ref=e1048]:
+              - img [ref=e1049]
+              - heading "采集参数调整" [level=2] [ref=e1050]
+            - generic [ref=e1051]:
+              - generic [ref=e1052]:
+                - generic [ref=e1053]:
+                  - img [ref=e1054]
+                  - heading "采集参数调整" [level=2] [ref=e1057]
+                - generic [ref=e1058]:
+                  - button "重置" [ref=e1059] [cursor=pointer]:
+                    - img
+                    - text: 重置
+                  - button "保存" [disabled]:
+                    - img
+                    - text: 保存
+              - generic [ref=e1061]:
+                - generic [ref=e1062]:
+                  - img [ref=e1063]
+                  - generic [ref=e1065]: 策略预设模板
+                - generic [ref=e1066]:
+                  - button "价值投资" [ref=e1067] [cursor=pointer]
+                  - button "趋势跟踪" [ref=e1068] [cursor=pointer]
+                  - button "量化交易" [ref=e1069] [cursor=pointer]
+                  - button "波段交易" [ref=e1070] [cursor=pointer]
+                  - button "长期持有" [ref=e1071] [cursor=pointer]
+                  - button "事件驱动" [ref=e1072] [cursor=pointer]
+                  - button "自定义" [ref=e1073] [cursor=pointer]
+              - generic [ref=e1076]:
+                - generic [ref=e1077]:
+                  - paragraph [ref=e1078]: 月总调用
+                  - paragraph [ref=e1079]: "684"
+                  - paragraph [ref=e1080]: 40只标的
+                - generic [ref=e1081]:
+                  - paragraph [ref=e1082]: AKShare
+                  - paragraph [ref=e1083]: "564"
+                  - generic [ref=e1084]: 免费
+                - generic [ref=e1085]:
+                  - paragraph [ref=e1086]: Kimi Work
+                  - paragraph [ref=e1087]: "120"
+                  - generic [ref=e1088]: 兜底
+                - generic [ref=e1089]:
+                  - paragraph [ref=e1090]: 额度使用
+                  - paragraph [ref=e1091]: 24%
+                  - progressbar [ref=e1092]
+              - generic [ref=e1095]:
+                - generic [ref=e1096]:
+                  - img [ref=e1097]
+                  - generic [ref=e1101]: Kimi Work 兜底配置
+                  - generic [ref=e1102]: 周检索策略
+                - generic [ref=e1103]:
+                  - generic [ref=e1104]:
+                    - generic [ref=e1105]:
+                      - generic [ref=e1106]: 月度额度上限
+                      - generic [ref=e1107]: 500 次
+                    - slider [ref=e1112]
+                    - generic [ref=e1113]:
+                      - generic [ref=e1114]: Andante ¥49 (500)
+                      - generic [ref=e1115]: Allegretto ¥199 (2000)
+                      - generic [ref=e1116]: Business ¥2980 (5000)
+                  - generic [ref=e1117]:
+                    - img [ref=e1118]
+                    - paragraph [ref=e1120]:
+                      - text: Kimi Work 作为
+                      - strong [ref=e1121]: 兜底数据源
+                      - text: ，仅在 AKShare 缺失时使用。 股票池全部标的
+                      - strong [ref=e1122]: 每周统一检索一次
+                      - text: ，非股票池标的不检索。
+              - generic [ref=e1123]:
+                - generic [ref=e1125]:
+                  - img [ref=e1126]
+                  - text: 维度参数调整
+                - generic [ref=e1131]:
+                  - generic [ref=e1133]:
+                    - switch [checked] [ref=e1134] [cursor=pointer]
+                    - generic [ref=e1135]: "01"
+                    - generic [ref=e1136]:
+                      - generic [ref=e1137]:
+                        - generic [ref=e1138]: 基本信息
+                        - generic [ref=e1139]: 低
+                      - paragraph [ref=e1140]: 公司概况 / 主营业务 / 控股股东 / 实控人
+                    - combobox [ref=e1141]:
+                      - option "实时"
+                      - option "1小时"
+                      - option "3小时"
+                      - option "日收盘后"
+                      - option "3日"
+                      - option "每周"
+                      - option "双周"
+                      - option "月度" [selected]
+                      - option "季度"
+                      - option "手动"
+                    - generic [ref=e1142]:
+                      - paragraph [ref=e1143]: "4"
+                      - paragraph [ref=e1144]: 次/月
+                    - button [ref=e1145] [cursor=pointer]:
+                      - img [ref=e1146]
+                  - generic [ref=e1149]:
+                    - switch [checked] [ref=e1150] [cursor=pointer]
+                    - generic [ref=e1151]: "02"
+                    - generic [ref=e1152]:
+                      - generic [ref=e1153]:
+                        - generic [ref=e1154]: K线数据
+                        - generic [ref=e1155]: 一般
+                      - paragraph [ref=e1156]: open / high / low / close
+                    - combobox [ref=e1157]:
+                      - option "实时"
+                      - option "1小时"
+                      - option "3小时"
+                      - option "日收盘后" [selected]
+                      - option "3日"
+                      - option "每周"
+                      - option "双周"
+                      - option "月度"
+                      - option "季度"
+                      - option "手动"
+                    - generic [ref=e1158]:
+                      - paragraph [ref=e1159]: "120"
+                      - paragraph [ref=e1160]: 次/月
+                    - button [ref=e1161] [cursor=pointer]:
+                      - img [ref=e1162]
+                  - generic [ref=e1165]:
+                    - switch [checked] [ref=e1166] [cursor=pointer]
+                    - generic [ref=e1167]: "03"
+                    - generic [ref=e1168]:
+                      - generic [ref=e1169]:
+                        - generic [ref=e1170]: 筹码分布
+                        - generic [ref=e1171]: 重要
+                      - paragraph [ref=e1172]: 股东户数 / 户均持股 / 机构持仓 / 十大流通股东
+                    - combobox [ref=e1173]:
+                      - option "实时"
+                      - option "1小时"
+                      - option "3小时"
+                      - option "日收盘后" [selected]
+                      - option "3日"
+                      - option "每周"
+                      - option "双周"
+                      - option "月度"
+                      - option "季度"
+                      - option "手动"
+                    - generic [ref=e1174]:
+                      - paragraph [ref=e1175]: "120"
+                      - paragraph [ref=e1176]: 次/月
+                    - button [ref=e1177] [cursor=pointer]:
+                      - img [ref=e1178]
+                  - generic [ref=e1181]:
+                    - switch [checked] [ref=e1182] [cursor=pointer]
+                    - generic [ref=e1183]: "04"
+                    - generic [ref=e1184]:
+                      - generic [ref=e1185]:
+                        - generic [ref=e1186]: 重大事项
+                        - generic [ref=e1187]: 重要
+                      - paragraph [ref=e1188]: 公告标题 / 公告类型 / 发布日期 / PDF链接
+                    - combobox [ref=e1189]:
+                      - option "实时"
+                      - option "1小时"
+                      - option "3小时"
+                      - option "日收盘后" [selected]
+                      - option "3日"
+                      - option "每周"
+                      - option "双周"
+                      - option "月度"
+                      - option "季度"
+                      - option "手动"
+                    - generic [ref=e1190]:
+                      - paragraph [ref=e1191]: "120"
+                      - paragraph [ref=e1192]: 次/月
+                    - button [ref=e1193] [cursor=pointer]:
+                      - img [ref=e1194]
+                  - generic [ref=e1197]:
+                    - switch [checked] [ref=e1198] [cursor=pointer]
+                    - generic [ref=e1199]: "05"
+                    - generic [ref=e1200]:
+                      - generic [ref=e1201]:
+                        - generic [ref=e1202]: 热点新闻
+                        - generic [ref=e1203]: 一般
+                      - paragraph [ref=e1204]: 标题 / 摘要 / 来源 / 日期
+                    - combobox [ref=e1205]:
+                      - option "实时"
+                      - option "1小时"
+                      - option "3小时"
+                      - option "日收盘后" [selected]
+                      - option "3日"
+                      - option "每周"
+                      - option "双周"
+                      - option "月度"
+                      - option "季度"
+                      - option "手动"
+                    - generic [ref=e1206]:
+                      - paragraph [ref=e1207]: "120"
+                      - paragraph [ref=e1208]: 次/月
+                    - button [ref=e1209] [cursor=pointer]:
+                      - img [ref=e1210]
+                  - generic [ref=e1213]:
+                    - switch [checked] [ref=e1214] [cursor=pointer]
+                    - generic [ref=e1215]: "06"
+                    - generic [ref=e1216]:
+                      - generic [ref=e1217]:
+                        - generic [ref=e1218]: 行业竞品
+                        - generic [ref=e1219]: 一般
+                      - paragraph [ref=e1220]: 行业排名 / 竞品对比 / ETF规模 / 行业统计
+                    - combobox [ref=e1221]:
+                      - option "实时"
+                      - option "1小时"
+                      - option "3小时"
+                      - option "日收盘后"
+                      - option "3日" [selected]
+                      - option "每周"
+                      - option "双周"
+                      - option "月度"
+                      - option "季度"
+                      - option "手动"
+                    - generic [ref=e1222]:
+                      - paragraph [ref=e1223]: "40"
+                      - paragraph [ref=e1224]: 次/月
+                    - button [ref=e1225] [cursor=pointer]:
+                      - img [ref=e1226]
+                  - generic [ref=e1229]:
+                    - switch [checked] [ref=e1230] [cursor=pointer]
+                    - generic [ref=e1231]: "07"
+                    - generic [ref=e1232]:
+                      - generic [ref=e1233]:
+                        - generic [ref=e1234]: 关联指数
+                        - generic [ref=e1235]: 低
+                      - paragraph [ref=e1236]: 所属指数 / ETF代码 / ETF规模 / 跟踪基金数
+                    - combobox [ref=e1237]:
+                      - option "实时"
+                      - option "1小时"
+                      - option "3小时"
+                      - option "日收盘后"
+                      - option "3日" [selected]
+                      - option "每周"
+                      - option "双周"
+                      - option "月度"
+                      - option "季度"
+                      - option "手动"
+                    - generic [ref=e1238]:
+                      - paragraph [ref=e1239]: "40"
+                      - paragraph [ref=e1240]: 次/月
+                    - button [ref=e1241] [cursor=pointer]:
+                      - img [ref=e1242]
+                  - generic [ref=e1245]:
+                    - switch [checked] [ref=e1246] [cursor=pointer]
+                    - generic [ref=e1247]: "08"
+                    - generic [ref=e1248]:
+                      - generic [ref=e1249]:
+                        - generic [ref=e1250]: 研报中心
+                        - generic [ref=e1251]: 核心
+                      - paragraph [ref=e1252]: 标题 / 作者 / 评级 / 目标价
+                    - combobox [ref=e1253]:
+                      - option "实时"
+                      - option "1小时"
+                      - option "3小时"
+                      - option "日收盘后" [selected]
+                      - option "3日"
+                      - option "每周"
+                      - option "双周"
+                      - option "月度"
+                      - option "季度"
+                      - option "手动"
+                    - generic [ref=e1254]:
+                      - paragraph [ref=e1255]: "120"
+                      - paragraph [ref=e1256]: 次/月
+                    - button [ref=e1257] [cursor=pointer]:
+                      - img [ref=e1258]
+              - generic [ref=e1261]:
+                - generic [ref=e1262]:
+                  - img [ref=e1263]
+                  - generic [ref=e1265]: 限流保护
+                - generic [ref=e1266]:
+                  - generic [ref=e1267]:
+                    - generic [ref=e1268]: 分钟限流
+                    - paragraph [ref=e1269]: 10次
+                  - generic [ref=e1270]:
+                    - generic [ref=e1271]: 小时限流
+                    - paragraph [ref=e1272]: 200次
+                  - generic [ref=e1273]:
+                    - generic [ref=e1274]: 日限流
+                    - paragraph [ref=e1275]: 1000次
+  - link "Kimi Kimi Agent" [ref=e202] [cursor=pointer]:
+    - /url: https://www.kimi.com/agent
+    - img "Kimi" [ref=e203]
+    - generic [ref=e204]: Kimi Agent
+    - img
