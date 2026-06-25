@@ -1,0 +1,173 @@
+// ============================================================
+// V6 风格资讯卡片 — 迁移至 V9
+// 保持 V6 UI 风格，适配 V9 数据类型
+// ============================================================
+
+import { Card, CardContent, CardHeader } from '@/components/ui/Card'
+import { Button } from '@/components/ui/Button'
+import {
+  Minus,
+  Clock,
+  ExternalLink,
+  Bookmark,
+  Share2,
+  ThumbsUp,
+  ThumbsDown,
+} from 'lucide-react'
+import { Badge } from '@/components/ui/Badge'
+import { useState } from 'react'
+import type { V6NewsArticle } from '../types'
+import { SentimentBadge, CategoryBadge } from './newsCardUtils'
+import { formatRelativeTime, formatSource } from './newsCardFormatters'
+
+export interface NewsCardProps {
+  article: V6NewsArticle
+  onBookmark?: (id: string) => void
+  onShare?: (article: V6NewsArticle) => void
+  onClick?: (article: V6NewsArticle) => void
+  compact?: boolean
+}
+
+export default function NewsCard({ article, onBookmark, onShare, onClick, compact = false }: NewsCardProps) {
+  const [bookmarked, setBookmarked] = useState(false)
+
+  const handleBookmark = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setBookmarked(!bookmarked)
+    onBookmark?.(article.id)
+  }
+
+  const handleShare = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    onShare?.(article)
+  }
+
+  const sentiment = article.sentiment || 0
+  const confidence = article.sentimentConfidence || 0
+  const isPositive = sentiment > 0.3
+  const isNegative = sentiment < -0.3
+
+  // 紧凑模式 - 用于侧边栏/列表
+  if (compact) {
+    return (
+      <div
+        onClick={() => onClick?.(article)}
+        className="p-3 border-b border-slate-100 hover:bg-slate-50 cursor-pointer transition-colors"
+      >
+        <div className="flex items-start gap-2">
+          {isPositive && <ThumbsUp className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />}
+          {isNegative && <ThumbsDown className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />}
+          {!isPositive && !isNegative && <Minus className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />}
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-slate-800 truncate">{article.title}</p>
+            <div className="flex items-center gap-2 mt-1">
+              <span className="text-xs text-slate-400">{formatSource(article.source)}</span>
+              <span className="text-xs text-slate-400">{formatRelativeTime(article.publishTime)}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // 完整卡片模式（V6 风格）
+  return (
+    <Card
+      className="hover:shadow-md transition-shadow cursor-pointer border-slate-200"
+      onClick={() => onClick?.(article)}
+    >
+      <CardHeader className="pb-2">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+              <CategoryBadge category={article.category || '宏观'} />
+              <SentimentBadge sentiment={sentiment} confidence={confidence} />
+              {article.relatedStocks && article.relatedStocks.length > 0 && (
+                <div className="flex gap-1">
+                  {article.relatedStocks.slice(0, 3).map((code) => (
+                    <Badge key={code} variant="outline" className="text-xs bg-slate-50">
+                      {code}
+                    </Badge>
+                  ))}
+                  {article.relatedStocks.length > 3 && (
+                    <Badge variant="outline" className="text-xs bg-slate-50">
+                      +{article.relatedStocks.length - 3}
+                    </Badge>
+                  )}
+                </div>
+              )}
+            </div>
+            <h3 className="text-base font-semibold text-slate-800 leading-snug hover:text-emerald-600 transition-colors">
+              {article.title}
+            </h3>
+          </div>
+        </div>
+      </CardHeader>
+
+      <CardContent className="pt-0">
+        {article.content && (
+          <p className="text-sm text-slate-600 line-clamp-2 mb-3">{article.content}</p>
+        )}
+
+        {article.keywords && article.keywords.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-3">
+            {article.keywords.map((kw) => (
+              <span key={kw} className="text-xs px-2 py-0.5 bg-slate-100 text-slate-600 rounded-full">
+                {kw}
+              </span>
+            ))}
+          </div>
+        )}
+
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3 text-xs text-slate-400">
+            <span className="flex items-center gap-1">
+              <Clock className="w-3.5 h-3.5" />
+              {formatRelativeTime(article.publishTime)}
+            </span>
+            <span>{formatSource(article.source)}</span>
+            {article.fetchTime && (
+              <span className="hidden sm:inline">抓取: {formatRelativeTime(article.fetchTime)}</span>
+            )}
+          </div>
+
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`h-8 w-8 p-0 ${bookmarked ? 'text-amber-500' : 'text-slate-400'}`}
+              onClick={handleBookmark}
+              title="收藏"
+            >
+              <Bookmark className={`w-4 h-4 ${bookmarked ? 'fill-current' : ''}`} />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0 text-slate-400"
+              onClick={handleShare}
+              title="分享"
+            >
+              <Share2 className="w-4 h-4" />
+            </Button>
+            {article.url && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0 text-slate-400"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  window.open(article.url, '_blank')
+                }}
+                title="原文"
+              >
+                <ExternalLink className="w-4 h-4" />
+              </Button>
+            )}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+

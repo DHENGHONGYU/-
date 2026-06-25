@@ -8,6 +8,10 @@ import { ROUTE_REGISTRY } from '@/config/routes'
 import { initializeApp } from '@/services/system/bootstrapService'
 import { getLogger } from '@/lib/logger'
 
+if (import.meta.env.DEV) {
+  import('@/devtools/testDataFlow')
+}
+
 const logger = getLogger()
 
 function AppContent(): React.JSX.Element {

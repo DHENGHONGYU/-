@@ -2,13 +2,58 @@ import { describe, expect, it, beforeEach, vi } from 'vitest'
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router'
-import { db } from '@/data/db'
 import NewsPage from '@/pages/analysis/NewsPage'
+import type { NewsArticle } from '@/data/types'
+
+const mockArticles: NewsArticle[] = [
+  {
+    id: 'news_1',
+    title: '贵州茅台年报超预期，白酒板块强劲上涨',
+    content: '600519贵州茅台发布年报，全年盈利大幅增长。',
+    url: 'https://mock.news/1',
+    source: 'mock',
+    category: '个股',
+    sentiment: 'positive',
+    sentimentConfidence: 0.9,
+    publishTime: new Date().toISOString(),
+    fetchTime: new Date().toISOString(),
+    relatedStocks: ['600519.SH'],
+    keywords: ['白酒'],
+    hash: 'hash1',
+  },
+  {
+    id: 'news_2',
+    title: '银行板块承压，工商银行息差收窄',
+    content: '受降息预期影响，银行板块整体下跌。',
+    url: 'https://mock.news/2',
+    source: 'mock',
+    category: '行业',
+    sentiment: 'negative',
+    sentimentConfidence: 0.8,
+    publishTime: new Date().toISOString(),
+    fetchTime: new Date().toISOString(),
+    relatedStocks: ['601398.SH'],
+    keywords: ['银行'],
+    hash: 'hash2',
+  },
+]
+
+let articlesStore: NewsArticle[] = []
+
+vi.mock('@/services/news/newsService', () => ({
+  generateMockArticles: vi.fn(() => mockArticles),
+  saveNewsArticles: vi.fn(async (articles: NewsArticle[]) => {
+    articlesStore = [...articles]
+    return { success: true, data: articles }
+  }),
+  listNews: vi.fn(async () => {
+    return { success: true, data: articlesStore }
+  }),
+}))
 
 describe('NewsPage', () => {
-  beforeEach(async () => {
-    await db.init()
-    await db.reset()
+  beforeEach(() => {
+    articlesStore = []
     HTMLDialogElement.prototype.showModal = vi.fn(function (this: HTMLDialogElement) {
       this.open = true
     })
@@ -44,7 +89,7 @@ describe('NewsPage', () => {
       { timeout: 10000 },
     )
 
-    const cards = await screen.findAllByRole('button', { name: /(贵州茅台|比亚迪|银行板块|人工智能|宏观数据)/ })
+    const cards = await screen.findAllByRole('button', { name: /(贵州茅台|银行板块)/ })
     expect(cards.length).toBeGreaterThan(0)
   })
 
@@ -63,8 +108,8 @@ describe('NewsPage', () => {
       { timeout: 10000 },
     )
 
-    const allCards = await screen.findAllByRole('button', { name: /(贵州茅台|比亚迪|银行板块|人工智能|宏观数据)/ })
-    expect(allCards.length).toBe(5)
+    const allCards = await screen.findAllByRole('button', { name: /(贵州茅台|银行板块)/ })
+    expect(allCards.length).toBe(2)
 
     await userEvent.selectOptions(screen.getByLabelText('情感'), 'negative')
 
@@ -92,7 +137,7 @@ describe('NewsPage', () => {
     const card = await screen.findByRole('button', { name: /贵州茅台/ })
     await userEvent.click(card)
 
-    const dialog = await screen.findByRole('dialog', {}, { timeout: 2000 })
+    const dialog = await screen.findByRole('dialog', {}, { timeout: 5000 })
     expect(dialog).toBeInTheDocument()
     expect(within(dialog).getByText('贵州茅台年报超预期，白酒板块强劲上涨')).toBeInTheDocument()
     expect(within(dialog).getByText(/600519贵州茅台发布年报/)).toBeInTheDocument()

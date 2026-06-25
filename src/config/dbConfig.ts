@@ -1,4 +1,5 @@
-export const DB_NAME = 'V6ProDB' as const
+const testDbName = typeof process !== 'undefined' ? process.env.TEST_DB_NAME : undefined
+export const DB_NAME = testDbName ? testDbName : ('V6ProDB' as const)
 export const DB_VERSION = 6 as const
 
 /**
@@ -76,6 +77,7 @@ export const ENVELOPE_ACTION = {
   saveNews: 'SAVE_NEWS',
   saveNewsStockMap: 'SAVE_NEWS_STOCK_MAP',
   saveSentimentCache: 'SAVE_SENTIMENT_CACHE',
+  saveResearchLog: 'SAVE_RESEARCH_LOG',
   insertSignal: 'INSERT_SIGNAL',
   insertOrder: 'INSERT_ORDER',
   updateOrder: 'UPDATE_ORDER',

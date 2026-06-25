@@ -107,9 +107,11 @@ export async function saveNewsArticles(
   articles: Omit<NewsArticle, 'id' | 'sentiment' | 'sentimentConfidence' | 'relatedStocks' | 'hash'>[],
   options?: { stocks?: StockInfo[] },
 ): Promise<DataLayerResult<NewsArticle[]>> {
+  const results = await Promise.all(
+    articles.map((article) => saveNewsArticle(article, { ...options, skipLinking: true })),
+  )
   const saved: NewsArticle[] = []
-  for (const article of articles) {
-    const result = await saveNewsArticle(article, options)
+  for (const result of results) {
     if (result.success && result.data) {
       saved.push(result.data)
     }

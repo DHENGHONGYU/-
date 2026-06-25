@@ -3,18 +3,82 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router'
 import LocalKnowledgePage from '@/pages/input/LocalKnowledgePage'
-import { db } from '@/data/db'
 import { useToast } from '@/hooks/useToast'
-import * as localDocService from '@/services/system/localDocService'
+import type { LocalDoc } from '@/data/types'
 
 vi.mock('@/hooks/useToast', () => ({
   useToast: vi.fn(() => ({ toast: vi.fn() })),
 }))
 
+const sampleDocs: LocalDoc[] = [
+  {
+    id: '1',
+    addedAt: 1,
+    symbol: '600519.SH',
+    name: '贵州茅台2024年研报',
+    content: '贵州茅台2024年业绩稳健增长。',
+    category: '研报',
+    tags: ['白酒'],
+    sourcePath: '',
+    size: 0,
+  },
+  {
+    id: '2',
+    addedAt: 2,
+    symbol: '00700.HK',
+    name: '腾讯控股财报摘要',
+    content: '腾讯控股最新季度财报显示。',
+    category: '财报',
+    tags: ['互联网'],
+    sourcePath: '',
+    size: 0,
+  },
+  {
+    id: '3',
+    addedAt: 3,
+    symbol: 'ALL',
+    name: '新能源行业策略笔记',
+    content: '新能源行业处于政策与技术双轮驱动阶段。',
+    category: '策略笔记',
+    tags: ['新能源'],
+    sourcePath: '',
+    size: 0,
+  },
+]
+
+let docsStore: LocalDoc[] = []
+let importDelay = 0
+
+vi.mock('@/services/system/localDocService', async () => {
+  return {
+    createLocalDoc: vi.fn(async (doc: Omit<LocalDoc, 'id' | 'addedAt'>) => {
+      if (importDelay > 0) {
+        await new Promise((resolve) => setTimeout(resolve, importDelay))
+      }
+      const newDoc: LocalDoc = { ...doc, id: `${docsStore.length + 1}`, addedAt: Date.now() }
+      docsStore = [...docsStore, newDoc]
+      return { success: true, data: newDoc }
+    }),
+    listLocalDocs: vi.fn(async () => {
+      return { success: true, data: docsStore }
+    }),
+    searchLocalDocs: vi.fn(async (keyword: string) => {
+      const results = docsStore.filter(
+        (d) =>
+          d.name.includes(keyword) ||
+          d.symbol.includes(keyword) ||
+          d.tags.some((t) => t.includes(keyword)),
+      )
+      return { success: true, data: results }
+    }),
+    scanFolder: vi.fn(async () => null),
+  }
+})
+
 describe('LocalKnowledgePage', () => {
-  beforeEach(async () => {
-    await db.init()
-    await db.reset()
+  beforeEach(() => {
+    docsStore = []
+    importDelay = 0
   })
 
   it('renders tabs', () => {
@@ -47,53 +111,7 @@ describe('LocalKnowledgePage', () => {
   })
 
   it('search tab finds docs by keyword', async () => {
-    vi.spyOn(localDocService, 'createLocalDoc').mockResolvedValue({
-      success: true,
-      data: {} as never,
-    })
-    vi.spyOn(localDocService, 'listLocalDocs').mockResolvedValue({
-      success: true,
-      data: [
-        {
-          id: '1',
-          addedAt: 1,
-          symbol: '600519.SH',
-          name: '贵州茅台2024年研报',
-          content: '贵州茅台2024年业绩稳健增长。',
-          category: '研报',
-          tags: ['白酒'],
-          sourcePath: '',
-          size: 0,
-        },
-        {
-          id: '2',
-          addedAt: 2,
-          symbol: '00700.HK',
-          name: '腾讯控股财报摘要',
-          content: '腾讯控股最新季度财报显示。',
-          category: '财报',
-          tags: ['互联网'],
-          sourcePath: '',
-          size: 0,
-        },
-      ],
-    })
-    vi.spyOn(localDocService, 'searchLocalDocs').mockResolvedValue({
-      success: true,
-      data: [
-        {
-          id: '1',
-          addedAt: 1,
-          symbol: '600519.SH',
-          name: '贵州茅台2024年研报',
-          content: '贵州茅台2024年业绩稳健增长。',
-          category: '研报',
-          tags: ['白酒'],
-          sourcePath: '',
-          size: 0,
-        },
-      ],
-    })
+    docsStore = sampleDocs
 
     render(
       <MemoryRouter>
@@ -101,7 +119,6 @@ describe('LocalKnowledgePage', () => {
       </MemoryRouter>,
     )
 
-    await userEvent.click(screen.getByRole('button', { name: '导入示例数据' }))
     await screen.findByText('贵州茅台2024年研报')
 
     await userEvent.click(screen.getByRole('tab', { name: '搜索' }))
@@ -115,48 +132,7 @@ describe('LocalKnowledgePage', () => {
   })
 
   it('stats tab shows counts', async () => {
-    vi.spyOn(localDocService, 'createLocalDoc').mockResolvedValue({
-      success: true,
-      data: {} as never,
-    })
-    vi.spyOn(localDocService, 'listLocalDocs').mockResolvedValue({
-      success: true,
-      data: [
-        {
-          id: '1',
-          addedAt: 1,
-          symbol: '600519.SH',
-          name: '贵州茅台2024年研报',
-          content: '',
-          category: '研报',
-          tags: [],
-          sourcePath: '',
-          size: 0,
-        },
-        {
-          id: '2',
-          addedAt: 2,
-          symbol: '00700.HK',
-          name: '腾讯控股财报摘要',
-          content: '',
-          category: '财报',
-          tags: [],
-          sourcePath: '',
-          size: 0,
-        },
-        {
-          id: '3',
-          addedAt: 3,
-          symbol: 'ALL',
-          name: '新能源行业策略笔记',
-          content: '',
-          category: '策略笔记',
-          tags: [],
-          sourcePath: '',
-          size: 0,
-        },
-      ],
-    })
+    docsStore = sampleDocs
 
     render(
       <MemoryRouter>
@@ -164,7 +140,6 @@ describe('LocalKnowledgePage', () => {
       </MemoryRouter>,
     )
 
-    await userEvent.click(screen.getByRole('button', { name: '导入示例数据' }))
     await screen.findByText('贵州茅台2024年研报')
 
     await userEvent.click(screen.getByRole('tab', { name: '统计' }))
@@ -178,9 +153,7 @@ describe('LocalKnowledgePage', () => {
   })
 
   it('disables import and search buttons while importing', async () => {
-    vi.spyOn(localDocService, 'createLocalDoc').mockImplementation(
-      () => new Promise((resolve) => setTimeout(() => resolve({ success: true, data: {} as never }), 100)),
-    )
+    importDelay = 100
 
     render(
       <MemoryRouter>
@@ -200,7 +173,8 @@ describe('LocalKnowledgePage', () => {
   it('shows error toast when import fails', async () => {
     const toast = vi.fn()
     vi.mocked(useToast).mockReturnValue({ toast, toasts: [], dismiss: vi.fn() })
-    vi.spyOn(localDocService, 'createLocalDoc').mockResolvedValue({
+    const { createLocalDoc } = await import('@/services/system/localDocService')
+    vi.mocked(createLocalDoc).mockResolvedValue({
       success: false,
       error: '写入失败',
     })
@@ -223,7 +197,8 @@ describe('LocalKnowledgePage', () => {
   it('shows error toast when search fails', async () => {
     const toast = vi.fn()
     vi.mocked(useToast).mockReturnValue({ toast, toasts: [], dismiss: vi.fn() })
-    vi.spyOn(localDocService, 'searchLocalDocs').mockResolvedValue({
+    const { searchLocalDocs } = await import('@/services/system/localDocService')
+    vi.mocked(searchLocalDocs).mockResolvedValue({
       success: false,
       error: '索引不可用',
     })

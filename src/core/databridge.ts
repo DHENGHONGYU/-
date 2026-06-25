@@ -8,6 +8,7 @@ import type {
   NewsArticle,
   NewsStockMap,
   Order,
+  ResearchLog,
   RotationSectorScore,
   ScoreDocVersion,
   SectorScoreRecord,
@@ -40,6 +41,7 @@ function inferStore(action: string): StoreName {
   if (action.includes('LOCAL_DOCS')) return STORE_NAME.localDocs
   if (action.includes('NEWS')) return STORE_NAME.news
   if (action.includes('SENTIMENT_CACHE')) return STORE_NAME.sentimentCache
+  if (action.includes('RESEARCH_LOG')) return STORE_NAME.researchLogs
   if (action.includes('SCORE')) return STORE_NAME.v6Scores
   if (action.includes('ORDER')) return STORE_NAME.orders
   if (action.includes('WATCHLIST')) return STORE_NAME.watchlists
@@ -272,6 +274,12 @@ export class DataBridge {
           const cache = payload as SentimentCache
           logger.debug(`[DataBridge] DB saveSentimentCache: contentHash="${cache.contentHash}"`)
           await db.put(store, cache)
+          break
+        }
+        case ENVELOPE_ACTION.saveResearchLog: {
+          const log = payload as ResearchLog
+          logger.debug(`[DataBridge] DB saveResearchLog: action="${log.action}"`)
+          await db.put(store, log)
           break
         }
         case ENVELOPE_ACTION.insertOrder: {

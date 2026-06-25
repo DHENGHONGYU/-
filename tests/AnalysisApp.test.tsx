@@ -28,7 +28,7 @@ const mockScore: V6Score = {
   dataVersion: 1,
 }
 
-describe('AnalysisApp', () => {
+describe.sequential('AnalysisApp', () => {
   beforeEach(() => {
     vi.spyOn(analysisService, 'listStocks').mockResolvedValue({
       success: true,

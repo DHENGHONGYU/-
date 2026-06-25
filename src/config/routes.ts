@@ -172,6 +172,12 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     description: '智能资讯',
   },
   {
+    path: '/analysis/news-v6',
+    component: React.lazy(() => import('@/pages/news-v6/NewsPage')),
+    category: 'analysis',
+    description: '智能资讯 (V6 风格迁移版)',
+  },
+  {
     path: '/trading/strategy-snapshots',
     component: React.lazy(() => import('@/pages/trading/StrategySnapshotPage')),
     category: 'trading',
@@ -182,6 +188,14 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     component: React.lazy(() => import('@/pages/input/LocalKnowledgePage')),
     category: 'input',
     description: '本地知识库',
+  },
+
+  // Mock 测试页
+  {
+    path: '/mock-test',
+    component: React.lazy(() => import('@/pages/MockTestPage')),
+    category: 'other',
+    description: 'V9 模块 Mock 验证页（Slider/Sheet/Toggle/Engine）',
   },
 ]
 

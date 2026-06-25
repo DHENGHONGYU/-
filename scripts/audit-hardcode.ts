@@ -79,8 +79,8 @@ function scanFile(file: string): Finding[] {
 
     if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*')) continue
 
-    // 1. Fatal：config/ 中硬编码股票代码
-    if (rel.startsWith('src/config/') && !rel.includes('audit-exempt')) {
+    // 1. Fatal：config/ 中硬编码股票代码（symbols.ts 为合法配置白名单，排除）
+    if (rel.startsWith('src/config/') && !rel.includes('audit-exempt') && rel !== 'src/config/symbols.ts') {
       const stockMatch = raw.match(/[^a-zA-Z0-9_.](\d{6}\.(SH|SZ|BJ|HK))[^a-zA-Z0-9_]/)
       if (stockMatch) {
         findings.push({

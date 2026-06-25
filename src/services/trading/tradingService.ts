@@ -158,11 +158,15 @@ export async function adviseForStock(stock: Stock): Promise<DataLayerResult<Trad
     return { success: false, error: sizingResult.error ?? '仓位计算失败' }
   }
   const sizing = sizingResult.data
+  const price = stock.price
+  if (price === undefined || price <= 0) {
+    return { success: false, error: '股票价格无效' }
+  }
   const risk = await checkOrderRisk({
     symbol: stock.symbol,
     direction: signal.direction,
     quantity: sizing.targetShares,
-    price: stock.price ?? 0,
+    price,
     portfolioValue: getDefaultTradingConfig().risk.portfolioValue,
   })
 
@@ -265,7 +269,7 @@ export async function createBuyOrder(
     symbol: stock.symbol,
     direction: 'buy',
     quantity,
-    price: stock.price ?? 0,
+    price: stock.price,
   })
 }
 
@@ -287,6 +291,6 @@ export async function createSellOrder(
     symbol: stock.symbol,
     direction: 'sell',
     quantity,
-    price: stock.price ?? 0,
+    price: stock.price,
   })
 }

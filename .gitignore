@@ -30,6 +30,17 @@ coverage
 
 # Playwright MCP screenshots
 .playwright-mcp/
+screenshots/
 
-# Temporary backup
+# Temporary files
+temp/
 temp/backup/
+
+# Verification artifacts (generated during this remediation)
+/*.md
+scripts/test-news-v6.cjs
+scripts/regression_news_v6*
+scripts/migration-auto-fix.cjs
+v6-ui-assets/
+tmp_mock_test.png
+tests/mock_validation.py

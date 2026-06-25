@@ -1,4 +1,7 @@
-import { db, generateId } from '@/data/db'
+import { ENVELOPE_ACTION, ENVELOPE_TARGET } from '@/config/dbConfig'
+import { EnvelopeFactory, type StandardEnvelope } from '@/core/envelope'
+import { DataBridge } from '@/core/databridge'
+import { generateId } from '@/data/db'
 import { getLogger } from '@/lib/logger'
 import type { V6ExportShape } from './migrationTypes'
 
@@ -39,8 +42,15 @@ export async function writeMigrationAuditLog(params: {
   failed: number
 }): Promise<void> {
   const { traceId, store, total, success, skipped, failed } = params
-  try {
-    await db.put('research_logs', {
+  const dataBridge = new DataBridge()
+  const envelope: StandardEnvelope = EnvelopeFactory.create(
+    {
+      source: 'system',
+      target: ENVELOPE_TARGET.db,
+      action: ENVELOPE_ACTION.saveResearchLog,
+      traceId,
+    },
+    {
       id: generateId(),
       traceId,
       timestamp: Date.now(),
@@ -49,7 +59,10 @@ export async function writeMigrationAuditLog(params: {
       targetType: store,
       targetCode: store,
       payload: JSON.stringify({ total, success, skipped, failed }),
-    })
+    },
+  )
+  try {
+    await dataBridge.forward(envelope)
   } catch (err) {
     logger.warn('迁移审计日志写入失败', { store, error: err instanceof Error ? err.message : String(err) })
   }
