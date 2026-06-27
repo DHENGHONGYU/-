@@ -372,9 +372,9 @@ L2    ──→ db.ts（唯一原生 IndexedDB 操作）
 ## 3.7 数据 Schema
 
 数据库名：`V6ProDB`  
-当前版本：`6`（V9 新库，不与旧项目冲突）
+当前版本：`14`（V9 新库，不与旧项目冲突）
 
-> 注意：早期文档写为版本 `1`/`3`，实际代码已演进至 `6`。v3→v4 新增 `daily_quotes` 与 `signals` Store；v4→v5 为 `stocks` 新增 `group` 字段与 by-group 索引；v5→v6 新增 `rotation_scores`、`sector_scores`、`score_docs`、`strategy_snapshots`、`local_docs`、`news`、`news_stock_map`、`sentiment_cache` Store，支撑 V6 Pro 迁移。
+> 注意：早期文档写为版本 `1`/`3`，实际代码已演进至 `14`。v3→v4 新增 `daily_quotes` 与 `signals` Store；v4→v5 为 `stocks` 新增 `group` 字段与 by-group 索引；v5→v6 新增 `rotation_scores`、`sector_scores`、`score_docs`、`strategy_snapshots`、`local_docs`、`news`、`news_stock_map`、`sentiment_cache` Store，支撑 V6 Pro 迁移；v6→v13 为 V9 架构统一与资讯收藏功能演进；v13→v14 新增 `hot_sector_scores`、`value_pit_scores` Store，支撑双策略体系。
 
 ### Store
 
@@ -397,6 +397,8 @@ L2    ──→ db.ts（唯一原生 IndexedDB 操作）
 | `news` | `id` | 资讯文章 |
 | `news_stock_map` | `id` | 股票-资讯关联 |
 | `sentiment_cache` | `id` | 情感分析缓存 |
+| `hot_sector_scores` | `symbol` | 热门板块策略评分 |
+| `value_pit_scores` | `symbol` | 价值洼地策略评分 |
 
 ### 核心字段
 
@@ -472,6 +474,9 @@ candidate → screened → deepDive → watching → archived
 | `ScoreDocVersion` | 评分文档版本 | `docId`（string）, `symbol`（string）, `stockName`（string）, `version`（number）, `scoreDate`（string）, `composite`（number）, `l3v`（number）, `layers`（Record\<string, V6LayerScore\>）, `recommendation`（object）, `targetPrice`（object）, `keyRisks`（string[]）, `keyCatalysts`（string[]）, `reportMd`（string）, `modelUsed`（string）, `market`（string）, `changeFromPrev`（object）, `createdAt`（string） |
 | `StrategyGroupSnapshot` | 策略分组快照 | `count`（number）, `avgComposite`（number）, `maxComposite`（number）, `symbols`（string[]）, `items`（Array） |
 | `StrategySnapshot` | 策略快照 | `id`（string）, `version`（number）, `timestamp`（number）, `date`（string）, `stockCount`（number）, `scoreCount`（number）, `rotationCount`（number）, `core`（StrategyGroupSnapshot）, `hot`（StrategyGroupSnapshot）, `value`（StrategyGroupSnapshot）, `changeFromPrev`（object）, `trigger`（string） |
+| `HotSectorScore` | 热门板块策略评分 | `symbol`（string）, `score`（number 0-5）, `dimensions`（{ momentum, sentiment, technical, valuation, composite }）, `triggerAction`（'immediate' \| 'probe' \| 'ignore'）, `calculatedAt`（number）, `dataVersion`（number） |
+| `ValuePitScore` | 价值洼地策略评分 | `symbol`（string）, `score`（number 0-5）, `dimensions`（{ catalyst, valuation, chip, rotation, liquidity }）, `rotationSignal`（boolean）, `triggerAction`（'immediate' \| 'probe' \| 'wait' \| 'ignore'）, `calculatedAt`（number）, `dataVersion`（number） |
+| `DualStrategyResult` | 双策略编排结果 | `hotSectorScores`（HotSectorScore[]）, `valuePitScores`（ValuePitScore[]）, `signals`（TradingSignal[]）, `watchlistCandidates`（{ symbol, reason }[]）, `summary`（object） |
 | `LocalDoc` | 本地知识库文档 | `id`（string）, `symbol`（string）, `name`（string）, `content`（string）, `category`（'研报' \| '财报' \| '行业分析' \| '新闻' \| '策略笔记' \| '其他'）, `tags`（string[]）, `sourcePath`（string）, `size`（number）, `addedAt`（number） |
 | `NewsArticle` | 外部财经资讯 | `id`（string）, `title`（string）, `content`（string）, `url`（string）, `source`（string）, `category`（string）, `publishTime`（string）, `fetchTime`（string）, `sentiment`（'positive' \| 'negative' \| 'neutral'）, `sentimentConfidence`（number）, `relatedStocks`（string[]）, `keywords`（string[]）, `hash`（string） |
 | `NewsStockMap` | 股票-资讯关联 | `symbol`（string）, `newsId`（string）, `relevanceScore`（number）, `isTitleMatch`（boolean）, `isContentMatch`（boolean）, `industryMatch`（boolean） |
@@ -653,6 +658,7 @@ V10 的 `StateBoard` 要求跨模块共享状态必须通过统一字段契约�
 | **D17** | **`rotationScoreService.ts` 已实现五因子十六指标模型，上层 `SectorAnalysisPage` 待充分接入** | `src/services/analysis/rotationScoreService.ts` | 板块轮动评分已可计算，上层展示与调用待完善 | Phase 2 在 `SectorAnalysisPage` 接入轮动评分 |
 | **D18** | **缺少操作反馈闭环** | `src/components/ui/Toast.tsx` | 仅基础 Toast，缺少操作状态实时更新、数据质量反馈、评分理由 | Phase 2 完善反馈机制 |
 | **D19** | **`ErrorBoundary.tsx` 已存在并被 `App.tsx` 使用，Widget 级隔离待专项接入** | `src/components/ErrorBoundary.tsx` | 全局错误边界已落地，Widget 级包裹尚未专项接入 | Phase 2 在 Widget 渲染管线中接入 ErrorBoundary |
+| **D20** | **缺少热门板块与价值洼地双策略体系** | `src/services/trading/`、`src/cockpit/widgets/` | 策略引擎仅有主题/价值/热门动量三分类，缺少用户规格中的 HotSectorScore / ValuePitScore 双评分输出与轮动信号检测 | Phase 2 新增独立 Store、Analyzer、Detector、Widget；详见 `docs/implementation/adr/2026-06-27-dual-strategy-system.md` |
 
 ---
 

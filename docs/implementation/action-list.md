@@ -1,94 +1,120 @@
 ---
 title: V9 模块完成度逆向校验 — 修复行动清单
-version: v1.2.0
+version: v1.0.0
 last_updated: 2026-06-27
 maintainer: Quality Auditor
 status: active
-change_log:
-  - date: 2026-06-27
-    author: Quality Auditor
-    desc: 全部 6 项 P2 任务已完成（P2-8: 驾驶舱 LLM SSE 流式接口替换）
-  - date: 2026-06-27
-    author: Quality Auditor
-    desc: 3 项 P1 + 2 项 P2 已修复并应用到代码；更新修复状态
-  - date: 2026-06-27
-    author: Quality Auditor
-    desc: 阶段四：汇总批次 1（5 模块）剖面图，生成修复行动清单
 ---
 
 # V9 模块完成度逆向校验 — 修复行动清单
 
-> 审计范围：批次 1（5 模块）— 首页 / 驾驶舱 / 新闻资讯V6 / 交易持仓 / 录入看板  
-> 发现总数：**11 项**（P0: 0, P1: 3, P2: 8）  
-> 修复进度：**11 项全部修复**（P1: 3/3, P2: 8/8），**0 项跟踪中**  
-> 综合健康度：🟢 5 健康（全部 🟢）
+> **审计范围**：批次 A-E（28 个模块）  
+> **问题总数**：30 个（0 P0 + 1 P1 + 29 P2）  
+> **已修复**：11 个（批次 A）  
+> **待修复**：19 个（1 P1 + 18 P2）
 
 ---
 
-## 一、P0 — 待修复（含 ❌ 层，阻断性问题）
+## 一、P0 级问题（立即修复）
 
-| 优先级 | 模块名称 | 问题层 | 问题描述 | 修复建议 | 预估工时 |
-|:---|:---|:---|:---|:---|:---|
-| — | — | — | **本次审计未发现 P0 级阻断性问题** | — | — |
-
----
-
-## 二、P1 — 需补强（含 🟡 层，功能不完整）
-
-| 优先级 | 模块名称 | 问题层 | 问题描述 | 修复建议 | 预估工时 |
-|:---|:---|:---|:---|:---|:---|
-| **P1** | 新闻资讯 V6 | L2 状态 | `handleFilterChange` 仅打印日志，筛选逻辑未执行。`NewsPage.tsx` L91-93 收到 `NewsFilter` 后未过滤 `articles` 列表 | 在 `NewsPage.tsx` 中增加 `useMemo` 过滤逻辑：按 `filter.category`/`filter.sentiment`/`filter.keyword` 筛选 `articles`，将过滤结果传给 `NewsFeed` | 1h |
-| **P1** | 新闻资讯 V6 | L2 状态 | `handleBookmark` 收藏功能未实现持久化。`NewsPage.tsx` L101-103 仅 `logger.info` 打印，未调用 `dataLayer` 或 `localStorage` 存储 | 方案 A：调用 `dataLayer.news.update()` 更新 `bookmarked` 字段；方案 B：独立 `newsBookmarkStore` 管理收藏状态。需同步更新 UI 收藏图标状态 | 2h |
-| **P1** | 新闻资讯 V6 | L2 状态 | `loadMore` 硬编码 `setHasMore(false)`，真实分页未实现。`NewsPage.tsx` L74 直接终止分页 | 扩展 `listNews` 支持 `offset`/`cursor` 参数，`loadMore` 中追加数据到 `articles` 列表尾部，`hasMore` 根据返回 `total` 计算 | 2h |
-
----
-
-## 三、P2 — 可交付（全部 ✅ 层，仅需优化）
-
-| 优先级 | 模块名称 | 问题层 | 问题描述 | 修复建议 | 预估工时 |
-|:---|:---|:---|:---|:---|:---|
-| P2 | 新闻资讯 V6 | L2 状态 | 无独立 Pinia/Zustand Store，状态完全在组件内管理，`articles`/`loading`/`selectedArticle` 无法跨组件共享 | 新建 `src/store/newsStore.ts`（Pinia），迁移 `articles`/`loading`/`selectedArticle`/`error` 状态，暴露 `loadNews`/`filterNews`/`bookmarkArticle` actions | 4h |
-| P2 | 新闻资讯 V6 | L3 数据 | 无 DataBridge 端点注册，数据流通过 `newsService` 直连 `dataLayer`，不可追溯 | 在 `newsService` 层增加 `DataBridge.forward()` 调用，注册 `news:article:loaded`/`news:article:bookmarked` 等事件通道 | 1h |
-| P2 | 驾驶舱 | L4 逻辑 | `handleLayoutChange` 为空函数。`CockpitShell.tsx` L104 布局变更后未持久化，刷新后丢失用户自定义布局 | 在 `handleLayoutChange` 中调用 `localStorage.setItem('cockpit-layout', JSON.stringify(layout))`，初始化时从 `localStorage` 读取恢复 | 0.5h |
-| P2 | 驾驶舱 | L4 逻辑 | `sendChatMessage` 生产环境 REST 路径标记为 TODO。`MarketDataProvider.tsx` L151 注释"生产环境替换为 SSE 流式接口" | 补充真实 LLM 推理接口调用（SSE 流式），当前 Mock 环境可正常运行，生产环境需替换 | 4h |
-| P2 | 交易持仓 | L2 状态 | 无独立 Pinia/Zustand Store，`useReducer` 状态无法跨组件共享（如与 TradingApp 的 CoreResourcePanel 共享持仓数据） | 新建 `src/store/holdingsStore.ts`（Pinia），迁移 `data`/`filter`/`pagination` 状态，暴露 `fetchHoldings`/`executeTrade`/`exportCSV` actions | 4h |
-| P2 | 交易持仓 | L3 数据 | 无 DataBridge 端点注册，数据流通过 `fetch` 直连 API，未纳入 DataBridge 体系 | 在 `holdingsService` 层增加 `DataBridge.forward()` 调用，注册 `trade:holding:loaded`/`trade:action:executed` 等事件通道 | 1h |
-| P2 | 录入看板 | L5 集成 | `InputApp.tsx` 子路由分发使用 `if/else` 链（L13-27），新增子面板需修改 `InputApp` 源码 | 替换为 `Routes`/`Route` 组件 + `Outlet` 嵌套路由，新增子面板仅需在 `routes.ts` 注册，无需修改 `InputApp` | 2h |
-| P2 | 录入看板 | L5 集成 | `InputPrototype` 临时原型页路由 `/input/prototype` 仍注册为正式路径 | 移除 `routes.ts` L77-81 注册，或将 `InputPrototype` 移入 `src/apps/input/__prototype__/` 并通过环境变量 `VITE_ENABLE_PROTOTYPE` 控制可见性 | 0.5h |
-
----
-
-## 四、工时汇总
-
-| 优先级 | 总数 | 已修复 | 跟踪中 | 剩余工时 |
+| 编号 | 模块 | 问题描述 | 文件路径 | 状态 |
 |:---|:---|:---|:---|:---|
-| P0 | 0 | 0 | 0 | 0h |
-| P1 | 3 | **3** | 0 | **0h** |
-| P2 | 8 | **8** | 0 | **0h** |
-| **合计** | **11** | **11** | **0** | **0h** |
-
----
-## 五、修复状态
-
-```
-✅ 已完成 (11 项，全部完成)
-  ├── P1-1: 新闻筛选逻辑 — NewsPage.tsx 新增 activeFilter + filteredArticles useMemo
-  ├── P1-2: 新闻收藏持久化 — NewsPage.tsx 新增 bookmarkedIds + localStorage
-  ├── P1-3: 新闻分页加载 — NewsPage.tsx 新增 currentOffset + loadData append 模式
-  ├── P2-1: 新闻 Store 抽离 — 新建 newsStore.ts (Zustand)
-  ├── P2-2: 驾驶舱布局持久化 — CockpitShell.tsx 新增 loadLayout/saveLayout
-  ├── P2-3: 新闻 DataBridge 集成 — newsService.ts 新增 forward 调用
-  ├── P2-4: 持仓 Store 抽离 — 新建 holdingsStore.ts (Zustand)
-  ├── P2-5: 持仓 DataBridge 集成 — holdingsService.ts 新增 forward 调用
-  ├── P2-6: 输入舱路由重构 — InputApp.tsx 使用 Routes/Route 替代 if/else
-  ├── P2-7: 临时原型页清理 — routes.ts 移除 /input/prototype
-  └── P2-8: 驾驶舱 LLM 接口替换 — streamingChat SSE 流式接口
-```
+| — | — | **无 P0 级问题** | — | — |
 
 ---
 
-## 六、变更日志
+## 二、P1 级问题（高优先级，尽快修复）
 
-| 日期 | 版本 | 变更内容 | 变更人 |
+| 编号 | 模块 | 问题描述 | 文件路径 | 状态 |
+|:---|:---|:---|:---|:---|
+| C6-P1-001 | 策略回测 | 仅占位页，核心功能完全未实现（回测引擎、参数配置、结果图表、绩效指标） | `src/pages/analysis/BacktestPage.tsx` | 📋 待修复 |
+
+**修复建议**：
+1. 创建策略回测核心引擎（`backtestEngine.ts`）
+2. 实现参数配置界面（策略选择、时间范围、初始资金、手续费等）
+3. 实现回测结果图表（收益曲线、最大回撤、胜率等）
+4. 实现绩效指标计算（Sharpe 比率、最大回撤、胜率、盈亏比等）
+
+---
+
+## 三、P2 级问题（中优先级，规划修复）
+
+### 3.1 导航路径问题
+
+| 编号 | 模块 | 问题描述 | 文件路径 | 修复成本 |
+|:---|:---|:---|:---|:---|
+| B2-P2-001 | 录入看板 | 快捷操作卡片中保留 `/input/prototype` 链接，该路由已删除 | `src/apps/input/InputDashboard.tsx:248` | 5 分钟 |
+| D1-P2-001 | 交易舱 Hub | "交易信号"和"模拟持仓"链接均指向 `/trading`，导航路径不明确 | `src/pages/trading/TradingHubPage.tsx:36/42` | 5 分钟 |
+| E2-P2-003 | 总控舱 Hub | "系统监控"和"配置管理"链接均指向 `/command`，导航路径不明确 | `src/pages/command/CommandHubPage.tsx:35/41` | 5 分钟 |
+
+### 3.2 缺失 Zustand Store（核心问题）
+
+| 编号 | 模块 | 当前状态管理 | 建议 Store | 文件路径 | 修复成本 |
+|:---|:---|:---|:---|:---|:---|
+| B1-P2-002 | 输入舱 Hub | useState | `inputHubStore.ts` | `src/pages/input/InputHubPage.tsx` | 30 分钟 |
+| B2-P2-003 | 录入看板 | usePoolData hook | `poolStore.ts` | `src/apps/input/InputDashboard.tsx` | 2 小时 |
+| B3-P2-004 | 批量导入 | usePoolData hook | `poolStore.ts` | `src/apps/input/BulkImportPanel.tsx` | 1 小时 |
+| B4-P2-005 | 热门板块 | usePoolData hook | `poolStore.ts` | `src/apps/input/HotSectorPanel.tsx` | 1 小时 |
+| B5-P2-006 | 本地知识库 | useState | `localDocStore.ts` | `src/pages/input/LocalKnowledgePage.tsx` | 1 小时 |
+| B6-P2-007 | 采集测试 | useState | `dataTestStore.ts` | `src/apps/input/DataTestPanel.tsx` | 30 分钟 |
+| C1-P2-002 | 分析舱 Hub | useState | `analysisHubStore.ts` | `src/pages/analysis/AnalysisHubPage.tsx` | 30 分钟 |
+| C2-P2-003 | V4 行业评分 | useIndustryScorePage hook | `industryScoreStore.ts` | `src/hooks/cabin/useIndustryScorePage.ts` | 2 小时 |
+| C3-P2-004 | V6 个股评分 | useState | `stockScoreStore.ts` | `src/pages/analysis/StockAnalysisPage.tsx` | 2 小时 |
+| C4-P2-005 | V6 智能评分 | useIntelligentScorePage hook | `intelligentScoreStore.ts` | `src/hooks/cabin/useIntelligentScorePage.ts` | 2 小时 |
+| C5-P2-006 | 行业分析 | useState | `sectorStore.ts` | `src/pages/analysis/SectorAnalysisPage.tsx` | 2 小时 |
+| C7-P2-007 | 评分文档 | useState | `scoreDocStore.ts` | `src/pages/analysis/ScoreDocPage.tsx` | 1 小时 |
+| C8-P2-008 | 智能资讯 | useState | `newsStore.ts`（已有，需迁移） | `src/pages/analysis/NewsPage.tsx` | 1 小时 |
+| D1-P2-002 | 交易舱 Hub | useState | `tradingHubStore.ts` | `src/pages/trading/TradingHubPage.tsx` | 30 分钟 |
+| D2-P2-003 | 交易信号 | 9 个 useState | `tradingStore.ts` | `src/apps/trading/TradingApp.tsx` | 2 小时 |
+| D3-P2-004 | 策略快照 | 10 个 useState | `strategySnapshotStore.ts` | `src/pages/trading/StrategySnapshotPage.tsx` | 2 小时 |
+| E1-P2-001 | 输出舱 | useState | `outputStore.ts` | `src/apps/output/OutputApp.tsx` | 1 小时 |
+| E3-P2-005 | 总控舱 | useState | `commandStore.ts` | `src/apps/command/CommandApp.tsx` | 1 小时 |
+
+### 3.3 功能缺失/规划中
+
+| 编号 | 模块 | 问题描述 | 文件路径 | 状态 |
+|:---|:---|:---|:---|:---|
+| E1-P2-002 | 输出舱 | 输出功能单一，缺少报告生成、PDF 导出等功能 | `src/apps/output/OutputApp.tsx` | 📋 规划中 |
+| E2-P2-004 | 总控舱 Hub | 4 个可扩展能力模块（AI体中心、风控网关、报告导出、信号质量复盘）标记为"数据层待建" | `src/pages/command/CommandHubPage.tsx:46-79` | 📋 规划中 |
+
+### 3.4 无需修复
+
+| 编号 | 模块 | 问题描述 | 文件路径 | 原因 |
+|:---|:---|:---|:---|:---|
+| E4-P2-006 | Mock 测试页 | 本地 Zustand Store 无法跨组件共享 | `src/pages/MockTestPage.tsx:16-26` | 测试页面，设计合理 |
+
+---
+
+## 四、修复工作量估算
+
+| 类别 | 问题数 | 总工作量 | 优先级 |
 |:---|:---|:---|:---|
-| 2026-06-27 | v1.0.0 | 阶段四：汇总 5 模块 11 项问题，生成修复行动清单 | Quality Auditor |
+| P1 级问题 | 1 | 5-10 天 | 🔴 紧急 |
+| 导航路径问题 | 3 | 15 分钟 | 🟢 低 |
+| 缺失 Zustand Store（核心） | 18 | 22.5 小时 | 🟡 中 |
+| 功能缺失（规划中） | 2 | 后续迭代 | 📋 规划 |
+| **总计** | **24** | **22.5 小时 + 5-10 天** | |
+
+---
+
+## 五、优先修复顺序建议
+
+1. **P1 策略回测**：核心功能缺失，影响用户体验（5-10 天）
+2. **导航路径问题**（3个）：简单快速修复，提升导航体验（15 分钟）
+3. **交易信号 Store**（D2-P2-003）：交易核心模块，状态管理分散（2 小时）
+4. **策略快照 Store**（D3-P2-004）：状态最复杂，10 个 useState（2 小时）
+5. **输入舱 Store**（B2-B4）：共享 usePoolData hook，可合并为一个 Store（4 小时）
+6. **分析舱 Store**（C2-C5）：评分类模块，结构相似（8 小时）
+7. **输出舱/总控舱 Store**（E1/E3）：功能相对简单（2 小时）
+
+---
+
+## 六、修复后预期效果
+
+| 指标 | 修复前 | 修复后 |
+|:---|:---|:---|
+| L2 状态层完成率 | 62% | 100% |
+| 健康模块数 | 27 | 28 |
+| 过时模块数 | 1 | 0 |
+| 跨组件状态共享 | 部分支持 | 全部支持 |
+| 导航清晰度 | 中 | 高 |

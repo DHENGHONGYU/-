@@ -290,6 +290,7 @@ interface StandardEnvelope {
 | 2.3.9 采集测试多维度健康度 | P1 | 🟡 | 待实施 |
 | 2.3.10 采集配置 UI | P2 | 🔴 | 待实施 |
 | 2.4 板块轮动与行业分析 | P1 | TBD | 待开始 |
+| 2.4.1 热门板块与价值洼地双策略体系 | P1 | 🟡 | ADR-009 已接受；类型/Store/Analyzer/Widget 实施中 |
 | 2.5 择时信号引擎 | P0 | ✅ | 已落地 |
 | 2.6 仓位管理器 | P0 | ✅ | 已落地 |
 | 2.7 风控引擎 | P0 | ✅ | 已落地 |
@@ -358,6 +359,7 @@ interface StandardEnvelope {
 | **D17** | **`rotationScoreService.ts` 已实现五因子十六指标模型，上层 `SectorAnalysisPage` 待充分接入** | 板块轮动评分已可计算，上层展示与调用待完善 | Phase 2 在 `SectorAnalysisPage` 接入轮动评分 |
 | **D18** | **缺少操作反馈闭环（规格已起草，代码待引入）** | `src/components/ui/Toast.tsx` 已提供基础组件；`docs/implementation/feedback-loop-spec.md` 已定义 FeedbackService 与 EventBus 集成 | Phase 2 完善反馈机制 |
 | **D19** | **`ErrorBoundary.tsx` 已存在并被 `App.tsx` 使用，Widget 级隔离待专项接入（规格已起草）** | 全局错误边界已落地；`docs/implementation/widget-error-handling.md` 已定义 Widget 级包裹与降级 UI | Phase 2 在 Widget 渲染管线中接入 ErrorBoundary |
+| **D20** | **缺少热门板块与价值洼地双策略体系** | 策略引擎仅有主题/价值/热门动量三分类，缺少用户规格中的 HotSectorScore / ValuePitScore 双评分输出与轮动信号检测 | Phase 2 新增独立 Store、Analyzer、Detector、Widget；详见 ADR-009 |
 
 ---
 
@@ -373,6 +375,7 @@ interface StandardEnvelope {
 | ADR-006 | 输入舱拆分为四子页面 | 已接受 | 2026-06-24 |
 | ADR-007 | 补齐筛选引擎、信号持久化与复盘引擎 | 已接受 | 2026-06-24 |
 | ADR-008 | 采用 v6-pro-cockpit "第四次工业革命稀缺核心资源" 交易策略 | 已接受 | 2026-06-24 |
+| ADR-009 | 引入热门板块与价值洼地双策略体系 | 已接受 | 2026-06-27 |
 
 #### 编号↔文件名对照表
 
@@ -386,6 +389,7 @@ interface StandardEnvelope {
 | ADR-006 | 2026-06-24-input-cabin-subpages.md |
 | ADR-007 | 2026-06-24-pool-screening-signal-persistence-review-engine.md |
 | ADR-008 | 2026-06-24-adopt-v6-core-resource-trading-strategy.md |
+| ADR-009 | 2026-06-27-dual-strategy-system.md |
 
 ---
 
@@ -411,6 +415,8 @@ interface StandardEnvelope {
 | 文档 | 内容 |
 |------|------|
 | `docs/implementation/v9-system-blueprint.md` | 本文档：整体架构蓝图 |
+| `docs/implementation/dual-strategy-dataflow-spec.md` | 用户输入的双策略/数据流规格 |
+| `docs/implementation/dual-strategy-gap-analysis.md` | 双策略规格与现有项目差异分析报告 |
 | `docs/implementation/architecture-version-comparison.md` | 架构文档版本比对 |
 | `docs/implementation/input-cabin-spec.md` | 输入舱业务规格与映射 |
 | `docs/implementation/data-interaction-protocols.md` | 数据交互协议 |
@@ -424,7 +430,7 @@ interface StandardEnvelope {
 | `docs/implementation/feedback-loop-spec.md` | 操作反馈闭环与 EventBus 集成 |
 | `docs/implementation/widget-error-handling.md` | Widget 错误边界与降级 UI |
 | `docs/implementation/pwa-offline-guide.md` | PWA Service Worker 与离线缓存 |
-| `docs/implementation/adr/ADR-001~008.md` | 架构决策记录 |
+| `docs/implementation/adr/ADR-001~009.md` | 架构决策记录 |
 | `CHANGELOG.md` | 版本变更日志 |
 
 ---

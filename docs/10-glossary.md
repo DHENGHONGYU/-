@@ -245,3 +245,16 @@ V9 采用**单表多状态**模型：所有标的统一存储在 `stocks` Store�
 | **诊断报告** | DiagnosticReport | 系统异常时的自动诊断分析报告，包含根因分析和修复建议 | AI Center |
 | **情感分析** | SentimentAnalysis | 基于规则引擎的新闻文本情感分类（正面/负面/中性），使用中文财经情感词典 | News |
 | **股票关联** | StockLinking | 将新闻资讯自动匹配到相关股票，支持代码精确匹配、名称模糊匹配、行业匹配 | News |
+
+## 10.10 2026-06-27 新增概念（双策略体系）
+
+| 术语 | 英文 | 定义 | 所属模块 |
+|------|------|------|---------|
+| **热门板块策略** | Hot Sector Strategy | 板块已在动时跟随趋势，持有期 3–15 天，-8% 硬性止损、+15% 卖 50% 的快进快出策略 | Trading |
+| **价值洼地策略** | Value Pit Strategy | 等板块开始轮动后再进入，持有期 6–12 个月，-15% 分步建仓、+20% 卖 30% 的等轮动策略 | Trading |
+| **热门板块评分** | HotSectorScore | 单只股票的热门策略五维评分（动量/情绪/技术/估值/综合），0–5 分，持久化于 `hot_sector_scores` Store | Trading |
+| **价值洼地评分** | ValuePitScore | 单只股票的价值策略五维评分（催化/估值/筹码/轮动/流动性），0–5 分，持久化于 `value_pit_scores` Store | Trading |
+| **轮动信号检测引擎** | Rotation Signal Detector | 对价值洼地候选检测成交量放大 + 资金净流入 + 技术金叉，决定立即建仓或加入观察池 | Trading |
+| **双策略编排引擎** | Dual Strategy Engine | 协调 HotSectorAnalyzer、ValuePitAnalyzer、RotationSignalDetector，输出 `DualStrategyResult` | Trading |
+| **热门板块 Widget** | HotSectorWidget | 驾驶舱中展示热门板块评分与相关标的的 Widget | Cockpit |
+| **价值洼地 Widget** | ValuePitWidget | 驾驶舱中展示价值洼地候选、五维评分与轮动信号状态的 Widget | Cockpit |

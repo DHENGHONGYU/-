@@ -77,6 +77,7 @@ change_log:
 | ADR-006 | 输入舱拆分为四子页面 | 已接受 | 2026-06-24 |
 | ADR-007 | 补齐筛选引擎、信号持久化与复盘引擎 | 已接受 | 2026-06-24 |
 | ADR-008 | 采用 v6-pro-cockpit "第四次工业革命稀缺核心资源" 交易策略 | 已接受 | 2026-06-24 |
+| ADR-009 | 引入热门板块与价值洼地双策略体系 | 已接受 | 2026-06-27 |
 
 [^1]: 表中「日期」为**架构决策接受日期**。Batch-2 审查中 8 个 ADR 均于 2026-06-24 被接受；ADR 文件名前缀 `YYYY-MM-DD` 为各自首次起草/讨论日期，可能与接受日期不同。
 
@@ -92,6 +93,7 @@ change_log:
 | ADR-006 | 2026-06-24-input-cabin-subpages.md |
 | ADR-007 | 2026-06-24-pool-screening-signal-persistence-review-engine.md |
 | ADR-008 | 2026-06-24-adopt-v6-core-resource-trading-strategy.md |
+| ADR-009 | 2026-06-27-dual-strategy-system.md |
 
 ---
 

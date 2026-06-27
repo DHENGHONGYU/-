@@ -316,6 +316,64 @@ runSectorRotation()
 
 ---
 
+### 2.5 双策略评分引擎（Dual Strategy Engine）
+
+#### 设计目标
+
+支持「热门板块策略」与「价值洼地策略」两条独立选股路径，输出结构化的 `HotSectorScore` / `ValuePitScore`，并配套轮动信号检测引擎决定价值洼地候选的建仓或观察池流转。
+
+#### 热门板块评分（HotSectorScore）
+
+| 维度 | 说明 | 数据来源 |
+|------|------|----------|
+| **动量 Momentum** | 价格趋势与相对强度 | `daily_quotes`（MA20/MA60、涨幅） |
+| **情绪 Sentiment** | 市场热度与资金流向 | 行业评分、新闻热度、资金净流入 |
+| **技术 Technical** | 技术指标状态 | RSI、MACD、成交量突破 |
+| **估值 Valuation** | 当前估值水平 | PE/PB 分位、PEG |
+| **综合 Composite** | 四维加权总分 | HotSectorAnalyzer 内部加权 |
+
+#### 价值洼地评分（ValuePitScore）
+
+| 维度 | 说明 | 数据来源 |
+|------|------|----------|
+| **催化 Catalyst** | 潜在催化剂与事件驱动 | 新闻/公告/研报关键词、行业政策 |
+| **估值 Valuation** | 低估值吸引力 | PE/PB 分位、DCF 安全边际 |
+| **筹码 Chip** | 股东结构集中度 | 换手率、机构持仓变化 |
+| **轮动 Rotation** | 板块轮动评分 | `rotationScoreService.ts` 五因子模型 |
+| **流动性 Liquidity** | 成交活跃度 | 近 20 日成交额/市值、换手率 |
+
+#### 轮动信号检测
+
+对 `ValuePitScore` 评分处于 3.0–4.0 区间的候选，检测以下三条件：
+
+1. **成交量放大**：近 5 日均量 / 近 20 日均量 ≥ 1.5；
+2. **资金净流入**：主力或北向连续 N 日净流入；
+3. **技术金叉**：MACD 金叉或价格站上 MA20/MA60。
+
+命中全部条件 → 生成 `buy_rotation` 交易信号；未命中 → 加入观察池候选。
+
+#### 关键文件
+
+| 文件 | 职责 |
+|------|------|
+| `src/services/trading/hotSectorAnalyzer.ts` | 热门板块策略五维评分 |
+| `src/services/trading/valuePitAnalyzer.ts` | 价值洼地策略五维评分 |
+| `src/services/trading/rotationSignalDetector.ts` | 价值洼地轮动信号检测 |
+| `src/services/trading/dualStrategyEngine.ts` | 编排上述服务，输出 `DualStrategyResult` |
+| `src/config/dualStrategyRules.ts` | 双策略阈值与轮动信号条件配置 |
+
+#### 当前状态
+
+| 状态 | 说明 |
+|------|------|
+| 🔴 双策略评分类型 | `HotSectorScore` / `ValuePitScore` 类型与 Store 待新增 |
+| 🔴 热门板块分析器 | `hotSectorAnalyzer.ts` 待实现 |
+| 🔴 价值洼地分析器 | `valuePitAnalyzer.ts` 待实现 |
+| 🔴 轮动信号检测 | `rotationSignalDetector.ts` 待实现 |
+| 🔴 驾驶舱 Widget | `HotSectorWidget` / `ValuePitWidget` 待实现 |
+
+---
+
 ## 3. 输入舱服务层
 
 输入舱本身属于 L4 应用层，但其核心逻辑已下沉到 L3 服务层：
