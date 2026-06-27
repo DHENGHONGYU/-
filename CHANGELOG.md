@@ -72,6 +72,34 @@
   - 新增 `docs/DATAFLOW_DATA_DEFINITION.md`：覆盖数据流引擎 `DataChannel`、`DataPacket`、`ChannelMeta`、API、事件、回退数据、重连策略、性能阈值。
   - 更新 `docs/05-engine-specs.md`：数据流引擎章节引用 `docs/DATAFLOW_DATA_DEFINITION.md`，版本号更新为 `v0.9.0-doc-sync-plan`。
 
+### Fixed
+
+- **质量审查修复批次（news-v6 / 全局 lint）**：
+  - 修复 `src/pages/trading/HoldingsPage.tsx` 9 处 `react-hooks/exhaustive-deps` warning，恢复 `npm run lint --max-warnings 0` 通过。
+  - 新增 `src/hooks/useDebounce.ts` 与 `tests/useDebounce.test.ts`，为搜索输入提供可取消的防抖能力。
+  - `NewsPage.tsx` / `NewsFeed.tsx` 接入 `useDebounce`，替换原有手写 setTimeout 防抖逻辑。
+  - `NewsPage.tsx` 模拟数据生成与筛选变更增加 try-catch 错误处理；`newsStore.ts` `toggleBookmark` 增加 DataBridge 转发异常捕获。
+  - 修复 `src/agents/index.ts` TS6133 未使用 `AgentTask` 类型导入。
+  - 新增 `tests/news-v6/NewsPage.test.tsx`（6 用例）与 `tests/news-v6/NewsFeed.test.tsx`（8 用例），覆盖加载、错误重试、详情弹窗、筛选、搜索防抖、收藏、加载更多。
+  - 新增 `src/constants/newsColorTokens.ts`，将 `NewsCard` / `CategoryBadge` / `SentimentBadge` 硬编码 Tailwind 颜色类收敛为语义化令牌。
+  - `scripts/audit-doc-sync.ts` 补充 `console.warn` 使用说明注释。
+
+### Quality Metrics
+
+- `tsc --noEmit`：通过
+- `eslint src/ --max-warnings 0`：通过
+- `npm run build`：通过
+- `npx vitest run`：63 文件 / 476 用例 通过
+- `audit:layers`：0 违规 / 1 警告（`SectorAnalysisPage.tsx` 过渡期 dataLayer 读取，非本次引入）
+- `audit:hardcode`：735（基线 749 ↓14）
+- `audit:deadcode`：0 / 0 / 16
+- `audit:docs`：0 未文档化文件
+
+### Notes
+
+- `newsStore.ts` 收藏状态当前仅持久化到 `localStorage`；是否同步到 IndexedDB 待产品决策。
+- 工作区存在未跟踪文件 `src/services/unifiedStockService.ts`、`src/services/feedbackService.ts`、`src/components/WidgetErrorBoundary.tsx`，非本次修改产生，未纳入本次提交。
+
 - **文档体系架构校对（v0.9.0-docs-review）**：
   - 新增 `docs/implementation/architecture-version-comparison.md`，记录架构文档从规划基线到校对版的全量差异。
   - 新增 `docs/implementation/input-cabin-spec.md`，补齐输入舱业务蓝图、数据协议、服务契约、UI 组件映射。

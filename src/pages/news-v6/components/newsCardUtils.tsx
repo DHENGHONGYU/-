@@ -1,5 +1,5 @@
 import { Badge } from '@/components/ui/Badge'
-import { newsColors } from '@/pages/news-v6/styles/newsColorTokens'
+import { newsColors } from '@/constants/newsColorTokens'
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
 
 /** 情感标签组件（V6 风格） */

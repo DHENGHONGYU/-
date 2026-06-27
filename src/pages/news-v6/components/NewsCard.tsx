@@ -17,7 +17,7 @@ import {
 import { Badge } from '@/components/ui/Badge'
 import type { V6NewsArticle } from '../types'
 import { SentimentBadge, CategoryBadge } from './newsCardUtils'
-import { newsColors } from '@/pages/news-v6/styles/newsColorTokens'
+import { newsColors } from '@/constants/newsColorTokens'
 import { formatRelativeTime, formatSource } from './newsCardFormatters'
 
 export interface NewsCardProps {

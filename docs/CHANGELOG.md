@@ -4,6 +4,47 @@
 
 ---
 
+## v1.2.0 (2026-06-27) — 架构审计修复与能力升级
+
+**审计范围**：V9 架构审计四项核心扫描（注册完整性/数据流一致性/错误处理/偏差清单）  
+**修复结果**：10 项待办任务（P1:3, P2:7）全部完成，4 项代码修复
+
+### 新增文件
+
+| 文件 | 模块 | 说明 |
+|------|------|------|
+| `src/agents/index.ts` | Agent | 统一入口，注册 5 个默认 Agent，健康监控初始化 |
+| `src/config/thresholds.ts` | Config | 统一阈值配置中心，整合 8 类阈值 |
+| `src/services/unifiedStockService.ts` | Service | 数据融合层，UnifiedStockView 统一视图 |
+| `src/services/feedbackService.ts` | Service | 操作反馈闭环，自动反馈包装器 |
+| `src/components/WidgetErrorBoundary.tsx` | Component | Widget 专用错误边界，重试机制 |
+| `src/constants/newsColorTokens.ts` | News | 新闻组件颜色令牌（从 pages/news-v6/styles 迁移） |
+| `docs/RELEASE_NOTES.md` | Docs | 版本发布说明文档 |
+
+### 修改文件
+
+| 文件 | 变更内容 |
+|------|---------|
+| `src/cockpit/CockpitShell.tsx` | Widget 引擎完整生命周期管理（mount/refresh/unmount） |
+| `src/services/scoring/v6ScoreService.ts` | 关闭 mock 降级，添加质量指标，扩展字段 |
+| `src/data/types.ts` | V6Score 添加 qualityWarning 字段 |
+| `src/pages/analysis/SectorAnalysisPage.tsx` | 接入轮动评分和行业评分数据展示 |
+| `src/pages/news-v6/components/NewsCard.tsx` | 修复 JSX 标签闭合错误 |
+| `src/pages/news-v6/components/newsCardUtils.tsx` | 修复类型索引错误 |
+| `tests/news-v6/NewsFeed.test.tsx` | 修复空值检查 |
+| `tests/news-v6/NewsPage.test.tsx` | 修复空值检查 |
+| `docs/implementation/feedback-loop-spec.md` | 反馈闭环规格文档更新 |
+| `scripts/audit-doc-sync.ts` | 审计脚本更新 |
+
+### 验证结果
+
+| 验证项 | 结果 |
+|--------|------|
+| `tsc --noEmit` | ✅ 0 错误 |
+| `git diff --stat` | 18 files, +1558/-75 |
+
+---
+
 ## v1.1.0 (2026-06-26) — 架构资产治理：文档与代码同步修正
 
 **治理范围**：全量差异扫描 + 架构文档修正 + 数据字典补全 + 一致性验证  
