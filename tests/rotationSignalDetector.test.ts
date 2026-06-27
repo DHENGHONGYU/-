@@ -2,7 +2,7 @@ import { describe, expect, it, beforeEach } from 'vitest'
 import { db } from '@/data/db'
 import { dataLayer } from '@/data/dataLayer'
 import { saveRotationScore } from '@/services/analysis/rotationScoreService'
-import { detectRotationSignals } from '@/services/trading/rotationSignalDetector'
+import { detectRotationSignals } from '@/services/scoring/rotationSignalDetector'
 import { getDefaultDualStrategyRuleConfig } from '@/config/dualStrategyRules'
 import type { DailyQuotes, Stock, ValuePitScore } from '@/data/types'
 
@@ -48,10 +48,11 @@ function buildDailyQuotes(symbol: string, overrides: Partial<DailyQuotes> = {}):
   }
 }
 
-function buildValuePitScore(symbol: string, triggerAction: ValuePitScore['triggerAction']): ValuePitScore {
+function buildValuePitScore(symbol: string, action: ValuePitScore['action']): ValuePitScore {
   return {
     symbol,
     score: 3.2,
+    name: '测试板块',
     dimensions: {
       catalyst: 3,
       valuation: 4,
@@ -61,7 +62,7 @@ function buildValuePitScore(symbol: string, triggerAction: ValuePitScore['trigge
       composite: 3.2,
     },
     rotationSignal: false,
-    triggerAction,
+    action,
     calculatedAt: Date.now(),
     dataVersion: 1,
   }

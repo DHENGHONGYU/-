@@ -1,4 +1,4 @@
-import { ENVELOPE_ACTION, STORE_NAME, type ModuleId, type StoreName } from '@/config/dbConfig'
+import { ENVELOPE_ACTION, STORE_NAME, type EnvelopeTarget, type ModuleId, type StoreName } from '@/config/dbConfig'
 import { db } from '@/data/db'
 import type {
   DailyQuotes,
@@ -22,6 +22,9 @@ import type {
 } from '@/data/types'
 import { eventBus } from '@/lib/eventBus'
 import { getLogger } from '@/lib/logger'
+import { analyze as analyzeHotSector, type HotSectorAnalyzerInput } from '@/services/scoring/hotSectorAnalyzer'
+import { detect as detectRotation, type RotationSignalInput } from '@/services/scoring/rotationSignalDetector'
+import { analyze as analyzeValuePit, type ValuePitAnalyzerInput } from '@/services/scoring/valuePitAnalyzer'
 import { aclEngine, inferOperation } from './acl'
 import { EnvelopeError, EnvelopeFactory, type StandardEnvelope } from './envelope'
 import { fallbackQueue, FallbackQueue } from './fallbackQueue'
@@ -29,6 +32,18 @@ import { fallbackQueue, FallbackQueue } from './fallbackQueue'
 const logger = getLogger()
 
 type EnvelopeCallback = (envelope: StandardEnvelope) => void
+
+/**
+ * 策略数据流订阅频道名称常量。
+ * 外部组件通过 `dataBridge.subscribe(STRATEGY_CHANNEL.hotSector, cb)` 订阅。
+ */
+export const STRATEGY_CHANNEL = {
+  hotSector: 'strategy:hotSector',
+  valuePit: 'strategy:valuePit',
+  rotationSignal: 'strategy:rotationSignal',
+} as const
+
+export type StrategyChannel = (typeof STRATEGY_CHANNEL)[keyof typeof STRATEGY_CHANNEL]
 
 function inferStore(action: string): StoreName {
   if (action.includes('NEWS_STOCK_MAP')) return STORE_NAME.newsStockMap
@@ -94,6 +109,16 @@ export class DataBridge {
     this.writeAuditLog(envelope, targetStore).catch((err) => {
       logger.warn('Audit log failed', { err })
     })
+
+    if (
+      meta.action === ENVELOPE_ACTION.strategyHotSectorRefresh ||
+      meta.action === ENVELOPE_ACTION.strategyValuePitRefresh ||
+      meta.action === ENVELOPE_ACTION.strategyRotationSignalDetect
+    ) {
+      logger.info(`[DataBridge] Routing to strategy engine: action="${meta.action}"`)
+      await this.routeToStrategy(envelope)
+      return
+    }
 
     if (
       meta.action === ENVELOPE_ACTION.resetAll ||
@@ -361,6 +386,217 @@ export class DataBridge {
       logger.info(`[DataBridge] routeToManager() completed: action="${meta.action}", duration=${duration}ms`)
     } catch (err) {
       logger.error(`[DataBridge] routeToManager() failed: action="${meta.action}"`, { error: err })
+      throw err
+    }
+  }
+
+  private async routeToStrategy(envelope: StandardEnvelope): Promise<void> {
+    const startTs = Date.now()
+    const { meta, payload } = envelope
+    logger.info(`[DataBridge] routeToStrategy() called: action="${meta.action}"`)
+
+    try {
+      switch (meta.action) {
+        case ENVELOPE_ACTION.strategyHotSectorRefresh: {
+          try {
+            // ===== 1. 输入校验 =====
+            const inputs = payload as HotSectorAnalyzerInput[]
+            if (!Array.isArray(inputs)) {
+              const err = new EnvelopeError('HotSector: payload 必须是数组')
+              logger.error(`[DataBridge] HotSector refresh: payload 校验失败`, { error: err })
+              throw err
+            }
+            logger.info(`[DataBridge] HotSector refresh: 输入数量=${inputs.length}, 板块列表=[${inputs.map((i) => i.symbol).join(', ')}]`)
+
+            // ===== 2. 逐板块评分 =====
+            const scores = inputs.map((input) => {
+              const score = analyzeHotSector(input)
+              logger.info(
+                `[DataBridge] HotSector: ${input.symbol} ` +
+                `momentum=${score.dimensions.momentum.toFixed(2)} ` +
+                `sentiment=${score.dimensions.sentiment.toFixed(2)} ` +
+                `technical=${score.dimensions.technical.toFixed(2)} ` +
+                `valuation=${score.dimensions.valuation.toFixed(2)} ` +
+                `composite=${score.dimensions.composite.toFixed(2)} ` +
+                `→ score=${score.score.toFixed(2)} action=${score.action}`,
+              )
+              return score
+            })
+
+            // ===== 3. 评分汇总 =====
+            const avgScore = scores.reduce((s, c) => s + c.score, 0) / scores.length
+            const maxScore = Math.max(...scores.map((s) => s.score))
+            const minScore = Math.min(...scores.map((s) => s.score))
+            const immediateCount = scores.filter((s) => s.action === 'immediate').length
+            const probeCount = scores.filter((s) => s.action === 'probe').length
+            const ignoreCount = scores.filter((s) => s.action === 'ignore').length
+            logger.info(
+              `[DataBridge] HotSector 评分汇总: ` +
+              `avg=${avgScore.toFixed(2)} max=${maxScore.toFixed(2)} min=${minScore.toFixed(2)} ` +
+              `immediate=${immediateCount} probe=${probeCount} ignore=${ignoreCount}`,
+            )
+
+            // ===== 4. 广播到策略频道 =====
+            const subscriberCount = this.subscribers.get(STRATEGY_CHANNEL.hotSector)?.size ?? 0
+            logger.info(`[DataBridge] HotSector: 准备广播到 channel="${STRATEGY_CHANNEL.hotSector}", 订阅者数=${subscriberCount}`)
+
+            const channelEnvelope: StandardEnvelope = {
+              ...envelope,
+              payload: scores,
+              meta: { ...meta, target: STRATEGY_CHANNEL.hotSector as EnvelopeTarget },
+            }
+            this.broadcast(STRATEGY_CHANNEL.hotSector, channelEnvelope)
+            logger.info(`[DataBridge] HotSector: channel="${STRATEGY_CHANNEL.hotSector}" 广播完成`)
+
+            // ===== 5. EventBus 事件 =====
+            eventBus.emit('strategy:hotSectorChanged', scores)
+            logger.info(`[DataBridge] HotSector: EventBus emit "strategy:hotSectorChanged" 完成, payload.length=${scores.length}`)
+          } catch (err) {
+            logger.error(`[DataBridge] HotSector refresh 失败`, { error: err })
+            throw err
+          }
+          break
+        }
+
+        case ENVELOPE_ACTION.strategyValuePitRefresh: {
+          try {
+            // ===== 1. 输入校验 =====
+            const inputs = payload as ValuePitAnalyzerInput[]
+            if (!Array.isArray(inputs)) {
+              const err = new EnvelopeError('ValuePit: payload 必须是数组')
+              logger.error(`[DataBridge] ValuePit refresh: payload 校验失败`, { error: err })
+              throw err
+            }
+            logger.info(`[DataBridge] ValuePit refresh: 输入数量=${inputs.length}, 板块列表=[${inputs.map((i) => i.symbol).join(', ')}]`)
+
+            // ===== 2. 逐板块评分 =====
+            const scores = inputs.map((input) => {
+              const score = analyzeValuePit(input)
+              logger.info(
+                `[DataBridge] ValuePit: ${input.symbol} ` +
+                `catalyst=${score.dimensions.catalyst.toFixed(2)} ` +
+                `valuation=${score.dimensions.valuation.toFixed(2)} ` +
+                `chip=${score.dimensions.chip.toFixed(2)} ` +
+                `rotation=${score.dimensions.rotation.toFixed(2)} ` +
+                `liquidity=${score.dimensions.liquidity.toFixed(2)} ` +
+                `composite=${score.dimensions.composite.toFixed(2)} ` +
+                `→ score=${score.score.toFixed(2)} action=${score.action}`,
+              )
+              return score
+            })
+
+            // ===== 3. 评分汇总 =====
+            const avgScore = scores.reduce((s, c) => s + c.score, 0) / scores.length
+            const maxScore = Math.max(...scores.map((s) => s.score))
+            const minScore = Math.min(...scores.map((s) => s.score))
+            const immediateCount = scores.filter((s) => s.action === 'immediate').length
+            const probeCount = scores.filter((s) => s.action === 'probe').length
+            const waitCount = scores.filter((s) => s.action === 'wait').length
+            const ignoreCount = scores.filter((s) => s.action === 'ignore').length
+            logger.info(
+              `[DataBridge] ValuePit 评分汇总: ` +
+              `avg=${avgScore.toFixed(2)} max=${maxScore.toFixed(2)} min=${minScore.toFixed(2)} ` +
+              `immediate=${immediateCount} probe=${probeCount} wait=${waitCount} ignore=${ignoreCount}`,
+            )
+
+            // ===== 4. 广播到策略频道 =====
+            const subscriberCount = this.subscribers.get(STRATEGY_CHANNEL.valuePit)?.size ?? 0
+            logger.info(`[DataBridge] ValuePit: 准备广播到 channel="${STRATEGY_CHANNEL.valuePit}", 订阅者数=${subscriberCount}`)
+
+            const channelEnvelope: StandardEnvelope = {
+              ...envelope,
+              payload: scores,
+              meta: { ...meta, target: STRATEGY_CHANNEL.valuePit as EnvelopeTarget },
+            }
+            this.broadcast(STRATEGY_CHANNEL.valuePit, channelEnvelope)
+            logger.info(`[DataBridge] ValuePit: channel="${STRATEGY_CHANNEL.valuePit}" 广播完成`)
+
+            // ===== 5. EventBus 事件 =====
+            eventBus.emit('strategy:valuePitChanged', scores)
+            logger.info(`[DataBridge] ValuePit: EventBus emit "strategy:valuePitChanged" 完成, payload.length=${scores.length}`)
+          } catch (err) {
+            logger.error(`[DataBridge] ValuePit refresh 失败`, { error: err })
+            throw err
+          }
+          break
+        }
+
+        case ENVELOPE_ACTION.strategyRotationSignalDetect: {
+          try {
+            // ===== 1. 输入校验 =====
+            const inputs = payload as RotationSignalInput[]
+            if (!Array.isArray(inputs)) {
+              const err = new EnvelopeError('RotationSignal: payload 必须是数组')
+              logger.error(`[DataBridge] RotationSignal detect: payload 校验失败`, { error: err })
+              throw err
+            }
+            logger.info(
+              `[DataBridge] RotationSignal detect: 输入数量=${inputs.length}, ` +
+              `板块列表=[${inputs.map((i) => i.sectorId).join(', ')}], ` +
+              `成交量数据量=[${inputs.map((i) => i.volume.history.length).join(', ')}], ` +
+              `资金流数据量=[${inputs.map((i) => i.capitalFlow.dailyNetFlow.length).join(', ')}], ` +
+              `收盘价数据量=[${inputs.map((i) => i.goldenCross.closes.length).join(', ')}]`,
+            )
+
+            // ===== 2. 逐板块检测 =====
+            const signals = inputs.map((input) => {
+              const signal = detectRotation(input)
+              logger.info(
+                `[DataBridge] RotationSignal: ${input.sectorId} ` +
+                `volumeBreakthrough=${signal.conditions.volumeBreakthrough} ` +
+                `capitalInflow=${signal.conditions.capitalInflow} ` +
+                `goldenCross=${signal.conditions.goldenCross} ` +
+                `→ triggered=${signal.triggered} strength=${signal.strength}`,
+              )
+              return signal
+            })
+
+            // ===== 3. 检测汇总 =====
+            const triggeredCount = signals.filter((s) => s.triggered).length
+            const notTriggeredCount = signals.length - triggeredCount
+            const strongCount = signals.filter((s) => s.strength === 'strong').length
+            const mediumCount = signals.filter((s) => s.strength === 'medium').length
+            const weakCount = signals.filter((s) => s.strength === 'weak').length
+            const triggeredList = signals.filter((s) => s.triggered).map((s) => s.sectorId)
+            logger.info(
+              `[DataBridge] RotationSignal 检测汇总: ` +
+              `总=${signals.length} 触发=${triggeredCount} 未触发=${notTriggeredCount} ` +
+              `strong=${strongCount} medium=${mediumCount} weak=${weakCount} ` +
+              `触发板块=[${triggeredList.join(', ') || '无'}]`,
+            )
+
+            // ===== 4. 广播到策略频道 =====
+            const subscriberCount = this.subscribers.get(STRATEGY_CHANNEL.rotationSignal)?.size ?? 0
+            logger.info(`[DataBridge] RotationSignal: 准备广播到 channel="${STRATEGY_CHANNEL.rotationSignal}", 订阅者数=${subscriberCount}`)
+
+            const channelEnvelope: StandardEnvelope = {
+              ...envelope,
+              payload: signals,
+              meta: { ...meta, target: STRATEGY_CHANNEL.rotationSignal as EnvelopeTarget },
+            }
+            this.broadcast(STRATEGY_CHANNEL.rotationSignal, channelEnvelope)
+            logger.info(`[DataBridge] RotationSignal: channel="${STRATEGY_CHANNEL.rotationSignal}" 广播完成`)
+
+            // ===== 5. EventBus 事件 =====
+            eventBus.emit('strategy:rotationSignalTriggered', signals)
+            logger.info(`[DataBridge] RotationSignal: EventBus emit "strategy:rotationSignalTriggered" 完成, payload.length=${signals.length}`)
+          } catch (err) {
+            logger.error(`[DataBridge] RotationSignal detect 失败`, { error: err })
+            throw err
+          }
+          break
+        }
+
+        default: {
+          logger.error(`[DataBridge] routeToStrategy() failed: Unknown action "${meta.action}"`)
+          throw new EnvelopeError(`Unknown strategy action: ${meta.action}`)
+        }
+      }
+
+      const duration = Date.now() - startTs
+      logger.info(`[DataBridge] routeToStrategy() completed: action="${meta.action}", duration=${duration}ms`)
+    } catch (err) {
+      logger.error(`[DataBridge] routeToStrategy() failed: action="${meta.action}"`, { error: err })
       throw err
     }
   }

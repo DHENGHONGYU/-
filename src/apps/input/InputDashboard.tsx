@@ -245,9 +245,7 @@ export default function InputDashboard(): React.JSX.Element {
               <Button size="sm" variant="secondary" onClick={() => navigate('/input/hot-sectors')}>
                 热门板块
               </Button>
-              <Button size="sm" variant="ghost" onClick={() => navigate('/input/prototype')}>
-                交互原型
-              </Button>
+
             </div>
           </CardContent>
         </Card>

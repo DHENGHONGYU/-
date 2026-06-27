@@ -1,7 +1,7 @@
 import { describe, expect, it, beforeEach } from 'vitest'
 import { db } from '@/data/db'
 import { dataLayer } from '@/data/dataLayer'
-import { analyzeValuePits, getLatestValuePitScore } from '@/services/trading/valuePitAnalyzer'
+import { analyzeValuePits, getLatestValuePitScore } from '@/services/scoring/valuePitAnalyzer'
 import { saveDefaultRotationScores } from '@/services/analysis/rotationScoreService'
 import { getDefaultDualStrategyRuleConfig } from '@/config/dualStrategyRules'
 import type { DailyQuotes, IndustryScore, Stock, V6Score } from '@/data/types'
@@ -136,7 +136,7 @@ describe('valuePitAnalyzer', () => {
     expect(result.success).toBe(true)
     const score = result.data?.[0]
     expect(score).toBeDefined()
-    expect(['immediate', 'probe', 'wait', 'ignore']).toContain(score?.triggerAction)
+    expect(['immediate', 'probe', 'wait', 'ignore']).toContain(score?.action)
   })
 
   it('should respect custom rule thresholds', async () => {

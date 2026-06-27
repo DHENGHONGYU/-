@@ -1,7 +1,7 @@
 import { describe, expect, it, beforeEach } from 'vitest'
 import { db } from '@/data/db'
 import { dataLayer } from '@/data/dataLayer'
-import { analyzeHotSectors, getLatestHotSectorScore } from '@/services/trading/hotSectorAnalyzer'
+import { analyzeHotSectors, getLatestHotSectorScore } from '@/services/scoring/hotSectorAnalyzer'
 import { getDefaultDualStrategyRuleConfig } from '@/config/dualStrategyRules'
 import type { DailyQuotes, IndustryScore, Stock, V6Score } from '@/data/types'
 
@@ -123,7 +123,7 @@ describe('hotSectorAnalyzer', () => {
     expect(result.success).toBe(true)
     const score = result.data?.[0]
     expect(score).toBeDefined()
-    expect(['immediate', 'probe', 'ignore']).toContain(score?.triggerAction)
+    expect(['immediate', 'probe', 'ignore']).toContain(score?.action)
   })
 
   it('should respect custom rule thresholds', async () => {

@@ -2,6 +2,21 @@ import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
 
+/**
+ * 策略相关事件名称常量。
+ * 由 DataBridge.routeToStrategy() 在策略计算完成后 emit。
+ */
+export const STRATEGY_EVENTS = {
+  /** 热门板块评分变更 */
+  hotSectorChanged: 'strategy:hotSectorChanged',
+  /** 价值洼地评分变更 */
+  valuePitChanged: 'strategy:valuePitChanged',
+  /** 轮动信号触发 */
+  rotationSignalTriggered: 'strategy:rotationSignalTriggered',
+} as const
+
+export type StrategyEvent = (typeof STRATEGY_EVENTS)[keyof typeof STRATEGY_EVENTS]
+
 type EventCallback = (payload: unknown) => void
 
 class EventBus {

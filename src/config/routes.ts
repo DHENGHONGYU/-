@@ -174,6 +174,18 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     description: '智能资讯 (V6 风格迁移版)',
   },
   {
+    path: '/analysis/hot-sector',
+    component: React.lazy(() => import('@/pages/analysis/HotSectorPage')),
+    category: 'analysis',
+    description: '热门板块策略选股（五维评分）',
+  },
+  {
+    path: '/analysis/value-pit',
+    component: React.lazy(() => import('@/pages/analysis/ValuePitPage')),
+    category: 'analysis',
+    description: '价值洼地策略选股（五维评分 + 轮动信号）',
+  },
+  {
     path: '/trading/strategy-snapshots',
     component: React.lazy(() => import('@/pages/trading/StrategySnapshotPage')),
     category: 'trading',

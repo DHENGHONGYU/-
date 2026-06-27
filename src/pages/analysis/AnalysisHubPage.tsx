@@ -9,6 +9,8 @@ import {
   ArrowRight,
   FileText,
   Newspaper,
+  Flame,
+  Target,
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
@@ -72,6 +74,18 @@ const ANALYSIS_MODULES: HubModule[] = [
     description: '多源资讯聚合、情感分析、股票关联与筛选',
     path: '/analysis/news',
     icon: Newspaper,
+  },
+  {
+    title: '热门板块策略',
+    description: '热门板块五维评分引擎 · 动量·情绪·技术·估值·环境',
+    path: '/analysis/hot-sector',
+    icon: Flame,
+  },
+  {
+    title: '价值洼地策略',
+    description: '价值洼地五维评分引擎 · 催化·安全垫·筹码·轮动·流动性',
+    path: '/analysis/value-pit',
+    icon: Target,
   },
 ]
 

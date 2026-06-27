@@ -238,9 +238,11 @@ export interface HotSectorDimensionScores {
 /** 热门板块策略评分，持久化于 hot_sector_scores Store */
 export interface HotSectorScore {
   symbol: string
+  /** 板块/标的名称 */
+  name: string
   score: number
   dimensions: HotSectorDimensionScores
-  triggerAction: 'immediate' | 'probe' | 'ignore'
+  action: 'immediate' | 'probe' | 'ignore'
   calculatedAt: number
   dataVersion: number
   qualityWarning?: string
@@ -259,10 +261,12 @@ export interface ValuePitDimensionScores {
 /** 价值洼地策略评分，持久化于 value_pit_scores Store */
 export interface ValuePitScore {
   symbol: string
+  /** 板块/标的名称 */
+  name: string
   score: number
   dimensions: ValuePitDimensionScores
   rotationSignal: boolean
-  triggerAction: 'immediate' | 'probe' | 'wait' | 'ignore'
+  action: 'immediate' | 'probe' | 'wait' | 'ignore'
   calculatedAt: number
   dataVersion: number
   qualityWarning?: string
@@ -777,118 +781,4 @@ export interface UnifiedStockData {
   maxDrawdown: number | null
   timestamp: string
   dataSource: string
-}
-
-// ============================================================
-// 策略回测相关类型定义
-// ============================================================
-
-/** 回测配置参数 */
-export interface BacktestConfig {
-  strategyId: string
-  strategyName: string
-  startDate: number
-  endDate: number
-  initialCapital: number
-  commissionRate: number
-  stampDutyRate: number
-  minCommission: number
-  slippageRate: number
-  maxPositions: number
-  positionSize: number
-  buyThreshold?: number
-  sellThreshold?: number
-  stopLossRate?: number
-  takeProfitRate?: number
-}
-
-/** 回测交易记录 */
-export interface BacktestTrade {
-  id: string
-  symbol: string
-  name: string
-  direction: 'BUY' | 'SELL'
-  price: number
-  quantity: number
-  amount: number
-  commission: number
-  stampDuty: number
-  slippage: number
-  netAmount: number
-  timestamp: number
-  signal: string
-  reason?: string
-}
-
-/** 回测持仓记录 */
-export interface BacktestPosition {
-  symbol: string
-  name: string
-  quantity: number
-  avgCost: number
-  currentPrice: number
-  marketValue: number
-  profit: number
-  profitRate: number
-  holdingDays: number
-  openDate: number
-}
-
-/** 回测绩效指标 */
-export interface BacktestMetrics {
-  totalReturn: number
-  annualizedReturn: number
-  benchmarkReturn?: number
-  excessReturn?: number
-  maxDrawdown: number
-  maxDrawdownDuration: number
-  volatility: number
-  downsideRisk: number
-  sharpeRatio: number
-  sortinoRatio: number
-  calmarRatio: number
-  totalTrades: number
-  winTrades: number
-  lossTrades: number
-  winRate: number
-  avgWinAmount: number
-  avgLossAmount: number
-  profitFactor: number
-  avgHoldingDays: number
-  maxPositionsHeld: number
-  turnoverRate: number
-  backtestDays: number
-  tradingDays: number
-}
-
-/** 回测日收益曲线点 */
-export interface BacktestCurvePoint {
-  date: number
-  portfolioValue: number
-  dailyReturn: number
-  cumulativeReturn: number
-  drawdown: number
-  positionsCount: number
-}
-
-/** 回测收益曲线 */
-export interface BacktestCurve {
-  points: BacktestCurvePoint[]
-  benchmarkCurve?: BacktestCurvePoint[]
-}
-
-/** 回测完整结果 */
-export interface BacktestResult {
-  config: BacktestConfig
-  metrics: BacktestMetrics
-  curve: BacktestCurve
-  trades: BacktestTrade[]
-  positions: BacktestPosition[]
-  summary: {
-    startTime: number
-    endTime: number
-    executionTime: number
-    dataPoints: number
-    signalCount: number
-  }
 }

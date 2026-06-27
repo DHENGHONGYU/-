@@ -61,6 +61,12 @@ export const ENVELOPE_TARGET = {
   ui: 'ui',
   tradinghub: 'tradinghub',
   system: 'system',
+  /** 策略数据流：热门板块 */
+  'strategy:hotSector': 'strategy:hotSector',
+  /** 策略数据流：价值洼地 */
+  'strategy:valuePit': 'strategy:valuePit',
+  /** 策略数据流：轮动信号 */
+  'strategy:rotationSignal': 'strategy:rotationSignal',
 } as const
 
 export type EnvelopeTarget =
@@ -96,6 +102,12 @@ export const ENVELOPE_ACTION = {
   resetAll: 'RESET_ALL',
   importAll: 'IMPORT_ALL',
   exportAll: 'EXPORT_ALL',
+  /** 策略：触发热门板块重新计算 */
+  strategyHotSectorRefresh: 'STRATEGY_HOT_SECTOR_REFRESH',
+  /** 策略：触发价值洼地重新计算 */
+  strategyValuePitRefresh: 'STRATEGY_VALUE_PIT_REFRESH',
+  /** 策略：触发轮动信号检测 */
+  strategyRotationSignalDetect: 'STRATEGY_ROTATION_SIGNAL_DETECT',
 } as const
 
 export type EnvelopeAction =
@@ -112,6 +124,7 @@ export const MODULE_ID = {
   sector: 'sector',
   news: 'news',
   trading: 'trading',
+  strategy: 'strategy',
 } as const
 
 export type ModuleId = (typeof MODULE_ID)[keyof typeof MODULE_ID]
@@ -240,6 +253,19 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
     read: [STORE_NAME.stocks, STORE_NAME.v6Scores, STORE_NAME.orders],
     write: [STORE_NAME.stocks, STORE_NAME.orders],
     actions: [DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete],
+  },
+  [MODULE_ID.strategy]: {
+    read: [
+      STORE_NAME.stocks,
+      STORE_NAME.v6Scores,
+      STORE_NAME.dailyQuotes,
+      STORE_NAME.hotSectorScores,
+      STORE_NAME.valuePitScores,
+      STORE_NAME.rotationScores,
+      STORE_NAME.signals,
+    ],
+    write: [STORE_NAME.hotSectorScores, STORE_NAME.valuePitScores],
+    actions: [DB_OPERATION.select, DB_OPERATION.insert, DB_OPERATION.update],
   },
 }
 
