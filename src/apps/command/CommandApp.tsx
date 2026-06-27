@@ -1,29 +1,39 @@
 import React from 'react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { Dialog, DialogContent } from '@/components/ui/Dialog'
+import { loadSystemStats, resetAll } from '@/services/system/systemService'
 import MigrationPanel from '@/components/system/MigrationPanel'
-import { useCommandStore } from '@/store/commandStore'
 
 export default function CommandApp(): React.JSX.Element {
-  // 从 Store 获取状态和方法
-  const {
-    stats,
-    message,
-    messageType,
-    migrationOpen,
-    isLoading,
-    isResetting,
-    setMigrationOpen,
-    loadStats,
-    resetAll,
-  } = useCommandStore()
+  const [stats, setStats] = useState<Record<string, number> | null>(null)
+  const [message, setMessage] = useState('')
+  const [migrationOpen, setMigrationOpen] = useState(false)
 
-  // 使用 Store 内置的异步动作
+  const loadStats = async (): Promise<void> => {
+    const result = await loadSystemStats()
+    if (result.success && result.data) {
+      setStats({
+        stocks: result.data.stocks,
+        orders: result.data.orders,
+        scores: result.data.scores,
+      })
+    } else {
+      setMessage(result.error ?? '加载统计失败')
+    }
+  }
+
   const handleReset = async (): Promise<void> => {
     if (!confirm('确定要清空所有数据吗？此操作不可恢复。')) return
-    await resetAll()
+    const result = await resetAll()
+    if (result.success) {
+      setMessage('已重置所有数据')
+      await loadStats()
+    } else {
+      setMessage(result.error ?? '重置失败')
+    }
   }
 
   return (
@@ -34,41 +44,17 @@ export default function CommandApp(): React.JSX.Element {
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex gap-2">
-            <Button 
-              variant="secondary" 
-              size="sm" 
-              onClick={loadStats}
-              disabled={isLoading}
-            >
-              {isLoading ? '加载中...' : '刷新统计'}
+            <Button variant="secondary" size="sm" onClick={loadStats}>
+              刷新统计
             </Button>
-            <Button 
-              variant="danger" 
-              size="sm" 
-              onClick={handleReset}
-              disabled={isResetting}
-            >
-              {isResetting ? '重置中...' : '重置数据'}
+            <Button variant="danger" size="sm" onClick={handleReset}>
+              重置数据
             </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={() => setMigrationOpen(true)}
-            >
+            <Button variant="outline" size="sm" onClick={() => setMigrationOpen(true)}>
               V6 迁移
             </Button>
           </div>
-          
-          {message && (
-            <p className={`text-sm ${
-              messageType === 'error' ? 'text-destructive' : 
-              messageType === 'success' ? 'text-green-600' : 
-              'text-muted-foreground'
-            }`}>
-              {message}
-            </p>
-          )}
-          
+          {message && <p className="text-sm text-muted-foreground">{message}</p>}
           {stats && (
             <div className="grid gap-2 sm:grid-cols-3">
               {Object.entries(stats).map(([key, value]) => (
