@@ -46,6 +46,7 @@ const mockSetHasMore = vi.fn()
 const mockSetCurrentOffset = vi.fn()
 const mockSelectArticle = vi.fn()
 const mockSetFilter = vi.fn()
+const mockInitBookmarks = vi.fn().mockResolvedValue(undefined)
 const mockInitSubscriptions = vi.fn().mockReturnValue(vi.fn())
 
 let storeState = {
@@ -81,6 +82,7 @@ vi.mock('@/store/newsStore', () => ({
     setCurrentOffset: mockSetCurrentOffset,
     selectArticle: mockSelectArticle,
     setFilter: mockSetFilter,
+    initBookmarks: mockInitBookmarks,
   }),
   initNewsStoreSubscriptions: () => mockInitSubscriptions(),
 }))

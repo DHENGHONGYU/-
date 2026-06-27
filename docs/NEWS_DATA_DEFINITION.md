@@ -80,6 +80,18 @@
 | `searchQuery` | `string` | 是 | - | 关键词搜索 |
 | `sortBy` | `string` | 是 | `'time'` / `'sentiment'` / `'source'` / `'relevance'` | 排序方式 |
 
+### 1.6 NewsBookmark — 资讯收藏（IndexedDB）
+
+| 字段 | 类型 | 必填 | 描述 |
+|------|------|------|------|
+| `id` | `string` | 是 | 资讯 ID（与 `V6NewsArticle.id` 一致） |
+| `bookmarkedAt` | `number` | 是 | 收藏时间戳（毫秒） |
+
+- 存储位置：`STORE_NAME.newsBookmarks`（IndexedDB 表名 `news_bookmarks`）
+- 索引：`by-bookmarked-at`（按收藏时间排序）
+- 读写入口：`src/store/newsStore.ts` 的 `initBookmarks()` / `toggleBookmark()`
+- 迁移策略：首次启动时若 IndexedDB 为空，自动从 `localStorage` 的 `v9_news_bookmarks` 迁移并清空旧 key
+
 ---
 
 ## 二、枚举与映射

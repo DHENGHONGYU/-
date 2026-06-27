@@ -36,7 +36,7 @@ export default function NewsPage(): React.JSX.Element {
     loading, error, hasMore, currentOffset,
     selectedArticle,
     setArticles, setLoading, setError, setHasMore, setCurrentOffset,
-    selectArticle, setFilter,
+    selectArticle, setFilter, initBookmarks,
   } = useNewsStore()
 
   /** 加载数据（接入 V9 newsService，支持分页） */
@@ -70,10 +70,11 @@ export default function NewsPage(): React.JSX.Element {
     }
   }, [setArticles, setLoading, setError, setHasMore, setCurrentOffset])
 
-  /** 初始加载 */
+  /** 初始加载 & 收藏状态恢复 */
   useEffect(() => {
+    void initBookmarks()
     void loadData()
-  }, [loadData])
+  }, [loadData, initBookmarks])
 
   /** 初始化 DataBridge 订阅（组件卸载时自动清理） */
   useEffect(() => {

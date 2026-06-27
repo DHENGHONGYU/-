@@ -83,13 +83,19 @@
   - 新增 `tests/news-v6/NewsPage.test.tsx`（6 用例）与 `tests/news-v6/NewsFeed.test.tsx`（8 用例），覆盖加载、错误重试、详情弹窗、筛选、搜索防抖、收藏、加载更多。
   - 新增 `src/constants/newsColorTokens.ts`，将 `NewsCard` / `CategoryBadge` / `SentimentBadge` 硬编码 Tailwind 颜色类收敛为语义化令牌。
   - `scripts/audit-doc-sync.ts` 补充 `console.warn` 使用说明注释。
+  - **收藏状态 IndexedDB 持久化落地**：
+    - `src/config/dbConfig.ts` 新增 `newsBookmarks` 存储、`DB_VERSION` 12 → 13，并更新 `MODULE_ID.news` ACL 读写权限。
+    - `src/data/db.ts` 在 `onupgradeneeded` 中创建 `news_bookmarks` object store（含 `by-bookmarked-at` 索引）。
+    - `src/store/newsStore.ts` 移除同步 localStorage 读写，改为异步 `initBookmarks()` / `saveBookmarksToDB()`；首次启动自动从 localStorage 迁移旧数据。
+    - `src/pages/news-v6/NewsPage.tsx` 挂载时调用 `initBookmarks()` 恢复收藏状态。
+    - 新增 `tests/newsStore.bookmarks.test.ts`（4 用例），覆盖 IndexedDB 恢复、添加、删除、localStorage 迁移。
 
 ### Quality Metrics
 
 - `tsc --noEmit`：通过
 - `eslint src/ --max-warnings 0`：通过
 - `npm run build`：通过
-- `npx vitest run`：63 文件 / 476 用例 通过
+- `npx vitest run`：64 文件 / 480 用例 通过
 - `audit:layers`：0 违规 / 1 警告（`SectorAnalysisPage.tsx` 过渡期 dataLayer 读取，非本次引入）
 - `audit:hardcode`：735（基线 749 ↓14）
 - `audit:deadcode`：0 / 0 / 16
@@ -97,7 +103,6 @@
 
 ### Notes
 
-- `newsStore.ts` 收藏状态当前仅持久化到 `localStorage`；是否同步到 IndexedDB 待产品决策。
 - 工作区存在未跟踪文件 `src/services/unifiedStockService.ts`、`src/services/feedbackService.ts`、`src/components/WidgetErrorBoundary.tsx`，非本次修改产生，未纳入本次提交。
 
 - **文档体系架构校对（v0.9.0-docs-review）**：

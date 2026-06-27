@@ -1,8 +1,8 @@
 # V9 数据字典索引
 
 > **Status**: Current  
-> **Version**: v1.1.0  
-> **Last Updated**: 2026-06-26  
+> **Version**: v1.2.0  
+> **Last Updated**: 2026-06-27  
 > 本文档汇总 V9 项目所有模块级数据字典入口，便于快速查找字段定义、枚举值、服务 API 与 DataBridge 映射。
 
 ---
@@ -11,10 +11,10 @@
 
 | 模块 | 数据字典 | 源码入口 | 覆盖范围 |
 |------|----------|----------|----------|
-| 交易持仓管理 | `DATA_DEFINITION.md`（根目录） | `src/pages/trading/`、`src/types/modules/trade.types.ts`、`src/constants/trade.constants.ts` | 持仓明细、查询参数、交易操作、分页/筛选状态 |
-| 智能资讯中心（NewsPage） | `docs/NEWS_DATA_DEFINITION.md` | `src/pages/news-v6/`、`src/services/news/`、`src/data/types.ts` | `NewsArticle`、`NewsStockMap`、`SentimentCache`、V6/V9 适配、路由 |
+| 交易持仓管理 | `DATA_DEFINITION.md`（根目录）、`docs/trade/API_CONTRACT.md` | `src/pages/trading/`、`src/types/modules/trade.types.ts`、`src/constants/trade.constants.ts`、`src/store/holdingsStore.ts` | 持仓明细、查询参数、交易操作、分页/筛选状态、Store 状态管理（Zustand） |
+| 智能资讯中心（NewsPage） | `docs/NEWS_DATA_DEFINITION.md`、`docs/news/DATA_DEFINITION.md` | `src/pages/news-v6/`、`src/services/news/`、`src/data/types.ts`、`src/store/newsStore.ts` | `NewsArticle`、`NewsStockMap`、`SentimentCache`、V6/V9 适配、路由、Store 状态管理（Zustand） |
 | AI 智能体调度中心 / 健康监控 / 诊断分析 | `docs/AI_CENTER_DATA_DEFINITION.md` | `src/constants/ai-center.constants.ts`、`src/constants/health.constants.ts`、`src/types/modules/ai-center.types.ts`、`src/services/ai-center/` | Agent、健康指标、诊断报告、统一 `AICenterData` |
-| 金融业务驾驶舱 Widget | `DATA_DEFINITION.md`（根目录，§2~§5） | `src/cockpit/widgets/`、`src/services/stock-analysis/`、`src/services/data-collector/`、`src/types/modules/widget.types.ts` | 投资画像、股票池、KAI 评分、模型对比、聊天界面 |
+| 金融业务驾驶舱 Widget | `DATA_DEFINITION.md`（根目录，§2~§5）、`docs/cockpit/DATA_DEFINITION.md` | `src/cockpit/widgets/`、`src/services/stock-analysis/`、`src/services/data-collector/`、`src/types/modules/widget.types.ts`、`src/store/widgetStore.ts` | 投资画像、股票池、KAI 评分、模型对比、聊天界面、Widget 实例管理 |
 
 ---
 
@@ -49,7 +49,7 @@
 | 模块 | 状态 | 说明 |
 |------|------|------|
 | 数据流引擎（DataFlow Engine） | ✅ 已补充 | 已新增 `docs/DATAFLOW_DATA_DEFINITION.md`，覆盖 `DataChannel`、`DataPacket`、`ChannelMeta`、API、事件、回退数据、重连策略 |
-| 数据融合引擎（Data Fusion） | 🔴 待实现 | `src/services/analysis/unifiedStockService.ts` 尚未落地，落地后再补字典 |
+| 数据融合引擎（Data Fusion） | ✅ 已实现 | `src/services/unifiedStockService.ts` 已落地，`UnifiedStockView` 统一视图整合 7 种数据源 |
 | 股票池分组 | 🟡 待补充 | 代码已实现，字段 `Stock.group`、`PoolGroupMeta` 等需纳入 Trade 字典 |
 | 交易引擎（信号/仓位/风控） | 🟡 待补充 | `Signal`、`PositionAdvice`、`RiskCheckResult` 等类型需字典化 |
 

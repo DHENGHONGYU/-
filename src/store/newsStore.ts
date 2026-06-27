@@ -15,12 +15,19 @@ import { DEFAULT_FILTER } from '@/pages/news-v6/components/newsFeedUtils'
 import { getLogger } from '@/lib/logger'
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
-import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID } from '@/config/dbConfig'
+import { db } from '@/data/db'
+import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
 
 const logger = getLogger()
 const BOOKMARK_STORAGE_KEY = 'v9_news_bookmarks'
 
-function loadBookmarks(): Set<string> {
+interface NewsBookmarkRecord {
+  id: string
+  bookmarkedAt: number
+}
+
+/** 从 localStorage 迁移旧收藏数据（一次性） */
+function loadLegacyBookmarks(): Set<string> {
   try {
     const raw = localStorage.getItem(BOOKMARK_STORAGE_KEY)
     return raw ? new Set(JSON.parse(raw) as string[]) : new Set()
@@ -29,11 +36,55 @@ function loadBookmarks(): Set<string> {
   }
 }
 
-function saveBookmarks(ids: Set<string>): void {
+/** 清除已迁移的 localStorage 数据 */
+function clearLegacyBookmarks(): void {
   try {
-    localStorage.setItem(BOOKMARK_STORAGE_KEY, JSON.stringify([...ids]))
+    localStorage.removeItem(BOOKMARK_STORAGE_KEY)
   } catch {
-    logger.warn('[newsStore] Failed to save bookmarks')
+    // ignore
+  }
+}
+
+/** 异步加载收藏状态；首次从 IndexedDB 读取为空时，尝试从 localStorage 迁移 */
+async function loadBookmarksFromDB(): Promise<Set<string>> {
+  try {
+    await db.init()
+    const records = await db.getAll<NewsBookmarkRecord>(STORE_NAME.newsBookmarks)
+    if (records.length > 0) {
+      return new Set(records.map((r) => r.id))
+    }
+
+    // 迁移旧数据
+    const legacy = loadLegacyBookmarks()
+    if (legacy.size > 0) {
+      await saveBookmarksToDB(legacy)
+      clearLegacyBookmarks()
+      logger.info('[newsStore] Migrated bookmarks from localStorage to IndexedDB', { count: legacy.size })
+      return legacy
+    }
+
+    return new Set()
+  } catch (err) {
+    logger.error('[newsStore] Failed to load bookmarks from IndexedDB, falling back to localStorage', { error: err })
+    return loadLegacyBookmarks()
+  }
+}
+
+/** 异步保存收藏状态到 IndexedDB */
+async function saveBookmarksToDB(ids: Set<string>): Promise<void> {
+  try {
+    await db.init()
+    await db.clear(STORE_NAME.newsBookmarks)
+    for (const id of ids) {
+      await db.put(STORE_NAME.newsBookmarks, { id, bookmarkedAt: Date.now() })
+    }
+  } catch (err) {
+    logger.error('[newsStore] Failed to save bookmarks to IndexedDB, falling back to localStorage', { error: err })
+    try {
+      localStorage.setItem(BOOKMARK_STORAGE_KEY, JSON.stringify([...ids]))
+    } catch {
+      logger.warn('[newsStore] Failed to save bookmarks fallback')
+    }
   }
 }
 
@@ -67,6 +118,7 @@ export interface NewsState {
   setShowFilter: (show: boolean) => void
   setDisplayCount: (count: number) => void
   resetDisplay: () => void
+  initBookmarks: () => Promise<void>
 }
 
 export const useNewsStore = create<NewsState>((set) => ({
@@ -76,7 +128,7 @@ export const useNewsStore = create<NewsState>((set) => ({
   hasMore: false,
   currentOffset: 0,
   selectedArticle: null,
-  bookmarkedIds: loadBookmarks(),
+  bookmarkedIds: new Set(),
   filter: DEFAULT_FILTER,
   searchInput: '',
   showFilter: false,
@@ -101,7 +153,7 @@ export const useNewsStore = create<NewsState>((set) => ({
         next.delete(id)
         logger.info('[newsStore] Bookmark removed', { id, total: next.size })
       }
-      saveBookmarks(next)
+      void saveBookmarksToDB(next)
 
       // DataBridge 事件转发：收藏状态变更（异步，不影响状态更新）
       try {
@@ -131,6 +183,11 @@ export const useNewsStore = create<NewsState>((set) => ({
   setShowFilter: (show) => set({ showFilter: show }),
   setDisplayCount: (count) => set({ displayCount: count }),
   resetDisplay: () => set({ displayCount: 20 }),
+  initBookmarks: async () => {
+    const ids = await loadBookmarksFromDB()
+    set({ bookmarkedIds: ids })
+    logger.info('[newsStore] Bookmarks initialized', { count: ids.size })
+  },
 }))
 
 // ===== DataBridge 订阅生命周期 =====

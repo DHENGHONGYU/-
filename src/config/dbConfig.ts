@@ -1,6 +1,6 @@
 const testDbName = typeof process !== 'undefined' ? process.env.TEST_DB_NAME : undefined
 export const DB_NAME = testDbName ? testDbName : ('V6ProDB' as const)
-export const DB_VERSION = 12 as const
+export const DB_VERSION = 13 as const
 
 // DB_VERSION 升级历史：
 // v3 → v4: 新增 daily_quotes 存储，用于保存 K线/行情数据。
@@ -8,6 +8,7 @@ export const DB_VERSION = 12 as const
 // v5 → v6: 新增 rotation_scores、sector_scores、score_docs、strategy_snapshots、
 //          local_docs、news、news_stock_map、sentiment_cache 存储，支撑 V6 Pro 迁移能力。
 // v6 → v12: V9 架构升级，统一数据模型与类型系统，优化索引结构。
+// v12 → v13: 新增 news_bookmarks 存储，用于持久化资讯收藏状态。
 
 export const DEFAULT_POOL_GROUP = '默认分组' as const
 
@@ -135,6 +136,7 @@ export const STORE_NAME = {
   news: 'news',
   newsStockMap: 'news_stock_map',
   sentimentCache: 'sentiment_cache',
+  newsBookmarks: 'news_bookmarks',
 } as const
 
 export type StoreName = (typeof STORE_NAME)[keyof typeof STORE_NAME]
@@ -187,8 +189,8 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
     actions: [DB_OPERATION.select, DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete],
   },
   [MODULE_ID.news]: {
-    read: [STORE_NAME.stocks, STORE_NAME.news, STORE_NAME.newsStockMap, STORE_NAME.sentimentCache],
-    write: [STORE_NAME.news, STORE_NAME.newsStockMap, STORE_NAME.sentimentCache],
+    read: [STORE_NAME.stocks, STORE_NAME.news, STORE_NAME.newsStockMap, STORE_NAME.sentimentCache, STORE_NAME.newsBookmarks],
+    write: [STORE_NAME.news, STORE_NAME.newsStockMap, STORE_NAME.sentimentCache, STORE_NAME.newsBookmarks],
     actions: [DB_OPERATION.select, DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete],
   },
   [MODULE_ID.tradinghub]: {

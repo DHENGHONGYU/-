@@ -34,7 +34,6 @@
 | `/input/bulk-import` | `PortalShell` | input | 输入舱 - 批量导入 |
 | `/input/hot-sectors` | `PortalShell` | input | 输入舱 - 热门板块 |
 | `/input/data-test` | `PortalShell` | input | 输入舱 - 采集测试 |
-| `/input/prototype` | `PortalShell` | input | 输入舱 - 交互原型（临时） |
 | `/input/local-knowledge` | `LocalKnowledgePage` | input | 输入舱 - 本地知识库 |
 | `/analysis/hub` | `PortalShell` | analysis | 分析舱 - 模块首页 |
 | `/analysis` | `PortalShell` | analysis | 分析舱入口 |
@@ -51,7 +50,10 @@
 | `/analysis/intelligent-score` | `IntelligentScorePage` | analysis | V6 个股智能评分 |
 | `/analysis/score-docs` | `ScoreDocPage` | analysis | 评分文档版本库 |
 | `/analysis/news` | `NewsPage` | analysis | 智能资讯 |
+| `/analysis/news-v6` | `NewsPage` | analysis | 智能资讯 (V6 风格迁移版) |
 | `/trading/strategy-snapshots` | `StrategySnapshotPage` | trading | 策略快照 |
+| `/trading/holdings` | `HoldingsPage` | trading | 交易持仓管理 |
+| `/mock-test` | `MockTestPage` | other | V9 模块 Mock 验证页（Slider/Sheet/Toggle/Engine） |
 
 > 所有业务路由均已集中注册；`App.tsx` 通过遍历 `ROUTE_REGISTRY` 渲染，不再硬编码路径。
 >
@@ -99,14 +101,14 @@ export interface RouteConfig {
 
 | 舱室 | 路径前缀 | 主要页面 | 当前状态 |
 |------|----------|----------|----------|
-| 输入舱 | `/input` | `/input`、`/input/bulk-import`、`/input/hot-sectors`、`/input/data-test`、`/input/local-knowledge`、`/input/prototype`（临时） | ✅ 已注册；子页面已拆分 |
+| 输入舱 | `/input` | `/input`、`/input/bulk-import`、`/input/hot-sectors`、`/input/data-test`、`/input/local-knowledge` | ✅ 已注册；子页面已拆分 |
 | 分析舱 | `/analysis/*` | 个股评分、行业评分、板块分析、回测 | ✅ 已注册 |
 | 交易舱 | `/trading` | 模拟下单、持仓、订单历史、风控 | ✅ 已注册 |
 | 输出舱 | `/output` | 研究报告、复盘笔记、数据导出 | ✅ 已注册 |
 | 总控舱 | `/command` | 系统统计、配置、数据重置 | ✅ 已注册 |
 | 驾驶舱 | `/cockpit` | 综合 Dashboard | ✅ 已注册 |
 
-> 输入舱已按分析舱模式拆分为 `/input`、`/input/bulk-import`、`/input/hot-sectors`、`/input/data-test`、`/input/local-knowledge`、`/input/prototype`（临时）六个子页面，统一由 `PortalShell` 渲染并在 `InputApp` 内按路径分发。交易/输出/总控舱仍仅注册入口路由，舱内功能通过 `PortalShell` 面板切换。
+> 输入舱已按分析舱模式拆分为 `/input`、`/input/bulk-import`、`/input/hot-sectors`、`/input/data-test`、`/input/local-knowledge` 五个子页面，统一由 `PortalShell` 渲染并在 `InputApp` 内按路径分发。交易/输出/总控舱仍仅注册入口路由，舱内功能通过 `PortalShell` 面板切换。
 >
 > **Hub 页说明**：Hub 页是一类组件的统称，实际文件名为 `InputHubPage`/`AnalysisHubPage`/`TradingHubPage`/`CommandHubPage`，由 `PortalShell` 内部分发；output hub 直接复用 `OutputApp`。
 
@@ -118,7 +120,6 @@ export interface RouteConfig {
 | `/input/bulk-import` | `BulkImportPanel.tsx` | `batchImportService`, `inputService` | 批量文本导入、解析预览、导入结果 |
 | `/input/hot-sectors` | `HotSectorPanel.tsx` | `hotSectorService`, `inputService` | 热门板块卡片、关联股票、加入候选池 |
 | `/input/data-test` | `DataTestPanel.tsx` | `fetcherService` | 服务健康、单/批量接口测试 |
-| `/input/prototype` | `InputPrototype.tsx` | mock only | 临时交互原型，方案确认后删除 |
 | `/input/local-knowledge` | `LocalKnowledgePage` | `localKnowledgeService` | 本地知识库浏览与管理 |
 
 ### 3.3 路径命名规范

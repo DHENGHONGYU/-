@@ -40,7 +40,7 @@ export interface ScreeningConfig {
 
 export function getDefaultScreeningConfig(): ScreeningConfig {
   return {
-    version: '0.9.0',
+    version: '1.2.0',
     thresholds: {
       minV6ScoreForScreened: 3.0,
       minV6ScoreForDeepDive: 4.0,

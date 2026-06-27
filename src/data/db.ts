@@ -257,6 +257,15 @@ async function openDB(): Promise<IDBDatabase> {
         console.debug(`[DB] ObjectStore "${STORE_NAME.sentimentCache}" already exists`)
       }
 
+      // v13 新增：资讯收藏
+      if (!db.objectStoreNames.contains(STORE_NAME.newsBookmarks)) {
+        console.debug(`[DB] Creating objectStore: "${STORE_NAME.newsBookmarks}"`)
+        const bookmarkStore = db.createObjectStore(STORE_NAME.newsBookmarks, { keyPath: 'id' })
+        bookmarkStore.createIndex('by-bookmarked-at', 'bookmarkedAt', { unique: false })
+      } else {
+        console.debug(`[DB] ObjectStore "${STORE_NAME.newsBookmarks}" already exists`)
+      }
+
       console.info(`[DB] Schema upgrade complete. Final stores: [${Array.from(db.objectStoreNames).join(', ')}]`)
     }
   })

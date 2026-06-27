@@ -253,7 +253,7 @@ export default function PortalShell(): React.JSX.Element {
             {fetcherOk === null ? '采集服务检查中' : fetcherOk ? '采集服务正常' : '采集服务未连接'}
           </span>
           <span className="hidden md:inline">运行 {formatUptime(uptime)}</span>
-          <span className="hidden lg:inline">v0.9.0</span>
+          <span className="hidden lg:inline">v1.2.0</span>
         </div>
       </header>
 
