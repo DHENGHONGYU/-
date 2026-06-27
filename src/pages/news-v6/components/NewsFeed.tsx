@@ -1,49 +1,45 @@
 // ============================================================
 // V6 风格资讯流组件 — 迁移至 V9
 // 含筛选、搜索、排序、分页功能
+// 状态管理已从 useState 迁移至 useNewsStore (Zustand)
 // ============================================================
 
-import { useState, useMemo, useRef, useCallback } from 'react'
+import { useMemo, useCallback, useEffect } from 'react'
 import { Loader2, RefreshCw, Search, SlidersHorizontal, Newspaper } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import NewsCard from './NewsCard'
 import FilterPanel, { type NewsFilter } from './FilterPanel'
 import type { V6NewsArticle } from '../types'
-import { DEFAULT_FILTER, matchesFilter, sortArticles } from './newsFeedUtils'
+import { matchesFilter, sortArticles } from './newsFeedUtils'
+import { useNewsStore } from '@/store/newsStore'
+import { useDebounce } from '@/hooks/useDebounce'
 
 export interface NewsFeedProps {
-  articles: V6NewsArticle[]
-  loading?: boolean
-  hasMore?: boolean
   onLoadMore?: () => void
   onRefresh?: () => void
   onFilterChange?: (filter: NewsFilter) => void
   onArticleClick?: (article: V6NewsArticle) => void
-  onBookmark?: (id: string) => void
   pageSize?: number
 }
 
 export default function NewsFeed({
-  articles,
-  loading = false,
-  hasMore = false,
   onLoadMore,
   onRefresh,
   onFilterChange,
   onArticleClick,
-  onBookmark,
   pageSize = 20,
 }: NewsFeedProps) {
-  const [filter, setFilter] = useState<NewsFilter>(DEFAULT_FILTER)
-  const [showFilter, setShowFilter] = useState(false)
-  const [displayCount, setDisplayCount] = useState(pageSize)
-  const [searchInput, setSearchInput] = useState('')
-  const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const {
+    articles, loading, hasMore,
+    bookmarkedIds, filter, searchInput, showFilter, displayCount,
+    setFilter, setSearchInput, setShowFilter, setDisplayCount, resetDisplay,
+    toggleBookmark,
+  } = useNewsStore()
 
   // 筛选+排序
   const filteredArticles = useMemo(() => {
-    const filtered = articles.filter((a) => matchesFilter(a, filter))
+    const filtered = articles.filter((a: V6NewsArticle) => matchesFilter(a, filter))
     return sortArticles(filtered, filter.sortBy)
   }, [articles, filter])
 
@@ -55,52 +51,60 @@ export default function NewsFeed({
   // 来源列表（用于筛选面板）
   const sources = useMemo(() => {
     const set = new Set<string>()
-    articles.forEach((a) => a.source && set.add(a.source))
+    articles.forEach((a: V6NewsArticle) => a.source && set.add(a.source))
     return Array.from(set)
   }, [articles])
 
-  // 搜索防抖
-  const handleSearchChange = (value: string) => {
-    setSearchInput(value)
-    if (searchTimeout.current) clearTimeout(searchTimeout.current)
-    searchTimeout.current = setTimeout(() => {
-      setFilter((prev) => ({ ...prev, searchQuery: value }))
-      setDisplayCount(pageSize)
-    }, 300)
-  }
+  // 搜索输入即时更新 UI，但过滤逻辑防抖 300ms
+  const debouncedSearchQuery = useDebounce(searchInput, 300)
 
-  // 筛选变更
+  useEffect(() => {
+    const trimmed = debouncedSearchQuery.trim()
+    if (trimmed !== filter.searchQuery) {
+      setFilter({ ...filter, searchQuery: trimmed })
+      resetDisplay()
+    }
+  }, [debouncedSearchQuery, filter, setFilter, resetDisplay])
+
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      setSearchInput(value.trimStart())
+    },
+    [setSearchInput],
+  )
+
+  // 筛选变更 — 委托 store 管理 filter
   const handleFilterChange = useCallback(
     (newFilter: NewsFilter) => {
       setFilter(newFilter)
-      setDisplayCount(pageSize)
+      resetDisplay()
       onFilterChange?.(newFilter)
     },
-    [onFilterChange, pageSize],
+    [onFilterChange, setFilter, resetDisplay],
   )
 
   // 加载更多
-  const handleLoadMore = () => {
+  const handleLoadMore = useCallback(() => {
     if (loading) return
     const newCount = displayCount + pageSize
     if (newCount >= filteredArticles.length) {
       onLoadMore?.()
     }
     setDisplayCount(newCount)
-  }
+  }, [loading, displayCount, pageSize, filteredArticles.length, onLoadMore, setDisplayCount])
 
   // 刷新
-  const handleRefresh = () => {
-    setDisplayCount(pageSize)
+  const handleRefresh = useCallback(() => {
+    resetDisplay()
     onRefresh?.()
-  }
+  }, [resetDisplay, onRefresh])
 
   // 统计信息
   const stats = {
     total: articles.length,
     filtered: filteredArticles.length,
-    positive: articles.filter((a) => (a.sentiment || 0) > 0.3).length,
-    negative: articles.filter((a) => (a.sentiment || 0) < -0.3).length,
+    positive: articles.filter((a: V6NewsArticle) => (a.sentiment || 0) > 0.3).length,
+    negative: articles.filter((a: V6NewsArticle) => (a.sentiment || 0) < -0.3).length,
   }
 
   return (
@@ -190,7 +194,8 @@ export default function NewsFeed({
             key={article.id}
             article={article}
             onClick={onArticleClick}
-            onBookmark={onBookmark}
+            onBookmark={toggleBookmark}
+            isBookmarked={bookmarkedIds.has(article.id)}
           />
         ))}
 

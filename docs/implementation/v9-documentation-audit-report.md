@@ -1,3 +1,14 @@
+---
+title: V9 文档体系化审计与补全建议书
+version: v0.9.0
+last_updated: 2026-06-25
+maintainer: V9 Architecture Team
+status: active
+change_log:
+  - date: 2026-06-25
+    author: Documentation Governor
+    desc: 注入 Frontmatter 元数据（Phase 3 版本化）
+---
 # V9 文档体系化审计与补全建议书
 
 > **角色**：架构治理官  

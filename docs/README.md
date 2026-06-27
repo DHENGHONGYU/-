@@ -50,6 +50,11 @@
 | [V9 整体架构蓝图](./implementation/v9-system-blueprint.md) | 愿景、架构、数据协议、路由映射、UI 范式、实施路线统一归纳 | Current (Active) |
 | [第四次工业革命稀缺核心资源交易策略](./implementation/fourth-industrial-revolution-core-resource-strategy.md) | 解析 v6-pro-cockpit 核心稀缺策略，Phase 1（Schema/主题/评分/组合）已落地 | Current (Active) |
 | [更新日志](../CHANGELOG.md) | 版本变更、架构决策、验收数据、已知问题 | Future Reference / Deferred |
+| [AI Center 数据字典](./AI_CENTER_DATA_DEFINITION.md) | AI 智能体调度中心 + 健康监控 + 诊断分析 数据字典 | Current (Active) |
+| [交易持仓 API 契约](./trade/API_CONTRACT.md) | 交易持仓管理模块 API 契约 | Current (Active) |
+| [Cockpit 数据字典](./cockpit/DATA_DEFINITION.md) | Cockpit Widget 框架数据字典（类型 + 枚举常量） | Current (Active) |
+| [News 数据字典](./news/DATA_DEFINITION.md) | 新闻资讯模块数据字典 | Current (Active) |
+| [Data Collection 数据字典](./data-collection/DATA_DEFINITION.md) | 数据采集模块三层架构数据字典 | Current (Active) |
 
 ---
 

@@ -2,17 +2,18 @@ import { getLogger } from '@/lib/logger'
 import { eventBus } from '@/lib/eventBus'
 import { widgetRegistry } from './widgetRegistry'
 import { defaultWidgetBuilder } from '../defaultWidgetBuilder'
+import type { MarketData } from '@/types/modules/widget.types'
 
 const logger = getLogger()
 
-const componentCache = new Map<string, React.ComponentType<{ config: unknown; data?: unknown }>>()
+const componentCache = new Map<string, React.ComponentType<{ config: unknown; data?: MarketData }>>()
 
 export class WidgetEngine {
   constructor() {
     logger.info('[WidgetEngine] Initializing...')
   }
 
-  async loadComponent(widgetId: string): Promise<React.ComponentType<{ config: unknown; data?: unknown }> | null> {
+  async loadComponent(widgetId: string): Promise<React.ComponentType<{ config: unknown; data?: MarketData }> | null> {
     const startTs = Date.now()
     logger.debug(`[WidgetEngine] loadComponent() called: widgetId="${widgetId}"`)
 
@@ -32,7 +33,7 @@ export class WidgetEngine {
     try {
       logger.debug(`[WidgetEngine] Loading component module: widgetId="${widgetId}"`)
       const module = await template.component()
-      const component = module.default as React.ComponentType<{ config: unknown; data?: unknown }>
+      const component = module.default as React.ComponentType<{ config: unknown; data?: MarketData }>
 
       if (!component) {
         throw new Error(`Widget "${widgetId}" component is empty`)

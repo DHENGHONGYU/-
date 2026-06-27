@@ -1,3 +1,17 @@
+---
+title: V9 智能投研复盘系统 — 整体架构蓝图
+version: v0.9.0-doc-sync-batch2
+last_updated: 2026-06-27
+maintainer: V9 Architecture Team
+status: active
+change_log:
+  - date: 2026-06-27
+    author: Documentation Governor
+    desc: 新增 chart-integration、feedback-loop-spec、widget-error-handling、pwa-offline-guide 四份实施规格；文档索引同步更新；D16/D18/D19 状态标记为规格已起草
+  - date: 2026-06-25
+    author: Documentation Governor
+    desc: 注入 Frontmatter 元数据（Phase 3 版本化）
+---
 # V9 智能投研复盘系统 — 整体架构蓝图
 
 > **Status**: Current  
@@ -340,10 +354,10 @@ interface StandardEnvelope {
 | **D13** | **缺少数据融合层** | `src/services/analysis/` 各服务分散获取数据，缺少统一 `UnifiedStockData` 视图 | Phase 2 实现 `unifiedStockService.ts` |
 | **D14** | **Widget 运行时引擎已存在（`src/cockpit/core/widgetEngine.ts`），`CockpitShell` 尚未接入** | 注册表/运行时基础已落地，`CockpitShell` 未调用 | Phase 2 将 CockpitShell 接入 Widget 引擎 |
 | **D15** | **评分算法能力降级** | `src/services/scoring/v6ScoreService.ts` 仅启发式计算 + 随机数降级，缺少 LLM 集成与报告生成 | Phase 2 升级评分引擎，接入真实数据与 LLM |
-| **D16** | **缺少图表组件库** | `src/components/ui/` 无 `lightweight-charts` / `recharts`，数据可视化能力缺失 | Phase 2 引入图表组件 |
+| **D16** | **缺少图表组件库（规格已起草，代码待引入）** | `src/components/ui/` 无 `lightweight-charts` / `recharts`；`docs/implementation/chart-integration.md` 已定义选型、API 与 DataFlow 对接 | Phase 2 引入图表组件 |
 | **D17** | **`rotationScoreService.ts` 已实现五因子十六指标模型，上层 `SectorAnalysisPage` 待充分接入** | 板块轮动评分已可计算，上层展示与调用待完善 | Phase 2 在 `SectorAnalysisPage` 接入轮动评分 |
-| **D18** | **缺少操作反馈闭环** | `src/components/ui/Toast.tsx` 仅基础 Toast，缺少操作状态实时更新、数据质量反馈、评分理由 | Phase 2 完善反馈机制 |
-| **D19** | **`ErrorBoundary.tsx` 已存在并被 `App.tsx` 使用，Widget 级隔离待专项接入** | 全局错误边界已落地，Widget 级包裹尚未专项接入 | Phase 2 在 Widget 渲染管线中接入 ErrorBoundary |
+| **D18** | **缺少操作反馈闭环（规格已起草，代码待引入）** | `src/components/ui/Toast.tsx` 已提供基础组件；`docs/implementation/feedback-loop-spec.md` 已定义 FeedbackService 与 EventBus 集成 | Phase 2 完善反馈机制 |
+| **D19** | **`ErrorBoundary.tsx` 已存在并被 `App.tsx` 使用，Widget 级隔离待专项接入（规格已起草）** | 全局错误边界已落地；`docs/implementation/widget-error-handling.md` 已定义 Widget 级包裹与降级 UI | Phase 2 在 Widget 渲染管线中接入 ErrorBoundary |
 
 ---
 
@@ -406,6 +420,10 @@ interface StandardEnvelope {
 | `docs/implementation/ui-module-alignment.md` | V6 Pro UI 模块对齐报告 |
 | `docs/implementation/v6-cockpit-ui-reference.md` | v6 UI 参考 |
 | `docs/implementation/trading-core-factors.md` | 交易核心因子导入 |
+| `docs/implementation/chart-integration.md` | 图表组件技术选型与 DataBridge 对接 |
+| `docs/implementation/feedback-loop-spec.md` | 操作反馈闭环与 EventBus 集成 |
+| `docs/implementation/widget-error-handling.md` | Widget 错误边界与降级 UI |
+| `docs/implementation/pwa-offline-guide.md` | PWA Service Worker 与离线缓存 |
 | `docs/implementation/adr/ADR-001~008.md` | 架构决策记录 |
 | `CHANGELOG.md` | 版本变更日志 |
 

@@ -1,3 +1,14 @@
+---
+title: ADR-002: IndexedDB 替代 localStorage
+version: v0.9.0
+last_updated: 2026-06-24
+maintainer: V9 Architecture Team
+status: active
+change_log:
+  - date: 2026-06-24
+    author: Documentation Governor
+    desc: 注入 Frontmatter 元数据（Phase 3 版本化）
+---
 # ADR-002: IndexedDB 替代 localStorage
 
 > **Status**: Accepted  

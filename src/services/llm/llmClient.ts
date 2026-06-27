@@ -1,5 +1,8 @@
 import { getDefaultLlmConfig, type LlmConfig } from '@/config/llmConfig'
-import type { LlmMessage, LlmResponse, LlmUsage } from './llmTypes'
+import type { LlmMessage, LlmResponse, LlmUsage, LlmStreamCallback, LlmStreamChunk } from './llmTypes'
+import { getLogger } from '@/lib/logger'
+
+const logger = getLogger()
 
 export class LlmConfigError extends Error {
   constructor(message: string) {
@@ -133,4 +136,133 @@ export async function chat(
   }
 
   return parseResponse(raw)
+}
+
+interface RawStreamChoice {
+  delta?: {
+    content?: string
+  }
+  finish_reason?: string
+}
+
+interface RawStreamResponse {
+  choices?: RawStreamChoice[]
+  model?: string
+  usage?: RawUsage
+  error?: {
+    message: string
+  }
+}
+
+function parseStreamChunk(raw: RawStreamResponse): LlmStreamChunk | null {
+  if (raw.error && typeof raw.error.message === 'string') {
+    throw new LlmApiError(`LLM API 错误: ${raw.error.message}`)
+  }
+
+  const choices = raw.choices
+  if (!Array.isArray(choices) || choices.length === 0) {
+    return null
+  }
+
+  const delta = choices[0]?.delta
+  const finishReason = choices[0]?.finish_reason
+
+  if (finishReason === 'stop') {
+    return {
+      content: '',
+      isDone: true,
+      usage: parseUsage(raw.usage),
+    }
+  }
+
+  const content = delta?.content ?? ''
+  if (content.length === 0) {
+    return null
+  }
+
+  return {
+    content,
+    isDone: false,
+  }
+}
+
+export async function streamingChat(
+  messages: LlmMessage[],
+  callback: LlmStreamCallback,
+  override?: Partial<LlmConfig>,
+): Promise<void> {
+  const config = buildConfig(override)
+  assertConfig(config)
+
+  const endpoint = `${normalizeBaseURL(config.baseURL)}/chat/completions`
+
+  const response = await fetch(endpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${config.apiKey}`,
+    },
+    body: JSON.stringify({
+      model: config.model,
+      messages,
+      temperature: 0.2,
+      stream: true,
+    }),
+  })
+
+  if (!response.ok) {
+    const raw = (await response.json()) as RawResponse
+    const message = raw.error?.message ?? `HTTP ${response.status}`
+    throw new LlmApiError(`LLM 请求失败: ${message}`)
+  }
+
+  const reader = response.body?.getReader()
+  if (!reader) {
+    throw new LlmApiError('LLM 流式响应 body 为空')
+  }
+
+  const decoder = new TextDecoder()
+  let buffer = ''
+  let isFinished = false
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) {
+        break
+      }
+
+      buffer += decoder.decode(value, { stream: true })
+      const lines = buffer.split('\n')
+      buffer = lines.pop() ?? ''
+
+      for (const line of lines) {
+        if (line.trim().length === 0) continue
+        if (!line.startsWith('data: ')) continue
+
+        const dataStr = line.slice(6)
+        if (dataStr === '[DONE]') {
+          if (!isFinished) {
+            callback({ content: '', isDone: true })
+          }
+          return
+        }
+
+        try {
+          const raw = JSON.parse(dataStr) as RawStreamResponse
+          const chunk = parseStreamChunk(raw)
+          if (chunk) {
+            callback(chunk)
+            if (chunk.isDone) {
+              isFinished = true
+            }
+          }
+        } catch (parseErr) {
+          logger.warn('[llmClient] Failed to parse stream chunk', { error: parseErr })
+        }
+      }
+    }
+  } finally {
+    reader.releaseLock()
+  }
 }

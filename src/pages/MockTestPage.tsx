@@ -3,7 +3,7 @@
  * 路径: /mock-test
  * 用途: 手动/自动化验证 Slider、Sheet、Toggle、Engine 的实际渲染与交互效果
  */
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Slider } from '@/components/ui/Slider'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/Sheet'
 import { Toggle } from '@/components/ui/Toggle'
@@ -98,7 +98,7 @@ export default function MockTestPage() {
               {[0, 25, 50, 75, 100].map((v) => (
                 <Button
                   key={v}
-                  variant={sliderVal === v ? 'default' : 'outline'}
+                  variant={sliderVal === v ? 'primary' : 'outline'}
                   size="sm"
                   onClick={() => handleSliderChange(v)}
                 >
@@ -131,7 +131,7 @@ export default function MockTestPage() {
             setSheetOpen(open)
             if (!open) addLog('Sheet 已关闭')
           }}>
-            <SheetContent side="right">
+            <SheetContent>
               <SheetHeader>
                 <SheetTitle>测试面板</SheetTitle>
               </SheetHeader>
@@ -209,7 +209,7 @@ export default function MockTestPage() {
           </div>
 
           <Button
-            variant={started ? 'destructive' : 'default'}
+            variant={started ? 'danger' : 'primary'}
             onClick={handleEngineToggle}
           >
             {started ? '⏹ 停止 Engine' : '▶ 启动 Engine'}

@@ -1,3 +1,14 @@
+---
+title: 因子提炼、扩容与追踪路径分析
+version: v0.9.0
+last_updated: 2026-06-24
+maintainer: V9 Architecture Team
+status: active
+change_log:
+  - date: 2026-06-24
+    author: Documentation Governor
+    desc: 注入 Frontmatter 元数据（Phase 3 版本化）
+---
 # 因子提炼、扩容与追踪路径分析
 
 > **Status**: Current  

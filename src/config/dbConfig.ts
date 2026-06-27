@@ -1,11 +1,14 @@
 const testDbName = typeof process !== 'undefined' ? process.env.TEST_DB_NAME : undefined
 export const DB_NAME = testDbName ? testDbName : ('V6ProDB' as const)
-export const DB_VERSION = 6 as const
+export const DB_VERSION = 12 as const
 
-/**
- * 股票池默认分组名称。
- * 当股票未指定分组或历史数据缺失分组字段时使用。
- */
+// DB_VERSION 升级历史：
+// v3 → v4: 新增 daily_quotes 存储，用于保存 K线/行情数据。
+// v4 → v5: stocks 存储新增 group 字段与 by-group 索引，历史数据回退为默认分组。
+// v5 → v6: 新增 rotation_scores、sector_scores、score_docs、strategy_snapshots、
+//          local_docs、news、news_stock_map、sentiment_cache 存储，支撑 V6 Pro 迁移能力。
+// v6 → v12: V9 架构升级，统一数据模型与类型系统，优化索引结构。
+
 export const DEFAULT_POOL_GROUP = '默认分组' as const
 
 export const RESEARCH_STATUS = {
@@ -77,6 +80,10 @@ export const ENVELOPE_ACTION = {
   saveNews: 'SAVE_NEWS',
   saveNewsStockMap: 'SAVE_NEWS_STOCK_MAP',
   saveSentimentCache: 'SAVE_SENTIMENT_CACHE',
+  newsArticleLoaded: 'NEWS_ARTICLE_LOADED',
+  newsArticleBookmarked: 'NEWS_ARTICLE_BOOKMARKED',
+  holdingsDataLoaded: 'HOLDINGS_DATA_LOADED',
+  tradeActionExecuted: 'TRADE_ACTION_EXECUTED',
   saveResearchLog: 'SAVE_RESEARCH_LOG',
   insertSignal: 'INSERT_SIGNAL',
   insertOrder: 'INSERT_ORDER',
@@ -100,6 +107,7 @@ export const MODULE_ID = {
   rotation: 'rotation',
   sector: 'sector',
   news: 'news',
+  trading: 'trading',
 } as const
 
 export type ModuleId = (typeof MODULE_ID)[keyof typeof MODULE_ID]
@@ -187,6 +195,11 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
     read: [STORE_NAME.stocks, STORE_NAME.v6Scores, STORE_NAME.orders, STORE_NAME.signals, STORE_NAME.strategySnapshots],
     write: [STORE_NAME.orders, STORE_NAME.signals, STORE_NAME.strategySnapshots],
     actions: [DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete],
+  },
+  [MODULE_ID.trading]: {
+    read: [STORE_NAME.stocks, STORE_NAME.orders, STORE_NAME.signals, STORE_NAME.strategySnapshots],
+    write: [STORE_NAME.orders, STORE_NAME.signals],
+    actions: [DB_OPERATION.select, DB_OPERATION.insert, DB_OPERATION.update],
   },
   [MODULE_ID.system]: {
     read: Object.values(STORE_NAME),

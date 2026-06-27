@@ -1,8 +1,8 @@
 # 08. 实施计划
 
 > **Status**: Current  
-> **Version**: v0.9.0-migration-implemented  
-> **Last Updated**: 2026-06-24
+> **Version**: v1.1.0  
+> **Last Updated**: 2026-06-26
 >
 > 本文档定义 V9 从 v0.9.0 到 v1.0.0 的分阶段实施计划、验收标准、任务依赖与风险登记。  
 > 目标读者：项目负责人、核心开发者、产品经理。
@@ -93,6 +93,7 @@
 | **2.19** | **错误边界组件** | **P1** | **-** | **✅** | **`ErrorBoundary.tsx` 已存在并被路由/App 使用** |
 | **2.20** | **操作反馈闭环增强** | **P1** | **-** | **🔴** | **评分理由反馈、数据质量可视化、操作状态实时更新** |
 | 2.21 | V6 Pro → V9 JSON 数据迁移 | P1 | 1.4, 2.1 | ✅ | `v6MigrationService.ts` + `MigrationPanel.tsx`：解析 V6 全量导出、按规范转换 12 个 store、导入 V9；默认跳过已存在，支持覆盖；单元测试覆盖每个转换函数 |
+| **2.22** | **代码-文档同步机制** | **P1** | **2.1, 2.3, 2.13** | **🟡** | **建立“扫描差异 → 补齐文档 → 验证”闭环；已输出 `docs/implementation/doc-sync-execution-plan.md`，落地 NewsPage / Widget / AI Center 数据字典；纳入 PR Checklist 待完成** |
 
 ### 3.2 依赖关系
 

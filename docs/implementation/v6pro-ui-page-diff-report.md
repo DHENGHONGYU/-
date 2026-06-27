@@ -1,3 +1,14 @@
+---
+title: V6 Pro 备份源码/线上站点 与 V9 当前项目 UI & Page 差异全量对比报告
+version: v0.9.0
+last_updated: 2026-06-24
+maintainer: V9 Architecture Team
+status: active
+change_log:
+  - date: 2026-06-24
+    author: Documentation Governor
+    desc: 注入 Frontmatter 元数据（Phase 3 版本化）
+---
 # V6 Pro 备份源码/线上站点 与 V9 当前项目 UI & Page 差异全量对比报告
 
 > **Status**: Current / Analysis  

@@ -1,20 +1,23 @@
 // ============================================================
 // V6 风格 NewsPage — 迁移至 V9
 // 保持 V6 UI 风格，接入 V9 DataBridge / newsService
+// 状态管理已从 useState 迁移至 useNewsStore (Zustand)
 // ============================================================
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 import { Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { getLogger } from '@/lib/logger'
 import { listNews, saveNewsArticles, generateMockArticles } from '@/services/news/newsService'
 import type { NewsArticle as V9NewsArticle } from '@/data/types'
+import { useNewsStore, initNewsStoreSubscriptions } from '@/store/newsStore'
 import NewsFeed from './components/NewsFeed'
 import type { NewsFilter } from './components/FilterPanel'
 import type { V6NewsArticle } from './types'
 import { adaptV9ListToV6 } from './types'
 
 const logger = getLogger()
+const PAGE_SIZE = 20
 
 /** 生成模拟数据并保存到 V9 DataLayer */
 async function seedMockData(): Promise<V9NewsArticle[]> {
@@ -29,26 +32,31 @@ async function seedMockData(): Promise<V9NewsArticle[]> {
 }
 
 export default function NewsPage(): React.JSX.Element {
-  const [articles, setArticles] = useState<V6NewsArticle[]>([])
-  const [loading, setLoading] = useState(false)
-  const [hasMore, setHasMore] = useState(true)
-  const [selectedArticle, setSelectedArticle] = useState<V6NewsArticle | null>(null)
-  const [error, setError] = useState<string | null>(null)
+  const {
+    loading, error, hasMore, currentOffset,
+    selectedArticle,
+    setArticles, setLoading, setError, setHasMore, setCurrentOffset,
+    selectArticle, setFilter,
+  } = useNewsStore()
 
-  /** 加载数据（接入 V9 newsService） */
-  const loadData = useCallback(async () => {
+  /** 加载数据（接入 V9 newsService，支持分页） */
+  const loadData = useCallback(async (offset = 0, append = false) => {
     setLoading(true)
     setError(null)
     try {
-      logger.info('[NewsPage] Loading news via V9 newsService')
-      const result = await listNews({ limit: 100 })
+      logger.info('[NewsPage] Loading news via V9 newsService', { offset })
+      const result = await listNews({ limit: PAGE_SIZE })
 
       if (result.success && result.data) {
-        // V9 → V6 适配转换
         const adapted = adaptV9ListToV6(result.data)
-        setArticles(adapted)
-        setHasMore(result.data.length >= 100)
-        logger.info('[NewsPage] News loaded', { count: adapted.length })
+        if (append) {
+          useNewsStore.getState().appendArticles(adapted)
+        } else {
+          setArticles(adapted)
+        }
+        setCurrentOffset(offset + PAGE_SIZE)
+        setHasMore(result.data.length >= PAGE_SIZE)
+        logger.info('[NewsPage] News loaded', { count: adapted.length, offset, total: result.data.length })
       } else {
         setError(result.error || '加载失败')
         logger.error('[NewsPage] Failed to load news', { error: result.error })
@@ -60,47 +68,61 @@ export default function NewsPage(): React.JSX.Element {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [setArticles, setLoading, setError, setHasMore, setCurrentOffset])
 
   /** 初始加载 */
   useEffect(() => {
     void loadData()
   }, [loadData])
 
+  /** 初始化 DataBridge 订阅（组件卸载时自动清理） */
+  useEffect(() => {
+    return initNewsStoreSubscriptions()
+  }, [])
+
   /** 加载更多 */
   const loadMore = useCallback(() => {
-    // V9 newsService 已做 limit/sort，本地分页逻辑由 NewsFeed 处理
-    // 若需真实分页，可扩展 listNews 参数
-    setHasMore(false)
-  }, [])
+    if (loading) return
+    logger.info('[NewsPage] Loading more news', { offset: currentOffset })
+    if (hasMore) {
+      void loadData(currentOffset, true)
+    }
+  }, [loading, hasMore, currentOffset, loadData])
 
   /** 刷新 */
   const handleRefresh = useCallback(() => {
-    void loadData()
-  }, [loadData])
+    setCurrentOffset(0)
+    void loadData(0)
+  }, [loadData, setCurrentOffset])
 
   /** 生成模拟数据 */
   const handleGenerateMock = async () => {
     setLoading(true)
-    await seedMockData()
-    await loadData()
-    setLoading(false)
+    setError(null)
+    try {
+      await seedMockData()
+      setCurrentOffset(0)
+      await loadData(0)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      setError(message)
+      logger.error('[NewsPage] Failed to generate mock data', { error: message })
+    } finally {
+      setLoading(false)
+    }
   }
 
-  /** 筛选变更 */
+  /** 筛选变更 — 委托 store 统一管理筛选状态 */
   const handleFilterChange = useCallback((filter: NewsFilter) => {
-    logger.info('[NewsPage] Filter changed', { filter })
-  }, [])
+    setFilter(filter)
+    setCurrentOffset(0)
+    void loadData(0)
+  }, [loadData, setFilter, setCurrentOffset])
 
   /** 点击文章 */
   const handleArticleClick = useCallback((article: V6NewsArticle) => {
-    setSelectedArticle(article)
-  }, [])
-
-  /** 收藏 */
-  const handleBookmark = useCallback((id: string) => {
-    logger.info('[NewsPage] Bookmark toggled', { id })
-  }, [])
+    selectArticle(article)
+  }, [selectArticle])
 
   return (
     <div className="space-y-4 p-4 max-w-6xl mx-auto">
@@ -129,24 +151,20 @@ export default function NewsPage(): React.JSX.Element {
         </div>
       )}
 
-      {/* 资讯流 — V6 风格组件 */}
+      {/* 资讯流 — 内部消费 useNewsStore，仅传递回调 */}
       <NewsFeed
-        articles={articles}
-        loading={loading}
-        hasMore={hasMore}
         onLoadMore={loadMore}
         onRefresh={handleRefresh}
         onFilterChange={handleFilterChange}
         onArticleClick={handleArticleClick}
-        onBookmark={handleBookmark}
-        pageSize={20}
+        pageSize={PAGE_SIZE}
       />
 
       {/* 文章详情弹窗 — V6 风格 */}
       {selectedArticle && (
         <div
           className="fixed inset-0 bg-black/50 z-50 flex items-start justify-center p-4 overflow-y-auto"
-          onClick={() => setSelectedArticle(null)}
+          onClick={() => selectArticle(null)}
         >
           <div
             className="bg-white rounded-xl shadow-xl max-w-2xl w-full mt-8 animate-in fade-in zoom-in-95 duration-200"
@@ -178,7 +196,7 @@ export default function NewsPage(): React.JSX.Element {
                 <h2 className="text-lg font-bold text-slate-800">{selectedArticle.title}</h2>
               </div>
               <button
-                onClick={() => setSelectedArticle(null)}
+                onClick={() => selectArticle(null)}
                 className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition-colors"
               >
                 ✕
@@ -196,7 +214,7 @@ export default function NewsPage(): React.JSX.Element {
                 <div>
                   <h4 className="text-xs font-medium text-slate-500 mb-2">关联个股</h4>
                   <div className="flex flex-wrap gap-2">
-                    {selectedArticle.relatedStocks.map((code) => (
+                    {selectedArticle.relatedStocks.map((code: string) => (
                       <span
                         key={code}
                         className="text-sm px-3 py-1 bg-slate-100 text-slate-700 rounded-lg"
@@ -213,7 +231,7 @@ export default function NewsPage(): React.JSX.Element {
                 <div>
                   <h4 className="text-xs font-medium text-slate-500 mb-2">关键词</h4>
                   <div className="flex flex-wrap gap-2">
-                    {selectedArticle.keywords.map((kw) => (
+                    {selectedArticle.keywords.map((kw: string) => (
                       <span
                         key={kw}
                         className="text-xs px-2 py-1 bg-slate-50 text-slate-600 rounded-full border border-slate-100"

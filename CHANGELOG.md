@@ -29,6 +29,49 @@
     - 问题三：路由参数变化未重新触发数据刷新 → 强制添加 `resetState + refetch` 逻辑
     - 包含当前代码违规示例与修正指令，建立强制审查清单
 
+- **金融业务 Widget 落地（Phase 2.4）**：
+  - 实现 5 个驾驶舱业务 Widget：`InvestmentProfileWidget`（投资画像/分析中心）、`StockPoolWidget`（股票池管理）、`KaiScoreWidget`（KAI 选股评分图谱）、`ModelCompareWidget`（AI 大模型对比）、`StockChatWidget`（个股/市场聊天界面）。
+  - 扩展 `src/types/modules/widget.types.ts`：新增 `AnalysisScores`、`ModelComparison`、`StockPool`、`ChatHistory` 等类型。
+  - 扩展 `src/constants/cockpit.constants.ts`：新增 `STOCK_COLOR_MAPPING`、`SCORE_LEVELS`、`KAI_DIMENSION_NAMES`、`LLM_MODEL_VERSIONS`、`INVESTOR_PROFILE_METRICS`、`STOCK_POOL_STATUS_COLORS`、`CHAT_DEMO_TARGETS`、`RISK_HINTS`，确保颜色、状态、维度、模型版本全部常量化。
+  - 新增 `src/services/stock-analysis/mockStockAnalysisProvider.ts`：统一生成 5 个 Widget 的 Mock 数据，所有随机值与常量关联。
+  - 扩展 `src/services/data-collector/MarketDataAdapter.ts`：新增 `analysisScores`、`modelComparison`、`stockPool`、`chatHistory` 适配分支与默认值。
+  - 扩展 `src/services/data-collector/collectors/MockCollector.ts`：新增 `/stock-analysis/profile|kai|compare|pool|chat` 路由。
+  - 扩展 `src/cockpit/providers/MarketDataProvider.tsx`：注入标准化 `MarketData`，新增 `sendChatMessage` 接口。
+  - 更新 `src/cockpit/core/widgetRegistry.ts` 与 `CockpitShell.tsx`：注册 5 个新 Widget 并配置默认布局。
+  - 新增 `tests/services/MockCollector.test.ts`、`tests/services/MarketDataAdapter.test.ts`，覆盖 A/B/C 板块 24 个用例。
+  - 新增架构文档 `ARCHITECTURE.md`：含 Mermaid 图、枚举表、目录树、新增 Widget SOP。
+  - 新增数据字典 `DATA_DEFINITION.md`：覆盖 5 个 Widget 的字段、枚举、颜色、服务端映射。
+
+- **AI 智能体调度中心 / 健康监控 / 诊断分析板块设计落地**：
+  - 新增 `src/constants/ai-center.constants.ts`：定义 `AGENT_STATUS`、`AGENT_TAG`、`AGENT_TYPE`、`AGENT_OVERVIEW_CARDS`、`AI_CENTER_DATA_SOURCE`。
+  - 新增 `src/constants/health.constants.ts`：定义 `HEALTH_STATUS`、`HEALTH_MODULE_CATEGORY`、`DIAGNOSTIC_LEVEL`、`HEALTH_SCORE_THRESHOLDS`。
+  - 新增 `src/types/modules/ai-center.types.ts`：定义 `AgentItem`、`AgentListData`、`HealthMetricItem`、`HealthMetricsData`、`DiagnosticReportItem`、`DiagnosticReportsData`、`AICenterData`。
+  - 新增 `src/services/ai-center/mockAICenterProvider.ts`：三大板块 Mock 数据生成器，含异常/预警状态用于演示监控效果。
+  - 新增 `docs/AI_CENTER_DATA_DEFINITION.md`：AI 中心数据字典，含接口字段、枚举常量、服务端 statusCode 映射、引用约束。
+  - 新增 `docs/AI_CENTER_VUE3_EXAMPLES.md`：纯前端 Vue3 组件示例（图标渲染器、Pinia Store、三大 Panel、服务封装、硬编码检查清单），所有状态/颜色/标签/轮询间隔均引用 constants。
+
+- **NewsPage PoC 数据字典补齐**：
+  - 新增 `docs/NEWS_DATA_DEFINITION.md`：覆盖 `NewsArticle`、`NewsStockMap`、`SentimentCache`、`V6NewsArticle`、情感映射规则、`newsService` API、DataBridge Store / Envelope Action、路由映射。
+  - 明确 PoC 未新增全局 Store 与 DataBridge 端点，读取复用 `newsService.listNews()`，写入由 `newsService` 内部调用 `dataLayer`。
+
+- **V9 文档治理官批次 2：图表/反馈/Widget 错误/PWA 实施规格补齐**：
+  - 新增 `docs/implementation/chart-integration.md`：图表技术选型（`lightweight-charts` + `recharts`）、`StockChart` / `IndicatorChart` API、DataFlow 通道对接、性能优化策略。
+  - 新增 `docs/implementation/feedback-loop-spec.md`：Toast 四态持续时间、`FeedbackService` 接口、操作反馈闭环流程图、`feedback:*` 事件与 `EventBus` 集成。
+  - 新增 `docs/implementation/widget-error-handling.md`：Widget 级 `ErrorBoundary` 复用与包裹策略、降级 UI 规范、错误分类上报、`widget:error` 事件定义。
+  - 新增 `docs/implementation/pwa-offline-guide.md`：`vite-plugin-pwa` 注册策略、Precache/Runtime Cache 清单、版本更新流程、Lighthouse 离线测试标准。
+  - 更新 `docs/implementation/v9-system-blueprint.md`：文档索引新增 4 份实施规格；D16/D18/D19 标记为「规格已起草，代码待引入」；版本号更新为 `v0.9.0-doc-sync-batch2`。
+
+- **代码-文档同步机制建立**：
+  - 新增 `docs/implementation/doc-sync-execution-plan.md`：定义“扫描差异 → 补齐文档 → 验证”闭环，明确与 V9 问题整改调度表、实施计划、NewsPage PoC、CHANGELOG 的衔接方式。
+  - 新增 `docs/implementation/doc-sync-gap-list.md`：首次扫描记录已闭环 4 项、待处理 12 项差异。
+  - 新增 `docs/DATA_DICTIONARY_INDEX.md`：汇总所有模块数据字典入口与通用类型，便于快速查找。
+  - 新增/完善 `scripts/audit-doc-sync.ts`：自动化差异扫描脚本，支持 git diff 与全量 src 扫描；已纳入 `npm run audit:docs` 与 `npm run audit`。
+  - 更新 `docs/08-implementation-plan.md`：新增任务 2.22“代码-文档同步机制”，版本号更新为 `v0.9.0-doc-sync-plan`。
+  - 更新 `docs/06-routing-specs.md`：补全 `/analysis/news-v6`、`/trading/holdings`、`/mock-test` 等路由映射，版本号更新为 `v0.9.0-doc-sync-plan`。
+  - 更新 `docs/09-quality-gates.md`：修正跨层调用基线为 0/0，更新硬编码基线为 749、死代码基线为 0/0/16，版本号更新为 `v0.9.0-doc-sync-plan`。
+  - 新增 `docs/DATAFLOW_DATA_DEFINITION.md`：覆盖数据流引擎 `DataChannel`、`DataPacket`、`ChannelMeta`、API、事件、回退数据、重连策略、性能阈值。
+  - 更新 `docs/05-engine-specs.md`：数据流引擎章节引用 `docs/DATAFLOW_DATA_DEFINITION.md`，版本号更新为 `v0.9.0-doc-sync-plan`。
+
 - **文档体系架构校对（v0.9.0-docs-review）**：
   - 新增 `docs/implementation/architecture-version-comparison.md`，记录架构文档从规划基线到校对版的全量差异。
   - 新增 `docs/implementation/input-cabin-spec.md`，补齐输入舱业务蓝图、数据协议、服务契约、UI 组件映射。
@@ -116,6 +159,15 @@
   - 在 `src/apps/command/CommandApp.tsx` 中新增"V6 迁移"按钮，点击弹出 Dialog 打开 `MigrationPanel`。
   - 新增 `tests/v6MigrationService.test.ts`（19 tests）与 `tests/MigrationPanel.test.tsx`（4 tests）。
   - 全量质量门禁通过：`tsc --noEmit`、`npm run lint`、`npm test` 291 passed、`npm run build`、`npm run test:e2e` 5 passed。
+
+- **Widget 与数据层质量修复**：
+  - 删除 `src/components/holdings/HoldingsFilter.tsx` 未使用变量，消除 ESLint 失败。
+  - 修复 `src/cockpit/core/widgetEngine.ts` 类型兼容问题，确保懒加载组件类型与注册表一致。
+  - 修复 `src/services/stock-analysis/mockStockAnalysisProvider.ts` 空值安全问题，避免 `toFixed` 等操作在异常 payload 上崩溃。
+  - 全量验证通过：`npm run tsc`、`npm run lint`、`npm run test`、`npm run build`。
+
+- **文档同步过程中的质量修复**：
+  - 修复 `src/services/data-collector/mockDataCollection.ts:872` 中 `catch (_)` 未使用变量导致的 ESLint 失败，改为 `catch { }`。
 
 ### Fixed
 

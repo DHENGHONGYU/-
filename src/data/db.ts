@@ -1,41 +1,90 @@
 import { DB_NAME, DB_VERSION, DEFAULT_POOL_GROUP, STORE_NAME } from '@/config/dbConfig'
 
-// DB_VERSION 升级历史：
-// v3 → v4: 新增 daily_quotes 存储，用于保存 K线/行情数据。
-// v4 → v5: stocks 存储新增 group 字段与 by-group 索引，历史数据回退为默认分组。
-// v5 → v6: 新增 rotation_scores、sector_scores、score_docs、strategy_snapshots、
-//          local_docs、news、news_stock_map、sentiment_cache 存储，支撑 V6 Pro 迁移能力。
-
 const STORE_NAMES = Object.values(STORE_NAME)
 
 let dbInstance: IDBDatabase | null = null
 
-function openDB(): Promise<IDBDatabase> {
-  if (dbInstance) return Promise.resolve(dbInstance)
+function deleteDB(): Promise<void> {
+  console.info('[DB] Initiating database deletion...')
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.deleteDatabase(DB_NAME)
+    request.onsuccess = () => {
+      console.info('[DB] Database deleted successfully')
+      resolve()
+    }
+    request.onerror = () => {
+      console.error('[DB] Failed to delete database:', request.error)
+      reject(request.error)
+    }
+    request.onblocked = () => {
+      console.warn('[DB] Database delete blocked - other tabs may have active connections')
+      reject(new Error('Database delete blocked'))
+    }
+  })
+}
+
+async function openDB(): Promise<IDBDatabase> {
+  if (dbInstance) {
+    console.debug('[DB] Returning existing database instance')
+    return Promise.resolve(dbInstance)
+  }
+
+  console.info(`[DB] Opening database "${DB_NAME}" with target version ${DB_VERSION}...`)
 
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, DB_VERSION)
 
-    request.onerror = () => reject(request.error)
+    request.onerror = () => {
+      const error = request.error
+      console.error('[DB] Database open request failed:', error?.message ?? error)
+      if (error && error.name === 'VersionError') {
+        console.warn(`[DB] Version conflict: existing DB version higher than requested v${DB_VERSION}`)
+        if (import.meta.env.DEV) {
+          console.warn('[DB] DEV mode: attempting to delete old database and recreate...')
+          deleteDB()
+            .then(() => {
+              dbInstance = null
+              console.info('[DB] Reopening database after deletion...')
+              openDB().then(resolve).catch(reject)
+            })
+            .catch((e) => {
+              console.error('[DB] Failed to delete old database:', e)
+              dbInstance = null
+              reject(error)
+            })
+        } else {
+          console.error('[DB] Production mode: refusing to auto-delete existing data')
+          reject(new Error('数据库版本冲突，请清除浏览器缓存后重试'))
+        }
+      } else {
+        reject(error)
+      }
+    }
+
     request.onsuccess = () => {
       dbInstance = request.result
+      console.info(`[DB] Database opened successfully. Current version: ${dbInstance.version}`)
       resolve(request.result)
     }
 
     request.onupgradeneeded = (event) => {
       const db = (event.target as IDBOpenDBRequest).result
+      const oldVersion = (event as IDBVersionChangeEvent).oldVersion
+      console.info(`[DB] Upgrade needed: v${oldVersion} → v${DB_VERSION} | Existing stores: [${Array.from(db.objectStoreNames).join(', ')}]`)
 
       if (!db.objectStoreNames.contains(STORE_NAME.stocks)) {
+        console.debug(`[DB] Creating objectStore: "${STORE_NAME.stocks}"`)
         const store = db.createObjectStore(STORE_NAME.stocks, { keyPath: 'symbol' })
         store.createIndex('by-status', 'researchStatus', { unique: false })
         store.createIndex('by-group', 'group', { unique: false })
       } else {
+        console.debug(`[DB] ObjectStore "${STORE_NAME.stocks}" already exists, checking indexes...`)
         const store = request.transaction?.objectStore(STORE_NAME.stocks)
         if (store && !store.indexNames.contains('by-group')) {
+          console.debug('[DB] Adding missing index: "by-group" on "stocks"')
           store.createIndex('by-group', 'group', { unique: false })
         }
 
-        // 历史数据兼容：缺失 group 字段的股票回写为默认分组
         if (store) {
           const cursorRequest = store.openCursor()
           cursorRequest.onsuccess = () => {
@@ -43,6 +92,7 @@ function openDB(): Promise<IDBDatabase> {
             if (cursor) {
               const stock = cursor.value as Record<string, unknown>
               if (stock.group === undefined) {
+                console.debug(`[DB] Backfilling missing "group" field for stock: ${stock.symbol}`)
                 stock.group = DEFAULT_POOL_GROUP
                 cursor.update(stock)
               }
@@ -53,111 +103,161 @@ function openDB(): Promise<IDBDatabase> {
       }
 
       if (!db.objectStoreNames.contains(STORE_NAME.v6Scores)) {
+        console.debug(`[DB] Creating objectStore: "${STORE_NAME.v6Scores}"`)
         db.createObjectStore(STORE_NAME.v6Scores, { keyPath: 'symbol' })
+      } else {
+        console.debug(`[DB] ObjectStore "${STORE_NAME.v6Scores}" already exists`)
       }
 
       if (!db.objectStoreNames.contains(STORE_NAME.intelligentScores)) {
+        console.debug(`[DB] Creating objectStore: "${STORE_NAME.intelligentScores}" with autoIncrement`)
         const scoreStore = db.createObjectStore(STORE_NAME.intelligentScores, {
           keyPath: 'id',
           autoIncrement: true,
         })
         scoreStore.createIndex('by-symbol', 'symbol', { unique: false })
+      } else {
+        console.debug(`[DB] ObjectStore "${STORE_NAME.intelligentScores}" already exists`)
       }
 
       if (!db.objectStoreNames.contains(STORE_NAME.industryScores)) {
+        console.debug(`[DB] Creating objectStore: "${STORE_NAME.industryScores}" with autoIncrement`)
         const industryStore = db.createObjectStore(STORE_NAME.industryScores, {
           keyPath: 'id',
           autoIncrement: true,
         })
         industryStore.createIndex('by-code', 'code', { unique: false })
+      } else {
+        console.debug(`[DB] ObjectStore "${STORE_NAME.industryScores}" already exists`)
       }
 
       if (!db.objectStoreNames.contains(STORE_NAME.orders)) {
+        console.debug(`[DB] Creating objectStore: "${STORE_NAME.orders}"`)
         db.createObjectStore(STORE_NAME.orders, { keyPath: 'id' })
+      } else {
+        console.debug(`[DB] ObjectStore "${STORE_NAME.orders}" already exists`)
       }
 
       if (!db.objectStoreNames.contains(STORE_NAME.watchlists)) {
+        console.debug(`[DB] Creating objectStore: "${STORE_NAME.watchlists}"`)
         db.createObjectStore(STORE_NAME.watchlists, { keyPath: 'id' })
+      } else {
+        console.debug(`[DB] ObjectStore "${STORE_NAME.watchlists}" already exists`)
       }
 
       if (!db.objectStoreNames.contains(STORE_NAME.signals)) {
+        console.debug(`[DB] Creating objectStore: "${STORE_NAME.signals}"`)
         db.createObjectStore(STORE_NAME.signals, { keyPath: 'id' })
+      } else {
+        console.debug(`[DB] ObjectStore "${STORE_NAME.signals}" already exists`)
       }
 
       if (!db.objectStoreNames.contains(STORE_NAME.researchLogs)) {
+        console.debug(`[DB] Creating objectStore: "${STORE_NAME.researchLogs}" with autoIncrement`)
         db.createObjectStore(STORE_NAME.researchLogs, {
           keyPath: 'id',
           autoIncrement: true,
         })
+      } else {
+        console.debug(`[DB] ObjectStore "${STORE_NAME.researchLogs}" already exists`)
       }
 
       if (!db.objectStoreNames.contains(STORE_NAME.dailyQuotes)) {
+        console.debug(`[DB] Creating objectStore: "${STORE_NAME.dailyQuotes}"`)
         db.createObjectStore(STORE_NAME.dailyQuotes, { keyPath: 'symbol' })
+      } else {
+        console.debug(`[DB] ObjectStore "${STORE_NAME.dailyQuotes}" already exists`)
       }
 
       // v6 新增：板块轮动评分
       if (!db.objectStoreNames.contains(STORE_NAME.rotationScores)) {
+        console.debug(`[DB] Creating objectStore: "${STORE_NAME.rotationScores}"`)
         const rotationStore = db.createObjectStore(STORE_NAME.rotationScores, { keyPath: 'id' })
         rotationStore.createIndex('by-sector-date', ['sectorCode', 'scoreDate'], { unique: true })
         rotationStore.createIndex('by-sector', 'sectorCode', { unique: false })
         rotationStore.createIndex('by-total', 'total', { unique: false })
         rotationStore.createIndex('by-resonance', 'resonance', { unique: false })
+      } else {
+        console.debug(`[DB] ObjectStore "${STORE_NAME.rotationScores}" already exists`)
       }
 
       // v6 新增：十五五板块评分
       if (!db.objectStoreNames.contains(STORE_NAME.sectorScores)) {
+        console.debug(`[DB] Creating objectStore: "${STORE_NAME.sectorScores}"`)
         const sectorScoreStore = db.createObjectStore(STORE_NAME.sectorScores, { keyPath: 'id' })
         sectorScoreStore.createIndex('by-sector', 'sectorCode', { unique: false })
         sectorScoreStore.createIndex('by-composite', 'composite', { unique: false })
         sectorScoreStore.createIndex('by-is-core', 'isCore', { unique: false })
+      } else {
+        console.debug(`[DB] ObjectStore "${STORE_NAME.sectorScores}" already exists`)
       }
 
       // v6 新增：评分文档版本库
       if (!db.objectStoreNames.contains(STORE_NAME.scoreDocs)) {
+        console.debug(`[DB] Creating objectStore: "${STORE_NAME.scoreDocs}"`)
         const scoreDocStore = db.createObjectStore(STORE_NAME.scoreDocs, { keyPath: 'docId' })
         scoreDocStore.createIndex('by-symbol', 'symbol', { unique: false })
         scoreDocStore.createIndex('by-symbol-version', ['symbol', 'version'], { unique: true })
         scoreDocStore.createIndex('by-composite', 'composite', { unique: false })
+      } else {
+        console.debug(`[DB] ObjectStore "${STORE_NAME.scoreDocs}" already exists`)
       }
 
       // v6 新增：策略快照
       if (!db.objectStoreNames.contains(STORE_NAME.strategySnapshots)) {
+        console.debug(`[DB] Creating objectStore: "${STORE_NAME.strategySnapshots}"`)
         const snapshotStore = db.createObjectStore(STORE_NAME.strategySnapshots, { keyPath: 'id' })
         snapshotStore.createIndex('by-version', 'version', { unique: true })
         snapshotStore.createIndex('by-date', 'date', { unique: false })
         snapshotStore.createIndex('by-timestamp', 'timestamp', { unique: false })
+      } else {
+        console.debug(`[DB] ObjectStore "${STORE_NAME.strategySnapshots}" already exists`)
       }
 
       // v6 新增：本地知识库
       if (!db.objectStoreNames.contains(STORE_NAME.localDocs)) {
+        console.debug(`[DB] Creating objectStore: "${STORE_NAME.localDocs}"`)
         const localDocStore = db.createObjectStore(STORE_NAME.localDocs, { keyPath: 'id' })
         localDocStore.createIndex('by-symbol', 'symbol', { unique: false })
         localDocStore.createIndex('by-category', 'category', { unique: false })
         localDocStore.createIndex('by-added-at', 'addedAt', { unique: false })
+      } else {
+        console.debug(`[DB] ObjectStore "${STORE_NAME.localDocs}" already exists`)
       }
 
       // v6 新增：资讯文章
       if (!db.objectStoreNames.contains(STORE_NAME.news)) {
+        console.debug(`[DB] Creating objectStore: "${STORE_NAME.news}"`)
         const newsStore = db.createObjectStore(STORE_NAME.news, { keyPath: 'id' })
         newsStore.createIndex('by-source', 'source', { unique: false })
         newsStore.createIndex('by-category', 'category', { unique: false })
         newsStore.createIndex('by-publish-time', 'publishTime', { unique: false })
         newsStore.createIndex('by-hash', 'hash', { unique: true })
+      } else {
+        console.debug(`[DB] ObjectStore "${STORE_NAME.news}" already exists`)
       }
 
       // v6 新增：股票-资讯关联
       if (!db.objectStoreNames.contains(STORE_NAME.newsStockMap)) {
+        console.debug(`[DB] Creating objectStore: "${STORE_NAME.newsStockMap}"`)
         const newsStockMapStore = db.createObjectStore(STORE_NAME.newsStockMap, { keyPath: 'id' })
         newsStockMapStore.createIndex('by-symbol', 'symbol', { unique: false })
         newsStockMapStore.createIndex('by-news', 'newsId', { unique: false })
+      } else {
+        console.debug(`[DB] ObjectStore "${STORE_NAME.newsStockMap}" already exists`)
       }
 
       // v6 新增：情感分析缓存
       if (!db.objectStoreNames.contains(STORE_NAME.sentimentCache)) {
+        console.debug(`[DB] Creating objectStore: "${STORE_NAME.sentimentCache}"`)
         const sentimentStore = db.createObjectStore(STORE_NAME.sentimentCache, { keyPath: 'id' })
         sentimentStore.createIndex('by-content-hash', 'contentHash', { unique: true })
         sentimentStore.createIndex('by-analyzed-at', 'analyzedAt', { unique: false })
+      } else {
+        console.debug(`[DB] ObjectStore "${STORE_NAME.sentimentCache}" already exists`)
       }
+
+      console.info(`[DB] Schema upgrade complete. Final stores: [${Array.from(db.objectStoreNames).join(', ')}]`)
     }
   })
 }
@@ -166,7 +266,9 @@ export class V6Database {
   private db: IDBDatabase | null = null
 
   async init(): Promise<void> {
+    console.info('[DB] V6Database.init() called')
     this.db = await openDB()
+    console.info('[DB] V6Database.init() completed, database ready')
   }
 
   private ensureDB(): IDBDatabase {

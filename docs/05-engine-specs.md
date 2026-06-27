@@ -1,8 +1,8 @@
 # 05. 引擎规格
 
 > **Status**: Current  
-> **Version**: v0.9.0-docs-v6pro-assessment  
-> **Last Updated**: 2026-06-25
+> **Version**: v1.1.0  
+> **Last Updated**: 2026-06-26
 >
 > 本文档定义 V9 的分析引擎、交易引擎、评分模型与跨模块通信协议（DataBridge / Envelope）。  
 > 目标读者：前端/全栈开发者、算法研究员、测试工程师。  
@@ -112,7 +112,7 @@ src/store/
 └── dataflowStore.ts       # 状态管理
 ```
 
-**当前状态**：🟡 部分实现。已支持 SSE/轮询、内存缓存、定时刷新、慢订阅者检测、通道 priority 字段；TTL/容量上限/按优先级排序分发待完善。
+**当前状态**：🟡 部分实现。已支持 SSE/轮询、内存缓存、定时刷新、慢订阅者检测、通道 priority 字段；TTL/容量上限/按优先级排序分发待完善。详细字段与 API 见 `docs/DATAFLOW_DATA_DEFINITION.md`。
 
 ### 1.4 未来可扩展
 

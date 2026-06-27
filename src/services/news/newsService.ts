@@ -2,6 +2,9 @@ import { dataLayer } from '@/data/dataLayer'
 import { generateId } from '@/data/db'
 import type { DataLayerResult, NewsArticle, NewsStockMap, Stock } from '@/data/types'
 import { getLogger } from '@/lib/logger'
+import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID } from '@/config/dbConfig'
+import { dataBridge } from '@/core/databridge'
+import { EnvelopeFactory } from '@/core/envelope'
 import { analyzeNewsArticle, getOrAnalyzeSentiment } from './sentimentAnalyzer'
 import type { StockInfo, StockLink } from './stockLinker'
 import { DEFAULT_STOCK_LIBRARY, linkArticleToStocks } from './stockLinker'
@@ -95,6 +98,24 @@ export async function saveNewsArticle(
       return { success: false, error: saveResult.error }
     }
 
+    // DataBridge 事件转发：通知所有订阅者新文章已保存
+    // 使用 try-catch 确保 forward 失败不影响已成功保存的文章
+    try {
+      const envelope = EnvelopeFactory.create(
+        {
+          source: MODULE_ID.news,
+          target: ENVELOPE_TARGET.db,
+          action: ENVELOPE_ACTION.saveNews,
+          traceId: `news-save-${Date.now()}-${id}`,
+        },
+        fullArticle,
+      )
+      await dataBridge.forward(envelope)
+      logger.info('[newsService] DataBridge forwarded: saveNews', { id, title: article.title.slice(0, 30) })
+    } catch (forwardErr) {
+      logger.error('[newsService] DataBridge forward failed for saveNews', { id, error: forwardErr })
+    }
+
     return { success: true, data: fullArticle }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
@@ -164,7 +185,28 @@ export async function listNews(options?: {
     articles.sort((a, b) => b.publishTime.localeCompare(a.publishTime))
 
     const limit = options?.limit ?? articles.length
-    return { success: true, data: articles.slice(0, limit) }
+    const result = articles.slice(0, limit)
+
+    // DataBridge 事件转发：记录新闻列表加载（用于可观测性）
+    // 使用 try-catch 确保 forward 失败不影响列表查询结果
+    try {
+      const envelope = EnvelopeFactory.create(
+        {
+          source: MODULE_ID.news,
+          target: ENVELOPE_TARGET.db,
+          action: ENVELOPE_ACTION.newsArticleLoaded,
+          traceId: `news-list-${Date.now()}`,
+        },
+        { count: result.length, total: articles.length, options },
+      )
+      void dataBridge.forward(envelope).catch((forwardErr) => {
+        logger.error('[newsService] DataBridge forward failed for listNews', { error: forwardErr })
+      })
+    } catch (err) {
+      logger.error('[newsService] Failed to create listNews envelope', { error: err })
+    }
+
+    return { success: true, data: result }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     logger.error('listNews failed', { error: message })

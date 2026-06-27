@@ -1,5 +1,6 @@
 import { getLogger } from '@/lib/logger'
-import type { WidgetMeta, WidgetConfig, WidgetRuntimeState } from '@/types/modules/widget.types'
+import type { WidgetMeta, WidgetConfig, WidgetRuntimeState, MarketData } from '@/types/modules/widget.types'
+import { DEFAULT_WIDGET_CONFIG, WIDGET_DEFAULT_DATA_SOURCE } from '@/constants/cockpit.constants'
 
 const logger = getLogger()
 
@@ -7,7 +8,8 @@ type RegistryListener = (event: { type: string; widgetId?: string; instanceId?: 
 
 export interface WidgetTemplate {
   meta: WidgetMeta
-  component: () => Promise<{ default: React.ComponentType<{ config: WidgetConfig; data?: unknown }> }>
+  /** Widget 组件统一接收 config 与 MarketData；data 可由 MarketDataProvider 注入 */
+  component: () => Promise<{ default: React.ComponentType<{ config: WidgetConfig; data?: MarketData }> }>
   configPanel?: () => Promise<{ default: React.ComponentType }>
 }
 
@@ -20,6 +22,176 @@ export class WidgetRegistry {
 
   constructor() {
     logger.info('[WidgetRegistry] Initializing...')
+    this.registerDefaultWidgets()
+  }
+
+  private registerDefaultWidgets(): void {
+    const widgets: WidgetTemplate[] = [
+      {
+        meta: {
+          id: 'marketIndices',
+          name: DEFAULT_WIDGET_CONFIG.marketIndices.title,
+          category: DEFAULT_WIDGET_CONFIG.marketIndices.category,
+          description: '展示大盘指数实时数据',
+          defaultSize: DEFAULT_WIDGET_CONFIG.marketIndices.size,
+          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.marketIndices,
+        },
+        component: () => import('@/cockpit/widgets/MarketIndicesWidget'),
+      },
+      {
+        meta: {
+          id: 'sectorHeatmap',
+          name: DEFAULT_WIDGET_CONFIG.sectorHeatmap.title,
+          category: DEFAULT_WIDGET_CONFIG.sectorHeatmap.category,
+          description: '展示板块涨跌幅热力图',
+          defaultSize: DEFAULT_WIDGET_CONFIG.sectorHeatmap.size,
+          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.sectorHeatmap,
+        },
+        component: () => import('@/cockpit/widgets/SectorHeatmapWidget'),
+      },
+      {
+        meta: {
+          id: 'fundFlow',
+          name: DEFAULT_WIDGET_CONFIG.fundFlow.title,
+          category: DEFAULT_WIDGET_CONFIG.fundFlow.category,
+          description: '展示资金流向数据',
+          defaultSize: DEFAULT_WIDGET_CONFIG.fundFlow.size,
+          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.fundFlow,
+        },
+        component: () => import('@/cockpit/widgets/FundFlowWidget'),
+      },
+      {
+        meta: {
+          id: 'marketSentiment',
+          name: DEFAULT_WIDGET_CONFIG.marketSentiment.title,
+          category: DEFAULT_WIDGET_CONFIG.marketSentiment.category,
+          description: '展示市场情绪指标',
+          defaultSize: DEFAULT_WIDGET_CONFIG.marketSentiment.size,
+          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.marketSentiment,
+        },
+        component: () => import('@/cockpit/widgets/MarketSentimentWidget'),
+      },
+      {
+        meta: {
+          id: 'watchlist',
+          name: DEFAULT_WIDGET_CONFIG.watchlist.title,
+          category: DEFAULT_WIDGET_CONFIG.watchlist.category,
+          description: '展示自选股列表',
+          defaultSize: DEFAULT_WIDGET_CONFIG.watchlist.size,
+          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.watchlist,
+        },
+        component: () => import('@/cockpit/widgets/WatchlistWidget'),
+      },
+      {
+        meta: {
+          id: 'portfolioOverview',
+          name: DEFAULT_WIDGET_CONFIG.portfolioOverview.title,
+          category: DEFAULT_WIDGET_CONFIG.portfolioOverview.category,
+          description: '展示持仓概览',
+          defaultSize: DEFAULT_WIDGET_CONFIG.portfolioOverview.size,
+          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.portfolioOverview,
+        },
+        component: () => import('@/cockpit/widgets/PortfolioOverviewWidget'),
+      },
+      {
+        meta: {
+          id: 'aiTradeReview',
+          name: DEFAULT_WIDGET_CONFIG.aiTradeReview.title,
+          category: DEFAULT_WIDGET_CONFIG.aiTradeReview.category,
+          description: 'AI 交易复盘分析',
+          defaultSize: DEFAULT_WIDGET_CONFIG.aiTradeReview.size,
+          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.aiTradeReview,
+        },
+        component: () => import('@/cockpit/widgets/AITradeReviewWidget'),
+      },
+      // ============================================================
+      // 新增金融业务 Widget 注册
+      // ============================================================
+      {
+        meta: {
+          id: 'investmentProfile',
+          name: DEFAULT_WIDGET_CONFIG.investmentProfile.title,
+          category: DEFAULT_WIDGET_CONFIG.investmentProfile.category,
+          description: '投资画像/分析中心',
+          defaultSize: DEFAULT_WIDGET_CONFIG.investmentProfile.size,
+          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.investmentProfile,
+        },
+        component: () => import('@/cockpit/widgets/InvestmentProfileWidget'),
+      },
+      {
+        meta: {
+          id: 'stockPool',
+          name: DEFAULT_WIDGET_CONFIG.stockPool.title,
+          category: DEFAULT_WIDGET_CONFIG.stockPool.category,
+          description: '股票池管理与监控列表',
+          defaultSize: DEFAULT_WIDGET_CONFIG.stockPool.size,
+          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.stockPool,
+        },
+        component: () => import('@/cockpit/widgets/StockPoolWidget'),
+      },
+      {
+        meta: {
+          id: 'kaiScore',
+          name: DEFAULT_WIDGET_CONFIG.kaiScore.title,
+          category: DEFAULT_WIDGET_CONFIG.kaiScore.category,
+          description: 'KAI 选股综合评分图谱',
+          defaultSize: DEFAULT_WIDGET_CONFIG.kaiScore.size,
+          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.kaiScore,
+        },
+        component: () => import('@/cockpit/widgets/KaiScoreWidget'),
+      },
+      {
+        meta: {
+          id: 'modelCompare',
+          name: DEFAULT_WIDGET_CONFIG.modelCompare.title,
+          category: DEFAULT_WIDGET_CONFIG.modelCompare.category,
+          description: 'AI 大模型智能对比',
+          defaultSize: DEFAULT_WIDGET_CONFIG.modelCompare.size,
+          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.modelCompare,
+        },
+        component: () => import('@/cockpit/widgets/ModelCompareWidget'),
+      },
+      {
+        meta: {
+          id: 'stockChat',
+          name: DEFAULT_WIDGET_CONFIG.stockChat.title,
+          category: DEFAULT_WIDGET_CONFIG.stockChat.category,
+          description: '个股/市场深度分析聊天',
+          defaultSize: DEFAULT_WIDGET_CONFIG.stockChat.size,
+          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.stockChat,
+        },
+        component: () => import('@/cockpit/widgets/StockChatWidget'),
+      },
+    ]
+
+    widgets.forEach((widget) => this.register(widget))
+    this.createDefaultInstances()
+  }
+
+  private createDefaultInstances(): void {
+    const defaultLayout = [
+      { widgetId: 'marketIndices', position: { x: 0, y: 0 } },
+      { widgetId: 'sectorHeatmap', position: { x: 0, y: 2 } },
+      { widgetId: 'fundFlow', position: { x: 0, y: 4 } },
+      { widgetId: 'marketSentiment', position: { x: 2, y: 4 } },
+      { widgetId: 'watchlist', position: { x: 0, y: 6 } },
+      { widgetId: 'portfolioOverview', position: { x: 0, y: 8 } },
+      { widgetId: 'aiTradeReview', position: { x: 0, y: 10 } },
+      // ============================================================
+      // 新增金融业务 Widget 默认布局
+      // ============================================================
+      { widgetId: 'investmentProfile', position: { x: 0, y: 13 } },
+      { widgetId: 'stockPool', position: { x: 0, y: 15 } },
+      { widgetId: 'kaiScore', position: { x: 0, y: 17 } },
+      { widgetId: 'modelCompare', position: { x: 0, y: 20 } },
+      { widgetId: 'stockChat', position: { x: 0, y: 23 } },
+    ]
+
+    defaultLayout.forEach((item) => {
+      this.createInstance(item.widgetId, { position: item.position })
+    })
+
+    logger.info(`[WidgetRegistry] Created ${defaultLayout.length} default instances`)
   }
 
   register(template: WidgetTemplate): boolean {
@@ -56,6 +228,7 @@ export class WidgetRegistry {
       settings: { ...template.meta.defaultConfig, ...overrides?.settings },
       visible: overrides?.visible ?? true,
       collapsed: overrides?.collapsed ?? false,
+      dataSource: overrides?.dataSource ?? template.meta.defaultDataSource,
     }
 
     this.instances.set(instanceId, config)

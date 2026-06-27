@@ -1,3 +1,14 @@
+---
+title: 输入舱 UI 体系化重塑说明
+version: v0.9.0
+last_updated: 2026-06-25
+maintainer: V9 Architecture Team
+status: active
+change_log:
+  - date: 2026-06-25
+    author: Documentation Governor
+    desc: 注入 Frontmatter 元数据（Phase 3 版本化）
+---
 # 输入舱 UI 体系化重塑说明
 
 > **Status**: Current  

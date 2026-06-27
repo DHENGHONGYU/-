@@ -1,3 +1,14 @@
+---
+title: ADR-008: 采用 v6-pro-cockpit "第四次工业革命稀缺核心资源" 交易策略
+version: v0.9.0
+last_updated: 2026-06-24
+maintainer: V9 Architecture Team
+status: active
+change_log:
+  - date: 2026-06-24
+    author: Documentation Governor
+    desc: 注入 Frontmatter 元数据（Phase 3 版本化）
+---
 # ADR-008: 采用 v6-pro-cockpit "第四次工业革命稀缺核心资源" 交易策略
 
 - **状态**：已接受 / Accepted

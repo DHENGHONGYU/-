@@ -1,3 +1,14 @@
+---
+title: 投资流程阶段化分析：仓位、引擎、数据架构与数据交互
+version: v0.9.0
+last_updated: 2026-06-24
+maintainer: V9 Architecture Team
+status: active
+change_log:
+  - date: 2026-06-24
+    author: Documentation Governor
+    desc: 注入 Frontmatter 元数据（Phase 3 版本化）
+---
 # 投资流程阶段化分析：仓位、引擎、数据架构与数据交互
 
 > **Status**: Current  

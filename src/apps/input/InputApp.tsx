@@ -1,30 +1,19 @@
 import React from 'react'
-import { useLocation } from 'react-router'
+import { Route, Routes } from 'react-router'
 import InputDashboard from './InputDashboard'
 import BulkImportPanel from './BulkImportPanel'
 import HotSectorPanel from './HotSectorPanel'
 import DataTestPanel from './DataTestPanel'
-import InputPrototype from './prototype/InputPrototype'
+import { getLogger } from '@/lib/logger'
 
+const logger = getLogger()
+
+/**
+ * 输入舱子路由分发
+ * @description 使用声明式 <Routes> 替代 if/else 链，新增子面板仅需在此添加 <Route> 即可
+ */
 export default function InputApp(): React.JSX.Element {
-  const { pathname } = useLocation()
-
-  let content: React.ReactNode
-  if (pathname === '/input' || pathname.startsWith('/input/')) {
-    if (pathname === '/input/bulk-import') {
-      content = <BulkImportPanel />
-    } else if (pathname === '/input/hot-sectors') {
-      content = <HotSectorPanel />
-    } else if (pathname === '/input/data-test') {
-      content = <DataTestPanel />
-    } else if (pathname === '/input/prototype') {
-      content = <InputPrototype />
-    } else {
-      content = <InputDashboard />
-    }
-  } else {
-    content = <InputDashboard />
-  }
+  logger.info('[InputApp] Rendering input cabin with declarative sub-routes')
 
   return (
     <div className="space-y-4">
@@ -34,7 +23,12 @@ export default function InputApp(): React.JSX.Element {
           <p className="text-sm text-muted-foreground">股票录入 · 批量导入 · 热门板块 · 采集测试</p>
         </div>
       </div>
-      {content}
+      <Routes>
+        <Route path="/input/bulk-import" element={<BulkImportPanel />} />
+        <Route path="/input/hot-sectors" element={<HotSectorPanel />} />
+        <Route path="/input/data-test" element={<DataTestPanel />} />
+        <Route path="/input" element={<InputDashboard />} />
+      </Routes>
     </div>
   )
 }

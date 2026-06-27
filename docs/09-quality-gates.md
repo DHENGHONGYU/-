@@ -1,8 +1,8 @@
 # 09. 质量门禁
 
 > **Status**: Current  
-> **Version**: v0.9.0-migration-implemented  
-> **Last Updated**: 2026-06-24
+> **Version**: v1.1.0  
+> **Last Updated**: 2026-06-26
 >
 > 本文档定义 V9 的上线前质量门禁、CI 流水线、测试策略与扫描脚本。  
 > 目标读者：开发者、QA、发布负责人。
@@ -19,9 +19,9 @@
 | 2 | ESLint 代码规范 | ✅ 通过 | 0 warnings/errors | `npm run lint` |
 | 3 | 单元测试 | ✅ 通过 | 0 失败（291/291 passed） | `npm run test` |
 | 4 | 生产构建 | ✅ 通过 | 产物生成成功 | `npm run build` |
-| 5 | 跨层调用审计 | ✅ 已建立，当前 0 违规 / 2 警告 | 0 违规 | `npm run audit:layers` |
-| 6 | 硬编码审计 | 🟡 已建立，基线 389 处问题 | 0 硬编码阈值/颜色 | `npm run audit:hardcode` |
-| 7 | 空壳文件/未使用导出审计 | 🟡 已建立，基线 11 处提示 | 0 空壳 | `npm run audit:deadcode` |
+| 5 | 跨层调用审计 | ✅ 已建立，当前 0 违规 / 0 警告 | 0 违规 | `npm run audit:layers` |
+| 6 | 硬编码审计 | 🟡 已建立，基线 749 处问题（Critical 398 / Major 351） | 0 硬编码阈值/颜色 | `npm run audit:hardcode` |
+| 7 | 空壳文件/未使用导出审计 | 🟡 已建立，基线 0 空壳 / 0 路由漂移 / 16 未注册页面提示 | 0 空壳 / 0 路由漂移 | `npm run audit:deadcode` |
 | 8 | 测试覆盖率 | 🟡 阈值已配置，当前实测覆盖率尚未达标 | core/data/lib ≥85%，services ≥70% | `npm run coverage` |
 | 9 | E2E 冒烟测试 | ✅ 已建立 | 0 失败（5/5 passed） | `npm run test:e2e` |
 | 10 | 路由一致性审计 | 🟡 已建立，基线 0 处漂移 | 0 漂移 | `npm run audit:deadcode` |
@@ -271,7 +271,7 @@ jobs:
 | 偏差 | 影响 | 计划 |
 |------|------|------|
 | 跨层调用基线已清零 | ✅ 架构违规已收敛 | 持续运行 `audit:layers` 守护 |
-| 硬编码基线 389 处未清零 | 阈值/颜色/错误兜底可能重新泄漏 | Phase 2/3 将阈值/颜色集中到 config/theme；错误兜底显式化 |
+| 硬编码基线 749 处未清零（新增主要来自 NewsPage V6 组件与 AI Center Mock 数据） | 阈值/颜色/错误兜底可能重新泄漏 | Phase 2/3 将阈值/颜色集中到 config/theme；错误兜底显式化；新增模块须先定义常量再写组件 |
 | 覆盖率阈值已配置，当前未达标 | 无法量化测试质量 | 待补充测试收敛，目标 core/data/lib ≥85%、services ≥70% |
 | E2E 已建立 | 核心链路回归风险已收敛 | 当前 5/5 通过，持续维护 |
 | CI 未配置 | 门禁依赖本地执行 | Phase 3 建立 `.github/workflows/ci.yml` |
@@ -281,7 +281,7 @@ jobs:
 
 ## 11. 版本比对
 
-本文档当前版本为 `v0.9.0-docs-review`，与规划基线 `v0.9.0-docs-base` 的差异见：
+本文档当前版本为 `v0.9.0-doc-sync-plan`，与规划基线 `v0.9.0-docs-base` 的差异见：
 
 - `docs/implementation/architecture-version-comparison.md`
 

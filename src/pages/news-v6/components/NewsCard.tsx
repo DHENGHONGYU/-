@@ -15,7 +15,6 @@ import {
   ThumbsDown,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge'
-import { useState } from 'react'
 import type { V6NewsArticle } from '../types'
 import { SentimentBadge, CategoryBadge } from './newsCardUtils'
 import { formatRelativeTime, formatSource } from './newsCardFormatters'
@@ -25,15 +24,13 @@ export interface NewsCardProps {
   onBookmark?: (id: string) => void
   onShare?: (article: V6NewsArticle) => void
   onClick?: (article: V6NewsArticle) => void
+  isBookmarked?: boolean
   compact?: boolean
 }
 
-export default function NewsCard({ article, onBookmark, onShare, onClick, compact = false }: NewsCardProps) {
-  const [bookmarked, setBookmarked] = useState(false)
-
+export default function NewsCard({ article, onBookmark, onShare, onClick, isBookmarked = false, compact = false }: NewsCardProps) {
   const handleBookmark = (e: React.MouseEvent) => {
     e.stopPropagation()
-    setBookmarked(!bookmarked)
     onBookmark?.(article.id)
   }
 
@@ -135,11 +132,11 @@ export default function NewsCard({ article, onBookmark, onShare, onClick, compac
             <Button
               variant="ghost"
               size="sm"
-              className={`h-8 w-8 p-0 ${bookmarked ? 'text-amber-500' : 'text-slate-400'}`}
+              className={`h-8 w-8 p-0 ${isBookmarked ? 'text-amber-500' : 'text-slate-400'}`}
               onClick={handleBookmark}
               title="收藏"
             >
-              <Bookmark className={`w-4 h-4 ${bookmarked ? 'fill-current' : ''}`} />
+              <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-current' : ''}`} />
             </Button>
             <Button
               variant="ghost"

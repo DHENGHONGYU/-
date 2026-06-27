@@ -21,13 +21,15 @@
     "audit:layers": "tsx scripts/audit-layer-calls.ts",
     "audit:hardcode": "tsx scripts/audit-hardcode.ts",
     "audit:deadcode": "tsx scripts/audit-dead-code.ts",
-    "audit": "npm run audit:layers && npm run audit:hardcode && npm run audit:deadcode"
+    "audit:docs": "tsx scripts/audit-doc-sync.ts",
+    "audit": "npm run audit:layers && npm run audit:hardcode && npm run audit:deadcode && npm run audit:docs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
     "lucide-react": "^0.460.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-grid-layout": "^2.2.3",
     "react-router": "^7.0.0",
     "tailwind-merge": "^2.5.0",
     "zustand": "^5.0.0"

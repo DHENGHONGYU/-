@@ -1,8 +1,8 @@
 # 06. 路由规格
 
 > **Status**: Current  
-> **Version**: v0.9.0-migration-implemented  
-> **Last Updated**: 2026-06-25
+> **Version**: v1.1.0  
+> **Last Updated**: 2026-06-26
 >
 > 本文档定义 V9 的路由注册表、舱室映射、懒加载策略与导航规范。  
 > 目标读者：前端开发者、UI/UX 设计师、测试工程师。
@@ -224,12 +224,14 @@ v6 项目强调「路由表即 UI 映射 truth source」，其做法值得 V9 �
 |------|------|------|------|
 | `/` | `HomePage` | - | portal |
 | `/cockpit` | `CockpitShell` | - | portal |
+| `/input/hub` | `PortalShell`（内部分发至 `InputApp`） | `inputService`, `stockpoolService` | input |
 | `/input` | `PortalShell`（内部分发至 `InputApp`/`InputDashboard`） | `inputService`, `stockpoolService` | input |
 | `/input/bulk-import` | `BulkImportPanel.tsx` | `batchImportService` | input |
 | `/input/hot-sectors` | `HotSectorPanel.tsx` | `hotSectorService` | input |
 | `/input/data-test` | `DataTestPanel.tsx` | `fetcherService` | input |
 | `/input/prototype` | `InputPrototype.tsx` | mock | input |
 | `/input/local-knowledge` | `LocalKnowledgePage` | `localKnowledgeService` | input |
+| `/analysis/hub` | `PortalShell`（内部分发至 `AnalysisApp`） | - | analysis |
 | `/analysis` | `PortalShell`（内部分发至 `AnalysisApp`） | - | analysis |
 | `/analysis/stock-score` | `StockAnalysisPage` | `v6ScoreService`, `intelligentScoreService` | analysis |
 | `/analysis/stock-score/:symbol` | `StockAnalysisPage` | `v6ScoreService`, `intelligentScoreService` | analysis |
@@ -237,12 +239,19 @@ v6 项目强调「路由表即 UI 映射 truth source」，其做法值得 V9 �
 | `/analysis/backtest` | `BacktestPage` | - | analysis |
 | `/analysis/industry-score` | `IndustryScorePage` | `industryScoreService` | analysis |
 | `/analysis/intelligent-score` | `IntelligentScorePage` | `intelligentScoreService` | analysis |
-| `/trading` | `PortalShell`（内部分发至 `TradingApp`） | `tradingService`, `signalGenerator`, `riskEngine` | trading |
-| `/output` | `PortalShell`（内部分发至 `OutputApp`） | - | output |
-| `/command` | `PortalShell`（内部分发至 `CommandApp`） | - | command |
 | `/analysis/score-docs` | `ScoreDocPage` | `scoreDocService` | analysis |
 | `/analysis/news` | `NewsPage` | `newsService` | analysis |
+| `/analysis/news-v6` | `NewsPage`（V6 迁移验证页） | `newsService` | analysis |
+| `/trading/hub` | `PortalShell`（内部分发至 `TradingApp`） | `tradingService`, `signalGenerator`, `riskEngine` | trading |
+| `/trading` | `PortalShell`（内部分发至 `TradingApp`） | `tradingService`, `signalGenerator`, `riskEngine` | trading |
 | `/trading/strategy-snapshots` | `StrategySnapshotPage` | `strategySnapshotService` | trading |
+| `/trading/holdings` | `HoldingsPage` | `holdingsService` | trading |
+| `/output` | `PortalShell`（内部分发至 `OutputApp`） | - | output |
+| `/command/hub` | `PortalShell`（内部分发至 `CommandApp`） | - | command |
+| `/command` | `PortalShell`（内部分发至 `CommandApp`） | - | command |
+| `/mock-test` | `MockTestPage` | - | other |
+
+> 完整路由源文件见 `src/config/routes.ts`。`getAllPaths()` 返回所有已注册路径，可用于路由一致性校验。
 
 ---
 

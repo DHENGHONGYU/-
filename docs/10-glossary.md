@@ -205,6 +205,10 @@ V9 采用**单表多状态**模型：所有标的统一存储在 `stocks` Store�
 | `sector` | 行业/板块 |
 | `system` | 系统 |
 | `user` | 用户 |
+| `ai-center` | AI 智能体中心 |
+| `data-collector` | 数据采集 |
+| `cockpit` | 驾驶舱 |
+| `health` | 健康监控 |
 
 ## 10.7 废弃命名
 
@@ -224,4 +228,20 @@ V9 采用**单表多状态**模型：所有标的统一存储在 `stocks` Store�
 | V6 迁移服务 | `v6MigrationService` | 解析 `V6ExportShape`，按 V9 规范转换 12 个 store 并写入 IndexedDB |
 | 迁移面板 | `MigrationPanel` | 输入舱/总控舱 UI，支持上传 V6 JSON、预览映射、覆盖/跳过策略 |
 | 迁移覆盖策略 | overwrite / skip | 默认跳过已存在 symbol；勾选覆盖后更新对应 store |
-| 迁移校验 | migration validation | 检查必填字段、未知状态、重复 symbol，输出错误报告 |
+|- 迁移校验 | migration validation | 检查必填字段、未知状态、重复 symbol，输出错误报告
+
+## 10.9 2026-06-26 新增概念
+
+| 术语 | 英文 | 定义 | 所属模块 |
+|------|------|------|---------|
+| **Widget** | Widget | 驾驶舱中可插拔的独立数据展示组件，由 WidgetRegistry 统一管理生命周期 | Cockpit |
+| **采集任务** | CollectionTask | TaskScheduler 调度的单次数据采集任务，包含状态、重试、执行统计 | Data Collection |
+| **KAI 评分** | KaiScore | 六维度（竞争力/技术面/基本面/情绪面/资金面/行业面）综合选股评分，0-100 分 | Cockpit |
+| **MarketData** | MarketData | 标准化市场数据结构，所有 Widget 统一消费的数据接口 | Cockpit / Data Collection |
+| **数据采集器** | DataCollector | 采集层三层架构的采集执行单元，支持 Mock/Rest/WebSocket 三种实现 | Data Collection |
+| **任务调度器** | TaskScheduler | 管理 Widget 数据采集任务的注册、启动、停止、错误恢复 | Data Collection |
+| **模型对比** | ModelComparison | AI 大模型（LLM）智能对比，比较不同模型版本在选股任务上的表现 | Cockpit |
+| **健康指标** | HealthMetric | Agent/模块的运行健康状态指标，包含 CPU、内存、延迟、错误率 | AI Center |
+| **诊断报告** | DiagnosticReport | 系统异常时的自动诊断分析报告，包含根因分析和修复建议 | AI Center |
+| **情感分析** | SentimentAnalysis | 基于规则引擎的新闻文本情感分类（正面/负面/中性），使用中文财经情感词典 | News |
+| **股票关联** | StockLinking | 将新闻资讯自动匹配到相关股票，支持代码精确匹配、名称模糊匹配、行业匹配 | News |

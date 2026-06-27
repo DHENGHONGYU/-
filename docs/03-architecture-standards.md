@@ -1,8 +1,8 @@
 # 03. 架构标准
 
 > **Status**: Current  
-> **Version**: v0.9.0-migration-implemented  
-> **Last Updated**: 2026-06-25
+> **Version**: v1.1.0  
+> **Last Updated**: 2026-06-26
 >
 > 本文档是 V9 系统架构的唯一真相源，定义五层架构、调用规则、数据架构、技术选型理由与当前代码偏差。  
 > 目标读者：前端/全栈开发者、架构师、新加入成员。  
@@ -35,9 +35,9 @@
 
 | 层级 | 规划目录 | 当前实际目录 | 状态 |
 |------|----------|--------------|------|
-| L5 展示层 | `pages/`, `components/` | ✅ `pages/`, `components/`, `portal/`, `cockpit/` | 基本对齐 |
-| L4 应用层 | `apps/`, `cockpit/` | ✅ `apps/`, `cockpit/`；输入舱已拆分为 Dashboard / BulkImport / HotSector / DataTest 四个子页面 | 对齐 |
-| L3 引擎层 | `agents/`, `trading/`, `services/` | ✅ `services/`；交易引擎已下沉至 `src/services/trading/`；采集引擎位于 `src/services/fetcher/`；🟡 `src/agents/agentRuntime.ts` 已存在，注册表/任务队列/健康监控待完善；🟡 `src/core/dataflow/` 已实现，数据融合层（UnifiedStockData）仍缺失 | 部分对齐，见偏差清单 |
+| L5 展示层 | `pages/`, `components/` | ✅ `pages/`, `components/`, `portal/`, `cockpit/`（含 12 个 Widget 组件） | 基本对齐 |
+| L4 应用层 | `apps/`, `cockpit/` | ✅ `apps/`, `cockpit/`（含 CockpitShell + Widget 引擎 + Widget 注册表）；输入舱已拆分为 Dashboard / BulkImport / HotSector / DataTest 四个子页面 | 对齐 |
+| L3 引擎层 | `agents/`, `trading/`, `services/` | ✅ `services/`；交易引擎已下沉至 `src/services/trading/`；采集引擎位于 `src/services/fetcher/` 和 `src/services/data-collector/`；新闻服务位于 `src/services/news/`（newsService + sentimentAnalyzer + stockLinker）；🟡 `src/agents/agentRuntime.ts` 已存在，注册表/任务队列/健康监控待完善；🟡 `src/core/dataflow/` 已实现，数据融合层（UnifiedStockData）仍缺失 | 部分对齐，见偏差清单 |
 | L2 数据层 | `data/`, `db/` | ✅ `src/data/`（含 `db.ts`, `dataLayer.ts`, `types.ts`）；`daily_quotes`、`signals`、`research_logs` store 已落地 | 对齐 |
 | L1 基础设施层 | `lib/`, `config/`, `core/` | ✅ `src/lib/`, `src/config/`, `src/core/`；🟡 `eventBus` 本身仍为基础 `on/emit/off`，高级缓存/定时/优先级由 `src/core/dataflow/dataflowEngine.ts` 承载 | 部分对齐 |
 
@@ -73,6 +73,17 @@ interface DataChannel {
 ```
 
 **当前状态**：🟡 部分实现。`src/core/dataflow/dataflowEngine.ts` 已提供 SSE/轮询、内存缓存、定时刷新、慢订阅者检测；通道配置包含 `priority` 字段，但 TTL、容量上限与按优先级排序分发尚未完全落地，详细规格文档待补充。
+
+**数据流引擎接口定义**（`src/types/modules/dataflow.types.ts`）：
+
+| 接口 | 用途 | 核心字段 |
+|------|------|---------|
+| `DataFlowModuleInput` | 数据流模块输入 | `channel`（string, ✅）, `callback`（(packet: DataPacket) => void, ✅）, `options.intervalMs`（number）, `options.persist`（boolean） |
+| `DataFlowModuleOutput` | 数据流模块输出 | `unsubscribe`（() => void, ✅）, `stats.connected`（boolean）, `stats.channels`（number）, `stats.subscribers`（number）, `stats.cacheEntries`（number） |
+| `DataPacket` | 数据包 | `channel`（string, ✅）, `data`（unknown, ✅）, `timestamp`（number, ✅）, `seq`（number, ✅） |
+| `ChannelMeta` | 通道元数据 | `channel`（string, ✅）, `description`（string, ✅）, `refreshInterval`（number, ✅）, `persist`（boolean, ✅）, `priority`（'high' \| 'normal' \| 'low', ✅） |
+
+> **变更**: 2026-06-26 | v1.1.0 | 补充 DataFlow 数据流引擎接口定义 | 架构资产治理官
 
 ### 3.1.3 数据融合层（Data Fusion）设计
 
@@ -122,18 +133,25 @@ interface UnifiedStockData {
 **目录结构**：
 ```
 src/cockpit/
-├── CockpitShell.tsx          # 驾驶舱外壳
-├── widgetRegistry.ts         # Widget 注册表
-├── widgetEngine.ts           # Widget 运行时引擎
-├── widgetEventBus.ts         # Widget 事件总线
+├── CockpitShell.tsx              # 驾驶舱外壳（react-grid-layout 动态网格）
+├── core/
+│   ├── widgetRegistry.ts         # Widget 注册表（模板注册 + 实例管理 + 运行时状态）
+│   ├── widgetEngine.ts           # Widget 运行时引擎
+│   └── widgetEventBus.ts         # Widget 跨组件事件总线
 └── widgets/
-    ├── market/               # 市场类 Widget
-    ├── portfolio/            # 持仓类 Widget
-    ├── strategy/             # 策略类 Widget
-    └── agent/                # Agent 监控类 Widget
+    ├── MarketIndicesWidget.tsx    # 大盘指数实时数据
+    ├── SectorHeatmapWidget.tsx    # 板块涨跌幅热力图
+    ├── FundFlowWidget.tsx         # 资金流向数据
+    ├── MarketSentimentWidget.tsx  # 市场情绪指标
+    ├── WatchlistWidget.tsx        # 自选股列表
+    ├── PortfolioOverviewWidget.tsx # 持仓概览
+    ├── AITradeReviewWidget.tsx    # AI 交易复盘分析
+    ├── InvestmentProfileWidget.tsx # 投资画像/分析中心
+    ├── StockPoolWidget.tsx        # 股票池管理与监控列表
+    ├── KaiScoreWidget.tsx         # KAI 选股综合评分图谱
+    ├── ModelCompareWidget.tsx     # AI 大模型智能对比
+    └── StockChatWidget.tsx        # 个股/市场深度分析聊天
 ```
-
-> 注：`src/cockpit/widgets/` 子目录（`market`/`portfolio`/`strategy`/`agent`）尚未创建。
 
 **Widget 定义规范**：
 ```ts
@@ -151,6 +169,37 @@ interface WidgetDefinition {
 ```
 
 **当前状态**：🟡 `CockpitShell.tsx` 当前为静态 Dashboard，尚未接入 Widget 引擎的动态网格布局；`src/cockpit/core/widgetEngine.ts` / `widgetRegistry.ts` 已实现基础 Widget 运行时，尚未被 CockpitShell 调用。
+
+### 3.1.4.1 Widget 数据采集流
+
+每个 Widget 通过 `DataSourceConfig` 声明数据需求，由 `TaskScheduler` 统一调度采集任务：
+
+```
+DataSourceConfig ──→ TaskScheduler ──→ BaseCollector（Mock/Rest/WebSocket）
+                                            │
+                                            ▼
+                                      RawMarketData
+                                            │
+                                            ▼
+                                   MarketDataAdapter
+                                            │
+                                            ▼
+                                       MarketData
+                                            │
+                                            ▼
+                              MarketDataProvider（React Context）
+                                            │
+                                    ┌───────┴───────┐
+                                    ▼               ▼
+                              Widget A          Widget B
+```
+
+**采集器三层架构**：
+- **BaseCollector**：超时控制、错误捕获、重试机制（3 次重试 / 10s 超时）
+- **TaskScheduler**：任务注册/启动/停止、错误状态管理、自动轮询与清理
+- **MarketDataAdapter**：统一不同来源的原始数据 → `MarketData` 接口
+
+**当前状态**：✅ 已实现。`src/services/data-collector/` 下三层架构完整，`src/cockpit/core/widgetRegistry.ts` 已注册 12 个默认 Widget，`CockpitShell` 已接入 Widget 引擎。
 
 ### 3.1.5 Agent 层设计
 
@@ -175,6 +224,69 @@ src/agents/
 ```
 
 **当前状态**：🟡 基础实现已存在。`src/agents/agentRuntime.ts` 已实现 Agent 注册、调度、任务队列、超时机制；注册表/健康监控/AI 助手待完善。
+
+### 3.1.5.1 Agent 运行时接口定义
+
+**来源**: `src/types/modules/agent.types.ts`
+
+| 接口 | 用途 | 核心字段 |
+|------|------|---------|
+| `AgentModuleInput` | Agent 任务输入 | `agentId`, `type`, `payload`, `options.timeout`, `options.priority` |
+| `AgentModuleOutput` | Agent 任务输出 | `taskId`, `status`（pending/running/completed/failed/timeout）, `result`, `error`, `executionTimeMs` |
+| `AgentDefinition` | Agent 定义 | `id`, `name`, `description`, `type`, `version`, `capabilities[]`, `metadata.tags`, `metadata.config` |
+| `AgentInstance` | Agent 运行实例 | `instanceId`, `agentId`, `name`, `status`（idle/running/completed/failed/stopped）, `startTime`, `lastHeartbeat`, `stats.{totalTasks,successTasks,failedTasks,avgExecutionTime}` |
+| `IOModule` | 输入输出组合 | `input: AgentModuleInput`, `output: AgentModuleOutput` |
+
+**任务状态流转**：
+```
+pending → running → completed / failed / timeout
+```
+
+**实例状态流转**：
+```
+idle → running → completed / failed / stopped
+```
+
+### 3.1.6 Engine 层设计
+
+Engine 层提供 DataFlow 引擎、Agent 运行时引擎的综合统计与生命周期管理。
+
+**设计目标**：
+- **DataFlow 引擎**：SSE/轮询/缓存/定时/优先级管理
+- **Agent 运行时引擎**：任务调度、超时控制、健康检查
+- **统计聚合**：跨引擎统计快照、健康告警
+
+**核心接口定义**（`src/types/modules/engine.types.ts`）：
+
+| 接口 | 用途 | 核心字段 |
+|------|------|---------|
+| `EngineConfig` | Engine 启动配置 | `enableSSE`, `sseUrl`, `enableAgentHealthCheck`, `agentHealthCheckInterval` |
+| `DataflowStats` | DataFlow 引擎统计快照 | `channels`, `subscriberChannels`, `connected` |
+| `AgentRuntimeStats` | Agent 运行时统计快照 | `totalAgents`, `runningTasks`, `completedTasks`, `failedTasks` |
+| `EngineStats` | Engine 综合统计 | `dataflow: DataflowStats`, `agents: AgentRuntimeStats` |
+| `EngineLifecycleEvent` | 引擎生命周期事件载荷 | `timestamp` |
+| `EngineHealthAlertEvent` | 引擎健康告警事件载荷 | `stats: AgentRuntimeStats` |
+
+**当前状态**：🟡 接口定义已存在。`src/core/dataflow/` 已实现 DataFlow 引擎基础，Agent 运行时引擎统计聚合待完善。
+
+### 3.1.7 Page 生命周期
+
+页面生命周期模块提供数据加载、状态管理、交互守卫能力，确保页面组件在路由切换时正确管理数据与状态。
+
+**设计目标**：
+- **数据源管理**：声明式数据源注册，按需加载
+- **状态标准化**：统一的 loading/error/visible/clickable 状态模型
+- **路由守卫**：页面进入/离开时校验权限与状态
+
+**核心接口定义**（`src/types/modules/page.types.ts`）：
+
+| 接口 | 用途 | 核心字段 |
+|------|------|---------|
+| `PageModuleInput` | 页面模块输入 | `routeParams`（Record\<string, string\>, ✅）, `dataSources`（Array\<{key: string, fetcher: () => Promise\<unknown\>}\>, ✅） |
+| `PageModuleOutput` | 页面模块输出 | `data`（Map\<string, unknown\>, ✅）, `loading`（boolean, ✅）, `error`（string \| null, ✅）, `isVisible`（boolean, ✅）, `isClickable`（boolean, ✅） |
+| `PageGuard` | 页面守卫 | `isVisible`（boolean, ✅）, `isClickable`（boolean, ✅）, `tooltipText`（string, ✅） |
+
+> **变更**: 2026-06-26 | v1.1.0 | 新增 Page 生命周期接口定义 | 架构资产治理官
 
 ---
 
@@ -233,6 +345,7 @@ L2    ──→ db.ts（唯一原生 IndexedDB 操作）
 | `src/config/tradingConfig.ts` | 交易引擎配置（已建） | 禁止在引擎层写信号/仓位阈值 |
 | `src/config/inputConfig.ts` | 输入舱配置（已建） | 禁止在 UI 层写导入上限/解析规则 |
 | `src/theme.config.ts` | 主题令牌 | 禁止 UI 层内联颜色 |
+| `src/constants/cockpit.constants.ts` | Cockpit Widget 常量（网格、颜色、枚举、数据源配置） | 禁止在 Widget 组件内硬编码颜色/尺寸 |
 
 ---
 
@@ -325,6 +438,49 @@ candidate → screened → deepDive → watching → archived
 - 买入后，`watching` 状态的标的可选择继续保留观察，或经人工判断后归档；卖出后的订单记录保留在 `orders` 中，用于复盘。
 - 禁止把 `orders` 表中的持仓混淆为“交易持仓池”并纳入股票池流转图。
 
+### 3.7.4 数据模型类型引用（`src/data/types.ts`）
+
+以下类型定义均来源于 `src/data/types.ts`，用于 V6 Pro 迁移与七维数据架构：
+
+| 类型 | 用途 | 核心字段 |
+|------|------|---------|
+| `DimensionScore` | 智能评分子维度得分 | `name`（string）, `score`（number \| null）, `rationale`（string）, `evidence`（string[]）, `weight`（number） |
+| `IndustryDimensionScore` | 行业评分子维度 | `name`（string）, `score`（number \| null）, `rationale`（string）, `evidence`（string[]）, `weight`（number） |
+| `IndustryScore` | 行业智能评分 | `code`（string）, `name`（string）, `overallScore`（number \| null）, `dimensionScores`（IndustryDimensionScore[]）, `summary`（string）, `basis`（string）, `sectorSnapshot`（object）, `configSnapshot`（object）, `modelResponse`（string）, `scoredAt`（number） |
+| `PortfolioHolding` | 组合持仓明细 | `symbol`（string）, `name`（string）, `currentShares`（number）, `currentWeight`（number）, `targetWeight`（number）, `targetShares`（number）, `price`（number）, `marketValue`（number）, `score`（number）, `rationale`（string） |
+| `RebalanceAction` | 再平衡动作 | `symbol`（string）, `action`（'buy' \| 'sell' \| 'hold'）, `shares`（number）, `reason`（string） |
+| `StrategyClassification` | 策略分类标签 | `'core-scarce'` \| `'value-bargain'` \| `'hot-momentum'` \| `'excluded'` |
+| `StrategyCandidate` | 策略候选标的 | `symbol`（string）, `name`（string）, `composite`（number）, `valuationScore`（number \| null）, `industryScore`（number \| null）, `momentum`（number \| null）, `sector`（string \| null）, `classification`（StrategyClassification）, `reasons`（string[]） |
+| `StrategyResult` | 策略结果 | `selected`（StrategyCandidate[]）, `coreScarce`（StrategyCandidate[]）, `valueBargain`（StrategyCandidate[]）, `hotMomentum`（StrategyCandidate[]）, `rejected`（StrategyCandidate[]）, `summary`（object） |
+| `SignalSnapshot` | 信号快照 | `pePercentile`（number）, `pbPercentile`（number）, `priceToMA20`（number）, `priceToMA60`（number）, `volumeRatio`（number）, `rsi14`（number）, `macdDirection`（'red' \| 'green' \| 'neutral'） |
+| `ResearchLog` | 研究审计日志 | `traceId`（string, ✅）, `timestamp`（number, ✅）, `actor`（string, ✅）, `action`（string, ✅）, `targetType`（string, ✅）, `targetCode`（string, ✅）, `payload`（string） |
+| `KlineBar` | K线柱 | `date`（string, ✅）, `open`（number, ✅）, `high`（number, ✅）, `low`（number, ✅）, `close`（number, ✅）, `volume`（number, ✅）, `amount`（number, ✅） |
+| `SectorScoreDimensions` | 板块评分三维度 | `planAlignment`（number 0-5）, `policySupport`（number 0-5）, `usChinaParity`（number 0-5） |
+| `SectorUsChinaData` | 中美对比数据 | `chinaShare`（string）, `usStatus`（string）, `gap`（string） |
+| `SectorDefinition` | 板块定义 | `code`（string）, `name`（string）, `category`（'新兴产业' \| '未来产业' \| '战略基础'）, `description`（string）, `keywords`（string[]）, `dimensions`（SectorScoreDimensions）, `weight`（object）, `composite`（number）, `isCore`（boolean）, `usChina`（SectorUsChinaData）, `keyStocks`（Array）, `relatedConcepts`（string[]） |
+| `SectorStockMapping` | 板块-股票映射 | `sectorCode`（string）, `sectorName`（string）, `stockSymbols`（string[]）, `matchType`（'primary' \| 'secondary'） |
+| `SectorScoreRecord` | 板块评分记录 | `sectorCode`（string）, `scoreDate`（string）, `dimensions`（SectorScoreDimensions）, `composite`（number）, `isCore`（boolean）, `modelUsed`（string）, `createdAt`（string） |
+| `MarketStyle` | 市场风格周期 | `'growth'` \| `'value'` \| `'balanced'` |
+| `RotationSubFactor` | 轮动因子子指标 | `code`（string）, `name`（string）, `score`（number）, `calcMethod`（string）, `dataSource`（string）, `freq`（string）, `fullRule`（string）, `midRule`（string）, `zeroRule`（string）, `redLine`（string） |
+| `RotationFactor` | 轮动因子 | `code`（string）, `name`（string）, `weight`（number）, `maxScore`（number）, `subCount`（number）, `role`（string）, `color`（string）, `subs`（RotationSubFactor[]） |
+| `RotationSignalGrade` | 轮动信号分级 | `minResonance`（number）, `maxResonance`（number）, `label`（string）, `signalType`（string）, `position`（string）, `action`（string）, `color`（string）, `bg`（string） |
+| `RotationScoreBucket` | 综合得分分档 | `min`（number）, `label`（string）, `pos`（string）, `desc`（string）, `color`（string） |
+| `RotationAlertLevel` | 高景气抛售预警 | `code`（string）, `name`（string）, `color`（string）, `condition`（string）, `action`（string） |
+| `DeclineNature` | 下跌性质判定 | `type`（'杀逻辑' \| '杀业绩' \| '杀估值'）, `severity`（'严重' \| '中等' \| '轻微'）, `action`（string）, `color`（string） |
+| `RotationSectorScore` | 板块轮动评分记录 | `sectorCode`（string）, `sectorName`（string）, `f1Jingqi`（number）, `f2Zijin`（number）, `f3Guzhi`（number）, `f4Beta`（number）, `f5Nengliang`（number）, `total`（number 0-100）, `resonance`（number 0-10）, `signal`（string）, `alertLevel`（string）, `declineType`（string）, `poolStocks`（Array）, `analysisReport`（string）, `modelUsed`（string）, `createdAt`（string） |
+| `V6LayerScore` | V6评分单维度 | `score`（number）, `reason`（string）, `weight`（number） |
+| `ScoreDocVersion` | 评分文档版本 | `docId`（string）, `symbol`（string）, `stockName`（string）, `version`（number）, `scoreDate`（string）, `composite`（number）, `l3v`（number）, `layers`（Record\<string, V6LayerScore\>）, `recommendation`（object）, `targetPrice`（object）, `keyRisks`（string[]）, `keyCatalysts`（string[]）, `reportMd`（string）, `modelUsed`（string）, `market`（string）, `changeFromPrev`（object）, `createdAt`（string） |
+| `StrategyGroupSnapshot` | 策略分组快照 | `count`（number）, `avgComposite`（number）, `maxComposite`（number）, `symbols`（string[]）, `items`（Array） |
+| `StrategySnapshot` | 策略快照 | `id`（string）, `version`（number）, `timestamp`（number）, `date`（string）, `stockCount`（number）, `scoreCount`（number）, `rotationCount`（number）, `core`（StrategyGroupSnapshot）, `hot`（StrategyGroupSnapshot）, `value`（StrategyGroupSnapshot）, `changeFromPrev`（object）, `trigger`（string） |
+| `LocalDoc` | 本地知识库文档 | `id`（string）, `symbol`（string）, `name`（string）, `content`（string）, `category`（'研报' \| '财报' \| '行业分析' \| '新闻' \| '策略笔记' \| '其他'）, `tags`（string[]）, `sourcePath`（string）, `size`（number）, `addedAt`（number） |
+| `NewsArticle` | 外部财经资讯 | `id`（string）, `title`（string）, `content`（string）, `url`（string）, `source`（string）, `category`（string）, `publishTime`（string）, `fetchTime`（string）, `sentiment`（'positive' \| 'negative' \| 'neutral'）, `sentimentConfidence`（number）, `relatedStocks`（string[]）, `keywords`（string[]）, `hash`（string） |
+| `NewsStockMap` | 股票-资讯关联 | `symbol`（string）, `newsId`（string）, `relevanceScore`（number）, `isTitleMatch`（boolean）, `isContentMatch`（boolean）, `industryMatch`（boolean） |
+| `SentimentCache` | 情感分析缓存 | `contentHash`（string）, `sentiment`（'positive' \| 'negative' \| 'neutral'）, `confidence`（number）, `method`（'rule' \| 'llm' \| 'hybrid'）, `analyzedAt`（number）, `llmModel`（string） |
+| `DataDimensionType` | 七维数据类型 | `'01_basic'` \| `'02_kline'` \| `'03_chip'` \| `'04_events'` \| `'05_news'` \| `'06_industry'` \| `'07_index'` |
+| `DimensionStatus` | 单维度采集状态 | `status`（'pending' \| 'collecting' \| 'completed' \| 'failed'）, `records`（number）, `updatedAt`（string）, `hash`（string） |
+
+> **变更**: 2026-06-26 | v1.1.0 | 补充 34 个数据模型类型引用 | 架构资产治理官
+
 ---
 
 ## 3.8 信封结构
@@ -343,6 +499,20 @@ interface StandardEnvelope {
 ```
 
 详见 `docs/05-engine-specs.md` 第 4 节。
+
+### 3.8.1 DataBridge 适配层接口定义
+
+**来源**: `src/types/modules/databridge.types.ts`
+
+| 接口 | 用途 | 核心字段 |
+|------|------|---------|
+| `DataBridgeAdapterConfig` | DataBridgeAdapter 配置 | `enableFallbackQueue`（boolean）, `defaultTimeout`（number） |
+| `DataAction` | 数据操作动作枚举 | `'FETCH_NEWS'` \| `'FETCH_STOCKS'` \| `'FETCH_SCORES'` \| `'FETCH_DAILY_QUOTES'` \| `'FETCH_INDUSTRY_SCORES'` \| `'FETCH_INTELLIGENT_SCORES'` \| `'FETCH_STRATEGY_SNAPSHOTS'` \| `'FETCH_LOCAL_DOCS'` \| `'SAVE_NEWS'` \| `'SAVE_STOCK'` \| `'SAVE_SCORE'` \| `'UPDATE_WATCHLIST'` \| `'DELETE_NEWS'` \| `'DELETE_STOCK'` |
+| `BridgeQueryOptions` | 查询选项 | `timeout`（number）, `fallbackToCache`（boolean）, `retryCount`（number） |
+| `BridgeQueryResult<T>` | 查询结果泛型 | `success`（boolean, ✅）, `data`（T）, `error`（string）, `fromCache`（boolean）, `traceId`（string, ✅） |
+| `DataBridgeAdapterStats` | 适配器统计快照 | `pendingQueries`（number, ✅）, `enableFallbackQueue`（boolean, ✅） |
+
+> **变更**: 2026-06-26 | v1.1.0 | 补充 DataBridge 适配层接口定义 | 架构资产治理官
 
 ---
 

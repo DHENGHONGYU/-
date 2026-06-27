@@ -14,3 +14,11 @@ export interface LlmResponse {
   model: string
   usage?: LlmUsage
 }
+
+export interface LlmStreamChunk {
+  content: string
+  isDone: boolean
+  usage?: LlmUsage
+}
+
+export type LlmStreamCallback = (chunk: LlmStreamChunk) => void
