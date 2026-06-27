@@ -318,6 +318,20 @@ export const WIDGET_DEFAULT_DATA_SOURCE = {
     endpoint: '/stock-analysis/chat',
     enabled: true,
   },
+  hotSector: {
+    type: ACTIVE_DATA_SOURCE,
+    mode: COLLECTION_MODE.POLLING,
+    interval: COLLECTOR_DEFAULT_CONFIG.DEFAULT_POLLING_INTERVAL,
+    endpoint: '/strategy/hot-sectors',
+    enabled: true,
+  },
+  valuePit: {
+    type: ACTIVE_DATA_SOURCE,
+    mode: COLLECTION_MODE.POLLING,
+    interval: COLLECTOR_DEFAULT_CONFIG.DEFAULT_POLLING_INTERVAL,
+    endpoint: '/strategy/value-pit',
+    enabled: true,
+  },
 }
 
 export const DEFAULT_WIDGET_CONFIG = {
@@ -383,5 +397,15 @@ export const DEFAULT_WIDGET_CONFIG = {
     title: '个股/市场深度分析助手',
     size: WIDGET_SIZE.CHAT_HEIGHT,
     category: 'ai',
+  },
+  hotSector: {
+    title: '热门板块策略',
+    size: WIDGET_SIZE.FULL_WIDTH,
+    category: 'strategy',
+  },
+  valuePit: {
+    title: '价值洼地策略',
+    size: WIDGET_SIZE.LARGE_HEIGHT,
+    category: 'strategy',
   },
 }

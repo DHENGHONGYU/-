@@ -226,6 +226,63 @@ export interface StrategyResult {
   }
 }
 
+/** 热门板块策略评分维度 */
+export interface HotSectorDimensionScores {
+  momentum: number
+  sentiment: number
+  technical: number
+  valuation: number
+  composite: number
+}
+
+/** 热门板块策略评分，持久化于 hot_sector_scores Store */
+export interface HotSectorScore {
+  symbol: string
+  score: number
+  dimensions: HotSectorDimensionScores
+  triggerAction: 'immediate' | 'probe' | 'ignore'
+  calculatedAt: number
+  dataVersion: number
+  qualityWarning?: string
+}
+
+/** 价值洼地策略评分维度 */
+export interface ValuePitDimensionScores {
+  catalyst: number
+  valuation: number
+  chip: number
+  rotation: number
+  liquidity: number
+  composite: number
+}
+
+/** 价值洼地策略评分，持久化于 value_pit_scores Store */
+export interface ValuePitScore {
+  symbol: string
+  score: number
+  dimensions: ValuePitDimensionScores
+  rotationSignal: boolean
+  triggerAction: 'immediate' | 'probe' | 'wait' | 'ignore'
+  calculatedAt: number
+  dataVersion: number
+  qualityWarning?: string
+}
+
+/** 双策略编排引擎输出结果 */
+export interface DualStrategyResult {
+  hotSectorScores: HotSectorScore[]
+  valuePitScores: ValuePitScore[]
+  signals: Signal[]
+  watchlistCandidates: Array<{ symbol: string; reason: string }>
+  summary: {
+    total: number
+    hotSectorCount: number
+    valuePitCount: number
+    signalCount: number
+    watchlistCount: number
+  }
+}
+
 export interface SignalSnapshot {
   pePercentile?: number
   pbPercentile?: number

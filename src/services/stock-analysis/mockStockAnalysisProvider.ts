@@ -7,6 +7,8 @@ import type {
   KaiScore,
   StockPoolItem,
   ChatMessage,
+  HotSectorData,
+  ValuePitData,
 } from '@/types/modules/widget.types'
 import {
   KAI_DIMENSION_NAMES,
@@ -107,6 +109,26 @@ export class MockStockAnalysisProvider {
   static getChatHistory(target = '000858'): Promise<ChatHistory> {
     return new Promise((resolve) => {
       setTimeout(() => resolve(generateChatHistory(target)), 700)
+    })
+  }
+
+  /**
+   * 获取热门板块策略评分数据
+   * @description 未来替换为真实 API：调用 dualStrategyEngine 输出
+   */
+  static getHotSectors(): Promise<HotSectorData[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => resolve(generateHotSectors()), 500)
+    })
+  }
+
+  /**
+   * 获取价值洼地策略评分数据
+   * @description 未来替换为真实 API：调用 dualStrategyEngine 输出
+   */
+  static getValuePit(): Promise<ValuePitData[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => resolve(generateValuePit()), 500)
     })
   }
 
@@ -250,6 +272,49 @@ function generateStockPool(page = 1, pageSize = 8): StockPool {
     page,
     pageSize,
   }
+}
+
+function generateHotSectors(): HotSectorData[] {
+  return MOCK_STOCK_NAMES.slice(0, 6).map((item) => {
+    const score = Number((Math.random() * 2 + 3).toFixed(2))
+    const action = score >= 4.0 ? 'immediate' : score >= 3.5 ? 'probe' : 'ignore'
+    return {
+      symbol: item.code,
+      name: item.name,
+      score,
+      action,
+      dimensions: {
+        momentum: Number((Math.random() * 5).toFixed(2)),
+        sentiment: Number((Math.random() * 5).toFixed(2)),
+        technical: Number((Math.random() * 5).toFixed(2)),
+        valuation: Number((Math.random() * 5).toFixed(2)),
+        composite: score,
+      },
+    }
+  })
+}
+
+function generateValuePit(): ValuePitData[] {
+  return MOCK_STOCK_NAMES.slice(6, 12).map((item) => {
+    const score = Number((Math.random() * 2 + 2.5).toFixed(2))
+    const action: ValuePitData['action'] =
+      score >= 4.0 ? 'immediate' : score >= 3.5 ? 'probe' : score >= 3.0 ? 'wait' : 'ignore'
+    return {
+      symbol: item.code,
+      name: item.name,
+      score,
+      action,
+      rotationSignal: Math.random() > 0.6,
+      dimensions: {
+        catalyst: Number((Math.random() * 5).toFixed(2)),
+        valuation: Number((Math.random() * 5).toFixed(2)),
+        chip: Number((Math.random() * 5).toFixed(2)),
+        rotation: Number((Math.random() * 5).toFixed(2)),
+        liquidity: Number((Math.random() * 5).toFixed(2)),
+        composite: score,
+      },
+    }
+  })
 }
 
 function generateChatHistory(target = '000858'): ChatHistory {

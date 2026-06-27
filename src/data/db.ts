@@ -266,6 +266,23 @@ async function openDB(): Promise<IDBDatabase> {
         console.debug(`[DB] ObjectStore "${STORE_NAME.newsBookmarks}" already exists`)
       }
 
+      // v14 新增：双策略评分
+      if (!db.objectStoreNames.contains(STORE_NAME.hotSectorScores)) {
+        console.debug(`[DB] Creating objectStore: "${STORE_NAME.hotSectorScores}"`)
+        const hotSectorStore = db.createObjectStore(STORE_NAME.hotSectorScores, { keyPath: 'symbol' })
+        hotSectorStore.createIndex('by-calculated-at', 'calculatedAt', { unique: false })
+      } else {
+        console.debug(`[DB] ObjectStore "${STORE_NAME.hotSectorScores}" already exists`)
+      }
+
+      if (!db.objectStoreNames.contains(STORE_NAME.valuePitScores)) {
+        console.debug(`[DB] Creating objectStore: "${STORE_NAME.valuePitScores}"`)
+        const valuePitStore = db.createObjectStore(STORE_NAME.valuePitScores, { keyPath: 'symbol' })
+        valuePitStore.createIndex('by-calculated-at', 'calculatedAt', { unique: false })
+      } else {
+        console.debug(`[DB] ObjectStore "${STORE_NAME.valuePitScores}" already exists`)
+      }
+
       console.info(`[DB] Schema upgrade complete. Final stores: [${Array.from(db.objectStoreNames).join(', ')}]`)
     }
   })

@@ -162,6 +162,28 @@ export class WidgetRegistry {
         },
         component: () => import('@/cockpit/widgets/StockChatWidget'),
       },
+      {
+        meta: {
+          id: 'hotSector',
+          name: DEFAULT_WIDGET_CONFIG.hotSector.title,
+          category: DEFAULT_WIDGET_CONFIG.hotSector.category,
+          description: '热门板块策略评分与相关标的',
+          defaultSize: DEFAULT_WIDGET_CONFIG.hotSector.size,
+          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.hotSector,
+        },
+        component: () => import('@/cockpit/widgets/HotSectorWidget'),
+      },
+      {
+        meta: {
+          id: 'valuePit',
+          name: DEFAULT_WIDGET_CONFIG.valuePit.title,
+          category: DEFAULT_WIDGET_CONFIG.valuePit.category,
+          description: '价值洼地候选、五维评分与轮动信号状态',
+          defaultSize: DEFAULT_WIDGET_CONFIG.valuePit.size,
+          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.valuePit,
+        },
+        component: () => import('@/cockpit/widgets/ValuePitWidget'),
+      },
     ]
 
     widgets.forEach((widget) => this.register(widget))
@@ -185,6 +207,8 @@ export class WidgetRegistry {
       { widgetId: 'kaiScore', position: { x: 0, y: 17 } },
       { widgetId: 'modelCompare', position: { x: 0, y: 20 } },
       { widgetId: 'stockChat', position: { x: 0, y: 23 } },
+      { widgetId: 'hotSector', position: { x: 0, y: 27 } },
+      { widgetId: 'valuePit', position: { x: 0, y: 29 } },
     ]
 
     defaultLayout.forEach((item) => {

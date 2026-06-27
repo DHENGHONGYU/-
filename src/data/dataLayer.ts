@@ -14,6 +14,7 @@ import { db, generateId, now } from './db'
 import type {
   DailyQuotes,
   DataLayerResult,
+  HotSectorScore,
   IndustryScore,
   IntelligentScore,
   LocalDoc,
@@ -28,6 +29,7 @@ import type {
   Signal,
   Stock,
   StrategySnapshot,
+  ValuePitScore,
   V6Score,
 } from './types'
 
@@ -285,6 +287,34 @@ export const rotationScoreStore = {
   },
 }
 
+export const hotSectorScoreStore = {
+  async save(score: HotSectorScore): Promise<DataLayerResult<void>> {
+    return sendWriteEnvelope('saveHotSectorScores', score, 'analyzer')
+  },
+
+  async get(symbol: string): Promise<HotSectorScore | undefined> {
+    return db.get<HotSectorScore>('hot_sector_scores', symbol)
+  },
+
+  async list(): Promise<HotSectorScore[]> {
+    return db.getAll<HotSectorScore>('hot_sector_scores')
+  },
+}
+
+export const valuePitScoreStore = {
+  async save(score: ValuePitScore): Promise<DataLayerResult<void>> {
+    return sendWriteEnvelope('saveValuePitScores', score, 'analyzer')
+  },
+
+  async get(symbol: string): Promise<ValuePitScore | undefined> {
+    return db.get<ValuePitScore>('value_pit_scores', symbol)
+  },
+
+  async list(): Promise<ValuePitScore[]> {
+    return db.getAll<ValuePitScore>('value_pit_scores')
+  },
+}
+
 export const sectorScoreStore = {
   async save(score: SectorScoreRecord): Promise<DataLayerResult<void>> {
     return sendWriteEnvelope('saveSectorScores', score, 'sector')
@@ -446,5 +476,7 @@ export const dataLayer = {
   news: newsStore,
   newsStockMap: newsStockMapStore,
   sentimentCache: sentimentCacheStore,
+  hotSectorScores: hotSectorScoreStore,
+  valuePitScores: valuePitScoreStore,
   manager: dataManager,
 }

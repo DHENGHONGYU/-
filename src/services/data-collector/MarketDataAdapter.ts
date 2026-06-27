@@ -15,6 +15,8 @@ import type {
   ChatHistory,
   StockPoolItem,
   ChatMessage,
+  HotSectorData,
+  ValuePitData,
 } from '@/types/modules/widget.types'
 import { FUND_FLOW_NAMES } from '@/constants/cockpit.constants'
 
@@ -60,6 +62,10 @@ export class MarketDataAdapter {
         return { stockPool: this.adaptStockPool(rawData.payload) }
       case 'chatHistory':
         return { chatHistory: this.adaptChatHistory(rawData.payload) }
+      case 'hotSectors':
+        return { hotSectors: this.adaptHotSectors(rawData.payload) }
+      case 'valuePit':
+        return { valuePit: this.adaptValuePit(rawData.payload) }
       default:
         logger.warn(`[MarketDataAdapter] 未知的数据类型: ${rawData.dataType}`)
         return {}
@@ -85,6 +91,8 @@ export class MarketDataAdapter {
       modelComparison: this.getDefaultModelComparison(),
       stockPool: this.getDefaultStockPool(),
       chatHistory: this.getDefaultChatHistory(),
+      hotSectors: [],
+      valuePit: [],
     }
 
     for (const partial of partials) {
@@ -100,6 +108,8 @@ export class MarketDataAdapter {
       if (partial.modelComparison) merged.modelComparison = partial.modelComparison
       if (partial.stockPool) merged.stockPool = partial.stockPool
       if (partial.chatHistory) merged.chatHistory = partial.chatHistory
+      if (partial.hotSectors) merged.hotSectors = partial.hotSectors
+      if (partial.valuePit) merged.valuePit = partial.valuePit
     }
 
     return merged
@@ -478,6 +488,50 @@ export class MarketDataAdapter {
       targetType: 'stock',
       messages: [],
     }
+  }
+
+  private adaptHotSectors(payload: unknown): HotSectorData[] {
+    if (!Array.isArray(payload)) {
+      logger.warn('[MarketDataAdapter] hotSectors payload 不是数组')
+      return []
+    }
+
+    return payload.map((item) => ({
+      symbol: String(item.symbol ?? ''),
+      name: String(item.name ?? ''),
+      score: Number(item.score ?? 0),
+      action: (item.action ?? 'ignore') as HotSectorData['action'],
+      dimensions: {
+        momentum: Number(item.dimensions?.momentum ?? 0),
+        sentiment: Number(item.dimensions?.sentiment ?? 0),
+        technical: Number(item.dimensions?.technical ?? 0),
+        valuation: Number(item.dimensions?.valuation ?? 0),
+        composite: Number(item.dimensions?.composite ?? 0),
+      },
+    }))
+  }
+
+  private adaptValuePit(payload: unknown): ValuePitData[] {
+    if (!Array.isArray(payload)) {
+      logger.warn('[MarketDataAdapter] valuePit payload 不是数组')
+      return []
+    }
+
+    return payload.map((item) => ({
+      symbol: String(item.symbol ?? ''),
+      name: String(item.name ?? ''),
+      score: Number(item.score ?? 0),
+      action: (item.action ?? 'ignore') as ValuePitData['action'],
+      rotationSignal: Boolean(item.rotationSignal ?? false),
+      dimensions: {
+        catalyst: Number(item.dimensions?.catalyst ?? 0),
+        valuation: Number(item.dimensions?.valuation ?? 0),
+        chip: Number(item.dimensions?.chip ?? 0),
+        rotation: Number(item.dimensions?.rotation ?? 0),
+        liquidity: Number(item.dimensions?.liquidity ?? 0),
+        composite: Number(item.dimensions?.composite ?? 0),
+      },
+    }))
   }
 }
 

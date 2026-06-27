@@ -2,6 +2,7 @@ import { ENVELOPE_ACTION, STORE_NAME, type ModuleId, type StoreName } from '@/co
 import { db } from '@/data/db'
 import type {
   DailyQuotes,
+  HotSectorScore,
   IndustryScore,
   IntelligentScore,
   LocalDoc,
@@ -16,6 +17,7 @@ import type {
   Signal,
   Stock,
   StrategySnapshot,
+  ValuePitScore,
   V6Score,
 } from '@/data/types'
 import { eventBus } from '@/lib/eventBus'
@@ -35,6 +37,8 @@ function inferStore(action: string): StoreName {
   if (action.includes('INDUSTRY')) return STORE_NAME.industryScores
   if (action.includes('INTELLIGENT')) return STORE_NAME.intelligentScores
   if (action.includes('ROTATION')) return STORE_NAME.rotationScores
+  if (action.includes('HOT_SECTOR_SCORE')) return STORE_NAME.hotSectorScores
+  if (action.includes('VALUE_PIT_SCORE')) return STORE_NAME.valuePitScores
   if (action.includes('SECTOR_SCORE')) return STORE_NAME.sectorScores
   if (action.includes('SCORE_DOCS')) return STORE_NAME.scoreDocs
   if (action.includes('STRATEGY_SNAPSHOTS')) return STORE_NAME.strategySnapshots
@@ -250,6 +254,18 @@ export class DataBridge {
           const snapshot = payload as StrategySnapshot
           logger.debug(`[DataBridge] DB saveStrategySnapshots: id="${snapshot.id}", version=${snapshot.version}`)
           await db.put(store, snapshot)
+          break
+        }
+        case ENVELOPE_ACTION.saveHotSectorScores: {
+          const score = payload as HotSectorScore
+          logger.debug(`[DataBridge] DB saveHotSectorScores: symbol="${score.symbol}"`)
+          await db.put(store, score)
+          break
+        }
+        case ENVELOPE_ACTION.saveValuePitScores: {
+          const score = payload as ValuePitScore
+          logger.debug(`[DataBridge] DB saveValuePitScores: symbol="${score.symbol}"`)
+          await db.put(store, score)
           break
         }
         case ENVELOPE_ACTION.saveLocalDocs: {

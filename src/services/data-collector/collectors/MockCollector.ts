@@ -79,6 +79,14 @@ export class MockCollector extends BaseCollector {
       const chat = await MockStockAnalysisProvider.getChatHistory()
       return this.wrapData('chatHistory', chat, 'mock')
     }
+    if (endpoint.includes('strategy/hot-sectors')) {
+      const hotSectors = await MockStockAnalysisProvider.getHotSectors()
+      return this.wrapData('hotSectors', hotSectors, 'mock')
+    }
+    if (endpoint.includes('strategy/value-pit')) {
+      const valuePit = await MockStockAnalysisProvider.getValuePit()
+      return this.wrapData('valuePit', valuePit, 'mock')
+    }
 
     throw new Error(`[MockCollector] 未知的 endpoint: ${endpoint}`)
   }

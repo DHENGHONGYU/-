@@ -49,6 +49,8 @@ export interface RawMarketData {
     | 'modelComparison'
     | 'stockPool'
     | 'chatHistory'
+    | 'hotSectors'
+    | 'valuePit'
   /** 原始 payload */
   payload: unknown
   /** 数据来源标识 */
@@ -83,6 +85,10 @@ export interface MarketData {
   stockPool: StockPool
   /** 个股深度分析 / 市场分析聊天数据（新增） */
   chatHistory: ChatHistory
+  /** 热门板块策略评分数据（新增） */
+  hotSectors: HotSectorData[]
+  /** 价值洼地策略评分数据（新增） */
+  valuePit: ValuePitData[]
 }
 
 export interface MarketIndexData {
@@ -319,6 +325,53 @@ export interface ChatMessage {
   content: string
   /** 消息时间戳 */
   timestamp: number
+}
+
+// ============================================================
+// 双策略数据类型（新增）
+// ============================================================
+
+/** 热门板块策略评分数据（用于驾驶舱 Widget） */
+export interface HotSectorData {
+  /** 股票代码 */
+  symbol: string
+  /** 股票名称 */
+  name: string
+  /** 综合评分 0-5 */
+  score: number
+  /** 动作建议 */
+  action: 'immediate' | 'probe' | 'ignore'
+  /** 五维评分 */
+  dimensions: {
+    momentum: number
+    sentiment: number
+    technical: number
+    valuation: number
+    composite: number
+  }
+}
+
+/** 价值洼地策略评分数据（用于驾驶舱 Widget） */
+export interface ValuePitData {
+  /** 股票代码 */
+  symbol: string
+  /** 股票名称 */
+  name: string
+  /** 综合评分 0-5 */
+  score: number
+  /** 动作建议 */
+  action: 'immediate' | 'probe' | 'wait' | 'ignore'
+  /** 轮动信号是否触发 */
+  rotationSignal: boolean
+  /** 五维评分 */
+  dimensions: {
+    catalyst: number
+    valuation: number
+    chip: number
+    rotation: number
+    liquidity: number
+    composite: number
+  }
 }
 
 // ============================================================
