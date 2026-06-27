@@ -1,4 +1,5 @@
 import { Badge } from '@/components/ui/Badge'
+import { newsColors } from '@/pages/news-v6/styles/newsColorTokens'
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
 
 /** 情感标签组件（V6 风格） */
@@ -12,12 +13,12 @@ export function SentimentBadge({ sentiment, confidence }: { sentiment: number; c
     icon = TrendingUp
     label = '看多'
     variant = 'default'
-    className = 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
+    className = `${newsColors.positive.bgSoft} ${newsColors.positive.textSoft} ${newsColors.positive.hoverSoft}`
   } else if (sentiment < -0.3) {
     icon = TrendingDown
     label = '看空'
     variant = 'destructive'
-    className = 'bg-red-100 text-red-700 hover:bg-red-200'
+    className = `${newsColors.negative.bgSoft} ${newsColors.negative.textSoft} ${newsColors.negative.hoverSoft}`
   }
 
   const Icon = icon
@@ -34,15 +35,9 @@ export function SentimentBadge({ sentiment, confidence }: { sentiment: number; c
 
 /** 分类标签（V6 风格） */
 export function CategoryBadge({ category }: { category: string }) {
-  const colors: Record<string, string> = {
-    '个股': 'bg-blue-100 text-blue-700',
-    '行业': 'bg-purple-100 text-purple-700',
-    '宏观': 'bg-amber-100 text-amber-700',
-    '政策': 'bg-rose-100 text-rose-700',
-    '公告': 'bg-cyan-100 text-cyan-700',
-  }
+  const categoryStyle = (newsColors.category as Record<string, string>)[category] ?? newsColors.category.default
   return (
-    <Badge variant="outline" className={`text-xs ${colors[category] || 'bg-slate-100 text-slate-600'}`}>
+    <Badge variant="outline" className={`text-xs ${categoryStyle}`}>
       {category}
     </Badge>
   )

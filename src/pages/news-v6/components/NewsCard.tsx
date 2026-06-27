@@ -17,6 +17,7 @@ import {
 import { Badge } from '@/components/ui/Badge'
 import type { V6NewsArticle } from '../types'
 import { SentimentBadge, CategoryBadge } from './newsCardUtils'
+import { newsColors } from '@/pages/news-v6/styles/newsColorTokens'
 import { formatRelativeTime, formatSource } from './newsCardFormatters'
 
 export interface NewsCardProps {
@@ -49,17 +50,17 @@ export default function NewsCard({ article, onBookmark, onShare, onClick, isBook
     return (
       <div
         onClick={() => onClick?.(article)}
-        className="p-3 border-b border-slate-100 hover:bg-slate-50 cursor-pointer transition-colors"
+        className={`p-3 border-b ${newsColors.surface.borderLight} ${newsColors.surface.hoverSoft} cursor-pointer transition-colors`}
       >
         <div className="flex items-start gap-2">
-          {isPositive && <ThumbsUp className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />}
-          {isNegative && <ThumbsDown className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />}
-          {!isPositive && !isNegative && <Minus className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />}
+          {isPositive && <ThumbsUp className={`w-4 h-4 ${newsColors.positive.icon} mt-0.5 flex-shrink-0`} />}
+          {isNegative && <ThumbsDown className={`w-4 h-4 ${newsColors.negative.icon} mt-0.5 flex-shrink-0`} />}
+          {!isPositive && !isNegative && <Minus className={`w-4 h-4 ${newsColors.neutral.icon} mt-0.5 flex-shrink-0`} />}
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-slate-800 truncate">{article.title}</p>
+            <p className={`text-sm font-medium ${newsColors.text.primary} truncate`}>{article.title}</p>
             <div className="flex items-center gap-2 mt-1">
-              <span className="text-xs text-slate-400">{formatSource(article.source)}</span>
-              <span className="text-xs text-slate-400">{formatRelativeTime(article.publishTime)}</span>
+              <span className={`text-xs ${newsColors.text.placeholder}`}>{formatSource(article.source)}</span>
+              <span className={`text-xs ${newsColors.text.placeholder}`}>{formatRelativeTime(article.publishTime)}</span>
             </div>
           </div>
         </div>
@@ -70,7 +71,7 @@ export default function NewsCard({ article, onBookmark, onShare, onClick, isBook
   // 完整卡片模式（V6 风格）
   return (
     <Card
-      className="hover:shadow-md transition-shadow cursor-pointer border-slate-200"
+      className={`hover:shadow-md transition-shadow cursor-pointer ${newsColors.surface.border}`}
       onClick={() => onClick?.(article)}
     >
       <CardHeader className="pb-2">
@@ -82,19 +83,19 @@ export default function NewsCard({ article, onBookmark, onShare, onClick, isBook
               {article.relatedStocks && article.relatedStocks.length > 0 && (
                 <div className="flex gap-1">
                   {article.relatedStocks.slice(0, 3).map((code) => (
-                    <Badge key={code} variant="outline" className="text-xs bg-slate-50">
+                    <Badge key={code} variant="outline" className={`text-xs ${newsColors.surface.bgSoft}`}>
                       {code}
                     </Badge>
                   ))}
                   {article.relatedStocks.length > 3 && (
-                    <Badge variant="outline" className="text-xs bg-slate-50">
+                    <Badge variant="outline" className={`text-xs ${newsColors.surface.bgSoft}`}>
                       +{article.relatedStocks.length - 3}
                     </Badge>
                   )}
                 </div>
               )}
             </div>
-            <h3 className="text-base font-semibold text-slate-800 leading-snug hover:text-emerald-600 transition-colors">
+            <h3 className={`text-base font-semibold ${newsColors.text.primary} leading-snug ${newsColors.positive.hoverText} transition-colors`}>
               {article.title}
             </h3>
           </div>
@@ -103,13 +104,13 @@ export default function NewsCard({ article, onBookmark, onShare, onClick, isBook
 
       <CardContent className="pt-0">
         {article.content && (
-          <p className="text-sm text-slate-600 line-clamp-2 mb-3">{article.content}</p>
+          <p className={`text-sm ${newsColors.text.secondary} line-clamp-2 mb-3`}>{article.content}</p>
         )}
 
         {article.keywords && article.keywords.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mb-3">
             {article.keywords.map((kw) => (
-              <span key={kw} className="text-xs px-2 py-0.5 bg-slate-100 text-slate-600 rounded-full">
+              <span key={kw} className={`text-xs px-2 py-0.5 ${newsColors.neutral.bgSoft} ${newsColors.neutral.textSoft} rounded-full`}>
                 {kw}
               </span>
             ))}
@@ -117,7 +118,7 @@ export default function NewsCard({ article, onBookmark, onShare, onClick, isBook
         )}
 
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3 text-xs text-slate-400">
+          <div className={`flex items-center gap-3 text-xs ${newsColors.text.placeholder}`}>
             <span className="flex items-center gap-1">
               <Clock className="w-3.5 h-3.5" />
               {formatRelativeTime(article.publishTime)}
@@ -132,7 +133,7 @@ export default function NewsCard({ article, onBookmark, onShare, onClick, isBook
             <Button
               variant="ghost"
               size="sm"
-              className={`h-8 w-8 p-0 ${isBookmarked ? 'text-amber-500' : 'text-slate-400'}`}
+              className={`h-8 w-8 p-0 ${isBookmarked ? newsColors.accent.amber : newsColors.neutral.icon}`}
               onClick={handleBookmark}
               title="收藏"
             >
@@ -141,7 +142,7 @@ export default function NewsCard({ article, onBookmark, onShare, onClick, isBook
             <Button
               variant="ghost"
               size="sm"
-              className="h-8 w-8 p-0 text-slate-400"
+              className={`h-8 w-8 p-0 ${newsColors.neutral.icon}`}
               onClick={handleShare}
               title="分享"
             >
@@ -151,7 +152,7 @@ export default function NewsCard({ article, onBookmark, onShare, onClick, isBook
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-8 w-8 p-0 text-slate-400"
+                className={`h-8 w-8 p-0 ${newsColors.neutral.icon}`}
                 onClick={(e) => {
                   e.stopPropagation()
                   window.open(article.url, '_blank')

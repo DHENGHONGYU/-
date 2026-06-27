@@ -105,7 +105,7 @@ export default function HoldingsPage(): React.JSX.Element {
         setLoading({ isListLoading: false })
       }
     }
-  }, [buildParams, toast])
+  }, [buildParams, setData, setLoading, toast])
 
   // 初始加载 & 依赖变化时重新加载
   useEffect(() => {
@@ -117,21 +117,21 @@ export default function HoldingsPage(): React.JSX.Element {
     logger.info('[HoldingsPage] 执行筛选搜索', { filter })
     setPage(PAGINATION_DEFAULTS.DEFAULT_PAGE)
     loadData()
-  }, [loadData, filter])
+  }, [loadData, filter, setPage])
 
   const handleReset = useCallback(() => {
     logger.info('[HoldingsPage] 重置筛选条件', { currentFilter: filter })
     resetFilter()
-  }, [filter])
+  }, [filter, resetFilter])
 
   // 分页操作
   const handlePageChange = useCallback((page: number) => {
     setPage(page)
-  }, [])
+  }, [setPage])
 
   const handlePageSizeChange = useCallback((pageSize: number) => {
     setPageSize(pageSize)
-  }, [])
+  }, [setPageSize])
 
   // 导出
   const handleExport = useCallback(async () => {
@@ -156,19 +156,19 @@ export default function HoldingsPage(): React.JSX.Element {
         setLoading({ isExporting: false })
       }
     }
-  }, [buildParams, toast])
+  }, [buildParams, setLoading, toast])
 
   // 操作列点击
   const handleAction = useCallback(
     (item: HoldingItem, action: HoldingAction) => {
       openModal(item, action)
     },
-    [],
+    [openModal],
   )
 
   const handleCloseModal = useCallback(() => {
     closeModal()
-  }, [])
+  }, [closeModal])
 
   // 确认交易
   const handleConfirmTrade = useCallback(
@@ -224,7 +224,7 @@ export default function HoldingsPage(): React.JSX.Element {
         }
       }
     },
-    [loadData, toast],
+    [loadData, setLoading, closeModal, toast],
   )
 
   return (

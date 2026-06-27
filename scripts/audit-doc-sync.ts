@@ -39,6 +39,8 @@ function getChangedFiles(since = 'HEAD~1'): string[] {
     const output = execSync(`git diff --name-only ${since} HEAD`, { encoding: 'utf-8', cwd: ROOT })
     return output.split('\n').filter((line) => line.startsWith('src/'))
   } catch {
+    // 该脚本仅在 CLI / CI 中运行，非生产 UI 路径；使用 console.warn 可直接提示审计人员
+    // git 环境异常时的降级行为，避免引入额外日志依赖。
     console.warn('⚠️  无法获取 git diff，尝试扫描全部 src 文件')
     return []
   }

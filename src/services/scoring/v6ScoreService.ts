@@ -9,9 +9,10 @@ const FACTOR_NAMES = ['估值', '成长', '盈利', '质量', '动量', '波动'
 
 /**
  * 是否启用随机数降级。
- * 当真实数据不可用或服务未启动时，保持 v0.9.0 行为，确保端到端链路可跑通。
+ * v1.0.0 后默认关闭，优先使用真实数据。
+ * 仅在测试或演示场景中开启。
  */
-const USE_MOCK_SCORE = true
+const USE_MOCK_SCORE = false
 
 function calculateFactorFromBasicData(stock: Stock, factorName: string): number | null {
   // P0：仅当全部基础字段存在时，使用简单启发式计算；否则返回 null 触发降级。
@@ -117,6 +118,13 @@ export async function getAllV6Scores(): Promise<DataLayerResult<V6Score[]>> {
   }
 }
 
+export interface V6ScoreQuality {
+  dataCompleteness: number // 0-100, 评分因子数据完整度
+  hasQuotes: boolean
+  hasBasicData: boolean
+  missingFactors: string[]
+}
+
 export async function runV6Score(symbol: string): Promise<DataLayerResult<V6Score>> {
   const stock = await dataLayer.stocks.get(symbol)
   if (!stock) {
@@ -124,8 +132,11 @@ export async function runV6Score(symbol: string): Promise<DataLayerResult<V6Scor
   }
 
   const quotes = await dataLayer.dailyQuotes.get(symbol)
+  const hasQuotes = quotes !== null && hasEnoughHistory(quotes, 20)
+  const hasBasicData = hasRealBasicData(stock)
 
   const factors: Record<string, number> = {}
+  const missingFactors: string[] = []
   let total = 0
   let validCount = 0
 
@@ -140,9 +151,13 @@ export async function runV6Score(symbol: string): Promise<DataLayerResult<V6Scor
       value = calculateFactorFromBasicData(stock, name)
     }
 
-    if (value === null && USE_MOCK_SCORE) {
-      value = Math.random() * 5
-      logger.info(`[v6ScoreService] ${symbol} 因子 ${name} 使用模拟分`)
+    // 记录缺失因子（不使用随机数降级）
+    if (value === null) {
+      missingFactors.push(name)
+      if (USE_MOCK_SCORE) {
+        value = Math.random() * 5
+        logger.warn(`[v6ScoreService] ${symbol} 因子 ${name} 数据缺失，使用模拟分（仅用于演示）`)
+      }
     }
 
     if (value !== null) {
@@ -153,6 +168,16 @@ export async function runV6Score(symbol: string): Promise<DataLayerResult<V6Scor
   }
 
   const score = validCount > 0 ? total / validCount : 0
+  const dataCompleteness = (validCount / FACTOR_NAMES.length) * 100
+
+  logger.info(`[v6ScoreService] ${symbol} 评分完成`, {
+    score: score.toFixed(2),
+    dataCompleteness: `${dataCompleteness.toFixed(0)}%`,
+    validFactors: validCount,
+    missingFactors: missingFactors.length,
+    hasQuotes,
+    hasBasicData,
+  })
 
   const v6Score: V6Score = {
     symbol,
@@ -161,6 +186,10 @@ export async function runV6Score(symbol: string): Promise<DataLayerResult<V6Scor
     algorithmVersion: 'v9-auto',
     calculatedAt: Date.now(),
     dataVersion: stock.dataVersion,
+    // 扩展字段：评分质量指标
+    ...(dataCompleteness < 100 && {
+      qualityWarning: `数据完整度 ${dataCompleteness.toFixed(0)}%，缺失因子: ${missingFactors.join(', ')}`,
+    }),
   }
 
   const result = await dataLayer.v6Scores.save(v6Score)
@@ -168,4 +197,18 @@ export async function runV6Score(symbol: string): Promise<DataLayerResult<V6Scor
     return { success: false, error: result.error }
   }
   return { success: true, data: v6Score }
+}
+
+/**
+ * 获取评分质量指标
+ */
+export function getV6ScoreQuality(_symbol: string, factors: Record<string, number>): V6ScoreQuality {
+  const missingFactors = FACTOR_NAMES.filter((name) => factors[name] === undefined || factors[name] === null)
+  const validCount = FACTOR_NAMES.length - missingFactors.length
+  return {
+    dataCompleteness: (validCount / FACTOR_NAMES.length) * 100,
+    hasQuotes: true, // 需要从外部传入
+    hasBasicData: validCount >= 3,
+    missingFactors,
+  }
 }

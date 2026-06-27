@@ -138,7 +138,9 @@ describe('news-v6/NewsFeed', () => {
 
   it('点击刷新按钮触发 onRefresh', async () => {
     renderFeed()
-    const refreshButton = screen.getByRole('button', { name: '' }).closest('button') ?? screen.getAllByRole('button')[2]
+    const buttons = screen.getAllByRole('button')
+    const refreshButton = buttons[buttons.length - 1]
+    if (!refreshButton) throw new Error('Refresh button not found')
     await userEvent.click(refreshButton)
 
     await waitFor(() => {

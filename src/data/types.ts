@@ -62,6 +62,8 @@ export interface V6Score {
   algorithmVersion: string
   calculatedAt: number
   dataVersion: number
+  /** 评分质量警告（当数据完整度低于 100% 时填充） */
+  qualityWarning?: string
 }
 
 export interface DimensionScore {

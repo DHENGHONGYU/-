@@ -51,18 +51,32 @@ function WidgetWrapper({ config, data }: WidgetWrapperProps): React.JSX.Element 
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    const load = async () => {
+    const mount = async () => {
       try {
-        const component = await widgetEngine.loadComponent(config.widgetId)
-        setComponent(component)
+        // 使用 widgetEngine 完整生命周期管理
+        const success = await widgetEngine.mountInstance(config.instanceId)
+        if (success) {
+          const component = await widgetEngine.loadComponent(config.widgetId)
+          setComponent(component)
+          logger.info('[CockpitShell] Widget mounted successfully', { instanceId: config.instanceId, widgetId: config.widgetId })
+        } else {
+          setError('挂载失败')
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : '加载失败')
+        logger.error('[CockpitShell] Widget mount error', { instanceId: config.instanceId, error: err })
       } finally {
         setLoading(false)
       }
     }
-    load()
-  }, [config.widgetId])
+    mount()
+
+    // 清理：卸载实例
+    return () => {
+      widgetEngine.unmountInstance(config.instanceId)
+      logger.info('[CockpitShell] Widget unmounted', { instanceId: config.instanceId })
+    }
+  }, [config.instanceId, config.widgetId])
 
   if (loading) {
     return (
@@ -88,7 +102,23 @@ function WidgetWrapper({ config, data }: WidgetWrapperProps): React.JSX.Element 
         <CardContent className="p-8">
           <div className="text-center text-red-500">
             <p>{error}</p>
-            <Button variant="outline" size="sm" onClick={() => setLoading(true)} className="mt-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={async () => {
+                setLoading(true)
+                setError(null)
+                const success = await widgetEngine.refreshInstance(config.instanceId)
+                if (success) {
+                  const component = await widgetEngine.loadComponent(config.widgetId)
+                  setComponent(component)
+                } else {
+                  setError('刷新失败')
+                }
+                setLoading(false)
+              }}
+              className="mt-2"
+            >
               重试
             </Button>
           </div>
@@ -117,12 +147,15 @@ function WidgetWrapper({ config, data }: WidgetWrapperProps): React.JSX.Element 
 
 function CockpitContent(): React.JSX.Element {
   const [instances, setInstances] = useState<WidgetConfig[]>([])
+  const [engineStats, setEngineStats] = useState({ cachedComponents: 0 })
   const { data, getTaskStats } = useMarketData()
 
   useEffect(() => {
     setInstances(widgetRegistry.getAllInstances())
+    setEngineStats(widgetEngine.getStats())
     const unsubscribe = widgetRegistry.subscribe(() => {
       setInstances(widgetRegistry.getAllInstances())
+      setEngineStats(widgetEngine.getStats())
     })
     return unsubscribe
   }, [])
@@ -161,6 +194,9 @@ function CockpitContent(): React.JSX.Element {
             <h1 className="text-lg font-bold">驾驶舱</h1>
             <Badge variant="outline" className="ml-2">
               {instances.length} 个 Widget
+            </Badge>
+            <Badge variant="secondary" className="text-xs">
+              缓存: {engineStats.cachedComponents}
             </Badge>
             <Badge variant="secondary" className="text-xs">
               采集任务: {stats.running}/{stats.total}

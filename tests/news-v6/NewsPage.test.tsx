@@ -169,7 +169,9 @@ describe('news-v6/NewsPage', () => {
   })
 
   it('点击文章卡片打开详情弹窗', async () => {
-    storeState.articles = [mockArticles[0]]
+    const firstArticle = mockArticles[0]
+    if (!firstArticle) throw new Error('No mock article available')
+    storeState.articles = [firstArticle]
     storeState.hasMore = false
 
     renderPage()
@@ -178,7 +180,7 @@ describe('news-v6/NewsPage', () => {
     await userEvent.click(card)
 
     await waitFor(() => {
-      expect(mockSelectArticle).toHaveBeenCalledWith(mockArticles[0])
+      expect(mockSelectArticle).toHaveBeenCalledWith(firstArticle)
     })
   })
 

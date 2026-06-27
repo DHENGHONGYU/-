@@ -172,7 +172,7 @@ export const feedbackService: FeedbackService = {
       ...item,
       id,
       metadata: {
-        traceId: globalThis.__traceId__,
+        traceId: item.traceId ?? crypto.randomUUID(),
         moduleId: item.scope,
         timestamp: Date.now(),
       },
