@@ -14,12 +14,142 @@
  * - 遵循现有 TypeScript 类型安全约束
  */
 
-import type { HotSectorAnalyzerInput } from '@/services/scoring/hotSectorAnalyzer'
+import type { HotSectorAnalyzerInput, MomentumInput, SentimentInput, BreakoutInput, ValuationRiskInput, MarketEnvInput } from '@/services/scoring/hotSectorAnalyzer'
 import type { RotationSignalInput } from '@/services/scoring/rotationSignalDetector'
 import type { ValuePitAnalyzerInput } from '@/services/scoring/valuePitAnalyzer'
 import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
+
+// ============================================================
+// DefaultValue 映射（A 类根治：防止 API 脏数据流入 UI）
+// ============================================================
+
+/** 各维度默认值常量（API 字段缺失时使用） */
+const SENTIMENT_DEFAULTS: SentimentInput = {
+  sentimentRank: 0,
+  retailSentiment: 0,
+  institutionBuyCount: 0,
+  limitUpCount: 0,
+}
+
+const MOMENTUM_DEFAULTS: MomentumInput = {
+  sectorStrengthScore: 0,
+  priceChangeRank: 0,
+  volumeExpansion: 0,
+  consecutiveInflow: 0,
+  relativeStrength: 0,
+}
+
+const BREAKOUT_DEFAULTS: BreakoutInput = {
+  hasBreakoutPattern: false,
+  rsiSignal: 'neutral',
+  rsi: 50,
+  priceAboveMA20: false,
+  priceAboveMA60: false,
+}
+
+const VALUATION_RISK_DEFAULTS: ValuationRiskInput = {
+  pe: 0,
+  pbPercentile: 0,
+  marketCap: 0,
+  dividendYield: 0,
+}
+
+const MARKET_ENV_DEFAULTS: MarketEnvInput = {
+  marketTrend: 'sideways',
+  systemicRisk: 'medium',
+}
+
+/**
+ * 将任意值强制转为 number，无效值返回 0。
+ * 防止 API 返回字符串/null/undefined 等脏数据。
+ */
+function toSafeNumber(value: unknown, defaultValue = 0): number {
+  if (value === null || value === undefined || value === '') return defaultValue
+  const num = Number(value)
+  return Number.isFinite(num) ? num : defaultValue
+}
+
+/**
+ * 将任意值强制转为指定枚举值，无效值返回默认值。
+ */
+function toSafeEnum<T extends string>(value: unknown, allowed: readonly T[], defaultValue: T): T {
+  if (typeof value === 'string' && (allowed as readonly string[]).includes(value)) {
+    return value as T
+  }
+  return defaultValue
+}
+
+/**
+ * 将任意值强制转为 boolean，无效值返回默认值。
+ */
+function toSafeBoolean(value: unknown, defaultValue = false): boolean {
+  if (typeof value === 'boolean') return value
+  if (value === 1 || value === 'true' || value === 1) return true
+  if (value === 0 || value === 'false' || value === 0) return false
+  return defaultValue
+}
+
+/**
+ * 规范化 sentiment 数据：补全缺失字段，强制类型转换。
+ * 用户报告的 API 返回 {"sentiment": {"sentimentRank": 10, "retailSentiment": 0.4}}
+ * 缺少 institutionBuyCount / limitUpCount，此处补全为 0。
+ */
+function normalizeSentiment(raw: unknown): SentimentInput {
+  if (!raw || typeof raw !== 'object') return { ...SENTIMENT_DEFAULTS }
+  const r = raw as Record<string, unknown>
+  return {
+    sentimentRank: toSafeNumber(r.sentimentRank, SENTIMENT_DEFAULTS.sentimentRank),
+    retailSentiment: toSafeNumber(r.retailSentiment, SENTIMENT_DEFAULTS.retailSentiment),
+    institutionBuyCount: toSafeNumber(r.institutionBuyCount, SENTIMENT_DEFAULTS.institutionBuyCount),
+    limitUpCount: toSafeNumber(r.limitUpCount, SENTIMENT_DEFAULTS.limitUpCount),
+  }
+}
+
+function normalizeMomentum(raw: unknown): MomentumInput {
+  if (!raw || typeof raw !== 'object') return { ...MOMENTUM_DEFAULTS }
+  const r = raw as Record<string, unknown>
+  return {
+    sectorStrengthScore: toSafeNumber(r.sectorStrengthScore, MOMENTUM_DEFAULTS.sectorStrengthScore),
+    priceChangeRank: toSafeNumber(r.priceChangeRank, MOMENTUM_DEFAULTS.priceChangeRank),
+    volumeExpansion: toSafeNumber(r.volumeExpansion, MOMENTUM_DEFAULTS.volumeExpansion),
+    consecutiveInflow: toSafeNumber(r.consecutiveInflow, MOMENTUM_DEFAULTS.consecutiveInflow),
+    relativeStrength: toSafeNumber(r.relativeStrength, MOMENTUM_DEFAULTS.relativeStrength),
+  }
+}
+
+function normalizeBreakout(raw: unknown): BreakoutInput {
+  if (!raw || typeof raw !== 'object') return { ...BREAKOUT_DEFAULTS }
+  const r = raw as Record<string, unknown>
+  return {
+    hasBreakoutPattern: toSafeBoolean(r.hasBreakoutPattern, BREAKOUT_DEFAULTS.hasBreakoutPattern),
+    rsiSignal: toSafeEnum(r.rsiSignal, ['bullish', 'bearish', 'neutral'] as const, BREAKOUT_DEFAULTS.rsiSignal),
+    rsi: toSafeNumber(r.rsi, BREAKOUT_DEFAULTS.rsi),
+    priceAboveMA20: toSafeBoolean(r.priceAboveMA20, BREAKOUT_DEFAULTS.priceAboveMA20),
+    priceAboveMA60: toSafeBoolean(r.priceAboveMA60, BREAKOUT_DEFAULTS.priceAboveMA60),
+  }
+}
+
+function normalizeValuationRisk(raw: unknown): ValuationRiskInput {
+  if (!raw || typeof raw !== 'object') return { ...VALUATION_RISK_DEFAULTS }
+  const r = raw as Record<string, unknown>
+  return {
+    pe: toSafeNumber(r.pe, VALUATION_RISK_DEFAULTS.pe),
+    pbPercentile: toSafeNumber(r.pbPercentile, VALUATION_RISK_DEFAULTS.pbPercentile),
+    marketCap: toSafeNumber(r.marketCap, VALUATION_RISK_DEFAULTS.marketCap),
+    dividendYield: toSafeNumber(r.dividendYield, VALUATION_RISK_DEFAULTS.dividendYield),
+  }
+}
+
+function normalizeMarketEnv(raw: unknown): MarketEnvInput {
+  if (!raw || typeof raw !== 'object') return { ...MARKET_ENV_DEFAULTS }
+  const r = raw as Record<string, unknown>
+  return {
+    marketTrend: toSafeEnum(r.marketTrend, ['bull', 'bear', 'sideways'] as const, MARKET_ENV_DEFAULTS.marketTrend),
+    systemicRisk: toSafeEnum(r.systemicRisk, ['low', 'medium', 'high'] as const, MARKET_ENV_DEFAULTS.systemicRisk),
+  }
+}
 
 // ============================================================
 // 外部 API 原始数据类型
@@ -134,45 +264,55 @@ export interface PriceVolumeRaw {
 /**
  * 腾讯API → HotSectorAnalyzerInput
  * 将板块资金流向原始数据映射为热门板块五维评分引擎所需输入。
+ *
+ * A 类根治：通过 normalize 函数补全缺失字段，防止 API 脏数据流入 UI。
+ * 即使 raw 中某些字段为 undefined/null/字符串，也能安全转换为合法类型。
  */
 export function adaptToHotSector(raw: TencentSectorFlowRaw): HotSectorAnalyzerInput {
   logger.info(`[strategyDataAdapter] adaptToHotSector: ${raw.code} ${raw.name}`)
 
+  // 将 raw 字段重新组织为维度对象后，通过 normalize 补全缺失字段
+  const sentimentRaw = {
+    sentimentRank: raw.heatRank,
+    retailSentiment: raw.retailIndex,
+    institutionBuyCount: raw.instBuyCount,
+    limitUpCount: raw.limitUpCount,
+  }
+  const momentumRaw = {
+    sectorStrengthScore: raw.strength,
+    priceChangeRank: raw.changeRank,
+    volumeExpansion: raw.volumeRatio,
+    consecutiveInflow: raw.mainInflowDays,
+    relativeStrength: raw.rs,
+  }
+  const breakoutRaw = {
+    hasBreakoutPattern: raw.breakout,
+    // P0-08: BreakoutInput.macdSignal 重命名为 rsiSignal（实际按 RSI 阈值推导）
+    // 后端 raw.macd 信号方向与 RSI 信号方向语义一致，直接映射
+    rsiSignal: raw.macd,
+    rsi: raw.rsi,
+    priceAboveMA20: raw.aboveMA20,
+    priceAboveMA60: raw.aboveMA60,
+  }
+  const valuationRiskRaw = {
+    pe: raw.pe,
+    pbPercentile: raw.pbPercentile,
+    marketCap: raw.mktCap,
+    dividendYield: raw.divYield,
+  }
+  const marketEnvRaw = {
+    marketTrend: raw.trend,
+    systemicRisk: raw.risk,
+  }
+
   return {
     symbol: raw.code,
     sectorName: raw.name,
-    momentum: {
-      sectorStrengthScore: raw.strength,
-      priceChangeRank: raw.changeRank,
-      volumeExpansion: raw.volumeRatio,
-      consecutiveInflow: raw.mainInflowDays,
-      relativeStrength: raw.rs,
-    },
-    sentiment: {
-      sentimentRank: raw.heatRank,
-      retailSentiment: raw.retailIndex,
-      institutionBuyCount: raw.instBuyCount,
-      limitUpCount: raw.limitUpCount,
-    },
-    breakout: {
-      hasBreakoutPattern: raw.breakout,
-      // P0-08: BreakoutInput.macdSignal 重命名为 rsiSignal（实际按 RSI 阈值推导）
-      // 后端 raw.macd 信号方向与 RSI 信号方向语义一致，直接映射
-      rsiSignal: raw.macd,
-      rsi: raw.rsi,
-      priceAboveMA20: raw.aboveMA20,
-      priceAboveMA60: raw.aboveMA60,
-    },
-    valuationRisk: {
-      pe: raw.pe,
-      pbPercentile: raw.pbPercentile,
-      marketCap: raw.mktCap,
-      dividendYield: raw.divYield,
-    },
-    marketEnv: {
-      marketTrend: raw.trend,
-      systemicRisk: raw.risk,
-    },
+    momentum: normalizeMomentum(momentumRaw),
+    sentiment: normalizeSentiment(sentimentRaw),
+    breakout: normalizeBreakout(breakoutRaw),
+    valuationRisk: normalizeValuationRisk(valuationRiskRaw),
+    marketEnv: normalizeMarketEnv(marketEnvRaw),
   }
 }
 
@@ -243,6 +383,46 @@ export function adaptToRotation(raw: PriceVolumeRaw): RotationSignalInput {
 export function adaptBatchToHotSector(rawList: TencentSectorFlowRaw[]): HotSectorAnalyzerInput[] {
   logger.info(`[strategyDataAdapter] adaptBatchToHotSector: ${rawList.length} items`)
   return rawList.map(adaptToHotSector)
+}
+
+/**
+ * 规范化直接从 API 拿到的 HotSectorAnalyzerInput 结构（部分字段可能缺失）。
+ *
+ * 使用场景：当调用方直接持有 HotSectorAnalyzerInput 形态的数据（非 TencentSectorFlowRaw），
+ * 例如从 IndexedDB 读取历史数据、或 API 返回的 JSON 结构与 HotSectorAnalyzerInput 一致但字段不全。
+ *
+ * 用户报告的脏数据示例：
+ * ```json
+ * {"sentiment": {"sentimentRank": 10, "retailSentiment": 0.4}}
+ * ```
+ * 调用本函数后 sentiment 将被补全为：
+ * ```json
+ * {"sentimentRank": 10, "retailSentiment": 0.4, "institutionBuyCount": 0, "limitUpCount": 0}
+ * ```
+ */
+export function normalizeHotSectorInput(raw: unknown): HotSectorAnalyzerInput {
+  if (!raw || typeof raw !== 'object') {
+    logger.warn('[strategyDataAdapter] normalizeHotSectorInput: raw 非对象，返回零值默认输入')
+    return {
+      symbol: '',
+      sectorName: '',
+      momentum: { ...MOMENTUM_DEFAULTS },
+      sentiment: { ...SENTIMENT_DEFAULTS },
+      breakout: { ...BREAKOUT_DEFAULTS },
+      valuationRisk: { ...VALUATION_RISK_DEFAULTS },
+      marketEnv: { ...MARKET_ENV_DEFAULTS },
+    }
+  }
+  const r = raw as Record<string, unknown>
+  return {
+    symbol: typeof r.symbol === 'string' ? r.symbol : String(r.symbol ?? ''),
+    sectorName: typeof r.sectorName === 'string' ? r.sectorName : String(r.sectorName ?? ''),
+    momentum: normalizeMomentum(r.momentum),
+    sentiment: normalizeSentiment(r.sentiment),
+    breakout: normalizeBreakout(r.breakout),
+    valuationRisk: normalizeValuationRisk(r.valuationRisk),
+    marketEnv: normalizeMarketEnv(r.marketEnv),
+  }
 }
 
 /**

@@ -1,9 +1,9 @@
-import React from 'react'
-import { Flame, TrendingUp, Smile, Activity, DollarSign } from 'lucide-react'
+import React, { memo } from 'react'
+import { Flame, TrendingUp, Smile, Activity, DollarSign, Globe } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { Progress } from '@/components/ui/Progress'
-import { useOptionalMarketData } from '@/cockpit/providers/MarketDataProvider'
+import { useDualStrategyStore } from '@/store/dualStrategyStore'
 import type { WidgetConfig, HotSectorData } from '@/types/modules/widget.types'
 import { SCORE_LEVELS } from '@/constants/cockpit.constants'
 
@@ -39,7 +39,7 @@ const DIMENSION_ICONS: Record<string, React.ReactNode> = {
   sentiment: <Smile className="h-3 w-3" />,
   technical: <Activity className="h-3 w-3" />,
   valuation: <DollarSign className="h-3 w-3" />,
-  composite: <Flame className="h-3 w-3" />,
+  marketEnv: <Globe className="h-3 w-3" />,
 }
 
 const DIMENSION_NAMES: Record<string, string> = {
@@ -47,17 +47,16 @@ const DIMENSION_NAMES: Record<string, string> = {
   sentiment: '情绪',
   technical: '技术',
   valuation: '估值',
-  composite: '综合',
+  marketEnv: '环境',
 }
 
 /**
  * 热门板块策略 Widget
  * @description 展示热门板块策略评分与相关标的五维评分
  */
-export default function HotSectorWidget({ config, data }: HotSectorWidgetProps): React.JSX.Element {
-  const marketData = useOptionalMarketData()
-  const sourceData = data ?? marketData?.data ?? { hotSectors: [] }
-  const hotSectors = sourceData.hotSectors ?? []
+const HotSectorWidget = memo(function HotSectorWidget({ config, data }: HotSectorWidgetProps): React.JSX.Element {
+  const storeHotSectors = useDualStrategyStore((s) => s.hotSectorScores)
+  const hotSectors = (data?.hotSectors ?? storeHotSectors as unknown as HotSectorData[]) ?? []
 
   return (
     <Card className="h-full flex flex-col">
@@ -73,8 +72,9 @@ export default function HotSectorWidget({ config, data }: HotSectorWidgetProps):
         ) : (
           <div className="space-y-3">
             {hotSectors.map((item) => {
-              const action = getActionLabel(item.action)
-              const scoreColor = getScoreColor(item.score)
+              const action = getActionLabel(item.action ?? 'ignore')
+              const scoreColor = getScoreColor(item.score ?? 0)
+              const dimensions = item.dimensions ?? {}
 
               return (
                 <div key={item.symbol} className="rounded-lg border p-3 space-y-2">
@@ -85,21 +85,21 @@ export default function HotSectorWidget({ config, data }: HotSectorWidgetProps):
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-2xl font-bold" style={{ color: scoreColor }}>
-                        {item.score.toFixed(2)}
+                        {(item.score ?? 0).toFixed(2)}
                       </span>
                       <Badge variant={action.variant}>{action.label}</Badge>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-5 gap-2">
-                    {Object.entries(item.dimensions).map(([key, value]) => (
+                    {Object.entries(dimensions).map(([key, value]) => (
                       <div key={key} className="space-y-1">
                         <div className="flex items-center gap-1 text-xs text-muted-foreground">
                           {DIMENSION_ICONS[key]}
                           <span>{DIMENSION_NAMES[key]}</span>
                         </div>
-                        <Progress value={value * 20} className="h-1.5" />
-                        <div className="text-xs font-medium text-right">{value.toFixed(1)}</div>
+                        <Progress value={(value ?? 0) * 20} className="h-1.5" />
+                        <div className="text-xs font-medium text-right">{(value ?? 0).toFixed(1)}</div>
                       </div>
                     ))}
                   </div>
@@ -111,4 +111,6 @@ export default function HotSectorWidget({ config, data }: HotSectorWidgetProps):
       </CardContent>
     </Card>
   )
-}
+})
+
+export default HotSectorWidget

@@ -6,6 +6,7 @@ import {
   adaptBatchToHotSector,
   adaptBatchToValuePit,
   adaptBatchToRotation,
+  normalizeHotSectorInput,
   type TencentSectorFlowRaw,
   type EastMoneyValuationRaw,
   type PriceVolumeRaw,
@@ -144,6 +145,131 @@ describe('adaptToHotSector', () => {
     expect(result.breakout.rsiSignal).toBe('bearish')
     expect(result.marketEnv.marketTrend).toBe('bear')
     expect(result.marketEnv.systemicRisk).toBe('high')
+  })
+
+  // ============================================================
+  // A 类根治：脏数据 defaultValue 映射测试
+  // ============================================================
+
+  test('A 类根治: sentiment 部分字段缺失时补全为默认值', () => {
+    // 模拟用户报告的脏数据：sentiment 只有 sentimentRank 和 retailSentiment
+    const dirtyRaw: TencentSectorFlowRaw = {
+      ...mockTencentData,
+      instBuyCount: undefined as unknown as number,
+      limitUpCount: undefined as unknown as number,
+    }
+    const result = adaptToHotSector(dirtyRaw)
+    expect(result.sentiment.sentimentRank).toBe(mockTencentData.heatRank)
+    expect(result.sentiment.retailSentiment).toBe(mockTencentData.retailIndex)
+    // 缺失字段补全为 0
+    expect(result.sentiment.institutionBuyCount).toBe(0)
+    expect(result.sentiment.limitUpCount).toBe(0)
+  })
+
+  test('A 类根治: 字段为字符串数字时正确转换', () => {
+    const stringNumRaw: TencentSectorFlowRaw = {
+      ...mockTencentData,
+      strength: '4.5' as unknown as number,
+      rs: '80' as unknown as number,
+      rsi: '65' as unknown as number,
+    }
+    const result = adaptToHotSector(stringNumRaw)
+    expect(result.momentum.sectorStrengthScore).toBe(4.5)
+    expect(result.momentum.relativeStrength).toBe(80)
+    expect(result.breakout.rsi).toBe(65)
+  })
+
+  test('A 类根治: 枚举字段为非法值时回退到默认值', () => {
+    const invalidEnumRaw: TencentSectorFlowRaw = {
+      ...mockTencentData,
+      macd: 'invalid' as unknown as 'bullish' | 'bearish' | 'neutral',
+      trend: 'unknown' as unknown as 'bull' | 'bear' | 'sideways',
+      risk: 'extreme' as unknown as 'low' | 'medium' | 'high',
+    }
+    const result = adaptToHotSector(invalidEnumRaw)
+    expect(result.breakout.rsiSignal).toBe('neutral')
+    expect(result.marketEnv.marketTrend).toBe('sideways')
+    expect(result.marketEnv.systemicRisk).toBe('medium')
+  })
+
+  test('A 类根治: NaN/Infinity 字段回退到默认值', () => {
+    const nanRaw: TencentSectorFlowRaw = {
+      ...mockTencentData,
+      strength: NaN,
+      rs: Infinity,
+      pe: -Infinity,
+    }
+    const result = adaptToHotSector(nanRaw)
+    expect(result.momentum.sectorStrengthScore).toBe(0)
+    expect(result.momentum.relativeStrength).toBe(0)
+    expect(result.valuationRisk.pe).toBe(0)
+  })
+})
+
+// ============================================================
+// normalizeHotSectorInput（直接处理 HotSectorAnalyzerInput 形态数据）
+// ============================================================
+
+describe('normalizeHotSectorInput', () => {
+  test('完整数据保持不变', () => {
+    const complete = {
+      symbol: 'BK001',
+      sectorName: '半导体',
+      momentum: { sectorStrengthScore: 4, priceChangeRank: 3, volumeExpansion: 1.5, consecutiveInflow: 5, relativeStrength: 72 },
+      sentiment: { sentimentRank: 10, retailSentiment: 0.4, institutionBuyCount: 2, limitUpCount: 0 },
+      breakout: { hasBreakoutPattern: true, rsiSignal: 'bullish' as const, rsi: 65, priceAboveMA20: true, priceAboveMA60: false },
+      valuationRisk: { pe: 55, pbPercentile: 65, marketCap: 5000, dividendYield: 0.8 },
+      marketEnv: { marketTrend: 'bull' as const, systemicRisk: 'low' as const },
+    }
+    const result = normalizeHotSectorInput(complete)
+    expect(result).toEqual(complete)
+  })
+
+  test('用户报告的脏数据: sentiment 缺 institutionBuyCount/limitUpCount', () => {
+    // 模拟用户报告的 API 返回: {"sentiment": {"sentimentRank": 10, "retailSentiment": 0.4}}
+    const dirty = {
+      symbol: 'BK001',
+      sectorName: '半导体',
+      momentum: { sectorStrengthScore: 4, priceChangeRank: 3, volumeExpansion: 1.5, consecutiveInflow: 5, relativeStrength: 72 },
+      sentiment: { sentimentRank: 10, retailSentiment: 0.4 },
+      breakout: { hasBreakoutPattern: true, rsiSignal: 'bullish' as const, rsi: 65, priceAboveMA20: true, priceAboveMA60: false },
+      valuationRisk: { pe: 55, pbPercentile: 65, marketCap: 5000, dividendYield: 0.8 },
+      marketEnv: { marketTrend: 'bull' as const, systemicRisk: 'low' as const },
+    }
+    const result = normalizeHotSectorInput(dirty)
+    expect(result.sentiment.sentimentRank).toBe(10)
+    expect(result.sentiment.retailSentiment).toBe(0.4)
+    expect(result.sentiment.institutionBuyCount).toBe(0)
+    expect(result.sentiment.limitUpCount).toBe(0)
+  })
+
+  test('整个维度缺失时全部补全为默认值', () => {
+    const partialMissing = {
+      symbol: 'BK001',
+      sectorName: '半导体',
+      momentum: { sectorStrengthScore: 4, priceChangeRank: 3, volumeExpansion: 1.5, consecutiveInflow: 5, relativeStrength: 72 },
+      // sentiment, breakout, valuationRisk, marketEnv 全部缺失
+    }
+    const result = normalizeHotSectorInput(partialMissing)
+    expect(result.sentiment).toEqual({ sentimentRank: 0, retailSentiment: 0, institutionBuyCount: 0, limitUpCount: 0 })
+    expect(result.breakout).toEqual({ hasBreakoutPattern: false, rsiSignal: 'neutral', rsi: 50, priceAboveMA20: false, priceAboveMA60: false })
+    expect(result.valuationRisk).toEqual({ pe: 0, pbPercentile: 0, marketCap: 0, dividendYield: 0 })
+    expect(result.marketEnv).toEqual({ marketTrend: 'sideways', systemicRisk: 'medium' })
+  })
+
+  test('null 输入返回完整默认值', () => {
+    const result = normalizeHotSectorInput(null)
+    expect(result.symbol).toBe('')
+    expect(result.sectorName).toBe('')
+    expect(result.sentiment).toEqual({ sentimentRank: 0, retailSentiment: 0, institutionBuyCount: 0, limitUpCount: 0 })
+    expect(result.momentum).toEqual({ sectorStrengthScore: 0, priceChangeRank: 0, volumeExpansion: 0, consecutiveInflow: 0, relativeStrength: 0 })
+  })
+
+  test('undefined 输入返回完整默认值', () => {
+    const result = normalizeHotSectorInput(undefined)
+    expect(result.symbol).toBe('')
+    expect(result.sentiment.institutionBuyCount).toBe(0)
+    expect(result.breakout.rsi).toBe(50)
   })
 })
 
