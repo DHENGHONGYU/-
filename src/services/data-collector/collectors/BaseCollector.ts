@@ -92,7 +92,7 @@ export abstract class BaseCollector {
         })
         .catch((error) => {
           clearTimeout(timeoutId)
-          reject(error)
+          reject(error instanceof Error ? error : new Error(String(error)))
         })
     })
   }

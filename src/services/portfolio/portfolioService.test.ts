@@ -3,6 +3,7 @@
  * @description 投资组合服务单元测试（E-2-6）
  */
 
+ 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 vi.mock('@/data/dataLayer', () => ({
@@ -68,7 +69,7 @@ describe('portfolioService', () => {
   describe('rebalance', () => {
     it('rebalances portfolio based on latest orders', async () => {
       vi.mocked(portfolioStore.get).mockResolvedValue(mockPortfolio())
-      vi.mocked(portfolioStore.save).mockResolvedValue({ success: true, data: {} as any } as any)
+      vi.mocked(portfolioStore.save).mockResolvedValue({ success: true, data: {} as any })
       const result = await rebalance('portfolio_001', [mockOrder()], { now: 3_000 })
       expect(result).toBeDefined()
       expect(result!.updatedAt).toBe(3_000)
@@ -78,7 +79,7 @@ describe('portfolioService', () => {
 
     it('handles sell orders correctly', async () => {
       vi.mocked(portfolioStore.get).mockResolvedValue(mockPortfolio())
-      vi.mocked(portfolioStore.save).mockResolvedValue({ success: true, data: {} as any } as any)
+      vi.mocked(portfolioStore.save).mockResolvedValue({ success: true, data: {} as any })
       const result = await rebalance('portfolio_001', [mockOrder({ direction: 'sell' })], { now: 3_000 })
       expect(result).toBeDefined()
       expect(result!.holdings[0]!.currentShares).toBe(50)
@@ -92,7 +93,7 @@ describe('portfolioService', () => {
 
     it('returns undefined when save fails', async () => {
       vi.mocked(portfolioStore.get).mockResolvedValue(mockPortfolio())
-      vi.mocked(portfolioStore.save).mockResolvedValue({ success: false, error: 'db_error' } as any)
+      vi.mocked(portfolioStore.save).mockResolvedValue({ success: false, error: 'db_error' })
       const result = await rebalance('portfolio_001', [])
       expect(result).toBeUndefined()
     })
@@ -101,7 +102,7 @@ describe('portfolioService', () => {
   describe('addHolding', () => {
     it('adds a new holding to portfolio', async () => {
       vi.mocked(portfolioStore.get).mockResolvedValue(mockPortfolio())
-      vi.mocked(portfolioStore.save).mockResolvedValue({ success: true, data: {} as any } as any)
+      vi.mocked(portfolioStore.save).mockResolvedValue({ success: true, data: {} as any })
       const newHolding = mockHolding({ symbol: '600001', name: '平安银行' })
       const result = await addHolding('portfolio_001', newHolding)
       expect(result).toBeDefined()
@@ -119,7 +120,7 @@ describe('portfolioService', () => {
   describe('removeHolding', () => {
     it('removes a holding from portfolio', async () => {
       vi.mocked(portfolioStore.get).mockResolvedValue(mockPortfolio())
-      vi.mocked(portfolioStore.save).mockResolvedValue({ success: true, data: {} as any } as any)
+      vi.mocked(portfolioStore.save).mockResolvedValue({ success: true, data: {} as any })
       const result = await removeHolding('portfolio_001', '600000')
       expect(result).toBeDefined()
       expect(result!.holdings).toHaveLength(0)

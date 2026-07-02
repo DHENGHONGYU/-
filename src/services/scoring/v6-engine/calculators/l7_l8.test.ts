@@ -273,7 +273,7 @@ describe('L7SecondCurveCalculator.calculate', () => {
     const result = await L7SecondCurveCalculator.calculate({
       stock: { symbol: 'TEST' },
       config: { weights: { l7: 0.15 } },
-    } as any)
+    } as unknown as LayerInput)
     expect(result.score).toBe(0)
     expect(result.summary).toContain('第二曲线计算失败')
     expect(result.layerId).toBe('l7')
@@ -335,7 +335,7 @@ describe('L8ChipCalculator.calculate', () => {
     const result = await L8ChipCalculator.calculate({
       stock: { symbol: 'TEST' },
       config: { weights: { l8: 0.04 } },
-    } as any)
+    } as unknown as LayerInput)
     expect(result.score).toBe(0)
     expect(result.summary).toContain('筹码计算失败')
     expect(result.layerId).toBe('l8')

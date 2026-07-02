@@ -1,4 +1,5 @@
 import { getLogger } from '@/lib/logger'
+import { toSafeNumber, toSafeOptionalNumber, toSafeString } from '@/lib/safeCoerce'
 import type {
   RawMarketData,
   MarketData,
@@ -67,7 +68,7 @@ export class MarketDataAdapter {
       case 'valuePit':
         return { valuePit: this.adaptValuePit(rawData.payload) }
       default:
-        logger.warn(`[MarketDataAdapter] 未知的数据类型: ${rawData.dataType}`)
+        logger.warn(`[MarketDataAdapter] 未知的数据类型: ${String(rawData.dataType)}`)
         return {}
     }
   }
@@ -126,14 +127,14 @@ export class MarketDataAdapter {
     }
 
     return payload.map((item) => ({
-      code: String(item.code ?? item.symbol ?? ''),
-      name: String(item.name ?? item.shortName ?? ''),
-      price: Number(item.price ?? item.value ?? item.current ?? 0),
-      change: Number(item.change ?? 0),
-      changePercent: Number(item.changePercent ?? item.change_percent ?? item.pctChange ?? 0),
-      high: item.high ? Number(item.high) : undefined,
-      low: item.low ? Number(item.low) : undefined,
-      volume: item.volume ? String(item.volume) : undefined,
+      code: toSafeString(item.code ?? item.symbol),
+      name: toSafeString(item.name ?? item.shortName),
+      price: toSafeNumber(item.price ?? item.value ?? item.current ?? 0),
+      change: toSafeNumber(item.change ?? 0),
+      changePercent: toSafeNumber(item.changePercent ?? item.change_percent ?? item.pctChange ?? 0),
+      high: toSafeOptionalNumber(item.high),
+      low: toSafeOptionalNumber(item.low),
+      volume: item.volume != null ? toSafeString(item.volume) : undefined,
     }))
   }
 
@@ -144,10 +145,10 @@ export class MarketDataAdapter {
     }
 
     return payload.map((item) => ({
-      name: String(item.name ?? item.sectorName ?? ''),
-      code: String(item.code ?? item.sectorCode ?? ''),
-      changePercent: Number(item.changePercent ?? item.change_percent ?? item.pctChange ?? 0),
-      turnover: item.turnover ? String(item.turnover) : undefined,
+      name: toSafeString(item.name ?? item.sectorName),
+      code: toSafeString(item.code ?? item.sectorCode),
+      changePercent: toSafeNumber(item.changePercent ?? item.change_percent ?? item.pctChange ?? 0),
+      turnover: item.turnover != null ? toSafeString(item.turnover) : undefined,
     }))
   }
 
@@ -158,10 +159,10 @@ export class MarketDataAdapter {
     }
 
     return payload.map((item) => ({
-      type: String(item.type ?? ''),
-      name: String(item.name ?? FUND_FLOW_NAMES[item.type] ?? ''),
-      value: Number(item.value ?? item.netInflow ?? 0),
-      unit: String(item.unit ?? '亿'),
+      type: toSafeString(item.type),
+      name: toSafeString(item.name ?? FUND_FLOW_NAMES[item.type]),
+      value: toSafeNumber(item.value ?? item.netInflow ?? 0),
+      unit: toSafeString(item.unit, '亿'),
     }))
   }
 
@@ -174,14 +175,14 @@ export class MarketDataAdapter {
     const p = payload as Record<string, unknown>
 
     return {
-      fearGreedIndex: Number(p.fearGreedIndex ?? p.fear_greed_index ?? p.fgi ?? 50),
-      fearGreedLabel: String(p.fearGreedLabel ?? p.fear_greed_label ?? '中性'),
-      totalStocks: Number(p.totalStocks ?? p.total_stocks ?? p.total ?? 0),
-      up: Number(p.up ?? p.rise ?? 0),
-      down: Number(p.down ?? p.fall ?? 0),
-      flat: Number(p.flat ?? p.unchanged ?? 0),
-      limitUp: Number(p.limitUp ?? p.limit_up ?? p.limitRise ?? 0),
-      limitDown: Number(p.limitDown ?? p.limit_down ?? p.limitFall ?? 0),
+      fearGreedIndex: toSafeNumber(p.fearGreedIndex ?? p.fear_greed_index ?? p.fgi ?? 50),
+      fearGreedLabel: toSafeString(p.fearGreedLabel ?? p.fear_greed_label, '中性'),
+      totalStocks: toSafeNumber(p.totalStocks ?? p.total_stocks ?? p.total ?? 0),
+      up: toSafeNumber(p.up ?? p.rise ?? 0),
+      down: toSafeNumber(p.down ?? p.fall ?? 0),
+      flat: toSafeNumber(p.flat ?? p.unchanged ?? 0),
+      limitUp: toSafeNumber(p.limitUp ?? p.limit_up ?? p.limitRise ?? 0),
+      limitDown: toSafeNumber(p.limitDown ?? p.limit_down ?? p.limitFall ?? 0),
     }
   }
 
@@ -192,10 +193,10 @@ export class MarketDataAdapter {
     }
 
     return payload.map((item) => ({
-      name: String(item.name ?? item.stockName ?? ''),
-      code: String(item.code ?? item.symbol ?? ''),
-      price: Number(item.price ?? item.currentPrice ?? item.current ?? 0),
-      changePercent: Number(item.changePercent ?? item.change_percent ?? item.pctChange ?? 0),
+      name: toSafeString(item.name ?? item.stockName),
+      code: toSafeString(item.code ?? item.symbol),
+      price: toSafeNumber(item.price ?? item.currentPrice ?? item.current ?? 0),
+      changePercent: toSafeNumber(item.changePercent ?? item.change_percent ?? item.pctChange ?? 0),
     }))
   }
 
@@ -208,13 +209,13 @@ export class MarketDataAdapter {
     const p = payload as Record<string, unknown>
 
     return {
-      totalAssets: String(p.totalAssets ?? p.total_assets ?? '0'),
-      availableFunds: String(p.availableFunds ?? p.available_funds ?? '0'),
-      todayPnL: String(p.todayPnL ?? p.today_pnl ?? p.todayProfit ?? '0'),
-      todayPnLPercent: Number(p.todayPnLPercent ?? p.today_pnl_percent ?? p.todayProfitPct ?? 0),
-      totalPnL: String(p.totalPnL ?? p.total_pnl ?? p.totalProfit ?? '0'),
-      totalPnLPercent: Number(p.totalPnLPercent ?? p.total_pnl_percent ?? p.totalProfitPct ?? 0),
-      holdings: Number(p.holdings ?? p.holdingCount ?? p.positionCount ?? 0),
+      totalAssets: toSafeString(p.totalAssets ?? p.total_assets, '0'),
+      availableFunds: toSafeString(p.availableFunds ?? p.available_funds, '0'),
+      todayPnL: toSafeString(p.todayPnL ?? p.today_pnl ?? p.todayProfit, '0'),
+      todayPnLPercent: toSafeNumber(p.todayPnLPercent ?? p.today_pnl_percent ?? p.todayProfitPct ?? 0),
+      totalPnL: toSafeString(p.totalPnL ?? p.total_pnl ?? p.totalProfit, '0'),
+      totalPnLPercent: toSafeNumber(p.totalPnLPercent ?? p.total_pnl_percent ?? p.totalProfitPct ?? 0),
+      holdings: toSafeNumber(p.holdings ?? p.holdingCount ?? p.positionCount ?? 0),
     }
   }
 
@@ -227,12 +228,12 @@ export class MarketDataAdapter {
     const p = payload as Record<string, unknown>
 
     return {
-      totalTrades: Number(p.totalTrades ?? p.total_trades ?? p.total ?? 0),
-      profitable: Number(p.profitable ?? p.profitCount ?? 0),
-      losing: Number(p.losing ?? p.lossCount ?? 0),
-      winRate: Number(p.winRate ?? p.win_rate ?? p.winPct ?? 0),
-      profitLossRatio: Number(p.profitLossRatio ?? p.profit_loss_ratio ?? p.plRatio ?? 0),
-      disciplineScore: Number(p.disciplineScore ?? p.discipline_score ?? p.score ?? 0),
+      totalTrades: toSafeNumber(p.totalTrades ?? p.total_trades ?? p.total ?? 0),
+      profitable: toSafeNumber(p.profitable ?? p.profitCount ?? 0),
+      losing: toSafeNumber(p.losing ?? p.lossCount ?? 0),
+      winRate: toSafeNumber(p.winRate ?? p.win_rate ?? p.winPct ?? 0),
+      profitLossRatio: toSafeNumber(p.profitLossRatio ?? p.profit_loss_ratio ?? p.plRatio ?? 0),
+      disciplineScore: toSafeNumber(p.disciplineScore ?? p.discipline_score ?? p.score ?? 0),
     }
   }
 
@@ -267,12 +268,12 @@ export class MarketDataAdapter {
     const metrics = Array.isArray(p.metrics) ? p.metrics : []
 
     return {
-      tags: Array.isArray(p.tags) ? p.tags.map((t) => String(t)) : [],
+      tags: Array.isArray(p.tags) ? p.tags.map((t) => toSafeString(t)) : [],
       metrics: metrics.map((item) => ({
-        name: String(item.name ?? ''),
-        score: Number(item.score ?? 0),
-        description: item.description ? String(item.description) : undefined,
-        icon: item.icon ? String(item.icon) : undefined,
+        name: toSafeString(item.name),
+        score: toSafeNumber(item.score ?? 0),
+        description: item.description != null ? toSafeString(item.description) : undefined,
+        icon: item.icon != null ? toSafeString(item.icon) : undefined,
       })),
     }
   }
@@ -287,23 +288,23 @@ export class MarketDataAdapter {
     const detailDistribution = Array.isArray(p.detailDistribution) ? p.detailDistribution : []
 
     return {
-      totalScore: Number(p.totalScore ?? p.total_score ?? p.score ?? 0),
-      sentiment: Number(p.sentiment ?? 0),
-      trend: Number(p.trend ?? 0),
-      flow: Number(p.flow ?? 0),
+      totalScore: toSafeNumber(p.totalScore ?? p.total_score ?? p.score ?? 0),
+      sentiment: toSafeNumber(p.sentiment ?? 0),
+      trend: toSafeNumber(p.trend ?? 0),
+      flow: toSafeNumber(p.flow ?? 0),
       dimensions: dimensions.map((item) => ({
-        name: String(item.name ?? ''),
-        score: Number(item.score ?? 0),
-        weight: Number(item.weight ?? 0),
-        status: String(item.status ?? ''),
-        color: String(item.color ?? 'bg-blue-500'),
+        name: toSafeString(item.name),
+        score: toSafeNumber(item.score ?? 0),
+        weight: toSafeNumber(item.weight ?? 0),
+        status: toSafeString(item.status),
+        color: toSafeString(item.color, 'bg-blue-500'),
       })),
       detailDistribution: detailDistribution.map((item) => ({
-        dimensionName: String(item.dimensionName ?? item.dimension_name ?? ''),
-        itemName: String(item.itemName ?? item.item_name ?? ''),
-        score: Number(item.score ?? 0),
-        weight: Number(item.weight ?? 0),
-        color: String(item.color ?? 'bg-blue-500'),
+        dimensionName: toSafeString(item.dimensionName ?? item.dimension_name),
+        itemName: toSafeString(item.itemName ?? item.item_name),
+        score: toSafeNumber(item.score ?? 0),
+        weight: toSafeNumber(item.weight ?? 0),
+        color: toSafeString(item.color, 'bg-blue-500'),
       })),
     }
   }
@@ -324,12 +325,12 @@ export class MarketDataAdapter {
       leftModel: this.adaptModelInfo(p.leftModel ?? p.left_model ?? p.modelA ?? {}),
       rightModel: this.adaptModelInfo(p.rightModel ?? p.right_model ?? p.modelB ?? {}),
       dimensions: dimensions.map((item) => ({
-        name: String(item.name ?? ''),
-        leftScore: Number(item.leftScore ?? item.left_score ?? item.scoreA ?? 0),
-        rightScore: Number(item.rightScore ?? item.right_score ?? item.scoreB ?? 0),
-        weight: Number(item.weight ?? 0),
+        name: toSafeString(item.name),
+        leftScore: toSafeNumber(item.leftScore ?? item.left_score ?? item.scoreA ?? 0),
+        rightScore: toSafeNumber(item.rightScore ?? item.right_score ?? item.scoreB ?? 0),
+        weight: toSafeNumber(item.weight ?? 0),
       })),
-      riskHint: String(p.riskHint ?? p.risk_hint ?? p.risk ?? ''),
+      riskHint: toSafeString(p.riskHint ?? p.risk_hint ?? p.risk),
     }
   }
 
@@ -340,10 +341,10 @@ export class MarketDataAdapter {
 
     const p = payload as Record<string, unknown>
     return {
-      id: String(p.id ?? ''),
-      name: String(p.name ?? ''),
-      version: String(p.version ?? ''),
-      score: Number(p.score ?? 0),
+      id: toSafeString(p.id),
+      name: toSafeString(p.name),
+      version: toSafeString(p.version),
+      score: toSafeNumber(p.score ?? 0),
     }
   }
 
@@ -361,23 +362,23 @@ export class MarketDataAdapter {
 
     return {
       stocks: stocks.map((item) => this.adaptStockPoolItem(item)),
-      total: Number(p.total ?? stocks.length),
-      page: Number(p.page ?? 1),
-      pageSize: Number(p.pageSize ?? p.page_size ?? p.limit ?? 10),
+      total: toSafeNumber(p.total ?? stocks.length),
+      page: toSafeNumber(p.page ?? 1),
+      pageSize: toSafeNumber(p.pageSize ?? p.page_size ?? p.limit ?? 10),
     }
   }
 
   private adaptStockPoolItem(item: unknown): StockPoolItem {
     const it = item as Record<string, unknown>
     return {
-      code: String(it.code ?? it.symbol ?? ''),
-      name: String(it.name ?? it.stockName ?? ''),
-      price: Number(it.price ?? it.currentPrice ?? it.current ?? 0),
-      changePercent: Number(it.changePercent ?? it.change_percent ?? it.pctChange ?? 0),
-      turnover: String(it.turnover ?? ''),
-      turnoverRate: String(it.turnoverRate ?? it.turnover_rate ?? ''),
-      statusColor: String(it.statusColor ?? it.status_color ?? 'bg-gray-400'),
-      statusLabel: String(it.statusLabel ?? it.status_label ?? ''),
+      code: toSafeString(it.code ?? it.symbol),
+      name: toSafeString(it.name ?? it.stockName),
+      price: toSafeNumber(it.price ?? it.currentPrice ?? it.current ?? 0),
+      changePercent: toSafeNumber(it.changePercent ?? it.change_percent ?? it.pctChange ?? 0),
+      turnover: toSafeString(it.turnover),
+      turnoverRate: toSafeString(it.turnoverRate ?? it.turnover_rate),
+      statusColor: toSafeString(it.statusColor ?? it.status_color, 'bg-gray-400'),
+      statusLabel: toSafeString(it.statusLabel ?? it.status_label),
     }
   }
 
@@ -394,7 +395,7 @@ export class MarketDataAdapter {
     const messages = Array.isArray(p.messages) ? p.messages : []
 
     return {
-      target: String(p.target ?? ''),
+      target: toSafeString(p.target),
       targetType: (p.targetType ?? p.target_type ?? 'stock') as ChatHistory['targetType'],
       messages: messages.map((item) => this.adaptChatMessage(item)),
     }
@@ -403,10 +404,10 @@ export class MarketDataAdapter {
   private adaptChatMessage(item: unknown): ChatMessage {
     const it = item as Record<string, unknown>
     return {
-      id: String(it.id ?? ''),
+      id: toSafeString(it.id),
       role: (it.role ?? 'assistant') as ChatMessage['role'],
-      content: String(it.content ?? ''),
-      timestamp: Number(it.timestamp ?? it.ts ?? Date.now()),
+      content: toSafeString(it.content),
+      timestamp: toSafeNumber(it.timestamp ?? it.ts ?? Date.now()),
     }
   }
 
@@ -497,16 +498,16 @@ export class MarketDataAdapter {
     }
 
     return payload.map((item) => ({
-      symbol: String(item.symbol ?? ''),
-      name: String(item.name ?? ''),
-      score: Number(item.score ?? 0),
+      symbol: toSafeString(item.symbol),
+      name: toSafeString(item.name),
+      score: toSafeNumber(item.score ?? 0),
       action: (item.action ?? 'ignore') as HotSectorData['action'],
       dimensions: {
-        momentum: Number(item.dimensions?.momentum ?? 0),
-        sentiment: Number(item.dimensions?.sentiment ?? 0),
-        technical: Number(item.dimensions?.technical ?? 0),
-        valuation: Number(item.dimensions?.valuation ?? 0),
-        composite: Number(item.dimensions?.composite ?? 0),
+        momentum: toSafeNumber(item.dimensions?.momentum ?? 0),
+        sentiment: toSafeNumber(item.dimensions?.sentiment ?? 0),
+        technical: toSafeNumber(item.dimensions?.technical ?? 0),
+        valuation: toSafeNumber(item.dimensions?.valuation ?? 0),
+        marketEnv: toSafeNumber(item.dimensions?.marketEnv ?? 0),
       },
     }))
   }
@@ -518,18 +519,17 @@ export class MarketDataAdapter {
     }
 
     return payload.map((item) => ({
-      symbol: String(item.symbol ?? ''),
-      name: String(item.name ?? ''),
-      score: Number(item.score ?? 0),
+      symbol: toSafeString(item.symbol),
+      name: toSafeString(item.name),
+      score: toSafeNumber(item.score ?? 0),
       action: (item.action ?? 'ignore') as ValuePitData['action'],
       rotationSignal: Boolean(item.rotationSignal ?? false),
       dimensions: {
-        catalyst: Number(item.dimensions?.catalyst ?? 0),
-        valuation: Number(item.dimensions?.valuation ?? 0),
-        chip: Number(item.dimensions?.chip ?? 0),
-        rotation: Number(item.dimensions?.rotation ?? 0),
-        liquidity: Number(item.dimensions?.liquidity ?? 0),
-        composite: Number(item.dimensions?.composite ?? 0),
+        catalyst: toSafeNumber(item.dimensions?.catalyst ?? 0),
+        valuation: toSafeNumber(item.dimensions?.valuation ?? 0),
+        chip: toSafeNumber(item.dimensions?.chip ?? 0),
+        rotation: toSafeNumber(item.dimensions?.rotation ?? 0),
+        liquidity: toSafeNumber(item.dimensions?.liquidity ?? 0),
       },
     }))
   }

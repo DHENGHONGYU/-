@@ -9,6 +9,7 @@
  * - tradeReviewAI 异步 LLM 增强模式
  */
 
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest'
 import { chat, LlmConfigError, LlmApiError } from '@/services/llm/llmClient'
 import type { LlmConfig } from '@/config/llmConfig'
@@ -350,9 +351,13 @@ describe('LLM model presets', () => {
   })
 
   test('getDefaultLlmConfig should return DeepSeek defaults when no env', () => {
+    // 清除 .env.local 中 VITE_LLM_MODEL 的覆盖，模拟无环境变量场景
+    vi.stubEnv('VITE_LLM_MODEL', undefined)
+    vi.stubEnv('VITE_LLM_BASE_URL', undefined)
     const config = getDefaultLlmConfig()
     expect(config.baseURL).toBe('https://api.deepseek.com')
     expect(config.model).toBe('deepseek-v4-flash')
+    vi.unstubAllEnvs()
   })
 })
 

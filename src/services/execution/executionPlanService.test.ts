@@ -3,6 +3,7 @@
  * @description 执行计划服务单元测试（E-2-6）
  */
 
+ 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 // Mock dataLayer
@@ -62,12 +63,12 @@ const mockPlan = (overrides: Partial<ExecutionPlan> = {}): ExecutionPlan => ({
 describe('executionPlanService', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    vi.mocked(executionLogStore.save).mockResolvedValue({ success: true, data: {} as any } as any)
+    vi.mocked(executionLogStore.save).mockResolvedValue({ success: true, data: {} as any })
   })
 
   describe('createPlan', () => {
     it('creates a plan when signal confidence exceeds threshold', async () => {
-      vi.mocked(executionPlanStore.save).mockResolvedValue({ success: true, data: {} as any } as any)
+      vi.mocked(executionPlanStore.save).mockResolvedValue({ success: true, data: {} as any })
       const plan = await createPlan(mockSignal({ confidence: 0.8 }), { now: 2_000 })
       expect(plan).toBeDefined()
       expect(plan!.symbol).toBe('600000')
@@ -82,13 +83,13 @@ describe('executionPlanService', () => {
     })
 
     it('returns undefined when save fails', async () => {
-      vi.mocked(executionPlanStore.save).mockResolvedValue({ success: false, error: 'db_error' } as any)
+      vi.mocked(executionPlanStore.save).mockResolvedValue({ success: false, error: 'db_error' })
       const plan = await createPlan(mockSignal(), { now: 2_000 })
       expect(plan).toBeUndefined()
     })
 
     it('writes a creation log after plan is saved', async () => {
-      vi.mocked(executionPlanStore.save).mockResolvedValue({ success: true, data: {} as any } as any)
+      vi.mocked(executionPlanStore.save).mockResolvedValue({ success: true, data: {} as any })
       await createPlan(mockSignal(), { now: 2_000 })
       expect(executionLogStore.save).toHaveBeenCalledTimes(1)
     })
@@ -114,7 +115,7 @@ describe('executionPlanService', () => {
   describe('updatePhase', () => {
     it('advances phase when transition is allowed', async () => {
       vi.mocked(executionPlanStore.get).mockResolvedValue(mockPlan())
-      vi.mocked(executionPlanStore.update).mockResolvedValue({ success: true, data: {} as any } as any)
+      vi.mocked(executionPlanStore.update).mockResolvedValue({ success: true, data: {} as any })
       const updated = await updatePhase('plan_001', EXECUTION_PHASE.CONFIRMED, { now: 3_000 })
       expect(updated).toBeDefined()
       expect(updated!.phase).toBe(EXECUTION_PHASE.CONFIRMED)
@@ -138,7 +139,7 @@ describe('executionPlanService', () => {
   describe('cancelPlan', () => {
     it('cancels a plan in plan phase', async () => {
       vi.mocked(executionPlanStore.get).mockResolvedValue(mockPlan())
-      vi.mocked(executionPlanStore.update).mockResolvedValue({ success: true, data: {} as any } as any)
+      vi.mocked(executionPlanStore.update).mockResolvedValue({ success: true, data: {} as any })
       const cancelled = await cancelPlan('plan_001', { now: 5_000 })
       expect(cancelled).toBeDefined()
       expect(cancelled!.phase).toBe(EXECUTION_PHASE.CANCELLED)

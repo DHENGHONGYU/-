@@ -3,6 +3,7 @@
  * @description 执行日志服务单元测试（E-2-6）
  */
 
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 vi.mock('@/data/dataLayer', () => ({
@@ -42,7 +43,7 @@ describe('executionLogService', () => {
 
   describe('writeLog', () => {
     it('writes a log entry with correct action', async () => {
-      vi.mocked(executionLogStore.save).mockResolvedValue({ success: true, data: {} as any } as any)
+      vi.mocked(executionLogStore.save).mockResolvedValue({ success: true, data: {} as any })
       const log = await writeLog(mockPlan(), EXECUTION_LOG_ACTION.CREATE, { now: 3_000, actor: 'user' })
       expect(log).toBeDefined()
       expect(log!.action).toBe(EXECUTION_LOG_ACTION.CREATE)
@@ -51,7 +52,7 @@ describe('executionLogService', () => {
     })
 
     it('returns undefined when save fails', async () => {
-      vi.mocked(executionLogStore.save).mockResolvedValue({ success: false, error: 'db_error' } as any)
+      vi.mocked(executionLogStore.save).mockResolvedValue({ success: false, error: 'db_error' })
       const log = await writeLog(mockPlan(), EXECUTION_LOG_ACTION.EXECUTE)
       expect(log).toBeUndefined()
     })

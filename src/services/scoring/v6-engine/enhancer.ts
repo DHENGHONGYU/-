@@ -134,8 +134,9 @@ export class LLMScoreEnhancer {
       const jsonMatch = content.match(/```(?:json)?\s*\n?([\s\S]*?)```/)
       const jsonStr = jsonMatch?.[1] ?? content
       const parsed = JSON.parse(jsonStr.trim())
+      const parsedScore = parsed.score
       return {
-        score: typeof parsed.score === 'number' ? Math.max(0, Math.min(5, parsed.score)) : undefined,
+        score: typeof parsedScore === 'number' ? Math.max(0, Math.min(5, parsedScore)) : undefined,
         summary: typeof parsed.summary === 'string' ? parsed.summary : undefined,
         rationale: typeof parsed.rationale === 'string' ? parsed.rationale : undefined,
         risks: Array.isArray(parsed.risks) ? parsed.risks.map(String) : undefined,

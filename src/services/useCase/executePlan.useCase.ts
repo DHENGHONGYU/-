@@ -16,7 +16,7 @@
 
 import { getLogger } from '@/lib/logger'
 import { dataLayer } from '@/data/dataLayer'
-import type { ExecutionPlan, Signal } from '@/data/types'
+import type { ExecutionPlan } from '@/data/types'
 
 const logger = getLogger()
 
@@ -28,9 +28,9 @@ export interface ExecutePlanContext {
   /** 设置处理中标志 */
   setProcessing: (planId: string, isProcessing: boolean) => void
   /** 创建买入订单 */
-  createBuyOrder: (signal: Signal, price: number, quantity: number) => Promise<string | null>
+  createBuyOrder: (symbol: string, price: number, quantity: number) => Promise<string | null>
   /** 创建卖出订单 */
-  createSellOrder: (signal: Signal, price: number, quantity: number) => Promise<string | null>
+  createSellOrder: (symbol: string, price: number, quantity: number) => Promise<string | null>
 }
 
 export interface ExecutePlanResult {
@@ -72,28 +72,32 @@ export async function executePlanUseCase(
     logger.info(`[executePlanUseCase] 计划 ${planId} 状态更新为 pending`)
 
     // Step 3: 获取最新价格
-    const stock = await dataLayer.stocks.getBySymbol(plan.signal.symbol)
+    const stock = await dataLayer.stocks.get(plan.symbol)
     if (!stock) {
-      throw new Error(`股票 ${plan.signal.symbol} 不存在`)
+      throw new Error(`股票 ${plan.symbol} 不存在`)
     }
 
-    const currentPrice = stock.currentPrice ?? stock.close ?? 0
+    const currentPrice = stock.price ?? 0
     if (currentPrice <= 0) {
-      throw new Error(`股票 ${plan.signal.symbol} 当前价格无效: ${currentPrice}`)
+      throw new Error(`股票 ${plan.symbol} 当前价格无效: ${currentPrice}`)
     }
 
-    logger.info(`[executePlanUseCase] 获取价格成功: ${plan.signal.symbol} = ${currentPrice}`)
+    logger.info(`[executePlanUseCase] 获取价格成功: ${plan.symbol} = ${currentPrice}`)
 
     // Step 4: 根据 direction 创建订单
-    const { signal, quantity } = plan
+    const quantity = plan.sizing?.quantity ?? 0
+    if (quantity <= 0 || !Number.isFinite(quantity)) {
+      throw new Error(`计划 ${planId} 交易数量无效: ${quantity}`)
+    }
+
     let orderId: string | null = null
 
-    if (signal.direction === 'buy' || signal.direction === 'long') {
-      orderId = await ctx.createBuyOrder(signal, currentPrice, quantity)
-    } else if (signal.direction === 'sell' || signal.direction === 'short') {
-      orderId = await ctx.createSellOrder(signal, currentPrice, quantity)
+    if (plan.direction === 'buy') {
+      orderId = await ctx.createBuyOrder(plan.symbol, currentPrice, quantity)
+    } else if (plan.direction === 'sell') {
+      orderId = await ctx.createSellOrder(plan.symbol, currentPrice, quantity)
     } else {
-      throw new Error(`不支持的方向: ${signal.direction}`)
+      throw new Error(`不支持的方向: ${String(plan.direction)}`)
     }
 
     // Step 5: 根据结果更新计划状态

@@ -53,7 +53,7 @@ export function validateOrder(order: Partial<Order>): ValidationResult<Order> {
   if (!order.direction) {
     errors.push('direction 不能为空')
   } else if (order.direction !== 'buy' && order.direction !== 'sell') {
-    errors.push(`direction 必须为 'buy' 或 'sell'，当前: ${order.direction}`)
+    errors.push(`direction 必须为 'buy' 或 'sell'，当前: ${String(order.direction)}`)
   }
 
   // quantity 校验

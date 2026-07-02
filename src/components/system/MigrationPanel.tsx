@@ -15,7 +15,7 @@ import {
 } from '@/services/system/v6MigrationService'
 
 export default function MigrationPanel(): React.JSX.Element {
-  const [rawJson, setRawJson] = useState<unknown | null>(null)
+  const [rawJson, setRawJson] = useState<unknown>(null)
   const [v6Export, setV6Export] = useState<V6ExportShape | null>(null)
   const [transformed, setTransformed] = useState<V9ImportShape | null>(null)
   const [report, setReport] = useState<MigrationReport | null>(null)
@@ -30,7 +30,8 @@ export default function MigrationPanel(): React.JSX.Element {
     const reader = new FileReader()
     reader.onload = (e) => {
       try {
-        const text = String(e.target?.result ?? '')
+        const raw = e.target?.result
+        const text = typeof raw === 'string' ? raw : ''
         const parsed = JSON.parse(text)
         setRawJson(parsed)
         const v6 = parseV6Export(parsed)
@@ -169,7 +170,11 @@ export default function MigrationPanel(): React.JSX.Element {
                 className="mt-4 block w-full text-sm text-muted-foreground file:mr-4 file:rounded-md file:border-0 file:bg-secondary file:px-4 file:py-2 file:text-sm file:font-medium"
               />
             </div>
-            {error && <p className="text-sm text-destructive">{error}</p>}
+            {error && (
+              <div className="rounded-md border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive">
+                {error}
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="preview" className="space-y-4">
@@ -222,7 +227,11 @@ export default function MigrationPanel(): React.JSX.Element {
                 </div>
               </>
             )}
-            {error && <p className="text-sm text-destructive">{error}</p>}
+            {error && (
+              <div className="rounded-md border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive">
+                {error}
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="report" className="space-y-4">
@@ -231,7 +240,7 @@ export default function MigrationPanel(): React.JSX.Element {
                 <div className="grid grid-cols-4 gap-2">
                   <div className="rounded-md border p-2 text-center">
                     <p className="text-lg font-bold">{report.summary.totalStores}</p>
-                    <Badge variant="outline">store</Badge>
+                    <Badge variant="outline">存储区</Badge>
                   </div>
                   <div className="rounded-md border p-2 text-center">
                     <p className="text-lg font-bold">{report.summary.importedRecords}</p>

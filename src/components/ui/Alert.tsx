@@ -37,9 +37,9 @@ export interface AlertProps extends React.HTMLAttributes<HTMLDivElement> {
   icon?: ReactNode
 }
 
-export interface AlertTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {}
+export type AlertTitleProps = React.HTMLAttributes<HTMLHeadingElement>
 
-export interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElement> {}
+export type AlertDescriptionProps = React.HTMLAttributes<HTMLParagraphElement>
 
 // ============================================================
 // 变体样式配置

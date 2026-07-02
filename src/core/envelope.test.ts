@@ -33,7 +33,7 @@ describe('EnvelopeFactory.create', () => {
       {
         source: MODULE_ID.analyzer,
         target: ENVELOPE_TARGET.db,
-        action: 'INSERT_STOCK' as any,
+        action: 'INSERT_STOCK',
         traceId: 'trace-001',
       },
       { stockCode: '600519' },
@@ -51,7 +51,7 @@ describe('EnvelopeFactory.create', () => {
       {
         source: MODULE_ID.analyzer,
         target: ENVELOPE_TARGET.db,
-        action: 'INSERT_STOCK' as any,
+        action: 'INSERT_STOCK',
         traceId: 'trace-002',
         timestamp: fixedTs,
       },
@@ -66,7 +66,7 @@ describe('EnvelopeFactory.create', () => {
       {
         source: MODULE_ID.fetcher,
         target: ENVELOPE_TARGET.ui,
-        action: 'SAVE_SCORES' as any,
+        action: 'SAVE_SCORES',
         traceId: 'trace-003',
       },
       undefined,
@@ -89,14 +89,14 @@ describe('EnvelopeFactory.validate', () => {
       meta: {
         source: MODULE_ID.analyzer,
         target: ENVELOPE_TARGET.db,
-        action: 'SAVE_SCORES' as any,
+        action: 'SAVE_SCORES',
         traceId: 'trace-001',
         timestamp: Date.now(),
         ...overrides?.meta,
       },
       payload: { data: 'test' },
       ...overrides,
-    } as StandardEnvelope
+    }
   }
 
   it('有效信封返回 valid: true', () => {
@@ -105,26 +105,26 @@ describe('EnvelopeFactory.validate', () => {
   })
 
   it('非 object 返回 valid: false', () => {
-    const result = EnvelopeFactory.validate(null as any)
+    const result = EnvelopeFactory.validate(null as unknown as StandardEnvelope)
     expect(result.valid).toBe(false)
     expect(result.error).toBe('Envelope must be an object')
   })
 
   it('字符串返回 valid: false', () => {
-    const result = EnvelopeFactory.validate('not an object' as any)
+    const result = EnvelopeFactory.validate('not an object' as unknown as StandardEnvelope)
     expect(result.valid).toBe(false)
     expect(result.error).toBe('Envelope must be an object')
   })
 
   it('缺少 meta 返回 valid: false', () => {
-    const result = EnvelopeFactory.validate({ payload: {} } as any)
+    const result = EnvelopeFactory.validate({ payload: {} } as unknown as StandardEnvelope)
     expect(result.valid).toBe(false)
     expect(result.error).toBe('Envelope meta is required')
   })
 
   it('缺少 source 返回 valid: false', () => {
     const result = EnvelopeFactory.validate(
-      makeValidEnvelope({ meta: { source: '' as any, target: ENVELOPE_TARGET.db, action: 'SAVE_SCORES' as any, traceId: 'trace-001', timestamp: Date.now() } }),
+      makeValidEnvelope({ meta: { source: '' as any, target: ENVELOPE_TARGET.db, action: 'SAVE_SCORES', traceId: 'trace-001', timestamp: Date.now() } }),
     )
     expect(result.valid).toBe(false)
     expect(result.error).toBe('Envelope source is required')
@@ -132,7 +132,7 @@ describe('EnvelopeFactory.validate', () => {
 
   it('无效 target 返回 valid: false', () => {
     const result = EnvelopeFactory.validate(
-      makeValidEnvelope({ meta: { source: MODULE_ID.analyzer, target: 'invalid_target' as any, action: 'SAVE_SCORES' as any, traceId: 'trace-001', timestamp: Date.now() } }),
+      makeValidEnvelope({ meta: { source: MODULE_ID.analyzer, target: 'invalid_target' as any, action: 'SAVE_SCORES', traceId: 'trace-001', timestamp: Date.now() } }),
     )
     expect(result.valid).toBe(false)
     expect(result.error).toContain('Invalid envelope target')
@@ -148,7 +148,7 @@ describe('EnvelopeFactory.validate', () => {
 
   it('缺少 traceId 返回 valid: false', () => {
     const result = EnvelopeFactory.validate(
-      makeValidEnvelope({ meta: { source: MODULE_ID.analyzer, target: ENVELOPE_TARGET.db, action: 'SAVE_SCORES' as any, traceId: '' as any, timestamp: Date.now() } }),
+      makeValidEnvelope({ meta: { source: MODULE_ID.analyzer, target: ENVELOPE_TARGET.db, action: 'SAVE_SCORES', traceId: '', timestamp: Date.now() } }),
     )
     expect(result.valid).toBe(false)
     expect(result.error).toBe('Envelope traceId is required')
@@ -156,7 +156,7 @@ describe('EnvelopeFactory.validate', () => {
 
   it('timestamp 非正数返回 valid: false', () => {
     const result = EnvelopeFactory.validate(
-      makeValidEnvelope({ meta: { source: MODULE_ID.analyzer, target: ENVELOPE_TARGET.db, action: 'SAVE_SCORES' as any, traceId: 'trace-001', timestamp: 0 } }),
+      makeValidEnvelope({ meta: { source: MODULE_ID.analyzer, target: ENVELOPE_TARGET.db, action: 'SAVE_SCORES', traceId: 'trace-001', timestamp: 0 } }),
     )
     expect(result.valid).toBe(false)
     expect(result.error).toBe('Envelope timestamp must be a positive number')
@@ -164,7 +164,7 @@ describe('EnvelopeFactory.validate', () => {
 
   it('timestamp 为负数返回 valid: false', () => {
     const result = EnvelopeFactory.validate(
-      makeValidEnvelope({ meta: { source: MODULE_ID.analyzer, target: ENVELOPE_TARGET.db, action: 'SAVE_SCORES' as any, traceId: 'trace-001', timestamp: -1 } }),
+      makeValidEnvelope({ meta: { source: MODULE_ID.analyzer, target: ENVELOPE_TARGET.db, action: 'SAVE_SCORES', traceId: 'trace-001', timestamp: -1 } }),
     )
     expect(result.valid).toBe(false)
     expect(result.error).toBe('Envelope timestamp must be a positive number')

@@ -40,7 +40,7 @@ describe('ScoreFactorDeltaPanel', () => {
     const previous = makeScore(70, [{ name: '估值', score: 70, rationale: '正常' }])
     render(<ScoreFactorDeltaPanel current={current} previous={previous} />)
     // 综合分变化 Badge 显示 -10.00
-    expect(screen.getByText(/^\-10\.00$/)).toBeInTheDocument()
+    expect(screen.getByText(/^-10\.00$/)).toBeInTheDocument()
   })
 
   it('显示上升因子 Top N', () => {

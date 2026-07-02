@@ -56,7 +56,7 @@ export class WebSocketCollector extends BaseCollector {
 
       this.ws.onmessage = (event) => {
         try {
-          const rawData = JSON.parse(event.data)
+          const rawData = JSON.parse(event.data as string)
           const dataType = this.inferDataType(endpoint)
           const wrappedData = this.wrapData(dataType, rawData, 'websocket')
           this.onMessageCallback?.(wrappedData)
@@ -99,7 +99,7 @@ export class WebSocketCollector extends BaseCollector {
    * @param message 消息内容
    */
   send(message: string): void {
-    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+    if (this.ws?.readyState === WebSocket.OPEN) {
       this.ws.send(message)
     } else {
       this.messageQueue.push(message)

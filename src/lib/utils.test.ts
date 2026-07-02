@@ -47,6 +47,6 @@ describe('cn', () => {
   })
 
   it('数字被忽略（clsx 默认行为）', () => {
-    expect(cn('base', 0 as any, 'extra')).toBe('base extra')
+    expect(cn('base', 0, 'extra')).toBe('base extra')
   })
 })

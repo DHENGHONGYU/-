@@ -423,8 +423,8 @@ export function normalizeHotSectorInput(raw: unknown): HotSectorAnalyzerInput {
   }
   const r = raw as Record<string, unknown>
   return {
-    symbol: typeof r.symbol === 'string' ? r.symbol : String(r.symbol ?? ''),
-    sectorName: typeof r.sectorName === 'string' ? r.sectorName : String(r.sectorName ?? ''),
+    symbol: typeof r.symbol === 'string' ? r.symbol : toSafeString(r.symbol),
+    sectorName: typeof r.sectorName === 'string' ? r.sectorName : toSafeString(r.sectorName),
     momentum: normalizeMomentum(r.momentum),
     sentiment: normalizeSentiment(r.sentiment),
     breakout: normalizeBreakout(r.breakout),

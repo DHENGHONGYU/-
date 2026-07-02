@@ -30,6 +30,24 @@ export function toSafeNumber(value: unknown, defaultValue = 0): number {
 }
 
 /**
+ * 将任意值强制转为 number | undefined，用于可选数值字段。
+ * null/undefined/空串/非数字字符串均返回 undefined（而非 0），
+ * 防止 0 被下游误判为"有值"。
+ *
+ * @example
+ *   toSafeOptionalNumber(42)      // 42
+ *   toSafeOptionalNumber('4.5')   // 4.5
+ *   toSafeOptionalNumber('停牌')    // undefined
+ *   toSafeOptionalNumber(null)    // undefined
+ *   toSafeOptionalNumber('')      // undefined
+ */
+export function toSafeOptionalNumber(value: unknown): number | undefined {
+  if (value === null || value === undefined || value === '') return undefined
+  const num = Number(value)
+  return Number.isFinite(num) ? num : undefined
+}
+
+/**
  * 将任意值强制转为指定枚举值，无效值返回 defaultValue。
  * 大小写敏感：'Bullish' 不匹配 'bullish'。
  *
@@ -87,5 +105,8 @@ export function toSafeArray<T>(value: unknown): T[] {
 export function toSafeString(value: unknown, defaultValue = ''): string {
   if (value === null || value === undefined) return defaultValue
   if (typeof value === 'string') return value
+  if (typeof value === 'number' || typeof value === 'boolean' || typeof value === 'bigint') return value.toString()
+  if (typeof value === 'symbol') return value.toString()
+  // eslint-disable-next-line @typescript-eslint/no-base-to-string -- 回退分支：value 已经过所有基本类型检查，此处为 object，调用 String() 是合理的最后手段
   return String(value)
 }

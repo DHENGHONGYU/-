@@ -13,7 +13,7 @@
 import { getLogger } from '@/lib/logger'
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
-import { ENVELOPE_ACTION } from '@/config/dbConfig'
+import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID, ORDER_STATUS, ACCOUNT_TYPE } from '@/config/dbConfig'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { withBroadcast } from '@/store/helpers/withBroadcast'
 import type { Order } from '@/data/types'
@@ -25,7 +25,6 @@ export interface SubmitOrderInput {
   direction: 'buy' | 'sell'
   quantity: number
   price: number
-  action: string
   note?: string
 }
 
@@ -60,23 +59,26 @@ export async function submitOrderUseCase(
   }
 
   if (input.direction !== 'buy' && input.direction !== 'sell') {
-    return { success: false, error: `不支持的方向: ${input.direction}` }
+    return { success: false, error: `不支持的方向: ${String(input.direction)}` }
   }
 
   // Step 2: 构造完整 Order 对象
   const now = Date.now()
   const traceId = `uc-submit-${now}-${input.symbol}`
   const orderId = `ord_${now}_${Math.random().toString(36).slice(2, 8)}`
+  const roundedPrice = Math.round(input.price * 100) / 100
+  const roundedAmount = Math.round(input.quantity * roundedPrice * 100) / 100
 
-  const order: Omit<Order, 'id' | 'createdAt'> = {
+  const order: Order = {
+    id: orderId,
     symbol: input.symbol.toUpperCase(),
     direction: input.direction,
     quantity: input.quantity,
-    price: Math.round(input.price * 100) / 100, // 金额精度：保留2位小数
-    action: input.action,
-    note: input.note ?? '',
-    executedAt: now,
-    traceId,
+    price: roundedPrice,
+    amount: roundedAmount,
+    status: ORDER_STATUS.pending,
+    accountType: ACCOUNT_TYPE.paper,
+    createdAt: now,
   }
 
   logger.info('[submitOrderUseCase] 订单构造完成', { orderId, symbol: order.symbol })
@@ -84,8 +86,8 @@ export async function submitOrderUseCase(
   // Step 3: 通过 DataBridge 持久化
   try {
     const envelope = EnvelopeFactory.create(
-      { source: 'submitOrderUseCase', target: 'orders', action: ENVELOPE_ACTION.insertOrder, traceId },
-      { id: orderId, ...order, createdAt: now } as Order,
+      { source: MODULE_ID.trading, target: ENVELOPE_TARGET.db, action: ENVELOPE_ACTION.insertOrder, traceId },
+      order,
     )
 
     await dataBridge.forward(envelope)

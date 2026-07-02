@@ -3,6 +3,7 @@
  * @description 缺失报告检测器单元测试（E-2-6）
  */
 
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 vi.mock('@/data/dataLayer', () => ({
@@ -41,7 +42,7 @@ describe('missingReportDetector', () => {
   describe('detect', () => {
     it('detects a missing report when enabled', async () => {
       vi.mocked(missingReportStore.listBySymbol).mockResolvedValue([])
-      vi.mocked(missingReportStore.report).mockResolvedValue({ success: true, data: {} as any } as any)
+      vi.mocked(missingReportStore.report).mockResolvedValue({ success: true, data: {} as any })
       const report = await detect('600000', MISSING_REPORT_TYPE.RESEARCH, '缺少研报', { now: 5_000 })
       expect(report).toBeDefined()
       expect(report!.symbol).toBe('600000')
@@ -69,14 +70,14 @@ describe('missingReportDetector', () => {
       vi.mocked(missingReportStore.listBySymbol).mockResolvedValue([
         { id: 1, symbol: '600000', reportType: MISSING_REPORT_TYPE.RESEARCH, severity: 'medium', reason: '缺少研报', detectedAt: 4_000, resolvedAt: 4_500, retryCount: 0 },
       ] as any)
-      vi.mocked(missingReportStore.report).mockResolvedValue({ success: true, data: {} as any } as any)
+      vi.mocked(missingReportStore.report).mockResolvedValue({ success: true, data: {} as any })
       const report = await detect('600000', MISSING_REPORT_TYPE.RESEARCH, '缺少研报', { now: 5_000 })
       expect(report).toBeDefined()
     })
 
     it('uses custom severity when provided', async () => {
       vi.mocked(missingReportStore.listBySymbol).mockResolvedValue([])
-      vi.mocked(missingReportStore.report).mockResolvedValue({ success: true, data: {} as any } as any)
+      vi.mocked(missingReportStore.report).mockResolvedValue({ success: true, data: {} as any })
       const report = await detect('600000', MISSING_REPORT_TYPE.EARNINGS, '缺少财报', {
         now: 5_000,
         severity: MISSING_REPORT_SEVERITY.CRITICAL,
@@ -100,7 +101,7 @@ describe('missingReportDetector', () => {
     it('returns reports by severity', async () => {
       vi.mocked(missingReportStore.listBySeverity).mockResolvedValue([
         { id: 1, symbol: '600000', reportType: MISSING_REPORT_TYPE.RESEARCH, severity: MISSING_REPORT_SEVERITY.CRITICAL, reason: '缺少研报', detectedAt: 4_000, retryCount: 0 },
-      ] as any)
+      ])
       const result = await listBySeverity(MISSING_REPORT_SEVERITY.CRITICAL)
       expect(result).toHaveLength(1)
       expect(result[0]!.severity).toBe(MISSING_REPORT_SEVERITY.CRITICAL)
@@ -121,14 +122,14 @@ describe('missingReportDetector', () => {
 
   describe('incrementRetry', () => {
     it('increments retry count for a report', async () => {
-      vi.mocked(missingReportStore.incrementRetry).mockResolvedValue({ success: true, data: {} as any } as any)
+      vi.mocked(missingReportStore.incrementRetry).mockResolvedValue({ success: true, data: {} as any })
       const result = await incrementRetry(1)
       expect(result).toBeDefined()
       expect(missingReportStore.incrementRetry).toHaveBeenCalledWith(1)
     })
 
     it('returns undefined when increment fails', async () => {
-      vi.mocked(missingReportStore.incrementRetry).mockResolvedValue({ success: false, error: 'db_error' } as any)
+      vi.mocked(missingReportStore.incrementRetry).mockResolvedValue({ success: false, error: 'db_error' })
       const result = await incrementRetry(1)
       expect(result).toBeUndefined()
     })
