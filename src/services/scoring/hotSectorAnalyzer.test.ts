@@ -145,7 +145,7 @@ describe('calculateSentiment', () => {
 describe('calculateBreakout', () => {
   const baseInput: BreakoutInput = {
     hasBreakoutPattern: false,
-    macdSignal: 'neutral',
+    rsiSignal: 'neutral',
     rsi: 50,
     priceAboveMA20: false,
     priceAboveMA60: false,
@@ -162,12 +162,12 @@ describe('calculateBreakout', () => {
   })
 
   test('bullish MACD gives bonus', () => {
-    const result = calculateBreakout({ ...baseInput, macdSignal: 'bullish' })
+    const result = calculateBreakout({ ...baseInput, rsiSignal: 'bullish' })
     expect(result).toBeGreaterThan(3.5)
   })
 
   test('bearish MACD penalizes', () => {
-    const result = calculateBreakout({ ...baseInput, macdSignal: 'bearish' })
+    const result = calculateBreakout({ ...baseInput, rsiSignal: 'bearish' })
     expect(result).toBeLessThan(2.0)
   })
 
@@ -208,7 +208,7 @@ describe('calculateBreakout', () => {
   test('result is clamped to 0-5', () => {
     const result = calculateBreakout({
       hasBreakoutPattern: true,
-      macdSignal: 'bullish',
+      rsiSignal: 'bullish',
       rsi: 60,
       priceAboveMA20: true,
       priceAboveMA60: true,
@@ -333,7 +333,7 @@ describe('analyze', () => {
       },
       breakout: {
         hasBreakoutPattern: true,
-        macdSignal: 'bullish',
+        rsiSignal: 'bullish',
         rsi: 60,
         priceAboveMA20: true,
         priceAboveMA60: true,
@@ -377,7 +377,7 @@ describe('analyze', () => {
       },
       breakout: {
         hasBreakoutPattern: false,
-        macdSignal: 'bearish',
+        rsiSignal: 'bearish',
         rsi: 25,
         priceAboveMA20: false,
         priceAboveMA60: false,
@@ -429,7 +429,7 @@ describe('analyze', () => {
       },
       breakout: {
         hasBreakoutPattern: false,
-        macdSignal: 'neutral',
+        rsiSignal: 'neutral',
         rsi: 50,
         priceAboveMA20: true,
         priceAboveMA60: false,

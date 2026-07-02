@@ -14,10 +14,24 @@
 
 import { getDefaultDualStrategyRuleConfig, type DualStrategyRuleConfig } from '@/config/dualStrategyRules'
 import { dataLayer } from '@/data/dataLayer'
-import type { DataLayerResult, Signal, ValuePitScore } from '@/data/types'
+import type { DataLayerResult, KlineBar, Signal, ValuePitScore } from '@/data/types'
 import { getLogger } from '@/lib/logger'
+import { ROTATION_SIGNAL_THRESHOLDS } from '@/config/thresholds'
 
 const logger = getLogger()
+
+// ============================================================
+// 常量（P0-09: 提取魔法数字）
+// ============================================================
+
+/** 板块聚合时取近 N 日数据窗口 */
+const RECENT_DATA_WINDOW_DAYS = 60
+
+/** 个股参与聚合的最小历史天数门槛 */
+const MIN_HISTORY_DAYS = 20
+
+/** 板块聚合时最多取前 N 只股票（避免过重计算） */
+const MAX_SECTOR_STOCKS_FOR_AGGREGATION = 10
 
 // ============================================================
 // 输入类型
@@ -127,8 +141,8 @@ export function checkCapitalInflow(
  * @returns 是否出现金叉
  */
 export function checkGoldenCross(data: GoldenCrossData): boolean {
-  const shortPeriod = data.shortPeriod ?? 5
-  const longPeriod = data.longPeriod ?? 20
+  const shortPeriod = data.shortPeriod ?? ROTATION_SIGNAL_THRESHOLDS.GOLDEN_CROSS_SHORT_PERIOD_DEFAULT
+  const longPeriod = data.longPeriod ?? ROTATION_SIGNAL_THRESHOLDS.GOLDEN_CROSS_LONG_PERIOD_DEFAULT
 
   if (data.closes.length < longPeriod + 1) {
     return false
@@ -231,76 +245,93 @@ export function detect(input: RotationSignalInput): RotationSignal {
  * 3. 执行三项检测
  */
 export async function detectBySector(sectorId: string): Promise<RotationSignal | null> {
-  logger.info(`[rotationSignalDetector] 开始检测板块 ${sectorId}`)
+  try {
+    logger.info(`[rotationSignalDetector] 开始检测板块 ${sectorId}`)
 
-  // 获取板块内所有股票
-  const allStocks = await dataLayer.stocks.list()
-  const sectorStocks = allStocks.filter(
-    (s) =>
-      s.sector === sectorId ||
-      s.industryCode === sectorId ||
-      (s.sector !== undefined && s.sector.includes(sectorId)),
-  )
+    // 获取板块内所有股票
+    const allStocks = await dataLayer.stocks.list()
+    const sectorStocks = allStocks.filter(
+      (s) =>
+        s.sector === sectorId ||
+        s.industryCode === sectorId ||
+        (s.sector !== undefined && s.sector.includes(sectorId)),
+    )
 
-  if (sectorStocks.length === 0) {
-    logger.warn(`[rotationSignalDetector] 板块 ${sectorId} 无股票数据`)
-    return null
-  }
+    if (sectorStocks.length === 0) {
+      logger.warn(`[rotationSignalDetector] 板块 ${sectorId} 无股票数据`)
+      return null
+    }
 
-  // 聚合板块内个股的成交量
-  const sectorVolumes: number[] = []
-  const sectorFlows: number[] = []
+    // P0-09: 按日期对齐聚合板块内个股的成交量、资金流和收盘价
+    // 旧实现按索引 i 聚合，但不同股票 recent 数组长度可能不同（历史不足 60 天），
+    // 导致索引 i 对不同股票代表不同日期，产生时间错位。
+    const stockBarMaps = new Map<string, Map<string, KlineBar>>()
+    const allDates = new Set<string>()
+    let count = 0
 
-  for (const stock of sectorStocks.slice(0, 10)) {
-    const quotes = await dataLayer.dailyQuotes.get(stock.symbol).catch(() => undefined)
-    if (!quotes || quotes.history.length < 20) continue
-
-    // 取近 60 日数据
-    const recent = quotes.history.slice(-60)
-    for (let i = 0; i < recent.length; i++) {
-      const bar = recent[i]!
-      if (sectorVolumes.length <= i) {
-        sectorVolumes.push(0)
-        sectorFlows.push(0)
+    for (const stock of sectorStocks.slice(0, MAX_SECTOR_STOCKS_FOR_AGGREGATION)) {
+      const quotes = await dataLayer.dailyQuotes.get(stock.symbol).catch(() => undefined)
+      if (!quotes || quotes.history.length < MIN_HISTORY_DAYS) {
+        logger.warn(`[rotationSignalDetector] 股票历史数据不足，跳过`, {
+          symbol: stock.symbol,
+          historyLength: quotes?.history.length ?? 0,
+          minLength: MIN_HISTORY_DAYS,
+        })
+        continue
       }
-      sectorVolumes[i] = (sectorVolumes[i] ?? 0) + bar.volume
-      // 用收盘价-开盘价作为资金流代理（正=流入）
-      const flow = (bar.close - bar.open) * bar.volume
-      sectorFlows[i] = (sectorFlows[i] ?? 0) + flow
-    }
-  }
 
-  if (sectorVolumes.length < 20) {
-    logger.warn(`[rotationSignalDetector] 板块 ${sectorId} 数据不足`)
+      // 取近 N 日数据，建立 date -> bar 映射
+      const barMap = new Map<string, KlineBar>()
+      for (const bar of quotes.history.slice(-RECENT_DATA_WINDOW_DAYS)) {
+        barMap.set(bar.date, bar)
+        allDates.add(bar.date)
+      }
+      stockBarMaps.set(stock.symbol, barMap)
+      count++
+    }
+
+    // 按日期排序后聚合，确保不同股票在同一日期对齐
+    const sortedDates = Array.from(allDates).sort()
+    const sectorVolumes: number[] = new Array(sortedDates.length).fill(0)
+    const sectorFlows: number[] = new Array(sortedDates.length).fill(0)
+    const closes: number[] = new Array(sortedDates.length).fill(0)
+
+    for (let i = 0; i < sortedDates.length; i++) {
+      const date = sortedDates[i]!
+      for (const [, barMap] of stockBarMaps) {
+        const bar = barMap.get(date)
+        if (bar) {
+          sectorVolumes[i]! += bar.volume
+          // 用收盘价-开盘价作为资金流代理（正=流入）
+          const flow = (bar.close - bar.open) * bar.volume
+          sectorFlows[i]! += flow
+          closes[i]! += bar.close
+        }
+      }
+    }
+
+    if (sectorVolumes.length < MIN_HISTORY_DAYS) {
+      logger.warn(`[rotationSignalDetector] 板块 ${sectorId} 数据不足`)
+      return null
+    }
+
+    const result = detect({
+      sectorId,
+      volume: { history: sectorVolumes },
+      capitalFlow: { dailyNetFlow: sectorFlows },
+      goldenCross: {
+        closes: count > 0 ? closes.map((c) => c / count) : [],
+      },
+    })
+
+    logger.info(
+      `[rotationSignalDetector] 板块 ${sectorId} 检测完成: triggered=${result.triggered}, strength=${result.strength}`,
+    )
+    return result
+  } catch (error) {
+    logger.error(`[rotationSignalDetector] 检测板块 ${sectorId} 失败`, { error: error instanceof Error ? error.message : String(error) })
     return null
   }
-
-  const closes: number[] = []
-  let count = 0
-  for (const stock of sectorStocks.slice(0, 10)) {
-    const quotes = await dataLayer.dailyQuotes.get(stock.symbol).catch(() => undefined)
-    if (!quotes || quotes.history.length < 20) continue
-    const recent = quotes.history.slice(-60)
-    for (let i = 0; i < recent.length; i++) {
-      if (closes.length <= i) closes.push(0)
-      closes[i] = (closes[i] ?? 0) + recent[i]!.close
-    }
-    count++
-  }
-
-  const result = detect({
-    sectorId,
-    volume: { history: sectorVolumes },
-    capitalFlow: { dailyNetFlow: sectorFlows },
-    goldenCross: {
-      closes: count > 0 ? closes.map((c) => c / count) : [],
-    },
-  })
-
-  logger.info(
-    `[rotationSignalDetector] 板块 ${sectorId} 检测完成: triggered=${result.triggered}, strength=${result.strength}`,
-  )
-  return result
 }
 
 export interface RotationSignalDetectorOptions {

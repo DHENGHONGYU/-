@@ -95,7 +95,7 @@ describe('adaptToHotSector', () => {
 
     // 技术突破维度
     expect(result.breakout.hasBreakoutPattern).toBe(true)
-    expect(result.breakout.macdSignal).toBe('bullish')
+    expect(result.breakout.rsiSignal).toBe('bullish')
     expect(result.breakout.rsi).toBe(62)
     expect(result.breakout.priceAboveMA20).toBe(true)
     expect(result.breakout.priceAboveMA60).toBe(true)
@@ -141,7 +141,7 @@ describe('adaptToHotSector', () => {
     const result = adaptToHotSector(zeroData)
     expect(result.symbol).toBe('ZERO')
     expect(result.momentum.sectorStrengthScore).toBe(0)
-    expect(result.breakout.macdSignal).toBe('bearish')
+    expect(result.breakout.rsiSignal).toBe('bearish')
     expect(result.marketEnv.marketTrend).toBe('bear')
     expect(result.marketEnv.systemicRisk).toBe('high')
   })

@@ -1,8 +1,12 @@
-import { getDefaultLlmConfig, type LlmConfig } from '@/config/llmConfig'
+import { getDefaultLlmConfig, getLlmApiKeyAsync, type LlmConfig } from '@/config/llmConfig'
 import type { LlmMessage, LlmResponse, LlmUsage, LlmStreamCallback, LlmStreamChunk } from './llmTypes'
 import { getLogger } from '@/lib/logger'
+import { isValidLlmBaseURL } from '@/utils/dataValidation'
 
 const logger = getLogger()
+
+// P0-02: 流式请求空闲超时阈值（毫秒），收到每个 chunk 后重置
+const STREAM_IDLE_TIMEOUT_MS = 30000
 
 export class LlmConfigError extends Error {
   constructor(message: string) {
@@ -12,9 +16,12 @@ export class LlmConfigError extends Error {
 }
 
 export class LlmApiError extends Error {
-  constructor(message: string) {
+  /** HTTP 状态码（可选，用于错误分类） */
+  readonly statusCode?: number
+  constructor(message: string, statusCode?: number) {
     super(message)
     this.name = 'LlmApiError'
+    this.statusCode = statusCode
   }
 }
 
@@ -24,12 +31,19 @@ function buildConfig(override?: Partial<LlmConfig>): LlmConfig {
     baseURL: override?.baseURL ?? defaults.baseURL,
     apiKey: override?.apiKey ?? defaults.apiKey,
     model: override?.model ?? defaults.model,
+    maxTokens: override?.maxTokens ?? defaults.maxTokens,
+    temperature: override?.temperature ?? defaults.temperature,
+    timeout: override?.timeout ?? defaults.timeout,
   }
 }
 
 function assertConfig(config: LlmConfig): void {
   if (!config.baseURL.trim()) {
     throw new LlmConfigError('LLM baseURL 未配置，请在 .env 或页面配置中设置 VITE_LLM_BASE_URL')
+  }
+  // XSS-003: 校验 baseURL 协议白名单，禁止 javascript:/data:/vbscript: 等危险协议
+  if (!isValidLlmBaseURL(config.baseURL)) {
+    throw new LlmConfigError('LLM baseURL 协议非法，仅允许 http:// 或 https://')
   }
   if (!config.apiKey.trim()) {
     throw new LlmConfigError('LLM apiKey 未配置，请在 .env 或页面配置中设置 VITE_LLM_API_KEY')
@@ -111,31 +125,69 @@ export async function chat(
   override?: Partial<LlmConfig>,
 ): Promise<LlmResponse> {
   const config = buildConfig(override)
+  // P0-01: 异步从加密 localStorage 读取 API Key
+  if (!config.apiKey) {
+    config.apiKey = await getLlmApiKeyAsync()
+  }
   assertConfig(config)
 
-  const endpoint = `${normalizeBaseURL(config.baseURL)}/chat/completions`
+  const endpoint = `${normalizeBaseURL(config.baseURL)}/v1/chat/completions`
 
-  const response = await fetch(endpoint, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${config.apiKey}`,
-    },
-    body: JSON.stringify({
-      model: config.model,
-      messages,
-      temperature: 0.2,
-    }),
-  })
-
-  const raw = (await response.json()) as RawResponse
-
-  if (!response.ok) {
-    const message = raw.error?.message ?? `HTTP ${response.status}`
-    throw new LlmApiError(`LLM 请求失败: ${message}`)
+  const body: Record<string, unknown> = {
+    model: config.model,
+    messages,
+    temperature: config.temperature ?? 0.2,
+  }
+  if (config.maxTokens !== undefined) {
+    body.max_tokens = config.maxTokens
   }
 
-  return parseResponse(raw)
+  const controller = new AbortController()
+  const timeoutId = config.timeout ? setTimeout(() => controller.abort(), config.timeout) : null
+
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${config.apiKey}`,
+      },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    })
+
+    if (timeoutId) clearTimeout(timeoutId)
+
+    // P0-03: 非 ok 响应时保护 response.json() 解析
+    if (!response.ok) {
+      let message = `HTTP ${response.status} ${response.statusText}`.trim()
+      try {
+        const raw = (await response.json()) as RawResponse
+        if (raw.error?.message) {
+          message = raw.error.message
+        }
+      } catch {
+        // 响应体非 JSON（如 nginx 502 HTML 错误页），保留默认 HTTP 状态消息
+        logger.warn('[llmClient] LLM 错误响应非 JSON 格式', {
+          status: response.status,
+          contentType: response.headers.get('content-type'),
+        })
+      }
+      throw new LlmApiError(`LLM 请求失败: ${message}`, response.status)
+    }
+
+    const raw = (await response.json()) as RawResponse
+    return parseResponse(raw)
+  } catch (err) {
+    if (timeoutId) clearTimeout(timeoutId)
+    if (err instanceof LlmApiError) {
+      throw err
+    }
+    if (err instanceof DOMException && err.name === 'AbortError') {
+      throw new LlmApiError('LLM 请求超时')
+    }
+    throw new LlmApiError(`LLM 请求失败: ${err instanceof Error ? err.message : String(err)}`)
+  }
 }
 
 interface RawStreamChoice {
@@ -192,42 +244,78 @@ export async function streamingChat(
   override?: Partial<LlmConfig>,
 ): Promise<void> {
   const config = buildConfig(override)
+  // P0-01: 异步从加密 localStorage 读取 API Key
+  if (!config.apiKey) {
+    config.apiKey = await getLlmApiKeyAsync()
+  }
   assertConfig(config)
 
-  const endpoint = `${normalizeBaseURL(config.baseURL)}/chat/completions`
+  const endpoint = `${normalizeBaseURL(config.baseURL)}/v1/chat/completions`
 
-  const response = await fetch(endpoint, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${config.apiKey}`,
-    },
-    body: JSON.stringify({
-      model: config.model,
-      messages,
-      temperature: 0.2,
-      stream: true,
-    }),
-  })
-
-  if (!response.ok) {
-    const raw = (await response.json()) as RawResponse
-    const message = raw.error?.message ?? `HTTP ${response.status}`
-    throw new LlmApiError(`LLM 请求失败: ${message}`)
+  const body: Record<string, unknown> = {
+    model: config.model,
+    messages,
+    temperature: config.temperature ?? 0.2,
+    stream: true,
+  }
+  if (config.maxTokens !== undefined) {
+    body.max_tokens = config.maxTokens
   }
 
-  const reader = response.body?.getReader()
-  if (!reader) {
-    throw new LlmApiError('LLM 流式响应 body 为空')
+  // P0-02: 增加 AbortController + 总超时 + 空闲超时
+  const controller = new AbortController()
+  const totalTimeoutId = config.timeout ? setTimeout(() => controller.abort(), config.timeout) : null
+  let idleTimer: ReturnType<typeof setTimeout> | null = null
+  const resetIdleTimer = (): void => {
+    if (idleTimer) clearTimeout(idleTimer)
+    idleTimer = setTimeout(() => controller.abort(), STREAM_IDLE_TIMEOUT_MS)
   }
+  resetIdleTimer()
 
-  const decoder = new TextDecoder()
-  let buffer = ''
-  let isFinished = false
+  let reader: ReadableStreamDefaultReader<Uint8Array> | null = null
 
   try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${config.apiKey}`,
+      },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    })
+
+    // P0-03: 非 ok 响应时保护 response.json() 解析
+    if (!response.ok) {
+      let message = `HTTP ${response.status} ${response.statusText}`.trim()
+      try {
+        const errRaw = (await response.json()) as RawResponse
+        if (errRaw.error?.message) {
+          message = errRaw.error.message
+        }
+      } catch {
+        // 响应体非 JSON（如 nginx 502 HTML 错误页），保留默认 HTTP 状态消息
+        logger.warn('[llmClient] LLM 流式错误响应非 JSON 格式', {
+          status: response.status,
+          contentType: response.headers.get('content-type'),
+        })
+      }
+      throw new LlmApiError(`LLM 请求失败: ${message}`, response.status)
+    }
+
+    reader = response.body?.getReader() ?? null
+    if (!reader) {
+      throw new LlmApiError('LLM 流式响应 body 为空')
+    }
+
+    const decoder = new TextDecoder()
+    let buffer = ''
+    let isFinished = false
+
     while (true) {
       const { done, value } = await reader.read()
+      resetIdleTimer() // P0-02: 每次读取后重置空闲定时器
+
       if (done) {
         break
       }
@@ -249,8 +337,8 @@ export async function streamingChat(
         }
 
         try {
-          const raw = JSON.parse(dataStr) as RawStreamResponse
-          const chunk = parseStreamChunk(raw)
+          const chunkRaw = JSON.parse(dataStr) as RawStreamResponse
+          const chunk = parseStreamChunk(chunkRaw)
           if (chunk) {
             callback(chunk)
             if (chunk.isDone) {
@@ -262,7 +350,22 @@ export async function streamingChat(
         }
       }
     }
+  } catch (err) {
+    // P0-02: 识别 AbortError（总超时或空闲超时）
+    if (err instanceof DOMException && err.name === 'AbortError') {
+      throw new LlmApiError('LLM 流式请求超时或被中止')
+    }
+    if (err instanceof LlmApiError) {
+      throw err
+    }
+    throw new LlmApiError(`LLM 流式请求失败: ${err instanceof Error ? err.message : String(err)}`)
   } finally {
-    reader.releaseLock()
+    // P0-02: 清理所有定时器并主动释放
+    if (totalTimeoutId) clearTimeout(totalTimeoutId)
+    if (idleTimer) clearTimeout(idleTimer)
+    controller.abort()
+    if (reader) {
+      reader.releaseLock()
+    }
   }
 }

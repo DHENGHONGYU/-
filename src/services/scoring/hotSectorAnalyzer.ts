@@ -14,8 +14,12 @@
  * @created 2026-06-27 - 基于双策略体系修正
  */
 
+import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID } from '@/config/dbConfig'
 import { getDefaultDualStrategyRuleConfig, type DualStrategyRuleConfig } from '@/config/dualStrategyRules'
+import { HOT_SECTOR_THRESHOLDS } from '@/config/thresholds'
+import { EnvelopeFactory } from '@/core/envelope'
 import { dataLayer } from '@/data/dataLayer'
+import { checkStrategyScoreFreshness } from '@/services/analysis/dataFreshnessGuard'
 import type { DataLayerResult, HotSectorScore, Stock } from '@/data/types'
 import { getLogger } from '@/lib/logger'
 
@@ -52,8 +56,8 @@ export interface SentimentInput {
 export interface BreakoutInput {
   /** 是否有突破形态 */
   hasBreakoutPattern: boolean
-  /** MACD 信号方向 */
-  macdSignal: 'bullish' | 'bearish' | 'neutral'
+  /** RSI 信号方向（多头/空头/中性，基于 RSI 阈值推导） */
+  rsiSignal: 'bullish' | 'bearish' | 'neutral'
   /** RSI(14) 值 */
   rsi: number
   /** 价格是否站上 MA20 */
@@ -103,11 +107,11 @@ export type { HotSectorScore }
 // ============================================================
 
 const WEIGHTS = {
-  momentum: 0.35,
-  sentiment: 0.25,
-  breakout: 0.20,
-  valuationRisk: 0.15,
-  marketEnv: 0.05,
+  momentum: HOT_SECTOR_THRESHOLDS.WEIGHT_MOMENTUM,
+  sentiment: HOT_SECTOR_THRESHOLDS.WEIGHT_SENTIMENT,
+  breakout: HOT_SECTOR_THRESHOLDS.WEIGHT_BREAKOUT,
+  valuationRisk: HOT_SECTOR_THRESHOLDS.WEIGHT_VALUATION_RISK,
+  marketEnv: HOT_SECTOR_THRESHOLDS.WEIGHT_MARKET_ENV,
 } as const
 
 // ============================================================
@@ -115,7 +119,10 @@ const WEIGHTS = {
 // ============================================================
 
 function clampScore(value: number): number {
-  return Math.max(0, Math.min(5, value))
+  return Math.max(
+    HOT_SECTOR_THRESHOLDS.SCORE_MIN,
+    Math.min(HOT_SECTOR_THRESHOLDS.SCORE_MAX, value),
+  )
 }
 
 /**
@@ -129,36 +136,41 @@ function clampScore(value: number): number {
  * - RS 值偏离中位数映射
  */
 export function calculateMomentum(data: MomentumInput): number {
-  if (data.sectorStrengthScore < 0 || data.sectorStrengthScore > 5) {
-    return 0
+  if (
+    data.sectorStrengthScore < HOT_SECTOR_THRESHOLDS.SCORE_MIN ||
+    data.sectorStrengthScore > HOT_SECTOR_THRESHOLDS.SCORE_MAX
+  ) {
+    return HOT_SECTOR_THRESHOLDS.SCORE_MIN
   }
 
   let score = data.sectorStrengthScore
 
-  // 排名加分：top10 → 1.5，top50 → 0.5，50+ → 0
-  if (data.priceChangeRank <= 10) {
-    score += 1.5
-  } else if (data.priceChangeRank <= 30) {
-    score += 1.0
-  } else if (data.priceChangeRank <= 50) {
-    score += 0.5
+  // 排名加分
+  if (data.priceChangeRank <= HOT_SECTOR_THRESHOLDS.MOMENTUM_RANK_TOP10) {
+    score += HOT_SECTOR_THRESHOLDS.MOMENTUM_RANK_TOP10_BONUS
+  } else if (data.priceChangeRank <= HOT_SECTOR_THRESHOLDS.MOMENTUM_RANK_TOP30) {
+    score += HOT_SECTOR_THRESHOLDS.MOMENTUM_RANK_TOP30_BONUS
+  } else if (data.priceChangeRank <= HOT_SECTOR_THRESHOLDS.MOMENTUM_RANK_TOP50) {
+    score += HOT_SECTOR_THRESHOLDS.MOMENTUM_RANK_TOP50_BONUS
   }
 
   // 成交量放大加分
-  if (data.volumeExpansion >= 2.0) {
-    score += 1.0
-  } else if (data.volumeExpansion >= 1.5) {
-    score += 0.5
+  if (data.volumeExpansion >= HOT_SECTOR_THRESHOLDS.MOMENTUM_VOLUME_EXPANSION_HIGH) {
+    score += HOT_SECTOR_THRESHOLDS.MOMENTUM_VOLUME_EXPANSION_HIGH_BONUS
+  } else if (data.volumeExpansion >= HOT_SECTOR_THRESHOLDS.MOMENTUM_VOLUME_EXPANSION_MEDIUM) {
+    score += HOT_SECTOR_THRESHOLDS.MOMENTUM_VOLUME_EXPANSION_MEDIUM_BONUS
   }
 
   // 资金连续流入
-  if (data.consecutiveInflow >= 3) {
-    score += 0.5
+  if (data.consecutiveInflow >= HOT_SECTOR_THRESHOLDS.MOMENTUM_CONSECUTIVE_INFLOW_DAYS) {
+    score += HOT_SECTOR_THRESHOLDS.MOMENTUM_CONSECUTIVE_INFLOW_BONUS
   }
 
-  // RS 映射：中性 50 → 0，极端 0/100 → 按比例
-  const rsDeviation = Math.abs(data.relativeStrength - 50) / 50
-  score += rsDeviation * 0.5
+  // RS 映射：中性基准 → 0，极端 0/100 → 按比例
+  const rsDeviation =
+    Math.abs(data.relativeStrength - HOT_SECTOR_THRESHOLDS.MOMENTUM_RS_BASE) /
+    HOT_SECTOR_THRESHOLDS.MOMENTUM_RS_BASE
+  score += rsDeviation * HOT_SECTOR_THRESHOLDS.MOMENTUM_RS_DEVIATION_MULTIPLIER
 
   return clampScore(score)
 }
@@ -173,45 +185,45 @@ export function calculateMomentum(data: MomentumInput): number {
  * - 涨停板数量 ≥ 10 → +1，≥ 3 → +0.5
  */
 export function calculateSentiment(data: SentimentInput): number {
-  if (data.sentimentRank < 1) {
-    return 0
+  if (data.sentimentRank < HOT_SECTOR_THRESHOLDS.RANK_MIN) {
+    return HOT_SECTOR_THRESHOLDS.SCORE_MIN
   }
 
-  let score = 0
+  let score = HOT_SECTOR_THRESHOLDS.SCORE_MIN
 
   // 舆情排名映射
-  if (data.sentimentRank <= 5) {
-    score = 5
-  } else if (data.sentimentRank <= 10) {
-    score = 4
-  } else if (data.sentimentRank <= 20) {
-    score = 3
-  } else if (data.sentimentRank <= 50) {
-    score = 1.5
+  if (data.sentimentRank <= HOT_SECTOR_THRESHOLDS.SENTIMENT_RANK_TOP5) {
+    score = HOT_SECTOR_THRESHOLDS.SENTIMENT_RANK_TOP5_SCORE
+  } else if (data.sentimentRank <= HOT_SECTOR_THRESHOLDS.SENTIMENT_RANK_TOP10) {
+    score = HOT_SECTOR_THRESHOLDS.SENTIMENT_RANK_TOP10_SCORE
+  } else if (data.sentimentRank <= HOT_SECTOR_THRESHOLDS.SENTIMENT_RANK_TOP20) {
+    score = HOT_SECTOR_THRESHOLDS.SENTIMENT_RANK_TOP20_SCORE
+  } else if (data.sentimentRank <= HOT_SECTOR_THRESHOLDS.SENTIMENT_RANK_TOP50) {
+    score = HOT_SECTOR_THRESHOLDS.SENTIMENT_RANK_TOP50_SCORE
   } else {
-    score = 0.5
+    score = HOT_SECTOR_THRESHOLDS.SENTIMENT_RANK_OTHER_SCORE
   }
 
-  // 散户情绪过热惩罚（> 0.8 极度乐观，视为风险）
-  if (data.retailSentiment > 0.8) {
-    score -= 1.0
-  } else if (data.retailSentiment < 0.2) {
+  // 散户情绪过热惩罚（极度乐观，视为风险）
+  if (data.retailSentiment > HOT_SECTOR_THRESHOLDS.SENTIMENT_RETAIL_OVERHEATED) {
+    score -= HOT_SECTOR_THRESHOLDS.SENTIMENT_RETAIL_OVERHEATED_PENALTY
+  } else if (data.retailSentiment < HOT_SECTOR_THRESHOLDS.SENTIMENT_RETAIL_PANIC) {
     // 极度恐慌也可能是机会
-    score -= 0.5
+    score -= HOT_SECTOR_THRESHOLDS.SENTIMENT_RETAIL_PANIC_PENALTY
   }
 
   // 机构买入加分
-  if (data.institutionBuyCount >= 5) {
-    score += 1.5
-  } else if (data.institutionBuyCount >= 2) {
-    score += 0.5
+  if (data.institutionBuyCount >= HOT_SECTOR_THRESHOLDS.SENTIMENT_INSTITUTION_BUY_HIGH) {
+    score += HOT_SECTOR_THRESHOLDS.SENTIMENT_INSTITUTION_BUY_HIGH_BONUS
+  } else if (data.institutionBuyCount >= HOT_SECTOR_THRESHOLDS.SENTIMENT_INSTITUTION_BUY_MEDIUM) {
+    score += HOT_SECTOR_THRESHOLDS.SENTIMENT_INSTITUTION_BUY_MEDIUM_BONUS
   }
 
   // 涨停板加分
-  if (data.limitUpCount >= 10) {
-    score += 1.0
-  } else if (data.limitUpCount >= 3) {
-    score += 0.5
+  if (data.limitUpCount >= HOT_SECTOR_THRESHOLDS.SENTIMENT_LIMIT_UP_HIGH) {
+    score += HOT_SECTOR_THRESHOLDS.SENTIMENT_LIMIT_UP_HIGH_BONUS
+  } else if (data.limitUpCount >= HOT_SECTOR_THRESHOLDS.SENTIMENT_LIMIT_UP_MEDIUM) {
+    score += HOT_SECTOR_THRESHOLDS.SENTIMENT_LIMIT_UP_MEDIUM_BONUS
   }
 
   return clampScore(score)
@@ -227,34 +239,37 @@ export function calculateSentiment(data: SentimentInput): number {
  * - 均线多头排列（价格 > MA20 > MA60）→ +1
  */
 export function calculateBreakout(data: BreakoutInput): number {
-  let score = 2.5 // 中性起点
+  let score = HOT_SECTOR_THRESHOLDS.BREAKOUT_NEUTRAL_BASE
 
   // 突破形态
   if (data.hasBreakoutPattern) {
-    score += 2.0
+    score += HOT_SECTOR_THRESHOLDS.BREAKOUT_PATTERN_BONUS
   }
 
-  // MACD 信号
-  if (data.macdSignal === 'bullish') {
-    score += 1.5
-  } else if (data.macdSignal === 'bearish') {
-    score -= 1.5
+  // RSI 信号方向
+  if (data.rsiSignal === 'bullish') {
+    score += HOT_SECTOR_THRESHOLDS.BREAKOUT_RSI_SIGNAL_BULLISH_BONUS
+  } else if (data.rsiSignal === 'bearish') {
+    score -= HOT_SECTOR_THRESHOLDS.BREAKOUT_RSI_SIGNAL_BEARISH_PENALTY
   }
 
-  // RSI 评分：50-70 最佳，> 80 或 < 30 惩罚
-  if (data.rsi >= 50 && data.rsi <= 70) {
-    score += 1.0
-  } else if (data.rsi > 80) {
-    score -= 1.5 // 超买
-  } else if (data.rsi < 30) {
-    score -= 1.0 // 超卖但无反弹
+  // RSI 评分：最佳区间，极端值惩罚
+  if (
+    data.rsi >= HOT_SECTOR_THRESHOLDS.BREAKOUT_RSI_OPTIMAL_LOW &&
+    data.rsi <= HOT_SECTOR_THRESHOLDS.BREAKOUT_RSI_OPTIMAL_HIGH
+  ) {
+    score += HOT_SECTOR_THRESHOLDS.BREAKOUT_RSI_OPTIMAL_BONUS
+  } else if (data.rsi > HOT_SECTOR_THRESHOLDS.BREAKOUT_RSI_OVERBOUGHT) {
+    score -= HOT_SECTOR_THRESHOLDS.BREAKOUT_RSI_OVERBOUGHT_PENALTY // 超买
+  } else if (data.rsi < HOT_SECTOR_THRESHOLDS.BREAKOUT_RSI_OVERSOLD) {
+    score -= HOT_SECTOR_THRESHOLDS.BREAKOUT_RSI_OVERSOLD_PENALTY // 超卖但无反弹
   }
 
   // 均线多头排列
   if (data.priceAboveMA20 && data.priceAboveMA60) {
-    score += 1.0
+    score += HOT_SECTOR_THRESHOLDS.BREAKOUT_MA_ALIGNMENT_BONUS
   } else if (!data.priceAboveMA20 && !data.priceAboveMA60) {
-    score -= 1.0
+    score -= HOT_SECTOR_THRESHOLDS.BREAKOUT_MA_MISALIGNMENT_PENALTY
   }
 
   return clampScore(score)
@@ -270,44 +285,44 @@ export function calculateBreakout(data: BreakoutInput): number {
  * - 股息率 > 3% → +1，> 1.5% → +0.5
  */
 export function calculateValuationRisk(data: ValuationRiskInput): number {
-  let score = 0
+  let score = HOT_SECTOR_THRESHOLDS.SCORE_MIN
 
   // PE 评分
-  if (data.pe <= 0) {
-    score = 0 // 亏损
-  } else if (data.pe < 10) {
-    score = 5
-  } else if (data.pe < 15) {
-    score = 4
-  } else if (data.pe < 20) {
-    score = 3
-  } else if (data.pe < 30) {
-    score = 2
-  } else if (data.pe < 50) {
-    score = 1
+  if (data.pe <= HOT_SECTOR_THRESHOLDS.VALUATION_PE_NEGATIVE) {
+    score = HOT_SECTOR_THRESHOLDS.VALUATION_PE_NEGATIVE_SCORE // 亏损
+  } else if (data.pe < HOT_SECTOR_THRESHOLDS.VALUATION_PE_LOW) {
+    score = HOT_SECTOR_THRESHOLDS.VALUATION_PE_LOW_SCORE
+  } else if (data.pe < HOT_SECTOR_THRESHOLDS.VALUATION_PE_MEDIUM_LOW) {
+    score = HOT_SECTOR_THRESHOLDS.VALUATION_PE_MEDIUM_LOW_SCORE
+  } else if (data.pe < HOT_SECTOR_THRESHOLDS.VALUATION_PE_MEDIUM) {
+    score = HOT_SECTOR_THRESHOLDS.VALUATION_PE_MEDIUM_SCORE
+  } else if (data.pe < HOT_SECTOR_THRESHOLDS.VALUATION_PE_HIGH) {
+    score = HOT_SECTOR_THRESHOLDS.VALUATION_PE_HIGH_SCORE
+  } else if (data.pe < HOT_SECTOR_THRESHOLDS.VALUATION_PE_VERY_HIGH) {
+    score = HOT_SECTOR_THRESHOLDS.VALUATION_PE_VERY_HIGH_SCORE
   } else {
-    score = 0.5
+    score = HOT_SECTOR_THRESHOLDS.VALUATION_PE_EXTREME_SCORE
   }
 
   // PB 分位
-  if (data.pbPercentile < 20) {
-    score += 1.0
-  } else if (data.pbPercentile > 80) {
-    score -= 1.0
+  if (data.pbPercentile < HOT_SECTOR_THRESHOLDS.VALUATION_PB_PERCENTILE_LOW) {
+    score += HOT_SECTOR_THRESHOLDS.VALUATION_PB_LOW_BONUS
+  } else if (data.pbPercentile > HOT_SECTOR_THRESHOLDS.VALUATION_PB_PERCENTILE_HIGH) {
+    score -= HOT_SECTOR_THRESHOLDS.VALUATION_PB_HIGH_PENALTY
   }
 
   // 市值流动性
-  if (data.marketCap > 1000) {
-    score += 0.5
-  } else if (data.marketCap < 50) {
-    score -= 0.5
+  if (data.marketCap > HOT_SECTOR_THRESHOLDS.VALUATION_MARKET_CAP_LARGE) {
+    score += HOT_SECTOR_THRESHOLDS.VALUATION_MARKET_CAP_LARGE_BONUS
+  } else if (data.marketCap < HOT_SECTOR_THRESHOLDS.VALUATION_MARKET_CAP_SMALL) {
+    score -= HOT_SECTOR_THRESHOLDS.VALUATION_MARKET_CAP_SMALL_PENALTY
   }
 
   // 股息率
-  if (data.dividendYield > 3) {
-    score += 1.0
-  } else if (data.dividendYield > 1.5) {
-    score += 0.5
+  if (data.dividendYield > HOT_SECTOR_THRESHOLDS.VALUATION_DIVIDEND_YIELD_HIGH) {
+    score += HOT_SECTOR_THRESHOLDS.VALUATION_DIVIDEND_YIELD_HIGH_BONUS
+  } else if (data.dividendYield > HOT_SECTOR_THRESHOLDS.VALUATION_DIVIDEND_YIELD_MEDIUM) {
+    score += HOT_SECTOR_THRESHOLDS.VALUATION_DIVIDEND_YIELD_MEDIUM_BONUS
   }
 
   return clampScore(score)
@@ -321,29 +336,29 @@ export function calculateValuationRisk(data: ValuationRiskInput): number {
  * - 系统性风险低 → +1，高 → -2
  */
 export function calculateMarketEnv(data: MarketEnvInput): number {
-  let score = 0
+  let score = HOT_SECTOR_THRESHOLDS.SCORE_MIN
 
   switch (data.marketTrend) {
     case 'bull':
-      score = 5
+      score = HOT_SECTOR_THRESHOLDS.MARKET_ENV_BULL_SCORE
       break
     case 'sideways':
-      score = 3
+      score = HOT_SECTOR_THRESHOLDS.MARKET_ENV_SIDEWAYS_SCORE
       break
     case 'bear':
-      score = 1
+      score = HOT_SECTOR_THRESHOLDS.MARKET_ENV_BEAR_SCORE
       break
   }
 
   switch (data.systemicRisk) {
     case 'low':
-      score += 1.0
+      score += HOT_SECTOR_THRESHOLDS.MARKET_ENV_SYSTEMIC_RISK_LOW_BONUS
       break
     case 'medium':
       // 不调整
       break
     case 'high':
-      score -= 2.0
+      score -= HOT_SECTOR_THRESHOLDS.MARKET_ENV_SYSTEMIC_RISK_HIGH_PENALTY
       break
   }
 
@@ -371,12 +386,14 @@ export function analyze(input: HotSectorAnalyzerInput): HotSectorScore {
     valuationRisk * WEIGHTS.valuationRisk +
     marketEnv * WEIGHTS.marketEnv
 
-  const rounded = Math.round(overallScore * 100) / 100
+  const rounded =
+    Math.round(overallScore * HOT_SECTOR_THRESHOLDS.SCORE_ROUNDING_PRECISION) /
+    HOT_SECTOR_THRESHOLDS.SCORE_ROUNDING_PRECISION
 
   let action: HotSectorScore['action']
-  if (rounded >= 4.0) {
+  if (rounded >= HOT_SECTOR_THRESHOLDS.ACTION_IMMEDIATE_THRESHOLD) {
     action = 'immediate'
-  } else if (rounded >= 3.5) {
+  } else if (rounded >= HOT_SECTOR_THRESHOLDS.ACTION_PROBE_THRESHOLD) {
     action = 'probe'
   } else {
     action = 'ignore'
@@ -387,15 +404,25 @@ export function analyze(input: HotSectorAnalyzerInput): HotSectorScore {
     name: input.sectorName,
     score: rounded,
     dimensions: {
-      momentum: Math.round(momentum * 100) / 100,
-      sentiment: Math.round(sentiment * 100) / 100,
-      technical: Math.round(breakout * 100) / 100,
-      valuation: Math.round(valuationRisk * 100) / 100,
-      composite: Math.round(rounded * 100) / 100,
+      momentum:
+        Math.round(momentum * HOT_SECTOR_THRESHOLDS.SCORE_ROUNDING_PRECISION) /
+        HOT_SECTOR_THRESHOLDS.SCORE_ROUNDING_PRECISION,
+      sentiment:
+        Math.round(sentiment * HOT_SECTOR_THRESHOLDS.SCORE_ROUNDING_PRECISION) /
+        HOT_SECTOR_THRESHOLDS.SCORE_ROUNDING_PRECISION,
+      technical:
+        Math.round(breakout * HOT_SECTOR_THRESHOLDS.SCORE_ROUNDING_PRECISION) /
+        HOT_SECTOR_THRESHOLDS.SCORE_ROUNDING_PRECISION,
+      valuation:
+        Math.round(valuationRisk * HOT_SECTOR_THRESHOLDS.SCORE_ROUNDING_PRECISION) /
+        HOT_SECTOR_THRESHOLDS.SCORE_ROUNDING_PRECISION,
+      marketEnv:
+        Math.round(marketEnv * HOT_SECTOR_THRESHOLDS.SCORE_ROUNDING_PRECISION) /
+        HOT_SECTOR_THRESHOLDS.SCORE_ROUNDING_PRECISION,
     },
     action,
     calculatedAt: Date.now(),
-    dataVersion: 1,
+    dataVersion: HOT_SECTOR_THRESHOLDS.DATA_VERSION,
   }
 }
 
@@ -409,7 +436,10 @@ function computeMA(closes: number[], period: number): number | undefined {
   return slice.reduce((a, b) => a + b, 0) / period
 }
 
-function computeRSI(closes: number[], period: number = 14): number | undefined {
+function computeRSI(
+  closes: number[],
+  period: number = HOT_SECTOR_THRESHOLDS.RSI_PERIOD,
+): number | undefined {
   if (closes.length < period + 1) return undefined
   const window = closes.slice(-(period + 1))
   let gains = 0
@@ -419,8 +449,13 @@ function computeRSI(closes: number[], period: number = 14): number | undefined {
     if (delta > 0) gains += delta
     else losses -= delta
   }
-  if (losses === 0) return 100
-  return 100 - 100 / (1 + gains / losses)
+  if (losses === HOT_SECTOR_THRESHOLDS.SCORE_MIN)
+    return HOT_SECTOR_THRESHOLDS.RSI_MAX
+  return (
+    HOT_SECTOR_THRESHOLDS.RSI_MAX -
+    HOT_SECTOR_THRESHOLDS.RSI_MAX /
+      (HOT_SECTOR_THRESHOLDS.RSI_FORMULA_OFFSET + gains / losses)
+  )
 }
 
 /**
@@ -441,60 +476,105 @@ export async function analyzeBySymbol(symbol: string): Promise<HotSectorScore | 
     return null
   }
 
-  const hasQuotes = quotes !== undefined && quotes.history.length >= 20
+  const now = Date.now()
+  const v6CalculatedAt = v6Score?.calculatedAt ?? now
+  const freshness = checkStrategyScoreFreshness(now, v6CalculatedAt, 'hot_sector_score')
+  logger.info(`[hotSectorAnalyzer] ${symbol} freshness check`, {
+    valid: freshness.valid,
+    outputTime: freshness.outputTime,
+    inputTime: freshness.inputTime,
+  })
+
+  const hasQuotes =
+    quotes !== undefined && quotes.history.length >= HOT_SECTOR_THRESHOLDS.KLINE_MIN_DAYS
   const closes = hasQuotes ? quotes!.history.map((b) => b.close) : []
-  const latest = hasQuotes ? closes[closes.length - 1]! : stock.price ?? 0
-  const ma20 = hasQuotes ? computeMA(closes, 20) : undefined
-  const ma60 = hasQuotes ? computeMA(closes, 60) : undefined
+  const latest = hasQuotes ? closes[closes.length - 1]! : stock.price ?? HOT_SECTOR_THRESHOLDS.SCORE_MIN
+  const ma20 = hasQuotes ? computeMA(closes, HOT_SECTOR_THRESHOLDS.MA20_PERIOD) : undefined
+  const ma60 = hasQuotes ? computeMA(closes, HOT_SECTOR_THRESHOLDS.MA60_PERIOD) : undefined
   const rsi = hasQuotes ? computeRSI(closes) : undefined
 
   const volumes = hasQuotes ? quotes!.history.map((b) => b.volume) : []
-  const recentAvgVol = volumes.length >= 5
-    ? volumes.slice(-5).reduce((a, b) => a + b, 0) / 5
-    : 0
-  const pastAvgVol = volumes.length >= 25
-    ? volumes.slice(-25, -5).reduce((a, b) => a + b, 0) / 20
-    : 1
-  const volumeExpansion = pastAvgVol > 0 ? recentAvgVol / pastAvgVol : 1
+  const recentAvgVol =
+    volumes.length >= HOT_SECTOR_THRESHOLDS.VOLUME_RECENT_DAYS
+      ? volumes
+          .slice(-HOT_SECTOR_THRESHOLDS.VOLUME_RECENT_DAYS)
+          .reduce((a, b) => a + b, 0) / HOT_SECTOR_THRESHOLDS.VOLUME_RECENT_DAYS
+      : HOT_SECTOR_THRESHOLDS.SCORE_MIN
+  const pastAvgVol =
+    volumes.length >= HOT_SECTOR_THRESHOLDS.VOLUME_PAST_TOTAL_DAYS
+      ? volumes
+          .slice(-HOT_SECTOR_THRESHOLDS.VOLUME_PAST_TOTAL_DAYS, -HOT_SECTOR_THRESHOLDS.VOLUME_RECENT_DAYS)
+          .reduce((a, b) => a + b, 0) / HOT_SECTOR_THRESHOLDS.VOLUME_PAST_DAYS
+      : HOT_SECTOR_THRESHOLDS.VOLUME_DEFAULT_PAST_AVG
+  const volumeExpansion =
+    pastAvgVol > HOT_SECTOR_THRESHOLDS.VOLUME_EXPANSION_ZERO_THRESHOLD
+      ? recentAvgVol / pastAvgVol
+      : HOT_SECTOR_THRESHOLDS.VOLUME_DEFAULT_EXPANSION
 
   const momentum: MomentumInput = {
-    sectorStrengthScore: v6Score?.factors?.动量 ?? 2.5,
-    priceChangeRank: hasQuotes ? Math.max(1, 50 - (closes.length % 50)) : 25,
+    sectorStrengthScore:
+      v6Score?.factors?.动量 ?? HOT_SECTOR_THRESHOLDS.DEFAULT_SECTOR_STRENGTH_SCORE,
+    priceChangeRank: hasQuotes
+      ? Math.max(
+          HOT_SECTOR_THRESHOLDS.RANK_MIN,
+          HOT_SECTOR_THRESHOLDS.SECTOR_RANK_BASE - (closes.length % HOT_SECTOR_THRESHOLDS.SECTOR_RANK_BASE),
+        )
+      : HOT_SECTOR_THRESHOLDS.DEFAULT_PRICE_CHANGE_RANK,
     volumeExpansion,
-    consecutiveInflow: 0, // 需外部资金流数据填充
-    relativeStrength: rsi ?? 50,
+    consecutiveInflow: HOT_SECTOR_THRESHOLDS.SCORE_MIN, // 需外部资金流数据填充
+    relativeStrength: rsi ?? HOT_SECTOR_THRESHOLDS.RSI_DEFAULT,
   }
 
   const sentiment: SentimentInput = {
-    sentimentRank: Math.max(1, 50 - Math.floor((v6Score?.score ?? 2.5) * 10)),
-    retailSentiment: 0.5, // 默认中性
-    institutionBuyCount: 0, // 需外部龙虎榜数据填充
-    limitUpCount: 0, // 需外部涨停数据填充
+    sentimentRank: Math.max(
+      HOT_SECTOR_THRESHOLDS.RANK_MIN,
+      HOT_SECTOR_THRESHOLDS.SECTOR_RANK_BASE -
+        Math.floor((v6Score?.score ?? HOT_SECTOR_THRESHOLDS.DEFAULT_V6_SCORE) * HOT_SECTOR_THRESHOLDS.SECTOR_RANK_MULTIPLIER),
+    ),
+    retailSentiment: HOT_SECTOR_THRESHOLDS.DEFAULT_RETAIL_SENTIMENT, // 默认中性
+    institutionBuyCount: HOT_SECTOR_THRESHOLDS.SCORE_MIN, // 需外部龙虎榜数据填充
+    limitUpCount: HOT_SECTOR_THRESHOLDS.SCORE_MIN, // 需外部涨停数据填充
   }
 
   const breakout: BreakoutInput = {
     hasBreakoutPattern: ma20 !== undefined && latest > ma20,
-    macdSignal: (rsi ?? 50) > 60 ? 'bullish' : (rsi ?? 50) < 40 ? 'bearish' : 'neutral',
-    rsi: rsi ?? 50,
+    rsiSignal:
+      (rsi ?? HOT_SECTOR_THRESHOLDS.RSI_DEFAULT) > HOT_SECTOR_THRESHOLDS.RSI_SIGNAL_BULLISH_THRESHOLD
+        ? 'bullish'
+        : (rsi ?? HOT_SECTOR_THRESHOLDS.RSI_DEFAULT) < HOT_SECTOR_THRESHOLDS.RSI_SIGNAL_BEARISH_THRESHOLD
+          ? 'bearish'
+          : 'neutral',
+    rsi: rsi ?? HOT_SECTOR_THRESHOLDS.RSI_DEFAULT,
     priceAboveMA20: ma20 !== undefined && latest > ma20,
     priceAboveMA60: ma60 !== undefined && latest > ma60,
   }
 
   const valuationRisk: ValuationRiskInput = {
-    pe: stock.pe ?? 0,
-    pbPercentile: stock.pb !== undefined ? Math.min(100, Math.max(0, (stock.pb / 5) * 100)) : 50,
-    marketCap: (stock.marketCap ?? 0) / 1e8, // 转为亿元
-    dividendYield: 0, // 需外部数据填充
+    pe: stock.pe ?? HOT_SECTOR_THRESHOLDS.SCORE_MIN,
+    pbPercentile:
+      stock.pb !== undefined
+        ? Math.min(
+            HOT_SECTOR_THRESHOLDS.PB_PERCENTILE_MAX,
+            Math.max(
+              HOT_SECTOR_THRESHOLDS.PB_PERCENTILE_MIN,
+              (stock.pb / HOT_SECTOR_THRESHOLDS.PB_PERCENTILE_REFERENCE) * HOT_SECTOR_THRESHOLDS.PB_PERCENTILE_MAX,
+            ),
+          )
+        : HOT_SECTOR_THRESHOLDS.DEFAULT_PB_PERCENTILE,
+    marketCap:
+      (stock.marketCap ?? HOT_SECTOR_THRESHOLDS.SCORE_MIN) / HOT_SECTOR_THRESHOLDS.MARKET_CAP_YUAN_TO_BILLION, // 转为亿元
+    dividendYield: HOT_SECTOR_THRESHOLDS.SCORE_MIN, // 需外部数据填充
   }
 
   const marketEnv: MarketEnvInput = {
-    marketTrend: 'sideways',
-    systemicRisk: 'medium',
+    marketTrend: HOT_SECTOR_THRESHOLDS.DEFAULT_MARKET_TREND,
+    systemicRisk: HOT_SECTOR_THRESHOLDS.DEFAULT_SYSTEMIC_RISK,
   }
 
   return analyze({
     symbol,
-    sectorName: stock.sector ?? stock.industryCode ?? '未知板块',
+    sectorName:
+      stock.sector ?? stock.industryCode ?? HOT_SECTOR_THRESHOLDS.DEFAULT_SECTOR_NAME,
     momentum,
     sentiment,
     breakout,
@@ -508,9 +588,11 @@ export async function analyzeBySymbol(symbol: string): Promise<HotSectorScore | 
  */
 export async function analyzeBatch(symbols: string[]): Promise<HotSectorScore[]> {
   const results: HotSectorScore[] = []
-  for (const symbol of symbols) {
-    const score = await analyzeBySymbol(symbol)
-    if (score) results.push(score)
+  const settled = await Promise.allSettled(symbols.map((symbol) => analyzeBySymbol(symbol)))
+  for (const result of settled) {
+    if (result.status === 'fulfilled' && result.value) {
+      results.push(result.value)
+    }
   }
   logger.info(`[hotSectorAnalyzer] 批量分析完成: ${results.length}/${symbols.length}`)
   return results
@@ -532,19 +614,41 @@ export async function analyzeHotSectors(
   options: HotSectorAnalyzerOptions = {},
 ): Promise<DataLayerResult<HotSectorScore[]>> {
   const ruleConfig = options.ruleConfig ?? getDefaultDualStrategyRuleConfig()
-  const filtered = []
+  const filtered: string[] = []
 
-  for (const stock of stocks) {
-    const v6Score = await dataLayer.v6Scores.get(stock.symbol).catch(() => undefined)
-    if ((v6Score?.score ?? 0) >= ruleConfig.hotSectorV6Min) {
-      filtered.push(stock.symbol)
+  const v6Settled = await Promise.allSettled(
+    stocks.map((stock) => dataLayer.v6Scores.get(stock.symbol).catch(() => undefined))
+  )
+  for (let i = 0; i < stocks.length; i++) {
+    const result = v6Settled[i]!
+    const v6Score = result.status === 'fulfilled' ? result.value : undefined
+    if ((v6Score?.score ?? HOT_SECTOR_THRESHOLDS.SCORE_MIN) >= ruleConfig.hotSectorV6Min) {
+      filtered.push(stocks[i]!.symbol)
     }
   }
 
   const scores = await analyzeBatch(filtered)
 
+  // 动态导入 dataBridge 避免循环依赖（databridge.ts 也引用了 hotSectorAnalyzer）
+  const { dataBridge } = await import('@/core/databridge')
+
   for (const score of scores) {
-    await dataLayer.hotSectorScores.save(score)
+    score.dataVersion = (score.dataVersion || 0) + 1
+    try {
+      const envelope = EnvelopeFactory.create(
+        {
+          source: MODULE_ID.analyzer,
+          target: ENVELOPE_TARGET.db,
+          action: ENVELOPE_ACTION.saveHotSectorScores,
+          traceId: `hs-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        },
+        score,
+      )
+      await dataBridge.forward(envelope)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      logger.error(`[hotSectorAnalyzer] DataBridge.forward failed for ${score.symbol}`, { error: message })
+    }
   }
 
   return { success: true, data: scores }

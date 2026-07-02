@@ -34,6 +34,16 @@ const logger = getLogger()
 type EnvelopeCallback = (envelope: StandardEnvelope) => void
 
 /**
+ * forward() 慢调用阈值（毫秒）。超过则记录 warn 日志。
+ */
+const FORWARD_SLOW_THRESHOLD_MS = 50
+
+/**
+ * broadcast() 慢调用阈值（毫秒）。超过则记录 warn 日志。
+ */
+const BROADCAST_SLOW_THRESHOLD_MS = 10
+
+/**
  * 策略数据流订阅频道名称常量。
  * 外部组件通过 `dataBridge.subscribe(STRATEGY_CHANNEL.hotSector, cb)` 订阅。
  */
@@ -90,56 +100,61 @@ export class DataBridge {
     logger.debug(`[DataBridge] Route determined: action="${meta.action}", targetStore="${targetStore}", operation="${operation}"`)
 
     try {
-      aclEngine.assert({
-        module: meta.source as ModuleId,
-        store: targetStore,
-        operation,
+      try {
+        aclEngine.assert({
+          module: meta.source as ModuleId,
+          store: targetStore,
+          operation,
+        })
+        logger.debug(`[DataBridge] ACL check passed: module="${meta.source}", store="${targetStore}", operation="${operation}"`)
+      } catch (aclErr) {
+        logger.error(`[DataBridge] ACL check failed: module="${meta.source}", store="${targetStore}", operation="${operation}"`, { error: aclErr })
+        if (this.isMarketEnvelope(meta.action)) {
+          logger.warn(`[DataBridge] ACL rejected market envelope, enqueueing for retry: action="${meta.action}", traceId="${meta.traceId}"`)
+          this.fallbackQueue.push(envelope)
+          return
+        }
+        throw aclErr
+      }
+
+      this.writeAuditLog(envelope, targetStore).catch((err) => {
+        logger.error(`[DataBridge] Audit log failed: action="${meta.action}", traceId="${meta.traceId}"`, { error: err })
       })
-      logger.debug(`[DataBridge] ACL check passed: module="${meta.source}", store="${targetStore}", operation="${operation}"`)
-    } catch (aclErr) {
-      logger.error(`[DataBridge] ACL check failed: module="${meta.source}", store="${targetStore}", operation="${operation}"`, { error: aclErr })
-      if (this.isMarketEnvelope(meta.action)) {
-        logger.warn(`[DataBridge] ACL rejected market envelope, enqueueing for retry: action="${meta.action}", traceId="${meta.traceId}"`)
-        this.fallbackQueue.push(envelope)
+
+      if (
+        meta.action === ENVELOPE_ACTION.strategyHotSectorRefresh ||
+        meta.action === ENVELOPE_ACTION.strategyValuePitRefresh ||
+        meta.action === ENVELOPE_ACTION.strategyRotationSignalDetect
+      ) {
+        logger.info(`[DataBridge] Routing to strategy engine: action="${meta.action}"`)
+        await this.routeToStrategy(envelope)
         return
       }
-      throw aclErr
+
+      if (
+        meta.action === ENVELOPE_ACTION.resetAll ||
+        meta.action === ENVELOPE_ACTION.importAll ||
+        meta.action === ENVELOPE_ACTION.exportAll
+      ) {
+        logger.info(`[DataBridge] Routing to manager: action="${meta.action}"`)
+        await this.routeToManager(envelope)
+      } else {
+        logger.info(`[DataBridge] Routing to DB: action="${meta.action}", store="${targetStore}"`)
+        await this.routeToDB(envelope, targetStore)
+      }
+
+      logger.debug(`[DataBridge] Broadcasting to channel: "${targetStore}"`)
+      this.broadcast(targetStore, envelope)
+    } catch (err) {
+      logger.error(`[DataBridge] forward() failed: action="${meta.action}", traceId="${meta.traceId}"`, { error: err })
+      throw err
+    } finally {
+      const duration = Date.now() - startTs
+      if (duration > FORWARD_SLOW_THRESHOLD_MS) {
+        logger.warn(`[DataBridge] forward() took ${duration}ms for action "${meta.action}"`)
+      }
+      logger.info(`[DataBridge] forward() completed: action="${meta.action}", duration=${duration}ms`)
     }
-
-    this.writeAuditLog(envelope, targetStore).catch((err) => {
-      logger.warn('Audit log failed', { err })
-    })
-
-    if (
-      meta.action === ENVELOPE_ACTION.strategyHotSectorRefresh ||
-      meta.action === ENVELOPE_ACTION.strategyValuePitRefresh ||
-      meta.action === ENVELOPE_ACTION.strategyRotationSignalDetect
-    ) {
-      logger.info(`[DataBridge] Routing to strategy engine: action="${meta.action}"`)
-      await this.routeToStrategy(envelope)
-      return
-    }
-
-    if (
-      meta.action === ENVELOPE_ACTION.resetAll ||
-      meta.action === ENVELOPE_ACTION.importAll ||
-      meta.action === ENVELOPE_ACTION.exportAll
-    ) {
-      logger.info(`[DataBridge] Routing to manager: action="${meta.action}"`)
-      await this.routeToManager(envelope)
-    } else {
-      logger.info(`[DataBridge] Routing to DB: action="${meta.action}", store="${targetStore}"`)
-      await this.routeToDB(envelope, targetStore)
-    }
-
-    logger.debug(`[DataBridge] Broadcasting to channel: "${targetStore}"`)
-    this.broadcast(targetStore, envelope)
-
-    const duration = Date.now() - startTs
-    if (duration > 50) {
-      logger.warn(`[DataBridge] forward() took ${duration}ms for action "${meta.action}"`)
-    }
-    logger.info(`[DataBridge] forward() completed: action="${meta.action}", duration=${duration}ms`)
   }
 
   subscribe(channel: string, callback: EnvelopeCallback): () => void {
@@ -229,8 +244,73 @@ export class DataBridge {
         }
         case ENVELOPE_ACTION.deleteStock: {
           const { symbol } = payload as { symbol: string }
-          logger.debug(`[DataBridge] DB deleteStock: symbol="${symbol}"`)
+          logger.info(`[DataBridge] DB deleteStock: symbol="${symbol}" — 开始级联删除`)
+
+          // 1. 删除 Stock 主记录
           await db.delete(store, symbol)
+
+          // 2. 级联删除以 symbol 为主键的关联表
+          const symbolKeyStores = [
+            STORE_NAME.v6Scores,
+            STORE_NAME.dailyQuotes,
+            STORE_NAME.hotSectorScores,
+            STORE_NAME.valuePitScores,
+          ]
+          for (const s of symbolKeyStores) {
+            try {
+              await db.delete(s, symbol)
+              logger.debug(`[DataBridge] 级联删除: ${s} symbol="${symbol}"`)
+            } catch (err) {
+              logger.warn(`[DataBridge] 级联删除失败(主键): ${s}`, { error: err instanceof Error ? err.message : String(err) })
+            }
+          }
+
+          // 3. 级联删除有 by-symbol 索引的关联表（先查后删）
+          const indexedStores = [
+            STORE_NAME.intelligentScores,
+            STORE_NAME.scoreDocs,
+            STORE_NAME.localDocs,
+            STORE_NAME.newsStockMap,
+            STORE_NAME.executionPlans,
+            STORE_NAME.executionLogs,
+            STORE_NAME.missingReports,
+          ]
+          for (const s of indexedStores) {
+            try {
+              const records = await db.getAllByIndex<{ id: string; symbol?: string }>(s, 'by-symbol', symbol)
+              for (const rec of records) {
+                if (rec.id) {
+                  await db.delete(s, rec.id)
+                }
+              }
+              if (records.length > 0) {
+                logger.debug(`[DataBridge] 级联删除(索引): ${s} count=${records.length}`)
+              }
+            } catch (err) {
+              logger.warn(`[DataBridge] 级联删除失败(索引): ${s}`, { error: err instanceof Error ? err.message : String(err) })
+            }
+          }
+
+          // 4. 级联删除无 symbol 索引的关联表（全表扫描过滤）
+          const scanStores = [STORE_NAME.orders, STORE_NAME.signals, STORE_NAME.watchlists]
+          for (const s of scanStores) {
+            try {
+              const allRecords = await db.getAll<{ id: string; symbol?: string }>(s)
+              const toDelete = allRecords.filter((r) => r.symbol === symbol)
+              for (const rec of toDelete) {
+                if (rec.id) {
+                  await db.delete(s, rec.id)
+                }
+              }
+              if (toDelete.length > 0) {
+                logger.debug(`[DataBridge] 级联删除(扫描): ${s} count=${toDelete.length}`)
+              }
+            } catch (err) {
+              logger.warn(`[DataBridge] 级联删除失败(扫描): ${s}`, { error: err instanceof Error ? err.message : String(err) })
+            }
+          }
+
+          logger.info(`[DataBridge] DB deleteStock 完成: symbol="${symbol}" — 级联删除结束`)
           break
         }
         case ENVELOPE_ACTION.saveScores: {
@@ -335,8 +415,20 @@ export class DataBridge {
           await db.put(store, signal)
           break
         }
+        // 通知类 action：仅用于可观测性，payload 是统计信息而非业务实体，不应持久化
+        case ENVELOPE_ACTION.newsArticleLoaded:
+        case ENVELOPE_ACTION.holdingsDataLoaded:
+        case ENVELOPE_ACTION.tradeActionExecuted: {
+          logger.info(`[DataBridge] Notification-only action, skip DB put: action="${meta.action}"`)
+          break
+        }
+        case ENVELOPE_ACTION.saveTradeReview: {
+          logger.info(`[DataBridge] Saving trade review report`)
+          await db.put(store, payload)
+          break
+        }
         default: {
-          logger.debug(`[DataBridge] DB default put: action="${meta.action}"`)
+          logger.warn(`[DataBridge] Unknown action routed to DB default put: action="${meta.action}", store="${store}"`)
           await db.put(store, payload)
         }
       }
@@ -417,7 +509,7 @@ export class DataBridge {
                 `sentiment=${score.dimensions.sentiment.toFixed(2)} ` +
                 `technical=${score.dimensions.technical.toFixed(2)} ` +
                 `valuation=${score.dimensions.valuation.toFixed(2)} ` +
-                `composite=${score.dimensions.composite.toFixed(2)} ` +
+                `marketEnv=${score.dimensions.marketEnv.toFixed(2)} ` +
                 `→ score=${score.score.toFixed(2)} action=${score.action}`,
               )
               return score
@@ -479,7 +571,6 @@ export class DataBridge {
                 `chip=${score.dimensions.chip.toFixed(2)} ` +
                 `rotation=${score.dimensions.rotation.toFixed(2)} ` +
                 `liquidity=${score.dimensions.liquidity.toFixed(2)} ` +
-                `composite=${score.dimensions.composite.toFixed(2)} ` +
                 `→ score=${score.score.toFixed(2)} action=${score.action}`,
               )
               return score
@@ -653,10 +744,14 @@ export class DataBridge {
     logger.info(`[DataBridge] broadcast() to subscribers: channel="${channel}", listeners=${callbackCount}, success=${successCount}, errors=${errorCount}`)
 
     logger.debug(`[DataBridge] Emitting eventBus: "${channel}:changed"`)
-    eventBus.emit(`${channel}:changed`, envelope)
+    try {
+      eventBus.emit(`${channel}:changed`, envelope)
+    } catch (err) {
+      logger.warn(`[DataBridge] eventBus.emit failed for channel "${channel}", action="${envelope.meta.action}", traceId="${envelope.meta.traceId}"`, { error: err })
+    }
 
     const duration = Date.now() - startTs
-    if (duration > 10) {
+    if (duration > BROADCAST_SLOW_THRESHOLD_MS) {
       logger.warn(`[DataBridge] broadcast() took ${duration}ms for channel "${channel}"`)
     }
   }

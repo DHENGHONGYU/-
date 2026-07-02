@@ -156,7 +156,9 @@ export function adaptToHotSector(raw: TencentSectorFlowRaw): HotSectorAnalyzerIn
     },
     breakout: {
       hasBreakoutPattern: raw.breakout,
-      macdSignal: raw.macd,
+      // P0-08: BreakoutInput.macdSignal 重命名为 rsiSignal（实际按 RSI 阈值推导）
+      // 后端 raw.macd 信号方向与 RSI 信号方向语义一致，直接映射
+      rsiSignal: raw.macd,
       rsi: raw.rsi,
       priceAboveMA20: raw.aboveMA20,
       priceAboveMA60: raw.aboveMA60,
