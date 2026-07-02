@@ -64,8 +64,9 @@ const MARKET_ENV_DEFAULTS: MarketEnvInput = {
 /**
  * 将任意值强制转为 number，无效值返回 0。
  * 防止 API 返回字符串/null/undefined 等脏数据。
+ * @internal 暴露用于单元测试
  */
-function toSafeNumber(value: unknown, defaultValue = 0): number {
+export function toSafeNumber(value: unknown, defaultValue = 0): number {
   if (value === null || value === undefined || value === '') return defaultValue
   const num = Number(value)
   return Number.isFinite(num) ? num : defaultValue
@@ -73,8 +74,9 @@ function toSafeNumber(value: unknown, defaultValue = 0): number {
 
 /**
  * 将任意值强制转为指定枚举值，无效值返回默认值。
+ * @internal 暴露用于单元测试
  */
-function toSafeEnum<T extends string>(value: unknown, allowed: readonly T[], defaultValue: T): T {
+export function toSafeEnum<T extends string>(value: unknown, allowed: readonly T[], defaultValue: T): T {
   if (typeof value === 'string' && (allowed as readonly string[]).includes(value)) {
     return value as T
   }
@@ -83,8 +85,9 @@ function toSafeEnum<T extends string>(value: unknown, allowed: readonly T[], def
 
 /**
  * 将任意值强制转为 boolean，无效值返回默认值。
+ * @internal 暴露用于单元测试
  */
-function toSafeBoolean(value: unknown, defaultValue = false): boolean {
+export function toSafeBoolean(value: unknown, defaultValue = false): boolean {
   if (typeof value === 'boolean') return value
   if (value === 1 || value === 'true' || value === 1) return true
   if (value === 0 || value === 'false' || value === 0) return false
@@ -95,8 +98,9 @@ function toSafeBoolean(value: unknown, defaultValue = false): boolean {
  * 规范化 sentiment 数据：补全缺失字段，强制类型转换。
  * 用户报告的 API 返回 {"sentiment": {"sentimentRank": 10, "retailSentiment": 0.4}}
  * 缺少 institutionBuyCount / limitUpCount，此处补全为 0。
+ * @internal 暴露用于单元测试
  */
-function normalizeSentiment(raw: unknown): SentimentInput {
+export function normalizeSentiment(raw: unknown): SentimentInput {
   if (!raw || typeof raw !== 'object') return { ...SENTIMENT_DEFAULTS }
   const r = raw as Record<string, unknown>
   return {
@@ -107,7 +111,8 @@ function normalizeSentiment(raw: unknown): SentimentInput {
   }
 }
 
-function normalizeMomentum(raw: unknown): MomentumInput {
+/** @internal 暴露用于单元测试 */
+export function normalizeMomentum(raw: unknown): MomentumInput {
   if (!raw || typeof raw !== 'object') return { ...MOMENTUM_DEFAULTS }
   const r = raw as Record<string, unknown>
   return {
@@ -119,7 +124,8 @@ function normalizeMomentum(raw: unknown): MomentumInput {
   }
 }
 
-function normalizeBreakout(raw: unknown): BreakoutInput {
+/** @internal 暴露用于单元测试 */
+export function normalizeBreakout(raw: unknown): BreakoutInput {
   if (!raw || typeof raw !== 'object') return { ...BREAKOUT_DEFAULTS }
   const r = raw as Record<string, unknown>
   return {
@@ -131,7 +137,8 @@ function normalizeBreakout(raw: unknown): BreakoutInput {
   }
 }
 
-function normalizeValuationRisk(raw: unknown): ValuationRiskInput {
+/** @internal 暴露用于单元测试 */
+export function normalizeValuationRisk(raw: unknown): ValuationRiskInput {
   if (!raw || typeof raw !== 'object') return { ...VALUATION_RISK_DEFAULTS }
   const r = raw as Record<string, unknown>
   return {
@@ -142,7 +149,8 @@ function normalizeValuationRisk(raw: unknown): ValuationRiskInput {
   }
 }
 
-function normalizeMarketEnv(raw: unknown): MarketEnvInput {
+/** @internal 暴露用于单元测试 */
+export function normalizeMarketEnv(raw: unknown): MarketEnvInput {
   if (!raw || typeof raw !== 'object') return { ...MARKET_ENV_DEFAULTS }
   const r = raw as Record<string, unknown>
   return {
