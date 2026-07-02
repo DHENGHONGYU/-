@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Config Data Schema",
+  "description": "Schema for configuration data",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Config version"
+    },
+    "enabled": {
+      "type": "boolean",
+      "description": "Whether enabled"
+    },
+    "apiKey": {
+      "type": "string",
+      "description": "API key"
+    },
+    "baseURL": {
+      "type": "string",
+      "format": "uri",
+      "description": "Base URL"
+    },
+    "model": {
+      "type": "string",
+      "description": "Model name"
+    },
+    "timeout": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Timeout in milliseconds"
+    },
+    "cacheTTL": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Cache TTL in seconds"
+    },
+    "thresholds": {
+      "type": "object",
+      "additionalProperties": { "type": "number" },
+      "description": "Threshold values"
+    },
+    "weights": {
+      "type": "object",
+      "additionalProperties": { "type": "number" },
+      "description": "Weight values"
+    }
+  }
+}

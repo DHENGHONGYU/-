@@ -1,0 +1,821 @@
+/**
+ * dualStrategyStore 单元测试
+ *
+ * 覆盖场景：
+ * 1.  初始状态验证
+ * 2.  fetchScores: 传入 stocks，调用 runDualStrategy，更新 3 个 scores
+ * 3.  fetchScores: 无传入 stocks，从 poolStore 获取
+ * 4.  fetchScores: poolStore 为空，从 dataLayer.stocks.list 获取
+ * 5.  fetchScores: 股票池为空，使用默认样本数据
+ * 6.  fetchScores: 并发锁（isRefreshing=true 跳过）
+ * 7.  fetchScores: runDualStrategy 失败，快照回滚
+ * 8.  fetchScores: 持久化到 DataBridge（调用 save）
+ * 9.  fetchScores: scores 按 score 降序排序
+ * 10. refresh: 从 dataLayer 读取 3 个列表
+ * 11. refresh: 过滤 rotationSignals（type='buy_rotation'）
+ * 12. refresh: 并发锁
+ * 13. refresh: 失败设置 error
+ * 14. clearScores: 重置所有状态
+ * 15. topHotSectors: 取前 N 个（默认 5）
+ * 16. topValuePits: 取前 N 个
+ * 17. activeRotationSignals: 过滤 triggered=true
+ * 18. hotSectorBuySignals: 过滤 action='immediate'
+ * 19. valuePitBuildCandidates: 过滤 action='immediate'
+ * 20. valuePitWaitSignals: 过滤 action='wait'
+ * 21. hotSectorBySymbol: 存在/不存在
+ * 22. valuePitBySymbol: 存在/不存在
+ * 23. rotationSignalBySector: 存在/不存在
+ * 24. signalToRotationSignal: confidence>=0.7→strong, >=0.4→medium, 否则 weak
+ * 25. rotationSignalToSignal: strong→0.8, medium→0.6, weak→0.4
+ * 26. shouldSkipSelf: analyzer/tradinghub/strategy → true, 其他 → false
+ * 27. initDualStrategyStoreSubscriptions: 订阅 5 个频道
+ * 28. initDualStrategyStoreSubscriptions: source 过滤（shouldSkipSelf）
+ * 29. initDualStrategyStoreSubscriptions: 去抖 100ms
+ * 30. initDualStrategyStoreSubscriptions: 重复调用不重复订阅
+ * 31. initDualStrategyStoreSubscriptions: 返回 cleanup
+ * 32. destroyDualStrategyStoreSubscriptions: 清除所有订阅和定时器
+ */
+
+import { vi } from 'vitest'
+import type { HotSectorScore, ValuePitScore, Signal, Stock } from '@/data/types'
+import type { RotationSignal } from '@/services/scoring/rotationSignalDetector'
+
+// ============================================================
+// vi.hoisted mocks
+// ============================================================
+
+const {
+  mockStocksList,
+  mockHotSectorList,
+  mockHotSectorSave,
+  mockValuePitList,
+  mockValuePitSave,
+  mockSignalsList,
+  mockSignalsSave,
+  mockRunDualStrategy,
+  mockHotSectorAnalyze,
+  mockValuePitAnalyze,
+  mockRotationDetect,
+  mockSubscribe,
+  capturedCallbacks,
+  unsubscribes,
+} = vi.hoisted(() => {
+  const capturedCallbacks = new Map<string, ((envelope: any) => void)>()
+  const unsubscribes: Array<ReturnType<typeof vi.fn>> = []
+  return {
+    mockStocksList: vi.fn().mockResolvedValue([]),
+    mockHotSectorList: vi.fn().mockResolvedValue([]),
+    mockHotSectorSave: vi.fn(),
+    mockValuePitList: vi.fn().mockResolvedValue([]),
+    mockValuePitSave: vi.fn(),
+    mockSignalsList: vi.fn().mockResolvedValue([]),
+    mockSignalsSave: vi.fn(),
+    mockRunDualStrategy: vi.fn(),
+    mockHotSectorAnalyze: vi.fn(),
+    mockValuePitAnalyze: vi.fn(),
+    mockRotationDetect: vi.fn(),
+    mockSubscribe: vi.fn((channel: string, callback: (envelope: any) => void) => {
+      capturedCallbacks.set(channel, callback)
+      const unsub = vi.fn()
+      unsubscribes.push(unsub)
+      return unsub
+    }),
+    capturedCallbacks,
+    unsubscribes,
+  }
+})
+
+// ============================================================
+// vi.mock declarations
+// ============================================================
+
+vi.mock('@/lib/logger', () => ({
+  getLogger: () => ({ info: vi.fn(), error: vi.fn(), warn: vi.fn(), debug: vi.fn() }),
+}))
+
+vi.mock('@/data/dataLayer', () => ({
+  dataLayer: {
+    stocks: { list: mockStocksList },
+    hotSectorScores: { list: mockHotSectorList, save: mockHotSectorSave },
+    valuePitScores: { list: mockValuePitList, save: mockValuePitSave },
+    signals: { list: mockSignalsList, save: mockSignalsSave },
+  },
+}))
+
+vi.mock('@/core/databridge', () => ({
+  dataBridge: { subscribe: mockSubscribe },
+}))
+
+vi.mock('@/services/trading/dualStrategyEngine', () => ({
+  runDualStrategy: mockRunDualStrategy,
+}))
+
+vi.mock('@/services/scoring/hotSectorAnalyzer', () => ({
+  analyze: mockHotSectorAnalyze,
+}))
+
+vi.mock('@/services/scoring/valuePitAnalyzer', () => ({
+  analyze: mockValuePitAnalyze,
+}))
+
+vi.mock('@/services/scoring/rotationSignalDetector', () => ({
+  detect: mockRotationDetect,
+}))
+
+vi.mock('@/config/dbConfig', () => ({
+  MODULE_ID: { analyzer: 'analyzer', tradinghub: 'tradinghub', strategy: 'strategy', stockpool: 'stockpool' },
+  STORE_NAME: { hotSectorScores: 'hotSectorScores', valuePitScores: 'valuePitScores', rotationScores: 'rotationScores', signals: 'signals', stocks: 'stocks' },
+}))
+
+// ============================================================
+// Imports
+// ============================================================
+
+import {
+  useDualStrategyStore,
+  topHotSectors,
+  topValuePits,
+  activeRotationSignals,
+  hotSectorBuySignals,
+  valuePitBuildCandidates,
+  valuePitWaitSignals,
+  hotSectorBySymbol,
+  valuePitBySymbol,
+  rotationSignalBySector,
+  signalToRotationSignal,
+  rotationSignalToSignal,
+  getSnapshot,
+  shouldSkipSelf,
+  initDualStrategyStoreSubscriptions,
+} from './dualStrategyStore'
+
+// ============================================================
+// Helpers
+// ============================================================
+
+function createMockStock(symbol: string): Stock {
+  return {
+    symbol,
+    name: symbol,
+    researchStatus: 'candidate',
+    source: 'manual',
+    dataVersion: 1,
+  } as Stock
+}
+
+function createMockHotSectorScore(symbol: string, score: number, action: 'immediate' | 'probe' | 'ignore' = 'immediate'): HotSectorScore {
+  return {
+    symbol,
+    name: symbol,
+    score,
+    dimensions: {} as any,
+    action,
+    calculatedAt: Date.now(),
+    dataVersion: 1,
+  }
+}
+
+function createMockValuePitScore(symbol: string, score: number, action: 'immediate' | 'probe' | 'wait' | 'ignore' = 'immediate'): ValuePitScore {
+  return {
+    symbol,
+    name: symbol,
+    score,
+    dimensions: {} as any,
+    rotationSignal: false,
+    action,
+    calculatedAt: Date.now(),
+    dataVersion: 1,
+  }
+}
+
+function createMockSignal(symbol: string, confidence: number, type: string = 'buy_rotation'): Signal {
+  return {
+    id: `sig-${symbol}`,
+    symbol,
+    direction: 'buy',
+    type,
+    confidence,
+    rationale: 'test',
+    snapshot: {},
+    createdAt: Date.now(),
+  }
+}
+
+function createMockRotationSignal(sectorId: string, triggered: boolean = true, strength: 'weak' | 'medium' | 'strong' = 'strong'): RotationSignal {
+  return {
+    sectorId,
+    triggered,
+    conditions: { volumeBreakthrough: true, capitalInflow: true, goldenCross: true },
+    strength,
+    detectedAt: Date.now(),
+  }
+}
+
+function resetStoreState() {
+  useDualStrategyStore.setState({
+    hotSectorScores: [],
+    valuePitScores: [],
+    rotationSignals: [],
+    loading: false,
+    error: null,
+    isRefreshing: false,
+    lastUpdated: 0,
+  })
+}
+
+// ============================================================
+// Setup
+// ============================================================
+
+beforeEach(() => {
+  vi.clearAllMocks()
+  capturedCallbacks.clear()
+  unsubscribes.length = 0
+
+  // 清理模块级订阅状态
+  const cleanup = initDualStrategyStoreSubscriptions()
+  cleanup()
+
+  resetStoreState()
+
+  // 重置 hoisted mock 默认行为
+  mockStocksList.mockResolvedValue([])
+  mockHotSectorList.mockResolvedValue([])
+  mockValuePitList.mockResolvedValue([])
+  mockSignalsList.mockResolvedValue([])
+})
+
+// ============================================================
+// useDualStrategyStore
+// ============================================================
+
+describe('useDualStrategyStore', () => {
+  it('初始状态验证', () => {
+    const state = useDualStrategyStore.getState()
+    expect(state.hotSectorScores).toEqual([])
+    expect(state.valuePitScores).toEqual([])
+    expect(state.rotationSignals).toEqual([])
+    expect(state.loading).toBe(false)
+    expect(state.error).toBeNull()
+    expect(state.isRefreshing).toBe(false)
+    expect(state.lastUpdated).toBe(0)
+  })
+
+  // ----------------------------------------------------------
+  // fetchScores
+  // ----------------------------------------------------------
+
+  it('fetchScores: 传入 stocks，调用 runDualStrategy，更新 3 个 scores', async () => {
+    const stocks = [createMockStock('A'), createMockStock('B')]
+    const hotScores = [createMockHotSectorScore('A', 4.5), createMockHotSectorScore('B', 3.8)]
+    const valueScores = [createMockValuePitScore('A', 3.5), createMockValuePitScore('B', 4.0)]
+    const signals = [createMockSignal('A', 0.8, 'buy_rotation'), createMockSignal('B', 0.5, 'momentum')]
+
+    mockRunDualStrategy.mockResolvedValue({
+      success: true,
+      data: { hotSectorScores: hotScores, valuePitScores: valueScores, signals },
+    })
+
+    await useDualStrategyStore.getState().fetchScores(stocks)
+
+    const state = useDualStrategyStore.getState()
+    expect(mockRunDualStrategy).toHaveBeenCalledWith(stocks, { persistScores: false })
+    expect(state.hotSectorScores).toHaveLength(2)
+    expect(state.valuePitScores).toHaveLength(2)
+    expect(state.rotationSignals).toHaveLength(1)
+    expect(state.rotationSignals[0]!.sectorId).toBe('A')
+    expect(state.loading).toBe(false)
+    expect(state.error).toBeNull()
+    expect(state.isRefreshing).toBe(false)
+    expect(state.lastUpdated).toBeGreaterThan(0)
+  })
+
+  it('fetchScores: 无传入 stocks，从 dataLayer.stocks.list 获取', async () => {
+    // 注意：不再从 poolStore 获取，统一从 dataLayer.stocks.list 获取
+    const dlStocks = [createMockStock('DL1')]
+    mockStocksList.mockResolvedValue(dlStocks)
+
+    const hotScores = [createMockHotSectorScore('DL1', 4.0)]
+    const valueScores = [createMockValuePitScore('DL1', 3.5)]
+    const signals: Signal[] = []
+
+    mockRunDualStrategy.mockResolvedValue({
+      success: true,
+      data: { hotSectorScores: hotScores, valuePitScores: valueScores, signals },
+    })
+
+    await useDualStrategyStore.getState().fetchScores()
+
+    // 现在统一从 dataLayer.stocks.list 获取，不再依赖 poolStore
+    expect(mockStocksList).toHaveBeenCalled()
+    expect(mockRunDualStrategy).toHaveBeenCalledWith(dlStocks, { persistScores: false })
+    expect(useDualStrategyStore.getState().hotSectorScores).toHaveLength(1)
+  })
+
+  it('fetchScores: 股票池为空，使用默认样本数据', async () => {
+    mockStocksList.mockResolvedValue([])
+
+    mockHotSectorAnalyze.mockReturnValue(createMockHotSectorScore('AI_算力', 4.5))
+    mockValuePitAnalyze.mockReturnValue(createMockValuePitScore('银行', 3.8))
+    mockRotationDetect.mockReturnValue(createMockRotationSignal('银行', true, 'strong'))
+
+    await useDualStrategyStore.getState().fetchScores()
+
+    expect(mockRunDualStrategy).not.toHaveBeenCalled()
+    expect(mockHotSectorAnalyze).toHaveBeenCalled()
+    expect(mockValuePitAnalyze).toHaveBeenCalled()
+    expect(mockRotationDetect).toHaveBeenCalled()
+    expect(useDualStrategyStore.getState().hotSectorScores.length).toBeGreaterThan(0)
+    expect(useDualStrategyStore.getState().valuePitScores.length).toBeGreaterThan(0)
+    expect(useDualStrategyStore.getState().rotationSignals.length).toBeGreaterThan(0)
+  })
+
+  it('fetchScores: 并发锁（isRefreshing=true 跳过）', async () => {
+    useDualStrategyStore.setState({ isRefreshing: true })
+
+    await useDualStrategyStore.getState().fetchScores([createMockStock('A')])
+
+    expect(mockRunDualStrategy).not.toHaveBeenCalled()
+    expect(mockHotSectorAnalyze).not.toHaveBeenCalled()
+  })
+
+  it('fetchScores: runDualStrategy 失败，快照回滚', async () => {
+    const existingHot = [createMockHotSectorScore('EXIST', 5.0)]
+    const existingValue = [createMockValuePitScore('EXIST', 4.0)]
+    const existingRot = [createMockRotationSignal('EXIST')]
+
+    useDualStrategyStore.setState({
+      hotSectorScores: existingHot,
+      valuePitScores: existingValue,
+      rotationSignals: existingRot,
+      lastUpdated: 12345,
+    })
+
+    mockRunDualStrategy.mockResolvedValue({ success: false, error: '引擎故障' })
+
+    await useDualStrategyStore.getState().fetchScores([createMockStock('A')])
+
+    const state = useDualStrategyStore.getState()
+    expect(state.error).toBe('引擎故障')
+    expect(state.hotSectorScores).toEqual(existingHot)
+    expect(state.valuePitScores).toEqual(existingValue)
+    expect(state.rotationSignals).toEqual(existingRot)
+    expect(state.lastUpdated).toBe(12345)
+    expect(state.loading).toBe(false)
+    expect(state.isRefreshing).toBe(false)
+  })
+
+  it('fetchScores: 持久化到 DataBridge（调用 save）', async () => {
+    const stocks = [createMockStock('A')]
+    const hotScores = [createMockHotSectorScore('A', 4.5)]
+    const valueScores = [createMockValuePitScore('A', 3.5)]
+    const signals = [createMockSignal('A', 0.8, 'buy_rotation')]
+
+    mockRunDualStrategy.mockResolvedValue({
+      success: true,
+      data: { hotSectorScores: hotScores, valuePitScores: valueScores, signals },
+    })
+
+    await useDualStrategyStore.getState().fetchScores(stocks)
+
+    expect(mockHotSectorSave).toHaveBeenCalledTimes(1)
+    expect(mockValuePitSave).toHaveBeenCalledTimes(1)
+    expect(mockSignalsSave).toHaveBeenCalledTimes(1)
+    expect(mockHotSectorSave).toHaveBeenCalledWith(hotScores[0])
+    expect(mockValuePitSave).toHaveBeenCalledWith(valueScores[0])
+    expect(mockSignalsSave).toHaveBeenCalledWith(signals[0])
+  })
+
+  it('fetchScores: scores 按 score 降序排序', async () => {
+    const stocks = [createMockStock('A'), createMockStock('B'), createMockStock('C')]
+    const hotScores = [
+      createMockHotSectorScore('A', 3.0),
+      createMockHotSectorScore('B', 5.0),
+      createMockHotSectorScore('C', 4.0),
+    ]
+    const valueScores = [
+      createMockValuePitScore('A', 2.0),
+      createMockValuePitScore('B', 4.5),
+      createMockValuePitScore('C', 3.5),
+    ]
+    const signals: Signal[] = []
+
+    mockRunDualStrategy.mockResolvedValue({
+      success: true,
+      data: { hotSectorScores: hotScores, valuePitScores: valueScores, signals },
+    })
+
+    await useDualStrategyStore.getState().fetchScores(stocks)
+
+    const state = useDualStrategyStore.getState()
+    expect(state.hotSectorScores[0]!.score).toBe(5.0)
+    expect(state.hotSectorScores[1]!.score).toBe(4.0)
+    expect(state.hotSectorScores[2]!.score).toBe(3.0)
+    expect(state.valuePitScores[0]!.score).toBe(4.5)
+    expect(state.valuePitScores[1]!.score).toBe(3.5)
+    expect(state.valuePitScores[2]!.score).toBe(2.0)
+  })
+
+  // ----------------------------------------------------------
+  // refresh
+  // ----------------------------------------------------------
+
+  it('refresh: 从 dataLayer 读取 3 个列表', async () => {
+    const hotScores = [createMockHotSectorScore('A', 4.0)]
+    const valueScores = [createMockValuePitScore('B', 3.5)]
+    const allSignals = [createMockSignal('C', 0.6, 'buy_rotation')]
+
+    mockHotSectorList.mockResolvedValue(hotScores)
+    mockValuePitList.mockResolvedValue(valueScores)
+    mockSignalsList.mockResolvedValue(allSignals)
+
+    await useDualStrategyStore.getState().refresh()
+
+    expect(mockHotSectorList).toHaveBeenCalled()
+    expect(mockValuePitList).toHaveBeenCalled()
+    expect(mockSignalsList).toHaveBeenCalled()
+    expect(useDualStrategyStore.getState().hotSectorScores).toEqual(hotScores)
+    expect(useDualStrategyStore.getState().valuePitScores).toEqual(valueScores)
+  })
+
+  it('refresh: 过滤 rotationSignals（type=buy_rotation）', async () => {
+    const allSignals = [
+      createMockSignal('ROT1', 0.8, 'buy_rotation'),
+      createMockSignal('OTHER', 0.5, 'momentum'),
+      createMockSignal('ROT2', 0.6, 'buy_rotation'),
+    ]
+
+    mockHotSectorList.mockResolvedValue([])
+    mockValuePitList.mockResolvedValue([])
+    mockSignalsList.mockResolvedValue(allSignals)
+
+    await useDualStrategyStore.getState().refresh()
+
+    const rotSignals = useDualStrategyStore.getState().rotationSignals
+    expect(rotSignals).toHaveLength(2)
+    expect(rotSignals.some((r) => r.sectorId === 'ROT1')).toBe(true)
+    expect(rotSignals.some((r) => r.sectorId === 'ROT2')).toBe(true)
+    expect(rotSignals.some((r) => r.sectorId === 'OTHER')).toBe(false)
+  })
+
+  it('refresh: 并发锁', async () => {
+    useDualStrategyStore.setState({ isRefreshing: true })
+
+    await useDualStrategyStore.getState().refresh()
+
+    expect(mockHotSectorList).not.toHaveBeenCalled()
+    expect(mockValuePitList).not.toHaveBeenCalled()
+    expect(mockSignalsList).not.toHaveBeenCalled()
+  })
+
+  it('refresh: 失败设置 error', async () => {
+    mockHotSectorList.mockRejectedValue(new Error('db error'))
+
+    await useDualStrategyStore.getState().refresh()
+
+    const state = useDualStrategyStore.getState()
+    expect(state.error).toBe('db error')
+    expect(state.loading).toBe(false)
+    expect(state.isRefreshing).toBe(false)
+  })
+
+  // ----------------------------------------------------------
+  // clearScores
+  // ----------------------------------------------------------
+
+  it('clearScores: 重置所有状态', () => {
+    useDualStrategyStore.setState({
+      hotSectorScores: [createMockHotSectorScore('A', 4.0)],
+      valuePitScores: [createMockValuePitScore('B', 3.5)],
+      rotationSignals: [createMockRotationSignal('C')],
+      loading: true,
+      error: 'some error',
+      isRefreshing: true,
+      lastUpdated: 12345,
+    })
+
+    useDualStrategyStore.getState().clearScores()
+
+    const state = useDualStrategyStore.getState()
+    expect(state.hotSectorScores).toEqual([])
+    expect(state.valuePitScores).toEqual([])
+    expect(state.rotationSignals).toEqual([])
+    expect(state.loading).toBe(false)
+    expect(state.error).toBeNull()
+    expect(state.isRefreshing).toBe(false)
+    expect(state.lastUpdated).toBe(0)
+  })
+})
+
+// ============================================================
+// 派生函数
+// ============================================================
+
+describe('派生函数', () => {
+  beforeEach(() => {
+    resetStoreState()
+  })
+
+  it('topHotSectors: 取前 N 个（默认 5）', () => {
+    const scores = Array.from({ length: 10 }, (_, i) => createMockHotSectorScore(`H${i}`, 10 - i))
+    useDualStrategyStore.setState({ hotSectorScores: scores })
+
+    const result = topHotSectors()
+    expect(result).toHaveLength(5)
+    expect(result[0]!.symbol).toBe('H0')
+    expect(result[4]!.symbol).toBe('H4')
+
+    const result3 = topHotSectors(3)
+    expect(result3).toHaveLength(3)
+  })
+
+  it('topValuePits: 取前 N 个', () => {
+    const scores = Array.from({ length: 8 }, (_, i) => createMockValuePitScore(`V${i}`, 8 - i))
+    useDualStrategyStore.setState({ valuePitScores: scores })
+
+    const result = topValuePits()
+    expect(result).toHaveLength(5)
+    expect(result[0]!.symbol).toBe('V0')
+
+    const result7 = topValuePits(7)
+    expect(result7).toHaveLength(7)
+  })
+
+  it('activeRotationSignals: 过滤 triggered=true', () => {
+    const signals = [
+      createMockRotationSignal('A', true),
+      createMockRotationSignal('B', false),
+      createMockRotationSignal('C', true),
+    ]
+    useDualStrategyStore.setState({ rotationSignals: signals })
+
+    const result = activeRotationSignals()
+    expect(result).toHaveLength(2)
+    expect(result.some((r) => r.sectorId === 'A')).toBe(true)
+    expect(result.some((r) => r.sectorId === 'C')).toBe(true)
+    expect(result.some((r) => r.sectorId === 'B')).toBe(false)
+  })
+
+  it('hotSectorBuySignals: 过滤 action=immediate', () => {
+    const scores = [
+      createMockHotSectorScore('A', 4.5, 'immediate'),
+      createMockHotSectorScore('B', 3.5, 'probe'),
+      createMockHotSectorScore('C', 4.0, 'immediate'),
+      createMockHotSectorScore('D', 3.0, 'ignore'),
+    ]
+    useDualStrategyStore.setState({ hotSectorScores: scores })
+
+    const result = hotSectorBuySignals()
+    expect(result).toHaveLength(2)
+    expect(result.some((r) => r.symbol === 'A')).toBe(true)
+    expect(result.some((r) => r.symbol === 'C')).toBe(true)
+  })
+
+  it('valuePitBuildCandidates: 过滤 action=immediate', () => {
+    const scores = [
+      createMockValuePitScore('A', 4.5, 'immediate'),
+      createMockValuePitScore('B', 3.5, 'wait'),
+      createMockValuePitScore('C', 4.0, 'immediate'),
+      createMockValuePitScore('D', 3.0, 'ignore'),
+    ]
+    useDualStrategyStore.setState({ valuePitScores: scores })
+
+    const result = valuePitBuildCandidates()
+    expect(result).toHaveLength(2)
+    expect(result.some((r) => r.symbol === 'A')).toBe(true)
+    expect(result.some((r) => r.symbol === 'C')).toBe(true)
+  })
+
+  it('valuePitWaitSignals: 过滤 action=wait', () => {
+    const scores = [
+      createMockValuePitScore('A', 4.5, 'immediate'),
+      createMockValuePitScore('B', 3.5, 'wait'),
+      createMockValuePitScore('C', 4.0, 'wait'),
+      createMockValuePitScore('D', 3.0, 'ignore'),
+    ]
+    useDualStrategyStore.setState({ valuePitScores: scores })
+
+    const result = valuePitWaitSignals()
+    expect(result).toHaveLength(2)
+    expect(result.some((r) => r.symbol === 'B')).toBe(true)
+    expect(result.some((r) => r.symbol === 'C')).toBe(true)
+  })
+
+  it('hotSectorBySymbol: 存在/不存在', () => {
+    const scores = [createMockHotSectorScore('A', 4.5), createMockHotSectorScore('B', 3.5)]
+    useDualStrategyStore.setState({ hotSectorScores: scores })
+
+    expect(hotSectorBySymbol('A')).toBeDefined()
+    expect(hotSectorBySymbol('A')?.score).toBe(4.5)
+    expect(hotSectorBySymbol('NOT_EXIST')).toBeUndefined()
+  })
+
+  it('valuePitBySymbol: 存在/不存在', () => {
+    const scores = [createMockValuePitScore('A', 4.5), createMockValuePitScore('B', 3.5)]
+    useDualStrategyStore.setState({ valuePitScores: scores })
+
+    expect(valuePitBySymbol('A')).toBeDefined()
+    expect(valuePitBySymbol('A')?.score).toBe(4.5)
+    expect(valuePitBySymbol('NOT_EXIST')).toBeUndefined()
+  })
+
+  it('rotationSignalBySector: 存在/不存在', () => {
+    const signals = [createMockRotationSignal('A'), createMockRotationSignal('B')]
+    useDualStrategyStore.setState({ rotationSignals: signals })
+
+    expect(rotationSignalBySector('A')).toBeDefined()
+    expect(rotationSignalBySector('NOT_EXIST')).toBeUndefined()
+  })
+})
+
+// ============================================================
+// 辅助函数
+// ============================================================
+
+describe('辅助函数', () => {
+  it('signalToRotationSignal: confidence>=0.7→strong, >=0.4→medium, 否则 weak', () => {
+    const signalStrong = createMockSignal('A', 0.9)
+    const signalMedium = createMockSignal('B', 0.5)
+    const signalWeak = createMockSignal('C', 0.3)
+
+    const rotStrong = signalToRotationSignal(signalStrong)
+    expect(rotStrong.strength).toBe('strong')
+    expect(rotStrong.sectorId).toBe('A')
+    expect(rotStrong.triggered).toBe(true)
+
+    const rotMedium = signalToRotationSignal(signalMedium)
+    expect(rotMedium.strength).toBe('medium')
+
+    const rotWeak = signalToRotationSignal(signalWeak)
+    expect(rotWeak.strength).toBe('weak')
+  })
+
+  it('rotationSignalToSignal: strong→0.8, medium→0.6, weak→0.4', () => {
+    const rotStrong = createMockRotationSignal('A', true, 'strong')
+    const rotMedium = createMockRotationSignal('B', true, 'medium')
+    const rotWeak = createMockRotationSignal('C', true, 'weak')
+
+    const sigStrong = rotationSignalToSignal(rotStrong)
+    expect(sigStrong.confidence).toBe(0.8)
+    expect(sigStrong.symbol).toBe('A')
+    expect(sigStrong.type).toBe('buy_rotation')
+    expect(sigStrong.direction).toBe('buy')
+
+    const sigMedium = rotationSignalToSignal(rotMedium)
+    expect(sigMedium.confidence).toBe(0.6)
+
+    const sigWeak = rotationSignalToSignal(rotWeak)
+    expect(sigWeak.confidence).toBe(0.4)
+  })
+
+  it('shouldSkipSelf: analyzer/tradinghub/strategy → true, 其他 → false', () => {
+    expect(shouldSkipSelf({ meta: { source: 'analyzer', action: 'SAVE' } })).toBe(true)
+    expect(shouldSkipSelf({ meta: { source: 'tradinghub', action: 'SAVE' } })).toBe(true)
+    expect(shouldSkipSelf({ meta: { source: 'strategy', action: 'SAVE' } })).toBe(true)
+    expect(shouldSkipSelf({ meta: { source: 'stockpool', action: 'SAVE' } })).toBe(false)
+    expect(shouldSkipSelf({ meta: { source: 'external', action: 'SAVE' } })).toBe(false)
+  })
+
+  it('getSnapshot: 正确提取状态快照', () => {
+    const state = {
+      hotSectorScores: [createMockHotSectorScore('A', 4.0)],
+      valuePitScores: [createMockValuePitScore('B', 3.5)],
+      rotationSignals: [createMockRotationSignal('C')],
+      loading: false,
+      error: null,
+      isRefreshing: false,
+      lastUpdated: 12345,
+      fetchScores: vi.fn() as any,
+      refresh: vi.fn() as any,
+      clearScores: vi.fn() as any,
+    }
+
+    const snapshot = getSnapshot(state)
+    expect(snapshot.hotSectorScores).toEqual(state.hotSectorScores)
+    expect(snapshot.valuePitScores).toEqual(state.valuePitScores)
+    expect(snapshot.rotationSignals).toEqual(state.rotationSignals)
+    expect(snapshot.lastUpdated).toBe(12345)
+  })
+})
+
+// ============================================================
+// initDualStrategyStoreSubscriptions
+// ============================================================
+
+describe('initDualStrategyStoreSubscriptions', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    capturedCallbacks.clear()
+    unsubscribes.length = 0
+    resetStoreState()
+  })
+
+  it('订阅 5 个频道', () => {
+    initDualStrategyStoreSubscriptions()
+
+    expect(mockSubscribe).toHaveBeenCalledTimes(5)
+    expect(mockSubscribe).toHaveBeenCalledWith('hotSectorScores', expect.any(Function))
+    expect(mockSubscribe).toHaveBeenCalledWith('valuePitScores', expect.any(Function))
+    expect(mockSubscribe).toHaveBeenCalledWith('rotationScores', expect.any(Function))
+    expect(mockSubscribe).toHaveBeenCalledWith('signals', expect.any(Function))
+    expect(mockSubscribe).toHaveBeenCalledWith('stocks', expect.any(Function))
+  })
+
+  it('source 过滤（shouldSkipSelf）', async () => {
+    mockHotSectorList.mockResolvedValue([])
+    mockValuePitList.mockResolvedValue([])
+    mockSignalsList.mockResolvedValue([])
+
+    initDualStrategyStoreSubscriptions()
+    const hotCb = capturedCallbacks.get('hotSectorScores')
+    expect(hotCb).toBeDefined()
+
+    // 被过滤的 source 不应触发 refresh
+    hotCb!({
+      meta: { source: 'analyzer', action: 'SAVE', traceId: 't1' },
+      payload: {},
+    })
+
+    await new Promise((r) => setTimeout(r, 150))
+    expect(mockHotSectorList).not.toHaveBeenCalled()
+
+    // 合法的 source 应该触发 refresh
+    hotCb!({
+      meta: { source: 'external', action: 'SAVE', traceId: 't2' },
+      payload: {},
+    })
+
+    await new Promise((r) => setTimeout(r, 150))
+    expect(mockHotSectorList).toHaveBeenCalled()
+  })
+
+  it('去抖 100ms', async () => {
+    mockHotSectorList.mockResolvedValue([])
+    mockValuePitList.mockResolvedValue([])
+    mockSignalsList.mockResolvedValue([])
+
+    initDualStrategyStoreSubscriptions()
+    const hotCb = capturedCallbacks.get('hotSectorScores')!
+
+    // 连续触发多次
+    hotCb({ meta: { source: 'external', action: 'SAVE', traceId: 't1' }, payload: {} })
+    hotCb({ meta: { source: 'external', action: 'SAVE', traceId: 't2' }, payload: {} })
+    hotCb({ meta: { source: 'external', action: 'SAVE', traceId: 't3' }, payload: {} })
+
+    // 50ms 内不应触发
+    await new Promise((r) => setTimeout(r, 50))
+    expect(mockHotSectorList).not.toHaveBeenCalled()
+
+    // 150ms 后应只触发一次
+    await new Promise((r) => setTimeout(r, 150))
+    expect(mockHotSectorList).toHaveBeenCalledTimes(1)
+  })
+
+  it('重复调用不重复订阅', () => {
+    initDualStrategyStoreSubscriptions()
+    expect(mockSubscribe).toHaveBeenCalledTimes(5)
+
+    // 第二次调用应该跳过
+    initDualStrategyStoreSubscriptions()
+    expect(mockSubscribe).toHaveBeenCalledTimes(5)
+  })
+
+  it('返回 cleanup', () => {
+    const cleanup = initDualStrategyStoreSubscriptions()
+    expect(typeof cleanup).toBe('function')
+
+    cleanup()
+
+    // cleanup 后再次初始化应该能重新订阅
+    const cleanup2 = initDualStrategyStoreSubscriptions()
+    expect(mockSubscribe).toHaveBeenCalledTimes(10) // 2 次初始化 × 5 个频道
+    expect(typeof cleanup2).toBe('function')
+
+    cleanup2()
+  })
+
+  it('cleanup 清除所有订阅和定时器', async () => {
+    mockHotSectorList.mockResolvedValue([])
+    mockValuePitList.mockResolvedValue([])
+    mockSignalsList.mockResolvedValue([])
+
+    const cleanup = initDualStrategyStoreSubscriptions()
+    const hotCb = capturedCallbacks.get('hotSectorScores')!
+
+    // 触发一个事件，启动去抖定时器
+    hotCb({ meta: { source: 'external', action: 'SAVE', traceId: 't1' }, payload: {} })
+
+    // 立刻 cleanup
+    cleanup()
+
+    // 等待超过去抖时间，验证没有触发 refresh
+    await new Promise((r) => setTimeout(r, 150))
+    expect(mockHotSectorList).not.toHaveBeenCalled()
+
+    // 验证所有 unsubscribe 被调用
+    expect(unsubscribes.length).toBe(5)
+    unsubscribes.forEach((unsub) => {
+      expect(unsub).toHaveBeenCalled()
+    })
+  })
+})

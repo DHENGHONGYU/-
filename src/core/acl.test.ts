@@ -1,0 +1,212 @@
+import { describe, it, expect, beforeEach } from 'vitest'
+import { inferOperation, AclError, AclEngine } from './acl'
+import {
+  DB_OPERATION,
+  MODULE_ID,
+  STORE_NAME,
+} from '@/config/dbConfig'
+
+// ──────────────────────────────────────────────
+// inferOperation
+// ──────────────────────────────────────────────
+describe('inferOperation', () => {
+  it('将包含 INSERT 的 action 映射为 insert', () => {
+    expect(inferOperation('INSERT_STOCK')).toBe(DB_OPERATION.insert)
+  })
+
+  it('将包含 SAVE 的 action 映射为 insert', () => {
+    expect(inferOperation('SAVE_SCORES')).toBe(DB_OPERATION.insert)
+  })
+
+  it('将包含 INGEST 的 action 映射为 insert', () => {
+    expect(inferOperation('INGEST_DATA')).toBe(DB_OPERATION.insert)
+  })
+
+  it('将包含 UPDATE 的 action 映射为 update', () => {
+    expect(inferOperation('UPDATE_STOCK')).toBe(DB_OPERATION.update)
+  })
+
+  it('将包含 DELETE 的 action 映射为 delete', () => {
+    expect(inferOperation('DELETE_STOCK')).toBe(DB_OPERATION.delete)
+  })
+
+  it('将包含 CLEAR 的 action 映射为 delete', () => {
+    expect(inferOperation('CLEAR_CACHE')).toBe(DB_OPERATION.delete)
+  })
+
+  it('将其他 action 默认映射为 select', () => {
+    expect(inferOperation('QUERY_DATA')).toBe(DB_OPERATION.select)
+  })
+})
+
+// ──────────────────────────────────────────────
+// AclError
+// ──────────────────────────────────────────────
+describe('AclError', () => {
+  it('继承自 Error', () => {
+    const err = new AclError('test')
+    expect(err).toBeInstanceOf(Error)
+    expect(err).toBeInstanceOf(AclError)
+  })
+
+  it('name 属性为 AclError', () => {
+    const err = new AclError('test')
+    expect(err.name).toBe('AclError')
+  })
+
+  it('message 属性正确', () => {
+    const err = new AclError('module not found')
+    expect(err.message).toBe('module not found')
+  })
+})
+
+// ──────────────────────────────────────────────
+// AclEngine.assert
+// ──────────────────────────────────────────────
+describe('AclEngine', () => {
+  let engine: AclEngine
+
+  beforeEach(() => {
+    engine = new AclEngine()
+  })
+
+  it('权限通过时不应抛出异常', () => {
+    // stockpool 模块: actions = [INSERT, UPDATE, DELETE], write.stocks
+    expect(() =>
+      engine.assert({
+        module: MODULE_ID.stockpool,
+        store: STORE_NAME.stocks,
+        operation: DB_OPERATION.insert,
+      }),
+    ).not.toThrow()
+  })
+
+  it('未注册模块应抛出 AclError', () => {
+    expect(() =>
+      engine.assert({
+        module: 'unknown_module' as any,
+        store: STORE_NAME.stocks,
+        operation: DB_OPERATION.select,
+      }),
+    ).toThrow(AclError)
+  })
+
+  it('操作不允许时应抛出 AclError', () => {
+    // fetcher 模块: actions = [INSERT, UPDATE]，不允许 SELECT
+    expect(() =>
+      engine.assert({
+        module: MODULE_ID.fetcher,
+        store: STORE_NAME.stocks,
+        operation: DB_OPERATION.select,
+      }),
+    ).toThrow(AclError)
+  })
+
+  it('store 不允许时应抛出 AclError', () => {
+    // stockpool 模块: write = [stocks]，不允许写 orders
+    expect(() =>
+      engine.assert({
+        module: MODULE_ID.stockpool,
+        store: STORE_NAME.orders,
+        operation: DB_OPERATION.insert,
+      }),
+    ).toThrow(AclError)
+  })
+
+  it('SELECT 操作检查 read 列表', () => {
+    // fetcher 模块: read = [], SELECT 不应在 read 中的 store 通过
+    expect(() =>
+      engine.assert({
+        module: MODULE_ID.fetcher,
+        store: STORE_NAME.stocks,
+        operation: DB_OPERATION.select,
+      }),
+    ).toThrow(AclError)
+  })
+
+  it('AclError 包含正确的错误信息', () => {
+    try {
+      engine.assert({
+        module: 'nonexistent' as any,
+        store: STORE_NAME.stocks,
+        operation: DB_OPERATION.select,
+      })
+      expect.unreachable('should have thrown')
+    } catch (err) {
+      expect(err).toBeInstanceOf(AclError)
+      expect((err as AclError).message).toContain('nonexistent')
+    }
+  })
+
+  describe('system 模块权限遵循最小权限原则', () => {
+    it('对 stocks 有 SELECT 权限（系统操作入口检查）', () => {
+      expect(() =>
+        engine.assert({
+          module: MODULE_ID.system,
+          store: STORE_NAME.stocks,
+          operation: DB_OPERATION.select,
+        }),
+      ).not.toThrow()
+    })
+
+    it('对 localDocs 有 INSERT 权限（本地文档管理）', () => {
+      expect(() =>
+        engine.assert({
+          module: MODULE_ID.system,
+          store: STORE_NAME.localDocs,
+          operation: DB_OPERATION.insert,
+        }),
+      ).not.toThrow()
+    })
+
+    it('对 researchLogs 有 INSERT 权限（迁移审计日志）', () => {
+      expect(() =>
+        engine.assert({
+          module: MODULE_ID.system,
+          store: STORE_NAME.researchLogs,
+          operation: DB_OPERATION.insert,
+        }),
+      ).not.toThrow()
+    })
+
+    it('对 orders 没有 WRITE 权限（敏感业务数据）', () => {
+      expect(() =>
+        engine.assert({
+          module: MODULE_ID.system,
+          store: STORE_NAME.orders,
+          operation: DB_OPERATION.insert,
+        }),
+      ).toThrow(AclError)
+    })
+
+    it('没有 DELETE 操作权限', () => {
+      expect(() =>
+        engine.assert({
+          module: MODULE_ID.system,
+          store: STORE_NAME.localDocs,
+          operation: DB_OPERATION.delete,
+        }),
+      ).toThrow(AclError)
+    })
+
+    it('对 executionPlans 有 UPDATE 权限（执行计划跟踪）', () => {
+      expect(() =>
+        engine.assert({
+          module: MODULE_ID.system,
+          store: STORE_NAME.executionPlans,
+          operation: DB_OPERATION.update,
+        }),
+      ).not.toThrow()
+    })
+
+    it('对 localDocs 有 UPDATE 权限（执行计划跟踪）', () => {
+      expect(() =>
+        engine.assert({
+          module: MODULE_ID.system,
+          store: STORE_NAME.localDocs,
+          operation: DB_OPERATION.update,
+        }),
+      ).not.toThrow()
+    })
+  })
+})

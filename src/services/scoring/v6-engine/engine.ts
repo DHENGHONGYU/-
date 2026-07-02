@@ -1,0 +1,262 @@
+/**
+ * V6 评分引擎核心
+ *
+ * 设计原则：
+ * - 零硬编码：所有阈值/权重/公式参数从 config 注入
+ * - Backtestable：注入历史行情数据 → 输出历史评分
+ * - OfflineMode：完全脱离网络运行（规则引擎层）
+ * - AuditTrail：每层评分的完整审计链路
+ */
+
+import { getLogger } from '@/lib/logger'
+import type {
+  LayerId, LayerInput, LayerScore, CompositeScore, ScoreAuditTrail,
+  AuditEntry, V6ScoreInput, LayerCalculator,
+} from './types'
+import { ALL_LAYER_IDS, LAYER_LABELS } from './types'
+import { buildFactorContributions } from './factorContributions'
+import type { V6ScoreEngineConfig, V6ScoreConfigOverride } from './config'
+import { DEFAULT_ENGINE_CONFIG } from './config'
+
+const logger = getLogger()
+const ENGINE_VERSION = 'v6-engine-v1.0.0'
+
+// ============================================================
+// V6ScoreEngine
+// ============================================================
+
+export class V6ScoreEngine {
+  private config: V6ScoreEngineConfig
+  private calculators: Map<LayerId, LayerCalculator> = new Map()
+  private auditTrail: ScoreAuditTrail | null = null
+
+  constructor(override?: V6ScoreConfigOverride) {
+    this.config = { ...DEFAULT_ENGINE_CONFIG, ...override }
+    logger.info(`[V6ScoreEngine] Initialized v${ENGINE_VERSION}, offlineMode=${this.config.offlineMode}`)
+  }
+
+  /** 注册层计算器 */
+  registerCalculator(calculator: LayerCalculator): this {
+    this.calculators.set(calculator.layerId, calculator)
+    return this
+  }
+
+  /** 批量注册计算器 */
+  registerCalculators(calculators: LayerCalculator[]): this {
+    for (const calc of calculators) {
+      this.calculators.set(calc.layerId, calc)
+    }
+    return this
+  }
+
+  /** 获取当前配置 */
+  getConfig(): V6ScoreEngineConfig {
+    return { ...this.config }
+  }
+
+  /** 更新配置 */
+  updateConfig(override: V6ScoreConfigOverride): void {
+    this.config = { ...this.config, ...override }
+  }
+
+  // ============================================================
+  // 核心计算流程
+  // ============================================================
+
+  /** 计算单层得分 */
+  async calculateLayer(layerId: LayerId, input: LayerInput): Promise<LayerScore> {
+    const calculator = this.calculators.get(layerId)
+    if (!calculator) {
+      logger.warn(`[V6ScoreEngine] No calculator registered for ${layerId}, returning placeholder`)
+      return this.placeholderLayer(layerId, input)
+    }
+
+    const audit: AuditEntry[] = []
+
+    if (this.config.auditEnabled) {
+      audit.push({
+        timestamp: Date.now(),
+        layerId,
+        step: 'start',
+        input: { symbol: input.stock.symbol, hasIndustryScore: input.industryScore !== undefined },
+        output: {},
+      })
+    }
+
+    try {
+      const result = await calculator.calculate(input)
+
+      if (this.config.auditEnabled) {
+        audit.push({
+          timestamp: Date.now(),
+          layerId,
+          step: 'complete',
+          input: { score: result.score },
+          output: { score: result.score, summary: result.summary },
+          formula: `calculator.${layerId}.calculate()`,
+        })
+      }
+
+      return {
+        ...result,
+        auditTrail: audit.length > 0 ? audit : undefined,
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err)
+      logger.error(`[V6ScoreEngine] ${layerId} calculation failed: ${msg}`)
+
+      if (this.config.auditEnabled) {
+        audit.push({
+          timestamp: Date.now(),
+          layerId,
+          step: 'error',
+          input: {},
+          output: { error: msg },
+        })
+      }
+
+      return this.placeholderLayer(layerId, input)
+    }
+  }
+
+  /** 计算所有层返回综合评分 */
+  async calculateAll(input: V6ScoreInput): Promise<CompositeScore> {
+    const layerInput: LayerInput = {
+      ...input,
+      config: this.config,
+    }
+
+    const layerResults: Record<string, LayerScore> = {}
+    const allRisks: string[] = []
+
+    if (this.config.auditEnabled) {
+      this.auditTrail = {
+        symbol: input.symbol,
+        timestamp: Date.now(),
+        config: this.config,
+        layers: {} as Record<LayerId, AuditEntry[]>,
+        composite: { weightedSum: 0, layers: {} as Record<LayerId, number>, rating: '' },
+        factorContributions: [],
+      }
+    }
+
+    for (const layerId of ALL_LAYER_IDS) {
+      const result = await this.calculateLayer(layerId, layerInput)
+      layerResults[layerId] = result
+      allRisks.push(...result.risks)
+
+      if (this.auditTrail && result.auditTrail) {
+        this.auditTrail.layers[layerId] = result.auditTrail
+      }
+    }
+
+    return this.aggregate(layerResults as Record<LayerId, LayerScore>, allRisks)
+  }
+
+  /** 聚合各层得分为综合评分 */
+  aggregate(layers: Record<LayerId, LayerScore>, allRisks: string[]): CompositeScore {
+    let weightedSum = 0
+    let totalWeight = 0
+
+    const { weights, thresholds } = this.config
+
+    const weightMap: Record<LayerId, number> = {
+      lMinus1: weights.lMinus1, l0: weights.l0, l1: weights.l1, l2: weights.l2,
+      l3f: weights.l3f, l3v: weights.l3v, l4: weights.l4, l5: weights.l5,
+      l6: weights.l6, l7: weights.l7, l8: weights.l8,
+    }
+
+    for (const layerId of ALL_LAYER_IDS) {
+      const layer = layers[layerId]
+      if (layer) {
+        const w = weightMap[layerId]
+        weightedSum += layer.score * w
+        totalWeight += w
+      }
+    }
+
+    // 归一化
+    const normalizedScore = totalWeight > 0
+      ? Math.max(0, Math.min(5, (weightedSum / totalWeight)))
+      : 0
+
+    const rating = this.mapRating(normalizedScore, thresholds)
+    const recommendation = this.generateRecommendation(rating, allRisks)
+
+    const result: CompositeScore = {
+      score: Math.round(normalizedScore * 100) / 100,
+      rating,
+      layers,
+      allRisks,
+      recommendation,
+      timestamp: Date.now(),
+      engineVersion: ENGINE_VERSION,
+    }
+
+    if (this.auditTrail) {
+      this.auditTrail.composite = {
+        weightedSum: Math.round(weightedSum * 100) / 100,
+        layers: ALL_LAYER_IDS.reduce((acc, id) => {
+          acc[id] = layers[id]?.score ?? 0
+          return acc
+        }, {} as Record<LayerId, number>),
+        rating,
+      }
+      this.auditTrail.factorContributions = buildFactorContributions(this.auditTrail)
+    }
+
+    return result
+  }
+
+  /** 获取审计追踪 */
+  audit(): ScoreAuditTrail | null {
+    return this.auditTrail
+  }
+
+  // ============================================================
+  // 辅助方法
+  // ============================================================
+
+  private placeholderLayer(layerId: LayerId, _input: LayerInput): LayerScore {
+    const w = this.config.weights
+    const weightMap: Record<LayerId, number> = {
+      lMinus1: w.lMinus1, l0: w.l0, l1: w.l1, l2: w.l2,
+      l3f: w.l3f, l3v: w.l3v, l4: w.l4, l5: w.l5,
+      l6: w.l6, l7: w.l7, l8: w.l8,
+    }
+    const weight = weightMap[layerId]
+
+    return {
+      layerId,
+      layerName: LAYER_LABELS[layerId],
+      score: 0,
+      summary: `[未注册计算器] ${LAYER_LABELS[layerId]} 层无可用计算器`,
+      risks: [],
+      evidence: [],
+      weight,
+      weightedScore: 0,
+      dataSources: [],
+    }
+  }
+
+  private mapRating(score: number, thresholds: V6ScoreEngineConfig['thresholds']): CompositeScore['rating'] {
+    const { rating } = thresholds
+    if (score >= rating.strongBuy) return 'strong_buy'
+    if (score >= rating.buy) return 'buy'
+    if (score >= rating.hold) return 'hold'
+    if (score >= rating.sell) return 'sell'
+    return 'strong_sell'
+  }
+
+  private generateRecommendation(rating: CompositeScore['rating'], risks: string[]): string {
+    const base: Record<CompositeScore['rating'], string> = {
+      strong_buy: '综合评分优秀，建议积极配置。',
+      buy: '综合评分良好，建议关注买入机会。',
+      hold: '综合评分中等，建议持有观望。',
+      sell: '综合评分偏弱，建议减仓。',
+      strong_sell: '综合评分较差，建议回避。',
+    }
+    const riskNote = risks.length > 0 ? ` 需关注风险：${risks.slice(0, 3).join('；')}` : ''
+    return (base[rating] ?? '') + riskNote
+  }
+}

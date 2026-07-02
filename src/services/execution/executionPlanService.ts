@@ -1,0 +1,238 @@
+/**
+ * @module executionPlanService
+ * @description 执行计划服务：基于交易信号创建执行计划，管理阶段流转与取消。
+ *
+ * 职责：
+ *   - createPlan(signal): 基于信号创建执行计划
+ *   - listPlans(symbol?): 查询执行计划列表
+ *   - updatePhase(planId, nextPhase): 按状态机推进阶段
+ *   - cancelPlan(planId): 取消执行计划
+ *
+ * 依赖：dataLayer.executionPlans / dataLayer.executionLogs / dataFreshnessGuard
+ */
+
+import { getLogger } from '@/lib/logger'
+import { executionPlanStore } from '@/data/dataLayer'
+import type { ExecutionPlan, Signal } from '@/data/types'
+import {
+  EXECUTION_PHASE,
+  PHASE_TRANSITIONS,
+  PHASE_LOG_ACTION,
+  DEFAULT_CONFIDENCE_THRESHOLD,
+  DEFAULT_MAX_POSITION_PCT,
+  DEFAULT_ACCOUNT_TYPE,
+} from '@/constants/execution.constants'
+import { checkExecutionPlanFreshness } from '@/services/analysis/dataFreshnessGuard'
+import { executionLogService } from './executionLogService'
+
+const logger = getLogger()
+
+export interface CreatePlanOptions {
+  now?: number
+  confidenceThreshold?: number
+  maxPositionPct?: number
+  accountType?: ExecutionPlan['accountType']
+}
+
+export interface UpdatePhaseOptions {
+  now?: number
+  actor?: string
+}
+
+/**
+ * 基于交易信号创建执行计划。
+ * 当信号置信度低于阈值时返回 undefined。
+ */
+export async function createPlan(signal: Signal, options: CreatePlanOptions = {}): Promise<ExecutionPlan | undefined> {
+  const now = options.now ?? Date.now()
+  const confidenceThreshold = options.confidenceThreshold ?? DEFAULT_CONFIDENCE_THRESHOLD
+  const maxPositionPct = options.maxPositionPct ?? DEFAULT_MAX_POSITION_PCT
+  const accountType = options.accountType ?? DEFAULT_ACCOUNT_TYPE as ExecutionPlan['accountType']
+
+  try {
+    if (signal.confidence < confidenceThreshold) {
+      logger.info(
+        `[executionPlanService] createPlan skipped: signal confidence ${signal.confidence} < threshold ${confidenceThreshold}`,
+        { symbol: signal.symbol, signalId: signal.id },
+      )
+      return undefined
+    }
+
+    const plan: ExecutionPlan = {
+      id: `plan_${signal.id}_${now}`,
+      signalId: signal.id,
+      symbol: signal.symbol,
+      direction: signal.direction === 'sell' ? 'sell' : 'buy',
+      phase: EXECUTION_PHASE.PLAN,
+      confidence: signal.confidence,
+      sizing: {
+        quantity: 0,
+        positionPct: Math.min(maxPositionPct, signal.confidence),
+        reason: `基于信号 ${signal.id} 自动生成`,
+      },
+      accountType,
+      createdAt: now,
+    }
+
+    // Freshness 校验：执行计划创建时间必须晚于信号创建时间
+    checkExecutionPlanFreshness(plan.createdAt, signal.createdAt, plan.id)
+
+    const result = await executionPlanStore.save(plan)
+    if (!result.success) {
+      logger.error(`[executionPlanService] createPlan save failed: ${result.error}`, { signalId: signal.id })
+      return undefined
+    }
+
+    // 写入创建日志
+    await executionLogService.writeLog(plan, PHASE_LOG_ACTION[EXECUTION_PHASE.PLAN], { now, actor: 'system' })
+
+    logger.info(`[executionPlanService] createPlan success: planId="${plan.id}"`, {
+      symbol: plan.symbol,
+      phase: plan.phase,
+      confidence: plan.confidence,
+    })
+    return plan
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    logger.error(`[executionPlanService] createPlan error: ${message}`, { signalId: signal.id })
+    return undefined
+  }
+}
+
+/**
+ * 查询执行计划列表。
+ * @param symbol 可选，按 symbol 过滤
+ */
+export async function listPlans(symbol?: string): Promise<ExecutionPlan[]> {
+  try {
+    const all = await executionPlanStore.list()
+    if (!symbol) {
+      return all
+    }
+    return all.filter((p) => p.symbol === symbol)
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    logger.error(`[executionPlanService] listPlans error: ${message}`, { symbol })
+    return []
+  }
+}
+
+/**
+ * 按状态机推进执行计划阶段。
+ * 若 nextPhase 不在当前阶段允许的下一个阶段列表中，则拒绝推进。
+ */
+export async function updatePhase(
+  planId: string,
+  nextPhase: ExecutionPlan['phase'],
+  options: UpdatePhaseOptions = {},
+): Promise<ExecutionPlan | undefined> {
+  const now = options.now ?? Date.now()
+  const actor = options.actor ?? 'system'
+
+  try {
+    const plan = await executionPlanStore.get(planId)
+    if (!plan) {
+      logger.warn(`[executionPlanService] updatePhase plan not found: planId="${planId}"`)
+      return undefined
+    }
+
+    const allowed = PHASE_TRANSITIONS[plan.phase]
+    if (!allowed.includes(nextPhase)) {
+      logger.warn(
+        `[executionPlanService] updatePhase rejected: ${plan.phase} → ${nextPhase} not allowed (planId="${planId}")`,
+      )
+      return undefined
+    }
+
+    const updated: ExecutionPlan = { ...plan, phase: nextPhase }
+    if (nextPhase === EXECUTION_PHASE.CONFIRMED) {
+      updated.confirmedAt = now
+    } else if (nextPhase === EXECUTION_PHASE.EXECUTED) {
+      updated.executedAt = now
+    } else if (nextPhase === EXECUTION_PHASE.REVIEWED) {
+      updated.reviewedAt = now
+    }
+
+    const result = await executionPlanStore.update(updated)
+    if (!result.success) {
+      logger.error(`[executionPlanService] updatePhase save failed: ${result.error}`, { planId })
+      return undefined
+    }
+
+    // 写入阶段流转日志
+    await executionLogService.writeLog(updated, PHASE_LOG_ACTION[nextPhase], { now, actor })
+
+    logger.info(`[executionPlanService] updatePhase success: ${plan.phase} → ${nextPhase} (planId="${planId}")`, {
+      actor,
+    })
+    return updated
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    logger.error(`[executionPlanService] updatePhase error: ${message}`, { planId })
+    return undefined
+  }
+}
+
+/**
+ * 取消执行计划。仅当当前阶段允许转移到 cancelled 时才可取消。
+ */
+export async function cancelPlan(planId: string, options: UpdatePhaseOptions = {}): Promise<ExecutionPlan | undefined> {
+  const now = options.now ?? Date.now()
+  const actor = options.actor ?? 'system'
+
+  try {
+    const plan = await executionPlanStore.get(planId)
+    if (!plan) {
+      logger.warn(`[executionPlanService] cancelPlan plan not found: planId="${planId}"`)
+      return undefined
+    }
+
+    const allowed = PHASE_TRANSITIONS[plan.phase]
+    if (!allowed.includes(EXECUTION_PHASE.CANCELLED)) {
+      logger.warn(
+        `[executionPlanService] cancelPlan rejected: ${plan.phase} → cancelled not allowed (planId="${planId}")`,
+      )
+      return undefined
+    }
+
+    const updated: ExecutionPlan = { ...plan, phase: EXECUTION_PHASE.CANCELLED }
+    const result = await executionPlanStore.update(updated)
+    if (!result.success) {
+      logger.error(`[executionPlanService] cancelPlan save failed: ${result.error}`, { planId })
+      return undefined
+    }
+
+    await executionLogService.writeLog(updated, PHASE_LOG_ACTION[EXECUTION_PHASE.CANCELLED], { now, actor })
+
+    logger.info(`[executionPlanService] cancelPlan success: planId="${planId}"`, { actor })
+    return updated
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    logger.error(`[executionPlanService] cancelPlan error: ${message}`, { planId })
+    return undefined
+  }
+}
+
+/**
+ * 查询孤儿执行计划：关联的信号已被删除的计划。
+ */
+export async function getOrphanPlans(): Promise<ExecutionPlan[]> {
+  try {
+    const all = await executionPlanStore.list()
+    // 信号存在性由调用方检查，这里仅返回非终态的计划
+    const terminalPhases: ExecutionPlan['phase'][] = [EXECUTION_PHASE.EXECUTED, EXECUTION_PHASE.CANCELLED, EXECUTION_PHASE.REVIEWED]
+    return all.filter((p) => !terminalPhases.includes(p.phase))
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    logger.error(`[executionPlanService] getOrphanPlans error: ${message}`)
+    return []
+  }
+}
+
+export const executionPlanService = {
+  createPlan,
+  listPlans,
+  updatePhase,
+  cancelPlan,
+  getOrphanPlans,
+}
