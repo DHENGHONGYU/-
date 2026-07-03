@@ -31,8 +31,8 @@ vi.mock('@/components/ui/Select', () => ({
     <option value={value}>{children}</option>
   ),
   SelectContent: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  SelectTrigger: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  SelectValue: ({ placeholder }: { placeholder?: string }) => <span>{placeholder}</span>,
+  SelectTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  SelectValue: (_props: { placeholder?: string }) => null,
 }))
 
 // 延迟导入被测组件
