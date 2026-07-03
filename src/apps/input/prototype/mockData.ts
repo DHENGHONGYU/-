@@ -1,3 +1,5 @@
+import { SECTOR_FACTOR_COLORS } from '@/config/chartColors'
+
 export interface MockStock {
   symbol: string
   name: string
@@ -124,11 +126,11 @@ export const mockSectors: MockSector[] = [
     total: 82,
     trend: 'up',
     factors: [
-      { name: '景气', value: 34, max: 40, color: '#2E5C8A' },
-      { name: '资金', value: 26, max: 30, color: '#6B5B8E' },
-      { name: '估值', value: 12, max: 20, color: '#06A77D' },
-      { name: 'β', value: 7, max: 10, color: '#C73E3A' },
-      { name: '量能', value: 3, max: 10, color: '#D4A017' },
+      { name: '景气', value: 34, max: 40, color: SECTOR_FACTOR_COLORS.JINGQI },
+      { name: '资金', value: 26, max: 30, color: SECTOR_FACTOR_COLORS.ZIJIN },
+      { name: '估值', value: 12, max: 20, color: SECTOR_FACTOR_COLORS.GUZHI },
+      { name: 'β', value: 7, max: 10, color: SECTOR_FACTOR_COLORS.BETA },
+      { name: '量能', value: 3, max: 10, color: SECTOR_FACTOR_COLORS.NENGLIANG },
     ],
     stocks: [
       { symbol: '600519.SH', name: '贵州茅台', price: 1688.0, change: 1.25, added: false },
@@ -143,11 +145,11 @@ export const mockSectors: MockSector[] = [
     total: 76,
     trend: 'up',
     factors: [
-      { name: '景气', value: 30, max: 40, color: '#2E5C8A' },
-      { name: '资金', value: 22, max: 30, color: '#6B5B8E' },
-      { name: '估值', value: 14, max: 20, color: '#06A77D' },
-      { name: 'β', value: 6, max: 10, color: '#C73E3A' },
-      { name: '量能', value: 4, max: 10, color: '#D4A017' },
+      { name: '景气', value: 30, max: 40, color: SECTOR_FACTOR_COLORS.JINGQI },
+      { name: '资金', value: 22, max: 30, color: SECTOR_FACTOR_COLORS.ZIJIN },
+      { name: '估值', value: 14, max: 20, color: SECTOR_FACTOR_COLORS.GUZHI },
+      { name: 'β', value: 6, max: 10, color: SECTOR_FACTOR_COLORS.BETA },
+      { name: '量能', value: 4, max: 10, color: SECTOR_FACTOR_COLORS.NENGLIANG },
     ],
     stocks: [
       { symbol: '300750.SZ', name: '宁德时代', price: 198.5, change: 2.14, added: false },
@@ -161,11 +163,11 @@ export const mockSectors: MockSector[] = [
     total: 58,
     trend: 'neutral',
     factors: [
-      { name: '景气', value: 18, max: 40, color: '#2E5C8A' },
-      { name: '资金', value: 15, max: 30, color: '#6B5B8E' },
-      { name: '估值', value: 18, max: 20, color: '#06A77D' },
-      { name: 'β', value: 4, max: 10, color: '#C73E3A' },
-      { name: '量能', value: 3, max: 10, color: '#D4A017' },
+      { name: '景气', value: 18, max: 40, color: SECTOR_FACTOR_COLORS.JINGQI },
+      { name: '资金', value: 15, max: 30, color: SECTOR_FACTOR_COLORS.ZIJIN },
+      { name: '估值', value: 18, max: 20, color: SECTOR_FACTOR_COLORS.GUZHI },
+      { name: 'β', value: 4, max: 10, color: SECTOR_FACTOR_COLORS.BETA },
+      { name: '量能', value: 3, max: 10, color: SECTOR_FACTOR_COLORS.NENGLIANG },
     ],
     stocks: [
       { symbol: '000001.SZ', name: '平安银行', price: 11.35, change: -0.82, added: true },

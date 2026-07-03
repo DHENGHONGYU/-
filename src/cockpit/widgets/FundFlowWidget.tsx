@@ -3,6 +3,7 @@ import { ArrowUpCircle, ArrowDownCircle } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import type { WidgetConfig } from '@/types/modules/widget.types'
 import { MockMarketDataProvider, type FundFlow } from '@/cockpit/data/mockDataProvider'
+import { STOCK_COLOR_MAPPING } from '@/constants/cockpit.constants'
 
 interface FundFlowWidgetProps {
   config: WidgetConfig
@@ -24,13 +25,14 @@ export default function FundFlowWidget({ config }: FundFlowWidgetProps): React.J
     fetchData()
   }, [])
 
+  // 资金流向图标色（A股惯例：北向资金流入=红涨，流出=绿跌；主力资金=info 蓝）
   const getIcon = (type: FundFlow['type'], value: number) => {
     if (value > 0) {
       switch (type) {
         case 'main':
           return <ArrowUpCircle className="h-6 w-6 text-blue-500" />
         case 'north':
-          return <ArrowUpCircle className="h-6 w-6 text-red-500" />
+          return <ArrowUpCircle className={`h-6 w-6 ${STOCK_COLOR_MAPPING.UP_CLASS}`} />
         default:
           return <ArrowDownCircle className="h-6 w-6 text-gray-500" />
       }
@@ -39,14 +41,15 @@ export default function FundFlowWidget({ config }: FundFlowWidgetProps): React.J
       case 'main':
         return <ArrowDownCircle className="h-6 w-6 text-blue-500" />
       case 'north':
-        return <ArrowDownCircle className="h-6 w-6 text-red-500" />
+        return <ArrowDownCircle className={`h-6 w-6 ${STOCK_COLOR_MAPPING.DOWN_CLASS}`} />
       default:
         return <ArrowUpCircle className="h-6 w-6 text-gray-500" />
     }
   }
 
+  // 资金流向数值色（A股惯例：净流入=红，净流出=绿）
   const getValueColor = (value: number) => {
-    return value >= 0 ? 'text-green-500' : 'text-red-500'
+    return value >= 0 ? STOCK_COLOR_MAPPING.UP_CLASS : STOCK_COLOR_MAPPING.DOWN_CLASS
   }
 
   if (loading) {

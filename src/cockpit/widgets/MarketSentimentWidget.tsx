@@ -72,7 +72,8 @@ export default function MarketSentimentWidget({ config }: MarketSentimentWidgetP
             <span className="text-sm text-gray-500">恐慌贪婪指数</span>
             <div className="flex items-center gap-2 mt-1">
               <span className="text-2xl font-bold">{sentiment.fearGreedIndex}</span>
-              <span className={`px-2 py-0.5 rounded text-xs font-medium ${sentiment.fearGreedIndex > 50 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+              {/* 恐慌贪婪指数标签色（A股惯例：贪婪=看涨=红，恐慌=看跌=绿；语义对应 COLOR_TOKENS.up/down） */}
+              <span className={`px-2 py-0.5 rounded text-xs font-medium ${sentiment.fearGreedIndex > 50 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
                 {sentiment.fearGreedLabel}
               </span>
             </div>

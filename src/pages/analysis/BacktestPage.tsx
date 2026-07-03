@@ -9,12 +9,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs'
 import { Download, RotateCcw, Play, BarChart3, TrendingUp, AlertCircle, Info } from 'lucide-react'
 import { useBacktestStore, type BacktestStrategy } from '@/store/backtestStore'
-
-const STRATEGY_LABELS: Record<BacktestStrategy, string> = {
-  hot_sector: '热门板块策略',
-  value_pit: '价值洼地策略',
-  composite: '复合策略',
-}
+import { STOCK_COLOR_MAPPING } from '@/constants/cockpit.constants'
+import { COLOR_TOKENS, CHART_PALETTE } from '@/constants/theme.tokens'
 
 export default function BacktestPage(): React.JSX.Element {
   const { config, results, loading, error, setConfig, runBacktest, clearResults, exportReport } =
@@ -37,8 +33,8 @@ export default function BacktestPage(): React.JSX.Element {
 
   const metrics = results
     ? [
-        { label: '总收益率', value: `${results.totalReturn.toFixed(2)}%`, color: results.totalReturn >= 0 ? 'text-green-500' : 'text-red-500' },
-        { label: '年化收益率', value: `${results.annualizedReturn.toFixed(2)}%`, color: results.annualizedReturn >= 0 ? 'text-green-500' : 'text-red-500' },
+        { label: '总收益率', value: `${results.totalReturn.toFixed(2)}%`, color: results.totalReturn >= 0 ? STOCK_COLOR_MAPPING.UP_CLASS : STOCK_COLOR_MAPPING.DOWN_CLASS },
+        { label: '年化收益率', value: `${results.annualizedReturn.toFixed(2)}%`, color: results.annualizedReturn >= 0 ? STOCK_COLOR_MAPPING.UP_CLASS : STOCK_COLOR_MAPPING.DOWN_CLASS },
         { label: '最大回撤', value: `${results.maxDrawdown.toFixed(2)}%`, color: 'text-red-500' },
         { label: '夏普比率', value: results.sharpeRatio.toFixed(2), color: results.sharpeRatio >= 1 ? 'text-green-500' : results.sharpeRatio >= 0 ? 'text-yellow-500' : 'text-red-500' },
         { label: '胜率', value: `${results.winRate.toFixed(2)}%`, color: results.winRate >= 50 ? 'text-green-500' : 'text-red-500' },
@@ -201,7 +197,7 @@ export default function BacktestPage(): React.JSX.Element {
                           })
                           .join(' ')}
                         fill="none"
-                        stroke="#22c55e"
+                        stroke={COLOR_TOKENS.success.hex}
                         strokeWidth="2"
                       />
                       <path
@@ -214,7 +210,7 @@ export default function BacktestPage(): React.JSX.Element {
                           .join(' ')} L ${results.pnlCurve.length - 1} 100 L 0 100 Z`}
                         fill="url(#pnlGradient)"
                       />
-                      <line x1="0" y1="50" x2={results.pnlCurve.length - 1} y2="50" stroke="#e5e7eb" strokeWidth="1" strokeDasharray="4" />
+                      <line x1="0" y1="50" x2={results.pnlCurve.length - 1} y2="50" stroke={CHART_PALETTE.grid} strokeWidth="1" strokeDasharray="4" />
                     </svg>
                     <div className="flex items-center justify-between mt-2 text-xs text-muted-foreground">
                       <span>基准线 (1.0)</span>
@@ -248,16 +244,17 @@ export default function BacktestPage(): React.JSX.Element {
                         <TableCell>{trade.date}</TableCell>
                         <TableCell className="font-medium">{trade.symbol}</TableCell>
                         <TableCell>
-                          <Badge className={trade.direction === 'buy' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}>
+                          {/* 交易方向标签色（A股惯例：买入=红涨，卖出=绿跌） */}
+                          <Badge className={trade.direction === 'buy' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}>
                             {trade.direction === 'buy' ? '买入' : '卖出'}
                           </Badge>
                         </TableCell>
                         <TableCell>{trade.price.toFixed(2)}</TableCell>
                         <TableCell>{trade.quantity}</TableCell>
-                        <TableCell className={trade.pnl >= 0 ? 'text-green-500' : 'text-red-500'}>
+                        <TableCell className={trade.pnl >= 0 ? STOCK_COLOR_MAPPING.UP_CLASS : STOCK_COLOR_MAPPING.DOWN_CLASS}>
                           {trade.pnl >= 0 ? '+' : ''}{trade.pnl.toFixed(2)}
                         </TableCell>
-                        <TableCell className={trade.pnlPct >= 0 ? 'text-green-500' : 'text-red-500'}>
+                        <TableCell className={trade.pnlPct >= 0 ? STOCK_COLOR_MAPPING.UP_CLASS : STOCK_COLOR_MAPPING.DOWN_CLASS}>
                           {trade.pnlPct >= 0 ? '+' : ''}{trade.pnlPct.toFixed(2)}%
                         </TableCell>
                         <TableCell className="text-muted-foreground text-sm">{trade.reason}</TableCell>
@@ -292,7 +289,7 @@ export default function BacktestPage(): React.JSX.Element {
                           <TableCell>{pos.avgCost.toFixed(2)}</TableCell>
                           <TableCell>{pos.currentPrice.toFixed(2)}</TableCell>
                           <TableCell>{pos.marketValue.toFixed(2)}</TableCell>
-                          <TableCell className={pos.unrealizedPnL >= 0 ? 'text-green-500' : 'text-red-500'}>
+                          <TableCell className={pos.unrealizedPnL >= 0 ? STOCK_COLOR_MAPPING.UP_CLASS : STOCK_COLOR_MAPPING.DOWN_CLASS}>
                             {pos.unrealizedPnL >= 0 ? '+' : ''}{pos.unrealizedPnL.toFixed(2)}
                           </TableCell>
                         </TableRow>
