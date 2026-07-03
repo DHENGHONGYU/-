@@ -43,8 +43,9 @@ jobs:
         run: |
           echo "============================================================"
           echo "踩坑规则门禁检查（规则 #11-#14）"
+          echo "检查范围: python/ + scripts/"
           echo "============================================================"
-          python scripts/pitfall_check.py python/ || {
+          python scripts/pitfall_check.py python/ scripts/ || {
             echo ""
             echo "❌ 踩坑规则检查未通过，阻止 CI/CD 流水线"
             exit 1
