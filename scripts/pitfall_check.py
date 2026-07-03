@@ -366,6 +366,14 @@ def check_file(path: Path, result: CheckResult) -> None:
     if not path.exists():
         return
 
+    # 跳过自身文件，避免自指误报
+    # 原因：filter_code_lines 的 docstring 检测会被本脚本代码中的
+    # 字符串字面量 '"""' (第121行) 误判为 docstring 开始，导致状态错乱，
+    # 使后续真正的 docstring 内容（含 "第3层" 等关键词）被错误保留。
+    # 排除自身是最稳妥的方案，门禁脚本本身不需要被自己检查。
+    if path.name == "pitfall_check.py":
+        return
+
     # 只检查 Python 和 JS/TS 文件
     if not (is_python_file(path) or is_js_ts_file(path)):
         return
