@@ -34,6 +34,22 @@ jobs:
       - name: ESLint check
         run: npm run lint
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Pitfall rules check
+        run: |
+          echo "============================================================"
+          echo "踩坑规则门禁检查（规则 #11-#14）"
+          echo "============================================================"
+          python scripts/pitfall_check.py python/ || {
+            echo ""
+            echo "❌ 踩坑规则检查未通过，阻止 CI/CD 流水线"
+            exit 1
+          }
+
       - name: Unit tests
         run: npm run test
 

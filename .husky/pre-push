@@ -1,0 +1,2 @@
+npm run verify:no-dead-refs
+npm run build
