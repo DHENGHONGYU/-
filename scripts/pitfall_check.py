@@ -34,6 +34,24 @@ from typing import Optional
 
 
 # ============================================================
+# 日志控制（通过环境变量 PITFALL_VERBOSE=1 开启详细日志）
+# ============================================================
+VERBOSE = os.environ.get("PITFALL_VERBOSE", "") in ("1", "true", "yes")
+
+
+def log_debug(msg: str) -> None:
+    """DEBUG 级别日志，输出到 stderr（仅在 VERBOSE 模式下输出）"""
+    if VERBOSE:
+        print(f"  [DEBUG] {msg}", file=sys.stderr)
+
+
+def log_info(msg: str) -> None:
+    """INFO 级别日志，输出到 stderr（仅在 VERBOSE 模式下输出）"""
+    if VERBOSE:
+        print(f"  [INFO] {msg}", file=sys.stderr)
+
+
+# ============================================================
 # 数据结构
 # ============================================================
 
@@ -108,12 +126,16 @@ def filter_code_lines(lines: list[str]) -> list[tuple[int, str]]:
     result = []
     in_docstring = False
     docstring_marker = None
+    skipped_lines: list[int] = []  # 被过滤的行号（用于日志）
+
+    log_debug(f"filter_code_lines: 输入 {len(lines)} 行")
 
     for i, line in enumerate(lines, 1):
         stripped = line.strip()
 
         # 跳过注释和空行
         if stripped.startswith("#") or not stripped:
+            skipped_lines.append(i)
             continue
 
         # docstring 状态跟踪
@@ -122,10 +144,14 @@ def filter_code_lines(lines: list[str]) -> list[tuple[int, str]]:
                 if marker in line:
                     if line.count(marker) >= 2:
                         # 单行 docstring，跳过本行
+                        log_debug(f"  L{i}: 单行 docstring，跳过")
+                        skipped_lines.append(i)
                         break
                     else:
                         in_docstring = True
                         docstring_marker = marker
+                        log_debug(f"  L{i}: docstring 开始 marker={marker}")
+                        skipped_lines.append(i)
                         break
             else:
                 # 非 docstring 行，加入结果
@@ -137,7 +163,13 @@ def filter_code_lines(lines: list[str]) -> list[tuple[int, str]]:
             if docstring_marker and docstring_marker in line:
                 in_docstring = False
                 docstring_marker = None
+                log_debug(f"  L{i}: docstring 结束")
+            skipped_lines.append(i)
             continue
+
+    log_debug(f"filter_code_lines: 输出 {len(result)} 行，过滤 {len(skipped_lines)} 行")
+    if skipped_lines and len(skipped_lines) <= 50:
+        log_debug(f"  被过滤行号: {skipped_lines}")
 
     return result
 
@@ -161,13 +193,16 @@ def check_regex_dynamic_construction(path: Path, lines: list[str], result: Check
     JS 中 /v_${var}=/ 不会插值，必须用 new RegExp()
     Python 中 re.compile(f"v_{var}=") 是正确的，但 re.compile("v_${var}=") 不会插值
     """
+    log_info(f"规则 #11 正则动态构造: 检查 {path.name}")
     code_lines = filter_code_lines(lines)
 
     # JS/TS 文件：检测字面量正则中的 ${
     if is_js_ts_file(path):
+        log_debug(f"  JS/TS 文件，扫描 {len(code_lines)} 行代码")
         for i, line in code_lines:
             # 匹配字面量正则 /...${...}.../
             if re.search(r'/[^/]*\$\{[^}]+\}[^/]*/[gimsuy]*', line):
+                log_debug(f"  L{i}: 匹配到字面量正则 ${{}} 模式")
                 result.add(Violation(
                     rule_id="11",
                     rule_name="正则动态构造",
@@ -180,9 +215,11 @@ def check_regex_dynamic_construction(path: Path, lines: list[str], result: Check
 
     # Python 文件：检测 re.compile 中的 ${}（应为 f-string 或 .format）
     if is_python_file(path):
+        log_debug(f"  Python 文件，扫描 {len(code_lines)} 行代码")
         for i, line in code_lines:
             # 检测 re.compile("...${...}...") — Python 中 ${} 不是插值语法
             if "re.compile" in line and "${" in line and "f\"" not in line and "f'" not in line:
+                log_debug(f"  L{i}: 匹配到 re.compile + ${{}} 模式（无 f-string）")
                 result.add(Violation(
                     rule_id="11",
                     rule_name="正则动态构造",
@@ -221,15 +258,19 @@ def check_timeout_control(path: Path, lines: list[str], result: CheckResult) -> 
     if not is_python_file(path):
         return
 
+    log_info(f"规则 #12 第三方库调用超时: 检查 {path.name}")
     code_lines = filter_code_lines(lines)
 
     for i, line in code_lines:
         # 检测 requests.get/post 无 timeout
         if re.search(r'requests\.(get|post|put|delete)\s*\(', line):
-            if "timeout=" not in line and "timeout =" not in line:
+            has_timeout = "timeout=" in line or "timeout =" in line
+            if not has_timeout:
                 # 检查是否在 call_with_timeout 内（粗略检查上下文）
                 context = "\n".join(lines[max(0, i-3):i])
-                if "call_with_timeout" not in context:
+                has_wrapper = "call_with_timeout" in context
+                log_debug(f"  L{i}: requests 调用无 timeout，上下文有 call_with_timeout={has_wrapper}")
+                if not has_wrapper:
                     result.add(Violation(
                         rule_id="12",
                         rule_name="第三方库调用超时",
@@ -248,7 +289,9 @@ def check_timeout_control(path: Path, lines: list[str], result: CheckResult) -> 
                 if re.search(pattern, line):
                     # 检查上下文是否有 call_with_timeout
                     context = "\n".join(lines[max(0, i-5):i+1])
-                    if "call_with_timeout" not in context and "call_with_timeout_and_retry" not in context:
+                    has_wrapper = "call_with_timeout" in context or "call_with_timeout_and_retry" in context
+                    log_debug(f"  L{i}: AKShare {func} 调用，上下文有 call_with_timeout={has_wrapper}")
+                    if not has_wrapper:
                         result.add(Violation(
                             rule_id="12",
                             rule_name="第三方库调用超时",
@@ -281,16 +324,19 @@ def check_cache_strategy(path: Path, lines: list[str], result: CheckResult) -> N
     if not is_python_file(path):
         return
 
+    log_info(f"规则 #13 TTL+LRU 缓存: 检查 {path.name}")
     code_lines = filter_code_lines(lines)
     file_content = "".join(lines)
     has_cache = any(marker in file_content for marker in [
         "@cached", "TTL_LRUCache", "_KLINE_CACHE", "_SPOT_CACHE",
         "call_with_cache", "CachedAPIClient",
     ])
+    log_debug(f"  文件缓存标识检测: has_cache={has_cache}")
 
     for i, line in code_lines:
         for func in CACHE_REQUIRED_FUNCS:
             if f"ak.{func}" in line or f"akshare.{func}" in line:
+                log_debug(f"  L{i}: 调用 {func}, has_cache={has_cache}")
                 if not has_cache:
                     result.add(Violation(
                         rule_id="13",
@@ -318,11 +364,13 @@ def check_degradation_depth(path: Path, lines: list[str], result: CheckResult) -
     if not is_python_file(path):
         return
 
+    log_info(f"规则 #14 降级路径限制: 检查 {path.name}")
     code_lines = filter_code_lines(lines)
 
     # 检测显式的"第N层"标记
     for i, line in code_lines:
         if re.search(r'第[3-9]层|第三层|第四层|第五层', line):
+            log_debug(f"  L{i}: 匹配到第N层关键词")
             result.add(Violation(
                 rule_id="14",
                 rule_name="降级路径限制",
@@ -335,9 +383,11 @@ def check_degradation_depth(path: Path, lines: list[str], result: CheckResult) -
 
     # 统计 except 块数量（粗略估计降级层数，基于过滤后的代码行）
     except_count = sum(1 for _, line in code_lines if line.strip().startswith("except "))
+    try_count = sum(1 for _, line in code_lines if line.strip().startswith("try:"))
+    log_debug(f"  try_count={try_count}, except_count={except_count}")
     if except_count >= 4:
-        try_count = sum(1 for _, line in code_lines if line.strip().startswith("try:"))
         if try_count >= 3:
+            log_debug(f"  触发降级路径过深警告: try={try_count} except={except_count}")
             result.add(Violation(
                 rule_id="14",
                 rule_name="降级路径限制",
@@ -364,6 +414,7 @@ CHECKERS = [
 def check_file(path: Path, result: CheckResult) -> None:
     """检查单个文件"""
     if not path.exists():
+        log_debug(f"check_file: 文件不存在 {path}")
         return
 
     # 跳过自身文件，避免自指误报
@@ -372,17 +423,21 @@ def check_file(path: Path, result: CheckResult) -> None:
     # 使后续真正的 docstring 内容（含 "第3层" 等关键词）被错误保留。
     # 排除自身是最稳妥的方案，门禁脚本本身不需要被自己检查。
     if path.name == "pitfall_check.py":
+        log_debug(f"check_file: 跳过自身文件 {path}")
         return
 
     # 只检查 Python 和 JS/TS 文件
     if not (is_python_file(path) or is_js_ts_file(path)):
+        log_debug(f"check_file: 跳过非 Python/JS/TS 文件 {path}")
         return
 
     lines = read_file_lines(path)
     if not lines:
+        log_debug(f"check_file: 文件为空或读取失败 {path}")
         return
 
     result.total_files += 1
+    log_info(f"check_file: 开始检查 {path} ({len(lines)} 行)")
 
     for rule_id, rule_name, checker in CHECKERS:
         try:
@@ -450,6 +505,9 @@ def print_report(result: CheckResult) -> None:
 
 def main() -> int:
     """主入口"""
+    if VERBOSE:
+        print("[pitfall_check] VERBOSE 模式已开启（PITFALL_VERBOSE=1），输出详细日志到 stderr", file=sys.stderr)
+
     # 解析参数
     args = sys.argv[1:]
 
