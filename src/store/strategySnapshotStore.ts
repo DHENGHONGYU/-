@@ -105,7 +105,11 @@ export const useStrategySnapshotStore = create<StrategySnapshotState & StrategyS
         const v6Scores = v6Result.data ?? []
         const rotationScores = rotationResult.data ?? []
 
+        // 用户在 await 期间切换了 tab，丢弃本次结果并释放 loading，
+        // 否则 loading 永久为 true，StrategySnapshotPage 永远显示「加载中...」
         if (get().activeTab !== 'current') {
+          logger.warn('[strategySnapshotStore] loadCurrentStrategy 期间 activeTab 已切换，丢弃结果')
+          set({ loading: false })
           return
         }
 
@@ -128,7 +132,10 @@ export const useStrategySnapshotStore = create<StrategySnapshotState & StrategyS
       try {
         const result = await listSnapshots(20)
 
+        // 用户在 await 期间切换了 tab，丢弃本次结果并释放 loading
         if (get().activeTab !== 'history') {
+          logger.warn('[strategySnapshotStore] loadHistorySnapshots 期间 activeTab 已切换，丢弃结果')
+          set({ loading: false })
           return
         }
 

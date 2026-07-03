@@ -20,6 +20,7 @@ import {
   getPnlBgClass,
 } from '@/constants/trade.constants'
 import type { HoldingItem } from '@/types/modules/trade.types'
+import type { HoldingAction } from '@/constants/trade.constants'
 
 // 虚拟滚动阈值，超过此数量启用
 const VIRTUALIZATION_THRESHOLD = 100
@@ -35,12 +36,12 @@ interface VirtualizedHoldingsTableProps {
   /** 是否加载中 */
   isLoading: boolean
   /** 操作列点击回调 */
-  onAction: (item: HoldingItem, action: 'ADD_POSITION' | 'CLOSE_POSITION') => void
+  onAction: (item: HoldingItem, action: HoldingAction) => void
 }
 
 interface HoldingsRowProps {
   holding: HoldingItem
-  onAction: (item: HoldingItem, action: 'ADD_POSITION' | 'CLOSE_POSITION') => void
+  onAction: (item: HoldingItem, action: HoldingAction) => void
 }
 
 function formatNumber(value: number, decimals = 2): string {

@@ -32,14 +32,14 @@ interface HubModule {
 const TRADING_MODULES: HubModule[] = [
   {
     title: '交易信号',
-    description: '观察池、信号扫描、买卖下单',
+    description: '观察池、信号扫描、买卖下单（综合页面主入口）',
     path: '/trading',
     icon: Activity,
   },
   {
     title: '模拟持仓',
     description: '持仓列表、订单管理',
-    path: '/trading',
+    path: '/trading/holdings',
     icon: Wallet,
   },
   {

@@ -17,6 +17,7 @@ import {
   getPnlColorClass,
 } from '@/constants/trade.constants'
 import type { HoldingItem, TradeModalState } from '@/types/modules/trade.types'
+import type { HoldingAction } from '@/constants/trade.constants'
 import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
@@ -29,7 +30,7 @@ interface TradeModalProps {
   /** 关闭弹窗 */
   onClose: () => void
   /** 确认操作 */
-  onConfirm: (item: HoldingItem, action: 'ADD_POSITION' | 'CLOSE_POSITION', quantity: number) => void
+  onConfirm: (item: HoldingItem, action: HoldingAction, quantity: number) => void
 }
 
 export default function TradeModal({

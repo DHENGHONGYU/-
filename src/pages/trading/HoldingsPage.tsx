@@ -27,12 +27,12 @@ import HoldingsFilter from './components/HoldingsFilter'
 import HoldingsTable from './components/HoldingsTable'
 import Pagination from './components/Pagination'
 import TradeModal from './components/TradeModal'
-import { fetchHoldings, executeTradeAction, exportHoldingsCSV } from '@/services/trade/holdingsService'
 import { PAGINATION_DEFAULTS, HOLDING_ACTION } from '@/constants/trade.constants'
 import type { HoldingItem } from '@/types/modules/trade.types'
 import type { HoldingsQueryParams } from '@/types/modules/trade.types'
 import type { HoldingAction } from '@/constants/trade.constants'
 import { useHoldingsStore, buildHoldingsParams, initHoldingsStoreSubscriptions } from '@/store/holdingsStore'
+import { usePageGuard } from '@/hooks/usePageGuard'
 import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
@@ -45,10 +45,12 @@ export default function HoldingsPage(): React.JSX.Element {
   const {
     data, filter, pagination, loading, modal,
     setData, setPage, setPageSize, setLoading,
-    openModal, closeModal, resetFilter,
+    openModal, closeModal, resetFilter, setFilter,
+    fetchData, executeTrade, exportCSV,
   } = useHoldingsStore()
   const { toast } = useToast()
   const isMountedRef = useRef(true)
+  const { guardProps } = usePageGuard('holdings')
 
   // 清理标记
   useEffect(() => {
@@ -74,16 +76,10 @@ export default function HoldingsPage(): React.JSX.Element {
     logger.info('[HoldingsPage] 开始加载持仓数据', { params })
     setLoading({ isListLoading: true })
     try {
-      const response = await fetchHoldings(params)
+      const response = await fetchData(params)
       if (!isMountedRef.current) return
 
-      if (response.code === 200) {
-        logger.info('[HoldingsPage] 持仓数据加载成功', {
-          total: response.data.total,
-          count: response.data.list.length,
-        })
-        setData(response.data.list, response.data.total)
-      } else {
+      if (response.code !== 200) {
         logger.warn('[HoldingsPage] 持仓数据加载返回异常code', {
           code: response.code,
           message: response.message,
@@ -139,7 +135,7 @@ export default function HoldingsPage(): React.JSX.Element {
     logger.info('[HoldingsPage] 开始导出持仓数据', { params })
     setLoading({ isExporting: true })
     try {
-      await exportHoldingsCSV(params)
+      await exportCSV(params)
       logger.info('[HoldingsPage] 导出成功')
       toast({ title: '导出成功', description: '持仓数据已导出为 CSV 文件', variant: 'success' })
     } catch (err) {
@@ -184,7 +180,7 @@ export default function HoldingsPage(): React.JSX.Element {
       })
       setLoading({ isActionLoading: true })
       try {
-        const response = await executeTradeAction({
+        const response = await executeTrade({
           code: item.code,
           action,
           quantity: tradeQuantity,
@@ -269,8 +265,10 @@ export default function HoldingsPage(): React.JSX.Element {
           onSearch: handleSearch,
           onReset: handleReset,
           onExport: handleExport,
+          onUpdateFilter: setFilter,
         }}
         isExporting={loading.isExporting}
+        disabled={guardProps.disabled}
       />
 
       {/* 数据表格 */}

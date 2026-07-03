@@ -32,13 +32,13 @@ const COMMAND_MODULES: HubModule[] = [
   {
     title: '系统监控',
     description: '刷新统计、重置数据、采集服务状态',
-    path: '/command',
+    path: '/command/monitor',
     icon: Activity,
   },
   {
     title: '配置管理',
     description: '系统配置与状态管理',
-    path: '/command',
+    path: '/command/config',
     icon: Settings,
   },
 ]

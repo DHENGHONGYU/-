@@ -136,12 +136,14 @@ export interface FilterState {
 
 /** 筛选操作回调 */
 export interface FilterHandlers {
-  /** 执行搜索 */
+  /** 执行搜索（点击按钮或回车触发，禁止每次按键触发） */
   onSearch: () => void
   /** 重置筛选 */
   onReset: () => void
   /** 导出 Excel */
   onExport: () => void
+  /** 更新筛选字段（受控输入必须，缺此字段会导致 input 无法输入） */
+  onUpdateFilter: (partial: Partial<FilterState>) => void
 }
 
 // ============================================================

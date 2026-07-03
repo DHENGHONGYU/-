@@ -24,6 +24,7 @@ import {
   SKELETON_COLUMNS,
 } from '@/constants/trade.constants'
 import type { HoldingItem } from '@/types/modules/trade.types'
+import type { HoldingAction } from '@/constants/trade.constants'
 
 interface HoldingsTableProps {
   /** 持仓数据列表 */
@@ -31,7 +32,7 @@ interface HoldingsTableProps {
   /** 是否加载中 */
   isLoading: boolean
   /** 操作列点击回调 */
-  onAction: (item: HoldingItem, action: 'ADD_POSITION' | 'CLOSE_POSITION') => void
+  onAction: (item: HoldingItem, action: HoldingAction) => void
 }
 
 function formatNumber(value: number, decimals = 2): string {

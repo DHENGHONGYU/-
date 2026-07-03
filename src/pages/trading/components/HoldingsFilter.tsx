@@ -21,12 +21,15 @@ interface HoldingsFilterProps {
   handlers: FilterHandlers
   /** 是否加载中 */
   isExporting: boolean
+  /** 页面守卫 disabled 状态（来自 usePageGuard，true 时禁用所有交互按钮） */
+  disabled?: boolean
 }
 
 export default function HoldingsFilter({
   filter,
   handlers,
   isExporting,
+  disabled = false,
 }: HoldingsFilterProps): React.JSX.Element {
   const handleSearch = useCallback(() => {
     logger.info('[HoldingsFilter] 执行筛选搜索', { filter })
@@ -42,6 +45,15 @@ export default function HoldingsFilter({
     logger.info('[HoldingsFilter] 导出持仓数据', { filter, isExporting })
     handlers.onExport()
   }, [handlers, filter, isExporting])
+
+  // 受控输入：仅更新 store 中的 filter 字段，不触发网络请求
+  // 否则每输入一个字符都会调用 onSearch → loadData，导致 input 卡顿、请求风暴、分页重置
+  const updateField = useCallback(
+    <K extends keyof FilterState>(key: K, value: FilterState[K]) => {
+      handlers.onUpdateFilter({ [key]: value })
+    },
+    [handlers],
+  )
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -60,7 +72,7 @@ export default function HoldingsFilter({
             <input
               type="date"
               value={filter.startDate}
-              onChange={handleSearch}
+              onChange={(e) => updateField('startDate', e.target.value)}
               className="h-9 rounded-md border border-input bg-background px-3 text-sm"
             />
           </div>
@@ -71,7 +83,7 @@ export default function HoldingsFilter({
             <input
               type="date"
               value={filter.endDate}
-              onChange={handleSearch}
+              onChange={(e) => updateField('endDate', e.target.value)}
               className="h-9 rounded-md border border-input bg-background px-3 text-sm"
             />
           </div>
@@ -81,7 +93,7 @@ export default function HoldingsFilter({
             <label className="text-xs text-muted-foreground">交易方向</label>
             <select
               value={filter.direction}
-              onChange={handleSearch}
+              onChange={(e) => updateField('direction', e.target.value as FilterState['direction'])}
               className="h-9 rounded-md border border-input bg-background px-3 text-sm"
             >
               {TRADE_DIRECTION_OPTIONS.map((opt) => (
@@ -100,7 +112,7 @@ export default function HoldingsFilter({
               <input
                 type="text"
                 value={filter.keyword}
-                onChange={handleSearch}
+                onChange={(e) => updateField('keyword', e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="输入代码或名称搜索..."
                 className="h-9 w-full rounded-md border border-input bg-background pl-9 pr-3 text-sm"
@@ -110,15 +122,15 @@ export default function HoldingsFilter({
 
           {/* 操作按钮 */}
           <div className="flex items-center gap-2">
-            <Button size="sm" onClick={handleSearch}>
+            <Button size="sm" onClick={handleSearch} disabled={disabled}>
               <Search className="mr-1 h-4 w-4" />
               搜索
             </Button>
-            <Button variant="outline" size="sm" onClick={handleReset}>
+            <Button variant="outline" size="sm" onClick={handleReset} disabled={disabled}>
               <RotateCcw className="mr-1 h-4 w-4" />
               重置
             </Button>
-            <Button variant="outline" size="sm" onClick={handleExport} disabled={isExporting}>
+            <Button variant="outline" size="sm" onClick={handleExport} disabled={disabled || isExporting}>
               <Download className="mr-1 h-4 w-4" />
               {isExporting ? '导出中...' : '导出 Excel'}
             </Button>
