@@ -1,8 +1,8 @@
 # 09. 质量门禁
 
 > **Status**: Current  
-> **Version**: v1.1.0  
-> **Last Updated**: 2026-06-26
+> **Version**: v1.2.0  
+> **Last Updated**: 2026-06-29
 >
 > 本文档定义 V9 的上线前质量门禁、CI 流水线、测试策略与扫描脚本。  
 > 目标读者：开发者、QA、发布负责人。
@@ -26,6 +26,8 @@
 | 9 | E2E 冒烟测试 | ✅ 已建立 | 0 失败（5/5 passed） | `npm run test:e2e` |
 | 10 | 路由一致性审计 | 🟡 已建立，基线 0 处漂移 | 0 漂移 | `npm run audit:deadcode` |
 | 11 | PWA 离线验证 | 🔴 未建立 | service worker 注册成功 | 手动/Playwright（待建） |
+| 12 | 数据蓝图一致性 | ✅ 已建立 | Store/类型/文档一致 | `npm run validate:blueprint && npx vitest run src/blueprints/__tests__/dataRelationship.test.ts` |
+| 13 | 踩坑规则门禁 | ✅ 已建立 | 0 ERROR（规则 #11-#14） | `python scripts/pitfall_check.py` — 详见 [踩坑规则门禁指南](踩坑规则门禁指南.md) |
 
 `.nvmrc` 已创建（Node 22），CI/团队成员可通过 `nvm use` 读取。
 
@@ -162,6 +164,27 @@ npx tsx scripts/audit-dead-code.ts
 - `src/` 下空函数、空组件、未使用 export。
 - 路由注册表中的路径是否存在对应文件。
 
+### 5.4 数据蓝图一致性扫描
+
+```bash
+npm run validate:blueprint
+# 或
+npx tsx scripts/validate-data-blueprint.ts
+```
+
+检查项：
+- `src/config/dbConfig.ts` 中 Store 数量是否与蓝图一致。
+- `src/data/types.ts` 中是否包含所有核心实体接口。
+
+```bash
+npx vitest run src/blueprints/__tests__/dataRelationship.test.ts
+```
+
+检查项：
+- Store 数量 = 20 且无重复。
+- 核心实体均映射到 Store。
+- 时间一致性规则（如 `calculatedAt >= updatedAt`）成立。
+
 ---
 
 ## 6. CI 流水线规划
@@ -188,6 +211,8 @@ jobs:
       - run: npm run coverage
       - run: npx tsx scripts/audit-layer-calls.ts
       - run: npx tsx scripts/audit-hardcode.ts
+      - run: npm run validate:blueprint
+      - run: npx vitest run src/blueprints/__tests__/dataRelationship.test.ts
 ```
 
 ### 6.2 合并规则
