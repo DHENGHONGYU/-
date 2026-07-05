@@ -51,7 +51,8 @@
     "generate:tokens": "tsx scripts/generate-tokens.ts",
     "tokens": "tsx scripts/generate-tokens.ts",
     "pre-review": "tsx scripts/pre-review-check.ts",
-    "review:checklist": "echo '📝 代码审查 Checklist: docs/CODE-REVIEW.md §2'"
+    "review:checklist": "echo '📝 代码审查 Checklist: docs/CODE-REVIEW.md §2'",
+    "commit": "cz"
   },
   "dependencies": {
     "@tanstack/react-virtual": "^3.14.4",
@@ -83,6 +84,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.3.0",
+    "@vitest/coverage-istanbul": "2.1.9",
     "@vitest/coverage-v8": "^2.1.9",
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",
@@ -94,7 +96,7 @@
     "eslint-plugin-react-refresh": "^0.4.14",
     "fake-indexeddb": "^6.2.5",
     "globals": "^15.12.0",
-    "husky": "^9.1.7",
+    "husky": "9.1.7",
     "jsdom": "^25.0.0",
     "lint-staged": "^17.0.8",
     "postcss": "^8.4.49",
