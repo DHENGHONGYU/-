@@ -1,7 +1,7 @@
 {
   "name": "v9-intelligent-research-review-system",
   "private": true,
-  "version": "0.9.18",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "predev": "tsc --noEmit",
@@ -10,8 +10,11 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint src/ --ext .ts,.tsx --max-warnings 2000",
+    "lint:colors": "eslint src/ --ext .ts,.tsx --rule 'no-hardcoded-colors/no-hardcoded-tailwind-colors: error' --max-warnings 0",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:ci": "vitest run --coverage",
+    "test:staged": "vitest related --run",
     "test:clean": "vitest run --exclude \"src/store/agentStore.test.ts\" --exclude \"src/blueprints/__tests__/dataRelationship.test.ts\" --exclude \"src/services/fetcher/fetcherClient.test.ts\" --exclude \"src/services/llm/llmClient.multimodel.test.ts\" --exclude \"src/components/ui/Dialog.test.tsx\" --exclude \"tests/fetcher/dataSourceProvider.test.ts\" --exclude \"tests/ui-components.test.tsx\"",
     "test:known": "vitest run src/store/agentStore.test.ts src/blueprints/__tests__/dataRelationship.test.ts src/services/fetcher/fetcherClient.test.ts src/services/llm/llmClient.multimodel.test.ts src/components/ui/Dialog.test.tsx tests/fetcher/dataSourceProvider.test.ts tests/ui-components.test.tsx",
     "pretest:e2e": "npm run build",
@@ -26,12 +29,29 @@
     "audit:hardcode": "tsx scripts/audit-hardcode.ts",
     "audit:deadcode": "tsx scripts/audit-dead-code.ts",
     "audit:docs": "tsx scripts/audit-doc-sync.ts",
-    "audit": "npm run audit:layers && npm run audit:hardcode && npm run audit:deadcode && npm run audit:docs",
+    "audit:routes": "tsx scripts/verify-all-routes.ts",
+    "audit:mcp": "tsx scripts/audit-mcp.ts",
+    "audit:token": "tsx scripts/audit-token-consumption.ts",
+    "audit": "npm run audit:layers && npm run audit:hardcode && npm run audit:deadcode && npm run audit:docs && npm run audit:routes && npm run audit:mcp && npm run audit:token",
+    "changelog:query": "tsx scripts/changelog-query.ts",
+    "changelog:summary": "tsx scripts/changelog-query.ts --summary",
+    "doc:trigger": "tsx scripts/doc-update-trigger.ts",
+    "doc:check": "tsx scripts/doc-update-trigger.ts --check",
+    "workflow:decide": "tsx scripts/workflow-rule-engine.ts",
+    "workflow:decide:json": "tsx scripts/workflow-rule-engine.ts --json",
+    "anomaly:detect": "tsx scripts/anomaly-detector.ts",
+    "anomaly:detect:json": "tsx scripts/anomaly-detector.ts --json",
+    "anomaly:baseline": "tsx scripts/anomaly-detector.ts --update-baseline",
+    "create:mcp-server": "tsx scripts/create-mcp-server.ts",
     "validate:blueprint": "tsx scripts/validate-data-blueprint.ts",
     "validate:json": "tsx scripts/validate-json.ts",
     "verify:no-dead-refs": "node scripts/verify-no-dead-refs.mjs",
     "analyze": "npm run build && npx vite-plugin-inspect dist/stats.html",
-    "prepare": "husky"
+    "prepare": "husky",
+    "generate:tokens": "tsx scripts/generate-tokens.ts",
+    "tokens": "tsx scripts/generate-tokens.ts",
+    "pre-review": "tsx scripts/pre-review-check.ts",
+    "review:checklist": "echo '📝 代码审查 Checklist: docs/CODE-REVIEW.md §2'"
   },
   "dependencies": {
     "@tanstack/react-virtual": "^3.14.4",
@@ -68,6 +88,7 @@
     "ajv-formats": "^3.0.1",
     "autoprefixer": "^10.4.20",
     "concurrently": "^10.0.3",
+    "cz-conventional-changelog": "3.3.0",
     "eslint": "^9.15.0",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.14",
@@ -86,8 +107,19 @@
     "vitest": "^2.1.0"
   },
   "lint-staged": {
-    "*.{ts,tsx}": ["eslint --fix"],
-    "!*.test.{ts,tsx}": ["bash -c 'npx tsc --noEmit'"],
-    "*.test.{ts,tsx}": ["vitest related --run"]
+    "*.{ts,tsx}": [
+      "eslint --fix"
+    ],
+    "!*.test.{ts,tsx}": [
+      "bash -c 'npx tsc --noEmit'"
+    ],
+    "*.test.{ts,tsx}": [
+      "vitest related --run"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }

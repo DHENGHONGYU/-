@@ -1,0 +1,100 @@
+# CODEOWNERS — 自动指定审查者
+
+> **规则**: 文件路径匹配到的第一个 Pattern 生效
+> **审查者**: 核心模块需要 2 人审查，其他模块至少 1 人
+
+---
+
+## 架构层（核心模块 - 必须 2 人审查）
+
+# 配置层
+src/config/**                          @xiaoying-ying @huawei
+src/constants/**                      @xiaoying-ying @huawei
+
+# 核心工具层
+src/core/**                           @xiaoying-ying @huawei
+
+# 数据层
+src/data/**                           @xiaoying-ying @huawei
+src/types/**                          @xiaoying-ying @huawei
+
+---
+
+## 服务层（核心业务逻辑 - 必须 2 人审查）
+
+src/services/analysis/**              @xiaoying-ying @huawei
+src/services/scoring/**              @xiaoying-ying @huawei
+src/services/trading/**              @xiaoying-ying @huawei
+src/services/execution/**            @xiaoying-ying @huawei
+src/services/news/**                 @xiaoying-ying @huawei
+src/services/llm/**                 @xiaoying-ying @huawei
+
+# 其他服务模块（至少 1 人审查）
+src/services/**                       @xiaoying-ying
+
+---
+
+## 状态层（Zustand Store - 必须 2 人审查）
+
+src/store/**                          @xiaoying-ying @huawei
+
+---
+
+## 页面层 & 组件层（UI 模块 - 至少 1 人审查）
+
+src/pages/**                          @xiaoying-ying
+src/components/**                     @xiaoying-ying
+src/portal/**                         @xiaoying-ying
+src/cockpit/**                        @xiaoying-ying
+
+---
+
+## 库函数 & 工具函数（至少 1 人审查）
+
+src/lib/**                            @xiaoying-ying
+src/hooks/**                          @xiaoying-ying
+src/utils/**                          @xiaoying-ying
+
+---
+
+## 测试 & 文档（可选审查）
+
+tests/**                              @xiaoying-ying
+e2e/**                                @xiaoying-ying
+docs/**                               @xiaoying-ying
+*.md                                  @xiaoying-ying
+
+---
+
+## 构建 & 配置（至少 1 人审查）
+
+package.json                          @xiaoying-ying @huawei
+tsconfig.json                         @xiaoying-ying @huawei
+vite.config.ts                        @xiaoying-ying @huawei
+eslint*.js                            @xiaoying-ying @huawei
+postcss.config.js                     @xiaoying-ying @huawei
+tailwind.config.js                    @xiaoying-ying @huawei
+
+---
+
+## 脚本 & 工具（至少 1 人审查）
+
+scripts/**                            @xiaoying-ying @huawei
+python/**                             @xiaoying-ying @huawei
+.github/**                            @xiaoying-ying @huawei
+
+---
+
+## 根目录文件（必须 2 人审查）
+
+AGENTS.md                             @xiaoying-ying @huawei
+ARCHITECTURE.md                       @xiaoying-ying @huawei
+DATA_DEFINITION.md                    @xiaoying-ying @huawei
+CODE-REVIEW.md                        @xiaoying-ying @huawei
+CHANGELOG.md                          @xiaoying-ying @huawei
+
+---
+
+## 默认审查者（未匹配上述规则的文件）
+
+*                                     @xiaoying-ying
