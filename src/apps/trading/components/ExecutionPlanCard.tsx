@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { PhaseStepper } from './PhaseStepper'
 import type { ExecutionPlan, ExecutionPhase, RiskCheckItem } from '@/data/types'
 import { ChevronDown, ChevronUp, ShieldAlert, ShieldCheck, Info } from 'lucide-react'
+import { COLOR_SHADES, twText, twBg } from '@/constants/theme.tokens'
 
 export interface ExecutionPlanCardProps {
   plan: ExecutionPlan
@@ -16,12 +17,12 @@ export interface ExecutionPlanCardProps {
 }
 
 const PHASE_BADGE_COLORS: Record<ExecutionPhase, string> = {
-  plan: 'bg-blue-100 text-blue-800',
-  confirmed: 'bg-blue-100 text-blue-800',
-  pending: 'bg-yellow-100 text-yellow-800',
-  executed: 'bg-green-100 text-green-800',
-  cancelled: 'bg-red-100 text-red-800',
-  reviewed: 'bg-purple-100 text-purple-800',
+  plan: `${twBg('blue', 100)} ${twText('blue', 800)}`,
+  confirmed: `${twBg('blue', 100)} ${twText('blue', 800)}`,
+  pending: `${twBg('yellow', 100)} ${twText('yellow', 800)}`,
+  executed: `${twBg('green', 100)} ${twText('green', 800)}`,
+  cancelled: `${twBg('red', 100)} ${twText('red', 800)}`,
+  reviewed: `${twBg('purple', 100)} ${twText('purple', 800)}`,
 }
 
 const PHASE_LABELS: Record<ExecutionPhase, string> = {
@@ -66,8 +67,8 @@ export function ExecutionPlanCard({
   const directionLabel = plan.direction === 'buy' ? '买入' : '卖出'
   const directionClass =
     plan.direction === 'buy'
-      ? 'bg-green-100 text-green-800'
-      : 'bg-red-100 text-red-800'
+      ? `${COLOR_SHADES.green[100]} ${COLOR_SHADES.green[800]}`
+      : `${COLOR_SHADES.red[100]} ${COLOR_SHADES.red[800]}`
 
   const phaseClass = PHASE_BADGE_COLORS[plan.phase]
   const stepperPhase = getStepperPhase(plan)
@@ -120,11 +121,11 @@ export function ExecutionPlanCard({
               {plan.risk ? (
                 <>
                   {plan.risk.passed ? (
-                    <ShieldCheck className="h-3.5 w-3.5 text-green-600" />
+                    <ShieldCheck className={`h-3.5 w-3.5 ${COLOR_SHADES.green[600]}`} />
                   ) : (
-                    <ShieldAlert className="h-3.5 w-3.5 text-red-600" />
+                    <ShieldAlert className={`h-3.5 w-3.5 ${COLOR_SHADES.red[600]}`} />
                   )}
-                  <span className={plan.risk.passed ? 'text-green-700' : 'text-red-700'}>
+                  <span className={plan.risk.passed ? COLOR_SHADES.green[700] : COLOR_SHADES.red[700]}>
                     {plan.risk.passed ? '通过' : '未通过'}
                   </span>
                   <span className="text-muted-foreground">({plan.risk.checks.length}项)</span>
@@ -158,14 +159,14 @@ export function ExecutionPlanCard({
                     key={idx}
                     className={cn(
                       'flex items-start gap-1.5 rounded-md border px-2 py-1.5 text-xs',
-                      check.severity === 'blocker' && 'bg-red-50 border-red-200 text-red-800',
-                      check.severity === 'warning' && 'bg-yellow-50 border-yellow-200 text-yellow-800',
-                      check.severity === 'info' && 'bg-gray-50 border-gray-200 text-gray-700'
+                      check.severity === 'blocker' && `${COLOR_SHADES.red[50]} ${COLOR_SHADES.red[200]} ${COLOR_SHADES.red[800]}`,
+                      check.severity === 'warning' && `${COLOR_SHADES.yellow[50]} ${COLOR_SHADES.yellow[200]} ${COLOR_SHADES.yellow[800]}`,
+                      check.severity === 'info' && `${COLOR_SHADES.gray[50]} ${COLOR_SHADES.gray[200]} ${COLOR_SHADES.gray[700]}`
                     )}
                   >
-                    {check.severity === 'blocker' && <ShieldAlert className="h-3.5 w-3.5 text-red-600 mt-0.5 shrink-0" />}
-                    {check.severity === 'warning' && <ShieldCheck className="h-3.5 w-3.5 text-yellow-600 mt-0.5 shrink-0" />}
-                    {check.severity === 'info' && <Info className="h-3.5 w-3.5 text-gray-500 mt-0.5 shrink-0" />}
+                    {check.severity === 'blocker' && <ShieldAlert className={`h-3.5 w-3.5 ${COLOR_SHADES.red[600]} mt-0.5 shrink-0`} />}
+                    {check.severity === 'warning' && <ShieldCheck className={`h-3.5 w-3.5 ${COLOR_SHADES.yellow[600]} mt-0.5 shrink-0`} />}
+                    {check.severity === 'info' && <Info className={`h-3.5 w-3.5 ${COLOR_SHADES.gray[500]} mt-0.5 shrink-0`} />}
                     <div>
                       <span className="font-medium">{check.name}:</span>{' '}
                       <span>{check.message}</span>
@@ -179,7 +180,7 @@ export function ExecutionPlanCard({
 
         {/* 错误信息 */}
         {plan.errorMessage && (
-          <p className="text-xs text-red-600 bg-red-50 rounded-md px-2 py-1.5 border border-red-200">
+          <p className={`text-xs ${COLOR_SHADES.red[600]} ${COLOR_SHADES.red[50]} rounded-md px-2 py-1.5 border ${COLOR_SHADES.red[200]}`}>
             {plan.errorMessage}
           </p>
         )}
