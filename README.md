@@ -1,6 +1,6 @@
 # 智能投研复盘系统 V9
 
-> 当前版本：`v0.9.0-migration-implemented`  
+> 当前版本：`v2.0.0`  
 > 面向中国 A 股个人投资者的研究决策与复盘工具
 
 ## 技术栈
@@ -96,3 +96,5 @@ UI 设计参考：https://hslqownhhwaig.ok.kimi.link/
 - `npm run test`：通过（291/291，44 个测试文件）
 - `npm run test:e2e`：通过（5/5）
 - `npm run build`：通过
+test
+test
