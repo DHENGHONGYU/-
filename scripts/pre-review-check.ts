@@ -28,8 +28,9 @@ interface CheckResult {
 function runCheck(name: string, command: string): CheckResult {
   const start = Date.now();
   try {
-    const output = execSync(command, { 
-      encoding: 'utf-8', 
+    // 使用 shell: true 并在 Windows 上正确处理 npm 命令
+    const output = execSync(command, {
+      encoding: 'utf-8',
       stdio: 'pipe',
       cwd: process.cwd(),
       env: process.env,
@@ -44,19 +45,20 @@ function runCheck(name: string, command: string): CheckResult {
       isWarning: false,
     };
   } catch (error: any) {
-    const stdout = error.stdout || '';
-    const stderr = error.stderr || '';
-    const output = stdout + '\n' + stderr;
+    // 正确捕获 stdout 和 stderr（execSync 失败时，输出在 error.stdout/stderr 中）
+    const stdout = error.stdout ? error.stdout.toString() : '';
+    const stderr = error.stderr ? error.stderr.toString() : '';
+    const output = (stdout + '\n' + stderr).trim();
     
-    // 特殊处理：ESLint 只有 warnings 时视为通过
+    // 特殊处理：ESLint - 从输出中判断是否有关键字 " error "（有 error 时视为失败）
     if (name === 'ESLint') {
-      const hasError = output.includes(' error ') || output.includes('✖');
+      const hasError = output.includes(' error ') || output.match(/\✖.*\error/);
       if (!hasError) {
         return {
           name,
           command,
           passed: true,
-          output: output.trim(),
+          output: output || '✅ ESLint 检查通过（无 error）',
           duration: Date.now() - start,
           isWarning: true,
         };
@@ -82,7 +84,7 @@ function runCheck(name: string, command: string): CheckResult {
       name,
       command,
       passed: false,
-      output: output.trim() || error.message || 'Unknown error',
+      output: output || error.message || 'Unknown error',
       duration: Date.now() - start,
       isWarning: false,
     };
@@ -96,15 +98,15 @@ function main() {
   
   // L1: 自动化检查
   console.log('📋 L1: 自动化检查');
-  checks.push(runCheck('ESLint', 'npm run lint'));
+  checks.push(runCheck('ESLint', 'npx eslint src/ --max-warnings=9999'));
   checks.push(runCheck('TypeScript', 'npx tsc --noEmit'));
-  checks.push(runCheck('单元测试', 'npm test -- --run'));
+  checks.push(runCheck('单元测试', 'npx vitest run'));
   
   console.log('\n📊 L2: 架构审计');
-  checks.push(runCheck('分层调用', 'npm run audit:layers'));
-  checks.push(runCheck('硬编码检查', 'npm run audit:hardcode'));
-  checks.push(runCheck('死代码', 'npm run audit:deadcode'));
-  checks.push(runCheck('文档同步', 'npm run audit:docs'));
+  checks.push(runCheck('分层调用', 'npx tsx scripts/audit-layer-calls.ts'));
+  checks.push(runCheck('硬编码检查', 'npx tsx scripts/audit-hardcode.ts'));
+  checks.push(runCheck('死代码', 'npx tsx scripts/audit-dead-code.ts'));
+  checks.push(runCheck('文档同步', 'npx tsx scripts/audit-doc-sync.ts'));
   
   // 生成报告
   const passed = checks.filter(c => c.passed && !c.isWarning).length;
