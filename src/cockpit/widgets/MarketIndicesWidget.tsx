@@ -12,7 +12,7 @@ interface MarketIndicesWidgetProps {
 export default function MarketIndicesWidget(props: MarketIndicesWidgetProps): React.JSX.Element {
   const { data, loadingMap, errorMap } = useMarketData()
   // P0-2 防御性 guard：防止 props 为 null 时解构崩溃（hooks 之后条件返回）
-  if (!props || !props.config) return <div className="p-4 text-sm text-gray-400">配置未就绪</div>
+  if (!props?.config) return <div className={`p-4 text-sm ${twText('gray', 400)}`}>配置未就绪</div>
   const { config } = props
   const indices = data.indices
   const loading = loadingMap[config.instanceId] ?? true

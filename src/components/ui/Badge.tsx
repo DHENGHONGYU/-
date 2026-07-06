@@ -1,9 +1,6 @@
 import { type HTMLAttributes, forwardRef } from 'react'
 import { cn } from '@/lib/utils'
 import { THEME_TOKENS, COLOR_TOKENS, HOVER } from '@/constants/theme.tokens'
-import { getLogger } from '@/lib/logger'
-
-const logger = getLogger()
 
 export type BadgeVariant = 'default' | 'secondary' | 'outline' | 'destructive' | 'success' | 'warning'
 
@@ -32,31 +29,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
       warning: `border-transparent ${COLOR_TOKENS.warning.bgClass} text-white ${HOVER.bgAmber800}`,
     }
 
-    logger.info('[Badge] 渲染开始', { 
-      variant, 
-      className,
-      baseTokens: {
-        radius: baseTokens.radius,
-        border: baseTokens.border,
-        paddingX: baseTokens.paddingX,
-        paddingY: baseTokens.paddingY,
-        fontSize: baseTokens.fontSize,
-        fontWeight: baseTokens.fontWeight,
-        transition: baseTokens.transition
-      }
-    })
-
-    logger.info('[Badge] Token 取值详情', {
-      THEME_TOKENS_radius_full: THEME_TOKENS.radius.full,
-      THEME_TOKENS_color_border: THEME_TOKENS.color.border,
-      THEME_TOKENS_typography_fontSize_xs: THEME_TOKENS.typography.fontSize.xs,
-      THEME_TOKENS_typography_fontWeight_semibold: THEME_TOKENS.typography.fontWeight.semibold,
-      COLOR_TOKENS_textPrimary_tailwind: COLOR_TOKENS.textPrimary.tailwind,
-      COLOR_TOKENS_danger_bgClass: COLOR_TOKENS.danger.bgClass,
-      COLOR_TOKENS_success_bgClass: COLOR_TOKENS.success.bgClass,
-      COLOR_TOKENS_warning_bgClass: COLOR_TOKENS.warning.bgClass,
-      variantTokenValue: variantTokens[variant]
-    })
+    // 样式计算已完成，不再输出调试日志
 
     return (
       <span
