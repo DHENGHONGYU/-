@@ -10,6 +10,7 @@ import {
   ArrowRight,
   Sparkles,
   MessageSquare,
+  Tag,
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
@@ -94,6 +95,13 @@ const NAV_CARDS: NavCard[] = [
     description: '查看和处理智能体反馈',
     path: '/command/agents/feedback',
     icon: MessageSquare,
+    badge: 'Phase E',
+  },
+  {
+    title: '数据标签管理',
+    description: '管理智能体训练和微调所需的数据标签',
+    path: '/command/agents/data-labels',
+    icon: Tag,
     badge: 'Phase E',
   },
 ]
