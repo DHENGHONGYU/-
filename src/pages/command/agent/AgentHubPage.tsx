@@ -12,6 +12,7 @@ import {
   MessageSquare,
   Tag,
   Key,
+  ArrowUpCircle,
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
@@ -111,6 +112,13 @@ const NAV_CARDS: NavCard[] = [
     path: '/command/agents/api-config',
     icon: Key,
     badge: 'Phase E',
+  },
+  {
+    title: '模型升级流程',
+    description: '管理模型版本升级、A/B测试和回滚策略',
+    path: '/command/agents/model-upgrade',
+    icon: ArrowUpCircle,
+    badge: 'Phase F',
   },
 ]
 
