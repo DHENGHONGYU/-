@@ -16,6 +16,7 @@ const AgentFeedbackPage = React.lazy(() => import('@/pages/command/agent/AgentFe
 const AgentDataLabelPage = React.lazy(() => import('@/pages/command/agent/DataLabelManagementPage'))
 const AgentApiConfigPage = React.lazy(() => import('@/pages/command/agent/ApiConfigurationPage'))
 const AgentModelUpgradePage = React.lazy(() => import('@/pages/command/agent/ModelUpgradePage'))
+const AgentSkillAuditPage = React.lazy(() => import('@/pages/command/agent/SkillAuditPage'))
 
 const logger = getLogger()
 
@@ -32,6 +33,7 @@ const AGENT_ROUTE_MAP: Record<string, { component: React.LazyExoticComponent<Rea
   '/command/agents/data-labels': { component: AgentDataLabelPage, label: '数据标签' },
   '/command/agents/api-config': { component: AgentApiConfigPage, label: 'API配置' },
   '/command/agents/model-upgrade': { component: AgentModelUpgradePage, label: '模型升级' },
+  '/command/agents/skill-audit': { component: AgentSkillAuditPage, label: 'Skill核查' },
 }
 
 function parseAgentId(pathname: string): string | null {

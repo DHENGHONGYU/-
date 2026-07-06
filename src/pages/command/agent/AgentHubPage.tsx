@@ -13,6 +13,7 @@ import {
   Tag,
   Key,
   ArrowUpCircle,
+  Search,
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
@@ -118,6 +119,13 @@ const NAV_CARDS: NavCard[] = [
     description: '管理模型版本升级、A/B测试和回滚策略',
     path: '/command/agents/model-upgrade',
     icon: ArrowUpCircle,
+    badge: 'Phase F',
+  },
+  {
+    title: 'Skill核查可视化',
+    description: '监控和分析所有Skill的使用情况、性能和依赖关系',
+    path: '/command/agents/skill-audit',
+    icon: Search,
     badge: 'Phase F',
   },
 ]
