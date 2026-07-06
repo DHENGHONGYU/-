@@ -14,6 +14,8 @@ import {
   Key,
   ArrowUpCircle,
   Search,
+  Lightbulb,
+  Gift,
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
@@ -126,6 +128,20 @@ const NAV_CARDS: NavCard[] = [
     description: '监控和分析所有Skill的使用情况、性能和依赖关系',
     path: '/command/agents/skill-audit',
     icon: Search,
+    badge: 'Phase F',
+  },
+  {
+    title: '优化建议',
+    description: '查看和实施系统优化建议，提升性能、质量和安全性',
+    path: '/command/agents/optimization',
+    icon: Lightbulb,
+    badge: 'Phase F',
+  },
+  {
+    title: '更新日志',
+    description: '查看系统版本更新历史和新功能介绍',
+    path: '/command/agents/changelog',
+    icon: Gift,
     badge: 'Phase F',
   },
 ]
