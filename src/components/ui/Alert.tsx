@@ -16,10 +16,7 @@
 
 import { type ReactNode, memo } from 'react'
 import { cn } from '@/lib/utils'
-import { getLogger } from '@/lib/logger'
 import { THEME_TOKENS, COLOR_TOKENS, COLOR_SHADES } from '@/constants/theme.tokens'
-
-const logger = getLogger()
 
 // ============================================================
 // 类型定义
@@ -137,45 +134,8 @@ export const Alert = memo(function Alert({
   }
 
   const handleClose = () => {
-    logger.info('[Alert] 关闭按钮点击', { 
-      variant, 
-      tokens,
-      closable 
-    })
     onClose?.()
   }
-
-  logger.info('[Alert] 渲染开始', { 
-    variant, 
-    closable,
-    className,
-    tokens: {
-      radius: tokens.radius,
-      padding: tokens.padding,
-      gap: tokens.gap,
-      border: tokens.border
-    },
-    variantStyles: {
-      container: styles.container,
-      icon: styles.icon
-    }
-  })
-
-  logger.info('[Alert] Token 取值详情', {
-    THEME_TOKENS_radius_lg: THEME_TOKENS.radius.lg,
-    THEME_TOKENS_spacing_md: THEME_TOKENS.spacing.md,
-    THEME_TOKENS_gap_md: THEME_TOKENS.gap.md,
-    COLOR_TOKENS_bgMuted_tailwind: COLOR_TOKENS.bgMuted.tailwind,
-    COLOR_TOKENS_textMuted_tailwind: COLOR_TOKENS.textMuted.tailwind,
-    COLOR_TOKENS_danger_bgClass: COLOR_TOKENS.danger.bgClass,
-    COLOR_TOKENS_danger_tailwind: COLOR_TOKENS.danger.tailwind,
-    COLOR_TOKENS_success_bgClass: COLOR_TOKENS.success.bgClass,
-    COLOR_TOKENS_success_tailwind: COLOR_TOKENS.success.tailwind,
-    COLOR_TOKENS_warning_bgClass: COLOR_TOKENS.warning.bgClass,
-    COLOR_TOKENS_warning_tailwind: COLOR_TOKENS.warning.tailwind,
-    COLOR_TOKENS_info_bgClass: COLOR_TOKENS.info.bgClass,
-    COLOR_TOKENS_info_tailwind: COLOR_TOKENS.info.tailwind
-  })
 
   return (
     <div
@@ -234,8 +194,6 @@ export function AlertTitle({ className, children, ...props }: AlertTitleProps) {
     marginBottom: 'mb-1',
   }
 
-  logger.info('[AlertTitle] 样式计算', { tokens, className })
-
   return (
     <h5
       className={cn(
@@ -262,8 +220,6 @@ export function AlertDescription({ className, children, ...props }: AlertDescrip
     lineHeight: THEME_TOKENS.typography.lineHeight.relaxed,
   }
 
-  logger.info('[AlertDescription] 样式计算', { tokens, className })
-
   return (
     <div
       className={cn(
@@ -280,4 +236,3 @@ export function AlertDescription({ className, children, ...props }: AlertDescrip
 }
 
 export default Alert
-// test

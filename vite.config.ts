@@ -121,9 +121,20 @@ export default defineConfig({
     hookTimeout: 30000,
     retry: 2,
     pool: 'forks',
+    poolOptions: {
+      forks: {
+        minForks: 1,
+        maxForks: 2,
+      },
+    },
+    // Windows 环境下 Worker 崩溃问题对策（TD-010）
+    // 使用 forks 池 + 禁用文件级并行 + isolate
+    sequence: {
+      concurrent: false,
+    },
     coverage: {
       // istanbul provider 基于源码静态分析，能正确识别所有 statements/branches/functions
-      // 修复 v8 coverage 在 pool:forks + vi.mock 场景下系统性丢失覆盖率数据的问题
+      // 使用 threads 池避免 Windows 下 tinypool Worker 崩溃问题（TD-010）
       provider: 'istanbul',
       reporter: ['text', 'json', 'html'],
       include: ['src/**/*.ts', 'src/**/*.tsx'],

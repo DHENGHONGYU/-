@@ -1,9 +1,6 @@
 import { type HTMLAttributes, forwardRef } from 'react'
 import { cn } from '@/lib/utils'
 import { THEME_TOKENS, COLOR_TOKENS } from '@/constants/theme.tokens'
-import { getLogger } from '@/lib/logger'
-
-const logger = getLogger()
 
 export const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => {
@@ -12,7 +9,6 @@ export const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
       background: COLOR_TOKENS.bgCard.tailwind,
       border: 'border shadow-sm',
     }
-    logger.info('[Card] 样式计算', { tokens, className })
     return (
       <div
         ref={ref}
@@ -37,7 +33,6 @@ export const CardHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivEleme
       stackGap: THEME_TOKENS.stackGap.sm,
       padding: THEME_TOKENS.spacing.lg,
     }
-    logger.info('[CardHeader] 样式计算', { tokens, className })
     return (
       <div
         ref={ref}
@@ -63,7 +58,6 @@ export const CardTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadi
       lineHeight: THEME_TOKENS.typography.lineHeight.none,
       letterSpacing: THEME_TOKENS.typography.letterSpacing.tight,
     }
-    logger.info('[CardTitle] 样式计算', { tokens, className })
     return (
       <h3
         ref={ref}
@@ -88,7 +82,6 @@ export const CardDescription = forwardRef<HTMLParagraphElement, HTMLAttributes<H
       fontSize: THEME_TOKENS.typography.fontSize.sm,
       color: COLOR_TOKENS.textMuted.tailwind,
     }
-    logger.info('[CardDescription] 样式计算', { tokens, className })
     return (
       <p
         ref={ref}
@@ -110,7 +103,6 @@ export const CardAction = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivEleme
     const tokens = {
       gap: THEME_TOKENS.gap.sm,
     }
-    logger.info('[CardAction] 样式计算', { tokens, className })
     return (
       <div
         ref={ref}
@@ -132,7 +124,6 @@ export const CardContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElem
     const tokens = {
       padding: THEME_TOKENS.spacing.lg,
     }
-    logger.info('[CardContent] 样式计算', { tokens, className })
     return (
       <div
         ref={ref}
@@ -150,7 +141,6 @@ export const CardFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivEleme
     const tokens = {
       padding: THEME_TOKENS.spacing.lg,
     }
-    logger.info('[CardFooter] 样式计算', { tokens, className })
     return (
       <div
         ref={ref}
