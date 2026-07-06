@@ -18,10 +18,9 @@ import type { ScoreDocVersion, Stock } from '@/data/types'
 import { buildReportMarkdown, getRecentVersions, exportSymbolMd, listScoreDocsBySymbol, buildScoreDocDiff, type ScoreDocDiff } from '@/services/analysis/scoreDocService'
 import { listStocks } from '@/services/stockpool/stockpoolService'
 import { dataBridge } from '@/core/databridge'
-import { ENVELOPE_ACTION } from '@/config/dbConfig'
+import { ENVELOPE_ACTION, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { withBroadcast } from '@/store/helpers/withBroadcast'
-import { dataLayer } from '@/data/dataLayer'
 
 const logger = getLogger()
 
@@ -62,7 +61,7 @@ export interface ScoreDocState {
   clear: () => void
   /** 导出当前股票全部 Markdown */
   exportAll: () => Promise<void>
-  /** 加载股票代码列表（供下拉选择，封装 dataLayer.stocks.list） */
+  /** 加载股票代码列表（供下拉选择，封装 DataBridge.query(queryList)）） */
   loadStockSymbols: () => Promise<string[]>
   /** 生成研究报告 Markdown（封装 buildReportMarkdown + getRecentVersions） */
   generateReport: (symbol: string) => Promise<{ symbol: string; version: number; markdown: string; generatedAt: string }>
@@ -251,7 +250,19 @@ export const useScoreDocStore = create<ScoreDocState>((set, get) => ({
   loadStockSymbols: async () => {
     logger.info('[scoreDocStore] loadStockSymbols 开始')
     try {
-      const stocks = await dataLayer.stocks.list()
+      const result = await dataBridge.query<Stock[]>({
+        action: ENVELOPE_ACTION.queryList,
+        store: STORE_NAME.stocks,
+        source: MODULE_ID.analyzer,
+      })
+
+      if (!result.success) {
+        const errorMessage = result.error ?? '查询股票列表失败'
+        logger.error(`[scoreDocStore] loadStockSymbols 查询失败: ${errorMessage}`)
+        throw new Error(errorMessage)
+      }
+
+      const stocks = result.data ?? []
       const uniqueSymbols = Array.from(new Set(stocks.map(s => s.symbol))).sort()
       logger.info(`[scoreDocStore] loadStockSymbols 完成: ${uniqueSymbols.length} 个代码`)
       return uniqueSymbols
