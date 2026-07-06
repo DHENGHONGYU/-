@@ -19,6 +19,7 @@ import type { Signal, ExecutionPlan, RiskCheckItem } from '@/data/types'
 import { getDefaultTradingConfig } from '@/config/tradingConfig'
 import { calculatePosition, type PositionSizingResult } from '@/services/trading/positionSizer'
 import { checkOrderRisk, type RiskCheckResult } from '@/services/trading/riskEngine'
+import { nanoid } from 'nanoid'
 
 const logger = getLogger()
 
@@ -28,10 +29,19 @@ const logger = getLogger()
 
 export interface CreateExecutionPlanInput {
   /** 交易信号 */
-  signal: Signal
+  readonly signal: Signal
   /** 账户类型，默认 'paper' */
-  accountType?: AccountType
+  readonly accountType?: AccountType
+  /** 调用来源，用于差异化风控策略 */
+  readonly source?: 'mcp' | 'manual' | 'strategy'
 }
+
+export type ExecutionPlanErrorCode =
+  | 'NOT_TRADE_SIGNAL'
+  | 'PRICE_MISSING'
+  | 'RISK_BLOCKED'
+  | 'PERSISTENCE_FAILED'
+  | 'UNKNOWN_ERROR'
 
 export interface CreateExecutionPlanResult {
   /** 是否成功 */
@@ -40,15 +50,17 @@ export interface CreateExecutionPlanResult {
   plan?: ExecutionPlan
   /** 错误信息（成功时为 undefined） */
   error?: string
+  /** 错误码，便于前端分类处理 */
+  errorCode?: ExecutionPlanErrorCode
 }
 
 // ============================================================
 // 工具函数
 // ============================================================
 
-/** 生成执行计划 ID */
+/** 生成执行计划 ID（使用 nanoid 避免高并发下的 ID 碰撞） */
 function generatePlanId(): string {
-  return `ep-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`
+  return `ep-${nanoid(16)}`
 }
 
 // ============================================================
@@ -63,6 +75,15 @@ function generatePlanId(): string {
  *
  * @param input 创建参数
  * @returns 创建结果（包含 plan 或 error）
+ *
+ * @example
+ * ```typescript
+ * const result = await createExecutionPlanUseCase({
+ *   signal: { id: 'sig-1', symbol: 'AAPL', direction: 'buy', confidence: 0.85 },
+ *   accountType: 'paper',
+ *   source: 'mcp'
+ * })
+ * ```
  */
 export async function createExecutionPlanUseCase(
   input: CreateExecutionPlanInput,
@@ -75,6 +96,7 @@ export async function createExecutionPlanUseCase(
     signalId: signal.id,
     symbol: signal.symbol,
     direction: signal.direction,
+    source: input.source,
   })
 
   // 非交易信号（hold/watch）不创建执行计划
@@ -82,7 +104,7 @@ export async function createExecutionPlanUseCase(
     logger.info('[createExecutionPlanUseCase] 跳过: direction 为 hold/watch', {
       symbol: signal.symbol,
     })
-    return { success: false, error: '非交易信号，不创建执行计划' }
+    return { success: false, error: '非交易信号，不创建执行计划', errorCode: 'NOT_TRADE_SIGNAL' }
   }
 
   try {
@@ -111,7 +133,7 @@ export async function createExecutionPlanUseCase(
     const totalValue = totalShares * price
 
     const sizingResult: PositionSizingResult = calculatePosition({
-      direction: signal.direction as 'buy' | 'sell' | 'hold',
+      direction: signal.direction,
       price,
       portfolioValue,
       currentHoldingShares: holdingShares,
@@ -122,10 +144,11 @@ export async function createExecutionPlanUseCase(
     // 3. 风控检查
     const riskResult: RiskCheckResult = await checkOrderRisk({
       symbol: signal.symbol,
-      direction: signal.direction as 'buy' | 'sell' | 'hold' | 'watch',
+      direction: signal.direction,
       quantity: sizingResult.targetShares,
       price,
       portfolioValue,
+      source: input.source,
     })
 
     // 将风控结果转换为 RiskCheckItem[]
@@ -196,20 +219,34 @@ export async function createExecutionPlanUseCase(
     // 5. 持久化
     await dataLayer.executionPlans.save(plan)
 
-    logger.info('[createExecutionPlanUseCase] 创建成功', {
-      planId,
-      symbol: signal.symbol,
-      passed: plan.risk?.passed,
-      quantity: plan.sizing?.quantity,
-    })
+    // 6. 日志记录：区分成功和风控阻断
+    if (!hasBlocker) {
+      logger.info('[createExecutionPlanUseCase] 创建成功', {
+        planId,
+        symbol: signal.symbol,
+        passed: true,
+        quantity: plan.sizing?.quantity,
+      })
+    } else {
+      logger.warn('[createExecutionPlanUseCase] 风控阻断', {
+        planId,
+        symbol: signal.symbol,
+        passed: false,
+        blockers: riskResult.blocks,
+      })
+    }
 
-    return { success: true, plan }
+    return {
+      success: true,
+      plan,
+      errorCode: hasBlocker ? 'RISK_BLOCKED' : undefined,
+    }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     logger.error('[createExecutionPlanUseCase] 创建失败', {
       error: message,
       symbol: signal.symbol,
     })
-    return { success: false, error: message }
+    return { success: false, error: message, errorCode: 'UNKNOWN_ERROR' }
   }
 }

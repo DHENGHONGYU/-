@@ -9,12 +9,12 @@ import type { ServerInfo, ToolDescriptor } from '@/types/modules/mcp.types'
 import { getLogger } from '@/lib/logger'
 import type { Signal } from '@/data/types'
 import {
-  createPlan,
   listPlans,
   updatePhase,
   cancelPlan,
   getOrphanPlans,
 } from '@/services/execution/executionPlanService'
+import { createExecutionPlanUseCase } from '@/services/useCase/createExecutionPlan.useCase'
 
 const logger = getLogger()
 
@@ -38,24 +38,36 @@ export class ExecutionServer extends MCPServerBase {
             direction: { type: 'string', enum: ['buy', 'sell'], description: '交易方向' },
             quantity: { type: 'number', description: '交易数量' },
             price: { type: 'number', description: '目标价格' },
+            confidence: { type: 'number', description: '置信度（0-1），默认 0.5' },
           },
           required: ['symbol', 'direction', 'quantity', 'price'],
         },
         handler: async (args) => {
           logger.info('[ExecutionServer] create_execution_plan called', { symbol: args.symbol })
+
+          // 尽早失败：校验 confidence 范围
+          const confidence = (args.confidence as number) ?? 0.5
+          if (confidence < 0 || confidence > 1) {
+            return { content: [{ type: 'text', text: JSON.stringify({ error: '参数错误：confidence 必须在 0-1 之间' }) }] }
+          }
+
           const signal: Signal = {
             id: `sig-mcp-${Date.now()}`,
             symbol: args.symbol as string,
             direction: args.direction as Signal['direction'],
             type: 'mcp_manual',
             strategy: 'manual',
-            confidence: 0.5,
+            confidence,
             rationale: 'MCP 手动创建',
             snapshot: {},
             createdAt: Date.now(),
           }
-          const plan = await createPlan(signal)
-          return { content: [{ type: 'text', text: JSON.stringify(plan ?? { error: '创建失败' }) }] }
+          // 委托给完整 UseCase，走完整风控流程
+          const result = await createExecutionPlanUseCase({ signal, source: 'mcp' })
+          if (!result.success || !result.plan) {
+            return { content: [{ type: 'text', text: JSON.stringify({ error: result.error || '创建失败', errorCode: result.errorCode }) }] }
+          }
+          return { content: [{ type: 'text', text: JSON.stringify(result.plan) }] }
         },
       },
       {

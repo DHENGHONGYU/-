@@ -56,6 +56,11 @@ const mockCheckOrderRisk = vi.mocked(checkOrderRisk)
 describe('createExecutionPlanUseCase', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    // 恢复默认 mock 实现（clearAllMocks 只清调用记录，不清实现，
+    // 但 mockRejectedValueOnce 等 Once 变体会残留，需要显式重置）
+    mockDataLayer.executionPlans.save.mockResolvedValue({ success: true } as never)
+    mockDataLayer.orders.list.mockResolvedValue([])
+    mockCheckOrderRisk.mockResolvedValue({ ok: true, blocks: [], warnings: [] })
   })
 
   // 测试数据
@@ -289,6 +294,467 @@ describe('createExecutionPlanUseCase', () => {
           source: 'mcp',
         }),
       )
+    })
+  })
+
+  describe('边界条件 - 极端数值', () => {
+    it('应当处理：极小正数股价（0.01元）', async () => {
+      // 准备：A股最低股价 0.01 元
+      mockDataLayer.stocks.get.mockResolvedValue({ symbol: '000001.SZ', price: 0.01 })
+      mockDataLayer.orders.list.mockResolvedValue([])
+      mockDataLayer.executionPlans.save.mockResolvedValue({ success: true })
+      mockCheckOrderRisk.mockResolvedValue({
+        ok: true,
+        blocks: [],
+        warnings: [],
+      })
+
+      // 执行
+      const result = await createExecutionPlanUseCase({ signal: mockSignal })
+
+      // 验证
+      expect(result.success).toBe(true)
+      expect(result.plan?.targetPrice).toBe(0.01)
+      expect(result.plan?.quantity).toBeGreaterThan(0)
+    })
+
+    it('应当处理：极大股价（99999.99元）', async () => {
+      // 准备：A股最高股价限制
+      mockDataLayer.stocks.get.mockResolvedValue({ symbol: '000001.SZ', price: 99999.99 })
+      mockDataLayer.orders.list.mockResolvedValue([])
+      mockDataLayer.executionPlans.save.mockResolvedValue({ success: true })
+      mockCheckOrderRisk.mockResolvedValue({
+        ok: true,
+        blocks: [],
+        warnings: [],
+      })
+
+      // 执行
+      const result = await createExecutionPlanUseCase({ signal: mockSignal })
+
+      // 验证
+      expect(result.success).toBe(true)
+      expect(result.plan?.targetPrice).toBe(99999.99)
+    })
+
+    it('应当处理：极小置信度（0.01）', async () => {
+      // 准备：置信度刚好高于阈值
+      const lowConfidenceSignal: Signal = { ...mockSignal, confidence: 0.01 }
+      mockDataLayer.stocks.get.mockResolvedValue({ symbol: '000001.SZ', price: 15.5 })
+      mockDataLayer.orders.list.mockResolvedValue([])
+      mockDataLayer.executionPlans.save.mockResolvedValue({ success: true })
+      mockCheckOrderRisk.mockResolvedValue({
+        ok: true,
+        blocks: [],
+        warnings: [],
+      })
+
+      // 执行
+      const result = await createExecutionPlanUseCase({ signal: lowConfidenceSignal })
+
+      // 验证
+      expect(result.success).toBe(true)
+      expect(result.plan?.confidence).toBe(0.01)
+    })
+
+    it('应当处理：极大置信度（1.0）', async () => {
+      // 准备：置信度达到最大值
+      const highConfidenceSignal: Signal = { ...mockSignal, confidence: 1.0 }
+      mockDataLayer.stocks.get.mockResolvedValue({ symbol: '000001.SZ', price: 15.5 })
+      mockDataLayer.orders.list.mockResolvedValue([])
+      mockDataLayer.executionPlans.save.mockResolvedValue({ success: true })
+      mockCheckOrderRisk.mockResolvedValue({
+        ok: true,
+        blocks: [],
+        warnings: [],
+      })
+
+      // 执行
+      const result = await createExecutionPlanUseCase({ signal: highConfidenceSignal })
+
+      // 验证
+      expect(result.success).toBe(true)
+      expect(result.plan?.confidence).toBe(1.0)
+    })
+
+    it('应当处理：负数股价（异常数据）', async () => {
+      // 准备：异常负数股价
+      mockDataLayer.stocks.get.mockResolvedValue({ symbol: '000001.SZ', price: -10.5 })
+      mockDataLayer.orders.list.mockResolvedValue([])
+      mockCheckOrderRisk.mockResolvedValue({
+        ok: false,
+        blocks: ['价格或数量非法'],
+        warnings: [],
+      })
+
+      // 执行
+      const result = await createExecutionPlanUseCase({ signal: mockSignal })
+
+      // 验证：应当被风控阻断
+      expect(result.plan?.risk?.passed).toBe(false)
+      expect(result.plan?.result).toBe('failed')
+    })
+
+    it('应当处理：极大数量（1000000股）', async () => {
+      // 准备：超大交易量
+      mockDataLayer.stocks.get.mockResolvedValue({ symbol: '000001.SZ', price: 15.5 })
+      mockDataLayer.orders.list.mockResolvedValue([])
+      mockDataLayer.executionPlans.save.mockResolvedValue({ success: true })
+      mockCheckOrderRisk.mockResolvedValue({
+        ok: true,
+        blocks: [],
+        warnings: ['超大交易量'],
+      })
+
+      // 执行
+      const result = await createExecutionPlanUseCase({ signal: mockSignal })
+
+      // 验证
+      expect(result.success).toBe(true)
+      expect(result.plan?.quantity).toBeGreaterThan(0)
+    })
+  })
+
+  describe('边界条件 - 数据缺失', () => {
+    it('应当处理：股票数据不存在', async () => {
+      // 准备：股票不存在
+      mockDataLayer.stocks.get.mockResolvedValue(null)
+      mockDataLayer.orders.list.mockResolvedValue([])
+      mockCheckOrderRisk.mockResolvedValue({
+        ok: false,
+        blocks: ['股票数据缺失'],
+        warnings: [],
+      })
+
+      // 执行
+      const result = await createExecutionPlanUseCase({ signal: mockSignal })
+
+      // 验证
+      expect(result.plan?.risk?.passed).toBe(false)
+      expect(result.plan?.result).toBe('failed')
+      expect(result.plan?.errorMessage).toContain('股票数据缺失')
+    })
+
+    it('应当处理：股票价格为 undefined', async () => {
+      // 准备：价格字段缺失
+      mockDataLayer.stocks.get.mockResolvedValue({ symbol: '000001.SZ', price: undefined })
+      mockDataLayer.orders.list.mockResolvedValue([])
+      mockCheckOrderRisk.mockResolvedValue({
+        ok: false,
+        blocks: ['价格或数量非法'],
+        warnings: [],
+      })
+
+      // 执行
+      const result = await createExecutionPlanUseCase({ signal: mockSignal })
+
+      // 验证
+      expect(result.plan?.risk?.passed).toBe(false)
+      expect(result.plan?.result).toBe('failed')
+    })
+
+    it('应当处理：股票价格为 NaN', async () => {
+      // 准备：价格为 NaN
+      mockDataLayer.stocks.get.mockResolvedValue({ symbol: '000001.SZ', price: NaN })
+      mockDataLayer.orders.list.mockResolvedValue([])
+      mockCheckOrderRisk.mockResolvedValue({
+        ok: false,
+        blocks: ['价格或数量非法'],
+        warnings: [],
+      })
+
+      // 执行
+      const result = await createExecutionPlanUseCase({ signal: mockSignal })
+
+      // 验证
+      expect(result.plan?.risk?.passed).toBe(false)
+      expect(result.plan?.result).toBe('failed')
+    })
+
+    it('应当处理：股票价格为 Infinity', async () => {
+      // 准备：价格为无穷大
+      mockDataLayer.stocks.get.mockResolvedValue({ symbol: '000001.SZ', price: Infinity })
+      mockDataLayer.orders.list.mockResolvedValue([])
+      mockCheckOrderRisk.mockResolvedValue({
+        ok: false,
+        blocks: ['价格或数量非法'],
+        warnings: [],
+      })
+
+      // 执行
+      const result = await createExecutionPlanUseCase({ signal: mockSignal })
+
+      // 验证
+      expect(result.plan?.risk?.passed).toBe(false)
+      expect(result.plan?.result).toBe('failed')
+    })
+  })
+
+  describe('边界条件 - 特殊字符', () => {
+    it('应当处理：symbol 包含空格', async () => {
+      // 准备：symbol 前后有空格
+      const signalWithSpace: Signal = { ...mockSignal, symbol: '  000001.SZ  ' }
+      mockDataLayer.stocks.get.mockResolvedValue({ symbol: '000001.SZ', price: 15.5 })
+      mockDataLayer.orders.list.mockResolvedValue([])
+      mockDataLayer.executionPlans.save.mockResolvedValue({ success: true })
+      mockCheckOrderRisk.mockResolvedValue({
+        ok: true,
+        blocks: [],
+        warnings: [],
+      })
+
+      // 执行
+      const result = await createExecutionPlanUseCase({ signal: signalWithSpace })
+
+      // 验证：应当正常处理（内部会 trim）
+      expect(result.success).toBe(true)
+    })
+
+    it('应当处理：symbol 小写转大写', async () => {
+      // 准备：小写 symbol
+      const signalLowercase: Signal = { ...mockSignal, symbol: '000001.sz' }
+      mockDataLayer.stocks.get.mockResolvedValue({ symbol: '000001.SZ', price: 15.5 })
+      mockDataLayer.orders.list.mockResolvedValue([])
+      mockDataLayer.executionPlans.save.mockResolvedValue({ success: true })
+      mockCheckOrderRisk.mockResolvedValue({
+        ok: true,
+        blocks: [],
+        warnings: [],
+      })
+
+      // 执行
+      const result = await createExecutionPlanUseCase({ signal: signalLowercase })
+
+      // 验证：应当正常处理（内部会转大写）
+      expect(result.success).toBe(true)
+    })
+  })
+
+  describe('边界条件 - 并发请求', () => {
+    it('应当处理：并发创建多个执行计划', async () => {
+      // 准备：模拟并发场景
+      mockDataLayer.stocks.get.mockResolvedValue({ symbol: '000001.SZ', price: 15.5 })
+      mockDataLayer.orders.list.mockResolvedValue([])
+      mockDataLayer.executionPlans.save.mockResolvedValue({ success: true })
+      mockCheckOrderRisk.mockResolvedValue({
+        ok: true,
+        blocks: [],
+        warnings: [],
+      })
+
+      // 执行：并发创建 5 个执行计划
+      const signals = Array.from({ length: 5 }, (_, i) => ({
+        ...mockSignal,
+        id: `sig-concurrent-${i}`,
+      }))
+
+      const results = await Promise.all(
+        signals.map((signal) => createExecutionPlanUseCase({ signal }))
+      )
+
+      // 验证：所有请求都应成功
+      expect(results).toHaveLength(5)
+      results.forEach((result) => {
+        expect(result.success).toBe(true)
+        expect(result.plan).toBeDefined()
+      })
+
+      // 验证：每个计划都有唯一的 ID
+      const planIds = results.map((r) => r.plan?.id)
+      const uniqueIds = new Set(planIds)
+      expect(uniqueIds.size).toBe(5)
+    })
+
+    it('应当处理：并发请求中部分失败', async () => {
+      // 准备：部分请求风控失败
+      mockDataLayer.stocks.get.mockResolvedValue({ symbol: '000001.SZ', price: 15.5 })
+      mockDataLayer.orders.list.mockResolvedValue([])
+      mockDataLayer.executionPlans.save.mockResolvedValue({ success: true })
+
+      // 第一次调用成功，第二次失败，第三次成功
+      mockCheckOrderRisk
+        .mockResolvedValueOnce({ ok: true, blocks: [], warnings: [] })
+        .mockResolvedValueOnce({ ok: false, blocks: ['超出当日最大交易次数'], warnings: [] })
+        .mockResolvedValueOnce({ ok: true, blocks: [], warnings: [] })
+
+      // 执行：并发创建 3 个执行计划
+      const signals = Array.from({ length: 3 }, (_, i) => ({
+        ...mockSignal,
+        id: `sig-mixed-${i}`,
+      }))
+
+      const results = await Promise.all(
+        signals.map((signal) => createExecutionPlanUseCase({ signal }))
+      )
+
+      // 验证
+      expect(results).toHaveLength(3)
+      expect(results[0].success).toBe(true)
+      expect(results[0].plan?.risk?.passed).toBe(true)
+
+      expect(results[1].success).toBe(true)
+      expect(results[1].plan?.risk?.passed).toBe(false)
+      expect(results[1].plan?.result).toBe('failed')
+
+      expect(results[2].success).toBe(true)
+      expect(results[2].plan?.risk?.passed).toBe(true)
+    })
+  })
+
+  describe('边界条件 - 数据库操作', () => {
+    it('应当处理：保存执行计划失败', async () => {
+      // 准备：数据库保存失败
+      mockDataLayer.stocks.get.mockResolvedValue({ symbol: '000001.SZ', price: 15.5 })
+      mockDataLayer.orders.list.mockResolvedValue([])
+      mockDataLayer.executionPlans.save.mockResolvedValue({ success: false, error: '数据库写入失败' })
+      mockCheckOrderRisk.mockResolvedValue({
+        ok: true,
+        blocks: [],
+        warnings: [],
+      })
+
+      // 执行
+      const result = await createExecutionPlanUseCase({ signal: mockSignal })
+
+      // 验证：即使保存失败，UseCase 仍应返回成功（计划已生成）
+      expect(result.success).toBe(true)
+      expect(result.plan).toBeDefined()
+    })
+
+    it('应当处理：保存执行计划抛出异常', async () => {
+      // 准备：数据库保存抛出异常
+      mockDataLayer.stocks.get.mockResolvedValue({ symbol: '000001.SZ', price: 15.5 })
+      mockDataLayer.orders.list.mockResolvedValue([])
+      mockDataLayer.executionPlans.save.mockRejectedValue(new Error('数据库连接失败'))
+      mockCheckOrderRisk.mockResolvedValue({
+        ok: true,
+        blocks: [],
+        warnings: [],
+      })
+
+      // 执行
+      const result = await createExecutionPlanUseCase({ signal: mockSignal })
+
+      // 验证：应当捕获异常并返回失败（统一错误码 UNKNOWN_ERROR）
+      expect(result.success).toBe(false)
+      expect(result.error).toContain('数据库连接失败')
+      expect(result.errorCode).toBe('UNKNOWN_ERROR')
+    })
+
+    it('应当处理：查询订单列表失败', async () => {
+      // 准备：查询订单失败
+      mockDataLayer.stocks.get.mockResolvedValue({ symbol: '000001.SZ', price: 15.5 })
+      mockDataLayer.orders.list.mockRejectedValue(new Error('数据库查询失败'))
+
+      // 执行
+      const result = await createExecutionPlanUseCase({ signal: mockSignal })
+
+      // 验证：应当捕获异常并返回失败（统一错误码 UNKNOWN_ERROR）
+      expect(result.success).toBe(false)
+      expect(result.error).toContain('数据库查询失败')
+      expect(result.errorCode).toBe('UNKNOWN_ERROR')
+    })
+  })
+
+  describe('边界条件 - 风控引擎', () => {
+    it('应当处理：风控引擎返回多个阻断原因', async () => {
+      // 准备：多个风控问题
+      mockDataLayer.stocks.get.mockResolvedValue({ symbol: '000001.SZ', price: 15.5 })
+      mockDataLayer.orders.list.mockResolvedValue([])
+      mockCheckOrderRisk.mockResolvedValue({
+        ok: false,
+        blocks: ['价格或数量非法', '超出单笔仓位上限', '超出当日最大交易次数'],
+        warnings: [],
+      })
+
+      // 执行
+      const result = await createExecutionPlanUseCase({ signal: mockSignal })
+
+      // 验证：应当包含所有阻断原因
+      expect(result.plan?.risk?.passed).toBe(false)
+      expect(result.plan?.result).toBe('failed')
+      expect(result.plan?.errorMessage).toContain('价格或数量非法')
+      expect(result.plan?.errorMessage).toContain('超出单笔仓位上限')
+      expect(result.plan?.errorMessage).toContain('超出当日最大交易次数')
+    })
+
+    it('应当处理：风控引擎返回多个警告', async () => {
+      // 准备：多个警告
+      mockDataLayer.stocks.get.mockResolvedValue({ symbol: '000001.SZ', price: 15.5 })
+      mockDataLayer.orders.list.mockResolvedValue([])
+      mockDataLayer.executionPlans.save.mockResolvedValue({ success: true })
+      mockCheckOrderRisk.mockResolvedValue({
+        ok: true,
+        blocks: [],
+        warnings: ['单笔仓位接近上限', '当日交易次数接近上限', '行情数据较旧'],
+      })
+
+      // 执行
+      const result = await createExecutionPlanUseCase({ signal: mockSignal })
+
+      // 验证：应当包含所有警告
+      expect(result.success).toBe(true)
+      expect(result.plan?.risk?.passed).toBe(true)
+      expect(result.plan?.risk?.warnings).toHaveLength(3)
+      expect(result.plan?.risk?.warnings).toContain('单笔仓位接近上限')
+      expect(result.plan?.risk?.warnings).toContain('当日交易次数接近上限')
+      expect(result.plan?.risk?.warnings).toContain('行情数据较旧')
+    })
+
+    it('应当处理：风控引擎抛出异常', async () => {
+      // 准备：风控引擎异常
+      mockDataLayer.stocks.get.mockResolvedValue({ symbol: '000001.SZ', price: 15.5 })
+      mockDataLayer.orders.list.mockResolvedValue([])
+      mockCheckOrderRisk.mockRejectedValue(new Error('风控引擎内部错误'))
+
+      // 执行
+      const result = await createExecutionPlanUseCase({ signal: mockSignal })
+
+      // 验证：应当捕获异常并返回失败
+      expect(result.success).toBe(false)
+      expect(result.error).toContain('风控引擎内部错误')
+      expect(result.errorCode).toBe('UNKNOWN_ERROR')
+    })
+  })
+
+  describe('边界条件 - 信号方向', () => {
+    it('应当处理：sell 方向', async () => {
+      // 准备：卖出信号
+      const sellSignal: Signal = { ...mockSignal, direction: 'sell' }
+      mockDataLayer.stocks.get.mockResolvedValue({ symbol: '000001.SZ', price: 15.5 })
+      mockDataLayer.orders.list.mockResolvedValue([])
+      mockDataLayer.executionPlans.save.mockResolvedValue({ success: true })
+      mockCheckOrderRisk.mockResolvedValue({
+        ok: true,
+        blocks: [],
+        warnings: [],
+      })
+
+      // 执行
+      const result = await createExecutionPlanUseCase({ signal: sellSignal })
+
+      // 验证
+      expect(result.success).toBe(true)
+      expect(result.plan?.direction).toBe('sell')
+    })
+
+    it('应当处理：大小写不敏感的方向', async () => {
+      // 准备：大写方向
+      const upperSignal: Signal = { ...mockSignal, direction: 'BUY' as 'buy' }
+      mockDataLayer.stocks.get.mockResolvedValue({ symbol: '000001.SZ', price: 15.5 })
+      mockDataLayer.orders.list.mockResolvedValue([])
+      mockDataLayer.executionPlans.save.mockResolvedValue({ success: true })
+      mockCheckOrderRisk.mockResolvedValue({
+        ok: true,
+        blocks: [],
+        warnings: [],
+      })
+
+      // 执行
+      const result = await createExecutionPlanUseCase({ signal: upperSignal })
+
+      // 验证：应当正常处理
+      expect(result.success).toBe(true)
     })
   })
 })

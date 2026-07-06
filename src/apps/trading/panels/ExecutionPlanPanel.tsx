@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { cn } from '@/lib/utils'
+import { getLogger } from '@/lib/logger'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
@@ -11,6 +12,8 @@ import type { ExecutionPlan } from '@/data/types'
 import { RefreshCw } from 'lucide-react'
 
 type FilterTab = 'all' | 'active' | 'completed' | 'cancelled' | 'reviewed'
+
+const logger = getLogger()
 
 const TAB_LABELS: Record<FilterTab, string> = {
   all: '全部',
@@ -59,9 +62,18 @@ export function ExecutionPlanPanel(): React.JSX.Element {
   const markReviewed = useExecutionStore((s) => s.markReviewed)
 
   useEffect(() => {
+    const snapshot = useExecutionStore.getState()
+    logger.info('[ExecutionPlanPanel] 挂载，开始初始化订阅', {
+      planCount: snapshot.plans.length,
+      activePlanCount: snapshot.activePlans.length,
+    })
     const cleanup = initExecutionStoreSubscriptions()
+    logger.info('[ExecutionPlanPanel] 订阅初始化完成，触发首次刷新')
     void refresh()
-    return cleanup
+    return () => {
+      logger.info('[ExecutionPlanPanel] 卸载，清理订阅')
+      cleanup()
+    }
   }, [refresh])
 
   const filteredPlans = useMemo(() => filterPlans(plans, activeTab), [plans, activeTab])
@@ -135,24 +147,33 @@ export function ExecutionPlanPanel(): React.JSX.Element {
                 ))}
               </div>
             ) : filteredPlans.length === 0 ? (
-              <EmptyState
-                title="暂无执行计划"
-                description="扫描信号后将自动生成"
-                className="py-8"
-              />
+              <>
+                {logger.info('[ExecutionPlanPanel] 当前标签无执行计划', { activeTab })}
+                <EmptyState
+                  title="暂无执行计划"
+                  description="扫描信号后将自动生成"
+                  className="py-8"
+                />
+              </>
             ) : (
-              <div className="grid gap-2">
-                {filteredPlans.map((plan) => (
-                  <ExecutionPlanCard
-                    key={plan.id}
-                    plan={plan}
-                    onConfirm={confirmPlan}
-                    onExecute={executePlan}
-                    onCancel={cancelPlan}
-                    onReview={markReviewed}
-                  />
-                ))}
-              </div>
+              <>
+                {logger.info('[ExecutionPlanPanel] 渲染执行计划列表', {
+                  activeTab,
+                  filteredCount: filteredPlans.length,
+                })}
+                <div className="grid gap-2">
+                  {filteredPlans.map((plan) => (
+                    <ExecutionPlanCard
+                      key={plan.id}
+                      plan={plan}
+                      onConfirm={confirmPlan}
+                      onExecute={executePlan}
+                      onCancel={cancelPlan}
+                      onReview={markReviewed}
+                    />
+                  ))}
+                </div>
+              </>
             )}
           </TabsContent>
         </Tabs>

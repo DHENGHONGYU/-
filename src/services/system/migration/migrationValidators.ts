@@ -1,6 +1,6 @@
 import { ENVELOPE_ACTION, ENVELOPE_TARGET } from '@/config/dbConfig'
 import { EnvelopeFactory, type StandardEnvelope } from '@/core/envelope'
-import { DataBridge } from '@/core/databridge'
+import { dataBridge } from '@/core/databridge'
 import { generateId } from '@/data/db'
 import { getLogger } from '@/lib/logger'
 import type { V6ExportShape } from './migrationTypes'
@@ -42,7 +42,6 @@ export async function writeMigrationAuditLog(params: {
   failed: number
 }): Promise<void> {
   const { traceId, store, total, success, skipped, failed } = params
-  const dataBridge = new DataBridge()
   const envelope: StandardEnvelope = EnvelopeFactory.create(
     {
       source: 'system',

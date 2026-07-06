@@ -12,6 +12,8 @@ export interface OrderRiskInput {
   quantity: number
   price: number
   portfolioValue: number
+  /** 调用来源，用于差异化风控策略 */
+  source?: 'mcp' | 'manual' | 'strategy'
 }
 
 export interface RiskCheckResult {
@@ -63,7 +65,7 @@ export async function checkOrderRisk(input: OrderRiskInput): Promise<RiskCheckRe
 
   // 1. 行情数据新鲜度
   const quotes = await dataLayer.dailyQuotes.get(normalized)
-  if (!quotes || !quotes.updatedAt) {
+  if (!quotes?.updatedAt) {
     blocks.push('无有效行情数据')
   } else if (!isWithinHours(quotes.updatedAt, risk.dataFreshnessHours)) {
     blocks.push(`行情数据超过 ${risk.dataFreshnessHours} 小时未更新`)
@@ -150,6 +152,16 @@ export async function checkOrderRisk(input: OrderRiskInput): Promise<RiskCheckRe
     if (holdingShares < input.quantity) {
       blocks.push(`卖出数量 ${input.quantity} 超过当前持仓 ${holdingShares}`)
     }
+  }
+
+  // MCP 来源：增加人工确认标志
+  if (input.source === 'mcp') {
+    logger.info('[RiskEngine] MCP 来源调用，标记需人工复核', {
+      symbol: input.symbol,
+      direction: input.direction,
+      quantity: input.quantity,
+    })
+    warnings.push('MCP 自动建议，建议人工复核')
   }
 
   return { ok: blocks.length === 0, warnings, blocks }

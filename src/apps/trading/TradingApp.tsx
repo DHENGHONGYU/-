@@ -11,6 +11,9 @@ import { COLOR_TOKENS } from '@/constants/theme.tokens'
 // 子页面懒加载
 const StrategySnapshotPage = React.lazy(() => import('@/pages/trading/StrategySnapshotPage'))
 const HoldingsPage = React.lazy(() => import('@/pages/trading/HoldingsPage'))
+const ExecutionPlanPanel = React.lazy(() =>
+  import('./panels/ExecutionPlanPanel').then((m) => ({ default: m.ExecutionPlanPanel })),
+)
 
 const logger = getLogger()
 
@@ -24,6 +27,7 @@ const logger = getLogger()
  * 路由映射：
  * - /trading/strategy-snapshots → StrategySnapshotPage
  * - /trading/holdings          → HoldingsPage
+ * - /trading/execution-plans   → ExecutionPlanPanel
  * - /trading（默认）           → 交易看板（TradingDashboard）
  */
 export default function TradingApp(): React.JSX.Element {
@@ -67,6 +71,9 @@ export default function TradingApp(): React.JSX.Element {
     } else if (path === '/trading/holdings') {
       branch = 'holdings'
       componentName = 'HoldingsPage'
+    } else if (path === '/trading/execution-plans') {
+      branch = 'execution-plans'
+      componentName = 'ExecutionPlanPanel'
     } else {
       branch = 'default'
       componentName = 'TradingDashboard'
@@ -118,6 +125,12 @@ export default function TradingApp(): React.JSX.Element {
     content = (
       <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">加载持仓管理中...</div>}>
         <HoldingsPage />
+      </Suspense>
+    )
+  } else if (path === '/trading/execution-plans') {
+    content = (
+      <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">加载执行计划中...</div>}>
+        <ExecutionPlanPanel />
       </Suspense>
     )
   } else {

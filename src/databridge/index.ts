@@ -4,7 +4,7 @@
  * @description DataBridge 扩展适配层，提供面向模块的便捷数据访问接口
  */
 
-import { DataBridge } from '@/core/databridge'
+import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
 import { getLogger } from '@/lib/logger'
 import { eventBus } from '@/lib/eventBus'
@@ -16,7 +16,7 @@ const logger = getLogger()
 export type { DataBridgeAdapterConfig, DataAction, BridgeQueryOptions, BridgeQueryResult } from '@/types/modules/databridge.types'
 
 export class DataBridgeAdapter {
-  private bridge: DataBridge
+  private bridge = dataBridge
   private config: DataBridgeAdapterConfig
   private pendingQueries = new Map<string, { resolve: (r: BridgeQueryResult) => void; reject: (e: Error) => void }>()
   private activeSubscriptions: Array<() => void> = []
@@ -27,7 +27,6 @@ export class DataBridgeAdapter {
       defaultTimeout: 10000,
       ...config,
     }
-    this.bridge = new DataBridge()
     logger.info('[DataBridgeAdapter] Initialized')
   }
 
@@ -44,8 +43,8 @@ export class DataBridgeAdapter {
     const envelope = EnvelopeFactory.create(
       {
         action: action as unknown as import('@/config/dbConfig').EnvelopeAction,
-        source: 'system' as import('@/config/dbConfig').ModuleId,
-        target: 'db' as import('@/config/dbConfig').EnvelopeTarget,
+        source: 'system',
+        target: 'db',
         traceId,
       },
       payload,
