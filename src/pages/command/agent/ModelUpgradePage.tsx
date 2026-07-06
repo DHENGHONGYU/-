@@ -1,19 +1,13 @@
 import React, { useState } from 'react'
-import { 
-  ArrowUpCircle, 
-  GitBranch, 
-  TestTube, 
-  RotateCcw, 
-  CheckCircle, 
+import {
+  ArrowUpCircle,
+  GitBranch,
+  TestTube,
+  RotateCcw,
+  CheckCircle,
   XCircle,
   Clock,
-  AlertTriangle,
-  Info,
-  Download,
-  Upload,
-  Trash2,
   Plus,
-  Filter,
   Search,
 } from 'lucide-react'
 import { twText, twBg } from '@/constants/theme.tokens'
@@ -79,7 +73,7 @@ interface UpgradeHistory {
 
 const ModelUpgradePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'versions' | 'plans' | 'history'>('versions')
-  const [showCreatePlan, setShowCreatePlan] = useState(false)
+  const [, setShowCreatePlan] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
 
   // Mock数据：模型版本
@@ -218,7 +212,7 @@ const ModelUpgradePage: React.FC = () => {
   ])
 
   const getStatusBadge = (status: string) => {
-    const config = {
+    const config: Record<string, { color: string; text: string }> = {
       'active': { color: 'text-green-400 bg-green-900/30', text: '运行中' },
       'deprecated': { color: 'text-yellow-400 bg-yellow-900/30', text: '已废弃' },
       'testing': { color: 'text-blue-400 bg-blue-900/30', text: '测试中' },
@@ -231,7 +225,7 @@ const ModelUpgradePage: React.FC = () => {
       'success': { color: 'text-green-400 bg-green-900/30', text: '成功' },
       'failed': { color: 'text-red-400 bg-red-900/30', text: '失败' },
     }
-    const badge = config[status] || config['draft']
+    const badge = config[status] ?? config['draft'] ?? { color: '', text: '' }
     return (
       <span className={`px-2 py-1 rounded text-xs font-medium ${badge.color}`}>
         {badge.text}
@@ -254,13 +248,13 @@ const ModelUpgradePage: React.FC = () => {
       {/* Tabs */}
       <div className="flex gap-2 mb-6 border-b border-gray-800">
         {[
-          { key: 'versions', label: '模型版本', icon: ArrowUpCircle },
-          { key: 'plans', label: '升级计划', icon: GitBranch },
-          { key: 'history', label: '升级历史', icon: Clock },
+          { key: 'versions' as const, label: '模型版本', icon: ArrowUpCircle },
+          { key: 'plans' as const, label: '升级计划', icon: GitBranch },
+          { key: 'history' as const, label: '升级历史', icon: Clock },
         ].map(tab => (
           <button
             key={tab.key}
-            onClick={() => setActiveTab(tab.key as any)}
+            onClick={() => setActiveTab(tab.key)}
             className={`flex items-center gap-2 px-4 py-3 font-medium transition-colors ${
               activeTab === tab.key
                 ? `border-b-2 border-blue-500 ${twText('accent')}`

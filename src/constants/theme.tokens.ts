@@ -195,34 +195,11 @@ export type ThemeColorToken = keyof typeof THEME_TOKENS.color
 /**
  * 语义化颜色体系（Design Tokens）
  * @description 统一的颜色语义映射，支持 HEX/Tailwind 类名/RGB 三种格式
- * 用于股票涨跌、状态、评分等级、背景、文字、边框等场景
+ * 用于状态、评分等级、背景、文字、边框等场景
+ * 
+ * @deprecated 股票涨跌颜色请使用 STOCK_COLOR_TOKENS（例外规则）
  */
 export const COLOR_TOKENS = {
-  // ============================================================
-  // 股票涨跌色（A 股标准：红涨绿跌）
-  // ============================================================
-  /** 上涨颜色 */
-  up: {
-    hex: '#ef4444',
-    tailwind: 'text-red-500',
-    bgClass: 'bg-red-500',
-    rgb: '239, 68, 68',
-  },
-  /** 下跌颜色 */
-  down: {
-    hex: '#22c55e',
-    tailwind: 'text-green-500',
-    bgClass: 'bg-green-500',
-    rgb: '34, 197, 94',
-  },
-  /** 平盘/中性颜色 */
-  neutral: {
-    hex: '#9ca3af',
-    tailwind: 'text-gray-400',
-    bgClass: 'bg-gray-400',
-    rgb: '156, 163, 175',
-  },
-
   // ============================================================
   // 状态色
   // ============================================================
@@ -327,6 +304,31 @@ export const COLOR_TOKENS = {
     tailwind: 'text-red-500',
     bgClass: 'bg-red-500',
     rgb: '239, 68, 68',
+  },
+
+  // ============================================================
+  // 股票涨跌色（例外规则：豁免主题切换，始终红涨绿跌）
+  // ============================================================
+  /** 上涨色（红）—— 中国A股标准，豁免主题切换 */
+  up: {
+    hex: '#ef4444',
+    tailwind: 'text-red-500',
+    bgClass: 'bg-red-500',
+    rgb: '239, 68, 68',
+  },
+  /** 下跌色（绿）—— 中国A股标准，豁免主题切换 */
+  down: {
+    hex: '#22c55e',
+    tailwind: 'text-green-500',
+    bgClass: 'bg-green-500',
+    rgb: '34, 197, 94',
+  },
+  /** 平盘/中性色（灰）—— 涨跌幅为 0 时使用 */
+  neutral: {
+    hex: '#9ca3af',
+    tailwind: 'text-gray-400',
+    bgClass: 'bg-gray-400',
+    rgb: '156, 163, 175',
   },
 
   // ============================================================
@@ -714,18 +716,85 @@ export const COLOR_SHADES = {
   },
 } as const
 
-/** Tailwind 文字色辅助：`twText('red', 600)` → `'text-red-600'` */
-export function twText(color: string, shade: number): string {
+/**
+ * 语义色映射表
+ * 将语义色名称映射到具体的 Tailwind 颜色类
+ * 
+ * @deprecated 股票涨跌颜色请使用 STOCK_COLOR_TOKENS（例外规则）
+ */
+const SEMANTIC_COLORS = {
+  primary: { text: 'text-gray-900', bg: 'bg-white', border: 'border-gray-300' },
+  secondary: { text: 'text-gray-600', bg: 'bg-gray-100', border: 'border-gray-300' },
+  muted: { text: 'text-gray-500', bg: 'bg-gray-100', border: 'border-gray-200' },
+  surface: { text: 'text-gray-900', bg: 'bg-white', border: 'border-gray-200' },
+  default: { text: 'text-gray-900', bg: 'bg-white', border: 'border-gray-300' },
+} as const
+
+type SemanticColor = keyof typeof SEMANTIC_COLORS
+
+/**
+ * Tailwind 文字色辅助
+ * 
+ * @example twText('red', 600) → 'text-red-600'
+ * @example twText('primary') → 'text-gray-900' (语义模式)
+ * 
+ * @deprecated 语义模式（单参数）已弃用，请使用双参数显式指定色阶
+ * 推荐：twText('gray', 900) 而非 twText('primary')
+ */
+export function twText(color: string, shade?: number): string {
+  if (shade === undefined) {
+    // 语义色模式（已弃用）
+    if (color in SEMANTIC_COLORS) {
+      return SEMANTIC_COLORS[color as SemanticColor].text
+    }
+    // 默认使用 500 色阶
+    return `text-${color}-500`
+  }
+  // 显式色阶模式（推荐）
   return `text-${color}-${shade}`
 }
 
-/** Tailwind 背景色辅助：`twBg('red', 50)` → `'bg-red-50'` */
-export function twBg(color: string, shade: number): string {
+/**
+ * Tailwind 背景色辅助
+ * 
+ * @example twBg('red', 50) → 'bg-red-50'
+ * @example twBg('surface') → 'bg-white' (语义模式)
+ * 
+ * @deprecated 语义模式（单参数）已弃用，请使用双参数显式指定色阶
+ * 推荐：twBg('gray', 100) 而非 twBg('muted')
+ */
+export function twBg(color: string, shade?: number | string): string {
+  if (shade === undefined) {
+    // 语义色模式（已弃用）
+    if (color in SEMANTIC_COLORS) {
+      return SEMANTIC_COLORS[color as SemanticColor].bg
+    }
+    // 默认使用 500 色阶
+    return `bg-${color}-500`
+  }
+  // 显式色阶模式（推荐）
   return `bg-${color}-${shade}`
 }
 
-/** Tailwind 边框色辅助：`twBorder('red', 200)` → `'border-red-200'` */
-export function twBorder(color: string, shade: number): string {
+/**
+ * Tailwind 边框色辅助
+ * 
+ * @example twBorder('red', 200) → 'border-red-200'
+ * @example twBorder('default') → 'border-gray-300' (语义模式)
+ * 
+ * @deprecated 语义模式（单参数）已弃用，请使用双参数显式指定色阶
+ * 推荐：twBorder('gray', 300) 而非 twBorder('default')
+ */
+export function twBorder(color: string, shade?: number): string {
+  if (shade === undefined) {
+    // 语义色模式（已弃用）
+    if (color in SEMANTIC_COLORS) {
+      return SEMANTIC_COLORS[color as SemanticColor].border
+    }
+    // 默认使用 300 色阶
+    return `border-${color}-300`
+  }
+  // 显式色阶模式（推荐）
   return `border-${color}-${shade}`
 }
 
@@ -1011,6 +1080,10 @@ export function getStockColorClass(change: number): string {
  * 获取股票涨跌 HEX 色值（自动判断，豁免主题切换）
  * @param change - 涨跌值
  * @returns HEX 色值（如 `#ef4444`）
+ * 
+ * @example
+ * const hex = getStockColorHex(3.2) // => '#ef4444'（红色）
+ * const hex = getStockColorHex(-1.5) // => '#22c55e'（绿色）
  */
 export function getStockColorHex(change: number): string {
   return getStockColor(change).hex

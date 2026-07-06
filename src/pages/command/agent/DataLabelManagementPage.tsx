@@ -3,7 +3,6 @@ import {
   PlusIcon,
   PencilIcon,
   TrashIcon,
-  TagIcon,
   ArrowDownTrayIcon,
   ArrowUpTrayIcon,
   MagnifyingGlassIcon,
@@ -110,8 +109,8 @@ const DataLabelManagementPage: React.FC = () => {
         color: COLOR_TOKENS.textPrimary.tailwind,
         description: '',
         exampleCount: 0,
-        createdAt: new Date().toISOString().split('T')[0],
-        updatedAt: new Date().toISOString().split('T')[0],
+        createdAt: new Date().toISOString().split('T')[0] ?? '',
+        updatedAt: new Date().toISOString().split('T')[0] ?? '',
       })
     }
     setShowModal(true)
@@ -127,7 +126,7 @@ const DataLabelManagementPage: React.FC = () => {
       const index = prev.findIndex(l => l.id === editingLabel.id)
       if (index >= 0) {
         const updated = [...prev]
-        updated[index] = { ...editingLabel, updatedAt: new Date().toISOString().split('T')[0] }
+        updated[index] = { ...editingLabel, updatedAt: new Date().toISOString().split('T')[0] ?? '' }
         return updated
       } else {
         return [...prev, editingLabel]
@@ -195,7 +194,7 @@ const DataLabelManagementPage: React.FC = () => {
     <div className="min-h-screen bg-gray-50 p-6">
       {/* 页面标题 */}
       <div className="mb-8">
-        <h1 className={`text-3xl font-bold ${twText('primary')} mb-2`}>
+        <h1 className={`text-3xl font-bold ${twText('gray', 900)} mb-2`}>
           数据标签管理
         </h1>
         <p className={twText('secondary')}>
@@ -235,7 +234,7 @@ const DataLabelManagementPage: React.FC = () => {
         <div className="flex gap-2">
           <button
             onClick={handleImportLabels}
-            className={`flex items-center gap-2 px-4 py-2 ${twBg('muted')} ${twText('primary')} rounded-lg hover:opacity-90 transition-opacity`}
+            className={`flex items-center gap-2 px-4 py-2 ${twBg('muted')} ${twText('gray', 900)} rounded-lg hover:opacity-90 transition-opacity`}
           >
             <ArrowUpTrayIcon className="w-5 h-5" />
             导入
@@ -243,7 +242,7 @@ const DataLabelManagementPage: React.FC = () => {
 
           <button
             onClick={handleExportLabels}
-            className={`flex items-center gap-2 px-4 py-2 ${twBg('muted')} ${twText('primary')} rounded-lg hover:opacity-90 transition-opacity`}
+            className={`flex items-center gap-2 px-4 py-2 ${twBg('muted')} ${twText('gray', 900)} rounded-lg hover:opacity-90 transition-opacity`}
           >
             <ArrowDownTrayIcon className="w-5 h-5" />
             导出
@@ -251,7 +250,7 @@ const DataLabelManagementPage: React.FC = () => {
 
           <button
             onClick={() => handleOpenModal()}
-            className={`flex items-center gap-2 px-4 py-2 ${twBg('up', '600')} text-white rounded-lg hover:opacity-90 transition-opacity`}
+            className={`flex items-center gap-2 px-4 py-2 ${twBg('red', 600)} text-white rounded-lg hover:opacity-90 transition-opacity`}
           >
             <PlusIcon className="w-5 h-5" />
             创建标签
@@ -261,25 +260,25 @@ const DataLabelManagementPage: React.FC = () => {
 
       {/* 统计信息 */}
       <div className="mb-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className={`${twBg('surface')} p-4 rounded-lg shadow-sm`}>
+        <div className={`${twBg('white', 0)} p-4 rounded-lg shadow-sm`}>
           <div className={`text-sm ${twText('muted')}`}>总标签数</div>
-          <div className={`text-2xl font-bold ${twText('primary')}`}>{labels.length}</div>
+          <div className={`text-2xl font-bold ${twText('gray', 900)}`}>{labels.length}</div>
         </div>
-        <div className={`${twBg('surface')} p-4 rounded-lg shadow-sm`}>
+        <div className={`${twBg('white', 0)} p-4 rounded-lg shadow-sm`}>
           <div className={`text-sm ${twText('muted')}`}>总示例数</div>
-          <div className={`text-2xl font-bold ${twText('primary')}`}>
+          <div className={`text-2xl font-bold ${twText('gray', 900)}`}>
             {labels.reduce((sum, l) => sum + l.exampleCount, 0).toLocaleString()}
           </div>
         </div>
-        <div className={`${twBg('surface')} p-4 rounded-lg shadow-sm`}>
+        <div className={`${twBg('white', 0)} p-4 rounded-lg shadow-sm`}>
           <div className={`text-sm ${twText('muted')}`}>情感标签</div>
-          <div className={`text-2xl font-bold ${twText('primary')}`}>
+          <div className={`text-2xl font-bold ${twText('gray', 900)}`}>
             {labels.filter(l => l.category === 'sentiment').length}
           </div>
         </div>
-        <div className={`${twBg('surface')} p-4 rounded-lg shadow-sm`}>
+        <div className={`${twBg('white', 0)} p-4 rounded-lg shadow-sm`}>
           <div className={`text-sm ${twText('muted')}`}>意图标签</div>
-          <div className={`text-2xl font-bold ${twText('primary')}`}>
+          <div className={`text-2xl font-bold ${twText('gray', 900)}`}>
             {labels.filter(l => l.category === 'intent').length}
           </div>
         </div>

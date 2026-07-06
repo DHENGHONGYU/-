@@ -7,7 +7,6 @@ import {
   CheckCircle,
   Clock,
   Download,
-  ExternalLink,
 } from 'lucide-react'
 import { twText, twBg } from '@/constants/theme.tokens'
 
@@ -150,12 +149,12 @@ const ChangelogPage: React.FC = () => {
   ])
 
   const getTypeBadge = (type: string) => {
-    const config = {
+    const config: Record<string, { color: string; text: string }> = {
       'major': { color: 'text-red-400 bg-red-900/30', text: '重大更新' },
       'minor': { color: 'text-blue-400 bg-blue-900/30', text: '功能更新' },
       'patch': { color: 'text-green-400 bg-green-900/30', text: '问题修复' },
     }
-    const badge = config[type] || config['patch']
+    const badge = config[type] ?? config['patch'] ?? { color: '', text: '' }
     return (
       <span className={`px-2 py-1 rounded text-xs font-medium ${badge.color}`}>
         {badge.text}

@@ -7,7 +7,7 @@ import {
   AlertTriangle,
   CheckCircle,
 } from 'lucide-react'
-import { twText, twBg } from '@/constants/theme.tokens'
+import { twText } from '@/constants/theme.tokens'
 
 /**
  * Skill核查可视化页面（简化版）
@@ -72,7 +72,7 @@ const SkillAuditPage: React.FC = () => {
       'error': { color: 'text-red-400 bg-red-900/30', text: '错误' },
       'testing': { color: 'text-blue-400 bg-blue-900/30', text: '测试中' },
     }
-    const badge = config[status] || config['active']
+    const badge = config[status] ?? config['active'] ?? { color: '', text: '' }
     return (
       <span className={`px-2 py-1 rounded text-xs font-medium ${badge.color}`}>
         {badge.text}
@@ -93,14 +93,14 @@ const SkillAuditPage: React.FC = () => {
 
       <div className="flex gap-2 mb-6 border-b border-gray-800">
         {[
-          { key: 'overview', label: '总览', icon: BarChart3 },
-          { key: 'performance', label: '性能分析', icon: TrendingUp },
-          { key: 'dependencies', label: '依赖关系', icon: GitBranch },
-          { key: 'issues', label: '问题检测', icon: AlertTriangle },
+          { key: 'overview' as const, label: '总览', icon: BarChart3 },
+          { key: 'performance' as const, label: '性能分析', icon: TrendingUp },
+          { key: 'dependencies' as const, label: '依赖关系', icon: GitBranch },
+          { key: 'issues' as const, label: '问题检测', icon: AlertTriangle },
         ].map(tab => (
           <button
             key={tab.key}
-            onClick={() => setActiveTab(tab.key as any)}
+            onClick={() => setActiveTab(tab.key)}
             className={`flex items-center gap-2 px-4 py-3 font-medium transition-colors ${
               activeTab === tab.key
                 ? 'border-b-2 border-blue-500 text-blue-400'

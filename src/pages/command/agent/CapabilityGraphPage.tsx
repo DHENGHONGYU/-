@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import {
   CubeTransparentIcon,
   LinkIcon,
@@ -42,7 +42,7 @@ interface CapabilityEdge {
  */
 const CapabilityGraphPage: React.FC = () => {
   const svgRef = useRef<SVGSVGElement>(null)
-  const [agents, setAgents] = useState<AgentNode[]>([
+  const [agents] = useState<AgentNode[]>([
     { id: 'agent-001', name: '技术指标分析', type: 'analysis', capabilities: ['technical-analysis', 'indicator-calculation'], x: 100, y: 100 },
     { id: 'agent-002', name: '风险管理', type: 'risk', capabilities: ['risk-monitoring', 'alert-generation'], x: 300, y: 150 },
     { id: 'agent-003', name: '数据获取', type: 'data', capabilities: ['data-fetching', 'data-cleaning'], x: 200, y: 300 },
@@ -50,7 +50,7 @@ const CapabilityGraphPage: React.FC = () => {
     { id: 'agent-005', name: '报告生成', type: 'custom', capabilities: ['report-generation', 'visualization'], x: 150, y: 450 },
   ])
 
-  const [edges, setEdges] = useState<CapabilityEdge[]>([
+  const [edges] = useState<CapabilityEdge[]>([
     { source: 'agent-001', target: 'agent-004', capability: 'trading-signal', strength: 0.8 },
     { source: 'agent-003', target: 'agent-001', capability: 'data-fetching', strength: 0.9 },
     { source: 'agent-001', target: 'agent-002', capability: 'risk-monitoring', strength: 0.6 },
@@ -121,10 +121,10 @@ const CapabilityGraphPage: React.FC = () => {
     <div className="min-h-screen bg-gray-50 p-6">
       {/* 页面标题 */}
       <div className="mb-8">
-        <h1 className={`text-3xl font-bold ${twText('primary')} mb-2`}>
+        <h1 className={`text-3xl font-bold ${twText('gray', 900)} mb-2`}>
           智能体能力图谱
         </h1>
-        <p className={twText('secondary')}>
+        <p className={twText('gray', 700)}>
           可视化智能体之间的能力依赖关系
         </p>
       </div>
@@ -255,7 +255,7 @@ const CapabilityGraphPage: React.FC = () => {
                     x={agent.x}
                     y={agent.y + 50}
                     textAnchor="middle"
-                    className={`text-sm font-medium ${twText('primary')}`}
+                    className={`text-sm font-medium ${twText('gray', 900)}`}
                   >
                     {agent.name}
                   </text>
@@ -277,19 +277,19 @@ const CapabilityGraphPage: React.FC = () => {
 
         {/* 详细信息面板 */}
         <div className={`w-80 ${twBg('surface')} rounded-lg shadow-sm border ${twBorder('default')} p-6`}>
-          <h3 className={`text-lg font-semibold ${twText('primary')} mb-4`}>
+          <h3 className={`text-lg font-semibold ${twText('gray', 900)} mb-4`}>
             详细信息
           </h3>
 
           {selectedNode ? (
             <div>
-              <h4 className={`text-md font-medium ${twText('primary')} mb-2`}>
+              <h4 className={`text-md font-medium ${twText('gray', 900)} mb-2`}>
                 {selectedNode.name}
               </h4>
               <div className="space-y-3">
                 <div>
-                  <span className={`text-sm ${twText('muted')}`}>类型</span>
-                  <p className={twText('primary')}>
+                  <span className={`text-sm ${twText('gray', 500)}`}>类型</span>
+                  <p className={twText('gray', 900)}>
                     {selectedNode.type === 'analysis' ? '分析' :
                      selectedNode.type === 'trading' ? '交易' :
                      selectedNode.type === 'risk' ? '风险' :
@@ -298,12 +298,12 @@ const CapabilityGraphPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <span className={`text-sm ${twText('muted')}`}>能力列表</span>
+                  <span className={`text-sm ${twText('gray', 500)}`}>能力列表</span>
                   <div className="flex flex-wrap gap-1 mt-1">
                     {selectedNode.capabilities.map(cap => (
                       <span
                         key={cap}
-                        className={`px-2 py-1 text-xs ${twBg('muted')} ${twText('secondary')} rounded`}
+                        className={`px-2 py-1 text-xs ${twBg('muted')} ${twText('gray', 700)} rounded`}
                       >
                         {cap}
                       </span>
@@ -312,15 +312,15 @@ const CapabilityGraphPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <span className={`text-sm ${twText('muted')}`}>位置</span>
-                  <p className={twText('primary')}>
+                  <span className={`text-sm ${twText('gray', 500)}`}>位置</span>
+                  <p className={twText('gray', 900)}>
                     ({selectedNode.x}, {selectedNode.y})
                   </p>
                 </div>
 
                 {/* 关联边 */}
                 <div>
-                  <span className={`text-sm ${twText('muted')}`}>关联能力边</span>
+                  <span className={`text-sm ${twText('gray', 500)}`}>关联能力边</span>
                   <div className="space-y-2 mt-1">
                     {edges
                       .filter(e => e.source === selectedNode.id || e.target === selectedNode.id)
@@ -345,35 +345,35 @@ const CapabilityGraphPage: React.FC = () => {
             </div>
           ) : selectedEdge ? (
             <div>
-              <h4 className={`text-md font-medium ${twText('primary')} mb-2`}>
+              <h4 className={`text-md font-medium ${twText('gray', 900)} mb-2`}>
                 能力边详情
               </h4>
               <div className="space-y-3">
                 <div>
-                  <span className={`text-sm ${twText('muted')}`}>源智能体</span>
-                  <p className={twText('primary')}>
+                  <span className={`text-sm ${twText('gray', 500)}`}>源智能体</span>
+                  <p className={twText('gray', 900)}>
                     {agents.find(a => a.id === selectedEdge.source)?.name || selectedEdge.source}
                   </p>
                 </div>
 
                 <div>
-                  <span className={`text-sm ${twText('muted')}`}>目标智能体</span>
-                  <p className={twText('primary')}>
+                  <span className={`text-sm ${twText('gray', 500)}`}>目标智能体</span>
+                  <p className={twText('gray', 900)}>
                     {agents.find(a => a.id === selectedEdge.target)?.name || selectedEdge.target}
                   </p>
                 </div>
 
                 <div>
-                  <span className={`text-sm ${twText('muted')}`}>能力</span>
-                  <p className={twText('primary')}>{selectedEdge.capability}</p>
+                  <span className={`text-sm ${twText('gray', 500)}`}>能力</span>
+                  <p className={twText('gray', 900)}>{selectedEdge.capability}</p>
                 </div>
 
                 <div>
-                  <span className={`text-sm ${twText('muted')}`}>依赖强度</span>
+                  <span className={`text-sm ${twText('gray', 500)}`}>依赖强度</span>
                   <div className="flex items-center gap-2 mt-1">
                     <div className="flex-1 bg-gray-200 rounded-full h-2">
                       <div
-                        className={`${twBg('up', '500')} h-2 rounded-full`}
+                        className={`${twBg('red', 500)} h-2 rounded-full`}
                         style={{ width: `${selectedEdge.strength * 100}%` }}
                       />
                     </div>
@@ -383,7 +383,7 @@ const CapabilityGraphPage: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className={`text-center ${twText('muted')} py-8`}>
+            <div className={`text-center ${twText('gray', 500)} py-8`}>
               <CubeTransparentIcon className="w-12 h-12 mx-auto mb-4 text-gray-300" />
               <p>点击图谱中的节点或边查看详细信息</p>
             </div>
@@ -393,7 +393,7 @@ const CapabilityGraphPage: React.FC = () => {
 
       {/* 图例 */}
       <div className={`mt-6 ${twBg('surface')} rounded-lg shadow-sm border ${twBorder('default')} p-4`}>
-        <h4 className={`text-sm font-medium ${twText('primary')} mb-2`}>图例</h4>
+        <h4 className={`text-sm font-medium ${twText('gray', 900)} mb-2`}>图例</h4>
         <div className="flex gap-6">
           {[
             { type: 'analysis', label: '分析', color: COLOR_TOKENS.info.tailwind },

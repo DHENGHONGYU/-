@@ -1,15 +1,9 @@
 import React, { useState } from 'react'
-import { 
-  Lightbulb,
+import {
   TrendingUp,
-  AlertTriangle,
-  CheckCircle,
-  XCircle,
-  Clock,
   Zap,
   Shield,
   Code,
-  Filter,
   Search,
   ExternalLink,
 } from 'lucide-react'
@@ -122,12 +116,12 @@ const OptimizationSuggestionsPage: React.FC = () => {
   ])
 
   const getPriorityBadge = (priority: string) => {
-    const config = {
+    const config: Record<string, { color: string; text: string }> = {
       'high': { color: 'text-red-400 bg-red-900/30', text: '高' },
       'medium': { color: 'text-yellow-400 bg-yellow-900/30', text: '中' },
       'low': { color: 'text-blue-400 bg-blue-900/30', text: '低' },
     }
-    const badge = config[priority] || config['medium']
+    const badge = config[priority] ?? config['medium'] ?? { color: '', text: '' }
     return (
       <span className={`px-2 py-1 rounded text-xs font-medium ${badge.color}`}>
         {badge.text}
@@ -136,13 +130,13 @@ const OptimizationSuggestionsPage: React.FC = () => {
   }
 
   const getStatusBadge = (status: string) => {
-    const config = {
+    const config: Record<string, { color: string; text: string }> = {
       'open': { color: 'text-blue-400 bg-blue-900/30', text: '待处理' },
       'in-progress': { color: 'text-yellow-400 bg-yellow-900/30', text: '进行中' },
       'completed': { color: 'text-green-400 bg-green-900/30', text: '已完成' },
       'dismissed': { color: 'text-gray-400 bg-gray-900/30', text: '已忽略' },
     }
-    const badge = config[status] || config['open']
+    const badge = config[status] ?? config['open'] ?? { color: '', text: '' }
     return (
       <span className={`px-2 py-1 rounded text-xs font-medium ${badge.color}`}>
         {badge.text}
@@ -151,13 +145,13 @@ const OptimizationSuggestionsPage: React.FC = () => {
   }
 
   const getCategoryIcon = (category: string) => {
-    const config = {
+    const config: Record<string, { icon: typeof Zap; color: string }> = {
       'performance': { icon: Zap, color: 'text-yellow-400' },
       'quality': { icon: Code, color: 'text-blue-400' },
       'security': { icon: Shield, color: 'text-red-400' },
       'architecture': { icon: TrendingUp, color: 'text-green-400' },
     }
-    const cat = config[category] || config['quality']
+    const cat = config[category] ?? config['quality'] ?? { icon: Zap, color: '' }
     const Icon = cat.icon
     return <Icon className={`w-5 h-5 ${cat.color}`} />
   }
@@ -212,14 +206,14 @@ const OptimizationSuggestionsPage: React.FC = () => {
       <div className="flex gap-4 mb-6">
         <div className="flex gap-2">
           {[
-            { key: 'all', label: '全部' },
-            { key: 'open', label: '待处理' },
-            { key: 'in-progress', label: '进行中' },
-            { key: 'completed', label: '已完成' },
+            { key: 'all' as const, label: '全部' },
+            { key: 'open' as const, label: '待处理' },
+            { key: 'in-progress' as const, label: '进行中' },
+            { key: 'completed' as const, label: '已完成' },
           ].map(filter => (
             <button
               key={filter.key}
-              onClick={() => setActiveFilter(filter.key as any)}
+              onClick={() => setActiveFilter(filter.key)}
               className={`px-4 py-2 rounded-lg transition-colors ${
                 activeFilter === filter.key
                   ? 'bg-blue-600 text-white'
