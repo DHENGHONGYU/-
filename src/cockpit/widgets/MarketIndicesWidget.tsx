@@ -3,7 +3,7 @@ import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import type { WidgetConfig, MarketIndexData } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
-import { COLOR_TOKENS, twText } from '@/constants/theme.tokens'
+import { COLOR_TOKENS, twText, getStockColorClass, getStockColorHex } from '@/constants/theme.tokens'
 
 interface MarketIndicesWidgetProps {
   config: WidgetConfig
@@ -19,15 +19,14 @@ export default function MarketIndicesWidget(props: MarketIndicesWidgetProps): Re
   const error = errorMap[config.instanceId]
 
   const getChangeIcon = (change: number) => {
-    if (change > 0) return <TrendingUp className={`h-4 w-4 ${COLOR_TOKENS.up.tailwind}`} />
-    if (change < 0) return <TrendingDown className={`h-4 w-4 ${COLOR_TOKENS.down.tailwind}`} />
+    const iconColorClass = getStockColorClass(change)
+    if (change > 0) return <TrendingUp className={`h-4 w-4 ${iconColorClass}`} />
+    if (change < 0) return <TrendingDown className={`h-4 w-4 ${iconColorClass}`} />
     return <Minus className={`h-4 w-4 ${twText('gray', 400)}`} />
   }
 
   const getChangeColor = (change: number) => {
-    if (change > 0) return COLOR_TOKENS.up.hex
-    if (change < 0) return COLOR_TOKENS.down.hex
-    return COLOR_TOKENS.neutral.hex
+    return getStockColorHex(change)
   }
 
   if (error) {

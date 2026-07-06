@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import type { WidgetConfig } from '@/types/modules/widget.types'
 import { MockMarketDataProvider, type FundFlow } from '@/cockpit/data/mockDataProvider'
 import { STOCK_COLOR_MAPPING } from '@/constants/cockpit.constants'
-import { COLOR_TOKENS, twText } from '@/constants/theme.tokens'
+import { COLOR_TOKENS, twText, twBg } from '@/constants/theme.tokens'
 
 interface FundFlowWidgetProps {
   config: WidgetConfig
@@ -62,10 +62,10 @@ export default function FundFlowWidget({ config }: FundFlowWidgetProps): React.J
         <CardContent className="space-y-4">
           {[1, 2, 3].map((i) => (
             <div key={i} className="flex items-center gap-4">
-              <div className="w-8 h-8 bg-gray-200 rounded-full" />
+              <div className={`w-8 h-8 ${twBg('gray', 200)} rounded-full`} />
               <div className="flex-1">
-                <div className="h-4 bg-gray-200 rounded w-24" />
-                <div className="h-6 bg-gray-200 rounded w-16 mt-1" />
+                <div className={`h-4 ${twBg('gray', 200)} rounded w-24`} />
+                <div className={`h-6 ${twBg('gray', 200)} rounded w-16 mt-1`} />
               </div>
             </div>
           ))}

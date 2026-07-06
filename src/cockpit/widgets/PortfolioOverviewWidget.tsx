@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import type { WidgetConfig, HoldingItem, RebalancePlanItem } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
 import { COLORS } from '@/constants/cockpit.constants'
-import { COLOR_TOKENS, COLOR_SHADES, twText, twBg } from '@/constants/theme.tokens'
+import { COLOR_TOKENS, COLOR_SHADES, twText, twBg, twBorder } from '@/constants/theme.tokens'
 
 /** 权重偏离阈值（百分比），超过此值视为需要调整 */
 const WEIGHT_DEVIATION_THRESHOLD = 5
@@ -45,7 +45,7 @@ function HoldingRow({ holding }: { holding: HoldingItem }): React.JSX.Element {
   const pnlPositive = holding.pnlPercent >= 0
 
   return (
-    <div className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+    <div className={`flex items-center justify-between py-2 border-b ${twBorder('gray', 100)} last:border-0`}>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium truncate">{holding.name}</span>

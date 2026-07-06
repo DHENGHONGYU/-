@@ -1,6 +1,6 @@
 # AGENTS.md — V9 智能投研复盘系统 AI 行为约束契约
 
-> **版本**: v1.3.3 | **日期**: 2026-07-05
+> **版本**: v1.3.4 | **日期**: 2026-07-06
 > **适用范围**: 所有 AI 辅助开发工具（Claude Code、Cursor、Trae 等）
 > **强制等级**: 所有 AI 生成的代码必须遵守以下约束
 
@@ -286,6 +286,55 @@ import { THEME_TOKENS } from '@/constants/theme.tokens'
 </div>
 ```
 
+**场景 C：股票涨跌动态颜色（红涨绿跌例外规则）**
+
+> **⚠️ 例外规则**：股票涨跌颜色**不受通用颜色规范或主题切换影响**。
+> 上涨 → 红色（`STOCK_COLOR_TOKENS.up` 或 `getStockColor()`），下跌 → 绿色（`STOCK_COLOR_TOKENS.down` 或 `getStockColor()`）。
+> 此规则作为颜色令牌体系的例外：**必须豁免主题切换**（暗色模式不改变涨跌颜色）。
+
+```typescript
+// ✅ 正确 1：使用 STOCK_COLOR_TOKENS（推荐，自动豁免主题切换）
+import { STOCK_COLOR_TOKENS, getStockColor, getStockColorClass } from '@/constants/theme.tokens'
+
+// 自动判断涨跌
+const color = getStockColor(stock.changePercent) // => STOCK_COLOR_TOKENS.up 或 down
+const className = getStockColorClass(stock.changePercent) // => 'text-red-500' 或 'text-green-500'
+
+// 手动判断
+<span className={stock.changePercent > 0 ? STOCK_COLOR_TOKENS.up.tailwind : STOCK_COLOR_TOKENS.down.tailwind}>
+  {stock.changePercent > 0 ? '+' : ''}{stock.changePercent.toFixed(2)}%
+</span>
+
+// ✅ 正确 2：使用辅助函数（推荐，代码更简洁）
+import { getStockColorHex, getStockColorBg } from '@/constants/theme.tokens'
+
+<div style={{ color: getStockColorHex(stock.changePercent) }}>
+  涨跌颜色
+</div>
+<div className={getStockColorBg(stock.changePercent)}>
+  涨跌背景
+</div>
+
+// ✅ 正确 3：三态（涨/跌/平）
+import { STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
+
+const changeColor = stock.changePercent > 0
+  ? STOCK_COLOR_TOKENS.up.tailwind
+  : stock.changePercent < 0
+    ? STOCK_COLOR_TOKENS.down.tailwind
+    : STOCK_COLOR_TOKENS.neutral.tailwind
+
+// ❌ 禁止：硬编码涨跌颜色（即使语义正确）
+<span className="text-red-500">+3.2%</span>        // 即使表示上涨也禁止
+<span className="text-green-500">-1.5%</span>      // 即使表示下跌也禁止
+<span style={{ color: '#ef4444' }}>+3.2%</span>    // 禁止 HEX 硬编码
+```
+
+> **豁免说明**：此场景的颜色选择逻辑（条件表达式）不受 §3.5.4 禁止清单约束，
+> 但颜色值来源仍必须遵守令牌系统（`STOCK_COLOR_TOKENS.up` / `STOCK_COLOR_TOKENS.down`）。
+> 审计脚本 `audit:hardcode` 对包含 `changePercent`、`priceChange`、`涨跌幅` 等关键词的
+> 条件表达式中的令牌引用予以豁免。
+
 #### 3.5.3 语义映射速查表
 
 | 业务场景 | 应使用的令牌 | 禁止使用的硬编码 |
@@ -349,20 +398,102 @@ import { THEME_TOKENS } from '@/constants/theme.tokens'
 <div style={{ color: CHART_PALETTE.series1 }}>系列1</div>
 ```
 
-#### 3.5.5 测试文件颜色断言规则
+#### 3.5.6 股票涨跌颜色例外规则（红涨绿跌）
+
+> **⚠️ 例外规则**：股票涨跌颜色**不受通用颜色规范或主题切换影响**。
+
+##### 规则说明
+
+**中国A股标准**：
+- 股票上涨 → **红色** 显示（红涨）
+- 股票下跌 → **绿色** 显示（绿跌）
+- 平盘/中性 → **灰色** 显示
+
+**例外原因**：
+- 这是**中国股市惯例**，与通用设计系统（成功=绿色、错误=红色）相反
+- **必须豁免主题切换**（暗色模式不改变涨跌颜色）
+- **必须豁免通用颜色规范**（不使用 `COLOR_TOKENS.success` 或 `COLOR_TOKENS.danger`）
+
+##### 正确用法
 
 ```typescript
-// ❌ 禁止：测试中直接断言硬编码颜色值
-expect(element).toHaveClass('text-red-500')
-expect(element).toHaveStyle({ color: '#ef4444' })
+// ✅ 正确 1：使用 STOCK_COLOR_TOKENS（推荐，自动豁免主题切换）
+import { STOCK_COLOR_TOKENS, getStockColor, getStockColorClass } from '@/constants/theme.tokens'
 
-// ✅ 允许：断言令牌引用
-expect(element).toHaveClass(COLOR_TOKENS.danger.tailwind)
-expect(element).toHaveStyle({ color: COLOR_TOKENS.danger.hex })
+// 自动判断涨跌
+const color = getStockColor(stock.changePercent) // => STOCK_COLOR_TOKENS.up 或 down
+const className = getStockColorClass(stock.changePercent) // => 'text-red-500' 或 'text-green-500'
 
-// ✅ 允许：断言语义属性（推荐）
-expect(element).toHaveAttribute('data-signal', 'danger')
+// 手动判断
+<span className={stock.changePercent > 0 ? STOCK_COLOR_TOKENS.up.tailwind : STOCK_COLOR_TOKENS.down.tailwind}>
+  {stock.changePercent > 0 ? '+' : ''}{stock.changePercent.toFixed(2)}%
+</span>
+
+// ✅ 正确 2：使用辅助函数（推荐，代码更简洁）
+import { getStockColorHex, getStockColorBg } from '@/constants/theme.tokens'
+
+<div style={{ color: getStockColorHex(stock.changePercent) }}>
+  涨跌颜色
+</div>
+<div className={getStockColorBg(stock.changePercent)}>
+  涨跌背景
+</div>
+
+// ✅ 正确 3：三态（涨/跌/平）
+import { STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
+
+const changeColor = stock.changePercent > 0
+  ? STOCK_COLOR_TOKENS.up.tailwind
+  : stock.changePercent < 0
+    ? STOCK_COLOR_TOKENS.down.tailwind
+    : STOCK_COLOR_TOKENS.neutral.tailwind
 ```
+
+##### 错误用法
+
+```typescript
+// ❌ 错误 1：使用通用颜色令牌（会被主题切换影响）
+import { COLOR_TOKENS } from '@/constants/theme.tokens'
+<span className={COLOR_TOKENS.success.tailwind}>+3.2%</span>  // ❌ 错误！success 是绿色，但上涨应该是红色
+<span className={COLOR_TOKENS.danger.tailwind}>-1.5%</span>  // ❌ 错误！danger 是红色，但下跌应该是绿色
+
+// ❌ 错误 2：硬编码颜色（即使语义正确）
+<span className="text-red-500">+3.2%</span>   // ❌ 即使表示上涨也禁止
+<span className="text-green-500">-1.5%</span> // ❌ 即使表示下跌也禁止
+
+// ❌ 错误 3：使用 COLOR_TOKENS.up/down（不推荐，容易混淆）
+import { COLOR_TOKENS } from '@/constants/theme.tokens'
+<span className={COLOR_TOKENS.up.tailwind}>+3.2%</span>  // ⚠️ 不推荐，容易与通用颜色混淆
+```
+
+##### ESLint 豁免
+
+- `STOCK_COLOR_TOKENS` 和相关辅助函数（`getStockColor()` 等）**豁免** `no-hardcoded-colors` 检查
+- 包含 `changePercent`、`priceChange`、`涨跌幅`、`stock.change` 等关键词的条件表达式**豁免**硬编码检查
+- 审计脚本 `audit:hardcode` 对上述用法予以豁免
+
+##### 实现说明
+
+- `STOCK_COLOR_TOKENS` 是**独立导出的常量**，不包含在主题切换逻辑中
+- 如需实现主题切换（暗色模式），**必须确保** `STOCK_COLOR_TOKENS` 不被修改
+- `getStockColor()` 等辅助函数**硬编码**了红涨绿跌规则，不受主题上下文影响
+
+---
+
+#### 3.5.7 颜色令牌检查清单
+
+**提交前自查**：
+
+```typescript
+// ✅ 检查清单
+[ ] 是否使用了 STOCK_COLOR_TOKENS 或 getStockColor()？（股票涨跌场景）
+[ ] 是否使用了 COLOR_TOKENS 或 THEME_TOKENS？（通用场景）
+[ ] 是否使用了 COLOR_SHADES 或 twText/twBg/twBorder？（特定色阶场景）
+[ ] 是否没有直接硬编码 HEX 或 Tailwind 颜色类？
+[ ] 是否理解了红涨绿跌例外规则？
+```
+
+---
 
 #### 3.5.6 新增颜色的 SOP
 
@@ -440,7 +571,7 @@ npm run audit:hardcode
 页面通过三级间接加载，新增页面必须在对应层级注册：
 
 ```
-routes.ts（35条路由）→ PortalShell → App 分发器（AnalysisApp/TradingApp/...）→ 页面组件
+routes.ts（48条路由）→ PortalShell → App 分发器（AnalysisApp/TradingApp/...）→ 页面组件
 ```
 
 - **routes.ts**：注册舱室级路由（`/analysis`、`/trading` 等），指向 `PortalShell`
