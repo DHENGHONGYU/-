@@ -1,8 +1,8 @@
 # 08. 实施计划
 
 > **Status**: Current  
-> **Version**: v1.1.0  
-> **Last Updated**: 2026-06-26
+> **Version**: v2.5.0  
+> **Last Updated**: 2026-07-05
 >
 > 本文档定义 V9 从 v0.9.0 到 v1.0.0 的分阶段实施计划、验收标准、任务依赖与风险登记。  
 > 目标读者：项目负责人、核心开发者、产品经理。
@@ -15,7 +15,7 @@
 |--------|------|------|
 | `tsc --noEmit` | ✅ 通过 | 0 errors |
 | `npm run lint` | ✅ 通过 | 0 warnings/errors |
-| `npm run test` | ✅ 44 个测试文件 / 291 个测试全部通过 | - |
+| `npm run test` | 🟡 236 个测试文件 / 198 passed, 38 failed | 详见 `docs/reports/test-failure-analysis-report.md` |
 | `npm run build` | ✅ 通过 | dist/ 生成成功 |
 | `npm run audit:layers` | ✅ 通过 | 0 违规 / 0 警告 |
 | 五舱框架 | ✅ 可用 | PortalShell + 五舱 App 骨架 |

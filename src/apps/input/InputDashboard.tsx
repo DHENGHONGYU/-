@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
@@ -20,29 +20,31 @@ import {
 } from '@/services/fetcher/fetcherService'
 import { transitionStock, updateStockGroup } from '@/services/stockpool/stockpoolService'
 import { PoolBoard } from '@/components/pool/PoolBoard'
-import { usePoolData } from '@/components/pool/usePoolData'
+import { usePoolStore, getAllGroups } from '@/store/poolStore'
 import { StockSearch } from '@/components/input/StockSearch'
 import { RESEARCH_STATUS, type ResearchStatus } from '@/config/dbConfig'
 import type { Stock } from '@/data/types'
 import type { StockSearchResult } from '@/services/input/inputService'
 import type { PoolViewMode } from '@/components/pool/PoolBoard'
+import { getLogger } from '@/lib/logger'
+import { COLOR_TOKENS, twText, twBg } from '@/constants/theme.tokens'
+
+const logger = getLogger()
 
 const ALL_GROUPS_VALUE = '__all__'
 type QualityFilter = 'all' | 'missingBasic' | 'missingKline' | 'missingFinance'
 
 export default function InputDashboard(): React.JSX.Element {
   const navigate = useNavigate()
-  const {
-    groups,
-    allGroups,
-    selectedGroup,
-    setSelectedGroup,
-    loading,
-    error,
-    refresh,
-    handleTransition,
-    handleChangeGroup,
-  } = usePoolData()
+
+  // 从 poolStore 获取状态
+  const stocks = usePoolStore((s) => s.stocks)
+  const loading = usePoolStore((s) => s.loading)
+  const error = usePoolStore((s) => s.error)
+  const refresh = usePoolStore((s) => s.refresh)
+
+  // 本地 UI 状态
+  const [selectedGroup, setSelectedGroup] = useState('')
   const [symbol, setSymbol] = useState('')
   const [name, setName] = useState('')
   const [group, setGroup] = useState('')
@@ -57,12 +59,20 @@ export default function InputDashboard(): React.JSX.Element {
   const [newGroupName, setNewGroupName] = useState('')
   const [createdGroups, setCreatedGroups] = useState<string[]>([])
 
+  // 初始化加载
+  useEffect(() => {
+    logger.info('[InputDashboard] 初始化，加载股票池数据')
+    void refresh()
+  }, [refresh])
+
+  const allGroups = useMemo(() => getAllGroups(), [stocks])
+
   const groupOptions = useMemo(
     () => Array.from(new Set([...allGroups, ...createdGroups])).sort(),
     [allGroups, createdGroups],
   )
 
-  const allStocks = groups.flatMap((g) => g.stocks)
+  const allStocks = stocks
 
   const filteredStocks = useMemo(() => {
     if (qualityFilter === 'all') return allStocks
@@ -182,6 +192,22 @@ export default function InputDashboard(): React.JSX.Element {
 
   const handleBulkArchive = (): Promise<void> => runBulkTransition(RESEARCH_STATUS.archived)
 
+  const handleTransition = async (symbol: string, toStatus: ResearchStatus): Promise<void> => {
+    const result = await transitionStock(symbol, toStatus)
+    await refresh()
+    if (!result.success) {
+      setMessage(`${symbol} 流转失败：${result.error ?? '未知错误'}`)
+    }
+  }
+
+  const handleChangeGroup = async (symbol: string, group: string): Promise<void> => {
+    const result = await updateStockGroup(symbol, group)
+    await refresh()
+    if (!result.success) {
+      setMessage(`${symbol} 移入分组失败：${result.error ?? '未知错误'}`)
+    }
+  }
+
   const handleCreateGroup = async (): Promise<void> => {
     const trimmed = newGroupName.trim()
     if (!trimmed) {
@@ -228,7 +254,7 @@ export default function InputDashboard(): React.JSX.Element {
               {fetcherOk === null ? (
                 <Badge variant="outline">检查中...</Badge>
               ) : fetcherOk ? (
-                <Badge className="bg-green-500/20 text-green-400">已连接</Badge>
+                <Badge className={`${twBg('green', 100)} ${twText('green', 800)}`}>已连接</Badge>
               ) : (
                 <Badge variant="destructive">未连接</Badge>
               )}
@@ -290,12 +316,14 @@ export default function InputDashboard(): React.JSX.Element {
             <Input
               className="min-w-[160px] flex-1"
               placeholder="股票代码，如 600519.SH"
+              aria-label="股票代码"
               value={symbol}
               onChange={(e) => setSymbol(e.target.value)}
             />
             <Input
               className="min-w-[120px] flex-1"
               placeholder="股票名称"
+              aria-label="股票名称"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
@@ -327,7 +355,7 @@ export default function InputDashboard(): React.JSX.Element {
             {fetcherOk === null ? (
               <Badge variant="outline">检查中...</Badge>
             ) : fetcherOk ? (
-              <Badge className="bg-green-500/20 text-green-400">已连接</Badge>
+              <Badge className={`${COLOR_TOKENS.up.bgClass} ${COLOR_TOKENS.up.tailwind}`}>已连接</Badge>
             ) : (
               <Badge variant="destructive">未连接</Badge>
             )}
@@ -453,6 +481,7 @@ export default function InputDashboard(): React.JSX.Element {
           </DialogHeader>
           <Input
             placeholder="分组名称，如 核心持仓"
+            aria-label="分组名称"
             value={newGroupName}
             onChange={(e) => setNewGroupName(e.target.value)}
             maxLength={20}

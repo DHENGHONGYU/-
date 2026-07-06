@@ -1,5 +1,6 @@
 import { getDefaultFetcherServiceConfig } from '@/config/fetcherConfig'
 import { getLogger } from '@/lib/logger'
+import { API_COLLECT_BASIC, API_COLLECT_KLINE } from '@/config/apiPaths'
 import type {
   CollectBasicData,
   CollectBasicRequest,
@@ -117,7 +118,7 @@ export async function checkFetcherHealth(): Promise<{
 export async function collectBasic(
   symbol: string,
 ): Promise<CollectResponse<CollectBasicData>> {
-  return request<CollectResponse<CollectBasicData>>('/api/collect/basic', {
+  return request<CollectResponse<CollectBasicData>>(API_COLLECT_BASIC, {
     method: 'POST',
     body: JSON.stringify({ symbol } satisfies CollectBasicRequest),
   })
@@ -126,7 +127,7 @@ export async function collectBasic(
 export async function collectKline(
   params: CollectKlineRequest,
 ): Promise<CollectResponse<CollectKlineData>> {
-  return request<CollectResponse<CollectKlineData>>('/api/collect/kline', {
+  return request<CollectResponse<CollectKlineData>>(API_COLLECT_KLINE, {
     method: 'POST',
     body: JSON.stringify(params),
   })

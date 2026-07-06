@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
@@ -12,38 +12,67 @@ import { IndustrySkillSnapshotCard } from '@/components/cabin/IndustrySkillSnaps
 import { IndustryHistoryCard } from '@/components/cabin/IndustryHistoryCard'
 import { HOT_TRACKS } from '@/data/sectorSkillData'
 import {
-  useIndustryScorePage,
+  useIndustryScoreStore,
+  selectSelectedSector,
+  selectConfigReady,
   STEP_LABELS,
   STEP_ORDER,
   DIMENSION_ORDER,
   formatIndustryDelta,
-} from '@/hooks/cabin/useIndustryScorePage'
+} from '@/store/industryScoreStore'
+import type { LlmConfig } from '@/config/llmConfig'
+import { getLogger } from '@/lib/logger'
+
+const logger = getLogger()
 
 export default function IndustryScorePage(): React.JSX.Element {
-  const {
-    selectedCode,
-    setSelectedCode,
-    sectors,
-    selectedSector,
-    files,
-    reportText,
-    setReportText,
-    llmConfig,
-    setLlmConfig,
-    showConfig,
-    setShowConfig,
-    configReady,
-    progress,
-    progressMessage,
-    result,
-    previousResult,
-    history,
-    logs,
-    error,
-    loading,
-    handleFileChange,
-    handleStart,
-  } = useIndustryScorePage()
+  // 从 Store 获取状态
+  const selectedCode = useIndustryScoreStore((s) => s.selectedCode)
+  const sectors = useIndustryScoreStore((s) => s.sectors)
+  const selectedSector = useIndustryScoreStore(selectSelectedSector)
+  const files = useIndustryScoreStore((s) => s.files)
+  const reportText = useIndustryScoreStore((s) => s.reportText)
+  const llmConfig = useIndustryScoreStore((s) => s.llmConfig)
+  const showConfig = useIndustryScoreStore((s) => s.showConfig)
+  const configReady = useIndustryScoreStore(selectConfigReady)
+  const progress = useIndustryScoreStore((s) => s.progress)
+  const progressMessage = useIndustryScoreStore((s) => s.progressMessage)
+  const result = useIndustryScoreStore((s) => s.result)
+  const previousResult = useIndustryScoreStore((s) => s.previousResult)
+  const history = useIndustryScoreStore((s) => s.history)
+  const logs = useIndustryScoreStore((s) => s.logs)
+  const error = useIndustryScoreStore((s) => s.error)
+  const loading = useIndustryScoreStore((s) => s.loading)
+
+  // 从 Store 获取 actions
+  const setSelectedCode = useIndustryScoreStore((s) => s.setSelectedCode)
+  const setFiles = useIndustryScoreStore((s) => s.setFiles)
+  const setReportText = useIndustryScoreStore((s) => s.setReportText)
+  const setLlmConfig = useIndustryScoreStore((s) => s.setLlmConfig)
+  const setShowConfig = useIndustryScoreStore((s) => s.setShowConfig)
+  const loadHistory = useIndustryScoreStore((s) => s.loadHistory)
+  const loadLogs = useIndustryScoreStore((s) => s.loadLogs)
+  const runScore = useIndustryScoreStore((s) => s.runScore)
+
+  // selectedCode 变化时加载历史和日志
+  useEffect(() => {
+    if (!selectedCode) return
+    logger.info('[IndustryScorePage] selectedCode 变化，加载历史和日志', { selectedCode })
+    void loadHistory(selectedCode)
+    void loadLogs(selectedCode)
+  }, [selectedCode, loadHistory, loadLogs])
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const selected = event.target.files
+    if (!selected) return
+    logger.info('[IndustryScorePage] 文件上传', { count: selected.length })
+    setFiles(Array.from(selected))
+  }
+
+  const handleStart = async (): Promise<void> => {
+    logger.info('[IndustryScorePage] 开始运行行业评分', { selectedCode })
+    await runScore()
+  }
 
   const runTooltip = loading
     ? '评分运行中，请稍候...'
@@ -52,7 +81,7 @@ export default function IndustryScorePage(): React.JSX.Element {
       : undefined
 
   const runButton = (
-    <Button onClick={handleStart} disabled={loading || !configReady} className="w-full">
+    <Button onClick={() => void handleStart()} disabled={loading || !configReady} className="w-full">
       {loading ? '评分中...' : '运行行业智能评分'}
     </Button>
   )
@@ -66,7 +95,7 @@ export default function IndustryScorePage(): React.JSX.Element {
         <CardContent className="space-y-4">
           <ScoreUpdateAlert
             lastScoredAt={previousResult?.scoredAt}
-            onRefresh={handleStart}
+            onRefresh={() => void handleStart()}
             loading={loading}
           />
 
@@ -75,6 +104,7 @@ export default function IndustryScorePage(): React.JSX.Element {
               <div className="space-y-2">
                 <label className="text-sm font-medium">选择行业/赛道</label>
                 <select
+                  aria-label="选择行业赛道"
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   value={selectedCode}
                   onChange={(e) => setSelectedCode(e.target.value)}
@@ -122,7 +152,7 @@ export default function IndustryScorePage(): React.JSX.Element {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => setShowConfig((prev) => !prev)}
+                    onClick={() => setShowConfig((prev: boolean) => !prev)}
                   >
                     {showConfig ? '收起' : '展开'}
                   </Button>
@@ -131,19 +161,22 @@ export default function IndustryScorePage(): React.JSX.Element {
                   <div className="space-y-2 rounded-md border p-3">
                     <Input
                       placeholder="Base URL"
+                      aria-label="大模型 Base URL"
                       value={llmConfig.baseURL}
-                      onChange={(e) => setLlmConfig((prev) => ({ ...prev, baseURL: e.target.value }))}
+                      onChange={(e) => setLlmConfig((prev: LlmConfig) => ({ ...prev, baseURL: e.target.value }))}
                     />
                     <Input
                       type="password"
                       placeholder="API Key"
+                      aria-label="大模型 API Key"
                       value={llmConfig.apiKey}
-                      onChange={(e) => setLlmConfig((prev) => ({ ...prev, apiKey: e.target.value }))}
+                      onChange={(e) => setLlmConfig((prev: LlmConfig) => ({ ...prev, apiKey: e.target.value }))}
                     />
                     <Input
                       placeholder="Model"
+                      aria-label="大模型 Model"
                       value={llmConfig.model}
-                      onChange={(e) => setLlmConfig((prev) => ({ ...prev, model: e.target.value }))}
+                      onChange={(e) => setLlmConfig((prev: LlmConfig) => ({ ...prev, model: e.target.value }))}
                     />
                   </div>
                 )}
@@ -154,7 +187,7 @@ export default function IndustryScorePage(): React.JSX.Element {
 
               <div className="space-y-2">
                 <label className="text-sm font-medium">补充资料上传</label>
-                <Input type="file" multiple accept=".txt,.md,.json" onChange={handleFileChange} />
+                <Input type="file" multiple accept=".txt,.md,.json" aria-label="补充资料上传" onChange={handleFileChange} />
                 {files.length > 0 && (
                   <div className="flex flex-wrap gap-2">
                     {files.map((file) => (
@@ -170,6 +203,7 @@ export default function IndustryScorePage(): React.JSX.Element {
                 <label className="text-sm font-medium">行业分析报告 / 资料</label>
                 <Textarea
                   placeholder="粘贴最新行业研报、政策文件、新闻事件等..."
+                  aria-label="行业分析报告文本"
                   value={reportText}
                   onChange={(e) => setReportText(e.target.value)}
                   rows={5}

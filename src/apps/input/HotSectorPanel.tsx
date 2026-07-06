@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
@@ -10,11 +10,19 @@ import {
   addHotSectorStocks,
   type HotSector,
 } from '@/services/input/hotSectorService'
-import { usePoolData } from '@/components/pool/usePoolData'
+import { usePoolStore, getAllGroups } from '@/store/poolStore'
 import { useToast } from '@/hooks/useToast'
+import { getLogger } from '@/lib/logger'
+import { twText, twBg } from '@/constants/theme.tokens'
+
+const logger = getLogger()
 
 export default function HotSectorPanel(): React.JSX.Element {
-  const { groups, allGroups, refresh } = usePoolData()
+  // 从 poolStore 获取状态
+  const refresh = usePoolStore((s) => s.refresh)
+  const stocks = usePoolStore((s) => s.stocks)
+  const allGroups = useMemo(() => getAllGroups(), [stocks])
+  
   const [hotSectors] = useState<HotSector[]>(() => getHotSectors())
   const [selectedHotSector, setSelectedHotSector] = useState<string>(
     getHotSectors()[0]?.code ?? '',
@@ -25,10 +33,9 @@ export default function HotSectorPanel(): React.JSX.Element {
   const [message, setMessage] = useState('')
   const { toast } = useToast()
 
-  const allStocks = groups.flatMap((g) => g.stocks)
   const existingSymbols = useMemo(
-    () => new Set(allStocks.map((s) => s.symbol)),
-    [allStocks],
+    () => new Set(stocks.map((s) => s.symbol)),
+    [stocks],
   )
 
   const activeHotSector = useMemo(
@@ -41,25 +48,67 @@ export default function HotSectorPanel(): React.JSX.Element {
     [targetGroup],
   )
 
-  const handleAddHotStock = async (symbolToAdd: string): Promise<void> => {
-    if (!activeHotSector) return
-    setAddingHot((prev) => new Set(prev).add(symbolToAdd))
-    const result = await addHotSectorStock(
-      activeHotSector.code,
-      symbolToAdd,
-      addOptions,
-    )
-    setAddingHot((prev) => {
-      const next = new Set(prev)
-      next.delete(symbolToAdd)
-      return next
-    })
+  // 组件初始化：加载股票池数据
+  useEffect(() => {
+    logger.info('[HotSectorPanel] 组件初始化，加载股票池数据')
+    void refresh()
+  }, [refresh])
 
-    if (result.success) {
-      setMessage(`已将 ${symbolToAdd} 加入候选池`)
-      await refresh()
-    } else {
-      setMessage(result.error ?? '加入失败')
+  const handleAddHotStock = async (symbolToAdd: string): Promise<void> => {
+    if (!activeHotSector) {
+      logger.warn('[HotSectorPanel] handleAddHotStock 中断: activeHotSector 为空', { symbol: symbolToAdd })
+      return
+    }
+
+    const startTime = Date.now()
+    logger.info('[HotSectorPanel] handleAddHotStock 开始', {
+      symbol: symbolToAdd,
+      sectorCode: activeHotSector.code,
+      targetGroup: addOptions.group ?? '默认分组'
+    })
+    
+    setAddingHot((prev) => new Set(prev).add(symbolToAdd))
+    
+    try {
+      const result = await addHotSectorStock(
+        activeHotSector.code,
+        symbolToAdd,
+        addOptions,
+      )
+      
+      setAddingHot((prev) => {
+        const next = new Set(prev)
+        next.delete(symbolToAdd)
+        return next
+      })
+
+      if (result.success) {
+        logger.info('[HotSectorPanel] handleAddHotStock 成功', {
+          symbol: symbolToAdd,
+          elapsedMs: Date.now() - startTime,
+        })
+        setMessage(`已将 ${symbolToAdd} 加入候选池`)
+        await refresh()
+      } else {
+        logger.error('[HotSectorPanel] handleAddHotStock 失败', {
+          symbol: symbolToAdd,
+          error: result.error,
+          elapsedMs: Date.now() - startTime,
+        })
+        setMessage(result.error ?? '加入失败')
+      }
+    } catch (err) {
+      logger.error('[HotSectorPanel] handleAddHotStock 异常', {
+        symbol: symbolToAdd,
+        error: err instanceof Error ? err.message : String(err),
+        elapsedMs: Date.now() - startTime,
+      })
+      setAddingHot((prev) => {
+        const next = new Set(prev)
+        next.delete(symbolToAdd)
+        return next
+      })
+      setMessage(err instanceof Error ? err.message : '加入失败')
     }
   }
 
@@ -120,10 +169,10 @@ export default function HotSectorPanel(): React.JSX.Element {
                   <Badge
                     className={
                       sector.trend === 'up'
-                        ? 'bg-green-500/20 text-green-400'
+                        ? `${twBg('green', 100)} ${twText('green', 800)}`
                         : sector.trend === 'down'
-                          ? 'bg-red-500/20 text-red-400'
-                          : 'bg-gray-500/20 text-gray-400'
+                          ? `${twBg('red', 100)} ${twText('red', 800)}`
+                          : `${twBg('gray', 100)} ${twText('gray', 600)}`
                     }
                   >
                     {sector.score}

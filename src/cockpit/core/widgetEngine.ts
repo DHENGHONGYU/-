@@ -1,3 +1,4 @@
+import React from 'react'
 import { getLogger } from '@/lib/logger'
 import { eventBus } from '@/lib/eventBus'
 import { widgetRegistry } from './widgetRegistry'
@@ -39,12 +40,22 @@ export class WidgetEngine {
         throw new Error(`Widget "${widgetId}" component is empty`)
       }
 
-      componentCache.set(widgetId, component)
+      // P0-2 全局防御：包裹所有 widget 组件，防止 props 为 null 时解构崩溃
+      const SafeWrapper = (props: { config: unknown; data?: MarketData }): React.JSX.Element | null => {
+        if (!props || !props.config) {
+          logger.warn(`[WidgetEngine] Widget "${widgetId}" received null props, rendering fallback`)
+          return null
+        }
+        return React.createElement(component, props)
+      }
+      SafeWrapper.displayName = `Safe(${component.displayName || component.name || 'Widget'})`
+
+      componentCache.set(widgetId, SafeWrapper)
       const duration = Date.now() - startTs
 
       logger.info(`[WidgetEngine] Component loaded: widgetId="${widgetId}", duration=${duration}ms`)
       eventBus.emit('WIDGET_LOAD_SUCCESS', { widgetId })
-      return component
+      return SafeWrapper
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : String(err)
       logger.error(`[WidgetEngine] Failed to load component: widgetId="${widgetId}", error="${errorMsg}"`)

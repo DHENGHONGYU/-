@@ -113,3 +113,94 @@ export const HEALTH_SCORE_THRESHOLDS = {
   GOOD: 75,
   WARNING: 60,
 }
+
+// ============================================================
+// 监控间隔（毫秒）
+// ============================================================
+export const MONITOR_INTERVALS = {
+  AGENT_HEARTBEAT: 5000,
+  AGENT_HEALTH: 15000,
+  HEALTH_CHECK: 30000,
+  LOG_POLL: 10000,
+  ENGINE_STATUS: 15000,
+  SYSTEM_SNAPSHOT: 60000,
+  TASK_QUEUE: 2000,
+  LOG_STREAM: 3000,
+} as const
+
+// ============================================================
+// V6 引擎评分层级
+// ============================================================
+export const V6_ENGINE_LAYERS = [
+  { id: 'L0', name: 'L0: 数据采集', deterministic: true, llmEnhanceable: false, weight: 0.05 },
+  { id: 'L1', name: 'L1: 宏观环境', deterministic: false, llmEnhanceable: true, weight: 0.10 },
+  { id: 'L2', name: 'L2: 行业分析', deterministic: false, llmEnhanceable: true, weight: 0.15 },
+  { id: 'L3', name: 'L3: 财务分析', deterministic: true, llmEnhanceable: false, weight: 0.20 },
+  { id: 'L4', name: 'L4: 估值分析', deterministic: true, llmEnhanceable: false, weight: 0.15 },
+  { id: 'L5', name: 'L5: 技术分析', deterministic: false, llmEnhanceable: true, weight: 0.10 },
+  { id: 'L6', name: 'L6: 情绪分析', deterministic: false, llmEnhanceable: true, weight: 0.10 },
+  { id: 'L7', name: 'L7: 风险分析', deterministic: true, llmEnhanceable: false, weight: 0.10 },
+  { id: 'L8', name: 'L8: 综合评分', deterministic: true, llmEnhanceable: false, weight: 0.05 },
+] as const
+
+// ============================================================
+// 系统架构分层定义
+// ============================================================
+export const SYSTEM_ARCHITECTURE_LAYERS = [
+  {
+    id: 'config',
+    name: '配置层',
+    description: '零硬编码锚点，全局配置注入',
+    modules: ['dbConfig', 'inputConfig', 'routes', 'thresholds', 'dualStrategyRules'],
+    color: '#6366f1',
+  },
+  {
+    id: 'core',
+    name: '核心层',
+    description: '核心工具与类型守卫',
+    modules: ['DataBridge', 'ACL', 'Envelope', 'MemoryCache', 'EventBus'],
+    color: '#8b5cf6',
+  },
+  {
+    id: 'data',
+    name: '数据层',
+    description: 'IndexedDB 数据访问层',
+    modules: ['dataLayer', 'db', 'types', 'queryBuilder'],
+    color: '#06b6d4',
+  },
+  {
+    id: 'services',
+    name: '服务层',
+    description: '18个子域业务服务',
+    modules: ['analysis', 'scoring', 'fetcher', 'news', 'llm', 'execution', 'portfolio', 'input', 'data-collector', 'system'],
+    color: '#10b981',
+  },
+  {
+    id: 'agents',
+    name: '智能体层',
+    description: 'AI Agent 注册与调度',
+    modules: ['agentRegistry', 'baseAgent', 'analysisAgent', 'researchAgent'],
+    color: '#f59e0b',
+  },
+  {
+    id: 'store',
+    name: '状态层',
+    description: '39个Zustand Store',
+    modules: ['analysisStore', 'engineStore', 'tradingStore', 'portfolioStore'],
+    color: '#ef4444',
+  },
+  {
+    id: 'pages',
+    name: '页面层',
+    description: '5舱页面入口',
+    modules: ['input', 'analysis', 'trading', 'output', 'command'],
+    color: '#ec4899',
+  },
+  {
+    id: 'components',
+    name: '组件层',
+    description: 'UI组件库',
+    modules: ['ui', 'cabin', 'chart', 'pool', 'news', 'strategy'],
+    color: '#f97316',
+  },
+] as const

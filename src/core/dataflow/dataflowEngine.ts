@@ -57,8 +57,13 @@ export class DataFlowEngine {
   private cache = new Map<string, CacheEntry>()
   private cacheMaxEntries = DEFAULT_CACHE_MAX_ENTRIES
   private cacheStats: CacheStats = {
+    hits: 0,
+    misses: 0,
+    size: 0,
+    totalRequests: 0,
     totalEntries: 0,
     maxEntries: DEFAULT_CACHE_MAX_ENTRIES,
+    hitRate: 0,
     hitCount: 0,
     missCount: 0,
     expiredCount: 0,

@@ -15,8 +15,8 @@
 import { SYSTEM_ARCHITECTURE_LAYERS, V6_ENGINE_LAYERS } from '@/constants/health.constants'
 import { getLogger } from '@/lib/logger'
 import { getAgentSystemStatus } from '@/agents'
-import { useEngineStore } from '@/store/engineStore'
 import { getAgentRegistry } from '@/agents/agentRegistry'
+import { eventBus } from '@/lib/eventBus'
 
 const logger = getLogger()
 
@@ -74,18 +74,40 @@ export interface ArchitectureSnapshot {
 // ============================================================
 
 export class ArchitectureService {
+  private engineStarted = false
+  private unsubscribeEngineStatus: (() => void) | null = null
+
+  constructor() {
+    // 订阅引擎状态变化事件，避免直接依赖 useEngineStore
+    this.unsubscribeEngineStatus = eventBus.on('ENGINE_STORE_STARTED_CHANGED', (payload: unknown) => {
+      const data = payload as { started: boolean }
+      this.engineStarted = data.started
+      logger.info('[ArchitectureService] Engine status updated via EventBus', { started: this.engineStarted })
+    })
+  }
+
+  /**
+   * 清理 EventBus 订阅，防止内存泄漏。
+   * 单例销毁时应调用此方法。
+   */
+  destroy(): void {
+    if (this.unsubscribeEngineStatus) {
+      this.unsubscribeEngineStatus()
+      this.unsubscribeEngineStatus = null
+      logger.info('[ArchitectureService] EventBus subscription cleaned up')
+    }
+  }
+
   /**
    * 解析单个分层的实时运行状态。
    *
-   * - services / agents 层：依据 `useEngineStore.started` 判断
+   * - services / agents 层：依据 `engineStarted`（通过 EventBus 订阅）判断
    * - agents 层：叠加 Agent 系统初始化状态与注册表统计
    * - 其余分层为静态基础设施，恒为 healthy
    */
   private resolveLayerStatus(layerId: string): ArchitectureNode['status'] {
-    const engineStarted = useEngineStore.getState().started
-
     if (layerId === 'services') {
-      return engineStarted ? 'healthy' : 'warning'
+      return this.engineStarted ? 'healthy' : 'warning'
     }
 
     if (layerId === 'agents') {
@@ -98,7 +120,7 @@ export class ArchitectureService {
       if (registryStats.total === 0) {
         return 'warning'
       }
-      return engineStarted ? 'healthy' : 'warning'
+      return this.engineStarted ? 'healthy' : 'warning'
     }
 
     // config / core / data / store / pages / components 为静态基础设施
@@ -272,4 +294,15 @@ let architectureServiceInstance: ArchitectureService | null = null
 export function getArchitectureService(): ArchitectureService {
   architectureServiceInstance ??= new ArchitectureService()
   return architectureServiceInstance
+}
+
+/**
+ * 销毁 ArchitectureService 单例并清理 EventBus 订阅。
+ */
+export function destroyArchitectureService(): void {
+  if (architectureServiceInstance) {
+    architectureServiceInstance.destroy()
+    architectureServiceInstance = null
+    logger.info('[ArchitectureService] Singleton destroyed')
+  }
 }

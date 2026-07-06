@@ -1,5 +1,5 @@
-> **Version**: v1.1.0  
-> **Last Updated**: 2026-06-26  
+> **Version**: v1.2.0  
+> **Last Updated**: 2026-07-06  
 > **Maintainer**: 架构资产治理官
 
 # 数据采集模块数据字典
@@ -52,7 +52,7 @@
 
 | 字段 | 类型 | 必填 | 描述 |
 |------|------|------|------|
-| `dataType` | `string` | 是 | 数据类型：indices/sectors/fundFlow/sentiment/watchlist/portfolio/tradeReview/analysisScores/modelComparison/stockPool/chatHistory |
+| `dataType` | `string` | 是 | 数据类型：indices/sectors/fundFlow/sentiment/watchlist/portfolio/tradeReview/analysisScores/modelComparison/stockPool/chatHistory/hotSectors/valuePit |
 | `source` | `string` | 是 | 数据来源标识 |
 | `payload` | `unknown` | 是 | 原始数据载荷 |
 | `timestamp` | `number` | 是 | 采集时间（毫秒时间戳） |
@@ -67,6 +67,7 @@
 | `timeout` | `number` | 是 | 超时时间（毫秒），默认 10000 |
 | `retryCount` | `number` | 是 | 重试次数，默认 3 |
 | `retryInterval` | `number` | 是 | 重试间隔（毫秒），默认 2000 |
+| `headers` | `Record<string, string>` | 否 | 请求头 |
 
 ### 1.5 BaseCollector — 基础采集器（抽象类）
 
@@ -130,6 +131,8 @@
 | `modelComparison` | `adaptModelComparison` | `MarketData.modelComparison` |
 | `stockPool` | `adaptStockPool` | `MarketData.stockPool` |
 | `chatHistory` | `adaptChatHistory` | `MarketData.chatHistory` |
+| `hotSectors` | `adaptHotSectors` | `MarketData.hotSectors` |
+| `valuePit` | `adaptValuePit` | `MarketData.valuePit` |
 
 ### 1.8 采集器实现清单
 
@@ -259,3 +262,4 @@
 | 日期 | 版本 | 变更内容 | 变更人 |
 |------|------|----------|--------|
 | 2026-06-26 | v1.0.0 | 初始创建，覆盖数据采集三层架构全部类型定义（8 个接口）与枚举常量（5 组） | Architecture Asset Governor |
+| 2026-07-06 | v1.2.0 | CollectorConfig +1 字段（headers）；RawMarketData.dataType +2 值（hotSectors/valuePit）；MarketDataAdapter +2 适配规则 | Architecture Asset Governor |

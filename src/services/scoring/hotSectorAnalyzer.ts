@@ -19,7 +19,7 @@ import { getDefaultDualStrategyRuleConfig, type DualStrategyRuleConfig } from '@
 import { HOT_SECTOR_THRESHOLDS } from '@/config/thresholds'
 import { EnvelopeFactory } from '@/core/envelope'
 import { dataLayer } from '@/data/dataLayer'
-import { checkStrategyScoreFreshness } from '@/services/analysis/dataFreshnessGuard'
+import { checkStrategyScoreFreshness } from '@/core/freshnessGuard'
 import type { DataLayerResult, HotSectorScore, Stock } from '@/data/types'
 import { getLogger } from '@/lib/logger'
 
@@ -416,6 +416,7 @@ export function analyze(input: HotSectorAnalyzerInput): HotSectorScore {
       valuation:
         Math.round(valuationRisk * HOT_SECTOR_THRESHOLDS.SCORE_ROUNDING_PRECISION) /
         HOT_SECTOR_THRESHOLDS.SCORE_ROUNDING_PRECISION,
+      composite: rounded,
       marketEnv:
         Math.round(marketEnv * HOT_SECTOR_THRESHOLDS.SCORE_ROUNDING_PRECISION) /
         HOT_SECTOR_THRESHOLDS.SCORE_ROUNDING_PRECISION,
@@ -633,7 +634,11 @@ export async function analyzeHotSectors(
   const { dataBridge } = await import('@/core/databridge')
 
   for (const score of scores) {
-    score.dataVersion = (score.dataVersion || 0) + 1
+    if (score.dataVersion == null) {
+      logger.warn('[hotSectorAnalyzer] 字段缺失，使用默认值', { field: 'dataVersion', context: `symbol=${score.symbol}` })
+    }
+    const baseVersion = score.dataVersion ?? 0
+    score.dataVersion = baseVersion + 1
     try {
       const envelope = EnvelopeFactory.create(
         {

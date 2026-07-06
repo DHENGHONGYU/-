@@ -1,10 +1,16 @@
 ---
 title: DataBridge 端点与数据映射清单
-version: v0.9.8
-last_updated: 2026-06-30
+version: v1.2.0
+last_updated: 2026-07-05
 maintainer: V9质量治理小组
 status: active
 changelog:
+  - date: 2026-07-05
+    author: V9质量治理小组
+    desc: v1.2.0：新增 §2.11 执行日志与缺失报告端点（5个）；新增 §2.12 Query路由（3个）；附录A新增序号40-47；DB路由计数修正为36，合计修正为42
+  - date: 2026-07-05
+    author: V9开发团队
+    desc: v1.1.0：新增 §2.9 LoadHoldingsDataHandler（持仓查询，查询不写 DB）；附录A新增序号39
   - date: 2026-06-30
     author: V9数据层改造小组
     desc: Phase 7：输出舱/总控舱功能扩展，无新增 DataBridge 端点，确认现有端点有效性
@@ -27,9 +33,9 @@ changelog:
 
 # DataBridge 端点与数据映射清单
 
-> **文档版本**：v1.0.0  
+> **文档版本**：v1.2.0  
 > **创建日期**：2026-06-28  
-> **最后更新**：2026-06-30（Phase 7：输出舱/总控舱功能扩展，无新增端点）  
+> **最后更新**：2026-07-05（v1.2.0：补充执行日志/缺失报告/执行计划 CRUD 端点 5 个，新增 Query 路由 3 个，修正 DB 路由计数为 36）  
 > **文档状态**：🟢 权威生效  
 > **权威等级**：DataBridge 模块设计参考  
 > **维护角色**：数据治理架构师
@@ -73,10 +79,12 @@ Forward 端点是 DataBridge.forward() 方法的输入，即模块通过发送 S
 
 | 路由类型 | 数量 | 说明 |
 |:---|:---:|:---|
-| **DB 路由** | 29 | 数据持久化操作与订单/新闻事件，写入 IndexedDB 各 Store |
+| **DB 路由** | 36 | 数据持久化操作与订单/新闻事件，写入 IndexedDB 各 Store |
 | **Strategy 路由** | 3 | 策略引擎计算触发，输出到策略频道 |
 | **Manager 路由** | 3 | 系统级管理操作（重置/导入/导出） |
-| **合计** | **35** | — |
+| **合计** | **42** | — |
+
+> **v1.1.0 变更**：DB 路由新增 6 个 action（saveExecutionLog、saveMissingReport、updateExecutionPlan、deleteExecutionPlan、incrementMissingReportRetry、savePortfolio 已记录但此前未纳入计数），另新增 Query 路由 3 个（queryGet、queryList、queryByIndex）走 `DataBridge.query()` 独立通道，不计入 forward 合计。
 
 ---
 
@@ -162,11 +170,47 @@ Forward 端点是 DataBridge.forward() 方法的输入，即模块通过发送 S
 
 > **说明**：`saveResearchLog` 由 DataBridge 内部的 `writeAuditLog` 自动触发，所有 forward 操作均会写入审计日志，外部模块一般不直接调用。
 
-### 2.9 交易复盘数据（P1）
+### 2.9 持仓查询（P0，v1.1.0 新增 — P0-3 修复）
+
+`loadHoldingsData` 的 payload 是 `HoldingsQueryParams`（分页/日期/关键词查询参数），**不是 Stock 数据**，不能写入 `stocks` store（keyPath='symbol'）。v1.1.0 新增 `LoadHoldingsDataHandler` 专用处理器，仅记录查询日志，不执行 DB 写入。
+
+| 序号 | EnvelopeAction | 常量值 | 数据实体 | 操作类型 | 优先级 | IndexedDB Store | 主要来源模块 |
+|:---:|:---|:---|:---|:---:|:---:|:---|:---|
+| 39 | `loadHoldingsData` | `LOAD_HOLDINGS_DATA` | HoldingsQueryParams | **查询（不写 DB）** | P0 | —（跳过） | holdingsStore |
+
+> **Handler 注册优先级**：`LoadHoldingsDataHandler` 注册在通知类处理器之后、DELETE 处理器之前（注释标记 "2.5"），优先于通用 `PutHandler`。
+
+### 2.10 交易复盘数据（P1）
 
 | 序号 | EnvelopeAction | 常量值 | 数据实体 | 操作类型 | 优先级 | IndexedDB Store | 订阅频道名 | 主要来源模块 |
 |:---:|:---|:---|:---|:---:|:---:|:---:|:---|:---|:---|
 | 27 | `saveTradeReview` | `SAVE_TRADE_REVIEW` | TradeReviewRecord | 写（增/改） | P1 | `trade_reviews` | `trade_reviews` | disciplineStore, trading |
+
+### 2.11 执行日志与缺失报告（P0，v1.1.0 补充）
+
+以下 action 在 `ENVELOPE_ACTION` 中定义且已在 `DataBridge.createHandlerRegistry()` 中注册处理器，但此前文档未收录。
+
+| 序号 | EnvelopeAction | 常量值 | 数据实体 | 操作类型 | 优先级 | IndexedDB Store | 订阅频道名 | 主要来源模块 |
+|:---:|:---|:---|:---|:---:|:---:|:---|:---|:---|
+| 40 | `saveExecutionLog` | `SAVE_EXECUTION_LOG` | ExecutionLog | 写（增） | P0 | `execution_logs` | `execution_logs` | executionStore |
+| 41 | `saveMissingReport` | `SAVE_MISSING_REPORT` | MissingReport | 写（增） | P0 | `missing_reports` | `missing_reports` | executionStore |
+| 42 | `incrementMissingReportRetry` | `INCREMENT_MISSING_REPORT_RETRY` | MissingReport | 写（改） | P0 | `missing_reports` | `missing_reports` | executionStore |
+| 43 | `updateExecutionPlan` | `UPDATE_EXECUTION_PLAN` | ExecutionPlan | 写（改） | P0 | `execution_plans` | `executionPlans` | executionStore |
+| 44 | `deleteExecutionPlan` | `DELETE_EXECUTION_PLAN` | ExecutionPlan | 写（删） | P0 | `execution_plans` | `executionPlans` | executionStore |
+
+> **Handler 说明**：`deleteExecutionPlan` 由 `DeleteHandler` 处理；`saveExecutionLog`、`saveMissingReport`、`incrementMissingReportRetry`、`updateExecutionPlan` 由通用 `PutHandler` 处理。
+
+### 2.12 Query 路由（读操作，v1.1.0 补充）
+
+`DataBridge.query()` 提供独立的读操作通道，不走 `forward()` 路径，不触发广播。支持 ACL 校验与读缓存。
+
+| 序号 | EnvelopeAction | 常量值 | 操作类型 | 说明 |
+|:---:|:---|:---|:---:|:---|
+| 45 | `queryGet` | `QUERY_GET` | 读（单条） | 按主键查询单条记录，`db.get(store, key)` |
+| 46 | `queryList` | `QUERY_LIST` | 读（全部） | 查询 Store 全部记录，`db.getAll(store)` |
+| 47 | `queryByIndex` | `QUERY_BY_INDEX` | 读（索引） | 按索引查询，`db.getAllByIndex(store, indexName, indexValue)` |
+
+> **Query 路由参数**：通过 `QueryRequest` 接口传入（含 `action`、`store`、`key?`、`indexName?`、`indexValue?`、`source?`），返回 `QueryResult<T>`（含 `success`、`data?`、`error?`）。
 
 ---
 
@@ -378,6 +422,8 @@ Subscribe 频道是 DataBridge.subscribe() 方法支持的所有可订阅频道�
 | 板块定义数据 | SectorDefinition 为配置加载，无动态写入端点 | 如需运行时修改，新增 saveSectorDefinition 等 |
 | 交易复盘数据 | ReviewReport, DisciplineScore, ActionPlan 等 ~~Store 未在 DataBridge 中映射~~ **已通过 `saveTradeReview` / `trade_reviews` Store 实现（Phase 1）** | ~~后续版本补充~~ 已完成 |
 | AI Agent 数据 | AgentDefinition, AgentInstance 等 Store 未接入 DataBridge | 后续版本补充 |
+| ~~执行日志/缺失报告~~ | ~~`execution_logs`、`missing_reports` 无对应 EnvelopeAction~~ **已通过 `saveExecutionLog`、`saveMissingReport`、`incrementMissingReportRetry` 实现（v1.2.0）** | ~~后续版本补充~~ 已完成 |
+| ~~执行计划完整 CRUD~~ | ~~仅有 `createExecutionPlan`/`updateExecutionPhase`，缺少更新和删除~~ **已补充 `updateExecutionPlan`、`deleteExecutionPlan`（v1.2.0）** | ~~后续版本补充~~ 已完成 |
 
 ### 10.3 架构优化建议
 
@@ -432,6 +478,20 @@ Subscribe 频道是 DataBridge.subscribe() 方法支持的所有可订阅频道�
 | 36 | saveTradeReview | SAVE_TRADE_REVIEW | DB | trade_reviews | TradeReviewRecord | P1 |
 | 37 | createExecutionPlan | CREATE_EXECUTION_PLAN | DB | execution_plans | ExecutionPlan | P0 |
 | 38 | updateExecutionPhase | UPDATE_EXECUTION_PHASE | DB | execution_plans | ExecutionPlan | P0 |
+| 39 | loadHoldingsData | LOAD_HOLDINGS_DATA | **查询（不写 DB）** | —（跳过） | HoldingsQueryParams | P0 |
+| 40 | saveExecutionLog | SAVE_EXECUTION_LOG | DB | execution_logs | ExecutionLog | P0 |
+| 41 | saveMissingReport | SAVE_MISSING_REPORT | DB | missing_reports | MissingReport | P0 |
+| 42 | incrementMissingReportRetry | INCREMENT_MISSING_REPORT_RETRY | DB | missing_reports | MissingReport | P0 |
+| 43 | updateExecutionPlan | UPDATE_EXECUTION_PLAN | DB | execution_plans | ExecutionPlan | P0 |
+| 44 | deleteExecutionPlan | DELETE_EXECUTION_PLAN | DB | execution_plans | ExecutionPlan | P0 |
+| 45 | queryGet | QUERY_GET | Query（读） | 按请求指定 | 泛型 T | P0 |
+| 46 | queryList | QUERY_LIST | Query（读） | 按请求指定 | 泛型 T[] | P0 |
+| 47 | queryByIndex | QUERY_BY_INDEX | Query（读） | 按请求指定 | 泛型 T[] | P0 |
+
+> **v1.1.0 变更**：
+> - #39 `loadHoldingsData` 由 `LoadHoldingsDataHandler` 专用处理器处理，不执行 DB 写入。此前该 action 被错误路由至 `PutHandler` → `stocks` store，导致 IndexedDB key path 报错（P0-3）。
+> - #40–#44 为新增 DB 路由 action，已在 `createHandlerRegistry()` 中注册对应处理器。
+> - #45–#47 为 Query 路由 action，走 `DataBridge.query()` 独立通道，不走 `forward()`。
 
 ---
 

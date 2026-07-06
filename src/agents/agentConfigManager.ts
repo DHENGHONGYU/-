@@ -42,7 +42,7 @@ export class AgentConfigManager {
 
   setOverride(agentId: string, override: AgentConfigOverride): void {
     logger.debug(`[AgentConfigManager] setOverride() agentId="${agentId}"`)
-    const existing = this.overrides.get(agentId) || {}
+    const existing = this.overrides.get(agentId) ?? {}
     this.overrides.set(agentId, { ...existing, ...override, customMeta: { ...existing.customMeta, ...override.customMeta } })
     eventBus.emit('AGENT_CONFIG_OVERRIDE_UPDATED', { agentId, override })
     logger.info(`[AgentConfigManager] Override updated for agent "${agentId}"`)
@@ -69,13 +69,13 @@ export class AgentConfigManager {
       return null
     }
 
-    const override = this.overrides.get(agentId) || {}
+    const override = this.overrides.get(agentId) ?? {}
     const merged: AgentConfigSnapshot['merged'] = {
       ...base,
       defaultTimeout: override.defaultTimeout ?? base.defaultTimeout,
       maxConcurrent: override.maxConcurrent ?? base.maxConcurrent,
       enabled: override.enabled ?? true,
-      customMeta: override.customMeta || {},
+      customMeta: override.customMeta ?? {},
     }
 
     return {
@@ -138,9 +138,7 @@ export function createAgentConfigManager(): AgentConfigManager {
 }
 
 export function getAgentConfigManager(): AgentConfigManager {
-  if (!configManagerInstance) {
-    configManagerInstance = new AgentConfigManager()
-  }
+  configManagerInstance ??= new AgentConfigManager()
   return configManagerInstance
 }
 

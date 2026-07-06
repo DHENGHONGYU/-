@@ -1,5 +1,5 @@
-> **Version**: v1.1.0  
-> **Last Updated**: 2026-06-26  
+> **Version**: v1.2.0  
+> **Last Updated**: 2026-07-06  
 > **Maintainer**: 架构资产治理官
 
 # AI 智能体调度中心 / 健康监控 / 诊断分析 — 数据字典
@@ -246,3 +246,156 @@
 | `stats.successTasks` | `number` | 是 | 成功任务数 |
 | `stats.failedTasks` | `number` | 是 | 失败任务数 |
 | `stats.avgExecutionTime` | `number` | 是 | 平均执行时间 |
+
+### 5.5 AgentHealthSnapshot — Agent 健康快照
+
+**来源**: `src/types/modules/agent.types.ts:51-66`
+**用途**: 单个 Agent 的健康状态快照，用于监控面板
+
+| 字段 | 类型 | 必填 | 描述 |
+|------|------|------|------|
+| `agentId` | `string` | 是 | 智能体唯一标识 |
+| `agentName` | `string` | 是 | 智能体名称（冗余字段） |
+| `name` | `string` | 是 | 显示名称 |
+| `status` | `'healthy' \| 'warning' \| 'critical' \| 'unknown'` | 是 | 健康状态 |
+| `lastHeartbeat` | `number` | 是 | 最后心跳（毫秒时间戳） |
+| `taskCount` | `number` | 是 | 当前任务数 |
+| `totalTasks` | `number` | 是 | 累计任务总数 |
+| `errorCount` | `number` | 是 | 错误计数 |
+| `failureRate` | `number` | 是 | 失败率 0-1 |
+| `uptime` | `number` | 是 | 运行时间（毫秒） |
+| `avgExecutionTime` | `number` | 是 | 平均执行时间（毫秒） |
+| `consecutiveFailures` | `number` | 是 | 连续失败次数 |
+| `maxConcurrent` | `number` | 是 | 最大并发数 |
+| `defaultTimeout` | `number` | 是 | 默认超时（毫秒） |
+
+### 5.6 AgentTaskHistoryEntry — Agent 任务历史条目
+
+**来源**: `src/types/modules/agent.types.ts:69-79`
+**用途**: 单个 Agent 任务的执行历史记录
+
+| 字段 | 类型 | 必填 | 描述 |
+|------|------|------|------|
+| `taskId` | `string` | 是 | 任务唯一标识 |
+| `agentId` | `string` | 是 | 关联 Agent ID |
+| `type` | `string` | 是 | 任务类型 |
+| `status` | `'pending' \| 'running' \| 'completed' \| 'failed' \| 'timeout'` | 是 | 任务状态 |
+| `createdAt` | `number` | 是 | 创建时间（毫秒时间戳） |
+| `startedAt` | `number` | 否 | 开始执行时间 |
+| `completedAt` | `number` | 否 | 完成时间 |
+| `durationMs` | `number` | 否 | 执行耗时（毫秒） |
+| `error` | `string` | 否 | 错误信息 |
+
+### 5.7 AgentMetricsSummary — Agent 指标汇总
+
+**来源**: `src/types/modules/agent.types.ts:82-94`
+**用途**: 所有 Agent 的聚合指标汇总
+
+| 字段 | 类型 | 必填 | 描述 |
+|------|------|------|------|
+| `totalAgents` | `number` | 是 | Agent 总数 |
+| `healthyCount` | `number` | 是 | 健康数量 |
+| `warningCount` | `number` | 是 | 预警数量 |
+| `criticalCount` | `number` | 是 | 异常数量 |
+| `totalTasks` | `number` | 是 | 任务总数 |
+| `successTasks` | `number` | 是 | 成功任务数 |
+| `failedTasks` | `number` | 是 | 失败任务数 |
+| `runningTasks` | `number` | 是 | 运行中任务数 |
+| `pendingTasks` | `number` | 是 | 等待中任务数 |
+| `avgFailureRate` | `number` | 是 | 平均失败率 |
+| `avgExecutionTime` | `number` | 是 | 平均执行时间（毫秒） |
+
+### 5.8 SystemMonitorSnapshot — 系统监控快照
+
+**来源**: `src/types/modules/agent.types.ts:97-107`
+**用途**: 系统级监控快照，聚合 Agent 系统全部运行时状态
+
+| 字段 | 类型 | 必填 | 描述 |
+|------|------|------|------|
+| `timestamp` | `number` | 是 | 快照时间（毫秒时间戳） |
+| `agentSystemInitialized` | `boolean` | 是 | Agent 系统是否已初始化 |
+| `agentMetrics` | `AgentMetricsSummary` | 是 | Agent 指标汇总 |
+| `agentHealthSnapshots` | `AgentHealthSnapshot[]` | 是 | 各 Agent 健康快照列表 |
+| `recentTasks` | `AgentTaskHistoryEntry[]` | 是 | 最近任务历史 |
+| `eventBusStats.totalEvents` | `number` | 是 | EventBus 总事件数 |
+| `eventBusStats.totalListeners` | `number` | 是 | EventBus 总监听器数 |
+
+### 5.9 AgentTriggerPayload — Agent 任务触发参数
+
+**来源**: `src/types/modules/agent.types.ts:114-120`
+**用途**: 手动触发 Agent 执行时的输入参数
+
+| 字段 | 类型 | 必填 | 描述 |
+|------|------|------|------|
+| `agentId` | `string` | 是 | 目标 Agent ID |
+| `toolName` | `string` | 是 | 工具名称 |
+| `serverName` | `string` | 是 | MCP Server 名称 |
+| `args` | `Record<string, unknown>` | 是 | 工具调用参数 |
+| `timeout` | `number` | 否 | 超时时间（毫秒） |
+
+### 5.10 AgentTaskFilter — Agent 任务筛选
+
+**来源**: `src/types/modules/agent.types.ts:123-127`
+**用途**: 查询 Agent 任务历史时的筛选条件
+
+| 字段 | 类型 | 必填 | 描述 |
+|------|------|------|------|
+| `agentId` | `string` | 否 | 按 Agent ID 筛选 |
+| `status` | `'pending' \| 'running' \| 'completed' \| 'failed' \| 'timeout'` | 否 | 按状态筛选 |
+| `dateRange` | `{ start: number; end: number }` | 否 | 按时间范围筛选 |
+
+### 5.11 MCPCallRecord — MCP 调用记录
+
+**来源**: `src/types/modules/agent.types.ts:130-141`
+**用途**: 单次 MCP 工具调用的完整记录
+
+| 字段 | 类型 | 必填 | 描述 |
+|------|------|------|------|
+| `id` | `string` | 是 | 记录唯一标识 |
+| `taskId` | `string` | 是 | 关联任务 ID |
+| `serverName` | `string` | 是 | MCP Server 名称 |
+| `toolName` | `string` | 是 | 工具名称 |
+| `args` | `Record<string, unknown>` | 是 | 调用参数 |
+| `result` | `unknown` | 否 | 调用结果 |
+| `error` | `string` | 否 | 错误信息 |
+| `startedAt` | `number` | 是 | 开始时间（毫秒时间戳） |
+| `completedAt` | `number` | 否 | 完成时间 |
+| `durationMs` | `number` | 否 | 调用耗时（毫秒） |
+
+### 5.12 AgentFeedback — Agent 反馈
+
+**来源**: `src/types/modules/agent.types.ts:148-157`
+**用途**: 用户对 Agent 执行结果的反馈评价
+
+| 字段 | 类型 | 必填 | 描述 |
+|------|------|------|------|
+| `id` | `string` | 是 | 反馈唯一标识 |
+| `taskId` | `string` | 是 | 关联任务 ID |
+| `agentId` | `string` | 是 | 关联 Agent ID |
+| `rating` | `1 \| 2 \| 3 \| 4 \| 5` | 是 | 评分（1-5 星） |
+| `comment` | `string` | 是 | 评论内容 |
+| `category` | `'accuracy' \| 'speed' \| 'usability' \| 'feature'` | 是 | 反馈分类 |
+| `createdAt` | `number` | 是 | 创建时间（毫秒时间戳） |
+| `resolved` | `boolean` | 是 | 是否已处理 |
+
+### 5.13 AgentFeedbackSummary — Agent 反馈汇总
+
+**来源**: `src/types/modules/agent.types.ts:160-165`
+**用途**: 单个 Agent 的反馈聚合统计
+
+| 字段 | 类型 | 必填 | 描述 |
+|------|------|------|------|
+| `agentId` | `string` | 是 | 关联 Agent ID |
+| `averageRating` | `number` | 是 | 平均评分 |
+| `totalFeedback` | `number` | 是 | 反馈总数 |
+| `categoryBreakdown` | `Record<string, number>` | 是 | 各分类反馈数量 |
+
+---
+
+## 变更日志
+
+| 日期 | 版本 | 变更内容 | 变更人 |
+|------|------|----------|--------|
+| 2026-06-26 | v1.0.0 | 初始创建，覆盖 AI Center 全部类型定义（8 个接口）与枚举常量（6 组） | Architecture Asset Governor |
+| 2026-06-26 | v1.1.0 | 补充 §5 Agent 运行时类型（4 个接口：AgentModuleInput/Output/Definition/Instance） | Architecture Asset Governor |
+| 2026-07-06 | v1.2.0 | 补充 §5.5-§5.13 共 9 个 Agent 运行时类型（HealthSnapshot/TaskHistoryEntry/MetricsSummary/SystemMonitorSnapshot/TriggerPayload/TaskFilter/MCPCallRecord/Feedback/FeedbackSummary） | Architecture Asset Governor |

@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import HotSectorWidget from '@/cockpit/widgets/HotSectorWidget'
 import type { HotSectorData, WidgetConfig } from '@/types/modules/widget.types'
+import { UI_TEXT } from '@/constants/uiText'
 
 function buildConfig(title: string): WidgetConfig {
   return {
@@ -34,37 +35,37 @@ function buildHotSectorData(overrides: Partial<HotSectorData> = {}): HotSectorDa
 
 describe('HotSectorWidget', () => {
   it('renders empty state when no hot sectors', () => {
-    render(<HotSectorWidget config={buildConfig('热门板块策略')} data={{ hotSectors: [] }} />)
+    render(<HotSectorWidget config={buildConfig(UI_TEXT.analysis.hotSector.title)} data={{ hotSectors: [] }} />)
 
-    expect(screen.getByText('热门板块策略')).toBeInTheDocument()
-    expect(screen.getByText('暂无热门板块策略数据')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.hotSector.title)).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.hotSector.noData)).toBeInTheDocument()
   })
 
   it('renders hot sector item with score and action badge', () => {
     const data = { hotSectors: [buildHotSectorData({ name: '热门标的', action: 'immediate', score: 4.35 })] }
-    render(<HotSectorWidget config={buildConfig('热门板块策略')} data={data} />)
+    render(<HotSectorWidget config={buildConfig(UI_TEXT.analysis.hotSector.title)} data={data} />)
 
     expect(screen.getByText('热门标的')).toBeInTheDocument()
     expect(screen.getByText('TEST.SZ')).toBeInTheDocument()
     expect(screen.getByText('4.35')).toBeInTheDocument()
-    expect(screen.getByText('立即跟进')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.trading.strategy.immediateFollow)).toBeInTheDocument()
   })
 
   it('renders dimension labels', () => {
     const data = { hotSectors: [buildHotSectorData()] }
-    render(<HotSectorWidget config={buildConfig('热门板块策略')} data={data} />)
+    render(<HotSectorWidget config={buildConfig(UI_TEXT.analysis.hotSector.title)} data={data} />)
 
-    expect(screen.getByText('动量')).toBeInTheDocument()
-    expect(screen.getByText('情绪')).toBeInTheDocument()
-    expect(screen.getByText('技术')).toBeInTheDocument()
-    expect(screen.getByText('估值')).toBeInTheDocument()
-    expect(screen.getByText('综合')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.factor.momentum)).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.factor.sentiment)).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.factor.technique)).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.factor.value)).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.score.overall)).toBeInTheDocument()
   })
 
   it('renders probe action label', () => {
     const data = { hotSectors: [buildHotSectorData({ action: 'probe', score: 3.5 })] }
-    render(<HotSectorWidget config={buildConfig('热门板块策略')} data={data} />)
+    render(<HotSectorWidget config={buildConfig(UI_TEXT.analysis.hotSector.title)} data={data} />)
 
-    expect(screen.getByText('试探')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.rotation.tentative)).toBeInTheDocument()
   })
 })

@@ -171,11 +171,11 @@ describe('outputStore — 日志输出验证', () => {
     await useOutputStore.getState().handleExport()
 
     expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining('[outputStore] INFO: handleExport/start'),
+      expect.stringContaining('[INFO] [outputStore] handleExport/start'),
       expect.any(Object)
     )
     expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining('[outputStore] INFO: handleExport/success'),
+      expect.stringContaining('[INFO] [outputStore] handleExport/success'),
       expect.any(Object)
     )
 
@@ -193,7 +193,7 @@ describe('outputStore — 日志输出验证', () => {
     await useOutputStore.getState().handleExport()
 
     expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining('[outputStore] WARN: handleExport/failed'),
+      expect.stringContaining('[WARN] [outputStore] handleExport/failed'),
       expect.any(Object)
     )
 
@@ -208,7 +208,7 @@ describe('outputStore — 日志输出验证', () => {
     await useOutputStore.getState().handleExport()
 
     expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining('[outputStore] ERROR: handleExport/exception'),
+      expect.stringContaining('[ERROR] [outputStore] handleExport/exception'),
       expect.any(Object)
     )
 

@@ -8,14 +8,16 @@ import { EnvelopeFactory } from '@/core/envelope'
 import { analyzeNewsArticle, getOrAnalyzeSentiment } from './sentimentAnalyzer'
 import type { StockInfo, StockLink } from './stockLinker'
 import { DEFAULT_STOCK_LIBRARY, linkArticleToStocks } from './stockLinker'
+import { MOCK_NEWS_URL_PREFIX } from '@/config/dataSourceUrls'
+import { DJB2_HASH_INIT, DJB2_HASH_MULTIPLIER } from '@/config/mathConstants'
 
 const logger = getLogger()
 
 /** 基于输入字符串生成稳定哈希 */
 export function generateNewsHash(input: string): string {
-  let hash = 5381
+  let hash = DJB2_HASH_INIT
   for (let i = 0; i < input.length; i++) {
-    hash = (hash * 33) ^ input.charCodeAt(i)
+    hash = (hash * DJB2_HASH_MULTIPLIER) ^ input.charCodeAt(i)
     hash |= 0
   }
   return (hash >>> 0).toString(16).padStart(8, '0')
@@ -298,7 +300,7 @@ export function generateMockArticles(count = 5): NewsArticle[] {
       id: '',
       title: template.title,
       content: template.content,
-      url: `https://mock.news/${generateId()}`,
+      url: `${MOCK_NEWS_URL_PREFIX}/${generateId()}`,
       source: 'mock',
       category: template.category,
       publishTime,

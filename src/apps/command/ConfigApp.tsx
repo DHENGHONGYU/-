@@ -25,12 +25,20 @@ import {
   BreadcrumbSeparator,
   BreadcrumbPage,
 } from '@/components/ui/Breadcrumb'
+import { LLMConfigWidget } from '@/components/shared/LLMConfigWidget'
+import { isLlmConfigured, type PartialLlmConfig } from '@/config/llmConfig'
+import { COLOR_TOKENS } from '@/constants/theme.tokens'
+import { getLogger } from '@/lib/logger'
+import { toSafeNumberInRange } from '@/lib/safeCoerce'
+
+const logger = getLogger()
 
 // ============================================================
 // 类型定义
 // ============================================================
 
 const STORAGE_KEY = 'v9-app-config'
+const LLM_CONFIG_KEY = 'v9-llm-config'
 
 interface AppConfig {
   // 交易配置
@@ -78,6 +86,20 @@ const LANGUAGE_OPTIONS = [
   { value: 'zh', label: '中文' },
   { value: 'en', label: '英文' },
 ]
+
+// 保存成功提示的显示时长（毫秒）
+const SAVE_SUCCESS_DISPLAY_DURATION = 2000
+
+// 数值字段的范围约束配置(用于 updateField 内做范围守卫)
+// HTML5 min/max 属性依赖浏览器原生验证,可被键盘输入/JS 注入/剪贴板粘贴绕过
+// 这里在 onChange 处理函数内做二次校验,拒绝 NaN/Infinity/越界值
+const NUMBER_FIELD_RANGES: Partial<Record<keyof AppConfig, { min: number; max: number }>> = {
+  portfolioValue: { min: 0, max: Number.MAX_SAFE_INTEGER },
+  maxSinglePositionPct: { min: 1, max: 100 },
+  maxDailyLossPct: { min: 0, max: 100 },
+  stopLossPct: { min: 0, max: 100 },
+  refreshInterval: { min: 1, max: 86_400 }, // 1 秒 ~ 1 天
+}
 
 // ============================================================
 // localStorage 工具
@@ -129,6 +151,21 @@ export default function ConfigApp(): React.JSX.Element {
   const [config, setConfig] = useState<AppConfig>(loadConfig)
   const [saved, setSaved] = useState(false)
 
+  // LLM 配置状态（受控模式）
+  const [llmConfig, setLlmConfig] = useState<PartialLlmConfig>(() => {
+    try {
+      const stored = localStorage.getItem(LLM_CONFIG_KEY)
+      return stored ? JSON.parse(stored) : {}
+    } catch {
+      return {}
+    }
+  })
+  const handleLlmConfigChange = (config: PartialLlmConfig) => {
+    setLlmConfig(config)
+    localStorage.setItem(LLM_CONFIG_KEY, JSON.stringify(config))
+  }
+  const llmConfigReady = isLlmConfigured(llmConfig)
+
   // 初始化时应用主题
   useEffect(() => {
     applyTheme(config.theme)
@@ -151,6 +188,35 @@ export default function ConfigApp(): React.JSX.Element {
 
   const updateField = useCallback(<K extends keyof AppConfig>(key: K, value: AppConfig[K]) => {
     setConfig((prev) => {
+      // P0-5 修复 + 任务 3 增强:数值字段使用 toSafeNumberInRange 守卫
+      // 同时拦截 NaN(由 'abc' 触发)、Infinity(由 '1e309' 触发)、越界值(如负数、超 100%)
+      // 复用 lib/safeCoerce.toSafeNumberInRange,避免数据流入口重复守卫逻辑
+      // 越界值默认回退到 prev[key],React controlled input 会自动重置为 prev 的值
+      if (typeof value === 'number') {
+        const range = NUMBER_FIELD_RANGES[key]
+        if (range) {
+          const safeValue = toSafeNumberInRange(
+            value,
+            range.min,
+            range.max,
+            prev[key] as number,
+          )
+          // 若 safeValue !== value,说明被守卫修正(NaN/Infinity/越界),不写入
+          if (safeValue !== value) {
+            const reason = !Number.isFinite(value)
+              ? (!Number.isNaN(value) ? 'Infinity' : 'NaN')
+              : 'OutOfRange'
+            logger.info('[ConfigApp] updateField/拒绝无效数值', {
+              field: String(key),
+              rawValue: value,
+              reason,
+              range: { min: range.min, max: range.max },
+            })
+            return prev
+          }
+        }
+      }
+
       const next = { ...prev, [key]: value }
       saveConfig(next)
 
@@ -161,7 +227,7 @@ export default function ConfigApp(): React.JSX.Element {
 
       setSaved(true)
       // 2 秒后隐藏保存成功提示
-      setTimeout(() => setSaved(false), 2000)
+      setTimeout(() => setSaved(false), SAVE_SUCCESS_DISPLAY_DURATION)
       return next
     })
   }, [])
@@ -202,7 +268,7 @@ export default function ConfigApp(): React.JSX.Element {
         <h1 className="text-2xl font-bold">配置管理</h1>
         <div className="flex items-center gap-2">
           {saved && (
-            <span className="text-sm text-green-600">已自动保存</span>
+            <span className={`text-sm ${COLOR_TOKENS.success.tailwind}`}>已自动保存</span>
           )}
           <Button variant="outline" size="sm" onClick={handleResetToDefault}>
             恢复默认
@@ -360,6 +426,21 @@ export default function ConfigApp(): React.JSX.Element {
               </Select>
             </div>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* LLM 模型配置 */}
+      <Card>
+        <CardHeader>
+          <CardTitle>LLM 模型配置</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <LLMConfigWidget
+            value={llmConfig}
+            onChange={handleLlmConfigChange}
+            configReady={llmConfigReady}
+            showWarning={!llmConfigReady}
+          />
         </CardContent>
       </Card>
     </div>

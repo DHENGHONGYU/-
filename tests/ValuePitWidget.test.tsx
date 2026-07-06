@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import ValuePitWidget from '@/cockpit/widgets/ValuePitWidget'
 import type { ValuePitData, WidgetConfig } from '@/types/modules/widget.types'
+import { UI_TEXT } from '@/constants/uiText'
 
 function buildConfig(title: string): WidgetConfig {
   return {
@@ -36,39 +37,39 @@ function buildValuePitData(overrides: Partial<ValuePitData> = {}): ValuePitData 
 
 describe('ValuePitWidget', () => {
   it('renders empty state when no value pit data', () => {
-    render(<ValuePitWidget config={buildConfig('价值洼地策略')} data={{ valuePit: [] }} />)
+    render(<ValuePitWidget config={buildConfig(UI_TEXT.analysis.valuePit.title)} data={{ valuePit: [] }} />)
 
-    expect(screen.getByText('价值洼地策略')).toBeInTheDocument()
-    expect(screen.getByText('暂无价值洼地策略数据')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.valuePit.title)).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.valuePit.noData)).toBeInTheDocument()
   })
 
   it('renders value pit item with score and action badge', () => {
     const data = { valuePit: [buildValuePitData({ name: '洼地标的', action: 'probe', score: 3.55 })] }
-    render(<ValuePitWidget config={buildConfig('价值洼地策略')} data={data} />)
+    render(<ValuePitWidget config={buildConfig(UI_TEXT.analysis.valuePit.title)} data={data} />)
 
     expect(screen.getByText('洼地标的')).toBeInTheDocument()
     expect(screen.getByText('TEST.SZ')).toBeInTheDocument()
     expect(screen.getByText('3.55')).toBeInTheDocument()
-    expect(screen.getByText('试探')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.rotation.tentative)).toBeInTheDocument()
   })
 
   it('renders rotation signal badge', () => {
     const data = { valuePit: [buildValuePitData({ rotationSignal: true, action: 'immediate' })] }
-    render(<ValuePitWidget config={buildConfig('价值洼地策略')} data={data} />)
+    render(<ValuePitWidget config={buildConfig(UI_TEXT.analysis.valuePit.title)} data={data} />)
 
-    expect(screen.getByText('轮动信号')).toBeInTheDocument()
-    expect(screen.getByText('立即建仓')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.rotation.signal)).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.trading.strategy.immediateOpen)).toBeInTheDocument()
   })
 
   it('renders dimension labels', () => {
     const data = { valuePit: [buildValuePitData()] }
-    render(<ValuePitWidget config={buildConfig('价值洼地策略')} data={data} />)
+    render(<ValuePitWidget config={buildConfig(UI_TEXT.analysis.valuePit.title)} data={data} />)
 
-    expect(screen.getByText('催化')).toBeInTheDocument()
-    expect(screen.getByText('估值')).toBeInTheDocument()
-    expect(screen.getByText('筹码')).toBeInTheDocument()
-    expect(screen.getByText('轮动')).toBeInTheDocument()
-    expect(screen.getByText('流动性')).toBeInTheDocument()
-    expect(screen.getByText('综合')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.factor.catalyst)).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.factor.value)).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.factor.chips)).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.rotation.rotation)).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.factor.liquidity)).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.score.overall)).toBeInTheDocument()
   })
 })

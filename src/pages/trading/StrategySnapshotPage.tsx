@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Link } from 'react-router'
 import { Save, History, Camera } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
@@ -15,147 +15,78 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs'
 import { StrategyGroupCard } from '@/components/strategy/StrategyGroupCard'
 import { ChangeLogPanel } from '@/components/strategy/ChangeLogPanel'
-import {
-  classifyStocks,
-  listSnapshots,
-  saveStrategySnapshot,
-} from '@/services/trading/strategySnapshotService'
-import { listStocks } from '@/services/stockpool/stockpoolService'
-import { getAllV6Scores } from '@/services/scoring/v6ScoreService'
-import { listRotationScores } from '@/services/analysis/rotationScoreService'
-import type { StrategySnapshot, Stock, V6Score, RotationSectorScore } from '@/data/types'
-import type { StrategyGroupItem } from '@/services/trading/strategySnapshotService'
+import { useStrategySnapshotStore } from '@/store/strategySnapshotStore'
+import { getLogger } from '@/lib/logger'
+import { twBg } from '@/constants/theme.tokens'
+
+const logger = getLogger()
 
 const GROUP_CONFIG: Array<{ key: 'core' | 'hot' | 'value'; title: string; color: string }> = [
-  { key: 'core', title: '核心稀缺', color: 'bg-emerald-500' },
-  { key: 'hot', title: '热点动量', color: 'bg-amber-500' },
-  { key: 'value', title: '价值洼地', color: 'bg-blue-500' },
+  { key: 'core', title: '核心稀缺', color: twBg('emerald', 500) },
+  { key: 'hot', title: '热点动量', color: twBg('amber', 500) },
+  { key: 'value', title: '价值洼地', color: twBg('blue', 500) },
 ]
 
 export default function StrategySnapshotPage(): React.JSX.Element {
-  const [activeTab, setActiveTab] = useState('current')
-  const [stocks, setStocks] = useState<Stock[]>([])
-  const [v6Scores, setV6Scores] = useState<V6Score[]>([])
-  const [rotationScores, setRotationScores] = useState<RotationSectorScore[]>([])
-  const [items, setItems] = useState<StrategyGroupItem[]>([])
-  const [snapshots, setSnapshots] = useState<StrategySnapshot[]>([])
-  const [selectedSnapshot, setSelectedSnapshot] = useState<StrategySnapshot | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [saving, setSaving] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  // 从 Store 获取状态
+  const activeTab = useStrategySnapshotStore((s) => s.activeTab)
+  const stocks = useStrategySnapshotStore((s) => s.stocks)
+  const v6Scores = useStrategySnapshotStore((s) => s.v6Scores)
+  const rotationScores = useStrategySnapshotStore((s) => s.rotationScores)
+  const items = useStrategySnapshotStore((s) => s.items)
+  const snapshots = useStrategySnapshotStore((s) => s.snapshots)
+  const selectedSnapshot = useStrategySnapshotStore((s) => s.selectedSnapshot)
+  const loading = useStrategySnapshotStore((s) => s.loading)
+  const saving = useStrategySnapshotStore((s) => s.saving)
+  const error = useStrategySnapshotStore((s) => s.error)
 
+  // 从 Store 获取 actions
+  const setActiveTab = useStrategySnapshotStore((s) => s.setActiveTab)
+  const loadCurrentStrategy = useStrategySnapshotStore((s) => s.loadCurrentStrategy)
+  const loadHistorySnapshots = useStrategySnapshotStore((s) => s.loadHistorySnapshots)
+  const saveSnapshot = useStrategySnapshotStore((s) => s.saveSnapshot)
+  const selectSnapshot = useStrategySnapshotStore((s) => s.selectSnapshot)
+
+  // 监听 activeTab 变化，加载对应数据
   useEffect(() => {
-    let cancelled = false
-    async function loadCurrentData() {
-      setLoading(true)
-      setError(null)
-      try {
-        const [stockResult, v6Result, rotationResult] = await Promise.all([
-          listStocks(),
-          getAllV6Scores(),
-          listRotationScores(),
-        ])
-        if (!stockResult.success || !v6Result.success || !rotationResult.success) {
-          throw new Error(
-            stockResult.error ?? v6Result.error ?? rotationResult.error ?? '加载当前数据失败',
-          )
-        }
-        const stockList = stockResult.data ?? []
-        const v6ScoreList = v6Result.data ?? []
-        const rotationScoreList = rotationResult.data ?? []
-        if (cancelled) return
-        setStocks(stockList)
-        setV6Scores(v6ScoreList)
-        setRotationScores(rotationScoreList)
-        const classified = classifyStocks({
-          stocks: stockList,
-          v6Scores: v6ScoreList,
-          rotationScores: rotationScoreList,
-        })
-        setItems(classified)
-      } catch (err) {
-        if (!cancelled) {
-          setError(err instanceof Error ? err.message : String(err))
-        }
-      } finally {
-        if (!cancelled) {
-          setLoading(false)
-        }
-      }
+    logger.info('[StrategySnapshotPage] activeTab 切换', { activeTab })
+    if (activeTab === 'current') {
+      void loadCurrentStrategy()
+    } else if (activeTab === 'history') {
+      void loadHistorySnapshots()
     }
-    loadCurrentData()
-    return () => {
-      cancelled = true
-    }
-  }, [activeTab])
+  }, [activeTab, loadCurrentStrategy, loadHistorySnapshots])
 
-  useEffect(() => {
-    let cancelled = false
-    async function loadSnapshots() {
-      if (activeTab !== 'history') return
-      setLoading(true)
-      setError(null)
-      try {
-        const result = await listSnapshots(20)
-        if (cancelled) return
-        if (!result.success) {
-          setError(result.error ?? '加载历史快照失败')
-          return
-        }
-        const list = result.data ?? []
-        setSnapshots(list)
-        if (list.length > 0) {
-          setSelectedSnapshot(list[0]!)
-        } else {
-          setSelectedSnapshot(null)
-        }
-      } catch (err) {
-        if (!cancelled) {
-          setError(err instanceof Error ? err.message : String(err))
-        }
-      } finally {
-        if (!cancelled) {
-          setLoading(false)
-        }
-      }
-    }
-    loadSnapshots()
-    return () => {
-      cancelled = true
-    }
-  }, [activeTab])
-
+  // 构建分类后的 items（Store 中已经是分类后的结构）
   const groupedItems = useMemo(() => {
-    return {
-      core: items.filter((item) => item.classification === 'core'),
-      hot: items.filter((item) => item.classification === 'hot'),
-      value: items.filter((item) => item.classification === 'value'),
-    }
+    logger.info('[StrategySnapshotPage] 构建分类数据', {
+      core: items.core.length,
+      hot: items.hot.length,
+      value: items.value.length,
+    })
+    return items
   }, [items])
 
+  // 保存快照处理
   async function handleSaveSnapshot() {
-    if (stocks.length === 0) return
-    setSaving(true)
-    setError(null)
-    try {
-      const result = await saveStrategySnapshot({ stocks, v6Scores, rotationScores }, 'manual')
-      if (!result.success) {
-        setError(result.error ?? '保存失败')
-        return
-      }
-      if (activeTab === 'history') {
-        const listResult = await listSnapshots(20)
-        if (listResult.success) {
-          const list = listResult.data ?? []
-          setSnapshots(list)
-          setSelectedSnapshot(list[0] ?? null)
-        }
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err))
-    } finally {
-      setSaving(false)
+    logger.info('[StrategySnapshotPage] 开始保存快照', {
+      stockCount: stocks.length,
+      v6ScoreCount: v6Scores.length,
+      rotationScoreCount: rotationScores.length,
+      activeTab,
+    })
+    if (stocks.length === 0) {
+      logger.warn('[StrategySnapshotPage] 跳过保存：股票池为空')
+      return
     }
+    await saveSnapshot('manual')
+    logger.info('[StrategySnapshotPage] 快照保存完成')
+  }
+
+  // 选择快照处理
+  function handleSelectSnapshot(id: string) {
+    logger.info('[StrategySnapshotPage] 选择快照', { snapshotId: id })
+    selectSnapshot(id)
   }
 
   return (
@@ -188,7 +119,7 @@ export default function StrategySnapshotPage(): React.JSX.Element {
         <Badge variant="secondary">V6 Pro</Badge>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
+      <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'current' | 'history')}>
         <TabsList>
           <TabsTrigger value="current">当前策略</TabsTrigger>
           <TabsTrigger value="history">历史快照</TabsTrigger>
@@ -201,7 +132,7 @@ export default function StrategySnapshotPage(): React.JSX.Element {
             </div>
             <Button
               size="sm"
-              onClick={handleSaveSnapshot}
+              onClick={() => void handleSaveSnapshot()}
               disabled={saving || stocks.length === 0}
               data-testid="save-snapshot-button"
             >
@@ -251,7 +182,7 @@ export default function StrategySnapshotPage(): React.JSX.Element {
                         <li key={snapshot.id}>
                           <button
                             type="button"
-                            onClick={() => setSelectedSnapshot(snapshot)}
+                            onClick={() => handleSelectSnapshot(snapshot.id)}
                             className={`w-full rounded-md border p-3 text-left text-sm transition-colors hover:bg-accent ${
                               selectedSnapshot?.id === snapshot.id ? 'border-primary bg-primary/5' : ''
                             }`}

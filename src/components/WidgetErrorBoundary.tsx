@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { getLogger } from '@/lib/logger'
+import { COLOR_TOKENS } from '@/constants/theme.tokens'
 
 const logger = getLogger()
 
@@ -103,7 +104,7 @@ export class WidgetErrorBoundary extends Component<WidgetErrorBoundaryProps, Wid
         <CardContent className="space-y-3">
           <div className="text-sm text-muted-foreground">
             <p className="font-medium mb-1">Widget ID: {widgetId}</p>
-            <p className="text-red-500">{error?.message ?? '未知错误'}</p>
+            <p className={COLOR_TOKENS.danger.tailwind}>{error?.message ?? '未知错误'}</p>
           </div>
 
           {retryCount > 0 && (

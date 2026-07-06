@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
+import { Link, useLocation } from 'react-router'
 import { Button } from '@/components/ui/Button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { Dialog, DialogContent } from '@/components/ui/Dialog'
 import MigrationPanel from '@/components/system/MigrationPanel'
+import LogStreamPanel from '@/components/system/LogStreamPanel'
+import AgentTaskList from '@/components/system/AgentTaskList'
 import {
   useCommandStore,
   selectStats,
@@ -13,8 +16,188 @@ import {
   selectIsLoading,
   selectIsResetting,
 } from '@/store/commandStore'
+import { getLogger } from '@/lib/logger'
+import { COLOR_TOKENS } from '@/constants/theme.tokens'
+import {
+  Activity,
+  ArrowRight,
+  Bot,
+  Server,
+  Settings,
+  type LucideIcon,
+} from 'lucide-react'
 
+const logger = getLogger()
+
+const ConfigApp = React.lazy(() => import('@/apps/command/ConfigApp'))
+
+/**
+ * 总控舱子路由分发
+ *
+ * @description
+ * 使用 useLocation + 条件渲染替代嵌套 <Routes>。
+ *
+ * 根因：React Router v7 在 descendant <Routes> 场景下，绝对路径匹配行为
+ * 与 v6 不一致。当 App.tsx 顶层已通过 <Route path="/command"> 匹配并渲染
+ * PortalShell → CommandApp 时，CommandApp 内部的 <Routes path="/command/...">
+ * 不会再次匹配当前 URL。
+ *
+ * 修复方案：直接读取 location.pathname 进行条件渲染，绕过 descendant
+ * Routes 的路径匹配问题。新增子面板仅需在此处追加 else-if 分支。
+ *
+ * 路由映射：
+ * - /command/config → ConfigApp（懒加载）
+ * - /command（默认） → 系统监控面板
+ *
+ * 注意：/command/agents 由 PortalShell 通过 isAgentPath 单独处理，不在此分发。
+ */
 export default function CommandApp(): React.JSX.Element {
+  const location = useLocation()
+  const path = location.pathname
+  const prevPathRef = useRef<string | null>(null)
+
+  // 路由切换检测：仅在 pathname 变化时记录切换事件与渲染状态
+  useEffect(() => {
+    const prevPath = prevPathRef.current
+    const isRouteChange = prevPath !== null && prevPath !== path
+
+    if (isRouteChange) {
+      logger.info('[CommandApp] 路由切换', { from: prevPath, to: path })
+    }
+
+    let branch: string
+    let componentName: string
+    if (path === '/command/hub') {
+      branch = 'hub'
+      componentName = 'CommandHubPage'
+    } else if (path === '/command/config') {
+      branch = 'config'
+      componentName = 'ConfigApp'
+    } else if (path === '/command/monitor') {
+      branch = 'monitor'
+      componentName = 'SystemMonitor'
+    } else {
+      branch = 'default'
+      componentName = 'SystemMonitor'
+    }
+
+    logger.info('[CommandApp] 渲染总控舱', {
+      path,
+      branch,
+      component: componentName,
+      isRouteChange,
+    })
+
+    prevPathRef.current = path
+  }, [path])
+
+  let content: React.ReactNode
+  if (path === '/command/hub') {
+    content = <CommandHubPage />
+  } else if (path === '/command/config') {
+    content = (
+      <React.Suspense fallback={<div className="p-4 text-muted-foreground">加载配置面板中...</div>}>
+        <ConfigApp />
+      </React.Suspense>
+    )
+  } else if (path === '/command/monitor') {
+    content = <SystemMonitor />
+  } else {
+    // 默认:未明确路径(如 /command)也渲染 SystemMonitor 以保持向后兼容
+    content = <SystemMonitor />
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-bold">总控舱</h1>
+          <p className="text-sm text-muted-foreground">系统监控 · 配置管理</p>
+        </div>
+      </div>
+      {content}
+    </div>
+  )
+}
+
+/**
+ * 总控舱 Hub 首页 — 展示所有子模块的导航卡片
+ */
+interface HubNavCard {
+  title: string
+  description: string
+  path: string
+  icon: LucideIcon
+}
+
+const HUB_NAV_CARDS: HubNavCard[] = [
+  {
+    title: '系统监控',
+    description: '查看系统统计、日志流与智能体任务队列',
+    path: '/command/monitor',
+    icon: Activity,
+  },
+  {
+    title: '配置管理',
+    description: '交易/采集/显示/LLM 模型配置',
+    path: '/command/config',
+    icon: Settings,
+  },
+  {
+    title: '智能体总控台',
+    description: '注册、调度、监控所有智能体',
+    path: '/command/agents',
+    icon: Bot,
+  },
+  {
+    title: 'MCP Server 管理',
+    description: '管理 MCP 服务器配置与状态',
+    path: '/command/mcp-servers',
+    icon: Server,
+  },
+]
+
+function CommandHubPage(): React.JSX.Element {
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">总控舱</h1>
+        <p className="text-muted-foreground">系统监控 · 配置管理 · 智能体调度 · MCP 服务</p>
+      </div>
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {HUB_NAV_CARDS.map((card) => {
+          const Icon = card.icon
+          return (
+            <Card key={card.title} className="transition-shadow hover:shadow-md">
+              <CardHeader className="pb-3">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/10 text-primary">
+                    <Icon className="h-4 w-4" />
+                  </div>
+                  <CardTitle className="text-base">{card.title}</CardTitle>
+                </div>
+                <CardDescription>{card.description}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button variant="ghost" size="sm" className="w-full justify-between" asChild>
+                  <Link to={card.path}>
+                    进入
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+          )
+        })}
+      </section>
+    </div>
+  )
+}
+
+/**
+ * 系统监控面板 — 原有的 CommandApp 主体内容
+ */
+function SystemMonitor(): React.JSX.Element {
   const stats = useCommandStore(selectStats)
   const message = useCommandStore(selectMessage)
   const messageType = useCommandStore(selectMessageType)
@@ -30,12 +213,32 @@ export default function CommandApp(): React.JSX.Element {
     await resetAll()
   }
 
+  // 挂载时自动加载统计；loadStats 由 zustand 维持稳定引用，可安全用作依赖
+  useEffect(() => {
+    void loadStats()
+  }, [loadStats])
+
   const messageClass =
     messageType === 'error'
       ? 'text-destructive'
       : messageType === 'success'
-        ? 'text-green-600'
+        ? COLOR_TOKENS.success.tailwind
         : 'text-muted-foreground'
+
+  if (isLoading && !stats) {
+    return (
+      <div className="space-y-4 p-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>总控舱 · 系统监控</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-32 animate-pulse rounded-md bg-muted" />
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-4 p-4">
@@ -66,6 +269,26 @@ export default function CommandApp(): React.JSX.Element {
               ))}
             </div>
           )}
+        </CardContent>
+      </Card>
+
+      {/* 智能体任务列表 */}
+      <Card>
+        <CardHeader>
+          <CardTitle>智能体任务队列</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <AgentTaskList />
+        </CardContent>
+      </Card>
+
+      {/* 系统日志流 */}
+      <Card>
+        <CardHeader>
+          <CardTitle>系统日志流</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <LogStreamPanel />
         </CardContent>
       </Card>
 

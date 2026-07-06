@@ -17,6 +17,7 @@
 
 import { describe, expect, it, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
+import { UI_TEXT } from '@/constants/uiText'
 import {
   DataState,
   LoadingErrorState,
@@ -84,7 +85,7 @@ describe('DataState', () => {
       </DataState>,
     )
     // EmptyState 默认 title="暂无数据"
-    expect(screen.getByText('暂无数据')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.common.empty)).toBeInTheDocument()
     expect(screen.queryByText('实际内容')).not.toBeInTheDocument()
   })
 

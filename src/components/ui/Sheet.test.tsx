@@ -168,12 +168,12 @@ describe('Sheet 组件族', () => {
     render(
       <Sheet open={true}>
         <SheetContent>
-          <SheetClose onClick={handleClose}>关闭抽屉</SheetClose>
+          <SheetClose onClick={handleClose} />
         </SheetContent>
       </Sheet>,
     )
-    // SheetClose 是 button，包含 X 图标和 sr-only "Close"，加上 children
-    const closeBtn = screen.getByRole('button', { name: /关闭抽屉/ })
+    // SheetClose 是 button，包含 X 图标和 sr-only "Close"
+    const closeBtn = screen.getByRole('button', { name: /close/i })
     expect(closeBtn).toBeInTheDocument()
     fireEvent.click(closeBtn)
     expect(handleClose).toHaveBeenCalledTimes(1)

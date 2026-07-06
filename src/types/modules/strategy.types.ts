@@ -181,3 +181,21 @@ export interface DualStrategyRuleConfig {
   valuePitTakeProfitPct: number
   valuePitTakeProfitSellRatio: number
 }
+
+// ============================================================
+// 策略快照分组
+// ============================================================
+
+/** 策略分组项 */
+export interface StrategyGroupItem {
+  symbol: string
+  name: string
+  composite: number
+  l3v: number
+  l1Score?: number
+  l3fScore?: number
+  l7Score?: number
+  resonance?: number
+  classification: 'core' | 'hot' | 'value'
+  reasons: string[]
+}

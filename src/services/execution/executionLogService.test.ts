@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @module executionLogService.test
  * @description 执行日志服务单元测试（E-2-6）
  */
@@ -12,6 +12,9 @@ vi.mock('@/data/dataLayer', () => ({
     listByPlan: vi.fn(),
     listBySymbol: vi.fn(),
     list: vi.fn(),
+    getByPlanId: vi.fn(),
+    getBySymbol: vi.fn(),
+    getAll: vi.fn(),
   },
 }))
 
@@ -28,9 +31,14 @@ const mockPlan = (overrides: Partial<ExecutionPlan> = {}): ExecutionPlan => ({
   id: 'plan_001',
   signalId: 'sig_001',
   symbol: '600000',
+  name: '测试股票',
   direction: 'buy',
   phase: EXECUTION_PHASE.PLAN,
+  quantity: 100,
+  targetPrice: 10.0,
+  rationale: '测试理由',
   confidence: 0.8,
+  riskChecks: [],
   accountType: 'paper',
   createdAt: 2_000,
   ...overrides,
@@ -64,7 +72,7 @@ describe('executionLogService', () => {
         { id: 2, planId: 'plan_001', symbol: '600000', phase: 'plan', action: 'create', actor: 'system', timestamp: 3_000, success: true },
         { id: 1, planId: 'plan_001', symbol: '600000', phase: 'plan', action: 'create', actor: 'system', timestamp: 2_000, success: true },
       ]
-      vi.mocked(executionLogStore.listByPlan).mockResolvedValue(logs as any)
+      vi.mocked(executionLogStore.getByPlanId).mockResolvedValue(logs as any)
       const result = await listByPlan('plan_001')
       expect(result).toHaveLength(2)
       expect(result[0]!.timestamp).toBe(2_000)
@@ -74,7 +82,7 @@ describe('executionLogService', () => {
 
   describe('listBySymbol', () => {
     it('returns logs for a symbol', async () => {
-      vi.mocked(executionLogStore.listBySymbol).mockResolvedValue([
+      vi.mocked(executionLogStore.getBySymbol).mockResolvedValue([
         { id: 1, planId: 'plan_001', symbol: '600000', phase: 'plan', action: 'create', actor: 'system', timestamp: 2_000, success: true },
       ] as any)
       const result = await listBySymbol('600000')
@@ -84,7 +92,7 @@ describe('executionLogService', () => {
 
   describe('listFailed', () => {
     it('returns only failed logs', async () => {
-      vi.mocked(executionLogStore.list).mockResolvedValue([
+      vi.mocked(executionLogStore.getAll).mockResolvedValue([
         { id: 1, planId: 'plan_001', symbol: '600000', phase: 'plan', action: 'create', actor: 'system', timestamp: 2_000, success: true },
         { id: 2, planId: 'plan_002', symbol: '600001', phase: 'execute', action: 'execute', actor: 'system', timestamp: 3_000, success: false },
       ] as any)

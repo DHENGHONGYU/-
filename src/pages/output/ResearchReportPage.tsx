@@ -35,7 +35,7 @@ export default memo(function ResearchReportPage(): React.JSX.Element {
   const { loadStockSymbols, generateReport: generateReportFromStore } = useScoreDocStore()
 
   useEffect(() => {
-    loadSymbols()
+    void loadSymbols()
   }, [])
 
   const loadSymbols = async (): Promise<void> => {
@@ -164,7 +164,7 @@ export default memo(function ResearchReportPage(): React.JSX.Element {
               <div className="flex items-end">
                 <Button
                   {...guardProps}
-                  onClick={generateReport}
+                  onClick={() => void generateReport()}
                   disabled={guardProps.disabled || !selectedSymbol || generating}
                   className="w-full"
                 >

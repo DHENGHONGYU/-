@@ -11,6 +11,7 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import type { BacktestConfig, BacktestResult, BacktestTrade } from '@/store/backtestStore'
 import { STOCK_COLOR_MAPPING } from '@/constants/cockpit.constants'
 import { COLOR_TOKENS, CHART_PALETTE } from '@/constants/theme.tokens'
+import { UI_TEXT } from '@/constants/uiText'
 
 // ============================================================
 // Mock: useBacktestStore
@@ -132,7 +133,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
 
       render(<BacktestPage />)
 
-      const totalReturn = screen.getByText('总收益率')
+      const totalReturn = screen.getByText(UI_TEXT.errors.totalReturn)
       const metricCard = totalReturn.closest('div')?.parentElement
       const valueEl = metricCard?.querySelector('.text-xl.font-bold')
 
@@ -147,7 +148,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
 
       render(<BacktestPage />)
 
-      const totalReturn = screen.getByText('总收益率')
+      const totalReturn = screen.getByText(UI_TEXT.errors.totalReturn)
       const metricCard = totalReturn.closest('div')?.parentElement
       const valueEl = metricCard?.querySelector('.text-xl.font-bold')
 
@@ -162,7 +163,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
 
       render(<BacktestPage />)
 
-      const annualizedReturn = screen.getByText('年化收益率')
+      const annualizedReturn = screen.getByText(UI_TEXT.errors.annualizedReturn)
       const metricCard = annualizedReturn.closest('div')?.parentElement
       const valueEl = metricCard?.querySelector('.text-xl.font-bold')
 
@@ -176,7 +177,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
 
       render(<BacktestPage />)
 
-      const annualizedReturn = screen.getByText('年化收益率')
+      const annualizedReturn = screen.getByText(UI_TEXT.errors.annualizedReturn)
       const metricCard = annualizedReturn.closest('div')?.parentElement
       const valueEl = metricCard?.querySelector('.text-xl.font-bold')
 
@@ -190,7 +191,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
 
       render(<BacktestPage />)
 
-      const totalReturn = screen.getByText('总收益率')
+      const totalReturn = screen.getByText(UI_TEXT.errors.totalReturn)
       const metricCard = totalReturn.closest('div')?.parentElement
       const valueEl = metricCard?.querySelector('.text-xl.font-bold')
 
@@ -213,7 +214,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
       render(<BacktestPage />)
       switchToTradesTab()
 
-      const buyBadge = screen.getByText('买入')
+      const buyBadge = screen.getByText(UI_TEXT.errors.buy)
       expect(buyBadge.className).toContain('bg-red-100')
       expect(buyBadge.className).toContain('text-red-700')
     })
@@ -227,7 +228,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
       render(<BacktestPage />)
       switchToTradesTab()
 
-      const sellBadge = screen.getByText('卖出')
+      const sellBadge = screen.getByText(UI_TEXT.errors.sell)
       expect(sellBadge.className).toContain('bg-green-100')
       expect(sellBadge.className).toContain('text-green-700')
     })
@@ -241,7 +242,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
       render(<BacktestPage />)
       switchToTradesTab()
 
-      const buyBadge = screen.getByText('买入')
+      const buyBadge = screen.getByText(UI_TEXT.errors.buy)
       expect(buyBadge.className).not.toContain('bg-green-100')
       expect(buyBadge.className).not.toContain('text-green-700')
     })
@@ -255,7 +256,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
       render(<BacktestPage />)
       switchToTradesTab()
 
-      const sellBadge = screen.getByText('卖出')
+      const sellBadge = screen.getByText(UI_TEXT.errors.sell)
       expect(sellBadge.className).not.toContain('bg-red-100')
       expect(sellBadge.className).not.toContain('text-red-700')
     })
@@ -272,8 +273,8 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
       render(<BacktestPage />)
       switchToTradesTab()
 
-      const buyBadge = screen.getByText('买入')
-      const sellBadge = screen.getByText('卖出')
+      const buyBadge = screen.getByText(UI_TEXT.errors.buy)
+      const sellBadge = screen.getByText(UI_TEXT.errors.sell)
 
       expect(buyBadge.className).toContain('bg-red-100')
       expect(sellBadge.className).toContain('bg-green-100')
@@ -322,8 +323,8 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
   // 否则会误匹配到 lucide 图标 SVG 的 path（图标 path 无 stroke 属性）。
   // ----------------------------------------------------------
   describe('净值曲线 SVG - 颜色常量引用', () => {
-    it('COLOR_TOKENS.success.hex 应为 #22c55e（PNL 曲线 stroke 值）', () => {
-      expect(COLOR_TOKENS.success.hex).toBe('#22c55e')
+    it('COLOR_TOKENS.success.hex 应为 #15803d（PNL 曲线 stroke 值，green-700 确保 WCAG AA 对比度）', () => {
+      expect(COLOR_TOKENS.success.hex).toBe('#15803d')
     })
 
     it('CHART_PALETTE.grid 应为 #e5e7eb（网格线 stroke 值）', () => {

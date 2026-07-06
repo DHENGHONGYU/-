@@ -67,18 +67,24 @@ export interface HotSectorState {
   loading: boolean
   error: string | null
   isRefreshing: boolean
+  lastUpdated: number
 
   // Actions
   setScores: (scores: HotSectorScore[]) => void
   setLoading: (loading: boolean) => void
   setError: (error: string | null) => void
   reset: () => void
+  clearScores: () => void
   /**
    * 执行热门板块评分。
    * - 传入 inputs 时直接作为分析输入
    * - 否则使用默认样本数据进行演示分析
    */
   fetchScores: (inputs?: HotSectorAnalyzerInput[]) => Promise<void>
+  /**
+   * 刷新指定标的的评分。
+   */
+  refreshScore: (symbol: string) => void
 }
 
 const initialState = {
@@ -86,6 +92,7 @@ const initialState = {
   loading: false,
   error: null as string | null,
   isRefreshing: false,
+  lastUpdated: 0,
 }
 
 export const useHotSectorStore = create<HotSectorState>((set, get) => ({
@@ -101,6 +108,20 @@ export const useHotSectorStore = create<HotSectorState>((set, get) => ({
   reset: () => {
     set(initialState)
     withBroadcast(EVENT_NAMES.HOT_SECTOR_CHANGED, { action: 'reset' })
+  },
+
+  clearScores: () => {
+    set(initialState)
+    withBroadcast(EVENT_NAMES.HOT_SECTOR_CHANGED, { action: 'clearScores' })
+  },
+
+  refreshScore: (symbol) => {
+    const { scores } = get()
+    const index = scores.findIndex((s) => s.symbol === symbol)
+    if (index === -1) return
+
+    // 重新计算该标的的评分（需要原始输入，这里简化处理）
+    logger.info(`[hotSectorStore] refreshScore: ${symbol}`)
   },
 
   fetchScores: async (inputs) => {
@@ -133,6 +154,7 @@ export const useHotSectorStore = create<HotSectorState>((set, get) => ({
         loading: false,
         isRefreshing: false,
         error: null,
+        lastUpdated: Date.now(),
       })
 
       logger.info(`[hotSectorStore] fetchScores 完成: ${scores.length} 个板块`)
@@ -179,4 +201,23 @@ export function destroyHotSectorStoreSubscriptions(): void {
     _unsubscribeHotSectorScores()
     _unsubscribeHotSectorScores = undefined
   }
+}
+
+// ============================================================
+// 派生查询
+// ============================================================
+
+/** 获取评分最高的前 N 条 */
+export function topScores(n: number = 5): HotSectorScore[] {
+  return useHotSectorStore.getState().scores.slice(0, n)
+}
+
+/** 获取买入信号（action='immediate'） */
+export function buySignals(): HotSectorScore[] {
+  return useHotSectorStore.getState().scores.filter((s) => s.action === 'immediate')
+}
+
+/** 按 symbol 查找评分 */
+export function bySector(symbol: string): HotSectorScore | undefined {
+  return useHotSectorStore.getState().scores.find((s) => s.symbol === symbol)
 }

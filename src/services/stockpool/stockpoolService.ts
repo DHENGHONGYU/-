@@ -5,17 +5,15 @@ import {
 } from '@/config/dbConfig'
 import { dataLayer } from '@/data/dataLayer'
 import {
-  getNextStatuses,
   getPoolLabel,
-  getTransitionLabel,
+  getPoolTransitionOptions,
   isValidTransition,
+  type PoolTransitionOption,
 } from '@/core/poolTransitionEngine'
 import type { DataLayerResult, Stock } from '@/data/types'
 
-export interface PoolTransitionOption {
-  value: ResearchStatus
-  label: string
-}
+export type { PoolTransitionOption } from '@/core/poolTransitionEngine'
+export { getPoolTransitionOptions } from '@/core/poolTransitionEngine'
 
 export interface PoolGroup {
   status: ResearchStatus
@@ -94,16 +92,6 @@ export async function getStocksByStatus(
       error: err instanceof Error ? err.message : String(err),
     }
   }
-}
-
-/**
- * 获取某状态的流转选项
- */
-export function getPoolTransitionOptions(status: ResearchStatus): PoolTransitionOption[] {
-  return getNextStatuses(status).map((value) => ({
-    value,
-    label: getTransitionLabel(status, value),
-  }))
 }
 
 /**

@@ -1,8 +1,8 @@
 import { calculateWeightedScore, getEnabledStockFactorNames } from '@/config/scoreFactors'
 import { dataLayer } from '@/data/dataLayer'
 import type { DataLayerResult, DimensionScore, IntelligentScore, Stock } from '@/data/types'
-import type { LlmConfig } from '@/config/llmConfig'
-import { chat, LlmApiError } from '@/services/llm/llmClient'
+import type { LlmConfig, LlmTransparencyConfig } from '@/config/llmConfig'
+import { chat, LlmApiError } from '@/services/llm/llmGateway'
 import { buildIntelligentScorePrompt } from './intelligentScorePrompt'
 
 const DIMENSION_NAMES = getEnabledStockFactorNames()
@@ -12,6 +12,8 @@ export interface RunIntelligentScoreInput {
   files: File[]
   reportText: string
   llmConfig?: Partial<LlmConfig>
+  /** LLM 透明度配置（包含 enableLlm 和 factorOverrides） */
+  transparencyConfig?: LlmTransparencyConfig
 }
 
 export interface ScoreStepStatus {

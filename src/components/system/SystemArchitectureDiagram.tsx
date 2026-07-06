@@ -153,6 +153,7 @@ function SystemArchitectureDiagram(): React.JSX.Element {
 
     const fetchSnapshot = (): void => {
       try {
+        // NOTE: 系统诊断工具，仅 mount 时一次性读取，无对应 Store，保持直调
         const result = getArchitectureService().getArchitectureSnapshot()
         if (mounted) {
           setSnapshot(result)

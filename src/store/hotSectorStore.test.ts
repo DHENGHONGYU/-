@@ -71,7 +71,7 @@ describe('hotSectorStore', () => {
         sectorName: '测试板块',
         momentum: { sectorStrengthScore: 5, priceChangeRank: 1, volumeExpansion: 3, consecutiveInflow: 5, relativeStrength: 90 },
         sentiment: { sentimentRank: 1, retailSentiment: 0.5, institutionBuyCount: 10, limitUpCount: 10 },
-        breakout: { hasBreakoutPattern: true, macdSignal: 'bullish', rsi: 60, priceAboveMA20: true, priceAboveMA60: true },
+        breakout: { hasBreakoutPattern: true, rsiSignal: 'bullish', rsi: 60, priceAboveMA20: true, priceAboveMA60: true },
         valuationRisk: { pe: 10, pbPercentile: 10, marketCap: 5000, dividendYield: 2 },
         marketEnv: { marketTrend: 'bull', systemicRisk: 'low' },
       },

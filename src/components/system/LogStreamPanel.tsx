@@ -21,12 +21,12 @@ import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import {
   getMonitorLogService,
-  type MonitorLogEntry,
   type MonitorLogFilter,
   type MonitorLogLevel,
   type MonitorLogSource,
 } from '@/services/system/monitorLogService'
-import { COLOR_TOKENS } from '@/constants/theme.tokens'
+import { useSystemMonitorStore } from '@/store/systemMonitorStore'
+import { COLOR_TOKENS, twText, twBg } from '@/constants/theme.tokens'
 import { MONITOR_INTERVALS } from '@/constants/health.constants'
 import { getLogger } from '@/lib/logger'
 import { cn } from '@/lib/utils'
@@ -85,18 +85,18 @@ const LEVEL_DISPLAY: Record<
   MonitorLogLevel,
   { label: string; color: string; bgClass: string }
 > = {
-  info: { label: '信息', color: COLOR_TOKENS.info.hex, bgClass: 'bg-blue-100 text-blue-700' },
-  warn: { label: '警告', color: COLOR_TOKENS.warning.hex, bgClass: 'bg-amber-100 text-amber-700' },
-  error: { label: '错误', color: COLOR_TOKENS.danger.hex, bgClass: 'bg-red-100 text-red-700' },
-  critical: { label: '严重', color: COLOR_TOKENS.danger.hex, bgClass: 'bg-red-200 text-red-800 font-bold' },
+  info: { label: '信息', color: COLOR_TOKENS.info.hex, bgClass: `${twBg('blue', 100)} ${twText('blue', 700)}` },
+  warn: { label: '警告', color: COLOR_TOKENS.warning.hex, bgClass: `${twBg('amber', 100)} ${twText('amber', 700)}` },
+  error: { label: '错误', color: COLOR_TOKENS.danger.hex, bgClass: `${twBg('red', 100)} ${twText('red', 700)}` },
+  critical: { label: '严重', color: COLOR_TOKENS.danger.hex, bgClass: `${twBg('red', 200)} ${twText('red', 800)} font-bold` },
 }
 
 /** 日志来源显示映射 */
 const SOURCE_DISPLAY: Record<MonitorLogSource, { label: string; bgClass: string }> = {
-  engine: { label: '引擎', bgClass: 'bg-indigo-100 text-indigo-700' },
-  agent: { label: '智能体', bgClass: 'bg-purple-100 text-purple-700' },
-  system: { label: '系统', bgClass: 'bg-teal-100 text-teal-700' },
-  dataflow: { label: '数据流', bgClass: 'bg-cyan-100 text-cyan-700' },
+  engine: { label: '引擎', bgClass: `${twBg('indigo', 100)} ${twText('indigo', 700)}` },
+  agent: { label: '智能体', bgClass: `${twBg('purple', 100)} ${twText('purple', 700)}` },
+  system: { label: '系统', bgClass: `${twBg('teal', 100)} ${twText('teal', 700)}` },
+  dataflow: { label: '数据流', bgClass: `${twBg('cyan', 100)} ${twText('cyan', 700)}` },
 }
 
 const logger = getLogger()
@@ -125,7 +125,10 @@ function formatTimestamp(timestamp: number): string {
 function LogStreamPanelBase({
   maxEntries = DEFAULT_MAX_ENTRIES,
 }: LogStreamPanelProps): React.JSX.Element {
-  const [logs, setLogs] = useState<MonitorLogEntry[]>([])
+  const monitorLogs = useSystemMonitorStore((s) => s.monitorLogs)
+  const fetchMonitorLogs = useSystemMonitorStore((s) => s.fetchMonitorLogs)
+  const clearMonitorLogs = useSystemMonitorStore((s) => s.clearMonitorLogs)
+
   const [filterLevel, setFilterLevel] = useState<FilterLevel>('all')
   const [filterSource, setFilterSource] = useState<FilterSource>('all')
   const [isPaused, setIsPaused] = useState<boolean>(false)
@@ -133,16 +136,13 @@ function LogStreamPanelBase({
 
   // 订阅 + 轮询：挂载时获取初始日志、订阅变更、启动轮询；暂停时停止轮询
   useEffect(() => {
-    const service = getMonitorLogService()
-
     const fetchFilteredLogs = (): void => {
       const filter: MonitorLogFilter = {
         level: filterLevel === 'all' ? undefined : filterLevel,
         source: filterSource === 'all' ? undefined : filterSource,
         limit: maxEntries,
       }
-      const result = service.getLogs(filter)
-      setLogs(result)
+      fetchMonitorLogs(filter)
     }
 
     // 获取初始日志
@@ -154,7 +154,8 @@ function LogStreamPanelBase({
       isPaused,
     })
 
-    // 订阅日志变更（实时更新，暂停时跳过）
+    // 订阅日志变更通知（仅用于触发刷新，数据通过 Store 获取）
+    const service = getMonitorLogService()
     const unsubscribe = service.subscribe(() => {
       if (!isPaused) {
         fetchFilteredLogs()
@@ -176,7 +177,7 @@ function LogStreamPanelBase({
         clearInterval(timer)
       }
     }
-  }, [filterLevel, filterSource, isPaused, maxEntries])
+  }, [filterLevel, filterSource, isPaused, maxEntries, fetchMonitorLogs])
 
   // 自动滚动到底部（暂停时保持当前视图）
   useEffect(() => {
@@ -185,7 +186,7 @@ function LogStreamPanelBase({
     if (container) {
       container.scrollTop = container.scrollHeight
     }
-  }, [logs, isPaused])
+  }, [monitorLogs, isPaused])
 
   // 暂停/恢复切换
   const handleTogglePause = (): void => {
@@ -197,8 +198,7 @@ function LogStreamPanelBase({
 
   // 清空日志
   const handleClear = (): void => {
-    getMonitorLogService().clearLogs()
-    setLogs([])
+    clearMonitorLogs()
     logger.info('[LogStreamPanel] clearLogs() triggered')
   }
 
@@ -207,7 +207,7 @@ function LogStreamPanelBase({
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>监控日志流</CardTitle>
-          <Badge variant="secondary">{logs.length} 条</Badge>
+          <Badge variant="secondary">{monitorLogs.length} 条</Badge>
         </div>
 
         <div className="mt-3 flex flex-wrap items-center gap-3">
@@ -260,16 +260,16 @@ function LogStreamPanelBase({
       <CardContent>
         <div
           ref={logContainerRef}
-          className="overflow-y-auto rounded-md border border-border bg-slate-50/50 p-2"
+          className={`overflow-y-auto rounded-md border border-border ${twBg('slate', 50)}/50 p-2`}
           style={{ maxHeight: `${MAX_HEIGHT_PX}px` }}
         >
-          {logs.length === 0 ? (
+          {monitorLogs.length === 0 ? (
             <div className="flex h-32 items-center justify-center text-sm text-muted-foreground">
               暂无日志
             </div>
           ) : (
             <div className="space-y-1">
-              {logs.map((entry) => {
+              {monitorLogs.map((entry) => {
                 const levelMeta = LEVEL_DISPLAY[entry.level]
                 const sourceMeta = SOURCE_DISPLAY[entry.source]
                 return (
@@ -296,7 +296,7 @@ function LogStreamPanelBase({
                     >
                       {sourceMeta.label}
                     </Badge>
-                    <span className="break-all text-slate-700">{entry.message}</span>
+                    <span className={`break-all ${twText('slate', 700)}`}>{entry.message}</span>
                   </div>
                 )
               })}

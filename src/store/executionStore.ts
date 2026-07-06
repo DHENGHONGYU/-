@@ -29,15 +29,16 @@ import {
   type AccountType,
   type EnvelopeAction,
 } from '@/config/dbConfig'
-import type { Signal, ExecutionPlan, ExecutionPhase, RiskCheckItem } from '@/data/types'
+import type { Signal, ExecutionPlan, ExecutionPhase } from '@/data/types'
 import type { StandardEnvelope } from '@/core/envelope'
 import { dataBridge } from '@/core/databridge'
-import { getDefaultTradingConfig } from '@/config/tradingConfig'
-import { calculatePosition, type PositionSizingResult } from '@/services/trading/positionSizer'
-import { checkOrderRisk, type RiskCheckResult } from '@/services/trading/riskEngine'
 import { createBuyOrder, createSellOrder } from '@/services/trading/tradingService'
+import { createExecutionPlanUseCase } from '@/services/useCase/createExecutionPlan.useCase'
 
 const logger = getLogger()
+
+/** 执行计划手动取消时的默认错误信息 */
+const DEFAULT_CANCEL_REASON = '手动取消'
 
 // ============================================================
 // 类型定义
@@ -97,11 +98,6 @@ const initialState: Omit<
 // ============================================================
 // 工具函数
 // ============================================================
-
-/** 生成执行计划 ID */
-function generatePlanId(): string {
-  return `ep-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`
-}
 
 /** 判断是否为活跃 phase */
 function isActivePhase(phase: ExecutionPhase): boolean {
@@ -175,103 +171,26 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
   // ----------------------------------------------------------
 
   createPlan: async (signal, accountType) => {
-    const planId = generatePlanId()
     logger.info('[executionStore] createPlan', {
-      planId,
       signalId: signal.id,
       symbol: signal.symbol,
       direction: signal.direction,
     })
 
-    // 非交易信号（hold/watch）不创建执行计划
-    if (signal.direction === 'hold' || signal.direction === 'watch') {
-      logger.info('[executionStore] createPlan skipped: direction is hold/watch', { symbol: signal.symbol })
-      return null
-    }
-
     try {
-      // 1. 获取股票信息用于仓位计算
-      const stock = await dataLayer.stocks.get(signal.symbol)
-      const price = stock?.price ?? 0
+      const result = await createExecutionPlanUseCase({ signal, accountType })
 
-      // 2. 计算仓位
-      const orders = await dataLayer.orders.list()
-      const portfolioValue = getDefaultTradingConfig().risk.portfolioValue
-
-      const holdingShares = orders
-        .filter((o) => o.symbol === signal.symbol)
-        .reduce((sum, o) => sum + (o.direction === 'buy' ? o.quantity : -o.quantity), 0)
-      const holdingValue = holdingShares * price
-
-      const totalShares = orders.reduce(
-        (sum, o) => sum + (o.direction === 'buy' ? o.quantity : -o.quantity),
-        0,
-      )
-      const totalValue = totalShares * price
-
-      const sizingResult: PositionSizingResult = calculatePosition({
-        direction: signal.direction as 'buy' | 'sell' | 'hold',
-        price,
-        portfolioValue,
-        currentHoldingShares: holdingShares,
-        currentHoldingValue: holdingValue,
-        currentTotalPositionValue: totalValue,
-      })
-
-      // 3. 风控检查
-      const riskResult: RiskCheckResult = await checkOrderRisk({
-        symbol: signal.symbol,
-        direction: signal.direction as 'buy' | 'sell' | 'hold' | 'watch',
-        quantity: sizingResult.targetShares,
-        price,
-        portfolioValue,
-      })
-
-      // 将风控结果转换为 RiskCheckItem[]
-      const riskChecks: RiskCheckItem[] = []
-      for (const block of riskResult.blocks) {
-        riskChecks.push({ name: 'blocker', passed: false, message: block, severity: 'blocker' })
-      }
-      for (const warning of riskResult.warnings) {
-        riskChecks.push({ name: 'warning', passed: true, message: warning, severity: 'warning' })
+      if (!result.success || !result.plan) {
+        if (result.error && result.error !== '非交易信号，不创建执行计划') {
+          logger.error('[executionStore] createPlan 失败', { error: result.error })
+          set({ error: result.error })
+        }
+        return null
       }
 
-      const hasBlocker = riskResult.blocks.length > 0
-
-      // 4. 生成 ExecutionPlan
-      const plan: ExecutionPlan = {
-        id: planId,
-        signalId: signal.id,
-        symbol: signal.symbol,
-        direction: signal.direction === 'buy' || signal.direction === 'sell'
-          ? signal.direction
-          : 'buy',
-        phase: 'plan',
-        confidence: signal.confidence,
-        sizing: {
-          quantity: sizingResult.targetShares,
-          positionPct: sizingResult.positionPct,
-          reason: sizingResult.cappedBy !== 'none'
-            ? `仓位受${sizingResult.cappedBy}上限约束`
-            : 'Kelly 公式计算',
-        },
-        risk: {
-          passed: !hasBlocker,
-          checks: riskChecks,
-          warnings: riskResult.warnings,
-        },
-        accountType: accountType ?? 'paper',
-        createdAt: Date.now(),
-        result: hasBlocker ? 'failed' : undefined,
-        errorMessage: hasBlocker ? riskResult.blocks.join('；') : undefined,
-      }
-
-      // 5. 持久化
-      await dataLayer.executionPlans.save(plan)
-
-      // 6. 更新 store
+      // 更新 store 状态
       set((state) => {
-        const newPlans = [...state.plans, plan]
+        const newPlans = [...state.plans, result.plan!]
         return {
           plans: newPlans,
           activePlans: computeActivePlans(newPlans),
@@ -280,13 +199,12 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
       })
 
       logger.info('[executionStore] createPlan 成功', {
-        planId,
-        symbol: signal.symbol,
-        passed: plan.risk?.passed,
-        quantity: plan.sizing?.quantity,
+        planId: result.plan.id,
+        symbol: result.plan.symbol,
+        passed: result.plan.risk?.passed,
       })
 
-      return plan
+      return result.plan
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
       logger.error('[executionStore] createPlan 失败', { error: message, symbol: signal.symbol })
@@ -323,7 +241,7 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
         confirmedAt: Date.now(),
       }
 
-      await dataLayer.executionPlans.update(updated)
+      await dataLayer.executionPlans.update(planId, { phase: 'confirmed', confirmedAt: Date.now() })
 
       set((state) => {
         const newPlans = state.plans.map((p) => (p.id === planId ? updated : p))
@@ -372,7 +290,7 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
 
       // 1. phase -> pending
       const pendingPlan: ExecutionPlan = { ...plan, phase: 'pending' }
-      await dataLayer.executionPlans.update(pendingPlan)
+      await dataLayer.executionPlans.update(planId, { phase: 'pending' })
 
       set((state) => {
         const newPlans = state.plans.map((p) => (p.id === planId ? pendingPlan : p))
@@ -404,7 +322,12 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
           executedAt: Date.now(),
           result: 'success',
         }
-        await dataLayer.executionPlans.update(executedPlan)
+        await dataLayer.executionPlans.update(planId, {
+          phase: 'executed',
+          orderId: orderResult.data.id,
+          executedAt: Date.now(),
+          result: 'success',
+        })
 
         set((state) => {
           const newPlans = state.plans.map((p) => (p.id === planId ? executedPlan : p))
@@ -428,7 +351,12 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
           result: 'failed',
           errorMessage: orderResult.error ?? '下单失败',
         }
-        await dataLayer.executionPlans.update(cancelledPlan)
+        await dataLayer.executionPlans.update(planId, {
+          phase: 'cancelled',
+          executedAt: Date.now(),
+          result: 'failed',
+          errorMessage: orderResult.error ?? '下单失败',
+        })
 
         set((state) => {
           const newPlans = state.plans.map((p) => (p.id === planId ? cancelledPlan : p))
@@ -457,7 +385,12 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
           result: 'failed',
           errorMessage: message,
         }
-        await dataLayer.executionPlans.update(cancelledPlan)
+        await dataLayer.executionPlans.update(planId, {
+          phase: 'cancelled',
+          executedAt: Date.now(),
+          result: 'failed',
+          errorMessage: message,
+        })
 
         set((state) => {
           const newPlans = state.plans.map((p) => (p.id === planId ? cancelledPlan : p))
@@ -501,10 +434,13 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
       const updated: ExecutionPlan = {
         ...plan,
         phase: 'cancelled',
-        errorMessage: reason ?? '手动取消',
+        errorMessage: reason ?? DEFAULT_CANCEL_REASON,
       }
 
-      await dataLayer.executionPlans.update(updated)
+      await dataLayer.executionPlans.update(planId, {
+        phase: 'cancelled',
+        errorMessage: reason ?? DEFAULT_CANCEL_REASON,
+      })
 
       set((state) => {
         const newPlans = state.plans.map((p) => (p.id === planId ? updated : p))
@@ -550,7 +486,10 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
         reviewedAt: Date.now(),
       }
 
-      await dataLayer.executionPlans.update(updated)
+      await dataLayer.executionPlans.update(planId, {
+        phase: 'reviewed',
+        reviewedAt: Date.now(),
+      })
 
       set((state) => {
         const newPlans = state.plans.map((p) => (p.id === planId ? updated : p))
@@ -588,7 +527,7 @@ let _debounceTimer: ReturnType<typeof setTimeout> | null = null
 
 /** 需要触发刷新的执行计划相关 action 集合 */
 const _EXECUTION_CHANGE_ACTIONS = new Set<EnvelopeAction>([
-  ENVELOPE_ACTION.createExecutionPlan,
+  ENVELOPE_ACTION.saveExecutionPlan,
   ENVELOPE_ACTION.updateExecutionPhase,
 ])
 
@@ -610,15 +549,15 @@ function _debouncedRefresh(envelope: StandardEnvelope): void {
   if (_debounceTimer) {
     clearTimeout(_debounceTimer)
   }
-  _debounceTimer = setTimeout(() => {
-    _debounceTimer = null
-    logger.info('[executionStore] Debounced refresh triggered', {
-      traceId: envelope.meta.traceId,
-      action: envelope.meta.action,
-      source: envelope.meta.source,
-    })
-    useExecutionStore.getState().refresh()
-  }, DEBOUNCE_MS)
+    _debounceTimer = setTimeout(() => {
+      _debounceTimer = null
+      logger.info('[executionStore] Debounced refresh triggered', {
+        traceId: envelope.meta.traceId,
+        action: envelope.meta.action,
+        source: envelope.meta.source,
+      })
+      void useExecutionStore.getState().refresh()
+    }, DEBOUNCE_MS)
 }
 
 /**

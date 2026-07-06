@@ -85,15 +85,27 @@ export const useStrategySnapshotStore = create<StrategySnapshotState & StrategyS
     },
 
     loadCurrentStrategy: async () => {
+      const t0 = Date.now()
       set({ loading: true, error: null })
       logger.info('[strategySnapshotStore] loadCurrentStrategy 开始')
 
       try {
+        logger.info('[strategySnapshotStore] Promise.all 发起: stocks + v6Scores + rotationScores')
         const [stockResult, v6Result, rotationResult] = await Promise.all([
           listStocks(),
           getAllV6Scores(),
           listRotationScores(),
         ])
+
+        logger.info('[strategySnapshotStore] Promise.all 返回', {
+          stocksOk: stockResult.success,
+          stocksCount: stockResult.data?.length ?? 0,
+          v6Ok: v6Result.success,
+          v6Count: v6Result.data?.length ?? 0,
+          rotationOk: rotationResult.success,
+          rotationCount: rotationResult.data?.length ?? 0,
+          elapsedMs: Date.now() - t0,
+        })
 
         if (!stockResult.success || !v6Result.success || !rotationResult.success) {
           throw new Error(
@@ -108,38 +120,57 @@ export const useStrategySnapshotStore = create<StrategySnapshotState & StrategyS
         // 用户在 await 期间切换了 tab，丢弃本次结果并释放 loading，
         // 否则 loading 永久为 true，StrategySnapshotPage 永远显示「加载中...」
         if (get().activeTab !== 'current') {
-          logger.warn('[strategySnapshotStore] loadCurrentStrategy 期间 activeTab 已切换，丢弃结果')
+          logger.warn('[strategySnapshotStore] loadCurrentStrategy 期间 activeTab 已切换，丢弃结果', {
+            elapsedMs: Date.now() - t0,
+          })
           set({ loading: false })
           return
         }
 
+        logger.info('[strategySnapshotStore] classifyStocks 调用中...')
         const classified = classifyStocks({ stocks, v6Scores, rotationScores })
         const items = buildClassifiedItems(classified)
+        logger.info('[strategySnapshotStore] classifyStocks 完成', {
+          core: items.core.length,
+          hot: items.hot.length,
+          value: items.value.length,
+        })
 
         set({ stocks, v6Scores, rotationScores, items, loading: false })
-        logger.info('[strategySnapshotStore] loadCurrentStrategy 完成')
+        logger.info(`[strategySnapshotStore] loadCurrentStrategy 完成, 耗时 ${Date.now() - t0}ms`)
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err)
-        logger.error('[strategySnapshotStore] loadCurrentStrategy 失败', { error: message })
+        logger.error('[strategySnapshotStore] loadCurrentStrategy 失败', { error: message, elapsedMs: Date.now() - t0 })
         set({ error: message, loading: false })
       }
     },
 
     loadHistorySnapshots: async () => {
+      const t0 = Date.now()
       set({ loading: true, error: null })
       logger.info('[strategySnapshotStore] loadHistorySnapshots 开始')
 
       try {
+        logger.info('[strategySnapshotStore] listSnapshots(20) 调用中...')
         const result = await listSnapshots(20)
+
+        logger.info('[strategySnapshotStore] listSnapshots 返回', {
+          success: result.success,
+          count: result.data?.length ?? 0,
+          elapsedMs: Date.now() - t0,
+        })
 
         // 用户在 await 期间切换了 tab，丢弃本次结果并释放 loading
         if (get().activeTab !== 'history') {
-          logger.warn('[strategySnapshotStore] loadHistorySnapshots 期间 activeTab 已切换，丢弃结果')
+          logger.warn('[strategySnapshotStore] loadHistorySnapshots 期间 activeTab 已切换，丢弃结果', {
+            elapsedMs: Date.now() - t0,
+          })
           set({ loading: false })
           return
         }
 
         if (!result.success) {
+          logger.error('[strategySnapshotStore] loadHistorySnapshots 失败', { error: result.error })
           set({ error: result.error ?? '加载历史快照失败', loading: false })
           return
         }
@@ -148,15 +179,16 @@ export const useStrategySnapshotStore = create<StrategySnapshotState & StrategyS
         const selectedSnapshot = snapshots.length > 0 ? snapshots[0] : null
 
         set({ snapshots, selectedSnapshot, loading: false })
-        logger.info(`[strategySnapshotStore] loadHistorySnapshots 完成: ${snapshots.length} 条`)
+        logger.info(`[strategySnapshotStore] loadHistorySnapshots 完成: ${snapshots.length} 条, 耗时 ${Date.now() - t0}ms`)
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err)
-        logger.error('[strategySnapshotStore] loadHistorySnapshots 失败', { error: message })
+        logger.error('[strategySnapshotStore] loadHistorySnapshots 失败', { error: message, elapsedMs: Date.now() - t0 })
         set({ error: message, loading: false })
       }
     },
 
     saveSnapshot: async (trigger) => {
+      const t0 = Date.now()
       const { stocks, v6Scores, rotationScores, activeTab } = get()
       if (stocks.length === 0) {
         logger.warn('[strategySnapshotStore] saveSnapshot 跳过：股票池为空')
@@ -164,26 +196,34 @@ export const useStrategySnapshotStore = create<StrategySnapshotState & StrategyS
       }
 
       set({ saving: true, error: null })
-      logger.info('[strategySnapshotStore] saveSnapshot 开始', { trigger })
+      logger.info('[strategySnapshotStore] saveSnapshot 开始', { trigger, stockCount: stocks.length })
 
       try {
+        logger.info('[strategySnapshotStore] saveStrategySnapshot 调用中...')
         const result = await saveStrategySnapshot({ stocks, v6Scores, rotationScores }, trigger)
 
+        logger.info('[strategySnapshotStore] saveStrategySnapshot 返回', {
+          success: result.success,
+          elapsedMs: Date.now() - t0,
+        })
+
         if (!result.success) {
+          logger.error('[strategySnapshotStore] saveSnapshot 失败', { error: result.error })
           set({ error: result.error ?? '保存失败', saving: false })
           return
         }
 
         if (activeTab === 'history') {
+          logger.info('[strategySnapshotStore] activeTab=history，刷新历史列表')
           await get().loadHistorySnapshots()
         }
 
         set({ saving: false })
-        logger.info('[strategySnapshotStore] saveSnapshot 完成')
+        logger.info(`[strategySnapshotStore] saveSnapshot 完成, 耗时 ${Date.now() - t0}ms`)
         withBroadcast(EVENT_NAMES.STRATEGY_SNAPSHOTS_CHANGED, { action: 'save', trigger })
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err)
-        logger.error('[strategySnapshotStore] saveSnapshot 失败', { error: message })
+        logger.error('[strategySnapshotStore] saveSnapshot 失败', { error: message, elapsedMs: Date.now() - t0 })
         set({ error: message, saving: false })
       }
     },

@@ -1,125 +1,36 @@
-﻿/**
+/**
  * @module portfolioService
  * @description 投资组合服务：组合构建、再平衡、持仓调整。
  *
- * 职责：
- *   - rebalance(portfolioId, orders, options): 根据最新订单再平衡组合
- *   - addHolding(portfolioId, holding): 新增持仓
- *   - removeHolding(portfolioId, symbol): 移除持仓
- *   - listByTheme(theme): 按主题查询组合
+ * 原 rebalance 实现已抽取至 services/useCase/rebalancePortfolio.useCase。
+ * 本文件保留为兼容 facade，新代码请直接从 UseCase 导入。
+ *
+ * @deprecated 请优先使用 services/useCase/rebalancePortfolio.useCase
  */
 
 import { getLogger } from '@/lib/logger'
 import { portfolioStore } from '@/data/dataLayer'
-import type { Portfolio, PortfolioHolding, Order } from '@/data/types'
-import {
-  DEFAULT_CASH_RESERVE_PCT,
-  DEFAULT_MAX_HOLDING_WEIGHT,
-  DEFAULT_REBALANCE_THRESHOLD,
-} from '@/constants/execution.constants'
-import { checkPortfolioRebalanceFreshness } from '@/services/analysis/dataFreshnessGuard'
+import type { Portfolio, PortfolioHolding } from '@/data/types'
+import { DEFAULT_MAX_HOLDING_WEIGHT } from '@/constants/execution.constants'
+import { rebalancePortfolioUseCase, type RebalanceOptions } from '@/services/useCase/rebalancePortfolio.useCase'
 
 const logger = getLogger()
 
-export interface RebalanceOptions {
-  now?: number
-  cashReservePct?: number
-  maxHoldingWeight?: number
-  rebalanceThreshold?: number
-}
+// Re-export for backward compatibility
+export type { RebalanceOptions }
 
 /**
- * 根据最新订单再平衡投资组合。
+ * 根据最新订单再平衡投资组合（薄包装）。
  * 当持仓权重偏差超过阈值时触发调整。
+ *
+ * @deprecated 请直接使用 rebalancePortfolioUseCase
  */
 export async function rebalance(
   portfolioId: string,
-  orders: Order[],
+  orders: Parameters<typeof rebalancePortfolioUseCase>[1],
   options: RebalanceOptions = {},
 ): Promise<Portfolio | undefined> {
-  const now = options.now ?? Date.now()
-  const cashReservePct = options.cashReservePct ?? DEFAULT_CASH_RESERVE_PCT
-  const maxHoldingWeight = options.maxHoldingWeight ?? DEFAULT_MAX_HOLDING_WEIGHT
-  const rebalanceThreshold = options.rebalanceThreshold ?? DEFAULT_REBALANCE_THRESHOLD
-
-  try {
-    const portfolio = await portfolioStore.get(portfolioId)
-    if (!portfolio) {
-      logger.warn(`[portfolioService] rebalance portfolio not found: id="${portfolioId}"`)
-      return undefined
-    }
-
-    // Freshness 校验：组合更新时间必须晚于最新订单创建时间
-    const latestOrderCreatedAt = orders.length > 0 ? Math.max(...orders.map((o) => o.createdAt)) : 0
-    checkPortfolioRebalanceFreshness(now, latestOrderCreatedAt, portfolioId)
-
-    // 根据订单更新持仓数量
-    const updatedHoldings = [...portfolio.holdings]
-    for (const order of orders) {
-      const idx = updatedHoldings.findIndex((h) => h.symbol === order.symbol)
-      if (idx >= 0) {
-        const holding = updatedHoldings[idx]
-        if (holding) {
-          const delta = order.direction === 'buy' ? order.quantity : -order.quantity
-          updatedHoldings[idx] = {
-            ...holding,
-            currentShares: Math.max(0, holding.currentShares + delta),
-          }
-        }
-      }
-    }
-
-    // 重新计算市值与权重
-    const totalValue = updatedHoldings.reduce((sum, h) => sum + h.marketValue, 0)
-    const cashReserve = totalValue * cashReservePct
-    const investable = totalValue - cashReserve
-
-    const rebalancePlan: Portfolio['rebalancePlan'] = []
-    for (const holding of updatedHoldings) {
-      const currentWeight = totalValue > 0 ? holding.marketValue / totalValue : 0
-      const deviation = Math.abs(currentWeight - holding.targetWeight)
-      if (deviation > rebalanceThreshold) {
-        const targetShares = Math.floor((investable * holding.targetWeight) / holding.price)
-        const delta = targetShares - holding.currentShares
-        rebalancePlan.push({
-          symbol: holding.symbol,
-          action: delta > 0 ? 'buy' : 'sell',
-          shares: Math.abs(delta),
-          reason: `权重偏差 ${(deviation * 100).toFixed(2)}% 超过阈值 ${(rebalanceThreshold * 100).toFixed(2)}%`,
-        })
-      }
-      // 强制权重上限
-      if (holding.targetWeight > maxHoldingWeight) {
-        holding.targetWeight = maxHoldingWeight
-      }
-    }
-
-    const updated: Portfolio = {
-      ...portfolio,
-      holdings: updatedHoldings,
-      totalValue,
-      cashReserve,
-      rebalancePlan,
-      updatedAt: now,
-    }
-
-    const result = await portfolioStore.save(updated)
-    if (!result.success) {
-      logger.error(`[portfolioService] rebalance save failed: ${result.error}`, { portfolioId })
-      return undefined
-    }
-
-    logger.info(`[portfolioService] rebalance success: portfolioId="${portfolioId}"`, {
-      holdingsCount: updatedHoldings.length,
-      rebalanceActions: rebalancePlan.length,
-      totalValue,
-    })
-    return updated
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err)
-    logger.error(`[portfolioService] rebalance error: ${message}`, { portfolioId })
-    return undefined
-  }
+  return rebalancePortfolioUseCase(portfolioId, orders, options)
 }
 
 /**

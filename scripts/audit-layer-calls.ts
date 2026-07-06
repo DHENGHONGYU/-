@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
  * audit-layer-calls.ts
- * 跨层调用扫描器
+ * 跨层调用扫描器 v3.0（白盒/透明管道）
  *
  * 检查目标：
  * 1. L5/L4（pages/components/portal/cockpit/apps）是否直接调用 dataLayer 写操作或 db 原生方法。
@@ -9,15 +9,48 @@
  * 2. src/config/ 是否依赖引擎层/应用层/展示层。
  * 3. src/core/ 是否依赖展示层/应用层。
  * 4. src/services/ 是否绕过 DataBridge 直接写 db。
+ * 5. src/services/ 是否直接依赖 src/store/（违反分层规则：services → core/data，禁止依赖 store）。
+ * 5c. src/services/ 是否依赖 src/lib/ 中的业务模块（仅允许基础设施）。
+ * 6. src/lib/ 是否依赖上层（services/store/pages/components）。
+ * 7. src/constants/ 是否依赖任何业务层（services/store/pages/components/config）。
  *
- * 输出：违规列表 + 警告列表 + 汇总；退出码 1 表示发现违规。
+ * v3.0 改造（2026-07-06）：
+ * - 采用白盒/透明管道模式：export scan() / formatReport() / main()
+ * - stdout 输出 JSON 数据流（机器可读）
+ * - stderr 输出诊断日志 + 人类可读报告
+ * - 持久化报告到 docs/reports/audit/audit-layer-calls-{timestamp}.json
+ * - 支持 CLI 参数：--json / --quiet / --output / --no-persist
+ * - 测试可直接 import scan() 验证 Report 对象，无需解析字符串
+ *
+ * v2.2 增强（2026-07-05）：
+ * - 新增规则 5c：检测 services 依赖 lib 中的业务模块（仅允许基础设施）
+ * - 明确 services 可依赖的 lib 基础设施白名单：logger/withBroadcast/eventBus/format/errors/utils/localStorageManager
+ *
+ * v2.1 修复（2026-07-05）：
+ * - 修复误报：排除 @/types/ 路径（类型定义层独立于业务层）
+ * - 修复误报：跳过 import type 语句（类型导入豁免跨层检查）
+ * - 修复误报：明确 @/agents/ 层归属（属于 core 层扩展）
+ *
+ * v2.0 增强：
+ * - 检测 services 直接依赖 store 的违规（应通过 core/data 或 DataBridge）
+ * - 检测 lib 层依赖上层的违规（lib 是基础设施，禁止依赖业务层）
+ * - 检测 constants 层依赖业务层的违规（constants 必须零依赖）
+ * - 改进 import 语句解析，支持动态 import() 和 re-export
+ *
+ * 输出契约：
+ * - stdout：JSON 数据流（AuditReport 结构）
+ * - stderr：诊断日志 + 人类可读报告
+ * - 文件：docs/reports/audit/audit-layer-calls-{timestamp}.json
+ * - 退出码：0=无违规, 1=有违规, 2=执行错误
  */
 
 import * as fs from 'node:fs'
 import * as path from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
+import { runAuditPipeline, colorize, type AuditReport } from './_audit-pipeline'
 
-interface Finding {
+/** 跨层调用违规/警告项 */
+export interface Finding {
   file: string
   line: number
   column: number
@@ -26,7 +59,8 @@ interface Finding {
   context: string
 }
 
-interface Report {
+/** 跨层调用审计报告 */
+export interface Report extends AuditReport {
   violations: Finding[]
   warnings: Finding[]
   summary: {
@@ -49,13 +83,40 @@ const DATA_LAYER_WRITE_PATTERN =
 const DB_WRITE_PATTERN = /\bdb\.(put|add|update|delete|clear|reset|import)\s*\(/
 const IMPORT_DATA_LAYER_PATTERN = /from\s+['"](?:\.\.\/data\/|@\/data\/)(dataLayer|db)['"]/
 
+// v2.1 修复：检测 services 直接依赖 store（排除 types 层和 import type）
+const IMPORT_STORE_PATTERN = /from\s+['"](?:\.\.\/store\/|@\/store\/)(?!types\/)[^'"]+['"]/
+const DYNAMIC_IMPORT_STORE_PATTERN = /import\s*\(\s*['"](?:\.\.\/store\/|@\/store\/)(?!types\/)[^'"]+['"]\s*\)/
+
+// v2.2 新增：检测 services 依赖 lib 中的业务模块（排除基础设施）
+// services 可以依赖 lib 中的基础设施（logger、withBroadcast、eventBus、safeCoerce），但不能依赖业务模块
+const SERVICES_IMPORT_LIB_BUSINESS = /from\s+['"](?:\.\.\/lib\/|@\/lib\/)(?!logger|withBroadcast|eventBus|format|errors|utils|localStorageManager|safeCoerce)[^'"]+['"]/
+
+// v2.1 修复：检测 lib 层依赖上层（排除 types 层）
+const LIB_IMPORT_UPPER_LAYER = /from\s+['"](?:\.\.\/(services|store|pages|components|apps|portal|cockpit)\/(?!types\/)|@\/(services|store|pages|components|apps|portal|cockpit)\/(?!types\/))[^'"]+['"]/
+
+// v2.1 修复：检测 constants 层依赖业务层（排除 types 层）
+const CONSTANTS_IMPORT_BUSINESS = /from\s+['"](?:\.\.\/(services|store|pages|components|apps|portal|cockpit|core|data|lib)\/(?!types\/)|@\/(services|store|pages|components|apps|portal|cockpit|core|data|lib)\/(?!types\/))[^'"]+['"]/
+
+// v2.1 新增：检测 import type（类型导入应豁免）
+const IMPORT_TYPE_PATTERN = /^\s*import\s+type\s+/
+
+// v2.0 新增：检测动态 import() 和 re-export
+const DYNAMIC_IMPORT_PATTERN = /import\s*\(\s*['"]([^'"]+)['"]\s*\)/
+const REEXPORT_PATTERN = /export\s+(?:\*|{[^}]*})\s+from\s+['"]([^'"]+)['"]/
+
 function isTsFile(name: string): boolean {
   return name.endsWith('.ts') || name.endsWith('.tsx')
 }
 
 function collectFiles(dir: string): string[] {
   const files: string[] = []
-  const entries = fs.readdirSync(dir, { withFileTypes: true })
+  let entries: fs.Dirent[]
+  try {
+    entries = fs.readdirSync(dir, { withFileTypes: true })
+  } catch {
+    // 目录不存在或无权限时返回空列表（边界条件健壮性）
+    return files
+  }
   for (const entry of entries) {
     const full = path.join(dir, entry.name)
     if (entry.isDirectory()) {
@@ -96,6 +157,9 @@ function scanFile(file: string): Pick<Report, 'violations' | 'warnings'> {
     const trimmed = raw.trim()
 
     if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*')) continue
+
+    // v2.1 修复：跳过 import type（类型导入豁免跨层检查）
+    if (IMPORT_TYPE_PATTERN.test(raw)) continue
 
     // 规则 1：L5/L4 直接写 dataLayer / db
     if (isL5OrL4(rel)) {
@@ -191,6 +255,75 @@ function scanFile(file: string): Pick<Report, 'violations' | 'warnings'> {
           context: trimmed.slice(0, 80),
         })
       }
+
+      // v2.0 规则 5：services 层禁止直接依赖 store（应通过 core/data 或 DataBridge）
+      const storeImportMatch = raw.match(IMPORT_STORE_PATTERN)
+      if (storeImportMatch && !rel.includes('__tests__') && !rel.includes('.test.')) {
+        violations.push({
+          file: rel,
+          line: i + 1,
+          column: (storeImportMatch.index ?? 0) + 1,
+          type: 'services 直接依赖 store',
+          message: '引擎层禁止直接依赖 store 层，应通过 core/data 或 DataBridge',
+          context: trimmed.slice(0, 80),
+        })
+      }
+
+      // v2.0 规则 5b：services 层禁止动态 import store
+      const dynamicStoreMatch = raw.match(DYNAMIC_IMPORT_STORE_PATTERN)
+      if (dynamicStoreMatch && !rel.includes('__tests__') && !rel.includes('.test.')) {
+        violations.push({
+          file: rel,
+          line: i + 1,
+          column: (dynamicStoreMatch.index ?? 0) + 1,
+          type: 'services 动态导入 store',
+          message: '引擎层禁止动态导入 store 层',
+          context: trimmed.slice(0, 80),
+        })
+      }
+
+      // v2.2 规则 5c：services 层禁止依赖 lib 中的业务模块（仅允许基础设施）
+      const libBusinessMatch = raw.match(SERVICES_IMPORT_LIB_BUSINESS)
+      if (libBusinessMatch && !rel.includes('__tests__') && !rel.includes('.test.')) {
+        violations.push({
+          file: rel,
+          line: i + 1,
+          column: (libBusinessMatch.index ?? 0) + 1,
+          type: 'services 依赖 lib 业务模块',
+          message: '引擎层仅可依赖 lib 中的基础设施（logger/withBroadcast/eventBus/format/errors/utils/localStorageManager）',
+          context: trimmed.slice(0, 80),
+        })
+      }
+    }
+
+    // v2.0 规则 6：lib 层禁止依赖上层（services/store/pages/components）
+    if (rel.startsWith('src/lib/')) {
+      const libUpperMatch = raw.match(LIB_IMPORT_UPPER_LAYER)
+      if (libUpperMatch && !rel.includes('__tests__') && !rel.includes('.test.')) {
+        violations.push({
+          file: rel,
+          line: i + 1,
+          column: (libUpperMatch.index ?? 0) + 1,
+          type: 'lib 层依赖上层',
+          message: '基础设施层禁止依赖业务层（services/store/pages/components）',
+          context: trimmed.slice(0, 80),
+        })
+      }
+    }
+
+    // v2.0 规则 7：constants 层禁止依赖任何业务层
+    if (rel.startsWith('src/constants/')) {
+      const constantsBusinessMatch = raw.match(CONSTANTS_IMPORT_BUSINESS)
+      if (constantsBusinessMatch && !rel.includes('__tests__') && !rel.includes('.test.')) {
+        violations.push({
+          file: rel,
+          line: i + 1,
+          column: (constantsBusinessMatch.index ?? 0) + 1,
+          type: 'constants 层依赖业务层',
+          message: '常量层必须零依赖，禁止导入任何业务模块',
+          context: trimmed.slice(0, 80),
+        })
+      }
     }
   }
 
@@ -212,7 +345,8 @@ function scanFile(file: string): Pick<Report, 'violations' | 'warnings'> {
   return { violations, warnings }
 }
 
-function scan(): Report {
+/** 扫描函数（白盒导出，供测试和外部调用） */
+export function scan(): Report {
   const files = collectFiles(SRC)
   const violations: Finding[] = []
   const warnings: Finding[] = []
@@ -245,55 +379,72 @@ function scan(): Report {
   }
 }
 
-function printFindings(title: string, items: Finding[], color: 'red' | 'yellow'): void {
-  const colorCode = color === 'red' ? '\x1b[31m' : '\x1b[33m'
-  const reset = '\x1b[0m'
+/** 格式化人类可读报告（输出到 stderr） */
+export function formatReport(report: Report): string {
+  const lines: string[] = []
 
-  console.log(`${colorCode}${title}${reset}\n`)
-  for (const item of items) {
-    console.log(`  ${item.file}:${item.line}:${item.column}`)
-    console.log(`    [${item.type}] ${item.message}`)
-    console.log(`    ${item.context}`)
-    console.log()
-  }
-}
-
-function main(): void {
-  console.log('\n╔════════════════════════════════════════════════════════════╗')
-  console.log('║  跨层调用审计 — audit-layer-calls.ts                       ║')
-  console.log('╚════════════════════════════════════════════════════════════\n')
-
-  const report = scan()
+  lines.push('╔════════════════════════════════════════════════════════════╗')
+  lines.push('║  跨层调用审计 — audit-layer-calls.ts v3.0                  ║')
+  lines.push('╚════════════════════════════════════════════════════════════╝')
+  lines.push('')
 
   if (report.violations.length === 0 && report.warnings.length === 0) {
-    console.log('✅ 未发现跨层调用违规或警告')
+    lines.push(colorize('✅ 未发现跨层调用违规或警告', 'green'))
   } else {
     if (report.violations.length > 0) {
-      printFindings(`🔴 发现 ${report.violations.length} 处跨层调用违规：`, report.violations, 'red')
-      console.log('按违规类型汇总：')
-      for (const [type, count] of Object.entries(report.summary.byViolationType)) {
-        console.log(`  ${type}: ${count}`)
+      lines.push(colorize(`🔴 发现 ${report.violations.length} 处跨层调用违规：`, 'red'))
+      lines.push('')
+      for (const item of report.violations) {
+        lines.push(`  ${item.file}:${item.line}:${item.column}`)
+        lines.push(`    [${item.type}] ${item.message}`)
+        lines.push(`    ${item.context}`)
+        lines.push('')
       }
-      console.log()
+      lines.push('按违规类型汇总：')
+      for (const [type, count] of Object.entries(report.summary.byViolationType)) {
+        lines.push(`  ${type}: ${count}`)
+      }
+      lines.push('')
     }
 
     if (report.warnings.length > 0) {
-      printFindings(`⚠️  发现 ${report.warnings.length} 处过渡期的读数据层警告：`, report.warnings, 'yellow')
-      console.log('按警告类型汇总：')
-      for (const [type, count] of Object.entries(report.summary.byWarningType)) {
-        console.log(`  ${type}: ${count}`)
+      lines.push(colorize(`⚠️  发现 ${report.warnings.length} 处过渡期的读数据层警告：`, 'yellow'))
+      lines.push('')
+      for (const item of report.warnings) {
+        lines.push(`  ${item.file}:${item.line}:${item.column}`)
+        lines.push(`    [${item.type}] ${item.message}`)
+        lines.push(`    ${item.context}`)
+        lines.push('')
       }
-      console.log()
+      lines.push('按警告类型汇总：')
+      for (const [type, count] of Object.entries(report.summary.byWarningType)) {
+        lines.push(`  ${type}: ${count}`)
+      }
+      lines.push('')
     }
   }
 
-  console.log('────────────────────────────────────────────────────────────')
-  console.log(`扫描文件数: ${report.summary.totalFiles}`)
-  console.log(`违规数: ${report.summary.totalViolations}`)
-  console.log(`警告数: ${report.summary.totalWarnings}`)
-  console.log('────────────────────────────────────────────────────────────\n')
+  lines.push('────────────────────────────────────────────────────────────')
+  lines.push(`扫描文件数: ${report.summary.totalFiles}`)
+  lines.push(`违规数: ${report.summary.totalViolations}`)
+  lines.push(`警告数: ${report.summary.totalWarnings}`)
+  lines.push('────────────────────────────────────────────────────────────')
 
-  process.exit(report.violations.length > 0 ? 1 : 0)
+  return lines.join('\n')
 }
 
-main()
+/** CLI 入口（编排：scan → stdout JSON → stderr 诊断 → 持久化 → exit） */
+export function main(): void {
+  const result = runAuditPipeline<Report>({
+    scriptName: 'audit-layer-calls',
+    version: '3.0',
+    scanFn: scan,
+    formatReportFn: formatReport,
+  })
+  process.exit(result.exitCode)
+}
+
+// 仅在直接作为 CLI 运行时执行（避免被 import 时自动运行）
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main()
+}

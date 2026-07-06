@@ -18,7 +18,7 @@ import { Link } from 'react-router'
 import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { getLogger } from '@/lib/logger'
-import { COLOR_TOKENS } from '@/constants/theme.tokens'
+import { COLOR_TOKENS, twBg } from '@/constants/theme.tokens'
 import {
   Card,
   CardHeader,
@@ -159,7 +159,7 @@ function DimensionRow({
   onFrequencyChange,
   onSourcesChange,
 }: DimensionRowProps) {
-  const colorBar = DIMENSION_COLORS[code] ?? 'bg-gray-400'
+  const colorBar = DIMENSION_COLORS[code] ?? twBg('gray', 400)
 
   return (
     <div className="flex items-start gap-3 py-3 transition-all duration-200">

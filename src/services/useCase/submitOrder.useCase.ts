@@ -13,9 +13,11 @@
 import { getLogger } from '@/lib/logger'
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
-import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID, ORDER_STATUS, ACCOUNT_TYPE } from '@/config/dbConfig'
+import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID, ORDER_STATUS, ACCOUNT_TYPE, STORE_NAME } from '@/config/dbConfig'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
-import { withBroadcast } from '@/store/helpers/withBroadcast'
+import { withBroadcast } from '@/lib/withBroadcast'
+import { startOperation, succeedOperation, failOperation } from '@/services/feedbackService'
+import { runInTransaction } from '@/core/transaction'
 import type { Order } from '@/data/types'
 
 const logger = getLogger()
@@ -43,6 +45,11 @@ export interface SubmitOrderResult {
 export async function submitOrderUseCase(
   input: SubmitOrderInput,
 ): Promise<SubmitOrderResult> {
+  const opId = startOperation('submitOrder', {
+    message: `提交${input.direction === 'buy' ? '买入' : '卖出'}订单: ${input.symbol} × ${input.quantity} @ ¥${input.price}`,
+    metadata: { symbol: input.symbol, direction: input.direction },
+  })
+
   logger.info('[submitOrderUseCase] 开始提交订单', { symbol: input.symbol, direction: input.direction })
 
   // Step 1: 参数校验
@@ -83,24 +90,32 @@ export async function submitOrderUseCase(
 
   logger.info('[submitOrderUseCase] 订单构造完成', { orderId, symbol: order.symbol })
 
-  // Step 3: 通过 DataBridge 持久化
+  // Step 3: 在事务中通过 DataBridge 持久化
   try {
-    const envelope = EnvelopeFactory.create(
-      { source: MODULE_ID.trading, target: ENVELOPE_TARGET.db, action: ENVELOPE_ACTION.insertOrder, traceId },
-      order,
-    )
+    await runInTransaction<void>(
+      [STORE_NAME.orders],
+      'readwrite',
+      async (_tx) => {
+        const envelope = EnvelopeFactory.create(
+          { source: MODULE_ID.trading, target: ENVELOPE_TARGET.db, action: ENVELOPE_ACTION.insertOrder, traceId },
+          order,
+        )
 
-    await dataBridge.forward(envelope)
+        await dataBridge.forward(envelope)
+      },
+    )
 
     // Step 4: 广播事件
     withBroadcast(EVENT_NAMES.ORDERS_CHANGED, { action: 'add', id: orderId, traceId })
 
     logger.info('[submitOrderUseCase] 订单提交成功', { orderId })
+    succeedOperation(opId, { message: `订单 ${orderId} 提交成功` })
 
     return { success: true, orderId }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     logger.error('[submitOrderUseCase] 订单提交失败', { error: message, orderId })
+    failOperation(opId, message, { message: `订单提交失败: ${message}` })
 
     return { success: false, error: message }
   }

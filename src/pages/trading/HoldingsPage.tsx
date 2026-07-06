@@ -105,14 +105,14 @@ export default function HoldingsPage(): React.JSX.Element {
 
   // 初始加载 & 依赖变化时重新加载
   useEffect(() => {
-    loadData()
+    void loadData()
   }, [loadData])
 
   // 筛选操作
   const handleSearch = useCallback(() => {
     logger.info('[HoldingsPage] 执行筛选搜索', { filter })
     setPage(PAGINATION_DEFAULTS.DEFAULT_PAGE)
-    loadData()
+    void loadData()
   }, [loadData, filter, setPage])
 
   const handleReset = useCallback(() => {
@@ -264,7 +264,7 @@ export default function HoldingsPage(): React.JSX.Element {
         handlers={{
           onSearch: handleSearch,
           onReset: handleReset,
-          onExport: handleExport,
+          onExport: () => void handleExport(),
           onUpdateFilter: setFilter,
         }}
         isExporting={loading.isExporting}
@@ -292,7 +292,7 @@ export default function HoldingsPage(): React.JSX.Element {
         modal={modal}
         isActionLoading={loading.isActionLoading}
         onClose={handleCloseModal}
-        onConfirm={handleConfirmTrade}
+        onConfirm={(item, action, quantity) => void handleConfirmTrade(item, action, quantity)}
       />
     </div>
   )

@@ -313,9 +313,9 @@ describe('getUnifiedStockView', () => {
   })
 
   test('rotationScore 未匹配到时记录到 missing', async () => {
-    vi.mocked(dataLayer.stocks.get).mockResolvedValue(makeStock({ sector: '白酒' }))
+    vi.mocked(dataLayer.stocks.get).mockResolvedValue(makeStock({ industryCode: 'SW3402' }))
     vi.mocked(dataLayer.rotationScores.list).mockResolvedValue([
-      makeRotationScore({ sectorCode: 'SW3402' }),
+      makeRotationScore({ sectorCode: 'SW3401' }),
     ])
 
     const result = await getUnifiedStockView('600519.SH', {
@@ -440,8 +440,8 @@ describe('getUnifiedStockViews', () => {
     )
 
     expect(result.success).toBe(false)
-    expect(result.failedCount).toBe(1)
-    expect(result.failedSymbols).toContainEqual(expect.objectContaining({ symbol: '000858.SZ' }))
+    expect(result.error).toBeDefined()
+    expect(result.error).toContain('000858.SZ')
   })
 
   test('空列表返回成功', async () => {

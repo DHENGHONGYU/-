@@ -107,6 +107,8 @@ export interface SectorHeatmapData {
   code: string
   changePercent: number
   turnover?: string
+  /** 资金流向（净流入为正，净流出为负，null 表示无数据） */
+  fundFlow?: number | null
 }
 
 export interface FundFlowData {
@@ -134,6 +136,42 @@ export interface WatchlistData {
   changePercent: number
 }
 
+/** 持仓列表项（用于 PortfolioOverviewWidget 持仓列表渲染） */
+export interface HoldingItem {
+  /** 股票代码 */
+  symbol: string
+  /** 股票名称 */
+  name: string
+  /** 持仓股数 */
+  shares: number
+  /** 当前价格（格式化字符串） */
+  price: string
+  /** 持仓市值（格式化字符串） */
+  marketValue: string
+  /** 当前权重（百分比，0-100） */
+  weight: number
+  /** 目标权重（百分比，0-100） */
+  targetWeight: number
+  /** 持仓盈亏（格式化字符串） */
+  pnl: string
+  /** 持仓盈亏百分比 */
+  pnlPercent: number
+}
+
+/** 再平衡计划项（用于 PortfolioOverviewWidget 再平衡计划展示） */
+export interface RebalancePlanItem {
+  /** 股票代码 */
+  symbol: string
+  /** 股票名称 */
+  name: string
+  /** 操作动作：买入/卖出/持有 */
+  action: 'buy' | 'sell' | 'hold'
+  /** 调整股数（正数） */
+  shares: number
+  /** 调整理由 */
+  reason: string
+}
+
 export interface PortfolioData {
   totalAssets: string
   availableFunds: string
@@ -142,6 +180,10 @@ export interface PortfolioData {
   totalPnL: string
   totalPnLPercent: number
   holdings: number
+  /** 持仓列表（用于持仓列表渲染，空数组表示无持仓） */
+  holdingsList: HoldingItem[]
+  /** 再平衡计划（空数组表示组合已平衡） */
+  rebalancePlan: RebalancePlanItem[]
 }
 
 export interface TradeReviewData {

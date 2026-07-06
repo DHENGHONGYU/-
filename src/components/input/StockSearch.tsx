@@ -1,10 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Input } from '@/components/ui/Input'
-import {
-  addStockFromSearch,
-  searchStocks,
-  type StockSearchResult,
-} from '@/services/input/inputService'
+import { useInputHubStore } from '@/store/inputHubStore'
+import type { StockSearchResult } from '@/services/input/inputService'
 import { INPUT_CONFIG } from '@/config/inputConfig'
 import { useToast } from '@/hooks/useToast'
 import { cn } from '@/lib/utils'
@@ -24,11 +21,14 @@ export function StockSearch({
   placeholder = mode === 'add' ? '搜索并直接录入候选池' : '搜索代码 / 名称 / 行业',
   className,
 }: StockSearchProps): React.JSX.Element {
+  const storeSearchStocks = useInputHubStore((s) => s.searchStocks)
+  const storeAddStockFromSearch = useInputHubStore((s) => s.addStockFromSearch)
+  const isAddingStock = useInputHubStore((s) => s.isAddingStock)
+
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<StockSearchResult[]>([])
   const [open, setOpen] = useState(false)
   const [activeIndex, setActiveIndex] = useState(-1)
-  const [adding, setAdding] = useState(false)
   const { toast } = useToast()
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -47,7 +47,7 @@ export function StockSearch({
     }
 
     debounceRef.current = setTimeout(() => {
-      const matches = searchStocks(trimmed)
+      const matches = storeSearchStocks(trimmed)
       setResults(matches)
       setOpen(matches.length > 0)
       setActiveIndex(matches.length > 0 ? 0 : -1)
@@ -58,14 +58,13 @@ export function StockSearch({
         clearTimeout(debounceRef.current)
       }
     }
-  }, [query])
+  }, [query, storeSearchStocks])
 
   const handleSelect = async (result: StockSearchResult): Promise<void> => {
     if (mode === 'add') {
-      if (adding) return
-      setAdding(true)
+      if (isAddingStock) return
       try {
-        const addResult = await addStockFromSearch(result, {
+        const addResult = await storeAddStockFromSearch(result, {
           fetchBasicAfterAdd: false,
           fetchKlineAfterAdd: false,
         })
@@ -94,8 +93,6 @@ export function StockSearch({
           title: '录入失败',
           description: err instanceof Error ? err.message : '无法录入标的',
         })
-      } finally {
-        setAdding(false)
       }
     } else {
       onSelect?.(result)
@@ -122,7 +119,7 @@ export function StockSearch({
       case 'Enter':
         e.preventDefault()
         if (activeIndex >= 0 && activeIndex < results.length) {
-          handleSelect(results[activeIndex]!)
+          void handleSelect(results[activeIndex]!)
         }
         break
       case 'Escape':
@@ -144,7 +141,8 @@ export function StockSearch({
           if (results.length > 0) setOpen(true)
         }}
         placeholder={placeholder}
-        disabled={adding}
+        aria-label={placeholder || '搜索股票'}
+        disabled={isAddingStock}
         role="combobox"
         aria-expanded={open}
         aria-autocomplete="list"
@@ -168,9 +166,9 @@ export function StockSearch({
               className={cn(
                 'cursor-pointer px-3 py-2 text-sm hover:bg-accent',
                 index === activeIndex && 'bg-accent',
-                adding && 'pointer-events-none opacity-50',
+                isAddingStock && 'pointer-events-none opacity-50',
               )}
-              onClick={() => handleSelect(result)}
+              onClick={() => void handleSelect(result)}
               onMouseEnter={() => setActiveIndex(index)}
             >
               <div className="flex items-center justify-between">

@@ -95,9 +95,18 @@ export async function getCompositeScore(
   try {
     if (stock.sector) {
       const allIndustryScores = await dataLayer.industryScores.list()
-      industryScore = allIndustryScores
+      const matched = allIndustryScores
         .filter((s) => s.name.includes(stock.sector!) || stock.sector!.includes(s.name))
-        .sort((a, b) => (b.scoredAt ?? 0) - (a.scoredAt ?? 0))[0]
+      const missingScoredAt = matched.filter((s) => s.scoredAt == null)
+      if (missingScoredAt.length > 0) {
+        logger.warn('[ScoringAdapter] 字段缺失，使用默认值', { field: 'scoredAt', symbol: stock.symbol, missingCount: missingScoredAt.length })
+      }
+      industryScore = matched
+        .sort((a, b) => {
+          const ta = a.scoredAt ?? 0
+          const tb = b.scoredAt ?? 0
+          return tb - ta
+        })[0]
     }
   } catch (e) {
     logger.warn('[scoringAdapter] 读取行业评分失败', { symbol: stock.symbol, error: e })
@@ -120,6 +129,20 @@ export async function getCompositeScore(
   }
 
   const rationale = buildRationale(v6Value, intelligentValue, industryValue, valuationValue, composite)
+
+  // 检测评分时间戳缺失
+  const scoredAtSources = {
+    v6CalculatedAt: v6Score?.calculatedAt ?? null,
+    intelligentScoredAt: intelligentScore?.scoredAt ?? null,
+    industryScoredAt: industryScore?.scoredAt ?? null,
+  }
+  const missingTimestamps = Object.entries(scoredAtSources)
+    .filter(([, v]) => v == null)
+    .map(([k]) => k)
+  if (missingTimestamps.length > 0 && missingTimestamps.length < 3) {
+    logger.warn('[ScoringAdapter] 评分因子缺失', { factor: 'scoredAt', symbol: stock.symbol, missingFields: missingTimestamps })
+  }
+
   const scoredAt = Math.max(
     v6Score?.calculatedAt ?? 0,
     intelligentScore?.scoredAt ?? 0,

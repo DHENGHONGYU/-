@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
@@ -8,39 +8,93 @@ import { Textarea } from '@/components/ui/Textarea'
 import { Tooltip } from '@/components/ui/Tooltip'
 import { ScoreFactorDeltaPanel } from '@/components/ScoreFactorDeltaPanel'
 import { ScoreUpdateAlert } from '@/components/ScoreUpdateAlert'
+import { MultiPeriodTrendChart } from '@/components/analysis/score/MultiPeriodTrendChart'
+import { IntelligentScoreExplanation } from '@/components/analysis/score/IntelligentScoreExplanation'
+import type { ScoreTrendPeriod } from '@/types/modules/score.types'
 import { IntelligentScoreBasisCard } from '@/components/cabin/IntelligentScoreBasisCard'
 import {
-  useIntelligentScorePage,
+  useIntelligentScoreStore,
+  selectConfigReady,
   STEP_LABELS,
   STEP_ORDER,
   DIMENSION_ORDER,
   formatIntelligentDelta,
-} from '@/hooks/cabin/useIntelligentScorePage'
+} from '@/store/intelligentScoreStore'
+import { DEFAULT_LLM_BASE_URL, type LlmConfig } from '@/config/llmConfig'
+import { getLogger } from '@/lib/logger'
+
+const logger = getLogger()
 
 export default function IntelligentScorePage(): React.JSX.Element {
-  const {
-    symbol,
-    setSymbol,
-    stocks,
-    files,
-    reportText,
-    setReportText,
-    llmConfig,
-    setLlmConfig,
-    showConfig,
-    setShowConfig,
-    configReady,
-    progress,
-    progressMessage,
-    result,
-    previousResult,
-    history,
-    logs,
-    error,
-    loading,
-    handleFileChange,
-    handleStart,
-  } = useIntelligentScorePage()
+  // 从 Store 获取状态
+  const symbol = useIntelligentScoreStore((s) => s.symbol)
+  const stocks = useIntelligentScoreStore((s) => s.stocks)
+  const files = useIntelligentScoreStore((s) => s.files)
+  const reportText = useIntelligentScoreStore((s) => s.reportText)
+  const llmConfig = useIntelligentScoreStore((s) => s.llmConfig)
+  const showConfig = useIntelligentScoreStore((s) => s.showConfig)
+  const configReady = useIntelligentScoreStore(selectConfigReady)
+  const progress = useIntelligentScoreStore((s) => s.progress)
+  const progressMessage = useIntelligentScoreStore((s) => s.progressMessage)
+  const result = useIntelligentScoreStore((s) => s.result)
+  const previousResult = useIntelligentScoreStore((s) => s.previousResult)
+  const history = useIntelligentScoreStore((s) => s.history)
+  const logs = useIntelligentScoreStore((s) => s.logs)
+  const error = useIntelligentScoreStore((s) => s.error)
+  const loading = useIntelligentScoreStore((s) => s.loading)
+  const trendData = useIntelligentScoreStore((s) => s.trendData)
+  const trendLoading = useIntelligentScoreStore((s) => s.trendLoading)
+  const trendError = useIntelligentScoreStore((s) => s.trendError)
+
+  // 从 Store 获取 actions
+  const setSymbol = useIntelligentScoreStore((s) => s.setSymbol)
+  const setFiles = useIntelligentScoreStore((s) => s.setFiles)
+  const setReportText = useIntelligentScoreStore((s) => s.setReportText)
+  const setLlmConfig = useIntelligentScoreStore((s) => s.setLlmConfig)
+  const setShowConfig = useIntelligentScoreStore((s) => s.setShowConfig)
+  const loadStocks = useIntelligentScoreStore((s) => s.loadStocks)
+  const loadHistory = useIntelligentScoreStore((s) => s.loadHistory)
+  const loadLogs = useIntelligentScoreStore((s) => s.loadLogs)
+  const runScore = useIntelligentScoreStore((s) => s.runScore)
+  const loadScoreTrend = useIntelligentScoreStore((s) => s.loadScoreTrend)
+
+  // 初始化加载股票列表
+  useEffect(() => {
+    logger.info('[IntelligentScorePage] 初始化，加载股票列表')
+    void loadStocks()
+  }, [loadStocks])
+
+  // symbol 变化时加载历史和日志
+  useEffect(() => {
+    if (!symbol) {
+      logger.info('[IntelligentScorePage] symbol 为空，清空历史和日志')
+      return
+    }
+    logger.info('[IntelligentScorePage] symbol 变化，加载历史和日志', { symbol })
+    void loadHistory(symbol)
+    void loadLogs(symbol)
+  }, [symbol, loadHistory, loadLogs])
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const selected = event.target.files
+    if (!selected) return
+    logger.info('[IntelligentScorePage] 文件上传', { count: selected.length })
+    setFiles(Array.from(selected))
+  }
+
+  const handleStart = async (): Promise<void> => {
+    logger.info('[IntelligentScorePage] 开始运行智能评分', { symbol })
+    await runScore()
+  }
+
+  // 多周期趋势数据（通过 Store 管理）
+  const [trendPeriod, setTrendPeriod] = useState<ScoreTrendPeriod>('month')
+
+  useEffect(() => {
+    if (!symbol) return
+    logger.info('[IntelligentScorePage] 加载评分趋势', { symbol, trendPeriod })
+    void loadScoreTrend(symbol, trendPeriod)
+  }, [symbol, trendPeriod, loadScoreTrend])
 
   const runTooltip = loading
     ? '评分运行中，请稍候...'
@@ -49,7 +103,7 @@ export default function IntelligentScorePage(): React.JSX.Element {
       : undefined
 
   const runButton = (
-    <Button onClick={handleStart} disabled={loading || !configReady} className="w-full">
+    <Button onClick={() => void handleStart()} disabled={loading || !configReady} className="w-full">
       {loading ? '评分中...' : '开始智能评分'}
     </Button>
   )
@@ -63,7 +117,7 @@ export default function IntelligentScorePage(): React.JSX.Element {
         <CardContent className="space-y-4">
           <ScoreUpdateAlert
             lastScoredAt={previousResult?.scoredAt}
-            onRefresh={handleStart}
+            onRefresh={() => void handleStart()}
             loading={loading}
           />
 
@@ -72,6 +126,7 @@ export default function IntelligentScorePage(): React.JSX.Element {
               <div className="space-y-2">
                 <label className="text-sm font-medium">选择标的</label>
                 <select
+                  aria-label="选择标的股票"
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   value={symbol}
                   onChange={(e) => setSymbol(e.target.value)}
@@ -85,6 +140,7 @@ export default function IntelligentScorePage(): React.JSX.Element {
                 </select>
                 <Input
                   placeholder="或直接输入代码，如 600519.SH"
+                  aria-label="手动输入股票代码"
                   value={symbol}
                   onChange={(e) => setSymbol(e.target.value)}
                 />
@@ -96,7 +152,7 @@ export default function IntelligentScorePage(): React.JSX.Element {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => setShowConfig((prev) => !prev)}
+                    onClick={() => setShowConfig((prev: boolean) => !prev)}
                   >
                     {showConfig ? '收起' : '展开'}
                   </Button>
@@ -104,20 +160,23 @@ export default function IntelligentScorePage(): React.JSX.Element {
                 {showConfig && (
                   <div className="space-y-2 rounded-md border p-3">
                     <Input
-                      placeholder="Base URL，如 https://api.deepseek.com/v1"
+                      placeholder={`Base URL，如 ${DEFAULT_LLM_BASE_URL}/v1`}
+                      aria-label="大模型 Base URL"
                       value={llmConfig.baseURL}
-                      onChange={(e) => setLlmConfig((prev) => ({ ...prev, baseURL: e.target.value }))}
+                      onChange={(e) => setLlmConfig((prev: LlmConfig) => ({ ...prev, baseURL: e.target.value }))}
                     />
                     <Input
                       type="password"
                       placeholder="API Key"
+                      aria-label="大模型 API Key"
                       value={llmConfig.apiKey}
-                      onChange={(e) => setLlmConfig((prev) => ({ ...prev, apiKey: e.target.value }))}
+                      onChange={(e) => setLlmConfig((prev: LlmConfig) => ({ ...prev, apiKey: e.target.value }))}
                     />
                     <Input
                       placeholder="Model，如 deepseek-chat / deepseek-reasoner"
+                      aria-label="大模型 Model"
                       value={llmConfig.model}
-                      onChange={(e) => setLlmConfig((prev) => ({ ...prev, model: e.target.value }))}
+                      onChange={(e) => setLlmConfig((prev: LlmConfig) => ({ ...prev, model: e.target.value }))}
                     />
                     <p className="text-xs text-muted-foreground">
                       支持 OpenAI 兼容接口，推荐 DeepSeek / Kimi / 硅基流动等国内模型。
@@ -135,6 +194,7 @@ export default function IntelligentScorePage(): React.JSX.Element {
                   type="file"
                   multiple
                   accept=".txt,.md,.json"
+                  aria-label="补充资料上传"
                   onChange={handleFileChange}
                 />
                 {files.length > 0 && (
@@ -152,6 +212,7 @@ export default function IntelligentScorePage(): React.JSX.Element {
                 <label className="text-sm font-medium">行业分析报告 / 资料</label>
                 <Textarea
                   placeholder="在此粘贴行业分析报告、研报摘要、关键事件等文本..."
+                  aria-label="分析报告文本"
                   value={reportText}
                   onChange={(e) => setReportText(e.target.value)}
                   rows={5}
@@ -255,6 +316,20 @@ export default function IntelligentScorePage(): React.JSX.Element {
           </div>
         </CardContent>
       </Card>
+
+      {/* 多周期趋势图表 + 智能评分解释 */}
+      {symbol && (
+        <div className="grid gap-4 lg:grid-cols-2">
+          <MultiPeriodTrendChart
+            data={trendData}
+            period={trendPeriod}
+            onPeriodChange={setTrendPeriod}
+            loading={trendLoading}
+            error={trendError}
+          />
+          {result && <IntelligentScoreExplanation result={result} />}
+        </div>
+      )}
 
       {result && <IntelligentScoreBasisCard result={result} history={history} logs={logs} />}
     </div>

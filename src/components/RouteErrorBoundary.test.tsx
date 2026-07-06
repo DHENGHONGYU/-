@@ -11,6 +11,7 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { MemoryRouter, Routes, Route } from 'react-router'
+import { UI_TEXT } from '@/constants/uiText'
 
 // 模拟 logger
 vi.mock('@/lib/logger', () => ({
@@ -67,7 +68,7 @@ describe('RouteErrorBoundary', () => {
 
   it('子组件抛出错误时显示路由级错误卡片', () => {
     renderWithRouter(<ThrowError shouldThrow={true} />)
-    expect(screen.getByText('页面加载失败')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.errors.pageLoadFailed)).toBeInTheDocument()
   })
 
   it('错误卡片包含「重试」按钮', () => {
@@ -89,7 +90,7 @@ describe('RouteErrorBoundary', () => {
     // 先开启抛错
     throwFlag = true
     renderWithRouter(<ControlledThrower />)
-    expect(screen.getByText('页面加载失败')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.errors.pageLoadFailed)).toBeInTheDocument()
 
     // 关闭抛错，然后点击重试
     throwFlag = false
@@ -97,6 +98,6 @@ describe('RouteErrorBoundary', () => {
 
     // 重试后错误卡片消失，子组件正常渲染
     expect(screen.getByTestId('child')).toBeInTheDocument()
-    expect(screen.queryByText('页面加载失败')).not.toBeInTheDocument()
+    expect(screen.queryByText(UI_TEXT.errors.pageLoadFailed)).not.toBeInTheDocument()
   })
 })

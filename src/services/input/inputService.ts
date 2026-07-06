@@ -4,7 +4,7 @@ import { EnvelopeFactory } from '@/core/envelope'
 import { MODULE_ID, ENVELOPE_TARGET, ENVELOPE_ACTION, RESEARCH_STATUS, DEFAULT_POOL_GROUP, type ResearchStatus } from '@/config/dbConfig'
 import { INPUT_CONFIG } from '@/config/inputConfig'
 import type { DataLayerResult, Stock } from '@/data/types'
-import { fetchStockBasic, fetchStockKline } from '@/services/fetcher/fetcherService'
+import { fetchBasicDataUseCase, fetchKlineDataUseCase } from '@/services/useCase/fetcherOrchestrator.useCase'
 import { MOCK_STOCK_LIBRARY, type MockStock } from './mockStockLibrary'
 
 export interface AddStockInput {
@@ -89,7 +89,7 @@ export async function addStock(
     await dataBridge.forward(envelope)
 
     if (options.fetchBasicAfterAdd) {
-      const fetchResult = await fetchStockBasic(symbol)
+      const fetchResult = await fetchBasicDataUseCase({ symbol })
       if (fetchResult.success && fetchResult.data) {
         stock = { ...fetchResult.data, group: stock.group }
       } else {
@@ -102,7 +102,7 @@ export async function addStock(
     }
 
     if (options.fetchKlineAfterAdd) {
-      const klineResult = await fetchStockKline(symbol)
+      const klineResult = await fetchKlineDataUseCase({ symbol })
       if (klineResult.success && klineResult.data) {
         stock = { ...klineResult.data, group: stock.group }
       } else {

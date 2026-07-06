@@ -1,41 +1,63 @@
-import React from 'react'
-import { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
-import { runV6Score } from '@/services/scoring/v6ScoreService'
-import {
-  loadDailyQuotesForAnalysis,
-  loadStockForAnalysis,
-  loadV6ScoreForAnalysis,
-} from '@/services/analysis/scorePageService'
-import type { DailyQuotes, Stock, V6Score } from '@/data/types'
+import { ScoreHistoryPanel } from '@/components/analysis/score/ScoreHistoryPanel'
+import { useStockAnalysisStore } from '@/store/stockAnalysisStore'
+import { getLogger } from '@/lib/logger'
+
+const logger = getLogger()
 
 export default function StockAnalysisPage(): React.JSX.Element {
   const { symbol } = useParams<{ symbol?: string }>()
-  const [stock, setStock] = useState<Stock | undefined>()
-  const [quotes, setQuotes] = useState<DailyQuotes | undefined>()
-  const [score, setScore] = useState<V6Score | undefined>()
-  const [loading, setLoading] = useState(false)
 
+  // 从 Store 获取状态
+  const stock = useStockAnalysisStore((s) => s.stock)
+  const quotes = useStockAnalysisStore((s) => s.quotes)
+  const score = useStockAnalysisStore((s) => s.v6Score)
+  const scoreLoading = useStockAnalysisStore((s) => s.scoreLoading)
+
+  // 从 Store 获取 actions
+  const loadStockAnalysis = useStockAnalysisStore((s) => s.loadStockAnalysis)
+  const refreshScore = useStockAnalysisStore((s) => s.refreshScore)
+
+  // 监听 symbol 变化，加载数据
   useEffect(() => {
-    if (symbol) {
-      loadStockForAnalysis(symbol).then(setStock)
-      loadDailyQuotesForAnalysis(symbol).then(setQuotes)
-      loadV6ScoreForAnalysis(symbol).then(setScore)
-    }
-  }, [symbol])
+    if (!symbol) return
 
+    logger.info('[StockAnalysisPage] symbol 变化，开始加载数据', { symbol })
+
+    // 创建 AbortController 用于取消请求
+    const controller = new AbortController()
+
+    loadStockAnalysis(symbol, controller.signal).then(() => {
+      if (!controller.signal.aborted) {
+        logger.info('[StockAnalysisPage] 数据加载完成', { symbol })
+      }
+    }).catch((err) => {
+      if (!controller.signal.aborted) {
+        logger.error('[StockAnalysisPage] 数据加载失败', { symbol, error: err.message })
+      }
+    })
+
+    return () => {
+      logger.info('[StockAnalysisPage] 取消加载', { symbol })
+      controller.abort()
+    }
+  }, [symbol, loadStockAnalysis])
+
+  // 刷新评分
   const handleScore = async (): Promise<void> => {
     if (!symbol) return
-    setLoading(true)
+
+    logger.info('[StockAnalysisPage] 开始刷新 V6 评分', { symbol })
+
     try {
-      await runV6Score(symbol)
-      const latest = await loadV6ScoreForAnalysis(symbol)
-      setScore(latest)
-    } finally {
-      setLoading(false)
+      await refreshScore(symbol)
+      logger.info('[StockAnalysisPage] V6 评分刷新完成', { symbol })
+    } catch (err) {
+      logger.error('[StockAnalysisPage] V6 评分刷新失败', { symbol, error: err instanceof Error ? err.message : String(err) })
     }
   }
 
@@ -109,8 +131,8 @@ export default function StockAnalysisPage(): React.JSX.Element {
                 <p className="text-muted-foreground">暂无评分</p>
               )}
 
-              <Button onClick={handleScore} disabled={loading}>
-                {loading ? '评分中...' : '运行 V6 评分'}
+              <Button onClick={handleScore} disabled={scoreLoading}>
+                {scoreLoading ? '评分中...' : '运行 V6 评分'}
               </Button>
             </>
           ) : (
@@ -120,6 +142,9 @@ export default function StockAnalysisPage(): React.JSX.Element {
           )}
         </CardContent>
       </Card>
+
+      {/* 评分历史面板 */}
+      {stock && score && <ScoreHistoryPanel symbol={stock.symbol} />}
     </div>
   )
 }

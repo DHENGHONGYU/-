@@ -3,6 +3,13 @@
  * @description 交易持仓模块常量定义。所有枚举值、颜色映射、配置数值必须从此文件引用，禁止在组件中硬编码。
  */
 
+import {
+  API_TRADE_HOLDINGS,
+  API_TRADE_ADD_POSITION,
+  API_TRADE_CLOSE_POSITION,
+  API_TRADE_HOLDINGS_EXPORT,
+} from '@/config/apiPaths'
+
 // ============================================================
 // 交易方向枚举
 // ============================================================
@@ -155,13 +162,13 @@ export const PAGINATION_MAX_VISIBLE = 5
 /** 交易持仓 API 端点 */
 export const HOLDINGS_API = {
   /** 持仓列表 */
-  LIST: '/api/v1/trade/holdings',
+  LIST: API_TRADE_HOLDINGS,
   /** 补仓操作 */
-  ADD_POSITION: '/api/v1/trade/add-position',
+  ADD_POSITION: API_TRADE_ADD_POSITION,
   /** 平仓操作 */
-  CLOSE_POSITION: '/api/v1/trade/close-position',
+  CLOSE_POSITION: API_TRADE_CLOSE_POSITION,
   /** 导出 Excel */
-  EXPORT: '/api/v1/trade/holdings/export',
+  EXPORT: API_TRADE_HOLDINGS_EXPORT,
 } as const
 
 // ============================================================
@@ -248,3 +255,22 @@ export const SKELETON_COLUMNS = [
   { width: 'w-16', className: '' },
   { width: 'w-20', className: '' },
 ] as const
+
+// ============================================================
+// 数值计算常量
+// ============================================================
+
+/** 百分比计算基数（四舍五入精度控制） */
+export const PERCENTAGE_BASE = 100
+
+/** 评分上限 */
+export const MAX_SCORE = 100
+
+/** 评分下限 */
+export const MIN_SCORE = 0
+
+/** 盈亏比无穷大标识（无亏损时使用） */
+export const PROFIT_LOSS_RATIO_UNBOUNDED = 999
+
+/** 日志内容截断长度 */
+export const LOG_TRUNCATE_LENGTH = 500

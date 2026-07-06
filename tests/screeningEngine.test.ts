@@ -1,6 +1,8 @@
 import { describe, expect, it, beforeEach } from 'vitest'
 import { db } from '@/data/db'
 import { dataLayer } from '@/data/dataLayer'
+import { dataBridge } from '@/core/databridge'
+import { STORE_NAME } from '@/config/dbConfig'
 import { runScreening, screenSingleStock } from '@/services/analysis/screeningEngine'
 import type { Stock, V6Score } from '@/data/types'
 
@@ -50,6 +52,8 @@ describe('ScreeningEngine', () => {
   beforeEach(async () => {
     await db.init()
     await db.reset()
+    dataBridge.invalidateCache(STORE_NAME.stocks)
+    dataBridge.invalidateCache(STORE_NAME.v6Scores)
   })
 
   it('promotes candidate to screened when v6 score and data quality meet thresholds', async () => {

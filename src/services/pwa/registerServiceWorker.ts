@@ -103,7 +103,40 @@ export async function registerServiceWorker(
 }
 
 /**
- * 在 App 初始化时调用，自动注册 SW（仅生产环境）
+ * 清理残留的旧版 Service Worker。
+ *
+ * 当项目不再提供 sw.js 时，浏览器中已注册的旧 SW 仍会拦截网络请求，
+ * 导致 fetch 失败被 SW 放大为网络错误。此函数在应用初始化时自动注销旧 SW。
+ */
+async function cleanupStaleServiceWorker(): Promise<void> {
+  if (!('serviceWorker' in navigator)) return
+
+  try {
+    const registrations = await navigator.serviceWorker.getRegistrations()
+    if (registrations.length === 0) return
+
+    // 检查当前作用域的 SW 脚本是否仍可访问
+    const response = await fetch('/sw.js', { method: 'HEAD', cache: 'no-cache' }).catch(() => null)
+    if (response && response.ok) return // sw.js 存在，无需清理
+
+    // sw.js 不存在，注销所有残留的 SW
+    console.info(`[PWA] sw.js 不存在，清理 ${registrations.length} 个残留 Service Worker ...`)
+    await Promise.all(
+      registrations.map((reg) =>
+        reg.unregister().then((ok) => {
+          if (ok) console.info('[PWA] SW 注销成功:', reg.scope)
+        }),
+      ),
+    )
+    currentStatus = 'unsupported'
+  } catch (err) {
+    console.warn('[PWA] 清理残留 SW 失败:', err)
+  }
+}
+
+/**
+ * 在 App 初始化时调用，自动注册 SW（仅生产环境）。
+ * 开发环境下自动清理残留旧版 SW。
  */
 export function initPWA(): void {
   if (import.meta.env.PROD) {
@@ -113,5 +146,9 @@ export function initPWA(): void {
   } else {
     console.info('[PWA] 开发环境跳过 Service Worker 注册')
     currentStatus = 'unsupported'
+    // 开发环境下清理旧版残留 SW，防止拦截请求产生错误
+    cleanupStaleServiceWorker().catch((err) => {
+      console.warn('[PWA] cleanupStaleServiceWorker 异常:', err)
+    })
   }
 }

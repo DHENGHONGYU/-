@@ -12,6 +12,7 @@
 
 import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import { UI_TEXT } from '@/constants/uiText'
 import { ScoreFactorDeltaPanel } from '@/components/ScoreFactorDeltaPanel'
 import type { ScoreWithDimensions } from '@/components/ScoreFactorDeltaPanel'
 
@@ -24,7 +25,7 @@ describe('ScoreFactorDeltaPanel', () => {
   it('无 previous 时显示提示信息', () => {
     const current = makeScore(75, [{ name: '估值', score: 80, rationale: '低估' }])
     render(<ScoreFactorDeltaPanel current={current} previous={undefined} />)
-    expect(screen.getByText(/暂无上一版本记录/)).toBeInTheDocument()
+    expect(screen.getByText(new RegExp(UI_TEXT.analysis.trend.noPreviousRecord))).toBeInTheDocument()
   })
 
   it('综合分变化为正时 Badge 显示 + 号', () => {
@@ -56,7 +57,7 @@ describe('ScoreFactorDeltaPanel', () => {
     ])
     render(<ScoreFactorDeltaPanel current={current} previous={previous} />)
     expect(screen.getByText(/上升因子 Top/)).toBeInTheDocument()
-    expect(screen.getByText('估值')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.factor.value)).toBeInTheDocument()
   })
 
   it('显示下降因子 Top N', () => {
@@ -76,7 +77,7 @@ describe('ScoreFactorDeltaPanel', () => {
     const current = makeScore(70, [{ name: '估值', score: 70, rationale: '正常' }])
     const previous = makeScore(70, [{ name: '估值', score: 70, rationale: '正常' }])
     render(<ScoreFactorDeltaPanel current={current} previous={previous} />)
-    expect(screen.getByText(/各因子与上一版本无有效变化/)).toBeInTheDocument()
+    expect(screen.getByText(new RegExp(UI_TEXT.analysis.trend.noEffectiveChange))).toBeInTheDocument()
   })
 
   it('null score 不参与 delta 计算', () => {
@@ -89,6 +90,6 @@ describe('ScoreFactorDeltaPanel', () => {
       { name: '资金', score: null, rationale: '数据缺失' },
     ])
     render(<ScoreFactorDeltaPanel current={current} previous={previous} />)
-    expect(screen.getByText('估值')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.factor.value)).toBeInTheDocument()
   })
 })

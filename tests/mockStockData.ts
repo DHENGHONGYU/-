@@ -56,7 +56,7 @@ export function generateDailyQuotes(
   trend: number = 0.001,
 ): DailyQuotes {
   const history = generateKlineHistory(days, basePrice, volatility, trend)
-  const latest = history[history.length - 1]
+  const latest = history[history.length - 1]!
 
   return {
     symbol,
@@ -124,7 +124,7 @@ export const MOCK_QUOTES_HIGH_QUALITY: QuoteData = {
   volatility20d: 0.025,
   avgTurnover20d: 0.035,
   return60d: 0.15,
-  history: generateKlineHistory(120, 40, 0.02, 0.001),
+  history: generateKlineHistory(120, 40, 0.02, 0.001).map((k) => k.close),
   volumeHistory: generateKlineHistory(120, 40, 0.02, 0.001).map((k) => k.volume),
 }
 
@@ -180,7 +180,7 @@ export const MOCK_QUOTES_VALUE_PIT: QuoteData = {
   volatility20d: 0.015,
   avgTurnover20d: 0.008,
   return60d: -0.05,
-  history: generateKlineHistory(120, 5.5, 0.015, -0.0005),
+  history: generateKlineHistory(120, 5.5, 0.015, -0.0005).map((k) => k.close),
   volumeHistory: generateKlineHistory(120, 5.5, 0.015, -0.0005).map((k) => k.volume),
 }
 
@@ -236,7 +236,7 @@ export const MOCK_QUOTES_HOT_MOMENTUM: QuoteData = {
   volatility20d: 0.045,
   avgTurnover20d: 0.08,
   return60d: 0.45,
-  history: generateKlineHistory(120, 90, 0.04, 0.003),
+  history: generateKlineHistory(120, 90, 0.04, 0.003).map((k) => k.close),
   volumeHistory: generateKlineHistory(120, 90, 0.04, 0.003).map((k) => k.volume),
 }
 
@@ -292,7 +292,7 @@ export const MOCK_QUOTES_PROBLEM: QuoteData = {
   volatility20d: 0.055,
   avgTurnover20d: 0.06,
   return60d: -0.35,
-  history: generateKlineHistory(120, 12, 0.05, -0.003),
+  history: generateKlineHistory(120, 12, 0.05, -0.003).map((k) => k.close),
   volumeHistory: generateKlineHistory(120, 12, 0.05, -0.003).map((k) => k.volume),
 }
 

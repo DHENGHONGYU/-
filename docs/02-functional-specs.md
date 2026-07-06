@@ -1,8 +1,8 @@
 # 02. 功能规格
 
 > **Status**: Current  
-> **Version**: v1.1.0  
-> **Last Updated**: 2026-06-26
+> **Version**: v2.5.0  
+> **Last Updated**: 2026-07-05
 
 ## 2.1 功能模块总览
 

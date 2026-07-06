@@ -1,6 +1,7 @@
 /**
  * v6ScoreService 单元测试
  *
+ * F4 整改后：runV6Score 调用 v6-engine L-1~L8 分层引擎。
  * 覆盖：getAllV6Scores, runV6Score, getV6ScoreQuality
  */
 
@@ -11,7 +12,6 @@ import {
   getV6ScoreQuality,
 } from './v6ScoreService'
 import { dataLayer } from '@/data/dataLayer'
-import { dataBridge } from '@/core/databridge'
 import type { Stock, DailyQuotes, V6Score, KlineBar } from '@/data/types'
 
 // ============================================================
@@ -27,10 +27,6 @@ vi.mock('@/lib/logger', () => ({
   }),
 }))
 
-vi.mock('@/data/db', () => ({
-  generateId: vi.fn().mockReturnValue('test-id-123'),
-}))
-
 vi.mock('@/data/dataLayer', () => ({
   dataLayer: {
     stocks: { get: vi.fn() },
@@ -39,24 +35,53 @@ vi.mock('@/data/dataLayer', () => ({
   },
 }))
 
-vi.mock('@/core/databridge', () => ({
-  dataBridge: { forward: vi.fn().mockResolvedValue(undefined) },
-}))
+// Mock v6-engine：避免在测试中运行真实 11 层计算器
+vi.mock('@/services/scoring/v6-engine', () => {
+  const mockComposite = {
+    score: 3.75,
+    rating: 'buy' as const,
+    layers: {
+      lMinus1: { layerId: 'lMinus1', layerName: '行业评分估值', score: 4.0, summary: '行业估值合理', risks: [], evidence: [], weight: 0.10, weightedScore: 0.4, dataSources: [] },
+      l0: { layerId: 'l0', layerName: 'STEEP 宏观', score: 3.5, summary: '宏观环境中性', risks: [], evidence: [], weight: 0.08, weightedScore: 0.28, dataSources: [] },
+      l1: { layerId: 'l1', layerName: '护城河', score: 4.5, summary: '品牌护城河强', risks: [], evidence: [], weight: 0.15, weightedScore: 0.675, dataSources: [] },
+      l2: { layerId: 'l2', layerName: '竞品格局', score: 3.0, summary: '竞争中等', risks: ['竞品增多'], evidence: [], weight: 0.10, weightedScore: 0.3, dataSources: [] },
+      l3f: { layerId: 'l3f', layerName: '财务健康', score: 4.0, summary: '财务稳健', risks: [], evidence: [], weight: 0.10, weightedScore: 0.4, dataSources: [] },
+      l3v: { layerId: 'l3v', layerName: '估值水平', score: 3.5, summary: '估值中等', risks: [], evidence: [], weight: 0.08, weightedScore: 0.28, dataSources: [] },
+      l4: { layerId: 'l4', layerName: '情景推演', score: 3.0, summary: '基准情景', risks: [], evidence: [], weight: 0.08, weightedScore: 0.24, dataSources: [] },
+      l5: { layerId: 'l5', layerName: 'T-M矩阵', score: 4.0, summary: '时机适中', risks: [], evidence: [], weight: 0.05, weightedScore: 0.2, dataSources: [] },
+      l6: { layerId: 'l6', layerName: 'Hype周期', score: 3.5, summary: '稳步爬升', risks: [], evidence: [], weight: 0.07, weightedScore: 0.245, dataSources: [] },
+      l7: { layerId: 'l7', layerName: '第二曲线', score: 4.0, summary: '新业务增长', risks: [], evidence: [], weight: 0.15, weightedScore: 0.6, dataSources: [] },
+      l8: { layerId: 'l8', layerName: '技术筹码', score: 3.5, summary: '筹码集中', risks: [], evidence: [], weight: 0.04, weightedScore: 0.14, dataSources: [] },
+    },
+    allRisks: ['竞品增多'],
+    recommendation: '建议买入',
+    timestamp: 1700000000000,
+    engineVersion: 'v6-engine-1.0',
+  }
 
-vi.mock('@/core/envelope', () => ({
-  EnvelopeFactory: { create: vi.fn().mockReturnValue({}) },
-}))
-
-vi.mock('@/config/dbConfig', () => ({
-  ENVELOPE_ACTION: { saveV6Score: 'SAVE_V6_SCORE' },
-  ENVELOPE_TARGET: { db: 'DB' },
-  MODULE_ID: { analyzer: 'analyzer' },
-}))
-
-vi.mock('@/services/fetcher/fetcherAdapter', () => ({
-  hasEnoughHistory: vi.fn().mockReturnValue(true),
-  hasRealBasicData: vi.fn().mockReturnValue(true),
-}))
+  return {
+    createV6Engine: vi.fn(() => ({
+      calculateAll: vi.fn().mockResolvedValue(mockComposite),
+      audit: vi.fn().mockReturnValue(null),
+    })),
+    stockToBasicData: vi.fn((stock: Stock) => ({
+      symbol: stock.symbol,
+      name: stock.name,
+      price: stock.price,
+      pe: stock.pe,
+      pb: stock.pb,
+      roe: stock.roe,
+      marketCap: stock.marketCap,
+      sector: stock.industryCode,
+    })),
+    quotesToQuoteData: vi.fn((quotes: DailyQuotes) => ({
+      latestClose: quotes.latest?.close,
+      history: quotes.history.map((b) => b.close),
+      volumeHistory: quotes.history.map((b) => b.volume),
+    })),
+    ALL_LAYER_IDS: ['lMinus1', 'l0', 'l1', 'l2', 'l3f', 'l3v', 'l4', 'l5', 'l6', 'l7', 'l8'],
+  }
+})
 
 // ============================================================
 // Mock 数据工厂
@@ -114,7 +139,7 @@ describe('getAllV6Scores', () => {
 
   test('成功返回 V6 评分列表', async () => {
     const mockScores: V6Score[] = [
-      { symbol: '600519.SH', score: 4.5, factors: {}, algorithmVersion: 'v9-auto', calculatedAt: Date.now(), dataVersion: 1 },
+      { symbol: '600519.SH', score: 4.5, factors: {}, algorithmVersion: 'v6-engine-1.0', calculatedAt: Date.now(), dataVersion: 1 },
     ]
     vi.mocked(dataLayer.v6Scores.list).mockResolvedValue(mockScores)
 
@@ -152,22 +177,38 @@ describe('runV6Score', () => {
     expect(result.error).toContain('Stock not found')
   })
 
-  test('正常评分流程', async () => {
+  test('正常评分流程 — 调用 v6-engine 并映射结果', async () => {
     vi.mocked(dataLayer.stocks.get).mockResolvedValue(createMockStock())
     vi.mocked(dataLayer.dailyQuotes.get).mockResolvedValue(createMockQuotes())
-    vi.mocked(dataBridge.forward).mockResolvedValue(undefined)
 
     const result = await runV6Score('600519.SH')
 
     expect(result.success).toBe(true)
     if (result.success) {
       expect(result.data!.symbol).toBe('600519.SH')
-      expect(result.data!.score).toBeGreaterThanOrEqual(0)
-      // V6 引擎接管后，algorithmVersion 为引擎版本号（如 v6-engine-v1.0.0）
-      expect(result.data!.algorithmVersion).toMatch(/^v6-engine-/)
-      // factors key 为层 ID（lMinus1/l0/l1/...）
-      expect(Object.keys(result.data!.factors).length).toBeGreaterThan(0)
+      expect(result.data!.score).toBe(3.75)
+      expect(result.data!.rating).toBe('buy')
+      expect(result.data!.algorithmVersion).toBe('v6-engine-1.0')
+      expect(result.data!.engineVersion).toBe('v6-engine-1.0')
+      // factors key 为 layerId（11 层）
+      expect(Object.keys(result.data!.factors)).toContain('lMinus1')
+      expect(Object.keys(result.data!.factors).length).toBe(11)
+      // 层明细
+      expect(result.data!.layerDetails).toBeDefined()
+      expect(result.data!.layerDetails?.['l1']?.score).toBe(4.5)
+      // 风险汇总
+      expect(result.data!.allRisks).toEqual(['竞品增多'])
+      expect(result.data!.recommendation).toBe('建议买入')
     }
+  })
+
+  test('无 K线数据时仍可评分（引擎自行降级）', async () => {
+    vi.mocked(dataLayer.stocks.get).mockResolvedValue(createMockStock())
+    vi.mocked(dataLayer.dailyQuotes.get).mockResolvedValue(undefined)
+
+    const result = await runV6Score('600519.SH')
+
+    expect(result.success).toBe(true)
   })
 })
 
@@ -176,35 +217,26 @@ describe('runV6Score', () => {
 // ============================================================
 
 describe('getV6ScoreQuality', () => {
-  test('完整因子', () => {
+  test('全部楼层完整', () => {
     const factors: Record<string, number> = {
-      lMinus1: 4,
-      l0: 3,
-      l1: 4,
-      l2: 3,
-      l3f: 4,
-      l3v: 3,
-      l4: 4,
-      l5: 3,
-      l6: 4,
-      l7: 3,
-      l8: 4,
+      lMinus1: 4, l0: 3, l1: 4, l2: 3, l3f: 4,
+      l3v: 3, l4: 4, l5: 3, l6: 4, l7: 3, l8: 4,
     }
     const result = getV6ScoreQuality('600519.SH', factors)
     expect(result.dataCompleteness).toBe(100)
-    expect(result.missingFactors).toHaveLength(0)
+    expect(result.missingLayers).toHaveLength(0)
     expect(result.hasBasicData).toBe(true)
   })
 
-  test('缺失因子', () => {
+  test('部分层缺失', () => {
     const factors: Record<string, number> = {
       lMinus1: 4,
-      l3f: 4,
+      l3f: 3,
     }
     const result = getV6ScoreQuality('600519.SH', factors)
     // 2/11 ≈ 18.18%
     expect(result.dataCompleteness).toBeCloseTo(18.18, 1)
-    expect(result.missingFactors.length).toBeGreaterThan(0)
+    expect(result.missingLayers.length).toBe(9)
     expect(result.hasBasicData).toBe(false)
   })
 })

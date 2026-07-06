@@ -393,6 +393,77 @@ export class V6Database {
     logger.debug('[DB] Database initialization confirmed ready')
   }
 
+  /**
+   * 在跨 store 事务中执行回调。
+   * 回调接收同一个 IDBTransaction，确保多 store 写入的原子性。
+   *
+   * @param storeNames 参与事务的 store 名列表
+   * @param mode 事务模式
+   * @param callback 事务回调
+   * @returns 回调返回值
+   */
+  withTransaction<T>(
+    storeNames: string[],
+    mode: IDBTransactionMode,
+    callback: (tx: IDBTransaction) => Promise<T> | T,
+  ): Promise<T> {
+    try {
+      const db = this.ensureDB()
+      logger.info(`[DB] withTransaction started: stores=[${storeNames.join(', ')}], mode=${mode}`)
+
+      return new Promise<T>((resolve, reject) => {
+        const tx = db.transaction(storeNames, mode)
+        let settled = false
+
+        tx.oncomplete = () => {
+          logger.info('[DB] withTransaction completed')
+        }
+        tx.onabort = () => {
+          if (!settled) {
+            settled = true
+            reject(new Error('Transaction aborted'))
+          }
+        }
+        tx.onerror = () => {
+          if (!settled) {
+            settled = true
+            reject(tx.error instanceof Error ? tx.error : new Error(String(tx.error)))
+          }
+        }
+
+        Promise.resolve(callback(tx))
+          .then((result) => {
+            if (!settled) {
+              settled = true
+              resolve(result)
+            }
+          })
+          .catch((err) => {
+            if (!settled) {
+              settled = true
+              logger.error('[DB] withTransaction callback error, aborting', {
+                error: err instanceof Error ? err.message : String(err),
+              })
+              tx.abort()
+              reject(err instanceof Error ? err : new Error(String(err)))
+            }
+          })
+      })
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      logger.error('[DB] withTransaction failed', { error: message })
+      throw err
+    }
+  }
+
+  /**
+   * 获取底层 IDBDatabase 实例的只读访问方法。
+   * 供 core/transaction 等需要直接操作事务的模块使用。
+   */
+  getDatabase(): IDBDatabase {
+    return this.ensureDB()
+  }
+
   private ensureDB(): IDBDatabase {
     if (!this.db) {
       throw new Error('Database not initialized. Call init() first.')

@@ -1,5 +1,8 @@
 import { create } from 'zustand'
 import { exportAll } from '@/services/system/systemService'
+import { getLogger } from '@/lib/logger'
+
+const logger = getLogger()
 
 interface OutputState {
   exportData: string
@@ -29,7 +32,7 @@ export const useOutputStore = create<OutputState & OutputActions>((set) => ({
 
   handleExport: async () => {
     set({ isExporting: true, message: '' })
-    console.log('[outputStore] INFO: handleExport/start', { timestamp: Date.now() })
+    logger.info('[outputStore] handleExport/start', { timestamp: Date.now() })
 
     try {
       const result = await exportAll()
@@ -37,16 +40,16 @@ export const useOutputStore = create<OutputState & OutputActions>((set) => ({
       if (result.success && result.data) {
         const formatted = JSON.stringify(result.data, null, 2)
         set({ exportData: formatted, isExporting: false, message: '' })
-        console.log('[outputStore] INFO: handleExport/success', { timestamp: Date.now() })
+        logger.info('[outputStore] handleExport/success', { timestamp: Date.now() })
       } else {
         const message = result.error ?? '导出失败'
         set({ exportData: '', isExporting: false, message })
-        console.warn('[outputStore] WARN: handleExport/failed', { message, timestamp: Date.now() })
+        logger.warn('[outputStore] handleExport/failed', { message, timestamp: Date.now() })
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error)
       set({ exportData: '', isExporting: false, message })
-      console.error('[outputStore] ERROR: handleExport/exception', { message, timestamp: Date.now() })
+      logger.error('[outputStore] handleExport/exception', { message, timestamp: Date.now() })
     }
   },
 }))

@@ -2,16 +2,17 @@ import { useContext } from 'react'
 import { cn } from '@/lib/utils'
 import { X } from 'lucide-react'
 import { ToastContext, type Toast, type ToastVariant } from '@/hooks/useToast'
+import { twText, twBg, twBorder, DARK } from '@/constants/theme.tokens'
 
 export type { Toast, ToastVariant }
 
 export function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: string) => void }) {
   const variantClasses: Record<ToastVariant, string> = {
     default: 'border bg-background text-foreground',
-    success: 'border-green-200 bg-green-50 text-green-900 dark:border-green-900 dark:bg-green-950 dark:text-green-100',
-    error: 'border-red-200 bg-red-50 text-red-900 dark:border-red-900 dark:bg-red-950 dark:text-red-100',
-    warning: 'border-yellow-200 bg-yellow-50 text-yellow-900 dark:border-yellow-900 dark:bg-yellow-950 dark:text-yellow-100',
-    info: 'border-blue-200 bg-blue-50 text-blue-900 dark:border-blue-900 dark:bg-blue-950 dark:text-blue-100',
+    success: `${twBorder('green', 200)} ${twBg('green', 50)} ${twText('green', 900)} ${DARK.borderGreen900} ${DARK.bgGreen950} ${DARK.textGreen100}`,
+    error: `${twBorder('red', 200)} ${twBg('red', 50)} ${twText('red', 900)} ${DARK.borderRed900} ${DARK.bgRed950} ${DARK.textRed200}`,
+    warning: `${twBorder('yellow', 200)} ${twBg('yellow', 50)} ${twText('yellow', 900)} ${DARK.borderYellow900} ${DARK.bgYellow950} ${DARK.textYellow100}`,
+    info: `${twBorder('blue', 200)} ${twBg('blue', 50)} ${twText('blue', 900)} ${DARK.borderBlue900} ${DARK.bgBlue950} ${DARK.textBlue100}`,
   }
 
   return (

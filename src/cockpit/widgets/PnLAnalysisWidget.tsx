@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/Badge'
 import type { WidgetConfig } from '@/types/modules/widget.types'
 import { getLogger } from '@/lib/logger'
 import { useOrderStore, initOrderStoreSubscriptions } from '@/store/orderStore'
-import { COLOR_TOKENS } from '@/constants/theme.tokens'
+import { COLOR_TOKENS, COLOR_SHADES, twText } from '@/constants/theme.tokens'
 
 const logger = getLogger()
 
@@ -51,7 +51,7 @@ const PnLAnalysisWidget = memo(function PnLAnalysisWidget({ config }: PnLAnalysi
         <CardHeader>
           <CardTitle className="text-base">{config.title}</CardTitle>
         </CardHeader>
-        <CardContent className="text-center text-red-500">
+        <CardContent className={`text-center ${COLOR_TOKENS.danger.tailwind}`}>
           <p>{error}</p>
         </CardContent>
       </Card>
@@ -67,10 +67,10 @@ const PnLAnalysisWidget = memo(function PnLAnalysisWidget({ config }: PnLAnalysi
         <CardContent className="space-y-4">
           <div className="grid grid-cols-3 gap-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-16 bg-gray-200 rounded animate-pulse" />
+              <div key={i} className={`h-16 ${COLOR_SHADES.gray[200]} rounded animate-pulse`} />
             ))}
           </div>
-          <div className="h-32 bg-gray-200 rounded animate-pulse" />
+          <div className={`h-32 ${COLOR_SHADES.gray[200]} rounded animate-pulse`} />
         </CardContent>
       </Card>
     )
@@ -103,28 +103,28 @@ const PnLAnalysisWidget = memo(function PnLAnalysisWidget({ config }: PnLAnalysi
       <CardContent className="space-y-4">
         {/* 核心指标 */}
         <div className="grid grid-cols-3 gap-3">
-          <div className="bg-gray-50 rounded-lg p-3 text-center">
+          <div className={`${COLOR_SHADES.gray[50]} rounded-lg p-3 text-center`}>
             <div className="flex justify-center mb-1">
               <BarChart3 className="h-5 w-5" style={{ color: data.totalRealizedPnl >= 0 ? COLOR_TOKENS.success.hex : COLOR_TOKENS.danger.hex }} />
             </div>
             <div className="text-xl font-bold" style={{ color: data.totalRealizedPnl >= 0 ? COLOR_TOKENS.success.hex : COLOR_TOKENS.danger.hex }}>
               {data.totalRealizedPnl >= 0 ? '+' : ''}{data.totalRealizedPnl}%
             </div>
-            <div className="text-xs text-gray-400">总盈亏</div>
+            <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>总盈亏</div>
           </div>
-          <div className="bg-gray-50 rounded-lg p-3 text-center">
+          <div className={`${COLOR_SHADES.gray[50]} rounded-lg p-3 text-center`}>
             <div className="flex justify-center mb-1">
               <TrendingUp className="h-5 w-5" style={{ color: COLOR_TOKENS.success.hex }} />
             </div>
             <div className="text-xl font-bold" style={{ color: COLOR_TOKENS.success.hex }}>{data.winRate}%</div>
-            <div className="text-xs text-gray-400">胜率</div>
+            <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>胜率</div>
           </div>
-          <div className="bg-gray-50 rounded-lg p-3 text-center">
+          <div className={`${COLOR_SHADES.gray[50]} rounded-lg p-3 text-center`}>
             <div className="flex justify-center mb-1">
-              <TrendingUp className="h-5 w-5 text-yellow-500" />
+              <TrendingUp className={`h-5 w-5 ${twText('yellow', 500)}`} />
             </div>
-            <div className="text-xl font-bold text-yellow-500">{data.profitFactor}</div>
-            <div className="text-xs text-gray-400">盈亏比</div>
+            <div className={`text-xl font-bold ${twText('yellow', 500)}`}>{data.profitFactor}</div>
+            <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>盈亏比</div>
           </div>
         </div>
 
@@ -165,7 +165,7 @@ const PnLAnalysisWidget = memo(function PnLAnalysisWidget({ config }: PnLAnalysi
           <div className="space-y-1 max-h-32 overflow-y-auto">
             {data.monthlyPnL.slice(-6).map((month) => (
               <div key={month.month} className="flex items-center justify-between text-xs">
-                <span className="text-gray-500">{month.month}</span>
+                <span className={COLOR_SHADES.gray[500]}>{month.month}</span>
                 <div className="flex items-center gap-2">
                   <Badge variant="outline" className="text-xs">{month.trades}笔</Badge>
                   <span
@@ -178,15 +178,15 @@ const PnLAnalysisWidget = memo(function PnLAnalysisWidget({ config }: PnLAnalysi
               </div>
             ))}
             {data.monthlyPnL.length === 0 && (
-              <p className="text-xs text-gray-400 text-center">暂无月度数据</p>
+              <p className={`text-xs ${COLOR_SHADES.gray[400]} text-center`}>暂无月度数据</p>
             )}
           </div>
         </div>
 
         {/* 交易统计 */}
-        <div className="flex items-center justify-between text-xs text-gray-500 bg-gray-50 rounded-lg p-2">
-          <span>盈利: <span className="font-medium text-green-500">{data.profitTrades}笔</span></span>
-          <span>亏损: <span className="font-medium text-red-500">{data.lossTrades}笔</span></span>
+        <div className={`flex items-center justify-between text-xs ${COLOR_SHADES.gray[500]} ${COLOR_SHADES.gray[50]} rounded-lg p-2`}>
+          <span>盈利: <span className={`font-medium ${COLOR_TOKENS.success.tailwind}`}>{data.profitTrades}笔</span></span>
+          <span>亏损: <span className={`font-medium ${COLOR_TOKENS.danger.tailwind}`}>{data.lossTrades}笔</span></span>
           <span>总计: <span className="font-medium">{data.totalTrades}笔</span></span>
         </div>
       </CardContent>

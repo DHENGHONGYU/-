@@ -1,8 +1,8 @@
 # 05. 引擎规格
 
 > **Status**: Current  
-> **Version**: v1.1.0  
-> **Last Updated**: 2026-06-26
+> **Version**: v2.5.0  
+> **Last Updated**: 2026-07-05
 >
 > 本文档定义 V9 的分析引擎、交易引擎、评分模型与跨模块通信协议（DataBridge / Envelope）。  
 > 目标读者：前端/全栈开发者、算法研究员、测试工程师。  
@@ -89,7 +89,7 @@ getUnifiedStockData(symbol)
   → 返回（可选缓存）
 ```
 
-**当前状态**：🔴 未实现。各服务分散获取数据。
+**当前状态**：✅ 已实现。`UnifiedStockData` 类型定义于 `src/data/types.ts`，`getUnifiedStockView.useCase.ts` 已实现跨源融合查询。
 
 ### 1.3 数据流引擎（DataFlow Engine）
 
@@ -415,8 +415,24 @@ src/services/trading/
 ├── signalGenerator.ts      # 买卖信号生成（已落地）
 ├── positionSizer.ts        # 仓位计算（Kelly + 金字塔，已落地）
 ├── riskEngine.ts           # 风控检查（已落地）
+├── positionComputer.ts     # FIFO 配对+持仓构建纯函数（已落地，v2.5.0 新增）
+├── pnlComputer.ts          # 盈亏汇总计算纯函数（已落地，v2.5.0 新增）
+├── riskComputer.ts         # 风险指标计算纯函数（已落地，v2.5.0 新增）
 ├── tradeErrorClassifier.ts # 12 类交易错误检测（待建）
 └── tradeReviewAI.ts        # 复盘报告与 AI 洞察（待建）
+
+src/services/useCase/
+├── createExecutionPlan.useCase.ts     # 创建执行计划 UseCase（已落地，v2.5.0 新增）
+├── executePlan.useCase.ts             # 执行计划执行 UseCase（已落地）
+├── fetchSectorAnalysis.useCase.ts     # 板块分析数据加载 UseCase（已落地，v2.5.0 新增）
+├── fetcherOrchestrator.useCase.ts     # 数据采集编排 UseCase（已落地）
+├── generateTradeReview.useCase.ts     # 交易复盘生成 UseCase（已落地）
+├── getUnifiedStockView.useCase.ts     # 统一数据视图查询 UseCase（已落地）
+├── hotSectorQuery.useCase.ts          # 热门板块查询 UseCase（已落地）
+├── rebalancePortfolio.useCase.ts      # 组合再平衡 UseCase（已落地）
+├── runDualStrategy.useCase.ts         # 双策略编排 UseCase（已落地）
+├── strategySnapshotSave.useCase.ts    # 策略快照保存 UseCase（已落地）
+└── submitOrder.useCase.ts             # 提交订单 UseCase（已落地）
 ```
 
 ### 3.3 当前实现（v0.9.3）
@@ -431,6 +447,11 @@ src/services/trading/
 - `portfolioBuilder.ts`：按主题筛选 → 评分过滤 → 排序 → 等权分配 → 生成持仓明细与再平衡计划；提供 `buildCoreResourcePortfolio()` 便捷函数。
 - `CoreResourcePanel.tsx`：交易舱“核心稀缺主题组合”面板，展示目标持仓、当前权重、再平衡计划。
 - `TradingApp.tsx`：展示观察池交易建议（信号、建议仓位、风控阻塞/提示），支持按建议数量买入/卖出，支持扫描全部信号，支持构建核心稀缺组合。
+- `positionComputer.ts`（v2.5.0 新增）：纯函数模块，FIFO 配对（`buildTradePairs`）+ 持仓构建（`buildPositions`）。TradePair 类型体系统一：规范 `TradePair` 类型定义于 `tradeReviewAI.types.ts`，`MatchedTradePair extends TradePair` 增加持仓计算特有字段（buyDate/sellDate/quantity/realizedAmount），`SymbolTradePair` 用于按 symbol 聚合交易对与持仓信息（含配对明细 `pairs: MatchedTradePair[]`），`PositionItem` 表示当前持仓项。`positionComputer.ts` 重新导出 `TradePair` 类型，消费方可从该模块直接导入。
+- `pnlComputer.ts`（v2.5.0 新增）：纯函数模块，盈亏汇总（`computePnLSummary`），导出 `PnLSummary` 类型，含胜率/盈亏比/月度盈亏/日度曲线。
+- `riskComputer.ts`（v2.5.0 新增）：纯函数模块，风险指标（`computeRiskMetrics`），导出 `RiskMetrics` 类型，含 VaR/最大回撤/波动率/夏普比率/集中度。
+- `createExecutionPlanUseCase`（v2.5.0 新增）：创建执行计划 UseCase，5 步业务流程（获取股价→仓位计算→风控检查→构造计划→持久化），输入 `CreateExecutionPlanInput`，输出 `CreateExecutionPlanResult`。
+- `fetchSectorAnalysisUseCase`（v2.5.0 新增）：板块分析数据加载 UseCase，4 步流程（并行查询→空数据默认计算→排序→返回合并结果），输入 `FetchSectorAnalysisInput`，输出 `FetchSectorAnalysisResult`。
 - 订单 Schema：`id / symbol / direction / quantity / price / amount / status / accountType / createdAt`。
 - 新增单测：`tests/signalGenerator.test.ts`、`tests/positionSizer.test.ts`、`tests/riskEngine.test.ts`、`tests/themeRegistry.test.ts`、`tests/scoringAdapter.test.ts`、`tests/portfolioBuilder.test.ts`、`tests/CoreResourcePanel.test.ts`。
 
@@ -738,3 +759,6 @@ candidate → screened → deepDive → watching → archived
 3. `EnvelopeAction` 清单增加 `SAVE_DAILY_QUOTES`、`INSERT_SIGNAL`。
 4. ACL 矩阵更新 tradinghub 对 `signals` 的读写权限。
 5. 偏差清单更新，移除已完成的交易风控项与输入舱配置项；新增信号-评分联动项。
+6. v2.5.0：交易引擎目录新增 `positionComputer.ts`/`pnlComputer.ts`/`riskComputer.ts`（纯函数模块）。
+7. v2.5.0：新增 `src/services/useCase/` 目录，含 11 个 UseCase 文件（createExecutionPlan/executePlan/fetchSectorAnalysis/fetcherOrchestrator/generateTradeReview/getUnifiedStockView/hotSectorQuery/rebalancePortfolio/runDualStrategy/strategySnapshotSave/submitOrder）。
+8. v2.5.0：补充 TradePair 类型体系统一说明（`MatchedTradePair extends TradePair`，`SymbolTradePair` 按 symbol 聚合）。

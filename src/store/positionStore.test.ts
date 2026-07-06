@@ -1,4 +1,4 @@
-import { vi, describe, it, expect, beforeEach } from 'vitest'
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import type { Order } from '@/data/types'
 import { usePositionStore, initPositionStoreSubscriptions } from './positionStore'
 
@@ -7,26 +7,32 @@ import { usePositionStore, initPositionStoreSubscriptions } from './positionStor
 // ============================================================
 
 const mocks = vi.hoisted(() => ({
-  refresh: vi.fn(),
-  subscribeCallback: null as ((orders: Order[]) => void) | null,
+  getOrders: vi.fn(),
+  eventBusOn: vi.fn(),
+  eventBusOff: vi.fn(),
 }))
 
 vi.mock('@/lib/logger', () => ({
   getLogger: () => ({ info: vi.fn(), error: vi.fn(), warn: vi.fn(), debug: vi.fn() }),
 }))
 
-vi.mock('@/store/orderStore', () => ({
-  useOrderStore: {
-    getState: vi.fn().mockImplementation(() => ({ orders: [], refresh: mocks.refresh })),
-    subscribe: vi.fn().mockImplementation((_selector, callback) => {
-      mocks.subscribeCallback = callback
-      return vi.fn()
-    }),
+vi.mock('@/services/trading/tradingService', () => ({
+  getOrders: mocks.getOrders,
+}))
+
+vi.mock('@/lib/eventBus', () => ({
+  eventBus: {
+    on: mocks.eventBusOn,
+    off: mocks.eventBusOff,
   },
 }))
 
 vi.mock('@/config/chartColors', () => ({
   PIE_CHART_PALETTE: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7'],
+}))
+
+vi.mock('@/store/helpers/withBroadcast', () => ({
+  withBroadcast: vi.fn(),
 }))
 
 // ============================================================
@@ -53,7 +59,7 @@ describe('usePositionStore', () => {
   beforeEach(() => {
     usePositionStore.getState().reset()
     vi.clearAllMocks()
-    mocks.subscribeCallback = null
+    mocks.getOrders.mockResolvedValue({ success: true, data: [] })
   })
 
   // 1. 初始状态验证
@@ -189,20 +195,16 @@ describe('usePositionStore', () => {
     expect(state.availableFunds).toBe(500)
   })
 
-  // 11. refresh: 调用 orderStore.refresh + aggregateOrders
-  it('refresh: 调用 orderStore.refresh 并更新状态', async () => {
-    const { useOrderStore } = await import('@/store/orderStore')
+  // 11. refresh: 调用 getOrders + aggregateOrders
+  it('refresh: 调用 getOrders 并更新状态', async () => {
     const mockOrders: Order[] = [
       createOrder({ symbol: 'AAPL', direction: 'buy', quantity: 100, price: 10, amount: 1000 }),
     ]
-    vi.mocked(useOrderStore.getState).mockReturnValue({
-      orders: mockOrders,
-      refresh: mocks.refresh,
-    } as unknown as ReturnType<typeof useOrderStore.getState>)
+    mocks.getOrders.mockResolvedValue({ success: true, data: mockOrders })
 
     await usePositionStore.getState().refresh()
 
-    expect(mocks.refresh).toHaveBeenCalledTimes(1)
+    expect(mocks.getOrders).toHaveBeenCalledTimes(1)
     const state = usePositionStore.getState()
     expect(state.totalValue).toBe(1000)
     expect(state.holdings).toHaveLength(1)
@@ -213,11 +215,7 @@ describe('usePositionStore', () => {
 
   // 12. refresh: 失败时设置 error
   it('refresh: 失败时设置 error', async () => {
-    const { useOrderStore } = await import('@/store/orderStore')
-    vi.mocked(useOrderStore.getState).mockReturnValue({
-      orders: [],
-      refresh: vi.fn().mockRejectedValue(new Error('Network error')),
-    } as unknown as ReturnType<typeof useOrderStore.getState>)
+    mocks.getOrders.mockResolvedValue({ success: false, error: 'Network error' })
 
     await usePositionStore.getState().refresh()
 
@@ -281,27 +279,43 @@ describe('usePositionStore', () => {
 // ============================================================
 
 describe('initPositionStoreSubscriptions', () => {
+  let eventBusCallback: ((data: unknown) => void) | null = null
+
   beforeEach(() => {
     usePositionStore.getState().reset()
     vi.clearAllMocks()
-    mocks.subscribeCallback = null
+    eventBusCallback = null
     vi.useFakeTimers()
+
+    // 捕获 eventBus.on 的回调
+    mocks.eventBusOn.mockImplementation((event: string, callback: (data: unknown) => void) => {
+      if (event === 'orders:changed') {
+        eventBusCallback = callback
+      }
+      return vi.fn()
+    })
   })
 
   afterEach(() => {
     vi.useRealTimers()
   })
 
-  // 17. initPositionStoreSubscriptions: 订阅 orderStore.orders 变化
-  it('订阅 orderStore.orders 变化并触发 recompute', async () => {
+  // 17. initPositionStoreSubscriptions: 订阅 eventBus ORDERS_CHANGED 事件
+  it('订阅 eventBus ORDERS_CHANGED 事件并触发 recompute', async () => {
+    const mockOrders: Order[] = [
+      createOrder({ symbol: 'AAPL', direction: 'buy', quantity: 100, price: 10, amount: 1000 }),
+    ]
+    mocks.getOrders.mockResolvedValue({ success: true, data: mockOrders })
+
     const cleanup = initPositionStoreSubscriptions()
 
-    expect(mocks.subscribeCallback).not.toBeNull()
+    expect(mocks.eventBusOn).toHaveBeenCalledWith('orders:changed', expect.any(Function))
+    expect(eventBusCallback).not.toBeNull()
 
-    mocks.subscribeCallback!([
-      createOrder({ symbol: 'AAPL', direction: 'buy', quantity: 100, price: 10, amount: 1000 }),
-    ])
+    // 触发事件
+    eventBusCallback!({})
 
+    // 等待 debounce 200ms
     await vi.advanceTimersByTimeAsync(200)
 
     const state = usePositionStore.getState()
@@ -311,25 +325,25 @@ describe('initPositionStoreSubscriptions', () => {
     cleanup()
   })
 
-  // 18. initPositionStoreSubscriptions: 去抖 200ms + 并发锁 _isRefreshing
+  // 18. initPositionStoreSubscriptions: 去抖 200ms
   it('去抖 200ms：多次变化只触发一次 recompute', async () => {
+    const mockOrders: Order[] = [
+      createOrder({ symbol: 'NVDA', direction: 'buy', quantity: 10, price: 100, amount: 1000 }),
+    ]
+    mocks.getOrders.mockResolvedValue({ success: true, data: mockOrders })
+
     const cleanup = initPositionStoreSubscriptions()
 
-    mocks.subscribeCallback!([
-      createOrder({ symbol: 'AAPL', direction: 'buy', quantity: 100, price: 10, amount: 1000 }),
-    ])
-    mocks.subscribeCallback!([
-      createOrder({ symbol: 'TSLA', direction: 'buy', quantity: 50, price: 20, amount: 1000 }),
-    ])
-    mocks.subscribeCallback!([
-      createOrder({ symbol: 'NVDA', direction: 'buy', quantity: 10, price: 100, amount: 1000 }),
-    ])
+    // 快速触发多次事件
+    eventBusCallback!({})
+    eventBusCallback!({})
+    eventBusCallback!({})
 
     // 未过 200ms 时不应更新
     await vi.advanceTimersByTimeAsync(100)
     expect(usePositionStore.getState().holdings).toHaveLength(0)
 
-    // 200ms 后应以最后一次数据为准
+    // 200ms 后应触发一次
     await vi.advanceTimersByTimeAsync(100)
     const state = usePositionStore.getState()
     expect(state.holdings).toHaveLength(1)
@@ -339,14 +353,15 @@ describe('initPositionStoreSubscriptions', () => {
   })
 
   it('并发锁 _isRefreshing：跳过正在刷新中的请求', async () => {
+    const mockOrders: Order[] = [
+      createOrder({ symbol: 'AAPL', direction: 'buy', quantity: 100, price: 10, amount: 1000 }),
+    ]
+    mocks.getOrders.mockResolvedValue({ success: true, data: mockOrders })
+
     const cleanup = initPositionStoreSubscriptions()
 
-    // 模拟一个长时间运行的 recompute：在回调中再次触发 subscribe
-    mocks.subscribeCallback!([
-      createOrder({ symbol: 'AAPL', direction: 'buy', quantity: 100, price: 10, amount: 1000 }),
-    ])
-
-    // 等待第一个任务开始执行（setTimeout 回调内设置 _isRefreshing=true）
+    // 第一次触发
+    eventBusCallback!({})
     await vi.advanceTimersByTimeAsync(200)
 
     // 此时 _isRefreshing 已被置为 false（同步执行完毕）
@@ -355,13 +370,9 @@ describe('initPositionStoreSubscriptions', () => {
     // 这里验证机制存在：先触发一次使其进入 refreshing，然后立即再触发
     usePositionStore.getState().reset()
 
-    mocks.subscribeCallback!([
-      createOrder({ symbol: 'AAPL', direction: 'buy', quantity: 100, price: 10, amount: 1000 }),
-    ])
+    eventBusCallback!({})
     // 在 200ms 防抖窗口内再次触发相同数据
-    mocks.subscribeCallback!([
-      createOrder({ symbol: 'AAPL', direction: 'buy', quantity: 100, price: 10, amount: 1000 }),
-    ])
+    eventBusCallback!({})
 
     await vi.advanceTimersByTimeAsync(200)
 

@@ -71,21 +71,47 @@ export { checkFetcherHealth }
 export async function fetchStockBasic(symbol: string): Promise<DataLayerResult<Stock>> {
   const normalized = symbol.trim().toUpperCase()
   if (!normalized) {
+    logger.warn('[fetcherService] fetchStockBasic 入参为空', { rawSymbol: symbol })
     return { success: false, error: '股票代码不能为空' }
   }
 
+  logger.info('[fetcherService] fetchStockBasic 开始', { symbol: normalized })
+
   const existing = await dataLayer.stocks.get(normalized)
   if (!existing) {
+    logger.warn('[fetcherService] fetchStockBasic 股票不存在', { symbol: normalized })
     return { success: false, error: `股票不存在: ${normalized}` }
   }
 
+  logger.info('[fetcherService] fetchStockBasic 本地股票已找到', {
+    symbol: normalized,
+    currentDataVersion: existing.dataVersion,
+    currentSource: existing.source,
+    currentPrice: existing.price,
+  })
+
   const response = await collectBasic(normalized)
   if (!response.success || !response.data) {
+    logger.error('[fetcherService] fetchStockBasic 采集接口返回失败', {
+      symbol: normalized,
+      error: response.error ?? '未知错误',
+      success: response.success,
+    })
     return {
       success: false,
       error: response.error ?? '采集基础数据失败',
     }
   }
+
+  logger.info('[fetcherService] fetchStockBasic 采集成功', {
+    symbol: normalized,
+    fetchedName: response.data.name,
+    fetchedPrice: response.data.price,
+    fetchedPe: response.data.pe,
+    fetchedPb: response.data.pb,
+    fetchedRoe: response.data.roe,
+    fetchedMarketCap: response.data.market_cap,
+  })
 
   const update = adaptBasicDataToStock(normalized, response.data, existing)
   update.dataVersion = (existing.dataVersion ?? 1) + 1
@@ -95,6 +121,14 @@ export async function fetchStockBasic(symbol: string): Promise<DataLayerResult<S
     finance: response.data.roe !== undefined && !Number.isNaN(response.data.roe),
     lastChecked: Date.now(),
   }
+
+  logger.info('[fetcherService] fetchStockBasic 数据适配完成，准备写入 DB', {
+    symbol: normalized,
+    newDataVersion: update.dataVersion,
+    dataQualityBasic: update.dataQuality.basic,
+    dataQualityFinance: update.dataQuality.finance,
+  })
+
   return sendUpdateStock(update as Partial<Stock> & { symbol: string })
 }
 
@@ -137,13 +171,29 @@ export async function fetchStockKline(
 ): Promise<DataLayerResult<Stock>> {
   const normalized = symbol.trim().toUpperCase()
   if (!normalized) {
+    logger.warn('[fetcherService] fetchStockKline 入参为空', { rawSymbol: symbol })
     return { success: false, error: '股票代码不能为空' }
   }
 
+  logger.info('[fetcherService] fetchStockKline 开始', {
+    symbol: normalized,
+    period: options.period ?? 'daily',
+    adjust: options.adjust ?? 'qfq',
+    startDate: options.startDate,
+    endDate: options.endDate,
+  })
+
   const existing = await dataLayer.stocks.get(normalized)
   if (!existing) {
+    logger.warn('[fetcherService] fetchStockKline 股票不存在', { symbol: normalized })
     return { success: false, error: `股票不存在: ${normalized}` }
   }
+
+  logger.info('[fetcherService] fetchStockKline 本地股票已找到', {
+    symbol: normalized,
+    currentDataVersion: existing.dataVersion,
+    currentPrice: existing.price,
+  })
 
   const response = await collectKline({
     symbol: normalized,
@@ -154,11 +204,23 @@ export async function fetchStockKline(
   })
 
   if (!response.success || !response.data) {
+    logger.error('[fetcherService] fetchStockKline 采集接口返回失败', {
+      symbol: normalized,
+      error: response.error ?? '未知错误',
+      success: response.success,
+    })
     return {
       success: false,
       error: response.error ?? '采集 K线数据失败',
     }
   }
+
+  logger.info('[fetcherService] fetchStockKline 采集成功', {
+    symbol: normalized,
+    dataCount: response.data?.history?.length ?? 0,
+    firstDate: response.data?.history?.[0]?.date,
+    lastDate: response.data?.history?.[response.data.history.length - 1]?.date,
+  })
 
   const quotes = adaptKlineDataToDailyQuotes(
     normalized,
@@ -167,13 +229,32 @@ export async function fetchStockKline(
     options.adjust ?? 'qfq',
   )
   if (!quotes) {
+    logger.error('[fetcherService] fetchStockKline K线数据适配失败', {
+      symbol: normalized,
+      rawDataLength: response.data?.history?.length ?? 0,
+    })
     return { success: false, error: 'K线数据为空或格式不正确' }
   }
 
+  logger.info('[fetcherService] fetchStockKline 数据适配完成', {
+    symbol: normalized,
+    historyLength: quotes.history.length,
+    latestClose: quotes.latest.close,
+    latestDate: quotes.latest.date,
+  })
+
   const saveResult = await sendSaveDailyQuotes(quotes)
   if (!saveResult.success) {
+    logger.error('[fetcherService] fetchStockKline 保存 DailyQuotes 失败', {
+      symbol: normalized,
+      error: saveResult.error,
+    })
     return { success: false, error: saveResult.error }
   }
+
+  logger.info('[fetcherService] fetchStockKline DailyQuotes 已保存', {
+    symbol: normalized,
+  })
 
   const update: Partial<Stock> & { symbol: string } = {
     symbol: normalized,
@@ -187,6 +268,13 @@ export async function fetchStockKline(
       lastChecked: Date.now(),
     },
   }
+
+  logger.info('[fetcherService] fetchStockKline 准备更新 Stock', {
+    symbol: normalized,
+    newPrice: update.price,
+    newDataVersion: update.dataVersion,
+    sourceChanged: existing.source !== update.source,
+  })
 
   return sendUpdateStock(update)
 }

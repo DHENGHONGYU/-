@@ -1,5 +1,6 @@
 import React from 'react'
 import { Badge } from '@/components/ui/Badge'
+import { twText, COLOR_SHADES } from '@/constants/theme.tokens'
 import type { StockDataQuality } from '@/data/types'
 
 export interface QualityIndicatorProps {
@@ -22,7 +23,8 @@ export function QualityIndicator({ quality, size = 'xs' }: QualityIndicatorProps
         ok ? (
           <Badge
             key={key}
-            className={`${sizeClass} bg-green-500/20 text-green-400`}
+            className={`${sizeClass} ${twText('green', 400)}`}
+            style={{ backgroundColor: `${COLOR_SHADES.green.hex[500]}33` }}
             title={`${label}数据已采集`}
           >
             {label}✓

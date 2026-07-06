@@ -1,6 +1,6 @@
 const testDbName = typeof process !== 'undefined' ? process.env.TEST_DB_NAME : undefined
 export const DB_NAME = testDbName ? testDbName : ('V6ProDB' as const)
-export const DB_VERSION = 14 as const
+export const DB_VERSION = 21 as const
 
 // DB_VERSION 升级历史：
 // v3 → v4: 新增 daily_quotes 存储，用于保存 K线/行情数据。
@@ -10,6 +10,14 @@ export const DB_VERSION = 14 as const
 // v6 → v12: V9 架构升级，统一数据模型与类型系统，优化索引结构。
 // v12 → v13: 新增 news_bookmarks 存储，用于持久化资讯收藏状态。
 // v13 → v14: 新增 hot_sector_scores、value_pit_scores 存储，支撑双策略体系。
+// v14 → v15: 新增 execution_logs、missing_reports 存储；hot_sector_scores 维度字段 composite 重命名为 marketEnv；value_pit_scores 移除 composite 字段。
+// v15 → v16: 新增 execution_plans（执行计划）、portfolios（投资组合）存储。
+// v16 → v17: 新增 agent_tasks、agent_health_logs 存储（智能体调度层）。
+// v17 → v18: 新增 command_audit_logs 存储（命令审计日志）。
+// v18 → v19: 新增 export_tasks、execution_strategies 存储（输出舱与执行模块）。
+// v19 → v20: 新增 trade_reviews 存储（交易纪律复盘）。
+// v20 → v21: 数据字典补全：完善 ACL 矩阵，新增 datalayer 模块的 read/write 权限。
+// @compliance AGENTS.md §八：DB_VERSION 必须与浏览器现有版本匹配或更高
 
 export const DEFAULT_POOL_GROUP = '默认分组' as const
 
@@ -67,6 +75,16 @@ export const ENVELOPE_TARGET = {
   'strategy:valuePit': 'strategy:valuePit',
   /** 策略数据流：轮动信号 */
   'strategy:rotationSignal': 'strategy:rotationSignal',
+  /** 执行计划模块 */
+  executionPlans: 'executionPlans',
+  /** 执行日志模块 */
+  executionLogs: 'executionLogs',
+  /** 缺失报告模块 */
+  missingReports: 'missingReports',
+  /** 组合管理模块 */
+  portfolios: 'portfolios',
+  /** 交易复盘模块 */
+  tradeReviews: 'tradeReviews',
 } as const
 
 export type EnvelopeTarget =
@@ -108,6 +126,33 @@ export const ENVELOPE_ACTION = {
   strategyValuePitRefresh: 'STRATEGY_VALUE_PIT_REFRESH',
   /** 策略：触发轮动信号检测 */
   strategyRotationSignalDetect: 'STRATEGY_ROTATION_SIGNAL_DETECT',
+  /** 交易复盘保存 */
+  saveTradeReview: 'SAVE_TRADE_REVIEW',
+  /** 执行计划保存 */
+  saveExecutionPlan: 'SAVE_EXECUTION_PLAN',
+  /** 执行日志保存 */
+  saveExecutionLog: 'SAVE_EXECUTION_LOG',
+  /** 缺失报告保存 */
+  saveMissingReport: 'SAVE_MISSING_REPORT',
+  /** 更新执行阶段 */
+  updateExecutionPhase: 'UPDATE_EXECUTION_PHASE',
+  /** 加载持仓数据 */
+  loadHoldingsData: 'LOAD_HOLDINGS_DATA',
+  /** 保存投资组合 */
+  savePortfolio: 'SAVE_PORTFOLIO',
+  /** 更新执行计划 */
+  updateExecutionPlan: 'UPDATE_EXECUTION_PLAN',
+  /** 删除执行计划 */
+  deleteExecutionPlan: 'DELETE_EXECUTION_PLAN',
+  /** 增加缺失报告重试次数 */
+  incrementMissingReportRetry: 'INCREMENT_MISSING_REPORT_RETRY',
+  // 查询操作（QueryEnvelope）
+  /** 查询单条记录 */
+  queryGet: 'QUERY_GET',
+  /** 查询全部记录 */
+  queryList: 'QUERY_LIST',
+  /** 按索引查询记录 */
+  queryByIndex: 'QUERY_BY_INDEX',
 } as const
 
 export type EnvelopeAction =
@@ -125,6 +170,14 @@ export const MODULE_ID = {
   news: 'news',
   trading: 'trading',
   strategy: 'strategy',
+  orderstore: 'orderstore',
+  holdingsStore: 'holdingsStore',
+  executionPlans: 'executionPlans',
+  executionLogs: 'executionLogs',
+  missingReports: 'missingReports',
+  portfolios: 'portfolios',
+  tradeReviews: 'tradeReviews',
+  datalayer: 'datalayer',
 } as const
 
 export type ModuleId = (typeof MODULE_ID)[keyof typeof MODULE_ID]
@@ -155,6 +208,11 @@ export const STORE_NAME = {
   newsBookmarks: 'news_bookmarks',
   hotSectorScores: 'hot_sector_scores',
   valuePitScores: 'value_pit_scores',
+  executionPlans: 'execution_plans',
+  executionLogs: 'execution_logs',
+  missingReports: 'missing_reports',
+  portfolios: 'portfolios',
+  tradeReviews: 'trade_reviews',
 } as const
 
 export type StoreName = (typeof STORE_NAME)[keyof typeof STORE_NAME]
@@ -266,6 +324,46 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
     ],
     write: [STORE_NAME.hotSectorScores, STORE_NAME.valuePitScores],
     actions: [DB_OPERATION.select, DB_OPERATION.insert, DB_OPERATION.update],
+  },
+  [MODULE_ID.orderstore]: {
+    read: [STORE_NAME.orders],
+    write: [STORE_NAME.orders],
+    actions: [DB_OPERATION.select, DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete],
+  },
+  [MODULE_ID.holdingsStore]: {
+    read: [STORE_NAME.stocks, STORE_NAME.orders],
+    write: [],
+    actions: [DB_OPERATION.select],
+  },
+  [MODULE_ID.executionPlans]: {
+    read: [STORE_NAME.executionPlans],
+    write: [STORE_NAME.executionPlans],
+    actions: [DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete],
+  },
+  [MODULE_ID.executionLogs]: {
+    read: [STORE_NAME.executionLogs],
+    write: [STORE_NAME.executionLogs],
+    actions: [DB_OPERATION.insert],
+  },
+  [MODULE_ID.missingReports]: {
+    read: [STORE_NAME.missingReports],
+    write: [STORE_NAME.missingReports],
+    actions: [DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete],
+  },
+  [MODULE_ID.portfolios]: {
+    read: [STORE_NAME.portfolios],
+    write: [STORE_NAME.portfolios],
+    actions: [DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete],
+  },
+  [MODULE_ID.tradeReviews]: {
+    read: [STORE_NAME.tradeReviews],
+    write: [STORE_NAME.tradeReviews],
+    actions: [DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete],
+  },
+  [MODULE_ID.datalayer]: {
+    read: Object.values(STORE_NAME),
+    write: [],
+    actions: [DB_OPERATION.select],
   },
 }
 

@@ -15,7 +15,7 @@
  */
 
 import { useState, useMemo, memo } from 'react'
-import { LLM_MODEL_PRESETS, getPresetById, inferPresetId, type PartialLlmConfig } from '@/config/llmConfig'
+import { LLM_MODEL_PRESETS, getPresetById, inferPresetId, DEFAULT_LLM_BASE_URL, type PartialLlmConfig } from '@/config/llmConfig'
 import { Input } from '@/components/ui/Input'
 import {
   isValidLlmBaseURL,
@@ -142,7 +142,7 @@ export const LLMConfigWidget = memo(function LLMConfigWidget({
           <div className="space-y-1">
             <label className="text-xs text-muted-foreground">Base URL</label>
             <Input
-              placeholder="https://api.deepseek.com"
+              placeholder={DEFAULT_LLM_BASE_URL}
               value={value.baseURL ?? ''}
               onChange={(e) => onChange({ ...value, baseURL: e.target.value })}
               aria-invalid={!!baseURLError}

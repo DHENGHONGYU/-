@@ -1,6 +1,7 @@
 import type { NewsArticle } from '@/data/types'
 import { Badge } from '@/components/ui/Badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import { twBg } from '@/constants/theme.tokens'
 
 export interface NewsCardProps {
   article: NewsArticle
@@ -11,9 +12,9 @@ const SENTIMENT_CONFIG: Record<
   NewsArticle['sentiment'],
   { label: string; variant: 'default' | 'secondary' | 'outline' | 'destructive'; className: string }
 > = {
-  positive: { label: '正面', variant: 'default', className: 'bg-emerald-500 text-white hover:bg-emerald-500/80' },
+  positive: { label: '正面', variant: 'default', className: `${twBg('emerald', 500)} text-white hover:${twBg('emerald', 500)}/80` },
   negative: { label: '负面', variant: 'destructive', className: '' },
-  neutral: { label: '中性', variant: 'secondary', className: 'bg-slate-500 text-white hover:bg-slate-500/80' },
+  neutral: { label: '中性', variant: 'secondary', className: `${twBg('slate', 500)} text-white hover:${twBg('slate', 500)}/80` },
 }
 
 export function NewsCard({ article, onClick }: NewsCardProps): React.JSX.Element {
@@ -45,7 +46,7 @@ export function NewsCard({ article, onClick }: NewsCardProps): React.JSX.Element
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        <p className="text-sm text-muted-foreground">{summary}</p>
+        <p className="text-sm text-muted-foreground overflow-hidden text-ellipsis" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' as const }}>{summary}</p>
         {article.relatedStocks.length > 0 && (
           <div className="flex flex-wrap gap-1">
             {article.relatedStocks.map((symbol) => (

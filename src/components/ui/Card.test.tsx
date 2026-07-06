@@ -21,15 +21,17 @@ import {
   CardContent,
   CardFooter,
 } from '@/components/ui/Card'
+import { COLOR_TOKENS } from '@/constants/theme.tokens'
 
 describe('Card 组件族', () => {
   it('Card 渲染 div 并应用默认样式', () => {
     render(<Card data-testid="card">主体</Card>)
     const card = screen.getByTestId('card')
     expect(card.tagName).toBe('DIV')
-    expect(card).toHaveClass('rounded-xl')
+    expect(card).toHaveClass('rounded-lg')
     expect(card).toHaveClass('border')
-    expect(card).toHaveClass('bg-card')
+    // 断言令牌引用(AGENTS.md §3.5.5):COLOR_TOKENS.bgCard.tailwind = 'bg-white'
+    expect(card).toHaveClass(COLOR_TOKENS.bgCard.tailwind)
     expect(card).toHaveClass('text-card-foreground')
   })
 
@@ -52,7 +54,8 @@ describe('Card 组件族', () => {
     render(<CardDescription>卡片描述</CardDescription>)
     const desc = screen.getByText('卡片描述')
     expect(desc.tagName).toBe('P')
-    expect(desc).toHaveClass('text-muted-foreground')
+    // 断言令牌引用(AGENTS.md §3.5.5):COLOR_TOKENS.textMuted.tailwind = 'text-slate-400'
+    expect(desc).toHaveClass(COLOR_TOKENS.textMuted.tailwind)
   })
 
   it('CardAction 渲染 div', () => {
@@ -95,7 +98,7 @@ describe('Card 组件族', () => {
     render(<Card className="my-card" data-testid="card">内容</Card>)
     const card = screen.getByTestId('card')
     expect(card).toHaveClass('my-card')
-    expect(card).toHaveClass('rounded-xl')
+    expect(card).toHaveClass('rounded-lg')
   })
 
   it('Card ref 转发到 div 元素', () => {

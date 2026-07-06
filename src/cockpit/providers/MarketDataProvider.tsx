@@ -5,7 +5,7 @@ import { taskScheduler } from '@/services/data-collector/TaskScheduler'
 import { marketDataAdapter } from '@/services/data-collector/MarketDataAdapter'
 import { widgetRegistry } from '@/cockpit/core/widgetRegistry'
 import { MockStockAnalysisProvider } from '@/services/stock-analysis/mockStockAnalysisProvider'
-import { streamingChat } from '@/services/llm/llmClient'
+import { streamingChat } from '@/services/llm/llmGateway'
 import type { LlmStreamCallback } from '@/services/llm/llmTypes'
 import {
   ACTIVE_DATA_SOURCE,

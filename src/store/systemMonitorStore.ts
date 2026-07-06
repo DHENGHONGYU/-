@@ -8,6 +8,11 @@ import { create } from 'zustand'
 import { eventBus } from '@/lib/eventBus'
 import { getLogger } from '@/lib/logger'
 import { getSystemMonitorService } from '@/services/system/systemMonitorService'
+import {
+  getMonitorLogService,
+  type MonitorLogEntry,
+  type MonitorLogFilter,
+} from '@/services/system/monitorLogService'
 import { MONITOR_INTERVALS } from '@/constants/health.constants'
 import type {
   SystemMonitorSnapshot,
@@ -35,12 +40,18 @@ interface SystemMonitorState {
   lastUpdated: number
   /** 监控是否已启动 */
   isMonitoring: boolean
+  /** 监控日志列表 */
+  monitorLogs: MonitorLogEntry[]
   /** 刷新快照 */
   refreshSnapshot: () => void
   /** 启动监控轮询 */
   startMonitoring: () => void
   /** 停止监控轮询 */
   stopMonitoring: () => void
+  /** 按过滤条件获取监控日志 */
+  fetchMonitorLogs: (filter: MonitorLogFilter) => void
+  /** 清空监控日志 */
+  clearMonitorLogs: () => void
 }
 
 /** 默认 Agent 指标汇总 */
@@ -59,6 +70,7 @@ const DEFAULT_AGENT_METRICS: AgentMetricsSummary = {
 }
 
 let monitorTimer: ReturnType<typeof setInterval> | null = null
+let isRefreshingSnapshot = false
 
 export const useSystemMonitorStore = create<SystemMonitorState>((set, get) => ({
   snapshot: null,
@@ -69,8 +81,17 @@ export const useSystemMonitorStore = create<SystemMonitorState>((set, get) => ({
   error: null,
   lastUpdated: 0,
   isMonitoring: false,
+  monitorLogs: [],
 
   refreshSnapshot: () => {
+    // 重入防护：避免并发事件（如 AGENT_HEALTH_* 与 SYSTEM_MONITOR_SNAPSHOT 同时触发）
+    // 导致 refreshSnapshot 递归调用形成 Maximum call stack size exceeded
+    if (isRefreshingSnapshot) {
+      logger.info('[SystemMonitorStore] refreshSnapshot() skipped — already in progress')
+      return
+    }
+    isRefreshingSnapshot = true
+
     set({ isLoading: true, error: null })
     try {
       const service = getSystemMonitorService()
@@ -97,6 +118,8 @@ export const useSystemMonitorStore = create<SystemMonitorState>((set, get) => ({
       const message = err instanceof Error ? err.message : 'Unknown error'
       logger.error('[SystemMonitorStore] Failed to refresh snapshot', { error: message })
       set({ isLoading: false, error: message })
+    } finally {
+      isRefreshingSnapshot = false
     }
   },
 
@@ -128,6 +151,36 @@ export const useSystemMonitorStore = create<SystemMonitorState>((set, get) => ({
     set({ isMonitoring: false })
     logger.info('[SystemMonitorStore] Monitoring stopped')
   },
+
+  fetchMonitorLogs: (filter: MonitorLogFilter) => {
+    try {
+      const service = getMonitorLogService()
+      const logs = service.getLogs(filter)
+      set({ monitorLogs: logs })
+      logger.info('[SystemMonitorStore] fetchMonitorLogs() completed', {
+        logCount: logs.length,
+        filter,
+      })
+    } catch (err) {
+      logger.error('[SystemMonitorStore] fetchMonitorLogs() failed', {
+        error: err instanceof Error ? err.message : String(err),
+      })
+      set({ monitorLogs: [] })
+    }
+  },
+
+  clearMonitorLogs: () => {
+    try {
+      const service = getMonitorLogService()
+      service.clearLogs()
+      set({ monitorLogs: [] })
+      logger.info('[SystemMonitorStore] clearMonitorLogs() completed')
+    } catch (err) {
+      logger.error('[SystemMonitorStore] clearMonitorLogs() failed', {
+        error: err instanceof Error ? err.message : String(err),
+      })
+    }
+  },
 }))
 
 // ============================================================
@@ -140,14 +193,27 @@ export function initSystemMonitorSubscriptions(): () => void {
   monitorSubscriptions.length = 0
 
   monitorSubscriptions.push(
-    eventBus.on('SYSTEM_MONITOR_SNAPSHOT', () => {
-      // 快照事件触发时，自动刷新 Store 数据
-      void useSystemMonitorStore.getState().refreshSnapshot()
+    eventBus.on('SYSTEM_MONITOR_SNAPSHOT', (payload) => {
+      // 直接使用事件 payload 更新 Store，避免调用 refreshSnapshot() 导致递归 emit
+      const snapshot = payload as SystemMonitorSnapshot
+      useSystemMonitorStore.setState({
+        snapshot,
+        agentHealthSnapshots: snapshot.agentHealthSnapshots,
+        agentMetrics: snapshot.agentMetrics,
+        recentTasks: snapshot.recentTasks,
+        lastUpdated: Date.now(),
+      })
+      logger.info('[SystemMonitorStore] Snapshot updated from event payload', {
+        agentCount: snapshot.agentHealthSnapshots.length,
+        taskCount: snapshot.recentTasks.length,
+      })
     }),
     eventBus.on('AGENT_HEALTH_CRITICAL', (payload) => {
       const { agentId } = payload as { agentId: string }
       logger.error(`[SystemMonitorStore] Agent health CRITICAL: ${agentId}`)
-      // 立即刷新以获取最新健康状态
+      // 健康事件触发全量刷新以获取最新状态。
+      // 注意：refreshSnapshot() → getSystemSnapshot() → emit('SYSTEM_MONITOR_SNAPSHOT') 的链路
+      // 已在 SYSTEM_MONITOR_SNAPSHOT listener 中通过 payload 直接 setState() 终止，不会形成递归。
       void useSystemMonitorStore.getState().refreshSnapshot()
     }),
     eventBus.on('AGENT_HEALTH_WARNING', (payload) => {

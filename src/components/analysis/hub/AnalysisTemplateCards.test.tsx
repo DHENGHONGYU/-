@@ -6,6 +6,7 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter, Routes, Route } from 'react-router'
+import { UI_TEXT } from '@/constants/uiText'
 import { AnalysisTemplateCards } from './AnalysisTemplateCards'
 import { ANALYSIS_TEMPLATES } from '@/config/analysisTemplatesConfig'
 
@@ -26,7 +27,7 @@ describe('AnalysisTemplateCards', () => {
   it('渲染所有模板卡片与默认标题', () => {
     renderWithRouter(<AnalysisTemplateCards />)
 
-    expect(screen.getByText('分析模板快捷入口')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.template.quickEntry)).toBeInTheDocument()
     for (const template of ANALYSIS_TEMPLATES) {
       expect(screen.getByText(template.title)).toBeInTheDocument()
       expect(screen.getByText(template.description)).toBeInTheDocument()

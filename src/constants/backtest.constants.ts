@@ -5,7 +5,7 @@
  * 供 Store、页面、导出服务统一引用，禁止在组件中硬编码。
  */
 
-import type { BacktestStrategy } from '@/store/backtestStore'
+import type { BacktestStrategy } from '@/types/modules/backtest.types'
 
 /** 策略类型到展示标签的映射 */
 export const BACKTEST_STRATEGY_LABELS: Record<BacktestStrategy, string> = {

@@ -17,6 +17,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
+import { UI_TEXT } from '@/constants/uiText'
 import SevenDimConfigPage from '@/pages/input/SevenDimConfigPage'
 import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
 import { STRATEGY_TEMPLATES, DEFAULT_DIMENSIONS } from '@/config/collectConfig'
@@ -66,8 +67,8 @@ describe('SevenDimConfigPage - 页面渲染', () => {
 
   it('渲染面包屑（首页 → 输入舱 → 七维采集配置）', () => {
     renderPage()
-    expect(screen.getByText('首页')).toBeInTheDocument()
-    expect(screen.getByText('输入舱')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.cockpit.home)).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.cockpit.inputCabin)).toBeInTheDocument()
     // 七维采集配置同时出现在标题和面包屑中，用 getAllByText
     const matches = screen.getAllByText('七维采集配置')
     expect(matches.length).toBeGreaterThanOrEqual(2)
@@ -147,7 +148,7 @@ describe('SevenDimConfigPage - 维度开关面板', () => {
 
   it('渲染重要性 Badge（核心/高/中/低）', () => {
     renderPage()
-    expect(screen.getByText('核心')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.common.core)).toBeInTheDocument()
     expect(screen.getAllByText('高').length).toBeGreaterThanOrEqual(1)
     expect(screen.getAllByText('中').length).toBeGreaterThanOrEqual(1)
     expect(screen.getAllByText('低').length).toBeGreaterThanOrEqual(1)
@@ -188,7 +189,7 @@ describe('SevenDimConfigPage - 模板切换交互', () => {
     expect(screen.getByText('4 / 8')).toBeInTheDocument()
 
     // 点击全维度卡片
-    fireEvent.click(screen.getByText('全维度'))
+    fireEvent.click(screen.getByText(UI_TEXT.input.dashboard.allDimensions))
 
     // 切换后 8/8
     expect(screen.getByText('8 / 8')).toBeInTheDocument()
@@ -221,7 +222,7 @@ describe('SevenDimConfigPage - 模板切换交互', () => {
 
   it('切回 value 模板后维度数恢复 4', () => {
     renderPage()
-    fireEvent.click(screen.getByText('全维度'))
+    fireEvent.click(screen.getByText(UI_TEXT.input.dashboard.allDimensions))
     expect(screen.getByText('8 / 8')).toBeInTheDocument()
     fireEvent.click(screen.getByText('价值投资'))
     expect(screen.getByText('4 / 8')).toBeInTheDocument()
@@ -359,7 +360,7 @@ describe('SevenDimConfigPage - 操作按钮', () => {
   it('点击重置按钮恢复默认配置', () => {
     renderPage()
     // 先切换模板
-    fireEvent.click(screen.getByText('全维度'))
+    fireEvent.click(screen.getByText(UI_TEXT.input.dashboard.allDimensions))
     expect(screen.getByText('8 / 8')).toBeInTheDocument()
     // 点击重置
     fireEvent.click(screen.getByText('重置为默认'))
@@ -384,13 +385,13 @@ describe('SevenDimConfigPage - 边界测试', () => {
     useSevenDimConfigStore.setState({ error: '测试错误信息' })
     renderPage()
     expect(screen.getByText('测试错误信息')).toBeInTheDocument()
-    expect(screen.getByText('关闭')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.common.close)).toBeInTheDocument()
   })
 
   it('点击关闭按钮清除错误', () => {
     useSevenDimConfigStore.setState({ error: '测试错误' })
     renderPage()
-    fireEvent.click(screen.getByText('关闭'))
+    fireEvent.click(screen.getByText(UI_TEXT.common.close))
     expect(useSevenDimConfigStore.getState().error).toBe(null)
   })
 
@@ -454,13 +455,13 @@ describe('SevenDimConfigPage - 可访问性', () => {
 
   it('面包屑首页链接指向根路径', () => {
     renderPage()
-    const homeLink = screen.getByText('首页').closest('a')
+    const homeLink = screen.getByText(UI_TEXT.cockpit.home).closest('a')
     expect(homeLink).toHaveAttribute('href', '/')
   })
 
   it('面包屑输入舱链接指向 /input', () => {
     renderPage()
-    const inputLink = screen.getByText('输入舱').closest('a')
+    const inputLink = screen.getByText(UI_TEXT.cockpit.inputCabin).closest('a')
     expect(inputLink).toHaveAttribute('href', '/input')
   })
 })

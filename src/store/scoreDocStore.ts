@@ -15,7 +15,7 @@
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'
 import type { ScoreDocVersion, Stock } from '@/data/types'
-import { buildReportMarkdown, getRecentVersions, exportSymbolMd } from '@/services/analysis/scoreDocService'
+import { buildReportMarkdown, getRecentVersions, exportSymbolMd, listScoreDocsBySymbol, buildScoreDocDiff, type ScoreDocDiff } from '@/services/analysis/scoreDocService'
 import { listStocks } from '@/services/stockpool/stockpoolService'
 import { dataBridge } from '@/core/databridge'
 import { ENVELOPE_ACTION } from '@/config/dbConfig'
@@ -40,6 +40,14 @@ export interface ScoreDocState {
   loading: boolean
   /** 错误信息 */
   error: string | null
+  /** 历史文档列表（供 ScoreHistoryPanel 使用） */
+  historyDocs: ScoreDocVersion[]
+  /** 历史文档差异（最新版本 vs 上一版本） */
+  historyDiff: ScoreDocDiff | null
+  /** 历史文档加载状态 */
+  historyLoading: boolean
+  /** 历史文档错误信息 */
+  historyError: string | null
 
   // Actions
   /** 设置当前股票代码 */
@@ -58,6 +66,8 @@ export interface ScoreDocState {
   loadStockSymbols: () => Promise<string[]>
   /** 生成研究报告 Markdown（封装 buildReportMarkdown + getRecentVersions） */
   generateReport: (symbol: string) => Promise<{ symbol: string; version: number; markdown: string; generatedAt: string }>
+  /** 加载历史文档列表并计算差异（供 ScoreHistoryPanel 使用） */
+  loadHistoryDocs: (symbol: string) => Promise<void>
 }
 
 // ============================================================
@@ -70,6 +80,10 @@ const initialState = {
   versions: [] as ScoreDocVersion[],
   loading: false,
   error: null as string | null,
+  historyDocs: [] as ScoreDocVersion[],
+  historyDiff: null as ScoreDocDiff | null,
+  historyLoading: false,
+  historyError: null as string | null,
 }
 
 // ============================================================
@@ -197,6 +211,40 @@ export const useScoreDocStore = create<ScoreDocState>((set, get) => ({
       const message = err instanceof Error ? err.message : String(err)
       logger.error(`[scoreDocStore] exportAll 异常: ${symbol}, ${message}`)
       set({ error: `导出失败：${message}` })
+    }
+  },
+
+  loadHistoryDocs: async (symbol) => {
+    if (!symbol) {
+      logger.info('[scoreDocStore] loadHistoryDocs 跳过: symbol 为空')
+      set({ historyDocs: [], historyDiff: null, historyError: null, historyLoading: false })
+      return
+    }
+
+    logger.info(`[scoreDocStore] loadHistoryDocs 开始: ${symbol}`)
+    set({ historyLoading: true, historyError: null })
+
+    try {
+      const result = await listScoreDocsBySymbol(symbol)
+      if (result.success) {
+        const list = result.data ?? []
+        let diff: ScoreDocDiff | null = null
+        if (list.length >= 2) {
+          const latest = list[0]!
+          const previous = list[1]!
+          diff = buildScoreDocDiff(latest, previous)
+        }
+        set({ historyDocs: list, historyDiff: diff, historyLoading: false })
+        logger.info(`[scoreDocStore] loadHistoryDocs 完成: ${symbol}, ${list.length} 个版本`)
+      } else {
+        const message = result.error ?? '加载失败'
+        logger.error(`[scoreDocStore] loadHistoryDocs 失败: ${symbol}, ${message}`)
+        set({ historyError: message, historyLoading: false })
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      logger.error(`[scoreDocStore] loadHistoryDocs 异常: ${symbol}, ${message}`)
+      set({ historyError: `加载失败：${message}`, historyLoading: false })
     }
   },
 

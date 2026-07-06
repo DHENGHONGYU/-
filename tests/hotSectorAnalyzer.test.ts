@@ -1,6 +1,8 @@
 import { describe, expect, it, beforeEach } from 'vitest'
 import { db } from '@/data/db'
 import { dataLayer } from '@/data/dataLayer'
+import { dataBridge } from '@/core/databridge'
+import { STORE_NAME } from '@/config/dbConfig'
 import { analyzeHotSectors, getLatestHotSectorScore } from '@/services/scoring/hotSectorAnalyzer'
 import { getDefaultDualStrategyRuleConfig } from '@/config/dualStrategyRules'
 import type { DailyQuotes, IndustryScore, Stock, V6Score } from '@/data/types'
@@ -76,6 +78,9 @@ describe('hotSectorAnalyzer', () => {
   beforeEach(async () => {
     await db.init()
     await db.reset()
+    dataBridge.invalidateCache(STORE_NAME.stocks)
+    dataBridge.invalidateCache(STORE_NAME.dailyQuotes)
+    dataBridge.invalidateCache(STORE_NAME.v6Scores)
   })
 
   it('should analyze stocks above V6 threshold and persist scores', async () => {

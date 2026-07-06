@@ -6,6 +6,12 @@
 
 import type { ScoreAuditTrail, FactorContribution, LayerId } from './types'
 import { ALL_LAYER_IDS, LAYER_LABELS } from './types'
+import { getLogger } from '@/lib/logger'
+
+const logger = getLogger()
+
+/** 因子评分或权重缺失时的默认零值 */
+const DEFAULT_MISSING_VALUE = 0
 
 /**
  * 根据审计追踪计算因子贡献明细。
@@ -26,14 +32,33 @@ export function buildFactorContributions(trail: ScoreAuditTrail): FactorContribu
   const baseline = (min + max) / 2
   const scale = max > 0 ? 100 / max : 20
 
+  // 检测缺失的因子得分和权重
+  const missingFactors: string[] = []
+  const missingWeights: string[] = []
+  for (const id of ALL_LAYER_IDS) {
+    const lid = id as LayerId
+    if (layerScores[lid] == null) missingFactors.push(LAYER_LABELS[lid] ?? lid)
+    if (weights[lid as keyof typeof weights] == null) missingWeights.push(lid)
+  }
+  if (missingFactors.length > 0) {
+    logger.warn('[V6Engine] 因子贡献度缺失', { factor: missingFactors.join(', ') })
+  }
+  if (missingWeights.length > 0) {
+    logger.warn('[V6Engine] 因子权重缺失', { factor: missingWeights.join(', ') })
+  }
+
   const activeLayers = ALL_LAYER_IDS.filter((id) => {
-    const score = layerScores[id as LayerId] ?? 0
-    const weight = weights[id as keyof typeof weights] ?? 0
+    const rawScore = layerScores[id as LayerId]
+    const rawWeight = weights[id as keyof typeof weights]
+    const score = rawScore ?? DEFAULT_MISSING_VALUE
+    const weight = rawWeight ?? DEFAULT_MISSING_VALUE
     return score > 0 && weight > 0
   })
 
   const totalWeight = activeLayers.reduce((sum, id) => {
-    return sum + (weights[id as keyof typeof weights] ?? 0)
+    const rawW = weights[id as keyof typeof weights]
+    const w = rawW ?? DEFAULT_MISSING_VALUE
+    return sum + w
   }, 0)
 
   if (totalWeight === 0 || activeLayers.length === 0) {

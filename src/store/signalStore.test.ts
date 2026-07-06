@@ -120,6 +120,14 @@ beforeEach(() => {
   capturedCallbacks.clear()
   unsubscribes.length = 0
 
+  // 重新设置 mockSubscribe 实现（clearAllMocks 会清除实现）
+  mockSubscribe.mockImplementation((channel: string, callback: (envelope: any) => void) => {
+    capturedCallbacks.set(channel, callback)
+    const unsub = vi.fn()
+    unsubscribes.push(unsub)
+    return unsub
+  })
+
   // 清理模块级订阅状态，确保每次测试都是干净的
   const cleanup = initSignalStoreSubscriptions()
   cleanup()
@@ -370,9 +378,9 @@ describe('initSignalStoreSubscriptions', () => {
     await new Promise((r) => setTimeout(r, 150))
     expect(dataLayer.stocks.list).not.toHaveBeenCalled()
 
-    // 正确的 action 应该触发
+    // 正确的 action 应该触发（使用 SAVE_SCORES）
     v6Cb({
-      meta: { source: 'analyzer', action: 'SAVE_V6_SCORE', traceId: 't3' },
+      meta: { source: 'analyzer', action: 'SAVE_SCORES', traceId: 't3' },
       payload: {},
     })
 
@@ -395,15 +403,15 @@ describe('initSignalStoreSubscriptions', () => {
 
     // 连续触发多次
     v6Cb({
-      meta: { source: 'analyzer', action: 'SAVE_V6_SCORE', traceId: 't1' },
+      meta: { source: 'analyzer', action: 'SAVE_SCORES', traceId: 't1' },
       payload: {},
     })
     v6Cb({
-      meta: { source: 'analyzer', action: 'SAVE_V6_SCORE', traceId: 't2' },
+      meta: { source: 'analyzer', action: 'SAVE_SCORES', traceId: 't2' },
       payload: {},
     })
     v6Cb({
-      meta: { source: 'analyzer', action: 'SAVE_V6_SCORE', traceId: 't3' },
+      meta: { source: 'analyzer', action: 'SAVE_SCORES', traceId: 't3' },
       payload: {},
     })
 
@@ -420,7 +428,7 @@ describe('initSignalStoreSubscriptions', () => {
     vi.clearAllMocks()
 
     v6Cb({
-      meta: { source: 'analyzer', action: 'SAVE_V6_SCORE', traceId: 't4' },
+      meta: { source: 'analyzer', action: 'SAVE_SCORES', traceId: 't4' },
       payload: {},
     })
     await new Promise((r) => setTimeout(r, 150))

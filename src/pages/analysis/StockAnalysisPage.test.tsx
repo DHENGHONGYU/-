@@ -1,6 +1,7 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor, act } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
+import { UI_TEXT } from '@/constants/uiText'
 import StockAnalysisPage from './StockAnalysisPage'
 
 // ------------------------------------------------------------------
@@ -91,7 +92,7 @@ describe('StockAnalysisPage', () => {
       </MemoryRouter>,
     )
 
-    expect(screen.getByText('请指定股票代码')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.errors.pleaseSpecifyStockCode)).toBeInTheDocument()
   })
 
   // ================================================================
@@ -159,9 +160,9 @@ describe('StockAnalysisPage', () => {
   })
 
   // ================================================================
-  // 5. 因子贡献标签页
+  // 5. 评分展示：有 v6Score 时显示评分和因子列表
   // ================================================================
-  it('显示因子贡献标签页并在切换后渲染瀑布图', async () => {
+  it('有 v6Score 时显示总分和因子网格', async () => {
     mockUseParams.mockReturnValue({ symbol: '600519.SH' })
     mockStockAnalysisState.stock = {
       symbol: '600519.SH',
@@ -178,37 +179,6 @@ describe('StockAnalysisPage', () => {
       algorithmVersion: 'v6-engine-v1.0.0',
       calculatedAt: Date.now(),
       dataVersion: 1,
-      audit: {
-        symbol: '600519.SH',
-        timestamp: Date.now(),
-        config: {},
-        layers: {},
-        composite: { weightedSum: 0, layers: {}, rating: 'buy' },
-        factorContributions: [
-          {
-            factorId: 'l1',
-            label: 'L1 护城河',
-            weight: 0.15,
-            normalizedWeight: 0.5,
-            score: 4,
-            baseline: 2.5,
-            contribution: 40,
-            signedContribution: 15,
-            contributionRate: 0.6,
-          },
-          {
-            factorId: 'l2',
-            label: 'L2 竞品格局',
-            weight: 0.1,
-            normalizedWeight: 0.5,
-            score: 3.5,
-            baseline: 2.5,
-            contribution: 35,
-            signedContribution: 5,
-            contributionRate: 0.4,
-          },
-        ],
-      } as never,
     }
 
     render(
@@ -217,16 +187,14 @@ describe('StockAnalysisPage', () => {
       </MemoryRouter>,
     )
 
-    const waterfallTab = screen.getByRole('tab', { name: '因子贡献' })
-    expect(waterfallTab).toBeInTheDocument()
-
-    act(() => {
-      waterfallTab.click()
-    })
-
     await waitFor(() => {
-      expect(screen.getByTestId('score-factor-waterfall')).toBeInTheDocument()
+      expect(screen.getByText(/V6 评分: 4.20/)).toBeInTheDocument()
     })
+
+    expect(screen.getByText('l1')).toBeInTheDocument()
+    expect(screen.getByText('4.00')).toBeInTheDocument()
+    expect(screen.getByText('l2')).toBeInTheDocument()
+    expect(screen.getByText('3.50')).toBeInTheDocument()
   })
 
   // ================================================================

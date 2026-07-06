@@ -2,6 +2,7 @@ import React, { useCallback } from 'react'
 import { WidgetContext } from '../../core/WidgetContext'
 import { widgetEventBus } from '../../core/widgetEventBus'
 import type { WidgetConfig } from '../../types/widget'
+import { THEME_TOKENS } from '@/constants/theme.tokens'
 
 // 每个 Widget 的外层包装器
 // 提供：ErrorBoundary、数据订阅管理、生命周期控制
@@ -87,7 +88,7 @@ export function WidgetShell({ widgetId, config, children, onError }: WidgetShell
             display: 'flex',
             flexDirection: 'column',
             height: '100%',
-            border: '1px solid #e5e7eb',
+            border: `1px solid ${THEME_TOKENS.color.borderRaw}`,
             borderRadius: '8px',
             overflow: 'hidden',
           }}
@@ -99,8 +100,8 @@ export function WidgetShell({ widgetId, config, children, onError }: WidgetShell
               alignItems: 'center',
               justifyContent: 'space-between',
               padding: '8px 12px',
-              backgroundColor: '#f9fafb',
-              borderBottom: '1px solid #e5e7eb',
+              backgroundColor: THEME_TOKENS.color.mutedBackground.replace('bg-', '#').replace('gray-100', 'f3f4f6'),
+              borderBottom: `1px solid ${THEME_TOKENS.color.borderRaw}`,
             }}
           >
             <span style={{ fontWeight: 500, fontSize: '14px' }}>
@@ -114,7 +115,7 @@ export function WidgetShell({ widgetId, config, children, onError }: WidgetShell
               style={{
                 padding: '4px 8px',
                 fontSize: '12px',
-                border: '1px solid #d1d5db',
+                border: `1px solid ${THEME_TOKENS.color.borderRaw}`,
                 borderRadius: '4px',
                 background: 'white',
                 cursor: 'pointer',

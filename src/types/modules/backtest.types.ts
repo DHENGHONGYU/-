@@ -5,6 +5,9 @@
  * 与 src/store/backtestStore.ts 中已有的 BacktestResult / BacktestTrade 互补。
  */
 
+/** 回测策略类型 */
+export type BacktestStrategy = 'hot_sector' | 'value_pit' | 'composite'
+
 /** 回测持仓快照 */
 export interface BacktestPosition {
   symbol: string
@@ -54,4 +57,44 @@ export interface BacktestExportResult {
   filename: string
   blob?: Blob
   error?: string
+}
+
+/** 回测交易记录 */
+export interface BacktestTrade {
+  symbol: string
+  direction: 'buy' | 'sell'
+  price: number
+  quantity: number
+  date: string
+  pnl: number
+  pnlPct: number
+  reason: string
+}
+
+/** 回测结果 */
+export interface BacktestResult {
+  totalReturn: number
+  annualizedReturn: number
+  maxDrawdown: number
+  sharpeRatio: number
+  winRate: number
+  tradeCount: number
+  profitTrades: number
+  lossTrades: number
+  avgProfit: number
+  avgLoss: number
+  pnlCurve: number[]
+  trades: BacktestTrade[]
+  /** 最终持仓快照（导出用，由 BacktestEngine 计算） */
+  positions?: BacktestPosition[]
+  /** 每日净值序列（导出用，由 BacktestEngine 计算） */
+  dailyValues?: BacktestDailyValue[]
+}
+
+/** 回测配置 */
+export interface BacktestConfig {
+  strategy: BacktestStrategy
+  startDate: string
+  endDate: string
+  initialCapital: number
 }

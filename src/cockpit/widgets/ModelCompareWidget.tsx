@@ -6,6 +6,7 @@ import { Select, SelectItem } from '@/components/ui/Select'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
 import type { WidgetConfig, MarketData, CompareDimension, ModelInfo } from '@/types/modules/widget.types'
 import { LLM_MODEL_VERSIONS, SCORE_LEVELS } from '@/constants/cockpit.constants'
+import { COLOR_TOKENS } from '@/constants/theme.tokens'
 
 interface ModelCompareWidgetProps {
   config: WidgetConfig
@@ -38,10 +39,10 @@ export default function ModelCompareWidget({ config, data }: ModelCompareWidgetP
 
   const modelOptions = Object.values(LLM_MODEL_VERSIONS)
 
-  const renderModelCard = (model: ModelInfo, icon: React.ReactNode, colorClass: string) => {
+  const renderModelCard = (model: ModelInfo, icon: React.ReactNode, bgStyle: React.CSSProperties) => {
     const level = getScoreLevel(model.score)
     return (
-      <div className={`rounded-lg border p-4 ${colorClass}`}>
+      <div className="rounded-lg border p-4" style={bgStyle}>
         <div className="flex items-center gap-2 text-muted-foreground mb-2">
           {icon}
           <span className="text-xs">{model.name}</span>
@@ -67,8 +68,8 @@ export default function ModelCompareWidget({ config, data }: ModelCompareWidgetP
       <CardContent className="flex-1 overflow-auto space-y-4">
         {/* 顶部模型指标卡 */}
         <div className="grid grid-cols-2 gap-4">
-          {renderModelCard(comparison.leftModel, <Cpu className="h-4 w-4" />, 'bg-blue-50/50')}
-          {renderModelCard(comparison.rightModel, <Scale className="h-4 w-4" />, 'bg-amber-50/50')}
+          {renderModelCard(comparison.leftModel, <Cpu className="h-4 w-4" />, { backgroundColor: `${COLOR_TOKENS.info.hex}80` })}
+          {renderModelCard(comparison.rightModel, <Scale className="h-4 w-4" />, { backgroundColor: `${COLOR_TOKENS.warning.hex}80` })}
         </div>
 
         {/* 多维度量化对比 */}
@@ -88,7 +89,7 @@ export default function ModelCompareWidget({ config, data }: ModelCompareWidgetP
                       <span>{dim.leftScore}</span>
                     </div>
                     <div className="h-2 rounded-full bg-muted overflow-hidden">
-                      <div className="h-full bg-blue-500" style={{ width: `${dim.leftScore}%` }} />
+                      <div className={`h-full ${COLOR_TOKENS.info.bgClass}`} style={{ width: `${dim.leftScore}%` }} />
                     </div>
                   </div>
                   <div className="space-y-1">
@@ -97,7 +98,7 @@ export default function ModelCompareWidget({ config, data }: ModelCompareWidgetP
                       <span>{dim.rightScore}</span>
                     </div>
                     <div className="h-2 rounded-full bg-muted overflow-hidden">
-                      <div className="h-full bg-amber-500" style={{ width: `${dim.rightScore}%` }} />
+                      <div className={`h-full ${COLOR_TOKENS.warning.bgClass}`} style={{ width: `${dim.rightScore}%` }} />
                     </div>
                   </div>
                 </div>

@@ -14,6 +14,7 @@ import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'
 import type { ValuePitScore } from '@/data/types'
 import { analyze, type ValuePitAnalyzerInput } from '@/services/scoring/valuePitAnalyzer'
+import { detect, type RotationSignalInput, type RotationSignal } from '@/services/scoring/rotationSignalDetector'
 
 const logger = getLogger()
 
@@ -52,12 +53,50 @@ const DEFAULT_SAMPLES: ValuePitAnalyzerInput[] = [
 ]
 
 // ============================================================
+// 轮动信号检测样本数据（与 DEFAULT_SAMPLES 对应）
+// ============================================================
+
+const DEFAULT_ROTATION_INPUTS: RotationSignalInput[] = [
+  {
+    sectorId: '银行',
+    volume: { history: [...Array(50).fill(60000), 100000, 110000, 120000, 115000, 105000] },
+    capitalFlow: { dailyNetFlow: [10, 20, 15, 30, 25] },
+    goldenCross: { closes: [...Array(20).fill(105), 100, 100, 100, 100, 130] },
+  },
+  {
+    sectorId: '钢铁',
+    volume: { history: [...Array(50).fill(30000), 35000, 32000, 31000, 33000, 34000] },
+    capitalFlow: { dailyNetFlow: [5, 3, -2, 8, 2] },
+    goldenCross: { closes: [...Array(25).fill(100)] },
+  },
+  {
+    sectorId: '煤炭',
+    volume: { history: [...Array(40).fill(15000), ...Array(10).fill(20000), 16000, 16000, 16000, 16000, 16000] },
+    capitalFlow: { dailyNetFlow: [-3, -5, -2, 1, -1] },
+    goldenCross: { closes: Array(25).fill(100).map((v, i) => v - i * 0.5) },
+  },
+]
+
+// ============================================================
+// 组合结果类型
+// ============================================================
+
+export interface ValuePitSectorResult {
+  score: ValuePitScore
+  rotation: RotationSignal
+}
+
+// ============================================================
 // Store 接口
 // ============================================================
 
 interface ValuePitState {
   /** 评分列表 */
   scores: ValuePitScore[]
+  /** 轮动信号列表 */
+  rotationSignals: RotationSignal[]
+  /** 组合结果（评分 + 轮动信号） */
+  combinedResults: ValuePitSectorResult[]
   /** 加载状态 */
   loading: boolean
   /** 错误信息 */
@@ -66,6 +105,8 @@ interface ValuePitState {
   lastUpdated: number
 
   // Actions
+  /** 运行组合分析（价值洼地评分 + 轮动信号检测） */
+  runAnalysis: () => void
   fetchScores: (inputs?: ValuePitAnalyzerInput[]) => void
   refreshScore: (symbol: string, inputs?: ValuePitAnalyzerInput[]) => void
   clearScores: () => void
@@ -77,6 +118,8 @@ interface ValuePitState {
 
 const initialState = {
   scores: [] as ValuePitScore[],
+  rotationSignals: [] as RotationSignal[],
+  combinedResults: [] as ValuePitSectorResult[],
   loading: false,
   error: null as string | null,
   lastUpdated: 0,
@@ -88,6 +131,38 @@ const initialState = {
 
 export const useValuePitStore = create<ValuePitState>((set) => ({
   ...initialState,
+
+  runAnalysis: () => {
+    logger.info('[valuePitStore] runAnalysis 开始')
+    set({ loading: true, error: null })
+
+    try {
+      const combinedResults: ValuePitSectorResult[] = DEFAULT_SAMPLES.map((input, index) => {
+        const score = analyze(input)
+        const rotationInput = DEFAULT_ROTATION_INPUTS[index]!
+        const rotation = detect(rotationInput)
+        logger.info(
+          `[valuePitStore] ${input.symbol} 评分: score=${score.score.toFixed(2)} ` +
+          `action=${score.action} rotation=${rotation.triggered ? rotation.strength : '无'}`,
+        )
+        return { score, rotation }
+      })
+
+      combinedResults.sort((a, b) => b.score.score - a.score.score)
+      set({
+        scores: combinedResults.map((r) => r.score),
+        rotationSignals: combinedResults.map((r) => r.rotation),
+        combinedResults,
+        loading: false,
+        lastUpdated: Date.now(),
+      })
+      logger.info(`[valuePitStore] runAnalysis 完成: ${combinedResults.length} 个板块`)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      logger.error(`[valuePitStore] runAnalysis 失败: ${message}`)
+      set({ error: message, loading: false })
+    }
+  },
 
   fetchScores: (inputs) => {
     logger.info('[valuePitStore] fetchScores 开始')
@@ -146,7 +221,14 @@ export const useValuePitStore = create<ValuePitState>((set) => ({
 
   clearScores: () => {
     logger.info('[valuePitStore] clearScores')
-    set({ ...initialState })
+    set({
+      scores: [],
+      rotationSignals: [],
+      combinedResults: [],
+      loading: false,
+      error: null,
+      lastUpdated: 0,
+    })
   },
 }))
 

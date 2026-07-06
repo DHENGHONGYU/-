@@ -21,6 +21,7 @@ import type {
   UnifiedStockData,
 } from '@/data/types'
 import { getLogger } from '@/lib/logger'
+import { RSI_THRESHOLDS } from '@/config/thresholds'
 
 const logger = getLogger()
 
@@ -359,8 +360,8 @@ export async function fuseStockData(
     // RSI 信号判定
     let rsiSignal: UnifiedStockData['rsiSignal'] = null
     if (rsi6 !== null) {
-      if (rsi6 > 80) rsiSignal = 'overbought'
-      else if (rsi6 < 20) rsiSignal = 'oversold'
+      if (rsi6 > RSI_THRESHOLDS.OVERBOUGHT) rsiSignal = 'overbought'
+      else if (rsi6 < RSI_THRESHOLDS.OVERSOLD) rsiSignal = 'oversold'
       else rsiSignal = 'neutral'
       logger.info(`[dataFusionEngine] ${symbol} RSI信号: ${rsiSignal} (RSI6=${rsi6.toFixed(1)})`)
     }
@@ -404,8 +405,11 @@ export async function fuseStockData(
       logger.info(`[dataFusionEngine] ${symbol} 无可用交易信号`)
     }
 
-    const prevClose = history.length >= 2 ? history[history.length - 2]!.close : (latest?.close ?? stock.price ?? 0)
     const currentPrice = latest?.close ?? stock.price ?? 0
+    if (latest?.close == null && stock.price == null) {
+      logger.warn('[dataFusionEngine] 价格数据缺失，使用默认值', { field: 'close/price', context: `symbol=${stock.symbol}` })
+    }
+    const prevClose = history.length >= 2 ? history[history.length - 2]!.close : currentPrice
     const change = currentPrice - prevClose
     const changePct = prevClose !== 0 ? (change / prevClose) * 100 : 0
 

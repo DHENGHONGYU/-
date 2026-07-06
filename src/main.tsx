@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { setLogLevel } from '@/lib/logger'
 import App from './App'
 import './index.css'
+import './generated/tokens.css'
 
 const LOG_LEVEL = (import.meta.env.VITE_LOG_LEVEL as 'debug' | 'info' | 'warn' | 'error') || 'info'
 

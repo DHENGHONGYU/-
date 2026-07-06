@@ -1,8 +1,8 @@
 # 07. 运营策略
 
 > **Status**: Current  
-> **Version**: v0.9.0-migration-implemented  
-> **Last Updated**: 2026-06-25
+> **Version**: v2.5.0  
+> **Last Updated**: 2026-07-05
 >
 > 本文档定义 V9 的开发流程、版本策略、风险控制与架构决策记录（ADR）。  
 > 目标读者：项目管理者、核心开发者、QA、未来维护者。

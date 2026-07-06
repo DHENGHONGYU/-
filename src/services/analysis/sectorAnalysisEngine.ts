@@ -18,6 +18,9 @@ import { saveDefaultRotationScores, listRotationScores } from '@/services/analys
 
 const logger = getLogger()
 
+/** scoreDate 未指定时的默认日志标签 */
+const DEFAULT_DATE_LABEL = '今天'
+
 // ============================================================
 // 板块轮动评分计算
 // ============================================================
@@ -30,7 +33,7 @@ const logger = getLogger()
 export async function calculateAndSaveDefaultRotationScores(
   scoreDate?: string,
 ): Promise<DataLayerResult<RotationSectorScore[]>> {
-  logger.info(`[sectorAnalysisEngine] 开始计算默认板块轮动评分: ${scoreDate ?? '今天'}`)
+  logger.info(`[sectorAnalysisEngine] 开始计算默认板块轮动评分: ${scoreDate ?? DEFAULT_DATE_LABEL}`)
 
   try {
     const result = await saveDefaultRotationScores(scoreDate)

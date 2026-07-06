@@ -1,21 +1,13 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Input } from '@/components/ui/Input'
 import { Badge } from '@/components/ui/Badge'
-import {
-  checkFetcherHealth,
-  fetchStockBasic,
-  fetchStockKline,
-} from '@/services/fetcher/fetcherService'
-import type { DataLayerResult, Stock } from '@/data/types'
-import type { DailyQuotes } from '@/data/types'
+import { useDataTestStore } from '@/store/dataTestStore'
+import { getLogger } from '@/lib/logger'
+import { COLOR_TOKENS } from '@/constants/theme.tokens'
 
-interface TestTask {
-  symbol: string
-  status: 'pending' | 'running' | 'success' | 'error'
-  message: string
-}
+const logger = getLogger()
 
 function parseSymbols(text: string): string[] {
   return text
@@ -25,95 +17,39 @@ function parseSymbols(text: string): string[] {
 }
 
 export default function DataTestPanel(): React.JSX.Element {
-  const [health, setHealth] = useState<boolean | null>(null)
-  const [checking, setChecking] = useState(false)
+  // 从 Store 获取状态
+  const health = useDataTestStore((s) => s.health)
+  const checking = useDataTestStore((s) => s.checking)
+  const singleSymbol = useDataTestStore((s) => s.singleSymbol)
+  const singleResult = useDataTestStore((s) => s.singleResult)
+  const singleStatus = useDataTestStore((s) => s.singleStatus)
+  const batchText = useDataTestStore((s) => s.batchText)
+  const tasks = useDataTestStore((s) => s.tasks)
+  const batchRunning = useDataTestStore((s) => s.batchRunning)
+  const progress = useDataTestStore((s) => s.progress)
 
-  const [singleSymbol, setSingleSymbol] = useState('')
-  const [singleResult, setSingleResult] = useState<string>('')
-  const [singleStatus, setSingleStatus] = useState<'idle' | 'running' | 'done'>('idle')
-
-  const [batchText, setBatchText] = useState('')
-  const [tasks, setTasks] = useState<TestTask[]>([])
-  const [batchRunning, setBatchRunning] = useState(false)
-  const [progress, setProgress] = useState(0)
+  // 从 Store 获取 actions
+  const setSingleSymbol = useDataTestStore((s) => s.setSingleSymbol)
+  const setBatchText = useDataTestStore((s) => s.setBatchText)
+  const checkHealth = useDataTestStore((s) => s.checkHealth)
+  const runSingleTest = useDataTestStore((s) => s.runSingleTest)
+  const runBatchTest = useDataTestStore((s) => s.runBatchTest)
 
   const handleCheckHealth = async (): Promise<void> => {
-    setChecking(true)
-    setHealth(null)
-    const result = await checkFetcherHealth()
-    setHealth(result.ok)
-    setChecking(false)
+    logger.info('[DataTestPanel] 检查采集服务健康状态')
+    await checkHealth()
   }
 
-  const runSingleTest = async (
+  const handleRunSingleTest = async (
     dimension: 'basic' | 'kline',
   ): Promise<void> => {
-    const symbol = singleSymbol.trim().toUpperCase()
-    if (!symbol) return
-
-    setSingleStatus('running')
-    setSingleResult('')
-
-    let result: DataLayerResult<Stock> | DataLayerResult<DailyQuotes>
-    if (dimension === 'basic') {
-      result = await fetchStockBasic(symbol)
-    } else {
-      result = await fetchStockKline(symbol)
-    }
-
-    setSingleResult(JSON.stringify(result, null, 2))
-    setSingleStatus('done')
+    logger.info('[DataTestPanel] 运行单接口测试', { dimension, symbol: singleSymbol })
+    await runSingleTest(dimension)
   }
 
-  const runBatchTest = async (): Promise<void> => {
-    const symbols = parseSymbols(batchText)
-    if (symbols.length === 0) return
-
-    setBatchRunning(true)
-    setProgress(0)
-    setTasks(
-      symbols.map((symbol) => ({
-        symbol,
-        status: 'pending',
-        message: '等待中',
-      })),
-    )
-
-    const updated: TestTask[] = []
-
-    for (let i = 0; i < symbols.length; i++) {
-      const symbol = symbols[i]!
-      setTasks((prev) =>
-        prev.map((t, idx) =>
-          idx === i ? { ...t, status: 'running', message: '采集中...' } : t,
-        ),
-      )
-
-      const basicResult = await fetchStockBasic(symbol)
-      let message: string
-      let status: TestTask['status']
-
-      if (!basicResult.success) {
-        message = `基础数据失败：${basicResult.error ?? '未知错误'}`
-        status = 'error'
-      } else {
-        const klineResult = await fetchStockKline(symbol)
-        if (!klineResult.success) {
-          message = `K线失败：${klineResult.error ?? '未知错误'}`
-          status = 'error'
-        } else {
-          message = `成功：price=${klineResult.data?.price ?? basicResult.data?.price ?? '-'}, K线=${klineResult.data ? '有' : '无'}`
-          status = 'success'
-        }
-      }
-
-      const task: TestTask = { symbol, status, message }
-      updated.push(task)
-      setTasks((prev) => prev.map((t, idx) => (idx === i ? task : t)))
-      setProgress(Math.round(((i + 1) / symbols.length) * 100))
-    }
-
-    setBatchRunning(false)
+  const handleRunBatchTest = async (): Promise<void> => {
+    logger.info('[DataTestPanel] 运行批量采集测试', { symbolCount: parseSymbols(batchText).length })
+    await runBatchTest()
   }
 
   return (
@@ -128,11 +64,11 @@ export default function DataTestPanel(): React.JSX.Element {
           {health === null ? (
             <Badge variant="outline">未检查</Badge>
           ) : health ? (
-            <Badge className="bg-green-100 text-green-800">已连接</Badge>
+            <Badge className={`${COLOR_TOKENS.up.bgClass} ${COLOR_TOKENS.up.tailwind}`}>已连接</Badge>
           ) : (
             <Badge variant="destructive">未连接</Badge>
           )}
-          <Button size="sm" variant="secondary" onClick={handleCheckHealth} disabled={checking}>
+          <Button size="sm" variant="secondary" onClick={() => void handleCheckHealth()} disabled={checking}>
             {checking ? '检查中...' : '检查连接'}
           </Button>
         </div>
@@ -149,7 +85,7 @@ export default function DataTestPanel(): React.JSX.Element {
             />
             <Button
               size="sm"
-              onClick={() => runSingleTest('basic')}
+              onClick={() => void handleRunSingleTest('basic')}
               disabled={singleStatus === 'running'}
             >
               测试基础接口
@@ -157,7 +93,7 @@ export default function DataTestPanel(): React.JSX.Element {
             <Button
               size="sm"
               variant="secondary"
-              onClick={() => runSingleTest('kline')}
+              onClick={() => void handleRunSingleTest('kline')}
               disabled={singleStatus === 'running'}
             >
               测试 K线接口
@@ -180,7 +116,7 @@ export default function DataTestPanel(): React.JSX.Element {
             onChange={(e) => setBatchText(e.target.value)}
           />
           <Button
-            onClick={runBatchTest}
+            onClick={() => void handleRunBatchTest()}
             disabled={batchRunning || parseSymbols(batchText).length === 0}
           >
             {batchRunning ? '采集中...' : '开始批量采集测试'}
@@ -217,7 +153,7 @@ export default function DataTestPanel(): React.JSX.Element {
                       <td className="px-3 py-1">{task.symbol}</td>
                       <td className="px-3 py-1">
                         {task.status === 'success' && (
-                          <Badge className="bg-green-100 text-green-800">成功</Badge>
+                          <Badge className={`${COLOR_TOKENS.up.bgClass} ${COLOR_TOKENS.up.tailwind}`}>成功</Badge>
                         )}
                         {task.status === 'error' && (
                           <Badge variant="destructive">失败</Badge>

@@ -1,25 +1,25 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
+import { UI_TEXT } from '@/constants/uiText'
 import ValuePitPage from './ValuePitPage'
 
 // ------------------------------------------------------------------
 // vi.hoisted mocks
 // ------------------------------------------------------------------
 
-const mockFetchScores = vi.hoisted(() => vi.fn())
+const mockRunAnalysis = vi.hoisted(() => vi.fn())
 
-const mockDualStrategyState = vi.hoisted(() => ({
-  valuePitScores: [] as unknown[],
-  rotationSignals: [] as unknown[],
+const mockValuePitState = vi.hoisted(() => ({
+  combinedResults: [] as unknown[],
   loading: false,
   error: null as string | null,
-  fetchScores: mockFetchScores,
+  runAnalysis: mockRunAnalysis,
 }))
 
-vi.mock('@/store/dualStrategyStore', () => ({
-  useDualStrategyStore: (selector: (s: typeof mockDualStrategyState) => unknown) =>
-    selector(mockDualStrategyState),
+vi.mock('@/store/valuePitStore', () => ({
+  useValuePitStore: (selector: (s: typeof mockValuePitState) => unknown) =>
+    selector(mockValuePitState),
 }))
 
 vi.mock('@/lib/logger', () => ({
@@ -99,17 +99,16 @@ vi.mock('@/components/ui/Breadcrumb', () => ({
 describe('ValuePitPage', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    mockDualStrategyState.valuePitScores = []
-    mockDualStrategyState.rotationSignals = []
-    mockDualStrategyState.loading = false
-    mockDualStrategyState.error = null
-    mockFetchScores.mockResolvedValue(undefined)
+    mockValuePitState.combinedResults = []
+    mockValuePitState.loading = false
+    mockValuePitState.error = null
+    mockRunAnalysis.mockResolvedValue(undefined)
   })
 
   // ================================================================
-  // 1. 基础渲染：挂载时调用 fetchScores
+  // 1. 基础渲染：挂载时调用 runAnalysis
   // ================================================================
-  it('挂载时调用 fetchScores', async () => {
+  it('挂载时调用 runAnalysis', async () => {
     render(
       <MemoryRouter>
         <ValuePitPage />
@@ -117,7 +116,7 @@ describe('ValuePitPage', () => {
     )
 
     await waitFor(() => {
-      expect(mockFetchScores).toHaveBeenCalledTimes(1)
+      expect(mockRunAnalysis).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -125,7 +124,7 @@ describe('ValuePitPage', () => {
   // 2. Loading 状态
   // ================================================================
   it('loading 为 true 时显示加载状态', () => {
-    mockDualStrategyState.loading = true
+    mockValuePitState.loading = true
 
     render(
       <MemoryRouter>
@@ -133,14 +132,14 @@ describe('ValuePitPage', () => {
       </MemoryRouter>,
     )
 
-    expect(screen.getByText('正在计算价值洼地评分...')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.valuePit.scoring)).toBeInTheDocument()
   })
 
   // ================================================================
   // 3. Error 状态
   // ================================================================
   it('error 有值时显示错误信息和重试按钮', () => {
-    mockDualStrategyState.error = '双策略计算失败'
+    mockValuePitState.error = '价值陷阱策略计算失败'
 
     render(
       <MemoryRouter>
@@ -148,15 +147,15 @@ describe('ValuePitPage', () => {
       </MemoryRouter>,
     )
 
-    expect(screen.getByText('双策略计算失败')).toBeInTheDocument()
+    expect(screen.getByText('价值陷阱策略计算失败')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: '重试' })).toBeInTheDocument()
   })
 
   // ================================================================
   // 4. useEffect cleanup：卸载后未完成的异步操作不触发渲染错误
   // ================================================================
-  it('cleanup: 组件卸载后未完成的 fetchScores 不触发渲染错误', async () => {
-    mockFetchScores.mockImplementation(
+  it('cleanup: 组件卸载后未完成的 runAnalysis 不触发渲染错误', async () => {
+    mockRunAnalysis.mockImplementation(
       () => new Promise((resolve) => setTimeout(() => resolve(undefined), 200)),
     )
 
@@ -187,7 +186,7 @@ describe('ValuePitPage', () => {
     )
 
     await waitFor(() => {
-      expect(mockFetchScores).toHaveBeenCalled()
+      expect(mockRunAnalysis).toHaveBeenCalled()
     })
 
     // results 为空时应显示"暂无评分数据"

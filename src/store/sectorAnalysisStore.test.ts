@@ -8,14 +8,22 @@ import type { RotationSectorScore, IndustryScore } from '@/data/types'
 const mockLogger = vi.hoisted(() => ({ info: vi.fn(), error: vi.fn(), warn: vi.fn(), debug: vi.fn() }))
 vi.mock('@/lib/logger', () => ({ getLogger: () => mockLogger }))
 
-const mockRotationScoresList = vi.hoisted(() => vi.fn())
-const mockIndustryScoresList = vi.hoisted(() => vi.fn())
+const mockFetchSectorAnalysisUseCase = vi.hoisted(() => vi.fn())
 
-vi.mock('@/data/dataLayer', () => ({
-  dataLayer: {
-    rotationScores: { list: mockRotationScoresList },
-    industryScores: { list: mockIndustryScoresList },
-  },
+vi.mock('@/services/useCase/fetchSectorAnalysis.useCase', () => ({
+  fetchSectorAnalysisUseCase: mockFetchSectorAnalysisUseCase,
+}))
+
+vi.mock('@/core/databridge', () => ({
+  dataBridge: { subscribe: vi.fn(() => vi.fn()) },
+}))
+
+vi.mock('@/config/dbConfig', () => ({
+  ENVELOPE_ACTION: { saveSectorScores: 'SAVE_SECTOR_SCORES' },
+}))
+
+vi.mock('@/store/helpers/withBroadcast', () => ({
+  withBroadcast: vi.fn(),
 }))
 
 // ============================================================
@@ -67,12 +75,18 @@ function createMockIndustryScore(overrides: Partial<IndustryScore> = {}): Indust
 
 beforeEach(() => {
   vi.clearAllMocks()
+  mockFetchSectorAnalysisUseCase.mockResolvedValue({
+    success: true,
+    rotationScores: [],
+    industryScores: [],
+  })
   useSectorAnalysisStore.setState({
     rotationScores: [],
     industryScores: [],
     loading: false,
     error: null,
     lastUpdated: 0,
+    isRefreshing: false,
   })
 })
 
@@ -100,8 +114,11 @@ describe('useSectorAnalysisStore', () => {
       createMockIndustryScore({ code: 'Y', scoredAt: 2000 }),
     ]
 
-    mockRotationScoresList.mockResolvedValue(rotations)
-    mockIndustryScoresList.mockResolvedValue(industries)
+    mockFetchSectorAnalysisUseCase.mockResolvedValue({
+      success: true,
+      rotationScores: [rotations[1], rotations[0]],
+      industryScores: [industries[1], industries[0]],
+    })
 
     await useSectorAnalysisStore.getState().fetchSectorAnalysis()
 
@@ -118,8 +135,11 @@ describe('useSectorAnalysisStore', () => {
   })
 
   it('fetchSectorAnalysis: 空列表', async () => {
-    mockRotationScoresList.mockResolvedValue([])
-    mockIndustryScoresList.mockResolvedValue([])
+    mockFetchSectorAnalysisUseCase.mockResolvedValue({
+      success: true,
+      rotationScores: [],
+      industryScores: [],
+    })
 
     await useSectorAnalysisStore.getState().fetchSectorAnalysis()
 
@@ -131,7 +151,12 @@ describe('useSectorAnalysisStore', () => {
   })
 
   it('fetchSectorAnalysis: 数据层异常应设置 error', async () => {
-    mockRotationScoresList.mockRejectedValue(new Error('DB failure'))
+    mockFetchSectorAnalysisUseCase.mockResolvedValue({
+      success: false,
+      rotationScores: [],
+      industryScores: [],
+      error: 'DB failure',
+    })
 
     await useSectorAnalysisStore.getState().fetchSectorAnalysis()
 
@@ -141,7 +166,7 @@ describe('useSectorAnalysisStore', () => {
   })
 
   it('fetchSectorAnalysis: 非 Error 异常应转为字符串', async () => {
-    mockRotationScoresList.mockRejectedValue('string-error')
+    mockFetchSectorAnalysisUseCase.mockRejectedValue('string-error')
 
     await useSectorAnalysisStore.getState().fetchSectorAnalysis()
 

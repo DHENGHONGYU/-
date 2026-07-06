@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
+import { twText, COLOR_SHADES } from '@/constants/theme.tokens'
 
 export interface ScoreUpdateAlertProps {
   lastScoredAt: number | undefined
@@ -48,9 +49,15 @@ export function ScoreUpdateAlert({ lastScoredAt, onRefresh, loading }: ScoreUpda
   if (elapsed > HALF_WEEK_MS) {
     const days = Math.floor(elapsed / (24 * 60 * 60 * 1000))
     return (
-      <div className="flex items-center justify-between rounded-md border border-amber-500/30 bg-amber-500/10 p-3">
+      <div
+        className={`flex items-center justify-between rounded-md border p-3 ${twText('amber', 700)}`}
+        style={{
+          borderColor: `${COLOR_SHADES.amber.hex[500]}4D`,
+          backgroundColor: `${COLOR_SHADES.amber.hex[500]}1A`,
+        }}
+      >
         <div className="space-y-0.5">
-          <p className="text-sm font-medium text-amber-700">
+          <p className={`text-sm font-medium ${twText('amber', 700)}`}>
             建议更新 <Badge variant="outline">已 {days} 天</Badge>
           </p>
           <p className="text-xs text-muted-foreground">

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
+import { UI_TEXT } from '@/constants/uiText'
 import HomePage from '@/pages/HomePage'
 
 describe('HomePage', () => {
@@ -11,11 +12,11 @@ describe('HomePage', () => {
       </MemoryRouter>,
     )
 
-    expect(screen.getByText('智能投研复盘系统 V9')).toBeInTheDocument()
-    expect(screen.getByText('输入舱')).toBeInTheDocument()
-    expect(screen.getByText('分析舱')).toBeInTheDocument()
-    expect(screen.getByText('交易舱')).toBeInTheDocument()
-    expect(screen.getByText('输出舱')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.cockpit.systemName)).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.cockpit.inputCabin)).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.cockpit.analysisCabin)).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.cockpit.tradingCabin)).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.cockpit.outputCabin)).toBeInTheDocument()
   })
 
   it('renders navigation buttons with correct links', () => {

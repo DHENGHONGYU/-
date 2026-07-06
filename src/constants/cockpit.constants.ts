@@ -1,3 +1,13 @@
+import {
+  API_SYSTEM_AGENT_HEALTH,
+  API_SYSTEM_ENGINE_STATUS,
+  API_SYSTEM_ARCHITECTURE,
+  API_SYSTEM_RISK_MONITOR,
+  API_TRADE_PNL_ANALYSIS,
+  API_TRADE_POSITIONS,
+  API_TRADE_SIGNALS,
+} from '@/config/apiPaths'
+
 export const GRID_COLUMNS = 4
 
 export const GRID_ROW_HEIGHT = 120
@@ -332,6 +342,58 @@ export const WIDGET_DEFAULT_DATA_SOURCE = {
     endpoint: '/strategy/value-pit',
     enabled: true,
   },
+  // ============================================================
+  // 系统监控与高级分析 Widget 数据源
+  // ============================================================
+  agentPerformance: {
+    type: ACTIVE_DATA_SOURCE,
+    mode: COLLECTION_MODE.POLLING,
+    interval: 30000,
+    endpoint: API_SYSTEM_AGENT_HEALTH,
+    enabled: true,
+  },
+  engineStatus: {
+    type: ACTIVE_DATA_SOURCE,
+    mode: COLLECTION_MODE.POLLING,
+    interval: 10000,
+    endpoint: API_SYSTEM_ENGINE_STATUS,
+    enabled: true,
+  },
+  systemArchitecture: {
+    type: ACTIVE_DATA_SOURCE,
+    mode: COLLECTION_MODE.POLLING,
+    interval: 60000,
+    endpoint: API_SYSTEM_ARCHITECTURE,
+    enabled: true,
+  },
+  pnlAnalysis: {
+    type: ACTIVE_DATA_SOURCE,
+    mode: COLLECTION_MODE.POLLING,
+    interval: 60000,
+    endpoint: API_TRADE_PNL_ANALYSIS,
+    enabled: true,
+  },
+  positionControl: {
+    type: ACTIVE_DATA_SOURCE,
+    mode: COLLECTION_MODE.POLLING,
+    interval: 15000,
+    endpoint: API_TRADE_POSITIONS,
+    enabled: true,
+  },
+  riskMonitor: {
+    type: ACTIVE_DATA_SOURCE,
+    mode: COLLECTION_MODE.POLLING,
+    interval: 30000,
+    endpoint: API_SYSTEM_RISK_MONITOR,
+    enabled: true,
+  },
+  signalMonitor: {
+    type: ACTIVE_DATA_SOURCE,
+    mode: COLLECTION_MODE.POLLING,
+    interval: 60000,
+    endpoint: API_TRADE_SIGNALS,
+    enabled: true,
+  },
 }
 
 export const DEFAULT_WIDGET_CONFIG = {
@@ -407,5 +469,43 @@ export const DEFAULT_WIDGET_CONFIG = {
     title: '价值洼地策略',
     size: WIDGET_SIZE.LARGE_HEIGHT,
     category: 'strategy',
+  },
+  // ============================================================
+  // 系统监控与高级分析 Widget
+  // ============================================================
+  agentPerformance: {
+    title: '智能体性能追踪',
+    category: '系统监控',
+    size: { cols: 2, rows: 2 },
+  },
+  engineStatus: {
+    title: '引擎状态监控',
+    category: '系统监控',
+    size: { cols: 1, rows: 1 },
+  },
+  systemArchitecture: {
+    title: '系统架构视图',
+    category: '系统监控',
+    size: { cols: 2, rows: 2 },
+  },
+  pnlAnalysis: {
+    title: '盈亏分析',
+    category: '交易分析',
+    size: { cols: 2, rows: 2 },
+  },
+  positionControl: {
+    title: '仓位控制',
+    category: '投资组合',
+    size: { cols: 2, rows: 2 },
+  },
+  riskMonitor: {
+    title: '风险监控',
+    category: '系统监控',
+    size: { cols: 2, rows: 2 },
+  },
+  signalMonitor: {
+    title: '信号监控',
+    category: '交易分析',
+    size: { cols: 1, rows: 2 },
   },
 }

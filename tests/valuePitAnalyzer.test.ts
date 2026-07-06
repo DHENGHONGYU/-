@@ -1,6 +1,8 @@
 import { describe, expect, it, beforeEach } from 'vitest'
 import { db } from '@/data/db'
 import { dataLayer } from '@/data/dataLayer'
+import { dataBridge } from '@/core/databridge'
+import { STORE_NAME } from '@/config/dbConfig'
 import { analyzeValuePits, getLatestValuePitScore } from '@/services/scoring/valuePitAnalyzer'
 import { saveDefaultRotationScores } from '@/services/analysis/rotationScoreService'
 import { getDefaultDualStrategyRuleConfig } from '@/config/dualStrategyRules'
@@ -78,6 +80,10 @@ describe('valuePitAnalyzer', () => {
   beforeEach(async () => {
     await db.init()
     await db.reset()
+    dataBridge.invalidateCache(STORE_NAME.stocks)
+    dataBridge.invalidateCache(STORE_NAME.dailyQuotes)
+    dataBridge.invalidateCache(STORE_NAME.v6Scores)
+    dataBridge.invalidateCache(STORE_NAME.rotationScores)
   })
 
   it('should analyze stocks within V6 band and persist scores', async () => {

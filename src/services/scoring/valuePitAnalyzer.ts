@@ -401,7 +401,10 @@ export async function analyzeBySymbol(symbol: string): Promise<ValuePitScore | n
 
   const hasQuotes = quotes !== undefined && quotes.history.length >= 20
   const closes = hasQuotes ? quotes!.history.map((b) => b.close) : []
-  const latest = hasQuotes ? closes[closes.length - 1]! : stock.price ?? 0
+  const latest = hasQuotes ? closes[closes.length - 1]! : (stock.price ?? (() => {
+    logger.warn('[valuePitAnalyzer] 字段缺失，使用默认值', { field: 'price', context: `symbol=${symbol}` })
+    return 0
+  })())
   const ma20 = hasQuotes ? computeMA(closes, 20) : undefined
   const ma60 = hasQuotes ? computeMA(closes, 60) : undefined
 
@@ -451,7 +454,10 @@ export async function analyzeBySymbol(symbol: string): Promise<ValuePitScore | n
     turnoverRate: hasQuotes && stock.marketCap && stock.marketCap > 0
       ? (avgAmount / stock.marketCap) * 100
       : 1.5,
-    marketCap: (stock.marketCap ?? 0) / 1e8,
+    marketCap: (stock.marketCap ?? (() => {
+      logger.warn('[valuePitAnalyzer] 字段缺失，使用默认值', { field: 'marketCap', context: `symbol=${symbol}` })
+      return 0
+    })()) / 1e8,
   }
 
   return analyze({

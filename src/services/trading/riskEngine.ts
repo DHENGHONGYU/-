@@ -1,6 +1,9 @@
 import { getDefaultTradingConfig } from '@/config/tradingConfig'
 import type { SignalDirection } from '@/config/tradingConfig'
 import { dataLayer } from '@/data/dataLayer'
+import { getLogger } from '@/lib/logger'
+
+const logger = getLogger()
 
 
 export interface OrderRiskInput {
@@ -68,14 +71,31 @@ export async function checkOrderRisk(input: OrderRiskInput): Promise<RiskCheckRe
 
   // 2. 同标的冷却期
   const orders = await dataLayer.orders.list()
+
+  // 检测 createdAt 缺失的订单
+  const missingCreatedAtOrders = orders.filter((o) => o.symbol === normalized && o.createdAt == null)
+  if (missingCreatedAtOrders.length > 0) {
+    logger.warn('[RiskEngine] 字段缺失，使用默认值', {
+      field: 'createdAt',
+      context: `symbol=${normalized}, missingCount=${missingCreatedAtOrders.length}`,
+    })
+  }
   const symbolOrders = orders
     .filter((o) => o.symbol === normalized)
-    .sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0))
+    .sort((a, b) => {
+      const ta = a.createdAt ?? 0
+      const tb = b.createdAt ?? 0
+      return tb - ta
+    })
   const latestOrder = symbolOrders[0]
-  if (latestOrder && isWithinHours(latestOrder.createdAt ?? 0, risk.sameSymbolCooldownHours)) {
-    blocks.push(
-      `${normalized} 在 ${risk.sameSymbolCooldownHours} 小时冷却期内，上次交易时间 ${new Date(latestOrder.createdAt ?? 0).toLocaleString()}`,
-    )
+  if (latestOrder) {
+    // 保守策略：createdAt 缺失时视为在冷却期内，阻断交易
+    const orderTime = latestOrder.createdAt ?? Date.now()
+    if (isWithinHours(orderTime, risk.sameSymbolCooldownHours)) {
+      blocks.push(
+        `${normalized} 在 ${risk.sameSymbolCooldownHours} 小时冷却期内，上次交易时间 ${new Date(orderTime).toLocaleString()}`,
+      )
+    }
   }
 
   // 3. 当日交易次数

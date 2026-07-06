@@ -132,7 +132,7 @@ export const L7SecondCurveCalculator: LayerCalculator = {
 
       return {
         layerId: 'l7' as LayerId,
-        layerName: LAYER_LABELS.l7,
+        layerName: LAYER_LABELS.l7 ?? 'L7 第二曲线',
         score: Math.round(score * 100) / 100,
         summary,
         risks,
@@ -146,7 +146,7 @@ export const L7SecondCurveCalculator: LayerCalculator = {
       logger.error(`[L7] ${stock.symbol}: 计算失败: ${msg}`)
       return {
         layerId: 'l7' as LayerId,
-        layerName: LAYER_LABELS.l7,
+        layerName: LAYER_LABELS.l7 ?? 'L7 第二曲线',
         score: 0,
         summary: `第二曲线计算失败: ${msg}`,
         risks: [],
@@ -317,7 +317,7 @@ export const L8ChipCalculator: LayerCalculator = {
 
       return {
         layerId: 'l8' as LayerId,
-        layerName: LAYER_LABELS.l8,
+        layerName: LAYER_LABELS.l8 ?? 'L8 技术筹码',
         score: Math.round(chip.score * 100) / 100,
         summary: `筹码 ${chip.matrix} | 风险${chip.riskLevel === 'low' ? '低' : chip.riskLevel === 'medium' ? '中' : '高'} | CSR=${chip.levels.CSR?.toFixed(1) ?? 'N/A'}`,
         risks,
@@ -331,7 +331,7 @@ export const L8ChipCalculator: LayerCalculator = {
       logger.error(`[L8] ${stock.symbol}: 计算失败: ${msg}`)
       return {
         layerId: 'l8' as LayerId,
-        layerName: LAYER_LABELS.l8,
+        layerName: LAYER_LABELS.l8 ?? 'L8 技术筹码',
         score: 0,
         summary: `筹码计算失败: ${msg}`,
         risks: [],

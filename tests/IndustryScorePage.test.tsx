@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router'
 import IndustryScorePage from '@/pages/analysis/IndustryScorePage'
 import { useIndustryScoreStore } from '@/store/industryScoreStore'
 import * as scorePageService from '@/services/analysis/scorePageService'
+import { UI_TEXT } from '@/constants/uiText'
 
 // ------------------------------------------------------------------
 // Mock 子组件，减少渲染树噪音
@@ -84,13 +85,14 @@ describe('IndustryScorePage', () => {
     )
 
     // 行业选择下拉框存在
-    expect(screen.getByText('选择行业/赛道')).toBeInTheDocument()
+    expect(screen.getByLabelText(UI_TEXT.analysis.industryScore.selectIndustry)).toBeInTheDocument()
     expect(screen.getByRole('combobox')).toBeInTheDocument()
 
     // 运行评分按钮存在（LLM未配置时按钮被Tooltip包裹且禁用）
-    const btn = screen.getByRole('button', { name: /运行行业智能评分/ })
+    const btn = screen.getByRole('button', { name: new RegExp(UI_TEXT.analysis.industryScore.runScore) })
     expect(btn).toBeInTheDocument()
     expect(btn).toBeDisabled()
+    expect(screen.getByRole('button', { name: '批量评分' })).toBeInTheDocument()
   })
 
   // ================================================================

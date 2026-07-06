@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Select, SelectItem } from '@/components/ui/Select'
@@ -8,16 +8,28 @@ import {
   type BulkImportRow,
   type BulkImportResult,
 } from '@/services/input/batchImportService'
-import { usePoolData } from '@/components/pool/usePoolData'
+import { usePoolStore, getAllGroups } from '@/store/poolStore'
+import { getLogger } from '@/lib/logger'
+import { twText, twBg, twBorder } from '@/constants/theme.tokens'
+
+const logger = getLogger()
 
 export default function BulkImportPanel(): React.JSX.Element {
-  const { refresh, allGroups } = usePoolData()
+  const refresh = usePoolStore((s) => s.refresh)
+  const stocks = usePoolStore((s) => s.stocks)
+  const allGroups = useMemo(() => getAllGroups(), [stocks])
   const [importText, setImportText] = useState('')
   const [importPreview, setImportPreview] = useState<BulkImportRow[]>([])
   const [importResult, setImportResult] = useState<BulkImportResult | null>(null)
   const [importing, setImporting] = useState(false)
   const [message, setMessage] = useState('')
   const [targetGroup, setTargetGroup] = useState('')
+
+  // 组件初始化：加载股票池数据
+  useEffect(() => {
+    logger.info('[BulkImportPanel] 组件初始化，加载股票池数据')
+    void refresh()
+  }, [refresh])
 
   const handleParseImport = (text: string): void => {
     setImportText(text)
@@ -112,9 +124,9 @@ export default function BulkImportPanel(): React.JSX.Element {
           )}
 
           {importResult && importResult.errors.length > 0 && (
-            <div className="max-h-40 overflow-auto rounded-md border border-red-200 bg-red-50 p-3 text-sm dark:border-red-900 dark:bg-red-950/30">
-              <p className="font-medium text-red-700 dark:text-red-400">失败明细：</p>
-              <ul className="mt-1 list-inside list-disc text-red-600 dark:text-red-300">
+            <div className={`max-h-40 overflow-auto rounded-md border p-3 text-sm ${twBorder('red', 200)} ${twBg('red', 50)} ${twText('red', 700)} dark:${twBorder('red', 900)} dark:${twBg('red', 950)}/30`}>
+              <p className={`font-medium ${twText('red', 700)} dark:${twText('red', 400)}`}>失败明细：</p>
+              <ul className={`mt-1 list-inside list-disc ${twText('red', 600)} dark:${twText('red', 300)}`}>
                 {importResult.errors.map((e, idx) => (
                   <li key={idx}>
                     第 {e.row} 行 {e.raw}: {e.error}

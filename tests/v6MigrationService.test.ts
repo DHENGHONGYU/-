@@ -197,6 +197,14 @@ describe('v6MigrationService', () => {
   beforeEach(async () => {
     await db.init()
     await db.reset()
+    dataBridge.invalidateCache(STORE_NAME.stocks)
+    dataBridge.invalidateCache(STORE_NAME.dailyQuotes)
+    dataBridge.invalidateCache(STORE_NAME.v6Scores)
+    dataBridge.invalidateCache(STORE_NAME.orders)
+    dataBridge.invalidateCache(STORE_NAME.rotationScores)
+    dataBridge.invalidateCache(STORE_NAME.news)
+    dataBridge.invalidateCache(STORE_NAME.sentimentCache)
+    dataBridge.invalidateCache(STORE_NAME.strategySnapshots)
   })
 
   describe('sentimentNumberToLabel', () => {

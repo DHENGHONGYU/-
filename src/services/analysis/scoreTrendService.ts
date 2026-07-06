@@ -7,10 +7,12 @@
 
 import { dataLayer } from '@/data/dataLayer'
 import { getLogger } from '@/lib/logger'
+import type { ScoreTrendPeriod } from '@/types/modules/score.types'
+import { MS_PER_DAY } from '@/config/mathConstants'
 
 const logger = getLogger()
 
-export type ScoreTrendPeriod = 'week' | 'month' | 'quarter'
+export type { ScoreTrendPeriod }
 export type ScoreTrendEntityType = 'industry' | 'stock'
 
 export interface ScoreTrendPoint {
@@ -48,7 +50,7 @@ function getISOWeek(date: Date): number {
   const dayNum = tmp.getUTCDay() || 7
   tmp.setUTCDate(tmp.getUTCDate() + 4 - dayNum)
   const yearStart = new Date(Date.UTC(tmp.getUTCFullYear(), 0, 1))
-  return Math.ceil((((tmp.getTime() - yearStart.getTime()) / 86400000) + 1) / 7)
+  return Math.ceil((((tmp.getTime() - yearStart.getTime()) / MS_PER_DAY) + 1) / 7)
 }
 
 function getISOWeekYear(date: Date): number {

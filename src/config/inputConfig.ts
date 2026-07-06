@@ -10,6 +10,16 @@ export const INPUT_CONFIG = {
     lineSeparators: /[\n;；、]/,
     inlineSeparators: /[\s,，]+/,
     supportedFormats: ['code', 'code.name', 'code,name'] as const,
+    supportedFileExtensions: ['csv', 'txt', 'json', 'xlsx', 'xls'] as const,
+    templateHeader: ['代码', '名称'] as const,
+    templateExamples: [
+      { code: '600519', name: '贵州茅台' },
+      { code: '000858', name: '五粮液' },
+      { code: '300750', name: '宁德时代' },
+    ] as const,
+    templateFileName: 'stock_import_template.csv',
+    batchSize: 20,
+    batchIntervalMs: 500,
   },
   quality: {
     requiredBasicFields: ['name', 'industry', 'price', 'pe', 'pb'] as const,

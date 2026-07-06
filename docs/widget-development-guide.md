@@ -1,7 +1,7 @@
 ---
 title: Widget 开发指南
-version: v1.0.0
-last_updated: 2026-06-29
+version: v1.2.0
+last_updated: 2026-07-05
 maintainer: Quality Auditor
 status: active
 ---
@@ -423,3 +423,59 @@ export default function ValuePitWidget({ config, data }: ValuePitWidgetProps): R
 - [ ] `widgetRegistry.ts` 已注册模板
 - [ ] `createDefaultInstances()` 已添加默认布局
 - [ ] 对应测试文件已创建并通过
+
+---
+
+## 七、已注册 Widget 清单（v1.1.0 更新）
+
+### 7.1 数据展示类 Widget（12 个）
+
+| Widget ID | 组件文件 | 分类 | 说明 |
+|-----------|----------|------|------|
+| `marketIndices` | `MarketIndicesWidget.tsx` | market | 大盘指数实时数据 |
+| `sectorHeatmap` | `SectorHeatmapWidget.tsx` | market | 板块涨跌幅热力图 |
+| `fundFlow` | `FundFlowWidget.tsx` | market | 资金流向数据 |
+| `marketSentiment` | `MarketSentimentWidget.tsx` | market | 市场情绪指标 |
+| `watchlist` | `WatchlistWidget.tsx` | portfolio | 自选股列表 |
+| `portfolioOverview` | `PortfolioOverviewWidget.tsx` | portfolio | 持仓概览 |
+| `aiTradeReview` | `AITradeReviewWidget.tsx` | strategy | AI 交易复盘分析 |
+| `investmentProfile` | `InvestmentProfileWidget.tsx` | analysis | 投资画像/分析中心 |
+| `stockPool` | `StockPoolWidget.tsx` | portfolio | 股票池管理与监控列表 |
+| `kaiScore` | `KaiScoreWidget.tsx` | analysis | KAI 选股综合评分图谱 |
+| `modelCompare` | `ModelCompareWidget.tsx` | agent | AI 大模型智能对比 |
+| `stockChat` | `StockChatWidget.tsx` | agent | 个股/市场深度分析聊天 |
+
+### 7.2 系统监控类 Widget（7 个，v1.1.0 新增）
+
+| Widget ID | 组件文件 | 分类 | 说明 |
+|-----------|----------|------|------|
+| `agentPerformance` | `AgentPerformance.tsx` | agent | Agent 执行统计与成功率 |
+| `engineStatus` | `EngineStatus.tsx` | system | 引擎运行状态监控 |
+| `systemArchitecture` | `SystemArchitecture.tsx` | system | 系统架构拓扑图 |
+| `pnlAnalysis` | `pnlAnalysis.tsx` | strategy | 盈亏分析面板 |
+| `positionControl` | `PositionControl.tsx` | strategy | 仓位控制与风控 |
+| `riskMonitor` | `RiskMonitor.tsx` | strategy | 风险指标实时监控 |
+| `signalMonitor` | `SignalMonitor.tsx` | strategy | 交易信号监控面板 |
+
+### 7.3 Widget 错误隔离（v1.1.0 新增）
+
+所有 Widget 在 `CockpitShell.tsx` 的 `WidgetWrapper` 中统一包裹 `WidgetErrorBoundary`，实现 Widget 级错误隔离：
+
+```typescript
+import { WidgetErrorBoundary } from '@/components/WidgetErrorBoundary'
+
+// WidgetWrapper 渲染管线
+return (
+  <WidgetErrorBoundary
+    widgetId={config.widgetId}
+    instanceId={config.instanceId}
+    errorTitle={`${config.title} 加载异常`}
+  >
+    <Component config={config} data={data} />
+  </WidgetErrorBoundary>
+)
+```
+
+单个 Widget 的渲染错误不会导致整个驾驶舱崩溃。
+
+> **变更**: 2026-07-05 | v1.1.0 | 新增 7 个系统监控类 Widget 清单；新增 Widget 错误隔离说明 | 架构资产治理官

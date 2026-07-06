@@ -1,42 +1,29 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
-import { dataLayer } from '@/data/dataLayer'
-import type { RotationSectorScore, IndustryScore } from '@/data/types'
+import { useSectorAnalysisStore } from '@/store/sectorAnalysisStore'
 import { getLogger } from '@/lib/logger'
+import { twText } from '@/constants/theme.tokens'
 
 const logger = getLogger()
 
 export default function SectorAnalysisPage(): React.JSX.Element {
-  const [rotationScores, setRotationScores] = useState<RotationSectorScore[]>([])
-  const [industryScores, setIndustryScores] = useState<IndustryScore[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  // @compliance AGENTS.md §一：pages 只能依赖 store/services，禁止直接调用 dataLayer
+  // 数据来源从 useState + dataLayer 迁移至 useSectorAnalysisStore
+  const rotationScores = useSectorAnalysisStore((s) => s.rotationScores)
+  const industryScores = useSectorAnalysisStore((s) => s.industryScores)
+  const loading = useSectorAnalysisStore((s) => s.loading)
+  const error = useSectorAnalysisStore((s) => s.error)
+  const fetchSectorAnalysis = useSectorAnalysisStore((s) => s.fetchSectorAnalysis)
 
   useEffect(() => {
-    loadData()
-  }, [])
+    void fetchSectorAnalysis()
+    logger.info('[SectorAnalysisPage] 挂载，触发 fetchSectorAnalysis')
+  }, [fetchSectorAnalysis])
 
-  async function loadData() {
-    setLoading(true)
-    setError(null)
-    try {
-      const rotation = await dataLayer.rotationScores.list()
-      const industry = await dataLayer.industryScores.list()
-      setRotationScores(rotation.sort((a, b) => b.total - a.total))
-      setIndustryScores(industry.sort((a, b) => b.scoredAt - a.scoredAt))
-      logger.info('[SectorAnalysisPage] 数据加载完成', {
-        rotation: rotation.length,
-        industry: industry.length,
-      })
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err)
-      setError(msg)
-      logger.error('[SectorAnalysisPage] 数据加载失败', { error: msg })
-    } finally {
-      setLoading(false)
-    }
+  const handleRetry = (): void => {
+    void fetchSectorAnalysis()
   }
 
   if (loading) {
@@ -55,9 +42,9 @@ export default function SectorAnalysisPage(): React.JSX.Element {
     return (
       <div className="p-4">
         <Card>
-          <CardContent className="p-8 text-center text-red-500">
+          <CardContent className={`p-8 text-center ${twText('red', 500)}`}>
             <p>{error}</p>
-            <Button variant="outline" size="sm" onClick={loadData} className="mt-2">
+            <Button variant="outline" size="sm" onClick={handleRetry} className="mt-2">
               重试
             </Button>
           </CardContent>

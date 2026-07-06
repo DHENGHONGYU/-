@@ -1,7 +1,6 @@
 import React from 'react'
 import { RESEARCH_STATUS, type ResearchStatus } from '@/config/dbConfig'
-import { getPoolLabel } from '@/core/poolTransitionEngine'
-import { getPoolTransitionOptions } from '@/services/stockpool/stockpoolService'
+import { getPoolLabel, getPoolTransitionOptions } from '@/core/poolTransitionEngine'
 import type { Stock } from '@/data/types'
 import { PoolColumn } from './PoolColumn'
 import { PoolList } from './PoolList'

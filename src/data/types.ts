@@ -6,6 +6,92 @@ import type {
   ResearchStatus,
 } from '@/config/dbConfig'
 
+// 从 dbConfig 重新导出，供其他模块使用
+export type { AccountType, DataSource, OrderDirection, OrderStatus, ResearchStatus }
+
+/**
+ * 执行计划阶段枚举
+ * 与 src/constants/execution.constants.ts 的 EXECUTION_PHASE 值保持一致
+ */
+export type ExecutionPhase = 'plan' | 'confirmed' | 'pending' | 'executed' | 'cancelled' | 'reviewed'
+
+/** 执行计划 */
+export interface ExecutionPlan {
+  id: string
+  signalId?: string
+  symbol: string
+  name: string
+  phase: ExecutionPhase
+  direction: 'buy' | 'sell'
+  quantity: number
+  targetPrice: number
+  currentPrice?: number
+  rationale: string
+  confidence: number
+  riskChecks: RiskCheckItem[]
+  risk?: {
+    passed: boolean
+    preCheck: boolean
+    postCheck: boolean
+    issueCount: number
+    checks: RiskCheckItem[]
+    warnings?: string[]
+  }
+  sizing?: {
+    quantity: number
+    positionPct: number
+    reason?: string
+  }
+  result?: 'success' | 'failed' | 'partial'
+  orderId?: string
+  errorMessage?: string
+  accountType?: AccountType
+  confirmedAt?: number
+  executedAt?: number
+  reviewedAt?: number
+  createdAt: number
+  updatedAt?: number
+}
+
+/** 风险检查项 */
+export interface RiskCheckItem {
+  id: string
+  name: string
+  label: string
+  passed: boolean
+  detail: string
+  message: string
+  severity: 'low' | 'medium' | 'high' | 'blocker' | 'warning' | 'info'
+}
+
+/** 执行日志 */
+export interface ExecutionLog {
+  id: string
+  planId: string
+  symbol: string
+  action: string
+  actor?: string
+  phase: ExecutionPhase
+  timestamp: number
+  detail?: string
+  success?: boolean
+  errorMessage?: string
+  createdAt: number
+}
+
+/** 缺失报告 */
+export interface MissingReport {
+  id: number
+  symbol: string
+  reportType: string
+  severity: string
+  reason: string
+  detectedAt: number
+  retryCount: number
+  resolvedAt?: number
+  createdAt: number
+}
+
 export interface StockDataQuality {
   basic: boolean
   kline: boolean
@@ -64,6 +150,17 @@ export interface V6Score {
   dataVersion: number
   /** 评分质量警告（当数据完整度低于 100% 时填充） */
   qualityWarning?: string
+  // ── F4 扩展：v6-engine CompositeScore 字段 ──
+  /** 综合评级 */
+  rating?: 'strong_buy' | 'buy' | 'hold' | 'sell' | 'strong_sell'
+  /** 各层评分明细（layerId → { score, summary, weight }） */
+  layerDetails?: Record<string, { score: number; summary: string; weight: number }>
+  /** 风险汇总 */
+  allRisks?: string[]
+  /** 投资建议 */
+  recommendation?: string
+  /** 引擎版本号 */
+  engineVersion?: string
 }
 
 export interface DimensionScore {
@@ -233,6 +330,7 @@ export interface HotSectorDimensionScores {
   technical: number
   valuation: number
   composite: number
+  marketEnv?: number
 }
 
 /** 热门板块策略评分，持久化于 hot_sector_scores Store */
@@ -302,6 +400,7 @@ export interface Signal {
   symbol: string
   direction: 'buy' | 'sell' | 'hold' | 'watch'
   type: string
+  strategy: string
   confidence: number
   rationale: string
   snapshot: SignalSnapshot
@@ -661,6 +760,12 @@ export interface SentimentCache {
   method: 'rule' | 'llm' | 'hybrid'
   analyzedAt: number
   llmModel?: string
+}
+
+/** 资讯收藏 */
+export interface NewsBookmark {
+  id: string
+  bookmarkedAt: number
 }
 
 // ============================================================

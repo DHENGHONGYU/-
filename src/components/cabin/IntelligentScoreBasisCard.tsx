@@ -10,7 +10,8 @@ interface Props {
 function formatFieldValue(value: unknown): string {
   if (value === undefined || value === null) return '数据缺失'
   if (typeof value === 'number') return value.toString()
-  return String(value)
+  if (typeof value === 'string') return value
+  return JSON.stringify(value)
 }
 
 export function IntelligentScoreBasisCard({ result, history, logs }: Props): React.JSX.Element {

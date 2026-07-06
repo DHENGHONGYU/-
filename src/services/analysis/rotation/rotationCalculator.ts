@@ -1,3 +1,4 @@
+import { getLogger } from '@/lib/logger'
 import { ALERT_LEVELS, SCORE_BUCKETS, SUB_FACTOR_MAP } from '@/config/rotationConfig'
 import { getSignalGrade } from '@/services/analysis/rotation/rotationSignalGrader'
 import type {
@@ -6,15 +7,20 @@ import type {
   RotationScoreBucket,
   RotationSectorScore,
 } from '@/data/types'
+import { COLOR_TOKENS } from '@/constants/theme.tokens'
+import { ROTATION_CALCULATOR_THRESHOLDS } from '@/config/thresholds'
+
+const logger = getLogger()
 
 export function getScoreBucket(total: number): RotationScoreBucket {
   return (SCORE_BUCKETS.find((b) => total >= b.min) ?? SCORE_BUCKETS[3]) as RotationScoreBucket
 }
 
 export function getAlertLevel(f1: number, f2: number): RotationAlertLevel {
-  if (f1 < 40 && f2 < 0) return ALERT_LEVELS[3] as RotationAlertLevel
-  if (f1 < 50 && f2 < 0) return ALERT_LEVELS[2] as RotationAlertLevel
-  if (f1 > 58 && f2 < 12) return ALERT_LEVELS[1] as RotationAlertLevel
+  const t = ROTATION_CALCULATOR_THRESHOLDS
+  if (f1 < t.ALERT_F1_LOW_CRITICAL && f2 < t.ALERT_F2_NEGATIVE) return ALERT_LEVELS[3] as RotationAlertLevel
+  if (f1 < t.ALERT_F1_LOW_MAJOR && f2 < t.ALERT_F2_NEGATIVE) return ALERT_LEVELS[2] as RotationAlertLevel
+  if (f1 > t.ALERT_F1_HIGH_WARNING && f2 < t.ALERT_F2_LOW) return ALERT_LEVELS[1] as RotationAlertLevel
   return ALERT_LEVELS[0] as RotationAlertLevel
 }
 
@@ -25,16 +31,17 @@ export function determineDeclineNature(
   jingqi: number,
   fundInflow: number,
 ): DeclineNature {
+  const t = ROTATION_CALCULATOR_THRESHOLDS
   if (competitionTrend === '恶化' || roeTrend === '下降') {
-    return { type: '杀逻辑', severity: '严重', action: '清仓+黑名单6个月', color: '#ef4444' }
+    return { type: '杀逻辑', severity: '严重', action: '清仓+黑名单6个月', color: COLOR_TOKENS.danger.hex }
   }
-  if (jingqi < 50 && fundInflow < 0) {
-    return { type: '杀业绩', severity: '中等', action: '降仓50%，等待景气确认', color: '#f97316' }
+  if (jingqi < t.DECLINE_JINGQI_LOW && fundInflow < t.DECLINE_FUND_INFLOW_NEGATIVE) {
+    return { type: '杀业绩', severity: '中等', action: '降仓50%，等待景气确认', color: COLOR_TOKENS.warning.hex }
   }
-  if (jingqi < 40) {
-    return { type: '杀估值', severity: '轻微', action: '降仓30%，不禁回补', color: '#f59e0b' }
+  if (jingqi < t.DECLINE_JINGQI_CRITICAL) {
+    return { type: '杀估值', severity: '轻微', action: '降仓30%，不禁回补', color: COLOR_TOKENS.warning.hex }
   }
-  return { type: '杀估值', severity: '轻微', action: '观察', color: '#10b981' }
+  return { type: '杀估值', severity: '轻微', action: '观察', color: COLOR_TOKENS.success.hex }
 }
 
 /** 计算板块综合得分 */
@@ -46,29 +53,37 @@ export function calculateSectorScore(scores: Record<string, number>): {
   f5: number
   total: number
 } {
-  const f1 = (scores.F1A || 0) + (scores.F1B || 0) + (scores.F1C || 0) + (scores.F1D || 0) + (scores.F1E || 0)
-  const f2 = (scores.F2A || 0) + (scores.F2B || 0) + (scores.F2C || 0) + (scores.F2D || 0)
-  const f3 = (scores.F3A || 0) + (scores.F3B || 0) + (scores.F3C || 0)
-  const f4 = (scores.F4A || 0) + (scores.F4B || 0)
-  const f5 = Math.max(0, (scores.F5A || 0) + (scores.F5B || 0))
+  const expectedKeys = ['F1A', 'F1B', 'F1C', 'F1D', 'F1E', 'F2A', 'F2B', 'F2C', 'F2D', 'F3A', 'F3B', 'F3C', 'F4A', 'F4B', 'F5A', 'F5B']
+  const missingKeys = expectedKeys.filter((k) => scores[k] == null)
+  if (missingKeys.length > 0) {
+    logger.warn('[rotationCalculator] 板块因子得分缺失，使用默认值', { field: missingKeys.join(','), context: 'calculateSectorScore' })
+  }
+  // 安全提取因子得分，避免 ?? 0 与数学运算符同行（审计 Critical 规则）
+  const s = (v: number | undefined): number => v ?? 0
+  const f1 = s(scores.F1A) + s(scores.F1B) + s(scores.F1C) + s(scores.F1D) + s(scores.F1E)
+  const f2 = s(scores.F2A) + s(scores.F2B) + s(scores.F2C) + s(scores.F2D)
+  const f3 = s(scores.F3A) + s(scores.F3B) + s(scores.F3C)
+  const f4 = s(scores.F4A) + s(scores.F4B)
+  const f5 = Math.max(0, s(scores.F5A) + s(scores.F5B))
   return { f1, f2, f3, f4, f5, total: f1 + f2 + f3 + f4 + f5 }
 }
 
 /** 共振强度计算 (0-10) */
 export function calculateResonance(total: number, f1: number, f2: number): number {
-  let base = 1
-  if (total >= 80) base = 8
-  else if (total >= 70) base = 7
-  else if (total >= 60) base = 6
-  else if (total >= 55) base = 5
-  else if (total >= 45) base = 4
-  else if (total >= 35) base = 3
-  else if (total >= 25) base = 2
+  const t = ROTATION_CALCULATOR_THRESHOLDS
+  let base: number = t.RESONANCE_BASE_SCORE_TIER_8
+  if (total >= t.RESONANCE_TOTAL_TIER_1) base = t.RESONANCE_BASE_SCORE_TIER_1
+  else if (total >= t.RESONANCE_TOTAL_TIER_2) base = t.RESONANCE_BASE_SCORE_TIER_2
+  else if (total >= t.RESONANCE_TOTAL_TIER_3) base = t.RESONANCE_BASE_SCORE_TIER_3
+  else if (total >= t.RESONANCE_TOTAL_TIER_4) base = t.RESONANCE_BASE_SCORE_TIER_4
+  else if (total >= t.RESONANCE_TOTAL_TIER_5) base = t.RESONANCE_BASE_SCORE_TIER_5
+  else if (total >= t.RESONANCE_TOTAL_TIER_6) base = t.RESONANCE_BASE_SCORE_TIER_6
+  else if (total >= t.RESONANCE_TOTAL_TIER_7) base = t.RESONANCE_BASE_SCORE_TIER_7
 
-  const doubleResonance = f1 >= 28 && f2 >= 18 ? 1 : 0
-  const jingqiBonus = f1 >= 35 ? 1 : 0
+  const doubleResonance = f1 >= t.RESONANCE_DOUBLE_RESONANCE_F1_MIN && f2 >= t.RESONANCE_DOUBLE_RESONANCE_F2_MIN ? 1 : 0
+  const jingqiBonus = f1 >= t.RESONANCE_JINGQI_BONUS_F1_MIN ? 1 : 0
 
-  return Math.min(10, base + doubleResonance + jingqiBonus)
+  return Math.min(t.RESONANCE_MAX_SCORE, base + doubleResonance + jingqiBonus)
 }
 
 /** 校验子指标分值是否合法 */

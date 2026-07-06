@@ -1,8 +1,8 @@
 # 数据流引擎（DataFlow Engine）数据字典
 
 > **Status**: Current  
-> **Version**: v1.1.0  
-> **Last Updated**: 2026-06-26  
+> **Version**: v1.2.0  
+> **Last Updated**: 2026-07-05  
 > 模块范围：`src/core/dataflow/`  
 > 关联任务：`docs/08-implementation-plan.md` 2.1.8
 
@@ -43,12 +43,31 @@
 | `refreshInterval` | `number` | 是 | > 0 | 轮询刷新间隔（毫秒） |
 | `persist` | `boolean` | 是 | - | 是否持久化到缓存 |
 | `priority` | `string` | 是 | `high` / `normal` / `low` | 分发优先级 |
+| `ttl` | `number` | 否 | >= 0 | 缓存过期时间（毫秒），0 表示不缓存。v1.2.0 新增 |
 
 ### 1.4 DataCallback — 订阅回调
 
 ```ts
 type DataCallback<T = unknown> = (packet: DataPacket<T>) => void
 ```
+
+### 1.5 CacheStats — 数据流缓存统计
+
+v1.2.0 新增。`getStats()` 返回的缓存统计对象。
+
+| 字段 | 类型 | 描述 |
+|------|------|------|
+| `hits` | `number` | 缓存命中次数 |
+| `hitCount` | `number` | 缓存命中条目数 |
+| `misses` | `number` | 缓存未命中次数 |
+| `missCount` | `number` | 缓存未命中条目数 |
+| `size` | `number` | 当前缓存大小 |
+| `totalRequests` | `number` | 总请求数 |
+| `totalEntries` | `number` | 总条目数 |
+| `maxEntries` | `number` | 最大缓存条目数 |
+| `hitRate` | `number` | 命中率（0-1） |
+| `expiredCount` | `number` | 过期条目数 |
+| `evictedCount` | `number` | 驱逐条目数 |
 
 ---
 

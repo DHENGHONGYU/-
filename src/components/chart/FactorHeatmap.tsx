@@ -3,6 +3,7 @@ import {
   memo,
   type ComponentPropsWithoutRef,
 } from 'react'
+import { CHART_PALETTE } from '@/constants/theme.tokens'
 
 export interface FactorHeatmapData {
   name: string
@@ -22,23 +23,31 @@ const FactorHeatmap = forwardRef<HTMLDivElement, FactorHeatmapProps>(
     // 计算列数（根据数据量动态调整）
     const colCount = Math.min(Math.ceil(Math.sqrt(data.length)), 6)
 
-    // 将值映射到颜色渐变：红(-1) -> 黄(0) -> 绿(1)
+    // 将值映射到颜色渐变：低(-1) -> 中(0) -> 高(1)
+    // 颜色端点全部来自 CHART_PALETTE，禁止硬编码
     const valueToColor = (value: number): string => {
       const normalized = (value - minValue) / (maxValue - minValue)
 
+      const parseRgb = (hex: string): [number, number, number] => {
+        const n = Number.parseInt(hex.replace('#', ''), 16)
+        return [(n >> 16) & 0xff, (n >> 8) & 0xff, n & 0xff]
+      }
+
+      const low = parseRgb(CHART_PALETTE.factorHeatmapLow)
+      const mid = parseRgb(CHART_PALETTE.factorHeatmapMid)
+      const high = parseRgb(CHART_PALETTE.factorHeatmapHigh)
+
       if (normalized <= 0.5) {
-        // 红 -> 黄
         const ratio = normalized * 2
-        const r = Math.round(255)
-        const g = Math.round(200 * ratio)
-        const b = Math.round(50 * ratio)
+        const r = Math.round(low[0] + (mid[0] - low[0]) * ratio)
+        const g = Math.round(low[1] + (mid[1] - low[1]) * ratio)
+        const b = Math.round(low[2] + (mid[2] - low[2]) * ratio)
         return `rgb(${r}, ${g}, ${b})`
       } else {
-        // 黄 -> 绿
         const ratio = (normalized - 0.5) * 2
-        const r = Math.round(255 * (1 - ratio))
-        const g = Math.round(200 + 55 * ratio)
-        const b = Math.round(50 + 15 * ratio)
+        const r = Math.round(mid[0] + (high[0] - mid[0]) * ratio)
+        const g = Math.round(mid[1] + (high[1] - mid[1]) * ratio)
+        const b = Math.round(mid[2] + (high[2] - mid[2]) * ratio)
         return `rgb(${r}, ${g}, ${b})`
       }
     }
@@ -59,7 +68,7 @@ const FactorHeatmap = forwardRef<HTMLDivElement, FactorHeatmapProps>(
                 <div
                   style={{
                     fontSize: '12px',
-                    color: 'hsl(220, 9%, 46%)',
+                    color: CHART_PALETTE.axis,
                     marginBottom: '6px',
                     fontWeight: 500,
                   }}
@@ -86,7 +95,7 @@ const FactorHeatmap = forwardRef<HTMLDivElement, FactorHeatmapProps>(
                       alignItems: 'center',
                       justifyContent: 'center',
                       minHeight: '60px',
-                      color: 'hsl(222, 47%, 11%)',
+                      color: CHART_PALETTE.tooltipBg,
                       fontSize: '11px',
                     }}
                   >

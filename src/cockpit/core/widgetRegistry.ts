@@ -184,6 +184,86 @@ export class WidgetRegistry {
         },
         component: () => import('@/cockpit/widgets/ValuePitWidget'),
       },
+      // ============================================================
+      // 系统监控与高级分析 Widget 注册
+      // ============================================================
+      {
+        meta: {
+          id: 'agentPerformance',
+          name: DEFAULT_WIDGET_CONFIG.agentPerformance.title,
+          category: DEFAULT_WIDGET_CONFIG.agentPerformance.category,
+          description: '智能体性能追踪与健康状态监控',
+          defaultSize: DEFAULT_WIDGET_CONFIG.agentPerformance.size,
+          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.agentPerformance,
+        },
+        component: () => import('@/cockpit/widgets/AgentPerformanceWidget'),
+      },
+      {
+        meta: {
+          id: 'engineStatus',
+          name: DEFAULT_WIDGET_CONFIG.engineStatus.title,
+          category: DEFAULT_WIDGET_CONFIG.engineStatus.category,
+          description: '评分引擎运行状态与性能指标',
+          defaultSize: DEFAULT_WIDGET_CONFIG.engineStatus.size,
+          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.engineStatus,
+        },
+        component: () => import('@/cockpit/widgets/EngineStatusWidget'),
+      },
+      {
+        meta: {
+          id: 'systemArchitecture',
+          name: DEFAULT_WIDGET_CONFIG.systemArchitecture.title,
+          category: DEFAULT_WIDGET_CONFIG.systemArchitecture.category,
+          description: '系统分层架构与模块依赖可视化',
+          defaultSize: DEFAULT_WIDGET_CONFIG.systemArchitecture.size,
+          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.systemArchitecture,
+        },
+        component: () => import('@/cockpit/widgets/SystemArchitectureWidget'),
+      },
+      {
+        meta: {
+          id: 'pnlAnalysis',
+          name: DEFAULT_WIDGET_CONFIG.pnlAnalysis.title,
+          category: DEFAULT_WIDGET_CONFIG.pnlAnalysis.category,
+          description: '交易盈亏归因分析与趋势追踪',
+          defaultSize: DEFAULT_WIDGET_CONFIG.pnlAnalysis.size,
+          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.pnlAnalysis,
+        },
+        component: () => import('@/cockpit/widgets/PnLAnalysisWidget'),
+      },
+      {
+        meta: {
+          id: 'positionControl',
+          name: DEFAULT_WIDGET_CONFIG.positionControl.title,
+          category: DEFAULT_WIDGET_CONFIG.positionControl.category,
+          description: '仓位管理与风险控制面板',
+          defaultSize: DEFAULT_WIDGET_CONFIG.positionControl.size,
+          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.positionControl,
+        },
+        component: () => import('@/cockpit/widgets/PositionControlWidget'),
+      },
+      {
+        meta: {
+          id: 'riskMonitor',
+          name: DEFAULT_WIDGET_CONFIG.riskMonitor.title,
+          category: DEFAULT_WIDGET_CONFIG.riskMonitor.category,
+          description: '实时风险指标监控与预警',
+          defaultSize: DEFAULT_WIDGET_CONFIG.riskMonitor.size,
+          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.riskMonitor,
+        },
+        component: () => import('@/cockpit/widgets/RiskMonitorWidget'),
+      },
+      {
+        meta: {
+          id: 'signalMonitor',
+          name: DEFAULT_WIDGET_CONFIG.signalMonitor.title,
+          category: DEFAULT_WIDGET_CONFIG.signalMonitor.category,
+          description: '交易信号实时追踪与置信度评估',
+          defaultSize: DEFAULT_WIDGET_CONFIG.signalMonitor.size,
+          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.signalMonitor,
+        },
+        component: () => import('@/cockpit/widgets/SignalMonitorWidget'),
+      },
     ]
 
     widgets.forEach((widget) => this.register(widget))
@@ -209,6 +289,16 @@ export class WidgetRegistry {
       { widgetId: 'stockChat', position: { x: 0, y: 23 } },
       { widgetId: 'hotSector', position: { x: 0, y: 27 } },
       { widgetId: 'valuePit', position: { x: 0, y: 29 } },
+      // ============================================================
+      // 系统监控与高级分析 Widget 默认布局
+      // ============================================================
+      { widgetId: 'agentPerformance', position: { x: 0, y: 33 } },
+      { widgetId: 'engineStatus', position: { x: 2, y: 33 } },
+      { widgetId: 'systemArchitecture', position: { x: 0, y: 35 } },
+      { widgetId: 'pnlAnalysis', position: { x: 0, y: 37 } },
+      { widgetId: 'positionControl', position: { x: 0, y: 39 } },
+      { widgetId: 'riskMonitor', position: { x: 0, y: 41 } },
+      { widgetId: 'signalMonitor', position: { x: 2, y: 41 } },
     ]
 
     defaultLayout.forEach((item) => {

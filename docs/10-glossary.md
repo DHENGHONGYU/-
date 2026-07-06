@@ -1,8 +1,8 @@
 # 10. 领域词汇表
 
 > **Status**: Current  
-> **Version**: v0.9.0-migration-implemented  
-> **Last Updated**: 2026-06-25
+> **Version**: v2.5.0  
+> **Last Updated**: 2026-07-05
 >
 > **原则**：所有概念在代码、UI、文档中必须使用本表规范命名。旧命名逐步迁移清零。
 
@@ -258,3 +258,16 @@ V9 采用**单表多状态**模型：所有标的统一存储在 `stocks` Store�
 | **双策略编排引擎** | Dual Strategy Engine | 协调 HotSectorAnalyzer、ValuePitAnalyzer、RotationSignalDetector，输出 `DualStrategyResult` | Trading |
 | **热门板块 Widget** | HotSectorWidget | 驾驶舱中展示热门板块评分与相关标的的 Widget | Cockpit |
 | **价值洼地 Widget** | ValuePitWidget | 驾驶舱中展示价值洼地候选、五维评分与轮动信号状态的 Widget | Cockpit |
+
+## 10.11 2026-07-05 新增概念（四层注册体系）
+
+| 术语 | 英文 | 定义 | 所属模块 |
+|------|------|------|---------|
+| **Store 注册表** | Store Registry | ~~`src/store/storeRegistry.ts`~~（文件已删除，待重建），项目当前共 47 个 Zustand Store 通过独立文件直接导出 | Store |
+| **Service 注册表** | Service Registry | ~~`src/services/serviceRegistry.ts`~~（文件已删除），原集中管理 52 个 Service 的元数据清单，覆盖 21 个域分类 | Services |
+| **Component 注册表** | Component Registry | `src/components/componentRegistry.ts`，集中管理 10+ 个业务组件的注册信息与建议集成目标 | Components |
+| **Widget 注册表** | Widget Registry | `src/cockpit/core/widgetRegistry.ts`，Class 单例模式管理 19 个 Widget 模板注册、默认布局与运行时状态 | Cockpit |
+| **注册条目状态** | Registry Entry Status | 注册表条目的生命周期状态：`available`（可用未集成）→ `active`（已集成）→ `deprecated`（已废弃） | Registry |
+| **Store 域** | Store Domain | Store 的业务域分类：`market`/`analysis`/`trading`/`portfolio`/`system`/`cockpit`/`input`/`signal`/`widget` | Registry |
+| **Widget 错误边界** | Widget Error Boundary | `WidgetErrorBoundary` 组件，在 `CockpitShell` 中包裹每个 Widget 渲染，实现 Widget 级错误隔离 | Cockpit |
+| **模块注册体系** | Module Registry System | 四层注册表（Store/Service/Component/Widget）的统一治理架构，解决模块创建后遗忘导致的死代码问题 | Architecture |

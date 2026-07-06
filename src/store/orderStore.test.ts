@@ -1,16 +1,22 @@
-import { vi, describe, it, expect, beforeEach } from 'vitest'
+﻿﻿import { vi, describe, it, expect, beforeEach } from 'vitest'
 import type { Order } from '@/data/types'
 import {
-  buildTradePairs,
-  computePnLSummary,
-  buildPositions,
-  computeRiskMetrics,
   useOrderStore,
   initOrderStoreSubscriptions,
-  type TradePair,
-  type PositionItem,
-  type PnLSummary,
 } from './orderStore'
+import {
+  buildTradePairs,
+  buildPositions,
+  type SymbolTradePair,
+  type PositionItem,
+} from '@/services/trading/positionComputer'
+import {
+  computePnLSummary,
+  type PnLSummary,
+} from '@/services/trading/pnlComputer'
+import {
+  computeRiskMetrics,
+} from '@/services/trading/riskComputer'
 import { dataLayer } from '@/data/dataLayer'
 
 // ============================================================
@@ -258,7 +264,7 @@ describe('computePnLSummary', () => {
   })
 
   it('单盈利配对 → winRate=100%, profitFactor=999, profitTrades=1', () => {
-    const tradePairs: TradePair[] = [
+    const tradePairs: SymbolTradePair[] = [
       {
         symbol: 'AAPL',
         buyOrders: [],
@@ -269,7 +275,7 @@ describe('computePnLSummary', () => {
         openPositions: 0,
         avgCostPrice: 0,
         pairs: [
-          { profitPct: 50, buyDate: '2024-01-01', sellDate: '2024-01-02', quantity: 100, realizedAmount: 500 },
+          { buyId: 'b1', sellId: 's1', profitPct: 50, holdDays: 1, buyDate: '2024-01-01', sellDate: '2024-01-02', quantity: 100, realizedAmount: 500 },
         ],
       },
     ]
@@ -284,7 +290,7 @@ describe('computePnLSummary', () => {
   })
 
   it('单亏损配对 → winRate=0%, profitFactor=0, lossTrades=1', () => {
-    const tradePairs: TradePair[] = [
+    const tradePairs: SymbolTradePair[] = [
       {
         symbol: 'AAPL',
         buyOrders: [],
@@ -295,7 +301,7 @@ describe('computePnLSummary', () => {
         openPositions: 0,
         avgCostPrice: 0,
         pairs: [
-          { profitPct: -20, buyDate: '2024-01-01', sellDate: '2024-01-02', quantity: 100, realizedAmount: -200 },
+          { buyId: 'b2', sellId: 's2', profitPct: -20, holdDays: 1, buyDate: '2024-01-01', sellDate: '2024-01-02', quantity: 100, realizedAmount: -200 },
         ],
       },
     ]
@@ -310,7 +316,7 @@ describe('computePnLSummary', () => {
   })
 
   it('混合盈亏 → winRate=50%, profitFactor 计算正确', () => {
-    const tradePairs: TradePair[] = [
+    const tradePairs: SymbolTradePair[] = [
       {
         symbol: 'AAPL',
         buyOrders: [],
@@ -321,7 +327,7 @@ describe('computePnLSummary', () => {
         openPositions: 0,
         avgCostPrice: 0,
         pairs: [
-          { profitPct: 50, buyDate: '2024-01-01', sellDate: '2024-01-02', quantity: 100, realizedAmount: 500 },
+          { buyId: 'b3', sellId: 's3', profitPct: 50, holdDays: 1, buyDate: '2024-01-01', sellDate: '2024-01-02', quantity: 100, realizedAmount: 500 },
         ],
       },
       {
@@ -334,7 +340,7 @@ describe('computePnLSummary', () => {
         openPositions: 0,
         avgCostPrice: 0,
         pairs: [
-          { profitPct: -20, buyDate: '2024-01-01', sellDate: '2024-01-03', quantity: 100, realizedAmount: -200 },
+          { buyId: 'b4', sellId: 's4', profitPct: -20, holdDays: 2, buyDate: '2024-01-01', sellDate: '2024-01-03', quantity: 100, realizedAmount: -200 },
         ],
       },
     ]
@@ -349,7 +355,7 @@ describe('computePnLSummary', () => {
   })
 
   it('月度聚合 → 按月份正确汇总', () => {
-    const tradePairs: TradePair[] = [
+    const tradePairs: SymbolTradePair[] = [
       {
         symbol: 'AAPL',
         buyOrders: [],
@@ -360,9 +366,9 @@ describe('computePnLSummary', () => {
         openPositions: 0,
         avgCostPrice: 0,
         pairs: [
-          { profitPct: 20, buyDate: '2024-01-01', sellDate: '2024-01-15', quantity: 100, realizedAmount: 100 },
-          { profitPct: 10, buyDate: '2024-01-05', sellDate: '2024-02-01', quantity: 100, realizedAmount: 100 },
-          { profitPct: 5, buyDate: '2024-02-10', sellDate: '2024-02-20', quantity: 100, realizedAmount: 50 },
+          { buyId: 'b5', sellId: 's5', profitPct: 20, holdDays: 14, buyDate: '2024-01-01', sellDate: '2024-01-15', quantity: 100, realizedAmount: 100 },
+          { buyId: 'b6', sellId: 's6', profitPct: 10, holdDays: 27, buyDate: '2024-01-05', sellDate: '2024-02-01', quantity: 100, realizedAmount: 100 },
+          { buyId: 'b7', sellId: 's7', profitPct: 5, holdDays: 10, buyDate: '2024-02-10', sellDate: '2024-02-20', quantity: 100, realizedAmount: 50 },
         ],
       },
     ]
@@ -375,7 +381,7 @@ describe('computePnLSummary', () => {
   })
 
   it('日度累计曲线 → 按日期排序累加', () => {
-    const tradePairs: TradePair[] = [
+    const tradePairs: SymbolTradePair[] = [
       {
         symbol: 'AAPL',
         buyOrders: [],
@@ -386,9 +392,9 @@ describe('computePnLSummary', () => {
         openPositions: 0,
         avgCostPrice: 0,
         pairs: [
-          { profitPct: 20, buyDate: '2024-01-01', sellDate: '2024-01-15', quantity: 100, realizedAmount: 100 },
-          { profitPct: 10, buyDate: '2024-01-05', sellDate: '2024-01-10', quantity: 100, realizedAmount: 50 },
-          { profitPct: 5, buyDate: '2024-01-10', sellDate: '2024-02-01', quantity: 100, realizedAmount: 50 },
+          { buyId: 'b8', sellId: 's8', profitPct: 20, holdDays: 14, buyDate: '2024-01-01', sellDate: '2024-01-15', quantity: 100, realizedAmount: 100 },
+          { buyId: 'b9', sellId: 's9', profitPct: 10, holdDays: 5, buyDate: '2024-01-05', sellDate: '2024-01-10', quantity: 100, realizedAmount: 50 },
+          { buyId: 'b10', sellId: 's10', profitPct: 5, holdDays: 22, buyDate: '2024-01-10', sellDate: '2024-02-01', quantity: 100, realizedAmount: 50 },
         ],
       },
     ]
@@ -402,7 +408,7 @@ describe('computePnLSummary', () => {
   })
 
   it('只有盈利无亏损 → profitFactor=999', () => {
-    const tradePairs: TradePair[] = [
+    const tradePairs: SymbolTradePair[] = [
       {
         symbol: 'AAPL',
         buyOrders: [],
@@ -413,8 +419,8 @@ describe('computePnLSummary', () => {
         openPositions: 0,
         avgCostPrice: 0,
         pairs: [
-          { profitPct: 30, buyDate: '2024-01-01', sellDate: '2024-01-02', quantity: 100, realizedAmount: 300 },
-          { profitPct: 50, buyDate: '2024-01-03', sellDate: '2024-01-04', quantity: 100, realizedAmount: 500 },
+          { buyId: 'b11', sellId: 's11', profitPct: 30, holdDays: 1, buyDate: '2024-01-01', sellDate: '2024-01-02', quantity: 100, realizedAmount: 300 },
+          { buyId: 'b12', sellId: 's12', profitPct: 50, holdDays: 1, buyDate: '2024-01-03', sellDate: '2024-01-04', quantity: 100, realizedAmount: 500 },
         ],
       },
     ]
@@ -427,7 +433,7 @@ describe('computePnLSummary', () => {
   })
 
   it('多 symbol 合并统计', () => {
-    const tradePairs: TradePair[] = [
+    const tradePairs: SymbolTradePair[] = [
       {
         symbol: 'AAPL',
         buyOrders: [],
@@ -438,7 +444,7 @@ describe('computePnLSummary', () => {
         openPositions: 0,
         avgCostPrice: 0,
         pairs: [
-          { profitPct: 20, buyDate: '2024-01-01', sellDate: '2024-01-02', quantity: 100, realizedAmount: 200 },
+          { buyId: 'b13', sellId: 's13', profitPct: 20, holdDays: 1, buyDate: '2024-01-01', sellDate: '2024-01-02', quantity: 100, realizedAmount: 200 },
         ],
       },
       {
@@ -451,7 +457,7 @@ describe('computePnLSummary', () => {
         openPositions: 0,
         avgCostPrice: 0,
         pairs: [
-          { profitPct: 10, buyDate: '2024-01-01', sellDate: '2024-01-02', quantity: 100, realizedAmount: 100 },
+          { buyId: 'b14', sellId: 's14', profitPct: 10, holdDays: 1, buyDate: '2024-01-01', sellDate: '2024-01-02', quantity: 100, realizedAmount: 100 },
         ],
       },
       {
@@ -464,7 +470,7 @@ describe('computePnLSummary', () => {
         openPositions: 0,
         avgCostPrice: 0,
         pairs: [
-          { profitPct: -10, buyDate: '2024-01-01', sellDate: '2024-01-02', quantity: 100, realizedAmount: -100 },
+          { buyId: 'b15', sellId: 's15', profitPct: -10, holdDays: 1, buyDate: '2024-01-01', sellDate: '2024-01-02', quantity: 100, realizedAmount: -100 },
         ],
       },
     ]
@@ -489,7 +495,7 @@ describe('buildPositions', () => {
   })
 
   it('有持仓 → 正确 symbol/quantity/avgCost/costValue', () => {
-    const tradePairs: TradePair[] = [
+    const tradePairs: SymbolTradePair[] = [
       {
         symbol: 'AAPL',
         buyOrders: [
@@ -517,7 +523,7 @@ describe('buildPositions', () => {
   })
 
   it('已清仓（openPositions=0）→ 不包含', () => {
-    const tradePairs: TradePair[] = [
+    const tradePairs: SymbolTradePair[] = [
       {
         symbol: 'AAPL',
         buyOrders: [
@@ -531,7 +537,7 @@ describe('buildPositions', () => {
         realizedPnl: 500,
         openPositions: 0,
         avgCostPrice: 0,
-        pairs: [{ profitPct: 50, buyDate: '2024-01-01', sellDate: '2024-01-02', quantity: 100, realizedAmount: 500 }],
+        pairs: [{ buyId: 'b16', sellId: 's16', profitPct: 50, holdDays: 1, buyDate: '2024-01-01', sellDate: '2024-01-02', quantity: 100, realizedAmount: 500 }],
       },
     ]
     const result = buildPositions(tradePairs)
@@ -539,7 +545,7 @@ describe('buildPositions', () => {
   })
 
   it('多标的 → 按 costValue 降序', () => {
-    const tradePairs: TradePair[] = [
+    const tradePairs: SymbolTradePair[] = [
       {
         symbol: 'AAPL',
         buyOrders: [
@@ -577,7 +583,7 @@ describe('buildPositions', () => {
   })
 
   it('firstBuyAt 和 lastChangedAt 正确', () => {
-    const tradePairs: TradePair[] = [
+    const tradePairs: SymbolTradePair[] = [
       {
         symbol: 'AAPL',
         buyOrders: [
@@ -592,7 +598,7 @@ describe('buildPositions', () => {
         realizedPnl: 210,
         openPositions: 70,
         avgCostPrice: 10,
-        pairs: [{ profitPct: 50, buyDate: '2024-01-01', sellDate: '2024-01-10', quantity: 30, realizedAmount: 150 }],
+        pairs: [{ buyId: 'b17', sellId: 's17', profitPct: 50, holdDays: 9, buyDate: '2024-01-01', sellDate: '2024-01-10', quantity: 30, realizedAmount: 150 }],
       },
     ]
     const result = buildPositions(tradePairs)
@@ -603,7 +609,7 @@ describe('buildPositions', () => {
   })
 
   it('direction 始终为 buy', () => {
-    const tradePairs: TradePair[] = [
+    const tradePairs: SymbolTradePair[] = [
       {
         symbol: 'AAPL',
         buyOrders: [
@@ -656,7 +662,7 @@ describe('computeRiskMetrics', () => {
   })
 
   it('正常数据 → 各指标在合理范围', () => {
-    const tradePairs: TradePair[] = [
+    const tradePairs: SymbolTradePair[] = [
       {
         symbol: 'AAPL',
         buyOrders: [],
@@ -695,7 +701,7 @@ describe('computeRiskMetrics', () => {
   })
 
   it('VaR high: var95 < -5', () => {
-    const tradePairs: TradePair[] = [
+    const tradePairs: SymbolTradePair[] = [
       { symbol: 'AAPL', buyOrders: [], sellOrders: [], totalBuy: 1000, totalSell: 0, realizedPnl: 0, openPositions: 0, avgCostPrice: 0, pairs: [] },
     ]
     const pnlSummary: PnLSummary = {
@@ -722,7 +728,7 @@ describe('computeRiskMetrics', () => {
   })
 
   it('VaR medium: -5 <= var95 < -2', () => {
-    const tradePairs: TradePair[] = [
+    const tradePairs: SymbolTradePair[] = [
       { symbol: 'AAPL', buyOrders: [], sellOrders: [], totalBuy: 10000, totalSell: 0, realizedPnl: 0, openPositions: 0, avgCostPrice: 0, pairs: [] },
     ]
     const pnlSummary: PnLSummary = {
@@ -750,7 +756,7 @@ describe('computeRiskMetrics', () => {
   })
 
   it('VaR low: var95 >= -2', () => {
-    const tradePairs: TradePair[] = [
+    const tradePairs: SymbolTradePair[] = [
       { symbol: 'AAPL', buyOrders: [], sellOrders: [], totalBuy: 10000, totalSell: 0, realizedPnl: 0, openPositions: 0, avgCostPrice: 0, pairs: [] },
     ]
     const pnlSummary: PnLSummary = {
@@ -799,7 +805,7 @@ describe('computeRiskMetrics', () => {
   })
 
   it('夏普 < 0 → alert', () => {
-    const tradePairs: TradePair[] = [
+    const tradePairs: SymbolTradePair[] = [
       { symbol: 'AAPL', buyOrders: [], sellOrders: [], totalBuy: 10000, totalSell: 0, realizedPnl: 0, openPositions: 0, avgCostPrice: 0, pairs: [] },
     ]
     const pnlSummary: PnLSummary = {
@@ -829,7 +835,7 @@ describe('computeRiskMetrics', () => {
   })
 
   it('最大回撤 > 20% → alert', () => {
-    const tradePairs: TradePair[] = [
+    const tradePairs: SymbolTradePair[] = [
       { symbol: 'AAPL', buyOrders: [], sellOrders: [], totalBuy: 1000, totalSell: 0, realizedPnl: 0, openPositions: 0, avgCostPrice: 0, pairs: [] },
     ]
     const pnlSummary: PnLSummary = {
@@ -854,7 +860,7 @@ describe('computeRiskMetrics', () => {
   })
 
   it('无持仓 → betaEstimate=0', () => {
-    const tradePairs: TradePair[] = [
+    const tradePairs: SymbolTradePair[] = [
       { symbol: 'AAPL', buyOrders: [], sellOrders: [], totalBuy: 1000, totalSell: 1500, realizedPnl: 500, openPositions: 0, avgCostPrice: 0, pairs: [] },
     ]
     const pnlSummary: PnLSummary = {
@@ -1032,3 +1038,4 @@ describe('initOrderStoreSubscriptions', () => {
     cleanup()
   })
 })
+

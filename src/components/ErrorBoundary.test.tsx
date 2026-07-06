@@ -17,6 +17,7 @@ import { render, screen } from '@testing-library/react'
 vi.mock('@/lib/logger', () => ({
   getLogger: () => ({
     error: vi.fn(),
+    info: vi.fn(),
   }),
 }))
 

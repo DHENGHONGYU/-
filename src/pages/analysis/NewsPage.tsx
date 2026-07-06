@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Link } from 'react-router'
 import { RefreshCw, Sparkles } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge'
@@ -20,41 +20,45 @@ import {
 } from '@/components/ui/Dialog'
 import { NewsCard } from '@/components/news/NewsCard'
 import { NewsFilterPanel, type NewsFilterState } from '@/components/news/NewsFilterPanel'
-import type { NewsArticle } from '@/data/types'
-import { generateMockArticles, listNews, saveNewsArticles } from '@/services/news/newsService'
+import { NewsSentimentTrend } from '@/components/analysis/news/NewsSentimentTrend'
+import { useAnalysisNewsStore } from '@/store/analysisNewsStore'
+import { getLogger } from '@/lib/logger'
+import { twBg } from '@/constants/theme.tokens'
+
+const logger = getLogger()
 
 export default function NewsPage(): React.JSX.Element {
-  const [articles, setArticles] = useState<NewsArticle[]>([])
-  const [loading, setLoading] = useState(false)
-  const [filter, setFilter] = useState<NewsFilterState>({
-    keyword: '',
-    category: '',
-    sentiment: '',
-    source: '',
-  })
-  const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null)
+  // 从 Store 获取状态
+  const articles = useAnalysisNewsStore((s) => s.articles)
+  const loading = useAnalysisNewsStore((s) => s.loading)
+  const filter = useAnalysisNewsStore((s) => s.filter)
+  const selectedArticle = useAnalysisNewsStore((s) => s.selectedArticle)
 
-  const loadNews = useCallback(async () => {
-    setLoading(true)
-    const result = await listNews({
-      keyword: filter.keyword || undefined,
-      category: filter.category || undefined,
-      sentiment: filter.sentiment || undefined,
-      source: filter.source || undefined,
-    })
-    if (result.success && result.data) {
-      setArticles(result.data)
-    }
-    setLoading(false)
-  }, [filter])
+  // 从 Store 获取 actions
+  const setFilter = useAnalysisNewsStore((s) => s.setFilter)
+  const selectArticle = useAnalysisNewsStore((s) => s.selectArticle)
+  const fetchArticles = useAnalysisNewsStore((s) => s.fetchArticles)
+  const generateMockArticles = useAnalysisNewsStore((s) => s.generateMockArticles)
 
+  // 初始化加载 & filter 变化时重新加载
   useEffect(() => {
-    void loadNews()
-  }, [loadNews])
+    logger.info('[NewsPage] 初始化或 filter 变化，加载资讯', {
+      keyword: filter.keyword,
+      category: filter.category,
+      sentiment: filter.sentiment,
+      source: filter.source,
+    })
+    void fetchArticles()
+  }, [filter, fetchArticles])
 
-  const handleGenerateMock = async () => {
-    await saveNewsArticles(generateMockArticles(5))
-    await loadNews()
+  const handleGenerateMock = async (): Promise<void> => {
+    logger.info('[NewsPage] 生成模拟资讯')
+    await generateMockArticles()
+  }
+
+  const handleFilterChange = (newFilter: NewsFilterState): void => {
+    logger.info('[NewsPage] filter 变化', { newFilter })
+    setFilter(newFilter)
   }
 
   return (
@@ -88,11 +92,11 @@ export default function NewsPage(): React.JSX.Element {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <Button onClick={handleGenerateMock} disabled={loading}>
+        <Button onClick={() => void handleGenerateMock()} disabled={loading}>
           <Sparkles className="mr-2 h-4 w-4" />
           生成模拟资讯
         </Button>
-        <Button variant="outline" onClick={loadNews} disabled={loading}>
+        <Button variant="outline" onClick={() => void fetchArticles()} disabled={loading}>
           <RefreshCw className="mr-2 h-4 w-4" />
           刷新
         </Button>
@@ -100,7 +104,7 @@ export default function NewsPage(): React.JSX.Element {
 
       <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
         <aside>
-          <NewsFilterPanel filter={filter} onChange={setFilter} />
+          <NewsFilterPanel filter={filter} onChange={handleFilterChange} />
         </aside>
 
         <main>
@@ -114,7 +118,7 @@ export default function NewsPage(): React.JSX.Element {
                 <NewsCard
                   key={article.id}
                   article={article}
-                  onClick={() => setSelectedArticle(article)}
+                  onClick={() => selectArticle(article)}
                 />
               ))}
             </div>
@@ -122,7 +126,10 @@ export default function NewsPage(): React.JSX.Element {
         </main>
       </div>
 
-      <Dialog open={selectedArticle !== null} onOpenChange={(open) => !open && setSelectedArticle(null)}>
+      {/* 资讯情感趋势图 */}
+      {articles.length > 0 && <NewsSentimentTrend />}
+
+      <Dialog open={selectedArticle !== null} onOpenChange={(open) => !open && selectArticle(null)}>
         <DialogContent>
           {selectedArticle && (
             <>
@@ -139,9 +146,9 @@ export default function NewsPage(): React.JSX.Element {
                     }
                     className={
                       selectedArticle.sentiment === 'positive'
-                        ? 'bg-emerald-500 text-white hover:bg-emerald-500/80'
+                        ? `${twBg('emerald', 500)} text-white hover:${twBg('emerald', 500)}/80`
                         : selectedArticle.sentiment === 'neutral'
-                          ? 'bg-slate-500 text-white hover:bg-slate-500/80'
+                          ? `${twBg('slate', 500)} text-white hover:${twBg('slate', 500)}/80`
                           : ''
                     }
                   >

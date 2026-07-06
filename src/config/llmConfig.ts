@@ -131,6 +131,9 @@ export const LLM_MODEL_PRESETS: LlmPreset[] = [
   },
 ]
 
+/** 默认 LLM Base URL（DeepSeek API 地址），用于 UI placeholder 和默认配置 */
+export const DEFAULT_LLM_BASE_URL = 'https://api.deepseek.com'
+
 /** 根据 preset id 获取预设 */
 export function getPresetById(id: string): LlmPreset | undefined {
   return LLM_MODEL_PRESETS.find((p) => p.id === id)
@@ -236,7 +239,7 @@ export function isLlmConfigured(config: PartialLlmConfig): config is LlmConfig {
 export function getDefaultLlmConfig(): LlmConfig {
   const cachedKey = getCachedApiKey()
   return {
-    baseURL: import.meta.env.VITE_LLM_BASE_URL ?? 'https://api.deepseek.com',
+    baseURL: import.meta.env.VITE_LLM_BASE_URL ?? DEFAULT_LLM_BASE_URL,
     // P0-01 安全修复：API Key 从加密 localStorage 读取，不再从 VITE_ 环境变量读取
     apiKey: cachedKey === '__encrypted_pending__' ? '' : cachedKey,
     model: import.meta.env.VITE_LLM_MODEL ?? 'deepseek-v4-flash',

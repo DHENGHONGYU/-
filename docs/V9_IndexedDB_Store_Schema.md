@@ -1,7 +1,7 @@
 # V9 IndexedDB Store Schema 文档
 
-> **版本**：v16  
-> **生成日期**：2026-07-02  
+> **版本**：v21  
+> **生成日期**：2026-07-05  
 > **源文件**：`src/config/dbConfig.ts`、`src/data/db.ts`、`src/data/types.ts`
 
 ---
@@ -13,8 +13,8 @@
 | 项目 | 值 |
 |------|-----|
 | 数据库名称 | `V6ProDB` |
-| 当前版本号 | **16** |
-| Store 总数 | **24** |
+| 当前版本号 | **21** |
+| Store 总数 | **25** |
 | 存储引擎 | IndexedDB（浏览器本地存储） |
 | 封装类 | `V6Database`（`src/data/db.ts`） |
 
@@ -29,7 +29,12 @@
 | v12 → v13 | 新增 `news_bookmarks` 存储，用于持久化资讯收藏状态。 |
 | v13 → v14 | 新增 `hot_sector_scores`、`value_pit_scores` 存储，支撑双策略体系。 |
 | v14 → v15 | `hot_sector_scores` 维度字段 `composite` 重命名为 `marketEnv`；`value_pit_scores` 移除 `composite` 字段；新增 `execution_logs`、`missing_reports` Store。 |
-| v15 → v16 | 数据层补全：新增 `executionPlans`（执行计划）、`portfolios`（投资组合）Store。 |
+| v15 → v16 | 数据层补全：新增 `execution_plans`（执行计划）、`portfolios`（投资组合）Store。 |
+| v16 → v17 | 智能体调度层：新增 `agent_tasks`、`agent_health_logs` Store。 |
+| v17 → v18 | 命令模块：新增 `command_audit_logs` Store。 |
+| v18 → v19 | 输出舱与执行模块：新增 `export_tasks`、`execution_strategies` Store。 |
+| v19 → v20 | 交易复盘：新增 `trade_reviews` Store。 |
+| v20 → v21 | 数据字典补全：完善 ACL 矩阵，新增 `datalayer` 模块的 read/write 权限。 |
 
 ### 1.3 Store 一览
 
@@ -55,10 +60,11 @@
 | 18 | `news_bookmarks` | `id` | 否 | 1 | 资讯收藏记录 |
 | 19 | `hot_sector_scores` | `symbol` | 否 | 1 | `HotSectorScore` |
 | 20 | `value_pit_scores` | `symbol` | 否 | 1 | `ValuePitScore` |
-| 21 | `execution_logs` | `id` | 是 | 0 | `ExecutionLog`（v15 新增） |
-| 22 | `missing_reports` | `id` | 否 | 0 | `MissingReport`（v15 新增） |
-| 23 | `execution_plans` | `id` | 否 | 0 | `ExecutionPlan`（v16 新增） |
-| 24 | `portfolios` | `id` | 否 | 0 | `Portfolio`（v16 新增） |
+| 21 | `execution_logs` | `id` | 是 | 3 | `ExecutionLog`（v15 新增） |
+| 22 | `missing_reports` | `id` | 是 | 3 | `MissingReport`（v15 新增） |
+| 23 | `execution_plans` | `id` | 否 | 4 | `ExecutionPlan`（v16 新增） |
+| 24 | `portfolios` | `id` | 否 | 2 | `Portfolio`（v16 新增） |
+| 25 | `trade_reviews` | `id` | 否 | 1 | `TradeReviewRecord`（v20 新增） |
 
 ---
 
@@ -740,6 +746,196 @@
 
 ---
 
+### 2.21 execution_logs — 执行日志
+
+| 属性 | 值 |
+|------|-----|
+| Store 名称 | `execution_logs` |
+| 主键 (keyPath) | `id` |
+| 自增 | **是** |
+| 数据实体类型 | `ExecutionLog` |
+| 数据来源模块 | `execution`（读写）、`trading`（读） |
+| 引入版本 | v15 |
+
+**索引列表：**
+
+| 索引名 | 字段 | 唯一 | 用途 |
+|--------|------|------|------|
+| `by-plan` | `planId` | 否 | 按执行计划查询日志 |
+| `by-symbol` | `symbol` | 否 | 按股票代码筛选 |
+| `by-timestamp` | `timestamp` | 否 | 按时间排序 |
+
+**主要字段说明：**
+
+| 字段名 | 类型 | 必填 | 说明 |
+|--------|------|------|------|
+| `id` | `number` | 否 | 自增主键 |
+| `planId` | `string` | 是 | 关联的执行计划 ID |
+| `symbol` | `string` | 是 | 股票代码 |
+| `action` | `string` | 是 | 执行动作（如 buy/sell/cancel） |
+| `actor` | `string` | 否 | 执行者（user/agent/system） |
+| `phase` | `ExecutionPhase` | 是 | 执行阶段（plan/confirmed/pending/executed/cancelled/reviewed） |
+| `timestamp` | `number` | 是 | 执行时间戳 |
+| `detail` | `string` | 否 | 执行详情描述 |
+| `success` | `boolean` | 否 | 是否执行成功 |
+| `errorMessage` | `string` | 否 | 错误信息（失败时填充） |
+| `createdAt` | `number` | 是 | 记录创建时间戳 |
+
+---
+
+### 2.22 missing_reports — 缺失报告登记
+
+| 属性 | 值 |
+|------|-----|
+| Store 名称 | `missing_reports` |
+| 主键 (keyPath) | `id` |
+| 自增 | **是** |
+| 数据实体类型 | `MissingReport` |
+| 数据来源模块 | `execution`（读写）、`trading`（读） |
+| 引入版本 | v15 |
+
+**索引列表：**
+
+| 索引名 | 字段 | 唯一 | 用途 |
+|--------|------|------|------|
+| `by-symbol` | `symbol` | 否 | 按股票代码查询缺失报告 |
+| `by-severity` | `severity` | 否 | 按严重程度筛选 |
+| `by-detected-at` | `detectedAt` | 否 | 按检测时间排序 |
+
+**主要字段说明：**
+
+| 字段名 | 类型 | 必填 | 说明 |
+|--------|------|------|------|
+| `id` | `number` | 否 | 自增主键 |
+| `symbol` | `string` | 是 | 股票代码 |
+| `reportType` | `string` | 是 | 报告类型 |
+| `severity` | `string` | 是 | 严重程度（low/medium/high/critical） |
+| `reason` | `string` | 是 | 缺失原因 |
+| `detectedAt` | `number` | 是 | 检测时间戳 |
+| `retryCount` | `number` | 是 | 重试次数 |
+| `resolvedAt` | `number` | 否 | 解决时间戳（未解决时为 undefined） |
+| `createdAt` | `number` | 是 | 记录创建时间戳 |
+
+---
+
+### 2.23 execution_plans — 执行计划
+
+| 属性 | 值 |
+|------|-----|
+| Store 名称 | `execution_plans` |
+| 主键 (keyPath) | `id` |
+| 自增 | 否 |
+| 数据实体类型 | `ExecutionPlan` |
+| 数据来源模块 | `execution`（读写）、`trading`（读写） |
+| 引入版本 | v16 |
+
+**索引列表：**
+
+| 索引名 | 字段 | 唯一 | 用途 |
+|--------|------|------|------|
+| `by-signal` | `signalId` | 否 | 按关联信号查询 |
+| `by-symbol` | `symbol` | 否 | 按股票代码筛选 |
+| `by-phase` | `phase` | 否 | 按执行阶段筛选 |
+| `by-created-at` | `createdAt` | 否 | 按创建时间排序 |
+
+**主要字段说明：**
+
+| 字段名 | 类型 | 必填 | 说明 |
+|--------|------|------|------|
+| `id` | `string` | 是 | 执行计划 ID，主键 |
+| `signalId` | `string` | 否 | 关联的交易信号 ID |
+| `symbol` | `string` | 是 | 股票代码 |
+| `name` | `string` | 是 | 计划名称 |
+| `phase` | `ExecutionPhase` | 是 | 当前执行阶段 |
+| `direction` | `'buy' \| 'sell'` | 是 | 买卖方向 |
+| `quantity` | `number` | 是 | 计划数量 |
+| `targetPrice` | `number` | 是 | 目标价格 |
+| `currentPrice` | `number` | 否 | 当前市场价格 |
+| `rationale` | `string` | 是 | 执行理由 |
+| `confidence` | `number` | 是 | 置信度（0-1） |
+| `riskChecks` | `RiskCheckItem[]` | 是 | 风控检查项列表 |
+| `risk` | `object` | 否 | 风控结果（passed/preCheck/postCheck/issueCount/checks/warnings） |
+| `sizing` | `object` | 否 | 仓位计算（quantity/positionPct/reason） |
+| `result` | `'success' \| 'failed' \| 'partial'` | 否 | 执行结果 |
+| `orderId` | `string` | 否 | 关联订单 ID |
+| `errorMessage` | `string` | 否 | 错误信息 |
+| `accountType` | `AccountType` | 否 | 账户类型（paper/real） |
+| `confirmedAt` | `number` | 否 | 确认时间戳 |
+| `executedAt` | `number` | 否 | 执行时间戳 |
+| `reviewedAt` | `number` | 否 | 复盘时间戳 |
+| `createdAt` | `number` | 是 | 创建时间戳 |
+| `updatedAt` | `number` | 否 | 更新时间戳 |
+
+---
+
+### 2.24 portfolios — 投资组合
+
+| 属性 | 值 |
+|------|-----|
+| Store 名称 | `portfolios` |
+| 主键 (keyPath) | `id` |
+| 自增 | 否 |
+| 数据实体类型 | `Portfolio` |
+| 数据来源模块 | `strategy`（读写）、`tradinghub`（读） |
+| 引入版本 | v16 |
+
+**索引列表：**
+
+| 索引名 | 字段 | 唯一 | 用途 |
+|--------|------|------|------|
+| `by-theme` | `theme` | 否 | 按投资主题筛选 |
+| `by-updated-at` | `updatedAt` | 否 | 按更新时间排序 |
+
+**主要字段说明：**
+
+| 字段名 | 类型 | 必填 | 说明 |
+|--------|------|------|------|
+| `id` | `string` | 是 | 组合 ID，主键 |
+| `name` | `string` | 是 | 组合名称 |
+| `theme` | `string` | 是 | 投资主题 |
+| `totalValue` | `number` | 是 | 组合总价值 |
+| `cashReserve` | `number` | 是 | 现金储备 |
+| `holdings` | `PortfolioHolding[]` | 是 | 持仓列表（symbol/name/currentShares/currentWeight/targetWeight/targetShares/price/marketValue/score/rationale） |
+| `rebalancePlan` | `RebalanceAction[]` | 是 | 再平衡计划（symbol/action/shares/reason） |
+| `createdAt` | `number` | 是 | 创建时间戳 |
+| `updatedAt` | `number` | 是 | 更新时间戳 |
+
+---
+
+### 2.25 trade_reviews — 交易纪律复盘
+
+| 属性 | 值 |
+|------|-----|
+| Store 名称 | `trade_reviews` |
+| 主键 (keyPath) | `id` |
+| 自增 | 否 |
+| 数据实体类型 | `TradeReviewRecord` |
+| 数据来源模块 | `trading`（读写）、`output`（读） |
+| 引入版本 | v20 |
+| 类型定义位置 | `src/services/trading/tradeReviewAI.types.ts` |
+
+**索引列表：**
+
+| 索引名 | 字段 | 唯一 | 用途 |
+|--------|------|------|------|
+| `by-generated-at` | `generatedAt` | 否 | 按生成时间排序 |
+
+**主要字段说明：**
+
+| 字段名 | 类型 | 必填 | 说明 |
+|--------|------|------|------|
+| `id` | `string` | 是 | 复盘记录 ID，主键 |
+| `generatedAt` | `number` | 是 | 生成时间戳 |
+| `report` | `TradeReviewReport` | 是 | 六维复盘报告主体（summary/errorAnalysis/disciplineAnalysis/skillDevelopment/actionPlan/aiInsight） |
+| `tradeErrors` | `DetectedError[]` | 是 | 检测到的交易错误列表 |
+| `disciplineScore` | `number` | 是 | 纪律评分（0-100） |
+| `skillRoadmap` | `string[]` | 是 | 技能发展路线图 |
+| `psychologicalProfile` | `PsychologicalProfile \| null` | 是 | 心理画像（可为 null） |
+
+> **注意**：`TradeReviewRecord` 是 25 个 Store 中唯一不在 `src/data/types.ts` 中定义的类型，其类型定义位于 `src/services/trading/tradeReviewAI.types.ts`。
+
+---
+
 ## 3. 附录
 
 ### 3.1 Store 与数据实体映射关系表
@@ -766,6 +962,11 @@
 | `news_bookmarks` | 资讯收藏记录（NewsArticle 扩展） | — | `id` |
 | `hot_sector_scores` | `HotSectorScore` | `src/data/types.ts` | `symbol` |
 | `value_pit_scores` | `ValuePitScore` | `src/data/types.ts` | `symbol` |
+| `execution_logs` | `ExecutionLog` | `src/data/types.ts` | `id`（自增） |
+| `missing_reports` | `MissingReport` | `src/data/types.ts` | `id`（自增） |
+| `execution_plans` | `ExecutionPlan` | `src/data/types.ts` | `id` |
+| `portfolios` | `Portfolio` | `src/data/types.ts` | `id` |
+| `trade_reviews` | `TradeReviewRecord` | `src/services/trading/tradeReviewAI.types.ts` | `id` |
 
 ### 3.2 模块与 Store 权限矩阵（ACL）
 
@@ -800,7 +1001,9 @@
 | `intelligent_scores` | `id` | AI 智能评分历史，每条记录独立自增 |
 | `industry_scores` | `id` | 行业评分历史，每条记录独立自增 |
 | `research_logs` | `id` | 操作审计日志，按顺序自增 |
+| `execution_logs` | `id` | 执行日志，按顺序自增（v15 新增） |
+| `missing_reports` | `id` | 缺失报告登记，按顺序自增（v15 新增） |
 
 ---
 
-> **文档说明**：本文档基于 `DB_VERSION = 16` 的代码实现自动整理，所有 Schema 定义来源于 `src/data/db.ts` 的 `onupgradeneeded` 回调，类型定义来源于 `src/data/types.ts`。当数据库版本升级时，请同步更新本文档。
+> **文档说明**：本文档基于 `DB_VERSION = 21` 的代码实现自动整理，所有 Schema 定义来源于 `src/data/db.ts` 的 `onupgradeneeded` 回调，类型定义来源于 `src/data/types.ts`。当数据库版本升级时，请同步更新本文档。

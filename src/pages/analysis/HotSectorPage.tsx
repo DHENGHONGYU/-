@@ -19,6 +19,7 @@ import { WidgetShell } from '@/components/widgets/WidgetShell'
 import ScoreRadar from '@/components/chart/ScoreRadar'
 import type { WidgetConfig } from '@/types/widget'
 import type { ScoreRadarData } from '@/components/chart/ScoreRadar'
+import { twText, twBg, twBorder } from '@/constants/theme.tokens'
 
 const logger = getLogger()
 
@@ -161,13 +162,13 @@ export default function HotSectorPage(): React.JSX.Element {
           const isExpanded = expandedSymbol === score.symbol
           const actionCfg = ACTION_CONFIG[score.action] ?? ACTION_CONFIG.ignore
           const scoreColor =
-            (score.score ?? 0) >= 4 ? 'text-green-600' :
-            (score.score ?? 0) >= 3 ? 'text-yellow-600' :
-            'text-red-600'
+            (score.score ?? 0) >= 4 ? twText('green', 600) :
+            (score.score ?? 0) >= 3 ? twText('yellow', 600) :
+            twText('red', 600)
 
           // 构造雷达图数据
           const radarData: ScoreRadarData[] = Object.entries(score.dimensions ?? {}).map(([key, value]) => ({
-            dimension: DIMENSION_LABELS[key] || key,
+            dimension: DIMENSION_LABELS[key] ?? key,
             score: (value ?? 0) * 100,
             fullMark: 100,
           }))
@@ -220,9 +221,9 @@ export default function HotSectorPage(): React.JSX.Element {
                     {/* 交易建议卡片 */}
                     <div
                       className={`rounded-md border p-4 ${
-                        score.action === 'immediate' ? 'border-green-200 bg-green-50' :
-                        score.action === 'ignore' ? 'border-red-200 bg-red-50' :
-                        'border-yellow-200 bg-yellow-50'
+                        score.action === 'immediate' ? `${twBorder('green', 200)} ${twBg('green', 50)}` :
+                        score.action === 'ignore' ? `${twBorder('red', 200)} ${twBg('red', 50)}` :
+                        `${twBorder('yellow', 200)} ${twBg('yellow', 50)}`
                       }`}
                     >
                       <div className="flex items-center gap-2">

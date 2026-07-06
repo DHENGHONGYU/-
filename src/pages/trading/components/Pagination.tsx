@@ -65,6 +65,7 @@ export default function Pagination({ pagination, handlers }: PaginationProps): R
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">每页</span>
           <Select
+            aria-label="每页显示条数"
             value={String(pageSize)}
             onChange={(e) => onPageSizeChange(Number((e.target as HTMLSelectElement).value))}
             className="h-8 w-20"
@@ -125,6 +126,7 @@ export default function Pagination({ pagination, handlers }: PaginationProps): R
             onChange={(e) => setJumpValue(e.target.value.replace(/\D/g, ''))}
             onKeyDown={handleJumpKeyDown}
             placeholder="..."
+            aria-label="跳转到页码"
             className="h-8 w-12 rounded-md border border-input bg-background px-2 text-center text-sm"
           />
           <Button

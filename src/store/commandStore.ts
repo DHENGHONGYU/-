@@ -20,19 +20,9 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { loadSystemStats, resetAll } from '@/services/system/systemService'
+import { getLogger } from '@/lib/logger'
 
-// 日志工具函数
-const logger = {
-  info: (action: string, detail: Record<string, unknown>) => {
-    console.log(`[commandStore] INFO: ${action}`, detail)
-  },
-  warn: (action: string, detail: Record<string, unknown>) => {
-    console.warn(`[commandStore] WARN: ${action}`, detail)
-  },
-  error: (action: string, detail: Record<string, unknown>) => {
-    console.error(`[commandStore] ERROR: ${action}`, detail)
-  },
-}
+const logger = getLogger()
 
 // 类型定义
 interface SystemStats {
@@ -82,71 +72,71 @@ export const useCommandStore = create<CommandState>()(
       
       // 设置统计数据
       setStats: (stats) => {
-        logger.info('setStats', { 
+        logger.info('[commandStore] setStats', {
           stocks: stats.stocks,
           orders: stats.orders,
-          scores: stats.scores
+          scores: stats.scores,
         })
         set({ stats }, false, 'setStats')
       },
-      
+
       // 清空统计数据
       clearStats: () => {
-        logger.info('clearStats', { reason: '用户清空或重置失败' })
+        logger.info('[commandStore] clearStats', { reason: '用户清空或重置失败' })
         set({ stats: null }, false, 'clearStats')
       },
-      
+
       // 设置消息（带类型）
       setMessage: (message, type = 'info') => {
-        logger.info('setMessage', { message, messageType: type })
+        logger.info('[commandStore] setMessage', { message, messageType: type })
         set({ message, messageType: type }, false, 'setMessage')
       },
-      
+
       // 清空消息
       clearMessage: () => {
-        logger.info('clearMessage', { reason: '操作成功，清空消息' })
+        logger.info('[commandStore] clearMessage', { reason: '操作成功，清空消息' })
         set({ message: '', messageType: '' }, false, 'clearMessage')
       },
-      
+
       // 设置迁移面板开关
       setMigrationOpen: (open) => {
-        logger.info('setMigrationOpen', { open })
+        logger.info('[commandStore] setMigrationOpen', { open })
         set({ migrationOpen: open }, false, 'setMigrationOpen')
       },
-      
+
       // 设置加载状态
       setIsLoading: (isLoading) => {
-        logger.info('setIsLoading', { isLoading })
+        logger.info('[commandStore] setIsLoading', { isLoading })
         set({ isLoading }, false, 'setIsLoading')
       },
-      
+
       // 设置重置状态
       setIsResetting: (isResetting) => {
-        logger.info('setIsResetting', { isResetting })
+        logger.info('[commandStore] setIsResetting', { isResetting })
         set({ isResetting }, false, 'setIsResetting')
       },
-      
+
       // 异步动作：加载统计数据
       loadStats: async () => {
-        logger.info('loadStats/start', { timestamp: Date.now() })
+        logger.info('[commandStore] loadStats/start', { timestamp: Date.now() })
         set({ isLoading: true }, false, 'loadStats/start')
-        
+
         try {
           const result = await loadSystemStats()
-          logger.info('loadSystemStats/response', { 
+          logger.info('[commandStore] loadSystemStats/response', {
             success: result.success,
             hasData: !!result.data,
-            error: result.error 
+            error: result.error,
           })
-          
+
           if (result.success && result.data) {
-            logger.info('loadStats/success', { 
+            logger.info('[commandStore] loadStats/success', {
               stocks: result.data.stocks,
               orders: result.data.orders,
               scores: result.data.scores,
-              timestamp: Date.now() 
+              timestamp: Date.now(),
             })
-            set({ 
+            set({
               stats: {
                 stocks: result.data.stocks,
                 orders: result.data.orders,
@@ -154,58 +144,58 @@ export const useCommandStore = create<CommandState>()(
               },
               isLoading: false,
               message: '',
-              messageType: ''
+              messageType: '',
             }, false, 'loadStats/success')
           } else {
-            logger.warn('loadStats/failed', { 
+            logger.warn('[commandStore] loadStats/failed', {
               error: result.error ?? '加载统计失败',
-              timestamp: Date.now() 
+              timestamp: Date.now(),
             })
-            set({ 
+            set({
               isLoading: false,
               message: result.error ?? '加载统计失败',
-              messageType: 'error'
+              messageType: 'error',
             }, false, 'loadStats/error')
           }
         } catch (err) {
-          logger.error('loadStats/exception', { 
+          logger.error('[commandStore] loadStats/exception', {
             error: err instanceof Error ? err.message : String(err),
             stack: err instanceof Error ? err.stack : undefined,
-            timestamp: Date.now() 
+            timestamp: Date.now(),
           })
-          set({ 
+          set({
             isLoading: false,
             message: err instanceof Error ? err.message : String(err),
-            messageType: 'error'
+            messageType: 'error',
           }, false, 'loadStats/error')
         }
       },
-      
+
       // 异步动作：重置所有数据
       resetAll: async () => {
-        logger.info('resetAll/start', { timestamp: Date.now() })
+        logger.info('[commandStore] resetAll/start', { timestamp: Date.now() })
         set({ isResetting: true }, false, 'resetAll/start')
-        
+
         try {
           const result = await resetAll()
-          logger.info('resetAll/response', { 
+          logger.info('[commandStore] resetAll/response', {
             success: result.success,
-            error: result.error 
+            error: result.error,
           })
-          
+
           if (result.success) {
             // 重置成功后自动刷新统计
             const statsResult = await loadSystemStats()
-            logger.info('resetAll/statsRefresh', { 
+            logger.info('[commandStore] resetAll/statsRefresh', {
               statsSuccess: statsResult.success,
               statsData: statsResult.success && statsResult.data ? {
                 stocks: statsResult.data.stocks,
                 orders: statsResult.data.orders,
                 scores: statsResult.data.scores,
-              } : null
+              } : null,
             })
-            
-            set({ 
+
+            set({
               isResetting: false,
               stats: statsResult.success && statsResult.data ? {
                 stocks: statsResult.data.stocks,
@@ -213,29 +203,29 @@ export const useCommandStore = create<CommandState>()(
                 scores: statsResult.data.scores,
               } : null,
               message: '已重置所有数据',
-              messageType: 'success'
+              messageType: 'success',
             }, false, 'resetAll/success')
           } else {
-            logger.warn('resetAll/failed', { 
+            logger.warn('[commandStore] resetAll/failed', {
               error: result.error ?? '重置失败',
-              timestamp: Date.now() 
+              timestamp: Date.now(),
             })
-            set({ 
+            set({
               isResetting: false,
               message: result.error ?? '重置失败',
-              messageType: 'error'
+              messageType: 'error',
             }, false, 'resetAll/error')
           }
         } catch (err) {
-          logger.error('resetAll/exception', { 
+          logger.error('[commandStore] resetAll/exception', {
             error: err instanceof Error ? err.message : String(err),
             stack: err instanceof Error ? err.stack : undefined,
-            timestamp: Date.now() 
+            timestamp: Date.now(),
           })
-          set({ 
+          set({
             isResetting: false,
             message: err instanceof Error ? err.message : String(err),
-            messageType: 'error'
+            messageType: 'error',
           }, false, 'resetAll/error')
         }
       },

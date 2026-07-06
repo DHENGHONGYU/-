@@ -8,6 +8,7 @@ import {
   type HeatmapCell,
 } from '@/components/analysis/sector/SectorRotationHeatmap'
 import type { SectorHeatmapData } from '@/types/modules/widget.types'
+import { UI_TEXT } from '@/constants/uiText'
 
 // ============================================================
 // Mock: react-router useNavigate
@@ -147,8 +148,8 @@ describe('SectorRotationHeatmap component', () => {
 
     render(<SectorRotationHeatmap />)
 
-    expect(screen.getByText('板块轮动热力图')).toBeInTheDocument()
-    expect(screen.getByText('加载中...')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.hotSector.rotationHeatmap)).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.common.loading)).toBeInTheDocument()
   })
 
   it('renders error state when useDataSource returns error', () => {
@@ -164,7 +165,7 @@ describe('SectorRotationHeatmap component', () => {
 
     render(<SectorRotationHeatmap />)
 
-    expect(screen.getByText('暂无数据')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.common.empty)).toBeInTheDocument()
   })
 
   // ----------------------------------------------------------
@@ -173,7 +174,7 @@ describe('SectorRotationHeatmap component', () => {
   it('renders title and time/metric selectors', () => {
     render(<SectorRotationHeatmap />)
 
-    expect(screen.getByText('板块轮动热力图')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.hotSector.rotationHeatmap)).toBeInTheDocument()
     // 组件中 Select 未配置 label，使用 role 选择器定位两个下拉框
     const selects = screen.getAllByRole('combobox')
     expect(selects.length).toBe(2)
@@ -193,8 +194,8 @@ describe('SectorRotationHeatmap component', () => {
   it('renders top gainers and losers sections for changePercent metric', () => {
     render(<SectorRotationHeatmap />)
 
-    expect(screen.getByText('领涨板块')).toBeInTheDocument()
-    expect(screen.getByText('领跌板块')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.hotSector.leadingSector)).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.hotSector.fallingSector)).toBeInTheDocument()
   })
 
   // ----------------------------------------------------------
@@ -208,8 +209,8 @@ describe('SectorRotationHeatmap component', () => {
     // 第二个 combobox 是指标选择器
     await user.selectOptions(selects[1]!, 'fundFlow')
 
-    expect(screen.getByText('资金流入')).toBeInTheDocument()
-    expect(screen.getByText('资金流出')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.hotSector.capitalInflow)).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.hotSector.capitalOutflow)).toBeInTheDocument()
     // cell 和排行榜中都会显示相同涨跌幅，使用 getAllByText 验证至少存在
     expect(screen.getAllByText('+1.20%').length).toBeGreaterThanOrEqual(1)
     expect(screen.getAllByText('-0.50%').length).toBeGreaterThanOrEqual(1)
@@ -222,9 +223,9 @@ describe('SectorRotationHeatmap component', () => {
     const selects = screen.getAllByRole('combobox')
     await user.selectOptions(selects[1]!, 'turnover')
 
-    expect(screen.getByText('高换手板块')).toBeInTheDocument()
-    expect(screen.queryByText('领跌板块')).not.toBeInTheDocument()
-    expect(screen.queryByText('资金流出')).not.toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.hotSector.highTurnover)).toBeInTheDocument()
+    expect(screen.queryByText(UI_TEXT.analysis.hotSector.fallingSector)).not.toBeInTheDocument()
+    expect(screen.queryByText(UI_TEXT.analysis.hotSector.capitalOutflow)).not.toBeInTheDocument()
   })
 
   // ----------------------------------------------------------
@@ -270,7 +271,7 @@ describe('SectorRotationHeatmap component', () => {
   it('sorts top gainers descending by selected metric', () => {
     render(<SectorRotationHeatmap />)
 
-    const gainers = screen.getByText('领涨板块').closest('div')?.querySelectorAll('li')
+    const gainers = screen.getByText(UI_TEXT.analysis.hotSector.leadingSector).closest('div')?.querySelectorAll('li')
     expect(gainers?.[0]?.textContent).toContain('人工智能')
     expect(gainers?.[1]?.textContent).toContain('半导体')
   })
@@ -278,7 +279,7 @@ describe('SectorRotationHeatmap component', () => {
   it('sorts top losers ascending by changePercent', () => {
     render(<SectorRotationHeatmap />)
 
-    const losers = screen.getByText('领跌板块').closest('div')?.querySelectorAll('li')
+    const losers = screen.getByText(UI_TEXT.analysis.hotSector.fallingSector).closest('div')?.querySelectorAll('li')
     expect(losers?.[0]?.textContent).toContain('新能源')
     expect(losers?.[1]?.textContent).toContain('房地产')
   })

@@ -194,6 +194,7 @@ function createMockSignal(symbol: string, confidence: number, type: string = 'bu
     symbol,
     direction: 'buy',
     type,
+    strategy: 'test_strategy',
     confidence,
     rationale: 'test',
     snapshot: {},

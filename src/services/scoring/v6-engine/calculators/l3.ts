@@ -393,7 +393,7 @@ export const L3aFinancialCalculator: LayerCalculator = {
 
       return {
         layerId: 'l3f' as LayerId,
-        layerName: LAYER_LABELS.l3f,
+        layerName: LAYER_LABELS.l3f ?? 'L3a 财务健康',
         score: Math.round(score * 100) / 100,
         summary,
         risks,
@@ -407,7 +407,7 @@ export const L3aFinancialCalculator: LayerCalculator = {
       logger.error(`[L3a] ${stock.symbol}: 计算失败: ${msg}`)
       return {
         layerId: 'l3f' as LayerId,
-        layerName: LAYER_LABELS.l3f,
+        layerName: LAYER_LABELS.l3f ?? 'L3a 财务健康',
         score: 0,
         summary: `财务评分计算失败: ${msg}`,
         risks: [],
@@ -443,7 +443,7 @@ export const L3vValuationCalculator: LayerCalculator = {
 
       return {
         layerId: 'l3v' as LayerId,
-        layerName: LAYER_LABELS.l3v,
+        layerName: LAYER_LABELS.l3v ?? 'L3b 估值水平',
         score: Math.round(score * 100) / 100,
         summary,
         risks,
@@ -457,7 +457,7 @@ export const L3vValuationCalculator: LayerCalculator = {
       logger.error(`[L3v] ${stock.symbol}: 计算失败: ${msg}`)
       return {
         layerId: 'l3v' as LayerId,
-        layerName: LAYER_LABELS.l3v,
+        layerName: LAYER_LABELS.l3v ?? 'L3b 估值水平',
         score: 0,
         summary: `估值计算失败: ${msg}`,
         risks: [],

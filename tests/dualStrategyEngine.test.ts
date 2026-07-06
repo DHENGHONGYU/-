@@ -4,6 +4,8 @@ import { dataLayer } from '@/data/dataLayer'
 import { saveDefaultRotationScores } from '@/services/analysis/rotationScoreService'
 import { runDualStrategy } from '@/services/trading/dualStrategyEngine'
 import type { DailyQuotes, IndustryScore, Stock, V6Score } from '@/data/types'
+import { dataBridge } from '@/core/databridge'
+import { STORE_NAME } from '@/config/dbConfig'
 
 function buildStock(symbol: string, overrides: Partial<Omit<Stock, 'dataVersion'>> = {}): Stock {
   return {
@@ -77,6 +79,10 @@ describe('dualStrategyEngine', () => {
   beforeEach(async () => {
     await db.init()
     await db.reset()
+    dataBridge.invalidateCache(STORE_NAME.stocks)
+    dataBridge.invalidateCache(STORE_NAME.dailyQuotes)
+    dataBridge.invalidateCache(STORE_NAME.v6Scores)
+    dataBridge.invalidateCache(STORE_NAME.rotationScores)
   })
 
   it('should return empty result for empty stocks', async () => {

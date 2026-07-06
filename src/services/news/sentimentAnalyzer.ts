@@ -199,9 +199,12 @@ export function analyzeNewsArticle(
   }
 }
 
+/** DJB2 哈希算法种子值 */
+const DJB2_HASH_SEED = 5381
+
 /** 生成内容哈希（稳定、可复现） */
 export function hashContent(content: string): string {
-  let hash = 5381
+  let hash = DJB2_HASH_SEED
   for (let i = 0; i < content.length; i++) {
     hash = (hash * 33) ^ content.charCodeAt(i)
     hash |= 0

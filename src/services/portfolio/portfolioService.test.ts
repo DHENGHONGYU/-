@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @module portfolioService.test
  * @description 投资组合服务单元测试（E-2-6）
  */
@@ -11,7 +11,21 @@ vi.mock('@/data/dataLayer', () => ({
     list: vi.fn(),
     get: vi.fn(),
     save: vi.fn(),
+    getWithTx: vi.fn(),
+    saveWithTx: vi.fn(),
   },
+}))
+
+vi.mock('@/data/db', () => ({
+  db: { init: vi.fn().mockResolvedValue(undefined), getDatabase: vi.fn() },
+  generateId: vi.fn().mockReturnValue('mock-id'),
+  now: vi.fn().mockReturnValue(1700000000000),
+}))
+
+vi.mock('@/core/transaction', () => ({
+  runInTransaction: vi.fn(async (_stores: string[], _mode: string, callback: (tx: unknown) => unknown) => {
+    return callback({ mock: 'tx' })
+  }),
 }))
 
 vi.mock('@/services/analysis/dataFreshnessGuard', () => ({
@@ -68,8 +82,8 @@ describe('portfolioService', () => {
 
   describe('rebalance', () => {
     it('rebalances portfolio based on latest orders', async () => {
-      vi.mocked(portfolioStore.get).mockResolvedValue(mockPortfolio())
-      vi.mocked(portfolioStore.save).mockResolvedValue({ success: true, data: {} as any })
+      vi.mocked(portfolioStore.getWithTx).mockResolvedValue(mockPortfolio())
+      vi.mocked(portfolioStore.saveWithTx).mockResolvedValue(undefined)
       const result = await rebalance('portfolio_001', [mockOrder()], { now: 3_000 })
       expect(result).toBeDefined()
       expect(result!.updatedAt).toBe(3_000)
@@ -78,22 +92,22 @@ describe('portfolioService', () => {
     })
 
     it('handles sell orders correctly', async () => {
-      vi.mocked(portfolioStore.get).mockResolvedValue(mockPortfolio())
-      vi.mocked(portfolioStore.save).mockResolvedValue({ success: true, data: {} as any })
+      vi.mocked(portfolioStore.getWithTx).mockResolvedValue(mockPortfolio())
+      vi.mocked(portfolioStore.saveWithTx).mockResolvedValue(undefined)
       const result = await rebalance('portfolio_001', [mockOrder({ direction: 'sell' })], { now: 3_000 })
       expect(result).toBeDefined()
       expect(result!.holdings[0]!.currentShares).toBe(50)
     })
 
     it('returns undefined when portfolio not found', async () => {
-      vi.mocked(portfolioStore.get).mockResolvedValue(undefined)
+      vi.mocked(portfolioStore.getWithTx).mockResolvedValue(undefined)
       const result = await rebalance('portfolio_999', [])
       expect(result).toBeUndefined()
     })
 
     it('returns undefined when save fails', async () => {
-      vi.mocked(portfolioStore.get).mockResolvedValue(mockPortfolio())
-      vi.mocked(portfolioStore.save).mockResolvedValue({ success: false, error: 'db_error' })
+      vi.mocked(portfolioStore.getWithTx).mockResolvedValue(mockPortfolio())
+      vi.mocked(portfolioStore.saveWithTx).mockRejectedValue(new Error('db_error'))
       const result = await rebalance('portfolio_001', [])
       expect(result).toBeUndefined()
     })

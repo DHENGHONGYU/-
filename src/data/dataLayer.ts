@@ -5,6 +5,8 @@ import {
   ENVELOPE_TARGET,
   MODULE_ID,
   RESEARCH_STATUS,
+  STORE_NAME,
+  type StoreName,
   type ResearchStatus,
 } from '@/config/dbConfig'
 import { dataBridge } from '@/core/databridge'
@@ -14,13 +16,17 @@ import { db, generateId, now } from './db'
 import type {
   DailyQuotes,
   DataLayerResult,
+  ExecutionPlan,
+  ExecutionLog,
   HotSectorScore,
   IndustryScore,
   IntelligentScore,
   LocalDoc,
+  MissingReport,
   NewsArticle,
   NewsStockMap,
   Order,
+  Portfolio,
   ResearchLog,
   RotationSectorScore,
   ScoreDocVersion,
@@ -32,6 +38,7 @@ import type {
   ValuePitScore,
   V6Score,
 } from './types'
+import type { TradeReviewRecord } from '@/services/trading/tradeReviewAI'
 
 const logger = getLogger()
 
@@ -63,9 +70,60 @@ async function sendWriteEnvelope<T>(
   }
 }
 
+/**
+ * 查询单条记录（通过主键）
+ */
+async function queryGet<T>(store: StoreName, key: string): Promise<T | undefined> {
+  const result = await dataBridge.query<T>({
+    action: ENVELOPE_ACTION.queryGet,
+    store,
+    key,
+    source: MODULE_ID.datalayer,
+  })
+  if (!result.success) {
+    logger.error(`[dataLayer] queryGet failed: store="${store}", key="${key}"`, { error: result.error })
+    return undefined
+  }
+  return result.data
+}
+
+/**
+ * 查询全部记录
+ */
+async function queryList<T>(store: StoreName): Promise<T[]> {
+  const result = await dataBridge.query<T[]>({
+    action: ENVELOPE_ACTION.queryList,
+    store,
+    source: MODULE_ID.datalayer,
+  })
+  if (!result.success) {
+    logger.error(`[dataLayer] queryList failed: store="${store}"`, { error: result.error })
+    return []
+  }
+  return result.data ?? []
+}
+
+/**
+ * 按索引查询记录
+ */
+async function queryByIndex<T>(store: StoreName, indexName: string, indexValue: unknown): Promise<T[]> {
+  const result = await dataBridge.query<T[]>({
+    action: ENVELOPE_ACTION.queryByIndex,
+    store,
+    indexName,
+    indexValue,
+    source: MODULE_ID.datalayer,
+  })
+  if (!result.success) {
+    logger.error(`[dataLayer] queryByIndex failed: store="${store}", index="${indexName}"`, { error: result.error })
+    return []
+  }
+  return result.data ?? []
+}
+
 export const stockStore = {
   async add(stock: Omit<Stock, 'createdAt' | 'updatedAt' | 'dataVersion'>): Promise<DataLayerResult<Stock>> {
-    const existing = await db.get<Stock>('stocks', stock.symbol)
+    const existing = await queryGet<Stock>(STORE_NAME.stocks, stock.symbol)
     if (existing) {
       return { success: false, error: `${stock.name}(${stock.symbol}) 已存在` }
     }
@@ -88,23 +146,23 @@ export const stockStore = {
   },
 
   async get(symbol: string): Promise<Stock | undefined> {
-    return db.get<Stock>('stocks', symbol)
+    return queryGet<Stock>(STORE_NAME.stocks, symbol)
   },
 
   async list(): Promise<Stock[]> {
-    return db.getAll<Stock>('stocks')
+    return queryList<Stock>(STORE_NAME.stocks)
   },
 
   async listByStatus(status: ResearchStatus): Promise<Stock[]> {
-    return db.getAllByIndex<Stock>('stocks', 'by-status', status)
+    return queryByIndex<Stock>(STORE_NAME.stocks, 'by-status', status)
   },
 
   async listByGroup(group: string): Promise<Stock[]> {
-    return db.getAllByIndex<Stock>('stocks', 'by-group', group)
+    return queryByIndex<Stock>(STORE_NAME.stocks, 'by-group', group)
   },
 
   async listGroups(): Promise<string[]> {
-    const all = await db.getAll<Stock>('stocks')
+    const all = await queryList<Stock>(STORE_NAME.stocks)
     const groups = new Set<string>()
     for (const stock of all) {
       groups.add(stock.group ?? DEFAULT_POOL_GROUP)
@@ -114,7 +172,7 @@ export const stockStore = {
   },
 
   async updateStatus(symbol: string, status: ResearchStatus): Promise<DataLayerResult<void>> {
-    const existing = await db.get<Stock>('stocks', symbol)
+    const existing = await queryGet<Stock>(STORE_NAME.stocks, symbol)
     if (!existing) {
       return { success: false, error: `Stock not found: ${symbol}` }
     }
@@ -132,7 +190,7 @@ export const stockStore = {
       return { success: false, error: '分组名称不能为空' }
     }
 
-    const existing = await db.get<Stock>('stocks', symbol)
+    const existing = await queryGet<Stock>(STORE_NAME.stocks, symbol)
     if (!existing) {
       return { success: false, error: `Stock not found: ${symbol}` }
     }
@@ -146,7 +204,7 @@ export const stockStore = {
       return { success: false, error: result.error }
     }
 
-    const updated = await db.get<Stock>('stocks', symbol)
+    const updated = await queryGet<Stock>(STORE_NAME.stocks, symbol)
     if (!updated) {
       return { success: false, error: `更新分组后未找到股票: ${symbol}` }
     }
@@ -164,7 +222,7 @@ export const dailyQuoteStore = {
   },
 
   async get(symbol: string): Promise<DailyQuotes | undefined> {
-    return db.get<DailyQuotes>('daily_quotes', symbol)
+    return queryGet<DailyQuotes>(STORE_NAME.dailyQuotes, symbol)
   },
 }
 
@@ -174,11 +232,11 @@ export const v6ScoreStore = {
   },
 
   async get(symbol: string): Promise<V6Score | undefined> {
-    return db.get<V6Score>('v6_scores', symbol)
+    return queryGet<V6Score>(STORE_NAME.v6Scores, symbol)
   },
 
   async list(): Promise<V6Score[]> {
-    return db.getAll<V6Score>('v6_scores')
+    return queryList<V6Score>(STORE_NAME.v6Scores)
   },
 }
 
@@ -188,7 +246,7 @@ export const intelligentScoreStore = {
   },
 
   async listBySymbol(symbol: string): Promise<IntelligentScore[]> {
-    return db.getAllByIndex<IntelligentScore>('intelligent_scores', 'by-symbol', symbol)
+    return queryByIndex<IntelligentScore>(STORE_NAME.intelligentScores, 'by-symbol', symbol)
   },
 
   async getLatestBySymbol(symbol: string): Promise<IntelligentScore | undefined> {
@@ -197,7 +255,7 @@ export const intelligentScoreStore = {
   },
 
   async list(): Promise<IntelligentScore[]> {
-    return db.getAll<IntelligentScore>('intelligent_scores')
+    return queryList<IntelligentScore>(STORE_NAME.intelligentScores)
   },
 }
 
@@ -207,7 +265,7 @@ export const industryScoreStore = {
   },
 
   async listByCode(code: string): Promise<IndustryScore[]> {
-    return db.getAllByIndex<IndustryScore>('industry_scores', 'by-code', code)
+    return queryByIndex<IndustryScore>(STORE_NAME.industryScores, 'by-code', code)
   },
 
   async getLatestByCode(code: string): Promise<IndustryScore | undefined> {
@@ -216,13 +274,13 @@ export const industryScoreStore = {
   },
 
   async list(): Promise<IndustryScore[]> {
-    return db.getAll<IndustryScore>('industry_scores')
+    return queryList<IndustryScore>(STORE_NAME.industryScores)
   },
 }
 
 export const researchLogStore = {
   async list(): Promise<ResearchLog[]> {
-    return db.getAll<ResearchLog>('research_logs')
+    return queryList<ResearchLog>(STORE_NAME.researchLogs)
   },
 }
 
@@ -241,7 +299,7 @@ export const orderStore = {
   },
 
   async list(): Promise<Order[]> {
-    return db.getAll<Order>('orders')
+    return queryList<Order>(STORE_NAME.orders)
   },
 }
 
@@ -255,11 +313,11 @@ export const signalStore = {
   },
 
   async list(): Promise<Signal[]> {
-    return db.getAll<Signal>('signals')
+    return queryList<Signal>(STORE_NAME.signals)
   },
 
   async listBySymbol(symbol: string): Promise<Signal[]> {
-    const all = await db.getAll<Signal>('signals')
+    const all = await queryList<Signal>(STORE_NAME.signals)
     return all.filter((s) => s.symbol === symbol)
   },
 }
@@ -270,15 +328,15 @@ export const rotationScoreStore = {
   },
 
   async get(id: string): Promise<RotationSectorScore | undefined> {
-    return db.get<RotationSectorScore>('rotation_scores', id)
+    return queryGet<RotationSectorScore>(STORE_NAME.rotationScores, id)
   },
 
   async list(): Promise<RotationSectorScore[]> {
-    return db.getAll<RotationSectorScore>('rotation_scores')
+    return queryList<RotationSectorScore>(STORE_NAME.rotationScores)
   },
 
   async listBySector(sectorCode: string): Promise<RotationSectorScore[]> {
-    return db.getAllByIndex<RotationSectorScore>('rotation_scores', 'by-sector', sectorCode)
+    return queryByIndex<RotationSectorScore>(STORE_NAME.rotationScores, 'by-sector', sectorCode)
   },
 
   async getLatestBySector(sectorCode: string): Promise<RotationSectorScore | undefined> {
@@ -293,11 +351,11 @@ export const hotSectorScoreStore = {
   },
 
   async get(symbol: string): Promise<HotSectorScore | undefined> {
-    return db.get<HotSectorScore>('hot_sector_scores', symbol)
+    return queryGet<HotSectorScore>(STORE_NAME.hotSectorScores, symbol)
   },
 
   async list(): Promise<HotSectorScore[]> {
-    return db.getAll<HotSectorScore>('hot_sector_scores')
+    return queryList<HotSectorScore>(STORE_NAME.hotSectorScores)
   },
 }
 
@@ -307,11 +365,11 @@ export const valuePitScoreStore = {
   },
 
   async get(symbol: string): Promise<ValuePitScore | undefined> {
-    return db.get<ValuePitScore>('value_pit_scores', symbol)
+    return queryGet<ValuePitScore>(STORE_NAME.valuePitScores, symbol)
   },
 
   async list(): Promise<ValuePitScore[]> {
-    return db.getAll<ValuePitScore>('value_pit_scores')
+    return queryList<ValuePitScore>(STORE_NAME.valuePitScores)
   },
 }
 
@@ -321,15 +379,15 @@ export const sectorScoreStore = {
   },
 
   async get(id: string): Promise<SectorScoreRecord | undefined> {
-    return db.get<SectorScoreRecord>('sector_scores', id)
+    return queryGet<SectorScoreRecord>(STORE_NAME.sectorScores, id)
   },
 
   async list(): Promise<SectorScoreRecord[]> {
-    return db.getAll<SectorScoreRecord>('sector_scores')
+    return queryList<SectorScoreRecord>(STORE_NAME.sectorScores)
   },
 
   async listBySector(sectorCode: string): Promise<SectorScoreRecord[]> {
-    return db.getAllByIndex<SectorScoreRecord>('sector_scores', 'by-sector', sectorCode)
+    return queryByIndex<SectorScoreRecord>(STORE_NAME.sectorScores, 'by-sector', sectorCode)
   },
 
   async getLatestBySector(sectorCode: string): Promise<SectorScoreRecord | undefined> {
@@ -344,15 +402,15 @@ export const scoreDocStore = {
   },
 
   async get(docId: string): Promise<ScoreDocVersion | undefined> {
-    return db.get<ScoreDocVersion>('score_docs', docId)
+    return queryGet<ScoreDocVersion>(STORE_NAME.scoreDocs, docId)
   },
 
   async list(): Promise<ScoreDocVersion[]> {
-    return db.getAll<ScoreDocVersion>('score_docs')
+    return queryList<ScoreDocVersion>(STORE_NAME.scoreDocs)
   },
 
   async listBySymbol(symbol: string): Promise<ScoreDocVersion[]> {
-    return db.getAllByIndex<ScoreDocVersion>('score_docs', 'by-symbol', symbol)
+    return queryByIndex<ScoreDocVersion>(STORE_NAME.scoreDocs, 'by-symbol', symbol)
   },
 
   async getLatestBySymbol(symbol: string): Promise<ScoreDocVersion | undefined> {
@@ -367,11 +425,11 @@ export const strategySnapshotStore = {
   },
 
   async get(id: string): Promise<StrategySnapshot | undefined> {
-    return db.get<StrategySnapshot>('strategy_snapshots', id)
+    return queryGet<StrategySnapshot>(STORE_NAME.strategySnapshots, id)
   },
 
   async list(): Promise<StrategySnapshot[]> {
-    return db.getAll<StrategySnapshot>('strategy_snapshots')
+    return queryList<StrategySnapshot>(STORE_NAME.strategySnapshots)
   },
 
   async getLatest(): Promise<StrategySnapshot | undefined> {
@@ -386,15 +444,15 @@ export const localDocStore = {
   },
 
   async get(id: string): Promise<LocalDoc | undefined> {
-    return db.get<LocalDoc>('local_docs', id)
+    return queryGet<LocalDoc>(STORE_NAME.localDocs, id)
   },
 
   async list(): Promise<LocalDoc[]> {
-    return db.getAll<LocalDoc>('local_docs')
+    return queryList<LocalDoc>(STORE_NAME.localDocs)
   },
 
   async listBySymbol(symbol: string): Promise<LocalDoc[]> {
-    return db.getAllByIndex<LocalDoc>('local_docs', 'by-symbol', symbol)
+    return queryByIndex<LocalDoc>(STORE_NAME.localDocs, 'by-symbol', symbol)
   },
 }
 
@@ -404,15 +462,16 @@ export const newsStore = {
   },
 
   async get(id: string): Promise<NewsArticle | undefined> {
-    return db.get<NewsArticle>('news', id)
+    return queryGet<NewsArticle>(STORE_NAME.news, id)
   },
 
   async getByHash(hash: string): Promise<NewsArticle | undefined> {
-    return db.getAllByIndex<NewsArticle>('news', 'by-hash', hash).then((list) => list[0])
+    const list = await queryByIndex<NewsArticle>(STORE_NAME.news, 'by-hash', hash)
+    return list[0]
   },
 
   async list(): Promise<NewsArticle[]> {
-    return db.getAll<NewsArticle>('news')
+    return queryList<NewsArticle>(STORE_NAME.news)
   },
 }
 
@@ -422,11 +481,11 @@ export const newsStockMapStore = {
   },
 
   async listBySymbol(symbol: string): Promise<NewsStockMap[]> {
-    return db.getAllByIndex<NewsStockMap>('news_stock_map', 'by-symbol', symbol)
+    return queryByIndex<NewsStockMap>(STORE_NAME.newsStockMap, 'by-symbol', symbol)
   },
 
   async listByNews(newsId: string): Promise<NewsStockMap[]> {
-    return db.getAllByIndex<NewsStockMap>('news_stock_map', 'by-news', newsId)
+    return queryByIndex<NewsStockMap>(STORE_NAME.newsStockMap, 'by-news', newsId)
   },
 }
 
@@ -436,12 +495,156 @@ export const sentimentCacheStore = {
   },
 
   async get(id: string): Promise<SentimentCache | undefined> {
-    return db.get<SentimentCache>('sentiment_cache', id)
+    return queryGet<SentimentCache>(STORE_NAME.sentimentCache, id)
   },
 
   async getByContentHash(contentHash: string): Promise<SentimentCache | undefined> {
-    const list = await db.getAllByIndex<SentimentCache>('sentiment_cache', 'by-content-hash', contentHash)
+    const list = await queryByIndex<SentimentCache>(STORE_NAME.sentimentCache, 'by-content-hash', contentHash)
     return list[0]
+  },
+}
+
+export const executionPlanStore = {
+  async save(plan: ExecutionPlan): Promise<DataLayerResult<void>> {
+    return sendWriteEnvelope('saveExecutionPlan', plan, 'executionPlans')
+  },
+
+  async get(id: string): Promise<ExecutionPlan | undefined> {
+    return queryGet<ExecutionPlan>(STORE_NAME.executionPlans, id)
+  },
+
+  async getAll(): Promise<ExecutionPlan[]> {
+    return queryList<ExecutionPlan>(STORE_NAME.executionPlans)
+  },
+
+  async getBySymbol(symbol: string): Promise<ExecutionPlan[]> {
+    return queryByIndex<ExecutionPlan>(STORE_NAME.executionPlans, 'by-symbol', symbol)
+  },
+
+  async list(): Promise<ExecutionPlan[]> {
+    return queryList<ExecutionPlan>(STORE_NAME.executionPlans)
+  },
+
+  async update(id: string, updates: Partial<ExecutionPlan>): Promise<DataLayerResult<ExecutionPlan>> {
+    const existing = await queryGet<ExecutionPlan>(STORE_NAME.executionPlans, id)
+    if (!existing) return { success: false, error: 'ExecutionPlan not found' }
+    const updated = { ...existing, ...updates, updatedAt: Date.now() }
+    const result = await sendWriteEnvelope<ExecutionPlan>('updateExecutionPlan', updated, 'executionPlans')
+    if (!result.success) {
+      return { success: false, error: result.error }
+    }
+    return { success: true, data: updated }
+  },
+
+  async delete(id: string): Promise<DataLayerResult<void>> {
+    return sendWriteEnvelope('deleteExecutionPlan', { id }, 'executionPlans')
+  },
+}
+
+export const executionLogStore = {
+  async save(log: ExecutionLog): Promise<DataLayerResult<void>> {
+    return sendWriteEnvelope('saveExecutionLog', log, 'executionLogs')
+  },
+
+  async getByPlanId(planId: string): Promise<ExecutionLog[]> {
+    return queryByIndex<ExecutionLog>(STORE_NAME.executionLogs, 'by-plan-id', planId)
+  },
+
+  async listByPlan(planId: string): Promise<ExecutionLog[]> {
+    return queryByIndex<ExecutionLog>(STORE_NAME.executionLogs, 'by-plan-id', planId)
+  },
+
+  async getBySymbol(symbol: string): Promise<ExecutionLog[]> {
+    return queryByIndex<ExecutionLog>(STORE_NAME.executionLogs, 'by-symbol', symbol)
+  },
+
+  async listBySymbol(symbol: string): Promise<ExecutionLog[]> {
+    return queryByIndex<ExecutionLog>(STORE_NAME.executionLogs, 'by-symbol', symbol)
+  },
+
+  async list(): Promise<ExecutionLog[]> {
+    return queryList<ExecutionLog>(STORE_NAME.executionLogs)
+  },
+
+  async getAll(): Promise<ExecutionLog[]> {
+    return queryList<ExecutionLog>(STORE_NAME.executionLogs)
+  },
+}
+
+export const missingReportStore = {
+  async report(report: Omit<MissingReport, 'id'>): Promise<DataLayerResult<MissingReport>> {
+    const id = Date.now()
+    const fullReport: MissingReport = { ...report, id, createdAt: now() }
+    await sendWriteEnvelope('saveMissingReport', fullReport, 'missingReports')
+    return { success: true, data: fullReport }
+  },
+
+  async list(): Promise<MissingReport[]> {
+    return queryList<MissingReport>(STORE_NAME.missingReports)
+  },
+
+  async listBySymbol(symbol: string): Promise<MissingReport[]> {
+    return queryByIndex<MissingReport>(STORE_NAME.missingReports, 'by-symbol', symbol)
+  },
+
+  async listBySeverity(severity: string): Promise<MissingReport[]> {
+    const all = await queryList<MissingReport>(STORE_NAME.missingReports)
+    return all.filter((r) => r.severity === severity)
+  },
+
+  async incrementRetry(id: number): Promise<DataLayerResult<MissingReport>> {
+    const report = await queryGet<MissingReport>(STORE_NAME.missingReports, String(id))
+    if (!report) return { success: false, error: 'Report not found' }
+    const updated = { ...report, retryCount: report.retryCount + 1 }
+    const result = await sendWriteEnvelope<MissingReport>('incrementMissingReportRetry', updated, 'missingReports')
+    if (!result.success) {
+      return { success: false, error: result.error }
+    }
+    return { success: true, data: updated }
+  },
+}
+
+export const portfolioStore = {
+  async save(portfolio: Portfolio): Promise<DataLayerResult<void>> {
+    return sendWriteEnvelope('savePortfolio', portfolio, 'tradinghub')
+  },
+
+  async saveWithTx(portfolio: Portfolio, tx: IDBTransaction): Promise<void> {
+    const store = tx.objectStore(STORE_NAME.portfolios)
+    await new Promise<void>((resolve, reject) => {
+      const request = store.put(portfolio)
+      request.onsuccess = () => resolve()
+      request.onerror = () => reject(request.error instanceof Error ? request.error : new Error(String(request.error)))
+    })
+  },
+
+  async get(id: string): Promise<Portfolio | undefined> {
+    return queryGet<Portfolio>(STORE_NAME.portfolios, id)
+  },
+
+  async getWithTx(id: string, tx: IDBTransaction): Promise<Portfolio | undefined> {
+    const store = tx.objectStore(STORE_NAME.portfolios)
+    return new Promise<Portfolio | undefined>((resolve, reject) => {
+      const request = store.get(id)
+      request.onsuccess = () => resolve(request.result as Portfolio | undefined)
+      request.onerror = () => reject(request.error instanceof Error ? request.error : new Error(String(request.error)))
+    })
+  },
+
+  async list(): Promise<Portfolio[]> {
+    return queryList<Portfolio>(STORE_NAME.portfolios)
+  },
+}
+
+export const tradeReviewStore = {
+  async save(record: TradeReviewRecord): Promise<DataLayerResult<void>> {
+    return sendWriteEnvelope('saveTradeReview', record, 'tradeReviews')
+  },
+
+  async getLatest(): Promise<TradeReviewRecord | null> {
+    const all = await queryList<TradeReviewRecord>(STORE_NAME.tradeReviews)
+    if (all.length === 0) return null
+    return all.reduce((latest, r) => (r.generatedAt > latest.generatedAt ? r : latest))
   },
 }
 
@@ -478,5 +681,10 @@ export const dataLayer = {
   sentimentCache: sentimentCacheStore,
   hotSectorScores: hotSectorScoreStore,
   valuePitScores: valuePitScoreStore,
+  executionPlans: executionPlanStore,
+  executionLogs: executionLogStore,
+  missingReports: missingReportStore,
+  portfolios: portfolioStore,
+  tradeReviews: tradeReviewStore,
   manager: dataManager,
 }

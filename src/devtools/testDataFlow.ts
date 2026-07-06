@@ -45,7 +45,7 @@ export async function testEventBus(): Promise<void> {
   eventBus.emit('USER_LOGIN', { userId: 'user_001', timestamp: Date.now() })
 
   logger.info('[EventBus] Step 3: 订阅 STOCK_UPDATE 事件')
-  eventBus.on('STOCK_UPDATE', (payload) => {
+  const unsubStockUpdate = eventBus.on('STOCK_UPDATE', (payload) => {
     const data = payload as { symbol: string; price: number }
     logger.info(`[EventBus] 收到 STOCK_UPDATE: ${data.symbol} = ${data.price}`)
   })
@@ -61,8 +61,11 @@ export async function testEventBus(): Promise<void> {
   })
 
   logger.info('[EventBus] Step 5: 取消订阅并再次发布')
-  eventBus.off('USER_LOGIN', unsub)
+  unsub() // 正确调用返回的 unsubscribe 函数
   eventBus.emit('USER_LOGIN', { userId: 'should_ignore' })
+
+  // 清理 STOCK_UPDATE 订阅，避免内存泄漏
+  unsubStockUpdate()
 
   logger.info('[EventBus] ✅ 测试完成')
 }

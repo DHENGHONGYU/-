@@ -30,6 +30,37 @@ export function toSafeNumber(value: unknown, defaultValue = 0): number {
 }
 
 /**
+ * 将任意值强制转为 number，并校验是否在 [min, max] 范围内。
+ * 无效值(NaN/Infinity/非数字字符串/null/undefined/空串)或越界值均返回 defaultValue。
+ *
+ * 用于表单 controlled input 的 onChange 守卫，避免 HTML5 min/max 属性
+ * 被绕过(键盘输入、JS 注入、剪贴板粘贴)导致脏数据流入 state。
+ *
+ * @example
+ *   toSafeNumberInRange(50, 0, 100, 0)        // 50
+ *   toSafeNumberInRange(-1, 0, 100, 0)        // 0(越界 → 默认值)
+ *   toSafeNumberInRange(150, 0, 100, 0)       // 0(越界 → 默认值)
+ *   toSafeNumberInRange('abc', 0, 100, 0)     // 0(NaN → 默认值)
+ *   toSafeNumberInRange(Infinity, 0, 100, 0) // 0(Infinity → 默认值)
+ *   toSafeNumberInRange('50', 0, 100, 0)      // 50(字符串数字 → 解析)
+ */
+export function toSafeNumberInRange(
+  value: unknown,
+  min: number,
+  max: number,
+  defaultValue: number,
+): number {
+  // 步骤 1:先做 NaN/Infinity/非数字 守卫(复用 toSafeNumber)
+  const num = toSafeNumber(value, Number.NaN)
+  if (!Number.isFinite(num)) return defaultValue
+
+  // 步骤 2:范围校验
+  if (num < min || num > max) return defaultValue
+
+  return num
+}
+
+/**
  * 将任意值强制转为 number | undefined，用于可选数值字段。
  * null/undefined/空串/非数字字符串均返回 undefined（而非 0），
  * 防止 0 被下游误判为"有值"。

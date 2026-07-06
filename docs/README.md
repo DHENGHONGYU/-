@@ -1,8 +1,8 @@
 # 智能投研复盘系统 V9 — 项目文档体系
 
 > **Status**: Current  
-> **Version**: v0.9.0-migration-implemented  
-> **Last Updated**: 2026-06-24
+> **Version**: v2.5.0  
+> **Last Updated**: 2026-07-05
 >
 > **项目代号**：V9-IRRS（Intelligent Research & Review System）  
 > **定位**：面向中国 A 股个人投资者的研究决策与复盘工具  
@@ -13,7 +13,7 @@
 
 ## 文档导航
 
-> 本文档体系当前统一版本为 `v0.9.0-migration-implemented`，表示迁移完成后的代码同步版；历史版本（`v0.9.0-docs-base`、`v0.9.0-docs-review`）仅用于版本比对参考。
+> 本文档体系当前统一版本为 `v2.5.0`，表示知识图谱 Token 消耗优化与协议缺陷修正后的版本；历史版本（`v0.9.0-docs-base`、`v0.9.0-docs-review`、`v0.9.0-migration-implemented`）仅用于版本比对参考。
 
 本文档体系是项目架构与实现的**唯一真相源**。历史讨论、临时笔记若与本文档冲突，以本文档为准。
 

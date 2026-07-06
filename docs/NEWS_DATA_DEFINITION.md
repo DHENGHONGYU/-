@@ -1,8 +1,10 @@
 # NewsPage（智能资讯中心）数据字典
 
-> 生成日期：2026-06-26  
-> 模块范围：`src/pages/news-v6/` · `src/services/news/` · `src/data/types.ts` · `src/config/routes.ts`  
-> 关联 PoC：`NewsPage-PoC验证报告.md` · `NewsPage-迁移验收确认书.md`
+> **版本**：v1.0.0  
+> **生成日期**：2026-06-26  
+> **最后更新**：2026-07-05（版本号补标）  
+> **模块范围**：`src/pages/news-v6/` · `src/services/news/` · `src/data/types.ts` · `src/config/routes.ts`  
+> **关联 PoC**：`NewsPage-PoC验证报告.md` · `NewsPage-迁移验收确认书.md`
 
 ---
 

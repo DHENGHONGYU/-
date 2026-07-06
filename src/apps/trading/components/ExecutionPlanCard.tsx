@@ -159,9 +159,9 @@ export function ExecutionPlanCard({
                     key={idx}
                     className={cn(
                       'flex items-start gap-1.5 rounded-md border px-2 py-1.5 text-xs',
-                      check.severity === 'blocker' && `${COLOR_SHADES.red[50]} ${COLOR_SHADES.red[200]} ${COLOR_SHADES.red[800]}`,
-                      check.severity === 'warning' && `${COLOR_SHADES.yellow[50]} ${COLOR_SHADES.yellow[200]} ${COLOR_SHADES.yellow[800]}`,
-                      check.severity === 'info' && `${COLOR_SHADES.gray[50]} ${COLOR_SHADES.gray[200]} ${COLOR_SHADES.gray[700]}`
+                      check.severity === 'blocker' && `${twBg('red', 50)} ${twBg('red', 200)} ${twText('red', 800)}`,
+                      check.severity === 'warning' && `${twBg('yellow', 50)} ${twBg('yellow', 200)} ${twText('yellow', 800)}`,
+                      check.severity === 'info' && `${twBg('gray', 50)} ${twBg('gray', 200)} ${twText('gray', 700)}`
                     )}
                   >
                     {check.severity === 'blocker' && <ShieldAlert className={`h-3.5 w-3.5 ${COLOR_SHADES.red[600]} mt-0.5 shrink-0`} />}

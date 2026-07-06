@@ -13,6 +13,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import type { WidgetConfig, SentimentData } from '@/types/modules/widget.types'
 import { STOCK_COLOR_MAPPING } from '@/constants/cockpit.constants'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
+import { UI_TEXT } from '@/constants/uiText'
 import type { FundFlow } from '@/cockpit/data/mockDataProvider'
 
 // ============================================================
@@ -228,7 +229,7 @@ describe('颜色整改 - A 股惯例验证（批次 E）', () => {
       render(<SignalMonitorWidget config={buildConfig('信号监控')} />)
 
       // 查找包含"买入"文字的外层 span，其内部包含统计数字的 span
-      const buyLabel = screen.getByText(/买入:/)
+      const buyLabel = screen.getByText(new RegExp(UI_TEXT.errors.buy + ':'))
       const buyCountSpan = buyLabel.querySelector('span.font-medium')
 
       expect(buyCountSpan).not.toBeNull()
@@ -241,7 +242,7 @@ describe('颜色整改 - A 股惯例验证（批次 E）', () => {
 
       render(<SignalMonitorWidget config={buildConfig('信号监控')} />)
 
-      const sellLabel = screen.getByText(/卖出:/)
+      const sellLabel = screen.getByText(new RegExp(UI_TEXT.errors.sell + ':'))
       const sellCountSpan = sellLabel.querySelector('span.font-medium')
 
       expect(sellCountSpan).not.toBeNull()
@@ -254,13 +255,13 @@ describe('颜色整改 - A 股惯例验证（批次 E）', () => {
 
       render(<SignalMonitorWidget config={buildConfig('信号监控')} />)
 
-      const buyLabel = screen.getByText(/买入:/)
+      const buyLabel = screen.getByText(new RegExp(UI_TEXT.errors.buy + ':'))
       const buyCountSpan = buyLabel.querySelector('span.font-medium')
 
       // 买入不应使用绿色（国际惯例）
       expect(buyCountSpan?.className).not.toContain('text-green-500')
 
-      const sellLabel = screen.getByText(/卖出:/)
+      const sellLabel = screen.getByText(new RegExp(UI_TEXT.errors.sell + ':'))
       const sellCountSpan = sellLabel.querySelector('span.font-medium')
 
       // 卖出不应使用红色（国际惯例）
@@ -320,7 +321,7 @@ describe('颜色整改 - A 股惯例验证（批次 E）', () => {
       render(<MarketSentimentWidget config={buildConfig('市场情绪')} />)
 
       // 边界值 50 不满足 > 50，走 else 分支（绿色）
-      const label = screen.getByText('中性')
+      const label = screen.getByText(UI_TEXT.errors.neutral)
       expect(label.className).toContain('bg-green-100')
       expect(label.className).toContain('text-green-700')
     })

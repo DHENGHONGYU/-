@@ -12,6 +12,7 @@ import {
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
+import { GRADIENT } from '@/constants/theme.tokens'
 
 interface FeatureCardProps {
   icon: React.ElementType
@@ -54,7 +55,7 @@ export default function HomePage(): React.JSX.Element {
       <Card className="w-full max-w-3xl">
         <CardHeader className="text-center">
           <div className="flex items-center justify-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-sky-500 text-white">
+            <div className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${GRADIENT.fromEmerald500} ${GRADIENT.toSky500} text-white`}>
               <Target className="h-5 w-5" />
             </div>
             <CardTitle className="text-3xl">智能投研复盘系统 V9</CardTitle>

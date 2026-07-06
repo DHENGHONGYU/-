@@ -13,14 +13,15 @@ import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { createRef } from 'react'
 import { Badge } from '@/components/ui/Badge'
+import { COLOR_TOKENS } from '@/constants/theme.tokens'
 
 describe('Badge', () => {
   it('默认 variant=default 应用 primary 样式', () => {
     render(<Badge>徽章</Badge>)
     const badge = screen.getByText('徽章')
     expect(badge.tagName).toBe('SPAN')
-    expect(badge).toHaveClass('bg-primary/15')
-    expect(badge).toHaveClass('text-primary')
+    expect(badge).toHaveClass('bg-primary')
+    expect(badge).toHaveClass('text-primary-foreground')
   })
 
   it('variant=secondary 应用 secondary 样式', () => {
@@ -31,24 +32,29 @@ describe('Badge', () => {
   it('variant=outline 应用 outline 样式（无背景色）', () => {
     render(<Badge variant="outline">轮廓</Badge>)
     const badge = screen.getByText('轮廓')
-    expect(badge).toHaveClass('text-muted-foreground')
+    expect(badge).toHaveClass(COLOR_TOKENS.textPrimary.tailwind)
     // outline 不应该带 bg-primary/secondary/destructive
     expect(badge).not.toHaveClass('bg-primary')
   })
 
   it('variant=destructive 应用 destructive 样式', () => {
     render(<Badge variant="destructive">危险</Badge>)
-    expect(screen.getByText('危险')).toHaveClass('text-destructive')
+    expect(screen.getByText('危险')).toHaveClass(COLOR_TOKENS.danger.bgClass)
+    expect(screen.getByText('危险')).toHaveClass('text-white')
   })
 
   it('variant=success 应用 success 样式', () => {
     render(<Badge variant="success">成功</Badge>)
-    expect(screen.getByText('成功')).toHaveClass('text-positive')
+    const badge = screen.getByText('成功')
+    expect(badge).toHaveClass(COLOR_TOKENS.success.bgClass.split(' ')[0]!)
+    expect(badge).toHaveClass('text-white')
   })
 
   it('variant=warning 应用 warning 样式', () => {
     render(<Badge variant="warning">警告</Badge>)
-    expect(screen.getByText('警告')).toHaveClass('text-warning')
+    const badge = screen.getByText('警告')
+    expect(badge).toHaveClass(COLOR_TOKENS.warning.bgClass.split(' ')[0]!)
+    expect(badge).toHaveClass('text-white')
   })
 
   it('应用基础徽章样式（rounded-full, px-2.5 等）', () => {
@@ -64,7 +70,7 @@ describe('Badge', () => {
     render(<Badge className="my-badge">合并</Badge>)
     const badge = screen.getByText('合并')
     expect(badge).toHaveClass('my-badge')
-    expect(badge).toHaveClass('bg-primary/15')
+    expect(badge).toHaveClass('bg-primary')
   })
 
   it('ref 转发到 span 元素', () => {

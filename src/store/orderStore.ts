@@ -33,108 +33,38 @@ import type { Order } from '@/data/types'
 import type { StandardEnvelope } from '@/core/envelope'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { withBroadcast } from '@/store/helpers/withBroadcast'
+import {
+  buildTradePairs,
+  buildPositions,
+  type SymbolTradePair,
+  type PositionItem,
+} from '@/services/trading/positionComputer'
+import { computePnLSummary, type PnLSummary } from '@/services/trading/pnlComputer'
+import { computeRiskMetrics, type RiskMetrics } from '@/services/trading/riskComputer'
 
 const logger = getLogger()
 
 // ============================================================
-// 类型定义
+// 类型定义（从计算模块重新导出，保持向后兼容）
 // ============================================================
 
-/** 单笔匹配的交易对明细 */
-export interface MatchedTradePair {
-  /** 盈亏百分比（基于买入价） */
-  profitPct: number
-  /** 买入日期 YYYY-MM-DD */
-  buyDate: string
-  /** 卖出日期 YYYY-MM-DD */
-  sellDate: string
-  /** 配对数量（股） */
-  quantity: number
-  /** 已实现盈亏金额（元） */
-  realizedAmount: number
-}
+// 重新导出类型，保持向后兼容性
+export type {
+  MatchedTradePair,
+  SymbolTradePair,
+  PositionItem,
+} from '@/services/trading/positionComputer'
 
-/** 按 symbol 聚合的交易对与持仓信息 */
-export interface TradePair {
-  /** 股票代码 */
-  symbol: string
-  /** 买入订单列表 */
-  buyOrders: Order[]
-  /** 卖出订单列表 */
-  sellOrders: Order[]
-  /** 买入总金额 */
-  totalBuy: number
-  /** 卖出总金额 */
-  totalSell: number
-  /** 已实现盈亏（金额，元） */
-  realizedPnl: number
-  /** 未平仓数量（股） */
-  openPositions: number
-  /** 未平仓平均成本价 */
-  avgCostPrice: number
-  /** 内部配对明细，用于 UI 曲线/月度聚合 */
-  pairs: MatchedTradePair[]
-}
+// 重新导出规范 TradePair 类型（来自 types 层零依赖定义）
+export type { TradePair } from '@/services/trading/tradeReviewAI.types'
 
-/** 当前持仓项 */
-export interface PositionItem {
-  /** 股票代码 */
-  symbol: string
-  /** 持仓数量（股） */
-  quantity: number
-  /** 平均成本价 */
-  avgCost: number
-  /** 持仓市值（按成本价计） */
-  costValue: number
-  /** 持仓方向 */
-  direction: 'buy' | 'sell'
-  /** 首次买入时间戳 */
-  firstBuyAt: number
-  /** 最近一次变动时间戳 */
-  lastChangedAt: number
-}
+export type {
+  PnLSummary,
+} from '@/services/trading/pnlComputer'
 
-/** 盈亏汇总 */
-export interface PnLSummary {
-  /** 总已实现盈亏（金额，元） */
-  totalRealizedPnl: number
-  /** 总未实现盈亏（金额，元）—— 按最新价估算，暂无行情时为 0 */
-  totalUnrealizedPnl: number
-  /** 胜率 % */
-  winRate: number
-  /** 盈亏比 */
-  profitFactor: number
-  /** 总交易笔数（完成配对的） */
-  totalTrades: number
-  /** 盈利交易数 */
-  profitTrades: number
-  /** 亏损交易数 */
-  lossTrades: number
-  /** 月度盈亏列表 */
-  monthlyPnL: Array<{ month: string; pnl: number; trades: number }>
-  /** 日度累计盈亏曲线 */
-  dailyCurve: Array<{ date: string; cumulativePnL: number }>
-}
-
-/** 风险指标（基于交易对与盈亏汇总估算） */
-export interface RiskMetrics {
-  /** 历史模拟法 VaR(95%)，单位：% */
-  var95: number
-  /** VaR 风险等级 */
-  varLevel: 'high' | 'medium' | 'low'
-  /** 最大回撤 % */
-  maxDrawdown: number
-  /** 年化波动率 % */
-  volatility: number
-  /** 夏普比率 */
-  sharpeRatio: number
-  /** Beta 估算 */
-  betaEstimate: number
-  /** 持仓集中度 % */
-  concentration: number
-  /** 风险告警列表 */
-  alerts: string[]
-}
+export type {
+  RiskMetrics,
+} from '@/services/trading/riskComputer'
 
 /**
  * OrderStore 状态接口 —— 订单域唯一可信源。
@@ -151,7 +81,7 @@ export interface OrderState {
   /** 未实现盈亏总金额（元）—— 无行情时为 0 */
   unrealizedPnL: number
   /** 按 symbol 聚合的交易对（派生） */
-  tradePairs: TradePair[]
+  tradePairs: SymbolTradePair[]
   /** 盈亏汇总（派生） */
   pnlSummary: PnLSummary
   /** 风险指标（派生） */
@@ -251,348 +181,16 @@ const initialState: Omit<
 // 工具函数
 // ============================================================
 
-/** 保留两位小数 */
-function round2(value: number): number {
-  return Math.round(value * 100) / 100
-}
-
-/** 保留一位小数 */
-function round1(value: number): number {
-  return Math.round(value * 10) / 10
-}
-
-/** 时间戳转日期字符串 YYYY-MM-DD */
-function formatDate(timestamp: number): string {
-  return new Date(timestamp).toISOString().slice(0, 10)
-}
-
 /** 生成 traceId */
 function createTraceId(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
 }
 
-// ============================================================
-// 共享计算函数 —— 纯函数，便于测试与复用
-// ============================================================
-
-/**
- * 按 symbol 对订单进行 FIFO 配对，计算已实现盈亏与未平仓头寸。
- *
- * @param orders - 订单列表
- * @returns 按 symbol 聚合的交易对数组
- *
- * @remarks
- * 配对算法：
- * 1. 按 symbol 分组
- * 2. 每组内按 createdAt 升序排列
- * 3. 买单入队，卖单从队头取买单进行 FIFO 配对
- * 4. 未配对的买单累积为当前持仓，计算平均成本价
- */
-export function buildTradePairs(orders: Order[]): TradePair[] {
-  const bySymbol = new Map<string, Order[]>()
-
-  for (const order of orders) {
-    const list = bySymbol.get(order.symbol) ?? []
-    list.push(order)
-    bySymbol.set(order.symbol, list)
-  }
-
-  const tradePairs: TradePair[] = []
-
-  for (const [symbol, symOrders] of bySymbol) {
-    const buyOrders = symOrders.filter((o) => o.direction === 'buy')
-    const sellOrders = symOrders.filter((o) => o.direction === 'sell')
-    const totalBuy = buyOrders.reduce((sum, o) => sum + o.amount, 0)
-    const totalSell = sellOrders.reduce((sum, o) => sum + o.amount, 0)
-
-    const sorted = [...symOrders].sort((a, b) => a.createdAt - b.createdAt)
-
-    // FIFO 配对队列：每个元素为 { price, quantity, createdAt }
-    interface BuyQueueItem {
-      price: number
-      quantity: number
-      createdAt: number
-      amount: number
-    }
-    const buyQueue: BuyQueueItem[] = []
-    const pairs: MatchedTradePair[] = []
-    let realizedPnl = 0
-
-    for (const order of sorted) {
-      if (order.direction === 'buy') {
-        buyQueue.push({
-          price: order.price,
-          quantity: order.quantity,
-          createdAt: order.createdAt,
-          amount: order.amount,
-        })
-      } else if (order.direction === 'sell' && buyQueue.length > 0) {
-        // 卖单与买单 FIFO 配对
-        let remainingQty = order.quantity
-
-        while (remainingQty > 0 && buyQueue.length > 0) {
-          const buy = buyQueue[0]!
-          const matchQty = Math.min(remainingQty, buy.quantity)
-          const buyAmount = (matchQty / buy.quantity) * buy.amount
-          const sellAmount = matchQty * order.price
-          const realized = sellAmount - buyAmount
-
-          pairs.push({
-            profitPct: buy.price > 0 ? round2(((order.price - buy.price) / buy.price) * 100) : 0,
-            buyDate: formatDate(buy.createdAt),
-            sellDate: formatDate(order.createdAt),
-            quantity: matchQty,
-            realizedAmount: round2(realized),
-          })
-
-          realizedPnl += realized
-          remainingQty -= matchQty
-
-          if (matchQty >= buy.quantity) {
-            buyQueue.shift()
-          } else {
-            buy.quantity -= matchQty
-            buy.amount -= buyAmount
-          }
-        }
-      }
-    }
-
-    // 计算未平仓持仓
-    const openPositions = buyQueue.reduce((sum, b) => sum + b.quantity, 0)
-    const totalOpenCost = buyQueue.reduce((sum, b) => sum + b.amount, 0)
-    const avgCostPrice = openPositions > 0 ? round2(totalOpenCost / openPositions) : 0
-
-    tradePairs.push({
-      symbol,
-      buyOrders,
-      sellOrders,
-      totalBuy: round2(totalBuy),
-      totalSell: round2(totalSell),
-      realizedPnl: round2(realizedPnl),
-      openPositions,
-      avgCostPrice,
-      pairs,
-    })
-  }
-
-  return tradePairs
-}
-
-/**
- * 从交易对结果计算盈亏汇总。
- *
- * @param tradePairs - 交易对数组
- * @returns 盈亏汇总指标
- */
-export function computePnLSummary(tradePairs: TradePair[]): PnLSummary {
-  const flatPairs = tradePairs.flatMap((tp) => tp.pairs)
-  const totalTrades = flatPairs.length
-
-  if (totalTrades === 0) {
-    return {
-      totalRealizedPnl: 0,
-      totalUnrealizedPnl: 0,
-      winRate: 0,
-      profitFactor: 0,
-      totalTrades: 0,
-      profitTrades: 0,
-      lossTrades: 0,
-      monthlyPnL: [],
-      dailyCurve: [],
-    }
-  }
-
-  const profitPairs = flatPairs.filter((p) => p.realizedAmount > 0)
-  const lossPairs = flatPairs.filter((p) => p.realizedAmount < 0)
-  const profitTrades = profitPairs.length
-  const lossTrades = lossPairs.length
-
-  const totalRealizedPnl = round2(flatPairs.reduce((sum, p) => sum + p.realizedAmount, 0))
-  const winRate = round1((profitTrades / totalTrades) * 100)
-
-  const totalProfit = profitPairs.length > 0
-    ? profitPairs.reduce((sum, p) => sum + p.realizedAmount, 0)
-    : 0
-  const totalLoss = lossPairs.length > 0
-    ? Math.abs(lossPairs.reduce((sum, p) => sum + p.realizedAmount, 0))
-    : 0
-  const profitFactor = totalLoss > 0
-    ? round2(totalProfit / totalLoss)
-    : totalProfit > 0
-      ? 999
-      : 0
-
-  // 月度盈亏（按卖出日期聚合）
-  const monthlyMap = new Map<string, { pnl: number; trades: number }>()
-  for (const pair of flatPairs) {
-    const month = pair.sellDate.slice(0, 7)
-    const existing = monthlyMap.get(month) ?? { pnl: 0, trades: 0 }
-    existing.pnl += pair.realizedAmount
-    existing.trades += 1
-    monthlyMap.set(month, existing)
-  }
-  const monthlyPnL = Array.from(monthlyMap.entries())
-    .map(([month, val]) => ({
-      month,
-      pnl: round2(val.pnl),
-      trades: val.trades,
-    }))
-    .sort((a, b) => a.month.localeCompare(b.month))
-
-  // 日度累计盈亏曲线（按卖出日期排序累加）
-  const sortedByDate = [...flatPairs].sort((a, b) => a.sellDate.localeCompare(b.sellDate))
-  let cumulative = 0
-  const dailyCurve = sortedByDate.map((pair) => {
-    cumulative += pair.realizedAmount
-    return {
-      date: pair.sellDate,
-      cumulativePnL: round2(cumulative),
-    }
-  })
-
-  // 未实现盈亏：暂无实时行情，暂计为 0
-  // 后续可接入 dailyQuotes 后，用最新价 × 持仓数量 - 持仓成本计算
-  const totalUnrealizedPnl = 0
-
-  return {
-    totalRealizedPnl,
-    totalUnrealizedPnl,
-    winRate,
-    profitFactor,
-    totalTrades,
-    profitTrades,
-    lossTrades,
-    monthlyPnL,
-    dailyCurve,
-  }
-}
-
-/**
- * 从交易对结果派生出当前持仓列表。
- *
- * @param tradePairs - 交易对数组
- * @returns 净持仓 > 0 的持仓项数组，按市值降序
- */
-export function buildPositions(tradePairs: TradePair[]): PositionItem[] {
-  const positions: PositionItem[] = []
-
-  for (const tp of tradePairs) {
-    if (tp.openPositions <= 0) continue
-
-    // 找出首次买入和最近一次变动时间
-    const allOrders = [...tp.buyOrders, ...tp.sellOrders]
-    const firstBuy = tp.buyOrders.reduce(
-      (earliest, o) => (o.createdAt < earliest ? o.createdAt : earliest),
-      Infinity,
-    )
-    const lastChanged = allOrders.reduce(
-      (latest, o) => (o.createdAt > latest ? o.createdAt : latest),
-      0,
-    )
-
-    positions.push({
-      symbol: tp.symbol,
-      quantity: tp.openPositions,
-      avgCost: tp.avgCostPrice,
-      costValue: round2(tp.openPositions * tp.avgCostPrice),
-      direction: 'buy',
-      firstBuyAt: isFinite(firstBuy) ? firstBuy : 0,
-      lastChangedAt: lastChanged,
-    })
-  }
-
-  // 按成本市值降序排列
-  positions.sort((a, b) => b.costValue - a.costValue)
-  return positions
-}
-
-/**
- * 从交易对与盈亏汇总估算风险指标。
- *
- * @remarks
- * 由于暂无实时行情，使用已实现盈亏曲线估算波动率、回撤、VaR 等风险指标。
- * 后续接入每日净值后可替换为基于净值的计算。
- */
-export function computeRiskMetrics(
-  tradePairs: TradePair[],
-  pnlSummary: PnLSummary,
-  positions: PositionItem[],
-): RiskMetrics {
-  const dailyCurve = pnlSummary.dailyCurve
-  const totalInvested = round2(
-    tradePairs.reduce((sum, tp) => sum + tp.totalBuy, 0),
-  )
-
-  // 日度盈亏变化（基于累计盈亏曲线的一阶差分）
-  const dailyReturns: number[] = []
-  for (let i = 1; i < dailyCurve.length; i++) {
-    const change = dailyCurve[i]!.cumulativePnL - dailyCurve[i - 1]!.cumulativePnL
-    dailyReturns.push(totalInvested > 0 ? (change / totalInvested) * 100 : 0)
-  }
-
-  const n = dailyReturns.length
-  const mean = n > 0 ? dailyReturns.reduce((sum, r) => sum + r, 0) / n : 0
-  const variance =
-    n > 0 ? dailyReturns.reduce((sum, r) => sum + (r - mean) ** 2, 0) / n : 0
-  const std = Math.sqrt(variance)
-
-  // 年化波动率与夏普（按 252 个交易日）
-  const volatility = round2(std * Math.sqrt(252))
-  const sharpeRatio = volatility > 0 ? round2((mean * 252) / volatility) : 0
-
-  // 历史模拟法 VaR(95%)
-  const var95 = round2(mean - 1.645 * std)
-  let varLevel: 'high' | 'medium' | 'low' = 'low'
-  if (var95 < -5) {
-    varLevel = 'high'
-  } else if (var95 < -2) {
-    varLevel = 'medium'
-  }
-
-  // 最大回撤（基于累计盈亏曲线的百分比）
-  let peak = -Infinity
-  let maxDrawdown = 0
-  for (const point of dailyCurve) {
-    const value = totalInvested > 0 ? (point.cumulativePnL / totalInvested) * 100 : 0
-    if (value > peak) peak = value
-    const drawdown = peak > -Infinity ? peak - value : 0
-    if (drawdown > maxDrawdown) maxDrawdown = drawdown
-  }
-
-  // 集中度：最大单一持仓成本市值 / 总持仓成本市值
-  const totalCost = positions.reduce((sum, p) => sum + p.costValue, 0)
-  const maxPosition = positions.reduce((max, p) => Math.max(max, p.costValue), 0)
-  const concentration = totalCost > 0 ? round2((maxPosition / totalCost) * 100) : 0
-
-  // Beta 估算：暂无基准数据，持仓存在时保守估算为 1.0
-  const betaEstimate = positions.length > 0 ? 1 : 0
-
-  const alerts: string[] = []
-  if (concentration > 50) {
-    alerts.push('持仓集中度超过 50%，建议分散风险')
-  }
-  if (sharpeRatio < 0) {
-    alerts.push('夏普比率为负，组合风险收益比不佳')
-  }
-  if (varLevel === 'high') {
-    alerts.push('VaR(95%) 处于高风险区间')
-  }
-  if (maxDrawdown > 20) {
-    alerts.push('最大回撤超过 20%')
-  }
-
-  return {
-    var95,
-    varLevel,
-    maxDrawdown: round2(maxDrawdown),
-    volatility,
-    sharpeRatio,
-    betaEstimate,
-    concentration,
-    alerts,
-  }
-}
+// 计算函数已从以下模块导入：
+// - buildTradePairs, buildPositions, type MatchedTradePair, type TradePair, type PositionItem
+//   from '@/services/trading/positionComputer'
+// - computePnLSummary, type PnLSummary from '@/services/trading/pnlComputer'
+// - computeRiskMetrics, type RiskMetrics from '@/services/trading/riskComputer'
 
 // ============================================================
 // Store

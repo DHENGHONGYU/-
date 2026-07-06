@@ -401,7 +401,9 @@ describe('analyze', () => {
     const result = analyze(makeInput())
     for (const key of Object.keys(result.dimensions) as Array<keyof typeof result.dimensions>) {
       const val = result.dimensions[key]
-      expect(val.toString().split('.')[1]?.length ?? 0).toBeLessThanOrEqual(2)
+      if (val !== undefined && val !== null) {
+        expect(val.toString().split('.')[1]?.length ?? 0).toBeLessThanOrEqual(2)
+      }
     }
   })
 

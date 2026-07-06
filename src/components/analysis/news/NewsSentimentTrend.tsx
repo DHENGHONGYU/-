@@ -1,30 +1,25 @@
 /**
  * @module NewsSentimentTrend
  * @description DA-008 资讯情感趋势组件。
- * 从 analysisNewsStore 读取 articles，调用 sentimentTrendEngine 聚合，
+ * 从 analysisNewsStore 读取 articles 与情感趋势计算结果，
  * 以 100% 堆叠柱状图展示正面/负面/中性资讯占比随时间变化。
+ * 禁止直接调用 sentimentTrendEngine，所有计算通过 Store action 完成。
  */
 
-import React, { useMemo, useState, useCallback } from 'react'
-import type { NewsArticle } from '@/data/types'
+import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Select, SelectItem } from '@/components/ui/Select'
 import { BarChart } from '@/components/chart'
 import { DataState } from '@/components/ui/DataState'
-import {
-  aggregateSentimentTrend,
-  extractStockOptions,
-  extractIndustryOptions,
-} from '@/services/news/sentimentTrendEngine'
 import type { SentimentTrendDimension } from '@/types/modules/news.types'
 import { SENTIMENT_TREND_COLORS } from '@/config/chartColors'
 import { newsColors } from '@/constants/newsColorTokens'
+import { useAnalysisNewsStore } from '@/store/analysisNewsStore'
 import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
 
 interface NewsSentimentTrendProps {
-  articles: NewsArticle[]
   loading?: boolean
   error?: string | null
 }
@@ -45,21 +40,30 @@ function formatRatio(value: number): string {
   return `${(value * 100).toFixed(1)}%`
 }
 
-export function NewsSentimentTrend({ articles, loading = false, error = null }: NewsSentimentTrendProps): React.JSX.Element {
+export function NewsSentimentTrend({ loading = false, error = null }: NewsSentimentTrendProps): React.JSX.Element {
+  // 从 Store 获取数据
+  const articles = useAnalysisNewsStore((s) => s.articles)
+  const sentimentTrend = useAnalysisNewsStore((s) => s.sentimentTrend)
+  const stockOptions = useAnalysisNewsStore((s) => s.sentimentStockOptions)
+  const industryOptions = useAnalysisNewsStore((s) => s.sentimentIndustryOptions)
+  const computeSentimentTrend = useAnalysisNewsStore((s) => s.computeSentimentTrend)
+
   const [dimension, setDimension] = useState<SentimentTrendDimension>('global')
   const [value, setValue] = useState<string>('')
 
-  const stockOptions = useMemo(() => extractStockOptions(articles), [articles])
-  const industryOptions = useMemo(() => extractIndustryOptions(articles), [articles])
+  // 当 articles/dimension/value 变化时，通过 Store action 重新计算
+  useEffect(() => {
+    logger.info('[NewsSentimentTrend] 触发情感趋势计算', { dimension, value, articleCount: articles.length })
+    computeSentimentTrend(dimension, value || undefined)
+  }, [articles, dimension, value, computeSentimentTrend])
 
-  const trend = useMemo(() => {
-    logger.info('[NewsSentimentTrend] recompute trend', { dimension, value })
-    return aggregateSentimentTrend(articles, {
-      dimension,
-      value: value || undefined,
-      fillGaps: true,
-    })
-  }, [articles, dimension, value])
+  // 构建趋势数据（从 Store 读取，若尚未计算则使用空数据）
+  const trend = useMemo(() => sentimentTrend ?? {
+    dimension,
+    value: value ?? '',
+    data: [],
+    summary: { totalArticles: 0, positiveCount: 0, negativeCount: 0, neutralCount: 0, avgDailyArticles: 0 },
+  }, [sentimentTrend, dimension, value])
 
   const handleDimensionChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
     const next = event.target.value as SentimentTrendDimension

@@ -1,12 +1,17 @@
 import { describe, expect, it, beforeEach } from 'vitest'
 import { dataLayer } from '@/data/dataLayer'
+import { dataBridge } from '@/core/databridge'
 import { db } from '@/data/db'
-import { DEFAULT_POOL_GROUP } from '@/config/dbConfig'
+import { RESEARCH_STATUS, STORE_NAME } from '@/config/dbConfig'
 
 describe('dataLayer', () => {
   beforeEach(async () => {
     await db.init()
     await db.reset()
+    dataBridge.invalidateCache(STORE_NAME.stocks)
+    dataBridge.invalidateCache(STORE_NAME.dailyQuotes)
+    dataBridge.invalidateCache(STORE_NAME.v6Scores)
+    dataBridge.invalidateCache(STORE_NAME.orders)
   })
 
   it('should add and retrieve a stock', async () => {

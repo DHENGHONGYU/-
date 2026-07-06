@@ -1,10 +1,10 @@
-const { mockDbInit, mockInitAgentSystem } = vi.hoisted(() => ({
+const { mockDbInit, mockInitPWA } = vi.hoisted(() => ({
   mockDbInit: vi.fn().mockResolvedValue(undefined),
-  mockInitAgentSystem: vi.fn()
+  mockInitPWA: vi.fn()
 }))
 
 vi.mock('@/data/db', () => ({ db: { init: mockDbInit } }))
-vi.mock('@/agents', () => ({ initAgentSystem: mockInitAgentSystem }))
+vi.mock('@/services/pwa/registerServiceWorker', () => ({ initPWA: mockInitPWA }))
 
 import { initializeApp } from './bootstrapService'
 
@@ -18,19 +18,19 @@ describe('bootstrapService', () => {
     expect(mockDbInit).toHaveBeenCalledTimes(1)
   })
 
-  it('initializeApp: 调用 initAgentSystem', async () => {
+  it('initializeApp: 调用 initPWA', async () => {
     await initializeApp()
-    expect(mockInitAgentSystem).toHaveBeenCalledTimes(1)
+    expect(mockInitPWA).toHaveBeenCalledTimes(1)
   })
 
-  it('initializeApp: 按正确顺序调用（先 db.init，后 initAgentSystem）', async () => {
+  it('initializeApp: 按正确顺序调用（先 db.init，后 initPWA）', async () => {
     await initializeApp()
     expect(mockDbInit).toHaveBeenCalledTimes(1)
-    expect(mockInitAgentSystem).toHaveBeenCalledTimes(1)
-    // db.init 的调用序号应小于 initAgentSystem
+    expect(mockInitPWA).toHaveBeenCalledTimes(1)
+    // db.init 的调用序号应小于 initPWA
     const dbCallOrder = mockDbInit.mock.invocationCallOrder[0]!
-    const agentCallOrder = mockInitAgentSystem.mock.invocationCallOrder[0]!
-    expect(dbCallOrder).toBeLessThan(agentCallOrder)
+    const pwaCallOrder = mockInitPWA.mock.invocationCallOrder[0]!
+    expect(dbCallOrder).toBeLessThan(pwaCallOrder)
   })
 
   it('initializeApp: db.init 失败时抛出异常', async () => {
@@ -38,7 +38,7 @@ describe('bootstrapService', () => {
     mockDbInit.mockRejectedValueOnce(error)
 
     await expect(initializeApp()).rejects.toThrow('db init failed')
-    expect(mockInitAgentSystem).not.toHaveBeenCalled()
+    expect(mockInitPWA).not.toHaveBeenCalled()
   })
 
   it('initializeApp: db.init 返回 Promise.resolve', async () => {
@@ -48,12 +48,12 @@ describe('bootstrapService', () => {
     expect(mockDbInit).toHaveBeenCalled()
   })
 
-  it('initializeApp: initAgentSystem 在 db.init 完成后调用', async () => {
+  it('initializeApp: initPWA 在 db.init 完成后调用', async () => {
     await initializeApp()
 
     const dbInitCallOrder = mockDbInit.mock.invocationCallOrder[0]!
-    const agentInitCallOrder = mockInitAgentSystem.mock.invocationCallOrder[0]!
+    const pwaInitCallOrder = mockInitPWA.mock.invocationCallOrder[0]!
 
-    expect(agentInitCallOrder).toBeGreaterThan(dbInitCallOrder)
+    expect(pwaInitCallOrder).toBeGreaterThan(dbInitCallOrder)
   })
 })

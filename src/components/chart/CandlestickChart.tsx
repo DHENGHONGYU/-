@@ -7,6 +7,7 @@ import {
   type RefObject,
 } from 'react'
 import { createChart, CandlestickSeries, type IChartApi, type ISeriesApi, type CandlestickData, type Time } from 'lightweight-charts'
+import { CHART_PALETTE } from '@/constants/theme.tokens'
 
 export interface CandlestickChartData {
   time: string
@@ -31,8 +32,8 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
     const seriesRef = useRef<ISeriesApi<'Candlestick'> | null>(null)
 
     // 涨跌色默认值
-    const positiveColor = upColor ?? 'hsl(152, 60%, 45%)'
-    const negativeColor = downColor ?? 'hsl(0, 65%, 55%)'
+    const positiveColor = upColor ?? CHART_PALETTE.upColor
+    const negativeColor = downColor ?? CHART_PALETTE.downColor
 
     useEffect(() => {
       if (!containerRef.current) return
@@ -42,30 +43,30 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
         height,
         layout: {
           background: { color: 'transparent' },
-          textColor: 'hsl(220, 9%, 46%)',
+          textColor: CHART_PALETTE.axis,
         },
         grid: {
-          vertLines: { color: 'hsl(220, 13%, 91%)' },
-          horzLines: { color: 'hsl(220, 13%, 91%)' },
+          vertLines: { color: CHART_PALETTE.gridLight },
+          horzLines: { color: CHART_PALETTE.gridLight },
         },
         crosshair: {
           mode: 1,
           vertLine: {
-            color: 'hsl(195, 85%, 42%)',
+            color: CHART_PALETTE.accent,
             width: 1,
             style: 2,
           },
           horzLine: {
-            color: 'hsl(195, 85%, 42%)',
+            color: CHART_PALETTE.accent,
             width: 1,
             style: 2,
           },
         },
         rightPriceScale: {
-          borderColor: 'hsl(220, 13%, 91%)',
+          borderColor: CHART_PALETTE.gridLight,
         },
         timeScale: {
-          borderColor: 'hsl(220, 13%, 91%)',
+          borderColor: CHART_PALETTE.gridLight,
           timeVisible: true,
         },
       })

@@ -50,6 +50,7 @@ function createMockSignal(overrides: Partial<Signal> = {}): Signal {
     symbol: '000001',
     direction: 'buy',
     type: 'buy_dip',
+    strategy: 'test_strategy',
     confidence: 0.75,
     rationale: '测试信号',
     snapshot: {

@@ -11,6 +11,7 @@ import {
   PolarRadiusAxis,
   ResponsiveContainer,
 } from 'recharts'
+import { CHART_PALETTE } from '@/constants/theme.tokens'
 
 export interface ScoreRadarData {
   dimension: string
@@ -29,9 +30,9 @@ export interface ScoreRadarProps extends ComponentPropsWithoutRef<'div'> {
 
 const ScoreRadar = forwardRef<HTMLDivElement, ScoreRadarProps>(
   ({ data, height = 300, colors, ...divProps }, ref) => {
-    // 默认颜色
-    const fillColor = colors?.fill ?? 'hsl(195, 85%, 42%)'
-    const strokeColor = colors?.stroke ?? 'hsl(195, 85%, 42%)'
+    // 默认颜色：从设计令牌读取，禁止硬编码
+    const fillColor = colors?.fill ?? CHART_PALETTE.radarDefault
+    const strokeColor = colors?.stroke ?? CHART_PALETTE.radarDefault
 
     // 计算满分值，用于归一化
     const maxScore = Math.max(
@@ -50,15 +51,15 @@ const ScoreRadar = forwardRef<HTMLDivElement, ScoreRadarProps>(
       <div ref={ref} style={{ height }} {...divProps}>
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart data={normalizedData} margin={{ top: 20, right: 30, bottom: 20, left: 30 }}>
-            <PolarGrid stroke="hsl(220, 13%, 91%)" />
+            <PolarGrid stroke={CHART_PALETTE.gridLight} />
             <PolarAngleAxis
               dataKey="dimension"
-              tick={{ fill: 'hsl(220, 9%, 46%)', fontSize: 12 }}
+              tick={{ fill: CHART_PALETTE.axis, fontSize: 12 }}
             />
             <PolarRadiusAxis
               angle={90}
               domain={[0, 100]}
-              tick={{ fill: 'hsl(220, 9%, 46%)', fontSize: 10 }}
+              tick={{ fill: CHART_PALETTE.axis, fontSize: 10 }}
               tickCount={5}
             />
             <Radar

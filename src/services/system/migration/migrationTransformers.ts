@@ -1,4 +1,5 @@
 import { generateId } from '@/data/db'
+import { getLogger } from '@/lib/logger'
 import {
   DATA_SOURCE,
   DEFAULT_POOL_GROUP,
@@ -10,6 +11,7 @@ import {
   type OrderDirection,
   type ResearchStatus,
 } from '@/config/dbConfig'
+import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import type {
   DailyQuotes,
   KlineBar,
@@ -45,6 +47,8 @@ import type {
   V6ExportShape,
   V9ImportShape,
 } from './migrationTypes'
+
+const logger = getLogger()
 
 export function sentimentNumberToLabel(score: number): 'positive' | 'negative' | 'neutral' {
   if (score > 0.2) return 'positive'
@@ -197,7 +201,13 @@ export function transformV6DailyQuotes(v6Quotes: V6DailyQuote[]): DailyQuotes[] 
 
     const updatedAt = Math.max(
       ...sorted.map((q) => parseTimestamp(q.updatedAt) ?? 0),
-      parseTimestamp(sorted[sorted.length - 1]?.tradeDate) ?? 0,
+      (() => {
+        const ts = parseTimestamp(sorted[sorted.length - 1]?.tradeDate)
+        if (ts == null) {
+          logger.warn('[migrationTransformers] 字段缺失，使用默认值', { field: 'tradeDate', context: `symbol=${symbol}` })
+        }
+        return ts ?? 0
+      })(),
     )
 
     result.push({
@@ -259,7 +269,7 @@ export function transformV6ScoreToDoc(v6: V6ScoreRecord): ScoreDocVersion {
     composite: safeNumber(v6.composite) ?? 0,
     l3v: safeNumber(v6.l3v) ?? 0,
     layers,
-    recommendation: v6.recommendation ?? { key: 'hold', label: '持有', color: '#6b7280' },
+    recommendation: v6.recommendation ?? { key: 'hold', label: '持有', color: COLOR_TOKENS.neutral.hex },
     targetPrice: v6.targetPrice ?? { bull: 0, base: 0, bear: 0 },
     keyRisks: safeArray<string>(v6.keyRisks),
     keyCatalysts: safeArray<string>(v6.keyCatalysts),
@@ -336,7 +346,7 @@ export function transformV6ScoreDoc(v6: V6ScoreDoc): ScoreDocVersion {
     composite: safeNumber(v6.composite) ?? 0,
     l3v: safeNumber(v6.l3v) ?? 0,
     layers: v6.layers ?? {},
-    recommendation: v6.recommendation ?? { key: 'hold', label: '持有', color: '#6b7280' },
+    recommendation: v6.recommendation ?? { key: 'hold', label: '持有', color: COLOR_TOKENS.neutral.hex },
     targetPrice: v6.targetPrice ?? { bull: 0, base: 0, bear: 0 },
     keyRisks: safeArray<string>(v6.keyRisks),
     keyCatalysts: safeArray<string>(v6.keyCatalysts),
@@ -438,8 +448,11 @@ export function transformV6SentimentCache(v6: V6SentimentCache): SentimentCache 
   }
 }
 
+/** DJB2 哈希算法种子值 */
+const DJB2_HASH_SEED = 5381
+
 function generateNewsHash(input: string): string {
-  let hash = 5381
+  let hash = DJB2_HASH_SEED
   for (let i = 0; i < input.length; i++) {
     hash = (hash * 33) ^ input.charCodeAt(i)
     hash |= 0

@@ -1,6 +1,8 @@
 import { describe, expect, it, beforeEach } from 'vitest'
 import { db } from '@/data/db'
 import { dataLayer } from '@/data/dataLayer'
+import { dataBridge } from '@/core/databridge'
+import { STORE_NAME } from '@/config/dbConfig'
 import type { NewsArticle } from '@/data/types'
 import {
   saveNewsArticle,
@@ -33,6 +35,8 @@ describe('newsService', () => {
   beforeEach(async () => {
     await db.init()
     await db.reset()
+    dataBridge.invalidateCache(STORE_NAME.news)
+    dataBridge.invalidateCache(STORE_NAME.newsStockMap)
   })
 
   it('generates mock articles', () => {

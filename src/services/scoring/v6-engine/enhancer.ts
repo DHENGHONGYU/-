@@ -13,8 +13,9 @@ import { getLogger } from '@/lib/logger'
 import type { LayerInput, LayerScore, LayerCalculator } from './types'
 import type { LlmConfig } from '@/config/llmConfig'
 import { isLlmConfigured } from '@/config/llmConfig'
-import { chat } from '@/services/llm/llmClient'
+import { chat } from '@/services/llm/llmGateway'
 import type { LlmMessage } from '@/services/llm/llmTypes'
+import { LOG_SNIPPET_MAX_CHARS } from '@/config/mathConstants'
 
 const logger = getLogger()
 
@@ -59,6 +60,15 @@ export class LLMScoreEnhancer {
         // 1. 先执行规则引擎计算
         const baseResult = await calculator.calculate(input)
 
+        // 防御性校验：验证 baseResult 结构完整性
+        if (!baseResult || typeof baseResult.score !== 'number') {
+          logger.warn(
+            `[LLMScoreEnhancer] 层 ${calculator.layerId} baseResult 无效，跳过增强`,
+            { score: baseResult?.score, hasLayerId: !!baseResult?.layerId },
+          )
+          return baseResult
+        }
+
         // 2. 判断是否需要 LLM 增强
         if (!this.isEnabled() || !LLM_ENHANCEABLE_LAYERS.has(calculator.layerId)) {
           return baseResult
@@ -71,11 +81,16 @@ export class LLMScoreEnhancer {
         try {
           const enhanced = await this.callLLM(calculator.layerId, baseResult, input)
           // LLM 增强成功：合并结果
+          const mergedScore = enhanced.score ?? baseResult.score
+          const mergedEvidence = enhanced.rationale
+            ? [...baseResult.evidence, `[LLM增强] ${enhanced.rationale}`]
+            : [...baseResult.evidence]
+
           return {
             ...baseResult,
-            score: enhanced.score ?? baseResult.score,
+            score: mergedScore,
             summary: enhanced.summary ?? baseResult.summary,
-            evidence: [...baseResult.evidence, `[LLM增强] ${enhanced.rationale ?? ''}`],
+            evidence: mergedEvidence,
             risks: [...baseResult.risks, ...(enhanced.risks ?? [])],
           }
         } catch (error) {
@@ -95,12 +110,17 @@ export class LLMScoreEnhancer {
     baseResult: LayerScore,
     input: LayerInput,
   ): Promise<{ score?: number; summary?: string; rationale?: string; risks?: string[] }> {
+    // 输入防护：确保 score 可安全格式化为字符串
+    const safeScore = Number.isFinite(baseResult.score) ? baseResult.score : 0
+    const safeSummary = baseResult.summary ?? '无摘要'
+    const safeEvidence = Array.isArray(baseResult.evidence) ? baseResult.evidence.join('；') : ''
+
     const systemPrompt = `你是一位专业的股票分析师，请对以下评分层的规则引擎结果进行复核和增强。
 
 当前层：${baseResult.layerName}
-规则引擎评分：${baseResult.score.toFixed(2)}/5
-规则引擎摘要：${baseResult.summary}
-已有证据：${baseResult.evidence.join('；')}
+规则引擎评分：${safeScore.toFixed(2)}/5
+规则引擎摘要：${safeSummary}
+已有证据：${safeEvidence}
 
 请以 JSON 格式返回增强建议：
 {
@@ -113,8 +133,8 @@ export class LLMScoreEnhancer {
     const userPrompt = `请对以下股票进行 ${baseResult.layerName} 的复核增强：
 股票：${input.stock.symbol} ${input.stock.name ?? ''}
 行业：${input.stock.sector ?? '未知'}
-规则引擎当前评分：${baseResult.score.toFixed(2)}/5
-评分摘要：${baseResult.summary}
+规则引擎当前评分：${safeScore.toFixed(2)}/5
+评分摘要：${safeSummary}
 
 请返回 JSON 格式的增强建议。`
 
@@ -124,7 +144,7 @@ export class LLMScoreEnhancer {
     ]
 
     const response = await chat(messages, this.llmConfig!)
-    logger.info(`[LLMScoreEnhancer] ${layerId} LLM 返回: ${response.content.slice(0, 200)}`)
+    logger.info(`[LLMScoreEnhancer] ${layerId} LLM 返回: ${response.content.slice(0, LOG_SNIPPET_MAX_CHARS)}`)
 
     return this.parseResponse(response.content)
   }
@@ -142,7 +162,7 @@ export class LLMScoreEnhancer {
         risks: Array.isArray(parsed.risks) ? parsed.risks.map(String) : undefined,
       }
     } catch {
-      logger.warn('[LLMScoreEnhancer] LLM 返回内容无法解析', { snippet: content.slice(0, 200) })
+      logger.warn('[LLMScoreEnhancer] LLM 返回内容无法解析', { snippet: content.slice(0, LOG_SNIPPET_MAX_CHARS) })
       return {}
     }
   }

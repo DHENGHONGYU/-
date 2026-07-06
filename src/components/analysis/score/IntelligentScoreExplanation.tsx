@@ -60,7 +60,7 @@ export const IntelligentScoreExplanation = memo(function IntelligentScoreExplana
   const keyFactors = useMemo(() => (result ? buildKeyFactors(result) : []), [result])
   const sanitizedChain = useMemo(() => {
     if (!result) return ''
-    return sanitizeLlmOutput(result.modelResponse || result.basis || '')
+    return sanitizeLlmOutput(result.modelResponse ?? result.basis ?? '')
   }, [result])
 
   const isEmpty = !loading && !error && !result

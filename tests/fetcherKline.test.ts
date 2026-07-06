@@ -46,6 +46,8 @@ describe('fetcherKline', () => {
   beforeEach(async () => {
     await db.init()
     await db.reset()
+    dataBridge.invalidateCache(STORE_NAME.stocks)
+    dataBridge.invalidateCache(STORE_NAME.dailyQuotes)
   })
 
   afterEach(() => {

@@ -1,0 +1,16 @@
+{
+  "violations": [],
+  "summary": {
+    "totalFiles": 1,
+    "totalViolations": 0,
+    "scanMode": "changed",
+    "docFilesCount": 227
+  },
+  "meta": {
+    "scriptName": "audit-doc-sync",
+    "version": "3.0",
+    "timestamp": "2026-07-05T22:53:58.532Z",
+    "durationMs": 1077,
+    "rootDir": "C:\\Users\\huawei\\Documents\\kimi\\Workspaces\\智能投研复盘系统V9"
+  }
+}

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Store 与 Channel 名称常量
  *
  * @description
@@ -8,35 +8,6 @@
  * @module constants/store-channels
  * @created 2026-06-30 - G1 批次低风险优化（重复字面量提取）
  */
-
-/**
- * 数据流通道名称（DataChannel）
- * @see {@link dataflowTypes.ts}
- */
-export const DATA_CHANNELS = {
-  /** 大盘指数数据 */
-  MARKET_INDEX: 'market:index',
-  /** 板块行情数据 */
-  MARKET_SECTOR: 'market:sector',
-  /** 资金流向数据 */
-  MARKET_FUNDFLOW: 'market:fundflow',
-  /** 市场情绪数据 */
-  MARKET_EMOTION: 'market:emotion',
-  /** 组合汇总数据 */
-  PORTFOLIO_SUMMARY: 'portfolio:summary',
-  /** 组合持仓数据 */
-  PORTFOLIO_HOLDING: 'portfolio:holding',
-  /** 策略信号 */
-  STRATEGY_SIGNAL: 'strategy:signal',
-  /** 策略评分 */
-  STRATEGY_SCORE: 'strategy:score',
-  /** Agent 状态 */
-  AGENT_STATUS: 'agent:status',
-  /** 系统健康 */
-  SYSTEM_HEALTH: 'system:health',
-} as const
-
-export type DataChannelName = (typeof DATA_CHANNELS)[keyof typeof DATA_CHANNELS]
 
 /**
  * EventBus 事件命名常量
@@ -49,13 +20,9 @@ export const EVENT_NAMES = {
   HOT_SECTOR_CHANGED: 'strategy:hotSectorChanged',
   VALUE_PIT_CHANGED: 'strategy:valuePitChanged',
   ROTATION_SIGNAL_TRIGGERED: 'strategy:rotationSignalTriggered',
-  AGENT_STATUS_CHANGED: 'agent:statusChanged',
-  SYSTEM_HEALTH_CHANGED: 'system:healthChanged',
   // ---- D-3 批次新增：Store 写操作广播 ----
   /** 股票池数据变更（poolStore 写操作触发） */
   STOCK_POOL_CHANGED: 'stock_pool:changed',
-  /** 输出/导出操作完成（outputStore 写操作触发） */
-  OUTPUT_CHANGED: 'output:changed',
   /** 分析评分变更（analysisStore 写操作触发） */
   SCORES_CHANGED: 'scores:changed',
   /** 持仓数据变更（holdingsStore / positionStore 写操作触发） */
@@ -67,8 +34,6 @@ export const EVENT_NAMES = {
   /** 策略快照变更（strategySnapshotStore 写操作触发） */
   STRATEGY_SNAPSHOTS_CHANGED: 'strategy_snapshots:changed',
   // ---- D-3 批次扩展：其余 Store 写操作广播 ----
-  /** 总控舱数据变更（commandStore 写操作触发） */
-  COMMAND_CHANGED: 'command:changed',
   /** 采集测试数据变更（dataTestStore 写操作触发） */
   DATA_TEST_CHANGED: 'data_test:changed',
   /** 双策略数据变更（dualStrategyStore 写操作触发） */
@@ -79,8 +44,6 @@ export const EVENT_NAMES = {
   RISK_CHANGED: 'risk:changed',
   /** 信号质量数据变更（signalQualityStore 写操作触发） */
   SIGNAL_QUALITY_CHANGED: 'signal_quality:changed',
-  /** 轮动评分数据变更（rotationSignalStore 写操作触发） */
-  ROTATION_SCORES_CHANGED: 'rotation_scores:changed',
   /** 市场数据变更（marketDataStore 写操作触发） */
   MARKET_DATA_CHANGED: 'market_data:changed',
   /** 交易纪律数据变更（disciplineStore 写操作触发） */
@@ -89,8 +52,13 @@ export const EVENT_NAMES = {
   BACKTEST_CHANGED: 'backtest:changed',
   /** 评分文档数据变更（scoreDocStore 写操作触发） */
   SCORE_DOCS_CHANGED: 'score_docs:changed',
-  /** 本地文档数据变更（localKnowledgeStore 写操作触发） */
-  LOCAL_DOCS_CHANGED: 'local_docs:changed',
+  // ---- DataFlow 引擎事件 ----
+  /** 数据流连接成功 */
+  DATAFLOW_CONNECTED: 'dataflow:connected',
+  /** 数据流断开 */
+  DATAFLOW_DISCONNECTED: 'dataflow:disconnected',
+  /** 数据包发布 */
+  DATAFLOW_PACKET_PUBLISHED: 'dataflow:packetPublished',
 } as const
 
 export type EventName = (typeof EVENT_NAMES)[keyof typeof EVENT_NAMES]

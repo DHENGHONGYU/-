@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router'
 import NewsPage from '@/pages/analysis/NewsPage'
 import type { NewsArticle } from '@/data/types'
+import { UI_TEXT } from '@/constants/uiText'
 
 const mockArticles: NewsArticle[] = [
   {
@@ -111,7 +112,7 @@ describe('NewsPage', () => {
     const allCards = await screen.findAllByRole('button', { name: /(贵州茅台|银行板块)/ })
     expect(allCards.length).toBe(2)
 
-    await userEvent.selectOptions(screen.getByLabelText('情感'), 'negative')
+    await userEvent.selectOptions(screen.getByLabelText(UI_TEXT.analysis.news.sentiment), 'negative')
 
     await waitFor(() => {
       const negativeCards = screen.getAllByRole('button', { name: /银行板块/ })

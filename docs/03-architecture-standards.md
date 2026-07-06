@@ -1,8 +1,8 @@
 # 03. 架构标准
 
 > **Status**: Current  
-> **Version**: v1.1.0  
-> **Last Updated**: 2026-06-26
+> **Version**: v2.5.0  
+> **Last Updated**: 2026-07-05
 >
 > 本文档是 V9 系统架构的唯一真相源，定义五层架构、调用规则、数据架构、技术选型理由与当前代码偏差。  
 > 目标读者：前端/全栈开发者、架构师、新加入成员。  
@@ -35,11 +35,24 @@
 
 | 层级 | 规划目录 | 当前实际目录 | 状态 |
 |------|----------|--------------|------|
-| L5 展示层 | `pages/`, `components/` | ✅ `pages/`, `components/`, `portal/`, `cockpit/`（含 12 个 Widget 组件） | 基本对齐 |
+| L5 展示层 | `pages/`, `components/` | ✅ `pages/`, `components/`, `portal/`, `cockpit/`（含 21 个 Widget 组件） | 基本对齐 |
 | L4 应用层 | `apps/`, `cockpit/` | ✅ `apps/`, `cockpit/`（含 CockpitShell + Widget 引擎 + Widget 注册表）；输入舱已拆分为 Dashboard / BulkImport / HotSector / DataTest 四个子页面 | 对齐 |
-| L3 引擎层 | `agents/`, `trading/`, `services/` | ✅ `services/`；交易引擎已下沉至 `src/services/trading/`；采集引擎位于 `src/services/fetcher/` 和 `src/services/data-collector/`；新闻服务位于 `src/services/news/`（newsService + sentimentAnalyzer + stockLinker）；🟡 `src/agents/agentRuntime.ts` 已存在，注册表/任务队列/健康监控待完善；🟡 `src/core/dataflow/` 已实现，数据融合层（UnifiedStockData）仍缺失 | 部分对齐，见偏差清单 |
+| L3 引擎层 | `agents/`, `trading/`, `services/` | ✅ `services/`；交易引擎已下沉至 `src/services/trading/`（含 positionComputer/pnlComputer/riskComputer 纯函数模块）；UseCase 层位于 `src/services/useCase/`（含 11 个 UseCase 文件：createExecutionPlan/executePlan/fetchSectorAnalysis/fetcherOrchestrator/generateTradeReview/getUnifiedStockView/hotSectorQuery/rebalancePortfolio/runDualStrategy/strategySnapshotSave/submitOrder）；采集引擎位于 `src/services/fetcher/` 和 `src/services/data-collector/`；新闻服务位于 `src/services/news/`（newsService + sentimentAnalyzer + stockLinker）；🟡 `src/agents/agentRuntime.ts` 已存在，注册表/任务队列/健康监控待完善；✅ `src/core/dataflow/` 已实现，数据融合层（UnifiedStockData）已实现 | 部分对齐，见偏差清单 |
 | L2 数据层 | `data/`, `db/` | ✅ `src/data/`（含 `db.ts`, `dataLayer.ts`, `types.ts`）；`daily_quotes`、`signals`、`research_logs` store 已落地 | 对齐 |
 | L1 基础设施层 | `lib/`, `config/`, `core/` | ✅ `src/lib/`, `src/config/`, `src/core/`；🟡 `eventBus` 本身仍为基础 `on/emit/off`，高级缓存/定时/优先级由 `src/core/dataflow/dataflowEngine.ts` 承载 | 部分对齐 |
+
+#### 交易引擎 TradePair 类型体系统一说明（v2.5.0 新增）
+
+交易计算纯函数模块（`positionComputer.ts`）建立了统一的 TradePair 类型层次：
+
+| 类型 | 定义位置 | 用途 | 关键字段 |
+|------|----------|------|---------|
+| `TradePair` | `tradeReviewAI.types.ts` | 规范交易对基础类型（跨模块共享） | 基础配对字段 |
+| `MatchedTradePair` | `positionComputer.ts` | FIFO 配对后的单笔交易对明细，**extends TradePair** | `buyDate`, `sellDate`, `quantity`, `realizedAmount` |
+| `SymbolTradePair` | `positionComputer.ts` | 按 symbol 聚合的交易对与持仓信息 | `symbol`, `buyOrders`, `sellOrders`, `pairs: MatchedTradePair[]`, `avgCostPrice`, `openPositions` |
+| `PositionItem` | `positionComputer.ts` | 当前未平仓持仓项 | `symbol`, `quantity`, `avgCost`, `costValue`, `direction` |
+
+> **设计决策**：`TradePair` 作为规范类型定义在 `tradeReviewAI.types.ts`，`MatchedTradePair` 通过 `extends TradePair` 扩展持仓计算特有字段。`positionComputer.ts` 重新导出 `TradePair` 类型，消费方可从该模块直接导入。
 
 ### 3.1.2 数据流引擎（DataFlow Engine）设计
 
@@ -118,7 +131,7 @@ interface UnifiedStockData {
 }
 ```
 
-**当前状态**：🔴 未实现。`UnifiedStockData` 类型已定义于 `src/data/types.ts:665`，仅缺少 `unifiedStockService.ts` 服务实现。
+**当前状态**：✅ 已实现。`UnifiedStockData` 类型已定义于 `src/data/types.ts:665`，`unifiedStockService.ts` 服务已实现，提供统一数据视图。
 
 ### 3.1.4 驾驶舱 Widget 架构设计
 
@@ -150,7 +163,14 @@ src/cockpit/
     ├── StockPoolWidget.tsx        # 股票池管理与监控列表
     ├── KaiScoreWidget.tsx         # KAI 选股综合评分图谱
     ├── ModelCompareWidget.tsx     # AI 大模型智能对比
-    └── StockChatWidget.tsx        # 个股/市场深度分析聊天
+    ├── StockChatWidget.tsx        # 个股/市场深度分析聊天
+    ├── AgentPerformance.tsx       # Agent 执行统计与成功率
+    ├── EngineStatus.tsx           # 引擎运行状态监控
+    ├── SystemArchitecture.tsx     # 系统架构拓扑图
+    ├── PnlAnalysis.tsx            # 盈亏分析面板
+    ├── PositionControl.tsx        # 仓位控制与风控
+    ├── RiskMonitor.tsx            # 风险指标实时监控
+    └── SignalMonitor.tsx          # 交易信号监控面板
 ```
 
 **Widget 定义规范**：
@@ -168,7 +188,7 @@ interface WidgetDefinition {
 }
 ```
 
-**当前状态**：🟡 `CockpitShell.tsx` 当前为静态 Dashboard，尚未接入 Widget 引擎的动态网格布局；`src/cockpit/core/widgetEngine.ts` / `widgetRegistry.ts` 已实现基础 Widget 运行时，尚未被 CockpitShell 调用。
+**当前状态**：✅ 已实现。`CockpitShell.tsx` 已接入 Widget 引擎的动态网格布局；`src/cockpit/core/widgetEngine.ts` / `widgetRegistry.ts` 已实现完整 Widget 运行时，并被 CockpitShell 调用。
 
 ### 3.1.4.1 Widget 数据采集流
 
@@ -199,7 +219,7 @@ DataSourceConfig ──→ TaskScheduler ──→ BaseCollector（Mock/Rest/Web
 - **TaskScheduler**：任务注册/启动/停止、错误状态管理、自动轮询与清理
 - **MarketDataAdapter**：统一不同来源的原始数据 → `MarketData` 接口
 
-**当前状态**：✅ 已实现。`src/services/data-collector/` 下三层架构完整，`src/cockpit/core/widgetRegistry.ts` 已注册 12 个默认 Widget，`CockpitShell` 已接入 Widget 引擎。
+**当前状态**：✅ 已实现。`src/services/data-collector/` 下三层架构完整，`src/cockpit/core/widgetRegistry.ts` 已注册 21 个默认 Widget（含 7 个系统监控类 Widget），`CockpitShell` 已接入 Widget 引擎并包裹 `WidgetErrorBoundary`。
 
 ### 3.1.5 Agent 层设计
 
@@ -288,6 +308,53 @@ Engine 层提供 DataFlow 引擎、Agent 运行时引擎的综合统计与生命
 
 > **变更**: 2026-06-26 | v1.1.0 | 新增 Page 生命周期接口定义 | 架构资产治理官
 
+### 3.1.8 三层模块注册体系（v2.3.0 新增，v2.5.0 调整）
+
+V9 通过三层注册表实现 Store、Component、Widget 的集中化管理，解决模块"创建后遗忘"导致的死代码与集成遗漏问题。
+
+> **v2.5.0 变更**：`src/services/serviceRegistry.ts` 已删除（agent 残留孤立文件），原四层注册体系调整为三层。Service 层模块通过 `docs/REGISTRY_INDEX.md` 和代码目录结构管理。
+
+**注册体系架构**：
+
+```
+┌────────────────────────────────────────────────────────────────────┐
+│  Widget Registry（Class 单例，运行时懒加载）                          │
+│  widgetRegistry.ts → 21 个 Widget 模板 + 默认布局                   │
+├────────────────────────────────────────────────────────────────────┤
+│  Store Registry（已删除，待重建）                                    │
+│  原 storeRegistry.ts 因数据损坏已移除，47 个 Store 直接导出          │
+├────────────────────────────────────────────────────────────────────┤
+│  Component Registry（静态常量清单，10+ 条目）                        │
+│  componentRegistry.ts → 建议集成目标标注                            │
+└────────────────────────────────────────────────────────────────────┘
+```
+
+**注册表文件位置与设计决策**：
+
+| 注册表 | 文件路径 | 设计模式 | 条目数 | 理由 |
+|--------|----------|----------|--------|------|
+| Widget | `src/cockpit/core/widgetRegistry.ts` | Class 单例 | 19 | 需要运行时懒加载（`() => import(...)`）和动态布局管理 |
+| Store | ~~`src/store/storeRegistry.ts`~~ | 已删除，待重建 | 47 | 原文件因数据损坏移除，当前 47 个 Store 各自独立导出 |
+| Component | `src/components/componentRegistry.ts` | 静态常量数组 | 10+ | 标注 `suggestedTarget` 引导集成 |
+
+**状态流转规范**：
+
+```
+available → active（被页面/组件集成后）
+active → deprecated（功能下线时）
+deprecated → 删除（下个次要版本）
+```
+
+**依赖规则**：
+- 注册表文件位于各自层级目录内，遵循既有分层规则
+- ~~`storeRegistry.ts`~~ 已删除（数据损坏），待重建。当前 47 个 Store 通过 `src/store/` 目录各自独立导出
+- `componentRegistry.ts` 位于 `src/components/`，仅记录组件路径与建议集成目标
+
+**当前状态**：⚠️ 部分实现。Widget Registry 和 Component Registry 正常运行；Store Registry 已删除待重建，47 个 Store 各自独立导出。
+
+> **变更**: 2026-07-05 | v2.5.0 | Service Registry 删除，四层调整为三层 | 架构资产治理官
+> **变更**: 2026-07-05 | v2.3.0 | 新增四层模块注册体系架构说明 | 架构资产治理官
+
 ---
 
 ## 3.2 调用方向铁律
@@ -328,6 +395,62 @@ L2    ──→ db.ts（唯一原生 IndexedDB 操作）
 | 事件通知 | 需手动 emit | `broadcast()` 统一触发 |
 | 测试 mock | 需 mock db | 可 mock DataBridge 或 fake-indexeddb |
 
+### 3.3.2 DataBridge.query() 单元测试标准模式（v2.2.1 新增）
+
+dataLayer 的所有读操作已统一迁移到 `dataBridge.query()`，测试中**禁止直接 mock `db.get`/`db.getAll`/`db.getAllByIndex`**，必须通过 `mockDataBridgeQuery` 模拟 `dataBridge.query()` 的返回值。
+
+**错误示例（已废弃）**：
+
+```ts
+// ❌ 直接 mock db 方法 — 与实现脱节
+mockDbGet.mockResolvedValue(score)
+const result = await v6ScoreStore.get('000001')
+expect(mockDbGet).toHaveBeenCalledWith('v6_scores', '000001')
+```
+
+**正确示例（当前标准）**：
+
+```ts
+// ✅ mock dataBridge.query() — 与实现一致
+const score = createV6Score()
+mockDataBridgeQuery.mockResolvedValue({ success: true, data: score })
+
+const result = await v6ScoreStore.get('000001')
+
+expect(mockDataBridgeQuery).toHaveBeenCalledWith({
+  action: ENVELOPE_ACTION.queryGet,
+  store: STORE_NAME.v6Scores,
+  key: '000001',
+  source: MODULE_ID.datalayer,
+})
+expect(result).toEqual(score)
+```
+
+**三种 query 模式的 mock 对照表**：
+
+| dataLayer 方法 | 内部调用 | mock 返回值格式 |
+|---|---|---|
+| `queryGet<T>(store, key)` | `dataBridge.query({ action: queryGet, store, key, source })` | `{ success: true, data: T \| undefined }` |
+| `queryList<T>(store)` | `dataBridge.query({ action: queryList, store, source })` | `{ success: true, data: T[] }` |
+| `queryByIndex<T>(store, indexName, indexValue)` | `dataBridge.query({ action: queryByIndex, store, indexName, indexValue, source })` | `{ success: true, data: T[] }` |
+
+**失败路径 mock**：
+
+```ts
+// query 失败时返回 undefined（queryGet）或空数组（queryList/queryByIndex）
+mockDataBridgeQuery.mockResolvedValue({ success: false, error: '查询失败' })
+
+const result = await v6ScoreStore.get('000001')
+expect(result).toBeUndefined()  // queryGet 失败 → undefined
+
+const list = await v6ScoreStore.list()
+expect(list).toEqual([])        // queryList 失败 → []
+```
+
+**测试文件参考**：`src/data/dataLayer.test.ts`（47 个测试用例，覆盖全部 store 的 queryGet/queryList/queryByIndex 路径）
+
+> **变更**: 2026-07-05 | v2.2.1 | 新增 DataBridge.query() 单元测试标准模式 | 架构资产治理官
+
 ---
 
 ## 3.4 配置层文件清单
@@ -344,6 +467,10 @@ L2    ──→ db.ts（唯一原生 IndexedDB 操作）
 | `src/config/fetcherConfig.ts` | 数据采集配置（已建） | 禁止在引擎层写服务地址/维度开关 |
 | `src/config/tradingConfig.ts` | 交易引擎配置（已建） | 禁止在引擎层写信号/仓位阈值 |
 | `src/config/inputConfig.ts` | 输入舱配置（已建） | 禁止在 UI 层写导入上限/解析规则 |
+| `src/config/apiPaths.ts` | 内部 API 路径集中配置（12 条路径：系统监控/交易/数据采集） | 禁止在常量/服务层硬编码 API 路径字符串 |
+| `src/config/dataSourceUrls.ts` | 外部数据源 URL 集中配置 | 禁止在组件/服务层硬编码数据源 URL |
+| `src/config/mathConstants.ts` | 数学/金融常量（MS_PER_DAY/TRADING_DAYS_PER_YEAR/VAR_95_Z_SCORE 等 10 项） | 禁止在计算逻辑中硬编码数学常数 |
+| `src/config/timeouts.ts` | 超时值集中配置（分析引擎/数据采集/默认请求/LLM 调用 4 项） | 禁止在业务代码中硬编码毫秒数 |
 | `src/theme.config.ts` | 主题令牌 | 禁止 UI 层内联颜色 |
 | `src/constants/cockpit.constants.ts` | Cockpit Widget 常量（网格、颜色、枚举、数据源配置） | 禁止在 Widget 组件内硬编码颜色/尺寸 |
 
@@ -372,9 +499,9 @@ L2    ──→ db.ts（唯一原生 IndexedDB 操作）
 ## 3.7 数据 Schema
 
 数据库名：`V6ProDB`  
-当前版本：`14`（V9 新库，不与旧项目冲突）
+当前版本：`21`（V9 新库，不与旧项目冲突）
 
-> 注意：早期文档写为版本 `1`/`3`，实际代码已演进至 `14`。v3→v4 新增 `daily_quotes` 与 `signals` Store；v4→v5 为 `stocks` 新增 `group` 字段与 by-group 索引；v5→v6 新增 `rotation_scores`、`sector_scores`、`score_docs`、`strategy_snapshots`、`local_docs`、`news`、`news_stock_map`、`sentiment_cache` Store，支撑 V6 Pro 迁移；v6→v13 为 V9 架构统一与资讯收藏功能演进；v13→v14 新增 `hot_sector_scores`、`value_pit_scores` Store，支撑双策略体系。
+> 注意：早期文档写为版本 `1`/`3`，实际代码已演进至 `21`。v3→v4 新增 `daily_quotes` 与 `signals` Store；v4→v5 为 `stocks` 新增 `group` 字段与 by-group 索引；v5→v6 新增 `rotation_scores`、`sector_scores`、`score_docs`、`strategy_snapshots`、`local_docs`、`news`、`news_stock_map`、`sentiment_cache` Store，支撑 V6 Pro 迁移；v6→v13 为 V9 架构统一与资讯收藏功能演进；v13→v14 新增 `hot_sector_scores`、`value_pit_scores` Store，支撑双策略体系；v14→v19 为智能体调度层、命令模块等 schema 升级；v19→v20 新增 `command_audit_logs` 存储，支撑命令审计日志持久化；v20→v21 新增 `execution_plans`、`execution_logs`、`missing_reports`、`portfolios`、`trade_reviews` 存储，支撑输出舱与执行模块。
 
 ### Store
 
@@ -397,8 +524,14 @@ L2    ──→ db.ts（唯一原生 IndexedDB 操作）
 | `news` | `id` | 资讯文章 |
 | `news_stock_map` | `id` | 股票-资讯关联 |
 | `sentiment_cache` | `id` | 情感分析缓存 |
+| `news_bookmarks` | `id` | 资讯收藏状态 |
 | `hot_sector_scores` | `symbol` | 热门板块策略评分 |
 | `value_pit_scores` | `symbol` | 价值洼地策略评分 |
+| `execution_plans` | `id` | 执行计划 |
+| `execution_logs` | `id` | 执行日志 |
+| `missing_reports` | `id` | 缺失报告 |
+| `portfolios` | `id` | 投资组合 |
+| `trade_reviews` | `id` | 交易复盘 |
 
 ### 核心字段
 
@@ -651,13 +784,13 @@ V10 的 `StateBoard` 要求跨模块共享状态必须通过统一字段契约�
 | D10 | V10 的 Agent/StateBoard/Gateway 机制尚未引入 | `src/` | 未来扩展方向未在文档中记录 | Phase 2/P3 按需求逐步评估 |
 | D11 | 缺少共享字段契约文档 | `docs/03-architecture-standards.md` | 跨模块字段语义可能漂移 | 已在 3.9.7 补充 |
 | **D12** | **数据流引擎已实现（`src/core/dataflow/`），详细规格文档待补充** | `src/core/dataflow/` | SSE/轮询/缓存/定时/优先级已落地，规格文档待完善 | Phase 2 补充详细规格文档 |
-| **D13** | **缺少数据融合层** | `src/services/analysis/` | 各服务分散获取数据，缺少统一 `UnifiedStockData` 视图 | Phase 2 实现 `unifiedStockService.ts` |
-| **D14** | **Widget 运行时引擎已存在（`src/cockpit/core/widgetEngine.ts`），`CockpitShell` 尚未接入** | `src/cockpit/core/widgetEngine.ts` | 注册表/运行时基础已落地，Shell 未调用 | Phase 2 将 CockpitShell 接入 Widget 引擎 |
+| **D13** | 🟢 已修复：数据融合层已实现（`dataFusionEngine.ts` + `unifiedStockService.ts`） | `src/services/analysis/` | 统一数据视图已落地 | 持续完善数据融合逻辑 |
+| **D14** | 🟢 已修复：Widget 运行时引擎已接入 `CockpitShell` | `src/cockpit/CockpitShell.tsx` | 注册表/运行时/Shell 已完整接入 | 持续完善 Widget 生态 |
 | **D15** | **评分算法能力降级** | `src/services/scoring/v6ScoreService.ts` | 仅启发式计算 + 随机数降级，缺少 LLM 集成与报告生成 | Phase 2 升级评分引擎，接入真实数据与 LLM |
-| **D16** | **缺少图表组件库** | `src/components/ui/` | 无 `lightweight-charts` / `recharts`，数据可视化能力缺失 | Phase 2 引入图表组件 |
+| **D16** | 🟢 已修复：图表组件库已引入 | `package.json` | 已引入 `lightweight-charts` 和 `recharts`，数据可视化能力已具备 | 持续完善图表组件封装 |
 | **D17** | **`rotationScoreService.ts` 已实现五因子十六指标模型，上层 `SectorAnalysisPage` 待充分接入** | `src/services/analysis/rotationScoreService.ts` | 板块轮动评分已可计算，上层展示与调用待完善 | Phase 2 在 `SectorAnalysisPage` 接入轮动评分 |
 | **D18** | **缺少操作反馈闭环** | `src/components/ui/Toast.tsx` | 仅基础 Toast，缺少操作状态实时更新、数据质量反馈、评分理由 | Phase 2 完善反馈机制 |
-| **D19** | **`ErrorBoundary.tsx` 已存在并被 `App.tsx` 使用，Widget 级隔离待专项接入** | `src/components/ErrorBoundary.tsx` | 全局错误边界已落地，Widget 级包裹尚未专项接入 | Phase 2 在 Widget 渲染管线中接入 ErrorBoundary |
+| **D19** | 🟢 已修复：`WidgetErrorBoundary` 已接入 `CockpitShell` Widget 渲染管线 | `src/cockpit/CockpitShell.tsx` | Widget 级错误隔离已落地，每个 Widget 独立捕获渲染错误 | 保持，持续完善错误恢复策略 |
 | **D20** | **缺少热门板块与价值洼地双策略体系** | `src/services/trading/`、`src/cockpit/widgets/` | 策略引擎仅有主题/价值/热门动量三分类，缺少用户规格中的 HotSectorScore / ValuePitScore 双评分输出与轮动信号检测 | Phase 2 新增独立 Store、Analyzer、Detector、Widget；详见 `docs/implementation/adr/2026-06-27-dual-strategy-system.md` |
 
 ---
@@ -813,3 +946,10 @@ useEffect(() => {
 2. 增加 `daily_quotes` store、`dataQuality` 字段与输入舱数据协议。
 3. 更新偏差清单，标记已修复项并新增未解决项。
 4. 补充配置层清单：`fetcherConfig.ts`、`tradingConfig.ts` 已建，`inputConfig.ts` 已建。
+5. v2.3.0：新增 §3.1.8 四层模块注册体系架构说明（Store/Service/Component/Widget Registry）。
+6. v2.3.0：Widget 注册数从 12 增至 21（新增 7 个系统监控类 Widget 及金融业务 Widget）。
+7. v2.3.0：偏差 D19 标记已修复（WidgetErrorBoundary 已接入 CockpitShell）。
+8. v2.5.0：配置层新增 `timeouts.ts`（超时集中配置）；`apiPaths.ts`/`mathConstants.ts` 描述更新。
+9. v2.5.0：L3 引擎层补充交易计算纯函数（positionComputer/pnlComputer/riskComputer）和 UseCase 层（11 个文件：createExecutionPlan/executePlan/fetchSectorAnalysis/fetcherOrchestrator/generateTradeReview/getUnifiedStockView/hotSectorQuery/rebalancePortfolio/runDualStrategy/strategySnapshotSave/submitOrder）。
+10. v2.5.0：§3.1.8 四层注册体系调整为三层（Service Registry 已删除）。
+11. v2.5.0：新增 TradePair 类型体系统一说明（MatchedTradePair extends TradePair，SymbolTradePair 按 symbol 聚合）。

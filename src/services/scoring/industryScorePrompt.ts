@@ -2,6 +2,9 @@ import type { LlmMessage } from '@/services/llm/llmTypes'
 import type { SectorSkillAnalysis } from '@/data/sectorSkillData'
 import { INDUSTRY_SCORE_SKILL } from './industryScoreSkill'
 
+/** 行业分析报告未提供时的兜底文案 */
+const DEFAULT_REPORT_UNAVAILABLE = '未提供'
+
 export interface IndustryScorePromptInput {
   sector: SectorSkillAnalysis
   supplementaryTexts: string[]
@@ -45,7 +48,7 @@ export function buildIndustryScorePrompt(input: IndustryScorePromptInput): LlmMe
     `已有 SKILL 量化评分:\n${summarizeSector(sector)}`,
     `补充文件资料 (${supplementaryTexts.length} 份):`,
     ...supplementaryTexts.map((text, idx) => `[文件${idx + 1}]\n${text}`),
-    `行业分析报告/资料:\n${reportText || '未提供'}`,
+    `行业分析报告/资料:\n${reportText || DEFAULT_REPORT_UNAVAILABLE}`,
     '请严格按照 system 指令中的 JSON 格式返回行业多维度评分结果。',
   ].join('\n\n')
 

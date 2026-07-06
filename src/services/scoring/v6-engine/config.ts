@@ -5,24 +5,32 @@
  * 可通过 V6ScoreConfigOverride 运行时覆盖，支持 Backtestable 接口。
  */
 
+import type {
+  V6ScoreWeightsConfig,
+  V6ScoreThresholdsConfig,
+  IndustryBenchmark,
+  RiskWarningConfig,
+  IPCConfig,
+  ConfidenceConfig,
+  V6ScoreEngineConfig,
+  ChipLevel,
+} from '@/types/modules/engine.types'
+
+// Re-export types for backward compatibility
+export type {
+  V6ScoreWeightsConfig,
+  V6ScoreThresholdsConfig,
+  IndustryBenchmark,
+  RiskWarningConfig,
+  IPCConfig,
+  ConfidenceConfig,
+  V6ScoreEngineConfig,
+  ChipLevel,
+}
+
 // ============================================================
 // 权重配置
 // ============================================================
-
-/** 各层权重（合计 1.0） */
-export interface V6ScoreWeightsConfig {
-  lMinus1: number    // L-1 行业评分估值
-  l0: number         // L0 STEEP 宏观
-  l1: number         // L1 护城河
-  l2: number         // L2 竞品格局
-  l3f: number        // L3a 财务健康
-  l3v: number        // L3b 估值水平
-  l4: number         // L4 情景推演
-  l5: number         // L5 T-M矩阵
-  l6: number         // L6 Hype周期
-  l7: number         // L7 第二曲线
-  l8: number         // L8 技术筹码
-}
 
 /** 默认权重（来自 SKILL v4.3 行业评分映射文档） */
 export const DEFAULT_WEIGHTS: V6ScoreWeightsConfig = {
@@ -43,21 +51,6 @@ export const DEFAULT_WEIGHTS: V6ScoreWeightsConfig = {
 // 阈值配置
 // ============================================================
 
-/** 综合评分阈值 */
-export interface V6ScoreThresholdsConfig {
-  /** 评级边界 */
-  rating: {
-    strongBuy: number   // >= 此值 → strong_buy
-    buy: number         // >= 此值 → buy
-    hold: number        // >= 此值 → hold
-    sell: number        // >= 此值 → sell（低于为 strong_sell）
-  }
-  /** 每层评分范围 */
-  layerScore: { min: number; max: number }
-  /** 综合评分范围 */
-  composite: { min: number; max: number }
-}
-
 export const DEFAULT_THRESHOLDS: V6ScoreThresholdsConfig = {
   rating: {
     strongBuy: 4.0,
@@ -72,22 +65,6 @@ export const DEFAULT_THRESHOLDS: V6ScoreThresholdsConfig = {
 // ============================================================
 // 行业基准配置
 // ============================================================
-
-/** 行业估值基准 */
-export interface IndustryBenchmark {
-  sector: string
-  /** 关键词匹配列表 */
-  keywords: string[]
-  /** 合理 PE 区间 */
-  peLow: number
-  peHigh: number
-  /** 合理 PEG */
-  peglow: number
-  pegHigh: number
-  /** 合理 PB 区间 */
-  pbLow: number
-  pbHigh: number
-}
 
 /** 8行业基准库（来自 SKILL L3 估值行业基准库） */
 export const INDUSTRY_BENCHMARKS: IndustryBenchmark[] = [
@@ -104,13 +81,6 @@ export const INDUSTRY_BENCHMARKS: IndustryBenchmark[] = [
 // ============================================================
 // 财务风险预警配置
 // ============================================================
-
-export interface RiskWarningConfig {
-  /** 红色预警条件（触发即降1分） */
-  red: string[]
-  /** 黄色预警条件（触发需标注） */
-  yellow: string[]
-}
 
 export const RISK_WARNINGS: RiskWarningConfig = {
   red: [
@@ -131,43 +101,6 @@ export const RISK_WARNINGS: RiskWarningConfig = {
 // ============================================================
 // IPC 业绩兑现临界点配置
 // ============================================================
-
-export interface IPCConfig {
-  /** OCR 阈值 */
-  ocr: {
-    superStrong: number   // ≥2.5x
-    strong: number        // ≥1.5x
-    medium: number        // ≥0.8x
-    weak: number          // ≥0.3x
-    ocrAccelSignal: number // ΔOCR > +0.3
-  }
-  /** MCE 阈值 */
-  mce: {
-    trackLevel: number    // ≥10x
-    categoryLevel: number // ≥3x
-    segmentLevel: number  // ≥1.5x
-    decay3m: number       // 0-3月 不打折
-    decay6m: number       // 3-6月 ×0.8
-    decay12m: number      // 6-12月 ×0.5
-  }
-  /** TIMS */
-  tims: {
-    disruptive: number    // 颠覆性创新 1.5-2.0
-    significant: number   // 1.2-1.5
-    differentiated: number // 1.0-1.2
-    follower: number      // 0.8-1.0
-    laggard: number       // ≤0.8
-  }
-  /** IPC 合成权重 */
-  ipcWeights: { ocr: number; mce: number; tims: number }
-  /** IPC 阶段边界 */
-  ipcStages: {
-    broken: number        // ≥4.5 临界点已突破
-    near: number          // ≥3.5 临界点附近
-    before: number        // ≥2.5 临界点前夜
-    far: number           // ≥1.5 临界点遥远
-  }
-}
 
 export const IPC_CONFIG: IPCConfig = {
   ocr: { superStrong: 2.5, strong: 1.5, medium: 0.8, weak: 0.3, ocrAccelSignal: 0.3 },
@@ -192,18 +125,9 @@ export const CHIP_LEVELS = [
   'CSR',   // 筹码结构风险比
 ] as const
 
-export type ChipLevel = typeof CHIP_LEVELS[number]
-
 // ============================================================
 // 置信度配置
 // ============================================================
-
-export interface ConfidenceConfig {
-  /** 数据来源可信度分级 */
-  sourceGrades: Record<string, { grade: string; score: number; description: string }>
-  /** ESS 证据充分度评分 */
-  ess: { minEvidence: number; sufficientThreshold: number }
-}
 
 export const CONFIDENCE_CONFIG: ConfidenceConfig = {
   sourceGrades: {
@@ -219,21 +143,6 @@ export const CONFIDENCE_CONFIG: ConfidenceConfig = {
 // ============================================================
 // 引擎运行时配置
 // ============================================================
-
-export interface V6ScoreEngineConfig {
-  weights: V6ScoreWeightsConfig
-  thresholds: V6ScoreThresholdsConfig
-  ipc: IPCConfig
-  confidence: ConfidenceConfig
-  industries: IndustryBenchmark[]
-  riskWarnings: RiskWarningConfig
-  /** 是否启用离线模式 */
-  offlineMode: boolean
-  /** 是否启用审计追踪 */
-  auditEnabled: boolean
-  /** 是否启用 LLM 增强 */
-  llmEnabled: boolean
-}
 
 export const DEFAULT_ENGINE_CONFIG: V6ScoreEngineConfig = {
   weights: DEFAULT_WEIGHTS,

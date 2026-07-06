@@ -17,7 +17,7 @@ import {
   setFreshnessConfig,
   getFreshnessConfig,
   FreshnessError,
-} from '@/services/analysis/dataFreshnessGuard'
+} from '@/core/freshnessGuard'
 
 describe('dataFreshnessGuard', () => {
   it('returns valid when output time equals input time', () => {

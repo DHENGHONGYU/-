@@ -1,6 +1,7 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
+import { UI_TEXT } from '@/constants/uiText'
 import SectorAnalysisPage from './SectorAnalysisPage'
 
 // ------------------------------------------------------------------
@@ -98,7 +99,7 @@ describe('SectorAnalysisPage', () => {
       </MemoryRouter>,
     )
 
-    expect(screen.getByText('加载中...')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.common.loading)).toBeInTheDocument()
   })
 
   // ================================================================

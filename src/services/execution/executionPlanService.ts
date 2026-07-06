@@ -22,7 +22,7 @@ import {
   DEFAULT_MAX_POSITION_PCT,
   DEFAULT_ACCOUNT_TYPE,
 } from '@/constants/execution.constants'
-import { checkExecutionPlanFreshness } from '@/services/analysis/dataFreshnessGuard'
+import { checkExecutionPlanFreshness } from '@/core/freshnessGuard'
 import { executionLogService } from './executionLogService'
 
 const logger = getLogger()
@@ -62,9 +62,14 @@ export async function createPlan(signal: Signal, options: CreatePlanOptions = {}
       id: `plan_${signal.id}_${now}`,
       signalId: signal.id,
       symbol: signal.symbol,
+      name: signal.symbol,
       direction: signal.direction === 'sell' ? 'sell' : 'buy',
       phase: EXECUTION_PHASE.PLAN,
+      quantity: 0,
+      targetPrice: 0,
+      rationale: signal.rationale,
       confidence: signal.confidence,
+      riskChecks: [],
       sizing: {
         quantity: 0,
         positionPct: Math.min(maxPositionPct, signal.confidence),
@@ -105,7 +110,7 @@ export async function createPlan(signal: Signal, options: CreatePlanOptions = {}
  */
 export async function listPlans(symbol?: string): Promise<ExecutionPlan[]> {
   try {
-    const all = await executionPlanStore.list()
+    const all = await executionPlanStore.getAll()
     if (!symbol) {
       return all
     }
@@ -153,7 +158,7 @@ export async function updatePhase(
       updated.reviewedAt = now
     }
 
-    const result = await executionPlanStore.update(updated)
+    const result = await executionPlanStore.save(updated)
     if (!result.success) {
       logger.error(`[executionPlanService] updatePhase save failed: ${result.error}`, { planId })
       return undefined
@@ -196,7 +201,7 @@ export async function cancelPlan(planId: string, options: UpdatePhaseOptions = {
     }
 
     const updated: ExecutionPlan = { ...plan, phase: EXECUTION_PHASE.CANCELLED }
-    const result = await executionPlanStore.update(updated)
+    const result = await executionPlanStore.save(updated)
     if (!result.success) {
       logger.error(`[executionPlanService] cancelPlan save failed: ${result.error}`, { planId })
       return undefined
@@ -218,7 +223,7 @@ export async function cancelPlan(planId: string, options: UpdatePhaseOptions = {
  */
 export async function getOrphanPlans(): Promise<ExecutionPlan[]> {
   try {
-    const all = await executionPlanStore.list()
+    const all = await executionPlanStore.getAll()
     // 信号存在性由调用方检查，这里仅返回非终态的计划
     const terminalPhases: ExecutionPlan['phase'][] = [EXECUTION_PHASE.EXECUTED, EXECUTION_PHASE.CANCELLED, EXECUTION_PHASE.REVIEWED]
     return all.filter((p) => !terminalPhases.includes(p.phase))

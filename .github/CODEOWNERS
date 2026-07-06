@@ -1,100 +1,101 @@
 # CODEOWNERS — 自动指定审查者
 
 > **规则**: 文件路径匹配到的第一个 Pattern 生效
-> **审查者**: 核心模块需要 2 人审查，其他模块至少 1 人
+> **审查者**: 目前单人开发，所有文件指定一个审查者
+> **注意**: 如果后续有团队成员，可以恢复为多人审查模式
 
 ---
 
-## 架构层（核心模块 - 必须 2 人审查）
+## 架构层（核心模块）
 
 # 配置层
-src/config/**                          @xiaoying-ying @huawei
-src/constants/**                      @xiaoying-ying @huawei
+src/config/**                          @DENGHONGYU
+src/constants/**                      @DENGHONGYU
 
 # 核心工具层
-src/core/**                           @xiaoying-ying @huawei
+src/core/**                           @DENGHONGYU
 
 # 数据层
-src/data/**                           @xiaoying-ying @huawei
-src/types/**                          @xiaoying-ying @huawei
+src/data/**                           @DENGHONGYU
+src/types/**                          @DENGHONGYU
 
 ---
 
-## 服务层（核心业务逻辑 - 必须 2 人审查）
+## 服务层（核心业务逻辑）
 
-src/services/analysis/**              @xiaoying-ying @huawei
-src/services/scoring/**              @xiaoying-ying @huawei
-src/services/trading/**              @xiaoying-ying @huawei
-src/services/execution/**            @xiaoying-ying @huawei
-src/services/news/**                 @xiaoying-ying @huawei
-src/services/llm/**                 @xiaoying-ying @huawei
+src/services/analysis/**              @DENGHONGYU
+src/services/scoring/**              @DENGHONGYU
+src/services/trading/**              @DENGHONGYU
+src/services/execution/**            @DENGHONGYU
+src/services/news/**                 @DENGHONGYU
+src/services/llm/**                 @DENGHONGYU
 
-# 其他服务模块（至少 1 人审查）
-src/services/**                       @xiaoying-ying
-
----
-
-## 状态层（Zustand Store - 必须 2 人审查）
-
-src/store/**                          @xiaoying-ying @huawei
+# 其他服务模块
+src/services/**                       @DENGHONGYU
 
 ---
 
-## 页面层 & 组件层（UI 模块 - 至少 1 人审查）
+## 状态层（Zustand Store）
 
-src/pages/**                          @xiaoying-ying
-src/components/**                     @xiaoying-ying
-src/portal/**                         @xiaoying-ying
-src/cockpit/**                        @xiaoying-ying
+src/store/**                          @DENGHONGYU
 
 ---
 
-## 库函数 & 工具函数（至少 1 人审查）
+## 页面层 & 组件层（UI 模块）
 
-src/lib/**                            @xiaoying-ying
-src/hooks/**                          @xiaoying-ying
-src/utils/**                          @xiaoying-ying
-
----
-
-## 测试 & 文档（可选审查）
-
-tests/**                              @xiaoying-ying
-e2e/**                                @xiaoying-ying
-docs/**                               @xiaoying-ying
-*.md                                  @xiaoying-ying
+src/pages/**                          @DENGHONGYU
+src/components/**                     @DENGHONGYU
+src/portal/**                         @DENGHONGYU
+src/cockpit/**                        @DENGHONGYU
 
 ---
 
-## 构建 & 配置（至少 1 人审查）
+## 库函数 & 工具函数
 
-package.json                          @xiaoying-ying @huawei
-tsconfig.json                         @xiaoying-ying @huawei
-vite.config.ts                        @xiaoying-ying @huawei
-eslint*.js                            @xiaoying-ying @huawei
-postcss.config.js                     @xiaoying-ying @huawei
-tailwind.config.js                    @xiaoying-ying @huawei
+src/lib/**                            @DENGHONGYU
+src/hooks/**                          @DENGHONGYU
+src/utils/**                          @DENGHONGYU
 
 ---
 
-## 脚本 & 工具（至少 1 人审查）
+## 测试 & 文档
 
-scripts/**                            @xiaoying-ying @huawei
-python/**                             @xiaoying-ying @huawei
-.github/**                            @xiaoying-ying @huawei
+tests/**                              @DENGHONGYU
+e2e/**                                @DENGHONGYU
+docs/**                               @DENGHONGYU
+*.md                                  @DENGHONGYU
 
 ---
 
-## 根目录文件（必须 2 人审查）
+## 构建 & 配置
 
-AGENTS.md                             @xiaoying-ying @huawei
-ARCHITECTURE.md                       @xiaoying-ying @huawei
-DATA_DEFINITION.md                    @xiaoying-ying @huawei
-CODE-REVIEW.md                        @xiaoying-ying @huawei
-CHANGELOG.md                          @xiaoying-ying @huawei
+package.json                          @DENGHONGYU
+tsconfig.json                         @DENGHONGYU
+vite.config.ts                        @DENGHONGYU
+eslint*.js                            @DENGHONGYU
+postcss.config.js                     @DENGHONGYU
+tailwind.config.js                    @DENGHONGYU
+
+---
+
+## 脚本 & 工具
+
+scripts/**                            @DENGHONGYU
+python/**                             @DENGHONGYU
+.github/**                            @DENGHONGYU
+
+---
+
+## 根目录文件
+
+AGENTS.md                             @DENGHONGYU
+ARCHITECTURE.md                       @DENGHONGYU
+DATA_DEFINITION.md                    @DENGHONGYU
+CODE-REVIEW.md                        @DENGHONGYU
+CHANGELOG.md                          @DENGHONGYU
 
 ---
 
 ## 默认审查者（未匹配上述规则的文件）
 
-*                                     @xiaoying-ying
+*                                     @DENGHONGYU

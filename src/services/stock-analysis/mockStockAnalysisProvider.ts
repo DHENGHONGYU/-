@@ -186,7 +186,7 @@ function generateKaiScore(): KaiScore {
   })
 
   const detailDistribution = dimensions.flatMap((dim) => {
-    const items = KAI_DETAIL_ITEMS[dim.name] || []
+    const items = KAI_DETAIL_ITEMS[dim.name] ?? []
     return items.map((itemName) => {
       const score = randomScore()
       return {

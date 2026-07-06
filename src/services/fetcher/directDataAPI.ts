@@ -12,6 +12,13 @@
  */
 
 import { getLogger } from '@/lib/logger'
+import {
+  TENCENT_QUOTE_API,
+  TENCENT_KLINE_API,
+  SINA_QUOTE_API,
+  NETEASE_HISTORY_API,
+} from '@/config/dataSourceUrls'
+import { WAN_TO_YUAN_MULTIPLIER } from '@/config/mathConstants'
 
 const logger = getLogger()
 
@@ -122,7 +129,7 @@ function isAbortError(err: unknown): boolean {
 export async function tencentQuote(code: string): Promise<StockQuote> {
   const startTs = Date.now()
   const prefix = getMarketPrefix(code)
-  const url = `https://qt.gtimg.cn/q=${prefix}${code}`
+  const url = `${TENCENT_QUOTE_API}=${prefix}${code}`
   logger.info('[directDataAPI] tencentQuote start', { code, url })
 
   try {
@@ -181,7 +188,7 @@ function parseTencentQuote(text: string, code: string): StockQuote | null {
     const volume = safeNumber(fields[6]) * 100 // 手 → 股
     const high = safeNumber(fields[33])
     const low = safeNumber(fields[34])
-    const amount = safeNumber(fields[37]) * 10000 // 万元 → 元
+    const amount = safeNumber(fields[37]) * WAN_TO_YUAN_MULTIPLIER // 万元 → 元
     const change = price - prevClose
     const changePercent = prevClose > 0 ? (change / prevClose) * 100 : 0
     const dateStr = fields[30] ?? ''
@@ -242,7 +249,7 @@ export async function tencentBatchQuotes(codes: string[]): Promise<StockQuote[]>
     return []
   }
   const query = codes.map((c) => `${getMarketPrefix(c)}${c}`).join(',')
-  const url = `https://qt.gtimg.cn/q=${query}`
+  const url = `${TENCENT_QUOTE_API}=${query}`
   logger.info('[directDataAPI] tencentBatchQuotes start', { count: codes.length, url })
 
   try {
@@ -291,7 +298,7 @@ export async function tencentKline(code: string, period: string, count: number):
   const startTs = Date.now()
   const prefix = getMarketPrefix(code)
   const safePeriod = period || 'day'
-  const url = `https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=${prefix}${code},${safePeriod},,,${count},qfq`
+  const url = `${TENCENT_KLINE_API}?param=${prefix}${code},${safePeriod},,,${count},qfq`
   logger.info('[directDataAPI] tencentKline start', { code, period: safePeriod, count, url })
 
   try {
@@ -361,7 +368,7 @@ function extractTencentKlineRows(stockData: Record<string, unknown>, code: strin
     const r = row as unknown[]
     // [date, open, close, high, low, volume, amount]
     items.push({
-      date: String(r[0] ?? ''),
+      date: typeof r[0] === 'string' ? r[0] : JSON.stringify(r[0] ?? ''),
       open: safeNumber(r[1] as string | undefined),
       close: safeNumber(r[2] as string | undefined),
       high: safeNumber(r[3] as string | undefined),
@@ -391,7 +398,7 @@ function extractTencentKlineRows(stockData: Record<string, unknown>, code: strin
 export async function sinaQuote(code: string): Promise<StockQuote> {
   const startTs = Date.now()
   const prefix = getMarketPrefix(code)
-  const url = `https://hq.sinajs.cn/list=${prefix}${code}`
+  const url = `${SINA_QUOTE_API}=${prefix}${code}`
   logger.info('[directDataAPI] sinaQuote start', { code, url })
 
   try {
@@ -496,7 +503,7 @@ export async function sinaBatchQuotes(codes: string[]): Promise<StockQuote[]> {
     return []
   }
   const query = codes.map((c) => `${getMarketPrefix(c)}${c}`).join(',')
-  const url = `https://hq.sinajs.cn/list=${query}`
+  const url = `${SINA_QUOTE_API}=${query}`
   logger.info('[directDataAPI] sinaBatchQuotes start', { count: codes.length, url })
 
   try {
@@ -550,7 +557,7 @@ export async function sinaBatchQuotes(codes: string[]): Promise<StockQuote[]> {
 export async function neteaseHistory(code: string, start: string, end: string): Promise<KlineItem[]> {
   const startTs = Date.now()
   const neteaseCode = getNeteaseCode(code)
-  const url = `https://quotes.163.com/service/chddata.html?code=${neteaseCode}&start=${start}&end=${end}&fields=TCLOSE;HIGH;LOW;TOPEN;VOTURNOVER;VATURNOVER`
+  const url = `${NETEASE_HISTORY_API}?code=${neteaseCode}&start=${start}&end=${end}&fields=TCLOSE;HIGH;LOW;TOPEN;VOTURNOVER;VATURNOVER`
   logger.info('[directDataAPI] neteaseHistory start', { code, start, end, url })
 
   try {

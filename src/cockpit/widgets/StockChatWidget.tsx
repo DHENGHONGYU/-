@@ -76,7 +76,7 @@ function MarkdownRenderer({ content }: { content: string }): React.JSX.Element {
     const ulMatch = line.match(/^[-*]\s+(.*)$/)
     if (ulMatch) {
       if (!listBuffer || listOrdered) flushList()
-      listBuffer = listBuffer ?? []
+      listBuffer ??= []
       listOrdered = false
       listBuffer.push(<li key={`li-${index}`}>{renderInline(ulMatch[1]!)}</li>)
       return
@@ -86,7 +86,7 @@ function MarkdownRenderer({ content }: { content: string }): React.JSX.Element {
     const olMatch = line.match(/^\d+\.\s+(.*)$/)
     if (olMatch) {
       if (!listBuffer || !listOrdered) flushList()
-      listBuffer = listBuffer ?? []
+      listBuffer ??= []
       listOrdered = true
       listBuffer.push(<li key={`li-${index}`}>{renderInline(olMatch[1]!)}</li>)
       return
@@ -219,7 +219,7 @@ export default function StockChatWidget({ config, data }: StockChatWidgetProps):
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
-      handleSend()
+      void handleSend()
     }
   }
 
@@ -294,7 +294,7 @@ export default function StockChatWidget({ config, data }: StockChatWidgetProps):
             className="min-h-[56px] flex-1 resize-none"
             disabled={isLoading}
           />
-          <Button size="sm" onClick={handleSend} disabled={isLoading || !input.trim()} className="h-14 px-4">
+          <Button size="sm" onClick={() => void handleSend()} disabled={isLoading || !input.trim()} className="h-14 px-4">
             <Send className="h-4 w-4" />
           </Button>
         </div>

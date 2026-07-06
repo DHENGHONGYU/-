@@ -110,33 +110,51 @@ function calculateMetrics(reviews: SignalReviewRecord[]): SignalQualityMetrics {
   const correctCount = realizedReviews.filter((r) => r.correct).length
   const accuracy = correctCount / realizedSignals
 
-  // 胜率
-  const winningTrades = realizedReviews.filter((r) => (r.pnlPercent ?? 0) > 0).length
-  const winRate = winningTrades / realizedSignals
+  // 过滤 pnlPercent 非空的记录，用于胜率/盈亏比/回撤/Sharpe 计算
+  const pnlReviews = realizedReviews.filter((r) => r.pnlPercent != null)
+  const pnlMissingCount = realizedSignals - pnlReviews.length
+  if (pnlMissingCount > 0) {
+    logger.warn('[SignalQuality] pnlPercent 缺失', { missingCount: pnlMissingCount, totalCount: realizedSignals })
+  }
+
+  // 胜率（基于有 pnlPercent 的记录）
+  const pnlBase = pnlReviews.length > 0 ? pnlReviews : realizedReviews
+  const winningTrades = pnlBase.filter((r) => (r.pnlPercent as number) > 0).length
+  const winRate = winningTrades / pnlBase.length
 
   // 盈亏比
   const avgWin =
-    realizedReviews.filter((r) => (r.pnlPercent ?? 0) > 0).reduce((sum, r) => sum + (r.pnlPercent ?? 0), 0) /
+    pnlBase.filter((r) => (r.pnlPercent as number) > 0).reduce((sum, r) => sum + (r.pnlPercent as number), 0) /
     Math.max(winningTrades, 1)
+  const losingTrades = pnlBase.filter((r) => (r.pnlPercent as number) < 0)
   const avgLoss =
     Math.abs(
-      realizedReviews.filter((r) => (r.pnlPercent ?? 0) < 0).reduce((sum, r) => sum + (r.pnlPercent ?? 0), 0) /
-        Math.max(realizedSignals - winningTrades, 1),
+      losingTrades.reduce((sum, r) => sum + (r.pnlPercent as number), 0) /
+        Math.max(pnlBase.length - winningTrades, 1),
     )
   const profitLossRatio = avgLoss > 0 ? avgWin / avgLoss : 0
 
-  // 平均持仓天数
-  const holdingDaysList = realizedReviews.map((r) => r.holdingDays ?? 0)
-  const avgHoldingDays = holdingDaysList.reduce((sum, d) => sum + d, 0) / realizedSignals
+  // 平均持仓天数（过滤 null 值）
+  const holdingDaysReviews = realizedReviews.filter((r) => r.holdingDays != null)
+  const holdingDaysMissing = realizedSignals - holdingDaysReviews.length
+  if (holdingDaysMissing > 0) {
+    logger.warn('[SignalQuality] holdingDays 缺失', { missingCount: holdingDaysMissing, totalCount: realizedSignals })
+  }
+  const holdingDaysList = holdingDaysReviews.map((r) => r.holdingDays as number)
+  const avgHoldingDays = holdingDaysList.length > 0
+    ? holdingDaysList.reduce((sum, d) => sum + d, 0) / holdingDaysList.length
+    : 0
 
   // 最大回撤（简化计算：取最小 pnlPercent）
-  const pnlValues = realizedReviews.map((r) => r.pnlPercent ?? 0)
-  const maxDrawdown = Math.min(0, ...pnlValues) / 100
+  const pnlValues = pnlBase.map((r) => r.pnlPercent as number)
+  const maxDrawdown = pnlValues.length > 0 ? Math.min(0, ...pnlValues) / 100 : 0
 
   // Sharpe 比率（简化：假设无风险利率为 0）
   const returns = pnlValues.map((p) => p / 100)
-  const avgReturn = returns.reduce((sum, r) => sum + r, 0) / returns.length
-  const stdDev = Math.sqrt(returns.reduce((sum, r) => sum + (r - avgReturn) ** 2, 0) / returns.length)
+  const avgReturn = returns.length > 0 ? returns.reduce((sum, r) => sum + r, 0) / returns.length : 0
+  const stdDev = returns.length > 0
+    ? Math.sqrt(returns.reduce((sum, r) => sum + (r - avgReturn) ** 2, 0) / returns.length)
+    : 0
   const sharpeRatio = stdDev > 0 ? avgReturn / stdDev : 0
 
   // 择时得分（简化：基于信号置信度与实际收益的相关性）

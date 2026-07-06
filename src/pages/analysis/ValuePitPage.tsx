@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router'
 import { Target, RefreshCw, ChevronDown, ChevronUp, AlertCircle, CheckCircle, XCircle, Clock } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
@@ -12,74 +12,13 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
 } from '@/components/ui/Breadcrumb'
-import { analyze, type ValuePitAnalyzerInput, type ValuePitScore } from '@/services/scoring/valuePitAnalyzer'
-import { detect, type RotationSignalInput, type RotationSignal } from '@/services/scoring/rotationSignalDetector'
+import type { ValuePitScore } from '@/data/types'
+import type { RotationSignal } from '@/services/scoring/rotationSignalDetector'
+import { useValuePitStore, type ValuePitSectorResult } from '@/store/valuePitStore'
 import { getLogger } from '@/lib/logger'
+import { COLOR_SHADES, twText } from '@/constants/theme.tokens'
 
 const logger = getLogger()
-
-// ============================================================
-// 预设价值洼地板块样本数据
-// ============================================================
-
-interface SectorEntry {
-  input: ValuePitAnalyzerInput
-  rotationInput: RotationSignalInput
-}
-
-const SECTOR_SAMPLES: SectorEntry[] = [
-  {
-    input: {
-      symbol: '银行',
-      sectorName: '银行',
-      catalyst: { policyCatalyst: 4.0, cycleTurningPoint: 3.5, techBreakthrough: 2.0, orderSurge: 2.5 },
-      valuationMargin: { pePercentile: 5, pbPercentile: 8, dividendYield: 4.5, peg: 0.6 },
-      chipStructure: { northBoundChange: 2.5, fundPositionChange: 3.0, shareholderChange: -1.5 },
-      rotationPosition: { sectorVolumePercentile: 15, capitalInflowStrength: 4.0, hasGoldenCross: true },
-      liquidity: { avgDailyAmount: 80000, turnoverRate: 1.5, marketCap: 1500 },
-    },
-    rotationInput: {
-      sectorId: '银行',
-      volume: { history: [...Array(50).fill(60000), 100000, 110000, 120000, 115000, 105000] },
-      capitalFlow: { dailyNetFlow: [10, 20, 15, 30, 25] },
-      goldenCross: { closes: [...Array(20).fill(105), 100, 100, 100, 100, 130] },
-    },
-  },
-  {
-    input: {
-      symbol: '钢铁',
-      sectorName: '钢铁',
-      catalyst: { policyCatalyst: 3.0, cycleTurningPoint: 3.0, techBreakthrough: 2.0, orderSurge: 2.0 },
-      valuationMargin: { pePercentile: 15, pbPercentile: 20, dividendYield: 3.0, peg: 0.8 },
-      chipStructure: { northBoundChange: 1.0, fundPositionChange: 1.5, shareholderChange: -0.5 },
-      rotationPosition: { sectorVolumePercentile: 40, capitalInflowStrength: 3.0, hasGoldenCross: false },
-      liquidity: { avgDailyAmount: 30000, turnoverRate: 2.5, marketCap: 500 },
-    },
-    rotationInput: {
-      sectorId: '钢铁',
-      volume: { history: [...Array(50).fill(30000), 35000, 32000, 31000, 33000, 34000] },
-      capitalFlow: { dailyNetFlow: [5, 3, -2, 8, 2] },
-      goldenCross: { closes: [...Array(25).fill(100)] },
-    },
-  },
-  {
-    input: {
-      symbol: '煤炭',
-      sectorName: '煤炭',
-      catalyst: { policyCatalyst: 2.5, cycleTurningPoint: 2.0, techBreakthrough: 1.5, orderSurge: 1.5 },
-      valuationMargin: { pePercentile: 10, pbPercentile: 12, dividendYield: 5.0, peg: 0.5 },
-      chipStructure: { northBoundChange: -0.5, fundPositionChange: 0.5, shareholderChange: 2.0 },
-      rotationPosition: { sectorVolumePercentile: 55, capitalInflowStrength: 2.0, hasGoldenCross: false },
-      liquidity: { avgDailyAmount: 15000, turnoverRate: 1.0, marketCap: 300 },
-    },
-    rotationInput: {
-      sectorId: '煤炭',
-      volume: { history: [...Array(40).fill(15000), ...Array(10).fill(20000), 16000, 16000, 16000, 16000, 16000] },
-      capitalFlow: { dailyNetFlow: [-3, -5, -2, 1, -1] },
-      goldenCross: { closes: Array(25).fill(100).map((v, i) => v - i * 0.5) },
-    },
-  },
-]
 
 // ============================================================
 // 常量
@@ -111,55 +50,26 @@ const ACTION_CONFIG: Record<ValuePitScore['action'], { label: string; variant: '
 }
 
 const STRENGTH_CONFIG: Record<RotationSignal['strength'], { label: string; color: string }> = {
-  strong: { label: '强信号', color: 'text-green-600' },
-  medium: { label: '中等信号', color: 'text-yellow-600' },
-  weak: { label: '弱信号', color: 'text-red-600' },
+  strong: { label: '强信号', color: twText('green', 600) },
+  medium: { label: '中等信号', color: twText('yellow', 600) },
+  weak: { label: '弱信号', color: twText('red', 600) },
 }
 
 // ============================================================
 // 页面组件
 // ============================================================
 
-interface SectorResult {
-  score: ValuePitScore
-  rotation: RotationSignal
-}
-
 export default function ValuePitPage(): React.JSX.Element {
-  const [results, setResults] = useState<SectorResult[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  // 从 Store 获取状态
+  const combinedResults = useValuePitStore((s) => s.combinedResults)
+  const loading = useValuePitStore((s) => s.loading)
+  const error = useValuePitStore((s) => s.error)
+  const runAnalysis = useValuePitStore((s) => s.runAnalysis)
+
   const [expandedSymbol, setExpandedSymbol] = useState<string | null>(null)
 
-  const runAnalysis = useCallback(() => {
-    setLoading(true)
-    setError(null)
-    logger.info('[ValuePitPage] 开始运行价值洼地分析')
-
-    try {
-      const sectorResults: SectorResult[] = SECTOR_SAMPLES.map((entry) => {
-        const score = analyze(entry.input)
-        const rotation = detect(entry.rotationInput)
-        logger.info(
-          `[ValuePitPage] ${entry.input.symbol} 评分完成: score=${score.score.toFixed(2)} ` +
-          `action=${score.action} rotation=${rotation.triggered ? rotation.strength : '无'}`,
-        )
-        return { score, rotation }
-      })
-
-      sectorResults.sort((a, b) => b.score.score - a.score.score)
-      setResults(sectorResults)
-      logger.info(`[ValuePitPage] 分析完成: ${sectorResults.length} 个板块`)
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err)
-      logger.error(`[ValuePitPage] 分析失败: ${message}`)
-      setError(message)
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
   useEffect(() => {
+    logger.info('[ValuePitPage] 初始化，运行价值洼地分析')
     runAnalysis()
   }, [runAnalysis])
 
@@ -202,7 +112,7 @@ export default function ValuePitPage(): React.JSX.Element {
   // Empty 状态
   // ============================================================
 
-  if (results.length === 0) {
+  if (combinedResults.length === 0) {
     return (
       <div className="flex min-h-[400px] flex-col items-center justify-center space-y-4">
         <Target className="h-8 w-8 text-muted-foreground" />
@@ -254,14 +164,14 @@ export default function ValuePitPage(): React.JSX.Element {
 
       {/* 板块列表 */}
       <div className="grid gap-4">
-        {results.map(({ score, rotation }) => {
+        {combinedResults.map(({ score, rotation }: ValuePitSectorResult) => {
           const isExpanded = expandedSymbol === score.symbol
           const actionCfg = ACTION_CONFIG[score.action]
           const strengthCfg = rotation.triggered ? STRENGTH_CONFIG[rotation.strength] : null
           const scoreColor =
-            score.score >= 4 ? 'text-green-600' :
-            score.score >= 3 ? 'text-yellow-600' :
-            'text-red-600'
+            score.score >= 4 ? twText('green', 600) :
+            score.score >= 3 ? twText('yellow', 600) :
+            twText('red', 600)
 
           return (
             <Card key={score.symbol} className="transition-shadow hover:shadow-md">
@@ -328,25 +238,25 @@ export default function ValuePitPage(): React.JSX.Element {
                     <div className="grid grid-cols-3 gap-3">
                       <div className="flex items-center gap-2">
                         {rotation.conditions.volumeBreakthrough ? (
-                          <CheckCircle className="h-4 w-4 text-green-500" />
+                          <CheckCircle className={`h-4 w-4 ${COLOR_SHADES.green[500]}`} />
                         ) : (
-                          <XCircle className="h-4 w-4 text-red-400" />
+                          <XCircle className={`h-4 w-4 ${COLOR_SHADES.red[400]}`} />
                         )}
                         <span className="text-xs">成交量突破</span>
                       </div>
                       <div className="flex items-center gap-2">
                         {rotation.conditions.capitalInflow ? (
-                          <CheckCircle className="h-4 w-4 text-green-500" />
+                          <CheckCircle className={`h-4 w-4 ${COLOR_SHADES.green[500]}`} />
                         ) : (
-                          <XCircle className="h-4 w-4 text-red-400" />
+                          <XCircle className={`h-4 w-4 ${COLOR_SHADES.red[400]}`} />
                         )}
                         <span className="text-xs">资金净流入</span>
                       </div>
                       <div className="flex items-center gap-2">
                         {rotation.conditions.goldenCross ? (
-                          <CheckCircle className="h-4 w-4 text-green-500" />
+                          <CheckCircle className={`h-4 w-4 ${COLOR_SHADES.green[500]}`} />
                         ) : (
-                          <XCircle className="h-4 w-4 text-red-400" />
+                          <XCircle className={`h-4 w-4 ${COLOR_SHADES.red[400]}`} />
                         )}
                         <span className="text-xs">技术金叉</span>
                       </div>
@@ -361,9 +271,9 @@ export default function ValuePitPage(): React.JSX.Element {
                   {/* 建仓建议卡片 */}
                   <div
                     className={`rounded-md border p-4 ${
-                      score.action === 'immediate' ? 'border-green-200 bg-green-50' :
-                      score.action === 'wait' ? 'border-red-200 bg-red-50' :
-                      'border-yellow-200 bg-yellow-50'
+                      score.action === 'immediate' ? `${COLOR_SHADES.green[200]} ${COLOR_SHADES.green[50]}` :
+                      score.action === 'wait' ? `${COLOR_SHADES.red[200]} ${COLOR_SHADES.red[50]}` :
+                      `${COLOR_SHADES.yellow[200]} ${COLOR_SHADES.yellow[50]}`
                     }`}
                   >
                     <div className="flex items-center gap-2">

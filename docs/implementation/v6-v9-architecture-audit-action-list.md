@@ -1,7 +1,7 @@
 ---
 title: V6 → V9 架构一致性整改行动清单
-version: v1.7.0
-last_updated: 2026-07-02
+version: v2.0.0
+last_updated: 2026-07-04
 maintainer: Quality Auditor
 status: active
 audit_source:
@@ -21,9 +21,9 @@ audit_source:
 > **待修复**：0 项
 > **整改原则**：只修改 V9 生产路径；废弃目录直接删除或移出仓库；保留 V6 分层设计并让其接管主流程。  
 > **核心约束**：严禁一套功能对应两套 UI 组件；所有整改必须保持组件体系化。  
-> **批次 A 状态**：已完成 ✅（P0-01/P0-02/P2-16 全部闭环；v6ScoreService 切换到 v6-engine；PortalShell 单轨化）
-> **批次 B 状态**：已完成 ✅（v6-ui-assets/ 已删除；temp/backup、input/prototype、news-v6、ConfigPage.tsx 已不存在）
-> **批次 C 状态**：已完成 ✅（P1-06 local-knowledge 改为 PortalShell 分发；P1-07 移除 /output/settings 卡片入口；P1-08 newsStore.ts 已不存在）
+> **批次 A 状态**：已完成 ✅（P0-01 v6ScoreService 已切换到 v6-engine ✅ F4 批次 2026-07-04；P0-02 PortalShell 单轨化 ✅ F3 批次删除 HUB_APPS + /hub 重定向；P2-16 测试已重写为 v6-engine mock 版本）
+> **批次 B 状态**：已完成 ✅（v6-ui-assets/、temp/backup/、ConfigPage.tsx 已删除；input/prototype/、news-v6/、newsStore.ts 由 F1 批次实际删除 2026-07-04）
+> **批次 C 状态**：已完成 ✅（P1-06 local-knowledge 改为 PortalShell 分发；P1-07 移除 /output/settings 卡片入口；P1-08 newsStore.ts 由 F1 实际删除）
 > **批次 D 状态**：已完成 ✅（D-1 路由文档同步 ✅；D-2 DataBridge 映射表 `DATA_ACTION_TO_ENVELOPE` 替代不安全强转 ✅；D-3 Store EventBus 广播 ✅ 21/24 Store 通过 `withBroadcast` 工具广播；D-4 页面可见性 ✅ 创建 `usePageGuard` Hook，6 个高频页面改造完成；D-4c 补齐 9 个业务页面 usePageGuard 改造 ✅）
 > - **D-3 详情**：新建 `src/store/helpers/withBroadcast.ts` 工具函数（含错误捕获与 logger），`EVENT_NAMES` 常量新增 21 个 channel；21 个写操作 Store 添加广播（poolStore/orderStore/holdingsStore/positionStore/intelligentScoreStore/industryScoreStore/strategySnapshotStore/valuePitStore/hotSectorStore/outputStore/commandStore/dataTestStore/analysisStore/dualStrategyStore/sectorAnalysisStore/riskStore/signalQualityStore/marketDataStore/disciplineStore/backtestStore/scoreDocStore）；跳过 3 个（signalStore 无同步写操作、rotationSignalStore 不存在、localKnowledgeStore 无同步写操作）
 > - **D-4 详情**：新建 `src/hooks/usePageGuard.ts` Hook（统一管理 `isVisible`/`isClickable`/`tooltipText`/`guardProps`）；改造 6 个高频页面（StockAnalysisPage、IntelligentScorePage、IndustryScorePage、ScoreDocPage、ValuePitPage、HotSectorPage）
@@ -114,6 +114,8 @@ audit_source:
 
 | 日期 | 版本 | 变更内容 | 变更人 |
 |:---|:---|:---|:---|
+| 2026-07-04 | v2.0.0 | **F3+F4 批次完成 — 批次 A 全闭环**：F3 PortalShell 单轨化 — 删除 HUB_APPS 映射表及 5 个 HubPage lazy import，/hub 路由改为 useEffect 重定向到舱室基础路径（方案B），侧边栏 PANEL_ITEMS 路径同步更新；F4 v6ScoreService 集成 v6-engine — 重写 runV6Score() 调用 createV6Engine().calculateAll()，扩展 V6Score 类型新增 rating/layerDetails/allRisks/recommendation/engineVersion 字段（方案B），测试重写为 v6-engine mock 版本（7/7 通过）；验证 tsc 0 错误、vite build 成功 | V9 Quality Audit Team |
+| 2026-07-04 | v1.8.0 | **F1 批次完成**：实际删除 news-v6/ 目录（8 文件）、newsStore.ts（225 行）、prototype/ 目录（6 文件）、mockData.colors.test.ts；移除 /analysis/news-v6 死路由；保留 newsColorTokens.ts（仍被 NewsSentimentTrend.tsx 引用）；验证 tsc 0 错误、vite build 成功；修正批次 A/B/C 状态记录（此前虚假标记已完成） | V9 Quality Audit Team |
 | 2026-07-01 | v1.6.0 | D-4c 完成：补齐 9 个业务页面 usePageGuard 改造（StrategySnapshotPage、HoldingsPage 含 HoldingsFilter 子组件 disabled 透传、LocalKnowledgePage、SectorAnalysisPage、NewsPage、BacktestPage、TradeReviewPage、ResearchReportPage、HomePage）；验证 D-4c 页面测试 4 文件 / 21 测试全部通过；批次 D 全部闭环 | V9 Quality Audit Team |
 | 2026-07-01 | v1.5.0 | 批次 D 收尾（P2 延后项）：D-3 Store EventBus 广播完成 — 新建 `src/store/helpers/withBroadcast.ts` 工具函数，`EVENT_NAMES` 常量新增 21 个 channel，21/24 Store 添加广播（跳过 signalStore/rotationSignalStore/localKnowledgeStore）；D-4 页面可见性完成 — 新建 `src/hooks/usePageGuard.ts` Hook，6 个高频页面（StockAnalysisPage、IntelligentScorePage、IndustryScorePage、ScoreDocPage、ValuePitPage、HotSectorPage）改造完成；验证 `tsc --noEmit` 0 错误、`vite build` 成功、Store 测试 29 文件 / 490 测试全部通过；D-4c 其他 8-10 页面改造为低优先级延后项 | V9 Quality Audit Team |
 | 2026-07-01 | v1.4.0 | 批次 C/E 完成 + 批次 D 部分完成：批次 C（P1-06 local-knowledge 改为 PortalShell 分发；P1-07 移除 /output/settings 卡片入口；P1-08 newsStore.ts 已不存在）；批次 D（D-1 路由文档 06-routing-specs v1.4.0 同步 31 条；D-2 DataBridge `DATA_ACTION_TO_ENVELOPE` 显式映射表替代 `as unknown as` 不安全强转）；批次 E（P2-05 @legacy 标记；P2-06 Mock 使用范围说明；P2-07 已有降级策略；P2-09 无 DEPRECATED 常量；P2-10 v6-competitive-analysis/ 已删除） | V9 Quality Audit Team |

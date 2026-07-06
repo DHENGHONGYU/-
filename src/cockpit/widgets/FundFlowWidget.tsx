@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import type { WidgetConfig } from '@/types/modules/widget.types'
 import { MockMarketDataProvider, type FundFlow } from '@/cockpit/data/mockDataProvider'
 import { STOCK_COLOR_MAPPING } from '@/constants/cockpit.constants'
+import { COLOR_TOKENS, twText } from '@/constants/theme.tokens'
 
 interface FundFlowWidgetProps {
   config: WidgetConfig
@@ -22,7 +23,7 @@ export default function FundFlowWidget({ config }: FundFlowWidgetProps): React.J
         setLoading(false)
       }
     }
-    fetchData()
+    void fetchData()
   }, [])
 
   // 资金流向图标色（A股惯例：北向资金流入=红涨，流出=绿跌；主力资金=info 蓝）
@@ -30,20 +31,20 @@ export default function FundFlowWidget({ config }: FundFlowWidgetProps): React.J
     if (value > 0) {
       switch (type) {
         case 'main':
-          return <ArrowUpCircle className="h-6 w-6 text-blue-500" />
+          return <ArrowUpCircle className={`h-6 w-6 ${COLOR_TOKENS.info.tailwind}`} />
         case 'north':
           return <ArrowUpCircle className={`h-6 w-6 ${STOCK_COLOR_MAPPING.UP_CLASS}`} />
         default:
-          return <ArrowDownCircle className="h-6 w-6 text-gray-500" />
+          return <ArrowDownCircle className={`h-6 w-6 ${twText('gray', 500)}`} />
       }
     }
     switch (type) {
       case 'main':
-        return <ArrowDownCircle className="h-6 w-6 text-blue-500" />
+        return <ArrowDownCircle className={`h-6 w-6 ${COLOR_TOKENS.info.tailwind}`} />
       case 'north':
         return <ArrowDownCircle className={`h-6 w-6 ${STOCK_COLOR_MAPPING.DOWN_CLASS}`} />
       default:
-        return <ArrowUpCircle className="h-6 w-6 text-gray-500" />
+        return <ArrowUpCircle className={`h-6 w-6 ${twText('gray', 500)}`} />
     }
   }
 

@@ -6,6 +6,7 @@ import { Progress } from '@/components/ui/Progress'
 import { useDualStrategyStore } from '@/store/dualStrategyStore'
 import type { WidgetConfig, HotSectorData } from '@/types/modules/widget.types'
 import { SCORE_LEVELS } from '@/constants/cockpit.constants'
+import { COLOR_TOKENS } from '@/constants/theme.tokens'
 
 interface HotSectorWidgetProps {
   config: WidgetConfig
@@ -62,7 +63,7 @@ const HotSectorWidget = memo(function HotSectorWidget({ config, data }: HotSecto
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-3">
         <CardTitle className="text-base font-semibold flex items-center gap-2">
-          <Flame className="h-4 w-4 text-orange-500" />
+          <Flame className={`h-4 w-4 ${COLOR_TOKENS.orange.tailwind}`} />
           {config.title}
         </CardTitle>
       </CardHeader>

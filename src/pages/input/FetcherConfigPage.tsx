@@ -46,6 +46,12 @@ import {
 } from '@/components/ui/Breadcrumb'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import {
+  MOCK_TENCENT_BASE_URL,
+  MOCK_SINA_BASE_URL,
+  MOCK_NETEASE_BASE_URL,
+  MOCK_AKSHARE_BASE_URL,
+} from '@/config/dataSourceUrls'
+import {
   getDefaultFetcherConfig,
   getDefaultFetcherDimensions,
   getDefaultFetcherGlobalConfig,
@@ -85,10 +91,10 @@ const SOURCE_STATUS_BADGE: Record<SourceStatus, { label: string; variant: 'succe
 }
 
 const MOCK_DATA_SOURCES: DataSourceItem[] = [
-  { id: 'tencent', name: '腾讯财经', type: 'HTTP REST', baseURL: 'https://proxy.finance.qq.com', status: 'online', latencyMs: 128, description: '实时行情、K线、板块资金流向' },
-  { id: 'sina', name: '新浪财经', type: 'HTTP REST', baseURL: 'https://hq.sinajs.cn', status: 'online', latencyMs: 156, description: '实时行情、分时数据' },
-  { id: 'netease', name: '网易财经', type: 'HTTP REST', baseURL: 'https://api.money.126.net', status: 'unknown', latencyMs: 0, description: '历史K线、财务数据' },
-  { id: 'akshare', name: 'AKShare', type: 'Python Service', baseURL: 'http://localhost:8000', status: 'online', latencyMs: 320, description: '主数据源，全维度采集服务' },
+  { id: 'tencent', name: '腾讯财经', type: 'HTTP REST', baseURL: MOCK_TENCENT_BASE_URL, status: 'online', latencyMs: 128, description: '实时行情、K线、板块资金流向' },
+  { id: 'sina', name: '新浪财经', type: 'HTTP REST', baseURL: MOCK_SINA_BASE_URL, status: 'online', latencyMs: 156, description: '实时行情、分时数据' },
+  { id: 'netease', name: '网易财经', type: 'HTTP REST', baseURL: MOCK_NETEASE_BASE_URL, status: 'unknown', latencyMs: 0, description: '历史K线、财务数据' },
+  { id: 'akshare', name: 'AKShare', type: 'Python Service', baseURL: MOCK_AKSHARE_BASE_URL, status: 'online', latencyMs: 320, description: '主数据源，全维度采集服务' },
   { id: 'mock', name: 'Mock 数据源', type: '本地 Mock', baseURL: 'mock://local', status: 'online', latencyMs: 5, description: '本地 Mock，用于开发与测试' },
 ]
 
@@ -101,7 +107,7 @@ interface FetcherLog {
 }
 
 const MOCK_FETCHER_LOGS: FetcherLog[] = [
-  { id: 'F1', time: '09:21:05', level: 'info', source: 'akshare', message: 'AKShare 服务连接成功，baseURL=http://localhost:8000' },
+  { id: 'F1', time: '09:21:05', level: 'info', source: 'akshare', message: `AKShare 服务连接成功，baseURL=${MOCK_AKSHARE_BASE_URL}` },
   { id: 'F2', time: '09:21:03', level: 'info', source: 'tencent', message: '腾讯财经数据源连通，延迟 128ms' },
   { id: 'F3', time: '09:20:58', level: 'warn', source: 'netease', message: '网易财经接口响应缓慢，建议降级处理' },
   { id: 'F4', time: '09:20:50', level: 'info', source: 'sina', message: '新浪财经数据源连通，延迟 156ms' },

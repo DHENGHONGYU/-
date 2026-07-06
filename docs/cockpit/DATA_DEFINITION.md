@@ -1,5 +1,5 @@
-> **Version**: v1.1.0  
-> **Last Updated**: 2026-06-26  
+> **Version**: v1.2.0  
+> **Last Updated**: 2026-07-06  
 > **Maintainer**: 架构资产治理官
 
 # Cockpit Widget 框架数据字典
@@ -14,7 +14,7 @@
 
 ### 1.1 MarketData — 标准化市场数据
 
-**来源**: `src/types/modules/widget.types.ts:61-86`
+**来源**: `src/types/modules/widget.types.ts:63-92`
 **用途**: 所有 Widget 统一消费的数据接口，由 MarketDataAdapter 转换后提供
 
 | 字段 | 类型 | 必填 | 描述 |
@@ -31,6 +31,8 @@
 | `modelComparison` | `ModelComparison` | 是 | AI 大模型对比数据 |
 | `stockPool` | `StockPool` | 是 | 股票池管理与监控数据 |
 | `chatHistory` | `ChatHistory` | 是 | 个股深度分析 / 市场分析聊天数据 |
+| `hotSectors` | `HotSectorData[]` | 是 | 热门板块策略评分数据 |
+| `valuePit` | `ValuePitData[]` | 是 | 价值洼地策略评分数据 |
 
 ### 1.2 MarketIndexData — 大盘指数数据
 
@@ -53,6 +55,7 @@
 | `code` | `string` | 是 | 板块代码 |
 | `changePercent` | `number` | 是 | 涨跌幅（%） |
 | `turnover` | `string` | 否 | 成交额 |
+| `fundFlow` | `number \| null` | 否 | 资金流向（净流入为正，净流出为负，null 表示无数据） |
 
 ### 1.4 FundFlowData — 资金流向数据
 
@@ -228,6 +231,33 @@
 | `content` | `string` | 是 | 消息内容（Markdown 格式） |
 | `timestamp` | `number` | 是 | 消息时间戳 |
 
+### 1.21A HotSectorData — 热门板块策略评分
+
+**来源**: `src/types/modules/widget.types.ts:337-354`
+**用途**: 热门板块策略评分数据，用于驾驶舱 Widget 展示
+
+| 字段 | 类型 | 必填 | 描述 |
+|------|------|------|------|
+| `symbol` | `string` | 是 | 股票代码 |
+| `name` | `string` | 是 | 股票名称 |
+| `score` | `number` | 是 | 综合评分 0-5 |
+| `action` | `'immediate' \| 'probe' \| 'ignore'` | 是 | 动作建议 |
+| `dimensions` | `{ momentum: number; sentiment: number; technical: number; valuation: number; composite: number }` | 是 | 五维评分 |
+
+### 1.21B ValuePitData — 价值洼地策略评分
+
+**来源**: `src/types/modules/widget.types.ts:357-377`
+**用途**: 价值洼地候选、五维评分与轮动信号状态
+
+| 字段 | 类型 | 必填 | 描述 |
+|------|------|------|------|
+| `symbol` | `string` | 是 | 股票代码 |
+| `name` | `string` | 是 | 股票名称 |
+| `score` | `number` | 是 | 综合评分 0-5 |
+| `action` | `'immediate' \| 'probe' \| 'wait' \| 'ignore'` | 是 | 动作建议 |
+| `rotationSignal` | `boolean` | 是 | 轮动信号是否触发 |
+| `dimensions` | `{ catalyst: number; valuation: number; chip: number; rotation: number; liquidity: number; composite: number }` | 是 | 六维评分 |
+
 ### 1.22 DataSourceConfig — Widget 数据源配置
 
 | 字段 | 类型 | 必填 | 描述 |
@@ -317,6 +347,15 @@
 | `kaiScore` | KAI 综合评分 | analysis | `KaiScoreWidget.tsx` |
 | `modelCompare` | 大模型对比 | analysis | `ModelCompareWidget.tsx` |
 | `stockChat` | 深度分析助手 | analysis | `StockChatWidget.tsx` |
+| `hotSector` | 热门板块策略 | strategy | `HotSectorWidget.tsx` |
+| `valuePit` | 价值洼地策略 | strategy | `ValuePitWidget.tsx` |
+| `agentPerformance` | 智能体性能追踪 | 系统监控 | `AgentPerformanceWidget.tsx` |
+| `engineStatus` | 引擎状态监控 | 系统监控 | `EngineStatusWidget.tsx` |
+| `systemArchitecture` | 系统架构视图 | 系统监控 | `SystemArchitectureWidget.tsx` |
+| `pnlAnalysis` | 盈亏分析 | 交易分析 | `PnLAnalysisWidget.tsx` |
+| `positionControl` | 仓位控制 | 投资组合 | `PositionControlWidget.tsx` |
+| `riskMonitor` | 风险监控 | 系统监控 | `RiskMonitorWidget.tsx` |
+| `signalMonitor` | 信号监控 | 交易分析 | `SignalMonitorWidget.tsx` |
 
 ---
 
@@ -552,3 +591,4 @@
 | 日期 | 版本 | 变更内容 | 变更人 |
 |------|------|----------|--------|
 | 2026-06-26 | v1.0.0 | 初始创建，覆盖 Widget 框架全部类型定义（28 个接口）与枚举常量（16 组） | Architecture Asset Governor |
+| 2026-07-06 | v1.2.0 | MarketData +2 字段（hotSectors/valuePit）；SectorHeatmapData +1 字段（fundFlow）；新增 HotSectorData/ValuePitData 接口；Widget 注册表 12→21 | Architecture Asset Governor |

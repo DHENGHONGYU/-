@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @module missingReportDetector.test
  * @description 缺失报告检测器单元测试（E-2-6）
  */
@@ -42,7 +42,7 @@ describe('missingReportDetector', () => {
   describe('detect', () => {
     it('detects a missing report when enabled', async () => {
       vi.mocked(missingReportStore.listBySymbol).mockResolvedValue([])
-      vi.mocked(missingReportStore.report).mockResolvedValue({ success: true, data: {} as any })
+      vi.mocked(missingReportStore.report).mockImplementation(async (r) => ({ success: true, data: { ...r, id: 1 } as any }))
       const report = await detect('600000', MISSING_REPORT_TYPE.RESEARCH, '缺少研报', { now: 5_000 })
       expect(report).toBeDefined()
       expect(report!.symbol).toBe('600000')
@@ -77,7 +77,7 @@ describe('missingReportDetector', () => {
 
     it('uses custom severity when provided', async () => {
       vi.mocked(missingReportStore.listBySymbol).mockResolvedValue([])
-      vi.mocked(missingReportStore.report).mockResolvedValue({ success: true, data: {} as any })
+      vi.mocked(missingReportStore.report).mockImplementation(async (r) => ({ success: true, data: { ...r, id: 1 } as any }))
       const report = await detect('600000', MISSING_REPORT_TYPE.EARNINGS, '缺少财报', {
         now: 5_000,
         severity: MISSING_REPORT_SEVERITY.CRITICAL,
@@ -100,7 +100,7 @@ describe('missingReportDetector', () => {
   describe('listBySeverity', () => {
     it('returns reports by severity', async () => {
       vi.mocked(missingReportStore.listBySeverity).mockResolvedValue([
-        { id: 1, symbol: '600000', reportType: MISSING_REPORT_TYPE.RESEARCH, severity: MISSING_REPORT_SEVERITY.CRITICAL, reason: '缺少研报', detectedAt: 4_000, retryCount: 0 },
+        { id: 1, symbol: '600000', reportType: MISSING_REPORT_TYPE.RESEARCH, severity: MISSING_REPORT_SEVERITY.CRITICAL, reason: '缺少研报', detectedAt: 4_000, retryCount: 0, createdAt: 4_000 },
       ])
       const result = await listBySeverity(MISSING_REPORT_SEVERITY.CRITICAL)
       expect(result).toHaveLength(1)

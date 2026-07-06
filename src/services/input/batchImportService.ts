@@ -236,8 +236,10 @@ export async function parseJsonFile(file: File): Promise<BulkImportRow[]> {
     for (const item of rawList.slice(0, INPUT_CONFIG.bulkImport.maxRows)) {
       if (item && typeof item === 'object') {
         const obj = item as Record<string, unknown>
-        const code = String((obj.code ?? obj.symbol ?? '')).trim()
-        const name = String((obj.name ?? '')).trim()
+        const rawCode = obj.code ?? obj.symbol ?? ''
+        const code = (typeof rawCode === 'string' ? rawCode : JSON.stringify(rawCode)).trim()
+        const rawName = obj.name ?? ''
+        const name = (typeof rawName === 'string' ? rawName : JSON.stringify(rawName)).trim()
         if (STOCK_CODE_PATTERN.test(code)) {
           const exchange = detectExchange(code)
           results.push({

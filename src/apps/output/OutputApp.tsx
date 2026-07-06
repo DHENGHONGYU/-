@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
-import { Route, Routes } from 'react-router'
+import React, { useEffect, useRef, useState } from 'react'
+import { useLocation } from 'react-router'
 import { Download } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { Select, SelectItem } from '@/components/ui/Select'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 import {
   useOutputStore,
   selectExportData,
@@ -12,12 +13,37 @@ import {
   selectIsExporting,
 } from '@/store/outputStore'
 import { toSafeString } from '@/lib/safeCoerce'
+import { getLogger } from '@/lib/logger'
+
+const logger = getLogger()
+
+/**
+ * 导出数据预览的最大显示长度（字符数）。
+ * 超出此长度的数据将截断显示，避免大量 DOM 文本节点导致渲染卡顿。
+ * 与项目 MAX_CONTENT_LENGTH 保持一致。
+ */
+const MAX_PREVIEW_LENGTH = 50000
 
 const OutputHubPage = React.lazy(() => import('@/pages/output/OutputHubPage'))
 const ResearchReportPage = React.lazy(() => import('@/pages/output/ResearchReportPage'))
 const TradeReviewPage = React.lazy(() => import('@/pages/output/TradeReviewPage'))
 
 // ---------- simple JSON -> CSV conversion ----------
+
+/**
+ * 防止 CSV 公式注入：当值以 = + - @ \t \r 开头时，添加前导单引号 '。
+ * Excel/WPS 会将前导单引号视为文本标记而不显示，从而避免值被解释为公式。
+ * 参考 OWASP CSV Injection 防护建议。
+ */
+const CSV_FORMULA_PREFIXES = new Set(['=', '+', '-', '@', '\t', '\r'])
+
+function sanitizeCsvValue(val: unknown): string {
+  const str = String(val)
+  if (str.length > 0 && CSV_FORMULA_PREFIXES.has(str.charAt(0))) {
+    return `'${str}`
+  }
+  return str
+}
 
 function jsonToCsv(jsonStr: string): string {
   try {
@@ -27,7 +53,9 @@ function jsonToCsv(jsonStr: string): string {
       const headers = Object.keys(parsed[0] as Record<string, unknown>)
       const rows = parsed.map((row: Record<string, unknown>) =>
         headers.map((h) => {
-          const val = toSafeString(row[h])
+          let val = toSafeString(row[h])
+          // 防止 CSV 公式注入
+          val = sanitizeCsvValue(val)
           // Escape commas and quotes in values
           return val.includes(',') || val.includes('"') || val.includes('\n')
             ? `"${val.replace(/"/g, '""')}"`
@@ -62,8 +90,12 @@ function DataExportPanel(): React.JSX.Element {
     const a = document.createElement('a')
     a.href = url
     a.download = `v9-export-${new Date().toISOString().slice(0, 10)}.${format}`
+    // Firefox 需要 <a> 在 DOM 中才能触发下载；Chrome 也能正常工作
+    document.body.appendChild(a)
     a.click()
-    URL.revokeObjectURL(url)
+    document.body.removeChild(a)
+    // 延迟 revoke：某些浏览器下载是异步的，立即 revoke 可能导致下载失败
+    setTimeout(() => URL.revokeObjectURL(url), 0)
   }
 
   return (
@@ -88,7 +120,13 @@ function DataExportPanel(): React.JSX.Element {
             <Button
               variant="secondary"
               size="sm"
-              onClick={() => void handleExport()}
+              onClick={() => {
+                handleExport().catch((error) => {
+                  logger.error('[OutputApp] handleExport 未捕获的 rejection', {
+                    message: error instanceof Error ? error.message : String(error),
+                  })
+                })
+              }}
               disabled={isExporting}
             >
               {isExporting ? '导出中...' : '导出全部数据'}
@@ -102,9 +140,13 @@ function DataExportPanel(): React.JSX.Element {
           </div>
           {message && <p className="text-sm text-muted-foreground">{message}</p>}
           {exportData && (
-            <pre className="max-h-96 overflow-auto rounded-md bg-muted p-4 text-xs">
-              {exportData}
-            </pre>
+            <div>
+              <pre className="max-h-96 overflow-auto rounded-md bg-muted p-4 text-xs">
+                {exportData.length > MAX_PREVIEW_LENGTH
+                  ? `${exportData.slice(0, MAX_PREVIEW_LENGTH)}\n\n... [数据已截断，共 ${exportData.length} 字符，仅显示前 ${MAX_PREVIEW_LENGTH} 字符，请点击"下载数据"查看完整内容]`
+                  : exportData}
+              </pre>
+            </div>
           )}
         </CardContent>
       </Card>
@@ -114,15 +156,94 @@ function DataExportPanel(): React.JSX.Element {
 
 // ---------- App with sub-routes ----------
 
+/**
+ * 输出舱子路由分发
+ *
+ * @description
+ * 使用 useLocation + 条件渲染替代嵌套 <Routes>。
+ *
+ * 根因：React Router v7 在 descendant <Routes> 场景下，绝对路径匹配行为
+ * 与 v6 不一致。当 App.tsx 顶层已通过 <Route path="/output"> 匹配并渲染
+ * PortalShell → OutputApp 时，OutputApp 内部的 <Routes path="/output">
+ * 不会再次匹配当前 URL（证据：main 内容为空，OutputHubPage chunk 未请求）。
+ *
+ * 修复方案：直接读取 location.pathname 进行条件渲染，绕过 descendant
+ * Routes 的路径匹配问题。新增子页面仅需在此处追加 else-if 分支。
+ */
 export default function OutputApp(): React.JSX.Element {
+  const location = useLocation()
+  const path = location.pathname
+  const prevPathRef = useRef<string | null>(null)
+
+  // 路由切换检测：仅在 pathname 变化时记录切换事件与渲染状态
+  useEffect(() => {
+    const prevPath = prevPathRef.current
+    const isRouteChange = prevPath !== null && prevPath !== path
+
+    if (isRouteChange) {
+      logger.info('[OutputApp] 路由切换', { from: prevPath, to: path })
+    }
+
+    // 计算命中的分支与组件名（仅在路径变化时记录，避免 PortalShell 重渲染导致日志噪音）
+    let branch: string
+    let componentName: string
+    if (path === '/output/export') {
+      branch = 'export'
+      componentName = 'DataExportPanel'
+    } else if (path === '/output/research') {
+      branch = 'research'
+      componentName = 'ResearchReportPage'
+    } else if (path === '/output/review') {
+      branch = 'review'
+      componentName = 'TradeReviewPage'
+    } else if (path === '/output' || path === '/output/hub') {
+      branch = 'hub'
+      componentName = 'OutputHubPage'
+    } else {
+      // 未匹配的 /output/* 路径：记录警告，不渲染内容（由 App.tsx 的 NotFoundPage 处理）
+      branch = 'unknown'
+      componentName = 'null'
+      logger.warn('[OutputApp] 未识别的输出舱子路径', { path })
+    }
+
+    logger.info('[OutputApp] 渲染输出舱', {
+      path,
+      branch,
+      component: componentName,
+      // DataExportPanel 是同步导入；null 表示无内容渲染；其余均为 React.lazy
+      isLazy: componentName !== 'DataExportPanel' && componentName !== 'null',
+      isRouteChange,
+    })
+
+    prevPathRef.current = path
+  }, [path])
+
+  let content: React.ReactNode
+  if (path === '/output/export') {
+    content = <DataExportPanel />
+  } else if (path === '/output/research') {
+    content = <ResearchReportPage />
+  } else if (path === '/output/review') {
+    content = <TradeReviewPage />
+  } else if (path === '/output' || path === '/output/hub') {
+    // 输出舱首页
+    content = <OutputHubPage />
+  } else {
+    // 未识别的 /output/* 路径：不渲染内容（由 App.tsx 的 NotFoundPage 处理）
+    content = null
+  }
+
   return (
-    <React.Suspense fallback={<div className="p-4 text-sm text-muted-foreground">加载中...</div>}>
-      <Routes>
-        <Route path="/output" element={<OutputHubPage />} />
-        <Route path="/output/export" element={<DataExportPanel />} />
-        <Route path="/output/research" element={<ResearchReportPage />} />
-        <Route path="/output/review" element={<TradeReviewPage />} />
-      </Routes>
-    </React.Suspense>
+    <ErrorBoundary
+      fallback={
+        <div className="p-4 text-sm text-muted-foreground">
+          输出舱加载失败，请刷新页面重试。若问题持续，请检查网络连接后联系管理员。
+        </div>
+      }
+    >
+      <React.Suspense fallback={<div className="p-4 text-sm text-muted-foreground">加载中...</div>}>
+        {content}
+      </React.Suspense>
+    </ErrorBoundary>
   )
 }

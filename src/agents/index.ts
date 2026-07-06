@@ -30,6 +30,8 @@ export const AGENT_V6_SCORING: AgentConfig = {
   description: '执行 V6 九维评分计算，返回评分结果与因子明细',
   defaultTimeout: 30000,
   maxConcurrent: 5,
+  mcpServerName: 'scoring:v6',
+  defaultToolName: 'score_stock',
 }
 
 /** V4 行业评分 Agent */
@@ -39,6 +41,8 @@ export const AGENT_V4_INDUSTRIAL: AgentConfig = {
   description: '执行 V4 行业评分计算，返回行业强弱与板块轮动信号',
   defaultTimeout: 45000,
   maxConcurrent: 3,
+  mcpServerName: 'scoring:v6',
+  defaultToolName: 'analyze_hot_sector',
 }
 
 /** LLM 智能评分 Agent */
@@ -48,6 +52,8 @@ export const AGENT_LLM_INTelligent: AgentConfig = {
   description: '调用 LLM API 进行个股深度分析，返回智能评分与投资建议',
   defaultTimeout: 60000,
   maxConcurrent: 2,
+  mcpServerName: 'llm',
+  defaultToolName: 'chat_completion',
 }
 
 /** 数据采集 Agent */
@@ -57,6 +63,8 @@ export const AGENT_FETCHER: AgentConfig = {
   description: '执行股票基础数据/行情数据/财务数据的采集任务',
   defaultTimeout: 15000,
   maxConcurrent: 10,
+  mcpServerName: 'fetcher',
+  defaultToolName: 'fetch_stock_basic',
 }
 
 /** 新闻分析 Agent */
@@ -66,6 +74,8 @@ export const AGENT_NEWS_ANALYZER: AgentConfig = {
   description: '执行新闻情感分析、股票关联提取、热点识别任务',
   defaultTimeout: 20000,
   maxConcurrent: 5,
+  mcpServerName: 'news',
+  defaultToolName: 'fetch_news',
 }
 
 /** 默认 Agent 配置列表 */

@@ -7,6 +7,7 @@
 
 import { describe, test, expect } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { UI_TEXT } from '@/constants/uiText'
 import { IntelligentScoreExplanation } from '../IntelligentScoreExplanation'
 import type { IntelligentScore } from '@/data/types'
 
@@ -39,19 +40,19 @@ describe('IntelligentScoreExplanation', () => {
 
   test('error 状态展示错误', () => {
     render(<IntelligentScoreExplanation error="解释加载失败" />)
-    expect(screen.getByText(/解释加载失败/i)).toBeInTheDocument()
+    expect(screen.getByText(new RegExp(UI_TEXT.analysis.scoreExplanation.loadingFailed, 'i'))).toBeInTheDocument()
   })
 
   test('空结果展示 empty 状态', () => {
     render(<IntelligentScoreExplanation />)
-    expect(screen.getByText(/暂无评分解释/i)).toBeInTheDocument()
+    expect(screen.getByText(new RegExp(UI_TEXT.analysis.scoreExplanation.noData, 'i'))).toBeInTheDocument()
   })
 
   test('渲染雷达图与关键因子', () => {
     render(<IntelligentScoreExplanation result={createResult()} />)
     expect(document.querySelector('.recharts-responsive-container')).toBeInTheDocument()
-    expect(screen.getByText(/关键因子/i)).toBeInTheDocument()
-    expect(screen.getByText(/估值/i)).toBeInTheDocument()
+    expect(screen.getByText(new RegExp(UI_TEXT.analysis.factor.keyFactor, 'i'))).toBeInTheDocument()
+    expect(screen.getByText(new RegExp(UI_TEXT.analysis.factor.value, 'i'))).toBeInTheDocument()
   })
 
   test('思维链默认折叠，点击展开显示净化后的内容', async () => {
@@ -59,13 +60,13 @@ describe('IntelligentScoreExplanation', () => {
 
     const toggle = screen.getByRole('button', { name: /展开思维链/i })
     expect(toggle).toBeInTheDocument()
-    expect(screen.queryByText(/推理/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(new RegExp(UI_TEXT.analysis.news.reasoning, 'i'))).not.toBeInTheDocument()
     expect(screen.queryByText('<script>alert(1)</script>')).not.toBeInTheDocument()
 
     fireEvent.click(toggle)
 
     await waitFor(() => {
-      expect(screen.getByText(/推理/i)).toBeInTheDocument()
+      expect(screen.getByText(new RegExp(UI_TEXT.analysis.news.reasoning, 'i'))).toBeInTheDocument()
     })
     expect(screen.queryByText(/<script>/i)).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: /收起思维链/i })).toBeInTheDocument()

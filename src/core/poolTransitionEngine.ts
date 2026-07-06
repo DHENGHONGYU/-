@@ -87,3 +87,18 @@ export function transitionStatus(
   logger.info(`[PoolTransition] transitionStatus() success: from="${from}" → to="${to}"`)
   return to
 }
+
+export interface PoolTransitionOption {
+  value: ResearchStatus
+  label: string
+}
+
+/**
+ * 获取某状态的流转选项（纯计算函数，无数据 CRUD）
+ */
+export function getPoolTransitionOptions(status: ResearchStatus): PoolTransitionOption[] {
+  return getNextStatuses(status).map((value) => ({
+    value,
+    label: getTransitionLabel(status, value),
+  }))
+}

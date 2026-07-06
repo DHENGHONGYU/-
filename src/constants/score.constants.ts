@@ -4,7 +4,7 @@
  * 所有 UI 标签、配置阈值集中管理，避免组件层硬编码。
  */
 
-import type { ScoreTrendPeriod } from '@/services/analysis/scoreTrendService'
+import type { ScoreTrendPeriod } from '@/types/modules/score.types'
 
 export const SCORE_TREND_PERIOD_OPTIONS: { value: ScoreTrendPeriod; label: string }[] = [
   { value: 'week', label: '周' },

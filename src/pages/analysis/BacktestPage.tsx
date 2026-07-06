@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs'
 import { Download, RotateCcw, Play, BarChart3, TrendingUp, AlertCircle, Info } from 'lucide-react'
 import { useBacktestStore, type BacktestStrategy } from '@/store/backtestStore'
 import { STOCK_COLOR_MAPPING } from '@/constants/cockpit.constants'
-import { COLOR_TOKENS, CHART_PALETTE } from '@/constants/theme.tokens'
+import { COLOR_TOKENS, CHART_PALETTE, COLOR_SHADES, twText, twBorder } from '@/constants/theme.tokens'
 
 export default function BacktestPage(): React.JSX.Element {
   const { config, results, loading, error, setConfig, runBacktest, clearResults, exportReport } =
@@ -19,7 +19,7 @@ export default function BacktestPage(): React.JSX.Element {
   const [activeTab, setActiveTab] = useState('results')
 
   const handleRun = () => {
-    runBacktest()
+    void runBacktest()
   }
 
   const handleExport = async () => {
@@ -35,10 +35,10 @@ export default function BacktestPage(): React.JSX.Element {
     ? [
         { label: '总收益率', value: `${results.totalReturn.toFixed(2)}%`, color: results.totalReturn >= 0 ? STOCK_COLOR_MAPPING.UP_CLASS : STOCK_COLOR_MAPPING.DOWN_CLASS },
         { label: '年化收益率', value: `${results.annualizedReturn.toFixed(2)}%`, color: results.annualizedReturn >= 0 ? STOCK_COLOR_MAPPING.UP_CLASS : STOCK_COLOR_MAPPING.DOWN_CLASS },
-        { label: '最大回撤', value: `${results.maxDrawdown.toFixed(2)}%`, color: 'text-red-500' },
-        { label: '夏普比率', value: results.sharpeRatio.toFixed(2), color: results.sharpeRatio >= 1 ? 'text-green-500' : results.sharpeRatio >= 0 ? 'text-yellow-500' : 'text-red-500' },
-        { label: '胜率', value: `${results.winRate.toFixed(2)}%`, color: results.winRate >= 50 ? 'text-green-500' : 'text-red-500' },
-        { label: '交易次数', value: `${results.tradeCount}`, color: 'text-blue-500' },
+        { label: '最大回撤', value: `${results.maxDrawdown.toFixed(2)}%`, color: twText('red', 500) },
+        { label: '夏普比率', value: results.sharpeRatio.toFixed(2), color: results.sharpeRatio >= 1 ? twText('green', 500) : results.sharpeRatio >= 0 ? twText('yellow', 500) : twText('red', 500) },
+        { label: '胜率', value: `${results.winRate.toFixed(2)}%`, color: results.winRate >= 50 ? twText('green', 500) : twText('red', 500) },
+        { label: '交易次数', value: `${results.tradeCount}`, color: twText('blue', 500) },
       ]
     : []
 
@@ -132,10 +132,10 @@ export default function BacktestPage(): React.JSX.Element {
       </Card>
 
       {error && (
-        <Card className="border-red-500 bg-red-50/50">
+        <Card className={`${twBorder('red', 500)} ${COLOR_SHADES.red[50]}/50`}>
           <CardContent className="flex items-center gap-3">
-            <AlertCircle className="h-5 w-5 text-red-500" />
-            <span className="text-red-600">{error}</span>
+            <AlertCircle className={`h-5 w-5 ${twText('red', 500)}`} />
+            <span className={twText('red', 600)}>{error}</span>
           </CardContent>
         </Card>
       )}
@@ -156,7 +156,7 @@ export default function BacktestPage(): React.JSX.Element {
                 <TabsTrigger value="positions">持仓快照</TabsTrigger>
               )}
             </TabsList>
-            <Button variant="outline" onClick={handleExport}>
+            <Button variant="outline" onClick={() => void handleExport()}>
               <Download className="h-4 w-4 mr-2" />
               导出报告
             </Button>
@@ -180,12 +180,12 @@ export default function BacktestPage(): React.JSX.Element {
                   <CardTitle>净值曲线</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-64 bg-gradient-to-r from-green-50 to-red-50 rounded-lg p-4 overflow-hidden">
+                  <div className={`h-64 rounded-lg p-4 overflow-hidden ${COLOR_SHADES.green[50]}`}>
                     <svg viewBox={`0 0 ${results.pnlCurve.length} 100`} className="w-full h-full">
                       <defs>
                         <linearGradient id="pnlGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor="rgba(34, 197, 94, 0.3)" />
-                          <stop offset="100%" stopColor="rgba(34, 197, 94, 0)" />
+                          <stop offset="0%" stopColor={COLOR_TOKENS.success.hex} stopOpacity="0.3" />
+                          <stop offset="100%" stopColor={COLOR_TOKENS.success.hex} stopOpacity="0" />
                         </linearGradient>
                       </defs>
                       <path
@@ -245,7 +245,7 @@ export default function BacktestPage(): React.JSX.Element {
                         <TableCell className="font-medium">{trade.symbol}</TableCell>
                         <TableCell>
                           {/* 交易方向标签色（A股惯例：买入=红涨，卖出=绿跌） */}
-                          <Badge className={trade.direction === 'buy' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}>
+                          <Badge className={trade.direction === 'buy' ? `${COLOR_SHADES.red[100]} ${twText('red', 700)}` : `${COLOR_SHADES.green[100]} ${twText('green', 700)}`}>
                             {trade.direction === 'buy' ? '买入' : '卖出'}
                           </Badge>
                         </TableCell>

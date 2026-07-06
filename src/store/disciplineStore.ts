@@ -380,15 +380,15 @@ function _debouncedRecalculate(envelope: StandardEnvelope): void {
   if (_debounceTimer) {
     clearTimeout(_debounceTimer)
   }
-  _debounceTimer = setTimeout(() => {
-    _debounceTimer = null
-    logger.info('[disciplineStore] Debounced recalculate triggered', {
-      traceId: envelope.meta.traceId,
-      action: envelope.meta.action,
-      source: envelope.meta.source,
-    })
-    useDisciplineStore.getState().recalculate()
-  }, DEBOUNCE_MS)
+    _debounceTimer = setTimeout(() => {
+      _debounceTimer = null
+      logger.info('[disciplineStore] Debounced recalculate triggered', {
+        traceId: envelope.meta.traceId,
+        action: envelope.meta.action,
+        source: envelope.meta.source,
+      })
+      void useDisciplineStore.getState().recalculate()
+    }, DEBOUNCE_MS)
 }
 
 /**

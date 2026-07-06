@@ -10,6 +10,12 @@ import type { AgentTask } from './agentRuntime'
 
 const logger = getLogger()
 
+/** 默认健康检查间隔（毫秒） */
+const DEFAULT_CHECK_INTERVAL_MS = 30_000
+
+/** 警告阈值比例（相对于最大失败率） */
+const WARNING_THRESHOLD_RATIO = 0.5
+
 export interface HealthThresholds {
   maxFailureRate: number // 0.0 ~ 1.0
   maxAvgExecutionTime: number // ms
@@ -43,7 +49,7 @@ export class AgentHealthMonitor {
     logger.info('[AgentHealthMonitor] Initialized', { thresholds: this.thresholds })
   }
 
-  start(checkInterval = 30000): void {
+  start(checkInterval = DEFAULT_CHECK_INTERVAL_MS): void {
     if (this.running) {
       logger.warn('[AgentHealthMonitor] Already running')
       return
@@ -69,7 +75,7 @@ export class AgentHealthMonitor {
   }
 
   recordTask(task: AgentTask): void {
-    const list = this.tasks.get(task.agentId) || []
+    const list = this.tasks.get(task.agentId) ?? []
     list.push(task)
     // 保留最近 100 条记录
     if (list.length > 100) {
@@ -85,26 +91,26 @@ export class AgentHealthMonitor {
   }
 
   getHealthReport(agentId: string): AgentHealthReport | null {
-    const taskList = this.tasks.get(agentId) || []
+    const taskList = this.tasks.get(agentId) ?? []
     if (taskList.length === 0) return null
 
     const total = taskList.length
     const failures = taskList.filter((t) => t.status === 'failed' || t.status === 'timeout').length
     const failureRate = total > 0 ? failures / total : 0
 
-    const completedTasks = taskList.filter((t) => t.status === 'completed' && t.completedAt && t.startedAt)
+    const completedTasks = taskList.filter((t) => t.status === 'completed' && t.completedAt != null && t.startedAt != null)
     const avgExecutionTime =
       completedTasks.length > 0
         ? completedTasks.reduce((sum, t) => sum + (t.completedAt! - t.startedAt!), 0) / completedTasks.length
         : 0
 
-    const lastHeartbeat = this.heartbeats.get(agentId) || 0
+    const lastHeartbeat = this.heartbeats.get(agentId) ?? 0
     const consecutiveFailures = this._countConsecutiveFailures(taskList)
 
     let status: AgentHealthReport['status'] = 'healthy'
     if (failureRate > this.thresholds.maxFailureRate || consecutiveFailures >= 5) {
       status = 'critical'
-    } else if (failureRate > this.thresholds.maxFailureRate * 0.5 || avgExecutionTime > this.thresholds.maxAvgExecutionTime) {
+    } else if (failureRate > this.thresholds.maxFailureRate * WARNING_THRESHOLD_RATIO || avgExecutionTime > this.thresholds.maxAvgExecutionTime) {
       status = 'warning'
     }
 
@@ -170,9 +176,7 @@ export function createAgentHealthMonitor(thresholds?: Partial<HealthThresholds>)
 }
 
 export function getAgentHealthMonitor(): AgentHealthMonitor {
-  if (!monitorInstance) {
-    monitorInstance = new AgentHealthMonitor()
-  }
+  monitorInstance ??= new AgentHealthMonitor()
   return monitorInstance
 }
 

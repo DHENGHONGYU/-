@@ -13,6 +13,12 @@ import type { NewsArticle } from '@/data/types'
 import type { NewsFilterState } from '@/components/news/NewsFilterPanel'
 import { listNews, saveNewsArticles } from '@/services/news/newsService'
 import { generateMockArticles } from '@/services/news/newsService'
+import {
+  aggregateSentimentTrend,
+  extractStockOptions,
+  extractIndustryOptions,
+} from '@/services/news/sentimentTrendEngine'
+import type { SentimentTrendDimension, SentimentTrendSeries } from '@/types/modules/news.types'
 import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
@@ -22,6 +28,12 @@ export interface AnalysisNewsState {
   loading: boolean
   filter: NewsFilterState
   selectedArticle: NewsArticle | null
+  /** 情感趋势数据 */
+  sentimentTrend: SentimentTrendSeries | null
+  /** 股票选项列表 */
+  sentimentStockOptions: string[]
+  /** 行业选项列表 */
+  sentimentIndustryOptions: string[]
 
   // Actions
   setArticles: (articles: NewsArticle[]) => void
@@ -34,6 +46,8 @@ export interface AnalysisNewsState {
   // 整改背景：原 NewsPage 直接 import Service 函数，现通过 Store action 中转
   // 相关规范：docs/implementation/data-flow-spec.md 第5.1节
   generateMockArticles: () => Promise<void>
+  /** 计算情感趋势（封装 sentimentTrendEngine 的聚合与选项提取） */
+  computeSentimentTrend: (dimension: SentimentTrendDimension, value?: string) => void
 }
 
 const DEFAULT_FILTER: NewsFilterState = {
@@ -48,6 +62,9 @@ const initialState = {
   loading: false,
   filter: { ...DEFAULT_FILTER },
   selectedArticle: null as NewsArticle | null,
+  sentimentTrend: null as SentimentTrendSeries | null,
+  sentimentStockOptions: [] as string[],
+  sentimentIndustryOptions: [] as string[],
 }
 
 export const useAnalysisNewsStore = create<AnalysisNewsState>((set, get) => ({
@@ -108,5 +125,29 @@ export const useAnalysisNewsStore = create<AnalysisNewsState>((set, get) => ({
     } finally {
       set({ loading: false })
     }
+  },
+
+  computeSentimentTrend: (dimension, value) => {
+    const { articles } = get()
+    logger.info('[analysisNewsStore] computeSentimentTrend', { dimension, value, articleCount: articles.length })
+
+    const stockOptions = extractStockOptions(articles)
+    const industryOptions = extractIndustryOptions(articles)
+    const trend = aggregateSentimentTrend(articles, {
+      dimension,
+      value: value || undefined,
+      fillGaps: true,
+    })
+
+    set({
+      sentimentTrend: trend,
+      sentimentStockOptions: stockOptions,
+      sentimentIndustryOptions: industryOptions,
+    })
+    logger.info('[analysisNewsStore] computeSentimentTrend 完成', {
+      pointCount: trend.data.length,
+      stockOptions: stockOptions.length,
+      industryOptions: industryOptions.length,
+    })
   },
 }))

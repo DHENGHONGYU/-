@@ -84,7 +84,7 @@ export const L0MacroCalculator: LayerCalculator = {
 
     return {
       layerId: 'l0' as LayerId,
-      layerName: LAYER_LABELS.l0,
+      layerName: LAYER_LABELS.l0 ?? 'L0 STEEP 宏观扫描',
       score: Math.round(score * 100) / 100,
       summary,
       risks: subs.filter((s) => s.score <= V6_CALCULATOR_THRESHOLDS.L0_STEEP_NEGATIVE_THRESHOLD).map((s) => `${s.name}: ${s.evidence}`),
@@ -167,7 +167,7 @@ export const L1MoatCalculator: LayerCalculator = {
 
     return {
       layerId: 'l1' as LayerId,
-      layerName: LAYER_LABELS.l1,
+      layerName: LAYER_LABELS.l1 ?? 'L1 护城河分析',
       score: Math.round(score * 100) / 100,
       summary,
       risks: score < V6_CALCULATOR_THRESHOLDS.L1_MOAT_RISK_THRESHOLD ? ['护城河较弱，需关注竞争压力'] : [],
@@ -229,7 +229,7 @@ export const L2PeerCalculator: LayerCalculator = {
 
     return {
       layerId: 'l2' as LayerId,
-      layerName: LAYER_LABELS.l2,
+      layerName: LAYER_LABELS.l2 ?? 'L2 竞品格局',
       score: Math.round(score * 100) / 100,
       summary,
       risks: score < V6_CALCULATOR_THRESHOLDS.L2_PEER_RISK_THRESHOLD ? ['竞品格局偏弱，需关注竞争压力'] : [],
@@ -313,7 +313,15 @@ export function scoreScoreBoard(board: Record<string, number>, filters?: string[
     ? Object.keys(board).filter(k => filters.includes(k))
     : Object.keys(board)
   if (keys.length === 0) return 0
-  const sum = keys.reduce((s, k) => s + (board[k] ?? 0), 0)
+  const missingBoardKeys = keys.filter((k) => board[k] == null)
+  if (missingBoardKeys.length > 0) {
+    logger.warn('[l0_l1_l2] 评分板字段缺失，使用默认值', { field: missingBoardKeys.join(','), context: 'scoreScoreBoard' })
+  }
+  const sum = keys.reduce((s, k) => {
+    const raw = board[k]
+    const val = raw ?? 0
+    return s + val
+  }, 0)
   return Math.min(5, Math.max(1, sum / keys.length))
 }
 

@@ -1,6 +1,8 @@
 import { describe, expect, it, beforeEach } from 'vitest'
 import { dataLayer } from '@/data/dataLayer'
 import { db } from '@/data/db'
+import { dataBridge } from '@/core/databridge'
+import { STORE_NAME } from '@/config/dbConfig'
 import { generateSignalsForSymbol, pickStrongestSignal } from '@/services/trading/signalGenerator'
 import type { DailyQuotes, KlineBar, Stock } from '@/data/types'
 
@@ -45,6 +47,9 @@ describe('signalGenerator', () => {
   beforeEach(async () => {
     await db.init()
     await db.reset()
+    dataBridge.invalidateCache(STORE_NAME.stocks)
+    dataBridge.invalidateCache(STORE_NAME.dailyQuotes)
+    dataBridge.invalidateCache(STORE_NAME.signals)
   })
 
   it('returns watch signal when quotes are missing', async () => {

@@ -11,6 +11,8 @@
  *          MockCollector / RestCollector / WebSocketCollector 实现
  */
 
+import { DATA_COLLECTION_TIMEOUT_MS } from '@/config/timeouts'
+
 // ============================================================
 // 内联类型（避免 @/ 别名导入在 vite.config 上下文中无法解析）
 // ============================================================
@@ -704,7 +706,7 @@ export const MOCK_RAW_MARKET_DATA: RawMarketData[] = generateAllRawMarketData()
  */
 export function generateDefaultCollectorConfig(): CollectorConfig {
   return {
-    timeout: 10000,
+    timeout: DATA_COLLECTION_TIMEOUT_MS,
     retryCount: 3,
     retryInterval: 2000,
   }
@@ -715,7 +717,7 @@ export function generateDefaultCollectorConfig(): CollectorConfig {
  */
 export function generateMockCollectorConfig(): CollectorConfig & { minDelay: number; maxDelay: number; priceFluctuation: number; defaultSeed: string } {
   return {
-    timeout: 10000,
+    timeout: DATA_COLLECTION_TIMEOUT_MS,
     retryCount: 3,
     retryInterval: 2000,
     minDelay: 200,
@@ -730,7 +732,7 @@ export function generateMockCollectorConfig(): CollectorConfig & { minDelay: num
  */
 export function generateRestCollectorConfig(): CollectorConfig & { baseUrl: string; defaultHeaders: Record<string, string> } {
   return {
-    timeout: 10000,
+    timeout: DATA_COLLECTION_TIMEOUT_MS,
     retryCount: 3,
     retryInterval: 2000,
     baseUrl: '/api',
@@ -746,7 +748,7 @@ export function generateRestCollectorConfig(): CollectorConfig & { baseUrl: stri
  */
 export function generateWebSocketCollectorConfig(): CollectorConfig & { wsUrl: string; reconnectInterval: number; maxReconnectCount: number } {
   return {
-    timeout: 10000,
+    timeout: DATA_COLLECTION_TIMEOUT_MS,
     retryCount: 3,
     retryInterval: 2000,
     wsUrl: 'ws://localhost:8080/ws',
@@ -857,27 +859,29 @@ export function createMockTaskScheduler() {
 
     const dataType = dataTypeMap[task.widgetId] ?? 'indices'
 
-    const intervalId = setInterval(async () => {
-      try {
-        task.lastRun = Date.now()
-        task.runCount++
-        const rawData = await mockCollectorFetch(dataType)
-        task.successCount++
-        task.nextRun = Date.now() + task.dataSource.interval
+    const intervalId = setInterval(() => {
+      void (async () => {
+        try {
+          task.lastRun = Date.now()
+          task.runCount++
+          const rawData = await mockCollectorFetch(dataType)
+          task.successCount++
+          task.nextRun = Date.now() + task.dataSource.interval
 
-        // 通知订阅者
-        subscribers.forEach((cb) => {
-          try {
-            cb({ taskId, widgetId: task.widgetId, instanceId: task.instanceId, data: rawData })
-          } catch {
-            /* ignore subscriber errors */
-          }
-        })
-      } catch (err) {
-        task.failCount++
-        task.error = err instanceof Error ? err.message : String(err)
-      }
-      tasks.set(taskId, { ...task })
+          // 通知订阅者
+          subscribers.forEach((cb) => {
+            try {
+              cb({ taskId, widgetId: task.widgetId, instanceId: task.instanceId, data: rawData })
+            } catch {
+              /* ignore subscriber errors */
+            }
+          })
+        } catch (err) {
+          task.failCount++
+          task.error = err instanceof Error ? err.message : String(err)
+        }
+        tasks.set(taskId, { ...task })
+      })()
     }, task.dataSource.interval)
 
     intervalIds.set(taskId, intervalId)

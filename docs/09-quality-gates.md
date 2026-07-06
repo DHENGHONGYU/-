@@ -1,8 +1,8 @@
 # 09. 质量门禁
 
 > **Status**: Current  
-> **Version**: v1.2.0  
-> **Last Updated**: 2026-06-29
+> **Version**: v2.5.0  
+> **Last Updated**: 2026-07-05
 >
 > 本文档定义 V9 的上线前质量门禁、CI 流水线、测试策略与扫描脚本。  
 > 目标读者：开发者、QA、发布负责人。
@@ -17,7 +17,7 @@
 |---|--------|----------|------|-----------|
 | 1 | TypeScript 类型检查 | ✅ 通过 | 0 errors | `tsc --noEmit` |
 | 2 | ESLint 代码规范 | ✅ 通过 | 0 warnings/errors | `npm run lint` |
-| 3 | 单元测试 | ✅ 通过 | 0 失败（291/291 passed） | `npm run test` |
+| 3 | 单元测试 | 🟡 部分通过 | 198/236 passed（38 failed） | `npm run test` |
 | 4 | 生产构建 | ✅ 通过 | 产物生成成功 | `npm run build` |
 | 5 | 跨层调用审计 | ✅ 已建立，当前 0 违规 / 0 警告 | 0 违规 | `npm run audit:layers` |
 | 6 | 硬编码审计 | 🟡 已建立，基线 749 处问题（Critical 398 / Major 351） | 0 硬编码阈值/颜色 | `npm run audit:hardcode` |

@@ -19,6 +19,7 @@ export class DataBridgeAdapter {
   private bridge: DataBridge
   private config: DataBridgeAdapterConfig
   private pendingQueries = new Map<string, { resolve: (r: BridgeQueryResult) => void; reject: (e: Error) => void }>()
+  private activeSubscriptions: Array<() => void> = []
 
   constructor(config: DataBridgeAdapterConfig = {}) {
     this.config = {
@@ -99,14 +100,31 @@ export class DataBridgeAdapter {
 
   subscribe(channel: string, callback: (envelope: StandardEnvelope) => void): () => void {
     logger.debug(`[DataBridgeAdapter] subscribe() channel="${channel}"`)
-    return eventBus.on(channel, callback as (payload: unknown) => void)
+    const unsubscribe = eventBus.on(channel, callback as (payload: unknown) => void)
+    // 追踪活跃订阅，destroy 时统一清理
+    this.activeSubscriptions.push(unsubscribe)
+    return () => {
+      unsubscribe()
+      const idx = this.activeSubscriptions.indexOf(unsubscribe)
+      if (idx !== -1) this.activeSubscriptions.splice(idx, 1)
+    }
   }
 
   getStats() {
     return {
       pendingQueries: this.pendingQueries.size,
+      activeSubscriptions: this.activeSubscriptions.length,
       enableFallbackQueue: this.config.enableFallbackQueue,
     }
+  }
+
+  /**
+   * 清理所有活跃 EventBus 订阅，防止内存泄漏。
+   */
+  destroySubscriptions(): void {
+    this.activeSubscriptions.forEach((unsub) => unsub())
+    this.activeSubscriptions = []
+    logger.info('[DataBridgeAdapter] All subscriptions cleaned up')
   }
 }
 
@@ -127,6 +145,9 @@ export function getDataBridgeAdapter(): DataBridgeAdapter {
 }
 
 export function destroyDataBridgeAdapter(): void {
+  if (adapterInstance) {
+    adapterInstance.destroySubscriptions()
+  }
   adapterInstance = null
   logger.info('[DataBridgeAdapter] Instance destroyed')
 }

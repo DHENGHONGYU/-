@@ -13,9 +13,10 @@
  */
 
 import React, { type ReactNode } from 'react'
-import { Navigate, useLocation } from 'react-router'
+import { Navigate, Route, useLocation } from 'react-router'
 import { getLogger } from '@/lib/logger'
 import { MODULE_ID } from '@/config/dbConfig'
+import { ROUTE_WHITELIST } from '@/config/routes'
 
 const logger = getLogger()
 
@@ -69,9 +70,14 @@ const ALLOWED_ROUTE_CATEGORIES: ReadonlyArray<string> = [
  * 检查是否拥有指定权限
  */
 export const hasPermission: PermissionChecker = (ctx): boolean => {
-  // Route 级：检查模块是否在路由白名单中
+  // Route 级：检查模块是否在路由白名单中，同时验证路径合法性
   if (ctx.level === 'route') {
-    return ALLOWED_ROUTE_CATEGORIES.includes(ctx.module)
+    if (!ALLOWED_ROUTE_CATEGORIES.includes(ctx.module)) return false
+    // 若提供了 storeName（此处复用为路径前缀），检查是否在 ROUTE_WHITELIST 中
+    if (ctx.storeName && ROUTE_WHITELIST.size > 0 && !ROUTE_WHITELIST.has(ctx.storeName)) {
+      return false
+    }
+    return true
   }
 
   // Module 级：检查模块是否已注册
@@ -177,9 +183,6 @@ export function GuardedRoute({
     />
   )
 }
-
-// 需要从 react-router 导入 Route
-import { Route } from 'react-router'
 
 // ============================================================================
 // 初始化：注册默认按钮权限规则

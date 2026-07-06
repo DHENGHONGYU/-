@@ -520,7 +520,7 @@ export function matchStocksToSectors(stocks: Array<{ symbol: string; name: strin
   }));
 
   for (const stock of stocks) {
-    const tags = stock.conceptTags || [];
+    const tags = stock.conceptTags ?? [];
     const nameLower = stock.name.toLowerCase();
 
     for (const sector of SECTORS_WITH_SCORES) {
@@ -563,7 +563,7 @@ export function getSectorPoolStocks(
     .filter((s) =>
       sector.keyStocks.some((ks) => ks.symbol === s.symbol)
     )
-    .map((s) => ({ ...s, v6Composite: s.v6Composite || 0 }));
+    .map((s) => ({ ...s, v6Composite: s.v6Composite ?? 0 }));
 }
 
 /** 三维度评分说明 */

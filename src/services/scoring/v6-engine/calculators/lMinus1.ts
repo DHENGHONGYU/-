@@ -93,7 +93,7 @@ export const LMinus1Calculator: LayerCalculator & { matchIndustry: typeof matchI
 
       return {
         layerId: 'lMinus1' as LayerId,
-        layerName: LAYER_LABELS.lMinus1,
+        layerName: LAYER_LABELS.lMinus1 ?? 'L-1 行业评分估值',
         score: Math.round(score * 100) / 100,
         summary: `${industryScore.sectorName} | SKILL-C ${industryScore.skillCRating}(${industryScore.skillCScore}) | SKILL-N ${industryScore.skillNScore} | 关联度 ${industryScore.relevance}`,
         risks: [],
@@ -110,7 +110,7 @@ export const LMinus1Calculator: LayerCalculator & { matchIndustry: typeof matchI
       logger.info(`[L-1] ${stock.symbol}: 不在7行业覆盖范围，L-1不纳入`)
       return {
         layerId: 'lMinus1' as LayerId,
-        layerName: LAYER_LABELS.lMinus1,
+        layerName: LAYER_LABELS.lMinus1 ?? 'L-1 行业评分估值',
         score: 0,
         summary: '不在7行业覆盖范围（CoWoS/芯片设计/机器人/量子计算/AI应用/航天星链/创新药），L-1不纳入综合评分',
         risks: [],
@@ -125,7 +125,7 @@ export const LMinus1Calculator: LayerCalculator & { matchIndustry: typeof matchI
     if (!sectorData) {
       return {
         layerId: 'lMinus1' as LayerId,
-        layerName: LAYER_LABELS.lMinus1,
+        layerName: LAYER_LABELS.lMinus1 ?? 'L-1 行业评分估值',
         score: 0,
         summary: `匹配到行业 ${matched.sectorName} 但无评分数据`,
         risks: [],
@@ -143,7 +143,7 @@ export const LMinus1Calculator: LayerCalculator & { matchIndustry: typeof matchI
 
     return {
       layerId: 'lMinus1' as LayerId,
-      layerName: LAYER_LABELS.lMinus1,
+      layerName: LAYER_LABELS.lMinus1 ?? 'L-1 行业评分估值',
       score: Math.round(score * 100) / 100,
       summary: `${matched.sectorName} | ${sectorData.skillCRating} | SKILL-C ${sectorData.skillC} | SKILL-N ${sectorData.skillN} | ${sectorData.allocationBias}`,
       risks: [],

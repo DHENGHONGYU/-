@@ -408,6 +408,7 @@ export async function detectRotationSignals(
         symbol: score.symbol,
         direction: 'buy',
         type: 'buy_rotation',
+        strategy: 'rotation',
         confidence: Math.min(1, Math.round(score.score) / 5),
         rationale: `轮动信号触发：量比 ${volumeRatio.toFixed(2)}，价格/MA20 ${priceToMA20.toFixed(3)}，板块资金因子 ${latestRotation?.f2Zijin ?? 0}`,
         snapshot: {

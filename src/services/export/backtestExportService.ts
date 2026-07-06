@@ -5,8 +5,10 @@
  * PDF / Excel 第三方库采用动态导入（import()），仅在导出触发时加载，减少主包体积。
  */
 
-import type { BacktestConfig, BacktestResult, BacktestTrade } from '@/store/backtestStore'
 import type {
+  BacktestConfig,
+  BacktestResult,
+  BacktestTrade,
   BacktestDailyValue,
   BacktestExcelSheets,
   BacktestExportConfig,

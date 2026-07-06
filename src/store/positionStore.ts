@@ -16,13 +16,8 @@
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'
-// @note [DF-003] 数据流违规：Store 直接 import 并引用其他 Store
-// 违规类型：Store 跨 Store 直接访问（应通过 selector 或中间层）
-// 当前状态：positionStore 作为派生 Store，订阅 orderStore 状态计算仓位数据
-// 整改计划：v0.9.16 评估是否通过 dataLayer 事件总线或 selector 模式解耦
-// 相关规范：docs/implementation/data-flow-spec.md 第2.5节
-import { useOrderStore } from '@/store/orderStore'
-import { refreshCoordinator } from '@/core/refreshCoordinator'
+import { eventBus } from '@/lib/eventBus'
+import { getOrders } from '@/services/trading/tradingService'
 import type { Order } from '@/data/types'
 import { PIE_CHART_PALETTE } from '@/config/chartColors'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
@@ -160,21 +155,22 @@ export const usePositionStore = create<PositionState>((set) => ({
     set({ loading: true, error: null })
 
     try {
-      // 通过 RefreshCoordinator 等待 orderStore 刷新完成，
-      // 避免 orderStore 正在刷新时 positionStore 读到过期订单数据
-      await refreshCoordinator.waitFor('orderStore')
-      // 复用 orderStore，避免重复读取 dataLayer
-      await useOrderStore.getState().refresh()
-      const orders = useOrderStore.getState().orders
-      const result = aggregateOrders(orders)
+      // P1-E Store 拆分修复：通过 services/trading/tradingService 读取订单，
+      // 不再直接订阅 orderStore 内存状态，解除 Store-to-Store 耦合。
+      const result = await getOrders()
+      if (!result.success) {
+        throw new Error(result.error ?? '获取订单失败')
+      }
+      const orders = result.data ?? []
+      const aggregated = aggregateOrders(orders)
       set({
-        ...result,
+        ...aggregated,
         loading: false,
         lastUpdated: Date.now(),
       })
       logger.info('[positionStore] refresh 完成', {
-        holdings: result.holdings.length,
-        totalValue: result.totalValue,
+        holdings: aggregated.holdings.length,
+        totalValue: aggregated.totalValue,
       })
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
@@ -209,8 +205,9 @@ export const usePositionStore = create<PositionState>((set) => ({
 
 // OrderStore 订阅生命周期
 // ============================================================
-// 由组件层 useEffect 调用 init，返回的 cleanup 函数中取消订阅
-// 避免模块级副作用导致的 HMR 重复订阅和内存泄漏
+// P1-E Store 拆分修复：不再直接订阅 useOrderStore 的 Zustand 状态，
+// 改为订阅 EventBus 的 ORDERS_CHANGED 事件，实现 Store 间解耦。
+// 由组件层 useEffect 调用 init，返回的 cleanup 函数中取消订阅。
 
 let _unsubscribeOrders: (() => void) | null = null
 let _debounceTimer: ReturnType<typeof setTimeout> | null = null
@@ -219,36 +216,34 @@ let _isRefreshing = false
 /** 去抖合并窗口（毫秒）：高频订单变化合并为一次重算 */
 const DEBOUNCE_MS = 200
 
-/** 初始化 OrderStore 内存状态订阅，当 orders 变化时自动重新派生持仓 */
+/** 初始化订单变更事件订阅，当 orders 变化时自动重新派生持仓 */
 export function initPositionStoreSubscriptions(): () => void {
   if (_unsubscribeOrders) {
     logger.warn('[positionStore] Subscriptions already initialized, skipping')
     return _unsubscribeOrders
   }
 
-  _unsubscribeOrders = useOrderStore.subscribe(
-    (state) => state.orders,
-    (orders) => {
-      logger.info('[positionStore] OrderStore orders changed, scheduling debounced recompute', {
-        orders: orders.length,
-      })
-      if (_debounceTimer) {
-        clearTimeout(_debounceTimer)
+  const handleOrdersChanged = () => {
+    logger.info('[positionStore] ORDERS_CHANGED event received, scheduling debounced recompute')
+    if (_debounceTimer) {
+      clearTimeout(_debounceTimer)
+    }
+    _debounceTimer = setTimeout(() => {
+      _debounceTimer = null
+      if (_isRefreshing) {
+        logger.debug('[positionStore] recomputeFromOrders skipped: isRefreshing is true')
+        return
       }
-      _debounceTimer = setTimeout(() => {
-        _debounceTimer = null
-        if (_isRefreshing) {
-          logger.debug('[positionStore] recomputeFromOrders skipped: isRefreshing is true')
-          return
-        }
-        _isRefreshing = true
-        usePositionStore.getState().recomputeFromOrders(orders)
+      _isRefreshing = true
+      void usePositionStore.getState().refresh().finally(() => {
         _isRefreshing = false
-      }, DEBOUNCE_MS)
-    },
-  )
+      })
+    }, DEBOUNCE_MS)
+  }
 
-  logger.info('[positionStore] OrderStore subscriptions initialized (debounce=200ms)')
+  _unsubscribeOrders = eventBus.on(EVENT_NAMES.ORDERS_CHANGED, handleOrdersChanged)
+
+  logger.info('[positionStore] ORDERS_CHANGED event subscription initialized (debounce=200ms)')
 
   return () => {
     if (_debounceTimer) {
@@ -258,6 +253,6 @@ export function initPositionStoreSubscriptions(): () => void {
     _unsubscribeOrders?.()
     _unsubscribeOrders = null
     _isRefreshing = false
-    logger.info('[positionStore] OrderStore subscriptions destroyed')
+    logger.info('[positionStore] ORDERS_CHANGED event subscription destroyed')
   }
 }

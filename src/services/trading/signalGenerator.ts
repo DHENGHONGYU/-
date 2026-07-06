@@ -3,6 +3,7 @@ import type { SignalDirection } from '@/config/tradingConfig'
 import { dataLayer } from '@/data/dataLayer'
 import type { DailyQuotes, KlineBar, Signal, SignalSnapshot } from '@/data/types'
 import { generateId } from '@/data/db'
+import { SIGNAL_GENERATOR_THRESHOLDS } from '@/config/thresholds'
 
 export type TradingSignal = Signal
 
@@ -13,8 +14,8 @@ function computeMA(values: number[], period: number): number | undefined {
 }
 
 function computeRSI14(closes: number[]): number | undefined {
-  if (closes.length < 15) return undefined
-  const window = closes.slice(-15)
+  if (closes.length < SIGNAL_GENERATOR_THRESHOLDS.RSI_MIN_CLOSES) return undefined
+  const window = closes.slice(-(SIGNAL_GENERATOR_THRESHOLDS.RSI_MIN_CLOSES + 1))
   let gains = 0
   let losses = 0
   for (let i = 1; i < window.length; i++) {
@@ -28,15 +29,15 @@ function computeRSI14(closes: number[]): number | undefined {
 }
 
 function computeVolumeRatio(history: KlineBar[]): number | undefined {
-  if (history.length < 21) return undefined
+  if (history.length < SIGNAL_GENERATOR_THRESHOLDS.VOLUME_RATIO_MIN_BARS) return undefined
   const recent = history[history.length - 1]!.volume
-  const avg = history.slice(-21, -1).reduce((sum, bar) => sum + bar.volume, 0) / 20
+  const avg = history.slice(-(SIGNAL_GENERATOR_THRESHOLDS.VOLUME_RATIO_MIN_BARS), -1).reduce((sum, bar) => sum + bar.volume, 0) / (SIGNAL_GENERATOR_THRESHOLDS.VOLUME_RATIO_MIN_BARS - 1)
   if (avg === 0) return undefined
   return recent / avg
 }
 
 function computeMACDDirection(closes: number[]): 'red' | 'green' | 'neutral' {
-  if (closes.length < 35) return 'neutral'
+  if (closes.length < SIGNAL_GENERATOR_THRESHOLDS.MACD_MIN_CLOSES) return 'neutral'
   const ema = (values: number[], period: number): number => {
     const k = 2 / (period + 1)
     let result: number = values[0]!
@@ -89,6 +90,7 @@ function generateBuySignals(snapshot: SignalSnapshot): TradingSignal[] {
       symbol: '',
       direction: 'buy',
       type: 'buy_dip',
+      strategy: 'signal',
       confidence: 0.55,
       rationale: `价格低于 MA20 ${(snapshot.priceToMA20 * 100).toFixed(1)}%，RSI14 ${snapshot.rsi14.toFixed(1)} 处于超卖区间`,
       snapshot,
@@ -109,6 +111,7 @@ function generateBuySignals(snapshot: SignalSnapshot): TradingSignal[] {
       symbol: '',
       direction: 'buy',
       type: 'buy_pivot',
+      strategy: 'signal',
       confidence: 0.65,
       rationale: `价格站上 MA20，量比 ${snapshot.volumeRatio.toFixed(2)}，MACD 红柱`,
       snapshot,
@@ -139,6 +142,7 @@ function generateSellSignals(
       symbol: '',
       direction: 'sell',
       type: 'sell_profit_taking',
+      strategy: 'signal',
       confidence: 0.55,
       rationale: `价格高于 MA20 ${(snapshot.priceToMA20 * 100).toFixed(1)}%，RSI14 ${snapshot.rsi14.toFixed(1)} 处于超买区间`,
       snapshot,
@@ -154,6 +158,7 @@ function generateSellSignals(
       symbol: '',
       direction: 'sell',
       type: 'sell_trailing_stop',
+      strategy: 'signal',
       confidence: 0.7,
       rationale: `从近期高点 ${highest.toFixed(2)} 回撤 ${(((highest - latest) / highest) * 100).toFixed(1)}%`,
       snapshot,
@@ -185,6 +190,7 @@ export async function generateSignalsForSymbol(
         symbol: normalized,
         direction: 'watch',
         type: 'watch',
+        strategy: 'signal',
         confidence: 0.1,
         rationale: '行情数据不足，保持观察',
         snapshot: {},
@@ -217,6 +223,7 @@ export async function generateSignalsForSymbol(
       symbol: normalized,
       direction: 'buy',
       type: 'composite_buy',
+      strategy: 'signal',
       confidence: Math.min(1, baseConfidence + 0.2 * (buyCount - 1)),
       rationale: `共振：同时触发 ${buyCount} 个买入信号`,
       snapshot,
@@ -231,6 +238,7 @@ export async function generateSignalsForSymbol(
       symbol: normalized,
       direction: 'sell',
       type: 'composite_sell',
+      strategy: 'signal',
       confidence: Math.min(1, baseConfidence + 0.2 * (sellCount - 1)),
       rationale: `共振：同时触发 ${sellCount} 个卖出信号`,
       snapshot,
@@ -244,6 +252,7 @@ export async function generateSignalsForSymbol(
       symbol: normalized,
       direction: 'hold',
       type: 'hold',
+      strategy: 'signal',
       confidence: 0.15,
       rationale: '无明确信号，建议持有/观望',
       snapshot,

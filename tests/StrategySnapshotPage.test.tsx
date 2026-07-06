@@ -3,7 +3,9 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router'
 import { db } from '@/data/db'
+import { dataBridge } from '@/core/databridge'
 import { dataLayer } from '@/data/dataLayer'
+import { STORE_NAME } from '@/config/dbConfig'
 import type { RotationSectorScore, Stock, V6Score } from '@/data/types'
 import {
   saveStrategySnapshot,
@@ -85,6 +87,9 @@ describe('StrategySnapshotPage', () => {
   beforeEach(async () => {
     await db.init()
     await db.reset()
+    dataBridge.invalidateCache(STORE_NAME.stocks)
+    dataBridge.invalidateCache(STORE_NAME.v6Scores)
+    dataBridge.invalidateCache(STORE_NAME.rotationScores)
   })
 
   it('renders tabs', () => {

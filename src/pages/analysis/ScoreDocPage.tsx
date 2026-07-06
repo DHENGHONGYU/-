@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
@@ -11,78 +11,53 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/Breadcrumb'
-import {
-  exportSymbolMd,
-  getRecentVersions,
-} from '@/services/analysis/scoreDocService'
-import { listStocks } from '@/services/stockpool/stockpoolService'
 import ScoreDocVersionTable from '@/components/scoreDoc/ScoreDocVersionTable'
-import type { ScoreDocVersion, Stock } from '@/data/types'
+import { useScoreDocStore } from '@/store/scoreDocStore'
+import { getLogger } from '@/lib/logger'
 
-function downloadFile(content: string, filename: string): void {
-  const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' })
-  const url = URL.createObjectURL(blob)
-  const link = document.createElement('a')
-  link.href = url
-  link.download = filename
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
-  URL.revokeObjectURL(url)
-}
+const logger = getLogger()
 
 export default function ScoreDocPage(): React.JSX.Element {
-  const [symbol, setSymbol] = useState('')
-  const [stocks, setStocks] = useState<Stock[]>([])
-  const [versions, setVersions] = useState<ScoreDocVersion[]>([])
-  const [loading, setLoading] = useState(false)
+  // 从 Store 获取状态
+  const symbol = useScoreDocStore((s) => s.symbol)
+  const stocks = useScoreDocStore((s) => s.stocks)
+  const versions = useScoreDocStore((s) => s.versions)
+  const loading = useScoreDocStore((s) => s.loading)
+  const error = useScoreDocStore((s) => s.error)
 
+  // 从 Store 获取 actions
+  const setSymbol = useScoreDocStore((s) => s.setSymbol)
+  const loadStocks = useScoreDocStore((s) => s.loadStocks)
+  const loadVersions = useScoreDocStore((s) => s.loadVersions)
+  const refresh = useScoreDocStore((s) => s.refresh)
+  const exportAll = useScoreDocStore((s) => s.exportAll)
+
+  // 初始化加载股票列表
   useEffect(() => {
-    void listStocks().then((result) => {
-      if (result.success && result.data) {
-        setStocks(result.data)
-      }
-    })
-  }, [])
+    logger.info('[ScoreDocPage] 初始化，加载股票列表')
+    void loadStocks()
+  }, [loadStocks])
 
+  // symbol 变化时加载版本列表
   useEffect(() => {
     if (!symbol) {
-      setVersions([])
+      logger.info('[ScoreDocPage] symbol 为空，清空版本列表')
       return
     }
-
-    setLoading(true)
-    void getRecentVersions(symbol)
-      .then((result) => {
-        if (result.success && result.data) {
-          setVersions(result.data)
-        }
-      })
-      .finally(() => {
-        setLoading(false)
-      })
-  }, [symbol])
+    logger.info('[ScoreDocPage] symbol 变化，加载版本列表', { symbol })
+    void loadVersions()
+  }, [symbol, loadVersions])
 
   const handleRefresh = (): void => {
     if (!symbol) return
-    setLoading(true)
-    void getRecentVersions(symbol)
-      .then((result) => {
-        if (result.success && result.data) {
-          setVersions(result.data)
-        }
-      })
-      .finally(() => {
-        setLoading(false)
-      })
+    logger.info('[ScoreDocPage] 手动刷新版本列表', { symbol })
+    void refresh()
   }
 
   const handleExportAll = async (): Promise<void> => {
     if (!symbol || versions.length === 0) return
-    const result = await exportSymbolMd(symbol)
-    if (result.success && result.data) {
-      downloadFile(result.data, `${symbol}_score_docs.md`)
-    }
+    logger.info('[ScoreDocPage] 导出全部 Markdown', { symbol, versionCount: versions.length })
+    await exportAll()
   }
 
   return (
@@ -144,6 +119,10 @@ export default function ScoreDocPage(): React.JSX.Element {
               导出全部 Markdown
             </Button>
           </div>
+
+          {error && (
+            <p className="text-sm text-destructive">{error}</p>
+          )}
 
           {!symbol ? (
             <p className="text-muted-foreground">请选择股票代码</p>

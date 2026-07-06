@@ -1,10 +1,11 @@
 # AI 中心 Vue3 组件示例
 
+> **注意**：`src/services/ai-center/mockAICenterProvider.ts` 已于 2026-07-05 作为零引用死代码删除。本文档中的代码示例仍保留 `MockAICenterProvider` 引用作为模式参考，实际开发中应替换为真实 Provider 或统一 Mock 开关。
+>
 > 配套文件：
 > - `src/constants/ai-center.constants.ts`
 > - `src/constants/health.constants.ts`
 > - `src/types/modules/ai-center.types.ts`
-> - `src/services/ai-center/mockAICenterProvider.ts`
 > - `docs/AI_CENTER_DATA_DEFINITION.md`
 >
 > 规范：**组件内禁止出现任何硬编码状态、颜色、标签、轮询间隔**。所有 UI 元信息必须从 constants 文件读取。

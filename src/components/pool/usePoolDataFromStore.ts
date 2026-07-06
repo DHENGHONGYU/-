@@ -14,8 +14,8 @@ import { useCallback, useMemo, useState } from 'react'
 import { usePoolStore } from '@/store/poolStore'
 import { getLogger } from '@/lib/logger'
 import { RESEARCH_STATUS, type ResearchStatus } from '@/config/dbConfig'
-import { getPoolLabel, getNextStatuses, getTransitionLabel } from '@/core/poolTransitionEngine'
-import type { PoolGroup, PoolTransitionOption } from '@/services/stockpool/stockpoolService'
+import { getPoolLabel, getNextStatuses, getTransitionLabel, type PoolTransitionOption } from '@/core/poolTransitionEngine'
+import type { PoolGroup } from '@/services/stockpool/stockpoolService'
 
 const logger = getLogger()
 

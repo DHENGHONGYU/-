@@ -1,23 +1,19 @@
 /**
  * V6 评分引擎类型层
  *
- * 定义 LayerId、LayerInput、LayerScore、CompositeScore、AuditTrail 等核心类型。
+ * 定义 LayerInput、LayerScore、CompositeScore、AuditTrail 等核心类型。
  */
 
 import type { Stock, DailyQuotes } from '@/data/types'
-import type { ChipLevel, V6ScoreEngineConfig } from './config'
+import type { ChipLevel, V6ScoreEngineConfig, LayerId } from '@/types/modules/engine.types'
 
-// ============================================================
-// 层 ID 定义
-// ============================================================
+// Re-export types for backward compatibility
+export type { LayerId } from '@/types/modules/engine.types'
 
-/** 所有分析层 ID */
-export const ALL_LAYER_IDS = [
-  'lMinus1', 'l0', 'l1', 'l2', 'l3f', 'l3v',
-  'l4', 'l5', 'l6', 'l7', 'l8',
-] as const
-
-export type LayerId = typeof ALL_LAYER_IDS[number]
+/** 所有层 ID 常量 */
+export const ALL_LAYER_IDS: LayerId[] = [
+  'lMinus1', 'l0', 'l1', 'l2', 'l3f', 'l3v', 'l4', 'l5', 'l6', 'l7', 'l8',
+]
 
 /** 层标签映射 */
 export const LAYER_LABELS: Record<LayerId, string> = {

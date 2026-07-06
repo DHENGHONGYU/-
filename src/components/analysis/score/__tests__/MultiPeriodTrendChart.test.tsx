@@ -6,6 +6,7 @@
 
 import { describe, test, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
+import { UI_TEXT } from '@/constants/uiText'
 import { MultiPeriodTrendChart } from '../MultiPeriodTrendChart'
 import type { ScoreTrendData } from '@/services/analysis/scoreTrendService'
 
@@ -72,7 +73,7 @@ describe('MultiPeriodTrendChart', () => {
     )
 
     expect(document.querySelector('.recharts-responsive-container')).toBeInTheDocument()
-    expect(screen.getByText(/波动/i)).toBeInTheDocument()
+    expect(screen.getByText(new RegExp(UI_TEXT.analysis.factor.volatility, 'i'))).toBeInTheDocument()
   })
 
   test('loading 状态展示加载 UI', () => {
@@ -100,7 +101,7 @@ describe('MultiPeriodTrendChart', () => {
       />,
     )
 
-    expect(screen.getByText(/加载失败/i)).toBeInTheDocument()
+    expect(screen.getByText(new RegExp(UI_TEXT.common.error, 'i'))).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: /重试/i }))
     expect(onRetry).toHaveBeenCalled()
   })
@@ -114,6 +115,6 @@ describe('MultiPeriodTrendChart', () => {
       />,
     )
 
-    expect(screen.getByText(/暂无趋势数据/i)).toBeInTheDocument()
+    expect(screen.getByText(new RegExp(UI_TEXT.analysis.trend.noData, 'i'))).toBeInTheDocument()
   })
 })

@@ -169,24 +169,24 @@ describe('AclEngine', () => {
       ).not.toThrow()
     })
 
-    it('对 orders 没有 WRITE 权限（敏感业务数据）', () => {
+    it('对 orders 有 WRITE 权限（系统模块完整访问）', () => {
       expect(() =>
         engine.assert({
           module: MODULE_ID.system,
           store: STORE_NAME.orders,
           operation: DB_OPERATION.insert,
         }),
-      ).toThrow(AclError)
+      ).not.toThrow()
     })
 
-    it('没有 DELETE 操作权限', () => {
+    it('有 DELETE 操作权限（系统模块完整访问）', () => {
       expect(() =>
         engine.assert({
           module: MODULE_ID.system,
           store: STORE_NAME.localDocs,
           operation: DB_OPERATION.delete,
         }),
-      ).toThrow(AclError)
+      ).not.toThrow()
     })
 
     it('对 executionPlans 有 UPDATE 权限（执行计划跟踪）', () => {

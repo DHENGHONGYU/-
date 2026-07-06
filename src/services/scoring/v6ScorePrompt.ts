@@ -8,6 +8,9 @@
 import type { LlmMessage } from '@/services/llm/llmTypes'
 import type { Stock } from '@/data/types'
 
+/** 已有因子评分为空时的兜底文案 */
+const DEFAULT_NO_FACTORS = '无'
+
 export interface V6ScorePromptInput {
   symbol: string
   stock: Stock | undefined
@@ -74,7 +77,7 @@ ROE: ${stock.roe ?? '未知'}
 ${stockInfo}
 
 ## 已有因子评分
-${factorsInfo || '无'}
+${factorsInfo || DEFAULT_NO_FACTORS}
 
 ## K线统计
 ${quoteInfo}

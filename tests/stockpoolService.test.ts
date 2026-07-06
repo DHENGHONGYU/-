@@ -1,7 +1,8 @@
 import { describe, expect, it, beforeEach } from 'vitest'
 import { dataLayer } from '@/data/dataLayer'
+import { dataBridge } from '@/core/databridge'
 import { db } from '@/data/db'
-import { DEFAULT_POOL_GROUP, RESEARCH_STATUS } from '@/config/dbConfig'
+import { DEFAULT_POOL_GROUP, RESEARCH_STATUS, STORE_NAME } from '@/config/dbConfig'
 import {
   getPoolGroups,
   getPoolTransitionOptions,
@@ -15,6 +16,7 @@ describe('stockpoolService', () => {
   beforeEach(async () => {
     await db.init()
     await db.reset()
+    dataBridge.invalidateCache(STORE_NAME.stocks)
   })
 
   it('should transition candidate to screened', async () => {

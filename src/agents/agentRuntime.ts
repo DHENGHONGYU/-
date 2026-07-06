@@ -9,6 +9,8 @@ export interface AgentConfig {
   description: string
   defaultTimeout: number
   maxConcurrent: number
+  mcpServerName?: string
+  defaultToolName?: string
 }
 
 export interface AgentTask {
@@ -119,17 +121,29 @@ export class AgentRuntime {
   }
 
   private async runAgent(agentId: string, task: AgentTask, signal: AbortSignal): Promise<unknown> {
-    logger.debug(`[AgentRuntime] runAgent() executing: agentId="${agentId}", taskId="${task.id}"`)
+    logger.info(`[AgentRuntime] runAgent() executing via MCP: agentId="${agentId}", taskId="${task.id}"`)
 
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    const agent = this.agents.get(agentId)
+    if (!agent) throw new Error(`Agent not found: ${agentId}`)
+
+    const { mcpBridge } = await import('@/mcp/bridge')
+    const serverName = agent.mcpServerName ?? agentId
+    const toolName = agent.defaultToolName ?? task.type
+    const result = await mcpBridge.callTool(serverName, toolName, task.payload as Record<string, unknown>)
 
     if (signal.aborted) {
       logger.debug(`[AgentRuntime] runAgent() aborted: taskId="${task.id}"`)
       throw new Error('Task aborted')
     }
 
-    logger.debug(`[AgentRuntime] runAgent() completed: taskId="${task.id}"`)
-    return { success: true, data: {}, agentId, taskId: task.id }
+    if (result.isError) {
+      const errorText = result.content[0]?.text ?? 'Unknown MCP error'
+      logger.error('[AgentRuntime] MCP call failed', { serverName, toolName, error: errorText })
+      throw new Error(`MCP call failed: ${errorText}`)
+    }
+
+    logger.info(`[AgentRuntime] MCP call completed: ${serverName}.${toolName}`)
+    return { success: true, serverName, toolName, result }
   }
 
   async executeParallel(tasks: Array<{ agentId: string; type: string; payload: unknown; timeout?: number }>): Promise<AgentTask[]> {

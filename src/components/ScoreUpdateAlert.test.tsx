@@ -12,6 +12,7 @@
 
 import { describe, expect, it, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
+import { UI_TEXT } from '@/constants/uiText'
 import { ScoreUpdateAlert } from '@/components/ScoreUpdateAlert'
 
 describe('ScoreUpdateAlert', () => {
@@ -23,7 +24,7 @@ describe('ScoreUpdateAlert', () => {
 
   it('尚未评分时显示"尚未评分"', () => {
     render(<ScoreUpdateAlert lastScoredAt={undefined} onRefresh={onRefresh} />)
-    expect(screen.getByText('尚未评分')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.score.notScored)).toBeInTheDocument()
     expect(screen.getByText(/建议每周至少运行两次大模型评分/)).toBeInTheDocument()
   })
 
@@ -65,7 +66,7 @@ describe('ScoreUpdateAlert', () => {
   it('一周内显示评分较新提示', () => {
     const threeDaysAgo = Date.now() - (3 * 24 * 60 * 60 * 1000)
     render(<ScoreUpdateAlert lastScoredAt={threeDaysAgo} onRefresh={onRefresh} />)
-    expect(screen.getByText(/评分较新/)).toBeInTheDocument()
+    expect(screen.getByText(new RegExp(UI_TEXT.analysis.score.isFresh))).toBeInTheDocument()
   })
 
   it('刷新按钮在超期状态下触发 onRefresh', () => {

@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { PoolList } from '@/components/pool/PoolList'
 import { DEFAULT_POOL_GROUP } from '@/config/dbConfig'
 import type { Stock } from '@/data/types'
+import { UI_TEXT } from '@/constants/uiText'
 
 const mockStocks: Stock[] = [
   {
@@ -82,7 +83,7 @@ describe('PoolList', () => {
       />,
     )
 
-    expect(screen.getByText('核心持仓')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.trading.strategy.coreHoldings)).toBeInTheDocument()
     expect(screen.getByText(DEFAULT_POOL_GROUP)).toBeInTheDocument()
   })
 

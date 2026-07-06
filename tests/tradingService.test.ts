@@ -1,5 +1,6 @@
 import { describe, expect, it, beforeEach } from 'vitest'
 import { dataLayer } from '@/data/dataLayer'
+import { dataBridge } from '@/core/databridge'
 import { db, generateId } from '@/data/db'
 import {
   adviseForStock,
@@ -9,7 +10,7 @@ import {
   getWatchlistStocks,
   scanWatchingSignals,
 } from '@/services/trading/tradingService'
-import { ORDER_DIRECTION } from '@/config/dbConfig'
+import { ORDER_DIRECTION, STORE_NAME } from '@/config/dbConfig'
 import type { DailyQuotes, KlineBar, Order, Stock } from '@/data/types'
 
 function buildHistory(count: number, factory: (i: number) => KlineBar): KlineBar[] {
@@ -118,6 +119,9 @@ describe('tradingService', () => {
   beforeEach(async () => {
     await db.init()
     await db.reset()
+    dataBridge.invalidateCache(STORE_NAME.stocks)
+    dataBridge.invalidateCache(STORE_NAME.dailyQuotes)
+    dataBridge.invalidateCache(STORE_NAME.orders)
   })
 
   describe('getWatchlistStocks', () => {

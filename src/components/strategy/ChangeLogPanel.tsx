@@ -1,3 +1,4 @@
+import { twText } from '@/constants/theme.tokens'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import type { StrategySnapshot } from '@/data/types'
@@ -66,7 +67,7 @@ export function ChangeLogPanel({ snapshot }: ChangeLogPanelProps): React.JSX.Ele
                   <span>
                     {change.symbol} {change.name}
                   </span>
-                  <span className={change.delta >= 0 ? 'text-emerald-600' : 'text-red-600'}>
+                  <span className={change.delta >= 0 ? twText('emerald', 600) : twText('red', 600)}>
                     {change.delta >= 0 ? '+' : ''}
                     {change.delta.toFixed(2)}
                   </span>

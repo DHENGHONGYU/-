@@ -20,6 +20,7 @@
 
 import { describe, expect, it, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
+import { UI_TEXT } from '@/constants/uiText'
 import { ErrorState } from '@/components/ui/ErrorState'
 
 describe('ErrorState', () => {
@@ -56,7 +57,7 @@ describe('ErrorState', () => {
       />,
     )
     // errorCode=network 强制使用"网络错误"标题 + 默认消息
-    expect(screen.getByText('网络错误')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.errors.networkErrorShort)).toBeInTheDocument()
     expect(
       screen.getByText('网络连接失败，请检查您的网络设置'),
     ).toBeInTheDocument()
@@ -70,13 +71,13 @@ describe('ErrorState', () => {
 
   it('errorCode=business 显示业务错误信息（使用 error 内容）', () => {
     render(<ErrorState error="数据格式错误" errorCode="business" />)
-    expect(screen.getByText('操作失败')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.errors.operationFailed)).toBeInTheDocument()
     expect(screen.getByText('数据格式错误')).toBeInTheDocument()
   })
 
   it('errorCode 缺失时根据 error 关键词自动推断为 network', () => {
     render(<ErrorState error="NetworkError: fetch failed" />)
-    expect(screen.getByText('网络错误')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.errors.networkErrorShort)).toBeInTheDocument()
   })
 
   it('errorCode 缺失时根据 error 关键词自动推断为 timeout', () => {
@@ -86,7 +87,7 @@ describe('ErrorState', () => {
 
   it('errorCode 缺失时根据 error 关键词自动推断为 network（断网关键词）', () => {
     render(<ErrorState error="断网了" />)
-    expect(screen.getByText('网络错误')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.errors.networkErrorShort)).toBeInTheDocument()
   })
 
   it('error 为 string 类型时正确显示', () => {
@@ -139,12 +140,12 @@ describe('ErrorState', () => {
   it('自定义 title 覆盖默认标题', () => {
     render(<ErrorState error="失败" title="自定义标题" />)
     expect(screen.getByText('自定义标题')).toBeInTheDocument()
-    expect(screen.queryByText('操作失败')).not.toBeInTheDocument()
+    expect(screen.queryByText(UI_TEXT.errors.operationFailed)).not.toBeInTheDocument()
   })
 
   it('未知 error 类型显示默认消息', () => {
     render(<ErrorState error="" />)
-    expect(screen.getByText('操作失败')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.errors.operationFailed)).toBeInTheDocument()
   })
 
   it('className 合并到外层 wrapper', () => {

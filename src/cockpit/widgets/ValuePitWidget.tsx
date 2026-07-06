@@ -6,6 +6,7 @@ import { Progress } from '@/components/ui/Progress'
 import { useOptionalMarketData } from '@/cockpit/providers/MarketDataProvider'
 import type { WidgetConfig, ValuePitData } from '@/types/modules/widget.types'
 import { SCORE_LEVELS } from '@/constants/cockpit.constants'
+import { COLOR_TOKENS, twBg } from '@/constants/theme.tokens'
 
 interface ValuePitWidgetProps {
   config: WidgetConfig
@@ -67,7 +68,7 @@ export default function ValuePitWidget({ config, data }: ValuePitWidgetProps): R
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-3">
         <CardTitle className="text-base font-semibold flex items-center gap-2">
-          <Gem className="h-4 w-4 text-blue-500" />
+          <Gem className={`h-4 w-4 ${COLOR_TOKENS.info.tailwind}`} />
           {config.title}
         </CardTitle>
       </CardHeader>
@@ -93,7 +94,7 @@ export default function ValuePitWidget({ config, data }: ValuePitWidgetProps): R
                       </span>
                       <Badge variant={action.variant}>{action.label}</Badge>
                       {item.rotationSignal && (
-                        <Badge variant="default" className="bg-green-600">
+                        <Badge variant="default" className={twBg('green', 600)}>
                           轮动信号
                         </Badge>
                       )}

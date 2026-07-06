@@ -1,8 +1,8 @@
 # 04. UI/UX 规范
 
 > **Status**: Current  
-> **Version**: v0.9.0-migration-implemented  
-> **Last Updated**: 2026-06-25
+> **Version**: v2.5.0  
+> **Last Updated**: 2026-07-05
 >
 > **设计参考**：https://hslqownhhwaig.ok.kimi.link/  
 > **设计特征**：PWA 移动端优先、shadcn/ui 组件体系、HSL CSS 变量主题、widget 化驾驶舱、翡翠绿强调色。

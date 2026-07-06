@@ -1,8 +1,8 @@
 # 01. 愿景与目标
 
 > **Status**: Current  
-> **Version**: v0.9.0-migration-implemented  
-> **Last Updated**: 2026-06-25
+> **Version**: v2.5.0  
+> **Last Updated**: 2026-07-05
 
 ## 1.1 系统愿景
 

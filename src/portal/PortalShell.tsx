@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router'
 import {
   LayoutDashboard,
@@ -15,6 +15,14 @@ import {
   Newspaper,
   BookOpen,
   Scale,
+  Bot,
+  Zap,
+  List,
+  Sparkles,
+  GitBranch,
+  Workflow,
+  MessageSquare,
+  Server,
   type LucideIcon,
 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
@@ -22,17 +30,18 @@ import { cn } from '@/lib/utils'
 import { PageSkeleton } from '@/components/PageSkeleton'
 import { useWorkflowStore, type CabinType } from '@/store/workflowStore'
 import { checkFetcherHealth } from '@/services/fetcher/fetcherService'
+import { getLogger } from '@/lib/logger'
+
+const logger = getLogger()
 
 const InputApp = React.lazy(() => import('@/apps/input/InputApp'))
 const AnalysisApp = React.lazy(() => import('@/apps/analysis/AnalysisApp'))
 const TradingApp = React.lazy(() => import('@/apps/trading/TradingApp'))
 const OutputApp = React.lazy(() => import('@/apps/output/OutputApp'))
 const CommandApp = React.lazy(() => import('@/apps/command/CommandApp'))
+const AgentApp = React.lazy(() => import('@/apps/command/AgentApp'))
 
-const InputHubPage = React.lazy(() => import('@/pages/input/InputHubPage'))
-const AnalysisHubPage = React.lazy(() => import('@/pages/analysis/AnalysisHubPage'))
-const TradingHubPage = React.lazy(() => import('@/pages/trading/TradingHubPage'))
-const CommandHubPage = React.lazy(() => import('@/pages/command/CommandHubPage'))
+const MCPServerDashboardPage = React.lazy(() => import('@/pages/command/MCPServerDashboardPage'))
 
 const CABIN_APPS: Record<CabinType, React.LazyExoticComponent<React.ComponentType<unknown>>> = {
   input: InputApp,
@@ -40,14 +49,6 @@ const CABIN_APPS: Record<CabinType, React.LazyExoticComponent<React.ComponentTyp
   trading: TradingApp,
   output: OutputApp,
   command: CommandApp,
-}
-
-const HUB_APPS: Record<CabinType, React.LazyExoticComponent<React.ComponentType<unknown>>> = {
-  input: InputHubPage,
-  analysis: AnalysisHubPage,
-  trading: TradingHubPage,
-  output: OutputApp,
-  command: CommandHubPage,
 }
 
 const CABINS: { id: CabinType; label: string; emoji: string; path: string }[] = [
@@ -75,7 +76,7 @@ const PANEL_ITEMS: Record<CabinType, PanelGroup[]> = {
     {
       group: '模块',
       items: [
-        { key: 'input-hub', label: '输入舱首页', path: '/input/hub', icon: LayoutDashboard },
+        { key: 'input-hub', label: '输入舱首页', path: '/input', icon: LayoutDashboard },
       ],
     },
     {
@@ -96,7 +97,7 @@ const PANEL_ITEMS: Record<CabinType, PanelGroup[]> = {
     {
       group: '模块',
       items: [
-        { key: 'analysis-hub', label: '分析舱首页', path: '/analysis/hub', icon: BarChart3 },
+        { key: 'analysis-hub', label: '分析舱首页', path: '/analysis', icon: BarChart3 },
       ],
     },
     {
@@ -116,7 +117,7 @@ const PANEL_ITEMS: Record<CabinType, PanelGroup[]> = {
     {
       group: '模块',
       items: [
-        { key: 'trading-hub', label: '交易舱首页', path: '/trading/hub', icon: TrendingUp },
+        { key: 'trading-hub', label: '交易舱首页', path: '/trading', icon: TrendingUp },
       ],
     },
     {
@@ -130,10 +131,17 @@ const PANEL_ITEMS: Record<CabinType, PanelGroup[]> = {
   ],
   output: [
     {
+      group: '模块',
+      items: [
+        { key: 'output-hub', label: '输出舱首页', path: '/output', icon: LayoutDashboard },
+      ],
+    },
+    {
       group: '输出',
       items: [
-        { key: 'reports', label: '研究报告', path: '/output', icon: FileText },
-        { key: 'reviews', label: '交易复盘', path: '/output', icon: TrendingUp },
+        { key: 'reports', label: '研究报告', path: '/output/research', icon: FileText },
+        { key: 'reviews', label: '交易复盘', path: '/output/review', icon: TrendingUp },
+        { key: 'export', label: '数据导出', path: '/output/export', icon: Database },
       ],
     },
   ],
@@ -141,41 +149,83 @@ const PANEL_ITEMS: Record<CabinType, PanelGroup[]> = {
     {
       group: '模块',
       items: [
-        { key: 'command-hub', label: '总控舱首页', path: '/command/hub', icon: Settings },
+        { key: 'command-hub', label: '总控舱首页', path: '/command', icon: Settings },
       ],
     },
     {
       group: '总控',
       items: [
-        { key: 'monitor', label: '系统监控', path: '/command', icon: Activity },
-        { key: 'settings', label: '配置管理', path: '/command', icon: Settings },
+        { key: 'monitor', label: '系统监控', path: '/command/monitor', icon: Activity },
+        { key: 'settings', label: '配置管理', path: '/command/config', icon: Settings },
+      ],
+    },
+    {
+      group: '智能体',
+      items: [
+        { key: 'agent-hub', label: '智能体总控台', path: '/command/agents', icon: Bot },
+        { key: 'agent-registry', label: '智能体注册表', path: '/command/agents/registry', icon: Bot },
+        { key: 'agent-trigger', label: '任务触发', path: '/command/agents/trigger', icon: Zap },
+        { key: 'agent-tasks', label: '任务列表', path: '/command/agents/tasks', icon: List },
+        { key: 'agent-custom', label: '自定义智能体', path: '/command/agents/custom', icon: Bot },
+        { key: 'agent-llm', label: 'LLM 管理', path: '/command/agents/llm', icon: Sparkles },
+        { key: 'agent-capability-graph', label: '能力图谱', path: '/command/agents/capability-graph', icon: GitBranch },
+        { key: 'agent-dag-scheduler', label: 'DAG 调度器', path: '/command/agents/dag-scheduler', icon: Workflow },
+        { key: 'agent-feedback', label: '反馈控制台', path: '/command/agents/feedback', icon: MessageSquare },
+      ],
+    },
+    {
+      group: 'MCP 服务',
+      items: [
+        { key: 'mcp-servers', label: 'MCP Server 管理', path: '/command/mcp-servers', icon: Server },
       ],
     },
   ],
 }
 
 function isActivePath(pathname: string, path: string): boolean {
-  return pathname === path || pathname.startsWith(`${path}/`)
+  if (pathname === path) return true
+  // 仅对真正的父级入口（如 /command/agents）允许前缀匹配
+  // 避免子路径按钮（如 /command/config）被父路径（/command）前缀匹配同时高亮
+  // /command 是舱室根入口，由 isActivePath 的精确匹配分支处理
+  if (path === '/command') return false
+  return pathname.startsWith(`${path}/`)
 }
 
 export default function PortalShell(): React.JSX.Element {
   const location = useLocation()
   const navigate = useNavigate()
-  const { activeCabin, setActiveCabin } = useWorkflowStore()
+  const { setActiveCabin } = useWorkflowStore()
   const [fetcherOk, setFetcherOk] = useState<boolean | null>(null)
   const [uptime, setUptime] = useState(0)
 
+  // 同步派生当前舱室：确保渲染时 cabin 与 pathname 一致，消除异步 useEffect 导致的闪烁
+  const activeCabin = useMemo((): CabinType => {
+    const matched = CABINS.find(
+      (c) => location.pathname === c.path || location.pathname.startsWith(`${c.path}/`),
+    )
+    return matched?.id ?? 'input'
+  }, [location.pathname])
+
+  // 将派生值同步回 store，供其他消费者使用（不影响渲染）
+  useEffect(() => {
+    setActiveCabin(activeCabin)
+  }, [activeCabin, setActiveCabin])
+
+  // 路径匹配埋点（独立 useEffect，不干扰渲染逻辑）
   useEffect(() => {
     const matched = CABINS.find(
       (c) => location.pathname === c.path || location.pathname.startsWith(`${c.path}/`),
     )
     if (matched) {
-      setActiveCabin(matched.id)
+      logger.info('[PortalShell] 路径匹配舱室', { pathname: location.pathname, cabin: matched.id })
+    } else {
+      logger.warn('[PortalShell] 路径未匹配到任何舱室', { pathname: location.pathname })
     }
-  }, [location.pathname, setActiveCabin])
+  }, [location.pathname])
 
   useEffect(() => {
     let mounted = true
+    setFetcherOk(null) // 切换舱室时重置为加载中状态，避免短暂显示旧舱错误
     checkFetcherHealth().then((result) => {
       if (mounted) setFetcherOk(result.ok)
     })
@@ -190,12 +240,27 @@ export default function PortalShell(): React.JSX.Element {
   }, [])
 
   const handleCabinSwitch = (cabin: CabinType, path: string): void => {
+    logger.info('[PortalShell] 用户切换舱室', { from: activeCabin, to: cabin, path })
     setActiveCabin(cabin)
     navigate(path)
   }
 
-  const isHubView = location.pathname.endsWith('/hub')
-  const ActiveApp = isHubView ? HUB_APPS[activeCabin] : CABIN_APPS[activeCabin]
+  // F3: /hub 路由重定向到舱室基础路径（仅当该舱室没有专门的 Hub 首页时）
+  // command 舱已有独立的 /command/hub Hub 首页（由 CommandApp 识别），不再重定向
+  useEffect(() => {
+    if (location.pathname.endsWith('/hub') && activeCabin !== 'command') {
+      navigate(`/${activeCabin}`, { replace: true })
+    }
+  }, [location.pathname, activeCabin, navigate])
+
+  const isAgentPath = location.pathname.startsWith('/command/agents')
+  const isMCPPath = location.pathname.startsWith('/command/mcp-servers')
+  const ActiveApp =
+    activeCabin === 'command' && isAgentPath
+      ? AgentApp
+      : activeCabin === 'command' && isMCPPath
+        ? MCPServerDashboardPage
+        : CABIN_APPS[activeCabin]
   const activeGroups = PANEL_ITEMS[activeCabin]
 
   const formatUptime = (seconds: number): string => {
@@ -274,7 +339,15 @@ export default function PortalShell(): React.JSX.Element {
                     return (
                       <li key={item.key}>
                         <button
-                          onClick={() => navigate(item.path)}
+                          onClick={() => {
+                            logger.info('[PortalShell] 侧边栏导航', {
+                              item: item.key,
+                              label: item.label,
+                              path: item.path,
+                              cabin: activeCabin,
+                            })
+                            navigate(item.path)
+                          }}
                           className={cn(
                             'flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-sm transition-colors',
                             active

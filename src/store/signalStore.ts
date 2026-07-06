@@ -139,7 +139,6 @@ let _unsubscribeScoring: (() => void) | null = null
 /** 触发刷新的相关 action 集合 */
 const SIGNAL_REFRESH_ACTIONS = new Set<EnvelopeAction>([
   ENVELOPE_ACTION.insertSignal,
-  ENVELOPE_ACTION.saveV6Score,
   ENVELOPE_ACTION.saveScores,
 ])
 
@@ -180,7 +179,6 @@ export function initSignalStoreSubscriptions(): () => void {
         return
       }
       if (
-        envelope.meta.action === ENVELOPE_ACTION.saveV6Score ||
         envelope.meta.action === ENVELOPE_ACTION.saveScores
       ) {
         logger.info('[signalStore] DataBridge event received on v6_scores channel', {

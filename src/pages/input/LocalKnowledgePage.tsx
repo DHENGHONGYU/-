@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Link } from 'react-router'
 import { FolderOpen, Search, BarChart3, Plus } from 'lucide-react'
 import { useToast } from '@/hooks/useToast'
@@ -21,13 +21,11 @@ import {
   TabsTrigger,
 } from '@/components/ui/Tabs'
 import { LocalDocCard } from '@/components/localDoc/LocalDocCard'
-import {
-  createLocalDoc,
-  listLocalDocs,
-  searchLocalDocs,
-  scanFolder,
-} from '@/services/system/localDocService'
+import { useLocalKnowledgeStore, type LocalKnowledgeTab } from '@/store/localKnowledgeStore'
 import type { LocalDoc } from '@/data/types'
+import { getLogger } from '@/lib/logger'
+
+const logger = getLogger()
 
 const CATEGORIES: LocalDoc['category'][] = [
   '研报',
@@ -38,77 +36,44 @@ const CATEGORIES: LocalDoc['category'][] = [
   '其他',
 ]
 
-const SAMPLE_DOCS: Omit<LocalDoc, 'id' | 'addedAt'>[] = [
-  {
-    symbol: '600519.SH',
-    name: '贵州茅台2024年研报',
-    content:
-      '贵州茅台2024年业绩稳健增长，白酒行业龙头地位稳固。公司持续推进产品结构升级，高端产品占比提升。渠道改革成效显著，直销比例持续扩大。',
-    category: '研报',
-    tags: ['白酒', '消费', '龙头'],
-    sourcePath: '/samples/贵州茅台2024年研报.md',
-    size: 2048,
-  },
-  {
-    symbol: '00700.HK',
-    name: '腾讯控股财报摘要',
-    content:
-      '腾讯控股最新季度财报显示，游戏业务恢复增长，广告业务受益于AI技术提升。视频号商业化加速，企业服务板块保持稳定。',
-    category: '财报',
-    tags: ['互联网', '游戏', '广告'],
-    sourcePath: '/samples/腾讯控股财报摘要.md',
-    size: 1536,
-  },
-  {
-    symbol: 'ALL',
-    name: '新能源行业策略笔记',
-    content:
-      '新能源行业处于政策与技术双轮驱动阶段。锂电产业链价格逐步企稳，储能需求保持高增。建议关注具备成本优势的龙头企业。',
-    category: '策略笔记',
-    tags: ['新能源', '储能', '策略'],
-    sourcePath: '/samples/新能源行业策略笔记.md',
-    size: 1024,
-  },
-]
-
 export default function LocalKnowledgePage(): React.JSX.Element {
-  const [activeTab, setActiveTab] = useState('browse')
-  const [docs, setDocs] = useState<LocalDoc[]>([])
-  const [symbolFilter, setSymbolFilter] = useState<string>('全部')
-  const [keyword, setKeyword] = useState('')
-  const [searchResults, setSearchResults] = useState<LocalDoc[]>([])
-  const [message, setMessage] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
   const { toast } = useToast()
 
-  const loadDocs = async () => {
-    setLoading(true)
-    try {
-      const result = await listLocalDocs(symbolFilter === '全部' ? undefined : symbolFilter)
-      if (result.success && result.data) {
-        setDocs(result.data)
-      } else {
-        toast({
-          variant: 'error',
-          title: '加载失败',
-          description: result.error ?? '无法加载本地文档',
-        })
-      }
-    } catch (err) {
+  // 从 Store 获取状态
+  const activeTab = useLocalKnowledgeStore((s) => s.activeTab)
+  const docs = useLocalKnowledgeStore((s) => s.docs)
+  const symbolFilter = useLocalKnowledgeStore((s) => s.symbolFilter)
+  const keyword = useLocalKnowledgeStore((s) => s.keyword)
+  const searchResults = useLocalKnowledgeStore((s) => s.searchResults)
+  const message = useLocalKnowledgeStore((s) => s.message)
+  const loading = useLocalKnowledgeStore((s) => s.loading)
+  const error = useLocalKnowledgeStore((s) => s.error)
+
+  // 从 Store 获取 actions
+  const setActiveTab = useLocalKnowledgeStore((s) => s.setActiveTab)
+  const loadDocs = useLocalKnowledgeStore((s) => s.loadDocs)
+  const searchDocs = useLocalKnowledgeStore((s) => s.searchDocs)
+  const scanFolder = useLocalKnowledgeStore((s) => s.scanFolder)
+  const importSampleDocs = useLocalKnowledgeStore((s) => s.importSampleDocs)
+  const setSymbolFilter = useLocalKnowledgeStore((s) => s.setSymbolFilter)
+  const setKeyword = useLocalKnowledgeStore((s) => s.setKeyword)
+
+  // 监听 symbolFilter 变化，自动加载文档
+  useEffect(() => {
+    logger.info('[LocalKnowledgePage] symbolFilter 变化，加载文档', { symbolFilter })
+    void loadDocs()
+  }, [symbolFilter, loadDocs])
+
+  // 监听 error 变化，显示 toast
+  useEffect(() => {
+    if (error) {
       toast({
         variant: 'error',
-        title: '加载失败',
-        description: err instanceof Error ? err.message : '无法加载本地文档',
+        title: '操作失败',
+        description: error,
       })
-    } finally {
-      setLoading(false)
     }
-  }
-
-  useEffect(() => {
-    void loadDocs()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [symbolFilter])
+  }, [error, toast])
 
   const symbols = useMemo(() => {
     const set = new Set(docs.map((d) => d.symbol))
@@ -116,73 +81,18 @@ export default function LocalKnowledgePage(): React.JSX.Element {
   }, [docs])
 
   const handleImportSamples = async () => {
-    setLoading(true)
-    let failed = 0
-    let lastError: string | undefined
-    try {
-      for (const doc of SAMPLE_DOCS) {
-        const result = await createLocalDoc(doc)
-        if (!result.success) {
-          failed += 1
-          lastError = result.error
-        }
-      }
-      await loadDocs()
-      if (failed > 0) {
-        toast({
-          variant: 'error',
-          title: '导入失败',
-          description: lastError ?? `${failed} 条示例数据导入失败`,
-        })
-      } else {
-        setMessage('示例数据导入成功')
-        setTimeout(() => setMessage(null), 3000)
-      }
-    } catch (err) {
-      toast({
-        variant: 'error',
-        title: '导入失败',
-        description: err instanceof Error ? err.message : '无法导入示例数据',
-      })
-    } finally {
-      setLoading(false)
-    }
+    logger.info('[LocalKnowledgePage] 导入示例文档')
+    await importSampleDocs()
   }
 
   const handleScanFolder = async () => {
-    const result = await scanFolder()
-    if (result === null) {
-      setMessage('请使用支持 File System Access API 的浏览器导入文件夹，或使用导入示例数据按钮')
-    } else if (result.files.length === 0 && result.errors.length === 0) {
-      setMessage('未在选择的文件夹中找到支持的文件')
-    } else {
-      setMessage(`扫描完成，发现 ${result.files.length} 个文件`)
-    }
-    setTimeout(() => setMessage(null), 5000)
+    logger.info('[LocalKnowledgePage] 扫描文件夹')
+    await scanFolder()
   }
 
   const handleSearch = async () => {
-    setLoading(true)
-    try {
-      const result = await searchLocalDocs(keyword)
-      if (result.success && result.data) {
-        setSearchResults(result.data)
-      } else {
-        toast({
-          variant: 'error',
-          title: '搜索失败',
-          description: result.error ?? '无法搜索本地文档',
-        })
-      }
-    } catch (err) {
-      toast({
-        variant: 'error',
-        title: '搜索失败',
-        description: err instanceof Error ? err.message : '无法搜索本地文档',
-      })
-    } finally {
-      setLoading(false)
-    }
+    logger.info('[LocalKnowledgePage] 搜索文档', { keyword })
+    await searchDocs(keyword)
   }
 
   const stats = useMemo(() => {
@@ -237,7 +147,7 @@ export default function LocalKnowledgePage(): React.JSX.Element {
         </div>
       )}
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
+      <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as LocalKnowledgeTab)}>
         <TabsList>
           <TabsTrigger value="browse">浏览</TabsTrigger>
           <TabsTrigger value="search">搜索</TabsTrigger>

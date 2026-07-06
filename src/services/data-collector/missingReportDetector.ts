@@ -21,7 +21,7 @@ import {
   type MissingReportType,
   type MissingReportSeverity,
 } from '@/constants/execution.constants'
-import { checkMissingReportFreshness } from '@/services/analysis/dataFreshnessGuard'
+import { checkMissingReportFreshness } from '@/core/freshnessGuard'
 
 const logger = getLogger()
 
@@ -86,6 +86,7 @@ export async function detect(
       reason,
       detectedAt: now,
       retryCount: 0,
+      createdAt: now,
     }
 
     const result = await missingReportStore.report(report)
@@ -95,7 +96,7 @@ export async function detect(
     }
 
     logger.info(`[missingReportDetector] detect success: symbol="${symbol}" type="${reportType}" severity="${severity}"`)
-    return { ...report, id: undefined }
+    return result.data
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     logger.error(`[missingReportDetector] detect error: ${message}`, { symbol, reportType })

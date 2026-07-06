@@ -2,6 +2,8 @@ import { describe, expect, it, beforeEach } from 'vitest'
 import { CORE_RESOURCE_THEME } from '@/config/themeRegistry'
 import { db } from '@/data/db'
 import { dataLayer } from '@/data/dataLayer'
+import { dataBridge } from '@/core/databridge'
+import { STORE_NAME } from '@/config/dbConfig'
 import {
   buildThemePortfolio,
   computeHoldingsFromOrders,
@@ -40,6 +42,9 @@ describe('portfolioBuilder', () => {
   beforeEach(async () => {
     await db.init()
     await db.reset()
+    dataBridge.invalidateCache(STORE_NAME.stocks)
+    dataBridge.invalidateCache(STORE_NAME.v6Scores)
+    dataBridge.invalidateCache(STORE_NAME.orders)
   })
 
   it('should build a theme portfolio from matching stocks', async () => {

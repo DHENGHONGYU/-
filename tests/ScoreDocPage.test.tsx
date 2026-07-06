@@ -75,6 +75,7 @@ describe('ScoreDocPage', () => {
   it('save two versions and verify version 2 appears', async () => {
     await seedStock()
     await saveVersion(4.0, 4.0)
+    await new Promise((resolve) => setTimeout(resolve, 10))
     await saveVersion(4.5, 4.5)
 
     render(

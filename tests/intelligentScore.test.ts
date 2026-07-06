@@ -1,7 +1,8 @@
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { db } from '@/data/db'
+import { dataBridge } from '@/core/databridge'
 import { dataLayer } from '@/data/dataLayer'
-import { RESEARCH_STATUS } from '@/config/dbConfig'
+import { RESEARCH_STATUS, STORE_NAME } from '@/config/dbConfig'
 import { runIntelligentScore } from '@/services/scoring/intelligentScoreService'
 
 vi.mock('@/services/llm/llmClient', () => ({
@@ -38,8 +39,14 @@ function mockValidResponse() {
 }
 
 describe('intelligent score service', () => {
-  it('should compute overall score only from valid dimensions and save result', async () => {
+  beforeEach(async () => {
     await db.init()
+    await db.reset()
+    dataBridge.invalidateCache(STORE_NAME.stocks)
+    dataBridge.invalidateCache(STORE_NAME.intelligentScores)
+  })
+
+  it('should compute overall score only from valid dimensions and save result', async () => {
 
     await dataLayer.stocks.add({
       symbol: '000001.SZ',

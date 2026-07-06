@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { SECTORS_SKILL_RANKED, type SectorSkillAnalysis } from '@/data/sectorSkillData'
 import type { IndustryScore, ResearchLog } from '@/data/types'
-import { getDefaultLlmConfig, type LlmConfig } from '@/config/llmConfig'
+import { getDefaultLlmConfig, getLlmApiKeyAsync, setLlmApiKey, type LlmConfig } from '@/config/llmConfig'
 import {
   runIndustryScore,
   type IndustryScoreProgressCallback,
@@ -96,6 +96,24 @@ export function useIndustryScorePage(): UseIndustryScorePageReturn {
   const [logs, setLogs] = useState<ResearchLog[]>([])
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+
+  // 异步加载加密存储的 API Key（P0-3 安全修复：禁止明文读取）
+  useEffect(() => {
+    let mounted = true
+    getLlmApiKeyAsync().then((key) => {
+      if (mounted && key) {
+        setLlmConfig((prev) => ({ ...prev, apiKey: key }))
+      }
+    })
+    return () => { mounted = false }
+  }, [])
+
+  // 用户修改 API Key 时自动加密持久化
+  useEffect(() => {
+    if (llmConfig.apiKey.trim()) {
+      setLlmApiKey(llmConfig.apiKey).catch(() => { /* 加密失败不阻塞 UI */ })
+    }
+  }, [llmConfig.apiKey])
 
   const selectedSector = useMemo(
     () => sectors.find((s) => s.code === selectedCode),

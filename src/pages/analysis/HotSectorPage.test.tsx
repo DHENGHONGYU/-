@@ -1,6 +1,7 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor, act } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
+import { UI_TEXT } from '@/constants/uiText'
 import HotSectorPage from './HotSectorPage'
 
 // ------------------------------------------------------------------
@@ -121,7 +122,7 @@ describe('HotSectorPage', () => {
     // 等待 runAnalysis 完成（同步计算后 loading 变为 false）
     // "热门板块策略" 在 h1 和面包屑中各出现一次，用 getAllByText
     await waitFor(() => {
-      expect(screen.getAllByText('热门板块策略').length).toBeGreaterThanOrEqual(1)
+      expect(screen.getAllByText(UI_TEXT.analysis.hotSector.title).length).toBeGreaterThanOrEqual(1)
     })
   })
 
@@ -158,7 +159,7 @@ describe('HotSectorPage', () => {
 
     // 等待 error 被捕获并渲染
     await waitFor(() => {
-      expect(screen.getByText('分析引擎异常')).toBeInTheDocument()
+      expect(screen.getByText(UI_TEXT.errors.analysisEngineError)).toBeInTheDocument()
     })
 
     expect(screen.getByRole('button', { name: '重试' })).toBeInTheDocument()
@@ -176,11 +177,11 @@ describe('HotSectorPage', () => {
 
     // 用 getAllByText 避免 h1 和面包屑重复匹配
     await waitFor(() => {
-      expect(screen.getAllByText('热门板块策略').length).toBeGreaterThanOrEqual(1)
+      expect(screen.getAllByText(UI_TEXT.analysis.hotSector.title).length).toBeGreaterThanOrEqual(1)
     })
 
     // 标题副标题
-    expect(screen.getByText(/五维评分引擎/)).toBeInTheDocument()
+    expect(screen.getByText(new RegExp(UI_TEXT.analysis.multiFactor.engine))).toBeInTheDocument()
   })
 
   // ================================================================

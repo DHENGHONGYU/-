@@ -12,7 +12,8 @@ import { getLogger } from '@/lib/logger'
 import { executionLogStore } from '@/data/dataLayer'
 import type { ExecutionPlan, ExecutionLog } from '@/data/types'
 import { EXECUTION_LOG_ACTION, type ExecutionLogAction } from '@/constants/execution.constants'
-import { checkExecutionLogFreshness } from '@/services/analysis/dataFreshnessGuard'
+import { checkExecutionLogFreshness } from '@/core/freshnessGuard'
+import { generateId } from '@/data/db'
 
 const logger = getLogger()
 
@@ -41,16 +42,19 @@ export async function writeLog(
     // Freshness 校验：日志时间戳必须晚于计划创建时间
     checkExecutionLogFreshness(now, plan.createdAt, plan.id)
 
-    const log: Omit<ExecutionLog, 'id'> = {
+    const id = generateId()
+    const log: ExecutionLog = {
+      id,
       planId: plan.id,
       symbol: plan.symbol,
       phase: plan.phase,
       action,
       actor,
       timestamp: now,
-      details: options.details,
+      detail: options.details,
       success,
       errorMessage: options.errorMessage,
+      createdAt: now,
     }
 
     const result = await executionLogStore.save(log)
@@ -64,7 +68,7 @@ export async function writeLog(
       phase: plan.phase,
       actor,
     })
-    return { ...log, id: undefined }
+    return log
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     logger.error(`[executionLogService] writeLog error: ${message}`, { planId: plan.id })
@@ -77,7 +81,7 @@ export async function writeLog(
  */
 export async function listByPlan(planId: string): Promise<ExecutionLog[]> {
   try {
-    const logs = await executionLogStore.listByPlan(planId)
+    const logs = await executionLogStore.getByPlanId(planId)
     return logs.sort((a, b) => a.timestamp - b.timestamp)
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
@@ -91,7 +95,7 @@ export async function listByPlan(planId: string): Promise<ExecutionLog[]> {
  */
 export async function listBySymbol(symbol: string): Promise<ExecutionLog[]> {
   try {
-    const logs = await executionLogStore.listBySymbol(symbol)
+    const logs = await executionLogStore.getBySymbol(symbol)
     return logs.sort((a, b) => a.timestamp - b.timestamp)
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
@@ -105,7 +109,7 @@ export async function listBySymbol(symbol: string): Promise<ExecutionLog[]> {
  */
 export async function listFailed(symbol?: string): Promise<ExecutionLog[]> {
   try {
-    const logs = symbol ? await executionLogStore.listBySymbol(symbol) : await executionLogStore.list()
+    const logs = symbol ? await executionLogStore.getBySymbol(symbol) : await executionLogStore.getAll()
     return logs.filter((l) => !l.success).sort((a, b) => a.timestamp - b.timestamp)
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)

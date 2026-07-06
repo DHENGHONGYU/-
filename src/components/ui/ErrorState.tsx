@@ -18,6 +18,7 @@ import { memo, useCallback } from 'react'
 import { AlertCircle, RotateCcw, WifiOff, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { cn } from '@/lib/utils'
+import { twText, twBg, twBorder, DARK, HOVER } from '@/constants/theme.tokens'
 
 // ============================================================
 // Props 定义
@@ -118,11 +119,11 @@ function getErrorInfo(error: Error | string, errorCode?: ErrorStateProps['errorC
 function getErrorIcon(code: ErrorInfo['code']) {
   switch (code) {
     case 'network':
-      return <WifiOff className="h-5 w-5 text-red-600" />
+      return <WifiOff className={`h-5 w-5 ${twText('red', 600)}`} />
     case 'timeout':
-      return <Clock className="h-5 w-5 text-red-600" />
+      return <Clock className={`h-5 w-5 ${twText('red', 600)}`} />
     default:
-      return <AlertCircle className="h-5 w-5 text-red-600" />
+      return <AlertCircle className={`h-5 w-5 ${twText('red', 600)}`} />
   }
 }
 
@@ -144,7 +145,7 @@ function ErrorInline({ error, errorInfo, onRetry, showErrorDetail, className }: 
   return (
     <div className={cn('flex items-center gap-2 text-sm', className)}>
       {getErrorIcon(errorInfo.code)}
-      <span className="text-red-600 flex-1">
+      <span className={`${twText('red', 600)} flex-1`}>
         {showErrorDetail ? errorMessage : errorInfo.defaultMessage}
       </span>
       {onRetry && (
@@ -183,18 +184,18 @@ function ErrorCard({
   return (
     <div
       className={cn(
-        'rounded-lg border border-red-200 bg-red-50 p-4',
-        'dark:bg-red-950/30 dark:border-red-900',
+        `rounded-lg border ${twBorder('red', 200)} ${twBg('red', 50)} p-4`,
+        `${DARK.bgRed950_30} ${DARK.borderRed900}`,
         className
       )}
     >
       <div className="flex items-start gap-3">
         <div className="shrink-0 mt-0.5">{getErrorIcon(errorInfo.code)}</div>
         <div className="flex-1 space-y-2">
-          <p className="text-sm font-medium text-red-800 dark:text-red-200">
+          <p className={`text-sm font-medium ${twText('red', 800)} ${DARK.textRed200}`}>
             {title ?? errorInfo.title}
           </p>
-          <p className="text-sm text-red-700 dark:text-red-300">
+          <p className={`text-sm ${twText('red', 700)} ${DARK.textRed300}`}>
             {showErrorDetail ? errorMessage : errorInfo.defaultMessage}
           </p>
           {onRetry && (
@@ -202,7 +203,7 @@ function ErrorCard({
               variant="outline"
               size="sm"
               onClick={onRetry}
-              className="mt-1 border-red-300 text-red-700 hover:bg-red-100 dark:border-red-800 dark:text-red-300 dark:hover:bg-red-900/50"
+              className={`mt-1 ${twBorder('red', 300)} ${twText('red', 700)} ${twBg('red', 100)} ${HOVER.bgRed100} ${DARK.borderRed800} ${DARK.textRed300}`}
             >
               <RotateCcw className="h-3.5 w-3.5 mr-1.5" />
               重试

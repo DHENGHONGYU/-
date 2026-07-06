@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import type { WidgetConfig, WatchlistData } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
 import { COLORS } from '@/constants/cockpit.constants'
+import { COLOR_TOKENS, COLOR_SHADES } from '@/constants/theme.tokens'
 
 interface WatchlistWidgetProps {
   config: WidgetConfig
@@ -33,7 +34,7 @@ export default function WatchlistWidget({ config }: WatchlistWidgetProps): React
         <CardHeader>
           <CardTitle className="text-base">{config.title}</CardTitle>
         </CardHeader>
-        <CardContent className="text-center text-red-500">
+        <CardContent className={`text-center ${COLOR_TOKENS.danger.tailwind}`}>
           <p>{error}</p>
         </CardContent>
       </Card>
@@ -50,10 +51,10 @@ export default function WatchlistWidget({ config }: WatchlistWidgetProps): React
           <div className="grid grid-cols-2 gap-4">
             {[1, 2, 3, 4].map((i) => (
               <div key={i} className="space-y-2">
-                <div className="h-4 bg-gray-200 rounded w-32" />
+                <div className={`h-4 ${COLOR_SHADES.gray[200]} rounded w-32`} />
                 <div className="flex gap-2">
-                  <div className="h-6 bg-gray-200 rounded w-20" />
-                  <div className="h-6 bg-gray-200 rounded w-12" />
+                  <div className={`h-6 ${COLOR_SHADES.gray[200]} rounded w-20`} />
+                  <div className={`h-6 ${COLOR_SHADES.gray[200]} rounded w-12`} />
                 </div>
               </div>
             ))}
@@ -76,7 +77,7 @@ export default function WatchlistWidget({ config }: WatchlistWidgetProps): React
                 <span className="text-sm font-medium truncate">{stock.name}</span>
                 {getChangeIcon(stock.changePercent)}
               </div>
-              <div className="text-xs text-gray-400">{stock.code}</div>
+              <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>{stock.code}</div>
               <div className="text-lg font-bold">{stock.price.toFixed(2)}</div>
               <div className="text-sm font-medium" style={{ color: getChangeColor(stock.changePercent) }}>
                 {stock.changePercent > 0 ? '+' : ''}{stock.changePercent.toFixed(2)}%

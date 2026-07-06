@@ -19,6 +19,7 @@ import {
 import type { HoldingItem, TradeModalState } from '@/types/modules/trade.types'
 import type { HoldingAction } from '@/constants/trade.constants'
 import { getLogger } from '@/lib/logger'
+import { COLOR_SHADES } from '@/constants/theme.tokens'
 
 const logger = getLogger()
 
@@ -139,7 +140,7 @@ export default function TradeModal({
           )}
 
           {action === HOLDING_ACTION.CLOSE_POSITION && (
-            <div className="rounded-md bg-amber-50 p-3 text-sm text-amber-800">
+            <div className={`rounded-md ${COLOR_SHADES.amber[50]} p-3 text-sm ${COLOR_SHADES.amber[700]}`}>
               确认后将全部平仓 {holding.quantity.toLocaleString()} 股，该操作不可撤销。
             </div>
           )}

@@ -21,6 +21,39 @@ import { DEFAULT_ENGINE_CONFIG } from './config'
 const logger = getLogger()
 const ENGINE_VERSION = 'v6-engine-v1.0.0'
 
+/**
+ * 评分清理化工具函数
+ * 
+ * 处理边界条件：
+ * - NaN/undefined → 0
+ * - Infinity → 5（正无穷）或 0（负无穷）
+ * - 超出 [0, 5] 范围 → 截断到边界
+ * - 记录警告日志便于排查
+ */
+function sanitizeScore(score: unknown, layerId: string, context: string): number {
+  if (typeof score !== 'number' || Number.isNaN(score)) {
+    logger.warn(`[V6ScoreEngine] ${layerId} ${context}: 无效评分 ${String(score)}，降级为 0`)
+    return 0
+  }
+  if (score === Infinity) {
+    logger.warn(`[V6ScoreEngine] ${layerId} ${context}: 正无穷评分，截断为 5`)
+    return 5
+  }
+  if (score === -Infinity) {
+    logger.warn(`[V6ScoreEngine] ${layerId} ${context}: 负无穷评分，截断为 0`)
+    return 0
+  }
+  if (score < 0) {
+    logger.warn(`[V6ScoreEngine] ${layerId} ${context}: 负数评分 ${score}，截断为 0`)
+    return 0
+  }
+  if (score > 5) {
+    logger.warn(`[V6ScoreEngine] ${layerId} ${context}: 超范围评分 ${score}，截断为 5`)
+    return 5
+  }
+  return score
+}
+
 // ============================================================
 // V6ScoreEngine
 // ============================================================
@@ -86,19 +119,31 @@ export class V6ScoreEngine {
     try {
       const result = await calculator.calculate(input)
 
+      // 防御性校验：验证计算器返回的 score 是否有效
+      const sanitizedScore = sanitizeScore(result.score, layerId, 'calculateLayer 结果校验')
+
+      const sanitizedResult = {
+        ...result,
+        score: sanitizedScore,
+        weightedScore: sanitizedScore * (result.weight ?? (() => {
+          logger.warn('[V6Engine] 字段缺失，使用默认值', { field: 'weight', context: `layer=${layerId}` })
+          return 0
+        })()),
+      }
+
       if (this.config.auditEnabled) {
         audit.push({
           timestamp: Date.now(),
           layerId,
           step: 'complete',
           input: { score: result.score },
-          output: { score: result.score, summary: result.summary },
+          output: { score: sanitizedScore, summary: sanitizedResult.summary },
           formula: `calculator.${layerId}.calculate()`,
         })
       }
 
       return {
-        ...result,
+        ...sanitizedResult,
         auditTrail: audit.length > 0 ? audit : undefined,
       }
     } catch (err) {
@@ -115,7 +160,7 @@ export class V6ScoreEngine {
         })
       }
 
-      return this.placeholderLayer(layerId, input)
+      return this.placeholderLayer(layerId, input, msg)
     }
   }
 
@@ -157,6 +202,7 @@ export class V6ScoreEngine {
   aggregate(layers: Record<LayerId, LayerScore>, allRisks: string[]): CompositeScore {
     let weightedSum = 0
     let totalWeight = 0
+    const failedLayers: string[] = []
 
     const { weights, thresholds } = this.config
 
@@ -167,24 +213,35 @@ export class V6ScoreEngine {
     }
 
     for (const layerId of ALL_LAYER_IDS) {
-      const layer = layers[layerId]
+      const layer = layers[layerId]!
       if (layer) {
-        const w = weightMap[layerId]
+        const w = weightMap[layerId]!
+        
+        // NaN 防护：验证 layer.score 是否有效
+        if (!Number.isFinite(layer.score)) {
+          logger.warn(`[V6ScoreEngine] aggregate: ${layerId} 层评分无效 (${layer.score})，跳过该层`)
+          failedLayers.push(layerId)
+          continue
+        }
+        
         weightedSum += layer.score * w
         totalWeight += w
       }
     }
 
-    // 归一化
+    // 归一化，防止除以零
     const normalizedScore = totalWeight > 0
       ? Math.max(0, Math.min(5, (weightedSum / totalWeight)))
       : 0
 
-    const rating = this.mapRating(normalizedScore, thresholds)
+    // 最终结果再次验证
+    const finalScore = Number.isFinite(normalizedScore) ? normalizedScore : 0
+
+    const rating = this.mapRating(finalScore, thresholds)
     const recommendation = this.generateRecommendation(rating, allRisks)
 
     const result: CompositeScore = {
-      score: Math.round(normalizedScore * 100) / 100,
+      score: Math.round(finalScore * 100) / 100,
       rating,
       layers,
       allRisks,
@@ -199,9 +256,15 @@ export class V6ScoreEngine {
         layers: ALL_LAYER_IDS.reduce((acc, id) => {
           acc[id] = layers[id]?.score ?? 0
           return acc
-        }, {} as Record<LayerId, number>),
+        }, {} as Record<LayerId, number>) as Record<LayerId, number>,
         rating,
       }
+      
+      // 记录失败层信息
+      if (failedLayers.length > 0) {
+        logger.warn(`[V6ScoreEngine] aggregate: ${failedLayers.length} 层评分无效，已跳过: ${failedLayers.join(', ')}`)
+      }
+      
       this.auditTrail.factorContributions = buildFactorContributions(this.auditTrail)
     }
 
@@ -217,7 +280,7 @@ export class V6ScoreEngine {
   // 辅助方法
   // ============================================================
 
-  private placeholderLayer(layerId: LayerId, _input: LayerInput): LayerScore {
+  private placeholderLayer(layerId: LayerId, _input: LayerInput, errorMsg?: string): LayerScore {
     const w = this.config.weights
     const weightMap: Record<LayerId, number> = {
       lMinus1: w.lMinus1, l0: w.l0, l1: w.l1, l2: w.l2,
@@ -226,12 +289,17 @@ export class V6ScoreEngine {
     }
     const weight = weightMap[layerId]
 
+    const layerName = LAYER_LABELS[layerId] ?? layerId
+    const summary = errorMsg
+      ? `[计算失败] ${layerName} 层计算失败: ${errorMsg}`
+      : `[未注册计算器] ${layerName} 层无可用计算器`
+
     return {
       layerId,
-      layerName: LAYER_LABELS[layerId],
+      layerName,
       score: 0,
-      summary: `[未注册计算器] ${LAYER_LABELS[layerId]} 层无可用计算器`,
-      risks: [],
+      summary,
+      risks: errorMsg ? [errorMsg] : [],
       evidence: [],
       weight,
       weightedScore: 0,

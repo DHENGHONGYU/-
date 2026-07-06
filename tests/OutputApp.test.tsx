@@ -1,8 +1,18 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { MemoryRouter } from 'react-router'
 import OutputApp from '@/apps/output/OutputApp'
 import * as systemService from '@/services/system/systemService'
+
+// 辅助函数：包裹组件提供 Router 上下文
+const renderWithRouter = (ui: React.ReactElement) => {
+  return render(
+    <MemoryRouter>
+      {ui}
+    </MemoryRouter>
+  )
+}
 
 describe('OutputApp', () => {
   beforeEach(() => {
@@ -20,12 +30,12 @@ describe('OutputApp', () => {
   })
 
   it('renders export button', () => {
-    render(<OutputApp />)
+    renderWithRouter(<OutputApp />)
     expect(screen.getByRole('button', { name: /导出全部数据/i })).toBeInTheDocument()
   })
 
   it('displays exported data after clicking export', async () => {
-    render(<OutputApp />)
+    renderWithRouter(<OutputApp />)
     await userEvent.click(screen.getByRole('button', { name: /导出全部数据/i }))
 
     await waitFor(() => {
@@ -40,7 +50,7 @@ describe('OutputApp', () => {
       error: '导出失败',
     })
 
-    render(<OutputApp />)
+    renderWithRouter(<OutputApp />)
     await userEvent.click(screen.getByRole('button', { name: /导出全部数据/i }))
 
     await waitFor(() => {

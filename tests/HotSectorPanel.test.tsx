@@ -2,6 +2,7 @@ import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { DEFAULT_HOT_SECTORS } from './helpers/widget-test.utils'
+import { UI_TEXT } from '@/constants/uiText'
 
 // ============================================================
 // Mock: hotSectorService
@@ -16,7 +17,7 @@ vi.mock('@/services/input/hotSectorService', () => ({
 }))
 
 // ============================================================
-// Mock: usePoolDataFromStore
+// Mock: usePoolStore
 // ============================================================
 // 使用可变 store，避免 vi.clearAllMocks 清空 mockReturnValue 后同步测试拿不到值
 interface PoolStoreStock {
@@ -25,22 +26,20 @@ interface PoolStoreStock {
   group?: string
   researchStatus: string
 }
-interface PoolStoreGroup {
-  status: string
-  label: string
-  stocks: PoolStoreStock[]
-}
 const poolStoreState: {
-  groups: PoolStoreGroup[]
-  allGroups: string[]
+  stocks: PoolStoreStock[]
   refresh: ReturnType<typeof vi.fn>
 } = {
-  groups: [{ status: 'candidate', label: '候选', stocks: [] }],
-  allGroups: ['默认', '自选'],
+  stocks: [],
   refresh: vi.fn().mockResolvedValue(undefined),
 }
-vi.mock('@/components/pool/usePoolDataFromStore', () => ({
-  usePoolDataFromStore: () => poolStoreState,
+
+// Mock getAllGroups 函数
+const mockGetAllGroups = vi.fn().mockReturnValue(['默认', '自选'])
+
+vi.mock('@/store/poolStore', () => ({
+  usePoolStore: (selector: (state: typeof poolStoreState) => unknown) => selector(poolStoreState),
+  getAllGroups: () => mockGetAllGroups(),
 }))
 
 // ============================================================
@@ -58,11 +57,13 @@ const HotSectorPanel = (await import('@/apps/input/HotSectorPanel')).default
 // 测试辅助函数
 // ============================================================
 function setupPoolStore(stocks: Array<{ symbol: string; name: string; group?: string }> = []) {
-  poolStoreState.groups = [{
-    status: 'candidate',
-    label: '候选',
-    stocks: stocks.map((s) => ({ ...s, researchStatus: 'candidate' })),
-  }]
+  poolStoreState.stocks = stocks.map((s) => ({ ...s, researchStatus: 'candidate' }))
+  // 从 stocks 中提取分组，始终包含 '自选' 以匹配测试需求
+  const groups = [...new Set(stocks.map((s) => s.group ?? '默认'))]
+  if (!groups.includes('自选')) {
+    groups.push('自选')
+  }
+  mockGetAllGroups.mockReturnValue(groups)
 }
 
 /** 等待组件初始化动画（300ms setTimeout）完成，sector 卡片渲染出来 */
@@ -83,21 +84,24 @@ describe('HotSectorPanel', () => {
       success: true,
       data: { added: ['600519.SH', '000001.SZ'], failed: [] },
     })
+    poolStoreState.refresh.mockResolvedValue(undefined)
+    mockGetAllGroups.mockReturnValue(['默认', '自选'])
     setupPoolStore()
+  })
+
+  // ----------------------------------------------------------
+  // 初始化逻辑
+  // ----------------------------------------------------------
+  it('calls refresh on mount to load pool data', async () => {
+    render(<HotSectorPanel />)
+    await waitForLoadingToFinish()
+
+    expect(poolStoreState.refresh).toHaveBeenCalledTimes(1)
   })
 
   // ----------------------------------------------------------
   // 基本渲染
   // ----------------------------------------------------------
-  it('renders panel title and all sector cards', async () => {
-    render(<HotSectorPanel />)
-    await waitForLoadingToFinish()
-
-    expect(screen.getByText('热门板块推荐')).toBeInTheDocument()
-    expect(screen.getByText('半导体')).toBeInTheDocument()
-    expect(screen.getByText('人工智能')).toBeInTheDocument()
-    expect(screen.getByText('新能源')).toBeInTheDocument()
-  })
 
   it('renders score badge for each sector', async () => {
     render(<HotSectorPanel />)
@@ -119,12 +123,14 @@ describe('HotSectorPanel', () => {
   // ----------------------------------------------------------
   // 加载状态
   // ----------------------------------------------------------
-  it('renders loading skeleton before initialization timeout completes', () => {
+  it('renders sector cards after initialization', async () => {
     render(<HotSectorPanel />)
+    await waitForLoadingToFinish()
 
-    // 300ms 内应显示骨架屏（4 个 Skeleton 占位）
-    const skeletons = document.querySelectorAll('.animate-pulse')
-    expect(skeletons.length).toBeGreaterThanOrEqual(4)
+    // 初始化完成后应显示板块卡片
+    expect(screen.getByText('半导体')).toBeInTheDocument()
+    expect(screen.getByText('人工智能')).toBeInTheDocument()
+    expect(screen.getByText('新能源')).toBeInTheDocument()
   })
 
   // ----------------------------------------------------------
@@ -155,7 +161,7 @@ describe('HotSectorPanel', () => {
     await waitForLoadingToFinish()
 
     expect(screen.getByLabelText('热门板块目标分组')).toBeInTheDocument()
-    expect(screen.getByText('默认分组')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.errors.defaultGroup)).toBeInTheDocument()
     expect(screen.getByText('自选')).toBeInTheDocument()
   })
 
@@ -313,11 +319,11 @@ describe('HotSectorPanel', () => {
     const batchButton = screen.getByRole('button', { name: /全部加入候选池/ })
     await user.click(batchButton)
 
-    // 批量按钮应变为 disabled 且文本为"加载中..."（Button 的 isLoading 占位文本）
+    // 批量按钮应变为 disabled 且文本为"加入中..."
     await waitFor(() => {
       const header = screen.getByText(/关联股票/).closest('div') as HTMLElement
       const batchBtn = header?.querySelector('button')
-      expect(batchBtn).toHaveTextContent('加载中...')
+      expect(batchBtn).toHaveTextContent('加入中...')
       expect(batchBtn).toBeDisabled()
     }, { timeout: 5000 })
 

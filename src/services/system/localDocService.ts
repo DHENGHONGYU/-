@@ -105,15 +105,23 @@ export function categorizeDocument(
   return '其他'
 }
 
-export function extractSummary(content: string, maxLen = 300): string {
+/** 摘要提取默认最大长度 */
+const DEFAULT_SUMMARY_MAX_LEN = 300
+
+export function extractSummary(content: string, maxLen = DEFAULT_SUMMARY_MAX_LEN): string {
   if (!content) return ''
   return content.slice(0, Math.max(0, maxLen))
 }
 
+/** 文档分块默认大小（字符数） */
+const DEFAULT_CHUNK_SIZE = 800
+/** 文档分块默认重叠（字符数） */
+const DEFAULT_CHUNK_OVERLAP = 100
+
 export function splitIntoChunks(
   text: string,
-  chunkSize = 800,
-  overlap = 100,
+  chunkSize = DEFAULT_CHUNK_SIZE,
+  overlap = DEFAULT_CHUNK_OVERLAP,
 ): string[] {
   if (chunkSize <= 0) return []
   if (text.length <= chunkSize) return text ? [text] : []

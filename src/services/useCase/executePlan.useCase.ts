@@ -15,8 +15,11 @@
  */
 
 import { getLogger } from '@/lib/logger'
-import { dataLayer } from '@/data/dataLayer'
-import type { ExecutionPlan } from '@/data/types'
+import { runInTransaction } from '@/core/transaction'
+import { STORE_NAME } from '@/config/dbConfig'
+import type { ExecutionPlan, Stock } from '@/data/types'
+
+// 注意：dataLayer 通过 runInTransaction 间接使用，无需直接导入
 
 const logger = getLogger()
 
@@ -71,8 +74,20 @@ export async function executePlanUseCase(
     ctx.updatePlanState(planId, { phase: 'pending' })
     logger.info(`[executePlanUseCase] 计划 ${planId} 状态更新为 pending`)
 
-    // Step 3: 获取最新价格
-    const stock = await dataLayer.stocks.get(plan.symbol)
+    // Step 3: 在事务中获取最新价格（保证读取一致性）
+    const stock = await runInTransaction<Stock | undefined>(
+      [STORE_NAME.stocks],
+      'readonly',
+      async (tx) => {
+        const store = tx.objectStore(STORE_NAME.stocks)
+        return new Promise<Stock | undefined>((resolve, reject) => {
+          const request = store.get(plan.symbol)
+          request.onsuccess = () => resolve(request.result as Stock | undefined)
+          request.onerror = () => reject(request.error instanceof Error ? request.error : new Error(String(request.error)))
+        })
+      },
+    )
+
     if (!stock) {
       throw new Error(`股票 ${plan.symbol} 不存在`)
     }

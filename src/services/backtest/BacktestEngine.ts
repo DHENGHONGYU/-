@@ -25,9 +25,16 @@ import { dataLayer } from '@/data/dataLayer'
 import type { DailyQuotes, Signal, Order } from '@/data/types'
 import { getLogger } from '@/lib/logger'
 import { calculatePosition } from '@/services/trading/positionSizer'
-import type { BacktestStrategy, BacktestResult, BacktestTrade } from '@/store/backtestStore'
+import type { BacktestStrategy, BacktestResult, BacktestTrade } from '@/types/modules/backtest.types'
+import { TRADING_DAYS_PER_YEAR } from '@/config/mathConstants'
 
 const logger = getLogger()
+
+/** 毫秒精度：一天结束时刻的毫秒部分 */
+const MS_END_OF_DAY = 999
+
+/** 信号事件不足此数量时，用订单事件补充合并 */
+const MIN_SIGNAL_EVENTS_FOR_COMBINE = 5
 
 // ============================================================
 // 类型定义
@@ -206,14 +213,14 @@ export class BacktestEngine {
   private async _loadEvents(config: BacktestEngineConfig): Promise<BacktestEvent[]> {
     const startTs = new Date(config.startDate).getTime()
     const endTsEod = new Date(config.endDate)
-    endTsEod.setHours(23, 59, 59, 999)
+    endTsEod.setHours(23, 59, 59, MS_END_OF_DAY)
     const endTs = endTsEod.getTime()
 
     // 1. 从 signals 获取策略信号
     const signalEvents = await this._loadSignalEvents(config, startTs, endTs)
 
     // 2. 若信号不足，用 orders 补充
-    if (signalEvents.length < 5) {
+    if (signalEvents.length < MIN_SIGNAL_EVENTS_FOR_COMBINE) {
       const orderEvents = await this._loadOrderEvents(config, startTs, endTs)
       const combined = this._mergeEvents(signalEvents, orderEvents)
       return combined.sort((a, b) => a.date.localeCompare(b.date))
@@ -539,7 +546,7 @@ export class BacktestEngine {
     trades: VirtualOrder[],
     config: BacktestEngineConfig,
   ): BacktestResult {
-    const DAYS_PER_YEAR = 252
+    const DAYS_PER_YEAR = TRADING_DAYS_PER_YEAR
     const RISK_FREE_RATE = 0.03
 
     // 净值曲线（归一化）

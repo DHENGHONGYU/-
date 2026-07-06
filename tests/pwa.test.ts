@@ -202,11 +202,11 @@ describe('registerServiceWorker 模块', () => {
   })
 })
 
-// ---------- 3. 集成验证：App.tsx 中引用了 PWA 模块 ----------
-describe('App.tsx PWA 集成', () => {
-  it('App.tsx 中导入了 initPWA', () => {
-    const appPath = resolve(__dirname, '../src/App.tsx')
-    const content = readFileSync(appPath, 'utf-8')
+// ---------- 3. 集成验证：bootstrapService 中引用了 PWA 模块 ----------
+describe('bootstrapService PWA 集成', () => {
+  it('bootstrapService.ts 中导入了 initPWA 并在 initializeApp 中调用', () => {
+    const bootstrapPath = resolve(__dirname, '../src/services/system/bootstrapService.ts')
+    const content = readFileSync(bootstrapPath, 'utf-8')
     expect(content).toContain("from '@/services/pwa/registerServiceWorker'")
     expect(content).toContain('initPWA()')
   })

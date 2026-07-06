@@ -1,4 +1,5 @@
 import { Badge } from '@/components/ui/Badge'
+import { twText, twBg, twBorder } from '@/constants/theme.tokens'
 
 interface Dimension {
   name: string
@@ -6,7 +7,7 @@ interface Dimension {
   rationale: string
 }
 
-interface ScoreWithDimensions {
+export interface ScoreWithDimensions {
   overallScore: number | null
   dimensionScores: Dimension[]
 }
@@ -70,14 +71,14 @@ export function ScoreFactorDeltaPanel({ current, previous }: ScoreFactorDeltaPan
       </div>
 
       {topPositive.length > 0 && (
-        <div className="rounded-md border border-emerald-500/30 bg-emerald-500/10 p-3">
-          <p className="mb-2 text-sm font-medium text-emerald-700">上升因子 Top {topPositive.length}</p>
+        <div className={`rounded-md border ${twBorder('emerald', 500)}/30 ${twBg('emerald', 500)}/10 p-3`}>
+          <p className={`mb-2 text-sm font-medium ${twText('emerald', 700)}`}>上升因子 Top {topPositive.length}</p>
           <ul className="space-y-2 text-sm">
             {topPositive.map((item) => (
               <li key={item.name}>
                 <div className="flex items-center justify-between">
                   <span>{item.name}</span>
-                  <span className="font-medium text-emerald-700">
+                  <span className={`font-medium ${twText('emerald', 700)}`}>
                     {item.previous.toFixed(1)} → {item.current.toFixed(1)} ({formatDelta(item.delta)})
                   </span>
                 </div>
@@ -89,14 +90,14 @@ export function ScoreFactorDeltaPanel({ current, previous }: ScoreFactorDeltaPan
       )}
 
       {topNegative.length > 0 && (
-        <div className="rounded-md border border-rose-500/30 bg-rose-500/10 p-3">
-          <p className="mb-2 text-sm font-medium text-rose-700">下降因子 Top {topNegative.length}</p>
+        <div className={`rounded-md border ${twBorder('rose', 500)}/30 ${twBg('rose', 500)}/10 p-3`}>
+          <p className={`mb-2 text-sm font-medium ${twText('rose', 700)}`}>下降因子 Top {topNegative.length}</p>
           <ul className="space-y-2 text-sm">
             {topNegative.map((item) => (
               <li key={item.name}>
                 <div className="flex items-center justify-between">
                   <span>{item.name}</span>
-                  <span className="font-medium text-rose-700">
+                  <span className={`font-medium ${twText('rose', 700)}`}>
                     {item.previous.toFixed(1)} → {item.current.toFixed(1)} ({formatDelta(item.delta)})
                   </span>
                 </div>

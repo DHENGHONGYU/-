@@ -27,11 +27,7 @@ import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'
 import { taskScheduler } from '@/services/data-collector/TaskScheduler'
 import { marketDataAdapter } from '@/services/data-collector/MarketDataAdapter'
-import type { DataSourceConfig, RawMarketData, MarketData, ChatMessage } from '@/types/modules/widget.types'
-import { MockStockAnalysisProvider } from '@/services/stock-analysis/mockStockAnalysisProvider'
-import { streamingChat } from '@/services/llm/llmClient'
-import type { LlmStreamCallback } from '@/services/llm/llmTypes'
-import { ACTIVE_DATA_SOURCE, DATA_SOURCE_TYPE } from '@/constants/cockpit.constants'
+import type { DataSourceConfig, RawMarketData, MarketData } from '@/types/modules/widget.types'
 import { dataBridge } from '@/core/databridge'
 import { STORE_NAME } from '@/config/dbConfig'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
@@ -145,11 +141,6 @@ export interface MarketDataState {
   reset: () => void
 
   /**
-   * 发送个股/市场分析聊天消息（兼容 MarketDataProvider.sendChatMessage）
-   */
-  sendChatMessage: (target: string, question: string) => Promise<ChatMessage>
-
-  /**
    * 刷新某个 Widget 实例（兼容 MarketDataProvider.refreshWidget）
    */
   refreshWidget: (instanceId: string) => void
@@ -245,7 +236,7 @@ const actions = {
     try {
       // 复用 taskScheduler 进行数据采集
       const taskId = taskScheduler.registerTask(key, instanceId ?? key, config)
-      taskScheduler.startTask(taskId)
+      void taskScheduler.startTask(taskId)
 
       // 等待首次采集结果（通过 subscribe 回调处理）
       // subscribe 是一次性的，结果会通过 handleCollectionResult 更新到 Store
@@ -325,7 +316,7 @@ const actions = {
     const taskId = useMarketDataStore.getState().taskMap[key]
     if (taskId) {
       taskScheduler.stopTask(taskId)
-      taskScheduler.startTask(taskId)
+      void taskScheduler.startTask(taskId)
     }
   },
 
@@ -342,55 +333,6 @@ const actions = {
     withBroadcast(EVENT_NAMES.MARKET_DATA_CHANGED, { action: 'reset' })
   },
 
-  sendChatMessage: async (target: string, question: string): Promise<ChatMessage> => {
-    logger.info(`[marketDataStore] sendChatMessage: target=${target}`)
-
-    if (ACTIVE_DATA_SOURCE === DATA_SOURCE_TYPE.MOCK) {
-      return MockStockAnalysisProvider.sendChatMessage(target, question)
-    }
-
-    const messages = [
-      {
-        role: 'system' as const,
-        content: `你是一位专业的股票分析助手，正在分析标的：${target}。请提供详细、专业的分析。`,
-      },
-      { role: 'user' as const, content: question },
-    ]
-
-    let fullContent = ''
-    const startTime = Date.now()
-
-    const chunkCallback: LlmStreamCallback = (chunk) => {
-      if (!chunk.isDone) {
-        fullContent += chunk.content
-        logger.debug('[marketDataStore] LLM stream chunk received', {
-          length: chunk.content.length,
-          total: fullContent.length,
-        })
-      }
-    }
-
-    try {
-      await streamingChat(messages, chunkCallback)
-      logger.info('[marketDataStore] LLM streaming chat completed', {
-        contentLength: fullContent.length,
-        duration: Date.now() - startTime,
-      })
-    } catch (err) {
-      logger.error('[marketDataStore] LLM streaming chat failed', {
-        error: err instanceof Error ? err.message : String(err),
-      })
-      throw err
-    }
-
-    return {
-      id: `assistant_${Date.now()}`,
-      role: 'assistant',
-      content: fullContent,
-      timestamp: Date.now(),
-    }
-  },
-
   refreshWidget: (instanceId: string) => {
     const state = useMarketDataStore.getState()
     const taskId = state.taskMap[instanceId]
@@ -405,7 +347,7 @@ const actions = {
     }))
 
     taskScheduler.stopTask(taskId)
-    taskScheduler.startTask(taskId)
+    void taskScheduler.startTask(taskId)
 
     logger.info(`[marketDataStore] 手动刷新: ${instanceId}`)
   },

@@ -41,24 +41,28 @@ function buildScenarios(
   pe: number | undefined,
   revenueYoY: number | undefined,
 ): Scenario[] {
-  const np = netProfit ?? 0
+  const np = netProfit
+  if (np == null) {
+    logger.warn('[L4] netProfit is undefined, using conservative estimate')
+  }
+  const safeNp = np ?? 0
   const basePE = pe ?? V6_CALCULATOR_THRESHOLDS.L4_SCENARIO_BASE_PE
   const growth = revenueYoY ?? V6_CALCULATOR_THRESHOLDS.L4_SCENARIO_BASE_GROWTH
 
   // 上行：业绩超预期，PE 扩张
-  const upNP = np * (1 + Math.max(0.2, growth * 0.5))
+  const upNP = safeNp * (1 + Math.max(0.2, growth * 0.5))
   const upPE = basePE * V6_CALCULATOR_THRESHOLDS.L4_SCENARIO_UP_MULTIPLIER
-  const upPrice = (upNP / (np || 1)) * currentPrice * (upPE / basePE)
+  const upPrice = (upNP / (safeNp || 1)) * currentPrice * (upPE / basePE)
 
   // 基准：符合预期
-  const baseNP = np * (1 + Math.min(0.15, growth * 0.3))
+  const baseNP = safeNp * (1 + Math.min(0.15, growth * 0.3))
   const basePE_ = basePE
-  const basePrice = (baseNP / (np || 1)) * currentPrice
+  const basePrice = (baseNP / (safeNp || 1)) * currentPrice
 
   // 下行：业绩不及预期，PE 收缩
-  const downNP = np * (1 - Math.max(0.05, Math.min(0.2, growth * 0.3)))
+  const downNP = safeNp * (1 - Math.max(0.05, Math.min(0.2, growth * 0.3)))
   const downPE = basePE * V6_CALCULATOR_THRESHOLDS.L4_SCENARIO_DOWN_MULTIPLIER
-  const downPrice = (downNP / (np || 1)) * currentPrice * (downPE / basePE)
+  const downPrice = (downNP / (safeNp || 1)) * currentPrice * (downPE / basePE)
 
   return [
     { name: '乐观', probability: V6_CALCULATOR_THRESHOLDS.L4_SCENARIO_BULL_PROB, netProfit: upNP, pe: upPE, priceTarget: upPrice },
@@ -89,7 +93,11 @@ function scoreScenario(input: LayerInput): { score: number; summary: string; evi
   // 收益比
   const upGain = (upScenario.priceTarget - currentPrice) * upScenario.probability
   const downLoss = (currentPrice - downScenario.priceTarget) * downScenario.probability
-  const rewardRatio = downLoss > 0 ? upGain / downLoss : upGain > 0 ? 999 : 1
+  /** 亏损为零时的最大收益比哨兵值 */
+  const MAX_REWARD_RATIO = 999
+  /** 盈亏均为零时的默认收益比 */
+  const DEFAULT_REWARD_RATIO = 1
+  const rewardRatio = downLoss > 0 ? upGain / downLoss : upGain > 0 ? MAX_REWARD_RATIO : DEFAULT_REWARD_RATIO
 
   let score: number
   if (baseUpside > V6_CALCULATOR_THRESHOLDS.L4_SCENARIO_UPSIDE_TIER1 && rewardRatio > V6_CALCULATOR_THRESHOLDS.L4_SCENARIO_REWARD_RATIO_HIGH) {
@@ -144,7 +152,7 @@ export const L4ScenarioCalculator: LayerCalculator = {
 
       return {
         layerId: 'l4' as LayerId,
-        layerName: LAYER_LABELS.l4,
+        layerName: LAYER_LABELS.l4 ?? 'L4 情景推演',
         score: Math.round(score * 100) / 100,
         summary,
         risks,
@@ -158,7 +166,7 @@ export const L4ScenarioCalculator: LayerCalculator = {
       logger.error(`[L4] ${stock.symbol}: 计算失败: ${msg}`)
       return {
         layerId: 'l4' as LayerId,
-        layerName: LAYER_LABELS.l4,
+        layerName: LAYER_LABELS.l4 ?? 'L4 情景推演',
         score: 0,
         summary: `情景推演失败: ${msg}`,
         risks: [],
@@ -268,7 +276,7 @@ export const L5TMCalculator: LayerCalculator = {
 
       return {
         layerId: 'l5' as LayerId,
-        layerName: LAYER_LABELS.l5,
+        layerName: LAYER_LABELS.l5 ?? 'L5 T-M 矩阵',
         score: Math.round(score * 100) / 100,
         summary: `T-M: ${level} | ${strategy}`,
         risks,
@@ -282,7 +290,7 @@ export const L5TMCalculator: LayerCalculator = {
       logger.error(`[L5] ${stock.symbol}: 计算失败: ${msg}`)
       return {
         layerId: 'l5' as LayerId,
-        layerName: LAYER_LABELS.l5,
+        layerName: LAYER_LABELS.l5 ?? 'L5 T-M 矩阵',
         score: 0,
         summary: `T-M计算失败: ${msg}`,
         risks: [],
@@ -375,7 +383,7 @@ export const L6HypeCalculator: LayerCalculator = {
 
       return {
         layerId: 'l6' as LayerId,
-        layerName: LAYER_LABELS.l6,
+        layerName: LAYER_LABELS.l6 ?? 'L6 Hype 周期',
         score: Math.round(hype.score * 100) / 100,
         summary: `${hype.stage} | ${hype.strategy}`,
         risks,
@@ -389,7 +397,7 @@ export const L6HypeCalculator: LayerCalculator = {
       logger.error(`[L6] ${stock.symbol}: 计算失败: ${msg}`)
       return {
         layerId: 'l6' as LayerId,
-        layerName: LAYER_LABELS.l6,
+        layerName: LAYER_LABELS.l6 ?? 'L6 Hype 周期',
         score: 0,
         summary: `Hype计算失败: ${msg}`,
         risks: [],

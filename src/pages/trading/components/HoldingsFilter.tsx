@@ -71,6 +71,7 @@ export default function HoldingsFilter({
             <label className="text-xs text-muted-foreground">开始日期</label>
             <input
               type="date"
+              aria-label="开始日期"
               value={filter.startDate}
               onChange={(e) => updateField('startDate', e.target.value)}
               className="h-9 rounded-md border border-input bg-background px-3 text-sm"
@@ -82,6 +83,7 @@ export default function HoldingsFilter({
             <label className="text-xs text-muted-foreground">结束日期</label>
             <input
               type="date"
+              aria-label="结束日期"
               value={filter.endDate}
               onChange={(e) => updateField('endDate', e.target.value)}
               className="h-9 rounded-md border border-input bg-background px-3 text-sm"
@@ -92,6 +94,7 @@ export default function HoldingsFilter({
           <div className="flex flex-col gap-1">
             <label className="text-xs text-muted-foreground">交易方向</label>
             <select
+              aria-label="交易方向"
               value={filter.direction}
               onChange={(e) => updateField('direction', e.target.value as FilterState['direction'])}
               className="h-9 rounded-md border border-input bg-background px-3 text-sm"
@@ -111,6 +114,7 @@ export default function HoldingsFilter({
               <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
                 type="text"
+                aria-label="证券代码或名称搜索"
                 value={filter.keyword}
                 onChange={(e) => updateField('keyword', e.target.value)}
                 onKeyDown={handleKeyDown}

@@ -2,6 +2,7 @@ import React from 'react'
 import { cn } from '@/lib/utils'
 import type { ExecutionPhase } from '@/data/types'
 import { Loader2 } from 'lucide-react'
+import { COLOR_SHADES, twBg, twText, twBorder } from '@/constants/theme.tokens'
 
 export interface PhaseStepperProps {
   phase: ExecutionPhase
@@ -21,12 +22,12 @@ const PHASE_LABELS: Record<ExecutionPhase, string> = {
 }
 
 const PHASE_COLORS: Record<ExecutionPhase, { bg: string; text: string; border: string }> = {
-  plan: { bg: 'bg-blue-500', text: 'text-blue-500', border: 'border-blue-500' },
-  confirmed: { bg: 'bg-blue-500', text: 'text-blue-500', border: 'border-blue-500' },
-  pending: { bg: 'bg-yellow-500', text: 'text-yellow-500', border: 'border-yellow-500' },
-  executed: { bg: 'bg-green-500', text: 'text-green-500', border: 'border-green-500' },
-  cancelled: { bg: 'bg-red-500', text: 'text-red-500', border: 'border-red-500' },
-  reviewed: { bg: 'bg-purple-500', text: 'text-purple-500', border: 'border-purple-500' },
+  plan: { bg: twBg('blue', 500), text: twText('blue', 500), border: twBorder('blue', 500) },
+  confirmed: { bg: twBg('blue', 500), text: twText('blue', 500), border: twBorder('blue', 500) },
+  pending: { bg: twBg('yellow', 500), text: twText('yellow', 500), border: twBorder('yellow', 500) },
+  executed: { bg: twBg('green', 500), text: twText('green', 500), border: twBorder('green', 500) },
+  cancelled: { bg: twBg('red', 500), text: twText('red', 500), border: twBorder('red', 500) },
+  reviewed: { bg: twBg('purple', 500), text: twText('purple', 500), border: twBorder('purple', 500) },
 }
 
 export function PhaseStepper({ phase, cancelled, result }: PhaseStepperProps): React.JSX.Element {
@@ -58,19 +59,19 @@ export function PhaseStepper({ phase, cancelled, result }: PhaseStepperProps): R
 
     // 取消模式下，从当前 phase 到 cancelled 的连线为红色断裂线
     if (cancelled && index === currentIndex && nextIndex === cancelledIndex) {
-      return { bg: 'bg-red-500', dashed: true }
+      return { bg: COLOR_SHADES.red[500], dashed: true }
     }
 
     // 取消模式下，cancelled 之后的连线灰色
     if (cancelled && index >= cancelledIndex) {
-      return { bg: 'bg-gray-200', dashed: false }
+      return { bg: twBg('gray', 200), dashed: false }
     }
 
     if (isCurrentReached && isNextReached) {
-      return { bg: 'bg-blue-500', dashed: false }
+      return { bg: COLOR_SHADES.blue[500], dashed: false }
     }
 
-    return { bg: 'bg-gray-200', dashed: false }
+    return { bg: twBg('gray', 200), dashed: false }
   }
 
   return (
@@ -92,7 +93,7 @@ export function PhaseStepper({ phase, cancelled, result }: PhaseStepperProps): R
                   'w-6 h-6',
                   reached || current
                     ? `${colors.bg} ${colors.border} text-white`
-                    : 'bg-white border-gray-300 text-gray-400',
+                    : `${twBg('slate', 50)} ${twBorder('slate', 300)} ${twText('slate', 400)}`,
                   current && !cancelled && 'ring-2 ring-offset-1',
                   current && !cancelled && colors.border.replace('border-', 'ring-')
                 )}
@@ -108,9 +109,9 @@ export function PhaseStepper({ phase, cancelled, result }: PhaseStepperProps): R
                   <span
                     className={cn(
                       'absolute -top-1 -right-1 flex h-2.5 w-2.5 rounded-full border border-white',
-                      result === 'success' && 'bg-green-600',
-                      result === 'failed' && 'bg-red-600',
-                      result === 'partial' && 'bg-yellow-600'
+                      result === 'success' && COLOR_SHADES.green[600],
+                      result === 'failed' && COLOR_SHADES.red[600],
+                      result === 'partial' && COLOR_SHADES.yellow[600]
                     )}
                   />
                 )}
@@ -118,7 +119,7 @@ export function PhaseStepper({ phase, cancelled, result }: PhaseStepperProps): R
               <span
                 className={cn(
                   'text-[10px] font-medium whitespace-nowrap',
-                  reached || current ? colors.text : 'text-gray-400'
+                  reached || current ? colors.text : twText('gray', 400)
                 )}
               >
                 {PHASE_LABELS[p]}
@@ -132,7 +133,7 @@ export function PhaseStepper({ phase, cancelled, result }: PhaseStepperProps): R
                   className={cn(
                     'absolute inset-0 rounded-full',
                     lineStyle.bg,
-                    lineStyle.dashed && 'bg-transparent border-t-2 border-dashed border-red-500'
+                    lineStyle.dashed && `bg-transparent border-t-2 border-dashed ${COLOR_SHADES.red[500]}`
                   )}
                 />
               </div>

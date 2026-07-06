@@ -11,7 +11,7 @@ import {
   checkFetcherHealth,
   fetchStockBasic,
   fetchStockKline,
-} from '@/services/input/inputService'
+} from '@/services/fetcher/fetcherService'
 import type { DataLayerResult, Stock, DailyQuotes } from '@/data/types'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { withBroadcast } from '@/store/helpers/withBroadcast'

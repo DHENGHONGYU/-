@@ -104,9 +104,9 @@ export const BarChart = memo(
                     backgroundColor: CHART_PALETTE.tooltipBg,
                     border: 'none',
                     borderRadius: 8,
-                    color: '#fff',
+                    color: CHART_PALETTE.tooltipText,
                   }}
-                  labelStyle={{ color: '#fff' }}
+                  labelStyle={{ color: CHART_PALETTE.tooltipText }}
                 />
               )}
               <Legend />

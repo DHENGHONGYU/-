@@ -1,11 +1,22 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { MemoryRouter } from 'react-router'
 import AnalysisApp from '@/apps/analysis/AnalysisApp'
 import * as analysisService from '@/services/analysis/analysisService'
 import * as v6ScoreService from '@/services/scoring/v6ScoreService'
 import { useToast } from '@/hooks/useToast'
 import type { Stock, V6Score } from '@/data/types'
+import { UI_TEXT } from '@/constants/uiText'
+
+// 辅助函数：包裹组件提供 Router 上下文
+const renderWithRouter = (ui: React.ReactElement) => {
+  return render(
+    <MemoryRouter>
+      {ui}
+    </MemoryRouter>
+  )
+}
 
 vi.mock('@/hooks/useToast', () => ({
   useToast: vi.fn(() => ({ toast: vi.fn() })),
@@ -49,19 +60,19 @@ describe.sequential('AnalysisApp', () => {
   })
 
   it('renders load button', () => {
-    render(<AnalysisApp />)
+    renderWithRouter(<AnalysisApp />)
     expect(screen.getByRole('button', { name: /加载标的/i })).toBeInTheDocument()
   })
 
   it('loads stocks and displays them', async () => {
-    render(<AnalysisApp />)
+    renderWithRouter(<AnalysisApp />)
     await userEvent.click(screen.getByRole('button', { name: /加载标的/i }))
 
     await waitFor(() => {
       expect(screen.getByText('000001.SZ')).toBeInTheDocument()
     })
     expect(screen.getByText('平安银行')).toBeInTheDocument()
-    expect(screen.getByText(/未评分/)).toBeInTheDocument()
+    expect(screen.getByText(new RegExp(UI_TEXT.analysis.score.notRated))).toBeInTheDocument()
   })
 
   it('displays score badge after running score', async () => {
@@ -74,7 +85,7 @@ describe.sequential('AnalysisApp', () => {
       data: [mockScore],
     })
 
-    render(<AnalysisApp />)
+    renderWithRouter(<AnalysisApp />)
     await userEvent.click(screen.getByRole('button', { name: /加载标的/i }))
     await waitFor(() => screen.getByText('000001.SZ'))
 
@@ -86,7 +97,7 @@ describe.sequential('AnalysisApp', () => {
   })
 
   it('runs score when clicking 运行评分', async () => {
-    render(<AnalysisApp />)
+    renderWithRouter(<AnalysisApp />)
     await userEvent.click(screen.getByRole('button', { name: /加载标的/i }))
     await waitFor(() => screen.getByText('000001.SZ'))
 
@@ -102,7 +113,7 @@ describe.sequential('AnalysisApp', () => {
       () => new Promise((resolve) => setTimeout(() => resolve({ success: true, data: mockScore }), 100)),
     )
 
-    render(<AnalysisApp />)
+    renderWithRouter(<AnalysisApp />)
     await userEvent.click(screen.getByRole('button', { name: /加载标的/i }))
     await waitFor(() => screen.getByText('000001.SZ'))
 
@@ -119,7 +130,7 @@ describe.sequential('AnalysisApp', () => {
       () => new Promise((resolve) => setTimeout(() => resolve({ success: true, data: [mockStock] }), 100)),
     )
 
-    render(<AnalysisApp />)
+    renderWithRouter(<AnalysisApp />)
     const loadBtn = screen.getByRole('button', { name: /加载标的/i })
     await userEvent.click(loadBtn)
 
@@ -136,12 +147,12 @@ describe.sequential('AnalysisApp', () => {
       error: '服务不可用',
     })
 
-    render(<AnalysisApp />)
+    renderWithRouter(<AnalysisApp />)
     await userEvent.click(screen.getByRole('button', { name: /加载标的/i }))
 
     await waitFor(() => {
       expect(toast).toHaveBeenCalledWith(
-        expect.objectContaining({ variant: 'error', title: '加载失败' }),
+        expect.objectContaining({ variant: 'error', title: UI_TEXT.common.error }),
       )
     })
   })
@@ -154,7 +165,7 @@ describe.sequential('AnalysisApp', () => {
       error: '评分服务异常',
     })
 
-    render(<AnalysisApp />)
+    renderWithRouter(<AnalysisApp />)
     await userEvent.click(screen.getByRole('button', { name: /加载标的/i }))
     await waitFor(() => screen.getByText('000001.SZ'))
 

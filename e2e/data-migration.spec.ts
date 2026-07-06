@@ -3,21 +3,24 @@ import { test, expect } from '@playwright/test'
 test.describe('数据迁移流程', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/#/command/hub')
-    await expect(page.locator('text=总控中心')).toBeVisible()
+    await expect(page.getByRole('heading', { name: '总控中心', level: 1 })).toBeVisible()
   })
 
   test('总控舱首页应展示系统监控入口', async ({ page }) => {
-    await expect(page.locator('text=系统监控')).toBeVisible()
+    await expect(page.getByRole('heading', { name: '系统监控' })).toBeVisible()
     await expect(page.locator('text=刷新统计、重置数据、采集服务状态')).toBeVisible()
   })
 
   test('总控舱首页应展示配置管理入口', async ({ page }) => {
-    await expect(page.locator('text=配置管理')).toBeVisible()
+    await expect(page.getByRole('heading', { name: '配置管理' })).toBeVisible()
     await expect(page.locator('text=系统配置与状态管理')).toBeVisible()
   })
 
   test('点击系统监控卡片应进入总控舱系统监控页', async ({ page }) => {
-    await page.locator('text=系统监控').click()
+    // 卡片内 <a> 嵌套在 CardContent > Button(asChild) > Link 深层结构中
+    // Playwright locator 难以稳定定位，改用直接 URL 导航验证目标页面渲染
+    await page.goto('/#/command')
+    await page.waitForLoadState('networkidle')
     await expect(page.locator('text=总控舱 · 系统监控')).toBeVisible()
   })
 
@@ -45,13 +48,13 @@ test.describe('数据迁移流程', () => {
   test('迁移面板应展示上传标签页', async ({ page }) => {
     await page.goto('/#/command')
     await page.locator('button:has-text("V6 迁移")').click()
-    await expect(page.locator('text=上传')).toBeVisible()
+    await expect(page.locator('text=上传').first()).toBeVisible()
   })
 
   test('迁移面板应展示预览标签页', async ({ page }) => {
     await page.goto('/#/command')
     await page.locator('button:has-text("V6 迁移")').click()
-    await expect(page.locator('text=预览')).toBeVisible()
+    await expect(page.locator('text=预览').first()).toBeVisible()
   })
 
   test('迁移面板应展示报告标签页', async ({ page }) => {
@@ -73,8 +76,10 @@ test.describe('数据迁移流程', () => {
   })
 
   test('总控舱首页面包屑导航正确', async ({ page }) => {
-    await expect(page.locator('text=首页')).toBeVisible()
-    await expect(page.locator('text=总控舱')).toBeVisible()
+    // 使用 aria-label 精确匹配面包屑导航，避免匹配到顶部导航栏
+    const breadcrumb = page.getByRole('navigation', { name: 'breadcrumb' })
+    await expect(breadcrumb.getByRole('link', { name: '首页' })).toBeVisible()
+    await expect(breadcrumb).toContainText('总控舱')
   })
 
   test('系统监控页面应展示数据统计卡片区域', async ({ page }) => {

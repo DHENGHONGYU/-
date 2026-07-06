@@ -1,25 +1,7 @@
 import { ENVELOPE_ACTION, STORE_NAME, type EnvelopeTarget, type ModuleId, type StoreName } from '@/config/dbConfig'
 import { db } from '@/data/db'
-import type {
-  DailyQuotes,
-  HotSectorScore,
-  IndustryScore,
-  IntelligentScore,
-  LocalDoc,
-  NewsArticle,
-  NewsStockMap,
-  Order,
-  ResearchLog,
-  RotationSectorScore,
-  ScoreDocVersion,
-  SectorScoreRecord,
-  SentimentCache,
-  Signal,
-  Stock,
-  StrategySnapshot,
-  ValuePitScore,
-  V6Score,
-} from '@/data/types'
+import type { Stock } from '@/data/types'
+import { CHANGED_SUFFIX, EVENT_NAMES } from '@/constants/store-channels.constants'
 import { eventBus } from '@/lib/eventBus'
 import { getLogger } from '@/lib/logger'
 import { analyze as analyzeHotSector, type HotSectorAnalyzerInput } from '@/services/scoring/hotSectorAnalyzer'
@@ -28,6 +10,304 @@ import { analyze as analyzeValuePit, type ValuePitAnalyzerInput } from '@/servic
 import { aclEngine, inferOperation } from './acl'
 import { EnvelopeError, EnvelopeFactory, type StandardEnvelope } from './envelope'
 import { fallbackQueue, FallbackQueue } from './fallbackQueue'
+import { MemoryCache } from './memoryCache'
+
+/**
+ * 信封处理器接口（策略模式）
+ * 每个 action 对应一个 Handler，负责具体的数据库操作
+ */
+interface EnvelopeHandler {
+  canHandle(action: string): boolean
+  handle(envelope: StandardEnvelope, store: StoreName): Promise<void>
+}
+
+/**
+ * 通用 PUT 操作处理器
+ * 处理所有简单的 db.put() 操作
+ */
+class PutHandler implements EnvelopeHandler {
+  private readonly actions: string[]
+
+  constructor(actions: string[]) {
+    this.actions = actions
+  }
+
+  canHandle(action: string): boolean {
+    return this.actions.includes(action)
+  }
+
+  async handle(envelope: StandardEnvelope, store: StoreName): Promise<void> {
+    const { meta, payload } = envelope
+    logger.debug(`[DataBridge] DB put: action="${meta.action}", store="${store}"`)
+    await db.put(store, payload)
+  }
+}
+
+/**
+ * 通用 DELETE 操作处理器
+ */
+class DeleteHandler implements EnvelopeHandler {
+  private readonly actions: string[]
+
+  constructor(actions: string[]) {
+    this.actions = actions
+  }
+
+  canHandle(action: string): boolean {
+    return this.actions.includes(action)
+  }
+
+  async handle(envelope: StandardEnvelope, store: StoreName): Promise<void> {
+    const { meta, payload } = envelope
+    const { id } = payload as { id: string }
+    logger.debug(`[DataBridge] DB delete: action="${meta.action}", store="${store}", id="${id}"`)
+    await db.delete(store, id)
+  }
+}
+
+/**
+ * 股票插入处理器（需要特殊处理）
+ */
+class InsertStockHandler implements EnvelopeHandler {
+  canHandle(action: string): boolean {
+    return action === ENVELOPE_ACTION.insertStock
+  }
+
+  async handle(envelope: StandardEnvelope, store: StoreName): Promise<void> {
+    const stock = envelope.payload as Stock
+    // 防御性校验：stocks store 的 keyPath 为 'symbol'，缺失会导致 IndexedDB 抛出
+    // "Evaluating the object store's key path did not yield a value"
+    if (!stock || !stock.symbol) {
+      const traceId = envelope.meta.traceId ?? 'N/A'
+      throw new EnvelopeError(
+        `insertStock rejected: missing or empty "symbol" field (traceId=${traceId})`,
+      )
+    }
+    logger.debug(`[DataBridge] DB insertStock: symbol="${stock.symbol}"`)
+    await db.put(store, stock)
+  }
+}
+
+/**
+ * 股票更新处理器（需要合并现有数据）
+ */
+class UpdateStockHandler implements EnvelopeHandler {
+  canHandle(action: string): boolean {
+    return action === ENVELOPE_ACTION.updateStock
+  }
+
+  async handle(envelope: StandardEnvelope, store: StoreName): Promise<void> {
+    const update = envelope.payload as Partial<Stock> & { symbol: string }
+    logger.debug(`[DataBridge] DB updateStock: symbol="${update.symbol}"`)
+    const existing = await db.get<Stock>(store, update.symbol)
+    if (!existing) {
+      logger.warn(`[DataBridge] DB updateStock failed: Stock not found "${update.symbol}"`)
+      throw new EnvelopeError(`Stock not found: ${update.symbol}`)
+    }
+    await db.put(store, { ...existing, ...update, updatedAt: Date.now(), dataVersion: (existing.dataVersion ?? 1) + 1 })
+  }
+}
+
+/**
+ * 股票删除处理器（需要级联删除）
+ */
+class DeleteStockHandler implements EnvelopeHandler {
+  canHandle(action: string): boolean {
+    return action === ENVELOPE_ACTION.deleteStock
+  }
+
+  async handle(envelope: StandardEnvelope, store: StoreName): Promise<void> {
+    const { symbol } = envelope.payload as { symbol: string }
+    logger.info(`[DataBridge] DB deleteStock: symbol="${symbol}" — 开始级联删除`)
+
+    // 1. 删除 Stock 主记录
+    await db.delete(store, symbol)
+
+    // 2. 级联删除以 symbol 为主键的关联表
+    const symbolKeyStores = [
+      STORE_NAME.v6Scores,
+      STORE_NAME.dailyQuotes,
+      STORE_NAME.hotSectorScores,
+      STORE_NAME.valuePitScores,
+    ]
+    for (const s of symbolKeyStores) {
+      try {
+        await db.delete(s, symbol)
+        logger.debug(`[DataBridge] 级联删除: ${s} symbol="${symbol}"`)
+      } catch (err) {
+        logger.warn(`[DataBridge] 级联删除失败(主键): ${s}`, { error: err instanceof Error ? err.message : String(err) })
+      }
+    }
+
+    // 3. 级联删除有 by-symbol 索引的关联表（先查后删）
+    const indexedStores = [
+      STORE_NAME.intelligentScores,
+      STORE_NAME.scoreDocs,
+      STORE_NAME.localDocs,
+      STORE_NAME.newsStockMap,
+      STORE_NAME.executionPlans,
+      STORE_NAME.executionLogs,
+      STORE_NAME.missingReports,
+    ]
+    for (const s of indexedStores) {
+      try {
+        const records = await db.getAllByIndex<{ id: string; symbol?: string }>(s, 'by-symbol', symbol)
+        for (const rec of records) {
+          if (rec.id) {
+            await db.delete(s, rec.id)
+          }
+        }
+        if (records.length > 0) {
+          logger.debug(`[DataBridge] 级联删除(索引): ${s} count=${records.length}`)
+        }
+      } catch (err) {
+        logger.warn(`[DataBridge] 级联删除失败(索引): ${s}`, { error: err instanceof Error ? err.message : String(err) })
+      }
+    }
+
+    // 4. 级联删除无 symbol 索引的关联表（全表扫描过滤）
+    const scanStores = [STORE_NAME.orders, STORE_NAME.signals, STORE_NAME.watchlists]
+    for (const s of scanStores) {
+      try {
+        const allRecords = await db.getAll<{ id: string; symbol?: string }>(s)
+        const toDelete = allRecords.filter((r) => r.symbol === symbol)
+        for (const rec of toDelete) {
+          if (rec.id) {
+            await db.delete(s, rec.id)
+          }
+        }
+        if (toDelete.length > 0) {
+          logger.debug(`[DataBridge] 级联删除(扫描): ${s} count=${toDelete.length}`)
+        }
+      } catch (err) {
+        logger.warn(`[DataBridge] 级联删除失败(扫描): ${s}`, { error: err instanceof Error ? err.message : String(err) })
+      }
+    }
+
+    logger.info(`[DataBridge] DB deleteStock 完成: symbol="${symbol}" — 级联删除结束`)
+  }
+}
+
+/**
+ * 通知类 action 处理器（仅记录日志，不持久化）
+ */
+class NotificationHandler implements EnvelopeHandler {
+  private readonly actions: string[]
+
+  constructor(actions: string[]) {
+    this.actions = actions
+  }
+
+  canHandle(action: string): boolean {
+    return this.actions.includes(action)
+  }
+
+  async handle(envelope: StandardEnvelope): Promise<void> {
+    const { meta } = envelope
+    logger.info(`[DataBridge] Notification-only action, skip DB put: action="${meta.action}"`)
+  }
+}
+
+/**
+ * 持仓数据查询处理器（P0-3 修复）
+ * loadHoldingsData 的 payload 是 HoldingsQueryParams（分页/日期/关键词），
+ * 不是 Stock 数据，不能写入 stocks store（keyPath='symbol'）。
+ * holdingsStore 的 ACL write=[] 也证实它不应执行 DB 写操作。
+ * 此处理器仅记录查询日志，不执行 DB 写入。
+ */
+class LoadHoldingsDataHandler implements EnvelopeHandler {
+  canHandle(action: string): boolean {
+    return action === ENVELOPE_ACTION.loadHoldingsData
+  }
+
+  async handle(envelope: StandardEnvelope): Promise<void> {
+    const { meta, payload } = envelope
+    logger.info('[DataBridge] loadHoldingsData: query-only action, skip DB put', {
+      traceId: meta.traceId,
+      source: meta.source,
+      payloadKeys: payload ? Object.keys(payload as Record<string, unknown>) : [],
+    })
+  }
+}
+
+/**
+ * 信封处理器注册表
+ * 按优先级顺序管理所有 Handler
+ */
+class HandlerRegistry {
+  private handlers: EnvelopeHandler[] = []
+
+  register(handler: EnvelopeHandler): void {
+    this.handlers.push(handler)
+  }
+
+  findHandler(action: string): EnvelopeHandler | undefined {
+    return this.handlers.find((h) => h.canHandle(action))
+  }
+}
+
+/**
+ * 初始化处理器注册表
+ */
+function createHandlerRegistry(): HandlerRegistry {
+  const registry = new HandlerRegistry()
+
+  // 1. 特殊处理器（优先级高）
+  registry.register(new InsertStockHandler())
+  registry.register(new UpdateStockHandler())
+  registry.register(new DeleteStockHandler())
+
+  // 2. 通知类处理器
+  registry.register(
+    new NotificationHandler([
+      ENVELOPE_ACTION.newsArticleLoaded,
+      ENVELOPE_ACTION.holdingsDataLoaded,
+      ENVELOPE_ACTION.tradeActionExecuted,
+    ])
+  )
+
+  // 2.5 持仓查询处理器（P0-3 修复：loadHoldingsData 的 payload 是 HoldingsQueryParams，
+  // 不是 Stock 数据，不应写入 stocks store。holdingsStore 的 ACL write=[] 也证实了这一点）
+  registry.register(new LoadHoldingsDataHandler())
+
+  // 3. DELETE 操作处理器
+  registry.register(new DeleteHandler([ENVELOPE_ACTION.deleteExecutionPlan]))
+
+  // 4. 通用 PUT 操作处理器（处理所有简单的 db.put() 操作）
+  registry.register(
+    new PutHandler([
+      ENVELOPE_ACTION.saveScores,
+      ENVELOPE_ACTION.saveDailyQuotes,
+      ENVELOPE_ACTION.saveIntelligentScores,
+      ENVELOPE_ACTION.saveIndustryScores,
+      ENVELOPE_ACTION.saveRotationScores,
+      ENVELOPE_ACTION.saveSectorScores,
+      ENVELOPE_ACTION.saveScoreDocs,
+      ENVELOPE_ACTION.saveStrategySnapshots,
+      ENVELOPE_ACTION.saveHotSectorScores,
+      ENVELOPE_ACTION.saveValuePitScores,
+      ENVELOPE_ACTION.saveLocalDocs,
+      ENVELOPE_ACTION.saveNews,
+      ENVELOPE_ACTION.saveNewsStockMap,
+      ENVELOPE_ACTION.saveSentimentCache,
+      ENVELOPE_ACTION.saveResearchLog,
+      ENVELOPE_ACTION.insertOrder,
+      ENVELOPE_ACTION.updateOrder,
+      ENVELOPE_ACTION.insertSignal,
+      ENVELOPE_ACTION.saveTradeReview,
+      ENVELOPE_ACTION.updateExecutionPlan,
+      ENVELOPE_ACTION.incrementMissingReportRetry,
+      ENVELOPE_ACTION.saveExecutionPlan,
+      ENVELOPE_ACTION.saveExecutionLog,
+      ENVELOPE_ACTION.saveMissingReport,
+      ENVELOPE_ACTION.updateExecutionPhase,
+      ENVELOPE_ACTION.savePortfolio,
+      ENVELOPE_ACTION.newsArticleBookmarked,
+    ])
+  )
+
+  return registry
+}
 
 const logger = getLogger()
 
@@ -55,32 +335,234 @@ export const STRATEGY_CHANNEL = {
 
 export type StrategyChannel = (typeof STRATEGY_CHANNEL)[keyof typeof STRATEGY_CHANNEL]
 
+/**
+ * Action 到 Store 的显式映射表（避免字符串包含判断的歧义）
+ */
+const ACTION_TO_STORE_MAP: Record<string, StoreName> = {
+  [ENVELOPE_ACTION.saveNewsStockMap]: STORE_NAME.newsStockMap,
+  [ENVELOPE_ACTION.insertStock]: STORE_NAME.stocks,
+  [ENVELOPE_ACTION.updateStock]: STORE_NAME.stocks,
+  [ENVELOPE_ACTION.deleteStock]: STORE_NAME.stocks,
+  [ENVELOPE_ACTION.saveDailyQuotes]: STORE_NAME.dailyQuotes,
+  [ENVELOPE_ACTION.saveIndustryScores]: STORE_NAME.industryScores,
+  [ENVELOPE_ACTION.saveIntelligentScores]: STORE_NAME.intelligentScores,
+  [ENVELOPE_ACTION.saveRotationScores]: STORE_NAME.rotationScores,
+  [ENVELOPE_ACTION.saveHotSectorScores]: STORE_NAME.hotSectorScores,
+  [ENVELOPE_ACTION.saveValuePitScores]: STORE_NAME.valuePitScores,
+  [ENVELOPE_ACTION.saveSectorScores]: STORE_NAME.sectorScores,
+  [ENVELOPE_ACTION.saveScoreDocs]: STORE_NAME.scoreDocs,
+  [ENVELOPE_ACTION.saveStrategySnapshots]: STORE_NAME.strategySnapshots,
+  [ENVELOPE_ACTION.saveLocalDocs]: STORE_NAME.localDocs,
+  [ENVELOPE_ACTION.saveNews]: STORE_NAME.news,
+  [ENVELOPE_ACTION.saveSentimentCache]: STORE_NAME.sentimentCache,
+  [ENVELOPE_ACTION.saveResearchLog]: STORE_NAME.researchLogs,
+  [ENVELOPE_ACTION.saveScores]: STORE_NAME.v6Scores,
+  [ENVELOPE_ACTION.insertOrder]: STORE_NAME.orders,
+  [ENVELOPE_ACTION.updateOrder]: STORE_NAME.orders,
+  [ENVELOPE_ACTION.deleteOrder]: STORE_NAME.orders,
+  [ENVELOPE_ACTION.insertSignal]: STORE_NAME.signals,
+  [ENVELOPE_ACTION.saveTradeReview]: STORE_NAME.tradeReviews,
+  [ENVELOPE_ACTION.saveExecutionPlan]: STORE_NAME.executionPlans,
+  [ENVELOPE_ACTION.updateExecutionPlan]: STORE_NAME.executionPlans,
+  [ENVELOPE_ACTION.deleteExecutionPlan]: STORE_NAME.executionPlans,
+  [ENVELOPE_ACTION.saveExecutionLog]: STORE_NAME.executionLogs,
+  [ENVELOPE_ACTION.saveMissingReport]: STORE_NAME.missingReports,
+  [ENVELOPE_ACTION.incrementMissingReportRetry]: STORE_NAME.missingReports,
+  [ENVELOPE_ACTION.updateExecutionPhase]: STORE_NAME.executionPlans,
+  [ENVELOPE_ACTION.loadHoldingsData]: STORE_NAME.stocks,
+  [ENVELOPE_ACTION.savePortfolio]: STORE_NAME.portfolios,
+  [ENVELOPE_ACTION.newsArticleLoaded]: STORE_NAME.news,
+  [ENVELOPE_ACTION.newsArticleBookmarked]: STORE_NAME.news,
+  [ENVELOPE_ACTION.holdingsDataLoaded]: STORE_NAME.stocks,
+  [ENVELOPE_ACTION.tradeActionExecuted]: STORE_NAME.orders,
+  [ENVELOPE_ACTION.resetAll]: STORE_NAME.stocks,
+  [ENVELOPE_ACTION.importAll]: STORE_NAME.stocks,
+  [ENVELOPE_ACTION.exportAll]: STORE_NAME.stocks,
+  [ENVELOPE_ACTION.strategyHotSectorRefresh]: STORE_NAME.hotSectorScores,
+  [ENVELOPE_ACTION.strategyValuePitRefresh]: STORE_NAME.valuePitScores,
+  [ENVELOPE_ACTION.strategyRotationSignalDetect]: STORE_NAME.rotationScores,
+}
+
 function inferStore(action: string): StoreName {
-  if (action.includes('NEWS_STOCK_MAP')) return STORE_NAME.newsStockMap
-  if (action.includes('STOCK')) return STORE_NAME.stocks
-  if (action.includes('DAILY_QUOTES')) return STORE_NAME.dailyQuotes
-  if (action.includes('INDUSTRY')) return STORE_NAME.industryScores
-  if (action.includes('INTELLIGENT')) return STORE_NAME.intelligentScores
-  if (action.includes('ROTATION')) return STORE_NAME.rotationScores
-  if (action.includes('HOT_SECTOR_SCORE')) return STORE_NAME.hotSectorScores
-  if (action.includes('VALUE_PIT_SCORE')) return STORE_NAME.valuePitScores
-  if (action.includes('SECTOR_SCORE')) return STORE_NAME.sectorScores
-  if (action.includes('SCORE_DOCS')) return STORE_NAME.scoreDocs
-  if (action.includes('STRATEGY_SNAPSHOTS')) return STORE_NAME.strategySnapshots
-  if (action.includes('LOCAL_DOCS')) return STORE_NAME.localDocs
-  if (action.includes('NEWS')) return STORE_NAME.news
-  if (action.includes('SENTIMENT_CACHE')) return STORE_NAME.sentimentCache
-  if (action.includes('RESEARCH_LOG')) return STORE_NAME.researchLogs
-  if (action.includes('SCORE')) return STORE_NAME.v6Scores
-  if (action.includes('ORDER')) return STORE_NAME.orders
-  if (action.includes('WATCHLIST')) return STORE_NAME.watchlists
-  if (action.includes('SIGNAL')) return STORE_NAME.signals
-  return STORE_NAME.stocks
+  const store = ACTION_TO_STORE_MAP[action]
+  if (!store) {
+    throw new EnvelopeError(`Unknown action: ${action} (no store mapping found)`)
+  }
+  return store
+}
+
+/**
+ * 查询请求参数
+ */
+export interface QueryRequest {
+  /** 查询动作：queryGet/queryList/queryByIndex */
+  action: typeof ENVELOPE_ACTION.queryGet | typeof ENVELOPE_ACTION.queryList | typeof ENVELOPE_ACTION.queryByIndex
+  /** 目标存储 */
+  store: StoreName
+  /** 主键（queryGet 时必填） */
+  key?: string
+  /** 索引名（queryByIndex 时必填） */
+  indexName?: string
+  /** 索引值（queryByIndex 时必填） */
+  indexValue?: unknown
+  /** 调用模块 */
+  source?: ModuleId
+}
+
+/**
+ * 查询结果
+ */
+export interface QueryResult<T> {
+  success: boolean
+  data?: T
+  error?: string
 }
 
 export class DataBridge {
   private subscribers = new Map<string, Set<EnvelopeCallback>>()
   private fallbackQueue: FallbackQueue = fallbackQueue
+  private handlerRegistry: HandlerRegistry = createHandlerRegistry()
+  private readCache = new MemoryCache<unknown>({ namespace: 'databridge:read', defaultTTL: 10_000, maxSize: 200 })
+
+  /**
+   * 查询数据（读操作）
+   * 支持缓存、ACL 校验、审计日志
+   */
+  async query<T = unknown>(request: QueryRequest): Promise<QueryResult<T>> {
+    const startTs = Date.now()
+    const source = request.source ?? ('datalayer' as ModuleId)
+    logger.info(`[DataBridge] query() called: action="${request.action}", store="${request.store}", source="${source}", key="${request.key ?? 'N/A'}", indexName="${request.indexName ?? 'N/A'}"`)
+
+    try {
+      // 1. 生成缓存 key
+      const cacheKey = this.buildCacheKey(request)
+      logger.debug(`[DataBridge] query() cache key generated: "${cacheKey}"`)
+
+      // 2. 查缓存
+      const cached = this.readCache.get(cacheKey) as T | undefined
+      if (cached !== undefined) {
+        const cacheStats = this.readCache.getStats()
+        logger.info(`[DataBridge] query() cache HIT: key="${cacheKey}", cacheSize=${cacheStats.size}, hitRate=${(cacheStats.hitRate * 100).toFixed(1)}%`)
+        const duration = Date.now() - startTs
+        logger.info(`[DataBridge] query() completed (from cache): action="${request.action}", store="${request.store}", duration=${duration}ms`)
+        return { success: true, data: cached }
+      }
+      logger.info(`[DataBridge] query() cache MISS: key="${cacheKey}", proceeding to database query`)
+
+      // 3. ACL 校验
+      try {
+        logger.debug(`[DataBridge] query() ACL check starting: module="${source}", store="${request.store}", operation="SELECT"`)
+        aclEngine.assert({
+          module: source,
+          store: request.store,
+          operation: 'SELECT',
+        })
+        logger.info(`[DataBridge] query() ACL check PASSED: module="${source}", store="${request.store}", operation="SELECT"`)
+      } catch (aclErr) {
+        const aclErrorMessage = aclErr instanceof Error ? aclErr.message : String(aclErr)
+        logger.error(`[DataBridge] query() ACL check FAILED: module="${source}", store="${request.store}", operation="SELECT", reason="${aclErrorMessage}"`)
+        throw aclErr
+      }
+
+      // 4. 执行数据库操作
+      logger.debug(`[DataBridge] query() executing database operation: action="${request.action}", store="${request.store}"`)
+      let result: T
+      switch (request.action) {
+        case ENVELOPE_ACTION.queryGet: {
+          if (!request.key) {
+            logger.error(`[DataBridge] query() parameter validation failed: queryGet requires key parameter`)
+            throw new EnvelopeError('queryGet requires key parameter')
+          }
+          logger.debug(`[DataBridge] query() executing db.get: store="${request.store}", key="${request.key}"`)
+          result = await db.get(request.store, request.key) as T
+          logger.debug(`[DataBridge] query() db.get completed: found=${result !== undefined && result !== null}`)
+          break
+        }
+        case ENVELOPE_ACTION.queryList: {
+          logger.debug(`[DataBridge] query() executing db.getAll: store="${request.store}"`)
+          result = await db.getAll(request.store) as T
+          const listLength = Array.isArray(result) ? result.length : 'N/A'
+          logger.debug(`[DataBridge] query() db.getAll completed: resultCount=${listLength}`)
+          break
+        }
+        case ENVELOPE_ACTION.queryByIndex: {
+          if (!request.indexName || request.indexValue === undefined) {
+            logger.error(`[DataBridge] query() parameter validation failed: queryByIndex requires indexName and indexValue parameters`)
+            throw new EnvelopeError('queryByIndex requires indexName and indexValue parameters')
+          }
+          const indexValueStr = typeof request.indexValue === 'string' ? request.indexValue : JSON.stringify(request.indexValue)
+          logger.debug(`[DataBridge] query() executing db.getAllByIndex: store="${request.store}", indexName="${request.indexName}", indexValue="${indexValueStr}"`)
+          result = await db.getAllByIndex(request.store, request.indexName, request.indexValue as string) as T
+          const indexListLength = Array.isArray(result) ? result.length : 'N/A'
+          logger.debug(`[DataBridge] query() db.getAllByIndex completed: resultCount=${indexListLength}`)
+          break
+        }
+        default: {
+          const unknownAction: string = request.action as string
+          logger.error(`[DataBridge] query() unknown action: "${unknownAction}"`)
+          throw new EnvelopeError(`Unknown query action: ${unknownAction}`)
+        }
+      }
+
+      // 5. 缓存结果
+      this.readCache.set(cacheKey, result)
+      const cacheStatsAfterSet = this.readCache.getStats()
+      logger.info(`[DataBridge] query() result cached: key="${cacheKey}", cacheSize=${cacheStatsAfterSet.size}, maxSize=${cacheStatsAfterSet.maxSize}`)
+
+      // 6. 审计日志
+      this.writeQueryAuditLog(request, source).catch((err) => {
+        logger.error(`[DataBridge] query() audit log failed: action="${request.action}", store="${request.store}", traceId="query-${Date.now()}"`, { error: err })
+      })
+
+      const duration = Date.now() - startTs
+      logger.info(`[DataBridge] query() completed (from db): action="${request.action}", store="${request.store}", duration=${duration}ms`)
+
+      return { success: true, data: result }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      const errorName = err instanceof Error ? err.name : 'UnknownError'
+      logger.error(`[DataBridge] query() FAILED: action="${request.action}", store="${request.store}", errorName="${errorName}", errorMessage="${message}"`)
+      return { success: false, error: message }
+    }
+  }
+
+  /**
+   * 清除指定 store 的缓存
+   * 在写操作后调用，保证数据一致性
+   */
+  invalidateCache(store: StoreName): void {
+    const statsBefore = this.readCache.getStats()
+    logger.info(`[DataBridge] invalidateCache() called: store="${store}", cacheSizeBefore=${statsBefore.size}, hitCount=${statsBefore.hitCount}, missCount=${statsBefore.missCount}`)
+    // MemoryCache 不支持批量删除，只能 clear 全部
+    // 后续可优化为按 pattern 删除
+    this.readCache.clear()
+    const statsAfter = this.readCache.getStats()
+    logger.info(`[DataBridge] invalidateCache() completed: store="${store}", cacheSizeAfter=${statsAfter.size}, clearedEntries=${statsBefore.size - statsAfter.size}`)
+  }
+
+  private buildCacheKey(request: QueryRequest): string {
+    const parts: string[] = [request.action, request.store]
+    if (request.key) parts.push(`key=${request.key}`)
+    if (request.indexName) parts.push(`idx=${request.indexName}`)
+    if (request.indexValue !== undefined) {
+      const valStr = typeof request.indexValue === 'string' ? request.indexValue : JSON.stringify(request.indexValue)
+      parts.push(`val=${valStr}`)
+    }
+    return parts.join(':')
+  }
+
+  private async writeQueryAuditLog(request: QueryRequest, source: ModuleId): Promise<void> {
+    const targetCode = request.key ?? request.indexValue?.toString() ?? request.action
+    await db.put(STORE_NAME.researchLogs, {
+      traceId: `query-${Date.now()}`,
+      timestamp: Date.now(),
+      actor: source,
+      action: request.action,
+      targetType: request.store,
+      targetCode,
+      payload: JSON.stringify({ indexName: request.indexName }),
+    })
+  }
 
   async forward(envelope: StandardEnvelope): Promise<void> {
     const startTs = Date.now()
@@ -142,6 +624,9 @@ export class DataBridge {
         logger.info(`[DataBridge] Routing to DB: action="${meta.action}", store="${targetStore}"`)
         await this.routeToDB(envelope, targetStore)
       }
+
+      // 写操作成功后清除相关缓存，保证读一致性
+      this.invalidateCache(targetStore)
 
       logger.debug(`[DataBridge] Broadcasting to channel: "${targetStore}"`)
       this.broadcast(targetStore, envelope)
@@ -220,217 +705,17 @@ export class DataBridge {
     store: StoreName,
   ): Promise<void> {
     const startTs = Date.now()
-    const { meta, payload } = envelope
+    const { meta } = envelope
     logger.debug(`[DataBridge] routeToDB() called: action="${meta.action}", store="${store}"`)
 
     try {
-      switch (meta.action) {
-        case ENVELOPE_ACTION.insertStock: {
-          const stock = payload as Stock
-          logger.debug(`[DataBridge] DB insertStock: symbol="${stock.symbol}"`)
-          await db.put(store, stock)
-          break
-        }
-        case ENVELOPE_ACTION.updateStock: {
-          const update = payload as Partial<Stock> & { symbol: string }
-          logger.debug(`[DataBridge] DB updateStock: symbol="${update.symbol}"`)
-          const existing = await db.get<Stock>(store, update.symbol)
-          if (!existing) {
-            logger.warn(`[DataBridge] DB updateStock failed: Stock not found "${update.symbol}"`)
-            throw new EnvelopeError(`Stock not found: ${update.symbol}`)
-          }
-          await db.put(store, { ...existing, ...update, updatedAt: Date.now(), dataVersion: (existing.dataVersion ?? 1) + 1 })
-          break
-        }
-        case ENVELOPE_ACTION.deleteStock: {
-          const { symbol } = payload as { symbol: string }
-          logger.info(`[DataBridge] DB deleteStock: symbol="${symbol}" — 开始级联删除`)
-
-          // 1. 删除 Stock 主记录
-          await db.delete(store, symbol)
-
-          // 2. 级联删除以 symbol 为主键的关联表
-          const symbolKeyStores = [
-            STORE_NAME.v6Scores,
-            STORE_NAME.dailyQuotes,
-            STORE_NAME.hotSectorScores,
-            STORE_NAME.valuePitScores,
-          ]
-          for (const s of symbolKeyStores) {
-            try {
-              await db.delete(s, symbol)
-              logger.debug(`[DataBridge] 级联删除: ${s} symbol="${symbol}"`)
-            } catch (err) {
-              logger.warn(`[DataBridge] 级联删除失败(主键): ${s}`, { error: err instanceof Error ? err.message : String(err) })
-            }
-          }
-
-          // 3. 级联删除有 by-symbol 索引的关联表（先查后删）
-          const indexedStores = [
-            STORE_NAME.intelligentScores,
-            STORE_NAME.scoreDocs,
-            STORE_NAME.localDocs,
-            STORE_NAME.newsStockMap,
-            STORE_NAME.executionPlans,
-            STORE_NAME.executionLogs,
-            STORE_NAME.missingReports,
-          ]
-          for (const s of indexedStores) {
-            try {
-              const records = await db.getAllByIndex<{ id: string; symbol?: string }>(s, 'by-symbol', symbol)
-              for (const rec of records) {
-                if (rec.id) {
-                  await db.delete(s, rec.id)
-                }
-              }
-              if (records.length > 0) {
-                logger.debug(`[DataBridge] 级联删除(索引): ${s} count=${records.length}`)
-              }
-            } catch (err) {
-              logger.warn(`[DataBridge] 级联删除失败(索引): ${s}`, { error: err instanceof Error ? err.message : String(err) })
-            }
-          }
-
-          // 4. 级联删除无 symbol 索引的关联表（全表扫描过滤）
-          const scanStores = [STORE_NAME.orders, STORE_NAME.signals, STORE_NAME.watchlists]
-          for (const s of scanStores) {
-            try {
-              const allRecords = await db.getAll<{ id: string; symbol?: string }>(s)
-              const toDelete = allRecords.filter((r) => r.symbol === symbol)
-              for (const rec of toDelete) {
-                if (rec.id) {
-                  await db.delete(s, rec.id)
-                }
-              }
-              if (toDelete.length > 0) {
-                logger.debug(`[DataBridge] 级联删除(扫描): ${s} count=${toDelete.length}`)
-              }
-            } catch (err) {
-              logger.warn(`[DataBridge] 级联删除失败(扫描): ${s}`, { error: err instanceof Error ? err.message : String(err) })
-            }
-          }
-
-          logger.info(`[DataBridge] DB deleteStock 完成: symbol="${symbol}" — 级联删除结束`)
-          break
-        }
-        case ENVELOPE_ACTION.saveScores: {
-          const score = payload as V6Score
-          logger.debug(`[DataBridge] DB saveScores: symbol="${score.symbol}"`)
-          await db.put(store, score)
-          break
-        }
-        case ENVELOPE_ACTION.saveDailyQuotes: {
-          const quotes = payload as DailyQuotes
-          logger.debug(`[DataBridge] DB saveDailyQuotes: symbol="${quotes.symbol}"`)
-          await db.put(store, quotes)
-          break
-        }
-        case ENVELOPE_ACTION.saveIntelligentScores: {
-          const score = payload as IntelligentScore
-          logger.debug(`[DataBridge] DB saveIntelligentScores: symbol="${score.symbol}"`)
-          await db.put(store, score)
-          break
-        }
-        case ENVELOPE_ACTION.saveIndustryScores: {
-          const score = payload as IndustryScore
-          logger.debug(`[DataBridge] DB saveIndustryScores: code="${score.code}", name="${score.name}"`)
-          await db.put(store, score)
-          break
-        }
-        case ENVELOPE_ACTION.saveRotationScores: {
-          const score = payload as RotationSectorScore
-          logger.debug(`[DataBridge] DB saveRotationScores: sectorCode="${score.sectorCode}", sectorName="${score.sectorName}"`)
-          await db.put(store, score)
-          break
-        }
-        case ENVELOPE_ACTION.saveSectorScores: {
-          const score = payload as SectorScoreRecord
-          logger.debug(`[DataBridge] DB saveSectorScores: sectorCode="${score.sectorCode}"`)
-          await db.put(store, score)
-          break
-        }
-        case ENVELOPE_ACTION.saveScoreDocs: {
-          const doc = payload as ScoreDocVersion
-          logger.debug(`[DataBridge] DB saveScoreDocs: docId="${doc.docId}"`)
-          await db.put(store, doc)
-          break
-        }
-        case ENVELOPE_ACTION.saveStrategySnapshots: {
-          const snapshot = payload as StrategySnapshot
-          logger.debug(`[DataBridge] DB saveStrategySnapshots: id="${snapshot.id}", version=${snapshot.version}`)
-          await db.put(store, snapshot)
-          break
-        }
-        case ENVELOPE_ACTION.saveHotSectorScores: {
-          const score = payload as HotSectorScore
-          logger.debug(`[DataBridge] DB saveHotSectorScores: symbol="${score.symbol}"`)
-          await db.put(store, score)
-          break
-        }
-        case ENVELOPE_ACTION.saveValuePitScores: {
-          const score = payload as ValuePitScore
-          logger.debug(`[DataBridge] DB saveValuePitScores: symbol="${score.symbol}"`)
-          await db.put(store, score)
-          break
-        }
-        case ENVELOPE_ACTION.saveLocalDocs: {
-          const doc = payload as LocalDoc
-          logger.debug(`[DataBridge] DB saveLocalDocs: docId="${doc.id}"`)
-          await db.put(store, doc)
-          break
-        }
-        case ENVELOPE_ACTION.saveNews: {
-          const article = payload as NewsArticle
-          logger.debug(`[DataBridge] DB saveNews: articleId="${article.id}"`)
-          await db.put(store, article)
-          break
-        }
-        case ENVELOPE_ACTION.saveNewsStockMap: {
-          const mapping = payload as NewsStockMap
-          logger.debug(`[DataBridge] DB saveNewsStockMap: newsId="${mapping.newsId}", symbol="${mapping.symbol}"`)
-          await db.put(store, mapping)
-          break
-        }
-        case ENVELOPE_ACTION.saveSentimentCache: {
-          const cache = payload as SentimentCache
-          logger.debug(`[DataBridge] DB saveSentimentCache: contentHash="${cache.contentHash}"`)
-          await db.put(store, cache)
-          break
-        }
-        case ENVELOPE_ACTION.saveResearchLog: {
-          const log = payload as ResearchLog
-          logger.debug(`[DataBridge] DB saveResearchLog: action="${log.action}"`)
-          await db.put(store, log)
-          break
-        }
-        case ENVELOPE_ACTION.insertOrder: {
-          const order = payload as Order
-          logger.debug(`[DataBridge] DB insertOrder: id="${order.id}", symbol="${order.symbol}"`)
-          await db.put(store, order)
-          break
-        }
-        case ENVELOPE_ACTION.insertSignal: {
-          const signal = payload as Signal
-          logger.debug(`[DataBridge] DB insertSignal: id="${signal.id}", symbol="${signal.symbol}"`)
-          await db.put(store, signal)
-          break
-        }
-        // 通知类 action：仅用于可观测性，payload 是统计信息而非业务实体，不应持久化
-        case ENVELOPE_ACTION.newsArticleLoaded:
-        case ENVELOPE_ACTION.holdingsDataLoaded:
-        case ENVELOPE_ACTION.tradeActionExecuted: {
-          logger.info(`[DataBridge] Notification-only action, skip DB put: action="${meta.action}"`)
-          break
-        }
-        case ENVELOPE_ACTION.saveTradeReview: {
-          logger.info(`[DataBridge] Saving trade review report`)
-          await db.put(store, payload)
-          break
-        }
-        default: {
-          logger.warn(`[DataBridge] Unknown action routed to DB default put: action="${meta.action}", store="${store}"`)
-          await db.put(store, payload)
-        }
+      // 使用策略模式：查找对应的 Handler
+      const handler = this.handlerRegistry.findHandler(meta.action)
+      if (!handler) {
+        logger.warn(`[DataBridge] No handler found for action: "${meta.action}", falling back to default put`)
+        await db.put(store, envelope.payload)
+      } else {
+        await handler.handle(envelope, store)
       }
 
       const duration = Date.now() - startTs
@@ -509,7 +794,7 @@ export class DataBridge {
                 `sentiment=${score.dimensions.sentiment.toFixed(2)} ` +
                 `technical=${score.dimensions.technical.toFixed(2)} ` +
                 `valuation=${score.dimensions.valuation.toFixed(2)} ` +
-                `marketEnv=${score.dimensions.marketEnv.toFixed(2)} ` +
+                `marketEnv=${(score.dimensions.marketEnv ?? 0).toFixed(2)} ` +
                 `→ score=${score.score.toFixed(2)} action=${score.action}`,
               )
               return score
@@ -541,8 +826,8 @@ export class DataBridge {
             logger.info(`[DataBridge] HotSector: channel="${STRATEGY_CHANNEL.hotSector}" 广播完成`)
 
             // ===== 5. EventBus 事件 =====
-            eventBus.emit('strategy:hotSectorChanged', scores)
-            logger.info(`[DataBridge] HotSector: EventBus emit "strategy:hotSectorChanged" 完成, payload.length=${scores.length}`)
+            eventBus.emit(EVENT_NAMES.HOT_SECTOR_CHANGED, scores)
+            logger.info(`[DataBridge] HotSector: EventBus emit "${EVENT_NAMES.HOT_SECTOR_CHANGED}" 完成, payload.length=${scores.length}`)
           } catch (err) {
             logger.error(`[DataBridge] HotSector refresh 失败`, { error: err })
             throw err
@@ -603,8 +888,8 @@ export class DataBridge {
             logger.info(`[DataBridge] ValuePit: channel="${STRATEGY_CHANNEL.valuePit}" 广播完成`)
 
             // ===== 5. EventBus 事件 =====
-            eventBus.emit('strategy:valuePitChanged', scores)
-            logger.info(`[DataBridge] ValuePit: EventBus emit "strategy:valuePitChanged" 完成, payload.length=${scores.length}`)
+            eventBus.emit(EVENT_NAMES.VALUE_PIT_CHANGED, scores)
+            logger.info(`[DataBridge] ValuePit: EventBus emit "${EVENT_NAMES.VALUE_PIT_CHANGED}" 完成, payload.length=${scores.length}`)
           } catch (err) {
             logger.error(`[DataBridge] ValuePit refresh 失败`, { error: err })
             throw err
@@ -669,8 +954,8 @@ export class DataBridge {
             logger.info(`[DataBridge] RotationSignal: channel="${STRATEGY_CHANNEL.rotationSignal}" 广播完成`)
 
             // ===== 5. EventBus 事件 =====
-            eventBus.emit('strategy:rotationSignalTriggered', signals)
-            logger.info(`[DataBridge] RotationSignal: EventBus emit "strategy:rotationSignalTriggered" 完成, payload.length=${signals.length}`)
+            eventBus.emit(EVENT_NAMES.ROTATION_SIGNAL_TRIGGERED, signals)
+            logger.info(`[DataBridge] RotationSignal: EventBus emit "${EVENT_NAMES.ROTATION_SIGNAL_TRIGGERED}" 完成, payload.length=${signals.length}`)
           } catch (err) {
             logger.error(`[DataBridge] RotationSignal detect 失败`, { error: err })
             throw err
@@ -743,9 +1028,10 @@ export class DataBridge {
 
     logger.info(`[DataBridge] broadcast() to subscribers: channel="${channel}", listeners=${callbackCount}, success=${successCount}, errors=${errorCount}`)
 
-    logger.debug(`[DataBridge] Emitting eventBus: "${channel}:changed"`)
+    const eventName = `${channel}${CHANGED_SUFFIX}`
+    logger.debug(`[DataBridge] Emitting eventBus: "${eventName}"`)
     try {
-      eventBus.emit(`${channel}:changed`, envelope)
+      eventBus.emit(eventName, envelope)
     } catch (err) {
       logger.warn(`[DataBridge] eventBus.emit failed for channel "${channel}", action="${envelope.meta.action}", traceId="${envelope.meta.traceId}"`, { error: err })
     }

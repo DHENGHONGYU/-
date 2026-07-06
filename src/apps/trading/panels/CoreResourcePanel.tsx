@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import type { Portfolio, StrategyClassification, StrategyResult } from '@/data/types'
+import { twBg, twText } from '@/constants/theme.tokens'
 
 export interface CoreResourcePanelProps {
   portfolio?: Portfolio
@@ -143,10 +144,10 @@ export function CoreResourcePanel({
                       <Badge
                         className={
                           action.action === 'buy'
-                            ? 'bg-green-100 text-green-800'
+                            ? twBg('green', 100) + ' ' + twText('green', 800)
                             : action.action === 'sell'
-                              ? 'bg-red-100 text-red-800'
-                              : 'bg-gray-100 text-gray-800'
+                              ? twBg('red', 100) + ' ' + twText('red', 800)
+                              : twBg('gray', 100) + ' ' + twText('gray', 700)
                         }
                       >
                         {action.action === 'buy'
@@ -181,16 +182,16 @@ function ClassificationBadge({
           ? '热门追涨'
           : '其他'
 
-  const className =
+  const badgeClass =
     classification === 'core-scarce'
-      ? 'bg-blue-100 text-blue-800'
+      ? twBg('blue', 100) + ' ' + twText('blue', 700)
       : classification === 'value-bargain'
-        ? 'bg-purple-100 text-purple-800'
+        ? twBg('purple', 100) + ' ' + twText('purple', 700)
         : classification === 'hot-momentum'
-          ? 'bg-orange-100 text-orange-800'
-          : 'bg-gray-100 text-gray-800'
+          ? twBg('orange', 100) + ' ' + twText('orange', 600)
+          : twBg('gray', 100) + ' ' + twText('gray', 700)
 
-  return <Badge className={className}>{label}</Badge>
+  return <Badge className={badgeClass}>{label}</Badge>
 }
 
 function MetricItem({ label, value }: { label: string; value: string }): React.JSX.Element {

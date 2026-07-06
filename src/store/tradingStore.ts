@@ -1,54 +1,53 @@
 /**
  * @module tradingStore
  * @lifecycle @Global
- * @description 交易信号页面状态管理 —— 交易舱视图层的唯一可信源（SSOT）。
- * 统一管理观察池列表、订单列表、信号列表、交易建议、组合与策略结果。
+ * @deprecated 批次B拆分后，此 Store 作为向后兼容的 Facade。
+ * 新代码应直接使用拆分后的独立 Store：
+ * - useWatchlistStore: 自选股管理
+ * - useSignalAdviceStore: 信号建议
+ * - usePortfolioStore: 投资组合
+ * - useOrderStore: 订单管理（可信源）
  *
- * @see docs/《功能模块数据契约》.md — 交易信号 Store 模块契约（第 15 节）
- * @see docs/《V9现有数据资产清单》.md — Zustand Store 资产清单
- * @see docs/implementation/v9-system-blueprint.md — Phase 5 Store-first 架构过渡
- * @see src/services/trading/tradingService.ts — 交易服务层（数据读取）
- * @see src/services/trading/portfolioBuilder.ts — 组合构建器
+ * @description 交易信号页面状态管理 —— 向后兼容 Facade。
+ * 通过订阅拆分后的子 Store 保持状态同步，确保消费方（TradingApp）的响应式更新。
  *
- * @compliance
- * - isRefreshing 锁防止并发刷新
- * - 失败时快照回滚，保留旧数据不被清空
- * - 所有写操作通过 dataBridge.forward() 走信封协议
- * - 数据读取通过 tradingService 获取
+ * 保留的本地状态：
+ * - processingSymbols: 正在执行交易的 symbol 集合
+ * - message: 页面消息
+ *
+ * @see src/store/watchlistStore.ts — 自选股管理
+ * @see src/store/signalAdviceStore.ts — 信号建议
+ * @see src/store/portfolioStore.ts — 投资组合
+ * @see src/store/orderStore.ts — 订单管理
  */
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'
 import {
-  getWatchlistStocks,
-  getOrders,
   createBuyOrder,
   createSellOrder,
-  scanWatchingSignals,
-  adviseForStock,
   type TradeAdvice,
 } from '@/services/trading/tradingService'
-import {
-  buildStrategyFilteredPortfolio,
-  computeHoldingsFromOrders,
-} from '@/services/trading/portfolioBuilder'
 import type { TradingSignal } from '@/services/trading/signalGenerator'
 import type { Order, Portfolio, Stock, StrategyResult } from '@/data/types'
-import { CORE_RESOURCE_THEME } from '@/config/themeRegistry'
 import { eventBus } from '@/lib/eventBus'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
+import { useWatchlistStore } from './watchlistStore'
+import { useSignalAdviceStore } from './signalAdviceStore'
+import { usePortfolioStore } from './portfolioStore'
+import { useOrderStore } from './orderStore'
 
 const logger = getLogger()
 
 // ============================================================
-// 类型定义
+// 类型定义（向后兼容导出）
 // ============================================================
 
 /**
- * TradingStore 状态接口 —— 交易信号页面的唯一可信源。
+ * TradingStore 状态接口 —— 向后兼容的 Facade。
+ * @deprecated 新代码应直接使用拆分后的独立 Store
  */
 export interface TradingState {
-  // ---- 核心数据 ----
   /** 观察池股票列表 */
   stocks: Stock[]
   /** 订单列表 */
@@ -61,8 +60,6 @@ export interface TradingState {
   portfolio: Portfolio | undefined
   /** 策略筛选结果 */
   strategyResult: StrategyResult | undefined
-
-  // ---- 加载状态 ----
   /** 组合构建加载中 */
   portfolioLoading: boolean
   /** 正在执行交易的 symbol 集合 */
@@ -72,24 +69,14 @@ export interface TradingState {
   /** 是否正在刷新（并发锁） */
   isRefreshing: boolean
 
-  // ---- Actions ----
-  /** 加载观察池股票并生成交易建议 */
   loadStocks: () => Promise<void>
-  /** 加载订单列表 */
   loadOrders: () => Promise<void>
-  /** 扫描观察池信号 */
   scanSignals: () => Promise<void>
-  /** 构建核心组合 */
   loadPortfolio: () => Promise<void>
-  /** 执行买入操作 */
   handleBuy: (stock: Stock) => Promise<void>
-  /** 执行卖出操作 */
   handleSell: (stock: Stock) => Promise<void>
-  /** 获取指定股票的持仓股数 */
   getHoldingShares: (symbol: string) => number
-  /** 设置页面消息 */
   setMessage: (msg: string) => void
-  /** 重置 store */
   reset: () => void
 }
 
@@ -118,123 +105,99 @@ export const useTradingStore = create<TradingState>()((set, get) => ({
   ...initialState,
 
   // ----------------------------------------------------------
-  // loadStocks —— 加载观察池并生成建议
+  // loadStocks —— 加载观察池并生成建议（委托）
   // ----------------------------------------------------------
   loadStocks: async () => {
-    const result = await getWatchlistStocks()
-    if (result.success && result.data) {
-      set({ stocks: result.data })
+    logger.info('[tradingStore] loadStocks 开始（委托给 watchlistStore + signalAdviceStore）')
 
-      const map: Record<string, TradeAdvice> = {}
-      for (const stock of result.data) {
-        const advice = await adviseForStock(stock)
-        if (advice.success && advice.data) {
-          map[stock.symbol] = advice.data
-        }
-      }
-      set({ adviceMap: map, message: '观察池与交易建议已更新' })
+    await useWatchlistStore.getState().loadStocks()
+    const stocks = useWatchlistStore.getState().stocks
+
+    if (stocks.length > 0) {
+      await useSignalAdviceStore.getState().generateAdviceForStocks(stocks)
+      // 同步子 Store 状态到 Facade
+      set({
+        stocks,
+        adviceMap: useSignalAdviceStore.getState().adviceMap,
+        message: '观察池与交易建议已更新',
+      })
     } else {
-      set({ message: result.error ?? '加载观察池失败' })
+      set({ stocks: [], message: '观察池为空' })
     }
   },
 
   // ----------------------------------------------------------
-  // loadOrders —— 加载订单
+  // loadOrders —— 加载订单（委托）
   // ----------------------------------------------------------
   loadOrders: async () => {
-    const result = await getOrders()
-    if (result.success && result.data) {
-      set({ orders: result.data })
-    } else {
-      set({ message: result.error ?? '加载订单失败' })
+    logger.info('[tradingStore] loadOrders 开始（委托给 orderStore）')
+    await useOrderStore.getState().refresh()
+    const orders = useOrderStore.getState().orders
+    set({ orders })
+    if (orders.length === 0) {
+      set({ message: '订单列表为空' })
     }
   },
 
   // ----------------------------------------------------------
-  // scanSignals —— 扫描信号
+  // scanSignals —— 扫描信号（委托）
   // ----------------------------------------------------------
   scanSignals: async () => {
-    const result = await scanWatchingSignals()
-    set({
-      signals: result,
-      message: `扫描完成，共 ${result.length} 条信号`,
-    })
-    // D-3: 广播信号变更事件
-    eventBus.emit(EVENT_NAMES.SIGNALS_CHANGED, { action: 'scan', count: result.length })
+    logger.info('[tradingStore] scanSignals 开始（委托给 signalAdviceStore）')
+    await useSignalAdviceStore.getState().scanSignals()
+    const signals = useSignalAdviceStore.getState().signals
+    set({ signals, message: `扫描完成，共 ${signals.length} 条信号` })
   },
 
   // ----------------------------------------------------------
-  // loadPortfolio —— 构建核心组合
+  // loadPortfolio —— 构建核心组合（委托）
   // ----------------------------------------------------------
   loadPortfolio: async () => {
-    const { stocks } = get()
+    logger.info('[tradingStore] loadPortfolio 开始（委托给 portfolioStore）')
 
-    // 快照回滚目标
-    const snapshot = {
-      portfolio: get().portfolio,
-      strategyResult: get().strategyResult,
-      portfolioLoading: get().portfolioLoading,
-      message: get().message,
-    }
-
-    if (stocks.length === 0) {
+    // 确保 stocks 和 orders 已加载
+    if (useWatchlistStore.getState().stocks.length === 0) {
       await get().loadStocks()
     }
-    if (get().orders.length === 0) {
+    if (useOrderStore.getState().orders.length === 0) {
       await get().loadOrders()
     }
 
+    const currentStocks = useWatchlistStore.getState().stocks
+    const currentOrders = useOrderStore.getState().orders
+
     set({ portfolioLoading: true })
+    await usePortfolioStore.getState().buildPortfolio(currentStocks, currentOrders)
 
-    try {
-      const currentStocks = get().stocks
-      const currentOrders = get().orders
-
-      const result = await buildStrategyFilteredPortfolio({
-        theme: CORE_RESOURCE_THEME,
-        stocks: currentStocks,
-        currentHoldings: computeHoldingsFromOrders(currentOrders),
-      })
-      set({
-        portfolio: result.portfolio,
-        strategyResult: result.strategyResult,
-        portfolioLoading: false,
-        message:
-          result.portfolio.holdings.length > 0
-            ? `核心稀缺组合已构建，共 ${result.portfolio.holdings.length} 只标的`
-            : '核心稀缺组合为空，无匹配标的或评分不足',
-      })
-    } catch (err) {
-      logger.error('[tradingStore] 构建组合失败', { error: err instanceof Error ? err.message : String(err) })
-      set({
-        ...snapshot,
-        portfolioLoading: false,
-        message: err instanceof Error ? err.message : '构建组合失败',
-      })
-    }
+    const portfolio = usePortfolioStore.getState().portfolio
+    set({
+      portfolio: usePortfolioStore.getState().portfolio,
+      strategyResult: usePortfolioStore.getState().strategyResult,
+      portfolioLoading: false,
+      message: portfolio && portfolio.holdings.length > 0
+        ? `核心稀缺组合已构建，共 ${portfolio.holdings.length} 只标的`
+        : '核心稀缺组合为空，无匹配标的或评分不足',
+    })
   },
 
   // ----------------------------------------------------------
   // handleBuy —— 买入
   // ----------------------------------------------------------
   handleBuy: async (stock: Stock) => {
-    const { processingSymbols, adviceMap } = get()
+    const { processingSymbols } = get()
     if (processingSymbols.has(stock.symbol)) return
 
-    set({
-      processingSymbols: new Set(processingSymbols).add(stock.symbol),
-    })
+    set({ processingSymbols: new Set(processingSymbols).add(stock.symbol) })
 
     try {
+      const adviceMap = useSignalAdviceStore.getState().adviceMap
       const advice = adviceMap[stock.symbol]
-      const quantity =
-        advice?.sizing?.action === 'buy' ? advice.sizing.targetShares : 100
+      const quantity = advice?.sizing?.action === 'buy' ? advice.sizing.targetShares : 100
       const result = await createBuyOrder(stock, quantity)
 
       if (result.success) {
         set({ message: `已买入 ${stock.symbol} ${quantity} 股` })
         await get().loadOrders()
-        // D-3: 广播订单变更事件
         eventBus.emit(EVENT_NAMES.ORDERS_CHANGED, { action: 'buy', symbol: stock.symbol, quantity })
       } else {
         set({ message: result.error ?? '买入失败' })
@@ -251,14 +214,13 @@ export const useTradingStore = create<TradingState>()((set, get) => ({
   // handleSell —— 卖出
   // ----------------------------------------------------------
   handleSell: async (stock: Stock) => {
-    const { processingSymbols, adviceMap } = get()
+    const { processingSymbols } = get()
     if (processingSymbols.has(stock.symbol)) return
 
-    set({
-      processingSymbols: new Set(processingSymbols).add(stock.symbol),
-    })
+    set({ processingSymbols: new Set(processingSymbols).add(stock.symbol) })
 
     try {
+      const adviceMap = useSignalAdviceStore.getState().adviceMap
       const advice = adviceMap[stock.symbol]
       const quantity =
         advice?.sizing?.action === 'sell'
@@ -269,7 +231,6 @@ export const useTradingStore = create<TradingState>()((set, get) => ({
       if (result.success) {
         set({ message: `已卖出 ${stock.symbol} ${quantity} 股` })
         await get().loadOrders()
-        // D-3: 广播订单变更事件
         eventBus.emit(EVENT_NAMES.ORDERS_CHANGED, { action: 'sell', symbol: stock.symbol, quantity })
       } else {
         set({ message: result.error ?? '卖出失败' })
@@ -286,7 +247,8 @@ export const useTradingStore = create<TradingState>()((set, get) => ({
   // getHoldingShares —— 计算持仓股数
   // ----------------------------------------------------------
   getHoldingShares: (symbol: string): number => {
-    return get().orders
+    const orders = useOrderStore.getState().orders
+    return orders
       .filter((o) => o.symbol === symbol)
       .reduce((sum, o) => sum + (o.direction === 'buy' ? o.quantity : -o.quantity), 0)
   },
@@ -303,6 +265,85 @@ export const useTradingStore = create<TradingState>()((set, get) => ({
   // ----------------------------------------------------------
   reset: () => {
     logger.info('[tradingStore] reset')
+    useWatchlistStore.getState().reset()
+    useSignalAdviceStore.getState().reset()
+    usePortfolioStore.getState().reset()
     set({ ...initialState, processingSymbols: new Set<string>() })
   },
 }))
+
+// ============================================================
+// 子 Store 订阅同步 —— Facade 响应式更新
+// ============================================================
+
+let _unsubscribeFacade: (() => void) | null = null
+
+/**
+ * 初始化 Facade 的子 Store 订阅同步。
+ * 当子 Store 状态变更时，自动同步到 Facade 状态，确保消费方响应式更新。
+ *
+ * @returns 清理函数
+ */
+export function initTradingStoreFacadeSync(): () => void {
+  if (_unsubscribeFacade) {
+    logger.warn('[tradingStore] Facade sync already initialized')
+    return _unsubscribeFacade
+  }
+
+  const cleanupFns: Array<() => void> = []
+
+  // 订阅 watchlistStore
+  const unsubWatchlist = useWatchlistStore.subscribe((state) => {
+    useTradingStore.setState({ stocks: state.stocks })
+  })
+  cleanupFns.push(unsubWatchlist)
+
+  // 订阅 signalAdviceStore
+  const unsubSignal = useSignalAdviceStore.subscribe((state) => {
+    useTradingStore.setState({
+      signals: state.signals,
+      adviceMap: state.adviceMap,
+    })
+  })
+  cleanupFns.push(unsubSignal)
+
+  // 订阅 portfolioStore
+  const unsubPortfolio = usePortfolioStore.subscribe((state) => {
+    useTradingStore.setState({
+      portfolio: state.portfolio,
+      strategyResult: state.strategyResult,
+      portfolioLoading: state.loading,
+    })
+  })
+  cleanupFns.push(unsubPortfolio)
+
+  // 订阅 orderStore
+  const unsubOrder = useOrderStore.subscribe((state) => {
+    useTradingStore.setState({ orders: state.orders })
+  })
+  cleanupFns.push(unsubOrder)
+
+  _unsubscribeFacade = () => {
+    cleanupFns.forEach((fn) => fn())
+    _unsubscribeFacade = null
+    logger.info('[tradingStore] Facade sync destroyed')
+  }
+
+  // 初始同步一次
+  const wlState = useWatchlistStore.getState()
+  const sigState = useSignalAdviceStore.getState()
+  const pfState = usePortfolioStore.getState()
+  const ordState = useOrderStore.getState()
+  useTradingStore.setState({
+    stocks: wlState.stocks,
+    signals: sigState.signals,
+    adviceMap: sigState.adviceMap,
+    portfolio: pfState.portfolio,
+    strategyResult: pfState.strategyResult,
+    portfolioLoading: pfState.loading,
+    orders: ordState.orders,
+  })
+
+  logger.info('[tradingStore] Facade sync initialized')
+  return _unsubscribeFacade
+}

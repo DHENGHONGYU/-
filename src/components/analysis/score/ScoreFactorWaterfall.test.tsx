@@ -7,6 +7,7 @@
 import React from 'react'
 import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import { UI_TEXT } from '@/constants/uiText'
 import { ScoreFactorWaterfall } from './ScoreFactorWaterfall'
 import type { FactorContribution, ScoreAuditTrail } from '@/services/scoring/v6-engine'
 
@@ -74,7 +75,7 @@ describe('ScoreFactorWaterfall', () => {
 
   it('error 态渲染 ErrorState', () => {
     render(<ScoreFactorWaterfall error="计算失败" />)
-    expect(screen.getByText('计算失败')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.errors.calculationFailed)).toBeInTheDocument()
     expect(screen.getByText('因子贡献加载失败')).toBeInTheDocument()
   })
 
@@ -92,8 +93,8 @@ describe('ScoreFactorWaterfall', () => {
     renderWithSize(<ScoreFactorWaterfall audit={audit} />)
 
     expect(screen.getByTestId('score-factor-waterfall')).toBeInTheDocument()
-    expect(screen.getByText('正向贡献')).toBeInTheDocument()
-    expect(screen.getByText('负向贡献')).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.factor.positiveContribution)).toBeInTheDocument()
+    expect(screen.getByText(UI_TEXT.analysis.factor.negativeContribution)).toBeInTheDocument()
     // “综合得分”同时出现在图例与 X 轴标签中
     expect(screen.getAllByText('综合得分').length).toBeGreaterThanOrEqual(1)
   })
@@ -107,8 +108,8 @@ describe('ScoreFactorWaterfall', () => {
 
     const l1Tick = screen.getByText(/^L1$/).closest('text')
     const l2Tick = screen.getByText(/^L2$/).closest('text')
-    expect(l1Tick).toHaveTextContent('护城河')
-    expect(l2Tick).toHaveTextContent('竞品格局')
+    expect(l1Tick).toHaveTextContent(UI_TEXT.analysis.factor.moat)
+    expect(l2Tick).toHaveTextContent(UI_TEXT.analysis.factor.competitionPattern)
     expect(screen.getAllByText('综合得分').length).toBeGreaterThanOrEqual(1)
   })
 })

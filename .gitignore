@@ -8,6 +8,8 @@ dist-ssr
 # Logs
 *.log
 logs
+.trae/logs/
+.trae-security/
 
 # Environment variables
 .env
@@ -89,3 +91,4 @@ __pycache__/
 # Script-generated outputs
 /scripts/component-audit-report.txt
 /scripts/component-audit-data.json
+NUL

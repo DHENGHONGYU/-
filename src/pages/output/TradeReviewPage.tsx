@@ -33,7 +33,7 @@ export default memo(function TradeReviewPage(): React.JSX.Element {
   const { loadOrders: loadOrdersFromStore, generateReviewReport } = useDisciplineStore()
 
   useEffect(() => {
-    loadOrders()
+    void loadOrders()
   }, [])
 
   const loadOrders = async (): Promise<void> => {
@@ -150,7 +150,7 @@ export default memo(function TradeReviewPage(): React.JSX.Element {
               </div>
               <Button
                 {...guardProps}
-                onClick={generateReviewReportHandler}
+                onClick={() => void generateReviewReportHandler()}
                 disabled={guardProps.disabled || orders.length === 0 || generating}
               >
                 {generating ? (

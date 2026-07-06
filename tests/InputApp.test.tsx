@@ -9,6 +9,7 @@ import * as batchImportService from '@/services/input/batchImportService'
 import * as hotSectorService from '@/services/input/hotSectorService'
 import * as stockpoolService from '@/services/stockpool/stockpoolService'
 import type { Stock } from '@/data/types'
+import { UI_TEXT } from '@/constants/uiText'
 
 vi.mock('@/hooks/useToast', () => ({
   useToast: () => ({ toast: vi.fn(), toasts: [], dismiss: vi.fn() }),
@@ -108,22 +109,22 @@ describe('InputApp', () => {
     renderApp()
 
     await waitFor(() => {
-      expect(screen.getByText('录入候选股票')).toBeInTheDocument()
+      expect(screen.getByText(UI_TEXT.input.dashboard.enterCandidateStock)).toBeInTheDocument()
     })
-    expect(screen.getByRole('button', { name: /仅录入$/ })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /批量导入/i })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /热门板块/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: new RegExp('^' + UI_TEXT.errors.entryOnly + '$') })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: new RegExp(UI_TEXT.errors.batchImport, 'i') })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: new RegExp(UI_TEXT.errors.hotSectors, 'i') })).toBeInTheDocument()
   })
 
   it('adds stock when clicking 仅录入', async () => {
     renderApp()
-    await waitFor(() => screen.getByText('录入候选股票'))
+    await waitFor(() => screen.getByText(UI_TEXT.input.dashboard.enterCandidateStock))
 
     const codeInput = screen.getByPlaceholderText(/股票代码/)
     const nameInput = screen.getByPlaceholderText(/股票名称/)
     await userEvent.type(codeInput, '000001.SZ')
     await userEvent.type(nameInput, '平安银行')
-    await userEvent.click(screen.getByRole('button', { name: /仅录入$/ }))
+    await userEvent.click(screen.getByRole('button', { name: new RegExp('^' + UI_TEXT.errors.entryOnly + '$') }))
 
     await waitFor(() => {
       expect(inputService.addStock).toHaveBeenCalledWith(
@@ -135,24 +136,24 @@ describe('InputApp', () => {
 
   it('checks fetcher health when clicking 刷新', async () => {
     renderApp()
-    await waitFor(() => screen.getByText('录入候选股票'))
+    await waitFor(() => screen.getByText(UI_TEXT.input.dashboard.enterCandidateStock))
 
-    await userEvent.click(screen.getByRole('button', { name: /^刷新$/ }))
+    await userEvent.click(screen.getByRole('button', { name: new RegExp('^' + UI_TEXT.common.refresh + '$') }))
 
     await waitFor(() => {
       expect(fetcherService.checkFetcherHealth).toHaveBeenCalled()
-      expect(screen.getAllByText('已连接').length).toBeGreaterThan(0)
+      expect(screen.getAllByText(UI_TEXT.errors.connected).length).toBeGreaterThan(0)
     })
   })
 
   it('navigates to bulk import page and imports', async () => {
     renderApp()
-    await waitFor(() => screen.getByText('录入候选股票'))
+    await waitFor(() => screen.getByText(UI_TEXT.input.dashboard.enterCandidateStock))
 
-    await userEvent.click(screen.getByRole('button', { name: /批量导入/i }))
+    await userEvent.click(screen.getByRole('button', { name: new RegExp(UI_TEXT.errors.batchImport, 'i') }))
 
     await waitFor(() => {
-      expect(screen.getByText('批量导入候选股票')).toBeInTheDocument()
+      expect(screen.getByText(UI_TEXT.input.dashboard.batchImportCandidateStock)).toBeInTheDocument()
     })
 
     await userEvent.type(screen.getByPlaceholderText(/600519,贵州茅台/), '600519,贵州茅台')
@@ -161,7 +162,7 @@ describe('InputApp', () => {
       expect(screen.getByText('600519.SH')).toBeInTheDocument()
     })
 
-    await userEvent.click(screen.getByRole('button', { name: /确认导入/i }))
+    await userEvent.click(screen.getByRole('button', { name: new RegExp(UI_TEXT.input.import.confirmImport, 'i') }))
 
     await waitFor(() => {
       expect(batchImportService.importStocks).toHaveBeenCalled()
@@ -170,12 +171,12 @@ describe('InputApp', () => {
 
   it('navigates to hot sector page and displays sectors', async () => {
     renderApp()
-    await waitFor(() => screen.getByText('录入候选股票'))
+    await waitFor(() => screen.getByText(UI_TEXT.input.dashboard.enterCandidateStock))
 
-    await userEvent.click(screen.getByRole('button', { name: /热门板块/i }))
+    await userEvent.click(screen.getByRole('button', { name: new RegExp(UI_TEXT.errors.hotSectors, 'i') }))
 
     await waitFor(() => {
-      expect(screen.getByText('热门板块推荐')).toBeInTheDocument()
+      expect(screen.getByText(UI_TEXT.input.dashboard.hotSectorsRecommendation)).toBeInTheDocument()
       expect(screen.getByText('半导体')).toBeInTheDocument()
       expect(screen.getByText('比亚迪')).toBeInTheDocument()
     })
@@ -183,9 +184,9 @@ describe('InputApp', () => {
 
   it('adds single hot sector stock', async () => {
     renderApp()
-    await waitFor(() => screen.getByText('录入候选股票'))
+    await waitFor(() => screen.getByText(UI_TEXT.input.dashboard.enterCandidateStock))
 
-    await userEvent.click(screen.getByRole('button', { name: /热门板块/i }))
+    await userEvent.click(screen.getByRole('button', { name: new RegExp(UI_TEXT.errors.hotSectors, 'i') }))
     await waitFor(() => screen.getByText('比亚迪'))
 
     const addButtons = screen.getAllByRole('button', { name: /^加入候选池$/ })
@@ -202,20 +203,20 @@ describe('InputApp', () => {
 
   it('toggles list view', async () => {
     renderApp()
-    await waitFor(() => screen.getByText('股票池看板'))
+    await waitFor(() => screen.getByText(UI_TEXT.input.dashboard.stockPoolBoard))
 
-    await userEvent.click(screen.getByRole('button', { name: /列表视图/i }))
+    await userEvent.click(screen.getByRole('button', { name: new RegExp(UI_TEXT.errors.listView, 'i') }))
 
     await waitFor(() => {
-      expect(screen.getByText('代码')).toBeInTheDocument()
+      expect(screen.getByText(UI_TEXT.common.code)).toBeInTheDocument()
     })
   })
 
   it('filters stocks by data quality', async () => {
     renderApp()
-    await waitFor(() => screen.getByText('股票池看板'))
+    await waitFor(() => screen.getByText(UI_TEXT.input.dashboard.stockPoolBoard))
 
-    const filterSelect = screen.getByLabelText('数据质量筛选')
+    const filterSelect = screen.getByLabelText(UI_TEXT.errors.dataQualityFilter)
     await userEvent.selectOptions(filterSelect, 'missingBasic')
 
     await waitFor(() => {
@@ -230,10 +231,10 @@ describe('InputApp', () => {
       data: { ...mockStock, researchStatus: 'archived' } as never,
     })
     renderApp()
-    await waitFor(() => screen.getByText('股票池看板'))
+    await waitFor(() => screen.getByText(UI_TEXT.input.dashboard.stockPoolBoard))
 
-    await userEvent.click(screen.getByRole('button', { name: /列表视图/i }))
-    await waitFor(() => screen.getByText('代码'))
+    await userEvent.click(screen.getByRole('button', { name: new RegExp(UI_TEXT.errors.listView, 'i') }))
+    await waitFor(() => screen.getByText(UI_TEXT.common.code))
 
     const checkboxes = screen.getAllByRole('checkbox')
     await userEvent.click(checkboxes[0]!)

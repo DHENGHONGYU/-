@@ -1,9 +1,10 @@
 import { describe, expect, it, beforeEach } from 'vitest'
 import { dataLayer } from '@/data/dataLayer'
 import { db, generateId } from '@/data/db'
+import { dataBridge } from '@/core/databridge'
+import { STORE_NAME, ORDER_DIRECTION } from '@/config/dbConfig'
 import { checkOrderRisk } from '@/services/trading/riskEngine'
 import type { DailyQuotes, KlineBar } from '@/data/types'
-import { ORDER_DIRECTION } from '@/config/dbConfig'
 
 function buildQuotes(symbol: string, updatedAt = Date.now()): DailyQuotes {
   const history: KlineBar[] = Array.from({ length: 30 }, (_, i) => ({
@@ -43,6 +44,8 @@ describe('riskEngine', () => {
   beforeEach(async () => {
     await db.init()
     await db.reset()
+    dataBridge.invalidateCache(STORE_NAME.dailyQuotes)
+    dataBridge.invalidateCache(STORE_NAME.orders)
   })
 
   it('passes for a valid buy order with fresh data', async () => {

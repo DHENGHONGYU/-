@@ -1,6 +1,8 @@
 import { describe, expect, it, beforeEach } from 'vitest'
 import { db } from '@/data/db'
 import { dataLayer } from '@/data/dataLayer'
+import { dataBridge } from '@/core/databridge'
+import { STORE_NAME } from '@/config/dbConfig'
 import { getCompositeScore } from '@/services/trading/scoringAdapter'
 import type { IndustryScore, IntelligentScore, Stock, V6Score } from '@/data/types'
 
@@ -31,6 +33,9 @@ describe('scoringAdapter', () => {
   beforeEach(async () => {
     await db.init()
     await db.reset()
+    dataBridge.invalidateCache(STORE_NAME.v6Scores)
+    dataBridge.invalidateCache(STORE_NAME.intelligentScores)
+    dataBridge.invalidateCache(STORE_NAME.industryScores)
   })
 
   it('should aggregate v6, intelligent and industry scores', async () => {

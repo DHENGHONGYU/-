@@ -1,107 +1,119 @@
+/**
+ * V6 评分服务 — 统一入口
+ *
+ * F4 整改：将原启发式 9 因子逻辑切换到 v6-engine L-1~L8 分层引擎。
+ * 通过 createV6Engine().calculateAll() 执行 11 层加权评分，
+ * 结果映射为 V6Score 持久化到 IndexedDB。
+ */
+
 import { dataLayer } from '@/data/dataLayer'
-import { hasEnoughHistory, hasRealBasicData } from '@/services/fetcher/fetcherAdapter'
 import { getLogger } from '@/lib/logger'
 import type { DataLayerResult, DailyQuotes, Stock, V6Score } from '@/data/types'
+import {
+  createV6Engine,
+  stockToBasicData,
+  quotesToQuoteData,
+  ALL_LAYER_IDS,
+} from '@/services/scoring/v6-engine'
+import type { CompositeScore, FinancialData, V6ScoreInput } from '@/services/scoring/v6-engine'
 
 const logger = getLogger()
 
-const FACTOR_NAMES = ['估值', '成长', '盈利', '质量', '动量', '波动', '流动性', '行业', '情绪']
+/**
+ * 从 Stock 构建最小化 FinancialData。
+ *
+ * Stock 类型仅包含基础行情字段（pe/pb/roe/marketCap），
+ * 财务明细（revenue/netProfit/margins 等）由引擎各层计算器自行降级处理。
+ */
+function buildFinancialData(_stock: Stock): FinancialData {
+  return {
+    // Stock 不直接携带财务报表字段；
+    // 如后续 dataLayer 扩展 Stock 或新增 financials store，在此处桥接。
+  }
+}
 
 /**
- * 是否启用随机数降级。
- * v1.0.0 后默认关闭，优先使用真实数据。
- * 仅在测试或演示场景中开启。
+ * 组装 v6-engine 输入
  */
-const USE_MOCK_SCORE = false
-
-function calculateFactorFromBasicData(stock: Stock, factorName: string): number | null {
-  // P0：仅当全部基础字段存在时，使用简单启发式计算；否则返回 null 触发降级。
-  if (!hasRealBasicData(stock)) {
-    return null
+function buildEngineInput(stock: Stock, quotes: DailyQuotes | null): V6ScoreInput {
+  // 输入校验：确保 stock.price 有效
+  if (!Number.isFinite(stock.price)) {
+    logger.warn(`[v6ScoreService] buildEngineInput: stock.price 无效 (${stock.price})，使用 0`)
   }
 
-  switch (factorName) {
-    case '估值':
-      // PE 越低分越高，PB 越低分越高；此处取一个保守的启发式映射
-      return Math.max(0, Math.min(5, 5 - (stock.pe ?? 0) / 20))
-    case '盈利':
-      return Math.max(0, Math.min(5, (stock.roe ?? 0) / 5))
-    case '流动性':
-      return Math.max(0, Math.min(5, (stock.marketCap ?? 0) / 1e12))
-    case '成长':
-    case '质量':
-    case '动量':
-    case '波动':
-    case '行业':
-    case '情绪':
-    default:
-      // 其余维度暂时无法从基础数据直接计算，返回 null
-      return null
+  const stockData = stockToBasicData(stock)
+  const financials = buildFinancialData(stock)
+  const quotesData = quotes
+    ? quotesToQuoteData(quotes)
+    : { latestClose: stock.price, history: [], volumeHistory: [] }
+
+  // 验证 quotesData 的 latestClose
+  if (!Number.isFinite(quotesData.latestClose)) {
+    logger.warn(`[v6ScoreService] buildEngineInput: quotesData.latestClose 无效，使用 stock.price`)
+    quotesData.latestClose = Number.isFinite(stock.price) ? stock.price : 0
+  }
+
+  return {
+    symbol: stock.symbol,
+    stock: stockData,
+    financials,
+    quotes: quotesData,
   }
 }
 
-function calculateMomentumScore(quotes: DailyQuotes): number {
-  const history = quotes.history
-  if (history.length < 20) return 2.5
-  const current = history[history.length - 1]?.close
-  const past = history[history.length - 20]?.close
-  if (current === undefined || past === undefined || past === 0) return 2.5
-  const returns = (current - past) / past
-  // 收益 -30% → 0 分，0% → 2.5 分，+30% → 5 分
-  return Math.max(0, Math.min(5, 2.5 + (returns / 0.3) * 2.5))
-}
+/**
+ * 将 CompositeScore 映射为 V6Score 持久化结构
+ */
+function compositeToV6Score(
+  stock: Stock,
+  composite: CompositeScore,
+): V6Score {
+  // 分数校验：确保 composite.score 是有效数字
+  const validScore = Number.isFinite(composite.score) ? composite.score : 0
 
-function calculateVolatilityScore(quotes: DailyQuotes): number {
-  const history = quotes.history
-  if (history.length < 20) return 2.5
-  const returns: number[] = []
-  for (let i = 1; i < history.length; i++) {
-    const prev = history[i - 1]?.close
-    const curr = history[i]?.close
-    if (prev !== undefined && prev !== 0 && curr !== undefined) {
-      returns.push((curr - prev) / prev)
+  // 各层得分明细（layerId → score）
+  const factors: Record<string, number> = {}
+  const layerDetails: Record<string, { score: number; summary: string; weight: number }> = {}
+
+  for (const [layerId, layer] of Object.entries(composite.layers)) {
+    // 校验每层分数
+    const layerScore = Number.isFinite(layer.score) ? layer.score : 0
+    factors[layerId] = layerScore
+    layerDetails[layerId] = {
+      score: layerScore,
+      summary: layer.summary,
+      weight: layer.weight,
     }
   }
-  if (returns.length === 0) return 2.5
-  const mean = returns.reduce((a, b) => a + b, 0) / returns.length
-  const variance = returns.reduce((sum, r) => sum + (r - mean) ** 2, 0) / returns.length
-  const std = Math.sqrt(variance)
-  // 日波动 0% → 5 分，5% → 0 分
-  return Math.max(0, Math.min(5, 5 - (std / 0.05) * 5))
-}
 
-function calculateLiquidityScore(stock: Stock, quotes: DailyQuotes): number {
-  const latest = quotes.latest
-  if (!latest || !stock.marketCap || stock.marketCap <= 0) return 2.5
-  // 以近 20 日平均成交额 / 市值 作为流动性代理
-  const recent = quotes.history.slice(-20).filter((bar) => bar.amount !== undefined)
-  if (recent.length === 0) return 2.5
-  const avgAmount = recent.reduce((sum, bar) => sum + bar.amount, 0) / recent.length
-  const turnover = avgAmount / stock.marketCap
-  // 日换手 0% → 0 分，2% → 5 分
-  return Math.max(0, Math.min(5, (turnover / 0.02) * 5))
-}
+  // 数据完整度检查
+  const totalLayers = Object.keys(composite.layers).length
+  const scoredLayers = Object.values(composite.layers).filter((l) => l.score > 0).length
+  const dataCompleteness = totalLayers > 0 ? (scoredLayers / totalLayers) * 100 : 0
 
-function calculateFactorFromQuotes(
-  stock: Stock,
-  quotes: DailyQuotes | undefined,
-  factorName: string,
-): number | null {
-  if (!quotes || !hasEnoughHistory(quotes, 20)) {
-    return null
+  const v6Score: V6Score = {
+    symbol: stock.symbol,
+    score: validScore,
+    factors,
+    algorithmVersion: composite.engineVersion,
+    calculatedAt: composite.timestamp,
+    dataVersion: stock.dataVersion,
+    // F4 扩展字段
+    rating: composite.rating,
+    layerDetails,
+    allRisks: composite.allRisks,
+    recommendation: composite.recommendation,
+    engineVersion: composite.engineVersion,
+    // 质量警告
+    ...(dataCompleteness < 100 && {
+      qualityWarning: `数据完整度 ${dataCompleteness.toFixed(0)}%，${scoredLayers}/${totalLayers} 层有效评分`,
+    }),
   }
 
-  switch (factorName) {
-    case '动量':
-      return calculateMomentumScore(quotes)
-    case '波动':
-      return calculateVolatilityScore(quotes)
-    case '流动性':
-      return calculateLiquidityScore(stock, quotes)
-    default:
-      return null
-  }
+  return v6Score
 }
+
+// ─── 公共 API ─────────────────────────────────────────────
 
 /**
  * 获取全部 V6 评分（只读）
@@ -119,96 +131,160 @@ export async function getAllV6Scores(): Promise<DataLayerResult<V6Score[]>> {
 }
 
 export interface V6ScoreQuality {
-  dataCompleteness: number // 0-100, 评分因子数据完整度
+  dataCompleteness: number
   hasQuotes: boolean
   hasBasicData: boolean
-  missingFactors: string[]
+  missingLayers: string[]
 }
 
+/**
+ * 执行 V6 分层评分（主入口）
+ *
+ * 调用 v6-engine L-1~L8 共 11 层计算器，结果持久化到 IndexedDB。
+ */
 export async function runV6Score(symbol: string): Promise<DataLayerResult<V6Score>> {
+  logger.info(`[v6ScoreService] runV6Score 开始`, { symbol })
+
   const stock = await dataLayer.stocks.get(symbol)
   if (!stock) {
+    logger.warn(`[v6ScoreService] runV6Score Stock 不存在`, { symbol })
     return { success: false, error: `Stock not found: ${symbol}` }
   }
 
-  const quotes = await dataLayer.dailyQuotes.get(symbol)
-  const hasQuotes = quotes !== null && hasEnoughHistory(quotes, 20)
-  const hasBasicData = hasRealBasicData(stock)
-
-  const factors: Record<string, number> = {}
-  const missingFactors: string[] = []
-  let total = 0
-  let validCount = 0
-
-  for (const name of FACTOR_NAMES) {
-    let value: number | null = null
-
-    // 优先从 K线数据计算动量/波动/流动性
-    value = calculateFactorFromQuotes(stock, quotes, name)
-
-    // 其次从基础数据计算估值/盈利/流动性
-    if (value === null) {
-      value = calculateFactorFromBasicData(stock, name)
-    }
-
-    // 记录缺失因子（不使用随机数降级）
-    if (value === null) {
-      missingFactors.push(name)
-      if (USE_MOCK_SCORE) {
-        value = Math.random() * 5
-        logger.warn(`[v6ScoreService] ${symbol} 因子 ${name} 数据缺失，使用模拟分（仅用于演示）`)
-      }
-    }
-
-    if (value !== null) {
-      factors[name] = value
-      total += value
-      validCount++
-    }
-  }
-
-  const score = validCount > 0 ? total / validCount : 0
-  const dataCompleteness = (validCount / FACTOR_NAMES.length) * 100
-
-  logger.info(`[v6ScoreService] ${symbol} 评分完成`, {
-    score: score.toFixed(2),
-    dataCompleteness: `${dataCompleteness.toFixed(0)}%`,
-    validFactors: validCount,
-    missingFactors: missingFactors.length,
-    hasQuotes,
-    hasBasicData,
+  logger.info(`[v6ScoreService] runV6Score Stock 已加载`, {
+    symbol,
+    name: stock.name,
+    price: stock.price,
+    pe: stock.pe,
+    pb: stock.pb,
+    roe: stock.roe,
+    marketCap: stock.marketCap,
+    dataVersion: stock.dataVersion,
+    industryCode: stock.industryCode,
   })
 
-  const v6Score: V6Score = {
-    symbol,
-    score,
-    factors,
-    algorithmVersion: 'v9-auto',
-    calculatedAt: Date.now(),
-    dataVersion: stock.dataVersion,
-    // 扩展字段：评分质量指标
-    ...(dataCompleteness < 100 && {
-      qualityWarning: `数据完整度 ${dataCompleteness.toFixed(0)}%，缺失因子: ${missingFactors.join(', ')}`,
-    }),
-  }
+  const quotes = await dataLayer.dailyQuotes.get(symbol)
+  const quotesOrNull = quotes ?? null
 
-  const result = await dataLayer.v6Scores.save(v6Score)
-  if (!result.success) {
-    return { success: false, error: result.error }
+  logger.info(`[v6ScoreService] runV6Score K线数据状态`, {
+    symbol,
+    hasQuotes: quotesOrNull !== null,
+    historyLength: quotesOrNull?.history.length ?? 0,
+    latestClose: quotesOrNull?.latest?.close,
+    latestDate: quotesOrNull?.latest?.date,
+    hasBasicData: stock.price !== undefined,
+  })
+
+  try {
+    logger.info(`[v6ScoreService] runV6Score 创建引擎实例`, { symbol })
+    const engine = createV6Engine()
+
+    logger.info(`[v6ScoreService] runV6Score 构建引擎输入`, { symbol })
+    const input = buildEngineInput(stock, quotesOrNull)
+
+    logger.info(`[v6ScoreService] runV6Score 引擎输入详情`, {
+      symbol,
+      stockSymbol: input.stock.symbol,
+      stockName: input.stock.name,
+      stockPrice: input.stock.price,
+      stockPe: input.stock.pe,
+      stockPb: input.stock.pb,
+      stockRoe: input.stock.roe,
+      stockMarketCap: input.stock.marketCap,
+      quotesLatestClose: input.quotes.latestClose,
+      quotesReturn20d: input.quotes.return20d,
+      quotesReturn60d: input.quotes.return60d,
+      quotesVolatility20d: input.quotes.volatility20d,
+      quotesHistoryLength: input.quotes.history?.length ?? 0,
+      hasIndustryScore: input.industryScore !== undefined,
+      hasZeroToOneEvents: input.zeroToOneEvents !== undefined,
+      zeroToOneEventsCount: input.zeroToOneEvents?.length ?? 0,
+    })
+
+    logger.info(`[v6ScoreService] runV6Score 开始执行 11 层评分计算`, { symbol })
+    const composite = await engine.calculateAll(input)
+
+    logger.info(`[v6ScoreService] runV6Score 引擎计算完成`, {
+      symbol,
+      compositeScore: composite.score,
+      compositeRating: composite.rating,
+      totalLayers: Object.keys(composite.layers).length,
+      allRisksCount: composite.allRisks.length,
+      recommendation: composite.recommendation,
+      engineVersion: composite.engineVersion,
+      timestamp: composite.timestamp,
+    })
+
+    // 记录各层评分明细
+    const layerScores: Record<string, { score: number; summary: string; weight: number }> = {}
+    for (const [layerId, layer] of Object.entries(composite.layers)) {
+      layerScores[layerId] = {
+        score: layer.score,
+        summary: layer.summary,
+        weight: layer.weight,
+      }
+    }
+    logger.info(`[v6ScoreService] runV6Score 各层评分明细`, {
+      symbol,
+      layerScores,
+    })
+
+    const v6Score = compositeToV6Score(stock, composite)
+
+    logger.info(`[v6ScoreService] runV6Score V6Score 映射完成`, {
+      symbol,
+      score: v6Score.score.toFixed(2),
+      rating: v6Score.rating,
+      layersScored: Object.keys(v6Score.layerDetails ?? {}).length,
+      risks: v6Score.allRisks?.length ?? 0,
+      qualityWarning: v6Score.qualityWarning,
+      algorithmVersion: v6Score.algorithmVersion,
+      dataVersion: v6Score.dataVersion,
+    })
+
+    logger.info(`[v6ScoreService] runV6Score 准备持久化到 IndexedDB`, { symbol })
+    const result = await dataLayer.v6Scores.save(v6Score)
+    if (!result.success) {
+      logger.error(`[v6ScoreService] runV6Score 持久化失败`, {
+        symbol,
+        error: result.error,
+      })
+      return { success: false, error: result.error }
+    }
+
+    logger.info(`[v6ScoreService] runV6Score 评分完成并已持久化`, {
+      symbol,
+      score: v6Score.score.toFixed(2),
+      rating: v6Score.rating,
+    })
+    return { success: true, data: v6Score }
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    const stack = err instanceof Error ? err.stack : undefined
+    logger.error(`[v6ScoreService] runV6Score 评分失败`, {
+      symbol,
+      error: message,
+      stack,
+    })
+    return { success: false, error: message }
   }
-  return { success: true, data: v6Score }
 }
 
 /**
  * 获取评分质量指标
  */
-export function getV6ScoreQuality(_symbol: string, factors: Record<string, number>): V6ScoreQuality {
-  const missingFactors = FACTOR_NAMES.filter((name) => factors[name] === undefined || factors[name] === null)
-  const validCount = FACTOR_NAMES.length - missingFactors.length
+export function getV6ScoreQuality(
+  _symbol: string,
+  factors: Record<string, number>,
+): V6ScoreQuality {
+  const missingLayers = ALL_LAYER_IDS.filter(
+    (id) => factors[id] === undefined || factors[id] === null,
+  )
+  const validCount = ALL_LAYER_IDS.length - missingLayers.length
   return {
-    dataCompleteness: (validCount / FACTOR_NAMES.length) * 100,
-    hasQuotes: true, // 需要从外部传入
+    dataCompleteness: (validCount / ALL_LAYER_IDS.length) * 100,
+    hasQuotes: true,
     hasBasicData: validCount >= 3,
-    missingFactors,
+    missingLayers,
   }
 }

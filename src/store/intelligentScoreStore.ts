@@ -33,6 +33,8 @@ import {
   loadIntelligentScoreHistory,
   loadResearchLogsForTarget,
 } from '@/services/analysis/scorePageService'
+import { loadStockScoreTrend, type ScoreTrendData } from '@/services/analysis/scoreTrendService'
+import type { ScoreTrendPeriod } from '@/types/modules/score.types'
 import { getEnabledStockFactorNames } from '@/config/scoreFactors'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { withBroadcast } from '@/store/helpers/withBroadcast'
@@ -115,6 +117,12 @@ export interface IntelligentScoreState {
   error: string
   /** 加载状态 */
   loading: boolean
+  /** 多周期趋势数据 */
+  trendData: ScoreTrendData | undefined
+  /** 趋势数据加载状态 */
+  trendLoading: boolean
+  /** 趋势数据错误信息 */
+  trendError: string | null
 
   // Actions
   /** 设置当前股票代码 */
@@ -163,6 +171,8 @@ export interface IntelligentScoreState {
   loadLogs: (symbol: string) => Promise<void>
   /** 运行智能评分 */
   runScore: (input?: Partial<RunIntelligentScoreInput> & { symbol?: string }) => Promise<void>
+  /** 加载多周期评分趋势 */
+  loadScoreTrend: (symbol: string, period: ScoreTrendPeriod) => Promise<void>
   /** 重置结果及关联状态 */
   resetResult: () => void
 }
@@ -195,6 +205,7 @@ const initialState: Omit<
   | 'loadHistory'
   | 'loadLogs'
   | 'runScore'
+  | 'loadScoreTrend'
   | 'resetResult'
 > = {
   symbol: '',
@@ -212,6 +223,9 @@ const initialState: Omit<
   logs: [],
   error: '',
   loading: false,
+  trendData: undefined,
+  trendLoading: false,
+  trendError: null,
 }
 
 // ============================================================
@@ -436,6 +450,32 @@ export const useIntelligentScoreStore = create<IntelligentScoreState>((set, get)
     }
   },
 
+  loadScoreTrend: async (symbol, period) => {
+    if (!symbol) {
+      logger.info('[intelligentScoreStore] loadScoreTrend 跳过: symbol 为空')
+      set({ trendData: undefined, trendError: null, trendLoading: false })
+      return
+    }
+
+    logger.info(`[intelligentScoreStore] loadScoreTrend 开始: ${symbol}, period=${period}`)
+    set({ trendLoading: true, trendError: null })
+
+    try {
+      const res = await loadStockScoreTrend(symbol, period)
+      if (res.success) {
+        set({ trendData: res.data, trendLoading: false })
+        logger.info(`[intelligentScoreStore] loadScoreTrend 完成: ${symbol}`)
+      } else {
+        set({ trendError: res.error, trendLoading: false })
+        logger.error(`[intelligentScoreStore] loadScoreTrend 失败: ${res.error}`)
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      logger.error(`[intelligentScoreStore] loadScoreTrend 异常: ${symbol}, ${message}`)
+      set({ trendError: message, trendLoading: false })
+    }
+  },
+
   resetResult: () => {
     logger.info('[intelligentScoreStore] resetResult')
     set({
@@ -446,6 +486,9 @@ export const useIntelligentScoreStore = create<IntelligentScoreState>((set, get)
       progress: { ...INITIAL_PROGRESS },
       progressMessage: '',
       error: '',
+      trendData: undefined,
+      trendLoading: false,
+      trendError: null,
     })
     withBroadcast(EVENT_NAMES.INTELLIGENT_SCORES_CHANGED, { action: 'reset' })
   },

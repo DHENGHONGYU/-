@@ -120,16 +120,20 @@ export default defineConfig({
     testTimeout: 30000,
     hookTimeout: 30000,
     retry: 2,
+    pool: 'forks',
     coverage: {
-      provider: 'v8',
+      // istanbul provider 基于源码静态分析，能正确识别所有 statements/branches/functions
+      // 修复 v8 coverage 在 pool:forks + vi.mock 场景下系统性丢失覆盖率数据的问题
+      provider: 'istanbul',
       reporter: ['text', 'json', 'html'],
+      include: ['src/**/*.ts', 'src/**/*.tsx'],
+      exclude: ['**/*.test.ts', '**/*.test.tsx', '**/*.spec.ts', '**/*.spec.tsx', 'src/types/**'],
       thresholds: {
         'src/core/**': { statements: 55, branches: 75, functions: 60, lines: 55 },
         'src/data/**': { statements: 35, branches: 35, functions: 35, lines: 35 },
         'src/lib/**': { statements: 70, branches: 65, functions: 80, lines: 70 },
         'src/services/**': { statements: 70, branches: 65, functions: 70, lines: 70 },
       },
-      exclude: ['e2e/**', 'node_modules/**', 'dist/**', 'tests/**', 'temp/**', 'src/types/**'],
     },
   },
 })

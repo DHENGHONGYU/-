@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import { Settings, RefreshCw, Plus, Target } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
+import { WidgetErrorBoundary } from '@/components/WidgetErrorBoundary'
 import { GridLayout } from 'react-grid-layout'
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
@@ -12,6 +13,7 @@ import { widgetEngine } from '@/cockpit/core/widgetEngine'
 import { MarketDataProvider, useMarketData } from '@/cockpit/providers/MarketDataProvider'
 import { GRID_COLUMNS, GRID_ROW_HEIGHT, GRID_GAP } from '@/constants/cockpit.constants'
 import { getLogger } from '@/lib/logger'
+import { COLOR_TOKENS, twText } from '@/constants/theme.tokens'
 import type { WidgetConfig, MarketData } from '@/types/modules/widget.types'
 
 const logger = getLogger()
@@ -45,12 +47,21 @@ interface WidgetWrapperProps {
   data: MarketData
 }
 
-function WidgetWrapper({ config, data }: WidgetWrapperProps): React.JSX.Element {
+function WidgetWrapper(props: WidgetWrapperProps): React.JSX.Element {
+  // P0-2 修复：hooks 必须在所有条件分支之前调用（React Rules of Hooks）
+  // 使用可选链安全访问 config，避免 null 解构崩溃
+  const config = props?.config ?? null
+  const data = props?.data
+
   const [Component, setComponent] = useState<React.ComponentType<{ config: unknown; data?: MarketData }> | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    if (!config) {
+      setLoading(false)
+      return
+    }
     const mount = async () => {
       try {
         // 使用 widgetEngine 完整生命周期管理
@@ -76,7 +87,35 @@ function WidgetWrapper({ config, data }: WidgetWrapperProps): React.JSX.Element 
       widgetEngine.unmountInstance(config.instanceId)
       logger.info('[CockpitShell] Widget unmounted', { instanceId: config.instanceId })
     }
-  }, [config.instanceId, config.widgetId])
+  }, [config?.instanceId, config?.widgetId])
+
+  // P0-2 深度修复：用 SafeWrapper 包裹动态加载的 Widget 组件
+  // 防止 widget 组件内部解构 { config } 时收到 null props 导致崩溃
+  // 注意：useMemo 必须在所有条件返回之前调用（rules of hooks）
+  const SafeComponent = useMemo(() => {
+    if (!Component) return null
+    const SafeWrapper = (wrapperProps: { config: unknown; data?: MarketData }): React.JSX.Element | null => {
+      if (!wrapperProps || !wrapperProps.config) {
+        logger.warn('[CockpitShell] SafeWrapper: widget received null props', { widgetId: config?.widgetId })
+        return null
+      }
+      return <Component {...wrapperProps} />
+    }
+    SafeWrapper.displayName = `Safe(${Component.displayName || Component.name || 'Widget'})`
+    return SafeWrapper
+  }, [Component, config?.widgetId])
+
+  // 空值守卫：所有 hooks 之后安全返回
+  if (!config) {
+    logger.warn('[WidgetWrapper] config is null/undefined, rendering fallback')
+    return (
+      <Card>
+        <CardContent className="flex h-full items-center justify-center text-sm" style={{ color: COLOR_TOKENS.textSecondary.hex }}>
+          组件配置未就绪
+        </CardContent>
+      </Card>
+    )
+  }
 
   if (loading) {
     return (
@@ -86,7 +125,7 @@ function WidgetWrapper({ config, data }: WidgetWrapperProps): React.JSX.Element 
         </CardHeader>
         <CardContent className="p-8">
           <div className="flex justify-center">
-            <RefreshCw className="h-8 w-8 animate-spin text-gray-400" />
+            <RefreshCw className={`h-8 w-8 animate-spin ${twText('gray', 400)}`} />
           </div>
         </CardContent>
       </Card>
@@ -100,7 +139,7 @@ function WidgetWrapper({ config, data }: WidgetWrapperProps): React.JSX.Element 
           <CardTitle className="text-base">{config.title}</CardTitle>
         </CardHeader>
         <CardContent className="p-8">
-          <div className="text-center text-red-500">
+          <div className={`text-center ${COLOR_TOKENS.danger.tailwind}`}>
             <p>{error}</p>
             <Button
               variant="outline"
@@ -127,13 +166,13 @@ function WidgetWrapper({ config, data }: WidgetWrapperProps): React.JSX.Element 
     )
   }
 
-  if (!Component) {
+  if (!SafeComponent) {
     return (
       <Card>
         <CardHeader>
           <CardTitle className="text-base">{config.title}</CardTitle>
         </CardHeader>
-        <CardContent className="p-8 text-center text-gray-400">
+        <CardContent className={`p-8 text-center ${twText('gray', 400)}`}>
           组件未找到
         </CardContent>
       </Card>
@@ -142,7 +181,16 @@ function WidgetWrapper({ config, data }: WidgetWrapperProps): React.JSX.Element 
 
   // 将统一的 MarketData 注入到每个 Widget 组件
   // 组件既可通过 props.data 获取，也可通过 useMarketData() 消费
-  return <Component config={config} data={data} />
+  // WidgetErrorBoundary 捕获子组件渲染异常，避免单个 Widget 崩溃影响全局
+  return (
+    <WidgetErrorBoundary
+      widgetId={config.widgetId}
+      instanceId={config.instanceId}
+      errorTitle={`${config.title} 加载异常`}
+    >
+      <SafeComponent config={config} data={data} />
+    </WidgetErrorBoundary>
+  )
 }
 
 function CockpitContent(): React.JSX.Element {

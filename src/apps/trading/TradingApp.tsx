@@ -1,179 +1,128 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, Suspense } from 'react'
+import { useLocation } from 'react-router'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
-import {
-  getWatchlistStocks,
-  getOrders,
-  createBuyOrder,
-  createSellOrder,
-  scanWatchingSignals,
-  adviseForStock,
-  type TradeAdvice,
-} from '@/services/trading/tradingService'
-import {
-  buildStrategyFilteredPortfolio,
-  computeHoldingsFromOrders,
-} from '@/services/trading/portfolioBuilder'
-import type { TradingSignal } from '@/services/trading/signalGenerator'
-import type { Order, Portfolio, Stock, StrategyResult } from '@/data/types'
-import { useToast } from '@/hooks/useToast'
+import { useTradingStore } from '@/store/tradingStore'
 import { CoreResourcePanel } from './panels/CoreResourcePanel'
-import { CORE_RESOURCE_THEME } from '@/config/themeRegistry'
+import { getLogger } from '@/lib/logger'
+import { COLOR_TOKENS } from '@/constants/theme.tokens'
 
+// 子页面懒加载
+const StrategySnapshotPage = React.lazy(() => import('@/pages/trading/StrategySnapshotPage'))
+const HoldingsPage = React.lazy(() => import('@/pages/trading/HoldingsPage'))
+
+const logger = getLogger()
+
+/**
+ * 交易舱子路由分发
+ *
+ * @description
+ * 使用 useLocation + 条件渲染实现子路由分发。
+ * 新增子页面仅需追加 else-if 分支并添加对应 React.lazy 导入。
+ *
+ * 路由映射：
+ * - /trading/strategy-snapshots → StrategySnapshotPage
+ * - /trading/holdings          → HoldingsPage
+ * - /trading（默认）           → 交易看板（TradingDashboard）
+ */
 export default function TradingApp(): React.JSX.Element {
-  const [stocks, setStocks] = useState<Stock[]>([])
-  const [orders, setOrders] = useState<Order[]>([])
-  const [signals, setSignals] = useState<TradingSignal[]>([])
-  const [adviceMap, setAdviceMap] = useState<Record<string, TradeAdvice>>({})
-  const [portfolio, setPortfolio] = useState<Portfolio | undefined>(undefined)
-  const [strategyResult, setStrategyResult] = useState<StrategyResult | undefined>(undefined)
-  const [portfolioLoading, setPortfolioLoading] = useState(false)
-  const [processingSymbols, setProcessingSymbols] = useState<Set<string>>(new Set())
-  const [message, setMessage] = useState('')
-  const { toast } = useToast()
+  const location = useLocation()
+  const path = location.pathname
+  const prevPathRef = useRef<string | null>(null)
 
-  const loadStocks = async (): Promise<void> => {
-    const result = await getWatchlistStocks()
-    if (result.success && result.data) {
-      setStocks(result.data)
-      const map: Record<string, TradeAdvice> = {}
-      for (const stock of result.data) {
-        const advice = await adviseForStock(stock)
-        if (advice.success && advice.data) {
-          map[stock.symbol] = advice.data
-        }
-      }
-      setAdviceMap(map)
-      setMessage('观察池与交易建议已更新')
+  // 从 tradingStore 获取状态和 actions
+  const stocks = useTradingStore((s) => s.stocks)
+  const orders = useTradingStore((s) => s.orders)
+  const signals = useTradingStore((s) => s.signals)
+  const adviceMap = useTradingStore((s) => s.adviceMap)
+  const portfolio = useTradingStore((s) => s.portfolio)
+  const strategyResult = useTradingStore((s) => s.strategyResult)
+  const portfolioLoading = useTradingStore((s) => s.portfolioLoading)
+  const processingSymbols = useTradingStore((s) => s.processingSymbols)
+  const message = useTradingStore((s) => s.message)
+
+  const loadStocks = useTradingStore((s) => s.loadStocks)
+  const loadOrders = useTradingStore((s) => s.loadOrders)
+  const scanSignals = useTradingStore((s) => s.scanSignals)
+  const loadPortfolio = useTradingStore((s) => s.loadPortfolio)
+  const handleBuy = useTradingStore((s) => s.handleBuy)
+  const handleSell = useTradingStore((s) => s.handleSell)
+
+  // 路由切换检测：仅在 pathname 变化时记录切换事件与渲染状态
+  useEffect(() => {
+    const prevPath = prevPathRef.current
+    const isRouteChange = prevPath !== null && prevPath !== path
+
+    if (isRouteChange) {
+      logger.info('[TradingApp] 路由切换', { from: prevPath, to: path })
+    }
+
+    // 计算命中的分支与组件名
+    let branch: string
+    let componentName: string
+    if (path === '/trading/strategy-snapshots') {
+      branch = 'strategy-snapshots'
+      componentName = 'StrategySnapshotPage'
+    } else if (path === '/trading/holdings') {
+      branch = 'holdings'
+      componentName = 'HoldingsPage'
     } else {
-      setMessage(result.error ?? '加载观察池失败')
-    }
-  }
-
-  const loadOrders = async (): Promise<void> => {
-    const result = await getOrders()
-    if (result.success && result.data) {
-      setOrders(result.data)
-    } else {
-      setMessage(result.error ?? '加载订单失败')
-    }
-  }
-
-  const scanSignals = async (): Promise<void> => {
-    const result = await scanWatchingSignals()
-    setSignals(result)
-    setMessage(`扫描完成，共 ${result.length} 条信号`)
-  }
-
-  const loadPortfolio = async (): Promise<void> => {
-    if (stocks.length === 0) {
-      await loadStocks()
-    }
-    if (orders.length === 0) {
-      await loadOrders()
+      branch = 'default'
+      componentName = 'TradingDashboard'
     }
 
-    setPortfolioLoading(true)
-    try {
-      const result = await buildStrategyFilteredPortfolio({
-        theme: CORE_RESOURCE_THEME,
-        stocks,
-        currentHoldings: computeHoldingsFromOrders(orders),
-      })
-      setPortfolio(result.portfolio)
-      setStrategyResult(result.strategyResult)
-      setMessage(
-        result.portfolio.holdings.length > 0
-          ? `核心稀缺组合已构建，共 ${result.portfolio.holdings.length} 只标的`
-          : '核心稀缺组合为空，无匹配标的或评分不足',
-      )
-    } catch (err) {
-      setMessage(err instanceof Error ? err.message : '构建组合失败')
-    } finally {
-      setPortfolioLoading(false)
-    }
-  }
+    logger.info('[TradingApp] 渲染交易舱', {
+      path,
+      branch,
+      component: componentName,
+      isRouteChange,
+    })
 
-  const handleBuy = async (stock: Stock): Promise<void> => {
-    if (processingSymbols.has(stock.symbol)) return
-    setProcessingSymbols((prev) => new Set(prev).add(stock.symbol))
-    try {
-      const advice = adviceMap[stock.symbol]
-      // 仅当建议为买入时使用建议仓位，否则使用默认 100 股（模拟盘兜底）
-      const quantity = advice?.sizing?.action === 'buy' ? advice.sizing.targetShares : 100
-      const result = await createBuyOrder(stock, quantity)
+    prevPathRef.current = path
+  }, [path])
 
-      if (result.success) {
-        toast({ title: '买入成功', description: `已买入 ${stock.symbol} ${quantity} 股`, variant: 'success' })
-        setMessage(`已买入 ${stock.symbol} ${quantity} 股`)
-        await loadOrders()
-      } else {
-        toast({ title: '买入失败', description: result.error ?? '未知错误', variant: 'error' })
-        setMessage(result.error ?? '买入失败')
-      }
-    } finally {
-      setProcessingSymbols((prev) => {
-        const next = new Set(prev)
-        next.delete(stock.symbol)
-        return next
-      })
-    }
-  }
-
-  const handleSell = async (stock: Stock): Promise<void> => {
-    if (processingSymbols.has(stock.symbol)) return
-    setProcessingSymbols((prev) => new Set(prev).add(stock.symbol))
-    try {
-      const advice = adviceMap[stock.symbol]
-      // 卖出数量优先级：卖出建议的 targetShares > 当前持仓 > 默认 100 股
-      // 避免在买入建议下误用买入目标仓位卖出
-      const quantity =
-        advice?.sizing?.action === 'sell'
-          ? advice.sizing.targetShares
-          : getHoldingShares(stock.symbol) || 100
-      const result = await createSellOrder(stock, quantity)
-
-      if (result.success) {
-        toast({ title: '卖出成功', description: `已卖出 ${stock.symbol} ${quantity} 股`, variant: 'success' })
-        setMessage(`已卖出 ${stock.symbol} ${quantity} 股`)
-        await loadOrders()
-      } else {
-        toast({ title: '卖出失败', description: result.error ?? '未知错误', variant: 'error' })
-        setMessage(result.error ?? '卖出失败')
-      }
-    } finally {
-      setProcessingSymbols((prev) => {
-        const next = new Set(prev)
-        next.delete(stock.symbol)
-        return next
-      })
-    }
-  }
+  // 组件初始化日志
+  useEffect(() => {
+    logger.info('[TradingApp] 组件初始化', {
+      stocksCount: stocks.length,
+      ordersCount: orders.length,
+      signalsCount: signals.length,
+    })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const signalColor = (direction: string): string => {
     switch (direction) {
       case 'buy':
-        return 'bg-green-100 text-green-800'
+        return `${COLOR_TOKENS.up.bgClass} ${COLOR_TOKENS.up.tailwind}`
       case 'sell':
-        return 'bg-red-100 text-red-800'
+        return `${COLOR_TOKENS.down.bgClass} ${COLOR_TOKENS.down.tailwind}`
       case 'watch':
-        return 'bg-yellow-100 text-yellow-800'
+        return `${COLOR_TOKENS.warning.bgClass} ${COLOR_TOKENS.warning.tailwind}`
       case 'hold':
-        return 'bg-gray-100 text-gray-800'
+        return `${COLOR_TOKENS.neutral.bgClass} ${COLOR_TOKENS.neutral.tailwind}`
       default:
-        return 'bg-gray-100 text-gray-800'
+        return `${COLOR_TOKENS.neutral.bgClass} ${COLOR_TOKENS.neutral.tailwind}`
     }
   }
 
-  const getHoldingShares = (symbol: string): number => {
-    return orders
-      .filter((o) => o.symbol === symbol)
-      .reduce((sum, o) => sum + (o.direction === 'buy' ? o.quantity : -o.quantity), 0)
-  }
-
-  return (
-    <div className="space-y-4 p-4">
+  // 子路由页面渲染
+  let content: React.ReactNode
+  if (path === '/trading/strategy-snapshots') {
+    content = (
+      <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">加载策略快照中...</div>}>
+        <StrategySnapshotPage />
+      </Suspense>
+    )
+  } else if (path === '/trading/holdings') {
+    content = (
+      <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">加载持仓管理中...</div>}>
+        <HoldingsPage />
+      </Suspense>
+    )
+  } else {
+    // 默认渲染交易看板，覆盖 /trading 等未明确分支
+    content = (
       <Card>
         <CardHeader>
           <CardTitle>交易舱 · 模拟盘</CardTitle>
@@ -227,12 +176,12 @@ export default function TradingApp(): React.JSX.Element {
                         </p>
                       )}
                       {advice.risk && !advice.risk.ok && (
-                        <p className="text-red-600">
+                        <p className={COLOR_TOKENS.danger.tailwind}>
                           风控阻塞：{advice.risk.blocks.join('；')}
                         </p>
                       )}
                       {advice.risk && advice.risk.ok && advice.risk.warnings.length > 0 && (
-                        <p className="text-yellow-600">
+                        <p className={COLOR_TOKENS.warning.tailwind}>
                           风控提示：{advice.risk.warnings.join('；')}
                         </p>
                       )}
@@ -293,6 +242,12 @@ export default function TradingApp(): React.JSX.Element {
           </div>
         </CardContent>
       </Card>
+    )
+  }
+
+  return (
+    <div className="space-y-4 p-4">
+      {content}
     </div>
   )
 }

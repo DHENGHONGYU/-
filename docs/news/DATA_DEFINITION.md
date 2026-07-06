@@ -1,5 +1,5 @@
-> **Version**: v1.1.0  
-> **Last Updated**: 2026-06-26  
+> **Version**: v1.2.0  
+> **Last Updated**: 2026-07-06  
 > **Maintainer**: 架构资产治理官
 
 # 新闻资讯模块数据字典
@@ -14,7 +14,7 @@
 
 ### 1.1 NewsArticle — 新闻资讯条目
 
-**来源**: `src/data/types.ts:565-579`
+**来源**: `src/data/types.ts:727-742`
 **用途**: 存储从外部财经源抓取的新闻资讯，支持 IndexedDB 持久化
 
 | 字段 | 类型 | 必填 | 描述 |
@@ -39,7 +39,7 @@
 
 ### 1.2 NewsStockMap — 股票-资讯多对多关联
 
-**来源**: `src/data/types.ts:582-590`
+**来源**: `src/data/types.ts:744-752`
 
 | 字段 | 类型 | 必填 | 描述 |
 |------|------|------|------|
@@ -53,7 +53,7 @@
 
 ### 1.3 SentimentCache — 情感分析缓存
 
-**来源**: `src/data/types.ts:593-601`
+**来源**: `src/data/types.ts:755-763`
 
 | 字段 | 类型 | 必填 | 描述 |
 |------|------|------|------|
@@ -64,6 +64,16 @@
 | `method` | `'rule' \| 'llm' \| 'hybrid'` | 是 | 分析方法 |
 | `analyzedAt` | `number` | 是 | 分析时间（毫秒时间戳） |
 | `llmModel` | `string` | 否 | 使用的 LLM 模型名称 |
+
+### 1.3A NewsBookmark — 新闻书签
+
+**来源**: `src/data/types.ts:766-769`
+**用途**: 用户收藏的新闻资讯书签
+
+| 字段 | 类型 | 必填 | 描述 |
+|------|------|------|------|
+| `id` | `string` | 是 | 书签唯一标识（对应新闻 ID） |
+| `bookmarkedAt` | `number` | 是 | 收藏时间（毫秒时间戳） |
 
 ### 1.4 SentimentResult — 情感分析结果
 
@@ -316,3 +326,4 @@ export const dataLayer = {
 | 日期 | 版本 | 变更内容 | 变更人 |
 |------|------|----------|--------|
 | 2026-06-26 | v1.0.0 | 初始创建，覆盖新闻模块全部类型定义（8 个接口）与枚举常量（5 组） | Architecture Asset Governor |
+| 2026-07-06 | v1.2.0 | 新增 NewsBookmark 接口（§1.3A）；修正行号引用（565→727, 582→744, 593→755） | Architecture Asset Governor |

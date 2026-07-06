@@ -216,6 +216,8 @@ export class MarketDataAdapter {
       totalPnL: toSafeString(p.totalPnL ?? p.total_pnl ?? p.totalProfit, '0'),
       totalPnLPercent: toSafeNumber(p.totalPnLPercent ?? p.total_pnl_percent ?? p.totalProfitPct ?? 0),
       holdings: toSafeNumber(p.holdings ?? p.holdingCount ?? p.positionCount ?? 0),
+      holdingsList: Array.isArray(p.holdingsList) ? p.holdingsList : [],
+      rebalancePlan: Array.isArray(p.rebalancePlan) ? p.rebalancePlan : [],
     }
   }
 
@@ -437,6 +439,8 @@ export class MarketDataAdapter {
       totalPnL: '0',
       totalPnLPercent: 0,
       holdings: 0,
+      holdingsList: [],
+      rebalancePlan: [],
     }
   }
 
@@ -497,19 +501,24 @@ export class MarketDataAdapter {
       return []
     }
 
-    return payload.map((item) => ({
-      symbol: toSafeString(item.symbol),
-      name: toSafeString(item.name),
-      score: toSafeNumber(item.score ?? 0),
-      action: (item.action ?? 'ignore') as HotSectorData['action'],
-      dimensions: {
+    return payload.map((item) => {
+      const dims = {
         momentum: toSafeNumber(item.dimensions?.momentum ?? 0),
         sentiment: toSafeNumber(item.dimensions?.sentiment ?? 0),
         technical: toSafeNumber(item.dimensions?.technical ?? 0),
         valuation: toSafeNumber(item.dimensions?.valuation ?? 0),
-        marketEnv: toSafeNumber(item.dimensions?.marketEnv ?? 0),
-      },
-    }))
+      }
+      return {
+        symbol: toSafeString(item.symbol),
+        name: toSafeString(item.name),
+        score: toSafeNumber(item.score ?? 0),
+        action: (item.action ?? 'ignore') as HotSectorData['action'],
+        dimensions: {
+          ...dims,
+          composite: (dims.momentum + dims.sentiment + dims.technical + dims.valuation) / 4,
+        },
+      }
+    })
   }
 
   private adaptValuePit(payload: unknown): ValuePitData[] {
@@ -518,20 +527,26 @@ export class MarketDataAdapter {
       return []
     }
 
-    return payload.map((item) => ({
-      symbol: toSafeString(item.symbol),
-      name: toSafeString(item.name),
-      score: toSafeNumber(item.score ?? 0),
-      action: (item.action ?? 'ignore') as ValuePitData['action'],
-      rotationSignal: Boolean(item.rotationSignal ?? false),
-      dimensions: {
+    return payload.map((item) => {
+      const dims = {
         catalyst: toSafeNumber(item.dimensions?.catalyst ?? 0),
         valuation: toSafeNumber(item.dimensions?.valuation ?? 0),
         chip: toSafeNumber(item.dimensions?.chip ?? 0),
         rotation: toSafeNumber(item.dimensions?.rotation ?? 0),
         liquidity: toSafeNumber(item.dimensions?.liquidity ?? 0),
-      },
-    }))
+      }
+      return {
+        symbol: toSafeString(item.symbol),
+        name: toSafeString(item.name),
+        score: toSafeNumber(item.score ?? 0),
+        action: (item.action ?? 'ignore') as ValuePitData['action'],
+        rotationSignal: Boolean(item.rotationSignal ?? false),
+        dimensions: {
+          ...dims,
+          composite: (dims.catalyst + dims.valuation + dims.chip + dims.rotation + dims.liquidity) / 5,
+        },
+      }
+    })
   }
 }
 

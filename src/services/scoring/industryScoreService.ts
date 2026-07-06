@@ -3,7 +3,7 @@ import { dataLayer } from '@/data/dataLayer'
 import type { IndustryDimensionScore, IndustryScore } from '@/data/types'
 import { getSectorSkillMap } from '@/data/sectorSkillData'
 import type { LlmConfig } from '@/config/llmConfig'
-import { chat, LlmApiError, LlmConfigError } from '@/services/llm/llmClient'
+import { chat, LlmApiError, LlmConfigError } from '@/services/llm/llmGateway'
 import { buildIndustryScorePrompt } from './industryScorePrompt'
 
 const DIMENSION_NAMES = getEnabledIndustryFactorNames()

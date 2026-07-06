@@ -8,6 +8,8 @@
 import { dataLayer } from '@/data/dataLayer'
 import type { DataLayerResult, FileLibraryStats, ScoreDocVersion, V6LayerScore } from '@/data/types'
 import { getLogger } from '@/lib/logger'
+import { DEFAULT_THRESHOLDS } from '@/services/scoring/v6-engine/config'
+import { COLOR_TOKENS } from '@/constants/theme.tokens'
 
 const logger = getLogger()
 
@@ -108,6 +110,81 @@ export function buildChangeFromPrev(
   }
 }
 
+/** 评分文档差异结构(用于历史版本对比面板) */
+export interface ScoreDocDiff {
+  newerVersion: number
+  olderVersion: number
+  compositeDelta: number
+  l3vDelta: number
+  layerChanges: Array<{
+    code: string
+    oldScore: number
+    newScore: number
+    delta: number
+  }>
+  addedLayers: string[]
+  removedLayers: string[]
+  ratingChanged: boolean
+  oldRating: string
+  newRating: string
+}
+
+/**
+ * 计算两个评分文档版本的完整差异(供 ScoreHistoryPanel 等使用)。
+ * 与 buildChangeFromPrev 的区别:本函数额外提供新增/删除维度、评级变化信息。
+ */
+export function buildScoreDocDiff(
+  newer: ScoreDocVersion,
+  older: ScoreDocVersion,
+): ScoreDocDiff {
+  const olderCodes = new Set(Object.keys(older.layers))
+  const newerCodes = new Set(Object.keys(newer.layers))
+
+  const addedLayers = [...newerCodes].filter((c) => !olderCodes.has(c))
+  const removedLayers = [...olderCodes].filter((c) => !newerCodes.has(c))
+
+  const layerChanges: ScoreDocDiff['layerChanges'] = []
+
+  // 新版本中存在的层(含新增)
+  for (const code of newerCodes) {
+    const oldScore = older.layers[code]?.score ?? 0
+    const newScore = newer.layers[code]!.score
+    layerChanges.push({
+      code,
+      oldScore,
+      newScore,
+      delta: Math.round((newScore - oldScore) * 100) / 100,
+    })
+  }
+
+  // 已删除的层(newScore=0,delta=-oldScore)
+  for (const code of removedLayers) {
+    const oldScore = older.layers[code]!.score
+    layerChanges.push({
+      code,
+      oldScore,
+      newScore: 0,
+      delta: Math.round(-oldScore * 100) / 100,
+    })
+  }
+
+  const oldRating = older.recommendation?.label ?? ''
+  const newRating = newer.recommendation?.label ?? ''
+
+  return {
+    newerVersion: newer.version,
+    olderVersion: older.version,
+    compositeDelta: Math.round((newer.composite - older.composite) * 100) / 100,
+    l3vDelta: Math.round((newer.l3v - older.l3v) * 100) / 100,
+    layerChanges,
+    addedLayers,
+    removedLayers,
+    ratingChanged: oldRating !== newRating,
+    oldRating,
+    newRating,
+  }
+}
+
 export async function getNextVersion(symbol: string): Promise<number> {
   const versions = await dataLayer.scoreDocs.listBySymbol(symbol)
   if (versions.length === 0) return 1
@@ -136,7 +213,7 @@ export async function saveScoreDoc(input: ScoreDocInput): Promise<DataLayerResul
       composite: input.composite,
       l3v: input.l3v,
       layers: input.layers,
-      recommendation: input.recommendation ?? { key: 'hold', label: '观望', color: '#9ca3af' },
+      recommendation: input.recommendation ?? { key: 'hold', label: '观望', color: COLOR_TOKENS.neutral.hex },
       targetPrice: input.targetPrice ?? { bull: 0, base: 0, bear: 0 },
       keyRisks: input.keyRisks ?? [],
       keyCatalysts: input.keyCatalysts ?? [],
@@ -146,7 +223,7 @@ export async function saveScoreDoc(input: ScoreDocInput): Promise<DataLayerResul
         scoreDate,
         docId: '',
         createdAt: new Date().toISOString(),
-        recommendation: input.recommendation ?? { key: 'hold', label: '观望', color: '#9ca3af' },
+        recommendation: input.recommendation ?? { key: 'hold', label: '观望', color: COLOR_TOKENS.neutral.hex },
         targetPrice: input.targetPrice ?? { bull: 0, base: 0, bear: 0 },
         keyRisks: input.keyRisks ?? [],
         keyCatalysts: input.keyCatalysts ?? [],
@@ -226,7 +303,7 @@ export async function getFileLibraryStats(): Promise<DataLayerResult<FileLibrary
     const all = await dataLayer.scoreDocs.list()
     const symbols = new Set(all.map((d) => d.symbol))
     const totalComposite = all.reduce((sum, d) => sum + d.composite, 0)
-    const coreStocks = all.filter((d) => d.composite >= 4.0).length
+    const coreStocks = all.filter((d) => d.composite >= DEFAULT_THRESHOLDS.rating.strongBuy).length
 
     return {
       success: true,

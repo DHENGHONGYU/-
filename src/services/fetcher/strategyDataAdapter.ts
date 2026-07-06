@@ -21,6 +21,13 @@ import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
 
+/** 安全地将任意值转为字符串 */
+function toSafeString(value: unknown): string {
+  if (value === null || value === undefined) return ''
+  if (typeof value === 'string') return value
+  return JSON.stringify(value)
+}
+
 // ============================================================
 // DefaultValue 映射（A 类根治：防止 API 脏数据流入 UI）
 // ============================================================

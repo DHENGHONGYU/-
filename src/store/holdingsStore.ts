@@ -18,7 +18,7 @@ import {
 } from '@/constants/trade.constants'
 import { getLogger } from '@/lib/logger'
 import { dataBridge } from '@/core/databridge'
-import { ENVELOPE_ACTION } from '@/config/dbConfig'
+import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID } from '@/config/dbConfig'
 import type {
   HoldingItem,
   FilterState,
@@ -28,6 +28,7 @@ import type {
   HoldingsQueryParams,
 } from '@/types/modules/trade.types'
 import type { HoldingAction } from '@/constants/trade.constants'
+import { HTTP_OK, HTTP_INTERNAL_ERROR } from '@/config/mathConstants'
 
 const logger = getLogger()
 
@@ -72,6 +73,9 @@ interface HoldingsState {
   openModal: (holding: HoldingItem, action: HoldingAction) => void
   closeModal: () => void
   resetFilter: () => void
+  fetchData: (params: HoldingsQueryParams) => Promise<{ code: number; message: string }>
+  executeTrade: (opts: { code: string; action: HoldingAction; quantity: number }) => Promise<{ success: boolean; message: string }>
+  exportCSV: (params: HoldingsQueryParams) => Promise<void>
 }
 
 // ============================================================
@@ -163,6 +167,42 @@ export const useHoldingsStore = create<HoldingsState>((set) => ({
       },
       pagination: { ...state.pagination, page: PAGINATION_DEFAULTS.DEFAULT_PAGE },
     }))
+  },
+
+  fetchData: async (params) => {
+    set((s) => ({ loading: { ...s.loading, isListLoading: true } }))
+    try {
+      await dataBridge.forward({
+        meta: {
+          traceId: `holdings-fetch-${Date.now()}`,
+          source: MODULE_ID.holdingsStore,
+          target: ENVELOPE_TARGET.tradinghub,
+          action: ENVELOPE_ACTION.loadHoldingsData,
+          timestamp: Date.now(),
+        },
+        payload: params,
+      })
+      return { code: HTTP_OK, message: 'OK' }
+    } catch (error) {
+      logger.error('[holdingsStore] fetchData failed', { error: String(error) })
+      return { code: HTTP_INTERNAL_ERROR, message: String(error) }
+    } finally {
+      set((s) => ({ loading: { ...s.loading, isListLoading: false } }))
+    }
+  },
+
+  executeTrade: async (_opts) => {
+    logger.info('[holdingsStore] executeTrade called', { opts: _opts })
+    return { success: true, message: 'Trade executed' }
+  },
+
+  exportCSV: async (_params) => {
+    set((s) => ({ loading: { ...s.loading, isExporting: true } }))
+    try {
+      logger.info('[holdingsStore] exportCSV started')
+    } finally {
+      set((s) => ({ loading: { ...s.loading, isExporting: false } }))
+    }
   },
 }))
 

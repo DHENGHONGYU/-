@@ -99,6 +99,9 @@ describe('rotationSignalDetector', () => {
   beforeEach(async () => {
     await db.init()
     await db.reset()
+    dataBridge.invalidateCache(STORE_NAME.stocks)
+    dataBridge.invalidateCache(STORE_NAME.dailyQuotes)
+    dataBridge.invalidateCache(STORE_NAME.rotationScores)
   })
 
   it('should return empty result for empty input', async () => {

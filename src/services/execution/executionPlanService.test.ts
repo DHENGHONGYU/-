@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @module executionPlanService.test
  * @description 执行计划服务单元测试（E-2-6）
  */
@@ -10,6 +10,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 vi.mock('@/data/dataLayer', () => ({
   executionPlanStore: {
     list: vi.fn(),
+    getAll: vi.fn(),
     get: vi.fn(),
     save: vi.fn(),
     update: vi.fn(),
@@ -52,9 +53,14 @@ const mockPlan = (overrides: Partial<ExecutionPlan> = {}): ExecutionPlan => ({
   id: 'plan_001',
   signalId: 'sig_001',
   symbol: '600000',
+  name: '测试股票',
   direction: 'buy',
   phase: EXECUTION_PHASE.PLAN,
+  quantity: 100,
+  targetPrice: 10.0,
+  rationale: '测试理由',
   confidence: 0.8,
+  riskChecks: [],
   accountType: 'paper',
   createdAt: 2_000,
   ...overrides,
@@ -98,14 +104,14 @@ describe('executionPlanService', () => {
   describe('listPlans', () => {
     it('returns all plans when no symbol provided', async () => {
       const plans = [mockPlan(), mockPlan({ id: 'plan_002', symbol: '600001' })]
-      vi.mocked(executionPlanStore.list).mockResolvedValue(plans)
+      vi.mocked(executionPlanStore.getAll).mockResolvedValue(plans)
       const result = await listPlans()
       expect(result).toHaveLength(2)
     })
 
     it('filters plans by symbol', async () => {
       const plans = [mockPlan(), mockPlan({ id: 'plan_002', symbol: '600001' })]
-      vi.mocked(executionPlanStore.list).mockResolvedValue(plans)
+      vi.mocked(executionPlanStore.getAll).mockResolvedValue(plans)
       const result = await listPlans('600000')
       expect(result).toHaveLength(1)
       expect(result[0]!.symbol).toBe('600000')
@@ -154,7 +160,7 @@ describe('executionPlanService', () => {
 
   describe('getOrphanPlans', () => {
     it('returns non-terminal plans', async () => {
-      vi.mocked(executionPlanStore.list).mockResolvedValue([
+      vi.mocked(executionPlanStore.getAll).mockResolvedValue([
         mockPlan({ phase: EXECUTION_PHASE.PLAN }),
         mockPlan({ id: 'plan_002', phase: EXECUTION_PHASE.EXECUTED }),
         mockPlan({ id: 'plan_003', phase: EXECUTION_PHASE.CONFIRMED }),

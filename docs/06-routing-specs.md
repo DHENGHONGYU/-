@@ -1,8 +1,8 @@
 # 06. 路由规格
 
 > **Status**: Current  
-> **Version**: v1.1.0  
-> **Last Updated**: 2026-06-26
+> **Version**: v3.1.0  
+> **Last Updated**: 2026-07-05
 >
 > 本文档定义 V9 的路由注册表、舱室映射、懒加载策略与导航规范。  
 > 目标读者：前端开发者、UI/UX 设计师、测试工程师。
@@ -25,39 +25,64 @@
 
 定义于 `src/config/routes.ts`：
 
-| 路径 | 组件 | 分类 | 说明 |
-|------|------|------|------|
-| `/` | `HomePage` | portal | 首页 |
-| `/cockpit` | `CockpitShell` | portal | 驾驶舱 Dashboard |
-| `/input/hub` | `PortalShell` | input | 输入舱 - 模块首页 |
-| `/input` | `PortalShell` | input | 输入舱 - 录入看板 |
-| `/input/bulk-import` | `PortalShell` | input | 输入舱 - 批量导入 |
-| `/input/hot-sectors` | `PortalShell` | input | 输入舱 - 热门板块 |
-| `/input/data-test` | `PortalShell` | input | 输入舱 - 采集测试 |
-| `/input/local-knowledge` | `LocalKnowledgePage` | input | 输入舱 - 本地知识库 |
-| `/analysis/hub` | `PortalShell` | analysis | 分析舱 - 模块首页 |
-| `/analysis` | `PortalShell` | analysis | 分析舱入口 |
-| `/trading/hub` | `PortalShell` | trading | 交易舱 - 模块首页 |
-| `/trading` | `PortalShell` | trading | 交易舱 |
-| `/output` | `PortalShell` | output | 输出舱 |
-| `/command/hub` | `PortalShell` | command | 总控舱 - 模块首页 |
-| `/command` | `PortalShell` | command | 总控舱 |
-| `/analysis/stock-score` | `StockAnalysisPage` | analysis | 个股九维评分分析 |
-| `/analysis/stock-score/:symbol` | `StockAnalysisPage` | analysis | 个股九维评分分析（带代码） |
-| `/analysis/sector` | `SectorAnalysisPage` | analysis | 行业与板块分析 |
-| `/analysis/backtest` | `BacktestPage` | analysis | 策略回测 |
-| `/analysis/industry-score` | `IndustryScorePage` | analysis | V4 行业评分 |
-| `/analysis/intelligent-score` | `IntelligentScorePage` | analysis | V6 个股智能评分 |
-| `/analysis/score-docs` | `ScoreDocPage` | analysis | 评分文档版本库 |
-| `/analysis/news` | `NewsPage` | analysis | 智能资讯 |
-| `/analysis/news-v6` | `NewsPage` | analysis | 智能资讯 (V6 风格迁移版) |
-| `/trading/strategy-snapshots` | `StrategySnapshotPage` | trading | 策略快照 |
-| `/trading/holdings` | `HoldingsPage` | trading | 交易持仓管理 |
-| `/mock-test` | `MockTestPage` | other | V9 模块 Mock 验证页（Slider/Sheet/Toggle/Engine） |
+| # | 路径 | 组件 | 分类 | 说明 |
+|:-:|------|------|------|------|
+| 1 | `/` | `HomePage` | portal | 首页 |
+| 2 | `/cockpit` | `CockpitShell` | portal | 驾驶舱 Dashboard |
+| 3 | `/input/hub` | `PortalShell` | input | 输入舱 - 模块首页 |
+| 4 | `/input` | `PortalShell` | input | 输入舱 |
+| 5 | `/input/bulk-import` | `PortalShell` | input | 输入舱 - 批量导入 |
+| 6 | `/input/hot-sectors` | `PortalShell` | input | 输入舱 - 热门板块 |
+| 7 | `/input/data-test` | `PortalShell` | input | 输入舱 - 采集测试 |
+| 8 | `/input/local-knowledge` | `PortalShell` | input | 输入舱 - 本地知识库 |
+| 9 | `/input/seven-dim` | `PortalShell` | input | 输入舱 - 七维采集策略配置 |
+| 10 | `/input/fetcher-config` | `PortalShell` | input | 输入舱 - 抓取引擎配置 |
+| 11 | `/input/collect-tasks` | `PortalShell` | input | 输入舱 - 采集任务监控 |
+| 12 | `/analysis/hub` | `PortalShell` | analysis | 分析舱 - 模块首页 |
+| 13 | `/analysis` | `PortalShell` | analysis | 分析舱 |
+| 14 | `/analysis/stock-score` | `PortalShell` | analysis | 个股九维评分分析 |
+| 15 | `/analysis/stock-score/:symbol` | `PortalShell` | analysis | 个股九维评分分析（带代码） |
+| 16 | `/analysis/sector` | `PortalShell` | analysis | 行业与板块分析 |
+| 17 | `/analysis/backtest` | `PortalShell` | analysis | 策略回测 |
+| 18 | `/analysis/industry-score` | `PortalShell` | analysis | V4 行业评分 |
+| 19 | `/analysis/intelligent-score` | `PortalShell` | analysis | V6 个股智能评分 |
+| 20 | `/analysis/score-docs` | `PortalShell` | analysis | 评分文档版本库 |
+| 21 | `/analysis/news` | `PortalShell` | analysis | 智能资讯 |
+| 22 | `/analysis/hot-sector` | `PortalShell` | analysis | 热门板块策略选股 |
+| 23 | `/analysis/value-pit` | `PortalShell` | analysis | 价值洼地策略选股 |
+| 24 | `/trading/hub` | `PortalShell` | trading | 交易舱 - 模块首页 |
+| 25 | `/trading` | `PortalShell` | trading | 交易舱 |
+| 26 | `/trading/strategy-snapshots` | `PortalShell` | trading | 策略快照 |
+| 27 | `/trading/holdings` | `PortalShell` | trading | 交易持仓管理 |
+| 28 | `/output` | `PortalShell` | output | 输出舱 |
+| 29 | `/output/hub` | `PortalShell` | output | 输出舱 - 模块首页 |
+| 30 | `/output/research` | `PortalShell` | output | 输出舱 - 研究报告 |
+| 31 | `/output/review` | `PortalShell` | output | 输出舱 - 交易复盘 |
+| 32 | `/output/export` | `PortalShell` | output | 输出舱 - 数据导出 |
+| 33 | `/command/hub` | `PortalShell` | command | 总控舱 - 模块首页 |
+| 34 | `/command` | `PortalShell` | command | 总控舱 |
+| 35 | `/command/agents` | `PortalShell` | command | 智能体总控台 |
+| 36 | `/command/agents/registry` | `PortalShell` | command | 智能体注册表 |
+| 37 | `/command/agents/registry/:agentId` | `PortalShell` | command | 智能体详情 |
+| 38 | `/command/agents/trigger` | `PortalShell` | command | 智能体任务触发 |
+| 39 | `/command/agents/tasks` | `PortalShell` | command | 智能体任务列表 |
+| 40 | `/command/agents/custom` | `PortalShell` | command | 自定义智能体 |
+| 41 | `/command/agents/llm` | `PortalShell` | command | LLM 管理 |
+| 42 | `/command/agents/capability-graph` | `PortalShell` | command | 能力图谱 |
+| 43 | `/command/agents/dag-scheduler` | `PortalShell` | command | DAG 调度器 |
+| 44 | `/command/agents/feedback` | `PortalShell` | command | 反馈控制台 |
+| 45 | `/command/mcp-servers` | `PortalShell` | command | MCP Server 管理 |
+| 46 | `/command/monitor` | `PortalShell` | command | 系统监控 |
+| 47 | `/command/config` | `PortalShell` | command | 配置管理 |
+| 48 | `/mock-test` | `MockTestPage` | other | V9 模块 Mock 验证页 |
 
+> **v3.0.0 变更**：路由数从 31 条增至 47 条。新增 16 条路由（输入舱 3 条、分析舱 2 条、总控舱智能体子模块 10 条、总控舱扩展 1 条），移除已废弃的 `/analysis/news-v6`。所有五舱路由的 `component` 统一为 `PortalShell`，实际页面组件由三级加载链的第三级（App 分发器）渲染。
+>
+> **v3.1.0 修正**：交叉一致性检查发现数量偏差，路由总数修正为 **48 条**（补算 `/mock-test` 路由编号）；分析舱路由数由 11 修正为 12（含价值洼地策略路由）。
+>
 > 所有业务路由均已集中注册；`App.tsx` 通过遍历 `ROUTE_REGISTRY` 渲染，不再硬编码路径。
 >
-> 路由→组件→服务映射见第 8 节。
+> 路由→组件→服务映射见第 8 节。三级加载链架构见第 2.5 节。
 
 ### 2.2 路由分类
 
@@ -93,24 +118,52 @@ export interface RouteConfig {
 | `getRoutesByCategory(category)` | `src/config/routes.ts` | 按舱室分类获取路由 |
 | `getCabinPaths()` | `src/config/routes.ts` | 获取五舱入口路径映射 |
 
+### 2.5 三级加载链架构（v3.0.0 新增）
+
+V9 采用三级间接加载架构，`ROUTE_REGISTRY` 中的 `component` 字段仅指向第一级（`PortalShell`），实际页面组件由第三级 App 分发器渲染：
+
+```
+Level 1: routes.ts（48 条路由）
+  ↓ component 统一指向 PortalShell（3 个例外：HomePage / CockpitShell / MockTestPage）
+Level 2: PortalShell（src/portal/PortalShell.tsx）
+  ↓ 根据 URL 路径前缀分发到对应 App 分发器
+Level 3: App 分发器（src/apps/{cabin}/*App.tsx）
+  ↓ 根据 location.pathname 条件渲染具体页面组件（React.lazy 或静态 import）
+```
+
+**设计决策**：所有 App 分发器均使用 `useLocation() + 条件渲染` 替代嵌套 `<Routes>`，原因是 React Router v7 在 descendant `<Routes>` 场景下绝对路径匹配行为与 v6 不一致。
+
+#### 各分发器子路由明细
+
+| 分发器 | 文件路径 | 子路由数 | 分发方式 |
+|--------|---------|:--------:|---------|
+| **InputApp** | `src/apps/input/InputApp.tsx` | 8 | else-if 链 + React.lazy |
+| **AnalysisApp** | `src/apps/analysis/AnalysisApp.tsx` | 11 | if-return 链 + React.lazy |
+| **TradingApp** | `src/apps/trading/TradingApp.tsx` | 3 | else-if 链 + React.lazy |
+| **OutputApp** | `src/apps/output/OutputApp.tsx` | 5 | else-if 链 + React.lazy + ErrorBoundary |
+| **CommandApp** | `src/apps/command/CommandApp.tsx` | 4 | else-if 链 + React.lazy |
+| **AgentApp** | `src/apps/command/AgentApp.tsx` | 10 | `AGENT_ROUTE_MAP` 查表 + React.lazy |
+
+> **AgentApp** 是唯一的查表式分发器（通过 `AGENT_ROUTE_MAP` 常量映射路径→组件），其余分发器均使用 if-else 链。PortalShell 通过 `isAgentPath` 判断将 `/command/agents*` 路径单独路由至 `AgentApp`（而非 `CommandApp`）。
+
 ---
 
 ## 3. 舱室与路由映射
 
 ### 3.1 五舱与驾驶舱映射
 
-| 舱室 | 路径前缀 | 主要页面 | 当前状态 |
-|------|----------|----------|----------|
-| 输入舱 | `/input` | `/input`、`/input/bulk-import`、`/input/hot-sectors`、`/input/data-test`、`/input/local-knowledge` | ✅ 已注册；子页面已拆分 |
-| 分析舱 | `/analysis/*` | 个股评分、行业评分、板块分析、回测 | ✅ 已注册 |
-| 交易舱 | `/trading` | 模拟下单、持仓、订单历史、风控 | ✅ 已注册 |
-| 输出舱 | `/output` | 研究报告、复盘笔记、数据导出 | ✅ 已注册 |
-| 总控舱 | `/command` | 系统统计、配置、数据重置 | ✅ 已注册 |
-| 驾驶舱 | `/cockpit` | 综合 Dashboard | ✅ 已注册 |
+| 舱室 | 路径前缀 | 路由数 | 主要页面 | 当前状态 |
+|------|----------|:------:|----------|----------|
+| 输入舱 | `/input` | 9 | 录入看板、批量导入、热门板块、采集测试、本地知识库、七维配置、抓取配置、采集监控 | ✅ 已注册；8 子页面由 InputApp 分发 |
+| 分析舱 | `/analysis/*` | 12 | 个股评分、行业评分、板块分析、回测、智能评分、资讯、热门板块、价值洼地 | ✅ 已注册；11 子页面由 AnalysisApp 分发 |
+| 交易舱 | `/trading` | 4 | 交易看板、策略快照、持仓管理 | ✅ 已注册；3 子页面由 TradingApp 分发 |
+| 输出舱 | `/output` | 5 | 研究报告、交易复盘、数据导出 | ✅ 已注册；5 子页面由 OutputApp 分发 |
+| 总控舱 | `/command` | 15 | 系统监控、配置管理、智能体子模块（10 页）、MCP 管理 | ✅ 已注册；CommandApp(4) + AgentApp(10) 分发 |
+| 驾驶舱 | `/cockpit` | 1 | 综合 Dashboard | ✅ 已注册 |
 
-> 输入舱已按分析舱模式拆分为 `/input`、`/input/bulk-import`、`/input/hot-sectors`、`/input/data-test`、`/input/local-knowledge` 五个子页面，统一由 `PortalShell` 渲染并在 `InputApp` 内按路径分发。交易/输出/总控舱仍仅注册入口路由，舱内功能通过 `PortalShell` 面板切换。
+> **v3.0.0 变更**：总控舱从 2 条路由扩展至 15 条（新增智能体子模块 10 条 + MCP/监控/配置 3 条）。输入舱新增 3 条（七维配置、抓取配置、采集监控）。分析舱新增 2 条（热门板块、价值洼地）。交易/总控舱已完成子页面拆分。
 >
-> **Hub 页说明**：Hub 页是一类组件的统称，实际文件名为 `InputHubPage`/`AnalysisHubPage`/`TradingHubPage`/`CommandHubPage`，由 `PortalShell` 内部分发；output hub 直接复用 `OutputApp`。
+> **Hub 页说明**：Hub 页是一类组件的统称，实际文件名为 `InputHubPage`/`AnalysisHubPage`/`TradingHubPage`/`OutputHubPage`/`CommandHubPage`，由 `PortalShell` 内部分发。
 
 ### 3.2 输入舱子路由映射
 
@@ -121,6 +174,10 @@ export interface RouteConfig {
 | `/input/hot-sectors` | `HotSectorPanel.tsx` | `hotSectorService`, `inputService` | 热门板块卡片、关联股票、加入候选池 |
 | `/input/data-test` | `DataTestPanel.tsx` | `fetcherService` | 服务健康、单/批量接口测试 |
 | `/input/local-knowledge` | `LocalKnowledgePage` | `localKnowledgeService` | 本地知识库浏览与管理 |
+| `/input/seven-dim` | `SevenDimConfigPage` | `sevenDimService` | 七维采集策略配置 |
+| `/input/fetcher-config` | `FetcherConfigPage` | `fetcherConfigService` | 抓取引擎配置 |
+| `/input/collect-tasks` | `CollectTaskPage` | `collectTaskService` | 采集任务监控 |
+| `/input/hub` | `InputHubPage` | `inputService`, `stockpoolService` | 输入舱模块首页 |
 
 ### 3.3 路径命名规范
 
@@ -208,50 +265,74 @@ v6 项目强调「路由表即 UI 映射 truth source」，其做法值得 V9 �
 
 ## 7. 当前偏差与下一步
 
-| 偏差 | 影响 | 计划 |
-|------|------|------|
-| 五舱入口已注册但子页面未拆分 | `/trading/signals` 等子路径不存在 | Phase 2 随功能完善逐步增加子路由 |
-| Hub 页（`InputHubPage`/`AnalysisHubPage`/`TradingHubPage`/`CommandHubPage`）未进入 `ROUTE_REGISTRY` | 外部路由表不感知 Hub 组件 | 设计选择：Hub 页由 `PortalShell` 内部懒加载分发，不独立注册；output hub 直接复用 `OutputApp` |
-| 无路由守卫 | 访问不存在的 symbol 会进入空白详情页 | Phase 2 增加数据存在性校验 |
-| ErrorBoundary 仅包裹根路由 | 单个页面崩溃可能影响整个应用 | Phase 2 为每个 Route 增加独立边界 |
-| 代码分割未按舱室 | 首屏仍加载全部页面组件 | Phase 3 按舱室拆分 chunk |
-| `/input/prototype` 为临时路由 | 与正式路由并存，可能造成漂移 | 已确认归档：保留路径但标记为临时，Phase 2 末迁移为设计档案或删除 |
+| 偏差 | 影响 | 状态 | 计划 |
+|------|------|------|------|
+| Hub 页未进入 `ROUTE_REGISTRY` | 外部路由表不感知 Hub 组件 | ✅ 设计选择 | Hub 页由 App 分发器内部分发，不独立注册 |
+| 无路由守卫 | 访问不存在的 symbol 会进入空白详情页 | ⏳ 待实现 | Phase 2 增加数据存在性校验 |
+| ErrorBoundary 仅包裹根路由 | 单个页面崩溃可能影响整个应用 | ⏳ 待实现 | Phase 2 为每个 Route 增加独立边界（OutputApp 已实现） |
+| 代码分割未按舱室 | 首屏仍加载全部页面组件 | ⏳ 待实现 | Phase 3 按舱室拆分 chunk |
+
+> **v3.0.0 已解决偏差**：五舱子页面已全部拆分（48 条路由）；`/input/prototype` 已移除；总控舱智能体子模块 10 条路由已注册。
+>
+> **v3.1.0 修正**：路由总数统计由 47 修正为 48；分析舱路由数由 11 修正为 12。
 
 ---
 
 ## 8. 路由 → 组件 → 服务映射
 
-| 路径 | 组件 | 服务 | 分类 |
+| 路径 | 实际页面组件（App 分发器渲染） | 服务 | 分类 |
 |------|------|------|------|
 | `/` | `HomePage` | - | portal |
 | `/cockpit` | `CockpitShell` | - | portal |
-| `/input/hub` | `PortalShell`（内部分发至 `InputApp`） | `inputService`, `stockpoolService` | input |
-| `/input` | `PortalShell`（内部分发至 `InputApp`/`InputDashboard`） | `inputService`, `stockpoolService` | input |
-| `/input/bulk-import` | `BulkImportPanel.tsx` | `batchImportService` | input |
-| `/input/hot-sectors` | `HotSectorPanel.tsx` | `hotSectorService` | input |
-| `/input/data-test` | `DataTestPanel.tsx` | `fetcherService` | input |
-| `/input/prototype` | `InputPrototype.tsx` | mock | input |
-| `/input/local-knowledge` | `LocalKnowledgePage` | `localKnowledgeService` | input |
-| `/analysis/hub` | `PortalShell`（内部分发至 `AnalysisApp`） | - | analysis |
-| `/analysis` | `PortalShell`（内部分发至 `AnalysisApp`） | - | analysis |
-| `/analysis/stock-score` | `StockAnalysisPage` | `v6ScoreService`, `intelligentScoreService` | analysis |
-| `/analysis/stock-score/:symbol` | `StockAnalysisPage` | `v6ScoreService`, `intelligentScoreService` | analysis |
-| `/analysis/sector` | `SectorAnalysisPage` | `industryScoreService` | analysis |
-| `/analysis/backtest` | `BacktestPage` | - | analysis |
-| `/analysis/industry-score` | `IndustryScorePage` | `industryScoreService` | analysis |
-| `/analysis/intelligent-score` | `IntelligentScorePage` | `intelligentScoreService` | analysis |
-| `/analysis/score-docs` | `ScoreDocPage` | `scoreDocService` | analysis |
-| `/analysis/news` | `NewsPage` | `newsService` | analysis |
-| `/analysis/news-v6` | `NewsPage`（V6 迁移验证页） | `newsService` | analysis |
-| `/trading/hub` | `PortalShell`（内部分发至 `TradingApp`） | `tradingService`, `signalGenerator`, `riskEngine` | trading |
-| `/trading` | `PortalShell`（内部分发至 `TradingApp`） | `tradingService`, `signalGenerator`, `riskEngine` | trading |
-| `/trading/strategy-snapshots` | `StrategySnapshotPage` | `strategySnapshotService` | trading |
-| `/trading/holdings` | `HoldingsPage` | `holdingsService` | trading |
-| `/output` | `PortalShell`（内部分发至 `OutputApp`） | - | output |
-| `/command/hub` | `PortalShell`（内部分发至 `CommandApp`） | - | command |
-| `/command` | `PortalShell`（内部分发至 `CommandApp`） | - | command |
+| `/input/hub` | → `InputApp` → `InputHubPage` | `inputService`, `stockpoolService` | input |
+| `/input` | → `InputApp` → `InputDashboard` | `inputService`, `stockpoolService` | input |
+| `/input/bulk-import` | → `InputApp` → `BulkImportPanel` | `batchImportService` | input |
+| `/input/hot-sectors` | → `InputApp` → `HotSectorPanel` | `hotSectorService` | input |
+| `/input/data-test` | → `InputApp` → `DataTestPanel` | `fetcherService` | input |
+| `/input/local-knowledge` | → `InputApp` → `LocalKnowledgePage` | `localKnowledgeService` | input |
+| `/input/seven-dim` | → `InputApp` → `SevenDimConfigPage` | `sevenDimService` | input |
+| `/input/fetcher-config` | → `InputApp` → `FetcherConfigPage` | `fetcherConfigService` | input |
+| `/input/collect-tasks` | → `InputApp` → `CollectTaskPage` | `collectTaskService` | input |
+| `/analysis/hub` | → `AnalysisApp` → `AnalysisHubPage` | - | analysis |
+| `/analysis` | → `AnalysisApp` → `AnalysisTemplateCards` | - | analysis |
+| `/analysis/stock-score` | → `AnalysisApp` → `StockAnalysisPage` | `v6ScoreService`, `intelligentScoreService` | analysis |
+| `/analysis/stock-score/:symbol` | → `AnalysisApp` → `StockAnalysisPage` | `v6ScoreService`, `intelligentScoreService` | analysis |
+| `/analysis/sector` | → `AnalysisApp` → `SectorAnalysisPage` | `industryScoreService` | analysis |
+| `/analysis/backtest` | → `AnalysisApp` → `BacktestPage` | - | analysis |
+| `/analysis/industry-score` | → `AnalysisApp` → `IndustryScorePage` | `industryScoreService` | analysis |
+| `/analysis/intelligent-score` | → `AnalysisApp` → `IntelligentScorePage` | `intelligentScoreService` | analysis |
+| `/analysis/score-docs` | → `AnalysisApp` → `ScoreDocPage` | `scoreDocService` | analysis |
+| `/analysis/news` | → `AnalysisApp` → `NewsPage` | `newsService` | analysis |
+| `/analysis/hot-sector` | → `AnalysisApp` → `HotSectorPage` | `hotSectorService` | analysis |
+| `/analysis/value-pit` | → `AnalysisApp` → `ValuePitPage` | `valuePitService` | analysis |
+| `/trading/hub` | → `TradingApp` → `TradingHubPage` | `tradingService`, `signalGenerator`, `riskEngine` | trading |
+| `/trading` | → `TradingApp` → 交易看板 | `tradingService`, `signalGenerator`, `riskEngine` | trading |
+| `/trading/strategy-snapshots` | → `TradingApp` → `StrategySnapshotPage` | `strategySnapshotService` | trading |
+| `/trading/holdings` | → `TradingApp` → `HoldingsPage` | `holdingsService` | trading |
+| `/output` | → `OutputApp` → `OutputHubPage` | `outputStore` | output |
+| `/output/hub` | → `OutputApp` → `OutputHubPage` | `outputStore` | output |
+| `/output/research` | → `OutputApp` → `ResearchReportPage` | `scoreDocStore` | output |
+| `/output/review` | → `OutputApp` → `TradeReviewPage` | `disciplineStore` | output |
+| `/output/export` | → `OutputApp` → `DataExportPanel` | `systemService` | output |
+| `/command/hub` | → `CommandApp` → `CommandHubPage` | - | command |
+| `/command` | → `CommandApp` → `SystemMonitor` | `systemMonitorStore` | command |
+| `/command/agents` | → `AgentApp` → `AgentHubPage` | `agentStore` | command |
+| `/command/agents/registry` | → `AgentApp` → `AgentRegistryPage` | `agentStore` | command |
+| `/command/agents/registry/:agentId` | → `AgentApp` → `AgentDetailPage` | `agentStore` | command |
+| `/command/agents/trigger` | → `AgentApp` → `AgentTaskTriggerPage` | `agentStore` | command |
+| `/command/agents/tasks` | → `AgentApp` → `AgentTasksPage` | `agentStore` | command |
+| `/command/agents/custom` | → `AgentApp` → `AgentPlaceholderPage` | `agentStore` | command |
+| `/command/agents/llm` | → `AgentApp` → `AgentPlaceholderPage` | `llmConfigService` | command |
+| `/command/agents/capability-graph` | → `AgentApp` → `AgentPlaceholderPage` | `agentStore` | command |
+| `/command/agents/dag-scheduler` | → `AgentApp` → `AgentPlaceholderPage` | `agentStore` | command |
+| `/command/agents/feedback` | → `AgentApp` → `AgentFeedbackPage` | `agentFeedbackStore` | command |
+| `/command/mcp-servers` | → `CommandApp` → `MCPServerDashboardPage` | `mcpService` | command |
+| `/command/monitor` | → `CommandApp` → `SystemMonitor` | `systemMonitorStore` | command |
+| `/command/config` | → `CommandApp` → `ConfigApp` | `configService` | command |
 | `/mock-test` | `MockTestPage` | - | other |
 
+> **v3.0.0 变更**：组件列从 `ROUTE_REGISTRY` 的 `PortalShell` 改为实际渲染页面组件（由 App 分发器内部渲染）。新增 16 条路由映射，移除已废弃的 `/analysis/news-v6` 和 `/input/prototype`。
+>
 > 完整路由源文件见 `src/config/routes.ts`。`getAllPaths()` 返回所有已注册路径，可用于路由一致性校验。
 
 ---

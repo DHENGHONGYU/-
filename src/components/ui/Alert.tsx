@@ -17,6 +17,7 @@
 import { type ReactNode, memo } from 'react'
 import { cn } from '@/lib/utils'
 import { getLogger } from '@/lib/logger'
+import { THEME_TOKENS, COLOR_TOKENS, COLOR_SHADES } from '@/constants/theme.tokens'
 
 const logger = getLogger()
 
@@ -42,7 +43,7 @@ export type AlertTitleProps = React.HTMLAttributes<HTMLHeadingElement>
 export type AlertDescriptionProps = React.HTMLAttributes<HTMLParagraphElement>
 
 // ============================================================
-// 变体样式配置
+// 变体样式配置（使用 Design Tokens）
 // ============================================================
 
 const VARIANT_STYLES: Record<AlertVariant, {
@@ -50,61 +51,61 @@ const VARIANT_STYLES: Record<AlertVariant, {
   icon: string
 }> = {
   default: {
-    container: 'bg-muted/50 border-muted-foreground/20',
-    icon: 'text-muted-foreground',
+    container: `${COLOR_TOKENS.bgMuted.tailwind}/50 ${COLOR_SHADES.slate[300]}/20`,
+    icon: COLOR_TOKENS.textMuted.tailwind,
   },
   destructive: {
-    container: 'bg-destructive/10 border-destructive/30',
-    icon: 'text-destructive',
+    container: `${COLOR_TOKENS.danger.bgClass}/10 ${COLOR_SHADES.red[300]}/30`,
+    icon: COLOR_TOKENS.danger.tailwind,
   },
   success: {
-    container: 'bg-positive/10 border-positive/30',
-    icon: 'text-positive',
+    container: `${COLOR_TOKENS.success.bgClass}/10 ${COLOR_SHADES.green[300]}/30`,
+    icon: COLOR_TOKENS.success.tailwind,
   },
   warning: {
-    container: 'bg-warning/10 border-warning/30',
-    icon: 'text-warning',
+    container: `${COLOR_TOKENS.warning.bgClass}/10 ${COLOR_SHADES.amber[300]}/30`,
+    icon: COLOR_TOKENS.warning.tailwind,
   },
   info: {
-    container: 'bg-info/10 border-info/30',
-    icon: 'text-info',
+    container: `${COLOR_TOKENS.info.bgClass}/10 ${COLOR_SHADES.blue[300]}/30`,
+    icon: COLOR_TOKENS.info.tailwind,
   },
 }
 
 // ============================================================
-// 默认图标
+// 默认图标（使用 Design Tokens）
 // ============================================================
 
 const DefaultIcons: Record<AlertVariant, ReactNode> = {
   default: (
-    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg className={THEME_TOKENS.iconSizes.md} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="12" cy="12" r="10" />
       <line x1="12" y1="16" x2="12" y2="12" />
       <line x1="12" y1="8" x2="12.01" y2="8" />
     </svg>
   ),
   destructive: (
-    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg className={THEME_TOKENS.iconSizes.md} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="12" cy="12" r="10" />
       <line x1="15" y1="9" x2="9" y2="15" />
       <line x1="9" y1="9" x2="15" y2="15" />
     </svg>
   ),
   success: (
-    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg className={THEME_TOKENS.iconSizes.md} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
       <polyline points="22 4 12 14.01 9 11.01" />
     </svg>
   ),
   warning: (
-    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg className={THEME_TOKENS.iconSizes.md} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
       <line x1="12" y1="9" x2="12" y2="13" />
       <line x1="12" y1="17" x2="12.01" y2="17" />
     </svg>
   ),
   info: (
-    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg className={THEME_TOKENS.iconSizes.md} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="12" cy="12" r="10" />
       <line x1="12" y1="16" x2="12" y2="12" />
       <line x1="12" y1="8" x2="12.01" y2="8" />
@@ -128,17 +129,63 @@ export const Alert = memo(function Alert({
   const styles = VARIANT_STYLES[variant]
   const defaultIcon = DefaultIcons[variant]
 
+  const tokens = {
+    radius: THEME_TOKENS.radius.lg,
+    padding: THEME_TOKENS.spacing.md,
+    gap: THEME_TOKENS.gap.md,
+    border: 'border',
+  }
+
   const handleClose = () => {
-    logger.info('[Alert] Closed', { variant })
+    logger.info('[Alert] 关闭按钮点击', { 
+      variant, 
+      tokens,
+      closable 
+    })
     onClose?.()
   }
+
+  logger.info('[Alert] 渲染开始', { 
+    variant, 
+    closable,
+    className,
+    tokens: {
+      radius: tokens.radius,
+      padding: tokens.padding,
+      gap: tokens.gap,
+      border: tokens.border
+    },
+    variantStyles: {
+      container: styles.container,
+      icon: styles.icon
+    }
+  })
+
+  logger.info('[Alert] Token 取值详情', {
+    THEME_TOKENS_radius_lg: THEME_TOKENS.radius.lg,
+    THEME_TOKENS_spacing_md: THEME_TOKENS.spacing.md,
+    THEME_TOKENS_gap_md: THEME_TOKENS.gap.md,
+    COLOR_TOKENS_bgMuted_tailwind: COLOR_TOKENS.bgMuted.tailwind,
+    COLOR_TOKENS_textMuted_tailwind: COLOR_TOKENS.textMuted.tailwind,
+    COLOR_TOKENS_danger_bgClass: COLOR_TOKENS.danger.bgClass,
+    COLOR_TOKENS_danger_tailwind: COLOR_TOKENS.danger.tailwind,
+    COLOR_TOKENS_success_bgClass: COLOR_TOKENS.success.bgClass,
+    COLOR_TOKENS_success_tailwind: COLOR_TOKENS.success.tailwind,
+    COLOR_TOKENS_warning_bgClass: COLOR_TOKENS.warning.bgClass,
+    COLOR_TOKENS_warning_tailwind: COLOR_TOKENS.warning.tailwind,
+    COLOR_TOKENS_info_bgClass: COLOR_TOKENS.info.bgClass,
+    COLOR_TOKENS_info_tailwind: COLOR_TOKENS.info.tailwind
+  })
 
   return (
     <div
       role="alert"
       className={cn(
-        'relative w-full rounded-lg border p-4',
-        'flex gap-3 items-start',
+        'relative w-full flex items-start',
+        tokens.radius,
+        tokens.border,
+        tokens.padding,
+        tokens.gap,
         styles.container,
         className,
       )}
@@ -155,14 +202,16 @@ export const Alert = memo(function Alert({
           type="button"
           onClick={handleClose}
           className={cn(
-            'shrink-0 rounded-sm opacity-70 transition-opacity',
+            'shrink-0 opacity-70 transition-opacity',
             'hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring',
-            'p-0.5 -mr-1 -mt-0.5',
+            THEME_TOKENS.radius.sm,
+            THEME_TOKENS.spacing.xs,
+            '-mr-1 -mt-0.5',
             styles.icon,
           )}
           aria-label="关闭"
         >
-          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg className={THEME_TOKENS.iconSizes.sm} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="18" y1="6" x2="6" y2="18" />
             <line x1="6" y1="6" x2="18" y2="18" />
           </svg>
@@ -177,9 +226,25 @@ export const Alert = memo(function Alert({
 // ============================================================
 
 export function AlertTitle({ className, children, ...props }: AlertTitleProps) {
+  const tokens = {
+    fontSize: THEME_TOKENS.typography.fontSize.base,
+    fontWeight: THEME_TOKENS.typography.fontWeight.semibold,
+    lineHeight: THEME_TOKENS.typography.lineHeight.none,
+    letterSpacing: THEME_TOKENS.typography.letterSpacing.tight,
+    marginBottom: 'mb-1',
+  }
+
+  logger.info('[AlertTitle] 样式计算', { tokens, className })
+
   return (
     <h5
-      className={cn('mb-1 font-semibold leading-none tracking-tight', className)}
+      className={cn(
+        tokens.marginBottom,
+        tokens.fontWeight,
+        tokens.lineHeight,
+        tokens.letterSpacing,
+        className,
+      )}
       {...props}
     >
       {children}
@@ -192,9 +257,21 @@ export function AlertTitle({ className, children, ...props }: AlertTitleProps) {
 // ============================================================
 
 export function AlertDescription({ className, children, ...props }: AlertDescriptionProps) {
+  const tokens = {
+    fontSize: THEME_TOKENS.typography.fontSize.sm,
+    lineHeight: THEME_TOKENS.typography.lineHeight.relaxed,
+  }
+
+  logger.info('[AlertDescription] 样式计算', { tokens, className })
+
   return (
     <div
-      className={cn('text-sm [&_p]:leading-relaxed', className)}
+      className={cn(
+        tokens.fontSize,
+        tokens.lineHeight,
+        '[&_p]:leading-relaxed',
+        className,
+      )}
       {...props}
     >
       {children}

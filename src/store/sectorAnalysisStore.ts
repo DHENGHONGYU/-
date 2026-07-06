@@ -9,16 +9,11 @@
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'
 import type { RotationSectorScore, IndustryScore } from '@/data/types'
-import {
-  calculateAndSaveDefaultRotationScores,
-  calculateAndSaveDefaultIndustryScores,
-  getRotationScores,
-  getIndustryScores,
-} from '@/services/analysis/sectorAnalysisEngine'
 import { dataBridge } from '@/core/databridge'
 import { ENVELOPE_ACTION } from '@/config/dbConfig'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { withBroadcast } from '@/store/helpers/withBroadcast'
+import { fetchSectorAnalysisUseCase } from '@/services/useCase/fetchSectorAnalysis.useCase'
 
 const logger = getLogger()
 
@@ -79,78 +74,24 @@ export const useSectorAnalysisStore = create<SectorAnalysisState>((set, get) => 
     set({ isRefreshing: true, loading: isFirstLoad, error: null })
 
     try {
-      // 首先尝试从 dataLayer 读取已持久化的数据
-      const [rotationResult, industryResult] = await Promise.all([
-        getRotationScores(),
-        getIndustryScores(),
-      ])
+      const result = await fetchSectorAnalysisUseCase()
 
-      let rotation: RotationSectorScore[] = []
-      let industry: IndustryScore[] = []
-
-      // 处理板块轮动评分结果
-      if (!rotationResult.success) {
-        // 如果查询失败，设置错误信息
-        logger.error(`[sectorAnalysisStore] 板块轮动评分查询失败: ${rotationResult.error}`)
-        set({ error: rotationResult.error ?? '板块轮动评分查询失败', loading: false, isRefreshing: false })
+      if (!result.success) {
+        set({ error: result.error, loading: false, isRefreshing: false })
         return
       }
-
-      if (rotationResult.data && rotationResult.data.length > 0) {
-        rotation = rotationResult.data
-        logger.info(`[sectorAnalysisStore] 从 dataLayer 加载 ${rotation.length} 条板块轮动评分`)
-      } else {
-        // 数据为空时，计算并保存默认评分
-        logger.info('[sectorAnalysisStore] 板块轮动评分为空，开始计算默认数据')
-        const calcResult = await calculateAndSaveDefaultRotationScores()
-        if (calcResult.success && calcResult.data) {
-          rotation = calcResult.data
-        } else if (calcResult.error) {
-          logger.error(`[sectorAnalysisStore] 计算默认板块轮动评分失败: ${calcResult.error}`)
-          set({ error: calcResult.error, loading: false, isRefreshing: false })
-          return
-        }
-      }
-
-      // 处理行业评分结果
-      if (!industryResult.success) {
-        // 如果查询失败，设置错误信息
-        logger.error(`[sectorAnalysisStore] 行业评分查询失败: ${industryResult.error}`)
-        set({ error: industryResult.error ?? '行业评分查询失败', loading: false, isRefreshing: false })
-        return
-      }
-
-      if (industryResult.data && industryResult.data.length > 0) {
-        industry = industryResult.data
-        logger.info(`[sectorAnalysisStore] 从 dataLayer 加载 ${industry.length} 条行业评分`)
-      } else {
-        // 数据为空时，计算并保存默认评分
-        logger.info('[sectorAnalysisStore] 行业评分为空，开始计算默认数据')
-        const calcResult = await calculateAndSaveDefaultIndustryScores()
-        if (calcResult.success && calcResult.data) {
-          industry = calcResult.data
-        } else if (calcResult.error) {
-          logger.error(`[sectorAnalysisStore] 计算默认行业评分失败: ${calcResult.error}`)
-          set({ error: calcResult.error, loading: false, isRefreshing: false })
-          return
-        }
-      }
-
-      // 排序
-      const sortedRotation = rotation.sort((a, b) => b.total - a.total)
-      const sortedIndustry = industry.sort((a, b) => (b.scoredAt ?? 0) - (a.scoredAt ?? 0))
 
       set({
-        rotationScores: sortedRotation,
-        industryScores: sortedIndustry,
+        rotationScores: result.rotationScores,
+        industryScores: result.industryScores,
         loading: false,
         isRefreshing: false,
         lastUpdated: Date.now(),
       })
 
       logger.info('[sectorAnalysisStore] 数据加载完成', {
-        rotation: sortedRotation.length,
-        industry: sortedIndustry.length,
+        rotation: result.rotationScores.length,
+        industry: result.industryScores.length,
       })
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)

@@ -11,9 +11,7 @@
  * 7. refreshDataSource: taskMap 存在时重新启动任务
  * 8. refreshDataSource: 未注册时只设置 loading
  * 9. reset: 重置所有状态，注销任务
- * 10. sendChatMessage: MOCK 模式返回 mock 结果
- * 11. sendChatMessage: MOCK 模式失败时抛出错误
- * 12. refreshWidget: taskMap 存在时重新启动任务
+ * 10. refreshWidget: taskMap 存在时重新启动任务
  * 13. refreshWidget: taskMap 不存在时警告
  * 14. getTaskStats: 返回任务统计
  * 15. useDataSource: 返回默认状态当 key 不存在
@@ -41,8 +39,6 @@ const {
   unsubscribeDataBridgeFn,
   mockAdapt,
   mockMerge,
-  mockSendChatMessage,
-  mockConstants,
 } = vi.hoisted(() => {
   const capturedTaskSchedulerCallback = { callback: null as ((taskId: string, rawData: any, error?: Error) => void) | null }
   const capturedDataBridgeCallback = { callback: null as ((envelope: any) => void) | null }
@@ -58,11 +54,6 @@ const {
     capturedDataBridgeCallback.callback = callback
     return unsubscribeDataBridgeFn
   })
-
-  const mockConstants = {
-    ACTIVE_DATA_SOURCE: 'mock',
-    DATA_SOURCE_TYPE: { MOCK: 'mock', REST: 'rest', WEBSOCKET: 'websocket' },
-  }
 
   return {
     mockRegisterTask: vi.fn().mockReturnValue('task_test_1'),
@@ -101,6 +92,8 @@ const {
         totalPnL: '0',
         totalPnLPercent: 0,
         holdings: 0,
+        holdingsList: [],
+        rebalancePlan: [],
       },
       tradeReview: {
         totalTrades: 0,
@@ -125,13 +118,6 @@ const {
       hotSectors: [],
       valuePit: [],
     }),
-    mockSendChatMessage: vi.fn().mockResolvedValue({
-      id: 'assistant_123',
-      role: 'assistant',
-      content: 'Mock response',
-      timestamp: 1234567890,
-    }),
-    mockConstants,
   }
 })
 
@@ -165,17 +151,7 @@ vi.mock('@/config/dbConfig', () => ({
   STORE_NAME: { orders: 'orders' },
 }))
 
-vi.mock('@/constants/cockpit.constants', () => mockConstants)
 
-vi.mock('@/services/stock-analysis/mockStockAnalysisProvider', () => ({
-  MockStockAnalysisProvider: {
-    sendChatMessage: mockSendChatMessage,
-  },
-}))
-
-vi.mock('@/services/llm/llmClient', () => ({
-  streamingChat: vi.fn().mockResolvedValue(undefined),
-}))
 
 import { renderHook } from '@testing-library/react'
 import {
@@ -382,24 +358,6 @@ describe('marketDataStore', () => {
     expect(state.taskMap).toEqual({})
     expect(state.globalError).toBeNull()
     expect(mockUnregisterTask).toHaveBeenCalledWith('t1')
-  })
-
-  // ============================================================
-  // sendChatMessage
-  // ============================================================
-  it('sendChatMessage: MOCK 模式返回 MockStockAnalysisProvider 结果', async () => {
-    const result = await useMarketDataStore.getState().sendChatMessage('AAPL', '\u5206\u6790\u8fd9\u53ea\u80a1\u7968')
-
-    expect(mockSendChatMessage).toHaveBeenCalledWith('AAPL', '\u5206\u6790\u8fd9\u53ea\u80a1\u7968')
-    expect(result.id).toBe('assistant_123')
-    expect(result.role).toBe('assistant')
-    expect(result.content).toBe('Mock response')
-  })
-
-  it('sendChatMessage: MOCK 模式失败时抛出错误', async () => {
-    mockSendChatMessage.mockRejectedValueOnce(new Error('Mock chat failed'))
-
-    await expect(useMarketDataStore.getState().sendChatMessage('AAPL', '\u5206\u6790')).rejects.toThrow('Mock chat failed')
   })
 
   // ============================================================

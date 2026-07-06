@@ -17,7 +17,7 @@ import { ENVELOPE_ACTION, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
 import type { StandardEnvelope } from '@/core/envelope'
 import { BacktestEngine } from '@/services/backtest'
 import { exportBacktestReport } from '@/services/export/backtestExportService'
-import type { BacktestExportConfig, BacktestExportResult } from '@/types/modules/backtest.types'
+import type { BacktestExportConfig, BacktestExportResult, BacktestStrategy } from '@/types/modules/backtest.types'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { withBroadcast } from '@/store/helpers/withBroadcast'
 
@@ -27,7 +27,8 @@ const logger = getLogger()
 // 类型定义
 // ============================================================
 
-export type BacktestStrategy = 'hot_sector' | 'value_pit' | 'composite'
+// Re-export BacktestStrategy for backward compatibility
+export type { BacktestStrategy }
 
 export interface BacktestTrade {
   symbol: string

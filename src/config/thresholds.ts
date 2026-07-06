@@ -508,6 +508,7 @@ export const TRADE_REVIEW_AI_THRESHOLDS = {
   SKILL_LEVEL_ADVANCED_THRESHOLD: 70,
   SKILL_LEVEL_INTERMEDIATE_THRESHOLD: 55,
   SKILL_LEVEL_BEGINNER_THRESHOLD: 35,
+  SKILL_LEVEL_PRIMARY_THRESHOLD: 50, // 初级交易者阈值（disciplineScore < 50）
 
   // 错误严重度扣分（按 severity 分档）
   ERROR_PENALTY_CRITICAL: 20,
@@ -523,6 +524,33 @@ export const TRADE_REVIEW_AI_THRESHOLDS = {
   TARGET_SCORE_ADVANCED: 70,
   TARGET_SCORE_EXPERT: 85,
   TARGET_SCORE_MASTER: 95,
+
+  // 学习路径完成阈值（disciplineScore >= 此值判定为完成）
+  LEARNING_PATH_STEP_1_COMPLETE_THRESHOLD: 70,
+  LEARNING_PATH_STEP_2_COMPLETE_THRESHOLD: 80,
+  LEARNING_PATH_STEP_3_COMPLETE_THRESHOLD: 90,
+  LEARNING_PATH_STEP_4_COMPLETE_THRESHOLD: 95,
+
+  // 纪律评分阈值（用于生成建议）
+  DISCIPLINE_SCORE_HIGH_THRESHOLD: 80,
+  DISCIPLINE_SCORE_MEDIUM_THRESHOLD: 60,
+
+  // 优先级技能筛选阈值
+  PRIORITY_SKILL_SCORE_THRESHOLD: 80,
+
+  // 差距重要性阈值
+  GAP_HIGH_THRESHOLD: 25,
+  GAP_MEDIUM_THRESHOLD: 15,
+
+  // 里程碑达成阈值
+  MILESTONE_ACHIEVED_THRESHOLD: 85,
+
+  // 纪律分析阈值（用于生成改进建议）
+  STOP_LOSS_EXECUTION_RATE_LOW_THRESHOLD: 70,
+  EMOTION_CONTROL_SCORE_LOW_THRESHOLD: 60,
+
+  // 胜率阈值
+  WIN_RATE_HIGH_THRESHOLD: 55,
 } as const
 
 // ============================================================
@@ -587,4 +615,85 @@ export const ROTATION_SIGNAL_THRESHOLDS = {
   // 金叉检测默认均线周期
   GOLDEN_CROSS_SHORT_PERIOD_DEFAULT: 5,
   GOLDEN_CROSS_LONG_PERIOD_DEFAULT: 20,
+} as const
+
+// ============================================================
+// 板块轮动计算器阈值常量
+// ============================================================
+
+/**
+ * RotationCalculator 使用的阈值、评分等级参数集合。
+ * 所有数值均从 rotationCalculator.ts 迁移而来，禁止在引擎中硬编码。
+ */
+export const ROTATION_CALCULATOR_THRESHOLDS = {
+  // 警报到级别阈值
+  ALERT_F1_LOW_CRITICAL: 40,
+  ALERT_F1_LOW_MAJOR: 50,
+  ALERT_F1_HIGH_WARNING: 58,
+  ALERT_F2_NEGATIVE: 0,
+  ALERT_F2_LOW: 12,
+
+  // 下跌性质判定阈值
+  DECLINE_JINGQI_LOW: 50,
+  DECLINE_JINGQI_CRITICAL: 40,
+  DECLINE_FUND_INFLOW_NEGATIVE: 0,
+
+  // 共振强度计算阈值
+  RESONANCE_TOTAL_TIER_1: 80,
+  RESONANCE_TOTAL_TIER_2: 70,
+  RESONANCE_TOTAL_TIER_3: 60,
+  RESONANCE_TOTAL_TIER_4: 55,
+  RESONANCE_TOTAL_TIER_5: 45,
+  RESONANCE_TOTAL_TIER_6: 35,
+  RESONANCE_TOTAL_TIER_7: 25,
+  RESONANCE_BASE_SCORE_TIER_1: 8,
+  RESONANCE_BASE_SCORE_TIER_2: 7,
+  RESONANCE_BASE_SCORE_TIER_3: 6,
+  RESONANCE_BASE_SCORE_TIER_4: 5,
+  RESONANCE_BASE_SCORE_TIER_5: 4,
+  RESONANCE_BASE_SCORE_TIER_6: 3,
+  RESONANCE_BASE_SCORE_TIER_7: 2,
+  RESONANCE_BASE_SCORE_TIER_8: 1,
+  RESONANCE_DOUBLE_RESONANCE_F1_MIN: 28,
+  RESONANCE_DOUBLE_RESONANCE_F2_MIN: 18,
+  RESONANCE_JINGQI_BONUS_F1_MIN: 35,
+  RESONANCE_MAX_SCORE: 10,
+} as const
+
+// ============================================================
+// RSI 技术指标阈值常量
+// ============================================================
+
+/**
+ * RSI 技术指标使用的超买/超卖阈值集合。
+ * 所有数值均从 dataFusionEngine.ts 等技术指标计算模块迁移而来。
+ */
+export const RSI_THRESHOLDS = {
+  /** RSI 超买阈值（>= 此值判定为超买） */
+  OVERBOUGHT: 80,
+  /** RSI 超卖阈值（<= 此值判定为超卖） */
+  OVERSOLD: 20,
+  /** RSI 强势阈值（>= 此值判定为强势） */
+  BULLISH: 60,
+  /** RSI 弱势阈值（<= 此值判定为弱势） */
+  BEARISH: 40,
+} as const
+
+// ============================================================
+// 风险计算阈值常量
+// ============================================================
+
+/**
+ * RiskComputer 使用的风险阈值集合。
+ * 所有数值均从 riskComputer.ts 迁移而来。
+ */
+export const RISK_THRESHOLDS = {
+  /** 持仓集中度高风险阈值（%） */
+  CONCENTRATION_HIGH_THRESHOLD: 50,
+  /** 最大回撤高风险阈值（%） */
+  MAX_DRAWDOWN_HIGH_THRESHOLD: 20,
+  /** VaR 高风险阈值（%） */
+  VAR_HIGH_THRESHOLD: -5,
+  /** VaR 中风险阈值（%） */
+  VAR_MEDIUM_THRESHOLD: -2,
 } as const
