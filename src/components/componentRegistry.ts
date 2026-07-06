@@ -2,6 +2,9 @@
  * @module components/componentRegistry
  * @description Component 集中注册表 — 所有可复用业务组件的元数据清单
  *
+ * @internal 当前无运行时消费者，仅供 DevTools/文档工具使用。
+ * 注册的组件状态均为 `available`（未被集成），需在对应页面集成后更新为 `active`。
+ *
  * 职责：
  * 1. 提供 Component 发现能力（DevTools / 文档工具可枚举所有组件）
  * 2. 标注组件的域归属、注册状态、适用场景

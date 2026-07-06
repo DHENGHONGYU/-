@@ -107,35 +107,68 @@ export async function loadScreenableStocks(): Promise<ScreenableStockData[]> {
     pb: view.stock.pb ?? null,
     roe: view.stock.roe ?? null,
     marketCap: view.stock.marketCap ?? null,
-    revenueGrowth: null,
-    profitGrowth: null,
+    revenueGrowth: null, // 当前 Stock 类型不包含此字段，保留 null 占位
+    profitGrowth: null, // 当前 Stock 类型不包含此字段，保留 null 占位
   }))
 }
 
-export function runScreening(
+export function runMultiFactorScreening(
   stocks: ScreenableStockData[],
   groups: ScreeningConditionGroup[],
 ): ScreeningRunResult {
   const start = performance.now()
 
+  logger.info('[multiFactorScreeningEngine] runMultiFactorScreening() 开始', {
+    stockCount: stocks.length,
+    groupCount: groups.length,
+    groupIds: groups.map(g => g.id),
+    groupLogics: groups.map(g => ({ id: g.id, logic: g.logic, criteriaCount: g.criteria.length })),
+  })
+
   const items: ScreeningResultItem[] = []
+  const rejectedStocks: { symbol: string; matchedGroupCount: number; totalGroupCount: number }[] = []
 
   for (const stock of stocks) {
     const matchedGroups: string[] = []
 
     for (const group of groups) {
-      if (evaluateGroup(stock, group)) {
+      const groupResult = evaluateGroup(stock, group)
+      if (groupResult) {
         matchedGroups.push(group.id)
       }
     }
 
-    if (groups.length === 0 || matchedGroups.length === groups.length) {
+    // 多条件组之间是 AND 逻辑：必须匹配所有条件组才入选
+    const shouldInclude = groups.length === 0 || matchedGroups.length === groups.length
+
+    if (shouldInclude) {
+      logger.info('[multiFactorScreeningEngine] 股票入选', {
+        symbol: stock.symbol,
+        name: stock.name,
+        matchedGroups: matchedGroups.length,
+        totalGroups: groups.length,
+        matchedGroupIds: matchedGroups,
+      })
       items.push({ ...stock, matchedGroups })
+    } else {
+      rejectedStocks.push({
+        symbol: stock.symbol,
+        matchedGroupCount: matchedGroups.length,
+        totalGroupCount: groups.length,
+      })
     }
   }
 
   const elapsedMs = Math.round(performance.now() - start)
-  logger.info(`[multiFactorScreeningEngine] 筛选完成: ${items.length}/${stocks.length}, 耗时 ${elapsedMs}ms`)
+
+  logger.info('[multiFactorScreeningEngine] runMultiFactorScreening() 完成', {
+    totalStocks: stocks.length,
+    selectedCount: items.length,
+    rejectedCount: rejectedStocks.length,
+    selectionRate: stocks.length > 0 ? ((items.length / stocks.length) * 100).toFixed(2) + '%' : '0%',
+    elapsedMs,
+    rejectedStocksSample: rejectedStocks.slice(0, 5), // 只记录前 5 个被拒绝的股票，避免日志过大
+  })
 
   return { items, total: items.length, elapsedMs }
 }
@@ -186,8 +219,10 @@ export function createTemplateFromGroups(
   description?: string,
 ): ScreeningTemplate {
   const now = Date.now()
+  // 修复：添加随机后缀避免高频调用时的 ID 碰撞
+  const randomSuffix = Math.random().toString(36).substring(2, 8)
   return {
-    id: `template_${now}`,
+    id: `template_${now}_${randomSuffix}`,
     name,
     description,
     groups,

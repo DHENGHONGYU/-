@@ -16,7 +16,7 @@ import type {
 } from '@/types/modules/screening.types'
 import {
   loadScreenableStocks,
-  runScreening,
+  runMultiFactorScreening,
   createTemplateFromGroups,
   exportScreeningResults,
 } from '@/services/screening/multiFactorScreeningEngine'
@@ -165,7 +165,7 @@ export const useMultiFactorScreeningStore = create<MultiFactorScreeningState>((s
     set({ loading: true, error: null })
     try {
       const stocks = await loadScreenableStocks()
-      const result = runScreening(stocks, get().conditionGroups)
+      const result = runMultiFactorScreening(stocks, get().conditionGroups)
       set({ results: result.items, loading: false })
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)

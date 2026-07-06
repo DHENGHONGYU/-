@@ -1,6 +1,9 @@
 /**
  * DataFusionEngine — 多源数据融合引擎
  *
+ * @deprecated 此模块已被 `unifiedStockService.ts` 替代，保留仅为未来可能的技术指标函数复用。
+ * 新代码应使用 `getUnifiedStockView.useCase.ts` 进行数据融合查询。
+ *
  * 将 Stock、DailyQuotes、V6Score、IntelligentScore、Signal 等多源数据
  * 融合为统一的 UnifiedStockData 视图，作为上层分析组件的数据感知统一入口。
  *
@@ -50,16 +53,6 @@ function computeMA(closes: number[], period: number): number | null {
   return slice.reduce((a, b) => a + b, 0) / period
 }
 
-function computeEMA(closes: number[], period: number): number | null {
-  if (closes.length < period) return null
-  const k = 2 / (period + 1)
-  let ema = closes.slice(0, period).reduce((a, b) => a + b, 0) / period
-  for (let i = period; i < closes.length; i++) {
-    ema = (closes[i]! - ema) * k + ema
-  }
-  return ema
-}
-
 function computeRSI(closes: number[], period: number): number | null {
   if (closes.length < period + 1) return null
   const window = closes.slice(-(period + 1))
@@ -81,25 +74,55 @@ function computeMACD(
   signal = 9,
 ): { dif: number; dea: number; macd: number } | null {
   if (closes.length < slow + signal) return null
-  const emaFast = computeEMA(closes, fast)!
-  const emaSlow = computeEMA(closes, slow)!
-  const dif = emaFast - emaSlow
+
+  // 优化：一次性计算所有 EMA，避免重复计算
+  const emaFastAll = computeEMAArray(closes, fast)
+  const emaSlowAll = computeEMAArray(closes, slow)
+
+  if (!emaFastAll || !emaSlowAll) return null
+
+  // 计算 DIF 序列
+  const difs: number[] = []
+  for (let i = 0; i < closes.length; i++) {
+    const ef = emaFastAll[i]
+    const es = emaSlowAll[i]
+    if (ef !== null && ef !== undefined && es !== null && es !== undefined) {
+      difs.push(ef - es)
+    }
+  }
+
+  if (difs.length < signal) return null
 
   // 计算 DEA (DIF 的 signal 周期 EMA)
-  const recentCloses = closes.slice(-(slow + signal))
-  const difs: number[] = []
-  for (let i = slow; i < recentCloses.length; i++) {
-    const ef = computeEMA(recentCloses.slice(0, i + 1), fast)!
-    const es = computeEMA(recentCloses.slice(0, i + 1), slow)!
-    difs.push(ef - es)
-  }
   const k = 2 / (signal + 1)
   let dea = difs.slice(0, signal).reduce((a, b) => a + b, 0) / signal
   for (let i = signal; i < difs.length; i++) {
     dea = (difs[i]! - dea) * k + dea
   }
 
+  const dif = difs[difs.length - 1]!
   return { dif, dea, macd: (dif - dea) * 2 }
+}
+
+/**
+ * 计算 EMA 数组（优化版本）
+ */
+function computeEMAArray(closes: number[], period: number): (number | null)[] | null {
+  if (closes.length < period) return null
+  const result: (number | null)[] = new Array(closes.length).fill(null)
+  const k = 2 / (period + 1)
+
+  // 初始 EMA = 前 period 个值的 SMA
+  let ema = closes.slice(0, period).reduce((a, b) => a + b, 0) / period
+  result[period - 1] = ema
+
+  // 后续使用递推公式
+  for (let i = period; i < closes.length; i++) {
+    ema = (closes[i]! - ema) * k + ema
+    result[i] = ema
+  }
+
+  return result
 }
 
 function computeKDJ(
@@ -109,21 +132,37 @@ function computeKDJ(
   period = 9,
 ): { k: number; d: number; j: number } | null {
   if (closes.length < period) return null
-  const window = closes.slice(-period)
-  const highWindow = highs.slice(-period)
-  const lowWindow = lows.slice(-period)
-  const highestHigh = Math.max(...highWindow)
-  const lowestLow = Math.min(...lowWindow)
-  const rsv =
-    lowestLow === highestHigh
-      ? 50
-      : ((window[window.length - 1]! - lowestLow) / (highestHigh - lowestLow)) * 100
 
-  // 简化：使用 RSV 作为 K 值，D 取 K 的 3 日均值
-  const k = rsv
-  const d = k // 初版简化
-  const j = 3 * k - 2 * d
-  return { k, d, j }
+  // 标准 KDJ 计算需要维护历史 K/D 序列
+  // K = 2/3 * prev_K + 1/3 * RSV
+  // D = 2/3 * prev_D + 1/3 * K
+  // J = 3*K - 2*D
+
+  let prevK = 50 // 初始值
+  let prevD = 50 // 初始值
+
+  // 从 period 开始遍历，计算每个周期的 RSV 并平滑 K/D
+  for (let i = period - 1; i < closes.length; i++) {
+    const windowHighs = highs.slice(Math.max(0, i - period + 1), i + 1)
+    const windowLows = lows.slice(Math.max(0, i - period + 1), i + 1)
+    const highestHigh = Math.max(...windowHighs)
+    const lowestLow = Math.min(...windowLows)
+
+    const rsv =
+      lowestLow === highestHigh
+        ? 50
+        : ((closes[i]! - lowestLow) / (highestHigh - lowestLow)) * 100
+
+    // 平滑计算
+    const k = (2 / 3) * prevK + (1 / 3) * rsv
+    const d = (2 / 3) * prevD + (1 / 3) * k
+
+    prevK = k
+    prevD = d
+  }
+
+  const j = 3 * prevK - 2 * prevD
+  return { k: prevK, d: prevD, j }
 }
 
 function computeBollinger(
@@ -306,8 +345,8 @@ export async function fuseStockData(
 
     // 基础数据
     const hasQuotes = quotes !== undefined && quotes !== null && quotes.history.length > 0
-    const latest = hasQuotes ? quotes!.latest : null
-    const history = hasQuotes ? quotes!.history : []
+    const latest = hasQuotes ? quotes.latest : null
+    const history = hasQuotes ? quotes.history : []
     const closes = history.map((b) => b.close)
     const highs = history.map((b) => b.high)
     const lows = history.map((b) => b.low)
