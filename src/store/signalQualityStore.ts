@@ -1,15 +1,29 @@
 /**
  * @module signalQualityStore
  * @lifecycle @Global
+ * @reserved 预留未来信号质量复盘面板使用
  * @description 信号质量复盘状态管理。管理信号准确率、择时得分、最大回撤、Sharpe 等
  * 绩效指标，提供复盘数据加载和 DataBridge 订阅。
+ *
+ * @status 当前无 UI 消费方。经补充验证（2026-07-06）确认：
+ * 1. 与 outputStore 零数据交互，outputStore 是纯导出工具 Store
+ * 2. OutputApp 子页面（TradeReviewPage/ResearchReportPage/OutputHubPage）均不引用此 Store
+ * 3. TradeReviewPage 使用 disciplineStore + tradeReviewAI（基于订单的纪律复盘），
+ *    与本 Store（基于信号的准确率复盘）是不同维度的复盘体系，数据模型不兼容
+ * 4. SIGNAL_QUALITY_CHANGED 事件零订阅者
+ * 5. initSignalQualityStoreSubscriptions() 从未被调用，无自动更新机制
+ *
+ * 保留以备未来**信号质量复盘面板**（如 SignalQualityDashboard）使用。
+ * 注意：与现有 TradeReviewPage（基于 disciplineStore 的订单复盘）是不同维度的复盘体系，不可混淆。
+ * 删除前需确认未来无信号准确率复盘可视化需求。
+ *
+ * @see docs/reports/redundant-stores-supplementary-verification.md - 补充验证报告
  */
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'
-import { dataLayer } from '@/data/dataLayer'
 import { dataBridge } from '@/core/databridge'
-import { ENVELOPE_ACTION, MODULE_ID, type EnvelopeAction } from '@/config/dbConfig'
+import { ENVELOPE_ACTION, MODULE_ID, STORE_NAME, type EnvelopeAction } from '@/config/dbConfig'
 import type { Signal } from '@/data/types'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { withBroadcast } from '@/store/helpers/withBroadcast'
@@ -190,14 +204,26 @@ export const useSignalQualityStore = create<SignalQualityState>((set, get) => ({
 
     try {
       // 从 signals 表加载历史信号
-      const signals = await dataLayer.signals.list()
+      const result = await dataBridge.query<Signal[]>({
+        action: ENVELOPE_ACTION.queryList,
+        store: STORE_NAME.signals,
+        source: MODULE_ID.analyzer,
+      })
+
+      if (!result.success) {
+        const errorMessage = result.error ?? '查询信号列表失败'
+        logger.error(`[signalQualityStore] loadReviews 查询失败: ${errorMessage}`)
+        throw new Error(errorMessage)
+      }
+
+      const signals = result.data ?? []
       logger.info(`[signalQualityStore] 加载到 ${signals.length} 个信号`)
 
       // 转换为复盘记录（简化：实际应查询后续价格数据）
       const reviews: SignalReviewRecord[] = signals.map((signal: Signal) => ({
         signalId: signal.id,
         symbol: signal.symbol,
-        direction: signal.direction as 'buy' | 'sell' | 'hold' | 'watch',
+        direction: signal.direction,
         type: signal.type,
         confidence: signal.confidence,
         issuedAt: signal.createdAt,

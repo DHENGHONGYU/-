@@ -13,22 +13,15 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-const { mockDataLayerSignalsList } = vi.hoisted(() => {
-  const mockDataLayerSignalsList = vi.fn()
-  return { mockDataLayerSignalsList }
+const { mockDataBridgeQuery } = vi.hoisted(() => {
+  const mockDataBridgeQuery = vi.fn()
+  return { mockDataBridgeQuery }
 })
-
-vi.mock('@/data/dataLayer', () => ({
-  dataLayer: {
-    signals: {
-      list: mockDataLayerSignalsList,
-    },
-  },
-}))
 
 vi.mock('@/core/databridge', () => ({
   dataBridge: {
     subscribe: vi.fn().mockReturnValue(vi.fn()),
+    query: mockDataBridgeQuery,
   },
 }))
 
@@ -92,7 +85,7 @@ describe('signalQualityStore', () => {
       createMockSignal({ id: 'signal-001', symbol: '000001' }),
       createMockSignal({ id: 'signal-002', symbol: '000002' }),
     ]
-    mockDataLayerSignalsList.mockResolvedValue(mockSignals)
+    mockDataBridgeQuery.mockResolvedValue({ success: true, data: mockSignals })
 
     await useSignalQualityStore.getState().loadReviews()
 
@@ -104,7 +97,7 @@ describe('signalQualityStore', () => {
   })
 
   it('loadReviews 异常时设置 error', async () => {
-    mockDataLayerSignalsList.mockRejectedValue(new Error('数据库错误'))
+    mockDataBridgeQuery.mockRejectedValue(new Error('数据库错误'))
 
     await useSignalQualityStore.getState().loadReviews()
 

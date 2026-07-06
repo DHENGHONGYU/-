@@ -252,6 +252,7 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
       STORE_NAME.scoreDocs,
       STORE_NAME.hotSectorScores,
       STORE_NAME.valuePitScores,
+      STORE_NAME.signals,
     ],
     write: [
       STORE_NAME.v6Scores,
