@@ -45,13 +45,8 @@ import type { RotationSignal } from '@/services/scoring/rotationSignalDetector'
 // ============================================================
 
 const {
-  mockStocksList,
-  mockHotSectorList,
-  mockHotSectorSave,
-  mockValuePitList,
-  mockValuePitSave,
-  mockSignalsList,
-  mockSignalsSave,
+  mockDataBridgeQuery,
+  mockDataBridgeForward,
   mockRunDualStrategy,
   mockHotSectorAnalyze,
   mockValuePitAnalyze,
@@ -63,13 +58,8 @@ const {
   const capturedCallbacks = new Map<string, ((envelope: any) => void)>()
   const unsubscribes: Array<ReturnType<typeof vi.fn>> = []
   return {
-    mockStocksList: vi.fn().mockResolvedValue([]),
-    mockHotSectorList: vi.fn().mockResolvedValue([]),
-    mockHotSectorSave: vi.fn(),
-    mockValuePitList: vi.fn().mockResolvedValue([]),
-    mockValuePitSave: vi.fn(),
-    mockSignalsList: vi.fn().mockResolvedValue([]),
-    mockSignalsSave: vi.fn(),
+    mockDataBridgeQuery: vi.fn().mockResolvedValue({ success: true, data: [] }),
+    mockDataBridgeForward: vi.fn().mockResolvedValue({ success: true }),
     mockRunDualStrategy: vi.fn(),
     mockHotSectorAnalyze: vi.fn(),
     mockValuePitAnalyze: vi.fn(),
@@ -93,17 +83,8 @@ vi.mock('@/lib/logger', () => ({
   getLogger: () => ({ info: vi.fn(), error: vi.fn(), warn: vi.fn(), debug: vi.fn() }),
 }))
 
-vi.mock('@/data/dataLayer', () => ({
-  dataLayer: {
-    stocks: { list: mockStocksList },
-    hotSectorScores: { list: mockHotSectorList, save: mockHotSectorSave },
-    valuePitScores: { list: mockValuePitList, save: mockValuePitSave },
-    signals: { list: mockSignalsList, save: mockSignalsSave },
-  },
-}))
-
 vi.mock('@/core/databridge', () => ({
-  dataBridge: { subscribe: mockSubscribe },
+  dataBridge: { subscribe: mockSubscribe, query: mockDataBridgeQuery, forward: mockDataBridgeForward },
 }))
 
 vi.mock('@/services/trading/dualStrategyEngine', () => ({
@@ -125,6 +106,8 @@ vi.mock('@/services/scoring/rotationSignalDetector', () => ({
 vi.mock('@/config/dbConfig', () => ({
   MODULE_ID: { analyzer: 'analyzer', tradinghub: 'tradinghub', strategy: 'strategy', stockpool: 'stockpool' },
   STORE_NAME: { hotSectorScores: 'hotSectorScores', valuePitScores: 'valuePitScores', rotationScores: 'rotationScores', signals: 'signals', stocks: 'stocks' },
+  ENVELOPE_ACTION: { queryList: 'QUERY_LIST', saveScores: 'SAVE_SCORES', insertSignal: 'INSERT_SIGNAL', saveV6Score: 'SAVE_V6_SCORE' },
+  ENVELOPE_TARGET: { db: 'db' },
 }))
 
 // ============================================================
@@ -212,6 +195,28 @@ function createMockRotationSignal(sectorId: string, triggered: boolean = true, s
   }
 }
 
+function mockQueryByStore(
+  stocks: Stock[] = [],
+  hotScores: HotSectorScore[] = [],
+  valueScores: ValuePitScore[] = [],
+  signals: Signal[] = [],
+) {
+  mockDataBridgeQuery.mockImplementation((req: { store: string }) => {
+    switch (req.store) {
+      case 'stocks':
+        return Promise.resolve({ success: true, data: stocks })
+      case 'hotSectorScores':
+        return Promise.resolve({ success: true, data: hotScores })
+      case 'valuePitScores':
+        return Promise.resolve({ success: true, data: valueScores })
+      case 'signals':
+        return Promise.resolve({ success: true, data: signals })
+      default:
+        return Promise.resolve({ success: true, data: [] })
+    }
+  })
+}
+
 function resetStoreState() {
   useDualStrategyStore.setState({
     hotSectorScores: [],
@@ -240,10 +245,8 @@ beforeEach(() => {
   resetStoreState()
 
   // 重置 hoisted mock 默认行为
-  mockStocksList.mockResolvedValue([])
-  mockHotSectorList.mockResolvedValue([])
-  mockValuePitList.mockResolvedValue([])
-  mockSignalsList.mockResolvedValue([])
+  mockDataBridgeQuery.mockResolvedValue({ success: true, data: [] })
+  mockDataBridgeForward.mockResolvedValue({ success: true })
 })
 
 // ============================================================
@@ -291,10 +294,10 @@ describe('useDualStrategyStore', () => {
     expect(state.lastUpdated).toBeGreaterThan(0)
   })
 
-  it('fetchScores: 无传入 stocks，从 dataLayer.stocks.list 获取', async () => {
-    // 注意：不再从 poolStore 获取，统一从 dataLayer.stocks.list 获取
+  it('fetchScores: 无传入 stocks，从 DataBridge.query 获取', async () => {
+    // 注意：不再从 poolStore 获取，统一从 DataBridge.query(stocks) 获取
     const dlStocks = [createMockStock('DL1')]
-    mockStocksList.mockResolvedValue(dlStocks)
+    mockQueryByStore(dlStocks)
 
     const hotScores = [createMockHotSectorScore('DL1', 4.0)]
     const valueScores = [createMockValuePitScore('DL1', 3.5)]
@@ -307,14 +310,14 @@ describe('useDualStrategyStore', () => {
 
     await useDualStrategyStore.getState().fetchScores()
 
-    // 现在统一从 dataLayer.stocks.list 获取，不再依赖 poolStore
-    expect(mockStocksList).toHaveBeenCalled()
+    // 现在统一从 DataBridge.query 获取，不再依赖 poolStore
+    expect(mockDataBridgeQuery).toHaveBeenCalledWith(expect.objectContaining({ store: 'stocks', action: 'QUERY_LIST' }))
     expect(mockRunDualStrategy).toHaveBeenCalledWith(dlStocks, { persistScores: false })
     expect(useDualStrategyStore.getState().hotSectorScores).toHaveLength(1)
   })
 
   it('fetchScores: 股票池为空，使用默认样本数据', async () => {
-    mockStocksList.mockResolvedValue([])
+    mockQueryByStore([])
 
     mockHotSectorAnalyze.mockReturnValue(createMockHotSectorScore('AI_算力', 4.5))
     mockValuePitAnalyze.mockReturnValue(createMockValuePitScore('银行', 3.8))
@@ -379,12 +382,11 @@ describe('useDualStrategyStore', () => {
 
     await useDualStrategyStore.getState().fetchScores(stocks)
 
-    expect(mockHotSectorSave).toHaveBeenCalledTimes(1)
-    expect(mockValuePitSave).toHaveBeenCalledTimes(1)
-    expect(mockSignalsSave).toHaveBeenCalledTimes(1)
-    expect(mockHotSectorSave).toHaveBeenCalledWith(hotScores[0])
-    expect(mockValuePitSave).toHaveBeenCalledWith(valueScores[0])
-    expect(mockSignalsSave).toHaveBeenCalledWith(signals[0])
+    expect(mockDataBridgeForward).toHaveBeenCalledTimes(3)
+    const forwardedPayloads = mockDataBridgeForward.mock.calls.map((c) => (c[0] as { payload: unknown }).payload)
+    expect(forwardedPayloads).toContain(hotScores[0])
+    expect(forwardedPayloads).toContain(valueScores[0])
+    expect(forwardedPayloads).toContain(signals[0])
   })
 
   it('fetchScores: scores 按 score 降序排序', async () => {
@@ -421,20 +423,18 @@ describe('useDualStrategyStore', () => {
   // refresh
   // ----------------------------------------------------------
 
-  it('refresh: 从 dataLayer 读取 3 个列表', async () => {
+  it('refresh: 从 DataBridge 读取 3 个列表', async () => {
     const hotScores = [createMockHotSectorScore('A', 4.0)]
     const valueScores = [createMockValuePitScore('B', 3.5)]
     const allSignals = [createMockSignal('C', 0.6, 'buy_rotation')]
 
-    mockHotSectorList.mockResolvedValue(hotScores)
-    mockValuePitList.mockResolvedValue(valueScores)
-    mockSignalsList.mockResolvedValue(allSignals)
+    mockQueryByStore([], hotScores, valueScores, allSignals)
 
     await useDualStrategyStore.getState().refresh()
 
-    expect(mockHotSectorList).toHaveBeenCalled()
-    expect(mockValuePitList).toHaveBeenCalled()
-    expect(mockSignalsList).toHaveBeenCalled()
+    expect(mockDataBridgeQuery).toHaveBeenCalledWith(expect.objectContaining({ store: 'hotSectorScores', action: 'QUERY_LIST' }))
+    expect(mockDataBridgeQuery).toHaveBeenCalledWith(expect.objectContaining({ store: 'valuePitScores', action: 'QUERY_LIST' }))
+    expect(mockDataBridgeQuery).toHaveBeenCalledWith(expect.objectContaining({ store: 'signals', action: 'QUERY_LIST' }))
     expect(useDualStrategyStore.getState().hotSectorScores).toEqual(hotScores)
     expect(useDualStrategyStore.getState().valuePitScores).toEqual(valueScores)
   })
@@ -446,9 +446,7 @@ describe('useDualStrategyStore', () => {
       createMockSignal('ROT2', 0.6, 'buy_rotation'),
     ]
 
-    mockHotSectorList.mockResolvedValue([])
-    mockValuePitList.mockResolvedValue([])
-    mockSignalsList.mockResolvedValue(allSignals)
+    mockQueryByStore([], [], [], allSignals)
 
     await useDualStrategyStore.getState().refresh()
 
@@ -464,13 +462,11 @@ describe('useDualStrategyStore', () => {
 
     await useDualStrategyStore.getState().refresh()
 
-    expect(mockHotSectorList).not.toHaveBeenCalled()
-    expect(mockValuePitList).not.toHaveBeenCalled()
-    expect(mockSignalsList).not.toHaveBeenCalled()
+    expect(mockDataBridgeQuery).not.toHaveBeenCalled()
   })
 
   it('refresh: 失败设置 error', async () => {
-    mockHotSectorList.mockRejectedValue(new Error('db error'))
+    mockDataBridgeQuery.mockRejectedValue(new Error('db error'))
 
     await useDualStrategyStore.getState().refresh()
 
@@ -723,9 +719,7 @@ describe('initDualStrategyStoreSubscriptions', () => {
   })
 
   it('source 过滤（shouldSkipSelf）', async () => {
-    mockHotSectorList.mockResolvedValue([])
-    mockValuePitList.mockResolvedValue([])
-    mockSignalsList.mockResolvedValue([])
+    mockQueryByStore()
 
     initDualStrategyStoreSubscriptions()
     const hotCb = capturedCallbacks.get('hotSectorScores')
@@ -738,7 +732,7 @@ describe('initDualStrategyStoreSubscriptions', () => {
     })
 
     await new Promise((r) => setTimeout(r, 150))
-    expect(mockHotSectorList).not.toHaveBeenCalled()
+    expect(mockDataBridgeQuery).not.toHaveBeenCalled()
 
     // 合法的 source 应该触发 refresh
     hotCb!({
@@ -747,13 +741,11 @@ describe('initDualStrategyStoreSubscriptions', () => {
     })
 
     await new Promise((r) => setTimeout(r, 150))
-    expect(mockHotSectorList).toHaveBeenCalled()
+    expect(mockDataBridgeQuery).toHaveBeenCalled()
   })
 
   it('去抖 100ms', async () => {
-    mockHotSectorList.mockResolvedValue([])
-    mockValuePitList.mockResolvedValue([])
-    mockSignalsList.mockResolvedValue([])
+    mockQueryByStore()
 
     initDualStrategyStoreSubscriptions()
     const hotCb = capturedCallbacks.get('hotSectorScores')!
@@ -765,11 +757,11 @@ describe('initDualStrategyStoreSubscriptions', () => {
 
     // 50ms 内不应触发
     await new Promise((r) => setTimeout(r, 50))
-    expect(mockHotSectorList).not.toHaveBeenCalled()
+    expect(mockDataBridgeQuery).not.toHaveBeenCalled()
 
     // 150ms 后应只触发一次
     await new Promise((r) => setTimeout(r, 150))
-    expect(mockHotSectorList).toHaveBeenCalledTimes(1)
+    expect(mockDataBridgeQuery).toHaveBeenCalledTimes(3) // refresh 内部 3 个 query
   })
 
   it('重复调用不重复订阅', () => {
@@ -796,9 +788,7 @@ describe('initDualStrategyStoreSubscriptions', () => {
   })
 
   it('cleanup 清除所有订阅和定时器', async () => {
-    mockHotSectorList.mockResolvedValue([])
-    mockValuePitList.mockResolvedValue([])
-    mockSignalsList.mockResolvedValue([])
+    mockQueryByStore()
 
     const cleanup = initDualStrategyStoreSubscriptions()
     const hotCb = capturedCallbacks.get('hotSectorScores')!
@@ -811,7 +801,7 @@ describe('initDualStrategyStoreSubscriptions', () => {
 
     // 等待超过去抖时间，验证没有触发 refresh
     await new Promise((r) => setTimeout(r, 150))
-    expect(mockHotSectorList).not.toHaveBeenCalled()
+    expect(mockDataBridgeQuery).not.toHaveBeenCalled()
 
     // 验证所有 unsubscribe 被调用
     expect(unsubscribes.length).toBe(5)

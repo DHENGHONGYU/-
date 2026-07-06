@@ -323,7 +323,7 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
       STORE_NAME.rotationScores,
       STORE_NAME.signals,
     ],
-    write: [STORE_NAME.hotSectorScores, STORE_NAME.valuePitScores],
+    write: [STORE_NAME.hotSectorScores, STORE_NAME.valuePitScores, STORE_NAME.signals],
     actions: [DB_OPERATION.select, DB_OPERATION.insert, DB_OPERATION.update],
   },
   [MODULE_ID.orderstore]: {

@@ -8,7 +8,7 @@
  * 数据来源与持久化：
  * - 计算层统一调用 dualStrategyEngine.runDualStrategy() 一次性产出三类结果。
  * - 持久化到 DataBridge：hot_sector_scores / value_pit_scores / signals（轮动信号）。
- * - 刷新时从 dataLayer 读取已持久化的评分与信号。
+ * - 刷新时从 DataBridge 读取已持久化的评分与信号。
  *
  * @see docs/《V9核心数据字典与类型定义（整合版）》.md — DualStrategyState 实体定义（#68）
  * @see docs/《功能模块数据契约》.md — 双策略信号池模块契约（第 9 节）
@@ -29,17 +29,22 @@ import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'
 import type { HotSectorScore, ValuePitScore, Signal, Stock } from '@/data/types'
 import type { RotationSignal } from '@/services/scoring/rotationSignalDetector'
-import { dataLayer } from '@/data/dataLayer'
 import { dataBridge } from '@/core/databridge'
+import { EnvelopeFactory } from '@/core/envelope'
 import { runDualStrategy } from '@/services/trading/dualStrategyEngine'
 import { analyze as analyzeHotSector, type HotSectorAnalyzerInput } from '@/services/scoring/hotSectorAnalyzer'
 import { analyze as analyzeValuePit, type ValuePitAnalyzerInput } from '@/services/scoring/valuePitAnalyzer'
 import { detect as detectRotation, type RotationSignalInput } from '@/services/scoring/rotationSignalDetector'
-import { MODULE_ID, STORE_NAME } from '@/config/dbConfig'
+import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { withBroadcast } from '@/store/helpers/withBroadcast'
 
 const logger = getLogger()
+
+/** 生成 traceId */
+function createTraceId(prefix: string): string {
+  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
+}
 
 // ============================================================
 // 默认样本数据（股票池为空时的回退数据，保持页面与测试可用）
@@ -159,11 +164,11 @@ export interface DualStrategyState {
   /**
    * 执行双策略评分并持久化。
    * - 传入 stocks 时直接作为输入
-   * - 否则优先从 poolStore，其次 dataLayer.stocks.list() 获取股票池
+   * - 否则通过 DataBridge.query(stocks) 获取股票池
    * - 股票池为空时使用默认样本数据
    */
   fetchScores: (stocks?: Stock[]) => Promise<void>
-  /** 从 dataLayer 读取已持久化的评分与信号 */
+  /** 从 DataBridge 读取已持久化的评分与信号 */
   refresh: () => Promise<void>
   /** 清空所有双策略状态 */
   clearScores: () => void
@@ -259,9 +264,17 @@ export const useDualStrategyStore = create<DualStrategyState>((set, get) => ({
       let inputStocks = stocks
 
       if (!inputStocks) {
-        // [DF-003 整改] 通过 dataLayer 获取股票池，不再直接引用 poolStore
-        inputStocks = await dataLayer.stocks.list()
-        logger.info(`[dualStrategyStore] 从 dataLayer 获取股票池: ${inputStocks.length} 只`)
+        // [DF-003 整改] 通过 DataBridge 获取股票池，不再直接引用 poolStore 或 dataLayer
+        const stocksResult = await dataBridge.query<Stock[]>({
+          action: ENVELOPE_ACTION.queryList,
+          store: STORE_NAME.stocks,
+          source: MODULE_ID.strategy,
+        })
+        if (!stocksResult.success) {
+          throw new Error(stocksResult.error ?? '获取股票池失败')
+        }
+        inputStocks = stocksResult.data ?? []
+        logger.info(`[dualStrategyStore] 从 DataBridge 获取股票池: ${inputStocks.length} 只`)
       } else {
         logger.info(`[dualStrategyStore] 使用传入股票池: ${inputStocks.length} 只`)
       }
@@ -299,10 +312,47 @@ export const useDualStrategyStore = create<DualStrategyState>((set, get) => ({
       logger.info(
         `[dualStrategyStore] 准备持久化: hot=${hotSectorScores.length}, value=${valuePitScores.length}, signals=${signals.length}`
       )
+      const baseTraceId = createTraceId('ds-save')
       await Promise.all([
-        ...hotSectorScores.map((score) => dataLayer.hotSectorScores.save(score)),
-        ...valuePitScores.map((score) => dataLayer.valuePitScores.save(score)),
-        ...signals.map((signal) => dataLayer.signals.save(signal)),
+        ...hotSectorScores.map((score) =>
+          dataBridge.forward(
+            EnvelopeFactory.create(
+              {
+                source: MODULE_ID.strategy,
+                target: ENVELOPE_TARGET.db,
+                action: ENVELOPE_ACTION.saveScores,
+                traceId: `${baseTraceId}-hot`,
+              },
+              score,
+            ),
+          ),
+        ),
+        ...valuePitScores.map((score) =>
+          dataBridge.forward(
+            EnvelopeFactory.create(
+              {
+                source: MODULE_ID.strategy,
+                target: ENVELOPE_TARGET.db,
+                action: ENVELOPE_ACTION.saveScores,
+                traceId: `${baseTraceId}-value`,
+              },
+              score,
+            ),
+          ),
+        ),
+        ...signals.map((signal) =>
+          dataBridge.forward(
+            EnvelopeFactory.create(
+              {
+                source: MODULE_ID.strategy,
+                target: ENVELOPE_TARGET.db,
+                action: ENVELOPE_ACTION.saveScores,
+                traceId: `${baseTraceId}-signal`,
+              },
+              signal,
+            ),
+          ),
+        ),
       ])
 
       set({
@@ -343,11 +393,34 @@ export const useDualStrategyStore = create<DualStrategyState>((set, get) => ({
     set({ isRefreshing: true, loading: isFirstLoad, error: null })
 
     try {
-      const [hotSectorScores, valuePitScores, allSignals] = await Promise.all([
-        dataLayer.hotSectorScores.list(),
-        dataLayer.valuePitScores.list(),
-        dataLayer.signals.list(),
+      const [hotResult, valueResult, signalsResult] = await Promise.all([
+        dataBridge.query<HotSectorScore[]>({
+          action: ENVELOPE_ACTION.queryList,
+          store: STORE_NAME.hotSectorScores,
+          source: MODULE_ID.strategy,
+        }),
+        dataBridge.query<ValuePitScore[]>({
+          action: ENVELOPE_ACTION.queryList,
+          store: STORE_NAME.valuePitScores,
+          source: MODULE_ID.strategy,
+        }),
+        dataBridge.query<Signal[]>({
+          action: ENVELOPE_ACTION.queryList,
+          store: STORE_NAME.signals,
+          source: MODULE_ID.strategy,
+        }),
       ])
+
+      if (!hotResult.success || !valueResult.success || !signalsResult.success) {
+        const errorMessage = [hotResult.error, valueResult.error, signalsResult.error]
+          .filter(Boolean)
+          .join('; ') || '刷新双策略数据失败'
+        throw new Error(errorMessage)
+      }
+
+      const hotSectorScores = hotResult.data ?? []
+      const valuePitScores = valueResult.data ?? []
+      const allSignals = signalsResult.data ?? []
 
       const rotationSignals = allSignals
         .filter((s) => s.type === 'buy_rotation')
