@@ -11,6 +11,7 @@ import {
   Sparkles,
   MessageSquare,
   Tag,
+  Key,
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
@@ -102,6 +103,13 @@ const NAV_CARDS: NavCard[] = [
     description: '管理智能体训练和微调所需的数据标签',
     path: '/command/agents/data-labels',
     icon: Tag,
+    badge: 'Phase E',
+  },
+  {
+    title: 'API配置管理',
+    description: '管理智能体使用的API配置和密钥',
+    path: '/command/agents/api-config',
+    icon: Key,
     badge: 'Phase E',
   },
 ]
