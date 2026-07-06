@@ -7,10 +7,9 @@
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'
-import type { Signal } from '@/data/types'
-import { dataLayer } from '@/data/dataLayer'
+import type { Signal, Stock } from '@/data/types'
 import { dataBridge } from '@/core/databridge'
-import { ENVELOPE_ACTION, MODULE_ID, type EnvelopeAction } from '@/config/dbConfig'
+import { ENVELOPE_ACTION, MODULE_ID, STORE_NAME, type EnvelopeAction } from '@/config/dbConfig'
 import { generateSignalsForSymbol, pickStrongestSignal } from '@/services/trading/signalGenerator'
 
 const logger = getLogger()
@@ -73,7 +72,19 @@ export const useSignalStore = create<SignalState>((set) => ({
     set({ loading: true, error: null, isRefreshing: true })
 
     try {
-      const stocks = await dataLayer.stocks.list()
+      const result = await dataBridge.query<Stock[]>({
+        action: ENVELOPE_ACTION.queryList,
+        store: STORE_NAME.stocks,
+        source: MODULE_ID.trading,
+      })
+
+      if (!result.success) {
+        const errorMessage = result.error ?? '查询股票池失败'
+        logger.error(`[signalStore] refresh 查询失败: ${errorMessage}`)
+        throw new Error(errorMessage)
+      }
+
+      const stocks = result.data ?? []
       const targetStocks = stocks.slice(0, 20)
       logger.info(`[signalStore] 获取股票池: ${stocks.length} 只，取前 ${targetStocks.length} 只生成信号`)
 

@@ -8,7 +8,7 @@
  * 4. refresh: 单只股票信号生成失败跳过
  * 5. refresh: 股票池为空 → signals 为空
  * 6. refresh: generateSignalsForSymbol 全部失败 → signals 为空
- * 7. refresh: 失败时设置 error（dataLayer.stocks.list 抛异常）
+ * 7. refresh: 失败时设置 error（dataBridge.query 抛异常）
  * 8. refresh: 设置 loading / isRefreshing 状态
  * 9. topSignals: 取前 N 个（默认10）
  * 10. topSignals: limit 大于总数
@@ -22,12 +22,13 @@
 
 import { vi } from 'vitest'
 import type { Signal, Stock } from '@/data/types'
+import { assertContract } from '../../tests/contracts'
 
 // ============================================================
 // vi.hoisted mocks
 // ============================================================
 
-const { mockSubscribe, capturedCallbacks, unsubscribes } = vi.hoisted(() => {
+const { mockSubscribe, mockDataBridgeQuery, capturedCallbacks, unsubscribes } = vi.hoisted(() => {
   const capturedCallbacks = new Map<string, ((envelope: any) => void)>()
   const unsubscribes: Array<ReturnType<typeof vi.fn>> = []
   const mockSubscribe = vi.fn((channel: string, callback: (envelope: any) => void) => {
@@ -36,7 +37,8 @@ const { mockSubscribe, capturedCallbacks, unsubscribes } = vi.hoisted(() => {
     unsubscribes.push(unsub)
     return unsub
   })
-  return { mockSubscribe, capturedCallbacks, unsubscribes }
+  const mockDataBridgeQuery = vi.fn()
+  return { mockSubscribe, mockDataBridgeQuery, capturedCallbacks, unsubscribes }
 })
 
 // ============================================================
@@ -47,12 +49,8 @@ vi.mock('@/lib/logger', () => ({
   getLogger: () => ({ info: vi.fn(), error: vi.fn(), warn: vi.fn(), debug: vi.fn() }),
 }))
 
-vi.mock('@/data/dataLayer', () => ({
-  dataLayer: { stocks: { list: vi.fn() } },
-}))
-
 vi.mock('@/core/databridge', () => ({
-  dataBridge: { subscribe: mockSubscribe },
+  dataBridge: { subscribe: mockSubscribe, query: mockDataBridgeQuery },
 }))
 
 vi.mock('@/services/trading/signalGenerator', () => ({
@@ -65,8 +63,10 @@ vi.mock('@/config/dbConfig', () => ({
     insertSignal: 'INSERT_SIGNAL',
     saveV6Score: 'SAVE_V6_SCORE',
     saveScores: 'SAVE_SCORES',
+    queryList: 'QUERY_LIST',
   },
   MODULE_ID: { trading: 'trading', tradinghub: 'tradinghub' },
+  STORE_NAME: { stocks: 'stocks', signals: 'signals' },
 }))
 
 // ============================================================
@@ -74,7 +74,6 @@ vi.mock('@/config/dbConfig', () => ({
 // ============================================================
 
 import { useSignalStore, topSignals, initSignalStoreSubscriptions } from './signalStore'
-import { dataLayer } from '@/data/dataLayer'
 import {
   generateSignalsForSymbol,
   pickStrongestSignal,
@@ -131,6 +130,8 @@ beforeEach(() => {
   // 清理模块级订阅状态，确保每次测试都是干净的
   const cleanup = initSignalStoreSubscriptions()
   cleanup()
+  // 重置 subscribe 调用计数，避免 beforeEach 自身的 init/cleanup 污染测试内的断言
+  mockSubscribe.mockClear()
 
   useSignalStore.setState({
     signals: [],
@@ -153,6 +154,9 @@ describe('useSignalStore', () => {
     expect(state.error).toBeNull()
     expect(state.lastUpdated).toBe(0)
     expect(state.isRefreshing).toBe(false)
+    
+    // 验证初始状态符合契约
+    assertContract('SignalState', state, '初始状态')
   })
 
   // ============================================================
@@ -161,7 +165,7 @@ describe('useSignalStore', () => {
 
   it('refresh: 正常生成信号（前20只股票，每只生成信号后 pickStrongest）', async () => {
     const stocks = Array.from({ length: 25 }, (_, i) => createMockStock(`STK${i}`))
-    ;(dataLayer.stocks.list as ReturnType<typeof vi.fn>).mockResolvedValue(stocks)
+    mockDataBridgeQuery.mockResolvedValue({ success: true, data: stocks })
 
     stocks.slice(0, 20).forEach((stock, i) => {
       const signal = createMockSignal(stock.symbol, 50 + i)
@@ -184,7 +188,7 @@ describe('useSignalStore', () => {
 
   it('refresh: 信号按 confidence 降序排列', async () => {
     const stocks = [createMockStock('A'), createMockStock('B'), createMockStock('C')]
-    ;(dataLayer.stocks.list as ReturnType<typeof vi.fn>).mockResolvedValue(stocks)
+    mockDataBridgeQuery.mockResolvedValue({ success: true, data: stocks })
 
     ;(generateSignalsForSymbol as ReturnType<typeof vi.fn>)
       .mockResolvedValueOnce([createMockSignal('A', 30)])
@@ -206,7 +210,7 @@ describe('useSignalStore', () => {
 
   it('refresh: 单只股票信号生成失败跳过', async () => {
     const stocks = [createMockStock('A'), createMockStock('B')]
-    ;(dataLayer.stocks.list as ReturnType<typeof vi.fn>).mockResolvedValue(stocks)
+    mockDataBridgeQuery.mockResolvedValue({ success: true, data: stocks })
 
     ;(generateSignalsForSymbol as ReturnType<typeof vi.fn>)
       .mockRejectedValueOnce(new Error('fail'))
@@ -222,7 +226,7 @@ describe('useSignalStore', () => {
   })
 
   it('refresh: 股票池为空 → signals 为空', async () => {
-    ;(dataLayer.stocks.list as ReturnType<typeof vi.fn>).mockResolvedValue([])
+    mockDataBridgeQuery.mockResolvedValue({ success: true, data: [] })
     await useSignalStore.getState().refresh()
     expect(useSignalStore.getState().signals).toEqual([])
     expect(useSignalStore.getState().loading).toBe(false)
@@ -230,7 +234,7 @@ describe('useSignalStore', () => {
 
   it('refresh: generateSignalsForSymbol 全部失败 → signals 为空', async () => {
     const stocks = [createMockStock('A'), createMockStock('B')]
-    ;(dataLayer.stocks.list as ReturnType<typeof vi.fn>).mockResolvedValue(stocks)
+    mockDataBridgeQuery.mockResolvedValue({ success: true, data: stocks })
     ;(generateSignalsForSymbol as ReturnType<typeof vi.fn>).mockRejectedValue(
       new Error('fail'),
     )
@@ -241,10 +245,8 @@ describe('useSignalStore', () => {
     expect(useSignalStore.getState().error).toBeNull()
   })
 
-  it('refresh: 失败时设置 error（dataLayer.stocks.list 抛异常）', async () => {
-    ;(dataLayer.stocks.list as ReturnType<typeof vi.fn>).mockRejectedValue(
-      new Error('db error'),
-    )
+  it('refresh: 失败时设置 error（dataBridge.query 抛异常）', async () => {
+    mockDataBridgeQuery.mockRejectedValue(new Error('db error'))
 
     await useSignalStore.getState().refresh()
 
@@ -256,11 +258,11 @@ describe('useSignalStore', () => {
 
   it('refresh: 设置 loading / isRefreshing 状态', async () => {
     const stocks = [createMockStock('A')]
-    let resolveList: (value: Stock[]) => void
-    const listPromise = new Promise<Stock[]>((r) => {
+    let resolveList: (value: { success: true; data: Stock[] }) => void
+    const listPromise = new Promise<{ success: true; data: Stock[] }>((r) => {
       resolveList = r
     })
-    ;(dataLayer.stocks.list as ReturnType<typeof vi.fn>).mockReturnValue(listPromise)
+    mockDataBridgeQuery.mockReturnValue(listPromise)
     ;(generateSignalsForSymbol as ReturnType<typeof vi.fn>).mockResolvedValue([
       createMockSignal('A', 70),
     ])
@@ -274,7 +276,7 @@ describe('useSignalStore', () => {
     expect(useSignalStore.getState().loading).toBe(true)
     expect(useSignalStore.getState().isRefreshing).toBe(true)
 
-    resolveList!(stocks)
+    resolveList!({ success: true, data: stocks })
     await promise
 
     // refresh 结束后恢复为 false
@@ -353,7 +355,7 @@ describe('initSignalStoreSubscriptions', () => {
 
   it('action 过滤（只响应特定 action）', async () => {
     const stocks = [createMockStock('A')]
-    ;(dataLayer.stocks.list as ReturnType<typeof vi.fn>).mockResolvedValue(stocks)
+    mockDataBridgeQuery.mockResolvedValue({ success: true, data: stocks })
     ;(generateSignalsForSymbol as ReturnType<typeof vi.fn>).mockResolvedValue([
       createMockSignal('A', 60),
     ])
@@ -376,7 +378,7 @@ describe('initSignalStoreSubscriptions', () => {
     })
 
     await new Promise((r) => setTimeout(r, 150))
-    expect(dataLayer.stocks.list).not.toHaveBeenCalled()
+    expect(mockDataBridgeQuery).not.toHaveBeenCalled()
 
     // 正确的 action 应该触发（使用 SAVE_SCORES）
     v6Cb({
@@ -385,12 +387,12 @@ describe('initSignalStoreSubscriptions', () => {
     })
 
     await new Promise((r) => setTimeout(r, 150))
-    expect(dataLayer.stocks.list).toHaveBeenCalledTimes(1)
+    expect(mockDataBridgeQuery).toHaveBeenCalledTimes(1)
   })
 
   it('去抖 100ms + 并发锁', async () => {
     const stocks = [createMockStock('A')]
-    ;(dataLayer.stocks.list as ReturnType<typeof vi.fn>).mockResolvedValue(stocks)
+    mockDataBridgeQuery.mockResolvedValue({ success: true, data: stocks })
     ;(generateSignalsForSymbol as ReturnType<typeof vi.fn>).mockResolvedValue([
       createMockSignal('A', 60),
     ])
@@ -417,11 +419,11 @@ describe('initSignalStoreSubscriptions', () => {
 
     // 50ms 内不应触发
     await new Promise((r) => setTimeout(r, 50))
-    expect(dataLayer.stocks.list).not.toHaveBeenCalled()
+    expect(mockDataBridgeQuery).not.toHaveBeenCalled()
 
     // 150ms 后应只触发一次
     await new Promise((r) => setTimeout(r, 150))
-    expect(dataLayer.stocks.list).toHaveBeenCalledTimes(1)
+    expect(mockDataBridgeQuery).toHaveBeenCalledTimes(1)
 
     // 模拟 isRefreshing=true，再次触发应该被跳过
     useSignalStore.setState({ isRefreshing: true })
@@ -432,7 +434,7 @@ describe('initSignalStoreSubscriptions', () => {
       payload: {},
     })
     await new Promise((r) => setTimeout(r, 150))
-    expect(dataLayer.stocks.list).not.toHaveBeenCalled()
+    expect(mockDataBridgeQuery).not.toHaveBeenCalled()
   })
 
   it('返回 cleanup 函数', () => {
