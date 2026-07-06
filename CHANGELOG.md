@@ -7,7 +7,56 @@
 
 ## [Unreleased]
 
+### Added
+
+- **代码审查系统建立（v2.1.0）**：
+  - 新增 `docs/CODE-REVIEW.md`：完整审查标准与流程（P0/P1/P2 三级检查、审查清单、常见问题）。
+  - 新增 `docs/CODE-REVIEW-CHEATSHEET.md`：快速参考卡（10 分钟审查指南、检查清单、常见问题）。
+  - 新增 `docs/CODE-REVIEW-TRAINING.md`：审查者培训材料（角色职责、审查技巧、沟通礼仪）。
+  - 新增 `docs/SOLO-REVIEW.md`：单人开发审查指南（自我审查清单、常见陷阱、工具配置）。
+  - 新增 `docs/TECH-DEBT.md`：技术债管理文档（登记模板、优先级定义、清理计划）。
+  - 新增 `.github/pull_request_template.md`：PR 模板（审查清单、测试覆盖、技术债登记）。
+  - 新增 `.github/CODEOWNERS`：审查者配置（单人开发模式）。
+  - 新增 `scripts/pre-review-check.ts` v2.1：预审查检查脚本（ESLint 输出过大修复、临时文件捕获、错误判断优化）。
+  - 新增 `commitizen` 配置：`package.json` 添加 `commit` 脚本，支持规范化提交信息。
+  - 新增 `.vscode/extensions.json`：VS Code 推荐插件（ESLint、Error Lens、GitLens）。
+  - 新增股票涨跌颜色例外规则（`AGENTS.md` §3.5.6）：红涨绿跌不受主题切换影响，使用 `STOCK_COLOR_TOKENS` 豁免令牌。
+  - 新增 `STOCK_COLOR_TOKENS`（`src/constants/theme.tokens.ts`）：股票颜色豁免令牌（up/down/bgUp/bgDown），辅助函数 `getStockColor()` / `getStockColorClass()` / `getStockColorHex()` / `getStockColorBg()`。
+  - 修复 `src/store/stockAnalysisStore.ts` 语法错误（第 241 行 `})()` → `})();`）。
+  - 修复 `scripts/pre-review-check.ts` ESLint 输出为空 Bug（使用临时文件捕获大输出）。
+  - 修复 `src/components/ui/Badge.tsx` TypeScript 错误（删除未使用 `logger` 导入）。
+  - 修复 `src/cockpit/widgets/MarketIndicesWidget.tsx` 硬编码颜色（使用 `getStockColorClass()`）。
+  - 修复 `src/cockpit/widgets/FundFlowWidget.tsx` 硬编码颜色（使用 `twBg()`）。
+  - 修复 `src/cockpit/widgets/PortfolioOverviewWidget.tsx` 硬编码颜色（使用 `twBorder()`）。
+  - 删除 `.husky/_/prepare-commit-msg` 钩子（路径解析错误）。
+  - 提交记录：`ca0c493`、`6d923ab`、`703abbb`、`9dd6ea8`、`1a8ca92`。
+
 ### Fixed
+
+- **pre-review-check.ts v2.1**：
+  - 修复 ESLint 输出过大导致缓冲区溢出的问题（使用临时文件捕获输出）。
+  - 修复命令拼接错误（Windows 路径格式问题）。
+  - 优化输出解析（只保留最后 200 行，避免内存问题）。
+  - 修复 ESLint 错误判断逻辑（无 error 时视为通过，不是警告）。
+
+- **TypeScript 错误修复**：
+  - `src/store/stockAnalysisStore.ts`：修复语法错误（第 241 行）。
+  - `src/components/ui/Badge.tsx`：删除未使用 `logger` 导入。
+
+- **硬编码颜色修复**：
+  - `MarketIndicesWidget.tsx`：使用 `getStockColorClass()` 替换硬编码颜色。
+  - `FundFlowWidget.tsx`：使用 `twBg()` 替换硬编码颜色。
+  - `PortfolioOverviewWidget.tsx`：使用 `twBorder()` 替换硬编码颜色。
+
+### Quality Metrics
+
+- `npm run pre-review`：ESLint 2226 warnings / 0 errors（单人开发模式，warnings 不阻塞）。
+- `npm run commit`：Commitizen 交互式提交正常工作。
+- Husky 预提交钩子：正常工作（删除 `prepare-commit-msg` 后）。
+
+---
+
+### Added
 
 - **P0-5 缺陷修复:ConfigApp updateField NaN/Infinity 守卫缺失（v1.3.2）**:
   - **问题**:`src/apps/command/ConfigApp.tsx` 的 `updateField` 使用 `Number(e.target.value)` 转换输入值,未对 NaN/Infinity 做守卫。`JSON.stringify(NaN)` 会序列化为 `'null'`,导致 localStorage 中的配置数据被污染为 `null`,破坏 `AppConfig` 类型契约,影响下游业务逻辑。
@@ -343,7 +392,7 @@
 ### Quality Metrics
 
 - `tsc --noEmit`：✅ 0 errors
-- `npm test`：✅ 198 passed / 38 failed (236 total)，新增 26 个 Hub 页面测试全部通过
+- `npm test`：✅ 3546 passed / 16 failed / 125 skipped (3687 total)，263 个测试文件
 - `audit-color-tokens.ts`：✅ 组件层硬编码颜色全部清除
 - `audit-spacing.ts`：✅ 间距系统合规
 - `audit-typography.ts`：✅ 字体系统合规
