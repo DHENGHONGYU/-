@@ -2,7 +2,10 @@ import { DB_NAME, DB_VERSION, DEFAULT_POOL_GROUP, STORE_NAME } from '@/config/db
 import { getLogger } from '@/lib/logger'
 import type { LogContext } from '@/lib/logger'
 
-import { nanoid } from 'nanoid'
+// === 工具函数重新导出（PR-6 步骤 1.1：从 db-utils.ts 拆分） ===
+// 保持 '@/data/db' 路径向后兼容，所有调用点零修改
+export { generateId, now } from './db-utils'
+
 const logger = getLogger()
 
 const STORE_NAMES = Object.values(STORE_NAME)
@@ -762,11 +765,3 @@ export class V6Database {
 }
 
 export const db = new V6Database()
-
-export function generateId(): string {
-  return nanoid(16)
-}
-
-export function now(): number {
-  return Date.now()
-}
