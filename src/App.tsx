@@ -12,6 +12,9 @@ import { ThemeProvider } from '@/core/ThemeProvider'
 // 显式 import 智能体系统入口，触发 initAgentSystem() 自动初始化
 // （src/agents/index.ts 在模块加载时通过 setTimeout 延迟 100ms 调用 initAgentSystem）
 import '@/agents'
+// 显式 import MCP Server 注册入口，触发 registerAllServers() 同步全量注册
+// （src/mcp/register.ts 在模块加载时通过 import.meta.glob eager 加载并注册所有 MCP Server）
+import '@/mcp/register'
 
 if (import.meta.env.DEV) {
   import('@/devtools/testDataFlow')

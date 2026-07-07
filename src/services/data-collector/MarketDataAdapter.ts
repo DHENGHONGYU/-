@@ -97,6 +97,7 @@ export class MarketDataAdapter {
     }
 
     for (const partial of partials) {
+      if (!partial) continue // 防御：跳过 undefined/null 片段，避免读取属性崩溃
       if (partial.indices) merged.indices = partial.indices
       if (partial.sectors) merged.sectors = partial.sectors
       if (partial.fundFlows) merged.fundFlows = partial.fundFlows

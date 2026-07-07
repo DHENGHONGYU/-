@@ -68,13 +68,13 @@ V6数据工场 `/data-hub` 含4个Tab，V9的迁移情况：
 | 组件 | 文件 | ErrorBoundary | 四步契约 | 加载/错误/空态 | 综合评价 |
 |:---|:---|:---:|:---:|:---:|:---:|
 | `InputHubPage` | [InputHubPage.tsx](file:///C:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/pages/input/InputHubPage.tsx) | ✅ | 部分 | 无（静态页） | 🟢 良好 |
-| `SevenDimConfigPage` | [SevenDimConfigPage.tsx](file:///C:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/pages/input/SevenDimConfigPage.tsx) | ✅ | 良好 | 全覆盖 | 🟢 良好 |
-| `LocalKnowledgePage` | [LocalKnowledgePage.tsx](file:///C:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/pages/input/LocalKnowledgePage.tsx) | ❌ | 良好 | 全覆盖 | 🟡 需补EB |
-| `InputDashboard` | [InputDashboard.tsx](file:///C:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/apps/input/InputDashboard.tsx) | ❌ | **违规** | 有加载/错误 | 🔴 DF-002 |
-| `DataTestPanel` | [DataTestPanel.tsx](file:///C:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/apps/input/DataTestPanel.tsx) | ❌ | 良好 | 全覆盖 | 🟡 需补EB |
-| `HotSectorPanel` | [HotSectorPanel.tsx](file:///C:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/apps/input/HotSectorPanel.tsx) | ❌ | **违规** | 有加载/错误 | 🔴 DF-002 |
-| `BulkImportPanel` | [BulkImportPanel.tsx](file:///C:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/apps/input/BulkImportPanel.tsx) | ❌ | **违规** | 有加载/错误 | 🔴 DF-002 |
-| `StockSearch` | [StockSearch.tsx](file:///C:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/components/input/StockSearch.tsx) | ❌ | **违规** | 有加载/空态 | 🔴 DF-002 |
+| `SevenDimConfigPage` | [SevenDimConfigPage.tsx](../../src/pages/input/SevenDimConfigPage.tsx) | ✅ | 良好 | 全覆盖 | 🟢 良好 |
+| `LocalKnowledgePage` | [LocalKnowledgePage.tsx](../../src/pages/input/LocalKnowledgePage.tsx) | ❌ | 良好 | 全覆盖 | 🟡 需补EB |
+| `InputDashboard` | [InputDashboard.tsx](../../src/apps/input/InputDashboard.tsx) | ❌ | **违规** | 有加载/错误 | 🔴 DF-002 |
+| `DataTestPanel` | [DataTestPanel.tsx](../../src/apps/input/DataTestPanel.tsx) | ❌ | 良好 | 全覆盖 | 🟡 需补EB |
+| `HotSectorPanel` | [HotSectorPanel.tsx](../../src/apps/input/HotSectorPanel.tsx) | ❌ | **违规** | 有加载/错误 | 🔴 DF-002 |
+| `BulkImportPanel` | [BulkImportPanel.tsx](../../src/apps/input/BulkImportPanel.tsx) | ❌ | **违规** | 有加载/错误 | 🔴 DF-002 |
+| `StockSearch` | [StockSearch.tsx](../../src/components/input/StockSearch.tsx) | ❌ | **违规** | 有加载/空态 | 🔴 DF-002 |
 
 ### 2.3 缺失的UI组件（需新建）
 
@@ -224,8 +224,8 @@ V6数据工场 `/data-hub` 含4个Tab，V9的迁移情况：
 | 编号 | 操作 | 文件 | 复杂度 |
 |:---:|:---|:---|:---:|
 | F-01 | `/input/seven-dim` 注册到 `ROUTE_REGISTRY` | [routes.ts](file:///C:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/config/routes.ts) | ✅ 已完成 |
-| F-02 | 替换 OutputApp 的 PlaceholderPanel → 实际页面 | [OutputApp.tsx](file:///C:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/apps/output/OutputApp.tsx) | ✅ 已完成 |
-| F-03 | 同步 docs/06-routing-specs.md 路由表 | [06-routing-specs.md](file:///C:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/docs/06-routing-specs.md) | 中 |
+| F-02 | 替换 OutputApp 的 PlaceholderPanel → 实际页面 | [OutputApp.tsx](../../src/apps/output/OutputApp.tsx) | ✅ 已完成 |
+| F-03 | 同步 docs/06-routing-specs.md 路由表 | [06-routing-specs.md](../06-routing-specs.md) | 中 |
 
 ### 6.2 短期优化（P1 - UI组件合规）
 

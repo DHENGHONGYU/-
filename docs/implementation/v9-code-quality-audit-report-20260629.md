@@ -690,11 +690,11 @@ changelog:
 
 ## 10. 参考文档
 
-- [V9 架构标准](docs/03-architecture-standards.md)
-- [V9 策略架构](docs/architecture/v9-strategy-architecture.md)
-- [V9 模块完成度剖面图](docs/implementation/completeness-profile.md)
-- [V9 审计总结报告](docs/implementation/audit-summary-report.md)
-- [审计动态分析报告](docs/audit/dynamic_analysis_report.json)
+- [V9 架构标准](../03-architecture-standards.md)
+- [V9 策略架构](../architecture/v9-strategy-architecture.md)
+- [V9 模块完成度剖面图](./completeness-profile.md)
+- [V9 审计总结报告](./audit-summary-report.md)
+- [审计动态分析报告](../audit/dynamic_analysis_report.json)
 
 ---
 

@@ -1333,7 +1333,7 @@ npm run changelog:summary
 - [V9架构规范](../03-architecture-standards.md)
 - [V9数据架构修订建议](../《V9数据架构修订建议》.md)
 - [V9核心数据字典](../《V9核心数据字典与类型定义(整合版)》.md)
-- [AGENTS.md](../AGENTS.md) - AI行为约束契约
+- [AGENTS.md](../../AGENTS.md) - AI行为约束契约
 
 ---
 

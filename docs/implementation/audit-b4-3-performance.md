@@ -472,7 +472,7 @@ import dayjs from 'dayjs'
 ## 八、G1 批次低风险优化状态（2026-06-30）
 
 > **状态**：24/24 = 100% 闭环  
-> **关联文档**：[`v9-code-quality-audit-report-20260629.md` 第 16 章](../v9-code-quality-audit-report-20260629.md#16-g1-批次低风险性能优化2026-06-30)
+> **关联文档**：[`v9-code-quality-audit-report-20260629.md` 第 16 章](./v9-code-quality-audit-report-20260629.md)
 
 针对本审计报告**第 2.3 节 / 3.3 节 / 4.3 节**标注的 24+ 项低风险问题，G1 批次已 100% 闭环。
 

@@ -471,7 +471,7 @@ npm run build
 - [Tailwind CSS 文档](https://tailwindcss.com/docs)
 - [React Context API](https://react.dev/reference/react/useContext)
 - [V9 架构指南](./architecture.md)
-- [V9 颜色令牌规范](../AGENTS.md#三代码风格约束)
+- [V9 颜色令牌规范](../../AGENTS.md)
 
 ---
 

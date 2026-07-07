@@ -1,297 +1,430 @@
-# V9 模块注册体系索引
+# 文档索引
 
-> **版本**: v1.1.0 | **日期**: 2026-07-05 | **对应代码版本**: v2.5.0
-> **适用范围**: Store / Component / Widget 三层注册体系
+> 本文件由每日文档验证流程自动生成，请勿手动修改。
 
----
+## 目录
 
-## 一、注册体系全景
+### 《功能模块数据契约》.md
 
-V9 项目采用**集中注册表 + 分散实现**的模块管理模式。每层通过独立的 Registry 文件提供模块发现、状态追踪和元数据查询能力。
+- [功能模块数据契约](《功能模块数据契约》.md)
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    注册体系全景                           │
-├──────────────┬──────────────────┬──────────┬─────────────┤
-│ Widget 注册   │ Store 注册        │ Service 注册│ Component 注册│
-│ widgetRegistry│ ~~storeRegistry~~ │ ~~serviceRegistry~~│ componentRegistry│
-│ 21 个 Widget  │ 47 个 Store      │ 52 个 Service│ 10 个组件     │
-│ 运行时注册     │ 已删除，待重建     │ 已删除       │ 静态清单      │
-└──────────────┴──────────────────┴──────────┴─────────────┘
-```
+### 《DataBridge端点与数据映射清单》.md
 
----
+- [DataBridge 端点与数据映射清单](《DataBridge端点与数据映射清单》.md)
 
-## 二、各注册表详情
+### 《V9 代码实现分析报告》.md
 
-### 2.1 Widget 注册表
+- [V9 代码实现分析报告](《V9 代码实现分析报告》.md)
 
-| 属性 | 值 |
-|------|-----|
-| **文件** | `src/cockpit/core/widgetRegistry.ts` |
-| **模式** | Class 单例，运行时注册 |
-| **配置** | `src/constants/cockpit.constants.ts`（DEFAULT_WIDGET_CONFIG + WIDGET_DEFAULT_DATA_SOURCE） |
-| **条目数** | 21 个 Widget（14 个核心 + 7 个系统监控/高级分析） |
-| **状态** | 全部 active |
+### 《V9 架构覆盖分析报告》.md
 
-**注册格式**：
-```typescript
-interface WidgetTemplate {
-  meta: WidgetMeta          // { id, name, category, description, defaultSize, defaultDataSource }
-  component: () => Promise<{ default: React.ComponentType }>  // 懒加载
-  configPanel?: () => Promise<{ default: React.ComponentType }>
-}
-```
+- [V9 架构覆盖分析报告](《V9 架构覆盖分析报告》.md)
 
-**v2.3.0 新增 Widget（8 个）**：
+### 《V9 架构缺陷与整改行动清单》.md
 
-| ID | 名称 | 分类 | 默认尺寸 |
-|----|------|------|---------|
-| `agentPerformance` | 智能体性能追踪 | 系统监控 | 2×2 |
-| `engineStatus` | 引擎状态监控 | 系统监控 | 1×1 |
-| `systemArchitecture` | 系统架构视图 | 系统监控 | 2×2 |
-| `pnlAnalysis` | 盈亏分析 | 交易分析 | 2×2 |
-| `positionControl` | 仓位控制 | 投资组合 | 2×2 |
-| `riskMonitor` | 风险监控 | 系统监控 | 2×2 |
-| `signalMonitor` | 信号监控 | 交易分析 | 1×2 |
+- [V9 架构缺陷与整改行动清单](《V9 架构缺陷与整改行动清单》.md)
 
-### 2.2 Store 注册表（已删除，待重建）
+### 《V9 目标功能清单》.md
 
-> **注意**：`src/store/storeRegistry.ts` 已删除（因数据损坏移除），当前 47 个 Store 以独立文件形式存在于 `src/store/` 目录，各自独立导出。
+- [V9 目标功能清单](《V9 目标功能清单》.md)
 
-| 属性 | 值 |
-|------|-----|
-| **文件** | ~~`src/store/storeRegistry.ts`~~（已删除，待重建）；当前 `src/store/*.ts`（47 个独立 Zustand Store 文件） |
-| **辅助** | `src/store/helpers/withBroadcast.ts`（跨 Tab 广播 HOC）、`withOptimisticUpdate.ts` |
-| **条目数** | 47 个 Store |
-| **查询函数** | 各 Store 独立导出，通过 `helpers/withBroadcast` 统一广播 |
+### 《V9核心数据字典与类型定义（整合版）》.md
 
-**原注册格式**（已删除，仅供参考）：
-```typescript
-interface StoreRegistryEntry {
-  id: string              // Store 唯一标识
-  name: string            // 显示名称
-  domain: StoreDomain     // 域分类：market/analysis/trading/portfolio/system/cockpit/input/signal/widget
-  description: string     // 功能描述
-  status: StoreStatus     // active | available | deprecated
-  broadcastChannel?: string  // EventBus 广播通道
-  importPath: string      // 懒加载导入路径
-}
-```
+- [V9 核心数据字典与类型定义（整合版）](《V9核心数据字典与类型定义（整合版）》.md)
 
-**Store 完整清单（47 个）**：
+### 《V9数据架构修订建议》.md
 
-| 序号 | Store 文件 | 域 | 说明 |
-|:---:|-----------|-----|------|
-| 1 | `analysisStore` | analysis | 分析主状态 |
-| 2 | `analysisHubStore` | analysis | 分析中心聚合状态 |
-| 3 | `analysisNewsStore` | analysis | 分析资讯状态 |
-| 4 | `hotSectorStore` | analysis | 热门板块评分 |
-| 5 | `industryScoreStore` | analysis | 行业评分 |
-| 6 | `intelligentScoreStore` | analysis | 智能评分 |
-| 7 | `localKnowledgeStore` | analysis | 本地知识库 |
-| 8 | `multiFactorScreeningStore` | analysis | 多因子筛选 |
-| 9 | `rotationSignalStore` | signal | 板块轮动信号 |
-| 10 | `riskStore` | signal | 风险指标计算 |
-| 11 | `scoreDocStore` | analysis | 评分文档版本 |
-| 12 | `sectorAnalysisStore` | analysis | 板块分析 |
-| 13 | `signalAdviceStore` | signal | 信号建议 |
-| 14 | `signalQualityStore` | signal | 信号质量评分 |
-| 15 | `signalStore` | signal | 交易信号 |
-| 16 | `stockAnalysisStore` | analysis | 股票分析 |
-| 17 | `valuePitStore` | analysis | 价值洼地评分 |
-| 18 | `backtestStore` | trading | 回测引擎 |
-| 19 | `disciplineStore` | trading | 交易纪律 |
-| 20 | `dualStrategyStore` | trading | 双策略引擎 |
-| 21 | `executionStore` | trading | 执行管理 |
-| 22 | `holdingsStore` | trading | 持仓查询 |
-| 23 | `orderStore` | trading | 订单管理 |
-| 24 | `portfolioStore` | trading | 投资组合 |
-| 25 | `positionStore` | trading | 仓位管理 |
-| 26 | `strategySnapshotStore` | trading | 策略快照 |
-| 27 | `tradingHubStore` | trading | 交易中心 |
-| 28 | `tradingStore` | trading | 交易基础状态 |
-| 29 | `inputHubStore` | input | 输入中心 |
-| 30 | `poolStore` | input | 股票池 |
-| 31 | `watchlistStore` | input | 自选股 |
-| 32 | `outputStore` | output | 输出舱 |
-| 33 | `workflowStore` | output | 工作流 |
-| 34 | `agentFeedbackStore` | system | 智能体反馈 |
-| 35 | `agentStore` | system | 智能体管理 |
-| 36 | `chatStore` | cockpit | LLM 聊天状态 |
-| 37 | `commandStore` | system | 命令管理 |
-| 38 | `databridgeStore` | system | DataBridge 网关状态 |
-| 39 | `dataflowStore` | system | 数据流引擎状态 |
-| 40 | `dataTestStore` | system | 数据测试 |
-| 41 | `engineStore` | system | 引擎状态 |
-| 42 | `marketDataStore` | market | 行情数据 |
-| 43 | `mcpServerStore` | system | MCP 服务器 |
-| 44 | `pageStore` | system | 页面状态 |
-| 45 | `sevenDimConfigStore` | system | 七维配置 |
-| 46 | `systemMonitorStore` | system | 系统监控 |
-| 47 | `widgetStore` | widget | Widget 实例状态 |
+- [V9 数据架构修订建议](《V9数据架构修订建议》.md)
 
-### 2.3 Service 注册表（已废弃）
+### 《V9现有数据资产清单》.md
 
-> **注意**：`src/services/serviceRegistry.ts` 已删除（agent 残留孤立文件），原四层注册体系调整为三层。Service 层模块通过 `docs/REGISTRY_INDEX.md` 和代码目录结构管理。
+- [V9 现有数据资产清单](《V9现有数据资产清单》.md)
 
-| 属性 | 值 |
-|------|-----|
-| **文件** | ~~`src/services/serviceRegistry.ts`~~（已删除） |
-| **模式** | ~~静态清单 `SERVICE_REGISTRY`~~ |
-| **条目数** | ~~52 个 Service（47 active + 2 available + 3 mock）~~ |
-| **查询函数** | ~~`getServicesByDomain()` / `getServicesByStatus()` / `getServiceById()` / `getServiceStats()`~~ |
+### 01-vision-and-goals.md
 
-**注册格式**：
-```typescript
-interface ServiceRegistryEntry {
-  id: string              // Service 唯一标识
-  name: string            // 显示名称
-  domain: ServiceDomain   // 21 个域分类
-  description: string     // 功能描述
-  status: ServiceStatus   // active | available | mock | deprecated
-  importPath: string      // 导入路径
-  exports?: string[]      // 主要导出函数
-  dependsOn?: string[]    // 依赖的其他 Service
-}
-```
+- [01. 愿景与目标](01-vision-and-goals.md)
 
-### 2.4 Component 注册表
+### 02-functional-specs.md
 
-| 属性 | 值 |
-|------|-----|
-| **文件** | `src/components/componentRegistry.ts` |
-| **模式** | 静态清单 `COMPONENT_REGISTRY` |
-| **条目数** | 10 个业务组件（全部 available） |
-| **查询函数** | `getComponentsByDomain()` / `getComponentsByStatus()` / `getComponentById()` / `getComponentsByType()` |
+- [02. 功能规格](02-functional-specs.md)
 
-**注册格式**：
-```typescript
-interface ComponentRegistryEntry {
-  id: string              // 组件名（PascalCase）
-  name: string            // 显示名称
-  domain: ComponentDomain // system / analysis / shared / ui
-  description: string     // 功能描述
-  status: ComponentStatus // active | available | deprecated
-  importPath: string      // 导入路径
-  componentType: 'page-section' | 'panel' | 'chart' | 'form' | 'layout' | 'utility'
-  suggestedTarget?: string  // 建议集成目标页面
-}
-```
+### 03-architecture-standards.md
 
-**v2.3.0 已集成组件（10 个 → 全部接入目标页面）**：
+- [03. 架构标准](03-architecture-standards.md)
 
-| 组件 | 集成目标 | 集成方式 |
-|------|---------|---------|
-| `LogStreamPanel` | CommandApp 系统监控区 | 直接渲染 |
-| `AgentTaskList` | CommandApp 系统监控区 | 直接渲染 |
-| `LLMConfigWidget` | ConfigApp 配置管理 | 受控模式 + localStorage |
-| `WidgetErrorBoundary` | CockpitShell WidgetWrapper | 异常降级包裹 |
-| `AnalysisTemplateCards` | AnalysisApp 默认视图 | V6ScoreCard 之前 |
-| `NewsSentimentTrend` | NewsPage | 资讯列表之后 |
-| `ScoreHistoryPanel` | StockAnalysisPage | Card 之后 |
-| `MultiPeriodTrendChart` | IntelligentScorePage | 趋势数据加载 |
-| `IntelligentScoreExplanation` | IntelligentScorePage | 评分结果解释 |
-| `initPWA()` | bootstrapService | 启动链路 |
+### 04-ui-ux-specs.md
 
-### 2.5 UseCase 模块
+- [04. UI/UX 规范](04-ui-ux-specs.md)
 
-| 属性 | 值 |
-|------|-----|
-| **目录** | `src/services/useCase/` |
-| **模式** | 跨域业务用例，编排多个 Service 完成复杂业务流程 |
-| **条目数** | 11 个 UseCase |
+### 05-engine-specs.md
 
-| 序号 | 文件名 | 说明 |
-|:---:|--------|------|
-| 1 | `getUnifiedStockView.useCase.ts` | 统一股票视图聚合 |
-| 2 | `fetchSectorAnalysis.useCase.ts` | 板块分析数据获取 |
-| 3 | `createExecutionPlan.useCase.ts` | 创建执行计划 |
-| 4 | `fetcherOrchestrator.useCase.ts` | 数据获取编排器 |
-| 5 | `rebalancePortfolio.useCase.ts` | 投资组合再平衡 |
-| 6 | `hotSectorQuery.useCase.ts` | 热门板块查询 |
-| 7 | `executePlan.useCase.ts` | 执行计划执行 |
-| 8 | `submitOrder.useCase.ts` | 提交订单 |
-| 9 | `generateTradeReview.useCase.ts` | 交易复盘生成 |
-| 10 | `runDualStrategy.useCase.ts` | 双策略运行 |
-| 11 | `strategySnapshotSave.useCase.ts` | 策略快照保存 |
+- [05. 引擎规格](05-engine-specs.md)
 
-### 2.6 交易计算纯函数模块
+### 06-routing-specs.md
 
-| 属性 | 值 |
-|------|-----|
-| **目录** | `src/services/trading/` |
-| **模式** | 无副作用纯函数，可独立测试，不依赖 Store 或 DataBridge |
-| **条目数** | 6 个计算模块 |
+- [06. 路由规格](06-routing-specs.md)
 
-| 序号 | 文件名 | 说明 |
-|:---:|--------|------|
-| 1 | `positionComputer.ts` | 仓位计算（持仓成本、盈亏、仓位比例） |
-| 2 | `riskComputer.ts` | 风险指标计算（波动率、最大回撤、VaR） |
-| 3 | `pnlComputer.ts` | 盈亏计算（已实现/未实现盈亏） |
-| 4 | `positionSizer.ts` | 仓位尺寸管理（Kelly/固定比例/风险预算） |
-| 5 | `portfolioBuilder.ts` | 投资组合构建器 |
-| 6 | `tradeErrorClassifier.ts` | 交易错误分类器 |
+### 07-operation-strategy.md
 
----
+- [07. 运营策略](07-operation-strategy.md)
 
-## 三、注册状态流转
+### 08-implementation-plan.md
 
-```
-新模块创建
-    │
-    ▼
-[available] ──→ 注册到对应 Registry ──→ 文档记录
-    │
-    ▼
-集成到页面/组件
-    │
-    ▼
-[active] ──→ 被生产代码引用
-    │
-    ▼
-功能废弃
-    │
-    ▼
-[deprecated] ──→ 标记待清理
-```
+- [08. 实施计划](08-implementation-plan.md)
 
----
+### 09-quality-gates.md
 
-## 四、维护规范
+- [09. 质量门禁](09-quality-gates.md)
 
-### 4.1 新增模块注册 SOP
+### 10-glossary.md
 
-1. 在对应层创建模块文件（遵循四步集成编码契约）
-2. 在对应 Registry 中添加注册条目
-3. 设置 `status: 'available'`
-4. 集成到页面后更新为 `status: 'active'`
-5. 运行 `npx tsc --noEmit` 验证
+- [10. 领域词汇表](10-glossary.md)
 
-### 4.2 注册表查询（DevTools 集成）
+### 变更摘要-2026-06-28-Phase0-数据层改造.md
 
-```typescript
-// import { getStoreStats } from '@/store/storeRegistry'         // ❌ 已删除，待重建
-// import { getServiceStats } from '@/services/serviceRegistry'   // ❌ 已删除
-import { getComponentStats } from '@/components/componentRegistry'
+- [Untitled](变更摘要-2026-06-28-Phase0-数据层改造.md)
 
-// 获取全局模块统计
-// console.log(getStoreStats())     // ❌ storeRegistry 已删除，待重建
-// console.log(getServiceStats())   // ❌ serviceRegistry 已删除
-console.log(getComponentStats()) // { total: 10, active: 0, available: 10, ... }
-```
+### 踩坑规则门禁指南.md
 
-### 4.3 与审计脚本的关系
+- [踩坑规则门禁指南](踩坑规则门禁指南.md)
 
-- `audit:deadcode` 检查页面注册（routes.ts + apps/ + portal/）
-- `audit:layers` 检查跨层调用合规性
-- Registry 提供模块元数据，未来可扩展 `audit:registry` 检查注册完整性
+### 数据治理路线图.md
 
----
+- [V9 数据治理路线图与执行优先级](数据治理路线图.md)
 
-## 五、变更日志
+### 文件整理清单.md
 
-| 版本 | 日期 | 变更摘要 |
-|------|------|---------| 
-| v1.1.0 | 2026-07-05 | Store 注册表更新为实际 47 个 Zustand Store 完整清单；新增 §2.5 UseCase 模块（11 个）；新增 §2.6 交易计算纯函数模块（6 个）；修正 Store 注册表文件路径与查询方式 |
-| v1.0.0 | 2026-07-05 | 初始版本：三层注册体系文档化（Widget/Store/Component） |
+- [V9 项目文件整理清单](文件整理清单.md)
+
+### AGENT_AUDIT_REPORT.md
+
+- [V9 智能体检视报告](AGENT_AUDIT_REPORT.md)
+
+### AI_CENTER_DATA_DEFINITION.md
+
+- [AI 智能体调度中心 / 健康监控 / 诊断分析 — 数据字典](AI_CENTER_DATA_DEFINITION.md)
+
+### AI_CENTER_VUE3_EXAMPLES.md
+
+- [AI 中心 Vue3 组件示例](AI_CENTER_VUE3_EXAMPLES.md)
+
+### architecture
+
+- [V9 智能投研复盘系统 - MCP 最小耦合原则合规性分析报告](architecture/mcp-coupling-analysis-report.md)
+- [V9 策略架构文档](architecture/v9-strategy-architecture.md)
+
+### audit
+
+- [代码质量审查报告](audit/code-quality-audit-report.md)
+- [代码质量量化考核标准（v1.0）](audit/code-quality-rubric.md)
+- [V9 模块集成水平测试比对报告 — Agent集群修复后](audit/report-12-integration-baseline-comparison.md)
+- [Report-6 整改行动清单](audit/report-6-remediation-action-list.md)
+- [V6-V9 UI 组件库比对分析报告](audit/v6-v9-ui-component-comparison-report.md)
+- [V9 UI 组件增加可行性评估报告](audit/v9-ui-component-feasibility-assessment.md)
+
+### BACKTEST_DATA_DEFINITION.md
+
+- [策略回测模块数据字典](BACKTEST_DATA_DEFINITION.md)
+
+### blueprints
+
+- [V9 数据关系蓝图任务跟踪计划](blueprints/v9-data-blueprint-task-tracking.md)
+- [V9 数据库实体关系蓝图 (ER)](blueprints/v9-data-relationship-er.md)
+- [V9 数据时间关系与生命周期蓝图](blueprints/v9-data-timeline.md)
+- [V9 蓝图补全整改任务清单 — 批次 E（v15/v16 新增 Store）](blueprints/v9-rectification-tasks-v15-v16.md)
+- [每周数据蓝图一致性检查 — 2026-06-30](blueprints/weekly-check-2026-06-30.md)
+
+### build-optimization-best-practices.md
+
+- [Vite 构建优化最佳实践](build-optimization-best-practices.md)
+
+### CHANGELOG.md
+
+- [V9 架构文档变更日志](CHANGELOG.md)
+
+### changelogs
+
+- [审计脚本误报分析报告](changelogs/2026-07/2026-07-05-audit-false-positive-analysis.md)
+- [颜色硬编码治理 - P1 批次技术日志](changelogs/2026-07/2026-07-05-color-refactor-p1.md)
+- [颜色硬编码治理 - P2 批次技术日志](changelogs/2026-07/2026-07-05-color-refactor-p2.md)
+- [颜色令牌重构清单](changelogs/2026-07/2026-07-05-color-token-refactor.md)
+- [全面检测、总结与整改报告 — 2026-07-05](changelogs/2026-07/2026-07-05-comprehensive-audit-and-remediation.md)
+- [技术日志：DataBridge.query() 实现与 dataLayer 读操作改造](changelogs/2026-07/2026-07-05-databridge-query-implementation.md)
+- [2026-07-05 模块注册体系建立与未注册文件全量集成](changelogs/2026-07/2026-07-05-module-registry-and-integration.md)
+- [Jira 任务单归档:P0-5 缺陷 + 6 个历史 Bug 修复](changelogs/2026-07/2026-07-05-p0-5-and-legacy-bugs-jira-tickets.md)
+- [P2 批次完成报告 & 后续迭代任务清单 — 2026-07-05](changelogs/2026-07/2026-07-05-p2-completion-and-backlog.md)
+- [开发复盘行动项执行日志](changelogs/2026-07/2026-07-05-post-dev-review-actions.md)
+- [变更日志 — 2026-07-05 开发后复盘修复](changelogs/2026-07/2026-07-05-post-dev-review.md)
+- [V9 系统性文档更新与交叉验证报告](changelogs/2026-07/2026-07-05-systematic-doc-update.md)
+- [UI 测试与优化更新日志](changelogs/2026-07/2026-07-05-ui-testing-optimization.md)
+- [P1 批次行动清单 — 2026-07-05](changelogs/2026-07/action-list-p1.md)
+- [P1 批次完整性画像 — 2026-07-05](changelogs/2026-07/completeness-profile-p1.md)
+- [PR-5 构建性能优化总结](changelogs/2026-07/pr-5-build-optimization-summary.md)
+- [测试缓存清理修复总结](changelogs/2026-07/test-cache-fix-summary.md)
+
+### cockpit
+
+- [Cockpit Widget 框架数据字典](cockpit/DATA_DEFINITION.md)
+
+### CODE-REVIEW-CHEATSHEET.md
+
+- [代码审查快速参考卡片](CODE-REVIEW-CHEATSHEET.md)
+
+### CODE-REVIEW-TRAINING.md
+
+- [代码审查者培训材料](CODE-REVIEW-TRAINING.md)
+
+### CODE-REVIEW.md
+
+- [CODE-REVIEW.md — V9 代码审查标准与流程](CODE-REVIEW.md)
+
+### DATA_DICTIONARY_INDEX.md
+
+- [V9 数据字典索引](DATA_DICTIONARY_INDEX.md)
+
+### data-collection
+
+- [数据采集模块数据字典](data-collection/DATA_DEFINITION.md)
+
+### DATAFLOW_DATA_DEFINITION.md
+
+- [数据流引擎（DataFlow Engine）数据字典](DATAFLOW_DATA_DEFINITION.md)
+
+### design-tokens.md
+
+- [Design Tokens 系统使用指南](design-tokens.md)
+
+### implementation
+
+- [V9 技术实施文档索引](implementation/00-README.md)
+- [V9 数据架构五大问题治理计划](implementation/2026-06-29-data-architecture-governance.md)
+- [V9 无障碍（Accessibility）检查清单](implementation/a11y-checklist.md)
+- [V9 五层追溯审计 — 修复行动清单](implementation/action-list.md)
+- [ADR-002: IndexedDB 替代 localStorage](implementation/adr/2026-06-20-indexeddb-over-localstorage.md)
+- [ADR-001: 纯前端无后端架构](implementation/adr/2026-06-20-pure-frontend-architecture.md)
+- [ADR-003: DataBridge 替代直接 dataLayer 写入](implementation/adr/2026-06-21-databridge-over-direct-datalayer.md)
+- [ADR-004: React Router HashRouter](implementation/adr/2026-06-21-hashrouter-for-static-hosting.md)
+- [ADR-005: PortalShell 深色 Kimi 经典布局](implementation/adr/2026-06-23-portalshell-dark-kimi-layout.md)
+- [ADR-008: 采用 v6-pro-cockpit "第四次工业革命稀缺核心资源" 交易策略](implementation/adr/2026-06-24-adopt-v6-core-resource-trading-strategy.md)
+- [ADR-006: 输入舱拆分为四子页面](implementation/adr/2026-06-24-input-cabin-subpages.md)
+- [ADR-007: 补齐筛选引擎、信号持久化与复盘引擎](implementation/adr/2026-06-24-pool-screening-signal-persistence-review-engine.md)
+- [ADR-009: V6 Pro JSON 全量导出迁移至 V9 IndexedDB](implementation/adr/2026-06-25-v6-migration.md)
+- [ADR-009: 引入热门板块与价值洼地双策略体系](implementation/adr/2026-06-27-dual-strategy-system.md)
+- [Agent Runtime 实现规格](implementation/agent-runtime-spec.md)
+- [架构设计文档版本比对](implementation/architecture-version-comparison.md)
+- [V9 前端应用代码编写质量审计报告 (B4-1)](implementation/audit-b4-1-code-quality.md)
+- [V9 前端应用测试质量审计报告](implementation/audit-b4-2-test-quality.md)
+- [V9 前端应用性能质量审计报告](implementation/audit-b4-3-performance.md)
+- [V9 前端应用安全质量审计报告](implementation/audit-b4-4-security.md)
+- [V9 智能投研复盘系统 — 质量审计总结报告](implementation/audit-summary-report.md)
+- [V9 自主工作流优化策略](implementation/autonomous-workflow-optimization.md)
+- [V9 自主工作流使用指南](implementation/autonomous-workflow-user-guide.md)
+- [V9 阶段性合并报告（Batch 1-3 汇总）](implementation/batch-merge-reports.md)
+- [批次 B P2 问题修复方案](implementation/batchB-fix-plan.md)
+- [V9 批次 D（交易舱）P2 问题修复方案](implementation/batchD-fix-plan.md)
+- [V9 批次 E（输出舱 + 总控舱）P2 问题修复方案](implementation/batchE-fix-plan.md)
+- [V9 图表组件集成规格](implementation/chart-integration.md)
+- [Cockpit + News 模块文档修正方案](implementation/cockpit-news-doc-fix-plan.md)
+- [颜色整改总结报告](implementation/color-remediation-summary-report-20260703.md)
+- [V9 模块完成度剖面图 — 批次 1](implementation/completeness-profile-batch1.md)
+- [V9 模块完成度剖面图 — 批次 B（输入舱）](implementation/completeness-profile-batch2.md)
+- [V9 模块完成度剖面图 — 批次 C（分析舱）](implementation/completeness-profile-batch3.md)
+- [V9 模块完成度剖面图 — 批次 D（交易舱）](implementation/completeness-profile-batch4.md)
+- [V9 批次 E：输出舱 + 总控舱 + 其他 — 完成度剖面图](implementation/completeness-profile-batch5.md)
+- [V9 模块完成度剖面图 — 全量汇总](implementation/completeness-profile.md)
+- [V9 组件弃用政策](implementation/component-deprecation-policy.md)
+- [V9 UI 组件库使用指南](implementation/component-library-guide.md)
+- [数据采集模块架构设计](implementation/data-collection-architecture.md)
+- [数据采集功能差距分析报告](implementation/data-collection-gap-analysis.md)
+- [数据采集模块路由与UI校对分析报告](implementation/data-collection-route-ui-audit.md)
+- [数据采集模块开发任务清单](implementation/data-collection-task-list.md)
+- [V9 数据流规范](implementation/data-flow-spec.md)
+- [数据交互协议](implementation/data-interaction-protocols.md)
+- [DataFlow Engine 实现规格](implementation/dataflow-engine-spec.md)
+- [V6ProDB IndexedDB 升级规范（v4 → v6）](implementation/db-migration-v4-to-v6.md)
+- [Batch-1 阶段性合并报告](implementation/deprecated/DEPRECATED_batch1-merge-report.md)
+- [Batch-2 阶段性合并报告](implementation/deprecated/DEPRECATED_batch2-merge-report.md)
+- [Batch-3 全量回归测试报告](implementation/deprecated/DEPRECATED_batch3-merge-report.md)
+- [Cockpit & News 模块文档修正方案（Phase 2-3）](implementation/deprecated/DEPRECATED_cockpit-news-doc-correction-plan.md)
+- [代码-文档同步差异清单](implementation/deprecated/DEPRECATED_doc-sync-gap-list.md)
+- [V6 Pro UI 模块新旧比对与 V9 吸收报告](implementation/deprecated/DEPRECATED_ui-module-alignment.md)
+- [V9 问题整改执行看板](implementation/deprecated/DEPRECATED_v9-issue-execution-board.md)
+- [V9 问题整改调度表](implementation/deprecated/DEPRECATED_v9-issue-resolution-schedule.md)
+- [V9 并行任务调度表](implementation/deprecated/DEPRECATED_v9-parallel-task-schedule.md)
+- [七维采集配置模块 — 文档交叉检查报告](implementation/doc-cross-check-report.md)
+- [代码-文档同步整体方案与执行计划](implementation/doc-sync-execution-plan.md)
+- [文档自动化更新与交叉检查结果报告](implementation/doc-update-report-20260701.md)
+- [V9 双策略体系与数据流架构规格](implementation/dual-strategy-dataflow-spec.md)
+- [V9 双策略规格与现有项目差异分析报告](implementation/dual-strategy-gap-analysis.md)
+- [V9 双策略体系 — 更新日志与一致性检查](implementation/dual-strategy-update-log-and-consistency-check.md)
+- [因子提炼、扩容与追踪路径分析](implementation/factor-tracking-roadmap.md)
+- [V9 功能入口清单](implementation/feature-entry-list.md)
+- [V9 操作反馈闭环规格](implementation/feedback-loop-spec.md)
+- [第四次工业革命稀缺核心资源 — 交易策略解析与 V9 采用方案](implementation/fourth-industrial-revolution-core-resource-strategy.md)
+- [V9 实施文档保鲜度告警清单](implementation/freshness-alerts.md)
+- [V9 实施文档健康度报告](implementation/health-report.md)
+- [实施治理与架构决策记录](implementation/implementation-governance.md)
+- [输入舱业务规格与实现映射](implementation/input-cabin-spec.md)
+- [输入舱 UI 体系化重塑说明](implementation/input-cabin-ui-reshaping.md)
+- [投资流程阶段化分析：仓位、引擎、数据架构与数据交互](implementation/investment-pipeline-stage-analysis.md)
+- [新闻模块 — useState → Zustand 迁移文档](implementation/migration-news-useState-to-zustand.md)
+- [V9 待处理事项清单（Backlog）](implementation/pending-items-backlog-20260704.md)
+- [V9 未完成任务清单（已验证版）](implementation/pending-tasks-inventory-20260701.md)
+- [V9 性能基线](implementation/performance-baseline.md)
+- [V9 PWA 离线化实施指南](implementation/pwa-offline-guide.md)
+- [V9 模块完成度逆向校验 — 执行计划](implementation/quality-audit-plan.md)
+- [质量门禁实测基线（2026-06-25）](implementation/quality-gates-baseline.md)
+- [变更影响分析报告](implementation/refactor-impact-analysis-2026-06-27.md)
+- [Rotation Score Service 实现规格](implementation/rotation-score-spec.md)
+- [V9 间距令牌规范（Spacing Tokens）](implementation/spacing-tokens.md)
+- [V9 实施文档时间轴报告](implementation/timeline-report.md)
+- [TradeReviewAI SkillDevelopment 测试说明](implementation/tradeReviewAI-skill-testing.md)
+- [交易核心因子与复盘指标导入](implementation/trading-core-factors.md)
+- [V9 UI 设计系统](implementation/ui-design-system.md)
+- [V6 Pro UI / Page 吸收落地总结（仅 UI 展示层，不动数据架构）](implementation/ui-only-implementation-summary.md)
+- [V10 架构白皮书与 V9 对齐报告](implementation/v10-architecture-alignment.md)
+- [v6-pro-cockpit UI 组件参考（输入舱）](implementation/v6-cockpit-ui-reference.md)
+- [V6 Pro → V9 JSON 数据迁移规范（中间文档）](implementation/v6-to-v9-migration-spec.md)
+- [V6 → V9 架构一致性整改行动清单](implementation/v6-v9-architecture-audit-action-list.md)
+- [V6 → V9 架构一致性审计计划](implementation/v6-v9-architecture-audit-plan.md)
+- [V6→V9 架构整改校正评估与可行性分析报告](implementation/v6-v9-rectification-feasibility-report.md)
+- [V6 Pro → V9 源码比对与二次开发重点模块梳理](implementation/v6pro-to-v9-migration-analysis.md)
+- [V6 Pro 备份源码/线上站点 与 V9 当前项目 UI & Page 差异全量对比报告](implementation/v6pro-ui-page-diff-report.md)
+- [V9 双策略一致性收敛 — 验收报告](implementation/v9-acceptance-report.md)
+- [V9 架构 Phase 4 一致性验证报告](implementation/v9-architecture-data-dictionary-validation-report.md)
+- [V9 架构资产差异分析报告（Phase 5 深层审计）](implementation/v9-architecture-data-diff-report.md)
+- [V9 架构整改总体策略与执行计划](implementation/v9-architecture-rectification-strategy.md)
+- [V9 代码质量校对分析报告](implementation/v9-code-quality-audit-report-20260629.md)
+- [V9 代码质量校对分析 — 过程透明看板](implementation/v9-code-quality-kanban-20260629.md)
+- [V9 智能投研复盘系统 — 当前状态全面梳理（按实施进度）](implementation/v9-current-state-review.md)
+- [V9 文档体系化审计与补全建议书](implementation/v9-documentation-audit-report.md)
+- [V9 输入舱升级策略报告](implementation/v9-input-cabin-strategy-report.md)
+- [V9 问题整改管理与调度记录](implementation/v9-issue-management.md)
+- [V9 P0 严重问题修复方案](implementation/v9-p0-remediation-plan.md)
+- [V9 问题修复排期报告](implementation/v9-remediation-plan.md)
+- [V9 智能投研复盘系统 — 整体架构蓝图](implementation/v9-system-blueprint.md)
+- [V9 Widget 错误隔离与降级规格](implementation/widget-error-handling.md)
+
+### MULTI_FACTOR_SCREENING_DATA_DEFINITION.md
+
+- [多因子选股筛选器数据字典](MULTI_FACTOR_SCREENING_DATA_DEFINITION.md)
+
+### news
+
+- [新闻资讯模块数据字典](news/DATA_DEFINITION.md)
+
+### NEWS_DATA_DEFINITION.md
+
+- [NewsPage（智能资讯中心）数据字典](NEWS_DATA_DEFINITION.md)
+
+### optimization
+
+- [buildScoreDocDiff 修复 — 生产部署回滚预案](optimization/buildscoredocdiff-rollback-plan.md)
+- [评分拍照比对功能模块 — 补充穿行测试报告](optimization/walkthrough-scoredoc-report.md)
+
+### README.md
+
+- [智能投研复盘系统 V9 — 项目文档体系](README.md)
+
+### REGISTRY_INDEX.md
+
+- [V9 模块注册体系索引](REGISTRY_INDEX.md)
+
+### RELEASE_NOTES.md
+
+- [V9 智能投研复盘系统 — Release Note](RELEASE_NOTES.md)
+
+### reports
+
+- [文档更新结果报告](reports/2026-07-05-document-update-report.md)
+- [V9 项目综合审查报告](reports/2026-07-07-comprehensive-audit-report.md)
+- [脚本与测试质量检查报告](reports/脚本与测试质量检查报告.md)
+- [批次 C（分析舱）L1-L5 五层追溯审计报告](reports/audit-batch-C-analysis.md)
+- [V9 项目审计报告 — 2026-07-05](reports/audit-findings-2026-07-05.md)
+- [audit:hardcode Warning 分布分析报告](reports/audit-hardcode-warning-distribution.md)
+- [批次 B（输入舱）L1-L5 五层追溯审计报告](reports/batch-B-input-audit.md)
+- [V9 更新日志报告](reports/changelog-2026-07-04T06-45-59.md)
+- [V9 系统代码质量综合报告](reports/code-quality-report-2026-07-06.md)
+- [Design Tokens 系统实施事后分析报告](reports/design-tokens-implementation-report.md)
+- [V9 全量审计问题详细清单](reports/full-audit-inventory-2026-07-05.md)
+- [audit:hardcode 剩余 107 项 Warning 根因分类报告](reports/hardcode-warning-root-cause-analysis.md)
+- [知识图谱构建Token消耗复盘与优化报告](reports/knowledge-graph-token-optimization-report.md)
+- [V9 更新日志报告](reports/monthly-2026-07.md)
+- [V9 系统代码重构执行方案](reports/refactoring-plan-2026-07-04.md)
+- [v2.2.1 测试覆盖率对比报告](reports/test-coverage-comparison-v2.2.1.md)
+- [测试失败分析报告](reports/test-failure-analysis-report.md)
+- [V9项目Token消耗深度分析报告](reports/token-consumption-analysis-2026-07-04.md)
+- [V9项目Token优化最佳实践指南](reports/token-optimization-best-practices.md)
+- [类型错误诊断报告](reports/type-error-diagnosis-report.md)
+- [v2.2.1 dataLayer.test.ts 测试覆盖率对比报告](reports/v2.2.1-test-coverage-comparison.md)
+
+### SEVEN_DIM_CONFIG_DATA_DEFINITION.md
+
+- [七维采集配置模块 — 数据字典](SEVEN_DIM_CONFIG_DATA_DEFINITION.md)
+
+### SOLO-REVIEW.md
+
+- [SOLO-REVIEW.md — 单人开发代码审查指南](SOLO-REVIEW.md)
+
+### strategy
+
+- [核心稀缺资源策略（core-scarce）](strategy/core-scarce-strategy.md)
+- [热门赛道策略（hot-momentum）](strategy/hot-momentum-strategy.md)
+- [V9 选股策略总文档](strategy/stock-selection-strategy.md)
+- [价值洼地策略（value-bargain）](strategy/value-bargain-strategy.md)
+- [观察仓策略（watchlist）](strategy/watchlist-strategy.md)
+
+### superpowers
+
+- [V9 数据库数据关系与时间关系蓝图计划](superpowers/plans/2026-06-29-data-relationship-blueprint.md)
+- [Untitled](superpowers/plans/2026-07-01-v6-architecture-dominance-batch-a.md)
+- [V9 系统界面功能测试与优化执行方案](superpowers/plans/2026-07-04-ui-testing-optimization.md)
+
+### TECH-DEBT.md
+
+- [TECH-DEBT.md — 技术债管理文档](TECH-DEBT.md)
+
+### testing
+
+- [评分引擎异常处理优化测试报告](testing/2026-07-05-exception-handling-test-report.md)
+- [V9 智能投研复盘系统 - 测试用例清单](testing/V9-TEST-CASES.md)
+
+### testing-strategy.md
+
+- [测试策略文档](testing-strategy.md)
+
+### trade
+
+- [交易持仓管理模块 API 契约文档](trade/API_CONTRACT.md)
+
+### v6pro-v9-gap-analysis-final.md
+
+- [V6 Pro → V9 架构差异分析报告](v6pro-v9-gap-analysis-final.md)
+
+### V9_数据血缘追踪.md
+
+- [V9 数据血缘追踪与数据流全景图](V9_数据血缘追踪.md)
+
+### V9_IndexedDB_Store_Schema.md
+
+- [V9 IndexedDB Store Schema 文档](V9_IndexedDB_Store_Schema.md)
+
+### V9_L2状态层补齐路线图.md
+
+- [V9 L2 状态层补齐路线图](V9_L2状态层补齐路线图.md)
+
+### v9-post-dev-review.md
+
+- [V9 开发后复盘报告](v9-post-dev-review.md)
+
+### V9数据宪法.md
+
+- [V9 数据宪法（Data Constitution）](V9数据宪法.md)
+
+### WEEKLY-TASKS-2026-07-05.md
+
+- [本周执行任务清单（2026-07-05 至 2026-07-12）](WEEKLY-TASKS-2026-07-05.md)
+
+### widget-development-guide.md
+
+- [Widget 开发指南](widget-development-guide.md)

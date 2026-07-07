@@ -268,7 +268,7 @@ vi.mock('@/cockpit/providers/MarketDataProvider', () => ({
 
 ## 附录: 相关文档
 
-- [AGENTS.md](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/AGENTS.md) - 项目架构规范
+- [AGENTS.md](../../AGENTS.md) - 项目架构规范
 - [CHANGELOG.md](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/CHANGELOG.md) - 版本更新日志
 - [v2.0.0 Migration Guide](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/CHANGELOG.md#migration-guide) - 设计令牌迁移指南
 

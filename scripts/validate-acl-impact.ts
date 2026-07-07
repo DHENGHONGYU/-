@@ -180,3 +180,29 @@ function runValidation(): ValidationReport {
     )
   }
 
+  // 检查 datalayer 完整性
+  if (!datalayerIntegrity) {
+    conflictDetected = true
+    messages.push('[CONFLICT] datalayer 模块权限不完整（缺少读权限或存在写权限）')
+  }
+
+  return {
+    timestamp: new Date().toISOString(),
+    proposedChanges: PROPOSED_CHANGES,
+    impacts,
+    unchangedModules,
+    readStockModules: currentStockAccessors.readStockModules,
+    writeStockModules: currentStockAccessors.writeStockModules,
+    datalayerIntegrity,
+    conflictDetected,
+    messages,
+  }
+}
+
+// 主入口
+const report = runValidation()
+console.log(JSON.stringify(report, null, 2))
+if (report.conflictDetected) {
+  process.exit(1)
+}
+

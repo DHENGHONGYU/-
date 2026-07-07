@@ -14,7 +14,7 @@
 
 | 文件路径 | 操作 | 变更行数 | 风险等级 |
 |----------|------|----------|----------|
-| [src/services/analysis/scoreDocService.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/services/analysis/scoreDocService.ts) | 修改 | +75 / -1 | 🟡 中 |
+| [src/services/analysis/scoreDocService.ts](../../src/services/analysis/scoreDocService.ts) | 修改 | +75 / -1 | 🟡 中 |
 
 ### 1.2 变更内容详情
 
@@ -362,9 +362,9 @@ npm run build
 
 | 文件路径 | 影响类型 | 说明 |
 |----------|----------|------|
-| [src/components/analysis/score/ScoreHistoryPanel.tsx](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/components/analysis/score/ScoreHistoryPanel.tsx) | 引用方 | 调用 `buildScoreDocDiff`,类型检查通过 |
+| [src/components/analysis/score/ScoreHistoryPanel.tsx](../../src/components/analysis/score/ScoreHistoryPanel.tsx) | 引用方 | 调用 `buildScoreDocDiff`,类型检查通过 |
 | [src/services/analysis/__tests__/scoreDocService.test.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/services/analysis/__tests__/scoreDocService.test.ts) | 测试 | 4 个 buildScoreDocDiff 测试用例通过 |
-| [tests/__tests__/integration/walkthroughScoreDoc.sampled.test.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/tests/__tests__/integration/walkthroughScoreDoc.sampled.test.ts) | 测试 | 43 个穿行测试用例通过 |
+| [tests/__tests__/integration/walkthroughScoreDoc.sampled.test.ts](../../tests/__tests__/integration/walkthroughScoreDoc.sampled.test.ts) | 测试 | 43 个穿行测试用例通过 |
 
 ---
 
