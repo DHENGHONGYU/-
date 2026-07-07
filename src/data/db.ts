@@ -1,6 +1,5 @@
 import { DB_NAME, DB_VERSION, DEFAULT_POOL_GROUP, STORE_NAME } from '@/config/dbConfig'
 import { getLogger } from '@/lib/logger'
-import type { LogContext } from '@/lib/logger'
 
 // === 工具函数重新导出（PR-6 步骤 1.1：从 db-utils.ts 拆分） ===
 // 保持 '@/data/db' 路径向后兼容，所有调用点零修改
@@ -10,105 +9,10 @@ const logger = getLogger()
 
 const STORE_NAMES = Object.values(STORE_NAME)
 
-// ── 迁移框架（D-01：IndexedDB Schema 版本化与迁移） ─────────────
-export interface MigrationContext {
-  /** 当前数据库实例，可在 onupgradeneeded 中 createObjectStore / createIndex */
-  db: IDBDatabase
-  /** 升级事务；仅 onupgradeneeded 期间可用，用于数据回填；非升级场景为 undefined */
-  tx?: IDBTransaction
-}
-
-export interface Migration {
-  /** 触发该迁移的目标版本号（严格递增） */
-  version: number
-  /** 迁移名称，用于日志与审计 */
-  name: string
-  /** 正向迁移逻辑；必须同步执行（在 onupgradeneeded 中调用，禁止 await） */
-  up(ctx: MigrationContext): void
-  /** 反向回滚逻辑；迁移失败时被逆序调用 */
-  down?(ctx: MigrationContext): void
-}
-
-interface LoggerLike {
-  info(message: string, context?: LogContext): void
-  warn(message: string, context?: LogContext): void
-  error(message: string, context?: LogContext): void
-  debug(message: string, context?: LogContext): void
-}
-
-/**
- * 按版本顺序执行待应用的迁移。
- * - 仅执行 oldVersion < m.version <= newVersion 的迁移
- * - 任一迁移抛错时，已成功的迁移按逆序执行 down() 回滚，并向上抛出
- * - 全程结构化日志，便于排障
- */
-export function runMigrations(
-  db: IDBDatabase,
-  oldVersion: number,
-  newVersion: number,
-  migrations: readonly Migration[],
-  log: LoggerLike,
-  tx?: IDBTransaction,
-): void {
-  const pending = migrations
-    .filter((m) => m.version > oldVersion && m.version <= newVersion)
-    .sort((a, b) => a.version - b.version)
-
-  if (pending.length === 0) {
-    return
-  }
-
-  const applied: Migration[] = []
-  try {
-    for (const m of pending) {
-      log.info(`[DB] Migration up → v${m.version}: ${m.name}`)
-      m.up({ db, tx })
-      applied.push(m)
-    }
-    const tags = applied.map((m) => `v${m.version}`).join(', ')
-    log.info(`[DB] Migrations applied: [${tags}]`)
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err)
-    const last = applied.at(-1)?.version
-    log.error(`[DB] Migration failed at v${last}; rolling back`, { error: message })
-    for (let i = applied.length - 1; i >= 0; i--) {
-      const m = applied[i]
-      if (!m) continue
-      if (m.down) {
-        try {
-          log.warn(`[DB] Migration rollback ↓ v${m.version}: ${m.name}`)
-          m.down({ db, tx })
-        } catch (downErr) {
-          log.error(`[DB] Rollback failed at v${m.version}`, {
-            error: downErr instanceof Error ? downErr.message : String(downErr),
-          })
-        }
-      }
-    }
-    throw err
-  }
-}
-
-/**
- * 已注册迁移表（按 version 升序）。
- * 新增 Schema 变更时：在 dbConfig 中将 DB_VERSION +1，并在此处追加一条 Migration。
- */
-export const MIGRATIONS: readonly Migration[] = [
-  {
-    version: DB_VERSION,
-    name: 'seed_schema_migrations_tracker',
-    up({ tx }) {
-      if (!tx) return
-      const store = tx.objectStore(STORE_NAME.schemaMigrations)
-      store.put({
-        id: 'framework_initialized',
-        version: DB_VERSION,
-        appliedAt: Date.now(),
-        note: 'schema migration framework initialized',
-      })
-    },
-  },
-]
+// === 迁移框架重新导出（PR-6 步骤 1.2：从 db-migrations.ts 拆分） ===
+// 保持 '@/data/db' 路径向后兼容，所有调用点零修改
+export { runMigrations, MIGRATIONS } from './db-migrations'
+export type { Migration, MigrationContext } from './db-migrations'
 
 let dbInstance: IDBDatabase | null = null
 
