@@ -4,7 +4,7 @@
  * @remarks 所有数值均来自常量，组件中禁止硬编码。
  */
 
-import { COLOR_TOKENS } from '@/constants/theme.tokens'
+import { STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
 
 /** 时间窗口选项 */
 export type SectorHeatmapTimeWindow = 'day' | 'week' | 'month'
@@ -56,19 +56,19 @@ export const SECTOR_HEATMAP_COLORS: Record<
   { positive: string; negative: string; neutral: string }
 > = {
   changePercent: {
-    positive: COLOR_TOKENS.up.hex,
-    negative: COLOR_TOKENS.down.hex,
-    neutral: COLOR_TOKENS.neutral.hex,
+    positive: STOCK_COLOR_TOKENS.up.hex,
+    negative: STOCK_COLOR_TOKENS.down.hex,
+    neutral: STOCK_COLOR_TOKENS.neutral.hex,
   },
   turnover: {
-    positive: COLOR_TOKENS.neutral.hex,
-    negative: COLOR_TOKENS.neutral.hex,
-    neutral: COLOR_TOKENS.neutral.hex,
+    positive: STOCK_COLOR_TOKENS.neutral.hex,
+    negative: STOCK_COLOR_TOKENS.neutral.hex,
+    neutral: STOCK_COLOR_TOKENS.neutral.hex,
   },
   fundFlow: {
-    positive: COLOR_TOKENS.up.hex,
-    negative: COLOR_TOKENS.down.hex,
-    neutral: COLOR_TOKENS.neutral.hex,
+    positive: STOCK_COLOR_TOKENS.up.hex,
+    negative: STOCK_COLOR_TOKENS.down.hex,
+    neutral: STOCK_COLOR_TOKENS.neutral.hex,
   },
 }
 

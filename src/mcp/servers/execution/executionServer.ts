@@ -16,6 +16,7 @@ import {
 } from '@/services/execution/executionPlanService'
 import { createExecutionPlanUseCase } from '@/services/useCase/createExecutionPlan.useCase'
 
+import { nanoid } from 'nanoid'
 const logger = getLogger()
 
 export class ExecutionServer extends MCPServerBase {
@@ -52,7 +53,7 @@ export class ExecutionServer extends MCPServerBase {
           }
 
           const signal: Signal = {
-            id: `sig-mcp-${Date.now()}`,
+            id: `sig-mcp-${nanoid(8)}`,
             symbol: args.symbol as string,
             direction: args.direction as Signal['direction'],
             type: 'mcp_manual',

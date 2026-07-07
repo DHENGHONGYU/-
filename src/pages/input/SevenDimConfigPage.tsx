@@ -18,7 +18,7 @@ import { Link } from 'react-router'
 import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { getLogger } from '@/lib/logger'
-import { COLOR_TOKENS, twBg } from '@/constants/theme.tokens'
+import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import {
   Card,
   CardHeader,
@@ -159,7 +159,7 @@ function DimensionRow({
   onFrequencyChange,
   onSourcesChange,
 }: DimensionRowProps) {
-  const colorBar = DIMENSION_COLORS[code] ?? twBg('gray', 400)
+  const colorBar = DIMENSION_COLORS[code] ?? 'bg-tertiary'
 
   return (
     <div className="flex items-start gap-3 py-3 transition-all duration-200">
@@ -237,7 +237,7 @@ function DimensionRow({
           <div className="mt-1 flex flex-wrap gap-2 text-xs text-muted-foreground">
             <span>频率: {FREQUENCY_LABELS[frequency]}</span>
             <span>·</span>
-            <span>源: {sources.map((s) => DATA_SOURCE_LABELS[s as keyof typeof DATA_SOURCE_LABELS] ?? s).join(' > ')}</span>
+            <span>源: {sources.map((s) => DATA_SOURCE_LABELS[s] ?? s).join(' > ')}</span>
             <span>·</span>
             <span>存储: {STORAGE_TYPE_LABELS[storageType as keyof typeof STORAGE_TYPE_LABELS]}</span>
           </div>

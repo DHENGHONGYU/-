@@ -59,6 +59,9 @@ export const EVENT_NAMES = {
   DATAFLOW_DISCONNECTED: 'dataflow:disconnected',
   /** 数据包发布 */
   DATAFLOW_PACKET_PUBLISHED: 'dataflow:packetPublished',
+  // ---- G1 批次扩展：引擎 Store 写操作广播 ----
+  /** 引擎启动状态变更（engineStore.setStarted 触发） */
+  ENGINE_STARTED_CHANGED: 'ENGINE_STORE_STARTED_CHANGED',
 } as const
 
 export type EventName = (typeof EVENT_NAMES)[keyof typeof EVENT_NAMES]

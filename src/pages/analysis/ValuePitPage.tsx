@@ -169,9 +169,9 @@ export default function ValuePitPage(): React.JSX.Element {
           const actionCfg = ACTION_CONFIG[score.action]
           const strengthCfg = rotation.triggered ? STRENGTH_CONFIG[rotation.strength] : null
           const scoreColor =
-            score.score >= 4 ? twText('green', 600) :
-            score.score >= 3 ? twText('yellow', 600) :
-            twText('red', 600)
+            score.score >= 4 ? 'text-success' :
+            score.score >= 3 ? 'text-warning' :
+            'text-destructive'
 
           return (
             <Card key={score.symbol} className="transition-shadow hover:shadow-md">

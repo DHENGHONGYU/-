@@ -1,4 +1,4 @@
 #!/bin/sh
-echo "🚀 Running pre-commit checks..."
+echo "Running pre-commit checks..."
 npx lint-staged
-echo "✅ Pre-commit checks passed!"
+echo "Pre-commit checks passed!"

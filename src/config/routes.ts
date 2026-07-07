@@ -203,6 +203,42 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     category: 'command',
     description: '反馈控制台',
   },
+  {
+    path: '/command/agents/model-upgrade',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'command',
+    description: '模型升级',
+  },
+  {
+    path: '/command/agents/data-labels',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'command',
+    description: '数据标签管理',
+  },
+  {
+    path: '/command/agents/api-config',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'command',
+    description: 'API 配置',
+  },
+  {
+    path: '/command/agents/skill-audit',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'command',
+    description: 'Skill 核查',
+  },
+  {
+    path: '/command/agents/optimization',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'command',
+    description: '优化建议',
+  },
+  {
+    path: '/command/agents/changelog',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'command',
+    description: '更新日志',
+  },
 
   // MCP Server 管理
   {
@@ -286,6 +322,12 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     description: '价值洼地策略选股（五维评分 + 轮动信号）',
   },
   {
+    path: '/analysis/multi-factor',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'analysis',
+    description: '多因子筛选（条件组增删 / 因子编辑 / 模板持久化）',
+  },
+  {
     path: '/trading/strategy-snapshots',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'trading',
@@ -296,6 +338,12 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'trading',
     description: '交易持仓管理',
+  },
+  {
+    path: '/trading/execution-plans',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'trading',
+    description: '执行计划管理',
   },
   {
     path: '/input/local-knowledge',

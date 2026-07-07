@@ -62,3 +62,11 @@ export interface SentimentTrendOptions {
   /** 是否填充无资讯的空日期 */
   fillGaps?: boolean
 }
+
+/** 资讯筛选状态（从 components/news/NewsFilterPanel 迁移） */
+export interface NewsFilterState {
+  keyword: string
+  category: string
+  sentiment: '' | 'positive' | 'negative' | 'neutral'
+  source: string
+}

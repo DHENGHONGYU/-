@@ -18,6 +18,7 @@ import type { MCPClient, ToolResult, ResourceContent, PromptMessage } from '@/mc
 import { mcpRegistry } from '@/mcp/core/registry'
 import { mcpAuditLogger } from '@/mcp/core/mcpAuditLogger'
 
+import { nanoid } from 'nanoid'
 const logger = getLogger()
 
 /** MCPBridge 单例 */
@@ -49,12 +50,15 @@ export class MCPBridge {
     toolName: string,
     args: Record<string, unknown>,
   ): Promise<ToolResult> {
-    const traceId = `mcp-${Date.now()}-${toolName}`
+    const traceId = `mcp-${nanoid(8)}-${toolName}`
     const startTime = performance.now()
+
+    logger.info(`[MCPBridge] callTool() called: server="${serverName}", tool="${toolName}", traceId="${traceId}"`)
 
     try {
       const result = await this.client.callTool(serverName, toolName, args)
       const durationMs = performance.now() - startTime
+      logger.info(`[MCPBridge] callTool() completed: server="${serverName}", tool="${toolName}", traceId="${traceId}", duration=${durationMs.toFixed(2)}ms, isError=${result.isError ?? false}`)
       await mcpAuditLogger.logToolCall(serverName, toolName, args, result, traceId, durationMs)
       return result
     } catch (err) {
@@ -63,6 +67,7 @@ export class MCPBridge {
         isError: true,
       }
       const durationMs = performance.now() - startTime
+      logger.error(`[MCPBridge] callTool() failed: server="${serverName}", tool="${toolName}", traceId="${traceId}", duration=${durationMs.toFixed(2)}ms`, { error: errorResult.content[0]?.text })
       await mcpAuditLogger.logToolCall(serverName, toolName, args, errorResult, traceId, durationMs)
       return errorResult
     }

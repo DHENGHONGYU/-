@@ -115,23 +115,25 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    setupFiles: ['./tests/setup.ts'],
+    setupFiles: ['./tests/setup.ts', './tests/contracts/setup.ts'],
     exclude: ['e2e/**', 'node_modules/**', 'dist/**', 'temp/**'],
     testTimeout: 30000,
     hookTimeout: 30000,
     retry: 2,
+    // Windows 环境下 Worker 崩溃问题对策（TD-010）
+    // 关键配置：forks 池 + maxForks=1 + fileParallelism=false
+    // 每个测试文件使用独立 fork 进程，防止内存累积导致崩溃
+    // 注：fileParallelism=true 在本机 Windows 会触发 tinypool "Worker exited
+    // unexpectedly" 崩溃，故保持单 fork。跨文件模块状态污染（TD-013）改用测试内
+    // beforeEach 重置共享单例（store/db）解决，见 tests/setup.ts 与各测试文件。
     pool: 'forks',
     poolOptions: {
       forks: {
         minForks: 1,
-        maxForks: 2,
+        maxForks: 1,
       },
     },
-    // Windows 环境下 Worker 崩溃问题对策（TD-010）
-    // 使用 forks 池 + 禁用文件级并行 + isolate
-    sequence: {
-      concurrent: false,
-    },
+    fileParallelism: false,
     coverage: {
       // istanbul provider 基于源码静态分析，能正确识别所有 statements/branches/functions
       // 使用 threads 池避免 Windows 下 tinypool Worker 崩溃问题（TD-010）

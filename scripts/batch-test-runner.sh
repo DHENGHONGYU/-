@@ -21,13 +21,13 @@ BATCHES=(
   # Batch 3: 服务层剩余
   "src/services/data src/services/output src/services/market src/services/sector src/services/discipline src/services/industry src/services/intelligent src/services/local"
   # Batch 4: Store层 - 第1批
-  "src/store/__tests__ src/store/agentStore.test.ts src/store/analysisNewsStore.test.ts src/store/backtestStore.test.ts src/store/commandStore.test.ts src/store/dataflowStore.test.ts src/store/disciplineStore.test.ts src/store/dualStrategyStore.test.ts src/store/engineStore.test.ts"
+  "src/store/__tests__ src/store/agentStore.test.ts src/store/analysisNewsStore.test.ts src/store/backtestStore.test.ts src/store/commandStore.test.ts src/store/disciplineStore.test.ts src/store/dualStrategyStore.test.ts src/store/engineStore.test.ts"
   # Batch 5: Store层 - 第2批
   "src/store/executionStore.test.ts src/store/holdingsStore.test.ts src/store/hotSectorStore.test.ts src/store/industryScoreStore.test.ts src/store/inputHubStore.test.ts src/store/intelligentScoreStore.test.ts src/store/localKnowledgeStore.test.ts src/store/marketDataStore.test.ts src/store/multiFactorScreeningStore.test.ts src/store/orderStore.test.ts"
   # Batch 6: Store层 - 第3批
   "src/store/outputStore.test.ts src/store/pageStore.test.ts src/store/poolStore.test.ts src/store/portfolioStore.test.ts src/store/positionStore.test.ts src/store/riskStore.test.ts src/store/rotationSignalStore.test.ts src/store/scoreDocStore.test.ts src/store/sectorAnalysisStore.test.ts src/store/signalQualityStore.test.ts"
   # Batch 7: Store层 - 第4批
-  "src/store/signalStore.test.ts src/store/stockAnalysisStore.test.ts src/store/strategySnapshotStore.test.ts src/store/tradingHubStore.test.ts src/store/tradingStore.test.ts src/store/valuePitStore.test.ts src/store/widgetStore.test.ts src/store/workflowStore.test.ts"
+  "src/store/signalStore.test.ts src/store/stockAnalysisStore.test.ts src/store/strategySnapshotStore.test.ts src/store/tradingStore.test.ts src/store/valuePitStore.test.ts src/store/workflowStore.test.ts"
   # Batch 8: 其他测试 (components, hooks, pages, etc.)
   "src/components src/hooks src/core src/lib src/data src/config src/portal src/apps"
 )

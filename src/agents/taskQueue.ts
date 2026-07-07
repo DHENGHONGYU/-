@@ -61,7 +61,17 @@ export class TaskQueue {
     }
 
     this.pending.set(fullTask.id, fullTask)
-    logger.info(`[TaskQueue] Enqueued: taskId="${fullTask.id}", agentId="${fullTask.agentId}", priority="${fullTask.priority}"`)
+    const stats = this.getStats()
+    const pendingIds = Array.from(this.pending.keys())
+    logger.info(`[TaskQueue] Enqueued`, {
+      taskId: fullTask.id,
+      agentId: fullTask.agentId,
+      type: fullTask.type,
+      priority: fullTask.priority,
+      queueSize: stats.pending,
+      totalTasks: stats.total,
+      remainingTaskIds: pendingIds,
+    })
 
     this.notify(fullTask)
     this.scheduleDrain(fullTask.agentId)
@@ -79,7 +89,10 @@ export class TaskQueue {
         return a.createdAt - b.createdAt
       })
 
-    if (pendingForAgent.length === 0) return undefined
+    if (pendingForAgent.length === 0) {
+      logger.info(`[TaskQueue] Dequeue skipped: no pending tasks for agentId="${agentId}"`)
+      return undefined
+    }
 
     const task = pendingForAgent[0] as QueuedTask
     this.pending.delete(task.id)
@@ -87,7 +100,18 @@ export class TaskQueue {
     task.startedAt = Date.now()
     this.running.set(task.id, task)
 
-    logger.debug(`[TaskQueue] Dequeued: taskId="${task.id}", priority="${task.priority}"`)
+    const stats = this.getStats()
+    const remainingIds = Array.from(this.pending.keys())
+    logger.info(`[TaskQueue] Dequeued`, {
+      taskId: task.id,
+      agentId: task.agentId,
+      type: task.type,
+      priority: task.priority,
+      pendingQueueSize: stats.pending,
+      runningCount: stats.running,
+      totalTasks: stats.total,
+      remainingTaskIds: remainingIds,
+    })
     this.notify(task)
     return task
   }
@@ -224,7 +248,7 @@ export class TaskQueue {
       this.drainTimers.delete(agentId)
       this.drain(agentId)
     })
-    this.drainTimers.set(agentId, timerId as unknown as number)
+    this.drainTimers.set(agentId, timerId)
   }
 
   private drain(agentId: string): void {

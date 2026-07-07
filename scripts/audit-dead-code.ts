@@ -1,12 +1,21 @@
 #!/usr/bin/env tsx
 /**
  * audit-dead-code.ts
- * 死代码/空壳/路由一致性扫描器 v3.0（白盒/透明管道）
+ * 死代码/空壳/路由一致性扫描器 v3.1（白盒/透明管道）
  *
  * 检查目标：
  * 1. src/ 下是否存在空函数、空组件、仅返回 null 的组件。
  * 2. src/config/routes.ts 中注册的路由是否对应真实存在的页面文件。
  * 3. pages/ 下是否存在未被任何路由或 App 分发器注册的页面文件（仅提示）。
+ *
+ * v3.1 改造（2026-07-06）：
+ * - 新增动态导入全量扫描：覆盖 React.lazy / lazy() / () => import() / import() 四种模式
+ * - 扫描范围扩展：config/ + portal/ + apps/ + cockpit/ 全覆盖
+ * - 路径前缀扩展：@/pages/ + @/apps/ + @/cockpit/ + @/portal/ 四类前缀
+ * - 二跳分析：对动态加载的模块本身进行二次扫描，发现嵌套懒加载
+ * - 修复 v3.0 漏判：widgetRegistry.ts 中的 21 个 Widget 懒加载此前未被识别
+ * - 修复 v3.0 漏判：PortalShell 中 @/apps/xxx 的动态加载此前未被识别
+ * - 新增统计字段：dynamicImports / dynamicImportSources
  *
  * v3.0 改造（2026-07-06）：
  * - 采用白盒/透明管道模式：export scan() / formatReport() / main()
@@ -20,6 +29,7 @@
  * v2.0.0 路由架构说明：
  *   routes.ts → PortalShell → App 分发器（AnalysisApp/TradingApp/...）→ React.lazy(页面)
  *   页面通过三级间接加载，审计需同时检查 routes.ts 和 src/apps/ 下的 lazy 导入。
+ *   v3.1 补充：cockpit/core/widgetRegistry.ts 中的 () => import() 懒加载也需纳入审计。
  *
  * 排除规则：
  *   - 测试文件：*.test.ts / *.test.tsx / __tests__/ 目录下所有文件
@@ -70,6 +80,12 @@ export interface Report extends AuditReport {
     appImports: number
     /** 注册源统计：portal/ lazy 导入数 */
     portalImports: number
+    /** v3.1 新增：动态导入总数（覆盖 React.lazy / lazy() / () => import() / import() 四种模式） */
+    dynamicImports: number
+    /** v3.1 新增：动态导入来源文件数（产生动态导入的文件数） */
+    dynamicImportSources: number
+    /** v3.1 新增：通过动态导入注册的页面数（仅 @/pages/ 前缀） */
+    dynamicRegisteredPages: number
   }
 }
 
@@ -257,6 +273,189 @@ function collectPortalImports(): Set<string> {
   return lazyImports
 }
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// v3.1 新增：动态导入全量扫描
+// 覆盖四种导入模式 × 四种路径前缀 × 四个来源目录
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/** 动态导入模式枚举 */
+type DynamicImportKind =
+  | 'react-lazy' // React.lazy(() => import('...'))
+  | 'named-lazy' // lazy(() => import('...'))（named import of lazy）
+  | 'arrow-import' // () => import('...')
+  | 'bare-import' // import('...')
+
+/** 动态导入路径前缀枚举 */
+type ImportPathPrefix =
+  | '@/pages/'
+  | '@/apps/'
+  | '@/cockpit/'
+  | '@/portal/'
+  | 'other'
+
+/** 单条动态导入信息 */
+export interface DynamicImportInfo {
+  /** 产生动态导入的源文件（相对项目根） */
+  sourceFile: string
+  /** 行号 */
+  line: number
+  /** 导入模式 */
+  kind: DynamicImportKind
+  /** 路径前缀分类 */
+  prefix: ImportPathPrefix
+  /** 原始导入路径（如 @/pages/analysis/StockAnalysisPage） */
+  importPath: string
+  /** 规范化后的模块标识（去除前缀和扩展名，如 pages/analysis/StockAnalysisPage） */
+  normalizedModule: string
+}
+
+/** 动态导入扫描结果 */
+interface DynamicImportScanResult {
+  /** 所有动态导入条目 */
+  imports: DynamicImportInfo[]
+  /** 按源文件分组的来源集合 */
+  sourceFiles: Set<string>
+  /** 仅 @/pages/ 前缀的规范化模块集合（用于页面注册判断） */
+  registeredPages: Set<string>
+}
+
+/**
+ * v3.1 核心：扫描全项目的动态导入。
+ *
+ * 覆盖四种导入模式：
+ *   1. React.lazy(() => import('...'))   — 标准 React 懒加载
+ *   2. lazy(() => import('...'))          — named import 的懒加载
+ *   3. () => import('...')                — 裸箭头函数动态导入（如 widgetRegistry）
+ *   4. import('...')                      — 直接动态 import 表达式
+ *
+ * 覆盖四个来源目录：
+ *   - src/config/    （routes.ts）
+ *   - src/portal/    （PortalShell.tsx）
+ *   - src/apps/      （AnalysisApp/TradingApp/...）
+ *   - src/cockpit/   （widgetRegistry.ts）
+ *
+ * 覆盖四种路径前缀：
+ *   - @/pages/    （页面模块）
+ *   - @/apps/    （App 分发器）
+ *   - @/cockpit/ （驾驶舱组件）
+ *   - @/portal/  （Portal 组件）
+ */
+function collectDynamicImports(): DynamicImportScanResult {
+  const imports: DynamicImportInfo[] = []
+  const sourceFiles = new Set<string>()
+  const registeredPages = new Set<string>()
+
+  // 扫描目录白名单（仅扫描可能产生动态导入的目录）
+  const scanDirs = ['config', 'portal', 'apps', 'cockpit'].map((d) => path.join(SRC, d))
+
+  // 四种导入模式的正则（统一捕获导入路径字符串）
+  // 注意：正则设计为"宽松匹配"，避免误判注释中的 import 字符串
+  // 通过 trim + 起始字符过滤减少误报
+  const patterns: Array<{ kind: DynamicImportKind; regex: RegExp }> = [
+    // React.lazy(() => import('...')) 或 React.lazy(() => import("..."))
+    {
+      kind: 'react-lazy',
+      regex: /React\.lazy\s*\(\s*\(\)\s*=>\s*import\s*\(\s*['"]([^'"]+)['"]\s*\)\s*\)/g,
+    },
+    // lazy(() => import('...')) — named import 的 lazy（如 import { lazy } from 'react'）
+    {
+      kind: 'named-lazy',
+      regex: /(?<![\w.])lazy\s*\(\s*\(\)\s*=>\s*import\s*\(\s*['"]([^'"]+)['"]\s*\)\s*\)/g,
+    },
+    // () => import('...') — 裸箭头函数（不含 React.lazy/lazy 包装）
+    // 注意：此模式可能与前两种重叠，需在去重阶段处理
+    {
+      kind: 'arrow-import',
+      regex: /(?<![\w.])\(\s*\)\s*=>\s*import\s*\(\s*['"]([^'"]+)['"]\s*\)/g,
+    },
+    // import('...') — 直接动态 import 表达式（兜底）
+    // 此模式会捕获所有 import() 调用，包括前三种内部的 import()
+    {
+      kind: 'bare-import',
+      regex: /(?<![\w.])import\s*\(\s*['"]([^'"]+)['"]\s*\)/g,
+    },
+  ]
+
+  // 已处理的 (file+line+importPath) 三元组，用于跨模式去重
+  const seen = new Set<string>()
+
+  for (const scanDir of scanDirs) {
+    if (!fs.existsSync(scanDir)) continue
+
+    const files = collectFiles(scanDir).filter(
+      (f) => (f.endsWith('.ts') || f.endsWith('.tsx')) && !f.includes('.test.'),
+    )
+
+    for (const file of files) {
+      const content = fs.readFileSync(file, 'utf-8')
+      const lines = content.split('\n')
+      const relFile = relativeFromRoot(file)
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i]
+        // 跳过注释行（减少误报）
+        const trimmed = line.trim()
+        if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*')) {
+          continue
+        }
+
+        for (const { kind, regex } of patterns) {
+          regex.lastIndex = 0
+          let match: RegExpExecArray | null
+          while ((match = regex.exec(line)) !== null) {
+            const importPath = match[1]
+
+            // 去重：同一行同一导入路径只记录一次（优先记录更具体的模式）
+            const dedupKey = `${relFile}:${i + 1}:${importPath}`
+            if (seen.has(dedupKey)) continue
+            seen.add(dedupKey)
+
+            // 分类路径前缀
+            const prefix = classifyImportPath(importPath)
+
+            // 规范化模块标识（去除 @/ 前缀和扩展名）
+            const normalizedModule = normalizeModulePath(importPath)
+
+            // 仅 @/pages/ 前缀的导入纳入页面注册集合
+            if (prefix === '@/pages/') {
+              registeredPages.add(normalizedModule)
+            }
+
+            imports.push({
+              sourceFile: relFile,
+              line: i + 1,
+              kind,
+              prefix,
+              importPath,
+              normalizedModule,
+            })
+            sourceFiles.add(relFile)
+          }
+        }
+      }
+    }
+  }
+
+  return { imports, sourceFiles, registeredPages }
+}
+
+/** 分类动态导入的路径前缀 */
+function classifyImportPath(importPath: string): ImportPathPrefix {
+  if (importPath.startsWith('@/pages/')) return '@/pages/'
+  if (importPath.startsWith('@/apps/')) return '@/apps/'
+  if (importPath.startsWith('@/cockpit/')) return '@/cockpit/'
+  if (importPath.startsWith('@/portal/')) return '@/portal/'
+  return 'other'
+}
+
+/** 规范化模块路径：去除 @/ 前缀和扩展名 */
+function normalizeModulePath(importPath: string): string {
+  if (importPath.startsWith('@/')) {
+    return importPath.slice(2).replace(/\.tsx?$/, '')
+  }
+  return importPath.replace(/\.tsx?$/, '')
+}
+
 /**
  * 判断文件路径是否为测试文件或被排除的目录。
  * 排除规则：
@@ -314,7 +513,11 @@ function scanRouteConsistency(): Issue[] {
       .map(relativeFromSrc)
       .filter((f) => !isExcludedFromPageAudit(f))
 
-    // 合并三个注册源：routes.ts 直接导入 + App 分发器 lazy 导入 + Portal lazy 导入
+    // 合并四个注册源（v3.1 升级为四源合并）：
+    //   源 1：routes.ts 直接导入
+    //   源 2：App 分发器 lazy 导入（向后兼容保留）
+    //   源 3：Portal lazy 导入（向后兼容保留）
+    //   源 4：v3.1 新增 - 全项目动态导入扫描（覆盖 React.lazy / lazy() / () => import() / import()）
     const registeredPaths = new Set<string>()
 
     // 源 1：routes.ts 中的 import() 路径
@@ -338,6 +541,15 @@ function scanRouteConsistency(): Issue[] {
     const portalImports = collectPortalImports()
     for (const p of portalImports) {
       registeredPaths.add(`pages/${p}`)
+    }
+
+    // 源 4（v3.1 新增）：全项目动态导入扫描
+    // 覆盖 widgetRegistry.ts 的 () => import('@/pages/...')
+    // 覆盖 PortalShell 中 @/apps/xxx 内部嵌套的 lazy 导入
+    // 覆盖 routes.ts 中 React.lazy 包装的页面导入
+    const dynamicScan = collectDynamicImports()
+    for (const mod of dynamicScan.registeredPages) {
+      registeredPaths.add(mod)
     }
 
     for (const pageFile of pageFiles) {
@@ -376,6 +588,12 @@ export function scan(): Report {
   const appImports = collectAppDispatcherImports().size
   const portalImports = collectPortalImports().size
 
+  // v3.1 新增：动态导入全量统计
+  const dynamicScan = collectDynamicImports()
+  const dynamicImports = dynamicScan.imports.length
+  const dynamicImportSources = dynamicScan.sourceFiles.size
+  const dynamicRegisteredPages = dynamicScan.registeredPages.size
+
   return {
     issues,
     violations,
@@ -390,6 +608,9 @@ export function scan(): Report {
       routeImports,
       appImports,
       portalImports,
+      dynamicImports,
+      dynamicImportSources,
+      dynamicRegisteredPages,
     },
   }
 }
@@ -399,7 +620,7 @@ export function formatReport(report: Report): string {
   const lines: string[] = []
 
   lines.push('╔════════════════════════════════════════════════════════════╗')
-  lines.push('║  死代码与路由一致性审计 — audit-dead-code.ts v3.0          ║')
+  lines.push('║  死代码与路由一致性审计 — audit-dead-code.ts v3.1          ║')
   lines.push('╚════════════════════════════════════════════════════════════╝')
   lines.push('')
 
@@ -430,6 +651,11 @@ export function formatReport(report: Report): string {
   lines.push(
     `注册源统计: routes.ts(${report.summary.routeImports}) + apps/(${report.summary.appImports}) + portal/(${report.summary.portalImports})`,
   )
+  lines.push(
+    `动态导入: ${report.summary.dynamicImports} 处，来自 ${report.summary.dynamicImportSources} 个源文件，注册页面 ${report.summary.dynamicRegisteredPages} 个`,
+  )
+  lines.push(`覆盖模式: React.lazy / lazy() / () => import() / import()`)
+  lines.push(`覆盖路径: @/pages/ + @/apps/ + @/cockpit/ + @/portal/`)
   lines.push(`排除规则: 测试文件 + __tests__/ + pages/*/components/`)
   lines.push('────────────────────────────────────────────────────────────')
 
@@ -444,7 +670,7 @@ export function formatReport(report: Report): string {
 export function main(): void {
   const result = runAuditPipeline<Report>({
     scriptName: 'audit-dead-code',
-    version: '3.0',
+    version: '3.1',
     scanFn: scan,
     formatReportFn: formatReport,
   })

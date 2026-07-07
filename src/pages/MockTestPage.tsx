@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/Label'
 import { Button } from '@/components/ui/Button'
 import { create } from 'zustand'
 import { eventBus } from '@/lib/eventBus'
-import { twText, twBg, twBorder } from '@/constants/theme.tokens'
+
 
 // Mock EngineStore 用于可视化 Engine 状态
 const useMockEngineStore = create<{
@@ -55,23 +55,23 @@ export default function MockTestPage() {
   }
 
   return (
-    <div className={`min-h-screen ${twBg('slate', 950)} text-white p-8`}>
+    <div className={`min-h-screen bg-background text-foreground p-8`}>
       <div className="max-w-4xl mx-auto space-y-8">
 
         {/* 页面标题 */}
         <div className="text-center">
-          <h1 className={`text-3xl font-bold ${twText('rose', 400)}`}>V9 模块 Mock 验证页</h1>
-          <p className={`${twText('slate', 400)} mt-2`}>验证 Slider / Sheet / Toggle / Engine 的实际运行效果</p>
+          <h1 className={`text-3xl font-bold text-primary`}>V9 模块 Mock 验证页</h1>
+          <p className={`text-muted-foreground mt-2`}>验证 Slider / Sheet / Toggle / Engine 的实际运行效果</p>
         </div>
 
         {/* 1. Slider 组件 */}
-        <section className={`${twBg('slate', 900)} rounded-xl p-6 ${twBorder('slate', 700)}`}>
-          <h2 className={`text-xl font-semibold ${twText('rose', 400)} mb-4 flex items-center gap-2`}>
+        <section className={`bg-card rounded-xl p-6 border-border`}>
+          <h2 className={`text-xl font-semibold text-primary mb-4 flex items-center gap-2`}>
             <span>🎚️</span> Slider 滑动条组件
           </h2>
 
           <div className="space-y-4">
-            <Label htmlFor="test-slider" className={twText('slate', 300)}>
+            <Label htmlFor="test-slider" className="text-foreground">
               选择数值（范围 0–100，步进 5）
             </Label>
 
@@ -88,10 +88,10 @@ export default function MockTestPage() {
             />
 
             <div className="flex items-center gap-4">
-              <div className={`${twBg('slate', 800)} px-6 py-3 rounded-lg text-2xl font-bold ${twText('emerald', 400)}`}>
+              <div className={`bg-muted px-6 py-3 rounded-lg text-2xl font-bold text-success`}>
                 {sliderVal}
               </div>
-              <span className={twText('slate', 400)}>← 当前 Slider 值</span>
+              <span className="text-muted-foreground">← 当前 Slider 值</span>
             </div>
 
             {/* 快捷预设 */}
@@ -111,8 +111,8 @@ export default function MockTestPage() {
         </section>
 
         {/* 2. Sheet 侧边抽屉 */}
-        <section className={`${twBg('slate', 900)} rounded-xl p-6 ${twBorder('slate', 700)}`}>
-          <h2 className={`text-xl font-semibold ${twText('rose', 400)} mb-4 flex items-center gap-2`}>
+        <section className={`bg-card rounded-xl p-6 border-border`}>
+          <h2 className={`text-xl font-semibold text-primary mb-4 flex items-center gap-2`}>
             <span>📋</span> Sheet 侧边抽屉组件
           </h2>
 
@@ -136,7 +136,7 @@ export default function MockTestPage() {
               <SheetHeader>
                 <SheetTitle>测试面板</SheetTitle>
               </SheetHeader>
-              <div className={`mt-4 space-y-3 ${twText('slate', 300)}`}>
+              <div className={`mt-4 space-y-3 text-foreground`}>
                 <p>这是 Sheet 抽屉的内容。</p>
                 <ul className="list-disc list-inside space-y-1 text-sm">
                   <li>支持 ESC 关闭</li>
@@ -157,8 +157,8 @@ export default function MockTestPage() {
         </section>
 
         {/* 3. Toggle 开关 */}
-        <section className={`${twBg('slate', 900)} rounded-xl p-6 ${twBorder('slate', 700)}`}>
-          <h2 className={`text-xl font-semibold ${twText('rose', 400)} mb-4 flex items-center gap-2`}>
+        <section className={`bg-card rounded-xl p-6 border-border`}>
+          <h2 className={`text-xl font-semibold text-primary mb-4 flex items-center gap-2`}>
             <span>🔘</span> Toggle 开关组件
           </h2>
 
@@ -180,8 +180,8 @@ export default function MockTestPage() {
               反向 Toggle
             </Toggle>
 
-            <span className={`${twText('slate', 400)} text-sm`}>
-              当前状态: <span className={toggleVal ? twText('emerald', 400) : twText('slate', 500)}>
+            <span className={`text-muted-foreground text-sm`}>
+              当前状态: <span className={toggleVal ? 'text-success' : 'text-tertiary'}>
                 {toggleVal ? 'ON' : 'OFF'}
               </span>
             </span>
@@ -189,23 +189,23 @@ export default function MockTestPage() {
         </section>
 
         {/* 4. Engine Mock 状态 */}
-        <section className={`${twBg('slate', 900)} rounded-xl p-6 ${twBorder('slate', 700)}`}>
-          <h2 className={`text-xl font-semibold ${twText('rose', 400)} mb-4 flex items-center gap-2`}>
+        <section className={`bg-card rounded-xl p-6 border-border`}>
+          <h2 className={`text-xl font-semibold text-primary mb-4 flex items-center gap-2`}>
             <span>⚙️</span> Engine 模块状态（Mock）
           </h2>
 
           <div className="grid grid-cols-3 gap-4 mb-4">
-            <div className={`${twBg('slate', 800)} rounded-lg p-4 text-center`}>
-              <div className={`text-2xl font-bold ${twText('emerald', 400)}`}>{started ? '运行中' : '已停止'}</div>
-              <div className={`text-xs ${twText('slate', 400)} mt-1`}>Engine 状态</div>
+            <div className={`bg-muted rounded-lg p-4 text-center`}>
+              <div className={`text-2xl font-bold text-success`}>{started ? '运行中' : '已停止'}</div>
+              <div className={`text-xs text-muted-foreground mt-1`}>Engine 状态</div>
             </div>
-            <div className={`${twBg('slate', 800)} rounded-lg p-4 text-center`}>
-              <div className={`text-2xl font-bold ${twText('cyan', 400)}`}>{channels}</div>
-              <div className={`text-xs ${twText('slate', 400)} mt-1`}>DataFlow 通道</div>
+            <div className={`bg-muted rounded-lg p-4 text-center`}>
+              <div className={`text-2xl font-bold text-info`}>{channels}</div>
+              <div className={`text-xs text-muted-foreground mt-1`}>DataFlow 通道</div>
             </div>
-            <div className={`${twBg('slate', 800)} rounded-lg p-4 text-center`}>
-              <div className={`text-2xl font-bold ${twText('amber', 400)}`}>{agents}</div>
-              <div className={`text-xs ${twText('slate', 400)} mt-1`}>Agent 实例</div>
+            <div className={`bg-muted rounded-lg p-4 text-center`}>
+              <div className={`text-2xl font-bold text-warning`}>{agents}</div>
+              <div className={`text-xs text-muted-foreground mt-1`}>Agent 实例</div>
             </div>
           </div>
 
@@ -218,16 +218,16 @@ export default function MockTestPage() {
         </section>
 
         {/* 5. 事件日志 */}
-        <section className={`${twBg('slate', 900)} rounded-xl p-6 ${twBorder('slate', 700)}`}>
-          <h2 className={`text-xl font-semibold ${twText('rose', 400)} mb-4 flex items-center gap-2`}>
+        <section className={`bg-card rounded-xl p-6 border-border`}>
+          <h2 className={`text-xl font-semibold text-primary mb-4 flex items-center gap-2`}>
             <span>📝</span> 实时事件日志
           </h2>
-          <div className={`${twBg('slate', 950)} rounded-lg p-4 h-48 overflow-y-auto font-mono text-sm space-y-1`}>
+          <div className={`bg-background rounded-lg p-4 h-48 overflow-y-auto font-mono text-sm space-y-1`}>
             {logLines.length === 0 ? (
-              <div className={twText('slate', 600)}>Interact with components above to see events here...</div>
+              <div className="text-tertiary">Interact with components above to see events here...</div>
             ) : (
               logLines.map((line, i) => (
-                <div key={i} className={line.includes('→') ? twText('emerald', 400) : twText('cyan', 400)}>
+                <div key={i} className={line.includes('→') ? 'text-success' : 'text-info'}>
                   {line}
                 </div>
               ))

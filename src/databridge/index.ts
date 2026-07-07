@@ -11,6 +11,7 @@ import { eventBus } from '@/lib/eventBus'
 import type { StandardEnvelope } from '@/core/envelope'
 import type { DataBridgeAdapterConfig, DataAction, BridgeQueryOptions, BridgeQueryResult } from '@/types/modules/databridge.types'
 
+import { nanoid } from 'nanoid'
 const logger = getLogger()
 
 export type { DataBridgeAdapterConfig, DataAction, BridgeQueryOptions, BridgeQueryResult } from '@/types/modules/databridge.types'
@@ -35,7 +36,7 @@ export class DataBridgeAdapter {
     payload: Record<string, unknown> = {},
     options: BridgeQueryOptions = {},
   ): Promise<BridgeQueryResult<T>> {
-    const traceId = `bridge-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
+    const traceId = `bridge-${nanoid(8)}`
     const timeout = options.timeout ?? this.config.defaultTimeout ?? 10000
 
     logger.info(`[DataBridgeAdapter] query() action="${action}", traceId="${traceId}"`)
@@ -65,11 +66,13 @@ export class DataBridgeAdapter {
         resolve: (result: BridgeQueryResult<unknown>) => {
           clearTimeout(timer)
           this.pendingQueries.delete(traceId)
+          logger.info(`[DataBridgeAdapter] query() completed: action="${action}", traceId="${traceId}", success=${result.success}`)
           resolve(result as BridgeQueryResult<T>)
         },
         reject: (err: Error) => {
           clearTimeout(timer)
           this.pendingQueries.delete(traceId)
+          logger.error(`[DataBridgeAdapter] query() rejected: action="${action}", traceId="${traceId}"`, { error: err.message })
           reject(err)
         },
       })

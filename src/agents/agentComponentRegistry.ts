@@ -1,5 +1,7 @@
 import React from 'react'
 import { Bot, Activity, Newspaper, Sparkles, Wifi, type LucideIcon } from 'lucide-react'
+import V6ScoringAgentDetail from '@/components/agent/V6ScoringAgentDetail'
+import GenericAgentDetail from '@/components/agent/GenericAgentDetail'
 
 export interface AgentDetailComponentProps {
   agentId: string
@@ -11,14 +13,11 @@ export interface AgentComponentEntry {
   icon: LucideIcon
   description: string
   tags: string[]
-  detailComponent: React.LazyExoticComponent<React.ComponentType<AgentDetailComponentProps>>
+  detailComponent: React.ComponentType<AgentDetailComponentProps>
   priority: number
   mcpServerName: string
   defaultToolName: string
 }
-
-const V6ScoringAgentDetail = React.lazy(() => import('@/components/agent/V6ScoringAgentDetail'))
-const GenericAgentDetail = React.lazy(() => import('@/components/agent/GenericAgentDetail'))
 
 const AGENT_COMPONENT_REGISTRY: Map<string, AgentComponentEntry> = new Map()
 
@@ -96,7 +95,7 @@ export function getAllAgentComponents(): AgentComponentEntry[] {
 
 export function getAgentDetailComponent(
   agentId: string,
-): React.LazyExoticComponent<React.ComponentType<AgentDetailComponentProps>> {
+): React.ComponentType<AgentDetailComponentProps> {
   const entry = AGENT_COMPONENT_REGISTRY.get(agentId)
   return entry?.detailComponent ?? GenericAgentDetail
 }

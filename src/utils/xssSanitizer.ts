@@ -47,8 +47,18 @@ export function escapeHtml(input: string): string {
 
 /**
  * 危险协议黑名单（用于过滤 javascript:、data:、vbscript: 等）
+ * 带 g 标志，专门用于全局替换（String.replace 无需关心 lastIndex）。
  */
 const DANGEROUS_PROTOCOL_REGEX = /(?:javascript|vbscript|data|file):/gi
+
+/**
+ * 危险协议检测（用于 .test() 判断）。
+ *
+ * 注意：绝不能复用带 g 标志的 DANGEROUS_PROTOCOL_REGEX 进行 .test()，
+ * 因为 g 标志会让 lastIndex 在多次 .test() 之间泄漏状态，导致间歇漏检。
+ * 此处使用独立的不带 g 的正则，保证每次 .test() 都从 0 开始匹配。
+ */
+const DANGEROUS_PROTOCOL_TEST = /(?:javascript|vbscript|data|file):/i
 
 /**
  * 净化字符串中的潜在 XSS 攻击载荷。
@@ -141,7 +151,7 @@ export function sanitizeMarkdown(input: string): string {
     /\[([^\]]*)\]\(([^)]*)\)/g,
     (match, text: string, url: string) => {
       const trimmedUrl = url.trim()
-      if (DANGEROUS_PROTOCOL_REGEX.test(trimmedUrl)) {
+      if (DANGEROUS_PROTOCOL_TEST.test(trimmedUrl)) {
         return `[${text}](#)`
       }
       return match

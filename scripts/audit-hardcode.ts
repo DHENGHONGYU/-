@@ -211,6 +211,21 @@ function isColorExemptFile(rel: string): boolean {
   return COLOR_EXEMPT_FILES.has(rel)
 }
 
+// v2.6：股票涨跌颜色豁免检查（例外规则）
+// 当代码中使用 STOCK_COLOR_TOKENS 或 getStockColor() 等函数时，豁免颜色硬编码检查
+function isStockColorUsage(line: string): boolean {
+  return (
+    line.includes('STOCK_COLOR_TOKENS') ||
+    line.includes('getStockColor') ||
+    line.includes('getStockColorClass') ||
+    line.includes('getStockColorHex') ||
+    line.includes('getStockColorBg') ||
+    // 检测条件表达式中的涨跌判断（如 changePercent > 0 ? ... : ...）
+    (/(changePercent|priceChange|涨跌幅|stock\.change)\s*[><]=?\s*0/.test(line) &&
+     (line.includes('?') || line.includes(':')))
+  )
+}
+
 // v2.5：UI 层目录列表（颜色硬编码检测范围，对应 AGENTS.md §3.5）
 const UI_LAYER_DIRS = [
   'src/components/',
@@ -366,50 +381,57 @@ function scanFile(file: string): Finding[] {
 
     // 3. Major：UI 层 HEX 颜色
     // v2.5：扩展检测范围至 src/cockpit/ 和 src/apps/，与 AGENTS.md §3.5 对齐
+    // v2.6：新增股票涨跌颜色例外规则豁免（STOCK_COLOR_TOKENS 和动态判断）
     if (
       isUiLayerFile(rel) &&
       !isTestFile(rel) &&
       !rel.includes('audit-exempt') &&
       !isColorExemptFile(rel)
     ) {
-      const hexMatch = raw.match(/#[0-9a-fA-F]{3,6}\b/)
-      if (hexMatch) {
-        findings.push({
-          file: rel,
-          line: i + 1,
-          severity: 'Major',
-          category: '硬编码 HEX 颜色',
-          message: `UI 层出现硬编码颜色 ${hexMatch[0]}`,
-          context: trimmed.slice(0, 80),
-        })
-      }
+      // v2.6：股票涨跌颜色例外规则豁免
+      // 如果本行使用了 STOCK_COLOR_TOKENS 或动态涨跌判断，豁免颜色检查
+      const isStockException = isStockColorUsage(raw)
 
-      // Tailwind 颜色类：text-red-500, bg-slate-100, border-blue-200 等
-      // v2.0：支持 hover:, focus:, dark:, group-hover: 等变体前缀
-      const twMatch = raw.match(/(?:hover:|focus:|dark:|group-hover:|active:|disabled:)?\b(bg|text|border|shadow|ring|from|to|via|stroke|fill)-([a-z]+-[0-9]+)/)
-      if (twMatch) {
-        // v2.2：排除非颜色类的误报模式
-        // - ring-offset-{number}：环偏移宽度，非颜色
-        // - border-b-{number}/border-t-{number}/border-l-{number}/border-r-{number}：边框宽度，非颜色
-        // - from-bottom-{number}/from-top-{number}/from-left-{number}/from-right-{number}：动画方向，非颜色
-        // - to-bottom-{number}/to-top-{number}/to-left-{number}/to-right-{number}：动画方向，非颜色
-        const fullMatch = twMatch[0]
-        const prefix = twMatch[1]
-        const colorPart = twMatch[2]
-        const isFalsePositive =
-          (prefix === 'ring' && colorPart.startsWith('offset-')) ||
-          (prefix === 'border' && /^[tblr]-\d+$/.test(colorPart)) ||
-          (prefix === 'from' && /^(bottom|top|left|right)-\d+$/.test(colorPart)) ||
-          (prefix === 'to' && /^(bottom|top|left|right)-\d+$/.test(colorPart))
-        if (!isFalsePositive) {
+      if (!isStockException) {
+        const hexMatch = raw.match(/#[0-9a-fA-F]{3,6}\b/)
+        if (hexMatch) {
           findings.push({
             file: rel,
             line: i + 1,
             severity: 'Major',
-            category: '硬编码 Tailwind 颜色类',
-            message: `UI 层出现硬编码 Tailwind 颜色类 ${fullMatch}`,
+            category: '硬编码 HEX 颜色',
+            message: `UI 层出现硬编码颜色 ${hexMatch[0]}`,
             context: trimmed.slice(0, 80),
           })
+        }
+
+        // Tailwind 颜色类：text-red-500, bg-slate-100, border-blue-200 等
+        // v2.0：支持 hover:, focus:, dark:, group-hover: 等变体前缀
+        const twMatch = raw.match(/(?:hover:|focus:|dark:|group-hover:|active:|disabled:)?\b(bg|text|border|shadow|ring|from|to|via|stroke|fill)-([a-z]+-[0-9]+)/)
+        if (twMatch) {
+          // v2.2：排除非颜色类的误报模式
+          // - ring-offset-{number}：环偏移宽度，非颜色
+          // - border-b-{number}/border-t-{number}/border-l-{number}/border-r-{number}：边框宽度，非颜色
+          // - from-bottom-{number}/from-top-{number}/from-left-{number}/from-right-{number}：动画方向，非颜色
+          // - to-bottom-{number}/to-top-{number}/to-left-{number}/to-right-{number}：动画方向，非颜色
+          const fullMatch = twMatch[0]
+          const prefix = twMatch[1]
+          const colorPart = twMatch[2]
+          const isFalsePositive =
+            (prefix === 'ring' && colorPart.startsWith('offset-')) ||
+            (prefix === 'border' && /^[tblr]-\d+$/.test(colorPart)) ||
+            (prefix === 'from' && /^(bottom|top|left|right)-\d+$/.test(colorPart)) ||
+            (prefix === 'to' && /^(bottom|top|left|right)-\d+$/.test(colorPart))
+          if (!isFalsePositive) {
+            findings.push({
+              file: rel,
+              line: i + 1,
+              severity: 'Major',
+              category: '硬编码 Tailwind 颜色类',
+              message: `UI 层出现硬编码 Tailwind 颜色类 ${fullMatch}`,
+              context: trimmed.slice(0, 80),
+            })
+          }
         }
       }
     }

@@ -17,14 +17,14 @@ import { StrategyGroupCard } from '@/components/strategy/StrategyGroupCard'
 import { ChangeLogPanel } from '@/components/strategy/ChangeLogPanel'
 import { useStrategySnapshotStore } from '@/store/strategySnapshotStore'
 import { getLogger } from '@/lib/logger'
-import { twBg } from '@/constants/theme.tokens'
+
 
 const logger = getLogger()
 
 const GROUP_CONFIG: Array<{ key: 'core' | 'hot' | 'value'; title: string; color: string }> = [
-  { key: 'core', title: '核心稀缺', color: twBg('emerald', 500) },
-  { key: 'hot', title: '热点动量', color: twBg('amber', 500) },
-  { key: 'value', title: '价值洼地', color: twBg('blue', 500) },
+  { key: 'core', title: '核心稀缺', color: 'bg-success' },
+  { key: 'hot', title: '热点动量', color: 'bg-warning' },
+  { key: 'value', title: '价值洼地', color: 'bg-info' },
 ]
 
 export default function StrategySnapshotPage(): React.JSX.Element {

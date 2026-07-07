@@ -67,7 +67,9 @@ export const SENTIMENT_LEVELS = {
 }
 
 /** 股票涨跌颜色映射（A 股市场标准：红涨绿跌）
- * @remarks 所有涉及涨跌幅颜色展示的组件必须从此常量读取，禁止硬编码
+ * @deprecated 请使用 `STOCK_COLOR_TOKENS`（位于 `src/constants/theme.tokens.ts`）
+ * @remarks 所有涉及涨跌幅颜色展示的组件必须从 `STOCK_COLOR_TOKENS` 读取，禁止硬编码
+ * @see STOCK_COLOR_TOKENS
  */
 export const STOCK_COLOR_MAPPING = {
   /** 上涨颜色 */

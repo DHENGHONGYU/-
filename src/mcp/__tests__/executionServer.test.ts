@@ -30,6 +30,8 @@ describe('ExecutionServer', () => {
     expect(tool!.inputSchema.required).toContain('direction')
     expect(tool!.inputSchema.required).toContain('quantity')
     expect(tool!.inputSchema.required).toContain('price')
+    // confidence 是可选参数，用于传递信号置信度
+    expect(tool!.inputSchema.properties).toHaveProperty('confidence')
   })
 
   it('should have list_execution_plans tool', () => {

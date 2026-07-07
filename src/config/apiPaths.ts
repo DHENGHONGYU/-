@@ -58,3 +58,6 @@ export const API_COLLECT_BASIC = '/api/collect/basic'
 
 /** K 线数据采集 API */
 export const API_COLLECT_KLINE = '/api/collect/kline'
+
+/** 财务数据采集 API */
+export const API_COLLECT_FINANCIAL = '/api/collect/financial'

@@ -20,6 +20,9 @@ export const SINA_QUOTE_API = 'https://hq.sinajs.cn/list'
 /** 网易财经历史数据 API */
 export const NETEASE_HISTORY_API = 'https://quotes.163.com/service/chddata.html'
 
+/** Tushare 金融数据 API */
+export const TUSHARE_API = 'http://api.tushare.pro'
+
 /** Mock 新闻 URL 前缀 */
 export const MOCK_NEWS_URL_PREFIX = 'https://mock.news'
 

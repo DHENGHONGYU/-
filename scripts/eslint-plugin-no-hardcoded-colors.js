@@ -9,6 +9,14 @@
  * - src/constants/theme.tokens.ts（令牌定义文件）
  * - src/config/chartColors.ts（图表配色定义）
  * - tests/**（测试文件）
+ * 
+ * 股票涨跌颜色豁免规则（A股红涨绿跌）：
+ * - 本规则仅检查静态字符串字面量（className="text-red-500"）
+ * - 动态表达式（className={condition ? 'text-red-500' : 'text-green-500'}）不被检查
+ * - 股票涨跌颜色应使用 STOCK_COLOR_TOKENS 或 getStockColorHex() 等辅助函数
+ * - 这些辅助函数遵循 A 股标准：上涨=红色，下跌=绿色，平盘=灰色
+ * - 豁免主题切换影响，确保涨跌颜色在暗色模式下保持不变
+ * - 参考 AGENTS.md §3.5.2 场景C 和 §3.5.6 股票涨跌颜色例外规则
  */
 
 const COLOR_PATTERNS = [

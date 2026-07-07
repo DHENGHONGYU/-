@@ -61,7 +61,7 @@ describe('agentComponentRegistry', () => {
     it('已注册的专用 Agent 返回对应组件', () => {
       const component = getAgentDetailComponent('v6-scoring-agent')
       expect(component).toBeDefined()
-      expect(component).toBeTypeOf('object')
+      expect(component).toBeTypeOf('function')
     })
 
     it('未注册的 Agent 返回通用组件', () => {

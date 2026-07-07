@@ -3,7 +3,7 @@
  * @description 执行链路模块常量定义。所有枚举值、阈值、配置数值必须从此文件引用，禁止在组件/Service 中硬编码。
  */
 
-import type { ExecutionPhase } from '@/types/modules/execution.types'
+import type { ExecutionPhase } from '@/data/types'
 
 // ============================================================
 // 执行计划阶段枚举与状态机

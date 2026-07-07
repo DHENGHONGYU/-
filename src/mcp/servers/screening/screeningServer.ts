@@ -50,8 +50,14 @@ export class ScreeningServer extends MCPServerBase {
           required: ['symbol'],
         },
         handler: async (args) => {
-          logger.info('[ScreeningServer] screen_single called', { symbol: args.symbol as string })
-          const result = await screenSingleStock(args.symbol as string)
+          const symbol = typeof args.symbol === 'string' ? args.symbol.trim() : ''
+          if (!symbol) {
+            return {
+              content: [{ type: 'text', text: JSON.stringify({ success: false, error: 'symbol 参数不能为空' }) }],
+            }
+          }
+          logger.info('[ScreeningServer] screen_single called', { symbol })
+          const result = await screenSingleStock(symbol)
           return {
             content: [{ type: 'text', text: JSON.stringify(result) }],
           }

@@ -50,6 +50,18 @@ tmp_mock_test.png
 tests/mock_validation.py
 patch-bundle.patch
 
+# Ad-hoc test run artifacts (TD-013 / TD-014)
+test-output.txt
+test-output2.txt
+failed-tests.txt
+junit*.xml
+fail_analysis.txt
+failed-test-files.txt
+lint-colors-result.txt
+test-latest.txt
+test-results-latest.txt
+commit-message.txt
+
 # Python virtual environments
 .venv/
 venv/
