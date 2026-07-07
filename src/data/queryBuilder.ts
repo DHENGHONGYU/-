@@ -1,3 +1,6 @@
+import { z } from 'zod'
+import { ok, fail, type Result } from '@/services/contracts'
+import { ValidationError } from '@/lib/errors'
 import { getLogger } from '@/lib/logger'
 import { dataLayer } from '@/data/dataLayer'
 import type {
@@ -12,25 +15,28 @@ import type {
 
 const logger = getLogger()
 
-/** 查询粒度开关 */
-export interface UnifiedStockQuery {
+/** 查询粒度开关（参数 schema，运行时校验） */
+export const unifiedStockQuerySchema = z.object({
   /** 股票代码（必填） */
-  symbol: string
+  symbol: z.string({ error: 'symbol 不能为空' }).min(1, { error: 'symbol 不能为空' }),
   /** 是否包含股票基础信息 */
-  includeBasic?: boolean
+  includeBasic: z.boolean().optional(),
   /** 是否包含 K 线行情 */
-  includeQuotes?: boolean
+  includeQuotes: z.boolean().optional(),
   /** 是否包含 V6 评分 */
-  includeV6Score?: boolean
+  includeV6Score: z.boolean().optional(),
   /** 是否包含智能评分 */
-  includeIntelligentScore?: boolean
+  includeIntelligentScore: z.boolean().optional(),
   /** 是否包含行业评分 */
-  includeIndustryScore?: boolean
+  includeIndustryScore: z.boolean().optional(),
   /** 是否包含交易信号 */
-  includeSignals?: boolean
+  includeSignals: z.boolean().optional(),
   /** 是否包含关联新闻 */
-  includeNews?: boolean
-}
+  includeNews: z.boolean().optional(),
+})
+
+/** 统一股票查询请求（由 schema 推断，保证运行时与编译期一致） */
+export type UnifiedStockQuery = z.infer<typeof unifiedStockQuerySchema>
 
 /** 综合查询结果 */
 export interface QueryBuilderResult {
@@ -55,25 +61,38 @@ export interface QueryBuilderResult {
 type TaskResult = { key: keyof Omit<QueryBuilderResult, 'errors'>; value: unknown }
 
 /**
- * QueryBuilder -- 绕开 Store 综合查询引擎
+ * QueryBuilder — 绕开 Store 综合查询引擎（D-02 类型安全化）
  *
  * 封装 dataLayer 多个 Store 的并发查询，一次性获取某只股票在
  * 基础信息 / 行情 / V6评分 / 智能评分 / 行业评分 / 交易信号 / 关联新闻
- * 等多个维度的数据，返回统一的 QueryBuilderResult。 */
+ * 等多个维度的数据，返回统一的 `Result<QueryBuilderResult>`。
+ *
+ * - 入参经 zod 校验，symbol 缺失/非法时返回 `fail(ValidationError)`，
+ *   与 S-01 的统一 Result 约定一致，避免吞异常。
+ * - 单维度失败仅记入 `errors` 字段，不影响其余维度（partial success）。
+ */
 export class QueryBuilder {
   /**
    * 从 DataLayer 查询多维度的股票数据
-   * @param params 查询参数
-   * @returns 综合后的 QueryBuilderResult
+   * @param params 查询参数（symbol 必填）
+   * @returns Result<QueryBuilderResult>
    */
-  async queryStock(params: UnifiedStockQuery): Promise<QueryBuilderResult> {
-    const { symbol } = params
+  async queryStock(params: UnifiedStockQuery): Promise<Result<QueryBuilderResult>> {
+    const parsed = unifiedStockQuerySchema.safeParse(params)
+    if (!parsed.success) {
+      const message = parsed.error.issues.map((i) => i.message).join('; ')
+      logger.warn(`[QueryBuilder] queryStock 参数校验失败: ${message}`)
+      return fail(new ValidationError(message, 'symbol'))
+    }
+    const p = parsed.data
+    const { symbol } = p
+
     const tasks: Promise<TaskResult>[] = []
     const dimensions: string[] = []
     const errors: string[] = []
 
     // --- 基础信息 ---
-    if (params.includeBasic) {
+    if (p.includeBasic) {
       dimensions.push('basic')
       tasks.push(
         (async (): Promise<TaskResult> => {
@@ -91,7 +110,7 @@ export class QueryBuilder {
     }
 
     // --- K 线行情 ---
-    if (params.includeQuotes) {
+    if (p.includeQuotes) {
       dimensions.push('quotes')
       tasks.push(
         (async (): Promise<TaskResult> => {
@@ -109,7 +128,7 @@ export class QueryBuilder {
     }
 
     // --- V6 评分 ---
-    if (params.includeV6Score) {
+    if (p.includeV6Score) {
       dimensions.push('v6Score')
       tasks.push(
         (async (): Promise<TaskResult> => {
@@ -127,7 +146,7 @@ export class QueryBuilder {
     }
 
     // --- 智能评分 ---
-    if (params.includeIntelligentScore) {
+    if (p.includeIntelligentScore) {
       dimensions.push('intelligentScore')
       tasks.push(
         (async (): Promise<TaskResult> => {
@@ -145,13 +164,11 @@ export class QueryBuilder {
     }
 
     // --- 行业评分（需要 industryCode） ---
-    if (params.includeIndustryScore) {
+    if (p.includeIndustryScore) {
       dimensions.push('industryScore')
       tasks.push(
         (async (): Promise<TaskResult> => {
           try {
-            // 如果 includeBasic 已经开启，basic 任务会并发返回 stock。
-            // 这里立即查询 stock 以确保 industryScore 任务自包含。
             const stock = await dataLayer.stocks.get(symbol).catch(() => undefined)
             if (stock?.industryCode) {
               const value = await dataLayer.industryScores.getLatestByCode(stock.industryCode)
@@ -169,7 +186,7 @@ export class QueryBuilder {
     }
 
     // --- 交易信号 ---
-    if (params.includeSignals) {
+    if (p.includeSignals) {
       dimensions.push('signals')
       tasks.push(
         (async (): Promise<TaskResult> => {
@@ -187,14 +204,13 @@ export class QueryBuilder {
     }
 
     // --- 关联新闻（通过 newsStockMap 多对多关联） ---
-    if (params.includeNews) {
+    if (p.includeNews) {
       dimensions.push('news')
       tasks.push(
         (async (): Promise<TaskResult> => {
           try {
             const mappings = await dataLayer.newsStockMap.listBySymbol(symbol)
             const newsList: NewsArticle[] = []
-            // 并行获取所有关联新闻
             const newsResults = await Promise.allSettled(
               mappings.map((m) => dataLayer.news.get(m.newsId)),
             )
@@ -230,26 +246,31 @@ export class QueryBuilder {
     }
 
     logger.info(`[QueryBuilder] queryStock: ${symbol}, dimensions=[${dimensions.join(',')}]`)
-    return data
+    return ok(data)
   }
 
   /**
    * 批量查询多只股票的综合数据
    * @param symbols 股票代码列表
    * @param params 查询参数（不含 symbol）
-   * @returns Map<symbol, QueryBuilderResult>
+   * @returns Result<Map<symbol, QueryBuilderResult>>，单标的失败仅记录日志并跳过
    */
   async queryStocksBatch(
     symbols: string[],
     params: Omit<UnifiedStockQuery, 'symbol'>,
-  ): Promise<Map<string, QueryBuilderResult>> {
-    const results = new Map<string, QueryBuilderResult>()
+  ): Promise<Result<Map<string, QueryBuilderResult>>> {
+    const map = new Map<string, QueryBuilderResult>()
     // 串行查询避免 IndexedDB 事务竞争
     for (const symbol of symbols) {
-      results.set(symbol, await this.queryStock({ ...params, symbol }))
+      const res = await this.queryStock({ ...params, symbol })
+      if (res.ok) {
+        map.set(symbol, res.value)
+      } else {
+        logger.warn(`[QueryBuilder] queryStocksBatch 跳过失败标的: ${symbol}`)
+      }
     }
-    logger.info(`[QueryBuilder] queryStocksBatch: ${symbols.length} symbols queried`)
-    return results
+    logger.info(`[QueryBuilder] queryStocksBatch: ${symbols.length} symbols, ${map.size} succeeded`)
+    return ok(map)
   }
 }
 

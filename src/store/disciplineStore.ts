@@ -21,11 +21,12 @@
 import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
 import { getLogger } from '@/lib/logger'
-import { dataLayer } from '@/data/dataLayer'
 import { dataBridge } from '@/core/databridge'
+import { EnvelopeFactory } from '@/core/envelope'
 import { refreshCoordinator } from '@/core/refreshCoordinator'
 import {
   ENVELOPE_ACTION,
+  ENVELOPE_TARGET,
   MODULE_ID,
   STORE_NAME,
   type EnvelopeAction,
@@ -45,6 +46,7 @@ import { classifyErrors } from '@/services/trading/tradeErrorClassifier'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { withBroadcast } from '@/store/helpers/withBroadcast'
 
+import { nanoid } from 'nanoid'
 const logger = getLogger()
 
 // ============================================================
@@ -87,7 +89,7 @@ export interface DisciplineState {
    * 重置 store 到初始空状态。
    */
   reset: () => void
-  /** 加载全部交易记录（封装 dataLayer.orders.list，避免页面直接调用 dataLayer） */
+  /** 加载全部交易记录（委托给 orderStore.refresh，避免页面直接调用 dataLayer） */
   loadOrders: () => Promise<Order[]>
   /** 同步生成交易复盘报告（封装 generateReview，避免页面直接调用 Service） */
   generateReviewReport: (orders: Order[]) => TradeReviewReport
@@ -202,11 +204,22 @@ export const useDisciplineStore = create<DisciplineState>()(
           ...derived,
         }
 
-        const saveResult = await dataLayer.tradeReviews.save(record)
-        if (!saveResult.success) {
-          logger.warn('[disciplineStore] 复盘摘要持久化失败', { error: saveResult.error })
-        } else {
+        try {
+          await dataBridge.forward(
+            EnvelopeFactory.create(
+              {
+                source: MODULE_ID.tradeReviews,
+                target: ENVELOPE_TARGET.db,
+                action: ENVELOPE_ACTION.saveTradeReview,
+                traceId: `discipline-save-${nanoid(8)}`,
+              },
+              record,
+            ),
+          )
           logger.info('[disciplineStore] 复盘摘要已持久化')
+        } catch (err) {
+          const saveMessage = err instanceof Error ? err.message : String(err)
+          logger.warn('[disciplineStore] 复盘摘要持久化失败', { error: saveMessage })
         }
 
         set({
@@ -273,7 +286,16 @@ export const useDisciplineStore = create<DisciplineState>()(
 
       try {
         logger.info('[disciplineStore] refresh 开始')
-        const record = await dataLayer.tradeReviews.getLatest() as TradeReviewRecord | null
+        const queryResult = await dataBridge.query<TradeReviewRecord | null>({
+          action: ENVELOPE_ACTION.queryGet,
+          store: STORE_NAME.tradeReviews,
+          source: MODULE_ID.tradeReviews,
+          key: 'latest',
+        })
+        if (!queryResult.success) {
+          throw new Error(queryResult.error ?? '读取复盘记录失败')
+        }
+        const record = queryResult.data ?? null
 
         if (!record) {
           logger.info('[disciplineStore] 未找到已持久化的复盘记录')
@@ -325,9 +347,10 @@ export const useDisciplineStore = create<DisciplineState>()(
     },
 
     loadOrders: async () => {
-      logger.info('[disciplineStore] loadOrders 开始')
+      logger.info('[disciplineStore] loadOrders 开始（委托给 orderStore）')
       try {
-        const orders = await dataLayer.orders.list()
+        await useOrderStore.getState().refresh()
+        const orders = useOrderStore.getState().orders
         logger.info(`[disciplineStore] loadOrders 完成: ${orders.length} 笔`)
         return orders
       } catch (err) {
@@ -357,7 +380,7 @@ export const useDisciplineStore = create<DisciplineState>()(
 // ============================================================
 
 /** 本模块 source 标识，用于订阅时 source 过滤，防止自激 */
-const DISCIPLINE_STORE_SOURCE = MODULE_ID.trading
+const DISCIPLINE_STORE_SOURCE = MODULE_ID.tradeReviews
 
 /** 去抖合并窗口（毫秒）：短时间内多次变更合并为一次 recalculate */
 const DEBOUNCE_MS = 100

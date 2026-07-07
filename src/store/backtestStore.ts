@@ -255,7 +255,7 @@ export function initBacktestStoreSubscriptions(): () => void {
     return _unsubscribeOrders
   }
 
-  _unsubscribeOrders = dataBridge.subscribe(
+  const dataBridgeUnsub = dataBridge.subscribe(
     STORE_NAME.orders,
     (envelope) => {
       // source 过滤：跳过本模块发出的事件，防止自激
@@ -287,14 +287,18 @@ export function initBacktestStoreSubscriptions(): () => void {
 
   logger.info('[backtestStore] DataBridge orders subscriptions initialized')
 
-  return () => {
+  const cleanup = () => {
     if (_debounceTimer) {
       clearTimeout(_debounceTimer)
       _debounceTimer = null
     }
     _pendingEvents = []
-    _unsubscribeOrders?.()
+    dataBridgeUnsub()
     _unsubscribeOrders = null
     logger.info('[backtestStore] DataBridge subscriptions destroyed')
   }
+
+  // 以返回的 cleanup 作为已初始化的守卫，保证重复初始化返回同一函数引用
+  _unsubscribeOrders = cleanup
+  return cleanup
 }

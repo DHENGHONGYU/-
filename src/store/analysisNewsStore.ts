@@ -10,7 +10,7 @@
 // @migration 从 analysis/NewsPage.tsx 的 4 个 useState 迁移而来
 import { create } from 'zustand'
 import type { NewsArticle } from '@/data/types'
-import type { NewsFilterState } from '@/components/news/NewsFilterPanel'
+import type { NewsFilterState } from '@/types/modules/news.types'
 import { listNews, saveNewsArticles } from '@/services/news/newsService'
 import { generateMockArticles } from '@/services/news/newsService'
 import {

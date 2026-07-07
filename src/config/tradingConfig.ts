@@ -8,10 +8,10 @@
 export type SignalDirection = 'buy' | 'sell' | 'hold' | 'watch'
 
 export interface SignalThresholds {
-  peBuyPercentile: number
-  pbBuyPercentile: number
-  peSellPercentile: number
-  pbSellPercentile: number
+  /** PE 绝对值上限（PE < 此值视为估值安全） */
+  peMax: number
+  /** PB 绝对值上限（PB < 此值视为估值安全） */
+  pbMax: number
   dipToMA20Pct: number
   dipRsi14Max: number
   pivotVolumeRatioMin: number
@@ -50,10 +50,8 @@ export function getDefaultTradingConfig(): TradingConfig {
   return {
     version: '0.9.3',
     signalThresholds: {
-      peBuyPercentile: 25,
-      pbBuyPercentile: 20,
-      peSellPercentile: 75,
-      pbSellPercentile: 80,
+      peMax: 25,
+      pbMax: 20,
       dipToMA20Pct: 8,
       dipRsi14Max: 30,
       pivotVolumeRatioMin: 1.5,

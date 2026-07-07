@@ -162,6 +162,7 @@ import {
   initMarketDataStoreSubscriptions,
 } from './marketDataStore'
 import { marketDataAdapter } from '@/services/data-collector/MarketDataAdapter'
+import { assertContract } from '../../tests/contracts'
 
 function createMockMarketDataItem(overrides: Record<string, unknown> = {}) {
   return {
@@ -215,6 +216,9 @@ describe('marketDataStore', () => {
     expect(state.errorMap).toEqual({})
     expect(state.taskMap).toEqual({})
     expect(state.globalError).toBeNull()
+
+    // 验证初始状态符合契约
+    assertContract('MarketDataState', state, '初始状态')
   })
 
   // ============================================================

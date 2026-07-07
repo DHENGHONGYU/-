@@ -69,6 +69,7 @@ import {
   v6ScoreStore,
   dailyQuoteStore,
   orderStore,
+  financialReportStore,
   signalStore,
   researchLogStore,
   executionLogStore,
@@ -183,7 +184,7 @@ function makeExecutionLog(overrides: Record<string, unknown> = {}) {
 
 function makeMissingReport(overrides: Record<string, unknown> = {}) {
   return {
-    id: 1,
+    id: '1',
     symbol: '600519',
     reportType: 'kline_missing',
     severity: 'high',
@@ -1346,7 +1347,7 @@ describe('dataLayer', () => {
         createdAt: 1700000000000,
       })
       expect(result.success).toBe(true)
-      expect(result.data?.id).toBeTypeOf('number')
+      expect(result.data?.id).toBeTypeOf('string')
     })
 
     it('list: 返回全部', async () => {
@@ -1366,7 +1367,7 @@ describe('dataLayer', () => {
     it('listBySeverity: 按严重程度过滤', async () => {
       mockQueryListSuccess([
         makeMissingReport({ severity: 'high' }),
-        makeMissingReport({ id: 2, severity: 'low' }),
+        makeMissingReport({ id: '2', severity: 'low' }),
       ])
 
       const result = await missingReportStore.listBySeverity('high')
@@ -1378,7 +1379,7 @@ describe('dataLayer', () => {
       mockQueryGetSuccess(makeMissingReport({ retryCount: 2 }))
       mockForwardSuccess()
 
-      const result = await missingReportStore.incrementRetry(1)
+      const result = await missingReportStore.incrementRetry('1')
       expect(result.success).toBe(true)
       expect(result.data?.retryCount).toBe(3)
     })
@@ -1386,7 +1387,7 @@ describe('dataLayer', () => {
     it('incrementRetry: 报告不存在返回失败', async () => {
       mockQueryGetSuccess(undefined)
 
-      const result = await missingReportStore.incrementRetry(999)
+      const result = await missingReportStore.incrementRetry('999')
       expect(result.success).toBe(false)
       expect(result.error).toContain('not found')
     })
@@ -1395,7 +1396,7 @@ describe('dataLayer', () => {
       mockQueryGetSuccess(makeMissingReport())
       mockForwardFail('写入失败')
 
-      const result = await missingReportStore.incrementRetry(1)
+      const result = await missingReportStore.incrementRetry('1')
       expect(result.success).toBe(false)
       expect(result.error).toBe('写入失败')
     })
@@ -1501,6 +1502,7 @@ describe('dataLayer', () => {
       expect(dataLayer.stocks).toBe(stockStore)
       expect(dataLayer.v6Scores).toBe(v6ScoreStore)
       expect(dataLayer.dailyQuotes).toBe(dailyQuoteStore)
+      expect(dataLayer.financialReports).toBe(financialReportStore)
       expect(dataLayer.intelligentScores).toBe(intelligentScoreStore)
       expect(dataLayer.industryScores).toBe(industryScoreStore)
       expect(dataLayer.researchLogs).toBe(researchLogStore)
@@ -1524,8 +1526,8 @@ describe('dataLayer', () => {
       expect(dataLayer.manager).toBe(dataManager)
     })
 
-    it('共计 24 个属性', () => {
-      expect(Object.keys(dataLayer)).toHaveLength(24)
+    it('共计 25 个属性', () => {
+      expect(Object.keys(dataLayer)).toHaveLength(26)
     })
   })
 

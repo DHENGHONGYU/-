@@ -23,21 +23,22 @@ import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'
 import type { ResearchStatus } from '@/config/dbConfig'
 import {
+  DATA_SOURCE,
   DEFAULT_POOL_GROUP,
   ENVELOPE_ACTION,
   ENVELOPE_TARGET,
   MODULE_ID,
+  RESEARCH_STATUS,
   STORE_NAME,
 } from '@/config/dbConfig'
 import type { Stock } from '@/data/types'
-import { dataLayer } from '@/data/dataLayer'
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
 import { isValidTransition } from '@/core/poolTransitionEngine'
-import { db } from '@/data/db'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { withBroadcast } from '@/store/helpers/withBroadcast'
 
+import { nanoid } from 'nanoid'
 const logger = getLogger()
 
 // ============================================================
@@ -116,12 +117,21 @@ export const usePoolStore = create<PoolState>((set, get) => ({
     set({ isRefreshing: true, loading: isFirstLoad, error: null })
 
     try {
-      if (!db.isReady()) {
-        logger.info('[poolStore] 等待数据库初始化完成...')
-        await db.ready()
-        logger.info('[poolStore] 数据库已就绪，继续刷新')
+      logger.info('[poolStore] refresh 开始 DataBridge.query', { source: MODULE_ID.stockpool, store: STORE_NAME.stocks, action: ENVELOPE_ACTION.queryList })
+      const result = await dataBridge.query<Stock[]>({
+        action: ENVELOPE_ACTION.queryList,
+        store: STORE_NAME.stocks,
+        source: MODULE_ID.stockpool,
+      })
+      logger.info('[poolStore] refresh DataBridge.query 返回', { success: result.success, count: Array.isArray(result.data) ? result.data.length : 0, error: result.error })
+
+      if (!result.success) {
+        const errorMessage = result.error ?? '查询股票池失败'
+        logger.error(`[poolStore] refresh 查询失败: ${errorMessage}`)
+        throw new Error(errorMessage)
       }
-      const list = await dataLayer.stocks.list()
+
+      const list = result.data ?? []
       set({
         stocks: list,
         loading: false,
@@ -146,22 +156,64 @@ export const usePoolStore = create<PoolState>((set, get) => ({
   // addStock：添加股票
   // ----------------------------------------------------------
   addStock: async (stock) => {
-    logger.info(`[poolStore] addStock: ${stock.name}(${stock.symbol})`)
+    const normalizedSymbol = stock.symbol.trim().toUpperCase()
+    logger.info(`[poolStore] addStock: ${stock.name}(${normalizedSymbol})`)
     set({ error: null })
 
-    const result = await dataLayer.stocks.add(stock)
-    if (!result.success) {
-      const message = result.error ?? '添加股票失败'
+    try {
+      // 1. 检查是否已存在（保持与原 dataLayer.stocks.add 语义一致）
+      logger.debug('[poolStore] addStock 查询是否已存在', { symbol: normalizedSymbol })
+      const existingResult = await dataBridge.query<Stock>({
+        action: ENVELOPE_ACTION.queryGet,
+        store: STORE_NAME.stocks,
+        key: normalizedSymbol,
+        source: MODULE_ID.stockpool,
+      })
+      logger.debug('[poolStore] addStock 存在性查询结果', { symbol: normalizedSymbol, exists: existingResult.success && !!existingResult.data })
+
+      if (existingResult.success && existingResult.data) {
+        const message = `${stock.name}(${normalizedSymbol}) 已存在`
+        logger.warn(`[poolStore] addStock 失败: ${message}`)
+        set({ error: message })
+        return false
+      }
+
+      // 2. 构造完整 Stock 并发送 insertStock envelope
+      const fullStock: Stock = {
+        ...stock,
+        symbol: normalizedSymbol,
+        researchStatus: stock.researchStatus ?? RESEARCH_STATUS.candidate,
+        source: stock.source ?? DATA_SOURCE.manual,
+        group: stock.group ?? DEFAULT_POOL_GROUP,
+        dataVersion: 1,
+        ingestedAt: Date.now(),
+        updatedAt: Date.now(),
+      }
+
+      logger.info('[poolStore] addStock 发送 insertStock envelope', { symbol: normalizedSymbol, researchStatus: fullStock.researchStatus })
+      const envelope = EnvelopeFactory.create(
+        {
+          source: MODULE_ID.stockpool,
+          target: ENVELOPE_TARGET.db,
+          action: ENVELOPE_ACTION.insertStock,
+          traceId: `pool-add-${nanoid(8)}-${normalizedSymbol}`,
+        },
+        fullStock,
+      )
+
+      await dataBridge.forward(envelope)
+
+      // 写操作已通过 DataBridge 广播，订阅会触发 refresh，此处无需手动更新
+      logger.info(`[poolStore] addStock 成功: ${normalizedSymbol}`)
+      // D-3: 广播股票池变更事件
+      withBroadcast(EVENT_NAMES.STOCK_POOL_CHANGED, { action: 'add', symbol: normalizedSymbol })
+      return true
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
       logger.error(`[poolStore] addStock 失败: ${message}`)
       set({ error: message })
       return false
     }
-
-    // 写操作已通过 DataBridge 广播，订阅会触发 refresh，此处无需手动更新
-    logger.info(`[poolStore] addStock 成功: ${stock.symbol}`)
-    // D-3: 广播股票池变更事件
-    withBroadcast(EVENT_NAMES.STOCK_POOL_CHANGED, { action: 'add', symbol: stock.symbol })
-    return true
   },
 
   // ----------------------------------------------------------
@@ -188,7 +240,7 @@ export const usePoolStore = create<PoolState>((set, get) => ({
           source: MODULE_ID.stockpool,
           target: ENVELOPE_TARGET.db,
           action: ENVELOPE_ACTION.updateStock,
-          traceId: `pool-update-${Date.now()}-${normalized}`,
+          traceId: `pool-update-${nanoid(8)}-${normalized}`,
         },
         { symbol: normalized, ...updates },
       )
@@ -215,18 +267,30 @@ export const usePoolStore = create<PoolState>((set, get) => ({
     logger.info(`[poolStore] deleteStock: ${normalized}`)
     set({ error: null })
 
-    const result = await dataLayer.stocks.remove(normalized)
-    if (!result.success) {
-      const message = result.error ?? '删除股票失败'
+    try {
+      logger.info('[poolStore] deleteStock 发送 deleteStock envelope', { symbol: normalized })
+      const envelope = EnvelopeFactory.create(
+        {
+          source: MODULE_ID.stockpool,
+          target: ENVELOPE_TARGET.db,
+          action: ENVELOPE_ACTION.deleteStock,
+          traceId: `pool-delete-${nanoid(8)}-${normalized}`,
+        },
+        { symbol: normalized },
+      )
+
+      await dataBridge.forward(envelope)
+
+      logger.info(`[poolStore] deleteStock 成功: ${normalized}`)
+      // D-3: 广播股票池变更事件
+      withBroadcast(EVENT_NAMES.STOCK_POOL_CHANGED, { action: 'delete', symbol: normalized })
+      return true
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
       logger.error(`[poolStore] deleteStock 失败: ${message}`)
       set({ error: message })
       return false
     }
-
-    logger.info(`[poolStore] deleteStock 成功: ${normalized}`)
-    // D-3: 广播股票池变更事件
-    withBroadcast(EVENT_NAMES.STOCK_POOL_CHANGED, { action: 'delete', symbol: normalized })
-    return true
   },
 
   // ----------------------------------------------------------
@@ -254,18 +318,30 @@ export const usePoolStore = create<PoolState>((set, get) => ({
       return false
     }
 
-    const result = await dataLayer.stocks.updateStatus(normalized, newStatus)
-    if (!result.success) {
-      const message = result.error ?? '更新状态失败'
+    try {
+      logger.info('[poolStore] updateStatus 发送 updateStock envelope', { symbol: normalized, newStatus })
+      const envelope = EnvelopeFactory.create(
+        {
+          source: MODULE_ID.stockpool,
+          target: ENVELOPE_TARGET.db,
+          action: ENVELOPE_ACTION.updateStock,
+          traceId: `pool-status-${nanoid(8)}-${normalized}`,
+        },
+        { symbol: normalized, researchStatus: newStatus, updatedAt: Date.now() },
+      )
+
+      await dataBridge.forward(envelope)
+
+      logger.info(`[poolStore] updateStatus 成功: ${normalized} → ${newStatus}`)
+      // D-3: 广播股票池变更事件
+      withBroadcast(EVENT_NAMES.STOCK_POOL_CHANGED, { action: 'updateStatus', symbol: normalized, newStatus })
+      return true
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
       logger.error(`[poolStore] updateStatus 失败: ${message}`)
       set({ error: message })
       return false
     }
-
-    logger.info(`[poolStore] updateStatus 成功: ${normalized} → ${newStatus}`)
-    // D-3: 广播股票池变更事件
-    withBroadcast(EVENT_NAMES.STOCK_POOL_CHANGED, { action: 'updateStatus', symbol: normalized, newStatus })
-    return true
   },
 
   // ----------------------------------------------------------
@@ -284,18 +360,30 @@ export const usePoolStore = create<PoolState>((set, get) => ({
       return false
     }
 
-    const result = await dataLayer.stocks.updateGroup(normalized, normalizedGroup)
-    if (!result.success) {
-      const message = result.error ?? '更新分组失败'
+    try {
+      logger.info('[poolStore] updateGroup 发送 updateStock envelope', { symbol: normalized, group: normalizedGroup })
+      const envelope = EnvelopeFactory.create(
+        {
+          source: MODULE_ID.stockpool,
+          target: ENVELOPE_TARGET.db,
+          action: ENVELOPE_ACTION.updateStock,
+          traceId: `pool-group-${nanoid(8)}-${normalized}`,
+        },
+        { symbol: normalized, group: normalizedGroup, updatedAt: Date.now() },
+      )
+
+      await dataBridge.forward(envelope)
+
+      logger.info(`[poolStore] updateGroup 成功: ${normalized} → ${normalizedGroup}`)
+      // D-3: 广播股票池变更事件
+      withBroadcast(EVENT_NAMES.STOCK_POOL_CHANGED, { action: 'updateGroup', symbol: normalized, group: normalizedGroup })
+      return true
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
       logger.error(`[poolStore] updateGroup 失败: ${message}`)
       set({ error: message })
       return false
     }
-
-    logger.info(`[poolStore] updateGroup 成功: ${normalized} → ${normalizedGroup}`)
-    // D-3: 广播股票池变更事件
-    withBroadcast(EVENT_NAMES.STOCK_POOL_CHANGED, { action: 'updateGroup', symbol: normalized, group: normalizedGroup })
-    return true
   },
 
   // ----------------------------------------------------------

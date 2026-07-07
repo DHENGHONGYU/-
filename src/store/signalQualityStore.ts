@@ -265,36 +265,11 @@ export const useSignalQualityStore = create<SignalQualityState>((set, get) => ({
 }))
 
 // ============================================================
-// 派生查询
+// 派生查询（从 .derived.ts 统一导出，含 memoizeByRef 缓存优化）
+// 设计原则：派生查询独立函数模式，通过 getState() 访问状态，不存入 State
+// 原 Store 中的 reviewsBySymbol/topSignalTypes 已由 .derived.ts 的缓存版本替代
 // ============================================================
-
-/** 获取指定 symbol 的复盘记录 */
-export function reviewsBySymbol(symbol: string): SignalReviewRecord[] {
-  return useSignalQualityStore.getState().reviews.filter((r) => r.symbol === symbol)
-}
-
-/** 获取准确率最高的 Top N 信号类型 */
-export function topSignalTypes(limit: number = 5): Array<{ type: string; accuracy: number; count: number }> {
-  const { reviews } = useSignalQualityStore.getState()
-  const typeMap = new Map<string, { correct: number; total: number }>()
-
-  for (const review of reviews) {
-    if (review.correct === undefined) continue
-    const entry = typeMap.get(review.type) ?? { correct: 0, total: 0 }
-    entry.total++
-    if (review.correct) entry.correct++
-    typeMap.set(review.type, entry)
-  }
-
-  return Array.from(typeMap.entries())
-    .map(([type, stats]) => ({
-      type,
-      accuracy: stats.total > 0 ? stats.correct / stats.total : 0,
-      count: stats.total,
-    }))
-    .sort((a, b) => b.accuracy - a.accuracy)
-    .slice(0, limit)
-}
+export * from './signalQualityStore.derived'
 
 // ============================================================
 // DataBridge 订阅

@@ -1,6 +1,6 @@
 const testDbName = typeof process !== 'undefined' ? process.env.TEST_DB_NAME : undefined
 export const DB_NAME = testDbName ? testDbName : ('V6ProDB' as const)
-export const DB_VERSION = 21 as const
+export const DB_VERSION = 23 as const
 
 // DB_VERSION 升级历史：
 // v3 → v4: 新增 daily_quotes 存储，用于保存 K线/行情数据。
@@ -17,6 +17,8 @@ export const DB_VERSION = 21 as const
 // v18 → v19: 新增 export_tasks、execution_strategies 存储（输出舱与执行模块）。
 // v19 → v20: 新增 trade_reviews 存储（交易纪律复盘）。
 // v20 → v21: 数据字典补全：完善 ACL 矩阵，新增 datalayer 模块的 read/write 权限。
+// v21 → v22: 新增 financial_reports 存储，支撑评分引擎财务数据管道。
+// v22 → v23: 新增 schema_migrations 存储（迁移追踪），落地 D-01 Schema 迁移框架。
 // @compliance AGENTS.md §八：DB_VERSION 必须与浏览器现有版本匹配或更高
 
 export const DEFAULT_POOL_GROUP = '默认分组' as const
@@ -96,6 +98,7 @@ export const ENVELOPE_ACTION = {
   deleteStock: 'DELETE_STOCK',
   saveScores: 'SAVE_SCORES',
   saveDailyQuotes: 'SAVE_DAILY_QUOTES',
+  saveFinancialReport: 'SAVE_FINANCIAL_REPORT',
   saveIntelligentScores: 'SAVE_INTELLIGENT_SCORES',
   saveIndustryScores: 'SAVE_INDUSTRY_SCORES',
   saveRotationScores: 'SAVE_ROTATION_SCORES',
@@ -146,6 +149,8 @@ export const ENVELOPE_ACTION = {
   deleteExecutionPlan: 'DELETE_EXECUTION_PLAN',
   /** 增加缺失报告重试次数 */
   incrementMissingReportRetry: 'INCREMENT_MISSING_REPORT_RETRY',
+  /** 保存观察列表快照（修复 C4：孤立的 watchlists 物理表写入通道） */
+  saveWatchlist: 'SAVE_WATCHLIST',
   // 查询操作（QueryEnvelope）
   /** 查询单条记录 */
   queryGet: 'QUERY_GET',
@@ -197,6 +202,7 @@ export const STORE_NAME = {
   signals: 'signals',
   researchLogs: 'research_logs',
   dailyQuotes: 'daily_quotes',
+  financialReports: 'financial_reports',
   rotationScores: 'rotation_scores',
   sectorScores: 'sector_scores',
   scoreDocs: 'score_docs',
@@ -213,6 +219,7 @@ export const STORE_NAME = {
   missingReports: 'missing_reports',
   portfolios: 'portfolios',
   tradeReviews: 'trade_reviews',
+  schemaMigrations: 'schema_migrations',
 } as const
 
 export type StoreName = (typeof STORE_NAME)[keyof typeof STORE_NAME]
@@ -235,7 +242,7 @@ export interface AclPermission {
 export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
   [MODULE_ID.fetcher]: {
     read: [],
-    write: [STORE_NAME.stocks, STORE_NAME.dailyQuotes],
+    write: [STORE_NAME.stocks, STORE_NAME.dailyQuotes, STORE_NAME.financialReports],
     actions: [DB_OPERATION.insert, DB_OPERATION.update],
   },
   [MODULE_ID.stockpool]: {

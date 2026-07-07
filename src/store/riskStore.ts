@@ -1,8 +1,13 @@
 /**
  * @module riskStore
  * @lifecycle @Global
+ * @reserved 预留未来风控面板使用
  * @description 风控网关状态管理。管理风控三态（正常/警告/阻塞）、裁决记录、
  * 回路状态（circuit breaker），提供 checkOrderRisk 调用入口及 DataBridge 订阅。
+ *
+ * @status 当前无 UI 消费方，但含完整风控逻辑（三态/回路/裁决记录）。
+ * 保留以备未来风控面板（如 SystemMonitor 或 RiskDashboard）展示风控状态。
+ * 删除前需确认未来无风控可视化需求。
  */
 
 import { create } from 'zustand'
@@ -219,3 +224,9 @@ function destroyRiskStoreSubscriptions(): void {
   _unsubscribeOrders = null
   logger.info('[riskStore] DataBridge subscriptions destroyed')
 }
+
+// ============================================================
+// 派生查询（从 .derived.ts 统一导出，含 memoizeByRef 缓存优化）
+// 设计原则：派生查询独立函数模式，通过 getState() 访问状态，不存入 State
+// ============================================================
+export * from './riskStore.derived'

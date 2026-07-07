@@ -1,8 +1,13 @@
 /**
  * @module store/chatStore
+ * @reserved 预留 cockpit 侧边栏 LLM 对话功能
  * @description  cockpit 侧边栏 LLM 聊天状态
  *
  * 原属于 marketDataStore，因属于独立 UI 状态域，拆分至此。
+ *
+ * @status 当前无 UI 消费方，但含完整 LLM 流式对话实现（streamingChat）。
+ * 保留以备 cockpit 侧边栏 AI 助手功能启用时使用。
+ * 删除前需确认未来无 LLM 对话界面需求。
  */
 
 import { create } from 'zustand'
@@ -10,6 +15,7 @@ import { getLogger } from '@/lib/logger'
 import { streamingChat } from '@/services/llm/llmGateway'
 import type { LlmConfig } from '@/config/llmConfig'
 
+import { nanoid } from 'nanoid'
 const logger = getLogger()
 
 export interface ChatMessage {
@@ -37,7 +43,7 @@ export const useChatStore = create<ChatState>((set) => ({
 
   sendMessage: async (content, config) => {
     const userMessage: ChatMessage = {
-      id: `chat-${Date.now()}`,
+      id: `chat-${nanoid(8)}`,
       role: 'user',
       content,
       timestamp: Date.now(),
@@ -53,7 +59,7 @@ export const useChatStore = create<ChatState>((set) => ({
 
     try {
       const assistantMessage: ChatMessage = {
-        id: `chat-${Date.now()}-assistant`,
+        id: `chat-${nanoid(8)}-assistant`,
         role: 'assistant',
         content: '',
         timestamp: Date.now(),
@@ -109,7 +115,7 @@ export const useChatStore = create<ChatState>((set) => ({
 
   addSystemMessage: (content) => {
     const message: ChatMessage = {
-      id: `chat-${Date.now()}-system`,
+      id: `chat-${nanoid(8)}-system`,
       role: 'system',
       content,
       timestamp: Date.now(),
@@ -117,3 +123,9 @@ export const useChatStore = create<ChatState>((set) => ({
     set((state) => ({ messages: [...state.messages, message] }))
   },
 }))
+
+// ============================================================
+// 派生查询（从 .derived.ts 统一导出，含 memoizeByRef 缓存优化）
+// 设计原则：派生查询独立函数模式，通过 getState() 访问状态，不存入 State
+// ============================================================
+export * from './chatStore.derived'

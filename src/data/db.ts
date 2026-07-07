@@ -1,9 +1,111 @@
 import { DB_NAME, DB_VERSION, DEFAULT_POOL_GROUP, STORE_NAME } from '@/config/dbConfig'
 import { getLogger } from '@/lib/logger'
+import type { LogContext } from '@/lib/logger'
 
+import { nanoid } from 'nanoid'
 const logger = getLogger()
 
 const STORE_NAMES = Object.values(STORE_NAME)
+
+// ── 迁移框架（D-01：IndexedDB Schema 版本化与迁移） ─────────────
+export interface MigrationContext {
+  /** 当前数据库实例，可在 onupgradeneeded 中 createObjectStore / createIndex */
+  db: IDBDatabase
+  /** 升级事务；仅 onupgradeneeded 期间可用，用于数据回填；非升级场景为 undefined */
+  tx?: IDBTransaction
+}
+
+export interface Migration {
+  /** 触发该迁移的目标版本号（严格递增） */
+  version: number
+  /** 迁移名称，用于日志与审计 */
+  name: string
+  /** 正向迁移逻辑；必须同步执行（在 onupgradeneeded 中调用，禁止 await） */
+  up(ctx: MigrationContext): void
+  /** 反向回滚逻辑；迁移失败时被逆序调用 */
+  down?(ctx: MigrationContext): void
+}
+
+interface LoggerLike {
+  info(message: string, context?: LogContext): void
+  warn(message: string, context?: LogContext): void
+  error(message: string, context?: LogContext): void
+  debug(message: string, context?: LogContext): void
+}
+
+/**
+ * 按版本顺序执行待应用的迁移。
+ * - 仅执行 oldVersion < m.version <= newVersion 的迁移
+ * - 任一迁移抛错时，已成功的迁移按逆序执行 down() 回滚，并向上抛出
+ * - 全程结构化日志，便于排障
+ */
+export function runMigrations(
+  db: IDBDatabase,
+  oldVersion: number,
+  newVersion: number,
+  migrations: readonly Migration[],
+  log: LoggerLike,
+  tx?: IDBTransaction,
+): void {
+  const pending = migrations
+    .filter((m) => m.version > oldVersion && m.version <= newVersion)
+    .sort((a, b) => a.version - b.version)
+
+  if (pending.length === 0) {
+    return
+  }
+
+  const applied: Migration[] = []
+  try {
+    for (const m of pending) {
+      log.info(`[DB] Migration up → v${m.version}: ${m.name}`)
+      m.up({ db, tx })
+      applied.push(m)
+    }
+    const tags = applied.map((m) => `v${m.version}`).join(', ')
+    log.info(`[DB] Migrations applied: [${tags}]`)
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    const last = applied.at(-1)?.version
+    log.error(`[DB] Migration failed at v${last}; rolling back`, { error: message })
+    for (let i = applied.length - 1; i >= 0; i--) {
+      const m = applied[i]
+      if (!m) continue
+      if (m.down) {
+        try {
+          log.warn(`[DB] Migration rollback ↓ v${m.version}: ${m.name}`)
+          m.down({ db, tx })
+        } catch (downErr) {
+          log.error(`[DB] Rollback failed at v${m.version}`, {
+            error: downErr instanceof Error ? downErr.message : String(downErr),
+          })
+        }
+      }
+    }
+    throw err
+  }
+}
+
+/**
+ * 已注册迁移表（按 version 升序）。
+ * 新增 Schema 变更时：在 dbConfig 中将 DB_VERSION +1，并在此处追加一条 Migration。
+ */
+export const MIGRATIONS: readonly Migration[] = [
+  {
+    version: DB_VERSION,
+    name: 'seed_schema_migrations_tracker',
+    up({ tx }) {
+      if (!tx) return
+      const store = tx.objectStore(STORE_NAME.schemaMigrations)
+      store.put({
+        id: 'framework_initialized',
+        version: DB_VERSION,
+        appliedAt: Date.now(),
+        note: 'schema migration framework initialized',
+      })
+    },
+  },
+]
 
 let dbInstance: IDBDatabase | null = null
 
@@ -71,8 +173,10 @@ async function openDB(): Promise<IDBDatabase> {
     }
 
     request.onupgradeneeded = (event) => {
-      const db = (event.target as IDBOpenDBRequest).result
+      const req = event.target as IDBOpenDBRequest | null
+      const db = req?.result as IDBDatabase
       const oldVersion = (event).oldVersion
+      const upgradeTx = req?.transaction
       logger.info(`[DB] Upgrade needed: v${oldVersion} → v${DB_VERSION} | Existing stores: [${Array.from(db.objectStoreNames).join(', ')}]`)
 
       if (!db.objectStoreNames.contains(STORE_NAME.stocks)) {
@@ -344,6 +448,28 @@ async function openDB(): Promise<IDBDatabase> {
       } else {
         logger.debug(`[DB] ObjectStore "${STORE_NAME.tradeReviews}" already exists`)
       }
+
+      // v22 新增：财务数据报告
+      if (!db.objectStoreNames.contains(STORE_NAME.financialReports)) {
+        logger.info(`[DB] Creating objectStore: "${STORE_NAME.financialReports}" with keyPath: "symbol"`)
+        const financialReportStore = db.createObjectStore(STORE_NAME.financialReports, { keyPath: 'symbol' })
+        financialReportStore.createIndex('by-symbol', 'symbol', { unique: true })
+        financialReportStore.createIndex('by-report-date', 'reportDate', { unique: false })
+        financialReportStore.createIndex('by-updated-at', 'updatedAt', { unique: false })
+      } else {
+        logger.debug(`[DB] ObjectStore "${STORE_NAME.financialReports}" already exists`)
+      }
+
+      // D-01：迁移追踪存储（schema_migrations）
+      if (!db.objectStoreNames.contains(STORE_NAME.schemaMigrations)) {
+        logger.debug(`[DB] Creating objectStore: "${STORE_NAME.schemaMigrations}"`)
+        db.createObjectStore(STORE_NAME.schemaMigrations, { keyPath: 'id' })
+      } else {
+        logger.debug(`[DB] ObjectStore "${STORE_NAME.schemaMigrations}" already exists`)
+      }
+
+      // ── D-01：运行已注册迁移（在基线 Schema 就绪后） ──
+      runMigrations(db, oldVersion, DB_VERSION, MIGRATIONS, logger, upgradeTx ?? undefined)
 
       logger.info(`[DB] Schema upgrade complete. Final stores: [${Array.from(db.objectStoreNames).join(', ')}]`)
     }
@@ -638,7 +764,7 @@ export class V6Database {
 export const db = new V6Database()
 
 export function generateId(): string {
-  return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`
+  return nanoid(16)
 }
 
 export function now(): number {

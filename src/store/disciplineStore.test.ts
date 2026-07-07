@@ -21,17 +21,8 @@ vi.mock('@/services/trading/tradeErrorClassifier', () => ({
   classifyErrors: mockClassifyErrors,
 }))
 
-const mockTradeReviewsSave = vi.hoisted(() => vi.fn())
-const mockTradeReviewsGetLatest = vi.hoisted(() => vi.fn())
-
-vi.mock('@/data/dataLayer', () => ({
-  dataLayer: {
-    tradeReviews: {
-      save: mockTradeReviewsSave,
-      getLatest: mockTradeReviewsGetLatest,
-    },
-  },
-}))
+const mockForward = vi.hoisted(() => vi.fn().mockResolvedValue(undefined))
+const mockQuery = vi.hoisted(() => vi.fn())
 
 const mockOrderStoreRefresh = vi.hoisted(() => vi.fn())
 const mockOrderStoreOrders = vi.hoisted(() => [] as Order[])
@@ -58,7 +49,7 @@ const { mockSubscribe, capturedCallbacks, unsubscribes } = vi.hoisted(() => {
 })
 
 vi.mock('@/core/databridge', () => ({
-  dataBridge: { subscribe: mockSubscribe },
+  dataBridge: { subscribe: mockSubscribe, forward: mockForward, query: mockQuery },
 }))
 
 vi.mock('@/config/dbConfig', () => ({
@@ -67,9 +58,12 @@ vi.mock('@/config/dbConfig', () => ({
     updateOrder: 'UPDATE_ORDER',
     deleteOrder: 'DELETE_ORDER',
     tradeActionExecuted: 'TRADE_ACTION_EXECUTED',
+    saveTradeReview: 'SAVE_TRADE_REVIEW',
+    queryGet: 'QUERY_GET',
   },
-  MODULE_ID: { trading: 'trading' },
-  STORE_NAME: { orders: 'orders' },
+  ENVELOPE_TARGET: { db: 'db' },
+  MODULE_ID: { trading: 'trading', tradeReviews: 'tradeReviews' },
+  STORE_NAME: { orders: 'orders', tradeReviews: 'trade_reviews' },
 }))
 
 // ============================================================
@@ -197,6 +191,8 @@ beforeEach(() => {
   capturedCallbacks.clear()
   unsubscribes.length = 0
   mockOrderStoreOrders.length = 0
+  mockForward.mockResolvedValue(undefined)
+  mockQuery.mockResolvedValue({ success: true, data: null })
 
   // 清理模块级订阅状态
   const cleanup = initDisciplineStoreSubscriptions()
@@ -237,7 +233,6 @@ describe('useDisciplineStore', () => {
     const report = createMockReport()
     mockGenerateReviewAsync.mockResolvedValue(report)
     mockClassifyErrors.mockReturnValue(createMockClassification())
-    mockTradeReviewsSave.mockResolvedValue({ success: true })
 
     const orders = [createMockOrder()]
     await useDisciplineStore.getState().recalculate(orders)
@@ -251,26 +246,27 @@ describe('useDisciplineStore', () => {
     expect(state.error).toBeNull()
     expect(state.isRefreshing).toBe(false)
     expect(state.lastUpdated).toBeGreaterThan(0)
+    expect(mockForward).toHaveBeenCalledTimes(1)
   })
 
   it('recalculate: 未传入订单时从 orderStore 获取', async () => {
     const report = createMockReport()
     mockGenerateReviewAsync.mockResolvedValue(report)
     mockClassifyErrors.mockReturnValue(createMockClassification())
-    mockTradeReviewsSave.mockResolvedValue({ success: true })
 
     mockOrderStoreOrders.push(createMockOrder())
     await useDisciplineStore.getState().recalculate()
 
     expect(mockOrderStoreRefresh).toHaveBeenCalledTimes(1)
     expect(useDisciplineStore.getState().latestReport).toEqual(report)
+    expect(mockForward).toHaveBeenCalledTimes(1)
   })
 
   it('recalculate: 持久化失败应只 warn 不影响状态', async () => {
     const report = createMockReport()
     mockGenerateReviewAsync.mockResolvedValue(report)
     mockClassifyErrors.mockReturnValue(createMockClassification())
-    mockTradeReviewsSave.mockResolvedValue({ success: false, error: 'Save failed' })
+    mockForward.mockRejectedValue(new Error('Save failed'))
 
     await useDisciplineStore.getState().recalculate([createMockOrder()])
 
@@ -278,6 +274,7 @@ describe('useDisciplineStore', () => {
     expect(state.latestReport).toEqual(report)
     expect(state.loading).toBe(false)
     expect(state.error).toBeNull()
+    expect(mockForward).toHaveBeenCalledTimes(1)
   })
 
   it('recalculate: 异常时回滚到旧快照', async () => {
@@ -314,7 +311,6 @@ describe('useDisciplineStore', () => {
     const reviewPromise = new Promise<TradeReviewReport>((r) => { resolveReview = r })
     mockGenerateReviewAsync.mockReturnValue(reviewPromise)
     mockClassifyErrors.mockReturnValue(createMockClassification())
-    mockTradeReviewsSave.mockResolvedValue({ success: true })
 
     const promise = useDisciplineStore.getState().recalculate([createMockOrder()])
 
@@ -329,20 +325,23 @@ describe('useDisciplineStore', () => {
 
   it('refresh: 从持久化存储恢复', async () => {
     const report = createMockReport()
-    mockTradeReviewsGetLatest.mockResolvedValue({
-      id: 'latest',
-      generatedAt: 12345,
-      report,
-      tradeErrors: [{
-        type: 'stop_loss',
-        name: '止损错误',
-        severity: 'high',
-        psychologicalRoot: 'fear',
-        relatedOrderIds: [],
-      } as unknown as TradeError],
-      disciplineScore: 80,
-      skillRoadmap: ['a', 'b'],
-      psychologicalProfile: report.errorAnalysis.psychologicalProfile,
+    mockQuery.mockResolvedValue({
+      success: true,
+      data: {
+        id: 'latest',
+        generatedAt: 12345,
+        report,
+        tradeErrors: [{
+          type: 'stop_loss',
+          name: '止损错误',
+          severity: 'high',
+          psychologicalRoot: 'fear',
+          relatedOrderIds: [],
+        } as unknown as TradeError],
+        disciplineScore: 80,
+        skillRoadmap: ['a', 'b'],
+        psychologicalProfile: report.errorAnalysis.psychologicalProfile,
+      },
     })
 
     await useDisciplineStore.getState().refresh()
@@ -358,7 +357,7 @@ describe('useDisciplineStore', () => {
   })
 
   it('refresh: 无持久化记录时应清空 loading', async () => {
-    mockTradeReviewsGetLatest.mockResolvedValue(null)
+    mockQuery.mockResolvedValue({ success: true, data: null })
 
     await useDisciplineStore.getState().refresh()
 
@@ -376,7 +375,7 @@ describe('useDisciplineStore', () => {
       lastUpdated: 9999,
     })
 
-    mockTradeReviewsGetLatest.mockRejectedValue(new Error('DB error'))
+    mockQuery.mockResolvedValue({ success: false, error: 'DB error' })
 
     await useDisciplineStore.getState().refresh()
 
@@ -391,7 +390,7 @@ describe('useDisciplineStore', () => {
   it('refresh: 并发锁（isRefreshing=true 跳过）', async () => {
     useDisciplineStore.setState({ isRefreshing: true })
     await useDisciplineStore.getState().refresh()
-    expect(mockTradeReviewsGetLatest).not.toHaveBeenCalled()
+    expect(mockQuery).not.toHaveBeenCalled()
   })
 
   it('reset: 重置到初始状态', () => {

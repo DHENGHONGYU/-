@@ -1,8 +1,13 @@
 /**
  * @module rotationSignalStore
  * @lifecycle @Global
+ * @reserved 预留未来板块轮动功能使用
  * @description 轮动信号检测状态管理。管理板块轮动信号列表，
  * 提供信号检测、单板块检测等操作，以及 triggeredSignals/bySector 等派生查询。
+ *
+ * @status 当前无 UI 消费方，但含完整板块轮动信号检测逻辑。
+ * 保留以备未来板块轮动分析面板（如 SectorRotationHeatmap）使用。
+ * 删除前需确认未来无板块轮动可视化需求。
  *
  * @compliance
  * - 所有数据展示来自 rotationSignalDetector 服务，禁止硬编码
@@ -141,17 +146,8 @@ export const useRotationSignalStore = create<RotationSignalState>((set) => ({
 }))
 
 // ============================================================
-// 派生查询（Getters）
+// 派生查询（从 .derived.ts 统一导出，含 memoizeByRef 缓存优化）
+// 设计原则：派生查询独立函数模式，通过 getState() 访问状态，不存入 State
+// 原 Store 中的 triggeredSignals/bySector 已由 .derived.ts 的缓存版本替代
 // ============================================================
-
-/** 获取已触发的信号列表 */
-export function triggeredSignals(): RotationSignal[] {
-  const { signals } = useRotationSignalStore.getState()
-  return signals.filter((s) => s.triggered)
-}
-
-/** 按板块查询 */
-export function bySector(sectorId: string): RotationSignal | undefined {
-  const { signals } = useRotationSignalStore.getState()
-  return signals.find((s) => s.sectorId === sectorId)
-}
+export * from './rotationSignalStore.derived'

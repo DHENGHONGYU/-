@@ -30,7 +30,7 @@ import {
 } from '@/services/trading/tradingService'
 import type { TradingSignal } from '@/services/trading/signalGenerator'
 import type { Order, Portfolio, Stock, StrategyResult } from '@/data/types'
-import { eventBus } from '@/lib/eventBus'
+import { withBroadcast } from '@/lib/withBroadcast'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { useWatchlistStore } from './watchlistStore'
 import { useSignalAdviceStore } from './signalAdviceStore'
@@ -198,7 +198,7 @@ export const useTradingStore = create<TradingState>()((set, get) => ({
       if (result.success) {
         set({ message: `已买入 ${stock.symbol} ${quantity} 股` })
         await get().loadOrders()
-        eventBus.emit(EVENT_NAMES.ORDERS_CHANGED, { action: 'buy', symbol: stock.symbol, quantity })
+        withBroadcast(EVENT_NAMES.ORDERS_CHANGED, { action: 'buy', symbol: stock.symbol, quantity })
       } else {
         set({ message: result.error ?? '买入失败' })
       }
@@ -231,7 +231,7 @@ export const useTradingStore = create<TradingState>()((set, get) => ({
       if (result.success) {
         set({ message: `已卖出 ${stock.symbol} ${quantity} 股` })
         await get().loadOrders()
-        eventBus.emit(EVENT_NAMES.ORDERS_CHANGED, { action: 'sell', symbol: stock.symbol, quantity })
+        withBroadcast(EVENT_NAMES.ORDERS_CHANGED, { action: 'sell', symbol: stock.symbol, quantity })
       } else {
         set({ message: result.error ?? '卖出失败' })
       }

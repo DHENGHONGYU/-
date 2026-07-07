@@ -1,889 +1,170 @@
-import type {
+/**
+ * @fileoverview 数据层类型定义（barrel re-export）
+ *
+ * 原单文件 types.ts（914 行），现拆分为 13 个子模块，本文件作为统一入口。
+ * 所有 API 保持完全兼容，外部引用方无需修改任何 import 语句。
+ *
+ * 拆分结构（2026-07-07 PR-1）：
+ * - types/types.dataLayer.ts: L0 基础层（dbConfig re-export + DataLayerResult）
+ * - types/types.execution.ts: 执行计划域（ExecutionPlan/RiskCheckItem/ExecutionLog/MissingReport）
+ * - types/types.stock.ts: 股票基础域（Stock/FinancialReport/StockDataQuality/PoolGroupMeta）
+ * - types/types.score.ts: 评分域（V6Score/DimensionScore/IntelligentScore/IndustryScore）
+ * - types/types.order.ts: 订单域（Order/Watchlist）
+ * - types/types.portfolio.ts: 组合域（Portfolio/PortfolioHolding/RebalanceAction）
+ * - types/types.strategy.ts: 策略域（StrategyResult/HotSectorScore/ValuePitScore/DualStrategyResult）
+ * - types/types.signal.ts: 信号域（Signal/SignalSnapshot/ResearchLog）
+ * - types/types.marketData.ts: 行情数据域（KlineBar/DailyQuotes）
+ * - types/types.sector.ts: 板块评分域（SectorDefinition/SectorScoreRecord）
+ * - types/types.rotation.ts: 轮动域（RotationFactor/RotationSectorScore/MarketStyle）
+ * - types/types.scoreDoc.ts: 评分文档域（ScoreDocVersion/V6LayerScore/StrategySnapshot）
+ * - types/types.knowledge.ts: 知识库/资讯域（LocalDoc/NewsArticle/SentimentCache）
+ * - types/types.sevenDimensions.ts: 七维数据域（DataDimensionType/GlobalMeta/UnifiedStockData）
+ * - types.ts（本文件）: barrel re-export，保持原 API 兼容
+ *
+ * 使用方式：
+ * import type { Stock, Order, V6Score } from '@/data/types'
+ *
+ * @module data/types
+ * @updated 2026-07-07 - PR-1：拆分为 13 个子模块，保持原 API 兼容
+ */
+
+// ============================================================
+// L0 基础层（dbConfig re-export + DataLayerResult）
+// ============================================================
+export type {
   AccountType,
   DataSource,
   OrderDirection,
   OrderStatus,
   ResearchStatus,
-} from '@/config/dbConfig'
-
-// 从 dbConfig 重新导出，供其他模块使用
-export type { AccountType, DataSource, OrderDirection, OrderStatus, ResearchStatus }
-
-/**
- * 执行计划阶段枚举
- * 与 src/constants/execution.constants.ts 的 EXECUTION_PHASE 值保持一致
- */
-export type ExecutionPhase = 'plan' | 'confirmed' | 'pending' | 'executed' | 'cancelled' | 'reviewed'
-
-/** 执行计划 */
-export interface ExecutionPlan {
-  id: string
-  signalId?: string
-  symbol: string
-  name: string
-  phase: ExecutionPhase
-  direction: 'buy' | 'sell'
-  quantity: number
-  targetPrice: number
-  currentPrice?: number
-  rationale: string
-  confidence: number
-  riskChecks: RiskCheckItem[]
-  risk?: {
-    passed: boolean
-    preCheck: boolean
-    postCheck: boolean
-    issueCount: number
-    checks: RiskCheckItem[]
-    warnings?: string[]
-  }
-  sizing?: {
-    quantity: number
-    positionPct: number
-    reason?: string
-  }
-  result?: 'success' | 'failed' | 'partial'
-  orderId?: string
-  errorMessage?: string
-  accountType?: AccountType
-  confirmedAt?: number
-  executedAt?: number
-  reviewedAt?: number
-  createdAt: number
-  updatedAt?: number
-}
-
-/** 风险检查项 */
-export interface RiskCheckItem {
-  id: string
-  name: string
-  label: string
-  passed: boolean
-  detail: string
-  message: string
-  severity: 'low' | 'medium' | 'high' | 'blocker' | 'warning' | 'info'
-}
-
-/** 执行日志 */
-export interface ExecutionLog {
-  id: string
-  planId: string
-  symbol: string
-  action: string
-  actor?: string
-  phase: ExecutionPhase
-  timestamp: number
-  detail?: string
-  success?: boolean
-  errorMessage?: string
-  createdAt: number
-}
-
-/** 缺失报告 */
-export interface MissingReport {
-  id: number
-  symbol: string
-  reportType: string
-  severity: string
-  reason: string
-  detectedAt: number
-  retryCount: number
-  resolvedAt?: number
-  createdAt: number
-}
-
-export interface StockDataQuality {
-  basic: boolean
-  kline: boolean
-  finance: boolean
-  lastChecked?: number
-}
-
-export interface Stock {
-  symbol: string
-  name: string
-  price?: number
-  pe?: number
-  pb?: number
-  roe?: number
-  marketCap?: number
-  researchStatus: ResearchStatus
-  source: DataSource
-  dataVersion: number
-  dataQuality?: StockDataQuality
-  ingestedAt?: number
-  updatedAt?: number
-  /**
-   * 行业代码，用于主题映射与组合集中度控制。
-   * 建议采用申万/中信等行业分类编码。
-   */
-  industryCode?: string
-  /**
-   * 主题标签，一只股票可同时属于多个主题。
-   * 例如：['第四次工业革命稀缺核心资源', 'AI算力']。
-   */
-  theme?: string[]
-  /**
-   * 板块/ Sector 名称，用于展示与粗略分组。
-   */
-  sector?: string
-  /**
-   * 股票池分组名称，用户自定义的展示/筛选维度。
-   * 未指定时由业务层回退为默认分组。
-   */
-  group?: string
-}
-
-/**
- * 股票池分组元数据，用于 UI 展示分组选择器。
- */
-export interface PoolGroupMeta {
-  name: string
-}
-
-export interface V6Score {
-  symbol: string
-  score: number
-  factors: Record<string, number>
-  algorithmVersion: string
-  calculatedAt: number
-  dataVersion: number
-  /** 评分质量警告（当数据完整度低于 100% 时填充） */
-  qualityWarning?: string
-  // ── F4 扩展：v6-engine CompositeScore 字段 ──
-  /** 综合评级 */
-  rating?: 'strong_buy' | 'buy' | 'hold' | 'sell' | 'strong_sell'
-  /** 各层评分明细（layerId → { score, summary, weight }） */
-  layerDetails?: Record<string, { score: number; summary: string; weight: number }>
-  /** 风险汇总 */
-  allRisks?: string[]
-  /** 投资建议 */
-  recommendation?: string
-  /** 引擎版本号 */
-  engineVersion?: string
-}
-
-export interface DimensionScore {
-  name: string
-  score: number | null
-  rationale: string
-  evidence: string[]
-  weight: number
-}
-
-export interface IntelligentScore {
-  id?: number
-  symbol: string
-  overallScore: number | null
-  dimensionScores: DimensionScore[]
-  summary: string
-  basis: string
-  missingFields: string[]
-  sourceSnapshot: {
-    stock: Stock | undefined
-    fileNames: string[]
-    reportLength: number
-  }
-  configSnapshot: {
-    model: string
-    baseURL: string
-  }
-  modelResponse: string
-  dataVersion: number
-  scoredAt: number
-}
-
-export interface IndustryDimensionScore {
-  name: string
-  score: number | null
-  rationale: string
-  evidence: string[]
-  weight: number
-}
-
-export interface IndustryScore {
-  id?: number
-  code: string
-  name: string
-  overallScore: number | null
-  dimensionScores: IndustryDimensionScore[]
-  summary: string
-  basis: string
-  missingFields: string[]
-  sectorSnapshot: {
-    composite: number
-    recommendation: string
-    positionPct: string
-    subTracks: string[]
-  }
-  configSnapshot: {
-    model: string
-    baseURL: string
-  }
-  modelResponse: string
-  scoredAt: number
-}
-
-export interface Order {
-  id: string
-  symbol: string
-  direction: OrderDirection
-  quantity: number
-  price: number
-  amount: number
-  status: OrderStatus
-  accountType: AccountType
-  createdAt: number
-}
-
-export interface Watchlist {
-  id: string
-  name: string
-  items: string[]
-  createdAt: number
-  updatedAt: number
-}
-
-/**
- * 组合持仓明细（目标 vs 当前）。
- * 用于主题投资组合的构建、展示与再平衡。
- */
-export interface PortfolioHolding {
-  symbol: string
-  name: string
-  currentShares: number
-  currentWeight: number
-  targetWeight: number
-  targetShares: number
-  price: number
-  marketValue: number
-  score: number
-  rationale: string
-}
-
-/**
- * 投资组合快照。
- * 可由 portfolioBuilder 根据股票池、主题、评分实时计算生成。
- */
-export interface Portfolio {
-  id: string
-  name: string
-  theme: string
-  totalValue: number
-  cashReserve: number
-  holdings: PortfolioHolding[]
-  rebalancePlan: RebalanceAction[]
-  createdAt: number
-  updatedAt: number
-}
-
-/**
- * 再平衡动作：买入/卖出某只标的以接近目标权重。
- */
-export interface RebalanceAction {
-  symbol: string
-  action: 'buy' | 'sell' | 'hold'
-  shares: number
-  reason: string
-}
-
-/** 策略分类标签 */
-export type StrategyClassification =
-  | 'core-scarce'
-  | 'value-bargain'
-  | 'hot-momentum'
-  | 'excluded'
-
-/** 策略候选标的 */
-export interface StrategyCandidate {
-  symbol: string
-  name: string
-  composite: number
-  valuationScore: number | null
-  industryScore: number | null
-  momentum: number | null
-  sector: string | null
-  classification: StrategyClassification
-  reasons: string[]
-}
-
-/** 策略规则引擎输出结果 */
-export interface StrategyResult {
-  selected: StrategyCandidate[]
-  coreScarce: StrategyCandidate[]
-  valueBargain: StrategyCandidate[]
-  hotMomentum: StrategyCandidate[]
-  rejected: StrategyCandidate[]
-  summary: {
-    total: number
-    selectedCount: number
-    coreScarceCount: number
-    valueBargainCount: number
-    hotMomentumCount: number
-  }
-}
-
-/** 热门板块策略评分维度 */
-export interface HotSectorDimensionScores {
-  momentum: number
-  sentiment: number
-  technical: number
-  valuation: number
-  composite: number
-  marketEnv?: number
-}
-
-/** 热门板块策略评分，持久化于 hot_sector_scores Store */
-export interface HotSectorScore {
-  symbol: string
-  /** 板块/标的名称 */
-  name: string
-  score: number
-  dimensions: HotSectorDimensionScores
-  action: 'immediate' | 'probe' | 'ignore'
-  calculatedAt: number
-  dataVersion: number
-  qualityWarning?: string
-}
-
-/** 价值洼地策略评分维度 */
-export interface ValuePitDimensionScores {
-  catalyst: number
-  valuation: number
-  chip: number
-  rotation: number
-  liquidity: number
-  composite: number
-}
-
-/** 价值洼地策略评分，持久化于 value_pit_scores Store */
-export interface ValuePitScore {
-  symbol: string
-  /** 板块/标的名称 */
-  name: string
-  score: number
-  dimensions: ValuePitDimensionScores
-  rotationSignal: boolean
-  action: 'immediate' | 'probe' | 'wait' | 'ignore'
-  calculatedAt: number
-  dataVersion: number
-  qualityWarning?: string
-}
-
-/** 双策略编排引擎输出结果 */
-export interface DualStrategyResult {
-  hotSectorScores: HotSectorScore[]
-  valuePitScores: ValuePitScore[]
-  signals: Signal[]
-  watchlistCandidates: Array<{ symbol: string; reason: string }>
-  summary: {
-    total: number
-    hotSectorCount: number
-    valuePitCount: number
-    signalCount: number
-    watchlistCount: number
-  }
-}
-
-export interface SignalSnapshot {
-  pePercentile?: number
-  pbPercentile?: number
-  priceToMA20?: number
-  priceToMA60?: number
-  volumeRatio?: number
-  rsi14?: number
-  macdDirection?: 'red' | 'green' | 'neutral'
-}
-
-export interface Signal {
-  id: string
-  symbol: string
-  direction: 'buy' | 'sell' | 'hold' | 'watch'
-  type: string
-  strategy: string
-  confidence: number
-  rationale: string
-  snapshot: SignalSnapshot
-  createdAt: number
-}
-
-export interface ResearchLog {
-  id?: number
-  traceId: string
-  timestamp: number
-  actor: string
-  action: string
-  targetType: string
-  targetCode: string
-  payload?: string
-}
-
-export interface KlineBar {
-  date: string
-  open: number
-  high: number
-  low: number
-  close: number
-  volume: number
-  amount: number
-}
-
-export interface DailyQuotes {
-  symbol: string
-  latest: KlineBar
-  history: KlineBar[]
-  period: string
-  adjust: string
-  updatedAt: number
-}
-
-export interface DataLayerResult<T> {
-  success: boolean
-  data?: T
-  error?: string
-}
+} from './types/types.dataLayer'
+export type { DataLayerResult } from './types/types.dataLayer'
 
 // ============================================================
-// V6 Pro 迁移：板块评分体系 — 十五五规划 20 大新兴行业
+// 执行计划域
 // ============================================================
-
-/** 板块评分三维度 */
-export interface SectorScoreDimensions {
-  /** 十五五规划契合度 0-5 */
-  planAlignment: number
-  /** 政策支持力度 0-5 */
-  policySupport: number
-  /** 中美同等热度 0-5 */
-  usChinaParity: number
-}
-
-/** 中美对比数据 */
-export interface SectorUsChinaData {
-  chinaShare?: string
-  usStatus?: string
-  gap?: string
-}
-
-/** 板块定义（十五五规划新兴行业） */
-export interface SectorDefinition {
-  code: string
-  name: string
-  category: '新兴产业' | '未来产业' | '战略基础'
-  description: string
-  keywords: string[]
-  dimensions: SectorScoreDimensions
-  weight: { plan: number; policy: number; parity: number }
-  composite: number
-  isCore: boolean
-  usChina: SectorUsChinaData
-  keyStocks: Array<{ symbol: string; name: string }>
-  relatedConcepts: string[]
-}
-
-/** 板块-股票映射 */
-export interface SectorStockMapping {
-  sectorCode: string
-  sectorName: string
-  stockSymbols: string[]
-  matchType: 'primary' | 'secondary'
-}
-
-/** 板块评分记录（存入 IndexedDB） */
-export interface SectorScoreRecord {
-  id: string // sectorCode__date
-  sectorCode: string
-  scoreDate: string
-  dimensions: SectorScoreDimensions
-  composite: number
-  isCore: boolean
-  modelUsed: string
-  createdAt: string
-}
+export type {
+  ExecutionPhase,
+  ExecutionPlan,
+  RiskCheckItem,
+  ExecutionLog,
+  MissingReport,
+} from './types/types.execution'
 
 // ============================================================
-// V6 Pro 迁移：板块轮动量化策略
+// 股票基础域
 // ============================================================
-
-/** 市场风格周期 */
-export type MarketStyle = 'growth' | 'value' | 'balanced'
-
-/** 轮动因子子指标 */
-export interface RotationSubFactor {
-  code: string
-  name: string
-  score: number
-  calcMethod: string
-  dataSource: string
-  freq: string
-  fullRule: string
-  midRule: string
-  zeroRule: string
-  redLine?: string
-}
-
-/** 轮动因子 */
-export interface RotationFactor {
-  code: string
-  name: string
-  weight: number
-  maxScore: number
-  subCount: number
-  role: string
-  color: string
-  subs: RotationSubFactor[]
-}
-
-/** 轮动信号分级 */
-export interface RotationSignalGrade {
-  minResonance: number
-  maxResonance: number
-  label: string
-  signalType: string
-  position: string
-  action: string
-  color: string
-  bg: string
-}
-
-/** 综合得分分档 */
-export interface RotationScoreBucket {
-  min: number
-  label: string
-  pos: string
-  desc: string
-  color: string
-}
-
-/** 高景气抛售预警 */
-export interface RotationAlertLevel {
-  code: string
-  name: string
-  color: string
-  condition: string
-  action: string
-}
-
-/** 下跌性质判定结果 */
-export interface DeclineNature {
-  type: '杀逻辑' | '杀业绩' | '杀估值'
-  severity: '严重' | '中等' | '轻微'
-  action: string
-  color: string
-}
-
-/** 板块轮动评分记录（存入 IndexedDB） */
-export interface RotationSectorScore {
-  id: string // sectorCode__date
-  sectorCode: string
-  sectorName: string
-  swLevel1?: string
-  swLevel2?: string
-  swLevel3?: string
-  scoreDate: string
-  /** 景气因子得分 */
-  f1Jingqi: number
-  /** 资金因子得分 */
-  f2Zijin: number
-  /** 估值因子得分 */
-  f3Guzhi: number
-  /** β+相关系数得分 */
-  f4Beta: number
-  /** 量能因子得分 */
-  f5Nengliang: number
-  /** 综合总分 0-100 */
-  total: number
-  /** 共振强度 0-10 */
-  resonance: number
-  /** 信号标签 */
-  signal: string
-  /** 预警等级 */
-  alertLevel: string
-  /** 下跌性质 */
-  declineType: string
-  /** 相关股票池标的 */
-  poolStocks: Array<{ symbol: string; name: string; v6Composite?: number }>
-  /** 分析报告 */
-  analysisReport?: string
-  modelUsed: string
-  createdAt: string
-}
+export type {
+  StockDataQuality,
+  FinancialReport,
+  Stock,
+  PoolGroupMeta,
+} from './types/types.stock'
 
 // ============================================================
-// V6 Pro 迁移：评分文档版本库
+// 评分域
 // ============================================================
-
-/** V6 评分单维度 */
-export interface V6LayerScore {
-  score: number
-  reason: string
-  weight: number
-}
-
-/** 单只股票的一次评分文档版本 */
-export interface ScoreDocVersion {
-  docId: string // symbol__version__timestamp
-  symbol: string
-  stockName: string
-  version: number
-  scoreDate: string
-  composite: number
-  l3v: number
-  layers: Record<string, V6LayerScore>
-  recommendation: { key: string; label: string; color: string }
-  targetPrice: { bull: number; base: number; bear: number }
-  keyRisks: string[]
-  keyCatalysts: string[]
-  reportMd: string
-  modelUsed: string
-  market: string
-  industry?: string
-  changeFromPrev?: {
-    compositeDelta: number
-    l3vDelta: number
-    layerChanges: Record<string, number>
-  }
-  createdAt: string
-}
-
-/** 内部文件库统计 */
-export interface FileLibraryStats {
-  totalDocs: number
-  totalStocks: number
-  totalVersions: number
-  avgComposite: number
-  coreStocks: number
-  lastUpdate: string
-}
+export type {
+  V6Score,
+  DimensionScore,
+  IntelligentScore,
+  IndustryDimensionScore,
+  IndustryScore,
+} from './types/types.score'
 
 // ============================================================
-// V6 Pro 迁移：策略快照与版本管理
+// 订单域
 // ============================================================
-
-/** 策略分组快照 */
-export interface StrategyGroupSnapshot {
-  count: number
-  avgComposite: number
-  maxComposite: number
-  symbols: string[]
-  items: Array<{
-    symbol: string
-    name: string
-    composite: number
-    classification: string
-  }>
-}
-
-/** 策略快照 */
-export interface StrategySnapshot {
-  id: string
-  version: number
-  timestamp: number
-  date: string
-  time: string
-  stockCount: number
-  scoreCount: number
-  rotationCount: number
-  core: StrategyGroupSnapshot
-  hot: StrategyGroupSnapshot
-  value: StrategyGroupSnapshot
-  changeFromPrev?: {
-    totalChange: number
-    coreChange: { added: string[]; removed: string[] }
-    hotChange: { added: string[]; removed: string[] }
-    valueChange: { added: string[]; removed: string[] }
-    scoreChanges?: Array<{
-      symbol: string
-      name: string
-      oldComposite: number
-      newComposite: number
-      delta: number
-    }>
-  }
-  trigger: string
-}
+export type { Order, Watchlist } from './types/types.order'
 
 // ============================================================
-// V6 Pro 迁移：本地知识库
+// 组合域
 // ============================================================
-
-/** 本地知识库文档 */
-export interface LocalDoc {
-  id: string
-  symbol: string
-  name: string
-  content: string
-  category: '研报' | '财报' | '行业分析' | '新闻' | '策略笔记' | '其他'
-  tags: string[]
-  sourcePath: string
-  size: number
-  addedAt: number
-}
+export type {
+  PortfolioHolding,
+  Portfolio,
+  RebalanceAction,
+} from './types/types.portfolio'
 
 // ============================================================
-// V6 Pro 迁移：资讯与情感
+// 策略域
 // ============================================================
-
-/** 外部财经源抓取资讯 */
-export interface NewsArticle {
-  id: string
-  title: string
-  content: string
-  url: string
-  source: string
-  category: string
-  publishTime: string
-  fetchTime: string
-  sentiment: 'positive' | 'negative' | 'neutral'
-  sentimentConfidence: number
-  relatedStocks: string[]
-  keywords: string[]
-  hash: string
-}
-
-/** 股票-资讯多对多关联 */
-export interface NewsStockMap {
-  id: string // {symbol}_{newsId}
-  symbol: string
-  newsId: string
-  relevanceScore: number
-  isTitleMatch: boolean
-  isContentMatch: boolean
-  industryMatch: boolean
-}
-
-/** 情感分析缓存 */
-export interface SentimentCache {
-  id: string // sent_{contentHash}
-  contentHash: string
-  sentiment: 'positive' | 'negative' | 'neutral'
-  confidence: number
-  method: 'rule' | 'llm' | 'hybrid'
-  analyzedAt: number
-  llmModel?: string
-}
-
-/** 资讯收藏 */
-export interface NewsBookmark {
-  id: string
-  bookmarkedAt: number
-}
+export type {
+  StrategyClassification,
+  StrategyCandidate,
+  StrategyResult,
+  HotSectorDimensionScores,
+  HotSectorScore,
+  ValuePitDimensionScores,
+  ValuePitScore,
+  DualStrategyResult,
+} from './types/types.strategy'
 
 // ============================================================
-// V6 Pro 迁移：七维数据架构
+// 信号域
 // ============================================================
-
-/** 七维数据类型 */
-export type DataDimensionType =
-  | '01_basic'
-  | '02_kline'
-  | '03_chip'
-  | '04_events'
-  | '05_news'
-  | '06_industry'
-  | '07_index'
-
-/** 七维数据元数据 */
-export interface DataDimensionMeta {
-  code: DataDimensionType
-  name: string
-  description: string
-  storageStrategy: 'full' | 'lightweight'
-  filePattern: string
-}
-
-/** 单维度采集状态 */
-export interface DimensionStatus {
-  status: 'pending' | 'collecting' | 'completed' | 'failed'
-  records: number
-  updatedAt: string
-  hash?: string
-}
-
-/** 单股票元数据 */
-export interface StockMeta {
-  code: string
-  name: string
-  market: 'SH' | 'SZ' | 'BJ'
-  industry: string
-  addedAt: string
-  lastCollectTime: string | null
-  dimensions: Record<string, DimensionStatus>
-}
-
-/** 全局 meta.json 结构 */
-export interface GlobalMeta {
-  version: string
-  schemaVersion: string
-  createdAt: string
-  lastUpdated: string
-  stocks: StockMeta[]
-  statistics: {
-    totalStocks: number
-    totalRecords: number
-    totalNews: number
-    totalEvents: number
-    storageSizeMB: number
-  }
-}
+export type { SignalSnapshot, Signal, ResearchLog } from './types/types.signal'
 
 // ============================================================
-// V6 Pro 迁移：统一股票数据视图
+// 行情数据域
 // ============================================================
+export type { KlineBar, DailyQuotes } from './types/types.marketData'
 
-export interface UnifiedStockData {
-  symbol: string
-  name: string
-  price: number
-  change: number
-  changePct: number
-  volume: number
-  amount: number
-  open: number
-  high: number
-  low: number
-  prevClose: number
-  turnover: number | null
-  marketCap: number | null
-  pe: number | null
-  pb: number | null
-  roe: number | null
-  grossMargin: number | null
-  netMargin: number | null
-  revenueGrowth: number | null
-  profitGrowth: number | null
-  debtRatio: number | null
-  eps: number | null
-  ma5: number | null
-  ma10: number | null
-  ma20: number | null
-  macd: number | null
-  rsi6: number | null
-  rsi12: number | null
-  rsi24: number | null
-  k: number | null
-  d: number | null
-  j: number | null
-  bollUpper: number | null
-  bollMid: number | null
-  bollLower: number | null
-  atr: number | null
-  maSignal: 'golden_cross' | 'death_cross' | 'neutral' | null
-  rsiSignal: 'overbought' | 'oversold' | 'neutral' | null
-  macdSignal: 'bullish' | 'bearish' | 'neutral' | null
-  sentimentScore: number | null
-  sentimentConfidence: number | null
-  sectorName: string | null
-  sectorRank: number | null
-  sectorStrength: number | null
-  trendScore: number | null
-  valueScore: number | null
-  fundScore: number | null
-  sentimentFactorScore: number | null
-  totalScore: number | null
-  signalType: 'strong_buy' | 'buy' | 'hold' | 'watch' | null
-  signalReason: string | null
-  var95: number | null
-  maxDrawdown: number | null
-  timestamp: string
-  dataSource: string
-}
+// ============================================================
+// 板块评分域
+// ============================================================
+export type {
+  SectorScoreDimensions,
+  SectorUsChinaData,
+  SectorDefinition,
+  SectorStockMapping,
+  SectorScoreRecord,
+} from './types/types.sector'
+
+// ============================================================
+// 轮动域
+// ============================================================
+export type {
+  MarketStyle,
+  RotationSubFactor,
+  RotationFactor,
+  RotationSignalGrade,
+  RotationScoreBucket,
+  RotationAlertLevel,
+  DeclineNature,
+  RotationSectorScore,
+} from './types/types.rotation'
+
+// ============================================================
+// 评分文档域
+// ============================================================
+export type {
+  V6LayerScore,
+  ScoreDocVersion,
+  FileLibraryStats,
+  StrategyGroupSnapshot,
+  StrategySnapshot,
+} from './types/types.scoreDoc'
+
+// ============================================================
+// 知识库/资讯域
+// ============================================================
+export type {
+  LocalDoc,
+  NewsArticle,
+  NewsStockMap,
+  SentimentCache,
+  NewsBookmark,
+} from './types/types.knowledge'
+
+// ============================================================
+// 七维数据域
+// ============================================================
+export type {
+  DataDimensionType,
+  DataDimensionMeta,
+  DimensionStatus,
+  StockMeta,
+  GlobalMeta,
+  UnifiedStockData,
+} from './types/types.sevenDimensions'

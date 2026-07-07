@@ -1,4 +1,4 @@
-﻿﻿import { vi, describe, it, expect, beforeEach } from 'vitest'
+import { vi, describe, it, expect, beforeEach } from 'vitest'
 import type { Order } from '@/data/types'
 import {
   useOrderStore,
@@ -17,27 +17,20 @@ import {
 import {
   computeRiskMetrics,
 } from '@/services/trading/riskComputer'
-import { dataLayer } from '@/data/dataLayer'
-
 // ============================================================
 // Mocks
 // ============================================================
+
+const mockQuery = vi.hoisted(() => vi.fn())
 
 vi.mock('@/lib/logger', () => ({
   getLogger: () => ({ info: vi.fn(), error: vi.fn(), warn: vi.fn(), debug: vi.fn() }),
 }))
 
-vi.mock('@/data/dataLayer', () => ({
-  dataLayer: {
-    orders: {
-      list: vi.fn(),
-    },
-  },
-}))
-
 vi.mock('@/core/databridge', () => ({
   dataBridge: {
     forward: vi.fn(),
+    query: mockQuery,
     subscribe: vi.fn().mockReturnValue(vi.fn()),
   },
 }))
@@ -49,7 +42,13 @@ vi.mock('@/core/envelope', () => ({
 }))
 
 vi.mock('@/config/dbConfig', () => ({
-  ENVELOPE_ACTION: { insertOrder: 'INSERT_ORDER', updateOrder: 'UPDATE_ORDER', deleteOrder: 'DELETE_ORDER', tradeActionExecuted: 'TRADE_ACTION_EXECUTED' },
+  ENVELOPE_ACTION: {
+    insertOrder: 'INSERT_ORDER',
+    updateOrder: 'UPDATE_ORDER',
+    deleteOrder: 'DELETE_ORDER',
+    tradeActionExecuted: 'TRADE_ACTION_EXECUTED',
+    queryList: 'QUERY_LIST',
+  },
   ENVELOPE_TARGET: { db: 'DB' },
   MODULE_ID: { orderstore: 'orderstore' },
   STORE_NAME: { orders: 'orders' },
@@ -896,7 +895,7 @@ describe('useOrderStore', () => {
       createOrder({ symbol: 'AAPL', direction: 'buy', quantity: 100, price: 10, amount: 1000, createdAt: dateTs('2024-01-01') }),
       createOrder({ symbol: 'TSLA', direction: 'buy', quantity: 50, price: 20, amount: 1000, createdAt: dateTs('2024-01-01') }),
     ]
-    ;(dataLayer.orders.list as ReturnType<typeof vi.fn>).mockResolvedValue(mockOrders)
+    mockQuery.mockResolvedValue({ success: true, data: mockOrders })
     await useOrderStore.getState().refresh()
 
     const aapl = useOrderStore.getState().getPosition('AAPL')
@@ -912,7 +911,7 @@ describe('useOrderStore', () => {
     const mockOrders: Order[] = [
       createOrder({ symbol: 'AAPL', direction: 'buy', quantity: 100, price: 10, amount: 1000, createdAt: dateTs('2024-01-01') }),
     ]
-    ;(dataLayer.orders.list as ReturnType<typeof vi.fn>).mockResolvedValue(mockOrders)
+    mockQuery.mockResolvedValue({ success: true, data: mockOrders })
     await useOrderStore.getState().refresh()
     expect(useOrderStore.getState().orders.length).toBeGreaterThan(0)
 
@@ -1006,24 +1005,24 @@ describe('useOrderStore', () => {
     const mockOrders: Order[] = [
       createOrder({ symbol: 'AAPL', direction: 'buy', quantity: 100, price: 10, amount: 1000, createdAt: dateTs('2024-01-01') }),
     ]
-    let resolveList: ((value: Order[]) => void) | undefined
-    const listPromise = new Promise<Order[]>((r) => { resolveList = r })
+    let resolveList: ((value: { success: true; data: Order[] }) => void) | undefined
+    const listPromise = new Promise<{ success: true; data: Order[] }>((r) => { resolveList = r })
     // coordinateRefresh 会在第一次完成后执行第二次刷新，所以需要返回两个 Promise
-    ;(dataLayer.orders.list as ReturnType<typeof vi.fn>)
+    mockQuery
       .mockReturnValueOnce(listPromise)
-      .mockResolvedValueOnce(mockOrders)
+      .mockResolvedValueOnce({ success: true, data: mockOrders })
 
     const promise1 = useOrderStore.getState().refresh()
     const promise2 = useOrderStore.getState().refresh()
 
     // 第二次调用不会立即返回，而是等待第一次完成
     // resolve 第一次请求
-    resolveList!(mockOrders)
+    resolveList!({ success: true, data: mockOrders })
     await promise1
     await promise2
 
     // coordinateRefresh 会让第二次调用在第一次完成后也执行刷新
-    expect(dataLayer.orders.list).toHaveBeenCalled()
+    expect(mockQuery).toHaveBeenCalled()
   })
 })
 
@@ -1038,4 +1037,3 @@ describe('initOrderStoreSubscriptions', () => {
     cleanup()
   })
 })
-

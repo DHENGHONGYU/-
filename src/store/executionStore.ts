@@ -20,21 +20,23 @@
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'
-import { dataLayer } from '@/data/dataLayer'
 import { refreshCoordinator } from '@/core/refreshCoordinator'
 import {
   ENVELOPE_ACTION,
+  ENVELOPE_TARGET,
   MODULE_ID,
   STORE_NAME,
   type AccountType,
   type EnvelopeAction,
 } from '@/config/dbConfig'
-import type { Signal, ExecutionPlan, ExecutionPhase } from '@/data/types'
+import type { Signal, ExecutionPlan, ExecutionPhase, Stock } from '@/data/types'
 import type { StandardEnvelope } from '@/core/envelope'
+import { EnvelopeFactory } from '@/core/envelope'
 import { dataBridge } from '@/core/databridge'
 import { createBuyOrder, createSellOrder } from '@/services/trading/tradingService'
 import { createExecutionPlanUseCase } from '@/services/useCase/createExecutionPlan.useCase'
 
+import { nanoid } from 'nanoid'
 const logger = getLogger()
 
 /** 执行计划手动取消时的默认错误信息 */
@@ -74,7 +76,7 @@ interface ExecutionState {
   cancelPlan: (planId: string, reason?: string) => Promise<void>
   /** 标记已复盘 */
   markReviewed: (planId: string) => Promise<void>
-  /** 从 dataLayer 全量刷新 */
+  /** 通过 DataBridge 全量刷新 */
   refresh: () => Promise<void>
 }
 
@@ -139,8 +141,21 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
     set({ isRefreshing: true, loading: state.plans.length === 0, error: null })
 
     try {
-      logger.info('[executionStore] refresh 开始')
-      const plans = await dataLayer.executionPlans.list()
+      logger.info('[executionStore] refresh 开始', { source: MODULE_ID.tradinghub, store: STORE_NAME.executionPlans, action: ENVELOPE_ACTION.queryList })
+      const result = await dataBridge.query<ExecutionPlan[]>({
+        action: ENVELOPE_ACTION.queryList,
+        store: STORE_NAME.executionPlans,
+        source: MODULE_ID.tradinghub,
+      })
+      logger.info('[executionStore] refresh DataBridge.query 返回', { success: result.success, count: Array.isArray(result.data) ? result.data.length : 0, error: result.error })
+
+      if (!result.success) {
+        const errorMessage = result.error ?? '查询执行计划列表失败'
+        logger.error(`[executionStore] refresh 查询失败: ${errorMessage}`)
+        throw new Error(errorMessage)
+      }
+
+      const plans = result.data ?? []
       const activePlans = computeActivePlans(plans)
 
       set({
@@ -241,7 +256,8 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
         confirmedAt: Date.now(),
       }
 
-      await dataLayer.executionPlans.update(planId, { phase: 'confirmed', confirmedAt: Date.now() })
+      logger.info('[executionStore] confirmPlan 调用 forwardUpdateExecutionPlan', { planId, targetPhase: 'confirmed' })
+      await forwardUpdateExecutionPlan(planId, { phase: 'confirmed', confirmedAt: Date.now() })
 
       set((state) => {
         const newPlans = state.plans.map((p) => (p.id === planId ? updated : p))
@@ -252,6 +268,7 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
         }
       })
 
+      logger.info('[executionStore] confirmPlan 本地状态已更新', { planId, newPhase: get().plans[0]?.phase })
       logger.info('[executionStore] confirmPlan 成功', { planId })
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
@@ -285,26 +302,48 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
     set({ isProcessing: true, error: null })
 
     try {
+      logger.info('[executionStore] executePlan 开始执行', { planId, symbol: plan.symbol, direction: plan.direction, phase: plan.phase })
+
       // 等待 orderStore 刷新完成，确保读取到最新持仓数据用于仓位计算
+      logger.info('[executionStore] executePlan 等待 orderStore 刷新完成', { planId })
       await refreshCoordinator.waitFor('orderStore')
+      logger.info('[executionStore] executePlan orderStore 刷新已完成', { planId })
 
       // 1. phase -> pending
+      logger.info('[executionStore] executePlan phase -> pending', { planId })
       const pendingPlan: ExecutionPlan = { ...plan, phase: 'pending' }
-      await dataLayer.executionPlans.update(planId, { phase: 'pending' })
+      await forwardUpdateExecutionPlan(planId, { phase: 'pending' })
 
       set((state) => {
         const newPlans = state.plans.map((p) => (p.id === planId ? pendingPlan : p))
         return { plans: newPlans, activePlans: computeActivePlans(newPlans) }
       })
+      logger.info('[executionStore] executePlan 本地状态已更新为 pending', { planId })
 
       // 2. 获取股票信息
-      const stock = await dataLayer.stocks.get(plan.symbol)
-      if (!stock || stock.price === undefined || stock.price <= 0) {
+      logger.info('[executionStore] executePlan 查询股票信息', { planId, symbol: plan.symbol })
+      const stockResult = await dataBridge.query<Stock>({
+        action: ENVELOPE_ACTION.queryGet,
+        store: STORE_NAME.stocks,
+        key: plan.symbol,
+        source: MODULE_ID.tradinghub,
+      })
+
+      if (!stockResult.success) {
+        const errorMessage = stockResult.error ?? `查询股票 ${plan.symbol} 失败`
+        logger.error(`[executionStore] executePlan 查询股票失败: ${errorMessage}`, { planId, symbol: plan.symbol })
+        throw new Error(errorMessage)
+      }
+
+      const stock = stockResult.data
+      logger.info('[executionStore] executePlan 股票信息查询成功', { planId, symbol: plan.symbol, price: stock?.price })
+      if (stock?.price === undefined || stock.price <= 0) {
         throw new Error(`股票 ${plan.symbol} 价格无效`)
       }
 
       // 3. 根据 direction 调用 tradingService
       const quantity = plan.sizing?.quantity ?? 100
+      logger.info('[executionStore] executePlan 调用 tradingService', { planId, direction: plan.direction, quantity })
       let orderResult
 
       if (plan.direction === 'buy') {
@@ -313,8 +352,11 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
         orderResult = await createSellOrder(stock, quantity)
       }
 
+      logger.info('[executionStore] executePlan tradingService 返回', { planId, success: orderResult.success, error: orderResult.error })
+
       // 4. 处理结果
       if (orderResult.success && orderResult.data) {
+        logger.info('[executionStore] executePlan 下单成功，准备更新为 executed', { planId, orderId: orderResult.data.id })
         const executedPlan: ExecutionPlan = {
           ...pendingPlan,
           phase: 'executed',
@@ -322,7 +364,7 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
           executedAt: Date.now(),
           result: 'success',
         }
-        await dataLayer.executionPlans.update(planId, {
+        await forwardUpdateExecutionPlan(planId, {
           phase: 'executed',
           orderId: orderResult.data.id,
           executedAt: Date.now(),
@@ -344,6 +386,7 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
         })
       } else {
         // 下单失败 -> cancelled
+        logger.warn('[executionStore] executePlan 下单失败，准备更新为 cancelled', { planId, error: orderResult.error })
         const cancelledPlan: ExecutionPlan = {
           ...pendingPlan,
           phase: 'cancelled',
@@ -351,7 +394,7 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
           result: 'failed',
           errorMessage: orderResult.error ?? '下单失败',
         }
-        await dataLayer.executionPlans.update(planId, {
+        await forwardUpdateExecutionPlan(planId, {
           phase: 'cancelled',
           executedAt: Date.now(),
           result: 'failed',
@@ -367,7 +410,7 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
           }
         })
 
-        logger.warn('[executionStore] executePlan 下单失败', {
+        logger.warn('[executionStore] executePlan 下单失败状态已更新', {
           planId,
           error: orderResult.error,
         })
@@ -385,7 +428,7 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
           result: 'failed',
           errorMessage: message,
         }
-        await dataLayer.executionPlans.update(planId, {
+        await forwardUpdateExecutionPlan(planId, {
           phase: 'cancelled',
           executedAt: Date.now(),
           result: 'failed',
@@ -437,7 +480,8 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
         errorMessage: reason ?? DEFAULT_CANCEL_REASON,
       }
 
-      await dataLayer.executionPlans.update(planId, {
+      logger.info('[executionStore] cancelPlan 调用 forwardUpdateExecutionPlan', { planId, targetPhase: 'cancelled', reason: reason ?? DEFAULT_CANCEL_REASON })
+      await forwardUpdateExecutionPlan(planId, {
         phase: 'cancelled',
         errorMessage: reason ?? DEFAULT_CANCEL_REASON,
       })
@@ -451,6 +495,7 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
         }
       })
 
+      logger.info('[executionStore] cancelPlan 本地状态已更新', { planId, newPhase: get().plans[0]?.phase })
       logger.info('[executionStore] cancelPlan 成功', { planId })
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
@@ -486,7 +531,8 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
         reviewedAt: Date.now(),
       }
 
-      await dataLayer.executionPlans.update(planId, {
+      logger.info('[executionStore] markReviewed 调用 forwardUpdateExecutionPlan', { planId, targetPhase: 'reviewed' })
+      await forwardUpdateExecutionPlan(planId, {
         phase: 'reviewed',
         reviewedAt: Date.now(),
       })
@@ -500,6 +546,7 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
         }
       })
 
+      logger.info('[executionStore] markReviewed 本地状态已更新', { planId, newPhase: get().plans[0]?.phase })
       logger.info('[executionStore] markReviewed 成功', { planId })
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
@@ -508,6 +555,64 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
     }
   },
 }))
+
+// ============================================================
+// DataBridge 写操作辅助函数
+// ============================================================
+
+/**
+ * 通过 DataBridge 转发执行计划更新。
+ * 将 updates 合并到 Store 中现有的 plan 后发送 updateExecutionPlan envelope。
+ * 与 dataLayer.executionPlans.update() 语义对齐，确保 updatedAt 刷新。
+ */
+async function forwardUpdateExecutionPlan(
+  planId: string,
+  updates: Partial<ExecutionPlan>,
+): Promise<void> {
+  logger.info('[executionStore] forwardUpdateExecutionPlan 开始', { planId, updatesKeys: Object.keys(updates) })
+
+  const { plans } = useExecutionStore.getState()
+  logger.debug('[executionStore] forwardUpdateExecutionPlan 当前 plans 快照', { planCount: plans.length, planIds: plans.map((p) => p.id) })
+
+  const existing = plans.find((p) => p.id === planId)
+  if (!existing) {
+    logger.error('[executionStore] forwardUpdateExecutionPlan 失败: 计划不存在', { planId })
+    throw new Error(`执行计划 ${planId} 不存在`)
+  }
+
+  const updated: ExecutionPlan = {
+    ...existing,
+    ...updates,
+    id: planId,
+    updatedAt: Date.now(),
+  }
+  logger.debug('[executionStore] forwardUpdateExecutionPlan 合并后 plan', {
+    planId,
+    oldPhase: existing.phase,
+    newPhase: updated.phase,
+    updatedAt: updated.updatedAt,
+  })
+
+  const envelope = EnvelopeFactory.create(
+    {
+      action: ENVELOPE_ACTION.updateExecutionPlan,
+      source: MODULE_ID.tradinghub,
+      target: ENVELOPE_TARGET.db,
+      traceId: `execution-store-${nanoid(8)}`,
+    },
+    updated,
+  )
+
+  logger.info('[executionStore] forwardUpdateExecutionPlan envelope 已创建', {
+    planId,
+    action: envelope.meta.action,
+    traceId: envelope.meta.traceId,
+  })
+
+  await dataBridge.forward(envelope)
+
+  logger.info('[executionStore] forwardUpdateExecutionPlan DataBridge.forward 完成', { planId, traceId: envelope.meta.traceId })
+}
 
 // ============================================================
 // DataBridge 订阅生命周期

@@ -1,9 +1,13 @@
 /**
  * @module analysisStore
+ * @reserved 预留 AnalysisApp 重构时启用
  * @description 分析舱（AnalysisApp）状态管理层。集中管理分析标的列表、V6 批量评分及加载状态。
  * 从 AnalysisApp 组件中抽取的 3 个 useState，实现 Store 化。
  *
- * @see @/apps/analysis/AnalysisApp.tsx - 消费此 Store 的分析舱 UI
+ * @status 当前 AnalysisApp.tsx 直接调用 services 层（runV6Score/listStocks/listV6Scores），
+ * 未使用此 Store。待 AnalysisApp 重构时启用，将 useState 替换为 Store 调用。
+ *
+ * @see @/apps/analysis/AnalysisApp.tsx - 预期消费方（待重构）
  * @see @/services/analysis/analysisService.ts - 底层数据服务
  * @see @/services/scoring/v6ScoreService.ts - V6 评分计算服务
  */
@@ -119,7 +123,7 @@ export const useAnalysisStore = create<AnalysisState>((set, get) => ({
           s.symbol === symbol ? result.data! : s,
         )
         if (!newScores.some((s) => s.symbol === symbol)) {
-          newScores.push(result.data!)
+          newScores.push(result.data)
         }
         set({ scores: newScores, loading: false })
         logger.info(`[analysisStore] handleScore 完成: ${symbol}`)
@@ -191,3 +195,9 @@ export const useAnalysisStore = create<AnalysisState>((set, get) => ({
     set({ trendError: null })
   },
 }))
+
+// ============================================================
+// 派生查询（从 .derived.ts 统一导出，含 memoizeByRef 缓存优化）
+// 设计原则：派生查询独立函数模式，通过 getState() 访问状态，不存入 State
+// ============================================================
+export * from './analysisStore.derived'

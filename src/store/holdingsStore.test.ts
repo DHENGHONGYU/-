@@ -66,7 +66,7 @@ vi.mock('@/config/dbConfig', () => ({
     deleteOrder: 'DELETE_ORDER',
   },
   MODULE_ID: { tradinghub: 'tradinghub' },
-  STORE_NAME: { orders: 'orders' },
+  STORE_NAME: { orders: 'orders', stocks: 'stocks' },
 }))
 
 // ============================================================
@@ -274,15 +274,24 @@ describe('useHoldingsStore', () => {
 // ============================================================
 
 describe('initHoldingsStoreSubscriptions', () => {
-  it('订阅 trading 通道', () => {
+  it('订阅 stocks 和 orders 通道', () => {
     const cleanup = initHoldingsStoreSubscriptions()
-    const cb = capturedCallbacks.get('trading')
-    expect(cb).toBeDefined()
+    const stocksCb = capturedCallbacks.get('stocks')
+    const ordersCb = capturedCallbacks.get('orders')
+    expect(stocksCb).toBeDefined()
+    expect(ordersCb).toBeDefined()
 
     // 调用回调应不会抛错
     expect(() =>
-      cb!({
-        meta: { source: 'tradinghub', action: 'TRADE_ACTION_EXECUTED', traceId: 't1' },
+      stocksCb!({
+        meta: { source: 'tradinghub', action: 'HOLDINGS_DATA_LOADED', traceId: 't1' },
+        payload: {},
+      }),
+    ).not.toThrow()
+
+    expect(() =>
+      ordersCb!({
+        meta: { source: 'tradinghub', action: 'TRADE_ACTION_EXECUTED', traceId: 't2' },
         payload: {},
       }),
     ).not.toThrow()

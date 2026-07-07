@@ -1,7 +1,7 @@
 import { getDefaultTradingConfig } from '@/config/tradingConfig'
 import type { SignalDirection } from '@/config/tradingConfig'
 import { dataLayer } from '@/data/dataLayer'
-import type { DailyQuotes, KlineBar, Signal, SignalSnapshot } from '@/data/types'
+import type { DailyQuotes, KlineBar, Signal, SignalSnapshot, Stock } from '@/data/types'
 import { generateId } from '@/data/db'
 import { SIGNAL_GENERATOR_THRESHOLDS } from '@/config/thresholds'
 
@@ -53,14 +53,17 @@ function computeMACDDirection(closes: number[]): 'red' | 'green' | 'neutral' {
   return diff > 0 ? 'red' : diff < 0 ? 'green' : 'neutral'
 }
 
-function buildSnapshot(_stock: unknown, quotes: DailyQuotes): SignalSnapshot {
+function buildSnapshot(stock: Stock, quotes: DailyQuotes): SignalSnapshot {
   const closes = quotes.history.map((bar) => bar.close)
   const ma20 = computeMA(closes, 20)
   const ma60 = computeMA(closes, 60)
   const latest = quotes.latest.close
   return {
-    pePercentile: undefined,
-    pbPercentile: undefined,
+    // 估值安全边际：使用 PE/PB 绝对值作为代理指标
+    // PE < peMax 且 PB < pbMax 视为估值安全
+    // 注：如需真实百分位，需在数据采集层补充历史 PE/PB 序列并计算分布
+    pePercentile: stock.pe,
+    pbPercentile: stock.pb,
     priceToMA20: ma20 !== undefined && ma20 !== 0 ? (latest - ma20) / ma20 : undefined,
     priceToMA60: ma60 !== undefined && ma60 !== 0 ? (latest - ma60) / ma60 : undefined,
     volumeRatio: computeVolumeRatio(quotes.history),
@@ -119,6 +122,28 @@ function generateBuySignals(snapshot: SignalSnapshot): TradingSignal[] {
     })
   }
 
+  // buy_safety_margin：估值安全边际（PE/PB 绝对值低于配置阈值）
+  if (
+    snapshot.pePercentile !== undefined &&
+    snapshot.pePercentile > 0 &&
+    snapshot.pePercentile < config.peMax &&
+    snapshot.pbPercentile !== undefined &&
+    snapshot.pbPercentile > 0 &&
+    snapshot.pbPercentile < config.pbMax
+  ) {
+    signals.push({
+      id: '',
+      symbol: '',
+      direction: 'buy',
+      type: 'buy_safety_margin',
+      strategy: 'signal',
+      confidence: 0.5,
+      rationale: `估值安全边际：PE ${snapshot.pePercentile.toFixed(1)} < ${config.peMax}，PB ${snapshot.pbPercentile.toFixed(2)} < ${config.pbMax}`,
+      snapshot,
+      createdAt: 0,
+    })
+  }
+
   return signals
 }
 
@@ -151,7 +176,11 @@ function generateSellSignals(
   }
 
   // sell_trailing_stop：从近期最高点回撤 10%
-  const highest = Math.max(...history.slice(-60).map((bar) => bar.high))
+  const recentHistory = history.slice(-60)
+  if (recentHistory.length === 0) {
+    return signals
+  }
+  const highest = Math.max(...recentHistory.map((bar) => bar.high))
   if (highest > 0 && (highest - latest) / highest > config.trailingStopDrawdownPct / 100) {
     signals.push({
       id: '',

@@ -1,5 +1,6 @@
 import { create } from 'zustand'
-import { eventBus } from '@/lib/eventBus'
+import { withBroadcast } from '@/lib/withBroadcast'
+import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import type { EngineConfig, EngineStats } from '@/types/modules/engine.types'
 
 interface EngineState {
@@ -29,7 +30,7 @@ export const useEngineStore = create<EngineState>((set) => ({
   healthSummary: { status: 'unknown', message: '引擎未启动', overallStatus: 'unknown' },
   setStarted: (started) => {
     set({ started, startedAt: started ? Date.now() : null })
-    eventBus.emit('ENGINE_STORE_STARTED_CHANGED', { started })
+    withBroadcast(EVENT_NAMES.ENGINE_STARTED_CHANGED, { started })
   },
   setConfig: (config) => set((state) => ({ config: { ...state.config, ...config } })),
   updateStats: (stats) => set((state) => ({

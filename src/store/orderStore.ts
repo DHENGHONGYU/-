@@ -18,7 +18,6 @@
 import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
 import { getLogger } from '@/lib/logger'
-import { dataLayer } from '@/data/dataLayer'
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
 import { refreshCoordinator } from '@/core/refreshCoordinator'
@@ -42,6 +41,7 @@ import {
 import { computePnLSummary, type PnLSummary } from '@/services/trading/pnlComputer'
 import { computeRiskMetrics, type RiskMetrics } from '@/services/trading/riskComputer'
 
+import { nanoid } from 'nanoid'
 const logger = getLogger()
 
 // ============================================================
@@ -183,7 +183,7 @@ const initialState: Omit<
 
 /** 生成 traceId */
 function createTraceId(prefix: string): string {
-  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
+  return `${prefix}-${nanoid(8)}`
 }
 
 // 计算函数已从以下模块导入：
@@ -248,8 +248,21 @@ export const useOrderStore = create<OrderState>()(
     set({ isRefreshing: true, loading: state.orders.length === 0, error: null })
 
     try {
-      logger.info('[orderStore] refresh 开始')
-      const orders = await dataLayer.orders.list()
+      logger.info('[orderStore] refresh 开始', { source: MODULE_ID.orderstore, store: STORE_NAME.orders, action: ENVELOPE_ACTION.queryList })
+      const result = await dataBridge.query<Order[]>({
+        action: ENVELOPE_ACTION.queryList,
+        store: STORE_NAME.orders,
+        source: MODULE_ID.orderstore,
+      })
+      logger.info('[orderStore] refresh DataBridge.query 返回', { success: result.success, count: Array.isArray(result.data) ? result.data.length : 0, error: result.error })
+
+      if (!result.success) {
+        const errorMessage = result.error ?? '查询订单列表失败'
+        logger.error(`[orderStore] refresh 查询失败: ${errorMessage}`)
+        throw new Error(errorMessage)
+      }
+
+      const orders = result.data ?? []
 
       // 计算派生数据
       const tradePairs = buildTradePairs(orders)

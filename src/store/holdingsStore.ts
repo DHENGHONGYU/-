@@ -18,7 +18,8 @@ import {
 } from '@/constants/trade.constants'
 import { getLogger } from '@/lib/logger'
 import { dataBridge } from '@/core/databridge'
-import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID } from '@/config/dbConfig'
+import type { StandardEnvelope } from '@/core/envelope'
+import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
 import type {
   HoldingItem,
   FilterState,
@@ -30,6 +31,7 @@ import type {
 import type { HoldingAction } from '@/constants/trade.constants'
 import { HTTP_OK, HTTP_INTERNAL_ERROR } from '@/config/mathConstants'
 
+import { nanoid } from 'nanoid'
 const logger = getLogger()
 
 // ============================================================
@@ -174,7 +176,7 @@ export const useHoldingsStore = create<HoldingsState>((set) => ({
     try {
       await dataBridge.forward({
         meta: {
-          traceId: `holdings-fetch-${Date.now()}`,
+          traceId: `holdings-fetch-${nanoid(8)}`,
           source: MODULE_ID.holdingsStore,
           target: ENVELOPE_TARGET.tradinghub,
           action: ENVELOPE_ACTION.loadHoldingsData,
@@ -229,16 +231,22 @@ export function buildHoldingsParams(): HoldingsQueryParams {
 // 由组件层 useEffect 调用 init，返回的 cleanup 函数中调用 destroy
 // 避免模块级副作用导致的 HMR 重复订阅和内存泄漏
 
-let _unsubscribeTrading: (() => void) | null = null
+let _unsubscribeChannels: Array<() => void> = []
 
-/** 初始化 DataBridge 交易通道订阅，返回 cleanup 函数 */
+/** 初始化 DataBridge 持仓相关频道订阅，返回 cleanup 函数 */
 export function initHoldingsStoreSubscriptions(): () => void {
-  if (_unsubscribeTrading) {
+  if (_unsubscribeChannels.length > 0) {
     logger.warn('[holdingsStore] Subscriptions already initialized, skipping')
-    return _unsubscribeTrading
+    return () => {
+      _unsubscribeChannels.forEach((fn) => fn())
+      _unsubscribeChannels = []
+    }
   }
 
-  _unsubscribeTrading = dataBridge.subscribe('trading', (envelope) => {
+  // 修正：DataBridge.forward() 在 databridge.ts:669 按 targetStore 广播，
+  // holdingsDataLoaded → STORE_NAME.stocks，tradeActionExecuted → STORE_NAME.orders，
+  // 原 'trading' 频道不存在，订阅永久失效（孤儿订阅）。改为订阅真实频道。
+  const handler = (envelope: StandardEnvelope) => {
     if (envelope.meta.action === ENVELOPE_ACTION.tradeActionExecuted) {
       logger.info('[holdingsStore] DataBridge event received: tradeActionExecuted', {
         traceId: envelope.meta.traceId,
@@ -250,11 +258,14 @@ export function initHoldingsStoreSubscriptions(): () => void {
         traceId: envelope.meta.traceId,
       })
     }
-  })
+  }
+
+  _unsubscribeChannels.push(dataBridge.subscribe(STORE_NAME.stocks, handler))
+  _unsubscribeChannels.push(dataBridge.subscribe(STORE_NAME.orders, handler))
 
   return () => {
-    _unsubscribeTrading?.()
-    _unsubscribeTrading = null
+    _unsubscribeChannels.forEach((fn) => fn())
+    _unsubscribeChannels = []
     logger.info('[holdingsStore] DataBridge subscriptions destroyed')
   }
 }
