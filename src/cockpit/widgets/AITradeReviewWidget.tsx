@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import type { WidgetConfig } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
-import { COLOR_TOKENS, COLOR_SHADES, twText, twBg } from '@/constants/theme.tokens'
+import { STOCK_COLOR_TOKENS, COLOR_TOKENS, COLOR_SHADES, twText, twBg } from '@/constants/theme.tokens'
 
 interface AITradeReviewWidgetProps {
   config: WidgetConfig
@@ -70,9 +70,9 @@ export default function AITradeReviewWidget({ config }: AITradeReviewWidgetProps
           </div>
           <div className="text-center">
             <div className="flex justify-center mb-2">
-              <TrendingUp className="h-6 w-6" style={{ color: COLOR_TOKENS.up.hex }} />
+              <TrendingUp className="h-6 w-6" style={{ color: STOCK_COLOR_TOKENS.up.hex }} />
             </div>
-            <div className="text-2xl font-bold" style={{ color: COLOR_TOKENS.up.hex }}>{tradeReview.winRate}%</div>
+            <div className="text-2xl font-bold" style={{ color: STOCK_COLOR_TOKENS.up.hex }}>{tradeReview.winRate}%</div>
             <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>胜率</div>
             <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>目标: 55%+</div>
           </div>

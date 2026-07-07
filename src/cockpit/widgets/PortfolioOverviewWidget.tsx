@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import type { WidgetConfig, HoldingItem, RebalancePlanItem } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
 import { COLORS } from '@/constants/cockpit.constants'
-import { COLOR_TOKENS, COLOR_SHADES, twText, twBg, twBorder } from '@/constants/theme.tokens'
+import { STOCK_COLOR_TOKENS, COLOR_TOKENS, COLOR_SHADES, twText, twBg, twBorder } from '@/constants/theme.tokens'
 
 /** 权重偏离阈值（百分比），超过此值视为需要调整 */
 const WEIGHT_DEVIATION_THRESHOLD = 5
@@ -33,8 +33,8 @@ function getWeightColorClass(status: 'overweight' | 'underweight' | 'balanced'):
 
 /** 获取再平衡动作的颜色令牌 */
 function getActionColorClass(action: RebalancePlanItem['action']): string {
-  if (action === 'buy') return COLOR_TOKENS.up.tailwind
-  if (action === 'sell') return COLOR_TOKENS.down.tailwind
+  if (action === 'buy') return STOCK_COLOR_TOKENS.up.tailwind
+  if (action === 'sell') return STOCK_COLOR_TOKENS.down.tailwind
   return COLOR_SHADES.gray[500]
 }
 
@@ -62,7 +62,7 @@ function HoldingRow({ holding }: { holding: HoldingItem }): React.JSX.Element {
             <ArrowRight className={`inline h-3 w-3 mx-1 ${COLOR_SHADES.gray[400]}`} />
             <span className={COLOR_SHADES.gray[500]}>{holding.targetWeight.toFixed(1)}%</span>
           </div>
-          <div className={`text-xs ${pnlPositive ? COLOR_TOKENS.up.tailwind : COLOR_TOKENS.down.tailwind}`}>
+          <div className={`text-xs ${pnlPositive ? STOCK_COLOR_TOKENS.up.tailwind : STOCK_COLOR_TOKENS.down.tailwind}`}>
             {holding.pnl} ({pnlPositive ? '+' : ''}{holding.pnlPercent}%)
           </div>
         </div>

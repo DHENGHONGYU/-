@@ -3,7 +3,7 @@ import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import type { WidgetConfig, MarketIndexData } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
-import { COLOR_TOKENS, twText, getStockColorClass, getStockColorHex } from '@/constants/theme.tokens'
+import { STOCK_COLOR_TOKENS, COLOR_TOKENS, twText, getStockColorClass, getStockColorHex } from '@/constants/theme.tokens'
 
 interface MarketIndicesWidgetProps {
   config: WidgetConfig
@@ -51,9 +51,9 @@ export default function MarketIndicesWidget(props: MarketIndicesWidgetProps): Re
         <CardContent className="grid grid-cols-2 gap-4">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="space-y-2">
-              <div className={`h-4 ${COLOR_TOKENS.neutral.bgClass} rounded w-24`} />
-              <div className={`h-6 ${COLOR_TOKENS.neutral.bgClass} rounded w-20`} />
-              <div className={`h-4 ${COLOR_TOKENS.neutral.bgClass} rounded w-16`} />
+              <div className={`h-4 ${STOCK_COLOR_TOKENS.neutral.bgClass} rounded w-24`} />
+              <div className={`h-6 ${STOCK_COLOR_TOKENS.neutral.bgClass} rounded w-20`} />
+              <div className={`h-4 ${STOCK_COLOR_TOKENS.neutral.bgClass} rounded w-16`} />
             </div>
           ))}
         </CardContent>

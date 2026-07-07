@@ -80,7 +80,7 @@ const DIRECTION_COLOR: Record<SignalDirection, string> = {
   buy: COLOR_TOKENS.success.tailwind,
   sell: COLOR_TOKENS.danger.tailwind,
   hold: COLOR_TOKENS.info.tailwind,
-  watch: COLOR_TOKENS.neutral.tailwind,
+  watch: STOCK_COLOR_TOKENS.neutral.tailwind,
 }
 
 /** 信号方向中文标签 */
@@ -159,7 +159,7 @@ function formatTime(timestamp: number): string {
 
 /** 根据准确率返回徽章颜色 */
 function getAccuracyBadgeClass(accuracy: number | undefined | null): string {
-  if (accuracy === undefined || accuracy === null) return COLOR_TOKENS.neutral.tailwind
+  if (accuracy === undefined || accuracy === null) return STOCK_COLOR_TOKENS.neutral.tailwind
   if (accuracy >= METRIC_GOOD_THRESHOLD) return COLOR_TOKENS.success.tailwind
   if (accuracy >= METRIC_WARN_THRESHOLD) return COLOR_TOKENS.warning.tailwind
   return COLOR_TOKENS.danger.tailwind
@@ -167,7 +167,7 @@ function getAccuracyBadgeClass(accuracy: number | undefined | null): string {
 
 /** 根据 Sharpe 比率返回徽章颜色 */
 function getSharpeBadgeClass(sharpe: number | undefined | null): string {
-  if (sharpe === undefined || sharpe === null) return COLOR_TOKENS.neutral.tailwind
+  if (sharpe === undefined || sharpe === null) return STOCK_COLOR_TOKENS.neutral.tailwind
   if (sharpe >= SHARPE_GOOD_THRESHOLD) return COLOR_TOKENS.success.tailwind
   if (sharpe >= SHARPE_WARN_THRESHOLD) return COLOR_TOKENS.warning.tailwind
   return COLOR_TOKENS.danger.tailwind
