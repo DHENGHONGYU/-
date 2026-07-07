@@ -1,5 +1,7 @@
 import { describe, expect, it, beforeEach } from 'vitest'
 import { db } from '@/data/db'
+import { dataBridge } from '@/core/databridge'
+import { STORE_NAME } from '@/config/dbConfig'
 import {
   calculateResonance,
   calculateSectorScore,
@@ -16,6 +18,7 @@ describe('rotationScoreService', () => {
   beforeEach(async () => {
     await db.init()
     await db.reset()
+    dataBridge.invalidateCache(STORE_NAME.rotationScores)
   })
 
   it('should calculate sector score from sub scores', () => {

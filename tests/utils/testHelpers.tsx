@@ -256,3 +256,75 @@ export async function resetTestDb(stores: readonly string[]): Promise<void> {
     }
   }
 }
+
+// ============================================================
+// 自动缓存清理工具（解决 db.reset() 不触发 invalidateCache 问题）
+// ============================================================
+
+/**
+ * 自动重置数据库并清理 DataBridge 缓存
+ *
+ * 解决 db.reset() 只清空 IndexedDB 但不清理 DataBridge 内存缓存的问题。
+ * 该工具会自动清理所有已知 store 的缓存，避免跨测试用例的数据污染。
+ *
+ * @param additionalStores 额外需要清理的 store 名称数组（可选）
+ * @returns Promise<void>
+ *
+ * @example
+ * ```typescript
+ * import { resetDbWithCache } from '../utils/testHelpers'
+ *
+ * beforeEach(async () => {
+ *   await resetDbWithCache()
+ * })
+ *
+ * // 或指定额外需要清理的 store
+ * beforeEach(async () => {
+ *   await resetDbWithCache(['custom_store'])
+ * })
+ * ```
+ */
+export async function resetDbWithCache(additionalStores: readonly string[] = []): Promise<void> {
+  const { db } = await import('@/data/db')
+  const { dataBridge } = await import('@/core/databridge')
+  const { STORE_NAME } = await import('@/config/dbConfig')
+
+  // 重置数据库
+  await db.init()
+  await db.reset()
+
+  // 清理所有已知 store 的缓存
+  const allStores = Object.values(STORE_NAME) as string[]
+  for (const store of allStores) {
+    dataBridge.invalidateCache(store)
+  }
+
+  // 清理额外指定的 store
+  for (const store of additionalStores) {
+    dataBridge.invalidateCache(store)
+  }
+}
+
+/**
+ * 创建自动缓存清理的 beforeEach 钩子
+ *
+ * 返回一个可以在 beforeEach 中直接调用的异步函数。
+ *
+ * @param additionalStores 额外需要清理的 store 名称数组（可选）
+ * @returns 可在 beforeEach 中调用的函数
+ *
+ * @example
+ * ```typescript
+ * import { createCacheResetHook } from '../utils/testHelpers'
+ *
+ * beforeEach(createCacheResetHook())
+ *
+ * // 或指定额外需要清理的 store
+ * beforeEach(createCacheResetHook(['custom_store']))
+ * ```
+ */
+export function createCacheResetHook(additionalStores: readonly string[] = []): () => Promise<void> {
+  return async () => {
+    await resetDbWithCache(additionalStores)
+  }
+}

@@ -1,5 +1,7 @@
 import { describe, expect, it, beforeEach } from 'vitest'
 import { db } from '@/data/db'
+import { dataBridge } from '@/core/databridge'
+import { STORE_NAME } from '@/config/dbConfig'
 import type { RotationSectorScore, Stock, V6Score } from '@/data/types'
 import {
   buildChangeLog,
@@ -65,6 +67,10 @@ describe('strategySnapshotService', () => {
   beforeEach(async () => {
     await db.init()
     await db.reset()
+    dataBridge.invalidateCache(STORE_NAME.stocks)
+    dataBridge.invalidateCache(STORE_NAME.v6Scores)
+    dataBridge.invalidateCache(STORE_NAME.rotationScores)
+    dataBridge.invalidateCache(STORE_NAME.strategySnapshots)
   })
 
   describe('classifyStocks', () => {
@@ -259,8 +265,8 @@ describe('strategySnapshotService', () => {
       expect(list.success).toBe(true)
       expect(list.data).toHaveLength(2)
 
-      const first = list.data?.[0]!
-      const second = list.data?.[1]!
+      const first = list.data![0]
+      const second = list.data![1]
       expect(first.timestamp).toBeGreaterThan(second.timestamp)
 
       const limited = await listSnapshots(1)

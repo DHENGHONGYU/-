@@ -1,5 +1,7 @@
 import { describe, expect, it, beforeEach } from 'vitest'
 import { db } from '@/data/db'
+import { dataBridge } from '@/core/databridge'
+import { STORE_NAME } from '@/config/dbConfig'
 import type { ScoreDocVersion } from '@/data/types'
 import {
   buildChangeFromPrev,
@@ -18,6 +20,7 @@ describe('scoreDocService', () => {
   beforeEach(async () => {
     await db.init()
     await db.reset()
+    dataBridge.invalidateCache(STORE_NAME.scoreDocs)
   })
 
   it('should validate required fields', () => {

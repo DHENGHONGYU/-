@@ -6,9 +6,9 @@ import OutputApp from '@/apps/output/OutputApp'
 import * as systemService from '@/services/system/systemService'
 
 // 辅助函数：包裹组件提供 Router 上下文
-const renderWithRouter = (ui: React.ReactElement) => {
+const renderWithRouter = (ui: React.ReactElement, initialRoute = '/output/export') => {
   return render(
-    <MemoryRouter>
+    <MemoryRouter initialEntries={[initialRoute]}>
       {ui}
     </MemoryRouter>
   )

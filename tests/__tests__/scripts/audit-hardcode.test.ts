@@ -350,6 +350,103 @@ export function getMessage() {
       )
       expect(magicInString).toHaveLength(0)
     })
+
+    it('豁免股票涨跌颜色令牌（STOCK_COLOR_TOKENS）', async () => {
+      setupVirtualFS({
+        'components/StockPrice.tsx': `
+import { STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
+export function StockPrice({ change }) {
+  return <span className={STOCK_COLOR_TOKENS.up.tailwind}>{change}%</span>
+}
+`,
+      })
+      const { scan } = await importScan()
+      const report = scan()
+
+      const colorViolations = report.violations.filter(
+        v => v.category === '硬编码 Tailwind 颜色类' || v.category === '硬编码 HEX 颜色',
+      )
+      expect(colorViolations).toHaveLength(0)
+    })
+
+    it('豁免股票涨跌辅助函数（getStockColor 系列）', async () => {
+      setupVirtualFS({
+        'components/StockDisplay.tsx': `
+import { getStockColor, getStockColorClass } from '@/constants/theme.tokens'
+export function StockDisplay({ stock }) {
+  const color = getStockColor(stock.changePercent)
+  return <span className={getStockColorClass(stock.changePercent)}>{stock.changePercent}%</span>
+}
+`,
+      })
+      const { scan } = await importScan()
+      const report = scan()
+
+      const colorViolations = report.violations.filter(
+        v => v.category === '硬编码 Tailwind 颜色类' || v.category === '硬编码 HEX 颜色',
+      )
+      expect(colorViolations).toHaveLength(0)
+    })
+
+    it('豁免股票涨跌动态判断（changePercent 条件表达式）', async () => {
+      setupVirtualFS({
+        'components/StockCard.tsx': `
+import { STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
+export function StockCard({ stock }) {
+  return (
+    <span className={stock.changePercent > 0 ? STOCK_COLOR_TOKENS.up.tailwind : STOCK_COLOR_TOKENS.down.tailwind}>
+      {stock.changePercent}%
+    </span>
+  )
+}
+`,
+      })
+      const { scan } = await importScan()
+      const report = scan()
+
+      const colorViolations = report.violations.filter(
+        v => v.category === '硬编码 Tailwind 颜色类' || v.category === '硬编码 HEX 颜色',
+      )
+      expect(colorViolations).toHaveLength(0)
+    })
+
+    it('豁免股票涨跌动态判断（priceChange 条件表达式）', async () => {
+      setupVirtualFS({
+        'components/PriceChange.tsx': `
+export function PriceChange({ data }) {
+  return (
+    <span className={data.priceChange >= 0 ? 'text-red-500' : 'text-green-500'}>
+      {data.priceChange}
+    </span>
+  )
+}
+`,
+      })
+      const { scan } = await importScan()
+      const report = scan()
+
+      const colorViolations = report.violations.filter(
+        v => v.category === '硬编码 Tailwind 颜色类' || v.category === '硬编码 HEX 颜色',
+      )
+      expect(colorViolations).toHaveLength(0)
+    })
+
+    it('不豁免非涨跌相关的颜色硬编码', async () => {
+      setupVirtualFS({
+        'components/StatusBadge.tsx': `
+export function StatusBadge({ status }) {
+  return <span className="text-red-500 bg-blue-100">{status}</span>
+}
+`,
+      })
+      const { scan } = await importScan()
+      const report = scan()
+
+      const colorViolations = report.violations.filter(
+        v => v.category === '硬编码 Tailwind 颜色类',
+      )
+      expect(colorViolations.length).toBeGreaterThan(0)
+    })
   })
 
   // ============================================================

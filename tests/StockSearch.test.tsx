@@ -1,15 +1,21 @@
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { StockSearch } from '@/components/input/StockSearch'
 import * as inputService from '@/services/input/inputService'
 import { useToast } from '@/hooks/useToast'
+import { useInputHubStore } from '@/store/inputHubStore'
 
 vi.mock('@/hooks/useToast', () => ({
   useToast: vi.fn(() => ({ toast: vi.fn() })),
 }))
 
 describe('StockSearch', () => {
+  beforeEach(() => {
+    // 重置输入舱 store，避免上一条用例的 isAddingStock 状态（prevents replay 用例含 100ms 延时 mock）泄漏到后续用例，导致搜索被禁用
+    useInputHubStore.getState().reset()
+  })
+
   it('renders search input', () => {
     render(<StockSearch onSelect={vi.fn()} />)
     expect(screen.getByRole('combobox')).toBeInTheDocument()

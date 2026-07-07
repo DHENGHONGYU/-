@@ -2,7 +2,7 @@ import { describe, expect, it, beforeEach } from 'vitest'
 import { dataLayer } from '@/data/dataLayer'
 import { dataBridge } from '@/core/databridge'
 import { db } from '@/data/db'
-import { RESEARCH_STATUS, STORE_NAME } from '@/config/dbConfig'
+import { RESEARCH_STATUS, STORE_NAME, DEFAULT_POOL_GROUP } from '@/config/dbConfig'
 
 describe('dataLayer', () => {
   beforeEach(async () => {

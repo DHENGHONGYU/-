@@ -10,7 +10,7 @@ import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import type { BacktestConfig, BacktestResult, BacktestTrade } from '@/store/backtestStore'
 import { STOCK_COLOR_MAPPING } from '@/constants/cockpit.constants'
-import { COLOR_TOKENS, CHART_PALETTE } from '@/constants/theme.tokens'
+import { COLOR_TOKENS, CHART_PALETTE, STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
 import { UI_TEXT } from '@/constants/uiText'
 
 // ============================================================
@@ -384,9 +384,9 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
       expect(COLOR_TOKENS.success.hex).not.toBe(CHART_PALETTE.grid)
     })
 
-    it('STOCK_COLOR_MAPPING UP/DOWN 应与 COLOR_TOKENS up/down 一致', () => {
-      expect(STOCK_COLOR_MAPPING.UP_CLASS).toBe(COLOR_TOKENS.up.tailwind)
-      expect(STOCK_COLOR_MAPPING.DOWN_CLASS).toBe(COLOR_TOKENS.down.tailwind)
+    it('STOCK_COLOR_MAPPING UP/DOWN 应与 STOCK_COLOR_TOKENS up/down 一致', () => {
+      expect(STOCK_COLOR_MAPPING.UP_CLASS).toBe(STOCK_COLOR_TOKENS.up.tailwind)
+      expect(STOCK_COLOR_MAPPING.DOWN_CLASS).toBe(STOCK_COLOR_TOKENS.down.tailwind)
     })
   })
 })

@@ -3,6 +3,8 @@ import { render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import userEvent from '@testing-library/user-event'
 import { db } from '@/data/db'
+import { dataBridge } from '@/core/databridge'
+import { STORE_NAME } from '@/config/dbConfig'
 import { saveScoreDoc } from '@/services/analysis/scoreDocService'
 import ScoreDocPage from '@/pages/analysis/ScoreDocPage'
 import type { Stock } from '@/data/types'
@@ -35,6 +37,7 @@ describe('ScoreDocPage', () => {
   beforeEach(async () => {
     await db.init()
     await db.reset()
+    dataBridge.invalidateCache(STORE_NAME.scoreDocs)
   })
 
   afterEach(() => {

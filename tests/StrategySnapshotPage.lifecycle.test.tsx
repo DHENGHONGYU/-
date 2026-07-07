@@ -3,6 +3,8 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router'
 import { db } from '@/data/db'
+import { dataBridge } from '@/core/databridge'
+import { STORE_NAME } from '@/config/dbConfig'
 import { useStrategySnapshotStore } from '@/store/strategySnapshotStore'
 import StrategySnapshotPage from '@/pages/trading/StrategySnapshotPage'
 
@@ -20,6 +22,10 @@ describe('StrategySnapshotPage - lifecycle & tri-state validation', () => {
   beforeEach(async () => {
     await db.init()
     await db.reset()
+    dataBridge.invalidateCache(STORE_NAME.stocks)
+    dataBridge.invalidateCache(STORE_NAME.v6Scores)
+    dataBridge.invalidateCache(STORE_NAME.rotationScores)
+    dataBridge.invalidateCache(STORE_NAME.strategySnapshots)
     useStrategySnapshotStore.setState({
       activeTab: 'current',
       stocks: [],

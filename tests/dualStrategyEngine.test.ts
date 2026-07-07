@@ -37,7 +37,9 @@ function buildDailyQuotes(symbol: string): DailyQuotes {
     open: 100 + i,
     high: 101 + i,
     low: 99 + i,
-    close: 100 + i * 0.5,
+    // 收盘价走低：制造「无技术金叉」场景，使价值洼地评分落入 wait 区间，
+    // 从而在轮动信号未触发时进入观察清单（runDualStrategy 对 wait 才生成观察候选）。
+    close: 200 - i * 0.5,
     volume: 100000 + i * 1000,
     amount: 1_000_000_000 + i * 10_000_000,
   }))

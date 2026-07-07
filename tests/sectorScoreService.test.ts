@@ -1,5 +1,7 @@
 import { describe, expect, it, beforeEach } from 'vitest'
 import { db } from '@/data/db'
+import { dataBridge } from '@/core/databridge'
+import { STORE_NAME } from '@/config/dbConfig'
 import { SECTOR_DEFINITIONS } from '@/data/sectorDefinitions'
 import type { SectorDefinition } from '@/data/types'
 import {
@@ -15,6 +17,7 @@ describe('sectorScoreService', () => {
   beforeEach(async () => {
     await db.init()
     await db.reset()
+    dataBridge.invalidateCache(STORE_NAME.sectorScores)
   })
 
   it('should calculate composite score from dimensions and weights', () => {

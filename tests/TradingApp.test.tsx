@@ -2,13 +2,22 @@ import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router'
-import TradingApp from '@/apps/trading/TradingApp'
 import * as tradingService from '@/services/trading/tradingService'
 
 vi.mock('@/hooks/useToast', () => ({
   useToast: () => ({ toast: vi.fn() }),
 }))
-import * as portfolioBuilder from '@/services/trading/portfolioBuilder'
+
+// 必须在 TradingApp / portfolioStore 之前 hoisted mock，否则模块加载时 portfolioStore
+// 会捕获原始 buildStrategyFilteredPortfolio 引用，导致 vi.spyOn 无法生效。
+const mockBuildStrategyFilteredPortfolio = vi.hoisted(() => vi.fn())
+const mockComputeHoldingsFromOrders = vi.hoisted(() => vi.fn())
+vi.mock('@/services/trading/portfolioBuilder', () => ({
+  buildStrategyFilteredPortfolio: mockBuildStrategyFilteredPortfolio,
+  computeHoldingsFromOrders: mockComputeHoldingsFromOrders,
+}))
+
+import TradingApp from '@/apps/trading/TradingApp'
 import type { Stock, Order, Portfolio, StrategyResult } from '@/data/types'
 import type { TradeAdvice } from '@/services/trading/tradingService'
 import type { TradingSignal } from '@/services/trading/signalGenerator'
@@ -195,10 +204,14 @@ describe('TradingApp', () => {
       data: undefined as never,
     })
     vi.spyOn(tradingService, 'scanWatchingSignals').mockResolvedValue([])
+
+    // 防止 loadPortfolio 内部调用 loadOrders 时触发真实 dataLayer DB 查询而挂起
+    vi.spyOn(useOrderStore.getState(), 'refresh').mockResolvedValue(undefined)
   })
 
   afterEach(() => {
     vi.restoreAllMocks()
+    vi.clearAllMocks()
   })
 
   it('renders initial action buttons', () => {
@@ -571,7 +584,7 @@ describe('TradingApp', () => {
       },
     }
 
-    vi.spyOn(portfolioBuilder, 'buildStrategyFilteredPortfolio').mockResolvedValue({
+    mockBuildStrategyFilteredPortfolio.mockResolvedValue({
       portfolio: mockPortfolio,
       strategyResult: mockStrategyResult,
     })

@@ -1,6 +1,8 @@
 import { describe, expect, it, beforeEach } from 'vitest'
 import { db } from '@/data/db'
 import { dataLayer } from '@/data/dataLayer'
+import { dataBridge } from '@/core/databridge'
+import { STORE_NAME } from '@/config/dbConfig'
 import {
   transformV6Stock,
   transformV6Order,

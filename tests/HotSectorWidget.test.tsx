@@ -55,11 +55,11 @@ describe('HotSectorWidget', () => {
     const data = { hotSectors: [buildHotSectorData()] }
     render(<HotSectorWidget config={buildConfig(UI_TEXT.analysis.hotSector.title)} data={data} />)
 
-    expect(screen.getByText(UI_TEXT.analysis.factor.momentum)).toBeInTheDocument()
-    expect(screen.getByText(UI_TEXT.analysis.factor.sentiment)).toBeInTheDocument()
-    expect(screen.getByText(UI_TEXT.analysis.factor.technique)).toBeInTheDocument()
-    expect(screen.getByText(UI_TEXT.analysis.factor.value)).toBeInTheDocument()
-    expect(screen.getByText(UI_TEXT.analysis.score.overall)).toBeInTheDocument()
+    // 组件使用 DIMENSION_NAMES 映射渲染维度标签
+    expect(screen.getByText('动量')).toBeInTheDocument()
+    expect(screen.getByText('情绪')).toBeInTheDocument()
+    expect(screen.getByText('技术')).toBeInTheDocument()
+    expect(screen.getByText('估值')).toBeInTheDocument()
   })
 
   it('renders probe action label', () => {

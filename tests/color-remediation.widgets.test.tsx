@@ -12,7 +12,7 @@ import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import type { WidgetConfig, SentimentData } from '@/types/modules/widget.types'
 import { STOCK_COLOR_MAPPING } from '@/constants/cockpit.constants'
-import { COLOR_TOKENS } from '@/constants/theme.tokens'
+import { STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
 import { UI_TEXT } from '@/constants/uiText'
 import type { FundFlow } from '@/cockpit/data/mockDataProvider'
 
@@ -22,7 +22,7 @@ import type { FundFlow } from '@/cockpit/data/mockDataProvider'
 // 避免 TDZ（temporal dead zone）和 unused-vars 警告。
 // ============================================================
 const { mockGetFundFlows } = vi.hoisted(() => ({
-  mockGetFundFlows: vi.fn<() => Promise<FundFlow[]>>(),
+  mockGetFundFlows: vi.fn<() => Promise<FundFlow[]>>(() => Promise.resolve([])),
 }))
 
 vi.mock('@/cockpit/data/mockDataProvider', () => ({
@@ -121,13 +121,13 @@ describe('颜色整改 - A 股惯例验证（批次 E）', () => {
   // ----------------------------------------------------------
   describe('FundFlowWidget - 北向资金流向色', () => {
     it('STOCK_COLOR_MAPPING.UP_CLASS 应为 A 股红色（红涨）', () => {
-      expect(STOCK_COLOR_MAPPING.UP_CLASS).toBe(COLOR_TOKENS.up.tailwind)
-      expect(COLOR_TOKENS.up.tailwind).toBe('text-red-500')
+      expect(STOCK_COLOR_MAPPING.UP_CLASS).toBe(STOCK_COLOR_TOKENS.up.tailwind)
+      expect(STOCK_COLOR_TOKENS.up.tailwind).toBe('text-red-500')
     })
 
     it('STOCK_COLOR_MAPPING.DOWN_CLASS 应为 A 股绿色（绿跌）', () => {
-      expect(STOCK_COLOR_MAPPING.DOWN_CLASS).toBe(COLOR_TOKENS.down.tailwind)
-      expect(COLOR_TOKENS.down.tailwind).toBe('text-green-500')
+      expect(STOCK_COLOR_MAPPING.DOWN_CLASS).toBe(STOCK_COLOR_TOKENS.down.tailwind)
+      expect(STOCK_COLOR_TOKENS.down.tailwind).toBe('text-green-500')
     })
 
     it('北向资金净流入（value > 0）应渲染红色上涨图标', async () => {
@@ -346,23 +346,23 @@ describe('颜色整改 - A 股惯例验证（批次 E）', () => {
 })
 
 // ============================================================
-// 颜色常量一致性测试（防止 COLOR_TOKENS 被意外修改）
+// 颜色常量一致性测试（防止 STOCK_COLOR_TOKENS 被意外修改）
 // ============================================================
 describe('颜色常量一致性 - A 股惯例锚点', () => {
-  it('COLOR_TOKENS.up.tailwind 应为 text-red-500（红涨）', () => {
-    expect(COLOR_TOKENS.up.tailwind).toBe('text-red-500')
-    expect(COLOR_TOKENS.up.hex).toBe('#ef4444')
+  it('STOCK_COLOR_TOKENS.up.tailwind 应为 text-red-500（红涨）', () => {
+    expect(STOCK_COLOR_TOKENS.up.tailwind).toBe('text-red-500')
+    expect(STOCK_COLOR_TOKENS.up.hex).toBe('#ef4444')
   })
 
-  it('COLOR_TOKENS.down.tailwind 应为 text-green-500（绿跌）', () => {
-    expect(COLOR_TOKENS.down.tailwind).toBe('text-green-500')
-    expect(COLOR_TOKENS.down.hex).toBe('#22c55e')
+  it('STOCK_COLOR_TOKENS.down.tailwind 应为 text-green-500（绿跌）', () => {
+    expect(STOCK_COLOR_TOKENS.down.tailwind).toBe('text-green-500')
+    expect(STOCK_COLOR_TOKENS.down.hex).toBe('#22c55e')
   })
 
-  it('STOCK_COLOR_MAPPING 应与 COLOR_TOKENS up/down 一致', () => {
-    expect(STOCK_COLOR_MAPPING.UP_CLASS).toBe(COLOR_TOKENS.up.tailwind)
-    expect(STOCK_COLOR_MAPPING.DOWN_CLASS).toBe(COLOR_TOKENS.down.tailwind)
-    expect(STOCK_COLOR_MAPPING.UP).toBe(COLOR_TOKENS.up.hex)
-    expect(STOCK_COLOR_MAPPING.DOWN).toBe(COLOR_TOKENS.down.hex)
+  it('STOCK_COLOR_MAPPING 应与 STOCK_COLOR_TOKENS up/down 一致', () => {
+    expect(STOCK_COLOR_MAPPING.UP_CLASS).toBe(STOCK_COLOR_TOKENS.up.tailwind)
+    expect(STOCK_COLOR_MAPPING.DOWN_CLASS).toBe(STOCK_COLOR_TOKENS.down.tailwind)
+    expect(STOCK_COLOR_MAPPING.UP).toBe(STOCK_COLOR_TOKENS.up.hex)
+    expect(STOCK_COLOR_MAPPING.DOWN).toBe(STOCK_COLOR_TOKENS.down.hex)
   })
 })

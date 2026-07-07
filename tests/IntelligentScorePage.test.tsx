@@ -22,7 +22,7 @@ describe('IntelligentScorePage', () => {
       </MemoryRouter>,
     )
     // 验证组件渲染了内容（检查页面标题，页面中有多个该文本）
-    expect(screen.getAllByText('V6 个股智能评分').length).toBeGreaterThan(0)
+    expect(screen.getAllByText(/V6 个股智能评分/).length).toBeGreaterThan(0)
   })
 
   // ================================================================

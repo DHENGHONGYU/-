@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { db } from '@/data/db'
+import { dataBridge } from '@/core/databridge'
+import { STORE_NAME } from '@/config/dbConfig'
 import type { LocalDoc } from '@/data/types'
 import {
   categorizeDocument,
@@ -18,6 +20,7 @@ describe('localDocService', () => {
   beforeEach(async () => {
     await db.init()
     await db.reset()
+    dataBridge.invalidateCache(STORE_NAME.localDocs)
   })
 
   describe('parseSymbolFromFilename', () => {

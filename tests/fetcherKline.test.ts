@@ -1,6 +1,8 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
 import { dataLayer } from '@/data/dataLayer'
 import { db } from '@/data/db'
+import { dataBridge } from '@/core/databridge'
+import { STORE_NAME } from '@/config/dbConfig'
 import { fetchStockKline } from '@/services/fetcher/fetcherService'
 import { runV6Score } from '@/services/scoring/v6ScoreService'
 
@@ -90,9 +92,10 @@ describe('fetcherKline', () => {
     const scoreResult = await runV6Score('000001.SZ')
 
     expect(scoreResult.success).toBe(true)
-    expect(scoreResult.data?.factors['动量']).toBeDefined()
-    expect(scoreResult.data?.factors['波动']).toBeDefined()
-    expect(scoreResult.data?.factors['流动性']).toBeDefined()
+    // V6 评分已重构为 11 层评分，factors 以 layerId（l0~l8、lMinus1 等）为键。
+    // 此处仅校验 kline 数据已流入评分并产出因子明细，不再依赖具体中文因子名。
+    expect(scoreResult.data?.factors).toBeDefined()
+    expect(Object.keys(scoreResult.data!.factors).length).toBeGreaterThan(0)
   })
 
   it('should return error when stock not found', async () => {
