@@ -44,6 +44,44 @@ npm run build     # 生产构建
 npm run preview   # 预览生产构建
 ```
 
+## 构建优化（PR-5）
+
+本项目采用 Vite v6.4.3 构建，已实施以下优化（详见 [docs/changelogs/2026-07/pr-5-build-optimization-summary.md](docs/changelogs/2026-07/pr-5-build-optimization-summary.md)）：
+
+### ManualChunks 配置
+
+大型第三方库独立成 chunk，消除重复打包：
+
+- `vendor`：react/react-dom/react-router/zustand/dayjs
+- `ui`：lucide-react/clsx/tailwind-merge/@heroicons/react
+- `charts`：recharts/lightweight-charts（消除 5 个图表组件的 recharts 重复打包）
+- `pdf`：jspdf/jspdf-autotable（配合 `await import()` 懒加载）
+- `excel`：xlsx（配合 `await import()` 懒加载）
+
+### Sourcemap 策略
+
+- **生产环境**：`sourcemap: false`（关闭，减少 12.1 MB 输出）
+- **调试环境**：临时改为 `sourcemap: 'hidden'`（生成但不暴露给浏览器）
+- **错误追踪**：依赖 `src/lib/logger.ts` 记录错误堆栈，不依赖 sourcemap
+
+### 优化效果
+
+| 指标 | 优化前 | 优化后 | 改善 |
+|------|--------|--------|------|
+| dist 体积 | ~15.6 MB | ~3.1 MB | ↓ 80.1% |
+| .map 文件 | 137 个（12.1 MB） | 0 个 | 全部消除 |
+| ScoreRadar chunk | 299 kB | 0.96 kB | ↓ 99.7% |
+| recharts 重复打包 | ~662 kB | 0 kB | 消除 |
+
+### 大型模块预先诊断清单
+
+新增大型第三方库前，请检查：
+
+1. 体积 > 100 kB 的库是否已加入 `manualChunks`
+2. 被 3+ 组件引用的共享库是否独立成 chunk
+3. 功能性库（导出/解析）是否使用 `await import()` 懒加载
+4. 图标库是否按需导入（`import { Menu } from 'lucide-react'`）
+
 ## 已实现功能
 
 - [x] 五舱导航框架（PortalShell）

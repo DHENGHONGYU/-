@@ -102,12 +102,20 @@ export default defineConfig({
   build: {
     target: 'es2022',
     outDir: 'dist',
-    sourcemap: true,
+    sourcemap: false,  // PR-5 5.2：关闭生产 sourcemap，调试时改为 'hidden'
     rollupOptions: {
       output: {
         manualChunks: {
-          'vendor': ['react', 'react-dom', 'react-router', 'zustand'],
-          'ui': ['lucide-react', 'clsx', 'tailwind-merge'],
+          // 核心框架
+          'vendor': ['react', 'react-dom', 'react-router', 'zustand', 'dayjs'],
+          // UI 组件库
+          'ui': ['lucide-react', 'clsx', 'tailwind-merge', '@heroicons/react'],
+          // 图表库（PR-5 5.1：消除 recharts 重复打包 ~662 kB）
+          'charts': ['recharts', 'lightweight-charts'],
+          // PDF 导出（PR-5 5.1：配合 backtestExportService 懒加载）
+          'pdf': ['jspdf', 'jspdf-autotable'],
+          // Excel 处理（PR-5 5.1：配合 backtestExportService 懒加载）
+          'excel': ['xlsx'],
         },
       },
     },
