@@ -10,7 +10,7 @@ import { ScoreFactorDeltaPanel } from '@/components/ScoreFactorDeltaPanel'
 import { ScoreUpdateAlert } from '@/components/ScoreUpdateAlert'
 import { IndustrySkillSnapshotCard } from '@/components/cabin/IndustrySkillSnapshotCard'
 import { IndustryHistoryCard } from '@/components/cabin/IndustryHistoryCard'
-import { HOT_TRACKS } from '@/data/sectorSkillData'
+import { HOT_TRACKS } from '@/constants/sectorConstants'
 import {
   useIndustryScoreStore,
   selectSelectedSector,

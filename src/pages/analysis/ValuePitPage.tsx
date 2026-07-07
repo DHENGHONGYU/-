@@ -16,7 +16,7 @@ import type { ValuePitScore } from '@/data/types'
 import type { RotationSignal } from '@/services/scoring/rotationSignalDetector'
 import { useValuePitStore, type ValuePitSectorResult } from '@/store/valuePitStore'
 import { getLogger } from '@/lib/logger'
-import { COLOR_SHADES, twText } from '@/constants/theme.tokens'
+
 
 const logger = getLogger()
 
@@ -50,9 +50,9 @@ const ACTION_CONFIG: Record<ValuePitScore['action'], { label: string; variant: '
 }
 
 const STRENGTH_CONFIG: Record<RotationSignal['strength'], { label: string; color: string }> = {
-  strong: { label: '强信号', color: twText('green', 600) },
-  medium: { label: '中等信号', color: twText('yellow', 600) },
-  weak: { label: '弱信号', color: twText('red', 600) },
+  strong: { label: '强信号', color: 'text-success' },
+  medium: { label: '中等信号', color: 'text-warning' },
+  weak: { label: '弱信号', color: 'text-destructive' },
 }
 
 // ============================================================
@@ -238,25 +238,25 @@ export default function ValuePitPage(): React.JSX.Element {
                     <div className="grid grid-cols-3 gap-3">
                       <div className="flex items-center gap-2">
                         {rotation.conditions.volumeBreakthrough ? (
-                          <CheckCircle className={`h-4 w-4 ${COLOR_SHADES.green[500]}`} />
+                          <CheckCircle className={`h-4 w-4 text-success`} />
                         ) : (
-                          <XCircle className={`h-4 w-4 ${COLOR_SHADES.red[400]}`} />
+                          <XCircle className={`h-4 w-4 text-destructive`} />
                         )}
                         <span className="text-xs">成交量突破</span>
                       </div>
                       <div className="flex items-center gap-2">
                         {rotation.conditions.capitalInflow ? (
-                          <CheckCircle className={`h-4 w-4 ${COLOR_SHADES.green[500]}`} />
+                          <CheckCircle className={`h-4 w-4 text-success`} />
                         ) : (
-                          <XCircle className={`h-4 w-4 ${COLOR_SHADES.red[400]}`} />
+                          <XCircle className={`h-4 w-4 text-destructive`} />
                         )}
                         <span className="text-xs">资金净流入</span>
                       </div>
                       <div className="flex items-center gap-2">
                         {rotation.conditions.goldenCross ? (
-                          <CheckCircle className={`h-4 w-4 ${COLOR_SHADES.green[500]}`} />
+                          <CheckCircle className={`h-4 w-4 text-success`} />
                         ) : (
-                          <XCircle className={`h-4 w-4 ${COLOR_SHADES.red[400]}`} />
+                          <XCircle className={`h-4 w-4 text-destructive`} />
                         )}
                         <span className="text-xs">技术金叉</span>
                       </div>
@@ -271,9 +271,9 @@ export default function ValuePitPage(): React.JSX.Element {
                   {/* 建仓建议卡片 */}
                   <div
                     className={`rounded-md border p-4 ${
-                      score.action === 'immediate' ? `${COLOR_SHADES.green[200]} ${COLOR_SHADES.green[50]}` :
-                      score.action === 'wait' ? `${COLOR_SHADES.red[200]} ${COLOR_SHADES.red[50]}` :
-                      `${COLOR_SHADES.yellow[200]} ${COLOR_SHADES.yellow[50]}`
+                      score.action === 'immediate' ? `border-success/30 bg-success/10` :
+                      score.action === 'wait' ? `border-destructive/30 bg-destructive/10` :
+                      `border-warning/30 bg-warning/10`
                     }`}
                   >
                     <div className="flex items-center gap-2">

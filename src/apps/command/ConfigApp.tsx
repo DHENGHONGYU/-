@@ -9,7 +9,7 @@
  * @see docs/《V9核心数据字典与类型定义（整合版）》.md — AppConfig 类型定义
  * @see docs/implementation/v9-system-blueprint.md — Phase 7 总控舱功能扩展
  */
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Input } from '@/components/ui/Input'
@@ -30,6 +30,7 @@ import { isLlmConfigured, type PartialLlmConfig } from '@/config/llmConfig'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import { getLogger } from '@/lib/logger'
 import { toSafeNumberInRange } from '@/lib/safeCoerce'
+import { useConfirmDialog } from '@/hooks/useConfirmDialog'
 
 const logger = getLogger()
 
@@ -150,6 +151,8 @@ function applyTheme(theme: AppConfig['theme']): void {
 export default function ConfigApp(): React.JSX.Element {
   const [config, setConfig] = useState<AppConfig>(loadConfig)
   const [saved, setSaved] = useState(false)
+  const savedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const { confirm } = useConfirmDialog()
 
   // LLM 配置状态（受控模式）
   const [llmConfig, setLlmConfig] = useState<PartialLlmConfig>(() => {
@@ -165,6 +168,15 @@ export default function ConfigApp(): React.JSX.Element {
     localStorage.setItem(LLM_CONFIG_KEY, JSON.stringify(config))
   }
   const llmConfigReady = isLlmConfigured(llmConfig)
+
+  // 清理 saved 定时器，防止测试环境 teardown 后执行
+  useEffect(() => {
+    return () => {
+      if (savedTimerRef.current) {
+        clearTimeout(savedTimerRef.current)
+      }
+    }
+  }, [])
 
   // 初始化时应用主题
   useEffect(() => {
@@ -227,18 +239,22 @@ export default function ConfigApp(): React.JSX.Element {
 
       setSaved(true)
       // 2 秒后隐藏保存成功提示
-      setTimeout(() => setSaved(false), SAVE_SUCCESS_DISPLAY_DURATION)
+      savedTimerRef.current = setTimeout(() => setSaved(false), SAVE_SUCCESS_DISPLAY_DURATION)
       return next
     })
   }, [])
 
-  const handleResetToDefault = useCallback(() => {
-    if (!confirm('确定要将所有配置恢复为默认值吗？')) return
+  const handleResetToDefault = useCallback(async () => {
+    const confirmed = await confirm({
+      title: '确认恢复默认配置',
+      description: '确定要将所有配置恢复为默认值吗？'
+    })
+    if (!confirmed) return
     const defaults = { ...DEFAULT_CONFIG }
     setConfig(defaults)
     saveConfig(defaults)
     applyTheme(defaults.theme)
-  }, [])
+  }, [confirm])
 
   return (
     <div className="space-y-4 p-4">

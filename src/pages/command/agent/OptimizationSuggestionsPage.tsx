@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
 import {
-  TrendingUp,
   Zap,
-  Shield,
   Code,
+  Shield,
+  TrendingUp,
   Search,
   ExternalLink,
 } from 'lucide-react'
-import { twText, twBg } from '@/constants/theme.tokens'
+import { PageContainer } from '@/components/ui/PageContainer'
+import { PageHeader } from '@/components/ui/PageHeader'
+import { PRIORITY_BADGE, SUGGESTION_STATUS_BADGE, CATEGORY_ICON_COLOR, DEFAULT_BADGE } from '@/components/ui/statusColors'
 
 /**
  * 优化建议展示页面
@@ -116,52 +118,40 @@ const OptimizationSuggestionsPage: React.FC = () => {
   ])
 
   const getPriorityBadge = (priority: string) => {
-    const config: Record<string, { color: string; text: string }> = {
-      'high': { color: 'text-red-400 bg-red-900/30', text: '高' },
-      'medium': { color: 'text-yellow-400 bg-yellow-900/30', text: '中' },
-      'low': { color: 'text-blue-400 bg-blue-900/30', text: '低' },
-    }
-    const badge = config[priority] ?? config['medium'] ?? { color: '', text: '' }
+    const badge = PRIORITY_BADGE[priority] ?? DEFAULT_BADGE
     return (
-      <span className={`px-2 py-1 rounded text-xs font-medium ${badge.color}`}>
-        {badge.text}
+      <span className={`rounded px-2 py-1 text-xs font-medium ${badge.badge}`}>
+        {badge.label}
       </span>
     )
   }
 
   const getStatusBadge = (status: string) => {
-    const config: Record<string, { color: string; text: string }> = {
-      'open': { color: 'text-blue-400 bg-blue-900/30', text: '待处理' },
-      'in-progress': { color: 'text-yellow-400 bg-yellow-900/30', text: '进行中' },
-      'completed': { color: 'text-green-400 bg-green-900/30', text: '已完成' },
-      'dismissed': { color: 'text-gray-400 bg-gray-900/30', text: '已忽略' },
-    }
-    const badge = config[status] ?? config['open'] ?? { color: '', text: '' }
+    const badge = SUGGESTION_STATUS_BADGE[status] ?? DEFAULT_BADGE
     return (
-      <span className={`px-2 py-1 rounded text-xs font-medium ${badge.color}`}>
-        {badge.text}
+      <span className={`rounded px-2 py-1 text-xs font-medium ${badge.badge}`}>
+        {badge.label}
       </span>
     )
   }
 
   const getCategoryIcon = (category: string) => {
-    const config: Record<string, { icon: typeof Zap; color: string }> = {
-      'performance': { icon: Zap, color: 'text-yellow-400' },
-      'quality': { icon: Code, color: 'text-blue-400' },
-      'security': { icon: Shield, color: 'text-red-400' },
-      'architecture': { icon: TrendingUp, color: 'text-green-400' },
-    }
-    const cat = config[category] ?? config['quality'] ?? { icon: Zap, color: '' }
-    const Icon = cat.icon
-    return <Icon className={`w-5 h-5 ${cat.color}`} />
+    const color = CATEGORY_ICON_COLOR[category] ?? 'text-muted-foreground'
+    const Icon = {
+      performance: Zap,
+      quality: Code,
+      security: Shield,
+      architecture: TrendingUp,
+    }[category] ?? Zap
+    return <Icon className={`h-5 w-5 ${color}`} />
   }
 
   const filteredSuggestions = suggestions
     .filter(s => activeFilter === 'all' || s.status === activeFilter)
     .filter(s => selectedCategory === 'all' || s.category === selectedCategory)
-    .filter(s => 
+    .filter(s =>
       s.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      s.description.toLowerCase().includes(searchQuery.toLowerCase())
+      s.description.toLowerCase().includes(searchQuery.toLowerCase()),
     )
 
   const stats = {
@@ -172,38 +162,34 @@ const OptimizationSuggestionsPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white p-6">
-      <div className="mb-8">
-        <h1 className={`text-3xl font-bold ${twText('primary')} mb-2`}>
-          优化建议
-        </h1>
-        <p className={twText('muted')}>
-          查看和实施系统优化建议，提升性能、质量和安全性
-        </p>
-      </div>
+    <PageContainer className="min-h-screen bg-background text-foreground">
+      <PageHeader
+        title="优化建议"
+        description="查看和实施系统优化建议，提升性能、质量和安全性"
+      />
 
       {/* 统计卡片 */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div className={`${twBg('card')} rounded p-4 border border-gray-800`}>
-          <div className={`text-sm ${twText('muted')} mb-1`}>总建议数</div>
-          <div className={`text-2xl font-bold ${twText('accent')}`}>{stats.total}</div>
+      <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
+        <div className="rounded-lg border bg-card p-4">
+          <div className="mb-1 text-body-sm text-muted-foreground">总建议数</div>
+          <div className="text-h2 font-bold text-primary">{stats.total}</div>
         </div>
-        <div className={`${twBg('card')} rounded p-4 border border-gray-800`}>
-          <div className={`text-sm ${twText('muted')} mb-1`}>待处理</div>
-          <div className="text-2xl font-bold text-blue-400">{stats.open}</div>
+        <div className="rounded-lg border bg-card p-4">
+          <div className="mb-1 text-body-sm text-muted-foreground">待处理</div>
+          <div className="text-h2 font-bold text-info">{stats.open}</div>
         </div>
-        <div className={`${twBg('card')} rounded p-4 border border-gray-800`}>
-          <div className={`text-sm ${twText('muted')} mb-1`}>进行中</div>
-          <div className="text-2xl font-bold text-yellow-400">{stats.inProgress}</div>
+        <div className="rounded-lg border bg-card p-4">
+          <div className="mb-1 text-body-sm text-muted-foreground">进行中</div>
+          <div className="text-h2 font-bold text-warning">{stats.inProgress}</div>
         </div>
-        <div className={`${twBg('card')} rounded p-4 border border-gray-800`}>
-          <div className={`text-sm ${twText('muted')} mb-1`}>已完成</div>
-          <div className="text-2xl font-bold text-green-400">{stats.completed}</div>
+        <div className="rounded-lg border bg-card p-4">
+          <div className="mb-1 text-body-sm text-muted-foreground">已完成</div>
+          <div className="text-h2 font-bold text-success">{stats.completed}</div>
         </div>
       </div>
 
       {/* 过滤和搜索 */}
-      <div className="flex gap-4 mb-6">
+      <div className="mb-6 flex flex-wrap gap-4">
         <div className="flex gap-2">
           {[
             { key: 'all' as const, label: '全部' },
@@ -214,30 +200,30 @@ const OptimizationSuggestionsPage: React.FC = () => {
             <button
               key={filter.key}
               onClick={() => setActiveFilter(filter.key)}
-              className={`px-4 py-2 rounded-lg transition-colors ${
+              className={`rounded-lg px-4 py-2 transition-colors ${
                 activeFilter === filter.key
-                  ? 'bg-blue-600 text-white'
-                  : `${twBg('card')} ${twText('muted')} hover:bg-gray-800`
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-card text-muted-foreground hover:bg-accent'
               }`}
             >
               {filter.label}
             </button>
           ))}
         </div>
-        <div className="flex-1 relative">
-          <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 ${twText('muted')}`} />
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
           <input
             type="text"
             placeholder="搜索建议..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className={`w-full pl-10 pr-4 py-2 ${twBg('card')} border border-gray-800 rounded-lg ${twText('primary')} focus:outline-none focus:border-blue-500`}
+            className="w-full rounded-lg border border-border bg-card py-2 pl-10 pr-4 text-foreground focus:border-primary focus:outline-none"
           />
         </div>
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          className={`px-4 py-2 ${twBg('card')} border border-gray-800 rounded-lg ${twText('primary')} focus:outline-none focus:border-blue-500`}
+          className="rounded-lg border border-border bg-card px-4 py-2 text-foreground focus:border-primary focus:outline-none"
         >
           <option value="all">全部分类</option>
           <option value="performance">性能</option>
@@ -250,49 +236,49 @@ const OptimizationSuggestionsPage: React.FC = () => {
       {/* 建议列表 */}
       <div className="space-y-4">
         {filteredSuggestions.map(suggestion => (
-          <div key={suggestion.id} className={`${twBg('card')} rounded-lg p-6 border border-gray-800`}>
+          <div key={suggestion.id} className="rounded-lg border bg-card p-6">
             <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 mt-1">
+              <div className="mt-1 flex-shrink-0">
                 {getCategoryIcon(suggestion.category)}
               </div>
               <div className="flex-1">
-                <div className="flex items-start justify-between mb-2">
+                <div className="mb-2 flex items-start justify-between">
                   <div>
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className={`text-xl font-semibold ${twText('primary')}`}>
+                    <div className="mb-2 flex items-center gap-3">
+                      <h3 className="text-h3 text-foreground">
                         {suggestion.title}
                       </h3>
                       {getPriorityBadge(suggestion.priority)}
                       {getStatusBadge(suggestion.status)}
                     </div>
-                    <p className={`${twText('secondary')} mb-4`}>
+                    <p className="mb-4 text-muted-foreground">
                       {suggestion.description}
                     </p>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                  <div className={`${twBg('muted')} rounded p-3`}>
-                    <div className={`text-sm ${twText('muted')} mb-1`}>预期影响</div>
-                    <div className={`font-semibold ${twText('primary')}`}>
+                <div className="mb-4 grid grid-cols-2 gap-4 md:grid-cols-4">
+                  <div className="rounded bg-muted p-3">
+                    <div className="mb-1 text-body-sm text-muted-foreground">预期影响</div>
+                    <div className="font-semibold text-foreground">
                       {suggestion.impact}
                     </div>
                   </div>
-                  <div className={`${twBg('muted')} rounded p-3`}>
-                    <div className={`text-sm ${twText('muted')} mb-1`}>工作量评估</div>
-                    <div className={`font-semibold ${twText('primary')}`}>
+                  <div className="rounded bg-muted p-3">
+                    <div className="mb-1 text-body-sm text-muted-foreground">工作量评估</div>
+                    <div className="font-semibold text-foreground">
                       {suggestion.effort}
                     </div>
                   </div>
-                  <div className={`${twBg('muted')} rounded p-3`}>
-                    <div className={`text-sm ${twText('muted')} mb-1`}>创建时间</div>
-                    <div className={`font-semibold ${twText('primary')}`}>
+                  <div className="rounded bg-muted p-3">
+                    <div className="mb-1 text-body-sm text-muted-foreground">创建时间</div>
+                    <div className="font-semibold text-foreground">
                       {suggestion.createdAt}
                     </div>
                   </div>
-                  <div className={`${twBg('muted')} rounded p-3`}>
-                    <div className={`text-sm ${twText('muted')} mb-1`}>负责人</div>
-                    <div className={`font-semibold ${twText('primary')}`}>
+                  <div className="rounded bg-muted p-3">
+                    <div className="mb-1 text-body-sm text-muted-foreground">负责人</div>
+                    <div className="font-semibold text-foreground">
                       {suggestion.assignee || '未分配'}
                     </div>
                   </div>
@@ -300,8 +286,8 @@ const OptimizationSuggestionsPage: React.FC = () => {
 
                 {suggestion.location && (
                   <div className="mb-4">
-                    <span className={`text-sm ${twText('muted')}`}>位置：</span>
-                    <code className="px-2 py-1 bg-gray-800 rounded text-sm text-blue-400">
+                    <span className="text-body-sm text-muted-foreground">位置：</span>
+                    <code className="rounded bg-muted px-2 py-1 text-body-sm text-info">
                       {suggestion.location}
                     </code>
                   </div>
@@ -310,21 +296,21 @@ const OptimizationSuggestionsPage: React.FC = () => {
                 <div className="flex gap-2">
                   {suggestion.status === 'open' && (
                     <>
-                      <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors">
+                      <button className="rounded-lg bg-primary px-4 py-2 text-primary-foreground transition-colors hover:bg-primary/90">
                         开始处理
                       </button>
-                      <button className={`px-4 py-2 ${twBg('muted')} hover:bg-gray-700 rounded-lg transition-colors`}>
+                      <button className="rounded-lg bg-muted px-4 py-2 text-foreground transition-colors hover:bg-accent">
                         忽略
                       </button>
                     </>
                   )}
                   {suggestion.status === 'in-progress' && (
-                    <button className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg transition-colors">
+                    <button className="rounded-lg bg-success px-4 py-2 text-success-foreground transition-colors hover:bg-success/90">
                       标记完成
                     </button>
                   )}
-                  <button className={`px-4 py-2 ${twBg('muted')} hover:bg-gray-700 rounded-lg transition-colors flex items-center gap-2`}>
-                    <ExternalLink className="w-4 h-4" />
+                  <button className="flex items-center gap-2 rounded-lg bg-muted px-4 py-2 text-foreground transition-colors hover:bg-accent">
+                    <ExternalLink className="h-4 w-4" />
                     查看详情
                   </button>
                 </div>
@@ -333,7 +319,7 @@ const OptimizationSuggestionsPage: React.FC = () => {
           </div>
         ))}
       </div>
-    </div>
+    </PageContainer>
   )
 }
 

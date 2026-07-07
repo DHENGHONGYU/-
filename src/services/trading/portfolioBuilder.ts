@@ -6,6 +6,7 @@ import { runStrategy } from './strategyEngine'
 import type { StrategyRuleConfig } from '@/config/strategyRules'
 import type { StrategyResult } from '@/data/types'
 
+import { nanoid } from 'nanoid'
 export interface PortfolioBuilderInput {
   theme: ThemeConfig
   /** 候选股票池，通常为 watching 池或全部 stocks */
@@ -117,7 +118,7 @@ export async function buildThemePortfolio(
   const rebalancePlan = buildRebalancePlan(holdings, theme)
 
   return {
-    id: `${theme.id}-${Date.now()}`,
+    id: `${theme.id}-${nanoid(8)}`,
     name: theme.name,
     theme: theme.id,
     totalValue,
@@ -250,7 +251,7 @@ function emptyPortfolio(theme: ThemeConfig, totalValue: number): Portfolio {
   const cashReserve = themeValue * (theme.cashReservePct / 100)
 
   return {
-    id: `${theme.id}-${Date.now()}`,
+    id: `${theme.id}-${nanoid(8)}`,
     name: theme.name,
     theme: theme.id,
     totalValue,

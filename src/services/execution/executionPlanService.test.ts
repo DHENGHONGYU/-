@@ -1,6 +1,10 @@
 /**
  * @module executionPlanService.test
  * @description 执行计划服务单元测试（E-2-6）
+ *
+ * 注：`createPlan` 相关用例覆盖的是已 @deprecated 的旧路径（无风控 / 无仓位计算），
+ * 仅用于兼容保留，不视为新功能的回归基准。该方法全仓无生产调用方，
+ * 待 `executionStore.createPlan` / `createExecutionPlanUseCase` 接管后，这些用例将随方法一并下线。
  */
 
  

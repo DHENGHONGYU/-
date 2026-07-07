@@ -13,6 +13,7 @@ import { chat as rawChat, streamingChat as rawStreamingChat, LlmApiError } from 
 import type { LlmConfig } from '@/config/llmConfig'
 import type { LlmMessage, LlmResponse, LlmStreamCallback } from '@/services/llm/llmTypes'
 
+import { nanoid } from 'nanoid'
 const logger = getLogger()
 
 export interface LlmGatewayOptions extends Partial<LlmConfig> {
@@ -39,7 +40,7 @@ export interface LlmGatewayResult {
  * @returns LLM 响应
  */
 export async function chat(messages: LlmMessage[], options: LlmGatewayOptions = {}): Promise<LlmResponse> {
-  const traceId = `llm-${Date.now()}-${generateId().slice(0, 8)}`
+  const traceId = `llm-${nanoid(8)}-${generateId().slice(0, 8)}`
   const caller = options.caller ?? 'unknown'
   const startTime = performance.now()
 
@@ -88,7 +89,7 @@ export async function streamingChat(
   callback: LlmStreamCallback,
   options: LlmGatewayOptions = {},
 ): Promise<void> {
-  const traceId = `llm-stream-${Date.now()}-${generateId().slice(0, 8)}`
+  const traceId = `llm-stream-${nanoid(8)}-${generateId().slice(0, 8)}`
   const caller = options.caller ?? 'unknown'
   const startTime = performance.now()
 

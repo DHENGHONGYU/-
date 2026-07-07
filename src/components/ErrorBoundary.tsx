@@ -1,6 +1,7 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
+import { captureError } from '@/services/errorBus'
 
 interface Props {
   children: ReactNode
@@ -23,7 +24,11 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: ErrorInfo): void {
-    console.error('ErrorBoundary caught error:', error, info)
+    captureError(error, {
+      source: 'ErrorBoundary',
+      operation: 'render',
+      meta: { componentStack: info.componentStack },
+    })
   }
 
   render(): ReactNode {

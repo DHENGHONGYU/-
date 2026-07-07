@@ -20,29 +20,62 @@ import type { CompositeScore, FinancialData, V6ScoreInput } from '@/services/sco
 const logger = getLogger()
 
 /**
- * 从 Stock 构建最小化 FinancialData。
+ * 从 financialReports store 读取真实财务数据，映射为引擎 FinancialData。
  *
- * Stock 类型仅包含基础行情字段（pe/pb/roe/marketCap），
- * 财务明细（revenue/netProfit/margins 等）由引擎各层计算器自行降级处理。
+ * 若数据库中无记录，返回空对象（引擎各层会降级处理）。
  */
-function buildFinancialData(_stock: Stock): FinancialData {
-  return {
-    // Stock 不直接携带财务报表字段；
-    // 如后续 dataLayer 扩展 Stock 或新增 financials store，在此处桥接。
+async function buildFinancialData(symbol: string): Promise<FinancialData> {
+  logger.info('[v6ScoreService] buildFinancialData 开始读取财务数据', { symbol })
+
+  const report = await dataLayer.financialReports.get(symbol)
+
+  if (!report) {
+    logger.info('[v6ScoreService] buildFinancialData 未找到财务数据，返回空对象', { symbol })
+    return {}
   }
+
+  const financialData: FinancialData = {
+    revenue: report.revenue,
+    revenueYoY: report.revenueYoY,
+    netProfit: report.netProfit,
+    netProfitYoY: report.netProfitYoY,
+    grossMargin: report.grossMargin,
+    netMargin: report.netMargin,
+    operatingCF: report.operatingCF,
+    rdRatio: report.rdRatio,
+    receivables: report.receivables,
+    inventoryTurnoverDays: report.inventoryTurnoverDays,
+    interestBearingDebt: report.interestBearingDebt,
+    goodwill: report.goodwill,
+    netAssets: report.netAssets,
+    shareholderPledge: report.shareholderPledge,
+  }
+
+  logger.info('[v6ScoreService] buildFinancialData 财务数据加载成功', {
+    symbol,
+    reportDate: report.reportDate,
+    revenue: financialData.revenue,
+    netProfit: financialData.netProfit,
+    grossMargin: financialData.grossMargin,
+    netMargin: financialData.netMargin,
+    rdRatio: financialData.rdRatio,
+    fieldCount: Object.values(financialData).filter(v => v !== undefined).length,
+  })
+
+  return financialData
 }
 
 /**
  * 组装 v6-engine 输入
  */
-function buildEngineInput(stock: Stock, quotes: DailyQuotes | null): V6ScoreInput {
+async function buildEngineInput(stock: Stock, quotes: DailyQuotes | null): Promise<V6ScoreInput> {
   // 输入校验：确保 stock.price 有效
   if (!Number.isFinite(stock.price)) {
     logger.warn(`[v6ScoreService] buildEngineInput: stock.price 无效 (${stock.price})，使用 0`)
   }
 
   const stockData = stockToBasicData(stock)
-  const financials = buildFinancialData(stock)
+  const financials = await buildFinancialData(stock.symbol)
   const quotesData = quotes
     ? quotesToQuoteData(quotes)
     : { latestClose: stock.price, history: [], volumeHistory: [] }
@@ -180,7 +213,7 @@ export async function runV6Score(symbol: string): Promise<DataLayerResult<V6Scor
     const engine = createV6Engine()
 
     logger.info(`[v6ScoreService] runV6Score 构建引擎输入`, { symbol })
-    const input = buildEngineInput(stock, quotesOrNull)
+    const input = await buildEngineInput(stock, quotesOrNull)
 
     logger.info(`[v6ScoreService] runV6Score 引擎输入详情`, {
       symbol,

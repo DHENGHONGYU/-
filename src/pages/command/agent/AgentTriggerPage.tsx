@@ -12,7 +12,6 @@ import { agentRuntime } from '@/agents/agentRuntime'
 import { getAllAgentComponents } from '@/agents/agentComponentRegistry'
 import { mcpRegistry } from '@/mcp/core/registry'
 import { getLogger } from '@/lib/logger'
-import { twBg, twText, twBorder } from '@/constants/theme.tokens'
 import type { AgentTriggerPayload } from '@/types/modules/agent.types'
 
 const logger = getLogger()
@@ -238,8 +237,8 @@ export default function AgentTriggerPage(): React.JSX.Element {
               </div>
             )}
             {result && (
-              <div className={`rounded-md border ${twBorder('green', 500)}/50 ${twBg('green', 500)}/10 p-4`}>
-                <div className={`flex items-center gap-2 text-sm font-medium ${twText('green', 600)}`}>
+              <div className="rounded-md border border-success/50 bg-success/10 p-4">
+                <div className="flex items-center gap-2 text-sm font-medium text-success">
                   <CheckCircle2 className="h-4 w-4" />
                   执行成功
                 </div>

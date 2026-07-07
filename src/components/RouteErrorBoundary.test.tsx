@@ -13,11 +13,13 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { MemoryRouter, Routes, Route } from 'react-router'
 import { UI_TEXT } from '@/constants/uiText'
 
-// 模拟 logger
+// 模拟 logger（须覆盖 eventBus/errorBus 实际调用的全部方法：debug/info/warn/error）
 vi.mock('@/lib/logger', () => ({
   getLogger: () => ({
-    error: vi.fn(),
+    debug: vi.fn(),
     info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
   }),
 }))
 

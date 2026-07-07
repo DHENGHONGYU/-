@@ -55,8 +55,10 @@ export default function HoldingsPage(): React.JSX.Element {
   // 清理标记
   useEffect(() => {
     isMountedRef.current = true
+    logger.info('[HoldingsPage] 挂载，初始化订阅与数据加载')
     return () => {
       isMountedRef.current = false
+      logger.info('[HoldingsPage] 卸载，清理挂载状态')
     }
   }, [])
 
@@ -79,7 +81,14 @@ export default function HoldingsPage(): React.JSX.Element {
       const response = await fetchData(params)
       if (!isMountedRef.current) return
 
-      if (response.code !== 200) {
+      if (response.code === 200) {
+        logger.info('[HoldingsPage] 持仓数据加载完成', {
+          total: pagination.total,
+          page: pagination.page,
+          pageSize: pagination.pageSize,
+          recordCount: data.length,
+        })
+      } else {
         logger.warn('[HoldingsPage] 持仓数据加载返回异常code', {
           code: response.code,
           message: response.message,
@@ -101,7 +110,7 @@ export default function HoldingsPage(): React.JSX.Element {
         setLoading({ isListLoading: false })
       }
     }
-  }, [buildParams, setData, setLoading, toast])
+  }, [buildParams, setData, setLoading, toast, pagination, data])
 
   // 初始加载 & 依赖变化时重新加载
   useEffect(() => {

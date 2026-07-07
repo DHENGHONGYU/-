@@ -2,7 +2,7 @@ import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import type { WidgetConfig, SectorHeatmapData } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
-import { COLOR_TOKENS } from '@/constants/theme.tokens'
+import { STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
 
 interface SectorHeatmapWidgetProps {
   config: WidgetConfig
@@ -15,13 +15,13 @@ export default function SectorHeatmapWidget({ config }: SectorHeatmapWidgetProps
   const error = errorMap[config.instanceId]
 
   const getTextColor = (change: number) => {
-    return change >= 0 ? COLOR_TOKENS.up.hex : COLOR_TOKENS.down.hex
+    return change >= 0 ? STOCK_COLOR_TOKENS.up.hex : STOCK_COLOR_TOKENS.down.hex
   }
 
-  // 热力图颜色：基于 COLOR_TOKENS 涨跌色进行强度插值，禁止硬编码
+  // 热力图颜色：基于 STOCK_COLOR_TOKENS 涨跌色进行强度插值，禁止硬编码
   const getHeatmapColor = (change: number) => {
     const intensity = Math.min(Math.abs(change) / 5, 0.8)
-    const baseRgb = change >= 0 ? COLOR_TOKENS.up.rgb : COLOR_TOKENS.down.rgb
+    const baseRgb = change >= 0 ? STOCK_COLOR_TOKENS.up.rgb : STOCK_COLOR_TOKENS.down.rgb
     const parts = baseRgb.split(',').map((s) => Number.parseInt(s.trim(), 10))
     const baseR = parts[0] ?? 0
     const baseG = parts[1] ?? 0
@@ -95,23 +95,23 @@ export default function SectorHeatmapWidget({ config }: SectorHeatmapWidgetProps
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <h4 className="text-xs font-semibold" style={{ color: COLOR_TOKENS.up.hex }}>领涨 Top5</h4>
+            <h4 className="text-xs font-semibold" style={{ color: STOCK_COLOR_TOKENS.up.hex }}>领涨 Top5</h4>
             <div className="space-y-1">
               {topGainers.map((sector: SectorHeatmapData, idx: number) => (
                 <div key={sector.code} className="flex justify-between text-xs">
                   <span>{idx + 1}. {sector.name}</span>
-                  <span style={{ color: COLOR_TOKENS.up.hex }}>+{sector.changePercent.toFixed(2)}%</span>
+                  <span style={{ color: STOCK_COLOR_TOKENS.up.hex }}>+{sector.changePercent.toFixed(2)}%</span>
                 </div>
               ))}
             </div>
           </div>
           <div>
-            <h4 className="text-xs font-semibold" style={{ color: COLOR_TOKENS.down.hex }}>领跌 Top5</h4>
+            <h4 className="text-xs font-semibold" style={{ color: STOCK_COLOR_TOKENS.down.hex }}>领跌 Top5</h4>
             <div className="space-y-1">
               {topLosers.map((sector: SectorHeatmapData, idx: number) => (
                 <div key={sector.code} className="flex justify-between text-xs">
                   <span>{idx + 1}. {sector.name}</span>
-                  <span style={{ color: COLOR_TOKENS.down.hex }}>{sector.changePercent.toFixed(2)}%</span>
+                  <span style={{ color: STOCK_COLOR_TOKENS.down.hex }}>{sector.changePercent.toFixed(2)}%</span>
                 </div>
               ))}
             </div>

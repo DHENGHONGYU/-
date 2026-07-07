@@ -82,12 +82,18 @@ export class TaskScheduler {
       // 立即执行一次
       await this.executeTask(taskId)
 
+      // 校验 interval 合法性
+      const interval = dataSource.interval > 0 ? dataSource.interval : 60000
+      if (dataSource.interval <= 0) {
+        logger.warn(`[TaskScheduler] interval 非法，使用默认值 60000ms: ${taskId}`)
+      }
+
       // 设置定时轮询
       const timer = setInterval(() => {
         this.executeTask(taskId).catch((err) => {
           logger.error(`[TaskScheduler] 轮询执行失败: ${taskId}`, { error: err })
         })
-      }, dataSource.interval)
+      }, interval)
 
       this.timers.set(taskId, timer)
     } else if (dataSource.mode === 'once') {
@@ -204,7 +210,7 @@ export class TaskScheduler {
    */
   private async executeTask(taskId: string): Promise<void> {
     const task = this.tasks.get(taskId)
-    if (!task || task.status !== 'running') return
+    if (task?.status !== 'running') return
 
     const collector = this.collectors.get(taskId)
     if (!collector) return

@@ -1,14 +1,15 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import { 
-  PlusIcon, 
-  PencilIcon, 
-  TrashIcon, 
-  Cog6ToothIcon,
+import React, { useState, useCallback } from 'react'
+import {
+  PlusIcon,
+  PencilIcon,
+  TrashIcon,
   BeakerIcon,
   ArrowPathIcon,
 } from '@heroicons/react/24/outline'
-import { COLOR_TOKENS, twText, twBg, twBorder } from '@/constants/theme.tokens'
+import { PageContainer } from '@/components/ui/PageContainer'
+import { PageHeader } from '@/components/ui/PageHeader'
 
+import { nanoid } from 'nanoid'
 /**
  * 自定义智能体配置接口
  */
@@ -34,7 +35,7 @@ interface CustomAgentConfig {
 
 /**
  * 自定义智能体管理页面
- * 
+ *
  * @component
  * @remarks
  * 功能：
@@ -76,7 +77,7 @@ const CustomAgentPage: React.FC = () => {
       isActive: true,
     },
   ])
-  
+
   const [showModal, setShowModal] = useState(false)
   const [editingAgent, setEditingAgent] = useState<CustomAgentConfig | null>(null)
   const [testingAgent, setTestingAgent] = useState<CustomAgentConfig | null>(null)
@@ -90,7 +91,7 @@ const CustomAgentPage: React.FC = () => {
       setEditingAgent({ ...agent })
     } else {
       setEditingAgent({
-        id: `agent-${Date.now()}`,
+        id: `agent-${nanoid(8)}`,
         name: '',
         description: '',
         type: 'custom',
@@ -99,8 +100,8 @@ const CustomAgentPage: React.FC = () => {
         temperature: 0.7,
         maxTokens: 2000,
         capabilities: [],
-        createdAt: new Date().toISOString().split('T')[0],
-        updatedAt: new Date().toISOString().split('T')[0],
+        createdAt: new Date().toISOString().split('T')[0] ?? '',
+        updatedAt: new Date().toISOString().split('T')[0] ?? '',
         isActive: true,
       })
     }
@@ -118,7 +119,7 @@ const CustomAgentPage: React.FC = () => {
       if (index >= 0) {
         // 更新现有智能体
         const updated = [...prev]
-        updated[index] = { ...editingAgent, updatedAt: new Date().toISOString().split('T')[0] }
+        updated[index] = { ...editingAgent, updatedAt: new Date().toISOString().split('T')[0] ?? '' }
         return updated
       } else {
         // 添加新智能体
@@ -156,44 +157,39 @@ const CustomAgentPage: React.FC = () => {
    * 切换智能体状态
    */
   const handleToggleAgent = useCallback((agentId: string) => {
-    setAgents(prev => prev.map(a => 
-      a.id === agentId ? { ...a, isActive: !a.isActive, updatedAt: new Date().toISOString().split('T')[0] } : a
+    setAgents(prev => prev.map(a =>
+      a.id === agentId ? { ...a, isActive: !a.isActive, updatedAt: new Date().toISOString().split('T')[0] ?? '' } : a
     ))
   }, [])
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      {/* 页面标题 */}
-      <div className="mb-8">
-        <h1 className={`text-3xl font-bold ${twText('primary')} mb-2`}>
-          自定义智能体管理
-        </h1>
-        <p className={twText('secondary')}>
-          创建和管理自定义智能体，配置智能体参数和能力
-        </p>
-      </div>
+    <PageContainer className="min-h-screen bg-background">
+      <PageHeader
+        title="自定义智能体管理"
+        description="创建和管理自定义智能体，配置智能体参数和能力"
+      />
 
       {/* 操作栏 */}
       <div className="mb-6 flex justify-between items-center">
         <div className="flex gap-4">
           <button
             onClick={() => handleOpenModal()}
-            className={`flex items-center gap-2 px-4 py-2 ${twBg('up', '600')} text-white rounded-lg hover:opacity-90 transition-opacity`}
+            className="flex items-center gap-2 px-4 py-2 bg-destructive text-white rounded-lg hover:opacity-90 transition-opacity"
           >
             <PlusIcon className="w-5 h-5" />
             创建智能体
           </button>
-          
+
           <button
             onClick={() => window.location.reload()}
-            className={`flex items-center gap-2 px-4 py-2 ${twBg('muted')} ${twText('primary')} rounded-lg hover:opacity-90 transition-opacity`}
+            className="flex items-center gap-2 px-4 py-2 bg-muted text-foreground rounded-lg hover:opacity-90 transition-opacity"
           >
             <ArrowPathIcon className="w-5 h-5" />
             刷新
           </button>
         </div>
 
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-tertiary">
           共 {agents.length} 个智能体，{agents.filter(a => a.isActive).length} 个已启用
         </div>
       </div>
@@ -203,20 +199,20 @@ const CustomAgentPage: React.FC = () => {
         {agents.map(agent => (
           <div
             key={agent.id}
-            className={`${twBg('surface')} rounded-lg shadow-sm border ${twBorder('default')} p-6 hover:shadow-md transition-shadow`}
+            className="bg-card rounded-lg shadow-sm border border-border p-6 hover:shadow-md transition-shadow"
           >
             {/* 智能体头部 */}
             <div className="flex justify-between items-start mb-4">
               <div className="flex-1">
-                <h3 className={`text-lg font-semibold ${twText('primary')} mb-1`}>
+                <h3 className="text-h3 font-semibold text-foreground mb-1">
                   {agent.name}
                 </h3>
                 <span className={`inline-block px-2 py-1 text-xs font-medium rounded ${
-                  agent.type === 'analysis' ? twBg('info', '100') + ' ' + twText('info', '700') :
-                  agent.type === 'trading' ? twBg('up', '100') + ' ' + twText('up', '700') :
-                  agent.type === 'risk' ? twBg('danger', '100') + ' ' + twText('danger', '700') :
-                  agent.type === 'data' ? twBg('warning', '100') + ' ' + twText('warning', '700') :
-                  twBg('muted') + ' ' + twText('secondary')
+                  agent.type === 'analysis' ? 'bg-info/15 text-info' :
+                  agent.type === 'trading' ? 'bg-destructive/15 text-destructive' :
+                  agent.type === 'risk' ? 'bg-destructive/15 text-destructive' :
+                  agent.type === 'data' ? 'bg-warning/15 text-warning' :
+                  'bg-muted text-muted-foreground'
                 }`}>
                   {agent.type === 'analysis' ? '分析' :
                    agent.type === 'trading' ? '交易' :
@@ -230,7 +226,7 @@ const CustomAgentPage: React.FC = () => {
                 <button
                   onClick={() => handleToggleAgent(agent.id)}
                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                    agent.isActive ? twBg('up', '500') : 'bg-gray-300'
+                    agent.isActive ? 'bg-destructive' : 'bg-muted'
                   }`}
                 >
                   <span
@@ -243,27 +239,27 @@ const CustomAgentPage: React.FC = () => {
             </div>
 
             {/* 智能体描述 */}
-            <p className={`${twText('secondary')} text-sm mb-4 line-clamp-2`}>
+            <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
               {agent.description}
             </p>
 
             {/* 智能体配置信息 */}
             <div className="space-y-2 mb-4">
               <div className="flex justify-between text-sm">
-                <span className={twText('muted')}>模型</span>
-                <span className={twText('primary')}>{agent.model}</span>
+                <span className="text-tertiary">模型</span>
+                <span className="text-foreground">{agent.model}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className={twText('muted')}>温度</span>
-                <span className={twText('primary')}>{agent.temperature}</span>
+                <span className="text-tertiary">温度</span>
+                <span className="text-foreground">{agent.temperature}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className={twText('muted')}>最大Token</span>
-                <span className={twText('primary')}>{agent.maxTokens}</span>
+                <span className="text-tertiary">最大Token</span>
+                <span className="text-foreground">{agent.maxTokens}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className={twText('muted')}>能力数量</span>
-                <span className={twText('primary')}>{agent.capabilities.length}</span>
+                <span className="text-tertiary">能力数量</span>
+                <span className="text-foreground">{agent.capabilities.length}</span>
               </div>
             </div>
 
@@ -274,13 +270,13 @@ const CustomAgentPage: React.FC = () => {
                   {agent.capabilities.slice(0, 3).map(cap => (
                     <span
                       key={cap}
-                      className={`px-2 py-1 text-xs ${twBg('muted')} ${twText('secondary')} rounded`}
+                      className="px-2 py-1 text-xs bg-muted text-muted-foreground rounded"
                     >
                       {cap}
                     </span>
                   ))}
                   {agent.capabilities.length > 3 && (
-                    <span className={`px-2 py-1 text-xs ${twBg('muted')} ${twText('muted')} rounded`}>
+                    <span className="px-2 py-1 text-xs bg-muted text-tertiary rounded">
                       +{agent.capabilities.length - 3}
                     </span>
                   )}
@@ -292,7 +288,7 @@ const CustomAgentPage: React.FC = () => {
             <div className="flex gap-2">
               <button
                 onClick={() => handleOpenModal(agent)}
-                className={`flex-1 flex items-center justify-center gap-1 px-3 py-2 ${twBg('muted')} ${twText('primary')} rounded hover:opacity-90 transition-opacity`}
+                className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-muted text-foreground rounded hover:opacity-90 transition-opacity"
               >
                 <PencilIcon className="w-4 h-4" />
                 编辑
@@ -300,7 +296,7 @@ const CustomAgentPage: React.FC = () => {
 
               <button
                 onClick={() => handleTestAgent(agent)}
-                className={`flex-1 flex items-center justify-center gap-1 px-3 py-2 ${twBg('info', '500')} text-white rounded hover:opacity-90 transition-opacity`}
+                className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-info text-white rounded hover:opacity-90 transition-opacity"
               >
                 <BeakerIcon className="w-4 h-4" />
                 测试
@@ -308,7 +304,7 @@ const CustomAgentPage: React.FC = () => {
 
               <button
                 onClick={() => handleDeleteAgent(agent.id)}
-                className={`flex items-center justify-center px-3 py-2 ${twBg('danger', '500')} text-white rounded hover:opacity-90 transition-opacity`}
+                className="flex items-center justify-center px-3 py-2 bg-destructive text-white rounded hover:opacity-90 transition-opacity"
               >
                 <TrashIcon className="w-4 h-4" />
               </button>
@@ -319,36 +315,36 @@ const CustomAgentPage: React.FC = () => {
 
       {/* 创建/编辑模态框 */}
       {showModal && editingAgent && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className={`${twBg('surface')} rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto`}>
-            <h2 className={`text-2xl font-bold ${twText('primary')} mb-4`}>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-card rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <h2 className="text-h2 font-bold text-foreground mb-4">
               {agents.find(a => a.id === editingAgent.id) ? '编辑智能体' : '创建智能体'}
             </h2>
 
             <div className="space-y-4">
               {/* 智能体名称 */}
               <div>
-                <label className={`block text-sm font-medium ${twText('primary')} mb-1`}>
+                <label className="block text-sm font-medium text-foreground mb-1">
                   智能体名称 *
                 </label>
                 <input
                   type="text"
                   value={editingAgent.name}
                   onChange={(e) => setEditingAgent(prev => prev ? { ...prev, name: e.target.value } : null)}
-                  className={`w-full px-3 py-2 border ${twBorder('default')} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="输入智能体名称"
                 />
               </div>
 
               {/* 智能体描述 */}
               <div>
-                <label className={`block text-sm font-medium ${twText('primary')} mb-1`}>
+                <label className="block text-sm font-medium text-foreground mb-1">
                   描述 *
                 </label>
                 <textarea
                   value={editingAgent.description}
                   onChange={(e) => setEditingAgent(prev => prev ? { ...prev, description: e.target.value } : null)}
-                  className={`w-full px-3 py-2 border ${twBorder('default')} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                   rows={3}
                   placeholder="输入智能体描述"
                 />
@@ -356,13 +352,13 @@ const CustomAgentPage: React.FC = () => {
 
               {/* 智能体类型 */}
               <div>
-                <label className={`block text-sm font-medium ${twText('primary')} mb-1`}>
+                <label className="block text-sm font-medium text-foreground mb-1">
                   类型 *
                 </label>
                 <select
                   value={editingAgent.type}
                   onChange={(e) => setEditingAgent(prev => prev ? { ...prev, type: e.target.value as CustomAgentConfig['type'] } : null)}
-                  className={`w-full px-3 py-2 border ${twBorder('default')} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option value="analysis">分析</option>
                   <option value="trading">交易</option>
@@ -374,13 +370,13 @@ const CustomAgentPage: React.FC = () => {
 
               {/* 模型选择 */}
               <div>
-                <label className={`block text-sm font-medium ${twText('primary')} mb-1`}>
+                <label className="block text-sm font-medium text-foreground mb-1">
                   模型 *
                 </label>
                 <select
                   value={editingAgent.model}
                   onChange={(e) => setEditingAgent(prev => prev ? { ...prev, model: e.target.value } : null)}
-                  className={`w-full px-3 py-2 border ${twBorder('default')} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option value="deepseek-chat">DeepSeek Chat</option>
                   <option value="deepseek-coder">DeepSeek Coder</option>
@@ -393,13 +389,13 @@ const CustomAgentPage: React.FC = () => {
 
               {/* 系统提示词 */}
               <div>
-                <label className={`block text-sm font-medium ${twText('primary')} mb-1`}>
+                <label className="block text-sm font-medium text-foreground mb-1">
                   系统提示词 *
                 </label>
                 <textarea
                   value={editingAgent.systemPrompt}
                   onChange={(e) => setEditingAgent(prev => prev ? { ...prev, systemPrompt: e.target.value } : null)}
-                  className={`w-full px-3 py-2 border ${twBorder('default')} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                   rows={5}
                   placeholder="输入系统提示词，定义智能体的角色和行为"
                 />
@@ -407,7 +403,7 @@ const CustomAgentPage: React.FC = () => {
 
               {/* 温度参数 */}
               <div>
-                <label className={`block text-sm font-medium ${twText('primary')} mb-1`}>
+                <label className="block text-sm font-medium text-foreground mb-1">
                   温度 (Temperature): {editingAgent.temperature}
                 </label>
                 <input
@@ -419,7 +415,7 @@ const CustomAgentPage: React.FC = () => {
                   onChange={(e) => setEditingAgent(prev => prev ? { ...prev, temperature: parseFloat(e.target.value) } : null)}
                   className="w-full"
                 />
-                <div className="flex justify-between text-xs text-gray-500">
+                <div className="flex justify-between text-xs text-tertiary">
                   <span>精确 (0)</span>
                   <span>平衡 (1)</span>
                   <span>创意 (2)</span>
@@ -428,14 +424,14 @@ const CustomAgentPage: React.FC = () => {
 
               {/* 最大Token */}
               <div>
-                <label className={`block text-sm font-medium ${twText('primary')} mb-1`}>
+                <label className="block text-sm font-medium text-foreground mb-1">
                   最大Token
                 </label>
                 <input
                   type="number"
                   value={editingAgent.maxTokens}
                   onChange={(e) => setEditingAgent(prev => prev ? { ...prev, maxTokens: parseInt(e.target.value) } : null)}
-                  className={`w-full px-3 py-2 border ${twBorder('default')} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                   min="100"
                   max="8000"
                 />
@@ -443,7 +439,7 @@ const CustomAgentPage: React.FC = () => {
 
               {/* 能力配置 */}
               <div>
-                <label className={`block text-sm font-medium ${twText('primary')} mb-1`}>
+                <label className="block text-sm font-medium text-foreground mb-1">
                   能力 (Capabilities)
                 </label>
                 <div className="space-y-2">
@@ -473,7 +469,7 @@ const CustomAgentPage: React.FC = () => {
               <button
                 onClick={handleSaveAgent}
                 disabled={!editingAgent.name || !editingAgent.description || !editingAgent.systemPrompt}
-                className={`flex-1 px-4 py-2 ${twBg('up', '500')} text-white rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed`}
+                className="flex-1 px-4 py-2 bg-destructive text-white rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 保存
               </button>
@@ -482,7 +478,7 @@ const CustomAgentPage: React.FC = () => {
                   setShowModal(false)
                   setEditingAgent(null)
                 }}
-                className={`flex-1 px-4 py-2 ${twBg('muted')} ${twText('primary')} rounded-lg hover:opacity-90 transition-opacity`}
+                className="flex-1 px-4 py-2 bg-muted text-foreground rounded-lg hover:opacity-90 transition-opacity"
               >
                 取消
               </button>
@@ -493,13 +489,13 @@ const CustomAgentPage: React.FC = () => {
 
       {/* 测试结果显示 */}
       {testingAgent && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className={`${twBg('surface')} rounded-lg p-6 w-full max-w-lg`}>
-            <h3 className={`text-xl font-bold ${twText('primary')} mb-4`}>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-card rounded-lg p-6 w-full max-w-lg">
+            <h3 className="text-h3 font-bold text-foreground mb-4">
               测试智能体: {testingAgent.name}
             </h3>
-            <div className={`${twBg('muted')} p-4 rounded-lg mb-4`}>
-              <pre className={`text-sm ${twText('primary')} whitespace-pre-wrap`}>
+            <div className="bg-muted p-4 rounded-lg mb-4">
+              <pre className="text-sm text-foreground whitespace-pre-wrap">
                 {testResult}
               </pre>
             </div>
@@ -508,14 +504,14 @@ const CustomAgentPage: React.FC = () => {
                 setTestingAgent(null)
                 setTestResult('')
               }}
-              className={`w-full px-4 py-2 ${twBg('up', '500')} text-white rounded-lg hover:opacity-90 transition-opacity`}
+              className="w-full px-4 py-2 bg-destructive text-white rounded-lg hover:opacity-90 transition-opacity"
             >
               关闭
             </button>
           </div>
         </div>
       )}
-    </div>
+    </PageContainer>
   )
 }
 

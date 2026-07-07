@@ -1,5 +1,6 @@
 import type { WidgetConfig, WidgetRuntimeState, WidgetMeta } from '@/types/modules/widget.types'
 
+import { nanoid } from 'nanoid'
 export class DefaultWidgetBuilder {
   buildDefaultMeta(widgetId: string): WidgetMeta {
     return {
@@ -13,7 +14,7 @@ export class DefaultWidgetBuilder {
 
   buildDefaultConfig(widgetId: string): WidgetConfig {
     return {
-      instanceId: `${widgetId}_${Date.now()}`,
+      instanceId: `${widgetId}_${nanoid(8)}`,
       widgetId,
       size: { cols: 2, rows: 2 },
       title: `Widget ${widgetId}`,

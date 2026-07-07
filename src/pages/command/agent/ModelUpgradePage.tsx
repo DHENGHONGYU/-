@@ -10,7 +10,7 @@ import {
   Plus,
   Search,
 } from 'lucide-react'
-import { twText, twBg } from '@/constants/theme.tokens'
+import { PageContainer } from '@/components/ui/PageContainer'
 
 /**
  * 模型升级流程管理页面
@@ -213,17 +213,17 @@ const ModelUpgradePage: React.FC = () => {
 
   const getStatusBadge = (status: string) => {
     const config: Record<string, { color: string; text: string }> = {
-      'active': { color: 'text-green-400 bg-green-900/30', text: '运行中' },
-      'deprecated': { color: 'text-yellow-400 bg-yellow-900/30', text: '已废弃' },
-      'testing': { color: 'text-blue-400 bg-blue-900/30', text: '测试中' },
-      'archived': { color: 'text-gray-400 bg-gray-900/30', text: '已归档' },
-      'draft': { color: 'text-gray-400 bg-gray-900/30', text: '草稿' },
-      'approved': { color: 'text-blue-400 bg-blue-900/30', text: '已批准' },
-      'in-progress': { color: 'text-yellow-400 bg-yellow-900/30', text: '进行中' },
-      'completed': { color: 'text-green-400 bg-green-900/30', text: '已完成' },
-      'rolled-back': { color: 'text-red-400 bg-red-900/30', text: '已回滚' },
-      'success': { color: 'text-green-400 bg-green-900/30', text: '成功' },
-      'failed': { color: 'text-red-400 bg-red-900/30', text: '失败' },
+      'active': { color: `text-success bg-success/15`, text: '运行中' },
+      'deprecated': { color: `text-warning bg-warning/15`, text: '已废弃' },
+      'testing': { color: `text-info bg-info/15`, text: '测试中' },
+      'archived': { color: `text-tertiary bg-background`, text: '已归档' },
+      'draft': { color: `text-tertiary bg-background`, text: '草稿' },
+      'approved': { color: `text-info bg-info/15`, text: '已批准' },
+      'in-progress': { color: `text-warning bg-warning/15`, text: '进行中' },
+      'completed': { color: `text-success bg-success/15`, text: '已完成' },
+      'rolled-back': { color: `text-destructive bg-destructive/15`, text: '已回滚' },
+      'success': { color: `text-success bg-success/15`, text: '成功' },
+      'failed': { color: `text-destructive bg-destructive/15`, text: '失败' },
     }
     const badge = config[status] ?? config['draft'] ?? { color: '', text: '' }
     return (
@@ -234,19 +234,19 @@ const ModelUpgradePage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white p-6">
+    <PageContainer className="min-h-screen bg-background text-foreground">
       {/* 页面标题 */}
       <div className="mb-8">
-        <h1 className={`text-3xl font-bold ${twText('primary')} mb-2`}>
+        <h1 className={`text-3xl font-bold text-foreground mb-2`}>
           模型升级流程管理
         </h1>
-        <p className={twText('muted')}>
+        <p className="text-muted-foreground">
           管理模型版本升级、A/B测试配置和回滚策略
         </p>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 mb-6 border-b border-gray-800">
+      <div className={`flex gap-2 mb-6 border-b border-border`}>
         {[
           { key: 'versions' as const, label: '模型版本', icon: ArrowUpCircle },
           { key: 'plans' as const, label: '升级计划', icon: GitBranch },
@@ -255,11 +255,11 @@ const ModelUpgradePage: React.FC = () => {
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
-            className={`flex items-center gap-2 px-4 py-3 font-medium transition-colors ${
-              activeTab === tab.key
-                ? `border-b-2 border-blue-500 ${twText('accent')}`
-                : twText('muted')
-            }`}
+              className={`flex items-center gap-2 px-4 py-3 font-medium transition-colors ${
+                activeTab === tab.key
+                  ? 'border-b-2 text-info text-primary'
+                  : 'text-muted-foreground'
+              }`}
           >
             <tab.icon className="w-4 h-4" />
             {tab.label}
@@ -270,19 +270,19 @@ const ModelUpgradePage: React.FC = () => {
       {/* 搜索栏 */}
       <div className="flex gap-4 mb-6">
         <div className="flex-1 relative">
-          <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 ${twText('muted')}`} />
+          <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground`} />
           <input
             type="text"
             placeholder="搜索模型或计划..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className={`w-full pl-10 pr-4 py-2 ${twBg('card')} border border-gray-800 rounded-lg ${twText('primary')} focus:outline-none focus:border-blue-500`}
+            className="w-full pl-10 pr-4 py-2 bg-card border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-info"
           />
         </div>
         {activeTab === 'plans' && (
           <button
             onClick={() => setShowCreatePlan(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+            className={`flex items-center gap-2 px-4 py-2 bg-info hover:bg-info/80 rounded-lg transition-colors`}
           >
             <Plus className="w-4 h-4" />
             创建升级计划
@@ -299,87 +299,87 @@ const ModelUpgradePage: React.FC = () => {
               v.version.toLowerCase().includes(searchQuery.toLowerCase())
             )
             .map(version => (
-              <div key={version.id} className={`${twBg('card')} rounded-lg p-6 border border-gray-800`}>
+              <div key={version.id} className={`bg-card rounded-lg p-6 border border-border`}>
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className={`text-xl font-semibold ${twText('primary')}`}>
+                      <h3 className={`text-xl font-semibold text-foreground`}>
                         {version.name}
                       </h3>
                       {getStatusBadge(version.status)}
                     </div>
-                    <p className={twText('muted')}>
+                    <p className="text-muted-foreground">
                       版本 {version.version} • {version.provider} • 发布于 {version.releaseDate}
                     </p>
                   </div>
                   <div className="text-right">
-                    <div className={`text-2xl font-bold ${twText('accent')}`}>
+                    <div className={`text-2xl font-bold text-primary`}>
                       {version.performanceScore}
                     </div>
-                    <div className={`text-sm ${twText('muted')}`}>
+                    <div className={`text-sm text-muted-foreground`}>
                       性能评分
                     </div>
                   </div>
                 </div>
 
-                <p className={`${twText('secondary')} mb-4`}>
+                <p className={`text-muted-foreground mb-4`}>
                   {version.description}
                 </p>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                  <div className={`${twBg('muted')} rounded p-3`}>
-                    <div className={`text-sm ${twText('muted')} mb-1`}>
+                  <div className={`bg-muted rounded p-3`}>
+                    <div className={`text-sm text-muted-foreground mb-1`}>
                       每Token成本
                     </div>
-                    <div className={`font-semibold ${twText('primary')}`}>
+                    <div className={`font-semibold text-foreground`}>
                       ${version.costPerToken.toFixed(6)}
                     </div>
                   </div>
-                  <div className={`${twBg('muted')} rounded p-3`}>
-                    <div className={`text-sm ${twText('muted')} mb-1`}>
+                  <div className={`bg-muted rounded p-3`}>
+                    <div className={`text-sm text-muted-foreground mb-1`}>
                       最大Token
                     </div>
-                    <div className={`font-semibold ${twText('primary')}`}>
+                    <div className={`font-semibold text-foreground`}>
                       {version.maxTokens.toLocaleString()}
                     </div>
                   </div>
-                  <div className={`${twBg('muted')} rounded p-3`}>
-                    <div className={`text-sm ${twText('muted')} mb-1`}>
+                  <div className={`bg-muted rounded p-3`}>
+                    <div className={`text-sm text-muted-foreground mb-1`}>
                       函数调用
                     </div>
                     <div className="font-semibold">
                       {version.supportsFunctions ? (
-                        <CheckCircle className="w-5 h-5 text-green-400" />
+                        <CheckCircle className={`w-5 h-5 text-success`} />
                       ) : (
-                        <XCircle className="w-5 h-5 text-red-400" />
+                        <XCircle className={`w-5 h-5 text-destructive`} />
                       )}
                     </div>
                   </div>
-                  <div className={`${twBg('muted')} rounded p-3`}>
-                    <div className={`text-sm ${twText('muted')} mb-1`}>
+                  <div className={`bg-muted rounded p-3`}>
+                    <div className={`text-sm text-muted-foreground mb-1`}>
                       视觉理解
                     </div>
                     <div className="font-semibold">
                       {version.supportsVision ? (
-                        <CheckCircle className="w-5 h-5 text-green-400" />
+                        <CheckCircle className={`w-5 h-5 text-success`} />
                       ) : (
-                        <XCircle className="w-5 h-5 text-red-400" />
+                        <XCircle className={`w-5 h-5 text-destructive`} />
                       )}
                     </div>
                   </div>
                 </div>
 
                 <div className="flex gap-2">
-                  <button className={`px-4 py-2 ${twBg('muted')} hover:bg-gray-700 rounded-lg transition-colors`}>
+                  <button className={`px-4 py-2 bg-muted hover:bg-muted/80 rounded-lg transition-colors`}>
                     查看详情
                   </button>
                   {version.status === 'testing' && (
-                    <button className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg transition-colors">
+                    <button className={`px-4 py-2 bg-success hover:bg-success/80 rounded-lg transition-colors`}>
                       批准上线
                     </button>
                   )}
                   {version.status === 'active' && (
-                    <button className="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 rounded-lg transition-colors">
+                    <button className={`px-4 py-2 bg-warning hover:bg-warning/80 rounded-lg transition-colors`}>
                       计划升级
                     </button>
                   )}
@@ -397,72 +397,72 @@ const ModelUpgradePage: React.FC = () => {
               p.name.toLowerCase().includes(searchQuery.toLowerCase())
             )
             .map(plan => (
-              <div key={plan.id} className={`${twBg('card')} rounded-lg p-6 border border-gray-800`}>
+              <div key={plan.id} className={`bg-card rounded-lg p-6 border border-border`}>
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className={`text-xl font-semibold ${twText('primary')}`}>
+                      <h3 className={`text-xl font-semibold text-foreground`}>
                         {plan.name}
                       </h3>
                       {getStatusBadge(plan.status)}
                     </div>
-                    <p className={twText('muted')}>
+                    <p className="text-muted-foreground">
                       从 {plan.fromVersion} 升级到 {plan.toVersion}
                     </p>
                   </div>
                   <div className="text-right">
-                    <div className={`text-sm ${twText('muted')}`}>
+                    <div className={`text-sm text-muted-foreground`}>
                       计划日期
                     </div>
-                    <div className={`font-semibold ${twText('primary')}`}>
+                    <div className={`font-semibold text-foreground`}>
                       {plan.scheduledDate}
                     </div>
                   </div>
                 </div>
 
                 {plan.abTestConfig && (
-                  <div className={`${twBg('muted')} rounded p-4 mb-4`}>
-                    <h4 className={`font-medium ${twText('primary')} mb-2`}>
+                  <div className={`bg-muted rounded p-4 mb-4`}>
+                    <h4 className={`font-medium text-foreground mb-2`}>
                       <TestTube className="w-4 h-4 inline mr-2" />
                       A/B测试配置
                     </h4>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                       <div>
-                        <span className={twText('muted')}>流量分配：</span>
-                        <span className={twText('primary')}>{plan.abTestConfig.trafficSplit}% → 新版本</span>
+                        <span className="text-muted-foreground">流量分配：</span>
+                        <span className="text-foreground">{plan.abTestConfig.trafficSplit}% → 新版本</span>
                       </div>
                       <div>
-                        <span className={twText('muted')}>测试时长：</span>
-                        <span className={twText('primary')}>{plan.abTestConfig.duration} 天</span>
+                        <span className="text-muted-foreground">测试时长：</span>
+                        <span className="text-foreground">{plan.abTestConfig.duration} 天</span>
                       </div>
                       <div>
-                        <span className={twText('muted')}>最小样本：</span>
-                        <span className={twText('primary')}>{plan.abTestConfig.minSampleSize.toLocaleString()}</span>
+                        <span className="text-muted-foreground">最小样本：</span>
+                        <span className="text-foreground">{plan.abTestConfig.minSampleSize.toLocaleString()}</span>
                       </div>
                       <div>
-                        <span className={twText('muted')}>成功指标：</span>
-                        <span className={twText('primary')}>{plan.abTestConfig.successMetrics.length} 项</span>
+                        <span className="text-muted-foreground">成功指标：</span>
+                        <span className="text-foreground">{plan.abTestConfig.successMetrics.length} 项</span>
                       </div>
                     </div>
                   </div>
                 )}
 
-                <div className={`${twBg('muted')} rounded p-4 mb-4`}>
-                  <h4 className={`font-medium ${twText('primary')} mb-2`}>
+                <div className={`bg-muted rounded p-4 mb-4`}>
+                  <h4 className={`font-medium text-foreground mb-2`}>
                     <RotateCcw className="w-4 h-4 inline mr-2" />
                     回滚策略
                   </h4>
                   <div className="text-sm">
                     <div className="mb-1">
-                      <span className={twText('muted')}>类型：</span>
-                      <span className={twText('primary')}>
+                      <span className="text-muted-foreground">类型：</span>
+                      <span className="text-foreground">
                         {plan.rollbackStrategy.type === 'automatic' ? '自动回滚' : '手动回滚'}
                       </span>
                     </div>
                     <div>
-                      <span className={twText('muted')}>触发条件：</span>
+                      <span className="text-muted-foreground">触发条件：</span>
                       {plan.rollbackStrategy.triggerConditions.map((condition, idx) => (
-                        <span key={idx} className="inline-block px-2 py-1 bg-red-900/30 text-red-400 rounded text-xs mr-2">
+                        <span key={idx} className={`inline-block px-2 py-1 bg-destructive/15 text-destructive rounded text-xs mr-2`}>
                           {condition}
                         </span>
                       ))}
@@ -471,16 +471,16 @@ const ModelUpgradePage: React.FC = () => {
                 </div>
 
                 <div className="flex gap-2">
-                  <button className={`px-4 py-2 ${twBg('muted')} hover:bg-gray-700 rounded-lg transition-colors`}>
+                  <button className={`px-4 py-2 bg-muted hover:bg-muted/80 rounded-lg transition-colors`}>
                     查看详情
                   </button>
                   {plan.status === 'approved' && (
-                    <button className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg transition-colors">
+                    <button className={`px-4 py-2 bg-success hover:bg-success/80 rounded-lg transition-colors`}>
                       开始升级
                     </button>
                   )}
                   {plan.status === 'in-progress' && (
-                    <button className="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 rounded-lg transition-colors">
+                    <button className={`px-4 py-2 bg-warning hover:bg-warning/80 rounded-lg transition-colors`}>
                       监控进度
                     </button>
                   )}
@@ -498,26 +498,26 @@ const ModelUpgradePage: React.FC = () => {
               h.planName.toLowerCase().includes(searchQuery.toLowerCase())
             )
             .map(record => (
-              <div key={record.id} className={`${twBg('card')} rounded-lg p-6 border border-gray-800`}>
+              <div key={record.id} className={`bg-card rounded-lg p-6 border border-border`}>
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className={`text-xl font-semibold ${twText('primary')}`}>
+                      <h3 className={`text-xl font-semibold text-foreground`}>
                         {record.planName}
                       </h3>
                       {getStatusBadge(record.status)}
                     </div>
-                    <p className={twText('muted')}>
+                    <p className="text-muted-foreground">
                       {record.fromVersion} → {record.toVersion}
                     </p>
                   </div>
                   <div className="text-right">
-                    <div className={`text-2xl font-bold ${
-                      record.performanceDelta > 0 ? 'text-green-400' : 'text-red-400'
-                    }`}>
+                  <div className={`text-2xl font-bold ${
+                    record.performanceDelta > 0 ? 'text-success' : 'text-destructive'
+                  }`}>
                       {record.performanceDelta > 0 ? '+' : ''}{record.performanceDelta}%
                     </div>
-                    <div className={`text-sm ${twText('muted')}`}>
+                    <div className={`text-sm text-muted-foreground`}>
                       性能变化
                     </div>
                   </div>
@@ -525,27 +525,27 @@ const ModelUpgradePage: React.FC = () => {
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                   <div>
-                    <span className={`text-sm ${twText('muted')}`}>开始时间：</span>
-                    <div className={twText('primary')}>{record.startedAt}</div>
+                    <span className={`text-sm text-muted-foreground`}>开始时间：</span>
+                    <div className="text-foreground">{record.startedAt}</div>
                   </div>
                   <div>
-                    <span className={`text-sm ${twText('muted')}`}>完成时间：</span>
-                    <div className={twText('primary')}>{record.completedAt || '-'}</div>
+                    <span className={`text-sm text-muted-foreground`}>完成时间：</span>
+                    <div className="text-foreground">{record.completedAt || '-'}</div>
                   </div>
                   {record.errorMessage && (
                     <div className="md:col-span-2">
-                      <span className={`text-sm ${twText('muted')}`}>错误信息：</span>
-                      <div className="text-red-400">{record.errorMessage}</div>
+                      <span className={`text-sm text-muted-foreground`}>错误信息：</span>
+                      <div className="text-destructive">{record.errorMessage}</div>
                     </div>
                   )}
                 </div>
 
                 <div className="flex gap-2">
-                  <button className={`px-4 py-2 ${twBg('muted')} hover:bg-gray-700 rounded-lg transition-colors`}>
+                  <button className={`px-4 py-2 bg-muted hover:bg-muted/80 rounded-lg transition-colors`}>
                     查看详情
                   </button>
                   {record.status === 'rolled-back' && (
-                    <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors">
+                    <button className={`px-4 py-2 bg-info hover:bg-info/80 rounded-lg transition-colors`}>
                       重新升级
                     </button>
                   )}
@@ -554,7 +554,7 @@ const ModelUpgradePage: React.FC = () => {
             ))}
         </div>
       )}
-    </div>
+    </PageContainer>
   )
 }
 

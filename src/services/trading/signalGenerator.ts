@@ -76,11 +76,6 @@ function generateBuySignals(snapshot: SignalSnapshot): TradingSignal[] {
   const signals: TradingSignal[] = []
   const config = getDefaultTradingConfig().signalThresholds
 
-  // buy_safety_margin：基于绝对估值启发式（因历史百分位数据缺失）
-  // if (stock.pe !== undefined && stock.pb !== undefined) {
-  //   // 保守映射：PE < 15 且 PB < 2 视为安全边际
-  // }
-
   // buy_dip：价格低于 MA20 8% 且 RSI < 30
   if (
     snapshot.priceToMA20 !== undefined &&

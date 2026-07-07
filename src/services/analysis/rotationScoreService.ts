@@ -29,6 +29,7 @@ import {
 } from '@/services/analysis/rotation/rotationCalculator'
 import { getSignalGrade } from '@/services/analysis/rotation/rotationSignalGrader'
 
+import { nanoid } from 'nanoid'
 const logger = getLogger()
 
 // Re-export public helpers to keep existing consumers/test imports working
@@ -45,7 +46,7 @@ export { ROTATION_FACTORS, DEFAULT_SECTORS }
 export type { RotationFactor }
 
 function createTraceId(prefix: string): string {
-  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
+  return `${prefix}-${nanoid(8)}`
 }
 
 async function saveRotationScoreViaDataBridge(score: RotationSectorScore): Promise<DataLayerResult<void>> {

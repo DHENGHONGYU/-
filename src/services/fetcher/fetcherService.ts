@@ -3,9 +3,9 @@ import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
 import { dataLayer } from '@/data/dataLayer'
 import { getLogger } from '@/lib/logger'
-import type { DataLayerResult, DailyQuotes, Stock } from '@/data/types'
-import { adaptBasicDataToStock, adaptKlineDataToDailyQuotes } from './fetcherAdapter'
-import { collectBasic, collectKline, checkFetcherHealth } from './fetcherClient'
+import type { DataLayerResult, DailyQuotes, FinancialReport, Stock } from '@/data/types'
+import { adaptBasicDataToStock, adaptFinancialDataToReport, adaptKlineDataToDailyQuotes } from './fetcherAdapter'
+import { collectBasic, collectFinancial, collectKline, checkFetcherHealth } from './fetcherClient'
 
 const logger = getLogger()
 
@@ -294,4 +294,127 @@ export async function refreshSymbolKline(
   options?: FetchKlineOptions,
 ): Promise<DataLayerResult<Stock>> {
   return fetchStockKline(symbol, options)
+}
+
+/**
+ * 拉取单只股票财务数据并保存
+ */
+export async function fetchFinancial(
+  symbol: string,
+): Promise<DataLayerResult<FinancialReport>> {
+  const normalized = symbol.trim().toUpperCase()
+  if (!normalized) {
+    logger.warn('[fetcherService] fetchFinancial 入参为空', { rawSymbol: symbol })
+    return { success: false, error: '股票代码不能为空' }
+  }
+
+  logger.info('[fetcherService] fetchFinancial 开始', { symbol: normalized })
+
+  // 1. 调用采集接口
+  logger.info('[fetcherService] fetchFinancial 调用 collectFinancial', { symbol: normalized })
+  const response = await collectFinancial(normalized)
+
+  if (!response.success || !response.data) {
+    logger.error('[fetcherService] fetchFinancial 采集接口返回失败', {
+      symbol: normalized,
+      error: response.error ?? '未知错误',
+      success: response.success,
+    })
+    return {
+      success: false,
+      error: response.error ?? '采集财务数据失败',
+    }
+  }
+
+  logger.info('[fetcherService] fetchFinancial 采集成功', {
+    symbol: normalized,
+    reportDate: response.data.report_date,
+    revenue: response.data.revenue,
+    netProfit: response.data.net_profit,
+    grossMargin: response.data.gross_margin,
+    netMargin: response.data.net_margin,
+    operatingCF: response.data.operating_cf,
+    rdRatio: response.data.rd_ratio,
+  })
+
+  // 2. 数据适配
+  logger.info('[fetcherService] fetchFinancial 开始数据适配', { symbol: normalized })
+  const report = adaptFinancialDataToReport(normalized, response.data)
+
+  if (!report) {
+    logger.error('[fetcherService] fetchFinancial 数据适配失败', {
+      symbol: normalized,
+      rawData: response.data,
+    })
+    return { success: false, error: '财务数据为空或格式不正确' }
+  }
+
+  logger.info('[fetcherService] fetchFinancial 数据适配成功', {
+    symbol: normalized,
+    reportDate: report.reportDate,
+    fieldCount: Object.keys(report).length,
+    hasRevenue: report.revenue !== undefined,
+    hasNetProfit: report.netProfit !== undefined,
+    hasGrossMargin: report.grossMargin !== undefined,
+  })
+
+  // 3. 保存到数据库
+  logger.info('[fetcherService] fetchFinancial 准备保存到 financial_reports', {
+    symbol: normalized,
+    reportDate: report.reportDate,
+  })
+
+  try {
+    const envelope = EnvelopeFactory.create(
+      {
+        source: MODULE_ID.fetcher,
+        target: ENVELOPE_TARGET.db,
+        action: ENVELOPE_ACTION.saveFinancialReport,
+        traceId: createTraceId(normalized),
+      },
+      report,
+    )
+
+    logger.info('[fetcherService] fetchFinancial 创建信封成功', {
+      symbol: normalized,
+      traceId: envelope.meta.traceId,
+      action: envelope.meta.action,
+    })
+
+    await dataBridge.forward(envelope)
+
+    logger.info('[fetcherService] fetchFinancial DataBridge.forward 成功', {
+      symbol: normalized,
+      traceId: envelope.meta.traceId,
+    })
+
+    // 4. 验证保存结果
+    logger.info('[fetcherService] fetchFinancial 开始验证保存结果', { symbol: normalized })
+    const saved = await dataLayer.financialReports.get(normalized)
+
+    if (!saved) {
+      logger.error('[fetcherService] fetchFinancial 验证失败: 保存后未找到记录', {
+        symbol: normalized,
+      })
+      return { success: false, error: '保存后未找到财务数据记录' }
+    }
+
+    logger.info('[fetcherService] fetchFinancial 验证成功: 财务数据已保存', {
+      symbol: normalized,
+      reportDate: saved.reportDate,
+      revenue: saved.revenue,
+      netProfit: saved.netProfit,
+      updatedAt: saved.updatedAt,
+    })
+
+    return { success: true, data: saved }
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    logger.error('[fetcherService] fetchFinancial 保存过程异常', {
+      symbol: normalized,
+      error: message,
+      stack: err instanceof Error ? err.stack : undefined,
+    })
+    return { success: false, error: message }
+  }
 }

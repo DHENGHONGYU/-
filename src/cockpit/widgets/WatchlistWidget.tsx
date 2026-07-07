@@ -3,8 +3,7 @@ import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import type { WidgetConfig, WatchlistData } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
-import { COLORS } from '@/constants/cockpit.constants'
-import { COLOR_TOKENS, COLOR_SHADES } from '@/constants/theme.tokens'
+import { COLOR_TOKENS, COLOR_SHADES, getStockColorHex } from '@/constants/theme.tokens'
 
 interface WatchlistWidgetProps {
   config: WidgetConfig
@@ -17,15 +16,14 @@ export default function WatchlistWidget({ config }: WatchlistWidgetProps): React
   const error = errorMap[config.instanceId]
 
   const getChangeIcon = (change: number) => {
-    if (change > 0) return <TrendingUp className="h-4 w-4" style={{ color: COLORS.UP }} />
-    if (change < 0) return <TrendingDown className="h-4 w-4" style={{ color: COLORS.DOWN }} />
-    return <Minus className="h-4 w-4" style={{ color: COLORS.NEUTRAL }} />
+    const color = getStockColorHex(change)
+    if (change > 0) return <TrendingUp className="h-4 w-4" style={{ color }} />
+    if (change < 0) return <TrendingDown className="h-4 w-4" style={{ color }} />
+    return <Minus className="h-4 w-4" style={{ color }} />
   }
 
   const getChangeColor = (change: number) => {
-    if (change > 0) return COLORS.UP
-    if (change < 0) return COLORS.DOWN
-    return COLORS.NEUTRAL
+    return getStockColorHex(change)
   }
 
   if (error) {

@@ -142,7 +142,10 @@ export async function runStrategy(
     lowValuationCompositeExempt: ruleConfig.lowValuationCompositeExempt,
   })
 
-  const afterR2 = pool.filter((c) => {
+  const afterR2: StrategyCandidate[] = []
+  const r2Rejected: StrategyCandidate[] = []
+
+  for (const c of pool) {
     if (
       c.valuationScore !== null &&
       c.valuationScore < ruleConfig.lowValuationThreshold &&
@@ -158,11 +161,13 @@ export async function runStrategy(
       c.reasons.push(
         `R2：估值分 ${c.valuationScore.toFixed(2)} 低于 ${ruleConfig.lowValuationThreshold} 且综合分 ${c.composite.toFixed(2)} 低于 ${ruleConfig.lowValuationCompositeExempt}`,
       )
-      excluded.push(c)
-      return false
+      r2Rejected.push(c)
+    } else {
+      afterR2.push(c)
     }
-    return true
-  })
+  }
+
+  excluded.push(...r2Rejected)
 
   logger.info('[strategyEngine] runStrategy R2 过滤完成', {
     beforeCount: pool.length,
@@ -277,13 +282,15 @@ function buildReasons(
       return [
         `价值洼地：估值分 ${valuationScore?.toFixed(2) ?? '-'}，综合分 ${composite.toFixed(2)}`,
       ]
-    case 'hot-momentum':
+    case 'hot-momentum': {
+      const momentumValue = momentum ?? 0
+      if (momentum === null) {
+        logger.warn('[strategyEngine] 字段缺失，使用默认值', { field: 'momentum', context: 'hot-momentum' })
+      }
       return [
-        `热门追涨：板块 ${sector ?? '-'}，动量 ${((momentum ?? (() => {
-          logger.warn('[strategyEngine] 字段缺失，使用默认值', { field: 'momentum', context: 'hot-momentum' })
-          return 0
-        })()) * 100).toFixed(1)}%`,
+        `热门追涨：板块 ${sector ?? '-'}，动量 ${(momentumValue * 100).toFixed(1)}%`,
       ]
+    }
     case 'excluded':
     default: {
       const reasons: string[] = []
@@ -313,9 +320,12 @@ async function fetchMomentumMap(stocks: Stock[]): Promise<Record<string, number>
       if (!quotes || quotes.history.length < 20) return
 
       const closes = quotes.history.map((bar) => bar.close)
+      if (closes.length === 0) return // 修复：空数组保护
+
       const ma20 = closes.slice(-20).reduce((a, b) => a + b, 0) / 20
       const latest = quotes.latest?.close ?? closes[closes.length - 1]
-      if (ma20 && ma20 !== 0 && latest !== undefined) {
+      if (latest === undefined) return // 修复：undefined 保护
+      if (ma20 && ma20 !== 0) {
         map[stock.symbol] = (latest - ma20) / ma20
       }
     }),
@@ -325,12 +335,8 @@ async function fetchMomentumMap(stocks: Stock[]): Promise<Record<string, number>
 }
 
 async function fetchTopHotSectors(topN: number): Promise<HotSector[]> {
-  try {
-    const result = await hotSectorQueryUseCase({ topN })
-    return result.hotSectors
-  } catch {
-    return []
-  }
+  const result = await hotSectorQueryUseCase({ topN })
+  return result.ok ? result.value.hotSectors : []
 }
 
 function isHotSector(sector: string, topHotSectors: HotSector[]): boolean {

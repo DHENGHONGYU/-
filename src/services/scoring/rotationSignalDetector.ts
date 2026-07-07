@@ -18,6 +18,7 @@ import type { DataLayerResult, KlineBar, Signal, ValuePitScore } from '@/data/ty
 import { getLogger } from '@/lib/logger'
 import { ROTATION_SIGNAL_THRESHOLDS } from '@/config/thresholds'
 
+import { nanoid } from 'nanoid'
 const logger = getLogger()
 
 // ============================================================
@@ -254,7 +255,7 @@ export async function detectBySector(sectorId: string): Promise<RotationSignal |
       (s) =>
         s.sector === sectorId ||
         s.industryCode === sectorId ||
-        (s.sector !== undefined && s.sector.includes(sectorId)),
+        (s.sector !== undefined && s.sector === sectorId), // 修复：精确匹配，避免子串误匹配
     )
 
     if (sectorStocks.length === 0) {
@@ -404,7 +405,7 @@ export async function detectRotationSignals(
 
     if (volumeOk && priceOk && fundFlowOk) {
       signals.push({
-        id: `rot-${score.symbol}-${Date.now()}`,
+        id: `rot-${score.symbol}-${nanoid(8)}`,
         symbol: score.symbol,
         direction: 'buy',
         type: 'buy_rotation',

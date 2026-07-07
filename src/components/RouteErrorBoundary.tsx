@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { PageSkeleton } from '@/components/PageSkeleton'
 import { getLogger } from '@/lib/logger'
+import { captureError } from '@/services/errorBus'
 
 const logger = getLogger()
 
@@ -47,6 +48,14 @@ class RouteErrorBoundaryInner extends Component<RouteErrorBoundaryInnerProps, Ro
       errorId: this.state.errorId,
       stack: import.meta.env.DEV ? error.stack : undefined,
       componentStack: import.meta.env.DEV ? info.componentStack : undefined,
+    })
+    captureError(error, {
+      source: 'RouteErrorBoundary',
+      operation: 'render',
+      meta: {
+        errorId: this.state.errorId,
+        componentStack: import.meta.env.DEV ? info.componentStack : undefined,
+      },
     })
   }
 

@@ -4,7 +4,6 @@ import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { useSectorAnalysisStore } from '@/store/sectorAnalysisStore'
 import { getLogger } from '@/lib/logger'
-import { twText } from '@/constants/theme.tokens'
 
 const logger = getLogger()
 
@@ -42,7 +41,7 @@ export default function SectorAnalysisPage(): React.JSX.Element {
     return (
       <div className="p-4">
         <Card>
-          <CardContent className={`p-8 text-center ${twText('red', 500)}`}>
+          <CardContent className="p-8 text-center text-destructive">
             <p>{error}</p>
             <Button variant="outline" size="sm" onClick={handleRetry} className="mt-2">
               重试

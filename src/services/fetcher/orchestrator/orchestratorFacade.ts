@@ -25,6 +25,7 @@ import {
   createDefaultSteps,
 } from './phaseOrchestrator'
 import { ResilienceChain } from './resilienceChain'
+import { nanoid } from 'nanoid'
 import type {
   CollectResult,
   CollectSession,
@@ -86,7 +87,7 @@ export class OrchestratorFacade {
    * 对外保持与原 collectAllDimensions 完全相同的签名和返回值。
    */
   async collectAllDimensions(symbols: string[]): Promise<CollectSession> {
-    const sessionId = `collect-${Date.now()}-${++globalCollectSessionId}`
+    const sessionId = `collect-${nanoid(8)}-${++globalCollectSessionId}`
     const sessionStart = Date.now()
 
     logger.info('[OrchestratorFacade] ====== 采集会话启动 ======', {

@@ -13,6 +13,7 @@ import { TRADE_REVIEW_AI_THRESHOLDS } from '@/config/thresholds'
 import { MAX_SCORE } from '@/constants/trade.constants'
 import { MS_PER_DAY } from '@/config/mathConstants'
 
+import { nanoid } from 'nanoid'
 const logger = getLogger()
 
 /**
@@ -130,7 +131,7 @@ export function generateSkillDevelopment(
 
   // 6. 里程碑（与 tradeReview.types.ts 对齐）
   const milestones: SkillDevelopment['milestones'] = dimensions.map((d, idx) => ({
-    id: `milestone_${d.code}_${Date.now()}_${idx}`,
+    id: `milestone_${d.code}_${nanoid(8)}_${idx}`,
     title: `${d.name}达到${d.targetLevel === 'intermediate' ? '进阶' : d.targetLevel === 'advanced' ? '高级' : d.targetLevel === 'expert' ? '专家' : '大师'}水平`,
     description: d.name,
     skillDimension: d.code,

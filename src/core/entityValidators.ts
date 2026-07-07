@@ -9,6 +9,8 @@
  * - 在 Store 写入入口（addOrder/saveScore）和 useCase 层调用
  *
  * @see AGENTS.md 第二章 "类型安全" 章节
+ *
+ * @updated 2026-07-07 - PR-1：OrderDirection 改为从 dbConfig re-export，消除重复定义
  */
 
 import type { Order, V6Score, Stock } from '@/data/types'
@@ -23,7 +25,9 @@ export interface ValidationResult<T> {
   errors: string[]
 }
 
-export type OrderDirection = 'buy' | 'sell'
+// OrderDirection 权威源在 @/config/dbConfig（通过 ORDER_DIRECTION 常量推断为 'buy' | 'sell'）
+// 此处 re-export 保持 API 兼容性（虽然本文件当前无外部引用）
+export type { OrderDirection } from '@/config/dbConfig'
 
 // ============================================================================
 // Order 实体验证

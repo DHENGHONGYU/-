@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { 
+import {
   Gift,
   Bug,
   Zap,
@@ -8,7 +8,9 @@ import {
   Clock,
   Download,
 } from 'lucide-react'
-import { twText, twBg } from '@/constants/theme.tokens'
+import { PageContainer } from '@/components/ui/PageContainer'
+import { PageHeader } from '@/components/ui/PageHeader'
+import { CHANGELOG_TYPE_BADGE, DEFAULT_BADGE } from '@/components/ui/statusColors'
 
 /**
  * 更新日志页面
@@ -149,42 +151,33 @@ const ChangelogPage: React.FC = () => {
   ])
 
   const getTypeBadge = (type: string) => {
-    const config: Record<string, { color: string; text: string }> = {
-      'major': { color: 'text-red-400 bg-red-900/30', text: '重大更新' },
-      'minor': { color: 'text-blue-400 bg-blue-900/30', text: '功能更新' },
-      'patch': { color: 'text-green-400 bg-green-900/30', text: '问题修复' },
-    }
-    const badge = config[type] ?? config['patch'] ?? { color: '', text: '' }
+    const badge = CHANGELOG_TYPE_BADGE[type] ?? DEFAULT_BADGE
     return (
-      <span className={`px-2 py-1 rounded text-xs font-medium ${badge.color}`}>
-        {badge.text}
+      <span className={`rounded px-2 py-1 text-xs font-medium ${badge.badge}`}>
+        {badge.label}
       </span>
     )
   }
 
-  const filteredChangelog = selectedVersion === 'all' 
-    ? changelog 
+  const filteredChangelog = selectedVersion === 'all'
+    ? changelog
     : changelog.filter(entry => entry.version === selectedVersion)
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white p-6">
-      <div className="mb-8">
-        <h1 className={`text-3xl font-bold ${twText('primary')} mb-2`}>
-          更新日志
-        </h1>
-        <p className={twText('muted')}>
-          查看系统版本更新历史和新功能介绍
-        </p>
-      </div>
+    <PageContainer className="min-h-screen bg-background text-foreground">
+      <PageHeader
+        title="更新日志"
+        description="查看系统版本更新历史和新功能介绍"
+      />
 
       {/* 版本选择 */}
-      <div className="flex gap-2 mb-6">
+      <div className="mb-6 flex flex-wrap gap-2">
         <button
           onClick={() => setSelectedVersion('all')}
-          className={`px-4 py-2 rounded-lg transition-colors ${
+          className={`rounded-lg px-4 py-2 transition-colors ${
             selectedVersion === 'all'
-              ? 'bg-blue-600 text-white'
-              : `${twBg('card')} ${twText('muted')} hover:bg-gray-800`
+              ? 'bg-primary text-primary-foreground'
+              : 'bg-card text-muted-foreground hover:bg-accent'
           }`}
         >
           全部版本
@@ -193,10 +186,10 @@ const ChangelogPage: React.FC = () => {
           <button
             key={entry.version}
             onClick={() => setSelectedVersion(entry.version)}
-            className={`px-4 py-2 rounded-lg transition-colors ${
+            className={`rounded-lg px-4 py-2 transition-colors ${
               selectedVersion === entry.version
-                ? 'bg-blue-600 text-white'
-                : `${twBg('card')} ${twText('muted')} hover:bg-gray-800`
+                ? 'bg-primary text-primary-foreground'
+                : 'bg-card text-muted-foreground hover:bg-accent'
             }`}
           >
             v{entry.version}
@@ -207,21 +200,21 @@ const ChangelogPage: React.FC = () => {
       {/* 更新日志列表 */}
       <div className="space-y-8">
         {filteredChangelog.map(entry => (
-          <div key={entry.version} className={`${twBg('card')} rounded-lg p-6 border border-gray-800`}>
-            <div className="flex items-start justify-between mb-6">
+          <div key={entry.version} className="rounded-lg border bg-card p-6">
+            <div className="mb-6 flex items-start justify-between">
               <div>
-                <div className="flex items-center gap-3 mb-2">
-                  <h2 className={`text-2xl font-bold ${twText('primary')}`}>
+                <div className="mb-2 flex items-center gap-3">
+                  <h2 className="text-h2 text-foreground">
                     v{entry.version}
                   </h2>
                   {getTypeBadge(entry.type)}
                 </div>
-                <p className={twText('muted')}>
+                <p className="text-muted-foreground">
                   发布于 {entry.releaseDate}
                 </p>
               </div>
-              <button className={`px-4 py-2 ${twBg('muted')} hover:bg-gray-700 rounded-lg transition-colors flex items-center gap-2`}>
-                <Download className="w-4 h-4" />
+              <button className="flex items-center gap-2 rounded-lg bg-muted px-4 py-2 text-foreground transition-colors hover:bg-accent">
+                <Download className="h-4 w-4" />
                 下载此版本
               </button>
             </div>
@@ -229,15 +222,15 @@ const ChangelogPage: React.FC = () => {
             {/* 亮点 */}
             {entry.highlights.length > 0 && (
               <div className="mb-6">
-                <h3 className={`text-lg font-semibold ${twText('primary')} mb-3 flex items-center gap-2`}>
-                  <Zap className="w-5 h-5 text-yellow-400" />
+                <h3 className="mb-3 flex items-center gap-2 text-h3 text-foreground">
+                  <Zap className="h-5 w-5 text-warning" />
                   亮点
                 </h3>
                 <ul className="space-y-2">
                   {entry.highlights.map((highlight, idx) => (
                     <li key={idx} className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5" />
-                      <span className={twText('secondary')}>{highlight}</span>
+                      <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-success" />
+                      <span className="text-muted-foreground">{highlight}</span>
                     </li>
                   ))}
                 </ul>
@@ -247,21 +240,21 @@ const ChangelogPage: React.FC = () => {
             {/* 新功能 */}
             {entry.features.length > 0 && (
               <div className="mb-6">
-                <h3 className={`text-lg font-semibold ${twText('primary')} mb-3 flex items-center gap-2`}>
-                  <Gift className="w-5 h-5 text-blue-400" />
+                <h3 className="mb-3 flex items-center gap-2 text-h3 text-foreground">
+                  <Gift className="h-5 w-5 text-info" />
                   新功能
                 </h3>
                 <div className="space-y-3">
                   {entry.features.map((feature, idx) => (
-                    <div key={idx} className={`${twBg('muted')} rounded p-4`}>
-                      <div className="font-semibold text-white mb-1">
+                    <div key={idx} className="rounded bg-muted p-4">
+                      <div className="mb-1 font-semibold text-foreground">
                         {feature.title}
                       </div>
-                      <div className={`text-sm ${twText('secondary')}`}>
+                      <div className="text-body-sm text-muted-foreground">
                         {feature.description}
                       </div>
                       {feature.author && (
-                        <div className={`text-xs ${twText('muted')} mt-2`}>
+                        <div className="mt-2 text-xs text-tertiary">
                           贡献者：{feature.author}
                         </div>
                       )}
@@ -274,17 +267,17 @@ const ChangelogPage: React.FC = () => {
             {/* Bug修复 */}
             {entry.bugFixes.length > 0 && (
               <div className="mb-6">
-                <h3 className={`text-lg font-semibold ${twText('primary')} mb-3 flex items-center gap-2`}>
-                  <Bug className="w-5 h-5 text-red-400" />
+                <h3 className="mb-3 flex items-center gap-2 text-h3 text-foreground">
+                  <Bug className="h-5 w-5 text-destructive" />
                   Bug修复
                 </h3>
                 <div className="space-y-3">
                   {entry.bugFixes.map((fix, idx) => (
-                    <div key={idx} className={`${twBg('muted')} rounded p-4`}>
-                      <div className="font-semibold text-white mb-1">
+                    <div key={idx} className="rounded bg-muted p-4">
+                      <div className="mb-1 font-semibold text-foreground">
                         {fix.title}
                       </div>
-                      <div className={`text-sm ${twText('secondary')}`}>
+                      <div className="text-body-sm text-muted-foreground">
                         {fix.description}
                       </div>
                     </div>
@@ -296,17 +289,17 @@ const ChangelogPage: React.FC = () => {
             {/* 改进 */}
             {entry.improvements.length > 0 && (
               <div className="mb-6">
-                <h3 className={`text-lg font-semibold ${twText('primary')} mb-3 flex items-center gap-2`}>
-                  <Zap className="w-5 h-5 text-yellow-400" />
+                <h3 className="mb-3 flex items-center gap-2 text-h3 text-foreground">
+                  <Zap className="h-5 w-5 text-warning" />
                   改进
                 </h3>
                 <div className="space-y-3">
                   {entry.improvements.map((improvement, idx) => (
-                    <div key={idx} className={`${twBg('muted')} rounded p-4`}>
-                      <div className="font-semibold text-white mb-1">
+                    <div key={idx} className="rounded bg-muted p-4">
+                      <div className="mb-1 font-semibold text-foreground">
                         {improvement.title}
                       </div>
-                      <div className={`text-sm ${twText('secondary')}`}>
+                      <div className="text-body-sm text-muted-foreground">
                         {improvement.description}
                       </div>
                     </div>
@@ -318,15 +311,15 @@ const ChangelogPage: React.FC = () => {
             {/* 破坏性变更 */}
             {entry.breakingChanges && entry.breakingChanges.length > 0 && (
               <div className="mb-6">
-                <h3 className={`text-lg font-semibold ${twText('danger')} mb-3 flex items-center gap-2`}>
-                  <AlertTriangle className="w-5 h-5" />
+                <h3 className="mb-3 flex items-center gap-2 text-h3 text-destructive">
+                  <AlertTriangle className="h-5 w-5" />
                   破坏性变更
                 </h3>
                 <div className="space-y-2">
                   {entry.breakingChanges.map((change, idx) => (
                     <div key={idx} className="flex items-start gap-2">
-                      <AlertTriangle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
-                      <span className={twText('danger')}>{change}</span>
+                      <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0 text-destructive" />
+                      <span className="text-destructive">{change}</span>
                     </div>
                   ))}
                 </div>
@@ -336,17 +329,17 @@ const ChangelogPage: React.FC = () => {
             {/* 已知问题 */}
             {entry.knownIssues.length > 0 && (
               <div>
-                <h3 className={`text-lg font-semibold ${twText('muted')} mb-3 flex items-center gap-2`}>
-                  <Clock className="w-5 h-5" />
+                <h3 className="mb-3 flex items-center gap-2 text-h3 text-muted-foreground">
+                  <Clock className="h-5 w-5" />
                   已知问题
                 </h3>
                 <div className="space-y-3">
                   {entry.knownIssues.map((issue, idx) => (
-                    <div key={idx} className={`${twBg('muted')} rounded p-4`}>
-                      <div className="font-semibold text-white mb-1">
+                    <div key={idx} className="rounded bg-muted p-4">
+                      <div className="mb-1 font-semibold text-foreground">
                         {issue.title}
                       </div>
-                      <div className={`text-sm ${twText('secondary')}`}>
+                      <div className="text-body-sm text-muted-foreground">
                         {issue.description}
                       </div>
                     </div>
@@ -357,7 +350,7 @@ const ChangelogPage: React.FC = () => {
           </div>
         ))}
       </div>
-    </div>
+    </PageContainer>
   )
 }
 

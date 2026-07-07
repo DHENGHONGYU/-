@@ -31,6 +31,7 @@ vi.mock('@/data/dataLayer', () => ({
   dataLayer: {
     stocks: { get: vi.fn() },
     dailyQuotes: { get: vi.fn() },
+    financialReports: { get: vi.fn().mockResolvedValue(undefined) },
     v6Scores: { list: vi.fn().mockResolvedValue([]), save: vi.fn().mockResolvedValue({ success: true }) },
   },
 }))

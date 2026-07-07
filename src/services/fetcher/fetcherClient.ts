@@ -1,9 +1,11 @@
 import { getDefaultFetcherServiceConfig } from '@/config/fetcherConfig'
 import { getLogger } from '@/lib/logger'
-import { API_COLLECT_BASIC, API_COLLECT_KLINE } from '@/config/apiPaths'
+import { API_COLLECT_BASIC, API_COLLECT_FINANCIAL, API_COLLECT_KLINE } from '@/config/apiPaths'
 import type {
   CollectBasicData,
   CollectBasicRequest,
+  CollectFinancialData,
+  CollectFinancialRequest,
   CollectKlineData,
   CollectKlineRequest,
   CollectResponse,
@@ -131,4 +133,30 @@ export async function collectKline(
     method: 'POST',
     body: JSON.stringify(params),
   })
+}
+
+export async function collectFinancial(
+  symbol: string,
+): Promise<CollectResponse<CollectFinancialData>> {
+  logger.info('[fetcherClient] collectFinancial 开始请求', { symbol })
+  try {
+    const result = await request<CollectResponse<CollectFinancialData>>(API_COLLECT_FINANCIAL, {
+      method: 'POST',
+      body: JSON.stringify({ symbol } satisfies CollectFinancialRequest),
+    })
+    logger.info('[fetcherClient] collectFinancial 请求成功', {
+      symbol,
+      success: result.success,
+      reportDate: result.data?.report_date,
+      revenue: result.data?.revenue,
+      netProfit: result.data?.net_profit,
+    })
+    return result
+  } catch (err) {
+    logger.error('[fetcherClient] collectFinancial 请求失败', {
+      symbol,
+      error: err instanceof Error ? err.message : String(err),
+    })
+    throw err
+  }
 }

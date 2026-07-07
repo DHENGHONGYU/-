@@ -28,7 +28,7 @@ import {
   BreadcrumbPage,
 } from '@/components/ui/Breadcrumb'
 import { useAgentStore } from '@/store/agentStore'
-import { twBg, twText } from '@/constants/theme.tokens'
+
 
 interface MetricCard {
   label: string
@@ -150,10 +150,10 @@ export default function AgentHubPage(): React.JSX.Element {
   const stats = useAgentStore((state) => state.stats)
 
   const metricCards: MetricCard[] = [
-    { label: '已注册智能体', value: stats.totalAgents, icon: Bot, color: `${twBg('emerald', 500)}/10 ${twText('emerald', 500)}` },
-    { label: '运行中任务', value: stats.runningTasks, icon: Activity, color: `${twBg('blue', 500)}/10 ${twText('blue', 500)}` },
+    { label: '已注册智能体', value: stats.totalAgents, icon: Bot, color: 'bg-success/10 text-success' },
+    { label: '运行中任务', value: stats.runningTasks, icon: Activity, color: 'bg-info/10 text-info' },
     { label: '已完成任务', value: stats.completedTasks, icon: Zap, color: 'bg-primary/10 text-primary' },
-    { label: '失败任务', value: stats.failedTasks, icon: Settings, color: `${twBg('red', 500)}/10 ${twText('red', 500)}` },
+    { label: '失败任务', value: stats.failedTasks, icon: Settings, color: 'bg-destructive/10 text-destructive' },
   ]
 
   return (

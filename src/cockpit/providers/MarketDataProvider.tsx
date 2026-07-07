@@ -7,6 +7,7 @@ import { widgetRegistry } from '@/cockpit/core/widgetRegistry'
 import { MockStockAnalysisProvider } from '@/services/stock-analysis/mockStockAnalysisProvider'
 import { streamingChat } from '@/services/llm/llmGateway'
 import type { LlmStreamCallback } from '@/services/llm/llmTypes'
+import { nanoid } from 'nanoid'
 import {
   ACTIVE_DATA_SOURCE,
   DATA_SOURCE_TYPE,
@@ -77,7 +78,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps): React
     instances.forEach((instance) => {
       const { instanceId, widgetId, dataSource } = instance
 
-      if (!dataSource || !dataSource.enabled) {
+      if (!dataSource?.enabled) {
         logger.warn(`[MarketDataProvider] Widget ${instanceId} 未配置数据源，跳过`)
         return
       }
@@ -171,7 +172,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps): React
     }
 
     return {
-      id: `assistant_${Date.now()}`,
+      id: `assistant_${nanoid(8)}`,
       role: 'assistant',
       content: fullContent,
       timestamp: Date.now(),

@@ -14,17 +14,28 @@ vi.mock('@/store/agentStore', () => ({
   }),
 }))
 
-vi.mock('lucide-react', () => ({
-  Bot: () => <svg data-testid="icon-bot" />,
-  Activity: () => <svg data-testid="icon-activity" />,
-  List: () => <svg data-testid="icon-list" />,
-  Zap: () => <svg data-testid="icon-zap" />,
-  GitBranch: () => <svg data-testid="icon-git-branch" />,
-  Settings: () => <svg data-testid="icon-settings" />,
-  ArrowRight: () => <svg data-testid="icon-arrow-right" />,
-  Sparkles: () => <svg data-testid="icon-sparkles" />,
-  MessageSquare: () => <svg data-testid="icon-message-square" />,
-}))
+vi.mock('lucide-react', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('lucide-react')>()
+  const icon = (testid: string) => () => <svg data-testid={testid} />
+  return {
+    ...actual,
+    Bot: icon('icon-bot'),
+    Activity: icon('icon-activity'),
+    List: icon('icon-list'),
+    Zap: icon('icon-zap'),
+    GitBranch: icon('icon-git-branch'),
+    Settings: icon('icon-settings'),
+    ArrowRight: icon('icon-arrow-right'),
+    Sparkles: icon('icon-sparkles'),
+    MessageSquare: icon('icon-message-square'),
+    Tag: icon('icon-tag'),
+    Key: icon('icon-key'),
+    ArrowUpCircle: icon('icon-arrow-up-circle'),
+    Search: icon('icon-search'),
+    Lightbulb: icon('icon-lightbulb'),
+    Gift: icon('icon-gift'),
+  }
+})
 
 vi.mock('@/lib/logger', () => ({
   getLogger: () => ({

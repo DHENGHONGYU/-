@@ -7,6 +7,7 @@
  */
 
 import { getLogger } from '@/lib/logger'
+import { tryResult, type Result } from '@/services/contracts'
 import { getHotSectors, type HotSector } from '@/services/input/hotSectorService'
 
 const logger = getLogger()
@@ -25,31 +26,38 @@ export interface HotSectorQueryResult {
  * 热门板块查询执行用例
  *
  * @param input 查询参数
- * @returns 热门板块列表
+ * @returns Result<热门板块列表>；失败时 error 为收敛后的 V9Error
  */
 export async function hotSectorQueryUseCase(
   input: HotSectorQueryInput = {},
-): Promise<HotSectorQueryResult> {
+): Promise<Result<HotSectorQueryResult>> {
   const topN = input.topN ?? 10
 
   logger.info('[hotSectorQueryUseCase] 开始查询热门板块', { topN })
 
-  try {
-    const allSectors = getHotSectors()
-    const sorted = allSectors.sort((a, b) => b.score - a.score)
-    const hotSectors = sorted.slice(0, topN)
+  const result = await tryResult(
+    async () => {
+      const allSectors = getHotSectors()
+      const sorted = allSectors.sort((a, b) => b.score - a.score)
+      const hotSectors = sorted.slice(0, topN)
 
-    logger.info('[hotSectorQueryUseCase] 查询完成', {
-      totalCount: allSectors.length,
-      returnedCount: hotSectors.length,
-      topSectors: hotSectors.map((s) => ({ name: s.name, score: s.score })),
-    })
+      logger.info('[hotSectorQueryUseCase] 查询完成', {
+        totalCount: allSectors.length,
+        returnedCount: hotSectors.length,
+        topSectors: hotSectors.map((s) => ({ name: s.name, score: s.score })),
+      })
 
-    return { hotSectors }
-  } catch (err) {
+      return { hotSectors }
+    },
+    { source: 'hotSectorQueryUseCase', operation: 'query', meta: { topN } },
+  )
+
+  if (!result.ok) {
     logger.error('[hotSectorQueryUseCase] 查询失败', {
-      error: err instanceof Error ? err.message : String(err),
+      error: result.error.message,
+      code: result.error.code,
     })
-    return { hotSectors: [] }
   }
+
+  return result
 }

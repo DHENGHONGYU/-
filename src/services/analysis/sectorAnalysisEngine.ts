@@ -16,6 +16,7 @@ import type { DataLayerResult, IndustryScore, RotationSectorScore } from '@/data
 import { getLogger } from '@/lib/logger'
 import { saveDefaultRotationScores, listRotationScores } from '@/services/analysis/rotationScoreService'
 
+import { nanoid } from 'nanoid'
 const logger = getLogger()
 
 /** scoreDate 未指定时的默认日志标签 */
@@ -102,7 +103,7 @@ export async function calculateAndSaveDefaultIndustryScores(): Promise<DataLayer
           source: MODULE_ID.analyzer,
           target: ENVELOPE_TARGET.db,
           action: ENVELOPE_ACTION.saveIndustryScores,
-          traceId: `industry-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+          traceId: `industry-${nanoid(8)}`,
         },
         score,
       )

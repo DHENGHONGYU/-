@@ -3,7 +3,7 @@
  * @description 执行计划服务：基于交易信号创建执行计划，管理阶段流转与取消。
  *
  * 职责：
- *   - createPlan(signal): 基于信号创建执行计划
+ *   - createPlan(signal): ~~基于信号创建执行计划~~ **@deprecated** 旧路径，不推荐新代码使用
  *   - listPlans(symbol?): 查询执行计划列表
  *   - updatePhase(planId, nextPhase): 按状态机推进阶段
  *   - cancelPlan(planId): 取消执行计划
@@ -40,14 +40,22 @@ export interface UpdatePhaseOptions {
 }
 
 /**
- * 基于交易信号创建执行计划。
+ * @deprecated 无风控 / 无仓位计算的旧路径，已被 `createExecutionPlanUseCase`（含 checkOrderRisk 风控 + 仓位计算）取代。
+ *
+ * 新代码请改用 `executionStore.createPlan`（文档《功能模块数据契约》列为 P0 的核心能力），
+ * 经 `createExecutionPlanUseCase` 持久化，具备风控与仓位 sizing。
+ *
+ * 本方法当前保留仅为兼容既有测试与历史调用，不推荐在新增功能中使用；
+ * 后续将在全仓调用方迁移完成后逐步删除（CORE PRINCIPLE：删除需经应潇震确认）。
+ *
+ * 基于交易信号创建执行计划（旧逻辑）。
  * 当信号置信度低于阈值时返回 undefined。
  */
 export async function createPlan(signal: Signal, options: CreatePlanOptions = {}): Promise<ExecutionPlan | undefined> {
   const now = options.now ?? Date.now()
   const confidenceThreshold = options.confidenceThreshold ?? DEFAULT_CONFIDENCE_THRESHOLD
   const maxPositionPct = options.maxPositionPct ?? DEFAULT_MAX_POSITION_PCT
-  const accountType = options.accountType ?? DEFAULT_ACCOUNT_TYPE as ExecutionPlan['accountType']
+  const accountType = options.accountType ?? DEFAULT_ACCOUNT_TYPE
 
   try {
     if (signal.confidence < confidenceThreshold) {

@@ -47,13 +47,42 @@ export default function StrategySnapshotPage(): React.JSX.Element {
   const saveSnapshot = useStrategySnapshotStore((s) => s.saveSnapshot)
   const selectSnapshot = useStrategySnapshotStore((s) => s.selectSnapshot)
 
+  // 组件挂载与卸载日志
+  useEffect(() => {
+    logger.info('[StrategySnapshotPage] 挂载，初始化策略快照页面')
+    return () => {
+      logger.info('[StrategySnapshotPage] 卸载，清理策略快照页面')
+    }
+  }, [])
+
+
   // 监听 activeTab 变化，加载对应数据
   useEffect(() => {
     logger.info('[StrategySnapshotPage] activeTab 切换', { activeTab })
     if (activeTab === 'current') {
-      void loadCurrentStrategy()
+      logger.info('[StrategySnapshotPage] 开始加载当前策略数据')
+      void loadCurrentStrategy().then(() => {
+        const state = useStrategySnapshotStore.getState()
+        logger.info('[StrategySnapshotPage] 当前策略数据加载完成', {
+          stockCount: state.stocks.length,
+          v6ScoreCount: state.v6Scores.length,
+          rotationScoreCount: state.rotationScores.length,
+          coreItems: state.items.core.length,
+          hotItems: state.items.hot.length,
+          valueItems: state.items.value.length,
+          error: state.error,
+        })
+      })
     } else if (activeTab === 'history') {
-      void loadHistorySnapshots()
+      logger.info('[StrategySnapshotPage] 开始加载历史快照数据')
+      void loadHistorySnapshots().then(() => {
+        const state = useStrategySnapshotStore.getState()
+        logger.info('[StrategySnapshotPage] 历史快照数据加载完成', {
+          snapshotCount: state.snapshots.length,
+          selectedSnapshotId: state.selectedSnapshot?.id,
+          error: state.error,
+        })
+      })
     }
   }, [activeTab, loadCurrentStrategy, loadHistorySnapshots])
 

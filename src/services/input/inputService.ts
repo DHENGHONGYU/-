@@ -7,6 +7,7 @@ import type { DataLayerResult, Stock } from '@/data/types'
 import { fetchBasicDataUseCase, fetchKlineDataUseCase } from '@/services/useCase/fetcherOrchestrator.useCase'
 import { MOCK_STOCK_LIBRARY, type MockStock } from './mockStockLibrary'
 
+import { nanoid } from 'nanoid'
 export interface AddStockInput {
   symbol: string
   name: string
@@ -80,7 +81,7 @@ export async function addStock(
       source: MODULE_ID.stockpool,
       target: ENVELOPE_TARGET.db,
       action: ENVELOPE_ACTION.insertStock,
-      traceId: `input-${Date.now()}-${symbol}`,
+      traceId: `input-${nanoid(8)}-${symbol}`,
     },
     stock,
   )
@@ -207,7 +208,7 @@ export async function importPool(payload: PoolExportPayload): Promise<DataLayerR
           source: MODULE_ID.stockpool,
           target: ENVELOPE_TARGET.db,
           action: ENVELOPE_ACTION.insertStock,
-          traceId: `import-${Date.now()}-${normalized}`,
+          traceId: `import-${nanoid(8)}-${normalized}`,
         },
         {
           ...stock,

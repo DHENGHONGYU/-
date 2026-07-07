@@ -4,6 +4,7 @@ import { EnvelopeFactory } from '@/core/envelope'
 import { MODULE_ID, ENVELOPE_TARGET, ENVELOPE_ACTION } from '@/config/dbConfig'
 import type { DataLayerResult } from '@/data/types'
 
+import { nanoid } from 'nanoid'
 export interface SystemStats {
   stocks: number
   orders: number
@@ -47,7 +48,7 @@ export async function resetAll(): Promise<DataLayerResult<void>> {
       source: MODULE_ID.system,
       target: ENVELOPE_TARGET.system,
       action: ENVELOPE_ACTION.resetAll,
-      traceId: `system-reset-${Date.now()}`,
+      traceId: `system-reset-${nanoid(8)}`,
     },
     {},
   )
@@ -74,7 +75,7 @@ export async function exportAll(): Promise<DataLayerResult<Record<string, unknow
       source: MODULE_ID.system,
       target: ENVELOPE_TARGET.system,
       action: ENVELOPE_ACTION.exportAll,
-      traceId: `system-export-${Date.now()}`,
+      traceId: `system-export-${nanoid(8)}`,
     },
     {},
   )

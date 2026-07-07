@@ -19,6 +19,7 @@ import {
 import { calculatePosition, type PositionSizingResult } from './positionSizer'
 import { checkOrderRisk, type RiskCheckResult } from './riskEngine'
 
+import { nanoid } from 'nanoid'
 export interface CreateOrderInput {
   symbol: string
   direction: 'buy' | 'sell'
@@ -30,7 +31,7 @@ export interface CreateOrderInput {
 const DEFAULT_BUY_QUANTITY = 100
 
 function generateId(): string {
-  return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`
+  return nanoid(16)
 }
 
 function buildOrder(input: CreateOrderInput): Order {
@@ -108,7 +109,7 @@ export async function scanWatchingSignals(): Promise<TradingSignal[]> {
           source: MODULE_ID.tradinghub,
           target: ENVELOPE_TARGET.db,
           action: ENVELOPE_ACTION.insertSignal,
-          traceId: `signal-${Date.now()}-${signal.symbol}`,
+          traceId: `signal-${nanoid(8)}-${signal.symbol}`,
         },
         signal,
       )
@@ -203,7 +204,7 @@ async function createOrderWithRiskCheck(
       source: MODULE_ID.tradinghub,
       target: ENVELOPE_TARGET.db,
       action: ENVELOPE_ACTION.insertOrder,
-      traceId: `trading-${Date.now()}-${input.symbol}`,
+      traceId: `trading-${nanoid(8)}-${input.symbol}`,
     },
     order,
   )

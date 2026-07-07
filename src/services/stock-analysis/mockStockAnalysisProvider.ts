@@ -1,3 +1,5 @@
+import { nanoid } from 'nanoid'
+
 import type {
   AnalysisScores,
   ModelComparison,
@@ -141,7 +143,7 @@ export class MockStockAnalysisProvider {
       setTimeout(
         () =>
           resolve({
-            id: `assistant_${Date.now()}`,
+            id: `assistant_${nanoid(8)}`,
             role: 'assistant',
             content: generateMockAnswer(target),
             timestamp: Date.now(),
@@ -325,7 +327,7 @@ function generateChatHistory(target = '000858'): ChatHistory {
     targetType: 'stock',
     messages: [
       {
-        id: `system_${Date.now()}`,
+        id: `system_${nanoid(8)}`,
         role: 'assistant',
         content: `您好，我是您的个股深度分析助手。当前标的：**${stock.name}（${stock.code}）**。\n\n您可以问我：\n- 该股票的基本面如何？\n- 近期技术面和资金面有什么信号？\n- 与同行业相比竞争力怎么样？`,
         timestamp: Date.now() - 1000 * 60,

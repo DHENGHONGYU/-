@@ -1,15 +1,17 @@
-import React, { Suspense, useEffect, useRef } from 'react'
-import { useState } from 'react'
+import React, { Suspense, useEffect, useMemo, useRef } from 'react'
 import { useLocation } from 'react-router'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
-import { runV6Score } from '@/services/scoring/v6ScoreService'
-import { listStocks, listV6Scores } from '@/services/analysis/analysisService'
 import { useToast } from '@/hooks/useToast'
 import { AnalysisTemplateCards } from '@/components/analysis/hub/AnalysisTemplateCards'
 import { getLogger } from '@/lib/logger'
-import type { Stock, V6Score } from '@/data/types'
+import {
+  useAnalysisStore,
+  // 派生查询 Hook（通过 export * 从 .derived.ts 导入）
+  useIsLoadingAny,
+  useErrorUnion,
+} from '@/store/analysisStore'
 
 // ── Lazy 页面导入 ────────────────────────────────────────────────────────────
 const StockAnalysisPage = React.lazy(() => import('@/pages/analysis/StockAnalysisPage'))
@@ -21,6 +23,7 @@ const ScoreDocPage = React.lazy(() => import('@/pages/analysis/ScoreDocPage'))
 const NewsPage = React.lazy(() => import('@/pages/analysis/NewsPage'))
 const HotSectorPage = React.lazy(() => import('@/pages/analysis/HotSectorPage'))
 const ValuePitPage = React.lazy(() => import('@/pages/analysis/ValuePitPage'))
+const MultiFactorFilterPage = React.lazy(() => import('@/pages/analysis/MultiFactorFilterPage'))
 
 const logger = getLogger()
 
@@ -81,6 +84,9 @@ export default function AnalysisApp(): React.JSX.Element {
     } else if (path === '/analysis/value-pit') {
       branch = 'value-pit'
       componentName = 'ValuePitPage'
+    } else if (path === '/analysis/multi-factor') {
+      branch = 'multi-factor'
+      componentName = 'MultiFactorFilterPage'
     } else {
       branch = 'default'
       componentName = 'V6ScoreCard'
@@ -169,6 +175,14 @@ export default function AnalysisApp(): React.JSX.Element {
     )
   }
 
+  if (path === '/analysis/multi-factor') {
+    return (
+      <Suspense fallback={<div className="p-4 text-muted-foreground">加载多因子筛选页...</div>}>
+        <MultiFactorFilterPage />
+      </Suspense>
+    )
+  }
+
   // ── 默认视图：分析模板卡片 + V6 九维评分卡片 ────────────────────────────────
   return (
     <div className="space-y-4">
@@ -178,70 +192,44 @@ export default function AnalysisApp(): React.JSX.Element {
   )
 }
 
-// ── V6 评分卡片（原有组件逻辑提取为独立组件）─────────────────────────────────
+// ── V6 评分卡片（接入 analysisStore + 派生查询 Hook）─────────────────────────
+// 业务行为完全保留：原 useState 替换为 Store 订阅；原 try/catch toast 替换为 useEffect 订阅 error
+// 派生查询接入：useIsLoadingAny (合并 loading || trendLoading)、useErrorUnion (合并 error ?? trendError)
 
 function V6ScoreCard(): React.JSX.Element {
-  const [stocks, setStocks] = useState<Stock[]>([])
-  const [scores, setScores] = useState<V6Score[]>([])
-  const [loading, setLoading] = useState(false)
+  // ── 接入 analysisStore，替代本地 useState ────────────────────────────────────
+  const stocks = useAnalysisStore((s) => s.stocks)
+  const scores = useAnalysisStore((s) => s.scores)
+  const loadStocks = useAnalysisStore((s) => s.loadStocks)
+  const handleScoreAction = useAnalysisStore((s) => s.handleScore)
+  const clearError = useAnalysisStore((s) => s.clearError)
+
+  // ── 派生查询 Hook（来自 .derived.ts，含 memoizeByRef 缓存优化）─────────────────
+  const loading = useIsLoadingAny()
+  const error = useErrorUnion()
+
   const { toast } = useToast()
 
-  const loadStocks = async (): Promise<void> => {
-    setLoading(true)
-    try {
-      const result = await listStocks()
-      if (result.success && result.data) {
-        setStocks(result.data)
-      } else {
-        toast({
-          variant: 'error',
-          title: '加载失败',
-          description: result.error ?? '无法加载标的列表',
-        })
-      }
-    } catch (err) {
+  // ── 错误变化时触发 toast（替代原 try/catch 中的 toast 调用）────────────────────
+  // 注意：Store 内部已通过 logger.error 记录错误，此处仅负责用户感知
+  useEffect(() => {
+    if (error !== null && error.length > 0) {
       toast({
         variant: 'error',
-        title: '加载失败',
-        description: err instanceof Error ? err.message : '无法加载标的列表',
+        title: '操作失败',
+        description: error,
       })
-    } finally {
-      setLoading(false)
+      clearError()
     }
-  }
+  }, [error, clearError, toast])
 
-  const handleScore = async (symbol: string): Promise<void> => {
-    setLoading(true)
-    try {
-      const result = await runV6Score(symbol)
-      if (result.success) {
-        await loadScores()
-      } else {
-        toast({
-          variant: 'error',
-          title: '评分失败',
-          description: result.error ?? `无法对 ${symbol} 运行评分`,
-        })
-      }
-    } catch (err) {
-      toast({
-        variant: 'error',
-        title: '评分失败',
-        description: err instanceof Error ? err.message : `无法对 ${symbol} 运行评分`,
-      })
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const loadScores = async (): Promise<void> => {
-    const result = await listV6Scores()
-    if (result.success && result.data) {
-      setScores(result.data)
-    }
-  }
-
-  const scoreMap = new Map(scores.map((s) => [s.symbol, s]))
+  // ── 评分索引（在循环外构建一次，O(n) 构建 + O(1) 查找）────────────────────────
+  // 注意：派生查询 scoreBySymbol(symbol) 是单次 find，循环中使用会产生 O(n²) 复杂度
+  // 因此保留 useMemo + Map 构建一次索引
+  const scoreMap = useMemo(
+    () => new Map(scores.map((s) => [s.symbol, s] as const)),
+    [scores],
+  )
 
   return (
     <div className="space-y-4 p-4">
@@ -250,7 +238,12 @@ function V6ScoreCard(): React.JSX.Element {
           <CardTitle>分析舱 · V6 九维评分</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <Button variant="secondary" size="sm" onClick={loadStocks} disabled={loading}>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => void loadStocks()}
+            disabled={loading}
+          >
             加载标的
           </Button>
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
@@ -272,7 +265,7 @@ function V6ScoreCard(): React.JSX.Element {
                     className="mt-2"
                     size="sm"
                     disabled={loading}
-                    onClick={() => handleScore(stock.symbol)}
+                    onClick={() => void handleScoreAction(stock.symbol)}
                   >
                     {loading ? '评分中...' : '运行评分'}
                   </Button>

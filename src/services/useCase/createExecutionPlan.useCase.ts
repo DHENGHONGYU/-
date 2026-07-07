@@ -7,15 +7,22 @@
  * 2. 计算当前持仓 & 仓位 sizing（Kelly 公式）
  * 3. 风控检查（阻断/警告）
  * 4. 构造 ExecutionPlan 对象
- * 5. 通过 dataLayer 持久化
+ * 5. 通过 DataBridge 持久化
  *
  * @see Clean Architecture Use Case Interactor 模式
  */
 
 import { getLogger } from '@/lib/logger'
-import { dataLayer } from '@/data/dataLayer'
-import type { AccountType } from '@/config/dbConfig'
-import type { Signal, ExecutionPlan, RiskCheckItem } from '@/data/types'
+import { dataBridge } from '@/core/databridge'
+import { EnvelopeFactory } from '@/core/envelope'
+import {
+  ENVELOPE_ACTION,
+  ENVELOPE_TARGET,
+  MODULE_ID,
+  STORE_NAME,
+  type AccountType,
+} from '@/config/dbConfig'
+import type { Signal, Stock, Order, ExecutionPlan, RiskCheckItem } from '@/data/types'
 import { getDefaultTradingConfig } from '@/config/tradingConfig'
 import { calculatePosition, type PositionSizingResult } from '@/services/trading/positionSizer'
 import { checkOrderRisk, type RiskCheckResult } from '@/services/trading/riskEngine'
@@ -71,7 +78,7 @@ function generatePlanId(): string {
  * 创建执行计划用例
  *
  * 根据交易信号获取股价、计算仓位、执行风控检查，
- * 构造 ExecutionPlan 并持久化到 dataLayer。
+ * 构造 ExecutionPlan 并通过 DataBridge 持久化。
  *
  * @param input 创建参数
  * @returns 创建结果（包含 plan 或 error）
@@ -109,7 +116,20 @@ export async function createExecutionPlanUseCase(
 
   try {
     // 1. 获取股票信息用于仓位计算
-    const stock = await dataLayer.stocks.get(signal.symbol)
+    logger.info('[createExecutionPlanUseCase] 查询股票信息', { symbol: signal.symbol })
+    const stockResult = await dataBridge.query<Stock>({
+      action: ENVELOPE_ACTION.queryGet,
+      store: STORE_NAME.stocks,
+      key: signal.symbol,
+      source: MODULE_ID.executionPlans,
+    })
+    logger.info('[createExecutionPlanUseCase] 股票信息返回', {
+      symbol: signal.symbol,
+      success: stockResult.success,
+      hasData: !!stockResult.data,
+    })
+
+    const stock = stockResult.success ? stockResult.data : undefined
     const price = stock?.price ?? 0
     if (!stock?.price) {
       logger.warn('[createExecutionPlanUseCase] 股价缺失，使用零值', {
@@ -118,7 +138,19 @@ export async function createExecutionPlanUseCase(
     }
 
     // 2. 计算仓位
-    const orders = await dataLayer.orders.list()
+    logger.info('[createExecutionPlanUseCase] 查询订单列表', { symbol: signal.symbol })
+    const ordersResult = await dataBridge.query<Order[]>({
+      action: ENVELOPE_ACTION.queryList,
+      store: STORE_NAME.orders,
+      source: MODULE_ID.executionPlans,
+    })
+    logger.info('[createExecutionPlanUseCase] 订单列表返回', {
+      symbol: signal.symbol,
+      success: ordersResult.success,
+      count: ordersResult.success ? (ordersResult.data ?? []).length : 0,
+    })
+
+    const orders = ordersResult.success ? (ordersResult.data ?? []) : []
     const portfolioValue = getDefaultTradingConfig().risk.portfolioValue
 
     const holdingShares = orders
@@ -217,7 +249,18 @@ export async function createExecutionPlanUseCase(
     }
 
     // 5. 持久化
-    await dataLayer.executionPlans.save(plan)
+    logger.info('[createExecutionPlanUseCase] 保存执行计划', { planId, symbol: signal.symbol })
+    const saveEnvelope = EnvelopeFactory.create(
+      {
+        action: ENVELOPE_ACTION.saveExecutionPlan,
+        source: MODULE_ID.executionPlans,
+        target: ENVELOPE_TARGET.db,
+        traceId: `usecase-${planId}`,
+      },
+      plan,
+    )
+    await dataBridge.forward(saveEnvelope)
+    logger.info('[createExecutionPlanUseCase] 执行计划保存完成', { planId, symbol: signal.symbol })
 
     // 6. 日志记录：区分成功和风控阻断
     if (!hasBlocker) {

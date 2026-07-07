@@ -120,7 +120,7 @@ function WaterfallTooltip({ active, payload }: { active?: boolean; payload?: Arr
   if (!c) return null
 
   return (
-    <div className="rounded-md border bg-white p-2 shadow-sm text-xs space-y-1">
+    <div className="rounded-md border bg-neutral-50 p-2 shadow-sm text-xs space-y-1">
       <div className="font-medium">{c.label}</div>
       <div className={twText('slate', 600)}>原始得分: {c.score.toFixed(2)}</div>
       <div className={twText('slate', 600)}>权重: {formatPercent(c.normalizedWeight)}</div>

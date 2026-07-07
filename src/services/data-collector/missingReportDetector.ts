@@ -56,6 +56,7 @@ export async function detect(
   reason: string,
   options: DetectOptions = {},
 ): Promise<MissingReport | undefined> {
+  logger.info(`[missingReportDetector] detect() called: symbol="${symbol}" type="${reportType}" severity="${options.severity ?? MISSING_REPORT_SEVERITY.MEDIUM}"`)
   const now = options.now ?? Date.now()
   const severity = options.severity ?? MISSING_REPORT_SEVERITY.MEDIUM
   const enabled = options.enabled ?? detectorEnabled
@@ -108,8 +109,11 @@ export async function detect(
  * 查询某股票的全部缺失报告。
  */
 export async function listBySymbol(symbol: string): Promise<MissingReport[]> {
+  logger.info(`[missingReportDetector] listBySymbol() called: symbol="${symbol}"`)
   try {
-    return await missingReportStore.listBySymbol(symbol)
+    const result = await missingReportStore.listBySymbol(symbol)
+    logger.info(`[missingReportDetector] listBySymbol() completed: symbol="${symbol}", count=${result.length}`)
+    return result
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     logger.error(`[missingReportDetector] listBySymbol error: ${message}`, { symbol })
@@ -121,8 +125,11 @@ export async function listBySymbol(symbol: string): Promise<MissingReport[]> {
  * 按严重度查询缺失报告。
  */
 export async function listBySeverity(severity: MissingReportSeverity): Promise<MissingReport[]> {
+  logger.info(`[missingReportDetector] listBySeverity() called: severity="${severity}"`)
   try {
-    return await missingReportStore.listBySeverity(severity)
+    const result = await missingReportStore.listBySeverity(severity)
+    logger.info(`[missingReportDetector] listBySeverity() completed: severity="${severity}", count=${result.length}`)
+    return result
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     logger.error(`[missingReportDetector] listBySeverity error: ${message}`, { severity })
@@ -134,9 +141,12 @@ export async function listBySeverity(severity: MissingReportSeverity): Promise<M
  * 查询所有未解决的缺失报告。
  */
 export async function listUnresolved(): Promise<MissingReport[]> {
+  logger.info('[missingReportDetector] listUnresolved() called')
   try {
     const all = await missingReportStore.list()
-    return all.filter((r) => r.resolvedAt === undefined && r.retryCount < DEFAULT_MAX_RETRY_COUNT)
+    const result = all.filter((r) => r.resolvedAt === undefined && r.retryCount < DEFAULT_MAX_RETRY_COUNT)
+    logger.info(`[missingReportDetector] listUnresolved() completed: all=${all.length}, unresolved=${result.length}`)
+    return result
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     logger.error(`[missingReportDetector] listUnresolved error: ${message}`)
@@ -147,7 +157,8 @@ export async function listUnresolved(): Promise<MissingReport[]> {
 /**
  * 增加重试次数。当重试次数达到上限时自动标记为已解决。
  */
-export async function incrementRetry(id: number, _options: { now?: number } = {}): Promise<MissingReport | undefined> {
+export async function incrementRetry(id: string, _options: { now?: number } = {}): Promise<MissingReport | undefined> {
+  logger.info(`[missingReportDetector] incrementRetry() called: id="${id}"`)
   try {
     const result = await missingReportStore.incrementRetry(id)
     if (!result.success) {
@@ -168,6 +179,7 @@ export async function incrementRetry(id: number, _options: { now?: number } = {}
  * 清理已解决的缺失报告。若提供 symbol，则仅清理该股票的报告。
  */
 export async function clear(symbol?: string): Promise<number> {
+  logger.info(`[missingReportDetector] clear() called: symbol="${symbol ?? 'ALL'}"`)
   try {
     const all = await missingReportStore.list()
     const toClear = all.filter((r) => {
@@ -176,7 +188,7 @@ export async function clear(symbol?: string): Promise<number> {
     })
 
     // 注意：dataLayer 未提供批量删除，这里仅返回待清理数量，实际删除由调用方逐条处理
-    logger.info(`[missingReportDetector] clear: ${toClear.length} resolved reports`, { symbol })
+    logger.info(`[missingReportDetector] clear() completed: symbol="${symbol ?? 'ALL'}", resolvedCount=${toClear.length}`)
     return toClear.length
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)

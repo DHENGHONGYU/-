@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/Table'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
 import type { WidgetConfig, MarketData, StockPoolItem } from '@/types/modules/widget.types'
-import { STOCK_COLOR_MAPPING } from '@/constants/cockpit.constants'
+import { getStockColorClass } from '@/constants/theme.tokens'
 
 interface StockPoolWidgetProps {
   config: WidgetConfig
@@ -22,12 +22,10 @@ interface StockPoolWidgetProps {
 
 /**
  * 获取涨跌幅颜色（A 股标准：红涨绿跌）
- * @remarks 颜色必须从 STOCK_COLOR_MAPPING 常量读取
+ * @remarks 颜色必须从 STOCK_COLOR_TOKENS 令牌系统读取，禁止硬编码
  */
 function getChangeColorClass(changePercent: number): string {
-  if (changePercent > 0) return STOCK_COLOR_MAPPING.UP_CLASS
-  if (changePercent < 0) return STOCK_COLOR_MAPPING.DOWN_CLASS
-  return STOCK_COLOR_MAPPING.NEUTRAL_CLASS
+  return getStockColorClass(changePercent)
 }
 
 /**

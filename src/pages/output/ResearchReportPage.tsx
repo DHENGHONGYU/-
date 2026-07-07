@@ -35,22 +35,26 @@ export default memo(function ResearchReportPage(): React.JSX.Element {
   const { loadStockSymbols, generateReport: generateReportFromStore } = useScoreDocStore()
 
   useEffect(() => {
-    void loadSymbols()
+    const abortController = new AbortController()
+    void loadSymbols(abortController.signal)
+    return () => abortController.abort()
   }, [])
 
-  const loadSymbols = async (): Promise<void> => {
+  const loadSymbols = async (signal?: AbortSignal): Promise<void> => {
     setLoading(true)
     try {
       const uniqueSymbols = await loadStockSymbols()
+      if (signal?.aborted) return
       setSymbols(uniqueSymbols)
     } catch (error) {
+      if (signal?.aborted) return
       toast({
         variant: 'error',
         title: '加载股票列表失败',
         description: error instanceof Error ? error.message : '未知错误',
       })
     } finally {
-      setLoading(false)
+      if (!signal?.aborted) setLoading(false)
     }
   }
 

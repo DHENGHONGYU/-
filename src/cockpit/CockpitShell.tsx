@@ -95,7 +95,7 @@ function WidgetWrapper(props: WidgetWrapperProps): React.JSX.Element {
   const SafeComponent = useMemo(() => {
     if (!Component) return null
     const SafeWrapper = (wrapperProps: { config: unknown; data?: MarketData }): React.JSX.Element | null => {
-      if (!wrapperProps || !wrapperProps.config) {
+      if (!wrapperProps?.config) {
         logger.warn('[CockpitShell] SafeWrapper: widget received null props', { widgetId: config?.widgetId })
         return null
       }
@@ -232,7 +232,7 @@ function CockpitContent(): React.JSX.Element {
   const stats = getTaskStats()
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="dark min-h-screen bg-background">
       <header className="sticky top-0 z-10 border-b bg-background/95 px-4 py-3 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <div className="flex items-center gap-3">

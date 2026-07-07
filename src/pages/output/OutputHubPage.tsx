@@ -27,14 +27,12 @@ const OUTPUT_MODULES: HubModule[] = [
     description: '生成和导出研究报告',
     path: '/output/research',
     icon: FileText,
-    badge: '待实现',
   },
   {
     title: '交易复盘',
     description: '交易记录回顾与复盘报告',
     path: '/output/review',
     icon: BarChart3,
-    badge: '待实现',
   },
   {
     title: '数据导出',

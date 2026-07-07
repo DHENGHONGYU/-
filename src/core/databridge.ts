@@ -1,313 +1,36 @@
-import { ENVELOPE_ACTION, STORE_NAME, type EnvelopeTarget, type ModuleId, type StoreName } from '@/config/dbConfig'
+/**
+ * @fileoverview DataBridge - 统一数据桥接层
+ *
+ * 职责：
+ * - 提供 forward() 写操作入口（ACL 校验 + 路由到 DB/Manager/Strategy）
+ * - 提供 query() 读操作入口（缓存 + ACL 校验 + 审计日志）
+ * - 提供 subscribe() 频道订阅机制（跨模块通信）
+ * - 提供 fallbackQueue 重试机制
+ *
+ * 子模块（从本文件拆分）：
+ * - databridgeHandlers.ts: EnvelopeHandler 类族 + HandlerRegistry + createHandlerRegistry
+ * - databridgeStrategyRouter.ts: STRATEGY_CHANNEL + routeToStrategy 策略路由逻辑
+ */
+import { ENVELOPE_ACTION, STORE_NAME, type ModuleId, type StoreName } from '@/config/dbConfig'
 import { db } from '@/data/db'
-import type { Stock } from '@/data/types'
-import { CHANGED_SUFFIX, EVENT_NAMES } from '@/constants/store-channels.constants'
+import { CHANGED_SUFFIX } from '@/constants/store-channels.constants'
 import { eventBus } from '@/lib/eventBus'
 import { getLogger } from '@/lib/logger'
-import { analyze as analyzeHotSector, type HotSectorAnalyzerInput } from '@/services/scoring/hotSectorAnalyzer'
-import { detect as detectRotation, type RotationSignalInput } from '@/services/scoring/rotationSignalDetector'
-import { analyze as analyzeValuePit, type ValuePitAnalyzerInput } from '@/services/scoring/valuePitAnalyzer'
 import { aclEngine, inferOperation } from './acl'
 import { EnvelopeError, EnvelopeFactory, type StandardEnvelope } from './envelope'
 import { fallbackQueue, FallbackQueue } from './fallbackQueue'
 import { MemoryCache } from './memoryCache'
+import { createHandlerRegistry, type HandlerRegistry } from './databridgeHandlers'
+import { nanoid } from 'nanoid'
+import {
+  routeToStrategy,
+  type StrategyRouterContext,
+} from './databridgeStrategyRouter'
 
-/**
- * 信封处理器接口（策略模式）
- * 每个 action 对应一个 Handler，负责具体的数据库操作
- */
-interface EnvelopeHandler {
-  canHandle(action: string): boolean
-  handle(envelope: StandardEnvelope, store: StoreName): Promise<void>
-}
-
-/**
- * 通用 PUT 操作处理器
- * 处理所有简单的 db.put() 操作
- */
-class PutHandler implements EnvelopeHandler {
-  private readonly actions: string[]
-
-  constructor(actions: string[]) {
-    this.actions = actions
-  }
-
-  canHandle(action: string): boolean {
-    return this.actions.includes(action)
-  }
-
-  async handle(envelope: StandardEnvelope, store: StoreName): Promise<void> {
-    const { meta, payload } = envelope
-    logger.debug(`[DataBridge] DB put: action="${meta.action}", store="${store}"`)
-    await db.put(store, payload)
-  }
-}
-
-/**
- * 通用 DELETE 操作处理器
- */
-class DeleteHandler implements EnvelopeHandler {
-  private readonly actions: string[]
-
-  constructor(actions: string[]) {
-    this.actions = actions
-  }
-
-  canHandle(action: string): boolean {
-    return this.actions.includes(action)
-  }
-
-  async handle(envelope: StandardEnvelope, store: StoreName): Promise<void> {
-    const { meta, payload } = envelope
-    const { id } = payload as { id: string }
-    logger.debug(`[DataBridge] DB delete: action="${meta.action}", store="${store}", id="${id}"`)
-    await db.delete(store, id)
-  }
-}
-
-/**
- * 股票插入处理器（需要特殊处理）
- */
-class InsertStockHandler implements EnvelopeHandler {
-  canHandle(action: string): boolean {
-    return action === ENVELOPE_ACTION.insertStock
-  }
-
-  async handle(envelope: StandardEnvelope, store: StoreName): Promise<void> {
-    const stock = envelope.payload as Stock
-    // 防御性校验：stocks store 的 keyPath 为 'symbol'，缺失会导致 IndexedDB 抛出
-    // "Evaluating the object store's key path did not yield a value"
-    if (!stock || !stock.symbol) {
-      const traceId = envelope.meta.traceId ?? 'N/A'
-      throw new EnvelopeError(
-        `insertStock rejected: missing or empty "symbol" field (traceId=${traceId})`,
-      )
-    }
-    logger.debug(`[DataBridge] DB insertStock: symbol="${stock.symbol}"`)
-    await db.put(store, stock)
-  }
-}
-
-/**
- * 股票更新处理器（需要合并现有数据）
- */
-class UpdateStockHandler implements EnvelopeHandler {
-  canHandle(action: string): boolean {
-    return action === ENVELOPE_ACTION.updateStock
-  }
-
-  async handle(envelope: StandardEnvelope, store: StoreName): Promise<void> {
-    const update = envelope.payload as Partial<Stock> & { symbol: string }
-    logger.debug(`[DataBridge] DB updateStock: symbol="${update.symbol}"`)
-    const existing = await db.get<Stock>(store, update.symbol)
-    if (!existing) {
-      logger.warn(`[DataBridge] DB updateStock failed: Stock not found "${update.symbol}"`)
-      throw new EnvelopeError(`Stock not found: ${update.symbol}`)
-    }
-    await db.put(store, { ...existing, ...update, updatedAt: Date.now(), dataVersion: (existing.dataVersion ?? 1) + 1 })
-  }
-}
-
-/**
- * 股票删除处理器（需要级联删除）
- */
-class DeleteStockHandler implements EnvelopeHandler {
-  canHandle(action: string): boolean {
-    return action === ENVELOPE_ACTION.deleteStock
-  }
-
-  async handle(envelope: StandardEnvelope, store: StoreName): Promise<void> {
-    const { symbol } = envelope.payload as { symbol: string }
-    logger.info(`[DataBridge] DB deleteStock: symbol="${symbol}" — 开始级联删除`)
-
-    // 1. 删除 Stock 主记录
-    await db.delete(store, symbol)
-
-    // 2. 级联删除以 symbol 为主键的关联表
-    const symbolKeyStores = [
-      STORE_NAME.v6Scores,
-      STORE_NAME.dailyQuotes,
-      STORE_NAME.hotSectorScores,
-      STORE_NAME.valuePitScores,
-    ]
-    for (const s of symbolKeyStores) {
-      try {
-        await db.delete(s, symbol)
-        logger.debug(`[DataBridge] 级联删除: ${s} symbol="${symbol}"`)
-      } catch (err) {
-        logger.warn(`[DataBridge] 级联删除失败(主键): ${s}`, { error: err instanceof Error ? err.message : String(err) })
-      }
-    }
-
-    // 3. 级联删除有 by-symbol 索引的关联表（先查后删）
-    const indexedStores = [
-      STORE_NAME.intelligentScores,
-      STORE_NAME.scoreDocs,
-      STORE_NAME.localDocs,
-      STORE_NAME.newsStockMap,
-      STORE_NAME.executionPlans,
-      STORE_NAME.executionLogs,
-      STORE_NAME.missingReports,
-    ]
-    for (const s of indexedStores) {
-      try {
-        const records = await db.getAllByIndex<{ id: string; symbol?: string }>(s, 'by-symbol', symbol)
-        for (const rec of records) {
-          if (rec.id) {
-            await db.delete(s, rec.id)
-          }
-        }
-        if (records.length > 0) {
-          logger.debug(`[DataBridge] 级联删除(索引): ${s} count=${records.length}`)
-        }
-      } catch (err) {
-        logger.warn(`[DataBridge] 级联删除失败(索引): ${s}`, { error: err instanceof Error ? err.message : String(err) })
-      }
-    }
-
-    // 4. 级联删除无 symbol 索引的关联表（全表扫描过滤）
-    const scanStores = [STORE_NAME.orders, STORE_NAME.signals, STORE_NAME.watchlists]
-    for (const s of scanStores) {
-      try {
-        const allRecords = await db.getAll<{ id: string; symbol?: string }>(s)
-        const toDelete = allRecords.filter((r) => r.symbol === symbol)
-        for (const rec of toDelete) {
-          if (rec.id) {
-            await db.delete(s, rec.id)
-          }
-        }
-        if (toDelete.length > 0) {
-          logger.debug(`[DataBridge] 级联删除(扫描): ${s} count=${toDelete.length}`)
-        }
-      } catch (err) {
-        logger.warn(`[DataBridge] 级联删除失败(扫描): ${s}`, { error: err instanceof Error ? err.message : String(err) })
-      }
-    }
-
-    logger.info(`[DataBridge] DB deleteStock 完成: symbol="${symbol}" — 级联删除结束`)
-  }
-}
-
-/**
- * 通知类 action 处理器（仅记录日志，不持久化）
- */
-class NotificationHandler implements EnvelopeHandler {
-  private readonly actions: string[]
-
-  constructor(actions: string[]) {
-    this.actions = actions
-  }
-
-  canHandle(action: string): boolean {
-    return this.actions.includes(action)
-  }
-
-  async handle(envelope: StandardEnvelope): Promise<void> {
-    const { meta } = envelope
-    logger.info(`[DataBridge] Notification-only action, skip DB put: action="${meta.action}"`)
-  }
-}
-
-/**
- * 持仓数据查询处理器（P0-3 修复）
- * loadHoldingsData 的 payload 是 HoldingsQueryParams（分页/日期/关键词），
- * 不是 Stock 数据，不能写入 stocks store（keyPath='symbol'）。
- * holdingsStore 的 ACL write=[] 也证实它不应执行 DB 写操作。
- * 此处理器仅记录查询日志，不执行 DB 写入。
- */
-class LoadHoldingsDataHandler implements EnvelopeHandler {
-  canHandle(action: string): boolean {
-    return action === ENVELOPE_ACTION.loadHoldingsData
-  }
-
-  async handle(envelope: StandardEnvelope): Promise<void> {
-    const { meta, payload } = envelope
-    logger.info('[DataBridge] loadHoldingsData: query-only action, skip DB put', {
-      traceId: meta.traceId,
-      source: meta.source,
-      payloadKeys: payload ? Object.keys(payload as Record<string, unknown>) : [],
-    })
-  }
-}
-
-/**
- * 信封处理器注册表
- * 按优先级顺序管理所有 Handler
- */
-class HandlerRegistry {
-  private handlers: EnvelopeHandler[] = []
-
-  register(handler: EnvelopeHandler): void {
-    this.handlers.push(handler)
-  }
-
-  findHandler(action: string): EnvelopeHandler | undefined {
-    return this.handlers.find((h) => h.canHandle(action))
-  }
-}
-
-/**
- * 初始化处理器注册表
- */
-function createHandlerRegistry(): HandlerRegistry {
-  const registry = new HandlerRegistry()
-
-  // 1. 特殊处理器（优先级高）
-  registry.register(new InsertStockHandler())
-  registry.register(new UpdateStockHandler())
-  registry.register(new DeleteStockHandler())
-
-  // 2. 通知类处理器
-  registry.register(
-    new NotificationHandler([
-      ENVELOPE_ACTION.newsArticleLoaded,
-      ENVELOPE_ACTION.holdingsDataLoaded,
-      ENVELOPE_ACTION.tradeActionExecuted,
-    ])
-  )
-
-  // 2.5 持仓查询处理器（P0-3 修复：loadHoldingsData 的 payload 是 HoldingsQueryParams，
-  // 不是 Stock 数据，不应写入 stocks store。holdingsStore 的 ACL write=[] 也证实了这一点）
-  registry.register(new LoadHoldingsDataHandler())
-
-  // 3. DELETE 操作处理器
-  registry.register(new DeleteHandler([ENVELOPE_ACTION.deleteExecutionPlan]))
-
-  // 4. 通用 PUT 操作处理器（处理所有简单的 db.put() 操作）
-  registry.register(
-    new PutHandler([
-      ENVELOPE_ACTION.saveScores,
-      ENVELOPE_ACTION.saveDailyQuotes,
-      ENVELOPE_ACTION.saveIntelligentScores,
-      ENVELOPE_ACTION.saveIndustryScores,
-      ENVELOPE_ACTION.saveRotationScores,
-      ENVELOPE_ACTION.saveSectorScores,
-      ENVELOPE_ACTION.saveScoreDocs,
-      ENVELOPE_ACTION.saveStrategySnapshots,
-      ENVELOPE_ACTION.saveHotSectorScores,
-      ENVELOPE_ACTION.saveValuePitScores,
-      ENVELOPE_ACTION.saveLocalDocs,
-      ENVELOPE_ACTION.saveNews,
-      ENVELOPE_ACTION.saveNewsStockMap,
-      ENVELOPE_ACTION.saveSentimentCache,
-      ENVELOPE_ACTION.saveResearchLog,
-      ENVELOPE_ACTION.insertOrder,
-      ENVELOPE_ACTION.updateOrder,
-      ENVELOPE_ACTION.insertSignal,
-      ENVELOPE_ACTION.saveTradeReview,
-      ENVELOPE_ACTION.updateExecutionPlan,
-      ENVELOPE_ACTION.incrementMissingReportRetry,
-      ENVELOPE_ACTION.saveExecutionPlan,
-      ENVELOPE_ACTION.saveExecutionLog,
-      ENVELOPE_ACTION.saveMissingReport,
-      ENVELOPE_ACTION.updateExecutionPhase,
-      ENVELOPE_ACTION.savePortfolio,
-      ENVELOPE_ACTION.newsArticleBookmarked,
-    ])
-  )
-
-  return registry
-}
+// re-export 子模块的公共 API，保持原导入路径兼容
+export { STRATEGY_CHANNEL } from './databridgeStrategyRouter'
+export type { StrategyChannel } from './databridgeStrategyRouter'
+export type { EnvelopeHandler } from './databridgeHandlers'
 
 const logger = getLogger()
 
@@ -324,18 +47,6 @@ const FORWARD_SLOW_THRESHOLD_MS = 50
 const BROADCAST_SLOW_THRESHOLD_MS = 10
 
 /**
- * 策略数据流订阅频道名称常量。
- * 外部组件通过 `dataBridge.subscribe(STRATEGY_CHANNEL.hotSector, cb)` 订阅。
- */
-export const STRATEGY_CHANNEL = {
-  hotSector: 'strategy:hotSector',
-  valuePit: 'strategy:valuePit',
-  rotationSignal: 'strategy:rotationSignal',
-} as const
-
-export type StrategyChannel = (typeof STRATEGY_CHANNEL)[keyof typeof STRATEGY_CHANNEL]
-
-/**
  * Action 到 Store 的显式映射表（避免字符串包含判断的歧义）
  */
 const ACTION_TO_STORE_MAP: Record<string, StoreName> = {
@@ -344,6 +55,7 @@ const ACTION_TO_STORE_MAP: Record<string, StoreName> = {
   [ENVELOPE_ACTION.updateStock]: STORE_NAME.stocks,
   [ENVELOPE_ACTION.deleteStock]: STORE_NAME.stocks,
   [ENVELOPE_ACTION.saveDailyQuotes]: STORE_NAME.dailyQuotes,
+  [ENVELOPE_ACTION.saveFinancialReport]: STORE_NAME.financialReports,
   [ENVELOPE_ACTION.saveIndustryScores]: STORE_NAME.industryScores,
   [ENVELOPE_ACTION.saveIntelligentScores]: STORE_NAME.intelligentScores,
   [ENVELOPE_ACTION.saveRotationScores]: STORE_NAME.rotationScores,
@@ -381,6 +93,7 @@ const ACTION_TO_STORE_MAP: Record<string, StoreName> = {
   [ENVELOPE_ACTION.strategyHotSectorRefresh]: STORE_NAME.hotSectorScores,
   [ENVELOPE_ACTION.strategyValuePitRefresh]: STORE_NAME.valuePitScores,
   [ENVELOPE_ACTION.strategyRotationSignalDetect]: STORE_NAME.rotationScores,
+  [ENVELOPE_ACTION.saveWatchlist]: STORE_NAME.watchlists,
 }
 
 function inferStore(action: string): StoreName {
@@ -430,10 +143,17 @@ export class DataBridge {
    */
   async query<T = unknown>(request: QueryRequest): Promise<QueryResult<T>> {
     const startTs = Date.now()
-    const source = request.source ?? ('datalayer' as ModuleId)
+    const source = request.source ?? 'datalayer'
     logger.info(`[DataBridge] query() called: action="${request.action}", store="${request.store}", source="${source}", key="${request.key ?? 'N/A'}", indexName="${request.indexName ?? 'N/A'}"`)
 
     try {
+      // 0. 等待数据库就绪（store 层不再直接依赖 db.ready）
+      if (!db.isReady()) {
+        logger.info('[DataBridge] query() waiting for database ready...')
+        await db.ready()
+        logger.info('[DataBridge] query() database ready confirmed')
+      }
+
       // 1. 生成缓存 key
       const cacheKey = this.buildCacheKey(request)
       logger.debug(`[DataBridge] query() cache key generated: "${cacheKey}"`)
@@ -469,13 +189,13 @@ export class DataBridge {
       let result: T
       switch (request.action) {
         case ENVELOPE_ACTION.queryGet: {
-          if (!request.key) {
+          if (request.key == null) {
             logger.error(`[DataBridge] query() parameter validation failed: queryGet requires key parameter`)
             throw new EnvelopeError('queryGet requires key parameter')
           }
           logger.debug(`[DataBridge] query() executing db.get: store="${request.store}", key="${request.key}"`)
           result = await db.get(request.store, request.key) as T
-          logger.debug(`[DataBridge] query() db.get completed: found=${result !== undefined && result !== null}`)
+          logger.debug(`[DataBridge] query() db.get completed: found=${result != null}`)
           break
         }
         case ENVELOPE_ACTION.queryList: {
@@ -486,7 +206,7 @@ export class DataBridge {
           break
         }
         case ENVELOPE_ACTION.queryByIndex: {
-          if (!request.indexName || request.indexValue === undefined) {
+          if (request.indexName == null || request.indexValue === undefined) {
             logger.error(`[DataBridge] query() parameter validation failed: queryByIndex requires indexName and indexValue parameters`)
             throw new EnvelopeError('queryByIndex requires indexName and indexValue parameters')
           }
@@ -498,7 +218,7 @@ export class DataBridge {
           break
         }
         default: {
-          const unknownAction: string = request.action as string
+          const unknownAction = request.action as string
           logger.error(`[DataBridge] query() unknown action: "${unknownAction}"`)
           throw new EnvelopeError(`Unknown query action: ${unknownAction}`)
         }
@@ -542,8 +262,8 @@ export class DataBridge {
 
   private buildCacheKey(request: QueryRequest): string {
     const parts: string[] = [request.action, request.store]
-    if (request.key) parts.push(`key=${request.key}`)
-    if (request.indexName) parts.push(`idx=${request.indexName}`)
+    if (request.key != null) parts.push(`key=${request.key}`)
+    if (request.indexName != null) parts.push(`idx=${request.indexName}`)
     if (request.indexValue !== undefined) {
       const valStr = typeof request.indexValue === 'string' ? request.indexValue : JSON.stringify(request.indexValue)
       parts.push(`val=${valStr}`)
@@ -554,7 +274,7 @@ export class DataBridge {
   private async writeQueryAuditLog(request: QueryRequest, source: ModuleId): Promise<void> {
     const targetCode = request.key ?? request.indexValue?.toString() ?? request.action
     await db.put(STORE_NAME.researchLogs, {
-      traceId: `query-${Date.now()}`,
+      traceId: `query-${nanoid(8)}`,
       timestamp: Date.now(),
       actor: source,
       action: request.action,
@@ -584,7 +304,7 @@ export class DataBridge {
     try {
       try {
         aclEngine.assert({
-          module: meta.source as ModuleId,
+          module: meta.source,
           store: targetStore,
           operation,
         })
@@ -609,7 +329,11 @@ export class DataBridge {
         meta.action === ENVELOPE_ACTION.strategyRotationSignalDetect
       ) {
         logger.info(`[DataBridge] Routing to strategy engine: action="${meta.action}"`)
-        await this.routeToStrategy(envelope)
+        const ctx: StrategyRouterContext = {
+          subscribers: this.subscribers,
+          broadcast: (channel, env) => this.broadcast(channel, env),
+        }
+        routeToStrategy(envelope, ctx)
         return
       }
 
@@ -662,7 +386,7 @@ export class DataBridge {
     logger.info(`[DataBridge] Subscribe: channel="${channel}", count=${prevCount}→${newCount}`)
 
     return () => {
-      const wasPresent = this.subscribers.get(channel)?.has(callback)
+      const wasPresent = this.subscribers.get(channel)?.has(callback) === true
       this.subscribers.get(channel)?.delete(callback)
       const remaining = this.subscribers.get(channel)?.size ?? 0
 
@@ -767,236 +491,34 @@ export class DataBridge {
     }
   }
 
-  private async routeToStrategy(envelope: StandardEnvelope): Promise<void> {
-    const startTs = Date.now()
-    const { meta, payload } = envelope
-    logger.info(`[DataBridge] routeToStrategy() called: action="${meta.action}"`)
-
-    try {
-      switch (meta.action) {
-        case ENVELOPE_ACTION.strategyHotSectorRefresh: {
-          try {
-            // ===== 1. 输入校验 =====
-            const inputs = payload as HotSectorAnalyzerInput[]
-            if (!Array.isArray(inputs)) {
-              const err = new EnvelopeError('HotSector: payload 必须是数组')
-              logger.error(`[DataBridge] HotSector refresh: payload 校验失败`, { error: err })
-              throw err
-            }
-            logger.info(`[DataBridge] HotSector refresh: 输入数量=${inputs.length}, 板块列表=[${inputs.map((i) => i.symbol).join(', ')}]`)
-
-            // ===== 2. 逐板块评分 =====
-            const scores = inputs.map((input) => {
-              const score = analyzeHotSector(input)
-              logger.info(
-                `[DataBridge] HotSector: ${input.symbol} ` +
-                `momentum=${score.dimensions.momentum.toFixed(2)} ` +
-                `sentiment=${score.dimensions.sentiment.toFixed(2)} ` +
-                `technical=${score.dimensions.technical.toFixed(2)} ` +
-                `valuation=${score.dimensions.valuation.toFixed(2)} ` +
-                `marketEnv=${(score.dimensions.marketEnv ?? 0).toFixed(2)} ` +
-                `→ score=${score.score.toFixed(2)} action=${score.action}`,
-              )
-              return score
-            })
-
-            // ===== 3. 评分汇总 =====
-            const avgScore = scores.reduce((s, c) => s + c.score, 0) / scores.length
-            const maxScore = Math.max(...scores.map((s) => s.score))
-            const minScore = Math.min(...scores.map((s) => s.score))
-            const immediateCount = scores.filter((s) => s.action === 'immediate').length
-            const probeCount = scores.filter((s) => s.action === 'probe').length
-            const ignoreCount = scores.filter((s) => s.action === 'ignore').length
-            logger.info(
-              `[DataBridge] HotSector 评分汇总: ` +
-              `avg=${avgScore.toFixed(2)} max=${maxScore.toFixed(2)} min=${minScore.toFixed(2)} ` +
-              `immediate=${immediateCount} probe=${probeCount} ignore=${ignoreCount}`,
-            )
-
-            // ===== 4. 广播到策略频道 =====
-            const subscriberCount = this.subscribers.get(STRATEGY_CHANNEL.hotSector)?.size ?? 0
-            logger.info(`[DataBridge] HotSector: 准备广播到 channel="${STRATEGY_CHANNEL.hotSector}", 订阅者数=${subscriberCount}`)
-
-            const channelEnvelope: StandardEnvelope = {
-              ...envelope,
-              payload: scores,
-              meta: { ...meta, target: STRATEGY_CHANNEL.hotSector as EnvelopeTarget },
-            }
-            this.broadcast(STRATEGY_CHANNEL.hotSector, channelEnvelope)
-            logger.info(`[DataBridge] HotSector: channel="${STRATEGY_CHANNEL.hotSector}" 广播完成`)
-
-            // ===== 5. EventBus 事件 =====
-            eventBus.emit(EVENT_NAMES.HOT_SECTOR_CHANGED, scores)
-            logger.info(`[DataBridge] HotSector: EventBus emit "${EVENT_NAMES.HOT_SECTOR_CHANGED}" 完成, payload.length=${scores.length}`)
-          } catch (err) {
-            logger.error(`[DataBridge] HotSector refresh 失败`, { error: err })
-            throw err
-          }
-          break
-        }
-
-        case ENVELOPE_ACTION.strategyValuePitRefresh: {
-          try {
-            // ===== 1. 输入校验 =====
-            const inputs = payload as ValuePitAnalyzerInput[]
-            if (!Array.isArray(inputs)) {
-              const err = new EnvelopeError('ValuePit: payload 必须是数组')
-              logger.error(`[DataBridge] ValuePit refresh: payload 校验失败`, { error: err })
-              throw err
-            }
-            logger.info(`[DataBridge] ValuePit refresh: 输入数量=${inputs.length}, 板块列表=[${inputs.map((i) => i.symbol).join(', ')}]`)
-
-            // ===== 2. 逐板块评分 =====
-            const scores = inputs.map((input) => {
-              const score = analyzeValuePit(input)
-              logger.info(
-                `[DataBridge] ValuePit: ${input.symbol} ` +
-                `catalyst=${score.dimensions.catalyst.toFixed(2)} ` +
-                `valuation=${score.dimensions.valuation.toFixed(2)} ` +
-                `chip=${score.dimensions.chip.toFixed(2)} ` +
-                `rotation=${score.dimensions.rotation.toFixed(2)} ` +
-                `liquidity=${score.dimensions.liquidity.toFixed(2)} ` +
-                `→ score=${score.score.toFixed(2)} action=${score.action}`,
-              )
-              return score
-            })
-
-            // ===== 3. 评分汇总 =====
-            const avgScore = scores.reduce((s, c) => s + c.score, 0) / scores.length
-            const maxScore = Math.max(...scores.map((s) => s.score))
-            const minScore = Math.min(...scores.map((s) => s.score))
-            const immediateCount = scores.filter((s) => s.action === 'immediate').length
-            const probeCount = scores.filter((s) => s.action === 'probe').length
-            const waitCount = scores.filter((s) => s.action === 'wait').length
-            const ignoreCount = scores.filter((s) => s.action === 'ignore').length
-            logger.info(
-              `[DataBridge] ValuePit 评分汇总: ` +
-              `avg=${avgScore.toFixed(2)} max=${maxScore.toFixed(2)} min=${minScore.toFixed(2)} ` +
-              `immediate=${immediateCount} probe=${probeCount} wait=${waitCount} ignore=${ignoreCount}`,
-            )
-
-            // ===== 4. 广播到策略频道 =====
-            const subscriberCount = this.subscribers.get(STRATEGY_CHANNEL.valuePit)?.size ?? 0
-            logger.info(`[DataBridge] ValuePit: 准备广播到 channel="${STRATEGY_CHANNEL.valuePit}", 订阅者数=${subscriberCount}`)
-
-            const channelEnvelope: StandardEnvelope = {
-              ...envelope,
-              payload: scores,
-              meta: { ...meta, target: STRATEGY_CHANNEL.valuePit as EnvelopeTarget },
-            }
-            this.broadcast(STRATEGY_CHANNEL.valuePit, channelEnvelope)
-            logger.info(`[DataBridge] ValuePit: channel="${STRATEGY_CHANNEL.valuePit}" 广播完成`)
-
-            // ===== 5. EventBus 事件 =====
-            eventBus.emit(EVENT_NAMES.VALUE_PIT_CHANGED, scores)
-            logger.info(`[DataBridge] ValuePit: EventBus emit "${EVENT_NAMES.VALUE_PIT_CHANGED}" 完成, payload.length=${scores.length}`)
-          } catch (err) {
-            logger.error(`[DataBridge] ValuePit refresh 失败`, { error: err })
-            throw err
-          }
-          break
-        }
-
-        case ENVELOPE_ACTION.strategyRotationSignalDetect: {
-          try {
-            // ===== 1. 输入校验 =====
-            const inputs = payload as RotationSignalInput[]
-            if (!Array.isArray(inputs)) {
-              const err = new EnvelopeError('RotationSignal: payload 必须是数组')
-              logger.error(`[DataBridge] RotationSignal detect: payload 校验失败`, { error: err })
-              throw err
-            }
-            logger.info(
-              `[DataBridge] RotationSignal detect: 输入数量=${inputs.length}, ` +
-              `板块列表=[${inputs.map((i) => i.sectorId).join(', ')}], ` +
-              `成交量数据量=[${inputs.map((i) => i.volume.history.length).join(', ')}], ` +
-              `资金流数据量=[${inputs.map((i) => i.capitalFlow.dailyNetFlow.length).join(', ')}], ` +
-              `收盘价数据量=[${inputs.map((i) => i.goldenCross.closes.length).join(', ')}]`,
-            )
-
-            // ===== 2. 逐板块检测 =====
-            const signals = inputs.map((input) => {
-              const signal = detectRotation(input)
-              logger.info(
-                `[DataBridge] RotationSignal: ${input.sectorId} ` +
-                `volumeBreakthrough=${signal.conditions.volumeBreakthrough} ` +
-                `capitalInflow=${signal.conditions.capitalInflow} ` +
-                `goldenCross=${signal.conditions.goldenCross} ` +
-                `→ triggered=${signal.triggered} strength=${signal.strength}`,
-              )
-              return signal
-            })
-
-            // ===== 3. 检测汇总 =====
-            const triggeredCount = signals.filter((s) => s.triggered).length
-            const notTriggeredCount = signals.length - triggeredCount
-            const strongCount = signals.filter((s) => s.strength === 'strong').length
-            const mediumCount = signals.filter((s) => s.strength === 'medium').length
-            const weakCount = signals.filter((s) => s.strength === 'weak').length
-            const triggeredList = signals.filter((s) => s.triggered).map((s) => s.sectorId)
-            logger.info(
-              `[DataBridge] RotationSignal 检测汇总: ` +
-              `总=${signals.length} 触发=${triggeredCount} 未触发=${notTriggeredCount} ` +
-              `strong=${strongCount} medium=${mediumCount} weak=${weakCount} ` +
-              `触发板块=[${triggeredList.join(', ') || '无'}]`,
-            )
-
-            // ===== 4. 广播到策略频道 =====
-            const subscriberCount = this.subscribers.get(STRATEGY_CHANNEL.rotationSignal)?.size ?? 0
-            logger.info(`[DataBridge] RotationSignal: 准备广播到 channel="${STRATEGY_CHANNEL.rotationSignal}", 订阅者数=${subscriberCount}`)
-
-            const channelEnvelope: StandardEnvelope = {
-              ...envelope,
-              payload: signals,
-              meta: { ...meta, target: STRATEGY_CHANNEL.rotationSignal as EnvelopeTarget },
-            }
-            this.broadcast(STRATEGY_CHANNEL.rotationSignal, channelEnvelope)
-            logger.info(`[DataBridge] RotationSignal: channel="${STRATEGY_CHANNEL.rotationSignal}" 广播完成`)
-
-            // ===== 5. EventBus 事件 =====
-            eventBus.emit(EVENT_NAMES.ROTATION_SIGNAL_TRIGGERED, signals)
-            logger.info(`[DataBridge] RotationSignal: EventBus emit "${EVENT_NAMES.ROTATION_SIGNAL_TRIGGERED}" 完成, payload.length=${signals.length}`)
-          } catch (err) {
-            logger.error(`[DataBridge] RotationSignal detect 失败`, { error: err })
-            throw err
-          }
-          break
-        }
-
-        default: {
-          logger.error(`[DataBridge] routeToStrategy() failed: Unknown action "${meta.action}"`)
-          throw new EnvelopeError(`Unknown strategy action: ${meta.action}`)
-        }
-      }
-
-      const duration = Date.now() - startTs
-      logger.info(`[DataBridge] routeToStrategy() completed: action="${meta.action}", duration=${duration}ms`)
-    } catch (err) {
-      logger.error(`[DataBridge] routeToStrategy() failed: action="${meta.action}"`, { error: err })
-      throw err
-    }
-  }
-
   private async writeAuditLog(
     envelope: StandardEnvelope,
     store: StoreName,
   ): Promise<void> {
     const { meta, payload } = envelope
     const targetCode =
-      payload && typeof payload === 'object' && 'symbol' in payload
+      payload != null && typeof payload === 'object' && 'symbol' in payload
         ? String((payload as Record<string, unknown>).symbol)
         : String(meta.action)
 
     logger.debug(`[DataBridge] writeAuditLog(): action="${meta.action}", targetType="${store}", targetCode="${targetCode}"`)
 
+    const now = Date.now()
     await db.put(STORE_NAME.researchLogs, {
       traceId: meta.traceId,
-      timestamp: Date.now(),
+      timestamp: now,
       actor: meta.source,
       action: meta.action,
       targetType: store,
       targetCode,
       payload: JSON.stringify(payload),
+      // D-04：审计字段随写入链路自动填充（结构对齐 data/audit#AuditMeta）
+      audit: {
+        createdAt: now,
+        updatedAt: now,
+        version: 1,
+        operator: meta.source,
+      },
     })
   }
 

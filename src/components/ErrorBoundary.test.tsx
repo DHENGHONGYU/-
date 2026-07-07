@@ -21,6 +21,13 @@ vi.mock('@/lib/logger', () => ({
   }),
 }))
 
+// 模拟错误总线，断言捕获的错误经 captureError 上报（A-03 闭环）
+vi.mock('@/services/errorBus', () => ({
+  captureError: vi.fn(),
+}))
+
+import { captureError } from '@/services/errorBus'
+
 // 动态导入以应用 mock
 const { ErrorBoundary } = await import('@/components/ErrorBoundary')
 
@@ -54,6 +61,23 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>,
     )
     expect(screen.getByText('🛑 组件渲染出错')).toBeInTheDocument()
+  })
+
+  it('子组件抛出错误时经 captureError 上报到错误总线（A-03 闭环）', () => {
+    render(
+      <ErrorBoundary>
+        <ThrowError shouldThrow={true} />
+      </ErrorBoundary>,
+    )
+
+    // 兜底 UI 已渲染，证明组件确实进入了错误态
+    expect(screen.getByText('🛑 组件渲染出错')).toBeInTheDocument()
+    // 错误应被收敛上报到错误总线，来源标记为 ErrorBoundary
+    expect(captureError).toHaveBeenCalledTimes(1)
+    expect(captureError).toHaveBeenCalledWith(
+      expect.any(Error),
+      expect.objectContaining({ source: 'ErrorBoundary', operation: 'render' }),
+    )
   })
 
   it('错误兜底包含刷新按钮', () => {

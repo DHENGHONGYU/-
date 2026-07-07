@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Progress } from '@/components/ui/Progress'
 import type { WidgetConfig } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
-import { COLOR_TOKENS, COLOR_SHADES, twText, twBg } from '@/constants/theme.tokens'
+import { STOCK_COLOR_TOKENS, COLOR_TOKENS, COLOR_SHADES, twText, twBg } from '@/constants/theme.tokens'
 
 interface MarketSentimentWidgetProps {
   config: WidgetConfig
@@ -89,16 +89,16 @@ export default function MarketSentimentWidget({ config }: MarketSentimentWidgetP
 
         <div className="grid grid-cols-2 gap-4">
           <div className="flex items-center gap-2">
-            <TrendingUp className="h-5 w-5" style={{ color: COLOR_TOKENS.up.hex }} />
+            <TrendingUp className="h-5 w-5" style={{ color: STOCK_COLOR_TOKENS.up.hex }} />
             <div>
-              <div className="text-lg font-bold" style={{ color: COLOR_TOKENS.up.hex }}>{upPercent}%</div>
+              <div className="text-lg font-bold" style={{ color: STOCK_COLOR_TOKENS.up.hex }}>{upPercent}%</div>
               <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>涨 {sentiment.up}</div>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <TrendingDown className="h-5 w-5" style={{ color: COLOR_TOKENS.down.hex }} />
+            <TrendingDown className="h-5 w-5" style={{ color: STOCK_COLOR_TOKENS.down.hex }} />
             <div>
-              <div className="text-lg font-bold" style={{ color: COLOR_TOKENS.down.hex }}>{downPercent}%</div>
+              <div className="text-lg font-bold" style={{ color: STOCK_COLOR_TOKENS.down.hex }}>{downPercent}%</div>
               <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>跌 {sentiment.down}</div>
             </div>
           </div>
@@ -106,19 +106,19 @@ export default function MarketSentimentWidget({ config }: MarketSentimentWidgetP
 
         <div className="grid grid-cols-4 gap-2 text-center">
           <div>
-            <div className="text-lg font-bold" style={{ color: COLOR_TOKENS.up.hex }}>{sentiment.limitUp}</div>
+            <div className="text-lg font-bold" style={{ color: STOCK_COLOR_TOKENS.up.hex }}>{sentiment.limitUp}</div>
             <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>涨停</div>
           </div>
           <div>
-            <div className="text-lg font-bold" style={{ color: COLOR_TOKENS.down.hex }}>{sentiment.limitDown}</div>
+            <div className="text-lg font-bold" style={{ color: STOCK_COLOR_TOKENS.down.hex }}>{sentiment.limitDown}</div>
             <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>跌停</div>
           </div>
           <div>
-            <div className="text-lg font-bold" style={{ color: COLOR_TOKENS.up.hex }}>0</div>
+            <div className="text-lg font-bold" style={{ color: STOCK_COLOR_TOKENS.up.hex }}>0</div>
             <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>涨幅&gt;5%</div>
           </div>
           <div>
-            <div className="text-lg font-bold" style={{ color: COLOR_TOKENS.down.hex }}>0</div>
+            <div className="text-lg font-bold" style={{ color: STOCK_COLOR_TOKENS.down.hex }}>0</div>
             <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>跌幅&gt;5%</div>
           </div>
         </div>

@@ -11,6 +11,7 @@ import { DEFAULT_STOCK_LIBRARY, linkArticleToStocks } from './stockLinker'
 import { MOCK_NEWS_URL_PREFIX } from '@/config/dataSourceUrls'
 import { DJB2_HASH_INIT, DJB2_HASH_MULTIPLIER } from '@/config/mathConstants'
 
+import { nanoid } from 'nanoid'
 const logger = getLogger()
 
 /** 基于输入字符串生成稳定哈希 */
@@ -108,7 +109,7 @@ export async function saveNewsArticle(
           source: MODULE_ID.news,
           target: ENVELOPE_TARGET.db,
           action: ENVELOPE_ACTION.saveNews,
-          traceId: `news-save-${Date.now()}-${id}`,
+          traceId: `news-save-${nanoid(8)}-${id}`,
         },
         fullArticle,
       )
@@ -197,7 +198,7 @@ export async function listNews(options?: {
           source: MODULE_ID.news,
           target: ENVELOPE_TARGET.db,
           action: ENVELOPE_ACTION.newsArticleLoaded,
-          traceId: `news-list-${Date.now()}`,
+          traceId: `news-list-${nanoid(8)}`,
         },
         { count: result.length, total: articles.length, options },
       )

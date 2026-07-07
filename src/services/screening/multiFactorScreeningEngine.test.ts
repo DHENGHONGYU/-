@@ -5,7 +5,7 @@
 
 import { describe, it, expect, vi } from 'vitest'
 import {
-  runScreening,
+  runMultiFactorScreening,
   generateScreeningCsv,
   createTemplateFromGroups,
   loadScreenableStocks,
@@ -43,7 +43,7 @@ function makeStock(overrides: Partial<ScreenableStockData> = {}): ScreenableStoc
 }
 
 describe('multiFactorScreeningEngine', () => {
-  it('runScreening 执行单条件组且逻辑', () => {
+  it('runMultiFactorScreening 执行单条件组且逻辑', () => {
     const stocks = [
       makeStock({ symbol: 'A', pe: 10 }),
       makeStock({ symbol: 'B', pe: 25 }),
@@ -56,12 +56,12 @@ describe('multiFactorScreeningEngine', () => {
         criteria: [{ id: 'c1', factor: 'pe', operator: 'lt', value: 15 }],
       },
     ]
-    const result = runScreening(stocks, groups)
+    const result = runMultiFactorScreening(stocks, groups)
     expect(result.total).toBe(2)
     expect(result.items.map((i) => i.symbol)).toEqual(['A', 'C'])
   })
 
-  it('runScreening 执行条件组或逻辑', () => {
+  it('runMultiFactorScreening 执行条件组或逻辑', () => {
     const stocks = [
       makeStock({ symbol: 'A', pe: 10, pb: 2 }),
       makeStock({ symbol: 'B', pe: 25, pb: 1 }),
@@ -77,11 +77,11 @@ describe('multiFactorScreeningEngine', () => {
         ],
       },
     ]
-    const result = runScreening(stocks, groups)
+    const result = runMultiFactorScreening(stocks, groups)
     expect(result.items.map((i) => i.symbol)).toEqual(['A', 'B'])
   })
 
-  it('runScreening 支持 between 操作符', () => {
+  it('runMultiFactorScreening 支持 between 操作符', () => {
     const stocks = [
       makeStock({ symbol: 'A', pe: 8 }),
       makeStock({ symbol: 'B', pe: 12 }),
@@ -94,11 +94,11 @@ describe('multiFactorScreeningEngine', () => {
         criteria: [{ id: 'c1', factor: 'pe', operator: 'between', value: 5, value2: 15 }],
       },
     ]
-    const result = runScreening(stocks, groups)
+    const result = runMultiFactorScreening(stocks, groups)
     expect(result.items.map((i) => i.symbol)).toEqual(['A', 'B'])
   })
 
-  it('runScreening 缺失因子值视为不匹配', () => {
+  it('runMultiFactorScreening 缺失因子值视为不匹配', () => {
     const stocks = [makeStock({ symbol: 'A', pe: null })]
     const groups: ScreeningConditionGroup[] = [
       {
@@ -107,11 +107,11 @@ describe('multiFactorScreeningEngine', () => {
         criteria: [{ id: 'c1', factor: 'pe', operator: 'gt', value: 0 }],
       },
     ]
-    const result = runScreening(stocks, groups)
+    const result = runMultiFactorScreening(stocks, groups)
     expect(result.total).toBe(0)
   })
 
-  it('runScreening 多条件组全部命中', () => {
+  it('runMultiFactorScreening 多条件组全部命中', () => {
     const stocks = [
       makeStock({ symbol: 'A', pe: 10, pb: 1 }),
       makeStock({ symbol: 'B', pe: 10, pb: 3 }),
@@ -120,7 +120,7 @@ describe('multiFactorScreeningEngine', () => {
       { id: 'g1', logic: 'and', criteria: [{ id: 'c1', factor: 'pe', operator: 'lt', value: 15 }] },
       { id: 'g2', logic: 'and', criteria: [{ id: 'c2', factor: 'pb', operator: 'lt', value: 2 }] },
     ]
-    const result = runScreening(stocks, groups)
+    const result = runMultiFactorScreening(stocks, groups)
     expect(result.total).toBe(1)
     expect(result.items[0]!.symbol).toBe('A')
     expect(result.items[0]!.matchedGroups).toContain('g1')

@@ -16,6 +16,7 @@ import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
 import { getLogger } from '@/lib/logger'
 
+import { nanoid } from 'nanoid'
 const logger = getLogger()
 
 /** 内部 fetch 封装（带超时） */
@@ -105,7 +106,7 @@ export async function fetchHoldings(
           source: MODULE_ID.trading,
           target: ENVELOPE_TARGET.db,
           action: ENVELOPE_ACTION.holdingsDataLoaded,
-          traceId: `holdings-list-${Date.now()}`,
+          traceId: `holdings-list-${nanoid(8)}`,
         },
         { total: result.data?.total, page: params.page, pageSize: params.pageSize },
       )
@@ -165,7 +166,7 @@ export async function executeTradeAction(
           source: MODULE_ID.trading,
           target: ENVELOPE_TARGET.db,
           action: ENVELOPE_ACTION.tradeActionExecuted,
-          traceId: `trade-action-${Date.now()}-${req.code}`,
+          traceId: `trade-action-${nanoid(8)}-${req.code}`,
         },
         { code: req.code, action: req.action, quantity: req.quantity, success: result.success },
       )

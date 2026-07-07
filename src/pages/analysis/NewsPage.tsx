@@ -23,7 +23,6 @@ import { NewsFilterPanel, type NewsFilterState } from '@/components/news/NewsFil
 import { NewsSentimentTrend } from '@/components/analysis/news/NewsSentimentTrend'
 import { useAnalysisNewsStore } from '@/store/analysisNewsStore'
 import { getLogger } from '@/lib/logger'
-import { twBg } from '@/constants/theme.tokens'
 
 const logger = getLogger()
 
@@ -146,9 +145,9 @@ export default function NewsPage(): React.JSX.Element {
                     }
                     className={
                       selectedArticle.sentiment === 'positive'
-                        ? `${twBg('emerald', 500)} text-white hover:${twBg('emerald', 500)}/80`
+                        ? 'bg-success text-success-foreground hover:bg-success/80'
                         : selectedArticle.sentiment === 'neutral'
-                          ? `${twBg('slate', 500)} text-white hover:${twBg('slate', 500)}/80`
+                          ? 'bg-muted text-foreground hover:bg-muted/80'
                           : ''
                     }
                   >

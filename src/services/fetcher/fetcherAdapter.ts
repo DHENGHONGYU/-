@@ -1,6 +1,9 @@
 import { DATA_SOURCE } from '@/config/dbConfig'
-import type { DailyQuotes, KlineBar, Stock } from '@/data/types'
-import type { CollectBasicData, CollectKlineData } from './fetcherTypes'
+import type { DailyQuotes, FinancialReport, KlineBar, Stock } from '@/data/types'
+import type { CollectBasicData, CollectFinancialData, CollectKlineData } from './fetcherTypes'
+import { getLogger } from '@/lib/logger'
+
+const logger = getLogger()
 
 /**
  * 将 AKShare / Python 服务返回的基础数据转换为 V9 Stock 更新对象
@@ -100,4 +103,60 @@ export function hasRealBasicData(stock: Stock): boolean {
  */
 export function hasEnoughHistory(quotes: DailyQuotes | undefined, minBars = 20): boolean {
   return quotes !== undefined && quotes.history.length >= minBars && quotes.latest !== undefined
+}
+
+/**
+ * 将 AKShare / Python 服务返回的财务数据转换为 V9 FinancialReport
+ */
+export function adaptFinancialDataToReport(
+  symbol: string,
+  data: CollectFinancialData,
+): FinancialReport | null {
+  logger.info('[fetcherAdapter] adaptFinancialDataToReport 开始转换', {
+    symbol,
+    reportDate: data.report_date,
+    revenue: data.revenue,
+    netProfit: data.net_profit,
+    grossMargin: data.gross_margin,
+    netMargin: data.net_margin,
+  })
+
+  if (!data.report_date) {
+    logger.error('[fetcherAdapter] adaptFinancialDataToReport 转换失败: report_date 为空', {
+      symbol,
+      data,
+    })
+    return null
+  }
+
+  const report: FinancialReport = {
+    symbol,
+    reportDate: data.report_date,
+    revenue: data.revenue,
+    revenueYoY: data.revenue_yoy,
+    netProfit: data.net_profit,
+    netProfitYoY: data.net_profit_yoy,
+    grossMargin: data.gross_margin,
+    netMargin: data.net_margin,
+    operatingCF: data.operating_cf,
+    rdRatio: data.rd_ratio,
+    receivables: data.receivables,
+    inventoryTurnoverDays: data.inventory_turnover_days,
+    interestBearingDebt: data.interest_bearing_debt,
+    goodwill: data.goodwill,
+    netAssets: data.net_assets,
+    shareholderPledge: data.shareholder_pledge,
+    updatedAt: Date.now(),
+  }
+
+  logger.info('[fetcherAdapter] adaptFinancialDataToReport 转换成功', {
+    symbol,
+    reportDate: report.reportDate,
+    fieldCount: Object.keys(report).length,
+    hasRevenue: report.revenue !== undefined,
+    hasNetProfit: report.netProfit !== undefined,
+    hasGrossMargin: report.grossMargin !== undefined,
+  })
+
+  return report
 }

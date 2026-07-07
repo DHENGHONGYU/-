@@ -5,13 +5,15 @@ import {
   TrashIcon,
   KeyIcon,
   LinkIcon,
-  ChartBarIcon,
   EyeIcon,
   EyeSlashIcon,
   ArrowPathIcon,
 } from '@heroicons/react/24/outline'
-import { COLOR_TOKENS, twText, twBg, twBorder } from '@/constants/theme.tokens'
+import { PageContainer } from '@/components/ui/PageContainer'
+import { PageHeader } from '@/components/ui/PageHeader'
+import { TUSHARE_API } from '@/config/dataSourceUrls'
 
+import { nanoid } from 'nanoid'
 /**
  * API配置接口
  */
@@ -90,7 +92,7 @@ const ApiConfigurationPage: React.FC = () => {
       name: 'Tushare API',
       provider: 'tushare',
       apiKey: 'tushare-token-xxxxxxxxxxxxxxxx',
-      endpoint: 'http://api.tushare.pro',
+      endpoint: TUSHARE_API,
       permissions: [
         { resource: 'data', actions: ['read'] },
       ],
@@ -143,12 +145,12 @@ const ApiConfigurationPage: React.FC = () => {
    */
   const getProviderColor = (provider: ApiConfig['provider']) => {
     switch (provider) {
-      case 'openai': return 'bg-green-500'
-      case 'deepseek': return 'bg-blue-500'
-      case 'kimi': return 'bg-orange-500'
-      case 'qwen': return 'bg-purple-500'
-      case 'tushare': return 'bg-red-500'
-      case 'custom': return 'bg-gray-500'
+      case 'openai': return 'bg-success'
+      case 'deepseek': return 'bg-info'
+      case 'kimi': return 'bg-warning'
+      case 'qwen': return 'bg-primary'
+      case 'tushare': return 'bg-destructive'
+      case 'custom': return 'bg-tertiary'
     }
   }
 
@@ -175,7 +177,7 @@ const ApiConfigurationPage: React.FC = () => {
       setEditingApi({ ...api })
     } else {
       setEditingApi({
-        id: `api-${Date.now()}`,
+        id: `api-${nanoid(8)}`,
         name: '',
         provider: 'custom',
         apiKey: '',
@@ -191,8 +193,8 @@ const ApiConfigurationPage: React.FC = () => {
           tokensThisMonth: 0,
         },
         isActive: true,
-        createdAt: new Date().toISOString().split('T')[0],
-        updatedAt: new Date().toISOString().split('T')[0],
+        createdAt: new Date().toISOString().split('T')[0] ?? '',
+        updatedAt: new Date().toISOString().split('T')[0] ?? '',
       })
     }
     setShowModal(true)
@@ -208,7 +210,7 @@ const ApiConfigurationPage: React.FC = () => {
       const index = prev.findIndex(a => a.id === editingApi.id)
       if (index >= 0) {
         const updated = [...prev]
-        updated[index] = { ...editingApi, updatedAt: new Date().toISOString().split('T')[0] }
+        updated[index] = { ...editingApi, updatedAt: new Date().toISOString().split('T')[0] ?? '' }
         return updated
       } else {
         return [...prev, editingApi]
@@ -241,28 +243,23 @@ const ApiConfigurationPage: React.FC = () => {
    */
   const handleToggleStatus = useCallback((apiId: string) => {
     setApis(prev => prev.map(a => 
-      a.id === apiId ? { ...a, isActive: !a.isActive, updatedAt: new Date().toISOString().split('T')[0] } : a
+      a.id === apiId ? { ...a, isActive: !a.isActive, updatedAt: new Date().toISOString().split('T')[0] ?? '' } : a
     ))
   }, [])
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      {/* 页面标题 */}
-      <div className="mb-8">
-        <h1 className={`text-3xl font-bold ${twText('primary')} mb-2`}>
-          API 配置管理
-        </h1>
-        <p className={twText('secondary')}>
-          管理智能体使用的API配置和密钥
-        </p>
-      </div>
+    <PageContainer className="min-h-screen bg-background text-foreground">
+      <PageHeader
+        title="API 配置管理"
+        description="管理智能体使用的API配置和密钥"
+      />
 
       {/* 操作栏 */}
       <div className="mb-6 flex justify-between items-center">
         <div className="flex gap-4">
           <button
             onClick={() => handleOpenModal()}
-            className={`flex items-center gap-2 px-4 py-2 ${twBg('up', '600')} text-white rounded-lg hover:opacity-90 transition-opacity`}
+            className={`flex items-center gap-2 px-4 py-2 ${'bg-destructive'} text-destructive-foreground rounded-lg hover:opacity-90 transition-opacity`}
           >
             <PlusIcon className="w-5 h-5" />
             添加API配置
@@ -270,14 +267,14 @@ const ApiConfigurationPage: React.FC = () => {
 
           <button
             onClick={() => window.location.reload()}
-            className={`flex items-center gap-2 px-4 py-2 ${twBg('muted')} ${twText('primary')} rounded-lg hover:opacity-90 transition-opacity`}
+            className={`flex items-center gap-2 px-4 py-2 ${'bg-muted'} ${'text-foreground'} rounded-lg hover:opacity-90 transition-opacity`}
           >
             <ArrowPathIcon className="w-5 h-5" />
             刷新
           </button>
         </div>
 
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-tertiary">
           共 {apis.length} 个API配置，{apis.filter(a => a.isActive).length} 个已启用
         </div>
       </div>
@@ -287,7 +284,7 @@ const ApiConfigurationPage: React.FC = () => {
         {apis.map(api => (
           <div
             key={api.id}
-            className={`${twBg('surface')} rounded-lg shadow-sm border ${twBorder('default')} p-6 hover:shadow-md transition-shadow`}
+            className={`${'bg-card'} rounded-lg shadow-sm border ${'border-border'} p-6 hover:shadow-md transition-shadow`}
           >
             {/* API头部 */}
             <div className="flex justify-between items-start mb-4">
@@ -297,16 +294,16 @@ const ApiConfigurationPage: React.FC = () => {
                 </div>
                 <div>
                   <div className="flex items-center gap-3">
-                    <h3 className={`text-lg font-semibold ${twText('primary')}`}>
+                    <h3 className={`text-lg font-semibold ${'text-foreground'}`}>
                       {api.name}
                     </h3>
                     <span className={`px-2 py-1 text-xs font-medium rounded ${
-                      api.isActive ? twBg('up', '100') + ' ' + twText('up', '700') : twBg('muted') + ' ' + twText('muted')
+                      api.isActive ? 'bg-success/15' + ' ' + 'text-success' : 'bg-muted' + ' ' + 'text-tertiary'
                     }`}>
                       {api.isActive ? '已启用' : '已禁用'}
                     </span>
                   </div>
-                  <p className={`${twText('secondary')} text-sm`}>
+                  <p className={`${'text-muted-foreground'} text-sm`}>
                     提供商: {api.provider} | 端点: {api.endpoint || '默认'}
                   </p>
                 </div>
@@ -317,11 +314,11 @@ const ApiConfigurationPage: React.FC = () => {
                 <button
                   onClick={() => handleToggleStatus(api.id)}
                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                    api.isActive ? twBg('up', '500') : 'bg-gray-300'
+                    api.isActive ? 'bg-destructive' : 'bg-muted'
                   }`}
                 >
                   <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    className={`inline-block h-4 w-4 transform rounded-full bg-background transition-transform ${
                       api.isActive ? 'translate-x-6' : 'translate-x-1'
                     }`}
                   />
@@ -330,7 +327,7 @@ const ApiConfigurationPage: React.FC = () => {
                 {/* 操作按钮 */}
                 <button
                   onClick={() => handleTestConnection(api)}
-                  className={`p-2 ${twBg('muted')} rounded hover:opacity-90 transition-opacity`}
+                  className={`p-2 ${'bg-muted'} rounded hover:opacity-90 transition-opacity`}
                   title="测试连接"
                 >
                   <LinkIcon className="w-5 h-5" />
@@ -338,7 +335,7 @@ const ApiConfigurationPage: React.FC = () => {
 
                 <button
                   onClick={() => handleOpenModal(api)}
-                  className={`p-2 ${twBg('muted')} rounded hover:opacity-90 transition-opacity`}
+                  className={`p-2 ${'bg-muted'} rounded hover:opacity-90 transition-opacity`}
                   title="编辑"
                 >
                   <PencilIcon className="w-5 h-5" />
@@ -346,10 +343,10 @@ const ApiConfigurationPage: React.FC = () => {
 
                 <button
                   onClick={() => handleDeleteApi(api.id)}
-                  className={`p-2 ${twBg('danger', '100')} rounded hover:opacity-90 transition-opacity`}
+                  className={`p-2 ${'bg-destructive/15'} rounded hover:opacity-90 transition-opacity`}
                   title="删除"
                 >
-                  <TrashIcon className="w-5 h-5 text-red-600" />
+                  <TrashIcon className="w-5 h-5 text-destructive" />
                 </button>
               </div>
             </div>
@@ -357,10 +354,10 @@ const ApiConfigurationPage: React.FC = () => {
             {/* API Key */}
             <div className="mb-4">
               <div className="flex items-center justify-between mb-1">
-                <span className={`text-sm font-medium ${twText('primary')}`}>API Key</span>
+                <span className={`text-sm font-medium ${'text-foreground'}`}>API Key</span>
                 <button
                   onClick={() => toggleApiKeyVisibility(api.id)}
-                  className="text-sm text-blue-600 hover:text-blue-800"
+                  className="text-sm text-info hover:text-info"
                 >
                   {showApiKey[api.id] ? (
                     <EyeSlashIcon className="w-4 h-4 inline mr-1" />
@@ -370,17 +367,17 @@ const ApiConfigurationPage: React.FC = () => {
                   {showApiKey[api.id] ? '隐藏' : '显示'}
                 </button>
               </div>
-              <div className={`font-mono text-sm ${twBg('muted')} p-2 rounded`}>
+              <div className={`font-mono text-sm ${'bg-muted'} p-2 rounded`}>
                 {maskApiKey(api.apiKey, showApiKey[api.id] || false)}
               </div>
             </div>
 
             {/* 权限配置 */}
             <div className="mb-4">
-              <span className={`text-sm font-medium ${twText('primary')} mb-2 block`}>权限配置</span>
+              <span className={`text-sm font-medium ${'text-foreground'} mb-2 block`}>权限配置</span>
               <div className="space-y-1">
                 {api.permissions.map((perm, index) => (
-                  <div key={index} className={`text-sm ${twText('secondary')}`}>
+                  <div key={index} className={`text-sm ${'text-muted-foreground'}`}>
                     <span className="font-medium">{perm.resource}</span>: {perm.actions.join(', ')}
                   </div>
                 ))}
@@ -389,17 +386,17 @@ const ApiConfigurationPage: React.FC = () => {
 
             {/* 速率限制 */}
             <div className="mb-4">
-              <span className={`text-sm font-medium ${twText('primary')} mb-2 block`}>速率限制</span>
+              <span className={`text-sm font-medium ${'text-foreground'} mb-2 block`}>速率限制</span>
               <div className="grid grid-cols-2 gap-4">
-                <div className={`${twBg('muted')} p-3 rounded`}>
-                  <div className={`text-sm ${twText('muted')}`}>每分钟请求数</div>
-                  <div className={`text-lg font-semibold ${twText('primary')}`}>
+                <div className={`${'bg-muted'} p-3 rounded`}>
+                  <div className={`text-sm ${'text-tertiary'}`}>每分钟请求数</div>
+                  <div className={`text-lg font-semibold ${'text-foreground'}`}>
                     {api.rateLimit.requestsPerMinute}
                   </div>
                 </div>
-                <div className={`${twBg('muted')} p-3 rounded`}>
-                  <div className={`text-sm ${twText('muted')}`}>每日Token限制</div>
-                  <div className={`text-lg font-semibold ${twText('primary')}`}>
+                <div className={`${'bg-muted'} p-3 rounded`}>
+                  <div className={`text-sm ${'text-tertiary'}`}>每日Token限制</div>
+                  <div className={`text-lg font-semibold ${'text-foreground'}`}>
                     {api.rateLimit.tokensPerDay > 0 ? api.rateLimit.tokensPerDay.toLocaleString() : '无限制'}
                   </div>
                 </div>
@@ -408,29 +405,29 @@ const ApiConfigurationPage: React.FC = () => {
 
             {/* 使用统计 */}
             <div>
-              <span className={`text-sm font-medium ${twText('primary')} mb-2 block`}>使用统计</span>
+              <span className={`text-sm font-medium ${'text-foreground'} mb-2 block`}>使用统计</span>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className={`${twBg('muted')} p-3 rounded`}>
-                  <div className={`text-sm ${twText('muted')}`}>今日请求</div>
-                  <div className={`text-lg font-semibold ${twText('primary')}`}>
+                <div className={`${'bg-muted'} p-3 rounded`}>
+                  <div className={`text-sm ${'text-tertiary'}`}>今日请求</div>
+                  <div className={`text-lg font-semibold ${'text-foreground'}`}>
                     {api.usage.requestsToday.toLocaleString()}
                   </div>
                 </div>
-                <div className={`${twBg('muted')} p-3 rounded`}>
-                  <div className={`text-sm ${twText('muted')}`}>今日Token</div>
-                  <div className={`text-lg font-semibold ${twText('primary')}`}>
+                <div className={`${'bg-muted'} p-3 rounded`}>
+                  <div className={`text-sm ${'text-tertiary'}`}>今日Token</div>
+                  <div className={`text-lg font-semibold ${'text-foreground'}`}>
                     {api.usage.tokensToday > 0 ? api.usage.tokensToday.toLocaleString() : '-'}
                   </div>
                 </div>
-                <div className={`${twBg('muted')} p-3 rounded`}>
-                  <div className={`text-sm ${twText('muted')}`}>本月请求</div>
-                  <div className={`text-lg font-semibold ${twText('primary')}`}>
+                <div className={`${'bg-muted'} p-3 rounded`}>
+                  <div className={`text-sm ${'text-tertiary'}`}>本月请求</div>
+                  <div className={`text-lg font-semibold ${'text-foreground'}`}>
                     {api.usage.requestsThisMonth.toLocaleString()}
                   </div>
                 </div>
-                <div className={`${twBg('muted')} p-3 rounded`}>
-                  <div className={`text-sm ${twText('muted')}`}>本月Token</div>
-                  <div className={`text-lg font-semibold ${twText('primary')}`}>
+                <div className={`${'bg-muted'} p-3 rounded`}>
+                  <div className={`text-sm ${'text-tertiary'}`}>本月Token</div>
+                  <div className={`text-lg font-semibold ${'text-foreground'}`}>
                     {api.usage.tokensThisMonth > 0 ? api.usage.tokensThisMonth.toLocaleString() : '-'}
                   </div>
                 </div>
@@ -439,7 +436,7 @@ const ApiConfigurationPage: React.FC = () => {
 
             {/* 最后使用时间 */}
             {api.lastUsed && (
-              <div className={`mt-4 text-sm ${twText('muted')}`}>
+              <div className={`mt-4 text-sm ${'text-tertiary'}`}>
                 最后使用: {api.lastUsed}
               </div>
             )}
@@ -449,36 +446,36 @@ const ApiConfigurationPage: React.FC = () => {
 
       {/* 创建/编辑模态框 */}
       {showModal && editingApi && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className={`${twBg('surface')} rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto`}>
-            <h2 className={`text-2xl font-bold ${twText('primary')} mb-4`}>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className={`${'bg-card'} rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto`}>
+            <h2 className={`text-2xl font-bold ${'text-foreground'} mb-4`}>
               {apis.find(a => a.id === editingApi.id) ? '编辑API配置' : '添加API配置'}
             </h2>
 
             <div className="space-y-4">
               {/* API名称 */}
               <div>
-                <label className={`block text-sm font-medium ${twText('primary')} mb-1`}>
+                <label className={`block text-sm font-medium ${'text-foreground'} mb-1`}>
                   API名称 *
                 </label>
                 <input
                   type="text"
                   value={editingApi.name}
                   onChange={(e) => setEditingApi(prev => prev ? { ...prev, name: e.target.value } : null)}
-                  className={`w-full px-3 py-2 border ${twBorder('default')} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  className={`w-full px-3 py-2 border ${'border-border'} rounded-lg focus:outline-none focus:ring-2 focus:ring-primary`}
                   placeholder="输入API名称"
                 />
               </div>
 
               {/* 提供商 */}
               <div>
-                <label className={`block text-sm font-medium ${twText('primary')} mb-1`}>
+                <label className={`block text-sm font-medium ${'text-foreground'} mb-1`}>
                   提供商 *
                 </label>
                 <select
                   value={editingApi.provider}
                   onChange={(e) => setEditingApi(prev => prev ? { ...prev, provider: e.target.value as ApiConfig['provider'] } : null)}
-                  className={`w-full px-3 py-2 border ${twBorder('default')} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  className={`w-full px-3 py-2 border ${'border-border'} rounded-lg focus:outline-none focus:ring-2 focus:ring-primary`}
                 >
                   <option value="openai">OpenAI</option>
                   <option value="deepseek">DeepSeek</option>
@@ -491,28 +488,28 @@ const ApiConfigurationPage: React.FC = () => {
 
               {/* API Key */}
               <div>
-                <label className={`block text-sm font-medium ${twText('primary')} mb-1`}>
+                <label className={`block text-sm font-medium ${'text-foreground'} mb-1`}>
                   API Key *
                 </label>
                 <input
                   type="password"
                   value={editingApi.apiKey}
                   onChange={(e) => setEditingApi(prev => prev ? { ...prev, apiKey: e.target.value } : null)}
-                  className={`w-full px-3 py-2 border ${twBorder('default')} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono`}
+                  className={`w-full px-3 py-2 border ${'border-border'} rounded-lg focus:outline-none focus:ring-2 focus:ring-primary font-mono`}
                   placeholder="输入API Key"
                 />
               </div>
 
               {/* 端点（可选） */}
               <div>
-                <label className={`block text-sm font-medium ${twText('primary')} mb-1`}>
+                <label className={`block text-sm font-medium ${'text-foreground'} mb-1`}>
                   端点（可选）
                 </label>
                 <input
                   type="text"
                   value={editingApi.endpoint || ''}
                   onChange={(e) => setEditingApi(prev => prev ? { ...prev, endpoint: e.target.value } : null)}
-                  className={`w-full px-3 py-2 border ${twBorder('default')} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  className={`w-full px-3 py-2 border ${'border-border'} rounded-lg focus:outline-none focus:ring-2 focus:ring-primary`}
                   placeholder="https://api.example.com"
                 />
               </div>
@@ -520,7 +517,7 @@ const ApiConfigurationPage: React.FC = () => {
               {/* 速率限制 */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className={`block text-sm font-medium ${twText('primary')} mb-1`}>
+                  <label className={`block text-sm font-medium ${'text-foreground'} mb-1`}>
                     每分钟请求数
                   </label>
                   <input
@@ -533,13 +530,13 @@ const ApiConfigurationPage: React.FC = () => {
                         requestsPerMinute: parseInt(e.target.value) 
                       } 
                     } : null)}
-                    className={`w-full px-3 py-2 border ${twBorder('default')} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    className={`w-full px-3 py-2 border ${'border-border'} rounded-lg focus:outline-none focus:ring-2 focus:ring-primary`}
                     min="1"
                   />
                 </div>
 
                 <div>
-                  <label className={`block text-sm font-medium ${twText('primary')} mb-1`}>
+                  <label className={`block text-sm font-medium ${'text-foreground'} mb-1`}>
                     每日Token限制（0=无限制）
                   </label>
                   <input
@@ -552,7 +549,7 @@ const ApiConfigurationPage: React.FC = () => {
                         tokensPerDay: parseInt(e.target.value) 
                       } 
                     } : null)}
-                    className={`w-full px-3 py-2 border ${twBorder('default')} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    className={`w-full px-3 py-2 border ${'border-border'} rounded-lg focus:outline-none focus:ring-2 focus:ring-primary`}
                     min="0"
                   />
                 </div>
@@ -566,7 +563,7 @@ const ApiConfigurationPage: React.FC = () => {
                   onChange={(e) => setEditingApi(prev => prev ? { ...prev, isActive: e.target.checked } : null)}
                   className="rounded"
                 />
-                <label className={`text-sm ${twText('primary')}`}>
+                <label className={`text-sm ${'text-foreground'}`}>
                   启用此API配置
                 </label>
               </div>
@@ -577,7 +574,7 @@ const ApiConfigurationPage: React.FC = () => {
               <button
                 onClick={handleSaveApi}
                 disabled={!editingApi.name || !editingApi.apiKey}
-                className={`flex-1 px-4 py-2 ${twBg('up', '500')} text-white rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed`}
+                className={`flex-1 px-4 py-2 ${'bg-destructive'} text-destructive-foreground rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed`}
               >
                 保存
               </button>
@@ -586,7 +583,7 @@ const ApiConfigurationPage: React.FC = () => {
                   setShowModal(false)
                   setEditingApi(null)
                 }}
-                className={`flex-1 px-4 py-2 ${twBg('muted')} ${twText('primary')} rounded-lg hover:opacity-90 transition-opacity`}
+                className={`flex-1 px-4 py-2 ${'bg-muted'} ${'text-foreground'} rounded-lg hover:opacity-90 transition-opacity`}
               >
                 取消
               </button>
@@ -594,7 +591,7 @@ const ApiConfigurationPage: React.FC = () => {
           </div>
         </div>
       )}
-    </div>
+    </PageContainer>
   )
 }
 

@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { getLogger } from '@/lib/logger'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
+import { captureError } from '@/services/errorBus'
 
 const logger = getLogger()
 
@@ -58,6 +59,12 @@ export class WidgetErrorBoundary extends Component<WidgetErrorBoundaryProps, Wid
       error: error.message,
       stack: error.stack,
       componentStack: info.componentStack,
+    })
+
+    captureError(error, {
+      source: 'WidgetErrorBoundary',
+      operation: 'render',
+      meta: { widgetId, instanceId, componentStack: info.componentStack },
     })
 
     onError?.(error, info)

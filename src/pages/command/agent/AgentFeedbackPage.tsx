@@ -10,9 +10,9 @@ import {
 import { useAgentFeedbackStore } from '@/store/agentFeedbackStore'
 import { useAgentStore } from '@/store/agentStore'
 import { getLogger } from '@/lib/logger'
-import { twText } from '@/constants/theme.tokens'
 import type { AgentFeedback } from '@/types/modules/agent.types'
 
+import { nanoid } from 'nanoid'
 const logger = getLogger()
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -42,7 +42,7 @@ export default function AgentFeedbackPage(): React.JSX.Element {
     const tasks = Array.from(agentStore.tasks.values())
     const lastTask = tasks[tasks.length - 1]
     const feedback: AgentFeedback = {
-      id: `fb-${Date.now()}`,
+      id: `fb-${nanoid(8)}`,
       taskId: lastTask?.id ?? 'unknown',
       agentId: lastTask?.agentId ?? 'unknown',
       rating: selectedRating as AgentFeedback['rating'],
@@ -102,7 +102,7 @@ export default function AgentFeedbackPage(): React.JSX.Element {
                     key={rating}
                     type="button"
                     className={`p-1 rounded-md transition-colors ${
-                      selectedRating >= rating ? twText('yellow', 500) : 'text-muted-foreground'
+                      selectedRating >= rating ? 'text-warning' : 'text-muted-foreground'
                     }`}
                     onClick={() => setSelectedRating(rating)}
                   >
@@ -164,7 +164,7 @@ export default function AgentFeedbackPage(): React.JSX.Element {
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm font-medium">{agentId}</span>
                       <div className="flex items-center gap-1">
-                        <Star className={`h-4 w-4 ${twText('yellow', 500)} fill-current`} />
+                        <Star className="h-4 w-4 text-warning fill-current" />
                         <span className="text-sm font-bold">{summary.averageRating}</span>
                         <span className="text-xs text-muted-foreground">({summary.totalFeedback})</span>
                       </div>
@@ -204,7 +204,7 @@ export default function AgentFeedbackPage(): React.JSX.Element {
                       {Array.from({ length: 5 }).map((_, i) => (
                         <Star
                           key={i}
-                          className={`h-3 w-3 ${i < fb.rating ? `${twText('yellow', 500)} fill-current` : 'text-muted-foreground'}`}
+                          className={`h-3 w-3 ${i < fb.rating ? 'text-warning fill-current' : 'text-muted-foreground'}`}
                         />
                       ))}
                     </div>
@@ -213,7 +213,7 @@ export default function AgentFeedbackPage(): React.JSX.Element {
                   <div className="flex items-center gap-2">
                     <Badge variant="outline">{CATEGORY_LABELS[fb.category] ?? fb.category}</Badge>
                     {fb.resolved && (
-                      <CheckCircle2 className={`h-4 w-4 ${twText('green', 500)}`} />
+                      <CheckCircle2 className="h-4 w-4 text-success" />
                     )}
                     <span className="text-xs text-muted-foreground">
                       {new Date(fb.createdAt).toLocaleString()}

@@ -8,6 +8,7 @@ import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
 import type { WidgetConfig, MarketData, ChatMessage } from '@/types/modules/widget.types'
 import { CHAT_DEMO_TARGETS } from '@/constants/cockpit.constants'
 
+import { nanoid } from 'nanoid'
 interface StockChatWidgetProps {
   config: WidgetConfig
   data?: MarketData
@@ -187,7 +188,7 @@ export default function StockChatWidget({ config, data }: StockChatWidgetProps):
     if (!input.trim() || isLoading) return
 
     const userMessage: ChatMessage = {
-      id: `user_${Date.now()}`,
+      id: `user_${nanoid(8)}`,
       role: 'user',
       content: input.trim(),
       timestamp: Date.now(),
@@ -205,7 +206,7 @@ export default function StockChatWidget({ config, data }: StockChatWidgetProps):
       setMessages((prev) => [
         ...prev,
         {
-          id: `error_${Date.now()}`,
+          id: `error_${nanoid(8)}`,
           role: 'assistant',
           content: '消息发送失败，请稍后重试。',
           timestamp: Date.now(),
