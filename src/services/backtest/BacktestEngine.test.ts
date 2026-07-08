@@ -799,4 +799,246 @@ describe('BacktestEngine', () => {
       expect(symbols).not.toContain('GOOG')
     })
   })
+
+  // ============================================================
+  // 行为契约测试（拆分等价性验证）
+  // ============================================================
+  // 验证原则：只验证 run() 的外部可观察行为（返回值结构、字段值、序列）
+  // 不验证内部实现细节（不关心调用了哪个私有方法），用于拆分前后行为等价性验证
+  // ============================================================
+  describe('run() 行为契约（拆分等价性验证）', () => {
+    // ---- 契约①：返回结果结构完整性 ----
+    it('契约①: run() 返回结果包含完整字段结构', async () => {
+      const buyDate = new Date('2024-01-02T10:00:00.000Z').getTime()
+      mockSignalsList.mockResolvedValue([
+        createMockSignal({ symbol: 'AAPL', direction: 'buy', createdAt: buyDate, strategy: 'hot-sector' }),
+      ])
+      mockDailyQuotesGet.mockResolvedValue(
+        createMockDailyQuotes('AAPL', { '2024-01-02': 100, '2024-01-03': 101 }),
+      )
+      mockCalculatePosition.mockReturnValue({ action: 'buy', targetShares: 100 })
+
+      const engine = new BacktestEngine()
+      const result = await engine.run({
+        strategy: 'hot_sector',
+        startDate: '2024-01-02',
+        endDate: '2024-01-03',
+        initialCapital: 1_000_000,
+        commissionRate: 0.0003,
+        slippage: 0.001,
+        maxPositionPct: 0.2,
+      })
+
+      // 顶层结构
+      expect(result).toHaveProperty('trades')
+      expect(result).toHaveProperty('positions')
+      expect(result).toHaveProperty('dailyValues')
+      expect(result).toHaveProperty('metrics')
+      expect(Array.isArray(result.trades)).toBe(true)
+      expect(Array.isArray(result.positions)).toBe(true)
+      expect(Array.isArray(result.dailyValues)).toBe(true)
+
+      // metrics 字段完整性
+      const m = result.metrics
+      expect(m).toHaveProperty('totalReturn')
+      expect(m).toHaveProperty('annualizedReturn')
+      expect(m).toHaveProperty('maxDrawdown')
+      expect(m).toHaveProperty('sharpeRatio')
+      expect(m).toHaveProperty('winRate')
+      expect(m).toHaveProperty('tradeCount')
+      expect(m).toHaveProperty('profitTrades')
+      expect(m).toHaveProperty('lossTrades')
+      expect(m).toHaveProperty('avgProfit')
+      expect(m).toHaveProperty('avgLoss')
+      expect(m).toHaveProperty('pnlCurve')
+      expect(m).toHaveProperty('trades')
+
+      // VirtualOrder 字段完整性
+      if (result.trades.length > 0) {
+        const t = result.trades[0]!
+        expect(t).toHaveProperty('id')
+        expect(t).toHaveProperty('symbol')
+        expect(t).toHaveProperty('direction')
+        expect(t).toHaveProperty('price')
+        expect(t).toHaveProperty('quantity')
+        expect(t).toHaveProperty('date')
+        expect(t).toHaveProperty('commission')
+      }
+    })
+
+    // ---- 契约②：buy→sell 完整路径后持仓清空 ----
+    it('契约②: buy→sell 完整路径后持仓清空且包含双向交易', async () => {
+      const buyDate = new Date('2024-01-02T10:00:00.000Z').getTime()
+      const sellDate = new Date('2024-01-03T10:00:00.000Z').getTime()
+
+      mockSignalsList.mockResolvedValue([
+        createMockSignal({ symbol: 'AAPL', direction: 'buy', createdAt: buyDate, strategy: 'hot-sector' }),
+        createMockSignal({ symbol: 'AAPL', direction: 'sell', createdAt: sellDate, strategy: 'hot-sector' }),
+      ])
+      mockDailyQuotesGet.mockResolvedValue(
+        createMockDailyQuotes('AAPL', { '2024-01-02': 100, '2024-01-03': 105 }),
+      )
+      mockCalculatePosition.mockReturnValue({ action: 'buy', targetShares: 100 })
+
+      const engine = new BacktestEngine()
+      const result = await engine.run({
+        strategy: 'hot_sector',
+        startDate: '2024-01-02',
+        endDate: '2024-01-03',
+        initialCapital: 1_000_000,
+        commissionRate: 0.0003,
+        slippage: 0.001,
+        maxPositionPct: 0.2,
+      })
+
+      // 包含买入和卖出双向交易
+      const buyTrades = result.trades.filter((t) => t.direction === 'buy')
+      const sellTrades = result.trades.filter((t) => t.direction === 'sell')
+      expect(buyTrades.length).toBeGreaterThan(0)
+      expect(sellTrades.length).toBeGreaterThan(0)
+
+      // 卖出后持仓清空
+      expect(result.positions).toHaveLength(0)
+
+      // 最终现金为正（卖出回收现金）
+      const lastDay = result.dailyValues[result.dailyValues.length - 1]
+      expect(lastDay).toBeDefined()
+      expect(lastDay!.cash).toBeGreaterThan(0)
+    })
+
+    // ---- 契约③：空事件时 metrics 全字段零值 ----
+    it('契约③: 空事件时 metrics 全字段为零值且 trades/positions/dailyValues 为空数组', async () => {
+      mockSignalsList.mockResolvedValue([])
+      mockOrdersList.mockResolvedValue([])
+
+      const engine = new BacktestEngine()
+      const result = await engine.run({
+        strategy: 'hot_sector',
+        startDate: '2024-01-01',
+        endDate: '2024-01-10',
+        initialCapital: 1_000_000,
+        commissionRate: 0.0003,
+        slippage: 0.001,
+        maxPositionPct: 0.2,
+      })
+
+      // 三个数组为空
+      expect(result.trades).toEqual([])
+      expect(result.positions).toEqual([])
+      expect(result.dailyValues).toEqual([])
+
+      // metrics 全字段零值（注：pnlCurve 默认 [1.0]，与 _emptyMetrics 实现一致）
+      expect(result.metrics.tradeCount).toBe(0)
+      expect(result.metrics.profitTrades).toBe(0)
+      expect(result.metrics.lossTrades).toBe(0)
+      expect(result.metrics.totalReturn).toBe(0)
+      expect(result.metrics.winRate).toBe(0)
+      expect(result.metrics.pnlCurve).toEqual([1.0])
+      expect(result.metrics.trades).toEqual([])
+    })
+
+    // ---- 契约④：滑点方向（买入上浮/卖出下浮） ----
+    it('契约④: 滑点方向正确（买入价上浮/卖出价下浮）', async () => {
+      const buyDate = new Date('2024-01-02T10:00:00.000Z').getTime()
+      const sellDate = new Date('2024-01-03T10:00:00.000Z').getTime()
+
+      mockSignalsList.mockResolvedValue([
+        createMockSignal({ symbol: 'AAPL', direction: 'buy', createdAt: buyDate, strategy: 'hot-sector' }),
+        createMockSignal({ symbol: 'AAPL', direction: 'sell', createdAt: sellDate, strategy: 'hot-sector' }),
+      ])
+      mockDailyQuotesGet.mockResolvedValue(
+        createMockDailyQuotes('AAPL', { '2024-01-02': 100, '2024-01-03': 100 }),
+      )
+      mockCalculatePosition.mockReturnValue({ action: 'buy', targetShares: 100 })
+
+      const engine = new BacktestEngine()
+      const result = await engine.run({
+        strategy: 'hot_sector',
+        startDate: '2024-01-02',
+        endDate: '2024-01-03',
+        initialCapital: 1_000_000,
+        commissionRate: 0,
+        slippage: 0.01, // 1% 滑点
+        maxPositionPct: 1,
+      })
+
+      const buyTrade = result.trades.find((t) => t.direction === 'buy')
+      const sellTrade = result.trades.find((t) => t.direction === 'sell')
+
+      // 买入价 = 100 × (1 + 0.01) = 101
+      expect(buyTrade).toBeDefined()
+      expect(buyTrade!.price).toBeCloseTo(101, 1)
+
+      // 卖出价 = 100 × (1 - 0.01) = 99
+      expect(sellTrade).toBeDefined()
+      expect(sellTrade!.price).toBeCloseTo(99, 1)
+    })
+
+    // ---- 契约⑤：dailyValues 日期严格升序且跳过周末 ----
+    it('契约⑤: dailyValues 日期严格升序且跳过周末', async () => {
+      const buyDate = new Date('2024-01-02T10:00:00.000Z').getTime()
+      mockSignalsList.mockResolvedValue([
+        createMockSignal({ symbol: 'AAPL', direction: 'buy', createdAt: buyDate, strategy: 'hot-sector' }),
+      ])
+      mockDailyQuotesGet.mockResolvedValue(
+        createMockDailyQuotes('AAPL', {
+          '2024-01-02': 100,
+          '2024-01-03': 101,
+          '2024-01-04': 102,
+          '2024-01-05': 103,
+        }),
+      )
+      mockCalculatePosition.mockReturnValue({ action: 'buy', targetShares: 100 })
+
+      const engine = new BacktestEngine()
+      const result = await engine.run({
+        strategy: 'hot_sector',
+        startDate: '2024-01-02',
+        endDate: '2024-01-08',
+        initialCapital: 1_000_000,
+        commissionRate: 0.0003,
+        slippage: 0.001,
+        maxPositionPct: 0.2,
+      })
+
+      // 日期严格升序
+      for (let i = 1; i < result.dailyValues.length; i++) {
+        const prev = result.dailyValues[i - 1]!
+        const curr = result.dailyValues[i]!
+        expect(curr.date > prev.date).toBe(true)
+      }
+
+      // 跳过周末（2024-01-06 周六、2024-01-07 周日）
+      const dates = result.dailyValues.map((d) => d.date)
+      expect(dates).not.toContain('2024-01-06')
+      expect(dates).not.toContain('2024-01-07')
+    })
+
+    // ---- 契约⑥：metrics.positions/dailyValues 与顶层一致 ----
+    it('契约⑥: metrics.positions 和 metrics.dailyValues 与顶层字段同引用', async () => {
+      const buyDate = new Date('2024-01-02T10:00:00.000Z').getTime()
+      mockSignalsList.mockResolvedValue([
+        createMockSignal({ symbol: 'AAPL', direction: 'buy', createdAt: buyDate, strategy: 'hot-sector' }),
+      ])
+      mockDailyQuotesGet.mockResolvedValue(
+        createMockDailyQuotes('AAPL', { '2024-01-02': 100, '2024-01-03': 101 }),
+      )
+      mockCalculatePosition.mockReturnValue({ action: 'buy', targetShares: 100 })
+
+      const engine = new BacktestEngine()
+      const result = await engine.run({
+        strategy: 'hot_sector',
+        startDate: '2024-01-02',
+        endDate: '2024-01-03',
+        initialCapital: 1_000_000,
+        commissionRate: 0.0003,
+        slippage: 0.001,
+        maxPositionPct: 0.2,
+      })
+
+      // metrics 注入的 positions/dailyValues 应与顶层一致
+      expect(result.metrics.positions).toEqual(result.positions)
+      expect(result.metrics.dailyValues).toEqual(result.dailyValues)
+    })
+  })
 })
