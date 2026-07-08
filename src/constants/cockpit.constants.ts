@@ -344,6 +344,20 @@ export const WIDGET_DEFAULT_DATA_SOURCE = {
     endpoint: '/strategy/value-pit',
     enabled: true,
   },
+  sectorRotation: {
+    type: ACTIVE_DATA_SOURCE,
+    mode: COLLECTION_MODE.ONCE,
+    interval: 0,
+    endpoint: '/strategy/sector-rotation',
+    enabled: true,
+  },
+  signalQuality: {
+    type: ACTIVE_DATA_SOURCE,
+    mode: COLLECTION_MODE.ONCE,
+    interval: 0,
+    endpoint: '/strategy/signal-quality',
+    enabled: true,
+  },
   // ============================================================
   // 系统监控与高级分析 Widget 数据源
   // ============================================================
@@ -469,6 +483,16 @@ export const DEFAULT_WIDGET_CONFIG = {
   },
   valuePit: {
     title: '价值洼地策略',
+    size: WIDGET_SIZE.LARGE_HEIGHT,
+    category: 'strategy',
+  },
+  sectorRotation: {
+    title: '板块轮动信号',
+    size: WIDGET_SIZE.LARGE_HEIGHT,
+    category: 'strategy',
+  },
+  signalQuality: {
+    title: '信号质量复盘',
     size: WIDGET_SIZE.LARGE_HEIGHT,
     category: 'strategy',
   },

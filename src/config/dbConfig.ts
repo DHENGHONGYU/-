@@ -1,6 +1,6 @@
 const testDbName = typeof process !== 'undefined' ? process.env.TEST_DB_NAME : undefined
 export const DB_NAME = testDbName ? testDbName : ('V6ProDB' as const)
-export const DB_VERSION = 23 as const
+export const DB_VERSION = 24 as const
 
 // DB_VERSION 升级历史：
 // v3 → v4: 新增 daily_quotes 存储，用于保存 K线/行情数据。
@@ -19,6 +19,8 @@ export const DB_VERSION = 23 as const
 // v20 → v21: 数据字典补全：完善 ACL 矩阵，新增 datalayer 模块的 read/write 权限。
 // v21 → v22: 新增 financial_reports 存储，支撑评分引擎财务数据管道。
 // v22 → v23: 新增 schema_migrations 存储（迁移追踪），落地 D-01 Schema 迁移框架。
+// v23 → v24: 新增 RBAC 5 表模式（rbac_users/rbac_roles/rbac_permissions/rbac_user_roles/
+//            rbac_role_permissions/rbac_permission_audit_logs），支撑权限自动回收与僵尸账号检测。
 // @compliance AGENTS.md §八：DB_VERSION 必须与浏览器现有版本匹配或更高
 
 export const DEFAULT_POOL_GROUP = '默认分组' as const
@@ -151,6 +153,21 @@ export const ENVELOPE_ACTION = {
   incrementMissingReportRetry: 'INCREMENT_MISSING_REPORT_RETRY',
   /** 保存观察列表快照（修复 C4：孤立的 watchlists 物理表写入通道） */
   saveWatchlist: 'SAVE_WATCHLIST',
+  // ── RBAC 6 表写入通道（v24 新增；STORE_NAME 已含 rbac* 表，无需 as StoreName 断言） ──
+  /** 保存 RBAC 用户 */
+  saveRbacUser: 'SAVE_RBAC_USER',
+  /** 保存 RBAC 角色 */
+  saveRbacRole: 'SAVE_RBAC_ROLE',
+  /** 保存 RBAC 权限 */
+  saveRbacPermission: 'SAVE_RBAC_PERMISSION',
+  /** 保存用户-角色映射 */
+  saveRbacUserRole: 'SAVE_RBAC_USER_ROLE',
+  /** 保存角色-权限映射 */
+  saveRbacRolePermission: 'SAVE_RBAC_ROLE_PERMISSION',
+  /** 保存权限审计日志（append-only） */
+  saveRbacAuditLog: 'SAVE_RBAC_AUDIT_LOG',
+  /** 删除权限审计日志（仅归档服务 RBAC-S3 使用，普通调用禁止） */
+  deleteRbacAuditLog: 'DELETE_RBAC_AUDIT_LOG',
   // 查询操作（QueryEnvelope）
   /** 查询单条记录 */
   queryGet: 'QUERY_GET',
@@ -183,6 +200,8 @@ export const MODULE_ID = {
   portfolios: 'portfolios',
   tradeReviews: 'tradeReviews',
   datalayer: 'datalayer',
+  /** RBAC 权限管理模块（v24 新增） */
+  rbac: 'rbac',
 } as const
 
 export type ModuleId = (typeof MODULE_ID)[keyof typeof MODULE_ID]
@@ -220,6 +239,13 @@ export const STORE_NAME = {
   portfolios: 'portfolios',
   tradeReviews: 'trade_reviews',
   schemaMigrations: 'schema_migrations',
+  // ── RBAC 5 表模式（v24 新增） ──
+  rbacUsers: 'rbac_users',
+  rbacRoles: 'rbac_roles',
+  rbacPermissions: 'rbac_permissions',
+  rbacUserRoles: 'rbac_user_roles',
+  rbacRolePermissions: 'rbac_role_permissions',
+  rbacPermissionAuditLogs: 'rbac_permission_audit_logs',
 } as const
 
 export type StoreName = (typeof STORE_NAME)[keyof typeof STORE_NAME]
@@ -248,7 +274,9 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
   [MODULE_ID.stockpool]: {
     read: [STORE_NAME.stocks, STORE_NAME.v6Scores],
     write: [STORE_NAME.stocks],
-    actions: [DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete],
+    // 修复 2026-07-08: 添加 DB_OPERATION.select，允许 poolStore 通过 DataBridge 查询 stocks/v6Scores
+    // 原配置仅允许 insert/update/delete，导致 poolStore.refresh() 触发 ACL_PERMISSION_DENIED
+    actions: [DB_OPERATION.select, DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete],
   },
   [MODULE_ID.analyzer]: {
     read: [
@@ -372,6 +400,28 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
     read: Object.values(STORE_NAME),
     write: [],
     actions: [DB_OPERATION.select],
+  },
+  [MODULE_ID.rbac]: {
+    read: [
+      STORE_NAME.rbacUsers,
+      STORE_NAME.rbacRoles,
+      STORE_NAME.rbacPermissions,
+      STORE_NAME.rbacUserRoles,
+      STORE_NAME.rbacRolePermissions,
+      STORE_NAME.rbacPermissionAuditLogs,
+    ],
+    write: [
+      STORE_NAME.rbacUsers,
+      STORE_NAME.rbacRoles,
+      STORE_NAME.rbacPermissions,
+      STORE_NAME.rbacUserRoles,
+      STORE_NAME.rbacRolePermissions,
+      // 注意：审计日志表遵循 append-only 原则，只能通过 saveRbacAuditLog action 追加
+      // 例外：归档服务（RBAC-S3）通过 deleteRbacAuditLog action 删除已导出的过期日志
+      // 详见 auditLogArchiveService.deleteArchivedLogs()
+      STORE_NAME.rbacPermissionAuditLogs,
+    ],
+    actions: [DB_OPERATION.select, DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete],
   },
 }
 

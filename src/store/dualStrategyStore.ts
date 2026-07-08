@@ -37,7 +37,7 @@ import { analyze as analyzeValuePit } from '@/services/scoring/valuePitAnalyzer'
 import { detect as detectRotation } from '@/services/scoring/rotationSignalDetector'
 import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
-import { withBroadcast } from '@/store/helpers/withBroadcast'
+import { withBroadcast } from '@/lib/withBroadcast'
 import {
   HOT_SECTOR_DEFAULT_SAMPLES,
   ROTATION_DEFAULT_SAMPLES,
@@ -281,7 +281,7 @@ export const useDualStrategyStore = create<DualStrategyState>((set, get) => ({
       )
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
-      logger.error(`[dualStrategyStore] fetchScores 失败: ${message}`)
+      logger.error(`[dualStrategyStore] fetchScores 失败: ${message}`, { error: message })
       // 失败快照回滚：保留原数据，仅设置错误状态
       set({
         ...snapshot,
@@ -355,7 +355,7 @@ export const useDualStrategyStore = create<DualStrategyState>((set, get) => ({
       )
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
-      logger.error(`[dualStrategyStore] refresh 失败: ${message}`)
+      logger.error(`[dualStrategyStore] refresh 失败: ${message}`, { error: message })
       set({ error: message, loading: false, isRefreshing: false })
     }
   },
