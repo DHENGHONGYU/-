@@ -12,6 +12,7 @@ import {
 import { PageContainer } from '@/components/ui/PageContainer'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { TUSHARE_API } from '@/config/dataSourceUrls'
+import { API_ENDPOINT_PLACEHOLDER } from '@/config/uiPlaceholders'
 
 import { nanoid } from 'nanoid'
 /**
@@ -510,7 +511,7 @@ const ApiConfigurationPage: React.FC = () => {
                   value={editingApi.endpoint || ''}
                   onChange={(e) => setEditingApi(prev => prev ? { ...prev, endpoint: e.target.value } : null)}
                   className={`w-full px-3 py-2 border ${'border-border'} rounded-lg focus:outline-none focus:ring-2 focus:ring-primary`}
-                  placeholder="https://api.example.com"
+                  placeholder={API_ENDPOINT_PLACEHOLDER}
                 />
               </div>
 

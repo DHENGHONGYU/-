@@ -407,7 +407,7 @@ function scanFile(file: string): Finding[] {
 
         // Tailwind 颜色类：text-red-500, bg-slate-100, border-blue-200 等
         // v2.0：支持 hover:, focus:, dark:, group-hover: 等变体前缀
-        const twMatch = raw.match(/(?:hover:|focus:|dark:|group-hover:|active:|disabled:)?\b(bg|text|border|shadow|ring|from|to|via|stroke|fill)-([a-z]+-[0-9]+)/)
+        const twMatch = raw.match(/(?:hover:|focus:|dark:|group-hover:|active:|disabled:)?\b(bg|text|border|ring|from|to|via|stroke|fill)-([a-z]+-[0-9]+)/)
         if (twMatch) {
           // v2.2：排除非颜色类的误报模式
           // - ring-offset-{number}：环偏移宽度，非颜色
@@ -584,11 +584,14 @@ export function scan(): Report {
     byCategory[f.category] = (byCategory[f.category] ?? 0) + 1
   }
 
+  const warningCount = violations.filter(f => f.severity === 'Warning').length
+
   return {
     violations,
     summary: {
       totalFiles: files.length,
       totalViolations: violations.length,
+      totalWarnings: warningCount,
       bySeverity,
       byCategory,
     },

@@ -1,13 +1,11 @@
 /**
  * @module analysisStore
- * @reserved 预留 AnalysisApp 重构时启用
  * @description 分析舱（AnalysisApp）状态管理层。集中管理分析标的列表、V6 批量评分及加载状态。
  * 从 AnalysisApp 组件中抽取的 3 个 useState，实现 Store 化。
  *
- * @status 当前 AnalysisApp.tsx 直接调用 services 层（runV6Score/listStocks/listV6Scores），
- * 未使用此 Store。待 AnalysisApp 重构时启用，将 useState 替换为 Store 调用。
+ * @status AnalysisApp.tsx 已接入 useAnalysisStore（stocks/scores/loadStocks/handleScore 等）。
  *
- * @see @/apps/analysis/AnalysisApp.tsx - 预期消费方（待重构）
+ * @see @/apps/analysis/AnalysisApp.tsx - 消费方
  * @see @/services/analysis/analysisService.ts - 底层数据服务
  * @see @/services/scoring/v6ScoreService.ts - V6 评分计算服务
  */

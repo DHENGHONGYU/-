@@ -135,7 +135,7 @@ export function SectorRotationHeatmap({ title = '板块轮动热力图' }: Secto
   const errorMessage = error ?? '操作失败'
 
   return (
-    <section className={`rounded-xl border ${twBorder('neutral', 200)} bg-neutral-50 p-4 shadow-sm ${DARK.borderSlate700} ${DARK.bgSlate900}`}>
+    <section className={`rounded-xl border ${twBorder('neutral', 200)} bg-card p-4 shadow-sm ${DARK.borderSlate700} ${DARK.bgSlate900}`}>
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className={`text-lg font-semibold ${twText('slate', 900)} ${DARK.textSlate100}`}>{title}</h2>
         <div className="flex flex-wrap items-center gap-2">

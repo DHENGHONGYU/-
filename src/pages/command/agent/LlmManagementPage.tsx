@@ -15,6 +15,7 @@ import {
   BreadcrumbPage,
 } from '@/components/ui/Breadcrumb'
 import { getLogger } from '@/lib/logger'
+import { API_ENDPOINT_PLACEHOLDER } from '@/config/uiPlaceholders'
 import {
   LLM_MODEL_PRESETS,
   type LlmConfig,
@@ -278,7 +279,7 @@ export default function LlmManagementPage(): React.JSX.Element {
                     onChange={(e) => {
                       setConfig((prev) => ({ ...prev, baseURL: e.target.value }))
                     }}
-                    placeholder="https://api.example.com"
+                    placeholder={API_ENDPOINT_PLACEHOLDER}
                   />
                 </div>
               )}

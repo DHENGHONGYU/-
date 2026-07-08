@@ -280,7 +280,9 @@ export function runAuditPipeline<TReport extends AuditReport = AuditReport>(
   }
 
   // ── 6. 确定退出码 ──
-  const exitCode = report.summary.totalViolations > 0 ? 1 : 0
+  // RM-011/12 决策：静默回退(Warning)不阻断，仅阻断性违规(Major/Critical)才 exit 1
+  const blockingCount = report.summary.totalViolations - (report.summary.totalWarnings ?? 0)
+  const exitCode = blockingCount > 0 ? 1 : 0
 
   if (!cliOptions.quiet) {
     logDiagnostic(`✅ 审计完成，退出码: ${exitCode}`)

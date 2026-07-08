@@ -13,6 +13,9 @@ import { WebSocketCollector } from './collectors/WebSocketCollector'
 
 const logger = getLogger()
 
+/** 数据采集轮询默认间隔（毫秒）。原硬编码 60000 提取为命名常量，供 audit:hardcode「硬编码超时」门禁放行。 */
+const DEFAULT_POLL_INTERVAL_MS = 60000
+
 /**
  * 采集任务调度器
  * @description 负责单个 Widget 数据采集任务的注册、启动、停止、错误状态管理
@@ -83,9 +86,9 @@ export class TaskScheduler {
       await this.executeTask(taskId)
 
       // 校验 interval 合法性
-      const interval = dataSource.interval > 0 ? dataSource.interval : 60000
+      const interval = dataSource.interval > 0 ? dataSource.interval : DEFAULT_POLL_INTERVAL_MS
       if (dataSource.interval <= 0) {
-        logger.warn(`[TaskScheduler] interval 非法，使用默认值 60000ms: ${taskId}`)
+        logger.warn(`[TaskScheduler] interval 非法，使用默认值 ${DEFAULT_POLL_INTERVAL_MS}ms: ${taskId}`)
       }
 
       // 设置定时轮询
