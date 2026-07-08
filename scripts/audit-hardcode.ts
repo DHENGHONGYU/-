@@ -272,13 +272,13 @@ function scanFile(file: string): Finding[] {
 
   for (let i = 0; i < lines.length; i++) {
     const raw = lines[i]
-    const trimmed = raw?.trim()!
+    const trimmed = raw.trim()
 
-    if (trimmed!.startsWith('//') || trimmed!.startsWith('*') || trimmed!.startsWith('/*')) continue
+    if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*')) continue
 
     // 1. Fatal：config/ 中硬编码股票代码（symbols.ts 为合法配置白名单，排除）
     if (rel.startsWith('src/config/') && !rel.includes('audit-exempt') && rel !== 'src/config/symbols.ts') {
-      const stockMatch = raw?.match(/[^a-zA-Z0-9_.](\d{6}\.(SH|SZ|BJ|HK))[^a-zA-Z0-9_]/)
+      const stockMatch = raw.match(/[^a-zA-Z0-9_.](\d{6}\.(SH|SZ|BJ|HK))[^a-zA-Z0-9_]/)
       if (stockMatch) {
         findings.push({
           file: rel,
@@ -286,7 +286,7 @@ function scanFile(file: string): Finding[] {
           severity: 'Fatal',
           category: '硬编码股票代码',
           message: `config 层出现硬编码股票代码 ${stockMatch[1]}`,
-          context: trimmed!.slice(0, 80),
+          context: trimmed.slice(0, 80),
         })
       }
     }
@@ -299,19 +299,19 @@ function scanFile(file: string): Finding[] {
       !rel.includes('audit-exempt')
     ) {
       // 匹配 3 位以上数字，但排除数组索引 [0]、[1] 等上下文
-      const magicMatch = raw?.match(/[^0-9a-zA-Z_\.\[\]]([0-9]{3,})[^0-9a-zA-Z_\.]/)
+      const magicMatch = raw.match(/[^0-9a-zA-Z_\.\[\]]([0-9]{3,})[^0-9a-zA-Z_\.]/)
       // v2.3：排除字符串字面量内的数字（含多行模板字符串）
-      const numPos = magicMatch ? magicMatch.index + 1 : -1
+      const numPos = magicMatch ? magicMatch.index! + 1 : -1
       const inStringLiteral = magicMatch && numPos >= 0 && isPositionInsideStringLiteral(raw ?? '', numPos)
       // v2.3：排除命名常量声明行（const FOO = 123）和行内注释（// ... 123）
-      const isConstDecl = magicMatch && isConstDeclarationValue(raw ?? '', magicMatch[1] ?? '')
-      const commentIdx = raw?.indexOf('//')!
+      const isConstDecl = magicMatch && isConstDeclarationValue(raw, magicMatch[1])
+      const commentIdx = raw.indexOf('//')
       const inComment = magicMatch && commentIdx >= 0 && numPos > commentIdx
       // v2.4：排除数组字面量、对象属性值、枚举声明、return/throw 中的数字
-      const inArrayLiteral = magicMatch && numPos >= 0 && isInArrayLiteral(raw ?? '', numPos)
-      const inObjectValue = magicMatch && numPos >= 0 && isObjectPropertyValue(raw ?? '', magicMatch[1] ?? '', numPos)
-      const inEnum = isInEnumDeclaration(raw ?? '')
-      const inReturnThrow = magicMatch && numPos >= 0 && isReturnOrThrowValue(raw ?? '', numPos)
+      const inArrayLiteral = magicMatch && numPos >= 0 && isInArrayLiteral(raw, numPos)
+      const inObjectValue = magicMatch && numPos >= 0 && isObjectPropertyValue(raw, magicMatch[1], numPos)
+      const inEnum = isInEnumDeclaration(raw)
+      const inReturnThrow = magicMatch && numPos >= 0 && isReturnOrThrowValue(raw, numPos)
       if (magicMatch && !inStringLiteral && !isConstDecl && !inComment &&
           !inArrayLiteral && !inObjectValue && !inEnum && !inReturnThrow) {
         const num = Number(magicMatch[1])
@@ -323,7 +323,7 @@ function scanFile(file: string): Finding[] {
             severity: 'Major',
             category: '魔法数字',
             message: `引擎层出现未解释数字 ${magicMatch[1]}`,
-            context: trimmed!.slice(0, 80),
+            context: trimmed.slice(0, 80),
           })
         }
       }
@@ -335,27 +335,27 @@ function scanFile(file: string): Finding[] {
       !rel.includes('audit-exempt') &&
       !rel.startsWith('src/config/')
     ) {
-      const urlMatch = raw?.match(HARDCODED_URL_PATTERN)
-      if (urlMatch && !trimmed!.startsWith('//') && !trimmed!.startsWith('*')) {
+      const urlMatch = raw.match(HARDCODED_URL_PATTERN)
+      if (urlMatch && !trimmed.startsWith('//') && !trimmed.startsWith('*')) {
         findings.push({
           file: rel,
           line: i + 1,
           severity: 'Critical',
           category: '硬编码 URL',
           message: `非配置层出现硬编码 URL`,
-          context: trimmed!.slice(0, 80),
+          context: trimmed.slice(0, 80),
         })
       }
 
-      const apiPathMatch = raw?.match(HARDCODED_API_PATH)
-      if (apiPathMatch && !trimmed!.startsWith('//') && !trimmed!.startsWith('*')) {
+      const apiPathMatch = raw.match(HARDCODED_API_PATH)
+      if (apiPathMatch && !trimmed.startsWith('//') && !trimmed.startsWith('*')) {
         findings.push({
           file: rel,
           line: i + 1,
           severity: 'Critical',
           category: '硬编码 API 路径',
           message: `非配置层出现硬编码 API 路径`,
-          context: trimmed!.slice(0, 80),
+          context: trimmed.slice(0, 80),
         })
       }
     }
@@ -366,7 +366,7 @@ function scanFile(file: string): Finding[] {
       !isTestFile(rel) &&
       !rel.includes('audit-exempt')
     ) {
-      const timeoutMatch = raw?.match(HARDCODED_TIMEOUT_PATTERN)
+      const timeoutMatch = raw.match(HARDCODED_TIMEOUT_PATTERN)
       if (timeoutMatch) {
         findings.push({
           file: rel,
@@ -374,7 +374,7 @@ function scanFile(file: string): Finding[] {
           severity: 'Major',
           category: '硬编码超时',
           message: `引擎层出现硬编码超时时间 ${timeoutMatch[1]}ms`,
-          context: trimmed!.slice(0, 80),
+          context: trimmed.slice(0, 80),
         })
       }
     }
@@ -390,10 +390,10 @@ function scanFile(file: string): Finding[] {
     ) {
       // v2.6：股票涨跌颜色例外规则豁免
       // 如果本行使用了 STOCK_COLOR_TOKENS 或动态涨跌判断，豁免颜色检查
-      const isStockException = isStockColorUsage(raw ?? '')
+      const isStockException = isStockColorUsage(raw)
 
       if (!isStockException) {
-        const hexMatch = raw?.match(/#[0-9a-fA-F]{3,6}\b/)
+        const hexMatch = raw.match(/#[0-9a-fA-F]{3,6}\b/)
         if (hexMatch) {
           findings.push({
             file: rel,
@@ -401,13 +401,13 @@ function scanFile(file: string): Finding[] {
             severity: 'Major',
             category: '硬编码 HEX 颜色',
             message: `UI 层出现硬编码颜色 ${hexMatch[0]}`,
-            context: trimmed!.slice(0, 80),
+            context: trimmed.slice(0, 80),
           })
         }
 
         // Tailwind 颜色类：text-red-500, bg-slate-100, border-blue-200 等
         // v2.0：支持 hover:, focus:, dark:, group-hover: 等变体前缀
-        const twMatch = raw?.match(/(?:hover:|focus:|dark:|group-hover:|active:|disabled:)?\b(bg|text|border|shadow|ring|from|to|via|stroke|fill)-([a-z]+-[0-9]+)/)
+        const twMatch = raw.match(/(?:hover:|focus:|dark:|group-hover:|active:|disabled:)?\b(bg|text|border|shadow|ring|from|to|via|stroke|fill)-([a-z]+-[0-9]+)/)
         if (twMatch) {
           // v2.2：排除非颜色类的误报模式
           // - ring-offset-{number}：环偏移宽度，非颜色
@@ -418,10 +418,10 @@ function scanFile(file: string): Finding[] {
           const prefix = twMatch[1]
           const colorPart = twMatch[2]
           const isFalsePositive =
-            (prefix === 'ring' && colorPart?.startsWith('offset-')) ||
-            (prefix === 'border' && /^[tblr]-\d+$/.test(colorPart ?? '')) ||
-            (prefix === 'from' && /^(bottom|top|left|right)-\d+$/.test(colorPart ?? '')) ||
-            (prefix === 'to' && /^(bottom|top|left|right)-\d+$/.test(colorPart ?? ''))
+            (prefix === 'ring' && colorPart.startsWith('offset-')) ||
+            (prefix === 'border' && /^[tblr]-\d+$/.test(colorPart)) ||
+            (prefix === 'from' && /^(bottom|top|left|right)-\d+$/.test(colorPart)) ||
+            (prefix === 'to' && /^(bottom|top|left|right)-\d+$/.test(colorPart))
           if (!isFalsePositive) {
             findings.push({
               file: rel,
@@ -429,7 +429,7 @@ function scanFile(file: string): Finding[] {
               severity: 'Major',
               category: '硬编码 Tailwind 颜色类',
               message: `UI 层出现硬编码 Tailwind 颜色类 ${fullMatch}`,
-              context: trimmed!.slice(0, 80),
+              context: trimmed.slice(0, 80),
             })
           }
         }
@@ -456,78 +456,78 @@ function scanFile(file: string): Finding[] {
         { regex: /\|\|\s*null\b/, text: '|| null', type: 'null' },
       ]
       for (const pattern of fallbackPatterns) {
-        const match = raw?.match(pattern.regex)
+        const match = raw.match(pattern.regex)
         if (match) {
           // ── A 类排除：合理默认值，不报警 ──
 
           // 排除 1：?? '' 用于错误消息兜底（如 error ?? 'xxx失败'）
           // 理由：错误消息兜底是标准做法，确保用户看到有意义的提示
-          if (pattern.type === 'empty-string' && /['"][^'"]*失败['"]/.test(raw ?? '')) continue
+          if (pattern.type === 'empty-string' && /['"][^'"]*失败['"]/.test(raw)) continue
 
           // 排除 2：.find(...) ?? null / .get(...) ?? null
           // 理由：Map.get() 和 Array.find() 返回 undefined 时回退 null 是类型安全的标准写法
-          if (pattern.type === 'null' && /\.(?:find|get)\s*\([^)]*\)\s*\?\?/.test(raw ?? '')) continue
+          if (pattern.type === 'null' && /\.(?:find|get)\s*\([^)]*\)\s*\?\?/.test(raw)) continue
 
           // 排除 3：safeNumber(...) ?? 0
           // 理由：已有安全转换函数兜底，?? 0 只是额外保险，不会掩盖问题
-          if (pattern.type === 'zero' && /safeNumber\s*\([^)]*\)\s*\?\?/.test(raw ?? '')) continue
+          if (pattern.type === 'zero' && /safeNumber\s*\([^)]*\)\s*\?\?/.test(raw)) continue
 
           // 排除 4：?.length ?? 0（可选链数组/字符串长度）
           // 理由：undefined.length 无意义，?? 0 是唯一合理的数值默认值
-          if (pattern.type === 'zero' && /\?\.length\s*\?\?/.test(raw ?? '')) continue
+          if (pattern.type === 'zero' && /\?\.length\s*\?\?/.test(raw)) continue
 
           // 排除 5：?.xxx ?? yyy 所有可选链属性访问 + 兜底值
           // 理由：TypeScript 可选链 + 兜底是类型安全的标准写法，无论兜底值是 0、''、null 还是其他
-          if (/\?\.\w+\s*(?:\?\?|\|\|)/.test(raw ?? '')) continue
+          if (/\?\.\w+\s*(?:\?\?|\|\|)/.test(raw)) continue
 
           // 排除 6：行中包含 throw new Error 或 set({ error: ) 的 ?? ''
           // 理由：错误已被显式抛出或写入 store，?? '' 仅做类型收窄，不会掩盖错误
           if (pattern.type === 'empty-string' &&
-              (/\bthrow\s+new\s+Error/.test(raw ?? '') || /set\s*\(\s*\{\s*error\s*:/.test(raw ?? ''))) continue
+              (/\bthrow\s+new\s+Error/.test(raw) || /set\s*\(\s*\{\s*error\s*:/.test(raw))) continue
 
           // 排除 7：.data ?? / .data || — API 响应数据兜底
           // 理由：API 响应数据兜底是标准做法，确保渲染时不会因 undefined 崩溃
-          if (/\.data\s*(?:\?\?|\|\|)/.test(raw ?? '')) continue
+          if (/\.data\s*(?:\?\?|\|\|)/.test(raw)) continue
 
           // 排除 8：as Type ?? defaultValue — 类型断言后的兜底
           // 理由：类型断言后提供兜底值是 TypeScript 防御性编程的标准写法
-          if (/as\s+\w+\s*\?\?/.test(raw ?? '')) continue
+          if (/as\s+\w+\s*\?\?/.test(raw)) continue
 
           // 排除 9：toString() ?? '' / String() ?? '' — 字符串转换后的兜底
           // 理由：转换函数结果提供兜底值不会掩盖问题，只是确保字符串类型安全
-          if (/(?:toString|String)\s*\(.*\)\s*(?:\?\?|\|\|)/.test(raw ?? '')) continue
+          if (/(?:toString|String)\s*\(.*\)\s*(?:\?\?|\|\|)/.test(raw)) continue
 
           // 排除 10：行中包含 logger.warn / logger.error 的兜底模式
           // 理由：已有显式错误日志记录，兜底值不会掩盖问题
-          if (/\blogger\.(?:warn|error)\b/.test(raw ?? '')) continue
+          if (/\blogger\.(?:warn|error)\b/.test(raw)) continue
 
           // 排除 11：.get(...) ?? defaultValue — Map/WeakMap get 操作兜底
           // 理由：Map.get() 返回 undefined 时提供默认值是标准做法
-          if (/\.get\s*\([^)]*\)\s*(?:\?\?|\|\|)/.test(raw ?? '')) continue
+          if (/\.get\s*\([^)]*\)\s*(?:\?\?|\|\|)/.test(raw)) continue
 
           // 排除 12：.prop ?? value — 点号属性访问 + 兜底值
           // 理由：属性访问可能为 undefined，提供兜底值是数据映射/对象构建的标准做法
-          if (/\.\w+\s*(?:\?\?|\|\|)/.test(raw ?? '')) continue
+          if (/\.\w+\s*(?:\?\?|\|\|)/.test(raw)) continue
 
           // 排除 13：[key] ?? value — 括号属性访问 + 兜底值
           // 理由：动态键访问（如 data[key] ?? 0、obj['prop'] ?? ''）是数据映射的标准做法
-          if (/\[[^\]]*\]\s*(?:\?\?|\|\|)/.test(raw ?? '')) continue
+          if (/\[[^\]]*\]\s*(?:\?\?|\|\|)/.test(raw)) continue
 
           // 排除 14：可选链 + 方法调用（含参数）+ 兜底值（如 ?.toFixed(2) ?? 'N/A'）
           // 理由：可选链方法调用后的兜底是类型安全的标准写法
-          if (/\?\.\w+\s*\([^)]*\)\s*(?:\?\?|\|\|)/.test(raw ?? '')) continue
+          if (/\?\.\w+\s*\([^)]*\)\s*(?:\?\?|\|\|)/.test(raw)) continue
 
           // 排除 15：非 ASCII 属性名可选链兜底（如 ?.动量 ?? null）
           // 理由：中文字符属性名的可选链 + 兜底是类型安全的标准写法
-          if (/\?\.[^\x00-\x7F]+\s*(?:\?\?|\|\|)/.test(raw ?? '')) continue
+          if (/\?\.[^\x00-\x7F]+\s*(?:\?\?|\|\|)/.test(raw)) continue
 
           // 排除 16：通用函数调用 + 兜底值（如 .pop() ?? ''、parseTimestamp(x) ?? 0）
           // 理由：函数返回值可能为 undefined，兜底是标准做法
-          if (!/\bcatch\b/.test(raw ?? '') && /\)\s*(?:\?\?|\|\|)/.test(raw ?? '')) continue
+          if (!/\bcatch\b/.test(raw) && /\)\s*(?:\?\?|\|\|)/.test(raw)) continue
 
           // 排除 17：类型断言含右括号 + 兜底值（如 (args.x as string) ?? 'composite'）
           // 理由：类型断言后的兜底是防御性编程
-          if (/as\s+\w+\)\s*(?:\?\?|\|\|)/.test(raw ?? '')) continue
+          if (/as\s+\w+\)\s*(?:\?\?|\|\|)/.test(raw)) continue
 
           // ── 严重级别判定 ──
 
@@ -548,7 +548,7 @@ function scanFile(file: string): Finding[] {
           if (pattern.type === 'zero' &&
               (rel.startsWith('src/store/') || rel.startsWith('src/services/'))) {
             const mathOps = /[+\-*/][^=]|[^=!<>]>[^=]|[^=!<>]<[^=]|===|!==/
-            if (mathOps.test(raw ?? '')) {
+            if (mathOps.test(raw)) {
               severity = 'Critical'
             }
           }
@@ -559,7 +559,7 @@ function scanFile(file: string): Finding[] {
             severity,
             category: '静默回退',
             message: `发现静默回退模式 ${pattern.text}`,
-            context: trimmed!.slice(0, 80),
+            context: trimmed.slice(0, 80),
           })
         }
       }

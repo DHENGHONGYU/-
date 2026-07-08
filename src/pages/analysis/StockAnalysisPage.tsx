@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useParams } from 'react-router'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { ScoreHistoryPanel } from '@/components/analysis/score/ScoreHistoryPanel'
+import { CandlestickChart, type CandlestickChartData } from '@/components/chart/CandlestickChart'
 import { useStockAnalysisStore } from '@/store/stockAnalysisStore'
 import { getLogger } from '@/lib/logger'
 
@@ -17,6 +18,19 @@ export default function StockAnalysisPage(): React.JSX.Element {
   const quotes = useStockAnalysisStore((s) => s.quotes)
   const score = useStockAnalysisStore((s) => s.v6Score)
   const scoreLoading = useStockAnalysisStore((s) => s.scoreLoading)
+
+  // K线数据映射为 CandlestickChart 所需结构
+  const candleData = useMemo<CandlestickChartData[]>(() => {
+    if (!quotes?.history?.length) return []
+    return quotes.history.map((bar) => ({
+      time: bar.date,
+      open: bar.open,
+      high: bar.high,
+      low: bar.low,
+      close: bar.close,
+      volume: bar.volume,
+    }))
+  }, [quotes])
 
   // 从 Store 获取 actions
   const loadStockAnalysis = useStockAnalysisStore((s) => s.loadStockAnalysis)
@@ -110,6 +124,13 @@ export default function StockAnalysisPage(): React.JSX.Element {
                   最新 K线 {quotes.latest.date}：开 {quotes.latest.open.toFixed(2)} / 高{' '}
                   {quotes.latest.high.toFixed(2)} / 低 {quotes.latest.low.toFixed(2)} / 收{' '}
                   {quotes.latest.close.toFixed(2)}
+                </div>
+              )}
+
+              {candleData.length > 0 && (
+                <div>
+                  <p className="mb-2 text-sm font-medium text-muted-foreground">K线走势</p>
+                  <CandlestickChart data={candleData} height={400} />
                 </div>
               )}
 

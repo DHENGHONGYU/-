@@ -94,6 +94,13 @@ const ACTION_TO_STORE_MAP: Record<string, StoreName> = {
   [ENVELOPE_ACTION.strategyValuePitRefresh]: STORE_NAME.valuePitScores,
   [ENVELOPE_ACTION.strategyRotationSignalDetect]: STORE_NAME.rotationScores,
   [ENVELOPE_ACTION.saveWatchlist]: STORE_NAME.watchlists,
+  // ── RBAC 6 表写入通道（v24 新增） ──
+  [ENVELOPE_ACTION.saveRbacUser]: STORE_NAME.rbacUsers,
+  [ENVELOPE_ACTION.saveRbacRole]: STORE_NAME.rbacRoles,
+  [ENVELOPE_ACTION.saveRbacPermission]: STORE_NAME.rbacPermissions,
+  [ENVELOPE_ACTION.saveRbacUserRole]: STORE_NAME.rbacUserRoles,
+  [ENVELOPE_ACTION.saveRbacRolePermission]: STORE_NAME.rbacRolePermissions,
+  [ENVELOPE_ACTION.saveRbacAuditLog]: STORE_NAME.rbacPermissionAuditLogs,
 }
 
 function inferStore(action: string): StoreName {

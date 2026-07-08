@@ -26,8 +26,9 @@ export const INTELLIGENT_SCORE_EXPLANATION_CONFIG = {
 export const INTELLIGENT_SCORE_EXPLANATION_LABELS = {
   title: '智能评分解释',
   radarTitle: '维度雷达',
-  heatmapTitle: '因子热力图',
   keyFactorsTitle: '关键因子',
+  heatmapTitle: '因子热力图',
+  waterfallTitle: '因子贡献瀑布图',
   chainTitle: '思维链',
   expandChain: '展开思维链',
   collapseChain: '收起思维链',

@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/Button'
 import { DataState } from '@/components/ui/DataState'
 import { ScoreRadar } from '@/components/chart/ScoreRadar'
 import { FactorHeatmap, type FactorHeatmapData } from '@/components/chart/FactorHeatmap'
+import { ScoreFactorWaterfall } from '@/components/analysis/score/ScoreFactorWaterfall'
 import { sanitizeLlmOutput } from '@/utils/xssSanitizer'
 import type { IntelligentScore } from '@/data/types'
 import {
@@ -144,6 +145,18 @@ export const IntelligentScoreExplanation = memo(function IntelligentScoreExplana
                     minValue={0}
                     maxValue={SCORE_SCALE_MAX}
                     height={Math.max(160, Math.ceil(heatmapData.length / 3) * 64)}
+                  />
+                </div>
+              )}
+
+              {result.dimensionScores.length > 0 && (
+                <div>
+                  <p className="mb-2 text-sm font-medium text-muted-foreground">
+                    {INTELLIGENT_SCORE_EXPLANATION_LABELS.waterfallTitle}
+                  </p>
+                  <ScoreFactorWaterfall
+                    dimensionScores={result.dimensionScores}
+                    height={360}
                   />
                 </div>
               )}

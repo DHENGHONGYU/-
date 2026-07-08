@@ -1,7 +1,7 @@
 /**
  * @module ScoreFactorWaterfall
  * @description V6 评分因子贡献瀑布图组件。
- * - 数据只读来自 V6ScoreEngine.audit().factorContributions
+ * - 数据只读：优先 V6ScoreEngine.audit().factorContributions；audit 缺失时从维度分 DimensionScore[] 派生
  * - 零硬编码：颜色、阈值均来自主题令牌与引擎配置
  * - 处理 loading / empty / data 三态
  */
@@ -20,16 +20,19 @@ import {
 import { LoadingState } from '@/components/ui/LoadingState'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { ErrorState } from '@/components/ui/ErrorState'
-import { COLOR_TOKENS, twText } from '@/constants/theme.tokens'
+import { COLOR_TOKENS, twBg, twText } from '@/constants/theme.tokens'
 import type { FactorContribution, ScoreAuditTrail } from '@/services/scoring/v6-engine'
+import type { DimensionScore } from '@/data/types'
 
 // ============================================================
 // Types
 // ============================================================
 
 export interface ScoreFactorWaterfallProps {
-  /** V6ScoreEngine.audit() 输出；组件只读 */
+  /** V6ScoreEngine.audit() 输出；组件只读，优先级高于 dimensionScores */
   audit?: ScoreAuditTrail | null
+  /** 评分维度分（DimensionScore[]）；当 audit 缺失时，从维度分派生瀑布 */
+  dimensionScores?: DimensionScore[]
   /** 加载态 */
   loading?: boolean
   /** 错误信息 */
@@ -44,6 +47,7 @@ interface WaterfallRow {
   value: number
   isTotal: boolean
   contribution?: FactorContribution
+  dimensionInfo?: { score: number; weight: number }
 }
 
 // ============================================================
@@ -90,6 +94,41 @@ function buildWaterfallData(contributions: FactorContribution[]): WaterfallRow[]
   return rows
 }
 
+/**
+ * 当 audit 缺失时，从评分维度分（DimensionScore[]）派生瀑布数据。
+ * 每个维度贡献 = score * weight，终点为各维度加权得分之和。
+ */
+function buildWaterfallFromDimensions(dimensions: DimensionScore[]): WaterfallRow[] {
+  const valid = dimensions.filter(
+    (d) => typeof d.score === 'number' && Number.isFinite(d.score),
+  )
+  if (valid.length === 0) return []
+
+  const rows: WaterfallRow[] = []
+  let cumulative = 0
+  for (const d of valid) {
+    const score = d.score as number
+    const value = score * d.weight
+    rows.push({
+      label: d.name,
+      base: cumulative,
+      value,
+      isTotal: false,
+      dimensionInfo: { score, weight: d.weight },
+    })
+    cumulative += value
+  }
+
+  rows.push({
+    label: '维度加权总分',
+    base: 0,
+    value: cumulative,
+    isTotal: true,
+  })
+
+  return rows
+}
+
 function formatPercent(value: number): string {
   return `${(value * 100).toFixed(1)}%`
 }
@@ -109,7 +148,7 @@ function WaterfallTooltip({ active, payload }: { active?: boolean; payload?: Arr
   if (!row) return null
   if (row.isTotal) {
     return (
-      <div className="rounded-md border bg-white p-2 shadow-sm text-xs">
+      <div className={`rounded-md border p-2 shadow-sm text-xs ${twBg('neutral', 50)}`}>
         <div className="font-medium">{row.label}</div>
         <div className={twText('slate', 600)}>{formatScore(row.value)}</div>
       </div>
@@ -117,10 +156,25 @@ function WaterfallTooltip({ active, payload }: { active?: boolean; payload?: Arr
   }
 
   const c = row.contribution
-  if (!c) return null
+  if (!c) {
+    if (row.dimensionInfo) {
+      const { score, weight } = row.dimensionInfo
+      return (
+        <div className={`rounded-md border p-2 shadow-sm text-xs space-y-1 ${twBg('neutral', 50)}`}>
+          <div className="font-medium">{row.label}</div>
+          <div className={twText('slate', 600)}>维度得分: {score.toFixed(2)}</div>
+          <div className={twText('slate', 600)}>权重: {formatPercent(weight)}</div>
+          <div className={twText('slate', 600)}>
+            加权贡献: {score.toFixed(2)} × {formatPercent(weight)} = {(score * weight).toFixed(3)}
+          </div>
+        </div>
+      )
+    }
+    return null
+  }
 
   return (
-    <div className="rounded-md border bg-neutral-50 p-2 shadow-sm text-xs space-y-1">
+    <div className={`rounded-md border p-2 shadow-sm text-xs space-y-1 ${twBg('neutral', 50)}`}>
       <div className="font-medium">{c.label}</div>
       <div className={twText('slate', 600)}>原始得分: {c.score.toFixed(2)}</div>
       <div className={twText('slate', 600)}>权重: {formatPercent(c.normalizedWeight)}</div>
@@ -135,6 +189,7 @@ function WaterfallTooltip({ active, payload }: { active?: boolean; payload?: Arr
 
 export function ScoreFactorWaterfall({
   audit,
+  dimensionScores,
   loading = false,
   error = null,
   height = 360,
@@ -142,8 +197,10 @@ export function ScoreFactorWaterfall({
   const contributions = audit?.factorContributions ?? []
 
   const rows = useMemo(() => {
-    return buildWaterfallData(contributions)
-  }, [contributions])
+    if (contributions.length > 0) return buildWaterfallData(contributions)
+    if (dimensionScores && dimensionScores.length > 0) return buildWaterfallFromDimensions(dimensionScores)
+    return []
+  }, [contributions, dimensionScores])
 
   if (loading) {
     return <LoadingState message="正在计算因子贡献..." />
@@ -153,7 +210,7 @@ export function ScoreFactorWaterfall({
     return <ErrorState error={error} variant="card" title="因子贡献加载失败" />
   }
 
-  if (contributions.length === 0 || rows.length === 0) {
+  if ((contributions.length === 0 && (dimensionScores?.length ?? 0) === 0) || rows.length === 0) {
     return <EmptyState title="暂无因子贡献数据" description="请先生成或刷新 V6 评分" />
   }
 

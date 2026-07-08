@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { useSectorAnalysisStore } from '@/store/sectorAnalysisStore'
+import { SectorRotationHeatmap } from '@/components/analysis/sector/SectorRotationHeatmap'
 import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
@@ -122,6 +123,15 @@ export default function SectorAnalysisPage(): React.JSX.Element {
               ))}
             </div>
           )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>板块轮动热力图</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <SectorRotationHeatmap />
         </CardContent>
       </Card>
     </div>

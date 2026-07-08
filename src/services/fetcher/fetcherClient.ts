@@ -120,41 +120,92 @@ export async function checkFetcherHealth(): Promise<{
 export async function collectBasic(
   symbol: string,
 ): Promise<CollectResponse<CollectBasicData>> {
-  return request<CollectResponse<CollectBasicData>>(API_COLLECT_BASIC, {
-    method: 'POST',
-    body: JSON.stringify({ symbol } satisfies CollectBasicRequest),
-  })
+  logger.info('[fetcherClient] collectBasic 开始请求', { symbol, path: API_COLLECT_BASIC })
+  const startTs = Date.now()
+  try {
+    const result = await request<CollectResponse<CollectBasicData>>(API_COLLECT_BASIC, {
+      method: 'POST',
+      body: JSON.stringify({ symbol } satisfies CollectBasicRequest),
+    })
+    const durationMs = Date.now() - startTs
+    logger.info('[fetcherClient] collectBasic 请求成功', {
+      symbol,
+      success: result.success,
+      durationMs,
+      stockName: result.data?.name,
+      price: result.data?.price,
+    })
+    return result
+  } catch (err) {
+    const durationMs = Date.now() - startTs
+    logger.error('[fetcherClient] collectBasic 请求失败', {
+      symbol,
+      durationMs,
+      error: err instanceof Error ? err.message : String(err),
+    })
+    throw err
+  }
 }
 
 export async function collectKline(
   params: CollectKlineRequest,
 ): Promise<CollectResponse<CollectKlineData>> {
-  return request<CollectResponse<CollectKlineData>>(API_COLLECT_KLINE, {
-    method: 'POST',
-    body: JSON.stringify(params),
+  logger.info('[fetcherClient] collectKline 开始请求', {
+    symbol: params.symbol,
+    period: params.period,
+    adjust: params.adjust,
+    path: API_COLLECT_KLINE,
   })
+  const startTs = Date.now()
+  try {
+    const result = await request<CollectResponse<CollectKlineData>>(API_COLLECT_KLINE, {
+      method: 'POST',
+      body: JSON.stringify(params),
+    })
+    const durationMs = Date.now() - startTs
+    logger.info('[fetcherClient] collectKline 请求成功', {
+      symbol: params.symbol,
+      success: result.success,
+      durationMs,
+      historyCount: result.data?.history?.length ?? 0,
+    })
+    return result
+  } catch (err) {
+    const durationMs = Date.now() - startTs
+    logger.error('[fetcherClient] collectKline 请求失败', {
+      symbol: params.symbol,
+      durationMs,
+      error: err instanceof Error ? err.message : String(err),
+    })
+    throw err
+  }
 }
 
 export async function collectFinancial(
   symbol: string,
 ): Promise<CollectResponse<CollectFinancialData>> {
-  logger.info('[fetcherClient] collectFinancial 开始请求', { symbol })
+  logger.info('[fetcherClient] collectFinancial 开始请求', { symbol, path: API_COLLECT_FINANCIAL })
+  const startTs = Date.now()
   try {
     const result = await request<CollectResponse<CollectFinancialData>>(API_COLLECT_FINANCIAL, {
       method: 'POST',
       body: JSON.stringify({ symbol } satisfies CollectFinancialRequest),
     })
+    const durationMs = Date.now() - startTs
     logger.info('[fetcherClient] collectFinancial 请求成功', {
       symbol,
       success: result.success,
+      durationMs,
       reportDate: result.data?.report_date,
       revenue: result.data?.revenue,
       netProfit: result.data?.net_profit,
     })
     return result
   } catch (err) {
+    const durationMs = Date.now() - startTs
     logger.error('[fetcherClient] collectFinancial 请求失败', {
       symbol,
+      durationMs,
       error: err instanceof Error ? err.message : String(err),
     })
     throw err

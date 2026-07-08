@@ -108,3 +108,26 @@ __pycache__/
 /scripts/component-audit-report.txt
 /scripts/component-audit-data.json
 NUL
+
+# --- 2026-07-08 补充：排除构建/测试噪声，保持版本库整洁 ---
+# Vite 临时配置快照（dev/build 时生成，可重建）
+vite.config.ts.timestamp-*.mjs
+
+# 组件/Widget 测试日志与结果产物
+widget_test_logs/
+widget_test_logs_run2/
+test-results-f01/
+dist_s1verify/
+dist_preview/
+dist_e2e/
+dist-e2e/
+
+# 仓库根目录的技能副本/草稿（技能应置于 .workbuddy/skills 或 ~/.workbuddy/skills）
+code-quality-compliance/
+code-quality-compliance.zip
+_s1check.cjs
+_backfill_plan.py
+checklist_record.json
+
+# Agent 工作日志（保留 .workbuddy/memory 与 .workbuddy/skills 纳入版本控制）
+.workbuddy/*.log
