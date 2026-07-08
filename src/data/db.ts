@@ -1,103 +1,23 @@
-import { DB_NAME, DB_VERSION, STORE_NAME } from '@/config/dbConfig'
+import { STORE_NAME } from '@/config/dbConfig'
 import { getLogger } from '@/lib/logger'
-import { createSchema } from './db-schema'
-import { runMigrations, MIGRATIONS } from './db-migrations'
+import { openDB } from './db-connection'
 
 // === 工具函数重新导出（PR-6 步骤 1.1：从 db-utils.ts 拆分） ===
 // 保持 '@/data/db' 路径向后兼容，所有调用点零修改
 export { generateId, now } from './db-utils'
-
-const logger = getLogger()
-
-const STORE_NAMES = Object.values(STORE_NAME)
 
 // === 迁移框架重新导出（PR-6 步骤 1.2：从 db-migrations.ts 拆分） ===
 // 保持 '@/data/db' 路径向后兼容，所有调用点零修改
 export { runMigrations, MIGRATIONS } from './db-migrations'
 export type { Migration, MigrationContext } from './db-migrations'
 
-let dbInstance: IDBDatabase | null = null
+// === 连接管理重新导出（PR-6 步骤 1.4：从 db-connection.ts 拆分） ===
+// 仅供测试与诊断使用，业务代码应通过 V6Database.init() 获取连接
+export { deleteDB, resetDbInstance, getDbInstance } from './db-connection'
 
-function deleteDB(): Promise<void> {
-  logger.info('[DB] Initiating database deletion...')
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.deleteDatabase(DB_NAME)
-    request.onsuccess = () => {
-      logger.info('[DB] Database deleted successfully')
-      resolve()
-    }
-    request.onerror = () => {
-      logger.error('[DB] Failed to delete database:', request.error ? { error: request.error.message } : undefined)
-      reject(request.error instanceof Error ? request.error : new Error(String(request.error)))
-    }
-    request.onblocked = () => {
-      logger.warn('[DB] Database delete blocked - other tabs may have active connections')
-      reject(new Error('Database delete blocked'))
-    }
-  })
-}
+const logger = getLogger()
 
-async function openDB(): Promise<IDBDatabase> {
-  if (dbInstance) {
-    logger.debug('[DB] Returning existing database instance')
-    return Promise.resolve(dbInstance)
-  }
-
-  logger.info(`[DB] Opening database "${DB_NAME}" with target version ${DB_VERSION}...`)
-
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, DB_VERSION)
-
-    request.onerror = () => {
-      const error = request.error
-      logger.error('[DB] Database open request failed:', error?.message ? { error: error.message } : undefined)
-      if (error?.name === 'VersionError') {
-        logger.warn(`[DB] Version conflict: existing DB version higher than requested v${DB_VERSION}`)
-        if (import.meta.env.DEV) {
-          logger.warn('[DB] DEV mode: attempting to delete old database and recreate...')
-          deleteDB()
-            .then(() => {
-              dbInstance = null
-              logger.info('[DB] Reopening database after deletion...')
-              openDB().then(resolve).catch(reject)
-            })
-            .catch((e) => {
-              logger.error('[DB] Failed to delete old database:', { error: e instanceof Error ? e.message : String(e) })
-              dbInstance = null
-              reject(error)
-            })
-        } else {
-          logger.error('[DB] Production mode: refusing to auto-delete existing data')
-          reject(new Error('数据库版本冲突，请清除浏览器缓存后重试'))
-        }
-      } else {
-        reject(error instanceof Error ? error : new Error(String(error)))
-      }
-    }
-
-    request.onsuccess = () => {
-      dbInstance = request.result
-      logger.info(`[DB] Database opened successfully. Current version: ${dbInstance.version}`)
-      resolve(request.result)
-    }
-
-    request.onupgradeneeded = (event) => {
-      const req = event.target as IDBOpenDBRequest | null
-      const db = req?.result as IDBDatabase
-      const oldVersion = (event).oldVersion
-      const upgradeTx = req?.transaction
-      logger.info(`[DB] Upgrade needed: v${oldVersion} → v${DB_VERSION} | Existing stores: [${Array.from(db.objectStoreNames).join(', ')}]`)
-
-      // Schema 创建委托给 db-schema.ts（PR-6 步骤 1.3）
-      createSchema(db, request, logger)
-
-      // ── D-01：运行已注册迁移（在基线 Schema 就绪后） ──
-      runMigrations(db, oldVersion, DB_VERSION, MIGRATIONS, logger, upgradeTx ?? undefined)
-
-      logger.info(`[DB] Schema upgrade complete. Final stores: [${Array.from(db.objectStoreNames).join(', ')}]`)
-    }
-  })
-}
+const STORE_NAMES = Object.values(STORE_NAME)
 
 export class V6Database {
   private db: IDBDatabase | null = null
