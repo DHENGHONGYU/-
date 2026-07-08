@@ -94,8 +94,18 @@ const ACTION_TO_STORE_MAP: Record<string, StoreName> = {
   [ENVELOPE_ACTION.strategyValuePitRefresh]: STORE_NAME.valuePitScores,
   [ENVELOPE_ACTION.strategyRotationSignalDetect]: STORE_NAME.rotationScores,
   [ENVELOPE_ACTION.saveWatchlist]: STORE_NAME.watchlists,
+  // ── 批量操作通道 ──
+  [ENVELOPE_ACTION.bulkInsertStock]: STORE_NAME.stocks,
+  [ENVELOPE_ACTION.bulkSaveDailyQuotes]: STORE_NAME.dailyQuotes,
+  [ENVELOPE_ACTION.bulkSaveScores]: STORE_NAME.v6Scores,
+  [ENVELOPE_ACTION.bulkSaveFinancialReports]: STORE_NAME.financialReports,
+  [ENVELOPE_ACTION.bulkSaveNews]: STORE_NAME.news,
   // ── RBAC 6 表写入通道（v24 新增） ──
   [ENVELOPE_ACTION.saveRbacUser]: STORE_NAME.rbacUsers,
+  // ── 查询操作通道（通过 payload.store 指定实际目标） ──
+  [ENVELOPE_ACTION.queryGet]: STORE_NAME.stocks,
+  [ENVELOPE_ACTION.queryList]: STORE_NAME.stocks,
+  [ENVELOPE_ACTION.queryByIndex]: STORE_NAME.stocks,
   [ENVELOPE_ACTION.saveRbacRole]: STORE_NAME.rbacRoles,
   [ENVELOPE_ACTION.saveRbacPermission]: STORE_NAME.rbacPermissions,
   [ENVELOPE_ACTION.saveRbacUserRole]: STORE_NAME.rbacUserRoles,
@@ -344,6 +354,18 @@ export class DataBridge {
         return
       }
 
+      if (this.isQueryAction(meta.action)) {
+        logger.info(`[DataBridge] Routing to query: action="${meta.action}"`)
+        await this.routeToQuery(envelope, targetStore)
+        return
+      }
+
+      if (this.isEventAction(meta.action)) {
+        logger.info(`[DataBridge] Routing to event channel: action="${meta.action}"`)
+        await this.routeToEvent(envelope)
+        return
+      }
+
       if (
         meta.action === ENVELOPE_ACTION.resetAll ||
         meta.action === ENVELOPE_ACTION.importAll ||
@@ -403,8 +425,108 @@ export class DataBridge {
     }
   }
 
+  private getMatchingSubscribers(channel: string): Set<EnvelopeCallback> {
+    const matching = new Set<EnvelopeCallback>()
+
+    for (const [subChannel, callbacks] of this.subscribers) {
+      if (subChannel === channel) {
+        callbacks.forEach((cb) => matching.add(cb))
+      } else if (subChannel.includes(':*')) {
+        const prefix = subChannel.split(':')[0]
+        if (prefix !== undefined && channel.startsWith(prefix)) {
+          callbacks.forEach((cb) => matching.add(cb))
+        }
+      } else if (channel.includes(':') && subChannel === channel.split(':')[0]) {
+        callbacks.forEach((cb) => matching.add(cb))
+      }
+    }
+
+    return matching
+  }
+
+  private extractSymbolFromPayload(payload: unknown): string | undefined {
+    if (payload != null && typeof payload === 'object') {
+      if ('symbol' in payload) {
+        return String((payload as Record<string, unknown>).symbol)
+      }
+      if (Array.isArray(payload) && payload.length > 0) {
+        const firstItem = payload[0]
+        if (typeof firstItem === 'object' && firstItem != null && 'symbol' in firstItem) {
+          const symbol = (firstItem as Record<string, unknown>).symbol
+          return typeof symbol === 'string' ? symbol : undefined
+        }
+      }
+    }
+    return undefined
+  }
+
   private isMarketEnvelope(action: string): boolean {
     return action === ENVELOPE_ACTION.saveDailyQuotes
+  }
+
+  private isEventAction(action: string): boolean {
+    const eventActions = [
+      ENVELOPE_ACTION.newsArticleLoaded,
+      ENVELOPE_ACTION.holdingsDataLoaded,
+      ENVELOPE_ACTION.tradeActionExecuted,
+      ENVELOPE_ACTION.loadHoldingsData,
+    ] as const
+    return (eventActions as readonly string[]).includes(action)
+  }
+
+  private isQueryAction(action: string): boolean {
+    const queryActions = [
+      ENVELOPE_ACTION.queryGet,
+      ENVELOPE_ACTION.queryList,
+      ENVELOPE_ACTION.queryByIndex,
+    ] as const
+    return (queryActions as readonly string[]).includes(action)
+  }
+
+  private async routeToQuery(envelope: StandardEnvelope, store: StoreName): Promise<void> {
+    const { meta, payload } = envelope
+    
+    logger.info(`[DataBridge] routeToQuery() called: action="${meta.action}", store="${store}"`)
+
+    const queryRequest: QueryRequest = {
+      action: meta.action as QueryRequest['action'],
+      store,
+      key: payload != null && typeof payload === 'object' && 'key' in payload
+        ? String((payload as Record<string, unknown>).key)
+        : undefined,
+      indexName: payload != null && typeof payload === 'object' && 'indexName' in payload
+        ? String((payload as Record<string, unknown>).indexName)
+        : undefined,
+      indexValue: payload != null && typeof payload === 'object' && 'indexValue' in payload
+        ? (payload as Record<string, unknown>).indexValue
+        : undefined,
+      source: meta.source,
+    }
+
+    const result = await this.query(queryRequest)
+    
+    const newPayload = payload != null && typeof payload === 'object'
+      ? { ...(payload as Record<string, unknown>), queryResult: result }
+      : { queryResult: result }
+    
+    this.broadcast(`query:${store}`, {
+      meta: envelope.meta,
+      payload: newPayload,
+    })
+
+    logger.info(`[DataBridge] routeToQuery() completed: action="${meta.action}", success=${result.success}`)
+  }
+
+  private async routeToEvent(envelope: StandardEnvelope): Promise<void> {
+    const { meta } = envelope
+    const eventChannel = `event:${meta.action.toLowerCase()}`
+    
+    logger.info(`[DataBridge] routeToEvent() called: action="${meta.action}", eventChannel="${eventChannel}"`)
+
+    this.broadcast(eventChannel, envelope)
+    this.broadcast('event:*', envelope)
+
+    logger.info(`[DataBridge] routeToEvent() completed: action="${meta.action}"`)
   }
 
   get failedEnvelopes(): readonly StandardEnvelope[] {
@@ -529,33 +651,51 @@ export class DataBridge {
     })
   }
 
-  private broadcast(channel: string, envelope: StandardEnvelope): void {
+  public broadcast(channel: string, envelope: StandardEnvelope): void {
     const startTs = Date.now()
     logger.debug(`[DataBridge] broadcast() called: channel="${channel}", action="${envelope.meta.action}"`)
 
-    const callbacks = this.subscribers.get(channel)
-    if (!callbacks) {
-      logger.debug(`[DataBridge] broadcast() skipped: no subscribers for channel "${channel}"`)
-      return
+    const symbol = this.extractSymbolFromPayload(envelope.payload)
+    const channelsToBroadcast: string[] = [channel]
+
+    if (symbol) {
+      channelsToBroadcast.push(`${channel}:${symbol}`)
+      logger.debug(`[DataBridge] Adding symbol-level channel: "${channel}:${symbol}"`)
     }
 
-    const callbackCount = callbacks.size
-    let successCount = 0
-    let errorCount = 0
-    let subscriberIndex = 0
+    let totalCallbackCount = 0
+    let totalSuccessCount = 0
+    let totalErrorCount = 0
 
-    callbacks.forEach((cb) => {
-      subscriberIndex++
-      try {
-        cb(envelope)
-        successCount++
-      } catch (err) {
-        errorCount++
-        logger.error(`[DataBridge] Subscriber #${subscriberIndex} error for channel "${channel}"`, { error: err })
+    for (const targetChannel of channelsToBroadcast) {
+      const callbacks = this.getMatchingSubscribers(targetChannel)
+      if (callbacks.size === 0) {
+        logger.debug(`[DataBridge] broadcast() skipped: no matching subscribers for channel "${targetChannel}"`)
+        continue
       }
-    })
 
-    logger.info(`[DataBridge] broadcast() to subscribers: channel="${channel}", listeners=${callbackCount}, success=${successCount}, errors=${errorCount}`)
+      const callbackCount = callbacks.size
+      let successCount = 0
+      let errorCount = 0
+      let subscriberIndex = 0
+
+      callbacks.forEach((cb) => {
+        subscriberIndex++
+        try {
+          cb(envelope)
+          successCount++
+        } catch (err) {
+          errorCount++
+          logger.error(`[DataBridge] Subscriber #${subscriberIndex} error for channel "${targetChannel}"`, { error: err })
+        }
+      })
+
+      totalCallbackCount += callbackCount
+      totalSuccessCount += successCount
+      totalErrorCount += errorCount
+
+      logger.info(`[DataBridge] broadcast() to subscribers: channel="${targetChannel}", listeners=${callbackCount}, success=${successCount}, errors=${errorCount}`)
+    }
 
     const eventName = `${channel}${CHANGED_SUFFIX}`
     logger.debug(`[DataBridge] Emitting eventBus: "${eventName}"`)
@@ -568,6 +708,10 @@ export class DataBridge {
     const duration = Date.now() - startTs
     if (duration > BROADCAST_SLOW_THRESHOLD_MS) {
       logger.warn(`[DataBridge] broadcast() took ${duration}ms for channel "${channel}"`)
+    }
+
+    if (totalCallbackCount > 0) {
+      logger.info(`[DataBridge] broadcast() completed: channel="${channel}", totalListeners=${totalCallbackCount}, totalSuccess=${totalSuccessCount}, totalErrors=${totalErrorCount}`)
     }
   }
 }
