@@ -45,12 +45,12 @@ const {
   const unsubscribeTaskSchedulerFn = vi.fn()
   const unsubscribeDataBridgeFn = vi.fn()
 
-  const mockSubscribeTaskScheduler = vi.fn().mockImplementation((callback: unknown) => {
+  const mockSubscribeTaskScheduler = vi.fn().mockImplementation((callback: (taskId: string, rawData: unknown, error?: Error) => void) => {
     capturedTaskSchedulerCallback.callback = callback
     return unsubscribeTaskSchedulerFn
   })
 
-  const mockSubscribeDataBridge = vi.fn().mockImplementation((_channel: string, callback: unknown) => {
+  const mockSubscribeDataBridge = vi.fn().mockImplementation((_channel: string, callback: (envelope: unknown) => void) => {
     capturedDataBridgeCallback.callback = callback
     return unsubscribeDataBridgeFn
   })
