@@ -152,6 +152,32 @@ export interface PromptTemplate {
 }
 
 // ============================================================
+// MCP 调用方上下文（P0 权限控制新增）
+// ============================================================
+
+/**
+ * MCP 调用方角色 — 用于工具层权限校验。
+ *
+ * 与 DataBridge 的 ACL_MATRIX（数据层权限）形成纵深防御：
+ *   - ACL_MATRIX: module → store → operation（数据层）
+ *   - MCP_ACL_MATRIX: caller → server → tool（工具层）
+ */
+export type McpCallerRole = 'agent' | 'ui' | 'ci' | 'system'
+
+/**
+ * MCP 调用方上下文 — 在 Client/Bridge 调用入口传入，用于权限校验和审计。
+ *
+ * `caller` 默认为 `agent`（向后兼容：未传入时使用默认值）。
+ * `callerId` 为可选的调用方标识（如组件名、Agent ID），用于审计日志。
+ */
+export interface McpCallerContext {
+  /** 调用方角色 */
+  caller: McpCallerRole
+  /** 调用方标识（如组件名、Agent ID，用于审计日志） */
+  callerId?: string
+}
+
+// ============================================================
 // MCP Server 接口
 // ============================================================
 
@@ -163,20 +189,45 @@ export interface MCPServer {
   /** 列出所有暴露的工具 */
   listTools(): ToolDescriptor[]
 
-  /** 调用指定工具 */
-  callTool(name: string, args: Record<string, unknown>): Promise<ToolResult>
+  /**
+   * 调用指定工具
+   *
+   * @param name - 工具名称
+   * @param args - 调用参数
+   * @param context - 调用方上下文（用于权限校验，可选，向后兼容）
+   */
+  callTool(
+    name: string,
+    args: Record<string, unknown>,
+    context?: McpCallerContext,
+  ): Promise<ToolResult>
 
   /** 列出所有暴露的资源模板 */
   listResources(): ResourceTemplate[]
 
-  /** 读取指定资源 */
-  readResource(uri: string): Promise<ResourceContent>
+  /**
+   * 读取指定资源
+   *
+   * @param uri - 资源 URI
+   * @param context - 调用方上下文（用于权限校验，可选）
+   */
+  readResource(uri: string, context?: McpCallerContext): Promise<ResourceContent>
 
   /** 列出所有暴露的 Prompt 模板 */
   listPrompts(): PromptTemplate[]
 
-  /** 获取指定 Prompt */
-  getPrompt(name: string, args: Record<string, string>): Promise<PromptMessage[]>
+  /**
+   * 获取指定 Prompt
+   *
+   * @param name - Prompt 名称
+   * @param args - 模板参数
+   * @param context - 调用方上下文（用于权限校验，可选）
+   */
+  getPrompt(
+    name: string,
+    args: Record<string, string>,
+    context?: McpCallerContext,
+  ): Promise<PromptMessage[]>
 }
 
 // ============================================================
@@ -188,20 +239,49 @@ export interface MCPClient {
   /** 列出所有已注册 Server 的工具 */
   listAllTools(): Array<{ serverName: string; tool: ToolDescriptor }>
 
-  /** 调用指定 Server 的指定工具 */
-  callTool(serverName: string, toolName: string, args: Record<string, unknown>): Promise<ToolResult>
+  /**
+   * 调用指定 Server 的指定工具
+   *
+   * @param serverName - Server 名称
+   * @param toolName - Tool 名称
+   * @param args - 调用参数
+   * @param context - 调用方上下文（用于权限校验，可选，默认 agent 角色）
+   */
+  callTool(
+    serverName: string,
+    toolName: string,
+    args: Record<string, unknown>,
+    context?: McpCallerContext,
+  ): Promise<ToolResult>
 
   /** 列出所有已注册 Server 的资源 */
   listAllResources(): Array<{ serverName: string; resource: ResourceTemplate }>
 
-  /** 读取指定 URI 的资源 */
-  readResource(uri: string): Promise<ResourceContent>
+  /**
+   * 读取指定 URI 的资源
+   *
+   * @param uri - 资源 URI
+   * @param context - 调用方上下文（用于权限校验，可选）
+   */
+  readResource(uri: string, context?: McpCallerContext): Promise<ResourceContent>
 
   /** 列出所有已注册 Server 的 Prompt 模板 */
   listAllPrompts(): Array<{ serverName: string; prompt: PromptTemplate }>
 
-  /** 获取指定 Prompt */
-  getPrompt(serverName: string, promptName: string, args: Record<string, string>): Promise<PromptMessage[]>
+  /**
+   * 获取指定 Prompt
+   *
+   * @param serverName - Server 名称
+   * @param promptName - Prompt 名称
+   * @param args - 模板参数
+   * @param context - 调用方上下文（用于权限校验，可选）
+   */
+  getPrompt(
+    serverName: string,
+    promptName: string,
+    args: Record<string, string>,
+    context?: McpCallerContext,
+  ): Promise<PromptMessage[]>
 }
 
 // ============================================================

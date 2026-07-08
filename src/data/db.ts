@@ -1,6 +1,6 @@
 import { STORE_NAME } from '@/config/dbConfig'
 import { getLogger } from '@/lib/logger'
-import { openDB } from './db-connection'
+import { openDB, resetDbInstance } from './db-connection'
 
 // === 工具函数重新导出（PR-6 步骤 1.1：从 db-utils.ts 拆分） ===
 // 保持 '@/data/db' 路径向后兼容，所有调用点零修改
@@ -60,6 +60,36 @@ export class V6Database {
     logger.debug('[DB] Waiting for database initialization...')
     await this._readyPromise
     logger.debug('[DB] Database initialization confirmed ready')
+  }
+
+  /**
+   * 关闭数据库连接并重置单例状态（供测试间串行运行时重置 db 单例使用）
+   *
+   * 行为：
+   * 1. 关闭底层 IDBDatabase 连接（若存在）
+   * 2. 重置 _isReady 标志和 db 引用
+   * 3. 清空 db-connection 中的 dbInstance 缓存
+   * 4. 重建 ready Promise，使下次 init() 能重新打开全新连接
+   *
+   * 业务代码禁止调用。
+   */
+  close(): void {
+    if (this.db) {
+      try {
+        this.db.close()
+      } catch (err) {
+        logger.warn('[DB] V6Database.close() error while closing IDBDatabase', {
+          error: err instanceof Error ? err.message : String(err),
+        })
+      }
+      this.db = null
+    }
+    this._isReady = false
+    resetDbInstance()
+    this._readyPromise = new Promise<void>((resolve) => {
+      this._readyResolve = resolve
+    })
+    logger.info('[DB] V6Database.close() completed, instance reset for reuse')
   }
 
   /**
@@ -305,3 +335,14 @@ export class V6Database {
 }
 
 export const db = new V6Database()
+
+/**
+ * 关闭数据库连接并重置单例（供测试使用）
+ *
+ * 等价于 db.close()，关闭底层 IDBDatabase 连接并重置 V6Database 状态，
+ * 使下一次 db.init() 能重新打开全新连接。用于同一进程串行运行多个测试
+ * 文件时重置 db 单例，解决 fake-indexeddb 状态冲突。
+ */
+export function close(): void {
+  db.close()
+}

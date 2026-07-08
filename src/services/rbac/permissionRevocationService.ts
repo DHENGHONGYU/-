@@ -300,7 +300,7 @@ class PermissionRevocationService {
         })),
       })
 
-      const details: RevocationTaskResult['details'] = []
+      const details: Array<RevocationTaskResult['details'][number]> = []
       const batches = Math.ceil(expiredMappings.length / batchLimit)
       this._trace(traceId, 'expiry:batch-start', 'Starting batch revocation', {
         totalExpired: expiredMappings.length,
@@ -478,10 +478,10 @@ class PermissionRevocationService {
     user: UserEntity,
     traceId: string,
     now: number,
-  ): Promise<RevocationTaskResult['details']> {
+  ): Promise<Array<RevocationTaskResult['details'][number]>> {
     const userProcessStartTs = Date.now()
     const inactiveDays = Math.floor((now - user.lastActiveAt) / (24 * 60 * 60 * 1000))
-    const details: RevocationTaskResult['details'] = []
+    const details: Array<RevocationTaskResult['details'][number]> = []
 
     try {
       this._trace(traceId, 'zombie:user-start', 'Processing zombie user', {
@@ -625,7 +625,7 @@ class PermissionRevocationService {
       }
       this.lastZombieResult = zombieResult
 
-      const details: RevocationTaskResult['details'] = []
+      const details: Array<RevocationTaskResult['details'][number]> = []
       this._trace(traceId, 'zombie:user-start', 'Processing zombie users', {
         zombieUserCount: zombieUsers.length,
       })

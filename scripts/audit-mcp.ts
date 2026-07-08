@@ -100,18 +100,25 @@ function analyzeFile(filePath: string): { violations: Finding[]; warnings: Findi
   const content = fs.readFileSync(filePath, 'utf-8')
   const lines = content.split('\n')
 
+  // 豁免的服务模块（基础设施工具，非业务服务，或工厂模式获取实例）
+  const EXEMPTED_SERVICES = ['errorBus', 'system/monitorLogService', 'system/architectureService']
+
   // 检查 1: 页面/组件直接 import service（绕过 MCP）
   if (filePath.includes('pages') || filePath.includes('components')) {
     for (let i = 0; i < lines.length; i++) {
-      const match = DIRECT_SERVICE_IMPORT.exec(lines[i] ?? '')
+      const line = lines[i] ?? ''
+      if (line.startsWith('import type')) continue
+      const match = DIRECT_SERVICE_IMPORT.exec(line)
       if (match) {
+        const servicePath = match[1]
+        if (EXEMPTED_SERVICES.some(exempt => servicePath.startsWith(exempt))) continue
         violations.push({
           file: relativePath,
           line: i + 1,
           column: match.index + 1,
           type: 'direct-service-import',
-          message: `页面/组件直接 import services/${match[1]}，应通过 MCPClient 调用`,
-          context: lines[i].trim(),
+          message: `页面/组件直接 import services/${servicePath}，应通过 MCPClient 调用`,
+          context: line.trim(),
         })
       }
     }

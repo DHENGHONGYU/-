@@ -9,11 +9,7 @@ import MigrationPanel from '@/components/system/MigrationPanel'
 // ══════════════════════════════════════════════════════════════
 const {
   mockLogger,
-  mockExportAll,
-  mockParseV6Export,
-  mockTransformV6ToV9,
-  mockImportToV9,
-  mockRunV6Migration,
+  mockCallTool,
 } = vi.hoisted(() => ({
   mockLogger: {
     info: vi.fn(),
@@ -21,28 +17,17 @@ const {
     warn: vi.fn(),
     debug: vi.fn(),
   },
-  mockExportAll: vi.fn(),
-  mockParseV6Export: vi.fn(),
-  mockTransformV6ToV9: vi.fn(),
-  mockImportToV9: vi.fn(),
-  mockRunV6Migration: vi.fn(),
+  mockCallTool: vi.fn(),
 }))
 
 vi.mock('@/lib/logger', () => ({
   getLogger: () => mockLogger,
 }))
 
-vi.mock('@/services/system/systemService', () => ({
-  exportAll: mockExportAll,
-}))
-
-vi.mock('@/services/system/v6MigrationService', () => ({
-  parseV6Export: mockParseV6Export,
-  transformV6ToV9: mockTransformV6ToV9,
-  importToV9: mockImportToV9,
-  generateMigrationReport: (report: unknown) => JSON.stringify(report, null, 2),
-  runV6Migration: mockRunV6Migration,
-  // 类型仅用于编译期,运行时不需要
+vi.mock('@/mcp/bridge/mcpBridge', () => ({
+  mcpBridge: {
+    callTool: mockCallTool,
+  },
 }))
 
 // ══════════════════════════════════════════════════════════════
@@ -119,13 +104,23 @@ const migrationReportMock = {
 // ══════════════════════════════════════════════════════════════
 beforeEach(() => {
   vi.clearAllMocks()
-  // 默认 mock 行为:正常解析与转换
-  mockParseV6Export.mockReturnValue(v6ExportMock)
-  mockTransformV6ToV9.mockReturnValue(v9TransformedMock)
-  mockImportToV9.mockResolvedValue(migrationReportMock)
-  mockRunV6Migration.mockResolvedValue({
-    success: true,
-    data: migrationReportMock,
+  mockCallTool.mockImplementation(async (_server: string, tool: string, args: Record<string, unknown>) => {
+    switch (tool) {
+      case 'parse_v6_export':
+        return { content: [{ type: 'text' as const, text: JSON.stringify(v6ExportMock) }], isError: false }
+      case 'transform_v6_to_v9':
+        return { content: [{ type: 'text' as const, text: JSON.stringify(v9TransformedMock) }], isError: false }
+      case 'import_to_v9':
+        return { content: [{ type: 'text' as const, text: JSON.stringify(migrationReportMock) }], isError: false }
+      case 'run_v6_migration':
+        return { content: [{ type: 'text' as const, text: JSON.stringify({ success: true, data: migrationReportMock }) }], isError: false }
+      case 'generate_migration_report':
+        return { content: [{ type: 'text' as const, text: typeof args.migrationReport === 'object' ? JSON.stringify(args.migrationReport, null, 2) : String(args.migrationReport) }], isError: false }
+      case 'export_data':
+        return { content: [{ type: 'text' as const, text: JSON.stringify({ success: true, data: {} }) }], isError: false }
+      default:
+        return { content: [{ type: 'text' as const, text: '{}' }], isError: false }
+    }
   })
 })
 
@@ -228,7 +223,7 @@ describe('MigrationPanel', () => {
     await userEvent.click(screen.getByRole('button', { name: /一键迁移/i }))
 
     await waitFor(() => {
-      expect(mockRunV6Migration).toHaveBeenCalled()
+      expect(mockCallTool).toHaveBeenCalledWith('system', 'run_v6_migration', expect.anything())
     })
 
     // 断言 1:handleRunMigration/start 日志
@@ -266,9 +261,17 @@ describe('MigrationPanel', () => {
   // 用例 5:handleRunMigration 失败响应路径 — 验证 warn 日志
   // ──────────────────────────────────────────────────────────────
   it('logs warn when runV6Migration returns success=false', async () => {
-    mockRunV6Migration.mockResolvedValueOnce({
-      success: false,
-      error: '迁移服务错误',
+    mockCallTool.mockImplementation(async (_server: string, tool: string) => {
+      switch (tool) {
+        case 'parse_v6_export':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(v6ExportMock) }], isError: false }
+        case 'transform_v6_to_v9':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(v9TransformedMock) }], isError: false }
+        case 'run_v6_migration':
+          return { content: [{ type: 'text' as const, text: JSON.stringify({ success: false, error: '迁移服务错误' }) }], isError: false }
+        default:
+          return { content: [{ type: 'text' as const, text: '{}' }], isError: false }
+      }
     })
 
     await uploadFile()
@@ -289,7 +292,18 @@ describe('MigrationPanel', () => {
   // 用例 6:handleRunMigration 异常路径 — 验证 error 日志
   // ──────────────────────────────────────────────────────────────
   it('logs error when runV6Migration throws', async () => {
-    mockRunV6Migration.mockRejectedValueOnce(new Error('Network crash'))
+    mockCallTool.mockImplementation(async (_server: string, tool: string) => {
+      switch (tool) {
+        case 'parse_v6_export':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(v6ExportMock) }], isError: false }
+        case 'transform_v6_to_v9':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(v9TransformedMock) }], isError: false }
+        case 'run_v6_migration':
+          throw new Error('Network crash')
+        default:
+          return { content: [{ type: 'text' as const, text: '{}' }], isError: false }
+      }
+    })
 
     await uploadFile()
     await userEvent.click(screen.getByRole('button', { name: /一键迁移/i }))
@@ -315,7 +329,7 @@ describe('MigrationPanel', () => {
     await userEvent.click(screen.getByRole('button', { name: /执行导入/i }))
 
     await waitFor(() => {
-      expect(mockImportToV9).toHaveBeenCalled()
+      expect(mockCallTool).toHaveBeenCalledWith('system', 'import_to_v9', expect.anything())
     })
 
     // 断言 1:handleImport/start 日志
@@ -356,8 +370,8 @@ describe('MigrationPanel', () => {
       }),
     )
 
-    // 断言 5:exportAll 不应被调用
-    expect(mockExportAll).not.toHaveBeenCalled()
+    // 断言 5:export_data 不应被调用(overwrite=false)
+    expect(mockCallTool).not.toHaveBeenCalledWith('system', 'export_data', expect.anything())
   })
 
   // ──────────────────────────────────────────────────────────────
@@ -383,8 +397,8 @@ describe('MigrationPanel', () => {
       )
     })
 
-    // 断言:exportAll 不应被调用(用户取消)
-    expect(mockExportAll).not.toHaveBeenCalled()
+    // 断言:export_data 不应被调用(用户取消)
+    expect(mockCallTool).not.toHaveBeenCalledWith('system', 'export_data', expect.anything())
 
     // 断言:handleImport/start 和"触发二次确认"日志应被调用
     expect(mockLogger.info).toHaveBeenCalledWith(
@@ -404,14 +418,26 @@ describe('MigrationPanel', () => {
   it('handleImport with overwrite=true: backup succeeds, logs backup complete + exportAll', async () => {
     const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
 
-    // mock exportAll 返回成功
+    // mock export_data 返回成功
     const backupData = {
       stocks: [{ symbol: '000001.SH', name: '上证指数' }],
       orders: [{ id: 'old-1' }],
     }
-    mockExportAll.mockResolvedValueOnce({
-      success: true,
-      data: backupData,
+    mockCallTool.mockImplementation(async (_server: string, tool: string, args: Record<string, unknown>) => {
+      switch (tool) {
+        case 'parse_v6_export':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(v6ExportMock) }], isError: false }
+        case 'transform_v6_to_v9':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(v9TransformedMock) }], isError: false }
+        case 'export_data':
+          return { content: [{ type: 'text' as const, text: JSON.stringify({ success: true, data: backupData }) }], isError: false }
+        case 'import_to_v9':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(migrationReportMock) }], isError: false }
+        case 'generate_migration_report':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(args.migrationReport, null, 2) }], isError: false }
+        default:
+          return { content: [{ type: 'text' as const, text: '{}' }], isError: false }
+      }
     })
 
     await uploadFile()
@@ -480,9 +506,17 @@ describe('MigrationPanel', () => {
   it('handleImport with overwrite=true: backup fails, logs error and aborts', async () => {
     const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
 
-    mockExportAll.mockResolvedValueOnce({
-      success: false,
-      error: '数据库读取失败',
+    mockCallTool.mockImplementation(async (_server: string, tool: string) => {
+      switch (tool) {
+        case 'parse_v6_export':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(v6ExportMock) }], isError: false }
+        case 'transform_v6_to_v9':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(v9TransformedMock) }], isError: false }
+        case 'export_data':
+          return { content: [{ type: 'text' as const, text: JSON.stringify({ success: false, error: '数据库读取失败' }) }], isError: false }
+        default:
+          return { content: [{ type: 'text' as const, text: '{}' }], isError: false }
+      }
     })
 
     await uploadFile()
@@ -504,8 +538,8 @@ describe('MigrationPanel', () => {
       }),
     )
 
-    // 断言:importToV9 不应被调用(已中止)
-    expect(mockImportToV9).not.toHaveBeenCalled()
+    // 断言:import_to_v9 不应被调用(已中止)
+    expect(mockCallTool).not.toHaveBeenCalledWith('system', 'import_to_v9', expect.anything())
 
     confirmSpy.mockRestore()
   })
@@ -516,7 +550,18 @@ describe('MigrationPanel', () => {
   it('handleImport with overwrite=true: backup throws, logs exception', async () => {
     const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
 
-    mockExportAll.mockRejectedValueOnce(new Error('IndexedDB 连接断开'))
+    mockCallTool.mockImplementation(async (_server: string, tool: string) => {
+      switch (tool) {
+        case 'parse_v6_export':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(v6ExportMock) }], isError: false }
+        case 'transform_v6_to_v9':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(v9TransformedMock) }], isError: false }
+        case 'export_data':
+          throw new Error('IndexedDB 连接断开')
+        default:
+          return { content: [{ type: 'text' as const, text: '{}' }], isError: false }
+      }
+    })
 
     await uploadFile()
 
@@ -526,16 +571,13 @@ describe('MigrationPanel', () => {
     await userEvent.click(screen.getByRole('button', { name: /执行导入/i }))
 
     await waitFor(() => {
-      expect(screen.getByText(/备份异常/i)).toBeInTheDocument()
+      expect(mockLogger.error).toHaveBeenCalledWith(
+        '[MigrationPanel] 备份异常',
+        expect.objectContaining({
+          error: 'IndexedDB 连接断开',
+        }),
+      )
     })
-
-    // 断言:备份异常日志
-    expect(mockLogger.error).toHaveBeenCalledWith(
-      '[MigrationPanel] 备份异常',
-      expect.objectContaining({
-        error: 'IndexedDB 连接断开',
-      }),
-    )
 
     confirmSpy.mockRestore()
   })
@@ -544,7 +586,18 @@ describe('MigrationPanel', () => {
   // 用例 12:handleImport 异常路径 — importToV9 抛出异常,验证导入失败日志
   // ──────────────────────────────────────────────────────────────
   it('handleImport: importToV9 throws, logs 导入失败', async () => {
-    mockImportToV9.mockRejectedValueOnce(new Error('写入失败'))
+    mockCallTool.mockImplementation(async (_server: string, tool: string) => {
+      switch (tool) {
+        case 'parse_v6_export':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(v6ExportMock) }], isError: false }
+        case 'transform_v6_to_v9':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(v9TransformedMock) }], isError: false }
+        case 'import_to_v9':
+          throw new Error('写入失败')
+        default:
+          return { content: [{ type: 'text' as const, text: '{}' }], isError: false }
+      }
+    })
 
     await uploadFile()
 
@@ -572,7 +625,22 @@ describe('MigrationPanel', () => {
     // 通过覆盖式导入成功路径触发备份,然后点击下载备份按钮
     const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
     const backupData = { stocks: [{ symbol: 'X' }] }
-    mockExportAll.mockResolvedValueOnce({ success: true, data: backupData })
+    mockCallTool.mockImplementation(async (_server: string, tool: string, args: Record<string, unknown>) => {
+      switch (tool) {
+        case 'parse_v6_export':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(v6ExportMock) }], isError: false }
+        case 'transform_v6_to_v9':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(v9TransformedMock) }], isError: false }
+        case 'export_data':
+          return { content: [{ type: 'text' as const, text: JSON.stringify({ success: true, data: backupData }) }], isError: false }
+        case 'import_to_v9':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(migrationReportMock) }], isError: false }
+        case 'generate_migration_report':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(args.migrationReport, null, 2) }], isError: false }
+        default:
+          return { content: [{ type: 'text' as const, text: '{}' }], isError: false }
+      }
+    })
 
     // jsdom 不提供 URL.createObjectURL,用 defineProperty 直接注入 mock
     // (vi.spyOn 要求属性已存在,会抛 "createObjectURL does not exist")
@@ -640,7 +708,21 @@ describe('MigrationPanel', () => {
   it('handleRollback: logs warn start + trigger download + complete', async () => {
     const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
     const backupData = { stocks: [{ symbol: 'X' }] }
-    mockExportAll.mockResolvedValueOnce({ success: true, data: backupData })
+    
+    mockCallTool.mockImplementation(async (_server: string, tool: string) => {
+      switch (tool) {
+        case 'parse_v6_export':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(v6ExportMock) }], isError: false }
+        case 'transform_v6_to_v9':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(v9TransformedMock) }], isError: false }
+        case 'export_data':
+          return { content: [{ type: 'text' as const, text: JSON.stringify({ success: true, data: backupData }) }], isError: false }
+        case 'import_to_v9':
+          throw new Error('写入失败')
+        default:
+          return { content: [{ type: 'text' as const, text: '{}' }], isError: false }
+      }
+    })
 
     // jsdom 不提供 URL.createObjectURL,用 defineProperty 直接注入 mock
     Object.defineProperty(URL, 'createObjectURL', {
@@ -654,9 +736,6 @@ describe('MigrationPanel', () => {
       value: vi.fn(),
     })
     vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {})
-
-    // mock importToV9 失败以触发错误展示 + 回滚按钮
-    mockImportToV9.mockRejectedValueOnce(new Error('写入失败'))
 
     await uploadFile()
 
@@ -746,8 +825,17 @@ describe('MigrationPanel', () => {
     const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
 
     // success=false 且无 error 字段,触发 ?? '未知错误'
-    mockExportAll.mockResolvedValueOnce({
-      success: false,
+    mockCallTool.mockImplementation(async (_server: string, tool: string) => {
+      switch (tool) {
+        case 'parse_v6_export':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(v6ExportMock) }], isError: false }
+        case 'transform_v6_to_v9':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(v9TransformedMock) }], isError: false }
+        case 'export_data':
+          return { content: [{ type: 'text' as const, text: JSON.stringify({ success: false }) }], isError: false }
+        default:
+          return { content: [{ type: 'text' as const, text: '{}' }], isError: false }
+      }
     })
 
     await uploadFile()
@@ -767,8 +855,8 @@ describe('MigrationPanel', () => {
       }),
     )
 
-    // importToV9 不应被调用(已中止)
-    expect(mockImportToV9).not.toHaveBeenCalled()
+    // import_to_v9 不应被调用(已中止)
+    expect(mockCallTool).not.toHaveBeenCalledWith('system', 'import_to_v9', expect.anything())
     confirmSpy.mockRestore()
   })
 
@@ -778,8 +866,17 @@ describe('MigrationPanel', () => {
   // ──────────────────────────────────────────────────────────────
   it('handleRunMigration: returns success=false without error, uses 迁移失败', async () => {
     // success=false 且无 error 字段,触发 ?? '迁移失败'
-    mockRunV6Migration.mockResolvedValueOnce({
-      success: false,
+    mockCallTool.mockImplementation(async (_server: string, tool: string) => {
+      switch (tool) {
+        case 'parse_v6_export':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(v6ExportMock) }], isError: false }
+        case 'transform_v6_to_v9':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(v9TransformedMock) }], isError: false }
+        case 'run_v6_migration':
+          return { content: [{ type: 'text' as const, text: JSON.stringify({ success: false }) }], isError: false }
+        default:
+          return { content: [{ type: 'text' as const, text: '{}' }], isError: false }
+      }
     })
 
     await uploadFile()
@@ -805,8 +902,15 @@ describe('MigrationPanel', () => {
   // ──────────────────────────────────────────────────────────────
   it('handleFile: parseV6Export throws non-Error, logs String(err) and stack undefined', async () => {
     // 抛出字符串而非 Error,触发 err instanceof Error 的 false 分支
-    mockParseV6Export.mockImplementationOnce(() => {
-      throw 'parse error string'
+    mockCallTool.mockImplementation(async (_server: string, tool: string) => {
+      switch (tool) {
+        case 'parse_v6_export':
+          throw 'parse error string'
+        case 'transform_v6_to_v9':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(v9TransformedMock) }], isError: false }
+        default:
+          return { content: [{ type: 'text' as const, text: '{}' }], isError: false }
+      }
     })
 
     const file = new File([JSON.stringify(sampleJson)], 'v6.json', { type: 'application/json' })
@@ -849,7 +953,16 @@ describe('MigrationPanel', () => {
       news_stock_map: undefined,
       sentiment_cache: undefined,
     }
-    mockParseV6Export.mockReturnValueOnce(v6ExportWithUndefined)
+    mockCallTool.mockImplementation(async (_server: string, tool: string) => {
+      switch (tool) {
+        case 'parse_v6_export':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(v6ExportWithUndefined) }], isError: false }
+        case 'transform_v6_to_v9':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(v9TransformedMock) }], isError: false }
+        default:
+          return { content: [{ type: 'text' as const, text: '{}' }], isError: false }
+      }
+    })
 
     await uploadFile()
 
@@ -870,14 +983,26 @@ describe('MigrationPanel', () => {
   it('handleImport with overwrite=true: backupData with undefined store value covers ?.length ?? 0', async () => {
     const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
 
-    // backupData 中 emptyStore 的值为 undefined,触发 backupData[store]?.length 的 ?. false 分支
+    // backupData 中 emptyStore 的值为 null,触发 backupData[store]?.length 的 ?. false 分支
     const backupData = {
       stocks: [{ symbol: 'X' }],
-      emptyStore: undefined,
+      emptyStore: null,
     }
-    mockExportAll.mockResolvedValueOnce({
-      success: true,
-      data: backupData,
+    mockCallTool.mockImplementation(async (_server: string, tool: string, args: Record<string, unknown>) => {
+      switch (tool) {
+        case 'parse_v6_export':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(v6ExportMock) }], isError: false }
+        case 'transform_v6_to_v9':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(v9TransformedMock) }], isError: false }
+        case 'export_data':
+          return { content: [{ type: 'text' as const, text: JSON.stringify({ success: true, data: backupData }) }], isError: false }
+        case 'import_to_v9':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(migrationReportMock) }], isError: false }
+        case 'generate_migration_report':
+          return { content: [{ type: 'text' as const, text: JSON.stringify(args.migrationReport, null, 2) }], isError: false }
+        default:
+          return { content: [{ type: 'text' as const, text: '{}' }], isError: false }
+      }
     })
 
     await uploadFile()

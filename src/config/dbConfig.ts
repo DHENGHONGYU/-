@@ -73,6 +73,7 @@ export const ENVELOPE_TARGET = {
   ui: 'ui',
   tradinghub: 'tradinghub',
   system: 'system',
+  event: 'event',
   /** 策略数据流：热门板块 */
   'strategy:hotSector': 'strategy:hotSector',
   /** 策略数据流：价值洼地 */
@@ -131,6 +132,8 @@ export const ENVELOPE_ACTION = {
   strategyValuePitRefresh: 'STRATEGY_VALUE_PIT_REFRESH',
   /** 策略：触发轮动信号检测 */
   strategyRotationSignalDetect: 'STRATEGY_ROTATION_SIGNAL_DETECT',
+  /** 反馈：检测到数据问题 */
+  feedbackIssuesDetected: 'FEEDBACK_ISSUES_DETECTED',
   /** 交易复盘保存 */
   saveTradeReview: 'SAVE_TRADE_REVIEW',
   /** 执行计划保存 */
@@ -168,6 +171,17 @@ export const ENVELOPE_ACTION = {
   saveRbacAuditLog: 'SAVE_RBAC_AUDIT_LOG',
   /** 删除权限审计日志（仅归档服务 RBAC-S3 使用，普通调用禁止） */
   deleteRbacAuditLog: 'DELETE_RBAC_AUDIT_LOG',
+  // ── 批量操作（BulkEnvelope） ──
+  /** 批量插入股票 */
+  bulkInsertStock: 'BULK_INSERT_STOCK',
+  /** 批量保存行情数据 */
+  bulkSaveDailyQuotes: 'BULK_SAVE_DAILY_QUOTES',
+  /** 批量保存评分数据 */
+  bulkSaveScores: 'BULK_SAVE_SCORES',
+  /** 批量保存财务报告 */
+  bulkSaveFinancialReports: 'BULK_SAVE_FINANCIAL_REPORTS',
+  /** 批量保存新闻数据 */
+  bulkSaveNews: 'BULK_SAVE_NEWS',
   // 查询操作（QueryEnvelope）
   /** 查询单条记录 */
   queryGet: 'QUERY_GET',

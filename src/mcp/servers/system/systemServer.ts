@@ -8,6 +8,13 @@ import { MCPServerBase } from '@/mcp/core/server'
 import type { ServerInfo, ToolDescriptor, ResourceTemplate } from '@/mcp/core/types'
 import { getLogger } from '@/lib/logger'
 import { loadSystemStats, resetAll, exportAll } from '@/services/system/systemService'
+import {
+  parseV6Export,
+  transformV6ToV9,
+  importToV9,
+  runV6Migration,
+  generateMigrationReport,
+} from '@/services/system/v6MigrationService'
 
 const logger = getLogger()
 
@@ -61,6 +68,130 @@ export class SystemServer extends MCPServerBase {
           logger.warn('[SystemServer] reset_system called — 系统重置中')
           const result = await resetAll()
           return { content: [{ type: 'text', text: JSON.stringify(result) }] }
+        },
+      },
+      {
+        name: 'parse_v6_export',
+        description: '解析 V6 Pro 导出的 JSON 数据',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            json: { type: 'object', description: 'V6 导出的 JSON 数据' },
+          },
+          required: ['json'],
+        },
+        handler: async (args) => {
+          logger.info('[SystemServer] parse_v6_export called')
+          try {
+            const v6 = parseV6Export(args.json)
+            return { content: [{ type: 'text', text: JSON.stringify(v6) }] }
+          } catch (err) {
+            return {
+              content: [{ type: 'text', text: err instanceof Error ? err.message : String(err) }],
+              isError: true,
+            }
+          }
+        },
+      },
+      {
+        name: 'transform_v6_to_v9',
+        description: '将 V6 数据转换为 V9 格式',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            v6Data: { type: 'object', description: '已解析的 V6 数据' },
+          },
+          required: ['v6Data'],
+        },
+        handler: async (args) => {
+          logger.info('[SystemServer] transform_v6_to_v9 called')
+          try {
+            const v9 = transformV6ToV9(args.v6Data as never)
+            return { content: [{ type: 'text', text: JSON.stringify(v9) }] }
+          } catch (err) {
+            return {
+              content: [{ type: 'text', text: err instanceof Error ? err.message : String(err) }],
+              isError: true,
+            }
+          }
+        },
+      },
+      {
+        name: 'import_to_v9',
+        description: '将转换后的 V9 数据导入系统',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            transformedData: { type: 'object', description: '转换后的 V9 数据' },
+            overwriteExisting: { type: 'boolean', description: '是否覆盖已存在数据', default: false },
+            dryRun: { type: 'boolean', description: '是否仅预览不实际导入', default: false },
+          },
+          required: ['transformedData'],
+        },
+        handler: async (args) => {
+          logger.info('[SystemServer] import_to_v9 called', {
+            overwriteExisting: args.overwriteExisting,
+            dryRun: args.dryRun,
+          })
+          try {
+            const result = await importToV9(args.transformedData as never, {
+              overwriteExisting: args.overwriteExisting as boolean,
+              dryRun: args.dryRun as boolean,
+            })
+            return { content: [{ type: 'text', text: JSON.stringify(result) }] }
+          } catch (err) {
+            return {
+              content: [{ type: 'text', text: err instanceof Error ? err.message : String(err) }],
+              isError: true,
+            }
+          }
+        },
+      },
+      {
+        name: 'run_v6_migration',
+        description: '一键执行 V6 → V9 完整迁移流程（解析+验证+转换+导入）',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            json: { type: 'object', description: 'V6 导出的 JSON 数据' },
+            overwriteExisting: { type: 'boolean', description: '是否覆盖已存在数据', default: false },
+          },
+          required: ['json'],
+        },
+        handler: async (args) => {
+          logger.info('[SystemServer] run_v6_migration called', {
+            overwriteExisting: args.overwriteExisting,
+          })
+          const result = await runV6Migration(args.json, {
+            overwriteExisting: args.overwriteExisting as boolean,
+          })
+          return {
+            content: [{ type: 'text', text: JSON.stringify(result) }],
+            isError: !result.success,
+          }
+        },
+      },
+      {
+        name: 'generate_migration_report',
+        description: '生成迁移结果文本报告',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            migrationReport: { type: 'object', description: '迁移结果报告数据' },
+          },
+          required: ['migrationReport'],
+        },
+        handler: async (args) => {
+          logger.info('[SystemServer] generate_migration_report called')
+          try {
+            const report = generateMigrationReport(args.migrationReport as never)
+            return { content: [{ type: 'text', text: report }] }
+          } catch (err) {
+            return {
+              content: [{ type: 'text', text: err instanceof Error ? err.message : String(err) }],
+              isError: true,
+            }
+          }
         },
       },
     ]

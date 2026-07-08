@@ -288,6 +288,73 @@ class NotificationHandler implements EnvelopeHandler {
 }
 
 /**
+ * 批量操作处理器
+ * 使用 IndexedDB 事务进行批量写入，提升性能
+ */
+class BulkHandler implements EnvelopeHandler {
+  private readonly actions: string[]
+
+  constructor(actions: string[]) {
+    this.actions = actions
+  }
+
+  canHandle(action: string): boolean {
+    return this.actions.includes(action)
+  }
+
+  async handle(envelope: StandardEnvelope, store: StoreName): Promise<void> {
+    const { meta, payload } = envelope
+    const items = payload as unknown[]
+
+    if (!Array.isArray(items)) {
+      throw new EnvelopeError(`Bulk operation requires array payload: ${meta.action}`)
+    }
+
+    if (items.length === 0) {
+      logger.debug(`[DataBridge] BulkHandler: empty array, skipping: action="${meta.action}", store="${store}"`)
+      return
+    }
+
+    logger.info(`[DataBridge] BulkHandler 开始批量写入`, {
+      action: meta.action,
+      store,
+      traceId: meta.traceId,
+      count: items.length,
+    })
+
+    const startTime = Date.now()
+
+    try {
+      await db.withTransaction([store], 'readwrite', async (tx) => {
+        const objectStore = tx.objectStore(store)
+        for (const item of items) {
+          await objectStore.put(item)
+        }
+      })
+
+      const duration = Date.now() - startTime
+      logger.info(`[DataBridge] BulkHandler 批量写入完成`, {
+        action: meta.action,
+        store,
+        traceId: meta.traceId,
+        count: items.length,
+        duration: `${duration}ms`,
+        avgPerItem: `${(duration / items.length).toFixed(2)}ms`,
+      })
+    } catch (err) {
+      logger.error(`[DataBridge] BulkHandler 批量写入失败`, {
+        action: meta.action,
+        store,
+        traceId: meta.traceId,
+        count: items.length,
+        error: err instanceof Error ? err.message : String(err),
+      })
+      throw new EnvelopeError(`Bulk operation failed: ${err instanceof Error ? err.message : String(err)}`)
+    }
+  }
+}
+
+/**
  * 持仓数据查询处理器（P0-3 修复）
  * loadHoldingsData 的 payload 是 HoldingsQueryParams（分页/日期/关键词），
  * 不是 Stock 数据，不能写入 stocks store（keyPath='symbol'）。
@@ -348,6 +415,17 @@ export function createHandlerRegistry(): HandlerRegistry {
   // 2.5 持仓查询处理器（P0-3 修复：loadHoldingsData 的 payload 是 HoldingsQueryParams，
   // 不是 Stock 数据，不应写入 stocks store。holdingsStore 的 ACL write=[] 也证实了这一点）
   registry.register(new LoadHoldingsDataHandler())
+
+  // 2.6 批量操作处理器
+  registry.register(
+    new BulkHandler([
+      ENVELOPE_ACTION.bulkInsertStock,
+      ENVELOPE_ACTION.bulkSaveDailyQuotes,
+      ENVELOPE_ACTION.bulkSaveScores,
+      ENVELOPE_ACTION.bulkSaveFinancialReports,
+      ENVELOPE_ACTION.bulkSaveNews,
+    ])
+  )
 
   // 3. DELETE 操作处理器
   registry.register(new DeleteHandler([ENVELOPE_ACTION.deleteExecutionPlan]))

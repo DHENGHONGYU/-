@@ -1,5 +1,5 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest'
-import { FeedbackOrchestrator } from './feedbackOrchestrator'
+import { FeedbackOrchestrator, type FeedbackIssue } from './feedbackOrchestrator'
 import { dataLayer } from '@/data/dataLayer'
 import { runV6Score } from '@/services/scoring/v6ScoreService'
 import { fetchStockBasic, fetchStockKline, fetchFinancial } from '@/services/fetcher/fetcherService'
@@ -81,7 +81,7 @@ describe('FeedbackOrchestrator', () => {
 
       const issues = await (orchestrator as any).detectIssues('600519.SH')
 
-      expect(issues.some((i) => i.type === 'incomplete_score')).toBe(true)
+      expect(issues.some((i: FeedbackIssue) => i.type === 'incomplete_score')).toBe(true)
     })
 
     test('数据完整度达标时未检测到问题', async () => {
@@ -123,7 +123,7 @@ describe('FeedbackOrchestrator', () => {
 
       const issues = await (orchestrator as any).detectIssues('600519.SH')
 
-      expect(issues.some((i) => i.type === 'stale_data')).toBe(true)
+      expect(issues.some((i: FeedbackIssue) => i.type === 'stale_data')).toBe(true)
     })
 
     test('存在 qualityWarning 时检测到问题', async () => {
@@ -139,7 +139,7 @@ describe('FeedbackOrchestrator', () => {
 
       const issues = await (orchestrator as any).detectIssues('600519.SH')
 
-      expect(issues.some((i) => i.type === 'quality_warning')).toBe(true)
+      expect(issues.some((i: FeedbackIssue) => i.type === 'quality_warning')).toBe(true)
     })
   })
 

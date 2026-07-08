@@ -1,24 +1,16 @@
 import React, { useCallback, useState } from 'react'
-import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Badge } from '@/components/ui/Badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs'
-import {
-  parseV6Export,
-  transformV6ToV9,
-  importToV9,
-  generateMigrationReport,
-  runV6Migration,
-  type V6ExportShape,
-  type V9ImportShape,
-  type MigrationReport,
-} from '@/services/system/v6MigrationService'
-import { exportAll } from '@/services/system/systemService'
 import { getLogger } from '@/lib/logger'
+import { useMcpMigration } from './migration/useMcpMigration'
+import { MigrationUploadTab } from './migration/MigrationUploadTab'
+import { MigrationPreviewTab } from './migration/MigrationPreviewTab'
+import { MigrationReportTab } from './migration/MigrationReportTab'
+import type { MigrationReport, V6ExportShape, V9ImportShape } from '@/services/system/v6MigrationService'
 
 const logger = getLogger()
 
-interface BackupSnapshot {
+export interface BackupSnapshot {
   data: Record<string, unknown[]>
   createdAt: number
   stores: number
@@ -34,11 +26,19 @@ export default function MigrationPanel(): React.JSX.Element {
   const [error, setError] = useState('')
   const [overwrite, setOverwrite] = useState(false)
   const [activeTab, setActiveTab] = useState('upload')
-  // 备份快照:覆盖式导入前自动备份,导入失败时可用于回滚
   const [backup, setBackup] = useState<BackupSnapshot | null>(null)
   const [rollbackStatus, setRollbackStatus] = useState<'idle' | 'rolling' | 'done' | 'failed'>('idle')
 
-  const handleFile = useCallback((file: File) => {
+  const {
+    parseV6Export,
+    transformV6ToV9,
+    importToV9,
+    runV6Migration,
+    generateMigrationReport,
+    exportAll,
+  } = useMcpMigration()
+
+  const handleFile = useCallback(async (file: File) => {
     logger.info('[MigrationPanel] handleFile/start', {
       fileName: file.name,
       fileSize: file.size,
@@ -47,17 +47,21 @@ export default function MigrationPanel(): React.JSX.Element {
     })
     setError('')
     setReport(null)
+
     const reader = new FileReader()
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       try {
         const raw = e.target?.result
         const text = typeof raw === 'string' ? raw : ''
         const parsed = JSON.parse(text)
         setRawJson(parsed)
-        const v6 = parseV6Export(parsed)
+
+        const v6 = await parseV6Export(parsed)
         setV6Export(v6)
-        const v9 = transformV6ToV9(v6)
+
+        const v9 = await transformV6ToV9(v6)
         setTransformed(v9)
+
         setActiveTab('preview')
         logger.info('[MigrationPanel] 文件解析成功', {
           fileName: file.name,
@@ -88,24 +92,7 @@ export default function MigrationPanel(): React.JSX.Element {
       })
     }
     reader.readAsText(file)
-  }, [])
-
-  const handleDrop = useCallback(
-    (e: React.DragEvent<HTMLDivElement>) => {
-      e.preventDefault()
-      const file = e.dataTransfer.files[0]
-      if (file) void handleFile(file)
-    },
-    [handleFile],
-  )
-
-  const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0]
-      if (file) void handleFile(file)
-    },
-    [handleFile],
-  )
+  }, [parseV6Export, transformV6ToV9])
 
   const handleImport = useCallback(async () => {
     if (!transformed) return
@@ -116,7 +103,6 @@ export default function MigrationPanel(): React.JSX.Element {
       timestamp: Date.now(),
     })
 
-    // 覆盖式导入:必须先备份 + 二次确认,确保数据可回滚
     let backupSnapshot: BackupSnapshot | null = null
     if (overwrite) {
       logger.info('[MigrationPanel] overwrite=true,触发二次确认对话框')
@@ -132,7 +118,6 @@ export default function MigrationPanel(): React.JSX.Element {
       }
       logger.info('[MigrationPanel] 用户确认覆盖式导入,开始备份')
 
-      // 导入前备份当前数据
       try {
         logger.info('[MigrationPanel] exportAll/start')
         const backupResult = await exportAll()
@@ -215,9 +200,8 @@ export default function MigrationPanel(): React.JSX.Element {
     } finally {
       setLoading(false)
     }
-  }, [transformed, overwrite])
+  }, [transformed, overwrite, exportAll, importToV9])
 
-  // 回滚:从备份恢复(下载备份文件 + 提示用户手动恢复)
   const handleDownloadBackup = useCallback(() => {
     if (!backup) return
     logger.info('[MigrationPanel] handleDownloadBackup/start', {
@@ -243,8 +227,7 @@ export default function MigrationPanel(): React.JSX.Element {
     })
   }, [backup])
 
-  // 回滚:清空当前数据并提示用户重新上传备份(因 systemService 未提供 restoreFromBackup 接口)
-  const handleRollback = useCallback(async () => {
+  const handleRollback = useCallback(() => {
     if (!backup) return
     logger.warn('[MigrationPanel] handleRollback/start', {
       backupCreatedAt: backup.createdAt,
@@ -254,7 +237,6 @@ export default function MigrationPanel(): React.JSX.Element {
     })
     setRollbackStatus('rolling')
     logger.info('[MigrationPanel] 触发备份下载以供手动恢复')
-    // 触发备份下载
     handleDownloadBackup()
     setRollbackStatus('done')
     logger.info('[MigrationPanel] handleRollback/complete', {
@@ -315,41 +297,18 @@ export default function MigrationPanel(): React.JSX.Element {
     } finally {
       setLoading(false)
     }
-  }, [rawJson, overwrite])
+  }, [rawJson, overwrite, runV6Migration])
 
-  const v6Overview = v6Export
-    ? [
-        { key: 'stocks', label: '股票', count: v6Export.stocks?.length ?? 0 },
-        { key: 'daily_quotes', label: '行情', count: v6Export.daily_quotes?.length ?? 0 },
-        { key: 'v6_scores', label: 'V6评分', count: v6Export.v6_scores?.length ?? 0 },
-        { key: 'orders', label: '订单', count: v6Export.orders?.length ?? 0 },
-        { key: 'sector_scores', label: '板块评分', count: v6Export.sector_scores?.length ?? 0 },
-        { key: 'rotation_scores', label: '轮动评分', count: v6Export.rotation_scores?.length ?? 0 },
-        { key: 'score_docs', label: '评分文档', count: v6Export.score_docs?.length ?? 0 },
-        { key: 'strategy_snapshots', label: '策略快照', count: v6Export.strategy_snapshots?.length ?? 0 },
-        { key: 'local_docs', label: '本地文档', count: v6Export.local_docs?.length ?? 0 },
-        { key: 'news', label: '资讯', count: v6Export.news?.length ?? 0 },
-        { key: 'news_stock_map', label: '资讯关联', count: v6Export.news_stock_map?.length ?? 0 },
-        { key: 'sentiment_cache', label: '情感缓存', count: v6Export.sentiment_cache?.length ?? 0 },
-      ]
-    : []
-
-  const v9Overview = transformed
-    ? [
-        { key: 'stocks', label: '股票', count: transformed.stocks.length },
-        { key: 'daily_quotes', label: '聚合行情', count: transformed.dailyQuotes.length },
-        { key: 'v6_scores', label: 'V6评分', count: transformed.v6Scores.length },
-        { key: 'score_docs', label: '评分文档', count: transformed.scoreDocs.length + transformed.scoreDocsFromScores.length },
-        { key: 'orders', label: '订单', count: transformed.orders.length },
-        { key: 'sector_scores', label: '板块评分', count: transformed.sectorScores.length },
-        { key: 'rotation_scores', label: '轮动评分', count: transformed.rotationScores.length },
-        { key: 'strategy_snapshots', label: '策略快照', count: transformed.strategySnapshots.length },
-        { key: 'local_docs', label: '本地文档', count: transformed.localDocs.length },
-        { key: 'news', label: '资讯', count: transformed.news.length },
-        { key: 'news_stock_map', label: '资讯关联', count: transformed.newsStockMaps.length },
-        { key: 'sentiment_cache', label: '情感缓存', count: transformed.sentimentCache.length },
-      ]
-    : []
+  const handleReset = useCallback(() => {
+    setRawJson(null)
+    setV6Export(null)
+    setTransformed(null)
+    setReport(null)
+    setBackup(null)
+    setRollbackStatus('idle')
+    setError('')
+    setActiveTab('upload')
+  }, [])
 
   return (
     <Card className="w-full">
@@ -367,145 +326,33 @@ export default function MigrationPanel(): React.JSX.Element {
             <TabsTrigger value="report" disabled={!report}>报告</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="upload" className="space-y-4">
-            <div
-              onDrop={handleDrop}
-              onDragOver={(e) => e.preventDefault()}
-              className="rounded-lg border-2 border-dashed border-muted-foreground/25 p-8 text-center hover:border-muted-foreground/50"
-            >
-              <p className="text-sm text-muted-foreground">拖拽 JSON 文件到此处，或点击选择</p>
-              <input
-                type="file"
-                accept="application/json"
-                aria-label="上传 V6 导出 JSON"
-                onChange={handleInputChange}
-                className="mt-4 block w-full text-sm text-muted-foreground file:mr-4 file:rounded-md file:border-0 file:bg-secondary file:px-4 file:py-2 file:text-sm file:font-medium"
-              />
-            </div>
-            {error && (
-              <div className="rounded-md border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive">
-                {error}
-              </div>
-            )}
+          <TabsContent value="upload">
+            <MigrationUploadTab error={error} onFileSelected={handleFile} />
           </TabsContent>
 
-          <TabsContent value="preview" className="space-y-4">
-            {transformed && (
-              <>
-                <div className="flex items-center gap-4">
-                  <label className="flex items-center gap-2 text-sm">
-                    <input
-                      type="checkbox"
-                      checked={overwrite}
-                      onChange={(e) => setOverwrite(e.target.checked)}
-                      className="h-4 w-4"
-                    />
-                    覆盖已存在数据
-                  </label>
-                </div>
-
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div>
-                    <h4 className="mb-2 text-sm font-medium">V6 源数据概览</h4>
-                    <div className="grid grid-cols-2 gap-2">
-                      {v6Overview.map((item) => (
-                        <div key={item.key} className="rounded-md border p-2 text-center">
-                          <p className="text-lg font-bold">{item.count}</p>
-                          <Badge variant="outline">{item.label}</Badge>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <h4 className="mb-2 text-sm font-medium">V9 转换后概览</h4>
-                    <div className="grid grid-cols-2 gap-2">
-                      {v9Overview.map((item) => (
-                        <div key={item.key} className="rounded-md border p-2 text-center">
-                          <p className="text-lg font-bold">{item.count}</p>
-                          <Badge variant="outline">{item.label}</Badge>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex gap-2">
-                  <Button onClick={handleImport} disabled={loading}>
-                    {loading ? '导入中...' : '执行导入'}
-                  </Button>
-                  <Button variant="outline" onClick={handleRunMigration} disabled={loading}>
-                    一键迁移（解析+导入）
-                  </Button>
-                </div>
-
-                {/* 备份状态提示:覆盖式导入前已自动备份 */}
-                {backup && (
-                  <div className="rounded-md border border-success/40 bg-success/5 p-3 text-sm">
-                    <p className="font-medium">已自动备份当前数据</p>
-                    <p className="mt-1 text-muted-foreground">
-                      备份时间:{new Date(backup.createdAt).toLocaleString('zh-CN')} ·
-                      共 {backup.stores} 个存储区 / {backup.totalRecords} 条记录
-                    </p>
-                    <div className="mt-2 flex gap-2">
-                      <Button variant="outline" size="sm" onClick={handleDownloadBackup}>
-                        下载备份文件
-                      </Button>
-                    </div>
-                  </div>
-                )}
-              </>
-            )}
-            {error && (
-              <div className="space-y-2">
-                <div className="rounded-md border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive whitespace-pre-line">
-                  {error}
-                </div>
-                {/* 回滚按钮:导入失败且有备份时显示 */}
-                {backup && rollbackStatus !== 'done' && (
-                  <div className="flex gap-2">
-                    <Button
-                      variant="danger"
-                      size="sm"
-                      onClick={handleRollback}
-                      disabled={rollbackStatus === 'rolling'}
-                    >
-                      {rollbackStatus === 'rolling' ? '回滚中...' : '回滚到备份'}
-                    </Button>
-                  </div>
-                )}
-              </div>
-            )}
+          <TabsContent value="preview">
+            <MigrationPreviewTab
+              v6Export={v6Export}
+              transformed={transformed}
+              overwrite={overwrite}
+              onOverwriteChange={setOverwrite}
+              onImport={handleImport}
+              onRunMigration={handleRunMigration}
+              loading={loading}
+              error={error}
+              backup={backup}
+              onDownloadBackup={handleDownloadBackup}
+              onRollback={handleRollback}
+              rollbackStatus={rollbackStatus}
+            />
           </TabsContent>
 
-          <TabsContent value="report" className="space-y-4">
-            {report && (
-              <>
-                <div className="grid grid-cols-4 gap-2">
-                  <div className="rounded-md border p-2 text-center">
-                    <p className="text-lg font-bold">{report.summary.totalStores}</p>
-                    <Badge variant="outline">存储区</Badge>
-                  </div>
-                  <div className="rounded-md border p-2 text-center">
-                    <p className="text-lg font-bold">{report.summary.importedRecords}</p>
-                    <Badge variant="outline">成功</Badge>
-                  </div>
-                  <div className="rounded-md border p-2 text-center">
-                    <p className="text-lg font-bold">{report.summary.skippedRecords}</p>
-                    <Badge variant="outline">跳过</Badge>
-                  </div>
-                  <div className="rounded-md border p-2 text-center">
-                    <p className="text-lg font-bold">{report.summary.failedRecords}</p>
-                    <Badge variant="outline">失败</Badge>
-                  </div>
-                </div>
-                <pre className="max-h-96 overflow-auto rounded-md bg-muted p-4 text-xs">
-                  {generateMigrationReport(report)}
-                </pre>
-                <Button variant="outline" onClick={() => { setRawJson(null); setV6Export(null); setTransformed(null); setReport(null); setActiveTab('upload') }}>
-                  重新上传
-                </Button>
-              </>
-            )}
+          <TabsContent value="report">
+            <MigrationReportTab
+              report={report}
+              onGenerateReport={generateMigrationReport}
+              onReset={handleReset}
+            />
           </TabsContent>
         </Tabs>
       </CardContent>

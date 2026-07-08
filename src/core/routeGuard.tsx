@@ -203,6 +203,10 @@ registerButtonPermission('command', [
   'migration',
   'exportDB',
   'importDB',
+  // 赛道相关交互对话（Agent 智能体权限）
+  'agentTrigger',    // 触发评分/赛道分析智能体
+  'agentConfig',     // 修改智能体配置
+  'sectorDialogue',  // 赛道交互对话
 ])
 
 // 分析舱敏感操作（使用路由类别字符串，不使用 MODULE_ID）

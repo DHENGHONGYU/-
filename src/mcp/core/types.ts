@@ -28,6 +28,8 @@ export type {
   JSONRPCRequest,
   JSONRPCResponse,
   MCPTransport,
+  McpCallerRole,
+  McpCallerContext,
 } from '@/types/modules/mcp.types'
 
 export { MCP_ERROR_CODES } from '@/types/modules/mcp.types'

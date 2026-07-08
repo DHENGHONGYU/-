@@ -3,10 +3,15 @@
  *
  * @description
  * 统一的 MCP 调用入口，通过注册中心查找 Server 并调用其 Tool/Resource/Prompt。
- * 支持工具发现、资源读取、Prompt 获取等全部 MCP 协议操作。
+ * 在每个调用入口集成 MCP ACL 拦截器，实现工具层权限控制。
+ *
+ * 与 Server 基类的深度防御 ACL 校验形成两层权限拦截：
+ *   - Client 层（本文件）：基于 caller 上下文的主拦截点
+ *   - Server 层（server.ts）：深度防御，防止绕过 Client 的直接调用
  *
  * @module mcp/core/client
  * @created 2026-07-04 - Phase 0 MCP 基础设施层建设
+ * @updated 2026-07-08 - P0 集成 ACL 拦截器
  */
 
 import { getLogger } from '@/lib/logger'
@@ -18,8 +23,10 @@ import type {
   ResourceContent,
   PromptTemplate,
   PromptMessage,
+  McpCallerContext,
 } from '@/types/modules/mcp.types'
 import { MCPRegistry } from './registry'
+import { mcpAclInterceptor, resolveCaller } from './mcpAclInterceptor'
 
 const logger = getLogger()
 
@@ -29,7 +36,7 @@ export class MCPClientImpl implements MCPClient {
 
   constructor(registry: MCPRegistry) {
     this.registry = registry
-    logger.info('[MCPClient] initialized')
+    logger.info('[MCPClient] initialized with ACL interceptor')
   }
 
   // ============================================================
@@ -56,8 +63,30 @@ export class MCPClientImpl implements MCPClient {
     serverName: string,
     toolName: string,
     args: Record<string, unknown>,
+    context?: McpCallerContext,
   ): Promise<ToolResult> {
     const startTime = performance.now()
+    const caller = resolveCaller(context?.caller)
+
+    // ── ACL 权限拦截（主拦截点） ──
+    const aclResult = mcpAclInterceptor.check({
+      caller,
+      serverName,
+      resourceName: toolName,
+    })
+
+    if (!aclResult.allowed) {
+      logger.warn(
+        `[MCPClient] callTool() ACL denied: caller="${caller}", ${serverName}.${toolName}`,
+      )
+      return {
+        content: [
+          { type: 'text', text: `ACL_PERMISSION_DENIED: ${aclResult.reason}` },
+        ],
+        isError: true,
+      }
+    }
+
     const entry = this.registry.getServer(serverName)
 
     if (!entry) {
@@ -68,13 +97,15 @@ export class MCPClientImpl implements MCPClient {
       }
     }
 
-    logger.info(`[MCPClient] callTool() ${serverName}.${toolName}`, { args })
-    const result = await entry.server.callTool(toolName, args)
+    logger.info(`[MCPClient] callTool() ${serverName}.${toolName}`, { args, caller })
+    // 透传 context 给 Server 基类（深度防御）
+    const result = await entry.server.callTool(toolName, args, context)
     const duration = performance.now() - startTime
 
     logger.info(`[MCPClient] callTool() ${serverName}.${toolName} completed`, {
       durationMs: Math.round(duration),
       isError: result.isError ?? false,
+      caller,
     })
 
     return result
@@ -99,7 +130,8 @@ export class MCPClientImpl implements MCPClient {
     return result
   }
 
-  async readResource(uri: string): Promise<ResourceContent> {
+  async readResource(uri: string, context?: McpCallerContext): Promise<ResourceContent> {
+    const caller = resolveCaller(context?.caller)
     const servers = this.registry.listServers()
 
     for (const entry of servers) {
@@ -108,8 +140,27 @@ export class MCPClientImpl implements MCPClient {
       for (const resource of resources) {
         const regex = this.uriTemplateToRegex(resource.uriTemplate)
         if (regex.test(uri)) {
-          logger.info(`[MCPClient] readResource() ${uri} → ${entry.server.info.name}`)
-          return await entry.server.readResource(uri)
+          // ── ACL 权限拦截（主拦截点） ──
+          const aclResult = mcpAclInterceptor.check({
+            caller,
+            serverName: entry.server.info.name,
+            resourceName: `readResource:${resource.name}`,
+          })
+
+          if (!aclResult.allowed) {
+            logger.warn(
+              `[MCPClient] readResource() ACL denied: caller="${caller}", uri="${uri}"`,
+            )
+            return {
+              uri,
+              mimeType: 'text/plain',
+              text: `ACL_PERMISSION_DENIED: ${aclResult.reason}`,
+            }
+          }
+
+          logger.info(`[MCPClient] readResource() ${uri} → ${entry.server.info.name}`, { caller })
+          // 透传 context 给 Server 基类（深度防御）
+          return await entry.server.readResource(uri, context)
         }
       }
     }
@@ -145,7 +196,30 @@ export class MCPClientImpl implements MCPClient {
     serverName: string,
     promptName: string,
     args: Record<string, string>,
+    context?: McpCallerContext,
   ): Promise<PromptMessage[]> {
+    const caller = resolveCaller(context?.caller)
+
+    // ── ACL 权限拦截（主拦截点） ──
+    const aclResult = mcpAclInterceptor.check({
+      caller,
+      serverName,
+      resourceName: `getPrompt:${promptName}`,
+    })
+
+    if (!aclResult.allowed) {
+      logger.warn(
+        `[MCPClient] getPrompt() ACL denied: caller="${caller}", ${serverName}.${promptName}`,
+      )
+      return [{
+        role: 'user',
+        content: {
+          type: 'text',
+          text: `ACL_PERMISSION_DENIED: ${aclResult.reason}`,
+        },
+      }]
+    }
+
     const entry = this.registry.getServer(serverName)
 
     if (!entry) {
@@ -153,8 +227,9 @@ export class MCPClientImpl implements MCPClient {
       return [{ role: 'user', content: { type: 'text', text: `Server not found: ${serverName}` } }]
     }
 
-    logger.info(`[MCPClient] getPrompt() ${serverName}.${promptName}`)
-    return await entry.server.getPrompt(promptName, args)
+    logger.info(`[MCPClient] getPrompt() ${serverName}.${promptName}`, { caller })
+    // 透传 context 给 Server 基类（深度防御）
+    return await entry.server.getPrompt(promptName, args, context)
   }
 
   // ============================================================

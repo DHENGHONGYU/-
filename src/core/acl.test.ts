@@ -210,3 +210,77 @@ describe('AclEngine', () => {
     })
   })
 })
+
+// ──────────────────────────────────────────────
+// AclEngine.check（v6 对齐新增）
+// ──────────────────────────────────────────────
+describe('AclEngine.check', () => {
+  let engine: AclEngine
+
+  beforeEach(() => {
+    engine = new AclEngine()
+  })
+
+  it('合法操作返回 allowed=true', () => {
+    const result = engine.check({
+      module: MODULE_ID.stockpool,
+      store: STORE_NAME.stocks,
+      operation: DB_OPERATION.insert,
+    })
+    expect(result.allowed).toBe(true)
+    expect(result.reason).toBeTruthy()
+  })
+
+  it('未注册模块返回 allowed=false', () => {
+    const result = engine.check({
+      module: 'unknown' as any,
+      store: STORE_NAME.stocks,
+      operation: DB_OPERATION.select,
+    })
+    expect(result.allowed).toBe(false)
+    expect(result.reason).toContain('unknown')
+  })
+
+  it('操作不允许返回 allowed=false', () => {
+    const result = engine.check({
+      module: MODULE_ID.fetcher,
+      store: STORE_NAME.stocks,
+      operation: DB_OPERATION.select,
+    })
+    expect(result.allowed).toBe(false)
+  })
+})
+
+// ──────────────────────────────────────────────
+// AclEngine.wrap（v6 对齐新增）
+// ──────────────────────────────────────────────
+describe('AclEngine.wrap', () => {
+  let engine: AclEngine
+
+  beforeEach(() => {
+    engine = new AclEngine()
+  })
+
+  it('权限通过时执行操作并返回结果', async () => {
+    const mockFn = async () => 'done'
+    const result = await engine.wrap(
+      { module: MODULE_ID.stockpool, store: STORE_NAME.stocks, operation: DB_OPERATION.insert },
+      mockFn,
+    )
+    expect(result).toBe('done')
+  })
+
+  it('权限拒绝时抛出 AclError 且不执行操作', async () => {
+    let called = false
+    const mockFn = async () => { called = true; return 'executed' }
+
+    await expect(
+      engine.wrap(
+        { module: 'nonexistent' as any, store: STORE_NAME.stocks, operation: DB_OPERATION.select },
+        mockFn,
+      ),
+    ).rejects.toThrow(AclError)
+
+    expect(called).toBe(false)
+  })
+})

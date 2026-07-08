@@ -8,15 +8,20 @@
  * 3. Store 层数据通过 MCPBridge 同步到 MCP Resource
  * 4. 数据写入通过 DataBridge 保持一致性
  *
+ * 新增 `callerContext` 参数透传至 MCPClient，实现工具层权限控制。
+ *
  * @module mcp/bridge/mcpBridge
  * @created 2026-07-04 - Phase 1 MCP 适配层建设
+ * @updated 2026-07-08 - P0 透传 callerContext 支持权限校验
  */
 
 import { getLogger } from '@/lib/logger'
 import { MCPClientImpl } from '@/mcp/core/client'
 import type { MCPClient, ToolResult, ResourceContent, PromptMessage } from '@/mcp/core/types'
+import type { McpCallerContext } from '@/types/modules/mcp.types'
 import { mcpRegistry } from '@/mcp/core/registry'
 import { mcpAuditLogger } from '@/mcp/core/mcpAuditLogger'
+import { DEFAULT_MCP_CALLER } from '@/config/mcpAclMatrix'
 
 import { nanoid } from 'nanoid'
 const logger = getLogger()
@@ -28,7 +33,7 @@ export class MCPBridge {
 
   private constructor() {
     this.client = new MCPClientImpl(mcpRegistry)
-    logger.info('[MCPBridge] initialized')
+    logger.info('[MCPBridge] initialized with ACL support')
   }
 
   /** 获取 MCPBridge 单例 */
@@ -44,21 +49,36 @@ export class MCPBridge {
     return this.client
   }
 
-  /** 便捷方法：调用 Tool */
+  /**
+   * 便捷方法：调用 Tool
+   *
+   * @param serverName - Server 名称
+   * @param toolName - Tool 名称
+   * @param args - 调用参数
+   * @param context - 调用方上下文（用于权限校验，默认 agent 角色）
+   */
   async callTool(
     serverName: string,
     toolName: string,
     args: Record<string, unknown>,
+    context?: McpCallerContext,
   ): Promise<ToolResult> {
     const traceId = `mcp-${nanoid(8)}-${toolName}`
     const startTime = performance.now()
+    const caller = context?.caller ?? DEFAULT_MCP_CALLER
 
-    logger.info(`[MCPBridge] callTool() called: server="${serverName}", tool="${toolName}", traceId="${traceId}"`)
+    logger.info(
+      `[MCPBridge] callTool() called: server="${serverName}", tool="${toolName}", caller="${caller}", traceId="${traceId}"`,
+    )
 
     try {
-      const result = await this.client.callTool(serverName, toolName, args)
+      const result = await this.client.callTool(serverName, toolName, args, context)
       const durationMs = performance.now() - startTime
-      logger.info(`[MCPBridge] callTool() completed: server="${serverName}", tool="${toolName}", traceId="${traceId}", duration=${durationMs.toFixed(2)}ms, isError=${result.isError ?? false}`)
+
+      logger.info(
+        `[MCPBridge] callTool() completed: server="${serverName}", tool="${toolName}", caller="${caller}", traceId="${traceId}", duration=${durationMs.toFixed(2)}ms, isError=${result.isError ?? false}`,
+      )
+
       await mcpAuditLogger.logToolCall(serverName, toolName, args, result, traceId, durationMs)
       return result
     } catch (err) {
@@ -67,24 +87,40 @@ export class MCPBridge {
         isError: true,
       }
       const durationMs = performance.now() - startTime
-      logger.error(`[MCPBridge] callTool() failed: server="${serverName}", tool="${toolName}", traceId="${traceId}", duration=${durationMs.toFixed(2)}ms`, { error: errorResult.content[0]?.text })
+      logger.error(
+        `[MCPBridge] callTool() failed: server="${serverName}", tool="${toolName}", caller="${caller}", traceId="${traceId}", duration=${durationMs.toFixed(2)}ms`,
+        { error: errorResult.content[0]?.text },
+      )
       await mcpAuditLogger.logToolCall(serverName, toolName, args, errorResult, traceId, durationMs)
       return errorResult
     }
   }
 
-  /** 便捷方法：读取 Resource */
-  async readResource(uri: string): Promise<ResourceContent> {
-    return this.client.readResource(uri)
+  /**
+   * 便捷方法：读取 Resource
+   *
+   * @param uri - Resource URI
+   * @param context - 调用方上下文（用于权限校验）
+   */
+  async readResource(uri: string, context?: McpCallerContext): Promise<ResourceContent> {
+    return this.client.readResource(uri, context)
   }
 
-  /** 便捷方法：获取 Prompt */
+  /**
+   * 便捷方法：获取 Prompt
+   *
+   * @param serverName - Server 名称
+   * @param promptName - Prompt 名称
+   * @param args - 模板参数
+   * @param context - 调用方上下文（用于权限校验）
+   */
   async getPrompt(
     serverName: string,
     promptName: string,
     args: Record<string, string>,
+    context?: McpCallerContext,
   ): Promise<PromptMessage[]> {
-    return this.client.getPrompt(serverName, promptName, args)
+    return this.client.getPrompt(serverName, promptName, args, context)
   }
 
   /** 列出所有工具（供 Agent 发现） */

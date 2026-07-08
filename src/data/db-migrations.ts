@@ -11,6 +11,7 @@
  */
 import { DB_VERSION, STORE_NAME } from '@/config/dbConfig'
 import type { LogContext } from '@/lib/logger'
+import { rbacMigrationV24 } from './migrations/rbacMigrationV24'
 
 // ── 迁移框架（D-01：IndexedDB Schema 版本化与迁移） ─────────────
 
@@ -97,6 +98,8 @@ export function runMigrations(
  * 新增 Schema 变更时：在 dbConfig 中将 DB_VERSION +1，并在此处追加一条 Migration。
  */
 export const MIGRATIONS: readonly Migration[] = [
+  // RBAC 6 表创建必须在 seed 之前执行（seed 依赖 schema 就绪）
+  rbacMigrationV24,
   {
     version: DB_VERSION,
     name: 'seed_schema_migrations_tracker',

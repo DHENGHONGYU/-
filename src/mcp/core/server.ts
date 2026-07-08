@@ -5,8 +5,15 @@
  * 提供 MCPServer 接口的默认实现，内置 Tool/Resource/Prompt 的注册与查找。
  * 业务 Server 继承此类并重写 getTools/getResources/getPrompts 方法。
  *
+ * **双端权限校验（金融级底线）**：
+ *   - Client 端（防君子）：MCPClientImpl 在入口拦截，基于 caller 上下文校验
+ *   - Server 端（防小人）：本基类在 callTool/readResource/getPrompt 执行前，
+ *     调用 `assertServerPermission(role, resourceName)` 再次校验，
+ *     防止绕过 Client 直接调用 Server 实例的越权访问
+ *
  * @module mcp/core/server
  * @created 2026-07-04 - Phase 0 MCP 基础设施层建设
+ * @updated 2026-07-08 - P0 新增 constructor 接收 defaultCallerRole + assertServerPermission 方法
  */
 
 import { getLogger } from '@/lib/logger'
@@ -19,13 +26,25 @@ import type {
   ResourceContent,
   PromptTemplate,
   PromptMessage,
+  McpCallerContext,
+  McpCallerRole,
 } from '@/types/modules/mcp.types'
+import { mcpAclInterceptor, McpAclError } from './mcpAclInterceptor'
 
 const logger = getLogger()
 
-/** MCP Server 基类 —— 提供默认的工具/资源/Prompt 管理 */
+/** MCP Server 基类 —— 提供默认的工具/资源/Prompt 管理 + 服务端权限防御 */
 export abstract class MCPServerBase implements MCPServer {
   abstract readonly info: ServerInfo
+
+  /**
+   * 该 Server 实例的默认调用方角色。
+   *
+   * 当 callTool/readResource/getPrompt 未传入 `context.caller` 时使用此默认值。
+   * 子类可在构造时通过 `super('ui')` / `super('system')` 指定，
+   * 默认 `'agent'`（向后兼容：现有 16 个 Server 子类无需修改）。
+   */
+  private readonly defaultCallerRole: McpCallerRole
 
   /** 工具缓存（按 name 索引） */
   private toolCache: Map<string, ToolDescriptor> | null = null
@@ -35,6 +54,13 @@ export abstract class MCPServerBase implements MCPServer {
 
   /** Prompt 缓存（按 name 索引） */
   private promptCache: Map<string, PromptTemplate> | null = null
+
+  /**
+   * @param defaultCallerRole - 默认调用方角色（未传入 context 时使用），默认 `'agent'`
+   */
+  constructor(defaultCallerRole: McpCallerRole = 'agent') {
+    this.defaultCallerRole = defaultCallerRole
+  }
 
   // ============================================================
   // 子类重写方法
@@ -56,6 +82,44 @@ export abstract class MCPServerBase implements MCPServer {
   }
 
   // ============================================================
+  // 服务端权限防御（防小人）
+  // ============================================================
+
+  /**
+   * 服务端权限断言 —— 在执行工具/资源/Prompt 前校验调用方角色是否有权访问。
+   *
+   * **设计目的**：这是"Server 防小人"的防线。即使调用方绕过 MCPClient 直接拿到
+   * Server 实例调用 callTool，Server 自身也会基于传入的 callerRole 进行权限校验，
+   * 拒绝未授权的工具访问。
+   *
+   * **可重写**：子类可重写此方法实现自定义权限逻辑（如基于 Tool 元数据的细粒度控制、
+   * 基于 args 内容的动态权限决策）。重写时建议保留 `super.assertServerPermission()`
+   * 调用以维持基础 ACL 校验。
+   *
+   * @param role - 调用方角色（从 context.caller 或 defaultCallerRole 解析）
+   * @param resourceName - 资源名称（Tool name / `readResource:xxx` / `getPrompt:xxx`）
+   * @throws {McpAclError} 当权限校验失败
+   */
+  protected assertServerPermission(
+    role: McpCallerRole,
+    resourceName: string,
+  ): void {
+    mcpAclInterceptor.assert({
+      caller: role,
+      serverName: this.info.name,
+      resourceName,
+    })
+  }
+
+  /**
+   * 解析当前调用的 caller 角色：
+   * 优先使用 context.caller，未传入时回退到 this.defaultCallerRole。
+   */
+  private resolveCallerFromContext(context?: McpCallerContext): McpCallerRole {
+    return context?.caller ?? this.defaultCallerRole
+  }
+
+  // ============================================================
   // 公共接口实现
   // ============================================================
 
@@ -68,8 +132,33 @@ export abstract class MCPServerBase implements MCPServer {
     return Array.from(this.toolCache.values())
   }
 
-  async callTool(name: string, args: Record<string, unknown>): Promise<ToolResult> {
+  async callTool(
+    name: string,
+    args: Record<string, unknown>,
+    context?: McpCallerContext,
+  ): Promise<ToolResult> {
     const startTime = performance.now()
+    const caller = this.resolveCallerFromContext(context)
+
+    // ── Server 端权限断言（防小人） ──
+    // 即使调用方绕过 Client 直接调用 Server 实例，Server 自身也会拦截未授权调用
+    try {
+      this.assertServerPermission(caller, name)
+    } catch (err) {
+      if (err instanceof McpAclError) {
+        logger.warn(
+          `[MCPServer:${this.info.name}] callTool() ACL denied: caller="${caller}", tool="${name}"`,
+        )
+        return {
+          content: [
+            { type: 'text', text: `ACL_PERMISSION_DENIED: ${err.detail.reason}` },
+          ],
+          isError: true,
+        }
+      }
+      throw err
+    }
+
     const tools = this.listTools()
     const tool = tools.find((t) => t.name === name)
 
@@ -94,12 +183,16 @@ export abstract class MCPServerBase implements MCPServer {
     }
 
     try {
-      logger.info(`[MCPServer:${this.info.name}] callTool() executing: ${name}`, { args })
+      logger.info(`[MCPServer:${this.info.name}] callTool() executing: ${name}`, {
+        args,
+        caller,
+      })
       const result = await tool.handler(args)
       const duration = performance.now() - startTime
       logger.info(`[MCPServer:${this.info.name}] callTool() completed: ${name}`, {
         durationMs: Math.round(duration),
         isError: result.isError ?? false,
+        caller,
       })
       return result
     } catch (error) {
@@ -121,14 +214,32 @@ export abstract class MCPServerBase implements MCPServer {
     return Array.from(this.resourceCache.values())
   }
 
-  async readResource(uri: string): Promise<ResourceContent> {
+  async readResource(uri: string, context?: McpCallerContext): Promise<ResourceContent> {
+    const caller = this.resolveCallerFromContext(context)
     const resources = this.listResources()
 
     for (const resource of resources) {
       const regex = this.uriTemplateToRegex(resource.uriTemplate)
       if (regex.test(uri)) {
+        // ── Server 端权限断言（防小人） ──
         try {
-          logger.info(`[MCPServer:${this.info.name}] readResource() reading: ${uri}`)
+          this.assertServerPermission(caller, `readResource:${resource.name}`)
+        } catch (err) {
+          if (err instanceof McpAclError) {
+            logger.warn(
+              `[MCPServer:${this.info.name}] readResource() ACL denied: caller="${caller}", uri="${uri}"`,
+            )
+            return {
+              uri,
+              mimeType: 'text/plain',
+              text: `ACL_PERMISSION_DENIED: ${err.detail.reason}`,
+            }
+          }
+          throw err
+        }
+
+        try {
+          logger.info(`[MCPServer:${this.info.name}] readResource() reading: ${uri}`, { caller })
           return await resource.resolver(uri)
         } catch (error) {
           const message = error instanceof Error ? error.message : String(error)
@@ -159,7 +270,32 @@ export abstract class MCPServerBase implements MCPServer {
     return Array.from(this.promptCache.values())
   }
 
-  async getPrompt(name: string, args: Record<string, string>): Promise<PromptMessage[]> {
+  async getPrompt(
+    name: string,
+    args: Record<string, string>,
+    context?: McpCallerContext,
+  ): Promise<PromptMessage[]> {
+    const caller = this.resolveCallerFromContext(context)
+
+    // ── Server 端权限断言（防小人） ──
+    try {
+      this.assertServerPermission(caller, `getPrompt:${name}`)
+    } catch (err) {
+      if (err instanceof McpAclError) {
+        logger.warn(
+          `[MCPServer:${this.info.name}] getPrompt() ACL denied: caller="${caller}", prompt="${name}"`,
+        )
+        return [{
+          role: 'user',
+          content: {
+            type: 'text',
+            text: `ACL_PERMISSION_DENIED: ${err.detail.reason}`,
+          },
+        }]
+      }
+      throw err
+    }
+
     const prompts = this.listPrompts()
     const prompt = prompts.find((p) => p.name === name)
 
@@ -169,7 +305,7 @@ export abstract class MCPServerBase implements MCPServer {
     }
 
     try {
-      logger.info(`[MCPServer:${this.info.name}] getPrompt() generating: ${name}`, { args })
+      logger.info(`[MCPServer:${this.info.name}] getPrompt() generating: ${name}`, { args, caller })
       return await prompt.generator(args)
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error)
@@ -195,7 +331,7 @@ export abstract class MCPServerBase implements MCPServer {
     const errors: string[] = []
     const schema = tool.inputSchema
 
-    if (!schema || schema.type !== 'object' || !schema.properties) {
+    if (schema?.type !== 'object' || !schema.properties) {
       return errors // 无 schema 定义时跳过校验（向后兼容）
     }
 
