@@ -61,7 +61,7 @@ async function detectViolations(): Promise<Violation[]> {
           line: idx + 1,
           type: 'constants-import',
           importPath: match[2],
-          importedTypes: match[1].split(',').map(s => s.trim()),
+          importedTypes: match[1]!.split(',').map(s => s.trim()),
         })
       }
     })
@@ -87,7 +87,7 @@ async function detectViolations(): Promise<Violation[]> {
           line: idx + 1,
           type: 'services-import',
           importPath: '@/store/',
-          importedTypes: match[1].split(',').map(s => s.trim()),
+          importedTypes: match[1]!.split(',').map(s => s.trim()),
         })
       }
     })

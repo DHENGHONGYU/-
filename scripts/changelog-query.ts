@@ -241,7 +241,7 @@ function filterEntries(entries: ChangelogEntry[], args: CliArgs): ChangelogEntry
     result = result.filter((e) => {
       // 支持前缀匹配（如 --date=2026-07 匹配整个月）
       const entryDate = e.timestamp.slice(0, 10)
-      return entryDate === args.date || entryDate.startsWith(args.date)
+      return entryDate === args.date || entryDate.startsWith(args.date ?? '')
     })
   }
 

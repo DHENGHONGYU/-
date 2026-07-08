@@ -298,7 +298,7 @@ class CodeAnalyzer {
 
       let match;
       while ((match = magicNumberRegex.exec(line)) !== null) {
-        const num = parseInt(match[1]);
+        const num = parseInt(match[1]!);
         // 排除常见的非魔法数字
         if (num === 100 || num === 1000 || num === 10000) continue;
         if (num >= 1900 && num <= 2100) continue; // 年份
@@ -914,7 +914,7 @@ function generateMermaidDiagram(graph: CodeGraph): string {
   // 为每个层创建一个子图
   Object.keys(graph.statistics.byLayer).forEach(layer => {
     const color = layerColors[layer] || '#95a5a6';
-    lines.push(`    subgraph ${layer}["${layer} (${graph.statistics.byLayer[layer].fileCount}文件)"]`);
+    lines?.push(`    subgraph ${layer}["${layer} (${graph.statistics.byLayer[layer].fileCount}文件)"]`);
     lines.push(`        style ${layer} fill:${color}22,stroke:${color},stroke-width:2px`);
     
     // 添加该层的代表性文件(最多5个)

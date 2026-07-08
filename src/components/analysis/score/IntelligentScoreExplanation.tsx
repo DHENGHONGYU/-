@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { DataState } from '@/components/ui/DataState'
 import { ScoreRadar } from '@/components/chart/ScoreRadar'
+import { FactorHeatmap, type FactorHeatmapData } from '@/components/chart/FactorHeatmap'
 import { sanitizeLlmOutput } from '@/utils/xssSanitizer'
 import type { IntelligentScore } from '@/data/types'
 import {
@@ -48,6 +49,15 @@ export function buildKeyFactors(result: IntelligentScore) {
   return sorted.slice(0, INTELLIGENT_SCORE_EXPLANATION_CONFIG.topFactorCount)
 }
 
+export function buildFactorHeatmapData(result: IntelligentScore): FactorHeatmapData[] {
+  return result.dimensionScores
+    .filter((dim) => typeof dim.score === 'number' && Number.isFinite(dim.score))
+    .map((dim) => ({
+      name: dim.name,
+      value: dim.score as number,
+    }))
+}
+
 export const IntelligentScoreExplanation = memo(function IntelligentScoreExplanation({
   result,
   loading,
@@ -58,6 +68,7 @@ export const IntelligentScoreExplanation = memo(function IntelligentScoreExplana
 
   const radarData = useMemo(() => (result ? buildRadarData(result) : []), [result])
   const keyFactors = useMemo(() => (result ? buildKeyFactors(result) : []), [result])
+  const heatmapData = useMemo(() => (result ? buildFactorHeatmapData(result) : []), [result])
   const sanitizedChain = useMemo(() => {
     if (!result) return ''
     return sanitizeLlmOutput(result.modelResponse ?? result.basis ?? '')
@@ -122,6 +133,20 @@ export const IntelligentScoreExplanation = memo(function IntelligentScoreExplana
                   </div>
                 </div>
               </div>
+
+              {heatmapData.length > 0 && (
+                <div>
+                  <p className="mb-2 text-sm font-medium text-muted-foreground">
+                    {INTELLIGENT_SCORE_EXPLANATION_LABELS.heatmapTitle}
+                  </p>
+                  <FactorHeatmap
+                    data={heatmapData}
+                    minValue={0}
+                    maxValue={SCORE_SCALE_MAX}
+                    height={Math.max(160, Math.ceil(heatmapData.length / 3) * 64)}
+                  />
+                </div>
+              )}
 
               {sanitizedChain && (
                 <div className="rounded-md border p-3">

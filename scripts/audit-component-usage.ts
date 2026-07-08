@@ -95,8 +95,8 @@ function extractComponentImports(filePath: string): Map<string, number> {
     for (const pattern of patterns) {
       pattern.lastIndex = 0
       let match
-      while ((match = pattern.exec(line)) !== null) {
-        const names = match[1].split(',').map(n => n.trim().split(' as ')[0].trim())
+      while ((match = pattern.exec(line ?? '')) !== null) {
+        const names = match[1]!?.split(',')?.map(n => n.trim().split(' as ')[0].trim())
         for (const name of names) {
           if (name && name !== '*') {
             imports.set(name, (imports.get(name) || 0) + 1)

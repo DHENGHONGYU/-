@@ -123,8 +123,8 @@ function main(): void {
       while ((m = STYLE_COLOR_PROP_RE.exec(content))) {
         const val = m[2]
         // 排除令牌引用（如 `${COLOR_SHADES.blue.hex[500]}`）——其值含 `${`，非硬编码字面量
-        if (val.includes('${')) continue
-        if (COLOR_VALUE_RE.test(val)) {
+        if (val?.includes('${')) continue
+        if (COLOR_VALUE_RE.test(val ?? '')) {
           ms.inlineStyleColor++
           ms.total++
           fileCount.set(rel, (fileCount.get(rel) ?? 0) + 1)

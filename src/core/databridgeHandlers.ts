@@ -14,6 +14,8 @@ import { db } from '@/data/db'
 import type { Stock } from '@/data/types'
 import { getLogger } from '@/lib/logger'
 import { EnvelopeError, type StandardEnvelope } from './envelope'
+import { cascadeExecutor } from './cascadeExecutor'
+import { CascadeError } from '@/types/modules/cascade.types'
 
 const logger = getLogger()
 
@@ -78,6 +80,14 @@ class PutHandler implements EnvelopeHandler {
 
 /**
  * 通用 DELETE 操作处理器
+ *
+ * 集成级联策略执行器（cascadeExecutor）：
+ * - 删除前先执行级联策略（CASCADE/RESTRICT/SET_NULL/SOFT_DELETE）
+ * - RESTRICT 策略阻止删除时，抛出 CascadeError，不执行 db.delete()
+ * - CASCADE 策略先删除关联数据，再删除主实体
+ *
+ * @see src/core/cascadeExecutor.ts
+ * @see src/config/cascadeConfig.ts
  */
 class DeleteHandler implements EnvelopeHandler {
   private readonly actions: string[]
@@ -94,6 +104,41 @@ class DeleteHandler implements EnvelopeHandler {
     const { meta, payload } = envelope
     const { id } = payload as { id: string }
     logger.debug(`[DataBridge] DB delete: action="${meta.action}", store="${store}", id="${id}"`)
+
+    // 执行级联策略（RESTRICT 可能阻止删除）
+    try {
+      const result = await cascadeExecutor.execute(store, id)
+      if (result.targets.length > 0) {
+        logger.info('[DataBridge] DeleteHandler 级联策略执行完成', {
+          action: meta.action,
+          store,
+          id,
+          traceId: meta.traceId,
+          cascadeTargets: result.targets.length,
+          affectedTotal: result.targets.reduce((sum, t) => sum + t.affectedCount, 0),
+        })
+      }
+    } catch (err) {
+      if (err instanceof CascadeError) {
+        logger.warn('[DataBridge] DeleteHandler 删除被级联策略阻止', {
+          action: meta.action,
+          store,
+          id,
+          traceId: meta.traceId,
+          error: err.message,
+        })
+        throw new EnvelopeError(`删除被阻止: ${err.message} (traceId=${meta.traceId})`)
+      }
+      // 非 CascadeError 的其他错误，记录日志但不阻止删除（容错策略）
+      logger.error('[DataBridge] DeleteHandler 级联执行异常（继续删除）', {
+        action: meta.action,
+        store,
+        id,
+        traceId: meta.traceId,
+        error: err instanceof Error ? err.message : String(err),
+      })
+    }
+
     await db.delete(store, id)
   }
 }

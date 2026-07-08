@@ -134,47 +134,47 @@ function scanEmptyFunctions(file: string): Issue[] {
 
   for (let i = 0; i < lines.length; i++) {
     const raw = lines[i]
-    const trimmed = raw.trim()
+    const trimmed = raw?.trim()!
 
-    if (trimmed.startsWith('//') || trimmed.startsWith('*')) continue
+    if (trimmed!.startsWith('//') || trimmed!.startsWith('*')) continue
 
     // 空箭头函数：const X = () => {}
     const emptyArrow = /(?:const|let|var)\s+(\w+)\s*=\s*(?:\([^)]*\))?\s*=>\s*\{\s*\}/
-    const arrowMatch = raw.match(emptyArrow)
+    const arrowMatch = raw?.match(emptyArrow)
     if (arrowMatch) {
       issues.push({
         file: rel,
         line: i + 1,
         type: '空函数',
         message: `空箭头函数 ${arrowMatch[1]}`,
-        context: trimmed.slice(0, 80),
+        context: trimmed!.slice(0, 80),
       })
       continue
     }
 
     // 空函数：function X() {}
     const emptyFunc = /function\s+(\w+)\s*\([^)]*\)\s*\{\s*\}/
-    const funcMatch = raw.match(emptyFunc)
+    const funcMatch = raw?.match(emptyFunc)
     if (funcMatch) {
       issues.push({
         file: rel,
         line: i + 1,
         type: '空函数',
         message: `空函数 ${funcMatch[1]}`,
-        context: trimmed.slice(0, 80),
+        context: trimmed!.slice(0, 80),
       })
       continue
     }
 
     // 仅返回 null 的组件（单文件内）
     const nullReturn = /return\s+null\s*;?\s*$/
-    if (nullReturn.test(trimmed) && rel.endsWith('.tsx')) {
+    if (nullReturn.test(trimmed ?? '') && rel.endsWith('.tsx')) {
       issues.push({
         file: rel,
         line: i + 1,
         type: '条件返回 null',
         message: '组件在条件分支中返回 null（请确认是否为预期空状态）',
-        context: trimmed.slice(0, 80),
+        context: trimmed!.slice(0, 80),
       })
     }
   }
@@ -191,7 +191,7 @@ function parseRoutes(): string[] {
   const regex = /import\s*\(\s*['"]([^'"]+)['"]\s*\)/g
   let match: RegExpExecArray | null
   while ((match = regex.exec(content)) !== null) {
-    importPaths.push(match[1])
+    importPaths.push(match[1]!)
   }
   return importPaths
 }
@@ -237,13 +237,13 @@ function collectAppDispatcherImports(): Set<string> {
     // 扫描动态导入
     dynamicRegex.lastIndex = 0
     while ((match = dynamicRegex.exec(content)) !== null) {
-      pageImports.add(match[1].replace(/\.tsx?$/, ''))
+      pageImports?.add(match[1]!.replace(/\.tsx?$/, ''))
     }
 
     // 扫描静态导入
     staticRegex.lastIndex = 0
     while ((match = staticRegex.exec(content)) !== null) {
-      pageImports.add(match[1].replace(/\.tsx?$/, ''))
+      pageImports?.add(match[1]!.replace(/\.tsx?$/, ''))
     }
   }
   return pageImports
@@ -267,7 +267,7 @@ function collectPortalImports(): Set<string> {
     let match: RegExpExecArray | null
     regex.lastIndex = 0
     while ((match = regex.exec(content)) !== null) {
-      lazyImports.add(match[1].replace(/\.tsx?$/, ''))
+      lazyImports?.add(match[1]!.replace(/\.tsx?$/, ''))
     }
   }
   return lazyImports
@@ -394,15 +394,15 @@ function collectDynamicImports(): DynamicImportScanResult {
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i]
         // 跳过注释行（减少误报）
-        const trimmed = line.trim()
-        if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*')) {
+        const trimmed = line?.trim()!
+        if (trimmed!.startsWith('//') || trimmed!.startsWith('*') || trimmed!.startsWith('/*')) {
           continue
         }
 
         for (const { kind, regex } of patterns) {
           regex.lastIndex = 0
           let match: RegExpExecArray | null
-          while ((match = regex.exec(line)) !== null) {
+          while ((match = regex.exec(line ?? '')) !== null) {
             const importPath = match[1]
 
             // 去重：同一行同一导入路径只记录一次（优先记录更具体的模式）
@@ -411,10 +411,10 @@ function collectDynamicImports(): DynamicImportScanResult {
             seen.add(dedupKey)
 
             // 分类路径前缀
-            const prefix = classifyImportPath(importPath)
+            const prefix = classifyImportPath(importPath ?? '')
 
             // 规范化模块标识（去除 @/ 前缀和扩展名）
-            const normalizedModule = normalizeModulePath(importPath)
+            const normalizedModule = normalizeModulePath(importPath ?? '')
 
             // 仅 @/pages/ 前缀的导入纳入页面注册集合
             if (prefix === '@/pages/') {
@@ -483,7 +483,7 @@ function isExcludedFromPageAudit(relativePath: string): boolean {
   if (/pages\/\w+\/types\//.test(relativePath)) return true
   // v2.0 新增：文件名以 use 开头（React hooks）
   const fileName = relativePath.split('/').pop() || ''
-  if (fileName.startsWith('use') && fileName[3] >= 'A' && fileName[3] <= 'Z') return true
+  if (fileName?.startsWith('use') && fileName[3] >= 'A' && fileName[3] <= 'Z') return true
   // v2.0 新增：纯类型文件
   if (fileName.endsWith('types.ts') || fileName.endsWith('interfaces.ts')) return true
   return false

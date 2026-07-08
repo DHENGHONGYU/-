@@ -154,16 +154,16 @@ function scanFile(file: string): Pick<Report, 'violations' | 'warnings'> {
 
   for (let i = 0; i < lines.length; i++) {
     const raw = lines[i]
-    const trimmed = raw.trim()
+    const trimmed = raw?.trim()!
 
-    if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*')) continue
+    if (trimmed!.startsWith('//') || trimmed!.startsWith('*') || trimmed!.startsWith('/*')) continue
 
     // v2.1 修复：跳过 import type（类型导入豁免跨层检查）
-    if (IMPORT_TYPE_PATTERN.test(raw)) continue
+    if (IMPORT_TYPE_PATTERN.test(raw ?? '')) continue
 
     // 规则 1：L5/L4 直接写 dataLayer / db
     if (isL5OrL4(rel)) {
-      const writeMatch = raw.match(DATA_LAYER_WRITE_PATTERN)
+      const writeMatch = raw?.match(DATA_LAYER_WRITE_PATTERN)
       if (writeMatch) {
         violations.push({
           file: rel,
@@ -171,11 +171,11 @@ function scanFile(file: string): Pick<Report, 'violations' | 'warnings'> {
           column: (writeMatch.index ?? 0) + 1,
           type: 'L5/L4 直接写数据层',
           message: 'L5/L4 禁止直接调用 dataLayer 写操作',
-          context: trimmed.slice(0, 80),
+          context: trimmed!.slice(0, 80),
         })
       }
 
-      const dbWriteMatch = raw.match(DB_WRITE_PATTERN)
+      const dbWriteMatch = raw?.match(DB_WRITE_PATTERN)
       if (dbWriteMatch) {
         violations.push({
           file: rel,
@@ -183,11 +183,11 @@ function scanFile(file: string): Pick<Report, 'violations' | 'warnings'> {
           column: (dbWriteMatch.index ?? 0) + 1,
           type: 'L5/L4 直接写 DB',
           message: 'L5/L4 禁止直接调用 db 原生写方法',
-          context: trimmed.slice(0, 80),
+          context: trimmed!.slice(0, 80),
         })
       }
 
-      if (IMPORT_DATA_LAYER_PATTERN.test(raw)) {
+      if (IMPORT_DATA_LAYER_PATTERN.test(raw ?? '')) {
         importsDataLayer = true
       }
     }
@@ -207,7 +207,7 @@ function scanFile(file: string): Pick<Report, 'violations' | 'warnings'> {
         /from\s+['"]@\/core\/(databridge|envelope|acl|poolTransitionEngine)['"]/,
       ]
       for (const pattern of forbiddenImports) {
-        const match = raw.match(pattern)
+        const match = raw?.match(pattern)
         if (match) {
           violations.push({
             file: rel,
@@ -215,7 +215,7 @@ function scanFile(file: string): Pick<Report, 'violations' | 'warnings'> {
             column: (match.index ?? 0) + 1,
             type: 'config 层依赖下层',
             message: '配置层禁止依赖引擎层/应用层/展示层',
-            context: trimmed.slice(0, 80),
+            context: trimmed!.slice(0, 80),
           })
         }
       }
@@ -228,7 +228,7 @@ function scanFile(file: string): Pick<Report, 'violations' | 'warnings'> {
         /from\s+['"]@\/(pages|components|apps|portal|cockpit)\//,
       ]
       for (const pattern of forbiddenImports) {
-        const match = raw.match(pattern)
+        const match = raw?.match(pattern)
         if (match) {
           violations.push({
             file: rel,
@@ -236,7 +236,7 @@ function scanFile(file: string): Pick<Report, 'violations' | 'warnings'> {
             column: (match.index ?? 0) + 1,
             type: 'core 层依赖上层',
             message: 'core 层禁止依赖展示层/应用层',
-            context: trimmed.slice(0, 80),
+            context: trimmed!.slice(0, 80),
           })
         }
       }
@@ -244,7 +244,7 @@ function scanFile(file: string): Pick<Report, 'violations' | 'warnings'> {
 
     // 规则 4：services 层禁止直接写 db（应通过 DataBridge）
     if (rel.startsWith('src/services/')) {
-      const dbWriteMatch = raw.match(DB_WRITE_PATTERN)
+      const dbWriteMatch = raw?.match(DB_WRITE_PATTERN)
       if (dbWriteMatch) {
         violations.push({
           file: rel,
@@ -252,12 +252,12 @@ function scanFile(file: string): Pick<Report, 'violations' | 'warnings'> {
           column: (dbWriteMatch.index ?? 0) + 1,
           type: 'services 直接写 DB',
           message: '引擎层禁止直接调用 db 写方法，应使用 DataBridge.forward()',
-          context: trimmed.slice(0, 80),
+          context: trimmed!.slice(0, 80),
         })
       }
 
       // v2.0 规则 5：services 层禁止直接依赖 store（应通过 core/data 或 DataBridge）
-      const storeImportMatch = raw.match(IMPORT_STORE_PATTERN)
+      const storeImportMatch = raw?.match(IMPORT_STORE_PATTERN)
       if (storeImportMatch && !rel.includes('__tests__') && !rel.includes('.test.')) {
         violations.push({
           file: rel,
@@ -265,12 +265,12 @@ function scanFile(file: string): Pick<Report, 'violations' | 'warnings'> {
           column: (storeImportMatch.index ?? 0) + 1,
           type: 'services 直接依赖 store',
           message: '引擎层禁止直接依赖 store 层，应通过 core/data 或 DataBridge',
-          context: trimmed.slice(0, 80),
+          context: trimmed!.slice(0, 80),
         })
       }
 
       // v2.0 规则 5b：services 层禁止动态 import store
-      const dynamicStoreMatch = raw.match(DYNAMIC_IMPORT_STORE_PATTERN)
+      const dynamicStoreMatch = raw?.match(DYNAMIC_IMPORT_STORE_PATTERN)
       if (dynamicStoreMatch && !rel.includes('__tests__') && !rel.includes('.test.')) {
         violations.push({
           file: rel,
@@ -278,12 +278,12 @@ function scanFile(file: string): Pick<Report, 'violations' | 'warnings'> {
           column: (dynamicStoreMatch.index ?? 0) + 1,
           type: 'services 动态导入 store',
           message: '引擎层禁止动态导入 store 层',
-          context: trimmed.slice(0, 80),
+          context: trimmed!.slice(0, 80),
         })
       }
 
       // v2.2 规则 5c：services 层禁止依赖 lib 中的业务模块（仅允许基础设施）
-      const libBusinessMatch = raw.match(SERVICES_IMPORT_LIB_BUSINESS)
+      const libBusinessMatch = raw?.match(SERVICES_IMPORT_LIB_BUSINESS)
       if (libBusinessMatch && !rel.includes('__tests__') && !rel.includes('.test.')) {
         violations.push({
           file: rel,
@@ -291,14 +291,14 @@ function scanFile(file: string): Pick<Report, 'violations' | 'warnings'> {
           column: (libBusinessMatch.index ?? 0) + 1,
           type: 'services 依赖 lib 业务模块',
           message: '引擎层仅可依赖 lib 中的基础设施（logger/withBroadcast/eventBus/format/errors/utils/localStorageManager）',
-          context: trimmed.slice(0, 80),
+          context: trimmed!.slice(0, 80),
         })
       }
     }
 
     // v2.0 规则 6：lib 层禁止依赖上层（services/store/pages/components）
     if (rel.startsWith('src/lib/')) {
-      const libUpperMatch = raw.match(LIB_IMPORT_UPPER_LAYER)
+      const libUpperMatch = raw?.match(LIB_IMPORT_UPPER_LAYER)
       if (libUpperMatch && !rel.includes('__tests__') && !rel.includes('.test.')) {
         violations.push({
           file: rel,
@@ -306,14 +306,14 @@ function scanFile(file: string): Pick<Report, 'violations' | 'warnings'> {
           column: (libUpperMatch.index ?? 0) + 1,
           type: 'lib 层依赖上层',
           message: '基础设施层禁止依赖业务层（services/store/pages/components）',
-          context: trimmed.slice(0, 80),
+          context: trimmed!.slice(0, 80),
         })
       }
     }
 
     // v2.0 规则 7：constants 层禁止依赖任何业务层
     if (rel.startsWith('src/constants/')) {
-      const constantsBusinessMatch = raw.match(CONSTANTS_IMPORT_BUSINESS)
+      const constantsBusinessMatch = raw?.match(CONSTANTS_IMPORT_BUSINESS)
       if (constantsBusinessMatch && !rel.includes('__tests__') && !rel.includes('.test.')) {
         violations.push({
           file: rel,
@@ -321,7 +321,7 @@ function scanFile(file: string): Pick<Report, 'violations' | 'warnings'> {
           column: (constantsBusinessMatch.index ?? 0) + 1,
           type: 'constants 层依赖业务层',
           message: '常量层必须零依赖，禁止导入任何业务模块',
-          context: trimmed.slice(0, 80),
+          context: trimmed!.slice(0, 80),
         })
       }
     }

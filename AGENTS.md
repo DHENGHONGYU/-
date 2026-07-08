@@ -747,11 +747,84 @@ npm run changelog:summary
 
 ---
 
+## 十二、任务图管理机制
+
+### 12.1 机制目标
+
+解决 AI 辅助开发过程中出现的三大问题：
+- **上下文任务丢失**：执行过程中忘记原始意图和前置任务
+- **任务执行漂移**：操作超出预期范围，混入无关变更
+- **过度纠结细节**：验证策略不明确，重复执行验证命令导致 token 浪费
+
+### 12.2 状态前置检查门禁（每次任务开始前强制执行）
+
+```powershell
+git log --oneline -5          # 确认当前 commit 位置
+git status --short            # 确认工作区状态
+读取相关方案文档               # 确认任务边界
+记录 contextAnchor 快照        # 后续对照防漂移
+```
+
+### 12.3 任务图核心结构
+
+每个复杂任务必须建立任务图，包含：
+
+| 组成部分 | 说明 |
+|---------|------|
+| **rootTask** | 用户原始意图、成功标准、约束条件 |
+| **phases** | 按阶段分解的任务清单，含依赖关系和 verificationLevel |
+| **contextAnchor** | 意图锚点、范围锚点、状态锚点（防漂移） |
+| **tokenBudget** | token 预算、已消耗、超预算策略 |
+
+### 12.4 三级回归测试套件
+
+替代"手动决定运行什么"的模式：
+
+| 级别 | 触发场景 | 包含命令 | 预期耗时 |
+|------|---------|---------|---------|
+| **L1 轻量** | 单文件修改、类型修复 | `tsc --noEmit` + 相关测试 | ~30s |
+| **L2 标准** | 模块拆分、跨文件重构 | L1 + `eslint` + `audit:layers` + `audit:deadcode` | ~2min |
+| **L3 完整** | 阶段性提交、PR 合并前 | L2 + `npm test -- --run` + `npm run build` | ~5min |
+
+**规则**：每个 phase 完成后必须运行对应级别的回归套件，结果作为 `exitCriteria` 的一部分。
+
+### 12.5 上下文锚点防漂移规则
+
+**每次执行工具调用前**，必须对照三个锚点：
+
+1. **意图锚点**：当前操作是否服务于 `rootTask.intent`？
+2. **范围锚点**：当前操作是否超出 `phase` 边界？
+3. **状态锚点**：工作区状态是否与 `contextAnchor` 一致？
+
+**触发暂停的条件**（硬性规则）：
+- staged 文件数与 phase 预期不符
+- 发现非本 phase 引入的文件变更
+- pre-commit hook 修改了非 staged 文件
+- token 消耗超过预算 80%
+
+### 12.6 知识图谱优先（与 §7.1 协同）
+
+```
+理解代码关系时:
+├── 优先查询 docs/reports/code-graph.json     # 缓存的依赖关系
+├── 常用查询用 scripts/quick-query.sh 模板    # 14 个预置查询
+└── 仅当图谱未覆盖时才用 Grep/SearchCodebase
+```
+
+### 12.7 模板文件
+
+- [task-graph-template.md](../docs/templates/task-graph-template.md) — 任务图模板
+- [regression-suite.md](../docs/templates/regression-suite.md) — 回归测试套件模板
+
+---
+
 ## 十一、变更日志
 
 | 版本 | 日期 | 变更摘要 |
 |------|------|----------|
-| v1.3.3 | 2026-07-05 | §3.5.1 补充 THEME_TOKENS 完整结构说明（typography/iconSizes/controlSizes/spacing/radius/gap/stackGap）；§3.5.2 新增场景 F/G/H（排版令牌、图标尺寸、间距圆角使用示例）；完成 Alert/Badge 组件 Design Tokens 迁移；新增组件迁移最佳实践文档 |
+| v1.3.6 | 2026-07-08 | §十二 新增任务图管理机制（12.1-12.7），包含状态前置检查门禁、三级回归测试套件、上下文锚点防漂移规则；新增 task-graph-template.md 和 regression-suite.md 两个模板文件 |
+| v1.3.5 | 2026-07-08 | §7 新增 audit:contract 契约合规性检测脚本；extract-code-graph.ts 新增增量更新+AST 缓存机制；创建 quick-query.sh 快速查询模板；daily-doc-validation.ts 重写括号检查逻辑 |
+| v1.3.3 | 2026-07-05 | §3.5.1 补充 THEME_TOKENS 完整结构说明；§3.5.2 新增场景 F/G/H；完成 Alert/Badge 组件 Design Tokens 迁移；新增组件迁移最佳实践文档 |
 | v1.3.2 | 2026-07-05 | §1 补充 services→lib 依赖规则（明确 lib 基础设施白名单）；补充 types/ 和 agents/ 层定义；audit-layer-calls.ts v2.2 新增 services→lib 业务模块检测 |
 | v1.3.1 | 2026-07-05 | §3 新增事件监听清理标准模板（4 个）、新增 AI 自主修复边界清单（允许/禁止）；§1 补充 lib/ 层依赖规则；§2 补充四步契约回滚验证流程（5 项验证要求）；Store 数量修正 39→44、服务子域 18→20 |
 | v1.3.0 | 2026-07-05 | §7 新增 Token 消耗控制规则（§7.1）、新增 audit:token 脚本、优化 audit:layers/hardcode/deadcode 检测能力、新增知识图谱使用指南和常见错误模式清单 |

@@ -234,7 +234,7 @@ function analyzeChangeContext(changedFiles: string[]): ChangeContext {
     // 提取模块名
     const parts = file.split('/')
     if (parts.length >= 2 && parts[0] === 'src') {
-      affectedModules.add(parts[1])
+      affectedModules.add(parts[1] ?? '')
     }
 
     // 检测变更类型
