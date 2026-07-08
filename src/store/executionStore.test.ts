@@ -512,4 +512,213 @@ describe('useExecutionStore', () => {
     expect(mockForward).not.toHaveBeenCalled()
     expect(useExecutionStore.getState().plans[0]!.phase).toBe('plan')
   })
+
+  // ============================================================
+  // executePlan 行为契约测试（重构等价性验证）
+  // ============================================================
+  // 验证原则：只验证外部可观察行为（phase 序列、forward 调用次数、下单调用、activePlans、error）
+  // 不验证内部实现细节（具体调用了哪个辅助函数），用于重构前后行为等价性验证
+  // ============================================================
+  describe('executePlan 行为契约（重构等价性验证）', () => {
+    // ---- 契约①：phase 状态序列（confirmed -> pending -> executed） ----
+    it('契约①-1: buy 成功 phase 序列 confirmed -> pending -> executed', async () => {
+      const plan = createPlan({ id: 'plan-c01', phase: 'confirmed', direction: 'buy' })
+      useExecutionStore.setState({ plans: [plan], activePlans: [plan] })
+      let phaseAtQueryTime: string | null = null
+      mockWaitFor.mockResolvedValueOnce(undefined)
+      mockQuery.mockImplementationOnce(async () => {
+        // 在 query 调用时读取当前 plan 的 phase，验证已经转为 pending
+        phaseAtQueryTime = useExecutionStore.getState().plans[0]!.phase
+        return { success: true, data: createStock({ price: 150 }) }
+      })
+      mockForward.mockResolvedValue(undefined)
+      mockCreateBuyOrder.mockResolvedValueOnce({
+        success: true,
+        data: createOrder({ id: 'ord-c01' }),
+      })
+
+      await useExecutionStore.getState().executePlan('plan-c01')
+
+      expect(phaseAtQueryTime).toBe('pending') // 验证中间态
+      expect(useExecutionStore.getState().plans[0]!.phase).toBe('executed')
+    })
+
+    it('契约①-2: sell 成功 phase 序列 confirmed -> pending -> executed', async () => {
+      const plan = createPlan({ id: 'plan-c02', phase: 'confirmed', direction: 'sell' })
+      useExecutionStore.setState({ plans: [plan], activePlans: [plan] })
+      let phaseAtQueryTime: string | null = null
+      mockWaitFor.mockResolvedValueOnce(undefined)
+      mockQuery.mockImplementationOnce(async () => {
+        phaseAtQueryTime = useExecutionStore.getState().plans[0]!.phase
+        return { success: true, data: createStock({ price: 150 }) }
+      })
+      mockForward.mockResolvedValue(undefined)
+      mockCreateSellOrder.mockResolvedValueOnce({
+        success: true,
+        data: createOrder({ id: 'ord-c02', direction: 'sell' }),
+      })
+
+      await useExecutionStore.getState().executePlan('plan-c02')
+
+      expect(phaseAtQueryTime).toBe('pending')
+      expect(useExecutionStore.getState().plans[0]!.phase).toBe('executed')
+    })
+
+    // ---- 契约②：forward 调用次数 ----
+    it('契约②-1: 成功时 forward 调用 2 次（pending + executed）', async () => {
+      const plan = createPlan({ id: 'plan-c03', phase: 'confirmed', direction: 'buy' })
+      useExecutionStore.setState({ plans: [plan], activePlans: [plan] })
+      mockWaitFor.mockResolvedValueOnce(undefined)
+      mockQuery.mockResolvedValueOnce({ success: true, data: createStock({ price: 150 }) })
+      mockForward.mockResolvedValue(undefined)
+      mockCreateBuyOrder.mockResolvedValueOnce({
+        success: true,
+        data: createOrder({ id: 'ord-c03' }),
+      })
+
+      await useExecutionStore.getState().executePlan('plan-c03')
+
+      expect(mockForward).toHaveBeenCalledTimes(2)
+    })
+
+    it('契约②-2: 下单失败时 forward 调用 2 次（pending + cancelled）', async () => {
+      const plan = createPlan({ id: 'plan-c04', phase: 'confirmed', direction: 'buy' })
+      useExecutionStore.setState({ plans: [plan], activePlans: [plan] })
+      mockWaitFor.mockResolvedValueOnce(undefined)
+      mockQuery.mockResolvedValueOnce({ success: true, data: createStock({ price: 150 }) })
+      mockForward.mockResolvedValue(undefined)
+      mockCreateBuyOrder.mockResolvedValueOnce({ success: false, error: '余额不足' })
+
+      await useExecutionStore.getState().executePlan('plan-c04')
+
+      expect(mockForward).toHaveBeenCalledTimes(2)
+    })
+
+    // ---- 契约③：下单调用方向互斥 ----
+    it('契约③-1: buy 方向仅调用 createBuyOrder', async () => {
+      const plan = createPlan({ id: 'plan-c05', phase: 'confirmed', direction: 'buy' })
+      useExecutionStore.setState({ plans: [plan], activePlans: [plan] })
+      mockWaitFor.mockResolvedValueOnce(undefined)
+      mockQuery.mockResolvedValueOnce({ success: true, data: createStock({ price: 150 }) })
+      mockForward.mockResolvedValue(undefined)
+      mockCreateBuyOrder.mockResolvedValueOnce({
+        success: true,
+        data: createOrder({ id: 'ord-c05' }),
+      })
+
+      await useExecutionStore.getState().executePlan('plan-c05')
+
+      expect(mockCreateBuyOrder).toHaveBeenCalledTimes(1)
+      expect(mockCreateSellOrder).not.toHaveBeenCalled()
+    })
+
+    it('契约③-2: sell 方向仅调用 createSellOrder', async () => {
+      const plan = createPlan({ id: 'plan-c06', phase: 'confirmed', direction: 'sell' })
+      useExecutionStore.setState({ plans: [plan], activePlans: [plan] })
+      mockWaitFor.mockResolvedValueOnce(undefined)
+      mockQuery.mockResolvedValueOnce({ success: true, data: createStock({ price: 150 }) })
+      mockForward.mockResolvedValue(undefined)
+      mockCreateSellOrder.mockResolvedValueOnce({
+        success: true,
+        data: createOrder({ id: 'ord-c06', direction: 'sell' }),
+      })
+
+      await useExecutionStore.getState().executePlan('plan-c06')
+
+      expect(mockCreateSellOrder).toHaveBeenCalledTimes(1)
+      expect(mockCreateBuyOrder).not.toHaveBeenCalled()
+    })
+
+    // ---- 契约④：activePlans 排除终态 plan ----
+    it('契约④-1: 成功后 activePlans 不含 executed plan', async () => {
+      const plan = createPlan({ id: 'plan-c07', phase: 'confirmed', direction: 'buy' })
+      useExecutionStore.setState({ plans: [plan], activePlans: [plan] })
+      mockWaitFor.mockResolvedValueOnce(undefined)
+      mockQuery.mockResolvedValueOnce({ success: true, data: createStock({ price: 150 }) })
+      mockForward.mockResolvedValue(undefined)
+      mockCreateBuyOrder.mockResolvedValueOnce({
+        success: true,
+        data: createOrder({ id: 'ord-c07' }),
+      })
+
+      await useExecutionStore.getState().executePlan('plan-c07')
+
+      const state = useExecutionStore.getState()
+      expect(state.activePlans).toHaveLength(0)
+      expect(state.activePlans.find((p) => p.id === 'plan-c07')).toBeUndefined()
+    })
+
+    it('契约④-2: 下单失败后 activePlans 不含 cancelled plan', async () => {
+      const plan = createPlan({ id: 'plan-c08', phase: 'confirmed', direction: 'buy' })
+      useExecutionStore.setState({ plans: [plan], activePlans: [plan] })
+      mockWaitFor.mockResolvedValueOnce(undefined)
+      mockQuery.mockResolvedValueOnce({ success: true, data: createStock({ price: 150 }) })
+      mockForward.mockResolvedValue(undefined)
+      mockCreateBuyOrder.mockResolvedValueOnce({ success: false, error: '余额不足' })
+
+      await useExecutionStore.getState().executePlan('plan-c08')
+
+      const state = useExecutionStore.getState()
+      expect(state.activePlans).toHaveLength(0)
+      expect(state.activePlans.find((p) => p.id === 'plan-c08')).toBeUndefined()
+    })
+
+    // ---- 契约⑤：异常分支 ----
+    it('契约⑤-1: 股票查询 success=false 时转为 cancelled 且不调用下单', async () => {
+      const plan = createPlan({ id: 'plan-c09', phase: 'confirmed', direction: 'buy' })
+      useExecutionStore.setState({ plans: [plan], activePlans: [plan] })
+      mockWaitFor.mockResolvedValueOnce(undefined)
+      mockQuery.mockResolvedValueOnce({ success: false, error: '查询股票失败' })
+      mockForward.mockResolvedValue(undefined)
+
+      await useExecutionStore.getState().executePlan('plan-c09')
+
+      const state = useExecutionStore.getState()
+      const updated = state.plans[0]!
+      expect(updated.phase).toBe('cancelled')
+      expect(updated.result).toBe('failed')
+      expect(updated.errorMessage).toBe('查询股票失败')
+      expect(mockCreateBuyOrder).not.toHaveBeenCalled()
+      expect(mockCreateSellOrder).not.toHaveBeenCalled()
+    })
+
+    it('契约⑤-2: 股票价格为 0 时转为 cancelled 且不调用下单', async () => {
+      const plan = createPlan({ id: 'plan-c10', phase: 'confirmed', direction: 'buy' })
+      useExecutionStore.setState({ plans: [plan], activePlans: [plan] })
+      mockWaitFor.mockResolvedValueOnce(undefined)
+      mockQuery.mockResolvedValueOnce({ success: true, data: createStock({ price: 0 }) })
+      mockForward.mockResolvedValue(undefined)
+
+      await useExecutionStore.getState().executePlan('plan-c10')
+
+      const state = useExecutionStore.getState()
+      const updated = state.plans[0]!
+      expect(updated.phase).toBe('cancelled')
+      expect(updated.result).toBe('failed')
+      expect(updated.errorMessage).toContain('价格无效')
+      expect(mockCreateBuyOrder).not.toHaveBeenCalled()
+      expect(mockCreateSellOrder).not.toHaveBeenCalled()
+    })
+
+    it('契约⑤-3: orderStore 等待失败时转为 cancelled 且不查询股票不下单', async () => {
+      const plan = createPlan({ id: 'plan-c11', phase: 'confirmed', direction: 'buy' })
+      useExecutionStore.setState({ plans: [plan], activePlans: [plan] })
+      mockWaitFor.mockRejectedValueOnce(new Error('orderStore 刷新超时'))
+      mockForward.mockResolvedValue(undefined)
+
+      await useExecutionStore.getState().executePlan('plan-c11')
+
+      const state = useExecutionStore.getState()
+      const updated = state.plans[0]!
+      expect(updated.phase).toBe('cancelled')
+      expect(updated.result).toBe('failed')
+      expect(updated.errorMessage).toBe('orderStore 刷新超时')
+      expect(state.error).toBe('orderStore 刷新超时')
+      // 异常发生在 waitFor，pending 未应用，仅 cancelled 调用 1 次 forward
+      expect(mockForward).toHaveBeenCalledTimes(1)
+      expect(mockQuery).not.toHaveBeenCalled()
+      expect(mockCreateBuyOrder).not.toHaveBeenCalled()
+      expect(mockCreateSellOrder).not.toHaveBeenCalled()
+    })
+  })
 })

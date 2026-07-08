@@ -112,6 +112,86 @@ function computeActivePlans(plans: ExecutionPlan[]): ExecutionPlan[] {
 }
 
 // ============================================================
+// executePlan 子步骤辅助函数（PR-6 阶段 3.1 内部优化）
+// ============================================================
+
+/**
+ * 查询股票信息并校验价格有效性
+ * @throws Error 若查询失败或价格无效
+ */
+async function queryStockForExecution(symbol: string, planId: string): Promise<Stock> {
+  logger.info('[executionStore] executePlan 查询股票信息', { planId, symbol })
+  const stockResult = await dataBridge.query<Stock>({
+    action: ENVELOPE_ACTION.queryGet,
+    store: STORE_NAME.stocks,
+    key: symbol,
+    source: MODULE_ID.tradinghub,
+  })
+
+  if (!stockResult.success) {
+    const errorMessage = stockResult.error ?? `查询股票 ${symbol} 失败`
+    logger.error(`[executionStore] executePlan 查询股票失败: ${errorMessage}`, { planId, symbol })
+    throw new Error(errorMessage)
+  }
+
+  const stock = stockResult.data
+  logger.info('[executionStore] executePlan 股票信息查询成功', { planId, symbol, price: stock?.price })
+  if (stock?.price === undefined || stock.price <= 0) {
+    throw new Error(`股票 ${symbol} 价格无效`)
+  }
+  return stock
+}
+
+/**
+ * 根据执行计划方向调用 tradingService 下单
+ */
+async function placeOrderForPlan(plan: ExecutionPlan, stock: Stock) {
+  const quantity = plan.sizing?.quantity ?? 100
+  logger.info('[executionStore] executePlan 调用 tradingService', {
+    planId: plan.id,
+    direction: plan.direction,
+    quantity,
+  })
+
+  const orderResult = plan.direction === 'buy'
+    ? await createBuyOrder(stock, quantity)
+    : await createSellOrder(stock, quantity)
+
+  logger.info('[executionStore] executePlan tradingService 返回', {
+    planId: plan.id,
+    success: orderResult.success,
+    error: orderResult.error,
+  })
+  return orderResult
+}
+
+/**
+ * 统一处理执行计划的 phase 状态转换：
+ * 1. 构造新 plan 对象
+ * 2. 通过 DataBridge 持久化（forwardUpdateExecutionPlan）
+ * 3. 更新本地 Store 状态（plans + activePlans + lastUpdated）
+ */
+async function transitionPlanPhase(
+  planId: string,
+  basePlan: ExecutionPlan,
+  targetPhase: ExecutionPhase,
+  extraFields?: Partial<ExecutionPlan>,
+): Promise<void> {
+  const updatedPlan: ExecutionPlan = { ...basePlan, ...extraFields, phase: targetPhase }
+
+  await forwardUpdateExecutionPlan(planId, { ...extraFields, phase: targetPhase })
+
+  useExecutionStore.setState((state) => {
+    const newPlans = state.plans.map((p) => (p.id === planId ? updatedPlan : p))
+    return {
+      plans: newPlans,
+      activePlans: computeActivePlans(newPlans),
+      lastUpdated: Date.now(),
+    }
+  })
+}
+
+// ============================================================
 // Store
 // ============================================================
 
@@ -151,7 +231,7 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
 
       if (!result.success) {
         const errorMessage = result.error ?? '查询执行计划列表失败'
-        logger.error(`[executionStore] refresh 查询失败: ${errorMessage}`)
+        logger.error(`[executionStore] refresh 查询失败: ${errorMessage}`, { errorMessage })
         throw new Error(errorMessage)
       }
 
@@ -279,11 +359,13 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
 
   // ----------------------------------------------------------
   // executePlan -- 执行计划（下单）
+  // 编排逻辑：refreshCoordinator 等待 → pending → 查询股票 → 下单 → executed/cancelled
   // ----------------------------------------------------------
 
   executePlan: async (planId) => {
     logger.info('[executionStore] executePlan', { planId })
 
+    // ─── 入口校验 ───
     const { plans } = get()
     const plan = plans.find((p) => p.id === planId)
     if (!plan) {
@@ -298,150 +380,47 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
       return
     }
 
-    // 设置处理中状态
     set({ isProcessing: true, error: null })
 
     try {
-      logger.info('[executionStore] executePlan 开始执行', { planId, symbol: plan.symbol, direction: plan.direction, phase: plan.phase })
-
       // 等待 orderStore 刷新完成，确保读取到最新持仓数据用于仓位计算
-      logger.info('[executionStore] executePlan 等待 orderStore 刷新完成', { planId })
       await refreshCoordinator.waitFor('orderStore')
-      logger.info('[executionStore] executePlan orderStore 刷新已完成', { planId })
 
       // 1. phase -> pending
-      logger.info('[executionStore] executePlan phase -> pending', { planId })
-      const pendingPlan: ExecutionPlan = { ...plan, phase: 'pending' }
-      await forwardUpdateExecutionPlan(planId, { phase: 'pending' })
+      await transitionPlanPhase(planId, plan, 'pending')
 
-      set((state) => {
-        const newPlans = state.plans.map((p) => (p.id === planId ? pendingPlan : p))
-        return { plans: newPlans, activePlans: computeActivePlans(newPlans) }
-      })
-      logger.info('[executionStore] executePlan 本地状态已更新为 pending', { planId })
+      // 2. 查询股票信息（内部校验价格有效性）
+      const stock = await queryStockForExecution(plan.symbol, planId)
 
-      // 2. 获取股票信息
-      logger.info('[executionStore] executePlan 查询股票信息', { planId, symbol: plan.symbol })
-      const stockResult = await dataBridge.query<Stock>({
-        action: ENVELOPE_ACTION.queryGet,
-        store: STORE_NAME.stocks,
-        key: plan.symbol,
-        source: MODULE_ID.tradinghub,
-      })
+      // 3. 调用 tradingService 下单
+      const orderResult = await placeOrderForPlan(plan, stock)
 
-      if (!stockResult.success) {
-        const errorMessage = stockResult.error ?? `查询股票 ${plan.symbol} 失败`
-        logger.error(`[executionStore] executePlan 查询股票失败: ${errorMessage}`, { planId, symbol: plan.symbol })
-        throw new Error(errorMessage)
-      }
-
-      const stock = stockResult.data
-      logger.info('[executionStore] executePlan 股票信息查询成功', { planId, symbol: plan.symbol, price: stock?.price })
-      if (stock?.price === undefined || stock.price <= 0) {
-        throw new Error(`股票 ${plan.symbol} 价格无效`)
-      }
-
-      // 3. 根据 direction 调用 tradingService
-      const quantity = plan.sizing?.quantity ?? 100
-      logger.info('[executionStore] executePlan 调用 tradingService', { planId, direction: plan.direction, quantity })
-      let orderResult
-
-      if (plan.direction === 'buy') {
-        orderResult = await createBuyOrder(stock, quantity)
-      } else {
-        orderResult = await createSellOrder(stock, quantity)
-      }
-
-      logger.info('[executionStore] executePlan tradingService 返回', { planId, success: orderResult.success, error: orderResult.error })
-
-      // 4. 处理结果
+      // 4. 根据下单结果转换 phase
       if (orderResult.success && orderResult.data) {
-        logger.info('[executionStore] executePlan 下单成功，准备更新为 executed', { planId, orderId: orderResult.data.id })
-        const executedPlan: ExecutionPlan = {
-          ...pendingPlan,
-          phase: 'executed',
-          orderId: orderResult.data.id,
-          executedAt: Date.now(),
-          result: 'success',
-        }
-        await forwardUpdateExecutionPlan(planId, {
-          phase: 'executed',
+        await transitionPlanPhase(planId, plan, 'executed', {
           orderId: orderResult.data.id,
           executedAt: Date.now(),
           result: 'success',
         })
-
-        set((state) => {
-          const newPlans = state.plans.map((p) => (p.id === planId ? executedPlan : p))
-          return {
-            plans: newPlans,
-            activePlans: computeActivePlans(newPlans),
-            lastUpdated: Date.now(),
-          }
-        })
-
-        logger.info('[executionStore] executePlan 成功', {
-          planId,
-          orderId: orderResult.data.id,
-        })
+        logger.info('[executionStore] executePlan 成功', { planId, orderId: orderResult.data.id })
       } else {
-        // 下单失败 -> cancelled
-        logger.warn('[executionStore] executePlan 下单失败，准备更新为 cancelled', { planId, error: orderResult.error })
-        const cancelledPlan: ExecutionPlan = {
-          ...pendingPlan,
-          phase: 'cancelled',
-          executedAt: Date.now(),
-          result: 'failed',
-          errorMessage: orderResult.error ?? '下单失败',
-        }
-        await forwardUpdateExecutionPlan(planId, {
-          phase: 'cancelled',
+        await transitionPlanPhase(planId, plan, 'cancelled', {
           executedAt: Date.now(),
           result: 'failed',
           errorMessage: orderResult.error ?? '下单失败',
         })
-
-        set((state) => {
-          const newPlans = state.plans.map((p) => (p.id === planId ? cancelledPlan : p))
-          return {
-            plans: newPlans,
-            activePlans: computeActivePlans(newPlans),
-            lastUpdated: Date.now(),
-          }
-        })
-
-        logger.warn('[executionStore] executePlan 下单失败状态已更新', {
-          planId,
-          error: orderResult.error,
-        })
+        logger.warn('[executionStore] executePlan 下单失败', { planId, error: orderResult.error })
       }
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
       logger.error('[executionStore] executePlan 异常', { error: message, planId })
 
-      // 异常 -> cancelled
+      // 异常 -> cancelled（使用原始 plan 作为基础，因 pending 状态可能已通过 transitionPlanPhase 应用）
       try {
-        const cancelledPlan: ExecutionPlan = {
-          ...plan,
-          phase: 'cancelled',
+        await transitionPlanPhase(planId, plan, 'cancelled', {
           executedAt: Date.now(),
           result: 'failed',
           errorMessage: message,
-        }
-        await forwardUpdateExecutionPlan(planId, {
-          phase: 'cancelled',
-          executedAt: Date.now(),
-          result: 'failed',
-          errorMessage: message,
-        })
-
-        set((state) => {
-          const newPlans = state.plans.map((p) => (p.id === planId ? cancelledPlan : p))
-          return {
-            plans: newPlans,
-            activePlans: computeActivePlans(newPlans),
-            lastUpdated: Date.now(),
-          }
         })
       } catch (updateErr) {
         logger.error('[executionStore] executePlan 异常后更新状态也失败', { error: updateErr })
@@ -666,6 +645,60 @@ function _debouncedRefresh(envelope: StandardEnvelope): void {
 }
 
 /**
+ * 处理 signals 频道的 envelope。
+ * - source 过滤防止自激
+ * - 收到 insertSignal（buy/sell）时，半自动模式自动创建执行计划
+ * - 执行计划相关变更触发去抖刷新
+ */
+function _handleSignalEnvelope(envelope: StandardEnvelope): void {
+  // source 过滤：跳过本模块发出的事件，防止自激
+  if (envelope.meta.source === EXECUTION_STORE_SOURCE) {
+    return
+  }
+
+  // 半自动模式：收到新信号自动创建执行计划（不自动确认和执行）
+  if (_SIGNAL_INSERT_ACTIONS.has(envelope.meta.action)) {
+    const signal = envelope.payload as Signal | undefined
+    if (signal && (signal.direction === 'buy' || signal.direction === 'sell')) {
+      logger.info('[executionStore] 收到新信号，自动创建执行计划', {
+        signalId: signal.id,
+        symbol: signal.symbol,
+        direction: signal.direction,
+        confidence: signal.confidence,
+      })
+      void useExecutionStore.getState().createPlan(signal)
+    }
+  }
+
+  // 执行计划相关变更触发去抖刷新
+  if (_EXECUTION_CHANGE_ACTIONS.has(envelope.meta.action)) {
+    _debouncedRefresh(envelope)
+  }
+}
+
+/**
+ * 处理 orders 频道的 envelope。
+ * - source 过滤防止自激
+ * - 订单状态变更触发去抖刷新以同步最新执行计划状态
+ */
+function _handleOrderEnvelope(envelope: StandardEnvelope): void {
+  // source 过滤：跳过本模块发出的事件，防止自激
+  if (envelope.meta.source === EXECUTION_STORE_SOURCE) {
+    return
+  }
+
+  if (_ORDER_CHANGE_ACTIONS.has(envelope.meta.action)) {
+    logger.info('[executionStore] DataBridge orders event received', {
+      action: envelope.meta.action,
+      traceId: envelope.meta.traceId,
+      source: envelope.meta.source,
+    })
+    // 订单变更触发刷新以同步最新状态
+    _debouncedRefresh(envelope)
+  }
+}
+
+/**
  * 初始化 ExecutionStore 的 DataBridge 订阅。
  *
  * 1. 订阅 STORE_NAME.signals 频道：收到 insertSignal 时，自动调用 createPlan()（半自动模式）
@@ -688,57 +721,8 @@ export function initExecutionStoreSubscriptions(): () => void {
     return _destroySubscriptions
   }
 
-  // 订阅 signals 频道：半自动模式下，收到新信号自动创建执行计划
-  _unsubscribeSignals = dataBridge.subscribe(
-    STORE_NAME.signals,
-    (envelope) => {
-      // source 过滤：跳过本模块发出的事件，防止自激
-      if (envelope.meta.source === EXECUTION_STORE_SOURCE) {
-        return
-      }
-
-      if (_SIGNAL_INSERT_ACTIONS.has(envelope.meta.action)) {
-        const signal = envelope.payload as Signal | undefined
-        if (signal && (signal.direction === 'buy' || signal.direction === 'sell')) {
-          logger.info('[executionStore] 收到新信号，自动创建执行计划', {
-            signalId: signal.id,
-            symbol: signal.symbol,
-            direction: signal.direction,
-            confidence: signal.confidence,
-          })
-          // 半自动模式：自动创建计划，但不自动确认和执行
-          void useExecutionStore.getState().createPlan(signal)
-        }
-      }
-
-      // 同步刷新执行计划列表
-      if (_EXECUTION_CHANGE_ACTIONS.has(envelope.meta.action)) {
-        _debouncedRefresh(envelope)
-      }
-    },
-  )
-
-  // 订阅 orders 频道：订单状态变更时更新关联执行计划
-  _unsubscribeOrders = dataBridge.subscribe(
-    STORE_NAME.orders,
-    (envelope) => {
-      // source 过滤：跳过本模块发出的事件，防止自激
-      if (envelope.meta.source === EXECUTION_STORE_SOURCE) {
-        return
-      }
-
-      if (_ORDER_CHANGE_ACTIONS.has(envelope.meta.action)) {
-        logger.info('[executionStore] DataBridge orders event received', {
-          action: envelope.meta.action,
-          traceId: envelope.meta.traceId,
-          source: envelope.meta.source,
-        })
-
-        // 订单变更触发刷新以同步最新状态
-        _debouncedRefresh(envelope)
-      }
-    },
-  )
+  _unsubscribeSignals = dataBridge.subscribe(STORE_NAME.signals, _handleSignalEnvelope)
+  _unsubscribeOrders = dataBridge.subscribe(STORE_NAME.orders, _handleOrderEnvelope)
 
   logger.info('[executionStore] DataBridge subscriptions initialized')
 
