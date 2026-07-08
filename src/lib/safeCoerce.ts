@@ -107,8 +107,8 @@ export function toSafeEnum<T extends string>(value: unknown, allowed: readonly T
  */
 export function toSafeBoolean(value: unknown, defaultValue = false): boolean {
   if (typeof value === 'boolean') return value
-  if (value === 1 || value === 'true' || value === 1) return true
-  if (value === 0 || value === 'false' || value === 0) return false
+  if (value === 1 || value === 'true') return true
+  if (value === 0 || value === 'false') return false
   return defaultValue
 }
 
