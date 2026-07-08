@@ -650,7 +650,13 @@ npm run audit:token
 - 修改 IndexedDB schema 必须递增 `DB_VERSION`（`src/config/dbConfig.ts`）
 - 新增 store 必须在 `STORE_NAME` 中注册
 - 新增 store 必须在 `ACL_MATRIX` 中添加对应的 read/write 白名单
-- 新增 store 必须在 `db.ts` 的 `onupgradeneeded` 中添加创建逻辑
+- 新增 store 必须有创建逻辑，按以下规则选择位置（v1.3.5 明确）：
+  - **基线 store**（首次安装时就需要的核心 store）→ 在 `createSchema`（`src/data/db-schema.ts`）中添加
+  - **增量 store**（版本升级时新增的 store）→ 在对应版本的 `Migration.up()`（`src/data/db-migrations.ts` 或 `src/data/migrations/`）中添加
+  - 禁止在两处同时添加同一 store 的创建逻辑（违反 DRY 原则）
+  - 当前基线 store 清单（由 createSchema 创建，共 27 个）：stocks / v6Scores / intelligentScores / industryScores / orders / watchlists / signals / researchLogs / dailyQuotes / financialReports / rotationScores / sectorScores / scoreDocs / strategySnapshots / localDocs / news / newsStockMap / sentimentCache / newsBookmarks / hotSectorScores / valuePitScores / executionLogs / missingReports / executionPlans / portfolios / tradeReviews / schemaMigrations
+  - 当前增量 store 清单（由 migration 创建）：RBAC 6 表（rbac_users / rbac_roles / rbac_permissions / rbac_user_roles / rbac_role_permissions / rbac_permission_audit_logs，由 rbacMigrationV24 创建）
+  - 注意：schemaMigrations 表本身由 createSchema 创建（基线），但它的"种子数据"由 seed_schema_migrations_tracker migration 写入
 - 新增 ENVELOPE_ACTION 必须在 `DataBridge.routeToDB()` 中添加对应 case
 
 ---

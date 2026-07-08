@@ -2,7 +2,7 @@
  * @fileoverview IndexedDB Schema 定义与创建
  *
  * 从 db.ts 拆分而来（PR-6 步骤 1.3），职责：
- * - 集中管理所有 ObjectStore 的创建逻辑（28 个 store）
+ * - 集中管理所有 ObjectStore 的创建逻辑（33 个 store）
  * - 定义索引（by-status, by-symbol, by-date 等）
  * - stocks store 的 group 字段 backfill 逻辑
  *
@@ -333,4 +333,8 @@ export function createSchema(
   } else {
     logger.debug(`[DB] ObjectStore "${STORE_NAME.schemaMigrations}" already exists`)
   }
+
+  // 注意：RBAC 6 表（rbac_users/rbac_roles/rbac_permissions/rbac_user_roles/
+  // rbac_role_permissions/rbac_permission_audit_logs）由 rbacMigrationV24 创建，
+  // 不在 createSchema 中创建。参见 AGENTS.md §八 第 3 条职责划分规则。
 }

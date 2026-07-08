@@ -6,10 +6,39 @@ import { createSchema } from '@/data/db-schema'
  * db-schema Schema 创建模块测试
  *
  * 验证目标（PR-6 步骤 1.3）：
- * 1. createSchema 创建所有 28 个 objectStore
+ * 1. createSchema 创建所有基线 objectStore（不含 migration 管理的 store）
  * 2. 关键索引存在性验证
  * 3. 幂等性验证（store 已存在时跳过创建）
  */
+
+/**
+ * 由 migration 管理的 store（不在 createSchema 中创建）
+ *
+ * 职责划分（AGENTS.md §八 第 3 条）：
+ * - createSchema：负责基线 schema（首次安装时的核心 store，含 schemaMigrations 表本身）
+ * - runMigrations：负责增量 schema（版本升级时新增的 store）
+ *
+ * 以下 store 由 migration 创建：
+ * - rbac_*（6 表）：由 rbacMigrationV24 创建（v24 新增）
+ *
+ * 注意：schemaMigrations 表本身由 createSchema 创建（基线），
+ * 但它的"种子数据"由 seed_schema_migrations_tracker migration 写入。
+ */
+const MIGRATION_MANAGED_STORES = new Set<string>([
+  'rbac_users',
+  'rbac_roles',
+  'rbac_permissions',
+  'rbac_user_roles',
+  'rbac_role_permissions',
+  'rbac_permission_audit_logs',
+])
+
+/**
+ * 基线 store 列表：由 createSchema 创建
+ */
+const BASELINE_STORES = Object.values(STORE_NAME).filter(
+  (name) => !MIGRATION_MANAGED_STORES.has(name),
+)
 interface MockIndex {
   createIndex: ReturnType<typeof vi.fn>
   indexNames: { contains: (name: string) => boolean }
@@ -68,7 +97,7 @@ function makeMockRequest(): MockRequest {
 
 describe('db-schema Schema 创建模块', () => {
   describe('createSchema - 全量创建场景', () => {
-    it('创建所有 28 个 objectStore（全新数据库）', () => {
+    it('创建所有基线 objectStore（全新数据库，不含 migration 管理的 store）', () => {
       const db = makeMockDb([])
       const request = makeMockRequest()
       const logger = makeLogger()
@@ -79,8 +108,8 @@ describe('db-schema Schema 创建模块', () => {
         logger,
       )
 
-      // 验证所有 store 都被创建
-      const expectedStores = Object.values(STORE_NAME)
+      // 验证所有基线 store 都被创建（不含 schemaMigrations 和 RBAC 6 表，它们由 migration 创建）
+      const expectedStores = BASELINE_STORES
       expect(db.createObjectStore).toHaveBeenCalledTimes(expectedStores.length)
       for (const storeName of expectedStores) {
         expect(db.createObjectStore).toHaveBeenCalledWith(storeName, expect.anything())
@@ -177,8 +206,8 @@ describe('db-schema Schema 创建模块', () => {
 
   describe('createSchema - 幂等性场景', () => {
     it('已存在的 store 不重复创建（跳过 createObjectStore）', () => {
-      // 所有 store 都已存在
-      const existingStores = Object.values(STORE_NAME)
+      // 所有基线 store 都已存在（含 migration 管理的 store 也不影响，因为 createSchema 不检查它们）
+      const existingStores = BASELINE_STORES
       const db = makeMockDb(existingStores)
       const request = makeMockRequest()
       const logger = makeLogger()
@@ -194,7 +223,7 @@ describe('db-schema Schema 创建模块', () => {
     })
 
     it('部分存在的 store 只创建缺失的', () => {
-      // 只让 stocks 已存在，其他全部不存在
+      // 只让 stocks 已存在，其他基线 store 全部不存在
       const db = makeMockDb([STORE_NAME.stocks])
       const request = makeMockRequest()
       const logger = makeLogger()
@@ -205,13 +234,13 @@ describe('db-schema Schema 创建模块', () => {
         logger,
       )
 
-      const expectedStores = Object.values(STORE_NAME)
+      const expectedStores = BASELINE_STORES
       const storesToCreate = expectedStores.filter((s) => s !== STORE_NAME.stocks)
       expect(db.createObjectStore).toHaveBeenCalledTimes(storesToCreate.length)
     })
 
     it('调用 logger.debug 记录已存在的 store', () => {
-      const existingStores = Object.values(STORE_NAME)
+      const existingStores = BASELINE_STORES
       const db = makeMockDb(existingStores)
       const request = makeMockRequest()
       const logger = makeLogger()
@@ -222,7 +251,7 @@ describe('db-schema Schema 创建模块', () => {
         logger,
       )
 
-      // 每个 store 都会记录 "already exists"
+      // 每个 store 都会记录 "already exists"（仅基线 store，不含 migration 管理的 store）
       const debugCalls = logger.debug.mock.calls.filter((call) =>
         String(call[0]).includes('already exists'),
       )
