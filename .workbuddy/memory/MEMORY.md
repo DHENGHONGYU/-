@@ -11,12 +11,13 @@
 
 ## 质量门禁运行方式（环境陷阱）
 - 审计/tsx 脚本与 vitest/tsc 均须用**系统 Node 24**（`C:/Program Files/nodejs/node.exe`）+ 项目 `node_modules` **关沙箱**跑；托管 node 在中文字路径下原生段错误。
-- 门禁入口：`npm run audit`（11 道）+ `tsc:prod` + `lint:colors`。
+- 门禁入口：`npm run audit`（10 道：layers→hardcode→deadcode→docs→routes→mcp→token→tests→reserved-stores→tokens）+ `tsc:prod` + `lint:colors`。
 - **audit:tests 是纯正则扫描**：`/:\s*any\b/`（no-any）与 `/@ts-ignore/`（no-ts-ignore）；`as any` 不触发，仅 WARNING 级（chinese-test-description / describe.skip / no-hardcoded-colors-in-tests）不阻塞。
-- **lint:colors 脚本已修正**：去掉 `--max-warnings 0`（否则被基础配置 1434 条无关 warning 误伤），现仅以颜色 error 判级。
+- **lint:colors 脚本已修正**（2026-07-08 19:3x）：`package.json:13` 单引号→双引号转义 `--rule \"...: error\"`（原单引号在 npm 传参时被吞致脚本完全不可用）；同时去掉 `--max-warnings 0`。
+- **audit:tokens 脚本**（2026-07-08 新建）：`scripts/token-scan.cjs`（零依赖，扫描 src/ 内联 hex/rgb 颜色字面量，排除 tokens/constants/config/mock/test），已注册 package.json 并加入 audit 聚合链。
 - A_MCP 的 16 处 direct-service-import 判为纯前端本地单例合理引用 → 可接受偏离，不 churn。
-- **audit:hardcode「静默回退」已闭环结案**：2026-07-08 核验其 59/60 处违规全为 `?? 0`/`?? ''`/`|| ''` 防御性兜底（非真硬编码）；v3.1 已将「静默回退」过滤出阻塞违规（`scan()` L595 `f.category !== '静默回退'`）+ 行级降 `Warning`（L539），`_audit-pipeline` 退出码仅看 `totalViolations`。本会话复跑（系统 Node24 + `tsx/dist/cli.mjs` + 关沙箱）：837 文件 / **阻塞 0 / 退出码 0** / 60 警告=静默回退 → 确认降级生效、不再阻断 `npm run audit`。✅ 结案。
-  - 伴随发现（已入审查报告）：event-listener-cleanup 启发式漏识别"订阅返回值清理"（`subscribeRef.current()` 范式）、ui-hardcoded-colors 含 test/令牌定义文件误报。
+- **audit:hardcode「静默回退」已闭环结案**：v3.1 将「静默回退」降 Warning；退出码逻辑 2026-07-08 19:3x 修复：`_audit-pipeline.ts:283` 改为 `blockingCount = totalViolations - (totalWarnings ?? 0)`，`audit-hardcode.ts` scan 函数补设 `totalWarnings`（原未设→undefined→假阳性 exit 1）。复跑：0 Major/Critical + 59 Warning → **exit 0** ✅。
+- **docs/templates/ 已创建**（2026-07-08）：`task-graph-template.md` + `regression-suite.md`，消除 AGENTS.md §12.7 悬空引用。
 
 ## 板块轮动数据准确性
 - 五因子评分当前为合成种子，UI 须标「示例」避免伪装实时；真实信号走 `detectBySector`（聚合 dailyQuotes 真实日线）。
