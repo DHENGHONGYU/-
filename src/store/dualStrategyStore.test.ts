@@ -55,7 +55,7 @@ const {
   capturedCallbacks,
   unsubscribes,
 } = vi.hoisted(() => {
-  const capturedCallbacks = new Map<string, ((envelope: any) => void)>()
+  const capturedCallbacks = new Map<string, ((envelope: unknown) => void)>()
   const unsubscribes: Array<ReturnType<typeof vi.fn>> = []
   return {
     mockDataBridgeQuery: vi.fn().mockResolvedValue({ success: true, data: [] }),
@@ -64,7 +64,7 @@ const {
     mockHotSectorAnalyze: vi.fn(),
     mockValuePitAnalyze: vi.fn(),
     mockRotationDetect: vi.fn(),
-    mockSubscribe: vi.fn((channel: string, callback: (envelope: any) => void) => {
+    mockSubscribe: vi.fn((channel: string, callback: (envelope: unknown) => void) => {
       capturedCallbacks.set(channel, callback)
       const unsub = vi.fn()
       unsubscribes.push(unsub)

@@ -24,9 +24,9 @@ import type { HoldingItem } from '@/types/modules/trade.types'
 // ============================================================
 
 const { mockSubscribe, capturedCallbacks, unsubscribes } = vi.hoisted(() => {
-  const capturedCallbacks = new Map<string, ((envelope: any) => void)>()
+  const capturedCallbacks = new Map<string, ((envelope: unknown) => void)>()
   const unsubscribes: Array<ReturnType<typeof vi.fn>> = []
-  const mockSubscribe = vi.fn((channel: string, callback: (envelope: any) => void) => {
+  const mockSubscribe = vi.fn((channel: string, callback: (envelope: unknown) => void) => {
     capturedCallbacks.set(channel, callback)
     const unsub = vi.fn()
     unsubscribes.push(unsub)

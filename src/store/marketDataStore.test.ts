@@ -40,17 +40,17 @@ const {
   mockAdapt,
   mockMerge,
 } = vi.hoisted(() => {
-  const capturedTaskSchedulerCallback = { callback: null as ((taskId: string, rawData: any, error?: Error) => void) | null }
-  const capturedDataBridgeCallback = { callback: null as ((envelope: any) => void) | null }
+  const capturedTaskSchedulerCallback = { callback: null as ((taskId: string, rawData: unknown, error?: Error) => void) | null }
+  const capturedDataBridgeCallback = { callback: null as ((envelope: unknown) => void) | null }
   const unsubscribeTaskSchedulerFn = vi.fn()
   const unsubscribeDataBridgeFn = vi.fn()
 
-  const mockSubscribeTaskScheduler = vi.fn().mockImplementation((callback: any) => {
+  const mockSubscribeTaskScheduler = vi.fn().mockImplementation((callback: unknown) => {
     capturedTaskSchedulerCallback.callback = callback
     return unsubscribeTaskSchedulerFn
   })
 
-  const mockSubscribeDataBridge = vi.fn().mockImplementation((_channel: string, callback: any) => {
+  const mockSubscribeDataBridge = vi.fn().mockImplementation((_channel: string, callback: unknown) => {
     capturedDataBridgeCallback.callback = callback
     return unsubscribeDataBridgeFn
   })

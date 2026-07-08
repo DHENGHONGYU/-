@@ -22,6 +22,44 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // ============================================================
+// 增量更新与缓存机制（基于文件 mtime，避免重复解析未变更文件）
+// ============================================================
+
+/** 文件 mtime 缓存：记录上次解析时的修改时间戳 */
+const fileMtimeCache = new Map<string, number>();
+
+/** AST 缓存：避免重复解析未变更文件的 AST */
+const astCache = new Map<string, ts.SourceFile>();
+
+/**
+ * 检查文件是否自上次解析后发生变更（基于 mtime 增量更新）
+ * @returns true 表示文件已变更或首次解析，需要重新解析；false 表示可跳过
+ */
+function hasFileChanged(filePath: string): boolean {
+  const stat = fs.statSync(filePath);
+  const currentMtime = stat.mtimeMs;
+  const lastMtime = fileMtimeCache.get(filePath);
+  if (lastMtime !== undefined && lastMtime === currentMtime) {
+    return false; // mtime 未变，跳过
+  }
+  fileMtimeCache.set(filePath, currentMtime);
+  return true; // 首次或已变更，需解析
+}
+
+/**
+ * 从缓存获取或重新解析 AST（缓存机制避免重复解析）
+ */
+function getCachedAst(filePath: string, content: string): ts.SourceFile {
+  if (!hasFileChanged(filePath)) {
+    const cached = astCache.get(filePath);
+    if (cached) return cached;
+  }
+  const ast = ts.createSourceFile(filePath, content, ts.ScriptTarget.Latest, true);
+  astCache.set(filePath, ast);
+  return ast;
+}
+
+// ============================================================
 // 类型定义
 // ============================================================
 

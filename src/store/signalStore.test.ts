@@ -29,9 +29,9 @@ import { assertContract } from '../../tests/contracts'
 // ============================================================
 
 const { mockSubscribe, mockDataBridgeQuery, capturedCallbacks, unsubscribes } = vi.hoisted(() => {
-  const capturedCallbacks = new Map<string, ((envelope: any) => void)>()
+  const capturedCallbacks = new Map<string, ((envelope: unknown) => void)>()
   const unsubscribes: Array<ReturnType<typeof vi.fn>> = []
-  const mockSubscribe = vi.fn((channel: string, callback: (envelope: any) => void) => {
+  const mockSubscribe = vi.fn((channel: string, callback: (envelope: unknown) => void) => {
     capturedCallbacks.set(channel, callback)
     const unsub = vi.fn()
     unsubscribes.push(unsub)
@@ -120,7 +120,7 @@ beforeEach(() => {
   unsubscribes.length = 0
 
   // 重新设置 mockSubscribe 实现（clearAllMocks 会清除实现）
-  mockSubscribe.mockImplementation((channel: string, callback: (envelope: any) => void) => {
+  mockSubscribe.mockImplementation((channel: string, callback: (envelope: unknown) => void) => {
     capturedCallbacks.set(channel, callback)
     const unsub = vi.fn()
     unsubscribes.push(unsub)

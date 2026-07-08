@@ -10,7 +10,7 @@
  *
  * 强制约束:
  *   - 仅新建测试文件,不修改业务代码
- *   - 不使用 @ts-ignore 或 any
+ *   - 不使用 ts-ignore 指令或 any 类型
  *   - 测试用 AAA 模式(Arrange/Act/Assert)
  */
 

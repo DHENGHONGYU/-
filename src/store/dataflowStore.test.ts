@@ -25,10 +25,10 @@ const {
   capturedEventBusCallbacks,
   unsubscribeFns,
 } = vi.hoisted(() => {
-  const capturedEventBusCallbacks = new Map<string, ((payload?: any) => void)>()
+  const capturedEventBusCallbacks = new Map<string, ((payload?: unknown) => void)>()
   const unsubscribeFns: Array<ReturnType<typeof vi.fn>> = []
 
-  const mockOn = vi.fn().mockImplementation((event: string, callback: (payload?: any) => void) => {
+  const mockOn = vi.fn().mockImplementation((event: string, callback: (payload?: unknown) => void) => {
     capturedEventBusCallbacks.set(event, callback)
     const unsub = vi.fn()
     unsubscribeFns.push(unsub)

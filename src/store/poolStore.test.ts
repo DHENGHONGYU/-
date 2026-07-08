@@ -21,10 +21,10 @@ const {
   capturedRef,
   unsubscribeFn,
 } = vi.hoisted(() => {
-  const capturedRef = { callback: null as ((envelope: any) => void) | null }
+  const capturedRef = { callback: null as ((envelope: unknown) => void) | null }
   const unsubscribeFn = vi.fn()
 
-  const mockOn = vi.fn().mockImplementation((_channel: string, callback: (envelope: any) => void) => {
+  const mockOn = vi.fn().mockImplementation((_channel: string, callback: (envelope: unknown) => void) => {
     capturedRef.callback = callback
     return unsubscribeFn
   })
