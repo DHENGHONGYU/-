@@ -115,13 +115,13 @@ function scanFile(file: string): Finding[] {
 
   for (let i = 0; i < lines.length; i++) {
     const raw = lines[i]
-    const trimmed = raw.trim()
+    const trimmed = raw?.trim()!
 
     // 跳过注释
-    if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*')) continue
+    if (trimmed!.startsWith('//') || trimmed!.startsWith('*') || trimmed!.startsWith('/*')) continue
 
     // 规则 1：禁止直接 new ExecutionPlan()
-    const newMatch = raw.match(NEW_EXECUTION_PLAN_PATTERN)
+    const newMatch = raw?.match(NEW_EXECUTION_PLAN_PATTERN)
     if (newMatch) {
       violations.push({
         file: rel,
@@ -129,12 +129,12 @@ function scanFile(file: string): Finding[] {
         column: (newMatch.index ?? 0) + 1,
         type: '直接创建 ExecutionPlan',
         message: '禁止直接 new ExecutionPlan()，必须通过 createExecutionPlanUseCase',
-        context: trimmed.slice(0, 80),
+        context: trimmed!.slice(0, 80),
       })
     }
 
     // 规则 2：禁止直接 db.executionPlans.add()
-    const dbMatch = raw.match(DB_EXECUTION_PLANS_ADD_PATTERN)
+    const dbMatch = raw?.match(DB_EXECUTION_PLANS_ADD_PATTERN)
     if (dbMatch) {
       violations.push({
         file: rel,
@@ -142,12 +142,12 @@ function scanFile(file: string): Finding[] {
         column: (dbMatch.index ?? 0) + 1,
         type: '直接写入 executionPlans',
         message: '禁止直接 db.executionPlans.add()，必须通过 createExecutionPlanUseCase',
-        context: trimmed.slice(0, 80),
+        context: trimmed!.slice(0, 80),
       })
     }
 
     // 规则 2b：禁止直接 dataLayer.executionPlans.add/save()
-    const dataLayerMatch = raw.match(DATA_LAYER_EXECUTION_PLANS_ADD_PATTERN)
+    const dataLayerMatch = raw?.match(DATA_LAYER_EXECUTION_PLANS_ADD_PATTERN)
     if (dataLayerMatch) {
       violations.push({
         file: rel,
@@ -155,12 +155,12 @@ function scanFile(file: string): Finding[] {
         column: (dataLayerMatch.index ?? 0) + 1,
         type: '直接写入 executionPlans',
         message: '禁止直接 dataLayer.executionPlans.add/save()，必须通过 createExecutionPlanUseCase',
-        context: trimmed.slice(0, 80),
+        context: trimmed!.slice(0, 80),
       })
     }
 
     // 规则 3：禁止绕过 UseCase 的独立实现
-    const serviceMatch = raw.match(EXECUTION_PLAN_SERVICE_CREATE_PATTERN)
+    const serviceMatch = raw?.match(EXECUTION_PLAN_SERVICE_CREATE_PATTERN)
     if (serviceMatch) {
       violations.push({
         file: rel,
@@ -168,7 +168,7 @@ function scanFile(file: string): Finding[] {
         column: (serviceMatch.index ?? 0) + 1,
         type: '绕过 UseCase 调用',
         message: '禁止调用 executionPlanService.createPlan()，必须通过 createExecutionPlanUseCase',
-        context: trimmed.slice(0, 80),
+        context: trimmed!.slice(0, 80),
       })
     }
   }

@@ -79,20 +79,20 @@ async function scanFile(filePath: string): Promise<Violation[]> {
     const line = lines[i]
     
     // 跳过白名单注释
-    if (WHITELIST_COMMENTS.some(comment => line.includes(comment))) {
+    if (WHITELIST_COMMENTS.some(comment => line?.includes(comment))) {
       continue
     }
 
     // 检测静默回退
     for (const { pattern, type } of SILENT_FALLBACK_PATTERNS) {
-      const matches = line.matchAll(pattern)
+      const matches = line?.matchAll(pattern)!
       for (const match of matches) {
         violations.push({
           file: filePath,
           line: i + 1,
           column: match.index || 0,
           pattern: match[0],
-          context: line.trim(),
+          context: line?.trim(),
         })
       }
     }
@@ -128,7 +128,7 @@ async function fixFile(filePath: string, violations: Violation[]): Promise<numbe
 
     // 修复静默回退
     // 策略：提取为变量，添加错误处理
-    const fixedLine = line.replace(
+    const fixedLine = line?.replace(
       violation.pattern,
       `${violation.pattern} /* TODO: handle error explicitly */`
     )

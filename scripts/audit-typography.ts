@@ -70,7 +70,7 @@ async function auditTypography(): Promise<void> {
       const fontSizeRegex = new RegExp(HARDCODED_FONT_SIZE_REGEX)
       while ((match = fontSizeRegex.exec(line)) !== null) {
         const value = match[1]
-        if (!VALID_FONT_SIZES.has(value)) {
+        if (!VALID_FONT_SIZES.has(value ?? '')) {
           violations.push({
             file,
             line: index + 1,
@@ -86,7 +86,7 @@ async function auditTypography(): Promise<void> {
       const fontWeightRegex = new RegExp(HARDCODED_FONT_WEIGHT_REGEX)
       while ((match = fontWeightRegex.exec(line)) !== null) {
         const value = match[1]
-        if (!VALID_FONT_WEIGHTS.has(value)) {
+        if (!VALID_FONT_WEIGHTS.has(value ?? '')) {
           violations.push({
             file,
             line: index + 1,

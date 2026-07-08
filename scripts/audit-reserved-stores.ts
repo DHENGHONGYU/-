@@ -271,17 +271,17 @@ function extractExports(content: string): StoreExports {
   const hookRegex = /export\s+const\s+(use\w+Store)\s*=/g
   let match: RegExpExecArray | null
   while ((match = hookRegex.exec(content)) !== null) {
-    hooks.push(match[1])
+    hooks.push(match[1]!)
   }
 
   // 匹配 export function xxx 或 export const xxx = (非 Hook)
   const funcRegex = /export\s+function\s+(\w+)/g
   while ((match = funcRegex.exec(content)) !== null) {
     const name = match[1]
-    if (!name.startsWith('use')) {
-      functions.push(name)
-    } else if (!name.endsWith('Store')) {
-      functions.push(name)
+    if (!name?.startsWith('use')) {
+      functions.push(name ?? '')
+    } else if (!name?.endsWith('Store')) {
+      functions.push(name ?? '')
     }
   }
 
@@ -289,15 +289,15 @@ function extractExports(content: string): StoreExports {
   const constRegex = /export\s+const\s+(\w+)\s*=/g
   while ((match = constRegex.exec(content)) !== null) {
     const name = match[1]
-    if (!name.startsWith('use') && !name.endsWith('Store')) {
-      constants.push(name)
+    if (!name?.startsWith('use') && !name?.endsWith('Store')) {
+      constants.push(name ?? '')
     }
   }
 
   // 匹配 export type xxx 或 export interface xxx
   const typeRegex = /export\s+(?:type|interface)\s+(\w+)/g
   while ((match = typeRegex.exec(content)) !== null) {
-    types.push(match[1])
+    types.push(match[1]!)
   }
 
   return { hooks, functions, types, constants }
@@ -413,12 +413,12 @@ function searchReferences(store: ReservedStore): StoreAuditResult {
 
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i]
-        const trimmed = line.trim()
-        if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*')) continue
+        const trimmed = line?.trim()!
+        if (trimmed!.startsWith('//') || trimmed!.startsWith('*') || trimmed!.startsWith('/*')) continue
 
         for (const { kind, regex, symbol, needsImportVerification } of patterns) {
           regex.lastIndex = 0
-          if (regex.test(line)) {
+          if (regex.test(line ?? '')) {
             // v1.1 改造：对需要 import 路径验证的维度，进行二次验证
             const verified = needsImportVerification
               ? importedSymbolsFromThisStore.has(symbol)
@@ -429,7 +429,7 @@ function searchReferences(store: ReservedStore): StoreAuditResult {
               line: i + 1,
               kind,
               symbol,
-              context: trimmed.slice(0, 100),
+              context: trimmed!.slice(0, 100),
               verified,
             })
           }

@@ -136,7 +136,7 @@ function extractJsonBlocks(mdContent: string, filePath: string): JsonBlock[] {
   const regex = /```json\n([\s\S]*?)\n```/g
   let match: RegExpExecArray | null
   while ((match = regex.exec(mdContent)) !== null) {
-    const content = cleanJsonContent(match[1])
+    const content = cleanJsonContent(match[1]!)
     const lineNumber = mdContent.substring(0, match.index).split('\n').length
     blocks.push({ content, lineNumber, file: filePath })
   }

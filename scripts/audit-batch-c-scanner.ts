@@ -151,7 +151,7 @@ function readAndAnalyze(filePath: string): ModuleAnalysis {
     /export\s+(?:async\s+)?(?:function|const|class|interface|type|enum|default)\s+(\w+)/g,
   )
   const exports: string[] = []
-  for (const m of exportMatches) exports.push(m[1])
+  for (const m of exportMatches) exports.push(m[1] ?? '')
 
   // 解析 re-exports
   const reExportMatches = content.matchAll(/export\s+\{[^}]+\}\s+from\s+['"]([^'"]+)['"]/g)
@@ -394,14 +394,14 @@ function main(): void {
   for (let i = 0; i < top20.length; i++) {
     const m = top20[i]
     console.log(
-      `${(i + 1).toString().padStart(2)}. [${m.riskLevel.toUpperCase().padEnd(8)}] ${m.path}`,
+      `${(i + 1).toString().padStart(2)}. [${m?.riskLevel.toUpperCase().padEnd(8)}] ${m?.path}`,
     )
-    console.log(`    行数: ${m.lines} | CC: ${m.cyclomaticComplexity} | MI: ${m.maintainabilityIndex}/100 | exports: ${m.exportCount} | 测试: ${m.hasTestFile ? '✓' : '✗'}`)
-    if (m.splitSuggestion) {
-      console.log(`    建议: ${m.splitSuggestion.strategy}`)
-      console.log(`    边界: ${m.splitSuggestion.boundaries.join(' | ')}`)
-      console.log(`    收益: ${m.splitSuggestion.expectedBenefit}`)
-      console.log(`    优先级: ${m.splitSuggestion.priority} | 预计拆分: ${m.splitSuggestion.estimatedSplitFiles} 文件`)
+    console.log(`    行数: ${m?.lines} | CC: ${m?.cyclomaticComplexity} | MI: ${m?.maintainabilityIndex}/100 | exports: ${m?.exportCount} | 测试: ${m?.hasTestFile ? '✓' : '✗'}`)
+    if (m?.splitSuggestion) {
+      console.log(`    建议: ${m?.splitSuggestion.strategy}`)
+      console.log(`    边界: ${m?.splitSuggestion.boundaries.join(' | ')}`)
+      console.log(`    收益: ${m?.splitSuggestion.expectedBenefit}`)
+      console.log(`    优先级: ${m?.splitSuggestion.priority} | 预计拆分: ${m?.splitSuggestion.estimatedSplitFiles} 文件`)
     }
     console.log()
   }

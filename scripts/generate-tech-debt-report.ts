@@ -292,7 +292,7 @@ function generateTrendData(items: TechDebtItem[]): TechDebtStats['trend'] {
     const total = items.length
     const closed = items.filter((item) => {
       if (!item.closedAt) return false
-      const closedDate = item.closedAt.split('T')[0]
+      const closedDate = item.closedAt.split('T')[0]!
       return closedDate <= dateStr
     }).length
 

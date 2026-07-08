@@ -168,7 +168,7 @@ async function verifyDimension2_Service(): Promise<void> {
   const taskList = runCmd(`netstat -ano | findstr ":${TARGET_PORT}"`)
   if (taskList) {
     const pidMatch = taskList.match(/(\d+)\s*$/m)
-    record('服务运行', '进程 PID', pidMatch ? 'PASS' : 'WARN', pidMatch ? `PID=${pidMatch[1]}` : '无法提取 PID')
+    record('服务运行', '进程 PID', pidMatch ? 'PASS' : 'WARN' ?? '', pidMatch ? `PID=${pidMatch[1]}` : '无法提取 PID')
   } else {
     record('服务运行', '进程 PID', 'WARN', 'netstat 未返回结果')
   }

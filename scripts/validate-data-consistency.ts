@@ -183,7 +183,7 @@ function extractFields(body: string): string[] {
     if (prevDepth === 0 && nestedBraceDepth >= 0) {
       const fieldMatch = trimmed.match(/^(\w+)\s*[?:]/)
       if (fieldMatch) {
-        fields.push(fieldMatch[1])
+        fields.push(fieldMatch[1] ?? '')
       }
     }
   }
@@ -262,12 +262,12 @@ function parseStoreSchemas(
 
   for (let i = 0; i < storePositions.length; i++) {
     const sp = storePositions[i]
-    const storeName = storeNameMap[sp.configKey]
+    const storeName = storeNameMap[sp?.configKey]
 
     if (!storeName) {
       console.warn(
         color(
-          `⚠️  db.ts 中引用了 STORE_NAME.${sp.configKey}，但在 dbConfig.ts 中未找到`,
+          `⚠️  db.ts 中引用了 STORE_NAME.${sp?.configKey}，但在 dbConfig.ts 中未找到`,
           COLORS.yellow,
         ),
       )
@@ -275,14 +275,14 @@ function parseStoreSchemas(
     }
 
     // 解析 keyPath
-    const keyPathMatch = sp.optionsStr.match(/keyPath\s*:\s*['"]([^'"]+)['"]/)
+    const keyPathMatch = sp?.optionsStr.match(/keyPath\s*:\s*['"]([^'"]+)['"]/)
     const keyPath = keyPathMatch ? keyPathMatch[1] : ''
 
     // 解析 autoIncrement
-    const autoIncrement = /autoIncrement\s*:\s*true/.test(sp.optionsStr)
+    const autoIncrement = /autoIncrement\s*:\s*true/.test(sp?.optionsStr ?? '')
 
     // 确定索引搜索范围：从当前 store 结束位置 到 下一个 store 开始位置
-    const searchStart = sp.endPos
+    const searchStart = sp?.endPos
     const searchEnd =
       i < storePositions.length - 1
         ? storePositions[i + 1].startPos
@@ -303,7 +303,7 @@ function parseStoreSchemas(
 
     stores.push({
       storeName,
-      configKey: sp.configKey,
+      configKey: sp?.configKey,
       keyPath,
       autoIncrement,
       indexes,
@@ -324,7 +324,7 @@ function parseIndexesInContext(context: string): IndexInfo[] {
 
   while ((match = indexRegex.exec(context)) !== null) {
     const indexName = match[1]
-    const keyPathRaw = match[2].trim()
+    const keyPathRaw = match[2]!.trim()
     const optionsStr = match[3] || ''
 
     let keyPath: string | string[]
@@ -335,7 +335,7 @@ function parseIndexesInContext(context: string): IndexInfo[] {
       const fieldRegex = /['"]([^'"]+)['"]/g
       let fieldMatch: RegExpExecArray | null
       while ((fieldMatch = fieldRegex.exec(keyPathRaw)) !== null) {
-        fields.push(fieldMatch[1])
+        fields.push(fieldMatch[1] ?? '')
       }
       keyPath = fields
     } else {

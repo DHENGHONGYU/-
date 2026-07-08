@@ -103,7 +103,7 @@ function analyzeFile(filePath: string): { violations: Finding[]; warnings: Findi
   // 检查 1: 页面/组件直接 import service（绕过 MCP）
   if (filePath.includes('pages') || filePath.includes('components')) {
     for (let i = 0; i < lines.length; i++) {
-      const match = DIRECT_SERVICE_IMPORT.exec(lines[i])
+      const match = DIRECT_SERVICE_IMPORT.exec(lines[i] ?? '')
       if (match) {
         violations.push({
           file: relativePath,

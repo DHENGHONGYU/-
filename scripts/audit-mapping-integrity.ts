@@ -282,7 +282,7 @@ function auditActionStoreMapping(): { violations: string[]; stats: { total: numb
   // 提取每个映射条目
   const entryRegex = /\[ENVELOPE_ACTION\.(\w+)\]:\s*STORE_NAME\.(\w+)/g
   let match
-  while ((match = entryRegex.exec(mapContent)) !== null) {
+  while ((match = entryRegex.exec(mapContent ?? '')) !== null) {
     entries.push({ action: match[1], store: match[2] })
   }
 
@@ -312,8 +312,8 @@ function auditActionStoreMapping(): { violations: string[]; stats: { total: numb
     const definedActions: string[] = []
     const definedActionRegex = /(\w+):\s*['"]/g
     let definedMatch
-    while ((definedMatch = definedActionRegex.exec(actionContent)) !== null) {
-      definedActions.push(definedMatch[1])
+    while ((definedMatch = definedActionRegex.exec(actionContent ?? '')) !== null) {
+      definedActions.push(definedMatch[1] ?? '')
     }
 
     const mappedActions = new Set(entries.map(e => e.action))
@@ -444,24 +444,24 @@ export function extractStoreImports(filePath: string): Array<{ target: string; l
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]
-    const trimmed = line.trim()
+    const trimmed = line?.trim()!
 
     // R5 注释过滤：跳过注释行
-    if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*')) {
+    if (trimmed!.startsWith('//') || trimmed!.startsWith('*') || trimmed!.startsWith('/*')) {
       continue
     }
 
     // 优先匹配相对路径
-    const relMatch = line.match(relRegex)
+    const relMatch = line?.match(relRegex)
     if (relMatch) {
       const importPath = relMatch[1]
-      const targetName = importPath.replace(/^.*\//, '')
+      const targetName = importPath?.replace(/^.*\//, '')
       results.push({ target: targetName, line: i + 1, importPath })
       continue
     }
 
     // 匹配绝对路径（v2.1 新增）
-    const absMatch = line.match(absRegex)
+    const absMatch = line?.match(absRegex)
     if (absMatch) {
       const targetName = absMatch[1]
       results.push({ target: targetName, line: i + 1, importPath: `@/store/${targetName}` })
@@ -669,19 +669,19 @@ export function walkAndFindConsumers(
       // R5 注释过滤：逐行检测，跳过注释行
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i]
-        const trimmed = line.trim()
+        const trimmed = line?.trim()!
 
         // 跳过注释行（// 单行注释、* JSDoc续行、/* 块注释起始）
-        if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*')) {
+        if (trimmed!.startsWith('//') || trimmed!.startsWith('*') || trimmed!.startsWith('/*')) {
           continue
         }
 
         // 检测各种导入模式
         for (const { regex, type } of patterns) {
           regex.lastIndex = 0
-          if (regex.test(line)) {
+          if (regex.test(line ?? '')) {
             // 判断是否为 type-only 导入
-            const isTypeImport = /^\s*import\s+type\s/.test(line) || /\btype\s*\{/.test(line)
+            const isTypeImport = /^\s*import\s+type\s/.test(line ?? '') || /\btype\s*\{/.test(line ?? '')
             consumers.push({
               file: relPath,
               line: i + 1,
@@ -1059,8 +1059,8 @@ function auditEventBusIntegrity(): { violations: string[]; stats: { emitted: num
   const definedEvents: string[] = []
   const eventNameRegex = /(\w+):\s*['"]([^'"]+)['"]/g
   let match
-  while ((match = eventNameRegex.exec(eventNamesContent)) !== null) {
-    definedEvents.push(match[2]) // 使用事件值（如 'stocks:changed'）
+  while ((match = eventNameRegex.exec(eventNamesContent ?? '')) !== null) {
+    definedEvents.push(match[2]!) // 使用事件值（如 'stocks:changed'）
   }
 
   logInfo(`  发现 ${definedEvents.length} 个定义的EVENT_NAMES`)

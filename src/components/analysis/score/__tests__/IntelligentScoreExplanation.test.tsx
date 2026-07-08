@@ -52,7 +52,10 @@ describe('IntelligentScoreExplanation', () => {
     render(<IntelligentScoreExplanation result={createResult()} />)
     expect(document.querySelector('.recharts-responsive-container')).toBeInTheDocument()
     expect(screen.getByText(new RegExp(UI_TEXT.analysis.factor.keyFactor, 'i'))).toBeInTheDocument()
-    expect(screen.getByText(new RegExp(UI_TEXT.analysis.factor.value, 'i'))).toBeInTheDocument()
+    // 因子名现在同时出现在「关键因子」徽章与「因子热力图」单元格中，故用 getAllByText
+    expect(
+      screen.getAllByText(new RegExp(UI_TEXT.analysis.factor.value, 'i')).length,
+    ).toBeGreaterThan(0)
   })
 
   test('思维链默认折叠，点击展开显示净化后的内容', async () => {
