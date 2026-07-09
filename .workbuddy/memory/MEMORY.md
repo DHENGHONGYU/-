@@ -31,3 +31,23 @@
 - 实测关键事实（2026-07-08）：AGENTS.md 数字滞后 → services 声明20/实测21、stores 声明47/实测49（Minor，非缺失）；STORE_NAME 33 与 blueprint 期望33 已对齐✅。
 - **RBAC 文档缺口（已闭合，2026-07-08）**：v24 引入 rbac 服务子域 + 6 表(rbacUsers/rbacRoles/rbacPermissions/rbacUserRoles/rbacRolePermissions/rbacPermissionAuditLogs) + 7 ENVELOPE_ACTION。原 ARCHITECTURE.md 与 DATA_DEFINITION.md 完全无 RBAC 记录（AGENTS.md 仅 :669 migration 段局部提及）；已于 2026-07-08 补录（ARCHITECTURE.md §8 + DATA_DEFINITION.md §7），缺口闭合。后续新增 RBAC 表/动作须同步这两处。
 - 文档↔文档陷阱：Glob 上限100被 node_modules 截断会制造悬空引用假阴性，核对前须 `find` 排除 node_modules。
+
+## 数据采集模块（2026-07-09 完成）
+
+### 模块架构
+- **服务层**: `src/services/data-collector/` — directDataAPI(三源)/dataSourceOrchestrator(四层降级)/qualityMetricsCollector(G-3监控)
+- **输入层**: `src/services/input/` — batchImportService(多格式解析)/batchImportParsers/batchImportExecutor
+- **UI层**: `src/apps/input/` — BulkImportPanel(拖拽+进度+Badge+步骤)/InputDashboard(Skeleton+趋势)/DataTestPanel(Skeleton)/HotSectorPanel(Skeleton)
+
+### 时序规范
+- F-1: `src/services/fetcher/dataSourceOrchestrator.ts` Phase 1-4 并行/屏障写入
+- F-2: `src/services/input/batchImportExecutor.ts` batchSize/interval/分批导入
+- F-3: `src/config/collectConfig.ts` TTL表(180→4320→10080→43200 min)
+
+### 数据传递路径
+- 实时采集: directDataAPI ↔ dataSourceOrchestrator → DataBridge.forward() → IndexedDB + EventBus → React
+- 批量导入: parseFile → BulkImportRow[] → importStocks → addStock → DataBridge.forward → EventBus
+
+### 质量监控(G-3)
+- `qualityMetricsCollector.ts`: 成功率/完整率/延迟/降级/写入率 + checkAlerts() 阈值告警
+- 集成点: dataSourceOrchestrator 每次采集+写入均记录指标
