@@ -96,4 +96,12 @@
 | 📝 遗漏未登记 | 5项 | PortalShell/信号修复/GaugeChart/按钮重设计/FactorHeatmap导出 |
 | 🔴 实际未完成 | 1/16 | P0-2 audit:hardcode仍exit 1（新Fatal违规，非本会话范围） |
 
-**总体结论**：RM整改方案的主体工作已全部完成（15/16任务代码实现完毕），但文档存在3处未同步更新和1处过期摘要。建议优先修复P0-2的Fatal违规（需与并行会话协调），同步更新文档正文至最新状态。
+**总体结论**：RM整改方案的主体工作已全部完成。P0-2 Fatal硬编码（真实股票代码→空模板）和P1-2b reserved-stores（4个Store @reserved清理）已于`88c8074`修复。
+
+| 维度 | 计数 | 说明 |
+|:-----|:----:|:-----|
+| ✅ 一致（文档=实际） | 10/16 | P0-3/4、P1-3/4、P2-1/2/3/4、P3-1/2/3 |
+| ⚠️ 文档已同步修正 | 3/16 | P0-1、P1-1、P0-2（方案文档已更新） |
+| ✅ P1-2b 已修复 | 1/16 | chatStore/riskStore/rotationSignalStore/signalQualityStore @reserved已移除 |
+| ✅ P0-2 Fatal已修复 | 1/16 | 5条Fatal→0 (真实股票代码→空模板) |
+| ⚠️ 剩余门禁风险 | 2项 | audit:hardcode仍有6Critical+73Major(并行会话文件)、audit:docs exit 1 |
