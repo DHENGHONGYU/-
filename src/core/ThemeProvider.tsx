@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { getLogger } from '@/lib/logger'
+import { HOVER } from '@/constants/theme.tokens'
+import { cn } from '@/lib/utils'
 
 const logger = getLogger()
 
@@ -204,7 +206,7 @@ export function ThemeToggle({ children }: ThemeToggleProps): React.JSX.Element {
     <button
       type="button"
       onClick={themeContext.toggleTheme}
-      className="inline-flex items-center justify-center rounded-md p-2 hover:bg-gray-100 dark:hover:bg-gray-800"
+      className={cn('inline-flex items-center justify-center rounded-md p-2', HOVER.bgGray100, HOVER.darkHoverBgNeutral800)}
       aria-label={`切换到${themeContext.resolvedMode === 'light' ? '暗色' : '亮色'}模式`}
     >
       {themeContext.resolvedMode === 'light' ? (

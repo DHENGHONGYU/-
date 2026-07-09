@@ -27,12 +27,40 @@ export const DARK = {
   textSlate300: 'dark:text-slate-300',
   textSlate400: 'dark:text-slate-400',
   borderSlate700: 'dark:border-slate-700',
+  // V9 高级灰 / 宋韵暗色主题扩展
+  bgNeutral700: 'dark:bg-neutral-700',
+  bgNeutral800: 'dark:bg-neutral-800',
+  bgNeutral900: 'dark:bg-neutral-900',
+  bgNeutral900Half: 'dark:bg-neutral-900/50',
+  textNeutral100: 'dark:text-neutral-100',
+  textNeutral200: 'dark:text-neutral-200',
+  textNeutral300: 'dark:text-neutral-300',
+  textNeutral400: 'dark:text-neutral-400',
+  textNeutral500: 'dark:text-neutral-500',
+  textNeutral600: 'dark:text-neutral-600',
+  borderNeutral700: 'dark:border-neutral-700',
+  borderNeutral800: 'dark:border-neutral-800',
+  divideNeutral800: 'dark:divide-neutral-800',
+  placeholderNeutral500: 'dark:placeholder:text-neutral-500',
+  hoverBgNeutral900Half: 'dark:hover:bg-neutral-900/50',
+  hoverTextNeutral200: 'dark:hover:text-neutral-200',
+  // emerald 暗色
+  textEmerald400: 'dark:text-emerald-400',
+  borderEmerald500: 'dark:border-emerald-500',
+  borderEmerald800: 'dark:border-emerald-800',
+  // 状态色暗色
   bgRed950: 'dark:bg-red-950',
   bgRed950_30: 'dark:bg-red-950/30',
   textRed200: 'dark:text-red-200',
   textRed300: 'dark:text-red-300',
+  textRed400: 'dark:text-red-400',
   borderRed900: 'dark:border-red-900',
   borderRed800: 'dark:border-red-800',
+  bgAmber950: 'dark:bg-amber-950',
+  bgAmber950_30: 'dark:bg-amber-950/30',
+  textAmber200: 'dark:text-amber-200',
+  textAmber300: 'dark:text-amber-300',
+  borderAmber800: 'dark:border-amber-800',
   bgGreen950: 'dark:bg-green-950',
   textGreen100: 'dark:text-green-100',
   borderGreen900: 'dark:border-green-900',
@@ -49,6 +77,15 @@ export const DARK = {
  * @description 用于替换组件中 `hover:bg-*` / `hover:text-*` / `hover:border-*` / `hover:ring-*` 硬编码
  */
 export const HOVER = {
+  // V9 宋韵/高级灰悬停态扩展
+  bgStone50: 'hover:bg-stone-50',
+  bgStone50Half: 'hover:bg-stone-50/50',
+  bgStone100: 'hover:bg-stone-100',
+  textStone700: 'hover:text-stone-700',
+  borderEmerald400: 'hover:border-emerald-400',
+  // 暗色悬停（补充）
+  darkHoverBgNeutral800: 'dark:hover:bg-neutral-800',
+  // 历史兼容
   bgRed100: 'hover:bg-red-100',
   bgRed600: 'hover:bg-red-600',
   bgGreen700: 'hover:bg-green-700',
@@ -61,6 +98,38 @@ export const HOVER = {
   bgSlate200: 'hover:bg-slate-200',
   bgGray100: 'hover:bg-gray-100',
   ringSlate300: 'hover:ring-slate-300',
+} as const
+
+/**
+ * 表格分隔线 Tailwind 颜色类
+ * @description 用于替换组件中 divide-* 硬编码
+ */
+export const DIVIDE = {
+  stone100: 'divide-stone-100',
+  neutral800: 'dark:divide-neutral-800',
+} as const
+
+/**
+ * Focus 状态 Tailwind 颜色类
+ * @description 用于替换表单组件 focus:border-* / focus:ring-* 硬编码
+ */
+export const FOCUS = {
+  borderEmerald400: 'focus:border-emerald-400',
+  ringEmerald400_30: 'focus:ring-emerald-400/30',
+  darkBorderEmerald500: 'dark:focus:border-emerald-500',
+} as const
+
+/**
+ * SVG fill 颜色类
+ * @description 用于替换 SVG 中 fill-* 硬编码
+ */
+export const FILL = {
+  stone400: 'fill-stone-400',
+  stone700: 'fill-stone-700',
+  stone800: 'fill-stone-800',
+  darkNeutral100: 'dark:fill-neutral-100',
+  darkNeutral200: 'dark:fill-neutral-200',
+  darkNeutral500: 'dark:fill-neutral-500',
 } as const
 
 /**
@@ -111,6 +180,14 @@ export const CHART_PALETTE = {
   downColor: '#ef4444', // red-500
   /** 主题强调色 */
   accent: '#0ea5e9', // sky-500
+  /** Gauge 仪表盘轨道 */
+  gaugeTrack: '#e2e8f0',
+  /** Gauge 仪表盘色阶 */
+  gaugeLow: '#cbd5e1',
+  gaugeMidLow: '#f59e0b',
+  gaugeMid: '#14b8a6',
+  gaugeHigh: '#10b981',
+  gaugeRiskHigh: '#dc2626',
   /** 因子热力图：低端颜色（-1） */
   factorHeatmapLow: '#ffc832',
   /** 因子热力图：中点颜色（0） */

@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "generatedAt": "2026-07-09T08:52:35.798Z",
+  "hex": {
+    "total": 24,
+    "byFile": {
+      "src/services/hybrid-proofread/reportGenerator.ts": 24
+    }
+  },
+  "classes": {
+    "total": 0,
+    "byLayer": {},
+    "byFile": {}
+  }
+}

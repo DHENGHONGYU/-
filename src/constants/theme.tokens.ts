@@ -57,7 +57,7 @@ export { COLOR_SHADES, twText, twBg, twBorder } from './theme/theme.tokens.shade
 // ============================================================
 // L3/4 辅助类（暗色/悬停/渐变 + 图表调色板 + 间距令牌）
 // ============================================================
-export { DARK, HOVER, GRADIENT, CHART_PALETTE, SPACING_TOKENS } from './theme/theme.tokens.helpers'
+export { DARK, HOVER, FOCUS, FILL, GRADIENT, DIVIDE, CHART_PALETTE, SPACING_TOKENS } from './theme/theme.tokens.helpers'
 export type { SpacingKey } from './theme/theme.tokens.helpers'
 
 // ============================================================
