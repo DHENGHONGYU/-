@@ -9,14 +9,11 @@ export const INPUT_CONFIG = {
     maxRows: 500,
     lineSeparators: /[\n;；、]/,
     inlineSeparators: /[\s,，]+/,
-    supportedFormats: ['code', 'code.name', 'code,name'] as const,
+    supportedFormats: ['code', 'code.name', 'code,name', 'code.name.exchange'] as const,
     supportedFileExtensions: ['csv', 'txt', 'json', 'xlsx', 'xls'] as const,
-    templateHeader: ['代码', '名称'] as const,
-    templateExamples: [
-      { code: '600519', name: '贵州茅台' },
-      { code: '000858', name: '五粮液' },
-      { code: '300750', name: '宁德时代' },
-    ] as const,
+    templateHeader: ['序号', '股票代码', '股票简称'] as const,
+    // 模板示例行（描述性占位符，非真实股票代码）
+    templateExamples: [] as ReadonlyArray<{ code: string; name: string }>,
     templateFileName: 'stock_import_template.csv',
     batchSize: 20,
     batchIntervalMs: 500,

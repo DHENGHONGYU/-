@@ -1,7 +1,6 @@
 /**
  * @module rotationSignalStore
  * @lifecycle @Global
- * @reserved 预留未来板块轮动功能使用
  * @description 轮动信号检测状态管理。管理板块轮动信号列表，
  * 提供信号检测、单板块检测等操作，以及 triggeredSignals/bySector 等派生查询。
  *

@@ -1,7 +1,6 @@
 /**
  * @module riskStore
  * @lifecycle @Global
- * @reserved 预留未来风控面板使用
  * @description 风控网关状态管理。管理风控三态（正常/警告/阻塞）、裁决记录、
  * 回路状态（circuit breaker），提供 checkOrderRisk 调用入口及 DataBridge 订阅。
  *

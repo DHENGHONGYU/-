@@ -1,7 +1,6 @@
 /**
  * @module signalQualityStore
  * @lifecycle @Global
- * @reserved 预留未来信号质量复盘面板使用
  * @description 信号质量复盘状态管理。管理信号准确率、择时得分、最大回撤、Sharpe 等
  * 绩效指标，提供复盘数据加载和 DataBridge 订阅。
  *

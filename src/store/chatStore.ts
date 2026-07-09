@@ -1,6 +1,5 @@
 /**
  * @module store/chatStore
- * @reserved 预留 cockpit 侧边栏 LLM 对话功能
  * @description  cockpit 侧边栏 LLM 聊天状态
  *
  * 原属于 marketDataStore，因属于独立 UI 状态域，拆分至此。
