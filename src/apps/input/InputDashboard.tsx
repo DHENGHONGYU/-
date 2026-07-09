@@ -29,6 +29,7 @@ import type { PoolViewMode } from '@/components/pool/PoolBoard'
 import { getLogger } from '@/lib/logger'
 import { COLOR_TOKENS, twText, twBg } from '@/constants/theme.tokens'
 import { Skeleton } from '@/components/ui/Skeleton'
+import { GaugeRing } from '@/components/chart/GaugeChart'
 
 const logger = getLogger()
 
@@ -230,7 +231,8 @@ export default function InputDashboard(): React.JSX.Element {
   const stats = useMemo(() => {
     const total = allStocks.length
     const withPrice = allStocks.filter((s) => s.price !== undefined).length
-    return { total, withPrice }
+    const coverage = total > 0 ? Math.round((withPrice / total) * 100) : 0
+    return { total, withPrice, coverage }
   }, [allStocks])
 
   return (
@@ -259,10 +261,15 @@ export default function InputDashboard(): React.JSX.Element {
             <Card>
               <CardContent className="p-5">
                 <p className="text-xs text-muted-foreground">已采行情</p>
-                <div className="flex items-baseline gap-2">
-                  <p className="text-2xl font-bold">{stats.withPrice}</p>
-                  {stats.total > 0 && stats.withPrice < stats.total && (
-                    <span className={`text-xs ${twText('amber', 600)}`}>↓ {stats.total - stats.withPrice} 待采</span>
+                <div className="flex items-center gap-3">
+                  <div>
+                    <p className="text-2xl font-bold">{stats.withPrice}</p>
+                    {stats.total > 0 && stats.withPrice < stats.total && (
+                      <span className={`text-xs ${twText('amber', 600)}`}>↓ {stats.total - stats.withPrice} 待采</span>
+                    )}
+                  </div>
+                  {stats.total > 0 && (
+                    <GaugeRing value={stats.coverage} max={100} size={44} thickness={4} colorMode="progress" />
                   )}
                 </div>
               </CardContent>

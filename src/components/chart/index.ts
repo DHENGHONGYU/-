@@ -7,6 +7,8 @@ export { default as LineChart } from './LineChart'
 export { default as BarChart } from './BarChart'
 export { default as AreaChart } from './AreaChart'
 export { default as ScoreRadar } from './ScoreRadar'
+export { GaugeChart, GaugeRing } from './GaugeChart'
+export { default as FactorHeatmap } from './FactorHeatmap'
 
 // 命名的组件导出（部分组件同时有 named export）
 export { LineChart as LineChartComponent } from './LineChart'
@@ -16,3 +18,4 @@ export { ScoreRadarChart } from './ScoreRadar'
 
 // 类型导出
 export type { ScoreRadarData, ScoreRadarProps } from './ScoreRadar'
+export type { GaugeChartProps } from './GaugeChart'
