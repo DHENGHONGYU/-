@@ -44,6 +44,12 @@ export interface CollectionResult<T> {
   error?: string
 }
 
+// ── Mock 数据常量 ──
+/** Mock K线量最大值（模拟真实成交区间） */
+const MOCK_VOLUME_MAX = 50_000_000
+/** Mock K线额最大值 */
+const MOCK_AMOUNT_MAX = 500_000_000
+
 // ── Mock 兜底数据生成 ──
 
 function mockQuote(code: string): RealtimeQuote {
@@ -86,8 +92,8 @@ function mockKlines(code: string, days: number): KlineBar[] {
       high: parseFloat(high.toFixed(2)),
       low: parseFloat(low.toFixed(2)),
       close: parseFloat(close.toFixed(2)),
-      volume: Math.floor(Math.random() * 50000000),
-      amount: parseFloat((Math.random() * 500000000).toFixed(2)),
+      volume: Math.floor(Math.random() * MOCK_VOLUME_MAX),
+      amount: parseFloat((Math.random() * MOCK_AMOUNT_MAX).toFixed(2)),
     })
   }
   return klines

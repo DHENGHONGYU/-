@@ -15,6 +15,12 @@ import type { KlineBar } from '@/data/types/types.marketData'
 
 const logger = getLogger()
 
+// ── API 端点常量 ──
+const TENCENT_API_BASE = 'https://qt.gtimg.cn/q='
+const TENCENT_REFERER = 'https://finance.qq.com'
+const SINA_API_BASE = 'https://hq.sinajs.cn/list='
+const NETEASE_API_BASE = 'https://quotes.163.com/service/chddata.html'
+
 // ── 类型定义 ──
 
 export interface RealtimeQuote {
@@ -64,7 +70,7 @@ async function safeFetch(url: string, timeoutMs = 5000): Promise<string | null> 
     const timer = setTimeout(() => controller.abort(), timeoutMs)
     const res = await fetch(url, {
       signal: controller.signal,
-      headers: { Referer: 'https://finance.qq.com' },
+      headers: { Referer: TENCENT_REFERER },
     })
     clearTimeout(timer)
     if (!res.ok) {
@@ -86,7 +92,7 @@ async function safeFetch(url: string, timeoutMs = 5000): Promise<string | null> 
  */
 export async function tencentQuote(code: string): Promise<RealtimeQuote | null> {
   const tencentCode = toTencentCode(code)
-  const url = `https://qt.gtimg.cn/q=${tencentCode}`
+  const url = `${TENCENT_API_BASE}${tencentCode}`
   const start = Date.now()
 
   const text = await safeFetch(url)
@@ -95,22 +101,22 @@ export async function tencentQuote(code: string): Promise<RealtimeQuote | null> 
   try {
     // 腾讯格式: v_sh600519="1~贵州茅台~600519~1689.00~1685.00~1690.00~..."
     const match = text.match(/v_\w+="([^"]+)"/)
-    if (!match) return null
+    if (!match?.[1]) return null
 
     const fields = match[1].split('~')
     if (fields.length < 50) return null
 
     const quote: RealtimeQuote = {
       symbol: code,
-      name: fields[1],
-      price: parseFloat(fields[3]) || 0,
-      change: parseFloat(fields[31]) || 0,
-      changePercent: parseFloat(fields[32]) || 0,
-      open: parseFloat(fields[5]) || 0,
-      high: parseFloat(fields[33]) || 0,
-      low: parseFloat(fields[34]) || 0,
-      volume: parseInt(fields[36]) || 0,
-      amount: parseFloat(fields[37]) || 0,
+      name: fields[1] || '',
+      price: parseFloat(fields[3] || '0') || 0,
+      change: parseFloat(fields[31] || '0') || 0,
+      changePercent: parseFloat(fields[32] || '0') || 0,
+      open: parseFloat(fields[5] || '0') || 0,
+      high: parseFloat(fields[33] || '0') || 0,
+      low: parseFloat(fields[34] || '0') || 0,
+      volume: parseInt(fields[36] || '0') || 0,
+      amount: parseFloat(fields[37] || '0') || 0,
       timestamp: Date.now(),
     }
 
@@ -137,20 +143,23 @@ export async function tencentBatchQuotes(codes: string[]): Promise<RealtimeQuote
   let idx = 0
   for (const match of matches) {
     const code = codes[idx]
-    if (!code) break
+    if (!code || !match[2]) {
+      idx++
+      continue
+    }
     const fields = match[2].split('~')
     if (fields.length >= 50) {
       results.push({
         symbol: code,
-        name: fields[1],
-        price: parseFloat(fields[3]) || 0,
-        change: parseFloat(fields[31]) || 0,
-        changePercent: parseFloat(fields[32]) || 0,
-        open: parseFloat(fields[5]) || 0,
-        high: parseFloat(fields[33]) || 0,
-        low: parseFloat(fields[34]) || 0,
-        volume: parseInt(fields[36]) || 0,
-        amount: parseFloat(fields[37]) || 0,
+        name: fields[1] || '',
+        price: parseFloat(fields[3] || '0') || 0,
+        change: parseFloat(fields[31] || '0') || 0,
+        changePercent: parseFloat(fields[32] || '0') || 0,
+        open: parseFloat(fields[5] || '0') || 0,
+        high: parseFloat(fields[33] || '0') || 0,
+        low: parseFloat(fields[34] || '0') || 0,
+        volume: parseInt(fields[36] || '0') || 0,
+        amount: parseFloat(fields[37] || '0') || 0,
         timestamp: Date.now(),
       })
     }
@@ -167,7 +176,7 @@ export async function tencentBatchQuotes(codes: string[]): Promise<RealtimeQuote
  */
 export async function sinaQuote(code: string): Promise<RealtimeQuote | null> {
   const sinaCode = toSinaCode(code)
-  const url = `https://hq.sinajs.cn/list=${sinaCode}`
+  const url = `${SINA_API_BASE}${sinaCode}`
   const start = Date.now()
 
   const text = await safeFetch(url)
@@ -176,22 +185,22 @@ export async function sinaQuote(code: string): Promise<RealtimeQuote | null> {
   try {
     // 新浪格式: var hq_str_sh600519="贵州茅台,1685.00,1690.00,..."
     const match = text.match(/hq_str_\w+="([^"]+)"/)
-    if (!match) return null
+    if (!match?.[1]) return null
 
     const fields = match[1].split(',')
     if (fields.length < 10) return null
 
     const quote: RealtimeQuote = {
       symbol: code,
-      name: fields[0],
-      price: parseFloat(fields[3]) || 0,
-      change: (parseFloat(fields[3]) || 0) - (parseFloat(fields[2]) || 0),
-      changePercent: parseFloat(fields[2]) > 0 ? ((parseFloat(fields[3]) - parseFloat(fields[2])) / parseFloat(fields[2])) * 100 : 0,
-      open: parseFloat(fields[1]) || 0,
-      high: parseFloat(fields[4]) || 0,
-      low: parseFloat(fields[5]) || 0,
-      volume: parseInt(fields[8]) || 0,
-      amount: parseFloat(fields[9]) || 0,
+      name: fields[0] || '',
+      price: parseFloat(fields[3] || '0') || 0,
+      change: (parseFloat(fields[3] || '0') || 0) - (parseFloat(fields[2] || '0') || 0),
+      changePercent: parseFloat(fields[2] || '0') > 0 ? ((parseFloat(fields[3] || '0') - parseFloat(fields[2] || '0')) / parseFloat(fields[2] || '0')) * 100 : 0,
+      open: parseFloat(fields[1] || '0') || 0,
+      high: parseFloat(fields[4] || '0') || 0,
+      low: parseFloat(fields[5] || '0') || 0,
+      volume: parseInt(fields[8] || '0') || 0,
+      amount: parseFloat(fields[9] || '0') || 0,
       timestamp: Date.now(),
     }
 
@@ -217,20 +226,23 @@ export async function sinaBatchQuotes(codes: string[]): Promise<RealtimeQuote[]>
   let idx = 0
   for (const match of matches) {
     const code = codes[idx]
-    if (!code) break
+    if (!code || !match[2]) {
+      idx++
+      continue
+    }
     const fields = match[2].split(',')
     if (fields.length >= 10) {
       results.push({
         symbol: code,
-        name: fields[0],
-        price: parseFloat(fields[3]) || 0,
-        change: (parseFloat(fields[3]) || 0) - (parseFloat(fields[2]) || 0),
-        changePercent: parseFloat(fields[2]) > 0 ? ((parseFloat(fields[3]) - parseFloat(fields[2])) / parseFloat(fields[2])) * 100 : 0,
-        open: parseFloat(fields[1]) || 0,
-        high: parseFloat(fields[4]) || 0,
-        low: parseFloat(fields[5]) || 0,
-        volume: parseInt(fields[8]) || 0,
-        amount: parseFloat(fields[9]) || 0,
+        name: fields[0] || '',
+        price: parseFloat(fields[3] || '0') || 0,
+        change: (parseFloat(fields[3] || '0') || 0) - (parseFloat(fields[2] || '0') || 0),
+        changePercent: parseFloat(fields[2] || '0') > 0 ? ((parseFloat(fields[3] || '0') - parseFloat(fields[2] || '0')) / parseFloat(fields[2] || '0')) * 100 : 0,
+        open: parseFloat(fields[1] || '0') || 0,
+        high: parseFloat(fields[4] || '0') || 0,
+        low: parseFloat(fields[5] || '0') || 0,
+        volume: parseInt(fields[8] || '0') || 0,
+        amount: parseFloat(fields[9] || '0') || 0,
         timestamp: Date.now(),
       })
     }
@@ -252,7 +264,7 @@ export async function neteaseHistory(
 ): Promise<KlineBar[]> {
   const neteaseCode = toNeteaseCode(code)
   const fields = 'TCLOSE;HIGH;LOW;TOPEN;LCLOSE;CHG;PCHG;TURNOVER;VOTURNOVER;VATURNOVER'
-  const url = `https://quotes.163.com/service/chddata.html?code=${neteaseCode}&start=${startDate}&end=${endDate}&fields=${fields}`
+  const url = `${NETEASE_API_BASE}?code=${neteaseCode}&start=${startDate}&end=${endDate}&fields=${fields}`
   const start = Date.now()
 
   const text = await safeFetch(url, 10000)
@@ -265,16 +277,18 @@ export async function neteaseHistory(
     // 网易 CSV 格式: 日期,股票代码,名称,收盘价,最高价,最低价,开盘价,前收盘,涨跌额,涨跌幅,换手率,成交量,成交金额
     const klines: KlineBar[] = []
     for (let i = 1; i < lines.length; i++) {
-      const cols = lines[i].split(',')
+      const line = lines[i]
+      if (!line) continue
+      const cols = line.split(',')
       if (cols.length < 13) continue
 
-      const date = cols[0].trim()
-      const close = parseFloat(cols[3]) || 0
-      const high = parseFloat(cols[4]) || 0
-      const low = parseFloat(cols[5]) || 0
-      const open = parseFloat(cols[6]) || 0
-      const volume = parseInt(cols[11]) || 0
-      const amount = parseFloat(cols[12]) || 0
+      const date = (cols[0] || '').trim()
+      const close = parseFloat(cols[3] || '0') || 0
+      const high = parseFloat(cols[4] || '0') || 0
+      const low = parseFloat(cols[5] || '0') || 0
+      const open = parseFloat(cols[6] || '0') || 0
+      const volume = parseInt(cols[11] || '0') || 0
+      const amount = parseFloat(cols[12] || '0') || 0
 
       if (date && close > 0) {
         klines.push({ date, open, high, low, close, volume, amount })
