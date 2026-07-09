@@ -9,6 +9,7 @@ import {
   parseFile,
   importStocksWithProgress,
   downloadTemplate,
+  detectDuplicates,
   type BulkImportRow,
   type BulkImportResult,
   type ImportStocksOptions,
@@ -56,7 +57,9 @@ export default function BulkImportPanel(): React.JSX.Element {
     setImportResult(null)
     setMessage('')
     const rows = parseBulkInput(text)
-    setImportPreview(rows)
+    const existingSymbols = new Set(stocks.map(s => s.symbol))
+    const detectedRows = detectDuplicates(rows, existingSymbols)
+    setImportPreview(detectedRows)
   }
 
   // ── 文件解析 ──
@@ -66,7 +69,9 @@ export default function BulkImportPanel(): React.JSX.Element {
     setFileInfo({ name: file.name, size: file.size, type: file.type || file.name.split('.').pop() || 'unknown' })
     try {
       const rows = await parseFile(file)
-      setImportPreview(rows)
+      const existingSymbols = new Set(stocks.map(s => s.symbol))
+      const detectedRows = detectDuplicates(rows, existingSymbols)
+      setImportPreview(detectedRows)
       setImportResult(null)
       logger.info('[BulkImportPanel] 文件解析完成', { file: file.name, rows: rows.length })
     } catch (err) {
@@ -75,7 +80,7 @@ export default function BulkImportPanel(): React.JSX.Element {
     } finally {
       setParsing(false)
     }
-  }, [])
+  }, [stocks])
 
   // ── 拖拽事件 ──
   const handleDragOver = (e: React.DragEvent): void => {
@@ -115,7 +120,7 @@ export default function BulkImportPanel(): React.JSX.Element {
     const result = await importStocksWithProgress(
       rows,
       options,
-      (completed, total, percent) => {
+      (_completed, _total, percent) => {
         setImportProgress(percent)
       },
     )
@@ -239,11 +244,11 @@ export default function BulkImportPanel(): React.JSX.Element {
           {inputMode === 'text' && (
             <>
               <p className="text-sm text-muted-foreground">
-                支持粘贴 CSV / 文本，每行格式：代码,名称（如 600519,贵州茅台）
+                支持粘贴 CSV / 文本，多种格式：代码,名称（如 600519,贵州茅台）或 代码.交易所,名称（如 600519.SH,贵州茅台）
               </p>
               <textarea
                 className="min-h-[160px] w-full rounded-md border bg-background p-3 text-sm text-foreground outline-none focus:border-primary"
-                placeholder={`600519,贵州茅台\n000001,平安银行\n300750,宁德时代`}
+                placeholder={`600519.SH,贵州茅台\n000001.SZ,平安银行\n300750.SZ,宁德时代\n688001.SH,华兴新材`}
                 value={importText}
                 onChange={(e) => handleParseImport(e.target.value)}
               />
@@ -282,7 +287,7 @@ export default function BulkImportPanel(): React.JSX.Element {
                     <p className="text-xs text-muted-foreground">
                       {formatFileSize(fileInfo.size)} · {fileInfo.type}
                     </p>
-                    <p className="mt-1 text-xs text-blue-600">点击更换文件</p>
+                    <p className={`mt-1 text-xs ${twText('blue', 600)}`}>点击更换文件</p>
                   </div>
                 ) : (
                   <div className="text-center">
@@ -317,9 +322,9 @@ export default function BulkImportPanel(): React.JSX.Element {
           {importPreview.length > 0 && (
             <div className="flex gap-3 text-sm">
               <span className="text-muted-foreground">共 {stats.total} 条</span>
-              <span className="text-green-600">有效 {stats.valid}</span>
-              <span className="text-amber-600">重复 {stats.duplicate}</span>
-              <span className="text-red-600">无效 {stats.invalid}</span>
+              <span className={twText('green', 600)}>有效 {stats.valid}</span>
+              <span className={twText('amber', 600)}>重复 {stats.duplicate}</span>
+              <span className={twText('red', 600)}>无效 {stats.invalid}</span>
             </div>
           )}
 

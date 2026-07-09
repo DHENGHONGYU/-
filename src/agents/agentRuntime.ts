@@ -171,10 +171,10 @@ export class AgentRuntime {
     return task
   }
 
-  listTasks(status?: AgentTask['status']): AgentTask[] {
+  listTasks(status: AgentTask['status'] | 'all' = 'all'): AgentTask[] {
     const allTasks = Array.from(this.tasks.values())
-    const filtered = status ? allTasks.filter((t) => t.status === status) : allTasks
-    logger.debug(`[AgentRuntime] listTasks(): status="${status ?? 'all'}", count=${filtered.length}`)
+    const filtered = status !== 'all' ? allTasks.filter((t) => t.status === status) : allTasks
+    logger.debug(`[AgentRuntime] listTasks(): status="${status}", count=${filtered.length}`)
     return filtered
   }
 

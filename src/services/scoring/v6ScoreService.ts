@@ -196,8 +196,7 @@ export async function runV6Score(symbol: string): Promise<DataLayerResult<V6Scor
     industryCode: stock.industryCode,
   })
 
-  const quotes = await dataLayer.dailyQuotes.get(symbol)
-  const quotesOrNull = quotes ?? null
+  const quotesOrNull = (await dataLayer.dailyQuotes.get(symbol)) ?? null
 
   logger.info(`[v6ScoreService] runV6Score K线数据状态`, {
     symbol,

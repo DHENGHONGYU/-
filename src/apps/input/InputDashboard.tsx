@@ -28,6 +28,7 @@ import type { StockSearchResult } from '@/services/input/inputService'
 import type { PoolViewMode } from '@/components/pool/PoolBoard'
 import { getLogger } from '@/lib/logger'
 import { COLOR_TOKENS, twText, twBg } from '@/constants/theme.tokens'
+import { Skeleton } from '@/components/ui/Skeleton'
 
 const logger = getLogger()
 
@@ -235,46 +236,72 @@ export default function InputDashboard(): React.JSX.Element {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardContent className="p-5">
-            <p className="text-xs text-muted-foreground">候选池标的</p>
-            <p className="text-2xl font-bold">{stats.total}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-5">
-            <p className="text-xs text-muted-foreground">已采行情</p>
-            <p className="text-2xl font-bold">{stats.withPrice}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-5">
-            <p className="text-xs text-muted-foreground">采集服务</p>
-            <div className="mt-1 flex items-center gap-2">
-              {fetcherOk === null ? (
-                <Badge variant="outline">检查中...</Badge>
-              ) : fetcherOk ? (
-                <Badge className={`${twBg('green', 100)} ${twText('green', 800)}`}>已连接</Badge>
-              ) : (
-                <Badge variant="destructive">未连接</Badge>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-5">
-            <p className="text-xs text-muted-foreground">快捷操作</p>
-            <div className="mt-2 flex flex-wrap gap-2">
-              <Button size="sm" variant="secondary" onClick={() => navigate('/input/bulk-import')}>
-                批量导入
-              </Button>
-              <Button size="sm" variant="secondary" onClick={() => navigate('/input/hot-sectors')}>
-                热门板块
-              </Button>
-
-            </div>
-          </CardContent>
-        </Card>
+        {loading ? (
+          <>
+            <Card><CardContent className="p-5"><Skeleton className="h-4 w-20" /><Skeleton className="mt-2 h-8 w-16" /></CardContent></Card>
+            <Card><CardContent className="p-5"><Skeleton className="h-4 w-20" /><Skeleton className="mt-2 h-8 w-16" /></CardContent></Card>
+            <Card><CardContent className="p-5"><Skeleton className="h-4 w-20" /><Skeleton className="mt-2 h-6 w-20" /></CardContent></Card>
+            <Card><CardContent className="p-5"><Skeleton className="h-4 w-20" /><Skeleton className="mt-2 h-8 w-24" /></CardContent></Card>
+          </>
+        ) : (
+          <>
+            <Card>
+              <CardContent className="p-5">
+                <p className="text-xs text-muted-foreground">候选池标的</p>
+                <div className="flex items-baseline gap-2">
+                  <p className="text-2xl font-bold">{stats.total}</p>
+                  {stats.total > 0 && (
+                    <span className={`text-xs ${twText('green', 600)}`}>↑ {Math.round((stats.withPrice / stats.total) * 100)}% 覆盖</span>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-5">
+                <p className="text-xs text-muted-foreground">已采行情</p>
+                <div className="flex items-baseline gap-2">
+                  <p className="text-2xl font-bold">{stats.withPrice}</p>
+                  {stats.total > 0 && stats.withPrice < stats.total && (
+                    <span className={`text-xs ${twText('amber', 600)}`}>↓ {stats.total - stats.withPrice} 待采</span>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-5">
+                <p className="text-xs text-muted-foreground">采集服务</p>
+                <div className="mt-1 flex items-center gap-2">
+                  {fetcherOk === null ? (
+                    <Badge variant="outline">检查中...</Badge>
+                  ) : fetcherOk ? (
+                    <Badge className={`${twBg('green', 100)} ${twText('green', 800)}`}>已连接</Badge>
+                  ) : (
+                    <Badge variant="destructive">未连接</Badge>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-5">
+                <p className="text-xs text-muted-foreground">快捷操作</p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <Button size="sm" variant="secondary" onClick={() => navigate('/input/bulk-import')}>
+                    批量导入
+                  </Button>
+                  <Button size="sm" variant="secondary" onClick={() => navigate('/input/hot-sectors')}>
+                    热门板块
+                  </Button>
+                  <Button size="sm" variant="secondary" onClick={() => navigate('/input/data-test')}>
+                    数据测试
+                  </Button>
+                  <Button size="sm" variant="secondary" onClick={() => navigate('/input/collect-task')}>
+                    采集任务
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </>
+        )}
       </div>
 
       <Card>
