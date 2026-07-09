@@ -27,6 +27,7 @@ import {
   klinesToDailyQuotes,
   type RealtimeQuote,
 } from './directDataAPI'
+import { getQualityMetrics } from './qualityMetricsCollector'
 
 const logger = getLogger()
 
@@ -73,7 +74,7 @@ function mockKlines(code: string, days: number): KlineBar[] {
     date.setDate(date.getDate() - i)
     const dateStr = date.toISOString().slice(0, 10).replace(/-/g, '')
 
-    const prevClose = i < days - 1 ? klines[klines.length - 1].close : basePrice
+    const prevClose = i < days - 1 ? klines[klines.length - 1]!.close : basePrice
     const open = prevClose + (Math.random() - 0.5) * 0.5
     const close = open + (Math.random() - 0.5) * 2
     const high = Math.max(open, close) + Math.random() * 0.8
@@ -112,7 +113,9 @@ export async function getQuote(code: string): Promise<CollectionResult<RealtimeQ
   chain.push('tencent')
   const tencentResult = await tencentQuote(code)
   if (tencentResult) {
-    return { success: true, data: tencentResult, source: 'tencent', latency: Date.now() - start, fallbackChain: chain }
+    const result: CollectionResult<RealtimeQuote> = { success: true, data: tencentResult, source: 'tencent', latency: Date.now() - start, fallbackChain: chain }
+    getQualityMetrics().recordCollect(true, 'tencent', result.latency, chain)
+    return result
   }
   logger.warn(`[orchestrator] 腾讯行情失败，降级到新浪: ${code}`)
 
@@ -120,7 +123,9 @@ export async function getQuote(code: string): Promise<CollectionResult<RealtimeQ
   chain.push('sina')
   const sinaResult = await sinaQuote(code)
   if (sinaResult) {
-    return { success: true, data: sinaResult, source: 'sina', latency: Date.now() - start, fallbackChain: chain }
+    const result: CollectionResult<RealtimeQuote> = { success: true, data: sinaResult, source: 'sina', latency: Date.now() - start, fallbackChain: chain }
+    getQualityMetrics().recordCollect(true, 'sina', result.latency, chain)
+    return result
   }
   logger.warn(`[orchestrator] 新浪行情失败，降级到 AKShare: ${code}`)
 
@@ -134,7 +139,7 @@ export async function getQuote(code: string): Promise<CollectionResult<RealtimeQ
   // 层 4: Mock
   chain.push('mock')
   logger.warn(`[orchestrator] 全部源失败，返回 Mock 数据: ${code}`)
-  return {
+  const finalResult: CollectionResult<RealtimeQuote> = {
     success: true,
     data: mockQuote(code),
     source: 'mock',
@@ -142,6 +147,11 @@ export async function getQuote(code: string): Promise<CollectionResult<RealtimeQ
     fallbackChain: chain,
     error: '所有真实数据源失败，使用 Mock 数据',
   }
+
+  // G-3: 记录采集指标
+  getQualityMetrics().recordCollect(finalResult.success, finalResult.source, finalResult.latency, finalResult.fallbackChain)
+
+  return finalResult
 }
 
 /**
@@ -234,8 +244,10 @@ export async function collectAndSaveQuote(code: string): Promise<CollectionResul
         },
       })
       logger.info(`[orchestrator] 行情写入 DataBridge 成功: ${code}`, { source: result.source })
+      getQualityMetrics().recordWrite(true)
     } catch (err) {
       logger.error(`[orchestrator] 行情写入 DataBridge 失败: ${code}`, { error: err instanceof Error ? err.message : String(err) })
+      getQualityMetrics().recordWrite(false)
     }
   }
 
