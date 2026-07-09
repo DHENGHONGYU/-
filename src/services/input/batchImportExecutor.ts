@@ -18,6 +18,7 @@ import { INPUT_CONFIG } from '@/config/inputConfig'
 import { dataLayer } from '@/data/dataLayer'
 import type { DataLayerResult, Stock } from '@/data/types'
 import { getLogger } from '@/lib/logger'
+import { eventBus } from '@/lib/eventBus'
 
 import { addStock, type AddStockOptions } from './inputService'
 import type { BulkImportResult, BulkImportRow } from './batchImportParsers'
@@ -109,6 +110,13 @@ export async function importStocks(
       })
     }
   }
+
+  // 发出信号 — 通知 poolStore 等消费者刷新数据
+  eventBus.emit('BATCH_IMPORT_COMPLETED', {
+    total: result.total,
+    success: result.success,
+    failed: result.failed,
+  })
 
   return { success: true, data: result }
 }
@@ -242,6 +250,12 @@ export async function importStocksWithProgress(
   }
 
   logger.info('[batchImport] 分批导入完成', {
+    total: result.total,
+    success: result.success,
+    failed: result.failed,
+  })
+
+  eventBus.emit('BATCH_IMPORT_COMPLETED', {
     total: result.total,
     success: result.success,
     failed: result.failed,

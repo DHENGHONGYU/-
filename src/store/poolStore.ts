@@ -37,6 +37,7 @@ import { EnvelopeFactory } from '@/core/envelope'
 import { isValidTransition } from '@/core/poolTransitionEngine'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { withBroadcast } from '@/store/helpers/withBroadcast'
+import { eventBus } from '@/lib/eventBus'
 
 import { nanoid } from 'nanoid'
 const logger = getLogger()
@@ -440,6 +441,11 @@ let _unsubscribeStocks: (() => void) | null = null
 let _debounceTimer: ReturnType<typeof setTimeout> | null = null
 const DEBOUNCE_MS = 100
 
+// EventBus 事件取消订阅句柄
+let _unsubBatchImport: (() => void) | null = null
+let _unsubCollectComplete: (() => void) | null = null
+let _unsubV6Score: (() => void) | null = null
+
 /**
  * 去抖触发 refresh。
  * 100ms 内多次调用仅执行最后一次，避免频繁刷新。
@@ -487,6 +493,26 @@ export function initPoolStoreSubscriptions(): () => void {
     },
   )
 
+  // 订阅批量导入完成信号 — 自动刷新股票池
+  _unsubBatchImport = eventBus.on('BATCH_IMPORT_COMPLETED', () => {
+    logger.info('[poolStore] BATCH_IMPORT_COMPLETED 信号 → 自动刷新')
+    debouncedRefresh()
+  })
+
+  // 订阅采集全部完成信号 — 自动刷新
+  _unsubCollectComplete = eventBus.on('COLLECT_ALL_COMPLETED', () => {
+    logger.info('[poolStore] COLLECT_ALL_COMPLETED 信号 → 自动刷新')
+    debouncedRefresh()
+  })
+
+  // 订阅 V6 评分完成信号 — 自动刷新（评分结果写入 IndexedDB 后刷新 Store）
+  _unsubV6Score = eventBus.on('V6_SCORE_COMPLETED', () => {
+    logger.info('[poolStore] V6_SCORE_COMPLETED 信号 → 自动刷新')
+    debouncedRefresh()
+  })
+
+  logger.info('[poolStore] EventBus 信号订阅就绪 (BATCH_IMPORT + COLLECT_ALL + V6_SCORE)')
+
   return () => destroyPoolStoreSubscriptions()
 }
 
@@ -494,10 +520,19 @@ function destroyPoolStoreSubscriptions(): void {
   _unsubscribeStocks?.()
   _unsubscribeStocks = null
 
+  _unsubBatchImport?.()
+  _unsubBatchImport = null
+
+  _unsubCollectComplete?.()
+  _unsubCollectComplete = null
+
+  _unsubV6Score?.()
+  _unsubV6Score = null
+
   if (_debounceTimer) {
     clearTimeout(_debounceTimer)
     _debounceTimer = null
   }
 
-  logger.info('[poolStore] DataBridge subscriptions destroyed')
+  logger.info('[poolStore] 所有订阅已销毁 (DataBridge + EventBus x3)')
 }

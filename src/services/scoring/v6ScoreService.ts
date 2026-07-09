@@ -8,6 +8,7 @@
 
 import { dataLayer } from '@/data/dataLayer'
 import { getLogger } from '@/lib/logger'
+import { eventBus } from '@/lib/eventBus'
 import type { DataLayerResult, DailyQuotes, Stock, V6Score } from '@/data/types'
 import {
   createV6Engine,
@@ -289,6 +290,14 @@ export async function runV6Score(symbol: string): Promise<DataLayerResult<V6Scor
       score: v6Score.score.toFixed(2),
       rating: v6Score.rating,
     })
+
+    // 发出信号 — 通知 UI 刷新
+    eventBus.emit('V6_SCORE_COMPLETED', {
+      symbol,
+      score: v6Score.score,
+      rating: v6Score.rating,
+    })
+
     return { success: true, data: v6Score }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
