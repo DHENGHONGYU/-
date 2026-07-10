@@ -472,7 +472,7 @@ describe('LLMScoreEnhancer 集成测试 — L4/L7 增强层 LLM 调用场景', (
     })
 
     it('LLM 返回带 ```json 代码块包装的 JSON 时应正确解析', async () => {
-      const wrappedJson = '```json\n{"score":4.6,"summary":"代码块包装的响应","rationale":"理由","risks":["风险"]}\n```'
+      const wrappedJson = '```json\n{"score":4.6,"summary":"代码块包装的响应","rationale":"理由","risks":["风险"],"citations":[{"source":"测试研报","content":"测试引用"}]}\n```'
       mockLlmChatSuccess(wrappedJson)
 
       enhancer.configure(VALID_LLM_CONFIG)
@@ -921,12 +921,21 @@ describe('LLMScoreEnhancer 集成测试 — L4/L7 增强层 LLM 调用场景', (
               choices: [
                 {
                   message: {
-                    content: JSON.stringify({ score: 4.4, summary: 'L4 动态响应' }),
+                    content: JSON.stringify({
+                      score: 4.4,
+                      summary: 'L4 动态响应',
+                      citations: [{ source: '测试研报', content: 'L4 测试引用' }],
+                    }),
                   },
                 },
               ],
             }),
-            text: async () => JSON.stringify({ score: 4.4, summary: 'L4 动态响应' }),
+            text: async () =>
+              JSON.stringify({
+                score: 4.4,
+                summary: 'L4 动态响应',
+                citations: [{ source: '测试研报', content: 'L4 测试引用' }],
+              }),
           } as Response
         }
 
@@ -939,12 +948,21 @@ describe('LLMScoreEnhancer 集成测试 — L4/L7 增强层 LLM 调用场景', (
             choices: [
               {
                 message: {
-                  content: JSON.stringify({ score: 4.7, summary: 'L7 动态响应' }),
+                  content: JSON.stringify({
+                    score: 4.7,
+                    summary: 'L7 动态响应',
+                    citations: [{ source: '测试研报', content: 'L7 测试引用' }],
+                  }),
                 },
               },
             ],
           }),
-          text: async () => JSON.stringify({ score: 4.7, summary: 'L7 动态响应' }),
+          text: async () =>
+            JSON.stringify({
+              score: 4.7,
+              summary: 'L7 动态响应',
+              citations: [{ source: '测试研报', content: 'L7 测试引用' }],
+            }),
         } as Response
       })
 

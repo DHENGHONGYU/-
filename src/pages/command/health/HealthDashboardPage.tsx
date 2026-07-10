@@ -4,11 +4,8 @@ import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
-import {
-  fetchHealthReport,
-  type HealthMetric,
-  type HealthReport,
-} from '@/services/system/healthDashboardService'
+import { mcpBridge } from '@/mcp/bridge/mcpBridge'
+import type { HealthMetric, HealthReport } from '@/types/modules/health.types'
 import { Activity, AlertCircle, CheckCircle2, RefreshCw, ShieldAlert, XCircle } from 'lucide-react'
 
 function statusIcon(status: HealthMetric['status']) {
@@ -71,7 +68,16 @@ export default function HealthDashboardPage(): React.JSX.Element {
     setLoading(true)
     setError(null)
     try {
-      const data = await fetchHealthReport()
+      // 通过 MCP 桥接调用 system server 的 fetch_health_report 工具，
+      // 避免 UI 层直接依赖 services/system/healthDashboardService。
+      const toolResult = await mcpBridge.callTool(
+        'system',
+        'fetch_health_report',
+        {},
+        { caller: 'ui', callerId: 'HealthDashboardPage' },
+      )
+      const text = toolResult.content.find((c) => c.type === 'text')?.text ?? ''
+      const data = JSON.parse(text) as HealthReport
       setReport(data)
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err))
