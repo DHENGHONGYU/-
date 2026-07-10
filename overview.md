@@ -67,3 +67,41 @@
 
 ### 结论
 原子组件体系阶段 1（体系建立 + 本次组件落位 + shim 兼容）已完成，全部门禁通过，无回归。后续按文档阶段 2–5 推进 `ui/` 物理迁移与 shim 清理。
+
+---
+
+## 补充：阶段 2 —— `ui/` 存量原子/分子物理迁移（2026-07-10 完成）
+
+将 `src/components/ui/` 下 **37 个组件文件（约 28 原子 + 9 分子，含 21 个测试）** 物理迁移至顶层 `src/components/atoms/` 与 `src/components/molecules/`，原 `ui/X.tsx` 全部改写为纯 re-export shim 兼容层。约 140 处消费者引用（`@/components/ui/X`）零改动。
+
+### 执行方式
+- 用一次性、可重入的迁移脚本确定性执行：移动实现文件 + 改写内部 import 指向新路径 + 重写 `ui/X.tsx` 为 `export * from '@/components/atoms|X'`。
+- 错误修正：脚本对 atoms/molecules 两个桶都追加了 `PageContainer` 导出，但 `PageContainer` 实际落在 molecules，已精准从 `atoms/index.ts` 移除该误加行（molecules 桶保留正确导出）。
+- 落点采用**顶层 atoms/molecules**（即文档阶段 5 终态），`ui/` 退化为纯 shim 兼容层，与 `collection/`、`pool/` 模式完全一致。
+
+### 迁移后结构抽查
+- `ui/` 残留 37 个 shim（纯 `export * from '@/components/atoms|molecules/X'`），兼容层保留。
+- `atoms/` 43 个、 `molecules/` 19 个真实实现文件。
+- 示例 shim：`export * from '@/components/atoms/Button'` —— 干净。
+
+### 验证结果（全部门禁通过）
+| 门禁 | 命令 | 结果 |
+|------|------|------|
+| 类型检查 | `tsc:prod` | ✅ 仅剩 `src/core/databridge.test.ts` 1 个预存 TS2352（V6Database→Mock 类型转换），**非本次引入**（迁移脚本仅处理 `src/components/ui/*`，该测试在 `src/core/` 从未被触碰） |
+| 构建 | `build` | ✅ 通过 |
+| 分层 | `audit:layers` | ✅ 0 违规 / 0 警告（909 文件） |
+| 令牌 | `audit:tokens` | ✅ 0 硬编码（当前=基线=0） |
+| 文档同步 | `audit:docs` | ✅ 0 违规（302 文件，0 未文档化） |
+| 路由 | `audit:routes` | ✅ 62/62 覆盖（100%），0 重复；2 条孤儿 `/command/showcase`、`/command/health` 为预存（注册于 ROUTE_REGISTRY 但未进 EXPECTED_PATHS，与本次无关，检查仍 exit 0 通过） |
+| 硬编码 | `audit:hardcode` | ⚠️ 29 处「静默回退」Warning（基线债务，退出码 0 不阻塞） |
+| 颜色 lint | `lint:colors` | ✅ 通过 |
+
+### ⚠️ 关键环境发现（与代码无关，必须记录）
+- **受管 Node 22.22.2 的 tsx 间歇性原生段错误（SIGSEGV / 0xC0000005）**，导致所有 `tsx` 类门禁（`audit:layers/docs/routes/hardcode`、以及 `npm run tsc` 外的 tsx 脚本）偶发崩溃。
+- 根因：**损坏的 tsx 编译缓存**（`node_modules/.cache/tsx`、`~/.cache/tsx`）。`rm -rf` 清缓存后部分恢复，但受管 Node 22 下仍不稳定。
+- 稳定绕开方案：**改用系统 Node 24.15.0 直接驱动 tsx**（如 `"/c/Program Files/nodejs/node.exe" ./node_modules/tsx/dist/cli.mjs scripts/xxx.ts`），全部门禁均 exit 0。
+- `tsc`(tsc) / `build`(vite) / eslint 本身在 Node 22 下正常，不受此影响。
+- **建议**：后续在本机跑 `audit:*` 系列门禁优先用 Node 24；或在 CI 固定 Node 24，避免受管 Node 22 的 tsx 段错误。
+
+### 结论
+阶段 2（ui/ → atoms/molecules 物理迁移 + shim 兼容层）完成，**核心正确性门禁（tsc/build/layers/tokens/docs/routes/lint:colors）全部通过，无迁移回归**。仅余预存技术债务：29 处静默回退 Warning、2 条 `/command/*` 孤儿路由未进预期列表、`databridge.test.ts` 预存类型错误——均非本次引入，可纳入后续优化立项。

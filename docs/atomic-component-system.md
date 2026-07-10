@@ -2,7 +2,7 @@
 
 > **版本**：v1.0.0  
 > **日期**：2026-07-10  
-> **状态**：阶段 1（体系建立）已完成并验证  
+> **状态**：阶段 1（体系建立）+ 阶段 2（ui/ 物理迁移）已完成并验证  
 > **适用范围**：`src/components/` 全量组件
 
 ---
@@ -126,11 +126,10 @@ src/components/
 │   ├── ErrorBoundary.tsx
 │   ├── PageSkeleton.tsx
 │   └── WidgetErrorBoundary.tsx
-└── ui/                             # 过渡期兼容目录
-    ├── index.ts                    # 推荐统一入口
-    └── atoms/                      # 原 ui/ 组件物理迁移至此
-    └── molecules/                  # 原 ui/ 中分子组件迁移至此
-    └── (空 shim 文件，保留到 v2.0 后删除)
+└── ui/                             # 过渡期兼容目录（扁平 shim，非 ui/atoms 子目录）
+    ├── index.ts                    # 聚合兼容桶（re-export 顶层 atoms/molecules）
+    ├── Button.tsx                  # `export * from '@/components/atoms/Button'`
+    ├── ...（37 个 shim 文件，保留到 v2.0 后删除）
 ```
 
 ---
@@ -310,12 +309,16 @@ export interface MetricCardProps {
 - [x] 旧路径 `components/collection/*`、`components/pool/*` 重建为 re-export shim，保持引用兼容
 - [x] 收尾验证（2026-07-10）：`tsc:prod` ✅ / `build` ✅（20.75s）/ `audit:layers` 0 违规 / `audit:routes` 62/62 / `audit:tokens` 0 违规 / `lint:colors` ✅ / `audit:docs` ✅ / `audit:hardcode` 仅既有 Warning
 
-### 阶段 2：UI 目录原子化（v1.1）
+### 阶段 2：UI 目录原子化（v1.1）— 已完成并验证 ✅（2026-07-10）
 
-- [ ] 将 `ui/` 中原子组件物理迁移到 `ui/atoms/`
-- [ ] 将 `ui/` 中分子组件物理迁移到 `ui/molecules/`
-- [ ] 在 `ui/` 根目录保留 shim 文件做兼容
-- [ ] 更新 `ui/index.ts` 统一导出
+> **落点决策**：经用户确认，直接落到**顶层 `atoms/` 与 `molecules/`**（即阶段 5 终态），而非文档原字面写的 `ui/atoms`、`ui/molecules`。`ui/` 退化为纯扁平 shim 兼容层，与 `collection/`、`pool/` 模式完全一致，避免阶段 5 二次合并。
+
+- [x] 将 `ui/` 中 28 个原子组件物理迁移到顶层 `src/components/atoms/`（含测试随迁）
+- [x] 将 `ui/` 中 9 个分子组件物理迁移到顶层 `src/components/molecules/`（含测试随迁）
+- [x] 原 `ui/X.tsx` 全部改写为 `export * from '@/components/atoms|X'` 纯 shim，约 140 处消费者引用零改动
+- [x] 更新 `atoms/index.ts`、`molecules/index.ts` 桶导出由 `@/components/ui/X` → `./X`
+- [x] 修复脚本误加的 `PageContainer` 到 `atoms/index.ts`（实际归属 molecules）
+- [x] 收尾验证（系统 Node 24 驱动 tsx）：`tsc:prod` ✅（仅 `databridge.test.ts` 预存 TS2352）/ `build` ✅ / `audit:layers` 0 违规（909 文件）/ `audit:tokens` 0 硬编码 / `audit:docs` 0 违规（302 文件）/ `audit:routes` 62/62 / `lint:colors` ✅ / `audit:hardcode` 仅 29 处基线 Warning
 
 ### 阶段 3：业务目录有机体化（v1.2）
 

@@ -125,9 +125,9 @@ function main(): void {
       name: 'jsdoc',
       label: 'JSDoc 缺失',
       value: jsdocMissing,
-      baseline: 628,
+      baseline: 0,
       unit: '处',
-      status: jsdocMissing <= 628 ? 'warning' : 'critical',
+      status: jsdocMissing === 0 ? 'healthy' : jsdocMissing <= 628 ? 'warning' : 'critical',
       detail: 'audit:jsdoc',
     },
     {

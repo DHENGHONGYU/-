@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-10T12:53:46.961Z",
+  "generatedAt": "2026-07-10T14:48:22.490Z",
   "agentsVersion": "v1.4.3",
-  "overallScore": 90,
+  "overallScore": 93,
   "metrics": [
     {
       "name": "layers",
@@ -49,10 +49,10 @@
     {
       "name": "jsdoc",
       "label": "JSDoc 缺失",
-      "value": 628,
-      "baseline": 628,
+      "value": 0,
+      "baseline": 0,
       "unit": "处",
-      "status": "warning",
+      "status": "healthy",
       "detail": "audit:jsdoc"
     },
     {
