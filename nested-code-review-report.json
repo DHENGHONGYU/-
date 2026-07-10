@@ -1,11 +1,11 @@
 {
   "summary": {
     "filesScanned": 749,
-    "deeplyNestedBlocks": 54,
-    "longElseIfChains": 12,
+    "deeplyNestedBlocks": 26,
+    "longElseIfChains": 4,
     "guardOpportunities": 0,
     "redundantBreaks": 0,
-    "duplicateIfConditions": 193
+    "duplicateIfConditions": 191
   },
   "deeplyNestedBlocks": [
     {
@@ -109,16 +109,6 @@
       "snippet": "if (remaining <= 0) {"
     },
     {
-      "file": "src/services/data-collector/collectors/BaseCollector.ts",
-      "function": "collectWithRetry",
-      "functionLine": 39,
-      "line": 56,
-      "column": 9,
-      "depth": 4,
-      "kind": "IfStatement",
-      "snippet": "if (attempt < this.config.retryCount) {"
-    },
-    {
       "file": "src/services/data-collector/mockDataCollection.ts",
       "function": "mockCollectorFetchWithRetry",
       "functionLine": 790,
@@ -137,66 +127,6 @@
       "depth": 4,
       "kind": "IfStatement",
       "snippet": "if (attempt < maxRetries) {\r"
-    },
-    {
-      "file": "src/services/fetcher/fetcherClient.ts",
-      "function": "request",
-      "functionLine": 53,
-      "line": 85,
-      "column": 7,
-      "depth": 4,
-      "kind": "IfStatement",
-      "snippet": "if (!isNetworkError || attempt === maxRetries) {"
-    },
-    {
-      "file": "src/services/fetcher/fetcherInterceptor.ts",
-      "function": "interceptedFetch",
-      "functionLine": 86,
-      "line": 117,
-      "column": 9,
-      "depth": 4,
-      "kind": "IfStatement",
-      "snippet": "if (errorType === HttpErrorType.UNAUTHORIZED && config.onUnauthorized) {"
-    },
-    {
-      "file": "src/services/fetcher/fetcherInterceptor.ts",
-      "function": "interceptedFetch",
-      "functionLine": 86,
-      "line": 120,
-      "column": 9,
-      "depth": 4,
-      "kind": "IfStatement",
-      "snippet": "if (errorType === HttpErrorType.FORBIDDEN && config.onForbidden) {"
-    },
-    {
-      "file": "src/services/fetcher/fetcherInterceptor.ts",
-      "function": "interceptedFetch",
-      "functionLine": 86,
-      "line": 125,
-      "column": 9,
-      "depth": 4,
-      "kind": "IfStatement",
-      "snippet": "if (shouldRetry(error, config, attempt)) {"
-    },
-    {
-      "file": "src/services/fetcher/fetcherInterceptor.ts",
-      "function": "interceptedFetch",
-      "functionLine": 86,
-      "line": 138,
-      "column": 7,
-      "depth": 4,
-      "kind": "IfStatement",
-      "snippet": "if (err instanceof HttpError) {"
-    },
-    {
-      "file": "src/services/fetcher/fetcherInterceptor.ts",
-      "function": "interceptedFetch",
-      "functionLine": 86,
-      "line": 152,
-      "column": 7,
-      "depth": 4,
-      "kind": "IfStatement",
-      "snippet": "if (shouldRetry(error, config, attempt)) {"
     },
     {
       "file": "src/services/fetcher/orchestrator/resilienceChain.ts",
@@ -241,8 +171,8 @@
     {
       "file": "src/services/input/batchImportParsers.ts",
       "function": "parseCsvLine",
-      "functionLine": 173,
-      "line": 183,
+      "functionLine": 197,
+      "line": 207,
       "column": 9,
       "depth": 4,
       "kind": "IfStatement",
@@ -251,172 +181,12 @@
     {
       "file": "src/services/input/batchImportParsers.ts",
       "function": "parseJsonFile",
-      "functionLine": 327,
-      "line": 354,
+      "functionLine": 351,
+      "line": 378,
       "column": 9,
       "depth": 4,
       "kind": "IfStatement",
       "snippet": "if (STOCK_CODE_PATTERN.test(code)) {"
-    },
-    {
-      "file": "src/services/llm/llmClient.ts",
-      "function": "chat",
-      "functionLine": 132,
-      "line": 175,
-      "column": 9,
-      "depth": 4,
-      "kind": "IfStatement",
-      "snippet": "if (raw.error?.message) {\r"
-    },
-    {
-      "file": "src/services/llm/llmClient.ts",
-      "function": "chat",
-      "functionLine": 132,
-      "line": 178,
-      "column": 9,
-      "depth": 4,
-      "kind": "CatchClause",
-      "snippet": "catch {\r"
-    },
-    {
-      "file": "src/services/llm/llmClient.ts",
-      "function": "streamingChat",
-      "functionLine": 253,
-      "line": 305,
-      "column": 9,
-      "depth": 4,
-      "kind": "IfStatement",
-      "snippet": "if (errRaw.error?.message) {\r"
-    },
-    {
-      "file": "src/services/llm/llmClient.ts",
-      "function": "streamingChat",
-      "functionLine": 253,
-      "line": 308,
-      "column": 9,
-      "depth": 4,
-      "kind": "CatchClause",
-      "snippet": "catch {\r"
-    },
-    {
-      "file": "src/services/llm/llmClient.ts",
-      "function": "streamingChat",
-      "functionLine": 253,
-      "line": 340,
-      "column": 9,
-      "depth": 4,
-      "kind": "IfStatement",
-      "snippet": "if (line.trim().length === 0) continue"
-    },
-    {
-      "file": "src/services/llm/llmClient.ts",
-      "function": "streamingChat",
-      "functionLine": 253,
-      "line": 341,
-      "column": 9,
-      "depth": 4,
-      "kind": "IfStatement",
-      "snippet": "if (!line.startsWith('data: ')) continue"
-    },
-    {
-      "file": "src/services/llm/llmClient.ts",
-      "function": "streamingChat",
-      "functionLine": 253,
-      "line": 344,
-      "column": 9,
-      "depth": 4,
-      "kind": "IfStatement",
-      "snippet": "if (dataStr === '[DONE]') {\r"
-    },
-    {
-      "file": "src/services/llm/llmClient.ts",
-      "function": "streamingChat",
-      "functionLine": 253,
-      "line": 345,
-      "column": 11,
-      "depth": 5,
-      "kind": "IfStatement",
-      "snippet": "if (!isFinished) {\r"
-    },
-    {
-      "file": "src/services/llm/llmClient.ts",
-      "function": "streamingChat",
-      "functionLine": 253,
-      "line": 351,
-      "column": 9,
-      "depth": 4,
-      "kind": "TryStatement",
-      "snippet": "try {\r"
-    },
-    {
-      "file": "src/services/llm/llmClient.ts",
-      "function": "streamingChat",
-      "functionLine": 253,
-      "line": 354,
-      "column": 11,
-      "depth": 5,
-      "kind": "IfStatement",
-      "snippet": "if (chunk) {\r"
-    },
-    {
-      "file": "src/services/llm/llmClient.ts",
-      "function": "streamingChat",
-      "functionLine": 253,
-      "line": 356,
-      "column": 13,
-      "depth": 6,
-      "kind": "IfStatement",
-      "snippet": "if (chunk.isDone) {\r"
-    },
-    {
-      "file": "src/services/llm/llmClient.ts",
-      "function": "streamingChat",
-      "functionLine": 253,
-      "line": 360,
-      "column": 11,
-      "depth": 5,
-      "kind": "CatchClause",
-      "snippet": "catch (parseErr) {\r"
-    },
-    {
-      "file": "src/services/news/stockLinker.ts",
-      "function": "matchText",
-      "functionLine": 125,
-      "line": 143,
-      "column": 9,
-      "depth": 4,
-      "kind": "IfStatement",
-      "snippet": "if (!code) continue"
-    },
-    {
-      "file": "src/services/news/stockLinker.ts",
-      "function": "matchText",
-      "functionLine": 125,
-      "line": 145,
-      "column": 9,
-      "depth": 4,
-      "kind": "IfStatement",
-      "snippet": "if (matchedStock && matchedStock.symbol === stock.symbol) {\r"
-    },
-    {
-      "file": "src/services/news/stockLinker.ts",
-      "function": "matchText",
-      "functionLine": 125,
-      "line": 172,
-      "column": 9,
-      "depth": 4,
-      "kind": "IfStatement",
-      "snippet": "if (text.includes(prefix)) {\r"
-    },
-    {
-      "file": "src/services/news/stockLinker.ts",
-      "function": "matchText",
-      "functionLine": 125,
-      "line": 189,
-      "column": 9,
-      "depth": 4,
-      "kind": "IfStatement",
-      "snippet": "if (text.includes(keyword)) {\r"
     },
     {
       "file": "src/services/resilience.ts",
@@ -429,26 +199,6 @@
       "snippet": "if (!isLast && shouldRetry(err, attempt)) {"
     },
     {
-      "file": "src/services/scoring/rotationSignalDetector.ts",
-      "function": "detectBySector",
-      "functionLine": 248,
-      "line": 304,
-      "column": 9,
-      "depth": 4,
-      "kind": "IfStatement",
-      "snippet": "if (bar) {\r"
-    },
-    {
-      "file": "src/services/system/localDocService.ts",
-      "function": "scanDirectory",
-      "functionLine": 172,
-      "line": 202,
-      "column": 11,
-      "depth": 4,
-      "kind": "IfStatement",
-      "snippet": "if (content.length > MAX_CONTENT_LENGTH) {\r"
-    },
-    {
       "file": "src/services/trade/holdingsService.ts",
       "function": "requestWithRetry",
       "functionLine": 52,
@@ -456,7 +206,7 @@
       "column": 7,
       "depth": 4,
       "kind": "IfStatement",
-      "snippet": "if (attempt < maxRetries) {"
+      "snippet": "if (attempt >= maxRetries) break"
     },
     {
       "file": "src/services/trading/tradeErrorDetectors.ts",
@@ -517,36 +267,6 @@
       "depth": 4,
       "kind": "CatchClause",
       "snippet": "catch (rollbackErr) {\r"
-    },
-    {
-      "file": "src/store/rotationSignalStore.derived.ts",
-      "function": "<arrow>",
-      "functionLine": 228,
-      "line": 250,
-      "column": 9,
-      "depth": 4,
-      "kind": "IfStatement",
-      "snippet": "if (sig.strength === 'strong') {"
-    },
-    {
-      "file": "src/store/signalStore.ts",
-      "function": "<arrow>",
-      "functionLine": 59,
-      "line": 100,
-      "column": 11,
-      "depth": 4,
-      "kind": "IfStatement",
-      "snippet": "if (strongest) {"
-    },
-    {
-      "file": "src/store/signalStore.ts",
-      "function": "<arrow>",
-      "functionLine": 59,
-      "line": 103,
-      "column": 11,
-      "depth": 4,
-      "kind": "CatchClause",
-      "snippet": "catch {"
     }
   ],
   "longElseIfChains": [
@@ -568,86 +288,6 @@
       "column": 3,
       "branchCount": 5,
       "lastLine": 119,
-      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
-    },
-    {
-      "file": "src/services/input/batchImportParsers.ts",
-      "function": "parseBulkInput",
-      "functionLine": 92,
-      "line": 113,
-      "column": 5,
-      "branchCount": 4,
-      "lastLine": 132,
-      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
-    },
-    {
-      "file": "src/services/scoring/hotSectorDimensions.ts",
-      "function": "calculateSentiment",
-      "functionLine": 177,
-      "line": 185,
-      "column": 3,
-      "branchCount": 4,
-      "lastLine": 191,
-      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
-    },
-    {
-      "file": "src/services/scoring/v6-engine/calculators/l0_l1_l2.ts",
-      "function": "scoreLongTermTrend",
-      "functionLine": 272,
-      "line": 279,
-      "column": 3,
-      "branchCount": 4,
-      "lastLine": 282,
-      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
-    },
-    {
-      "file": "src/services/scoring/v6-engine/calculators/l3/l3v-valuation.ts",
-      "function": "scoreValuation",
-      "functionLine": 24,
-      "line": 32,
-      "column": 5,
-      "branchCount": 4,
-      "lastLine": 35,
-      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
-    },
-    {
-      "file": "src/services/scoring/v6-engine/calculators/l4_l5_l6.ts",
-      "function": "evaluateTMMatrix",
-      "functionLine": 203,
-      "line": 248,
-      "column": 3,
-      "branchCount": 4,
-      "lastLine": 254,
-      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
-    },
-    {
-      "file": "src/services/scoring/valuePitAnalyzer.ts",
-      "function": "calculateValuationMargin",
-      "functionLine": 156,
-      "line": 160,
-      "column": 3,
-      "branchCount": 4,
-      "lastLine": 166,
-      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
-    },
-    {
-      "file": "src/services/scoring/valuePitAnalyzer.ts",
-      "function": "calculateRotationPosition",
-      "functionLine": 249,
-      "line": 253,
-      "column": 3,
-      "branchCount": 4,
-      "lastLine": 259,
-      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
-    },
-    {
-      "file": "src/services/scoring/valuePitAnalyzer.ts",
-      "function": "calculateLiquidity",
-      "functionLine": 284,
-      "line": 290,
-      "column": 3,
-      "branchCount": 4,
-      "lastLine": 296,
       "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
     },
     {
@@ -2517,23 +2157,6 @@
       "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
     },
     {
-      "file": "src/services/fetcher/fetcherInterceptor.ts",
-      "condition": "shouldRetry(error, config, attempt)",
-      "occurrences": [
-        {
-          "line": 125,
-          "column": 9,
-          "snippet": "if (shouldRetry(error, config, attempt)) {"
-        },
-        {
-          "line": 152,
-          "column": 7,
-          "snippet": "if (shouldRetry(error, config, attempt)) {"
-        }
-      ],
-      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
-    },
-    {
       "file": "src/services/fetcher/fetcherScheduler.ts",
       "condition": "this.state.isRunning",
       "occurrences": [
@@ -2760,7 +2383,7 @@
           "snippet": "if (STOCK_CODE_PATTERN.test(code)) {"
         },
         {
-          "line": 354,
+          "line": 378,
           "column": 9,
           "snippet": "if (STOCK_CODE_PATTERN.test(code)) {"
         }
@@ -2774,12 +2397,12 @@
         {
           "line": 108,
           "column": 3,
-          "snippet": "if (raw.error && typeof raw.error.message === 'string') {\r"
+          "snippet": "if (raw.error && typeof raw.error.message === 'string') {"
         },
         {
-          "line": 219,
+          "line": 207,
           "column": 3,
-          "snippet": "if (raw.error && typeof raw.error.message === 'string') {\r"
+          "snippet": "if (raw.error && typeof raw.error.message === 'string') {"
         }
       ],
       "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
@@ -2791,12 +2414,12 @@
         {
           "line": 113,
           "column": 3,
-          "snippet": "if (!Array.isArray(choices) || choices.length === 0) {\r"
+          "snippet": "if (!Array.isArray(choices) || choices.length === 0) {"
         },
         {
-          "line": 224,
+          "line": 212,
           "column": 3,
-          "snippet": "if (!Array.isArray(choices) || choices.length === 0) {\r"
+          "snippet": "if (!Array.isArray(choices) || choices.length === 0) {"
         }
       ],
       "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
@@ -2808,12 +2431,12 @@
         {
           "line": 138,
           "column": 3,
-          "snippet": "if (!config.apiKey) {\r"
+          "snippet": "if (!config.apiKey) {"
         },
         {
-          "line": 260,
+          "line": 295,
           "column": 3,
-          "snippet": "if (!config.apiKey) {\r"
+          "snippet": "if (!config.apiKey) {"
         }
       ],
       "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
@@ -2825,12 +2448,12 @@
         {
           "line": 150,
           "column": 3,
-          "snippet": "if (config.maxTokens !== undefined) {\r"
+          "snippet": "if (config.maxTokens !== undefined) {"
         },
         {
-          "line": 273,
+          "line": 308,
           "column": 3,
-          "snippet": "if (config.maxTokens !== undefined) {\r"
+          "snippet": "if (config.maxTokens !== undefined) {"
         }
       ],
       "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
@@ -2845,7 +2468,7 @@
           "snippet": "if (timeoutId) clearTimeout(timeoutId)"
         },
         {
-          "line": 191,
+          "line": 179,
           "column": 5,
           "snippet": "if (timeoutId) clearTimeout(timeoutId)"
         }
@@ -2859,12 +2482,12 @@
         {
           "line": 171,
           "column": 5,
-          "snippet": "if (!response.ok) {\r"
+          "snippet": "if (!response.ok) {"
         },
         {
-          "line": 301,
+          "line": 336,
           "column": 5,
-          "snippet": "if (!response.ok) {\r"
+          "snippet": "if (!response.ok) {"
         }
       ],
       "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
@@ -2874,14 +2497,14 @@
       "condition": "err instanceof LlmApiError",
       "occurrences": [
         {
-          "line": 192,
+          "line": 180,
           "column": 5,
-          "snippet": "if (err instanceof LlmApiError) {\r"
+          "snippet": "if (err instanceof LlmApiError) {"
         },
         {
-          "line": 370,
+          "line": 368,
           "column": 5,
-          "snippet": "if (err instanceof LlmApiError) {\r"
+          "snippet": "if (err instanceof LlmApiError) {"
         }
       ],
       "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
@@ -2891,14 +2514,14 @@
       "condition": "err instanceof DOMException && err.name === 'AbortError'",
       "occurrences": [
         {
-          "line": 195,
+          "line": 183,
           "column": 5,
-          "snippet": "if (err instanceof DOMException && err.name === 'AbortError') {\r"
+          "snippet": "if (err instanceof DOMException && err.name === 'AbortError') {"
         },
         {
-          "line": 367,
+          "line": 365,
           "column": 5,
-          "snippet": "if (err instanceof DOMException && err.name === 'AbortError') {\r"
+          "snippet": "if (err instanceof DOMException && err.name === 'AbortError') {"
         }
       ],
       "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
@@ -2908,12 +2531,12 @@
       "condition": "idleTimer",
       "occurrences": [
         {
-          "line": 282,
+          "line": 317,
           "column": 5,
           "snippet": "if (idleTimer) clearTimeout(idleTimer)"
         },
         {
-          "line": 377,
+          "line": 375,
           "column": 5,
           "snippet": "if (idleTimer) clearTimeout(idleTimer)"
         }
@@ -3144,12 +2767,12 @@
         {
           "line": 128,
           "column": 3,
-          "snippet": "if (stock.marketCap !== undefined) {\r"
+          "snippet": "if (stock.marketCap !== undefined) {"
         },
         {
           "line": 205,
           "column": 3,
-          "snippet": "if (stock.marketCap !== undefined) {\r"
+          "snippet": "if (stock.marketCap !== undefined) {"
         }
       ],
       "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
@@ -3194,23 +2817,6 @@
           "line": 171,
           "column": 3,
           "snippet": "if (growth > 0.10) return 3.5"
-        }
-      ],
-      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
-    },
-    {
-      "file": "src/services/scoring/v6-engine/calculators/l3/l3v-valuation.ts",
-      "condition": "benchmark",
-      "occurrences": [
-        {
-          "line": 40,
-          "column": 5,
-          "snippet": "if (benchmark) {"
-        },
-        {
-          "line": 54,
-          "column": 3,
-          "snippet": "if (benchmark) {"
         }
       ],
       "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
@@ -3371,7 +2977,7 @@
           "snippet": "if (!response.ok) {"
         },
         {
-          "line": 211,
+          "line": 214,
           "column": 3,
           "snippet": "if (!response.ok) {"
         }
@@ -4105,12 +3711,12 @@
       "condition": "state.isRefreshing",
       "occurrences": [
         {
-          "line": 63,
+          "line": 72,
           "column": 5,
           "snippet": "if (state.isRefreshing) {"
         },
         {
-          "line": 171,
+          "line": 170,
           "column": 5,
           "snippet": "if (state.isRefreshing) {"
         }
@@ -4122,12 +3728,12 @@
       "condition": "_refreshDebounceTimer",
       "occurrences": [
         {
-          "line": 165,
+          "line": 164,
           "column": 3,
           "snippet": "if (_refreshDebounceTimer) {"
         },
         {
-          "line": 235,
+          "line": 234,
           "column": 3,
           "snippet": "if (_refreshDebounceTimer) {"
         }
@@ -4139,12 +3745,12 @@
       "condition": "envelope.meta.source === MODULE_ID.trading || envelope.meta.source === MODULE_ID.tradinghub",
       "occurrences": [
         {
-          "line": 192,
+          "line": 191,
           "column": 7,
           "snippet": "if (envelope.meta.source === MODULE_ID.trading || envelope.meta.source === MODULE_ID.tradinghub) {"
         },
         {
-          "line": 213,
+          "line": 212,
           "column": 7,
           "snippet": "if (envelope.meta.source === MODULE_ID.trading || envelope.meta.source === MODULE_ID.tradinghub) {"
         }

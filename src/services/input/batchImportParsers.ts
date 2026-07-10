@@ -73,6 +73,50 @@ export function detectExchange(code: string): string {
 // 文本解析
 // ============================================================
 
+type RowParser = (parts: string[], line: string) => BulkImportRow | null
+
+const PARSERS: RowParser[] = [
+  // 格式1: 6位代码,名称
+  (parts) => {
+    if (parts.length < 2 || !STOCK_CODE_PATTERN.test(parts[0]!)) return null
+    const code = parts[0]!
+    const name = parts[1]!.slice(0, MAX_NAME_LENGTH)
+    const exchange = detectExchange(code)
+    return { code, name, symbol: `${code}.${exchange}`, status: 'valid' }
+  },
+  // 格式2: 600000.SH,名称
+  (parts) => {
+    if (parts.length < 2 || !/^\d{6}\.(SH|SZ|BJ)$/i.test(parts[0]!)) return null
+    const rawCode = parts[0]!
+    const [code, exchange] = rawCode.split('.') as [string, string]
+    const name = parts[1]!.slice(0, MAX_NAME_LENGTH)
+    return { code, name, symbol: `${code}.${exchange.toUpperCase()}`, status: 'valid' }
+  },
+  // 格式3: 仅 600000.SH
+  (_parts, line) => {
+    if (!/^\d{6}\.(SH|SZ|BJ)$/i.test(line)) return null
+    const [code, exchange] = line.split('.') as [string, string]
+    return { code, name: code, symbol: `${code}.${exchange.toUpperCase()}`, status: 'valid' }
+  },
+  // 格式4: 仅 6位代码
+  (_parts, line) => {
+    if (!STOCK_CODE_PATTERN.test(line)) return null
+    const code = line
+    const exchange = detectExchange(code)
+    return { code, name: code, symbol: `${code}.${exchange}`, status: 'valid' }
+  },
+]
+
+function createInvalidRow(line: string): BulkImportRow {
+  return {
+    code: line.split(',')[0]?.trim() || line,
+    name: line.split(',')[1]?.trim() || '',
+    symbol: '',
+    status: 'invalid',
+    statusReason: '代码格式不合规（需为 6 位数字）',
+  }
+}
+
 /**
  * 解析批量导入文本。
  *
@@ -84,6 +128,9 @@ export function detectExchange(code: string): string {
  *
  * 注意：本函数仅做格式解析，返回行状态默认为 'valid'，
  * 重复检测请额外调用 detectDuplicates。
+ *
+ * @param text - 批量输入原始文本
+ * @returns 解析后的行数组
  */
 export function parseBulkInput(text: string): BulkImportRow[] {
   const results: BulkImportRow[] = []
@@ -103,36 +150,16 @@ export function parseBulkInput(text: string): BulkImportRow[] {
 
   for (const line of lines) {
     const parts = line.split(INPUT_CONFIG.bulkImport.inlineSeparators).filter(Boolean)
-
     logger.debug('[batchImport] 解析单行', { rawLine: line, partCount: parts.length })
 
-    if (parts.length >= 2 && STOCK_CODE_PATTERN.test(parts[0]!)) {
-      const code = parts[0]!
-      const name = parts[1]!.slice(0, MAX_NAME_LENGTH)
-      const exchange = detectExchange(code)
-      results.push({ code, name, symbol: `${code}.${exchange}`, status: 'valid' })
+    const parsed = PARSERS.reduce<BulkImportRow | null>((acc, parser) => acc ?? parser(parts, line), null)
+
+    if (parsed) {
+      results.push(parsed)
       parsedCount++
-      logger.debug('[batchImport] 格式1匹配成功', { code, name, symbol: `${code}.${exchange}` })
-    } else if (parts.length >= 2 && /^\d{6}\.(SH|SZ|BJ)$/i.test(parts[0]!)) {
-      const rawCode = parts[0]!
-      const [code, exchange] = rawCode.split('.') as [string, string]
-      const name = parts[1]!.slice(0, MAX_NAME_LENGTH)
-      results.push({ code, name, symbol: `${code}.${exchange.toUpperCase()}`, status: 'valid' })
-      parsedCount++
-      logger.debug('[batchImport] 格式2匹配成功（带交易所后缀+名称）', { code, name, exchange: exchange.toUpperCase() })
-    } else if (/^\d{6}\.(SH|SZ|BJ)$/i.test(line)) {
-      const [code, exchange] = line.split('.') as [string, string]
-      results.push({ code, name: code, symbol: `${code}.${exchange.toUpperCase()}`, status: 'valid' })
-      parsedCount++
-      logger.debug('[batchImport] 格式3匹配成功（仅带交易所后缀）', { code, exchange: exchange.toUpperCase() })
-    } else if (STOCK_CODE_PATTERN.test(line)) {
-      const code = line
-      const exchange = detectExchange(code)
-      results.push({ code, name: code, symbol: `${code}.${exchange}`, status: 'valid' })
-      parsedCount++
-      logger.debug('[batchImport] 格式4匹配成功（纯代码）', { code, exchange })
+      logger.debug('[batchImport] 格式匹配成功', { code: parsed.code, name: parsed.name, symbol: parsed.symbol })
     } else {
-      results.push({ code: line.split(',')[0]?.trim() || line, name: line.split(',')[1]?.trim() || '', symbol: '', status: 'invalid', statusReason: '代码格式不合规（需为 6 位数字）' })
+      results.push(createInvalidRow(line))
       skippedCount++
       logger.debug('[batchImport] 行匹配失败（标记为无效）', { rawLine: line })
     }
@@ -217,7 +244,7 @@ function extractStockCode(field: string): string | null {
     return trimmed
   }
   const match = trimmed.match(/^(\d{6})\.(SH|SZ|BJ)$/i)
-  if (match && match[1]) {
+  if (match?.[1]) {
     return match[1]
   }
   return null
@@ -234,7 +261,7 @@ function buildRowFromFields(fields: string[]): BulkImportRow | null {
     if (code) {
       const rawField = fields[i]!.trim()
       const exchangeMatch = rawField.match(/\.(SH|SZ|BJ)$/i)
-      if (exchangeMatch && exchangeMatch[1]) {
+      if (exchangeMatch?.[1]) {
         exchange = exchangeMatch[1].toUpperCase()
       } else {
         exchange = detectExchange(code)

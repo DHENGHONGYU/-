@@ -4,7 +4,7 @@
  * 所有权重、阈值均来自引擎配置，禁止硬编码。
  */
 
-import type { ScoreAuditTrail, FactorContribution, LayerId } from './types'
+import type { ScoreAuditTrail, FactorContribution } from './types'
 import { ALL_LAYER_IDS, LAYER_LABELS } from './types'
 import { getLogger } from '@/lib/logger'
 
@@ -23,6 +23,9 @@ const DEFAULT_MISSING_VALUE = 0
  * 4. 中性基准 = (layerScore.min + layerScore.max) / 2，来自阈值配置。
  * 5. signedContribution = (层得分 - 中性基准) × 归一化权重 × 100 / 层满分，
  *    用于瀑布图展示正向/负向贡献。
+ *
+ * @param trail - 审计追踪
+ * @returns 因子贡献明细数组
  */
 export function buildFactorContributions(trail: ScoreAuditTrail): FactorContribution[] {
   const { config, composite } = trail
@@ -36,9 +39,9 @@ export function buildFactorContributions(trail: ScoreAuditTrail): FactorContribu
   const missingFactors: string[] = []
   const missingWeights: string[] = []
   for (const id of ALL_LAYER_IDS) {
-    const lid = id as LayerId
+    const lid = id
     if (layerScores[lid] == null) missingFactors.push(LAYER_LABELS[lid] ?? lid)
-    if (weights[lid as keyof typeof weights] == null) missingWeights.push(lid)
+    if (weights[lid] == null) missingWeights.push(lid)
   }
   if (missingFactors.length > 0) {
     logger.warn('[V6Engine] 因子贡献度缺失', { factor: missingFactors.join(', ') })
@@ -48,15 +51,15 @@ export function buildFactorContributions(trail: ScoreAuditTrail): FactorContribu
   }
 
   const activeLayers = ALL_LAYER_IDS.filter((id) => {
-    const rawScore = layerScores[id as LayerId]
-    const rawWeight = weights[id as keyof typeof weights]
+    const rawScore = layerScores[id]
+    const rawWeight = weights[id]
     const score = rawScore ?? DEFAULT_MISSING_VALUE
     const weight = rawWeight ?? DEFAULT_MISSING_VALUE
     return score > 0 && weight > 0
   })
 
   const totalWeight = activeLayers.reduce((sum, id) => {
-    const rawW = weights[id as keyof typeof weights]
+    const rawW = weights[id]
     const w = rawW ?? DEFAULT_MISSING_VALUE
     return sum + w
   }, 0)
@@ -67,23 +70,23 @@ export function buildFactorContributions(trail: ScoreAuditTrail): FactorContribu
 
   const weightedAverage =
     activeLayers.reduce((sum, id) => {
-      const score = layerScores[id as LayerId] ?? 0
-      const weight = weights[id as keyof typeof weights] ?? 0
+      const score = layerScores[id] ?? 0
+      const weight = weights[id] ?? 0
       return sum + score * weight
     }, 0) / totalWeight
   const finalScaled = weightedAverage * scale
 
   return activeLayers.map((id) => {
-    const score = layerScores[id as LayerId] ?? 0
-    const weight = weights[id as keyof typeof weights] ?? 0
+    const score = layerScores[id] ?? 0
+    const weight = weights[id] ?? 0
     const normalizedWeight = weight / totalWeight
     const contribution = score * normalizedWeight * scale
     const signedContribution = (score - baseline) * normalizedWeight * scale
     const contributionRate = finalScaled > 0 ? contribution / finalScaled : 0
 
     return {
-      factorId: id as LayerId,
-      label: LAYER_LABELS[id as LayerId] ?? id,
+      factorId: id,
+      label: LAYER_LABELS[id] ?? id,
       weight,
       normalizedWeight,
       score,

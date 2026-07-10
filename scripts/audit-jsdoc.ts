@@ -64,16 +64,16 @@ function findMissingJSDoc(): MissingEntry[] {
             ? 'function'
             : 'constant'
 
-        // Check previous non-empty lines for JSDoc
+        // Check previous non-empty lines for JSDoc (allow long comments)
         let hasJSDoc = false
-        for (let j = i - 1; j >= 0 && j >= i - 10; j--) {
+        for (let j = i - 1; j >= 0 && j >= i - 100; j--) {
           const prevLine = lines[j].trim()
           if (prevLine === '') continue
           if (prevLine.startsWith('/**')) {
             hasJSDoc = true
             break
           }
-          if (!prevLine.startsWith('*') && !prevLine.startsWith('/*')) {
+          if (!prevLine.startsWith('*') && !prevLine.startsWith('/*') && !prevLine.startsWith('@')) {
             break
           }
         }

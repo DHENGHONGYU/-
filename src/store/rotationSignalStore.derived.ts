@@ -225,6 +225,24 @@ export function recentTriggered(hours: number = 24): RotationSignal[] {
  * 板块统计聚合
  * 性能优化：单次遍历 signals 完成所有计算，避免调用 signalsByStrength
  */
+function updateStrengthLevel(stat: SectorStat, strength: Exclude<RotationSignal['strength'], 'none'>): void {
+  const STRENGTH_PRIORITY: Record<SectorStat['strengthLevel'], number> = {
+    none: 0,
+    weak: 1,
+    medium: 2,
+    strong: 3,
+  }
+  if (STRENGTH_PRIORITY[strength] > STRENGTH_PRIORITY[stat.strengthLevel]) {
+    stat.strengthLevel = strength
+  }
+}
+
+/**
+ * 板块统计聚合（memoized）。
+ *
+ * @param signals - 轮动信号列表
+ * @returns 板块统计数组
+ */
 export const sectorStatsMemo = memoizeByRef((signals: readonly RotationSignal[]): SectorStat[] => {
   const statsMap = new Map<string, SectorStat>()
 
@@ -242,19 +260,10 @@ export const sectorStatsMemo = memoizeByRef((signals: readonly RotationSignal[])
     }
 
     stat.signalCount++
-    if (sig.triggered) {
+    if (sig.triggered && sig.detectedAt > stat.latestDetectedAt) {
       stat.hasTriggered = true
-      if (sig.detectedAt > stat.latestDetectedAt) {
-        stat.latestDetectedAt = sig.detectedAt
-        // 更新强度等级（strong > medium > weak）
-        if (sig.strength === 'strong') {
-          stat.strengthLevel = 'strong'
-        } else if (sig.strength === 'medium' && stat.strengthLevel !== 'strong') {
-          stat.strengthLevel = 'medium'
-        } else if (sig.strength === 'weak' && stat.strengthLevel === 'none') {
-          stat.strengthLevel = 'weak'
-        }
-      }
+      stat.latestDetectedAt = sig.detectedAt
+      updateStrengthLevel(stat, sig.strength)
     }
   }
 

@@ -50,6 +50,24 @@ const initialState = {
 // Store
 // ============================================================
 
+/**
+ * 为单个股票生成最强交易信号。
+ *
+ * @param symbol - 股票代码
+ * @returns 最强信号或 null
+ */
+async function generateSignalForStock(symbol: string): Promise<Signal | null> {
+  try {
+    const stockSignals = await generateSignalsForSymbol(symbol)
+    return pickStrongestSignal(stockSignals) ?? null
+  } catch {
+    return null
+  }
+}
+
+/**
+ * 交易信号 Zustand Store。
+ */
 export const useSignalStore = create<SignalState>((set) => ({
   ...initialState,
 
@@ -88,19 +106,9 @@ export const useSignalStore = create<SignalState>((set) => ({
       const targetStocks = stocks.slice(0, 20)
       logger.info(`[signalStore] 获取股票池: ${stocks.length} 只，取前 ${targetStocks.length} 只生成信号`)
 
-      const allSignals: Signal[] = []
-
-      for (const stock of targetStocks) {
-        try {
-          const stockSignals = await generateSignalsForSymbol(stock.symbol)
-          const strongest = pickStrongestSignal(stockSignals)
-          if (strongest) {
-            allSignals.push(strongest)
-          }
-        } catch {
-          // 单个股票信号生成失败，跳过
-        }
-      }
+      const allSignals = (await Promise.all(
+        targetStocks.map((stock) => generateSignalForStock(stock.symbol))
+      )).filter((signal): signal is Signal => signal !== null)
 
       // 按置信度降序排列
       allSignals.sort((a, b) => b.confidence - a.confidence)
