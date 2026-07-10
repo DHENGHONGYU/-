@@ -176,6 +176,24 @@ export function mockLlmChatSuccess(
 ): void {
   ensureMockInstalled()
 
+  // M2 依据追溯闸：当 mock 响应包含 score 但未提供 citations 时，自动补一条默认引证，
+  // 避免大量生命周期测试因引证闸回退而失败。
+  let finalContent = content
+  try {
+    const parsed = JSON.parse(content)
+    if (
+      typeof parsed === 'object' &&
+      parsed !== null &&
+      'score' in parsed &&
+      (!Array.isArray(parsed.citations) || parsed.citations.length === 0)
+    ) {
+      parsed.citations = [{ source: '测试研报', content: '测试引用内容' }]
+      finalContent = JSON.stringify(parsed)
+    }
+  } catch {
+    // content 不是 JSON，保持原样
+  }
+
   const response = {
     id: `chatcmpl-mock-${Date.now()}`,
     object: 'chat.completion',
@@ -184,7 +202,7 @@ export function mockLlmChatSuccess(
     choices: [
       {
         index: 0,
-        message: { role: 'assistant', content },
+        message: { role: 'assistant', content: finalContent },
         finish_reason: 'stop',
       },
     ],

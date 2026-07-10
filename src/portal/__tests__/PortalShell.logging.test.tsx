@@ -2,9 +2,9 @@
  * PortalShell 日志埋点单元测试
  *
  * 验证 4 个核心埋点是否在正确时机触发：
- *   1. [PortalShell] 路径匹配舱室 (info) — pathname 匹配舱室时
- *   2. [PortalShell] 路径未匹配到任何舱室 (warn) — pathname 不匹配时
- *   3. [PortalShell] 用户切换舱室 (info) — 顶栏点击舱室按钮
+ *   1. [PortalShell] 路径匹配 (info) — pathname 匹配舱室时
+ *   2. [PortalShell] 路径未匹配 (warn) — pathname 不匹配时
+ *   3. [PortalShell] 切换舱室 (info) — 顶栏点击舱室按钮
  *   4. [PortalShell] 侧边栏导航 (info) — 侧边栏点击导航项
  *
  * 参考: docs/11-logging-standards.md 第三章核心埋点清单
@@ -121,16 +121,16 @@ describe('PortalShell 日志埋点', () => {
   })
 
   // --------------------------------------------------------------------------
-  // 埋点 1: [PortalShell] 路径匹配舱室 (info)
+  // 埋点 1: [PortalShell] 路径匹配 (info)
   // --------------------------------------------------------------------------
-  describe('埋点 1: [PortalShell] 路径匹配舱室', () => {
+  describe('埋点 1: [PortalShell] 路径匹配', () => {
     it('pathname 匹配舱室时打印 info 日志', () => {
       mockLocation = { pathname: '/trading' }
 
       render(<PortalShell />)
 
       expect(mockLogger.info).toHaveBeenCalledWith(
-        '[PortalShell] 路径匹配舱室',
+        '[PortalShell] 路径匹配',
         expect.objectContaining({
           pathname: '/trading',
           cabin: 'trading',
@@ -144,7 +144,7 @@ describe('PortalShell 日志埋点', () => {
       render(<PortalShell />)
 
       expect(mockLogger.info).toHaveBeenCalledWith(
-        '[PortalShell] 路径匹配舱室',
+        '[PortalShell] 路径匹配',
         expect.objectContaining({
           pathname: '/analysis/stock-score',
           cabin: 'analysis',
@@ -158,7 +158,7 @@ describe('PortalShell 日志埋点', () => {
       render(<PortalShell />)
 
       const call = mockLogger.info.mock.calls.find(
-        ([msg]) => msg === '[PortalShell] 路径匹配舱室',
+        ([msg]) => msg === '[PortalShell] 路径匹配',
       )
       expect(call).toBeDefined()
       expect(call![1]).toHaveProperty('pathname')
@@ -167,16 +167,16 @@ describe('PortalShell 日志埋点', () => {
   })
 
   // --------------------------------------------------------------------------
-  // 埋点 2: [PortalShell] 路径未匹配到任何舱室 (warn)
+  // 埋点 2: [PortalShell] 路径未匹配 (warn)
   // --------------------------------------------------------------------------
-  describe('埋点 2: [PortalShell] 路径未匹配到任何舱室', () => {
+  describe('埋点 2: [PortalShell] 路径未匹配', () => {
     it('pathname 不匹配任何舱室时打印 warn 日志', () => {
       mockLocation = { pathname: '/__unknown_path__' }
 
       render(<PortalShell />)
 
       expect(mockLogger.warn).toHaveBeenCalledWith(
-        '[PortalShell] 路径未匹配到任何舱室',
+        '[PortalShell] 路径未匹配',
         expect.objectContaining({
           pathname: '/__unknown_path__',
         }),
@@ -189,7 +189,7 @@ describe('PortalShell 日志埋点', () => {
       render(<PortalShell />)
 
       const call = mockLogger.warn.mock.calls.find(
-        ([msg]) => msg === '[PortalShell] 路径未匹配到任何舱室',
+        ([msg]) => msg === '[PortalShell] 路径未匹配',
       )
       expect(call).toBeDefined()
       expect(call![1]).toHaveProperty('pathname')
@@ -197,9 +197,9 @@ describe('PortalShell 日志埋点', () => {
   })
 
   // --------------------------------------------------------------------------
-  // 埋点 3: [PortalShell] 用户切换舱室 (info)
+  // 埋点 3: [PortalShell] 切换舱室 (info)
   // --------------------------------------------------------------------------
-  describe('埋点 3: [PortalShell] 用户切换舱室', () => {
+  describe('埋点 3: [PortalShell] 切换舱室', () => {
     it('点击顶栏舱室按钮时打印 info 日志', () => {
       mockLocation = { pathname: '/input' }
       mockActiveCabin = 'input'
@@ -207,7 +207,7 @@ describe('PortalShell 日志埋点', () => {
       render(<PortalShell />)
 
       // 找到交易舱按钮（顶栏 nav 中的按钮）
-      const buttons = screen.getAllByTestId('button')
+      const buttons = screen.getAllByRole('button')
       const tradingButton = buttons.find(
         (btn) => btn.textContent?.includes('交易舱'),
       )
@@ -216,7 +216,7 @@ describe('PortalShell 日志埋点', () => {
       fireEvent.click(tradingButton!)
 
       expect(mockLogger.info).toHaveBeenCalledWith(
-        '[PortalShell] 用户切换舱室',
+        '[PortalShell] 切换舱室',
         expect.objectContaining({
           from: 'input',
           to: 'trading',
@@ -231,7 +231,7 @@ describe('PortalShell 日志埋点', () => {
 
       render(<PortalShell />)
 
-      const buttons = screen.getAllByTestId('button')
+      const buttons = screen.getAllByRole('button')
       const analysisButton = buttons.find(
         (btn) => btn.textContent?.includes('分析舱'),
       )
@@ -239,7 +239,7 @@ describe('PortalShell 日志埋点', () => {
       fireEvent.click(analysisButton!)
 
       const call = mockLogger.info.mock.calls.find(
-        ([msg]) => msg === '[PortalShell] 用户切换舱室',
+        ([msg]) => msg === '[PortalShell] 切换舱室',
       )
       expect(call).toBeDefined()
       expect(call![1]).toHaveProperty('from')
@@ -253,7 +253,7 @@ describe('PortalShell 日志埋点', () => {
 
       render(<PortalShell />)
 
-      const buttons = screen.getAllByTestId('button')
+      const buttons = screen.getAllByRole('button')
       const analysisButton = buttons.find(
         (btn) => btn.textContent?.includes('分析舱'),
       )
@@ -336,7 +336,7 @@ describe('PortalShell 日志埋点', () => {
       render(<PortalShell />)
 
       const pathMatchCalls = mockLogger.info.mock.calls.filter(
-        ([msg]) => msg === '[PortalShell] 路径匹配舱室',
+        ([msg]) => msg === '[PortalShell] 路径匹配',
       )
       expect(pathMatchCalls.length).toBeGreaterThan(0)
     })
@@ -346,7 +346,7 @@ describe('PortalShell 日志埋点', () => {
       render(<PortalShell />)
 
       const warnMessages = mockLogger.warn.mock.calls.map(([msg]) => msg)
-      expect(warnMessages).toContain('[PortalShell] 路径未匹配到任何舱室')
+      expect(warnMessages).toContain('[PortalShell] 路径未匹配')
     })
 
     it('日志消息字面量与规范文档完全一致', () => {
@@ -355,7 +355,7 @@ describe('PortalShell 日志埋点', () => {
 
       // 验证 info 埋点消息字面量
       const infoMessages = mockLogger.info.mock.calls.map(([msg]) => msg)
-      expect(infoMessages).toContain('[PortalShell] 路径匹配舱室')
+      expect(infoMessages).toContain('[PortalShell] 路径匹配')
       // 埋点 3 和 4 需要用户交互才会触发
     })
   })

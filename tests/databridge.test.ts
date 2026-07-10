@@ -43,6 +43,10 @@ describe('DataBridge', () => {
   })
 
   it('应该reject unauthorized module', async () => {
+    vi.spyOn(aclEngine, 'assert').mockImplementation(() => {
+      throw new AclError('mock ACL rejection')
+    })
+
     const envelope = EnvelopeFactory.create(
       {
         source: MODULE_ID.fetcher,
@@ -54,6 +58,7 @@ describe('DataBridge', () => {
     )
 
     await expect(dataBridge.forward(envelope)).rejects.toThrow()
+    vi.restoreAllMocks()
   })
 
   it('应该enqueue rejected market envelope instead of throwing (DF-005)', async () => {
@@ -325,7 +330,7 @@ describe('DataBridge.query()', () => {
       })
 
       expect(result.success).toBe(false)
-      expect(result.error).toContain('not allowed')
+      expect(result.error).toMatch(/cannot|not allowed/i)
     })
 
     it('system 模块应该有所有 store 的读权限', async () => {

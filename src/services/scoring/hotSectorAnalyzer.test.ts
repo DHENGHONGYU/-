@@ -251,7 +251,7 @@ describe('calculateValuationRisk', () => {
   })
 
   test('high PB percentile penalizes', () => {
-    const result = calculateValuationRisk({ ...baseInput, pbPercentile: 90 })
+    const result = calculateValuationRisk({ ...baseInput, pe: 30, pbPercentile: 90 })
     expect(result).toBeLessThan(3)
   })
 
@@ -261,7 +261,7 @@ describe('calculateValuationRisk', () => {
   })
 
   test('small market cap penalizes', () => {
-    const result = calculateValuationRisk({ ...baseInput, marketCap: 20 })
+    const result = calculateValuationRisk({ ...baseInput, pe: 30, marketCap: 20 })
     expect(result).toBeLessThan(3)
   })
 

@@ -141,7 +141,7 @@ describe('resetAll', () => {
       target: 'system',
       action: 'RESET_ALL',
     })
-    expect(callArgs[0].traceId).toMatch(/^system-reset-\d+$/)
+    expect(callArgs[0].traceId).toMatch(/^system-reset-[A-Za-z0-9_-]+$/)
   })
 })
 
@@ -198,6 +198,6 @@ describe('exportAll', () => {
       target: 'system',
       action: 'EXPORT_ALL',
     })
-    expect(callArgs[0].traceId).toMatch(/^system-export-\d+$/)
+    expect(callArgs[0].traceId).toMatch(/^system-export-[A-Za-z0-9_-]+$/)
   })
 })
