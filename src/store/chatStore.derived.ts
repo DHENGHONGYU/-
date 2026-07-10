@@ -151,6 +151,12 @@ export function streamingProgress(): number {
 // 派生查询：角色统计（memoizeByRef 缓存）
 // ============================================================
 
+const ROLE_STAT_KEY: Record<MessageRole, keyof Omit<MessageStats, 'total'>> = {
+  user: 'user',
+  assistant: 'assistant',
+  system: 'system',
+}
+
 /**
  * 各角色消息数统计
  * 性能优化：基于 messages 引用记忆化，单次遍历完成所有计数
@@ -163,9 +169,7 @@ export const messageStatsMemo = memoizeByRef((messages: readonly ChatMessage[]):
     total: messages.length,
   }
   for (const m of messages) {
-    if (m.role === 'user') stats.user++
-    else if (m.role === 'assistant') stats.assistant++
-    else if (m.role === 'system') stats.system++
+    stats[ROLE_STAT_KEY[m.role]]++
   }
   return stats
 }, 'messageStats')

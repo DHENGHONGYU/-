@@ -110,6 +110,11 @@ interface StateSnapshot {
   lastUpdated: number
 }
 
+/**
+ * getSnapshot
+ * @param state
+ * @returns StateSnapshot
+ */
 export function getSnapshot(state: DualStrategyState): StateSnapshot {
   return {
     hotSectorScores: state.hotSectorScores,
@@ -123,6 +128,11 @@ export function getSnapshot(state: DualStrategyState): StateSnapshot {
 // Signal → RotationSignal 转换
 // ============================================================
 
+/**
+ * signalToRotationSignal
+ * @param signal
+ * @returns RotationSignal
+ */
 export function signalToRotationSignal(signal: Signal): RotationSignal {
   return {
     sectorId: signal.symbol,
@@ -137,6 +147,11 @@ export function signalToRotationSignal(signal: Signal): RotationSignal {
   }
 }
 
+/**
+ * rotationSignalToSignal
+ * @param rotation
+ * @returns Signal
+ */
 export function rotationSignalToSignal(rotation: RotationSignal): Signal {
   return {
     id: `rot-${rotation.sectorId}-${Date.now()}`,
@@ -155,6 +170,9 @@ export function rotationSignalToSignal(rotation: RotationSignal): Signal {
 // Store
 // ============================================================
 
+/**
+ * useDualStrategyStore
+ */
 export const useDualStrategyStore = create<DualStrategyState>((set, get) => ({
   ...initialState,
 
@@ -469,6 +487,10 @@ function debouncedRefresh(): void {
   }, DEBOUNCE_MS)
 }
 
+/**
+ * shouldSkipSelf
+ * @param envelope
+ */
 export function shouldSkipSelf(envelope: { meta: { source: string; action: string } }): boolean {
   if (SELF_SOURCES.has(envelope.meta.source)) {
     return true

@@ -147,6 +147,9 @@ const initialState = {
 // Store
 // ============================================================
 
+/**
+ * useBacktestStore
+ */
 export const useBacktestStore = create<BacktestState>((set, get) => ({
   ...initialState,
 

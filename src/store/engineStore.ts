@@ -21,6 +21,9 @@ const defaultStats: EngineStats = {
   agents: { totalAgents: 0, runningTasks: 0, completedTasks: 0, failedTasks: 0 },
 }
 
+/**
+ * useEngineStore
+ */
 export const useEngineStore = create<EngineState>((set) => ({
   started: false,
   startedAt: null,

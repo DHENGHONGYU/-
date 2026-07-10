@@ -25,6 +25,9 @@ const initialState = {
   loading: false,
 }
 
+/**
+ * useAnalysisHubStore
+ */
 export const useAnalysisHubStore = create<AnalysisHubState>()((set) => ({
   ...initialState,
   setActiveModule: (path: string) => set({ activeModule: path }),

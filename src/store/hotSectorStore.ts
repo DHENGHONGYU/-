@@ -95,6 +95,9 @@ const initialState = {
   lastUpdated: 0,
 }
 
+/**
+ * useHotSectorStore
+ */
 export const useHotSectorStore = create<HotSectorState>((set, get) => ({
   ...initialState,
 
@@ -176,6 +179,9 @@ export const useHotSectorStore = create<HotSectorState>((set, get) => ({
 
 let _unsubscribeHotSectorScores: (() => void) | undefined
 
+/**
+ * initHotSectorStoreSubscriptions
+ */
 export function initHotSectorStoreSubscriptions(): () => void {
   destroyHotSectorStoreSubscriptions()
   logger.info('[hotSectorStore] 初始化 DataBridge hot_sector_scores 频道订阅')
@@ -196,6 +202,10 @@ export function initHotSectorStoreSubscriptions(): () => void {
   return () => destroyHotSectorStoreSubscriptions()
 }
 
+/**
+ * destroyHotSectorStoreSubscriptions
+ * @returns void
+ */
 export function destroyHotSectorStoreSubscriptions(): void {
   if (_unsubscribeHotSectorScores) {
     _unsubscribeHotSectorScores()

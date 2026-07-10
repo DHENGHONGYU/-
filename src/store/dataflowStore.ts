@@ -13,6 +13,9 @@ interface DataflowState {
   refreshStats: () => void
 }
 
+/**
+ * useDataflowStore
+ */
 export const useDataflowStore = create<DataflowState>((set) => ({
   connected: false,
   channels: new Map(),
@@ -34,6 +37,9 @@ export const useDataflowStore = create<DataflowState>((set) => ({
 
 const dataflowSubscriptions: Array<() => void> = []
 
+/**
+ * initDataflowSubscriptions
+ */
 export function initDataflowSubscriptions(): () => void {
   destroyDataflowSubscriptions()
   dataflowSubscriptions.push(
@@ -56,6 +62,10 @@ export function initDataflowSubscriptions(): () => void {
   return () => destroyDataflowSubscriptions()
 }
 
+/**
+ * destroyDataflowSubscriptions
+ * @returns void
+ */
 export function destroyDataflowSubscriptions(): void {
   dataflowSubscriptions.forEach((unsubscribe) => unsubscribe())
   dataflowSubscriptions.length = 0

@@ -72,6 +72,9 @@ const DEFAULT_OPTIONS: FusionOptions = {
   includeHolding: false,
 }
 
+/**
+ * getUnifiedStockViewUseCase
+ */
 export async function getUnifiedStockViewUseCase(
   symbol: string,
   options: FusionOptions = DEFAULT_OPTIONS,
@@ -192,6 +195,9 @@ export async function getUnifiedStockViewUseCase(
   }
 }
 
+/**
+ * getUnifiedStockViewsUseCase
+ */
 export async function getUnifiedStockViewsUseCase(
   symbols: string[],
   options: FusionOptions = DEFAULT_OPTIONS,
@@ -212,6 +218,9 @@ export async function getUnifiedStockViewsUseCase(
   }
 }
 
+/**
+ * getUnifiedStockViewsByStatusUseCase
+ */
 export async function getUnifiedStockViewsByStatusUseCase(
   status: string,
   options: FusionOptions = DEFAULT_OPTIONS,
@@ -226,6 +235,11 @@ export async function getUnifiedStockViewsByStatusUseCase(
   }
 }
 
+/**
+ * getScoreViewUseCase
+ * @param symbol
+ * @returns Promise<DataLayerResult<
+ */
 export async function getScoreViewUseCase(symbol: string): Promise<DataLayerResult<{
   stock: Stock
   v6Score?: V6Score
@@ -260,6 +274,11 @@ export async function getScoreViewUseCase(symbol: string): Promise<DataLayerResu
   }
 }
 
+/**
+ * getTradingViewUseCase
+ * @param symbol
+ * @returns Promise<DataLayerResult<
+ */
 export async function getTradingViewUseCase(symbol: string): Promise<DataLayerResult<{
   stock: Stock
   quotes?: DailyQuotes

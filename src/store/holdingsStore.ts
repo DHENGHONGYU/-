@@ -113,6 +113,9 @@ const initialState = {
 // Store
 // ============================================================
 
+/**
+ * useHoldingsStore
+ */
 export const useHoldingsStore = create<HoldingsState>((set) => ({
   ...initialState,
 

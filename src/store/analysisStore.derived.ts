@@ -98,6 +98,14 @@ export function scoresCount(): number {
 // 派生查询：评分等级分布（memoizeByRef 缓存）
 // ============================================================
 
+function classifyScoreLevel(score: number): keyof ScoreLevelDistribution {
+  if (score >= 80) return 'excellent'
+  if (score >= 60) return 'good'
+  if (score >= 40) return 'average'
+  if (score >= 20) return 'poor'
+  return 'bad'
+}
+
 /**
  * 评分等级分布
  * 性能优化：基于 scores 数组引用记忆化，scores 未变时直接返回缓存
@@ -111,11 +119,7 @@ export const scoreLevelDistribution = memoizeByRef((scores: readonly V6Score[]):
     bad: 0,
   }
   for (const s of scores) {
-    if (s.score >= 80) dist.excellent++
-    else if (s.score >= 60) dist.good++
-    else if (s.score >= 40) dist.average++
-    else if (s.score >= 20) dist.poor++
-    else dist.bad++
+    dist[classifyScoreLevel(s.score)]++
   }
   return dist
 }, 'scoreLevelDistribution')

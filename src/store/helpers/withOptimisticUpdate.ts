@@ -92,20 +92,31 @@ export async function withOptimisticUpdate<TState, TResult>(
       error: errorMsg,
     })
 
-    try {
-      setStore(() => snapshot)
-      logger.info(`[withOptimisticUpdate] "${operationName}" — 回滚完成`)
-    } catch (rollbackErr) {
-      logger.error(`[withOptimisticUpdate] "${operationName}" — 回滚失败!`, {
-        error: rollbackErr instanceof Error ? rollbackErr.message : String(rollbackErr),
-      })
-    }
+    rollbackToSnapshot(setStore, snapshot, operationName)
 
     return {
       success: false,
       error: errorMsg,
       rolledBack: true,
     }
+  }
+}
+
+/**
+ * 回滚到快照。
+ */
+function rollbackToSnapshot<TState>(
+  setStore: (updater: (state: TState) => TState) => void,
+  snapshot: TState,
+  operationName: string,
+): void {
+  try {
+    setStore(() => snapshot)
+    logger.info(`[withOptimisticUpdate] "${operationName}" — 回滚完成`)
+  } catch (rollbackErr) {
+    logger.error(`[withOptimisticUpdate] "${operationName}" — 回滚失败!`, {
+      error: rollbackErr instanceof Error ? rollbackErr.message : String(rollbackErr),
+    })
   }
 }
 
@@ -122,7 +133,7 @@ export function snapshotFields<TState, K extends keyof TState>(
     snap[f] = Array.isArray(state[f])
       ? [...(state[f] as unknown[])] as TState[K]
       : typeof state[f] === 'object' && state[f] !== null
-        ? { ...state[f] } as TState[K]
+        ? { ...state[f] }
         : state[f]
   }
   return snap as Pick<TState, K>

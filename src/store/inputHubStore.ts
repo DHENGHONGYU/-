@@ -48,6 +48,9 @@ const initialState = {
   isAddingStock: false,
 }
 
+/**
+ * useInputHubStore
+ */
 export const useInputHubStore = create<InputHubState>()((set) => ({
   ...initialState,
 

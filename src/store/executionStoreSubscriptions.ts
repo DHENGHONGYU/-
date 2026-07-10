@@ -173,6 +173,8 @@ function _handleOrderEnvelope(envelope: StandardEnvelope): void {
  * 注意：此函数是幂等的，多次调用只初始化一次。
  *
  * @returns 清理函数，调用后移除所有订阅和定时器
+/**
+ * initExecutionStoreSubscriptions
  */
 export function initExecutionStoreSubscriptions(): () => void {
   if (_unsubscribeSignals || _unsubscribeOrders) {

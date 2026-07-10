@@ -65,6 +65,9 @@ const initialState = {
 }
 
 // Store 创建（带 DevTools 中间件，便于调试）
+/**
+ * useCommandStore
+ */
 export const useCommandStore = create<CommandState>()(
   devtools(
     (set) => ({
@@ -235,9 +238,27 @@ export const useCommandStore = create<CommandState>()(
 )
 
 // 导出选择器（用于组件中只订阅需要的状态）
+/**
+ * selectStats
+ */
 export const selectStats = (state: CommandState) => state.stats
+/**
+ * selectMessage
+ */
 export const selectMessage = (state: CommandState) => state.message
+/**
+ * selectMessageType
+ */
 export const selectMessageType = (state: CommandState) => state.messageType
+/**
+ * selectMigrationOpen
+ */
 export const selectMigrationOpen = (state: CommandState) => state.migrationOpen
+/**
+ * selectIsLoading
+ */
 export const selectIsLoading = (state: CommandState) => state.isLoading
+/**
+ * selectIsResetting
+ */
 export const selectIsResetting = (state: CommandState) => state.isResetting

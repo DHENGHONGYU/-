@@ -18,6 +18,9 @@ const defaultStats: DataBridgeAdapterStats = {
   enableFallbackQueue: true,
 }
 
+/**
+ * useDataBridgeStore
+ */
 export const useDataBridgeStore = create<DataBridgeState>((set) => ({
   pendingCount: 0,
   stats: defaultStats,

@@ -28,6 +28,9 @@ interface CustomAgentState {
   reset: () => void
 }
 
+/**
+ * useCustomAgentStore
+ */
 export const useCustomAgentStore = create<CustomAgentState>((set) => ({
   agents: [],
   loading: false,

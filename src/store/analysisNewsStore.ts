@@ -67,6 +67,9 @@ const initialState = {
   sentimentIndustryOptions: [] as string[],
 }
 
+/**
+ * useAnalysisNewsStore
+ */
 export const useAnalysisNewsStore = create<AnalysisNewsState>((set, get) => ({
   ...initialState,
 

@@ -104,6 +104,9 @@ const initialState = {
   traceResults: [] as TraceResult[],
 }
 
+/**
+ * useDataTestStore
+ */
 export const useDataTestStore = create<DataTestState>((set, get) => ({
   ...initialState,
 

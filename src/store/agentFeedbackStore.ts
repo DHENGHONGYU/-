@@ -21,6 +21,9 @@ interface AgentFeedbackState {
   refreshSummaries: () => void
 }
 
+/**
+ * useAgentFeedbackStore
+ */
 export const useAgentFeedbackStore = create<AgentFeedbackState>((set, get) => ({
   feedbacks: [],
   summaries: new Map(),

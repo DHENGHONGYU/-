@@ -17,6 +17,7 @@
 
 import { create } from 'zustand'
 import { withBroadcast } from '@/lib/withBroadcast'
+import { MOCK_WIZARD_API_BASE_URL } from '@/config/dataSourceUrls'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { getLogger } from '@/lib/logger'
 import type {
@@ -36,6 +37,7 @@ import {
   deleteWizardConfig,
   updateWizardConfig,
 } from '@/services/collection/collectionWizardPersistence'
+import { validateConfigName } from '@/utils/dataValidation'
 
 const logger = getLogger()
 
@@ -47,6 +49,60 @@ const broadcastWizard = (action: string, payload?: Record<string, unknown>): voi
 // ============================================================
 // 默认值
 // ============================================================
+
+/** Mock 配置模板数据（开发阶段使用） */
+const MOCK_CONFIGS: PersistedWizardConfig[] = [
+  {
+    id: 'wizard_config_1_mock',
+    name: '高频行情监控',
+    selectedDimensions: ['quote', 'financial'],
+    apiConfigs: {
+      quote: { baseUrl: `${MOCK_WIZARD_API_BASE_URL}/quote/realtime`, timeoutMs: 5000, rateLimitPerMinute: 60 },
+      financial: { baseUrl: `${MOCK_WIZARD_API_BASE_URL}/financial/quarterly`, timeoutMs: 10000 },
+    },
+    frequency: 'realtime',
+    cronExpression: '* * * * *',
+    priority: 'high',
+    cacheTTL: 60,
+    cacheStrategy: 'network-first',
+    saveAsTemplate: true,
+    createdAt: Date.now() - 86400000 * 2,
+    updatedAt: Date.now() - 3600000,
+  },
+  {
+    id: 'wizard_config_2_mock',
+    name: '每日舆情分析',
+    selectedDimensions: ['news', 'sector'],
+    apiConfigs: {
+      news: { baseUrl: `${MOCK_WIZARD_API_BASE_URL}/news/sentiment`, timeoutMs: 8000 },
+      sector: { baseUrl: `${MOCK_WIZARD_API_BASE_URL}/sector/rotation`, timeoutMs: 8000 },
+    },
+    frequency: 'hourly',
+    cronExpression: '0 * * * *',
+    priority: 'medium',
+    cacheTTL: 1800,
+    cacheStrategy: 'stale-while-revalidate',
+    saveAsTemplate: true,
+    createdAt: Date.now() - 86400000 * 5,
+    updatedAt: Date.now() - 86400000,
+  },
+  {
+    id: 'wizard_config_3_mock',
+    name: '基础行情采集',
+    selectedDimensions: ['quote'],
+    apiConfigs: {
+      quote: { baseUrl: `${MOCK_WIZARD_API_BASE_URL}/quote/daily`, timeoutMs: 15000 },
+    },
+    frequency: 'daily',
+    cronExpression: '0 0 * * *',
+    priority: 'low',
+    cacheTTL: 86400,
+    cacheStrategy: 'cache-first',
+    saveAsTemplate: true,
+    createdAt: Date.now() - 86400000 * 10,
+    updatedAt: Date.now() - 86400000 * 3,
+  },
+]
 
 const INITIAL_STATE = {
   currentStep: 1 as CollectionWizardStep,
@@ -66,8 +122,8 @@ const INITIAL_STATE = {
   logs: [] as WizardLogEntry[],
   /** 当前任务的链路追踪 ID */
   traceId: null as string | null,
-  /** 已保存的配置模板列表 */
-  savedConfigs: [] as PersistedWizardConfig[],
+  /** 已保存的配置模板列表（开发阶段使用 mock 数据） */
+  savedConfigs: MOCK_CONFIGS,
   /** 是否正在保存配置 */
   isSavingConfig: false,
 }
@@ -102,8 +158,8 @@ interface CollectionWizardActions {
   loadConfigToWizard: (config: PersistedWizardConfig) => void
   /** 删除已保存的配置模板 */
   deleteSavedConfig: (configId: string) => Promise<void>
-  /** 重命名配置模板 */
-  renameSavedConfig: (configId: string, newName: string) => Promise<void>
+  /** 重命名配置模板，返回 { success, error? } */
+  renameSavedConfig: (configId: string, newName: string) => Promise<{ success: boolean; error?: string }>
 }
 
 type CollectionWizardStore = typeof INITIAL_STATE & CollectionWizardActions
@@ -127,6 +183,9 @@ const formatDuration = (ms: number): string => {
 // Store 实现
 // ============================================================
 
+/**
+ * useCollectionWizardStore
+ */
 export const useCollectionWizardStore = create<CollectionWizardStore>()(
   (set, get) => ({
     ...INITIAL_STATE,
@@ -475,17 +534,39 @@ export const useCollectionWizardStore = create<CollectionWizardStore>()(
 
     loadSavedConfigs: async () => {
       const traceId = generateTraceId()
-      logger.info('[CollectionWizardStore] loadSavedConfigs - 开始', { traceId })
+      const startTime = Date.now()
+      const previousCount = get().savedConfigs.length
+
+      logger.info('[CollectionWizardStore] loadSavedConfigs - 开始', {
+        traceId,
+        previousCount,
+      })
       try {
         const configs = await loadAllWizardConfigs()
+        const duration = Date.now() - startTime
+
+        // 如果 IndexedDB 返回空，保留 mock 数据（开发阶段）
+        const finalConfigs = configs.length > 0 ? configs : previousCount > 0 ? get().savedConfigs : configs
+
         logger.info('[CollectionWizardStore] loadSavedConfigs - 完成', {
           traceId,
-          count: configs.length,
+          previousCount,
+          newCount: finalConfigs.length,
+          countDiff: finalConfigs.length - previousCount,
+          source: configs.length > 0 ? 'indexedDB' : 'mock/fallback',
+          configIds: finalConfigs.map((c) => c.id),
+          configNames: finalConfigs.map((c) => c.name),
+          durationMs: duration,
         })
-        set({ savedConfigs: configs })
+
+        set({ savedConfigs: finalConfigs })
+        broadcastWizard('loadSavedConfigs', { count: finalConfigs.length })
       } catch (error) {
+        const duration = Date.now() - startTime
         logger.error('[CollectionWizardStore] loadSavedConfigs - 失败', {
           traceId,
+          previousCount,
+          durationMs: duration,
           error: error instanceof Error ? error.message : String(error),
         })
       }
@@ -524,17 +605,17 @@ export const useCollectionWizardStore = create<CollectionWizardStore>()(
       })
       try {
         const success = await deleteWizardConfig(configId)
-        if (success) {
-          logger.info('[CollectionWizardStore] deleteSavedConfig - 成功', {
-            traceId,
-            configId,
-          })
-          // 从本地列表中移除
-          set((state) => ({
-            savedConfigs: state.savedConfigs.filter((c) => c.id !== configId),
-          }))
-        } else {
-          logger.warn('[CollectionWizardStore] deleteSavedConfig - 失败', {
+        // 无论 IndexedDB 是否成功，都更新本地状态（兼容 mock 数据）
+        logger.info('[CollectionWizardStore] deleteSavedConfig - 更新本地状态', {
+          traceId,
+          configId,
+          indexedDBSuccess: success,
+        })
+        set((state) => ({
+          savedConfigs: state.savedConfigs.filter((c) => c.id !== configId),
+        }))
+        if (!success) {
+          logger.warn('[CollectionWizardStore] deleteSavedConfig - IndexedDB 删除失败，仅更新本地', {
             traceId,
             configId,
           })
@@ -545,6 +626,10 @@ export const useCollectionWizardStore = create<CollectionWizardStore>()(
           configId,
           error: error instanceof Error ? error.message : String(error),
         })
+        // 异常时也从本地移除
+        set((state) => ({
+          savedConfigs: state.savedConfigs.filter((c) => c.id !== configId),
+        }))
       }
     },
 
@@ -555,32 +640,65 @@ export const useCollectionWizardStore = create<CollectionWizardStore>()(
         configId,
         newName,
       })
+
+      // 1. 名称格式校验
+      const validation = validateConfigName(newName)
+      if (!validation.valid) {
+        logger.warn('[CollectionWizardStore] renameSavedConfig - 名称校验失败', {
+          traceId,
+          configId,
+          newName,
+          error: validation.error,
+        })
+        return { success: false, error: validation.error }
+      }
+
+      // 2. 重名检测（排除自身）
+      const hasDuplicate = get().savedConfigs.some(
+        (c) => c.id !== configId && c.name.trim().toLowerCase() === newName.trim().toLowerCase(),
+      )
+      if (hasDuplicate) {
+        logger.warn('[CollectionWizardStore] renameSavedConfig - 名称重复', {
+          traceId,
+          configId,
+          newName,
+          existingConfigs: get().savedConfigs
+            .filter((c) => c.id !== configId && c.name.trim().toLowerCase() === newName.trim().toLowerCase())
+            .map((c) => ({ id: c.id, name: c.name })),
+        })
+        return { success: false, error: `配置名称"${newName}"已存在` }
+      }
+
       try {
         const updated = await updateWizardConfig(configId, { name: newName })
-        if (updated) {
-          logger.info('[CollectionWizardStore] renameSavedConfig - 成功', {
-            traceId,
-            configId,
-            newName,
-          })
-          // 更新本地列表中的名称
-          set((state) => ({
-            savedConfigs: state.savedConfigs.map((c) =>
-              c.id === configId ? { ...c, name: newName, updatedAt: updated.updatedAt } : c,
-            ),
-          }))
-        } else {
-          logger.warn('[CollectionWizardStore] renameSavedConfig - 失败', {
+        // 无论 IndexedDB 是否成功，都更新本地状态（兼容 mock 数据）
+        const newUpdatedAt = updated?.updatedAt ?? Date.now()
+        logger.info('[CollectionWizardStore] renameSavedConfig - 更新本地状态', {
+          traceId,
+          configId,
+          newName,
+          indexedDBSuccess: !!updated,
+        })
+        set((state) => ({
+          savedConfigs: state.savedConfigs.map((c) =>
+            c.id === configId ? { ...c, name: newName, updatedAt: newUpdatedAt } : c,
+          ),
+        }))
+        if (!updated) {
+          logger.warn('[CollectionWizardStore] renameSavedConfig - IndexedDB 更新失败，仅更新本地', {
             traceId,
             configId,
           })
         }
+        return { success: true }
       } catch (error) {
         logger.error('[CollectionWizardStore] renameSavedConfig - 异常', {
           traceId,
           configId,
+          newName,
           error: error instanceof Error ? error.message : String(error),
         })
+        return { success: false, error: error instanceof Error ? error.message : String(error) }
       }
     },
   }),

@@ -41,6 +41,9 @@ const logger = getLogger()
 // 常量定义
 // ============================================================
 
+/**
+ * STEP_LABELS
+ */
 export const STEP_LABELS: Record<IndustryScoreStep, { label: string; description: string }> = {
   fetchSectorData: { label: '读取行业 SKILL 数据', description: '加载已有行业量化评分' },
   readSupplementaryFiles: { label: '解析补充文件', description: '读取本地上传文件内容' },
@@ -50,6 +53,9 @@ export const STEP_LABELS: Record<IndustryScoreStep, { label: string; description
   saveResult: { label: '保存结果', description: '通过 DataBridge 写入数据库' },
 }
 
+/**
+ * STEP_ORDER
+ */
 export const STEP_ORDER: IndustryScoreStep[] = [
   'fetchSectorData',
   'readSupplementaryFiles',
@@ -59,8 +65,17 @@ export const STEP_ORDER: IndustryScoreStep[] = [
   'saveResult',
 ]
 
+/**
+ * DIMENSION_ORDER
+ */
 export const DIMENSION_ORDER = getEnabledIndustryFactorNames()
 
+/**
+ * formatIndustryDelta
+ * @param current
+ * @param previous
+ * @returns string
+ */
 export function formatIndustryDelta(current: number | null, previous: number | null): string {
   if (current === null || previous === null) return ''
   const delta = current - previous
@@ -216,6 +231,9 @@ export function selectConfigReady(state: IndustryScoreState): boolean {
 // Store
 // ============================================================
 
+/**
+ * useIndustryScoreStore
+ */
 export const useIndustryScoreStore = create<IndustryScoreState>((set, get) => ({
   ...initialState,
 
@@ -403,6 +421,9 @@ export const useIndustryScoreStore = create<IndustryScoreState>((set, get) => ({
 
 let _unsubscribeIndustryScores: (() => void) | undefined
 
+/**
+ * initIndustryScoreStoreSubscriptions
+ */
 export function initIndustryScoreStoreSubscriptions(): () => void {
   destroyIndustryScoreStoreSubscriptions()
   logger.info('[industryScoreStore] 初始化 DataBridge industry_scores 频道订阅')
@@ -421,6 +442,10 @@ export function initIndustryScoreStoreSubscriptions(): () => void {
   return () => destroyIndustryScoreStoreSubscriptions()
 }
 
+/**
+ * destroyIndustryScoreStoreSubscriptions
+ * @returns void
+ */
 export function destroyIndustryScoreStoreSubscriptions(): void {
   if (_unsubscribeIndustryScores) {
     _unsubscribeIndustryScores()

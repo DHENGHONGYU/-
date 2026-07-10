@@ -45,6 +45,9 @@ const logger = getLogger()
 // 常量定义
 // ============================================================
 
+/**
+ * STEP_LABELS
+ */
 export const STEP_LABELS: Record<ScoreStep, { label: string; description: string }> = {
   fetchBasicData: { label: '读取基础数据', description: '从数据采集层获取标的字段' },
   readSupplementaryFiles: { label: '解析补充文件', description: '读取本地上传文件内容' },
@@ -54,6 +57,9 @@ export const STEP_LABELS: Record<ScoreStep, { label: string; description: string
   saveResult: { label: '保存结果', description: '通过 DataBridge 写入数据库' },
 }
 
+/**
+ * STEP_ORDER
+ */
 export const STEP_ORDER: ScoreStep[] = [
   'fetchBasicData',
   'readSupplementaryFiles',
@@ -63,8 +69,17 @@ export const STEP_ORDER: ScoreStep[] = [
   'saveResult',
 ]
 
+/**
+ * DIMENSION_ORDER
+ */
 export const DIMENSION_ORDER = getEnabledStockFactorNames()
 
+/**
+ * formatIntelligentDelta
+ * @param current
+ * @param previous
+ * @returns string
+ */
 export function formatIntelligentDelta(current: number | null, previous: number | null): string {
   if (current === null || previous === null) return ''
   const delta = current - previous
@@ -243,6 +258,9 @@ export function selectConfigReady(state: IntelligentScoreState): boolean {
 // Store
 // ============================================================
 
+/**
+ * useIntelligentScoreStore
+ */
 export const useIntelligentScoreStore = create<IntelligentScoreState>((set, get) => ({
   ...initialState,
 

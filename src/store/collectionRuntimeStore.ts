@@ -111,6 +111,9 @@ const initialState = {
   isRunning: false,
 }
 
+/**
+ * useCollectionRuntimeStore
+ */
 export const useCollectionRuntimeStore = create<CollectionRuntimeState>((set) => ({
   ...initialState,
 
@@ -217,7 +220,7 @@ function handleLifecycleEvent(event: CollectionLifecycleEvent): void {
 
   // 更新任务状态
   if (event.taskId) {
-    const payload = event.payload as Record<string, unknown> | undefined
+    const payload = event.payload
     const progress = typeof payload?.progress === 'number' ? payload.progress : undefined
     const statusFromPayload = typeof payload?.status === 'string' ? payload.status : undefined
     const status: CollectionTaskRuntime['status'] =
@@ -250,7 +253,7 @@ function handleLifecycleEvent(event: CollectionLifecycleEvent): void {
 
   // 更新全局进度
   if (event.type === COLLECTION_EVENTS.TASK_STATUS) {
-    const payload = event.payload as Record<string, unknown> | undefined
+    const payload = event.payload
     if (typeof payload?.progress === 'number') {
       store.setOverallProgress(payload.progress)
     }

@@ -133,6 +133,9 @@ function extractReviewDerived(report: TradeReviewReport) {
 // Store
 // ============================================================
 
+/**
+ * useDisciplineStore
+ */
 export const useDisciplineStore = create<DisciplineState>()(
   subscribeWithSelector((set, get) => ({
     ...initialState,
@@ -426,6 +429,8 @@ function _debouncedRecalculate(envelope: StandardEnvelope): void {
  * 同时做 source 过滤：跳过 source 为 'trading' 的事件，防止自激。
  *
  * @returns 清理函数，调用后取消所有订阅并清理定时器
+/**
+ * initDisciplineStoreSubscriptions
  */
 export function initDisciplineStoreSubscriptions(): () => void {
   if (_unsubscribeOrders) {

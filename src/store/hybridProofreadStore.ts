@@ -32,6 +32,9 @@ interface HybridProofreadState {
   clearReport: () => void
 }
 
+/**
+ * useHybridProofreadStore
+ */
 export const useHybridProofreadStore = create<HybridProofreadState>((set, get) => ({
   report: null,
   localScan: null,

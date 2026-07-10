@@ -28,6 +28,9 @@ interface AgentState {
   clearMCPCallHistory: () => void
 }
 
+/**
+ * useAgentStore
+ */
 export const useAgentStore = create<AgentState>((set) => ({
   registeredAgents: [],
   tasks: new Map(),
@@ -79,6 +82,9 @@ export const useAgentStore = create<AgentState>((set) => ({
 
 const agentSubscriptions: Array<() => void> = []
 
+/**
+ * initAgentSubscriptions
+ */
 export function initAgentSubscriptions(): () => void {
   destroyAgentSubscriptions()
   agentSubscriptions.push(
@@ -131,6 +137,10 @@ export function initAgentSubscriptions(): () => void {
   return () => destroyAgentSubscriptions()
 }
 
+/**
+ * destroyAgentSubscriptions
+ * @returns void
+ */
 export function destroyAgentSubscriptions(): void {
   agentSubscriptions.forEach((unsubscribe) => unsubscribe())
   agentSubscriptions.length = 0

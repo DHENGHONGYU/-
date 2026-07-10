@@ -35,6 +35,9 @@ export interface ChatState {
   addSystemMessage: (content: string) => void
 }
 
+/**
+ * useChatStore
+ */
 export const useChatStore = create<ChatState>((set) => ({
   messages: [],
   isStreaming: false,

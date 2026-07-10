@@ -40,6 +40,8 @@ export interface RebalanceOptions {
  * 7. 保存更新后的组合
  *
  * @returns 更新后的 Portfolio 或 undefined（失败时）
+/**
+ * rebalancePortfolioUseCase
  */
 export async function rebalancePortfolioUseCase(
   portfolioId: string,
@@ -83,19 +85,24 @@ export async function rebalancePortfolioUseCase(
         const latestOrderCreatedAt = orders.length > 0 ? Math.max(...orders.map((o) => o.createdAt)) : 0
         checkPortfolioRebalanceFreshness(now, latestOrderCreatedAt, portfolioId)
 
-        // 5. 根据订单更新持仓数量
+function updateHoldingForOrder(
+  holding: Portfolio['holdings'][number],
+  order: Order,
+): Portfolio['holdings'][number] {
+  const delta = order.direction === 'buy' ? order.quantity : -order.quantity
+  return {
+    ...holding,
+    currentShares: Math.max(0, holding.currentShares + delta),
+  }
+}
+
+// 5. 根据订单更新持仓数量
         const updatedHoldings = [...portfolio.holdings]
         for (const order of orders) {
           const idx = updatedHoldings.findIndex((h) => h.symbol === order.symbol)
-          if (idx >= 0) {
-            const holding = updatedHoldings[idx]
-            if (holding) {
-              const delta = order.direction === 'buy' ? order.quantity : -order.quantity
-              updatedHoldings[idx] = {
-                ...holding,
-                currentShares: Math.max(0, holding.currentShares + delta),
-              }
-            }
+          const holding = updatedHoldings[idx]
+          if (idx >= 0 && holding) {
+            updatedHoldings[idx] = updateHoldingForOrder(holding, order)
           }
         }
 

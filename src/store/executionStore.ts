@@ -189,10 +189,53 @@ async function transitionPlanPhase(
   })
 }
 
+/**
+ * 根据下单结果转换执行计划 phase。
+ */
+async function finalizeExecution(
+  planId: string,
+  plan: ExecutionPlan,
+  orderResult: Awaited<ReturnType<typeof placeOrderForPlan>>,
+): Promise<void> {
+  if (orderResult.success && orderResult.data) {
+    await transitionPlanPhase(planId, plan, 'executed', {
+      orderId: orderResult.data.id,
+      executedAt: Date.now(),
+      result: 'success',
+    })
+    logger.info('[executionStore] executePlan 成功', { planId, orderId: orderResult.data.id })
+  } else {
+    await transitionPlanPhase(planId, plan, 'cancelled', {
+      executedAt: Date.now(),
+      result: 'failed',
+      errorMessage: orderResult.error ?? '下单失败',
+    })
+    logger.warn('[executionStore] executePlan 下单失败', { planId, error: orderResult.error })
+  }
+}
+
+/**
+ * 异常后将执行计划转为 cancelled。
+ */
+async function transitionToCancelledOnError(planId: string, plan: ExecutionPlan, message: string): Promise<void> {
+  try {
+    await transitionPlanPhase(planId, plan, 'cancelled', {
+      executedAt: Date.now(),
+      result: 'failed',
+      errorMessage: message,
+    })
+  } catch (updateErr) {
+    logger.error('[executionStore] executePlan 异常后更新状态也失败', { error: updateErr })
+  }
+}
+
 // ============================================================
 // Store
 // ============================================================
 
+/**
+ * useExecutionStore
+ */
 export const useExecutionStore = create<ExecutionState>((set, get) => ({
   ...initialState,
 
@@ -394,36 +437,11 @@ export const useExecutionStore = create<ExecutionState>((set, get) => ({
       const orderResult = await placeOrderForPlan(plan, stock)
 
       // 4. 根据下单结果转换 phase
-      if (orderResult.success && orderResult.data) {
-        await transitionPlanPhase(planId, plan, 'executed', {
-          orderId: orderResult.data.id,
-          executedAt: Date.now(),
-          result: 'success',
-        })
-        logger.info('[executionStore] executePlan 成功', { planId, orderId: orderResult.data.id })
-      } else {
-        await transitionPlanPhase(planId, plan, 'cancelled', {
-          executedAt: Date.now(),
-          result: 'failed',
-          errorMessage: orderResult.error ?? '下单失败',
-        })
-        logger.warn('[executionStore] executePlan 下单失败', { planId, error: orderResult.error })
-      }
+      await finalizeExecution(planId, plan, orderResult)
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
       logger.error('[executionStore] executePlan 异常', { error: message, planId })
-
-      // 异常 -> cancelled（使用原始 plan 作为基础，因 pending 状态可能已通过 transitionPlanPhase 应用）
-      try {
-        await transitionPlanPhase(planId, plan, 'cancelled', {
-          executedAt: Date.now(),
-          result: 'failed',
-          errorMessage: message,
-        })
-      } catch (updateErr) {
-        logger.error('[executionStore] executePlan 异常后更新状态也失败', { error: updateErr })
-      }
-
+      await transitionToCancelledOnError(planId, plan, message)
       set({ error: message })
     } finally {
       set({ isProcessing: false })
