@@ -144,8 +144,11 @@ function scoreScenario(input: LayerInput): { score: number; summary: string; evi
   return { score, summary, evidence, scenarios }
 }
 
+/**
+ * L4ScenarioCalculator
+ */
 export const L4ScenarioCalculator: LayerCalculator = {
-  layerId: 'l4' as LayerId,
+  layerId: 'l4',
 
   async calculate(input: LayerInput): Promise<LayerScore> {
     const { stock, config } = input
@@ -201,33 +204,23 @@ function evaluateTMMatrix(input: LayerInput): { techScore: number; marketScore: 
   const { stock, financials } = input
   const sector = (stock.sector ?? '').toLowerCase()
 
-  const isTech = sector.includes('芯片') || sector.includes('半导体') || sector.includes('ai') || sector.includes('科技')
-  const isPharma = sector.includes('医药') || sector.includes('药') || sector.includes('生物')
-  const isNewEnergy = sector.includes('新能源') || sector.includes('光伏') || sector.includes('锂电')
-
-  // 技术成熟度
-  let techScore: number
-  if (isTech) {
-    techScore = 70 // 技术先进，规模量产阶段
-  } else if (isPharma) {
-    techScore = 55 // 创新药处于临床/商业化过渡
-  } else if (isNewEnergy) {
-    techScore = 65 // 技术成熟，成本持续下降
-  } else {
-    techScore = 50
+  const SECTOR_SCORES: Record<string, { tech: number; market: number }> = {
+    tech: { tech: 70, market: 60 },
+    pharma: { tech: 55, market: 45 },
+    newEnergy: { tech: 65, market: 55 },
+    default: { tech: 50, market: 50 },
   }
 
-  // 市场成熟度
-  let marketScore: number
-  if (isTech) {
-    marketScore = 60 // AI/芯片处于早期大众期
-  } else if (isPharma) {
-    marketScore = 45 // 创新药市场认知度提升中
-  } else if (isNewEnergy) {
-    marketScore = 55 // 渗透率快速提升
-  } else {
-    marketScore = 50
-  }
+  const sectorKey = sector.includes('芯片') || sector.includes('半导体') || sector.includes('ai') || sector.includes('科技')
+    ? 'tech'
+    : sector.includes('医药') || sector.includes('药') || sector.includes('生物')
+      ? 'pharma'
+      : sector.includes('新能源') || sector.includes('光伏') || sector.includes('锂电')
+        ? 'newEnergy'
+        : 'default'
+  const base = SECTOR_SCORES[sectorKey] ?? SECTOR_SCORES.default
+  const techScore = base!.tech
+  let marketScore = base!.market
 
   // 营收高增 → 市场成熟度上调
   if (financials.revenueYoY !== undefined) {
@@ -241,30 +234,28 @@ function evaluateTMMatrix(input: LayerInput): { techScore: number; marketScore: 
   const marketHigh = marketScore >= V6_CALCULATOR_THRESHOLDS.L5_TM_MARKET_HIGH
   const marketMid = marketScore >= V6_CALCULATOR_THRESHOLDS.L5_TM_MARKET_MID
 
-  let strategy: string
-  if (techHigh && marketMid) {
-    strategy = '最佳投资时机 — 技术领先且市场正在追赶'
-  } else if (techHigh && marketHigh) {
-    strategy = '成熟期 — 关注第二曲线'
-  } else if (techHigh && !marketMid) {
-    strategy = '技术领先但市场未跟上，需耐心等待'
-  } else if (techMid && marketMid) {
-    strategy = '追赶期 — 需催化剂推动'
-  } else {
-    strategy = '早期探索或滞后 — 风险较高'
+  const strategyKey = `${techHigh}:${techMid}:${marketHigh}:${marketMid}`
+  const STRATEGY_MAP: Record<string, { level: string; strategy: string }> = {
+    'true:true:true:true': { level: '最佳击球区', strategy: '最佳投资时机 — 技术领先且市场正在追赶' },
+    'true:true:true:false': { level: '最佳击球区', strategy: '最佳投资时机 — 技术领先且市场正在追赶' },
+    'true:true:false:false': { level: '最佳击球区', strategy: '最佳投资时机 — 技术领先且市场正在追赶' },
+    'true:false:true:false': { level: '技术等待市场', strategy: '技术领先但市场未跟上，需耐心等待' },
+    'true:false:false:false': { level: '技术等待市场', strategy: '技术领先但市场未跟上，需耐心等待' },
+    'false:true:true:true': { level: '追赶期', strategy: '追赶期 — 需催化剂推动' },
+    'false:true:true:false': { level: '追赶期', strategy: '追赶期 — 需催化剂推动' },
+    'false:false:true:false': { level: '早期阶段', strategy: '早期探索或滞后 — 风险较高' },
+    'false:false:false:false': { level: '早期阶段', strategy: '早期探索或滞后 — 风险较高' },
   }
-
-  const level = techHigh && marketMid ? '最佳击球区'
-    : techHigh && marketHigh ? '成熟期'
-    : techHigh ? '技术等待市场'
-    : techMid && marketMid ? '追赶期'
-    : '早期阶段'
+  const { level, strategy } = STRATEGY_MAP[strategyKey] ?? { level: '早期阶段', strategy: '早期探索或滞后 — 风险较高' }
 
   return { techScore, marketScore, level, strategy }
 }
 
+/**
+ * L5TMCalculator
+ */
 export const L5TMCalculator: LayerCalculator = {
-  layerId: 'l5' as LayerId,
+  layerId: 'l5',
 
   async calculate(input: LayerInput): Promise<LayerScore> {
     const { stock, config } = input
@@ -384,8 +375,11 @@ function evaluateHypeCycle(input: LayerInput): HypeStage {
   return { stage: '技术萌芽期', score: 3, characteristic: '实验室突破，初创出现', strategy: '小仓位布局' }
 }
 
+/**
+ * L6HypeCalculator
+ */
 export const L6HypeCalculator: LayerCalculator = {
-  layerId: 'l6' as LayerId,
+  layerId: 'l6',
 
   async calculate(input: LayerInput): Promise<LayerScore> {
     const { stock, config } = input

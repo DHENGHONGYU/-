@@ -135,6 +135,16 @@ export async function listPlans(symbol?: string): Promise<ExecutionPlan[]> {
   }
 }
 
+function applyPhaseTimestamp(
+  phase: ExecutionPlan['phase'],
+  now: number,
+): Partial<ExecutionPlan> {
+  if (phase === EXECUTION_PHASE.CONFIRMED) return { confirmedAt: now }
+  if (phase === EXECUTION_PHASE.EXECUTED) return { executedAt: now }
+  if (phase === EXECUTION_PHASE.REVIEWED) return { reviewedAt: now }
+  return {}
+}
+
 /**
  * 按状态机推进执行计划阶段。
  * 若 nextPhase 不在当前阶段允许的下一个阶段列表中，则拒绝推进。
@@ -162,14 +172,8 @@ export async function updatePhase(
       return undefined
     }
 
-    const updated: ExecutionPlan = { ...plan, phase: nextPhase }
-    if (nextPhase === EXECUTION_PHASE.CONFIRMED) {
-      updated.confirmedAt = now
-    } else if (nextPhase === EXECUTION_PHASE.EXECUTED) {
-      updated.executedAt = now
-    } else if (nextPhase === EXECUTION_PHASE.REVIEWED) {
-      updated.reviewedAt = now
-    }
+    const timestampUpdate = applyPhaseTimestamp(nextPhase, now)
+    const updated: ExecutionPlan = { ...plan, phase: nextPhase, ...timestampUpdate }
 
     const result = await executionPlanStore.save(updated)
     if (!result.success) {

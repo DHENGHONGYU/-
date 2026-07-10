@@ -12,6 +12,11 @@ export interface ScorePromptInput {
   reportText: string
 }
 
+/**
+ * buildIntelligentScorePrompt
+ * @param input
+ * @returns LlmMessage[]
+ */
 export function buildIntelligentScorePrompt(input: ScorePromptInput): LlmMessage[] {
   const { symbol, stock, supplementaryTexts, reportText } = input
 

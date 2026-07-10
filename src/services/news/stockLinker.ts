@@ -28,6 +28,9 @@ export interface LinkerConfig {
   contentWeight: number
 }
 
+/**
+ * DEFAULT_LINKER_CONFIG
+ */
 export const DEFAULT_LINKER_CONFIG: Required<LinkerConfig> = {
   enableExactCode: true,
   enableExactName: true,
@@ -119,6 +122,85 @@ function normalizeNewsArticle(
   }
 }
 
+function matchExactCode(
+  text: string,
+  stock: StockInfo,
+  stockMap: Map<string, StockInfo>,
+  source: 'title' | 'content',
+  sourceWeight: number,
+): StockLink[] {
+  const links: StockLink[] = []
+  const codePattern = /\b(\d{6})\b/g
+  let match: RegExpExecArray | null
+  while ((match = codePattern.exec(text)) !== null) {
+    const code = match[1]
+    if (!code) continue
+    const matchedStock = stockMap.get(code) ?? stockMap.get(`${code}.SH`) ?? stockMap.get(`${code}.SZ`)
+    if (matchedStock?.symbol === stock.symbol) {
+      links.push({
+        symbol: stock.symbol,
+        name: stock.name,
+        matchType: 'exact_code',
+        confidence: Math.min(1, MATCH_CONFIDENCE_BASE.exact_code * sourceWeight),
+        source,
+        matchedKeyword: code,
+      })
+    }
+  }
+  return links
+}
+
+function matchExactName(text: string, stock: StockInfo, source: 'title' | 'content', sourceWeight: number): StockLink[] {
+  if (!text.includes(stock.name)) return []
+  return [{
+    symbol: stock.symbol,
+    name: stock.name,
+    matchType: 'exact_name',
+    confidence: Math.min(1, MATCH_CONFIDENCE_BASE.exact_name * sourceWeight),
+    source,
+    matchedKeyword: stock.name,
+  }]
+}
+
+function matchFuzzyName(text: string, stock: StockInfo, source: 'title' | 'content', sourceWeight: number): StockLink[] {
+  if (stock.name.length < 2) return []
+  const links: StockLink[] = []
+  for (let len = 2; len <= Math.min(4, stock.name.length); len++) {
+    const prefix = stock.name.slice(0, len)
+    if (text.includes(prefix)) {
+      links.push({
+        symbol: stock.symbol,
+        name: stock.name,
+        matchType: 'fuzzy_name',
+        confidence: Math.min(1, MATCH_CONFIDENCE_BASE.fuzzy_name * sourceWeight),
+        source,
+        matchedKeyword: prefix,
+      })
+      break
+    }
+  }
+  return links
+}
+
+function matchIndustry(text: string, stock: StockInfo, source: 'title' | 'content', sourceWeight: number): StockLink[] {
+  if (!stock.industry) return []
+  const keywords = DEFAULT_INDUSTRY_KEYWORDS[stock.industry] ?? []
+  const links: StockLink[] = []
+  for (const keyword of keywords) {
+    if (text.includes(keyword)) {
+      links.push({
+        symbol: stock.symbol,
+        name: stock.name,
+        matchType: 'industry',
+        confidence: Math.min(1, MATCH_CONFIDENCE_BASE.industry * sourceWeight),
+        source,
+        matchedKeyword: keyword,
+      })
+    }
+  }
+  return links
+}
+
 function matchText(
   text: string,
   source: 'title' | 'content',
@@ -133,67 +215,16 @@ function matchText(
     const candidates: StockLink[] = []
 
     if (config.enableExactCode) {
-      const codePattern = /\b(\d{6})\b/g
-      let match: RegExpExecArray | null
-      while ((match = codePattern.exec(text)) !== null) {
-        const code = match[1]
-        if (!code) continue
-        const matchedStock = stockMap.get(code) ?? stockMap.get(`${code}.SH`) ?? stockMap.get(`${code}.SZ`)
-        if (matchedStock && matchedStock.symbol === stock.symbol) {
-          candidates.push({
-            symbol: stock.symbol,
-            name: stock.name,
-            matchType: 'exact_code',
-            confidence: Math.min(1, MATCH_CONFIDENCE_BASE.exact_code * sourceWeight),
-            source,
-            matchedKeyword: code,
-          })
-        }
-      }
+      candidates.push(...matchExactCode(text, stock, stockMap, source, sourceWeight))
     }
-
-    if (config.enableExactName && text.includes(stock.name)) {
-      candidates.push({
-        symbol: stock.symbol,
-        name: stock.name,
-        matchType: 'exact_name',
-        confidence: Math.min(1, MATCH_CONFIDENCE_BASE.exact_name * sourceWeight),
-        source,
-        matchedKeyword: stock.name,
-      })
+    if (config.enableExactName) {
+      candidates.push(...matchExactName(text, stock, source, sourceWeight))
     }
-
-    if (config.enableFuzzy && stock.name.length >= 2) {
-      for (let len = 2; len <= Math.min(4, stock.name.length); len++) {
-        const prefix = stock.name.slice(0, len)
-        if (text.includes(prefix)) {
-          candidates.push({
-            symbol: stock.symbol,
-            name: stock.name,
-            matchType: 'fuzzy_name',
-            confidence: Math.min(1, MATCH_CONFIDENCE_BASE.fuzzy_name * sourceWeight),
-            source,
-            matchedKeyword: prefix,
-          })
-          break
-        }
-      }
+    if (config.enableFuzzy) {
+      candidates.push(...matchFuzzyName(text, stock, source, sourceWeight))
     }
-
     if (config.enableIndustry && stock.industry) {
-      const keywords = DEFAULT_INDUSTRY_KEYWORDS[stock.industry] ?? []
-      for (const keyword of keywords) {
-        if (text.includes(keyword)) {
-          candidates.push({
-            symbol: stock.symbol,
-            name: stock.name,
-            matchType: 'industry',
-            confidence: Math.min(1, MATCH_CONFIDENCE_BASE.industry * sourceWeight),
-            source,
-            matchedKeyword: keyword,
-          })
-        }
-      }
+      candidates.push(...matchIndustry(text, stock, source, sourceWeight))
     }
 
     if (candidates.length > 0) {

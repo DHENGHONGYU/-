@@ -969,6 +969,9 @@ class PermissionRevocationService {
   }
 }
 
+/**
+ * permissionRevocationService
+ */
 export const permissionRevocationService = new PermissionRevocationService()
 
 export { PermissionRevocationService }

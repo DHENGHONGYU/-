@@ -73,8 +73,11 @@ function evaluateSTEEP(input: LayerInput): { subs: SteepSubItem[]; score: number
   return { subs, score, summary }
 }
 
+/**
+ * L0MacroCalculator
+ */
 export const L0MacroCalculator: LayerCalculator = {
-  layerId: 'l0' as LayerId,
+  layerId: 'l0',
   async calculate(input: LayerInput): Promise<LayerScore> {
     const { config } = input
     const weight = config.weights.l0
@@ -156,8 +159,11 @@ function evaluateMoat(input: LayerInput): { score: number; summary: string; evid
   return { score, summary, evidence: strengths }
 }
 
+/**
+ * L1MoatCalculator
+ */
 export const L1MoatCalculator: LayerCalculator = {
-  layerId: 'l1' as LayerId,
+  layerId: 'l1',
   async calculate(input: LayerInput): Promise<LayerScore> {
     const { config } = input
     const weight = config.weights.l1
@@ -218,8 +224,11 @@ function evaluatePeer(input: LayerInput): { score: number; summary: string; evid
   return { score, summary: `竞品评估: ${tier}`, evidence }
 }
 
+/**
+ * L2PeerCalculator
+ */
 export const L2PeerCalculator: LayerCalculator = {
-  layerId: 'l2' as LayerId,
+  layerId: 'l2',
   async calculate(input: LayerInput): Promise<LayerScore> {
     const { config } = input
     const weight = config.weights.l2
@@ -266,11 +275,15 @@ export function scoreLongTermTrend(input: LayerInput): number {
   const days = history.length
   const trend = judgeLongTermTrend(history, days)
 
-  let score: number = V6_CALCULATOR_THRESHOLDS.L0_TREND_BASELINE_SCORE
-  if (trend === '上升') score = V6_CALCULATOR_THRESHOLDS.L0_TREND_UP_SCORE
-  else if (trend === '横盘') score = V6_CALCULATOR_THRESHOLDS.L0_TREND_SIDEWAYS_SCORE
-  else if (trend === '下降') score = V6_CALCULATOR_THRESHOLDS.L0_TREND_DOWN_SCORE
-  else if (trend === '无数据') return 0
+  const TREND_SCORES: Record<string, number> = {
+    上升: V6_CALCULATOR_THRESHOLDS.L0_TREND_UP_SCORE,
+    横盘: V6_CALCULATOR_THRESHOLDS.L0_TREND_SIDEWAYS_SCORE,
+    下降: V6_CALCULATOR_THRESHOLDS.L0_TREND_DOWN_SCORE,
+    无数据: 0,
+  }
+
+  if (trend === '无数据') return 0
+  const score = TREND_SCORES[trend] ?? V6_CALCULATOR_THRESHOLDS.L0_TREND_BASELINE_SCORE
 
   // 日线连续3天同向且>=3% 额外加分/减分
   if (history.length >= 3) {
@@ -280,8 +293,12 @@ export function scoreLongTermTrend(input: LayerInput): number {
     const v2 = safeArrayGet(last3, 2, 1)
     const d1 = (v1 - v0) / v0
     const d2 = (v2 - v1) / v1
-    if (d1 >= V6_CALCULATOR_THRESHOLDS.L0_TREND_ACCELERATION && d2 >= V6_CALCULATOR_THRESHOLDS.L0_TREND_ACCELERATION) score += V6_CALCULATOR_THRESHOLDS.L0_TREND_ACCELERATION_DELTA
-    else if (d1 <= -V6_CALCULATOR_THRESHOLDS.L0_TREND_ACCELERATION && d2 <= -V6_CALCULATOR_THRESHOLDS.L0_TREND_ACCELERATION) score -= V6_CALCULATOR_THRESHOLDS.L0_TREND_ACCELERATION_DELTA
+    if (d1 >= V6_CALCULATOR_THRESHOLDS.L0_TREND_ACCELERATION && d2 >= V6_CALCULATOR_THRESHOLDS.L0_TREND_ACCELERATION) {
+      return Math.min(V6_CALCULATOR_THRESHOLDS.SCORE_MAX, Math.max(V6_CALCULATOR_THRESHOLDS.SCORE_MIN, score + V6_CALCULATOR_THRESHOLDS.L0_TREND_ACCELERATION_DELTA))
+    }
+    if (d1 <= -V6_CALCULATOR_THRESHOLDS.L0_TREND_ACCELERATION && d2 <= -V6_CALCULATOR_THRESHOLDS.L0_TREND_ACCELERATION) {
+      return Math.min(V6_CALCULATOR_THRESHOLDS.SCORE_MAX, Math.max(V6_CALCULATOR_THRESHOLDS.SCORE_MIN, score - V6_CALCULATOR_THRESHOLDS.L0_TREND_ACCELERATION_DELTA))
+    }
   }
 
   return Math.min(V6_CALCULATOR_THRESHOLDS.SCORE_MAX, Math.max(V6_CALCULATOR_THRESHOLDS.SCORE_MIN, score))
@@ -308,7 +325,7 @@ export function buildScoreBoard(stock: StockBasicData, financials: FinancialData
 
 /** 评分板打分 */
 export function scoreScoreBoard(board: Record<string, number>, filters?: string[]): number {
-  if (filters !== undefined && filters.length === 0) return 0
+  if (filters?.length === 0) return 0
   const keys = filters !== undefined && filters.length > 0
     ? Object.keys(board).filter(k => filters.includes(k))
     : Object.keys(board)

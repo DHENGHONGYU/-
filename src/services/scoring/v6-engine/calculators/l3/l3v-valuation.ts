@@ -18,6 +18,28 @@ import { matchIndustryBenchmark, clamp } from './utils'
 
 const logger = getLogger()
 
+function scorePeg(peg: number): number {
+  const PEG_TIERS = [
+    { threshold: V6_CALCULATOR_THRESHOLDS.L3_VALUATION_PEG_TIER1, score: 5 },
+    { threshold: V6_CALCULATOR_THRESHOLDS.L3_VALUATION_PEG_TIER2, score: 4 },
+    { threshold: V6_CALCULATOR_THRESHOLDS.L3_VALUATION_PEG_TIER3, score: 3 },
+    { threshold: V6_CALCULATOR_THRESHOLDS.L3_VALUATION_PEG_TIER4, score: 2.5 },
+  ]
+  const matched = PEG_TIERS.find((t) => peg < t.threshold)
+  return matched?.score ?? 2
+}
+
+function scorePeRelative(pe: number, benchmark: { peLow: number; peHigh: number } | null): number {
+  if (benchmark) {
+    if (pe < benchmark.peLow) return 4.5
+    if (pe < benchmark.peHigh) return 3.5
+    return 2.5
+  }
+  if (pe < V6_CALCULATOR_THRESHOLDS.L3_VALUATION_PE_LOW) return 4.5
+  if (pe < V6_CALCULATOR_THRESHOLDS.L3_VALUATION_PE_MEDIUM) return 3.5
+  return 2.5
+}
+
 /**
  * 估值评分
  */
@@ -29,39 +51,25 @@ function scoreValuation(input: LayerInput): { score: number; summary: string; ev
   let pegScore = 3 // 默认合理
 
   if (stock.peg !== undefined && stock.peg > 0) {
-    if (stock.peg < V6_CALCULATOR_THRESHOLDS.L3_VALUATION_PEG_TIER1) pegScore = 5
-    else if (stock.peg < V6_CALCULATOR_THRESHOLDS.L3_VALUATION_PEG_TIER2) pegScore = 4
-    else if (stock.peg < V6_CALCULATOR_THRESHOLDS.L3_VALUATION_PEG_TIER3) pegScore = 3
-    else if (stock.peg < V6_CALCULATOR_THRESHOLDS.L3_VALUATION_PEG_TIER4) pegScore = 2.5
-    else pegScore = 2
+    pegScore = scorePeg(stock.peg)
     evidence.push(`PEG=${stock.peg.toFixed(2)}`)
   } else if (stock.pe !== undefined && stock.pe > 0) {
     // PEG 缺失时用 PE 做粗略判断
-    if (benchmark) {
-      if (stock.pe < benchmark.peLow) pegScore = 4.5
-      else if (stock.pe < benchmark.peHigh) pegScore = 3.5
-      else pegScore = 2.5
-    } else {
-      if (stock.pe < V6_CALCULATOR_THRESHOLDS.L3_VALUATION_PE_LOW) pegScore = 4.5
-      else if (stock.pe < V6_CALCULATOR_THRESHOLDS.L3_VALUATION_PE_MEDIUM) pegScore = 3.5
-      else pegScore = 2.5
-    }
+    pegScore = scorePeRelative(stock.pe, benchmark)
     evidence.push(`PE=${stock.pe.toFixed(1)}`)
   }
 
   // 行业基准校准
   let industryAdjust = 0
-  if (benchmark) {
-    if (stock.pe !== undefined && stock.pe > 0) {
-      if (stock.pe < benchmark.peLow) {
-        industryAdjust = V6_CALCULATOR_THRESHOLDS.L3_VALUATION_INDUSTRY_ADJUST // 低于行业区间下限 → 低估
-        evidence.push(`PE ${stock.pe.toFixed(1)} < 行业下限 ${benchmark.peLow}x → 低估 +0.5`)
-      } else if (stock.pe > benchmark.peHigh) {
-        industryAdjust = -V6_CALCULATOR_THRESHOLDS.L3_VALUATION_INDUSTRY_ADJUST // 高于行业区间上限 → 高估
-        evidence.push(`PE ${stock.pe.toFixed(1)} > 行业上限 ${benchmark.peHigh}x → 高估 -0.5`)
-      } else {
-        evidence.push(`PE ${stock.pe.toFixed(1)} 在行业区间 ${benchmark.peLow}-${benchmark.peHigh}x 内`)
-      }
+  if (benchmark && stock.pe !== undefined && stock.pe > 0) {
+    if (stock.pe < benchmark.peLow) {
+      industryAdjust = V6_CALCULATOR_THRESHOLDS.L3_VALUATION_INDUSTRY_ADJUST // 低于行业区间下限 → 低估
+      evidence.push(`PE ${stock.pe.toFixed(1)} < 行业下限 ${benchmark.peLow}x → 低估 +0.5`)
+    } else if (stock.pe > benchmark.peHigh) {
+      industryAdjust = -V6_CALCULATOR_THRESHOLDS.L3_VALUATION_INDUSTRY_ADJUST // 高于行业区间上限 → 高估
+      evidence.push(`PE ${stock.pe.toFixed(1)} > 行业上限 ${benchmark.peHigh}x → 高估 -0.5`)
+    } else {
+      evidence.push(`PE ${stock.pe.toFixed(1)} 在行业区间 ${benchmark.peLow}-${benchmark.peHigh}x 内`)
     }
     evidence.push(`行业基准: ${benchmark.sector} PEG ${benchmark.peglow}-${benchmark.pegHigh}`)
   }

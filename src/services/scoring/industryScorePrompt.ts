@@ -40,6 +40,11 @@ function summarizeSector(sector: SectorSkillAnalysis): string {
   }, null, 2)
 }
 
+/**
+ * buildIndustryScorePrompt
+ * @param input
+ * @returns LlmMessage[]
+ */
 export function buildIndustryScorePrompt(input: IndustryScorePromptInput): LlmMessage[] {
   const { sector, supplementaryTexts, reportText } = input
 

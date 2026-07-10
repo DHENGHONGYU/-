@@ -144,6 +144,9 @@ async function writeAudit(
 // 用户管理
 // ═══════════════════════════════════════════
 
+/**
+ * createUser
+ */
 export async function createUser(
   input: CreateUserInput,
   operatorId: string,
@@ -175,6 +178,9 @@ export async function createUser(
   return result
 }
 
+/**
+ * updateUser
+ */
 export async function updateUser(
   input: UpdateUserInput,
   operatorId: string,
@@ -206,6 +212,9 @@ export async function updateUser(
   return result
 }
 
+/**
+ * deleteUser
+ */
 export async function deleteUser(
   userId: string,
   operatorId: string,
@@ -234,6 +243,11 @@ export async function deleteUser(
   return result
 }
 
+/**
+ * getUser
+ * @param userId
+ * @returns Promise<QueryResult<UserEntity | null>>
+ */
 export async function getUser(userId: string): Promise<QueryResult<UserEntity | null>> {
   try {
     const res = await dataBridge.query<UserEntity>({
@@ -249,6 +263,11 @@ export async function getUser(userId: string): Promise<QueryResult<UserEntity | 
   }
 }
 
+/**
+ * listUsers
+ * @param onlyActive
+ * @returns Promise<QueryResult<UserEntity[]>>
+ */
 export async function listUsers(onlyActive = true): Promise<QueryResult<UserEntity[]>> {
   try {
     const res = await dataBridge.query<UserEntity[]>({
@@ -268,6 +287,9 @@ export async function listUsers(onlyActive = true): Promise<QueryResult<UserEnti
 // 角色管理
 // ═══════════════════════════════════════════
 
+/**
+ * createRole
+ */
 export async function createRole(
   input: CreateRoleInput,
   operatorId: string,
@@ -296,6 +318,9 @@ export async function createRole(
   return result
 }
 
+/**
+ * updateRole
+ */
 export async function updateRole(
   role: RoleEntity,
 ): Promise<CrudResult> {
@@ -304,6 +329,9 @@ export async function updateRole(
   return forward(updated, ENVELOPE_ACTION.saveRbacRole, tId, 'updateRole')
 }
 
+/**
+ * deleteRole
+ */
 export async function deleteRole(
   roleId: string,
 ): Promise<CrudResult> {
@@ -316,6 +344,11 @@ export async function deleteRole(
   return forward(deleted, ENVELOPE_ACTION.saveRbacRole, tId, 'deleteRole')
 }
 
+/**
+ * getRole
+ * @param roleId
+ * @returns Promise<QueryResult<RoleEntity | null>>
+ */
 export async function getRole(roleId: string): Promise<QueryResult<RoleEntity | null>> {
   try {
     const res = await dataBridge.query<RoleEntity>({
@@ -331,6 +364,11 @@ export async function getRole(roleId: string): Promise<QueryResult<RoleEntity | 
   }
 }
 
+/**
+ * listRoles
+ * @param onlyActive
+ * @returns Promise<QueryResult<RoleEntity[]>>
+ */
 export async function listRoles(onlyActive = true): Promise<QueryResult<RoleEntity[]>> {
   try {
     const res = await dataBridge.query<RoleEntity[]>({
@@ -350,6 +388,9 @@ export async function listRoles(onlyActive = true): Promise<QueryResult<RoleEnti
 // 权限管理
 // ═══════════════════════════════════════════
 
+/**
+ * createPermission
+ */
 export async function createPermission(
   input: CreatePermissionInput,
 ): Promise<CrudResult> {
@@ -368,6 +409,9 @@ export async function createPermission(
   return forward(perm, ENVELOPE_ACTION.saveRbacPermission, tId, 'createPermission')
 }
 
+/**
+ * updatePermission
+ */
 export async function updatePermission(
   perm: PermissionEntity,
 ): Promise<CrudResult> {
@@ -376,6 +420,11 @@ export async function updatePermission(
   return forward(updated, ENVELOPE_ACTION.saveRbacPermission, tId, 'updatePermission')
 }
 
+/**
+ * listPermissions
+ * @param onlyActive
+ * @returns Promise<QueryResult<PermissionEntity[]>>
+ */
 export async function listPermissions(onlyActive = true): Promise<QueryResult<PermissionEntity[]>> {
   try {
     const res = await dataBridge.query<PermissionEntity[]>({
@@ -395,6 +444,9 @@ export async function listPermissions(onlyActive = true): Promise<QueryResult<Pe
 // 角色授予 / 撤销
 // ═══════════════════════════════════════════
 
+/**
+ * grantUserRole
+ */
 export async function grantUserRole(
   input: GrantUserRoleInput,
   parentTraceId?: string,
@@ -430,6 +482,9 @@ export async function grantUserRole(
   return result
 }
 
+/**
+ * revokeUserRole
+ */
 export async function revokeUserRole(
   mappingId: string,
   operatorId: string,
@@ -468,6 +523,11 @@ export async function revokeUserRole(
   return result
 }
 
+/**
+ * getUserRoles
+ * @param userId
+ * @returns Promise<QueryResult<UserRoleMapping[]>>
+ */
 export async function getUserRoles(userId: string): Promise<QueryResult<UserRoleMapping[]>> {
   try {
     const res = await dataBridge.query<UserRoleMapping[]>({
@@ -487,6 +547,9 @@ export async function getUserRoles(userId: string): Promise<QueryResult<UserRole
 // 权限分配 / 移除
 // ═══════════════════════════════════════════
 
+/**
+ * grantRolePermission
+ */
 export async function grantRolePermission(
   input: GrantRolePermissionInput,
 ): Promise<CrudResult> {
@@ -516,6 +579,9 @@ export async function grantRolePermission(
   return result
 }
 
+/**
+ * revokeRolePermission
+ */
 export async function revokeRolePermission(
   mappingId: string,
   operatorId: string,
@@ -541,6 +607,11 @@ export async function revokeRolePermission(
   return forward(revoked, ENVELOPE_ACTION.saveRbacRolePermission, tId, 'revokeRolePermission')
 }
 
+/**
+ * getRolePermissions
+ * @param roleId
+ * @returns Promise<QueryResult<RolePermissionMapping[]>>
+ */
 export async function getRolePermissions(roleId: string): Promise<QueryResult<RolePermissionMapping[]>> {
   try {
     const res = await dataBridge.query<RolePermissionMapping[]>({
@@ -560,6 +631,9 @@ export async function getRolePermissions(roleId: string): Promise<QueryResult<Ro
 // 组合查询：用户有效权限（所有活跃角色的权限并集）
 // ═══════════════════════════════════════════
 
+/**
+ * getUserEffectivePermissions
+ */
 export async function getUserEffectivePermissions(
   userId: string,
 ): Promise<QueryResult<PermissionEntity[]>> {

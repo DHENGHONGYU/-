@@ -45,6 +45,41 @@ export interface RetryOptions {
 
 const sleepOrDefault = (o?: RetryOptions): ((ms: number) => Promise<void>) => o?.sleep ?? defaultSleep
 
+function computeRetryDelay(
+  attempt: number,
+  baseDelayMs: number,
+  maxDelayMs: number,
+  factor: number,
+): number {
+  return Math.min(baseDelayMs * Math.pow(factor, attempt - 1), maxDelayMs)
+}
+
+async function handleRetryAttempt(
+  err: unknown,
+  attempt: number,
+  maxAttempts: number,
+  shouldRetry: (err: unknown, attempt: number) => boolean,
+  onRetry: ((err: unknown, attempt: number) => void) | undefined,
+  sleep: (ms: number) => Promise<void>,
+  baseDelayMs: number,
+  maxDelayMs: number,
+  factor: number,
+): Promise<boolean> {
+  const isLast = attempt === maxAttempts
+  if (isLast || !shouldRetry(err, attempt)) {
+    return false
+  }
+
+  const delay = computeRetryDelay(attempt, baseDelayMs, maxDelayMs, factor)
+  onRetry?.(err, attempt)
+  logger.warn(
+    `[Resilience] retry ${attempt}/${maxAttempts} after ${delay}ms`,
+    { error: err instanceof Error ? err.message : String(err) },
+  )
+  await sleep(delay)
+  return true
+}
+
 /**
  * 指数退避重试。
  * 全部尝试失败后，抛出经 `captureError` 收敛并上报的 `V9Error`。
@@ -63,16 +98,18 @@ export async function withRetry<T>(fn: () => Promise<T>, options: RetryOptions =
       return await fn()
     } catch (err) {
       lastErr = err
-      const isLast = attempt === maxAttempts
-      if (!isLast && shouldRetry(err, attempt)) {
-        const delay = Math.min(baseDelayMs * Math.pow(factor, attempt - 1), maxDelayMs)
-        options.onRetry?.(err, attempt)
-        logger.warn(
-          `[Resilience] retry ${attempt}/${maxAttempts} after ${delay}ms`,
-          { error: err instanceof Error ? err.message : String(err) },
-        )
-        await sleep(delay)
-      } else {
+      const shouldContinue = await handleRetryAttempt(
+        err,
+        attempt,
+        maxAttempts,
+        shouldRetry,
+        options.onRetry,
+        sleep,
+        baseDelayMs,
+        maxDelayMs,
+        factor,
+      )
+      if (!shouldContinue) {
         break
       }
     }

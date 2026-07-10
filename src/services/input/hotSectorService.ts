@@ -81,10 +81,19 @@ const HOT_SECTORS: HotSector[] = [
   },
 ]
 
+/**
+ * getHotSectors
+ * @returns HotSector[]
+ */
 export function getHotSectors(): HotSector[] {
   return HOT_SECTORS.map((s) => ({ ...s }))
 }
 
+/**
+ * getHotSectorByCode
+ * @param code
+ * @returns HotSector | undefined
+ */
 export function getHotSectorByCode(code: string): HotSector | undefined {
   return HOT_SECTORS.find((s) => s.code === code)
 }

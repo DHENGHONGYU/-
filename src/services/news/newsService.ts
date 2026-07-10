@@ -47,6 +47,9 @@ async function resolveStockLibrary(explicitStocks?: StockInfo[]): Promise<StockI
   return DEFAULT_STOCK_LIBRARY
 }
 
+/**
+ * saveNewsArticle
+ */
 export async function saveNewsArticle(
   article: Omit<NewsArticle, 'id' | 'sentiment' | 'sentimentConfidence' | 'relatedStocks' | 'hash'>,
   options?: { stocks?: StockInfo[]; skipLinking?: boolean },
@@ -127,6 +130,9 @@ export async function saveNewsArticle(
   }
 }
 
+/**
+ * saveNewsArticles
+ */
 export async function saveNewsArticles(
   articles: Omit<NewsArticle, 'id' | 'sentiment' | 'sentimentConfidence' | 'relatedStocks' | 'hash'>[],
   options?: { stocks?: StockInfo[] },
@@ -143,6 +149,9 @@ export async function saveNewsArticles(
   return { success: true, data: saved }
 }
 
+/**
+ * listNews
+ */
 export async function listNews(options?: {
   source?: string
   category?: string
@@ -217,6 +226,9 @@ export async function listNews(options?: {
   }
 }
 
+/**
+ * getNewsBySymbol
+ */
 export async function getNewsBySymbol(
   symbol: string,
 ): Promise<DataLayerResult<NewsArticle[]>> {
@@ -238,6 +250,9 @@ export async function getNewsBySymbol(
   }
 }
 
+/**
+ * getNewsByHash
+ */
 export async function getNewsByHash(
   hash: string,
 ): Promise<DataLayerResult<NewsArticle | undefined>> {

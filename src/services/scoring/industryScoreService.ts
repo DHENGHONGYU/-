@@ -70,7 +70,7 @@ interface RawScoreOutput {
 
 function extractJsonFromMarkdown(content: string): string {
   const match = content.match(/```(?:json)?\s*([\s\S]*?)\s*```/)
-  if (match && match[1]) {
+  if (match?.[1]) {
     return match[1].trim()
   }
   return content.trim()
@@ -137,6 +137,9 @@ function calculateOverallScore(dimensions: IndustryDimensionScore[]): number | n
   )
 }
 
+/**
+ * runIndustryScore
+ */
 export async function runIndustryScore(
   input: RunIndustryScoreInput,
   onProgress?: IndustryScoreProgressCallback,

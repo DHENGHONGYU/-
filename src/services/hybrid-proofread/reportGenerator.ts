@@ -10,6 +10,9 @@ import type {
 
 const logger = getLogger()
 
+/**
+ * ReportGenerator
+ */
 export class ReportGenerator {
   generateReport(
     projectId: string,
@@ -179,6 +182,16 @@ export class ReportGenerator {
     return parts.join(' ')
   }
 
+  private appendRecommendation(
+    recommendations: string[],
+    seen: Set<string>,
+    advice: string,
+  ): void {
+    if (seen.has(advice)) return
+    recommendations.push(advice)
+    seen.add(advice)
+  }
+
   private generateRecommendations(
     ruleMatches: RuleMatchResult[],
     risks: Array<{ remediation_advice: string }>,
@@ -189,23 +202,16 @@ export class ReportGenerator {
     for (const match of ruleMatches) {
       if (match.action_type === 'block') {
         const advice = `[${match.rule_name}] ${match.description}，请修复文件 ${match.file_path} 第 ${match.line_number} 行`
-        if (!seen.has(advice)) {
-          recommendations.push(advice)
-          seen.add(advice)
-        }
+        this.appendRecommendation(recommendations, seen, advice)
       } else if (match.action_type === 'warn') {
         const advice = `[${match.rule_name}] ${match.description}`
-        if (!seen.has(advice)) {
-          recommendations.push(advice)
-          seen.add(advice)
-        }
+        this.appendRecommendation(recommendations, seen, advice)
       }
     }
 
     for (const risk of risks) {
-      if (risk.remediation_advice && !seen.has(risk.remediation_advice)) {
-        recommendations.push(risk.remediation_advice)
-        seen.add(risk.remediation_advice)
+      if (risk.remediation_advice) {
+        this.appendRecommendation(recommendations, seen, risk.remediation_advice)
       }
     }
 
@@ -313,7 +319,7 @@ export class ReportGenerator {
     const CSS_COLOR_BORDER = COLOR_SHADES.slate.hex[200]
     const CSS_COLOR_BG = COLOR_SHADES.slate.hex[50]
 
-    let html = `<!DOCTYPE html>
+    const html = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
@@ -393,4 +399,7 @@ export class ReportGenerator {
   }
 }
 
+/**
+ * reportGenerator
+ */
 export const reportGenerator = new ReportGenerator()

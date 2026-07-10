@@ -133,6 +133,9 @@ export async function listByTheme(theme: string): Promise<Portfolio[]> {
   }
 }
 
+/**
+ * portfolioService
+ */
 export const portfolioService = {
   rebalance,
   addHolding,

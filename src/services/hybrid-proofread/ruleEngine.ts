@@ -5,6 +5,9 @@ import { defaultStorage } from '@/lib/localStorageManager'
 
 const logger = getLogger()
 
+/**
+ * RuleEngine
+ */
 export class RuleEngine {
   private rules: RuleConfig[] = []
   private currentVersion: string = HYBRID_PROOFREAD_CONFIG.rules.defaultVersion
@@ -327,4 +330,7 @@ export class RuleEngine {
   }
 }
 
+/**
+ * ruleEngine
+ */
 export const ruleEngine = new RuleEngine()

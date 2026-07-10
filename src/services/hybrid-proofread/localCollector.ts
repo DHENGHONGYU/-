@@ -27,6 +27,31 @@ export interface ScanOptions {
   maxConcurrentFiles?: number
 }
 
+function isPathExcluded(relativePath: string, excludes: string[]): boolean {
+  return excludes.some((pattern) => matchesPattern(relativePath, pattern))
+}
+
+function isPathIncluded(relativePath: string, includes: string[]): boolean {
+  return includes.some((pattern) => matchesPattern(relativePath, pattern))
+}
+
+async function collectFileIfIncluded(
+  fullPath: string,
+  relativePath: string,
+  includes: string[],
+  results: string[],
+): Promise<void> {
+  if (!isPathIncluded(relativePath, includes)) return
+  const fs = await import('fs')
+  const stats = await fs.promises.stat(fullPath)
+  if (stats.size <= HYBRID_PROOFREAD_CONFIG.hash.maxFileSizeBytes) {
+    results.push(fullPath)
+  }
+}
+
+/**
+ * LocalCollector
+ */
 export class LocalCollector {
   private abortController: AbortController | null = null
   private isRunning = false
@@ -67,7 +92,7 @@ export class LocalCollector {
             scannedFiles.push(1)
             return fileHash
           } catch (error) {
-            logger.warn(`[LocalCollector] 跳过文件 ${filePath}: ${error}`)
+            logger.warn(`[LocalCollector] 跳过文件 ${filePath}: ${String(error)}`)
             skippedFiles.push(1)
             return null
           }
@@ -100,14 +125,6 @@ export class LocalCollector {
     const results: string[] = []
     const abortControllerRef = this.abortController
 
-    function isPathExcluded(relativePath: string): boolean {
-      return excludes.some((pattern) => matchesPattern(relativePath, pattern))
-    }
-
-    function isPathIncluded(relativePath: string): boolean {
-      return includes.some((pattern) => matchesPattern(relativePath, pattern))
-    }
-
     async function traverse(dir: string, relativeDir: string): Promise<void> {
       if (abortControllerRef?.signal.aborted) return
 
@@ -118,7 +135,7 @@ export class LocalCollector {
         for (const entry of entries) {
           const relativePath = relativeDir ? `${relativeDir}/${entry.name}` : entry.name
 
-          if (isPathExcluded(relativePath)) {
+          if (isPathExcluded(relativePath, excludes)) {
             continue
           }
 
@@ -126,14 +143,13 @@ export class LocalCollector {
 
           if (entry.isDirectory()) {
             await traverse(fullPath, relativePath)
-          } else if (entry.isFile() && isPathIncluded(relativePath)) {
-            const stats = await fs.promises.stat(fullPath)
-            if (stats.size <= HYBRID_PROOFREAD_CONFIG.hash.maxFileSizeBytes) {
-              results.push(fullPath)
-            }
+            continue
+          }
+          if (entry.isFile()) {
+            await collectFileIfIncluded(fullPath, relativePath, includes, results)
           }
         }
-      } catch (error) {
+      } catch {
         logger.warn(`[LocalCollector] 读取目录失败: ${dir}`)
       }
     }
@@ -177,4 +193,7 @@ export class LocalCollector {
   }
 }
 
+/**
+ * localCollector
+ */
 export const localCollector = new LocalCollector()

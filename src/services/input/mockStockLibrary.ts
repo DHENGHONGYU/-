@@ -14,6 +14,9 @@ export interface MockStock {
   marketCap?: number
 }
 
+/**
+ * MOCK_STOCK_LIBRARY
+ */
 export const MOCK_STOCK_LIBRARY: MockStock[] = [
   { symbol: '600519.SH', name: '贵州茅台', industry: '白酒', pe: 28.5, pb: 8.2, marketCap: 2100000000000 },
   { symbol: '000001.SZ', name: '平安银行', industry: '银行', pe: 6.3, pb: 0.72, marketCap: 220000000000 },

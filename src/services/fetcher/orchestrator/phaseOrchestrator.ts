@@ -54,6 +54,59 @@ interface CollectedItem {
 // ============================================================
 
 /**
+ * 判断维度是否并行执行（Phase 2 维度串行，其余并行）
+ */
+function isParallelDimension(dimension: string): boolean {
+  const phase2Dims = PHASE_2_DIMENSIONS as readonly string[]
+  return !phase2Dims.includes(dimension)
+}
+
+type DimensionType = 'quote' | 'kline' | 'stub'
+
+/**
+ * 解析维度类型，决定使用 quote、kline 还是 stub 采集
+ */
+function resolveDimensionType(dimension: string): DimensionType {
+  if (dimension === '01_basic' || dimension === '07_index') return 'quote'
+  if (dimension === '02_kline') return 'kline'
+  return 'stub'
+}
+
+/**
+ * 采集 stub 维度（仅触发后端，前端不写入）
+ */
+async function collectStub(
+  code: string,
+  dimension: string,
+  collectBasic: CollectDeps['collectBasic'],
+): Promise<CollectedItem> {
+  const success = await collectBasic(code)
+  if (!success) {
+    throw new Error(`${dimension} 采集失败`)
+  }
+  return { code, isStub: true, dimension }
+}
+
+/**
+ * 将单个采集结果写入存储，返回是否写入成功
+ */
+async function writeCollectedItem(item: CollectedItem, deps: CollectDeps): Promise<boolean> {
+  try {
+    if (item.quote !== undefined) {
+      await deps.writer.writeQuote(item.quote)
+      return true
+    }
+    if (item.kline !== undefined) {
+      await deps.writer.writeKline(item.code, item.kline)
+      return true
+    }
+    return false
+  } catch {
+    return false
+  }
+}
+
+/**
  * 单维度采集：根据维度所属 Phase 决定执行模式，采集完成后写入存储。
  *
  * 维度路由：
@@ -83,40 +136,26 @@ export async function collectDimension(
     stubDimensions: [],
   }
 
-  // 判断执行模式（Phase 1/3 并行，Phase 2 串行）
-  const phase1Dims = PHASE_1_DIMENSIONS as readonly string[]
-  const phase2Dims = PHASE_2_DIMENSIONS as readonly string[]
-  const phase3Dims = PHASE_3_DIMENSIONS as readonly string[]
-
-  let parallel = true
-  if (phase1Dims.includes(dimension)) {
-    parallel = true
-  } else if (phase2Dims.includes(dimension)) {
-    parallel = false
-  } else if (phase3Dims.includes(dimension)) {
-    parallel = true
-  }
+  const parallel = isParallelDimension(dimension)
 
   // ===== 采集阶段 =====
   const collected: CollectedItem[] = []
 
   const collectOne = async (code: string): Promise<void> => {
     try {
-      if (dimension === '01_basic' || dimension === '07_index') {
+      const type = resolveDimensionType(dimension)
+      if (type === 'quote') {
         const quote = await deps.fetcher.fetchQuote(code)
         collected.push({ code, quote })
-      } else if (dimension === '02_kline') {
+        return
+      }
+      if (type === 'kline') {
         const kline = await deps.fetcher.fetchKline(code, DEFAULT_KLINE_DAYS)
         collected.push({ code, kline })
-      } else {
-        // Phase 2/3 维度：通过注入的 collectBasic 触发后端采集
-        // 注意：前端不写入数据，标记为 stub，不计入 success 统计
-        const success = await deps.collectBasic(code)
-        if (!success) {
-          throw new Error(`${dimension} 采集失败`)
-        }
-        collected.push({ code, isStub: true, dimension })
+        return
       }
+      const item = await collectStub(code, dimension, deps.collectBasic)
+      collected.push(item)
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
       collected.push({ code, error: msg })
@@ -146,14 +185,10 @@ export async function collectDimension(
       result.partial = true
       continue
     }
-    try {
-      if (item.quote !== undefined) {
-        await deps.writer.writeQuote(item.quote)
-      } else if (item.kline !== undefined) {
-        await deps.writer.writeKline(item.code, item.kline)
-      }
+    const ok = await writeCollectedItem(item, deps)
+    if (ok) {
       result.success.push(item.code)
-    } catch {
+    } else {
       result.failed.push(item.code)
       result.partial = true
     }

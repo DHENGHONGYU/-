@@ -8,6 +8,9 @@ const logger = getLogger()
 // P0-02: 流式请求空闲超时阈值（毫秒），收到每个 chunk 后重置
 const STREAM_IDLE_TIMEOUT_MS = 30000
 
+/**
+ * LlmConfigError
+ */
 export class LlmConfigError extends Error {
   constructor(message: string) {
     super(message)
@@ -15,6 +18,9 @@ export class LlmConfigError extends Error {
   }
 }
 
+/**
+ * LlmApiError
+ */
 export class LlmApiError extends Error {
   /** HTTP 状态码（可选，用于错误分类） */
   readonly statusCode?: number
@@ -120,6 +126,9 @@ function parseResponse(raw: RawResponse): LlmResponse {
   }
 }
 
+/**
+ * chat
+ */
 export async function chat(
   messages: LlmMessage[],
   override?: Partial<LlmConfig>,
@@ -160,19 +169,7 @@ export async function chat(
 
     // P0-03: 非 ok 响应时保护 response.json() 解析
     if (!response.ok) {
-      let message = `HTTP ${response.status} ${response.statusText}`.trim()
-      try {
-        const raw = (await response.json()) as RawResponse
-        if (raw.error?.message) {
-          message = raw.error.message
-        }
-      } catch {
-        // 响应体非 JSON（如 nginx 502 HTML 错误页），保留默认 HTTP 状态消息
-        logger.warn('[llmClient] LLM 错误响应非 JSON 格式', {
-          status: response.status,
-          contentType: response.headers.get('content-type'),
-        })
-      }
+      const message = await parseErrorMessageFromResponse(response)
       throw new LlmApiError(`LLM 请求失败: ${message}`, response.status)
     }
 
@@ -238,6 +235,56 @@ function parseStreamChunk(raw: RawStreamResponse): LlmStreamChunk | null {
   }
 }
 
+function parseErrorMessageFromResponse(response: Response): Promise<string> {
+  return response
+    .json()
+    .then((raw) => {
+      const errRaw = raw as RawResponse
+      return errRaw.error?.message ?? `HTTP ${response.status} ${response.statusText}`.trim()
+    })
+    .catch(() => {
+      logger.warn('[llmClient] LLM 错误响应非 JSON 格式', {
+        status: response.status,
+        contentType: response.headers.get('content-type'),
+      })
+      return `HTTP ${response.status} ${response.statusText}`.trim()
+    })
+}
+
+function processStreamLines(
+  lines: string[],
+  callback: LlmStreamCallback,
+  state: { isFinished: boolean },
+): void {
+  for (const line of lines) {
+    if (line.trim().length === 0) continue
+    if (!line.startsWith('data: ')) continue
+
+    const dataStr = line.slice(6)
+    if (dataStr === '[DONE]') {
+      if (!state.isFinished) {
+        callback({ content: '', isDone: true })
+      }
+      return
+    }
+
+    try {
+      const chunkRaw = JSON.parse(dataStr) as RawStreamResponse
+      const chunk = parseStreamChunk(chunkRaw)
+      if (!chunk) continue
+      callback(chunk)
+      if (chunk.isDone) {
+        state.isFinished = true
+      }
+    } catch (parseErr) {
+      logger.warn('[llmClient] Failed to parse stream chunk', { error: parseErr })
+    }
+  }
+}
+
+/**
+ * streamingChat
+ */
 export async function streamingChat(
   messages: LlmMessage[],
   callback: LlmStreamCallback,
@@ -287,19 +334,7 @@ export async function streamingChat(
 
     // P0-03: 非 ok 响应时保护 response.json() 解析
     if (!response.ok) {
-      let message = `HTTP ${response.status} ${response.statusText}`.trim()
-      try {
-        const errRaw = (await response.json()) as RawResponse
-        if (errRaw.error?.message) {
-          message = errRaw.error.message
-        }
-      } catch {
-        // 响应体非 JSON（如 nginx 502 HTML 错误页），保留默认 HTTP 状态消息
-        logger.warn('[llmClient] LLM 流式错误响应非 JSON 格式', {
-          status: response.status,
-          contentType: response.headers.get('content-type'),
-        })
-      }
+      const message = await parseErrorMessageFromResponse(response)
       throw new LlmApiError(`LLM 请求失败: ${message}`, response.status)
     }
 
@@ -310,7 +345,7 @@ export async function streamingChat(
 
     const decoder = new TextDecoder()
     let buffer = ''
-    let isFinished = false
+    const state = { isFinished: false }
 
     while (true) {
       const { done, value } = await reader.read()
@@ -323,32 +358,7 @@ export async function streamingChat(
       buffer += decoder.decode(value, { stream: true })
       const lines = buffer.split('\n')
       buffer = lines.pop() ?? ''
-
-      for (const line of lines) {
-        if (line.trim().length === 0) continue
-        if (!line.startsWith('data: ')) continue
-
-        const dataStr = line.slice(6)
-        if (dataStr === '[DONE]') {
-          if (!isFinished) {
-            callback({ content: '', isDone: true })
-          }
-          return
-        }
-
-        try {
-          const chunkRaw = JSON.parse(dataStr) as RawStreamResponse
-          const chunk = parseStreamChunk(chunkRaw)
-          if (chunk) {
-            callback(chunk)
-            if (chunk.isDone) {
-              isFinished = true
-            }
-          }
-        } catch (parseErr) {
-          logger.warn('[llmClient] Failed to parse stream chunk', { error: parseErr })
-        }
-      }
+      processStreamLines(lines, callback, state)
     }
   } catch (err) {
     // P0-02: 识别 AbortError（总超时或空闲超时）

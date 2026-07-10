@@ -237,6 +237,60 @@ export function detect(input: RotationSignalInput): RotationSignal {
 // 数据获取与编排
 // ============================================================
 
+async function aggregateSectorBars(
+  sectorStocks: Array<{ symbol: string }>,
+): Promise<{
+  sortedDates: string[]
+  sectorVolumes: number[]
+  sectorFlows: number[]
+  closes: number[]
+  count: number
+} | null> {
+  const stockBarMaps = new Map<string, Map<string, KlineBar>>()
+  const allDates = new Set<string>()
+  let count = 0
+
+  for (const stock of sectorStocks.slice(0, MAX_SECTOR_STOCKS_FOR_AGGREGATION)) {
+    const quotes = await dataLayer.dailyQuotes.get(stock.symbol).catch(() => undefined)
+    if (!quotes || quotes.history.length < MIN_HISTORY_DAYS) {
+      logger.warn(`[rotationSignalDetector] 股票历史数据不足，跳过`, {
+        symbol: stock.symbol,
+        historyLength: quotes?.history.length ?? 0,
+        minLength: MIN_HISTORY_DAYS,
+      })
+      continue
+    }
+
+    const barMap = new Map<string, KlineBar>()
+    for (const bar of quotes.history.slice(-RECENT_DATA_WINDOW_DAYS)) {
+      barMap.set(bar.date, bar)
+      allDates.add(bar.date)
+    }
+    stockBarMaps.set(stock.symbol, barMap)
+    count++
+  }
+
+  if (count === 0) return null
+
+  const sortedDates = Array.from(allDates).sort()
+  const sectorVolumes: number[] = new Array(sortedDates.length).fill(0)
+  const sectorFlows: number[] = new Array(sortedDates.length).fill(0)
+  const closes: number[] = new Array(sortedDates.length).fill(0)
+
+  for (let i = 0; i < sortedDates.length; i++) {
+    const date = sortedDates[i]!
+    for (const [, barMap] of stockBarMaps) {
+      const bar = barMap.get(date)
+      if (!bar) continue
+      sectorVolumes[i]! += bar.volume
+      sectorFlows[i]! += (bar.close - bar.open) * bar.volume
+      closes[i]! += bar.close
+    }
+  }
+
+  return { sortedDates, sectorVolumes, sectorFlows, closes, count }
+}
+
 /**
  * 根据 sectorId 从 dataLayer 获取板块数据并执行轮动信号检测。
  *
@@ -255,7 +309,7 @@ export async function detectBySector(sectorId: string): Promise<RotationSignal |
       (s) =>
         s.sector === sectorId ||
         s.industryCode === sectorId ||
-        (s.sector !== undefined && s.sector === sectorId), // 修复：精确匹配，避免子串误匹配
+        (s.sector !== undefined && s.sector === sectorId),
     )
 
     if (sectorStocks.length === 0) {
@@ -263,53 +317,13 @@ export async function detectBySector(sectorId: string): Promise<RotationSignal |
       return null
     }
 
-    // P0-09: 按日期对齐聚合板块内个股的成交量、资金流和收盘价
-    // 旧实现按索引 i 聚合，但不同股票 recent 数组长度可能不同（历史不足 60 天），
-    // 导致索引 i 对不同股票代表不同日期，产生时间错位。
-    const stockBarMaps = new Map<string, Map<string, KlineBar>>()
-    const allDates = new Set<string>()
-    let count = 0
-
-    for (const stock of sectorStocks.slice(0, MAX_SECTOR_STOCKS_FOR_AGGREGATION)) {
-      const quotes = await dataLayer.dailyQuotes.get(stock.symbol).catch(() => undefined)
-      if (!quotes || quotes.history.length < MIN_HISTORY_DAYS) {
-        logger.warn(`[rotationSignalDetector] 股票历史数据不足，跳过`, {
-          symbol: stock.symbol,
-          historyLength: quotes?.history.length ?? 0,
-          minLength: MIN_HISTORY_DAYS,
-        })
-        continue
-      }
-
-      // 取近 N 日数据，建立 date -> bar 映射
-      const barMap = new Map<string, KlineBar>()
-      for (const bar of quotes.history.slice(-RECENT_DATA_WINDOW_DAYS)) {
-        barMap.set(bar.date, bar)
-        allDates.add(bar.date)
-      }
-      stockBarMaps.set(stock.symbol, barMap)
-      count++
+    const aggregated = await aggregateSectorBars(sectorStocks)
+    if (!aggregated) {
+      logger.warn(`[rotationSignalDetector] 板块 ${sectorId} 数据不足`)
+      return null
     }
 
-    // 按日期排序后聚合，确保不同股票在同一日期对齐
-    const sortedDates = Array.from(allDates).sort()
-    const sectorVolumes: number[] = new Array(sortedDates.length).fill(0)
-    const sectorFlows: number[] = new Array(sortedDates.length).fill(0)
-    const closes: number[] = new Array(sortedDates.length).fill(0)
-
-    for (let i = 0; i < sortedDates.length; i++) {
-      const date = sortedDates[i]!
-      for (const [, barMap] of stockBarMaps) {
-        const bar = barMap.get(date)
-        if (bar) {
-          sectorVolumes[i]! += bar.volume
-          // 用收盘价-开盘价作为资金流代理（正=流入）
-          const flow = (bar.close - bar.open) * bar.volume
-          sectorFlows[i]! += flow
-          closes[i]! += bar.close
-        }
-      }
-    }
+    const { sectorVolumes, sectorFlows, closes, count } = aggregated
 
     if (sectorVolumes.length < MIN_HISTORY_DAYS) {
       logger.warn(`[rotationSignalDetector] 板块 ${sectorId} 数据不足`)

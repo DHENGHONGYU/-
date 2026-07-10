@@ -54,6 +54,10 @@ import type { LayerInput } from '../../types'
  * })
  * // score = 4.5 (毛利率基础分) + 0 (营收增速未达标) + 0.25 (ROE>15%) = 4.75
  * ```
+/**
+ * scoreMoat
+ * @param input
+ * @returns number
  */
 export function scoreMoat(input: LayerInput): number {
   const { financials, stock } = input
@@ -135,6 +139,10 @@ export function scoreMoat(input: LayerInput): number {
  * })
  * // 毛利率 > 40% → 递增趋势，营收增速 > 30% → 评分 = 4.0
  * ```
+/**
+ * scoreCompetition
+ * @param input
+ * @returns number
  */
 export function scoreCompetition(input: LayerInput): number {
   const { financials } = input

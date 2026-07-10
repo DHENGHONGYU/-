@@ -132,6 +132,8 @@ export async function importStocks(
  * @param rows 已经过 detectDuplicates 标记状态的行
  * @param options 导入选项
  * @param onProgress 进度回调 (completed, total, percent)
+/**
+ * importStocksWithProgress
  */
 export async function importStocksWithProgress(
   rows: BulkImportRow[],

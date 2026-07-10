@@ -29,6 +29,11 @@ interface LifeStage {
   baseScore: number
 }
 
+/**
+ * diagnoseLifeStage
+ * @param input
+ * @returns LifeStage
+ */
 export function diagnoseLifeStage(input: LayerInput): LifeStage {
   const { financials: f } = input
   const revenueYoY = f.revenueYoY
@@ -71,6 +76,10 @@ export function diagnoseLifeStage(input: LayerInput): LifeStage {
   return { stage: '成熟期', description: '增速放缓，稳定盈利', baseScore: 3.0 }
 }
 
+/**
+ * scoreSecondCurve
+ * @param input
+ */
 export function scoreSecondCurve(input: LayerInput): { score: number; summary: string; evidence: string[]; stage: LifeStage } {
   const { financials: f } = input
   const evidence: string[] = []
@@ -110,8 +119,11 @@ export function scoreSecondCurve(input: LayerInput): { score: number; summary: s
   return { score, summary, evidence, stage }
 }
 
+/**
+ * L7SecondCurveCalculator
+ */
 export const L7SecondCurveCalculator: LayerCalculator = {
-  layerId: 'l7' as LayerId,
+  layerId: 'l7',
 
   async calculate(input: LayerInput): Promise<LayerScore> {
     const { stock, config } = input
@@ -287,8 +299,11 @@ export function evaluateChip(input: LayerInput): ChipResult {
   return { levels, score, matrix, riskLevel }
 }
 
+/**
+ * L8ChipCalculator
+ */
 export const L8ChipCalculator: LayerCalculator = {
-  layerId: 'l8' as LayerId,
+  layerId: 'l8',
 
   async calculate(input: LayerInput): Promise<LayerScore> {
     const { stock, config } = input

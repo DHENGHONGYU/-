@@ -192,6 +192,22 @@ function readFileAsText(file: File): Promise<string> {
   })
 }
 
+/** 处理 CSV 引号状态中的字符，返回是否已消费该字符 */
+function handleQuotedChar(
+  line: string,
+  i: number,
+  current: string,
+): { current: string; nextIndex: number; inQuotes: boolean } {
+  const char = line[i]!
+  if (char === '"') {
+    if (line[i + 1] === '"') {
+      return { current: current + '"', nextIndex: i + 1, inQuotes: true }
+    }
+    return { current, nextIndex: i, inQuotes: false }
+  }
+  return { current: current + char, nextIndex: i, inQuotes: true }
+}
+
 /** 解析单行 CSV，支持引号包裹与转义双引号 */
 function parseCsvLine(line: string): string[] {
   const fields: string[] = []
@@ -201,18 +217,13 @@ function parseCsvLine(line: string): string[] {
   for (let i = 0; i < line.length; i++) {
     const char = line[i]!
     if (inQuotes) {
-      if (char === '"') {
-        // 双引号转义
-        if (line[i + 1] === '"') {
-          current += '"'
-          i++
-        } else {
-          inQuotes = false
-        }
-      } else {
-        current += char
-      }
-    } else if (char === '"') {
+      const result = handleQuotedChar(line, i, current)
+      current = result.current
+      i = result.nextIndex
+      inQuotes = result.inQuotes
+      continue
+    }
+    if (char === '"') {
       inQuotes = true
     } else if (char === ',') {
       fields.push(current)
@@ -340,6 +351,28 @@ export async function parseCsvFile(file: File): Promise<BulkImportRow[]> {
   }
 }
 
+/** 将单个 JSON 对象转换为 BulkImportRow，返回 null 表示无效 */
+function parseJsonRow(item: unknown, maxRows: number, currentCount: number): BulkImportRow | null {
+  if (currentCount >= maxRows) return null
+  if (!item || typeof item !== 'object') return null
+
+  const obj = item as Record<string, unknown>
+  const rawCode = obj.code ?? obj.symbol ?? ''
+  const code = (typeof rawCode === 'string' ? rawCode : JSON.stringify(rawCode)).trim()
+  const rawName = obj.name ?? ''
+  const name = (typeof rawName === 'string' ? rawName : JSON.stringify(rawName)).trim()
+
+  if (!STOCK_CODE_PATTERN.test(code)) return null
+
+  const exchange = detectExchange(code)
+  return {
+    code,
+    name: name || code,
+    symbol: `${code}.${exchange}`,
+    status: 'valid',
+  }
+}
+
 /**
  * 解析 JSON 文件
  *
@@ -367,22 +400,10 @@ export async function parseJsonFile(file: File): Promise<BulkImportRow[]> {
     }
 
     const results: BulkImportRow[] = []
-    for (const item of rawList.slice(0, INPUT_CONFIG.bulkImport.maxRows)) {
-      if (item && typeof item === 'object') {
-        const obj = item as Record<string, unknown>
-        const rawCode = obj.code ?? obj.symbol ?? ''
-        const code = (typeof rawCode === 'string' ? rawCode : JSON.stringify(rawCode)).trim()
-        const rawName = obj.name ?? ''
-        const name = (typeof rawName === 'string' ? rawName : JSON.stringify(rawName)).trim()
-        if (STOCK_CODE_PATTERN.test(code)) {
-          const exchange = detectExchange(code)
-          results.push({
-            code,
-            name: name || code,
-            symbol: `${code}.${exchange}`,
-            status: 'valid',
-          })
-        }
+    for (let i = 0; i < rawList.length && i < INPUT_CONFIG.bulkImport.maxRows; i++) {
+      const row = parseJsonRow(rawList[i], INPUT_CONFIG.bulkImport.maxRows, i)
+      if (row) {
+        results.push(row)
       }
     }
 

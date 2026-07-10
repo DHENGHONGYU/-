@@ -31,6 +31,7 @@ import {
   Layers,
 } from 'lucide-react'
 import { getLogger } from '@/lib/logger'
+import { validateConfigName } from '@/utils/dataValidation'
 import type { PersistedWizardConfig } from '@/types/modules/collection.types'
 
 const logger = getLogger()
@@ -102,6 +103,7 @@ function ConfigTemplateCard({
   const [isEditing, setIsEditing] = useState(false)
   const [editName, setEditName] = useState(config.name)
   const [showConfirmDelete, setShowConfirmDelete] = useState(false)
+  const [validationError, setValidationError] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -115,24 +117,47 @@ function ConfigTemplateCard({
     setEditName(config.name)
     setIsEditing(true)
     setShowConfirmDelete(false)
+    setValidationError(null)
   }
 
   const handleConfirmRename = (): void => {
     const trimmed = editName.trim()
-    if (trimmed && trimmed !== config.name) {
-      logger.info('[ConfigTemplateCard] 重命名配置', {
-        configId: config.id,
-        oldName: config.name,
-        newName: trimmed,
-      })
-      onRename(trimmed)
+    if (!trimmed) {
+      setValidationError('名称不能为空')
+      return
     }
+    if (trimmed === config.name) {
+      setIsEditing(false)
+      setValidationError(null)
+      return
+    }
+
+    // 客户端校验
+    const validation = validateConfigName(trimmed)
+    if (!validation.valid) {
+      setValidationError(validation.error ?? '名称不合法')
+      logger.warn('[ConfigTemplateCard] 重命名校验失败', {
+        configId: config.id,
+        newName: trimmed,
+        error: validation.error,
+      })
+      return
+    }
+
+    setValidationError(null)
+    logger.info('[ConfigTemplateCard] 重命名配置', {
+      configId: config.id,
+      oldName: config.name,
+      newName: trimmed,
+    })
+    onRename(trimmed)
     setIsEditing(false)
   }
 
   const handleCancelRename = (): void => {
     setEditName(config.name)
     setIsEditing(false)
+    setValidationError(null)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent): void => {
@@ -175,31 +200,50 @@ function ConfigTemplateCard({
           {/* 左侧：名称 + 元信息 */}
           <div className="flex-1 min-w-0">
             {isEditing ? (
-              <div className="flex items-center gap-1">
-                <Input
-                  ref={inputRef}
-                  value={editName}
-                  onChange={(e) => setEditName(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  className="h-7 text-sm"
-                  maxLength={50}
-                />
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleConfirmRename}
-                  className="h-7 w-7 p-0"
-                >
-                  <Check className={cn('h-3.5 w-3.5', twText('emerald', 600))} />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleCancelRename}
-                  className="h-7 w-7 p-0"
-                >
-                  <X className={cn('h-3.5 w-3.5', COLOR_TOKENS.textMuted.tailwind)} />
-                </Button>
+              <div>
+                <div className="flex items-center gap-1">
+                  <Input
+                    ref={inputRef}
+                    value={editName}
+                    onChange={(e) => {
+                      setEditName(e.target.value)
+                      setValidationError(null)
+                    }}
+                    onKeyDown={handleKeyDown}
+                    className={cn(
+                      'h-7 text-sm',
+                      validationError && cn('ring-2', twBorder('red', 400)),
+                    )}
+                    maxLength={50}
+                  />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleConfirmRename}
+                    className="h-7 w-7 p-0"
+                  >
+                    <Check className={cn('h-3.5 w-3.5', twText('emerald', 600))} />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleCancelRename}
+                    className="h-7 w-7 p-0"
+                  >
+                    <X className={cn('h-3.5 w-3.5', COLOR_TOKENS.textMuted.tailwind)} />
+                  </Button>
+                </div>
+                {validationError && (
+                  <div
+                    className={cn(
+                      'mt-1 text-xs px-1.5 py-0.5 rounded',
+                      twBg('red', 50),
+                      twText('red', 600),
+                    )}
+                  >
+                    {validationError}
+                  </div>
+                )}
               </div>
             ) : (
               <div className="font-medium text-sm truncate" title={config.name}>
@@ -341,9 +385,12 @@ export function DataSourceConfigStep(): React.JSX.Element {
     void deleteSavedConfig(configId)
   }
 
-  const handleRenameConfig = (configId: string, newName: string): void => {
+  const handleRenameConfig = async (configId: string, newName: string): Promise<void> => {
     logger.info('[DataSourceConfigStep] 重命名配置模板', { configId, newName })
-    void renameSavedConfig(configId, newName)
+    const result = await renameSavedConfig(configId, newName)
+    if (!result.success) {
+      logger.warn('[DataSourceConfigStep] 重命名失败', { configId, newName, error: result.error })
+    }
   }
 
   /** 判断当前向导是否加载了某个模板 */
