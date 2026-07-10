@@ -22,6 +22,9 @@ const CATEGORY_LABELS: Record<string, string> = {
   feature: '功能',
 }
 
+/**
+ * AgentFeedbackPage
+ */
 export default function AgentFeedbackPage(): React.JSX.Element {
   const feedbackStore = useAgentFeedbackStore()
   const agentStore = useAgentStore()

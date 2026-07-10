@@ -8,6 +8,9 @@ import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
 
+/**
+ * SectorAnalysisPage
+ */
 export default function SectorAnalysisPage(): React.JSX.Element {
   // @compliance AGENTS.md §一：pages 只能依赖 store/services，禁止直接调用 dataLayer
   // 数据来源从 useState + dataLayer 迁移至 useSectorAnalysisStore

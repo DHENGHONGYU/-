@@ -36,6 +36,9 @@ const CATEGORIES: LocalDoc['category'][] = [
   '其他',
 ]
 
+/**
+ * LocalKnowledgePage
+ */
 export default function LocalKnowledgePage(): React.JSX.Element {
   const { toast } = useToast()
 

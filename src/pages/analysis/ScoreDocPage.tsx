@@ -17,6 +17,9 @@ import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
 
+/**
+ * ScoreDocPage
+ */
 export default function ScoreDocPage(): React.JSX.Element {
   // 从 Store 获取状态
   const symbol = useScoreDocStore((s) => s.symbol)

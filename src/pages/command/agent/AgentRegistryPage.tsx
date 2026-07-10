@@ -46,6 +46,9 @@ function matchesFilter(entry: AgentComponentEntry, filter: FilterTab): boolean {
   return entry.tags.includes(filter)
 }
 
+/**
+ * AgentRegistryPage
+ */
 export default function AgentRegistryPage(): React.JSX.Element {
   const [searchTerm, setSearchTerm] = useState('')
   const [activeFilter, setActiveFilter] = useState<FilterTab>('all')

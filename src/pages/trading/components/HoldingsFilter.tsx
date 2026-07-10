@@ -25,6 +25,9 @@ interface HoldingsFilterProps {
   disabled?: boolean
 }
 
+/**
+ * HoldingsFilter
+ */
 export default function HoldingsFilter({
   filter,
   handlers,

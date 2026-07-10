@@ -34,6 +34,9 @@ interface TradeModalProps {
   onConfirm: (item: HoldingItem, action: HoldingAction, quantity: number) => void
 }
 
+/**
+ * TradeModal
+ */
 export default function TradeModal({
   modal,
   isActionLoading,

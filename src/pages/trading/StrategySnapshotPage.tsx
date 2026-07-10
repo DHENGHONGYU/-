@@ -27,6 +27,9 @@ const GROUP_CONFIG: Array<{ key: 'core' | 'hot' | 'value'; title: string; color:
   { key: 'value', title: '价值洼地', color: 'bg-info' },
 ]
 
+/**
+ * StrategySnapshotPage
+ */
 export default function StrategySnapshotPage(): React.JSX.Element {
   // 从 Store 获取状态
   const activeTab = useStrategySnapshotStore((s) => s.activeTab)

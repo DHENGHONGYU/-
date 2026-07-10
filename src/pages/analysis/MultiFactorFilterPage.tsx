@@ -23,6 +23,9 @@ import { PageHeader } from '@/components/ui/PageHeader'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { MultiFactorFilterPanel } from '@/components/analysis/screening/MultiFactorFilterPanel'
 
+/**
+ * MultiFactorFilterPage
+ */
 export default function MultiFactorFilterPage(): React.JSX.Element {
   return (
     <ErrorBoundary>

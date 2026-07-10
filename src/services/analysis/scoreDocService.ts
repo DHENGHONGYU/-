@@ -19,10 +19,21 @@ import { COLOR_TOKENS } from '@/constants/theme.tokens'
 
 const logger = getLogger()
 
+/**
+ * makeScoreDocId
+ * @param symbol
+ * @param version
+ * @returns string
+ */
 export function makeScoreDocId(symbol: string, version: number): string {
   return `${symbol}__V${version}__${Date.now()}`
 }
 
+/**
+ * buildReportMarkdown
+ * @param doc
+ * @returns string
+ */
 export function buildReportMarkdown(doc: ScoreDocVersion): string {
   const lines: string[] = []
   lines.push(`# ${doc.stockName}（${doc.symbol}）评分报告 V${doc.version}`)
@@ -89,6 +100,10 @@ export interface ScoreDocInput {
   industry?: string
 }
 
+/**
+ * validateScoreDocInput
+ * @param input
+ */
 export function validateScoreDocInput(input: ScoreDocInput): { valid: boolean; errors: string[] } {
   const errors: string[] = []
   if (!input.symbol?.trim()) errors.push('symbol 不能为空')
@@ -99,6 +114,9 @@ export function validateScoreDocInput(input: ScoreDocInput): { valid: boolean; e
   return { valid: errors.length === 0, errors }
 }
 
+/**
+ * buildChangeFromPrev
+ */
 export function buildChangeFromPrev(
   newDoc: Pick<ScoreDocVersion, 'composite' | 'l3v' | 'layers'>,
   prevDoc: ScoreDocVersion,
@@ -191,12 +209,22 @@ export function buildScoreDocDiff(
   }
 }
 
+/**
+ * getNextVersion
+ * @param symbol
+ * @returns Promise<number>
+ */
 export async function getNextVersion(symbol: string): Promise<number> {
   const versions = await dataLayer.scoreDocs.listBySymbol(symbol)
   if (versions.length === 0) return 1
   return Math.max(...versions.map((d) => d.version)) + 1
 }
 
+/**
+ * saveScoreDoc
+ * @param input
+ * @returns Promise<DataLayerResult<ScoreDocVersion>>
+ */
 export async function saveScoreDoc(input: ScoreDocInput): Promise<DataLayerResult<ScoreDocVersion>> {
   const validation = validateScoreDocInput(input)
   if (!validation.valid) {
@@ -268,6 +296,9 @@ export async function saveScoreDoc(input: ScoreDocInput): Promise<DataLayerResul
   }
 }
 
+/**
+ * getVersion
+ */
 export async function getVersion(
   symbol: string,
   version: number,
@@ -276,6 +307,9 @@ export async function getVersion(
   return versions.find((d) => d.version === version)
 }
 
+/**
+ * getRecentVersions
+ */
 export async function getRecentVersions(
   symbol: string,
   limit = 4,
@@ -290,6 +324,11 @@ export async function getRecentVersions(
   }
 }
 
+/**
+ * exportSymbolMd
+ * @param symbol
+ * @returns Promise<DataLayerResult<string>>
+ */
 export async function exportSymbolMd(symbol: string): Promise<DataLayerResult<string>> {
   try {
     const versions = await dataLayer.scoreDocs.listBySymbol(symbol)
@@ -304,6 +343,10 @@ export async function exportSymbolMd(symbol: string): Promise<DataLayerResult<st
   }
 }
 
+/**
+ * getFileLibraryStats
+ * @returns Promise<DataLayerResult<FileLibraryStats>>
+ */
 export async function getFileLibraryStats(): Promise<DataLayerResult<FileLibraryStats>> {
   try {
     const all = await dataLayer.scoreDocs.list()
@@ -328,6 +371,9 @@ export async function getFileLibraryStats(): Promise<DataLayerResult<FileLibrary
   }
 }
 
+/**
+ * listScoreDocsBySymbol
+ */
 export async function listScoreDocsBySymbol(
   symbol: string,
 ): Promise<DataLayerResult<ScoreDocVersion[]>> {
@@ -340,6 +386,9 @@ export async function listScoreDocsBySymbol(
   }
 }
 
+/**
+ * buildScoreComparison
+ */
 export function buildScoreComparison(
   leftDoc: ScoreDocVersion,
   rightDoc: ScoreDocVersion,
@@ -424,6 +473,11 @@ export function buildScoreComparison(
   }
 }
 
+/**
+ * buildScoreTimeline
+ * @param versions
+ * @returns ScoreComparisonTimelineItem[]
+ */
 export function buildScoreTimeline(versions: ScoreDocVersion[]): ScoreComparisonTimelineItem[] {
   const sorted = [...versions].sort((a, b) => a.version - b.version)
   return sorted.map((v, i) => ({
@@ -434,6 +488,9 @@ export function buildScoreTimeline(versions: ScoreDocVersion[]): ScoreComparison
   }))
 }
 
+/**
+ * compareTwoVersions
+ */
 export async function compareTwoVersions(
   symbol: string,
   leftVersion: number,
@@ -460,6 +517,9 @@ export async function compareTwoVersions(
   }
 }
 
+/**
+ * compareTwoStocksLatest
+ */
 export async function compareTwoStocksLatest(
   leftSymbol: string,
   rightSymbol: string,
@@ -492,6 +552,9 @@ export async function compareTwoStocksLatest(
   }
 }
 
+/**
+ * getScoreTimeline
+ */
 export async function getScoreTimeline(
   symbol: string,
 ): Promise<DataLayerResult<ScoreComparisonTimelineItem[]>> {

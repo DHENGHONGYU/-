@@ -12,10 +12,21 @@ import { ROTATION_CALCULATOR_THRESHOLDS } from '@/config/thresholds'
 
 const logger = getLogger()
 
+/**
+ * getScoreBucket
+ * @param total
+ * @returns RotationScoreBucket
+ */
 export function getScoreBucket(total: number): RotationScoreBucket {
   return (SCORE_BUCKETS.find((b) => total >= b.min) ?? SCORE_BUCKETS[3]) as RotationScoreBucket
 }
 
+/**
+ * getAlertLevel
+ * @param f1
+ * @param f2
+ * @returns RotationAlertLevel
+ */
 export function getAlertLevel(f1: number, f2: number): RotationAlertLevel {
   const t = ROTATION_CALCULATOR_THRESHOLDS
   if (f1 < t.ALERT_F1_LOW_CRITICAL && f2 < t.ALERT_F2_NEGATIVE) return ALERT_LEVELS[3] as RotationAlertLevel

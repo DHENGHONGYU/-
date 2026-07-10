@@ -16,6 +16,9 @@ import type { AgentTriggerPayload } from '@/types/modules/agent.types'
 
 const logger = getLogger()
 
+/**
+ * AgentTriggerPage
+ */
 export default function AgentTriggerPage(): React.JSX.Element {
   const [selectedAgentId, setSelectedAgentId] = useState('')
   const [selectedServerName, setSelectedServerName] = useState('')

@@ -149,6 +149,9 @@ function DimHealthCard({
   )
 }
 
+/**
+ * CollectTaskPage
+ */
 export default function CollectTaskPage(): React.JSX.Element {
   const [isLoading] = useState(false)
   const [activeTab, setActiveTab] = useState('progress')

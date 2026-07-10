@@ -303,6 +303,9 @@ function DimensionRow({
 // 主页面
 // ============================================================
 
+/**
+ * SevenDimConfigPage
+ */
 export default function SevenDimConfigPage() {
   const store = useSevenDimConfigStore()
   const [showApiTest, setShowApiTest] = useState(false)

@@ -97,6 +97,9 @@ function sourceTypeLabel(type: DataSourceEndpoint['type']): string {
   }
 }
 
+/**
+ * FetcherConfigPage
+ */
 export default function FetcherConfigPage(): React.JSX.Element {
   const [isLoading, setIsLoading] = useState(true)
   const [testResults, setTestResults] = useState<Record<QuoteDataSourceId, TestResult>>(

@@ -21,6 +21,9 @@ const PRIORITY_VARIANTS: Record<string, 'default' | 'secondary' | 'outline' | 'd
   low: 'secondary',
 }
 
+/**
+ * MCPServerDashboardPage
+ */
 export default function MCPServerDashboardPage(): React.JSX.Element {
   const store = useMCPServerStore()
   const [expandedServer, setExpandedServer] = useState<string | null>(null)

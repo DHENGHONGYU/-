@@ -22,6 +22,9 @@ interface AgentDetailPageProps {
   agentId: string
 }
 
+/**
+ * AgentDetailPage
+ */
 export default function AgentDetailPage({ agentId }: AgentDetailPageProps): React.JSX.Element {
   const [notFound, setNotFound] = useState(false)
   const registeredAgents = useAgentStore((state) => state.registeredAgents)

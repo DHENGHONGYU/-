@@ -146,6 +146,9 @@ const NAV_CARDS: NavCard[] = [
   },
 ]
 
+/**
+ * AgentHubPage
+ */
 export default function AgentHubPage(): React.JSX.Element {
   const stats = useAgentStore((state) => state.stats)
 

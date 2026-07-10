@@ -10,6 +10,9 @@ import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
 
+/**
+ * StockAnalysisPage
+ */
 export default function StockAnalysisPage(): React.JSX.Element {
   const { symbol } = useParams<{ symbol?: string }>()
 

@@ -23,6 +23,9 @@ const logger = getLogger()
 /** 是否使用模拟数据（开发环境） */
 const USE_MOCK_DATA = import.meta.env.DEV
 
+/**
+ * TradingFlowPage
+ */
 export default function TradingFlowPage(): React.JSX.Element {
   // 从 tradingStore 获取状态
   const stocks = useTradingStore((s) => s.stocks)
@@ -181,10 +184,10 @@ export default function TradingFlowPage(): React.JSX.Element {
       },
     })
     
-    const direction = signal.action === 'buy' ? 'buy' : 'sell'
+    const direction: 'buy' | 'sell' = signal.action === 'buy' ? 'buy' : 'sell'
     const orderData = {
       symbol: signal.symbol,
-      direction: direction as 'buy' | 'sell',
+      direction: direction,
       quantity: 100, // 默认数量，实际应从信号中获取
       price: 0, // 市价单，实际价格由市场决定
       amount: 0,
@@ -551,11 +554,11 @@ export default function TradingFlowPage(): React.JSX.Element {
           orders={displayOrders.map((o) => ({
             id: o.id.toString(),
             symbol: o.symbol,
-            side: o.direction as 'buy' | 'sell',
+            side: o.direction,
             quantity: o.quantity,
             price: o.price,
             type: 'limit', // TODO: 从订单获取类型
-            status: o.status as 'pending' | 'filled' | 'cancelled',
+            status: o.status,
             createdAt: o.createdAt,
           }))}
           onCreateOrder={handleCreateOrder}

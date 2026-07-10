@@ -23,6 +23,9 @@ import { PoolBoard } from '@/components/organisms/pool/PoolBoard'
 import { useStockPoolBoard } from '@/hooks/useStockPoolBoard'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 
+/**
+ * StockPoolBoardPage
+ */
 export default function StockPoolBoardPage(): React.JSX.Element {
   const board = useStockPoolBoard()
 

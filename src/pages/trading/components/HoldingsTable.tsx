@@ -74,6 +74,9 @@ function EmptyState(): React.JSX.Element {
   )
 }
 
+/**
+ * HoldingsTable
+ */
 export default function HoldingsTable({
   data,
   isLoading,

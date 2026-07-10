@@ -26,6 +26,9 @@ import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
 
+/**
+ * NewsPage
+ */
 export default function NewsPage(): React.JSX.Element {
   // 从 Store 获取状态
   const articles = useAnalysisNewsStore((s) => s.articles)

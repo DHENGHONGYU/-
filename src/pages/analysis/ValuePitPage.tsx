@@ -59,6 +59,9 @@ const STRENGTH_CONFIG: Record<RotationSignal['strength'], { label: string; color
 // 页面组件
 // ============================================================
 
+/**
+ * ValuePitPage
+ */
 export default function ValuePitPage(): React.JSX.Element {
   // 从 Store 获取状态
   const combinedResults = useValuePitStore((s) => s.combinedResults)

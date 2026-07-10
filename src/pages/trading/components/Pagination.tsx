@@ -21,6 +21,10 @@ interface PaginationProps {
   handlers: PaginationHandlers
 }
 
+/**
+ * Pagination
+ * @param handlers }
+ */
 export default function Pagination({ pagination, handlers }: PaginationProps): React.JSX.Element {
   const { page, pageSize, total } = pagination
   const { onPageChange, onPageSizeChange } = handlers
@@ -67,7 +71,7 @@ export default function Pagination({ pagination, handlers }: PaginationProps): R
           <Select
             aria-label="每页显示条数"
             value={String(pageSize)}
-            onChange={(e) => onPageSizeChange(Number((e.target as HTMLSelectElement).value))}
+            onChange={(e) => onPageSizeChange(Number((e.target).value))}
             className="h-8 w-20"
           >
             {PAGINATION_DEFAULTS.PAGE_SIZE_OPTIONS.map((size) => (

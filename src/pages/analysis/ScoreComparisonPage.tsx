@@ -124,7 +124,7 @@ function DimensionBarChart({ dimensions }: { dimensions: DimensionComparisonItem
 
   return (
     <BarChart
-      data={chartData as unknown as Record<string, unknown>[]}
+      data={chartData}
       xKey="code"
       bars={[
         { dataKey: '左版', color: CHART_PALETTE.series2 },
@@ -230,6 +230,9 @@ function TopChangesSection({
   )
 }
 
+/**
+ * ScoreComparisonPage
+ */
 export default function ScoreComparisonPage(): React.JSX.Element {
   const comparisonMode = useScoreDocStore((s) => s.comparisonMode)
   const comparisonLeft = useScoreDocStore((s) => s.comparisonLeft)
@@ -520,7 +523,7 @@ export default function ScoreComparisonPage(): React.JSX.Element {
                     emptyProps={{ title: '暂无历史数据', description: '该股票暂无评分历史' }}
                   >
                     <LineChart
-                      data={timelineChartData as unknown as Record<string, unknown>[]}
+                      data={timelineChartData}
                       xKey="period"
                       lines={[
                         { dataKey: 'score', name: '综合评分', color: CHART_PALETTE.series1 },
