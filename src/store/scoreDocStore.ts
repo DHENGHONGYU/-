@@ -136,6 +136,9 @@ const initialState = {
 // Store
 // ============================================================
 
+/**
+ * useScoreDocStore
+ */
 export const useScoreDocStore = create<ScoreDocState>((set, get) => ({
   ...initialState,
 
@@ -433,6 +436,9 @@ export const useScoreDocStore = create<ScoreDocState>((set, get) => ({
 
 let _unsubscribeScoreDocs: (() => void) | undefined
 
+/**
+ * initScoreDocStoreSubscriptions
+ */
 export function initScoreDocStoreSubscriptions(): () => void {
   destroyScoreDocStoreSubscriptions()
   logger.info('[scoreDocStore] 初始化 DataBridge score_docs 频道订阅')
@@ -451,6 +457,10 @@ export function initScoreDocStoreSubscriptions(): () => void {
   return () => destroyScoreDocStoreSubscriptions()
 }
 
+/**
+ * destroyScoreDocStoreSubscriptions
+ * @returns void
+ */
 export function destroyScoreDocStoreSubscriptions(): void {
   if (_unsubscribeScoreDocs) {
     _unsubscribeScoreDocs()

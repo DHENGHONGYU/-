@@ -188,6 +188,9 @@ const initialState: Omit<
   error: null,
 }
 
+/**
+ * useSevenDimConfigStore
+ */
 export const useSevenDimConfigStore = create<SevenDimConfigState>((set, get) => ({
   ...initialState,
 
@@ -263,7 +266,7 @@ export const useSevenDimConfigStore = create<SevenDimConfigState>((set, get) => 
               sourcePriority: sources.length > 0
                 ? dim.sourcePriority.filter((item) => {
                     const mapped = item.id === 'akshare' ? 'akshare' : 'ifind'
-                    return sources.includes(mapped as DataSourceType) || item.id === 'mock'
+                    return sources.includes(mapped) || item.id === 'mock'
                   })
                 : dim.sourcePriority,
             }

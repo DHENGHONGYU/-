@@ -18,6 +18,9 @@ interface PageState {
   setClickable: (isClickable: boolean, tooltip?: string) => void
 }
 
+/**
+ * usePageStore
+ */
 export const usePageStore = create<PageState>((set) => ({
   currentPage: '',
   pageData: new Map(),
@@ -41,6 +44,9 @@ export const usePageStore = create<PageState>((set) => ({
 
 const pageSubscriptions: Array<() => void> = []
 
+/**
+ * initPageSubscriptions
+ */
 export function initPageSubscriptions(): () => void {
   destroyPageSubscriptions()
   pageSubscriptions.push(
@@ -63,6 +69,10 @@ export function initPageSubscriptions(): () => void {
   return () => destroyPageSubscriptions()
 }
 
+/**
+ * destroyPageSubscriptions
+ * @returns void
+ */
 export function destroyPageSubscriptions(): void {
   pageSubscriptions.forEach((unsubscribe) => unsubscribe())
   pageSubscriptions.length = 0

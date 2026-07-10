@@ -190,6 +190,9 @@ function calculateMetrics(reviews: SignalReviewRecord[]): SignalQualityMetrics {
 // Store
 // ============================================================
 
+/**
+ * useSignalQualityStore
+ */
 export const useSignalQualityStore = create<SignalQualityState>((set, get) => ({
   metrics: null,
   reviews: [],

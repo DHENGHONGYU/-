@@ -92,6 +92,9 @@ interface RuntimeTradingConfigState {
   refresh: () => void
 }
 
+/**
+ * useRuntimeTradingConfigStore
+ */
 export const useRuntimeTradingConfigStore = create<RuntimeTradingConfigState>((set) => ({
   effective: getEffectiveTradingConfig(),
   hydrated: false,

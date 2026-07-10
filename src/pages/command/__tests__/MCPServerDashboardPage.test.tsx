@@ -72,9 +72,9 @@ vi.mock('@/mcp/core/client', () => ({
   })),
 }))
 
-vi.mock('@/mcp/bridge', () => ({
+vi.mock('@/mcp/bridge/mcpBridge', () => ({
   mcpBridge: {
-    callTool: vi.fn(),
+    callTool: mockCallTool,
   },
 }))
 

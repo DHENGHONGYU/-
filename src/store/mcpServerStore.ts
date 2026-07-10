@@ -20,6 +20,9 @@ interface MCPServerState {
   toggleServer: (name: string, enabled: boolean) => void
 }
 
+/**
+ * useMCPServerStore
+ */
 export const useMCPServerStore = create<MCPServerState>((set, get) => ({
   servers: [],
   isLoading: false,

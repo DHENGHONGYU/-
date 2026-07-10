@@ -27,6 +27,7 @@ import {
   maskToken,
   isSensitiveField,
   sanitizeObject,
+  validateConfigName,
 } from './dataValidation'
 
 describe('股票代码验证', () => {
@@ -217,5 +218,88 @@ describe('敏感信息脱敏', () => {
     expect(sanitizeObject(undefined)).toBeUndefined()
     expect(sanitizeObject('string')).toBe('string')
     expect(sanitizeObject(123)).toBe(123)
+  })
+})
+
+describe('配置名称校验 validateConfigName', () => {
+  it('应通过正常名称', () => {
+    expect(validateConfigName('高频行情监控').valid).toBe(true)
+    expect(validateConfigName('每日舆情分析').valid).toBe(true)
+    expect(validateConfigName('基础行情采集').valid).toBe(true)
+    expect(validateConfigName('  带空格的名称  ').valid).toBe(true)
+    expect(validateConfigName('a').valid).toBe(true)
+  })
+
+  it('应拒绝空字符串和纯空格', () => {
+    expect(validateConfigName('').valid).toBe(false)
+    expect(validateConfigName('   ').valid).toBe(false)
+    expect(validateConfigName('\t\n').valid).toBe(false)
+  })
+
+  it('应拒绝超长名称（> 50 字符）', () => {
+    const longName = 'a'.repeat(51)
+    const result = validateConfigName(longName)
+    expect(result.valid).toBe(false)
+    expect(result.error).toContain('50')
+  })
+
+  it('应拒绝包含文件系统敏感字符的名称', () => {
+    const forbiddenChars = ['<', '>', '{', '}', '[', ']', '|', '\\', ':', '*', '?', '"', '`']
+    for (const char of forbiddenChars) {
+      const result = validateConfigName(`test${char}name`)
+      expect(result.valid).toBe(false)
+      expect(result.error).toContain('特殊字符')
+    }
+  })
+
+  it('应拒绝包含控制字符的名称', () => {
+    expect(validateConfigName('test\x00name').valid).toBe(false)
+    expect(validateConfigName('test\x1Fname').valid).toBe(false)
+    expect(validateConfigName('test\x7Fname').valid).toBe(false)
+  })
+
+  it('应拒绝包含 HTML 标签的名称（XSS 防护）', () => {
+    expect(validateConfigName('<script>alert(1)</script>').valid).toBe(false)
+    expect(validateConfigName('<img src=x onerror=alert(1)>').valid).toBe(false)
+    expect(validateConfigName('正常名称<script>恶意</script>').valid).toBe(false)
+  })
+
+  it('应拒绝以危险协议开头的名称（XSS 防护）', () => {
+    expect(validateConfigName('javascript:alert(1)').valid).toBe(false)
+    expect(validateConfigName('data:text/html,<script>').valid).toBe(false)
+    expect(validateConfigName('vbscript:msgbox(1)').valid).toBe(false)
+    expect(validateConfigName('file:///etc/passwd').valid).toBe(false)
+  })
+
+  it('应允许包含常见安全字符的名称', () => {
+    expect(validateConfigName('配置-V2.0').valid).toBe(true)
+    expect(validateConfigName('策略_A/B').valid).toBe(true)
+    expect(validateConfigName('监控 (实时)').valid).toBe(true)
+    expect(validateConfigName('行情#1').valid).toBe(true)
+    expect(validateConfigName('测试@2024').valid).toBe(true)
+    expect(validateConfigName('名称!').valid).toBe(true)
+  })
+
+  it('应 trim 后校验长度', () => {
+    // trim 后为空
+    expect(validateConfigName('   ').valid).toBe(false)
+    // trim 后合法
+    expect(validateConfigName('  合法名称  ').valid).toBe(true)
+  })
+
+  it('应返回具体的错误信息', () => {
+    const emptyResult = validateConfigName('')
+    expect(emptyResult.error).toBe('名称不能为空')
+
+    const longResult = validateConfigName('a'.repeat(51))
+    expect(longResult.error).toContain('50')
+
+    // < 和 > 属于禁止字符，优先于 HTML 标签检测
+    const xssResult = validateConfigName('<script>alert(1)</script>')
+    expect(xssResult.error).toContain('特殊字符')
+
+    // javascript: 含 : 属于禁止字符，也会先被特殊字符检测拦截
+    const protocolResult = validateConfigName('javascript:alert(1)')
+    expect(protocolResult.error).toContain('特殊字符')
   })
 })

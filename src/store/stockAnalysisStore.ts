@@ -67,6 +67,9 @@ const initialState = {
 // Store
 // ============================================================
 
+/**
+ * useStockAnalysisStore
+ */
 export const useStockAnalysisStore = create<StockAnalysisState>((set) => ({
   ...initialState,
 
@@ -188,6 +191,9 @@ export const useStockAnalysisStore = create<StockAnalysisState>((set) => ({
 let _unsubscribeV6Scores: (() => void) | undefined
 let _unsubscribeV6ScoresChanged: (() => void) | undefined
 
+/**
+ * initStockAnalysisStoreSubscriptions
+ */
 export function initStockAnalysisStoreSubscriptions(): () => void {
   destroyStockAnalysisStoreSubscriptions()
   logger.info('[stockAnalysisStore] 初始化 DataBridge + EventBus v6_scores 订阅')
@@ -245,6 +251,10 @@ export function initStockAnalysisStoreSubscriptions(): () => void {
   return () => destroyStockAnalysisStoreSubscriptions()
 }
 
+/**
+ * destroyStockAnalysisStoreSubscriptions
+ * @returns void
+ */
 export function destroyStockAnalysisStoreSubscriptions(): void {
   if (_unsubscribeV6Scores) {
     _unsubscribeV6Scores()

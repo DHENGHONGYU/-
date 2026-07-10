@@ -129,6 +129,9 @@ const initialState = {
 // Store
 // ============================================================
 
+/**
+ * useValuePitStore
+ */
 export const useValuePitStore = create<ValuePitState>((set) => ({
   ...initialState,
 

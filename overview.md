@@ -105,3 +105,46 @@
 
 ### 结论
 阶段 2（ui/ → atoms/molecules 物理迁移 + shim 兼容层）完成，**核心正确性门禁（tsc/build/layers/tokens/docs/routes/lint:colors）全部通过，无迁移回归**。仅余预存技术债务：29 处静默回退 Warning、2 条 `/command/*` 孤儿路由未进预期列表、`databridge.test.ts` 预存类型错误——均非本次引入，可纳入后续优化立项。
+
+---
+
+## 补充：阶段 3 —— 业务目录有机体化（2026-07-11 进行中）
+
+采用「治理优先 + 试点先行」策略（经用户确认）：先建 `audit:atomic` 门禁强制层级边界，再以 `input/` 为试点验证 shim 配方。`chart/` 与 `cockpit/cabin/widgets` 因与 Widget 注册表耦合，仅 registry 标注不物理搬。
+
+### 步骤 0：构建 `audit:atomic` 层级边界审计脚本 ✅
+
+- 新建 `scripts/audit-atomic.ts`，按 `_audit-pipeline` 契约（stdout=JSON / stderr=人类可读 / 退出码 0·1·2）实现：
+  - 依据 `componentRegistry` + 目录推断组件层级（atom/molecule/organism/template）
+  - 校验层级边界：atom 不引 store/service/molecule/organism/template/page/app；molecule 不引 organism/template/store/service；template 不引 organism/store/service
+  - 校验 `ui/` shim 为纯 re-export
+  - 登记未注册业务组件
+- 注册 npm script `audit:atomic`
+- 修复行注释正则语法错误 + 注册表匹配逻辑（同时按 `sourcePath` 和 `targetPath` 匹配）
+- 翻转 36 条已迁移条目的 registry status `migrating` → `active`
+- **基线**：0 阻断性违规、194 warning（168 stale-ui-import + 26 unregistered）
+
+### 步骤 1：`input/` 试点物理迁移到 `organisms/input/` ✅
+
+- 将 `src/components/input/` 18 个 `.tsx`（含 `wizard-steps/` 子目录）物理迁移到 `src/components/organisms/input/`
+- 原 `input/X.tsx` 改写为纯 re-export shim，8 个消费者引用（pages/apps/pool）零改动
+- 翻转注册表对应条目 status → `active`
+- 迁移后结构：`organisms/input/` 18 真实文件，`input/` 14 顶层 shim + `wizard-steps/` 子目录 shim
+
+### 验证结果（全部门禁通过，2026-07-11）
+
+| 门禁 | 命令 | 结果 |
+|------|------|------|
+| 类型检查 | `tsc:prod` | ✅ **0 类型错误**（resilienceChain.ts 预存错误已被用户修正） |
+| 构建 | `vite build` | ✅ exit 0（31.64s） |
+| 分层 | `audit:layers` | ✅ 0 违规 |
+| 原子层级 | `audit:atomic` | ✅ 0 阻断违规；203 warning（173 stale-ui-import + 30 unregistered，过渡期预期） |
+| 文档同步 | `audit:docs` | ✅ 0 违规 |
+| 路由 | `audit:routes` | ✅ 64 路由覆盖，exit 0 |
+| 令牌 | `audit:tokens` | ✅ 0 硬编码（当前=基线=0） |
+| 硬编码 | `audit:hardcode` | ⚠️ 29 warning（基线债务，exit 0） |
+| 颜色 lint | `lint:colors` | ✅ exit 0 |
+
+### 后续待执行
+- **步骤 2**：低风险域逐域迁移（trading/output/news/strategy/agent/localDoc/system 共 ~22 文件）
+- **步骤 3**：`analysis/` 中风险域迁移（13 文件，含嵌套子目录）

@@ -22,6 +22,7 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { LLMScoreEnhancer } from '@/services/scoring/v6-engine/enhancer'
+import type { Citation } from '@/services/scoring/v6-engine/enhancer'
 import type {
   LayerCalculator,
   LayerInput,
@@ -156,12 +157,19 @@ function buildLlmEnhanceResponse(options: {
   summary?: string
   rationale?: string
   risks?: string[]
+  citations?: Citation[]
 }): string {
+  // M2 依据追溯闸：当 mock 调整评分但未显式提供 citations 时，自动补充默认引用，
+  // 确保测试聚焦在增强合并逻辑本身，而非被引证闸回退。
+  const defaultCitations: Citation[] | undefined =
+    typeof options.score === 'number' ? [{ source: '测试研报', content: '测试引用内容' }] : undefined
+
   return JSON.stringify({
     score: options.score,
     summary: options.summary,
     rationale: options.rationale,
     risks: options.risks,
+    citations: options.citations ?? defaultCitations,
   })
 }
 

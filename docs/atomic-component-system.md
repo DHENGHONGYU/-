@@ -2,7 +2,7 @@
 
 > **版本**：v1.0.0  
 > **日期**：2026-07-10  
-> **状态**：阶段 1（体系建立）+ 阶段 2（ui/ 物理迁移）已完成并验证  
+> **状态**：阶段 1（体系建立）+ 阶段 2（ui/ 物理迁移）+ 阶段 3 步骤 0（audit:atomic 门禁）+ 阶段 3 步骤 1（input/ 试点迁移）已完成并验证  
 > **适用范围**：`src/components/` 全量组件
 
 ---
@@ -320,11 +320,41 @@ export interface MetricCardProps {
 - [x] 修复脚本误加的 `PageContainer` 到 `atoms/index.ts`（实际归属 molecules）
 - [x] 收尾验证（系统 Node 24 驱动 tsx）：`tsc:prod` ✅（仅 `databridge.test.ts` 预存 TS2352）/ `build` ✅ / `audit:layers` 0 违规（909 文件）/ `audit:tokens` 0 硬编码 / `audit:docs` 0 违规（302 文件）/ `audit:routes` 62/62 / `lint:colors` ✅ / `audit:hardcode` 仅 29 处基线 Warning
 
-### 阶段 3：业务目录有机体化（v1.2）
+### 阶段 3：业务目录有机体化（v1.2）— 进行中
 
-- [ ] 逐步将 `components/analysis/`、`components/input/` 等迁移到 `organisms/` 下
-- [ ] 保持旧路径 shim 文件兼容
-- [ ] 更新所有引用到原子层级路径
+> **执行策略**：治理优先 + 试点先行（经用户确认）。先建 `audit:atomic` 门禁强制层级边界，再以 `input/` 为试点验证 shim 配方，随后低风险域逐域扩面。`chart/` 与 `cockpit/cabin/widgets` 因与 Widget 注册表耦合，仅 registry 标注不物理搬。
+
+**步骤 0：构建 `audit:atomic` 层级边界审计脚本 — 已完成 ✅（2026-07-11）**
+
+- [x] 新建 `scripts/audit-atomic.ts`：依据 `componentRegistry` + 目录推断组件层级，校验 atom 不引 store/service/molecule/organism/template/page/app、molecule 不引 organism/template/store/service、template 不引 organism/store/service；校验 ui/ shim 为纯 re-export；登记未注册业务组件
+- [x] 注册 npm script `audit:atomic`
+- [x] 修复行注释正则语法错误（`//\/\/.*$/gm` → `/\/\/.*$/gm`）
+- [x] 修复注册表匹配逻辑：同时按 `sourcePath` 和 `targetPath` 匹配，已迁移到目标位置的组件不再误报为 unregistered
+- [x] 翻转 36 条已迁移条目的 registry status `migrating` → `active`
+- [x] 基线验证：0 阻断性违规、194 warning（168 stale-ui-import + 26 unregistered）
+
+**步骤 1：`input/` 试点物理迁移到 `organisms/input/` — 已完成 ✅（2026-07-11）**
+
+- [x] 将 `src/components/input/` 18 个 `.tsx`（含 `wizard-steps/` 子目录）物理迁移到 `src/components/organisms/input/`
+- [x] 原 `input/X.tsx` 改写为纯 re-export shim，8 个消费者引用零改动
+- [x] 翻转注册表对应条目 status → `active`
+- [x] 收尾验证（系统 Node 24 驱动 tsx）：`tsc:prod` 0 错误 / `build` ✅ / `audit:layers` 0 违规 / `audit:atomic` 0 阻断（203 warning 过渡期预期）/ `audit:docs` 0 违规 / `audit:routes` 64 路由覆盖 / `audit:tokens` 0 硬编码 / `lint:colors` ✅ / `audit:hardcode` 29 基线 Warning
+
+**步骤 2：低风险域逐域物理迁移 — 待执行**
+
+- [ ] `trading/`（3 文件）→ `organisms/trading/`
+- [ ] `output/`（3 文件）→ `organisms/output/`
+- [ ] `news/`（2 文件）→ `organisms/news/`
+- [ ] `strategy/`（2 文件）→ `organisms/strategy/`
+- [ ] `agent/`（2 文件）→ `organisms/agent/`
+- [ ] `localDoc/`（1 文件）→ `organisms/localDoc/`
+- [ ] `system/`（9 文件）→ `organisms/system/`
+- [ ] `chart/` → 重评级为 molecule，registry 标注不物理搬
+- [ ] `cockpit/cabin/widgets` → 仅 registry 标注不物理搬（Widget 注册表耦合）
+
+**步骤 3：`analysis/` 中风险域迁移 — 待执行**
+
+- [ ] `analysis/`（13 文件，含 6 个嵌套子目录，域内互引）→ `organisms/analysis/`（需子目录感知 shim）
 
 ### 阶段 4：模板提取（v1.3）
 

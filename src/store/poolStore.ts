@@ -100,6 +100,9 @@ const initialState = {
 // Store
 // ============================================================
 
+/**
+ * usePoolStore
+ */
 export const usePoolStore = create<PoolState>((set, get) => ({
   ...initialState,
 

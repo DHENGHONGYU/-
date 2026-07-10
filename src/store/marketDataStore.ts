@@ -366,6 +366,9 @@ const actions = {
 // Store 创建
 // ============================================================
 
+/**
+ * useMarketDataStore
+ */
 export const useMarketDataStore = create<MarketDataState>()(() => ({
   ...initialState,
   ...actions,

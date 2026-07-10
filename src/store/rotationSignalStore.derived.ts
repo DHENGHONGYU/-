@@ -136,6 +136,14 @@ export function bySector(sectorId: string): RotationSignal | undefined {
 // 派生查询：统计聚合（memoizeByRef 缓存）
 // ============================================================
 
+function classifyStrength(signal: RotationSignal): keyof StrengthDistribution {
+  if (!signal.triggered) return 'none'
+  if (signal.strength === 'strong' || signal.strength === 'medium' || signal.strength === 'weak') {
+    return signal.strength
+  }
+  return 'none'
+}
+
 /**
  * 强度分布统计
  * 性能优化：基于 signals 引用记忆化，单次遍历完成所有计数
@@ -148,17 +156,7 @@ export const strengthDistribution = memoizeByRef((signals: readonly RotationSign
     none: 0,
   }
   for (const s of signals) {
-    if (!s.triggered) {
-      dist.none++
-    } else if (s.strength === 'strong') {
-      dist.strong++
-    } else if (s.strength === 'medium') {
-      dist.medium++
-    } else if (s.strength === 'weak') {
-      dist.weak++
-    } else {
-      dist.none++  // 未知强度归为 none
-    }
+    dist[classifyStrength(s)]++
   }
   return dist
 }, 'strengthDistribution')

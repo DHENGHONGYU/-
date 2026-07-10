@@ -25,6 +25,8 @@ import {
   parseAIDeepInsightFromLlm,
 } from '@/services/trading/tradeReviewAI.llmEnhancer'
 import type { TradeReviewReport, TradeReviewOptions } from '@/services/trading/tradeReviewAI.types'
+import type { PartialLlmConfig } from '@/config/llmConfig'
+import type { AIDeepInsight } from '@/services/trading/tradeReviewAI.types'
 
 const logger = getLogger()
 
@@ -72,6 +74,44 @@ export function generateTradeReviewUseCase(orders: Order[], now = Date.now()): T
 }
 
 /**
+ * 生成 LLM 深度洞察，失败或无配置时降级为规则模板。
+ */
+async function generateLlmInsight(
+  summary: TradeReviewReport['summary'],
+  errorAnalysis: TradeReviewReport['errorAnalysis'],
+  disciplineAnalysis: TradeReviewReport['disciplineAnalysis'],
+  llmOverride: PartialLlmConfig,
+  onProgress?: (phase: string, message: string) => void,
+): Promise<{ aiInsight: AIDeepInsight; usedLlm: boolean }> {
+  const defaults = { baseURL: '', apiKey: '', model: '', ...llmOverride }
+  if (!isLlmConfigured(defaults)) {
+    return { aiInsight: generateAIDeepInsight(summary, errorAnalysis, disciplineAnalysis), usedLlm: false }
+  }
+
+  try {
+    onProgress?.('llm', '调用 LLM 生成深度洞察...')
+    logger.info('[GenerateTradeReviewAsyncUseCase] 使用 LLM 生成 AI 深度洞察')
+
+    const messages = buildAIDeepInsightPrompt(summary, errorAnalysis, disciplineAnalysis)
+    const response = await chat(messages, { ...llmOverride })
+    logger.info(`[GenerateTradeReviewAsyncUseCase] LLM 洞察返回: model=${response.model}, tokens=${response.usage?.totalTokens ?? 'unknown'}`)
+
+    const llmInsight = parseAIDeepInsightFromLlm(response.content)
+    if (llmInsight.pnlAttribution.length > 0 || llmInsight.personalizedAdvice.length > 0) {
+      return { aiInsight: llmInsight, usedLlm: true }
+    }
+
+    logger.warn('[GenerateTradeReviewAsyncUseCase] LLM 返回空洞察，降级为规则模板')
+    return { aiInsight: generateAIDeepInsight(summary, errorAnalysis, disciplineAnalysis), usedLlm: false }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    logger.warn(`[GenerateTradeReviewAsyncUseCase] LLM 洞察失败，降级为规则模板: ${msg}`)
+    onProgress?.('llm', `LLM 洞察失败: ${msg}`)
+    return { aiInsight: generateAIDeepInsight(summary, errorAnalysis, disciplineAnalysis), usedLlm: false }
+  }
+}
+
+/**
  * 生成异步交易复盘报告（支持 LLM 增强）
  */
 export async function generateTradeReviewAsyncUseCase(
@@ -99,40 +139,9 @@ export async function generateTradeReviewAsyncUseCase(
     const skillDevelopment = generateSkillDevelopment(classification, orders)
     const actionPlan = generateActionPlan(classification, disciplineAnalysis)
 
-    let aiInsight: TradeReviewReport['aiInsight']
-    let usedLlm = false
-
-    if (llmOverride) {
-      const defaults = { baseURL: '', apiKey: '', model: '', ...llmOverride }
-      if (isLlmConfigured(defaults)) {
-        try {
-          onProgress?.('llm', '调用 LLM 生成深度洞察...')
-          logger.info('[GenerateTradeReviewAsyncUseCase] 使用 LLM 生成 AI 深度洞察')
-
-          const messages = buildAIDeepInsightPrompt(summary, errorAnalysis, disciplineAnalysis)
-          const response = await chat(messages, { ...llmOverride })
-          logger.info(`[GenerateTradeReviewAsyncUseCase] LLM 洞察返回: model=${response.model}, tokens=${response.usage?.totalTokens ?? 'unknown'}`)
-
-          const llmInsight = parseAIDeepInsightFromLlm(response.content)
-          if (llmInsight.pnlAttribution.length > 0 || llmInsight.personalizedAdvice.length > 0) {
-            aiInsight = llmInsight
-            usedLlm = true
-          } else {
-            logger.warn('[GenerateTradeReviewAsyncUseCase] LLM 返回空洞察，降级为规则模板')
-            aiInsight = generateAIDeepInsight(summary, errorAnalysis, disciplineAnalysis)
-          }
-        } catch (err) {
-          const msg = err instanceof Error ? err.message : String(err)
-          logger.warn(`[GenerateTradeReviewAsyncUseCase] LLM 洞察失败，降级为规则模板: ${msg}`)
-          onProgress?.('llm', `LLM 洞察失败: ${msg}`)
-          aiInsight = generateAIDeepInsight(summary, errorAnalysis, disciplineAnalysis)
-        }
-      } else {
-        aiInsight = generateAIDeepInsight(summary, errorAnalysis, disciplineAnalysis)
-      }
-    } else {
-      aiInsight = generateAIDeepInsight(summary, errorAnalysis, disciplineAnalysis)
-    }
+    const { aiInsight, usedLlm } = llmOverride
+      ? await generateLlmInsight(summary, errorAnalysis, disciplineAnalysis, llmOverride, onProgress)
+      : { aiInsight: generateAIDeepInsight(summary, errorAnalysis, disciplineAnalysis), usedLlm: false }
 
     const report: TradeReviewReport = {
       generatedAt: now,

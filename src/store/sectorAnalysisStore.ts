@@ -59,6 +59,9 @@ const initialState = {
 // Store
 // ============================================================
 
+/**
+ * useSectorAnalysisStore
+ */
 export const useSectorAnalysisStore = create<SectorAnalysisState>((set, get) => ({
   ...initialState,
 
@@ -121,6 +124,9 @@ export const useSectorAnalysisStore = create<SectorAnalysisState>((set, get) => 
 
 let _unsubscribeSectorScores: (() => void) | undefined
 
+/**
+ * initSectorAnalysisStoreSubscriptions
+ */
 export function initSectorAnalysisStoreSubscriptions(): () => void {
   destroySectorAnalysisStoreSubscriptions()
   logger.info('[sectorAnalysisStore] 初始化 DataBridge sector_scores 频道订阅')
@@ -139,6 +145,10 @@ export function initSectorAnalysisStoreSubscriptions(): () => void {
   return () => destroySectorAnalysisStoreSubscriptions()
 }
 
+/**
+ * destroySectorAnalysisStoreSubscriptions
+ * @returns void
+ */
 export function destroySectorAnalysisStoreSubscriptions(): void {
   if (_unsubscribeSectorScores) {
     _unsubscribeSectorScores()

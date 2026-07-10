@@ -11,6 +11,89 @@
  */
 
 // ============================================================
+// 配置名称验证
+// ============================================================
+
+/** 配置名称最大长度 */
+const CONFIG_NAME_MAX_LENGTH = 50
+
+/** 配置名称最小长度 */
+const CONFIG_NAME_MIN_LENGTH = 1
+
+/** 配置名称禁止的字符（文件系统敏感字符 + XSS 相关字符） */
+const CONFIG_NAME_FORBIDDEN_CHARS = /[<>{}[\]|\\:*?"`]/
+
+/** 配置名称禁止的控制字符 */
+function containsControlChars(name: string): boolean {
+  return name.split('').some((char) => {
+    const code = char.charCodeAt(0)
+    return (code >= 0x00 && code <= 0x1f) || code === 0x7f
+  })
+}
+
+/**
+ * 配置名称校验结果
+ */
+export interface ConfigNameValidationResult {
+  valid: boolean
+  error?: string
+}
+
+/**
+ * 校验配置模板名称的合法性。
+ *
+ * 规则：
+ * 1. 不能为空或纯空格
+ * 2. 长度在 1-50 字符之间
+ * 3. 禁止文件系统敏感字符（<>{}[]|\\:*?"`）
+ * 4. 禁止控制字符
+ * 5. 禁止 HTML 标签注入（<script>、<img> 等）
+ * 6. 禁止危险协议（javascript:、data: 等）
+ *
+ * @param name 待校验的配置名称
+ * @returns 校验结果（valid + 可选 error 信息）
+ */
+export function validateConfigName(name: string): ConfigNameValidationResult {
+  if (typeof name !== 'string') {
+    return { valid: false, error: '名称必须为字符串' }
+  }
+
+  const trimmed = name.trim()
+
+  if (trimmed.length === 0) {
+    return { valid: false, error: '名称不能为空' }
+  }
+
+  if (trimmed.length < CONFIG_NAME_MIN_LENGTH) {
+    return { valid: false, error: `名称长度不能少于 ${CONFIG_NAME_MIN_LENGTH} 个字符` }
+  }
+
+  if (trimmed.length > CONFIG_NAME_MAX_LENGTH) {
+    return { valid: false, error: `名称长度不能超过 ${CONFIG_NAME_MAX_LENGTH} 个字符` }
+  }
+
+  if (CONFIG_NAME_FORBIDDEN_CHARS.test(trimmed)) {
+    return { valid: false, error: '名称不能包含特殊字符（<>{}[]|\\:*?"`）' }
+  }
+
+  if (containsControlChars(trimmed)) {
+    return { valid: false, error: '名称不能包含控制字符' }
+  }
+
+  // XSS 防护：检测 HTML 标签
+  if (/<[a-zA-Z][^>]*>/.test(trimmed)) {
+    return { valid: false, error: '名称不能包含 HTML 标签' }
+  }
+
+  // XSS 防护：检测危险协议
+  if (/^(javascript|vbscript|data|file):/i.test(trimmed)) {
+    return { valid: false, error: '名称不能以危险协议开头' }
+  }
+
+  return { valid: true }
+}
+
+// ============================================================
 // 股票代码相关验证
 // ============================================================
 
@@ -257,6 +340,16 @@ export function isSensitiveField(fieldName: string): boolean {
   return SENSITIVE_FIELD_NAMES.some((sensitive) => lower === sensitive || lower.includes(sensitive))
 }
 
+function sanitizeValue(key: string, value: unknown, maxDepth: number): unknown {
+  if (isSensitiveField(key) && typeof value === 'string') {
+    return maskApiKey(value)
+  }
+  if (typeof value === 'object' && value !== null) {
+    return sanitizeObject(value, maxDepth - 1)
+  }
+  return value
+}
+
 /**
  * 对任意对象进行脱敏处理，递归遍历所有字段。
  *
@@ -268,7 +361,7 @@ export function sanitizeObject<T>(obj: T, maxDepth = 5): T {
   if (maxDepth < 0 || obj === null || obj === undefined) return obj
 
   if (typeof obj === 'string') {
-    return obj as unknown as T
+    return obj
   }
 
   if (Array.isArray(obj)) {
@@ -278,13 +371,7 @@ export function sanitizeObject<T>(obj: T, maxDepth = 5): T {
   if (typeof obj === 'object') {
     const result: Record<string, unknown> = {}
     for (const [key, value] of Object.entries(obj as Record<string, unknown>)) {
-      if (isSensitiveField(key) && typeof value === 'string') {
-        result[key] = maskApiKey(value)
-      } else if (typeof value === 'object' && value !== null) {
-        result[key] = sanitizeObject(value, maxDepth - 1)
-      } else {
-        result[key] = value
-      }
+      result[key] = sanitizeValue(key, value, maxDepth)
     }
     return result as unknown as T
   }

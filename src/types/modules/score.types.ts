@@ -1,8 +1,6 @@
 /**
  * @module score.types
  * @description 评分模块类型定义
- */
-
 /** 评分趋势周期 */
 export type ScoreTrendPeriod = 'week' | 'month' | 'quarter'
 

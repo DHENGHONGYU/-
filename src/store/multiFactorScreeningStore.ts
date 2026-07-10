@@ -97,6 +97,9 @@ function persistTemplates(templates: ScreeningTemplate[]): void {
   }
 }
 
+/**
+ * useMultiFactorScreeningStore
+ */
 export const useMultiFactorScreeningStore = create<MultiFactorScreeningState>((set, get) => ({
   conditionGroups: [createDefaultGroup()],
   results: [],

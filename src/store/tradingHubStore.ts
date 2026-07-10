@@ -25,6 +25,9 @@ const initialState = {
   loading: false,
 }
 
+/**
+ * useTradingHubStore
+ */
 export const useTradingHubStore = create<TradingHubState>()((set) => ({
   ...initialState,
   setActiveModule: (path: string) => set({ activeModule: path }),

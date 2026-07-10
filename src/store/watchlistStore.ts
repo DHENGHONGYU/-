@@ -67,6 +67,9 @@ const initialState = {
 // Store
 // ============================================================
 
+/**
+ * useWatchlistStore
+ */
 export const useWatchlistStore = create<WatchlistState>()((set, get) => ({
   ...initialState,
 

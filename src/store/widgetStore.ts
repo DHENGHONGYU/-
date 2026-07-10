@@ -14,6 +14,9 @@ interface WidgetState {
   refreshStats: () => void
 }
 
+/**
+ * useWidgetStore
+ */
 export const useWidgetStore = create<WidgetState>((set) => ({
   instances: new Map(),
   runtimeStates: new Map(),
@@ -49,6 +52,9 @@ export const useWidgetStore = create<WidgetState>((set) => ({
 
 const widgetSubscriptions: Array<() => void> = []
 
+/**
+ * initWidgetSubscriptions
+ */
 export function initWidgetSubscriptions(): () => void {
   destroyWidgetSubscriptions()
   widgetSubscriptions.push(
@@ -78,6 +84,10 @@ export function initWidgetSubscriptions(): () => void {
   return () => destroyWidgetSubscriptions()
 }
 
+/**
+ * destroyWidgetSubscriptions
+ * @returns void
+ */
 export function destroyWidgetSubscriptions(): void {
   widgetSubscriptions.forEach((unsubscribe) => unsubscribe())
   widgetSubscriptions.length = 0

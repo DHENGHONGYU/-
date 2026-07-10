@@ -4,8 +4,6 @@
  * 与 DataBridge DeleteHandler 配套使用（见 src/core/databridgeHandlers.ts）。
  * DeleteHandler 在 db.delete() 前调用 cascadeExecutor.execute(store, id)，
  * 当级联策略为 RESTRICT 且存在依赖时抛出 CascadeError。
- */
-
 /** 级联策略类型 */
 export type CascadeStrategy = 'CASCADE' | 'RESTRICT' | 'SET_NULL' | 'SOFT_DELETE' | 'NONE'
 

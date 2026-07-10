@@ -3,8 +3,6 @@
  * @description 策略回测模块类型定义（DA-006 导出扩展）。
  * 补充回测导出所需的持仓快照、净值序列与导出配置类型，
  * 与 src/store/backtestStore.ts 中已有的 BacktestResult / BacktestTrade 互补。
- */
-
 /** 回测策略类型 */
 export type BacktestStrategy = 'hot_sector' | 'value_pit' | 'composite'
 

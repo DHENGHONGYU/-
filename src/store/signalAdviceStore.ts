@@ -78,6 +78,9 @@ const initialState = {
 // Store
 // ============================================================
 
+/**
+ * useSignalAdviceStore
+ */
 export const useSignalAdviceStore = create<SignalAdviceState>()((set, get) => ({
   ...initialState,
 

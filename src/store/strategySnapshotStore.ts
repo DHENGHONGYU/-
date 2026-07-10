@@ -76,6 +76,9 @@ function buildClassifiedItems(items: StrategyGroupItem[]): ClassifiedItems {
   }
 }
 
+/**
+ * useStrategySnapshotStore
+ */
 export const useStrategySnapshotStore = create<StrategySnapshotState & StrategySnapshotActions>(
   (set, get) => ({
     ...initialState,
@@ -247,6 +250,9 @@ export const useStrategySnapshotStore = create<StrategySnapshotState & StrategyS
 
 let _unsubscribeStrategySnapshots: (() => void) | undefined
 
+/**
+ * initStrategySnapshotStoreSubscriptions
+ */
 export function initStrategySnapshotStoreSubscriptions(): () => void {
   destroyStrategySnapshotStoreSubscriptions()
   logger.info('[strategySnapshotStore] 初始化 DataBridge strategy_snapshots 频道订阅')
@@ -265,6 +271,10 @@ export function initStrategySnapshotStoreSubscriptions(): () => void {
   return () => destroyStrategySnapshotStoreSubscriptions()
 }
 
+/**
+ * destroyStrategySnapshotStoreSubscriptions
+ * @returns void
+ */
 export function destroyStrategySnapshotStoreSubscriptions(): void {
   if (_unsubscribeStrategySnapshots) {
     _unsubscribeStrategySnapshots()

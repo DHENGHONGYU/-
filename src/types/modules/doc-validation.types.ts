@@ -7,8 +7,6 @@
  * - 验证结果（完整性 / 一致性 / 正确性）
  * - 自动更新记录
  * - 结构化日志条目
- */
-
 /** 验证结果状态 */
 export type ValidationStatus = 'pass' | 'warning' | 'failure'
 

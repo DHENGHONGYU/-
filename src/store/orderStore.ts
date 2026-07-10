@@ -521,6 +521,8 @@ function _debouncedRefresh(envelope: StandardEnvelope): void {
  *   return cleanup
  * }, [])
  * ```
+/**
+ * initOrderStoreSubscriptions
  */
 export function initOrderStoreSubscriptions(): () => void {
   if (_unsubscribeOrders) {

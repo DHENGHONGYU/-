@@ -40,6 +40,9 @@ function inferInitialCabin(): CabinType {
   }
 }
 
+/**
+ * useWorkflowStore
+ */
 export const useWorkflowStore = create<WorkflowState>((set, get) => ({
   activeCabin: inferInitialCabin(),
   setActiveCabin: (cabin) => {
@@ -53,6 +56,12 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
 
 const CABIN_ORDER: CabinType[] = ['input', 'analysis', 'trading', 'output', 'command']
 
+/**
+ * canSwitchCabin
+ * @param from
+ * @param to
+ * @returns boolean
+ */
 export function canSwitchCabin(from: CabinType, to: CabinType): boolean {
   const fromIndex = CABIN_ORDER.indexOf(from)
   const toIndex = CABIN_ORDER.indexOf(to)

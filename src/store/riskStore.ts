@@ -81,6 +81,9 @@ function generateVerdictId(): string {
 // Store
 // ============================================================
 
+/**
+ * useRiskStore
+ */
 export const useRiskStore = create<RiskState>((set, get) => ({
   triState: 'normal',
   circuitState: 'closed',

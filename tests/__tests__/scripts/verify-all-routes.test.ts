@@ -135,17 +135,37 @@ describe('verify-all-routes.ts v3.0（白盒测试）', () => {
 
     it('所有预期路径都注册时无 missing-route 违规', async () => {
       // 构造所有预期路径都已注册的场景
+      // 必须与 scripts/verify-all-routes.ts 的 EXPECTED_PATHS 完全同步
       const allExpectedPaths = [
+        // input
         '/input', '/input/hub', '/input/bulk-import', '/input/hot-sectors',
-        '/input/data-test', '/input/local-knowledge',
+        '/input/data-test', '/input/local-knowledge', '/input/collect-tasks',
+        '/input/seven-dim', '/input/fetcher-config',
+        // analysis
         '/analysis', '/analysis/hub', '/analysis/stock-score',
         '/analysis/stock-score/:symbol', '/analysis/sector', '/analysis/backtest',
         '/analysis/industry-score', '/analysis/intelligent-score', '/analysis/score-docs',
-        '/analysis/news', '/analysis/news-v6', '/analysis/hot-sector', '/analysis/value-pit',
-        '/trading', '/trading/hub', '/trading/strategy-snapshots', '/trading/holdings',
-        '/output', '/output/hub', '/output/research', '/output/review', '/output/export',
-        '/command', '/command/hub',
-        '/', '/cockpit',
+        '/analysis/news', '/analysis/hot-sector', '/analysis/value-pit',
+        '/analysis/stock-pool', '/analysis/score-comparison', '/analysis/multi-factor',
+        // trading
+        '/trading', '/trading/strategy-snapshots', '/trading/holdings',
+        '/trading/flow', '/trading/execution-plans', '/trading/execution',
+        '/trading/portfolio', '/trading/risk',
+        // output
+        '/output', '/output/hub', '/output/research', '/output/review',
+        '/output/export', '/output/dashboard',
+        // command
+        '/command', '/command/hub', '/command/agents', '/command/agents/registry',
+        '/command/agents/registry/:agentId', '/command/agents/trigger',
+        '/command/agents/tasks', '/command/agents/custom', '/command/agents/llm',
+        '/command/agents/capability-graph', '/command/agents/dag-scheduler',
+        '/command/agents/feedback', '/command/agents/model-upgrade',
+        '/command/agents/data-labels', '/command/agents/api-config',
+        '/command/agents/skill-audit', '/command/agents/optimization',
+        '/command/agents/changelog', '/command/mcp-servers', '/command/monitor',
+        '/command/config',
+        // portal
+        '/', '/cockpit', '/mock-test',
       ]
       const hasRouteMap: Record<string, boolean> = {}
       for (const p of allExpectedPaths) {

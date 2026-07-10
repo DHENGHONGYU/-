@@ -72,6 +72,9 @@ const DEFAULT_AGENT_METRICS: AgentMetricsSummary = {
 let monitorTimer: ReturnType<typeof setInterval> | null = null
 let isRefreshingSnapshot = false
 
+/**
+ * useSystemMonitorStore
+ */
 export const useSystemMonitorStore = create<SystemMonitorState>((set, get) => ({
   snapshot: null,
   agentHealthSnapshots: [],
@@ -188,6 +191,9 @@ export const useSystemMonitorStore = create<SystemMonitorState>((set, get) => ({
 // ============================================================
 const monitorSubscriptions: Array<() => void> = []
 
+/**
+ * initSystemMonitorSubscriptions
+ */
 export function initSystemMonitorSubscriptions(): () => void {
   monitorSubscriptions.forEach((unsubscribe) => unsubscribe())
   monitorSubscriptions.length = 0

@@ -123,6 +123,9 @@ export interface VerdictTimelineEntry {
  *   const blocks = pendingBlocks()
  * }
  * ```
+/**
+ * isExecutable
+ * @returns boolean
  */
 export function isExecutable(): boolean {
   return useRiskStore.getState().triState !== 'blocked'
@@ -140,6 +143,9 @@ export function isExecutable(): boolean {
  * const levelText = riskLevelText()
  * // '正常' | '警告' | '阻塞'
  * ```
+/**
+ * riskLevelText
+ * @returns RiskLevelText
  */
 export function riskLevelText(): RiskLevelText {
   const triState = useRiskStore.getState().triState
@@ -165,6 +171,9 @@ export function riskLevelText(): RiskLevelText {
  *   console.log(latest.triState, latest.result.blocks)
  * }
  * ```
+/**
+ * latestVerdict
+ * @returns RiskVerdict | null
  */
 export function latestVerdict(): RiskVerdict | null {
   const verdicts = useRiskStore.getState().verdicts
@@ -188,6 +197,9 @@ export function latestVerdict(): RiskVerdict | null {
  *   blocks.forEach(block => console.log('阻断原因:', block))
  * }
  * ```
+/**
+ * pendingBlocks
+ * @returns string[]
  */
 export function pendingBlocks(): string[] {
   const latest = latestVerdict()
@@ -207,6 +219,9 @@ export function pendingBlocks(): string[] {
  * const warnings = pendingWarnings()
  * warnings.forEach(warning => console.log('警告:', warning))
  * ```
+/**
+ * pendingWarnings
+ * @returns string[]
  */
 export function pendingWarnings(): string[] {
   const latest = latestVerdict()
@@ -230,6 +245,9 @@ export function pendingWarnings(): string[] {
  *   console.log('熔断已开启，请人工干预')
  * }
  * ```
+/**
+ * isCircuitOpen
+ * @returns boolean
  */
 export function isCircuitOpen(): boolean {
   return useRiskStore.getState().circuitState === 'open'
@@ -248,6 +266,9 @@ export function isCircuitOpen(): boolean {
  *   // 显示人工干预提示
  * }
  * ```
+/**
+ * needsManualIntervention
+ * @returns boolean
  */
 export function needsManualIntervention(): boolean {
   return useRiskStore.getState().circuitState === 'open'
@@ -265,6 +286,9 @@ export function needsManualIntervention(): boolean {
  * const stateText = circuitStateText()
  * // '闭合' | '开启' | '半开'
  * ```
+/**
+ * circuitStateText
+ * @returns CircuitStateText
  */
 export function circuitStateText(): CircuitStateText {
   const state = useRiskStore.getState().circuitState
@@ -289,6 +313,9 @@ export function circuitStateText(): CircuitStateText {
  *   // 放行探测请求
  * }
  * ```
+/**
+ * isCircuitHalfOpen
+ * @returns boolean
  */
 export function isCircuitHalfOpen(): boolean {
   return useRiskStore.getState().circuitState === 'half-open'
@@ -314,6 +341,8 @@ export function isCircuitHalfOpen(): boolean {
  * const stats = verdictStats(verdicts)
  * console.log(`阻断率: ${stats.blockedCount / stats.total}`)
  * ```
+/**
+ * verdictStats
  */
 export const verdictStats = memoizeByRef((verdicts: readonly RiskVerdict[]) => {
   let blockedCount = 0
@@ -377,6 +406,9 @@ export function normalCount(): number {
  *   console.log('阻断率超过 50%')
  * }
  * ```
+/**
+ * blockedRate
+ * @returns number
  */
 export function blockedRate(): number {
   const stats = verdictStats(useRiskStore.getState().verdicts)
@@ -411,6 +443,10 @@ export function verdictsCount(): number {
  * const trend = riskTrend(10)
  * // ['normal', 'normal', 'warning', 'blocked', 'normal', ...]
  * ```
+/**
+ * riskTrend
+ * @param limit
+ * @returns RiskTriState[]
  */
 export function riskTrend(limit: number = 10): RiskTriState[] {
   const verdicts = useRiskStore.getState().verdicts
@@ -441,6 +477,9 @@ export function riskTrend(limit: number = 10): RiskTriState[] {
  *   console.log('风险正在改善')
  * }
  * ```
+/**
+ * riskTrendDirection
+ * @returns RiskTrendDirection
  */
 export function riskTrendDirection(): RiskTrendDirection {
   const trend = riskTrend(10)
@@ -481,6 +520,10 @@ export function riskTrendDirection(): RiskTrendDirection {
  *   console.log(`${entry.verdict.triState} - 间隔: ${entry.timeGap}ms`)
  * })
  * ```
+/**
+ * verdictsTimeline
+ * @param limit
+ * @returns VerdictTimelineEntry[]
  */
 export function verdictsTimeline(limit: number = 20): VerdictTimelineEntry[] {
   const verdicts = useRiskStore.getState().verdicts
@@ -514,6 +557,10 @@ export function verdictsTimeline(limit: number = 20): VerdictTimelineEntry[] {
  * const stats = symbolRiskStats('000001')
  * console.log(`000001 阻断率: ${stats.blockedCount / stats.totalChecks}`)
  * ```
+/**
+ * symbolRiskStats
+ * @param symbol
+ * @returns SymbolRiskStats
  */
 export function symbolRiskStats(symbol: string): SymbolRiskStats {
   const verdicts = useRiskStore.getState().verdicts
@@ -565,6 +612,9 @@ export function symbolRiskStats(symbol: string): SymbolRiskStats {
  * const canExecute = useIsExecutable()
  * return <Button disabled={!canExecute}>提交</Button>
  * ```
+/**
+ * useIsExecutable
+ * @returns boolean
  */
 export function useIsExecutable(): boolean {
   return useRiskStore(state => state.triState !== 'blocked')
@@ -584,6 +634,9 @@ export function useIsExecutable(): boolean {
  * const levelText = useRiskLevelText()
  * return <span>{levelText}</span>
  * ```
+/**
+ * useRiskLevelText
+ * @returns RiskLevelText
  */
 export function useRiskLevelText(): RiskLevelText {
   const triState = useRiskStore(state => state.triState)
@@ -608,6 +661,9 @@ export function useRiskLevelText(): RiskLevelText {
  * const circuitOpen = useIsCircuitOpen()
  * return <StatusIndicator open={circuitOpen} />
  * ```
+/**
+ * useIsCircuitOpen
+ * @returns boolean
  */
 export function useIsCircuitOpen(): boolean {
   return useRiskStore(state => state.circuitState === 'open')
@@ -627,6 +683,9 @@ export function useIsCircuitOpen(): boolean {
  * const blocks = usePendingBlocks()
  * return blocks.map(block => <Warning key={block}>{block}</Warning>)
  * ```
+/**
+ * usePendingBlocks
+ * @returns string[]
  */
 export function usePendingBlocks(): string[] {
   const verdicts = useRiskStore(state => state.verdicts)

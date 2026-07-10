@@ -19,6 +19,9 @@ interface OutputActions {
   handleExport: () => Promise<void>
 }
 
+/**
+ * useOutputStore
+ */
 export const useOutputStore = create<OutputState & OutputActions>((set) => ({
   exportData: '',
   message: '',
@@ -54,6 +57,15 @@ export const useOutputStore = create<OutputState & OutputActions>((set) => ({
   },
 }))
 
+/**
+ * selectExportData
+ */
 export const selectExportData = (state: OutputState): string => state.exportData
+/**
+ * selectMessage
+ */
 export const selectMessage = (state: OutputState): string => state.message
+/**
+ * selectIsExporting
+ */
 export const selectIsExporting = (state: OutputState): boolean => state.isExporting

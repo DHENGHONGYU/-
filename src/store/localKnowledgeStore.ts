@@ -100,6 +100,9 @@ function resolveSymbolFilter(filter: string): string | undefined {
   return filter === '全部' ? undefined : filter
 }
 
+/**
+ * useLocalKnowledgeStore
+ */
 export const useLocalKnowledgeStore = create<LocalKnowledgeState>((set, get) => ({
   ...initialState,
 
@@ -221,6 +224,9 @@ export const useLocalKnowledgeStore = create<LocalKnowledgeState>((set, get) => 
 
 let _unsubscribeLocalDocs: (() => void) | undefined
 
+/**
+ * initLocalKnowledgeStoreSubscriptions
+ */
 export function initLocalKnowledgeStoreSubscriptions(): () => void {
   destroyLocalKnowledgeStoreSubscriptions()
   logger.info('[localKnowledgeStore] 初始化 DataBridge local_docs 频道订阅')
@@ -239,6 +245,10 @@ export function initLocalKnowledgeStoreSubscriptions(): () => void {
   return () => destroyLocalKnowledgeStoreSubscriptions()
 }
 
+/**
+ * destroyLocalKnowledgeStoreSubscriptions
+ * @returns void
+ */
 export function destroyLocalKnowledgeStoreSubscriptions(): void {
   if (_unsubscribeLocalDocs) {
     _unsubscribeLocalDocs()

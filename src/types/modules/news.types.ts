@@ -3,8 +3,6 @@
  * @description 智能资讯模块类型定义（DA-008 情感趋势扩展）。
  * 所有情感聚合数据结构、维度枚举与配置选项均在此声明，
  * 供 Store、引擎、组件统一引用，禁止在 UI 层内联定义。
- */
-
 /** 情感趋势维度 */
 export type SentimentTrendDimension = 'global' | 'stock' | 'industry'
 

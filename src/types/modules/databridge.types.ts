@@ -2,8 +2,6 @@
  * @module DataBridgeTypes
  * @lifecycle @Global
  * @description DataBridge 扩展适配层类型契约
- */
-
 /** DataBridgeAdapter 配置 */
 export interface DataBridgeAdapterConfig {
   /** 是否启用降级队列 */

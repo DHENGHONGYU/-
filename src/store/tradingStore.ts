@@ -102,6 +102,9 @@ const initialState = {
 // Store
 // ============================================================
 
+/**
+ * useTradingStore
+ */
 export const useTradingStore = create<TradingState>()((set, get) => ({
   ...initialState,
 

@@ -12,8 +12,6 @@
  * - 性能优先：纯字符串处理，无 DOM 操作
  *
  * @module xssSanitizer
- */
-
 /**
  * 危险的 HTML 实体字符 → 转义映射
  * 用于将纯文本嵌入 HTML 上下文时防止 XSS
@@ -177,7 +175,6 @@ export function sanitizeMarkdown(input: string): string {
  * @param input 原始输入
  * @param maxLength 最大长度（默认 100）
  * @returns 净化后的字符串
- */
 /**
  * 净化 LLM 输出（Markdown 格式）。
  *

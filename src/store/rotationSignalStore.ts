@@ -80,6 +80,9 @@ const initialState = {
 // Store
 // ============================================================
 
+/**
+ * useRotationSignalStore
+ */
 export const useRotationSignalStore = create<RotationSignalState>((set) => ({
   ...initialState,
 
