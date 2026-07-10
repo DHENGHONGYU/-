@@ -1,6 +1,6 @@
 const testDbName = typeof process !== 'undefined' ? process.env.TEST_DB_NAME : undefined
 export const DB_NAME = testDbName ? testDbName : ('V6ProDB' as const)
-export const DB_VERSION = 24 as const
+export const DB_VERSION = 27 as const
 
 // DB_VERSION 升级历史：
 // v3 → v4: 新增 daily_quotes 存储，用于保存 K线/行情数据。
@@ -21,6 +21,9 @@ export const DB_VERSION = 24 as const
 // v22 → v23: 新增 schema_migrations 存储（迁移追踪），落地 D-01 Schema 迁移框架。
 // v23 → v24: 新增 RBAC 5 表模式（rbac_users/rbac_roles/rbac_permissions/rbac_user_roles/
 //            rbac_role_permissions/rbac_permission_audit_logs），支撑权限自动回收与僵尸账号检测。
+// v24 → v25: 新增 collect_config 存储，用于持久化采集策略配置。
+// v25 → v26: 新增 custom_agents 存储（阶段 B-1），用于持久化用户在「自定义智能体」页创建的 Agent。
+// v26 → v27: 新增 trace_records 存储，用于持久化采集链路追踪数据。
 // @compliance AGENTS.md §八：DB_VERSION 必须与浏览器现有版本匹配或更高
 
 export const DEFAULT_POOL_GROUP = '默认分组' as const
@@ -171,6 +174,17 @@ export const ENVELOPE_ACTION = {
   saveRbacAuditLog: 'SAVE_RBAC_AUDIT_LOG',
   /** 删除权限审计日志（仅归档服务 RBAC-S3 使用，普通调用禁止） */
   deleteRbacAuditLog: 'DELETE_RBAC_AUDIT_LOG',
+  /** 保存采集配置（v25 新增） */
+  saveCollectConfig: 'SAVE_COLLECT_CONFIG',
+  /** 删除采集配置（v25 新增） */
+  deleteCollectConfig: 'DELETE_COLLECT_CONFIG',
+  // ── 自定义智能体通道（v26 新增，阶段 B-1） ──
+  /** 保存/更新自定义智能体 */
+  saveCustomAgent: 'SAVE_CUSTOM_AGENT',
+  /** 删除自定义智能体 */
+  deleteCustomAgent: 'DELETE_CUSTOM_AGENT',
+  /** 保存采集链路追踪记录（v27 新增） */
+  saveTraceRecord: 'SAVE_TRACE_RECORD',
   // ── 批量操作（BulkEnvelope） ──
   /** 批量插入股票 */
   bulkInsertStock: 'BULK_INSERT_STOCK',
@@ -253,6 +267,8 @@ export const STORE_NAME = {
   portfolios: 'portfolios',
   tradeReviews: 'trade_reviews',
   schemaMigrations: 'schema_migrations',
+  // ── 采集配置存储（v25 新增） ──
+  collectConfig: 'collect_config',
   // ── RBAC 5 表模式（v24 新增） ──
   rbacUsers: 'rbac_users',
   rbacRoles: 'rbac_roles',
@@ -260,6 +276,10 @@ export const STORE_NAME = {
   rbacUserRoles: 'rbac_user_roles',
   rbacRolePermissions: 'rbac_role_permissions',
   rbacPermissionAuditLogs: 'rbac_permission_audit_logs',
+  // ── 自定义智能体存储（v26 新增，阶段 B-1） ──
+  customAgents: 'custom_agents',
+  // ── 采集链路追踪存储（v27 新增） ──
+  traceRecords: 'trace_records',
 } as const
 
 export type StoreName = (typeof STORE_NAME)[keyof typeof STORE_NAME]
@@ -281,9 +301,9 @@ export interface AclPermission {
 
 export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
   [MODULE_ID.fetcher]: {
-    read: [],
-    write: [STORE_NAME.stocks, STORE_NAME.dailyQuotes, STORE_NAME.financialReports],
-    actions: [DB_OPERATION.insert, DB_OPERATION.update],
+    read: [STORE_NAME.traceRecords, STORE_NAME.collectConfig],
+    write: [STORE_NAME.stocks, STORE_NAME.dailyQuotes, STORE_NAME.financialReports, STORE_NAME.collectConfig, STORE_NAME.traceRecords],
+    actions: [DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete, DB_OPERATION.select],
   },
   [MODULE_ID.stockpool]: {
     read: [STORE_NAME.stocks, STORE_NAME.v6Scores],
@@ -358,8 +378,8 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
     actions: Object.values(DB_OPERATION),
   },
   [MODULE_ID.user]: {
-    read: [STORE_NAME.stocks, STORE_NAME.v6Scores, STORE_NAME.orders],
-    write: [STORE_NAME.stocks, STORE_NAME.orders],
+    read: [STORE_NAME.stocks, STORE_NAME.v6Scores, STORE_NAME.orders, STORE_NAME.customAgents],
+    write: [STORE_NAME.stocks, STORE_NAME.orders, STORE_NAME.customAgents],
     actions: [DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete],
   },
   [MODULE_ID.strategy]: {
