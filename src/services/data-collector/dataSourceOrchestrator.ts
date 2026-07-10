@@ -322,6 +322,23 @@ export async function getQuote(code: string): Promise<CollectionResult<RealtimeQ
 }
 
 /**
+ * 尝试单一层批量数据源，返回结果或非空时 null。
+ * 将 `results.length > 0` 判断收敛到单一位置，避免 getBatchQuotes 内重复条件。
+ */
+async function tryBatchSource(
+  fetch: () => Promise<RealtimeQuote[]>,
+  source: DataSource,
+  start: number,
+  chain: DataSource[],
+): Promise<CollectionResult<RealtimeQuote[]> | null> {
+  const results = await fetch()
+  if (results.length > 0) {
+    return { success: true, data: results, source, latency: Date.now() - start, fallbackChain: chain }
+  }
+  return null
+}
+
+/**
  * 批量获取实时行情（仍使用默认优先级链，暂不支持单维度配置）
  */
 export async function getBatchQuotes(codes: string[]): Promise<CollectionResult<RealtimeQuote[]>> {
@@ -329,16 +346,16 @@ export async function getBatchQuotes(codes: string[]): Promise<CollectionResult<
   const start = Date.now()
 
   // 层 1: 腾讯批量
-  let results = await tencentBatchQuotes(codes)
-  if (results.length > 0) {
-    return { success: true, data: results, source: 'tencent', latency: Date.now() - start, fallbackChain: chain }
+  const tencentResult = await tryBatchSource(() => tencentBatchQuotes(codes), 'tencent', start, chain)
+  if (tencentResult) {
+    return tencentResult
   }
 
   // 层 2: 新浪批量
   chain.push('sina')
-  results = await sinaBatchQuotes(codes)
-  if (results.length > 0) {
-    return { success: true, data: results, source: 'sina', latency: Date.now() - start, fallbackChain: chain }
+  const sinaResult = await tryBatchSource(() => sinaBatchQuotes(codes), 'sina', start, chain)
+  if (sinaResult) {
+    return sinaResult
   }
 
   // 层 3: Mock 批量

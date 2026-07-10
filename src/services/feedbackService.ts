@@ -343,6 +343,30 @@ type AttemptOutcome<T> =
   | { done: false }
 
 /**
+ * 统一处理失败/重试分支，避免 attemptOperation 内重复判断 `options.attempt < options.maxRetries`。
+ */
+function handleFailure<T>(
+  operationId: string,
+  options: {
+    successMessage?: string
+    failMessage?: string
+    maxRetries: number
+    attempt: number
+  },
+  error: string,
+): AttemptOutcome<T> {
+  if (options.attempt < options.maxRetries) {
+    retryOperation(operationId, { message: `重试第 ${options.attempt + 1} 次` })
+    return { done: false }
+  }
+
+  failOperation(operationId, error, {
+    message: options.failMessage,
+  })
+  return { done: true, result: { success: false, error } }
+}
+
+/**
  * 单次尝试执行操作，返回结果或需要重试。
  */
 async function attemptOperation<T>(
@@ -366,27 +390,10 @@ async function attemptOperation<T>(
       return { done: true, result }
     }
 
-    if (options.attempt < options.maxRetries) {
-      retryOperation(operationId, { message: `重试第 ${options.attempt + 1} 次` })
-      return { done: false }
-    }
-
-    failOperation(operationId, result.error ?? '操作失败', {
-      message: options.failMessage,
-    })
-    return { done: true, result }
+    return handleFailure(operationId, options, result.error ?? '操作失败')
   } catch (err) {
     const error = err instanceof Error ? err.message : String(err)
-
-    if (options.attempt < options.maxRetries) {
-      retryOperation(operationId, { message: `重试第 ${options.attempt + 1} 次` })
-      return { done: false }
-    }
-
-    failOperation(operationId, error, {
-      message: options.failMessage,
-    })
-    return { done: true, result: { success: false, error } }
+    return handleFailure(operationId, options, error)
   }
 }
 

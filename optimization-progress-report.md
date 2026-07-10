@@ -2,6 +2,8 @@
 
 > 生成时间：2026-07-11 00:25
 > 基于 `optimization-plan.md` 优先级推进，本次完成 P0 剩余项 + P1 服务层/Store 层主要优化项，并回归门禁测试。
+> 
+> 2026-07-10 追加：完成测试失败诊断与修复、MCP 违规收尾、门禁回归。
 
 ---
 
@@ -38,6 +40,15 @@
 ### 1.2 类型/测试修复
 
 - 补充 `src/utils/dataValidation.test.ts` 缺失的 `validateConfigName` 导入。
+
+### 1.3 2026-07-10 测试失败与 MCP 违规收尾（新增 3 项）
+
+| 文件 | 问题 | 修复动作 |
+|------|------|----------|
+| `tests/__tests__/scripts/verify-all-routes.test.ts` | 测试用预期路径与 `scripts/verify-all-routes.ts` 的 `EXPECTED_PATHS` 不同步，导致 `missing-route` 误报 32 条 | 同步全部 62 条预期路径 |
+| `tests/__tests__/integration/llmEnhancer.integration.test.ts` | M2 依据追溯闸上线后，mock 响应未带 `citations`，LLM 评分调整被回退 | `buildLlmEnhanceResponse` 默认补 citation；手动为代码块/动态响应用例补充 citations |
+| `src/pages/command/__tests__/MCPServerDashboardPage.test.tsx` | `vi.mock('@/mcp/bridge')` 路径与实际组件导入 `@/mcp/bridge/mcpBridge` 不匹配，导致真实桥接实现被调用 | 修正 mock 路径为 `@/mcp/bridge/mcpBridge` 并复用 `mockCallTool` |
+| `src/pages/command/health/HealthDashboardPage.tsx` | MCP 审计违规：直接 import `services/system/healthDashboardService` | 改为通过 `mcpBridge.callTool('system', 'fetch_health_report', {})` 调用；类型从 `@/types/modules/health.types` 引入 |
 
 ---
 ### 1.1 剩余 P0 核心层嵌套（3 项）
@@ -118,19 +129,17 @@
 | `audit:tests` | ✅ 通过 | 所有测试文件通过审计 |
 | `audit:reserved-stores` | ✅ 通过 | 无违规 |
 | `audit:tokens` | ✅ 通过 | 颜色/令牌 0 违规 |
-| `audit:mcp` | ❌ 1 处违规 | `src/pages/command/health/HealthDashboardPage.tsx` 直接 import `services/system/healthDashboardService` |
-| `npm run test -- --run` | ❌ 116 失败 | 全量测试任务 `31DGOF` 已结束：280 文件通过 / 45 文件失败，4571 测试通过 / 116 失败 / 13 跳过 |
+| `audit:mcp` | ✅ 通过 | 0 违规；`HealthDashboardPage.tsx` 已改为通过 `mcpBridge` 调用 |
+| `complexity-scan` | ✅ 通过 | 当前 7 嵌套 / 0 长链 / 26 重复 ≤ 基线 104/0/39 |
+| `npm run test -- --run` | ⏳ 回归中 | 已修复 3 组主要失败：`verify-all-routes`（16/16）、`llmEnhancer`（46/46）、`MCPServerDashboardPage`（17/17）；全量测试仍在运行验证 |
 
 ---
 
-## 四、MCP direct-service-import 评估结论
+## 四、MCP direct-service-import 收尾
 
-- **当前状态**：经 P0 核心层重构后，`audit:mcp` 由 4 处降至 **1 处**。
-- **剩余违规**：`HealthDashboardPage.tsx` 直接引入 `healthDashboardService`。
-- **是否纳入本次范围**：建议**不纳入本次核心优化范围**，原因：
-  1. 该处属于 UI 层调用服务层，不是 P0/P1 嵌套/链式/重复条件问题；
-  2. 改为 MCPClient 调用需确认 `health` 资源已在 MCP Server 注册，并补充对应工具/资源描述，改动涉及运行时协议；
-  3. 建议单独排期作为「MCP 合规收尾」任务，与本次代码质量优化解耦。
+- **当前状态**：`audit:mcp` 已归零。`HealthDashboardPage.tsx` 改为通过 `mcpBridge.callTool('system', 'fetch_health_report', {}, { caller: 'ui', callerId: 'HealthDashboardPage' })` 调用，类型从 `@/types/modules/health.types` 引入，不再直接依赖 `services/system/healthDashboardService`。
+- **system server 侧**：`fetch_health_report` 工具已注册，返回 `public/health-report.json` 内容。
+- **后续注意**：新增 UI 页调用服务时，优先通过 `mcpBridge` / `MCPClient` 而非直接 import services，避免重新引入 MCP 违规。
 
 ---
 
@@ -138,7 +147,7 @@
 
 ### 5.1 P1 中优项剩余（7 项深层嵌套）
 
-以下文件仍存在于 `nested-code-review-report.json` 中，均为 core/lib 基础设施或难以再扁平化的控制流：
+以下文件仍存在于 `complexity-scan` 报告中，均为 core/lib 基础设施或难以再扁平化的控制流：
 
 - `src/core/databridgeHandlers.ts::deleteIndexedRecords` / `deleteScannedRecords`（循环内 `if (!rec.id) continue`）
 - `src/core/dataflow/dataflowEngine.ts`（SSE 消息解析 try/catch）
@@ -154,9 +163,9 @@
 
 ## 六、建议下一步
 
-1. **诊断并修复 116 个测试失败**：先区分本次改动引入 vs 预存失败。重点关注 `verify-all-routes` 白盒测试、`llmEnhancer` L4/L7 分数、`MCPServerDashboardPage` 工具测试。
-2. **单独处理 MCP 违规**：将 `HealthDashboardPage.tsx` 改为通过 MCPClient 调用，作为独立任务。
-3. **继续 P2 收尾**：处理剩余 26 项重复条件，进一步降低代码重复度。
+1. **确认全量测试回归**：等待当前 `npm run test -- --run` 结果；如仍有失败，按失败模块继续收敛。
+2. **继续 P2 收尾**：处理剩余 26 项重复条件，进一步降低代码重复度。
+3. **保持门禁**：后续新增代码继续通过 `tsc:prod` + `npm run audit` + `complexity-scan` 回归。
 
 ---
 

@@ -166,15 +166,7 @@ export function mergeBacktestEvents(
   const seen = new Set<string>()
   const merged: BacktestEvent[] = []
 
-  for (const e of signals) {
-    const key = `${e.date}-${e.symbol}-${e.direction}`
-    if (!seen.has(key)) {
-      seen.add(key)
-      merged.push(e)
-    }
-  }
-
-  for (const e of orders) {
+  for (const e of [...signals, ...orders]) {
     const key = `${e.date}-${e.symbol}-${e.direction}`
     if (!seen.has(key)) {
       seen.add(key)

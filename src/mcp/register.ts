@@ -146,10 +146,11 @@ export function syncWithConfig(): SyncResult {
   // Step 1: 处理配置中的条目
   for (const entry of MCP_SERVER_REGISTRY) {
     configNames.add(entry.name)
+    const isRegistered = registeredNames.has(entry.name)
 
     if (!entry.enabled) {
-      // 配置中禁用但 Registry 中存在 → 注销
-      if (registeredNames.has(entry.name)) {
+      if (isRegistered) {
+        // 配置中禁用但 Registry 中存在 → 注销
         mcpRegistry.unregister(entry.name)
         result.removed.push(entry.name)
         logger.info(`[MCP:sync] disabled & unregistered: ${entry.name}`)
@@ -157,19 +158,19 @@ export function syncWithConfig(): SyncResult {
       continue
     }
 
-    if (registeredNames.has(entry.name)) {
-      result.skipped.push(entry.name)
+    if (!isRegistered) {
+      // 新增注册
+      const server = instantiateServer(entry.modulePath, entry.exportName)
+      if (server) {
+        mcpRegistry.register(server, { priority: entry.priority })
+        result.added.push(entry.name)
+      } else {
+        result.failed.push(entry.name)
+      }
       continue
     }
 
-    // 新增注册
-    const server = instantiateServer(entry.modulePath, entry.exportName)
-    if (server) {
-      mcpRegistry.register(server, { priority: entry.priority })
-      result.added.push(entry.name)
-    } else {
-      result.failed.push(entry.name)
-    }
+    result.skipped.push(entry.name)
   }
 
   // Step 2: 注销 Registry 中存在但配置中不存在的 Server

@@ -60,13 +60,7 @@ class PutHandler implements EnvelopeHandler {
         netProfit: report.netProfit,
         fieldCount: Object.keys(payload as Record<string, unknown>).length,
       })
-    } else {
-      logger.debug(`[DataBridge] DB put: action="${meta.action}", store="${store}"`)
-    }
-
-    await db.put(store, payload)
-
-    if (meta.action === ENVELOPE_ACTION.saveFinancialReport) {
+      await db.put(store, payload)
       const duration = Date.now() - startTime
       logger.info(`[DataBridge] PutHandler 财务数据保存完成`, {
         action: meta.action,
@@ -74,6 +68,9 @@ class PutHandler implements EnvelopeHandler {
         traceId: meta.traceId,
         duration: `${duration}ms`,
       })
+    } else {
+      logger.debug(`[DataBridge] DB put: action="${meta.action}", store="${store}"`)
+      await db.put(store, payload)
     }
   }
 }

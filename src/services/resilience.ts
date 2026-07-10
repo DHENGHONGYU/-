@@ -274,14 +274,14 @@ export async function withResilience<T>(
 
   const core = (): Promise<T> => withRetry(fn, options)
 
-  if (breaker) {
-    if (options.fallback !== undefined) {
-      const fb = options.fallback
-      return withFallback(() => breaker.execute(core), fb, options.context)
-    }
-    return breaker.execute(core)
+  if (!breaker) {
+    return applyFallback(core, options)
   }
 
+  return applyFallback(() => breaker.execute(core), options)
+}
+
+function applyFallback<T>(core: () => Promise<T>, options: ResilienceOptions<T>): Promise<T> {
   if (options.fallback !== undefined) {
     return withFallback(core, options.fallback, options.context)
   }

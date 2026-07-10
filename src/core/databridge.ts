@@ -370,45 +370,7 @@ export class DataBridge {
     })
 
     try {
-      if (STRATEGY_ACTIONS.has(meta.action)) {
-        logger.info(`[DataBridge] Routing to strategy engine: action="${meta.action}"`)
-        const ctx: StrategyRouterContext = {
-          subscribers: this.subscribers,
-          broadcast: (channel, env) => this.broadcast(channel, env),
-        }
-        routeToStrategy(envelope, ctx)
-        return
-      }
-
-      if (QUERY_ACTIONS.has(meta.action)) {
-        logger.info(`[DataBridge] Routing to query: action="${meta.action}", store="${targetStore}"`)
-        await this.routeToQuery(envelope, targetStore)
-        return
-      }
-
-      if (EVENT_ACTIONS.has(meta.action)) {
-        logger.info(`[DataBridge] Routing to event channel: action="${meta.action}"`)
-        await this.routeToEvent(envelope)
-        return
-      }
-
-      if (
-        meta.action === ENVELOPE_ACTION.resetAll ||
-        meta.action === ENVELOPE_ACTION.importAll ||
-        meta.action === ENVELOPE_ACTION.exportAll
-      ) {
-        logger.info(`[DataBridge] Routing to manager: action="${meta.action}"`)
-        await this.routeToManager(envelope)
-      } else {
-        logger.info(`[DataBridge] Routing to DB: action="${meta.action}", store="${targetStore}"`)
-        await this.routeToDB(envelope, targetStore)
-      }
-
-      // 写操作成功后清除相关缓存，保证读一致性
-      this.invalidateCache(targetStore)
-
-      logger.debug(`[DataBridge] Broadcasting to channel: "${targetStore}"`)
-      this.broadcast(targetStore, envelope)
+      await this.routeToAction(envelope, targetStore)
     } catch (err) {
       logger.error(`[DataBridge] forward() failed: action="${meta.action}", traceId="${meta.traceId}"`, { error: err })
       throw err
@@ -419,6 +381,54 @@ export class DataBridge {
       }
       logger.info(`[DataBridge] forward() completed: action="${meta.action}", duration=${duration}ms`)
     }
+  }
+
+  /**
+   * 按 action 类型路由到对应处理器（策略/查询/事件/管理/DB）。
+   * 将主 forward 的路由分支提取到独立方法，避免同一函数内重复判断 QUERY_ACTIONS。
+   */
+  private async routeToAction(envelope: StandardEnvelope, targetStore: StoreName): Promise<void> {
+    const { meta } = envelope
+
+    if (STRATEGY_ACTIONS.has(meta.action)) {
+      logger.info(`[DataBridge] Routing to strategy engine: action="${meta.action}"`)
+      const ctx: StrategyRouterContext = {
+        subscribers: this.subscribers,
+        broadcast: (channel, env) => this.broadcast(channel, env),
+      }
+      routeToStrategy(envelope, ctx)
+      return
+    }
+
+    if (QUERY_ACTIONS.has(meta.action)) {
+      logger.info(`[DataBridge] Routing to query: action="${meta.action}", store="${targetStore}"`)
+      await this.routeToQuery(envelope, targetStore)
+      return
+    }
+
+    if (EVENT_ACTIONS.has(meta.action)) {
+      logger.info(`[DataBridge] Routing to event channel: action="${meta.action}"`)
+      await this.routeToEvent(envelope)
+      return
+    }
+
+    if (
+      meta.action === ENVELOPE_ACTION.resetAll ||
+      meta.action === ENVELOPE_ACTION.importAll ||
+      meta.action === ENVELOPE_ACTION.exportAll
+    ) {
+      logger.info(`[DataBridge] Routing to manager: action="${meta.action}"`)
+      await this.routeToManager(envelope)
+    } else {
+      logger.info(`[DataBridge] Routing to DB: action="${meta.action}", store="${targetStore}"`)
+      await this.routeToDB(envelope, targetStore)
+    }
+
+    // 写操作成功后清除相关缓存，保证读一致性
+    this.invalidateCache(targetStore)
+
+    logger.debug(`[DataBridge] Broadcasting to channel: "${targetStore}"`)
+    this.broadcast(targetStore, envelope)
   }
 
   subscribe(channel: string, callback: EnvelopeCallback): () => void {

@@ -48,17 +48,15 @@ export function diagnoseLifeStage(input: LayerInput): LifeStage {
   const isLossMaking = f.netProfit !== undefined && f.netProfit < 0
 
   if (revenueYoY > V6_CALCULATOR_THRESHOLDS.L7_LIFE_STAGE_TIER1) {
-    if (isLossMaking) {
-      return { stage: '孵化期', description: '营收翻倍增长但仍在投入期，高研发烧钱', baseScore: 3.0 }
-    }
-    return { stage: '爆发期', description: '营收翻倍增长，亏损收窄或扭亏', baseScore: 4.0 }
+    return isLossMaking
+      ? { stage: '孵化期', description: '营收翻倍增长但仍在投入期，高研发烧钱', baseScore: 3.0 }
+      : { stage: '爆发期', description: '营收翻倍增长，亏损收窄或扭亏', baseScore: 4.0 }
   }
 
   if (revenueYoY > V6_CALCULATOR_THRESHOLDS.L7_LIFE_STAGE_TIER2) {
-    if (isLossMaking) {
-      return { stage: '爆发期', description: '高速增长中，亏损收窄', baseScore: 4.0 }
-    }
-    return { stage: '成长前期', description: '高速增长，盈亏平衡附近', baseScore: 4.5 }
+    return isLossMaking
+      ? { stage: '爆发期', description: '高速增长中，亏损收窄', baseScore: 4.0 }
+      : { stage: '成长前期', description: '高速增长，盈亏平衡附近', baseScore: 4.5 }
   }
 
   if (revenueYoY > V6_CALCULATOR_THRESHOLDS.L7_LIFE_STAGE_TIER3) {

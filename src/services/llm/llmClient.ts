@@ -165,8 +165,6 @@ export async function chat(
       signal: controller.signal,
     })
 
-    if (timeoutId) clearTimeout(timeoutId)
-
     // P0-03: 非 ok 响应时保护 response.json() 解析
     if (!response.ok) {
       const message = await parseErrorMessageFromResponse(response)
@@ -176,7 +174,6 @@ export async function chat(
     const raw = (await response.json()) as RawResponse
     return parseResponse(raw)
   } catch (err) {
-    if (timeoutId) clearTimeout(timeoutId)
     if (err instanceof LlmApiError) {
       throw err
     }
@@ -184,6 +181,8 @@ export async function chat(
       throw new LlmApiError('LLM 请求超时')
     }
     throw new LlmApiError(`LLM 请求失败: ${err instanceof Error ? err.message : String(err)}`)
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId)
   }
 }
 

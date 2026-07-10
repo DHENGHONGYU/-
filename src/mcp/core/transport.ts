@@ -20,6 +20,16 @@ const TRANSPORT_CALLER_CONTEXT: McpCallerContext = {
   callerId: 'InProcessTransport',
 }
 
+/**
+ * 校验工具调用/提示模板请求是否包含 name 参数。
+ * 抽成断言函数，避免 sendRequest 内重复 if 条件。
+ */
+function assertNameParam(params?: Record<string, unknown>): asserts params is { name: string; arguments?: Record<string, unknown> } {
+  if (!params || typeof params.name !== 'string') {
+    throw new Error('Missing required param: name')
+  }
+}
+
 /** 进程内传输 —— 零拷贝，直接调用 Server 方法 */
 export class InProcessTransport implements MCPTransport {
   private server: MCPServer
@@ -45,9 +55,7 @@ export class InProcessTransport implements MCPTransport {
       }
 
       case 'tools/call': {
-        if (!params || typeof params.name !== 'string') {
-          throw new Error('Missing required param: name')
-        }
+        assertNameParam(params)
         const args = (params.arguments as Record<string, unknown>) ?? {}
         const result = await this.server.callTool(params.name, args, TRANSPORT_CALLER_CONTEXT)
         const duration = performance.now() - startTime
@@ -73,9 +81,7 @@ export class InProcessTransport implements MCPTransport {
       }
 
       case 'prompts/get': {
-        if (!params || typeof params.name !== 'string') {
-          throw new Error('Missing required param: name')
-        }
+        assertNameParam(params)
         const args = (params.arguments as Record<string, string>) ?? {}
         return {
           messages: await this.server.getPrompt(params.name, args, TRANSPORT_CALLER_CONTEXT),

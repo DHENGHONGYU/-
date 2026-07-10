@@ -365,21 +365,17 @@ class McpAclMonitor {
     const deniedByServer = windowedEvents.filter((e) => e.eventType === 'denied_server').length
     const deniedByTool = windowedEvents.filter((e) => e.eventType === 'denied_tool').length
 
-    // 按 caller 统计拒绝数
+    // 按 caller / server 统计拒绝数
     const deniedByCaller: Record<string, number> = {}
+    const serverDeniedCount: Record<string, number> = {}
     for (const e of windowedEvents) {
       if (e.eventType !== 'granted') {
         deniedByCaller[e.caller] = (deniedByCaller[e.caller] ?? 0) + 1
+        serverDeniedCount[e.serverName] = (serverDeniedCount[e.serverName] ?? 0) + 1
       }
     }
 
     // 按 Server 统计拒绝数（Top 5）
-    const serverDeniedCount: Record<string, number> = {}
-    for (const e of windowedEvents) {
-      if (e.eventType !== 'granted') {
-        serverDeniedCount[e.serverName] = (serverDeniedCount[e.serverName] ?? 0) + 1
-      }
-    }
     const topDeniedServers = Object.entries(serverDeniedCount)
       .map(([server, count]) => ({ server, count }))
       .sort((a, b) => b.count - a.count)
