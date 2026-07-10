@@ -45,29 +45,29 @@ export function MarketDataProvider({ children }: MarketDataProviderProps): React
   const isMountedRef = useRef(false)
   const subscribeRef = useRef<(() => void) | null>(null)
 
+  const updateInstanceStatus = useCallback((instanceId: string | undefined, error: string | null) => {
+    if (!instanceId) return
+    setErrorMap((prev) => ({ ...prev, [instanceId]: error }))
+    setLoadingMap((prev) => ({ ...prev, [instanceId]: false }))
+  }, [])
+
   const handleCollectionResult: CollectionResultCallback = useCallback((taskId, rawData, error) => {
     if (!isMountedRef.current) return
 
     if (error) {
       const instanceId = Object.entries(taskMapRef.current).find(([, tid]) => tid === taskId)?.[0]
-      if (instanceId) {
-        setErrorMap((prev) => ({ ...prev, [instanceId]: error.message }))
-        setLoadingMap((prev) => ({ ...prev, [instanceId]: false }))
-      }
+      updateInstanceStatus(instanceId, error.message)
       return
     }
 
     if (rawData) {
       const instanceId = Object.entries(taskMapRef.current).find(([, tid]) => tid === taskId)?.[0]
-      if (instanceId) {
-        setErrorMap((prev) => ({ ...prev, [instanceId]: null }))
-        setLoadingMap((prev) => ({ ...prev, [instanceId]: false }))
-      }
+      updateInstanceStatus(instanceId, null)
 
       const adapted = marketDataAdapter.adapt(rawData)
       setData((prev) => marketDataAdapter.merge(prev, adapted))
     }
-  }, [])
+  }, [updateInstanceStatus])
 
   useEffect(() => {
     isMountedRef.current = true

@@ -379,6 +379,30 @@ export const useMarketDataStore = create<MarketDataState>()(() => ({
 // ============================================================
 
 /**
+ * 按 key 更新 dataSources 条目，将 `if (key)` 守卫收敛到单一位置。
+ */
+function updateDataSourceByKey(key: MarketDataSourceKey | undefined, patch: Partial<DataSourceEntry>): void {
+  if (!key) return
+  useMarketDataStore.setState((s) => ({
+    dataSources: {
+      ...s.dataSources,
+      [key]: { ...s.dataSources[key]!, ...patch },
+    },
+  }))
+}
+
+/**
+ * 按 instanceId 更新 loadingMap/errorMap，将 `if (instanceId)` 守卫收敛到单一位置。
+ */
+function updateLoadingMapByInstanceId(instanceId: string | undefined, error: string | null): void {
+  if (!instanceId) return
+  useMarketDataStore.setState((s) => ({
+    loadingMap: { ...s.loadingMap, [instanceId]: false },
+    errorMap: { ...s.errorMap, [instanceId]: error },
+  }))
+}
+
+/**
  * 处理 TaskScheduler 的采集结果回调
  * @remarks 将采集到的原始数据经过 marketDataAdapter 适配后写入 Store
  */
@@ -396,21 +420,8 @@ function handleCollectionResult(
       ([, dsKey]) => dsKey === instanceId,
     )?.[1]
 
-    if (key) {
-      useMarketDataStore.setState((s) => ({
-        dataSources: {
-          ...s.dataSources,
-          [key]: { ...s.dataSources[key]!, loading: false, error: error.message },
-        },
-      }))
-    }
-
-    if (instanceId) {
-      useMarketDataStore.setState((s) => ({
-        loadingMap: { ...s.loadingMap, [instanceId]: false },
-        errorMap: { ...s.errorMap, [instanceId]: error.message },
-      }))
-    }
+    updateDataSourceByKey(key, { loading: false, error: error.message })
+    updateLoadingMapByInstanceId(instanceId, error.message)
 
     logger.error(`[marketDataStore] 采集结果错误: taskId=${taskId}`, { error: error.message })
     return
@@ -428,26 +439,13 @@ function handleCollectionResult(
     // 合并到全局 mergedData
     const newMergedData = marketDataAdapter.merge(state.mergedData, adapted)
 
-    if (key) {
-      useMarketDataStore.setState((s) => ({
-        dataSources: {
-          ...s.dataSources,
-          [key]: {
-            data: adapted,
-            loading: false,
-            error: null,
-            lastUpdated: Date.now(),
-          },
-        },
-      }))
-    }
-
-    if (instanceId) {
-      useMarketDataStore.setState((s) => ({
-        loadingMap: { ...s.loadingMap, [instanceId]: false },
-        errorMap: { ...s.errorMap, [instanceId]: null },
-      }))
-    }
+    updateDataSourceByKey(key, {
+      data: adapted,
+      loading: false,
+      error: null,
+      lastUpdated: Date.now(),
+    })
+    updateLoadingMapByInstanceId(instanceId, null)
 
     // 更新全局 mergedData 和状态
     const hasAnyData = Object.values(newMergedData).some(

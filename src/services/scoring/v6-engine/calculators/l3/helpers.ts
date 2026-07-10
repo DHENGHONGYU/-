@@ -140,6 +140,19 @@ export function scoreMoat(input: LayerInput): number {
  * // 毛利率 > 40% → 递增趋势，营收增速 > 30% → 评分 = 4.0
  * ```
 /**
+ * 按增速与趋势分档评分，将 `growth > 0.30` / `growth > 0.10` 收敛到单一函数。
+ */
+function scoreGrowthByTrend(growth: number, trend: '递减' | '递增' | '稳定'): number {
+  if (growth > 0.30) {
+    return trend === '递减' ? 4.5 : 4
+  }
+  if (growth > 0.10) {
+    return trend === '递减' ? 4 : 3.5
+  }
+  return trend === '递减' ? 3.5 : 3
+}
+
+/**
  * scoreCompetition
  * @param input
  * @returns number
@@ -151,23 +164,9 @@ export function scoreCompetition(input: LayerInput): number {
 
   if (gm === undefined || growth === undefined) return 2.5
 
-  let trend = '稳定'
+  let trend: '稳定' | '递增' | '递减' = '稳定'
   if (gm > 0.40) trend = '递增'
   else if (gm < 0.20) trend = '递减'
 
-  if (trend === '递减') {
-    if (growth > 0.30) return 4.5
-    if (growth > 0.10) return 4
-    return 3.5
-  }
-
-  if (trend === '递增') {
-    if (growth > 0.30) return 4
-    if (growth > 0.10) return 3.5
-    return 3
-  }
-
-  if (growth > 0.30) return 4
-  if (growth > 0.10) return 3.5
-  return 3
+  return scoreGrowthByTrend(growth, trend)
 }

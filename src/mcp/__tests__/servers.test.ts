@@ -112,7 +112,7 @@ describe('DataFetcherServer', () => {
       expect(names).toContain('fetch_stocks_basic')
       expect(names).toContain('fetch_kline')
       expect(names).toContain('refresh_symbol')
-      expect(names).toContain('health_check')
+      expect(names).toContain('test_source_connectivity')
     })
   })
 
@@ -148,9 +148,9 @@ describe('TradingServer', () => {
   })
 
   describe('listTools', () => {
-    it('应返回 9 个 Tool', () => {
+    it('应返回 10 个 Tool', () => {
       const tools = server.listTools()
-      expect(tools).toHaveLength(9)
+      expect(tools).toHaveLength(10)
       const names = tools.map((t) => t.name)
       expect(names).toContain('scan_signals')
       expect(names).toContain('advise_stock')
@@ -161,6 +161,7 @@ describe('TradingServer', () => {
       expect(names).toContain('calculate_position')
       expect(names).toContain('get_strategy_snapshot')
       expect(names).toContain('generate_trade_review')
+      expect(names).toContain('generate_mock_trading_data')
     })
 
     it('check_order_risk 应有 5 个必填参数', () => {

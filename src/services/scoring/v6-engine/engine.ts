@@ -95,6 +95,15 @@ export class V6ScoreEngine {
     this.config = { ...this.config, ...override }
   }
 
+  /**
+   * 条件化记录审计条目。
+   * 将 `this.config.auditEnabled` 判断收敛到单一位置，避免 calculateLayer 内重复 if。
+   */
+  private recordAudit(audit: AuditEntry[], partial: Omit<AuditEntry, 'timestamp'>): void {
+    if (!this.config.auditEnabled) return
+    audit.push({ timestamp: Date.now(), ...partial })
+  }
+
   // ============================================================
   // 核心计算流程
   // ============================================================
@@ -109,15 +118,12 @@ export class V6ScoreEngine {
 
     const audit: AuditEntry[] = []
 
-    if (this.config.auditEnabled) {
-      audit.push({
-        timestamp: Date.now(),
-        layerId,
-        step: 'start',
-        input: { symbol: input.stock.symbol, hasIndustryScore: input.industryScore !== undefined },
-        output: {},
-      })
-    }
+    this.recordAudit(audit, {
+      layerId,
+      step: 'start',
+      input: { symbol: input.stock.symbol, hasIndustryScore: input.industryScore !== undefined },
+      output: {},
+    })
 
     try {
       const result = await calculator.calculate(input)
@@ -134,16 +140,13 @@ export class V6ScoreEngine {
         })()),
       }
 
-      if (this.config.auditEnabled) {
-        audit.push({
-          timestamp: Date.now(),
-          layerId,
-          step: 'complete',
-          input: { score: result.score },
-          output: { score: sanitizedScore, summary: sanitizedResult.summary },
-          formula: `calculator.${layerId}.calculate()`,
-        })
-      }
+      this.recordAudit(audit, {
+        layerId,
+        step: 'complete',
+        input: { score: result.score },
+        output: { score: sanitizedScore, summary: sanitizedResult.summary },
+        formula: `calculator.${layerId}.calculate()`,
+      })
 
       return {
         ...sanitizedResult,
@@ -153,15 +156,12 @@ export class V6ScoreEngine {
       const msg = err instanceof Error ? err.message : String(err)
       logger.error(`[V6ScoreEngine] ${layerId} calculation failed: ${msg}`)
 
-      if (this.config.auditEnabled) {
-        audit.push({
-          timestamp: Date.now(),
-          layerId,
-          step: 'error',
-          input: {},
-          output: { error: msg },
-        })
-      }
+      this.recordAudit(audit, {
+        layerId,
+        step: 'error',
+        input: {},
+        output: { error: msg },
+      })
 
       return this.placeholderLayer(layerId, input, msg)
     }

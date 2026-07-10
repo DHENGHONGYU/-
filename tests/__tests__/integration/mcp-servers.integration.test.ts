@@ -166,10 +166,9 @@ describe('套件2: MCP 工具调用冒烟测试', () => {
     dataBridge.invalidateCache(STORE_NAME.v6Scores)
   })
 
-  it('fetcher: health_check 应返回 fetcher 和 providers 嵌套结构', async () => {
-    const result = await callTool('fetcher', 'health_check')
-    expect(result).toHaveProperty('fetcher')
-    expect(result).toHaveProperty('providers')
+  it('fetcher: test_source_connectivity 应返回连通性结果', async () => {
+    const result = await callTool('fetcher', 'test_source_connectivity', { source: 'mock' })
+    expect(result).toHaveProperty('ok')
   }, { timeout: 60000 })
 
   it('scoring:v6: get_engine_config 应返回引擎配置', async () => {
@@ -344,10 +343,9 @@ describe('套件4: 关键链路端到端测试', () => {
     dataBridge.invalidateCache(STORE_NAME.v6Scores)
   })
 
-  it('fetcher MCP 工具 health_check → 返回格式应包含 fetcher 嵌套对象', async () => {
-    const result = await callTool('fetcher', 'health_check')
-    expect(result).toHaveProperty('fetcher')
-    expect(result).toHaveProperty('providers')
+  it('fetcher MCP 工具 test_source_connectivity → 返回 ok 字段', async () => {
+    const result = await callTool('fetcher', 'test_source_connectivity', { source: 'mock' })
+    expect(result).toHaveProperty('ok')
   }, { timeout: 60000 })
 
   it('stockpool MCP 工具 list_pool_stocks → 应返回股票列表', async () => {

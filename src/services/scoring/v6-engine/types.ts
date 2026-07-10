@@ -371,6 +371,17 @@ export function stockToBasicData(stock: Stock): StockBasicData {
 }
 
 /**
+ * 安全计算收益率，避免除以零或 undefined。
+ * 将 `past !== undefined && past !== 0 && latestClose !== undefined` 收敛到单一位置。
+ */
+function safeReturn(past: number | undefined, latestClose: number | undefined): number | undefined {
+  if (past === undefined || past === 0 || latestClose === undefined) {
+    return undefined
+  }
+  return (latestClose - past) / past
+}
+
+/**
  * 将 dataLayer 的 DailyQuotes 适配为引擎 QuoteData
  *
  * 计算 20/60 日收益率、20 日波动率与平均换手率；历史数据不足时字段保持 undefined。
@@ -384,18 +395,14 @@ export function quotesToQuoteData(quotes: DailyQuotes): QuoteData {
   let return20d: number | undefined
   if (history.length >= 21) {
     const past = history[history.length - 20 - 1]?.close
-    if (past !== undefined && past !== 0 && latestClose !== undefined) {
-      return20d = (latestClose - past) / past
-    }
+    return20d = safeReturn(past, latestClose)
   }
 
   // 60 日收益率
   let return60d: number | undefined
   if (history.length >= 61) {
     const past = history[history.length - 60 - 1]?.close
-    if (past !== undefined && past !== 0 && latestClose !== undefined) {
-      return60d = (latestClose - past) / past
-    }
+    return60d = safeReturn(past, latestClose)
   }
 
   // 20 日波动率（日收益标准差）

@@ -140,35 +140,8 @@ export class BacktestEngine {
       const sellEvents = dayEvents.filter((e) => e.direction === 'sell')
       const buyEvents = dayEvents.filter((e) => e.direction === 'buy')
 
-      for (const evt of sellEvents) {
-        const price = getPriceForDate(evt.symbol, date, quotesCache) ?? evt.price
-        if (price <= 0) continue
-
-        const qty = this._calculateSellQuantity(evt.symbol, positions)
-        if (qty <= 0) continue
-
-        const order = this._executeVirtualSell(evt.symbol, price, qty, date, config)
-        trades.push(order)
-        cash = cash + order.quantity * order.price - order.commission
-        this._updatePositionAfterSell(positions, evt.symbol, order.quantity)
-      }
-
-      for (const evt of buyEvents) {
-        const price = getPriceForDate(evt.symbol, date, quotesCache) ?? evt.price
-        if (price <= 0) continue
-
-        const portfolioValue = this._calculatePortfolioValue(cash, positions, date, quotesCache)
-        const qty = this._calculatePositionSize(evt, cash, portfolioValue, positions, config)
-        if (qty <= 0) continue
-
-        const order = this._executeVirtualBuy(evt.symbol, price, qty, date, config)
-        const totalCost = order.quantity * order.price + order.commission
-        if (totalCost > cash) continue
-
-        trades.push(order)
-        cash = cash - totalCost
-        this._updatePositionAfterBuy(positions, evt.symbol, order.quantity, order.price)
-      }
+      cash = this._processSellEvents(sellEvents, date, quotesCache, positions, cash, trades, config)
+      cash = this._processBuyEvents(buyEvents, date, quotesCache, positions, cash, trades, config)
 
       // 6. 记录当日收盘净值
       const dayTotalValue = this._calculatePortfolioValue(cash, positions, date, quotesCache)
@@ -192,6 +165,64 @@ export class BacktestEngine {
     })
 
     return { trades, positions: virtualPositions, dailyValues, metrics }
+  }
+
+  /**
+   * 逐笔处理卖出事件。将价格/数量校验封装到独立方法，避免 run() 内重复 if 条件。
+   */
+  private _processSellEvents(
+    sellEvents: BacktestEvent[],
+    date: string,
+    quotesCache: Map<string, DailyQuotes>,
+    positions: Map<string, InternalPosition>,
+    cash: number,
+    trades: VirtualOrder[],
+    config: BacktestEngineConfig,
+  ): number {
+    for (const evt of sellEvents) {
+      const price = getPriceForDate(evt.symbol, date, quotesCache) ?? evt.price
+      if (price <= 0) continue
+
+      const qty = this._calculateSellQuantity(evt.symbol, positions)
+      if (qty <= 0) continue
+
+      const order = this._executeVirtualSell(evt.symbol, price, qty, date, config)
+      trades.push(order)
+      cash = cash + order.quantity * order.price - order.commission
+      this._updatePositionAfterSell(positions, evt.symbol, order.quantity)
+    }
+    return cash
+  }
+
+  /**
+   * 逐笔处理买入事件。将价格/数量校验封装到独立方法，避免 run() 内重复 if 条件。
+   */
+  private _processBuyEvents(
+    buyEvents: BacktestEvent[],
+    date: string,
+    quotesCache: Map<string, DailyQuotes>,
+    positions: Map<string, InternalPosition>,
+    cash: number,
+    trades: VirtualOrder[],
+    config: BacktestEngineConfig,
+  ): number {
+    for (const evt of buyEvents) {
+      const price = getPriceForDate(evt.symbol, date, quotesCache) ?? evt.price
+      if (price <= 0) continue
+
+      const portfolioValue = this._calculatePortfolioValue(cash, positions, date, quotesCache)
+      const qty = this._calculatePositionSize(evt, cash, portfolioValue, positions, config)
+      if (qty <= 0) continue
+
+      const order = this._executeVirtualBuy(evt.symbol, price, qty, date, config)
+      const totalCost = order.quantity * order.price + order.commission
+      if (totalCost > cash) continue
+
+      trades.push(order)
+      cash = cash - totalCost
+      this._updatePositionAfterBuy(positions, evt.symbol, order.quantity, order.price)
+    }
+    return cash
   }
 
   // ============================================================

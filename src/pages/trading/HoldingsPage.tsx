@@ -80,39 +80,45 @@ export default function HoldingsPage(): React.JSX.Element {
     const params = buildParams()
     logger.info('[HoldingsPage] 开始加载持仓数据', { params })
     setLoading({ isListLoading: true })
+    let error: Error | null = null
+    let responseCode = 0
+    let responseMessage = ''
     try {
       const response = await fetchData(params)
-      if (!isMountedRef.current) return
-
-      if (response.code === 200) {
-        logger.info('[HoldingsPage] 持仓数据加载完成', {
-          total: pagination.total,
-          page: pagination.page,
-          pageSize: pagination.pageSize,
-          recordCount: data.length,
-        })
-      } else {
-        logger.warn('[HoldingsPage] 持仓数据加载返回异常code', {
-          code: response.code,
-          message: response.message,
-        })
-        toast({ title: '加载失败', description: response.message || '未知错误', variant: 'error' })
-      }
+      responseCode = response.code
+      responseMessage = response.message
     } catch (err) {
-      if (!isMountedRef.current) return
+      error = err instanceof Error ? err : new Error(String(err))
+    }
+
+    if (!isMountedRef.current) {
+      return
+    }
+
+    if (error) {
       logger.error('[HoldingsPage] 持仓数据加载异常', {
-        error: err instanceof Error ? err.message : String(err),
+        error: error.message,
       })
       toast({
         title: '加载失败',
-        description: err instanceof Error ? err.message : '网络请求异常',
+        description: error.message || '网络请求异常',
         variant: 'error',
       })
-    } finally {
-      if (isMountedRef.current) {
-        setLoading({ isListLoading: false })
-      }
+    } else if (responseCode === 200) {
+      logger.info('[HoldingsPage] 持仓数据加载完成', {
+        total: pagination.total,
+        page: pagination.page,
+        pageSize: pagination.pageSize,
+        recordCount: data.length,
+      })
+    } else {
+      logger.warn('[HoldingsPage] 持仓数据加载返回异常code', {
+        code: responseCode,
+        message: responseMessage,
+      })
+      toast({ title: '加载失败', description: responseMessage || '未知错误', variant: 'error' })
     }
+    setLoading({ isListLoading: false })
   }, [buildParams, setData, setLoading, toast, pagination, data])
 
   // 初始加载 & 依赖变化时重新加载

@@ -52,20 +52,28 @@ export default memo(function ResearchReportPage(): React.JSX.Element {
 
   const loadSymbols = async (signal?: AbortSignal): Promise<void> => {
     setLoading(true)
+    let error: Error | null = null
+    let symbols: string[] = []
     try {
-      const uniqueSymbols = await loadStockSymbols()
-      if (signal?.aborted) return
-      setSymbols(uniqueSymbols)
-    } catch (error) {
-      if (signal?.aborted) return
+      symbols = await loadStockSymbols()
+    } catch (err) {
+      error = err instanceof Error ? err : new Error(String(err))
+    }
+
+    if (signal?.aborted) {
+      return
+    }
+
+    if (error) {
       toast({
         variant: 'error',
         title: '加载股票列表失败',
         description: error instanceof Error ? error.message : '未知错误',
       })
-    } finally {
-      if (!signal?.aborted) setLoading(false)
+    } else {
+      setSymbols(symbols)
     }
+    setLoading(false)
   }
 
   const generateReport = async (): Promise<void> => {

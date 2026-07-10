@@ -112,18 +112,18 @@ export const useStockAnalysisStore = create<StockAnalysisState>((set) => ({
       })
       logger.info(`[stockAnalysisStore] loadStockAnalysis 完成: ${symbol}, 耗时 ${Date.now() - t0}ms`)
     } catch (err) {
-      if (signal?.aborted) {
+      if (!signal?.aborted) {
+        const message = err instanceof Error ? err.message : String(err)
+        logger.error(`[stockAnalysisStore] loadStockAnalysis 失败: ${symbol}, ${message}`, {
+          elapsedMs: Date.now() - t0,
+        })
+        set({
+          loading: false,
+          error: message,
+        })
+      } else {
         logger.info(`[stockAnalysisStore] loadStockAnalysis 已取消: ${symbol}`)
-        return
       }
-      const message = err instanceof Error ? err.message : String(err)
-      logger.error(`[stockAnalysisStore] loadStockAnalysis 失败: ${symbol}, ${message}`, {
-        elapsedMs: Date.now() - t0,
-      })
-      set({
-        loading: false,
-        error: message,
-      })
     }
   },
 

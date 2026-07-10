@@ -174,8 +174,14 @@ export function generateRiskProfile(
   )
 
   let riskAppetite: RiskProfile['riskAppetite'] = 'moderate'
-  if (hasHeavyGambling) riskAppetite = 'aggressive'
-  else if (classification.disciplineScore >= 80) riskAppetite = 'conservative'
+  const suggestions: string[] = []
+
+  if (hasHeavyGambling) {
+    riskAppetite = 'aggressive'
+    suggestions.push('严格控制单笔仓位不超过总资金的 20%')
+  } else if (classification.disciplineScore >= 80) {
+    riskAppetite = 'conservative'
+  }
 
   // 计算最大回撤
   const pairs = buildTradePairs(orders)
@@ -207,9 +213,7 @@ export function generateRiskProfile(
   if (maxConcentration > 0.5) concentrationLevel = 'high'
   else if (maxConcentration < 0.2) concentrationLevel = 'low'
 
-  const suggestions: string[] = []
   if (hasNoStopLoss) suggestions.push('必须设置每笔交易的止损位并严格执行')
-  if (hasHeavyGambling) suggestions.push('严格控制单笔仓位不超过总资金的 20%')
   if (concentrationLevel === 'high') suggestions.push('建议分散持仓，降低单一标的集中度')
   if (maxDrawdown > 15) suggestions.push('最大回撤偏高，建议设置组合层面的回撤止损线')
   if (riskAppetite === 'aggressive') suggestions.push('建议降低风险偏好，采用更稳健的仓位管理策略')
