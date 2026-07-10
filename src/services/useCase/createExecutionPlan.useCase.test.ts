@@ -35,6 +35,16 @@ vi.mock('@/config/tradingConfig', () => ({
       dataFreshnessHours: 48,
     },
   })),
+  getEffectiveTradingConfig: vi.fn(() => ({
+    risk: {
+      portfolioValue: 100000,
+      singleMaxPct: 0.25,
+      totalAllocationPct: 0.80,
+      sameSymbolCooldownHours: 24,
+      maxTradesPerDay: 5,
+      dataFreshnessHours: 48,
+    },
+  })),
 }))
 
 vi.mock('@/services/trading/positionSizer', () => ({
