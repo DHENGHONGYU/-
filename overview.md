@@ -145,6 +145,41 @@
 | 硬编码 | `audit:hardcode` | ⚠️ 29 warning（基线债务，exit 0） |
 | 颜色 lint | `lint:colors` | ✅ exit 0 |
 
-### 后续待执行
-- **步骤 2**：低风险域逐域迁移（trading/output/news/strategy/agent/localDoc/system 共 ~22 文件）
-- **步骤 3**：`analysis/` 中风险域迁移（13 文件，含嵌套子目录）
+### 步骤 2：低风险域逐域物理迁移 ✅
+
+将 7 个低风险域共 25 个文件（含 3 个 .ts）物理迁移到 `organisms/` 对应子目录：
+
+| 域 | 文件数 | 子目录 |
+|----|--------|--------|
+| trading/ | 3 | — |
+| output/ | 4（含 reviewArtifact.ts） | — |
+| news/ | 2 | — |
+| strategy/ | 2 | — |
+| agent/ | 2 | — |
+| localDoc/ | 1 | — |
+| system/ | 11 | `migration/`（5 文件） |
+
+- 每域原位置留纯 re-export shim（检测 default 导出，有则双行 `export *` + `export { default }`）
+- 测试文件仅移动不生成 shim
+- 翻转注册表 status → `active`，补登 9 个未登记条目（AgentTaskList/LogStreamPanel/SystemArchitectureDiagram/migration 子目录 5 个/reviewArtifact.ts）
+
+### 步骤 3：`analysis/` 中风险域迁移 ✅
+
+将 `analysis/` 下 13 个文件（含 6 个嵌套子目录 `hub/news/score/screening/sector/signal` + 4 个测试文件）物理迁移到 `organisms/analysis/`，保留子目录结构。原位置留纯 re-export shim。
+
+### 验证结果（全部门禁通过，2026-07-11 步骤 2+3 收尾）
+
+| 门禁 | 命令 | 结果 |
+|------|------|------|
+| 类型检查 | `tsc:prod` | ✅ **0 类型错误** |
+| 构建 | `vite build` | ✅ exit 0（28.96s） |
+| 分层 | `audit:layers` | ✅ 0 违规 |
+| 原子层级 | `audit:atomic` | ✅ 0 阻断违规；194 warning（173 stale-ui-import + 21 unregistered，过渡期预期） |
+| 文档同步 | `audit:docs` | ✅ 0 违规 |
+| 路由 | `audit:routes` | ✅ exit 0 |
+| 令牌 | `audit:tokens` | ✅ 0 硬编码（当前=基线=0） |
+| 硬编码 | `audit:hardcode` | ⚠️ 29 warning（基线债务，exit 0） |
+| 颜色 lint | `lint:colors` | ✅ exit 0 |
+
+### 阶段 3 总结
+步骤 0–3 全部完成。**11 个业务域共 63 个文件**已物理迁移到 `organisms/` 下对应子目录，原位置全部保留纯 re-export shim，**全量消费者引用零改动、零类型错误、零阻断违规**。`chart/`、`cockpit/cabin/widgets` 按决策仅 registry 标注不物理搬（Widget 注册表耦合）。后续阶段 4（模板提取）+ 阶段 5（shim 清理）可独立排期。

@@ -2,7 +2,7 @@
 
 > **版本**：v1.0.0  
 > **日期**：2026-07-10  
-> **状态**：阶段 1（体系建立）+ 阶段 2（ui/ 物理迁移）+ 阶段 3 步骤 0（audit:atomic 门禁）+ 阶段 3 步骤 1（input/ 试点迁移）已完成并验证  
+> **状态**：阶段 1（体系建立）+ 阶段 2（ui/ 物理迁移）+ 阶段 3（业务目录有机体化，步骤 0–3）已完成并验证；`chart/`、`cockpit/cabin/widgets` 仅 registry 标注  
 > **适用范围**：`src/components/` 全量组件
 
 ---
@@ -320,7 +320,7 @@ export interface MetricCardProps {
 - [x] 修复脚本误加的 `PageContainer` 到 `atoms/index.ts`（实际归属 molecules）
 - [x] 收尾验证（系统 Node 24 驱动 tsx）：`tsc:prod` ✅（仅 `databridge.test.ts` 预存 TS2352）/ `build` ✅ / `audit:layers` 0 违规（909 文件）/ `audit:tokens` 0 硬编码 / `audit:docs` 0 违规（302 文件）/ `audit:routes` 62/62 / `lint:colors` ✅ / `audit:hardcode` 仅 29 处基线 Warning
 
-### 阶段 3：业务目录有机体化（v1.2）— 进行中
+### 阶段 3：业务目录有机体化（v1.2）— 已完成 ✅（2026-07-11）
 
 > **执行策略**：治理优先 + 试点先行（经用户确认）。先建 `audit:atomic` 门禁强制层级边界，再以 `input/` 为试点验证 shim 配方，随后低风险域逐域扩面。`chart/` 与 `cockpit/cabin/widgets` 因与 Widget 注册表耦合，仅 registry 标注不物理搬。
 
@@ -340,21 +340,24 @@ export interface MetricCardProps {
 - [x] 翻转注册表对应条目 status → `active`
 - [x] 收尾验证（系统 Node 24 驱动 tsx）：`tsc:prod` 0 错误 / `build` ✅ / `audit:layers` 0 违规 / `audit:atomic` 0 阻断（203 warning 过渡期预期）/ `audit:docs` 0 违规 / `audit:routes` 64 路由覆盖 / `audit:tokens` 0 硬编码 / `lint:colors` ✅ / `audit:hardcode` 29 基线 Warning
 
-**步骤 2：低风险域逐域物理迁移 — 待执行**
+**步骤 2：低风险域逐域物理迁移 — 已完成 ✅（2026-07-11）**
 
-- [ ] `trading/`（3 文件）→ `organisms/trading/`
-- [ ] `output/`（3 文件）→ `organisms/output/`
-- [ ] `news/`（2 文件）→ `organisms/news/`
-- [ ] `strategy/`（2 文件）→ `organisms/strategy/`
-- [ ] `agent/`（2 文件）→ `organisms/agent/`
-- [ ] `localDoc/`（1 文件）→ `organisms/localDoc/`
-- [ ] `system/`（9 文件）→ `organisms/system/`
-- [ ] `chart/` → 重评级为 molecule，registry 标注不物理搬
+- [x] `trading/`（3 文件）→ `organisms/trading/`
+- [x] `output/`（4 文件，含 reviewArtifact.ts）→ `organisms/output/`
+- [x] `news/`（2 文件）→ `organisms/news/`
+- [x] `strategy/`（2 文件）→ `organisms/strategy/`
+- [x] `agent/`（2 文件）→ `organisms/agent/`
+- [x] `localDoc/`（1 文件）→ `organisms/localDoc/`
+- [x] `system/`（11 文件，含 `migration/` 子目录 5 文件）→ `organisms/system/`
+- [x] 补登 9 个未登记条目（AgentTaskList/LogStreamPanel/SystemArchitectureDiagram/migration 子目录/reviewArtifact.ts）
+- [ ] `chart/` → 重评级为 molecule，registry 标注不物理搬（待执行重评级）
 - [ ] `cockpit/cabin/widgets` → 仅 registry 标注不物理搬（Widget 注册表耦合）
 
-**步骤 3：`analysis/` 中风险域迁移 — 待执行**
+**步骤 3：`analysis/` 中风险域迁移 — 已完成 ✅（2026-07-11）**
 
-- [ ] `analysis/`（13 文件，含 6 个嵌套子目录，域内互引）→ `organisms/analysis/`（需子目录感知 shim）
+- [x] `analysis/`（13 文件，含 6 个嵌套子目录 `hub/news/score/screening/sector/signal` + 4 测试文件）→ `organisms/analysis/`（子目录结构保留，子目录感知 shim 已生成）
+
+**收尾验证（2026-07-11 步骤 2+3）**：`tsc:prod` 0 错误 / `build` ✅（28.96s）/ `audit:layers` 0 违规 / `audit:atomic` 0 阻断（194 warning 过渡期预期）/ `audit:docs` 0 违规 / `audit:routes` exit 0 / `audit:tokens` 0 硬编码 / `lint:colors` ✅ / `audit:hardcode` 29 基线 Warning
 
 ### 阶段 4：模板提取（v1.3）
 

@@ -16,10 +16,10 @@
 ## 原子组件体系（Atomic Design）
 - **四层目录**：`src/components/{atoms,molecules,organisms,templates}/`，各层有 `index.ts` 桶导出。
 - **层级边界**（`audit:atomic` 强制）：atom 不引 store/service/molecule/organism/template/page/app；molecule 不引 organism/template/store/service；template 不引 organism/store/service。
-- **迁移状态**：阶段 1（体系建立）✅ + 阶段 2（ui/ → atoms/molecules 物理迁移，37 文件 + shim）✅ + 阶段 3 步骤 0（`audit:atomic` 脚本）✅ + 步骤 1（input/ 18 文件 → organisms/input/）✅；待执行：步骤 2（低风险域 ~22 文件）、步骤 3（analysis/ 13 文件）。
-- **shim 兼容模式**：旧路径（`ui/`、`collection/`、`pool/`、`input/`）保留纯 re-export shim，消费者引用零改动；阶段 5 统一清理。
+- **迁移状态**：阶段 1（体系建立）✅ + 阶段 2（ui/ → atoms/molecules 物理迁移，37 文件 + shim）✅ + 阶段 3（业务目录有机体化，步骤 0–3 全完成，11 域 63 文件迁入 organisms/）✅；待执行：阶段 4（模板提取）、阶段 5（shim 清理）。
+- **shim 兼容模式**：旧路径（`ui/`、`collection/`、`pool/`、`input/`、`trading/`、`output/`、`news/`、`strategy/`、`agent/`、`localDoc/`、`system/`、`analysis/`）保留纯 re-export shim，消费者引用零改动；阶段 5 统一清理。
 - **注册表**：`src/components/componentRegistry.ts` 登记 sourcePath/targetPath/level/status，`migrating` → `active` 翻转跟踪迁移进度。
-- **audit:atomic 基线**：0 阻断违规、203 warning（173 stale-ui-import + 30 unregistered，过渡期预期）。
+- **audit:atomic 基线**：0 阻断违规、194 warning（173 stale-ui-import + 21 unregistered 含测试文件，过渡期预期）。
 - **chart/ 与 cockpit/cabin/widgets**：仅 registry 标注不物理搬（Widget 注册表耦合）。
 
 ## 数据采集
