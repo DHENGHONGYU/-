@@ -40,28 +40,30 @@ export abstract class BaseCollector {
     let lastError: Error | undefined
 
     for (let attempt = 0; attempt <= this.config.retryCount; attempt++) {
-      try {
-        // 每次重试创建新的 AbortController
-        this.abortController = new AbortController()
-
-        const result = await this.executeWithTimeout(dataSource)
+      const result = await this.tryCollectOnce(dataSource).catch((error) => ({ error }))
+      if (!('error' in result)) {
         this.isRunning = false
         return result
-      } catch (error) {
-        lastError = error instanceof Error ? error : new Error(String(error))
-        logger.warn(
-          `[BaseCollector] 采集失败 (attempt ${attempt + 1}/${this.config.retryCount + 1}): ${lastError.message}`
-        )
+      }
 
-        if (attempt < this.config.retryCount) {
-          logger.info(`[BaseCollector] ${this.config.retryInterval}ms 后重试...`)
-          await this.delay(this.config.retryInterval)
-        }
+      lastError = result.error instanceof Error ? result.error : new Error(String(result.error))
+      logger.warn(
+        `[BaseCollector] 采集失败 (attempt ${attempt + 1}/${this.config.retryCount + 1}): ${lastError.message}`
+      )
+
+      if (attempt < this.config.retryCount) {
+        logger.info(`[BaseCollector] ${this.config.retryInterval}ms 后重试...`)
+        await this.delay(this.config.retryInterval)
       }
     }
 
     this.isRunning = false
     throw lastError ?? new Error('采集失败，已达到最大重试次数')
+  }
+
+  private async tryCollectOnce(dataSource: DataSourceConfig): Promise<RawMarketData> {
+    this.abortController = new AbortController()
+    return await this.executeWithTimeout(dataSource)
   }
 
   /**

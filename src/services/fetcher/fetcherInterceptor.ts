@@ -32,6 +32,13 @@ const DEFAULT_CONFIG: InterceptorConfig = {
 }
 
 // 指数退避计算
+/**
+ * calculateBackoff
+ * @param attempt
+ * @param baseDelay
+ * @param maxDelay
+ * @returns number
+ */
 export function calculateBackoff(attempt: number, baseDelay: number, maxDelay: number): number {
   const delay = Math.min(baseDelay * Math.pow(2, attempt), maxDelay)
   // 添加随机抖动 ±20%
@@ -42,10 +49,19 @@ export function calculateBackoff(attempt: number, baseDelay: number, maxDelay: n
 // 全局拦截器实例
 let globalConfig: InterceptorConfig = { ...DEFAULT_CONFIG }
 
+/**
+ * setInterceptorConfig
+ * @param config
+ * @returns void
+ */
 export function setInterceptorConfig(config: Partial<InterceptorConfig>): void {
   globalConfig = { ...globalConfig, ...config }
 }
 
+/**
+ * getInterceptorConfig
+ * @returns InterceptorConfig
+ */
 export function getInterceptorConfig(): InterceptorConfig {
   return { ...globalConfig }
 }
@@ -63,7 +79,51 @@ function shouldRetry(error: HttpError, config: InterceptorConfig, attempt: numbe
   return false
 }
 
+function createHttpErrorFromResponse(response: Response, url: string): HttpError {
+  return new HttpError(
+    `HTTP ${response.status}: ${response.statusText}`,
+    getHttpErrorType(response.status),
+    response.status,
+    url,
+  )
+}
+
+function createNetworkError(err: unknown, url: string): HttpError {
+  const isAbort = err instanceof DOMException && err.name === 'AbortException'
+  return new HttpError(
+    isAbort ? '请求超时' : '网络连接失败',
+    isAbort ? HttpErrorType.TIMEOUT : HttpErrorType.NETWORK_ERROR,
+    undefined,
+    url,
+  )
+}
+
+function triggerAuthCallbacks(errorType: HttpErrorType, config: InterceptorConfig): void {
+  if (errorType === HttpErrorType.UNAUTHORIZED && config.onUnauthorized) {
+    config.onUnauthorized()
+  }
+  if (errorType === HttpErrorType.FORBIDDEN && config.onForbidden) {
+    config.onForbidden()
+  }
+}
+
+async function tryOnce(
+  input: RequestInfo | URL,
+  init: RequestInit | undefined,
+): Promise<Response> {
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 30000)
+  try {
+    return await fetch(input, { ...init, signal: controller.signal })
+  } finally {
+    clearTimeout(timeout)
+  }
+}
+
 // 全局 fetch 包装函数
+/**
+ * interceptedFetch
+ */
 export async function interceptedFetch(
   input: RequestInfo | URL,
   init?: RequestInit,
@@ -73,73 +133,37 @@ export async function interceptedFetch(
   let lastError: HttpError | null = null
 
   for (let attempt = 0; attempt <= config.maxRetries; attempt++) {
-    try {
-      const controller = new AbortController()
-      const timeout = setTimeout(() => controller.abort(), 30000)  // 30s 超时
+    const response = await tryOnce(input, init).catch((err) => ({ error: createNetworkError(err, url) }))
 
-      const response = await fetch(input, {
-        ...init,
-        signal: controller.signal,
-      })
-
-      clearTimeout(timeout)
-
-      // 处理 HTTP 错误状态码
-      if (!response.ok) {
-        const errorType = getHttpErrorType(response.status)
-        const error = new HttpError(
-          `HTTP ${response.status}: ${response.statusText}`,
-          errorType,
-          response.status,
-          url,
-        )
-
-        // 触发特殊回调
-        if (errorType === HttpErrorType.UNAUTHORIZED && config.onUnauthorized) {
-          config.onUnauthorized()
-        }
-        if (errorType === HttpErrorType.FORBIDDEN && config.onForbidden) {
-          config.onForbidden()
-        }
-
-        // 判断是否重试
-        if (shouldRetry(error, config, attempt)) {
-          lastError = error
-          const delay = calculateBackoff(attempt, config.baseDelay, config.maxDelay)
-          await new Promise(resolve => setTimeout(resolve, delay))
-          continue
-        }
-
-        throw error
-      }
-
-      return response
-
-    } catch (err) {
-      if (err instanceof HttpError) {
-        throw err
-      }
-
-      // 网络错误（fetch 抛出）
-      const isAbort = err instanceof DOMException && err.name === 'AbortException'
-      const errorType = isAbort ? HttpErrorType.TIMEOUT : HttpErrorType.NETWORK_ERROR
-      const error = new HttpError(
-        isAbort ? '请求超时' : '网络连接失败',
-        errorType,
-        undefined,
-        url,
-      )
-
-      if (shouldRetry(error, config, attempt)) {
-        lastError = error
-        const delay = calculateBackoff(attempt, config.baseDelay, config.maxDelay)
-        await new Promise(resolve => setTimeout(resolve, delay))
+    if ('error' in response) {
+      const networkError = response.error
+      if (shouldRetry(networkError, config, attempt)) {
+        lastError = networkError
+        await delay(calculateBackoff(attempt, config.baseDelay, config.maxDelay))
         continue
       }
-
-      throw error
+      throw networkError
     }
+
+    if (response.ok) {
+      return response
+    }
+
+    const error = createHttpErrorFromResponse(response, url)
+    triggerAuthCallbacks(error.type, config)
+
+    if (shouldRetry(error, config, attempt)) {
+      lastError = error
+      await delay(calculateBackoff(attempt, config.baseDelay, config.maxDelay))
+      continue
+    }
+
+    throw error
   }
 
   throw lastError || new HttpError('请求失败', HttpErrorType.UNKNOWN, undefined, url)
+}
+
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms))
 }

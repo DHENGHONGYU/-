@@ -63,6 +63,8 @@ interface CollectedItem {
  *                        → collectBasic（后端直接处理，前端不写入）
  *
  * @internal 供 Phase 步骤和 Facade 共用，不直接对外暴露
+/**
+ * collectDimension
  */
 export async function collectDimension(
   dimension: string,
@@ -355,6 +357,8 @@ class Phase4Step implements IWorkflowStep<OrchestratorContext> {
  *   new Phase4Step(),
  * ])
  * const result = await orchestrator.run(ctx)
+/**
+ * PhaseOrchestrator
  */
 export class PhaseOrchestrator {
   constructor(private readonly steps: IWorkflowStep<OrchestratorContext>[]) {}

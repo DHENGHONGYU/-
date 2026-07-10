@@ -98,6 +98,10 @@ class FetcherScheduler {
 
 let globalScheduler: FetcherScheduler | null = null
 
+/**
+ * getFetcherScheduler
+ * @returns FetcherScheduler
+ */
 export function getFetcherScheduler(): FetcherScheduler {
   if (!globalScheduler) {
     globalScheduler = new FetcherScheduler()
@@ -105,6 +109,10 @@ export function getFetcherScheduler(): FetcherScheduler {
   return globalScheduler
 }
 
+/**
+ * resetFetcherScheduler
+ * @returns void
+ */
 export function resetFetcherScheduler(): void {
   globalScheduler = null
 }

@@ -552,6 +552,12 @@ export async function sinaBatchQuotes(codes: string[]): Promise<StockQuote[]> {
  *
  * 注意：网易返回 CSV 可能为 GBK 编码，浏览器以 UTF-8 解析时表头中文可能乱码，
  *      故采用固定列索引而非表头匹配，保证解析鲁棒性。
+/**
+ * neteaseHistory
+ * @param code
+ * @param start
+ * @param end
+ * @returns Promise<KlineItem[]>
  */
 export async function neteaseHistory(code: string, start: string, end: string): Promise<KlineItem[]> {
   const startTs = Date.now()

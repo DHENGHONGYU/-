@@ -197,6 +197,9 @@ export async function clear(symbol = 'ALL'): Promise<number> {
   }
 }
 
+/**
+ * missingReportDetector
+ */
 export const missingReportDetector = {
   detect,
   listBySymbol,

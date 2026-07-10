@@ -50,6 +50,31 @@ async function fetchWithTimeout(
   }
 }
 
+async function tryRequest<T>(
+  path: string,
+  options: RequestInit,
+  timeoutMs: number,
+): Promise<{ ok: true; data: T } | { ok: false; error: unknown }> {
+  try {
+    const response = await fetchWithTimeout(buildUrl(path), {
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+      ...options,
+    }, timeoutMs)
+
+    if (!response.ok) {
+      return { ok: false, error: new FetcherError(`HTTP ${response.status}: ${response.statusText}`) }
+    }
+
+    const data = (await response.json()) as T
+    return { ok: true, data }
+  } catch (err) {
+    return { ok: false, error: err }
+  }
+}
+
 async function request<T>(
   path: string,
   options: RequestInit = {},
@@ -60,33 +85,17 @@ async function request<T>(
   let lastError: unknown
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
-    try {
-      const response = await fetchWithTimeout(
-        buildUrl(path),
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            ...options.headers,
-          },
-          ...options,
-        },
-        timeoutMs,
-      )
-
-      if (!response.ok) {
-        throw new FetcherError(`HTTP ${response.status}: ${response.statusText}`)
-      }
-
-      const data = (await response.json()) as T
-      return data
-    } catch (err) {
-      lastError = err
-      const isNetworkError = err instanceof TypeError || err instanceof FetcherError
-      if (!isNetworkError || attempt === maxRetries) {
-        break
-      }
-      logger.warn(`[fetcherClient] 请求失败，第 ${attempt + 1} 次重试`, { path, err })
+    const result = await tryRequest<T>(path, options, timeoutMs)
+    if (result.ok) {
+      return result.data
     }
+
+    lastError = result.error
+    const isNetworkError = result.error instanceof TypeError || result.error instanceof FetcherError
+    if (!isNetworkError || attempt === maxRetries) {
+      break
+    }
+    logger.warn(`[fetcherClient] 请求失败，第 ${attempt + 1} 次重试`, { path, err: result.error })
   }
 
   if (lastError instanceof TypeError) {
@@ -100,6 +109,10 @@ async function request<T>(
     : new FetcherError(String(lastError), lastError)
 }
 
+/**
+ * checkFetcherHealth
+ * @returns Promise<
+ */
 export async function checkFetcherHealth(): Promise<{
   ok: boolean
   error?: string
@@ -117,6 +130,9 @@ export async function checkFetcherHealth(): Promise<{
   }
 }
 
+/**
+ * collectBasic
+ */
 export async function collectBasic(
   symbol: string,
 ): Promise<CollectResponse<CollectBasicData>> {
@@ -147,6 +163,9 @@ export async function collectBasic(
   }
 }
 
+/**
+ * collectKline
+ */
 export async function collectKline(
   params: CollectKlineRequest,
 ): Promise<CollectResponse<CollectKlineData>> {
@@ -181,6 +200,9 @@ export async function collectKline(
   }
 }
 
+/**
+ * collectFinancial
+ */
 export async function collectFinancial(
   symbol: string,
 ): Promise<CollectResponse<CollectFinancialData>> {

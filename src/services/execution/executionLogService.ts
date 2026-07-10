@@ -118,6 +118,9 @@ export async function listFailed(symbol?: string): Promise<ExecutionLog[]> {
   }
 }
 
+/**
+ * executionLogService
+ */
 export const executionLogService = {
   writeLog,
   listByPlan,

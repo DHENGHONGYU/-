@@ -35,6 +35,9 @@ const VOLUME_MULTIPLIER = 100
 // DataSourceProvider 实现
 // ============================================================
 
+/**
+ * MockProvider
+ */
 export class MockProvider implements DataSourceProvider {
   readonly name = 'mock'
 

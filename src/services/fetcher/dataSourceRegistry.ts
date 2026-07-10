@@ -3,6 +3,9 @@ import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
 
+/**
+ * DataSourceRegistry
+ */
 export class DataSourceRegistry {
   private providers: DataSourceProvider[] = []
 

@@ -185,6 +185,17 @@ async function tryQuoteSource(code: string, source: DataSource): Promise<Realtim
 
 // ── B-3: 可配置降级编排 ──
 
+function resolveSourcePriority<T extends DataSource>(
+  configPriority: T[] | undefined,
+  defaultPriority: () => T[],
+): T[] {
+  return configPriority && configPriority.length > 0 ? configPriority : defaultPriority()
+}
+
+function createTraceId(prefix: string, code: string): string {
+  return `${prefix}-${code}-${Date.now()}`
+}
+
 /**
  * 获取实时行情（按配置优先级链降级）
  */
@@ -192,10 +203,8 @@ export async function getQuoteWithConfig(
   code: string,
   config: QuoteFetchConfig = {},
 ): Promise<CollectionResult<RealtimeQuote>> {
-  const chain = config.sourcePriority && config.sourcePriority.length > 0
-    ? config.sourcePriority
-    : defaultQuotePriority()
-  const traceId = config.traceId ?? `quote-${code}-${Date.now()}`
+  const chain = resolveSourcePriority(config.sourcePriority, defaultQuotePriority)
+  const traceId = config.traceId ?? createTraceId('quote', code)
   const start = Date.now()
 
   emitLifecycleEvent(COLLECTION_EVENTS.TRIGGERED, {
@@ -371,10 +380,8 @@ export async function getKlineWithConfig(
   days: number,
   config: KlineFetchConfig = {},
 ): Promise<CollectionResult<KlineBar[]>> {
-  const chain = config.sourcePriority && config.sourcePriority.length > 0
-    ? config.sourcePriority
-    : defaultKlinePriority()
-  const traceId = config.traceId ?? `kline-${code}-${Date.now()}`
+  const chain = resolveSourcePriority(config.sourcePriority, defaultKlinePriority)
+  const traceId = config.traceId ?? createTraceId('kline', code)
   const start = Date.now()
 
   emitLifecycleEvent(COLLECTION_EVENTS.TRIGGERED, {
@@ -658,7 +665,7 @@ export async function testSourceConnectivity(source: DataSource): Promise<Source
       return { ok: false, latencyMs: Date.now() - start, message: '网易 K 线返回空' }
     }
 
-    return { ok: false, latencyMs: Date.now() - start, message: `未知数据源 ${source}` }
+    return { ok: false, latencyMs: Date.now() - start, message: `未知数据源 ${String(source)}` }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     return { ok: false, latencyMs: Date.now() - start, message }

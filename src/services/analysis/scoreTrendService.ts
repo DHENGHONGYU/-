@@ -60,6 +60,12 @@ function getISOWeekYear(date: Date): number {
   return tmp.getUTCFullYear()
 }
 
+/**
+ * formatPeriodLabel
+ * @param date
+ * @param period
+ * @returns string
+ */
 export function formatPeriodLabel(date: Date, period: ScoreTrendPeriod): string {
   if (period === 'week') {
     const year = getISOWeekYear(date)
@@ -78,6 +84,41 @@ export function formatPeriodLabel(date: Date, period: ScoreTrendPeriod): string 
   return `${year}-Q${quarter}`
 }
 
+function getOrCreateBucket(buckets: Map<string, Bucket>, label: string): Bucket {
+  let bucket = buckets.get(label)
+  if (!bucket) {
+    bucket = { label, compositeSum: 0, compositeCount: 0, dimensions: new Map() }
+    buckets.set(label, bucket)
+  }
+  return bucket
+}
+
+function addCompositeScore(bucket: Bucket, score: number | null | undefined): void {
+  if (typeof score === 'number' && Number.isFinite(score)) {
+    bucket.compositeSum += score
+    bucket.compositeCount += 1
+  }
+}
+
+function addDimensionScores(bucket: Bucket, dimensions: DimensionLike[] | undefined): void {
+  if (!dimensions) return
+  for (const dim of dimensions) {
+    if (!dim?.name) continue
+    const s = dim.score
+    if (typeof s !== 'number' || !Number.isFinite(s)) continue
+    let entry = bucket.dimensions.get(dim.name)
+    if (!entry) {
+      entry = { sum: 0, count: 0 }
+      bucket.dimensions.set(dim.name, entry)
+    }
+    entry.sum += s
+    entry.count += 1
+  }
+}
+
+/**
+ * aggregateScoresByPeriod
+ */
 export function aggregateScoresByPeriod<T>(
   items: T[],
   period: ScoreTrendPeriod,
@@ -95,57 +136,39 @@ export function aggregateScoresByPeriod<T>(
     }
 
     const label = formatPeriodLabel(date, period)
-    let bucket = buckets.get(label)
-    if (!bucket) {
-      bucket = { label, compositeSum: 0, compositeCount: 0, dimensions: new Map() }
-      buckets.set(label, bucket)
-    }
+    const bucket = getOrCreateBucket(buckets, label)
 
-    const score = getScore(item)
-    if (typeof score === 'number' && Number.isFinite(score)) {
-      bucket.compositeSum += score
-      bucket.compositeCount += 1
-    }
-
-    if (getDimensions) {
-      for (const dim of getDimensions(item)) {
-        if (!dim || !dim.name) continue
-        const s = dim.score
-        if (typeof s !== 'number' || !Number.isFinite(s)) continue
-        let entry = bucket.dimensions.get(dim.name)
-        if (!entry) {
-          entry = { sum: 0, count: 0 }
-          bucket.dimensions.set(dim.name, entry)
-        }
-        entry.sum += s
-        entry.count += 1
-      }
-    }
+    addCompositeScore(bucket, getScore(item))
+    addDimensionScores(bucket, getDimensions?.(item))
   }
 
   const sortedLabels = Array.from(buckets.keys()).sort()
-  return sortedLabels.map((label) => {
-    const bucket = buckets.get(label)!
-    const composite = bucket.compositeCount > 0
-      ? Number((bucket.compositeSum / bucket.compositeCount).toFixed(2))
-      : 0
-
-    const dimensions: Record<string, number> = {}
-    for (const [name, entry] of bucket.dimensions.entries()) {
-      dimensions[name] = entry.count > 0
-        ? Number((entry.sum / entry.count).toFixed(2))
-        : 0
-    }
-
-    return {
-      period: label,
-      composite,
-      count: bucket.compositeCount,
-      dimensions,
-    }
-  })
+  return sortedLabels.map((label) => bucketToPoint(buckets.get(label)!))
 }
 
+function bucketToPoint(bucket: Bucket): ScoreTrendPoint {
+  const composite = bucket.compositeCount > 0
+    ? Number((bucket.compositeSum / bucket.compositeCount).toFixed(2))
+    : 0
+
+  const dimensions: Record<string, number> = {}
+  for (const [name, entry] of bucket.dimensions.entries()) {
+    dimensions[name] = entry.count > 0
+      ? Number((entry.sum / entry.count).toFixed(2))
+      : 0
+  }
+
+  return {
+    period: bucket.label,
+    composite,
+    count: bucket.compositeCount,
+    dimensions,
+  }
+}
+
+/**
+ * loadIndustryScoreTrend
+ */
 export async function loadIndustryScoreTrend(
   code: string,
   period: ScoreTrendPeriod,
@@ -171,6 +194,9 @@ export async function loadIndustryScoreTrend(
   }
 }
 
+/**
+ * loadStockScoreTrend
+ */
 export async function loadStockScoreTrend(
   symbol: string,
   period: ScoreTrendPeriod,

@@ -551,4 +551,7 @@ export class MarketDataAdapter {
   }
 }
 
+/**
+ * marketDataAdapter
+ */
 export const marketDataAdapter = new MarketDataAdapter()

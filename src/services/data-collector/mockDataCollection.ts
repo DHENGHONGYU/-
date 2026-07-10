@@ -792,20 +792,29 @@ export async function mockCollectorFetchWithRetry(
   maxRetries = 3,
   retryInterval = 2000,
 ): Promise<RawMarketData> {
-  let lastError: Error | null = null
-
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
-    try {
-      return await mockCollectorFetch(dataType, 200, 1000, 0)
-    } catch (err) {
-      lastError = err instanceof Error ? err : new Error(String(err))
-      if (attempt < maxRetries) {
-        await new Promise((resolve) => setTimeout(resolve, retryInterval))
-      }
-    }
+    const outcome = await attemptMockCollectorFetch(dataType, maxRetries, retryInterval, attempt)
+    if (outcome.done) return outcome.result
   }
 
-  throw lastError ?? new Error('Collector fetch failed after retries')
+  throw new Error('Collector fetch failed after retries')
+}
+
+async function attemptMockCollectorFetch(
+  dataType: DataType,
+  maxRetries: number,
+  retryInterval: number,
+  attempt: number,
+): Promise<{ done: true; result: RawMarketData } | { done: false }> {
+  try {
+    const result = await mockCollectorFetch(dataType, 200, 1000, 0)
+    return { done: true, result }
+  } catch {
+    if (attempt < maxRetries) {
+      await new Promise((resolve) => setTimeout(resolve, retryInterval))
+    }
+    return { done: false }
+  }
 }
 
 // ============================================================

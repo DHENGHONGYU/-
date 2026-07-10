@@ -134,7 +134,13 @@ export interface OrchestratorContext {
 // 降级链配置常量（从 dataSourceOrchestrator.ts 迁移）
 // ============================================================
 
+/**
+ * QUOTE_FALLBACK_CHAIN
+ */
 export const QUOTE_FALLBACK_CHAIN = ['tencent', 'sina', 'akshare', 'mock'] as const
+/**
+ * KLINE_FALLBACK_CHAIN
+ */
 export const KLINE_FALLBACK_CHAIN = ['netease', 'tencent', 'akshare', 'mock'] as const
 
 export type QuoteSource = (typeof QUOTE_FALLBACK_CHAIN)[number]
@@ -142,7 +148,13 @@ export type KlineSource = (typeof KLINE_FALLBACK_CHAIN)[number]
 
 /** 维度 → Phase 映射（从 dataSourceOrchestrator.ts 迁移） */
 export const PHASE_1_DIMENSIONS = ['01_basic', '02_kline', '07_index'] as const
+/**
+ * PHASE_2_DIMENSIONS
+ */
 export const PHASE_2_DIMENSIONS = ['03_chip', '06_industry', '08_research'] as const
+/**
+ * PHASE_3_DIMENSIONS
+ */
 export const PHASE_3_DIMENSIONS = ['04_events', '05_news'] as const
 
 /** 默认 K 线采集天数 */

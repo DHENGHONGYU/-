@@ -11,6 +11,9 @@ export enum HttpErrorType {
 }
 
 // HTTP 错误类
+/**
+ * HttpError
+ */
 export class HttpError extends Error {
   constructor(
     message: string,
@@ -24,6 +27,11 @@ export class HttpError extends Error {
 }
 
 // 错误码到类型的映射
+/**
+ * getHttpErrorType
+ * @param statusCode
+ * @returns HttpErrorType
+ */
 export function getHttpErrorType(statusCode: number): HttpErrorType {
   if (statusCode === 401) return HttpErrorType.UNAUTHORIZED
   if (statusCode === 403) return HttpErrorType.FORBIDDEN

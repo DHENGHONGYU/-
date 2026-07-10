@@ -39,6 +39,9 @@ const logger = getLogger()
 /** 全局采集会话 ID 计数器（与原 dataSourceOrchestrator.ts 一致） */
 let globalCollectSessionId = 0
 
+/**
+ * OrchestratorFacade
+ */
 export class OrchestratorFacade {
   private readonly fetcher: IMarketDataFetcher
   private readonly writer: IDataBridgeWriter

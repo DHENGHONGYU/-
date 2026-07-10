@@ -26,6 +26,8 @@ const logger = getLogger()
  *
  * @example
  * const loggedStep = withLogging(new Phase1Step(fetcher, writer))
+/**
+ * withLogging
  */
 export function withLogging(
   step: IWorkflowStep<OrchestratorContext>,

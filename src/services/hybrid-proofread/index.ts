@@ -2,6 +2,27 @@ import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
 
+async function evaluateFileForMatches(
+  fileHash: { file_path: string; file_type: string },
+  fs: typeof import('fs'),
+  ruleEngine: { evaluateFile(path: string, content: string): Promise<import('@/data/types').RuleMatchResult[]> },
+  logger: ReturnType<typeof getLogger>,
+): Promise<import('@/data/types').RuleMatchResult[]> {
+  if (fileHash.file_type !== 'source_code' && fileHash.file_type !== 'config_file') {
+    return []
+  }
+  try {
+    const content = await fs.promises.readFile(fileHash.file_path, 'utf-8')
+    return await ruleEngine.evaluateFile(fileHash.file_path, content)
+  } catch (error) {
+    logger.warn(`[HybridProofread] runFullProofread - 跳过文件评估`, {
+      file_path: fileHash.file_path,
+      error: error instanceof Error ? error.message : String(error),
+    })
+    return []
+  }
+}
+
 export { LocalCollector, localCollector, type ScanOptions } from './localCollector'
 export { RuleEngine, ruleEngine } from './ruleEngine'
 export { HashService, hashService } from './hashService'
@@ -66,18 +87,8 @@ export async function runFullProofread(
     })
 
     for (const fileHash of localScan.hashes) {
-      if (fileHash.file_type === 'source_code' || fileHash.file_type === 'config_file') {
-        try {
-          const content = await fs.promises.readFile(fileHash.file_path, 'utf-8')
-          const matches = await ruleEngine.evaluateFile(fileHash.file_path, content)
-          ruleMatches.push(...matches)
-        } catch (error) {
-          logger.warn(`[HybridProofread] runFullProofread - 跳过文件评估`, {
-            file_path: fileHash.file_path,
-            error: error instanceof Error ? error.message : String(error),
-          })
-        }
-      }
+      const matches = await evaluateFileForMatches(fileHash, fs, ruleEngine, logger)
+      ruleMatches.push(...matches)
     }
 
     localScan.rule_matches = ruleMatches

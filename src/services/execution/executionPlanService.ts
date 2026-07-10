@@ -50,6 +50,11 @@ export interface UpdatePhaseOptions {
  *
  * 基于交易信号创建执行计划（旧逻辑）。
  * 当信号置信度低于阈值时返回 undefined。
+/**
+ * createPlan
+ * @param signal
+ * @param options
+ * @returns Promise<ExecutionPlan | undefined>
  */
 export async function createPlan(signal: Signal, options: CreatePlanOptions = {}): Promise<ExecutionPlan | undefined> {
   const now = options.now ?? Date.now()
@@ -242,6 +247,9 @@ export async function getOrphanPlans(): Promise<ExecutionPlan[]> {
   }
 }
 
+/**
+ * executionPlanService
+ */
 export const executionPlanService = {
   createPlan,
   listPlans,

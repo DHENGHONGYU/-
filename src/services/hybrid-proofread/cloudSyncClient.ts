@@ -39,6 +39,9 @@ const MOCK_RISKY_HASHES: Record<string, RiskDetail[]> = {
   ],
 }
 
+/**
+ * CloudSyncClient
+ */
 export class CloudSyncClient {
   constructor() {}
 
@@ -280,4 +283,7 @@ export class CloudSyncClient {
   }
 }
 
+/**
+ * cloudSyncClient
+ */
 export const cloudSyncClient = new CloudSyncClient()

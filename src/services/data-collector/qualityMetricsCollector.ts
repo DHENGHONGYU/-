@@ -137,6 +137,10 @@ class QualityMetricsCollector {
 /** 全局单例 */
 let _instance: QualityMetricsCollector | null = null
 
+/**
+ * getQualityMetrics
+ * @returns QualityMetricsCollector
+ */
 export function getQualityMetrics(): QualityMetricsCollector {
   if (!_instance) {
     _instance = new QualityMetricsCollector()

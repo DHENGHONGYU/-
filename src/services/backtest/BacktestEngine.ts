@@ -96,6 +96,9 @@ export interface BacktestEngineResult {
 // 回测引擎（编排器）
 // ============================================================
 
+/**
+ * BacktestEngine
+ */
 export class BacktestEngine {
   /**
    * 执行回测。
@@ -147,16 +150,7 @@ export class BacktestEngine {
         const order = this._executeVirtualSell(evt.symbol, price, qty, date, config)
         trades.push(order)
         cash = cash + order.quantity * order.price - order.commission
-
-        const pos = positions.get(evt.symbol)
-        if (pos) {
-          const remaining = pos.quantity - order.quantity
-          if (remaining <= 0) {
-            positions.delete(evt.symbol)
-          } else {
-            positions.set(evt.symbol, { quantity: remaining, avgCost: pos.avgCost })
-          }
-        }
+        this._updatePositionAfterSell(positions, evt.symbol, order.quantity)
       }
 
       for (const evt of buyEvents) {
@@ -173,14 +167,7 @@ export class BacktestEngine {
 
         trades.push(order)
         cash = cash - totalCost
-
-        const pos = positions.get(evt.symbol) ?? { quantity: 0, avgCost: 0 }
-        const newQty = pos.quantity + order.quantity
-        const newAvgCost =
-          newQty > 0
-            ? (pos.quantity * pos.avgCost + order.quantity * order.price) / newQty
-            : 0
-        positions.set(evt.symbol, { quantity: newQty, avgCost: newAvgCost })
+        this._updatePositionAfterBuy(positions, evt.symbol, order.quantity, order.price)
       }
 
       // 6. 记录当日收盘净值
@@ -315,6 +302,43 @@ export class BacktestEngine {
       date,
       commission: Math.round(commission * 100) / 100,
     }
+  }
+
+  /**
+   * 卖出后更新持仓（减仓或清仓）。
+   */
+  private _updatePositionAfterSell(
+    positions: Map<string, InternalPosition>,
+    symbol: string,
+    soldQuantity: number,
+  ): void {
+    const pos = positions.get(symbol)
+    if (!pos) return
+
+    const remaining = pos.quantity - soldQuantity
+    if (remaining <= 0) {
+      positions.delete(symbol)
+    } else {
+      positions.set(symbol, { quantity: remaining, avgCost: pos.avgCost })
+    }
+  }
+
+  /**
+   * 买入后更新持仓（加仓并重新计算平均成本）。
+   */
+  private _updatePositionAfterBuy(
+    positions: Map<string, InternalPosition>,
+    symbol: string,
+    boughtQuantity: number,
+    price: number,
+  ): void {
+    const pos = positions.get(symbol) ?? { quantity: 0, avgCost: 0 }
+    const newQty = pos.quantity + boughtQuantity
+    const newAvgCost =
+      newQty > 0
+        ? (pos.quantity * pos.avgCost + boughtQuantity * price) / newQty
+        : 0
+    positions.set(symbol, { quantity: newQty, avgCost: newAvgCost })
   }
 
   // ============================================================

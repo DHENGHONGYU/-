@@ -414,6 +414,10 @@ export function adaptBatchToHotSector(rawList: TencentSectorFlowRaw[]): HotSecto
  * ```json
  * {"sentimentRank": 10, "retailSentiment": 0.4, "institutionBuyCount": 0, "limitUpCount": 0}
  * ```
+/**
+ * normalizeHotSectorInput
+ * @param raw
+ * @returns HotSectorAnalyzerInput
  */
 export function normalizeHotSectorInput(raw: unknown): HotSectorAnalyzerInput {
   if (!raw || typeof raw !== 'object') {

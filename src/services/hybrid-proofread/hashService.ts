@@ -4,6 +4,9 @@ import { HYBRID_PROOFREAD_CONFIG } from '@/config/hybridProofreadConfig'
 
 const logger = getLogger()
 
+/**
+ * HashService
+ */
 export class HashService {
   async computeHash(data: string | Buffer): Promise<string> {
     const crypto = await import('crypto')
@@ -100,4 +103,7 @@ export class HashService {
   }
 }
 
+/**
+ * hashService
+ */
 export const hashService = new HashService()

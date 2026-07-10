@@ -17,6 +17,8 @@ import { mockKline, mockQuote } from '../mockProvider'
 import {
   KLINE_FALLBACK_CHAIN,
   QUOTE_FALLBACK_CHAIN,
+  type QuoteSource,
+  type KlineSource,
 } from './ports'
 import type { IMarketDataFetcher } from './ports'
 import type { KlineItem, StockQuote } from '../directDataAPI'
@@ -46,61 +48,13 @@ export class ResilienceChain implements IMarketDataFetcher {
    * 每个源超时/异常后自动切换，所有源失败时返回 Mock 数据。
    */
   async fetchQuote(code: string): Promise<StockQuote> {
-    const startTs = Date.now()
-    logger.info('[ResilienceChain] fetchQuote start', {
+    return this.runFallbackChain(
+      'fetchQuote',
       code,
-      chain: QUOTE_FALLBACK_CHAIN.join('→'),
-    })
-
-    let lastReason = ''
-    for (let i = 0; i < QUOTE_FALLBACK_CHAIN.length; i++) {
-      const current = QUOTE_FALLBACK_CHAIN[i]!
-      const next = QUOTE_FALLBACK_CHAIN[i + 1]
-      try {
-        const quote = await this.fetcher.fetchQuoteBySource(current, code)
-        if (quote !== null) {
-          const latency = Date.now() - startTs
-          logger.info('[ResilienceChain] fetchQuote success', {
-            code,
-            source: current,
-            latency,
-          })
-          return quote
-        }
-        // 格式错误：返回空 → 跳过该字段 + 切换
-        lastReason = `${current} returned empty`
-        if (next) {
-          logger.warn('[ResilienceChain] 降级', {
-            from: current,
-            to: next,
-            reason: lastReason,
-          })
-        }
-      } catch (err) {
-        lastReason = err instanceof Error ? err.message : String(err)
-        const aborted = isAbortError(err)
-        // 网络超时 → 切换备用源
-        if (next) {
-          logger.warn('[ResilienceChain] 降级', {
-            from: current,
-            to: next,
-            reason: aborted ? 'timeout' : lastReason,
-          })
-        } else {
-          logger.warn('[ResilienceChain] 降级链末端失败', {
-            from: current,
-            reason: lastReason,
-          })
-        }
-      }
-    }
-
-    // 降级链耗尽 → 返回 Mock + 标记 stale
-    logger.warn('[ResilienceChain] fetchQuote 降级链耗尽, 返回 Mock', {
-      code,
-      lastReason,
-    })
-    return mockQuote(code)
+      QUOTE_FALLBACK_CHAIN,
+      (source) => this.fetcher.fetchQuoteBySource(source as QuoteSource, code),
+      () => mockQuote(code),
+    )
   }
 
   /**
@@ -108,61 +62,109 @@ export class ResilienceChain implements IMarketDataFetcher {
    * 网易 → 腾讯 → AKShare → Mock
    */
   async fetchKline(code: string, days: number): Promise<KlineItem[]> {
-    const startTs = Date.now()
-    logger.info('[ResilienceChain] fetchKline start', {
+    return this.runFallbackChain(
+      'fetchKline',
       code,
-      days,
-      chain: KLINE_FALLBACK_CHAIN.join('→'),
+      KLINE_FALLBACK_CHAIN,
+      (source) => this.fetcher.fetchKlineBySource(source as KlineSource, code, days),
+      () => mockKline(code, days),
+      { days },
+    )
+  }
+
+  /**
+   * 按降级链依次尝试各数据源，成功则返回，失败则降级，
+   * 全部失败时返回 fallback 兜底值。
+   */
+  private async runFallbackChain<T>(
+    operation: 'fetchQuote' | 'fetchKline',
+    code: string,
+    chain: readonly string[],
+    fetchBySource: (source: string) => Promise<T | null>,
+    fallback: () => T,
+    extra?: { days?: number },
+  ): Promise<T> {
+    const startTs = Date.now()
+    logger.info(`[ResilienceChain] ${operation} start`, {
+      code,
+      ...extra,
+      chain: chain.join('→'),
     })
 
     let lastReason = ''
-    for (let i = 0; i < KLINE_FALLBACK_CHAIN.length; i++) {
-      const current = KLINE_FALLBACK_CHAIN[i]!
-      const next = KLINE_FALLBACK_CHAIN[i + 1]
-      try {
-        const kline = await this.fetcher.fetchKlineBySource(current, code, days)
-        if (kline.length > 0) {
-          const latency = Date.now() - startTs
-          logger.info('[ResilienceChain] fetchKline success', {
-            code,
-            source: current,
-            latency,
-            count: kline.length,
-          })
-          return kline
-        }
-        lastReason = `${current} returned empty`
-        if (next) {
-          logger.warn('[ResilienceChain] 降级', {
-            from: current,
-            to: next,
-            reason: lastReason,
-          })
-        }
-      } catch (err) {
-        lastReason = err instanceof Error ? err.message : String(err)
-        const aborted = isAbortError(err)
-        if (next) {
-          logger.warn('[ResilienceChain] 降级', {
-            from: current,
-            to: next,
-            reason: aborted ? 'timeout' : lastReason,
-          })
-        } else {
-          logger.warn('[ResilienceChain] 降级链末端失败', {
-            from: current,
-            reason: lastReason,
-          })
-        }
+    for (let i = 0; i < chain.length; i++) {
+      const current = chain[i]!
+      const next = chain[i + 1]
+      const attempt = await this.trySource(current, code, operation, startTs, fetchBySource, extra)
+
+      if (attempt.kind === 'success') {
+        return attempt.value
+      }
+
+      lastReason = attempt.reason
+      if (next) {
+        logger.warn('[ResilienceChain] 降级', {
+          from: current,
+          to: next,
+          reason: lastReason,
+        })
+      } else {
+        logger.warn('[ResilienceChain] 降级链末端失败', {
+          from: current,
+          reason: lastReason,
+        })
       }
     }
 
-    // 降级链耗尽 → 返回 Mock + 标记 stale
-    logger.warn('[ResilienceChain] fetchKline 降级链耗尽, 返回 Mock', {
+    logger.warn(`[ResilienceChain] ${operation} 降级链耗尽, 返回 Mock`, {
       code,
-      days,
       lastReason,
     })
-    return mockKline(code, days)
+    return fallback()
+  }
+
+  /**
+   * 尝试单个数据源。
+   */
+  private async trySource<T>(
+    source: string,
+    code: string,
+    operation: 'fetchQuote' | 'fetchKline',
+    startTs: number,
+    fetchBySource: (source: string) => Promise<T | null>,
+    extra?: { days?: number },
+  ): Promise<{ kind: 'success'; value: T; reason: '' } | { kind: 'empty' | 'error'; reason: string }> {
+    try {
+      const value = await fetchBySource(source)
+
+      if (Array.isArray(value) && value.length > 0) {
+        const latency = Date.now() - startTs
+        logger.info(`[ResilienceChain] ${operation} success`, {
+          code,
+          source,
+          latency,
+          ...extra,
+          count: value.length,
+        })
+        return { kind: 'success', value: value as T, reason: '' }
+      }
+
+      if (!Array.isArray(value) && value !== null) {
+        const latency = Date.now() - startTs
+        logger.info(`[ResilienceChain] ${operation} success`, {
+          code,
+          source,
+          latency,
+          ...extra,
+        })
+        return { kind: 'success', value: value as T, reason: '' }
+      }
+
+      return { kind: 'empty', reason: `${source} returned empty` }
+    } catch (err) {
+      const reason = err instanceof Error ? err.message : String(err)
+      const aborted = isAbortError(err)
+      return { kind: 'error', reason: aborted ? 'timeout' : reason }
+    }
   }
 }

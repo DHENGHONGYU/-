@@ -326,42 +326,68 @@ export async function wrapOperation<T>(
   const maxRetries = options?.maxRetries ?? 0
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
-    try {
-      const result = await operation()
-
-      if (result.success) {
-        succeedOperation(operationId, {
-          message: options?.successMessage,
-          metadata: { result: result.data },
-        })
-        return result
-      }
-
-      if (attempt < maxRetries) {
-        retryOperation(operationId, { message: `重试第 ${attempt + 1} 次` })
-        continue
-      }
-
-      failOperation(operationId, result.error ?? '操作失败', {
-        message: options?.failMessage,
-      })
-      return result
-    } catch (err) {
-      const error = err instanceof Error ? err.message : String(err)
-
-      if (attempt < maxRetries) {
-        retryOperation(operationId, { message: `重试第 ${attempt + 1} 次` })
-        continue
-      }
-
-      failOperation(operationId, error, {
-        message: options?.failMessage,
-      })
-      return { success: false, error }
-    }
+    const outcome = await attemptOperation(operationId, operation, {
+      successMessage: options?.successMessage,
+      failMessage: options?.failMessage,
+      maxRetries,
+      attempt,
+    })
+    if (outcome.done) return outcome.result
   }
 
   return { success: false, error: '重试次数耗尽' }
+}
+
+type AttemptOutcome<T> =
+  | { done: true; result: DataLayerResult<T> }
+  | { done: false }
+
+/**
+ * 单次尝试执行操作，返回结果或需要重试。
+ */
+async function attemptOperation<T>(
+  operationId: string,
+  operation: () => Promise<DataLayerResult<T>>,
+  options: {
+    successMessage?: string
+    failMessage?: string
+    maxRetries: number
+    attempt: number
+  },
+): Promise<AttemptOutcome<T>> {
+  try {
+    const result = await operation()
+
+    if (result.success) {
+      succeedOperation(operationId, {
+        message: options.successMessage,
+        metadata: { result: result.data },
+      })
+      return { done: true, result }
+    }
+
+    if (options.attempt < options.maxRetries) {
+      retryOperation(operationId, { message: `重试第 ${options.attempt + 1} 次` })
+      return { done: false }
+    }
+
+    failOperation(operationId, result.error ?? '操作失败', {
+      message: options.failMessage,
+    })
+    return { done: true, result }
+  } catch (err) {
+    const error = err instanceof Error ? err.message : String(err)
+
+    if (options.attempt < options.maxRetries) {
+      retryOperation(operationId, { message: `重试第 ${options.attempt + 1} 次` })
+      return { done: false }
+    }
+
+    failOperation(operationId, error, {
+      message: options.failMessage,
+    })
+    return { done: true, result: { success: false, error } }
+  }
 }
 
 /**

@@ -110,10 +110,18 @@ function traceIdFor(symbol: string, dimensionCode: string): string {
 
 // ── 配置映射 ──
 
+/**
+ * resolveDimensionMode
+ * @param dimensionCode
+ * @returns CollectionMode
+ */
 export function resolveDimensionMode(dimensionCode: string): CollectionMode {
   return DIMENSION_TO_MODE[dimensionCode] ?? 'unsupported'
 }
 
+/**
+ * buildDefaultSourcePriority
+ */
 export function buildDefaultSourcePriority(
   dimension: DimensionPipelineConfig,
 ): SourcePriorityItem[] {
@@ -139,6 +147,11 @@ export function buildDefaultSourcePriority(
   return items.sort((a, b) => a.priority - b.priority)
 }
 
+/**
+ * resolveQuoteChain
+ * @param dimension
+ * @returns QuoteDataSourceId[]
+ */
 export function resolveQuoteChain(dimension: DimensionPipelineConfig): QuoteDataSourceId[] {
   const chain = dimension.sourcePriority && dimension.sourcePriority.length > 0
     ? dimension.sourcePriority
@@ -149,6 +162,11 @@ export function resolveQuoteChain(dimension: DimensionPipelineConfig): QuoteData
     .map((item) => item.id)
 }
 
+/**
+ * resolveKlineChain
+ * @param dimension
+ * @returns QuoteDataSourceId[]
+ */
 export function resolveKlineChain(dimension: DimensionPipelineConfig): QuoteDataSourceId[] {
   const quoteChain = resolveQuoteChain(dimension)
   const klineSources = quoteChain.filter((id) => id === 'netease' || id === 'mock')
@@ -156,6 +174,9 @@ export function resolveKlineChain(dimension: DimensionPipelineConfig): QuoteData
   return ['netease', 'mock']
 }
 
+/**
+ * getDimensionConfig
+ */
 export function getDimensionConfig(
   config: CollectionConfig,
   dimensionCode: string,
@@ -200,6 +221,9 @@ async function writeKlineToDailyQuotes(symbol: string, klines: KlineBar[]): Prom
 
 // ── 单次链路 ──
 
+/**
+ * runSingleTrace
+ */
 export async function runSingleTrace(
   options: RunSingleTraceOptions,
 ): Promise<TraceResult> {
@@ -481,6 +505,9 @@ export async function runSingleTrace(
 
 // ── 批量链路 ──
 
+/**
+ * runBatchTrace
+ */
 export async function runBatchTrace(
   options: RunBatchTraceOptions,
 ): Promise<TraceResult[]> {
