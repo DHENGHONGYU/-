@@ -136,32 +136,12 @@ export function detectNoStopLoss(orders: Order[]): DetectedError | null {
  * 逻辑：同 symbol 连续买入且价格递减
  */
 export function detectAgainstTrendAdding(orders: Order[]): DetectedError | null {
-  const relatedIds: string[] = []
   const buyOrders = orders.filter((o) => o.direction === 'buy')
+  const bySymbol = groupBuyOrdersBySymbol(buyOrders)
+  const relatedIds: string[] = []
 
-  // 按 symbol 分组
-  const bySymbol = new Map<string, typeof buyOrders>()
-  for (const order of buyOrders) {
-    const list = bySymbol.get(order.symbol) ?? []
-    list.push(order)
-    bySymbol.set(order.symbol, list)
-  }
-
-  for (const [, symOrders] of bySymbol) {
-    symOrders.sort((a, b) => a.createdAt - b.createdAt)
-    let consecutiveCount = 0
-    let prevPrice = 0
-    for (const order of symOrders) {
-      if (prevPrice > 0 && order.price < prevPrice) {
-        consecutiveCount++
-        if (consecutiveCount >= 2) {
-          relatedIds.push(order.id)
-        }
-      } else {
-        consecutiveCount = 0
-      }
-      prevPrice = order.price
-    }
+  for (const symOrders of bySymbol.values()) {
+    relatedIds.push(...detectAgainstTrendForSymbol(symOrders))
   }
 
   if (relatedIds.length === 0) return null
@@ -175,6 +155,35 @@ export function detectAgainstTrendAdding(orders: Order[]): DetectedError | null 
     count: relatedIds.length,
     penalty: SEVERITY_PENALTY.critical,
   }
+}
+
+function groupBuyOrdersBySymbol(buyOrders: Order[]): Map<string, Order[]> {
+  const bySymbol = new Map<string, Order[]>()
+  for (const order of buyOrders) {
+    const list = bySymbol.get(order.symbol) ?? []
+    list.push(order)
+    bySymbol.set(order.symbol, list)
+  }
+  return bySymbol
+}
+
+function detectAgainstTrendForSymbol(symOrders: Order[]): string[] {
+  symOrders.sort((a, b) => a.createdAt - b.createdAt)
+  const relatedIds: string[] = []
+  let consecutiveCount = 0
+  let prevPrice = 0
+  for (const order of symOrders) {
+    if (prevPrice > 0 && order.price < prevPrice) {
+      consecutiveCount++
+      if (consecutiveCount >= 2) {
+        relatedIds.push(order.id)
+      }
+    } else {
+      consecutiveCount = 0
+    }
+    prevPrice = order.price
+  }
+  return relatedIds
 }
 
 /**

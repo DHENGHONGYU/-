@@ -1,19 +1,5 @@
 import { dataLayer } from '@/data/dataLayer'
 import { getLogger } from '@/lib/logger'
-import type {
-  DailyQuotes,
-  LocalDoc,
-  NewsArticle,
-  NewsStockMap,
-  Order,
-  RotationSectorScore,
-  ScoreDocVersion,
-  SectorScoreRecord,
-  SentimentCache,
-  Stock,
-  StrategySnapshot,
-  V6Score,
-} from '@/data/types'
 import { writeMigrationAuditLog } from './migrationValidators'
 import type { MigrationReport, MigrationOptions, StoreImportContext, V9ImportShape } from './migrationTypes'
 
@@ -68,6 +54,9 @@ async function migrateOne<T>(
   return detail
 }
 
+/**
+ * migrateStocks
+ */
 export async function migrateStocks(
   traceId: string,
   transformed: V9ImportShape,
@@ -79,11 +68,14 @@ export async function migrateStocks(
     transformed.stocks,
     (s) => s.symbol,
     (key) => dataLayer.stocks.get(key),
-    (s) => dataLayer.stocks.add(s as Stock),
+    (s) => dataLayer.stocks.add(s),
     options.overwriteExisting,
   )
 }
 
+/**
+ * migrateDailyQuotes
+ */
 export async function migrateDailyQuotes(
   traceId: string,
   transformed: V9ImportShape,
@@ -95,11 +87,14 @@ export async function migrateDailyQuotes(
     transformed.dailyQuotes,
     (q) => q.symbol,
     (key) => dataLayer.dailyQuotes.get(key),
-    (q) => dataLayer.dailyQuotes.save(q as DailyQuotes),
+    (q) => dataLayer.dailyQuotes.save(q),
     options.overwriteExisting,
   )
 }
 
+/**
+ * migrateV6Scores
+ */
 export async function migrateV6Scores(
   traceId: string,
   transformed: V9ImportShape,
@@ -111,11 +106,14 @@ export async function migrateV6Scores(
     transformed.v6Scores,
     (s) => s.symbol,
     (key) => dataLayer.v6Scores.get(key),
-    (s) => dataLayer.v6Scores.save(s as V6Score),
+    (s) => dataLayer.v6Scores.save(s),
     options.overwriteExisting,
   )
 }
 
+/**
+ * migrateScoreDocs
+ */
 export async function migrateScoreDocs(
   traceId: string,
   transformed: V9ImportShape,
@@ -128,11 +126,14 @@ export async function migrateScoreDocs(
     docs,
     (d) => d.docId,
     (key) => dataLayer.scoreDocs.get(key),
-    (d) => dataLayer.scoreDocs.save(d as ScoreDocVersion),
+    (d) => dataLayer.scoreDocs.save(d),
     options.overwriteExisting,
   )
 }
 
+/**
+ * migrateOrders
+ */
 export async function migrateOrders(
   traceId: string,
   transformed: V9ImportShape,
@@ -144,11 +145,14 @@ export async function migrateOrders(
     transformed.orders,
     (o) => o.id,
     (key) => dataLayer.orders.list().then((list) => list.find((x) => x.id === key)),
-    (o) => dataLayer.orders.add(o as Order),
+    (o) => dataLayer.orders.add(o),
     options.overwriteExisting,
   )
 }
 
+/**
+ * migrateSectorScores
+ */
 export async function migrateSectorScores(
   traceId: string,
   transformed: V9ImportShape,
@@ -160,11 +164,14 @@ export async function migrateSectorScores(
     transformed.sectorScores,
     (s) => s.id,
     (key) => dataLayer.sectorScores.get(key),
-    (s) => dataLayer.sectorScores.save(s as SectorScoreRecord),
+    (s) => dataLayer.sectorScores.save(s),
     options.overwriteExisting,
   )
 }
 
+/**
+ * migrateRotationScores
+ */
 export async function migrateRotationScores(
   traceId: string,
   transformed: V9ImportShape,
@@ -176,11 +183,14 @@ export async function migrateRotationScores(
     transformed.rotationScores,
     (r) => r.id,
     (key) => dataLayer.rotationScores.get(key),
-    (r) => dataLayer.rotationScores.save(r as RotationSectorScore),
+    (r) => dataLayer.rotationScores.save(r),
     options.overwriteExisting,
   )
 }
 
+/**
+ * migrateStrategySnapshots
+ */
 export async function migrateStrategySnapshots(
   traceId: string,
   transformed: V9ImportShape,
@@ -192,11 +202,14 @@ export async function migrateStrategySnapshots(
     transformed.strategySnapshots,
     (s) => s.id,
     (key) => dataLayer.strategySnapshots.get(key),
-    (s) => dataLayer.strategySnapshots.save(s as StrategySnapshot),
+    (s) => dataLayer.strategySnapshots.save(s),
     options.overwriteExisting,
   )
 }
 
+/**
+ * migrateLocalDocs
+ */
 export async function migrateLocalDocs(
   traceId: string,
   transformed: V9ImportShape,
@@ -208,11 +221,14 @@ export async function migrateLocalDocs(
     transformed.localDocs,
     (d) => d.id,
     (key) => dataLayer.localDocs.get(key),
-    (d) => dataLayer.localDocs.save(d as LocalDoc),
+    (d) => dataLayer.localDocs.save(d),
     options.overwriteExisting,
   )
 }
 
+/**
+ * migrateSentimentCache
+ */
 export async function migrateSentimentCache(
   traceId: string,
   transformed: V9ImportShape,
@@ -224,11 +240,14 @@ export async function migrateSentimentCache(
     transformed.sentimentCache,
     (c) => c.id,
     (key) => dataLayer.sentimentCache.get(key),
-    (c) => dataLayer.sentimentCache.save(c as SentimentCache),
+    (c) => dataLayer.sentimentCache.save(c),
     options.overwriteExisting,
   )
 }
 
+/**
+ * migrateNews
+ */
 export async function migrateNews(
   traceId: string,
   transformed: V9ImportShape,
@@ -240,11 +259,14 @@ export async function migrateNews(
     transformed.news,
     (n) => n.id,
     (key) => dataLayer.news.get(key),
-    (n) => dataLayer.news.save(n as NewsArticle),
+    (n) => dataLayer.news.save(n),
     options.overwriteExisting,
   )
 }
 
+/**
+ * migrateNewsStockMaps
+ */
 export async function migrateNewsStockMaps(
   traceId: string,
   transformed: V9ImportShape,
@@ -259,7 +281,7 @@ export async function migrateNewsStockMaps(
       dataLayer.newsStockMap
         .listBySymbol(key.split('_')[0] ?? '')
         .then((list) => list.find((x) => x.id === key)),
-    (m) => dataLayer.newsStockMap.save(m as NewsStockMap),
+    (m) => dataLayer.newsStockMap.save(m),
     options.overwriteExisting,
   )
 }

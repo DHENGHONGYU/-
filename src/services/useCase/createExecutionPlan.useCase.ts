@@ -91,6 +91,8 @@ function generatePlanId(): string {
  *   source: 'mcp'
  * })
  * ```
+/**
+ * createExecutionPlanUseCase
  */
 export async function createExecutionPlanUseCase(
   input: CreateExecutionPlanInput,

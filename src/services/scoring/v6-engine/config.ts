@@ -51,6 +51,9 @@ export const DEFAULT_WEIGHTS: V6ScoreWeightsConfig = {
 // 阈值配置
 // ============================================================
 
+/**
+ * DEFAULT_THRESHOLDS
+ */
 export const DEFAULT_THRESHOLDS: V6ScoreThresholdsConfig = {
   rating: {
     strongBuy: 4.0,
@@ -82,6 +85,9 @@ export const INDUSTRY_BENCHMARKS: IndustryBenchmark[] = [
 // 财务风险预警配置
 // ============================================================
 
+/**
+ * RISK_WARNINGS
+ */
 export const RISK_WARNINGS: RiskWarningConfig = {
   red: [
     '经营现金流连续两季为负',
@@ -102,6 +108,9 @@ export const RISK_WARNINGS: RiskWarningConfig = {
 // IPC 业绩兑现临界点配置
 // ============================================================
 
+/**
+ * IPC_CONFIG
+ */
 export const IPC_CONFIG: IPCConfig = {
   ocr: { superStrong: 2.5, strong: 1.5, medium: 0.8, weak: 0.3, ocrAccelSignal: 0.3 },
   mce: { trackLevel: 10, categoryLevel: 3, segmentLevel: 1.5, decay3m: 1.0, decay6m: 0.8, decay12m: 0.5 },
@@ -114,6 +123,9 @@ export const IPC_CONFIG: IPCConfig = {
 // 筹码变化度配置
 // ============================================================
 
+/**
+ * CHIP_LEVELS
+ */
 export const CHIP_LEVELS = [
   'SCD',   // 股东人数变化度
   'PCH',   // 筹码集中度
@@ -129,6 +141,9 @@ export const CHIP_LEVELS = [
 // 置信度配置
 // ============================================================
 
+/**
+ * CONFIDENCE_CONFIG
+ */
 export const CONFIDENCE_CONFIG: ConfidenceConfig = {
   sourceGrades: {
     A: { grade: 'A', score: 1.0, description: '监管文件/官方公告/审计报告' },
@@ -144,6 +159,9 @@ export const CONFIDENCE_CONFIG: ConfidenceConfig = {
 // 引擎运行时配置
 // ============================================================
 
+/**
+ * DEFAULT_ENGINE_CONFIG
+ */
 export const DEFAULT_ENGINE_CONFIG: V6ScoreEngineConfig = {
   weights: DEFAULT_WEIGHTS,
   thresholds: DEFAULT_THRESHOLDS,

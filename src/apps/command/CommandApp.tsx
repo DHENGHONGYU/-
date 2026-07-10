@@ -53,6 +53,43 @@ const HealthDashboardPage = React.lazy(() => import('@/pages/command/health/Heal
  *
  * 注意：/command/agents 由 PortalShell 通过 isAgentPath 单独处理，不在此分发。
  */
+const BRANCH_INFO: Record<string, { branch: string; componentName: string }> = {
+  '/command/hub': { branch: 'hub', componentName: 'CommandHubPage' },
+  '/command/config': { branch: 'config', componentName: 'ConfigApp' },
+  '/command/monitor': { branch: 'monitor', componentName: 'SystemMonitor' },
+  '/command/showcase': { branch: 'showcase', componentName: 'ComponentShowcasePage' },
+  '/command/health': { branch: 'health', componentName: 'HealthDashboardPage' },
+}
+
+function renderCommandContent(path: string): React.ReactNode {
+  switch (path) {
+    case '/command/hub':
+      return <CommandHubPage />
+    case '/command/config':
+      return (
+        <React.Suspense fallback={<div className="p-4 text-muted-foreground">加载配置面板中...</div>}>
+          <ConfigApp />
+        </React.Suspense>
+      )
+    case '/command/monitor':
+      return <SystemMonitor />
+    case '/command/showcase':
+      return (
+        <React.Suspense fallback={<div className="p-4 text-muted-foreground">加载示例库中...</div>}>
+          <ComponentShowcasePage />
+        </React.Suspense>
+      )
+    case '/command/health':
+      return (
+        <React.Suspense fallback={<div className="p-4 text-muted-foreground">加载健康度面板中...</div>}>
+          <HealthDashboardPage />
+        </React.Suspense>
+      )
+    default:
+      return <SystemMonitor />
+  }
+}
+
 export default function CommandApp(): React.JSX.Element {
   const location = useLocation()
   const path = location.pathname
@@ -67,27 +104,7 @@ export default function CommandApp(): React.JSX.Element {
       logger.info('[CommandApp] 路由切换', { from: prevPath, to: path })
     }
 
-    let branch: string
-    let componentName: string
-    if (path === '/command/hub') {
-      branch = 'hub'
-      componentName = 'CommandHubPage'
-    } else if (path === '/command/config') {
-      branch = 'config'
-      componentName = 'ConfigApp'
-    } else if (path === '/command/monitor') {
-      branch = 'monitor'
-      componentName = 'SystemMonitor'
-    } else if (path === '/command/showcase') {
-      branch = 'showcase'
-      componentName = 'ComponentShowcasePage'
-    } else if (path === '/command/health') {
-      branch = 'health'
-      componentName = 'HealthDashboardPage'
-    } else {
-      branch = 'default'
-      componentName = 'SystemMonitor'
-    }
+    const { branch, componentName } = BRANCH_INFO[path] ?? { branch: 'default', componentName: 'SystemMonitor' }
 
     logger.info('[CommandApp] 渲染总控舱', {
       path,
@@ -99,33 +116,7 @@ export default function CommandApp(): React.JSX.Element {
     prevPathRef.current = path
   }, [path])
 
-  let content: React.ReactNode
-  if (path === '/command/hub') {
-    content = <CommandHubPage />
-  } else if (path === '/command/config') {
-    content = (
-      <React.Suspense fallback={<div className="p-4 text-muted-foreground">加载配置面板中...</div>}>
-        <ConfigApp />
-      </React.Suspense>
-    )
-  } else if (path === '/command/monitor') {
-    content = <SystemMonitor />
-  } else if (path === '/command/showcase') {
-    content = (
-      <React.Suspense fallback={<div className="p-4 text-muted-foreground">加载示例库中...</div>}>
-        <ComponentShowcasePage />
-      </React.Suspense>
-    )
-  } else if (path === '/command/health') {
-    content = (
-      <React.Suspense fallback={<div className="p-4 text-muted-foreground">加载健康度面板中...</div>}>
-        <HealthDashboardPage />
-      </React.Suspense>
-    )
-  } else {
-    // 默认:未明确路径(如 /command)也渲染 SystemMonitor 以保持向后兼容
-    content = <SystemMonitor />
-  }
+  const content = renderCommandContent(path)
 
   return (
     <div className="space-y-4">

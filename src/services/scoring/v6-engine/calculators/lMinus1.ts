@@ -55,6 +55,12 @@ const KEYWORD_SECTOR_MAP: Array<{ keywords: string[]; sector: string; relevance:
   { keywords: ['创新药', 'CXO', '生物', 'ADC', '双抗', '基因', 'mRNA'], sector: '创新药', relevance: 0.9 },
 ]
 
+/**
+ * matchIndustry
+ * @param symbol
+ * @param sector
+ * @param name
+ */
 export function matchIndustry(symbol: string, sector = '', name = ''): { sectorName: string; relevance: number } | null {
   // 1. 精确代码匹配
   const coreMatch = CORE_STOCK_MAP[symbol]
@@ -71,14 +77,22 @@ export function matchIndustry(symbol: string, sector = '', name = ''): { sectorN
   return null
 }
 
+/**
+ * calcSkillNBonus
+ * @param allocationBias
+ * @returns number
+ */
 export function calcSkillNBonus(allocationBias: string): number {
   if (allocationBias.includes('极度超配')) return 0.30
   if (allocationBias.includes('超配')) return 0.15
   return 0.00
 }
 
+/**
+ * LMinus1Calculator
+ */
 export const LMinus1Calculator: LayerCalculator & { matchIndustry: typeof matchIndustry; calcSkillNBonus: typeof calcSkillNBonus } = {
-  layerId: 'lMinus1' as LayerId,
+  layerId: 'lMinus1',
 
   async calculate(input: LayerInput): Promise<LayerScore> {
     const { stock, industryScore, config } = input

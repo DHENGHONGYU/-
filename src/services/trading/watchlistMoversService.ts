@@ -13,6 +13,9 @@ export interface WatchlistMoversResult {
   mostActive: WatchlistMover[]
 }
 
+/**
+ * DEFAULT_TOP_N
+ */
 export const DEFAULT_TOP_N = 5
 
 /**

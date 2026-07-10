@@ -44,6 +44,10 @@ function startOfDayTimestamp(timestamp: number): number {
  * 警告项：
  *   - 单日交易次数接近上限
  *   - 仓位接近上限
+/**
+ * checkOrderRisk
+ * @param input
+ * @returns Promise<RiskCheckResult>
  */
 export async function checkOrderRisk(input: OrderRiskInput): Promise<RiskCheckResult> {
   const config = getEffectiveTradingConfig()

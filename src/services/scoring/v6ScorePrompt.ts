@@ -29,6 +29,11 @@ export interface V6ScorePromptInput {
   missingFactors: string[]
 }
 
+/**
+ * buildV6ScorePrompt
+ * @param input
+ * @returns LlmMessage[]
+ */
 export function buildV6ScorePrompt(input: V6ScorePromptInput): LlmMessage[] {
   const { symbol, stock, ruleFactors, quoteStats, missingFactors } = input
 

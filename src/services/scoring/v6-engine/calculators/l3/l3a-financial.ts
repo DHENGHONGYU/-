@@ -31,6 +31,34 @@ function scoreByTiers(value: number | undefined, defaultScore: number, tiers: Sc
   return tiers.find((tier) => value > tier.threshold)?.score ?? defaultScore
 }
 
+function scoreCashFlow(f: LayerInput['financials']): number {
+  if (f.operatingCF !== undefined && f.netProfit !== undefined && f.netProfit > 0) {
+    const ratio = f.operatingCF / f.netProfit
+    return scoreByTiers(ratio, 2, [
+      { threshold: V6_CALCULATOR_THRESHOLDS.L3_FINANCE_CASH_FLOW_RATIO_TIER1, score: 5 },
+      { threshold: V6_CALCULATOR_THRESHOLDS.L3_FINANCE_CASH_FLOW_RATIO_TIER2, score: 4 },
+      { threshold: V6_CALCULATOR_THRESHOLDS.L3_FINANCE_CASH_FLOW_RATIO_TIER3, score: 3 },
+      { threshold: Number.NEGATIVE_INFINITY, score: 2 },
+    ])
+  }
+  if (f.operatingCF !== undefined && f.operatingCF < 0) return 1.5
+  return 3
+}
+
+function scoreOrders(f: LayerInput['financials']): number {
+  if (f.ordersInHand !== undefined && f.revenue !== undefined) {
+    const ocr = f.ordersInHand / (f.revenue || 1)
+    return scoreByTiers(ocr, 2, [
+      { threshold: V6_CALCULATOR_THRESHOLDS.L3_FINANCE_OCR_TIER1, score: 5 },
+      { threshold: V6_CALCULATOR_THRESHOLDS.L3_FINANCE_OCR_TIER2, score: 4 },
+      { threshold: V6_CALCULATOR_THRESHOLDS.L3_FINANCE_OCR_TIER3, score: 3 },
+      { threshold: Number.NEGATIVE_INFINITY, score: 2 },
+    ])
+  }
+  if (f.newOrders !== undefined && f.newOrders > 0) return 3.5
+  return 3
+}
+
 /**
  * 财务多维度评分
  */
@@ -81,28 +109,10 @@ function scoreFinancialDimensions(input: LayerInput): FinancialDimensionScore {
   ])
 
   // 现金流
-  let cashFlowScore = 3
-  if (f.operatingCF !== undefined && f.netProfit !== undefined && f.netProfit > 0) {
-    const ratio = f.operatingCF / f.netProfit
-    if (ratio > V6_CALCULATOR_THRESHOLDS.L3_FINANCE_CASH_FLOW_RATIO_TIER1) cashFlowScore = 5
-    else if (ratio > V6_CALCULATOR_THRESHOLDS.L3_FINANCE_CASH_FLOW_RATIO_TIER2) cashFlowScore = 4
-    else if (ratio > V6_CALCULATOR_THRESHOLDS.L3_FINANCE_CASH_FLOW_RATIO_TIER3) cashFlowScore = 3
-    else cashFlowScore = 2
-  } else if (f.operatingCF !== undefined && f.operatingCF < 0) {
-    cashFlowScore = 1.5
-  }
+  const cashFlowScore = scoreCashFlow(f)
 
   // 订单
-  let ordersScore = 3
-  if (f.ordersInHand !== undefined && f.revenue !== undefined) {
-    const ocr = f.ordersInHand / (f.revenue || 1)
-    if (ocr > V6_CALCULATOR_THRESHOLDS.L3_FINANCE_OCR_TIER1) ordersScore = 5
-    else if (ocr > V6_CALCULATOR_THRESHOLDS.L3_FINANCE_OCR_TIER2) ordersScore = 4
-    else if (ocr > V6_CALCULATOR_THRESHOLDS.L3_FINANCE_OCR_TIER3) ordersScore = 3
-    else ordersScore = 2
-  } else if (f.newOrders !== undefined && f.newOrders > 0) {
-    ordersScore = 3.5
-  }
+  const ordersScore = scoreOrders(f)
 
   return {
     revenue: revenueScore,

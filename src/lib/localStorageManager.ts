@@ -90,6 +90,12 @@ export interface NamespaceInfo {
 // 工具函数
 // ============================================================
 
+function utf8ByteCount(code: number): number {
+  if (code < 0x80) return 1
+  if (code < 0x800) return 2
+  return 3
+}
+
 /**
  * 计算字符串的 UTF-8 字节长度。
  */
@@ -101,10 +107,7 @@ function byteLength(str: string): number {
     // 回退：英文 1 字节，中文 3 字节，其他 2 字节
     let len = 0
     for (let i = 0; i < str.length; i++) {
-      const code = str.charCodeAt(i)
-      if (code < 0x80) len += 1
-      else if (code < 0x800) len += 2
-      else len += 3
+      len += utf8ByteCount(str.charCodeAt(i))
     }
     return len
   }
@@ -424,22 +427,21 @@ export class LocalStorageManager {
 
     for (const fullKey of keys) {
       const raw = localStorage.getItem(fullKey)
-      if (raw) {
-        totalBytes += byteLength(fullKey) + byteLength(raw)
+      if (!raw) {
+        continue
+      }
 
-        try {
-          const entry = JSON.parse(raw) as StorageEntry
-          if (entry.createdAt < oldestTime) {
-            oldestTime = entry.createdAt
-            oldestEntry = fullKey.slice(this.getPrefix().length)
-          }
-          if (entry.createdAt > newestTime) {
-            newestTime = entry.createdAt
-            newestEntry = fullKey.slice(this.getPrefix().length)
-          }
-        } catch {
-          // 忽略解析失败
-        }
+      totalBytes += byteLength(fullKey) + byteLength(raw)
+
+      try {
+        const entry = JSON.parse(raw) as StorageEntry
+        const updated = this.computeOldestNewest(entry, fullKey, oldestTime, newestTime, oldestEntry, newestEntry)
+        oldestTime = updated.oldestTime
+        newestTime = updated.newestTime
+        oldestEntry = updated.oldestEntry
+        newestEntry = updated.newestEntry
+      } catch {
+        // 忽略解析失败
       }
     }
 
@@ -450,6 +452,26 @@ export class LocalStorageManager {
       oldestEntry,
       newestEntry,
     }
+  }
+
+  private computeOldestNewest(
+    entry: StorageEntry,
+    fullKey: string,
+    oldestTime: number,
+    newestTime: number,
+    oldestEntry: string | null,
+    newestEntry: string | null,
+  ): { oldestTime: number; newestTime: number; oldestEntry: string | null; newestEntry: string | null } {
+    const prefixLength = this.getPrefix().length
+    if (entry.createdAt < oldestTime) {
+      oldestTime = entry.createdAt
+      oldestEntry = fullKey.slice(prefixLength)
+    }
+    if (entry.createdAt > newestTime) {
+      newestTime = entry.createdAt
+      newestEntry = fullKey.slice(prefixLength)
+    }
+    return { oldestTime, newestTime, oldestEntry, newestEntry }
   }
 
   // ============================================================

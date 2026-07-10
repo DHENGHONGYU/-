@@ -109,6 +109,9 @@ export interface ErrorClassificationResult {
 // 12 类错误定义表
 // ============================================================
 
+/**
+ * ERROR_DEFINITIONS
+ */
 export const ERROR_DEFINITIONS: TradeErrorDef[] = [
   {
     type: TradeErrorType.CHASE_HIGH_SELL_LOW,
@@ -200,6 +203,9 @@ export const ERROR_DEFINITIONS: TradeErrorDef[] = [
 // 扣分权重
 // ============================================================
 
+/**
+ * SEVERITY_PENALTY
+ */
 export const SEVERITY_PENALTY: Record<ErrorSeverity, number> = {
   critical: 15,
   major: 8,

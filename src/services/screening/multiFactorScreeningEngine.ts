@@ -76,6 +76,10 @@ function evaluateGroup(stock: ScreenableStockData, group: ScreeningConditionGrou
   return group.criteria.every((criterion) => evaluateCriterion(stock, criterion))
 }
 
+/**
+ * loadScreenableStocks
+ * @returns Promise<ScreenableStockData[]>
+ */
 export async function loadScreenableStocks(): Promise<ScreenableStockData[]> {
   logger.info('[multiFactorScreeningEngine] 开始加载可筛选股票池')
 
@@ -112,6 +116,9 @@ export async function loadScreenableStocks(): Promise<ScreenableStockData[]> {
   }))
 }
 
+/**
+ * runMultiFactorScreening
+ */
 export function runMultiFactorScreening(
   stocks: ScreenableStockData[],
   groups: ScreeningConditionGroup[],
@@ -173,6 +180,11 @@ export function runMultiFactorScreening(
   return { items, total: items.length, elapsedMs }
 }
 
+/**
+ * generateScreeningCsv
+ * @param items
+ * @returns string
+ */
 export function generateScreeningCsv(items: ScreeningResultItem[]): string {
   const BOM = '\uFEFF'
   const headers = ['代码', '名称', '行业', 'PE', 'PB', 'ROE', '总市值(亿)', '营收增速(%)', '净利润增速(%)']
@@ -198,6 +210,12 @@ export function generateScreeningCsv(items: ScreeningResultItem[]): string {
   return BOM + [headers, ...rows].map((row) => row.map(escape).join(',')).join('\n')
 }
 
+/**
+ * exportScreeningResults
+ * @param items
+ * @param filenamePrefix
+ * @returns void
+ */
 export function exportScreeningResults(items: ScreeningResultItem[], filenamePrefix: string): void {
   if (items.length === 0) return
 
@@ -213,6 +231,9 @@ export function exportScreeningResults(items: ScreeningResultItem[], filenamePre
   URL.revokeObjectURL(url)
 }
 
+/**
+ * createTemplateFromGroups
+ */
 export function createTemplateFromGroups(
   name: string,
   groups: ScreeningConditionGroup[],

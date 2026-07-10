@@ -64,6 +64,10 @@ function normalizeName(filename: string): string {
   return base.replace(/\.[^.]+$/, '')
 }
 
+/**
+ * parseSymbolFromFilename
+ * @param filename
+ */
 export function parseSymbolFromFilename(filename: string): { symbol: string; name: string } {
   for (const [key, mapping] of Object.entries(HARD_CODED_NAME_MAP)) {
     if (filename.includes(key)) {
@@ -91,6 +95,9 @@ export function parseSymbolFromFilename(filename: string): { symbol: string; nam
   return { symbol: 'UNKNOWN', name: filename }
 }
 
+/**
+ * categorizeDocument
+ */
 export function categorizeDocument(
   filename: string,
   content: string,
@@ -108,6 +115,12 @@ export function categorizeDocument(
 /** 摘要提取默认最大长度 */
 const DEFAULT_SUMMARY_MAX_LEN = 300
 
+/**
+ * extractSummary
+ * @param content
+ * @param maxLen
+ * @returns string
+ */
 export function extractSummary(content: string, maxLen = DEFAULT_SUMMARY_MAX_LEN): string {
   if (!content) return ''
   return content.slice(0, Math.max(0, maxLen))
@@ -118,6 +131,9 @@ const DEFAULT_CHUNK_SIZE = 800
 /** 文档分块默认重叠（字符数） */
 const DEFAULT_CHUNK_OVERLAP = 100
 
+/**
+ * splitIntoChunks
+ */
 export function splitIntoChunks(
   text: string,
   chunkSize = DEFAULT_CHUNK_SIZE,
@@ -137,6 +153,10 @@ export function splitIntoChunks(
   return chunks
 }
 
+/**
+ * scanFolder
+ * @returns Promise<ScanResult | null>
+ */
 export async function scanFolder(): Promise<ScanResult | null> {
   if (
     typeof window === 'undefined' ||
@@ -149,14 +169,48 @@ export async function scanFolder(): Promise<ScanResult | null> {
   const result: ScanResult = { files: [], totalSize: 0, errors: [] }
   const win = window as unknown as WindowWithFilePicker
 
+  async function processFileEntry(
+    entry: FileSystemHandleLike,
+    entryPath: string,
+  ): Promise<void> {
+    const dotIndex = entry.name.lastIndexOf('.')
+    const ext = dotIndex > 0 ? entry.name.slice(dotIndex + 1).toLowerCase() : ''
+    if (!ALLOWED_EXTENSIONS.has(ext)) return
+
+    try {
+      const fileHandle = entry as FileSystemFileHandleLike
+      const file = await fileHandle.getFile()
+
+      let content: string
+      if (BINARY_EXTENSIONS.has(ext)) {
+        content = `[${ext.toUpperCase()}文件: ${file.name}]`
+      } else {
+        content = await file.text()
+        if (content.length > MAX_CONTENT_LENGTH) {
+          content = content.slice(0, MAX_CONTENT_LENGTH)
+        }
+      }
+
+      result.files.push({
+        name: file.name,
+        path: entryPath,
+        size: file.size,
+        content,
+        lastModified: file.lastModified,
+      })
+      result.totalSize += file.size
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      result.errors.push(`Failed to read ${entryPath}: ${message}`)
+    }
+  }
+
   async function scanDirectory(
     dirHandle: FileSystemDirectoryHandleLike,
     currentPath: string,
   ): Promise<void> {
     for await (const entry of dirHandle.values()) {
-      const entryPath = currentPath
-        ? `${currentPath}/${entry.name}`
-        : entry.name
+      const entryPath = currentPath ? `${currentPath}/${entry.name}` : entry.name
 
       if (entry.kind === 'directory') {
         await scanDirectory(entry as FileSystemDirectoryHandleLike, entryPath)
@@ -165,37 +219,7 @@ export async function scanFolder(): Promise<ScanResult | null> {
 
       if (entry.kind !== 'file') continue
 
-      const dotIndex = entry.name.lastIndexOf('.')
-      const ext =
-        dotIndex > 0 ? entry.name.slice(dotIndex + 1).toLowerCase() : ''
-      if (!ALLOWED_EXTENSIONS.has(ext)) continue
-
-      try {
-        const fileHandle = entry as FileSystemFileHandleLike
-        const file = await fileHandle.getFile()
-
-        let content: string
-        if (BINARY_EXTENSIONS.has(ext)) {
-          content = `[${ext.toUpperCase()}文件: ${file.name}]`
-        } else {
-          content = await file.text()
-          if (content.length > MAX_CONTENT_LENGTH) {
-            content = content.slice(0, MAX_CONTENT_LENGTH)
-          }
-        }
-
-        result.files.push({
-          name: file.name,
-          path: entryPath,
-          size: file.size,
-          content,
-          lastModified: file.lastModified,
-        })
-        result.totalSize += file.size
-      } catch (err) {
-        const message = err instanceof Error ? err.message : String(err)
-        result.errors.push(`Failed to read ${entryPath}: ${message}`)
-      }
+      await processFileEntry(entry, entryPath)
     }
   }
 
@@ -210,6 +234,9 @@ export async function scanFolder(): Promise<ScanResult | null> {
   return result
 }
 
+/**
+ * importFilesToDatabase
+ */
 export async function importFilesToDatabase(
   scanResult: ScanResult,
 ): Promise<{ imported: number; errors: string[] }> {
@@ -243,6 +270,9 @@ export async function importFilesToDatabase(
   return { imported, errors }
 }
 
+/**
+ * createLocalDoc
+ */
 export async function createLocalDoc(
   doc: Omit<LocalDoc, 'id' | 'addedAt'>,
 ): Promise<DataLayerResult<LocalDoc>> {
@@ -257,6 +287,30 @@ export async function createLocalDoc(
   return { success: true, data: fullDoc }
 }
 
+function calculateMatchScore(doc: LocalDoc, normalizedKeyword: string): number {
+  const symbolLower = doc.symbol.toLowerCase()
+  if (symbolLower === normalizedKeyword) return 3
+
+  const nameLower = doc.name.toLowerCase()
+  const categoryLower = doc.category.toLowerCase()
+  const tagsLower = doc.tags.join(' ').toLowerCase()
+  if (
+    nameLower.includes(normalizedKeyword) ||
+    categoryLower.includes(normalizedKeyword) ||
+    tagsLower.includes(normalizedKeyword)
+  ) {
+    return 2
+  }
+
+  const contentLower = doc.content.toLowerCase()
+  if (contentLower.includes(normalizedKeyword)) return 1
+
+  return 0
+}
+
+/**
+ * searchLocalDocs
+ */
 export async function searchLocalDocs(
   keyword: string,
 ): Promise<DataLayerResult<LocalDoc[]>> {
@@ -269,27 +323,7 @@ export async function searchLocalDocs(
     }
 
     const scored = all
-      .map((doc) => {
-        const symbolLower = doc.symbol.toLowerCase()
-        const nameLower = doc.name.toLowerCase()
-        const categoryLower = doc.category.toLowerCase()
-        const tagsLower = doc.tags.join(' ').toLowerCase()
-        const contentLower = doc.content.toLowerCase()
-
-        let score = 0
-        if (symbolLower === normalizedKeyword) score = 3
-        else if (
-          nameLower.includes(normalizedKeyword) ||
-          categoryLower.includes(normalizedKeyword) ||
-          tagsLower.includes(normalizedKeyword)
-        ) {
-          score = 2
-        } else if (contentLower.includes(normalizedKeyword)) {
-          score = 1
-        }
-
-        return { doc, score }
-      })
+      .map((doc) => ({ doc, score: calculateMatchScore(doc, normalizedKeyword) }))
       .filter((item) => item.score > 0)
       .sort((a, b) => b.score - a.score)
       .map((item) => item.doc)
@@ -302,6 +336,9 @@ export async function searchLocalDocs(
   }
 }
 
+/**
+ * listLocalDocs
+ */
 export async function listLocalDocs(
   symbol?: string,
 ): Promise<DataLayerResult<LocalDoc[]>> {

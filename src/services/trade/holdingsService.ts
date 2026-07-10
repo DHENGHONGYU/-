@@ -54,21 +54,21 @@ async function requestWithRetry<T>(
   options: RequestInit = {},
   maxRetries: number = HOLDINGS_REQUEST_CONFIG.MAX_RETRIES,
   retryDelay: number = HOLDINGS_REQUEST_CONFIG.RETRY_DELAY,
+  attempt: number = 0,
 ): Promise<T> {
-  let lastError: Error | null = null
-
-  for (let attempt = 0; attempt <= maxRetries; attempt++) {
-    try {
-      return await requestWithTimeout<T>(url, options)
-    } catch (err) {
-      lastError = err instanceof Error ? err : new Error(String(err))
-      if (attempt < maxRetries) {
-        await new Promise((resolve) => setTimeout(resolve, retryDelay * (attempt + 1)))
-      }
+  try {
+    return await requestWithTimeout<T>(url, options)
+  } catch (err) {
+    if (attempt >= maxRetries) {
+      throw err instanceof Error ? err : new Error(String(err))
     }
+    await sleep(retryDelay * (attempt + 1))
+    return requestWithRetry(url, options, maxRetries, retryDelay, attempt + 1)
   }
+}
 
-  throw lastError ?? new Error('请求失败')
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
 /**

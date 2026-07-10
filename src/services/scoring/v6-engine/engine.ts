@@ -58,6 +58,9 @@ function sanitizeScore(score: unknown, layerId: string, context: string): number
 // V6ScoreEngine
 // ============================================================
 
+/**
+ * V6ScoreEngine
+ */
 export class V6ScoreEngine {
   private config: V6ScoreEngineConfig
   private calculators: Map<LayerId, LayerCalculator> = new Map()
@@ -195,7 +198,7 @@ export class V6ScoreEngine {
       }
     }
 
-    return this.aggregate(layerResults as Record<LayerId, LayerScore>, allRisks)
+    return this.aggregate(layerResults, allRisks)
   }
 
   /** 聚合各层得分为综合评分 */
@@ -213,9 +216,9 @@ export class V6ScoreEngine {
     }
 
     for (const layerId of ALL_LAYER_IDS) {
-      const layer = layers[layerId]!
+      const layer = layers[layerId]
       if (layer) {
-        const w = weightMap[layerId]!
+        const w = weightMap[layerId]
         
         // NaN 防护：验证 layer.score 是否有效
         if (!Number.isFinite(layer.score)) {
@@ -256,7 +259,7 @@ export class V6ScoreEngine {
         layers: ALL_LAYER_IDS.reduce((acc, id) => {
           acc[id] = layers[id]?.score ?? 0
           return acc
-        }, {} as Record<LayerId, number>) as Record<LayerId, number>,
+        }, {} as Record<LayerId, number>),
         rating,
       }
       

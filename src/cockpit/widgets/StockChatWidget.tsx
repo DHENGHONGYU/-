@@ -123,6 +123,23 @@ function MarkdownRenderer({ content }: { content: string }): React.JSX.Element {
   return <div className="markdown-body">{elements}</div>
 }
 
+function renderInlineToken(token: string, key: number): React.ReactNode {
+  if (token.startsWith('**') && token.endsWith('**')) {
+    return <strong key={key}>{token.slice(2, -2)}</strong>
+  }
+  if (token.startsWith('*') && token.endsWith('*')) {
+    return <em key={key}>{token.slice(1, -1)}</em>
+  }
+  if (token.startsWith('`') && token.endsWith('`')) {
+    return (
+      <code key={key} className="bg-muted px-1 rounded text-xs">
+        {token.slice(1, -1)}
+      </code>
+    )
+  }
+  return token
+}
+
 /**
  * 行内 Markdown 渲染（加粗、斜体、行内代码）
  */
@@ -137,19 +154,7 @@ function renderInline(text: string): React.ReactNode {
       parts.push(text.slice(lastIndex, match.index))
     }
 
-    const token = match[0]
-    if (token.startsWith('**') && token.endsWith('**')) {
-      parts.push(<strong key={match.index}>{token.slice(2, -2)}</strong>)
-    } else if (token.startsWith('*') && token.endsWith('*')) {
-      parts.push(<em key={match.index}>{token.slice(1, -1)}</em>)
-    } else if (token.startsWith('`') && token.endsWith('`')) {
-      parts.push(
-        <code key={match.index} className="bg-muted px-1 rounded text-xs">
-          {token.slice(1, -1)}
-        </code>
-      )
-    }
-
+    parts.push(renderInlineToken(match[0], match.index))
     lastIndex = regex.lastIndex
   }
 

@@ -154,28 +154,20 @@ export function calculateCatalyst(data: CatalystInput): number {
  * - PEG：< 0.5 → +1，0.5-1 → +0.5，> 2 → -1
  */
 export function calculateValuationMargin(data: ValuationMarginInput): number {
-  let score = 0
+  const PE_TIERS = [
+    { threshold: 20, score: 5 },
+    { threshold: 40, score: 4 },
+    { threshold: 60, score: 3 },
+    { threshold: 80, score: 2 },
+  ]
+  const peScore = PE_TIERS.find((t) => data.pePercentile < t.threshold)?.score ?? 1
 
-  // PE 分位映射
-  if (data.pePercentile < 20) {
-    score = 5
-  } else if (data.pePercentile < 40) {
-    score = 4
-  } else if (data.pePercentile < 60) {
-    score = 3
-  } else if (data.pePercentile < 80) {
-    score = 2
-  } else {
-    score = 1
-  }
-
-  // PB 分位加权（取 PE 和 PB 中更保守的）
   const pbScore = data.pbPercentile < 20 ? 5
     : data.pbPercentile < 40 ? 4
     : data.pbPercentile < 60 ? 3
     : data.pbPercentile < 80 ? 2
     : 1
-  score = (score + pbScore) / 2
+  let score = (peScore + pbScore) / 2
 
   // 股息率加分
   if (data.dividendYield > 4) {
@@ -247,30 +239,23 @@ export function calculateChipStructure(data: ChipStructureInput): number {
  * - 技术金叉 → +1.5
  */
 export function calculateRotationPosition(data: RotationPositionInput): number {
-  let score = 0
-
-  // 成交量分位：越低越好（底部启动）
-  if (data.sectorVolumePercentile < 20) {
-    score = 5
-  } else if (data.sectorVolumePercentile < 40) {
-    score = 4
-  } else if (data.sectorVolumePercentile < 60) {
-    score = 3
-  } else if (data.sectorVolumePercentile < 80) {
-    score = 2
-  } else {
-    score = 1
-  }
+  const VOLUME_TIERS = [
+    { threshold: 20, score: 5 },
+    { threshold: 40, score: 4 },
+    { threshold: 60, score: 3 },
+    { threshold: 80, score: 2 },
+  ]
+  const score = VOLUME_TIERS.find((t) => data.sectorVolumePercentile < t.threshold)?.score ?? 1
 
   // 资金流入强度
-  score = (score + data.capitalInflowStrength) / 2
+  let finalScore = (score + data.capitalInflowStrength) / 2
 
   // 技术金叉加分
   if (data.hasGoldenCross) {
-    score += 1.5
+    finalScore += 1.5
   }
 
-  return clampScore(score)
+  return clampScore(finalScore)
 }
 
 /**
@@ -282,22 +267,16 @@ export function calculateRotationPosition(data: RotationPositionInput): number {
  * - 市值 > 500亿 → 大盘（+0.5），< 30亿 → 小盘（-0.5）
  */
 export function calculateLiquidity(data: LiquidityInput): number {
-  let score = 0
-
   // 日均成交额（万元 → 亿元）
   const dailyAmountYi = data.avgDailyAmount / 10000
 
-  if (dailyAmountYi > 5) {
-    score = 5
-  } else if (dailyAmountYi > 3) {
-    score = 4
-  } else if (dailyAmountYi > 1) {
-    score = 3
-  } else if (dailyAmountYi > 0.5) {
-    score = 2
-  } else {
-    score = 1
-  }
+  const AMOUNT_TIERS = [
+    { threshold: 5, score: 5 },
+    { threshold: 3, score: 4 },
+    { threshold: 1, score: 3 },
+    { threshold: 0.5, score: 2 },
+  ]
+  let score = AMOUNT_TIERS.find((t) => dailyAmountYi > t.threshold)?.score ?? 1
 
   // 换手率调整
   if (data.turnoverRate >= 1 && data.turnoverRate <= 3) {
@@ -400,7 +379,7 @@ export async function analyzeBySymbol(symbol: string): Promise<ValuePitScore | n
   }
 
   const hasQuotes = quotes !== undefined && quotes.history.length >= 20
-  const closes = hasQuotes ? quotes!.history.map((b) => b.close) : []
+  const closes = hasQuotes ? quotes.history.map((b) => b.close) : []
   const latest = hasQuotes ? closes[closes.length - 1]! : (stock.price ?? (() => {
     logger.warn('[valuePitAnalyzer] 字段缺失，使用默认值', { field: 'price', context: `symbol=${symbol}` })
     return 0
@@ -408,11 +387,11 @@ export async function analyzeBySymbol(symbol: string): Promise<ValuePitScore | n
   const ma20 = hasQuotes ? computeMA(closes, 20) : undefined
   const ma60 = hasQuotes ? computeMA(closes, 60) : undefined
 
-  const volumes = hasQuotes ? quotes!.history.map((b) => b.volume) : []
+  const volumes = hasQuotes ? quotes.history.map((b) => b.volume) : []
   const recentVol = volumes.length >= 5
     ? volumes.slice(-5).reduce((a, b) => a + b, 0) / 5
     : 0
-  const amounts = hasQuotes ? quotes!.history.map((b) => b.amount).filter((a): a is number => a !== undefined) : []
+  const amounts = hasQuotes ? quotes.history.map((b) => b.amount).filter((a): a is number => a !== undefined) : []
   const avgAmount = amounts.length >= 5
     ? amounts.slice(-5).reduce((a, b) => a + b, 0) / 5
     : 0

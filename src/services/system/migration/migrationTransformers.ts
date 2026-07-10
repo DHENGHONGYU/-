@@ -50,12 +50,21 @@ import type {
 
 const logger = getLogger()
 
+/**
+ * sentimentNumberToLabel
+ * @param score
+ */
 export function sentimentNumberToLabel(score: number): 'positive' | 'negative' | 'neutral' {
   if (score > 0.2) return 'positive'
   if (score < -0.2) return 'negative'
   return 'neutral'
 }
 
+/**
+ * parseTimestamp
+ * @param value
+ * @returns number | undefined
+ */
 export function parseTimestamp(value: string | number | undefined): number | undefined {
   if (value === undefined || value === null) return undefined
   if (typeof value === 'number') {
@@ -92,6 +101,10 @@ function normalizeResearchStatus(isFavorite?: boolean): ResearchStatus {
   return isFavorite ? RESEARCH_STATUS.watching : RESEARCH_STATUS.candidate
 }
 
+/**
+ * normalizeStockThemes
+ * @param v6
+ */
 export function normalizeStockThemes(v6: V6Stock): {
   industryCode?: string
   sector?: string
@@ -129,6 +142,11 @@ export function normalizeStockThemes(v6: V6Stock): {
   }
 }
 
+/**
+ * transformV6Stock
+ * @param v6
+ * @returns Stock
+ */
 export function transformV6Stock(v6: V6Stock): Stock {
   const { industryCode, sector, theme, group } = normalizeStockThemes(v6)
   return {
@@ -146,6 +164,11 @@ export function transformV6Stock(v6: V6Stock): Stock {
   }
 }
 
+/**
+ * transformV6Order
+ * @param v6
+ * @returns Order
+ */
 export function transformV6Order(v6: V6Order): Order {
   const direction: OrderDirection =
     v6.type === 'sell' || v6.type === 'reduce' ? ORDER_DIRECTION.sell : ORDER_DIRECTION.buy
@@ -173,6 +196,11 @@ export function transformV6Order(v6: V6Order): Order {
   }
 }
 
+/**
+ * transformV6DailyQuotes
+ * @param v6Quotes
+ * @returns DailyQuotes[]
+ */
 export function transformV6DailyQuotes(v6Quotes: V6DailyQuote[]): DailyQuotes[] {
   const bySymbol = new Map<string, V6DailyQuote[]>()
   for (const quote of v6Quotes) {
@@ -223,6 +251,11 @@ export function transformV6DailyQuotes(v6Quotes: V6DailyQuote[]): DailyQuotes[] 
   return result
 }
 
+/**
+ * transformV6Score
+ * @param v6
+ * @returns V6Score
+ */
 export function transformV6Score(v6: V6ScoreRecord): V6Score {
   const factors: Record<string, number> = {}
   if (v6.layers) {
@@ -245,6 +278,11 @@ export function transformV6Score(v6: V6ScoreRecord): V6Score {
   }
 }
 
+/**
+ * transformV6ScoreToDoc
+ * @param v6
+ * @returns ScoreDocVersion
+ */
 export function transformV6ScoreToDoc(v6: V6ScoreRecord): ScoreDocVersion {
   const layers: Record<string, V6LayerScore> = {}
   if (v6.layers) {
@@ -282,6 +320,11 @@ export function transformV6ScoreToDoc(v6: V6ScoreRecord): ScoreDocVersion {
   }
 }
 
+/**
+ * transformV6SectorScore
+ * @param v6
+ * @returns SectorScoreRecord
+ */
 export function transformV6SectorScore(v6: V6SectorScore): SectorScoreRecord {
   return {
     id: v6.id ?? `${v6.sectorCode}__${v6.scoreDate}`,
@@ -299,6 +342,11 @@ export function transformV6SectorScore(v6: V6SectorScore): SectorScoreRecord {
   }
 }
 
+/**
+ * transformV6RotationScore
+ * @param v6
+ * @returns RotationSectorScore
+ */
 export function transformV6RotationScore(v6: V6RotationScore): RotationSectorScore {
   const poolStocks: RotationSectorScore['poolStocks'] = []
   const v6PoolStocks = safeArray<string>(v6.poolStocks)
@@ -337,6 +385,11 @@ export function transformV6RotationScore(v6: V6RotationScore): RotationSectorSco
   }
 }
 
+/**
+ * transformV6ScoreDoc
+ * @param v6
+ * @returns ScoreDocVersion
+ */
 export function transformV6ScoreDoc(v6: V6ScoreDoc): ScoreDocVersion {
   return {
     docId: v6.docId,
@@ -375,6 +428,11 @@ function buildV9StrategyGroupSnapshot(v6: V6StrategyGroupSnapshot): StrategyGrou
   }
 }
 
+/**
+ * transformV6StrategySnapshot
+ * @param v6
+ * @returns StrategySnapshot
+ */
 export function transformV6StrategySnapshot(v6: V6StrategySnapshot): StrategySnapshot {
   return {
     id: v6.id,
@@ -393,6 +451,11 @@ export function transformV6StrategySnapshot(v6: V6StrategySnapshot): StrategySna
   }
 }
 
+/**
+ * transformV6LocalDoc
+ * @param v6
+ * @returns LocalDoc
+ */
 export function transformV6LocalDoc(v6: V6LocalDoc): LocalDoc {
   return {
     id: v6.id,
@@ -407,6 +470,11 @@ export function transformV6LocalDoc(v6: V6LocalDoc): LocalDoc {
   }
 }
 
+/**
+ * transformV6NewsArticle
+ * @param v6
+ * @returns NewsArticle
+ */
 export function transformV6NewsArticle(v6: V6NewsArticle): NewsArticle {
   return {
     id: v6.id,
@@ -425,6 +493,11 @@ export function transformV6NewsArticle(v6: V6NewsArticle): NewsArticle {
   }
 }
 
+/**
+ * transformV6NewsStockMap
+ * @param v6
+ * @returns NewsStockMap
+ */
 export function transformV6NewsStockMap(v6: V6NewsStockMap): NewsStockMap {
   return {
     id: v6.id,
@@ -437,6 +510,11 @@ export function transformV6NewsStockMap(v6: V6NewsStockMap): NewsStockMap {
   }
 }
 
+/**
+ * transformV6SentimentCache
+ * @param v6
+ * @returns SentimentCache
+ */
 export function transformV6SentimentCache(v6: V6SentimentCache): SentimentCache {
   return {
     id: v6.id,
@@ -461,6 +539,11 @@ function generateNewsHash(input: string): string {
   return (hash >>> 0).toString(16).padStart(8, '0')
 }
 
+/**
+ * parseV6Export
+ * @param json
+ * @returns V6ExportShape
+ */
 export function parseV6Export(json: unknown): V6ExportShape {
   if (json === null || typeof json !== 'object') {
     throw new Error('V6 导出 JSON 必须是对象')
@@ -496,6 +579,11 @@ export function parseV6Export(json: unknown): V6ExportShape {
   }
 }
 
+/**
+ * transformV6ToV9
+ * @param v6
+ * @returns V9ImportShape
+ */
 export function transformV6ToV9(v6: V6ExportShape): V9ImportShape {
   const stocks = safeArray<V6Stock>(v6.stocks).map(transformV6Stock)
   const dailyQuotes = transformV6DailyQuotes(safeArray<V6DailyQuote>(v6.daily_quotes))

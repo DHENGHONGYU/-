@@ -145,6 +145,9 @@ function classify(
   return undefined
 }
 
+/**
+ * classifyStocks
+ */
 export function classifyStocks(input: ClassifyStocksInput): StrategyGroupItem[] {
   const { stocks, v6Scores, rotationScores } = input
   const v6ScoreMap = new Map(v6Scores.map((score) => [score.symbol, score]))
@@ -160,6 +163,11 @@ export function classifyStocks(input: ClassifyStocksInput): StrategyGroupItem[] 
   return items
 }
 
+/**
+ * buildGroupSnapshot
+ * @param items
+ * @returns StrategyGroupSnapshot
+ */
 export function buildGroupSnapshot(items: StrategyGroupItem[]): StrategyGroupSnapshot {
   const count = items.length
   const composites = items.map((item) => item.composite)
@@ -194,6 +202,9 @@ function diffSymbols(prev: string[], current: string[]): { added: string[]; remo
   return { added, removed }
 }
 
+/**
+ * buildChangeLog
+ */
 export function buildChangeLog(
   prev: StrategySnapshot | undefined,
   current: { core: StrategyGroupSnapshot; hot: StrategyGroupSnapshot; value: StrategyGroupSnapshot; stockCount: number },
@@ -249,6 +260,10 @@ export function buildChangeLog(
   }
 }
 
+/**
+ * getNextVersion
+ * @returns Promise<number>
+ */
 export async function getNextVersion(): Promise<number> {
   const latestResult = await getLatestSnapshot()
   if (!latestResult.success || !latestResult.data) {
@@ -257,6 +272,9 @@ export async function getNextVersion(): Promise<number> {
   return latestResult.data.version + 1
 }
 
+/**
+ * saveStrategySnapshot
+ */
 export async function saveStrategySnapshot(
   input: ClassifyStocksInput,
   trigger = 'manual',
@@ -312,6 +330,10 @@ export async function saveStrategySnapshot(
   }
 }
 
+/**
+ * getLatestSnapshot
+ * @returns Promise<DataLayerResult<StrategySnapshot | undefined>>
+ */
 export async function getLatestSnapshot(): Promise<DataLayerResult<StrategySnapshot | undefined>> {
   try {
     const snapshot = await dataLayer.strategySnapshots.getLatest()
@@ -323,6 +345,11 @@ export async function getLatestSnapshot(): Promise<DataLayerResult<StrategySnaps
   }
 }
 
+/**
+ * listSnapshots
+ * @param limit?
+ * @returns Promise<DataLayerResult<StrategySnapshot[]>>
+ */
 export async function listSnapshots(limit?: number): Promise<DataLayerResult<StrategySnapshot[]>> {
   try {
     const list = await dataLayer.strategySnapshots.list()

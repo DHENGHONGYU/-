@@ -50,6 +50,9 @@ const ZERO_METRICS_SUMMARY: AgentMetricsSummary = {
   avgExecutionTime: 0,
 }
 
+/**
+ * SystemMonitorService
+ */
 export class SystemMonitorService {
   /** Agent 状态轮询定时器（15s） */
   private agentStatusTimer: ReturnType<typeof setInterval> | null = null

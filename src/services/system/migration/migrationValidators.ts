@@ -7,6 +7,9 @@ import type { V6ExportShape } from './migrationTypes'
 
 const logger = getLogger()
 
+/**
+ * REQUIRED_V6_TABLES
+ */
 export const REQUIRED_V6_TABLES = [
   'stocks',
   'daily_quotes',
@@ -22,10 +25,19 @@ export const REQUIRED_V6_TABLES = [
   'sentiment_cache',
 ]
 
+/**
+ * createMigrationTraceId
+ * @returns string
+ */
 export function createMigrationTraceId(): string {
   return `migration-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
 }
 
+/**
+ * validateV6ExportTables
+ * @param v6
+ * @returns void
+ */
 export function validateV6ExportTables(v6: V6ExportShape): void {
   const missing = REQUIRED_V6_TABLES.filter((table) => !(table in v6))
   if (missing.length > 0) {
@@ -33,6 +45,9 @@ export function validateV6ExportTables(v6: V6ExportShape): void {
   }
 }
 
+/**
+ * writeMigrationAuditLog
+ */
 export async function writeMigrationAuditLog(params: {
   traceId: string
   store: string

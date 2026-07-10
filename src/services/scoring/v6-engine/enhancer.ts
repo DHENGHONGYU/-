@@ -65,6 +65,9 @@ export interface LlmEnhancementResult {
 /** 可被 LLM 增强的层 */
 const LLM_ENHANCEABLE_LAYERS: ReadonlySet<LayerId> = new Set<LayerId>(['l0', 'l1', 'l2', 'l4', 'l5', 'l6', 'l7'])
 
+/**
+ * LLMScoreEnhancer
+ */
 export class LLMScoreEnhancer {
   private llmConfig: LlmConfig | null = null
   private enabled = false
@@ -171,7 +174,7 @@ export class LLMScoreEnhancer {
                 citation: c,
                 // AuditEntry 结构兼容字段
                 input: { baseScore: baseResult.score, layerName: baseResult.layerName },
-                output: { source: c.source, content: c.content } as Record<string, unknown>,
+                output: { source: c.source, content: c.content },
               }))
             : []
 

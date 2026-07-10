@@ -203,6 +203,18 @@ export class QueryBuilder {
       )
     }
 
+function collectSuccessfulNews(
+  newsResults: PromiseSettledResult<NewsArticle | undefined>[],
+): NewsArticle[] {
+  const newsList: NewsArticle[] = []
+  for (const result of newsResults) {
+    if (result.status === 'fulfilled' && result.value) {
+      newsList.push(result.value)
+    }
+  }
+  return newsList
+}
+
     // --- 关联新闻（通过 newsStockMap 多对多关联） ---
     if (p.includeNews) {
       dimensions.push('news')
@@ -210,15 +222,10 @@ export class QueryBuilder {
         (async (): Promise<TaskResult> => {
           try {
             const mappings = await dataLayer.newsStockMap.listBySymbol(symbol)
-            const newsList: NewsArticle[] = []
             const newsResults = await Promise.allSettled(
               mappings.map((m) => dataLayer.news.get(m.newsId)),
             )
-            for (const result of newsResults) {
-              if (result.status === 'fulfilled' && result.value) {
-                newsList.push(result.value)
-              }
-            }
+            const newsList = collectSuccessfulNews(newsResults)
             return { key: 'news', value: newsList }
           } catch (err) {
             const msg = `Failed to fetch news for ${symbol}: ${String(err)}`

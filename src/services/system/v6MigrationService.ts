@@ -20,6 +20,9 @@ import {
 
 const logger = getLogger()
 
+/**
+ * importToV9
+ */
 export async function importToV9(
   transformed: V9ImportShape,
   options: MigrationOptions = {},
@@ -74,6 +77,9 @@ export async function importToV9(
   }
 }
 
+/**
+ * runV6Migration
+ */
 export async function runV6Migration(
   json: unknown,
   options: MigrationOptions = {},
@@ -91,6 +97,11 @@ export async function runV6Migration(
   }
 }
 
+/**
+ * generateMigrationReport
+ * @param result
+ * @returns string
+ */
 export function generateMigrationReport(result: MigrationReport): string {
   const lines: string[] = []
   lines.push(`迁移结果：${result.success ? '成功' : '部分失败'}`)

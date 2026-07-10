@@ -107,6 +107,10 @@ function computeHoldDays(buyTimestamp: number, sellTimestamp: number): number {
  * 2. 每组内按 createdAt 升序排列
  * 3. 买单入队，卖单从队头取买单进行 FIFO 配对
  * 4. 未配对的买单累积为当前持仓，计算平均成本价
+/**
+ * buildTradePairs
+ * @param orders
+ * @returns SymbolTradePair[]
  */
 export function buildTradePairs(orders: Order[]): SymbolTradePair[] {
   const bySymbol = new Map<string, Order[]>()
@@ -148,38 +152,12 @@ export function buildTradePairs(orders: Order[]): SymbolTradePair[] {
           createdAt: order.createdAt,
           amount: order.amount,
         })
-      } else if (order.direction === 'sell' && buyQueue.length > 0) {
-        // 卖单与买单 FIFO 配对
-        let remainingQty = order.quantity
-
-        while (remainingQty > 0 && buyQueue.length > 0) {
-          const buy = buyQueue[0]!
-          const matchQty = Math.min(remainingQty, buy.quantity)
-          const buyAmount = (matchQty / buy.quantity) * buy.amount
-          const sellAmount = matchQty * order.price
-          const realized = sellAmount - buyAmount
-
-          pairs.push({
-            buyId: buy.id ?? '',
-            sellId: order.id ?? '',
-            profitPct: buy.price > 0 ? round2(((order.price - buy.price) / buy.price) * 100) : 0,
-            holdDays: computeHoldDays(buy.createdAt, order.createdAt),
-            buyDate: formatDate(buy.createdAt),
-            sellDate: formatDate(order.createdAt),
-            quantity: matchQty,
-            realizedAmount: round2(realized),
-          })
-
-          realizedPnl += realized
-          remainingQty -= matchQty
-
-          if (matchQty >= buy.quantity) {
-            buyQueue.shift()
-          } else {
-            buy.quantity -= matchQty
-            buy.amount -= buyAmount
-          }
-        }
+        continue
+      }
+      if (order.direction === 'sell' && buyQueue.length > 0) {
+        const matchResult = matchSellWithBuys(order, buyQueue)
+        pairs.push(...matchResult.pairs)
+        realizedPnl += matchResult.realizedPnl
       }
     }
 
@@ -202,6 +180,62 @@ export function buildTradePairs(orders: Order[]): SymbolTradePair[] {
   }
 
   return tradePairs
+}
+
+interface BuyQueueItem {
+  id: string
+  price: number
+  quantity: number
+  createdAt: number
+  amount: number
+}
+
+interface MatchResult {
+  pairs: MatchedTradePair[]
+  realizedPnl: number
+}
+
+/**
+ * 将卖单与买单队列进行 FIFO 配对
+ */
+function matchSellWithBuys(
+  sellOrder: Order,
+  buyQueue: BuyQueueItem[],
+): MatchResult {
+  const pairs: MatchedTradePair[] = []
+  let realizedPnl = 0
+  let remainingQty = sellOrder.quantity
+
+  while (remainingQty > 0 && buyQueue.length > 0) {
+    const buy = buyQueue[0]!
+    const matchQty = Math.min(remainingQty, buy.quantity)
+    const buyAmount = (matchQty / buy.quantity) * buy.amount
+    const sellAmount = matchQty * sellOrder.price
+    const realized = sellAmount - buyAmount
+
+    pairs.push({
+      buyId: buy.id ?? '',
+      sellId: sellOrder.id ?? '',
+      profitPct: buy.price > 0 ? round2(((sellOrder.price - buy.price) / buy.price) * 100) : 0,
+      holdDays: computeHoldDays(buy.createdAt, sellOrder.createdAt),
+      buyDate: formatDate(buy.createdAt),
+      sellDate: formatDate(sellOrder.createdAt),
+      quantity: matchQty,
+      realizedAmount: round2(realized),
+    })
+
+    realizedPnl += realized
+    remainingQty -= matchQty
+
+    if (matchQty >= buy.quantity) {
+      buyQueue.shift()
+    } else {
+      buy.quantity -= matchQty
+      buy.amount -= buyAmount
+    }
+  }
+
+  return { pairs, realizedPnl }
 }
 
 /**

@@ -73,6 +73,9 @@ export interface ArchitectureSnapshot {
 // 服务实现
 // ============================================================
 
+/**
+ * ArchitectureService
+ */
 export class ArchitectureService {
   private engineStarted = false
   private unsubscribeEngineStatus: (() => void) | null = null
