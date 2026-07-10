@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WorkBuddy 社区发文包 · 审计工作流改造</title>
+<style>
+  :root{
+    --bg:#fafaf9; --panel:#ffffff; --border:#e7e5e4; --text:#1c1917;
+    --text2:#57534e; --muted:#a8a29e; --accent:#10b981; --accent-bg:#ecfdf5;
+    --amber:#f59e0b; --blue:#3b82f6; --red:#ef4444;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;line-height:1.7;padding:32px 20px}
+  .wrap{max-width:920px;margin:0 auto}
+  h1{font-size:26px;font-weight:800;letter-spacing:-.5px;margin-bottom:6px}
+  .sub{color:var(--muted);font-size:14px;margin-bottom:28px}
+  .badge{display:inline-block;background:var(--accent);color:#fff;font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px;margin-right:6px}
+  .badge.gray{background:#78716c}
+  .badge.amber{background:var(--amber)}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:24px 28px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  .card h2{font-size:19px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:10px}
+  .card h2 .num{background:var(--accent);color:#fff;width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .card.amber h2 .num{background:var(--amber)}
+  .meta{color:var(--muted);font-size:13px;margin:6px 0 14px}
+  .meta span{margin-right:16px}
+  .fignav{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .fignav a{font-size:12px;color:var(--accent);text-decoration:none;border:1px solid var(--border);padding:4px 12px;border-radius:6px;background:var(--bg)}
+  .fignav a:hover{background:var(--accent-bg);border-color:var(--accent)}
+  .figs{display:grid;grid-template-columns:1fr;gap:18px;margin-top:18px}
+  .fig{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px}
+  .fig h3{font-size:13px;color:var(--text2);margin-bottom:8px;font-weight:600}
+  .fig svg{width:100%;height:auto;display:block;border-radius:6px}
+  .checklist{background:var(--accent-bg);border:1px solid #a7f3d0;border-radius:10px;padding:18px 22px;margin-top:8px}
+  .checklist h3{font-size:14px;color:#047857;margin-bottom:10px}
+  .checklist ul{list-style:none}
+  .checklist li{font-size:13px;color:#065f46;padding:4px 0;padding-left:26px;position:relative}
+  .checklist li:before{content:"☐";position:absolute;left:0;font-size:16px}
+  .checklist li.done:before{content:"☑";color:#047857}
+  .tips{font-size:13px;color:var(--text2);margin-top:14px;padding:14px 18px;background:#fffbeb;border:1px solid #fde68a;border-radius:10px}
+  .tips strong{color:#92400e}
+  footer{text-align:center;color:var(--muted);font-size:12px;margin-top:30px;padding-top:18px;border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>WorkBuddy 社区发文包</h1>
+  <p class="sub">审计合伙人视角 · 2 篇文章 + 6 张配图 · 目标积分 3500（3000 + 500）</p>
+
+  <div class="card">
+    <h2><span class="num">1</span>完整实操教程（冲精选 · 单篇最高 3000 积分）</h2>
+    <p class="meta">
+      <span>📄 文件：<code>01-tutorial-audit-workflow.md</code></span>
+      <span>📝 约 2000 字</span>
+      <span>🖼️ 配图 4 张</span>
+      <span class="badge">基础 1000 + 精选 2000</span>
+    </p>
+    <p style="font-size:14px;color:var(--text2)">标题：《我用 WorkBuddy 给审计团队搭了 20 个"分身"：一个审计合伙人的 AI 工作流改造实录 #WorkBuddy》</p>
+    <div class="fignav">
+      <a href="#fig1">图1 架构图</a>
+      <a href="#fig2">图2 记忆层</a>
+      <a href="#fig3">图3 专家配置</a>
+      <a href="#fig4">图4 时间对比</a>
+    </div>
+  </div>
+
+  <div class="card amber">
+    <h2><span class="num">2</span>使用心得 / 踩坑记录（保底 500 积分）</h2>
+    <p class="meta">
+      <span>📄 文件：<code>02-experience-five-pitfalls.md</code></span>
+      <span>📝 约 1100 字</span>
+      <span>🖼️ 配图 2 张</span>
+      <span class="badge amber">基础 500</span>
+    </p>
+    <p style="font-size:14px;color:var(--text2)">标题：《审计场景下 WorkBuddy 的 5 个真实踩坑与解法 #WorkBuddy》</p>
+    <div class="fignav">
+      <a href="#fig5">图5 踩坑概览</a>
+      <a href="#fig6">图6 决策流</a>
+    </div>
+  </div>
+
+  <div class="figs">
+    <div class="fig" id="fig1"><h3>图1 · 4 指挥官 × 20 分身架构（配教程篇 Step·架构设计）</h3>
+      <object data="images/fig1-architecture.svg" type="image/svg+xml" style="width:100%"></object>
+    </div>
+    <div class="fig" id="fig2"><h3>图2 · 三层记忆文件结构（配教程篇 Step 1）</h3>
+      <object data="images/fig2-memory-layer.svg" type="image/svg+xml" style="width:100%"></object>
+    </div>
+    <div class="fig" id="fig3"><h3>图3 · 专家中心配置流程（配教程篇 Step 3）</h3>
+      <object data="images/fig3-expert-center.svg" type="image/svg+xml" style="width:100%"></object>
+    </div>
+    <div class="fig" id="fig4"><h3>图4 · 改造前后时间分配对比（配教程篇·效果对比）</h3>
+      <object data="images/fig4-comparison.svg" type="image/svg+xml" style="width:100%"></object>
+    </div>
+    <div class="fig" id="fig5"><h3>图5 · 5 个踩坑概览（配心得篇开头）</h3>
+      <object data="images/fig5-pitfalls-overview.svg" type="image/svg+xml" style="width:100%"></object>
+    </div>
+    <div class="fig" id="fig6"><h3>图6 · 工作模式选择决策流（配心得篇坑5）</h3>
+      <object data="images/fig6-solution-flow.svg" type="image/svg+xml" style="width:100%"></object>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:24px">
+    <h2 style="margin-bottom:12px">📋 发文过审清单</h2>
+    <div class="checklist">
+      <h3>通用要求（两篇均适用）</h3>
+      <ul>
+        <li class="done">标题包含 <strong>#WorkBuddy</strong> 标签</li>
+        <li class="done">字数 ≥ 800 字（教程篇 ~2000 / 心得篇 ~1100）</li>
+        <li class="done">配 3-6 张实操截图（已生成 6 张示意图）</li>
+        <li>发文账号与 WorkBuddy 账号一致</li>
+        <li>配图上传前在浏览器打开 SVG 截图为 PNG</li>
+      </ul>
+    </div>
+    <div class="tips">
+      <strong>💡 精选加分技巧：</strong>实战教程 + 踩坑记录 + 效率对比类内容更容易被精选。教程篇同时具备「架构设计 + 分步实操 + 效果数据对比 + 避坑指南」四要素，精选命中率最高。建议优先发教程篇冲 3000，3 天后再发心得篇补 500。
+    </div>
+    <div class="tips" style="background:#eff6ff;border-color:#bfdbfe;margin-top:10px">
+      <strong style="color:#1e40af">🖼️ 配图转 PNG 方法：</strong>用浏览器单独打开每个 .svg 文件 → 右键「另存为图片」选 PNG，或用截图工具截取。汇总页（本页面）也可整体截图后裁切。
+    </div>
+  </div>
+
+  <footer>
+    WorkBuddy 社区发文包 · 审计工作流改造系列 · 生成于 2026-07-11<br>
+    文章为作者个人实践分享，不代表任何机构立场
+  </footer>
+</div>
+</body>
+</html>
