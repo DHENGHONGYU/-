@@ -28,6 +28,9 @@ const SIZE_MAP = {
   lg: { track: 'h-3.5', text: THEME_TOKENS.typography.fontSize.base },
 } as const
 
+/**
+ * SignalSpectrum
+ */
 export function SignalSpectrum({
   value,
   label,

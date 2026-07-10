@@ -22,6 +22,10 @@ function formatDelta(value: number): string {
   return value.toFixed(2)
 }
 
+/**
+ * ScoreFactorDeltaPanel
+ * @param previous }
+ */
 export function ScoreFactorDeltaPanel({ current, previous }: ScoreFactorDeltaPanelProps): React.JSX.Element | null {
   if (!previous) {
     return (

@@ -12,6 +12,9 @@ interface WatchlistMoversWidgetProps {
   config: WidgetConfig
 }
 
+/**
+ * WatchlistMoversWidget
+ */
 export default function WatchlistMoversWidget({ config }: WatchlistMoversWidgetProps): React.JSX.Element {
   const { data, loadingMap, errorMap, refreshWidget } = useMarketData()
   const watchlist = data.watchlist

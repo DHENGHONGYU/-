@@ -47,6 +47,9 @@ const statusConfig: Record<ResultStatus, { icon: string; title: string; subTitle
   },
 }
 
+/**
+ * Result
+ */
 export const Result = memo(forwardRef<HTMLDivElement, ResultProps>(
   ({ className, status, title, subTitle, extra, ...props }, ref) => {
     const config = statusConfig[status]

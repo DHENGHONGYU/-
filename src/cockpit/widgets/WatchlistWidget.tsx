@@ -10,6 +10,9 @@ interface WatchlistWidgetProps {
   config: WidgetConfig
 }
 
+/**
+ * WatchlistWidget
+ */
 export default function WatchlistWidget({ config }: WatchlistWidgetProps): React.JSX.Element {
   const { data, loadingMap, errorMap, refreshWidget } = useMarketData()
   const watchlist = data.watchlist

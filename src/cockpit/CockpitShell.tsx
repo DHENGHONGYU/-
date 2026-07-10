@@ -287,6 +287,9 @@ function CockpitContent(): React.JSX.Element {
   )
 }
 
+/**
+ * CockpitShell
+ */
 export default function CockpitShell(): React.JSX.Element {
   return (
     <MarketDataProvider>

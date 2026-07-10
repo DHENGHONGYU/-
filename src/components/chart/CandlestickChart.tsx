@@ -4,7 +4,6 @@ import {
   useEffect,
   useRef,
   type ComponentPropsWithoutRef,
-  type RefObject,
 } from 'react'
 import { createChart, CandlestickSeries, type IChartApi, type ISeriesApi, type CandlestickData, type Time } from 'lightweight-charts'
 import { CHART_PALETTE } from '@/constants/theme.tokens'
@@ -83,7 +82,7 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
 
       // 格式化数据
       const formattedData: CandlestickData<Time>[] = data.map((item) => ({
-        time: item.time as Time,
+        time: item.time,
         open: item.open,
         high: item.high,
         low: item.low,
@@ -111,7 +110,7 @@ const CandlestickChart = forwardRef<HTMLDivElement, CandlestickChartProps>(
       if (typeof ref === 'function') {
         ref(containerRef.current)
       } else {
-        ;(ref as RefObject<HTMLDivElement | null>).current = containerRef.current
+        ;(ref as { current: HTMLDivElement | null }).current = containerRef.current
       }
     }
 
@@ -126,6 +125,9 @@ CandlestickChart.displayName = 'CandlestickChart'
 // 同时导出 named + default
 const CandlestickChartMemo = memo(CandlestickChart)
 CandlestickChartMemo.displayName = 'CandlestickChart'
+/**
+ * CandlestickSeriesChart
+ */
 export const CandlestickSeriesChart = CandlestickChartMemo
 export { CandlestickSeriesChart as CandlestickChart }
 export default CandlestickChartMemo

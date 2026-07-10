@@ -22,6 +22,9 @@ export interface DatePickerProps {
   className?: string
 }
 
+/**
+ * DatePicker
+ */
 export const DatePicker = memo(forwardRef<HTMLInputElement, DatePickerProps>(
   ({ value, onChange, min, max, placeholder, disabled, className }, ref) => {
     const dateValue = useMemo(() => toDateString(value), [value])

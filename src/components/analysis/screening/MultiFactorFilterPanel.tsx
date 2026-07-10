@@ -181,6 +181,9 @@ function ConditionGroupCard({
   )
 }
 
+/**
+ * MultiFactorFilterPanel
+ */
 export function MultiFactorFilterPanel() {
   const {
     conditionGroups,

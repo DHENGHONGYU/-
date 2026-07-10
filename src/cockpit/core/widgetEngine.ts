@@ -9,6 +9,9 @@ const logger = getLogger()
 
 const componentCache = new Map<string, React.ComponentType<{ config: unknown; data?: MarketData }>>()
 
+/**
+ * WidgetEngine
+ */
 export class WidgetEngine {
   constructor() {
     logger.info('[WidgetEngine] Initializing...')
@@ -42,7 +45,7 @@ export class WidgetEngine {
 
       // P0-2 全局防御：包裹所有 widget 组件，防止 props 为 null 时解构崩溃
       const SafeWrapper = (props: { config: unknown; data?: MarketData }): React.JSX.Element | null => {
-        if (!props || !props.config) {
+        if (!props?.config) {
           logger.warn(`[WidgetEngine] Widget "${widgetId}" received null props, rendering fallback`)
           return null
         }
@@ -172,4 +175,7 @@ export class WidgetEngine {
   }
 }
 
+/**
+ * widgetEngine
+ */
 export const widgetEngine = new WidgetEngine()

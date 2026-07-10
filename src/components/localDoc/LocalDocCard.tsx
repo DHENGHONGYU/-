@@ -6,6 +6,9 @@ export interface LocalDocCardProps {
   doc: LocalDoc
 }
 
+/**
+ * LocalDocCard
+ */
 export function LocalDocCard({ doc }: LocalDocCardProps): React.JSX.Element {
   const summary = doc.content.slice(0, 150)
 

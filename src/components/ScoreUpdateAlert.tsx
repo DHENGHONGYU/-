@@ -11,6 +11,11 @@ export interface ScoreUpdateAlertProps {
 const HALF_WEEK_MS = 3.5 * 24 * 60 * 60 * 1000
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000
 
+/**
+ * ScoreUpdateAlert
+ * @param onRefresh
+ * @param loading }
+ */
 export function ScoreUpdateAlert({ lastScoredAt, onRefresh, loading }: ScoreUpdateAlertProps): React.JSX.Element | null {
   const now = Date.now()
   const elapsed = lastScoredAt ? now - lastScoredAt : Number.POSITIVE_INFINITY

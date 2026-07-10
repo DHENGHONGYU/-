@@ -32,6 +32,9 @@ const DEFAULT_COLORS = [
   CHART_PALETTE.series6,
 ]
 
+/**
+ * AreaChart
+ */
 export const AreaChart = memo(
   forwardRef<HTMLDivElement, AreaChartProps>(
     (

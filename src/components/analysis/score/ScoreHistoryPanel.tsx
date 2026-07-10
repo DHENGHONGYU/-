@@ -15,6 +15,9 @@ interface ScoreHistoryPanelProps {
   symbol?: string
 }
 
+/**
+ * ScoreHistoryPanel
+ */
 export function ScoreHistoryPanel({ symbol }: ScoreHistoryPanelProps) {
   const historyDocs = useScoreDocStore((s) => s.historyDocs)
   const historyDiff = useScoreDocStore((s) => s.historyDiff)

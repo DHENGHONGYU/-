@@ -161,6 +161,8 @@ function computeVolatility(values: Array<number | null>): number {
  * - Y 轴域限定为 [0, 1]，避免视觉误导
  * - 缺失值显示为 null（折线断开），保留数据真实性
  * - 通过 DataState 统一处理 loading/error/empty 三态
+/**
+ * SignalQualityTrendChart
  */
 export const SignalQualityTrendChart = memo(function SignalQualityTrendChart({
   accuracyTrendData,

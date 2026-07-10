@@ -101,6 +101,9 @@ function DataStateInner<T = unknown>({
 }
 
 // 通过类型断言保留泛型签名（memo 默认擦除泛型）
+/**
+ * DataState
+ */
 export const DataState = memo(DataStateInner) as typeof DataStateInner
 
 // ============================================================
@@ -116,6 +119,9 @@ export interface LoadingErrorStateProps {
   className?: string
 }
 
+/**
+ * LoadingErrorState
+ */
 export const LoadingErrorState = memo(function LoadingErrorState({
   isLoading,
   isError,
@@ -189,6 +195,9 @@ function LoadingEmptyStateInner<T = unknown>({
   return <></>
 }
 
+/**
+ * LoadingEmptyState
+ */
 export const LoadingEmptyState = memo(LoadingEmptyStateInner) as typeof LoadingEmptyStateInner
 
 export default DataState

@@ -3,6 +3,9 @@ import { cn } from '@/lib/utils'
 
 export type SwitchProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'type'>
 
+/**
+ * Switch
+ */
 export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
   ({ className, ...props }, ref) => (
     <label className={cn('relative inline-flex cursor-pointer items-center', className)}>

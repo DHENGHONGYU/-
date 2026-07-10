@@ -22,6 +22,9 @@ export interface ListItemProps extends HTMLAttributes<HTMLDivElement> {
   extra?: ReactNode
 }
 
+/**
+ * ListItem
+ */
 export const ListItem = memo(forwardRef<HTMLDivElement, ListItemProps>(
   ({ className, actions, extra, children, ...props }, ref) => (
     <div
@@ -90,6 +93,9 @@ forwardRef<HTMLDivElement, ListProps<any>>(
 
 ListInner.displayName = 'List'
 
+/**
+ * List
+ */
 export const List = ListInner as unknown as ListComponent
 List.Item = ListItem
 List.displayName = 'List'

@@ -11,6 +11,9 @@ interface AITradeReviewWidgetProps {
   config: WidgetConfig
 }
 
+/**
+ * AITradeReviewWidget
+ */
 export default function AITradeReviewWidget({ config }: AITradeReviewWidgetProps): React.JSX.Element {
   const { data, loadingMap, errorMap, refreshWidget } = useMarketData()
   const tradeReview = data.tradeReview

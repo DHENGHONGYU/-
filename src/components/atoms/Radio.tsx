@@ -24,6 +24,9 @@ export interface RadioGroupProps {
   className?: string
 }
 
+/**
+ * RadioGroup
+ */
 export const RadioGroup = memo(forwardRef<HTMLDivElement, RadioGroupProps>(
   ({ value, defaultValue = '', name, onChange, children, className }, ref) => {
     const [internalValue, setInternalValue] = useState(defaultValue)
@@ -58,6 +61,9 @@ export interface RadioProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
   label?: React.ReactNode
 }
 
+/**
+ * Radio
+ */
 export const Radio = memo(forwardRef<HTMLInputElement, RadioProps>(
   ({ className, value, label, disabled, id, ...props }, ref) => {
     const { value: groupValue, name: groupName, onValueChange } = useRadioGroup()

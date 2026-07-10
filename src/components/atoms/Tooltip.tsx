@@ -5,6 +5,9 @@ export interface TooltipProps extends Omit<React.HTMLAttributes<HTMLDivElement>,
   side?: 'top' | 'bottom' | 'left' | 'right'
 }
 
+/**
+ * Tooltip
+ */
 export function Tooltip({ children, content, side = 'top', className, ...props }: TooltipProps) {
   const sideClasses = {
     top: 'bottom-full left-1/2 -translate-x-1/2 mb-2',

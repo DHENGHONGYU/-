@@ -11,6 +11,9 @@ interface MarketSentimentWidgetProps {
   config: WidgetConfig
 }
 
+/**
+ * MarketSentimentWidget
+ */
 export default function MarketSentimentWidget({ config }: MarketSentimentWidgetProps): React.JSX.Element {
   const { data, loadingMap, errorMap, refreshWidget } = useMarketData()
   const sentiment = data.sentiment

@@ -187,6 +187,9 @@ function WaterfallTooltip({ active, payload }: { active?: boolean; payload?: Arr
   )
 }
 
+/**
+ * ScoreFactorWaterfall
+ */
 export function ScoreFactorWaterfall({
   audit,
   dimensionScores,

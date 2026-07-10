@@ -36,6 +36,9 @@ function generatePages(current: number, totalPages: number): (number | 'ellipsis
   return pages
 }
 
+/**
+ * Pagination
+ */
 export const Pagination = memo(forwardRef<HTMLDivElement, PaginationProps>(
   ({ total, pageSize = 10, current = 1, onChange, className }, ref) => {
     const totalPages = useMemo(() => Math.max(1, Math.ceil(total / pageSize)), [total, pageSize])

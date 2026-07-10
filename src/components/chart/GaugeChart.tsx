@@ -57,6 +57,9 @@ function getColor(value: number, max: number, mode: 'score' | 'progress' | 'risk
   return bands[0]!.color
 }
 
+/**
+ * GaugeChart
+ */
 export function GaugeChart({
   value,
   max = 100,

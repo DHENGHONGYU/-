@@ -272,6 +272,9 @@ function ErrorFullscreen({
 // 主组件
 // ============================================================
 
+/**
+ * ErrorState
+ */
 export const ErrorState = memo(function ErrorState({
   error,
   onRetry,

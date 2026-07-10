@@ -1,6 +1,9 @@
 import type { WidgetConfig, WidgetRuntimeState, WidgetMeta } from '@/types/modules/widget.types'
 
 import { nanoid } from 'nanoid'
+/**
+ * DefaultWidgetBuilder
+ */
 export class DefaultWidgetBuilder {
   buildDefaultMeta(widgetId: string): WidgetMeta {
     return {
@@ -42,4 +45,7 @@ export class DefaultWidgetBuilder {
   }
 }
 
+/**
+ * defaultWidgetBuilder
+ */
 export const defaultWidgetBuilder = new DefaultWidgetBuilder()

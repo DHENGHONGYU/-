@@ -36,6 +36,9 @@ function computeVolatility(points: ScoreTrendData['points']): number {
   return Number((Math.max(...values) - Math.min(...values)).toFixed(2))
 }
 
+/**
+ * MultiPeriodTrendChart
+ */
 export const MultiPeriodTrendChart = memo(function MultiPeriodTrendChart({
   data,
   period,

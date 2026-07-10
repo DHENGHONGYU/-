@@ -32,6 +32,9 @@ const DEFAULT_COLORS = [
   CHART_PALETTE.series6,
 ]
 
+/**
+ * BarChart
+ */
 export const BarChart = memo(
   forwardRef<HTMLDivElement, BarChartProps>(
     (

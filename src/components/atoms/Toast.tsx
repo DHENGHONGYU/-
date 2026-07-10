@@ -6,6 +6,10 @@ import { twText, twBg, twBorder, DARK } from '@/constants/theme.tokens'
 
 export type { Toast, ToastVariant }
 
+/**
+ * ToastItem
+ * @param onDismiss }
+ */
 export function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: string) => void }) {
   const variantClasses: Record<ToastVariant, string> = {
     default: 'border bg-background text-foreground',
@@ -37,6 +41,9 @@ export function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: 
   )
 }
 
+/**
+ * Toaster
+ */
 export function Toaster({ className }: { className?: string }) {
   const ctx = useContext(ToastContext)
   if (!ctx) return <></>

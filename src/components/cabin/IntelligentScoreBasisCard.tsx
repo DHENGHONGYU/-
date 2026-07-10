@@ -18,6 +18,11 @@ function formatFieldValue(value: unknown): string {
   return JSON.stringify(value)
 }
 
+/**
+ * IntelligentScoreBasisCard
+ * @param history
+ * @param logs }
+ */
 export function IntelligentScoreBasisCard({ result, history, logs }: Props): React.JSX.Element {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
 

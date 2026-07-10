@@ -31,6 +31,10 @@ export interface IntelligentScoreExplanationProps {
 
 const SCORE_SCALE_MAX = 5
 
+/**
+ * buildRadarData
+ * @param result
+ */
 export function buildRadarData(result: IntelligentScore) {
   return result.dimensionScores
     .filter((dim) => typeof dim.score === 'number' && Number.isFinite(dim.score))
@@ -42,6 +46,10 @@ export function buildRadarData(result: IntelligentScore) {
     }))
 }
 
+/**
+ * buildKeyFactors
+ * @param result
+ */
 export function buildKeyFactors(result: IntelligentScore) {
   const valid = result.dimensionScores.filter(
     (dim) => typeof dim.score === 'number' && Number.isFinite(dim.score),
@@ -50,6 +58,11 @@ export function buildKeyFactors(result: IntelligentScore) {
   return sorted.slice(0, INTELLIGENT_SCORE_EXPLANATION_CONFIG.topFactorCount)
 }
 
+/**
+ * buildFactorHeatmapData
+ * @param result
+ * @returns FactorHeatmapData[]
+ */
 export function buildFactorHeatmapData(result: IntelligentScore): FactorHeatmapData[] {
   return result.dimensionScores
     .filter((dim) => typeof dim.score === 'number' && Number.isFinite(dim.score))
@@ -59,6 +72,9 @@ export function buildFactorHeatmapData(result: IntelligentScore): FactorHeatmapD
     }))
 }
 
+/**
+ * IntelligentScoreExplanation
+ */
 export const IntelligentScoreExplanation = memo(function IntelligentScoreExplanation({
   result,
   loading,

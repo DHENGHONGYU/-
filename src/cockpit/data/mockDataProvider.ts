@@ -64,6 +64,9 @@ export interface TradeReview {
   disciplineScore: number
 }
 
+/**
+ * mockMarketIndices
+ */
 export const mockMarketIndices: MarketIndex[] = [
   {
     name: '上证指数',
@@ -111,6 +114,9 @@ export const mockMarketIndices: MarketIndex[] = [
   },
 ]
 
+/**
+ * mockSectorData
+ */
 export const mockSectorData: SectorData[] = [
   { name: '半导体', code: 'semiconductor', changePercent: -0.08 },
   { name: '白酒', code: 'baijiu', changePercent: 1.21 },
@@ -134,12 +140,18 @@ export const mockSectorData: SectorData[] = [
   { name: '电力', code: 'power', changePercent: 0.58 },
 ]
 
+/**
+ * mockFundFlows
+ */
 export const mockFundFlows: FundFlow[] = [
   { type: 'main', name: '主力净流入', value: 27.8, unit: '亿' },
   { type: 'retail', name: '散户净流入', value: -48.7, unit: '亿' },
   { type: 'north', name: '北向净流入', value: 9.2, unit: '亿' },
 ]
 
+/**
+ * mockMarketSentiment
+ */
 export const mockMarketSentiment: MarketSentiment = {
   fearGreedIndex: 64,
   fearGreedLabel: '贪婪',
@@ -153,6 +165,9 @@ export const mockMarketSentiment: MarketSentiment = {
   downOver5Percent: 167,
 }
 
+/**
+ * mockWatchlist
+ */
 export const mockWatchlist: WatchlistStock[] = [
   { name: '五粮液', code: '000858', price: 147.99, changePercent: 2.06 },
   { name: '恒瑞医药', code: '600276', price: 48.86, changePercent: 1.79 },
@@ -164,6 +179,9 @@ export const mockWatchlist: WatchlistStock[] = [
   { name: '中芯国际', code: '688981', price: 86.52, changePercent: -1.68 },
 ]
 
+/**
+ * mockPortfolioStats
+ */
 export const mockPortfolioStats: PortfolioStats = {
   totalAssets: '502.4万',
   availableFunds: '117.0万',
@@ -176,6 +194,9 @@ export const mockPortfolioStats: PortfolioStats = {
   sharpeRatio: 0.56,
 }
 
+/**
+ * mockTradeReview
+ */
 export const mockTradeReview: TradeReview = {
   totalTrades: 28,
   profitable: 16,
@@ -185,6 +206,9 @@ export const mockTradeReview: TradeReview = {
   disciplineScore: 68,
 }
 
+/**
+ * MockMarketDataProvider
+ */
 export class MockMarketDataProvider {
   /**
    * 获取大盘指数数据

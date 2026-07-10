@@ -37,6 +37,7 @@
     "audit:tests": "tsx scripts/audit-tests.ts",
     "audit:reserved-stores": "tsx scripts/audit-reserved-stores.ts",
     "audit:tokens": "tsx scripts/token-scan.cjs",
+    "audit:atomic": "tsx scripts/audit-atomic.ts",
     "audit:jsdoc": "tsx scripts/audit-jsdoc.ts",
     "audit:complexity": "npm run complexity-scan",
     "complexity-scan": "tsx scripts/complexity-scan.ts",

@@ -7,6 +7,9 @@ export interface DialogProps extends DialogHTMLAttributes<HTMLDialogElement> {
   onOpenChange?: (open: boolean) => void
 }
 
+/**
+ * Dialog
+ */
 export const Dialog = forwardRef<HTMLDialogElement, DialogProps>(
   ({ className, open, onOpenChange, children, ...props }, ref) => {
     const internalRef = useRef<HTMLDialogElement>(null)
@@ -48,6 +51,9 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>(
 )
 Dialog.displayName = 'Dialog'
 
+/**
+ * DialogContent
+ */
 export const DialogContent = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement> & { showCloseButton?: boolean }>(
   ({ className, children, showCloseButton = true, ...props }, ref) => (
     <div ref={ref} className={cn('relative flex flex-col gap-4 p-6', className)} {...props}>
@@ -63,6 +69,9 @@ export const DialogContent = forwardRef<HTMLDivElement, React.HTMLAttributes<HTM
 )
 DialogContent.displayName = 'DialogContent'
 
+/**
+ * DialogHeader
+ */
 export const DialogHeader = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div ref={ref} className={cn('flex flex-col space-y-1.5 text-center sm:text-left', className)} {...props} />
@@ -70,6 +79,9 @@ export const DialogHeader = forwardRef<HTMLDivElement, React.HTMLAttributes<HTML
 )
 DialogHeader.displayName = 'DialogHeader'
 
+/**
+ * DialogFooter
+ */
 export const DialogFooter = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div ref={ref} className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2', className)} {...props} />
@@ -77,6 +89,9 @@ export const DialogFooter = forwardRef<HTMLDivElement, React.HTMLAttributes<HTML
 )
 DialogFooter.displayName = 'DialogFooter'
 
+/**
+ * DialogTitle
+ */
 export const DialogTitle = forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
     <h2 ref={ref} className={cn('text-lg font-semibold leading-none tracking-tight', className)} {...props} />
@@ -84,6 +99,9 @@ export const DialogTitle = forwardRef<HTMLHeadingElement, React.HTMLAttributes<H
 )
 DialogTitle.displayName = 'DialogTitle'
 
+/**
+ * DialogDescription
+ */
 export const DialogDescription = forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
   ({ className, ...props }, ref) => (
     <p ref={ref} className={cn('text-sm text-muted-foreground', className)} {...props} />
@@ -91,6 +109,9 @@ export const DialogDescription = forwardRef<HTMLParagraphElement, React.HTMLAttr
 )
 DialogDescription.displayName = 'DialogDescription'
 
+/**
+ * DialogClose
+ */
 export const DialogClose = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTMLButtonElement>>(
   ({ className, ...props }, ref) => (
     <button

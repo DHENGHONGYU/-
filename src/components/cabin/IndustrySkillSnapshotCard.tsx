@@ -5,6 +5,9 @@ interface Props {
   sector: SectorSkillAnalysis
 }
 
+/**
+ * IndustrySkillSnapshotCard
+ */
 export function IndustrySkillSnapshotCard({ sector }: Props): React.JSX.Element {
   return (
     <Card>

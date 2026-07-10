@@ -9,6 +9,9 @@ export interface ToggleProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'sm' | 'md' | 'lg'
 }
 
+/**
+ * Toggle
+ */
 export const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
   (
     {

@@ -2,6 +2,9 @@ import { type HTMLAttributes, forwardRef } from 'react'
 import { cn } from '@/lib/utils'
 import { THEME_TOKENS, COLOR_TOKENS } from '@/constants/theme.tokens'
 
+/**
+ * Card
+ */
 export const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => {
     const tokens = {
@@ -27,6 +30,9 @@ export const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
 
 Card.displayName = 'Card'
 
+/**
+ * CardHeader
+ */
 export const CardHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => {
     const tokens = {
@@ -50,6 +56,9 @@ export const CardHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivEleme
 
 CardHeader.displayName = 'CardHeader'
 
+/**
+ * CardTitle
+ */
 export const CardTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => {
     const tokens = {
@@ -76,6 +85,9 @@ export const CardTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadi
 
 CardTitle.displayName = 'CardTitle'
 
+/**
+ * CardDescription
+ */
 export const CardDescription = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLParagraphElement>>(
   ({ className, ...props }, ref) => {
     const tokens = {
@@ -98,6 +110,9 @@ export const CardDescription = forwardRef<HTMLParagraphElement, HTMLAttributes<H
 
 CardDescription.displayName = 'CardDescription'
 
+/**
+ * CardAction
+ */
 export const CardAction = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => {
     const tokens = {
@@ -119,6 +134,9 @@ export const CardAction = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivEleme
 
 CardAction.displayName = 'CardAction'
 
+/**
+ * CardContent
+ */
 export const CardContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => {
     const tokens = {
@@ -136,6 +154,9 @@ export const CardContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElem
 
 CardContent.displayName = 'CardContent'
 
+/**
+ * CardFooter
+ */
 export const CardFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => {
     const tokens = {

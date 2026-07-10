@@ -128,6 +128,8 @@ class RouteErrorBoundaryInner extends Component<RouteErrorBoundaryInnerProps, Ro
  * 1. 路由切换时自动重置错误状态（key 绑定 location.pathname）
  * 2. 独立的 Suspense fallback，单路由懒加载不影响其他路由
  * 3. 三级恢复策略：重试 / 返回首页 / 刷新页面
+/**
+ * RouteErrorBoundary
  */
 export function RouteErrorBoundary({ children }: { children: ReactNode }): React.JSX.Element {
   const location = useLocation()

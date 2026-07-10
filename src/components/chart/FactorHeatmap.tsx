@@ -138,6 +138,9 @@ FactorHeatmap.displayName = 'FactorHeatmap'
 // 同时导出 named + default
 const FactorHeatmapMemo = memo(FactorHeatmap)
 FactorHeatmapMemo.displayName = 'FactorHeatmap'
+/**
+ * FactorHeatmapChart
+ */
 export const FactorHeatmapChart = FactorHeatmapMemo
 export { FactorHeatmapChart as FactorHeatmap }
 export default FactorHeatmapMemo

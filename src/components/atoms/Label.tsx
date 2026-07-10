@@ -5,6 +5,9 @@ export interface LabelProps extends LabelHTMLAttributes<HTMLLabelElement> {
   optional?: boolean
 }
 
+/**
+ * Label
+ */
 export const Label = forwardRef<HTMLLabelElement, LabelProps>(
   ({ className, children, optional, ...props }, ref) => (
     <label

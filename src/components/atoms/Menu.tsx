@@ -23,6 +23,9 @@ export interface MenuProps extends Omit<HTMLAttributes<HTMLUListElement>, 'onSel
   onSelect?: (key: string) => void
 }
 
+/**
+ * Menu
+ */
 export const Menu = memo(forwardRef<HTMLUListElement, MenuProps>(
   ({ selectedKeys, defaultSelectedKeys = [], mode = 'vertical', onSelect, className, children, ...props }, ref) => {
     const [internalKeys, setInternalKeys] = useState<string[]>(defaultSelectedKeys)
@@ -68,6 +71,9 @@ export interface MenuItemProps extends LiHTMLAttributes<HTMLLIElement> {
   onClick?: React.MouseEventHandler<HTMLLIElement>
 }
 
+/**
+ * MenuItem
+ */
 export const MenuItem = memo(forwardRef<HTMLLIElement, MenuItemProps>(
   ({ className, icon, disabled, children, onClick, key: itemKey, ...props }, ref) => {
     const { selectedKeys, onSelect } = useMenu()
@@ -119,6 +125,9 @@ export interface SubMenuProps {
   className?: string
 }
 
+/**
+ * SubMenu
+ */
 export const SubMenu = memo(forwardRef<HTMLLIElement, SubMenuProps>(
   ({ className, title, icon, disabled, children }, ref) => {
     const [open, setOpen] = useState(false)

@@ -2,6 +2,9 @@ import { ChevronRight, MoreHorizontal } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { cloneElement, forwardRef, isValidElement, type HTMLAttributes } from 'react'
 
+/**
+ * Breadcrumb
+ */
 export const Breadcrumb = forwardRef<HTMLElement, HTMLAttributes<HTMLElement>>(
   ({ className, ...props }, ref) => (
     <nav ref={ref} aria-label="breadcrumb" className={cn('flex', className)} {...props} />
@@ -9,6 +12,9 @@ export const Breadcrumb = forwardRef<HTMLElement, HTMLAttributes<HTMLElement>>(
 )
 Breadcrumb.displayName = 'Breadcrumb'
 
+/**
+ * BreadcrumbList
+ */
 export const BreadcrumbList = forwardRef<HTMLOListElement, HTMLAttributes<HTMLOListElement>>(
   ({ className, ...props }, ref) => (
     <ol
@@ -23,6 +29,9 @@ export const BreadcrumbList = forwardRef<HTMLOListElement, HTMLAttributes<HTMLOL
 )
 BreadcrumbList.displayName = 'BreadcrumbList'
 
+/**
+ * BreadcrumbItem
+ */
 export const BreadcrumbItem = forwardRef<HTMLLIElement, HTMLAttributes<HTMLLIElement>>(
   ({ className, ...props }, ref) => (
     <li ref={ref} className={cn('inline-flex items-center gap-1.5 sm:gap-2.5', className)} {...props} />
@@ -34,6 +43,9 @@ export interface BreadcrumbLinkProps extends React.AnchorHTMLAttributes<HTMLAnch
   asChild?: boolean
 }
 
+/**
+ * BreadcrumbLink
+ */
 export const BreadcrumbLink = forwardRef<HTMLAnchorElement, BreadcrumbLinkProps>(
   ({ className, asChild, children, ...props }, ref) => {
     const classes = cn('transition-colors hover:text-foreground', className)
@@ -55,6 +67,9 @@ export const BreadcrumbLink = forwardRef<HTMLAnchorElement, BreadcrumbLinkProps>
 )
 BreadcrumbLink.displayName = 'BreadcrumbLink'
 
+/**
+ * BreadcrumbPage
+ */
 export const BreadcrumbPage = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(
   ({ className, ...props }, ref) => (
     <span
@@ -69,6 +84,9 @@ export const BreadcrumbPage = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpa
 )
 BreadcrumbPage.displayName = 'BreadcrumbPage'
 
+/**
+ * BreadcrumbSeparator
+ */
 export const BreadcrumbSeparator = forwardRef<HTMLLIElement, HTMLAttributes<HTMLLIElement>>(
   ({ className, ...props }, ref) => (
     <li
@@ -84,6 +102,9 @@ export const BreadcrumbSeparator = forwardRef<HTMLLIElement, HTMLAttributes<HTML
 )
 BreadcrumbSeparator.displayName = 'BreadcrumbSeparator'
 
+/**
+ * BreadcrumbEllipsis
+ */
 export const BreadcrumbEllipsis = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(
   ({ className, ...props }, ref) => (
     <span

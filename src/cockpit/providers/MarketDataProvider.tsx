@@ -33,6 +33,9 @@ interface MarketDataProviderProps {
   children: React.ReactNode
 }
 
+/**
+ * MarketDataProvider
+ */
 export function MarketDataProvider({ children }: MarketDataProviderProps): React.JSX.Element {
   const [data, setData] = useState<MarketData>(() => marketDataAdapter.merge())
   const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({})
@@ -191,7 +194,11 @@ export function MarketDataProvider({ children }: MarketDataProviderProps): React
   return <MarketDataContext.Provider value={value}>{children}</MarketDataContext.Provider>
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
+ 
+/**
+ * useMarketData
+ * @returns MarketDataContextValue
+ */
 export function useMarketData(): MarketDataContextValue {
   const context = useContext(MarketDataContext)
   if (!context) {
@@ -200,7 +207,11 @@ export function useMarketData(): MarketDataContextValue {
   return context
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
+ 
+/**
+ * useOptionalMarketData
+ * @returns MarketDataContextValue | undefined
+ */
 export function useOptionalMarketData(): MarketDataContextValue | undefined {
   return useContext(MarketDataContext) ?? undefined
 }

@@ -15,6 +15,9 @@ import { getAgentComponent } from '@/agents/agentComponentRegistry'
 import type { AgentDetailComponentProps } from '@/agents/agentComponentRegistry'
 import { COLOR_TOKENS, COLOR_SHADES, twBg, twText } from '@/constants/theme.tokens'
 
+/**
+ * GenericAgentDetail
+ */
 export default function GenericAgentDetail({ agentId }: AgentDetailComponentProps): React.JSX.Element {
   const entry = getAgentComponent(agentId)
   const displayName = entry?.displayName ?? '未知智能体'

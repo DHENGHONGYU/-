@@ -159,10 +159,7 @@ function ConfigTemplateCard({
 
   const extraDimCount = config.selectedDimensions.length - 3
 
-  const priorityStyle = (PRIORITY_COLORS[config.priority] ?? DEFAULT_PRIORITY_STYLE) as {
-    text: string
-    bg: string
-  }
+  const priorityStyle = (PRIORITY_COLORS[config.priority] ?? DEFAULT_PRIORITY_STYLE)
 
   return (
     <Card
@@ -315,6 +312,9 @@ function ConfigTemplateCard({
   )
 }
 
+/**
+ * DataSourceConfigStep
+ */
 export function DataSourceConfigStep(): React.JSX.Element {
   const selectedDimensions = useCollectionWizardStore((s) => s.selectedDimensions)
   const toggleDimension = useCollectionWizardStore((s) => s.toggleDimension)

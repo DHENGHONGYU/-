@@ -11,6 +11,9 @@ interface FundFlowWidgetProps {
   config: WidgetConfig
 }
 
+/**
+ * FundFlowWidget
+ */
 export default function FundFlowWidget({ config }: FundFlowWidgetProps): React.JSX.Element {
   const [data, setData] = useState<FundFlow[]>([])
   const [loading, setLoading] = useState(true)

@@ -9,6 +9,9 @@ interface SectorHeatmapWidgetProps {
   config: WidgetConfig
 }
 
+/**
+ * SectorHeatmapWidget
+ */
 export default function SectorHeatmapWidget({ config }: SectorHeatmapWidgetProps): React.JSX.Element {
   const { data, loadingMap, errorMap, refreshWidget } = useMarketData()
   const sectors = data.sectors

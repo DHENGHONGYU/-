@@ -13,6 +13,9 @@ export interface WidgetTemplate {
   configPanel?: () => Promise<{ default: React.ComponentType }>
 }
 
+/**
+ * WidgetRegistry
+ */
 export class WidgetRegistry {
   private templates = new Map<string, WidgetTemplate>()
   private instances = new Map<string, WidgetConfig>()
@@ -465,4 +468,7 @@ export class WidgetRegistry {
   }
 }
 
+/**
+ * widgetRegistry
+ */
 export const widgetRegistry = new WidgetRegistry()

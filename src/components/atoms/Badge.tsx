@@ -8,6 +8,9 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   variant?: BadgeVariant
 }
 
+/**
+ * Badge
+ */
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
   ({ className, variant = 'default', ...props }, ref) => {
     const baseTokens = {

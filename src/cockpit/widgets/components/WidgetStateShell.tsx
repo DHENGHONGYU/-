@@ -44,6 +44,9 @@ export interface WidgetStateShellProps {
   className?: string
 }
 
+/**
+ * WidgetStateShell
+ */
 export function WidgetStateShell({
   title,
   titleIcon,

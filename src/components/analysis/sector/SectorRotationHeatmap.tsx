@@ -46,6 +46,11 @@ function parsePercentString(value: string | number | undefined): number | null {
   return Number.isNaN(parsed) ? null : parsed
 }
 
+/**
+ * adaptHeatmapData
+ * @param sectors
+ * @returns HeatmapCell[]
+ */
 export function adaptHeatmapData(sectors: SectorHeatmapData[]): HeatmapCell[] {
   return sectors.map((sector) => ({
     code: sector.code,
@@ -56,6 +61,12 @@ export function adaptHeatmapData(sectors: SectorHeatmapData[]): HeatmapCell[] {
   }))
 }
 
+/**
+ * getMetricValue
+ * @param cell
+ * @param metric
+ * @returns number | null
+ */
 export function getMetricValue(cell: HeatmapCell, metric: SectorHeatmapMetric): number | null {
   if (metric === 'changePercent') return cell.changePercent
   if (metric === 'turnover') return cell.turnover
@@ -99,6 +110,9 @@ function sortCellsByMetric(cells: HeatmapCell[], metric: SectorHeatmapMetric): H
   })
 }
 
+/**
+ * SectorRotationHeatmap
+ */
 export function SectorRotationHeatmap({ title = '板块轮动热力图' }: SectorRotationHeatmapProps) {
   const navigate = useNavigate()
   const { data, loading, error } = useDataSource('sectorHeatmap')

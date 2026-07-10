@@ -16,6 +16,10 @@ interface MarketIndicesWidgetProps {
   config: WidgetConfig
 }
 
+/**
+ * MarketIndicesWidget
+ * @param props
+ */
 export default function MarketIndicesWidget(props: MarketIndicesWidgetProps): React.JSX.Element {
   const { data, loadingMap, errorMap, refreshWidget } = useMarketData()
   // P0-2 防御性 guard：防止 props 为 null 时解构崩溃（hooks 之后条件返回）

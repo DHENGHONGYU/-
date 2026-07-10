@@ -11,6 +11,9 @@ export interface SliderProps extends Omit<InputHTMLAttributes<HTMLInputElement>,
   showTooltip?: boolean
 }
 
+/**
+ * Slider
+ */
 export const Slider = forwardRef<HTMLInputElement, SliderProps>(
   (
     { className, min = 0, max = 100, step = 1, value, defaultValue, onValueChange, showTooltip = false, disabled, ...props },

@@ -120,7 +120,7 @@ function SwimlaneRow({ span }: { span: CollectionTraceSpan }): React.JSX.Element
     return { lanes: lanesMap, sourceColorMap: colorMap }
   }, [span])
 
-  const laneKeys = Array.from(lanes.keys()) as Array<QuoteDataSourceId | 'global'>
+  const laneKeys = Array.from(lanes.keys())
 
   const getStagePosition = (
     stage: CollectionStageRecord,
@@ -185,6 +185,9 @@ function SwimlaneRow({ span }: { span: CollectionTraceSpan }): React.JSX.Element
   )
 }
 
+/**
+ * CollectionSwimlane
+ */
 export default function CollectionSwimlane({
   spans,
   maxHeight = '360px',

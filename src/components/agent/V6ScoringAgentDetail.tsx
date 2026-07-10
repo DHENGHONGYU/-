@@ -28,6 +28,9 @@ const SCORE_LAYERS = [
   { name: 'L-8 第二曲线', description: '成长空间与第二增长曲线', weight: '5%' },
 ]
 
+/**
+ * V6ScoringAgentDetail
+ */
 export default function V6ScoringAgentDetail({ agentId }: AgentDetailComponentProps): React.JSX.Element {
   return (
     <div className="space-y-6">

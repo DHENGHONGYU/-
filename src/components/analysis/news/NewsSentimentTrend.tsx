@@ -40,6 +40,10 @@ function formatRatio(value: number): string {
   return `${(value * 100).toFixed(1)}%`
 }
 
+/**
+ * NewsSentimentTrend
+ * @param error
+ */
 export function NewsSentimentTrend({ loading = false, error = null }: NewsSentimentTrendProps): React.JSX.Element {
   // 从 Store 获取数据
   const articles = useAnalysisNewsStore((s) => s.articles)

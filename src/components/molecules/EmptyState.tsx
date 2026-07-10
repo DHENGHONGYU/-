@@ -43,6 +43,9 @@ export interface EmptyStateProps {
 // 主组件
 // ============================================================
 
+/**
+ * EmptyState
+ */
 export const EmptyState = memo(function EmptyState({
   title = '暂无数据',
   description,

@@ -82,6 +82,9 @@ ScoreRadar.displayName = 'ScoreRadar'
 // 同时导出 named + default（ScoreRadarMemo 避免与 forwardRef const 命名冲突）
 const ScoreRadarMemo = memo(ScoreRadar)
 ScoreRadarMemo.displayName = 'ScoreRadar'
+/**
+ * ScoreRadarChart
+ */
 export const ScoreRadarChart = ScoreRadarMemo
 export { ScoreRadarChart as ScoreRadar }
 export default ScoreRadarMemo

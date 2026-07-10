@@ -18,6 +18,9 @@ export interface ColProps extends HTMLAttributes<HTMLDivElement> {
   offset?: number
 }
 
+/**
+ * Grid
+ */
 export const Grid = memo(forwardRef<HTMLDivElement, GridProps>(
   ({ className, gap = 16, style, ...props }, ref) => (
     <div
@@ -31,6 +34,9 @@ export const Grid = memo(forwardRef<HTMLDivElement, GridProps>(
 
 Grid.displayName = 'Grid'
 
+/**
+ * Row
+ */
 export const Row = memo(forwardRef<HTMLDivElement, RowProps>(
   ({ className, wrap = true, ...props }, ref) => (
     <div
@@ -43,6 +49,9 @@ export const Row = memo(forwardRef<HTMLDivElement, RowProps>(
 
 Row.displayName = 'Row'
 
+/**
+ * Col
+ */
 export const Col = memo(forwardRef<HTMLDivElement, ColProps>(
   ({ className, span = 24, offset = 0, ...props }, ref) => (
     <div

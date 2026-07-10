@@ -41,6 +41,9 @@ interface WidgetErrorBoundaryState {
   retryCount: number
 }
 
+/**
+ * WidgetErrorBoundary
+ */
 export class WidgetErrorBoundary extends Component<WidgetErrorBoundaryProps, WidgetErrorBoundaryState> {
   constructor(props: WidgetErrorBoundaryProps) {
     super(props)

@@ -3,6 +3,9 @@ import { cn } from '@/lib/utils'
 
 export type SkeletonProps = React.HTMLAttributes<HTMLDivElement>
 
+/**
+ * Skeleton
+ */
 export const Skeleton = React.forwardRef<HTMLDivElement, SkeletonProps>(
   ({ className, ...props }, ref) => {
     return (

@@ -114,6 +114,9 @@ const DefaultIcons: Record<AlertVariant, ReactNode> = {
 // Alert 组件
 // ============================================================
 
+/**
+ * Alert
+ */
 export const Alert = memo(function Alert({
   className,
   variant = 'default',
@@ -185,6 +188,9 @@ export const Alert = memo(function Alert({
 // AlertTitle 组件
 // ============================================================
 
+/**
+ * AlertTitle
+ */
 export function AlertTitle({ className, children, ...props }: AlertTitleProps) {
   const tokens = {
     fontSize: THEME_TOKENS.typography.fontSize.base,
@@ -214,6 +220,9 @@ export function AlertTitle({ className, children, ...props }: AlertTitleProps) {
 // AlertDescription 组件
 // ============================================================
 
+/**
+ * AlertDescription
+ */
 export function AlertDescription({ className, children, ...props }: AlertDescriptionProps) {
   const tokens = {
     fontSize: THEME_TOKENS.typography.fontSize.sm,

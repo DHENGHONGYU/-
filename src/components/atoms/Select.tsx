@@ -10,6 +10,9 @@ export type SelectProps = SelectHTMLAttributes<HTMLSelectElement> & {
   onValueChange?: (value: string) => void
 }
 
+/**
+ * Select
+ */
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
   ({ className, children, onValueChange, onChange, ...props }, ref) => (
     <div className="relative">
@@ -37,6 +40,9 @@ Select.displayName = 'Select'
 
 export type SelectItemProps = React.OptionHTMLAttributes<HTMLOptionElement>
 
+/**
+ * SelectItem
+ */
 export const SelectItem = forwardRef<HTMLOptionElement, SelectItemProps>(
   ({ className, children, ...props }, ref) => (
     <option ref={ref} className={cn('', className)} {...props}>

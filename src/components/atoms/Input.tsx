@@ -2,6 +2,9 @@ import { type InputHTMLAttributes, forwardRef } from 'react'
 import { cn } from '@/lib/utils'
 import { THEME_TOKENS, COLOR_TOKENS } from '@/constants/theme.tokens'
 
+/**
+ * Input
+ */
 export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(
   ({ className, type, ...props }, ref) => (
     <input

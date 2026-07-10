@@ -68,6 +68,8 @@ export interface StockPriceChangeProps {
  * <StockPriceChange change={5.0}>
  *   <Badge>涨停</Badge>
  * </StockPriceChange>
+/**
+ * StockPriceChange
  */
 export function StockPriceChange({
   change,

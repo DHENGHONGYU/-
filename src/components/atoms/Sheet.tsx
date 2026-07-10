@@ -8,6 +8,9 @@ export interface SheetProps extends HTMLAttributes<HTMLDivElement> {
   side?: 'left' | 'right' | 'top' | 'bottom'
 }
 
+/**
+ * Sheet
+ */
 export const Sheet = forwardRef<HTMLDivElement, SheetProps>(
   ({ className, open, onOpenChange, side = 'right', children, ...props }, ref) => {
     const internalRef = useRef<HTMLDivElement>(null)
@@ -59,6 +62,9 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(
 )
 Sheet.displayName = 'Sheet'
 
+/**
+ * SheetContent
+ */
 export const SheetContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, children, ...props }, ref) => (
     <div ref={ref} className={cn('flex flex-col gap-4', className)} {...props}>
@@ -68,6 +74,9 @@ export const SheetContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivEle
 )
 SheetContent.displayName = 'SheetContent'
 
+/**
+ * SheetHeader
+ */
 export const SheetHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div ref={ref} className={cn('flex flex-col space-y-2', className)} {...props} />
@@ -75,6 +84,9 @@ export const SheetHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElem
 )
 SheetHeader.displayName = 'SheetHeader'
 
+/**
+ * SheetFooter
+ */
 export const SheetFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div ref={ref} className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2', className)} {...props} />
@@ -82,6 +94,9 @@ export const SheetFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElem
 )
 SheetFooter.displayName = 'SheetFooter'
 
+/**
+ * SheetTitle
+ */
 export const SheetTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
     <h2 ref={ref} className={cn('text-lg font-semibold text-foreground', className)} {...props} />
@@ -89,6 +104,9 @@ export const SheetTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHead
 )
 SheetTitle.displayName = 'SheetTitle'
 
+/**
+ * SheetDescription
+ */
 export const SheetDescription = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLParagraphElement>>(
   ({ className, ...props }, ref) => (
     <p ref={ref} className={cn('text-sm text-muted-foreground', className)} {...props} />
@@ -96,6 +114,9 @@ export const SheetDescription = forwardRef<HTMLParagraphElement, HTMLAttributes<
 )
 SheetDescription.displayName = 'SheetDescription'
 
+/**
+ * SheetClose
+ */
 export const SheetClose = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTMLButtonElement>>(
   ({ className, ...props }, ref) => (
     <button

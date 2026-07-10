@@ -6,6 +6,10 @@ interface Props {
   logs: ResearchLog[]
 }
 
+/**
+ * IndustryHistoryCard
+ * @param logs }
+ */
 export function IndustryHistoryCard({ history, logs }: Props): React.JSX.Element {
   return (
     <Card>

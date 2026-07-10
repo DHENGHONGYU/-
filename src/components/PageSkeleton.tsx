@@ -1,6 +1,9 @@
 import React from 'react'
 import { Card, CardContent, CardHeader } from '@/components/ui/Card'
 
+/**
+ * PageSkeleton
+ */
 export function PageSkeleton(): React.JSX.Element {
   return (
     <div className="space-y-4 p-4">

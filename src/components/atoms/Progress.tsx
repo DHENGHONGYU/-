@@ -8,6 +8,9 @@ export interface ProgressProps extends HTMLAttributes<HTMLDivElement> {
   showMax?: boolean
 }
 
+/**
+ * Progress
+ */
 export const Progress = forwardRef<HTMLDivElement, ProgressProps>(
   ({ className, value, max = 5, label, showMax = true, ...props }, ref) => {
     const percentage = Math.min(100, Math.max(0, (value / max) * 100))

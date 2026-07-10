@@ -24,6 +24,9 @@ const placementClasses: Record<PopoverPlacement, string> = {
   right: 'left-full ml-2 top-1/2 -translate-y-1/2',
 }
 
+/**
+ * Popover
+ */
 export const Popover = memo(forwardRef<HTMLDivElement, PopoverProps>(
   ({
     className,

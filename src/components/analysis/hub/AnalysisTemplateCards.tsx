@@ -64,6 +64,9 @@ export interface AnalysisTemplateCardsProps {
   title?: string
 }
 
+/**
+ * AnalysisTemplateCards
+ */
 export function AnalysisTemplateCards({ title = '分析模板快捷入口' }: AnalysisTemplateCardsProps) {
   return (
     <section className="space-y-3">
