@@ -5,8 +5,6 @@
  *
  * @module data/types/types.rotation
  * @updated 2026-07-07 - PR-1：从 data/types.ts 拆分
- */
-
 /** 市场风格周期 */
 export type MarketStyle = 'growth' | 'value' | 'balanced'
 

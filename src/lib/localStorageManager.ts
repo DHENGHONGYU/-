@@ -114,6 +114,9 @@ function byteLength(str: string): number {
 // LocalStorageManager 实现
 // ============================================================
 
+/**
+ * LocalStorageManager
+ */
 export class LocalStorageManager {
   private namespace: string
   private defaultTTL: number

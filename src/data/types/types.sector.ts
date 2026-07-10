@@ -5,8 +5,6 @@
  *
  * @module data/types/types.sector
  * @updated 2026-07-07 - PR-1：从 data/types.ts 拆分
- */
-
 /** 板块评分三维度 */
 export interface SectorScoreDimensions {
   /** 十五五规划契合度 0-5 */

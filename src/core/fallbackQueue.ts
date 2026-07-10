@@ -4,6 +4,9 @@ export interface FallbackQueueStats {
   length: number
 }
 
+/**
+ * FallbackQueue
+ */
 export class FallbackQueue {
   private queue: StandardEnvelope[] = []
 
@@ -30,4 +33,7 @@ export class FallbackQueue {
   }
 }
 
+/**
+ * fallbackQueue
+ */
 export const fallbackQueue = new FallbackQueue()

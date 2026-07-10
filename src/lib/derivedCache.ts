@@ -132,6 +132,8 @@ export function getCacheStatsSnapshot(): Record<string, CacheStats> {
  *   'scoreLevelDistribution'
  * )
  * // scores 引用未变时，直接返回缓存结果
+/**
+ * memoizeByRef
  */
 export function memoizeByRef<TInput, TResult>(
   fn: (input: TInput) => TResult,

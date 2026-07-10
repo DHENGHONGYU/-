@@ -14,6 +14,9 @@ import {
 } from '@/services/analysis/scorePageService'
 import { getEnabledIndustryFactorNames } from '@/config/scoreFactors'
 
+/**
+ * STEP_LABELS
+ */
 export const STEP_LABELS: Record<IndustryScoreStep, { label: string; description: string }> = {
   fetchSectorData: { label: '读取行业 SKILL 数据', description: '加载已有行业量化评分' },
   readSupplementaryFiles: { label: '解析补充文件', description: '读取本地上传文件内容' },
@@ -23,6 +26,9 @@ export const STEP_LABELS: Record<IndustryScoreStep, { label: string; description
   saveResult: { label: '保存结果', description: '通过 DataBridge 写入数据库' },
 }
 
+/**
+ * STEP_ORDER
+ */
 export const STEP_ORDER: IndustryScoreStep[] = [
   'fetchSectorData',
   'readSupplementaryFiles',
@@ -32,8 +38,17 @@ export const STEP_ORDER: IndustryScoreStep[] = [
   'saveResult',
 ]
 
+/**
+ * DIMENSION_ORDER
+ */
 export const DIMENSION_ORDER = getEnabledIndustryFactorNames()
 
+/**
+ * formatIndustryDelta
+ * @param current
+ * @param previous
+ * @returns string
+ */
 export function formatIndustryDelta(current: number | null, previous: number | null): string {
   if (current === null || previous === null) return ''
   const delta = current - previous
@@ -81,6 +96,10 @@ export interface UseIndustryScorePageReturn {
   handleStart: () => Promise<void>
 }
 
+/**
+ * useIndustryScorePage
+ * @returns UseIndustryScorePageReturn
+ */
 export function useIndustryScorePage(): UseIndustryScorePageReturn {
   const [selectedCode, setSelectedCode] = useState('')
   const [sectors] = useState<SectorSkillAnalysis[]>(SECTORS_SKILL_RANKED)

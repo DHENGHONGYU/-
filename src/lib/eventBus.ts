@@ -95,4 +95,7 @@ class EventBus {
   }
 }
 
+/**
+ * eventBus
+ */
 export const eventBus = new EventBus()

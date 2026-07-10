@@ -17,6 +17,9 @@
 import type { StoreName } from '@/config/dbConfig'
 import type { CascadeResult } from '@/types/modules/cascade.types'
 
+/**
+ * cascadeExecutor
+ */
 export const cascadeExecutor = {
   /**
    * 执行级联策略检查

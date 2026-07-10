@@ -76,6 +76,9 @@ class ErrorBoundary extends React.Component<
   }
 }
 
+/**
+ * WidgetShell
+ */
 export function WidgetShell({
   widgetId,
   config,

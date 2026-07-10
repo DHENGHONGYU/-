@@ -25,6 +25,11 @@ const logger = getLogger()
  * set((s) => ({ stocks: [...s.stocks, stock] }))
  * withBroadcast(EVENT_NAMES.STOCK_POOL_CHANGED, { symbol: stock.symbol })
  * ```
+/**
+ * withBroadcast
+ * @param eventName
+ * @param payload?
+ * @returns void
  */
 export function withBroadcast(eventName: string, payload?: unknown): void {
   try {
@@ -51,6 +56,9 @@ export function withBroadcast(eventName: string, payload?: unknown): void {
  *   broadcastStocks({ item })
  * }
  * ```
+/**
+ * createBroadcaster
+ * @param eventName
  */
 export function createBroadcaster(eventName: string): (payload?: unknown) => void {
   return (payload?: unknown) => withBroadcast(eventName, payload)

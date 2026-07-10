@@ -7,6 +7,9 @@ export interface ChangeLogPanelProps {
   snapshot: StrategySnapshot
 }
 
+/**
+ * ChangeLogPanel
+ */
 export function ChangeLogPanel({ snapshot }: ChangeLogPanelProps): React.JSX.Element {
   const changeLog = snapshot.changeFromPrev
 

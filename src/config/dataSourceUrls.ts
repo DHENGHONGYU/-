@@ -6,8 +6,6 @@
  * 禁止在 services 层硬编码外部 URL。
  *
  * @module config/dataSourceUrls
- */
-
 /** 腾讯财经实时行情 API */
 export const TENCENT_QUOTE_API = 'https://qt.gtimg.cn/q'
 
@@ -47,3 +45,6 @@ export const MOCK_NETEASE_BASE_URL = 'https://api.money.126.net'
 
 /** AKShare 本地服务基地址（用于 FetcherConfigPage 展示；运行时取 fetcherConfig.service.baseURL） */
 export const MOCK_AKSHARE_BASE_URL = 'http://localhost:8000'
+
+/** 采集向导 Mock API 基地址（占位符，仅用于开发阶段示例） */
+export const MOCK_WIZARD_API_BASE_URL = 'https://api.example.com'

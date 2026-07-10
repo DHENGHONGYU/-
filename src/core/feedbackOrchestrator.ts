@@ -62,6 +62,9 @@ const DEFAULT_CONFIG: FeedbackConfig = {
   autoTrigger: true,
 }
 
+/**
+ * FeedbackOrchestrator
+ */
 export class FeedbackOrchestrator {
   private config: FeedbackConfig
   private processing = new Set<string>()
@@ -360,4 +363,7 @@ export class FeedbackOrchestrator {
   }
 }
 
+/**
+ * feedbackOrchestrator
+ */
 export const feedbackOrchestrator = new FeedbackOrchestrator()

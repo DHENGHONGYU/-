@@ -9,6 +9,11 @@ interface MigrationReportTabProps {
   onReset: () => void
 }
 
+/**
+ * MigrationReportTab
+ * @param onGenerateReport
+ * @param onReset }
+ */
 export function MigrationReportTab({ report, onGenerateReport, onReset }: MigrationReportTabProps): React.JSX.Element {
   const [reportText, setReportText] = React.useState<string>('')
   const [loading, setLoading] = React.useState(false)

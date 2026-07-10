@@ -166,6 +166,9 @@ export interface GuardedRouteProps {
   redirectTo?: string
 }
 
+/**
+ * GuardedRoute
+ */
 export function GuardedRoute({
   path,
   component: Component,

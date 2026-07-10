@@ -80,6 +80,9 @@ function ErrorBanner({ error, backup, rollbackStatus, onRollback }: {
   )
 }
 
+/**
+ * MigrationPreviewTab
+ */
 export function MigrationPreviewTab({
   v6Export,
   transformed,

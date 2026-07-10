@@ -168,6 +168,9 @@ function exportToPDF(score: IntelligentScore): void {
   logger.info('[IntelligentScorePage] 导出 PDF', { symbol: score.symbol })
 }
 
+/**
+ * IntelligentScorePage
+ */
 export default function IntelligentScorePage(): React.JSX.Element {
   // 从 Store 获取状态
   const symbol = useIntelligentScoreStore((s) => s.symbol)

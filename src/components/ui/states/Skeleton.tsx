@@ -18,6 +18,9 @@ const VARIANT = {
   circle: cn(THEME_TOKENS.radius.full, 'h-12 w-12'),
 } as const
 
+/**
+ * Skeleton
+ */
 export function Skeleton({ variant = 'rect', className, ...props }: SkeletonProps) {
   return (
     <div

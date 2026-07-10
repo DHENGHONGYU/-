@@ -20,6 +20,9 @@ const SPINNER = {
   lg: 'h-8 w-8 border-[3px]',
 } as const
 
+/**
+ * Loading
+ */
 export function Loading({ label = '加载中…', size = 'md', className, ...props }: LoadingProps) {
   return (
     <div

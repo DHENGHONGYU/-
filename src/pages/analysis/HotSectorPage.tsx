@@ -44,6 +44,9 @@ const ACTION_CONFIG: Record<HotSectorScore['action'], { label: string; variant: 
 // 页面组件
 // ============================================================
 
+/**
+ * HotSectorPage
+ */
 export default function HotSectorPage(): React.JSX.Element {
   const scores = useHotSectorStore((s) => s.scores)
   const loading = useHotSectorStore((s) => s.loading)

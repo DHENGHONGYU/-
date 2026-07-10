@@ -61,6 +61,8 @@ interface ConfirmOptions {
  *
  * return <>{ConfirmDialog}</>
  * ```
+/**
+ * useConfirmDialog
  */
 export function useConfirmDialog() {
   const [open, setOpen] = useState(false)

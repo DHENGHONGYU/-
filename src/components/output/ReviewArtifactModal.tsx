@@ -29,6 +29,12 @@ export interface ReviewArtifactModalProps {
   generatedAt: string
 }
 
+/**
+ * ReviewArtifactModal
+ * @param onOpenChange
+ * @param report
+ * @param generatedAt }
+ */
 export function ReviewArtifactModal({ open, onOpenChange, report, generatedAt }: ReviewArtifactModalProps) {
   if (!report) return null
 

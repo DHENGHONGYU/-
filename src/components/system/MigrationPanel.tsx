@@ -17,6 +17,9 @@ export interface BackupSnapshot {
   totalRecords: number
 }
 
+/**
+ * MigrationPanel
+ */
 export default function MigrationPanel(): React.JSX.Element {
   const [rawJson, setRawJson] = useState<unknown>(null)
   const [v6Export, setV6Export] = useState<V6ExportShape | null>(null)

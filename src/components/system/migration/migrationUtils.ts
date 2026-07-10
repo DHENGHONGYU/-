@@ -6,6 +6,11 @@ export interface PreviewItem {
   count: number
 }
 
+/**
+ * buildV6Overview
+ * @param v6Export
+ * @returns PreviewItem[]
+ */
 export function buildV6Overview(v6Export: V6ExportShape): PreviewItem[] {
   return [
     { key: 'stocks', label: '股票', count: v6Export.stocks?.length ?? 0 },
@@ -23,6 +28,11 @@ export function buildV6Overview(v6Export: V6ExportShape): PreviewItem[] {
   ]
 }
 
+/**
+ * buildV9Overview
+ * @param transformed
+ * @returns PreviewItem[]
+ */
 export function buildV9Overview(transformed: V9ImportShape): PreviewItem[] {
   return [
     { key: 'stocks', label: '股票', count: transformed.stocks.length },

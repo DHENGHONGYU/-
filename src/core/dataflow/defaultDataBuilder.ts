@@ -1,5 +1,8 @@
 import type { ChannelMeta, DataPacket, DataChannel } from './dataflowTypes'
 
+/**
+ * DefaultDataBuilder
+ */
 export class DefaultDataBuilder {
   buildChannelMeta(channel: string): ChannelMeta {
     const defaults: Record<string, Partial<ChannelMeta>> = {
@@ -48,4 +51,7 @@ export class DefaultDataBuilder {
   }
 }
 
+/**
+ * defaultDataBuilder
+ */
 export const defaultDataBuilder = new DefaultDataBuilder()

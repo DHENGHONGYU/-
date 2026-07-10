@@ -10,8 +10,6 @@
  * - 枚举校验值域，布尔校验 0/1/'true'/'false'
  *
  * @module safeCoerce
- */
-
 /**
  * 将任意值强制转为 number，无效值返回 defaultValue。
  *
@@ -22,6 +20,11 @@
  *   toSafeNumber(NaN)             // 0
  *   toSafeNumber(null, 50)        // 50
  *   toSafeNumber(Infinity)        // 0
+/**
+ * toSafeNumber
+ * @param value
+ * @param defaultValue
+ * @returns number
  */
 export function toSafeNumber(value: unknown, defaultValue = 0): number {
   if (value === null || value === undefined || value === '') return defaultValue
@@ -43,6 +46,8 @@ export function toSafeNumber(value: unknown, defaultValue = 0): number {
  *   toSafeNumberInRange('abc', 0, 100, 0)     // 0(NaN → 默认值)
  *   toSafeNumberInRange(Infinity, 0, 100, 0) // 0(Infinity → 默认值)
  *   toSafeNumberInRange('50', 0, 100, 0)      // 50(字符串数字 → 解析)
+/**
+ * toSafeNumberInRange
  */
 export function toSafeNumberInRange(
   value: unknown,
@@ -71,6 +76,10 @@ export function toSafeNumberInRange(
  *   toSafeOptionalNumber('停牌')    // undefined
  *   toSafeOptionalNumber(null)    // undefined
  *   toSafeOptionalNumber('')      // undefined
+/**
+ * toSafeOptionalNumber
+ * @param value
+ * @returns number | undefined
  */
 export function toSafeOptionalNumber(value: unknown): number | undefined {
   if (value === null || value === undefined || value === '') return undefined
@@ -104,6 +113,11 @@ export function toSafeEnum<T extends string>(value: unknown, allowed: readonly T
  *   toSafeBoolean('true')         // true
  *   toSafeBoolean('yes')          // false（不识别，返回默认值）
  *   toSafeBoolean(null, true)     // true
+/**
+ * toSafeBoolean
+ * @param value
+ * @param defaultValue
+ * @returns boolean
  */
 export function toSafeBoolean(value: unknown, defaultValue = false): boolean {
   if (typeof value === 'boolean') return value

@@ -59,6 +59,9 @@ export interface CacheStats {
 // MemoryCache 实现
 // ============================================================
 
+/**
+ * MemoryCache
+ */
 export class MemoryCache<T = unknown> {
   private store = new Map<string, CacheEntry<T>>()
   private options: Required<MemoryCacheOptions>

@@ -143,6 +143,9 @@ function LoadingProgress({ progress = 0, message, className }: LoadingProgressPr
 // 主组件
 // ============================================================
 
+/**
+ * LoadingState
+ */
 export const LoadingState = memo(function LoadingState({
   variant = 'spinner',
   rows = 5,

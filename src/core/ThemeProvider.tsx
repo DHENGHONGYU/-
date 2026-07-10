@@ -102,6 +102,9 @@ interface ThemeProviderProps {
  *   <App />
  * </ThemeProvider>
  * ```
+/**
+ * ThemeProvider
+ * @param defaultMode
  */
 export function ThemeProvider({ children, defaultMode = 'system' }: ThemeProviderProps): React.JSX.Element {
   // 初始化主题状态
@@ -178,6 +181,9 @@ export function ThemeProvider({ children, defaultMode = 'system' }: ThemeProvide
  *   )
  * }
  * ```
+/**
+ * useTheme
+ * @returns ThemeContextValue
  */
 export function useTheme(): ThemeContextValue {
   const context = useContext(ThemeContext)
@@ -195,6 +201,9 @@ interface ThemeToggleProps {
   children?: (context: ThemeContextValue) => React.ReactNode
 }
 
+/**
+ * ThemeToggle
+ */
 export function ThemeToggle({ children }: ThemeToggleProps): React.JSX.Element {
   const themeContext = useTheme()
 

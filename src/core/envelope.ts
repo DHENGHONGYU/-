@@ -9,6 +9,9 @@ export interface StandardEnvelope {
   payload: unknown
 }
 
+/**
+ * EnvelopeError
+ */
 export class EnvelopeError extends Error {
   constructor(message: string) {
     super(message)
@@ -21,6 +24,9 @@ interface ValidationResult {
   error?: string
 }
 
+/**
+ * EnvelopeFactory
+ */
 export class EnvelopeFactory {
   static create(
     meta: Omit<EnvelopeMeta, 'timestamp'> & { timestamp?: number },
@@ -60,7 +66,7 @@ export class EnvelopeFactory {
       return { valid: false, error: 'Envelope source is required' }
     }
 
-    if (!Object.values(ENVELOPE_TARGET).includes(meta.target as EnvelopeTarget)) {
+    if (!Object.values(ENVELOPE_TARGET).includes(meta.target)) {
       logger.warn(`[EnvelopeFactory] Validation failed: Invalid envelope target "${meta.target}"`)
       return { valid: false, error: `Invalid envelope target: ${meta.target}` }
     }

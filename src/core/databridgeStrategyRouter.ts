@@ -59,6 +59,8 @@ export interface StrategyRouterContext {
  * @param envelope 标准信封
  * @param context 路由上下文（subscribers + broadcast）
  * @throws {EnvelopeError} 未知 action 或 payload 校验失败时抛出
+/**
+ * routeToStrategy
  */
 export function routeToStrategy(
   envelope: StandardEnvelope,

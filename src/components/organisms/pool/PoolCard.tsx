@@ -17,6 +17,9 @@ export interface PoolCardProps {
   onAnalyze?: (symbol: string) => void
 }
 
+/**
+ * PoolCard
+ */
 export function PoolCard({
   stock,
   options,

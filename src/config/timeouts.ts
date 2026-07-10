@@ -6,8 +6,6 @@
  * 修改超时策略只需修改本文件。
  *
  * @module config/timeouts
- */
-
 /** 股票分析引擎超时（ms） */
 export const ANALYSIS_ENGINE_TIMEOUT_MS = 30_000
 

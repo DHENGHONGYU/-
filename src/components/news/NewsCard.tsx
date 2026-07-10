@@ -17,6 +17,10 @@ const SENTIMENT_CONFIG: Record<
   neutral: { label: '中性', variant: 'secondary', className: `${twBg('slate', 500)} text-white hover:${twBg('slate', 500)}/80` },
 }
 
+/**
+ * NewsCard
+ * @param onClick }
+ */
 export function NewsCard({ article, onClick }: NewsCardProps): React.JSX.Element {
   const sentiment = SENTIMENT_CONFIG[article.sentiment]
   const summary = article.content.length > 120 ? `${article.content.slice(0, 120)}...` : article.content

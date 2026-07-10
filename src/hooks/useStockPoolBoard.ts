@@ -22,6 +22,9 @@ type QualityFilter = 'all' | 'missingBasic' | 'missingKline' | 'missingFinance'
 
 const ALL_GROUPS_VALUE = '__all__'
 
+/**
+ * useStockPoolBoard
+ */
 export function useStockPoolBoard() {
   const navigate = useNavigate()
 

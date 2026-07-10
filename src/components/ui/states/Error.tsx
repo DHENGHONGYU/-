@@ -20,6 +20,9 @@ export interface ErrorStateProps extends HTMLAttributes<HTMLDivElement> {
   action?: ReactNode
 }
 
+/**
+ * ErrorState
+ */
 export function ErrorState({
   title = '出错了',
   description,

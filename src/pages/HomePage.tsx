@@ -48,6 +48,9 @@ const FEATURES: FeatureCardProps[] = [
   },
 ]
 
+/**
+ * HomePage
+ */
 export default function HomePage(): React.JSX.Element {
   return (
     <PageContainer>

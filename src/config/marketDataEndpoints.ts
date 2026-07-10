@@ -6,8 +6,6 @@
  * 采集服务从此文件导入，禁止在 services/ 层硬编码外部 URL。
  *
  * @module config/marketDataEndpoints
- */
-
 /** 腾讯财经实时行情 API 基础地址 */
 export const TENCENT_API_BASE = 'https://qt.gtimg.cn/q='
 

@@ -6,6 +6,9 @@ import {
 
 const logger = getLogger()
 
+/**
+ * POOL_TRANSITIONS
+ */
 export const POOL_TRANSITIONS: Record<
   ResearchStatus,
   { next: ResearchStatus[]; label: string }
@@ -32,18 +35,31 @@ export const POOL_TRANSITIONS: Record<
   },
 }
 
+/**
+ * getNextStatuses
+ * @param status
+ * @returns ResearchStatus[]
+ */
 export function getNextStatuses(status: ResearchStatus): ResearchStatus[] {
   const nextStatuses = POOL_TRANSITIONS[status].next
   logger.debug(`[PoolTransition] getNextStatuses: current="${status}", next=${JSON.stringify(nextStatuses)}`)
   return nextStatuses
 }
 
+/**
+ * getPoolLabel
+ * @param status
+ * @returns string
+ */
 export function getPoolLabel(status: ResearchStatus): string {
   const label = POOL_TRANSITIONS[status].label
   logger.debug(`[PoolTransition] getPoolLabel: status="${status}", label="${label}"`)
   return label
 }
 
+/**
+ * isValidTransition
+ */
 export function isValidTransition(
   from: ResearchStatus,
   to: ResearchStatus,
@@ -57,6 +73,9 @@ export function isValidTransition(
   return isValid
 }
 
+/**
+ * getTransitionLabel
+ */
 export function getTransitionLabel(
   from: ResearchStatus,
   to: ResearchStatus,
@@ -73,6 +92,9 @@ export function getTransitionLabel(
   return label
 }
 
+/**
+ * transitionStatus
+ */
 export function transitionStatus(
   from: ResearchStatus,
   to: ResearchStatus,

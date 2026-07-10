@@ -9,6 +9,9 @@ import {
 
 const logger = getLogger()
 
+/**
+ * AclError
+ */
 export class AclError extends Error {
   constructor(message: string) {
     super(message)
@@ -27,6 +30,11 @@ export interface AclCheckResult {
   readonly reason: string
 }
 
+/**
+ * inferOperation
+ * @param action
+ * @returns DbOperation
+ */
 export function inferOperation(action: string): DbOperation {
   if (action.includes('INSERT') || action.includes('SAVE') || action.includes('INGEST')) {
     logger.debug(`[ACL] inferOperation: action="${action}" → "${DB_OPERATION.insert}"`)
@@ -44,6 +52,9 @@ export function inferOperation(action: string): DbOperation {
   return DB_OPERATION.select
 }
 
+/**
+ * AclEngine
+ */
 export class AclEngine {
   /**
    * 检查权限（非抛出）；v6 参考对齐
@@ -100,4 +111,7 @@ export class AclEngine {
   }
 }
 
+/**
+ * aclEngine
+ */
 export const aclEngine = new AclEngine()

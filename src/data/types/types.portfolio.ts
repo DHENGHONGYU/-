@@ -5,8 +5,6 @@
  *
  * @module data/types/types.portfolio
  * @updated 2026-07-07 - PR-1：从 data/types.ts 拆分
- */
-
 /**
  * 组合持仓明细（目标 vs 当前）。
  * 用于主题投资组合的构建、展示与再平衡。

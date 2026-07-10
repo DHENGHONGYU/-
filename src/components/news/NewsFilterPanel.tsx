@@ -21,6 +21,10 @@ const DEFAULT_FILTER: NewsFilterState = {
   source: '',
 }
 
+/**
+ * NewsFilterPanel
+ * @param onChange }
+ */
 export function NewsFilterPanel({ filter, onChange }: NewsFilterPanelProps): React.JSX.Element {
   const update = (partial: Partial<NewsFilterState>) => {
     onChange({ ...filter, ...partial })

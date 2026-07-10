@@ -30,6 +30,10 @@ export interface PageGuardState {
  *   <Button {...guardProps} onClick={handleScore}>运行评分</Button>
  * )
  * ```
+/**
+ * usePageGuard
+ * @param pageKey
+ * @returns PageGuardState
  */
 export function usePageGuard(pageKey: string): PageGuardState {
   // pageKey 当前作为语义标识保留，store 状态为全局读取（见上方说明）

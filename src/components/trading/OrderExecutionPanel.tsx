@@ -40,6 +40,9 @@ interface OrderExecutionPanelProps {
   onCancelOrder?: (orderId: string) => Promise<void>
 }
 
+/**
+ * OrderExecutionPanel
+ */
 export function OrderExecutionPanel({
   orders = [],
   onCreateOrder,

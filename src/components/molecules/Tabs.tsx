@@ -20,6 +20,9 @@ export interface TabsProps extends HTMLAttributes<HTMLDivElement> {
   onValueChange?: (value: string) => void
 }
 
+/**
+ * Tabs
+ */
 export const Tabs = forwardRef<HTMLDivElement, TabsProps>(
   ({ defaultValue = '', value, onValueChange, className, children, ...props }, ref) => {
     const [internalValue, setInternalValue] = useState(defaultValue)
@@ -48,6 +51,9 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(
 )
 Tabs.displayName = 'Tabs'
 
+/**
+ * TabsList
+ */
 export const TabsList = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div
@@ -67,6 +73,9 @@ export interface TabsTriggerProps extends HTMLAttributes<HTMLButtonElement> {
   disabled?: boolean
 }
 
+/**
+ * TabsTrigger
+ */
 export const TabsTrigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
   ({ className, value, disabled, ...props }, ref) => {
     const { value: activeValue, onValueChange } = useTabs()
@@ -98,6 +107,9 @@ export interface TabsContentProps extends HTMLAttributes<HTMLDivElement> {
   value: string
 }
 
+/**
+ * TabsContent
+ */
 export const TabsContent = forwardRef<HTMLDivElement, TabsContentProps>(
   ({ className, value, ...props }, ref) => {
     const { value: activeValue } = useTabs()

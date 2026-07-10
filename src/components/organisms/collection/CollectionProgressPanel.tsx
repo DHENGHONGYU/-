@@ -33,6 +33,9 @@ const STATUS_VARIANT: Record<CollectionProgressItem['status'], string> = {
   not_ready: COLOR_SHADES.gray[500],
 }
 
+/**
+ * CollectionProgressPanel
+ */
 export function CollectionProgressPanel({
   items,
   overallProgress,

@@ -17,6 +17,9 @@ export interface PoolListProps {
   onAnalyze?: (symbol: string) => void
 }
 
+/**
+ * PoolList
+ */
 export function PoolList({
   stocks,
   selectedSymbols,

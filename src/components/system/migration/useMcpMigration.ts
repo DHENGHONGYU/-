@@ -20,6 +20,10 @@ interface McpMigrationApi {
   exportAll: () => Promise<{ success: boolean; data?: Record<string, unknown[]>; error?: string }>
 }
 
+/**
+ * useMcpMigration
+ * @returns McpMigrationApi
+ */
 export function useMcpMigration(): McpMigrationApi {
   const callMigrationTool = async <T>(toolName: string, args: Record<string, unknown>): Promise<T> => {
     const result = await mcpBridge.callTool('system', toolName, args, MIGRATION_CALLER_CONTEXT)

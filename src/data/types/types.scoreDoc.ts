@@ -5,8 +5,6 @@
  *
  * @module data/types/types.scoreDoc
  * @updated 2026-07-07 - PR-1：从 data/types.ts 拆分
- */
-
 /** V6 评分单维度 */
 export interface V6LayerScore {
   score: number

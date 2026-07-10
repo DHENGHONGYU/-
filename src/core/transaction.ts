@@ -24,6 +24,8 @@ export type TransactionMode = IDBTransactionMode
  * @param mode 事务模式（readonly / readwrite）
  * @param callback 接收 IDBTransaction 的回调函数
  * @returns 回调返回值
+/**
+ * runInTransaction
  */
 export async function runInTransaction<T>(
   storeNames: StoreName[],

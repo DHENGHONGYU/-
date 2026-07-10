@@ -103,6 +103,10 @@ function ensureVisibilityListener(): void {
  *   label: 'orderStore',
  * })
  * ```
+/**
+ * useFreshData
+ * @param options
+ * @returns UseFreshDataResult
  */
 export function useFreshData(options: UseFreshDataOptions): UseFreshDataResult {
   const { lastUpdated, maxStaleMs, refresh, enabled = true, label = 'unknown' } = options

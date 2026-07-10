@@ -25,6 +25,9 @@ import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
 
+/**
+ * IndustryScorePage
+ */
 export default function IndustryScorePage(): React.JSX.Element {
   // 从 Store 获取状态
   const selectedCode = useIndustryScoreStore((s) => s.selectedCode)

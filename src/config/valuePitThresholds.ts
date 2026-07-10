@@ -3,8 +3,6 @@
  *
  * 集中管理价值洼地五维评分引擎中的所有阈值、权重、公式参数与默认值。
  * 本文件位于 src/config/，禁止依赖 services/、apps/、pages/、components/、core/（除类型外）。
- */
-
 /**
  * ValuePit 评分引擎阈值常量集合。
  */

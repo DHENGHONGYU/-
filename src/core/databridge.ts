@@ -175,6 +175,9 @@ export interface QueryResult<T> {
   error?: string
 }
 
+/**
+ * DataBridge
+ */
 export class DataBridge {
   private subscribers = new Map<string, Set<EnvelopeCallback>>()
   private fallbackQueue: FallbackQueue = fallbackQueue
@@ -738,4 +741,7 @@ export class DataBridge {
   }
 }
 
+/**
+ * dataBridge
+ */
 export const dataBridge = new DataBridge()

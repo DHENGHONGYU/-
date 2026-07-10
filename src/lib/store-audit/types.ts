@@ -13,8 +13,6 @@
  *
  * 这些类型被 scripts/audit-mapping-integrity.ts 和 lib/store-audit/analyzer.ts 共享，
  * 确保 Store 依赖分析算法与审计脚本之间的类型契约一致。
- */
-
 /**
  * Store 文件元信息
  */

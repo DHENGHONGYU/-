@@ -5,8 +5,6 @@
  *
  * @module data/types/types.knowledge
  * @updated 2026-07-07 - PR-1：从 data/types.ts 拆分
- */
-
 /** 本地知识库文档 */
 export interface LocalDoc {
   id: string

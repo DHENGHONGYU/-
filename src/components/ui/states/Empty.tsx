@@ -18,6 +18,9 @@ export interface EmptyProps extends HTMLAttributes<HTMLDivElement> {
   action?: ReactNode
 }
 
+/**
+ * Empty
+ */
 export function Empty({
   title = '暂无数据',
   description,

@@ -25,6 +25,9 @@ interface RiskControlPanelProps {
   onUpdateRules?: (rules: { stopLossPercent: number; takeProfitPercent: number }) => void
 }
 
+/**
+ * RiskControlPanel
+ */
 export function RiskControlPanel({
   riskMetrics = { var: 0, maxDrawdown: 0, sharpeRatio: 0 },
   riskAlerts = [],

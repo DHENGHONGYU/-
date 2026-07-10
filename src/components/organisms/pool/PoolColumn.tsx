@@ -17,6 +17,9 @@ export interface PoolColumnProps {
   onAnalyze?: (symbol: string) => void
 }
 
+/**
+ * PoolColumn
+ */
 export function PoolColumn({
   title,
   status: _status,

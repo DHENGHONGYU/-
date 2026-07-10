@@ -49,6 +49,12 @@ export function isTestFile(filePath: string): boolean {
  *
  * @param metas Store 元信息数组（会被按引用修改）
  * @param graph Store 间依赖图（fileName → 它导入的 Store 列表）
+/**
+ * markFacadeStores
+ * @param metas
+ * @param graph
+ * @param string[]>
+ * @returns void
  */
 export function markFacadeStores(metas: StoreMeta[], graph: Map<string, string[]>): void {
   for (const meta of metas) {
@@ -87,6 +93,8 @@ export function markFacadeStores(metas: StoreMeta[], graph: Map<string, string[]
  * @param graph Store 间依赖图（fileName → 它导入的 Store 列表）
  * @param directConsumersMap 每个 Store 的直接消费者列表
  * @returns 可达 Store 集合 + BFS 诊断信息（起点、遍历路径、传递可达列表）
+/**
+ * computeTransitiveReachability
  */
 export function computeTransitiveReachability(
   metas: StoreMeta[],

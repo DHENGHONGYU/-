@@ -6,8 +6,6 @@
  *
  * @module constants/theme/color
  * @created 2026-07-07 - 从 theme.tokens.ts 拆分
- */
-
 /**
  * 语义化颜色体系（Design Tokens）
  * @description 统一的颜色语义映射，支持 HEX/Tailwind 类名/RGB 三种格式

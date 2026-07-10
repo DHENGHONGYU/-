@@ -5,8 +5,6 @@
  *
  * 注意：本文件位于 src/config/，仅包含静态配置数据，不依赖任何业务层/数据层模块，
  * 供 themeRegistry 等配置模块引用。
- */
-
 /** 第四次工业革命稀缺核心资源主题 — A 股与港股核心标的白名单。 */
 export const CORE_RESOURCE_SYMBOL_WHITELIST: string[] = [
   // A 股核心稀缺资源标的（示例池，用户可自定义）

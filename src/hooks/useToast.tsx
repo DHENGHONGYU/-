@@ -19,6 +19,9 @@ interface ToastContextValue {
 
 const ToastContext = createContext<ToastContextValue | null>(null)
 
+/**
+ * useToast
+ */
 export function useToast() {
   const ctx = useContext(ToastContext)
   if (!ctx) throw new Error('useToast must be used within <ToastProvider>')
@@ -29,6 +32,9 @@ export interface ToastProviderProps {
   children: ReactNode
 }
 
+/**
+ * ToastProvider
+ */
 export function ToastProvider({ children }: ToastProviderProps) {
   const [toasts, setToasts] = useState<Toast[]>([])
 

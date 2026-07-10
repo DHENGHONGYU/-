@@ -228,6 +228,9 @@ class PipelineCycle {
   }
 }
 
+/**
+ * PipelineScheduler
+ */
 export class PipelineScheduler {
   private cycles = new Map<string, PipelineCycle>()
   private running = false
@@ -312,6 +315,9 @@ export class PipelineScheduler {
   }
 }
 
+/**
+ * DataIntegrityGuard
+ */
 export class DataIntegrityGuard {
   async checkStockPool(): Promise<IntegrityResult> {
     logger.info('[DataIntegrityGuard] 开始校验股票池数据完整性')
@@ -460,5 +466,11 @@ export class DataIntegrityGuard {
   }
 }
 
+/**
+ * pipelineScheduler
+ */
 export const pipelineScheduler = new PipelineScheduler()
+/**
+ * dataIntegrityGuard
+ */
 export const dataIntegrityGuard = new DataIntegrityGuard()

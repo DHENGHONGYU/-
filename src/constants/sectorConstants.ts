@@ -7,8 +7,6 @@
  *
  * @migration 2026-07-06 跨层违规修复：pages 层禁止直接导入 data 层
  * @compliance AGENTS.md §一 分层规则：constants 层禁止依赖任何运行时模块
- */
-
 /**
  * 热门赛道标签列表
  *

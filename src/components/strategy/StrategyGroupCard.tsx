@@ -9,6 +9,11 @@ export interface StrategyGroupCardProps {
   color: string
 }
 
+/**
+ * StrategyGroupCard
+ * @param items
+ * @param color }
+ */
 export function StrategyGroupCard({ title, items, color }: StrategyGroupCardProps): React.JSX.Element {
   const count = items.length
   const composites = items.map((item) => item.composite)

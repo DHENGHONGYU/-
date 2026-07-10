@@ -14,8 +14,15 @@ interface WidgetContextValue {
   publish: (event: string, data: unknown) => void
 }
 
+/**
+ * WidgetContext
+ */
 export const WidgetContext = createContext<WidgetContextValue | null>(null)
 
+/**
+ * useWidgetContext
+ * @returns WidgetContextValue
+ */
 export function useWidgetContext(): WidgetContextValue {
   const context = useContext(WidgetContext)
   if (!context) {
@@ -24,6 +31,10 @@ export function useWidgetContext(): WidgetContextValue {
   return context
 }
 
+/**
+ * useWidgetData
+ * @param channel
+ */
 export function useWidgetData<T>(channel: string): { data: T | null; loading: boolean } {
   const { subscribe } = useWidgetContext()
   const [data, setData] = useState<T | null>(null)

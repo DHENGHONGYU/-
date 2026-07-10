@@ -7,8 +7,6 @@
  *
  * @module constants/store-channels
  * @created 2026-06-30 - G1 批次低风险优化（重复字面量提取）
- */
-
 /**
  * EventBus 事件命名常量
  */

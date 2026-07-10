@@ -29,6 +29,10 @@ interface TradingSignalPanelProps {
   onCreateOrder?: (signal: TradingSignal) => void
 }
 
+/**
+ * TradingSignalPanel
+ * @param onCreateOrder }
+ */
 export function TradingSignalPanel({ signals = [], onCreateOrder }: TradingSignalPanelProps): React.JSX.Element {
   const handleCreateOrder = (signal: TradingSignal): void => {
     logger.info('[TradingSignalPanel] 从信号创建订单', { signalId: signal.id })

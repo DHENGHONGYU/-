@@ -8,6 +8,10 @@ interface MigrationUploadTabProps {
   onFileSelected: (file: File) => void
 }
 
+/**
+ * MigrationUploadTab
+ * @param onFileSelected }
+ */
 export function MigrationUploadTab({ error, onFileSelected }: MigrationUploadTabProps): React.JSX.Element {
   const handleDrop = useCallback(
     (e: React.DragEvent<HTMLDivElement>) => {

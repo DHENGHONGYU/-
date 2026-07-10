@@ -17,6 +17,9 @@ function shouldLog(level: LogLevel): boolean {
   return LOG_LEVEL_PRIORITY[level] >= LOG_LEVEL_PRIORITY[globalLevel]
 }
 
+/**
+ * getLogger
+ */
 export function getLogger() {
   return {
     debug(message: string, context?: LogContext): void {
@@ -42,6 +45,11 @@ export function getLogger() {
   }
 }
 
+/**
+ * setLogLevel
+ * @param level
+ * @returns void
+ */
 export function setLogLevel(level: LogLevel): void {
   globalLevel = level
 }

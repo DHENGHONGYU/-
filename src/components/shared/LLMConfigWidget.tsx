@@ -52,6 +52,9 @@ function validateField(field: 'baseURL' | 'apiKey' | 'model', value: string): st
   }
 }
 
+/**
+ * LLMConfigWidget
+ */
 export const LLMConfigWidget = memo(function LLMConfigWidget({
   value,
   onChange,

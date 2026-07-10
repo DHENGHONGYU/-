@@ -25,6 +25,9 @@ function formatTime(timestamp: number | null): string {
   })
 }
 
+/**
+ * CollectionReportPanel
+ */
 export function CollectionReportPanel({ items }: CollectionReportPanelProps): React.JSX.Element {
   if (items.length === 0) {
     return (

@@ -12,6 +12,9 @@ import { useBacktestStore, type BacktestStrategy } from '@/store/backtestStore'
 import { STOCK_COLOR_MAPPING } from '@/constants/cockpit.constants'
 import { COLOR_TOKENS, CHART_PALETTE } from '@/constants/theme.tokens'
 
+/**
+ * BacktestPage
+ */
 export default function BacktestPage(): React.JSX.Element {
   const { config, results, loading, error, setConfig, runBacktest, clearResults, exportReport } =
     useBacktestStore()

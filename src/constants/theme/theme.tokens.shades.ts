@@ -5,8 +5,6 @@
  *
  * @module constants/theme/shades
  * @created 2026-07-07 - 从 theme.tokens.ts 拆分
- */
-
 /**
  * 语义色阶令牌
  * @description 提供每个语义色的多色阶 Tailwind 类名与 HEX 值，

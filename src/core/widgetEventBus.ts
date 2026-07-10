@@ -51,4 +51,7 @@ class WidgetEventBusImpl {
   }
 }
 
+/**
+ * widgetEventBus
+ */
 export const widgetEventBus = new WidgetEventBusImpl()

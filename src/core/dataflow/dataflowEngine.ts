@@ -52,6 +52,9 @@ interface CacheEntry {
   lastAccessAt: number
 }
 
+/**
+ * DataFlowEngine
+ */
 export class DataFlowEngine {
   private subscribers = new Map<string, Set<DataCallback>>()
   private cache = new Map<string, CacheEntry>()
@@ -477,4 +480,7 @@ export class DataFlowEngine {
   }
 }
 
+/**
+ * dataFlowEngine
+ */
 export const dataFlowEngine = new DataFlowEngine()

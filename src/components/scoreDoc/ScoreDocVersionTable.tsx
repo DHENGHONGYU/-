@@ -28,6 +28,9 @@ function downloadMarkdown(content: string, filename: string): void {
   URL.revokeObjectURL(url)
 }
 
+/**
+ * ScoreDocVersionTable
+ */
 export default function ScoreDocVersionTable({
   versions,
 }: ScoreDocVersionTableProps): React.JSX.Element {

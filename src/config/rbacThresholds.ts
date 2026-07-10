@@ -10,8 +10,6 @@
  * - 7 Privilege Management Mistakes: 默认授予过宽权限是 #1 错误（Dropbox Sign 案例）
  * - OWASP Broken Access Control: 最小权限原则是缓解 BAC 的首要控制
  * - 访问控制 5 大致命问题: 32% 离职员工账号未及时禁用 → 僵尸账号检测间隔应 <= 7 天
- */
-
 /**
  * RBAC 阈值配置接口
  */

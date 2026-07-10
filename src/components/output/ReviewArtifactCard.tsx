@@ -77,6 +77,9 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
   )
 }
 
+/**
+ * ReviewArtifactCard
+ */
 export function ReviewArtifactCard({
   report,
   generatedAt,

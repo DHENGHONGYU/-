@@ -27,6 +27,9 @@ const STATUS_ORDER: ResearchStatus[] = [
   RESEARCH_STATUS.archived,
 ]
 
+/**
+ * PoolBoard
+ */
 export function PoolBoard({
   stocks,
   viewMode = 'kanban',

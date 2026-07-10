@@ -12,8 +12,6 @@
  *
  * @module constants/theme/stock
  * @created 2026-07-07 - 从 theme.tokens.ts 拆分
- */
-
 /**
  * 股票涨跌颜色令牌（例外规则）
  *
