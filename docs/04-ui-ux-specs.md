@@ -239,7 +239,7 @@ mount → initData → subscribeChannels → render → updateData → unsubscri
 
 分组是用户自定义的展示/筛选维度，与 `researchStatus` 五态流转解耦：
 
-- **分组筛选器**：位于 `InputDashboard` 股票池看板工具栏，选项包含「全部组」及所有已存在的分组。
+- **分组筛选器**：位于 `StockPoolBoardPage` 股票池看板工具栏（原 `InputDashboard` 看板已迁移至分析舱），选项包含「全部组」及所有已存在的分组。
 - **新建分组**：通过工具栏「新建分组」按钮打开弹窗输入分组名称，创建后自动选中并可用于后续录入。
 - **录入时指定分组**：单条录入、批量导入、热门板块加池均支持选择目标分组，未选择时使用默认分组。
 - **批量移入分组**：选中多个标的后，可通过「批量移入分组」下拉将标的统一移动到目标分组。
@@ -247,49 +247,92 @@ mount → initData → subscribeChannels → render → updateData → unsubscri
 
 ## 4.5 组件库清单
 
-### 基础 UI 组件
+> **v2.1.0 变更**：组件库按原子设计（Atomic Design）分层，分为 `atoms`、`molecules`、`organisms`、`templates` 四级。
+> 详见 `docs/atomic-component-system.md` 与 `src/components/componentRegistry.ts`。
+> 过渡期内 `src/components/ui/` 仍保留兼容 shim，但新增组件须按原子层级放置。
+
+### 原子组件（Atoms）
 
 | 组件 | 路径 | 说明 |
 |------|------|------|
-| Button | `src/components/ui/Button.tsx` | 主/次/危险/幽灵按钮 |
-| Card | `src/components/ui/Card.tsx` | 卡片容器 |
-| Input | `src/components/ui/Input.tsx` | 文本输入 |
-| Dialog | `src/components/ui/Dialog.tsx` | 模态对话框 |
-| Tabs | `src/components/ui/Tabs.tsx` | 标签页 |
-| Table | `src/components/ui/Table.tsx` | 表格 |
-| Badge | `src/components/ui/Badge.tsx` | 状态徽章 |
-| Skeleton | `src/components/ui/Skeleton.tsx` | 加载骨架 |
-| Toast | `src/components/ui/Toast.tsx` | 轻提示 |
-| Checkbox | `src/components/ui/Checkbox.tsx` | 复选框 |
-| Progress | `src/components/ui/Progress.tsx` | 进度条 |
-| Textarea | `src/components/ui/Textarea.tsx` | 多行文本输入 |
-| Dropdown | `src/components/ui/Dropdown.tsx` | 下拉菜单 |
-| Command | `src/components/ui/Command.tsx` | 命令面板 |
-| ScrollArea | `src/components/ui/ScrollArea.tsx` | 自定义滚动区域 |
+| Button | `src/components/atoms/Button.tsx`（shim: `src/components/ui/Button.tsx`） | 主/次/危险/幽灵按钮 |
+| Card | `src/components/atoms/Card.tsx` | 卡片容器 |
+| Input | `src/components/atoms/Input.tsx` | 文本输入 |
+| Badge | `src/components/atoms/Badge.tsx` | 状态徽章 |
+| Progress | `src/components/atoms/Progress.tsx` | 进度条 |
+| Skeleton | `src/components/atoms/Skeleton.tsx` | 加载骨架 |
+| Checkbox | `src/components/atoms/Checkbox.tsx` | 复选框 |
+| Textarea | `src/components/atoms/Textarea.tsx` | 多行文本输入 |
+| Select | `src/components/atoms/Select.tsx` | 选择器 |
+| Radio | `src/components/atoms/Radio.tsx` | 单选 |
+| Switch | `src/components/atoms/Switch.tsx` | 开关 |
+| Slider | `src/components/atoms/Slider.tsx` | 滑块 |
+| Toggle | `src/components/atoms/Toggle.tsx` | 切换 |
+| Tooltip | `src/components/atoms/Tooltip.tsx` | 工具提示 |
+| Popover | `src/components/atoms/Popover.tsx` | 气泡卡片 |
+| Sheet | `src/components/atoms/Sheet.tsx` | 抽屉 |
+| Toast | `src/components/atoms/Toast.tsx` | 轻提示 |
+| Menu | `src/components/atoms/Menu.tsx` | 菜单 |
+| Pagination | `src/components/atoms/Pagination.tsx` | 分页 |
+| Breadcrumb | `src/components/atoms/Breadcrumb.tsx` | 面包屑 |
+| Result | `src/components/atoms/Result.tsx` | 结果展示 |
+| List | `src/components/atoms/List.tsx` | 列表 |
+| Grid | `src/components/atoms/Grid.tsx` | 栅格 |
+| Table | `src/components/atoms/Table.tsx` | 表格 |
+| DatePicker | `src/components/atoms/DatePicker.tsx` | 日期选择 |
+| StockPriceChange | `src/components/atoms/StockPriceChange.tsx` | 股价变化 |
 
-### 业务组件
-
-| 组件 | 路径 | 说明 |
-|------|------|------|
-| StockSearch | `src/components/input/StockSearch.tsx` | 股票搜索组件 |
-| QualityIndicator | `src/components/input/QualityIndicator.tsx` | 数据质量指示 |
-| PoolBoard | `src/components/pool/PoolBoard.tsx` | 股票池看板 |
-| PoolCard | `src/components/pool/PoolCard.tsx` | 股票卡片 |
-| PoolList | `src/components/pool/PoolList.tsx` | 股票列表视图 |
-| ScoreFactorDeltaPanel | `src/components/ScoreFactorDeltaPanel.tsx` | 评分因子变化面板 |
-| ScoreUpdateAlert | `src/components/ScoreUpdateAlert.tsx` | 评分更新提醒 |
-| ErrorBoundary | `src/components/ErrorBoundary.tsx` | 错误边界组件 |
-
-### 图表组件（待建）
+### 分子组件（Molecules）
 
 | 组件 | 路径 | 说明 |
 |------|------|------|
-| LineChart | `src/components/chart/LineChart.tsx` | 折线图 |
-| BarChart | `src/components/chart/BarChart.tsx` | 柱状图 |
-| CandlestickChart | `src/components/chart/CandlestickChart.tsx` | K 线图 |
-| AreaChart | `src/components/chart/AreaChart.tsx` | 面积图 |
-| ScoreRadar | `src/components/chart/ScoreRadar.tsx` | 评分雷达图 |
-| FactorHeatmap | `src/components/chart/FactorHeatmap.tsx` | 因子热力图 |
+| Dialog | `src/components/molecules/Dialog.tsx` | 模态对话框 |
+| Tabs | `src/components/molecules/Tabs.tsx` | 标签页 |
+| Alert | `src/components/molecules/Alert.tsx` | 警告提示 |
+| DataState | `src/components/molecules/DataState.tsx` | 加载/空/错误状态 |
+| ErrorState | `src/components/molecules/ErrorState.tsx` | 错误状态 |
+| EmptyState | `src/components/molecules/EmptyState.tsx` | 空状态 |
+| LoadingState | `src/components/molecules/LoadingState.tsx` | 加载状态 |
+| PageHeader | `src/components/molecules/PageHeader.tsx` | 页面标题 + 操作区 |
+| FormField | `src/components/molecules/FormField.tsx` | 表单字段（Label + 控件 + 错误） |
+| MetricCard | `src/components/molecules/MetricCard.tsx` | 指标卡（标题 + 数值 + 趋势） |
+| SearchBar | `src/components/molecules/SearchBar.tsx` | 搜索栏 |
+| FilterChip | `src/components/molecules/FilterChip.tsx` | 可关闭筛选标签 |
+
+### 有机体组件（Organisms）
+
+| 组件 | 路径 | 说明 |
+|------|------|------|
+| StockSearch | `src/components/organisms/input/StockSearch.tsx` | 股票搜索组件 |
+| QualityIndicator | `src/components/organisms/input/QualityIndicator.tsx` | 数据质量指示 |
+| PoolBoard | `src/components/organisms/pool/PoolBoard.tsx` | 股票池看板 |
+| PoolCard | `src/components/organisms/pool/PoolCard.tsx` | 股票卡片 |
+| PoolList | `src/components/organisms/pool/PoolList.tsx` | 股票列表视图 |
+| CollectionProgressPanel | `src/components/organisms/collection/CollectionProgressPanel.tsx` | 采集进度面板 |
+| CollectionReportPanel | `src/components/organisms/collection/CollectionReportPanel.tsx` | 采集汇报面板 |
+| ScoreFactorDeltaPanel | `src/components/organisms/shared/ScoreFactorDeltaPanel.tsx` | 评分因子变化面板 |
+| ScoreUpdateAlert | `src/components/organisms/shared/ScoreUpdateAlert.tsx` | 评分更新提醒 |
+| ErrorBoundary | `src/components/organisms/shared/ErrorBoundary.tsx` | 错误边界组件 |
+
+### 图表组件
+
+| 组件 | 路径 | 说明 |
+|------|------|------|
+| LineChart | `src/components/organisms/chart/LineChart.tsx` | 折线图 |
+| BarChart | `src/components/organisms/chart/BarChart.tsx` | 柱状图 |
+| CandlestickChart | `src/components/organisms/chart/CandlestickChart.tsx` | K 线图 |
+| AreaChart | `src/components/organisms/chart/AreaChart.tsx` | 面积图 |
+| ScoreRadar | `src/components/organisms/chart/ScoreRadar.tsx` | 评分雷达图 |
+| FactorHeatmap | `src/components/organisms/chart/FactorHeatmap.tsx` | 因子热力图 |
+
+### 模板组件（Templates）
+
+| 组件 | 路径 | 说明 |
+|------|------|------|
+| PageContainer | `src/components/templates/PageContainer.tsx` | 页面内容容器 |
+| DashboardLayout | `src/components/templates/DashboardLayout.tsx` | 仪表盘布局 |
+| SidebarLayout | `src/components/templates/SidebarLayout.tsx` | 侧边栏布局 |
+| CockpitLayout | `src/components/templates/CockpitLayout.tsx` | 驾驶舱布局 |
 
 ## 4.6 响应式断点
 

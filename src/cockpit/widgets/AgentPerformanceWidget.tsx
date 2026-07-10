@@ -4,12 +4,15 @@
  */
 
 import React, { memo, useEffect } from 'react'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card'
+import { Users } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge'
+import { Skeleton } from '@/components/ui/states'
+import { WidgetStateShell } from './components/WidgetStateShell'
 import type { WidgetConfig, MarketData } from '@/types/modules/widget.types'
 import AgentHealthCard from '@/components/system/AgentHealthCard'
 import { useSystemMonitorStore } from '@/store/systemMonitorStore'
 import { getLogger } from '@/lib/logger'
+import { COLOR_TOKENS } from '@/constants/theme.tokens'
 
 const logger = getLogger()
 
@@ -18,9 +21,10 @@ interface AgentPerformanceWidgetProps {
   data?: MarketData
 }
 
-const AgentPerformanceWidget = memo(function AgentPerformanceWidget(_props: AgentPerformanceWidgetProps): React.JSX.Element {
+const AgentPerformanceWidget = memo(function AgentPerformanceWidget({ config }: AgentPerformanceWidgetProps): React.JSX.Element {
   const agentHealthSnapshots = useSystemMonitorStore((state) => state.agentHealthSnapshots)
   const isLoading = useSystemMonitorStore((state) => state.isLoading)
+  const error = useSystemMonitorStore((state) => state.error)
   const refreshSnapshot = useSystemMonitorStore((state) => state.refreshSnapshot)
   const isMonitoring = useSystemMonitorStore((state) => state.isMonitoring)
 
@@ -31,28 +35,39 @@ const AgentPerformanceWidget = memo(function AgentPerformanceWidget(_props: Agen
     }
   }, [isMonitoring, refreshSnapshot])
 
+  const visualState = error
+    ? 'error'
+    : isLoading
+      ? 'loading'
+      : agentHealthSnapshots.length === 0
+        ? 'empty'
+        : 'ready'
+
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle>智能体性能追踪</CardTitle>
-          <Badge variant="outline">{agentHealthSnapshots.length} 个智能体</Badge>
+    <WidgetStateShell
+      title={config.title}
+      titleIcon={<Users className={COLOR_TOKENS.info.tailwind} />}
+      titleAction={<Badge variant="outline">{agentHealthSnapshots.length} 个智能体</Badge>}
+      visualState={visualState}
+      error={error}
+      onRetry={() => void refreshSnapshot()}
+      loadingLabel="加载智能体健康数据…"
+      emptyTitle="暂无智能体健康数据"
+      emptyDescription="系统监控启动后将自动采集 Agent 性能快照"
+      skeleton={
+        <div className="grid gap-3 sm:grid-cols-2">
+          {[1, 2, 3, 4].map((i) => (
+            <Skeleton key={i} variant="rect" className="h-24" />
+          ))}
         </div>
-      </CardHeader>
-      <CardContent>
-        {isLoading && agentHealthSnapshots.length === 0 ? (
-          <div className="py-8 text-center text-sm text-muted-foreground">加载中...</div>
-        ) : agentHealthSnapshots.length === 0 ? (
-          <div className="py-8 text-center text-sm text-muted-foreground">暂无智能体健康数据</div>
-        ) : (
-          <div className="grid gap-3 sm:grid-cols-2">
-            {agentHealthSnapshots.map((snapshot) => (
-              <AgentHealthCard key={snapshot.agentId} agent={snapshot} />
-            ))}
-          </div>
-        )}
-      </CardContent>
-    </Card>
+      }
+    >
+      <div className="grid gap-3 sm:grid-cols-2">
+        {agentHealthSnapshots.map((snapshot) => (
+          <AgentHealthCard key={snapshot.agentId} agent={snapshot} />
+        ))}
+      </div>
+    </WidgetStateShell>
   )
 })
 

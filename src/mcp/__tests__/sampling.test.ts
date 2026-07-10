@@ -2,14 +2,14 @@ import { describe, it, expect, vi } from 'vitest'
 import { SamplingHandler } from '@/mcp/core/sampling'
 
 describe('SamplingHandler', () => {
-  it('should throw when no model provider registered', async () => {
+  it('应该抛出 when no model provider registered', async () => {
     const handler = new SamplingHandler()
     await expect(
       handler.createMessage({ messages: [], maxTokens: 100 }),
     ).rejects.toThrow('not configured')
   })
 
-  it('should call provider and return response', async () => {
+  it('应该调用 provider and return response', async () => {
     const handler = new SamplingHandler()
     const mockResponse = {
       model: 'test-model',
@@ -22,7 +22,7 @@ describe('SamplingHandler', () => {
     expect(result).toEqual(mockResponse)
   })
 
-  it('should propagate provider errors', async () => {
+  it('应该propagate provider errors', async () => {
     const handler = new SamplingHandler()
     handler.setModelProvider(vi.fn().mockRejectedValue(new Error('Provider error')))
     await expect(
@@ -30,7 +30,7 @@ describe('SamplingHandler', () => {
     ).rejects.toThrow('Provider error')
   })
 
-  it('should pass model preferences to provider', async () => {
+  it('应该pass model preferences to provider', async () => {
     const handler = new SamplingHandler()
     const provider = vi.fn().mockResolvedValue({
       model: 'gpt-4',

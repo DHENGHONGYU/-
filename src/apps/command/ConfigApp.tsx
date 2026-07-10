@@ -31,6 +31,7 @@ import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import { getLogger } from '@/lib/logger'
 import { toSafeNumberInRange } from '@/lib/safeCoerce'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
+import { useRuntimeTradingConfigStore } from '@/store/runtimeTradingConfigStore'
 
 const logger = getLogger()
 
@@ -237,6 +238,29 @@ export default function ConfigApp(): React.JSX.Element {
         applyTheme(value as AppConfig['theme'])
       }
 
+      // ── 阶段 A-1：将可影响交易/风险引擎的字段同步推送到运行时覆盖层 ──
+      // 仅 portfolioValue / maxSinglePositionPct / stopLossPct 三个字段映射到 tradingConfig。
+      // enablePaperTrading / refreshInterval / maxDailyLossPct / autoRefresh / language
+      // 不属于 tradingConfig 覆盖范围，保留 localStorage 写入即可。
+      if (key === 'portfolioValue' || key === 'maxSinglePositionPct' || key === 'stopLossPct') {
+        try {
+          useRuntimeTradingConfigStore.getState().applyOverride({
+            risk: {
+              portfolioValue: next.portfolioValue,
+              maxSinglePositionPct: next.maxSinglePositionPct,
+            },
+            signalThresholds: {
+              fixedStopLossPct: next.stopLossPct,
+              trailingStopDrawdownPct: next.stopLossPct,
+            },
+          })
+        } catch (err) {
+          logger.error('[ConfigApp] applyOverride 失败', {
+            error: err instanceof Error ? err.message : String(err),
+          })
+        }
+      }
+
       setSaved(true)
       // 2 秒后隐藏保存成功提示
       savedTimerRef.current = setTimeout(() => setSaved(false), SAVE_SUCCESS_DISPLAY_DURATION)
@@ -254,6 +278,8 @@ export default function ConfigApp(): React.JSX.Element {
     setConfig(defaults)
     saveConfig(defaults)
     applyTheme(defaults.theme)
+    // 阶段 A-1：恢复默认时同步重置运行时交易配置覆盖
+    useRuntimeTradingConfigStore.getState().resetToDefault()
   }, [confirm])
 
   return (

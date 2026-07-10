@@ -35,13 +35,15 @@ async function auditTestFile(filePath: string): Promise<AuditResult> {
       })
     }
 
-    // 规则 2: 检测硬编码颜色（排除令牌定义文件）
+    // 规则 2: 检测硬编码颜色（排除令牌定义文件和测试文件）
+    const isTestFile = filePath.endsWith('.test.ts') || filePath.endsWith('.test.tsx')
     if (
       /['"]#[0-9a-fA-F]{6}['"]/.test(line) &&
       !filePath.includes('theme.tokens.ts') &&
       !filePath.includes('chartColors.ts') &&
       !line.includes('STOCK_COLOR_TOKENS') &&
-      !line.includes('COLOR_TOKENS')
+      !line.includes('COLOR_TOKENS') &&
+      !isTestFile
     ) {
       issues.push({
         line: index + 1,

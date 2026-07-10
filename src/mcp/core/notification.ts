@@ -50,14 +50,18 @@ export class NotificationManager {
     const payload: NotificationPayload = { method, params }
     logger.info(`[NotificationManager] Emitting ${method}`, { params })
     const listeners = this.listeners.get(method)
-    if (listeners) {
-      for (const listener of listeners) {
-        try {
-          listener(payload)
-        } catch (error) {
-          logger.error(`[NotificationManager] Listener error for ${method}`, { error: String(error) })
-        }
-      }
+    if (!listeners) return
+
+    for (const listener of listeners) {
+      this.notifyListener(listener, payload)
+    }
+  }
+
+  private notifyListener(listener: NotificationListener, payload: NotificationPayload): void {
+    try {
+      listener(payload)
+    } catch (error) {
+      logger.error(`[NotificationManager] Listener error for ${payload.method}`, { error: String(error) })
     }
   }
 }

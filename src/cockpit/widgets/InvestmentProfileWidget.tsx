@@ -1,6 +1,7 @@
 import React from 'react'
 import { User, TrendingUp, Shield, PieChart, Clock } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import { WidgetStateShell } from './components/WidgetStateShell'
+import { Skeleton } from '@/components/ui/states'
 import { Badge } from '@/components/ui/Badge'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
 import type { WidgetConfig, MarketData, ProfileMetric } from '@/types/modules/widget.types'
@@ -38,16 +39,46 @@ function getScoreLevel(score: number) {
  * @remarks 真实数据替换：将 MarketDataCollector 指向用户画像量化模型 API（如 /quant/profile）
  */
 export default function InvestmentProfileWidget({ config, data }: InvestmentProfileWidgetProps): React.JSX.Element {
-  const marketData = useMarketData()
-  const sourceData = data ?? marketData.data
+  const { data: marketData, loadingMap, errorMap, refreshWidget } = useMarketData()
+  const sourceData = data ?? marketData
   const { profile } = sourceData.analysisScores
 
+  const loading = !!loadingMap[config.instanceId]
+  const error = errorMap[config.instanceId] ?? null
+  const visualState = error
+    ? 'error'
+    : loading
+      ? 'loading'
+      : profile.metrics.length === 0
+        ? 'empty'
+        : 'ready'
+
   return (
-    <Card className="h-full flex flex-col">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-base font-semibold">{config.title}</CardTitle>
-      </CardHeader>
-      <CardContent className="flex-1 overflow-auto space-y-4">
+    <WidgetStateShell
+      title={config.title}
+      visualState={visualState}
+      error={error}
+      onRetry={() => refreshWidget(config.instanceId)}
+      loadingLabel="加载投资画像…"
+      emptyTitle="暂无投资画像数据"
+      emptyDescription="当前未获取到投资能力、风格、风控等画像指标"
+      skeleton={
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <Skeleton key={i} variant="rect" className="h-24" />
+            ))}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {[1, 2, 3, 4].map((i) => (
+              <Skeleton key={i} variant="text" className="h-6 w-16" />
+            ))}
+          </div>
+        </div>
+      }
+      className="h-full flex flex-col"
+    >
+      <div className="flex-1 overflow-auto space-y-4">
         {/* 核心指标卡片 */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
           {profile.metrics.map((metric: ProfileMetric) => {
@@ -94,7 +125,7 @@ export default function InvestmentProfileWidget({ config, data }: InvestmentProf
             )}
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </WidgetStateShell>
   )
 }

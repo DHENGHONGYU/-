@@ -153,7 +153,7 @@ export const COLOR_SHADES = {
     400: 'text-slate-400',
     500: 'text-slate-500',
     700: 'text-slate-700',
-    hex: { 50: '#f8fafc', 100: '#f1f5f9', 200: '#e2e8f0', 300: '#cbd5e1', 400: '#94a3b8', 500: '#64748b', 700: '#334155' },
+    hex: { 50: '#f8fafc', 100: '#f1f5f9', 200: '#e2e8f0', 300: '#cbd5e1', 400: '#94a3b8', 500: '#64748b', 700: '#334155', 800: '#1e293b' },
   },
   /** 灰色阶（用于 skeleton/placeholder/次要文字等） */
   gray: {

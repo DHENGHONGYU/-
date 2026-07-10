@@ -2,31 +2,46 @@
  * @module collectConfig
  * @description 七维采集配置常量定义。
  *
- * 参考V6 Pro collectConfig.ts 设计，适配V9架构：
- * - 8个采集维度（七维+研报中心）
- * - 5个策略模板（价值/成长/防御/周期/全维度）
+ * 参考 V6 Pro collectConfig.ts 设计，适配 V9 架构：
+ * - 8 个采集维度（七维 + 研报中心）
+ * - 5 个策略模板（价值 / 成长 / 防御 / 周期 / 全维度）
  * - 频率枚举与中文标签映射
  * - 数据源类型与优先级
  * - 全局限流参数
+ * - 字段注册表与默认策略
  *
  * @see V6 Pro: cockpit-app/src/data/collectConfig.ts
  */
 
+import type {
+  UpdateFrequency,
+  DataSourceType,
+  StorageType,
+  DimensionImportance,
+  StrategyTemplateId,
+  StrategyTemplate,
+  DimensionConfig,
+  FieldRegistry,
+  RetryPolicy,
+  TimeoutPolicy,
+  FallbackPolicy,
+} from '@/types/modules/collection.types'
+
+// Re-export 类型，保持现有导入路径兼容
+export type {
+  UpdateFrequency,
+  DataSourceType,
+  StorageType,
+  DimensionImportance,
+  StrategyTemplateId,
+  StrategyTemplate,
+  DimensionConfig,
+  FieldRegistry,
+}
+
 // ============================================================
 // 频率枚举
 // ============================================================
-
-export type UpdateFrequency =
-  | 'realtime'
-  | '1h'
-  | '3h'
-  | 'daily'
-  | '3d'
-  | 'weekly'
-  | 'biweekly'
-  | 'monthly'
-  | 'quarterly'
-  | 'manual'
 
 export const FREQUENCY_LABELS: Record<UpdateFrequency, string> = {
   realtime: '实时',
@@ -58,8 +73,6 @@ export const FREQUENCY_MINUTES: Record<UpdateFrequency, number> = {
 // 数据源类型
 // ============================================================
 
-export type DataSourceType = 'akshare' | 'ifind' | 'yahoo' | 'tianyancha' | 'scholar' | 'cache'
-
 export const DATA_SOURCE_LABELS: Record<DataSourceType, string> = {
   akshare: 'AKShare',
   ifind: 'iFinD',
@@ -73,8 +86,6 @@ export const DATA_SOURCE_LABELS: Record<DataSourceType, string> = {
 // 存储策略
 // ============================================================
 
-export type StorageType = 'full' | 'lightweight'
-
 export const STORAGE_TYPE_LABELS: Record<StorageType, string> = {
   full: '全量存储',
   lightweight: '轻量索引',
@@ -84,8 +95,6 @@ export const STORAGE_TYPE_LABELS: Record<StorageType, string> = {
 // 重要性等级
 // ============================================================
 
-export type DimensionImportance = 'critical' | 'high' | 'medium' | 'low'
-
 export const IMPORTANCE_LABELS: Record<DimensionImportance, string> = {
   critical: '核心',
   high: '高',
@@ -94,51 +103,8 @@ export const IMPORTANCE_LABELS: Record<DimensionImportance, string> = {
 }
 
 // ============================================================
-// 单维度配置接口
-// ============================================================
-
-export interface DimensionConfig {
-  /** 维度代码 "01"~"08" */
-  code: string
-  /** 维度名称 */
-  name: string
-  /** 是否启用 */
-  enabled: boolean
-  /** 采集频率 */
-  frequency: UpdateFrequency
-  /** 批量大小 */
-  batchSize: number
-  /** 数据源优先级列表（按序尝试） */
-  sources: DataSourceType[]
-  /** 缓存TTL（分钟） */
-  cacheTtl: number
-  /** 存储策略 */
-  storageType: StorageType
-  /** 采集字段列表 */
-  fields: string[]
-  /** 重要性等级 */
-  importance: DimensionImportance
-}
-
-// ============================================================
 // 策略模板
 // ============================================================
-
-export type StrategyTemplateId = 'value' | 'growth' | 'defense' | 'cycle' | 'full'
-
-export interface StrategyTemplate {
-  id: StrategyTemplateId
-  name: string
-  description: string
-  /** 启用的维度code列表 */
-  dimensions: string[]
-  /** 更新频率 */
-  updateInterval: UpdateFrequency
-  /** 历史数据天数 */
-  historyDays: number
-  /** 数据源 */
-  sources: DataSourceType[]
-}
 
 export const STRATEGY_TEMPLATES: StrategyTemplate[] = [
   {
@@ -189,7 +155,7 @@ export const STRATEGY_TEMPLATES: StrategyTemplate[] = [
 ]
 
 // ============================================================
-// 8个采集维度默认配置
+// 8 个采集维度默认配置
 // ============================================================
 
 export const DEFAULT_DIMENSIONS: DimensionConfig[] = [
@@ -292,7 +258,7 @@ export const DEFAULT_DIMENSIONS: DimensionConfig[] = [
 ]
 
 // ============================================================
-// 维度颜色映射（用于UI标识）
+// 维度颜色映射（用于 UI 标识）
 // ============================================================
 
 export const DIMENSION_COLORS: Record<string, string> = {
@@ -314,6 +280,88 @@ export const IMPORTANCE_BADGE_VARIANT: Record<DimensionImportance, 'default' | '
 }
 
 // ============================================================
+// 字段注册表
+// ============================================================
+
+export const FIELD_REGISTRY: FieldRegistry = {
+  '01': [
+    { id: 'name', name: '名称', description: '股票名称', dimensions: ['01'] },
+    { id: 'industry', name: '行业', description: '所属行业', dimensions: ['01'] },
+    { id: 'marketCap', name: '市值', description: '总市值', dimensions: ['01'] },
+    { id: 'pe', name: 'PE', description: '市盈率', dimensions: ['01'] },
+    { id: 'pb', name: 'PB', description: '市净率', dimensions: ['01'] },
+    { id: 'roe', name: 'ROE', description: '净资产收益率', dimensions: ['01'] },
+  ],
+  '02': [
+    { id: 'open', name: '开盘价', description: '日线开盘价', dimensions: ['02'] },
+    { id: 'close', name: '收盘价', description: '日线收盘价', dimensions: ['02'] },
+    { id: 'high', name: '最高价', description: '日线最高价', dimensions: ['02'] },
+    { id: 'low', name: '最低价', description: '日线最低价', dimensions: ['02'] },
+    { id: 'volume', name: '成交量', description: '日线成交量', dimensions: ['02'] },
+    { id: 'amount', name: '成交额', description: '日线成交额', dimensions: ['02'] },
+    { id: 'ma5', name: 'MA5', description: '5 日均线', dimensions: ['02'] },
+    { id: 'ma20', name: 'MA20', description: '20 日均线', dimensions: ['02'] },
+    { id: 'ma60', name: 'MA60', description: '60 日均线', dimensions: ['02'] },
+  ],
+  '03': [
+    { id: 'chipDistribution', name: '筹码分布', description: '筹码分布数据', dimensions: ['03'] },
+    { id: 'holderCount', name: '股东户数', description: '股东户数', dimensions: ['03'] },
+    { id: 'costDistribution', name: '成本分布', description: '成本分布', dimensions: ['03'] },
+  ],
+  '04': [
+    { id: 'announcements', name: '公告', description: '公司公告', dimensions: ['04'] },
+    { id: 'notices', name: '通知', description: '交易所通知', dimensions: ['04'] },
+    { id: 'reports', name: '报告', description: '定期报告', dimensions: ['04'] },
+  ],
+  '05': [
+    { id: 'title', name: '标题', description: '新闻标题', dimensions: ['05'] },
+    { id: 'summary', name: '摘要', description: '新闻摘要', dimensions: ['05'] },
+    { id: 'source', name: '来源', description: '新闻来源', dimensions: ['05'] },
+    { id: 'url', name: '链接', description: '原文链接', dimensions: ['05'] },
+    { id: 'publishedAt', name: '发布时间', description: '新闻发布时间', dimensions: ['05'] },
+  ],
+  '06': [
+    { id: 'industryRank', name: '行业排名', description: '行业内排名', dimensions: ['06'] },
+    { id: 'competitors', name: '竞品', description: '主要竞争对手', dimensions: ['06'] },
+    { id: 'marketShare', name: '市场份额', description: '市场份额', dimensions: ['06'] },
+  ],
+  '07': [
+    { id: 'indexCode', name: '指数代码', description: '关联指数代码', dimensions: ['07'] },
+    { id: 'etfCode', name: 'ETF 代码', description: '关联 ETF 代码', dimensions: ['07'] },
+    { id: 'correlation', name: '相关性', description: '与指数相关性', dimensions: ['07'] },
+    { id: 'fundFlow', name: '资金流向', description: '板块资金流向', dimensions: ['07'] },
+  ],
+  '08': [
+    { id: 'reportTitle', name: '研报标题', description: '研报标题', dimensions: ['08'] },
+    { id: 'rating', name: '评级', description: '机构评级', dimensions: ['08'] },
+    { id: 'targetPrice', name: '目标价', description: '目标价', dimensions: ['08'] },
+    { id: 'analyst', name: '分析师', description: '分析师', dimensions: ['08'] },
+    { id: 'summary', name: '摘要', description: '研报摘要', dimensions: ['08'] },
+  ],
+}
+
+// ============================================================
+// 默认策略
+// ============================================================
+
+export const DEFAULT_RETRY_POLICY: RetryPolicy = {
+  maxRetries: 2,
+  backoffMultiplier: 2,
+  initialDelayMs: 500,
+}
+
+export const DEFAULT_TIMEOUT_POLICY: TimeoutPolicy = {
+  requestTimeoutMs: 5000,
+  dimensionTimeoutMs: 30000,
+}
+
+export const DEFAULT_FALLBACK_POLICY: FallbackPolicy = {
+  allowFallback: true,
+  allowMockFallback: true,
+  alertFailureRate: 80,
+}
+
+// ============================================================
 // 全局限流参数
 // ============================================================
 
@@ -328,7 +376,7 @@ export const GLOBAL_LIMITS = {
   rateLimitPerHour: 200,
   /** 每天限流 */
   rateLimitPerDay: 2000,
-  /** L1缓存TTL（秒） */
+  /** L1 缓存 TTL（秒） */
   l1CacheTtl: 300,
 } as const
 
@@ -357,3 +405,44 @@ export function estimateMonthlyCalls(dimension: DimensionConfig, symbolCount: nu
 export function estimateTotalMonthlyCalls(dimensions: DimensionConfig[], symbolCount: number): number {
   return dimensions.reduce((total, dim) => total + estimateMonthlyCalls(dim, symbolCount), 0)
 }
+
+// ============================================================
+// 数据源连通性测试端点（配置层，供 ApiTestDialog 消费）
+// ============================================================
+
+export interface TestApiEndpoint {
+  id: string
+  name: string
+  testApi: string
+}
+
+export const TEST_API_ENDPOINTS: TestApiEndpoint[] = [
+  { id: 'akshare', name: 'AKShare', testApi: '/api/test/akshare' },
+  { id: 'ifind', name: 'iFinD', testApi: '/api/test/ifind' },
+  { id: 'yahoo', name: 'Yahoo', testApi: '/api/test/yahoo' },
+  { id: 'tianyancha', name: '天眼查', testApi: '/api/test/tianyancha' },
+  { id: 'scholar', name: '学术', testApi: '/api/test/scholar' },
+]
+
+// ============================================================
+// 维度接口映射（配置层，供 CollectionPlanPanel 消费）
+// ============================================================
+
+export interface DimensionApiMapping {
+  code: string
+  name: string
+  api: string
+  method: string
+  cache: string
+}
+
+export const DIMENSION_API_MAPPING: DimensionApiMapping[] = [
+  { code: '01', name: '基本信息', api: '/api/stock/basic', method: 'GET', cache: '43200s' },
+  { code: '02', name: 'K线数据', api: '/api/stock/kline', method: 'GET', cache: '1440s' },
+  { code: '03', name: '筹码分布', api: '/api/stock/chip', method: 'GET', cache: '4320s' },
+  { code: '04', name: '重大事项', api: '/api/stock/news', method: 'GET', cache: '1440s' },
+  { code: '05', name: '热点新闻', api: '/api/news/hot', method: 'GET', cache: '720s' },
+  { code: '06', name: '行业竞品', api: '/api/industry/competitors', method: 'GET', cache: '10080s' },
+  { code: '07', name: '关联指数', api: '/api/index/correlation', method: 'GET', cache: '10080s' },
+  { code: '08', name: '研报中心', api: '/api/research/reports', method: 'GET', cache: '1440s' },
+]

@@ -100,7 +100,7 @@ describe('MCPServerDashboardPage', () => {
   // ──────────────────────────────────────────────────────────────
   // 原有:基础渲染
   // ──────────────────────────────────────────────────────────────
-  it('should render without crashing', () => {
+  it('应该渲染 without crashing', () => {
     const { container } = renderPage()
     expect(container).toBeTruthy()
     expect(container.innerHTML).toBeTruthy()

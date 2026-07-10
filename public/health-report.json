@@ -1,0 +1,67 @@
+{
+  "generatedAt": "2026-07-10T12:53:46.961Z",
+  "agentsVersion": "v1.4.3",
+  "overallScore": 90,
+  "metrics": [
+    {
+      "name": "layers",
+      "label": "跨层调用违规",
+      "value": 0,
+      "unit": "处",
+      "status": "healthy",
+      "detail": "audit:layers"
+    },
+    {
+      "name": "tokens",
+      "label": "颜色硬编码",
+      "value": 0,
+      "unit": "处",
+      "status": "healthy",
+      "detail": "audit:tokens"
+    },
+    {
+      "name": "deepNesting",
+      "label": "深层嵌套（≥4 层）",
+      "value": 104,
+      "baseline": 104,
+      "unit": "处",
+      "status": "warning",
+      "detail": "audit:complexity"
+    },
+    {
+      "name": "longChain",
+      "label": "长链式条件（≥6 分支）",
+      "value": 0,
+      "baseline": 0,
+      "unit": "处",
+      "status": "warning",
+      "detail": "audit:complexity"
+    },
+    {
+      "name": "duplicateConditions",
+      "label": "重复 if 条件",
+      "value": 39,
+      "baseline": 39,
+      "unit": "处",
+      "status": "warning",
+      "detail": "audit:complexity"
+    },
+    {
+      "name": "jsdoc",
+      "label": "JSDoc 缺失",
+      "value": 628,
+      "baseline": 628,
+      "unit": "处",
+      "status": "warning",
+      "detail": "audit:jsdoc"
+    },
+    {
+      "name": "docs",
+      "label": "文档同步违规",
+      "value": 0,
+      "unit": "处",
+      "status": "healthy",
+      "detail": "audit:docs"
+    }
+  ]
+}

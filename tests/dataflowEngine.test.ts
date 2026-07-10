@@ -31,7 +31,7 @@ describe('DataFlowEngine SSE reconnect (DF-006)', () => {
     mockInstances.length = 0
   })
 
-  it('should schedule a reconnect with exponential backoff on SSE error', () => {
+  it('应该schedule a reconnect with exponential backoff on SSE error', () => {
     engine.connect('http://localhost/sse')
     const es = mockInstances[0]!
     expect(es).toBeDefined()

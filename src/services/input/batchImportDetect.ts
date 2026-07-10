@@ -84,16 +84,20 @@ export function detectDuplicates(
  * 下载 CSV 导入模板（含表头与示例数据）
  *
  * 使用 Blob + URL.createObjectURL 触发浏览器下载，附带 BOM 以兼容 Excel。
+ * 支持两种格式：
+ * - 序号,股票代码,股票简称（如：1,600519.SH,贵州茅台）
+ * - 代码,名称（如：600519,贵州茅台）
  */
 export function downloadTemplate(): void {
   logger.info('[batchImport] 下载导入模板')
   try {
     const header = INPUT_CONFIG.bulkImport.templateHeader.join(',')
     const examples = INPUT_CONFIG.bulkImport.templateExamples
-      .map((e) => `${e.code},${e.name}`)
+      .map((e, idx) => `${idx + 1},${e.code},${e.name}`)
       .join('\n')
-    // BOM 头确保 Excel 正确识别 UTF-8 中文
     const content = `${String.fromCharCode(BOM_CHAR_CODE)}${header}\n${examples}\n`
+
+    logger.debug('[batchImport] 生成模板内容', { header, exampleCount: INPUT_CONFIG.bulkImport.templateExamples.length })
 
     const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' })
     const url = URL.createObjectURL(blob)
@@ -104,6 +108,8 @@ export function downloadTemplate(): void {
     link.click()
     document.body.removeChild(link)
     URL.revokeObjectURL(url)
+
+    logger.info('[batchImport] 模板下载成功', { fileName: INPUT_CONFIG.bulkImport.templateFileName, size: blob.size })
   } catch (err) {
     logger.error('[batchImport] 模板下载失败', {
       error: err instanceof Error ? err.message : String(err),

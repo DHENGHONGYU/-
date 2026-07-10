@@ -4,14 +4,14 @@ import { PortfolioServer } from '@/mcp/servers/portfolio/portfolioServer'
 describe('PortfolioServer', () => {
   const server = new PortfolioServer()
 
-  it('should have correct server info', () => {
+  it('应该有 correct server info', () => {
     expect(server.info.name).toBe('portfolio')
     expect(server.info.version).toBe('1.0.0')
     expect(server.info.description).toBeTruthy()
     expect(server.info.dependencies).toContain('scoring:v6')
   })
 
-  it('should register at least 3 tools', () => {
+  it('应该register at least 3 tools', () => {
     const tools = server.listTools()
     expect(tools.length).toBeGreaterThanOrEqual(3)
     for (const tool of tools) {
@@ -22,22 +22,22 @@ describe('PortfolioServer', () => {
     }
   })
 
-  it('should have add_holding tool', () => {
+  it('应该有 add_holding tool', () => {
     const tool = server.listTools().find((t) => t.name === 'add_holding')
     expect(tool).toBeDefined()
   })
 
-  it('should have remove_holding tool', () => {
+  it('应该有 remove_holding tool', () => {
     const tool = server.listTools().find((t) => t.name === 'remove_holding')
     expect(tool).toBeDefined()
   })
 
-  it('should have list_by_theme tool', () => {
+  it('应该有 list_by_theme tool', () => {
     const tool = server.listTools().find((t) => t.name === 'list_by_theme')
     expect(tool).toBeDefined()
   })
 
-  it('should register at least 1 resource', () => {
+  it('应该register at least 1 resource', () => {
     const resources = server.listResources()
     expect(resources.length).toBeGreaterThanOrEqual(1)
     for (const resource of resources) {
@@ -46,7 +46,7 @@ describe('PortfolioServer', () => {
     }
   })
 
-  it('should register at least 1 prompt', () => {
+  it('应该register at least 1 prompt', () => {
     const prompts = server.listPrompts()
     expect(prompts.length).toBeGreaterThanOrEqual(1)
   })

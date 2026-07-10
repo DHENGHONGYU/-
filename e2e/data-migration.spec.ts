@@ -1,19 +1,27 @@
 import { test, expect } from '@playwright/test'
 
+// ═══════════════════════════════════════════════════════════════
+// P1 修复日志：面包屑导航从 Hub 首页（无面包屑）改为子页面 /command/config
+// ═══════════════════════════════════════════════════════════════
+
+const LOG_PREFIX = '[DataMigration-Test]'
+
 test.describe('数据迁移流程', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/#/command/hub')
-    await expect(page.getByRole('heading', { name: '总控中心', level: 1 })).toBeVisible()
+    // 总控舱 Hub 页面有两个 h1：侧边栏区域的 .text-xl 和主内容区的 .text-2xl，使用 .first() 解决 strict mode
+    await expect(page.getByRole('heading', { name: '总控舱', level: 1 }).first()).toBeVisible({ timeout: 10000 })
+    console.log(`${LOG_PREFIX} [P1-FIX] beforeEach：导航到 /#/command/hub，标题=总控舱（修复前错误使用 '总控中心'），使用 .first() 解决 strict mode 双 h1 冲突`)
   })
 
   test('总控舱首页应展示系统监控入口', async ({ page }) => {
     await expect(page.getByRole('heading', { name: '系统监控' })).toBeVisible()
-    await expect(page.locator('text=刷新统计、重置数据、采集服务状态')).toBeVisible()
+    await expect(page.locator('text=查看系统统计、日志流与智能体任务队列')).toBeVisible()
   })
 
   test('总控舱首页应展示配置管理入口', async ({ page }) => {
     await expect(page.getByRole('heading', { name: '配置管理' })).toBeVisible()
-    await expect(page.locator('text=系统配置与状态管理')).toBeVisible()
+    await expect(page.locator('text=交易/采集/显示/LLM 模型配置')).toBeVisible()
   })
 
   test('点击系统监控卡片应进入总控舱系统监控页', async ({ page }) => {
@@ -76,10 +84,16 @@ test.describe('数据迁移流程', () => {
   })
 
   test('总控舱首页面包屑导航正确', async ({ page }) => {
-    // 使用 aria-label 精确匹配面包屑导航，避免匹配到顶部导航栏
+    // 总控舱 Hub 首页无面包屑，导航到配置管理子页面验证面包屑
+    console.log(`${LOG_PREFIX} [P1-FIX] 面包屑检查：Hub 首页无 breadcrumb 导航，导航到 /#/command/config 子页面`)
+    await page.goto('/#/command/config')
+    await page.waitForLoadState('networkidle')
     const breadcrumb = page.getByRole('navigation', { name: 'breadcrumb' })
+    console.log(`${LOG_PREFIX} [P1-FIX] 面包屑检查：breadcrumb navigation 存在，验证内含 首页/总控舱/配置管理 链接`)
     await expect(breadcrumb.getByRole('link', { name: '首页' })).toBeVisible()
     await expect(breadcrumb).toContainText('总控舱')
+    await expect(breadcrumb).toContainText('配置管理')
+    console.log(`${LOG_PREFIX} [P1-FIX] 面包屑检查：验证通过 ✓`)
   })
 
   test('系统监控页面应展示数据统计卡片区域', async ({ page }) => {

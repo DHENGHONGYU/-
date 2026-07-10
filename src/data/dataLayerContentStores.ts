@@ -1,7 +1,7 @@
 /**
  * @fileoverview 内容/日志类 Store
  *
- * 从 dataLayer.ts 拆分而来，包含 7 个内容域 Store：
+ * 从 dataLayer.ts 拆分而来，包含 8 个内容域 Store：
  * - researchLogStore: 研究日志 list
  * - strategySnapshotStore: 策略快照 save/get/list/getLatest
  * - localDocStore: 本地文档 save/get/list/listBySymbol
@@ -9,6 +9,7 @@
  * - newsStockMapStore: 新闻-股票映射 save/listBySymbol/listByNews
  * - sentimentCacheStore: 情绪缓存 save/get/getByContentHash
  * - missingReportStore: 缺失报告 report/list/listBySymbol/listBySeverity/incrementRetry
+ * - customAgentStore: 用户自定义智能体 list/get/save/delete（v26 新增，阶段 B-1）
  */
 import { STORE_NAME } from '@/config/dbConfig'
 import { now } from './db'
@@ -21,6 +22,7 @@ import type {
   ResearchLog,
   SentimentCache,
   StrategySnapshot,
+  CustomAgent,
 } from './types'
 import { sendWriteEnvelope, queryGet, queryList, queryByIndex } from './dataLayerHelpers'
 import { nanoid } from 'nanoid'
@@ -146,5 +148,30 @@ export const missingReportStore = {
       return { success: false, error: result.error }
     }
     return { success: true, data: updated }
+  },
+}
+
+// ── 阶段 B-1：customAgentStore（用户自定义智能体） ─────────────
+export const customAgentStore = {
+  async list(): Promise<CustomAgent[]> {
+    return queryList<CustomAgent>(STORE_NAME.customAgents)
+  },
+  async listByType(type: string): Promise<CustomAgent[]> {
+    return queryByIndex<CustomAgent>(STORE_NAME.customAgents, 'by-type', type)
+  },
+  async get(id: string): Promise<CustomAgent | undefined> {
+    return queryGet<CustomAgent>(STORE_NAME.customAgents, id)
+  },
+  async save(agent: Omit<CustomAgent, 'createdAt' | 'updatedAt'> & { createdAt?: number }): Promise<DataLayerResult<CustomAgent>> {
+    const existing = await queryGet<CustomAgent>(STORE_NAME.customAgents, agent.id)
+    const full: CustomAgent = {
+      ...agent,
+      createdAt: existing?.createdAt ?? agent.createdAt ?? now(),
+      updatedAt: now(),
+    }
+    return sendWriteEnvelope<CustomAgent>('saveCustomAgent', full, 'user')
+  },
+  async remove(id: string): Promise<DataLayerResult<void>> {
+    return sendWriteEnvelope<void>('deleteCustomAgent', { id }, 'user')
   },
 }

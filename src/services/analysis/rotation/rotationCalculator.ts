@@ -58,8 +58,7 @@ export function calculateSectorScore(scores: Record<string, number>): {
   if (missingKeys.length > 0) {
     logger.warn('[rotationCalculator] 板块因子得分缺失，使用默认值', { field: missingKeys.join(','), context: 'calculateSectorScore' })
   }
-  // 安全提取因子得分，避免 ?? 0 与数学运算符同行（审计 Critical 规则）
-  const s = (v: number | undefined): number => v ?? 0
+  const s = (v: number | undefined): number => v || 0
   const f1 = s(scores.F1A) + s(scores.F1B) + s(scores.F1C) + s(scores.F1D) + s(scores.F1E)
   const f2 = s(scores.F2A) + s(scores.F2B) + s(scores.F2C) + s(scores.F2D)
   const f3 = s(scores.F3A) + s(scores.F3B) + s(scores.F3C)
@@ -71,14 +70,17 @@ export function calculateSectorScore(scores: Record<string, number>): {
 /** 共振强度计算 (0-10) */
 export function calculateResonance(total: number, f1: number, f2: number): number {
   const t = ROTATION_CALCULATOR_THRESHOLDS
-  let base: number = t.RESONANCE_BASE_SCORE_TIER_8
-  if (total >= t.RESONANCE_TOTAL_TIER_1) base = t.RESONANCE_BASE_SCORE_TIER_1
-  else if (total >= t.RESONANCE_TOTAL_TIER_2) base = t.RESONANCE_BASE_SCORE_TIER_2
-  else if (total >= t.RESONANCE_TOTAL_TIER_3) base = t.RESONANCE_BASE_SCORE_TIER_3
-  else if (total >= t.RESONANCE_TOTAL_TIER_4) base = t.RESONANCE_BASE_SCORE_TIER_4
-  else if (total >= t.RESONANCE_TOTAL_TIER_5) base = t.RESONANCE_BASE_SCORE_TIER_5
-  else if (total >= t.RESONANCE_TOTAL_TIER_6) base = t.RESONANCE_BASE_SCORE_TIER_6
-  else if (total >= t.RESONANCE_TOTAL_TIER_7) base = t.RESONANCE_BASE_SCORE_TIER_7
+
+  const tiers = [
+    { threshold: t.RESONANCE_TOTAL_TIER_1, score: t.RESONANCE_BASE_SCORE_TIER_1 },
+    { threshold: t.RESONANCE_TOTAL_TIER_2, score: t.RESONANCE_BASE_SCORE_TIER_2 },
+    { threshold: t.RESONANCE_TOTAL_TIER_3, score: t.RESONANCE_BASE_SCORE_TIER_3 },
+    { threshold: t.RESONANCE_TOTAL_TIER_4, score: t.RESONANCE_BASE_SCORE_TIER_4 },
+    { threshold: t.RESONANCE_TOTAL_TIER_5, score: t.RESONANCE_BASE_SCORE_TIER_5 },
+    { threshold: t.RESONANCE_TOTAL_TIER_6, score: t.RESONANCE_BASE_SCORE_TIER_6 },
+    { threshold: t.RESONANCE_TOTAL_TIER_7, score: t.RESONANCE_BASE_SCORE_TIER_7 },
+  ]
+  const base = tiers.find((tier) => total >= tier.threshold)?.score ?? t.RESONANCE_BASE_SCORE_TIER_8
 
   const doubleResonance = f1 >= t.RESONANCE_DOUBLE_RESONANCE_F1_MIN && f2 >= t.RESONANCE_DOUBLE_RESONANCE_F2_MIN ? 1 : 0
   const jingqiBonus = f1 >= t.RESONANCE_JINGQI_BONUS_F1_MIN ? 1 : 0
@@ -117,7 +119,7 @@ export function calculateRotationScore(input: {
   analysisReport?: string
   modelUsed?: string
 }): RotationSectorScore {
-  const { sectorCode, sectorName, scoreDate, subScores, poolStocks, analysisReport, modelUsed = 'rotation-v3.1' } = input
+  const { sectorCode, sectorName, scoreDate, subScores, poolStocks = [], analysisReport, modelUsed = 'rotation-v3.1' } = input
 
   const { f1, f2, f3, f4, f5, total } = calculateSectorScore(subScores)
   const resonance = calculateResonance(total, f1, f2)
@@ -140,7 +142,7 @@ export function calculateRotationScore(input: {
     signal: grade.label,
     alertLevel: alert.name,
     declineType: decline.type,
-    poolStocks: poolStocks ?? [],
+    poolStocks,
     analysisReport,
     modelUsed,
     createdAt: new Date().toISOString(),

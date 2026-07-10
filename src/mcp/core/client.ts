@@ -17,6 +17,7 @@
 import { getLogger } from '@/lib/logger'
 import type {
   MCPClient,
+  MCPServer,
   ToolDescriptor,
   ToolResult,
   ResourceTemplate,
@@ -132,45 +133,49 @@ export class MCPClientImpl implements MCPClient {
 
   async readResource(uri: string, context?: McpCallerContext): Promise<ResourceContent> {
     const caller = resolveCaller(context?.caller)
-    const servers = this.registry.listServers()
+    const match = this.findResourceMatch(uri)
 
-    for (const entry of servers) {
-      if (entry.options.enabled === false) continue
-      const resources = entry.server.listResources()
-      for (const resource of resources) {
-        const regex = this.uriTemplateToRegex(resource.uriTemplate)
-        if (regex.test(uri)) {
-          // ── ACL 权限拦截（主拦截点） ──
-          const aclResult = mcpAclInterceptor.check({
-            caller,
-            serverName: entry.server.info.name,
-            resourceName: `readResource:${resource.name}`,
-          })
-
-          if (!aclResult.allowed) {
-            logger.warn(
-              `[MCPClient] readResource() ACL denied: caller="${caller}", uri="${uri}"`,
-            )
-            return {
-              uri,
-              mimeType: 'text/plain',
-              text: `ACL_PERMISSION_DENIED: ${aclResult.reason}`,
-            }
-          }
-
-          logger.info(`[MCPClient] readResource() ${uri} → ${entry.server.info.name}`, { caller })
-          // 透传 context 给 Server 基类（深度防御）
-          return await entry.server.readResource(uri, context)
-        }
+    if (!match) {
+      logger.error(`[MCPClient] readResource() no server matches: ${uri}`)
+      return {
+        uri,
+        mimeType: 'text/plain',
+        text: `No server matches resource URI: ${uri}`,
       }
     }
 
-    logger.error(`[MCPClient] readResource() no server matches: ${uri}`)
-    return {
-      uri,
-      mimeType: 'text/plain',
-      text: `No server matches resource URI: ${uri}`,
+    const { server, resource } = match
+    const aclResult = mcpAclInterceptor.check({
+      caller,
+      serverName: server.info.name,
+      resourceName: `readResource:${resource.name}`,
+    })
+
+    if (!aclResult.allowed) {
+      logger.warn(
+        `[MCPClient] readResource() ACL denied: caller="${caller}", uri="${uri}"`,
+      )
+      return {
+        uri,
+        mimeType: 'text/plain',
+        text: `ACL_PERMISSION_DENIED: ${aclResult.reason}`,
+      }
     }
+
+    logger.info(`[MCPClient] readResource() ${uri} → ${server.info.name}`, { caller })
+    return await server.readResource(uri, context)
+  }
+
+  private findResourceMatch(uri: string): { server: MCPServer; resource: ResourceTemplate } | null {
+    for (const entry of this.registry.listServers()) {
+      if (entry.options.enabled === false) continue
+      for (const resource of entry.server.listResources()) {
+        if (this.uriTemplateToRegex(resource.uriTemplate).test(uri)) {
+          return { server: entry.server, resource }
+        }
+      }
+    }
+    return null
   }
 
   // ============================================================

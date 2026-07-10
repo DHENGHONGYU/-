@@ -16,7 +16,7 @@ function createMockEnvelope(action: EnvelopeAction = ENVELOPE_ACTION.insertStock
 }
 
 describe('DataBridge priority broadcast', () => {
-  it('should broadcast to all subscribers', () => {
+  it('应该broadcast to all subscribers', () => {
     const db = new DataBridge()
     const order: string[] = []
     const mockEnvelope = createMockEnvelope()
@@ -29,7 +29,7 @@ describe('DataBridge priority broadcast', () => {
     expect(order).toEqual(['first', 'second'])
   })
 
-  it('should maintain registration order', () => {
+  it('应该maintain registration order', () => {
     const db = new DataBridge()
     const order: string[] = []
     const mockEnvelope = createMockEnvelope()
@@ -43,7 +43,7 @@ describe('DataBridge priority broadcast', () => {
     expect(order).toEqual(['first', 'second', 'third'])
   })
 
-  it('should unsubscribe correctly and not execute unsubscribed callback', () => {
+  it('应该取消订阅 correctly and not execute unsubscribed callback', () => {
     const db = new DataBridge()
     const order: string[] = []
     const mockEnvelope = createMockEnvelope()
@@ -58,7 +58,7 @@ describe('DataBridge priority broadcast', () => {
     expect(order).toEqual(['remaining'])
   })
 
-  it('should handle empty subscriber list gracefully', () => {
+  it('应该处理空值 subscriber list gracefully', () => {
     const db = new DataBridge()
     const mockEnvelope = createMockEnvelope()
 
@@ -66,7 +66,7 @@ describe('DataBridge priority broadcast', () => {
     expect(() => db.broadcast('nonexistent-channel', mockEnvelope)).not.toThrow()
   })
 
-  it('should continue broadcasting when a subscriber throws', () => {
+  it('应该continue broadcasting when a subscriber throws', () => {
     const db = new DataBridge()
     const order: string[] = []
     const mockEnvelope = createMockEnvelope()
@@ -85,7 +85,7 @@ describe('DataBridge priority broadcast', () => {
     expect(order).toEqual(['error', 'after-error'])
   })
 
-  it('should return correct subscriber count after subscribe/unsubscribe', () => {
+  it('应该返回 correct subscriber count after subscribe/unsubscribe', () => {
     const db = new DataBridge()
     const cb1 = () => {}
     const cb2 = () => {}

@@ -8,6 +8,7 @@ import { MCPServerBase } from '@/mcp/core/server'
 import type { ServerInfo, ToolDescriptor, ResourceTemplate } from '@/mcp/core/types'
 import { getLogger } from '@/lib/logger'
 import { loadSystemStats, resetAll, exportAll } from '@/services/system/systemService'
+import { fetchHealthReport } from '@/services/system/healthDashboardService'
 import {
   parseV6Export,
   transformV6ToV9,
@@ -83,7 +84,7 @@ export class SystemServer extends MCPServerBase {
         handler: async (args) => {
           logger.info('[SystemServer] parse_v6_export called')
           try {
-            const v6 = parseV6Export(args.json)
+            const v6 = parseV6Export(args.json as never)
             return { content: [{ type: 'text', text: JSON.stringify(v6) }] }
           } catch (err) {
             return {
@@ -186,6 +187,23 @@ export class SystemServer extends MCPServerBase {
           try {
             const report = generateMigrationReport(args.migrationReport as never)
             return { content: [{ type: 'text', text: report }] }
+          } catch (err) {
+            return {
+              content: [{ type: 'text', text: err instanceof Error ? err.message : String(err) }],
+              isError: true,
+            }
+          }
+        },
+      },
+      {
+        name: 'fetch_health_report',
+        description: '获取架构健康度报告（public/health-report.json）',
+        inputSchema: { type: 'object', properties: {} },
+        handler: async () => {
+          logger.info('[SystemServer] fetch_health_report called')
+          try {
+            const report = await fetchHealthReport()
+            return { content: [{ type: 'text', text: JSON.stringify(report) }] }
           } catch (err) {
             return {
               content: [{ type: 'text', text: err instanceof Error ? err.message : String(err) }],

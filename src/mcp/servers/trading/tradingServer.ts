@@ -23,6 +23,7 @@ import { getLatestSnapshot } from '@/services/trading/strategySnapshotService'
 import { generateReview } from '@/services/trading/tradeReviewAI'
 import { checkOrderRisk } from '@/services/trading/riskEngine'
 import { calculatePosition } from '@/services/trading/positionSizer'
+import { generateMockTradingData } from '@/services/trading/mockDataGenerator'
 
 const logger = getLogger()
 
@@ -40,6 +41,18 @@ export class TradingServer extends MCPServerBase {
 
   protected getTools(): ToolDescriptor[] {
     return [
+      {
+        name: 'generate_mock_trading_data',
+        description: '生成完整的模拟交易数据（信号、订单、持仓、风控指标）',
+        inputSchema: { type: 'object', properties: {} },
+        handler: async () => {
+          logger.info('[trading] generate_mock_trading_data')
+          const data = generateMockTradingData()
+          return {
+            content: [{ type: 'text', text: JSON.stringify(data, null, 2) }],
+          }
+        },
+      },
       {
         name: 'scan_signals',
         description: '扫描自选股交易信号（MA20/RSI14/MACD/量比），返回所有触发信号',

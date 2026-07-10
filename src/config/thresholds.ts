@@ -10,7 +10,7 @@
  */
 
 import { getDefaultScreeningConfig, type ScreeningThresholds } from './screeningConfig'
-import { getDefaultTradingConfig, type SignalThresholds, type KellyConfig, type RiskConfig } from './tradingConfig'
+import { getEffectiveTradingConfig, type SignalThresholds, type KellyConfig, type RiskConfig } from './tradingConfig'
 import { VALUE_PIT_THRESHOLDS, type ValuePitThresholds } from './valuePitThresholds'
 
 /**
@@ -94,7 +94,7 @@ export interface UnifiedThresholds {
  */
 export function getDefaultThresholds(): UnifiedThresholds {
   const screeningConfig = getDefaultScreeningConfig()
-  const tradingConfig = getDefaultTradingConfig()
+  const tradingConfig = getEffectiveTradingConfig()
 
   return {
     version: '1.0.0',

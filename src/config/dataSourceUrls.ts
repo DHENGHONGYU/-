@@ -27,17 +27,23 @@ export const TUSHARE_API = 'http://api.tushare.pro'
 export const MOCK_NEWS_URL_PREFIX = 'https://mock.news'
 
 // ============================================================
-// Mock / Demo 数据源基地址（用于 FetcherConfigPage 展示）
+// 数据源基地址（用于 FetcherConfigPage 展示与默认 baseURL）
+//
+// v1.1.0（阶段 A-2）说明：
+// - 历史上 `MOCK_*_BASE_URL` 用作 "MOCK 占位"，但实际值就是真实金融数据源地址。
+// - FetcherConfigPage 用它们作为「数据源列表」的展示项。
+// - 运行时真实请求走 `getDefaultFetcherServiceConfig().baseURL`（fetcherConfig）。
+// - 两者需在 UI 上标注区别（"展示地址" vs "实际请求地址"），避免误以为已配置。
 // ============================================================
 
-/** 腾讯财经 Mock 数据源基地址 */
+/** 腾讯财经数据源基地址（用于 FetcherConfigPage 展示） */
 export const MOCK_TENCENT_BASE_URL = 'https://proxy.finance.qq.com'
 
-/** 新浪财经 Mock 数据源基地址 */
+/** 新浪财经数据源基地址（用于 FetcherConfigPage 展示） */
 export const MOCK_SINA_BASE_URL = 'https://hq.sinajs.cn'
 
-/** 网易财经 Mock 数据源基地址 */
+/** 网易财经数据源基地址（用于 FetcherConfigPage 展示） */
 export const MOCK_NETEASE_BASE_URL = 'https://api.money.126.net'
 
-/** AKShare 本地服务基地址 */
+/** AKShare 本地服务基地址（用于 FetcherConfigPage 展示；运行时取 fetcherConfig.service.baseURL） */
 export const MOCK_AKSHARE_BASE_URL = 'http://localhost:8000'

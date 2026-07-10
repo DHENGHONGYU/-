@@ -83,8 +83,9 @@ function normalizeSource(v6Source?: string): DataSource {
   if (v6Source === 'AI推荐' || v6Source === '策略信号' || v6Source === '手动添加') {
     return DATA_SOURCE.manual
   }
+  if (!v6Source) return DATA_SOURCE.manual
   const validSources = Object.values(DATA_SOURCE) as string[]
-  return validSources.includes(v6Source ?? '') ? (v6Source as DataSource) : DATA_SOURCE.manual
+  return validSources.includes(v6Source) ? (v6Source as DataSource) : DATA_SOURCE.manual
 }
 
 function normalizeResearchStatus(isFavorite?: boolean): ResearchStatus {
@@ -187,12 +188,12 @@ export function transformV6DailyQuotes(v6Quotes: V6DailyQuote[]): DailyQuotes[] 
     const history: KlineBar[] = sorted
       .map((q) => ({
         date: q.tradeDate,
-        open: safeNumber(q.open) ?? 0,
-        high: safeNumber(q.high) ?? 0,
-        low: safeNumber(q.low) ?? 0,
-        close: safeNumber(q.price) ?? 0,
-        volume: safeNumber(q.volume) ?? 0,
-        amount: safeNumber(q.amount) ?? 0,
+        open: safeNumber(q.open) || 0,
+        high: safeNumber(q.high) || 0,
+        low: safeNumber(q.low) || 0,
+        close: safeNumber(q.price) || 0,
+        volume: safeNumber(q.volume) || 0,
+        amount: safeNumber(q.amount) || 0,
       }))
       .filter((bar) => bar.date)
 
@@ -200,13 +201,13 @@ export function transformV6DailyQuotes(v6Quotes: V6DailyQuote[]): DailyQuotes[] 
     if (!latest) continue
 
     const updatedAt = Math.max(
-      ...sorted.map((q) => parseTimestamp(q.updatedAt) ?? 0),
+      ...sorted.map((q) => parseTimestamp(q.updatedAt) || 0),
       (() => {
         const ts = parseTimestamp(sorted[sorted.length - 1]?.tradeDate)
         if (ts == null) {
           logger.warn('[migrationTransformers] 字段缺失，使用默认值', { field: 'tradeDate', context: `symbol=${symbol}` })
         }
-        return ts ?? 0
+        return ts || 0
       })(),
     )
 

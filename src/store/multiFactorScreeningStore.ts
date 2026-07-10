@@ -207,8 +207,8 @@ export const useMultiFactorScreeningStore = create<MultiFactorScreeningState>((s
 
   loadSavedTemplates: () => {
     try {
-      const raw = storage.get<ScreeningTemplate[]>(MULTI_FACTOR_SCREENING_STORAGE_KEY)
-      set({ templates: raw ?? [] })
+      const raw = storage.get<ScreeningTemplate[]>(MULTI_FACTOR_SCREENING_STORAGE_KEY) ?? []
+      set({ templates: raw })
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
       logger.error('[multiFactorScreeningStore] 读取模板失败', { error: message })

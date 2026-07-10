@@ -9,6 +9,7 @@ import { RouteGuard } from '@/core/routeGuard'
 import { initializeApp } from '@/services/system/bootstrapService'
 import { getLogger } from '@/lib/logger'
 import { ThemeProvider } from '@/core/ThemeProvider'
+import { useRuntimeTradingConfigStore } from '@/store/runtimeTradingConfigStore'
 // 显式 import 智能体系统入口，触发 initAgentSystem() 自动初始化
 // （src/agents/index.ts 在模块加载时通过 setTimeout 延迟 100ms 调用 initAgentSystem）
 import '@/agents'
@@ -36,6 +37,8 @@ function AppContent(): React.JSX.Element {
         duration: 0,
       })
     })
+    // 阶段 A-1：从 ConfigApp 写入的 localStorage 还原交易配置覆盖
+    useRuntimeTradingConfigStore.getState().hydrateFromConfigApp()
   }, [toast])
 
   return (
@@ -70,8 +73,10 @@ function NotFoundPage(): React.JSX.Element {
 }
 
 export default function App(): React.JSX.Element {
+  // P1 暗色优先：交易/投研类数据产品默认暗色更护眼、对比更佳；
+  // 用户若曾切换并持久化（localStorage v9-theme），则尊重其选择。
   return (
-    <ThemeProvider defaultMode="system">
+    <ThemeProvider defaultMode="dark">
       <HashRouter>
         <ErrorBoundary>
           <ToastProvider>

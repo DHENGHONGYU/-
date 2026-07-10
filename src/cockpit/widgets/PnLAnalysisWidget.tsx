@@ -1,11 +1,12 @@
 import React, { memo, useEffect, useMemo } from 'react'
 import { TrendingUp, BarChart3, Calendar } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
+import { Skeleton } from '@/components/ui/states'
 import type { WidgetConfig } from '@/types/modules/widget.types'
 import { getLogger } from '@/lib/logger'
 import { useOrderStore, initOrderStoreSubscriptions } from '@/store/orderStore'
 import { COLOR_TOKENS, COLOR_SHADES, twText } from '@/constants/theme.tokens'
+import { WidgetStateShell } from './components/WidgetStateShell'
 
 const logger = getLogger()
 
@@ -14,7 +15,7 @@ interface PnLAnalysisWidgetProps {
 }
 
 const PnLAnalysisWidget = memo(function PnLAnalysisWidget({ config }: PnLAnalysisWidgetProps): React.JSX.Element {
-  const { orders, tradePairs, pnlSummary, loading, error } = useOrderStore()
+  const { orders, tradePairs, pnlSummary, loading, error, refresh } = useOrderStore()
 
   useEffect(() => {
     let cancelled = false
@@ -45,70 +46,36 @@ const PnLAnalysisWidget = memo(function PnLAnalysisWidget({ config }: PnLAnalysi
     [dailyCurveSlice],
   )
 
-  if (error) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">{config.title}</CardTitle>
-        </CardHeader>
-        <CardContent className={`text-center ${COLOR_TOKENS.danger.tailwind}`}>
-          <p>{error}</p>
-        </CardContent>
-      </Card>
-    )
-  }
-
-  if (loading) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">{config.title}</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-3 gap-3">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className={`h-16 ${COLOR_SHADES.gray[200]} rounded animate-pulse`} />
-            ))}
-          </div>
-          <div className={`h-32 ${COLOR_SHADES.gray[200]} rounded animate-pulse`} />
-        </CardContent>
-      </Card>
-    )
-  }
-
-  if (orders.length === 0 || tradePairs.length === 0) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">{config.title}</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col items-center justify-center py-10 text-center">
-          <BarChart3 className="h-10 w-10 text-muted-foreground/30 mb-3" />
-          <p className="text-sm font-medium text-muted-foreground">暂无盈亏数据</p>
-          <p className="text-xs text-muted-foreground/60 mt-1 max-w-[200px]">
-            完成交易后将自动生成盈亏分析与收益曲线
-          </p>
-        </CardContent>
-      </Card>
-    )
-  }
-
-  const data = pnlSummary
+  const visualState = error ? 'error' : loading ? 'loading' : orders.length === 0 || tradePairs.length === 0 ? 'empty' : 'ready'
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <CardTitle className="text-base font-semibold">{config.title}</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <WidgetStateShell
+      title={config.title}
+      visualState={visualState}
+      error={error}
+      onRetry={refresh}
+      emptyTitle="暂无盈亏数据"
+      emptyDescription="完成交易后将自动生成盈亏分析与收益曲线"
+      skeleton={(
+        <div className="space-y-4">
+          <div className="grid grid-cols-3 gap-3">
+            {[1, 2, 3].map((i) => (
+              <Skeleton key={i} className="h-16" />
+            ))}
+          </div>
+          <Skeleton className="h-32" />
+        </div>
+      )}
+    >
+      <div className="space-y-4">
         {/* 核心指标 */}
         <div className="grid grid-cols-3 gap-3">
           <div className={`${COLOR_SHADES.gray[50]} rounded-lg p-3 text-center`}>
             <div className="flex justify-center mb-1">
-              <BarChart3 className="h-5 w-5" style={{ color: data.totalRealizedPnl >= 0 ? COLOR_TOKENS.success.hex : COLOR_TOKENS.danger.hex }} />
+              <BarChart3 className="h-5 w-5" style={{ color: pnlSummary.totalRealizedPnl >= 0 ? COLOR_TOKENS.success.hex : COLOR_TOKENS.danger.hex }} />
             </div>
-            <div className="text-xl font-bold" style={{ color: data.totalRealizedPnl >= 0 ? COLOR_TOKENS.success.hex : COLOR_TOKENS.danger.hex }}>
-              {data.totalRealizedPnl >= 0 ? '+' : ''}{data.totalRealizedPnl}%
+            <div className="text-xl font-bold" style={{ color: pnlSummary.totalRealizedPnl >= 0 ? COLOR_TOKENS.success.hex : COLOR_TOKENS.danger.hex }}>
+              {pnlSummary.totalRealizedPnl >= 0 ? '+' : ''}{pnlSummary.totalRealizedPnl}%
             </div>
             <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>总盈亏</div>
           </div>
@@ -116,14 +83,14 @@ const PnLAnalysisWidget = memo(function PnLAnalysisWidget({ config }: PnLAnalysi
             <div className="flex justify-center mb-1">
               <TrendingUp className="h-5 w-5" style={{ color: COLOR_TOKENS.success.hex }} />
             </div>
-            <div className="text-xl font-bold" style={{ color: COLOR_TOKENS.success.hex }}>{data.winRate}%</div>
+            <div className="text-xl font-bold" style={{ color: COLOR_TOKENS.success.hex }}>{pnlSummary.winRate}%</div>
             <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>胜率</div>
           </div>
           <div className={`${COLOR_SHADES.gray[50]} rounded-lg p-3 text-center`}>
             <div className="flex justify-center mb-1">
               <TrendingUp className={`h-5 w-5 ${twText('yellow', 500)}`} />
             </div>
-            <div className={`text-xl font-bold ${twText('yellow', 500)}`}>{data.profitFactor}</div>
+            <div className={`text-xl font-bold ${twText('yellow', 500)}`}>{pnlSummary.profitFactor}</div>
             <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>盈亏比</div>
           </div>
         </div>
@@ -163,7 +130,7 @@ const PnLAnalysisWidget = memo(function PnLAnalysisWidget({ config }: PnLAnalysi
             <Calendar className="h-4 w-4" /> 月度盈亏
           </h4>
           <div className="space-y-1 max-h-32 overflow-y-auto">
-            {data.monthlyPnL.slice(-6).map((month) => (
+            {pnlSummary.monthlyPnL.slice(-6).map((month) => (
               <div key={month.month} className="flex items-center justify-between text-xs">
                 <span className={COLOR_SHADES.gray[500]}>{month.month}</span>
                 <div className="flex items-center gap-2">
@@ -177,7 +144,7 @@ const PnLAnalysisWidget = memo(function PnLAnalysisWidget({ config }: PnLAnalysi
                 </div>
               </div>
             ))}
-            {data.monthlyPnL.length === 0 && (
+            {pnlSummary.monthlyPnL.length === 0 && (
               <p className={`text-xs ${COLOR_SHADES.gray[400]} text-center`}>暂无月度数据</p>
             )}
           </div>
@@ -185,12 +152,12 @@ const PnLAnalysisWidget = memo(function PnLAnalysisWidget({ config }: PnLAnalysi
 
         {/* 交易统计 */}
         <div className={`flex items-center justify-between text-xs ${COLOR_SHADES.gray[500]} ${COLOR_SHADES.gray[50]} rounded-lg p-2`}>
-          <span>盈利: <span className={`font-medium ${COLOR_TOKENS.success.tailwind}`}>{data.profitTrades}笔</span></span>
-          <span>亏损: <span className={`font-medium ${COLOR_TOKENS.danger.tailwind}`}>{data.lossTrades}笔</span></span>
-          <span>总计: <span className="font-medium">{data.totalTrades}笔</span></span>
+          <span>盈利: <span className={`font-medium ${COLOR_TOKENS.success.tailwind}`}>{pnlSummary.profitTrades}笔</span></span>
+          <span>亏损: <span className={`font-medium ${COLOR_TOKENS.danger.tailwind}`}>{pnlSummary.lossTrades}笔</span></span>
+          <span>总计: <span className="font-medium">{pnlSummary.totalTrades}笔</span></span>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </WidgetStateShell>
   )
 })
 

@@ -1,4 +1,4 @@
-import { getDefaultTradingConfig } from '@/config/tradingConfig'
+import { getEffectiveTradingConfig } from '@/config/tradingConfig'
 import type { SignalDirection } from '@/config/tradingConfig'
 
 export interface PositionSizingInput {
@@ -34,7 +34,7 @@ function clamp(value: number, min: number, max: number): number {
  * 卖出：若当前有持仓则建议全部卖出。
  */
 export function calculatePosition(input: PositionSizingInput): PositionSizingResult {
-  const config = getDefaultTradingConfig()
+  const config = getEffectiveTradingConfig()
   const kelly = config.kelly
   const risk = config.risk
 

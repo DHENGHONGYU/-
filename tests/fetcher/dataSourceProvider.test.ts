@@ -10,9 +10,9 @@ import type { DataSourceProvider } from '@/services/fetcher/types'
  * @skip-reason 此测试为已知失败，已通过 vitest --exclude 跳过；
  *               修复后请移除 .skip 标记并从 test:clean 的 --exclude 列表中删除
  */
-describe.skip('DataSourceProvider', () => {
+describe('DataSourceProvider', () => {
   describe('MockProvider', () => {
-    it('should return healthy status immediately', async () => {
+    it('应该返回 healthy status immediately', async () => {
       const provider = new MockProvider()
       expect(provider.name).toBe('mock')
       const health = await provider.healthCheck()
@@ -22,7 +22,7 @@ describe.skip('DataSourceProvider', () => {
   })
 
   describe('DataSourceRegistry', () => {
-    it('should return mock provider when akshare is unhealthy', async () => {
+    it('应该返回 mock provider when akshare is unhealthy', async () => {
       const registry = new DataSourceRegistry()
       const unhealthyProvider: DataSourceProvider = {
         name: 'unhealthy-akshare',
@@ -36,7 +36,7 @@ describe.skip('DataSourceProvider', () => {
       expect(active.name).toBe('mock')
     })
 
-    it('should fallback to last provider when all are unhealthy', async () => {
+    it('应该fallback to last provider when all are unhealthy', async () => {
       const registry = new DataSourceRegistry()
       const sick1: DataSourceProvider = {
         name: 'sick1',
@@ -53,19 +53,19 @@ describe.skip('DataSourceProvider', () => {
       expect(active.name).toBe('sick2')
     })
 
-    it('should throw when no providers registered', async () => {
+    it('应该抛出 when no providers registered', async () => {
       const registry = new DataSourceRegistry()
       await expect(registry.getActiveProvider()).rejects.toThrow('No providers registered')
     })
 
-    it('should skip duplicate registration', () => {
+    it('应该跳过 duplicate registration', () => {
       const registry = new DataSourceRegistry()
       registry.register(new MockProvider())
       registry.register(new MockProvider())
       expect(registry.getAllProviders()).toHaveLength(1)
     })
 
-    it('should return all providers status', async () => {
+    it('应该返回 all providers status', async () => {
       const registry = new DataSourceRegistry()
       registry.register(new MockProvider())
       const statuses = await registry.getStatus()
@@ -73,7 +73,7 @@ describe.skip('DataSourceProvider', () => {
       expect(statuses[0]!.status).toBe('healthy')
     })
 
-    it('should handle healthCheck that throws', async () => {
+    it('应该处理 healthCheck that throws', async () => {
       const registry = new DataSourceRegistry()
       const throwingProvider: DataSourceProvider = {
         name: 'throwing',

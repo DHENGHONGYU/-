@@ -21,22 +21,22 @@ export function getLogger() {
   return {
     debug(message: string, context?: LogContext): void {
       if (shouldLog('debug')) {
-        console.debug(`[DEBUG] ${message}`, context ?? '')
+        console.debug(`[DEBUG] ${message}`, context ?? {})
       }
     },
     info(message: string, context?: LogContext): void {
       if (shouldLog('info')) {
-        console.log(`[INFO] ${message}`, context ?? '')
+        console.log(`[INFO] ${message}`, context ?? {})
       }
     },
     warn(message: string, context?: LogContext): void {
       if (shouldLog('warn')) {
-        console.warn(`[WARN] ${message}`, context ?? '')
+        console.warn(`[WARN] ${message}`, context ?? {})
       }
     },
     error(message: string, context?: LogContext): void {
       if (shouldLog('error')) {
-        console.error(`[ERROR] ${message}`, context ?? '')
+        console.error(`[ERROR] ${message}`, context ?? {})
       }
     },
   }

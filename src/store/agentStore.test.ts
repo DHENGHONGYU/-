@@ -96,7 +96,7 @@ beforeEach(() => {
  * @skip-reason 此测试为已知失败，已通过 vitest --exclude 跳过；
  *               修复后请移除 .skip 标记并从 test:clean 的 --exclude 列表中删除
  */
-describe.skip('agentStore', () => {
+describe('agentStore', () => {
   // ============================================================
   // 初始状态
   // ============================================================

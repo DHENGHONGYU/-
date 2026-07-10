@@ -275,44 +275,37 @@ export function calculateBreakout(data: BreakoutInput): number {
  * - 股息率 > 3% → +1，> 1.5% → +0.5
  */
 export function calculateValuationRisk(data: ValuationRiskInput): number {
-  let score = HOT_SECTOR_THRESHOLDS.SCORE_MIN
+  const t = HOT_SECTOR_THRESHOLDS
 
-  // PE 评分
-  if (data.pe <= HOT_SECTOR_THRESHOLDS.VALUATION_PE_NEGATIVE) {
-    score = HOT_SECTOR_THRESHOLDS.VALUATION_PE_NEGATIVE_SCORE // 亏损
-  } else if (data.pe < HOT_SECTOR_THRESHOLDS.VALUATION_PE_LOW) {
-    score = HOT_SECTOR_THRESHOLDS.VALUATION_PE_LOW_SCORE
-  } else if (data.pe < HOT_SECTOR_THRESHOLDS.VALUATION_PE_MEDIUM_LOW) {
-    score = HOT_SECTOR_THRESHOLDS.VALUATION_PE_MEDIUM_LOW_SCORE
-  } else if (data.pe < HOT_SECTOR_THRESHOLDS.VALUATION_PE_MEDIUM) {
-    score = HOT_SECTOR_THRESHOLDS.VALUATION_PE_MEDIUM_SCORE
-  } else if (data.pe < HOT_SECTOR_THRESHOLDS.VALUATION_PE_HIGH) {
-    score = HOT_SECTOR_THRESHOLDS.VALUATION_PE_HIGH_SCORE
-  } else if (data.pe < HOT_SECTOR_THRESHOLDS.VALUATION_PE_VERY_HIGH) {
-    score = HOT_SECTOR_THRESHOLDS.VALUATION_PE_VERY_HIGH_SCORE
-  } else {
-    score = HOT_SECTOR_THRESHOLDS.VALUATION_PE_EXTREME_SCORE
-  }
+  const peTiers = [
+    { threshold: t.VALUATION_PE_NEGATIVE, score: t.VALUATION_PE_NEGATIVE_SCORE },
+    { threshold: t.VALUATION_PE_LOW, score: t.VALUATION_PE_LOW_SCORE },
+    { threshold: t.VALUATION_PE_MEDIUM_LOW, score: t.VALUATION_PE_MEDIUM_LOW_SCORE },
+    { threshold: t.VALUATION_PE_MEDIUM, score: t.VALUATION_PE_MEDIUM_SCORE },
+    { threshold: t.VALUATION_PE_HIGH, score: t.VALUATION_PE_HIGH_SCORE },
+    { threshold: t.VALUATION_PE_VERY_HIGH, score: t.VALUATION_PE_VERY_HIGH_SCORE },
+  ]
+  let score = peTiers.find((tier) => data.pe <= tier.threshold)?.score ?? t.VALUATION_PE_EXTREME_SCORE
 
   // PB 分位
-  if (data.pbPercentile < HOT_SECTOR_THRESHOLDS.VALUATION_PB_PERCENTILE_LOW) {
-    score += HOT_SECTOR_THRESHOLDS.VALUATION_PB_LOW_BONUS
-  } else if (data.pbPercentile > HOT_SECTOR_THRESHOLDS.VALUATION_PB_PERCENTILE_HIGH) {
-    score -= HOT_SECTOR_THRESHOLDS.VALUATION_PB_HIGH_PENALTY
+  if (data.pbPercentile < t.VALUATION_PB_PERCENTILE_LOW) {
+    score += t.VALUATION_PB_LOW_BONUS
+  } else if (data.pbPercentile > t.VALUATION_PB_PERCENTILE_HIGH) {
+    score -= t.VALUATION_PB_HIGH_PENALTY
   }
 
   // 市值流动性
-  if (data.marketCap > HOT_SECTOR_THRESHOLDS.VALUATION_MARKET_CAP_LARGE) {
-    score += HOT_SECTOR_THRESHOLDS.VALUATION_MARKET_CAP_LARGE_BONUS
-  } else if (data.marketCap < HOT_SECTOR_THRESHOLDS.VALUATION_MARKET_CAP_SMALL) {
-    score -= HOT_SECTOR_THRESHOLDS.VALUATION_MARKET_CAP_SMALL_PENALTY
+  if (data.marketCap > t.VALUATION_MARKET_CAP_LARGE) {
+    score += t.VALUATION_MARKET_CAP_LARGE_BONUS
+  } else if (data.marketCap < t.VALUATION_MARKET_CAP_SMALL) {
+    score -= t.VALUATION_MARKET_CAP_SMALL_PENALTY
   }
 
   // 股息率
-  if (data.dividendYield > HOT_SECTOR_THRESHOLDS.VALUATION_DIVIDEND_YIELD_HIGH) {
-    score += HOT_SECTOR_THRESHOLDS.VALUATION_DIVIDEND_YIELD_HIGH_BONUS
-  } else if (data.dividendYield > HOT_SECTOR_THRESHOLDS.VALUATION_DIVIDEND_YIELD_MEDIUM) {
-    score += HOT_SECTOR_THRESHOLDS.VALUATION_DIVIDEND_YIELD_MEDIUM_BONUS
+  if (data.dividendYield > t.VALUATION_DIVIDEND_YIELD_HIGH) {
+    score += t.VALUATION_DIVIDEND_YIELD_HIGH_BONUS
+  } else if (data.dividendYield > t.VALUATION_DIVIDEND_YIELD_MEDIUM) {
+    score += t.VALUATION_DIVIDEND_YIELD_MEDIUM_BONUS
   }
 
   return clampScore(score)

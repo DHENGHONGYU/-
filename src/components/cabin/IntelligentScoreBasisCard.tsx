@@ -1,5 +1,9 @@
+import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import { Badge } from '@/components/ui/Badge'
+import { Button } from '@/components/ui/Button'
 import type { IntelligentScore, ResearchLog } from '@/data/types'
+import { COLOR_TOKENS } from '@/constants/theme.tokens'
 
 interface Props {
   result: IntelligentScore
@@ -15,6 +19,31 @@ function formatFieldValue(value: unknown): string {
 }
 
 export function IntelligentScoreBasisCard({ result, history, logs }: Props): React.JSX.Element {
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
+
+  const handleToggleSelect = (recordId: string): void => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(recordId)) {
+        next.delete(recordId)
+      } else {
+        next.add(recordId)
+      }
+      return next
+    })
+  }
+
+  const handleClearSelection = (): void => {
+    setSelectedIds(new Set())
+  }
+
+  const selectedRecords = history.filter((r) => {
+    const id = String(r.id ?? r.scoredAt)
+    return selectedIds.has(id)
+  })
+
+  const getRecordId = (record: IntelligentScore): string => String(record.id ?? record.scoredAt)
+
   return (
     <Card>
       <CardHeader>
@@ -64,49 +93,168 @@ export function IntelligentScoreBasisCard({ result, history, logs }: Props): Rea
         </div>
 
         {history.length > 0 && (
-          <div className="rounded-md border">
-            <table className="w-full text-sm">
-              <thead className="bg-muted">
-                <tr>
-                  <th className="px-3 py-2 text-left">时间</th>
-                  <th className="px-3 py-2 text-left">综合分</th>
-                  <th className="px-3 py-2 text-left">综合分Δ</th>
-                  <th className="px-3 py-2 text-left">最大变化因子</th>
-                  <th className="px-3 py-2 text-left">模型</th>
-                  <th className="px-3 py-2 text-left">缺失字段</th>
-                </tr>
-              </thead>
-              <tbody>
-                {history.map((record, index) => {
-                  const prev = history[index + 1]
-                  const overallDelta = record.overallScore !== null && prev?.overallScore !== null && prev?.overallScore !== undefined
-                    ? record.overallScore - prev.overallScore
-                    : null
-                  const deltas = record.dimensionScores
-                    .map((d) => {
-                      const pd = prev?.dimensionScores.find((p) => p.name === d.name)
-                      if (d.score === null || pd?.score === null || pd?.score === undefined) return null
-                      return { name: d.name, delta: d.score - pd.score }
-                    })
-                    .filter((item): item is { name: string; delta: number } => item !== null)
-                  const maxDelta = deltas.sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta))[0]
-                  return (
-                    <tr key={record.id ?? record.scoredAt} className="border-t">
-                      <td className="px-3 py-2">{new Date(record.scoredAt).toLocaleString()}</td>
-                      <td className="px-3 py-2">{record.overallScore?.toFixed(2) ?? 'N/A'}</td>
-                      <td className="px-3 py-2">
-                        {overallDelta !== null ? `${overallDelta > 0 ? '+' : ''}${overallDelta.toFixed(2)}` : '—'}
-                      </td>
-                      <td className="px-3 py-2">
-                        {maxDelta ? `${maxDelta.name} ${maxDelta.delta > 0 ? '+' : ''}${maxDelta.delta.toFixed(2)}` : '—'}
-                      </td>
-                      <td className="px-3 py-2">{record.configSnapshot.model}</td>
-                      <td className="px-3 py-2">{record.missingFields.join(', ') || '无'}</td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium">评分历史记录</p>
+              {selectedIds.size > 0 && (
+                <div className="flex items-center gap-2">
+                  <Badge variant="secondary">已选择 {selectedIds.size} 条</Badge>
+                  <Button variant="ghost" size="sm" onClick={handleClearSelection}>
+                    清除选择
+                  </Button>
+                </div>
+              )}
+            </div>
+            <div className="rounded-md border">
+              <table className="w-full text-sm">
+                <thead className="bg-muted">
+                  <tr>
+                    <th className="px-3 py-2 text-left">
+                      <input
+                        type="checkbox"
+                        aria-label="全选"
+                        checked={selectedIds.size === history.length && history.length > 0}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedIds(new Set(history.map(getRecordId)))
+                          } else {
+                            setSelectedIds(new Set())
+                          }
+                        }}
+                      />
+                    </th>
+                    <th className="px-3 py-2 text-left">时间</th>
+                    <th className="px-3 py-2 text-left">综合分</th>
+                    <th className="px-3 py-2 text-left">综合分Δ</th>
+                    <th className="px-3 py-2 text-left">最大变化因子</th>
+                    <th className="px-3 py-2 text-left">模型</th>
+                    <th className="px-3 py-2 text-left">缺失字段</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {history.map((record, index) => {
+                    const recordId = getRecordId(record)
+                    const prev = history[index + 1]
+                    const overallDelta = record.overallScore !== null && prev?.overallScore !== null && prev?.overallScore !== undefined
+                      ? record.overallScore - prev.overallScore
+                      : null
+                    const deltas = record.dimensionScores
+                      .map((d) => {
+                        const pd = prev?.dimensionScores.find((p) => p.name === d.name)
+                        if (d.score === null || pd?.score === null || pd?.score === undefined) return null
+                        return { name: d.name, delta: d.score - pd.score }
+                      })
+                      .filter((item): item is { name: string; delta: number } => item !== null)
+                    const maxDelta = deltas.sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta))[0]
+                    const isSelected = selectedIds.has(recordId)
+                    return (
+                      <tr key={recordId} className={`border-t ${isSelected ? 'bg-primary/5' : ''}`}>
+                        <td className="px-3 py-2">
+                          <input
+                            type="checkbox"
+                            aria-label={`选择 ${new Date(record.scoredAt).toLocaleString()}`}
+                            checked={isSelected}
+                            onChange={() => handleToggleSelect(recordId)}
+                          />
+                        </td>
+                        <td className="px-3 py-2">{new Date(record.scoredAt).toLocaleString()}</td>
+                        <td className="px-3 py-2">{record.overallScore?.toFixed(2) ?? 'N/A'}</td>
+                        <td className="px-3 py-2">
+                          {overallDelta !== null ? (
+                            <span className={overallDelta > 0 ? COLOR_TOKENS.up.tailwind : overallDelta < 0 ? COLOR_TOKENS.down.tailwind : ''}>
+                              {overallDelta > 0 ? '+' : ''}{overallDelta.toFixed(2)}
+                            </span>
+                          ) : '—'}
+                        </td>
+                        <td className="px-3 py-2">
+                          {maxDelta ? `${maxDelta.name} ${maxDelta.delta > 0 ? '+' : ''}${maxDelta.delta.toFixed(2)}` : '—'}
+                        </td>
+                        <td className="px-3 py-2">{record.configSnapshot.model}</td>
+                        <td className="px-3 py-2">{record.missingFields.join(', ') || '无'}</td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {selectedRecords.length >= 2 && (
+              <div className="rounded-md border p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium">维度对比（已选 {selectedRecords.length} 条记录）</p>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead className="bg-muted">
+                      <tr>
+                        <th className="px-3 py-2 text-left">维度</th>
+                        {selectedRecords.map((record) => (
+                          <th key={getRecordId(record)} className="px-3 py-2 text-left">
+                            {new Date(record.scoredAt).toLocaleDateString()}
+                          </th>
+                        ))}
+                        <th className="px-3 py-2 text-left">变化范围</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {selectedRecords[0]?.dimensionScores.map((dimension) => {
+                        const dimensionName = dimension.name
+                        const scores = selectedRecords.map((record) => {
+                          const dim = record.dimensionScores.find((d) => d.name === dimensionName)
+                          return dim?.score ?? null
+                        })
+                        const validScores = scores.filter((s): s is number => s !== null)
+                        const minScore = validScores.length > 0 ? Math.min(...validScores) : null
+                        const maxScore = validScores.length > 0 ? Math.max(...validScores) : null
+                        const range = minScore !== null && maxScore !== null ? maxScore - minScore : null
+
+                        return (
+                          <tr key={dimensionName} className="border-t">
+                            <td className="px-3 py-2 font-medium">{dimensionName}</td>
+                            {scores.map((score, idx) => (
+                              <td key={idx} className="px-3 py-2">
+                                {score !== null ? score.toFixed(2) : 'N/A'}
+                              </td>
+                            ))}
+                            <td className="px-3 py-2">
+                              {range !== null ? (
+                                <Badge variant="secondary">
+                                  {range.toFixed(2)}
+                                </Badge>
+                              ) : '—'}
+                            </td>
+                          </tr>
+                        )
+                      })}
+                      <tr className="border-t bg-muted/50">
+                        <td className="px-3 py-2 font-medium">综合分</td>
+                        {selectedRecords.map((record) => (
+                          <td key={getRecordId(record)} className="px-3 py-2 font-medium">
+                            {record.overallScore?.toFixed(2) ?? 'N/A'}
+                          </td>
+                        ))}
+                        <td className="px-3 py-2">
+                          {(() => {
+                            const overallScores = selectedRecords
+                              .map((r) => r.overallScore)
+                              .filter((s): s is number => s !== null)
+                            if (overallScores.length === 0) return '—'
+                            const range = Math.max(...overallScores) - Math.min(...overallScores)
+                            return <Badge variant="secondary">{range.toFixed(2)}</Badge>
+                          })()}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {selectedIds.size > 0 && selectedIds.size < 2 && (
+              <p className="text-xs text-muted-foreground">
+                请至少选择 2 条记录以进行维度对比
+              </p>
+            )}
           </div>
         )}
 

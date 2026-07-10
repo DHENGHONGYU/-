@@ -4,7 +4,7 @@ import { destroyPageSubscriptions, initPageSubscriptions } from '@/store/pageSto
 import { destroyAgentSubscriptions, initAgentSubscriptions } from '@/store/agentStore'
 
 describe('Store eventBus subscriptions cleanup (DF-003)', () => {
-  it('should cancel all store subscriptions and leave eventBus with zero listeners', () => {
+  it('应该cancel all store subscriptions and leave eventBus with zero listeners', () => {
     expect(eventBus.getStats().totalListeners).toBeGreaterThan(0)
 
     destroyPageSubscriptions()

@@ -6,7 +6,7 @@ describe('databridgeStore', () => {
     useDataBridgeStore.getState().reset()
   })
 
-  it('should have correct initial state', () => {
+  it('应该有 correct initial state', () => {
     const state = useDataBridgeStore.getState()
     expect(state.pendingCount).toBe(0)
     expect(state.stats.pendingQueries).toBe(0)
@@ -15,7 +15,7 @@ describe('databridgeStore', () => {
     expect(state.lastTraceId).toBeNull()
   })
 
-  it('should update pending count', () => {
+  it('应该更新 pending count', () => {
     useDataBridgeStore.getState().setPendingCount(5)
     expect(useDataBridgeStore.getState().pendingCount).toBe(5)
 
@@ -23,14 +23,14 @@ describe('databridgeStore', () => {
     expect(useDataBridgeStore.getState().pendingCount).toBe(0)
   })
 
-  it('should merge stats partially', () => {
+  it('应该合并 stats partially', () => {
     useDataBridgeStore.getState().setStats({ enableFallbackQueue: false })
     const stats = useDataBridgeStore.getState().stats
     expect(stats.enableFallbackQueue).toBe(false)
     expect(stats.pendingQueries).toBe(0)
   })
 
-  it('should record successful query result', () => {
+  it('应该record successful query result', () => {
     useDataBridgeStore.getState().recordResult({
       success: true,
       data: { foo: 'bar' },
@@ -42,7 +42,7 @@ describe('databridgeStore', () => {
     expect(state.lastTraceId).toBe('trace-123')
   })
 
-  it('should record failed query result', () => {
+  it('应该record failed query result', () => {
     useDataBridgeStore.getState().recordResult({
       success: false,
       error: 'Connection timeout',
@@ -54,7 +54,7 @@ describe('databridgeStore', () => {
     expect(state.lastTraceId).toBe('trace-456')
   })
 
-  it('should reset to default state', () => {
+  it('应该重置 to default state', () => {
     useDataBridgeStore.getState().setPendingCount(10)
     useDataBridgeStore.getState().setStats({ enableFallbackQueue: false })
     useDataBridgeStore.getState().recordResult({ success: false, error: 'err', traceId: 't1' })
@@ -67,12 +67,12 @@ describe('databridgeStore', () => {
     expect(state.lastTraceId).toBeNull()
   })
 
-  it('should handle zero pending count', () => {
+  it('应该处理 zero pending count', () => {
     useDataBridgeStore.getState().setPendingCount(0)
     expect(useDataBridgeStore.getState().pendingCount).toBe(0)
   })
 
-  it('should handle result without error field', () => {
+  it('应该处理 result without error field', () => {
     useDataBridgeStore.getState().recordResult({
       success: false,
       traceId: 'trace-789',

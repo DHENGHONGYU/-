@@ -1,31 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Input } from '@/components/ui/Input'
 import { Badge } from '@/components/ui/Badge'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/Dialog'
 import { Select, SelectItem } from '@/components/ui/Select'
 import { addStock } from '@/services/input/inputService'
-import {
-  checkFetcherHealth,
-  refreshSymbolKline,
-} from '@/services/fetcher/fetcherService'
-import { transitionStock, updateStockGroup } from '@/services/stockpool/stockpoolService'
-import { PoolBoard } from '@/components/pool/PoolBoard'
+import { checkFetcherHealth } from '@/services/fetcher/fetcherService'
 import { usePoolStore, getAllGroups } from '@/store/poolStore'
 import { StockSearch } from '@/components/input/StockSearch'
-import { RESEARCH_STATUS, type ResearchStatus } from '@/config/dbConfig'
-import type { Stock } from '@/data/types'
 import type { StockSearchResult } from '@/services/input/inputService'
-import type { PoolViewMode } from '@/components/pool/PoolBoard'
 import { getLogger } from '@/lib/logger'
 import { COLOR_TOKENS, twText, twBg } from '@/constants/theme.tokens'
 import { Skeleton } from '@/components/ui/Skeleton'
@@ -33,12 +16,7 @@ import { GaugeRing } from '@/components/chart/GaugeChart'
 
 const logger = getLogger()
 
-const ALL_GROUPS_VALUE = '__all__'
-type QualityFilter = 'all' | 'missingBasic' | 'missingKline' | 'missingFinance'
-
 export default function InputDashboard(): React.JSX.Element {
-  const navigate = useNavigate()
-
   // 从 poolStore 获取状态
   const stocks = usePoolStore((s) => s.stocks)
   const loading = usePoolStore((s) => s.loading)
@@ -46,7 +24,6 @@ export default function InputDashboard(): React.JSX.Element {
   const refresh = usePoolStore((s) => s.refresh)
 
   // 本地 UI 状态
-  const [selectedGroup, setSelectedGroup] = useState('')
   const [symbol, setSymbol] = useState('')
   const [name, setName] = useState('')
   const [group, setGroup] = useState('')
@@ -54,12 +31,6 @@ export default function InputDashboard(): React.JSX.Element {
   const [fetcherOk, setFetcherOk] = useState<boolean | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [searchMode, setSearchMode] = useState<'fill' | 'add'>('fill')
-  const [viewMode, setViewMode] = useState<PoolViewMode>('kanban')
-  const [qualityFilter, setQualityFilter] = useState<QualityFilter>('all')
-  const [selectedSymbols, setSelectedSymbols] = useState<string[]>([])
-  const [newGroupDialogOpen, setNewGroupDialogOpen] = useState(false)
-  const [newGroupName, setNewGroupName] = useState('')
-  const [createdGroups, setCreatedGroups] = useState<string[]>([])
 
   // 初始化加载
   useEffect(() => {
@@ -67,31 +38,8 @@ export default function InputDashboard(): React.JSX.Element {
     void refresh()
   }, [refresh])
 
-  const allGroups = useMemo(() => getAllGroups(), [stocks])
-
-  const groupOptions = useMemo(
-    () => Array.from(new Set([...allGroups, ...createdGroups])).sort(),
-    [allGroups, createdGroups],
-  )
-
+  const allGroups = useMemo(() => getAllGroups(), [])
   const allStocks = stocks
-
-  const filteredStocks = useMemo(() => {
-    if (qualityFilter === 'all') return allStocks
-    return allStocks.filter((s) => {
-      const q = s.dataQuality
-      switch (qualityFilter) {
-        case 'missingBasic':
-          return q?.basic !== true
-        case 'missingKline':
-          return q?.kline !== true
-        case 'missingFinance':
-          return q?.finance !== true
-        default:
-          return true
-      }
-    })
-  }, [allStocks, qualityFilter])
 
   const handleAdd = async (fetchBasic: boolean, fetchKline: boolean): Promise<void> => {
     if (!symbol || !name) {
@@ -132,100 +80,6 @@ export default function InputDashboard(): React.JSX.Element {
     if (!result.ok) {
       setMessage(result.error ?? '数据采集服务异常')
     }
-  }
-
-  const handleRefreshKline = async (stock: Stock): Promise<void> => {
-    const result = await refreshSymbolKline(stock.symbol)
-    if (result.success) {
-      setMessage(`已刷新 ${stock.symbol} 行情`)
-      await refresh()
-    } else {
-      setMessage(result.error ?? '刷新行情失败')
-    }
-  }
-
-  const handleAnalyze = (symbolToAnalyze: string): void => {
-    navigate(`/analysis/stock-score/${symbolToAnalyze}`)
-  }
-
-  const handleSelectToggle = (targetSymbol: string): void => {
-    setSelectedSymbols((prev) =>
-      prev.includes(targetSymbol)
-        ? prev.filter((s) => s !== targetSymbol)
-        : [...prev, targetSymbol],
-    )
-  }
-
-  const runBulkTransition = async (toStatus: ResearchStatus): Promise<void> => {
-    const targets = allStocks.filter((s) => selectedSymbols.includes(s.symbol))
-    const results: string[] = []
-    for (const stock of targets) {
-      const result = await transitionStock(stock.symbol, toStatus)
-      if (!result.success) {
-        results.push(`${stock.symbol}: ${result.error ?? '失败'}`)
-      }
-    }
-    setSelectedSymbols([])
-    await refresh()
-    if (results.length > 0) {
-      setMessage(`批量流转完成，部分失败：${results.join('；')}`)
-    } else {
-      setMessage(`已批量流转 ${targets.length} 只标的到 ${toStatus}`)
-    }
-  }
-
-  const runBulkChangeGroup = async (targetGroup: string): Promise<void> => {
-    const targets = allStocks.filter((s) => selectedSymbols.includes(s.symbol))
-    const results: string[] = []
-    for (const stock of targets) {
-      const result = await updateStockGroup(stock.symbol, targetGroup)
-      if (!result.success) {
-        results.push(`${stock.symbol}: ${result.error ?? '失败'}`)
-      }
-    }
-    setSelectedSymbols([])
-    await refresh()
-    if (results.length > 0) {
-      setMessage(`批量移入分组完成，部分失败：${results.join('；')}`)
-    } else {
-      setMessage(`已批量移入 ${targets.length} 只标的到 ${targetGroup}`)
-    }
-  }
-
-  const handleBulkArchive = (): Promise<void> => runBulkTransition(RESEARCH_STATUS.archived)
-
-  const handleTransition = async (symbol: string, toStatus: ResearchStatus): Promise<void> => {
-    const result = await transitionStock(symbol, toStatus)
-    await refresh()
-    if (!result.success) {
-      setMessage(`${symbol} 流转失败：${result.error ?? '未知错误'}`)
-    }
-  }
-
-  const handleChangeGroup = async (symbol: string, group: string): Promise<void> => {
-    const result = await updateStockGroup(symbol, group)
-    await refresh()
-    if (!result.success) {
-      setMessage(`${symbol} 移入分组失败：${result.error ?? '未知错误'}`)
-    }
-  }
-
-  const handleCreateGroup = async (): Promise<void> => {
-    const trimmed = newGroupName.trim()
-    if (!trimmed) {
-      setMessage('分组名称不能为空')
-      return
-    }
-    if (groupOptions.includes(trimmed)) {
-      setMessage('分组名称已存在')
-      return
-    }
-    setCreatedGroups((prev) => [...prev, trimmed])
-    setGroup(trimmed)
-    setSelectedGroup(trimmed)
-    setNewGroupName('')
-    setNewGroupDialogOpen(false)
-    setMessage(`已创建分组「${trimmed}」`)
   }
 
   const stats = useMemo(() => {
@@ -292,16 +146,16 @@ export default function InputDashboard(): React.JSX.Element {
               <CardContent className="p-5">
                 <p className="text-xs text-muted-foreground">快捷操作</p>
                 <div className="mt-2 flex flex-wrap gap-2">
-                  <Button size="sm" variant="secondary" onClick={() => navigate('/input/bulk-import')}>
+                  <Button size="sm" variant="secondary" onClick={() => window.location.hash = '#/input/bulk-import'}>
                     批量导入
                   </Button>
-                  <Button size="sm" variant="secondary" onClick={() => navigate('/input/hot-sectors')}>
+                  <Button size="sm" variant="secondary" onClick={() => window.location.hash = '#/input/hot-sectors'}>
                     热门板块
                   </Button>
-                  <Button size="sm" variant="secondary" onClick={() => navigate('/input/data-test')}>
+                  <Button size="sm" variant="secondary" onClick={() => window.location.hash = '#/input/data-test'}>
                     数据测试
                   </Button>
-                  <Button size="sm" variant="secondary" onClick={() => navigate('/input/collect-task')}>
+                  <Button size="sm" variant="secondary" onClick={() => window.location.hash = '#/input/collect-tasks'}>
                     采集任务
                   </Button>
                 </div>
@@ -368,7 +222,7 @@ export default function InputDashboard(): React.JSX.Element {
               aria-label="目标分组"
             >
               <SelectItem value="">默认分组</SelectItem>
-              {groupOptions.map((g) => (
+              {allGroups.map((g) => (
                 <SelectItem key={g} value={g}>
                   {g}
                 </SelectItem>
@@ -393,7 +247,7 @@ export default function InputDashboard(): React.JSX.Element {
             ) : (
               <Badge variant="destructive">未连接</Badge>
             )}
-            <Button variant="ghost" size="sm" onClick={handleRefreshHealth}>
+            <Button variant="ghost" size="sm" onClick={() => void handleRefreshHealth()}>
               刷新
             </Button>
           </div>
@@ -402,132 +256,6 @@ export default function InputDashboard(): React.JSX.Element {
           )}
         </CardContent>
       </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>股票池看板</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="mb-3 flex flex-wrap items-center gap-2">
-            <Button variant="secondary" size="sm" onClick={refresh} disabled={loading}>
-              {loading ? '刷新中...' : '刷新看板'}
-            </Button>
-            <Button
-              size="sm"
-              variant={viewMode === 'kanban' ? 'secondary' : 'ghost'}
-              onClick={() => setViewMode('kanban')}
-            >
-              看板视图
-            </Button>
-            <Button
-              size="sm"
-              variant={viewMode === 'list' ? 'secondary' : 'ghost'}
-              onClick={() => setViewMode('list')}
-            >
-              列表视图
-            </Button>
-            <Select
-              className="h-8 w-auto min-w-[140px]"
-              value={selectedGroup || ALL_GROUPS_VALUE}
-              onChange={(e) =>
-                setSelectedGroup(e.target.value === ALL_GROUPS_VALUE ? '' : e.target.value)
-              }
-              aria-label="分组筛选"
-            >
-              <SelectItem value={ALL_GROUPS_VALUE}>全部组</SelectItem>
-              {groupOptions.map((g) => (
-                <SelectItem key={g} value={g}>
-                  {g}
-                </SelectItem>
-              ))}
-            </Select>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => setNewGroupDialogOpen(true)}
-            >
-              新建分组
-            </Button>
-            <select
-              className="h-8 rounded-md border bg-background px-2 text-sm"
-              value={qualityFilter}
-              onChange={(e) => setQualityFilter(e.target.value as QualityFilter)}
-              aria-label="数据质量筛选"
-            >
-              <option value="all">全部质量状态</option>
-              <option value="missingBasic">缺失基础数据</option>
-              <option value="missingKline">缺失行情数据</option>
-              <option value="missingFinance">缺失财务数据</option>
-            </select>
-            {selectedSymbols.length > 0 && (
-              <>
-                <span className="text-sm text-muted-foreground">
-                  已选 {selectedSymbols.length} 只
-                </span>
-                <Button size="sm" variant="secondary" onClick={handleBulkArchive}>
-                  批量归档
-                </Button>
-                <Select
-                  className="h-8 w-auto min-w-[120px]"
-                  value=""
-                  onChange={(e) => {
-                    if (e.target.value) {
-                      void runBulkChangeGroup(e.target.value)
-                    }
-                  }}
-                  aria-label="批量移入分组"
-                >
-                  <SelectItem value="">批量移入分组</SelectItem>
-                  {groupOptions.map((g) => (
-                    <SelectItem key={g} value={g}>
-                      {g}
-                    </SelectItem>
-                  ))}
-                </Select>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => setSelectedSymbols([])}
-                >
-                  清除选择
-                </Button>
-              </>
-            )}
-          </div>
-          <PoolBoard
-            stocks={filteredStocks}
-            viewMode={viewMode}
-            selectedSymbols={selectedSymbols}
-            onSelectToggle={handleSelectToggle}
-            onTransition={handleTransition}
-            onChangeGroup={handleChangeGroup}
-            onRefreshKline={handleRefreshKline}
-            onAnalyze={handleAnalyze}
-          />
-        </CardContent>
-      </Card>
-
-      <Dialog open={newGroupDialogOpen} onOpenChange={setNewGroupDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>新建股票池分组</DialogTitle>
-            <DialogDescription>输入新分组名称，创建后可用于筛选与录入。</DialogDescription>
-          </DialogHeader>
-          <Input
-            placeholder="分组名称，如 核心持仓"
-            aria-label="分组名称"
-            value={newGroupName}
-            onChange={(e) => setNewGroupName(e.target.value)}
-            maxLength={20}
-          />
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setNewGroupDialogOpen(false)}>
-              取消
-            </Button>
-            <Button onClick={() => void handleCreateGroup()}>创建</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }

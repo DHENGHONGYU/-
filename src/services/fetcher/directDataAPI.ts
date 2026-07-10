@@ -294,12 +294,11 @@ export async function tencentBatchQuotes(codes: string[]): Promise<StockQuote[]>
  * URL: https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh600519,day,,,30,qfq
  * 响应 JSON: { data: { sh600519: { qfqday: [[date,open,close,high,low,vol,amount], ...] } } }
  */
-export async function tencentKline(code: string, period: string, count: number): Promise<KlineItem[]> {
+export async function tencentKline(code: string, period = 'day', count: number): Promise<KlineItem[]> {
   const startTs = Date.now()
   const prefix = getMarketPrefix(code)
-  const safePeriod = period || 'day'
-  const url = `${TENCENT_KLINE_API}?param=${prefix}${code},${safePeriod},,,${count},qfq`
-  logger.info('[directDataAPI] tencentKline start', { code, period: safePeriod, count, url })
+  const url = `${TENCENT_KLINE_API}?param=${prefix}${code},${period},,,${count},qfq`
+  logger.info('[directDataAPI] tencentKline start', { code, period, count, url })
 
   try {
     const response = await fetchWithTimeout(url)

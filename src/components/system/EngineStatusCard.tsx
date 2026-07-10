@@ -125,7 +125,7 @@ function EngineStatusCard(): React.JSX.Element {
 
   const overallStatus = mapOverallStatus(healthSummary?.overallStatus)
   const statusMeta = HEALTH_STATUS_MAP[overallStatus]
-  const uptime = formatUptime(started, startedAt ?? 0, now)
+  const uptime = formatUptime(started, startedAt || 0, now)
 
   // 加载态：系统监控正在加载且尚无健康摘要数据时展示占位文本
   const showLoading = systemMonitorIsLoading && !healthSummary

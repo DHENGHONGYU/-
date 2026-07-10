@@ -13,12 +13,17 @@
  * @see V6 Pro: cockpit-app/src/components/collect/CollectParamPanel.tsx
  */
 
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { getLogger } from '@/lib/logger'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
+import { CollectionPlanPanel } from '@/components/input/CollectionPlanPanel'
+import { ApiTestDialog } from '@/components/input/ApiTestDialog'
+import { QuotaEstimatePanel } from '@/components/input/QuotaEstimatePanel'
+
+import DimensionConfigCard from '@/components/input/DimensionConfigCard'
 import {
   Card,
   CardHeader,
@@ -56,6 +61,13 @@ import {
   type UpdateFrequency,
   type DataSourceType,
 } from '@/config/collectConfig'
+import type {
+  DimensionPipelineConfig,
+  SourcePriorityItem,
+  RetryPolicy,
+  TimeoutPolicy,
+  FallbackPolicy,
+} from '@/types/modules/collection.types'
 
 const logger = getLogger()
 
@@ -131,130 +143,158 @@ function StrategyCard({
 // ============================================================
 
 interface DimensionRowProps {
-  code: string
-  name: string
-  enabled: boolean
-  frequency: UpdateFrequency
-  sources: DataSourceType[]
-  storageType: string
-  importance: string
-  fields: string[]
+  dim: DimensionPipelineConfig
   disabled: boolean
+  expanded: boolean
   onToggle: () => void
+  onExpand: () => void
   onFrequencyChange: (frequency: UpdateFrequency) => void
   onSourcesChange: (sources: DataSourceType[]) => void
+  onSourcePriorityChange: (priority: SourcePriorityItem[]) => void
+  onFieldsChange: (fields: string[]) => void
+  onPolicyChange: (policy: {
+    retryPolicy?: RetryPolicy
+    timeoutPolicy?: TimeoutPolicy
+    fallbackPolicy?: FallbackPolicy
+  }) => void
 }
 
 function DimensionRow({
-  code,
-  name,
-  enabled,
-  frequency,
-  sources,
-  storageType,
-  importance,
-  fields,
+  dim,
   disabled,
+  expanded,
   onToggle,
+  onExpand,
   onFrequencyChange,
   onSourcesChange,
+  onSourcePriorityChange,
+  onFieldsChange,
+  onPolicyChange,
 }: DimensionRowProps) {
-  const colorBar = DIMENSION_COLORS[code] ?? 'bg-tertiary'
+  const colorBar = DIMENSION_COLORS[dim.code] ?? 'bg-tertiary'
 
   return (
-    <div className="flex items-start gap-3 py-3 transition-all duration-200">
-      {/* 维度色块 */}
-      <div className={`mt-1 h-3 w-3 shrink-0 rounded-full transition-all duration-200 ${colorBar}`} />
+    <div className="py-3 transition-all duration-200">
+      <div className="flex items-start gap-3">
+        {/* 维度色块 */}
+        <div className={`mt-1 h-3 w-3 shrink-0 rounded-full transition-all duration-200 ${colorBar}`} />
 
-      {/* 开关 */}
-      <div className="mt-0.5 transition-all duration-200">
-        <Switch
-          checked={enabled}
-          onChange={onToggle}
-          disabled={disabled}
-        />
-      </div>
-
-      {/* 维度信息 */}
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium">{code} · {name}</span>
-          <Badge variant={IMPORTANCE_BADGE_VARIANT[importance as keyof typeof IMPORTANCE_BADGE_VARIANT]}>
-            {IMPORTANCE_LABELS[importance as keyof typeof IMPORTANCE_LABELS]}
-          </Badge>
+        {/* 开关 */}
+        <div className="mt-0.5 transition-all duration-200">
+          <Switch
+            checked={dim.enabled}
+            onChange={onToggle}
+            disabled={disabled}
+          />
         </div>
-        {enabled ? (
-          <div className="mt-2 space-y-2">
-            {/* 频率下拉 + 存储策略（静态） */}
-            <div className="flex flex-wrap items-center gap-2 text-xs">
-              <span className="text-muted-foreground">频率</span>
-              <Select
-                value={frequency}
-                disabled={disabled}
-                onChange={(e) => onFrequencyChange(e.target.value as UpdateFrequency)}
-                className="h-7 w-28 py-1 text-xs"
-              >
-                {(Object.keys(FREQUENCY_LABELS) as UpdateFrequency[]).map((freq) => (
-                  <SelectItem key={freq} value={freq}>
-                    {FREQUENCY_LABELS[freq]}
-                  </SelectItem>
-                ))}
-              </Select>
-              <span className="text-muted-foreground">·</span>
-              <span className="text-muted-foreground">
-                存储: {STORAGE_TYPE_LABELS[storageType as keyof typeof STORAGE_TYPE_LABELS]}
-              </span>
+
+        {/* 维度信息 */}
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium">{dim.code} · {dim.name}</span>
+            <Badge variant={IMPORTANCE_BADGE_VARIANT[dim.importance]}>
+              {IMPORTANCE_LABELS[dim.importance]}
+            </Badge>
+          </div>
+          {dim.enabled ? (
+            <div className="mt-2 space-y-2">
+              {/* 频率下拉 + 存储策略（静态） */}
+              <div className="flex flex-wrap items-center gap-2 text-xs">
+                <span className="text-muted-foreground">频率</span>
+                <Select
+                  value={dim.frequency}
+                  disabled={disabled}
+                  onChange={(e) => onFrequencyChange(e.target.value as UpdateFrequency)}
+                  className="h-7 w-28 py-1 text-xs"
+                >
+                  {(Object.keys(FREQUENCY_LABELS) as UpdateFrequency[]).map((freq) => (
+                    <SelectItem key={freq} value={freq}>
+                      {FREQUENCY_LABELS[freq]}
+                    </SelectItem>
+                  ))}
+                </Select>
+                <span className="text-muted-foreground">·</span>
+                <span className="text-muted-foreground">
+                  存储: {STORAGE_TYPE_LABELS[dim.storageType]}
+                </span>
+              </div>
+              {/* 数据源多选标签 */}
+              <div className="flex flex-wrap items-center gap-1.5">
+                <span className="text-xs text-muted-foreground">数据源</span>
+                {(Object.keys(DATA_SOURCE_LABELS) as DataSourceType[]).map((src) => {
+                  const active = dim.sources.includes(src)
+                  return (
+                    <Badge
+                      key={src}
+                      variant={active ? 'default' : 'outline'}
+                      className={
+                        disabled
+                          ? 'pointer-events-none opacity-50 text-[10px]'
+                          : 'cursor-pointer text-[10px] hover:scale-105'
+                      }
+                      onClick={() => {
+                        if (disabled) return
+                        const next = active
+                          ? dim.sources.filter((s) => s !== src)
+                          : [...dim.sources, src]
+                        onSourcesChange(next)
+                      }}
+                    >
+                      {DATA_SOURCE_LABELS[src]}
+                    </Badge>
+                  )
+                })}
+              </div>
             </div>
-            {/* 数据源多选标签 */}
-            <div className="flex flex-wrap items-center gap-1.5">
-              <span className="text-xs text-muted-foreground">数据源</span>
-              {(Object.keys(DATA_SOURCE_LABELS) as DataSourceType[]).map((src) => {
-                const active = sources.includes(src)
-                return (
-                  <Badge
-                    key={src}
-                    variant={active ? 'default' : 'outline'}
-                    className={
-                      disabled
-                        ? 'pointer-events-none opacity-50 text-[10px]'
-                        : 'cursor-pointer text-[10px] hover:scale-105'
-                    }
-                    onClick={() => {
-                      if (disabled) return
-                      const next = active
-                        ? sources.filter((s) => s !== src)
-                        : [...sources, src]
-                      onSourcesChange(next)
-                    }}
-                  >
-                    {DATA_SOURCE_LABELS[src]}
-                  </Badge>
-                )
-              })}
+          ) : (
+            <div className="mt-1 flex flex-wrap gap-2 text-xs text-muted-foreground">
+              <span>频率: {FREQUENCY_LABELS[dim.frequency]}</span>
+              <span>·</span>
+              <span>源: {dim.sources.map((s) => DATA_SOURCE_LABELS[s] ?? s).join(' > ')}</span>
+              <span>·</span>
+              <span>存储: {STORAGE_TYPE_LABELS[dim.storageType]}</span>
             </div>
-          </div>
-        ) : (
-          <div className="mt-1 flex flex-wrap gap-2 text-xs text-muted-foreground">
-            <span>频率: {FREQUENCY_LABELS[frequency]}</span>
-            <span>·</span>
-            <span>源: {sources.map((s) => DATA_SOURCE_LABELS[s] ?? s).join(' > ')}</span>
-            <span>·</span>
-            <span>存储: {STORAGE_TYPE_LABELS[storageType as keyof typeof STORAGE_TYPE_LABELS]}</span>
-          </div>
-        )}
-        {enabled && fields.length > 0 && (
-          <div className="mt-1 flex flex-wrap gap-1">
-            {fields.slice(0, 4).map((field) => (
-              <span key={field} className="rounded bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">
-                {field}
-              </span>
-            ))}
-            {fields.length > 4 && (
-              <span className="text-[10px] text-muted-foreground">+{fields.length - 4}</span>
-            )}
-          </div>
-        )}
+          )}
+          {dim.enabled && dim.fields.length > 0 && (
+            <div className="mt-1 flex flex-wrap gap-1">
+              {dim.fields.slice(0, 4).map((field) => (
+                <span key={field} className="rounded bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">
+                  {field}
+                </span>
+              ))}
+              {dim.fields.length > 4 && (
+                <span className="text-[10px] text-muted-foreground">+{dim.fields.length - 4}</span>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* 展开高级配置 */}
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-xs"
+          onClick={onExpand}
+          disabled={disabled || !dim.enabled}
+        >
+          {expanded ? '收起' : '高级'}
+        </Button>
       </div>
+
+      {/* 高级配置卡片 */}
+      {expanded && (
+        <div className="mt-3 pl-9">
+          <DimensionConfigCard
+            dimension={dim}
+            disabled={disabled}
+            onFrequencyChange={onFrequencyChange}
+            onSourcesChange={onSourcesChange}
+            onSourcePriorityChange={onSourcePriorityChange}
+            onFieldsChange={onFieldsChange}
+            onPolicyChange={onPolicyChange}
+          />
+        </div>
+      )}
     </div>
   )
 }
@@ -265,6 +305,9 @@ function DimensionRow({
 
 export default function SevenDimConfigPage() {
   const store = useSevenDimConfigStore()
+  const [showApiTest, setShowApiTest] = useState(false)
+  const [expandedCode, setExpandedCode] = useState<string | null>(null)
+  const [kimiPlan, setKimiPlan] = useState('free')
 
   logger.info('[SevenDimConfigPage] 渲染', {
     activeTemplate: store.activeTemplate,
@@ -277,19 +320,6 @@ export default function SevenDimConfigPage() {
   const monthlyCalls = store.monthlyCallEstimate()
   const isDisabled = !store.isClickable()
   const tooltipText = store.tooltipText()
-  // 额度使用率（基于月调用量 / 日上限×30）
-  const quotaUsagePercent = useMemo(
-    () => (GLOBAL_LIMITS.rateLimitPerDay > 0
-      ? Math.min(100, Math.round((monthlyCalls / (GLOBAL_LIMITS.rateLimitPerDay * 30)) * 100))
-      : 0),
-    [monthlyCalls],
-  )
-  // 额度使用率颜色 token：低→蓝，中→琥珀，高→红
-  const quotaColorToken = useMemo(() => {
-    if (quotaUsagePercent >= 80) return COLOR_TOKENS.danger
-    if (quotaUsagePercent >= 50) return COLOR_TOKENS.warning
-    return COLOR_TOKENS.info
-  }, [quotaUsagePercent])
 
   // 策略模板维度数映射
   const templateDimCounts = useMemo(() => {
@@ -402,16 +432,11 @@ export default function SevenDimConfigPage() {
                 {store.dimensions.map((dim) => (
                   <DimensionRow
                     key={dim.code}
-                    code={dim.code}
-                    name={dim.name}
-                    enabled={dim.enabled}
-                    frequency={dim.frequency}
-                    sources={dim.sources}
-                    storageType={dim.storageType}
-                    importance={dim.importance}
-                    fields={dim.fields}
+                    dim={dim}
                     disabled={isDisabled}
+                    expanded={expandedCode === dim.code}
                     onToggle={() => store.toggleDimension(dim.code)}
+                    onExpand={() => setExpandedCode(expandedCode === dim.code ? null : dim.code)}
                     onFrequencyChange={(freq) => {
                       logger.info(`[SevenDimConfigPage] 维度 ${dim.code} 频率变更`, {
                         from: dim.frequency,
@@ -426,6 +451,11 @@ export default function SevenDimConfigPage() {
                       })
                       store.setDimensionSources(dim.code, nextSources)
                     }}
+                    onSourcePriorityChange={(priority) =>
+                      store.setDimensionSourcePriority(dim.code, priority)
+                    }
+                    onFieldsChange={(fields) => store.setDimensionFields(dim.code, fields)}
+                    onPolicyChange={(policy) => store.setDimensionPolicy(dim.code, policy)}
                   />
                 ))}
               </CardContent>
@@ -470,50 +500,8 @@ export default function SevenDimConfigPage() {
               </CardContent>
             </Card>
 
-            {/* 额度预估 */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">额度预估</CardTitle>
-                <CardDescription>基于当前配置的月调用估算</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">月调用总量</span>
-                  <span className="text-lg font-bold">{monthlyCalls.toLocaleString()}</span>
-                </div>
-                <Separator />
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">日调用上限</span>
-                  <span className="text-sm">{GLOBAL_LIMITS.rateLimitPerDay}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">小时调用上限</span>
-                  <span className="text-sm">{GLOBAL_LIMITS.rateLimitPerHour}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">AKShare 额度</span>
-                  <Badge variant="secondary">免费无限</Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">额度使用率</span>
-                  <span className="text-sm font-medium" style={{ color: quotaColorToken.hex }}>
-                    {quotaUsagePercent}%
-                  </span>
-                </div>
-                {/* 额度使用率可视化进度条 */}
-                <div className="space-y-1">
-                  <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
-                    <div
-                      className="h-full rounded-full transition-all duration-500"
-                      style={{ width: `${quotaUsagePercent}%`, backgroundColor: quotaColorToken.hex }}
-                    />
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    月调用 {monthlyCalls.toLocaleString()} / 日上限×30 {(GLOBAL_LIMITS.rateLimitPerDay * 30).toLocaleString()}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+            {/* 额度预估面板 */}
+            <QuotaEstimatePanel monthlyCalls={monthlyCalls} selectedPlan={kimiPlan} onPlanChange={setKimiPlan} />
 
             {/* 操作按钮 */}
             <div className="space-y-2">
@@ -540,6 +528,14 @@ export default function SevenDimConfigPage() {
               >
                 重置为默认
               </Button>
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => setShowApiTest(true)}
+                disabled={isDisabled}
+              >
+                接口测试
+              </Button>
             </div>
 
             {/* 不可交互提示 */}
@@ -548,6 +544,12 @@ export default function SevenDimConfigPage() {
             )}
           </div>
         </div>
+
+        {/* 采集方案整合面板 */}
+        <CollectionPlanPanel />
+
+        {/* 接口测试弹窗 */}
+        <ApiTestDialog open={showApiTest} onOpenChange={setShowApiTest} />
       </div>
     </ErrorBoundary>
   )

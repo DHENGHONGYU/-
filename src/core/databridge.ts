@@ -11,7 +11,7 @@
  * - databridgeHandlers.ts: EnvelopeHandler 类族 + HandlerRegistry + createHandlerRegistry
  * - databridgeStrategyRouter.ts: STRATEGY_CHANNEL + routeToStrategy 策略路由逻辑
  */
-import { ENVELOPE_ACTION, STORE_NAME, type ModuleId, type StoreName } from '@/config/dbConfig'
+import { ENVELOPE_ACTION, STORE_NAME, type DbOperation, type ModuleId, type StoreName } from '@/config/dbConfig'
 import { db } from '@/data/db'
 import { CHANGED_SUFFIX } from '@/constants/store-channels.constants'
 import { eventBus } from '@/lib/eventBus'
@@ -102,18 +102,45 @@ const ACTION_TO_STORE_MAP: Record<string, StoreName> = {
   [ENVELOPE_ACTION.bulkSaveNews]: STORE_NAME.news,
   // ── RBAC 6 表写入通道（v24 新增） ──
   [ENVELOPE_ACTION.saveRbacUser]: STORE_NAME.rbacUsers,
-  // ── 查询操作通道（通过 payload.store 指定实际目标） ──
-  [ENVELOPE_ACTION.queryGet]: STORE_NAME.stocks,
-  [ENVELOPE_ACTION.queryList]: STORE_NAME.stocks,
-  [ENVELOPE_ACTION.queryByIndex]: STORE_NAME.stocks,
   [ENVELOPE_ACTION.saveRbacRole]: STORE_NAME.rbacRoles,
   [ENVELOPE_ACTION.saveRbacPermission]: STORE_NAME.rbacPermissions,
   [ENVELOPE_ACTION.saveRbacUserRole]: STORE_NAME.rbacUserRoles,
   [ENVELOPE_ACTION.saveRbacRolePermission]: STORE_NAME.rbacRolePermissions,
   [ENVELOPE_ACTION.saveRbacAuditLog]: STORE_NAME.rbacPermissionAuditLogs,
+  [ENVELOPE_ACTION.saveCollectConfig]: STORE_NAME.collectConfig,
+  [ENVELOPE_ACTION.deleteCollectConfig]: STORE_NAME.collectConfig,
+  [ENVELOPE_ACTION.saveCustomAgent]: STORE_NAME.customAgents,
+  [ENVELOPE_ACTION.deleteCustomAgent]: STORE_NAME.customAgents,
+  [ENVELOPE_ACTION.saveTraceRecord]: STORE_NAME.traceRecords,
 }
 
+// 查询动作集合（目标 store 由 payload 传入，**不**走 ACTION_TO_STORE_MAP）
+const QUERY_ACTIONS: ReadonlySet<string> = new Set([
+  ENVELOPE_ACTION.queryGet,
+  ENVELOPE_ACTION.queryList,
+  ENVELOPE_ACTION.queryByIndex,
+])
+
+// 事件动作集合（仅广播，不走 DB）
+const EVENT_ACTIONS: ReadonlySet<string> = new Set([
+  ENVELOPE_ACTION.newsArticleLoaded,
+  ENVELOPE_ACTION.holdingsDataLoaded,
+  ENVELOPE_ACTION.tradeActionExecuted,
+  ENVELOPE_ACTION.loadHoldingsData,
+])
+
+// 策略路由动作集合（路由到 routeToStrategy）
+const STRATEGY_ACTIONS: ReadonlySet<string> = new Set([
+  ENVELOPE_ACTION.strategyHotSectorRefresh,
+  ENVELOPE_ACTION.strategyValuePitRefresh,
+  ENVELOPE_ACTION.strategyRotationSignalDetect,
+])
+
 function inferStore(action: string): StoreName {
+  // 查询动作不查 map，由 routeToQuery 从 payload.store 解析
+  if (QUERY_ACTIONS.has(action)) {
+    throw new EnvelopeError(`Query action "${action}" should not call inferStore; payload.store required`)
+  }
   const store = ACTION_TO_STORE_MAP[action]
   if (!store) {
     throw new EnvelopeError(`Unknown action: ${action} (no store mapping found)`)
@@ -313,38 +340,34 @@ export class DataBridge {
     logger.debug(`[DataBridge] Envelope validated: action="${envelope.meta.action}", target="${envelope.meta.target}"`)
 
     const { meta } = envelope
-    const targetStore = inferStore(meta.action)
     const operation = inferOperation(meta.action)
+
+    // 1. Query 路径：从 payload 解析真实目标 store（不查 ACTION_TO_STORE_MAP）
+    let targetStore: StoreName
+    if (QUERY_ACTIONS.has(meta.action)) {
+      const payloadStore = envelope.payload != null && typeof envelope.payload === 'object'
+        && 'store' in envelope.payload
+        ? (envelope.payload as Record<string, unknown>).store
+        : undefined
+      if (typeof payloadStore !== 'string' || payloadStore === '') {
+        throw new EnvelopeError(`Query action "${meta.action}" requires payload.store`)
+      }
+      targetStore = payloadStore as StoreName
+    } else {
+      targetStore = inferStore(meta.action)
+    }
 
     logger.debug(`[DataBridge] Route determined: action="${meta.action}", targetStore="${targetStore}", operation="${operation}"`)
 
+    const shouldContinue = await this.assertAclWithFallback(envelope, targetStore, operation)
+    if (!shouldContinue) return
+
+    this.writeAuditLog(envelope, targetStore).catch((err) => {
+      logger.error(`[DataBridge] Audit log failed: action="${meta.action}", traceId="${meta.traceId}"`, { error: err })
+    })
+
     try {
-      try {
-        aclEngine.assert({
-          module: meta.source,
-          store: targetStore,
-          operation,
-        })
-        logger.debug(`[DataBridge] ACL check passed: module="${meta.source}", store="${targetStore}", operation="${operation}"`)
-      } catch (aclErr) {
-        logger.error(`[DataBridge] ACL check failed: module="${meta.source}", store="${targetStore}", operation="${operation}"`, { error: aclErr })
-        if (this.isMarketEnvelope(meta.action)) {
-          logger.warn(`[DataBridge] ACL rejected market envelope, enqueueing for retry: action="${meta.action}", traceId="${meta.traceId}"`)
-          this.fallbackQueue.push(envelope)
-          return
-        }
-        throw aclErr
-      }
-
-      this.writeAuditLog(envelope, targetStore).catch((err) => {
-        logger.error(`[DataBridge] Audit log failed: action="${meta.action}", traceId="${meta.traceId}"`, { error: err })
-      })
-
-      if (
-        meta.action === ENVELOPE_ACTION.strategyHotSectorRefresh ||
-        meta.action === ENVELOPE_ACTION.strategyValuePitRefresh ||
-        meta.action === ENVELOPE_ACTION.strategyRotationSignalDetect
-      ) {
+      if (STRATEGY_ACTIONS.has(meta.action)) {
         logger.info(`[DataBridge] Routing to strategy engine: action="${meta.action}"`)
         const ctx: StrategyRouterContext = {
           subscribers: this.subscribers,
@@ -354,13 +377,13 @@ export class DataBridge {
         return
       }
 
-      if (this.isQueryAction(meta.action)) {
-        logger.info(`[DataBridge] Routing to query: action="${meta.action}"`)
+      if (QUERY_ACTIONS.has(meta.action)) {
+        logger.info(`[DataBridge] Routing to query: action="${meta.action}", store="${targetStore}"`)
         await this.routeToQuery(envelope, targetStore)
         return
       }
 
-      if (this.isEventAction(meta.action)) {
+      if (EVENT_ACTIONS.has(meta.action)) {
         logger.info(`[DataBridge] Routing to event channel: action="${meta.action}"`)
         await this.routeToEvent(envelope)
         return
@@ -426,22 +449,11 @@ export class DataBridge {
   }
 
   private getMatchingSubscribers(channel: string): Set<EnvelopeCallback> {
-    const matching = new Set<EnvelopeCallback>()
-
-    for (const [subChannel, callbacks] of this.subscribers) {
-      if (subChannel === channel) {
-        callbacks.forEach((cb) => matching.add(cb))
-      } else if (subChannel.includes(':*')) {
-        const prefix = subChannel.split(':')[0]
-        if (prefix !== undefined && channel.startsWith(prefix)) {
-          callbacks.forEach((cb) => matching.add(cb))
-        }
-      } else if (channel.includes(':') && subChannel === channel.split(':')[0]) {
-        callbacks.forEach((cb) => matching.add(cb))
-      }
-    }
-
-    return matching
+    // 严格匹配：只匹配订阅了完全相同 channel 的回调
+    // 历史曾支持通配（'event:*'）与前缀匹配（'test' 匹配 'test:foo'），均无调用方依赖
+    // 且与 symbol 级精确广播（bypass 模糊匹配）冲突，移除以保持单一行为
+    const callbacks = this.subscribers.get(channel)
+    return new Set(callbacks ?? [])
   }
 
   private extractSymbolFromPayload(payload: unknown): string | undefined {
@@ -464,23 +476,33 @@ export class DataBridge {
     return action === ENVELOPE_ACTION.saveDailyQuotes
   }
 
-  private isEventAction(action: string): boolean {
-    const eventActions = [
-      ENVELOPE_ACTION.newsArticleLoaded,
-      ENVELOPE_ACTION.holdingsDataLoaded,
-      ENVELOPE_ACTION.tradeActionExecuted,
-      ENVELOPE_ACTION.loadHoldingsData,
-    ] as const
-    return (eventActions as readonly string[]).includes(action)
-  }
-
-  private isQueryAction(action: string): boolean {
-    const queryActions = [
-      ENVELOPE_ACTION.queryGet,
-      ENVELOPE_ACTION.queryList,
-      ENVELOPE_ACTION.queryByIndex,
-    ] as const
-    return (queryActions as readonly string[]).includes(action)
+  /**
+   * ACL 校验；若市场类 envelope 被拒绝则入队重试并返回 false，
+   * 否则返回 true 表示继续处理。
+   */
+  private async assertAclWithFallback(
+    envelope: StandardEnvelope,
+    targetStore: StoreName,
+    operation: DbOperation,
+  ): Promise<boolean> {
+    const { meta } = envelope
+    try {
+      aclEngine.assert({
+        module: meta.source,
+        store: targetStore,
+        operation,
+      })
+      logger.debug(`[DataBridge] ACL check passed: module="${meta.source}", store="${targetStore}", operation="${operation}"`)
+      return true
+    } catch (aclErr) {
+      logger.error(`[DataBridge] ACL check failed: module="${meta.source}", store="${targetStore}", operation="${operation}"`, { error: aclErr })
+      if (this.isMarketEnvelope(meta.action)) {
+        logger.warn(`[DataBridge] ACL rejected market envelope, enqueueing for retry: action="${meta.action}", traceId="${meta.traceId}"`)
+        this.fallbackQueue.push(envelope)
+        return false
+      }
+      throw aclErr
+    }
   }
 
   private async routeToQuery(envelope: StandardEnvelope, store: StoreName): Promise<void> {

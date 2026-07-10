@@ -29,7 +29,7 @@ describe('AgentRuntime MCP Integration', () => {
     runtime.register(mockConfig)
   })
 
-  it('should call mcpBridge.callTool with correct params', async () => {
+  it('应该调用 mcpBridge.callTool with correct params', async () => {
     const mockResult = {
       content: [{ type: 'text' as const, text: 'success' }],
       isError: false,
@@ -43,7 +43,7 @@ describe('AgentRuntime MCP Integration', () => {
     expect(task.result).toBeDefined()
   })
 
-  it('should handle MCP call errors', async () => {
+  it('应该处理 MCP call errors', async () => {
     const mockResult = {
       content: [{ type: 'text' as const, text: 'Tool error' }],
       isError: true,
@@ -57,7 +57,7 @@ describe('AgentRuntime MCP Integration', () => {
     expect(task.error).toContain('Tool error')
   })
 
-  it('should handle timeout', async () => {
+  it('应该处理超时', async () => {
     mockCallTool.mockImplementation(() => new Promise((r) => setTimeout(r, 10000)))
 
     const task = await runtime.execute('test-agent', 'test_tool', {}, 100)
@@ -66,13 +66,13 @@ describe('AgentRuntime MCP Integration', () => {
     expect(task.error).toContain('timeout')
   }, 5000)
 
-  it('should throw when agent not found', async () => {
+  it('应该抛出 when agent not found', async () => {
     await expect(
       runtime.execute('unknown-agent', 'test_tool', {}),
     ).rejects.toThrow('Agent not found')
   })
 
-  it('should use defaultToolName from config', async () => {
+  it('应该use defaultToolName from config', async () => {
     mockCallTool.mockResolvedValue({
       content: [{ type: 'text' as const, text: 'ok' }],
       isError: false,
@@ -83,7 +83,7 @@ describe('AgentRuntime MCP Integration', () => {
     expect(mockCallTool).toHaveBeenCalledWith('test-server', 'test_tool', {})
   })
 
-  it('should use mcpServerName from config', async () => {
+  it('应该use mcpServerName from config', async () => {
     mockCallTool.mockResolvedValue({
       content: [{ type: 'text' as const, text: 'ok' }],
       isError: false,

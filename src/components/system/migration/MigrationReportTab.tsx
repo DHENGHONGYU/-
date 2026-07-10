@@ -9,7 +9,7 @@ interface MigrationReportTabProps {
   onReset: () => void
 }
 
-export function MigrationReportTab({ report, onGenerateReport, onReset }: MigrationReportTabProps): React.JSX.Element | null {
+export function MigrationReportTab({ report, onGenerateReport, onReset }: MigrationReportTabProps): React.JSX.Element {
   const [reportText, setReportText] = React.useState<string>('')
   const [loading, setLoading] = React.useState(false)
 
@@ -22,7 +22,7 @@ export function MigrationReportTab({ report, onGenerateReport, onReset }: Migrat
     }
   }, [report, reportText, onGenerateReport])
 
-  if (!report) return null
+  if (!report) return <></>
 
   const { summary } = report
 

@@ -86,7 +86,7 @@ describe('valuePitAnalyzer', () => {
     dataBridge.invalidateCache(STORE_NAME.rotationScores)
   })
 
-  it('should analyze stocks within V6 band and persist scores', async () => {
+  it('应该analyze stocks within V6 band and persist scores', async () => {
     const stocks: Stock[] = [
       buildStock('A', { sector: '人工智能' }),
       buildStock('B', { sector: '集成电路' }),
@@ -117,7 +117,7 @@ describe('valuePitAnalyzer', () => {
     expect(persisted?.score).toBe(first?.score)
   })
 
-  it('should exclude stocks outside V6 value pit band', async () => {
+  it('应该exclude stocks outside V6 value pit band', async () => {
     const lowStock = buildStock('LOW', { sector: '人工智能' })
     await dataLayer.stocks.add(lowStock)
     await dataLayer.v6Scores.save(buildV6Score('LOW', 1.5))
@@ -129,7 +129,7 @@ describe('valuePitAnalyzer', () => {
     expect(result.data).toHaveLength(0)
   })
 
-  it('should classify trigger action across wait/probe/immediate', async () => {
+  it('应该classify trigger action across wait/probe/immediate', async () => {
     const stock = buildStock('EDGE', { sector: '人工智能' })
     await dataLayer.stocks.add(stock)
     await dataLayer.v6Scores.save(buildV6Score('EDGE', 3.0))
@@ -145,7 +145,7 @@ describe('valuePitAnalyzer', () => {
     expect(['immediate', 'probe', 'wait', 'ignore']).toContain(score?.action)
   })
 
-  it('should respect custom rule thresholds', async () => {
+  it('应该respect custom rule thresholds', async () => {
     const stock = buildStock('THRESH', { sector: '人工智能' })
     await dataLayer.stocks.add(stock)
     await dataLayer.v6Scores.save(buildV6Score('THRESH', 2.7))

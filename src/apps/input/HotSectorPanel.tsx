@@ -14,6 +14,7 @@ import { usePoolStore, getAllGroups } from '@/store/poolStore'
 import { useToast } from '@/hooks/useToast'
 import { getLogger } from '@/lib/logger'
 import { twText, twBg } from '@/constants/theme.tokens'
+import { Skeleton } from '@/components/ui/Skeleton'
 
 const logger = getLogger()
 
@@ -21,6 +22,7 @@ export default function HotSectorPanel(): React.JSX.Element {
   // 从 poolStore 获取状态
   const refresh = usePoolStore((s) => s.refresh)
   const stocks = usePoolStore((s) => s.stocks)
+  const loading = usePoolStore((s) => s.loading)
   const allGroups = useMemo(() => getAllGroups(), [stocks])
   
   const [hotSectors] = useState<HotSector[]>(() => getHotSectors())
@@ -211,29 +213,37 @@ export default function HotSectorPanel(): React.JSX.Element {
                 </Button>
               </div>
               <div className="max-h-96 overflow-auto">
-                {activeHotSector.stocks.map((stock) => {
-                  const isAdded = existingSymbols.has(stock.symbol)
-                  const isAdding = addingHot.has(stock.symbol)
-                  return (
-                    <div
-                      key={stock.symbol}
-                      className="flex items-center justify-between border-b p-3 last:border-b-0"
-                    >
-                      <div>
-                        <span className="font-mono text-sm">{stock.symbol}</span>
-                        <span className="ml-2 text-sm text-muted-foreground">{stock.name}</span>
-                      </div>
-                      <Button
-                        size="sm"
-                        onClick={() => void handleAddHotStock(stock.symbol)}
-                        disabled={isAdded || isAdding}
-                        variant={isAdded ? 'secondary' : 'primary'}
+                {loading && stocks.length === 0 ? (
+                  <div className="space-y-2 p-3">
+                    <Skeleton className="h-10 w-full" />
+                    <Skeleton className="h-10 w-full" />
+                    <Skeleton className="h-10 w-full" />
+                  </div>
+                ) : (
+                  activeHotSector.stocks.map((stock) => {
+                    const isAdded = existingSymbols.has(stock.symbol)
+                    const isAdding = addingHot.has(stock.symbol)
+                    return (
+                      <div
+                        key={stock.symbol}
+                        className="flex items-center justify-between border-b p-3 last:border-b-0"
                       >
-                        {isAdded ? '已加入' : isAdding ? '加入中...' : '加入候选池'}
-                      </Button>
-                    </div>
-                  )
-                })}
+                        <div>
+                          <span className="font-mono text-sm">{stock.symbol}</span>
+                          <span className="ml-2 text-sm text-muted-foreground">{stock.name}</span>
+                        </div>
+                        <Button
+                          size="sm"
+                          onClick={() => void handleAddHotStock(stock.symbol)}
+                          disabled={isAdded || isAdding}
+                          variant={isAdded ? 'secondary' : 'primary'}
+                        >
+                          {isAdded ? '已加入' : isAdding ? '加入中...' : '加入候选池'}
+                        </Button>
+                      </div>
+                    )
+                  })
+                )}
               </div>
             </div>
           )}

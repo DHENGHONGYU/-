@@ -39,6 +39,7 @@
 import { vi } from 'vitest'
 import type { HotSectorScore, ValuePitScore, Signal, Stock } from '@/data/types'
 import type { RotationSignal } from '@/services/scoring/rotationSignalDetector'
+import type { StandardEnvelope } from '@/core/envelope'
 
 // ============================================================
 // vi.hoisted mocks
@@ -55,7 +56,7 @@ const {
   capturedCallbacks,
   unsubscribes,
 } = vi.hoisted(() => {
-  const capturedCallbacks = new Map<string, ((envelope: unknown) => void)>()
+  const capturedCallbacks = new Map<string, ((envelope: StandardEnvelope) => void)>()
   const unsubscribes: Array<ReturnType<typeof vi.fn>> = []
   return {
     mockDataBridgeQuery: vi.fn().mockResolvedValue({ success: true, data: [] }),
@@ -64,7 +65,7 @@ const {
     mockHotSectorAnalyze: vi.fn(),
     mockValuePitAnalyze: vi.fn(),
     mockRotationDetect: vi.fn(),
-    mockSubscribe: vi.fn((channel: string, callback: (envelope: unknown) => void) => {
+    mockSubscribe: vi.fn((channel: string, callback: (envelope: StandardEnvelope) => void) => {
       capturedCallbacks.set(channel, callback)
       const unsub = vi.fn()
       unsubscribes.push(unsub)
@@ -727,7 +728,7 @@ describe('initDualStrategyStoreSubscriptions', () => {
 
     // 被过滤的 source 不应触发 refresh
     hotCb!({
-      meta: { source: 'analyzer', action: 'SAVE', traceId: 't1' },
+      meta: { source: 'analyzer', target: 'db', action: 'SAVE_SCORES', traceId: 't1', timestamp: Date.now() },
       payload: {},
     })
 
@@ -736,7 +737,7 @@ describe('initDualStrategyStoreSubscriptions', () => {
 
     // 合法的 source 应该触发 refresh
     hotCb!({
-      meta: { source: 'external', action: 'SAVE', traceId: 't2' },
+      meta: { source: 'system', target: 'db', action: 'SAVE_SCORES', traceId: 't2', timestamp: Date.now() },
       payload: {},
     })
 
@@ -751,9 +752,9 @@ describe('initDualStrategyStoreSubscriptions', () => {
     const hotCb = capturedCallbacks.get('hotSectorScores')!
 
     // 连续触发多次
-    hotCb({ meta: { source: 'external', action: 'SAVE', traceId: 't1' }, payload: {} })
-    hotCb({ meta: { source: 'external', action: 'SAVE', traceId: 't2' }, payload: {} })
-    hotCb({ meta: { source: 'external', action: 'SAVE', traceId: 't3' }, payload: {} })
+    hotCb({ meta: { source: 'system', target: 'db', action: 'SAVE_SCORES', traceId: 't1', timestamp: Date.now() }, payload: {} })
+    hotCb({ meta: { source: 'system', target: 'db', action: 'SAVE_SCORES', traceId: 't2', timestamp: Date.now() }, payload: {} })
+    hotCb({ meta: { source: 'system', target: 'db', action: 'SAVE_SCORES', traceId: 't3', timestamp: Date.now() }, payload: {} })
 
     // 50ms 内不应触发
     await new Promise((r) => setTimeout(r, 50))
@@ -794,7 +795,7 @@ describe('initDualStrategyStoreSubscriptions', () => {
     const hotCb = capturedCallbacks.get('hotSectorScores')!
 
     // 触发一个事件，启动去抖定时器
-    hotCb({ meta: { source: 'external', action: 'SAVE', traceId: 't1' }, payload: {} })
+    hotCb({ meta: { source: 'system', target: 'db', action: 'SAVE_SCORES', traceId: 't1', timestamp: Date.now() }, payload: {} })
 
     // 立刻 cleanup
     cleanup()

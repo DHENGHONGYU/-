@@ -57,10 +57,9 @@ export function NewsSentimentTrend({ loading = false, error = null }: NewsSentim
     computeSentimentTrend(dimension, value || undefined)
   }, [articles, dimension, value, computeSentimentTrend])
 
-  // 构建趋势数据（从 Store 读取，若尚未计算则使用空数据）
   const trend = useMemo(() => sentimentTrend ?? {
     dimension,
-    value: value ?? '',
+    value: value || '',
     data: [],
     summary: { totalArticles: 0, positiveCount: 0, negativeCount: 0, neutralCount: 0, avgDailyArticles: 0 },
   }, [sentimentTrend, dimension, value])
@@ -133,7 +132,7 @@ export function NewsSentimentTrend({ loading = false, error = null }: NewsSentim
           isError={error !== null}
           isEmpty={isEmpty || trend.data.length === 0}
           data={trend}
-          errorProps={{ error: error ?? '' }}
+          errorProps={{ error: error || '' }}
           emptyProps={{
             title: '暂无趋势数据',
             description: '当前筛选条件下没有足够资讯生成情感趋势',

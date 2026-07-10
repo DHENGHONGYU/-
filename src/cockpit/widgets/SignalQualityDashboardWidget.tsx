@@ -25,12 +25,11 @@ import {
   TrendingUp,
   TrendingDown,
   Award,
-  AlertTriangle,
 } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
-import { DataState } from '@/components/ui/DataState'
+import { Skeleton } from '@/components/ui/states'
+import { WidgetStateShell } from './components/WidgetStateShell'
 import {
   useSignalQualityStore,
   initSignalQualityStoreSubscriptions,
@@ -263,92 +262,13 @@ const SignalQualityDashboardWidget = memo(
 
     const hasError = error !== null && error.length > 0
     const isEmpty = !loading && !hasError && reviews.length === 0
-
-    // ── 渲染：错误状态 ──────────────────────────────────────────────────────
-    if (hasError) {
-      return (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <AlertTriangle className="h-4 w-4" />
-              {config.title}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className={`text-center ${COLOR_TOKENS.danger.tailwind}`}>
-            <p>{error}</p>
-            <Button
-              className="mt-3"
-              size="sm"
-              variant="secondary"
-              onClick={() => void loadReviews()}
-            >
-              重试
-            </Button>
-          </CardContent>
-        </Card>
-      )
-    }
-
-    // ── 渲染：加载中 ────────────────────────────────────────────────────────
-    if (loading && reviews.length === 0) {
-      return (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Activity className="h-4 w-4" />
-              {config.title}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <DataState
-              isLoading={true}
-              isError={false}
-              isEmpty={false}
-              data={null}
-              loadingProps={{ message: '加载复盘数据中...' }}
-            >
-              <></>
-            </DataState>
-          </CardContent>
-        </Card>
-      )
-    }
-
-    // ── 渲染：空状态 ────────────────────────────────────────────────────────
-    if (isEmpty) {
-      return (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Activity className="h-4 w-4" />
-              {config.title}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <DataState
-              isLoading={false}
-              isError={false}
-              isEmpty={true}
-              data={null}
-              emptyProps={{
-                title: '暂无复盘数据',
-                description: '点击下方按钮加载历史信号复盘记录',
-              }}
-            >
-              <></>
-            </DataState>
-            <Button
-              className="mt-3"
-              size="sm"
-              variant="secondary"
-              onClick={() => void loadReviews()}
-            >
-              加载复盘数据
-            </Button>
-          </CardContent>
-        </Card>
-      )
-    }
+    const visualState = hasError
+      ? 'error'
+      : loading && reviews.length === 0
+        ? 'loading'
+        : isEmpty
+          ? 'empty'
+          : 'ready'
 
     // ── 渲染：正常状态 ──────────────────────────────────────────────────────
     logger.info('[SignalQualityDashboardWidget] 渲染', {
@@ -357,17 +277,48 @@ const SignalQualityDashboardWidget = memo(
     })
 
     return (
-      <Card className="overflow-hidden">
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="flex items-center gap-2 text-base">
-            <Activity className="h-4 w-4" />
-            {config.title}
-          </CardTitle>
-          <Badge variant="outline" className="text-xs">
-            {reviews.length} 条复盘
-          </Badge>
-        </CardHeader>
-        <CardContent className="space-y-4">
+      <WidgetStateShell
+        title={config.title}
+        titleIcon={<Activity className="h-4 w-4" />}
+        titleAction={
+          visualState === 'ready' ? (
+            <Badge variant="outline" className="text-xs">
+              {reviews.length} 条复盘
+            </Badge>
+          ) : null
+        }
+        visualState={visualState}
+        error={error ?? undefined}
+        onRetry={() => void loadReviews()}
+        loadingLabel="加载复盘数据中…"
+        emptyTitle="暂无复盘数据"
+        emptyDescription="点击下方按钮加载历史信号复盘记录"
+        emptyAction={
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={() => void loadReviews()}
+          >
+            加载复盘数据
+          </Button>
+        }
+        skeleton={
+          <div className="space-y-4">
+            <div className="grid grid-cols-4 gap-3">
+              {[1, 2, 3, 4].map((i) => (
+                <Skeleton key={i} variant="rect" className="h-20" />
+              ))}
+            </div>
+            <Skeleton variant="rect" className="h-32" />
+            <div className="space-y-2">
+              {[1, 2, 3].map((i) => (
+                <Skeleton key={i} variant="text" />
+              ))}
+            </div>
+          </div>
+        }
+      >
+        <div className="space-y-4">
           {/* 1. 核心指标卡（accuracy/winRate/sharpe/maxDrawdown） */}
           <div className="grid grid-cols-4 gap-3">
             <MetricCard
@@ -577,8 +528,8 @@ const SignalQualityDashboardWidget = memo(
               重新计算指标
             </Button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </WidgetStateShell>
     )
   },
 )

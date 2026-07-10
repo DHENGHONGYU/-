@@ -18,15 +18,16 @@
 
 import { vi } from 'vitest'
 import type { HoldingItem } from '@/types/modules/trade.types'
+import type { StandardEnvelope } from '@/core/envelope'
 
 // ============================================================
 // vi.hoisted mocks
 // ============================================================
 
 const { mockSubscribe, capturedCallbacks, unsubscribes } = vi.hoisted(() => {
-  const capturedCallbacks = new Map<string, ((envelope: unknown) => void)>()
+  const capturedCallbacks = new Map<string, ((envelope: StandardEnvelope) => void)>()
   const unsubscribes: Array<ReturnType<typeof vi.fn>> = []
-  const mockSubscribe = vi.fn((channel: string, callback: (envelope: unknown) => void) => {
+  const mockSubscribe = vi.fn((channel: string, callback: (envelope: StandardEnvelope) => void) => {
     capturedCallbacks.set(channel, callback)
     const unsub = vi.fn()
     unsubscribes.push(unsub)
@@ -284,14 +285,14 @@ describe('initHoldingsStoreSubscriptions', () => {
     // 调用回调应不会抛错
     expect(() =>
       stocksCb!({
-        meta: { source: 'tradinghub', action: 'HOLDINGS_DATA_LOADED', traceId: 't1' },
+        meta: { source: 'tradinghub', target: 'db', action: 'HOLDINGS_DATA_LOADED', traceId: 't1', timestamp: Date.now() },
         payload: {},
       }),
     ).not.toThrow()
 
     expect(() =>
       ordersCb!({
-        meta: { source: 'tradinghub', action: 'TRADE_ACTION_EXECUTED', traceId: 't2' },
+        meta: { source: 'tradinghub', target: 'db', action: 'TRADE_ACTION_EXECUTED', traceId: 't2', timestamp: Date.now() },
         payload: {},
       }),
     ).not.toThrow()

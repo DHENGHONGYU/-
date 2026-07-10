@@ -141,7 +141,7 @@ export function StockSearch({
           if (results.length > 0) setOpen(true)
         }}
         placeholder={placeholder}
-        aria-label={placeholder || '搜索股票'}
+        aria-label={placeholder}
         disabled={isAddingStock}
         role="combobox"
         aria-expanded={open}

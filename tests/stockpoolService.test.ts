@@ -19,7 +19,7 @@ describe('stockpoolService', () => {
     dataBridge.invalidateCache(STORE_NAME.stocks)
   })
 
-  it('should transition candidate to screened', async () => {
+  it('应该transition candidate to screened', async () => {
     await dataLayer.stocks.add({
       symbol: '000001.SZ',
       name: '平安银行',
@@ -35,7 +35,7 @@ describe('stockpoolService', () => {
     expect(updated?.researchStatus).toBe(RESEARCH_STATUS.screened)
   })
 
-  it('should archive from any active pool', async () => {
+  it('应该archive from any active pool', async () => {
     await dataLayer.stocks.add({
       symbol: '000001.SZ',
       name: '平安银行',
@@ -51,7 +51,7 @@ describe('stockpoolService', () => {
     expect(updated?.researchStatus).toBe(RESEARCH_STATUS.archived)
   })
 
-  it('should reactivate archived to candidate', async () => {
+  it('应该reactivate archived to candidate', async () => {
     await dataLayer.stocks.add({
       symbol: '000001.SZ',
       name: '平安银行',
@@ -67,7 +67,7 @@ describe('stockpoolService', () => {
     expect(updated?.researchStatus).toBe(RESEARCH_STATUS.candidate)
   })
 
-  it('should reject invalid transition', async () => {
+  it('应该reject invalid transition', async () => {
     await dataLayer.stocks.add({
       symbol: '000001.SZ',
       name: '平安银行',
@@ -81,13 +81,13 @@ describe('stockpoolService', () => {
     expect(result.error).toContain('非法流转')
   })
 
-  it('should reject transition for non-existent stock', async () => {
+  it('应该reject transition for non-existent stock', async () => {
     const result = await transitionStock('NOT_EXIST', RESEARCH_STATUS.screened)
     expect(result.success).toBe(false)
     expect(result.error).toContain('股票不存在')
   })
 
-  it('should get stocks by status', async () => {
+  it('应该get stocks by status', async () => {
     await dataLayer.stocks.add({
       symbol: '000001.SZ',
       name: '平安银行',
@@ -101,7 +101,7 @@ describe('stockpoolService', () => {
     expect(result.data).toHaveLength(1)
   })
 
-  it('should return transition options for each status', () => {
+  it('应该返回 transition options for each status', () => {
     expect(getPoolTransitionOptions(RESEARCH_STATUS.candidate)).toHaveLength(2)
     expect(getPoolTransitionOptions(RESEARCH_STATUS.screened)).toHaveLength(2)
     expect(getPoolTransitionOptions(RESEARCH_STATUS.deepDive)).toHaveLength(2)
@@ -109,7 +109,7 @@ describe('stockpoolService', () => {
     expect(getPoolTransitionOptions(RESEARCH_STATUS.archived)).toHaveLength(1)
   })
 
-  it('should update stock group', async () => {
+  it('应该更新 stock group', async () => {
     await dataLayer.stocks.add({
       symbol: '000001.SZ',
       name: '平安银行',
@@ -125,7 +125,7 @@ describe('stockpoolService', () => {
     expect(updated?.group).toBe('核心持仓')
   })
 
-  it('should reject empty group name', async () => {
+  it('应该reject empty group name', async () => {
     await dataLayer.stocks.add({
       symbol: '000001.SZ',
       name: '平安银行',
@@ -139,7 +139,7 @@ describe('stockpoolService', () => {
     expect(result.error).toContain('分组名称不能为空')
   })
 
-  it('should get stocks by group', async () => {
+  it('应该get stocks by group', async () => {
     await dataLayer.stocks.add({
       symbol: '000001.SZ',
       name: '平安银行',
@@ -162,7 +162,7 @@ describe('stockpoolService', () => {
     expect(result.data?.[0]?.symbol).toBe('000001.SZ')
   })
 
-  it('should list all pool groups including default', async () => {
+  it('应该list all pool groups including default', async () => {
     await dataLayer.stocks.add({
       symbol: '000001.SZ',
       name: '平安银行',
@@ -178,7 +178,7 @@ describe('stockpoolService', () => {
     expect(result.data).toContain(DEFAULT_POOL_GROUP)
   })
 
-  it('should fall back to default group when group is undefined', async () => {
+  it('应该fall back to default group when group is undefined', async () => {
     await dataLayer.stocks.add({
       symbol: '000001.SZ',
       name: '平安银行',

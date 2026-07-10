@@ -28,3 +28,82 @@ export interface ScoreTrendData {
   period: ScoreTrendPeriod
   points: ScoreTrendPoint[]
 }
+
+/** 评分比对模式 */
+export type ScoreComparisonMode =
+  /** 同股票不同版本比对 */
+  | 'same-stock-versions'
+  /** 不同股票最新版本比对 */
+  | 'cross-stock-latest'
+
+/** 维度比对项 */
+export interface DimensionComparisonItem {
+  /** 维度代码 */
+  code: string
+  /** 左侧得分 */
+  leftScore: number
+  /** 右侧得分 */
+  rightScore: number
+  /** 变化量（右 - 左） */
+  delta: number
+  /** 左侧权重 */
+  leftWeight: number
+  /** 右侧权重 */
+  rightWeight: number
+  /** 左侧理由 */
+  leftReason: string
+  /** 右侧理由 */
+  rightReason: string
+}
+
+/** 评分比对结果 */
+export interface ScoreComparisonResult {
+  /** 比对模式 */
+  mode: ScoreComparisonMode
+  /** 左侧版本信息 */
+  left: {
+    symbol: string
+    stockName: string
+    version: number
+    scoreDate: string
+    composite: number
+    l3v: number
+    recommendation: { key: string; label: string; color: string }
+    modelUsed: string
+  }
+  /** 右侧版本信息 */
+  right: {
+    symbol: string
+    stockName: string
+    version: number
+    scoreDate: string
+    composite: number
+    l3v: number
+    recommendation: { key: string; label: string; color: string }
+    modelUsed: string
+  }
+  /** 综合分变化（右 - 左） */
+  compositeDelta: number
+  /** L3V 变化（右 - 左） */
+  l3vDelta: number
+  /** 各维度比对结果 */
+  dimensions: DimensionComparisonItem[]
+  /** 评级是否变化 */
+  ratingChanged: boolean
+  /** 新增维度（右侧有左侧没有） */
+  addedDimensions: string[]
+  /** 移除维度（左侧有右侧没有） */
+  removedDimensions: string[]
+  /** 上升幅度最大的维度 Top N */
+  topRisingDimensions: DimensionComparisonItem[]
+  /** 下降幅度最大的维度 Top N */
+  topFallingDimensions: DimensionComparisonItem[]
+}
+
+/** 比对看板时间轴项 */
+export interface ScoreComparisonTimelineItem {
+  version: number
+  scoreDate: string
+  composite: number
+  changeFromPrev: number | null
+}

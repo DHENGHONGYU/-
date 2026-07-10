@@ -18,7 +18,7 @@ describe('useMCPServerStore', () => {
     useMCPServerStore.setState({ servers: [], isLoading: false, error: null })
   })
 
-  it('should refresh servers from registry', () => {
+  it('应该refresh servers from registry', () => {
     mockListServers.mockReturnValue([
       {
         server: {
@@ -40,25 +40,25 @@ describe('useMCPServerStore', () => {
     expect(isLoading).toBe(false)
   })
 
-  it('should toggle server enabled state', () => {
+  it('应该toggle server enabled state', () => {
     mockListServers.mockReturnValue([])
     useMCPServerStore.getState().toggleServer('test', false)
     expect(mockSetEnabled).toHaveBeenCalledWith('test', false)
   })
 
-  it('should handle empty registry', () => {
+  it('应该处理空值 registry', () => {
     mockListServers.mockReturnValue([])
     useMCPServerStore.getState().refreshServers()
     expect(useMCPServerStore.getState().servers).toEqual([])
   })
 
-  it('should set isLoading during refresh', () => {
+  it('应该设置 isLoading during refresh', () => {
     mockListServers.mockReturnValue([])
     useMCPServerStore.getState().refreshServers()
     expect(useMCPServerStore.getState().isLoading).toBe(false)
   })
 
-  it('should handle listServers error', () => {
+  it('应该处理 listServers error', () => {
     mockListServers.mockImplementation(() => {
       throw new Error('Registry error')
     })

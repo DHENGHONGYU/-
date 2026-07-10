@@ -217,47 +217,62 @@ export abstract class MCPServerBase implements MCPServer {
   async readResource(uri: string, context?: McpCallerContext): Promise<ResourceContent> {
     const caller = this.resolveCallerFromContext(context)
     const resources = this.listResources()
+    const matched = resources.find((r) => this.uriTemplateToRegex(r.uriTemplate).test(uri))
 
-    for (const resource of resources) {
-      const regex = this.uriTemplateToRegex(resource.uriTemplate)
-      if (regex.test(uri)) {
-        // ── Server 端权限断言（防小人） ──
-        try {
-          this.assertServerPermission(caller, `readResource:${resource.name}`)
-        } catch (err) {
-          if (err instanceof McpAclError) {
-            logger.warn(
-              `[MCPServer:${this.info.name}] readResource() ACL denied: caller="${caller}", uri="${uri}"`,
-            )
-            return {
-              uri,
-              mimeType: 'text/plain',
-              text: `ACL_PERMISSION_DENIED: ${err.detail.reason}`,
-            }
-          }
-          throw err
-        }
-
-        try {
-          logger.info(`[MCPServer:${this.info.name}] readResource() reading: ${uri}`, { caller })
-          return await resource.resolver(uri)
-        } catch (error) {
-          const message = error instanceof Error ? error.message : String(error)
-          logger.error(`[MCPServer:${this.info.name}] readResource() failed: ${uri}`, { error: message })
-          return {
-            uri,
-            mimeType: 'text/plain',
-            text: `Resource read error: ${message}`,
-          }
-        }
+    if (!matched) {
+      logger.error(`[MCPServer:${this.info.name}] readResource() not found: ${uri}`)
+      return {
+        uri,
+        mimeType: 'text/plain',
+        text: `Resource not found: ${uri}`,
       }
     }
 
-    logger.error(`[MCPServer:${this.info.name}] readResource() not found: ${uri}`)
-    return {
-      uri,
-      mimeType: 'text/plain',
-      text: `Resource not found: ${uri}`,
+    const permissionResult = this.checkResourcePermission(caller, matched, uri)
+    if (permissionResult) return permissionResult
+
+    return this.resolveResource(matched, uri, caller)
+  }
+
+  private checkResourcePermission(
+    caller: McpCallerRole,
+    resource: ResourceTemplate,
+    uri: string,
+  ): ResourceContent | null {
+    try {
+      this.assertServerPermission(caller, `readResource:${resource.name}`)
+      return null
+    } catch (err) {
+      if (err instanceof McpAclError) {
+        logger.warn(
+          `[MCPServer:${this.info.name}] readResource() ACL denied: caller="${caller}", uri="${uri}"`,
+        )
+        return {
+          uri,
+          mimeType: 'text/plain',
+          text: `ACL_PERMISSION_DENIED: ${err.detail.reason}`,
+        }
+      }
+      throw err
+    }
+  }
+
+  private async resolveResource(
+    resource: ResourceTemplate,
+    uri: string,
+    caller: McpCallerRole,
+  ): Promise<ResourceContent> {
+    try {
+      logger.info(`[MCPServer:${this.info.name}] readResource() reading: ${uri}`, { caller })
+      return await resource.resolver(uri)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error)
+      logger.error(`[MCPServer:${this.info.name}] readResource() failed: ${uri}`, { error: message })
+      return {
+        uri,
+        mimeType: 'text/plain',
+        text: `Resource read error: ${message}`,
+      }
     }
   }
 

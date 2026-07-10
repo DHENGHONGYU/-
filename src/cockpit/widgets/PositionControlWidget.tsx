@@ -1,6 +1,8 @@
 import React, { memo, useEffect } from 'react'
 import { PieChart, Wallet, DollarSign } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import { cn } from '@/lib/utils'
+import { WidgetStateShell } from './components/WidgetStateShell'
+import { Skeleton } from '@/components/ui/states'
 import { Badge } from '@/components/ui/Badge'
 import type { WidgetConfig } from '@/types/modules/widget.types'
 import { usePositionStore, initPositionStoreSubscriptions } from '@/store/positionStore'
@@ -42,35 +44,11 @@ const PositionControlWidget = memo(function PositionControlWidget({ config }: Po
     return () => { cancelled = true; cleanup() }
   }, [refresh])
 
+  let visualState: 'ready' | 'loading' | 'empty' | 'error' = 'ready'
   if (error) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">{config.title}</CardTitle>
-        </CardHeader>
-        <CardContent className={`text-center ${COLOR_TOKENS.danger.tailwind}`}>
-          <p>{error}</p>
-        </CardContent>
-      </Card>
-    )
-  }
-
-  if (loading) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">{config.title}</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-3">
-            {[1, 2].map((i) => (
-              <div key={i} className={`h-20 ${COLOR_SHADES.gray[200]} rounded animate-pulse`} />
-            ))}
-          </div>
-          <div className={`h-32 ${COLOR_SHADES.gray[200]} rounded animate-pulse`} />
-        </CardContent>
-      </Card>
-    )
+    visualState = 'error'
+  } else if (loading) {
+    visualState = 'loading'
   }
 
   const formatCurrency = (val: number): string => {
@@ -80,33 +58,46 @@ const PositionControlWidget = memo(function PositionControlWidget({ config }: Po
   }
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <CardTitle className="text-base font-semibold">{config.title}</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <WidgetStateShell
+      title={config.title}
+      visualState={visualState}
+      error={error}
+      onRetry={() => void refresh()}
+      loadingLabel="加载仓位数据中…"
+      skeleton={
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            {[1, 2].map((i) => (
+              <Skeleton key={i} variant="rect" className={cn(twBg('gray', 200), 'h-20')} />
+            ))}
+          </div>
+          <Skeleton variant="rect" className={cn(twBg('gray', 200), 'h-32')} />
+        </div>
+      }
+    >
+      <div className="space-y-4">
         {/* 资金概览 */}
         <div className="grid grid-cols-2 gap-3">
-          <div className={`${twBg('blue', 50)} rounded-lg p-3`}>
+          <div className="rounded-lg p-3 bg-card border">
             <div className="flex items-center gap-2 mb-1">
-              <Wallet className={`h-4 w-4 ${COLOR_TOKENS.info.tailwind}`} />
-              <span className={`text-xs ${COLOR_SHADES.gray[500]}`}>持仓市值</span>
+              <Wallet className={cn('h-4 w-4', COLOR_TOKENS.info.tailwind)} />
+              <span className={cn('text-xs', COLOR_SHADES.gray[500])}>持仓市值</span>
             </div>
-            <div className={`text-lg font-bold ${twText('blue', 600)}`}>{formatCurrency(totalValue)}</div>
+            <div className={cn('text-lg font-bold', COLOR_TOKENS.info.tailwind)}>{formatCurrency(totalValue)}</div>
           </div>
-          <div className={`${twBg('green', 50)} rounded-lg p-3`}>
+          <div className="rounded-lg p-3 bg-card border">
             <div className="flex items-center gap-2 mb-1">
-              <DollarSign className={`h-4 w-4 ${COLOR_TOKENS.success.tailwind}`} />
-              <span className={`text-xs ${COLOR_SHADES.gray[500]}`}>可用资金</span>
+              <DollarSign className={cn('h-4 w-4', COLOR_TOKENS.success.tailwind)} />
+              <span className={cn('text-xs', COLOR_SHADES.gray[500])}>可用资金</span>
             </div>
-            <div className={`text-lg font-bold ${twText('green', 600)}`}>{formatCurrency(availableFunds)}</div>
+            <div className={cn('text-lg font-bold', COLOR_TOKENS.success.tailwind)}>{formatCurrency(availableFunds)}</div>
           </div>
         </div>
 
         {/* 仓位比例 */}
-        <div className={`${COLOR_SHADES.gray[50]} rounded-lg p-3`}>
+        <div className="rounded-lg p-3 bg-card border">
           <div className="flex items-center justify-between mb-2">
-            <span className={`text-sm font-medium ${COLOR_SHADES.gray[700]}`}>仓位比例</span>
+            <span className={cn('text-sm font-medium', COLOR_SHADES.gray[700])}>仓位比例</span>
             <Badge
               variant="outline"
               className={
@@ -118,7 +109,7 @@ const PositionControlWidget = memo(function PositionControlWidget({ config }: Po
               {positionRatio}%
             </Badge>
           </div>
-          <div className={`w-full ${COLOR_SHADES.gray[200]} rounded-full h-3`}>
+          <div className={cn('w-full', COLOR_SHADES.gray[200], 'rounded-full h-3')}>
             <div
               className="h-3 rounded-full transition-all"
               style={{
@@ -135,7 +126,7 @@ const PositionControlWidget = memo(function PositionControlWidget({ config }: Po
             <PieChart className="h-4 w-4" /> 持仓分布
           </h4>
           {holdings.length === 0 ? (
-            <p className={`text-xs ${COLOR_SHADES.gray[400]} text-center py-4`}>暂无持仓</p>
+            <p className={cn('text-xs', COLOR_SHADES.gray[400], 'text-center py-4')}>暂无持仓</p>
           ) : (
             <div className="space-y-2 max-h-48 overflow-y-auto">
               {holdings.map((holding) => (
@@ -146,12 +137,12 @@ const PositionControlWidget = memo(function PositionControlWidget({ config }: Po
                   />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <span className={`text-sm font-medium ${COLOR_SHADES.gray[700]} truncate`}>
+                      <span className={cn('text-sm font-medium', COLOR_SHADES.gray[700], 'truncate')}>
                         {holding.name}
                       </span>
-                      <span className={`text-xs ${COLOR_SHADES.gray[500]}`}>{holding.ratio}%</span>
+                      <span className={cn('text-xs', COLOR_SHADES.gray[500])}>{holding.ratio}%</span>
                     </div>
-                    <div className={`w-full ${COLOR_SHADES.gray[200]} rounded-full h-1.5 mt-1`}>
+                    <div className={cn('w-full', COLOR_SHADES.gray[200], 'rounded-full h-1.5 mt-1')}>
                       <div
                         className="h-1.5 rounded-full"
                         style={{
@@ -166,8 +157,8 @@ const PositionControlWidget = memo(function PositionControlWidget({ config }: Po
             </div>
           )}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </WidgetStateShell>
   )
 })
 

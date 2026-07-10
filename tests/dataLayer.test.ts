@@ -14,7 +14,7 @@ describe('dataLayer', () => {
     dataBridge.invalidateCache(STORE_NAME.orders)
   })
 
-  it('should add and retrieve a stock', async () => {
+  it('应该add and retrieve a stock', async () => {
     const result = await dataLayer.stocks.add({
       symbol: '000001.SZ',
       name: '平安银行',
@@ -29,7 +29,7 @@ describe('dataLayer', () => {
     expect(stock?.name).toBe('平安银行')
   })
 
-  it('should default group to default pool group when adding stock', async () => {
+  it('应该default group to default pool group when adding stock', async () => {
     await dataLayer.stocks.add({
       symbol: '000001.SZ',
       name: '平安银行',
@@ -41,7 +41,7 @@ describe('dataLayer', () => {
     expect(stock?.group).toBe(DEFAULT_POOL_GROUP)
   })
 
-  it('should not add duplicate stock', async () => {
+  it('不应该 add duplicate stock', async () => {
     await dataLayer.stocks.add({
       symbol: '000001.SZ',
       name: '平安银行',
@@ -59,7 +59,7 @@ describe('dataLayer', () => {
     expect(result.success).toBe(false)
   })
 
-  it('should list stocks by group', async () => {
+  it('应该list stocks by group', async () => {
     await dataLayer.stocks.add({
       symbol: '000001.SZ',
       name: '平安银行',
@@ -80,7 +80,7 @@ describe('dataLayer', () => {
     expect(list[0]?.symbol).toBe('000001.SZ')
   })
 
-  it('should list all distinct groups', async () => {
+  it('应该list all distinct groups', async () => {
     await dataLayer.stocks.add({
       symbol: '000001.SZ',
       name: '平安银行',
@@ -102,7 +102,7 @@ describe('dataLayer', () => {
     expect(groups).toContain(DEFAULT_POOL_GROUP)
   })
 
-  it('should update stock group', async () => {
+  it('应该更新 stock group', async () => {
     await dataLayer.stocks.add({
       symbol: '000001.SZ',
       name: '平安银行',
@@ -121,7 +121,7 @@ describe('dataLayer', () => {
     expect(stock?.dataVersion).toBe(beforeVersion + 1)
   })
 
-  it('should save and retrieve daily quotes', async () => {
+  it('应该保存 and retrieve daily quotes', async () => {
     const quotes = {
       symbol: '000001.SZ',
       latest: {
@@ -147,7 +147,7 @@ describe('dataLayer', () => {
     expect(saved?.latest.close).toBe(12.3)
   })
 
-  it('should save and retrieve rotation score', async () => {
+  it('应该保存 and retrieve rotation score', async () => {
     const score = {
       id: 'AI__2026-06-24',
       sectorCode: 'AI',
@@ -176,7 +176,7 @@ describe('dataLayer', () => {
     expect(saved?.total).toBe(84)
   })
 
-  it('should save and retrieve sector score', async () => {
+  it('应该保存 and retrieve sector score', async () => {
     const score = {
       id: 'AI__2026-06-24',
       sectorCode: 'AI',
@@ -196,7 +196,7 @@ describe('dataLayer', () => {
     expect(saved?.composite).toBe(4.55)
   })
 
-  it('should save and retrieve score doc version', async () => {
+  it('应该保存 and retrieve score doc version', async () => {
     const doc = {
       docId: '000001.SZ__1__1234567890',
       symbol: '000001.SZ',

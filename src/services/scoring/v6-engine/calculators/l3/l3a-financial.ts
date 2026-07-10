@@ -21,63 +21,64 @@ import { clamp, type FinancialDimensionScore } from './utils'
 
 const logger = getLogger()
 
+interface ScoreTier {
+  threshold: number
+  score: number
+}
+
+function scoreByTiers(value: number | undefined, defaultScore: number, tiers: ScoreTier[]): number {
+  if (value === undefined) return defaultScore
+  return tiers.find((tier) => value > tier.threshold)?.score ?? defaultScore
+}
+
 /**
  * 财务多维度评分
  */
 function scoreFinancialDimensions(input: LayerInput): FinancialDimensionScore {
   const { financials: f } = input
 
-  // 营收增长
-  let revenueScore = 3
-  if (f.revenueYoY !== undefined) {
-    if (f.revenueYoY > V6_CALCULATOR_THRESHOLDS.L3_FINANCE_REVENUE_YOY_TIER1) revenueScore = 5
-    else if (f.revenueYoY > V6_CALCULATOR_THRESHOLDS.L3_FINANCE_REVENUE_YOY_TIER2) revenueScore = 4
-    else if (f.revenueYoY > V6_CALCULATOR_THRESHOLDS.L3_FINANCE_REVENUE_YOY_TIER3) revenueScore = 3
-    else if (f.revenueYoY >= 0) revenueScore = 2.5
-    else revenueScore = 2
-  }
+  const revenueScore = scoreByTiers(f.revenueYoY, 3, [
+    { threshold: V6_CALCULATOR_THRESHOLDS.L3_FINANCE_REVENUE_YOY_TIER1, score: 5 },
+    { threshold: V6_CALCULATOR_THRESHOLDS.L3_FINANCE_REVENUE_YOY_TIER2, score: 4 },
+    { threshold: V6_CALCULATOR_THRESHOLDS.L3_FINANCE_REVENUE_YOY_TIER3, score: 3 },
+    { threshold: 0, score: 2.5 },
+    { threshold: Number.NEGATIVE_INFINITY, score: 2 },
+  ])
 
-  // 净利润增速
-  let netProfitYoYScore = 3
-  if (f.netProfitYoY !== undefined) {
-    if (f.netProfitYoY > V6_CALCULATOR_THRESHOLDS.L3_FINANCE_NET_PROFIT_YOY_TIER1) netProfitYoYScore = 5
-    else if (f.netProfitYoY > V6_CALCULATOR_THRESHOLDS.L3_FINANCE_NET_PROFIT_YOY_TIER2) netProfitYoYScore = 4
-    else if (f.netProfitYoY > V6_CALCULATOR_THRESHOLDS.L3_FINANCE_NET_PROFIT_YOY_TIER3) netProfitYoYScore = 3
-    else if (f.netProfitYoY >= 0) netProfitYoYScore = 2.5
-    else netProfitYoYScore = 2
-  }
+  const netProfitYoYScore = scoreByTiers(f.netProfitYoY, 3, [
+    { threshold: V6_CALCULATOR_THRESHOLDS.L3_FINANCE_NET_PROFIT_YOY_TIER1, score: 5 },
+    { threshold: V6_CALCULATOR_THRESHOLDS.L3_FINANCE_NET_PROFIT_YOY_TIER2, score: 4 },
+    { threshold: V6_CALCULATOR_THRESHOLDS.L3_FINANCE_NET_PROFIT_YOY_TIER3, score: 3 },
+    { threshold: 0, score: 2.5 },
+    { threshold: Number.NEGATIVE_INFINITY, score: 2 },
+  ])
 
-  // 盈利能力（净利率）
-  let profitabilityScore = 3
-  if (f.netMargin !== undefined) {
-    if (f.netMargin > V6_CALCULATOR_THRESHOLDS.L3_FINANCE_NET_MARGIN_TIER1) profitabilityScore = 5
-    else if (f.netMargin > V6_CALCULATOR_THRESHOLDS.L3_FINANCE_NET_MARGIN_TIER2) profitabilityScore = 4
-    else if (f.netMargin > V6_CALCULATOR_THRESHOLDS.L3_FINANCE_NET_MARGIN_TIER3) profitabilityScore = 3
-    else if (f.netMargin >= 0) profitabilityScore = 2.5
-    else profitabilityScore = 2
-  } else if (f.netProfit !== undefined && f.netProfit < 0) {
+  let profitabilityScore = scoreByTiers(f.netMargin, 3, [
+    { threshold: V6_CALCULATOR_THRESHOLDS.L3_FINANCE_NET_MARGIN_TIER1, score: 5 },
+    { threshold: V6_CALCULATOR_THRESHOLDS.L3_FINANCE_NET_MARGIN_TIER2, score: 4 },
+    { threshold: V6_CALCULATOR_THRESHOLDS.L3_FINANCE_NET_MARGIN_TIER3, score: 3 },
+    { threshold: 0, score: 2.5 },
+    { threshold: Number.NEGATIVE_INFINITY, score: 2 },
+  ])
+  if (f.netMargin === undefined && f.netProfit !== undefined && f.netProfit < 0) {
     profitabilityScore = 2
   }
 
-  // 毛利率趋势
-  let grossMarginScore = 3
-  if (f.grossMargin !== undefined) {
-    if (f.grossMargin > V6_CALCULATOR_THRESHOLDS.L3_FINANCE_GROSS_MARGIN_TIER1) grossMarginScore = 5
-    else if (f.grossMargin > V6_CALCULATOR_THRESHOLDS.L3_FINANCE_GROSS_MARGIN_TIER2) grossMarginScore = 4
-    else if (f.grossMargin > V6_CALCULATOR_THRESHOLDS.L3_FINANCE_GROSS_MARGIN_TIER3) grossMarginScore = 3
-    else if (f.grossMargin >= 0) grossMarginScore = 2.5
-    else grossMarginScore = 2
-  }
+  const grossMarginScore = scoreByTiers(f.grossMargin, 3, [
+    { threshold: V6_CALCULATOR_THRESHOLDS.L3_FINANCE_GROSS_MARGIN_TIER1, score: 5 },
+    { threshold: V6_CALCULATOR_THRESHOLDS.L3_FINANCE_GROSS_MARGIN_TIER2, score: 4 },
+    { threshold: V6_CALCULATOR_THRESHOLDS.L3_FINANCE_GROSS_MARGIN_TIER3, score: 3 },
+    { threshold: 0, score: 2.5 },
+    { threshold: Number.NEGATIVE_INFINITY, score: 2 },
+  ])
 
-  // 研发强度
-  let rdRatioScore = 3
-  if (f.rdRatio !== undefined) {
-    if (f.rdRatio > V6_CALCULATOR_THRESHOLDS.L3_FINANCE_RD_RATIO_TIER1) rdRatioScore = 5
-    else if (f.rdRatio > V6_CALCULATOR_THRESHOLDS.L3_FINANCE_RD_RATIO_TIER2) rdRatioScore = 4
-    else if (f.rdRatio > V6_CALCULATOR_THRESHOLDS.L3_FINANCE_RD_RATIO_TIER3) rdRatioScore = 3
-    else if (f.rdRatio >= 0) rdRatioScore = 2.5
-    else rdRatioScore = 2
-  }
+  const rdRatioScore = scoreByTiers(f.rdRatio, 3, [
+    { threshold: V6_CALCULATOR_THRESHOLDS.L3_FINANCE_RD_RATIO_TIER1, score: 5 },
+    { threshold: V6_CALCULATOR_THRESHOLDS.L3_FINANCE_RD_RATIO_TIER2, score: 4 },
+    { threshold: V6_CALCULATOR_THRESHOLDS.L3_FINANCE_RD_RATIO_TIER3, score: 3 },
+    { threshold: 0, score: 2.5 },
+    { threshold: Number.NEGATIVE_INFINITY, score: 2 },
+  ])
 
   // 现金流
   let cashFlowScore = 3
@@ -196,11 +197,12 @@ function evaluateIPC(input: LayerInput, l1Score: number, l2Score: number): IPCRe
   let ocrScore = 0
   if (f.ordersInHand !== undefined && f.revenue !== undefined && f.revenue > 0) {
     const ocr = f.ordersInHand / f.revenue
-    if (ocr >= cfg.ocr.superStrong) ocrScore = 5
-    else if (ocr >= cfg.ocr.strong) ocrScore = 4
-    else if (ocr >= cfg.ocr.medium) ocrScore = 3
-    else if (ocr >= cfg.ocr.weak) ocrScore = 2
-    else ocrScore = 1
+    ocrScore = scoreByTiers(ocr, 1, [
+      { threshold: cfg.ocr.superStrong, score: 5 },
+      { threshold: cfg.ocr.strong, score: 4 },
+      { threshold: cfg.ocr.medium, score: 3 },
+      { threshold: cfg.ocr.weak, score: 2 },
+    ])
   }
 
   // --- MCE 维度 ---
@@ -209,16 +211,18 @@ function evaluateIPC(input: LayerInput, l1Score: number, l2Score: number): IPCRe
     for (const evt of events) {
       const mce = evt.mce ?? 1
       // 时效性衰减
-      let decay = 1.0
-      if (evt.monthsAgo > V6_CALCULATOR_THRESHOLDS.L3_IPC_MONTHS_DECAY_12M) decay = 0
-      else if (evt.monthsAgo > V6_CALCULATOR_THRESHOLDS.L3_IPC_MONTHS_DECAY_6M) decay = cfg.mce.decay12m
-      else if (evt.monthsAgo > V6_CALCULATOR_THRESHOLDS.L3_IPC_MONTHS_DECAY_3M) decay = cfg.mce.decay6m
+      const decayTiers = [
+        { threshold: V6_CALCULATOR_THRESHOLDS.L3_IPC_MONTHS_DECAY_12M, score: 0 },
+        { threshold: V6_CALCULATOR_THRESHOLDS.L3_IPC_MONTHS_DECAY_6M, score: cfg.mce.decay12m },
+        { threshold: V6_CALCULATOR_THRESHOLDS.L3_IPC_MONTHS_DECAY_3M, score: cfg.mce.decay6m },
+      ]
+      const decay = scoreByTiers(evt.monthsAgo, 1.0, decayTiers)
 
-      let rawScore = 0
-      if (mce >= cfg.mce.trackLevel) rawScore = 5
-      else if (mce >= cfg.mce.categoryLevel) rawScore = 4
-      else if (mce >= cfg.mce.segmentLevel) rawScore = 3
-      else rawScore = 2
+      const rawScore = scoreByTiers(mce, 2, [
+        { threshold: cfg.mce.trackLevel, score: 5 },
+        { threshold: cfg.mce.categoryLevel, score: 4 },
+        { threshold: cfg.mce.segmentLevel, score: 3 },
+      ])
 
       const adjusted = rawScore * decay
       if (adjusted > mceScore) mceScore = adjusted
@@ -226,21 +230,16 @@ function evaluateIPC(input: LayerInput, l1Score: number, l2Score: number): IPCRe
   }
 
   // --- TIMS 维度 ---
-  let timsScore = 3 // 默认中等
   const sector = (input.stock.sector ?? '').toLowerCase()
   const isTech = sector.includes('芯片') || sector.includes('半导体') || sector.includes('ai') || sector.includes('科技')
 
-  if (isTech && l1Score >= 4) {
-    timsScore = 5 // 技术+护城河双强
-  } else if (isTech && l1Score >= 3) {
-    timsScore = 4
-  } else if (l1Score >= 4) {
-    timsScore = 4
-  } else if (l1Score >= 3) {
-    timsScore = 3
-  } else {
-    timsScore = 2
-  }
+  const timsTiers = [
+    { predicate: () => isTech && l1Score >= 4, score: 5 },
+    { predicate: () => isTech && l1Score >= 3, score: 4 },
+    { predicate: () => l1Score >= 4, score: 4 },
+    { predicate: () => l1Score >= 3, score: 3 },
+  ]
+  let timsScore = timsTiers.find((tier) => tier.predicate())?.score ?? 2
 
   // L2 竞品压制：竞品得分 ≤ 2.5 → 市占率上限
   if (l2Score <= V6_CALCULATOR_THRESHOLDS.L3_IPC_L2_SUPPRESS_THRESHOLD && timsScore > 3) {
@@ -255,31 +254,16 @@ function evaluateIPC(input: LayerInput, l1Score: number, l2Score: number): IPCRe
   // --- IPC 综合 ---
   const ipcScore = ocrScore * cfg.ipcWeights.ocr + mceScore * cfg.ipcWeights.mce + timsScore * cfg.ipcWeights.tims
 
-  let stage: IPCResult['stage'] = 'none'
-  let stageLabel = '无法判定'
-  let l3Bonus = 0
-
-  if (ipcScore >= cfg.ipcStages.broken) {
-    stage = 'broken'
-    stageLabel = '✅ 临界点已突破 — 订单充裕+事件落地+技术转化，业绩加速确认'
-    l3Bonus = 1.0
-  } else if (ipcScore >= cfg.ipcStages.near) {
-    stage = 'near'
-    stageLabel = '🔶 临界点附近（最佳击球区） — 2/3维度共振，业绩拐点在未来1-2季'
-    l3Bonus = 0.5
-  } else if (ipcScore >= cfg.ipcStages.before) {
-    stage = 'before'
-    stageLabel = '🔸 临界点前夜 — 单一维度发出信号，需等待第二重确认'
-    l3Bonus = 0.0
-  } else if (ipcScore >= cfg.ipcStages.far) {
-    stage = 'far'
-    stageLabel = '🔹 临界点遥远 — 各维度暂无明显信号，业绩兑现路径模糊'
-    l3Bonus = -0.5
-  } else {
-    stage = 'none'
-    stageLabel = '⬜ 未到临界点 — 无订单、无事件、无技术优势'
-    l3Bonus = -1.0
-  }
+  const ipcStages = [
+    { threshold: cfg.ipcStages.broken, stage: 'broken' as const, label: '✅ 临界点已突破 — 订单充裕+事件落地+技术转化，业绩加速确认', bonus: 1.0 },
+    { threshold: cfg.ipcStages.near, stage: 'near' as const, label: '🔶 临界点附近（最佳击球区） — 2/3维度共振，业绩拐点在未来1-2季', bonus: 0.5 },
+    { threshold: cfg.ipcStages.before, stage: 'before' as const, label: '🔸 临界点前夜 — 单一维度发出信号，需等待第二重确认', bonus: 0.0 },
+    { threshold: cfg.ipcStages.far, stage: 'far' as const, label: '🔹 临界点遥远 — 各维度暂无明显信号，业绩兑现路径模糊', bonus: -0.5 },
+  ]
+  const matchedStage = ipcStages.find((s) => ipcScore >= s.threshold)
+  const stage = matchedStage?.stage ?? 'none'
+  const stageLabel = matchedStage?.label ?? '⬜ 未到临界点 — 无订单、无事件、无技术优势'
+  const l3Bonus = matchedStage?.bonus ?? -1.0
 
   return {
     ocrScore: Math.round(ocrScore * 100) / 100,

@@ -2,37 +2,46 @@
  * @module CollectTaskPage
  * @description 采集任务监控页（D-1 框架）。
  *
- * 三 Tab 布局：
- * - 任务列表：表格展示任务ID/维度/状态/进度/耗时/操作
- * - 评分卡片：网格布局展示各维度健康度卡片
- * - 采集日志：滚动日志列表
- *
- * 当前为 Mock 数据展示，不接入真实 API。
+ * 从 `collectionRuntimeStore` 读取真实任务状态、日志、链路 trace，
+ * 提供任务列表、维度健康度、实时日志、时间线、泳道图、链路回放等 Tab。
  */
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router'
-import { Activity, ListChecks, ScrollText, RefreshCw, Play, Eye } from 'lucide-react'
+import {
+  Activity,
+  ListChecks,
+  ScrollText,
+  GitBranch,
+  Repeat,
+  Eye,
+  BarChart3,
+  LayoutDashboard,
+} from 'lucide-react'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { getLogger } from '@/lib/logger'
+import { mcpBridge } from '@/mcp/bridge/mcpBridge'
+import type { CollectionReport } from '@/services/data-collector/collectionReportService'
+import { CollectionProgressPanel } from '@/components/organisms/collection/CollectionProgressPanel'
+import { CollectionReportPanel } from '@/components/organisms/collection/CollectionReportPanel'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
-import { Skeleton } from '@/components/ui/Skeleton'
-import { Progress } from '@/components/ui/Progress'
-import { EmptyState } from '@/components/ui/EmptyState'
+} from '@/components/atoms'
+import { Button } from '@/components/atoms'
+import { Badge } from '@/components/atoms'
+import { Skeleton } from '@/components/atoms'
+import { Progress } from '@/components/atoms'
+import { EmptyState } from '@/components/molecules'
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from '@/components/ui/Tabs'
+} from '@/components/molecules'
 import {
   Table,
   TableBody,
@@ -40,7 +49,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/Table'
+} from '@/components/atoms'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -48,140 +57,259 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/Breadcrumb'
+} from '@/components/atoms'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
+import { useCollectionRuntimeStore } from '@/store/collectionRuntimeStore'
+import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
+import { useIntelligentScoreStore } from '@/store/intelligentScoreStore'
+import LiveLogStream from '@/components/input/LiveLogStream'
+import CollectionTimeline from '@/components/input/CollectionTimeline'
+import CollectionSwimlane from '@/components/input/CollectionSwimlane'
+import TraceReplayPanel from '@/components/input/TraceReplayPanel'
+import type { CollectionTaskRuntime } from '@/types/modules/collection.types'
 
 const logger = getLogger()
 
-// ============================================================
-// 类型定义
-// ============================================================
+type DisplayStatus = 'running' | 'success' | 'failed' | 'pending'
 
-type TaskStatus = 'running' | 'success' | 'failed' | 'pending'
-
-interface CollectTask {
-  id: string
-  dimension: string
-  dimensionName: string
-  status: TaskStatus
-  progress: number
-  durationMs: number
-  symbolCount: number
-}
-
-interface DimHealthCard {
-  code: string
-  name: string
-  score: number
-  max: number
-  status: 'healthy' | 'warning' | 'critical'
-  lastUpdate: string
-}
-
-interface CollectLog {
-  id: string
-  time: string
-  level: 'info' | 'warn' | 'error'
-  dimension: string
-  message: string
-}
-
-// ============================================================
-// Mock 数据
-// ============================================================
-
-const MOCK_TASKS: CollectTask[] = [
-  { id: 'TASK-20260701-001', dimension: '01', dimensionName: '基本信息', status: 'success', progress: 100, durationMs: 12800, symbolCount: 40 },
-  { id: 'TASK-20260701-002', dimension: '02', dimensionName: 'K线数据', status: 'running', progress: 65, durationMs: 8400, symbolCount: 40 },
-  { id: 'TASK-20260701-003', dimension: '03', dimensionName: '筹码分布', status: 'pending', progress: 0, durationMs: 0, symbolCount: 40 },
-  { id: 'TASK-20260630-004', dimension: '05', dimensionName: '热点新闻', status: 'failed', progress: 42, durationMs: 5600, symbolCount: 40 },
-  { id: 'TASK-20260630-005', dimension: '08', dimensionName: '研报中心', status: 'success', progress: 100, durationMs: 21300, symbolCount: 40 },
-]
-
-const MOCK_HEALTH: DimHealthCard[] = [
-  { code: '01', name: '基本信息', score: 4.8, max: 5, status: 'healthy', lastUpdate: '2026-07-01 09:15' },
-  { code: '02', name: 'K线数据', score: 4.5, max: 5, status: 'healthy', lastUpdate: '2026-07-01 09:20' },
-  { code: '03', name: '筹码分布', score: 3.2, max: 5, status: 'warning', lastUpdate: '2026-06-30 18:00' },
-  { code: '04', name: '重大事项', score: 4.0, max: 5, status: 'healthy', lastUpdate: '2026-07-01 08:30' },
-  { code: '05', name: '热点新闻', score: 1.8, max: 5, status: 'critical', lastUpdate: '2026-06-30 22:10' },
-  { code: '06', name: '行业竞品', score: 3.6, max: 5, status: 'warning', lastUpdate: '2026-06-30 12:00' },
-  { code: '07', name: '关联指数', score: 4.2, max: 5, status: 'healthy', lastUpdate: '2026-06-30 12:00' },
-  { code: '08', name: '研报中心', score: 4.7, max: 5, status: 'healthy', lastUpdate: '2026-07-01 09:00' },
-]
-
-const MOCK_LOGS: CollectLog[] = [
-  { id: 'L1', time: '09:20:15', level: 'info', dimension: '02', message: 'K线数据采集开始，共 40 只标的' },
-  { id: 'L2', time: '09:20:32', level: 'info', dimension: '02', message: '已完成 26/40，进度 65%' },
-  { id: 'L3', time: '09:15:02', level: 'info', dimension: '01', message: '基本信息采集完成，耗时 12.8s' },
-  { id: 'L4', time: '09:14:58', level: 'warn', dimension: '01', message: '600519.SH 字段 roe 为空，使用默认值' },
-  { id: 'L5', time: '08:30:44', level: 'error', dimension: '05', message: '热点新闻接口超时，重试 3 次后失败' },
-  { id: 'L6', time: '08:30:10', level: 'info', dimension: '05', message: '热点新闻采集开始' },
-  { id: 'L7', time: '08:25:00', level: 'info', dimension: '08', message: '研报中心采集完成，共 38 条' },
-]
-
-// ============================================================
-// 状态映射
-// ============================================================
-
-const STATUS_BADGE: Record<TaskStatus, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' | 'success' | 'warning' }> = {
+const STATUS_BADGE: Record<DisplayStatus, { label: string; variant: 'default' | 'success' | 'destructive' | 'outline' }> = {
   running: { label: '采集中', variant: 'default' },
   success: { label: '已完成', variant: 'success' },
   failed: { label: '失败', variant: 'destructive' },
   pending: { label: '等待中', variant: 'outline' },
 }
 
-const HEALTH_BADGE: Record<DimHealthCard['status'], { label: string; variant: 'success' | 'warning' | 'destructive' }> = {
-  healthy: { label: '健康', variant: 'success' },
-  warning: { label: '警告', variant: 'warning' },
-  critical: { label: '异常', variant: 'destructive' },
+function normalizeStatus(status: CollectionTaskRuntime['status']): DisplayStatus {
+  switch (status) {
+    case 'running':
+      return 'running'
+    case 'completed':
+      return 'success'
+    case 'error':
+    case 'paused':
+      return 'failed'
+    case 'pending':
+    default:
+      return 'pending'
+  }
 }
 
-/** 维度健康状态对应颜色 token（引用 constants，不硬编码） */
-const HEALTH_COLOR_TOKEN: Record<DimHealthCard['status'], keyof typeof COLOR_TOKENS> = {
-  healthy: 'success',
-  warning: 'warning',
-  critical: 'danger',
-}
+function DimHealthCard({
+  code,
+  name,
+  total,
+  success,
+}: {
+  code: string
+  name: string
+  total: number
+  success: number
+}): React.JSX.Element {
+  const rate = total > 0 ? (success / total) * 100 : 0
+  let status: 'healthy' | 'warning' | 'critical' = 'healthy'
+  if (total === 0) {
+    status = 'critical'
+  } else if (rate < 60) {
+    status = 'critical'
+  } else if (rate < 85) {
+    status = 'warning'
+  }
 
-function formatDuration(ms: number): string {
-  if (ms === 0) return '-'
-  if (ms < 1000) return `${ms}ms`
-  return `${(ms / 1000).toFixed(1)}s`
-}
+  const colorKey = status === 'healthy' ? 'success' : status === 'warning' ? 'warning' : 'danger'
+  const badgeLabel = status === 'healthy' ? '健康' : status === 'warning' ? '警告' : '异常'
 
-// ============================================================
-// 主页面
-// ============================================================
+  return (
+    <Card
+      className="transition-all duration-200 hover:shadow-md"
+      style={{ borderLeftColor: COLOR_TOKENS[colorKey].hex, borderLeftWidth: 3 }}
+    >
+      <CardHeader className="pb-2">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-sm">
+            {code} · {name}
+          </CardTitle>
+          <Badge variant={colorKey === 'success' ? 'success' : colorKey === 'warning' ? 'warning' : 'destructive'}>
+            {badgeLabel}
+          </Badge>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-2">
+        <div className="flex items-baseline gap-1">
+          <span className="text-2xl font-bold" style={{ color: COLOR_TOKENS[colorKey].hex }}>
+            {rate.toFixed(1)}
+          </span>
+          <span className="text-xs text-muted-foreground">% 成功</span>
+        </div>
+        <Progress value={rate} max={100} showMax={false} />
+        <p className="text-xs text-muted-foreground">
+          {success} / {total} 成功
+        </p>
+      </CardContent>
+    </Card>
+  )
+}
 
 export default function CollectTaskPage(): React.JSX.Element {
-  const [isLoading, setIsLoading] = useState(true)
-  const [tasks] = useState<CollectTask[]>(MOCK_TASKS)
-  const [healthCards] = useState<DimHealthCard[]>(MOCK_HEALTH)
-  const [logs] = useState<CollectLog[]>(MOCK_LOGS)
+  const [isLoading] = useState(false)
+  const [activeTab, setActiveTab] = useState('progress')
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null)
 
+  const taskStatuses = useCollectionRuntimeStore((s) => s.taskStatuses)
+  const logs = useCollectionRuntimeStore((s) => s.logs)
+  const traceSpans = useCollectionRuntimeStore((s) => s.traceSpans)
+  const stats = useCollectionRuntimeStore((s) => s.stats)
+  const clearLogs = useCollectionRuntimeStore((s) => s.clearLogs)
+  const dimensions = useSevenDimConfigStore((s) => s.dimensions)
+  const scoreHistory = useIntelligentScoreStore((s) => s.history)
+
+  const tasks = useMemo(() => Object.values(taskStatuses), [taskStatuses])
+  const spans = useMemo(() => Object.values(traceSpans), [traceSpans])
+  const selectedTraces = useMemo(
+    () => (selectedTaskId ? spans.filter((s) => s.taskId === selectedTaskId) : spans),
+    [selectedTaskId, spans],
+  )
+
+  const [collectionReport, setCollectionReport] = useState<CollectionReport>({
+    progressItems: [],
+    reportItems: [],
+    overallProgress: 0,
+    hasRunningTask: false,
+  })
   useEffect(() => {
-    logger.info('[CollectTaskPage] 挂载，加载 Mock 数据')
-    const timer = window.setTimeout(() => {
-      try {
-        setIsLoading(false)
-      } catch (err) {
-        logger.error('[CollectTaskPage] 加载失败', { err })
-        setIsLoading(false)
-      }
-    }, 400)
+    let cancelled = false
+    mcpBridge
+      .callTool('data-collector', 'build_collection_report', {
+        traceSpans,
+        taskStatuses,
+      })
+      .then((result) => {
+        if (cancelled || result.isError) return
+        const text = result.content[0]?.text
+        if (!text) return
+        try {
+          setCollectionReport(JSON.parse(text) as CollectionReport)
+        } catch {
+          logger.warn('[CollectTaskPage] 采集报告 JSON 解析失败', { text })
+        }
+      })
+      .catch((err) => {
+        logger.warn('[CollectTaskPage] 调用 build_collection_report 失败', {
+          error: err instanceof Error ? err.message : String(err),
+        })
+      })
     return () => {
-      window.clearTimeout(timer)
+      cancelled = true
     }
-  }, [])
+  }, [traceSpans, taskStatuses])
 
-  const runningCount = tasks.filter((t) => t.status === 'running').length
-  const successCount = tasks.filter((t) => t.status === 'success').length
-  const failedCount = tasks.filter((t) => t.status === 'failed').length
+  const { runningCount, successCount, failedCount } = useMemo(() => {
+    const running = tasks.filter((t) => t.status === 'running').length
+    const success = tasks.filter((t) => t.status === 'completed').length
+    const failed = tasks.filter((t) => t.status === 'error' || t.status === 'paused').length
+    return { runningCount: running, successCount: success, failedCount: failed }
+  }, [tasks])
+
+  const dimHealth = useMemo(() => {
+    const map = new Map<string, { total: number; success: number; name: string }>()
+    dimensions.forEach((dim) => map.set(dim.code, { total: 0, success: 0, name: dim.name }))
+    spans.forEach((span) => {
+      const entry = map.get(span.dimensionCode)
+      if (!entry) return
+      entry.total++
+      if (span.result === 'success') entry.success++
+    })
+    return map
+  }, [spans, dimensions])
+
+  // 评分状态分析
+  const scoreStats = useMemo(() => {
+    const total = scoreHistory.length
+    if (total === 0) {
+      return {
+        total: 0,
+        avgScore: 0,
+        maxScore: 0,
+        minScore: 0,
+        scoreDistribution: { high: 0, medium: 0, low: 0 },
+        recentTrend: [],
+        avgIntervalHours: 0,
+        lastScoredAt: null,
+        nextEstimateAt: null,
+      }
+    }
+
+    const scores = scoreHistory
+      .map((s) => s.overallScore)
+      .filter((s): s is number => s !== null)
+
+    const avgScore = scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0
+    const maxScore = scores.length > 0 ? Math.max(...scores) : 0
+    const minScore = scores.length > 0 ? Math.min(...scores) : 0
+
+    // 评分分布：高分(>=4.0)、中分(2.5-4.0)、低分(<2.5)
+    const high = scores.filter((s) => s >= 4.0).length
+    const medium = scores.filter((s) => s >= 2.5 && s < 4.0).length
+    const low = scores.filter((s) => s < 2.5).length
+
+    // 最近 10 次评分趋势
+    const recentTrend = scoreHistory
+      .slice(0, 10)
+      .reverse()
+      .map((s) => ({
+        date: new Date(s.scoredAt).toLocaleDateString(),
+        score: s.overallScore ?? 0,
+      }))
+
+    // 计算平均评分间隔（小时）
+    const sortedHistory = [...scoreHistory].sort((a, b) => 
+      new Date(b.scoredAt).getTime() - new Date(a.scoredAt).getTime()
+    )
+    const lastScoredAt = sortedHistory[0]?.scoredAt ?? null
+    
+    let avgIntervalHours = 0
+    if (sortedHistory.length >= 2) {
+      const intervals: number[] = []
+      for (let i = 0; i < sortedHistory.length - 1; i++) {
+        const current = sortedHistory[i]
+        const next = sortedHistory[i + 1]
+        if (current && next) {
+          const diff = new Date(current.scoredAt).getTime() - 
+                       new Date(next.scoredAt).getTime()
+          intervals.push(diff / (1000 * 60 * 60)) // 转换为小时
+        }
+      }
+      avgIntervalHours = intervals.length > 0 
+        ? intervals.reduce((a, b) => a + b, 0) / intervals.length 
+        : 0
+    }
+
+    // 预估下次评分时间
+    const nextEstimateAt = lastScoredAt && avgIntervalHours > 0
+      ? new Date(new Date(lastScoredAt).getTime() + avgIntervalHours * 60 * 60 * 1000)
+      : null
+
+    return {
+      total,
+      avgScore,
+      maxScore,
+      minScore,
+      scoreDistribution: { high, medium, low },
+      recentTrend,
+      avgIntervalHours,
+      lastScoredAt,
+      nextEstimateAt,
+    }
+  }, [scoreHistory])
+
+  const handleViewTask = (taskId: string) => {
+    setSelectedTaskId(taskId)
+    setActiveTab('timeline')
+    logger.info('[CollectTaskPage] 查看任务详情', { taskId })
+  }
 
   return (
     <ErrorBoundary>
       <div className="space-y-6 p-6">
-        {/* 面包屑 */}
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -202,18 +330,16 @@ export default function CollectTaskPage(): React.JSX.Element {
           </BreadcrumbList>
         </Breadcrumb>
 
-        {/* 页面标题 */}
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl font-bold">采集任务监控</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              任务列表 · 维度健康度 · 采集日志
+              任务列表 · 维度健康度 · 采集日志 · 链路可视化
             </p>
           </div>
-          <Badge variant="outline">D-1 框架 · Mock</Badge>
+          <Badge variant="outline">D-1 框架</Badge>
         </div>
 
-        {/* 概览统计 */}
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <Card>
             <CardContent className="py-4">
@@ -224,54 +350,116 @@ export default function CollectTaskPage(): React.JSX.Element {
           <Card>
             <CardContent className="py-4">
               <p className="text-xs text-muted-foreground">采集中</p>
-              <p className="mt-1 text-2xl font-bold" style={{ color: COLOR_TOKENS.info.hex }}>{runningCount}</p>
+              <p className="mt-1 text-2xl font-bold" style={{ color: COLOR_TOKENS.info.hex }}>
+                {runningCount}
+              </p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="py-4">
               <p className="text-xs text-muted-foreground">已完成</p>
-              <p className="mt-1 text-2xl font-bold" style={{ color: COLOR_TOKENS.success.hex }}>{successCount}</p>
+              <p className="mt-1 text-2xl font-bold" style={{ color: COLOR_TOKENS.success.hex }}>
+                {successCount}
+              </p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="py-4">
               <p className="text-xs text-muted-foreground">失败</p>
-              <p className="mt-1 text-2xl font-bold" style={{ color: COLOR_TOKENS.danger.hex }}>{failedCount}</p>
+              <p className="mt-1 text-2xl font-bold" style={{ color: COLOR_TOKENS.danger.hex }}>
+                {failedCount}
+              </p>
             </CardContent>
           </Card>
         </div>
 
-        {/* 三 Tab 布局 */}
-        <Tabs defaultValue="tasks">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <Card>
+            <CardContent className="py-4">
+              <p className="text-xs text-muted-foreground">采集成功率</p>
+              <p className="mt-1 text-2xl font-bold" style={{ color: COLOR_TOKENS.success.hex }}>
+                {stats.successRate}%
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="py-4">
+              <p className="text-xs text-muted-foreground">平均延迟</p>
+              <p className="mt-1 text-2xl font-bold" style={{ color: COLOR_TOKENS.info.hex }}>
+                {stats.avgLatency}ms
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="py-4">
+              <p className="text-xs text-muted-foreground">降级次数</p>
+              <p className="mt-1 text-2xl font-bold" style={{ color: COLOR_TOKENS.warning.hex }}>
+                {stats.fallbackCount}
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="py-4">
+              <p className="text-xs text-muted-foreground">写入成功率</p>
+              <p className="mt-1 text-2xl font-bold" style={{ color: COLOR_TOKENS.success.hex }}>
+                {stats.writeRate}%
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList>
+            <TabsTrigger value="progress" className="gap-1.5">
+              <LayoutDashboard className="h-4 w-4" />
+              进度汇报
+            </TabsTrigger>
             <TabsTrigger value="tasks" className="gap-1.5">
               <ListChecks className="h-4 w-4" />
               任务列表
             </TabsTrigger>
+            <TabsTrigger value="score-analysis" className="gap-1.5">
+              <BarChart3 className="h-4 w-4" />
+              评分分析
+            </TabsTrigger>
             <TabsTrigger value="health" className="gap-1.5">
               <Activity className="h-4 w-4" />
-              评分卡片
+              维度健康
             </TabsTrigger>
             <TabsTrigger value="logs" className="gap-1.5">
               <ScrollText className="h-4 w-4" />
               采集日志
             </TabsTrigger>
+            <TabsTrigger value="timeline" className="gap-1.5">
+              <GitBranch className="h-4 w-4" />
+              时间线
+            </TabsTrigger>
+            <TabsTrigger value="swimlane" className="gap-1.5">
+              <GitBranch className="h-4 w-4" />
+              泳道图
+            </TabsTrigger>
+            <TabsTrigger value="replay" className="gap-1.5">
+              <Repeat className="h-4 w-4" />
+              回放
+            </TabsTrigger>
           </TabsList>
 
-          {/* Tab 1: 任务列表 */}
+          <TabsContent value="progress">
+            <div className="space-y-4">
+              <CollectionProgressPanel
+                items={collectionReport.progressItems}
+                overallProgress={collectionReport.overallProgress}
+                hasRunningTask={collectionReport.hasRunningTask}
+              />
+              <CollectionReportPanel items={collectionReport.reportItems} />
+            </div>
+          </TabsContent>
+
           <TabsContent value="tasks">
             <Card>
               <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle>采集任务列表</CardTitle>
-                    <CardDescription>展示最近采集任务的状态与进度</CardDescription>
-                  </div>
-                  <Button variant="outline" size="sm" className="gap-1.5">
-                    <RefreshCw className="h-4 w-4" />
-                    刷新
-                  </Button>
-                </div>
+                <CardTitle>采集任务列表</CardTitle>
+                <CardDescription>来自 collectionRuntimeStore 的实时任务状态</CardDescription>
               </CardHeader>
               <CardContent>
                 {isLoading ? (
@@ -283,8 +471,8 @@ export default function CollectTaskPage(): React.JSX.Element {
                 ) : tasks.length === 0 ? (
                   <EmptyState
                     title="暂无采集任务"
-                    description="尚未发起任何采集任务，请前往七维采集配置页执行采集"
-                    action={{ label: '前往采集配置', onClick: () => { window.location.href = '/input/seven-dim' } }}
+                    description="尚未发起任何采集任务，请前往数据测试面板执行"
+                    action={{ label: '前往数据测试', onClick: () => { window.location.href = '/input' } }}
                   />
                 ) : (
                   <div className="overflow-x-auto">
@@ -295,19 +483,21 @@ export default function CollectTaskPage(): React.JSX.Element {
                           <TableHead>维度</TableHead>
                           <TableHead>状态</TableHead>
                           <TableHead>进度</TableHead>
-                          <TableHead>耗时</TableHead>
-                          <TableHead>标的数</TableHead>
                           <TableHead>操作</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {tasks.map((task) => {
-                          const statusInfo = STATUS_BADGE[task.status]
+                          const displayStatus = normalizeStatus(task.status)
+                          const statusInfo = STATUS_BADGE[displayStatus]
+                          const dimName = dimensions.find((d) => d.code === task.dimensionCode)?.name ?? ''
                           return (
-                            <TableRow key={task.id}>
-                              <TableCell className="font-mono text-xs">{task.id}</TableCell>
+                            <TableRow key={task.taskId}>
+                              <TableCell className="font-mono text-xs">{task.taskId}</TableCell>
                               <TableCell>
-                                <span className="text-sm">{task.dimension}·{task.dimensionName}</span>
+                                <span className="text-sm">
+                                  {task.dimensionCode} · {dimName}
+                                </span>
                               </TableCell>
                               <TableCell>
                                 <Badge variant={statusInfo.variant}>{statusInfo.label}</Badge>
@@ -318,21 +508,16 @@ export default function CollectTaskPage(): React.JSX.Element {
                                   <span className="text-xs text-muted-foreground">{task.progress}%</span>
                                 </div>
                               </TableCell>
-                              <TableCell className="text-sm text-muted-foreground">{formatDuration(task.durationMs)}</TableCell>
-                              <TableCell className="text-sm">{task.symbolCount}</TableCell>
                               <TableCell>
-                                <div className="flex items-center gap-1">
-                                  <Button variant="ghost" size="sm" className="h-7 gap-1 px-2">
-                                    <Eye className="h-3.5 w-3.5" />
-                                    详情
-                                  </Button>
-                                  {task.status === 'failed' && (
-                                    <Button variant="outline" size="sm" className="h-7 gap-1 px-2">
-                                      <Play className="h-3.5 w-3.5" />
-                                      重试
-                                    </Button>
-                                  )}
-                                </div>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-7 gap-1 px-2"
+                                  onClick={() => handleViewTask(task.taskId)}
+                                >
+                                  <Eye className="h-3.5 w-3.5" />
+                                  详情
+                                </Button>
                               </TableCell>
                             </TableRow>
                           )
@@ -345,12 +530,279 @@ export default function CollectTaskPage(): React.JSX.Element {
             </Card>
           </TabsContent>
 
-          {/* Tab 2: 评分卡片 */}
+          <TabsContent value="score-analysis">
+            <div className="space-y-4">
+              {/* 评分统计卡片 - 宋瓷美学风格 */}
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                <Card className="border-l-4" style={{ borderLeftColor: COLOR_TOKENS.info.hex }}>
+                  <CardContent className="p-4">
+                    <p className="text-xs text-muted-foreground">评分总数</p>
+                    <p className="mt-1 text-2xl font-bold" style={{ color: COLOR_TOKENS.info.hex }}>{scoreStats.total}</p>
+                  </CardContent>
+                </Card>
+                <Card className="border-l-4" style={{ borderLeftColor: COLOR_TOKENS.emerald.hex }}>
+                  <CardContent className="p-4">
+                    <p className="text-xs text-muted-foreground">平均分</p>
+                    <p className="mt-1 text-2xl font-bold" style={{ color: COLOR_TOKENS.success.hex }}>
+                      {scoreStats.avgScore.toFixed(2)}
+                    </p>
+                  </CardContent>
+                </Card>
+                <Card className="border-l-4" style={{ borderLeftColor: COLOR_TOKENS.warning.hex }}>
+                  <CardContent className="p-4">
+                    <p className="text-xs text-muted-foreground">最高分</p>
+                    <p className="mt-1 text-2xl font-bold" style={{ color: COLOR_TOKENS.warning.hex }}>
+                      {scoreStats.maxScore.toFixed(2)}
+                    </p>
+                  </CardContent>
+                </Card>
+                <Card className="border-l-4" style={{ borderLeftColor: COLOR_TOKENS.danger.hex }}>
+                  <CardContent className="p-4">
+                    <p className="text-xs text-muted-foreground">最低分</p>
+                    <p className="mt-1 text-2xl font-bold" style={{ color: COLOR_TOKENS.danger.hex }}>
+                      {scoreStats.minScore.toFixed(2)}
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* 评分分布 Widget */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <BarChart3 className="h-5 w-5" style={{ color: COLOR_TOKENS.info.hex }} />
+                    评分分布
+                  </CardTitle>
+                  <CardDescription>按分数段统计评分数量</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {scoreStats.total === 0 ? (
+                    <EmptyState title="暂无评分数据" description="完成评分后将显示分布统计" />
+                  ) : (
+                    <div className="space-y-4">
+                      {/* 高分段 */}
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium">高分 (≥4.0)</span>
+                          <Badge variant="success">{scoreStats.scoreDistribution.high}</Badge>
+                        </div>
+                        <Progress
+                          value={scoreStats.total > 0 ? (scoreStats.scoreDistribution.high / scoreStats.total) * 100 : 0}
+                          className="h-2"
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          {scoreStats.total > 0 ? ((scoreStats.scoreDistribution.high / scoreStats.total) * 100).toFixed(1) : 0}%
+                        </p>
+                      </div>
+
+                      {/* 中分段 */}
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium">中分 (2.5-4.0)</span>
+                          <Badge variant="warning">{scoreStats.scoreDistribution.medium}</Badge>
+                        </div>
+                        <Progress
+                          value={scoreStats.total > 0 ? (scoreStats.scoreDistribution.medium / scoreStats.total) * 100 : 0}
+                          className="h-2"
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          {scoreStats.total > 0 ? ((scoreStats.scoreDistribution.medium / scoreStats.total) * 100).toFixed(1) : 0}%
+                        </p>
+                      </div>
+
+                      {/* 低分段 */}
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium">低分 (&lt;2.5)</span>
+                          <Badge variant="destructive">{scoreStats.scoreDistribution.low}</Badge>
+                        </div>
+                        <Progress
+                          value={scoreStats.total > 0 ? (scoreStats.scoreDistribution.low / scoreStats.total) * 100 : 0}
+                          className="h-2"
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          {scoreStats.total > 0 ? ((scoreStats.scoreDistribution.low / scoreStats.total) * 100).toFixed(1) : 0}%
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* 评分趋势 Widget */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Activity className="h-5 w-5" style={{ color: COLOR_TOKENS.info.hex }} />
+                    评分趋势
+                  </CardTitle>
+                  <CardDescription>最近 10 次评分变化趋势</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {scoreStats.recentTrend.length === 0 ? (
+                    <EmptyState title="暂无趋势数据" description="完成多次评分后将显示趋势图" />
+                  ) : (
+                    <div className="space-y-3">
+                      <div className="flex items-end justify-between gap-2 h-32">
+                        {scoreStats.recentTrend.map((item, idx) => {
+                          const height = (item.score / 5) * 100
+                          const isHigh = item.score >= 4.0
+                          const isMedium = item.score >= 2.5 && item.score < 4.0
+                          const color = isHigh ? COLOR_TOKENS.success.hex : isMedium ? COLOR_TOKENS.warning.hex : COLOR_TOKENS.danger.hex
+                          return (
+                            <div key={idx} className="flex-1 flex flex-col items-center gap-1">
+                              <div
+                                className="w-full rounded-t transition-all hover:opacity-80"
+                                style={{
+                                  height: `${height}%`,
+                                  backgroundColor: color,
+                                  minHeight: '4px',
+                                }}
+                                title={`${item.date}: ${item.score.toFixed(2)}`}
+                              />
+                              <span className="text-xs text-muted-foreground truncate w-full text-center">
+                                {item.date.slice(5)}
+                              </span>
+                            </div>
+                          )
+                        })}
+                      </div>
+                      <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1">
+                          <span className="h-3 w-3 rounded" style={{ backgroundColor: COLOR_TOKENS.success.hex }} />
+                          高分
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <span className="h-3 w-3 rounded" style={{ backgroundColor: COLOR_TOKENS.warning.hex }} />
+                          中分
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <span className="h-3 w-3 rounded" style={{ backgroundColor: COLOR_TOKENS.danger.hex }} />
+                          低分
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* 评分进度 Widget */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Activity className="h-5 w-5" style={{ color: COLOR_TOKENS.info.hex }} />
+                    评分进度
+                  </CardTitle>
+                  <CardDescription>评分间隔与预估下次评分时间</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {scoreStats.total === 0 ? (
+                    <EmptyState title="暂无进度数据" description="完成评分后将显示进度统计" />
+                  ) : (
+                    <div className="space-y-4">
+                      {/* 评分间隔统计 */}
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        <div className="rounded-lg border p-3">
+                          <p className="text-xs text-muted-foreground">平均评分间隔</p>
+                          <p className="mt-1 text-lg font-bold" style={{ color: COLOR_TOKENS.info.hex }}>
+                            {scoreStats.avgIntervalHours.toFixed(1)} 小时
+                          </p>
+                          <p className="mt-1 text-xs text-muted-foreground">
+                            约 {Math.round(scoreStats.avgIntervalHours / 24)} 天
+                          </p>
+                        </div>
+                        <div className="rounded-lg border p-3">
+                          <p className="text-xs text-muted-foreground">评分频率</p>
+                          <p className="mt-1 text-lg font-bold" style={{ color: COLOR_TOKENS.info.hex }}>
+                            {scoreStats.avgIntervalHours > 0 
+                              ? (24 / scoreStats.avgIntervalHours).toFixed(1) 
+                              : '0'} 次/天
+                          </p>
+                          <p className="mt-1 text-xs text-muted-foreground">
+                            基于历史评分间隔计算
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* 时间线 */}
+                      <div className="rounded-lg border p-4 space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium">上次评分</span>
+                          <Badge variant="outline">
+                            {scoreStats.lastScoredAt 
+                              ? new Date(scoreStats.lastScoredAt).toLocaleString('zh-CN', {
+                                  month: 'short',
+                                  day: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit',
+                                })
+                              : '—'}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium">预估下次</span>
+                          <Badge variant="default">
+                            {scoreStats.nextEstimateAt 
+                              ? new Date(scoreStats.nextEstimateAt).toLocaleString('zh-CN', {
+                                  month: 'short',
+                                  day: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit',
+                                })
+                              : '—'}
+                          </Badge>
+                        </div>
+                        {scoreStats.nextEstimateAt && (
+                          <div className="pt-2 border-t">
+                            <p className="text-xs text-muted-foreground">
+                              距离下次评分约 {Math.round(
+                                (new Date(scoreStats.nextEstimateAt).getTime() - Date.now()) / (1000 * 60 * 60)
+                              )} 小时
+                            </p>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* 进度条可视化 */}
+                      {scoreStats.nextEstimateAt && scoreStats.lastScoredAt && (
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between text-xs text-muted-foreground">
+                            <span>上次评分</span>
+                            <span>预估下次</span>
+                          </div>
+                          <div className="relative h-2 rounded-full bg-muted overflow-hidden">
+                            {(() => {
+                              const lastTime = new Date(scoreStats.lastScoredAt).getTime()
+                              const nextTime = new Date(scoreStats.nextEstimateAt).getTime()
+                              const currentTime = Date.now()
+                              const progress = ((currentTime - lastTime) / (nextTime - lastTime)) * 100
+                              const clampedProgress = Math.min(Math.max(progress, 0), 100)
+                              
+                              return (
+                                <div 
+                                  className="absolute left-0 top-0 h-full transition-all"
+                                  style={{ width: `${clampedProgress}%`, backgroundColor: COLOR_TOKENS.info.hex }}
+                                />
+                              )
+                            })()}
+                          </div>
+                          <p className="text-xs text-center text-muted-foreground">
+                            评分周期进度
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
           <TabsContent value="health">
             <Card>
               <CardHeader>
-                <CardTitle>维度健康度评分</CardTitle>
-                <CardDescription>各采集维度数据质量与时效性评分</CardDescription>
+                <CardTitle>维度健康度</CardTitle>
+                <CardDescription>基于已完成的 trace 计算成功率</CardDescription>
               </CardHeader>
               <CardContent>
                 {isLoading ? (
@@ -359,95 +811,66 @@ export default function CollectTaskPage(): React.JSX.Element {
                       <Skeleton key={i} className="h-36 w-full" />
                     ))}
                   </div>
-                ) : healthCards.length === 0 ? (
-                  <EmptyState title="暂无评分数据" description="尚未生成维度健康度评分" />
+                ) : dimHealth.size === 0 ? (
+                  <EmptyState title="暂无数据" description="未产生任何采集 trace" />
                 ) : (
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                    {healthCards.map((card) => {
-                      const healthInfo = HEALTH_BADGE[card.status]
-                      const colorToken = COLOR_TOKENS[HEALTH_COLOR_TOKEN[card.status]]
-                      return (
-                        <Card
-                          key={card.code}
-                          className="transition-all duration-200 hover:shadow-md"
-                          style={{ borderLeftColor: colorToken.hex, borderLeftWidth: 3 }}
-                        >
-                          <CardHeader className="pb-2">
-                            <div className="flex items-center justify-between">
-                              <CardTitle className="text-sm">{card.code}·{card.name}</CardTitle>
-                              <Badge variant={healthInfo.variant}>{healthInfo.label}</Badge>
-                            </div>
-                          </CardHeader>
-                          <CardContent className="space-y-2">
-                            <div className="flex items-baseline gap-1">
-                              <span className="text-2xl font-bold" style={{ color: colorToken.hex }}>
-                                {card.score.toFixed(1)}
-                              </span>
-                              <span className="text-xs text-muted-foreground">/ {card.max}</span>
-                            </div>
-                            <Progress value={card.score} max={card.max} showMax={false} />
-                            <p className="text-xs text-muted-foreground">最近更新：{card.lastUpdate}</p>
-                          </CardContent>
-                        </Card>
-                      )
-                    })}
+                    {Array.from(dimHealth.entries()).map(([code, data]) => (
+                      <DimHealthCard
+                        key={code}
+                        code={code}
+                        name={data.name}
+                        total={data.total}
+                        success={data.success}
+                      />
+                    ))}
                   </div>
                 )}
               </CardContent>
             </Card>
           </TabsContent>
 
-          {/* Tab 3: 采集日志 */}
           <TabsContent value="logs">
+            <LiveLogStream logs={logs} onClear={clearLogs} maxHeight="480px" />
+          </TabsContent>
+
+          <TabsContent value="timeline">
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle>采集日志</CardTitle>
-                    <CardDescription>实时滚动展示采集过程日志</CardDescription>
+                    <CardTitle>采集链路时间线</CardTitle>
+                    <CardDescription>
+                      {selectedTaskId ? `任务 ${selectedTaskId} 的 trace` : '全部 trace'}
+                    </CardDescription>
                   </div>
-                  <Button variant="outline" size="sm" className="gap-1.5">
-                    <RefreshCw className="h-4 w-4" />
-                    刷新
-                  </Button>
+                  {selectedTaskId && (
+                    <Button size="sm" variant="outline" onClick={() => setSelectedTaskId(null)}>
+                      查看全部
+                    </Button>
+                  )}
                 </div>
               </CardHeader>
               <CardContent>
-                {isLoading ? (
-                  <div className="space-y-2">
-                    {Array.from({ length: 6 }).map((_, i) => (
-                      <Skeleton key={i} className="h-8 w-full" />
-                    ))}
-                  </div>
-                ) : logs.length === 0 ? (
-                  <EmptyState title="暂无日志" description="采集启动后将在此展示实时日志" />
-                ) : (
-                  <div className="max-h-[480px] space-y-1 overflow-y-auto rounded-md border bg-muted/30 p-3 font-mono text-xs">
-                    {logs.map((log) => {
-                      const levelColor =
-                        log.level === 'error'
-                          ? COLOR_TOKENS.danger.hex
-                          : log.level === 'warn'
-                            ? COLOR_TOKENS.warning.hex
-                            : COLOR_TOKENS.info.hex
-                      return (
-                        <div key={log.id} className="flex items-start gap-2 py-0.5">
-                          <span className="shrink-0 text-muted-foreground">{log.time}</span>
-                          <span
-                            className="shrink-0 font-semibold uppercase"
-                            style={{ color: levelColor }}
-                          >
-                            [{log.level}]
-                          </span>
-                          <span className="shrink-0 text-muted-foreground">[{log.dimension}]</span>
-                          <span className="min-w-0 break-words text-foreground">{log.message}</span>
-                        </div>
-                      )
-                    })}
-                  </div>
-                )}
+                <CollectionTimeline spans={selectedTraces} maxHeight="480px" />
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="swimlane">
+            <Card>
+              <CardHeader>
+                <CardTitle>采集链路泳道图</CardTitle>
+                <CardDescription>各数据源按时间轴展开的甘特式视图</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <CollectionSwimlane spans={selectedTraces} maxHeight="480px" />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="replay">
+            <TraceReplayPanel spans={selectedTraces} />
           </TabsContent>
         </Tabs>
       </div>

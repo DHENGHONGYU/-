@@ -20,14 +20,14 @@ describe('sectorScoreService', () => {
     dataBridge.invalidateCache(STORE_NAME.sectorScores)
   })
 
-  it('should calculate composite score from dimensions and weights', () => {
+  it('应该calculate composite score from dimensions and weights', () => {
     const definition = SECTOR_DEFINITIONS[0] as SectorDefinition
     const composite = calculateSectorComposite(definition)
     expect(composite).toBeGreaterThan(0)
     expect(composite).toBeLessThanOrEqual(5)
   })
 
-  it('should identify core sector by threshold', () => {
+  it('应该identify core sector by threshold', () => {
     const highScoreDef = {
       ...SECTOR_DEFINITIONS[0],
       dimensions: { planAlignment: 5, policySupport: 5, usChinaParity: 5 },
@@ -41,7 +41,7 @@ describe('sectorScoreService', () => {
     expect(isCoreSector(lowScoreDef)).toBe(false)
   })
 
-  it('should save single sector score', async () => {
+  it('应该保存 single sector score', async () => {
     const definition = SECTOR_DEFINITIONS[0] as SectorDefinition
     const result = await saveSectorScore(definition, '2026-06-24')
 
@@ -50,7 +50,7 @@ describe('sectorScoreService', () => {
     expect(result.data?.composite).toBe(calculateSectorComposite(definition))
   })
 
-  it('should save all sector scores', async () => {
+  it('应该保存 all sector scores', async () => {
     const result = await saveAllSectorScores('2026-06-24')
     expect(result.success).toBe(true)
     expect(result.data?.length).toBe(SECTOR_DEFINITIONS.length)
@@ -60,7 +60,7 @@ describe('sectorScoreService', () => {
     expect(list.data?.length).toBe(SECTOR_DEFINITIONS.length)
   })
 
-  it('should filter core sectors', async () => {
+  it('应该过滤 core sectors', async () => {
     await saveAllSectorScores('2026-06-24')
     const result = await getCoreSectorScores()
 

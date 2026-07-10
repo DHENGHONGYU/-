@@ -28,6 +28,7 @@ import {
   createSellOrder,
   type TradeAdvice,
 } from '@/services/trading/tradingService'
+import { loadPortfolioInput } from '@/services/trading/portfolioService'
 import type { TradingSignal } from '@/services/trading/signalGenerator'
 import type { Order, Portfolio, Stock, StrategyResult } from '@/data/types'
 import { withBroadcast } from '@/lib/withBroadcast'
@@ -150,34 +151,31 @@ export const useTradingStore = create<TradingState>()((set, get) => ({
   },
 
   // ----------------------------------------------------------
-  // loadPortfolio —— 构建核心组合（委托）
+  // loadPortfolio —— 构建核心组合（从真实数据源构建）
   // ----------------------------------------------------------
   loadPortfolio: async () => {
-    logger.info('[tradingStore] loadPortfolio 开始（委托给 portfolioStore）')
-
-    // 确保 stocks 和 orders 已加载
-    if (useWatchlistStore.getState().stocks.length === 0) {
-      await get().loadStocks()
-    }
-    if (useOrderStore.getState().orders.length === 0) {
-      await get().loadOrders()
-    }
-
-    const currentStocks = useWatchlistStore.getState().stocks
-    const currentOrders = useOrderStore.getState().orders
+    logger.info('[tradingStore] loadPortfolio 开始（从真实数据源构建组合）')
 
     set({ portfolioLoading: true })
-    await usePortfolioStore.getState().buildPortfolio(currentStocks, currentOrders)
 
-    const portfolio = usePortfolioStore.getState().portfolio
-    set({
-      portfolio: usePortfolioStore.getState().portfolio,
-      strategyResult: usePortfolioStore.getState().strategyResult,
-      portfolioLoading: false,
-      message: portfolio && portfolio.holdings.length > 0
-        ? `核心稀缺组合已构建，共 ${portfolio.holdings.length} 只标的`
-        : '核心稀缺组合为空，无匹配标的或评分不足',
-    })
+    try {
+      const { stocks, orders } = await loadPortfolioInput()
+      await usePortfolioStore.getState().buildPortfolio(stocks, orders)
+
+      const portfolio = usePortfolioStore.getState().portfolio
+      set({
+        portfolioLoading: false,
+        message:
+          portfolio && portfolio.holdings.length > 0
+            ? `核心稀缺组合已构建，共 ${portfolio.holdings.length} 只标的`
+            : '核心稀缺组合为空，无匹配标的或评分不足',
+      })
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      logger.error('[tradingStore] loadPortfolio 失败', { error: message })
+      usePortfolioStore.setState({ error: message, loading: false })
+      set({ portfolioLoading: false, message: `组合加载失败：${message}` })
+    }
   },
 
   // ----------------------------------------------------------

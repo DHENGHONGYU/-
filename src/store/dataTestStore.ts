@@ -1,20 +1,22 @@
 /**
  * @module dataTestStore
- * @lifecycle @Route
- * @description 采集测试面板状态管理。
- * 管理单接口测试、批量采集测试、服务健康检查等状态。
+ * @description 采集测试面板状态管理（v2）。
+ *
+ * 支持单接口链路测试、批量采集测试，并与 `collectionPipeline` 集成，
+ * 实现采集触发 → 数据源尝试 → 降级 → 写入 → 结果反馈的可视化。
  */
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'
-import {
-  checkFetcherHealth,
-  fetchStockBasic,
-  fetchStockKline,
-} from '@/services/fetcher/fetcherService'
-import type { DataLayerResult, Stock, DailyQuotes } from '@/data/types'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { withBroadcast } from '@/store/helpers/withBroadcast'
+import { checkFetcherHealth } from '@/services/fetcher/fetcherService'
+import {
+  runSingleTrace,
+  runBatchTrace,
+} from '@/services/data-collector/collectionPipeline'
+import type { CollectionConfig } from '@/types/modules/collection.types'
+import type { TraceResult } from '@/services/data-collector/collectionPipeline'
 
 const logger = getLogger()
 
@@ -22,13 +24,17 @@ const logger = getLogger()
 // 类型定义
 // ============================================================
 
+export type TestTaskStatus = 'pending' | 'running' | 'success' | 'error'
+
 export interface TestTask {
   symbol: string
-  status: 'pending' | 'running' | 'success' | 'error'
+  status: TestTaskStatus
   message: string
 }
 
 export type SingleTestStatus = 'idle' | 'running' | 'done'
+
+export type TraceDimension = '01' | '02'
 
 interface DataTestState {
   // 服务健康检查
@@ -37,6 +43,7 @@ interface DataTestState {
 
   // 单接口测试
   singleSymbol: string
+  selectedDimension: TraceDimension
   singleResult: string
   singleStatus: SingleTestStatus
 
@@ -46,10 +53,12 @@ interface DataTestState {
   batchRunning: boolean
   progress: number
 
+  // 链路测试结果
+  traceResults: TraceResult[]
+
   // Actions
-  setHealth: (health: boolean | null) => void
-  setChecking: (checking: boolean) => void
   setSingleSymbol: (symbol: string) => void
+  setSelectedDimension: (dimension: TraceDimension) => void
   setSingleResult: (result: string) => void
   setSingleStatus: (status: SingleTestStatus) => void
   setBatchText: (text: string) => void
@@ -57,12 +66,13 @@ interface DataTestState {
   updateTask: (index: number, task: TestTask) => void
   setBatchRunning: (running: boolean) => void
   setProgress: (progress: number) => void
+  setTraceResults: (results: TraceResult[]) => void
   reset: () => void
 
   // 异步操作
   checkHealth: () => Promise<void>
-  runSingleTest: (dimension: 'basic' | 'kline') => Promise<void>
-  runBatchTest: () => Promise<void>
+  runSingleTrace: (config: CollectionConfig) => Promise<void>
+  runBatchTrace: (config: CollectionConfig) => Promise<void>
 }
 
 // ============================================================
@@ -84,24 +94,21 @@ const initialState = {
   health: null as boolean | null,
   checking: false,
   singleSymbol: '',
+  selectedDimension: '01' as TraceDimension,
   singleResult: '',
   singleStatus: 'idle' as SingleTestStatus,
   batchText: '',
   tasks: [] as TestTask[],
   batchRunning: false,
   progress: 0,
+  traceResults: [] as TraceResult[],
 }
 
 export const useDataTestStore = create<DataTestState>((set, get) => ({
   ...initialState,
 
-  // 同步 Actions
-  setHealth: (health) => {
-    set({ health })
-    withBroadcast(EVENT_NAMES.DATA_TEST_CHANGED, { action: 'setHealth', health })
-  },
-  setChecking: (checking) => set({ checking }),
   setSingleSymbol: (symbol) => set({ singleSymbol: symbol }),
+  setSelectedDimension: (dimension) => set({ selectedDimension: dimension }),
   setSingleResult: (result) => {
     set({ singleResult: result })
     withBroadcast(EVENT_NAMES.DATA_TEST_CHANGED, { action: 'setSingleResult' })
@@ -120,12 +127,12 @@ export const useDataTestStore = create<DataTestState>((set, get) => ({
   },
   setBatchRunning: (running) => set({ batchRunning: running }),
   setProgress: (progress) => set({ progress }),
+  setTraceResults: (traceResults) => set({ traceResults }),
   reset: () => {
     set(initialState)
     withBroadcast(EVENT_NAMES.DATA_TEST_CHANGED, { action: 'reset' })
   },
 
-  // 异步操作
   checkHealth: async () => {
     logger.info('[dataTestStore] 检查采集服务健康状态')
     set({ checking: true, health: null })
@@ -140,30 +147,30 @@ export const useDataTestStore = create<DataTestState>((set, get) => ({
     }
   },
 
-  runSingleTest: async (dimension) => {
-    const { singleSymbol } = get()
+  runSingleTrace: async (config) => {
+    const { singleSymbol, selectedDimension } = get()
     const symbol = singleSymbol.trim().toUpperCase()
     if (!symbol) return
 
-    logger.info(`[dataTestStore] 单接口测试: ${symbol} (${dimension})`)
+    logger.info(`[dataTestStore] 单链路测试: ${symbol} (${selectedDimension})`)
     set({ singleStatus: 'running', singleResult: '' })
 
     try {
-      let result: DataLayerResult<Stock> | DataLayerResult<DailyQuotes>
-      if (dimension === 'basic') {
-        result = await fetchStockBasic(symbol)
-      } else {
-        result = await fetchStockKline(symbol)
-      }
+      const result = await runSingleTrace({
+        symbol,
+        dimensionCode: selectedDimension,
+        config,
+      })
 
       set({
         singleResult: JSON.stringify(result, null, 2),
         singleStatus: 'done',
+        traceResults: [result],
       })
-      logger.info(`[dataTestStore] 单接口测试完成: ${symbol}`)
+      logger.info(`[dataTestStore] 单链路测试完成: ${symbol}`, { result })
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
-      logger.error(`[dataTestStore] 单接口测试失败: ${message}`)
+      logger.error(`[dataTestStore] 单链路测试失败: ${message}`)
       set({
         singleResult: JSON.stringify({ error: message }, null, 2),
         singleStatus: 'done',
@@ -171,12 +178,12 @@ export const useDataTestStore = create<DataTestState>((set, get) => ({
     }
   },
 
-  runBatchTest: async () => {
+  runBatchTrace: async (config) => {
     const { batchText } = get()
     const symbols = parseSymbols(batchText)
     if (symbols.length === 0) return
 
-    logger.info(`[dataTestStore] 批量采集测试: ${symbols.length} 只股票`)
+    logger.info(`[dataTestStore] 批量链路测试: ${symbols.length} 只股票`)
     set({
       batchRunning: true,
       progress: 0,
@@ -187,39 +194,29 @@ export const useDataTestStore = create<DataTestState>((set, get) => ({
       })),
     })
 
-    for (let i = 0; i < symbols.length; i++) {
-      const symbol = symbols[i]!
-      get().updateTask(i, { symbol, status: 'running', message: '采集中...' })
+    const results = await runBatchTrace({
+      symbols,
+      dimensionCode: '01',
+      config,
+    })
 
-      try {
-        const basicResult = await fetchStockBasic(symbol)
-        let message: string
-        let status: TestTask['status']
+    // 同步 task 状态
+    results.forEach((result, index) => {
+      get().updateTask(index, {
+        symbol: result.symbol,
+        status: result.success ? 'success' : 'error',
+        message: result.success
+          ? `成功${result.source ? `（${result.source}）` : ''}`
+          : result.error ?? '失败',
+      })
+    })
 
-        if (!basicResult.success) {
-          message = `基础数据失败：${basicResult.error ?? '未知错误'}`
-          status = 'error'
-        } else {
-          const klineResult = await fetchStockKline(symbol)
-          if (!klineResult.success) {
-            message = `K线失败：${klineResult.error ?? '未知错误'}`
-            status = 'error'
-          } else {
-            message = `成功：price=${klineResult.data?.price ?? basicResult.data?.price ?? '-'}, K线=${klineResult.data ? '有' : '无'}`
-            status = 'success'
-          }
-        }
+    set({
+      batchRunning: false,
+      progress: 100,
+      traceResults: results,
+    })
 
-        get().updateTask(i, { symbol, status, message })
-        set({ progress: Math.round(((i + 1) / symbols.length) * 100) })
-      } catch (err) {
-        const errorMsg = err instanceof Error ? err.message : String(err)
-        logger.error(`[dataTestStore] 批量测试异常: ${symbol}, ${errorMsg}`)
-        get().updateTask(i, { symbol, status: 'error', message: `异常：${errorMsg}` })
-      }
-    }
-
-    set({ batchRunning: false })
-    logger.info('[dataTestStore] 批量采集测试完成')
+    logger.info('[dataTestStore] 批量链路测试完成')
   },
 }))

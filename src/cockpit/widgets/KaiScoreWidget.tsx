@@ -1,6 +1,7 @@
 import React from 'react'
 import { Activity, Smile, TrendingUp, Droplets } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import { WidgetStateShell } from './components/WidgetStateShell'
+import { Skeleton } from '@/components/ui/states'
 import { Badge } from '@/components/ui/Badge'
 import {
   Table,
@@ -36,9 +37,19 @@ function getScoreLevel(score: number) {
  * @remarks 数据来自 MarketData.analysisScores.kai；未来可替换为量化评分模型 API
  */
 export default function KaiScoreWidget({ config, data }: KaiScoreWidgetProps): React.JSX.Element {
-  const marketData = useMarketData()
-  const sourceData = data ?? marketData.data
+  const { data: marketData, loadingMap, errorMap, refreshWidget } = useMarketData()
+  const sourceData = data ?? marketData
   const kai = sourceData.analysisScores.kai
+
+  const loading = !!loadingMap[config.instanceId]
+  const error = errorMap[config.instanceId] ?? null
+  const visualState = error
+    ? 'error'
+    : loading
+      ? 'loading'
+      : kai.dimensions.length === 0
+        ? 'empty'
+        : 'ready'
 
   const topMetrics = [
     { name: '综合评分', value: kai.totalScore, icon: <Activity className="h-4 w-4" /> },
@@ -48,11 +59,32 @@ export default function KaiScoreWidget({ config, data }: KaiScoreWidgetProps): R
   ]
 
   return (
-    <Card className="h-full flex flex-col">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-base font-semibold">{config.title}</CardTitle>
-      </CardHeader>
-      <CardContent className="flex-1 overflow-auto space-y-4">
+    <WidgetStateShell
+      title={config.title}
+      visualState={visualState}
+      error={error}
+      onRetry={() => refreshWidget(config.instanceId)}
+      loadingLabel="加载 KAI 评分…"
+      emptyTitle="暂无 KAI 评分数据"
+      emptyDescription="当前未获取到 KAI 选股综合评分与维度分布"
+      skeleton={
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {[1, 2, 3, 4].map((i) => (
+              <Skeleton key={i} variant="rect" className="h-20" />
+            ))}
+          </div>
+          <div className="space-y-2">
+            {[1, 2, 3].map((i) => (
+              <Skeleton key={i} variant="text" className="h-2 w-full" />
+            ))}
+          </div>
+          <Skeleton variant="rect" className="h-32" />
+        </div>
+      }
+      className="h-full flex flex-col"
+    >
+      <div className="flex-1 overflow-auto space-y-4">
         {/* 顶部指标卡 */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {topMetrics.map((metric) => {
@@ -129,7 +161,7 @@ export default function KaiScoreWidget({ config, data }: KaiScoreWidgetProps): R
             </Table>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </WidgetStateShell>
   )
 }

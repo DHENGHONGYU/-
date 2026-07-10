@@ -104,7 +104,7 @@ function createMockErrorResponse(status: number, statusText: string): Response {
  * @skip-reason 此测试为已知失败，已通过 vitest --exclude 跳过；
  *               修复后请移除 .skip 标记并从 test:clean 的 --exclude 列表中删除
  */
-describe.skip('checkFetcherHealth', () => {
+describe('checkFetcherHealth', () => {
   test('ok=true（status="ok"）', async () => {
     const healthResponse = createMockResponse({ status: 'ok', service: 'fetcher' })
     mockFetch.mockResolvedValueOnce(healthResponse)
@@ -159,7 +159,11 @@ describe.skip('checkFetcherHealth', () => {
 // collectBasic
 // ============================================================
 
-describe.skip('collectBasic', () => {
+/**
+ * @status known-failing
+ * @reason TODO: 待修复（详见 docs/reports/脚本与测试质量检查报告.md）
+ */
+describe('collectBasic', () => {
   const mockBasicResponse = {
     success: true,
     symbol: '600519.SH',
@@ -232,7 +236,11 @@ describe.skip('collectBasic', () => {
 // collectKline
 // ============================================================
 
-describe.skip('collectKline', () => {
+/**
+ * @status known-failing
+ * @reason TODO: 待修复（详见 docs/reports/脚本与测试质量检查报告.md）
+ */
+describe('collectKline', () => {
   const mockKlineResponse = {
     success: true,
     symbol: '600519.SH',
@@ -302,7 +310,11 @@ describe.skip('collectKline', () => {
 // 错误传播
 // ============================================================
 
-describe.skip('错误传播', () => {
+/**
+ * @status known-failing
+ * @reason TODO: 待修复（详见 docs/reports/脚本与测试质量检查报告.md）
+ */
+describe('错误传播', () => {
   test('HTTP 500 错误 → 传播 FetcherError', async () => {
     mockFetch.mockResolvedValueOnce(createMockErrorResponse(500, 'Internal Server Error'))
 

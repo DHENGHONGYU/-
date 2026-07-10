@@ -47,6 +47,7 @@ export {
   newsStockMapStore,
   sentimentCacheStore,
   missingReportStore,
+  customAgentStore, // 阶段 B-1：用户自定义智能体（v26 新增）
 } from './dataLayerContentStores'
 export { watchlistStore } from './dataLayerWatchlistStore'
 
@@ -78,6 +79,7 @@ import {
   newsStockMapStore,
   sentimentCacheStore,
   missingReportStore,
+  customAgentStore,
 } from './dataLayerContentStores'
 import { watchlistStore } from './dataLayerWatchlistStore'
 
@@ -128,5 +130,7 @@ export const dataLayer = {
   portfolios: portfolioStore,
   tradeReviews: tradeReviewStore,
   watchlists: watchlistStore,
+  // 阶段 B-1：用户自定义智能体
+  customAgents: customAgentStore,
   manager: dataManager,
 }

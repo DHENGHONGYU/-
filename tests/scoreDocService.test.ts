@@ -23,7 +23,7 @@ describe('scoreDocService', () => {
     dataBridge.invalidateCache(STORE_NAME.scoreDocs)
   })
 
-  it('should validate required fields', () => {
+  it('应该验证 required fields', () => {
     const result = validateScoreDocInput({
       symbol: '',
       stockName: '',
@@ -35,12 +35,12 @@ describe('scoreDocService', () => {
     expect(result.errors.length).toBeGreaterThan(0)
   })
 
-  it('should generate doc id with version', () => {
+  it('应该生成 doc id with version', () => {
     const id = makeScoreDocId('000001.SZ', 3)
     expect(id.startsWith('000001.SZ__V3__')).toBe(true)
   })
 
-  it('should save first score doc with version 1', async () => {
+  it('应该保存 first score doc with version 1', async () => {
     const result = await saveScoreDoc({
       symbol: '000001.SZ',
       stockName: '平安银行',
@@ -58,7 +58,7 @@ describe('scoreDocService', () => {
     expect(result.data?.changeFromPrev).toBeUndefined()
   })
 
-  it('should auto increment version and compute change from previous', async () => {
+  it('应该auto increment version and compute change from previous', async () => {
     await saveScoreDoc({
       symbol: '000001.SZ',
       stockName: '平安银行',
@@ -83,7 +83,7 @@ describe('scoreDocService', () => {
     expect(result.data?.changeFromPrev?.layerChanges['L1']).toBe(0.5)
   })
 
-  it('should build change from previous', () => {
+  it('应该build change from previous', () => {
     const prev: ScoreDocVersion = {
       docId: 'x',
       symbol: '000001.SZ',
@@ -117,7 +117,7 @@ describe('scoreDocService', () => {
     expect(change.layerChanges['L1']).toBe(0.2)
   })
 
-  it('should generate markdown report', () => {
+  it('应该生成 markdown report', () => {
     const doc: ScoreDocVersion = {
       docId: 'x',
       symbol: '000001.SZ',
@@ -146,7 +146,7 @@ describe('scoreDocService', () => {
     expect(md).toContain('催化1')
   })
 
-  it('should retrieve recent versions', async () => {
+  it('应该检索 recent versions', async () => {
     for (let i = 1; i <= 5; i++) {
       await saveScoreDoc({
         symbol: '000001.SZ',
@@ -163,7 +163,7 @@ describe('scoreDocService', () => {
     expect(result.data?.[0]?.version).toBe(5)
   })
 
-  it('should export symbol markdown', async () => {
+  it('应该export symbol markdown', async () => {
     await saveScoreDoc({
       symbol: '000001.SZ',
       stockName: '平安银行',
@@ -187,7 +187,7 @@ describe('scoreDocService', () => {
     expect(result.data).toContain('第二版')
   })
 
-  it('should return file library stats', async () => {
+  it('应该返回 file library stats', async () => {
     await saveScoreDoc({
       symbol: '000001.SZ',
       stockName: '平安银行',
@@ -210,7 +210,7 @@ describe('scoreDocService', () => {
     expect(result.data?.coreStocks).toBe(1)
   })
 
-  it('should list score docs by symbol', async () => {
+  it('应该list score docs by symbol', async () => {
     await saveScoreDoc({
       symbol: '000001.SZ',
       stockName: '平安银行',
@@ -224,7 +224,7 @@ describe('scoreDocService', () => {
     expect(result.data?.length).toBe(1)
   })
 
-  it('should get specific version', async () => {
+  it('应该get specific version', async () => {
     await saveScoreDoc({
       symbol: '000001.SZ',
       stockName: '平安银行',

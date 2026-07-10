@@ -37,14 +37,14 @@ export class CancellationManager {
   }
 
   /** 取消指定请求 */
-  cancel(requestId: string, reason?: string): boolean {
+  cancel(requestId: string, reason = 'Cancelled by user'): boolean {
     const controller = this.controllers.get(requestId)
     if (!controller) {
       logger.info('[CancellationManager] No controller found for request', { requestId })
       return false
     }
 
-    controller.abort(reason ?? 'Cancelled by user')
+    controller.abort(reason)
     this.controllers.delete(requestId)
 
     const token: CancellationToken = {
@@ -74,11 +74,11 @@ export class CancellationManager {
   }
 
   /** 取消所有活跃请求 */
-  cancelAll(reason?: string): void {
+  cancelAll(reason = 'Mass cancellation'): void {
     const ids = Array.from(this.controllers.keys())
     logger.info('[CancellationManager] Cancelling all', { count: ids.length, reason })
     for (const id of ids) {
-      this.cancel(id, reason ?? 'Mass cancellation')
+      this.cancel(id, reason)
     }
   }
 

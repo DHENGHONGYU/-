@@ -10,8 +10,30 @@ import { BaseCollector } from './collectors/BaseCollector'
 import { MockCollector } from './collectors/MockCollector'
 import { RestCollector } from './collectors/RestCollector'
 import { WebSocketCollector } from './collectors/WebSocketCollector'
+import { eventBus } from '@/lib/eventBus'
+import { COLLECTION_EVENTS } from '@/types/modules/collection.types'
+import { runSingleTrace } from './collectionPipeline'
+import type { CollectionConfig } from '@/types/modules/collection.types'
 
 const logger = getLogger()
+
+function emitTaskStatus(
+  taskId: string,
+  status: CollectionTaskStatus,
+  payload?: Record<string, unknown>,
+): void {
+  try {
+    eventBus.emit(COLLECTION_EVENTS.TASK_STATUS, {
+      traceId: taskId,
+      taskId,
+      message: `任务状态变更: ${status}`,
+      timestamp: Date.now(),
+      payload: { status, ...payload },
+    })
+  } catch (err) {
+    logger.warn('[TaskScheduler] 任务状态事件发射失败', { error: err, taskId })
+  }
+}
 
 /** 数据采集轮询默认间隔（毫秒）。原硬编码 60000 提取为命名常量，供 audit:hardcode「硬编码超时」门禁放行。 */
 const DEFAULT_POLL_INTERVAL_MS = 60000
@@ -51,6 +73,8 @@ export class TaskScheduler {
     }
 
     this.tasks.set(taskId, task)
+    emitTaskStatus(taskId, 'pending', { widgetId, instanceId, mode: dataSource.mode })
+    // 参数 widgetId / instanceId 来自 registerTask 的闭包，类型已推断
     logger.info(`[TaskScheduler] 任务注册成功: ${taskId}, widgetId=${widgetId}, type=${dataSource.type}, mode=${dataSource.mode}`)
 
     return taskId
@@ -79,6 +103,11 @@ export class TaskScheduler {
     this.collectors.set(taskId, collector)
 
     task.status = 'running'
+    emitTaskStatus(taskId, 'running', {
+      widgetId: task.widgetId,
+      instanceId: task.instanceId,
+      mode: dataSource.mode,
+    })
     logger.info(`[TaskScheduler] 任务启动: ${taskId}, mode=${dataSource.mode}`)
 
     if (dataSource.mode === 'polling') {
@@ -103,6 +132,10 @@ export class TaskScheduler {
       // 只执行一次
       await this.executeTask(taskId)
       task.status = 'completed'
+      emitTaskStatus(taskId, 'completed', {
+        widgetId: task.widgetId,
+        instanceId: task.instanceId,
+      })
     } else if (dataSource.mode === 'streaming') {
       // 流式采集（WebSocket）
       logger.info(`[TaskScheduler] 流式采集模式: ${taskId}`)
@@ -134,6 +167,10 @@ export class TaskScheduler {
     }
 
     task.status = 'paused'
+    emitTaskStatus(taskId, 'paused', {
+      widgetId: task.widgetId,
+      instanceId: task.instanceId,
+    })
     logger.info(`[TaskScheduler] 任务已停止: ${taskId}`)
   }
 
@@ -175,6 +212,34 @@ export class TaskScheduler {
    */
   getAllTasks(): CollectionTask[] {
     return Array.from(this.tasks.values())
+  }
+
+  /**
+   * 使用 collectionPipeline 执行单次采集（供输入舱页面显式触发）。
+   * 不会注册到任务轮询列表，只产生一次 trace 并持久化。
+   * @param symbol 标的代码
+   * @param dimensionCode 维度代码
+   * @param config 采集配置
+   * @returns 采集结果
+   */
+  async runPipelineOnce(
+    symbol: string,
+    dimensionCode: string,
+    config: CollectionConfig,
+  ): Promise<{ success: boolean; latency: number; fallbackCount: number; error?: string }> {
+    const taskId = `pipeline-once-${dimensionCode}-${Date.now()}`
+    emitTaskStatus(taskId, 'running', { symbol, dimensionCode })
+
+    const result = await runSingleTrace({ symbol, dimensionCode, config, taskId })
+
+    emitTaskStatus(taskId, result.success ? 'completed' : 'error', {
+      symbol,
+      dimensionCode,
+      latency: result.latency,
+      error: result.error,
+    })
+
+    return result
   }
 
   /**
@@ -221,10 +286,30 @@ export class TaskScheduler {
     task.lastRun = Date.now()
     task.runCount++
 
+    const traceId = `scheduler-${taskId}-${Date.now()}`
+    eventBus.emit(COLLECTION_EVENTS.TRIGGERED, {
+      traceId,
+      taskId,
+      message: `任务触发: ${taskId}`,
+      timestamp: Date.now(),
+    })
+
     try {
       const rawData = await collector.collectWithRetry(task.dataSource)
       task.successCount++
       task.nextRun = Date.now() + task.dataSource.interval
+      emitTaskStatus(task.taskId, 'running', {
+        widgetId: task.widgetId,
+        instanceId: task.instanceId,
+        runCount: task.runCount,
+        successCount: task.successCount,
+      })
+      eventBus.emit(COLLECTION_EVENTS.COMPLETE, {
+        traceId,
+        taskId,
+        message: `任务执行成功: ${taskId}`,
+        timestamp: Date.now(),
+      })
 
       // 通知所有监听器
       this.listeners.forEach((listener) => {
@@ -238,6 +323,18 @@ export class TaskScheduler {
       task.failCount++
       task.status = 'error'
       task.error = error instanceof Error ? error.message : String(error)
+      emitTaskStatus(taskId, 'error', {
+        widgetId: task.widgetId,
+        instanceId: task.instanceId,
+        error: task.error,
+      })
+      eventBus.emit(COLLECTION_EVENTS.COMPLETE, {
+        traceId,
+        taskId,
+        message: `任务执行失败: ${taskId}`,
+        timestamp: Date.now(),
+        error: task.error,
+      })
 
       logger.error(`[TaskScheduler] 任务执行失败: ${taskId}`, { error })
 

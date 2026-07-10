@@ -142,10 +142,10 @@ function formatScore(value: number): string {
 // ============================================================
 
 function WaterfallTooltip({ active, payload }: { active?: boolean; payload?: Array<{ payload?: WaterfallRow }> }) {
-  if (!active || !payload || payload.length === 0) return null
+  if (!active || !payload || payload.length === 0) return <></>
 
   const row = payload[0]?.payload
-  if (!row) return null
+  if (!row) return <></>
   if (row.isTotal) {
     return (
       <div className={`rounded-md border p-2 shadow-sm text-xs ${twBg('neutral', 50)}`}>
@@ -170,7 +170,7 @@ function WaterfallTooltip({ active, payload }: { active?: boolean; payload?: Arr
         </div>
       )
     }
-    return null
+    return <></>
   }
 
   return (

@@ -30,6 +30,8 @@ import {
 const logger = getLogger()
 
 const ConfigApp = React.lazy(() => import('@/apps/command/ConfigApp'))
+const ComponentShowcasePage = React.lazy(() => import('@/pages/command/showcase/ComponentShowcasePage'))
+const HealthDashboardPage = React.lazy(() => import('@/pages/command/health/HealthDashboardPage'))
 
 /**
  * 总控舱子路由分发
@@ -76,6 +78,12 @@ export default function CommandApp(): React.JSX.Element {
     } else if (path === '/command/monitor') {
       branch = 'monitor'
       componentName = 'SystemMonitor'
+    } else if (path === '/command/showcase') {
+      branch = 'showcase'
+      componentName = 'ComponentShowcasePage'
+    } else if (path === '/command/health') {
+      branch = 'health'
+      componentName = 'HealthDashboardPage'
     } else {
       branch = 'default'
       componentName = 'SystemMonitor'
@@ -102,6 +110,18 @@ export default function CommandApp(): React.JSX.Element {
     )
   } else if (path === '/command/monitor') {
     content = <SystemMonitor />
+  } else if (path === '/command/showcase') {
+    content = (
+      <React.Suspense fallback={<div className="p-4 text-muted-foreground">加载示例库中...</div>}>
+        <ComponentShowcasePage />
+      </React.Suspense>
+    )
+  } else if (path === '/command/health') {
+    content = (
+      <React.Suspense fallback={<div className="p-4 text-muted-foreground">加载健康度面板中...</div>}>
+        <HealthDashboardPage />
+      </React.Suspense>
+    )
   } else {
     // 默认:未明确路径(如 /command)也渲染 SystemMonitor 以保持向后兼容
     content = <SystemMonitor />

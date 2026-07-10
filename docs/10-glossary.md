@@ -61,7 +61,7 @@ V9 采用**单表多状态**模型：所有标的统一存储在 `stocks` Store�
 - **交易持仓不属于研究池**，也不写入 `stocks.researchStatus`，它由独立的 `orders` / `positions` Store 管理（见 10.1.2）。
 - **不再有独立的 `intention_pool` / `screener_pool` / `watchlist` 表或 localStorage key**。
 - 所有研究池的查询统一为：`db.getAllByIndex('stocks', 'by-status', status)`。
-- UI 层通过 `PoolBoard` / `PoolColumn` + `researchStatus` 渲染不同研究池。
+- UI 层通过 `StockPoolBoardPage`（`/analysis/stock-pool`）承载 `PoolBoard` / `PoolColumn`，按 `researchStatus` 渲染不同研究池。输入舱侧栏保留跳转入口。
 
 ## 10.1.2 交易持仓（独立管理）
 

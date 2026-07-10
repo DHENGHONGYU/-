@@ -259,7 +259,7 @@ export async function getNextVersion(): Promise<number> {
 
 export async function saveStrategySnapshot(
   input: ClassifyStocksInput,
-  trigger?: string,
+  trigger = 'manual',
 ): Promise<DataLayerResult<StrategySnapshot>> {
   try {
     const items = classifyStocks(input)
@@ -297,7 +297,7 @@ export async function saveStrategySnapshot(
       hot,
       value,
       changeFromPrev,
-      trigger: trigger ?? 'manual',
+      trigger,
     }
 
     const result = await dataLayer.strategySnapshots.save(snapshot)

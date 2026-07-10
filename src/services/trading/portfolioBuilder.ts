@@ -1,5 +1,5 @@
 import { CORE_RESOURCE_THEME, matchesTheme, type ThemeConfig } from '@/config/themeRegistry'
-import { getDefaultTradingConfig } from '@/config/tradingConfig'
+import { getEffectiveTradingConfig } from '@/config/tradingConfig'
 import type { Portfolio, PortfolioHolding, RebalanceAction, Stock } from '@/data/types'
 import { getCompositeScores } from './scoringAdapter'
 import { runStrategy } from './strategyEngine'
@@ -49,7 +49,7 @@ export async function buildThemePortfolio(
 ): Promise<Portfolio> {
   const opts = { ...DEFAULT_OPTIONS, ...options }
   const theme = input.theme
-  const totalValue = input.totalPortfolioValue ?? getDefaultTradingConfig().risk.portfolioValue
+  const totalValue = input.totalPortfolioValue ?? getEffectiveTradingConfig().risk.portfolioValue
   const currentHoldings = input.currentHoldings ?? {}
 
   // 1. 主题匹配 + 基础过滤
@@ -89,7 +89,7 @@ export async function buildThemePortfolio(
     const targetWeight = allocations[index] ?? 0
     const targetValue = investableValue * targetWeight
     const price = stock.price ?? 0
-    const roundLot = getDefaultTradingConfig().kelly.roundLot
+    const roundLot = getEffectiveTradingConfig().kelly.roundLot
     const targetShares = price > 0 ? Math.floor(targetValue / price / roundLot) * roundLot : 0
     const marketValue = targetShares * price
     const currentShares = currentHoldings[stock.symbol] ?? 0
@@ -173,7 +173,7 @@ function buildRebalancePlan(
     const diff = h.targetShares - h.currentShares
     const drift = Math.abs(h.targetWeight - h.currentWeight)
 
-    if (Math.abs(diff) < getDefaultTradingConfig().kelly.roundLot) {
+    if (Math.abs(diff) < getEffectiveTradingConfig().kelly.roundLot) {
       plan.push({
         symbol: h.symbol,
         action: 'hold',

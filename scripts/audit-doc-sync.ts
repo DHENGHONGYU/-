@@ -79,6 +79,9 @@ const AUTO_EXCLUDED_PATTERNS = [
   /\/utils\.ts$/,        // 独立 utils.ts 文件（如 lib/utils.ts）
   /\/config\.ts$/,       // 独立 config.ts 文件（如 v6-engine/config.ts）
   /index\.ts$/,          // barrel 文件
+  // 纯端点/监控配置常量文件，本身即文档
+  /[A-Z][a-zA-Z]*Endpoints\.ts$/,
+  /[A-Z][a-zA-Z]*Monitoring\.ts$/,
 ]
 
 function collectDocs(dir: string, docFiles: Set<string>): void {
@@ -149,13 +152,13 @@ function isLikelyReferenced(filePath: string, allDocContent: string): boolean {
   const baseName = fileName.replace(/\.(ts|tsx)$/, '')
   const parts = normalized.split('/')
 
+  // 直接路径引用（完整路径）- 优先级最高，不受噪音词影响
+  if (allDocContent.includes(normalized)) return true
+
   // v2.1 增强：过滤常见噪音词，避免误判
   if (COMMON_NOISE_WORDS.has(baseName.toLowerCase())) {
     return false
   }
-
-  // 直接路径引用（完整路径）
-  if (allDocContent.includes(normalized)) return true
 
   // v2.1 增强：文件名引用需要至少出现 2 次或伴随描述性文本
   // 避免单个常见词（如 "utils"）的误判

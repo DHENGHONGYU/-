@@ -4,6 +4,60 @@
 
 ---
 
+## v2.6.0 (2026-07-08) — Hybrid Proofread 模块完善、日志增强与文档同步
+
+**变更范围**：混合校对模块（Hybrid Proofread）全面完善，包含详细日志添加、耗时统计、测试脚本构建、数据字典更新、核心文档同步
+
+### 新建文件
+
+| 文件 | 用途 |
+|------|------|
+| `scripts/test-hybrid-proofread.ts` | 混合校对模块综合测试脚本，包含 9 个测试用例，覆盖 HashService/RuleEngine/CloudSyncClient/完整校对流程 |
+| `src/data/types/types.hybridProofread.ts` | 混合校对模块类型定义（17 个接口/类型） |
+
+### 修改文件
+
+| 文件 | 变更内容 |
+|------|---------|
+| `src/services/hybrid-proofread/cloudSyncClient.ts` | 为所有核心方法（verifyHash/batchVerifyHashes/getRiskDetails/syncRules）添加详细 logger.info 日志和耗时统计 |
+| `src/services/hybrid-proofread/ruleEngine.ts` | 为 loadRules/syncRules/evaluateFile 添加详细 logger.info 日志和耗时统计 |
+| `src/services/hybrid-proofread/index.ts` | 为 runFullProofread 完整流程添加四步分阶段日志和耗时拆解 |
+| `src/config/hybridProofreadConfig.ts` | 哈希算法从 SHA-3-256 改为 SHA-256（Node.js 兼容性） |
+| `src/store/hybridProofreadStore.ts` | 添加状态管理和日志记录 |
+
+### 文档更新
+
+| 文件 | 变更内容 |
+|------|---------|
+| `docs/DATA_DICTIONARY_INDEX.md` | v1.5.0→v1.6.0：新增混合校对模块索引，包含 17 个类型定义 |
+| `docs/03-architecture-standards.md` | v2.5.0→v2.6.0：新增 §3.1.9 Hybrid Proofread 模块说明 |
+| `docs/05-engine-specs.md` | v2.5.0→v2.6.0：新增混合校对引擎说明 |
+
+### 验证结果
+
+- `tsc --noEmit` — 0 错误
+- `npm run audit:layers` — 0 violations, 0 warnings
+- `npm run test -- --run` — 通过
+- 测试脚本 9/9 用例全部通过，成功检测到 Mock 项目中的安全问题
+
+### 模块架构
+
+混合校对模块采用分层架构：
+- **配置层**：`HYBRID_PROOFREAD_CONFIG`（API 端点、哈希算法、规则同步间隔）
+- **服务层**：5 个核心模块（hashService/ruleEngine/cloudSyncClient/localCollector/reportGenerator）
+- **状态层**：`useHybridProofreadStore`（扫描状态、报告数据、规则信息）
+- **类型层**：17 个接口定义（FileHash/RuleConfig/ProofreadReport 等）
+
+### 日志增强详情
+
+| 模块 | 日志内容 |
+|------|---------|
+| CloudSyncClient | 请求参数、响应状态、风险等级、CVE 信息、耗时统计 |
+| RuleEngine | 规则加载状态、匹配详情、跳过规则数、耗时统计 |
+| runFullProofread | 四步流程日志（规则同步→本地扫描→规则评估→云端检查）、各阶段耗时拆解、最终结果汇总 |
+
+---
+
 ## v2.5.0 (2026-07-05) — UseCase 抽取、交易计算纯函数化与配置层补全
 
 **变更范围**：8 轮迭代整改，涵盖 UseCase 模式引入、交易计算纯函数提取、配置层文件新增、Store 瘦身、死代码清理、12 个 pages/components 的 Service 直调改为 Store 调用

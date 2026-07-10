@@ -9,6 +9,26 @@
 
 ### Added
 
+- **T8 代码复杂度专项治理（v2.6.0）**：
+  - 新增 `scripts/complexity-scan.ts`：基于 TypeScript AST 扫描深层嵌套、长链式条件、重复 if 条件，支持基线回归与 CI 集成。
+  - 重构 `src/apps/analysis/AnalysisApp.tsx`、`src/apps/input/InputApp.tsx`、`src/apps/output/OutputApp.tsx`、`src/apps/trading/TradingApp.tsx`：将路由映射提取为 `ANALYSIS_ROUTES` / `INPUT_ROUTES` / `OUTPUT_ROUTES` / `TRADING_ROUTES`，消除 ≥6 分支的 if-else-if 链。
+  - 新增 `src/types/modules/health.types.ts`：抽取架构健康度类型。
+  - 新增 `src/constants/healthStatusStyles.ts`：集中管理健康度状态样式，避免页面层裸 Tailwind 色类。
+  - 在 `src/mcp/servers/system/systemServer.ts` 新增 `fetch_health_report` Tool，供页面层通过 MCP 调用。
+  - 更新 `.complexity-baseline.json`：长链式条件从 5 处降至 0 处，深层嵌套从 127 处降至 104 处。
+
+- **文档化完善（v2.6.0）**：
+  - 为 `src/services/scoring/v6-engine/calculators/l3/helpers.ts` 添加完整 JSDoc 注释（`scoreMoat()` 护城河评分、`scoreCompetition()` 竞争格局评分）。
+  - 为 `src/components/ui/PageContainer.tsx` 添加模块级注释。
+  - 为 `src/components/ui/PageHeader.tsx` 添加模块级注释。
+  - 为 `src/constants/sectorConstants.ts` 添加完整 JSDoc 注释（热门赛道标签、热力等级说明）。
+  - 新增 `docs/RISK_DERIVED_DATA_DEFINITION.md`：`riskStore.derived.ts` 详细文档（风控三态规则、熔断状态机、趋势分析规则）。
+  - 更新 `docs/DATA_DICTIONARY_INDEX.md`：添加 Store 派生计算、事件订阅、基础设施模块等索引条目。
+  - 更新 `docs/03-architecture-standards.md`：新增 Store 派生计算与事件订阅架构说明（§3.1.10）、V6 评分引擎 L3 层辅助函数说明（§3.5.1）。
+
+- **审计脚本修复（v2.6.0）**：
+  - 修复 `scripts/audit-doc-sync.ts` 逻辑缺陷：将完整路径检查移到噪音词检查之前。原逻辑中，文件名是噪音词（如 `helpers`）的文件即使在文档中有完整路径引用，也会被误判为未文档化。修复后，完整路径引用优先于噪音词过滤，避免误判。
+
 - **代码审查系统建立（v2.1.0）**：
   - 新增 `docs/CODE-REVIEW.md`：完整审查标准与流程（P0/P1/P2 三级检查、审查清单、常见问题）。
   - 新增 `docs/CODE-REVIEW-CHEATSHEET.md`：快速参考卡（10 分钟审查指南、检查清单、常见问题）。

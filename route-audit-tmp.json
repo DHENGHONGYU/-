@@ -1,0 +1,205 @@
+{
+  "violations": [
+    {
+      "path": "/trading/risk",
+      "type": "duplicate-path",
+      "message": "路径 \"/trading/risk\" 在 ROUTE_REGISTRY 中重复 2 次"
+    },
+    {
+      "cabin": "analysis",
+      "path": "/analysis/news-v6",
+      "label": "智能资讯 V6",
+      "type": "missing-route",
+      "message": "预期路径 /analysis/news-v6（智能资讯 V6）未在 ROUTE_REGISTRY 中注册"
+    },
+    {
+      "cabin": "trading",
+      "path": "/trading/hub",
+      "label": "交易舱首页",
+      "type": "missing-route",
+      "message": "预期路径 /trading/hub（交易舱首页）未在 ROUTE_REGISTRY 中注册"
+    }
+  ],
+  "warnings": [
+    {
+      "path": "/trading/risk",
+      "type": "orphan-route",
+      "message": "路径 \"/trading/risk\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/trading/flow",
+      "type": "orphan-route",
+      "message": "路径 \"/trading/flow\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/output/dashboard",
+      "type": "orphan-route",
+      "message": "路径 \"/output/dashboard\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/agents",
+      "type": "orphan-route",
+      "message": "路径 \"/command/agents\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/agents/registry",
+      "type": "orphan-route",
+      "message": "路径 \"/command/agents/registry\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/agents/registry/:agentId",
+      "type": "orphan-route",
+      "message": "路径 \"/command/agents/registry/:agentId\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/agents/trigger",
+      "type": "orphan-route",
+      "message": "路径 \"/command/agents/trigger\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/agents/tasks",
+      "type": "orphan-route",
+      "message": "路径 \"/command/agents/tasks\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/agents/custom",
+      "type": "orphan-route",
+      "message": "路径 \"/command/agents/custom\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/agents/llm",
+      "type": "orphan-route",
+      "message": "路径 \"/command/agents/llm\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/agents/capability-graph",
+      "type": "orphan-route",
+      "message": "路径 \"/command/agents/capability-graph\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/agents/dag-scheduler",
+      "type": "orphan-route",
+      "message": "路径 \"/command/agents/dag-scheduler\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/agents/feedback",
+      "type": "orphan-route",
+      "message": "路径 \"/command/agents/feedback\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/agents/model-upgrade",
+      "type": "orphan-route",
+      "message": "路径 \"/command/agents/model-upgrade\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/agents/data-labels",
+      "type": "orphan-route",
+      "message": "路径 \"/command/agents/data-labels\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/agents/api-config",
+      "type": "orphan-route",
+      "message": "路径 \"/command/agents/api-config\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/agents/skill-audit",
+      "type": "orphan-route",
+      "message": "路径 \"/command/agents/skill-audit\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/agents/optimization",
+      "type": "orphan-route",
+      "message": "路径 \"/command/agents/optimization\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/agents/changelog",
+      "type": "orphan-route",
+      "message": "路径 \"/command/agents/changelog\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/mcp-servers",
+      "type": "orphan-route",
+      "message": "路径 \"/command/mcp-servers\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/monitor",
+      "type": "orphan-route",
+      "message": "路径 \"/command/monitor\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/config",
+      "type": "orphan-route",
+      "message": "路径 \"/command/config\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/analysis/score-comparison",
+      "type": "orphan-route",
+      "message": "路径 \"/analysis/score-comparison\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/analysis/multi-factor",
+      "type": "orphan-route",
+      "message": "路径 \"/analysis/multi-factor\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/trading/execution-plans",
+      "type": "orphan-route",
+      "message": "路径 \"/trading/execution-plans\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/trading/execution",
+      "type": "orphan-route",
+      "message": "路径 \"/trading/execution\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/trading/portfolio",
+      "type": "orphan-route",
+      "message": "路径 \"/trading/portfolio\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/trading/risk",
+      "type": "orphan-route",
+      "message": "路径 \"/trading/risk\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/input/seven-dim",
+      "type": "orphan-route",
+      "message": "路径 \"/input/seven-dim\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/input/fetcher-config",
+      "type": "orphan-route",
+      "message": "路径 \"/input/fetcher-config\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/mock-test",
+      "type": "orphan-route",
+      "message": "路径 \"/mock-test\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    }
+  ],
+  "summary": {
+    "totalFiles": 63,
+    "totalViolations": 3,
+    "totalWarnings": 31,
+    "totalRoutes": 63,
+    "totalExpected": 34,
+    "totalCovered": 32,
+    "coverageRate": "94.1%",
+    "duplicatePaths": 1,
+    "orphanPaths": 31,
+    "byViolationType": {
+      "duplicate-path": 1,
+      "missing-route": 2
+    },
+    "byWarningType": {
+      "orphan-route": 31
+    }
+  },
+  "meta": {
+    "scriptName": "verify-all-routes",
+    "version": "3.0",
+    "timestamp": "2026-07-10T01:56:48.998Z",
+    "durationMs": 1,
+    "rootDir": "C:\\Users\\huawei\\Documents\\kimi\\Workspaces\\智能投研复盘系统V9"
+  }
+}

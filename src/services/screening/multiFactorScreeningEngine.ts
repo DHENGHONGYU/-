@@ -86,7 +86,7 @@ export async function loadScreenableStocks(): Promise<ScreenableStockData[]> {
   }
 
   const symbols = stocks.map((stock) => stock.symbol)
-  const { data } = await getUnifiedStockViews(symbols, {
+  const { data = [] } = await getUnifiedStockViews(symbols, {
     includeQuotes: false,
     includeV6Score: false,
     includeIntelligentScore: false,
@@ -96,7 +96,7 @@ export async function loadScreenableStocks(): Promise<ScreenableStockData[]> {
     includeHolding: false,
   })
 
-  const views = data ?? []
+  const views = data
   logger.info(`[multiFactorScreeningEngine] 加载股票池完成: ${views.length}/${symbols.length}`)
 
   return views.map((view) => ({

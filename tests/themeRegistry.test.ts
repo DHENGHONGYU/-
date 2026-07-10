@@ -8,7 +8,7 @@ import {
 import type { Stock } from '@/data/types'
 
 describe('themeRegistry', () => {
-  it('should expose the core resource theme', () => {
+  it('应该expose the core resource theme', () => {
     const theme = getThemeConfig(CORE_RESOURCE_THEME.id)
     expect(theme).toBeDefined()
     expect(theme?.name).toBe('第四次工业革命稀缺核心资源')
@@ -17,7 +17,7 @@ describe('themeRegistry', () => {
     expect(theme?.minCompositeScore).toBe(4.0)
   })
 
-  it('should match stock by explicit theme tag', () => {
+  it('应该匹配 stock by explicit theme tag', () => {
     const stock: Stock = {
       symbol: 'TEST001',
       name: '测试',
@@ -30,7 +30,7 @@ describe('themeRegistry', () => {
     expect(matchesTheme(stock, CORE_RESOURCE_THEME)).toBe(true)
   })
 
-  it('should match stock by symbol whitelist', () => {
+  it('应该匹配 stock by symbol whitelist', () => {
     const stock: Stock = {
       symbol: '002371.SZ',
       name: '北方华创',
@@ -42,7 +42,7 @@ describe('themeRegistry', () => {
     expect(matchesTheme(stock, CORE_RESOURCE_THEME)).toBe(true)
   })
 
-  it('should match stock by sector keyword', () => {
+  it('应该匹配 stock by sector keyword', () => {
     const stock: Stock = {
       symbol: 'TEST002',
       name: '半导体测试',
@@ -55,7 +55,7 @@ describe('themeRegistry', () => {
     expect(matchesTheme(stock, CORE_RESOURCE_THEME)).toBe(true)
   })
 
-  it('should match stock by industry code pattern', () => {
+  it('应该匹配 stock by industry code pattern', () => {
     const stock: Stock = {
       symbol: 'TEST003',
       name: 'AI测试',
@@ -68,7 +68,7 @@ describe('themeRegistry', () => {
     expect(matchesTheme(stock, CORE_RESOURCE_THEME)).toBe(true)
   })
 
-  it('should not match unrelated stock', () => {
+  it('不应该 match unrelated stock', () => {
     const stock: Stock = {
       symbol: 'TEST004',
       name: '食品饮料',
@@ -82,7 +82,7 @@ describe('themeRegistry', () => {
     expect(matchesTheme(stock, CORE_RESOURCE_THEME)).toBe(false)
   })
 
-  it('should return matched theme ids for a stock', () => {
+  it('应该返回 matched theme ids for a stock', () => {
     const stock: Stock = {
       symbol: '002371.SZ',
       name: '北方华创',

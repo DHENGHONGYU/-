@@ -8,7 +8,7 @@ import {
   ORDER_STATUS,
   RESEARCH_STATUS,
 } from '@/config/dbConfig'
-import { getDefaultTradingConfig } from '@/config/tradingConfig'
+import { getEffectiveTradingConfig } from '@/config/tradingConfig'
 import { dataLayer } from '@/data/dataLayer'
 import type { DataLayerResult, Order, Stock } from '@/data/types'
 import {
@@ -68,7 +68,7 @@ async function computePositionForSignal(
 
   const orders = await dataLayer.orders.list()
   const price = stock.price
-  const portfolioValue = getDefaultTradingConfig().risk.portfolioValue
+  const portfolioValue = getEffectiveTradingConfig().risk.portfolioValue
 
   const holdingShares = orders
     .filter((o) => o.symbol === signal.symbol)
@@ -168,7 +168,7 @@ export async function adviseForStock(stock: Stock): Promise<DataLayerResult<Trad
     direction: signal.direction,
     quantity: sizing.targetShares,
     price,
-    portfolioValue: getDefaultTradingConfig().risk.portfolioValue,
+    portfolioValue: getEffectiveTradingConfig().risk.portfolioValue,
   })
 
   return { success: true, data: { signal, sizing, risk } }
@@ -187,7 +187,7 @@ async function createOrderWithRiskCheck(
     direction: input.direction,
     quantity: input.quantity,
     price,
-    portfolioValue: getDefaultTradingConfig().risk.portfolioValue,
+    portfolioValue: getEffectiveTradingConfig().risk.portfolioValue,
   })
 
   if (!risk.ok) {

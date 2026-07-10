@@ -16,6 +16,7 @@ import { useDisciplineStore } from '@/store/disciplineStore'
 import type { TradeReviewReport } from '@/services/trading/tradeReviewAI'
 import { useToast } from '@/hooks/useToast'
 import { usePageGuard } from '@/hooks/usePageGuard'
+import { ReviewArtifactModal } from '@/components/output/ReviewArtifactModal'
 import type { Order } from '@/data/types'
 
 interface ReviewData {
@@ -25,12 +26,19 @@ interface ReviewData {
 
 export default memo(function TradeReviewPage(): React.JSX.Element {
   const [orders, setOrders] = useState<Order[]>([])
-  const [review, setReview] = useState<ReviewData | null>(null)
   const [loading, setLoading] = useState(false)
   const [generating, setGenerating] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false)
   const { toast } = useToast()
   const { guardProps } = usePageGuard('trade-review')
+  // 阶段 B-2：从 store 读取 latestReport（持久化在 IDB.trade_reviews），不再维护本地 review state
+  const latestReport = useDisciplineStore((s) => s.latestReport)
   const { loadOrders: loadOrdersFromStore, generateReviewReport } = useDisciplineStore()
+
+  // 将 store 中的 latestReport 转成 UI 用的 ReviewData
+  const review: ReviewData | null = latestReport
+    ? { report: latestReport, generatedAt: new Date().toISOString() }
+    : null
 
   useEffect(() => {
     void loadOrders()
@@ -64,11 +72,9 @@ export default memo(function TradeReviewPage(): React.JSX.Element {
 
     setGenerating(true)
     try {
-      const report = generateReviewReport(orders)
-      setReview({
-        report,
-        generatedAt: new Date().toISOString(),
-      })
+      // 阶段 B-2：generateReviewReport 内部已 store.set({ latestReport: report }) + dataBridge.saveTradeReview 落库
+      // 不再本地 setReview，UI 直接订阅 store.latestReport
+      generateReviewReport(orders)
       toast({
         title: '复盘报告生成成功',
         description: `已分析 ${orders.length} 笔交易记录`,
@@ -175,10 +181,15 @@ export default memo(function TradeReviewPage(): React.JSX.Element {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>交易摘要</CardTitle>
-                  <Button variant="outline" size="sm" {...guardProps} onClick={downloadReport} disabled={guardProps.disabled}>
-                    <Download className="mr-2 h-4 w-4" />
-                    下载报告
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button variant="outline" size="sm" {...guardProps} onClick={() => setModalOpen(true)} disabled={guardProps.disabled}>
+                      导出成品卡
+                    </Button>
+                    <Button variant="outline" size="sm" {...guardProps} onClick={downloadReport} disabled={guardProps.disabled}>
+                      <Download className="mr-2 h-4 w-4" />
+                      下载报告
+                    </Button>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent>
@@ -306,6 +317,13 @@ export default memo(function TradeReviewPage(): React.JSX.Element {
             </Card>
           </>
         )}
+
+        <ReviewArtifactModal
+          open={modalOpen}
+          onOpenChange={setModalOpen}
+          report={review?.report ?? null}
+          generatedAt={review ? new Date(review.generatedAt).toLocaleString('zh-CN') : ''}
+        />
       </div>
     </ErrorBoundary>
   )

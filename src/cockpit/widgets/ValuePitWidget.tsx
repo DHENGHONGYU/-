@@ -1,6 +1,6 @@
 import React from 'react'
 import { Gem, Sparkles, DollarSign, Users, RotateCcw, Droplets } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import { WidgetStateShell } from './components/WidgetStateShell'
 import { Badge } from '@/components/ui/Badge'
 import { Progress } from '@/components/ui/Progress'
 import { useOptionalMarketData } from '@/cockpit/providers/MarketDataProvider'
@@ -63,62 +63,60 @@ export default function ValuePitWidget({ config, data }: ValuePitWidgetProps): R
   const marketData = useOptionalMarketData()
   const sourceData = data ?? marketData?.data ?? { valuePit: [] }
   const valuePit = sourceData.valuePit ?? []
+  const visualState = valuePit.length === 0 ? 'empty' : 'ready'
 
   return (
-    <Card className="h-full flex flex-col">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-base font-semibold flex items-center gap-2">
-          <Gem className={`h-4 w-4 ${COLOR_TOKENS.info.tailwind}`} />
-          {config.title}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="flex-1 overflow-auto space-y-4">
-        {valuePit.length === 0 ? (
-          <div className="text-center text-muted-foreground py-8">暂无价值洼地策略数据</div>
-        ) : (
-          <div className="space-y-3">
-            {valuePit.map((item) => {
-              const action = getActionLabel(item.action)
-              const scoreColor = getScoreColor(item.score)
+    <WidgetStateShell
+      title={config.title}
+      titleIcon={<Gem className={`h-4 w-4 ${COLOR_TOKENS.info.tailwind}`} />}
+      visualState={visualState}
+      emptyTitle="暂无价值洼地策略"
+      emptyDescription="当前未获取到价值洼地候选与建仓信号"
+      className="h-full flex flex-col"
+    >
+      <div className="flex-1 overflow-auto space-y-4">
+        <div className="space-y-3">
+          {valuePit.map((item) => {
+            const action = getActionLabel(item.action)
+            const scoreColor = getScoreColor(item.score)
 
-              return (
-                <div key={item.symbol} className="rounded-lg border p-3 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="font-medium">{item.name}</div>
-                      <div className="text-xs text-muted-foreground">{item.symbol}</div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-2xl font-bold" style={{ color: scoreColor }}>
-                        {item.score.toFixed(2)}
-                      </span>
-                      <Badge variant={action.variant}>{action.label}</Badge>
-                      {item.rotationSignal && (
-                        <Badge variant="default" className={twBg('green', 600)}>
-                          轮动信号
-                        </Badge>
-                      )}
-                    </div>
+            return (
+              <div key={item.symbol} className="rounded-lg border p-3 space-y-2">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-medium">{item.name}</div>
+                    <div className="text-xs text-muted-foreground">{item.symbol}</div>
                   </div>
-
-                  <div className="grid grid-cols-6 gap-2">
-                    {Object.entries(item.dimensions).map(([key, value]) => (
-                      <div key={key} className="space-y-1">
-                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                          {DIMENSION_ICONS[key]}
-                          <span>{DIMENSION_NAMES[key]}</span>
-                        </div>
-                        <Progress value={value * 20} className="h-1.5" />
-                        <div className="text-xs font-medium text-right">{value.toFixed(1)}</div>
-                      </div>
-                    ))}
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl font-bold" style={{ color: scoreColor }}>
+                      {item.score.toFixed(2)}
+                    </span>
+                    <Badge variant={action.variant}>{action.label}</Badge>
+                    {item.rotationSignal && (
+                      <Badge variant="default" className={twBg('green', 600)}>
+                        轮动信号
+                      </Badge>
+                    )}
                   </div>
                 </div>
-              )
-            })}
-          </div>
-        )}
-      </CardContent>
-    </Card>
+
+                <div className="grid grid-cols-6 gap-2">
+                  {Object.entries(item.dimensions).map(([key, value]) => (
+                    <div key={key} className="space-y-1">
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                        {DIMENSION_ICONS[key]}
+                        <span>{DIMENSION_NAMES[key]}</span>
+                      </div>
+                      <Progress value={value * 20} className="h-1.5" />
+                      <div className="text-xs font-medium text-right">{value.toFixed(1)}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </WidgetStateShell>
   )
 }

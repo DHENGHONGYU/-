@@ -519,36 +519,54 @@ export function matchStocksToSectors(stocks: Array<{ symbol: string; name: strin
     matchType: "primary" as const,
   }));
 
+  const mappingByCode = new Map(mappings.map((m) => [m.sectorCode, m]));
+
   for (const stock of stocks) {
-    const tags = stock.conceptTags ?? [];
-    const nameLower = stock.name.toLowerCase();
-
-    for (const sector of SECTORS_WITH_SCORES) {
-      // 关键词匹配
-      const matched = sector.keywords.some((kw) =>
-        tags.some((t) => t.includes(kw)) || nameLower.includes(kw)
-      );
-      if (matched) {
-        const mapping = mappings.find((m) => m.sectorCode === sector.code)!;
-        if (!mapping.stockSymbols.includes(stock.symbol)) {
-          mapping.stockSymbols.push(stock.symbol);
-        }
-      }
-    }
-
-    // 检查是否在keyStocks列表中
-    for (const sector of SECTORS_WITH_SCORES) {
-      const isKeyStock = sector.keyStocks.some((ks) => ks.symbol === stock.symbol);
-      if (isKeyStock) {
-        const mapping = mappings.find((m) => m.sectorCode === sector.code)!;
-        if (!mapping.stockSymbols.includes(stock.symbol)) {
-          mapping.stockSymbols.push(stock.symbol);
-        }
-      }
-    }
+    matchStockByKeywords(stock, mappingByCode);
+    matchStockByKeyStocks(stock, mappingByCode);
   }
 
   return mappings.filter((m) => m.stockSymbols.length > 0);
+}
+
+function addSymbolToMapping(
+  mappingByCode: Map<string, SectorStockMapping>,
+  sectorCode: string,
+  symbol: string,
+): void {
+  const mapping = mappingByCode.get(sectorCode);
+  if (mapping && !mapping.stockSymbols.includes(symbol)) {
+    mapping.stockSymbols.push(symbol);
+  }
+}
+
+function matchStockByKeywords(
+  stock: { symbol: string; name: string; conceptTags?: string[] },
+  mappingByCode: Map<string, SectorStockMapping>,
+): void {
+  const tags = stock.conceptTags ?? [];
+  const nameLower = stock.name.toLowerCase();
+
+  for (const sector of SECTORS_WITH_SCORES) {
+    const matched = sector.keywords.some((kw) =>
+      tags.some((t) => t.includes(kw)) || nameLower.includes(kw)
+    );
+    if (matched) {
+      addSymbolToMapping(mappingByCode, sector.code, stock.symbol);
+    }
+  }
+}
+
+function matchStockByKeyStocks(
+  stock: { symbol: string; name: string; conceptTags?: string[] },
+  mappingByCode: Map<string, SectorStockMapping>,
+): void {
+  for (const sector of SECTORS_WITH_SCORES) {
+    const isKeyStock = sector.keyStocks.some((ks) => ks.symbol === stock.symbol);
+    if (isKeyStock) {
+      addSymbolToMapping(mappingByCode, sector.code, stock.symbol);
+    }
+  }
 }
 
 /** 获取某板块在股票池中的匹配股票 */

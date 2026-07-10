@@ -88,30 +88,57 @@ export function detectExchange(code: string): string {
 export function parseBulkInput(text: string): BulkImportRow[] {
   const results: BulkImportRow[] = []
 
-  // VAL-003: 限制总行数，防止 DoS
+  logger.info('[batchImport] 开始解析批量输入文本', { textLength: text.length })
+
   const lines = text
     .split(INPUT_CONFIG.bulkImport.lineSeparators)
-    .map((s) => s.trim().slice(0, MAX_LINE_LENGTH)) // 限制单行长度
+    .map((s) => s.trim().slice(0, MAX_LINE_LENGTH))
     .filter(Boolean)
     .slice(0, INPUT_CONFIG.bulkImport.maxRows)
+
+  logger.info('[batchImport] 输入行解析', { totalLines: lines.length, maxRows: INPUT_CONFIG.bulkImport.maxRows })
+
+  let parsedCount = 0
+  let skippedCount = 0
 
   for (const line of lines) {
     const parts = line.split(INPUT_CONFIG.bulkImport.inlineSeparators).filter(Boolean)
 
+    logger.debug('[batchImport] 解析单行', { rawLine: line, partCount: parts.length })
+
     if (parts.length >= 2 && STOCK_CODE_PATTERN.test(parts[0]!)) {
       const code = parts[0]!
-      const name = parts[1]!.slice(0, MAX_NAME_LENGTH) // 限制名称长度
+      const name = parts[1]!.slice(0, MAX_NAME_LENGTH)
       const exchange = detectExchange(code)
       results.push({ code, name, symbol: `${code}.${exchange}`, status: 'valid' })
+      parsedCount++
+      logger.debug('[batchImport] 格式1匹配成功', { code, name, symbol: `${code}.${exchange}` })
+    } else if (parts.length >= 2 && /^\d{6}\.(SH|SZ|BJ)$/i.test(parts[0]!)) {
+      const rawCode = parts[0]!
+      const [code, exchange] = rawCode.split('.') as [string, string]
+      const name = parts[1]!.slice(0, MAX_NAME_LENGTH)
+      results.push({ code, name, symbol: `${code}.${exchange.toUpperCase()}`, status: 'valid' })
+      parsedCount++
+      logger.debug('[batchImport] 格式2匹配成功（带交易所后缀+名称）', { code, name, exchange: exchange.toUpperCase() })
     } else if (/^\d{6}\.(SH|SZ|BJ)$/i.test(line)) {
       const [code, exchange] = line.split('.') as [string, string]
       results.push({ code, name: code, symbol: `${code}.${exchange.toUpperCase()}`, status: 'valid' })
+      parsedCount++
+      logger.debug('[batchImport] 格式3匹配成功（仅带交易所后缀）', { code, exchange: exchange.toUpperCase() })
     } else if (STOCK_CODE_PATTERN.test(line)) {
       const code = line
       const exchange = detectExchange(code)
       results.push({ code, name: code, symbol: `${code}.${exchange}`, status: 'valid' })
+      parsedCount++
+      logger.debug('[batchImport] 格式4匹配成功（纯代码）', { code, exchange })
+    } else {
+      results.push({ code: line.split(',')[0]?.trim() || line, name: line.split(',')[1]?.trim() || '', symbol: '', status: 'invalid', statusReason: '代码格式不合规（需为 6 位数字）' })
+      skippedCount++
+      logger.debug('[batchImport] 行匹配失败（标记为无效）', { rawLine: line })
     }
   }
+
+  logger.info('[batchImport] 批量输入解析完成', { totalLines: lines.length, parsed: parsedCount, skipped: skippedCount, resultCount: results.length })
 
   return results
 }
@@ -183,17 +210,49 @@ function isHeaderLine(line: string | undefined): boolean {
   )
 }
 
+/** 从字段中提取股票代码（支持纯数字或带交易所后缀格式） */
+function extractStockCode(field: string): string | null {
+  const trimmed = field.trim()
+  if (STOCK_CODE_PATTERN.test(trimmed)) {
+    return trimmed
+  }
+  const match = trimmed.match(/^(\d{6})\.(SH|SZ|BJ)$/i)
+  if (match && match[1]) {
+    return match[1]
+  }
+  return null
+}
+
 /** 将原始字段数组转换为 BulkImportRow */
 function buildRowFromFields(fields: string[]): BulkImportRow | null {
-  const code = (fields[0] ?? '').trim()
-  if (!STOCK_CODE_PATTERN.test(code)) return null
-  const name = (fields[1] ?? '').trim().slice(0, MAX_NAME_LENGTH) || code
-  const exchange = detectExchange(code)
+  let code: string | null = null
+  let name = ''
+  let exchange = ''
+
+  for (let i = 0; i < fields.length && !code; i++) {
+    code = extractStockCode(fields[i]!)
+    if (code) {
+      const rawField = fields[i]!.trim()
+      const exchangeMatch = rawField.match(/\.(SH|SZ|BJ)$/i)
+      if (exchangeMatch && exchangeMatch[1]) {
+        exchange = exchangeMatch[1].toUpperCase()
+      } else {
+        exchange = detectExchange(code)
+      }
+      if (i + 1 < fields.length) {
+        name = fields[i + 1]!.trim().slice(0, MAX_NAME_LENGTH)
+      }
+    }
+  }
+
+  if (!code) return null
+  if (!name) name = code
+
   return { code, name, symbol: `${code}.${exchange}`, status: 'valid' }
 }
 
 /** 解析 CSV 文本为 BulkImportRow[] */
-function parseCsvText(text: string): BulkImportRow[] {
+export function parseCsvText(text: string): BulkImportRow[] {
   const results: BulkImportRow[] = []
   const lines = text
     .split(/\r?\n/)
@@ -201,13 +260,34 @@ function parseCsvText(text: string): BulkImportRow[] {
     .filter(Boolean)
     .slice(0, INPUT_CONFIG.bulkImport.maxRows)
 
+  logger.info('[batchImport] 开始解析 CSV 文本', { totalLines: lines.length, maxRows: INPUT_CONFIG.bulkImport.maxRows })
+
   const startIdx = isHeaderLine(lines[0]) ? 1 : 0
+  const hasHeader = startIdx === 1
+  logger.info('[batchImport] 表头检测', { hasHeader, header: hasHeader ? lines[0] : '无表头' })
+
+  let parsedCount = 0
+  let skippedCount = 0
 
   for (let i = startIdx; i < lines.length; i++) {
-    const fields = parseCsvLine(lines[i]!)
+    const line = lines[i]!
+    const lineNum = i + 1
+    const fields = parseCsvLine(line)
+
+    logger.debug('[batchImport] 解析行', { lineNum, rawLine: line, fieldCount: fields.length, fields })
+
     const row = buildRowFromFields(fields)
-    if (row) results.push(row)
+    if (row) {
+      results.push(row)
+      parsedCount++
+      logger.debug('[batchImport] 行解析成功', { lineNum, code: row.code, name: row.name, symbol: row.symbol })
+    } else {
+      skippedCount++
+      logger.debug('[batchImport] 行解析失败（跳过）', { lineNum, rawLine: line })
+    }
   }
+
+  logger.info('[batchImport] CSV 文本解析完成', { totalLines: lines.length, parsed: parsedCount, skipped: skippedCount, hasHeader })
 
   return results
 }

@@ -4,14 +4,14 @@ import { NewsServer } from '@/mcp/servers/news/newsServer'
 describe('NewsServer', () => {
   const server = new NewsServer()
 
-  it('should have correct server info', () => {
+  it('应该有 correct server info', () => {
     expect(server.info.name).toBe('news')
     expect(server.info.version).toBe('1.0.0')
     expect(server.info.description).toBeTruthy()
     expect(server.info.dependencies).toContain('fetcher')
   })
 
-  it('should register at least 3 tools', () => {
+  it('应该register at least 3 tools', () => {
     const tools = server.listTools()
     expect(tools.length).toBeGreaterThanOrEqual(3)
     for (const tool of tools) {
@@ -22,26 +22,26 @@ describe('NewsServer', () => {
     }
   })
 
-  it('should have fetch_news tool', () => {
+  it('应该有 fetch_news tool', () => {
     const tools = server.listTools()
     const tool = tools.find((t) => t.name === 'fetch_news')
     expect(tool).toBeDefined()
     expect(tool!.inputSchema.required).toContain('symbol')
   })
 
-  it('should have analyze_sentiment tool', () => {
+  it('应该有 analyze_sentiment tool', () => {
     const tools = server.listTools()
     const tool = tools.find((t) => t.name === 'analyze_sentiment')
     expect(tool).toBeDefined()
   })
 
-  it('should have get_sentiment_trend tool', () => {
+  it('应该有 get_sentiment_trend tool', () => {
     const tools = server.listTools()
     const tool = tools.find((t) => t.name === 'get_sentiment_trend')
     expect(tool).toBeDefined()
   })
 
-  it('should register at least 2 resources', () => {
+  it('应该register at least 2 resources', () => {
     const resources = server.listResources()
     expect(resources.length).toBeGreaterThanOrEqual(2)
     for (const resource of resources) {
@@ -50,7 +50,7 @@ describe('NewsServer', () => {
     }
   })
 
-  it('should register at least 1 prompt', () => {
+  it('应该register at least 1 prompt', () => {
     const prompts = server.listPrompts()
     expect(prompts.length).toBeGreaterThanOrEqual(1)
   })

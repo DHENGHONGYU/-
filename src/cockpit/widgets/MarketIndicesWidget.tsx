@@ -1,18 +1,25 @@
 import React from 'react'
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import { cn } from '@/lib/utils'
+import { WidgetStateShell } from './components/WidgetStateShell'
+import { Skeleton } from '@/components/ui/states'
 import type { WidgetConfig, MarketIndexData } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
-import { STOCK_COLOR_TOKENS, COLOR_TOKENS, twText, getStockColorClass, getStockColorHex } from '@/constants/theme.tokens'
+import {
+  twText,
+  twBg,
+  getStockColorClass,
+  getStockColorHex,
+} from '@/constants/theme.tokens'
 
 interface MarketIndicesWidgetProps {
   config: WidgetConfig
 }
 
 export default function MarketIndicesWidget(props: MarketIndicesWidgetProps): React.JSX.Element {
-  const { data, loadingMap, errorMap } = useMarketData()
+  const { data, loadingMap, errorMap, refreshWidget } = useMarketData()
   // P0-2 防御性 guard：防止 props 为 null 时解构崩溃（hooks 之后条件返回）
-  if (!props?.config) return <div className={`p-4 text-sm ${twText('gray', 400)}`}>配置未就绪</div>
+  if (!props?.config) return <div className={cn('p-4 text-sm', twText('gray', 400))}>配置未就绪</div>
   const { config } = props
   const indices = data.indices
   const loading = loadingMap[config.instanceId] ?? true
@@ -20,53 +27,46 @@ export default function MarketIndicesWidget(props: MarketIndicesWidgetProps): Re
 
   const getChangeIcon = (change: number) => {
     const iconColorClass = getStockColorClass(change)
-    if (change > 0) return <TrendingUp className={`h-4 w-4 ${iconColorClass}`} />
-    if (change < 0) return <TrendingDown className={`h-4 w-4 ${iconColorClass}`} />
-    return <Minus className={`h-4 w-4 ${twText('gray', 400)}`} />
+    if (change > 0) return <TrendingUp className={cn('h-4 w-4', iconColorClass)} />
+    if (change < 0) return <TrendingDown className={cn('h-4 w-4', iconColorClass)} />
+    return <Minus className={cn('h-4 w-4', twText('gray', 400))} />
   }
 
   const getChangeColor = (change: number) => {
     return getStockColorHex(change)
   }
 
+  let visualState: 'ready' | 'loading' | 'empty' | 'error' = 'ready'
   if (error) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">{config.title}</CardTitle>
-        </CardHeader>
-        <CardContent className={`text-center ${COLOR_TOKENS.danger.tailwind}`}>
-          <p>{error}</p>
-        </CardContent>
-      </Card>
-    )
-  }
-
-  if (loading) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>{config.title}</CardTitle>
-        </CardHeader>
-        <CardContent className="grid grid-cols-2 gap-4">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="space-y-2">
-              <div className={`h-4 ${STOCK_COLOR_TOKENS.neutral.bgClass} rounded w-24`} />
-              <div className={`h-6 ${STOCK_COLOR_TOKENS.neutral.bgClass} rounded w-20`} />
-              <div className={`h-4 ${STOCK_COLOR_TOKENS.neutral.bgClass} rounded w-16`} />
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-    )
+    visualState = 'error'
+  } else if (loading) {
+    visualState = 'loading'
+  } else if (indices.length === 0) {
+    visualState = 'empty'
   }
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <CardTitle className="text-base font-semibold">{config.title}</CardTitle>
-      </CardHeader>
-      <CardContent className="grid grid-cols-2 gap-4">
+    <WidgetStateShell
+      title={config.title}
+      visualState={visualState}
+      error={error}
+      onRetry={() => refreshWidget(config.instanceId)}
+      loadingLabel="加载大盘行情中…"
+      emptyTitle="暂无大盘行情"
+      emptyDescription="当前未获取到指数数据，请检查数据源或稍后重试"
+      skeleton={
+        <div className="grid grid-cols-2 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="space-y-2">
+              <Skeleton variant="text" className={twBg('gray', 200)} />
+              <Skeleton variant="text" className={cn(twBg('gray', 200), 'h-6 w-20')} />
+              <Skeleton variant="text" className={cn(twBg('gray', 200), 'h-4 w-16')} />
+            </div>
+          ))}
+        </div>
+      }
+    >
+      <div className="grid grid-cols-2 gap-4">
         {indices.map((index: MarketIndexData) => (
           <div key={index.code} className="space-y-1">
             <div className="flex items-center justify-between">
@@ -77,13 +77,13 @@ export default function MarketIndicesWidget(props: MarketIndicesWidgetProps): Re
             <div className="text-sm" style={{ color: getChangeColor(index.changePercent) }}>
               {index.changePercent > 0 ? '+' : ''}{index.changePercent.toFixed(2)}%
             </div>
-            <div className={`text-xs ${COLOR_TOKENS.textMuted.tailwind}`}>
+            <div className={cn('text-xs', twText('gray', 400))}>
               最高:{index.high?.toFixed(0)} 最低:{index.low?.toFixed(0)}
             </div>
-            <div className={`text-xs ${COLOR_TOKENS.textMuted.tailwind}`}>成交:{index.volume}</div>
+            <div className={cn('text-xs', twText('gray', 400))}>成交:{index.volume}</div>
           </div>
         ))}
-      </CardContent>
-    </Card>
+      </div>
+    </WidgetStateShell>
   )
 }

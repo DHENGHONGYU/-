@@ -1,7 +1,7 @@
 /**
  * 自动生成的 Design Tokens
  * 源文件: design-tokens/tokens.json
- * 生成时间: 2026-07-05T08:30:49.838Z
+ * 生成时间: 2026-07-09T02:51:43.426Z
  * 请勿手动编辑此文件
  */
 
@@ -166,36 +166,36 @@ export const CHART_TOKENS = {
 } as const
 
 export const SPACING = {
-  0: '0px',
-  1: '4px',
-  2: '8px',
-  3: '12px',
-  4: '16px',
-  5: '20px',
-  6: '24px',
-  8: '32px',
-  10: '40px',
-  12: '48px',
-  16: '64px',
-  20: '80px',
+  '0': '0px',
+  '1': '4px',
+  '2': '8px',
+  '3': '12px',
+  '4': '16px',
+  '5': '20px',
+  '6': '24px',
+  '8': '32px',
+  '10': '40px',
+  '12': '48px',
+  '16': '64px',
+  '20': '80px',
 } as const
 
 export const FONT_SIZE = {
-  xs: '0.75rem',
-  sm: '0.875rem',
-  base: '1rem',
-  lg: '1.125rem',
-  xl: '1.25rem',
+  'xs': '0.75rem',
+  'sm': '0.875rem',
+  'base': '1rem',
+  'lg': '1.125rem',
+  'xl': '1.25rem',
   '2xl': '1.5rem',
   '3xl': '1.875rem',
   '4xl': '2.25rem',
 } as const
 
 export const BORDER_RADIUS = {
-  none: '0px',
-  sm: '0.125rem',
-  md: '0.375rem',
-  lg: '0.5rem',
-  xl: '0.75rem',
-  full: '9999px',
+  'none': '0px',
+  'sm': '0.125rem',
+  'md': '0.375rem',
+  'lg': '0.5rem',
+  'xl': '0.75rem',
+  'full': '9999px',
 } as const

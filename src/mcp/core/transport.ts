@@ -9,10 +9,16 @@
  * @created 2026-07-04 - Phase 0 MCP 基础设施层建设
  */
 
-import type { MCPTransport, MCPServer, NotificationMethod, SamplingRequest } from '@/types/modules/mcp.types'
+import type { MCPTransport, MCPServer, NotificationMethod, SamplingRequest, McpCallerContext } from '@/types/modules/mcp.types'
 import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
+
+/** Transport 层调用方上下文 —— 协议适配层属于系统内部调用 */
+const TRANSPORT_CALLER_CONTEXT: McpCallerContext = {
+  caller: 'system',
+  callerId: 'InProcessTransport',
+}
 
 /** 进程内传输 —— 零拷贝，直接调用 Server 方法 */
 export class InProcessTransport implements MCPTransport {
@@ -43,7 +49,7 @@ export class InProcessTransport implements MCPTransport {
           throw new Error('Missing required param: name')
         }
         const args = (params.arguments as Record<string, unknown>) ?? {}
-        const result = await this.server.callTool(params.name, args)
+        const result = await this.server.callTool(params.name, args, TRANSPORT_CALLER_CONTEXT)
         const duration = performance.now() - startTime
         logger.info(`[InProcessTransport] tools/call ${params.name} completed in ${Math.round(duration)}ms`)
         return result
@@ -58,7 +64,7 @@ export class InProcessTransport implements MCPTransport {
         if (!params || typeof params.uri !== 'string') {
           throw new Error('Missing required param: uri')
         }
-        return await this.server.readResource(params.uri)
+        return await this.server.readResource(params.uri, TRANSPORT_CALLER_CONTEXT)
       }
 
       case 'prompts/list': {
@@ -72,7 +78,7 @@ export class InProcessTransport implements MCPTransport {
         }
         const args = (params.arguments as Record<string, string>) ?? {}
         return {
-          messages: await this.server.getPrompt(params.name, args),
+          messages: await this.server.getPrompt(params.name, args, TRANSPORT_CALLER_CONTEXT),
         }
       }
 

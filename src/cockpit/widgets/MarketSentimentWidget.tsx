@@ -1,72 +1,38 @@
 import React from 'react'
 import { TrendingUp, TrendingDown } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Progress } from '@/components/ui/Progress'
+import { Skeleton } from '@/components/ui/states'
+import { WidgetStateShell } from './components/WidgetStateShell'
 import type { WidgetConfig } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
-import { STOCK_COLOR_TOKENS, COLOR_TOKENS, COLOR_SHADES, twText, twBg } from '@/constants/theme.tokens'
+import { STOCK_COLOR_TOKENS, COLOR_SHADES, twText, twBg } from '@/constants/theme.tokens'
 
 interface MarketSentimentWidgetProps {
   config: WidgetConfig
 }
 
 export default function MarketSentimentWidget({ config }: MarketSentimentWidgetProps): React.JSX.Element {
-  const { data, loadingMap, errorMap } = useMarketData()
+  const { data, loadingMap, errorMap, refreshWidget } = useMarketData()
   const sentiment = data.sentiment
   const loading = loadingMap[config.instanceId] ?? true
   const error = errorMap[config.instanceId]
 
-  if (error) {
+  const visualState = error
+    ? 'error'
+    : loading
+      ? 'loading'
+      : !sentiment
+        ? 'empty'
+        : 'ready'
+
+  const content = (() => {
+    if (!sentiment) return null
+
+    const upPercent = ((sentiment.up / sentiment.totalStocks) * 100).toFixed(0)
+    const downPercent = ((sentiment.down / sentiment.totalStocks) * 100).toFixed(0)
+
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">{config.title}</CardTitle>
-        </CardHeader>
-        <CardContent className={`text-center ${COLOR_TOKENS.danger.tailwind}`}>
-          <p>{error}</p>
-        </CardContent>
-      </Card>
-    )
-  }
-
-  if (loading || !sentiment) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>{config.title}</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className={`h-16 ${COLOR_SHADES.gray[200]} rounded`} />
-          <div className="grid grid-cols-3 gap-4">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="text-center">
-                <div className={`h-6 ${COLOR_SHADES.gray[200]} rounded w-12 mx-auto`} />
-                <div className={`h-4 ${COLOR_SHADES.gray[200]} rounded w-16 mx-auto mt-1`} />
-              </div>
-            ))}
-          </div>
-          <div className="grid grid-cols-4 gap-2">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="text-center">
-                <div className={`h-6 ${COLOR_SHADES.gray[200]} rounded w-10 mx-auto`} />
-                <div className={`h-4 ${COLOR_SHADES.gray[200]} rounded w-8 mx-auto mt-1`} />
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    )
-  }
-
-  const upPercent = ((sentiment.up / sentiment.totalStocks) * 100).toFixed(0)
-  const downPercent = ((sentiment.down / sentiment.totalStocks) * 100).toFixed(0)
-
-  return (
-    <Card>
-      <CardHeader className="pb-3">
-        <CardTitle className="text-base font-semibold">{config.title}</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
+      <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
             <span className={`text-sm ${COLOR_SHADES.gray[500]}`}>恐慌贪婪指数</span>
@@ -122,7 +88,39 @@ export default function MarketSentimentWidget({ config }: MarketSentimentWidgetP
             <div className={`text-xs ${COLOR_SHADES.gray[400]}`}>跌幅&gt;5%</div>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    )
+  })()
+
+  return (
+    <WidgetStateShell
+      title={config.title}
+      visualState={visualState}
+      error={error}
+      onRetry={() => refreshWidget(config.instanceId)}
+      skeleton={
+        <div className="space-y-4">
+          <Skeleton className="h-16" />
+          <div className="grid grid-cols-3 gap-4">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="text-center space-y-1">
+                <Skeleton variant="text" className="h-6 w-12 mx-auto" />
+                <Skeleton variant="text" className="h-4 w-16 mx-auto" />
+              </div>
+            ))}
+          </div>
+          <div className="grid grid-cols-4 gap-2">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="text-center space-y-1">
+                <Skeleton variant="text" className="h-6 w-10 mx-auto" />
+                <Skeleton variant="text" className="h-4 w-8 mx-auto" />
+              </div>
+            ))}
+          </div>
+        </div>
+      }
+    >
+      {content}
+    </WidgetStateShell>
   )
 }

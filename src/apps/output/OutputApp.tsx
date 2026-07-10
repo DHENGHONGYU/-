@@ -15,7 +15,7 @@ import {
 import { toSafeString } from '@/lib/safeCoerce'
 import { getLogger } from '@/lib/logger'
 
-const logger = getLogger()
+// ---------- lazy page imports ----------
 
 /**
  * 导出数据预览的最大显示长度（字符数）。
@@ -27,6 +27,40 @@ const MAX_PREVIEW_LENGTH = 50000
 const OutputHubPage = React.lazy(() => import('@/pages/output/OutputHubPage'))
 const ResearchReportPage = React.lazy(() => import('@/pages/output/ResearchReportPage'))
 const TradeReviewPage = React.lazy(() => import('@/pages/output/TradeReviewPage'))
+const ReviewWizardPage = React.lazy(() => import('@/pages/output/ReviewWizardPage'))
+const DashboardPage = React.lazy(() => import('@/pages/output/DashboardPage'))
+
+interface OutputRoute {
+  path: string
+  branch: string
+  componentName: string
+  exact?: boolean
+  component: React.ReactNode
+  fallback: string
+}
+
+const OUTPUT_ROUTES: OutputRoute[] = [
+  { path: '/output/export', branch: 'export', componentName: 'DataExportPanel', component: <DataExportPanel />, fallback: '加载中...' },
+  { path: '/output/research', branch: 'research', componentName: 'ResearchReportPage', component: <ResearchReportPage />, fallback: '加载中...' },
+  { path: '/output/dashboard', branch: 'dashboard', componentName: 'DashboardPage', component: <DashboardPage />, fallback: '加载中...' },
+  { path: '/output/review', branch: 'review', componentName: 'TradeReviewPage', component: <TradeReviewPage />, fallback: '加载中...' },
+  { path: '/output/wizard', branch: 'wizard', componentName: 'ReviewWizardPage', component: <ReviewWizardPage />, fallback: '加载中...' },
+  { path: '/output', branch: 'hub', componentName: 'OutputHubPage', component: <OutputHubPage />, fallback: '加载中...' },
+  { path: '/output/hub', branch: 'hub', componentName: 'OutputHubPage', component: <OutputHubPage />, fallback: '加载中...' },
+]
+
+function matchOutputRoute(path: string): OutputRoute {
+  for (const route of OUTPUT_ROUTES) {
+    if (route.exact === false) {
+      if (path === route.path || path.startsWith(route.path + '/')) return route
+    } else if (path === route.path) {
+      return route
+    }
+  }
+  return { path: '', branch: 'default', componentName: 'null', component: null, fallback: '' }
+}
+
+const logger = getLogger()
 
 // ---------- simple JSON -> CSV conversion ----------
 
@@ -168,7 +202,7 @@ function DataExportPanel(): React.JSX.Element {
  * 不会再次匹配当前 URL（证据：main 内容为空，OutputHubPage chunk 未请求）。
  *
  * 修复方案：直接读取 location.pathname 进行条件渲染，绕过 descendant
- * Routes 的路径匹配问题。新增子页面仅需在此处追加 else-if 分支。
+ * Routes 的路径匹配问题。新增子页面仅需在 OUTPUT_ROUTES 中追加条目。
  */
 export default function OutputApp(): React.JSX.Element {
   const location = useLocation()
@@ -185,24 +219,9 @@ export default function OutputApp(): React.JSX.Element {
     }
 
     // 计算命中的分支与组件名（仅在路径变化时记录，避免 PortalShell 重渲染导致日志噪音）
-    let branch: string
-    let componentName: string
-    if (path === '/output/export') {
-      branch = 'export'
-      componentName = 'DataExportPanel'
-    } else if (path === '/output/research') {
-      branch = 'research'
-      componentName = 'ResearchReportPage'
-    } else if (path === '/output/review') {
-      branch = 'review'
-      componentName = 'TradeReviewPage'
-    } else if (path === '/output' || path === '/output/hub') {
-      branch = 'hub'
-      componentName = 'OutputHubPage'
-    } else {
-      // 未匹配的 /output/* 路径：记录警告，不渲染内容（由 App.tsx 的 NotFoundPage 处理）
-      branch = 'unknown'
-      componentName = 'null'
+    const { branch, componentName } = matchOutputRoute(path)
+
+    if (branch === 'default') {
       logger.warn('[OutputApp] 未识别的输出舱子路径', { path })
     }
 
@@ -218,20 +237,7 @@ export default function OutputApp(): React.JSX.Element {
     prevPathRef.current = path
   }, [path])
 
-  let content: React.ReactNode
-  if (path === '/output/export') {
-    content = <DataExportPanel />
-  } else if (path === '/output/research') {
-    content = <ResearchReportPage />
-  } else if (path === '/output/review') {
-    content = <TradeReviewPage />
-  } else if (path === '/output' || path === '/output/hub') {
-    // 输出舱首页
-    content = <OutputHubPage />
-  } else {
-    // 未识别的 /output/* 路径：不渲染内容（由 App.tsx 的 NotFoundPage 处理）
-    content = null
-  }
+  const matched = matchOutputRoute(path)
 
   return (
     <ErrorBoundary
@@ -242,7 +248,7 @@ export default function OutputApp(): React.JSX.Element {
       }
     >
       <React.Suspense fallback={<div className="p-4 text-sm text-muted-foreground">加载中...</div>}>
-        {content}
+        {matched.component}
       </React.Suspense>
     </ErrorBoundary>
   )

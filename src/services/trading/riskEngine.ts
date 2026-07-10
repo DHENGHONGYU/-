@@ -1,4 +1,4 @@
-import { getDefaultTradingConfig } from '@/config/tradingConfig'
+import { getEffectiveTradingConfig } from '@/config/tradingConfig'
 import type { SignalDirection } from '@/config/tradingConfig'
 import { dataLayer } from '@/data/dataLayer'
 import { getLogger } from '@/lib/logger'
@@ -46,7 +46,7 @@ function startOfDayTimestamp(timestamp: number): number {
  *   - 仓位接近上限
  */
 export async function checkOrderRisk(input: OrderRiskInput): Promise<RiskCheckResult> {
-  const config = getDefaultTradingConfig()
+  const config = getEffectiveTradingConfig()
   const risk = config.risk
   const warnings: string[] = []
   const blocks: string[] = []

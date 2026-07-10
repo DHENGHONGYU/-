@@ -202,14 +202,22 @@ class DeleteStockHandler implements EnvelopeHandler {
     // 1. 删除 Stock 主记录
     await db.delete(store, symbol)
 
-    // 2. 级联删除以 symbol 为主键的关联表
-    const symbolKeyStores = [
+    // 2-4. 级联删除关联表
+    await this.deleteSymbolKeyRecords(symbol)
+    await this.deleteIndexedRecords(symbol)
+    await this.deleteScannedRecords(symbol)
+
+    logger.info(`[DataBridge] DB deleteStock 完成: symbol="${symbol}" — 级联删除结束`)
+  }
+
+  private async deleteSymbolKeyRecords(symbol: string): Promise<void> {
+    const stores = [
       STORE_NAME.v6Scores,
       STORE_NAME.dailyQuotes,
       STORE_NAME.hotSectorScores,
       STORE_NAME.valuePitScores,
     ]
-    for (const s of symbolKeyStores) {
+    for (const s of stores) {
       try {
         await db.delete(s, symbol)
         logger.debug(`[DataBridge] 级联删除: ${s} symbol="${symbol}"`)
@@ -217,9 +225,10 @@ class DeleteStockHandler implements EnvelopeHandler {
         logger.warn(`[DataBridge] 级联删除失败(主键): ${s}`, { error: err instanceof Error ? err.message : String(err) })
       }
     }
+  }
 
-    // 3. 级联删除有 by-symbol 索引的关联表（先查后删）
-    const indexedStores = [
+  private async deleteIndexedRecords(symbol: string): Promise<void> {
+    const stores = [
       STORE_NAME.intelligentScores,
       STORE_NAME.scoreDocs,
       STORE_NAME.localDocs,
@@ -228,13 +237,12 @@ class DeleteStockHandler implements EnvelopeHandler {
       STORE_NAME.executionLogs,
       STORE_NAME.missingReports,
     ]
-    for (const s of indexedStores) {
+    for (const s of stores) {
       try {
         const records = await db.getAllByIndex<{ id: string; symbol?: string }>(s, 'by-symbol', symbol)
         for (const rec of records) {
-          if (rec.id) {
-            await db.delete(s, rec.id)
-          }
+          if (!rec.id) continue
+          await db.delete(s, rec.id)
         }
         if (records.length > 0) {
           logger.debug(`[DataBridge] 级联删除(索引): ${s} count=${records.length}`)
@@ -243,17 +251,17 @@ class DeleteStockHandler implements EnvelopeHandler {
         logger.warn(`[DataBridge] 级联删除失败(索引): ${s}`, { error: err instanceof Error ? err.message : String(err) })
       }
     }
+  }
 
-    // 4. 级联删除无 symbol 索引的关联表（全表扫描过滤）
-    const scanStores = [STORE_NAME.orders, STORE_NAME.signals, STORE_NAME.watchlists]
-    for (const s of scanStores) {
+  private async deleteScannedRecords(symbol: string): Promise<void> {
+    const stores = [STORE_NAME.orders, STORE_NAME.signals, STORE_NAME.watchlists]
+    for (const s of stores) {
       try {
         const allRecords = await db.getAll<{ id: string; symbol?: string }>(s)
         const toDelete = allRecords.filter((r) => r.symbol === symbol)
         for (const rec of toDelete) {
-          if (rec.id) {
-            await db.delete(s, rec.id)
-          }
+          if (!rec.id) continue
+          await db.delete(s, rec.id)
         }
         if (toDelete.length > 0) {
           logger.debug(`[DataBridge] 级联删除(扫描): ${s} count=${toDelete.length}`)
@@ -262,8 +270,6 @@ class DeleteStockHandler implements EnvelopeHandler {
         logger.warn(`[DataBridge] 级联删除失败(扫描): ${s}`, { error: err instanceof Error ? err.message : String(err) })
       }
     }
-
-    logger.info(`[DataBridge] DB deleteStock 完成: symbol="${symbol}" — 级联删除结束`)
   }
 }
 
@@ -462,6 +468,7 @@ export function createHandlerRegistry(): HandlerRegistry {
       ENVELOPE_ACTION.savePortfolio,
       ENVELOPE_ACTION.newsArticleBookmarked,
       ENVELOPE_ACTION.saveWatchlist,
+      ENVELOPE_ACTION.saveCollectConfig,
     ])
   )
 

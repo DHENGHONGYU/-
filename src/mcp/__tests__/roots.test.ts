@@ -8,7 +8,7 @@ describe('RootsManager', () => {
     manager = new RootsManager()
   })
 
-  it('should set and list roots', () => {
+  it('应该设置 and list roots', () => {
     manager.setRoots([
       { uri: 'file:///workspace', name: 'workspace' },
       { uri: 'file:///data', name: 'data' },
@@ -19,34 +19,34 @@ describe('RootsManager', () => {
     expect(result.roots[1]!.uri).toBe('file:///data')
   })
 
-  it('should add a single root', () => {
+  it('应该add a single root', () => {
     manager.addRoot({ uri: 'file:///workspace', name: 'workspace' })
     expect(manager.listRoots().roots).toHaveLength(1)
   })
 
-  it('should not add duplicate root', () => {
+  it('不应该 add duplicate root', () => {
     manager.addRoot({ uri: 'file:///workspace', name: 'workspace' })
     manager.addRoot({ uri: 'file:///workspace', name: 'duplicate' })
     expect(manager.listRoots().roots).toHaveLength(1)
   })
 
-  it('should remove a root', () => {
+  it('应该remove a root', () => {
     manager.addRoot({ uri: 'file:///workspace', name: 'workspace' })
     const removed = manager.removeRoot('file:///workspace')
     expect(removed).toBe(true)
     expect(manager.listRoots().roots).toHaveLength(0)
   })
 
-  it('should return false when removing non-existent root', () => {
+  it('应该返回 false when removing non-existent root', () => {
     const removed = manager.removeRoot('file:///nonexistent')
     expect(removed).toBe(false)
   })
 
-  it('should allow all URIs when no roots configured', () => {
+  it('应该允许 all URIs when no roots configured', () => {
     expect(manager.isAllowed('file:///any/path')).toBe(true)
   })
 
-  it('should block URIs outside root scope', () => {
+  it('应该block URIs outside root scope', () => {
     manager.addRoot({ uri: 'file:///workspace', name: 'workspace' })
     expect(manager.isAllowed('file:///workspace/project')).toBe(true)
     expect(manager.isAllowed('file:///outside')).toBe(false)

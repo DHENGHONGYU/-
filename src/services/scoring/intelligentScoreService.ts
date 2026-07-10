@@ -98,7 +98,11 @@ function parseRawScoreOutput(content: string): RawScoreOutput {
   }
 }
 
-function normalizeDimensionScore(raw: RawDimension, fallbackName: string): DimensionScore {
+function normalizeDimensionScore(
+  raw: RawDimension,
+  fallbackName: string,
+  usedLlm: boolean = false
+): DimensionScore {
   const name = typeof raw.name === 'string' && raw.name.length > 0
     ? raw.name
     : fallbackName
@@ -114,10 +118,14 @@ function normalizeDimensionScore(raw: RawDimension, fallbackName: string): Dimen
     rationale,
     evidence,
     weight: 1 / DIMENSION_NAMES.length,
+    usedLlm,
   }
 }
 
-function normalizeScoreOutput(raw: RawScoreOutput): {
+function normalizeScoreOutput(
+  raw: RawScoreOutput,
+  transparencyConfig?: LlmTransparencyConfig
+): {
   dimensions: DimensionScore[]
   summary: string
   basis: string
@@ -128,9 +136,18 @@ function normalizeScoreOutput(raw: RawScoreOutput): {
     const found = rawDimensions.find(
       (d) => typeof d.name === 'string' && d.name.includes(expectedName),
     )
+
+    // 判断该因子是否使用 LLM
+    const factorOverride = transparencyConfig?.factorOverrides?.find(
+      (o) => o.factorId === expectedName
+    )
+    const usedLlm = transparencyConfig?.enableLlm
+      ? (factorOverride?.useLlm ?? false)
+      : false
+
     return found
-      ? normalizeDimensionScore(found, expectedName)
-      : normalizeDimensionScore({ name: expectedName, score: null, rationale: '数据缺失，未参与评分' }, expectedName)
+      ? normalizeDimensionScore(found, expectedName, usedLlm)
+      : normalizeDimensionScore({ name: expectedName, score: null, rationale: '数据缺失，未参与评分' }, expectedName, usedLlm)
   })
 
   const summary = typeof raw.summary === 'string' ? raw.summary : '未生成总结'
@@ -186,7 +203,7 @@ export async function runIntelligentScore(
     currentStep = 'parseScore'
     reportProgress(currentStep, 'running', '解析评分结果...')
     const rawOutput = parseRawScoreOutput(response.content)
-    const normalized = normalizeScoreOutput(rawOutput)
+    const normalized = normalizeScoreOutput(rawOutput, input.transparencyConfig)
     const overallScore = calculateOverallScore(normalized.dimensions)
     reportProgress(currentStep, 'done', overallScore !== null ? `综合分 ${overallScore}` : '综合分无法计算')
 

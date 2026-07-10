@@ -66,7 +66,7 @@
 | 2.3 | 股票池流转 UI | P1 | 1.7, 1.9 | ✅ | candidate→screened→deepDive→watching→archived 可在 UI 上点击推送；流转经 `poolTransitionEngine` 校验 |
 | 2.3.1 | 股票池服务层 | P1 | - | ✅ | `src/services/stockpool/stockpoolService.ts` |
 | 2.3.2 | 看板组件 | P1 | - | ✅ | `PoolBoard` / `PoolColumn` / `PoolCard` / `usePoolData` |
-| 2.3.3 | 输入舱看板化 | P1 | 2.3.2 | ✅ | `InputApp.tsx` 使用看板展示五态池 |
+| 2.3.3 | 分析舱股票池看板 | P1 | 2.3.2 | ✅ | `StockPoolBoardPage` 在 `/analysis/stock-pool` 展示五态池；输入舱侧栏保留跳转入口 |
 | 2.3.4 | 单元测试 | P1 | 2.3.1 | ✅ | `tests/stockpoolService.test.ts`、`tests/poolTransitionEngine.test.ts` |
 | 2.3.5 | 输入舱 UI 体系化重塑 | P1 | 2.3.2, 2.3.3 | ✅ | PortalShell 深色经典布局；InputApp 拆分为 Dashboard / 批量导入 / 热门板块 / 采集测试子页面；同步路由与文档 |
 | 2.3.6 | 输入舱交互增强（P0） | P0 | 2.3.5 | 🟡 | 新增 `StockSearch` 搜索组件；`QualityIndicator` 数据质量指示；`PoolBoard` 列表视图/复选批量操作；候选池导入/导出 |
@@ -74,6 +74,8 @@
 | 2.3.8 | 热门板块信息密度增强（P1） | P1 | 2.3.5 | 🟡 | `HotSectorPanel` 五因子进度条、排名、轮动建议；数据源优先接入 V4 行业评分 SKILL |
 | 2.3.9 | 采集测试多维度健康度（P1） | P1 | 2.1 | 🟡 | `DataTestPanel` 多数据源健康列表、延迟、实时行情探测、清洗检查 |
 | 2.3.10 | 采集配置 UI（P2） | P2 | 2.1, 2.3.9 | 🔴 | `FetcherConfigPanel` 维度/频率/数据源优先级/限流配置；先内存配置，稳定后持久化到 IndexedDB |
+| 2.3.11 | 采集任务进度与汇报（P1） | P1 | 2.3.3, 2.1 | ✅ | `CollectionProgressPanel` / `CollectionReportPanel` 在 `/input/collect-tasks` 按 8 个采集维度展示进度与失败记录 |
+| 2.3.12 | 原子组件体系重构（P1） | P1 | 2.3.11 | ✅ | 建立 `atoms/molecules/organisms/templates` 四级目录；迁移 `PoolBoard`、`CollectionProgressPanel`、`CollectionReportPanel` 到 `organisms/`；新增 `componentRegistry.ts` 与 `docs/atomic-component-system.md` |
 | 2.4 | 板块轮动与行业分析 | P1 | 1.9 | TBD | `SectorAnalysisPage` 展示行业评分与轮动信号；V4 行业评分可保存 |
 | **2.4.1** | **板块轮动评分引擎** | **P1** | **2.4** | **🟡** | **代码已存在，待上层 `SectorAnalysisPage` 接入** |
 | 2.5 | 择时信号引擎 | P0 | 2.2 | ✅ | 实现 SignalGenerator，输出 buy_dip / buy_pivot / sell_profit_taking / sell_trailing_stop / hold / watch / composite 信号；参数化配置 |

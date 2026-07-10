@@ -8,7 +8,7 @@ describe('ProgressTracker', () => {
     tracker = new ProgressTracker()
   })
 
-  it('should start tracking a task', () => {
+  it('应该开始 tracking a task', () => {
     tracker.start('task-1', 100, 'Processing')
     const progress = tracker.getProgress('task-1')
     expect(progress).toBeDefined()
@@ -18,7 +18,7 @@ describe('ProgressTracker', () => {
     expect(progress!.message).toBe('Processing')
   })
 
-  it('should update progress', () => {
+  it('应该更新 progress', () => {
     tracker.start('task-1', 100)
     tracker.update('task-1', 50, 'Half done')
     const progress = tracker.getProgress('task-1')
@@ -26,13 +26,13 @@ describe('ProgressTracker', () => {
     expect(progress!.message).toBe('Half done')
   })
 
-  it('should not exceed total', () => {
+  it('不应该 exceed total', () => {
     tracker.start('task-1', 100)
     tracker.update('task-1', 150)
     expect(tracker.getProgress('task-1')!.current).toBe(100)
   })
 
-  it('should increment progress', () => {
+  it('应该increment progress', () => {
     tracker.start('task-1', 100)
     tracker.increment('task-1', 25)
     expect(tracker.getProgress('task-1')!.current).toBe(25)
@@ -40,25 +40,25 @@ describe('ProgressTracker', () => {
     expect(tracker.getProgress('task-1')!.current).toBe(50)
   })
 
-  it('should complete and clean up', () => {
+  it('应该完成 and clean up', () => {
     tracker.start('task-1', 100)
     tracker.complete('task-1', 'All done')
     expect(tracker.getProgress('task-1')).toBeUndefined()
   })
 
-  it('should return all active tracks', () => {
+  it('应该返回 all active tracks', () => {
     tracker.start('task-1', 100)
     tracker.start('task-2', 200)
     const active = tracker.getAllActive()
     expect(active).toHaveLength(2)
   })
 
-  it('should ignore updates for unknown tokens', () => {
+  it('应该忽略 updates for unknown tokens', () => {
     tracker.update('unknown', 50)
     expect(tracker.getProgress('unknown')).toBeUndefined()
   })
 
-  it('should ignore increment for unknown tokens', () => {
+  it('应该忽略 increment for unknown tokens', () => {
     tracker.increment('unknown', 10)
     expect(tracker.getProgress('unknown')).toBeUndefined()
   })

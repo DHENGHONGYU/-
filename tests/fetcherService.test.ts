@@ -47,7 +47,7 @@ describe('fetcherService', () => {
     vi.restoreAllMocks()
   })
 
-  it('should fetch basic data and update stock', async () => {
+  it('应该获取 basic data and update stock', async () => {
     await dataLayer.stocks.add({
       symbol: '000001.SZ',
       name: 'Old Name',
@@ -70,7 +70,7 @@ describe('fetcherService', () => {
     expect(result.data?.dataVersion).toBe(2)
   })
 
-  it('should return error when stock not found', async () => {
+  it('应该返回 error when stock not found', async () => {
     global.fetch = mockFetch(BASIC_RESPONSE)
 
     const result = await fetchStockBasic('NOT_EXIST')
@@ -79,7 +79,7 @@ describe('fetcherService', () => {
     expect(result.error).toContain('股票不存在')
   })
 
-  it('should return error when service returns failure', async () => {
+  it('应该返回 error when service returns failure', async () => {
     await dataLayer.stocks.add({
       symbol: '000001.SZ',
       name: '平安银行',
@@ -103,7 +103,7 @@ describe('fetcherService', () => {
     expect(result.error).toContain('AKShare 接口异常')
   })
 
-  it('should batch fetch stocks', async () => {
+  it('应该batch fetch stocks', async () => {
     await dataLayer.stocks.add({
       symbol: '000001.SZ',
       name: '平安银行',

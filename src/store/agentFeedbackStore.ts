@@ -55,8 +55,7 @@ export const useAgentFeedbackStore = create<AgentFeedbackState>((set, get) => ({
         logger.warn('[agentFeedbackStore] 字段缺失，使用默认值', { field: 'category', context: `agentId=${f.agentId}` })
         continue // 跳过无分类的反馈，避免污染 breakdown 数据
       }
-      const prev = breakdown[f.category]
-      const count = prev ?? 0
+      const count = breakdown[f.category] ?? 0
       breakdown[f.category] = count + 1
     }
     return {

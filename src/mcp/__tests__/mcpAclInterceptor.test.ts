@@ -317,3 +317,422 @@ describe('通配符匹配边界场景', () => {
     ).toBe(true)
   })
 })
+
+// ============================================================
+// 套件 9: 权限拒绝场景全覆盖（P0 补充）
+// ============================================================
+
+describe('权限拒绝场景全覆盖', () => {
+  // ── 9.1 未知角色拒绝 ──
+
+  it('未知角色应被拒绝（角色未注册）', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'guest' as never, // 故意传入未注册的角色
+      serverName: 'fetcher',
+      resourceName: 'health_check',
+    })
+    expect(result.allowed).toBe(false)
+    expect(result.reason).toContain('not registered')
+  })
+
+  it('未知角色应被拒绝（admin 角色不存在）', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'admin' as never,
+      serverName: 'system',
+      resourceName: 'get_stats',
+    })
+    expect(result.allowed).toBe(false)
+    expect(result.reason).toContain('not registered')
+  })
+
+  // ── 9.2 ui 角色对所有禁止 Server 的拒绝 ──
+
+  it('ui 角色应拒绝访问 trading Server', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ui', serverName: 'trading', resourceName: 'get_orders',
+    })
+    expect(result.allowed).toBe(false)
+    expect(result.reason).toContain('not allowed to access server')
+    expect(result.reason).toContain('trading')
+  })
+
+  it('ui 角色应拒绝访问 execution Server', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ui', serverName: 'execution', resourceName: 'list_execution_plans',
+    })
+    expect(result.allowed).toBe(false)
+  })
+
+  it('ui 角色应拒绝访问 trade Server', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ui', serverName: 'trade', resourceName: 'get_trades',
+    })
+    expect(result.allowed).toBe(false)
+  })
+
+  it('ui 角色应拒绝访问 input Server', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ui', serverName: 'input', resourceName: 'get_inputs',
+    })
+    expect(result.allowed).toBe(false)
+  })
+
+  it('ui 角色应拒绝访问 export Server', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ui', serverName: 'export', resourceName: 'export_backtest_report',
+    })
+    expect(result.allowed).toBe(false)
+  })
+
+  it('ui 角色应拒绝访问 system Server', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ui', serverName: 'system', resourceName: 'get_stats',
+    })
+    expect(result.allowed).toBe(false)
+  })
+
+  it('ui 角色应拒绝访问 data-collector Server', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ui', serverName: 'data-collector', resourceName: 'detect_missing_reports',
+    })
+    expect(result.allowed).toBe(false)
+  })
+
+  // ── 9.3 ci 角色对所有非 system Server 的拒绝 ──
+
+  it('ci 角色应拒绝访问 fetcher Server', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ci', serverName: 'fetcher', resourceName: 'health_check',
+    })
+    expect(result.allowed).toBe(false)
+    expect(result.reason).toContain('not allowed to access server')
+  })
+
+  it('ci 角色应拒绝访问 trading Server', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ci', serverName: 'trading', resourceName: 'get_orders',
+    })
+    expect(result.allowed).toBe(false)
+  })
+
+  it('ci 角色应拒绝访问 stockpool Server', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ci', serverName: 'stockpool', resourceName: 'list_pool_stocks',
+    })
+    expect(result.allowed).toBe(false)
+  })
+
+  it('ci 角色应拒绝访问 scoring:v6 Server', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ci', serverName: 'scoring:v6', resourceName: 'get_engine_config',
+    })
+    expect(result.allowed).toBe(false)
+  })
+
+  // ── 9.4 ui 角色对禁止 Tool 模式的拒绝（即使在允许的 Server 上） ──
+
+  it('ui 角色应拒绝调用 create_order Tool（即使在 stockpool Server 上）', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ui', serverName: 'stockpool', resourceName: 'create_order',
+    })
+    expect(result.allowed).toBe(false)
+    expect(result.reason).toContain('not allowed to call tool')
+    expect(result.reason).toContain('create_order')
+  })
+
+  it('ui 角色应拒绝调用 update_stock Tool', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ui', serverName: 'stockpool', resourceName: 'update_stock',
+    })
+    expect(result.allowed).toBe(false)
+  })
+
+  it('ui 角色应拒绝调用 delete_stock Tool', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ui', serverName: 'stockpool', resourceName: 'delete_stock',
+    })
+    expect(result.allowed).toBe(false)
+  })
+
+  it('ui 角色应拒绝调用 insert_stock Tool', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ui', serverName: 'stockpool', resourceName: 'insert_stock',
+    })
+    expect(result.allowed).toBe(false)
+  })
+
+  it('ui 角色应拒绝调用 reset_database Tool（即使在允许的 Server 上）', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ui', serverName: 'fetcher', resourceName: 'reset_cache',
+    })
+    expect(result.allowed).toBe(false)
+  })
+
+  it('ui 角色应拒绝调用 export_data Tool（即使在允许的 Server 上）', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ui', serverName: 'fetcher', resourceName: 'export_data',
+    })
+    expect(result.allowed).toBe(false)
+  })
+
+  // ── 9.5 ci 角色对禁止 Tool 的拒绝（即使在 system Server 上） ──
+
+  it('ci 角色应拒绝调用 system Server 上的 reset_database Tool', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ci', serverName: 'system', resourceName: 'reset_database',
+    })
+    expect(result.allowed).toBe(false)
+    expect(result.reason).toContain('not allowed to call tool')
+  })
+
+  it('ci 角色应拒绝调用 system Server 上的 clear_cache Tool', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ci', serverName: 'system', resourceName: 'clear_cache',
+    })
+    expect(result.allowed).toBe(false)
+  })
+
+  it('ci 角色应拒绝调用 system Server 上的 export_data Tool', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ci', serverName: 'system', resourceName: 'export_data',
+    })
+    expect(result.allowed).toBe(false)
+  })
+
+  // ── 9.6 通配符不匹配的拒绝 ──
+
+  it('list_* 不应匹配 listpoolstocks（缺少下划线）', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ui', serverName: 'stockpool', resourceName: 'listpoolstocks',
+    })
+    expect(result.allowed).toBe(false)
+  })
+
+  it('get_* 不应匹配 getstats（缺少下划线）', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ui', serverName: 'scoring:v6', resourceName: 'getstats',
+    })
+    expect(result.allowed).toBe(false)
+  })
+
+  it('fetch_* 不应匹配 fetchnews（缺少下划线）', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ui', serverName: 'fetcher', resourceName: 'fetchnews',
+    })
+    expect(result.allowed).toBe(false)
+  })
+
+  // ── 9.7 Server 级别 vs Tool 级别拒绝原因区分 ──
+
+  it('Server 级别拒绝原因应包含 "not allowed to access server"', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ui', serverName: 'trading', resourceName: 'any_tool',
+    })
+    expect(result.allowed).toBe(false)
+    expect(result.reason).toContain('not allowed to access server')
+    expect(result.reason).not.toContain('not allowed to call tool')
+  })
+
+  it('Tool 级别拒绝原因应包含 "not allowed to call tool"', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ui', serverName: 'stockpool', resourceName: 'create_order',
+    })
+    expect(result.allowed).toBe(false)
+    expect(result.reason).toContain('not allowed to call tool')
+    expect(result.reason).not.toContain('not allowed to access server')
+  })
+
+  it('Server 级别拒绝应优先于 Tool 级别检查', () => {
+    // ui 角色访问 trading Server 的 create_order Tool
+    // 应该先在 Server 级别被拒绝，而不是 Tool 级别
+    const result = mcpAclInterceptor.check({
+      caller: 'ui', serverName: 'trading', resourceName: 'create_order',
+    })
+    expect(result.allowed).toBe(false)
+    expect(result.reason).toContain('not allowed to access server')
+  })
+
+  // ── 9.8 边界场景 ──
+
+  it('空字符串 resourceName 应被拒绝（不匹配任何模式）', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ui', serverName: 'fetcher', resourceName: '',
+    })
+    expect(result.allowed).toBe(false)
+  })
+
+  it('空字符串 serverName 应被拒绝（ui 角色不允许）', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ui', serverName: '', resourceName: 'health_check',
+    })
+    expect(result.allowed).toBe(false)
+  })
+
+  it('超长 resourceName 应正常处理（不崩溃）', () => {
+    const longName = 'tool_' + 'a'.repeat(1000)
+    const result = mcpAclInterceptor.check({
+      caller: 'ui', serverName: 'fetcher', resourceName: longName,
+    })
+    expect(result.allowed).toBe(false)
+    expect(result.reason).toBeDefined()
+  })
+
+  // ── 9.9 拒绝结果结构化字段验证 ──
+
+  it('拒绝结果应包含完整的结构化字段', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ui', serverName: 'trading', resourceName: 'create_order',
+    })
+    expect(result.allowed).toBe(false)
+    expect(result.reason).toBeTruthy()
+    expect(result.caller).toBe('ui')
+    expect(result.serverName).toBe('trading')
+    expect(result.resourceName).toBe('create_order')
+  })
+
+  it('放行结果也应包含完整的结构化字段', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'agent', serverName: 'fetcher', resourceName: 'health_check',
+    })
+    expect(result.allowed).toBe(true)
+    expect(result.reason).toBe('Permission granted')
+    expect(result.caller).toBe('agent')
+    expect(result.serverName).toBe('fetcher')
+    expect(result.resourceName).toBe('health_check')
+  })
+})
+
+// ============================================================
+// 套件 10: 四角色权限对比矩阵
+// ============================================================
+
+describe('四角色权限对比矩阵', () => {
+  const testCases: Array<{
+    desc: string
+    server: string
+    tool: string
+    expected: { agent: boolean; ui: boolean; ci: boolean; system: boolean }
+  }> = [
+    {
+      desc: 'fetcher.health_check（查询类）',
+      server: 'fetcher', tool: 'health_check',
+      expected: { agent: true, ui: true, ci: false, system: true },
+    },
+    {
+      desc: 'stockpool.list_pool_stocks（列表查询）',
+      server: 'stockpool', tool: 'list_pool_stocks',
+      expected: { agent: true, ui: true, ci: false, system: true },
+    },
+    {
+      desc: 'trading.create_buy_order（交易写操作）',
+      server: 'trading', tool: 'create_buy_order',
+      expected: { agent: true, ui: false, ci: false, system: true },
+    },
+    {
+      desc: 'system.reset_database（系统级危险操作）',
+      server: 'system', tool: 'reset_database',
+      expected: { agent: true, ui: false, ci: false, system: true },
+    },
+    {
+      desc: 'system.generate_migration_report（迁移报告）',
+      server: 'system', tool: 'generate_migration_report',
+      expected: { agent: true, ui: false, ci: true, system: true },
+    },
+    {
+      desc: 'system.get_stats（系统统计）',
+      server: 'system', tool: 'get_stats',
+      expected: { agent: true, ui: false, ci: true, system: true },
+    },
+    {
+      desc: 'execution.list_execution_plans（执行计划查询）',
+      server: 'execution', tool: 'list_execution_plans',
+      expected: { agent: true, ui: false, ci: false, system: true },
+    },
+    {
+      desc: 'scoring:v6.score_stock（评分写操作）',
+      server: 'scoring:v6', tool: 'score_stock',
+      expected: { agent: true, ui: true, ci: false, system: true },
+    },
+  ]
+
+  for (const tc of testCases) {
+    it(`${tc.desc} → agent=${tc.expected.agent}, ui=${tc.expected.ui}, ci=${tc.expected.ci}, system=${tc.expected.system}`, () => {
+      expect(
+        mcpAclInterceptor.check({ caller: 'agent', serverName: tc.server, resourceName: tc.tool }).allowed,
+      ).toBe(tc.expected.agent)
+      expect(
+        mcpAclInterceptor.check({ caller: 'ui', serverName: tc.server, resourceName: tc.tool }).allowed,
+      ).toBe(tc.expected.ui)
+      expect(
+        mcpAclInterceptor.check({ caller: 'ci', serverName: tc.server, resourceName: tc.tool }).allowed,
+      ).toBe(tc.expected.ci)
+      expect(
+        mcpAclInterceptor.check({ caller: 'system', serverName: tc.server, resourceName: tc.tool }).allowed,
+      ).toBe(tc.expected.system)
+    })
+  }
+})
+
+// ============================================================
+// 套件 11: assert() 拒绝场景全覆盖
+// ============================================================
+
+describe('assert() 拒绝场景全覆盖', () => {
+  it('未知角色拒绝时应抛出 McpAclError 且 detail.caller 为传入值', () => {
+    try {
+      mcpAclInterceptor.assert({
+        caller: 'guest' as never, serverName: 'fetcher', resourceName: 'health_check',
+      })
+      expect.fail('应抛出异常')
+    } catch (err) {
+      expect(err).toBeInstanceOf(McpAclError)
+      expect((err as McpAclError).detail.caller).toBe('guest' as never)
+      expect((err as McpAclError).detail.reason).toContain('not registered')
+    }
+  })
+
+  it('Server 级别拒绝时抛出的 McpAclError 应包含正确的 serverName', () => {
+    try {
+      mcpAclInterceptor.assert({
+        caller: 'ui', serverName: 'trading', resourceName: 'get_orders',
+      })
+      expect.fail('应抛出异常')
+    } catch (err) {
+      expect(err).toBeInstanceOf(McpAclError)
+      const aclErr = err as McpAclError
+      expect(aclErr.detail.serverName).toBe('trading')
+      expect(aclErr.detail.resourceName).toBe('get_orders')
+      expect(aclErr.detail.reason).toContain('trading')
+    }
+  })
+
+  it('Tool 级别拒绝时抛出的 McpAclError 应包含正确的 resourceName', () => {
+    try {
+      mcpAclInterceptor.assert({
+        caller: 'ui', serverName: 'stockpool', resourceName: 'delete_stock',
+      })
+      expect.fail('应抛出异常')
+    } catch (err) {
+      expect(err).toBeInstanceOf(McpAclError)
+      const aclErr = err as McpAclError
+      expect(aclErr.detail.resourceName).toBe('delete_stock')
+      expect(aclErr.detail.reason).toContain('delete_stock')
+    }
+  })
+
+  it('ci 角色拒绝时应抛出 McpAclError', () => {
+    expect(() => {
+      mcpAclInterceptor.assert({
+        caller: 'ci', serverName: 'fetcher', resourceName: 'health_check',
+      })
+    }).toThrow(McpAclError)
+  })
+
+  it('ci 角色调用禁止 Tool 时应抛出 McpAclError', () => {
+    expect(() => {
+      mcpAclInterceptor.assert({
+        caller: 'ci', serverName: 'system', resourceName: 'reset_database',
+      })
+    }).toThrow(McpAclError)
+  })
+})

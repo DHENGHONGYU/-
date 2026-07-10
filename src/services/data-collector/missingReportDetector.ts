@@ -178,17 +178,17 @@ export async function incrementRetry(id: string, _options: { now?: number } = {}
 /**
  * 清理已解决的缺失报告。若提供 symbol，则仅清理该股票的报告。
  */
-export async function clear(symbol?: string): Promise<number> {
-  logger.info(`[missingReportDetector] clear() called: symbol="${symbol ?? 'ALL'}"`)
+export async function clear(symbol = 'ALL'): Promise<number> {
+  logger.info(`[missingReportDetector] clear() called: symbol="${symbol}"`)
   try {
     const all = await missingReportStore.list()
     const toClear = all.filter((r) => {
       if (r.resolvedAt === undefined) return false
-      return symbol ? r.symbol === symbol : true
+      return symbol !== 'ALL' ? r.symbol === symbol : true
     })
 
     // 注意：dataLayer 未提供批量删除，这里仅返回待清理数量，实际删除由调用方逐条处理
-    logger.info(`[missingReportDetector] clear() completed: symbol="${symbol ?? 'ALL'}", resolvedCount=${toClear.length}`)
+    logger.info(`[missingReportDetector] clear() completed: symbol="${symbol}", resolvedCount=${toClear.length}`)
     return toClear.length
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)

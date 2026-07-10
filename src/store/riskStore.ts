@@ -2,21 +2,21 @@
  * @module riskStore
  * @lifecycle @Global
  * @description 风控网关状态管理。管理风控三态（正常/警告/阻塞）、裁决记录、
- * 回路状态（circuit breaker），提供 checkOrderRisk 调用入口及 DataBridge 订阅。
+ * 回路状态（circuit breaker），提供 checkOrderRisk 调用入口、DataBridge 订阅
+ * 及从 execution_plans 加载真实风控裁决记录的能力。
  *
- * @status 当前无 UI 消费方，但含完整风控逻辑（三态/回路/裁决记录）。
- * 保留以备未来风控面板（如 SystemMonitor 或 RiskDashboard）展示风控状态。
- * 删除前需确认未来无风控可视化需求。
+ * @status RiskControlPage 已通过 loadRiskVerdicts 接入真实数据源。
  */
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'
 import { checkOrderRisk, type OrderRiskInput, type RiskCheckResult } from '@/services/trading/riskEngine'
+import { loadRiskVerdicts, type RiskVerdict } from '@/services/riskControlService'
 import { dataBridge } from '@/core/databridge'
 import { ENVELOPE_ACTION, MODULE_ID, type EnvelopeAction } from '@/config/dbConfig'
-import type { SignalDirection } from '@/config/tradingConfig'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { withBroadcast } from '@/store/helpers/withBroadcast'
+import type { RiskTriState, CircuitState } from '@/types/modules/risk.types'
 
 const logger = getLogger()
 
@@ -24,22 +24,9 @@ const logger = getLogger()
 // 类型定义
 // ============================================================
 
-/** 风控三态 */
-export type RiskTriState = 'normal' | 'warning' | 'blocked'
-
-/** 裁决记录 */
-export interface RiskVerdict {
-  id: string
-  timestamp: number
-  symbol: string
-  direction: SignalDirection
-  input: OrderRiskInput
-  result: RiskCheckResult
-  triState: RiskTriState
-}
-
-/** 回路状态 */
-export type CircuitState = 'closed' | 'open' | 'half-open'
+// 类型由 services / types 层提供，本文件仅做 re-export 以保持外部引用稳定
+export type { RiskTriState, CircuitState } from '@/types/modules/risk.types'
+export type { RiskVerdict } from '@/services/riskControlService'
 
 // ============================================================
 // Store 接口
@@ -62,6 +49,8 @@ interface RiskState {
   // Actions
   /** 执行风控检查 */
   checkRisk: (input: OrderRiskInput) => Promise<RiskCheckResult>
+  /** 从 DataBridge 加载真实风控裁决记录 */
+  loadRiskVerdicts: () => Promise<void>
   /** 设置回路状态 */
   setCircuitState: (state: CircuitState) => void
   /** 清空裁决记录 */
@@ -150,6 +139,50 @@ export const useRiskStore = create<RiskState>((set, get) => ({
       logger.error(`[riskStore] checkRisk 失败: ${message}`)
       set({ loading: false, error: message })
       return { ok: false, warnings: [], blocks: [message] }
+    }
+  },
+
+  loadRiskVerdicts: async () => {
+    logger.info('[riskStore] loadRiskVerdicts 开始')
+    set({ loading: true, error: null })
+
+    try {
+      const verdicts = await loadRiskVerdicts()
+      const latest = verdicts[0]
+      const triState: RiskTriState = latest?.triState ?? 'normal'
+
+      let circuitState: CircuitState = 'closed'
+      if (verdicts.some((v) => v.triState === 'blocked')) {
+        circuitState = 'open'
+      } else if (verdicts.some((v) => v.triState === 'warning')) {
+        circuitState = 'half-open'
+      }
+
+      set({
+        triState,
+        circuitState,
+        verdicts,
+        loading: false,
+        error: null,
+        lastChecked: latest?.timestamp ?? Date.now(),
+      })
+
+      withBroadcast(EVENT_NAMES.RISK_CHANGED, {
+        action: 'loadRiskVerdicts',
+        count: verdicts.length,
+        triState,
+        circuitState,
+      })
+
+      logger.info('[riskStore] loadRiskVerdicts 完成', {
+        count: verdicts.length,
+        triState,
+        circuitState,
+      })
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      logger.error(`[riskStore] loadRiskVerdicts 失败: ${message}`)
+      set({ loading: false, error: message })
     }
   },
 

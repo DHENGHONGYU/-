@@ -55,13 +55,13 @@ const KEYWORD_SECTOR_MAP: Array<{ keywords: string[]; sector: string; relevance:
   { keywords: ['创新药', 'CXO', '生物', 'ADC', '双抗', '基因', 'mRNA'], sector: '创新药', relevance: 0.9 },
 ]
 
-export function matchIndustry(symbol: string, sector?: string, name?: string): { sectorName: string; relevance: number } | null {
+export function matchIndustry(symbol: string, sector = '', name = ''): { sectorName: string; relevance: number } | null {
   // 1. 精确代码匹配
   const coreMatch = CORE_STOCK_MAP[symbol]
   if (coreMatch) return { sectorName: coreMatch.sector, relevance: coreMatch.relevance }
 
   // 2. 关键词匹配
-  const searchText = `${sector ?? ''} ${name ?? ''}`.toLowerCase()
+  const searchText = `${sector} ${name}`.toLowerCase()
   for (const entry of KEYWORD_SECTOR_MAP) {
     if (entry.keywords.some((kw) => searchText.includes(kw.toLowerCase()))) {
       return { sectorName: entry.sector, relevance: entry.relevance }

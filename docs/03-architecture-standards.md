@@ -355,6 +355,140 @@ deprecated → 删除（下个次要版本）
 > **变更**: 2026-07-05 | v2.5.0 | Service Registry 删除，四层调整为三层 | 架构资产治理官
 > **变更**: 2026-07-05 | v2.3.0 | 新增四层模块注册体系架构说明 | 架构资产治理官
 
+### 3.1.9 Hybrid Proofread 混合校对模块（v2.6.0 新增）
+
+混合校对模块负责代码安全与合规性检查，通过本地规则引擎与云端风险数据库的协同，实现全面的项目安全扫描。
+
+**设计目标**：
+- **本地规则引擎**：基于正则匹配的安全规则检查（硬编码密钥、不安全依赖、敏感文件等）
+- **云端风险验证**：文件哈希比对云端风险数据库，识别已知漏洞
+- **报告生成**：结构化安全报告，支持多格式导出（Markdown/HTML/JSON）
+- **详细日志**：全链路日志记录与耗时统计，便于问题排查
+
+**目录结构**：
+```
+src/services/hybrid-proofread/
+├── index.ts                  # 主入口，runFullProofread 完整流程
+├── hashService.ts            # 哈希计算服务（SHA-256）
+├── localCollector.ts         # 本地文件扫描与收集
+├── ruleEngine.ts             # 规则引擎（规则加载/同步/评估）
+├── cloudSyncClient.ts        # 云端风险同步客户端
+└── reportGenerator.ts        # 报告生成器（多格式导出）
+```
+
+**配置层**：`src/config/hybridProofreadConfig.ts`
+- API 端点配置（哈希验证、风险详情、规则版本、规则下载）
+- 哈希算法配置（SHA-256，批处理大小 50）
+- 规则同步配置（默认版本、同步间隔、缓存策略）
+- 扫描配置（排除/包含模式、并发数、超时时间）
+
+**状态层**：`src/store/hybridProofreadStore.ts`
+- 扫描状态管理（isScanning、scanStatus、scanProgress）
+- 报告数据存储（report、localScan、cloudRisk）
+- 规则信息管理（rules、rulesVersion）
+
+**类型层**：`src/data/types/types.hybridProofread.ts`（17 个接口）
+
+| 接口 | 用途 | 核心字段 |
+|------|------|---------|
+| `FileHash` | 文件哈希信息 | `file_hash`, `file_type`, `file_path`, `project_id`, `last_modified`, `size_bytes` |
+| `RuleConfig` | 规则配置 | `rule_id`, `name`, `description`, `severity`, `pattern`, `category`, `action_type` |
+| `RuleMatchResult` | 规则匹配结果 | `rule_id`, `rule_name`, `severity`, `category`, `file_path`, `line_number`, `match_text` |
+| `LocalScanResult` | 本地扫描结果 | `project_id`, `scan_time`, `total_files`, `scanned_files`, `rule_matches`, `hashes` |
+| `CloudRiskResult` | 云端风险结果 | `project_id`, `checked_at`, `hash_count`, `risky_count`, `risks` |
+| `ProofreadReport` | 校对报告 | `id`, `project_id`, `project_name`, `scan_time`, `overall_risk_level`, `total_issues`, `local_scan`, `cloud_risk`, `summary`, `recommendations` |
+| `RiskDetail` | 风险详情 | `hash`, `cve_id`, `description`, `remediation_advice`, `severity` |
+| `RulesSyncResult` | 规则同步结果 | `current_version`, `latest_version`, `updated`, `downloaded_rules`, `skipped_rules` |
+
+**核心流程**：
+```
+runFullProofread(projectId, projectName, projectPath)
+  ├── Step 1: 同步规则（云端版本检查 + 规则下载）
+  ├── Step 2: 本地扫描（文件遍历 + 哈希计算）
+  ├── Step 3: 规则评估（正则匹配 + 严重级别统计）
+  ├── Step 4: 云端风险检查（哈希批量验证 + 风险详情获取）
+  └── Step 5: 生成报告（结构化输出 + 多格式导出）
+```
+
+**当前状态**：✅ 已实现。所有核心模块已完成，包含详细日志记录与耗时统计，测试脚本覆盖 9 个测试用例。
+
+> **变更**: 2026-07-08 | v2.6.0 | 新增 Hybrid Proofread 模块架构说明 | 架构资产治理官
+
+### 3.1.10 Store 派生计算与事件订阅（v2.6.0 新增）
+
+#### 3.1.10.1 派生计算模式
+
+派生计算（Derived Computations）是基于 Store 原始状态计算得出的派生状态或查询结果。它们是纯函数，不修改状态，只读取状态并返回计算结果。
+
+**设计原则**：
+1. **纯函数**：通过 `useStore.getState()` 访问状态，不修改状态
+2. **性能优化**：使用 `memoizeByRef` 缓存无参数派生，`buildIndex` 优化 O(n) 查找
+3. **空状态安全**：所有派生在空数据时返回合理默认值
+4. **不引入循环依赖**：仅依赖对应 Store 和 `lib/derivedCache`
+
+**缓存策略**：
+- `memoizeByRef`：基于输入引用的记忆化（适用于 Zustand 状态数组）
+- `memoizeByKey`：基于参数 hash 的记忆化（适用于带参数派生）
+- `buildIndex`：列表转 Map 索引（O(1) 查找替代 O(n) filter）
+
+**导出模式**：每个 .derived.ts 文件导出：
+- 纯函数形式的派生查询
+- React Hook 形式的派生订阅（自动响应状态变化）
+
+**派生计算文件清单**：
+
+| 文件 | 关联 Store | 函数数量 | 核心功能 |
+|------|-----------|---------|---------|
+| `analysisStore.derived.ts` | analysisStore | 22 | 评分等级分布、趋势分析、按字段查找 |
+| `chatStore.derived.ts` | chatStore | 23 | 消息统计、上下文管理、Token 估算 |
+| `riskStore.derived.ts` | riskStore | 22 | 风控裁决、熔断状态、趋势分析 |
+| `signalQualityStore.derived.ts` | signalQualityStore | 30 | 信号质量分级、盈亏分析、方向统计 |
+
+**当前状态**：✅ 已实现。所有派生计算文件均包含完整 JSDoc 注释。
+
+#### 3.1.10.2 事件订阅模式
+
+`executionStoreSubscriptions.ts` 负责订阅 DataBridge 上的 signals 和 orders 事件，实现执行计划的自动化更新。
+
+**事件驱动架构**：
+- **信号生成模块** → `insertSignal` 事件 → 自动创建执行计划
+- **订单执行模块** → `insertOrder`/`updateOrder` 事件 → 防抖刷新执行计划
+- **执行计划模块** → `saveExecutionPlan`/`updateExecutionPhase` 事件 → 防抖刷新执行计划
+
+**核心设计原则**：
+1. **自循环保护**：通过 source 检查避免处理自身发出的事件
+2. **防抖机制**：100ms 防抖避免频繁刷新导致性能问题
+3. **幂等初始化**：多次调用 init 只初始化一次
+4. **完整清理**：销毁时清除订阅和定时器
+
+**当前状态**：✅ 已实现。包含完整 JSDoc 注释。
+
+#### 3.1.10.3 基础设施模块
+
+| 模块 | 文件 | 职责 |
+|------|------|------|
+| 派生缓存工具 | `src/lib/derivedCache.ts` | 派生查询记忆化缓存、性能优化、VERBOSE 日志埋点 |
+| 本地存储加密 | `src/lib/localStorageCrypto.ts` | AES-GCM 256 加密、CryptoKey 派生、安全策略 STOR-001 |
+| 错误总线 | `src/services/errorBus.ts` | 统一错误捕获、V9Error 收敛、全局错误总线 |
+| 韧性工具 | `src/services/resilience.ts` | 指数退避重试、熔断保护器、失败降级、一站式封装 |
+
+#### 3.1.10.4 UI 组件与 Hooks
+
+| 模块 | 文件 | 职责 |
+|------|------|------|
+| 全局错误处理 | `src/components/installGlobalErrorHandler.ts` | window.error 事件、unhandledrejection 事件、错误总线集成 |
+| 页面容器 | `src/components/ui/PageContainer.tsx` | 页面统一容器（1200px 宽度、居中策略） |
+| 页面页头 | `src/components/ui/PageHeader.tsx` | 页面统一页头（标题 + 描述 + 操作区） |
+| 确认对话框 | `src/hooks/useConfirmDialog.tsx` | 命令式确认对话框，替代 window.confirm |
+
+#### 3.1.10.5 常量模块
+
+| 模块 | 文件 | 职责 |
+|------|------|------|
+| 板块常量 | `src/constants/sectorConstants.ts` | 热门赛道标签（15 条）、板块分类、热力等级 |
+
+> **变更**: 2026-07-08 | v2.6.0 | 新增 Store 派生计算与事件订阅架构说明 | 架构资产治理官
+
 ---
 
 ## 3.2 调用方向铁律
@@ -484,6 +618,19 @@ expect(list).toEqual([])        // queryList 失败 → []
 - 禁止 O(n²) 循环（必须标注复杂度）
 - 公共函数必须有完整类型签名
 - 禁止直接写 DB：必须使用 `DataBridge.forward()`
+
+### 3.5.1 V6 评分引擎 L3 层辅助函数
+
+`src/services/scoring/v6-engine/calculators/l3/helpers.ts` 包含两个核心评分函数：
+
+| 函数 | 用途 | 评分维度 |
+|------|------|---------|
+| `scoreMoat()` | 护城河评分（1-5 分） | 毛利率、营收增速、ROE |
+| `scoreCompetition()` | 竞争格局评分（1-5 分） | 毛利率趋势、营收增速 |
+
+**评分规则**：
+- 护城河评分：毛利率为核心指标（60%+→5.0 分，10%以下→2.0 分），营收增速和 ROE 作为加分项
+- 竞争格局评分：通过毛利率水平推断趋势（>40%→递增，<20%→递减），结合营收增速综合评估
 
 ---
 
@@ -713,7 +860,7 @@ interface StandardEnvelope {
 
 | 事件名 | 触发时机 | 订阅方 |
 |--------|----------|--------|
-| `input:poolChanged` | 股票录入/导入/流转/删除后 | `InputDashboard`, `PoolBoard` |
+| `input:poolChanged` | 股票录入/导入/流转/删除后 | `StockPoolBoardPage`, `PoolBoard` |
 | `input:fetcherStatusChanged` | 采集服务健康状态变化后 | `DataTestPanel`, 顶部状态栏 |
 | `input:importProgress` | 批量导入进度更新 | `BulkImportPanel` |
 

@@ -87,7 +87,7 @@ describe('dualStrategyEngine', () => {
     dataBridge.invalidateCache(STORE_NAME.rotationScores)
   })
 
-  it('should return empty result for empty stocks', async () => {
+  it('应该返回 empty result for empty stocks', async () => {
     const result = await runDualStrategy([])
 
     expect(result.success).toBe(true)
@@ -97,7 +97,7 @@ describe('dualStrategyEngine', () => {
     expect(result.data!.valuePitScores).toHaveLength(0)
   })
 
-  it('should orchestrate hot sector and value pit analysis', async () => {
+  it('应该orchestrate hot sector and value pit analysis', async () => {
     const stocks: Stock[] = [
       buildStock('HOT', { sector: '人工智能' }),
       buildStock('PIT', { sector: '集成电路' }),
@@ -125,7 +125,7 @@ describe('dualStrategyEngine', () => {
     expect(result.data!.summary.signalCount + result.data!.summary.watchlistCount).toBeGreaterThanOrEqual(1)
   })
 
-  it('should persist scores when persistScores is true', async () => {
+  it('应该持久化 scores when persistScores is true', async () => {
     const stock = buildStock('PERSIST', { sector: '人工智能' })
     await dataLayer.stocks.add(stock)
     await dataLayer.v6Scores.save(buildV6Score('PERSIST', 4.2))

@@ -10,7 +10,7 @@ describe('eventBus', () => {
     })
   })
 
-  it('should subscribe and receive emitted events', () => {
+  it('应该订阅 and receive emitted events', () => {
     const handler = vi.fn()
     eventBus.on('test:event', handler)
     eventBus.emit('test:event', { foo: 'bar' })
@@ -19,7 +19,7 @@ describe('eventBus', () => {
     expect(handler).toHaveBeenCalledWith({ foo: 'bar' })
   })
 
-  it('should allow multiple listeners for same event', () => {
+  it('应该允许 multiple listeners for same event', () => {
     const handler1 = vi.fn()
     const handler2 = vi.fn()
     eventBus.on('test:multi', handler1)
@@ -30,7 +30,7 @@ describe('eventBus', () => {
     expect(handler2).toHaveBeenCalledWith(123)
   })
 
-  it('should unsubscribe via returned function', () => {
+  it('应该取消订阅 via returned function', () => {
     const handler = vi.fn()
     const unsubscribe = eventBus.on('test:unsub', handler)
     unsubscribe()
@@ -39,7 +39,7 @@ describe('eventBus', () => {
     expect(handler).not.toHaveBeenCalled()
   })
 
-  it('should unsubscribe via off()', () => {
+  it('应该取消订阅 via off()', () => {
     const handler = vi.fn()
     eventBus.on('test:off', handler)
     eventBus.off('test:off', handler)
@@ -48,11 +48,11 @@ describe('eventBus', () => {
     expect(handler).not.toHaveBeenCalled()
   })
 
-  it('should not throw when emitting to no listeners', () => {
+  it('不应该 throw when emitting to no listeners', () => {
     expect(() => eventBus.emit('test:no-listeners', 'data')).not.toThrow()
   })
 
-  it('should not throw when listener throws', () => {
+  it('不应该 throw when listener throws', () => {
     const badHandler = vi.fn(() => { throw new Error('listener error') })
     const goodHandler = vi.fn()
     eventBus.on('test:error', badHandler)
@@ -63,7 +63,7 @@ describe('eventBus', () => {
     expect(goodHandler).toHaveBeenCalled()
   })
 
-  it('should return stats', () => {
+  it('应该返回 stats', () => {
     const handler = vi.fn()
     eventBus.on('test:stats', handler)
     const stats = eventBus.getStats()
@@ -73,7 +73,7 @@ describe('eventBus', () => {
     expect(stats.listenersPerEvent.some((e) => e.event === 'test:stats')).toBe(true)
   })
 
-  it('should emit without payload', () => {
+  it('应该触发 without payload', () => {
     const handler = vi.fn()
     eventBus.on('test:no-payload', handler)
     eventBus.emit('test:no-payload')
@@ -81,7 +81,7 @@ describe('eventBus', () => {
     expect(handler).toHaveBeenCalledWith(undefined)
   })
 
-  it('should clean up all listeners after multiple unsubscribes', () => {
+  it('应该clean up all listeners after multiple unsubscribes', () => {
     const handler1 = vi.fn()
     const handler2 = vi.fn()
     const unsub1 = eventBus.on('test:cleanup', handler1)

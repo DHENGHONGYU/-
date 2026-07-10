@@ -343,4 +343,34 @@ export function createSchema(
   ensureStore(db, STORE_NAME.schemaMigrations, logger, {
     storeOptions: { keyPath: 'id' },
   })
+
+  // ── collectConfig：采集策略配置（v25 新增） ──
+  ensureStore(db, STORE_NAME.collectConfig, logger, {
+    storeOptions: { keyPath: 'id' },
+    logLevel: 'info',
+    indexes: [{ name: 'by-updated-at', keyPath: 'updatedAt' }],
+  })
+
+  // ── customAgents：用户自定义智能体（v26 新增，阶段 B-1） ──
+  // keyPath='id'（nanoid 生成）；索引 by-type / by-updated-at 便于按 type 筛选 / 按更新时间排序。
+  ensureStore(db, STORE_NAME.customAgents, logger, {
+    storeOptions: { keyPath: 'id' },
+    logLevel: 'info',
+    indexes: [
+      { name: 'by-type', keyPath: 'type' },
+      { name: 'by-updated-at', keyPath: 'updatedAt' },
+    ],
+  })
+
+  // ── traceRecords：采集链路追踪记录（v27 新增） ──
+  ensureStore(db, STORE_NAME.traceRecords, logger, {
+    storeOptions: { keyPath: 'traceId' },
+    logLevel: 'info',
+    indexes: [
+      { name: 'by-symbol', keyPath: 'symbol' },
+      { name: 'by-dimension', keyPath: 'dimensionCode' },
+      { name: 'by-started-at', keyPath: 'startedAt' },
+      { name: 'by-result', keyPath: 'result' },
+    ],
+  })
 }

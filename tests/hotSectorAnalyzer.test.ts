@@ -83,7 +83,7 @@ describe('hotSectorAnalyzer', () => {
     dataBridge.invalidateCache(STORE_NAME.v6Scores)
   })
 
-  it('should analyze stocks above V6 threshold and persist scores', async () => {
+  it('应该analyze stocks above V6 threshold and persist scores', async () => {
     const stocks: Stock[] = [buildStock('A'), buildStock('B'), buildStock('C')]
 
     for (const stock of stocks) {
@@ -105,7 +105,7 @@ describe('hotSectorAnalyzer', () => {
     expect(persisted?.score).toBeLessThanOrEqual(5)
   })
 
-  it('should return empty array for no matching stocks', async () => {
+  it('应该返回 empty array for no matching stocks', async () => {
     const stocks: Stock[] = [buildStock('LOW')]
     await dataLayer.stocks.add(stocks[0]!)
     await dataLayer.v6Scores.save(buildV6Score('LOW', 2.0))
@@ -116,7 +116,7 @@ describe('hotSectorAnalyzer', () => {
     expect(result.data).toHaveLength(0)
   })
 
-  it('should classify trigger action based on composite score', async () => {
+  it('应该classify trigger action based on composite score', async () => {
     const stock = buildStock('EDGE', { sector: '半导体' })
     await dataLayer.stocks.add(stock)
     await dataLayer.v6Scores.save(buildV6Score('EDGE', 3.6))
@@ -131,7 +131,7 @@ describe('hotSectorAnalyzer', () => {
     expect(['immediate', 'probe', 'ignore']).toContain(score?.action)
   })
 
-  it('should respect custom rule thresholds', async () => {
+  it('应该respect custom rule thresholds', async () => {
     const stock = buildStock('THRESH')
     await dataLayer.stocks.add(stock)
     await dataLayer.v6Scores.save(buildV6Score('THRESH', 3.4))

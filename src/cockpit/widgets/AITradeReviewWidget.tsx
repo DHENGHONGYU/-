@@ -1,65 +1,35 @@
 import React from 'react'
 import { TrendingUp, Target, Award, AlertCircle } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
+import { Skeleton } from '@/components/ui/states'
+import { WidgetStateShell } from './components/WidgetStateShell'
 import type { WidgetConfig } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
-import { STOCK_COLOR_TOKENS, COLOR_TOKENS, COLOR_SHADES, twText, twBg } from '@/constants/theme.tokens'
+import { STOCK_COLOR_TOKENS, COLOR_TOKENS, COLOR_SHADES, twText } from '@/constants/theme.tokens'
 
 interface AITradeReviewWidgetProps {
   config: WidgetConfig
 }
 
 export default function AITradeReviewWidget({ config }: AITradeReviewWidgetProps): React.JSX.Element {
-  const { data, loadingMap, errorMap } = useMarketData()
+  const { data, loadingMap, errorMap, refreshWidget } = useMarketData()
   const tradeReview = data.tradeReview
   const loading = loadingMap[config.instanceId] ?? true
   const error = errorMap[config.instanceId]
 
-  if (error) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">{config.title}</CardTitle>
-        </CardHeader>
-        <CardContent className={`text-center ${COLOR_TOKENS.danger.tailwind}`}>
-          <p>{error}</p>
-        </CardContent>
-      </Card>
-    )
-  }
+  const visualState = error
+    ? 'error'
+    : loading
+      ? 'loading'
+      : !tradeReview
+        ? 'empty'
+        : 'ready'
 
-  if (loading || !tradeReview) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>{config.title}</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-4 gap-4">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="text-center">
-                <div className={`h-8 ${COLOR_SHADES.gray[200]} rounded w-16 mx-auto`} />
-                <div className={`h-4 ${COLOR_SHADES.gray[200]} rounded w-20 mx-auto mt-2`} />
-              </div>
-            ))}
-          </div>
-          <div className={`h-32 ${COLOR_SHADES.gray[200]} rounded`} />
-          <div className={`h-24 ${COLOR_SHADES.gray[200]} rounded`} />
-        </CardContent>
-      </Card>
-    )
-  }
+  const content = (() => {
+    if (!tradeReview) return null
 
-  return (
-    <Card>
-      <CardHeader className="pb-3">
-        <CardTitle className="text-base font-semibold">{config.title}</CardTitle>
-        <Badge variant="outline" className="mt-1">
-          基于 AI 双引擎分析
-        </Badge>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    return (
+      <div className="space-y-4">
         <div className="grid grid-cols-4 gap-4">
           <div className="text-center">
             <div className="flex justify-center mb-2">
@@ -96,9 +66,9 @@ export default function AITradeReviewWidget({ config }: AITradeReviewWidgetProps
           </div>
         </div>
 
-        <div className={`${twBg('purple', 50)} rounded-lg p-4`}>
-          <h4 className={`text-sm font-semibold ${twText('purple', 700)} mb-3`}>AI 深度洞察</h4>
-          <ul className={`space-y-2 text-sm ${twText('gray', 600)}`}>
+        <div className="bg-card border rounded-lg p-4">
+          <h4 className={`text-sm font-semibold ${COLOR_TOKENS.purple.tailwind} mb-3`}>AI 深度洞察</h4>
+          <ul className={`space-y-2 text-sm ${COLOR_SHADES.gray[600]}`}>
             <li className="flex items-start gap-2">
               <span className={COLOR_TOKENS.purple.tailwind}>•</span>
               <span>盈亏比失衡: 平均盈利3.3% vs 平均亏损13.3%，盈亏比仅0.25:1。建议优化止盈策略。</span>
@@ -117,21 +87,51 @@ export default function AITradeReviewWidget({ config }: AITradeReviewWidgetProps
         <div className="space-y-3">
           <h4 className="text-sm font-semibold">行动建议</h4>
           <div className="space-y-2">
-            <div className={`flex items-center gap-3 ${twBg('green', 50)} rounded-lg p-3`}>
-              <span className={`text-xs font-semibold ${twText('green', 600)} w-16`}>立即执行</span>
+            <div className="flex items-center gap-3 bg-card border rounded-lg p-3">
+              <span className={`text-xs font-semibold ${COLOR_TOKENS.success.tailwind} w-16`}>立即执行</span>
               <span className={`text-sm ${COLOR_SHADES.gray[600]}`}>采用移动止损策略，每笔交易强制填写计划</span>
             </div>
-            <div className={`flex items-center gap-3 ${twBg('blue', 50)} rounded-lg p-3`}>
-              <span className={`text-xs font-semibold ${twText('blue', 600)} w-16`}>短期(1月)</span>
+            <div className="flex items-center gap-3 bg-card border rounded-lg p-3">
+              <span className={`text-xs font-semibold ${COLOR_TOKENS.info.tailwind} w-16`}>短期(1月)</span>
               <span className={`text-sm ${COLOR_SHADES.gray[600]}`}>每日收盘后使用 V6 Pro 复盘工具分析当日交易</span>
             </div>
-            <div className={`flex items-center gap-3 ${twBg('yellow', 50)} rounded-lg p-3`}>
-              <span className={`text-xs font-semibold ${twText('yellow', 600)} w-16`}>长期(3月)</span>
+            <div className="flex items-center gap-3 bg-card border rounded-lg p-3">
+              <span className={`text-xs font-semibold ${COLOR_TOKENS.warning.tailwind} w-16`}>长期(3月)</span>
               <span className={`text-sm ${COLOR_SHADES.gray[600]}`}>建立完整的交易 SOP，每季度进行深度 AI 复盘</span>
             </div>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    )
+  })()
+
+  return (
+    <WidgetStateShell
+      title={config.title}
+      visualState={visualState}
+      error={error}
+      onRetry={() => refreshWidget(config.instanceId)}
+      titleAction={
+        <Badge variant="outline" className="mt-1">
+          基于 AI 双引擎分析
+        </Badge>
+      }
+      skeleton={
+        <div className="space-y-4">
+          <div className="grid grid-cols-4 gap-4">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="text-center space-y-2">
+                <Skeleton variant="text" className="h-8 w-16 mx-auto" />
+                <Skeleton variant="text" className="h-4 w-20 mx-auto" />
+              </div>
+            ))}
+          </div>
+          <Skeleton className="h-32" />
+          <Skeleton className="h-24" />
+        </div>
+      }
+    >
+      {content}
+    </WidgetStateShell>
   )
 }

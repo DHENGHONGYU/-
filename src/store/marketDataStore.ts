@@ -458,7 +458,7 @@ function handleCollectionResult(
       status: hasAnyData ? 'ready' : s.status,
     }))
 
-    logger.debug(`[marketDataStore] 数据已更新: taskId=${taskId}, key=${key ?? 'unknown'}`)
+    logger.debug(`[marketDataStore] 数据已更新: taskId=${taskId}, key=${key || 'unknown'}`)
   }
 }
 

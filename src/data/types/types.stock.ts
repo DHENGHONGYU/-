@@ -75,6 +75,14 @@ export interface Stock {
    * 未指定时由业务层回退为默认分组。
    */
   group?: string
+  // ── 阶段 A-3：数据血缘（采集降级可见性） ──
+  /**
+   * 数据血缘标识：'real' = 真实数据源 / 'mock' = Mock 降级数据 / 'unknown' = 未标注
+   * UI 侧显示降级徽章，避免 Mock 数据被误用为真实信号
+   */
+  dataProvenance?: 'real' | 'mock' | 'unknown'
+  /** 实际数据源标识（tencent/sina/netease/akshare/mock/unknown） */
+  dataSource?: 'tencent' | 'sina' | 'netease' | 'akshare' | 'mock' | 'unknown'
 }
 
 /**

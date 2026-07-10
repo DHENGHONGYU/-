@@ -93,8 +93,8 @@ export function MigrationPreviewTab({
   onDownloadBackup,
   onRollback,
   rollbackStatus,
-}: MigrationPreviewTabProps): React.JSX.Element | null {
-  if (!transformed) return null
+}: MigrationPreviewTabProps): React.JSX.Element {
+  if (!transformed) return <></>
 
   const v6Overview = v6Export ? buildV6Overview(v6Export) : []
   const v9Overview = buildV9Overview(transformed)

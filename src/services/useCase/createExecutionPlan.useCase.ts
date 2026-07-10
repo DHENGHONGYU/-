@@ -23,7 +23,7 @@ import {
   type AccountType,
 } from '@/config/dbConfig'
 import type { Signal, Stock, Order, ExecutionPlan, RiskCheckItem } from '@/data/types'
-import { getDefaultTradingConfig } from '@/config/tradingConfig'
+import { getEffectiveTradingConfig } from '@/config/tradingConfig'
 import { calculatePosition, type PositionSizingResult } from '@/services/trading/positionSizer'
 import { checkOrderRisk, type RiskCheckResult } from '@/services/trading/riskEngine'
 import { nanoid } from 'nanoid'
@@ -95,7 +95,7 @@ function generatePlanId(): string {
 export async function createExecutionPlanUseCase(
   input: CreateExecutionPlanInput,
 ): Promise<CreateExecutionPlanResult> {
-  const { signal, accountType } = input
+  const { signal, accountType = 'paper' } = input
   const planId = generatePlanId()
 
   logger.info('[createExecutionPlanUseCase] 开始', {
@@ -151,7 +151,7 @@ export async function createExecutionPlanUseCase(
     })
 
     const orders = ordersResult.success ? (ordersResult.data ?? []) : []
-    const portfolioValue = getDefaultTradingConfig().risk.portfolioValue
+    const portfolioValue = getEffectiveTradingConfig().risk.portfolioValue
 
     const holdingShares = orders
       .filter((o) => o.symbol === signal.symbol)
@@ -242,7 +242,7 @@ export async function createExecutionPlanUseCase(
         checks: riskChecks,
         warnings: riskResult.warnings,
       },
-      accountType: accountType ?? 'paper',
+      accountType,
       createdAt: Date.now(),
       result: hasBlocker ? 'failed' : undefined,
       errorMessage: hasBlocker ? riskResult.blocks.join('；') : undefined,

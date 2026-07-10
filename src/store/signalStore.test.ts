@@ -22,6 +22,7 @@
 
 import { vi } from 'vitest'
 import type { Signal, Stock } from '@/data/types'
+import type { StandardEnvelope } from '@/core/envelope'
 import { assertContract } from '../../tests/contracts'
 
 // ============================================================
@@ -29,9 +30,9 @@ import { assertContract } from '../../tests/contracts'
 // ============================================================
 
 const { mockSubscribe, mockDataBridgeQuery, capturedCallbacks, unsubscribes } = vi.hoisted(() => {
-  const capturedCallbacks = new Map<string, ((envelope: unknown) => void)>()
+  const capturedCallbacks = new Map<string, ((envelope: StandardEnvelope) => void)>()
   const unsubscribes: Array<ReturnType<typeof vi.fn>> = []
-  const mockSubscribe = vi.fn((channel: string, callback: (envelope: unknown) => void) => {
+  const mockSubscribe = vi.fn((channel: string, callback: (envelope: StandardEnvelope) => void) => {
     capturedCallbacks.set(channel, callback)
     const unsub = vi.fn()
     unsubscribes.push(unsub)
@@ -120,7 +121,7 @@ beforeEach(() => {
   unsubscribes.length = 0
 
   // 重新设置 mockSubscribe 实现（clearAllMocks 会清除实现）
-  mockSubscribe.mockImplementation((channel: string, callback: (envelope: unknown) => void) => {
+  mockSubscribe.mockImplementation((channel: string, callback: (envelope: StandardEnvelope) => void) => {
     capturedCallbacks.set(channel, callback)
     const unsub = vi.fn()
     unsubscribes.push(unsub)
@@ -340,11 +341,11 @@ describe('initSignalStoreSubscriptions', () => {
 
     // trading source 应该被过滤掉
     v6Cb!({
-      meta: { source: 'trading', action: 'SAVE_V6_SCORE', traceId: 't1' },
+      meta: { source: 'trading', target: 'db', action: 'SAVE_SCORES', traceId: 't1', timestamp: Date.now() },
       payload: {},
     })
     signalsCb!({
-      meta: { source: 'tradinghub', action: 'INSERT_SIGNAL', traceId: 't2' },
+      meta: { source: 'tradinghub', target: 'db', action: 'INSERT_SIGNAL', traceId: 't2', timestamp: Date.now() },
       payload: {},
     })
 
@@ -369,11 +370,11 @@ describe('initSignalStoreSubscriptions', () => {
 
     // 不相关的 action 不应触发
     v6Cb({
-      meta: { source: 'analyzer', action: 'INSERT_ORDER', traceId: 't1' },
+      meta: { source: 'analyzer', target: 'db', action: 'INSERT_ORDER', traceId: 't1', timestamp: Date.now() },
       payload: {},
     })
     signalsCb({
-      meta: { source: 'analyzer', action: 'UPDATE_ORDER', traceId: 't2' },
+      meta: { source: 'analyzer', target: 'db', action: 'UPDATE_ORDER', traceId: 't2', timestamp: Date.now() },
       payload: {},
     })
 
@@ -382,7 +383,7 @@ describe('initSignalStoreSubscriptions', () => {
 
     // 正确的 action 应该触发（使用 SAVE_SCORES）
     v6Cb({
-      meta: { source: 'analyzer', action: 'SAVE_SCORES', traceId: 't3' },
+      meta: { source: 'analyzer', target: 'db', action: 'SAVE_SCORES', traceId: 't3', timestamp: Date.now() },
       payload: {},
     })
 
@@ -405,15 +406,15 @@ describe('initSignalStoreSubscriptions', () => {
 
     // 连续触发多次
     v6Cb({
-      meta: { source: 'analyzer', action: 'SAVE_SCORES', traceId: 't1' },
+      meta: { source: 'analyzer', target: 'db', action: 'SAVE_SCORES', traceId: 't1', timestamp: Date.now() },
       payload: {},
     })
     v6Cb({
-      meta: { source: 'analyzer', action: 'SAVE_SCORES', traceId: 't2' },
+      meta: { source: 'analyzer', target: 'db', action: 'SAVE_SCORES', traceId: 't2', timestamp: Date.now() },
       payload: {},
     })
     v6Cb({
-      meta: { source: 'analyzer', action: 'SAVE_SCORES', traceId: 't3' },
+      meta: { source: 'analyzer', target: 'db', action: 'SAVE_SCORES', traceId: 't3', timestamp: Date.now() },
       payload: {},
     })
 
@@ -430,7 +431,7 @@ describe('initSignalStoreSubscriptions', () => {
     vi.clearAllMocks()
 
     v6Cb({
-      meta: { source: 'analyzer', action: 'SAVE_SCORES', traceId: 't4' },
+      meta: { source: 'analyzer', target: 'db', action: 'SAVE_SCORES', traceId: 't4', timestamp: Date.now() },
       payload: {},
     })
     await new Promise((r) => setTimeout(r, 150))

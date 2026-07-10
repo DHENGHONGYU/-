@@ -75,21 +75,28 @@ export function runMigrations(
     const message = err instanceof Error ? err.message : String(err)
     const last = applied.at(-1)?.version
     log.error(`[DB] Migration failed at v${last}; rolling back`, { error: message })
-    for (let i = applied.length - 1; i >= 0; i--) {
-      const m = applied[i]
-      if (!m) continue
-      if (m.down) {
-        try {
-          log.warn(`[DB] Migration rollback ↓ v${m.version}: ${m.name}`)
-          m.down({ db, tx })
-        } catch (downErr) {
-          log.error(`[DB] Rollback failed at v${m.version}`, {
-            error: downErr instanceof Error ? downErr.message : String(downErr),
-          })
-        }
-      }
-    }
+    rollbackMigrations(db, tx, applied, log)
     throw err
+  }
+}
+
+function rollbackMigrations(
+  db: IDBDatabase,
+  tx: IDBTransaction | undefined,
+  applied: Migration[],
+  log: LoggerLike,
+): void {
+  for (let i = applied.length - 1; i >= 0; i--) {
+    const m = applied[i]
+    if (!m || !m.down) continue
+    try {
+      log.warn(`[DB] Migration rollback ↓ v${m.version}: ${m.name}`)
+      m.down({ db, tx })
+    } catch (downErr) {
+      log.error(`[DB] Rollback failed at v${m.version}`, {
+        error: downErr instanceof Error ? downErr.message : String(downErr),
+      })
+    }
   }
 }
 
@@ -100,6 +107,43 @@ export function runMigrations(
 export const MIGRATIONS: readonly Migration[] = [
   // RBAC 6 表创建必须在 seed 之前执行（seed 依赖 schema 就绪）
   rbacMigrationV24,
+  // ── 阶段 B-1：v26 custom_agents 表种子数据 ──
+  // 注意：store 本身由 createSchema（db-schema.ts）创建，此处仅写入版本标记（DRY 原则）
+  {
+    version: 26,
+    name: 'seed_custom_agents_tracker',
+    up({ tx }) {
+      if (!tx) return
+      // customAgents store 由 createSchema 创建；此处仅记录版本标记
+      if (tx.db.objectStoreNames.contains(STORE_NAME.schemaMigrations)) {
+        const tracker = tx.objectStore(STORE_NAME.schemaMigrations)
+        tracker.put({
+          id: 'custom_agents_initialized',
+          version: 26,
+          appliedAt: Date.now(),
+          note: 'custom_agents store created by createSchema (baseline)',
+        })
+      }
+    },
+  },
+  // ── v27 trace_records 表版本标记 ──
+  // store 本身由 createSchema 创建；此处仅记录版本标记
+  {
+    version: 27,
+    name: 'seed_trace_records_tracker',
+    up({ tx }) {
+      if (!tx) return
+      if (tx.db.objectStoreNames.contains(STORE_NAME.schemaMigrations)) {
+        const tracker = tx.objectStore(STORE_NAME.schemaMigrations)
+        tracker.put({
+          id: 'trace_records_initialized',
+          version: 27,
+          appliedAt: Date.now(),
+          note: 'trace_records store created by createSchema (baseline)',
+        })
+      }
+    },
+  },
   {
     version: DB_VERSION,
     name: 'seed_schema_migrations_tracker',

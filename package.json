@@ -10,7 +10,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint src/ --ext .ts,.tsx --max-warnings 2000",
-    "lint:colors": "eslint src/ --ext .ts,.tsx --rule \"no-hardcoded-colors/no-hardcoded-tailwind-colors: error\"",
+    "lint:colors": "eslint --config eslint.colors.config.js",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ci": "vitest run --coverage",
@@ -20,6 +20,8 @@
     "pretest:e2e": "npm run build",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
+    "test:e2e:visual": "playwright test e2e/visual-regression.spec.ts",
+    "test:e2e:visual:update": "playwright test e2e/visual-regression.spec.ts --update-snapshots",
     "coverage": "vitest run --coverage",
     "tsc": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json --noEmit",
     "tsc:prod": "tsc -p tsconfig.json --noEmit",
@@ -35,6 +37,13 @@
     "audit:tests": "tsx scripts/audit-tests.ts",
     "audit:reserved-stores": "tsx scripts/audit-reserved-stores.ts",
     "audit:tokens": "tsx scripts/token-scan.cjs",
+    "audit:jsdoc": "tsx scripts/audit-jsdoc.ts",
+    "audit:complexity": "npm run complexity-scan",
+    "complexity-scan": "tsx scripts/complexity-scan.ts",
+    "verify:tokens": "tsx scripts/verify-design-tokens.ts",
+    "build:health": "tsx scripts/build-health-report.ts",
+    "build:ai-memory": "tsx scripts/build-ai-memory-index.ts",
+    "query:ai-memory": "tsx scripts/query-ai-memory.ts",
     "audit": "npm run audit:layers && npm run audit:hardcode && npm run audit:deadcode && npm run audit:docs && npm run audit:routes && npm run audit:mcp && npm run audit:token && npm run audit:tests && npm run audit:reserved-stores && npm run audit:tokens",
     "changelog:query": "tsx scripts/changelog-query.ts",
     "changelog:summary": "tsx scripts/changelog-query.ts --summary",
@@ -120,7 +129,19 @@
     "zod": "4.4.3"
   },
   "lint-staged": {
-    "*.{ts,tsx}": "eslint --fix"
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "eslint --config eslint.colors.config.js --fix"
+    ],
+    "AGENTS.md": [
+      "npm run audit:docs"
+    ],
+    "docs/*.md": [
+      "npm run audit:docs"
+    ],
+    "prompts/*.md": [
+      "npm run audit:docs"
+    ]
   },
   "config": {
     "commitizen": {

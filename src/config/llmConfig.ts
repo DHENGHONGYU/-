@@ -157,12 +157,12 @@ const LLM_API_KEY_STORAGE = 'llm_api_key'
  * 使用 localStorageManager.getEncrypted 解密，失败返回空字符串。
  * 同步接口（内部使用缓存值），用于 getDefaultLlmConfig。
  */
-let cachedApiKey: string | null = null
+let cachedApiKey: string = ''
 let apiKeyCacheInit = false
 
 function getCachedApiKey(): string {
   if (apiKeyCacheInit) {
-    return cachedApiKey ?? ''
+    return cachedApiKey
   }
   apiKeyCacheInit = true
   // 同步读取：localStorageManager.getEncrypted 是异步的，这里读取原始 localStorage 条目判断是否存在
@@ -177,7 +177,7 @@ function getCachedApiKey(): string {
   } catch {
     // localStorage 不可用时忽略
   }
-  return cachedApiKey ?? ''
+  return cachedApiKey
 }
 
 /**
@@ -187,9 +187,9 @@ function getCachedApiKey(): string {
 export async function getLlmApiKeyAsync(): Promise<string> {
   try {
     const key = await defaultStorage.getEncrypted<string>(LLM_API_KEY_STORAGE)
-    cachedApiKey = key
+    cachedApiKey = key || ''
     apiKeyCacheInit = true
-    return key ?? ''
+    return cachedApiKey
   } catch (err) {
     logger.warn('[llmConfig] 读取加密 API Key 失败', { error: err })
     return ''

@@ -7,6 +7,12 @@
 
 import { dataLayer } from '@/data/dataLayer'
 import type { DataLayerResult, FileLibraryStats, ScoreDocVersion, V6LayerScore } from '@/data/types'
+import type {
+  ScoreComparisonMode,
+  ScoreComparisonResult,
+  DimensionComparisonItem,
+  ScoreComparisonTimelineItem,
+} from '@/types/modules/score.types'
 import { getLogger } from '@/lib/logger'
 import { DEFAULT_THRESHOLDS } from '@/services/scoring/v6-engine/config'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
@@ -330,6 +336,172 @@ export async function listScoreDocsBySymbol(
     return { success: true, data: list }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
+    return { success: false, error: message }
+  }
+}
+
+export function buildScoreComparison(
+  leftDoc: ScoreDocVersion,
+  rightDoc: ScoreDocVersion,
+  mode: ScoreComparisonMode,
+): ScoreComparisonResult {
+  const leftCodes = new Set(Object.keys(leftDoc.layers))
+  const rightCodes = new Set(Object.keys(rightDoc.layers))
+
+  const addedDimensions = [...rightCodes].filter((c) => !leftCodes.has(c))
+  const removedDimensions = [...leftCodes].filter((c) => !rightCodes.has(c))
+
+  const dimensions: DimensionComparisonItem[] = []
+
+  for (const code of rightCodes) {
+    const leftLayer = leftDoc.layers[code]
+    const rightLayer = rightDoc.layers[code]!
+    const leftScore = leftLayer?.score ?? 0
+    const rightScore = rightLayer.score
+    dimensions.push({
+      code,
+      leftScore,
+      rightScore,
+      delta: Math.round((rightScore - leftScore) * 100) / 100,
+      leftWeight: leftLayer?.weight ?? 0,
+      rightWeight: rightLayer.weight,
+      leftReason: leftLayer?.reason ?? '',
+      rightReason: rightLayer.reason,
+    })
+  }
+
+  for (const code of removedDimensions) {
+    const leftLayer = leftDoc.layers[code]!
+    dimensions.push({
+      code,
+      leftScore: leftLayer.score,
+      rightScore: 0,
+      delta: Math.round(-leftLayer.score * 100) / 100,
+      leftWeight: leftLayer.weight,
+      rightWeight: 0,
+      leftReason: leftLayer.reason,
+      rightReason: '',
+    })
+  }
+
+  const sortedByDeltaAbs = [...dimensions].sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta))
+  const topRisingDimensions = sortedByDeltaAbs.filter((d) => d.delta > 0).slice(0, 5)
+  const topFallingDimensions = sortedByDeltaAbs.filter((d) => d.delta < 0).slice(0, 5)
+
+  const oldRating = leftDoc.recommendation?.label ?? ''
+  const newRating = rightDoc.recommendation?.label ?? ''
+
+  return {
+    mode,
+    left: {
+      symbol: leftDoc.symbol,
+      stockName: leftDoc.stockName,
+      version: leftDoc.version,
+      scoreDate: leftDoc.scoreDate,
+      composite: leftDoc.composite,
+      l3v: leftDoc.l3v,
+      recommendation: leftDoc.recommendation,
+      modelUsed: leftDoc.modelUsed,
+    },
+    right: {
+      symbol: rightDoc.symbol,
+      stockName: rightDoc.stockName,
+      version: rightDoc.version,
+      scoreDate: rightDoc.scoreDate,
+      composite: rightDoc.composite,
+      l3v: rightDoc.l3v,
+      recommendation: rightDoc.recommendation,
+      modelUsed: rightDoc.modelUsed,
+    },
+    compositeDelta: Math.round((rightDoc.composite - leftDoc.composite) * 100) / 100,
+    l3vDelta: Math.round((rightDoc.l3v - leftDoc.l3v) * 100) / 100,
+    dimensions,
+    ratingChanged: oldRating !== newRating,
+    addedDimensions,
+    removedDimensions,
+    topRisingDimensions,
+    topFallingDimensions,
+  }
+}
+
+export function buildScoreTimeline(versions: ScoreDocVersion[]): ScoreComparisonTimelineItem[] {
+  const sorted = [...versions].sort((a, b) => a.version - b.version)
+  return sorted.map((v, i) => ({
+    version: v.version,
+    scoreDate: v.scoreDate,
+    composite: v.composite,
+    changeFromPrev: i === 0 ? null : v.composite - sorted[i - 1]!.composite,
+  }))
+}
+
+export async function compareTwoVersions(
+  symbol: string,
+  leftVersion: number,
+  rightVersion: number,
+): Promise<DataLayerResult<ScoreComparisonResult>> {
+  try {
+    const versions = await dataLayer.scoreDocs.listBySymbol(symbol)
+    const leftDoc = versions.find((v) => v.version === leftVersion)
+    const rightDoc = versions.find((v) => v.version === rightVersion)
+
+    if (!leftDoc) {
+      return { success: false, error: `未找到版本 V${leftVersion}` }
+    }
+    if (!rightDoc) {
+      return { success: false, error: `未找到版本 V${rightVersion}` }
+    }
+
+    const result = buildScoreComparison(leftDoc, rightDoc, 'same-stock-versions')
+    return { success: true, data: result }
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    logger.error('比对评分版本失败', { symbol, leftVersion, rightVersion, error: message })
+    return { success: false, error: message }
+  }
+}
+
+export async function compareTwoStocksLatest(
+  leftSymbol: string,
+  rightSymbol: string,
+): Promise<DataLayerResult<ScoreComparisonResult>> {
+  try {
+    const [leftVersions, rightVersions] = await Promise.all([
+      dataLayer.scoreDocs.listBySymbol(leftSymbol),
+      dataLayer.scoreDocs.listBySymbol(rightSymbol),
+    ])
+
+    const leftSorted = [...leftVersions].sort((a, b) => b.version - a.version)
+    const rightSorted = [...rightVersions].sort((a, b) => b.version - a.version)
+
+    const leftDoc = leftSorted[0]
+    const rightDoc = rightSorted[0]
+
+    if (!leftDoc) {
+      return { success: false, error: `股票 ${leftSymbol} 暂无评分文档` }
+    }
+    if (!rightDoc) {
+      return { success: false, error: `股票 ${rightSymbol} 暂无评分文档` }
+    }
+
+    const result = buildScoreComparison(leftDoc, rightDoc, 'cross-stock-latest')
+    return { success: true, data: result }
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    logger.error('比对两只股票最新评分失败', { leftSymbol, rightSymbol, error: message })
+    return { success: false, error: message }
+  }
+}
+
+export async function getScoreTimeline(
+  symbol: string,
+): Promise<DataLayerResult<ScoreComparisonTimelineItem[]>> {
+  try {
+    const versions = await dataLayer.scoreDocs.listBySymbol(symbol)
+    const timeline = buildScoreTimeline(versions)
+    return { success: true, data: timeline }
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    logger.error('获取评分时间轴失败', { symbol, error: message })
     return { success: false, error: message }
   }
 }

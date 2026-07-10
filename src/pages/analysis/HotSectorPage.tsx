@@ -65,7 +65,7 @@ export default function HotSectorPage(): React.JSX.Element {
   const toggleExpand = useCallback((symbol: string) => {
     setExpandedSymbol((prev) => {
       const next = prev === symbol ? null : symbol
-      logger.info(`[HotSectorPage] 切换展开: ${symbol} → ${next ?? '收起'}`)
+      logger.info(`[HotSectorPage] 切换展开: ${symbol} → ${next || '收起'}`)
       return next
     })
   }, [])
@@ -159,16 +159,17 @@ export default function HotSectorPage(): React.JSX.Element {
       <div className="grid gap-4">
         {scores.map((score) => {
           const isExpanded = expandedSymbol === score.symbol
-          const actionCfg = ACTION_CONFIG[score.action] ?? ACTION_CONFIG.ignore
-          const scoreColor =
-            (score.score ?? 0) >= 4 ? 'text-success' :
-            (score.score ?? 0) >= 3 ? 'text-warning' :
-            'text-destructive'
+          const actionCfg = ACTION_CONFIG[score.action] || ACTION_CONFIG.ignore
+          const scoreNum = score.score || 0
+            const scoreColor =
+              scoreNum >= 4 ? 'text-success' :
+              scoreNum >= 3 ? 'text-warning' :
+              'text-destructive'
 
           // 构造雷达图数据
-          const radarData: ScoreRadarData[] = Object.entries(score.dimensions ?? {}).map(([key, value]) => ({
-            dimension: DIMENSION_LABELS[key] ?? key,
-            score: (value ?? 0) * 100,
+          const radarData: ScoreRadarData[] = Object.entries(score.dimensions || {}).map(([key, value]) => ({
+            dimension: DIMENSION_LABELS[key] || key,
+            score: (value || 0) * 100,
             fullMark: 100,
           }))
 

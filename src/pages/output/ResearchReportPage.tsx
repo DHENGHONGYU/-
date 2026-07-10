@@ -1,4 +1,4 @@
-import { memo, useState, useEffect } from 'react'
+import { memo, useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router'
 import { FileText, Download, RefreshCw, ArrowLeft } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
@@ -16,29 +16,39 @@ import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { useScoreDocStore } from '@/store/scoreDocStore'
 import { useToast } from '@/hooks/useToast'
 import { usePageGuard } from '@/hooks/usePageGuard'
-
-interface ReportData {
-  symbol: string
-  version: number
-  markdown: string
-  generatedAt: string
-}
+import type { ScoreDocVersion } from '@/data/types'
 
 export default memo(function ResearchReportPage(): React.JSX.Element {
   const [symbols, setSymbols] = useState<string[]>([])
   const [selectedSymbol, setSelectedSymbol] = useState('')
-  const [reports, setReports] = useState<ReportData[]>([])
   const [loading, setLoading] = useState(false)
   const [generating, setGenerating] = useState(false)
   const { toast } = useToast()
   const { guardProps } = usePageGuard('research-report')
-  const { loadStockSymbols, generateReport: generateReportFromStore } = useScoreDocStore()
+  // 阶段 B-2：从 store 读取所有 scoreDoc versions，并按 selectedSymbol 过滤（持久化在 IDB）
+  const versions = useScoreDocStore((s) => s.versions)
+  const setSymbol = useScoreDocStore((s) => s.setSymbol)
+  const { loadStockSymbols, generateReport: generateReportFromStore, loadVersions } = useScoreDocStore()
+
+  // 当前选中股票的报告列表（按 updatedAt 倒序）
+  const reports = useMemo<ScoreDocVersion[]>(
+    () => versions.filter((v) => v.symbol === selectedSymbol).slice().sort((a, b) => b.version - a.version),
+    [versions, selectedSymbol],
+  )
 
   useEffect(() => {
     const abortController = new AbortController()
     void loadSymbols(abortController.signal)
     return () => abortController.abort()
-  }, [])
+  }, [loadVersions])
+
+  // 阶段 B-2：selectedSymbol 变化时先写入 store.symbol 再拉取 versions
+  useEffect(() => {
+    if (selectedSymbol) {
+      setSymbol(selectedSymbol)
+      void loadVersions()
+    }
+  }, [selectedSymbol, setSymbol, loadVersions])
 
   const loadSymbols = async (signal?: AbortSignal): Promise<void> => {
     setLoading(true)
@@ -71,13 +81,8 @@ export default memo(function ResearchReportPage(): React.JSX.Element {
     setGenerating(true)
     try {
       const report = await generateReportFromStore(selectedSymbol)
-      const reportData: ReportData = {
-        symbol: report.symbol,
-        version: report.version,
-        markdown: report.markdown,
-        generatedAt: report.generatedAt,
-      }
-      setReports(prev => [reportData, ...prev])
+      // 阶段 B-2：生成后立即重新拉取当前 selectedSymbol 的 versions，确保 UI 看到最新版本
+      void loadVersions()
       toast({
         title: '报告生成成功',
         description: `${selectedSymbol} V${report.version} 研究报告已生成`,
@@ -93,12 +98,12 @@ export default memo(function ResearchReportPage(): React.JSX.Element {
     }
   }
 
-  const downloadReport = (report: ReportData): void => {
-    const blob = new Blob([report.markdown], { type: 'text/markdown;charset=utf-8' })
+  const downloadReport = (report: ScoreDocVersion): void => {
+    const blob = new Blob([report.reportMd], { type: 'text/markdown;charset=utf-8' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `${report.symbol}_V${report.version}_研究报告_${new Date(report.generatedAt).toLocaleDateString('zh-CN')}.md`
+    a.download = `${report.symbol}_V${report.version}_研究报告_${report.scoreDate}.md`
     a.click()
     URL.revokeObjectURL(url)
     toast({
@@ -195,15 +200,13 @@ export default memo(function ResearchReportPage(): React.JSX.Element {
               <CardTitle>已生成报告</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {reports.map((report, index) => (
-                <div key={index} className="rounded-lg border p-4 space-y-3">
+              {reports.map((report) => (
+                <div key={report.docId} className="rounded-lg border p-4 space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Badge variant="secondary">{report.symbol}</Badge>
                       <Badge variant="outline">V{report.version}</Badge>
-                      <span className="text-sm text-muted-foreground">
-                        {new Date(report.generatedAt).toLocaleString('zh-CN')}
-                      </span>
+                      <span className="text-sm text-muted-foreground">{report.scoreDate}</span>
                     </div>
                     <Button
                       variant="outline"
@@ -217,7 +220,7 @@ export default memo(function ResearchReportPage(): React.JSX.Element {
                     </Button>
                   </div>
                   <div className="max-h-96 overflow-auto rounded-md bg-muted/50 p-4">
-                    <pre className="text-xs whitespace-pre-wrap">{report.markdown}</pre>
+                    <pre className="text-xs whitespace-pre-wrap">{report.reportMd}</pre>
                   </div>
                 </div>
               ))}

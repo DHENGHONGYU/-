@@ -47,7 +47,7 @@ describe('portfolioBuilder', () => {
     dataBridge.invalidateCache(STORE_NAME.orders)
   })
 
-  it('should build a theme portfolio from matching stocks', async () => {
+  it('应该build a theme portfolio from matching stocks', async () => {
     // 使用 8 只默认核心池股票，确保等权不触发 singleMaxPct 上限
     const stocks: Stock[] = [
       buildStock('002371.SZ', 300), // 北方华创
@@ -82,7 +82,7 @@ describe('portfolioBuilder', () => {
     expect(totalTargetWeight).toBeCloseTo(1, 1)
   })
 
-  it('should filter out stocks below min composite score', async () => {
+  it('应该过滤 out stocks below min composite score', async () => {
     const stocks: Stock[] = [
       buildStock('002371.SZ', 300),
       buildStock('601138.SH', 25),
@@ -101,7 +101,7 @@ describe('portfolioBuilder', () => {
     expect(portfolio.holdings[0]?.symbol).toBe('002371.SZ')
   })
 
-  it('should respect single max pct constraint', async () => {
+  it('应该respect single max pct constraint', async () => {
     // 用 4 只高评分股票，等权下主题内权重 25%，但受 singleMaxPct=8% 总资产约束
     const stocks: Stock[] = [
       buildStock('A', 100),
@@ -133,7 +133,7 @@ describe('portfolioBuilder', () => {
     }
   })
 
-  it('should generate rebalance plan based on current holdings', async () => {
+  it('应该生成 rebalance plan based on current holdings', async () => {
     const stocks: Stock[] = [buildStock('002371.SZ', 100)]
     await seedV6Score('002371.SZ', 4.5)
 
@@ -149,7 +149,7 @@ describe('portfolioBuilder', () => {
     expect(portfolio.rebalancePlan[0]?.shares).toBeGreaterThan(0)
   })
 
-  it('should return empty portfolio when no matching stocks', async () => {
+  it('应该返回 empty portfolio when no matching stocks', async () => {
     const stocks: Stock[] = [buildStock('600519.SH', 1500, { sector: '白酒' })]
     await seedV6Score('600519.SH', 4.8)
 
@@ -163,7 +163,7 @@ describe('portfolioBuilder', () => {
     expect(portfolio.rebalancePlan).toHaveLength(0)
   })
 
-  it('should compute holdings from orders', () => {
+  it('应该计算 holdings from orders', () => {
     const orders = [
       { symbol: 'A', direction: 'buy' as const, quantity: 100 },
       { symbol: 'A', direction: 'buy' as const, quantity: 200 },

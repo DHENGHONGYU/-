@@ -38,7 +38,7 @@ describe('scoringAdapter', () => {
     dataBridge.invalidateCache(STORE_NAME.industryScores)
   })
 
-  it('should aggregate v6, intelligent and industry scores', async () => {
+  it('应该aggregate v6, intelligent and industry scores', async () => {
     const stock = buildStock('000001.SZ', '半导体')
 
     await seedV6Score({
@@ -90,7 +90,7 @@ describe('scoringAdapter', () => {
     expect(view.rationale).toContain('行业评分 4.3')
   })
 
-  it('should fallback to v6 score when other scores are missing', async () => {
+  it('应该fallback to v6 score when other scores are missing', async () => {
     const stock = buildStock('000002.SZ')
 
     await seedV6Score({
@@ -110,7 +110,7 @@ describe('scoringAdapter', () => {
     expect(view.composite).toBe(3.8)
   })
 
-  it('should return null composite when no scores available', async () => {
+  it('应该返回 null composite when no scores available', async () => {
     const stock = buildStock('000003.SZ')
 
     const view = await getCompositeScore(stock)
@@ -119,7 +119,7 @@ describe('scoringAdapter', () => {
     expect(view.rationale).toBe('暂无评分数据')
   })
 
-  it('should expose valuationScore from v6 factor', async () => {
+  it('应该expose valuationScore from v6 factor', async () => {
     const stock = buildStock('000004.SZ')
 
     await seedV6Score({

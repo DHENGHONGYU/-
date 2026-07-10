@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import { Link } from 'react-router'
-import { FileText, BarChart3, Database, ArrowRight } from 'lucide-react'
+import { FileText, BarChart3, Database, Wand2, ArrowRight } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
@@ -39,6 +39,12 @@ const OUTPUT_MODULES: HubModule[] = [
     description: '全量数据 JSON/CSV 导出',
     path: '/output/export',
     icon: Database,
+  },
+  {
+    title: '复盘向导',
+    description: '四步渐进式复盘并导出成品卡',
+    path: '/output/wizard',
+    icon: Wand2,
   },
 ]
 

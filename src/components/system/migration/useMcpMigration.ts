@@ -1,8 +1,15 @@
 import { mcpBridge } from '@/mcp/bridge/mcpBridge'
 import { getLogger } from '@/lib/logger'
 import type { MigrationReport, V6ExportShape, V9ImportShape } from '@/services/system/v6MigrationService'
+import type { McpCallerContext } from '@/types/modules/mcp.types'
 
 const logger = getLogger()
+
+/** 系统迁移操作的调用方上下文 —— 迁移属于系统级操作，使用 system 角色 */
+const MIGRATION_CALLER_CONTEXT: McpCallerContext = {
+  caller: 'system',
+  callerId: 'useMcpMigration',
+}
 
 interface McpMigrationApi {
   parseV6Export: (json: unknown) => Promise<V6ExportShape>
@@ -15,7 +22,7 @@ interface McpMigrationApi {
 
 export function useMcpMigration(): McpMigrationApi {
   const callMigrationTool = async <T>(toolName: string, args: Record<string, unknown>): Promise<T> => {
-    const result = await mcpBridge.callTool('system', toolName, args)
+    const result = await mcpBridge.callTool('system', toolName, args, MIGRATION_CALLER_CONTEXT)
     
     if (result.isError) {
       const errorText = result.content[0]?.text ?? '未知错误'

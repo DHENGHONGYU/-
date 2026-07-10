@@ -193,7 +193,7 @@ export function checkPortfolioFreshness(builtAt: number, latestScoredAt: number)
 export function checkExecutionPlanFreshness(
   planCreatedAt: number,
   signalCreatedAt: number,
-  planId?: string,
+  planId: string = 'unknown',
 ): FreshnessCheck {
   const check = checkFreshness({
     outputName: 'execution_plan.createdAt',
@@ -203,7 +203,7 @@ export function checkExecutionPlanFreshness(
   })
   const logger = getLogger()
   logger.info(
-    `[freshnessGuard] checkExecutionPlanFreshness: planId="${planId ?? 'unknown'}" valid=${check.valid}`,
+    `[freshnessGuard] checkExecutionPlanFreshness: planId="${planId}" valid=${check.valid}`,
   )
   return check
 }
@@ -212,7 +212,7 @@ export function checkExecutionPlanFreshness(
 export function checkExecutionLogFreshness(
   logTimestamp: number,
   planCreatedAt: number,
-  planId?: string,
+  planId: string = 'unknown',
 ): FreshnessCheck {
   const check = checkFreshness({
     outputName: 'execution_log.timestamp',
@@ -222,7 +222,7 @@ export function checkExecutionLogFreshness(
   })
   const logger = getLogger()
   logger.info(
-    `[freshnessGuard] checkExecutionLogFreshness: planId="${planId ?? 'unknown'}" valid=${check.valid}`,
+    `[freshnessGuard] checkExecutionLogFreshness: planId="${planId}" valid=${check.valid}`,
   )
   return check
 }
@@ -231,7 +231,7 @@ export function checkExecutionLogFreshness(
 export function checkPortfolioRebalanceFreshness(
   portfolioUpdatedAt: number,
   latestOrderCreatedAt: number,
-  portfolioId?: string,
+  portfolioId: string = 'unknown',
 ): FreshnessCheck {
   const check = checkFreshness({
     outputName: 'portfolio.updatedAt',
@@ -241,7 +241,7 @@ export function checkPortfolioRebalanceFreshness(
   })
   const logger = getLogger()
   logger.info(
-    `[freshnessGuard] checkPortfolioRebalanceFreshness: portfolioId="${portfolioId ?? 'unknown'}" valid=${check.valid}`,
+    `[freshnessGuard] checkPortfolioRebalanceFreshness: portfolioId="${portfolioId}" valid=${check.valid}`,
   )
   return check
 }
@@ -250,7 +250,7 @@ export function checkPortfolioRebalanceFreshness(
 export function checkMissingReportFreshness(
   detectedAt: number,
   referenceTime: number,
-  symbol?: string,
+  symbol: string = 'unknown',
 ): FreshnessCheck {
   const check = checkFreshness({
     outputName: 'missing_report.detectedAt',
@@ -260,7 +260,7 @@ export function checkMissingReportFreshness(
   })
   const logger = getLogger()
   logger.info(
-    `[freshnessGuard] checkMissingReportFreshness: symbol="${symbol ?? 'unknown'}" valid=${check.valid}`,
+    `[freshnessGuard] checkMissingReportFreshness: symbol="${symbol}" valid=${check.valid}`,
   )
   return check
 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Badge } from '@/components/ui/Badge'
+import { Brain, Download } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Input } from '@/components/ui/Input'
@@ -22,8 +23,150 @@ import {
 } from '@/store/intelligentScoreStore'
 import { DEFAULT_LLM_BASE_URL, type LlmConfig } from '@/config/llmConfig'
 import { getLogger } from '@/lib/logger'
+import type { IntelligentScore } from '@/data/types'
+import { COLOR_SHADES } from '@/constants/theme.tokens'
 
 const logger = getLogger()
+
+// 导出工具函数
+function exportToJSON(score: IntelligentScore): void {
+  const data = {
+    symbol: score.symbol,
+    name: score.sourceSnapshot.stock?.name,
+    overallScore: score.overallScore,
+    scoredAt: score.scoredAt,
+    dimensions: score.dimensionScores,
+    summary: score.summary,
+    basis: score.basis,
+    missingFields: score.missingFields,
+    model: score.configSnapshot.model,
+  }
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `${score.symbol}-score-${new Date(score.scoredAt).toISOString().split('T')[0]}.json`
+  a.click()
+  URL.revokeObjectURL(url)
+  logger.info('[IntelligentScorePage] 导出 JSON', { symbol: score.symbol })
+}
+
+function exportToMarkdown(score: IntelligentScore): void {
+  const date = new Date(score.scoredAt).toLocaleString('zh-CN')
+  const stockName = score.sourceSnapshot.stock?.name ?? ''
+  const md = `# ${score.symbol} ${stockName} 智能评分报告
+
+**评分时间**: ${date}  
+**综合评分**: ${score.overallScore?.toFixed(2) ?? 'N/A'} / 5.0  
+**使用模型**: ${score.configSnapshot.model}
+
+## 维度评分
+
+${score.dimensionScores.map(d => `- **${d.name}**: ${d.score?.toFixed(1) ?? 'N/A'}${d.usedLlm ? ' (LLM增强)' : ''}`).join('\n')}
+
+## 评分依据
+
+${score.basis}
+
+## AI 总结
+
+${score.summary}
+
+## 缺失数据
+
+${score.missingFields.length > 0 ? score.missingFields.map(f => `- ${f}`).join('\n') : '无缺失字段'}
+
+---
+*由 V9 智能投研复盘系统生成*
+`
+  const blob = new Blob([md], { type: 'text/markdown' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `${score.symbol}-score-${new Date(score.scoredAt).toISOString().split('T')[0]}.md`
+  a.click()
+  URL.revokeObjectURL(url)
+  logger.info('[IntelligentScorePage] 导出 Markdown', { symbol: score.symbol })
+}
+
+function exportToPDF(score: IntelligentScore): void {
+  // 创建打印友好的 HTML 内容
+  const printWindow = window.open('', '_blank')
+  if (!printWindow) return
+
+  const date = new Date(score.scoredAt).toLocaleString('zh-CN')
+  const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>${score.symbol} 智能评分报告</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 40px; color: ${COLOR_SHADES.gray.hex[800]}; }
+    h1 { color: ${COLOR_SHADES.emerald.hex[500]}; border-bottom: 2px solid ${COLOR_SHADES.emerald.hex[500]}; padding-bottom: 10px; }
+    h2 { color: ${COLOR_SHADES.emerald.hex[600]}; margin-top: 30px; }
+    .score { font-size: 48px; font-weight: bold; color: ${COLOR_SHADES.emerald.hex[500]}; }
+    .meta { color: ${COLOR_SHADES.gray.hex[500]}; margin: 20px 0; }
+    .dimension { margin: 15px 0; padding: 15px; background: ${COLOR_SHADES.gray.hex[100]}; border-radius: 8px; }
+    .dimension-name { font-weight: bold; color: ${COLOR_SHADES.emerald.hex[600]}; }
+    .dimension-score { float: right; font-size: 18px; font-weight: bold; }
+    .llm-badge { background: ${COLOR_SHADES.blue.hex[100]}; color: ${COLOR_SHADES.blue.hex[700]}; padding: 2px 8px; border-radius: 4px; font-size: 12px; margin-left: 8px; }
+    .basis { background: ${COLOR_SHADES.amber.hex[100]}; padding: 15px; border-radius: 8px; margin: 20px 0; }
+    .summary { background: ${COLOR_SHADES.emerald.hex[50]}; padding: 15px; border-radius: 8px; margin: 20px 0; }
+    .missing { color: ${COLOR_SHADES.red.hex[600]}; }
+    .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid ${COLOR_SHADES.gray.hex[300]}; color: ${COLOR_SHADES.gray.hex[400]}; font-size: 12px; }
+    @media print { body { padding: 20px; } }
+  </style>
+</head>
+<body>
+  <h1>${score.symbol} ${score.sourceSnapshot.stock?.name ?? ''} 智能评分报告</h1>
+  <div class="meta">
+    <p><strong>评分时间</strong>: ${date}</p>
+    <p><strong>使用模型</strong>: ${score.configSnapshot.model}</p>
+  </div>
+
+  <div style="text-align: center; margin: 30px 0;">
+    <div class="score">${score.overallScore?.toFixed(2) ?? 'N/A'}</div>
+    <div style="color: ${COLOR_SHADES.gray.hex[500]};">综合评分 / 5.0</div>
+  </div>
+
+  <h2>维度评分</h2>
+  ${score.dimensionScores.map(d => `
+    <div class="dimension">
+      <span class="dimension-name">${d.name}</span>
+      <span class="dimension-score">${d.score?.toFixed(1) ?? 'N/A'}</span>
+      ${d.usedLlm ? '<span class="llm-badge">LLM增强</span>' : ''}
+      <div style="margin-top: 10px; color: ${COLOR_SHADES.gray.hex[500]}; font-size: 14px;">${d.rationale}</div>
+    </div>
+  `).join('')}
+
+  <h2>评分依据</h2>
+  <div class="basis">${score.basis}</div>
+
+  <h2>AI 总结</h2>
+  <div class="summary">${score.summary}</div>
+
+  <h2>缺失数据</h2>
+  <div class="missing">
+    ${score.missingFields.length > 0 ? score.missingFields.map(f => `<p>• ${f}</p>`).join('') : '<p>无缺失字段</p>'}
+  </div>
+
+  <div class="footer">
+    <p>由 V9 智能投研复盘系统生成 | ${date}</p>
+  </div>
+
+  <script>
+    window.onload = function() {
+      window.print();
+    }
+  </script>
+</body>
+</html>
+`
+  printWindow.document.write(html)
+  printWindow.document.close()
+  logger.info('[IntelligentScorePage] 导出 PDF', { symbol: score.symbol })
+}
 
 export default function IntelligentScorePage(): React.JSX.Element {
   // 从 Store 获取状态
@@ -267,9 +410,40 @@ export default function IntelligentScorePage(): React.JSX.Element {
               {result && (
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-base">
-                      评分结果 · {result.symbol}
-                    </CardTitle>
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-base">
+                        评分结果 · {result.symbol}
+                      </CardTitle>
+                      <div className="flex gap-2">
+                        <Tooltip content="导出 JSON">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => exportToJSON(result)}
+                          >
+                            <Download className="h-4 w-4" />
+                          </Button>
+                        </Tooltip>
+                        <Tooltip content="导出 Markdown">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => exportToMarkdown(result)}
+                          >
+                            <Download className="h-4 w-4" />
+                          </Button>
+                        </Tooltip>
+                        <Tooltip content="导出 PDF">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => exportToPDF(result)}
+                          >
+                            <Download className="h-4 w-4" />
+                          </Button>
+                        </Tooltip>
+                      </div>
+                    </div>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="flex items-center gap-4">
@@ -284,20 +458,46 @@ export default function IntelligentScorePage(): React.JSX.Element {
                       )}
                     </div>
 
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                       {DIMENSION_ORDER.map((name) => {
                         const dimension = result.dimensionScores.find((d) => d.name === name)
                         const previousDimension = previousResult?.dimensionScores.find((d) => d.name === name)
                         if (!dimension) return null
                         return (
-                          <div key={dimension.name}>
-                            <Progress
-                              value={dimension.score ?? 0}
-                              label={`${dimension.name} ${dimension.score !== null ? dimension.score.toFixed(1) : 'N/A'} ${formatIntelligentDelta(dimension.score, previousDimension?.score ?? null)}`}
-                            />
-                            <p className="mt-1 text-xs text-muted-foreground">
-                              {dimension.rationale}
-                            </p>
+                          <div key={dimension.name} className="space-y-2">
+                            <div className="flex items-center gap-2">
+                              <Progress
+                                value={dimension.score ?? 0}
+                                label={`${dimension.name} ${dimension.score !== null ? dimension.score.toFixed(1) : 'N/A'} ${formatIntelligentDelta(dimension.score, previousDimension?.score ?? null)}`}
+                              />
+                              {dimension.usedLlm && (
+                                <Badge variant="secondary" className="text-xs" title="该因子使用了 LLM 增强分析">
+                                  <Brain className="mr-1 h-3 w-3" />
+                                  LLM
+                                </Badge>
+                              )}
+                            </div>
+                            <div className="rounded-md bg-muted/50 p-3 space-y-2">
+                              <div>
+                                <p className="text-xs font-medium text-muted-foreground">评分依据</p>
+                                <p className="text-sm text-muted-foreground mt-1">
+                                  {dimension.rationale}
+                                </p>
+                              </div>
+                              {dimension.evidence && dimension.evidence.length > 0 && (
+                                <div>
+                                  <p className="text-xs font-medium text-muted-foreground">支撑证据</p>
+                                  <ul className="mt-1 space-y-1">
+                                    {dimension.evidence.map((item, idx) => (
+                                      <li key={idx} className="text-xs text-muted-foreground flex items-start gap-2">
+                                        <span className="text-primary mt-0.5">•</span>
+                                        <span>{item}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+                            </div>
                           </div>
                         )
                       })}

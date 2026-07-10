@@ -4,14 +4,14 @@ import { TradeServer } from '@/mcp/servers/trade/tradeServer'
 describe('TradeServer', () => {
   const server = new TradeServer()
 
-  it('should have correct server info', () => {
+  it('应该有 correct server info', () => {
     expect(server.info.name).toBe('trade')
     expect(server.info.version).toBe('1.0.0')
     expect(server.info.description).toBeTruthy()
     expect(server.info.dependencies).toContain('trading')
   })
 
-  it('should register 3 tools', () => {
+  it('应该register 3 tools', () => {
     const tools = server.listTools()
     expect(tools.length).toBe(3)
     for (const tool of tools) {
@@ -22,7 +22,7 @@ describe('TradeServer', () => {
     }
   })
 
-  it('should have fetch_holdings tool', () => {
+  it('应该有 fetch_holdings tool', () => {
     const tools = server.listTools()
     const tool = tools.find((t) => t.name === 'fetch_holdings')
     expect(tool).toBeDefined()
@@ -31,7 +31,7 @@ describe('TradeServer', () => {
     expect(tool!.inputSchema.properties!).toHaveProperty('keyword')
   })
 
-  it('should have execute_trade_action tool', () => {
+  it('应该有 execute_trade_action tool', () => {
     const tools = server.listTools()
     const tool = tools.find((t) => t.name === 'execute_trade_action')
     expect(tool).toBeDefined()
@@ -42,7 +42,7 @@ describe('TradeServer', () => {
     expect(tool!.inputSchema.properties!.action!.enum).toEqual(['buy', 'sell'])
   })
 
-  it('should have export_holdings_csv tool', () => {
+  it('应该有 export_holdings_csv tool', () => {
     const tools = server.listTools()
     const tool = tools.find((t) => t.name === 'export_holdings_csv')
     expect(tool).toBeDefined()
@@ -50,12 +50,12 @@ describe('TradeServer', () => {
     expect(tool!.inputSchema.properties).toHaveProperty('pageSize')
   })
 
-  it('should have no resources', () => {
+  it('应该有 no resources', () => {
     const resources = server.listResources()
     expect(resources.length).toBe(0)
   })
 
-  it('should have no prompts', () => {
+  it('应该有 no prompts', () => {
     const prompts = server.listPrompts()
     expect(prompts.length).toBe(0)
   })

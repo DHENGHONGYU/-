@@ -173,6 +173,30 @@ export const THEME_TOKENS = {
       widest: 'tracking-widest',
     },
   },
+
+  /**
+   * 动效令牌（Motion）
+   * @description 统一的微动效时长/缓动/状态令牌，供 Loading/骨架屏/过渡使用，禁止组件内硬编码
+   */
+  motion: {
+    /** 时长 */
+    duration: {
+      fast: 'duration-150',
+      base: 'duration-300',
+      slow: 'duration-500',
+    },
+    /** 缓动 */
+    easing: {
+      standard: 'ease-in-out',
+      emphasized: 'ease-out',
+    },
+    /** 过渡组合（淡入） */
+    fadeIn: 'transition-opacity duration-300 ease-in-out',
+    /** 骨架屏脉冲 */
+    skeletonPulse: 'animate-pulse',
+    /** 旋转（加载指示器） */
+    spin: 'animate-spin',
+  },
 } as const
 
 /** 颜色令牌类型 */

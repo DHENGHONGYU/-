@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { ArrowUpCircle, ArrowDownCircle } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import { WidgetStateShell } from './components/WidgetStateShell'
+import { Skeleton } from '@/components/ui/states'
 import type { WidgetConfig } from '@/types/modules/widget.types'
 import { MockMarketDataProvider, type FundFlow } from '@/cockpit/data/mockDataProvider'
 import { STOCK_COLOR_MAPPING } from '@/constants/cockpit.constants'
@@ -13,18 +14,25 @@ interface FundFlowWidgetProps {
 export default function FundFlowWidget({ config }: FundFlowWidgetProps): React.JSX.Element {
   const [data, setData] = useState<FundFlow[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  const fetchData = useCallback(async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const flows = await MockMarketDataProvider.getFundFlows()
+      setData(flows)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : '获取资金流向数据失败'
+      setError(message)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const flows = await MockMarketDataProvider.getFundFlows()
-        setData(flows)
-      } finally {
-        setLoading(false)
-      }
-    }
     void fetchData()
-  }, [])
+  }, [fetchData])
 
   // 资金流向图标色（A股惯例：北向资金流入=红涨，流出=绿跌；主力资金=info 蓝）
   const getIcon = (type: FundFlow['type'], value: number) => {
@@ -53,33 +61,38 @@ export default function FundFlowWidget({ config }: FundFlowWidgetProps): React.J
     return value >= 0 ? STOCK_COLOR_MAPPING.UP_CLASS : STOCK_COLOR_MAPPING.DOWN_CLASS
   }
 
-  if (loading) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>{config.title}</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+  const visualState = error
+    ? 'error'
+    : loading
+      ? 'loading'
+      : data.length === 0
+        ? 'empty'
+        : 'ready'
+
+  return (
+    <WidgetStateShell
+      title={config.title}
+      visualState={visualState}
+      error={error}
+      onRetry={fetchData}
+      loadingLabel="加载资金流向…"
+      emptyTitle="暂无资金流向数据"
+      emptyDescription="当前未获取到主力资金、北向资金等流向数据"
+      skeleton={
+        <div className="space-y-4">
           {[1, 2, 3].map((i) => (
             <div key={i} className="flex items-center gap-4">
-              <div className={`w-8 h-8 ${twBg('gray', 200)} rounded-full`} />
-              <div className="flex-1">
-                <div className={`h-4 ${twBg('gray', 200)} rounded w-24`} />
-                <div className={`h-6 ${twBg('gray', 200)} rounded w-16 mt-1`} />
+              <Skeleton variant="circle" className={`h-8 w-8 ${twBg('gray', 200)}`} />
+              <div className="flex-1 space-y-2">
+                <Skeleton variant="text" className={`${twBg('gray', 200)} w-24`} />
+                <Skeleton variant="text" className={`${twBg('gray', 200)} h-6 w-16`} />
               </div>
             </div>
           ))}
-        </CardContent>
-      </Card>
-    )
-  }
-
-  return (
-    <Card>
-      <CardHeader className="pb-3">
-        <CardTitle className="text-base font-semibold">{config.title}</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
+        </div>
+      }
+    >
+      <div className="space-y-4">
         {data.map((flow) => (
           <div key={flow.type} className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -91,7 +104,7 @@ export default function FundFlowWidget({ config }: FundFlowWidgetProps): React.J
             </span>
           </div>
         ))}
-      </CardContent>
-    </Card>
+      </div>
+    </WidgetStateShell>
   )
 }

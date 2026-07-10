@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Cpu, Scale } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import { WidgetStateShell } from './components/WidgetStateShell'
+import { Skeleton } from '@/components/ui/states'
 import { Badge } from '@/components/ui/Badge'
 import { Select, SelectItem } from '@/components/ui/Select'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
@@ -30,9 +31,19 @@ function getScoreLevel(score: number) {
  * @remarks 数据来自 MarketData.modelComparison；未来替换为真实多模型推理 API
  */
 export default function ModelCompareWidget({ config, data }: ModelCompareWidgetProps): React.JSX.Element {
-  const marketData = useMarketData()
-  const sourceData = data ?? marketData.data
+  const { data: marketData, loadingMap, errorMap, refreshWidget } = useMarketData()
+  const sourceData = data ?? marketData
   const comparison = sourceData.modelComparison
+
+  const loading = !!loadingMap[config.instanceId]
+  const error = errorMap[config.instanceId] ?? null
+  const visualState = error
+    ? 'error'
+    : loading
+      ? 'loading'
+      : comparison.dimensions.length === 0
+        ? 'empty'
+        : 'ready'
 
   const [leftModelId, setLeftModelId] = useState(comparison.leftModel.id || LLM_MODEL_VERSIONS.KAILLM_V2_1.id)
   const [rightModelId, setRightModelId] = useState(comparison.rightModel.id || LLM_MODEL_VERSIONS.BASELINE_V1_5.id)
@@ -61,11 +72,30 @@ export default function ModelCompareWidget({ config, data }: ModelCompareWidgetP
   }
 
   return (
-    <Card className="h-full flex flex-col">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-base font-semibold">{config.title}</CardTitle>
-      </CardHeader>
-      <CardContent className="flex-1 overflow-auto space-y-4">
+    <WidgetStateShell
+      title={config.title}
+      visualState={visualState}
+      error={error}
+      onRetry={() => refreshWidget(config.instanceId)}
+      loadingLabel="加载模型对比…"
+      emptyTitle="暂无模型对比数据"
+      emptyDescription="当前未获取到 AI 大模型多维量化对比结果"
+      skeleton={
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <Skeleton variant="rect" className="h-28" />
+            <Skeleton variant="rect" className="h-28" />
+          </div>
+          <div className="space-y-2">
+            {[1, 2, 3].map((i) => (
+              <Skeleton key={i} variant="text" className="h-2 w-full" />
+            ))}
+          </div>
+        </div>
+      }
+      className="h-full flex flex-col"
+    >
+      <div className="flex-1 overflow-auto space-y-4">
         {/* 顶部模型指标卡 */}
         <div className="grid grid-cols-2 gap-4">
           {renderModelCard(comparison.leftModel, <Cpu className="h-4 w-4" />, { backgroundColor: `${COLOR_TOKENS.info.hex}80` })}
@@ -138,7 +168,7 @@ export default function ModelCompareWidget({ config, data }: ModelCompareWidgetP
             </Select>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </WidgetStateShell>
   )
 }

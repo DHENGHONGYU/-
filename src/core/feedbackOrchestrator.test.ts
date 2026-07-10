@@ -62,11 +62,12 @@ describe('FeedbackOrchestrator', () => {
     test('评分不存在时检测到 critical 问题', async () => {
       vi.mocked(dataLayer.v6Scores.get).mockResolvedValue(undefined)
 
-      const issues = await (orchestrator as any).detectIssues('600519.SH')
+      const issues = await orchestrator.detectIssues('600519.SH')
 
       expect(issues).toHaveLength(1)
-      expect(issues[0].type).toBe('incomplete_score')
-      expect(issues[0].severity).toBe('critical')
+      expect(issues[0]).toBeDefined()
+      expect(issues[0]!.type).toBe('incomplete_score')
+      expect(issues[0]!.severity).toBe('critical')
     })
 
     test('数据完整度低于阈值时检测到问题', async () => {
@@ -79,7 +80,7 @@ describe('FeedbackOrchestrator', () => {
         dataVersion: 1,
       })
 
-      const issues = await (orchestrator as any).detectIssues('600519.SH')
+      const issues = await orchestrator.detectIssues('600519.SH')
 
       expect(issues.some((i: FeedbackIssue) => i.type === 'incomplete_score')).toBe(true)
     })
@@ -94,7 +95,7 @@ describe('FeedbackOrchestrator', () => {
         dataVersion: 1,
       })
 
-      const issues = await (orchestrator as any).detectIssues('600519.SH')
+      const issues = await orchestrator.detectIssues('600519.SH')
 
       expect(issues.length).toBe(0)
     })
@@ -114,14 +115,14 @@ describe('FeedbackOrchestrator', () => {
 
       vi.mocked(dataLayer.dailyQuotes.get).mockResolvedValue({
         symbol: '600519.SH',
-        latest: { date: '2026-01-01', open: 0, high: 0, low: 0, close: 0, volume: 0 } as any,
+        latest: { date: '2026-01-01', open: 0, high: 0, low: 0, close: 0, volume: 0, amount: 0 },
         history: [],
         period: 'daily',
         adjust: 'qfq',
         updatedAt: quotesTime,
-      } as any)
+      })
 
-      const issues = await (orchestrator as any).detectIssues('600519.SH')
+      const issues = await orchestrator.detectIssues('600519.SH')
 
       expect(issues.some((i: FeedbackIssue) => i.type === 'stale_data')).toBe(true)
     })
@@ -137,7 +138,7 @@ describe('FeedbackOrchestrator', () => {
         qualityWarning: '数据完整度 70%',
       })
 
-      const issues = await (orchestrator as any).detectIssues('600519.SH')
+      const issues = await orchestrator.detectIssues('600519.SH')
 
       expect(issues.some((i: FeedbackIssue) => i.type === 'quality_warning')).toBe(true)
     })

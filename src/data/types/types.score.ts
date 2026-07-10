@@ -39,6 +39,8 @@ export interface DimensionScore {
   rationale: string
   evidence: string[]
   weight: number
+  /** 该因子是否使用了 LLM 增强（透明度标记） */
+  usedLlm?: boolean
 }
 
 /** 智能评分结果 */

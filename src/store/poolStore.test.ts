@@ -21,10 +21,10 @@ const {
   capturedRef,
   unsubscribeFn,
 } = vi.hoisted(() => {
-  const capturedRef = { callback: null as ((envelope: unknown) => void) | null }
+  const capturedRef = { callback: null as ((envelope: StandardEnvelope) => void) | null }
   const unsubscribeFn = vi.fn()
 
-  const mockOn = vi.fn().mockImplementation((_channel: string, callback: (envelope: unknown) => void) => {
+  const mockOn = vi.fn().mockImplementation((_channel: string, callback: (envelope: StandardEnvelope) => void) => {
     capturedRef.callback = callback
     return unsubscribeFn
   })
@@ -84,6 +84,7 @@ import {
   initPoolStoreSubscriptions,
 } from './poolStore'
 import type { Stock } from '@/data/types'
+import type { StandardEnvelope } from '@/core/envelope'
 import { EnvelopeFactory } from '@/core/envelope'
 import { assertContract } from '../../tests/contracts'
 import { isValidTransition } from '@/core/poolTransitionEngine'
@@ -389,14 +390,16 @@ describe('poolStore', () => {
 
     // stockpool 自身发出的事件应被跳过
     capturedRef.callback?.({
-      meta: { source: 'stockpool', action: 'UPDATE_STOCK', traceId: 't1' },
+      meta: { source: 'stockpool', target: 'db', action: 'UPDATE_STOCK', traceId: 't1', timestamp: Date.now() },
+      payload: {},
     })
     vi.advanceTimersByTime(100)
     expect(mockQuery).not.toHaveBeenCalled()
 
     // 其他模块的事件应触发 refresh
     capturedRef.callback?.({
-      meta: { source: 'analyzer', action: 'UPDATE_STOCK', traceId: 't2' },
+      meta: { source: 'analyzer', target: 'db', action: 'UPDATE_STOCK', traceId: 't2', timestamp: Date.now() },
+      payload: {},
     })
     vi.advanceTimersByTime(100)
     expect(mockQuery).toHaveBeenCalledTimes(1)
@@ -409,7 +412,8 @@ describe('poolStore', () => {
     initPoolStoreSubscriptions()
 
     capturedRef.callback?.({
-      meta: { source: 'analyzer', action: 'X', traceId: 't1' },
+      meta: { source: 'analyzer', target: 'db', action: 'UPDATE_STOCK', traceId: 't1', timestamp: Date.now() },
+      payload: {},
     })
     expect(mockQuery).not.toHaveBeenCalled()
 
@@ -427,11 +431,13 @@ describe('poolStore', () => {
     initPoolStoreSubscriptions()
 
     capturedRef.callback?.({
-      meta: { source: 'analyzer', action: 'X', traceId: 't1' },
+      meta: { source: 'analyzer', target: 'db', action: 'UPDATE_STOCK', traceId: 't1', timestamp: Date.now() },
+      payload: {},
     })
     vi.advanceTimersByTime(50)
     capturedRef.callback?.({
-      meta: { source: 'analyzer', action: 'Y', traceId: 't2' },
+      meta: { source: 'analyzer', target: 'db', action: 'INSERT_STOCK', traceId: 't2', timestamp: Date.now() },
+      payload: {},
     })
 
     // 100ms 从第一次算起，但第二次重置了定时器，所以不应触发

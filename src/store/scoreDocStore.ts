@@ -15,7 +15,18 @@
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'
 import type { ScoreDocVersion, Stock } from '@/data/types'
-import { buildReportMarkdown, getRecentVersions, exportSymbolMd, listScoreDocsBySymbol, buildScoreDocDiff, type ScoreDocDiff } from '@/services/analysis/scoreDocService'
+import type { ScoreComparisonMode, ScoreComparisonResult, ScoreComparisonTimelineItem } from '@/types/modules/score.types'
+import {
+  buildReportMarkdown,
+  getRecentVersions,
+  exportSymbolMd,
+  listScoreDocsBySymbol,
+  buildScoreDocDiff,
+  type ScoreDocDiff,
+  compareTwoVersions,
+  compareTwoStocksLatest,
+  getScoreTimeline,
+} from '@/services/analysis/scoreDocService'
 import { listStocks } from '@/services/stockpool/stockpoolService'
 import { dataBridge } from '@/core/databridge'
 import { ENVELOPE_ACTION, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
@@ -47,6 +58,22 @@ export interface ScoreDocState {
   historyLoading: boolean
   /** 历史文档错误信息 */
   historyError: string | null
+  /** 比对模式 */
+  comparisonMode: ScoreComparisonMode
+  /** 比对左侧版本号（同股票模式）或股票代码（跨股票模式） */
+  comparisonLeft: string
+  /** 比对右侧版本号（同股票模式）或股票代码（跨股票模式） */
+  comparisonRight: string
+  /** 比对结果 */
+  comparisonResult: ScoreComparisonResult | null
+  /** 比对加载状态 */
+  comparisonLoading: boolean
+  /** 比对错误信息 */
+  comparisonError: string | null
+  /** 评分时间轴数据 */
+  timelineData: ScoreComparisonTimelineItem[]
+  /** 时间轴加载状态 */
+  timelineLoading: boolean
 
   // Actions
   /** 设置当前股票代码 */
@@ -67,6 +94,18 @@ export interface ScoreDocState {
   generateReport: (symbol: string) => Promise<{ symbol: string; version: number; markdown: string; generatedAt: string }>
   /** 加载历史文档列表并计算差异（供 ScoreHistoryPanel 使用） */
   loadHistoryDocs: (symbol: string) => Promise<void>
+  /** 设置比对模式 */
+  setComparisonMode: (mode: ScoreComparisonMode) => void
+  /** 设置比对左侧值 */
+  setComparisonLeft: (value: string) => void
+  /** 设置比对右侧值 */
+  setComparisonRight: (value: string) => void
+  /** 执行版本比对（同股票模式） */
+  runVersionComparison: (symbol: string, leftVersion: number, rightVersion: number) => Promise<void>
+  /** 执行股票比对（跨股票模式） */
+  runStockComparison: (leftSymbol: string, rightSymbol: string) => Promise<void>
+  /** 加载评分时间轴 */
+  loadTimeline: (symbol: string) => Promise<void>
 }
 
 // ============================================================
@@ -83,6 +122,14 @@ const initialState = {
   historyDiff: null as ScoreDocDiff | null,
   historyLoading: false,
   historyError: null as string | null,
+  comparisonMode: 'same-stock-versions' as ScoreComparisonMode,
+  comparisonLeft: '',
+  comparisonRight: '',
+  comparisonResult: null as ScoreComparisonResult | null,
+  comparisonLoading: false,
+  comparisonError: null as string | null,
+  timelineData: [] as ScoreComparisonTimelineItem[],
+  timelineLoading: false,
 }
 
 // ============================================================
@@ -294,6 +341,88 @@ export const useScoreDocStore = create<ScoreDocState>((set, get) => ({
       const message = err instanceof Error ? err.message : String(err)
       logger.error(`[scoreDocStore] generateReport 异常: ${symbol}, ${message}`)
       throw err
+    }
+  },
+
+  setComparisonMode: (mode: ScoreComparisonMode) => {
+    logger.info(`[scoreDocStore] setComparisonMode: ${mode}`)
+    set({ comparisonMode: mode, comparisonLeft: '', comparisonRight: '', comparisonResult: null, comparisonError: null })
+  },
+
+  setComparisonLeft: (value: string) => {
+    set({ comparisonLeft: value })
+  },
+
+  setComparisonRight: (value: string) => {
+    set({ comparisonRight: value })
+  },
+
+  runVersionComparison: async (symbol: string, leftVersion: number, rightVersion: number) => {
+    logger.info(`[scoreDocStore] runVersionComparison 开始: ${symbol} V${leftVersion} vs V${rightVersion}`)
+    set({ comparisonLoading: true, comparisonError: null })
+
+    try {
+      const result = await compareTwoVersions(symbol, leftVersion, rightVersion)
+      if (result.success && result.data) {
+        set({ comparisonResult: result.data, comparisonLoading: false })
+        logger.info(`[scoreDocStore] runVersionComparison 完成: ${symbol} V${leftVersion} vs V${rightVersion}`)
+      } else {
+        const message = result.error ?? '版本比对失败'
+        logger.error(`[scoreDocStore] runVersionComparison 失败: ${message}`)
+        set({ comparisonError: message, comparisonLoading: false })
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      logger.error(`[scoreDocStore] runVersionComparison 异常: ${message}`)
+      set({ comparisonError: `比对失败：${message}`, comparisonLoading: false })
+    }
+  },
+
+  runStockComparison: async (leftSymbol: string, rightSymbol: string) => {
+    logger.info(`[scoreDocStore] runStockComparison 开始: ${leftSymbol} vs ${rightSymbol}`)
+    set({ comparisonLoading: true, comparisonError: null })
+
+    try {
+      const result = await compareTwoStocksLatest(leftSymbol, rightSymbol)
+      if (result.success && result.data) {
+        set({ comparisonResult: result.data, comparisonLoading: false })
+        logger.info(`[scoreDocStore] runStockComparison 完成: ${leftSymbol} vs ${rightSymbol}`)
+      } else {
+        const message = result.error ?? '股票比对失败'
+        logger.error(`[scoreDocStore] runStockComparison 失败: ${message}`)
+        set({ comparisonError: message, comparisonLoading: false })
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      logger.error(`[scoreDocStore] runStockComparison 异常: ${message}`)
+      set({ comparisonError: `比对失败：${message}`, comparisonLoading: false })
+    }
+  },
+
+  loadTimeline: async (symbol: string) => {
+    if (!symbol) {
+      logger.info('[scoreDocStore] loadTimeline 跳过: symbol 为空')
+      set({ timelineData: [], timelineLoading: false })
+      return
+    }
+
+    logger.info(`[scoreDocStore] loadTimeline 开始: ${symbol}`)
+    set({ timelineLoading: true })
+
+    try {
+      const result = await getScoreTimeline(symbol)
+      if (result.success && result.data) {
+        set({ timelineData: result.data, timelineLoading: false })
+        logger.info(`[scoreDocStore] loadTimeline 完成: ${symbol}, ${result.data.length} 个版本`)
+      } else {
+        const message = result.error ?? '加载时间轴失败'
+        logger.error(`[scoreDocStore] loadTimeline 失败: ${message}`)
+        set({ timelineData: [], timelineLoading: false })
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      logger.error(`[scoreDocStore] loadTimeline 异常: ${message}`)
+      set({ timelineData: [], timelineLoading: false })
     }
   },
 }))

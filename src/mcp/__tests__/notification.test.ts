@@ -3,7 +3,7 @@ import { NotificationManager } from '@/mcp/core/notification'
 import type { NotificationMethod } from '@/types/modules/mcp.types'
 
 describe('NotificationManager', () => {
-  it('should subscribe and emit', () => {
+  it('应该订阅 and emit', () => {
     const nm = new NotificationManager()
     const listener = vi.fn()
     nm.subscribe('notifications/tools/list_changed' as NotificationMethod, listener)
@@ -15,7 +15,7 @@ describe('NotificationManager', () => {
     })
   })
 
-  it('should return unsubscribe function', () => {
+  it('应该返回 unsubscribe function', () => {
     const nm = new NotificationManager()
     const listener = vi.fn()
     const unsubscribe = nm.subscribe('notifications/progress' as NotificationMethod, listener)
@@ -24,7 +24,7 @@ describe('NotificationManager', () => {
     expect(listener).not.toHaveBeenCalled()
   })
 
-  it('should isolate listener errors', () => {
+  it('应该isolate listener errors', () => {
     const nm = new NotificationManager()
     const badListener = vi.fn().mockImplementation(() => {
       throw new Error('Boom!')
@@ -36,7 +36,7 @@ describe('NotificationManager', () => {
     expect(goodListener).toHaveBeenCalledOnce()
   })
 
-  it('should support multiple listeners for same method', () => {
+  it('应该support multiple listeners for same method', () => {
     const nm = new NotificationManager()
     const listener1 = vi.fn()
     const listener2 = vi.fn()
@@ -47,7 +47,7 @@ describe('NotificationManager', () => {
     expect(listener2).toHaveBeenCalledOnce()
   })
 
-  it('should not emit to unsubscribed listeners', () => {
+  it('不应该 emit to unsubscribed listeners', () => {
     const nm = new NotificationManager()
     const listener = vi.fn()
     const unsub = nm.subscribe('notifications/resources/list_changed' as NotificationMethod, listener)

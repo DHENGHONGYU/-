@@ -270,26 +270,25 @@ function classify(
 function buildReasons(
   classification: StrategyClassification,
   composite: number,
-  valuationScore: number | null,
-  sector: string | null,
-  momentum: number | null,
+  valuationScore: number | null = null,
+  sector: string | null = null,
+  momentum: number | null = null,
   rules: StrategyRuleConfig,
 ): string[] {
   switch (classification) {
     case 'core-scarce':
       return [`核心稀缺主题匹配，综合分 ${composite.toFixed(2)}`]
-    case 'value-bargain':
-      return [
-        `价值洼地：估值分 ${valuationScore?.toFixed(2) ?? '-'}，综合分 ${composite.toFixed(2)}`,
-      ]
+    case 'value-bargain': {
+      const vs = valuationScore?.toFixed(2) || '-'
+      return [`价值洼地：估值分 ${vs}，综合分 ${composite.toFixed(2)}`]
+    }
     case 'hot-momentum': {
-      const momentumValue = momentum ?? 0
+      const mv = momentum ?? 0
       if (momentum === null) {
         logger.warn('[strategyEngine] 字段缺失，使用默认值', { field: 'momentum', context: 'hot-momentum' })
       }
-      return [
-        `热门追涨：板块 ${sector ?? '-'}，动量 ${(momentumValue * 100).toFixed(1)}%`,
-      ]
+      const s = sector ?? '-'
+      return [`热门追涨：板块 ${s}，动量 ${(mv * 100).toFixed(1)}%`]
     }
     case 'excluded':
     default: {

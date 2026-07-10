@@ -56,7 +56,7 @@ describe('fetcherKline', () => {
     vi.restoreAllMocks()
   })
 
-  it('should save daily quotes and update stock price', async () => {
+  it('应该保存 daily quotes and update stock price', async () => {
     await dataLayer.stocks.add({
       symbol: '000001.SZ',
       name: '平安银行',
@@ -78,7 +78,7 @@ describe('fetcherKline', () => {
     expect(quotes?.latest.close).toBe(114.5)
   })
 
-  it('should use real kline data in V6 scoring', async () => {
+  it('应该use real kline data in V6 scoring', async () => {
     await dataLayer.stocks.add({
       symbol: '000001.SZ',
       name: '平安银行',
@@ -98,7 +98,7 @@ describe('fetcherKline', () => {
     expect(Object.keys(scoreResult.data!.factors).length).toBeGreaterThan(0)
   })
 
-  it('should return error when stock not found', async () => {
+  it('应该返回 error when stock not found', async () => {
     global.fetch = mockFetch(buildKlineResponse('NOT_EXIST'))
 
     const result = await fetchStockKline('NOT_EXIST')
@@ -107,7 +107,7 @@ describe('fetcherKline', () => {
     expect(result.error).toContain('股票不存在')
   })
 
-  it('should return error when kline service fails', async () => {
+  it('应该返回 error when kline service fails', async () => {
     await dataLayer.stocks.add({
       symbol: '000001.SZ',
       name: '平安银行',

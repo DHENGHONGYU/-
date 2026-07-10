@@ -46,7 +46,7 @@ describe('intelligent score service', () => {
     dataBridge.invalidateCache(STORE_NAME.intelligentScores)
   })
 
-  it('should compute overall score only from valid dimensions and save result', async () => {
+  it('应该计算 overall score only from valid dimensions and save result', async () => {
 
     await dataLayer.stocks.add({
       symbol: '000001.SZ',
@@ -84,7 +84,7 @@ describe('intelligent score service', () => {
     expect(nullDimensions.length).toBeGreaterThan(0)
   })
 
-  it('should return error when LLM config is missing', async () => {
+  it('应该返回 error when LLM config is missing', async () => {
     vi.mocked(chat).mockRejectedValueOnce(new Error('config missing'))
 
     const result = await runIntelligentScore({

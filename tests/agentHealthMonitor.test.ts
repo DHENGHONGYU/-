@@ -36,13 +36,13 @@ describe('AgentHealthMonitor', () => {
     vi.useRealTimers()
   })
 
-  it('should be healthy with no tasks', () => {
+  it('应该是 healthy with no tasks', () => {
     const monitor = createAgentHealthMonitor()
     const report = monitor.getHealthReport('agent-1')
     expect(report).toBeNull()
   })
 
-  it('should report healthy for all successful tasks', () => {
+  it('应该report healthy for all successful tasks', () => {
     const monitor = createAgentHealthMonitor()
     const now = Date.now()
 
@@ -57,7 +57,7 @@ describe('AgentHealthMonitor', () => {
     expect(report?.totalTasks).toBe(5)
   })
 
-  it('should report critical when failure rate exceeds threshold', () => {
+  it('应该report critical when failure rate exceeds threshold', () => {
     const monitor = createAgentHealthMonitor({ maxFailureRate: 0.3 })
     const now = Date.now()
 
@@ -72,7 +72,7 @@ describe('AgentHealthMonitor', () => {
     expect(report?.failureRate).toBe(0.8)
   })
 
-  it('should report warning when failure rate is moderate', () => {
+  it('应该report warning when failure rate is moderate', () => {
     const monitor = createAgentHealthMonitor({ maxFailureRate: 0.3 })
     const now = Date.now()
 
@@ -86,7 +86,7 @@ describe('AgentHealthMonitor', () => {
     expect(report?.status).toBe('warning')
   })
 
-  it('should report critical for 5 consecutive failures', () => {
+  it('应该report critical for 5 consecutive failures', () => {
     const monitor = createAgentHealthMonitor()
     const now = Date.now()
 
@@ -104,7 +104,7 @@ describe('AgentHealthMonitor', () => {
     expect(report?.status).toBe('critical')
   })
 
-  it('should calculate average execution time', () => {
+  it('应该calculate average execution time', () => {
     const monitor = createAgentHealthMonitor()
     const now = Date.now()
 
@@ -115,7 +115,7 @@ describe('AgentHealthMonitor', () => {
     expect(report?.avgExecutionTime).toBe(1500)
   })
 
-  it('should track heartbeats', () => {
+  it('应该track heartbeats', () => {
     const monitor = createAgentHealthMonitor()
     const now = Date.now()
 
@@ -127,7 +127,7 @@ describe('AgentHealthMonitor', () => {
     expect(report!.lastHeartbeat).toBeGreaterThan(0)
   })
 
-  it('should limit task history to 100 entries', () => {
+  it('应该limit task history to 100 entries', () => {
     const monitor = createAgentHealthMonitor()
 
     for (let i = 0; i < 150; i++) {
@@ -138,7 +138,7 @@ describe('AgentHealthMonitor', () => {
     expect(report?.totalTasks).toBe(100)
   })
 
-  it('should start and stop health check cycle', () => {
+  it('应该开始 and stop health check cycle', () => {
     const monitor = createAgentHealthMonitor()
     monitor.start(1000)
 
@@ -148,13 +148,13 @@ describe('AgentHealthMonitor', () => {
     expect(vi.getTimerCount()).toBe(0)
   })
 
-  it('should handle double start gracefully', () => {
+  it('应该处理 double start gracefully', () => {
     const monitor = createAgentHealthMonitor()
     monitor.start(1000)
     expect(() => monitor.start(1000)).not.toThrow()
   })
 
-  it('should return all reports', () => {
+  it('应该返回 all reports', () => {
     const monitor = createAgentHealthMonitor()
     const now = Date.now()
 
@@ -167,13 +167,13 @@ describe('AgentHealthMonitor', () => {
     expect(reports.map((r) => r.agentId)).toContain('agent-2')
   })
 
-  it('should be singleton via getAgentHealthMonitor', () => {
+  it('应该是 singleton via getAgentHealthMonitor', () => {
     const monitor1 = getAgentHealthMonitor()
     const monitor2 = getAgentHealthMonitor()
     expect(monitor1).toBe(monitor2)
   })
 
-  it('should emit events on critical health', () => {
+  it('应该触发 events on critical health', () => {
     const monitor = createAgentHealthMonitor({ maxFailureRate: 0.1 })
     monitor.start(100)
 

@@ -20,6 +20,7 @@ export interface Order {
   status: OrderStatus
   accountType: AccountType
   createdAt: number
+  userId?: string
 }
 
 /** 观察列表 */

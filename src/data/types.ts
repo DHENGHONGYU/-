@@ -168,3 +168,31 @@ export type {
   GlobalMeta,
   UnifiedStockData,
 } from './types/types.sevenDimensions'
+
+// ============================================================
+// 混合校对域
+// ============================================================
+export type {
+  FileType,
+  RiskLevel,
+  CheckStatus,
+  FileHash,
+  HashVerifyRequest,
+  HashVerifyResponse,
+  RiskDetail,
+  RuleConfig,
+  RulePackage,
+  RuleMatchResult,
+  LocalScanResult,
+  CloudRiskResult,
+  ProofreadReport,
+  PerformanceMetric,
+  RulesSyncResult,
+  HashBatchVerifyRequest,
+  HashBatchVerifyResponse,
+  RiskDetailsRequest,
+  RiskDetailsResponse,
+} from './types/types.hybridProofread'
+
+// ── 阶段 B-1：自定义智能体（v26 新增） ──
+export type { CustomAgent, CustomAgentType, CustomAgentApiConfig } from './types/types.customAgent'

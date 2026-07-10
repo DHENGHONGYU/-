@@ -14,7 +14,7 @@ describe('DataBridge', () => {
     dataBridge.invalidateCache(STORE_NAME.stocks)
   })
 
-  it('should insert a stock through envelope', async () => {
+  it('应该insert a stock through envelope', async () => {
     const stock: Stock = {
       symbol: '600519.SH',
       name: '贵州茅台',
@@ -42,7 +42,7 @@ describe('DataBridge', () => {
     expect(result?.name).toBe('贵州茅台')
   })
 
-  it('should reject unauthorized module', async () => {
+  it('应该reject unauthorized module', async () => {
     const envelope = EnvelopeFactory.create(
       {
         source: MODULE_ID.fetcher,
@@ -56,7 +56,7 @@ describe('DataBridge', () => {
     await expect(dataBridge.forward(envelope)).rejects.toThrow()
   })
 
-  it('should enqueue rejected market envelope instead of throwing (DF-005)', async () => {
+  it('应该enqueue rejected market envelope instead of throwing (DF-005)', async () => {
     const spy = vi.spyOn(aclEngine, 'assert').mockImplementation(({ store }) => {
       if (store === 'daily_quotes') {
         throw new AclError('mock ACL rejection')

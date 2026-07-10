@@ -57,10 +57,10 @@ export class ProgressTracker {
   }
 
   /** 完成任务 */
-  complete(token: string, message?: string): void {
+  complete(token: string, message = '完成'): void {
     const ctx = this.tracks.get(token)
     if (!ctx) return
-    this.update(token, ctx.total, message ?? '完成')
+    this.update(token, ctx.total, message)
     const duration = Date.now() - ctx.startedAt
     logger.info('[ProgressTracker] Task completed', { token, duration: `${duration}ms` })
     this.tracks.delete(token)

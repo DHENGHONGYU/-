@@ -84,6 +84,17 @@ export class WidgetRegistry {
       },
       {
         meta: {
+          id: 'watchlistMovers',
+          name: DEFAULT_WIDGET_CONFIG.watchlistMovers.title,
+          category: DEFAULT_WIDGET_CONFIG.watchlistMovers.category,
+          description: '展示自选股涨幅榜、跌幅榜与振幅榜',
+          defaultSize: DEFAULT_WIDGET_CONFIG.watchlistMovers.size,
+          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.watchlistMovers,
+        },
+        component: () => import('@/cockpit/widgets/WatchlistMoversWidget'),
+      },
+      {
+        meta: {
           id: 'portfolioOverview',
           name: DEFAULT_WIDGET_CONFIG.portfolioOverview.title,
           category: DEFAULT_WIDGET_CONFIG.portfolioOverview.category,

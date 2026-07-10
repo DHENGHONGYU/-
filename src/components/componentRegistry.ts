@@ -1,233 +1,184 @@
 /**
- * @module components/componentRegistry
- * @description Component 集中注册表 — 所有可复用业务组件的元数据清单
+ * V9 组件原子层级注册表
  *
- * @internal 当前无运行时消费者，仅供 DevTools/文档工具使用。
- * 注册的组件状态均为 `available`（未被集成），需在对应页面集成后更新为 `active`。
+ * 用途：
+ * 1. 记录每个组件的原子层级归属（Atom / Molecule / Organism / Template）
+ * 2. 作为 `audit:atomic` 脚本的校验依据
+ * 3. 为新组件放置位置提供权威参考
  *
- * 职责：
- * 1. 提供 Component 发现能力（DevTools / 文档工具可枚举所有组件）
- * 2. 标注组件的域归属、注册状态、适用场景
- * 3. 为后续组件文档生成、Storybook 集成提供基础
- *
- * @version 1.0.0
+ * 维护规则：
+ * - 新增组件必须在本文件登记
+ * - 组件迁移时必须同步更新 targetPath
+ * - status: 'active' | 'migrating' | 'deprecated'
  */
 
-import { getLogger } from '@/lib/logger'
+export type AtomicLevel = 'atom' | 'molecule' | 'organism' | 'template'
 
-const logger = getLogger()
-
-// ============================================================
-// 类型定义
-// ============================================================
-
-/** Component 域分类 */
-export type ComponentDomain =
-  | 'system'        // 系统管理
-  | 'analysis'      // 分析展示
-  | 'shared'        // 通用共享
-  | 'ui'            // 基础 UI
-
-/** Component 注册状态 */
-export type ComponentStatus = 'active' | 'available' | 'deprecated'
-
-/** Component 注册条目 */
-export interface ComponentRegistryEntry {
-  /** Component 唯一标识（PascalCase 组件名） */
-  id: string
-  /** Component 显示名称 */
+export interface ComponentEntry {
   name: string
-  /** 所属域 */
-  domain: ComponentDomain
-  /** 功能描述 */
+  level: AtomicLevel
+  sourcePath: string
+  targetPath: string
+  status: 'active' | 'migrating' | 'deprecated'
   description: string
-  /** 注册状态 */
-  status: ComponentStatus
-  /** 导入路径 */
-  importPath: string
-  /** 组件类型 */
-  componentType: 'page-section' | 'panel' | 'chart' | 'form' | 'layout' | 'utility'
-  /** 建议集成目标页面（若已知） */
-  suggestedTarget?: string
 }
 
-// ============================================================
-// Component 注册表
-// ============================================================
-
-/**
- * 业务组件注册清单
- * - active: 已被页面/其他组件引用的组件
- * - available: 已注册但尚未被集成的组件（可供后续开发使用）
- * - deprecated: 已废弃待清理的组件
- */
-export const COMPONENT_REGISTRY: ComponentRegistryEntry[] = [
+export const COMPONENT_REGISTRY: ComponentEntry[] = [
   // ============================================================
-  // available — 已注册但尚未被页面集成的业务组件
+  // Atoms（原子）— 不可再分的最小 UI 单元
   // ============================================================
+  { name: 'Button', level: 'atom', sourcePath: 'src/components/ui/Button.tsx', targetPath: 'src/components/atoms/Button.tsx', status: 'migrating', description: '按钮原子' },
+  { name: 'Input', level: 'atom', sourcePath: 'src/components/ui/Input.tsx', targetPath: 'src/components/atoms/Input.tsx', status: 'migrating', description: '输入框' },
+  { name: 'Textarea', level: 'atom', sourcePath: 'src/components/ui/Textarea.tsx', targetPath: 'src/components/atoms/Textarea.tsx', status: 'migrating', description: '文本域' },
+  { name: 'Select', level: 'atom', sourcePath: 'src/components/ui/Select.tsx', targetPath: 'src/components/atoms/Select.tsx', status: 'migrating', description: '选择器' },
+  { name: 'Checkbox', level: 'atom', sourcePath: 'src/components/ui/Checkbox.tsx', targetPath: 'src/components/atoms/Checkbox.tsx', status: 'migrating', description: '复选框' },
+  { name: 'Radio', level: 'atom', sourcePath: 'src/components/ui/Radio.tsx', targetPath: 'src/components/atoms/Radio.tsx', status: 'migrating', description: '单选' },
+  { name: 'Switch', level: 'atom', sourcePath: 'src/components/ui/Switch.tsx', targetPath: 'src/components/atoms/Switch.tsx', status: 'migrating', description: '开关' },
+  { name: 'Slider', level: 'atom', sourcePath: 'src/components/ui/Slider.tsx', targetPath: 'src/components/atoms/Slider.tsx', status: 'migrating', description: '滑块' },
+  { name: 'Toggle', level: 'atom', sourcePath: 'src/components/ui/Toggle.tsx', targetPath: 'src/components/atoms/Toggle.tsx', status: 'migrating', description: '切换' },
+  { name: 'Label', level: 'atom', sourcePath: 'src/components/ui/Label.tsx', targetPath: 'src/components/atoms/Label.tsx', status: 'migrating', description: '标签' },
+  { name: 'Badge', level: 'atom', sourcePath: 'src/components/ui/Badge.tsx', targetPath: 'src/components/atoms/Badge.tsx', status: 'migrating', description: '徽章' },
+  { name: 'Progress', level: 'atom', sourcePath: 'src/components/ui/Progress.tsx', targetPath: 'src/components/atoms/Progress.tsx', status: 'migrating', description: '进度条' },
+  { name: 'Separator', level: 'atom', sourcePath: 'src/components/ui/Separator.tsx', targetPath: 'src/components/atoms/Separator.tsx', status: 'migrating', description: '分隔线' },
+  { name: 'Skeleton', level: 'atom', sourcePath: 'src/components/ui/Skeleton.tsx', targetPath: 'src/components/atoms/Skeleton.tsx', status: 'migrating', description: '骨架屏' },
+  { name: 'Card', level: 'atom', sourcePath: 'src/components/ui/Card.tsx', targetPath: 'src/components/atoms/Card.tsx', status: 'migrating', description: '卡片容器' },
+  { name: 'Tooltip', level: 'atom', sourcePath: 'src/components/ui/Tooltip.tsx', targetPath: 'src/components/atoms/Tooltip.tsx', status: 'migrating', description: '工具提示' },
+  { name: 'Popover', level: 'atom', sourcePath: 'src/components/ui/Popover.tsx', targetPath: 'src/components/atoms/Popover.tsx', status: 'migrating', description: '气泡卡片' },
+  { name: 'Sheet', level: 'atom', sourcePath: 'src/components/ui/Sheet.tsx', targetPath: 'src/components/atoms/Sheet.tsx', status: 'migrating', description: '抽屉' },
+  { name: 'Toast', level: 'atom', sourcePath: 'src/components/ui/Toast.tsx', targetPath: 'src/components/atoms/Toast.tsx', status: 'migrating', description: '轻提示' },
+  { name: 'Menu', level: 'atom', sourcePath: 'src/components/ui/Menu.tsx', targetPath: 'src/components/atoms/Menu.tsx', status: 'migrating', description: '菜单' },
+  { name: 'Pagination', level: 'atom', sourcePath: 'src/components/ui/Pagination.tsx', targetPath: 'src/components/atoms/Pagination.tsx', status: 'migrating', description: '分页' },
+  { name: 'Breadcrumb', level: 'atom', sourcePath: 'src/components/ui/Breadcrumb.tsx', targetPath: 'src/components/atoms/Breadcrumb.tsx', status: 'migrating', description: '面包屑' },
+  { name: 'Result', level: 'atom', sourcePath: 'src/components/ui/Result.tsx', targetPath: 'src/components/atoms/Result.tsx', status: 'migrating', description: '结果展示' },
+  { name: 'List', level: 'atom', sourcePath: 'src/components/ui/List.tsx', targetPath: 'src/components/atoms/List.tsx', status: 'migrating', description: '列表' },
+  { name: 'Grid', level: 'atom', sourcePath: 'src/components/ui/Grid.tsx', targetPath: 'src/components/atoms/Grid.tsx', status: 'migrating', description: '栅格' },
+  { name: 'Table', level: 'atom', sourcePath: 'src/components/ui/Table.tsx', targetPath: 'src/components/atoms/Table.tsx', status: 'migrating', description: '表格' },
+  { name: 'DatePicker', level: 'atom', sourcePath: 'src/components/ui/DatePicker.tsx', targetPath: 'src/components/atoms/DatePicker.tsx', status: 'migrating', description: '日期选择' },
+  { name: 'StockPriceChange', level: 'atom', sourcePath: 'src/components/ui/StockPriceChange.tsx', targetPath: 'src/components/atoms/StockPriceChange.tsx', status: 'migrating', description: '股价变化' },
 
-  // ── 系统管理组件 ────────────────────────────────────────
-  {
-    id: 'LogStreamPanel',
-    name: '系统日志流面板',
-    domain: 'system',
-    description: '实时系统日志流展示，支持过滤、搜索、级别高亮',
-    status: 'active',
-    importPath: '@/components/system/LogStreamPanel',
-    componentType: 'panel',
-    suggestedTarget: 'CommandPage/系统监控面板',
-  },
-  {
-    id: 'AgentTaskList',
-    name: '智能体任务列表',
-    domain: 'system',
-    description: 'Agent 任务队列展示，支持状态追踪、优先级排序、超时预警',
-    status: 'active',
-    importPath: '@/components/system/AgentTaskList',
-    componentType: 'panel',
-    suggestedTarget: 'CommandPage/Agent 管理面板',
-  },
+  // ============================================================
+  // Molecules（分子）— 2+ 原子组合，无业务逻辑
+  // ============================================================
+  { name: 'Alert', level: 'molecule', sourcePath: 'src/components/ui/Alert.tsx', targetPath: 'src/components/molecules/Alert.tsx', status: 'migrating', description: '警告提示（Icon + 文本 + 关闭）' },
+  { name: 'Dialog', level: 'molecule', sourcePath: 'src/components/ui/Dialog.tsx', targetPath: 'src/components/molecules/Dialog.tsx', status: 'migrating', description: '对话框（Trigger + Overlay + Content）' },
+  { name: 'Tabs', level: 'molecule', sourcePath: 'src/components/ui/Tabs.tsx', targetPath: 'src/components/molecules/Tabs.tsx', status: 'migrating', description: '标签页（List + Trigger + Content）' },
+  { name: 'DataState', level: 'molecule', sourcePath: 'src/components/ui/DataState.tsx', targetPath: 'src/components/molecules/DataState.tsx', status: 'migrating', description: '数据状态（加载/空/错误）' },
+  { name: 'ErrorState', level: 'molecule', sourcePath: 'src/components/ui/ErrorState.tsx', targetPath: 'src/components/molecules/ErrorState.tsx', status: 'migrating', description: '错误状态' },
+  { name: 'EmptyState', level: 'molecule', sourcePath: 'src/components/ui/EmptyState.tsx', targetPath: 'src/components/molecules/EmptyState.tsx', status: 'migrating', description: '空状态' },
+  { name: 'LoadingState', level: 'molecule', sourcePath: 'src/components/ui/LoadingState.tsx', targetPath: 'src/components/molecules/LoadingState.tsx', status: 'migrating', description: '加载状态' },
+  { name: 'PageHeader', level: 'molecule', sourcePath: 'src/components/ui/PageHeader.tsx', targetPath: 'src/components/molecules/PageHeader.tsx', status: 'migrating', description: '页面标题 + 操作区' },
+  { name: 'FormField', level: 'molecule', sourcePath: 'src/components/molecules/FormField.tsx', targetPath: 'src/components/molecules/FormField.tsx', status: 'active', description: '表单字段（Label + 控件 + 错误）' },
+  { name: 'MetricCard', level: 'molecule', sourcePath: 'src/components/molecules/MetricCard.tsx', targetPath: 'src/components/molecules/MetricCard.tsx', status: 'active', description: '指标卡（标题 + 数值 + 趋势）' },
+  { name: 'SearchBar', level: 'molecule', sourcePath: 'src/components/molecules/SearchBar.tsx', targetPath: 'src/components/molecules/SearchBar.tsx', status: 'active', description: '搜索栏' },
+  { name: 'FilterChip', level: 'molecule', sourcePath: 'src/components/molecules/FilterChip.tsx', targetPath: 'src/components/molecules/FilterChip.tsx', status: 'active', description: '可关闭筛选标签' },
 
-  // ── 分析展示组件 ────────────────────────────────────────
-  {
-    id: 'NewsSentimentTrend',
-    name: '资讯情感趋势图',
-    domain: 'analysis',
-    description: '基于资讯数据的情感趋势可视化，展示正面/负面/中性情感走势',
-    status: 'active',
-    importPath: '@/components/analysis/news/NewsSentimentTrend',
-    componentType: 'chart',
-    suggestedTarget: 'AnalysisPage/资讯分析面板',
-  },
-  {
-    id: 'MultiFactorFilterPanel',
-    name: '多因子筛选面板',
-    domain: 'analysis',
-    description: '多因子选股筛选条件面板，支持因子权重配置、阈值设定、实时预览',
-    status: 'active',
-    importPath: '@/components/analysis/screening/MultiFactorFilterPanel',
-    componentType: 'form',
-    suggestedTarget: 'AnalysisPage/多因子筛选页面',
-  },
-  {
-    id: 'ScoreHistoryPanel',
-    name: '评分历史面板',
-    domain: 'analysis',
-    description: '个股评分历史变化追踪，展示各层评分时间序列',
-    status: 'active',
-    importPath: '@/components/analysis/score/ScoreHistoryPanel',
-    componentType: 'panel',
-    suggestedTarget: 'AnalysisPage/评分详情页',
-  },
-  {
-    id: 'AnalysisTemplateCards',
-    name: '分析模板卡片',
-    domain: 'analysis',
-    description: '预设分析模板快速选择卡片，支持一键启动标准化分析流程',
-    status: 'active',
-    importPath: '@/components/analysis/hub/AnalysisTemplateCards',
-    componentType: 'layout',
-    suggestedTarget: 'AnalysisPage/分析中心 Hub',
-  },
-  {
-    id: 'MultiPeriodTrendChart',
-    name: '多周期趋势图表',
-    domain: 'analysis',
-    description: '多时间周期（日/周/月/季）评分趋势叠加对比图',
-    status: 'active',
-    importPath: '@/components/analysis/score/MultiPeriodTrendChart',
-    componentType: 'chart',
-    suggestedTarget: 'AnalysisPage/评分趋势面板',
-  },
-  {
-    id: 'IntelligentScoreExplanation',
-    name: '智能评分解释',
-    domain: 'analysis',
-    description: 'LLM 增强评分结果的可解释性展示，分解各因子贡献',
-    status: 'active',
-    importPath: '@/components/analysis/score/IntelligentScoreExplanation',
-    componentType: 'panel',
-    suggestedTarget: 'AnalysisPage/智能评分详情页',
-  },
+  // ============================================================
+  // Organisms（有机体）— 业务领域复合组件
+  // ============================================================
+  { name: 'PoolBoard', level: 'organism', sourcePath: 'src/components/pool/PoolBoard.tsx', targetPath: 'src/components/organisms/pool/PoolBoard.tsx', status: 'active', description: '股票池看板' },
+  { name: 'PoolCard', level: 'organism', sourcePath: 'src/components/pool/PoolCard.tsx', targetPath: 'src/components/organisms/pool/PoolCard.tsx', status: 'active', description: '股票池卡片' },
+  { name: 'PoolColumn', level: 'organism', sourcePath: 'src/components/pool/PoolColumn.tsx', targetPath: 'src/components/organisms/pool/PoolColumn.tsx', status: 'active', description: '股票池列视图' },
+  { name: 'PoolList', level: 'organism', sourcePath: 'src/components/pool/PoolList.tsx', targetPath: 'src/components/organisms/pool/PoolList.tsx', status: 'active', description: '股票池列表' },
+  { name: 'CollectionProgressPanel', level: 'organism', sourcePath: 'src/components/collection/CollectionProgressPanel.tsx', targetPath: 'src/components/organisms/collection/CollectionProgressPanel.tsx', status: 'active', description: '采集进度面板' },
+  { name: 'CollectionReportPanel', level: 'organism', sourcePath: 'src/components/collection/CollectionReportPanel.tsx', targetPath: 'src/components/organisms/collection/CollectionReportPanel.tsx', status: 'active', description: '采集汇报面板' },
 
-  // ── 通用共享组件 ────────────────────────────────────────
-  {
-    id: 'WidgetErrorBoundary',
-    name: 'Widget 错误边界',
-    domain: 'shared',
-    description: 'Cockpit Widget 专用错误边界，捕获子组件渲染异常并展示降级 UI',
-    status: 'active',
-    importPath: '@/components/WidgetErrorBoundary',
-    componentType: 'utility',
-    suggestedTarget: 'CockpitShell/Widget 容器',
-  },
-  {
-    id: 'LLMConfigWidget',
-    name: 'LLM 模型配置面板',
-    domain: 'shared',
-    description: 'LLM 模型选择、API Key 配置、评分因子使用开关的统一配置面板',
-    status: 'active',
-    importPath: '@/components/shared/LLMConfigWidget',
-    componentType: 'form',
-    suggestedTarget: 'CommandPage/配置面板 或 AnalysisPage/评分设置',
-  },
+  // 业务领域组件（保持当前位置，逐步迁移）
+  { name: 'AnalysisTemplateCards', level: 'organism', sourcePath: 'src/components/analysis/hub/AnalysisTemplateCards.tsx', targetPath: 'src/components/organisms/analysis/hub/AnalysisTemplateCards.tsx', status: 'migrating', description: '分析模板卡片' },
+  { name: 'ScoreHistoryPanel', level: 'organism', sourcePath: 'src/components/analysis/score/ScoreHistoryPanel.tsx', targetPath: 'src/components/organisms/analysis/score/ScoreHistoryPanel.tsx', status: 'migrating', description: '评分历史面板' },
+  { name: 'MultiPeriodTrendChart', level: 'organism', sourcePath: 'src/components/analysis/score/MultiPeriodTrendChart.tsx', targetPath: 'src/components/organisms/analysis/score/MultiPeriodTrendChart.tsx', status: 'migrating', description: '多周期趋势图' },
+  { name: 'ScoreFactorWaterfall', level: 'organism', sourcePath: 'src/components/analysis/score/ScoreFactorWaterfall.tsx', targetPath: 'src/components/organisms/analysis/score/ScoreFactorWaterfall.tsx', status: 'migrating', description: '因子瀑布图' },
+  { name: 'IntelligentScoreExplanation', level: 'organism', sourcePath: 'src/components/analysis/score/IntelligentScoreExplanation.tsx', targetPath: 'src/components/organisms/analysis/score/IntelligentScoreExplanation.tsx', status: 'migrating', description: '智能评分解释' },
+  { name: 'MultiFactorFilterPanel', level: 'organism', sourcePath: 'src/components/analysis/screening/MultiFactorFilterPanel.tsx', targetPath: 'src/components/organisms/analysis/screening/MultiFactorFilterPanel.tsx', status: 'migrating', description: '多因子筛选面板' },
+  { name: 'NewsFilterPanel', level: 'organism', sourcePath: 'src/components/news/NewsFilterPanel.tsx', targetPath: 'src/components/organisms/news/NewsFilterPanel.tsx', status: 'migrating', description: '资讯筛选面板' },
+  { name: 'NewsCard', level: 'organism', sourcePath: 'src/components/news/NewsCard.tsx', targetPath: 'src/components/organisms/news/NewsCard.tsx', status: 'migrating', description: '资讯卡片' },
+  { name: 'NewsSentimentTrend', level: 'organism', sourcePath: 'src/components/analysis/news/NewsSentimentTrend.tsx', targetPath: 'src/components/organisms/analysis/news/NewsSentimentTrend.tsx', status: 'migrating', description: '资讯情绪趋势' },
+  { name: 'RiskControlPanel', level: 'organism', sourcePath: 'src/components/trading/RiskControlPanel.tsx', targetPath: 'src/components/organisms/trading/RiskControlPanel.tsx', status: 'migrating', description: '风控面板' },
+  { name: 'OrderExecutionPanel', level: 'organism', sourcePath: 'src/components/trading/OrderExecutionPanel.tsx', targetPath: 'src/components/organisms/trading/OrderExecutionPanel.tsx', status: 'migrating', description: '订单执行面板' },
+  { name: 'TradingSignalPanel', level: 'organism', sourcePath: 'src/components/trading/TradingSignalPanel.tsx', targetPath: 'src/components/organisms/trading/TradingSignalPanel.tsx', status: 'migrating', description: '交易信号面板' },
+  { name: 'ReviewWizard', level: 'organism', sourcePath: 'src/components/output/ReviewWizard.tsx', targetPath: 'src/components/organisms/output/ReviewWizard.tsx', status: 'migrating', description: '复盘向导' },
+  { name: 'ReviewArtifactCard', level: 'organism', sourcePath: 'src/components/output/ReviewArtifactCard.tsx', targetPath: 'src/components/organisms/output/ReviewArtifactCard.tsx', status: 'migrating', description: '复盘产物卡片' },
+  { name: 'ReviewArtifactModal', level: 'organism', sourcePath: 'src/components/output/ReviewArtifactModal.tsx', targetPath: 'src/components/organisms/output/ReviewArtifactModal.tsx', status: 'migrating', description: '复盘产物弹窗' },
+  { name: 'AgentHealthCard', level: 'organism', sourcePath: 'src/components/system/AgentHealthCard.tsx', targetPath: 'src/components/organisms/system/AgentHealthCard.tsx', status: 'migrating', description: 'Agent 健康卡片' },
+  { name: 'EngineStatusCard', level: 'organism', sourcePath: 'src/components/system/EngineStatusCard.tsx', targetPath: 'src/components/organisms/system/EngineStatusCard.tsx', status: 'migrating', description: '引擎状态卡片' },
+  { name: 'MigrationPanel', level: 'organism', sourcePath: 'src/components/system/MigrationPanel.tsx', targetPath: 'src/components/organisms/system/MigrationPanel.tsx', status: 'migrating', description: '迁移面板' },
+  { name: 'GenericAgentDetail', level: 'organism', sourcePath: 'src/components/agent/GenericAgentDetail.tsx', targetPath: 'src/components/organisms/agent/GenericAgentDetail.tsx', status: 'migrating', description: '通用 Agent 详情' },
+  { name: 'V6ScoringAgentDetail', level: 'organism', sourcePath: 'src/components/agent/V6ScoringAgentDetail.tsx', targetPath: 'src/components/organisms/agent/V6ScoringAgentDetail.tsx', status: 'migrating', description: 'V6 评分 Agent 详情' },
+  { name: 'StrategyGroupCard', level: 'organism', sourcePath: 'src/components/strategy/StrategyGroupCard.tsx', targetPath: 'src/components/organisms/strategy/StrategyGroupCard.tsx', status: 'migrating', description: '策略组卡片' },
+  { name: 'ChangeLogPanel', level: 'organism', sourcePath: 'src/components/strategy/ChangeLogPanel.tsx', targetPath: 'src/components/organisms/strategy/ChangeLogPanel.tsx', status: 'migrating', description: '变更日志面板' },
+  { name: 'LocalDocCard', level: 'organism', sourcePath: 'src/components/localDoc/LocalDocCard.tsx', targetPath: 'src/components/organisms/localDoc/LocalDocCard.tsx', status: 'migrating', description: '本地文档卡片' },
+  { name: 'WidgetShell', level: 'organism', sourcePath: 'src/components/widgets/WidgetShell.tsx', targetPath: 'src/components/organisms/widgets/WidgetShell.tsx', status: 'migrating', description: 'Widget 外壳' },
+  { name: 'IndustryHistoryCard', level: 'organism', sourcePath: 'src/components/cabin/IndustryHistoryCard.tsx', targetPath: 'src/components/organisms/cabin/IndustryHistoryCard.tsx', status: 'migrating', description: '行业历史卡片' },
+  { name: 'IndustrySkillSnapshotCard', level: 'organism', sourcePath: 'src/components/cabin/IndustrySkillSnapshotCard.tsx', targetPath: 'src/components/organisms/cabin/IndustrySkillSnapshotCard.tsx', status: 'migrating', description: '行业技能快照卡' },
+  { name: 'ScoreSnapshot', level: 'organism', sourcePath: 'src/components/cabin/ScoreSnapshot.tsx', targetPath: 'src/components/organisms/cabin/ScoreSnapshot.tsx', status: 'migrating', description: '评分快照' },
+  { name: 'ScoreSummary', level: 'organism', sourcePath: 'src/components/cabin/ScoreSummary.tsx', targetPath: 'src/components/organisms/cabin/ScoreSummary.tsx', status: 'migrating', description: '评分汇总' },
+  { name: 'ScoreHistoryTable', level: 'organism', sourcePath: 'src/components/cabin/ScoreHistoryTable.tsx', targetPath: 'src/components/organisms/cabin/ScoreHistoryTable.tsx', status: 'migrating', description: '评分历史表' },
+  { name: 'ScoreItem', level: 'organism', sourcePath: 'src/components/cabin/ScoreItem.tsx', targetPath: 'src/components/organisms/cabin/ScoreItem.tsx', status: 'migrating', description: '评分项' },
+  { name: 'IntelligentScoreBasisCard', level: 'organism', sourcePath: 'src/components/cabin/IntelligentScoreBasisCard.tsx', targetPath: 'src/components/organisms/cabin/IntelligentScoreBasisCard.tsx', status: 'migrating', description: '智能评分依据卡' },
+  { name: 'LineChart', level: 'organism', sourcePath: 'src/components/chart/LineChart.tsx', targetPath: 'src/components/organisms/chart/LineChart.tsx', status: 'migrating', description: '折线图' },
+  { name: 'BarChart', level: 'organism', sourcePath: 'src/components/chart/BarChart.tsx', targetPath: 'src/components/organisms/chart/BarChart.tsx', status: 'migrating', description: '柱状图' },
+  { name: 'AreaChart', level: 'organism', sourcePath: 'src/components/chart/AreaChart.tsx', targetPath: 'src/components/organisms/chart/AreaChart.tsx', status: 'migrating', description: '面积图' },
+  { name: 'CandlestickChart', level: 'organism', sourcePath: 'src/components/chart/CandlestickChart.tsx', targetPath: 'src/components/organisms/chart/CandlestickChart.tsx', status: 'migrating', description: 'K线图' },
+  { name: 'GaugeChart', level: 'organism', sourcePath: 'src/components/chart/GaugeChart.tsx', targetPath: 'src/components/organisms/chart/GaugeChart.tsx', status: 'migrating', description: '仪表盘图' },
+  { name: 'ScoreRadar', level: 'organism', sourcePath: 'src/components/chart/ScoreRadar.tsx', targetPath: 'src/components/organisms/chart/ScoreRadar.tsx', status: 'migrating', description: '评分雷达图' },
+  { name: 'FactorHeatmap', level: 'organism', sourcePath: 'src/components/chart/FactorHeatmap.tsx', targetPath: 'src/components/organisms/chart/FactorHeatmap.tsx', status: 'migrating', description: '因子热力图' },
+  { name: 'SectorRotationHeatmap', level: 'organism', sourcePath: 'src/components/analysis/sector/SectorRotationHeatmap.tsx', targetPath: 'src/components/organisms/analysis/sector/SectorRotationHeatmap.tsx', status: 'migrating', description: '行业轮动热力图' },
+  { name: 'SignalQualityTrendChart', level: 'organism', sourcePath: 'src/components/analysis/signal/SignalQualityTrendChart.tsx', targetPath: 'src/components/organisms/analysis/signal/SignalQualityTrendChart.tsx', status: 'migrating', description: '信号质量趋势图' },
+
+  // 输入舱组件
+  { name: 'CollectionPlanPanel', level: 'organism', sourcePath: 'src/components/input/CollectionPlanPanel.tsx', targetPath: 'src/components/organisms/input/CollectionPlanPanel.tsx', status: 'migrating', description: '采集计划面板' },
+  { name: 'DataCollectionWizard', level: 'organism', sourcePath: 'src/components/input/DataCollectionWizard.tsx', targetPath: 'src/components/organisms/input/DataCollectionWizard.tsx', status: 'migrating', description: '采集向导' },
+  { name: 'TraceReplayPanel', level: 'organism', sourcePath: 'src/components/input/TraceReplayPanel.tsx', targetPath: 'src/components/organisms/input/TraceReplayPanel.tsx', status: 'migrating', description: 'Trace 回放面板' },
+  { name: 'QualityIndicator', level: 'organism', sourcePath: 'src/components/input/QualityIndicator.tsx', targetPath: 'src/components/organisms/input/QualityIndicator.tsx', status: 'migrating', description: '质量指示器' },
+  { name: 'StockSearch', level: 'organism', sourcePath: 'src/components/input/StockSearch.tsx', targetPath: 'src/components/organisms/input/StockSearch.tsx', status: 'migrating', description: '股票搜索' },
+  { name: 'LiveLogStream', level: 'organism', sourcePath: 'src/components/input/LiveLogStream.tsx', targetPath: 'src/components/organisms/input/LiveLogStream.tsx', status: 'migrating', description: '实时日志流' },
+  { name: 'SourcePrioritySelect', level: 'organism', sourcePath: 'src/components/input/SourcePrioritySelect.tsx', targetPath: 'src/components/organisms/input/SourcePrioritySelect.tsx', status: 'migrating', description: '数据源优先级选择' },
+  { name: 'FieldSelector', level: 'organism', sourcePath: 'src/components/input/FieldSelector.tsx', targetPath: 'src/components/organisms/input/FieldSelector.tsx', status: 'migrating', description: '字段选择器' },
+  { name: 'PolicyForm', level: 'organism', sourcePath: 'src/components/input/PolicyForm.tsx', targetPath: 'src/components/organisms/input/PolicyForm.tsx', status: 'migrating', description: '策略表单' },
+  { name: 'DimensionConfigCard', level: 'organism', sourcePath: 'src/components/input/DimensionConfigCard.tsx', targetPath: 'src/components/organisms/input/DimensionConfigCard.tsx', status: 'migrating', description: '维度配置卡' },
+  { name: 'CollectionTimeline', level: 'organism', sourcePath: 'src/components/input/CollectionTimeline.tsx', targetPath: 'src/components/organisms/input/CollectionTimeline.tsx', status: 'migrating', description: '采集时间线' },
+  { name: 'CollectionSwimlane', level: 'organism', sourcePath: 'src/components/input/CollectionSwimlane.tsx', targetPath: 'src/components/organisms/input/CollectionSwimlane.tsx', status: 'migrating', description: '采集泳道图' },
+  { name: 'QuotaEstimatePanel', level: 'organism', sourcePath: 'src/components/input/QuotaEstimatePanel.tsx', targetPath: 'src/components/organisms/input/QuotaEstimatePanel.tsx', status: 'migrating', description: '配额估算面板' },
+  { name: 'ApiTestDialog', level: 'organism', sourcePath: 'src/components/input/ApiTestDialog.tsx', targetPath: 'src/components/organisms/input/ApiTestDialog.tsx', status: 'migrating', description: 'API 测试弹窗' },
+
+  // ============================================================
+  // Templates（模板）— 页面级布局
+  // ============================================================
+  { name: 'PageContainer', level: 'template', sourcePath: 'src/components/ui/PageContainer.tsx', targetPath: 'src/components/templates/PageContainer.tsx', status: 'migrating', description: '页面内容容器' },
+  { name: 'DashboardLayout', level: 'template', sourcePath: 'src/components/templates/DashboardLayout.tsx', targetPath: 'src/components/templates/DashboardLayout.tsx', status: 'active', description: '仪表盘布局' },
+  { name: 'SidebarLayout', level: 'template', sourcePath: 'src/components/templates/SidebarLayout.tsx', targetPath: 'src/components/templates/SidebarLayout.tsx', status: 'active', description: '侧边栏布局' },
+  { name: 'CockpitLayout', level: 'template', sourcePath: 'src/components/templates/CockpitLayout.tsx', targetPath: 'src/components/templates/CockpitLayout.tsx', status: 'active', description: '驾驶舱布局' },
+
+  // ============================================================
+  // Shared（跨领域共享，过渡保留）
+  // ============================================================
+  { name: 'ErrorBoundary', level: 'organism', sourcePath: 'src/components/ErrorBoundary.tsx', targetPath: 'src/components/organisms/shared/ErrorBoundary.tsx', status: 'migrating', description: '错误边界' },
+  { name: 'RouteErrorBoundary', level: 'organism', sourcePath: 'src/components/RouteErrorBoundary.tsx', targetPath: 'src/components/organisms/shared/RouteErrorBoundary.tsx', status: 'migrating', description: '路由错误边界' },
+  { name: 'WidgetErrorBoundary', level: 'organism', sourcePath: 'src/components/WidgetErrorBoundary.tsx', targetPath: 'src/components/organisms/shared/WidgetErrorBoundary.tsx', status: 'migrating', description: 'Widget 错误边界' },
+  { name: 'PageSkeleton', level: 'organism', sourcePath: 'src/components/PageSkeleton.tsx', targetPath: 'src/components/organisms/shared/PageSkeleton.tsx', status: 'migrating', description: '页面骨架屏' },
 ]
 
-// ============================================================
-// 查询工具函数
-// ============================================================
-
-/** 按域筛选 Component */
-export function getComponentsByDomain(domain: ComponentDomain): ComponentRegistryEntry[] {
-  return COMPONENT_REGISTRY.filter((c) => c.domain === domain)
-}
-
-/** 按状态筛选 Component */
-export function getComponentsByStatus(status: ComponentStatus): ComponentRegistryEntry[] {
-  return COMPONENT_REGISTRY.filter((c) => c.status === status)
-}
-
-/** 按 ID 获取 Component */
-export function getComponentById(id: string): ComponentRegistryEntry | undefined {
-  return COMPONENT_REGISTRY.find((c) => c.id === id)
-}
-
-/** 按类型筛选 Component */
-export function getComponentsByType(type: ComponentRegistryEntry['componentType']): ComponentRegistryEntry[] {
-  return COMPONENT_REGISTRY.filter((c) => c.componentType === type)
-}
-
-/** 获取 Component 统计 */
-export function getComponentStats(): {
-  total: number
-  active: number
-  available: number
-  deprecated: number
-  byDomain: Record<ComponentDomain, number>
-  byType: Record<string, number>
-} {
-  const stats = {
-    total: COMPONENT_REGISTRY.length,
-    active: COMPONENT_REGISTRY.filter((c) => c.status === 'active').length,
-    available: COMPONENT_REGISTRY.filter((c) => c.status === 'available').length,
-    deprecated: COMPONENT_REGISTRY.filter((c) => c.status === 'deprecated').length,
-    byDomain: {} as Record<ComponentDomain, number>,
-    byType: {} as Record<string, number>,
+/**
+ * 按层级分组
+ */
+export function groupByLevel(registry: ComponentEntry[] = COMPONENT_REGISTRY): Record<AtomicLevel, ComponentEntry[]> {
+  const initial: Record<AtomicLevel, ComponentEntry[]> = {
+    atom: [],
+    molecule: [],
+    organism: [],
+    template: [],
   }
-
-  for (const comp of COMPONENT_REGISTRY) {
-    stats.byDomain[comp.domain] = (stats.byDomain[comp.domain] ?? 0) + 1
-    stats.byType[comp.componentType] = (stats.byType[comp.componentType] ?? 0) + 1
-  }
-
-  return stats
+  return registry.reduce(
+    (acc, entry) => {
+      acc[entry.level].push(entry)
+      return acc
+    },
+    initial,
+  )
 }
 
-// ============================================================
-// 初始化日志
-// ============================================================
-
-logger.info(
-  `[ComponentRegistry] Initialized: ${COMPONENT_REGISTRY.length} components registered ` +
-  `(${getComponentStats().active} active, ${getComponentStats().available} available)`
-)
+/**
+ * 获取指定层级的组件名列表
+ */
+export function getNamesByLevel(level: AtomicLevel, registry: ComponentEntry[] = COMPONENT_REGISTRY): string[] {
+  return registry.filter((e) => e.level === level).map((e) => e.name)
+}

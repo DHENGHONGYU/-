@@ -1,8 +1,12 @@
 # AGENTS.md — V9 智能投研复盘系统 AI 行为约束契约
 
-> **版本**: v1.3.4 | **日期**: 2026-07-06
+> **版本**: v1.4.3 | **日期**: 2026-07-10
 > **适用范围**: 所有 AI 辅助开发工具（Claude Code、Cursor、Trae 等）
 > **强制等级**: 所有 AI 生成的代码必须遵守以下约束
+
+> **提示词模板与检查清单**：为降低 AI 上下文漂移与人工返工，本项目在 `prompts/` 目录维护系统提示词模板，在 `docs/` 目录维护 `ui-migration-checklist.md`、`widget-integration-checklist.md`、`ai-memory-layer.md` 与 `ai-generate-audit-fix-loop.md`。AI 辅助开发时应优先加载对应模板，执行迁移、新增 Widget、记忆检索或飞轮流程时应按文档逐项核对。
+>
+> **文档与复杂度规范**：为提升代码可维护性，新增公共函数、组件、Hook、Store 必须补充 JSDoc（见 `docs/jsdoc-convention.md`）；新增代码应避免深层嵌套、长链式条件与过长函数（见 `docs/complexity-governance.md`）。
 
 ---
 
@@ -14,7 +18,7 @@ src/core/         ← 核心工具与类型守卫（DataBridge/ACL/Envelope/Memo
 src/data/         ← 数据层（IndexedDB/dataLayer/queryBuilder/types）
 src/lib/          ← 库函数（logger/format/errors/utils/localStorageManager）
 src/services/      ← 服务层（20个子域：analysis/scoring/fetcher/news/llm/trading/execution/...）
-src/store/        ← 状态层（47个Zustand Store + helpers/withBroadcast）
+src/store/        ← 状态层（49个Zustand Store + helpers/withBroadcast）
 src/pages/        ← 页面层（5舱：input/analysis/trading/output/command）
 src/components/   ← 组件层（ui/cabin/chart/pool/news/strategy/...）
 src/portal/       ← PortalShell 舱室入口层
@@ -132,6 +136,8 @@ useEffect(() => {
 ### 颜色令牌规范（v2.0.0 新增）
 
 > **核心原则**：所有颜色值必须通过令牌系统引用，禁止在 `src/components/`、`src/pages/`、`src/cockpit/`、`src/apps/` 中直接书写 HEX 值或 Tailwind 颜色类名。
+>
+> **速查表**：`docs/design-token-mapping.md` 按业务场景给出 L1–L6 令牌的推荐 Import 与代码示例；`.vscode/token-snippets.code-snippets` 提供常用令牌的 VSCode 代码片段。
 
 #### 3.5.1 令牌层次结构（4 层）
 
@@ -257,6 +263,15 @@ import { THEME_TOKENS } from '@/constants/theme.tokens'
   正文内容
 </p>
 ```
+
+**单一克制强调色公约 & 令牌管线一致性**（v1.4.0 新增）
+
+> 为满足经典 UI 美学「色彩节制（60-30-10）」与 Nielsen 一致性原则，新增以下硬性规则：
+> 1. **单一克制强调色**：全站仅允许一个品牌强调色（当前 = emerald 翠绿，由 `index.css` 的 `--primary` 决定）。禁止在业务组件中引入第二个品牌色；语义色（涨跌/评分/因子/信号）仅限于状态传达，不得用作装饰性强调。
+> 2. **令牌管线一致性**：`design-tokens/tokens.json` 是规范单一真相源；其 `primary`/`ring` 必须与运行时 `index.css` 的 `--primary` 同色相。`scripts/generate-tokens.ts` 生成的 `--color-*` 变量须被 Tailwind 映射消费（当前 `--color-primary` 为死变量，属 P0 待修管线债）。
+> 3. **禁止裸色类**：UI 层（`components/pages/cockpit/apps`）禁止直接书写 HEX 或数字色类，一律经 `THEME_TOKENS`/`COLOR_TOKENS`/`COLOR_SHADES`/`chartColors`。
+> 4. **对比度门槛**：强调色配白字须达 WCAG AA 正文 4.5:1（`node scripts/a11y-contrast.cjs` 校验）。
+> 5. **视觉 QA 回归闸**：`npm run audit:tokens` 为令牌合规 CI 门禁（零依赖，扫描 hex 字面量 + className 裸色类）。采用**基线 ratchet**——违规数只减不增，新增即 exit 1 拦截。基线存于仓库根 `.token-baseline.json`；消减债务后须 `npm run audit:tokens -- --update-baseline` 刷新并提交；本地全量体检用 `--strict`（任意违规即失败）。
 
 **场景 G：图标尺寸和控件尺寸**
 
@@ -654,9 +669,9 @@ npm run audit:token
   - **基线 store**（首次安装时就需要的核心 store）→ 在 `createSchema`（`src/data/db-schema.ts`）中添加
   - **增量 store**（版本升级时新增的 store）→ 在对应版本的 `Migration.up()`（`src/data/db-migrations.ts` 或 `src/data/migrations/`）中添加
   - 禁止在两处同时添加同一 store 的创建逻辑（违反 DRY 原则）
-  - 当前基线 store 清单（由 createSchema 创建，共 27 个）：stocks / v6Scores / intelligentScores / industryScores / orders / watchlists / signals / researchLogs / dailyQuotes / financialReports / rotationScores / sectorScores / scoreDocs / strategySnapshots / localDocs / news / newsStockMap / sentimentCache / newsBookmarks / hotSectorScores / valuePitScores / executionLogs / missingReports / executionPlans / portfolios / tradeReviews / schemaMigrations
+  - 当前基线 store 清单（由 createSchema 创建，共 29 个）：stocks / v6Scores / intelligentScores / industryScores / orders / watchlists / signals / researchLogs / dailyQuotes / financialReports / rotationScores / sectorScores / scoreDocs / strategySnapshots / localDocs / news / newsStockMap / sentimentCache / newsBookmarks / hotSectorScores / valuePitScores / executionLogs / missingReports / executionPlans / portfolios / tradeReviews / schemaMigrations / collectConfig / customAgents
   - 当前增量 store 清单（由 migration 创建）：RBAC 6 表（rbac_users / rbac_roles / rbac_permissions / rbac_user_roles / rbac_role_permissions / rbac_permission_audit_logs，由 rbacMigrationV24 创建）
-  - 注意：schemaMigrations 表本身由 createSchema 创建（基线），但它的"种子数据"由 seed_schema_migrations_tracker migration 写入
+  - 注意：schemaMigrations 表本身由 createSchema 创建（基线），但它的"种子数据"由 seed_schema_migrations_tracker migration 写入；customAgents 同理（store 由 createSchema 创建，种子数据由 seed_custom_agents_tracker migration 写入）
 - 新增 ENVELOPE_ACTION 必须在 `DataBridge.routeToDB()` 中添加对应 case
 
 ---
@@ -886,10 +901,178 @@ git status --short            # 确认工作区状态
 
 ---
 
+## 十四、MCP 权限控制规范（v1.4.0 新增）
+
+> **核心原则**：所有 MCP 工具调用必须经过双端权限校验（Client 防君子 + Server 防小人），禁止任何绕过权限矩阵的调用路径。
+
+### 14.1 双端校验架构
+
+```
+调用方 → MCPBridge.callTool(server, tool, args, context?)
+           │
+           ▼
+┌─────────────────────────────────────────────────┐
+│  Client 端（防君子）— MCPClientImpl             │
+│  mcpAclInterceptor.check(caller, server, tool)  │ ← 主拦截点
+│  拒绝 → 返回 ACL_PERMISSION_DENIED              │
+└─────────────────────────────────────────────────┘
+           │ 透传 context
+           ▼
+┌─────────────────────────────────────────────────┐
+│  Server 端（防小人）— MCPServerBase              │
+│  this.assertServerPermission(caller, tool)      │ ← 深度防御
+│  拒绝 → 抛 McpAclError → 返回错误结果           │
+└─────────────────────────────────────────────────┘
+           │
+           ▼
+      tool.handler(args) 实际执行
+```
+
+**强制规则**：
+- 禁止绕过 `MCPClient` 直接调用 `MCPServer.callTool()`（Dashboard 等管理工具也必须走 `mcpBridge.callTool`）
+- `MCPServerBase` 子类可重写 `assertServerPermission()` 实现自定义权限逻辑，但必须保留 `super.assertServerPermission()` 调用
+- 所有 `mcpBridge.callTool/readResource/getPrompt` 调用必须传入 `context: { caller, callerId? }` 参数
+
+### 14.2 调用方角色定义
+
+| 角色 | 用途 | 权限范围 | 典型场景 |
+|------|------|---------|---------|
+| `agent` | AI Agent 自主调用 | 全权限（`'*'` / `'*'`） | AgentRuntime 执行任务 |
+| `ui` | UI 层调用 | 仅查询类 Server/Tool | 组件按钮点击、表单提交 |
+| `ci` | CI 流水线调用 | 仅 `system` Server 的查询/迁移工具 | GitHub Actions、迁移脚本 |
+| `system` | 系统内部调用 | 全权限（`'*'` / `'*'`） | Bootstrap、迁移、Dashboard 管理工具 |
+
+### 14.3 权限矩阵配置
+
+权限矩阵定义于 `src/config/mcpAclMatrix.ts` 的 `MCP_ACL_MATRIX` 常量：
+
+```typescript
+export const MCP_ACL_MATRIX: Readonly<Record<McpCallerRole, McpPermissionRule>> = {
+  agent:  { allowedServers: ['*'], allowedTools: ['*'] },
+  ui:     { allowedServers: [9个查询类Server], allowedTools: ['health_check','list_*','get_*','fetch_*',...] },
+  ci:     { allowedServers: ['system'], allowedTools: ['get_*','generate_migration_report'] },
+  system: { allowedServers: ['*'], allowedTools: ['*'] },
+}
+```
+
+**通配符规则**：
+- `'*'`：匹配任意字符串
+- `'prefix_*'`：匹配以 `prefix_` 开头的字符串（保留末尾下划线）
+
+**与 DataBridge ACL 的关系**：
+- `ACL_MATRIX`（`src/config/dbConfig.ts`）：数据层权限（module → store → operation）
+- `MCP_ACL_MATRIX`（`src/config/mcpAclMatrix.ts`）：工具层权限（caller → server → tool）
+- 两者形成纵深防御，互不替代
+
+### 14.4 调用方适配规则
+
+**调用方角色选择决策树**：
+
+```
+新增 mcpBridge.callTool 调用？
+├── 调用方是 AI Agent（AgentRuntime）？
+│   └── → { caller: 'agent', callerId: agentId }
+├── 调用方是 UI 组件（按钮/表单）？
+│   ├── 仅查询类操作 → { caller: 'ui', callerId: 'ComponentName' }
+│   └── 系统管理工具（Dashboard 等） → { caller: 'system', callerId: 'ComponentName' }
+├── 调用方是 CI 流水线？
+│   └── → { caller: 'ci', callerId: 'github-actions' }
+├── 调用方是系统内部（Bootstrap/迁移/Transport）？
+│   └── → { caller: 'system', callerId: 'ModuleName' }
+└── 不确定？
+    └── → 默认 { caller: 'agent' }（全权限，但需在代码审查时确认）
+```
+
+**禁止清单**：
+- ❌ 禁止 `mcpRegistry.getServer().server.callTool()` 直接调用（绕过 Client）
+- ❌ 禁止省略 `context` 参数（除非是向后兼容的旧代码）
+- ❌ 禁止在 UI 组件中用 `caller: 'agent'` 规避权限限制
+
+### 14.5 新增 Server/Tool 权限配置 SOP
+
+新增 MCP Server 时，必须按以下顺序配置权限：
+
+1. **在 `MCP_ACL_MATRIX` 中配置权限规则**（`src/config/mcpAclMatrix.ts`）：
+   ```typescript
+   // 如果新 Server 是查询类（UI 可访问）
+   ui: { allowedServers: [..., 'newServer'], allowedTools: [..., 'new_query_tool'] }
+   ```
+
+2. **如果是写操作类 Server**，不要添加到 `ui` 角色的 `allowedServers` 中
+
+3. **新增 Tool 时**，根据 Tool 性质配置通配符：
+   - 查询类 Tool → 添加 `'get_*'` 或 `'list_*'` 通配符（自动覆盖）
+   - 写操作 Tool → 显式列出 Tool 名（如 `'create_order'`）
+   - 危险操作 Tool → 仅允许 `agent`/`system` 角色
+
+4. **更新单元测试**（`src/mcp/__tests__/mcpAclInterceptor.test.ts`）：
+   - 在"四角色权限对比矩阵"套件中新增测试用例
+   - 在"权限拒绝场景全覆盖"套件中新增拒绝场景
+
+5. **运行验证**：
+   ```powershell
+   npx vitest run src/mcp/__tests__/mcpAclInterceptor.test.ts
+   ```
+
+### 14.6 类型定义位置
+
+| 类型 | 定义文件 | 用途 |
+|------|---------|------|
+| `McpCallerRole` | `src/types/modules/mcp.types.ts` | 调用方角色枚举（零依赖） |
+| `McpCallerContext` | `src/types/modules/mcp.types.ts` | 调用方上下文（caller + callerId） |
+| `McpPermissionRule` | `src/config/mcpAclMatrix.ts` | 权限规则接口 |
+| `MCP_ACL_MATRIX` | `src/config/mcpAclMatrix.ts` | 权限矩阵常量 |
+| `mcpAclInterceptor` | `src/mcp/core/mcpAclInterceptor.ts` | 拦截器单例 |
+| `McpAclError` | `src/mcp/core/mcpAclInterceptor.ts` | 权限拒绝错误类 |
+
+**分层规则**：
+- `types/` 定义 `McpCallerRole`（零依赖，可被所有层引用）
+- `config/` 从 `types/` 导入 `McpCallerRole` 定义权限矩阵
+- `mcp/core/` 从 `config/` 和 `types/` 导入实现拦截器
+- 禁止 `types/` 依赖 `config/`（保持类型层零依赖）
+
+### 14.7 验证命令
+
+```powershell
+# MCP ACL 拦截器单元测试（72 用例）
+npx vitest run src/mcp/__tests__/mcpAclInterceptor.test.ts
+
+# 全部 MCP 测试 + 集成测试
+npx vitest run src/mcp/__tests__/ tests/__tests__/integration/mcp-servers.integration.test.ts
+
+# 类型检查（MCP 相关文件零错误）
+npx tsc --noEmit | findstr /R "mcpAcl mcpBridge MCPServer MCPClient"
+# 期望：无输出（零错误）
+```
+
+### 14.8 错误处理
+
+权限拒绝时统一返回格式：
+
+```typescript
+// 拒绝结果（ToolResult）
+{
+  content: [{ type: 'text', text: 'ACL_PERMISSION_DENIED: <reason>' }],
+  isError: true,
+}
+```
+
+**排查步骤**：
+1. 检查 `context.caller` 是否传入正确的角色
+2. 检查 `MCP_ACL_MATRIX[caller].allowedServers` 是否包含目标 Server
+3. 检查 `MCP_ACL_MATRIX[caller].allowedTools` 是否匹配目标 Tool（注意通配符规则）
+4. 查看日志中的 `[MCP:ACL]` 前缀信息
+
+---
+
 ## 十一、变更日志
 
 | 版本 | 日期 | 变更摘要 |
 |------|------|----------|
+| v1.4.3 | 2026-07-10 | 标题区新增 JSDoc 与复杂度规范引用；新增 `docs/jsdoc-convention.md`、`docs/complexity-governance.md`、`scripts/audit-jsdoc.ts`、`scripts/audit-complexity.ts`；Husky 预提交门禁扩展为 9 项检查（新增 audit:jsdoc、audit:complexity） |
+| v1.4.2 | 2026-07-10 | §3.5 颜色令牌规范新增 `docs/design-token-mapping.md` 与 `.vscode/token-snippets.code-snippets` 引用；新增 `design-tokens/figma-to-project.json`、`design-tokens/project-to-figma.json` 双向映射与 `scripts/verify-design-tokens.ts`；Husky 预提交门禁扩展为 7 项检查并新增 `pre-push` 门禁 |
+| v1.4.1 | 2026-07-10 | 新增提示词模板与检查清单引用：在标题区引用 `prompts/` 系统提示词模板、`docs/ui-migration-checklist.md` 与 `docs/widget-integration-checklist.md` |
+| v1.4.0 | 2026-07-08 | §十四 新增 MCP 权限控制规范（14.1-14.8），包含双端校验架构、4 种调用方角色定义、权限矩阵配置、调用方适配决策树、新增 Server/Tool 权限配置 SOP、类型定义分层规则、验证命令、错误处理排查步骤 |
 | v1.3.7 | 2026-07-08 | §十三 新增模块分拆必要性评估框架（13.1-13.6），包含评估维度与权重、决策阈值、替代方案评估、分拆可行性评估清单、成本风险分析框架 |
 | v1.3.6 | 2026-07-08 | §十二 新增任务图管理机制（12.1-12.7），包含状态前置检查门禁、三级回归测试套件、上下文锚点防漂移规则；新增 task-graph-template.md 和 regression-suite.md 两个模板文件 |
 | v1.3.5 | 2026-07-08 | §7 新增 audit:contract 契约合规性检测脚本；extract-code-graph.ts 新增增量更新+AST 缓存机制；创建 quick-query.sh 快速查询模板；daily-doc-validation.ts 重写括号检查逻辑 |

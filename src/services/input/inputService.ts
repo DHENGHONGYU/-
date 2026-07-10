@@ -6,8 +6,11 @@ import { INPUT_CONFIG } from '@/config/inputConfig'
 import type { DataLayerResult, Stock } from '@/data/types'
 import { fetchBasicDataUseCase, fetchKlineDataUseCase } from '@/services/useCase/fetcherOrchestrator.useCase'
 import { MOCK_STOCK_LIBRARY, type MockStock } from './mockStockLibrary'
+import { getLogger } from '@/lib/logger'
 
 import { nanoid } from 'nanoid'
+
+const logger = getLogger()
 export interface AddStockInput {
   symbol: string
   name: string
@@ -46,10 +49,21 @@ export interface AddStockOptions {
   group?: string
 }
 
+// ============================================================
+// 阶段 C-1：in-memory 互斥锁（addStock 并发竞态防护）
+// ============================================================
+/** 同一进程内 addStock 的 in-flight 集合；防止两个并发批次同时通过存在性检查 */
+const addStockInFlight = new Set<string>()
+
 /**
  * 添加候选股票到意向候选池，并在需要时触发基础数据采集
  *
  * 通过 DataBridge.forward() 写入，确保 ACL 校验与审计日志。
+ *
+ * 阶段 C-1 增强：
+ * - 进程内同 symbol 并发 addStock 用 `addStockInFlight` Set 互斥
+ * - 避免「A 读不存在 + B 读不存在 → 双方同时 forward insertStock」竞态
+ * - 跨进程/跨 Tab 互斥由 IDB 主键冲突兜底（dataVersion 仍=1，下次 update 会覆盖）
  */
 export async function addStock(
   input: AddStockInput,
@@ -58,12 +72,23 @@ export async function addStock(
   const symbol = normalizeSymbol(input.symbol)
   const name = input.name.trim()
 
+  logger.info('[inputService] addStock 开始', { symbol, name, options })
+
   if (!symbol) {
+    logger.warn('[inputService] addStock 失败：股票代码为空', { input })
     return { success: false, error: '股票代码不能为空' }
   }
   if (!name) {
+    logger.warn('[inputService] addStock 失败：股票名称为空', { input })
     return { success: false, error: '股票名称不能为空' }
   }
+
+  // 阶段 C-1：进程内同 symbol 互斥（防并发读+写竞态）
+  if (addStockInFlight.has(symbol)) {
+    logger.warn('[inputService] addStock 拒绝并发: 已有 in-flight 调用', { symbol })
+    return { success: false, error: `股票 ${symbol} 正在导入中，请稍后重试` }
+  }
+  addStockInFlight.add(symbol)
 
   let stock: Stock = {
     symbol,
@@ -86,14 +111,21 @@ export async function addStock(
     stock,
   )
 
+  logger.debug('[inputService] 构建 Envelope', { traceId: envelope.meta.traceId, action: envelope.meta.action })
+
   try {
+    logger.info('[inputService] 写入数据库', { symbol, envelopeAction: ENVELOPE_ACTION.insertStock })
     await dataBridge.forward(envelope)
+    logger.info('[inputService] 数据库写入成功', { symbol })
 
     if (options.fetchBasicAfterAdd) {
+      logger.info('[inputService] 拉取基础数据', { symbol })
       const fetchResult = await fetchBasicDataUseCase({ symbol })
       if (fetchResult.success && fetchResult.data) {
         stock = { ...fetchResult.data, group: stock.group }
+        logger.info('[inputService] 基础数据拉取成功', { symbol })
       } else {
+        logger.warn('[inputService] 基础数据拉取失败', { symbol, error: fetchResult.error })
         return {
           success: true,
           data: stock,
@@ -103,10 +135,13 @@ export async function addStock(
     }
 
     if (options.fetchKlineAfterAdd) {
+      logger.info('[inputService] 拉取 K线数据', { symbol })
       const klineResult = await fetchKlineDataUseCase({ symbol })
       if (klineResult.success && klineResult.data) {
         stock = { ...klineResult.data, group: stock.group }
+        logger.info('[inputService] K线数据拉取成功', { symbol })
       } else {
+        logger.warn('[inputService] K线数据拉取失败', { symbol, error: klineResult.error })
         return {
           success: true,
           data: stock,
@@ -115,12 +150,16 @@ export async function addStock(
       }
     }
 
+    logger.info('[inputService] addStock 完成', { symbol, name, group: stock.group })
     return { success: true, data: stock }
   } catch (err) {
     return {
       success: false,
       error: err instanceof Error ? err.message : String(err),
     }
+  } finally {
+    // 阶段 C-1：无论成功失败，释放 in-flight 锁
+    addStockInFlight.delete(symbol)
   }
 }
 

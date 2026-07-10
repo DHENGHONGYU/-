@@ -20,12 +20,50 @@ const BacktestPage = React.lazy(() => import('@/pages/analysis/BacktestPage'))
 const IndustryScorePage = React.lazy(() => import('@/pages/analysis/IndustryScorePage'))
 const IntelligentScorePage = React.lazy(() => import('@/pages/analysis/IntelligentScorePage'))
 const ScoreDocPage = React.lazy(() => import('@/pages/analysis/ScoreDocPage'))
+const ScoreComparisonPage = React.lazy(() => import('@/pages/analysis/ScoreComparisonPage'))
 const NewsPage = React.lazy(() => import('@/pages/analysis/NewsPage'))
 const HotSectorPage = React.lazy(() => import('@/pages/analysis/HotSectorPage'))
 const ValuePitPage = React.lazy(() => import('@/pages/analysis/ValuePitPage'))
 const MultiFactorFilterPage = React.lazy(() => import('@/pages/analysis/MultiFactorFilterPage'))
+const StockPoolBoardPage = React.lazy(() => import('@/pages/analysis/StockPoolBoardPage'))
 
 const logger = getLogger()
+
+interface AnalysisRoute {
+  path: string
+  branch: string
+  componentName: string
+  /** false 表示同时匹配 path 与 path/ 前缀；默认 true 为精确匹配 */
+  exact?: boolean
+  component: React.ReactNode
+  fallback: string
+}
+
+const ANALYSIS_ROUTES: AnalysisRoute[] = [
+  { path: '/analysis/stock-score', branch: 'stock-score', componentName: 'StockAnalysisPage', exact: false, component: <StockAnalysisPage />, fallback: '加载个股评分页...' },
+  { path: '/analysis/sector', branch: 'sector', componentName: 'SectorAnalysisPage', component: <SectorAnalysisPage />, fallback: '加载板块分析页...' },
+  { path: '/analysis/backtest', branch: 'backtest', componentName: 'BacktestPage', component: <BacktestPage />, fallback: '加载回测页...' },
+  { path: '/analysis/industry-score', branch: 'industry-score', componentName: 'IndustryScorePage', component: <IndustryScorePage />, fallback: '加载行业评分页...' },
+  { path: '/analysis/intelligent-score', branch: 'intelligent-score', componentName: 'IntelligentScorePage', component: <IntelligentScorePage />, fallback: '加载智能评分页...' },
+  { path: '/analysis/score-docs', branch: 'score-docs', componentName: 'ScoreDocPage', component: <ScoreDocPage />, fallback: '加载评分文档页...' },
+  { path: '/analysis/score-comparison', branch: 'score-comparison', componentName: 'ScoreComparisonPage', component: <ScoreComparisonPage />, fallback: '加载评分比对看板...' },
+  { path: '/analysis/news', branch: 'news', componentName: 'NewsPage', component: <NewsPage />, fallback: '加载新闻页...' },
+  { path: '/analysis/hot-sector', branch: 'hot-sector', componentName: 'HotSectorPage', component: <HotSectorPage />, fallback: '加载热门板块页...' },
+  { path: '/analysis/value-pit', branch: 'value-pit', componentName: 'ValuePitPage', component: <ValuePitPage />, fallback: '加载价值洼地页...' },
+  { path: '/analysis/multi-factor', branch: 'multi-factor', componentName: 'MultiFactorFilterPage', component: <MultiFactorFilterPage />, fallback: '加载多因子筛选页...' },
+  { path: '/analysis/stock-pool', branch: 'stock-pool', componentName: 'StockPoolBoardPage', component: <StockPoolBoardPage />, fallback: '加载股票池看板...' },
+]
+
+function matchAnalysisRoute(path: string): AnalysisRoute {
+  for (const route of ANALYSIS_ROUTES) {
+    if (route.exact === false) {
+      if (path === route.path || path.startsWith(route.path + '/')) return route
+    } else if (path === route.path) {
+      return route
+    }
+  }
+  return { path: '', branch: 'default', componentName: 'V6ScoreCard', component: null, fallback: '' }
+}
 
 /**
  * 分析舱子路由分发
@@ -39,7 +77,7 @@ const logger = getLogger()
  * 不会再次匹配当前 URL。
  *
  * 修复方案：直接读取 location.pathname 进行条件渲染，绕过 descendant
- * Routes 的路径匹配问题。新增子面板仅需在此处追加 else-if 分支。
+ * Routes 的路径匹配问题。新增子面板仅需在 ANALYSIS_ROUTES 中追加条目。
  */
 export default function AnalysisApp(): React.JSX.Element {
   const location = useLocation()
@@ -55,42 +93,7 @@ export default function AnalysisApp(): React.JSX.Element {
       logger.info('[AnalysisApp] 路由切换', { from: prevPath, to: path })
     }
 
-    let branch: string
-    let componentName: string
-    if (path === '/analysis/stock-score' || path.startsWith('/analysis/stock-score/')) {
-      branch = 'stock-score'
-      componentName = 'StockAnalysisPage'
-    } else if (path === '/analysis/sector') {
-      branch = 'sector'
-      componentName = 'SectorAnalysisPage'
-    } else if (path === '/analysis/backtest') {
-      branch = 'backtest'
-      componentName = 'BacktestPage'
-    } else if (path === '/analysis/industry-score') {
-      branch = 'industry-score'
-      componentName = 'IndustryScorePage'
-    } else if (path === '/analysis/intelligent-score') {
-      branch = 'intelligent-score'
-      componentName = 'IntelligentScorePage'
-    } else if (path === '/analysis/score-docs') {
-      branch = 'score-docs'
-      componentName = 'ScoreDocPage'
-    } else if (path === '/analysis/news') {
-      branch = 'news'
-      componentName = 'NewsPage'
-    } else if (path === '/analysis/hot-sector') {
-      branch = 'hot-sector'
-      componentName = 'HotSectorPage'
-    } else if (path === '/analysis/value-pit') {
-      branch = 'value-pit'
-      componentName = 'ValuePitPage'
-    } else if (path === '/analysis/multi-factor') {
-      branch = 'multi-factor'
-      componentName = 'MultiFactorFilterPage'
-    } else {
-      branch = 'default'
-      componentName = 'V6ScoreCard'
-    }
+    const { branch, componentName } = matchAnalysisRoute(path)
 
     logger.info('[AnalysisApp] 渲染分析舱', {
       path,
@@ -103,82 +106,11 @@ export default function AnalysisApp(): React.JSX.Element {
   }, [path])
 
   // ── 子路由页面渲染 ──────────────────────────────────────────────────────────
-  if (path === '/analysis/stock-score' || path.startsWith('/analysis/stock-score/')) {
+  const matched = matchAnalysisRoute(path)
+  if (matched.component) {
     return (
-      <Suspense fallback={<div className="p-4 text-muted-foreground">加载个股评分页...</div>}>
-        <StockAnalysisPage />
-      </Suspense>
-    )
-  }
-
-  if (path === '/analysis/sector') {
-    return (
-      <Suspense fallback={<div className="p-4 text-muted-foreground">加载板块分析页...</div>}>
-        <SectorAnalysisPage />
-      </Suspense>
-    )
-  }
-
-  if (path === '/analysis/backtest') {
-    return (
-      <Suspense fallback={<div className="p-4 text-muted-foreground">加载回测页...</div>}>
-        <BacktestPage />
-      </Suspense>
-    )
-  }
-
-  if (path === '/analysis/industry-score') {
-    return (
-      <Suspense fallback={<div className="p-4 text-muted-foreground">加载行业评分页...</div>}>
-        <IndustryScorePage />
-      </Suspense>
-    )
-  }
-
-  if (path === '/analysis/intelligent-score') {
-    return (
-      <Suspense fallback={<div className="p-4 text-muted-foreground">加载智能评分页...</div>}>
-        <IntelligentScorePage />
-      </Suspense>
-    )
-  }
-
-  if (path === '/analysis/score-docs') {
-    return (
-      <Suspense fallback={<div className="p-4 text-muted-foreground">加载评分文档页...</div>}>
-        <ScoreDocPage />
-      </Suspense>
-    )
-  }
-
-  if (path === '/analysis/news') {
-    return (
-      <Suspense fallback={<div className="p-4 text-muted-foreground">加载新闻页...</div>}>
-        <NewsPage />
-      </Suspense>
-    )
-  }
-
-  if (path === '/analysis/hot-sector') {
-    return (
-      <Suspense fallback={<div className="p-4 text-muted-foreground">加载热门板块页...</div>}>
-        <HotSectorPage />
-      </Suspense>
-    )
-  }
-
-  if (path === '/analysis/value-pit') {
-    return (
-      <Suspense fallback={<div className="p-4 text-muted-foreground">加载价值洼地页...</div>}>
-        <ValuePitPage />
-      </Suspense>
-    )
-  }
-
-  if (path === '/analysis/multi-factor') {
-    return (
-      <Suspense fallback={<div className="p-4 text-muted-foreground">加载多因子筛选页...</div>}>
-        <MultiFactorFilterPage />
+      <Suspense fallback={<div className="p-4 text-muted-foreground">{matched.fallback}</div>}>
+        {matched.component}
       </Suspense>
     )
   }

@@ -317,11 +317,7 @@ export function scoreScoreBoard(board: Record<string, number>, filters?: string[
   if (missingBoardKeys.length > 0) {
     logger.warn('[l0_l1_l2] 评分板字段缺失，使用默认值', { field: missingBoardKeys.join(','), context: 'scoreScoreBoard' })
   }
-  const sum = keys.reduce((s, k) => {
-    const raw = board[k]
-    const val = raw ?? 0
-    return s + val
-  }, 0)
+  const sum = keys.reduce((s, k) => s + (board[k] || 0), 0)
   return Math.min(5, Math.max(1, sum / keys.length))
 }
 

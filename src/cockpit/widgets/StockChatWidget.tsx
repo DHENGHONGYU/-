@@ -6,7 +6,7 @@ import { Select, SelectItem } from '@/components/ui/Select'
 import { Textarea } from '@/components/ui/Textarea'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
 import type { WidgetConfig, MarketData, ChatMessage } from '@/types/modules/widget.types'
-import { CHAT_DEMO_TARGETS } from '@/constants/cockpit.constants'
+import { CHAT_DEMO_TARGETS, AI_DISCLAIMER_TEXT } from '@/constants/cockpit.constants'
 
 import { nanoid } from 'nanoid'
 interface StockChatWidgetProps {
@@ -285,7 +285,10 @@ export default function StockChatWidget({ config, data }: StockChatWidgetProps):
         </div>
       </CardContent>
 
-      <CardFooter className="pt-0">
+      <CardFooter className="pt-0 flex flex-col gap-2">
+        <p className="text-[11px] leading-tight text-muted-foreground w-full">
+          {AI_DISCLAIMER_TEXT}
+        </p>
         <div className="flex w-full items-start gap-2">
           <Textarea
             value={input}

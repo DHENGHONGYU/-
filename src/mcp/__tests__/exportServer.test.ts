@@ -4,14 +4,14 @@ import { ExportServer } from '@/mcp/servers/export/exportServer'
 describe('ExportServer', () => {
   const server = new ExportServer()
 
-  it('should have correct server info', () => {
+  it('应该有 correct server info', () => {
     expect(server.info.name).toBe('export')
     expect(server.info.version).toBe('1.0.0')
     expect(server.info.description).toBeTruthy()
     expect(server.info.dependencies).toContain('backtest')
   })
 
-  it('should register 1 tool', () => {
+  it('应该register 1 tool', () => {
     const tools = server.listTools()
     expect(tools.length).toBe(1)
     for (const tool of tools) {
@@ -22,7 +22,7 @@ describe('ExportServer', () => {
     }
   })
 
-  it('should have export_backtest_report tool', () => {
+  it('应该有 export_backtest_report tool', () => {
     const tools = server.listTools()
     const tool = tools.find((t) => t.name === 'export_backtest_report')
     expect(tool).toBeDefined()
@@ -31,12 +31,12 @@ describe('ExportServer', () => {
     expect(tool!.inputSchema.properties!.format!.enum).toEqual(['pdf', 'excel'])
   })
 
-  it('should have no resources', () => {
+  it('应该有 no resources', () => {
     const resources = server.listResources()
     expect(resources.length).toBe(0)
   })
 
-  it('should have no prompts', () => {
+  it('应该有 no prompts', () => {
     const prompts = server.listPrompts()
     expect(prompts.length).toBe(0)
   })

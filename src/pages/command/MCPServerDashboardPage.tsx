@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/Breadcrumb'
 import { useMCPServerStore } from '@/store/mcpServerStore'
 import { mcpRegistry } from '@/mcp/core/registry'
+import { mcpBridge } from '@/mcp/bridge/mcpBridge'
 import { getLogger } from '@/lib/logger'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 
@@ -48,10 +49,13 @@ export default function MCPServerDashboardPage(): React.JSX.Element {
     setToolError(null)
     try {
       const args = JSON.parse(toolArgs) as Record<string, unknown>
-      const result = await mcpRegistry.getServer(serverName)?.server.callTool(toolName, args)
-      if (result) {
-        setToolResult(JSON.stringify(result, null, 2))
-      }
+      // 走 mcpBridge.callTool → MCPClient 主拦截 + MCPServerBase 深度防御（双端校验）
+      // 使用 system 角色：Dashboard 是管理工具，需要测试所有 Server 的所有 Tool
+      const result = await mcpBridge.callTool(serverName, toolName, args, {
+        caller: 'system',
+        callerId: 'MCPServerDashboardPage',
+      })
+      setToolResult(JSON.stringify(result, null, 2))
     } catch (err) {
       setToolError(err instanceof Error ? err.message : String(err))
     }

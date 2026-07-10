@@ -114,13 +114,84 @@ src/store/
 
 **当前状态**：🟡 部分实现。已支持 SSE/轮询、内存缓存、定时刷新、慢订阅者检测、通道 priority 字段；TTL/容量上限/按优先级排序分发待完善。详细字段与 API 见 `docs/DATAFLOW_DATA_DEFINITION.md`。
 
-### 1.4 未来可扩展
+### 1.4 Hybrid Proofread 混合校对引擎（v2.6.0 新增）
+
+混合校对引擎负责代码安全与合规性检查，通过本地规则引擎与云端风险数据库的协同，实现全面的项目安全扫描。
+
+#### 设计目标
+
+- **本地规则引擎**：基于正则匹配的安全规则检查（硬编码密钥、不安全依赖、敏感文件等）
+- **云端风险验证**：文件哈希比对云端风险数据库，识别已知漏洞
+- **报告生成**：结构化安全报告，支持多格式导出（Markdown/HTML/JSON）
+- **详细日志**：全链路日志记录与耗时统计，便于问题排查
+
+#### 核心模块
+
+| 模块 | 文件 | 职责 |
+|------|------|------|
+| HashService | `hashService.ts` | 文件哈希计算（SHA-256），支持批处理 |
+| LocalCollector | `localCollector.ts` | 本地文件遍历、过滤、哈希收集 |
+| RuleEngine | `ruleEngine.ts` | 规则加载、同步、评估（正则匹配） |
+| CloudSyncClient | `cloudSyncClient.ts` | 云端 API 调用（哈希验证、风险详情、规则同步） |
+| ReportGenerator | `reportGenerator.ts` | 报告生成与多格式导出 |
+
+#### 默认规则集（8 条）
+
+| 规则 ID | 名称 | 严重级别 | 类别 | 检测内容 |
+|---------|------|---------|------|---------|
+| R001 | Hardcoded API Key | critical | hardcoded_secret | 检测硬编码的 API Key |
+| R002 | Hardcoded Password | critical | hardcoded_secret | 检测硬编码的密码 |
+| R003 | Sensitive File Exposed | high | sensitive_data | 检测敏感配置文件（.env/.pem/.key） |
+| R004 | Insecure Dependency | high | dependency_vulnerability | 检测已知不安全的依赖版本（lodash@1/2、moment@1/2） |
+| R005 | Missing License File | info | security_best_practice | 检测项目是否缺少 LICENSE 文件 |
+| R006 | Console Log Security Risk | medium | code_quality | 检测可能泄露敏感信息的 console.log |
+| R007 | HTTP URL Usage | medium | security_best_practice | 检测使用 HTTP 而非 HTTPS 的 URL |
+| R008 | SQL Injection Risk | critical | sensitive_data | 检测可能导致 SQL 注入的字符串拼接 |
+
+#### 核心流程
+
+```
+runFullProofread(projectId, projectName, projectPath)
+  ├── Step 1: 同步规则（云端版本检查 + 规则下载）
+  ├── Step 2: 本地扫描（文件遍历 + 哈希计算）
+  ├── Step 3: 规则评估（正则匹配 + 严重级别统计）
+  ├── Step 4: 云端风险检查（哈希批量验证 + 风险详情获取）
+  └── Step 5: 生成报告（结构化输出 + 多格式导出）
+```
+
+#### 接口签名
+
+```ts
+// src/services/hybrid-proofread/index.ts
+export async function runFullProofread(
+  projectId: string,
+  projectName: string,
+  projectPath: string
+): Promise<{ success: boolean; report?: ProofreadReport; error?: string }>
+```
+
+#### 日志与监控
+
+所有核心方法均包含详细日志记录与耗时统计：
+
+| 模块 | 日志内容 |
+|------|---------|
+| CloudSyncClient | 请求参数、响应状态、风险等级、CVE 信息、耗时统计 |
+| RuleEngine | 规则加载状态、匹配详情、跳过规则数、耗时统计 |
+| runFullProofread | 四步流程日志、各阶段耗时拆解、最终结果汇总 |
+
+#### 当前状态
+
+✅ 已实现。所有核心模块已完成，包含详细日志记录与耗时统计，测试脚本覆盖 9 个测试用例。
+
+### 1.5 未来可扩展
 
 | 扩展方向 | 说明 | 优先级 |
 |----------|------|--------|
 | Agent 调度层 | V10 的 `src/agents/` 用于多 Agent 协同；V9 当前以函数式服务层为主 | P2/P3 |
 | Trading Gateway 抽象 | 将 `src/services/trading/` 抽象为 `ITradingGateway`，支持模拟/真实券商切换 | P3 |
 | Sector Factor Updater | 定时轮询 `sector_scores`，输出板块轮动信号 | P2 |
+| Hybrid Proofread 规则市场 | 支持自定义规则上传与共享 | P2 |
 
 ---
 

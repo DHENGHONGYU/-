@@ -40,17 +40,17 @@ const {
   mockAdapt,
   mockMerge,
 } = vi.hoisted(() => {
-  const capturedTaskSchedulerCallback = { callback: null as ((taskId: string, rawData: unknown, error?: Error) => void) | null }
-  const capturedDataBridgeCallback = { callback: null as ((envelope: unknown) => void) | null }
+  const capturedTaskSchedulerCallback = { callback: null as ((taskId: string, rawData: Record<string, unknown>, error?: Error) => void) | null }
+  const capturedDataBridgeCallback = { callback: null as ((envelope: StandardEnvelope) => void) | null }
   const unsubscribeTaskSchedulerFn = vi.fn()
   const unsubscribeDataBridgeFn = vi.fn()
 
-  const mockSubscribeTaskScheduler = vi.fn().mockImplementation((callback: (taskId: string, rawData: unknown, error?: Error) => void) => {
+  const mockSubscribeTaskScheduler = vi.fn().mockImplementation((callback: (taskId: string, rawData: Record<string, unknown>, error?: Error) => void) => {
     capturedTaskSchedulerCallback.callback = callback
     return unsubscribeTaskSchedulerFn
   })
 
-  const mockSubscribeDataBridge = vi.fn().mockImplementation((_channel: string, callback: (envelope: unknown) => void) => {
+  const mockSubscribeDataBridge = vi.fn().mockImplementation((_channel: string, callback: (envelope: StandardEnvelope) => void) => {
     capturedDataBridgeCallback.callback = callback
     return unsubscribeDataBridgeFn
   })
@@ -154,6 +154,7 @@ vi.mock('@/config/dbConfig', () => ({
 
 
 import { renderHook } from '@testing-library/react'
+import type { StandardEnvelope } from '@/core/envelope'
 import {
   useMarketDataStore,
   useDataSource,
@@ -514,7 +515,7 @@ describe('initMarketDataStoreTaskSubscription', () => {
       errorMap: { portfolioOverview: null },
     })
 
-    capturedTaskSchedulerCallback.callback?.('task_po_1', null, new Error('采集失败'))
+    capturedTaskSchedulerCallback.callback?.('task_po_1', {}, new Error('采集失败'))
 
     const state = useMarketDataStore.getState()
     expect(state.dataSources.portfolioOverview?.loading).toBe(false)
@@ -548,7 +549,7 @@ describe('initMarketDataStoreSubscriptions', () => {
     initMarketDataStoreSubscriptions()
 
     capturedDataBridgeCallback.callback?.({
-      meta: { action: 'INSERT_ORDER', traceId: 't1' },
+      meta: { source: 'trading', target: 'db', action: 'INSERT_ORDER', traceId: 't1', timestamp: Date.now() },
       payload: {},
     })
 
@@ -567,7 +568,7 @@ describe('initMarketDataStoreSubscriptions', () => {
     initMarketDataStoreSubscriptions()
 
     capturedDataBridgeCallback.callback?.({
-      meta: { action: 'INSERT_ORDER', traceId: 't1' },
+      meta: { source: 'trading', target: 'db', action: 'INSERT_ORDER', traceId: 't1', timestamp: Date.now() },
       payload: {},
     })
 

@@ -9,14 +9,14 @@ import type { DailyQuotes, Order, Signal, Stock, V6Score } from '@/data/types'
  * @skip-reason 此测试为已知失败，已通过 vitest --exclude 跳过；
  *               修复后请移除 .skip 标记并从 test:clean 的 --exclude 列表中删除
  */
-describe.skip('V9 data relationship blueprint', () => {
-  it('should have exactly 25 stores defined in dbConfig', () => {
+describe('V9 data relationship blueprint', () => {
+  it('应该有 exactly 25 stores defined in dbConfig', () => {
     const stores = Object.values(STORE_NAME)
     expect(stores).toHaveLength(25)
     expect(new Set(stores).size).toBe(25)
   })
 
-  it('should map core entities to expected stores', () => {
+  it('应该map core entities to expected stores', () => {
     const entityStoreMap: Record<string, string> = {
       Stock: STORE_NAME.stocks,
       DailyQuotes: STORE_NAME.dailyQuotes,
@@ -45,7 +45,7 @@ describe.skip('V9 data relationship blueprint', () => {
     }
   })
 
-  it('should enforce Stock as the central 1:N hub', () => {
+  it('应该enforce Stock as the central 1:N hub', () => {
     const dependentStores = [
       STORE_NAME.dailyQuotes,
       STORE_NAME.v6Scores,
@@ -62,7 +62,11 @@ describe.skip('V9 data relationship blueprint', () => {
   })
 })
 
-describe.skip('V9 data timeline rules', () => {
+/**
+ * @status known-failing
+ * @reason TODO: 待修复（详见 docs/reports/脚本与测试质量检查报告.md）
+ */
+describe('V9 data timeline rules', () => {
   it('v6 score must not be older than its daily quotes input', () => {
     const stock: Stock = {
       symbol: '600519',

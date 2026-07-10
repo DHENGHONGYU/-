@@ -2,17 +2,24 @@
  * @module FetcherConfigPage
  * @description 抓取引擎配置页（D-2 框架）。
  *
- * 三大面板：
- * - 数据源列表：腾讯/新浪/网易/AKShare/Mock 等数据源配置展示
- * - 连通性测试面板：测试数据源连通性并展示结果
- * - 采集日志面板：滚动展示抓取引擎日志
- *
- * 使用 src/config/fetcherConfig.ts 中的配置数据，Mock 模式不接入真实 API。
+ * 从 `dataSourceRegistry` 读取真实数据源端点，提供：
+ * - 数据源列表与能力标签（行情/K线/启用/超时/重试）
+ * - 单源 / 全局连通性测试
+ * - 维度与数据源映射展示
+ * - 实时采集日志流
  */
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useCallback } from 'react'
 import { Link } from 'react-router'
-import { Server, Wifi, ScrollText, Play, CheckCircle, XCircle, Loader2 } from 'lucide-react'
+import {
+  Server,
+  Wifi,
+  Activity,
+  Play,
+  CheckCircle,
+  XCircle,
+  Loader2,
+} from 'lucide-react'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { getLogger } from '@/lib/logger'
 import {
@@ -25,9 +32,7 @@ import {
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { Skeleton } from '@/components/ui/Skeleton'
-import { Progress } from '@/components/ui/Progress'
 import { EmptyState } from '@/components/ui/EmptyState'
-import { Separator } from '@/components/ui/Separator'
 import {
   Table,
   TableBody,
@@ -45,154 +50,119 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/Breadcrumb'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
-import {
-  MOCK_TENCENT_BASE_URL,
-  MOCK_SINA_BASE_URL,
-  MOCK_NETEASE_BASE_URL,
-  MOCK_AKSHARE_BASE_URL,
-} from '@/config/dataSourceUrls'
-import {
-  getDefaultFetcherConfig,
-  getDefaultFetcherDimensions,
-  getDefaultFetcherGlobalConfig,
-  FETCHER_FREQUENCY_LABELS,
-  type FetcherDimensionConfig,
-} from '@/config/fetcherConfig'
+import { DATA_SOURCE_ENDPOINTS } from '@/config/dataSourceRegistry'
+import type { DataSourceEndpoint } from '@/types/modules/collection.types'
+import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
+import { useCollectionRuntimeStore } from '@/store/collectionRuntimeStore'
+import { mcpBridge } from '@/mcp/bridge/mcpBridge'
+import type { SourceConnectivityResult } from '@/services/data-collector/dataSourceOrchestrator'
+import LiveLogStream from '@/components/input/LiveLogStream'
+import SourcePrioritySelect from '@/components/input/SourcePrioritySelect'
+import type {
+  QuoteDataSourceId,
+  SourcePriorityItem,
+} from '@/types/modules/collection.types'
 
 const logger = getLogger()
 
-// ============================================================
-// 数据源定义（Mock）
-// ============================================================
-
-type SourceStatus = 'online' | 'offline' | 'unknown'
-
-interface DataSourceItem {
-  id: string
-  name: string
-  type: string
-  baseURL: string
-  status: SourceStatus
-  latencyMs: number
-  description: string
-}
-
-/** 数据源状态对应颜色 token（引用 constants，不硬编码） */
-const SOURCE_STATUS_COLOR: Record<SourceStatus, keyof typeof COLOR_TOKENS> = {
-  online: 'success',
-  offline: 'danger',
-  unknown: 'neutral',
-}
-
-const SOURCE_STATUS_BADGE: Record<SourceStatus, { label: string; variant: 'success' | 'destructive' | 'outline' }> = {
-  online: { label: '在线', variant: 'success' },
-  offline: { label: '离线', variant: 'destructive' },
-  unknown: { label: '未知', variant: 'outline' },
-}
-
-const MOCK_DATA_SOURCES: DataSourceItem[] = [
-  { id: 'tencent', name: '腾讯财经', type: 'HTTP REST', baseURL: MOCK_TENCENT_BASE_URL, status: 'online', latencyMs: 128, description: '实时行情、K线、板块资金流向' },
-  { id: 'sina', name: '新浪财经', type: 'HTTP REST', baseURL: MOCK_SINA_BASE_URL, status: 'online', latencyMs: 156, description: '实时行情、分时数据' },
-  { id: 'netease', name: '网易财经', type: 'HTTP REST', baseURL: MOCK_NETEASE_BASE_URL, status: 'unknown', latencyMs: 0, description: '历史K线、财务数据' },
-  { id: 'akshare', name: 'AKShare', type: 'Python Service', baseURL: MOCK_AKSHARE_BASE_URL, status: 'online', latencyMs: 320, description: '主数据源，全维度采集服务' },
-  { id: 'mock', name: 'Mock 数据源', type: '本地 Mock', baseURL: 'mock://local', status: 'online', latencyMs: 5, description: '本地 Mock，用于开发与测试' },
-]
-
-interface FetcherLog {
-  id: string
-  time: string
-  level: 'info' | 'warn' | 'error'
-  source: string
-  message: string
-}
-
-const MOCK_FETCHER_LOGS: FetcherLog[] = [
-  { id: 'F1', time: '09:21:05', level: 'info', source: 'akshare', message: `AKShare 服务连接成功，baseURL=${MOCK_AKSHARE_BASE_URL}` },
-  { id: 'F2', time: '09:21:03', level: 'info', source: 'tencent', message: '腾讯财经数据源连通，延迟 128ms' },
-  { id: 'F3', time: '09:20:58', level: 'warn', source: 'netease', message: '网易财经接口响应缓慢，建议降级处理' },
-  { id: 'F4', time: '09:20:50', level: 'info', source: 'sina', message: '新浪财经数据源连通，延迟 156ms' },
-  { id: 'F5', time: '09:20:42', level: 'error', source: 'akshare', message: '维度 05 热点新闻采集超时，触发重试机制' },
-  { id: 'F6', time: '09:20:30', level: 'info', source: 'mock', message: 'Mock 数据源已就绪，供开发调试使用' },
-]
-
-// ============================================================
-// 连通性测试结果
-// ============================================================
-
-type TestState = 'idle' | 'testing' | 'done'
-
-interface TestResult {
-  sourceId: string
+type TestResult = {
+  state: 'idle' | 'testing' | 'done'
   ok: boolean
   latencyMs: number
   message: string
 }
 
-// ============================================================
-// 主页面
-// ============================================================
+function initialTestResults(): Record<QuoteDataSourceId, TestResult> {
+  return DATA_SOURCE_ENDPOINTS.reduce((acc, endpoint) => {
+    acc[endpoint.id] = {
+      state: 'idle',
+      ok: false,
+      latencyMs: 0,
+      message: '未测试',
+    }
+    return acc
+  }, {} as Record<QuoteDataSourceId, TestResult>)
+}
+
+function sourceTypeLabel(type: DataSourceEndpoint['type']): string {
+  switch (type) {
+    case 'http':
+      return 'HTTP REST'
+    case 'python':
+      return 'Python 服务'
+    case 'mock':
+      return '本地 Mock'
+    default:
+      return type
+  }
+}
 
 export default function FetcherConfigPage(): React.JSX.Element {
   const [isLoading, setIsLoading] = useState(true)
-  const [testState, setTestState] = useState<TestState>('idle')
-  const [testResults, setTestResults] = useState<TestResult[]>([])
-  const [logs] = useState<FetcherLog[]>(MOCK_FETCHER_LOGS)
+  const [testResults, setTestResults] = useState<Record<QuoteDataSourceId, TestResult>>(
+    initialTestResults,
+  )
+  const [testingAll, setTestingAll] = useState(false)
 
-  const fetcherConfig = useMemo(() => getDefaultFetcherConfig(), [])
-  const dimensions = useMemo<FetcherDimensionConfig[]>(() => getDefaultFetcherDimensions(), [])
-  const globalConfig = useMemo(() => getDefaultFetcherGlobalConfig(), [])
+  const dimensions = useSevenDimConfigStore((s) => s.dimensions)
+  const logs = useCollectionRuntimeStore((s) => s.logs)
+  const clearLogs = useCollectionRuntimeStore((s) => s.clearLogs)
+
+  const enabledEndpoints = useMemo(
+    () => DATA_SOURCE_ENDPOINTS.filter((e) => e.enabled).length,
+    [],
+  )
+  const enabledDimensions = useMemo(
+    () => dimensions.filter((d) => d.enabled).length,
+    [dimensions],
+  )
 
   useEffect(() => {
-    logger.info('[FetcherConfigPage] 挂载，加载 fetcherConfig 数据')
-    const timer = window.setTimeout(() => {
-      try {
-        setIsLoading(false)
-      } catch (err) {
-        logger.error('[FetcherConfigPage] 加载失败', { err })
-        setIsLoading(false)
-      }
-    }, 400)
-    return () => {
-      window.clearTimeout(timer)
-    }
+    logger.info('[FetcherConfigPage] 挂载，加载数据源注册表')
+    const timer = window.setTimeout(() => setIsLoading(false), 300)
+    return () => window.clearTimeout(timer)
   }, [])
 
-  const handleConnectivityTest = (): void => {
-    setTestState('testing')
-    setTestResults([])
-    logger.info('[FetcherConfigPage] 开始连通性测试')
-    const timer = window.setTimeout(() => {
-      try {
-        const results: TestResult[] = MOCK_DATA_SOURCES.map((src) => {
-          // Mock 测试：网易为失败，其余成功
-          const ok = src.id !== 'netease'
-          return {
-            sourceId: src.id,
-            ok,
-            latencyMs: ok ? src.latencyMs : 0,
-            message: ok ? '连通正常' : '连接超时，建议检查网络或降级',
-          }
-        })
-        setTestResults(results)
-        setTestState('done')
-        logger.info('[FetcherConfigPage] 连通性测试完成', { successCount: results.filter(r => r.ok).length })
-      } catch (err) {
-        logger.error('[FetcherConfigPage] 连通性测试异常', { err })
-        setTestState('done')
-      }
-    }, 800)
-    // cleanup 在组件卸载时无法清除已触发逻辑，但定时器本身在 effect 外需手动管理
-    // 此处通过 testState 防止重复触发
-    void timer
-  }
+  const testOne = useCallback(async (id: QuoteDataSourceId): Promise<void> => {
+    setTestResults((prev) => ({
+      ...prev,
+      [id]: { ...prev[id], state: 'testing' },
+    }))
+    const result = await mcpBridge.callTool('fetcher', 'test_source_connectivity', { source: id })
+    const text = result.content[0]?.text ?? '{}'
+    const parsed: SourceConnectivityResult = JSON.parse(text) as SourceConnectivityResult
+    setTestResults((prev) => ({
+      ...prev,
+      [id]: {
+        state: 'done',
+        ok: parsed.ok,
+        latencyMs: parsed.latencyMs,
+        message: parsed.message,
+      },
+    }))
+  }, [])
 
-  const onlineCount = MOCK_DATA_SOURCES.filter((s) => s.status === 'online').length
-  const enabledDimCount = dimensions.filter((d) => d.enabled).length
+  const handleTestAll = useCallback(async (): Promise<void> => {
+    setTestingAll(true)
+    logger.info('[FetcherConfigPage] 开始全部数据源连通性测试')
+    for (const endpoint of DATA_SOURCE_ENDPOINTS) {
+      await testOne(endpoint.id)
+    }
+    setTestingAll(false)
+    logger.info('[FetcherConfigPage] 全部数据源连通性测试完成')
+  }, [testOne])
+
+  const handleUpdateDimensionPriority = useCallback(
+    (code: string, priority: SourcePriorityItem[]) => {
+      logger.info(`[FetcherConfigPage] 维度 ${code} 优先级变更`, { priority })
+      useSevenDimConfigStore.getState().setDimensionSourcePriority(code, priority)
+    },
+    [],
+  )
 
   return (
     <ErrorBoundary>
       <div className="space-y-6 p-6">
-        {/* 面包屑 */}
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -213,54 +183,69 @@ export default function FetcherConfigPage(): React.JSX.Element {
           </BreadcrumbList>
         </Breadcrumb>
 
-        {/* 页面标题 */}
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl font-bold">抓取引擎配置</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              数据源管理 · 连通性测试 · 引擎日志
+              数据源管理 · 连通性测试 · 维度映射 · 实时日志
             </p>
           </div>
-          <Badge variant="outline">D-2 框架 · v{fetcherConfig.version}</Badge>
+          <Badge variant="outline">D-2 框架</Badge>
         </div>
 
-        {/* 全局配置概览 */}
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <Card>
             <CardContent className="py-4">
               <p className="text-xs text-muted-foreground">数据源数量</p>
-              <p className="mt-1 text-2xl font-bold">{MOCK_DATA_SOURCES.length}</p>
+              <p className="mt-1 text-2xl font-bold">{DATA_SOURCE_ENDPOINTS.length}</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="py-4">
-              <p className="text-xs text-muted-foreground">在线数据源</p>
-              <p className="mt-1 text-2xl font-bold" style={{ color: COLOR_TOKENS.success.hex }}>{onlineCount}</p>
+              <p className="text-xs text-muted-foreground">已启用</p>
+              <p
+                className="mt-1 text-2xl font-bold"
+                style={{ color: COLOR_TOKENS.success.hex }}
+              >
+                {enabledEndpoints}
+              </p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="py-4">
               <p className="text-xs text-muted-foreground">启用维度</p>
-              <p className="mt-1 text-2xl font-bold">{enabledDimCount} / {dimensions.length}</p>
+              <p className="mt-1 text-2xl font-bold">
+                {enabledDimensions} / {dimensions.length}
+              </p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="py-4">
-              <p className="text-xs text-muted-foreground">日调用上限</p>
-              <p className="mt-1 text-2xl font-bold">{globalConfig.rateLimitPerDay}</p>
+              <p className="text-xs text-muted-foreground">日志条数</p>
+              <p className="mt-1 text-2xl font-bold">{logs.length}</p>
             </CardContent>
           </Card>
         </div>
 
-        {/* 数据源列表 */}
         <Card>
           <CardHeader>
-            <div className="flex items-center gap-2">
-              <Server className="h-5 w-5 text-primary" />
-              <div>
-                <CardTitle>数据源列表</CardTitle>
-                <CardDescription>已配置的数据源供应商及其连通状态</CardDescription>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Server className="h-5 w-5 text-primary" />
+                <div>
+                  <CardTitle>数据源列表</CardTitle>
+                  <CardDescription>来自 dataSourceRegistry 的端点注册信息</CardDescription>
+                </div>
               </div>
+              <Button
+                onClick={() => void handleTestAll()}
+                disabled={testingAll}
+                isLoading={testingAll}
+                className="gap-1.5"
+              >
+                {!testingAll && <Play className="h-4 w-4" />}
+                {testingAll ? '测试中...' : '全部测试'}
+              </Button>
             </div>
           </CardHeader>
           <CardContent>
@@ -270,8 +255,6 @@ export default function FetcherConfigPage(): React.JSX.Element {
                   <Skeleton key={i} className="h-12 w-full" />
                 ))}
               </div>
-            ) : MOCK_DATA_SOURCES.length === 0 ? (
-              <EmptyState title="暂无数据源" description="尚未配置任何数据源" />
             ) : (
               <div className="overflow-x-auto">
                 <Table>
@@ -279,36 +262,87 @@ export default function FetcherConfigPage(): React.JSX.Element {
                     <TableRow>
                       <TableHead>数据源</TableHead>
                       <TableHead>类型</TableHead>
-                      <TableHead>地址</TableHead>
+                      <TableHead>baseURL</TableHead>
+                      <TableHead>能力</TableHead>
+                      <TableHead>超时 / 重试</TableHead>
                       <TableHead>状态</TableHead>
-                      <TableHead>延迟</TableHead>
-                      <TableHead>说明</TableHead>
+                      <TableHead>操作</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {MOCK_DATA_SOURCES.map((src) => {
-                      const statusInfo = SOURCE_STATUS_BADGE[src.status]
-                      const colorToken = COLOR_TOKENS[SOURCE_STATUS_COLOR[src.status]]
+                    {DATA_SOURCE_ENDPOINTS.map((endpoint) => {
+                      const result = testResults[endpoint.id]
+                      const testing = result.state === 'testing'
                       return (
-                        <TableRow key={src.id}>
-                          <TableCell className="font-medium">{src.name}</TableCell>
-                          <TableCell>
-                            <Badge variant="secondary">{src.type}</Badge>
-                          </TableCell>
-                          <TableCell className="font-mono text-xs text-muted-foreground">{src.baseURL}</TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-1.5">
-                              <span
-                                className="inline-block h-2 w-2 rounded-full"
-                                style={{ backgroundColor: colorToken.hex }}
-                              />
-                              <Badge variant={statusInfo.variant}>{statusInfo.label}</Badge>
+                        <TableRow key={endpoint.id}>
+                          <TableCell className="font-medium">
+                            <div className="flex items-center gap-2">
+                              {endpoint.name}
+                              {endpoint.enabled ? (
+                                <Badge variant="success" className="text-[10px]">
+                                  启用
+                                </Badge>
+                              ) : (
+                                <Badge variant="outline" className="text-[10px]">
+                                  禁用
+                                </Badge>
+                              )}
                             </div>
                           </TableCell>
-                          <TableCell className="text-sm text-muted-foreground">
-                            {src.latencyMs > 0 ? `${src.latencyMs}ms` : '-'}
+                          <TableCell>
+                            <Badge variant="secondary">{sourceTypeLabel(endpoint.type)}</Badge>
                           </TableCell>
-                          <TableCell className="text-xs text-muted-foreground">{src.description}</TableCell>
+                          <TableCell className="font-mono text-xs text-muted-foreground">
+                            {endpoint.baseUrl}
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex gap-1">
+                              {endpoint.supportsQuote && (
+                                <Badge variant="outline" className="text-[10px]">
+                                  行情
+                                </Badge>
+                              )}
+                              {endpoint.supportsKline && (
+                                <Badge variant="outline" className="text-[10px]">
+                                  K线
+                                </Badge>
+                              )}
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-xs text-muted-foreground">
+                            {endpoint.timeoutMs}ms / {endpoint.retries}次
+                          </TableCell>
+                          <TableCell>
+                            {result.state === 'done' && (
+                              <div className="flex items-center gap-1.5">
+                                {result.ok ? (
+                                  <CheckCircle
+                                    className="h-4 w-4"
+                                    style={{ color: COLOR_TOKENS.success.hex }}
+                                  />
+                                ) : (
+                                  <XCircle
+                                    className="h-4 w-4"
+                                    style={{ color: COLOR_TOKENS.danger.hex }}
+                                  />
+                                )}
+                                <span className="text-xs">{result.latencyMs}ms</span>
+                              </div>
+                            )}
+                            {testing && (
+                              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => void testOne(endpoint.id)}
+                              disabled={testing}
+                            >
+                              {testing ? '测试中' : '测试'}
+                            </Button>
+                          </TableCell>
                         </TableRow>
                       )
                     })}
@@ -319,68 +353,51 @@ export default function FetcherConfigPage(): React.JSX.Element {
           </CardContent>
         </Card>
 
-        {/* 连通性测试面板 */}
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Wifi className="h-5 w-5 text-primary" />
-                <div>
-                  <CardTitle>连通性测试</CardTitle>
-                  <CardDescription>一键测试所有数据源的连通性与响应延迟</CardDescription>
-                </div>
+            <div className="flex items-center gap-2">
+              <Wifi className="h-5 w-5 text-primary" />
+              <div>
+                <CardTitle>连通性测试结果</CardTitle>
+                <CardDescription>各数据源实际探测结果</CardDescription>
               </div>
-              <Button
-                onClick={handleConnectivityTest}
-                disabled={testState === 'testing' || isLoading}
-                isLoading={testState === 'testing'}
-                className="gap-1.5"
-              >
-                {testState !== 'testing' && <Play className="h-4 w-4" />}
-                {testState === 'testing' ? '测试中...' : testState === 'done' ? '重新测试' : '开始测试'}
-              </Button>
             </div>
           </CardHeader>
           <CardContent>
-            {testState === 'idle' ? (
+            {Object.values(testResults).every((r) => r.state === 'idle') ? (
               <EmptyState
-                title="尚未执行连通性测试"
-                description="点击右上角「开始测试」按钮，检测各数据源是否可正常访问"
+                title="尚未执行测试"
+                description="点击「全部测试」或单个数据源「测试」按钮"
                 icon={<Wifi className="h-12 w-12 text-muted-foreground/40" />}
               />
-            ) : testState === 'testing' ? (
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  正在测试数据源连通性...
-                </div>
-                <Progress value={50} max={100} showMax={false} />
-              </div>
             ) : (
-              <div className="space-y-2">
-                {testResults.map((result) => {
-                  const source = MOCK_DATA_SOURCES.find((s) => s.id === result.sourceId)
-                  const colorToken = result.ok ? COLOR_TOKENS.success : COLOR_TOKENS.danger
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                {DATA_SOURCE_ENDPOINTS.filter((endpoint) => testResults[endpoint.id].state !== 'idle').map((endpoint) => {
+                  const result = testResults[endpoint.id]
+                  const color = result.ok ? COLOR_TOKENS.success : COLOR_TOKENS.danger
                   return (
                     <div
-                      key={result.sourceId}
+                      key={endpoint.id}
                       className="flex items-center justify-between rounded-md border p-3"
-                      style={{ borderLeftColor: colorToken.hex, borderLeftWidth: 3 }}
+                      style={{ borderLeftColor: color.hex, borderLeftWidth: 3 }}
                     >
-                      <div className="flex items-center gap-2">
-                        {result.ok ? (
-                          <CheckCircle className="h-4 w-4" style={{ color: COLOR_TOKENS.success.hex }} />
-                        ) : (
-                          <XCircle className="h-4 w-4" style={{ color: COLOR_TOKENS.danger.hex }} />
-                        )}
-                        <span className="text-sm font-medium">{source?.name ?? result.sourceId}</span>
-                        <Badge variant={result.ok ? 'success' : 'destructive'}>
-                          {result.ok ? '成功' : '失败'}
-                        </Badge>
+                      <div className="space-y-0.5">
+                        <div className="text-sm font-medium">{endpoint.name}</div>
+                        <div className="text-xs text-muted-foreground">{result.message}</div>
                       </div>
-                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                        <span>{result.message}</span>
-                        {result.ok && <span>延迟 {result.latencyMs}ms</span>}
+                      <div className="text-right">
+                        {result.state === 'testing' ? (
+                          <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                        ) : (
+                          <>
+                            <div className="text-sm font-bold" style={{ color: color.hex }}>
+                              {result.ok ? '成功' : '失败'}
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              {result.latencyMs}ms
+                            </div>
+                          </>
+                        )}
                       </div>
                     </div>
                   )
@@ -390,36 +407,45 @@ export default function FetcherConfigPage(): React.JSX.Element {
           </CardContent>
         </Card>
 
-        {/* 维度采集配置（来自 fetcherConfig） */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">维度采集配置</CardTitle>
-            <CardDescription>来自 src/config/fetcherConfig.ts 的默认维度配置</CardDescription>
+            <div className="flex items-center gap-2">
+              <Activity className="h-5 w-5 text-primary" />
+              <div>
+                <CardTitle>维度数据源映射</CardTitle>
+                <CardDescription>各维度与直连数据源优先级的当前配置</CardDescription>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             {isLoading ? (
               <div className="space-y-2">
                 {Array.from({ length: 6 }).map((_, i) => (
-                  <Skeleton key={i} className="h-8 w-full" />
+                  <Skeleton key={i} className="h-16 w-full" />
                 ))}
               </div>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {dimensions.map((dim) => (
-                  <div key={dim.code} className="flex items-center justify-between rounded-md border p-2.5">
-                    <div className="flex items-center gap-2">
-                      <Badge variant={dim.enabled ? 'default' : 'outline'}>
-                        {dim.enabled ? '启用' : '禁用'}
-                      </Badge>
-                      <span className="text-sm font-medium">{dim.code}·{dim.name}</span>
+                  <div
+                    key={dim.code}
+                    className={`rounded-md border p-3 ${dim.enabled ? '' : 'opacity-60'}`}
+                  >
+                    <div className="mb-2 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium">
+                          {dim.code} · {dim.name}
+                        </span>
+                        <Badge variant={dim.enabled ? 'default' : 'outline'}>
+                          {dim.enabled ? '启用' : '禁用'}
+                        </Badge>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                      <span>频率：{FETCHER_FREQUENCY_LABELS[dim.frequency]}</span>
-                      <span>·</span>
-                      <span>源：{dim.sources.join(', ')}</span>
-                      <span>·</span>
-                      <span>缓存：{dim.cacheTtlMinutes}min</span>
-                    </div>
+                    <SourcePrioritySelect
+                      value={dim.sourcePriority}
+                      onChange={(priority) => handleUpdateDimensionPriority(dim.code, priority)}
+                      disabled={!dim.enabled}
+                    />
                   </div>
                 ))}
               </div>
@@ -427,88 +453,7 @@ export default function FetcherConfigPage(): React.JSX.Element {
           </CardContent>
         </Card>
 
-        {/* 采集日志面板 */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <ScrollText className="h-5 w-5 text-primary" />
-              <div>
-                <CardTitle>采集日志</CardTitle>
-                <CardDescription>抓取引擎运行日志</CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <div className="space-y-2">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Skeleton key={i} className="h-8 w-full" />
-                ))}
-              </div>
-            ) : logs.length === 0 ? (
-              <EmptyState title="暂无日志" description="抓取引擎启动后将在此展示日志" />
-            ) : (
-              <div className="max-h-[400px] space-y-1 overflow-y-auto rounded-md border bg-muted/30 p-3 font-mono text-xs">
-                {logs.map((log) => {
-                  const levelColor =
-                    log.level === 'error'
-                      ? COLOR_TOKENS.danger.hex
-                      : log.level === 'warn'
-                        ? COLOR_TOKENS.warning.hex
-                        : COLOR_TOKENS.info.hex
-                  return (
-                    <div key={log.id} className="flex items-start gap-2 py-0.5">
-                      <span className="shrink-0 text-muted-foreground">{log.time}</span>
-                      <span className="shrink-0 font-semibold uppercase" style={{ color: levelColor }}>
-                        [{log.level}]
-                      </span>
-                      <span className="shrink-0 text-muted-foreground">[{log.source}]</span>
-                      <span className="min-w-0 break-words text-foreground">{log.message}</span>
-                    </div>
-                  )
-                })}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* 全局参数 */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">全局参数</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">最大标的数</span>
-              <span className="text-sm">{globalConfig.maxSymbols}</span>
-            </div>
-            <Separator />
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">批量大小</span>
-              <span className="text-sm">{globalConfig.batchSize}</span>
-            </div>
-            <Separator />
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">默认频率</span>
-              <span className="text-sm">{FETCHER_FREQUENCY_LABELS[globalConfig.defaultFrequency]}</span>
-            </div>
-            <Separator />
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">每分钟限流</span>
-              <span className="text-sm">{globalConfig.rateLimitPerMinute}</span>
-            </div>
-            <Separator />
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">每小时限流</span>
-              <span className="text-sm">{globalConfig.rateLimitPerHour}</span>
-            </div>
-            <Separator />
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">每日限流</span>
-              <span className="text-sm">{globalConfig.rateLimitPerDay}</span>
-            </div>
-          </CardContent>
-        </Card>
+        <LiveLogStream logs={logs} onClear={clearLogs} maxHeight="300px" />
       </div>
     </ErrorBoundary>
   )

@@ -8,7 +8,7 @@ describe('CancellationManager', () => {
     manager = new CancellationManager()
   })
 
-  it('should register and unregister AbortController', () => {
+  it('应该register and unregister AbortController', () => {
     const controller = new AbortController()
     manager.register('req-1', controller)
     expect(manager.getActiveCount()).toBe(1)
@@ -17,7 +17,7 @@ describe('CancellationManager', () => {
     expect(manager.getActiveCount()).toBe(0)
   })
 
-  it('should cancel a registered request', () => {
+  it('应该cancel a registered request', () => {
     const controller = new AbortController()
     const onAbort = vi.fn()
     controller.signal.addEventListener('abort', onAbort)
@@ -30,12 +30,12 @@ describe('CancellationManager', () => {
     expect(manager.getActiveCount()).toBe(0)
   })
 
-  it('should return false for non-existent request', () => {
+  it('应该返回 false for non-existent request', () => {
     const result = manager.cancel('nonexistent')
     expect(result).toBe(false)
   })
 
-  it('should cancel all active requests', () => {
+  it('应该cancel all active requests', () => {
     const c1 = new AbortController()
     const c2 = new AbortController()
     manager.register('req-1', c1)
@@ -45,7 +45,7 @@ describe('CancellationManager', () => {
     expect(manager.getActiveCount()).toBe(0)
   })
 
-  it('should notify onCancel listeners', () => {
+  it('不应该ify onCancel listeners', () => {
     const listener = vi.fn()
     manager.onCancel(listener)
 
@@ -59,7 +59,7 @@ describe('CancellationManager', () => {
     )
   })
 
-  it('should unsubscribe onCancel listeners', () => {
+  it('应该取消订阅 onCancel listeners', () => {
     const listener = vi.fn()
     const unsubscribe = manager.onCancel(listener)
     unsubscribe()
@@ -71,7 +71,7 @@ describe('CancellationManager', () => {
     expect(listener).not.toHaveBeenCalled()
   })
 
-  it('should isolate listener errors', () => {
+  it('应该isolate listener errors', () => {
     const badListener = vi.fn().mockImplementation(() => {
       throw new Error('Boom!')
     })

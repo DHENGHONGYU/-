@@ -46,41 +46,17 @@ export type { OrderDirection } from '@/config/dbConfig'
 export function validateOrder(order: Partial<Order>): ValidationResult<Order> {
   const errors: string[] = []
 
-  // symbol 校验
-  if (!order.symbol || typeof order.symbol !== 'string' || order.symbol.trim().length === 0) {
-    errors.push('symbol 不能为空')
-  } else if (order.symbol.length > 20) {
-    errors.push('symbol 长度不能超过 20 个字符')
-  }
+  const symbolError = validateSymbol(order.symbol)
+  if (symbolError) errors.push(symbolError)
 
-  // direction 校验
-  if (!order.direction) {
-    errors.push('direction 不能为空')
-  } else if (order.direction !== 'buy' && order.direction !== 'sell') {
-    errors.push(`direction 必须为 'buy' 或 'sell'，当前: ${String(order.direction)}`)
-  }
+  const directionError = validateDirection(order.direction)
+  if (directionError) errors.push(directionError)
 
-  // quantity 校验
-  if (order.quantity === undefined || order.quantity === null) {
-    errors.push('quantity 不能为空')
-  } else if (typeof order.quantity !== 'number' || !Number.isFinite(order.quantity)) {
-    errors.push('quantity 必须为有限数字')
-  } else if (order.quantity <= 0) {
-    errors.push('quantity 必须为正数')
-  } else if (order.quantity > 1_000_000) {
-    errors.push('quantity 不能超过 100 万')
-  }
+  const quantityError = validateQuantity(order.quantity)
+  if (quantityError) errors.push(quantityError)
 
-  // price 校验
-  if (order.price === undefined || order.price === null) {
-    errors.push('price 不能为空')
-  } else if (typeof order.price !== 'number' || !Number.isFinite(order.price)) {
-    errors.push('price 必须为有限数字')
-  } else if (order.price <= 0) {
-    errors.push('price 必须为正数')
-  } else if (order.price > 1_000_000) {
-    errors.push('price 不能超过 1,000,000')
-  }
+  const priceError = validatePrice(order.price)
+  if (priceError) errors.push(priceError)
 
   // amount 校验（如果提供了 amount）
   if (order.amount !== undefined && order.quantity !== undefined && order.price !== undefined) {
@@ -103,6 +79,58 @@ export function validateOrder(order: Partial<Order>): ValidationResult<Order> {
     } as Order,
     errors: [],
   }
+}
+
+function validateSymbol(symbol: unknown): string | null {
+  if (!symbol || typeof symbol !== 'string' || symbol.trim().length === 0) {
+    return 'symbol 不能为空'
+  }
+  if (symbol.length > 20) {
+    return 'symbol 长度不能超过 20 个字符'
+  }
+  return null
+}
+
+function validateDirection(direction: unknown): string | null {
+  if (!direction) {
+    return 'direction 不能为空'
+  }
+  if (direction !== 'buy' && direction !== 'sell') {
+    return `direction 必须为 'buy' 或 'sell'，当前: ${String(direction)}`
+  }
+  return null
+}
+
+function validateQuantity(quantity: unknown): string | null {
+  if (quantity === undefined || quantity === null) {
+    return 'quantity 不能为空'
+  }
+  if (typeof quantity !== 'number' || !Number.isFinite(quantity)) {
+    return 'quantity 必须为有限数字'
+  }
+  if (quantity <= 0) {
+    return 'quantity 必须为正数'
+  }
+  if (quantity > 1_000_000) {
+    return 'quantity 不能超过 100 万'
+  }
+  return null
+}
+
+function validatePrice(price: unknown): string | null {
+  if (price === undefined || price === null) {
+    return 'price 不能为空'
+  }
+  if (typeof price !== 'number' || !Number.isFinite(price)) {
+    return 'price 必须为有限数字'
+  }
+  if (price <= 0) {
+    return 'price 必须为正数'
+  }
+  if (price > 1_000_000) {
+    return 'price 不能超过 1,000,000'
+  }
+  return null
 }
 
 /**

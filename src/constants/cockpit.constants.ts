@@ -8,6 +8,13 @@ import {
   API_TRADE_SIGNALS,
 } from '@/config/apiPaths'
 
+/**
+ * AI 生成内容免责声明（合规：C07）。
+ * 所有 AI 对话/分析类界面应统一展示，避免"保证收益/必涨"等表述。
+ */
+export const AI_DISCLAIMER_TEXT =
+  'AI 生成内容仅供参考，不构成投资建议或交易依据。市场有风险，投资需谨慎。'
+
 export const GRID_COLUMNS = 4
 
 export const GRID_ROW_HEIGHT = 120
@@ -278,6 +285,13 @@ export const WIDGET_DEFAULT_DATA_SOURCE = {
     endpoint: '/user/watchlist',
     enabled: true,
   },
+  watchlistMovers: {
+    type: ACTIVE_DATA_SOURCE,
+    mode: COLLECTION_MODE.POLLING,
+    interval: COLLECTOR_DEFAULT_CONFIG.DEFAULT_POLLING_INTERVAL,
+    endpoint: '/user/watchlist',
+    enabled: true,
+  },
   portfolioOverview: {
     type: ACTIVE_DATA_SOURCE,
     mode: COLLECTION_MODE.POLLING,
@@ -435,6 +449,11 @@ export const DEFAULT_WIDGET_CONFIG = {
   },
   watchlist: {
     title: '自选股',
+    size: WIDGET_SIZE.FULL_WIDTH,
+    category: 'portfolio',
+  },
+  watchlistMovers: {
+    title: '自选股异动',
     size: WIDGET_SIZE.FULL_WIDTH,
     category: 'portfolio',
   },

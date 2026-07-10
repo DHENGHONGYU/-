@@ -100,7 +100,7 @@ export const LLMConfigWidget = memo(function LLMConfigWidget({
   }
 
   return (
-    <div className={`space-y-2 ${className ?? ''}`}>
+    <div className={`space-y-2 ${className}`}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <label className="text-sm font-medium">大模型配置</label>

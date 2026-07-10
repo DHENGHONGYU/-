@@ -1,5 +1,6 @@
 import React from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import { Skeleton } from '@/components/ui/states'
+import { WidgetStateShell } from './components/WidgetStateShell'
 import type { WidgetConfig, SectorHeatmapData } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
 import { STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
@@ -9,7 +10,7 @@ interface SectorHeatmapWidgetProps {
 }
 
 export default function SectorHeatmapWidget({ config }: SectorHeatmapWidgetProps): React.JSX.Element {
-  const { data, loadingMap, errorMap } = useMarketData()
+  const { data, loadingMap, errorMap, refreshWidget } = useMarketData()
   const sectors = data.sectors
   const loading = loadingMap[config.instanceId] ?? true
   const error = errorMap[config.instanceId]
@@ -35,50 +36,39 @@ export default function SectorHeatmapWidget({ config }: SectorHeatmapWidgetProps
   const topGainers = [...sectors].sort((a, b) => b.changePercent - a.changePercent).slice(0, 5)
   const topLosers = [...sectors].sort((a, b) => a.changePercent - b.changePercent).slice(0, 5)
 
-  if (error) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">{config.title}</CardTitle>
-        </CardHeader>
-        <CardContent className="text-center text-destructive">
-          <p>{error}</p>
-        </CardContent>
-      </Card>
-    )
-  }
+  const visualState = error
+    ? 'error'
+    : loading
+      ? 'loading'
+      : sectors.length === 0
+        ? 'empty'
+        : 'ready'
 
-  if (loading) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>{config.title}</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="h-32 bg-muted rounded" />
+  return (
+    <WidgetStateShell
+      title={config.title}
+      visualState={visualState}
+      error={error}
+      onRetry={() => refreshWidget(config.instanceId)}
+      skeleton={
+        <div className="space-y-4">
+          <Skeleton className="h-32" />
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="h-4 bg-muted rounded" />
+                <Skeleton key={i} variant="text" />
               ))}
             </div>
             <div className="space-y-2">
               {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="h-4 bg-muted rounded" />
+                <Skeleton key={i} variant="text" />
               ))}
             </div>
           </div>
-        </CardContent>
-      </Card>
-    )
-  }
-
-  return (
-    <Card>
-      <CardHeader className="pb-3">
-        <CardTitle className="text-base font-semibold">{config.title}</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
+        </div>
+      }
+    >
+      <div className="space-y-4">
         <div className="grid grid-cols-5 gap-2">
           {sectors.map((sector: SectorHeatmapData) => (
             <div
@@ -117,7 +107,7 @@ export default function SectorHeatmapWidget({ config }: SectorHeatmapWidgetProps
             </div>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </WidgetStateShell>
   )
 }

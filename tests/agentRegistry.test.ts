@@ -31,13 +31,13 @@ describe('AgentRegistry', () => {
     destroyAgentRegistry()
   })
 
-  it('should register an agent', () => {
+  it('应该register an agent', () => {
     const registry = createAgentRegistry()
     registry.register(mockAgent)
     expect(registry.has('test-agent')).toBe(true)
   })
 
-  it('should retrieve registered agent', () => {
+  it('应该检索 registered agent', () => {
     const registry = createAgentRegistry()
     registry.register(mockAgent)
     const entry = registry.get('test-agent')
@@ -46,24 +46,24 @@ describe('AgentRegistry', () => {
     expect(entry?.config.name).toBe('测试Agent')
   })
 
-  it('should return undefined for unregistered agent', () => {
+  it('应该返回 undefined for unregistered agent', () => {
     const registry = createAgentRegistry()
     expect(registry.get('non-existent')).toBeUndefined()
   })
 
-  it('should unregister an agent', () => {
+  it('应该unregister an agent', () => {
     const registry = createAgentRegistry()
     registry.register(mockAgent)
     expect(registry.unregister('test-agent')).toBe(true)
     expect(registry.has('test-agent')).toBe(false)
   })
 
-  it('should return false when unregistering non-existent agent', () => {
+  it('应该返回 false when unregistering non-existent agent', () => {
     const registry = createAgentRegistry()
     expect(registry.unregister('non-existent')).toBe(false)
   })
 
-  it('should list all registered agents', () => {
+  it('应该list all registered agents', () => {
     const registry = createAgentRegistry()
     registry.register(mockAgent)
     registry.register(mockAgent2)
@@ -73,7 +73,7 @@ describe('AgentRegistry', () => {
     expect(all.map((e) => e.config.id)).toContain('test-agent-2')
   })
 
-  it('should filter agents by tag', () => {
+  it('应该过滤 agents by tag', () => {
     const registry = createAgentRegistry()
     registry.register(mockAgent, ['analysis', 'news'])
     registry.register(mockAgent2, ['trading'])
@@ -90,7 +90,7 @@ describe('AgentRegistry', () => {
     expect(emptyAgents).toHaveLength(0)
   })
 
-  it('should return correct stats', () => {
+  it('应该返回 correct stats', () => {
     const registry = createAgentRegistry()
     registry.register(mockAgent, ['tag1'])
     registry.register(mockAgent2, ['tag2', 'tag3'])
@@ -102,7 +102,7 @@ describe('AgentRegistry', () => {
     expect(stats.agentIds).toContain('test-agent-2')
   })
 
-  it('should update config when registering existing agent', () => {
+  it('应该更新 config when registering existing agent', () => {
     const registry = createAgentRegistry()
     registry.register(mockAgent)
     const updated: AgentConfig = { ...mockAgent, name: '更新后的名称' }
@@ -112,7 +112,7 @@ describe('AgentRegistry', () => {
     expect(entry?.config.name).toBe('更新后的名称')
   })
 
-  it('should track instance count', () => {
+  it('应该track instance count', () => {
     const registry = createAgentRegistry()
     registry.register(mockAgent)
 
@@ -131,13 +131,13 @@ describe('AgentRegistry', () => {
     expect(registry.get('test-agent')!.instanceCount).toBe(0)
   })
 
-  it('should return existing instance from getAgentRegistry', () => {
+  it('应该返回 existing instance from getAgentRegistry', () => {
     const registry1 = getAgentRegistry()
     const registry2 = getAgentRegistry()
     expect(registry1).toBe(registry2)
   })
 
-  it('should clear tags when unregistering', () => {
+  it('应该清除 tags when unregistering', () => {
     const registry = createAgentRegistry()
     registry.register(mockAgent, ['temp-tag'])
     registry.unregister('test-agent')

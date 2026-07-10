@@ -1,8 +1,28 @@
 import React, { useCallback } from 'react'
+import type { ReactNode } from 'react'
 import { WidgetContext } from '../../core/WidgetContext'
 import { widgetEventBus } from '../../core/widgetEventBus'
 import type { WidgetConfig } from '../../types/widget'
 import { THEME_TOKENS } from '@/constants/theme.tokens'
+import { Loading, Empty, ErrorState } from '@/components/ui/states'
+
+/**
+ * Widget 视觉状态：控制 Loading/Empty/Error 占位，默认 ready 渲染 children。
+ * 由宿主 widget 根据数据加载情况传入，实现全站统一的交互状态呈现（P3）。
+ */
+export type WidgetVisualState = 'ready' | 'loading' | 'empty' | 'error'
+
+/** 状态占位文案配置 */
+export interface WidgetStateConfig {
+  loadingLabel?: string
+  emptyTitle?: string
+  emptyDescription?: string
+  emptyAction?: ReactNode
+  errorTitle?: string
+  errorDescription?: string
+  onRetry?: () => void
+  skeletonVariant?: 'text' | 'rect' | 'circle'
+}
 
 // 每个 Widget 的外层包装器
 // 提供：ErrorBoundary、数据订阅管理、生命周期控制
@@ -12,6 +32,10 @@ interface WidgetShellProps {
   config: WidgetConfig
   children: React.ReactNode
   onError?: (error: Error) => void
+  /** 视觉状态，默认 ready */
+  state?: WidgetVisualState
+  /** 状态占位配置 */
+  stateConfig?: WidgetStateConfig
 }
 
 interface State {
@@ -40,13 +64,11 @@ class ErrorBoundary extends React.Component<
   render(): React.ReactNode {
     if (this.state.hasError) {
       return (
-        <div style={{ padding: '16px', color: 'red' }}>
-          <h3>Widget 渲染错误</h3>
-          <p>{this.state.error?.message}</p>
-          <button onClick={() => this.setState({ hasError: false, error: null })}>
-            重试
-          </button>
-        </div>
+        <ErrorState
+          title="组件渲染出错"
+          description={this.state.error?.message}
+          onRetry={() => this.setState({ hasError: false, error: null })}
+        />
       )
     }
 
@@ -54,7 +76,40 @@ class ErrorBoundary extends React.Component<
   }
 }
 
-export function WidgetShell({ widgetId, config, children, onError }: WidgetShellProps): React.ReactElement {
+export function WidgetShell({
+  widgetId,
+  config,
+  children,
+  onError,
+  state,
+  stateConfig,
+}: WidgetShellProps): React.ReactElement {
+  const visualState: WidgetVisualState = state ?? 'ready'
+
+  const renderContent = (): React.ReactNode => {
+    if (visualState === 'loading') {
+      return <Loading label={stateConfig?.loadingLabel ?? '加载中…'} />
+    }
+    if (visualState === 'empty') {
+      return (
+        <Empty
+          title={stateConfig?.emptyTitle}
+          description={stateConfig?.emptyDescription}
+          action={stateConfig?.emptyAction}
+        />
+      )
+    }
+    if (visualState === 'error') {
+      return (
+        <ErrorState
+          title={stateConfig?.errorTitle}
+          description={stateConfig?.errorDescription}
+          onRetry={stateConfig?.onRetry}
+        />
+      )
+    }
+    return children
+  }
   const subscribe = useCallback(
     (channel: string, callback: (data: unknown) => void) => {
       // 事件名格式：`widget:{widgetId}:{event}` 或数据通道
@@ -126,7 +181,7 @@ export function WidgetShell({ widgetId, config, children, onError }: WidgetShell
           </div>
 
           {/* Widget 内容区 */}
-          <div style={{ flex: 1, overflow: 'auto', padding: '12px' }}>{children}</div>
+          <div style={{ flex: 1, overflow: 'auto', padding: '12px' }}>{renderContent()}</div>
         </div>
       </ErrorBoundary>
     </WidgetContext.Provider>

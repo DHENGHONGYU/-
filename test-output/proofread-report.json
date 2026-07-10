@@ -1,0 +1,88 @@
+{
+  "id": "report-1783519242273-test-project-1",
+  "project_id": "test-project-1",
+  "project_name": "测试项目",
+  "scan_time": 1783519242263,
+  "local_scan": {
+    "project_id": "test-project-1",
+    "scan_time": 1783519242263,
+    "total_files": 2,
+    "scanned_files": 2,
+    "skipped_files": 0,
+    "rule_matches": [
+      {
+        "rule_id": "R002",
+        "rule_name": "Hardcoded Password",
+        "severity": "critical",
+        "category": "hardcoded_secret",
+        "file_path": "C:\\Users\\huawei\\AppData\\Local\\Temp\\hybrid-proofread-test-FkOeYn/src/config/env.ts",
+        "line_number": 6,
+        "column_number": 5,
+        "match_text": "password: 'admin123'",
+        "description": "检测硬编码的密码",
+        "action_type": "block"
+      },
+      {
+        "rule_id": "R002",
+        "rule_name": "Hardcoded Password",
+        "severity": "critical",
+        "category": "hardcoded_secret",
+        "file_path": "C:\\Users\\huawei\\AppData\\Local\\Temp\\hybrid-proofread-test-FkOeYn/src/index.ts",
+        "line_number": 2,
+        "column_number": 7,
+        "match_text": "password = 'superSecret123!'",
+        "description": "检测硬编码的密码",
+        "action_type": "block"
+      },
+      {
+        "rule_id": "R007",
+        "rule_name": "HTTP URL Usage",
+        "severity": "medium",
+        "category": "security_best_practice",
+        "file_path": "C:\\Users\\huawei\\AppData\\Local\\Temp\\hybrid-proofread-test-FkOeYn/src/index.ts",
+        "line_number": 3,
+        "column_number": 14,
+        "match_text": "http://localhost:3000'\n\nexport function getData() {\n  return fetch(url, {\n    headers: { Authorization: `Bearer ${api_key}` }\n  })\n}\n",
+        "description": "检测使用 HTTP 而非 HTTPS 的 URL",
+        "action_type": "warn"
+      }
+    ],
+    "hashes": [
+      {
+        "file_hash": "08af7d893ab2076f7ebb4a73c4c3f28cdc57b2095d99fc2c6528f8463bb8f635",
+        "file_type": "source_code",
+        "file_path": "C:\\Users\\huawei\\AppData\\Local\\Temp\\hybrid-proofread-test-FkOeYn/src/config/env.ts",
+        "project_id": "test-project-1",
+        "last_modified": 1783519242206,
+        "size_bytes": 177
+      },
+      {
+        "file_hash": "5e2326305a6467bac3e3110113d91a9900a467029ece2e7bf0bf807761fc0bd4",
+        "file_type": "source_code",
+        "file_path": "C:\\Users\\huawei\\AppData\\Local\\Temp\\hybrid-proofread-test-FkOeYn/src/index.ts",
+        "project_id": "test-project-1",
+        "last_modified": 1783519242205,
+        "size_bytes": 240
+      }
+    ]
+  },
+  "cloud_risk": {
+    "project_id": "test-project-1",
+    "checked_at": 1783519242273,
+    "hash_count": 2,
+    "risky_count": 0,
+    "risks": []
+  },
+  "overall_risk_level": 5,
+  "total_issues": 3,
+  "critical_issues": 2,
+  "high_issues": 0,
+  "medium_issues": 1,
+  "low_issues": 0,
+  "summary": "项目 测试项目 的代码安全校对已完成。 本地扫描共检查 2 个文件。 云端风险检查共验证 2 个文件哈希，发现 0 个风险文件。 发现 2 个严重问题，建议立即修复。 发现 1 个中危问题，建议规划修复。",
+  "recommendations": [
+    "[Hardcoded Password] 检测硬编码的密码，请修复文件 C:\\Users\\huawei\\AppData\\Local\\Temp\\hybrid-proofread-test-FkOeYn/src/config/env.ts 第 6 行",
+    "[Hardcoded Password] 检测硬编码的密码，请修复文件 C:\\Users\\huawei\\AppData\\Local\\Temp\\hybrid-proofread-test-FkOeYn/src/index.ts 第 2 行",
+    "[HTTP URL Usage] 检测使用 HTTP 而非 HTTPS 的 URL"
+  ]
+}

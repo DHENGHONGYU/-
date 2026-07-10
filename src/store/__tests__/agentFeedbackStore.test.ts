@@ -23,7 +23,7 @@ describe('useAgentFeedbackStore', () => {
     ...overrides,
   })
 
-  it('should add feedback', () => {
+  it('应该add feedback', () => {
     const fb = createFeedback()
     useAgentFeedbackStore.getState().addFeedback(fb)
 
@@ -32,7 +32,7 @@ describe('useAgentFeedbackStore', () => {
     expect(feedbacks[0]!.id).toBe('fb-1')
   })
 
-  it('should resolve feedback', () => {
+  it('应该resolve feedback', () => {
     const fb = createFeedback()
     useAgentFeedbackStore.getState().addFeedback(fb)
     useAgentFeedbackStore.getState().resolveFeedback('fb-1')
@@ -41,7 +41,7 @@ describe('useAgentFeedbackStore', () => {
     expect(feedbacks[0]!.resolved).toBe(true)
   })
 
-  it('should resolve only matching feedback', () => {
+  it('应该resolve only matching feedback', () => {
     useAgentFeedbackStore.getState().addFeedback(createFeedback({ id: 'fb-1' }))
     useAgentFeedbackStore.getState().addFeedback(createFeedback({ id: 'fb-2' }))
     useAgentFeedbackStore.getState().resolveFeedback('fb-1')
@@ -51,7 +51,7 @@ describe('useAgentFeedbackStore', () => {
     expect(feedbacks[1]!.resolved).toBe(false)
   })
 
-  it('should get summary for agent', () => {
+  it('应该get summary for agent', () => {
     useAgentFeedbackStore.getState().addFeedback(
       createFeedback({ agentId: 'agent-a', rating: 5, category: 'accuracy' }),
     )
@@ -66,14 +66,14 @@ describe('useAgentFeedbackStore', () => {
     expect(summary.categoryBreakdown).toEqual({ accuracy: 1, speed: 1 })
   })
 
-  it('should return empty summary for unknown agent', () => {
+  it('应该返回 empty summary for unknown agent', () => {
     const summary = useAgentFeedbackStore.getState().getSummary('unknown')
     expect(summary.agentId).toBe('unknown')
     expect(summary.averageRating).toBe(0)
     expect(summary.totalFeedback).toBe(0)
   })
 
-  it('should refresh summaries', () => {
+  it('应该refresh summaries', () => {
     useAgentFeedbackStore.getState().addFeedback(createFeedback({ agentId: 'agent-a', rating: 5 }))
     useAgentFeedbackStore.getState().addFeedback(
       createFeedback({ id: 'fb-2', agentId: 'agent-b', rating: 3 }),
@@ -87,7 +87,7 @@ describe('useAgentFeedbackStore', () => {
     expect(summaries.get('agent-b')?.averageRating).toBe(3)
   })
 
-  it('should calculate average rating correctly', () => {
+  it('应该calculate average rating correctly', () => {
     useAgentFeedbackStore.getState().addFeedback(
       createFeedback({ id: 'fb-1', agentId: 'agent-a', rating: 5 }),
     )

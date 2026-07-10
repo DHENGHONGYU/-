@@ -5,6 +5,8 @@
  * 零外部依赖，纯 SVG 绘制，支持宋韵色阶（天青→赭石→胭脂）
  */
 import React, { useMemo } from 'react'
+import { CHART_PALETTE, DARK, FILL, twText } from '@/constants/theme.tokens'
+import { cn } from '@/lib/utils'
 
 export interface GaugeChartProps {
   /** 当前值 (0-100) */
@@ -24,24 +26,24 @@ export interface GaugeChartProps {
   className?: string
 }
 
-// 宋韵色阶
+const GAUGE_TRACK_COLOR = CHART_PALETTE.gaugeTrack
 const COLOR_BANDS = {
   score: [
-    { pct: 0, color: '#cbd5e1' },   // 石色 (低)
-    { pct: 40, color: '#f59e0b' },  // 赭石 (中低)
-    { pct: 60, color: '#14b8a6' },  // 青瓷 (中)
-    { pct: 80, color: '#10b981' },  // 天青 (高)
+    { pct: 0, color: CHART_PALETTE.gaugeLow },
+    { pct: 40, color: CHART_PALETTE.gaugeMidLow },
+    { pct: 60, color: CHART_PALETTE.gaugeMid },
+    { pct: 80, color: CHART_PALETTE.gaugeHigh },
   ],
   progress: [
-    { pct: 0, color: '#e2e8f0' },
-    { pct: 50, color: '#14b8a6' },
-    { pct: 100, color: '#10b981' },
+    { pct: 0, color: CHART_PALETTE.gaugeTrack },
+    { pct: 50, color: CHART_PALETTE.gaugeMid },
+    { pct: 100, color: CHART_PALETTE.gaugeHigh },
   ],
   risk: [
-    { pct: 0, color: '#10b981' },   // 低风险 (青)
-    { pct: 30, color: '#f59e0b' },  // 中风险 (赭石)
-    { pct: 70, color: '#ef4444' },  // 高风险 (胭脂)
-    { pct: 100, color: '#dc2626' },
+    { pct: 0, color: CHART_PALETTE.gaugeHigh },
+    { pct: 30, color: CHART_PALETTE.gaugeMidLow },
+    { pct: 70, color: CHART_PALETTE.series4 },
+    { pct: 100, color: CHART_PALETTE.gaugeRiskHigh },
   ],
 }
 
@@ -103,7 +105,7 @@ export function GaugeChart({
         <path
           d={bgPath}
           fill="none"
-          stroke="#e2e8f0"
+          stroke={GAUGE_TRACK_COLOR}
           strokeWidth={thickness}
           strokeLinecap="round"
         />
@@ -121,7 +123,7 @@ export function GaugeChart({
           x={center}
           y={center - 2}
           textAnchor="middle"
-          className="fill-stone-800 dark:fill-stone-100"
+          className={cn(FILL.stone800, FILL.darkNeutral100)}
           style={{ fontSize: size * 0.16, fontWeight: 700 }}
         >
           {displayPct}
@@ -131,7 +133,7 @@ export function GaugeChart({
           x={center + size * 0.06}
           y={center - 6}
           textAnchor="start"
-          className="fill-stone-400 dark:fill-stone-500"
+          className={cn(FILL.stone400, FILL.darkNeutral500)}
           style={{ fontSize: size * 0.08 }}
         >
           %
@@ -140,14 +142,14 @@ export function GaugeChart({
       {/* 底部标签 */}
       {label && (
         <p
-          className="mt-1 truncate text-xs font-medium text-stone-600 dark:text-stone-300"
+          className={cn('mt-1 truncate text-xs font-medium', twText('stone', 600), DARK.textNeutral300)}
           style={{ maxWidth: size }}
         >
           {label}
         </p>
       )}
       {sublabel && (
-        <p className="truncate text-[11px] text-stone-400 dark:text-stone-500">{sublabel}</p>
+        <p className={cn('truncate text-[11px]', twText('stone', 400), DARK.textNeutral500)}>{sublabel}</p>
       )}
     </div>
   )
@@ -174,7 +176,7 @@ export function GaugeRing({
         cy={center}
         r={radius}
         fill="none"
-        stroke="#e2e8f0"
+        stroke={GAUGE_TRACK_COLOR}
         strokeWidth={thickness}
       />
       <circle
@@ -195,7 +197,7 @@ export function GaugeRing({
         y={center + 1}
         textAnchor="middle"
         dominantBaseline="central"
-        className="fill-stone-700 dark:fill-stone-200"
+        className={cn(FILL.stone700, FILL.darkNeutral200)}
         style={{ fontSize: size * 0.28, fontWeight: 600 }}
       >
         {Math.round((value / max) * 100)}

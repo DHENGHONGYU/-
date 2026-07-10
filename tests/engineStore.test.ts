@@ -6,7 +6,7 @@ describe('engineStore', () => {
     useEngineStore.getState().reset()
   })
 
-  it('should have correct initial state', () => {
+  it('应该有 correct initial state', () => {
     const state = useEngineStore.getState()
     expect(state.started).toBe(false)
     expect(state.stats.dataflow.channels).toBe(0)
@@ -15,7 +15,7 @@ describe('engineStore', () => {
     expect(state.config).toEqual({})
   })
 
-  it('should update started state', () => {
+  it('应该更新 started state', () => {
     useEngineStore.getState().setStarted(true)
     expect(useEngineStore.getState().started).toBe(true)
 
@@ -23,14 +23,14 @@ describe('engineStore', () => {
     expect(useEngineStore.getState().started).toBe(false)
   })
 
-  it('should merge config partially', () => {
+  it('应该合并 config partially', () => {
     useEngineStore.getState().setConfig({ enableSSE: true, sseUrl: 'ws://test' })
     const config = useEngineStore.getState().config
     expect(config.enableSSE).toBe(true)
     expect(config.sseUrl).toBe('ws://test')
   })
 
-  it('should update stats partially', () => {
+  it('应该更新 stats partially', () => {
     useEngineStore.getState().updateStats({
       dataflow: { channels: 5, connected: true },
       agents: { totalAgents: 3, runningTasks: 2 },
@@ -45,7 +45,7 @@ describe('engineStore', () => {
     expect(stats.agents.completedTasks).toBe(0)
   })
 
-  it('should reset to default state', () => {
+  it('应该重置 to default state', () => {
     useEngineStore.getState().setStarted(true)
     useEngineStore.getState().setConfig({ enableSSE: true })
     useEngineStore.getState().updateStats({ dataflow: { channels: 10 } })
@@ -57,14 +57,14 @@ describe('engineStore', () => {
     expect(state.stats.dataflow.channels).toBe(0)
   })
 
-  it('should handle empty stats update', () => {
+  it('应该处理空值 stats update', () => {
     useEngineStore.getState().updateStats({})
     const stats = useEngineStore.getState().stats
     expect(stats.dataflow.channels).toBe(0)
     expect(stats.agents.totalAgents).toBe(0)
   })
 
-  it('should preserve unmodified stats fields during partial update', () => {
+  it('应该preserve unmodified stats fields during partial update', () => {
     useEngineStore.getState().updateStats({ agents: { failedTasks: 5 } })
     const stats = useEngineStore.getState().stats
     expect(stats.agents.failedTasks).toBe(5)

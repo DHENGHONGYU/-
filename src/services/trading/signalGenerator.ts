@@ -1,4 +1,4 @@
-import { getDefaultTradingConfig } from '@/config/tradingConfig'
+import { getEffectiveTradingConfig } from '@/config/tradingConfig'
 import type { SignalDirection } from '@/config/tradingConfig'
 import { dataLayer } from '@/data/dataLayer'
 import type { DailyQuotes, KlineBar, Signal, SignalSnapshot, Stock } from '@/data/types'
@@ -74,7 +74,7 @@ function buildSnapshot(stock: Stock, quotes: DailyQuotes): SignalSnapshot {
 
 function generateBuySignals(snapshot: SignalSnapshot): TradingSignal[] {
   const signals: TradingSignal[] = []
-  const config = getDefaultTradingConfig().signalThresholds
+  const config = getEffectiveTradingConfig().signalThresholds
 
   // buy_dip：价格低于 MA20 8% 且 RSI < 30
   if (
@@ -147,7 +147,7 @@ function generateSellSignals(
   history: KlineBar[],
 ): TradingSignal[] {
   const signals: TradingSignal[] = []
-  const config = getDefaultTradingConfig().signalThresholds
+  const config = getEffectiveTradingConfig().signalThresholds
   const latest = history[history.length - 1]!.close
 
   // sell_profit_taking：价格高于 MA20 15% 且 RSI > 70

@@ -19,38 +19,38 @@ describe('logger', () => {
     vi.restoreAllMocks()
   })
 
-  it('should log debug at debug level', () => {
+  it('应该记录 debug at debug level', () => {
     const logger = getLogger()
     logger.debug('debug msg')
     expect(debugSpy).toHaveBeenCalledWith('[DEBUG] debug msg', '')
   })
 
-  it('should log info at debug level', () => {
+  it('应该记录 info at debug level', () => {
     const logger = getLogger()
     logger.info('info msg')
     expect(logSpy).toHaveBeenCalledWith('[INFO] info msg', '')
   })
 
-  it('should log warn at debug level', () => {
+  it('应该记录 warn at debug level', () => {
     const logger = getLogger()
     logger.warn('warn msg')
     expect(warnSpy).toHaveBeenCalledWith('[WARN] warn msg', '')
   })
 
-  it('should log error at debug level', () => {
+  it('应该记录 error at debug level', () => {
     const logger = getLogger()
     logger.error('error msg')
     expect(errorSpy).toHaveBeenCalledWith('[ERROR] error msg', '')
   })
 
-  it('should suppress debug when level is info', () => {
+  it('应该suppress debug when level is info', () => {
     setLogLevel('info')
     const logger = getLogger()
     logger.debug('debug msg')
     expect(debugSpy).not.toHaveBeenCalled()
   })
 
-  it('should suppress debug and info when level is warn', () => {
+  it('应该suppress debug and info when level is warn', () => {
     setLogLevel('warn')
     const logger = getLogger()
     logger.debug('debug msg')
@@ -59,7 +59,7 @@ describe('logger', () => {
     expect(logSpy).not.toHaveBeenCalled()
   })
 
-  it('should suppress all except error when level is error', () => {
+  it('应该suppress all except error when level is error', () => {
     setLogLevel('error')
     const logger = getLogger()
     logger.debug('debug msg')
@@ -73,13 +73,13 @@ describe('logger', () => {
     expect(errorSpy).toHaveBeenCalledTimes(1)
   })
 
-  it('should include context when provided', () => {
+  it('应该包含 context when provided', () => {
     const logger = getLogger()
     logger.info('msg', { key: 'value' })
     expect(logSpy).toHaveBeenCalledWith('[INFO] msg', { key: 'value' })
   })
 
-  it('should allow changing log level dynamically', () => {
+  it('应该允许 changing log level dynamically', () => {
     const logger = getLogger()
     setLogLevel('error')
     logger.info('should not appear')
@@ -90,7 +90,7 @@ describe('logger', () => {
     expect(logSpy).toHaveBeenCalledTimes(1)
   })
 
-  it('should return same logger interface each time', () => {
+  it('应该返回 same logger interface each time', () => {
     const logger1 = getLogger()
     const logger2 = getLogger()
     expect(typeof logger1.debug).toBe('function')

@@ -88,10 +88,10 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     description: '分析舱',
   },
   {
-    path: '/trading/hub',
+    path: '/trading/flow',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'trading',
-    description: '交易舱 - 模块首页',
+    description: '交易舱 - 交易流程',
   },
   {
     path: '/trading',
@@ -128,6 +128,12 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'output',
     description: '输出舱 - 数据导出',
+  },
+  {
+    path: '/output/dashboard',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'output',
+    description: '输出舱 - 仪表盘',
   },
   {
     path: '/command/hub',
@@ -248,6 +254,18 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     description: 'MCP Server 管理',
   },
   {
+    path: '/command/showcase',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'command',
+    description: '组件示例库',
+  },
+  {
+    path: '/command/health',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'command',
+    description: '架构健康度仪表盘',
+  },
+  {
     path: '/command/monitor',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'command',
@@ -310,6 +328,12 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     description: '智能资讯',
   },
   {
+    path: '/analysis/score-comparison',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'analysis',
+    description: '历史评分比对看板',
+  },
+  {
     path: '/analysis/hot-sector',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'analysis',
@@ -328,6 +352,12 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     description: '多因子筛选（条件组增删 / 因子编辑 / 模板持久化）',
   },
   {
+    path: '/analysis/stock-pool',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'analysis',
+    description: '股票池看板',
+  },
+  {
     path: '/trading/strategy-snapshots',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'trading',
@@ -344,6 +374,24 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'trading',
     description: '执行计划管理',
+  },
+  {
+    path: '/trading/execution',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'trading',
+    description: '执行管理（别名 → execution-plans）',
+  },
+  {
+    path: '/trading/portfolio',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'trading',
+    description: '投资组合管理',
+  },
+  {
+    path: '/trading/risk',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'trading',
+    description: '风险控制管理',
   },
   {
     path: '/input/local-knowledge',

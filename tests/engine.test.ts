@@ -12,13 +12,13 @@ describe('Engine', () => {
     destroyEngine()
   })
 
-  it('should create engine instance with default config', () => {
+  it('应该创建 engine instance with default config', () => {
     const engine = createEngine()
     expect(engine).toBeDefined()
     expect(getEngine()).toBe(engine)
   })
 
-  it('should create engine with custom config', () => {
+  it('应该创建 engine with custom config', () => {
     const config: EngineConfig = {
       enableSSE: true,
       sseUrl: 'http://localhost/sse',
@@ -29,30 +29,30 @@ describe('Engine', () => {
     expect(engine).toBeDefined()
   })
 
-  it('should return existing instance when createEngine called twice', () => {
+  it('应该返回 existing instance when createEngine called twice', () => {
     const engine1 = createEngine()
     const engine2 = createEngine()
     expect(engine1).toBe(engine2)
   })
 
-  it('should throw when getEngine called before createEngine', () => {
+  it('应该抛出 when getEngine called before createEngine', () => {
     destroyEngine()
     expect(() => getEngine()).toThrow('Engine not initialized')
   })
 
-  it('should expose DataFlowEngine', () => {
+  it('应该expose DataFlowEngine', () => {
     const engine = createEngine()
     const dataflow = engine.getDataFlowEngine()
     expect(dataflow).toBeInstanceOf(DataFlowEngine)
   })
 
-  it('should expose AgentRuntime', () => {
+  it('应该expose AgentRuntime', () => {
     const engine = createEngine()
     const agentRuntime = engine.getAgentRuntime()
     expect(agentRuntime).toBeInstanceOf(AgentRuntime)
   })
 
-  it('should return stats object with required fields', () => {
+  it('应该返回 stats object with required fields', () => {
     const engine = createEngine()
     const stats = engine.getStats()
     expect(stats).toHaveProperty('dataflow')
@@ -66,24 +66,24 @@ describe('Engine', () => {
     expect(stats.agents).toHaveProperty('failedTasks')
   })
 
-  it('should start and stop without errors', () => {
+  it('应该开始 and stop without errors', () => {
     const engine = createEngine()
     expect(() => engine.start()).not.toThrow()
     expect(() => engine.stop()).not.toThrow()
   })
 
-  it('should handle double start gracefully', () => {
+  it('应该处理 double start gracefully', () => {
     const engine = createEngine()
     engine.start()
     expect(() => engine.start()).not.toThrow()
   })
 
-  it('should handle stop before start gracefully', () => {
+  it('应该处理 stop before start gracefully', () => {
     const engine = createEngine()
     expect(() => engine.stop()).not.toThrow()
   })
 
-  it('should destroy instance and allow recreation', () => {
+  it('应该destroy instance and allow recreation', () => {
     const engine1 = createEngine()
     destroyEngine()
     const engine2 = createEngine()

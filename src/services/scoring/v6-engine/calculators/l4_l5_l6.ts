@@ -37,15 +37,15 @@ interface Scenario {
 
 function buildScenarios(
   currentPrice: number,
-  netProfit: number | undefined,
+  netProfit: number = 0,
   pe: number | undefined,
   revenueYoY: number | undefined,
 ): Scenario[] {
   const np = netProfit
-  if (np == null) {
+  if (np === 0) {
     logger.warn('[L4] netProfit is undefined, using conservative estimate')
   }
-  const safeNp = np ?? 0
+  const safeNp = np
   const basePE = pe ?? V6_CALCULATOR_THRESHOLDS.L4_SCENARIO_BASE_PE
   const growth = revenueYoY ?? V6_CALCULATOR_THRESHOLDS.L4_SCENARIO_BASE_GROWTH
 
@@ -99,17 +99,31 @@ function scoreScenario(input: LayerInput): { score: number; summary: string; evi
   const DEFAULT_REWARD_RATIO = 1
   const rewardRatio = downLoss > 0 ? upGain / downLoss : upGain > 0 ? MAX_REWARD_RATIO : DEFAULT_REWARD_RATIO
 
+  const upsideTiers = [
+    {
+      threshold: V6_CALCULATOR_THRESHOLDS.L4_SCENARIO_UPSIDE_TIER1,
+      minRatio: V6_CALCULATOR_THRESHOLDS.L4_SCENARIO_REWARD_RATIO_HIGH,
+      highScore: 5,
+      lowScore: 4.5,
+    },
+    {
+      threshold: V6_CALCULATOR_THRESHOLDS.L4_SCENARIO_UPSIDE_TIER2,
+      minRatio: V6_CALCULATOR_THRESHOLDS.L4_SCENARIO_REWARD_RATIO_HIGH,
+      highScore: 4,
+      lowScore: 3.5,
+    },
+    {
+      threshold: V6_CALCULATOR_THRESHOLDS.L4_SCENARIO_UPSIDE_TIER3,
+      minRatio: Number.NEGATIVE_INFINITY,
+      highScore: 3,
+      lowScore: 3,
+    },
+  ]
+
   let score: number
-  if (baseUpside > V6_CALCULATOR_THRESHOLDS.L4_SCENARIO_UPSIDE_TIER1 && rewardRatio > V6_CALCULATOR_THRESHOLDS.L4_SCENARIO_REWARD_RATIO_HIGH) {
-    score = 5
-  } else if (baseUpside > V6_CALCULATOR_THRESHOLDS.L4_SCENARIO_UPSIDE_TIER1) {
-    score = 4.5
-  } else if (baseUpside > V6_CALCULATOR_THRESHOLDS.L4_SCENARIO_UPSIDE_TIER2 && rewardRatio > V6_CALCULATOR_THRESHOLDS.L4_SCENARIO_REWARD_RATIO_HIGH) {
-    score = 4
-  } else if (baseUpside > V6_CALCULATOR_THRESHOLDS.L4_SCENARIO_UPSIDE_TIER2) {
-    score = 3.5
-  } else if (baseUpside > V6_CALCULATOR_THRESHOLDS.L4_SCENARIO_UPSIDE_TIER3) {
-    score = 3
+  const matchedTier = upsideTiers.find((tier) => baseUpside > tier.threshold)
+  if (matchedTier) {
+    score = rewardRatio > matchedTier.minRatio ? matchedTier.highScore : matchedTier.lowScore
   } else if (baseUpside > 0) {
     score = 2.5
   } else {
@@ -318,44 +332,56 @@ function evaluateHypeCycle(input: LayerInput): HypeStage {
   const { stock, financials } = input
   const sector = (stock.sector ?? '').toLowerCase()
 
-  const isAI = sector.includes('ai') || sector.includes('人工智能') || sector.includes('大模型')
-  const isRobot = sector.includes('机器人') || sector.includes('人形')
-  const isQuantum = sector.includes('量子')
-  const isSemicon = sector.includes('芯片') || sector.includes('半导体')
-  const isPharma = sector.includes('医药') || sector.includes('药') || sector.includes('创新药')
-
-  const hasRevenue = financials.revenue !== undefined && financials.revenue > 0
-  const hasHighGrowth = financials.revenueYoY !== undefined && financials.revenueYoY > 0.30
-  const hasOrders = financials.ordersInHand !== undefined && financials.ordersInHand > 0
-
-  // 按行业和财务数据判断 Hype 阶段
-  let stage: HypeStage
-
-  if (isAI || isRobot) {
-    if (hasHighGrowth && hasOrders) {
-      stage = { stage: '期望膨胀期（有交付）', score: 4, characteristic: 'AI/机器人概念火爆但有实际交付', strategy: '谨慎追高，关注交付能力' }
-    } else {
-      stage = { stage: '期望膨胀期（纯概念）', score: 3, characteristic: '概念股暴涨但交付不足', strategy: '警惕泡沫，精选有实质进展的标的' }
-    }
-  } else if (isQuantum) {
-    stage = { stage: '技术萌芽期', score: 3, characteristic: '量子计算实验室突破，初创出现', strategy: '小仓位布局，长期跟踪' }
-  } else if (isSemicon) {
-    if (hasHighGrowth) {
-      stage = { stage: '复苏期/爬升期', score: 5, characteristic: '半导体周期复苏，价值创造者脱颖而出', strategy: '重仓龙头' }
-    } else {
-      stage = { stage: '生产成熟期', score: 3, characteristic: '半导体成为基础设施，增速放缓', strategy: '关注分红回报和估值性价比' }
-    }
-  } else if (isPharma) {
-    stage = { stage: '复苏期/爬升期', score: 4, characteristic: '创新药管线兑现，商业化加速', strategy: '精选管线，重仓龙头' }
-  } else if (hasRevenue && hasHighGrowth) {
-    stage = { stage: '复苏期/爬升期', score: 4, characteristic: '价值创造者脱颖而出', strategy: '积极配置' }
-  } else if (hasRevenue) {
-    stage = { stage: '生产成熟期', score: 3, characteristic: '技术成基础设施，增速放缓', strategy: '关注分红回报' }
-  } else {
-    stage = { stage: '技术萌芽期', score: 3, characteristic: '实验室突破，初创出现', strategy: '小仓位布局' }
+  const flags = {
+    isAI: sector.includes('ai') || sector.includes('人工智能') || sector.includes('大模型'),
+    isRobot: sector.includes('机器人') || sector.includes('人形'),
+    isQuantum: sector.includes('量子'),
+    isSemicon: sector.includes('芯片') || sector.includes('半导体'),
+    isPharma: sector.includes('医药') || sector.includes('药') || sector.includes('创新药'),
+    hasRevenue: financials.revenue !== undefined && financials.revenue > 0,
+    hasHighGrowth: financials.revenueYoY !== undefined && financials.revenueYoY > 0.30,
+    hasOrders: financials.ordersInHand !== undefined && financials.ordersInHand > 0,
   }
 
-  return stage
+  type HypeMatcher = (f: typeof flags) => HypeStage | null
+
+  const matchers: HypeMatcher[] = [
+    (f) =>
+      f.isAI || f.isRobot
+        ? f.hasHighGrowth && f.hasOrders
+          ? { stage: '期望膨胀期（有交付）', score: 4, characteristic: 'AI/机器人概念火爆但有实际交付', strategy: '谨慎追高，关注交付能力' }
+          : { stage: '期望膨胀期（纯概念）', score: 3, characteristic: '概念股暴涨但交付不足', strategy: '警惕泡沫，精选有实质进展的标的' }
+        : null,
+    (f) =>
+      f.isQuantum
+        ? { stage: '技术萌芽期', score: 3, characteristic: '量子计算实验室突破，初创出现', strategy: '小仓位布局，长期跟踪' }
+        : null,
+    (f) =>
+      f.isSemicon
+        ? f.hasHighGrowth
+          ? { stage: '复苏期/爬升期', score: 5, characteristic: '半导体周期复苏，价值创造者脱颖而出', strategy: '重仓龙头' }
+          : { stage: '生产成熟期', score: 3, characteristic: '半导体成为基础设施，增速放缓', strategy: '关注分红回报和估值性价比' }
+        : null,
+    (f) =>
+      f.isPharma
+        ? { stage: '复苏期/爬升期', score: 4, characteristic: '创新药管线兑现，商业化加速', strategy: '精选管线，重仓龙头' }
+        : null,
+    (f) =>
+      f.hasRevenue && f.hasHighGrowth
+        ? { stage: '复苏期/爬升期', score: 4, characteristic: '价值创造者脱颖而出', strategy: '积极配置' }
+        : null,
+    (f) =>
+      f.hasRevenue
+        ? { stage: '生产成熟期', score: 3, characteristic: '技术成基础设施，增速放缓', strategy: '关注分红回报' }
+        : null,
+  ]
+
+  for (const matcher of matchers) {
+    const result = matcher(flags)
+    if (result) return result
+  }
+
+  return { stage: '技术萌芽期', score: 3, characteristic: '实验室突破，初创出现', strategy: '小仓位布局' }
 }
 
 export const L6HypeCalculator: LayerCalculator = {

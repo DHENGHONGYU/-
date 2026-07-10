@@ -22,8 +22,8 @@
 // ═══════════════════════════════════════════════════════════════
 
 const VERBOSE =
-  process.env.AUDIT_VERBOSE === '1' ||
-  process.env.VERBOSE === '1' ||
+  (typeof import.meta !== 'undefined' && import.meta.env?.VITE_AUDIT_VERBOSE === '1') ||
+  (typeof import.meta !== 'undefined' && import.meta.env?.VITE_VERBOSE === '1') ||
   (typeof globalThis !== 'undefined' && (globalThis as { __DEBUG_DERIVED__?: boolean }).__DEBUG_DERIVED__ === true)
 
 /**

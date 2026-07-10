@@ -1,0 +1,4706 @@
+{
+  "summary": {
+    "filesScanned": 681,
+    "deeplyNestedBlocks": 55,
+    "longElseIfChains": 30,
+    "guardOpportunities": 0,
+    "redundantBreaks": 0,
+    "duplicateIfConditions": 194
+  },
+  "deeplyNestedBlocks": [
+    {
+      "file": "src/core/databridgeHandlers.ts",
+      "function": "deleteIndexedRecords",
+      "functionLine": 230,
+      "line": 244,
+      "column": 11,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (rec.id) {"
+    },
+    {
+      "file": "src/core/databridgeHandlers.ts",
+      "function": "deleteScannedRecords",
+      "functionLine": 257,
+      "line": 264,
+      "column": 11,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (rec.id) {"
+    },
+    {
+      "file": "src/data/db-migrations.ts",
+      "function": "rollbackMigrations",
+      "functionLine": 83,
+      "line": 96,
+      "column": 9,
+      "depth": 4,
+      "kind": "CatchClause",
+      "snippet": "catch (downErr) {"
+    },
+    {
+      "file": "src/lib/localStorageManager.ts",
+      "function": "byteLength",
+      "functionLine": 96,
+      "line": 105,
+      "column": 7,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (code < 0x80) len += 1\r"
+    },
+    {
+      "file": "src/lib/localStorageManager.ts",
+      "function": "getNamespaceInfo",
+      "functionLine": 414,
+      "line": 429,
+      "column": 11,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (entry.createdAt < oldestTime) {\r"
+    },
+    {
+      "file": "src/lib/localStorageManager.ts",
+      "function": "getNamespaceInfo",
+      "functionLine": 414,
+      "line": 433,
+      "column": 11,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (entry.createdAt > newestTime) {\r"
+    },
+    {
+      "file": "src/lib/localStorageManager.ts",
+      "function": "getNamespaceInfo",
+      "functionLine": 414,
+      "line": 437,
+      "column": 11,
+      "depth": 4,
+      "kind": "CatchClause",
+      "snippet": "catch {\r"
+    },
+    {
+      "file": "src/services/analysis/scoreTrendService.ts",
+      "function": "aggregateScoresByPeriod",
+      "functionLine": 81,
+      "line": 112,
+      "column": 9,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (!dim || !dim.name) continue"
+    },
+    {
+      "file": "src/services/analysis/scoreTrendService.ts",
+      "function": "aggregateScoresByPeriod",
+      "functionLine": 81,
+      "line": 114,
+      "column": 9,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (typeof s !== 'number' || !Number.isFinite(s)) continue"
+    },
+    {
+      "file": "src/services/analysis/scoreTrendService.ts",
+      "function": "aggregateScoresByPeriod",
+      "functionLine": 81,
+      "line": 116,
+      "column": 9,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (!entry) {\r"
+    },
+    {
+      "file": "src/services/backtest/BacktestEngine.ts",
+      "function": "run",
+      "functionLine": 103,
+      "line": 154,
+      "column": 11,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (remaining <= 0) {"
+    },
+    {
+      "file": "src/services/data-collector/collectors/BaseCollector.ts",
+      "function": "collectWithRetry",
+      "functionLine": 39,
+      "line": 56,
+      "column": 9,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (attempt < this.config.retryCount) {"
+    },
+    {
+      "file": "src/services/data-collector/mockDataCollection.ts",
+      "function": "mockCollectorFetchWithRetry",
+      "functionLine": 790,
+      "line": 802,
+      "column": 7,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (attempt < maxRetries) {\r"
+    },
+    {
+      "file": "src/services/feedbackService.ts",
+      "function": "wrapOperation",
+      "functionLine": 308,
+      "line": 352,
+      "column": 7,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (attempt < maxRetries) {\r"
+    },
+    {
+      "file": "src/services/fetcher/fetcherClient.ts",
+      "function": "request",
+      "functionLine": 53,
+      "line": 85,
+      "column": 7,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (!isNetworkError || attempt === maxRetries) {"
+    },
+    {
+      "file": "src/services/fetcher/fetcherInterceptor.ts",
+      "function": "interceptedFetch",
+      "functionLine": 67,
+      "line": 98,
+      "column": 9,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (errorType === HttpErrorType.UNAUTHORIZED && config.onUnauthorized) {"
+    },
+    {
+      "file": "src/services/fetcher/fetcherInterceptor.ts",
+      "function": "interceptedFetch",
+      "functionLine": 67,
+      "line": 101,
+      "column": 9,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (errorType === HttpErrorType.FORBIDDEN && config.onForbidden) {"
+    },
+    {
+      "file": "src/services/fetcher/fetcherInterceptor.ts",
+      "function": "interceptedFetch",
+      "functionLine": 67,
+      "line": 106,
+      "column": 9,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (shouldRetry(error, config, attempt)) {"
+    },
+    {
+      "file": "src/services/fetcher/fetcherInterceptor.ts",
+      "function": "interceptedFetch",
+      "functionLine": 67,
+      "line": 119,
+      "column": 7,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (err instanceof HttpError) {"
+    },
+    {
+      "file": "src/services/fetcher/fetcherInterceptor.ts",
+      "function": "interceptedFetch",
+      "functionLine": 67,
+      "line": 133,
+      "column": 7,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (shouldRetry(error, config, attempt)) {"
+    },
+    {
+      "file": "src/services/fetcher/orchestrator/resilienceChain.ts",
+      "function": "fetchQuote",
+      "functionLine": 48,
+      "line": 83,
+      "column": 9,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (next) {\r"
+    },
+    {
+      "file": "src/services/fetcher/orchestrator/resilienceChain.ts",
+      "function": "fetchKline",
+      "functionLine": 110,
+      "line": 145,
+      "column": 9,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (next) {\r"
+    },
+    {
+      "file": "src/services/hybrid-proofread/index.ts",
+      "function": "runFullProofread",
+      "functionLine": 11,
+      "line": 70,
+      "column": 9,
+      "depth": 4,
+      "kind": "TryStatement",
+      "snippet": "try {"
+    },
+    {
+      "file": "src/services/hybrid-proofread/index.ts",
+      "function": "runFullProofread",
+      "functionLine": 11,
+      "line": 74,
+      "column": 11,
+      "depth": 5,
+      "kind": "CatchClause",
+      "snippet": "catch (error) {"
+    },
+    {
+      "file": "src/services/input/batchImportParsers.ts",
+      "function": "parseCsvLine",
+      "functionLine": 169,
+      "line": 179,
+      "column": 9,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (line[i + 1] === '\"') {"
+    },
+    {
+      "file": "src/services/input/batchImportParsers.ts",
+      "function": "parseJsonFile",
+      "functionLine": 323,
+      "line": 350,
+      "column": 9,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (STOCK_CODE_PATTERN.test(code)) {"
+    },
+    {
+      "file": "src/services/llm/llmClient.ts",
+      "function": "chat",
+      "functionLine": 123,
+      "line": 166,
+      "column": 9,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (raw.error?.message) {\r"
+    },
+    {
+      "file": "src/services/llm/llmClient.ts",
+      "function": "chat",
+      "functionLine": 123,
+      "line": 169,
+      "column": 9,
+      "depth": 4,
+      "kind": "CatchClause",
+      "snippet": "catch {\r"
+    },
+    {
+      "file": "src/services/llm/llmClient.ts",
+      "function": "streamingChat",
+      "functionLine": 241,
+      "line": 293,
+      "column": 9,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (errRaw.error?.message) {\r"
+    },
+    {
+      "file": "src/services/llm/llmClient.ts",
+      "function": "streamingChat",
+      "functionLine": 241,
+      "line": 296,
+      "column": 9,
+      "depth": 4,
+      "kind": "CatchClause",
+      "snippet": "catch {\r"
+    },
+    {
+      "file": "src/services/llm/llmClient.ts",
+      "function": "streamingChat",
+      "functionLine": 241,
+      "line": 328,
+      "column": 9,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (line.trim().length === 0) continue"
+    },
+    {
+      "file": "src/services/llm/llmClient.ts",
+      "function": "streamingChat",
+      "functionLine": 241,
+      "line": 329,
+      "column": 9,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (!line.startsWith('data: ')) continue"
+    },
+    {
+      "file": "src/services/llm/llmClient.ts",
+      "function": "streamingChat",
+      "functionLine": 241,
+      "line": 332,
+      "column": 9,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (dataStr === '[DONE]') {\r"
+    },
+    {
+      "file": "src/services/llm/llmClient.ts",
+      "function": "streamingChat",
+      "functionLine": 241,
+      "line": 333,
+      "column": 11,
+      "depth": 5,
+      "kind": "IfStatement",
+      "snippet": "if (!isFinished) {\r"
+    },
+    {
+      "file": "src/services/llm/llmClient.ts",
+      "function": "streamingChat",
+      "functionLine": 241,
+      "line": 339,
+      "column": 9,
+      "depth": 4,
+      "kind": "TryStatement",
+      "snippet": "try {\r"
+    },
+    {
+      "file": "src/services/llm/llmClient.ts",
+      "function": "streamingChat",
+      "functionLine": 241,
+      "line": 342,
+      "column": 11,
+      "depth": 5,
+      "kind": "IfStatement",
+      "snippet": "if (chunk) {\r"
+    },
+    {
+      "file": "src/services/llm/llmClient.ts",
+      "function": "streamingChat",
+      "functionLine": 241,
+      "line": 344,
+      "column": 13,
+      "depth": 6,
+      "kind": "IfStatement",
+      "snippet": "if (chunk.isDone) {\r"
+    },
+    {
+      "file": "src/services/llm/llmClient.ts",
+      "function": "streamingChat",
+      "functionLine": 241,
+      "line": 348,
+      "column": 11,
+      "depth": 5,
+      "kind": "CatchClause",
+      "snippet": "catch (parseErr) {\r"
+    },
+    {
+      "file": "src/services/news/stockLinker.ts",
+      "function": "matchText",
+      "functionLine": 122,
+      "line": 140,
+      "column": 9,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (!code) continue"
+    },
+    {
+      "file": "src/services/news/stockLinker.ts",
+      "function": "matchText",
+      "functionLine": 122,
+      "line": 142,
+      "column": 9,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (matchedStock && matchedStock.symbol === stock.symbol) {\r"
+    },
+    {
+      "file": "src/services/news/stockLinker.ts",
+      "function": "matchText",
+      "functionLine": 122,
+      "line": 169,
+      "column": 9,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (text.includes(prefix)) {\r"
+    },
+    {
+      "file": "src/services/news/stockLinker.ts",
+      "function": "matchText",
+      "functionLine": 122,
+      "line": 186,
+      "column": 9,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (text.includes(keyword)) {\r"
+    },
+    {
+      "file": "src/services/resilience.ts",
+      "function": "withRetry",
+      "functionLine": 52,
+      "line": 67,
+      "column": 7,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (!isLast && shouldRetry(err, attempt)) {"
+    },
+    {
+      "file": "src/services/scoring/rotationSignalDetector.ts",
+      "function": "detectBySector",
+      "functionLine": 248,
+      "line": 304,
+      "column": 9,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (bar) {\r"
+    },
+    {
+      "file": "src/services/system/localDocService.ts",
+      "function": "scanDirectory",
+      "functionLine": 152,
+      "line": 182,
+      "column": 11,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (content.length > MAX_CONTENT_LENGTH) {\r"
+    },
+    {
+      "file": "src/services/trade/holdingsService.ts",
+      "function": "requestWithRetry",
+      "functionLine": 52,
+      "line": 65,
+      "column": 7,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (attempt < maxRetries) {"
+    },
+    {
+      "file": "src/services/trading/tradeErrorDetectors.ts",
+      "function": "detectAgainstTrendAdding",
+      "functionLine": 138,
+      "line": 157,
+      "column": 9,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (consecutiveCount >= 2) {"
+    },
+    {
+      "file": "src/services/useCase/generateTradeReview.useCase.ts",
+      "function": "generateTradeReviewAsyncUseCase",
+      "functionLine": 77,
+      "line": 108,
+      "column": 9,
+      "depth": 4,
+      "kind": "TryStatement",
+      "snippet": "try {"
+    },
+    {
+      "file": "src/services/useCase/generateTradeReview.useCase.ts",
+      "function": "generateTradeReviewAsyncUseCase",
+      "functionLine": 77,
+      "line": 117,
+      "column": 11,
+      "depth": 5,
+      "kind": "IfStatement",
+      "snippet": "if (llmInsight.pnlAttribution.length > 0 || llmInsight.personalizedAdvice.length > 0) {"
+    },
+    {
+      "file": "src/services/useCase/generateTradeReview.useCase.ts",
+      "function": "generateTradeReviewAsyncUseCase",
+      "functionLine": 77,
+      "line": 124,
+      "column": 11,
+      "depth": 5,
+      "kind": "CatchClause",
+      "snippet": "catch (err) {"
+    },
+    {
+      "file": "src/store/executionStore.ts",
+      "function": "<arrow>",
+      "functionLine": 363,
+      "line": 423,
+      "column": 9,
+      "depth": 4,
+      "kind": "CatchClause",
+      "snippet": "catch (updateErr) {\r"
+    },
+    {
+      "file": "src/store/helpers/withOptimisticUpdate.ts",
+      "function": "withOptimisticUpdate",
+      "functionLine": 49,
+      "line": 98,
+      "column": 7,
+      "depth": 4,
+      "kind": "CatchClause",
+      "snippet": "catch (rollbackErr) {\r"
+    },
+    {
+      "file": "src/store/rotationSignalStore.derived.ts",
+      "function": "<arrow>",
+      "functionLine": 228,
+      "line": 250,
+      "column": 9,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (sig.strength === 'strong') {"
+    },
+    {
+      "file": "src/store/signalStore.ts",
+      "function": "<arrow>",
+      "functionLine": 56,
+      "line": 97,
+      "column": 11,
+      "depth": 4,
+      "kind": "IfStatement",
+      "snippet": "if (strongest) {"
+    },
+    {
+      "file": "src/store/signalStore.ts",
+      "function": "<arrow>",
+      "functionLine": 56,
+      "line": 100,
+      "column": 11,
+      "depth": 4,
+      "kind": "CatchClause",
+      "snippet": "catch {"
+    }
+  ],
+  "longElseIfChains": [
+    {
+      "file": "src/apps/analysis/AnalysisApp.tsx",
+      "function": "<arrow>",
+      "functionLine": 52,
+      "line": 62,
+      "column": 5,
+      "branchCount": 12,
+      "lastLine": 95,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/apps/input/InputApp.tsx",
+      "function": "<arrow>",
+      "functionLine": 47,
+      "line": 58,
+      "column": 5,
+      "branchCount": 7,
+      "lastLine": 76,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/apps/input/InputApp.tsx",
+      "function": "InputApp",
+      "functionLine": 41,
+      "line": 95,
+      "column": 3,
+      "branchCount": 7,
+      "lastLine": 115,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/apps/output/OutputApp.tsx",
+      "function": "<arrow>",
+      "functionLine": 181,
+      "line": 192,
+      "column": 5,
+      "branchCount": 6,
+      "lastLine": 207,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/apps/output/OutputApp.tsx",
+      "function": "OutputApp",
+      "functionLine": 175,
+      "line": 230,
+      "column": 3,
+      "branchCount": 6,
+      "lastLine": 240,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/apps/trading/TradingApp.tsx",
+      "function": "<arrow>",
+      "functionLine": 60,
+      "line": 71,
+      "column": 5,
+      "branchCount": 6,
+      "lastLine": 86,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/apps/trading/TradingApp.tsx",
+      "function": "TradingApp",
+      "functionLine": 36,
+      "line": 130,
+      "column": 3,
+      "branchCount": 7,
+      "lastLine": 166,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/services/analysis/rotation/rotationCalculator.ts",
+      "function": "calculateResonance",
+      "functionLine": 71,
+      "line": 74,
+      "column": 3,
+      "branchCount": 7,
+      "lastLine": 80,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/services/input/batchImportParsers.ts",
+      "function": "parseBulkInput",
+      "functionLine": 88,
+      "line": 109,
+      "column": 5,
+      "branchCount": 4,
+      "lastLine": 128,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/services/scoring/hotSectorDimensions.ts",
+      "function": "calculateSentiment",
+      "functionLine": 177,
+      "line": 185,
+      "column": 3,
+      "branchCount": 4,
+      "lastLine": 191,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/services/scoring/hotSectorDimensions.ts",
+      "function": "calculateValuationRisk",
+      "functionLine": 277,
+      "line": 281,
+      "column": 3,
+      "branchCount": 6,
+      "lastLine": 291,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/services/scoring/v6-engine/calculators/l0_l1_l2.ts",
+      "function": "scoreLongTermTrend",
+      "functionLine": 263,
+      "line": 270,
+      "column": 3,
+      "branchCount": 4,
+      "lastLine": 273,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/services/scoring/v6-engine/calculators/l3/helpers.ts",
+      "function": "scoreMoat",
+      "functionLine": 58,
+      "line": 64,
+      "column": 5,
+      "branchCount": 5,
+      "lastLine": 68,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/services/scoring/v6-engine/calculators/l3/l3a-financial.ts",
+      "function": "scoreFinancialDimensions",
+      "functionLine": 27,
+      "line": 33,
+      "column": 5,
+      "branchCount": 4,
+      "lastLine": 36,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/services/scoring/v6-engine/calculators/l3/l3a-financial.ts",
+      "function": "scoreFinancialDimensions",
+      "functionLine": 27,
+      "line": 43,
+      "column": 5,
+      "branchCount": 4,
+      "lastLine": 46,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/services/scoring/v6-engine/calculators/l3/l3a-financial.ts",
+      "function": "scoreFinancialDimensions",
+      "functionLine": 27,
+      "line": 53,
+      "column": 5,
+      "branchCount": 4,
+      "lastLine": 56,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/services/scoring/v6-engine/calculators/l3/l3a-financial.ts",
+      "function": "scoreFinancialDimensions",
+      "functionLine": 27,
+      "line": 65,
+      "column": 5,
+      "branchCount": 4,
+      "lastLine": 68,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/services/scoring/v6-engine/calculators/l3/l3a-financial.ts",
+      "function": "scoreFinancialDimensions",
+      "functionLine": 27,
+      "line": 75,
+      "column": 5,
+      "branchCount": 4,
+      "lastLine": 78,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/services/scoring/v6-engine/calculators/l3/l3a-financial.ts",
+      "function": "evaluateIPC",
+      "functionLine": 190,
+      "line": 199,
+      "column": 5,
+      "branchCount": 4,
+      "lastLine": 202,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/services/scoring/v6-engine/calculators/l3/l3a-financial.ts",
+      "function": "evaluateIPC",
+      "functionLine": 190,
+      "line": 233,
+      "column": 3,
+      "branchCount": 4,
+      "lastLine": 239,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/services/scoring/v6-engine/calculators/l3/l3a-financial.ts",
+      "function": "evaluateIPC",
+      "functionLine": 190,
+      "line": 262,
+      "column": 3,
+      "branchCount": 4,
+      "lastLine": 274,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/services/scoring/v6-engine/calculators/l3/l3v-valuation.ts",
+      "function": "scoreValuation",
+      "functionLine": 24,
+      "line": 32,
+      "column": 5,
+      "branchCount": 4,
+      "lastLine": 35,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/services/scoring/v6-engine/calculators/l4_l5_l6.ts",
+      "function": "scoreScenario",
+      "functionLine": 74,
+      "line": 103,
+      "column": 3,
+      "branchCount": 6,
+      "lastLine": 113,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/services/scoring/v6-engine/calculators/l4_l5_l6.ts",
+      "function": "evaluateTMMatrix",
+      "functionLine": 186,
+      "line": 231,
+      "column": 3,
+      "branchCount": 4,
+      "lastLine": 237,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/services/scoring/v6-engine/calculators/l4_l5_l6.ts",
+      "function": "evaluateHypeCycle",
+      "functionLine": 317,
+      "line": 334,
+      "column": 3,
+      "branchCount": 6,
+      "lastLine": 352,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/services/scoring/valuePitAnalyzer.ts",
+      "function": "calculateValuationMargin",
+      "functionLine": 156,
+      "line": 160,
+      "column": 3,
+      "branchCount": 4,
+      "lastLine": 166,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/services/scoring/valuePitAnalyzer.ts",
+      "function": "calculateRotationPosition",
+      "functionLine": 249,
+      "line": 253,
+      "column": 3,
+      "branchCount": 4,
+      "lastLine": 259,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/services/scoring/valuePitAnalyzer.ts",
+      "function": "calculateLiquidity",
+      "functionLine": 284,
+      "line": 290,
+      "column": 3,
+      "branchCount": 4,
+      "lastLine": 296,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/store/analysisStore.derived.ts",
+      "function": "<arrow>",
+      "functionLine": 105,
+      "line": 114,
+      "column": 5,
+      "branchCount": 4,
+      "lastLine": 117,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    },
+    {
+      "file": "src/store/rotationSignalStore.derived.ts",
+      "function": "<arrow>",
+      "functionLine": 143,
+      "line": 151,
+      "column": 5,
+      "branchCount": 4,
+      "lastLine": 157,
+      "suggestion": "Consider replacing the long if-else-if chain with a switch statement or a route→component map"
+    }
+  ],
+  "guardOpportunities": [],
+  "redundantBreaks": [],
+  "duplicateIfConditions": [
+    {
+      "file": "src/agents/agentHealthMonitor.ts",
+      "condition": "monitorInstance",
+      "occurrences": [
+        {
+          "line": 173,
+          "column": 3,
+          "snippet": "if (monitorInstance) return monitorInstance"
+        },
+        {
+          "line": 184,
+          "column": 3,
+          "snippet": "if (monitorInstance) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/apps/input/BulkImportPanel.tsx",
+      "condition": "importPhase === 'importing'",
+      "occurrences": [
+        {
+          "line": 208,
+          "column": 5,
+          "snippet": "if (importPhase === 'importing') return `导入中 ${importProgress}%`"
+        },
+        {
+          "line": 218,
+          "column": 5,
+          "snippet": "if (importPhase === 'importing') return 'secondary'"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/apps/trading/components/PhaseStepper.tsx",
+      "condition": "cancelled",
+      "occurrences": [
+        {
+          "line": 38,
+          "column": 5,
+          "snippet": "if (cancelled) {\r"
+        },
+        {
+          "line": 47,
+          "column": 5,
+          "snippet": "if (cancelled) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/cockpit/core/widgetRegistry.ts",
+      "condition": "!template",
+      "occurrences": [
+        {
+          "line": 340,
+          "column": 5,
+          "snippet": "if (!template) {"
+        },
+        {
+          "line": 387,
+          "column": 5,
+          "snippet": "if (!template) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/cockpit/providers/MarketDataProvider.tsx",
+      "condition": "instanceId",
+      "occurrences": [
+        {
+          "line": 50,
+          "column": 7,
+          "snippet": "if (instanceId) {\r"
+        },
+        {
+          "line": 59,
+          "column": 7,
+          "snippet": "if (instanceId) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/cockpit/widgets/SignalMonitorWidget.tsx",
+      "condition": "direction === 'buy'",
+      "occurrences": [
+        {
+          "line": 43,
+          "column": 5,
+          "snippet": "if (direction === 'buy') return <ArrowUpCircle className={`h-5 w-5 ${COLOR_TOKENS.success.tailwind}`"
+        },
+        {
+          "line": 49,
+          "column": 5,
+          "snippet": "if (direction === 'buy') return <Badge className=\"text-xs\" style={{ backgroundColor: THEME_TOKENS.co"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/cockpit/widgets/SignalMonitorWidget.tsx",
+      "condition": "direction === 'sell'",
+      "occurrences": [
+        {
+          "line": 44,
+          "column": 5,
+          "snippet": "if (direction === 'sell') return <ArrowDownCircle className={`h-5 w-5 ${COLOR_TOKENS.danger.tailwind"
+        },
+        {
+          "line": 50,
+          "column": 5,
+          "snippet": "if (direction === 'sell') return <Badge className=\"text-xs\" style={{ backgroundColor: THEME_TOKENS.c"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/cockpit/widgets/SignalQualityDashboardWidget.tsx",
+      "condition": "value === undefined || value === null",
+      "occurrences": [
+        {
+          "line": 134,
+          "column": 3,
+          "snippet": "if (value === undefined || value === null) return '—'"
+        },
+        {
+          "line": 140,
+          "column": 3,
+          "snippet": "if (value === undefined || value === null) return '—'"
+        },
+        {
+          "line": 146,
+          "column": 3,
+          "snippet": "if (value === undefined || value === null) return '—'"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/components/analysis/score/ScoreFactorWaterfall.tsx",
+      "condition": "row.isTotal",
+      "occurrences": [
+        {
+          "line": 149,
+          "column": 3,
+          "snippet": "if (row.isTotal) {"
+        },
+        {
+          "line": 257,
+          "column": 15,
+          "snippet": "if (row.isTotal) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/components/analysis/sector/SectorRotationHeatmap.tsx",
+      "condition": "value === null",
+      "occurrences": [
+        {
+          "line": 66,
+          "column": 3,
+          "snippet": "if (value === null) {"
+        },
+        {
+          "line": 88,
+          "column": 3,
+          "snippet": "if (value === null) return 'N/A'"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/components/collection/CollectionReportPanel.tsx",
+      "condition": "rate >= 80",
+      "occurrences": [
+        {
+          "line": 25,
+          "column": 3,
+          "snippet": "if (rate >= 80) return COLOR_TOKENS.success.tailwind"
+        },
+        {
+          "line": 31,
+          "column": 3,
+          "snippet": "if (rate >= 80) return 'default'"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/components/collection/CollectionReportPanel.tsx",
+      "condition": "rate >= 50",
+      "occurrences": [
+        {
+          "line": 26,
+          "column": 3,
+          "snippet": "if (rate >= 50) return COLOR_TOKENS.warning.tailwind"
+        },
+        {
+          "line": 32,
+          "column": 3,
+          "snippet": "if (rate >= 50) return 'secondary'"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/components/input/ApiTestDialog.tsx",
+      "condition": "result.ok",
+      "occurrences": [
+        {
+          "line": 81,
+          "column": 7,
+          "snippet": "if (result.ok) {"
+        },
+        {
+          "line": 117,
+          "column": 5,
+          "snippet": "if (result.ok) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/components/input/StockSearch.tsx",
+      "condition": "debounceRef.current",
+      "occurrences": [
+        {
+          "line": 37,
+          "column": 5,
+          "snippet": "if (debounceRef.current) {\r"
+        },
+        {
+          "line": 57,
+          "column": 7,
+          "snippet": "if (debounceRef.current) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/components/input/TraceReplayPanel.tsx",
+      "condition": "index >= stages.length - 1",
+      "occurrences": [
+        {
+          "line": 106,
+          "column": 5,
+          "snippet": "if (index >= stages.length - 1) return 100"
+        },
+        {
+          "line": 131,
+          "column": 5,
+          "snippet": "if (index >= stages.length - 1) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/components/output/reviewArtifact.ts",
+      "condition": "items.length === 0",
+      "occurrences": [
+        {
+          "line": 42,
+          "column": 3,
+          "snippet": "if (items.length === 0) return ''"
+        },
+        {
+          "line": 63,
+          "column": 3,
+          "snippet": "if (items.length === 0) return ''"
+        },
+        {
+          "line": 71,
+          "column": 3,
+          "snippet": "if (items.length === 0) return ''"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/components/pool/usePoolDataFromStore.ts",
+      "condition": "!success",
+      "occurrences": [
+        {
+          "line": 108,
+          "column": 7,
+          "snippet": "if (!success) {"
+        },
+        {
+          "line": 122,
+          "column": 7,
+          "snippet": "if (!success) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/components/system/LogStreamPanel.tsx",
+      "condition": "!isPaused",
+      "occurrences": [
+        {
+          "line": 160,
+          "column": 7,
+          "snippet": "if (!isPaused) {\r"
+        },
+        {
+          "line": 167,
+          "column": 5,
+          "snippet": "if (!isPaused) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/components/system/migration/useMcpMigration.ts",
+      "condition": "result.isError",
+      "occurrences": [
+        {
+          "line": 27,
+          "column": 5,
+          "snippet": "if (result.isError) {"
+        },
+        {
+          "line": 72,
+          "column": 5,
+          "snippet": "if (result.isError) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/components/ui/DataState.tsx",
+      "condition": "isLoading",
+      "occurrences": [
+        {
+          "line": 59,
+          "column": 3,
+          "snippet": "if (isLoading) {"
+        },
+        {
+          "line": 127,
+          "column": 3,
+          "snippet": "if (isLoading) {"
+        },
+        {
+          "line": 171,
+          "column": 3,
+          "snippet": "if (isLoading) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/components/ui/DataState.tsx",
+      "condition": "showEmpty",
+      "occurrences": [
+        {
+          "line": 88,
+          "column": 3,
+          "snippet": "if (showEmpty) {"
+        },
+        {
+          "line": 181,
+          "column": 3,
+          "snippet": "if (showEmpty) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/components/ui/Popover.tsx",
+      "condition": "trigger === 'hover'",
+      "occurrences": [
+        {
+          "line": 63,
+          "column": 7,
+          "snippet": "if (trigger === 'hover') setIsOpen(true)"
+        },
+        {
+          "line": 67,
+          "column": 7,
+          "snippet": "if (trigger === 'hover') setIsOpen(false)"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/components/ui/Popover.tsx",
+      "condition": "trigger === 'focus'",
+      "occurrences": [
+        {
+          "line": 71,
+          "column": 7,
+          "snippet": "if (trigger === 'focus') setIsOpen(true)"
+        },
+        {
+          "line": 75,
+          "column": 7,
+          "snippet": "if (trigger === 'focus') setIsOpen(false)"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/config/dataSourceRegistry.ts",
+      "condition": "dimensionSourcePriority && dimensionSourcePriority.length > 0",
+      "occurrences": [
+        {
+          "line": 139,
+          "column": 3,
+          "snippet": "if (dimensionSourcePriority && dimensionSourcePriority.length > 0) {"
+        },
+        {
+          "line": 151,
+          "column": 3,
+          "snippet": "if (dimensionSourcePriority && dimensionSourcePriority.length > 0) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/constants/theme/theme.tokens.shades.ts",
+      "condition": "shade === undefined",
+      "occurrences": [
+        {
+          "line": 203,
+          "column": 3,
+          "snippet": "if (shade === undefined) {\r"
+        },
+        {
+          "line": 225,
+          "column": 3,
+          "snippet": "if (shade === undefined) {\r"
+        },
+        {
+          "line": 247,
+          "column": 3,
+          "snippet": "if (shade === undefined) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/constants/theme/theme.tokens.shades.ts",
+      "condition": "color in SEMANTIC_COLORS",
+      "occurrences": [
+        {
+          "line": 205,
+          "column": 5,
+          "snippet": "if (color in SEMANTIC_COLORS) {\r"
+        },
+        {
+          "line": 227,
+          "column": 5,
+          "snippet": "if (color in SEMANTIC_COLORS) {\r"
+        },
+        {
+          "line": 249,
+          "column": 5,
+          "snippet": "if (color in SEMANTIC_COLORS) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/constants/trade.constants.ts",
+      "condition": "value > 0",
+      "occurrences": [
+        {
+          "line": 114,
+          "column": 3,
+          "snippet": "if (value > 0) return PNL_COLORS.UP_CLASS"
+        },
+        {
+          "line": 125,
+          "column": 3,
+          "snippet": "if (value > 0) return PNL_COLORS.UP_BG_CLASS"
+        },
+        {
+          "line": 136,
+          "column": 3,
+          "snippet": "if (value > 0) return PNL_COLORS.UP_HEX"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/constants/trade.constants.ts",
+      "condition": "value < 0",
+      "occurrences": [
+        {
+          "line": 115,
+          "column": 3,
+          "snippet": "if (value < 0) return PNL_COLORS.DOWN_CLASS"
+        },
+        {
+          "line": 126,
+          "column": 3,
+          "snippet": "if (value < 0) return PNL_COLORS.DOWN_BG_CLASS"
+        },
+        {
+          "line": 137,
+          "column": 3,
+          "snippet": "if (value < 0) return PNL_COLORS.DOWN_HEX"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/core/databridge.ts",
+      "condition": "QUERY_ACTIONS.has(meta.action)",
+      "occurrences": [
+        {
+          "line": 346,
+          "column": 5,
+          "snippet": "if (QUERY_ACTIONS.has(meta.action)) {"
+        },
+        {
+          "line": 379,
+          "column": 7,
+          "snippet": "if (QUERY_ACTIONS.has(meta.action)) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/core/databridgeHandlers.ts",
+      "condition": "meta.action === ENVELOPE_ACTION.saveFinancialReport",
+      "occurrences": [
+        {
+          "line": 51,
+          "column": 5,
+          "snippet": "if (meta.action === ENVELOPE_ACTION.saveFinancialReport) {"
+        },
+        {
+          "line": 69,
+          "column": 5,
+          "snippet": "if (meta.action === ENVELOPE_ACTION.saveFinancialReport) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/core/databridgeStrategyRouter.ts",
+      "condition": "!Array.isArray(inputs)",
+      "occurrences": [
+        {
+          "line": 115,
+          "column": 5,
+          "snippet": "if (!Array.isArray(inputs)) {"
+        },
+        {
+          "line": 184,
+          "column": 5,
+          "snippet": "if (!Array.isArray(inputs)) {"
+        },
+        {
+          "line": 254,
+          "column": 5,
+          "snippet": "if (!Array.isArray(inputs)) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/core/dataflow/dataflowEngine.ts",
+      "condition": "this.connected",
+      "occurrences": [
+        {
+          "line": 94,
+          "column": 5,
+          "snippet": "if (this.connected) {\r"
+        },
+        {
+          "line": 407,
+          "column": 5,
+          "snippet": "if (this.connected) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/core/dataflow/dataflowEngine.ts",
+      "condition": "this.reconnectTimer",
+      "occurrences": [
+        {
+          "line": 107,
+          "column": 11,
+          "snippet": "if (this.reconnectTimer) {\r"
+        },
+        {
+          "line": 153,
+          "column": 5,
+          "snippet": "if (this.reconnectTimer) {\r"
+        },
+        {
+          "line": 391,
+          "column": 5,
+          "snippet": "if (this.reconnectTimer) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/core/entityValidators.ts",
+      "condition": "errors.length > 0",
+      "occurrences": [
+        {
+          "line": 69,
+          "column": 3,
+          "snippet": "if (errors.length > 0) {"
+        },
+        {
+          "line": 188,
+          "column": 3,
+          "snippet": "if (errors.length > 0) {"
+        },
+        {
+          "line": 265,
+          "column": 3,
+          "snippet": "if (errors.length > 0) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/core/entityValidators.ts",
+      "condition": "!result.valid || !result.data",
+      "occurrences": [
+        {
+          "line": 141,
+          "column": 3,
+          "snippet": "if (!result.valid || !result.data) {"
+        },
+        {
+          "line": 204,
+          "column": 3,
+          "snippet": "if (!result.valid || !result.data) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/core/memoryCache.ts",
+      "condition": "this.isExpired(entry)",
+      "occurrences": [
+        {
+          "line": 109,
+          "column": 5,
+          "snippet": "if (this.isExpired(entry)) {"
+        },
+        {
+          "line": 178,
+          "column": 5,
+          "snippet": "if (this.isExpired(entry)) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/core/memoryCache.ts",
+      "condition": "count > 0",
+      "occurrences": [
+        {
+          "line": 234,
+          "column": 5,
+          "snippet": "if (count > 0) {"
+        },
+        {
+          "line": 295,
+          "column": 7,
+          "snippet": "if (count > 0) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/core/pipelineScheduler.ts",
+      "condition": "this.state === 'RUNNING'",
+      "occurrences": [
+        {
+          "line": 78,
+          "column": 5,
+          "snippet": "if (this.state === 'RUNNING') {"
+        },
+        {
+          "line": 95,
+          "column": 5,
+          "snippet": "if (this.state === 'RUNNING') {"
+        },
+        {
+          "line": 155,
+          "column": 7,
+          "snippet": "if (this.state === 'RUNNING') {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/core/ThemeProvider.tsx",
+      "condition": "typeof window === 'undefined'",
+      "occurrences": [
+        {
+          "line": 33,
+          "column": 3,
+          "snippet": "if (typeof window === 'undefined') {"
+        },
+        {
+          "line": 43,
+          "column": 3,
+          "snippet": "if (typeof window === 'undefined') {"
+        },
+        {
+          "line": 57,
+          "column": 3,
+          "snippet": "if (typeof window === 'undefined') {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/core/widgetEventBus.ts",
+      "condition": "callbacks",
+      "occurrences": [
+        {
+          "line": 26,
+          "column": 5,
+          "snippet": "if (callbacks) {\r"
+        },
+        {
+          "line": 40,
+          "column": 5,
+          "snippet": "if (callbacks) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/data/dataLayerHelpers.ts",
+      "condition": "!result.success",
+      "occurrences": [
+        {
+          "line": 69,
+          "column": 3,
+          "snippet": "if (!result.success) {"
+        },
+        {
+          "line": 85,
+          "column": 3,
+          "snippet": "if (!result.success) {"
+        },
+        {
+          "line": 103,
+          "column": 3,
+          "snippet": "if (!result.success) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/data/dataLayerStockStores.ts",
+      "condition": "!result.success",
+      "occurrences": [
+        {
+          "line": 41,
+          "column": 5,
+          "snippet": "if (!result.success) {"
+        },
+        {
+          "line": 102,
+          "column": 5,
+          "snippet": "if (!result.success) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/data/dataLayerStockStores.ts",
+      "condition": "!existing",
+      "occurrences": [
+        {
+          "line": 75,
+          "column": 5,
+          "snippet": "if (!existing) {"
+        },
+        {
+          "line": 93,
+          "column": 5,
+          "snippet": "if (!existing) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/data/dataLayerTradingStores.ts",
+      "condition": "!result.success",
+      "occurrences": [
+        {
+          "line": 33,
+          "column": 5,
+          "snippet": "if (!result.success) {"
+        },
+        {
+          "line": 47,
+          "column": 5,
+          "snippet": "if (!result.success) {"
+        },
+        {
+          "line": 89,
+          "column": 5,
+          "snippet": "if (!result.success) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/data/db-migrations.ts",
+      "condition": "tx.db.objectStoreNames.contains(STORE_NAME.schemaMigrations)",
+      "occurrences": [
+        {
+          "line": 120,
+          "column": 7,
+          "snippet": "if (tx.db.objectStoreNames.contains(STORE_NAME.schemaMigrations)) {"
+        },
+        {
+          "line": 138,
+          "column": 7,
+          "snippet": "if (tx.db.objectStoreNames.contains(STORE_NAME.schemaMigrations)) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/data/db.ts",
+      "condition": "this._isReady",
+      "occurrences": [
+        {
+          "line": 36,
+          "column": 7,
+          "snippet": "if (this._isReady) {\r"
+        },
+        {
+          "line": 57,
+          "column": 5,
+          "snippet": "if (this._isReady) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/data/db.ts",
+      "condition": "!settled",
+      "occurrences": [
+        {
+          "line": 121,
+          "column": 11,
+          "snippet": "if (!settled) {\r"
+        },
+        {
+          "line": 127,
+          "column": 11,
+          "snippet": "if (!settled) {\r"
+        },
+        {
+          "line": 135,
+          "column": 13,
+          "snippet": "if (!settled) {\r"
+        },
+        {
+          "line": 141,
+          "column": 13,
+          "snippet": "if (!settled) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/data/repository.ts",
+      "condition": "!res.success",
+      "occurrences": [
+        {
+          "line": 111,
+          "column": 7,
+          "snippet": "if (!res.success) {"
+        },
+        {
+          "line": 126,
+          "column": 7,
+          "snippet": "if (!res.success) {"
+        },
+        {
+          "line": 141,
+          "column": 7,
+          "snippet": "if (!res.success) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/databridge/index.ts",
+      "condition": "adapterInstance",
+      "occurrences": [
+        {
+          "line": 137,
+          "column": 3,
+          "snippet": "if (adapterInstance) return adapterInstance"
+        },
+        {
+          "line": 150,
+          "column": 3,
+          "snippet": "if (adapterInstance) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/hooks/cabin/useIndustryScorePage.ts",
+      "condition": "!selectedCode",
+      "occurrences": [
+        {
+          "line": 124,
+          "column": 5,
+          "snippet": "if (!selectedCode) return"
+        },
+        {
+          "line": 146,
+          "column": 5,
+          "snippet": "if (!selectedCode) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/hooks/useConfirmDialog.tsx",
+      "condition": "resolverRef.current",
+      "occurrences": [
+        {
+          "line": 90,
+          "column": 5,
+          "snippet": "if (resolverRef.current) {"
+        },
+        {
+          "line": 98,
+          "column": 5,
+          "snippet": "if (resolverRef.current) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/hooks/useFreshData.ts",
+      "condition": "!enabled",
+      "occurrences": [
+        {
+          "line": 117,
+          "column": 5,
+          "snippet": "if (!enabled) return"
+        },
+        {
+          "line": 161,
+          "column": 5,
+          "snippet": "if (!enabled) return"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/hooks/useFreshData.ts",
+      "condition": "isRefreshingRef.current",
+      "occurrences": [
+        {
+          "line": 132,
+          "column": 5,
+          "snippet": "if (isRefreshingRef.current) {"
+        },
+        {
+          "line": 170,
+          "column": 7,
+          "snippet": "if (isRefreshingRef.current) return"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/hooks/useStockPoolBoard.ts",
+      "condition": "!result.success",
+      "occurrences": [
+        {
+          "line": 87,
+          "column": 7,
+          "snippet": "if (!result.success) {"
+        },
+        {
+          "line": 98,
+          "column": 7,
+          "snippet": "if (!result.success) {"
+        },
+        {
+          "line": 131,
+          "column": 9,
+          "snippet": "if (!result.success) {"
+        },
+        {
+          "line": 152,
+          "column": 9,
+          "snippet": "if (!result.success) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/hooks/useStockPoolBoard.ts",
+      "condition": "results.length > 0",
+      "occurrences": [
+        {
+          "line": 137,
+          "column": 7,
+          "snippet": "if (results.length > 0) {"
+        },
+        {
+          "line": 158,
+          "column": 7,
+          "snippet": "if (results.length > 0) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/lib/eventBus.ts",
+      "condition": "!callbacks",
+      "occurrences": [
+        {
+          "line": 40,
+          "column": 5,
+          "snippet": "if (!callbacks) {\r"
+        },
+        {
+          "line": 75,
+          "column": 5,
+          "snippet": "if (!callbacks) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/lib/localStorageManager.ts",
+      "condition": "raw === null",
+      "occurrences": [
+        {
+          "line": 142,
+          "column": 5,
+          "snippet": "if (raw === null) {\r"
+        },
+        {
+          "line": 267,
+          "column": 5,
+          "snippet": "if (raw === null) return null"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/lib/localStorageManager.ts",
+      "condition": "err instanceof DOMException && err.name === 'QuotaExceededError'",
+      "occurrences": [
+        {
+          "line": 188,
+          "column": 7,
+          "snippet": "if (err instanceof DOMException && err.name === 'QuotaExceededError') {\r"
+        },
+        {
+          "line": 248,
+          "column": 7,
+          "snippet": "if (err instanceof DOMException && err.name === 'QuotaExceededError') {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/lib/safeCoerce.ts",
+      "condition": "value === null || value === undefined || value === ''",
+      "occurrences": [
+        {
+          "line": 27,
+          "column": 3,
+          "snippet": "if (value === null || value === undefined || value === '') return defaultValue"
+        },
+        {
+          "line": 76,
+          "column": 3,
+          "snippet": "if (value === null || value === undefined || value === '') return undefined"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/mcp/core/client.ts",
+      "condition": "entry.options.enabled === false",
+      "occurrences": [
+        {
+          "line": 51,
+          "column": 7,
+          "snippet": "if (entry.options.enabled === false) continue"
+        },
+        {
+          "line": 123,
+          "column": 7,
+          "snippet": "if (entry.options.enabled === false) continue"
+        },
+        {
+          "line": 170,
+          "column": 7,
+          "snippet": "if (entry.options.enabled === false) continue"
+        },
+        {
+          "line": 196,
+          "column": 7,
+          "snippet": "if (entry.options.enabled === false) continue"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/mcp/core/client.ts",
+      "condition": "!aclResult.allowed",
+      "occurrences": [
+        {
+          "line": 78,
+          "column": 5,
+          "snippet": "if (!aclResult.allowed) {"
+        },
+        {
+          "line": 153,
+          "column": 5,
+          "snippet": "if (!aclResult.allowed) {"
+        },
+        {
+          "line": 221,
+          "column": 5,
+          "snippet": "if (!aclResult.allowed) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/mcp/core/mcpAclMonitor.ts",
+      "condition": "e.eventType !== 'granted'",
+      "occurrences": [
+        {
+          "line": 371,
+          "column": 7,
+          "snippet": "if (e.eventType !== 'granted') {"
+        },
+        {
+          "line": 379,
+          "column": 7,
+          "snippet": "if (e.eventType !== 'granted') {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/mcp/core/server.ts",
+      "condition": "err instanceof McpAclError",
+      "occurrences": [
+        {
+          "line": 148,
+          "column": 7,
+          "snippet": "if (err instanceof McpAclError) {"
+        },
+        {
+          "line": 246,
+          "column": 7,
+          "snippet": "if (err instanceof McpAclError) {"
+        },
+        {
+          "line": 299,
+          "column": 7,
+          "snippet": "if (err instanceof McpAclError) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/mcp/core/transport.ts",
+      "condition": "!params || typeof params.name !== 'string'",
+      "occurrences": [
+        {
+          "line": 48,
+          "column": 9,
+          "snippet": "if (!params || typeof params.name !== 'string') {"
+        },
+        {
+          "line": 76,
+          "column": 9,
+          "snippet": "if (!params || typeof params.name !== 'string') {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/mcp/register.ts",
+      "condition": "!entry.enabled",
+      "occurrences": [
+        {
+          "line": 108,
+          "column": 5,
+          "snippet": "if (!entry.enabled) {"
+        },
+        {
+          "line": 150,
+          "column": 5,
+          "snippet": "if (!entry.enabled) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/mcp/register.ts",
+      "condition": "registeredNames.has(entry.name)",
+      "occurrences": [
+        {
+          "line": 152,
+          "column": 7,
+          "snippet": "if (registeredNames.has(entry.name)) {"
+        },
+        {
+          "line": 160,
+          "column": 5,
+          "snippet": "if (registeredNames.has(entry.name)) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/pages/analysis/StockAnalysisPage.tsx",
+      "condition": "!controller.signal.aborted",
+      "occurrences": [
+        {
+          "line": 49,
+          "column": 7,
+          "snippet": "if (!controller.signal.aborted) {\r"
+        },
+        {
+          "line": 53,
+          "column": 7,
+          "snippet": "if (!controller.signal.aborted) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/pages/output/ResearchReportPage.tsx",
+      "condition": "signal?.aborted",
+      "occurrences": [
+        {
+          "line": 57,
+          "column": 7,
+          "snippet": "if (signal?.aborted) return"
+        },
+        {
+          "line": 60,
+          "column": 7,
+          "snippet": "if (signal?.aborted) return"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/pages/trading/components/TradeModal.tsx",
+      "condition": "!modal.holding || !modal.action",
+      "occurrences": [
+        {
+          "line": 64,
+          "column": 5,
+          "snippet": "if (!modal.holding || !modal.action) return"
+        },
+        {
+          "line": 74,
+          "column": 3,
+          "snippet": "if (!modal.holding || !modal.action) return <></>"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/pages/trading/HoldingsPage.tsx",
+      "condition": "!isMountedRef.current",
+      "occurrences": [
+        {
+          "line": 82,
+          "column": 7,
+          "snippet": "if (!isMountedRef.current) return"
+        },
+        {
+          "line": 99,
+          "column": 7,
+          "snippet": "if (!isMountedRef.current) return"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/pages/trading/HoldingsPage.tsx",
+      "condition": "isMountedRef.current",
+      "occurrences": [
+        {
+          "line": 109,
+          "column": 7,
+          "snippet": "if (isMountedRef.current) {\r"
+        },
+        {
+          "line": 160,
+          "column": 7,
+          "snippet": "if (isMountedRef.current) {\r"
+        },
+        {
+          "line": 227,
+          "column": 9,
+          "snippet": "if (isMountedRef.current) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/pages/trading/TradingFlowPage.tsx",
+      "condition": "result.success",
+      "occurrences": [
+        {
+          "line": 189,
+          "column": 5,
+          "snippet": "if (result.success) {"
+        },
+        {
+          "line": 259,
+          "column": 5,
+          "snippet": "if (result.success) {"
+        },
+        {
+          "line": 325,
+          "column": 5,
+          "snippet": "if (result.success) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/analysis/scoreDocService.ts",
+      "condition": "versions.length === 0",
+      "occurrences": [
+        {
+          "line": 196,
+          "column": 3,
+          "snippet": "if (versions.length === 0) return 1"
+        },
+        {
+          "line": 296,
+          "column": 5,
+          "snippet": "if (versions.length === 0) return { success: true, data: '' }"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/analysis/scoreDocService.ts",
+      "condition": "!leftDoc",
+      "occurrences": [
+        {
+          "line": 447,
+          "column": 5,
+          "snippet": "if (!leftDoc) {\r"
+        },
+        {
+          "line": 479,
+          "column": 5,
+          "snippet": "if (!leftDoc) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/analysis/scoreDocService.ts",
+      "condition": "!rightDoc",
+      "occurrences": [
+        {
+          "line": 450,
+          "column": 5,
+          "snippet": "if (!rightDoc) {\r"
+        },
+        {
+          "line": 482,
+          "column": 5,
+          "snippet": "if (!rightDoc) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/analysis/screeningEngine.ts",
+      "condition": "!qualityOk",
+      "occurrences": [
+        {
+          "line": 33,
+          "column": 3,
+          "snippet": "if (!qualityOk) return false"
+        },
+        {
+          "line": 50,
+          "column": 3,
+          "snippet": "if (!qualityOk) return false"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/backtest/BacktestEngine.ts",
+      "condition": "price <= 0",
+      "occurrences": [
+        {
+          "line": 142,
+          "column": 9,
+          "snippet": "if (price <= 0) continue"
+        },
+        {
+          "line": 164,
+          "column": 9,
+          "snippet": "if (price <= 0) continue"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/backtest/BacktestEngine.ts",
+      "condition": "qty <= 0",
+      "occurrences": [
+        {
+          "line": 145,
+          "column": 9,
+          "snippet": "if (qty <= 0) continue"
+        },
+        {
+          "line": 168,
+          "column": 9,
+          "snippet": "if (qty <= 0) continue"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/backtest/backtestEventLoader.ts",
+      "condition": "!seen.has(key)",
+      "occurrences": [
+        {
+          "line": 171,
+          "column": 5,
+          "snippet": "if (!seen.has(key)) {"
+        },
+        {
+          "line": 179,
+          "column": 5,
+          "snippet": "if (!seen.has(key)) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/data-collector/collectors/RestCollector.ts",
+      "condition": "!response.ok",
+      "occurrences": [
+        {
+          "line": 42,
+          "column": 5,
+          "snippet": "if (!response.ok) {\r"
+        },
+        {
+          "line": 78,
+          "column": 5,
+          "snippet": "if (!response.ok) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/data-collector/dataSourceOrchestrator.ts",
+      "condition": "i < chain.length - 1",
+      "occurrences": [
+        {
+          "line": 267,
+          "column": 5,
+          "snippet": "if (i < chain.length - 1) {"
+        },
+        {
+          "line": 446,
+          "column": 5,
+          "snippet": "if (i < chain.length - 1) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/data-collector/dataSourceOrchestrator.ts",
+      "condition": "results.length > 0",
+      "occurrences": [
+        {
+          "line": 324,
+          "column": 3,
+          "snippet": "if (results.length > 0) {"
+        },
+        {
+          "line": 331,
+          "column": 3,
+          "snippet": "if (results.length > 0) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/data-collector/dataSourceOrchestrator.ts",
+      "condition": "source === 'netease'",
+      "occurrences": [
+        {
+          "line": 351,
+          "column": 3,
+          "snippet": "if (source === 'netease') {"
+        },
+        {
+          "line": 653,
+          "column": 5,
+          "snippet": "if (source === 'netease') {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/data-collector/dataSourceOrchestrator.ts",
+      "condition": "source === 'mock'",
+      "occurrences": [
+        {
+          "line": 359,
+          "column": 3,
+          "snippet": "if (source === 'mock') {"
+        },
+        {
+          "line": 635,
+          "column": 3,
+          "snippet": "if (source === 'mock') {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/data-collector/dataSourceOrchestrator.ts",
+      "condition": "result && result.length > 0",
+      "occurrences": [
+        {
+          "line": 401,
+          "column": 7,
+          "snippet": "if (result && result.length > 0) {"
+        },
+        {
+          "line": 655,
+          "column": 7,
+          "snippet": "if (result && result.length > 0) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/data-collector/directDataAPI.ts",
+      "condition": "code.startsWith('6')",
+      "occurrences": [
+        {
+          "line": 52,
+          "column": 3,
+          "snippet": "if (code.startsWith('6')) return `sh${code}`"
+        },
+        {
+          "line": 65,
+          "column": 3,
+          "snippet": "if (code.startsWith('6')) return `0${code}`"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/data-collector/directDataAPI.ts",
+      "condition": "!match?.[1]",
+      "occurrences": [
+        {
+          "line": 107,
+          "column": 5,
+          "snippet": "if (!match?.[1]) return null"
+        },
+        {
+          "line": 191,
+          "column": 5,
+          "snippet": "if (!match?.[1]) return null"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/data-collector/directDataAPI.ts",
+      "condition": "!code || !match[2]",
+      "occurrences": [
+        {
+          "line": 149,
+          "column": 5,
+          "snippet": "if (!code || !match[2]) {"
+        },
+        {
+          "line": 232,
+          "column": 5,
+          "snippet": "if (!code || !match[2]) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/data-collector/MarketDataAdapter.ts",
+      "condition": "!Array.isArray(payload)",
+      "occurrences": [
+        {
+          "line": 125,
+          "column": 5,
+          "snippet": "if (!Array.isArray(payload)) {\r"
+        },
+        {
+          "line": 143,
+          "column": 5,
+          "snippet": "if (!Array.isArray(payload)) {\r"
+        },
+        {
+          "line": 157,
+          "column": 5,
+          "snippet": "if (!Array.isArray(payload)) {\r"
+        },
+        {
+          "line": 191,
+          "column": 5,
+          "snippet": "if (!Array.isArray(payload)) {\r"
+        },
+        {
+          "line": 500,
+          "column": 5,
+          "snippet": "if (!Array.isArray(payload)) {\r"
+        },
+        {
+          "line": 526,
+          "column": 5,
+          "snippet": "if (!Array.isArray(payload)) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/data-collector/MarketDataAdapter.ts",
+      "condition": "!payload || typeof payload !== 'object'",
+      "occurrences": [
+        {
+          "line": 171,
+          "column": 5,
+          "snippet": "if (!payload || typeof payload !== 'object') {\r"
+        },
+        {
+          "line": 205,
+          "column": 5,
+          "snippet": "if (!payload || typeof payload !== 'object') {\r"
+        },
+        {
+          "line": 226,
+          "column": 5,
+          "snippet": "if (!payload || typeof payload !== 'object') {\r"
+        },
+        {
+          "line": 252,
+          "column": 5,
+          "snippet": "if (!payload || typeof payload !== 'object') {\r"
+        },
+        {
+          "line": 266,
+          "column": 5,
+          "snippet": "if (!payload || typeof payload !== 'object') {\r"
+        },
+        {
+          "line": 285,
+          "column": 5,
+          "snippet": "if (!payload || typeof payload !== 'object') {\r"
+        },
+        {
+          "line": 319,
+          "column": 5,
+          "snippet": "if (!payload || typeof payload !== 'object') {\r"
+        },
+        {
+          "line": 341,
+          "column": 5,
+          "snippet": "if (!payload || typeof payload !== 'object') {\r"
+        },
+        {
+          "line": 358,
+          "column": 5,
+          "snippet": "if (!payload || typeof payload !== 'object') {\r"
+        },
+        {
+          "line": 392,
+          "column": 5,
+          "snippet": "if (!payload || typeof payload !== 'object') {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/data-collector/missingReportDetector.ts",
+      "condition": "!result.success",
+      "occurrences": [
+        {
+          "line": 94,
+          "column": 5,
+          "snippet": "if (!result.success) {\r"
+        },
+        {
+          "line": 164,
+          "column": 5,
+          "snippet": "if (!result.success) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/execution/executionPlanService.ts",
+      "condition": "!result.success",
+      "occurrences": [
+        {
+          "line": 94,
+          "column": 5,
+          "snippet": "if (!result.success) {\r"
+        },
+        {
+          "line": 170,
+          "column": 5,
+          "snippet": "if (!result.success) {\r"
+        },
+        {
+          "line": 213,
+          "column": 5,
+          "snippet": "if (!result.success) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/feedbackService.ts",
+      "condition": "attempt < maxRetries",
+      "occurrences": [
+        {
+          "line": 340,
+          "column": 7,
+          "snippet": "if (attempt < maxRetries) {\r"
+        },
+        {
+          "line": 352,
+          "column": 7,
+          "snippet": "if (attempt < maxRetries) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/fetcher/directDataAPI.ts",
+      "condition": "!response.ok",
+      "occurrences": [
+        {
+          "line": 137,
+          "column": 5,
+          "snippet": "if (!response.ok) {\r"
+        },
+        {
+          "line": 257,
+          "column": 5,
+          "snippet": "if (!response.ok) {\r"
+        },
+        {
+          "line": 305,
+          "column": 5,
+          "snippet": "if (!response.ok) {\r"
+        },
+        {
+          "line": 405,
+          "column": 5,
+          "snippet": "if (!response.ok) {\r"
+        },
+        {
+          "line": 510,
+          "column": 5,
+          "snippet": "if (!response.ok) {\r"
+        },
+        {
+          "line": 564,
+          "column": 5,
+          "snippet": "if (!response.ok) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/fetcher/directDataAPI.ts",
+      "condition": "!match || match.length < 2 || !match[1]",
+      "occurrences": [
+        {
+          "line": 174,
+          "column": 5,
+          "snippet": "if (!match || match.length < 2 || !match[1]) {\r"
+        },
+        {
+          "line": 268,
+          "column": 7,
+          "snippet": "if (!match || match.length < 2 || !match[1]) continue"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/fetcher/directDataAPI.ts",
+      "condition": "codes.length === 0",
+      "occurrences": [
+        {
+          "line": 247,
+          "column": 3,
+          "snippet": "if (codes.length === 0) {\r"
+        },
+        {
+          "line": 500,
+          "column": 3,
+          "snippet": "if (codes.length === 0) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/fetcher/directDataAPI.ts",
+      "condition": "!segCode",
+      "occurrences": [
+        {
+          "line": 271,
+          "column": 7,
+          "snippet": "if (!segCode) continue"
+        },
+        {
+          "line": 524,
+          "column": 7,
+          "snippet": "if (!segCode) continue"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/fetcher/fetcherInterceptor.ts",
+      "condition": "shouldRetry(error, config, attempt)",
+      "occurrences": [
+        {
+          "line": 106,
+          "column": 9,
+          "snippet": "if (shouldRetry(error, config, attempt)) {"
+        },
+        {
+          "line": 133,
+          "column": 7,
+          "snippet": "if (shouldRetry(error, config, attempt)) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/fetcher/fetcherScheduler.ts",
+      "condition": "this.state.isRunning",
+      "occurrences": [
+        {
+          "line": 34,
+          "column": 5,
+          "snippet": "if (this.state.isRunning) {"
+        },
+        {
+          "line": 60,
+          "column": 5,
+          "snippet": "if (this.state.isRunning) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/fetcher/fetcherScheduler.ts",
+      "condition": "!result.success",
+      "occurrences": [
+        {
+          "line": 44,
+          "column": 7,
+          "snippet": "if (!result.success) {"
+        },
+        {
+          "line": 70,
+          "column": 7,
+          "snippet": "if (!result.success) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/fetcher/fetcherService.ts",
+      "condition": "!normalized",
+      "occurrences": [
+        {
+          "line": 73,
+          "column": 3,
+          "snippet": "if (!normalized) {"
+        },
+        {
+          "line": 173,
+          "column": 3,
+          "snippet": "if (!normalized) {"
+        },
+        {
+          "line": 306,
+          "column": 3,
+          "snippet": "if (!normalized) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/fetcher/fetcherService.ts",
+      "condition": "!existing",
+      "occurrences": [
+        {
+          "line": 81,
+          "column": 3,
+          "snippet": "if (!existing) {"
+        },
+        {
+          "line": 187,
+          "column": 3,
+          "snippet": "if (!existing) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/fetcher/fetcherService.ts",
+      "condition": "!response.success || !response.data",
+      "occurrences": [
+        {
+          "line": 94,
+          "column": 3,
+          "snippet": "if (!response.success || !response.data) {"
+        },
+        {
+          "line": 206,
+          "column": 3,
+          "snippet": "if (!response.success || !response.data) {"
+        },
+        {
+          "line": 317,
+          "column": 3,
+          "snippet": "if (!response.success || !response.data) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/fetcher/orchestrator/adapters/marketDataFetcher.ts",
+      "condition": "!resp.success || !resp.data",
+      "occurrences": [
+        {
+          "line": 90,
+          "column": 5,
+          "snippet": "if (!resp.success || !resp.data) {\r"
+        },
+        {
+          "line": 129,
+          "column": 5,
+          "snippet": "if (!resp.success || !resp.data) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/fetcher/strategyDataAdapter.ts",
+      "condition": "!raw || typeof raw !== 'object'",
+      "occurrences": [
+        {
+          "line": 111,
+          "column": 3,
+          "snippet": "if (!raw || typeof raw !== 'object') return { ...SENTIMENT_DEFAULTS }"
+        },
+        {
+          "line": 123,
+          "column": 3,
+          "snippet": "if (!raw || typeof raw !== 'object') return { ...MOMENTUM_DEFAULTS }"
+        },
+        {
+          "line": 136,
+          "column": 3,
+          "snippet": "if (!raw || typeof raw !== 'object') return { ...BREAKOUT_DEFAULTS }"
+        },
+        {
+          "line": 149,
+          "column": 3,
+          "snippet": "if (!raw || typeof raw !== 'object') return { ...VALUATION_RISK_DEFAULTS }"
+        },
+        {
+          "line": 161,
+          "column": 3,
+          "snippet": "if (!raw || typeof raw !== 'object') return { ...MARKET_ENV_DEFAULTS }"
+        },
+        {
+          "line": 419,
+          "column": 3,
+          "snippet": "if (!raw || typeof raw !== 'object') {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/hybrid-proofread/reportGenerator.ts",
+      "condition": "critical > 0",
+      "occurrences": [
+        {
+          "line": 132,
+          "column": 5,
+          "snippet": "if (critical > 0) return 5"
+        },
+        {
+          "line": 158,
+          "column": 5,
+          "snippet": "if (critical > 0) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/hybrid-proofread/reportGenerator.ts",
+      "condition": "!seen.has(advice)",
+      "occurrences": [
+        {
+          "line": 191,
+          "column": 9,
+          "snippet": "if (!seen.has(advice)) {"
+        },
+        {
+          "line": 197,
+          "column": 9,
+          "snippet": "if (!seen.has(advice)) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/input/batchImportExecutor.ts",
+      "condition": "options.skipDuplicates !== false && seen.has(row.symbol)",
+      "occurrences": [
+        {
+          "line": 70,
+          "column": 5,
+          "snippet": "if (options.skipDuplicates !== false && seen.has(row.symbol)) {"
+        },
+        {
+          "line": 178,
+          "column": 11,
+          "snippet": "if (options.skipDuplicates !== false && seen.has(row.symbol)) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/input/batchImportExecutor.ts",
+      "condition": "addResult.success && addResult.data",
+      "occurrences": [
+        {
+          "line": 101,
+          "column": 5,
+          "snippet": "if (addResult.success && addResult.data) {"
+        },
+        {
+          "line": 209,
+          "column": 11,
+          "snippet": "if (addResult.success && addResult.data) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/input/batchImportParsers.ts",
+      "condition": "STOCK_CODE_PATTERN.test(code)",
+      "occurrences": [
+        {
+          "line": 66,
+          "column": 3,
+          "snippet": "if (STOCK_CODE_PATTERN.test(code)) {"
+        },
+        {
+          "line": 350,
+          "column": 9,
+          "snippet": "if (STOCK_CODE_PATTERN.test(code)) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/llm/llmClient.ts",
+      "condition": "raw.error && typeof raw.error.message === 'string'",
+      "occurrences": [
+        {
+          "line": 102,
+          "column": 3,
+          "snippet": "if (raw.error && typeof raw.error.message === 'string') {\r"
+        },
+        {
+          "line": 210,
+          "column": 3,
+          "snippet": "if (raw.error && typeof raw.error.message === 'string') {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/llm/llmClient.ts",
+      "condition": "!Array.isArray(choices) || choices.length === 0",
+      "occurrences": [
+        {
+          "line": 107,
+          "column": 3,
+          "snippet": "if (!Array.isArray(choices) || choices.length === 0) {\r"
+        },
+        {
+          "line": 215,
+          "column": 3,
+          "snippet": "if (!Array.isArray(choices) || choices.length === 0) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/llm/llmClient.ts",
+      "condition": "!config.apiKey",
+      "occurrences": [
+        {
+          "line": 129,
+          "column": 3,
+          "snippet": "if (!config.apiKey) {\r"
+        },
+        {
+          "line": 248,
+          "column": 3,
+          "snippet": "if (!config.apiKey) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/llm/llmClient.ts",
+      "condition": "config.maxTokens !== undefined",
+      "occurrences": [
+        {
+          "line": 141,
+          "column": 3,
+          "snippet": "if (config.maxTokens !== undefined) {\r"
+        },
+        {
+          "line": 261,
+          "column": 3,
+          "snippet": "if (config.maxTokens !== undefined) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/llm/llmClient.ts",
+      "condition": "timeoutId",
+      "occurrences": [
+        {
+          "line": 159,
+          "column": 5,
+          "snippet": "if (timeoutId) clearTimeout(timeoutId)"
+        },
+        {
+          "line": 182,
+          "column": 5,
+          "snippet": "if (timeoutId) clearTimeout(timeoutId)"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/llm/llmClient.ts",
+      "condition": "!response.ok",
+      "occurrences": [
+        {
+          "line": 162,
+          "column": 5,
+          "snippet": "if (!response.ok) {\r"
+        },
+        {
+          "line": 289,
+          "column": 5,
+          "snippet": "if (!response.ok) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/llm/llmClient.ts",
+      "condition": "err instanceof LlmApiError",
+      "occurrences": [
+        {
+          "line": 183,
+          "column": 5,
+          "snippet": "if (err instanceof LlmApiError) {\r"
+        },
+        {
+          "line": 358,
+          "column": 5,
+          "snippet": "if (err instanceof LlmApiError) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/llm/llmClient.ts",
+      "condition": "err instanceof DOMException && err.name === 'AbortError'",
+      "occurrences": [
+        {
+          "line": 186,
+          "column": 5,
+          "snippet": "if (err instanceof DOMException && err.name === 'AbortError') {\r"
+        },
+        {
+          "line": 355,
+          "column": 5,
+          "snippet": "if (err instanceof DOMException && err.name === 'AbortError') {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/llm/llmClient.ts",
+      "condition": "idleTimer",
+      "occurrences": [
+        {
+          "line": 270,
+          "column": 5,
+          "snippet": "if (idleTimer) clearTimeout(idleTimer)"
+        },
+        {
+          "line": 365,
+          "column": 5,
+          "snippet": "if (idleTimer) clearTimeout(idleTimer)"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/llm/llmGateway.ts",
+      "condition": "options.allowFallback",
+      "occurrences": [
+        {
+          "line": 65,
+          "column": 5,
+          "snippet": "if (options.allowFallback) {"
+        },
+        {
+          "line": 113,
+          "column": 5,
+          "snippet": "if (options.allowFallback) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/llm/llmGateway.ts",
+      "condition": "err instanceof LlmApiError",
+      "occurrences": [
+        {
+          "line": 73,
+          "column": 5,
+          "snippet": "if (err instanceof LlmApiError) {"
+        },
+        {
+          "line": 118,
+          "column": 5,
+          "snippet": "if (err instanceof LlmApiError) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/news/sentimentTrendEngine.ts",
+      "condition": "date.length === 0",
+      "occurrences": [
+        {
+          "line": 50,
+          "column": 3,
+          "snippet": "if (date.length === 0) return false"
+        },
+        {
+          "line": 76,
+          "column": 5,
+          "snippet": "if (date.length === 0) continue"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/portfolio/portfolioService.ts",
+      "condition": "!portfolio",
+      "occurrences": [
+        {
+          "line": 42,
+          "column": 5,
+          "snippet": "if (!portfolio) {\r"
+        },
+        {
+          "line": 89,
+          "column": 5,
+          "snippet": "if (!portfolio) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/portfolio/portfolioService.ts",
+      "condition": "!result.success",
+      "occurrences": [
+        {
+          "line": 69,
+          "column": 5,
+          "snippet": "if (!result.success) {\r"
+        },
+        {
+          "line": 108,
+          "column": 5,
+          "snippet": "if (!result.success) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/pwa/registerServiceWorker.ts",
+      "condition": "!('serviceWorker' in navigator)",
+      "occurrences": [
+        {
+          "line": 49,
+          "column": 3,
+          "snippet": "if (!('serviceWorker' in navigator)) {\r"
+        },
+        {
+          "line": 112,
+          "column": 3,
+          "snippet": "if (!('serviceWorker' in navigator)) return"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/rbac/rbacManagementService.ts",
+      "condition": "result.success",
+      "occurrences": [
+        {
+          "line": 166,
+          "column": 3,
+          "snippet": "if (result.success) {"
+        },
+        {
+          "line": 197,
+          "column": 3,
+          "snippet": "if (result.success) {"
+        },
+        {
+          "line": 225,
+          "column": 3,
+          "snippet": "if (result.success) {"
+        },
+        {
+          "line": 288,
+          "column": 3,
+          "snippet": "if (result.success) {"
+        },
+        {
+          "line": 420,
+          "column": 3,
+          "snippet": "if (result.success) {"
+        },
+        {
+          "line": 459,
+          "column": 3,
+          "snippet": "if (result.success) {"
+        },
+        {
+          "line": 507,
+          "column": 3,
+          "snippet": "if (result.success) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/rbac/rbacManagementService.ts",
+      "condition": "!existing.success || !existing.data",
+      "occurrences": [
+        {
+          "line": 184,
+          "column": 3,
+          "snippet": "if (!existing.success || !existing.data) {"
+        },
+        {
+          "line": 215,
+          "column": 3,
+          "snippet": "if (!existing.success || !existing.data) {"
+        },
+        {
+          "line": 312,
+          "column": 3,
+          "snippet": "if (!existing.success || !existing.data) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/rbac/rbacManagementService.ts",
+      "condition": "!res.success || !res.data",
+      "occurrences": [
+        {
+          "line": 447,
+          "column": 3,
+          "snippet": "if (!res.success || !res.data) {"
+        },
+        {
+          "line": 531,
+          "column": 3,
+          "snippet": "if (!res.success || !res.data) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/resilience.ts",
+      "condition": "state === 'half-open'",
+      "occurrences": [
+        {
+          "line": 154,
+          "column": 9,
+          "snippet": "if (state === 'half-open') {"
+        },
+        {
+          "line": 168,
+          "column": 9,
+          "snippet": "if (state === 'half-open') {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/resilience.ts",
+      "condition": "options.fallback !== undefined",
+      "occurrences": [
+        {
+          "line": 241,
+          "column": 5,
+          "snippet": "if (options.fallback !== undefined) {"
+        },
+        {
+          "line": 248,
+          "column": 3,
+          "snippet": "if (options.fallback !== undefined) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/scoring/v6-engine/calculators/l0_l1_l2.ts",
+      "condition": "stock.marketCap !== undefined",
+      "occurrences": [
+        {
+          "line": 125,
+          "column": 3,
+          "snippet": "if (stock.marketCap !== undefined) {\r"
+        },
+        {
+          "line": 199,
+          "column": 3,
+          "snippet": "if (stock.marketCap !== undefined) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/scoring/v6-engine/calculators/l3/helpers.ts",
+      "condition": "growth > 0.30",
+      "occurrences": [
+        {
+          "line": 149,
+          "column": 5,
+          "snippet": "if (growth > 0.30) return 4.5"
+        },
+        {
+          "line": 155,
+          "column": 5,
+          "snippet": "if (growth > 0.30) return 4"
+        },
+        {
+          "line": 160,
+          "column": 3,
+          "snippet": "if (growth > 0.30) return 4"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/scoring/v6-engine/calculators/l3/helpers.ts",
+      "condition": "growth > 0.10",
+      "occurrences": [
+        {
+          "line": 150,
+          "column": 5,
+          "snippet": "if (growth > 0.10) return 4"
+        },
+        {
+          "line": 156,
+          "column": 5,
+          "snippet": "if (growth > 0.10) return 3.5"
+        },
+        {
+          "line": 161,
+          "column": 3,
+          "snippet": "if (growth > 0.10) return 3.5"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/scoring/v6-engine/calculators/l3/l3v-valuation.ts",
+      "condition": "benchmark",
+      "occurrences": [
+        {
+          "line": 40,
+          "column": 5,
+          "snippet": "if (benchmark) {"
+        },
+        {
+          "line": 54,
+          "column": 3,
+          "snippet": "if (benchmark) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/scoring/v6-engine/calculators/l7_l8.ts",
+      "condition": "isLossMaking",
+      "occurrences": [
+        {
+          "line": 46,
+          "column": 5,
+          "snippet": "if (isLossMaking) {\r"
+        },
+        {
+          "line": 53,
+          "column": 5,
+          "snippet": "if (isLossMaking) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/scoring/v6-engine/engine.ts",
+      "condition": "this.config.auditEnabled",
+      "occurrences": [
+        {
+          "line": 109,
+          "column": 5,
+          "snippet": "if (this.config.auditEnabled) {\r"
+        },
+        {
+          "line": 134,
+          "column": 7,
+          "snippet": "if (this.config.auditEnabled) {\r"
+        },
+        {
+          "line": 153,
+          "column": 7,
+          "snippet": "if (this.config.auditEnabled) {\r"
+        },
+        {
+          "line": 177,
+          "column": 5,
+          "snippet": "if (this.config.auditEnabled) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/scoring/v6-engine/types.ts",
+      "condition": "past !== undefined && past !== 0 && latestClose !== undefined",
+      "occurrences": [
+        {
+          "line": 387,
+          "column": 5,
+          "snippet": "if (past !== undefined && past !== 0 && latestClose !== undefined) {\r"
+        },
+        {
+          "line": 396,
+          "column": 5,
+          "snippet": "if (past !== undefined && past !== 0 && latestClose !== undefined) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/stock-analysis/mockStockAnalysisProvider.ts",
+      "condition": "score >= 80",
+      "occurrences": [
+        {
+          "line": 354,
+          "column": 3,
+          "snippet": "if (score >= 80) return '优秀'"
+        },
+        {
+          "line": 361,
+          "column": 3,
+          "snippet": "if (score >= 80) return 'bg-green-500'"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/stock-analysis/mockStockAnalysisProvider.ts",
+      "condition": "score >= 60",
+      "occurrences": [
+        {
+          "line": 355,
+          "column": 3,
+          "snippet": "if (score >= 60) return '良好'"
+        },
+        {
+          "line": 362,
+          "column": 3,
+          "snippet": "if (score >= 60) return 'bg-blue-500'"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/stock-analysis/mockStockAnalysisProvider.ts",
+      "condition": "score >= 40",
+      "occurrences": [
+        {
+          "line": 356,
+          "column": 3,
+          "snippet": "if (score >= 40) return '一般'"
+        },
+        {
+          "line": 363,
+          "column": 3,
+          "snippet": "if (score >= 40) return 'bg-amber-500'"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/stockpool/stockpoolService.ts",
+      "condition": "!normalized",
+      "occurrences": [
+        {
+          "line": 52,
+          "column": 3,
+          "snippet": "if (!normalized) {\r"
+        },
+        {
+          "line": 167,
+          "column": 3,
+          "snippet": "if (!normalized) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/system/migration/migrationTransformers.ts",
+      "condition": "v6.layers",
+      "occurrences": [
+        {
+          "line": 228,
+          "column": 3,
+          "snippet": "if (v6.layers) {"
+        },
+        {
+          "line": 250,
+          "column": 3,
+          "snippet": "if (v6.layers) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/trade/holdingsService.ts",
+      "condition": "!response.ok",
+      "occurrences": [
+        {
+          "line": 41,
+          "column": 5,
+          "snippet": "if (!response.ok) {"
+        },
+        {
+          "line": 211,
+          "column": 3,
+          "snippet": "if (!response.ok) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/trading/signalGenerator.ts",
+      "condition": "signals.length === 0",
+      "occurrences": [
+        {
+          "line": 273,
+          "column": 3,
+          "snippet": "if (signals.length === 0) {\r"
+        },
+        {
+          "line": 294,
+          "column": 3,
+          "snippet": "if (signals.length === 0) return undefined"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/trading/tradeErrorDetectors.ts",
+      "condition": "relatedIds.length === 0",
+      "occurrences": [
+        {
+          "line": 67,
+          "column": 3,
+          "snippet": "if (relatedIds.length === 0) return null"
+        },
+        {
+          "line": 94,
+          "column": 3,
+          "snippet": "if (relatedIds.length === 0) return null"
+        },
+        {
+          "line": 121,
+          "column": 3,
+          "snippet": "if (relatedIds.length === 0) return null"
+        },
+        {
+          "line": 167,
+          "column": 3,
+          "snippet": "if (relatedIds.length === 0) return null"
+        },
+        {
+          "line": 194,
+          "column": 3,
+          "snippet": "if (relatedIds.length === 0) return null"
+        },
+        {
+          "line": 221,
+          "column": 3,
+          "snippet": "if (relatedIds.length === 0) return null"
+        },
+        {
+          "line": 258,
+          "column": 3,
+          "snippet": "if (relatedIds.length === 0) return null"
+        },
+        {
+          "line": 318,
+          "column": 3,
+          "snippet": "if (relatedIds.length === 0) return null"
+        },
+        {
+          "line": 345,
+          "column": 3,
+          "snippet": "if (relatedIds.length === 0) return null"
+        },
+        {
+          "line": 377,
+          "column": 3,
+          "snippet": "if (relatedIds.length === 0) return null"
+        },
+        {
+          "line": 403,
+          "column": 3,
+          "snippet": "if (relatedIds.length === 0) return null"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/trading/tradingService.ts",
+      "condition": "stock.price === undefined || stock.price <= 0",
+      "occurrences": [
+        {
+          "line": 65,
+          "column": 3,
+          "snippet": "if (stock.price === undefined || stock.price <= 0) {"
+        },
+        {
+          "line": 265,
+          "column": 3,
+          "snippet": "if (stock.price === undefined || stock.price <= 0) {"
+        },
+        {
+          "line": 287,
+          "column": 3,
+          "snippet": "if (stock.price === undefined || stock.price <= 0) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/trading/tradingService.ts",
+      "condition": "!stock.symbol",
+      "occurrences": [
+        {
+          "line": 127,
+          "column": 3,
+          "snippet": "if (!stock.symbol) {"
+        },
+        {
+          "line": 262,
+          "column": 3,
+          "snippet": "if (!stock.symbol) {"
+        },
+        {
+          "line": 284,
+          "column": 3,
+          "snippet": "if (!stock.symbol) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/useCase/fetcherOrchestrator.useCase.ts",
+      "condition": "result.success",
+      "occurrences": [
+        {
+          "line": 38,
+          "column": 5,
+          "snippet": "if (result.success) {"
+        },
+        {
+          "line": 80,
+          "column": 5,
+          "snippet": "if (result.success) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/services/useCase/getUnifiedStockView.useCase.ts",
+      "condition": "!result.success",
+      "occurrences": [
+        {
+          "line": 246,
+          "column": 3,
+          "snippet": "if (!result.success) {"
+        },
+        {
+          "line": 281,
+          "column": 3,
+          "snippet": "if (!result.success) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/analysisStore.derived.ts",
+      "condition": "!trendData?.points || trendData.points.length < 2",
+      "occurrences": [
+        {
+          "line": 210,
+          "column": 3,
+          "snippet": "if (!trendData?.points || trendData.points.length < 2) {"
+        },
+        {
+          "line": 228,
+          "column": 3,
+          "snippet": "if (!trendData?.points || trendData.points.length < 2) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/analysisStore.derived.ts",
+      "condition": "!trendData?.points || trendData.points.length === 0",
+      "occurrences": [
+        {
+          "line": 243,
+          "column": 3,
+          "snippet": "if (!trendData?.points || trendData.points.length === 0) {"
+        },
+        {
+          "line": 258,
+          "column": 3,
+          "snippet": "if (!trendData?.points || trendData.points.length === 0) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/analysisStore.ts",
+      "condition": "result.success && result.data",
+      "occurrences": [
+        {
+          "line": 98,
+          "column": 7,
+          "snippet": "if (result.success && result.data) {"
+        },
+        {
+          "line": 119,
+          "column": 7,
+          "snippet": "if (result.success && result.data) {"
+        },
+        {
+          "line": 146,
+          "column": 7,
+          "snippet": "if (result.success && result.data) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/backtestStore.ts",
+      "condition": "_debounceTimer",
+      "occurrences": [
+        {
+          "line": 236,
+          "column": 3,
+          "snippet": "if (_debounceTimer) {"
+        },
+        {
+          "line": 291,
+          "column": 5,
+          "snippet": "if (_debounceTimer) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/chatStore.derived.ts",
+      "condition": "messages.length === 0",
+      "occurrences": [
+        {
+          "line": 81,
+          "column": 3,
+          "snippet": "if (messages.length === 0) return null"
+        },
+        {
+          "line": 289,
+          "column": 3,
+          "snippet": "if (messages.length === 0) return null"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/customAgentStore.ts",
+      "condition": "!result.success",
+      "occurrences": [
+        {
+          "line": 52,
+          "column": 7,
+          "snippet": "if (!result.success) {"
+        },
+        {
+          "line": 74,
+          "column": 7,
+          "snippet": "if (!result.success) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/disciplineStore.ts",
+      "condition": "state.isRefreshing",
+      "occurrences": [
+        {
+          "line": 158,
+          "column": 7,
+          "snippet": "if (state.isRefreshing) {"
+        },
+        {
+          "line": 267,
+          "column": 7,
+          "snippet": "if (state.isRefreshing) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/disciplineStore.ts",
+      "condition": "_debounceTimer",
+      "occurrences": [
+        {
+          "line": 403,
+          "column": 3,
+          "snippet": "if (_debounceTimer) {"
+        },
+        {
+          "line": 459,
+          "column": 5,
+          "snippet": "if (_debounceTimer) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/dualStrategyStore.ts",
+      "condition": "isRefreshing",
+      "occurrences": [
+        {
+          "line": 163,
+          "column": 5,
+          "snippet": "if (isRefreshing) {"
+        },
+        {
+          "line": 297,
+          "column": 5,
+          "snippet": "if (isRefreshing) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/dualStrategyStore.ts",
+      "condition": "_debounceTimer",
+      "occurrences": [
+        {
+          "line": 457,
+          "column": 3,
+          "snippet": "if (_debounceTimer) {"
+        },
+        {
+          "line": 558,
+          "column": 3,
+          "snippet": "if (_debounceTimer) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/dualStrategyStore.ts",
+      "condition": "shouldSkipSelf(envelope)",
+      "occurrences": [
+        {
+          "line": 492,
+          "column": 7,
+          "snippet": "if (shouldSkipSelf(envelope)) return"
+        },
+        {
+          "line": 505,
+          "column": 7,
+          "snippet": "if (shouldSkipSelf(envelope)) return"
+        },
+        {
+          "line": 518,
+          "column": 7,
+          "snippet": "if (shouldSkipSelf(envelope)) return"
+        },
+        {
+          "line": 531,
+          "column": 7,
+          "snippet": "if (shouldSkipSelf(envelope)) return"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/executionStoreSubscriptions.ts",
+      "condition": "_debounceTimer",
+      "occurrences": [
+        {
+          "line": 91,
+          "column": 3,
+          "snippet": "if (_debounceTimer) {"
+        },
+        {
+          "line": 200,
+          "column": 3,
+          "snippet": "if (_debounceTimer) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/executionStoreSubscriptions.ts",
+      "condition": "envelope.meta.source === EXECUTION_STORE_SOURCE",
+      "occurrences": [
+        {
+          "line": 119,
+          "column": 3,
+          "snippet": "if (envelope.meta.source === EXECUTION_STORE_SOURCE) {"
+        },
+        {
+          "line": 152,
+          "column": 3,
+          "snippet": "if (envelope.meta.source === EXECUTION_STORE_SOURCE) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/intelligentScoreStore.ts",
+      "condition": "typeof config === 'function'",
+      "occurrences": [
+        {
+          "line": 259,
+          "column": 5,
+          "snippet": "if (typeof config === 'function') {"
+        },
+        {
+          "line": 267,
+          "column": 5,
+          "snippet": "if (typeof config === 'function') {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/localKnowledgeStore.ts",
+      "condition": "result.success && result.data",
+      "occurrences": [
+        {
+          "line": 114,
+          "column": 7,
+          "snippet": "if (result.success && result.data) {"
+        },
+        {
+          "line": 133,
+          "column": 7,
+          "snippet": "if (result.success && result.data) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/marketDataStore.ts",
+      "condition": "instanceId",
+      "occurrences": [
+        {
+          "line": 405,
+          "column": 5,
+          "snippet": "if (instanceId) {"
+        },
+        {
+          "line": 442,
+          "column": 5,
+          "snippet": "if (instanceId) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/orderStore.ts",
+      "condition": "_debounceTimer",
+      "occurrences": [
+        {
+          "line": 486,
+          "column": 3,
+          "snippet": "if (_debounceTimer) {"
+        },
+        {
+          "line": 556,
+          "column": 5,
+          "snippet": "if (_debounceTimer) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/poolStore.ts",
+      "condition": "_debounceTimer",
+      "occurrences": [
+        {
+          "line": 454,
+          "column": 3,
+          "snippet": "if (_debounceTimer) {"
+        },
+        {
+          "line": 532,
+          "column": 3,
+          "snippet": "if (_debounceTimer) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/positionStore.ts",
+      "condition": "_debounceTimer",
+      "occurrences": [
+        {
+          "line": 228,
+          "column": 5,
+          "snippet": "if (_debounceTimer) {"
+        },
+        {
+          "line": 249,
+          "column": 5,
+          "snippet": "if (_debounceTimer) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/riskStore.derived.ts",
+      "condition": "verdicts.length === 0",
+      "occurrences": [
+        {
+          "line": 171,
+          "column": 3,
+          "snippet": "if (verdicts.length === 0) return null"
+        },
+        {
+          "line": 633,
+          "column": 3,
+          "snippet": "if (verdicts.length === 0) return []"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/scoreDocStore.ts",
+      "condition": "result.success && result.data",
+      "occurrences": [
+        {
+          "line": 153,
+          "column": 7,
+          "snippet": "if (result.success && result.data) {"
+        },
+        {
+          "line": 181,
+          "column": 7,
+          "snippet": "if (result.success && result.data) {"
+        },
+        {
+          "line": 208,
+          "column": 7,
+          "snippet": "if (result.success && result.data) {"
+        },
+        {
+          "line": 240,
+          "column": 7,
+          "snippet": "if (result.success && result.data) {"
+        },
+        {
+          "line": 366,
+          "column": 7,
+          "snippet": "if (result.success && result.data) {"
+        },
+        {
+          "line": 387,
+          "column": 7,
+          "snippet": "if (result.success && result.data) {"
+        },
+        {
+          "line": 414,
+          "column": 7,
+          "snippet": "if (result.success && result.data) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/sevenDimConfigStore.ts",
+      "condition": "!template",
+      "occurrences": [
+        {
+          "line": 119,
+          "column": 3,
+          "snippet": "if (!template) return createPipelineDimensions()"
+        },
+        {
+          "line": 215,
+          "column": 5,
+          "snippet": "if (!template) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/sevenDimConfigStore.ts",
+      "condition": "state.isSaving",
+      "occurrences": [
+        {
+          "line": 206,
+          "column": 5,
+          "snippet": "if (state.isSaving) return '配置保存中，请稍候...'"
+        },
+        {
+          "line": 355,
+          "column": 5,
+          "snippet": "if (state.isSaving) return"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/sevenDimConfigStore.ts",
+      "condition": "state.isCollecting",
+      "occurrences": [
+        {
+          "line": 207,
+          "column": 5,
+          "snippet": "if (state.isCollecting) return '采集进行中，请稍候...'"
+        },
+        {
+          "line": 441,
+          "column": 5,
+          "snippet": "if (state.isCollecting) return"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/signalAdviceStore.ts",
+      "condition": "isRefreshing",
+      "occurrences": [
+        {
+          "line": 89,
+          "column": 5,
+          "snippet": "if (isRefreshing) {"
+        },
+        {
+          "line": 159,
+          "column": 5,
+          "snippet": "if (isRefreshing) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/signalAdviceStore.ts",
+      "condition": "advice.success && advice.data",
+      "occurrences": [
+        {
+          "line": 134,
+          "column": 7,
+          "snippet": "if (advice.success && advice.data) {"
+        },
+        {
+          "line": 171,
+          "column": 9,
+          "snippet": "if (advice.success && advice.data) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/signalQualityStore.derived.ts",
+      "condition": "realized.length === 0",
+      "occurrences": [
+        {
+          "line": 116,
+          "column": 3,
+          "snippet": "if (realized.length === 0) return 0"
+        },
+        {
+          "line": 128,
+          "column": 3,
+          "snippet": "if (realized.length === 0) return 0"
+        },
+        {
+          "line": 154,
+          "column": 3,
+          "snippet": "if (realized.length === 0) return 'unknown'"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/signalQualityStore.derived.ts",
+      "condition": "r.pnlPercent !== undefined",
+      "occurrences": [
+        {
+          "line": 261,
+          "column": 5,
+          "snippet": "if (r.pnlPercent !== undefined) {"
+        },
+        {
+          "line": 277,
+          "column": 5,
+          "snippet": "if (r.pnlPercent !== undefined) {"
+        },
+        {
+          "line": 316,
+          "column": 5,
+          "snippet": "if (r.pnlPercent !== undefined) {"
+        },
+        {
+          "line": 359,
+          "column": 5,
+          "snippet": "if (r.pnlPercent !== undefined) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/signalQualityStore.derived.ts",
+      "condition": "r.correct !== undefined",
+      "occurrences": [
+        {
+          "line": 312,
+          "column": 5,
+          "snippet": "if (r.correct !== undefined) {"
+        },
+        {
+          "line": 355,
+          "column": 5,
+          "snippet": "if (r.correct !== undefined) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/signalQualityStore.derived.ts",
+      "condition": "r.correct",
+      "occurrences": [
+        {
+          "line": 314,
+          "column": 7,
+          "snippet": "if (r.correct) stat.correct++"
+        },
+        {
+          "line": 357,
+          "column": 7,
+          "snippet": "if (r.correct) stat.correct++"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/signalStore.ts",
+      "condition": "state.isRefreshing",
+      "occurrences": [
+        {
+          "line": 60,
+          "column": 5,
+          "snippet": "if (state.isRefreshing) {"
+        },
+        {
+          "line": 168,
+          "column": 5,
+          "snippet": "if (state.isRefreshing) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/signalStore.ts",
+      "condition": "_refreshDebounceTimer",
+      "occurrences": [
+        {
+          "line": 162,
+          "column": 3,
+          "snippet": "if (_refreshDebounceTimer) {"
+        },
+        {
+          "line": 232,
+          "column": 3,
+          "snippet": "if (_refreshDebounceTimer) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/signalStore.ts",
+      "condition": "envelope.meta.source === MODULE_ID.trading || envelope.meta.source === MODULE_ID.tradinghub",
+      "occurrences": [
+        {
+          "line": 189,
+          "column": 7,
+          "snippet": "if (envelope.meta.source === MODULE_ID.trading || envelope.meta.source === MODULE_ID.tradinghub) {"
+        },
+        {
+          "line": 210,
+          "column": 7,
+          "snippet": "if (envelope.meta.source === MODULE_ID.trading || envelope.meta.source === MODULE_ID.tradinghub) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/stockAnalysisStore.ts",
+      "condition": "signal?.aborted",
+      "occurrences": [
+        {
+          "line": 90,
+          "column": 7,
+          "snippet": "if (signal?.aborted) {"
+        },
+        {
+          "line": 112,
+          "column": 7,
+          "snippet": "if (signal?.aborted) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/strategySnapshotStore.ts",
+      "condition": "!result.success",
+      "occurrences": [
+        {
+          "line": 172,
+          "column": 9,
+          "snippet": "if (!result.success) {"
+        },
+        {
+          "line": 210,
+          "column": 9,
+          "snippet": "if (!result.success) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/tradingStore.ts",
+      "condition": "processingSymbols.has(stock.symbol)",
+      "occurrences": [
+        {
+          "line": 186,
+          "column": 5,
+          "snippet": "if (processingSymbols.has(stock.symbol)) return"
+        },
+        {
+          "line": 216,
+          "column": 5,
+          "snippet": "if (processingSymbols.has(stock.symbol)) return"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/store/tradingStore.ts",
+      "condition": "result.success",
+      "occurrences": [
+        {
+          "line": 196,
+          "column": 7,
+          "snippet": "if (result.success) {\r"
+        },
+        {
+          "line": 229,
+          "column": 7,
+          "snippet": "if (result.success) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/types/guards.ts",
+      "condition": "!isObject(value)",
+      "occurrences": [
+        {
+          "line": 74,
+          "column": 3,
+          "snippet": "if (!isObject(value)) return false"
+        },
+        {
+          "line": 101,
+          "column": 3,
+          "snippet": "if (!isObject(value)) return false"
+        },
+        {
+          "line": 116,
+          "column": 3,
+          "snippet": "if (!isObject(value)) return false"
+        },
+        {
+          "line": 130,
+          "column": 3,
+          "snippet": "if (!isObject(value)) return false"
+        },
+        {
+          "line": 144,
+          "column": 3,
+          "snippet": "if (!isObject(value)) return false"
+        },
+        {
+          "line": 171,
+          "column": 3,
+          "snippet": "if (!isObject(value)) return false"
+        },
+        {
+          "line": 188,
+          "column": 3,
+          "snippet": "if (!isObject(value)) return false"
+        },
+        {
+          "line": 207,
+          "column": 3,
+          "snippet": "if (!isObject(value)) return false"
+        },
+        {
+          "line": 221,
+          "column": 3,
+          "snippet": "if (!isObject(value)) return false"
+        },
+        {
+          "line": 236,
+          "column": 3,
+          "snippet": "if (!isObject(value)) return false"
+        },
+        {
+          "line": 251,
+          "column": 3,
+          "snippet": "if (!isObject(value)) return false"
+        },
+        {
+          "line": 260,
+          "column": 3,
+          "snippet": "if (!isObject(value)) return false"
+        },
+        {
+          "line": 274,
+          "column": 3,
+          "snippet": "if (!isObject(value)) return false"
+        },
+        {
+          "line": 291,
+          "column": 3,
+          "snippet": "if (!isObject(value)) return false"
+        },
+        {
+          "line": 305,
+          "column": 3,
+          "snippet": "if (!isObject(value)) return false"
+        },
+        {
+          "line": 318,
+          "column": 3,
+          "snippet": "if (!isObject(value)) return false"
+        },
+        {
+          "line": 332,
+          "column": 3,
+          "snippet": "if (!isObject(value)) return false"
+        },
+        {
+          "line": 345,
+          "column": 3,
+          "snippet": "if (!isObject(value)) return false"
+        },
+        {
+          "line": 358,
+          "column": 3,
+          "snippet": "if (!isObject(value)) return false"
+        },
+        {
+          "line": 374,
+          "column": 3,
+          "snippet": "if (!isObject(value)) return false"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/utils/a11y.ts",
+      "condition": "!container",
+      "occurrences": [
+        {
+          "line": 163,
+          "column": 3,
+          "snippet": "if (!container) return"
+        },
+        {
+          "line": 170,
+          "column": 3,
+          "snippet": "if (!container) return"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/utils/a11y.ts",
+      "condition": "typeof window === 'undefined'",
+      "occurrences": [
+        {
+          "line": 177,
+          "column": 3,
+          "snippet": "if (typeof window === 'undefined') return false"
+        },
+        {
+          "line": 183,
+          "column": 3,
+          "snippet": "if (typeof window === 'undefined') return false"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/utils/dataValidation.ts",
+      "condition": "typeof apiKey !== 'string' || apiKey.length === 0",
+      "occurrences": [
+        {
+          "line": 171,
+          "column": 3,
+          "snippet": "if (typeof apiKey !== 'string' || apiKey.length === 0) return false"
+        },
+        {
+          "line": 209,
+          "column": 3,
+          "snippet": "if (typeof apiKey !== 'string' || apiKey.length === 0) return '(empty)'"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/utils/precision.ts",
+      "condition": "value == null || isNaN(value)",
+      "occurrences": [
+        {
+          "line": 24,
+          "column": 3,
+          "snippet": "if (value == null || isNaN(value)) return '--'"
+        },
+        {
+          "line": 34,
+          "column": 3,
+          "snippet": "if (value == null || isNaN(value)) return '--'"
+        },
+        {
+          "line": 45,
+          "column": 3,
+          "snippet": "if (value == null || isNaN(value)) return '--'"
+        },
+        {
+          "line": 57,
+          "column": 3,
+          "snippet": "if (value == null || isNaN(value)) return '--'"
+        },
+        {
+          "line": 75,
+          "column": 3,
+          "snippet": "if (value == null || isNaN(value)) return '--'"
+        },
+        {
+          "line": 93,
+          "column": 3,
+          "snippet": "if (value == null || isNaN(value)) return '--'"
+        },
+        {
+          "line": 158,
+          "column": 3,
+          "snippet": "if (value == null || isNaN(value)) return '--'"
+        },
+        {
+          "line": 182,
+          "column": 3,
+          "snippet": "if (value == null || isNaN(value)) return '--'"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/utils/precision.ts",
+      "condition": "unit === 'wan' || (unit === 'auto' && value < 100000000)",
+      "occurrences": [
+        {
+          "line": 59,
+          "column": 3,
+          "snippet": "if (unit === 'wan' || (unit === 'auto' && value < 100000000)) {"
+        },
+        {
+          "line": 77,
+          "column": 3,
+          "snippet": "if (unit === 'wan' || (unit === 'auto' && value < 100000000)) {"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/utils/timeUtils.ts",
+      "condition": "!timestamp",
+      "occurrences": [
+        {
+          "line": 42,
+          "column": 3,
+          "snippet": "if (!timestamp) return '--'"
+        },
+        {
+          "line": 60,
+          "column": 3,
+          "snippet": "if (!timestamp) return '--'"
+        },
+        {
+          "line": 68,
+          "column": 3,
+          "snippet": "if (!timestamp) return false"
+        },
+        {
+          "line": 80,
+          "column": 3,
+          "snippet": "if (!timestamp) return false"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    },
+    {
+      "file": "src/utils/xssSanitizer.ts",
+      "condition": "typeof input !== 'string' || input.length === 0",
+      "occurrences": [
+        {
+          "line": 42,
+          "column": 3,
+          "snippet": "if (typeof input !== 'string' || input.length === 0) {\r"
+        },
+        {
+          "line": 76,
+          "column": 3,
+          "snippet": "if (typeof input !== 'string' || input.length === 0) {\r"
+        },
+        {
+          "line": 121,
+          "column": 3,
+          "snippet": "if (typeof input !== 'string' || input.length === 0) {\r"
+        },
+        {
+          "line": 190,
+          "column": 3,
+          "snippet": "if (typeof input !== 'string' || input.length === 0) {\r"
+        }
+      ],
+      "suggestion": "Consider extracting the shared condition into a boolean variable or a helper predicate"
+    }
+  ]
+}

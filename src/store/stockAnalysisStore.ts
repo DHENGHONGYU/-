@@ -95,15 +95,15 @@ export const useStockAnalysisStore = create<StockAnalysisState>((set) => ({
       logger.info(`[stockAnalysisStore] Promise.all 返回`, {
         symbol,
         hasStock: stockData != null,
-        quotesCount: quotesData ? (quotesData as { dates?: unknown[] }).dates?.length ?? 'N/A' : 0,
+        quotesCount: quotesData ? ((quotesData as { dates?: unknown[] }).dates?.length || 'N/A') : 0,
         hasScore: scoreData != null,
         elapsedMs: Date.now() - t0,
       })
 
       set({
-        stock: stockData ?? null,
-        quotes: quotesData ?? null,
-        v6Score: scoreData ?? null,
+        stock: stockData,
+        quotes: quotesData,
+        v6Score: scoreData,
         loading: false,
         error: null,
       })

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import {
   PlusIcon,
   PencilIcon,
@@ -10,8 +10,17 @@ import { PageContainer } from '@/components/ui/PageContainer'
 import { PageHeader } from '@/components/ui/PageHeader'
 
 import { nanoid } from 'nanoid'
+import { useCustomAgentStore } from '@/store/customAgentStore'
+import type { CustomAgent } from '@/data/types'
+import { getLogger } from '@/lib/logger'
+
+const logger = getLogger()
+
 /**
- * 自定义智能体配置接口
+ * 自定义智能体配置接口（页面表单内部形态）
+ *
+ * 阶段 B-1 说明：保留原有 CustomAgentConfig 作为表单中间态，
+ * 提交时映射为 dataLayer 的 CustomAgent（createdAt/updatedAt 改 number，id 沿用）。
  */
 interface CustomAgentConfig {
   id: string
@@ -33,6 +42,25 @@ interface CustomAgentConfig {
   isActive: boolean
 }
 
+/** 表单 → IDB 实体的映射（date string → timestamp number） */
+function toCustomAgentEntity(config: CustomAgentConfig, existing?: CustomAgent): CustomAgent {
+  return {
+    id: config.id,
+    name: config.name,
+    description: config.description,
+    type: config.type,
+    model: config.model,
+    systemPrompt: config.systemPrompt,
+    temperature: config.temperature,
+    maxTokens: config.maxTokens,
+    capabilities: config.capabilities,
+    apiConfig: config.apiConfig,
+    isActive: config.isActive,
+    createdAt: existing?.createdAt ?? new Date(config.createdAt || Date.now()).getTime(),
+    updatedAt: Date.now(),
+  }
+}
+
 /**
  * 自定义智能体管理页面
  *
@@ -44,39 +72,22 @@ interface CustomAgentConfig {
  * - 配置智能体能力
  * - 测试智能体
  * - 启用/禁用智能体
+ *
+ * 阶段 B-1：所有 CRUD 走 useCustomAgentStore → dataLayer → DataBridge → IDB.custom_agents，
+ * 跨刷新不再丢数据。
  */
 const CustomAgentPage: React.FC = () => {
-  // 状态管理
-  const [agents, setAgents] = useState<CustomAgentConfig[]>([
-    {
-      id: 'agent-001',
-      name: '技术指标分析智能体',
-      description: '专门分析技术指标的智能体，支持MA、MACD、RSI等多种指标',
-      type: 'analysis',
-      model: 'deepseek-chat',
-      systemPrompt: '你是一个专业的技术分析专家，擅长分析股票技术指标...',
-      temperature: 0.3,
-      maxTokens: 2000,
-      capabilities: ['technical-analysis', 'indicator-calculation'],
-      createdAt: '2026-01-15',
-      updatedAt: '2026-07-01',
-      isActive: true,
-    },
-    {
-      id: 'agent-002',
-      name: '风险管理智能体',
-      description: '实时监控投资组合风险，提供风险预警和建议',
-      type: 'risk',
-      model: 'gpt-4',
-      systemPrompt: '你是一个风险管理专家，负责监控和评估投资组合风险...',
-      temperature: 0.2,
-      maxTokens: 1500,
-      capabilities: ['risk-monitoring', 'alert-generation'],
-      createdAt: '2026-02-20',
-      updatedAt: '2026-06-15',
-      isActive: true,
-    },
-  ])
+  // 阶段 B-1：从 store 读取列表；表单中间态仍用本地 useState（editingAgent）
+  const agents = useCustomAgentStore((s) => s.agents)
+  const storeLoading = useCustomAgentStore((s) => s.loading)
+  const storeError = useCustomAgentStore((s) => s.error)
+  const loadAll = useCustomAgentStore((s) => s.loadAll)
+  const saveAgent = useCustomAgentStore((s) => s.saveAgent)
+  const deleteAgent = useCustomAgentStore((s) => s.deleteAgent)
+
+  useEffect(() => {
+    void loadAll()
+  }, [loadAll])
 
   const [showModal, setShowModal] = useState(false)
   const [editingAgent, setEditingAgent] = useState<CustomAgentConfig | null>(null)
@@ -84,11 +95,67 @@ const CustomAgentPage: React.FC = () => {
   const [testResult, setTestResult] = useState<string>('')
 
   /**
-   * 打开创建/编辑模态框
+   * 保存智能体配置（阶段 B-1：走 useCustomAgentStore → IDB）
    */
-  const handleOpenModal = useCallback((agent?: CustomAgentConfig) => {
+  const handleSaveAgent = useCallback(async () => {
+    if (!editingAgent) return
+    const existing = agents.find((a): a is CustomAgent => a.id === editingAgent.id)
+    const entity = toCustomAgentEntity(editingAgent, existing)
+    const ok = await saveAgent(entity)
+    if (ok) {
+      setShowModal(false)
+      setEditingAgent(null)
+    } else {
+      logger.warn('[CustomAgentPage] saveAgent 失败, 保留模态框', { id: editingAgent.id })
+    }
+  }, [editingAgent, agents, saveAgent])
+
+  /**
+   * 删除智能体（阶段 B-1：走 useCustomAgentStore → IDB）
+   */
+  const handleDeleteAgent = useCallback(async (agentId: string) => {
+    if (window.confirm('确定要删除这个智能体吗？')) {
+      await deleteAgent(agentId)
+    }
+  }, [deleteAgent])
+
+  /**
+   * 切换智能体启用状态（阶段 B-1：持久化到 IDB）
+   */
+  const handleToggleAgent = useCallback(async (agentId: string) => {
+    const target = agents.find((a) => a.id === agentId)
+    if (!target) {
+      logger.warn('[CustomAgentPage] handleToggleAgent 找不到目标', { agentId })
+      return
+    }
+    const updated: CustomAgent = { ...target, isActive: !target.isActive, updatedAt: Date.now() }
+    const ok = await saveAgent(updated)
+    if (!ok) {
+      logger.warn('[CustomAgentPage] handleToggleAgent 持久化失败', { agentId })
+    }
+  }, [agents, saveAgent])
+
+  /**
+   * 打开创建/编辑模态框
+   * 接受 CustomAgent 实体（来自 store.agents），转回表单中间态 CustomAgentConfig。
+   */
+  const handleOpenModal = useCallback((agent?: CustomAgent) => {
     if (agent) {
-      setEditingAgent({ ...agent })
+      setEditingAgent({
+        id: agent.id,
+        name: agent.name,
+        description: agent.description,
+        type: agent.type,
+        model: agent.model,
+        systemPrompt: agent.systemPrompt,
+        temperature: agent.temperature,
+        maxTokens: agent.maxTokens,
+        capabilities: agent.capabilities,
+        apiConfig: agent.apiConfig,
+        createdAt: new Date(agent.createdAt).toISOString().split('T')[0] ?? '',
+        updatedAt: new Date(agent.updatedAt).toISOString().split('T')[0] ?? '',
+        isActive: agent.isActive,
+      })
     } else {
       setEditingAgent({
         id: `agent-${nanoid(8)}`,
@@ -109,57 +176,30 @@ const CustomAgentPage: React.FC = () => {
   }, [])
 
   /**
-   * 保存智能体配置
+   * 打开测试模态框
    */
-  const handleSaveAgent = useCallback(() => {
-    if (!editingAgent) return
-
-    setAgents(prev => {
-      const index = prev.findIndex(a => a.id === editingAgent.id)
-      if (index >= 0) {
-        // 更新现有智能体
-        const updated = [...prev]
-        updated[index] = { ...editingAgent, updatedAt: new Date().toISOString().split('T')[0] ?? '' }
-        return updated
-      } else {
-        // 添加新智能体
-        return [...prev, editingAgent]
-      }
+  const handleTestAgent = useCallback(async (agent: CustomAgent) => {
+    setTestingAgent({
+      id: agent.id,
+      name: agent.name,
+      description: agent.description,
+      type: agent.type,
+      model: agent.model,
+      systemPrompt: agent.systemPrompt,
+      temperature: agent.temperature,
+      maxTokens: agent.maxTokens,
+      capabilities: agent.capabilities,
+      apiConfig: agent.apiConfig,
+      createdAt: new Date(agent.createdAt).toISOString().split('T')[0] ?? '',
+      updatedAt: new Date(agent.updatedAt).toISOString().split('T')[0] ?? '',
+      isActive: agent.isActive,
     })
-
-    setShowModal(false)
-    setEditingAgent(null)
-  }, [editingAgent])
-
-  /**
-   * 删除智能体
-   */
-  const handleDeleteAgent = useCallback((agentId: string) => {
-    if (window.confirm('确定要删除这个智能体吗？')) {
-      setAgents(prev => prev.filter(a => a.id !== agentId))
-    }
-  }, [])
-
-  /**
-   * 测试智能体
-   */
-  const handleTestAgent = useCallback(async (agent: CustomAgentConfig) => {
-    setTestingAgent(agent)
     setTestResult('正在测试智能体...')
 
     // 模拟API调用
     await new Promise(resolve => setTimeout(resolve, 2000))
 
     setTestResult(`测试完成！\n\n智能体：${agent.name}\n模型：${agent.model}\n温度：${agent.temperature}\n最大Token：${agent.maxTokens}\n\n测试结果：智能体响应正常，能够正确处理请求。`)
-  }, [])
-
-  /**
-   * 切换智能体状态
-   */
-  const handleToggleAgent = useCallback((agentId: string) => {
-    setAgents(prev => prev.map(a =>
-      a.id === agentId ? { ...a, isActive: !a.isActive, updatedAt: new Date().toISOString().split('T')[0] ?? '' } : a
-    ))
   }, [])
 
   return (
@@ -181,16 +221,18 @@ const CustomAgentPage: React.FC = () => {
           </button>
 
           <button
-            onClick={() => window.location.reload()}
+            onClick={() => void loadAll()}
             className="flex items-center gap-2 px-4 py-2 bg-muted text-foreground rounded-lg hover:opacity-90 transition-opacity"
+            disabled={storeLoading}
           >
             <ArrowPathIcon className="w-5 h-5" />
-            刷新
+            {storeLoading ? '加载中...' : '刷新'}
           </button>
         </div>
 
         <div className="text-sm text-tertiary">
           共 {agents.length} 个智能体，{agents.filter(a => a.isActive).length} 个已启用
+          {storeError && <span className="ml-2 text-destructive">· {storeError}</span>}
         </div>
       </div>
 

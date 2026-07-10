@@ -12,14 +12,17 @@
 import { getLogger } from '@/lib/logger'
 import type { Stock, DailyQuotes } from '@/data/types'
 import type { KlineBar } from '@/data/types/types.marketData'
+import {
+  TENCENT_API_BASE,
+  TENCENT_REFERER,
+  SINA_API_BASE,
+  NETEASE_API_BASE,
+} from '@/config/marketDataEndpoints'
 
 const logger = getLogger()
 
 // ── API 端点常量 ──
-const TENCENT_API_BASE = 'https://qt.gtimg.cn/q='
-const TENCENT_REFERER = 'https://finance.qq.com'
-const SINA_API_BASE = 'https://hq.sinajs.cn/list='
-const NETEASE_API_BASE = 'https://quotes.163.com/service/chddata.html'
+// 已迁移至 src/config/marketDataEndpoints.ts，保持服务层零硬编码 URL。
 
 // ── 类型定义 ──
 
@@ -134,7 +137,7 @@ export async function tencentQuote(code: string): Promise<RealtimeQuote | null> 
  */
 export async function tencentBatchQuotes(codes: string[]): Promise<RealtimeQuote[]> {
   const tencentCodes = codes.map(toTencentCode).join(',')
-  const url = `https://qt.gtimg.cn/q=${tencentCodes}`
+  const url = `${TENCENT_API_BASE}${tencentCodes}`
   const text = await safeFetch(url)
   if (!text) return []
 
@@ -217,7 +220,7 @@ export async function sinaQuote(code: string): Promise<RealtimeQuote | null> {
  */
 export async function sinaBatchQuotes(codes: string[]): Promise<RealtimeQuote[]> {
   const sinaCodes = codes.map(toSinaCode).join(',')
-  const url = `https://hq.sinajs.cn/list=${sinaCodes}`
+  const url = `${SINA_API_BASE}${sinaCodes}`
   const text = await safeFetch(url)
   if (!text) return []
 

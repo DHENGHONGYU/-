@@ -23,7 +23,7 @@ describe('AgentConfigManager', () => {
     destroyAgentConfigManager()
   })
 
-  it('should set and get default config', () => {
+  it('应该设置 and get default config', () => {
     const manager = createAgentConfigManager()
     manager.setDefault('test-agent', mockConfig)
 
@@ -33,12 +33,12 @@ describe('AgentConfigManager', () => {
     expect(result!.defaultTimeout).toBe(5000)
   })
 
-  it('should return undefined for unset default', () => {
+  it('应该返回 undefined for unset default', () => {
     const manager = createAgentConfigManager()
     expect(manager.getDefault('unknown')).toBeUndefined()
   })
 
-  it('should merge base and override', () => {
+  it('应该合并 base and override', () => {
     const manager = createAgentConfigManager()
     manager.setDefault('test-agent', mockConfig)
     manager.setOverride('test-agent', { defaultTimeout: 10000, maxConcurrent: 5 })
@@ -50,7 +50,7 @@ describe('AgentConfigManager', () => {
     expect(merged!.merged.name).toBe('测试Agent')
   })
 
-  it('should use base values when no override provided', () => {
+  it('应该use base values when no override provided', () => {
     const manager = createAgentConfigManager()
     manager.setDefault('test-agent', mockConfig)
 
@@ -60,12 +60,12 @@ describe('AgentConfigManager', () => {
     expect(merged!.merged.enabled).toBe(true)
   })
 
-  it('should return null when getting merged config without default', () => {
+  it('应该返回 null when getting merged config without default', () => {
     const manager = createAgentConfigManager()
     expect(manager.getMergedConfig('unknown')).toBeNull()
   })
 
-  it('should update override incrementally', () => {
+  it('应该更新 override incrementally', () => {
     const manager = createAgentConfigManager()
     manager.setDefault('test-agent', mockConfig)
     manager.setOverride('test-agent', { defaultTimeout: 8000 })
@@ -76,7 +76,7 @@ describe('AgentConfigManager', () => {
     expect(merged!.merged.maxConcurrent).toBe(1)
   })
 
-  it('should merge customMeta incrementally', () => {
+  it('应该合并 customMeta incrementally', () => {
     const manager = createAgentConfigManager()
     manager.setDefault('test-agent', mockConfig)
     manager.setOverride('test-agent', { customMeta: { key1: 'a' } })
@@ -86,7 +86,7 @@ describe('AgentConfigManager', () => {
     expect(merged!.merged.customMeta).toEqual({ key1: 'a', key2: 'b' })
   })
 
-  it('should remove override', () => {
+  it('应该remove override', () => {
     const manager = createAgentConfigManager()
     manager.setDefault('test-agent', mockConfig)
     manager.setOverride('test-agent', { defaultTimeout: 9999 })
@@ -96,40 +96,40 @@ describe('AgentConfigManager', () => {
     expect(merged!.merged.defaultTimeout).toBe(5000)
   })
 
-  it('should return false when removing non-existent override', () => {
+  it('应该返回 false when removing non-existent override', () => {
     const manager = createAgentConfigManager()
     expect(manager.removeOverride('unknown')).toBe(false)
   })
 
-  it('should validate correct config', () => {
+  it('应该验证 correct config', () => {
     const manager = createAgentConfigManager()
     const result = manager.validateConfig(mockConfig)
     expect(result.valid).toBe(true)
     expect(result.errors).toHaveLength(0)
   })
 
-  it('should reject config with empty id', () => {
+  it('应该reject config with empty id', () => {
     const manager = createAgentConfigManager()
     const result = manager.validateConfig({ ...mockConfig, id: '' })
     expect(result.valid).toBe(false)
     expect(result.errors).toContain('agentId is required')
   })
 
-  it('should reject config with zero timeout', () => {
+  it('应该reject config with zero timeout', () => {
     const manager = createAgentConfigManager()
     const result = manager.validateConfig({ ...mockConfig, defaultTimeout: 0 })
     expect(result.valid).toBe(false)
     expect(result.errors).toContain('defaultTimeout must be greater than 0')
   })
 
-  it('should reject config with negative maxConcurrent', () => {
+  it('应该reject config with negative maxConcurrent', () => {
     const manager = createAgentConfigManager()
     const result = manager.validateConfig({ ...mockConfig, maxConcurrent: -1 })
     expect(result.valid).toBe(false)
     expect(result.errors).toContain('maxConcurrent must be greater than 0')
   })
 
-  it('should return all snapshots', () => {
+  it('应该返回 all snapshots', () => {
     const manager = createAgentConfigManager()
     manager.setDefault('agent-a', mockConfig)
     manager.setDefault('agent-b', { ...mockConfig, id: 'agent-b', name: 'Agent B' })
@@ -140,7 +140,7 @@ describe('AgentConfigManager', () => {
     expect(snapshots.map((s) => s.agentId)).toContain('agent-b')
   })
 
-  it('should return stats', () => {
+  it('应该返回 stats', () => {
     const manager = createAgentConfigManager()
     manager.setDefault('agent-a', mockConfig)
     manager.setOverride('agent-a', { enabled: false })
@@ -150,13 +150,13 @@ describe('AgentConfigManager', () => {
     expect(stats.overrides).toBe(1)
   })
 
-  it('should be singleton via getAgentConfigManager', () => {
+  it('应该是 singleton via getAgentConfigManager', () => {
     const m1 = getAgentConfigManager()
     const m2 = getAgentConfigManager()
     expect(m1).toBe(m2)
   })
 
-  it('should allow disable via override', () => {
+  it('应该允许 disable via override', () => {
     const manager = createAgentConfigManager()
     manager.setDefault('test-agent', mockConfig)
     manager.setOverride('test-agent', { enabled: false })

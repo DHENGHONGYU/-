@@ -106,14 +106,14 @@ describe('rotationSignalDetector', () => {
     dataBridge.invalidateCache(STORE_NAME.rotationScores)
   })
 
-  it('should return empty result for empty input', async () => {
+  it('应该返回 empty result for empty input', async () => {
     const result = await detectRotationSignals([])
     expect(result.success).toBe(true)
     expect(result.data?.signals).toHaveLength(0)
     expect(result.data?.watchlistCandidates).toHaveLength(0)
   })
 
-  it('should skip immediate/ignore action scores', async () => {
+  it('应该跳过 immediate/ignore action scores', async () => {
     const scores: ValuePitScore[] = [
       buildValuePitScore('IMM', 'immediate'),
       buildValuePitScore('IGN', 'ignore'),
@@ -143,7 +143,7 @@ describe('rotationSignalDetector', () => {
     expect(result.data?.watchlistCandidates).toHaveLength(0)
   })
 
-  it('should add to watchlist when technical condition fails', async () => {
+  it('应该add to watchlist when technical condition fails', async () => {
     const symbol = 'WATCH'
     const stock = buildStock(symbol, { sector: '人工智能' })
     await dataLayer.stocks.add(stock)
@@ -165,7 +165,7 @@ describe('rotationSignalDetector', () => {
     expect(result.data?.watchlistCandidates[0]?.symbol).toBe(symbol)
   })
 
-  it('should add to watchlist when stock data missing', async () => {
+  it('应该add to watchlist when stock data missing', async () => {
     const score = buildValuePitScore('NO-STOCK', 'wait')
     const result = await detectRotationSignals([score])
 
@@ -175,7 +175,7 @@ describe('rotationSignalDetector', () => {
     expect(result.data?.watchlistCandidates[0]?.reason).toContain('基础数据缺失')
   })
 
-  it('should respect custom rule thresholds', async () => {
+  it('应该respect custom rule thresholds', async () => {
     const symbol = 'STRICT'
     const stock = buildStock(symbol, { sector: '人工智能' })
     await dataLayer.stocks.add(stock)

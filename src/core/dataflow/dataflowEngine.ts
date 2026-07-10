@@ -95,7 +95,7 @@ export class DataFlowEngine {
       logger.debug('[DataFlowEngine] connect() skipped - already connected')
       return
     }
-    logger.info(`[DataFlowEngine] connect() called, url=${url ?? 'none (polling mode)'}`)
+    logger.info(`[DataFlowEngine] connect() called, url=${url || 'none (polling mode)'}`)
 
     if (url && typeof EventSource !== 'undefined') {
       logger.debug('[DataFlowEngine] Attempting SSE connection...')

@@ -89,7 +89,20 @@ export default function StockAnalysisPage(): React.JSX.Element {
                   <h2 className="text-2xl font-bold">{stock.symbol}</h2>
                   <p className="text-muted-foreground">{stock.name}</p>
                 </div>
-                <Badge variant="outline">{stock.researchStatus}</Badge>
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline">{stock.researchStatus}</Badge>
+                  {/* 阶段 A-3：数据血缘降级徽章 */}
+                  {stock.dataProvenance === 'mock' && (
+                    <Badge variant="destructive" className="gap-1">
+                      Mock 数据
+                    </Badge>
+                  )}
+                  {stock.dataProvenance === 'real' && stock.dataSource && (
+                    <Badge variant="secondary" className="gap-1">
+                      来源 {stock.dataSource}
+                    </Badge>
+                  )}
+                </div>
               </div>
 
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">

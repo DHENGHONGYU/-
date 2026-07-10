@@ -19,6 +19,7 @@ import {
   refreshSymbol,
   checkFetcherHealth,
 } from '@/services/fetcher/fetcherService'
+import { testSourceConnectivity } from '@/services/data-collector/dataSourceOrchestrator'
 import { DataSourceRegistry } from '@/services/fetcher/dataSourceRegistry'
 import { AkshareProvider } from '@/services/fetcher/akshareProvider'
 import { MockProvider } from '@/services/fetcher/mockProvider'
@@ -152,25 +153,26 @@ export class DataFetcherServer extends MCPServerBase {
         },
       },
       {
-        name: 'health_check',
-        description: '检查数据采集服务健康状态，返回各数据源状态',
-        inputSchema: { type: 'object', properties: {} },
-        handler: async () => {
-          logger.info('[fetcher] health_check')
-          const fetcherHealth = await checkFetcherHealth()
-          const registry = getDataSourceRegistry()
-          const providers = registry.getAllProviders()
-          const providerStatuses = await Promise.all(
-            providers.map(async (p: DataSourceProvider) => ({
-              name: p.name,
-              status: await p.healthCheck(),
-            })),
-          )
+        name: 'test_source_connectivity',
+        description: '测试单个行情数据源（tencent/sina/netease/akshare/mock）的连通性',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            source: {
+              type: 'string',
+              enum: ['tencent', 'sina', 'netease', 'akshare', 'mock'],
+              description: '数据源标识',
+            },
+          },
+          required: ['source'],
+        },
+        handler: async (args) => {
+          const source = args.source as 'tencent' | 'sina' | 'netease' | 'akshare' | 'mock'
+          logger.info(`[fetcher] test_source_connectivity: ${source}`)
+          const result = await testSourceConnectivity(source)
           return {
-            content: [{
-              type: 'text',
-              text: JSON.stringify({ fetcher: fetcherHealth, providers: providerStatuses }, null, 2),
-            }],
+            content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
+            isError: !result.ok,
           }
         },
       },

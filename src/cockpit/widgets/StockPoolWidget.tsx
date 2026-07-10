@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Plus, ChevronLeft, ChevronRight } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import { WidgetStateShell } from './components/WidgetStateShell'
+import { Skeleton } from '@/components/ui/states'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import {
@@ -34,12 +35,22 @@ function getChangeColorClass(changePercent: number): string {
  * @remarks 真实数据替换：将 endpoint 切换为证券行情 API（如 /api/stock/pool）
  */
 export default function StockPoolWidget({ config, data }: StockPoolWidgetProps): React.JSX.Element {
-  const marketData = useMarketData()
-  const sourceData = data ?? marketData.data
+  const { data: marketData, loadingMap, errorMap, refreshWidget } = useMarketData()
+  const sourceData = data ?? marketData
   const { stocks, total, page: initialPage, pageSize } = sourceData.stockPool
 
   const [page, setPage] = useState(initialPage)
   const totalPages = Math.max(1, Math.ceil(total / pageSize))
+
+  const loading = !!loadingMap[config.instanceId]
+  const error = errorMap[config.instanceId] ?? null
+  const visualState = error
+    ? 'error'
+    : loading
+      ? 'loading'
+      : stocks.length === 0
+        ? 'empty'
+        : 'ready'
 
   const handleAddStock = () => {
     // TODO: 未来替换为真实 API 调用，打开添加股票弹窗并提交到后端
@@ -52,57 +63,73 @@ export default function StockPoolWidget({ config, data }: StockPoolWidgetProps):
   }
 
   return (
-    <Card className="h-full flex flex-col">
-      <CardHeader className="pb-3 flex flex-row items-center justify-between">
-        <CardTitle className="text-base font-semibold">{config.title}</CardTitle>
+    <WidgetStateShell
+      title={config.title}
+      visualState={visualState}
+      error={error}
+      onRetry={() => refreshWidget(config.instanceId)}
+      loadingLabel="加载股票池…"
+      emptyTitle="暂无股票数据"
+      emptyDescription="当前股票池为空，可点击右上角添加股票"
+      skeleton={
+        <div className="space-y-3">
+          <div className="rounded-md border">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="flex items-center gap-4 p-3 border-b last:border-b-0">
+                <Skeleton variant="text" className="h-4 w-20" />
+                <Skeleton variant="text" className="h-4 w-24" />
+                <Skeleton variant="text" className="h-4 flex-1" />
+                <Skeleton variant="text" className="h-4 w-16" />
+              </div>
+            ))}
+          </div>
+        </div>
+      }
+      titleAction={
         <Button size="sm" onClick={handleAddStock}>
           <Plus className="h-4 w-4 mr-1" />
           添加股票
         </Button>
-      </CardHeader>
-      <CardContent className="flex-1 overflow-auto flex flex-col">
+      }
+      className="h-full flex flex-col"
+    >
+      <div className="flex-1 overflow-auto flex flex-col">
         <div className="rounded-md border flex-1 overflow-auto">
-          {stocks.length > 0 ? (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-24">股票代码</TableHead>
-                  <TableHead>名称</TableHead>
-                  <TableHead className="text-right">最新价</TableHead>
-                  <TableHead className="text-right">涨跌幅</TableHead>
-                  <TableHead className="text-right">成交额</TableHead>
-                  <TableHead className="text-right">换手率</TableHead>
-                  <TableHead>状态</TableHead>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-24">股票代码</TableHead>
+                <TableHead>名称</TableHead>
+                <TableHead className="text-right">最新价</TableHead>
+                <TableHead className="text-right">涨跌幅</TableHead>
+                <TableHead className="text-right">成交额</TableHead>
+                <TableHead className="text-right">换手率</TableHead>
+                <TableHead>状态</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {stocks.map((stock: StockPoolItem) => (
+                <TableRow key={stock.code}>
+                  <TableCell className="font-medium">{stock.code}</TableCell>
+                  <TableCell>{stock.name}</TableCell>
+                  <TableCell className="text-right">{stock.price.toFixed(2)}</TableCell>
+                  <TableCell className={`text-right ${getChangeColorClass(stock.changePercent)}`}>
+                    {formatChange(stock.changePercent)}
+                  </TableCell>
+                  <TableCell className="text-right">{stock.turnover}</TableCell>
+                  <TableCell className="text-right">{stock.turnoverRate}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <div className={`h-2 w-8 rounded-full ${stock.statusColor}`} />
+                      <Badge variant="outline" className="text-xs">
+                        {stock.statusLabel}
+                      </Badge>
+                    </div>
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {stocks.map((stock: StockPoolItem) => (
-                  <TableRow key={stock.code}>
-                    <TableCell className="font-medium">{stock.code}</TableCell>
-                    <TableCell>{stock.name}</TableCell>
-                    <TableCell className="text-right">{stock.price.toFixed(2)}</TableCell>
-                    <TableCell className={`text-right ${getChangeColorClass(stock.changePercent)}`}>
-                      {formatChange(stock.changePercent)}
-                    </TableCell>
-                    <TableCell className="text-right">{stock.turnover}</TableCell>
-                    <TableCell className="text-right">{stock.turnoverRate}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <div className={`h-2 w-8 rounded-full ${stock.statusColor}`} />
-                        <Badge variant="outline" className="text-xs">
-                          {stock.statusLabel}
-                        </Badge>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          ) : (
-            <div className="flex h-32 items-center justify-center text-sm text-muted-foreground">
-              暂无股票数据
-            </div>
-          )}
+              ))}
+            </TableBody>
+          </Table>
         </div>
 
         {/* 分页 */}
@@ -129,7 +156,7 @@ export default function StockPoolWidget({ config, data }: StockPoolWidgetProps):
             </Button>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </WidgetStateShell>
   )
 }

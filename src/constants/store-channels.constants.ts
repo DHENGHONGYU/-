@@ -62,6 +62,9 @@ export const EVENT_NAMES = {
   // ---- G1 批次扩展：引擎 Store 写操作广播 ----
   /** 引擎启动状态变更（engineStore.setStarted 触发） */
   ENGINE_STARTED_CHANGED: 'ENGINE_STORE_STARTED_CHANGED',
+  // ---- 数据采集向导事件 ----
+  /** 采集向导状态变更（collectionWizardStore 写操作触发） */
+  COLLECTION_WIZARD_CHANGED: 'collection_wizard:changed',
 } as const
 
 export type EventName = (typeof EVENT_NAMES)[keyof typeof EVENT_NAMES]

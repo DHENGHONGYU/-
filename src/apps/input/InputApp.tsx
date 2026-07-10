@@ -12,6 +12,36 @@ const SevenDimConfigPage = React.lazy(() => import('@/pages/input/SevenDimConfig
 const FetcherConfigPage = React.lazy(() => import('@/pages/input/FetcherConfigPage'))
 const CollectTaskPage = React.lazy(() => import('@/pages/input/CollectTaskPage'))
 
+interface InputRoute {
+  path: string
+  branch: string
+  componentName: string
+  exact?: boolean
+  component: React.ReactNode
+  fallback: string
+}
+
+const INPUT_ROUTES: InputRoute[] = [
+  { path: '/input/bulk-import', branch: 'bulk-import', componentName: 'BulkImportPanel', component: <BulkImportPanel />, fallback: '' },
+  { path: '/input/hot-sectors', branch: 'hot-sectors', componentName: 'HotSectorPanel', component: <HotSectorPanel />, fallback: '' },
+  { path: '/input/data-test', branch: 'data-test', componentName: 'DataTestPanel', component: <DataTestPanel />, fallback: '' },
+  { path: '/input/local-knowledge', branch: 'local-knowledge', componentName: 'LocalKnowledgePage', component: <LocalKnowledgePage />, fallback: '' },
+  { path: '/input/seven-dim', branch: 'seven-dim', componentName: 'SevenDimConfigPage', component: <SevenDimConfigPage />, fallback: '加载七维采集配置中...' },
+  { path: '/input/fetcher-config', branch: 'fetcher-config', componentName: 'FetcherConfigPage', component: <FetcherConfigPage />, fallback: '加载抓取引擎配置中...' },
+  { path: '/input/collect-tasks', branch: 'collect-tasks', componentName: 'CollectTaskPage', component: <CollectTaskPage />, fallback: '加载采集任务监控中...' },
+]
+
+function matchInputRoute(path: string): InputRoute {
+  for (const route of INPUT_ROUTES) {
+    if (route.exact === false) {
+      if (path === route.path || path.startsWith(route.path + '/')) return route
+    } else if (path === route.path) {
+      return route
+    }
+  }
+  return { path: '', branch: 'default', componentName: 'InputDashboard', component: null, fallback: '' }
+}
+
 const logger = getLogger()
 
 /**
@@ -26,7 +56,7 @@ const logger = getLogger()
  * 不会再次匹配当前 URL（证据：main 内容为空，子面板 chunk 未请求）。
  *
  * 修复方案：直接读取 location.pathname 进行条件渲染，绕过 descendant
- * Routes 的路径匹配问题。新增子面板仅需在此处追加 else-if 分支。
+ * Routes 的路径匹配问题。新增子面板仅需在 INPUT_ROUTES 中追加条目。
  *
  * 路由映射：
  * - /input/bulk-import     → BulkImportPanel
@@ -53,33 +83,7 @@ export default function InputApp(): React.JSX.Element {
     }
 
     // 计算命中的分支与组件名（仅在路径变化时记录，避免 PortalShell 重渲染导致日志噪音）
-    let branch: string
-    let componentName: string
-    if (path === '/input/bulk-import') {
-      branch = 'bulk-import'
-      componentName = 'BulkImportPanel'
-    } else if (path === '/input/hot-sectors') {
-      branch = 'hot-sectors'
-      componentName = 'HotSectorPanel'
-    } else if (path === '/input/data-test') {
-      branch = 'data-test'
-      componentName = 'DataTestPanel'
-    } else if (path === '/input/local-knowledge') {
-      branch = 'local-knowledge'
-      componentName = 'LocalKnowledgePage'
-    } else if (path === '/input/seven-dim') {
-      branch = 'seven-dim'
-      componentName = 'SevenDimConfigPage'
-    } else if (path === '/input/fetcher-config') {
-      branch = 'fetcher-config'
-      componentName = 'FetcherConfigPage'
-    } else if (path === '/input/collect-tasks') {
-      branch = 'collect-tasks'
-      componentName = 'CollectTaskPage'
-    } else {
-      branch = 'default'
-      componentName = 'InputDashboard'
-    }
+    const { branch, componentName } = matchInputRoute(path)
 
     logger.info('[InputApp] 渲染输入舱', {
       path,
@@ -91,37 +95,7 @@ export default function InputApp(): React.JSX.Element {
     prevPathRef.current = path
   }, [path])
 
-  let content: React.ReactNode
-  if (path === '/input/bulk-import') {
-    content = <BulkImportPanel />
-  } else if (path === '/input/hot-sectors') {
-    content = <HotSectorPanel />
-  } else if (path === '/input/data-test') {
-    content = <DataTestPanel />
-  } else if (path === '/input/local-knowledge') {
-    content = <LocalKnowledgePage />
-  } else if (path === '/input/seven-dim') {
-    content = (
-      <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">加载七维采集配置中...</div>}>
-        <SevenDimConfigPage />
-      </Suspense>
-    )
-  } else if (path === '/input/fetcher-config') {
-    content = (
-      <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">加载抓取引擎配置中...</div>}>
-        <FetcherConfigPage />
-      </Suspense>
-    )
-  } else if (path === '/input/collect-tasks') {
-    content = (
-      <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">加载采集任务监控中...</div>}>
-        <CollectTaskPage />
-      </Suspense>
-    )
-  } else {
-    // 默认渲染看板，覆盖 /input 等未明确分支
-    content = <InputDashboard />
-  }
+  const matched = matchInputRoute(path)
 
   return (
     <div className="space-y-4">
@@ -131,7 +105,13 @@ export default function InputApp(): React.JSX.Element {
           <p className="text-sm text-muted-foreground">股票录入 · 批量导入 · 热门板块 · 采集测试</p>
         </div>
       </div>
-      {content}
+      {matched.component ? (
+        <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">{matched.fallback}</div>}>
+          {matched.component}
+        </Suspense>
+      ) : (
+        <InputDashboard />
+      )}
     </div>
   )
 }

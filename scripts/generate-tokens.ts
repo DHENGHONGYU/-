@@ -175,27 +175,27 @@ function generateTypeScript(tokens: Tokens): string {
 
   // 生成间距令牌
   lines.push('export const SPACING = {')
-  const spacingFlat = flattenTokens(tokens.global.spacing || {} ?? '')
+  const spacingFlat = flattenTokens(tokens.global.spacing || {})
   for (const [key, value] of Object.entries(spacingFlat)) {
-    lines.push(`  ${key}: '${value}',`)
+    lines.push(`  '${key}': '${value}',`)
   }
   lines.push('} as const')
   lines.push('')
 
   // 生成字体大小令牌
   lines.push('export const FONT_SIZE = {')
-  const fontSizeFlat = flattenTokens(tokens.global.fontSize || {} ?? '')
+  const fontSizeFlat = flattenTokens(tokens.global.fontSize || {})
   for (const [key, value] of Object.entries(fontSizeFlat)) {
-    lines.push(`  ${key}: '${value}',`)
+    lines.push(`  '${key}': '${value}',`)
   }
   lines.push('} as const')
   lines.push('')
 
   // 生成圆角令牌
   lines.push('export const BORDER_RADIUS = {')
-  const borderRadiusFlat = flattenTokens(tokens.global.borderRadius || {} ?? '')
+  const borderRadiusFlat = flattenTokens(tokens.global.borderRadius || {})
   for (const [key, value] of Object.entries(borderRadiusFlat)) {
-    lines.push(`  ${key}: '${value}',`)
+    lines.push(`  '${key}': '${value}',`)
   }
   lines.push('} as const')
 

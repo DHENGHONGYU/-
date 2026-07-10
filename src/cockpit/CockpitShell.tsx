@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router'
-import { Settings, RefreshCw, Plus, Target } from 'lucide-react'
+import { Settings, Plus, Target } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
@@ -13,7 +13,7 @@ import { widgetEngine } from '@/cockpit/core/widgetEngine'
 import { MarketDataProvider, useMarketData } from '@/cockpit/providers/MarketDataProvider'
 import { GRID_COLUMNS, GRID_ROW_HEIGHT, GRID_GAP } from '@/constants/cockpit.constants'
 import { getLogger } from '@/lib/logger'
-import { COLOR_TOKENS, twText } from '@/constants/theme.tokens'
+import { Loading, Empty, ErrorState } from '@/components/ui/states'
 import type { WidgetConfig, MarketData } from '@/types/modules/widget.types'
 
 const logger = getLogger()
@@ -93,11 +93,11 @@ function WidgetWrapper(props: WidgetWrapperProps): React.JSX.Element {
   // 防止 widget 组件内部解构 { config } 时收到 null props 导致崩溃
   // 注意：useMemo 必须在所有条件返回之前调用（rules of hooks）
   const SafeComponent = useMemo(() => {
-    if (!Component) return null
-    const SafeWrapper = (wrapperProps: { config: unknown; data?: MarketData }): React.JSX.Element | null => {
+    if (!Component) return () => <></>
+    const SafeWrapper = (wrapperProps: { config: unknown; data?: MarketData }): React.JSX.Element => {
       if (!wrapperProps?.config) {
         logger.warn('[CockpitShell] SafeWrapper: widget received null props', { widgetId: config?.widgetId })
-        return null
+        return <></>
       }
       return <Component {...wrapperProps} />
     }
@@ -110,8 +110,8 @@ function WidgetWrapper(props: WidgetWrapperProps): React.JSX.Element {
     logger.warn('[WidgetWrapper] config is null/undefined, rendering fallback')
     return (
       <Card>
-        <CardContent className="flex h-full items-center justify-center text-sm" style={{ color: COLOR_TOKENS.textSecondary.hex }}>
-          组件配置未就绪
+        <CardContent className="flex h-full items-center justify-center">
+          <Empty title="组件配置未就绪" description="请稍后重试，或重新添加该组件" />
         </CardContent>
       </Card>
     )
@@ -124,9 +124,7 @@ function WidgetWrapper(props: WidgetWrapperProps): React.JSX.Element {
           <CardTitle className="text-base">{config.title}</CardTitle>
         </CardHeader>
         <CardContent className="p-8">
-          <div className="flex justify-center">
-            <RefreshCw className={`h-8 w-8 animate-spin ${twText('gray', 400)}`} />
-          </div>
+          <Loading size="lg" label="组件加载中…" />
         </CardContent>
       </Card>
     )
@@ -139,28 +137,22 @@ function WidgetWrapper(props: WidgetWrapperProps): React.JSX.Element {
           <CardTitle className="text-base">{config.title}</CardTitle>
         </CardHeader>
         <CardContent className="p-8">
-          <div className={`text-center ${COLOR_TOKENS.danger.tailwind}`}>
-            <p>{error}</p>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={async () => {
-                setLoading(true)
-                setError(null)
-                const success = await widgetEngine.refreshInstance(config.instanceId)
-                if (success) {
-                  const component = await widgetEngine.loadComponent(config.widgetId)
-                  setComponent(component)
-                } else {
-                  setError('刷新失败')
-                }
-                setLoading(false)
-              }}
-              className="mt-2"
-            >
-              重试
-            </Button>
-          </div>
+          <ErrorState
+            title="组件加载失败"
+            description={error}
+            onRetry={async () => {
+              setLoading(true)
+              setError(null)
+              const success = await widgetEngine.refreshInstance(config.instanceId)
+              if (success) {
+                const component = await widgetEngine.loadComponent(config.widgetId)
+                setComponent(component)
+              } else {
+                setError('刷新失败')
+              }
+              setLoading(false)
+            }}
+          />
         </CardContent>
       </Card>
     )
@@ -172,8 +164,8 @@ function WidgetWrapper(props: WidgetWrapperProps): React.JSX.Element {
         <CardHeader>
           <CardTitle className="text-base">{config.title}</CardTitle>
         </CardHeader>
-        <CardContent className={`p-8 text-center ${twText('gray', 400)}`}>
-          组件未找到
+        <CardContent className="p-8">
+          <Empty title="组件未找到" description="该组件可能尚未注册或已被移除" />
         </CardContent>
       </Card>
     )

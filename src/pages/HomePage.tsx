@@ -26,19 +26,19 @@ const FEATURES: FeatureCardProps[] = [
     icon: Database,
     title: '输入舱',
     desc: '录入候选股票，管理股票池，批量导入，热门板块',
-    to: '/input/hub',
+    to: '/input',
   },
   {
     icon: BarChart3,
     title: '分析舱',
     desc: 'V4/V6 评分，行业分析，策略回测',
-    to: '/analysis/hub',
+    to: '/analysis',
   },
   {
     icon: TrendingUp,
     title: '交易舱',
     desc: '交易信号，模拟盘执行，持仓管理',
-    to: '/trading/hub',
+    to: '/trading',
   },
   {
     icon: FileText,
@@ -88,10 +88,10 @@ export default function HomePage(): React.JSX.Element {
 
       <section className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
         <Button asChild size="lg">
-          <Link to="/input/hub">进入输入舱</Link>
+          <Link to="/input">进入输入舱</Link>
         </Button>
         <Button variant="secondary" asChild size="lg">
-          <Link to="/command/hub">总控中心</Link>
+          <Link to="/command">总控中心</Link>
         </Button>
       </section>
 
