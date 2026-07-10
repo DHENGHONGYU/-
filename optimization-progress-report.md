@@ -107,7 +107,7 @@
 |------|----------|------------|-----------------|----------|
 | 真实深层嵌套（≥4 层） | 66 | **43** | **7** | -89.4% ✅ |
 | 长链式条件（≥6 分支） | 32 | **0** | **0** | -100% ✅ |
-| 重复条件判断 | 194 | **30** | **26** | -86.6% ✅ |
+| 重复条件判断 | 194 | **30** | **0** | -100% ✅ |
 | 颜色硬编码 | 6 | 0 | 0 | 0 违规 ✅ |
 | 硬编码 URL | — | 0 | 0 | 0 违规 ✅ |
 
@@ -130,8 +130,42 @@
 | `audit:reserved-stores` | ✅ 通过 | 无违规 |
 | `audit:tokens` | ✅ 通过 | 颜色/令牌 0 违规 |
 | `audit:mcp` | ✅ 通过 | 0 违规；`HealthDashboardPage.tsx` 已改为通过 `mcpBridge` 调用 |
-| `complexity-scan` | ✅ 通过 | 当前 7 嵌套 / 0 长链 / 26 重复 ≤ 基线 104/0/39 |
+| `complexity-scan` | ✅ 通过 | 当前 7 嵌套 / 0 长链 / 0 重复 ≤ 基线 7/0/0 |
 | `npm run test -- --run` | ⏳ 回归中 | 已修复 3 组主要失败：`verify-all-routes`（16/16）、`llmEnhancer`（46/46）、`MCPServerDashboardPage`（17/17）；全量测试仍在运行验证 |
+
+---
+
+## 1.4 2026-07-10 重复 `if` 条件清零（P2 低优项收尾）
+
+本轮将 `complexity-scan` 报告的重复 `if` 条件从 **26 项降至 0 项**，并同步更新 `.complexity-baseline.json` 为 `{ deeplyNestedBlocks: 7, longElseIfChains: 0, duplicateIfConditions: 0 }`。主要收敛点如下：
+
+| 文件 | 方法 | 优化动作 |
+|------|------|----------|
+| `src/core/databridge.ts` | `forward` | 提取 `routeToAction` 私有方法，统一策略/查询/事件/管理/DB 路由分支 |
+| `src/core/databridgeHandlers.ts` | `handle` | 合并 `db.put` 与两段日志到单一 `if/else` 块 |
+| `src/mcp/core/mcpAclMonitor.ts` | `getStats` | 将 caller 与 server 统计合并到单循环 |
+| `src/mcp/core/transport.ts` | `sendRequest` | 提取断言函数 `assertNameParam` |
+| `src/mcp/register.ts` | `syncWithConfig` | 重排逻辑，先 `!entry.enabled` 跳过，再用 `!isRegistered` 注册 |
+| `src/services/backtest/BacktestEngine.ts` | `run` | 提取 `_processSellEvents` / `_processBuyEvents` 私有方法 |
+| `src/services/backtest/backtestEventLoader.ts` | `mergeBacktestEvents` | 合并 `[...signals, ...orders]` 单循环 |
+| `src/services/data-collector/dataSourceOrchestrator.ts` | `getBatchQuotes` | 提取 `tryBatchSource` 辅助函数 |
+| `src/services/feedbackService.ts` | `attemptOperation` | 提取 `handleFailure` 统一失败/重试处理 |
+| `src/services/llm/llmClient.ts` | `chat` | 使用 `finally` 统一清理定时器 |
+| `src/services/resilience.ts` | `withResilience` | 提取 `applyFallback` 辅助函数 |
+| `src/services/scoring/v6-engine/calculators/l3/helpers.ts` | `scoreCompetition` | 提取 `scoreGrowthByTrend(growth, trend)` |
+| `src/services/scoring/v6-engine/calculators/l7_l8.ts` | `diagnoseLifeStage` | 嵌套 `isLossMaking` 改为三元表达式 |
+| `src/services/scoring/v6-engine/engine.ts` | `calculateLayer` | 提取 `recordAudit` 私有方法 |
+| `src/services/scoring/v6-engine/types.ts` | `quotesToQuoteData` | 提取 `safeReturn(past, latestClose)` |
+| `src/services/trading/tradeReviewAI.profileGenerator.ts` | `generateRiskProfile` | 合并 `hasHeavyGambling` 双分支 |
+| `src/store/marketDataStore.ts` | `handleCollectionResult` | 提取 `updateDataSourceByKey` / `updateLoadingMapByInstanceId` |
+| `src/store/stockAnalysisStore.ts` | `<async>` | 反转 `signal?.aborted` 条件，消除重复守卫 |
+| `src/cockpit/providers/MarketDataProvider.tsx` | `<callback>` | 提取 `updateInstanceStatus` 辅助函数 |
+| `src/components/output/ReviewWizard.tsx` | `<async IIFE>` | 提取 `setIfActive` 辅助函数 |
+| `src/components/system/SystemArchitectureDiagram.tsx` | `<effect>` | 提取 `updateIfMounted` 辅助函数 |
+| `src/pages/output/ResearchReportPage.tsx` | `<async>` | 收集 error 与结果，在 `finally` 中统一判断 `signal?.aborted` |
+| `src/pages/trading/HoldingsPage.tsx` | `<async>` | 收集 error 与响应码，在 `finally` 中统一判断 `!isMountedRef.current` |
+
+> 复杂度门禁：`complexity-scan` 当前 7 嵌套 / 0 长链 / 0 重复 ≤ 基线 7/0/0，通过。
 
 ---
 
@@ -155,17 +189,16 @@
 - `src/services/data-collector/TaskScheduler.ts`（错误监听器 try/catch）
 - `src/services/resilience.ts::withRetry`（重试循环 break 判断）
 
-### 5.2 重复 if 条件剩余（26 项）
+### 5.2 重复 if 条件剩余
 
-主要集中在 core/MCP、V6 引擎、Store/组件的条件守卫，建议作为 P2 低优项逐步收敛。
+**0 项**。本轮 P2 低优项已全部收敛。
 
 ---
 
 ## 六、建议下一步
 
-1. **确认全量测试回归**：等待当前 `npm run test -- --run` 结果；如仍有失败，按失败模块继续收敛。
-2. **继续 P2 收尾**：处理剩余 26 项重复条件，进一步降低代码重复度。
-3. **保持门禁**：后续新增代码继续通过 `tsc:prod` + `npm run audit` + `complexity-scan` 回归。
+1. **确认全量测试回归**：等待当前 `test:clean` 与 `npm run test -- --run` 结果；如仍有失败，按失败模块继续收敛。
+2. **保持门禁**：后续新增代码继续通过 `tsc:prod` + `npm run audit` + `complexity-scan` 回归。
 
 ---
 
