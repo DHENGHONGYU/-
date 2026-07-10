@@ -163,10 +163,14 @@ export const COMPONENT_REGISTRY: ComponentEntry[] = [
   // ============================================================
   // Shared（跨领域共享，过渡保留）
   // ============================================================
-  { name: 'ErrorBoundary', level: 'organism', sourcePath: 'src/components/ErrorBoundary.tsx', targetPath: 'src/components/organisms/shared/ErrorBoundary.tsx', status: 'migrating', description: '错误边界' },
-  { name: 'RouteErrorBoundary', level: 'organism', sourcePath: 'src/components/RouteErrorBoundary.tsx', targetPath: 'src/components/organisms/shared/RouteErrorBoundary.tsx', status: 'migrating', description: '路由错误边界' },
-  { name: 'WidgetErrorBoundary', level: 'organism', sourcePath: 'src/components/WidgetErrorBoundary.tsx', targetPath: 'src/components/organisms/shared/WidgetErrorBoundary.tsx', status: 'migrating', description: 'Widget 错误边界' },
-  { name: 'PageSkeleton', level: 'organism', sourcePath: 'src/components/PageSkeleton.tsx', targetPath: 'src/components/organisms/shared/PageSkeleton.tsx', status: 'migrating', description: '页面骨架屏' },
+  { name: 'ErrorBoundary', level: 'organism', sourcePath: 'src/components/ErrorBoundary.tsx', targetPath: 'src/components/organisms/shared/ErrorBoundary.tsx', status: 'active', description: '错误边界' },
+  { name: 'RouteErrorBoundary', level: 'organism', sourcePath: 'src/components/RouteErrorBoundary.tsx', targetPath: 'src/components/organisms/shared/RouteErrorBoundary.tsx', status: 'active', description: '路由错误边界' },
+  { name: 'WidgetErrorBoundary', level: 'organism', sourcePath: 'src/components/WidgetErrorBoundary.tsx', targetPath: 'src/components/organisms/shared/WidgetErrorBoundary.tsx', status: 'active', description: 'Widget 错误边界' },
+  { name: 'PageSkeleton', level: 'organism', sourcePath: 'src/components/PageSkeleton.tsx', targetPath: 'src/components/organisms/shared/PageSkeleton.tsx', status: 'active', description: '页面骨架屏' },
+  { name: 'installGlobalErrorHandler', level: 'organism', sourcePath: 'src/components/installGlobalErrorHandler.ts', targetPath: 'src/components/organisms/shared/installGlobalErrorHandler.ts', status: 'active', description: '全局错误监听安装函数（非 UI 组件，基础设施）' },
+  { name: 'ScoreFactorDeltaPanel', level: 'organism', sourcePath: 'src/components/ScoreFactorDeltaPanel.tsx', targetPath: 'src/components/organisms/shared/ScoreFactorDeltaPanel.tsx', status: 'active', description: '评分因子差异面板' },
+  { name: 'ScoreUpdateAlert', level: 'organism', sourcePath: 'src/components/ScoreUpdateAlert.tsx', targetPath: 'src/components/organisms/shared/ScoreUpdateAlert.tsx', status: 'active', description: '评分更新提醒' },
+  { name: 'SignalSpectrum', level: 'organism', sourcePath: 'src/components/cockpit/SignalSpectrum.tsx', targetPath: 'src/components/cockpit/SignalSpectrum.tsx', status: 'active', description: '信号频谱（cockpit 域，仅 registry 标注不物理搬）' },
 ]
 
 /**
