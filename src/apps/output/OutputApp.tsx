@@ -5,7 +5,7 @@ import { Button } from '@/components/atoms/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
 import { Select, SelectItem } from '@/components/atoms/Select'
-import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
 import {
   useOutputStore,
   selectExportData,

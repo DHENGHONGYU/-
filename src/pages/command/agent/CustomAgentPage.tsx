@@ -7,7 +7,7 @@ import {
   ArrowPathIcon,
 } from '@heroicons/react/24/outline'
 import { PageContainer } from '@/components/templates/PageContainer'
-import { PageHeader } from '@/components/molecules/PageHeader'
+import { PageHeader } from '@/components/templates/PageHeader'
 
 import { nanoid } from 'nanoid'
 import { useCustomAgentStore } from '@/store/customAgentStore'

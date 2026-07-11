@@ -12,7 +12,7 @@ vi.mock('@/services/errorBus', () => ({
 }))
 
 const { captureError } = await import('@/services/errorBus')
-const { installGlobalErrorHandler } = await import('@/components/installGlobalErrorHandler')
+const { installGlobalErrorHandler } = await import('@/components/organisms/shared/installGlobalErrorHandler')
 
 function makeErrorEvent(error: Error): Event {
   const e = new Event('error')

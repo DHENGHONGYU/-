@@ -11,7 +11,7 @@ import {
 import { Button } from '@/components/atoms/Button'
 import { Badge } from '@/components/atoms/Badge'
 import { PageContainer } from '@/components/templates/PageContainer'
-import { PageHeader } from '@/components/molecules/PageHeader'
+import { PageHeader } from '@/components/templates/PageHeader'
 
 interface FeatureCardProps {
   icon: React.ElementType

@@ -4,7 +4,7 @@
  */
 import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { PageHeader } from '@/components/molecules/PageHeader'
+import { PageHeader } from '@/components/templates/PageHeader'
 
 describe('PageHeader', () => {
   it('渲染标题为 h1 并套用排版阶梯', () => {

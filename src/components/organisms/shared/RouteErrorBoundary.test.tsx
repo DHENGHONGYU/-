@@ -23,7 +23,7 @@ vi.mock('@/lib/logger', () => ({
   }),
 }))
 
-const { RouteErrorBoundary } = await import('@/components/RouteErrorBoundary')
+const { RouteErrorBoundary } = await import('@/components/organisms/shared/RouteErrorBoundary')
 
 /** 测试用：根据 prop 决定是否抛出错误的子组件 */
 function ThrowError({ shouldThrow }: { shouldThrow: boolean }) {

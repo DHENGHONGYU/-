@@ -69,7 +69,7 @@ vi.mock('react-grid-layout', () => ({
 // ============================================================
 // Mock 5: WidgetErrorBoundary（直接渲染 children）
 // ============================================================
-vi.mock('@/components/WidgetErrorBoundary', () => ({
+vi.mock('@/components/organisms/shared/WidgetErrorBoundary', () => ({
   WidgetErrorBoundary: ({ children }: { children: ReactNode }) => (
     <div data-testid="error-boundary">{children}</div>
   ),

@@ -11,7 +11,7 @@ import {
   BreadcrumbLink,
   BreadcrumbPage,
 } from '@/components/atoms/Breadcrumb'
-import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
 import { useDisciplineStore } from '@/store/disciplineStore'
 import type { TradeReviewReport } from '@/services/trading/tradeReviewAI'
 import { useToast } from '@/hooks/useToast'

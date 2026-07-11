@@ -11,7 +11,7 @@ vi.mock('lucide-react', () => ({
   ArrowRight: () => <svg data-testid="icon-arrow-right" />,
 }))
 
-vi.mock('@/components/ErrorBoundary', () => ({
+vi.mock('@/components/organisms/shared/ErrorBoundary', () => ({
   ErrorBoundary: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }))
 

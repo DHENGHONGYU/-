@@ -13,7 +13,7 @@ import {
 import type { HotSectorScore } from '@/services/scoring/hotSectorAnalyzer'
 import { useHotSectorStore } from '@/store/hotSectorStore'
 import { getLogger } from '@/lib/logger'
-import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
 import { usePageGuard } from '@/hooks/usePageGuard'
 import { WidgetShell } from '@/components/widgets/WidgetShell'
 import ScoreRadar from '@/components/chart/ScoreRadar'

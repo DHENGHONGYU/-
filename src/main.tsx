@@ -2,7 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { setLogLevel } from '@/lib/logger'
 import App from './App'
-import { installGlobalErrorHandler } from '@/components/installGlobalErrorHandler'
+import { installGlobalErrorHandler } from '@/components/organisms/shared/installGlobalErrorHandler'
 import './index.css'
 import './generated/tokens.css'
 

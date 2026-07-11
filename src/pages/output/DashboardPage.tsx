@@ -10,7 +10,7 @@ import {
   BreadcrumbSeparator,
   BreadcrumbPage,
 } from '@/components/atoms/Breadcrumb'
-import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
 import { useCommandStore } from '@/store/commandStore'
 import { useScoreDocStore } from '@/store/scoreDocStore'
 import { useDisciplineStore } from '@/store/disciplineStore'

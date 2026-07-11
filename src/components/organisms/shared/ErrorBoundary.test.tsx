@@ -29,7 +29,7 @@ vi.mock('@/services/errorBus', () => ({
 import { captureError } from '@/services/errorBus'
 
 // 动态导入以应用 mock
-const { ErrorBoundary } = await import('@/components/ErrorBoundary')
+const { ErrorBoundary } = await import('@/components/organisms/shared/ErrorBoundary')
 
 // 测试用抛出错误的子组件
 function ThrowError({ shouldThrow }: { shouldThrow: boolean }) {

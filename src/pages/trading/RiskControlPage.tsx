@@ -22,7 +22,7 @@ import {
   BreadcrumbSeparator,
   BreadcrumbPage,
 } from '@/components/atoms/Breadcrumb'
-import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
 import { PageContainer, PageHeader } from '@/components/templates'
 import { getLogger } from '@/lib/logger'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'

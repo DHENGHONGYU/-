@@ -11,7 +11,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
 } from '@/components/atoms/Breadcrumb'
-import { PageSkeleton } from '@/components/PageSkeleton'
+import { PageSkeleton } from '@/components/organisms/shared/PageSkeleton'
 import { getLogger } from '@/lib/logger'
 import { getAgentDetailComponent, hasAgentComponent } from '@/agents/agentComponentRegistry'
 import { useAgentStore } from '@/store/agentStore'

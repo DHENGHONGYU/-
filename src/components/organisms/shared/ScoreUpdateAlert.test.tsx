@@ -13,7 +13,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { UI_TEXT } from '@/constants/uiText'
-import { ScoreUpdateAlert } from '@/components/ScoreUpdateAlert'
+import { ScoreUpdateAlert } from '@/components/organisms/shared/ScoreUpdateAlert'
 
 describe('ScoreUpdateAlert', () => {
   const onRefresh = vi.fn()

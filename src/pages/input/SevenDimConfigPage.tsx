@@ -16,7 +16,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
-import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
 import { getLogger } from '@/lib/logger'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import { CollectionPlanPanel } from '@/components/organisms/input/CollectionPlanPanel'

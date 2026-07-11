@@ -19,8 +19,8 @@ import {
   BreadcrumbPage,
 } from '@/components/atoms/Breadcrumb'
 import { PageContainer } from '@/components/templates/PageContainer'
-import { PageHeader } from '@/components/molecules/PageHeader'
-import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { PageHeader } from '@/components/templates/PageHeader'
+import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
 import { MultiFactorFilterPanel } from '@/components/organisms/analysis/screening/MultiFactorFilterPanel'
 
 /**

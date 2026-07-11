@@ -13,8 +13,8 @@
 import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { UI_TEXT } from '@/constants/uiText'
-import { ScoreFactorDeltaPanel } from '@/components/ScoreFactorDeltaPanel'
-import type { ScoreWithDimensions } from '@/components/ScoreFactorDeltaPanel'
+import { ScoreFactorDeltaPanel } from '@/components/organisms/shared/ScoreFactorDeltaPanel'
+import type { ScoreWithDimensions } from '@/components/organisms/shared/ScoreFactorDeltaPanel'
 
 const makeScore = (overallScore: number, dimensions: Array<{ name: string; score: number | null; rationale: string }>): ScoreWithDimensions => ({
   overallScore,

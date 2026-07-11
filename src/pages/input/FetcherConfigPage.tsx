@@ -20,7 +20,7 @@ import {
   XCircle,
   Loader2,
 } from 'lucide-react'
-import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
 import { getLogger } from '@/lib/logger'
 import {
   Card,

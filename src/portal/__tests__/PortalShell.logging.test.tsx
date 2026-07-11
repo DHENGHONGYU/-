@@ -61,14 +61,14 @@ vi.mock('@/services/fetcher/fetcherService', () => ({
 }))
 
 // Mock ErrorBoundary — 透传 children
-vi.mock('@/components/ErrorBoundary', () => ({
+vi.mock('@/components/organisms/shared/ErrorBoundary', () => ({
   ErrorBoundary: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="error-boundary">{children}</div>
   ),
 }))
 
 // Mock PageSkeleton
-vi.mock('@/components/PageSkeleton', () => ({
+vi.mock('@/components/organisms/shared/PageSkeleton', () => ({
   PageSkeleton: () => <div data-testid="page-skeleton">Loading...</div>,
 }))
 

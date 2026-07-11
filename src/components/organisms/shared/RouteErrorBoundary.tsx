@@ -2,7 +2,7 @@ import { Component, Suspense, type ErrorInfo, type ReactNode } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Button } from '@/components/atoms/Button'
-import { PageSkeleton } from '@/components/PageSkeleton'
+import { PageSkeleton } from '@/components/organisms/shared/PageSkeleton'
 import { getLogger } from '@/lib/logger'
 import { captureError } from '@/services/errorBus'
 

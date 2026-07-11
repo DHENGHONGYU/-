@@ -8,7 +8,7 @@ import {
   ExternalLink,
 } from 'lucide-react'
 import { PageContainer } from '@/components/templates/PageContainer'
-import { PageHeader } from '@/components/molecules/PageHeader'
+import { PageHeader } from '@/components/templates/PageHeader'
 import { PRIORITY_BADGE, SUGGESTION_STATUS_BADGE, CATEGORY_ICON_COLOR, DEFAULT_BADGE } from '@/components/atoms/statusColors'
 
 /**

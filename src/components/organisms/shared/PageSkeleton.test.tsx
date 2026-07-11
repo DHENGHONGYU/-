@@ -9,7 +9,7 @@
 
 import { describe, expect, it } from 'vitest'
 import { render } from '@testing-library/react'
-import { PageSkeleton } from '@/components/PageSkeleton'
+import { PageSkeleton } from '@/components/organisms/shared/PageSkeleton'
 
 describe('PageSkeleton', () => {
   it('默认渲染骨架屏容器', () => {

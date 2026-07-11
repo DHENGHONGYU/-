@@ -9,7 +9,7 @@ import {
   Download,
 } from 'lucide-react'
 import { PageContainer } from '@/components/templates/PageContainer'
-import { PageHeader } from '@/components/molecules/PageHeader'
+import { PageHeader } from '@/components/templates/PageHeader'
 import { CHANGELOG_TYPE_BADGE, DEFAULT_BADGE } from '@/components/atoms/statusColors'
 
 /**

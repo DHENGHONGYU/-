@@ -10,7 +10,7 @@ import {
   ArrowPathIcon,
 } from '@heroicons/react/24/outline'
 import { PageContainer } from '@/components/templates/PageContainer'
-import { PageHeader } from '@/components/molecules/PageHeader'
+import { PageHeader } from '@/components/templates/PageHeader'
 import { TUSHARE_API } from '@/config/dataSourceUrls'
 import { API_ENDPOINT_PLACEHOLDER } from '@/config/uiPlaceholders'
 

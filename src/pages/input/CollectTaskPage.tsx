@@ -18,7 +18,7 @@ import {
   BarChart3,
   LayoutDashboard,
 } from 'lucide-react'
-import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
 import { getLogger } from '@/lib/logger'
 import { mcpBridge } from '@/mcp/bridge/mcpBridge'
 import type { CollectionReport } from '@/services/data-collector/collectionReportService'

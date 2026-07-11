@@ -1,7 +1,7 @@
 import React, { useEffect, Suspense } from 'react'
 import { useLocation } from 'react-router'
 import { getLogger } from '@/lib/logger'
-import { PageSkeleton } from '@/components/PageSkeleton'
+import { PageSkeleton } from '@/components/organisms/shared/PageSkeleton'
 
 const AgentHubPage = React.lazy(() => import('@/pages/command/agent/AgentHubPage'))
 const AgentRegistryPage = React.lazy(() => import('@/pages/command/agent/AgentRegistryPage'))

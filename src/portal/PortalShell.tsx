@@ -37,7 +37,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { twText, twBg, DARK, HOVER } from '@/constants/theme.tokens'
-import { PageSkeleton } from '@/components/PageSkeleton'
+import { PageSkeleton } from '@/components/organisms/shared/PageSkeleton'
 import { SignalSpectrum } from '@/components/cockpit/SignalSpectrum'
 import { Sheet, SheetContent, SheetClose } from '@/components/atoms/Sheet'
 import { useWorkflowStore, type CabinType } from '@/store/workflowStore'

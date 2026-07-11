@@ -9,7 +9,7 @@ import {
 } from 'lucide-react'
 import { THEME_TOKENS, COLOR_TOKENS } from '@/constants/theme.tokens'
 import { PageContainer } from '@/components/templates/PageContainer'
-import { PageHeader } from '@/components/molecules/PageHeader'
+import { PageHeader } from '@/components/templates/PageHeader'
 import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
