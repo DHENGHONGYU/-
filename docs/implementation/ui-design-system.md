@@ -263,13 +263,13 @@ font-variant-numeric: tabular-nums;  /* 等宽数字 */
 
 | 组件 | 来源 | 用途 |
 |------|------|------|
-| `Card` / `CardHeader` / `CardTitle` / `CardDescription` / `CardContent` | `@/components/ui/Card` | 策略模板卡片、维度行容器、全局参数面板、额度预估面板 |
-| `Button` | `@/components/ui/Button` | 保存配置、执行采集、策略模板选择、维度操作 |
-| `Badge` | `@/components/ui/Badge` | 维度重要性标签、策略模板维度数量标签 |
-| `Switch` | `@/components/ui/Switch` | 维度启用/禁用开关 |
-| `Input` | `@/components/ui/Input` | 标的数、历史天数等全局参数输入 |
-| `Label` | `@/components/ui/Label` | 表单字段关联标签 |
-| `Progress` | `@/components/ui/Progress` | 额度预估可视化 |
+| `Card` / `CardHeader` / `CardTitle` / `CardDescription` / `CardContent` | `@/components/atoms/Card` | 策略模板卡片、维度行容器、全局参数面板、额度预估面板 |
+| `Button` | `@/components/atoms/Button` | 保存配置、执行采集、策略模板选择、维度操作 |
+| `Badge` | `@/components/atoms/Badge` | 维度重要性标签、策略模板维度数量标签 |
+| `Switch` | `@/components/atoms/Switch` | 维度启用/禁用开关 |
+| `Input` | `@/components/atoms/Input` | 标的数、历史天数等全局参数输入 |
+| `Label` | `@/components/atoms/Label` | 表单字段关联标签 |
+| `Progress` | `@/components/atoms/Progress` | 额度预估可视化 |
 | `Separator` | `@/components/ui/Separator` | 模块间分隔线 |
 | `Breadcrumb` 系列 | `@/components/ui/Breadcrumb` | 顶部面包屑导航（首页 / 输入舱 / 七维采集配置） |
 

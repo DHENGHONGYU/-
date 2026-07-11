@@ -1,6 +1,6 @@
 /**
  * @fileoverview P3 交互状态组件统一出口
- * @module components/ui/states
+ * @module components/molecules/states
  */
 export { Loading } from './Loading'
 export { Empty } from './Empty'

@@ -51,6 +51,6 @@ export type { SearchBarProps } from './SearchBar'
 export { FilterChip } from './FilterChip'
 export type { FilterChipProps } from './FilterChip'
 
-// P3 交互状态组件
-export { Loading, Empty, ErrorState, Skeleton } from './states'
-export type { LoadingProps, EmptyProps, ErrorStateProps, SkeletonProps } from './states'
+// P3 交互状态组件（ErrorState 与 ./ErrorState 重名，不通过桶导出，需直引 @/components/molecules/states/Error）
+export { Loading, Empty, Skeleton } from './states'
+export type { LoadingProps, EmptyProps, SkeletonProps } from './states'
