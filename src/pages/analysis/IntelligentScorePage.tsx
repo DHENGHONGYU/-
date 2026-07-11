@@ -9,6 +9,7 @@ import { Textarea } from '@/components/atoms/Textarea'
 import { Tooltip } from '@/components/atoms/Tooltip'
 import { ScoreFactorDeltaPanel } from '@/components/ScoreFactorDeltaPanel'
 import { ScoreUpdateAlert } from '@/components/ScoreUpdateAlert'
+import { PageContainer, PageHeader } from '@/components/templates'
 import { MultiPeriodTrendChart } from '@/components/organisms/analysis/score/MultiPeriodTrendChart'
 import { IntelligentScoreExplanation } from '@/components/organisms/analysis/score/IntelligentScoreExplanation'
 import type { ScoreTrendPeriod } from '@/types/modules/score.types'
@@ -255,11 +256,10 @@ export default function IntelligentScorePage(): React.JSX.Element {
   )
 
   return (
-    <div className="space-y-4 p-4">
+    <PageContainer className="space-y-4">
+      <PageHeader title="V6 个股智能评分" description="多源资料综合评估" />
+
       <Card>
-        <CardHeader>
-          <CardTitle>V6 个股智能评分 · 多源资料综合评估</CardTitle>
-        </CardHeader>
         <CardContent className="space-y-4">
           <ScoreUpdateAlert
             lastScoredAt={previousResult?.scoredAt}
@@ -535,6 +535,6 @@ export default function IntelligentScorePage(): React.JSX.Element {
       )}
 
       {result && <IntelligentScoreBasisCard result={result} history={history} logs={logs} />}
-    </div>
+    </PageContainer>
   )
 }
