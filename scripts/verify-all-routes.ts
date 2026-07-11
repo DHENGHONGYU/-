@@ -147,6 +147,8 @@ const EXPECTED_PATHS: Record<string, { path: string; label: string }[]> = {
     { path: '/command/mcp-servers', label: 'MCP Server 管理' },
     { path: '/command/monitor', label: '系统监控' },
     { path: '/command/config', label: '配置管理' },
+    { path: '/command/showcase', label: '组件示例库' },
+    { path: '/command/health', label: '架构健康度仪表盘' },
   ],
   portal: [
     { path: '/', label: '首页' },
