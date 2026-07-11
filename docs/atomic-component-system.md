@@ -361,14 +361,22 @@ export interface MetricCardProps {
 
 ### 阶段 4：模板提取（v1.3）— 已完成 ✅（2026-07-11）
 
-- [x] 提取 `PageContainer` 到 `templates/`（`src/components/molecules/PageContainer.tsx` → `src/components/templates/PageContainer.tsx`；`PageHeader` 按注册表保留在 `molecules/`，属分子层复合组件）。
-- [x] `DashboardLayout` / `SidebarLayout` / `CockpitLayout` 已存在于 `templates/`。
-- [x] 更新 `templates/index.ts`、原子桶注释、`ui/PageContainer.tsx` shim、注册表 status `migrating` → `active`。
+- [x] 提取 `PageContainer` 到 `templates/`（阶段 2 已完成）
+- [x] 提取 `PageHeader` 到 `templates/`（从 `molecules/` 迁移，原位置留 shim；注册表 level 改为 `template`）
+- [x] `DashboardLayout` / `SidebarLayout` / `CockpitLayout` 已存在于 `templates/`
+- [x] 更新 `templates/index.ts` 导出 `PageHeader`
+- [x] 试点页面采用 `PageContainer` + `PageHeader`（3 个代表页面）：
+  - `StockPoolBoardPage`：手写 h1/p → PageHeader（1:1 映射，最简迁移）
+  - `IntelligentScorePage`：CardTitle 当页头反模式 → PageHeader + 保留 Card 无 CardHeader
+  - `RiskControlPage`：p-4 内联布局 + 手写 h1 → PageContainer + PageHeader
+- [ ] 全量页面采用（~29 页待迁移，模式已固化可批量执行）
 
-### 阶段 5：清理（v2.0）— 进行中
+### 阶段 5：清理（v2.0）— 部分完成
 
-- [x] 已建立全部目标目录的真实文件与旧位置 shim（`pool/`、`scoreDoc/`、`shared/`、`ui/statusColors.ts`、`ui/states/` 等）。
-- [ ] 删除所有 shim 文件
+- [x] stale-ui-import 全量清理（173 → 0）：消费者引用从 `@/components/ui/X` 改为 `@/components/{atoms,molecules,templates}/X`
+- [x] 注册表全量 active（0 migrating）
+- [x] `audit:atomic` 达到 0 违规 0 警告
+- [ ] 删除所有 shim 文件（消费者引用已改为新路径，shim 仅作兼容兜底）
 - [ ] 强制使用 `@/components/{atoms,molecules,organisms,templates}` 导入
 - [ ] 更新 lint 规则禁止跨层级导入
 
