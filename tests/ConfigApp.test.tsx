@@ -42,7 +42,7 @@ vi.mock('@/hooks/useConfirmDialog', () => ({
   }),
 }))
 
-vi.mock('@/components/shared/LLMConfigWidget', () => ({
+vi.mock('@/components/organisms/shared/LLMConfigWidget', () => ({
   LLMConfigWidget: (props: {
     onChange: (config: {
       baseURL?: string

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Badge, Button, Checkbox } from '@/components/atoms'
-import { QualityIndicator } from '@/components/input/QualityIndicator'
+import { QualityIndicator } from '@/components/organisms/input/QualityIndicator'
 import { getPoolLabel, getPoolTransitionOptions } from '@/core/poolTransitionEngine'
 import { DEFAULT_POOL_GROUP } from '@/config/dbConfig'
 import type { ResearchStatus } from '@/config/dbConfig'

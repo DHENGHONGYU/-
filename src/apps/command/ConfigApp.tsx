@@ -25,7 +25,7 @@ import {
   BreadcrumbSeparator,
   BreadcrumbPage,
 } from '@/components/atoms/Breadcrumb'
-import { LLMConfigWidget } from '@/components/shared/LLMConfigWidget'
+import { LLMConfigWidget } from '@/components/organisms/shared/LLMConfigWidget'
 import { isLlmConfigured, type PartialLlmConfig } from '@/config/llmConfig'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import { getLogger } from '@/lib/logger'

@@ -6,7 +6,7 @@ import {
   getMetricValue,
   SectorRotationHeatmap,
   type HeatmapCell,
-} from '@/components/analysis/sector/SectorRotationHeatmap'
+} from '@/components/organisms/analysis/sector/SectorRotationHeatmap'
 import type { SectorHeatmapData } from '@/types/modules/widget.types'
 import { UI_TEXT } from '@/constants/uiText'
 

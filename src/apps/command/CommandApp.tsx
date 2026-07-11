@@ -4,9 +4,9 @@ import { Button } from '@/components/atoms/Button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
 import { Dialog, DialogContent } from '@/components/molecules/Dialog'
-import MigrationPanel from '@/components/system/MigrationPanel'
-import LogStreamPanel from '@/components/system/LogStreamPanel'
-import AgentTaskList from '@/components/system/AgentTaskList'
+import MigrationPanel from '@/components/organisms/system/MigrationPanel'
+import LogStreamPanel from '@/components/organisms/system/LogStreamPanel'
+import AgentTaskList from '@/components/organisms/system/AgentTaskList'
 import {
   useCommandStore,
   selectStats,

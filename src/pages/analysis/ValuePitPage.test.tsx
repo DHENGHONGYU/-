@@ -48,7 +48,7 @@ vi.mock('react-router', async (importOriginal) => {
   }
 })
 
-vi.mock('@/components/ui/Card', () => ({
+vi.mock('@/components/atoms/Card', () => ({
   Card: ({ children, className }: { children: React.ReactNode; className?: string }) => (
     <div data-testid="card" className={className}>{children}</div>
   ),
@@ -64,7 +64,7 @@ vi.mock('@/components/ui/Card', () => ({
   ),
 }))
 
-vi.mock('@/components/ui/Button', () => ({
+vi.mock('@/components/atoms/Button', () => ({
   Button: (props: { children: React.ReactNode; onClick?: () => void; disabled?: boolean; variant?: string; className?: string }) => (
     <button onClick={props.onClick} disabled={props.disabled} className={props.className}>
       {props.children}
@@ -72,17 +72,17 @@ vi.mock('@/components/ui/Button', () => ({
   ),
 }))
 
-vi.mock('@/components/ui/Badge', () => ({
+vi.mock('@/components/atoms/Badge', () => ({
   Badge: ({ children }: { children: React.ReactNode }) => <span data-testid="badge">{children}</span>,
 }))
 
-vi.mock('@/components/ui/Progress', () => ({
+vi.mock('@/components/atoms/Progress', () => ({
   Progress: ({ label }: { value: number; label: string }) => (
     <div data-testid="progress">{label}</div>
   ),
 }))
 
-vi.mock('@/components/ui/Breadcrumb', () => ({
+vi.mock('@/components/atoms/Breadcrumb', () => ({
   Breadcrumb: ({ children }: { children: React.ReactNode }) => <nav>{children}</nav>,
   BreadcrumbItem: ({ children }: { children: React.ReactNode }) => <span>{children}</span>,
   BreadcrumbLink: ({ children, asChild: _asChild }: { children: React.ReactNode; asChild?: boolean }) => (

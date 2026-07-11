@@ -18,9 +18,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/molecules/Dialog'
-import { NewsCard } from '@/components/news/NewsCard'
-import { NewsFilterPanel, type NewsFilterState } from '@/components/news/NewsFilterPanel'
-import { NewsSentimentTrend } from '@/components/analysis/news/NewsSentimentTrend'
+import { NewsCard } from '@/components/organisms/news/NewsCard'
+import { NewsFilterPanel, type NewsFilterState } from '@/components/organisms/news/NewsFilterPanel'
+import { NewsSentimentTrend } from '@/components/organisms/analysis/news/NewsSentimentTrend'
 import { useAnalysisNewsStore } from '@/store/analysisNewsStore'
 import { getLogger } from '@/lib/logger'
 

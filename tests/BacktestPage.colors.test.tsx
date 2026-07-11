@@ -22,7 +22,7 @@ vi.mock('@/store/backtestStore', () => ({
 }))
 
 // Mock: SelectContent/SelectTrigger/SelectValue（这些组件在测试环境可能未导出）
-vi.mock('@/components/ui/Select', () => ({
+vi.mock('@/components/atoms/Select', () => ({
   Select: ({ children, value, onValueChange }: { children: React.ReactNode; value?: string; onValueChange?: (v: string) => void }) => (
     <select data-testid="mock-select" value={value} onChange={(e) => onValueChange?.(e.target.value)}>
       {children}

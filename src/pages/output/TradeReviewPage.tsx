@@ -16,7 +16,7 @@ import { useDisciplineStore } from '@/store/disciplineStore'
 import type { TradeReviewReport } from '@/services/trading/tradeReviewAI'
 import { useToast } from '@/hooks/useToast'
 import { usePageGuard } from '@/hooks/usePageGuard'
-import { ReviewArtifactModal } from '@/components/output/ReviewArtifactModal'
+import { ReviewArtifactModal } from '@/components/organisms/output/ReviewArtifactModal'
 import type { Order } from '@/data/types'
 
 interface ReviewData {

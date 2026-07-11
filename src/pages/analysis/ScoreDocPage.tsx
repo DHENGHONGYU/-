@@ -11,7 +11,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/atoms/Breadcrumb'
-import ScoreDocVersionTable from '@/components/scoreDoc/ScoreDocVersionTable'
+import ScoreDocVersionTable from '@/components/organisms/scoreDoc/ScoreDocVersionTable'
 import { useScoreDocStore } from '@/store/scoreDocStore'
 import { getLogger } from '@/lib/logger'
 

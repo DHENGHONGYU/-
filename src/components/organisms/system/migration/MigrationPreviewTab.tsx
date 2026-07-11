@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button } from '@/components/atoms/Button'
 import { Badge } from '@/components/atoms/Badge'
-import type { BackupSnapshot } from '@/components/system/MigrationPanel'
+import type { BackupSnapshot } from '@/components/organisms/system/MigrationPanel'
 import type { V6ExportShape, V9ImportShape } from '@/services/system/v6MigrationService'
 import { buildV6Overview, buildV9Overview, type PreviewItem } from './migrationUtils'
 

@@ -56,8 +56,8 @@ import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
 import { useCollectionRuntimeStore } from '@/store/collectionRuntimeStore'
 import { mcpBridge } from '@/mcp/bridge/mcpBridge'
 import type { SourceConnectivityResult } from '@/services/data-collector/dataSourceOrchestrator'
-import LiveLogStream from '@/components/input/LiveLogStream'
-import SourcePrioritySelect from '@/components/input/SourcePrioritySelect'
+import LiveLogStream from '@/components/organisms/input/LiveLogStream'
+import SourcePrioritySelect from '@/components/organisms/input/SourcePrioritySelect'
 import type {
   QuoteDataSourceId,
   SourcePriorityItem,

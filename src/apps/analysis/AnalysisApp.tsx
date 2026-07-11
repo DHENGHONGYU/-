@@ -4,7 +4,7 @@ import { Button } from '@/components/atoms/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
 import { useToast } from '@/hooks/useToast'
-import { AnalysisTemplateCards } from '@/components/analysis/hub/AnalysisTemplateCards'
+import { AnalysisTemplateCards } from '@/components/organisms/analysis/hub/AnalysisTemplateCards'
 import { getLogger } from '@/lib/logger'
 import {
   useAnalysisStore,

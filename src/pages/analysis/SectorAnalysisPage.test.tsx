@@ -25,7 +25,7 @@ vi.mock('@/store/sectorAnalysisStore', () => ({
 
 
 
-vi.mock('@/components/ui/Card', () => ({
+vi.mock('@/components/atoms/Card', () => ({
   Card: ({ children }: { children: React.ReactNode }) => <div data-testid="card">{children}</div>,
   CardContent: ({ children, className }: { children: React.ReactNode; className?: string }) => (
     <div className={className}>{children}</div>
@@ -34,7 +34,7 @@ vi.mock('@/components/ui/Card', () => ({
   CardTitle: ({ children }: { children: React.ReactNode }) => <h1>{children}</h1>,
 }))
 
-vi.mock('@/components/ui/Button', () => ({
+vi.mock('@/components/atoms/Button', () => ({
   Button: (props: { children: React.ReactNode; onClick?: () => void; disabled?: boolean; variant?: string; size?: string; className?: string }) => (
     <button onClick={props.onClick} disabled={props.disabled} className={props.className}>
       {props.children}
@@ -42,7 +42,7 @@ vi.mock('@/components/ui/Button', () => ({
   ),
 }))
 
-vi.mock('@/components/ui/Badge', () => ({
+vi.mock('@/components/atoms/Badge', () => ({
   Badge: ({ children }: { children: React.ReactNode }) => <span data-testid="badge">{children}</span>,
 }))
 

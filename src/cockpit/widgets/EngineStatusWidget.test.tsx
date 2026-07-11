@@ -61,7 +61,7 @@ vi.mock('@/store/systemMonitorStore', () => ({
 // ============================================================
 const mockEngineStatusCardRender = vi.hoisted(() => vi.fn())
 
-vi.mock('@/components/system/EngineStatusCard', () => ({
+vi.mock('@/components/organisms/system/EngineStatusCard', () => ({
   __esModule: true,
   default: (props: Record<string, unknown>) => {
     mockEngineStatusCardRender(props)

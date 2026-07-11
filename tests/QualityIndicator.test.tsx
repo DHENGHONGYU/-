@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { QualityIndicator } from '@/components/input/QualityIndicator'
+import { QualityIndicator } from '@/components/organisms/input/QualityIndicator'
 
 describe('QualityIndicator', () => {
   it('renders missing state when quality is undefined', () => {

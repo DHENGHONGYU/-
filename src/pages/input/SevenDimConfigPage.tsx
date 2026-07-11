@@ -19,11 +19,11 @@ import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { getLogger } from '@/lib/logger'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
-import { CollectionPlanPanel } from '@/components/input/CollectionPlanPanel'
-import { ApiTestDialog } from '@/components/input/ApiTestDialog'
-import { QuotaEstimatePanel } from '@/components/input/QuotaEstimatePanel'
+import { CollectionPlanPanel } from '@/components/organisms/input/CollectionPlanPanel'
+import { ApiTestDialog } from '@/components/organisms/input/ApiTestDialog'
+import { QuotaEstimatePanel } from '@/components/organisms/input/QuotaEstimatePanel'
 
-import DimensionConfigCard from '@/components/input/DimensionConfigCard'
+import DimensionConfigCard from '@/components/organisms/input/DimensionConfigCard'
 import {
   Card,
   CardHeader,

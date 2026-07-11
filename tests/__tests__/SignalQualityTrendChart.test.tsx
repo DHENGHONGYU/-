@@ -20,7 +20,7 @@ import {
   SignalQualityTrendChart,
   type AccuracyTrendPoint,
   type WinRateTrendPoint,
-} from '@/components/analysis/signal/SignalQualityTrendChart'
+} from '@/components/organisms/analysis/signal/SignalQualityTrendChart'
 
 // Mock logger 避免日志干扰测试输出
 vi.mock('@/lib/logger', () => ({

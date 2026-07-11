@@ -17,9 +17,9 @@ vi.mock('@/lib/logger', () => ({
   getLogger: () => mockLogger,
 }))
 
-import { MigrationUploadTab } from '@/components/system/migration/MigrationUploadTab'
-import { MigrationPreviewTab } from '@/components/system/migration/MigrationPreviewTab'
-import { MigrationReportTab } from '@/components/system/migration/MigrationReportTab'
+import { MigrationUploadTab } from '@/components/organisms/system/migration/MigrationUploadTab'
+import { MigrationPreviewTab } from '@/components/organisms/system/migration/MigrationPreviewTab'
+import { MigrationReportTab } from '@/components/organisms/system/migration/MigrationReportTab'
 
 describe('MigrationUploadTab', () => {
   beforeEach(() => {

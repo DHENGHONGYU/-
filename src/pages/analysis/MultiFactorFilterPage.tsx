@@ -21,7 +21,7 @@ import {
 import { PageContainer } from '@/components/templates/PageContainer'
 import { PageHeader } from '@/components/molecules/PageHeader'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
-import { MultiFactorFilterPanel } from '@/components/analysis/screening/MultiFactorFilterPanel'
+import { MultiFactorFilterPanel } from '@/components/organisms/analysis/screening/MultiFactorFilterPanel'
 
 /**
  * MultiFactorFilterPage

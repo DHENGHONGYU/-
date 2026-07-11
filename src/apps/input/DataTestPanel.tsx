@@ -20,8 +20,8 @@ import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
 import { useCollectionRuntimeStore } from '@/store/collectionRuntimeStore'
 import { getLogger } from '@/lib/logger'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
-import CollectionTimeline from '@/components/input/CollectionTimeline'
-import LiveLogStream from '@/components/input/LiveLogStream'
+import CollectionTimeline from '@/components/organisms/input/CollectionTimeline'
+import LiveLogStream from '@/components/organisms/input/LiveLogStream'
 
 const logger = getLogger()
 

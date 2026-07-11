@@ -5,7 +5,7 @@
 
 import React, { memo } from 'react'
 import type { WidgetConfig, MarketData } from '@/types/modules/widget.types'
-import SystemArchitectureDiagram from '@/components/system/SystemArchitectureDiagram'
+import SystemArchitectureDiagram from '@/components/organisms/system/SystemArchitectureDiagram'
 
 interface SystemArchitectureWidgetProps {
   config: WidgetConfig

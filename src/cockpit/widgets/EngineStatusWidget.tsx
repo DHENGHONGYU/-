@@ -5,7 +5,7 @@
 
 import React, { memo, useEffect } from 'react'
 import type { WidgetConfig, MarketData } from '@/types/modules/widget.types'
-import EngineStatusCard from '@/components/system/EngineStatusCard'
+import EngineStatusCard from '@/components/organisms/system/EngineStatusCard'
 import { useSystemMonitorStore } from '@/store/systemMonitorStore'
 import { getLogger } from '@/lib/logger'
 

@@ -13,7 +13,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/Alert'
+import { Alert, AlertTitle, AlertDescription } from '@/components/molecules/Alert'
 import { THEME_TOKENS, COLOR_TOKENS } from '@/constants/theme.tokens'
 
 // Mock logger

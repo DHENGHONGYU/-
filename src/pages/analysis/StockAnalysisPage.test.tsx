@@ -35,14 +35,14 @@ vi.mock('@/store/stockAnalysisStore', () => ({
 }))
 
 // Mock UI components to simplify rendering tree
-vi.mock('@/components/ui/Card', () => ({
+vi.mock('@/components/atoms/Card', () => ({
   Card: ({ children }: { children: React.ReactNode }) => <div data-testid="card">{children}</div>,
   CardContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   CardHeader: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   CardTitle: ({ children }: { children: React.ReactNode }) => <h1>{children}</h1>,
 }))
 
-vi.mock('@/components/ui/Button', () => ({
+vi.mock('@/components/atoms/Button', () => ({
   Button: (props: { children: React.ReactNode; onClick?: () => void; disabled?: boolean }) => (
     <button onClick={props.onClick} disabled={props.disabled}>
       {props.children}
@@ -50,15 +50,15 @@ vi.mock('@/components/ui/Button', () => ({
   ),
 }))
 
-vi.mock('@/components/ui/Badge', () => ({
+vi.mock('@/components/atoms/Badge', () => ({
   Badge: ({ children }: { children: React.ReactNode }) => <span data-testid="badge">{children}</span>,
 }))
 
-vi.mock('@/components/analysis/score/ScoreHistoryPanel', () => ({
+vi.mock('@/components/organisms/analysis/score/ScoreHistoryPanel', () => ({
   ScoreHistoryPanel: ({ symbol }: { symbol?: string }) => <div data-testid="score-history-panel">{symbol}</div>,
 }))
 
-vi.mock('@/components/analysis/score/MultiPeriodTrendChart', () => ({
+vi.mock('@/components/organisms/analysis/score/MultiPeriodTrendChart', () => ({
   MultiPeriodTrendChart: () => <div data-testid="multi-period-trend-chart" />,
 }))
 

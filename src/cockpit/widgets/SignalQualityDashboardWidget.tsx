@@ -47,7 +47,7 @@ import {
   averageWin,
   averageLoss,
 } from '@/store/signalQualityStore'
-import { SignalQualityTrendChart } from '@/components/analysis/signal/SignalQualityTrendChart'
+import { SignalQualityTrendChart } from '@/components/organisms/analysis/signal/SignalQualityTrendChart'
 import {
   COLOR_TOKENS,
   STOCK_COLOR_TOKENS,

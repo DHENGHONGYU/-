@@ -73,7 +73,7 @@ vi.mock('@/components/PageSkeleton', () => ({
 }))
 
 // Mock UI 组件
-vi.mock('@/components/ui/Button', () => ({
+vi.mock('@/components/atoms/Button', () => ({
   Button: ({
     children,
     onClick,
@@ -91,7 +91,7 @@ vi.mock('@/components/ui/Button', () => ({
   ),
 }))
 
-vi.mock('@/components/ui/Card', () => ({
+vi.mock('@/components/atoms/Card', () => ({
   Card: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   CardContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   CardHeader: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,

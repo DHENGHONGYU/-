@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Car
 import { Badge } from '@/components/atoms/Badge'
 import { Button } from '@/components/atoms/Button'
 import { useSectorAnalysisStore } from '@/store/sectorAnalysisStore'
-import { SectorRotationHeatmap } from '@/components/analysis/sector/SectorRotationHeatmap'
+import { SectorRotationHeatmap } from '@/components/organisms/analysis/sector/SectorRotationHeatmap'
 import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()

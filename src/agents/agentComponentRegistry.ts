@@ -1,7 +1,7 @@
 import React from 'react'
 import { Bot, Activity, Newspaper, Sparkles, Wifi, type LucideIcon } from 'lucide-react'
-import V6ScoringAgentDetail from '@/components/agent/V6ScoringAgentDetail'
-import GenericAgentDetail from '@/components/agent/GenericAgentDetail'
+import V6ScoringAgentDetail from '@/components/organisms/agent/V6ScoringAgentDetail'
+import GenericAgentDetail from '@/components/organisms/agent/GenericAgentDetail'
 
 export interface AgentDetailComponentProps {
   agentId: string

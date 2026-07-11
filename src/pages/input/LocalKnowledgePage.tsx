@@ -20,7 +20,7 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/components/molecules/Tabs'
-import { LocalDocCard } from '@/components/localDoc/LocalDocCard'
+import { LocalDocCard } from '@/components/organisms/localDoc/LocalDocCard'
 import { useLocalKnowledgeStore, type LocalKnowledgeTab } from '@/store/localKnowledgeStore'
 import type { LocalDoc } from '@/data/types'
 import { getLogger } from '@/lib/logger'

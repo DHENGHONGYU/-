@@ -18,7 +18,7 @@ import {
 } from '@/components/atoms/Breadcrumb'
 import { Button } from '@/components/atoms/Button'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
-import ReviewWizard from '@/components/output/ReviewWizard'
+import ReviewWizard from '@/components/organisms/output/ReviewWizard'
 
 export default memo(function ReviewWizardPage(): React.JSX.Element {
   return (

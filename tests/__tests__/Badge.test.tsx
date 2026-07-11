@@ -12,7 +12,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { Badge } from '@/components/ui/Badge'
+import { Badge } from '@/components/atoms/Badge'
 import { THEME_TOKENS, COLOR_TOKENS } from '@/constants/theme.tokens'
 
 // Mock logger

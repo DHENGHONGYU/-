@@ -13,8 +13,8 @@ import {
   BreadcrumbSeparator,
 } from '@/components/atoms/Breadcrumb'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/molecules/Tabs'
-import { StrategyGroupCard } from '@/components/strategy/StrategyGroupCard'
-import { ChangeLogPanel } from '@/components/strategy/ChangeLogPanel'
+import { StrategyGroupCard } from '@/components/organisms/strategy/StrategyGroupCard'
+import { ChangeLogPanel } from '@/components/organisms/strategy/ChangeLogPanel'
 import { useStrategySnapshotStore } from '@/store/strategySnapshotStore'
 import { getLogger } from '@/lib/logger'
 

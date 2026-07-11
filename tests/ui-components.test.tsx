@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { Label } from '@/components/ui/Label'
-import { Slider } from '@/components/ui/Slider'
-import { Sheet, SheetContent, SheetTitle, SheetClose } from '@/components/ui/Sheet'
-import { Toggle } from '@/components/ui/Toggle'
+import { Label } from '@/components/atoms/Label'
+import { Slider } from '@/components/atoms/Slider'
+import { Sheet, SheetContent, SheetTitle, SheetClose } from '@/components/atoms/Sheet'
+import { Toggle } from '@/components/atoms/Toggle'
 import React from 'react'
 
 // ===================== Label =====================
