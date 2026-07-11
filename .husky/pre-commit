@@ -14,47 +14,52 @@ echo "📋 当前 AGENTS.md 版本: $AGENTS_VERSION"
 
 # 2. lint-staged：仅对暂存区文件运行 ESLint --fix
 echo ""
-echo "🧹 [1/9] 运行 lint-staged（ESLint --fix）..."
+echo "🧹 [1/10] 运行 lint-staged（ESLint --fix）..."
 npx lint-staged
 
 # 3. 颜色硬编码门禁
 echo ""
-echo "🎨 [2/9] 运行 lint:colors（颜色硬编码检查）..."
+echo "🎨 [2/10] 运行 lint:colors（颜色硬编码检查）..."
 npm run lint:colors
 
 # 4. 生产类型检查
 echo ""
-echo "🔍 [3/9] 运行 tsc:prod（生产类型检查）..."
+echo "🔍 [3/10] 运行 tsc:prod（生产类型检查）..."
 npm run tsc:prod
 
 # 5. 分层调用审计
 echo ""
-echo "🏗️  [4/9] 运行 audit:layers（禁止跨层调用）..."
+echo "🏗️  [4/10] 运行 audit:layers（禁止跨层调用）..."
 npm run audit:layers
+
+# 5. 原子组件层级边界审计
+echo ""
+echo "⚛️  [5/10] 运行 audit:atomic（原子层级边界检查）..."
+npm run audit:atomic
 
 # 6. 文档同步审计
 echo ""
-echo "📝 [5/9] 运行 audit:docs（文档同步检查）..."
+echo "📝 [6/10] 运行 audit:docs（文档同步检查）..."
 npm run audit:docs
 
 # 7. 设计令牌映射校验
 echo ""
-echo "🎨 [6/9] 运行 verify:tokens（设计令牌映射校验）..."
+echo "🎨 [7/10] 运行 verify:tokens（设计令牌映射校验）..."
 npm run verify:tokens
 
 # 8. 令牌消费审计
 echo ""
-echo "🪙 [7/9] 运行 audit:tokens（令牌消费检查）..."
+echo "🪙 [8/10] 运行 audit:tokens（令牌消费检查）..."
 npm run audit:tokens
 
 # 9. JSDoc 文档门禁（基线采集，当前不阻断）
 echo ""
-echo "📖 [8/9] 运行 audit:jsdoc（JSDoc 覆盖检查）..."
+echo "📖 [9/10] 运行 audit:jsdoc（JSDoc 覆盖检查）..."
 npm run audit:jsdoc
 
 # 10. 代码复杂度门禁（基线采集，当前不阻断）
 echo ""
-echo "📊 [9/9] 运行 audit:complexity（代码复杂度检查）..."
+echo "📊 [10/10] 运行 audit:complexity（代码复杂度检查）..."
 npm run audit:complexity
 
 echo ""

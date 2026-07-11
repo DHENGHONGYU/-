@@ -2,7 +2,7 @@
 
 > **版本**：v1.0.0  
 > **日期**：2026-07-10  
-> **状态**：阶段 1（体系建立）+ 阶段 2（ui/ 物理迁移）+ 阶段 3（业务目录有机体化，步骤 0–3）已完成并验证；`chart/`、`cockpit/cabin/widgets` 仅 registry 标注  
+> **状态**：阶段 1–5 全部完成 ✅ — 原子组件体系迁移收官（0 shim 残留、0 违规 0 警告、全门禁通过）
 > **适用范围**：`src/components/` 全量组件
 
 ---
@@ -376,9 +376,26 @@ export interface MetricCardProps {
 - [x] stale-ui-import 全量清理（173 → 0）：消费者引用从 `@/components/ui/X` 改为 `@/components/{atoms,molecules,templates}/X`
 - [x] 注册表全量 active（0 migrating）
 - [x] `audit:atomic` 达到 0 违规 0 警告
-- [ ] 删除所有 shim 文件（消费者引用已改为新路径，shim 仅作兼容兜底）
-- [ ] 强制使用 `@/components/{atoms,molecules,organisms,templates}` 导入
-- [ ] 更新 lint 规则禁止跨层级导入
+- [x] 删除所有 shim 文件（14 个旧目录 + 7 个顶层 shim 全部删除；46 处导入路径修复为新路径）
+- [x] 强制使用 `@/components/{atoms,molecules,organisms,templates}` 导入（旧路径已不存在，编译器自动强制）
+- [x] `audit:atomic` 脚本已强制层级边界（atom 不引 store/organism 等）；ESLint 规则为可选增强
+
+### 阶段 5 收尾验证（2026-07-11）
+`tsc:prod` 0 错误 / `build` ✅ / `audit:atomic` **0 违规 0 警告（133 文件）** / `audit:layers` 0 / `audit:docs` 0 / `audit:routes` exit 0 / `audit:tokens` 0 / `lint:colors` exit 0 / `audit:hardcode` exit 0
+
+### 最终目录结构
+```
+src/components/
+├── atoms/          # 原子（28 组件 + 测试 + statusColors.ts）
+├── molecules/      # 分子（12 组件 + states/ 子目录 + 测试）
+├── organisms/      # 有机体（13 域：input/analysis/trading/output/.../shared/scoreDoc）
+├── templates/      # 模板（PageContainer/PageHeader/DashboardLayout/SidebarLayout/CockpitLayout）
+├── chart/          # 图表原语（按决策保留原位，registry active）
+├── cabin/          # 驾驶舱评分卡片（按决策保留原位）
+├── cockpit/        # 驾驶舱组件（按决策保留原位）
+├── widgets/        # Widget 外壳（按决策保留原位）
+└── componentRegistry.ts  # 注册表（全量 active，0 migrating）
+```
 
 
 ---

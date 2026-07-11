@@ -50,3 +50,7 @@ export type { SearchBarProps } from './SearchBar'
 
 export { FilterChip } from './FilterChip'
 export type { FilterChipProps } from './FilterChip'
+
+// P3 交互状态组件
+export { Loading, Empty, ErrorState, Skeleton } from './states'
+export type { LoadingProps, EmptyProps, ErrorStateProps, SkeletonProps } from './states'

@@ -16,10 +16,10 @@
 ## 原子组件体系（Atomic Design）
 - **四层目录**：`src/components/{atoms,molecules,organisms,templates}/`，各层有 `index.ts` 桶导出。
 - **层级边界**（`audit:atomic` 强制）：atom 不引 store/service/molecule/organism/template/page/app；molecule 不引 organism/template/store/service；template 不引 organism/store/service。
-- **迁移状态**：阶段 1（体系建立）✅ + 阶段 2（ui/ → atoms/molecules 物理迁移）✅ + 阶段 3（业务目录有机体化，11 域 63 文件迁入 organisms/）✅ + stale-ui-import 全量清理（173→0）✅ + 阶段 4（PageContainer/PageHeader 提取到 templates/）✅ + 阶段 5（遗留 shim 目录删除、全量导入归一化）✅。
-- **目录现状**：`src/components/{atoms,molecules,organisms,templates}/` 四层齐备；`src/components/ui/` 及 `src/components/{agent,analysis,...,trading}/` 等遗留 shim 目录已删除；消费者导入全部走 `@/components/{atoms,molecules,organisms,templates}/...` 规范路径。
-- **注册表**：`src/components/componentRegistry.ts` 登记 sourcePath/targetPath/level/status，全量 `active`（0 migrating）。
-- **audit:atomic 基线**：**0 违规、0 警告**（140 文件全量通过）。
+- **迁移状态**：阶段 1–5 **全部完成** ✅。5 个阶段：体系建立 → ui/ 物理迁移 → 业务目录有机体化（11 域 63 文件）→ 模板提取+试点页面布局统一 → Shim 清理（14 旧目录+7 顶层 shim 删除，46 处导入归一化）。
+- **目录现状**：`src/components/` 仅剩 `atoms/ molecules/ organisms/ templates/ chart/ cabin/ cockpit/ widgets/ componentRegistry.ts`；**0 shim 残留**，消费者导入全部走 `@/components/{atoms,molecules,organisms,templates}/...` 规范路径（旧路径已不存在，编译器自动强制）。
+- **注册表**：`src/components/componentRegistry.ts` 全量 `active`（0 migrating）。
+- **audit:atomic 基线**：**0 违规、0 警告**（133 文件全量通过）。
 - **chart/ 与 cockpit/cabin/widgets**：registry 标注 active + targetPath=sourcePath（不物理搬，Widget 注册表耦合）。
 
 ## 数据采集
