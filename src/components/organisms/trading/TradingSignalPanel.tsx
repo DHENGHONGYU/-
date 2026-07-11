@@ -3,9 +3,9 @@
  * 展示基于评分和策略生成的交易信号
  */
 import React from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Badge } from '@/components/ui/Badge'
-import { Button } from '@/components/ui/Button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Badge } from '@/components/atoms/Badge'
+import { Button } from '@/components/atoms/Button'
 import { Target, TrendingUp, Clock } from 'lucide-react'
 import { getLogger } from '@/lib/logger'
 import { cn } from '@/lib/utils'

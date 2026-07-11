@@ -1,21 +1,21 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { Key, Sparkles, Bot, Activity, Save, TestTube, RotateCw, Brain, Cpu, TrendingUp, DollarSign, BarChart3, Zap } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
-import { Input } from '@/components/ui/Input'
-import { Label } from '@/components/ui/Label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs'
-import { Switch } from '@/components/ui/Switch'
-import { Progress } from '@/components/ui/Progress'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Button } from '@/components/atoms/Button'
+import { Badge } from '@/components/atoms/Badge'
+import { Input } from '@/components/atoms/Input'
+import { Label } from '@/components/atoms/Label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/atoms/Select'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/molecules/Tabs'
+import { Switch } from '@/components/atoms/Switch'
+import { Progress } from '@/components/atoms/Progress'
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-} from '@/components/ui/Breadcrumb'
+} from '@/components/atoms/Breadcrumb'
 import { getLogger } from '@/lib/logger'
 import { API_ENDPOINT_PLACEHOLDER } from '@/config/uiPlaceholders'
 import {
@@ -53,13 +53,20 @@ export default function LlmManagementPage(): React.JSX.Element {
   const [globalLlmEnabled, setGlobalLlmEnabled] = useState(true)
   
   // 使用统计状态（模拟数据，实际应从后端获取）
-  const [usageStats] = useState({
+  const [usageStats] = useState<{
+    todayCalls: number
+    monthCalls: number
+    tokenUsage: { input: number; output: number; total: number }
+    costEstimate: number
+    callsByFactor: Record<string, number>
+    callsByModel: Record<string, number>
+  }>({
     todayCalls: 0,
     monthCalls: 0,
     tokenUsage: { input: 0, output: 0, total: 0 },
     costEstimate: 0,
-    callsByFactor: {} as Record<string, number>,
-    callsByModel: {} as Record<string, number>,
+    callsByFactor: {},
+    callsByModel: {},
   })
 
   // 模型筛选状态
@@ -247,13 +254,14 @@ export default function LlmManagementPage(): React.JSX.Element {
           ...LLM_MODEL_PRESETS.filter((p) => p.id !== 'custom' && (p.contextWindow ?? 0) >= 100000)
         )
         break
-      case 'balanced':
+      case 'balanced': {
         // 均衡推荐：综合价格和性能
         const deepseek = LLM_MODEL_PRESETS.find((p) => p.id === 'deepseek')
         const qwen = LLM_MODEL_PRESETS.find((p) => p.id === 'qwen')
         if (deepseek) recommendations.push(deepseek)
         if (qwen) recommendations.push(qwen)
         break
+      }
     }
 
     return recommendations

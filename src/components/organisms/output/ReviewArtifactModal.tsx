@@ -12,8 +12,8 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/Dialog'
-import { Button } from '@/components/ui/Button'
+} from '@/components/molecules/Dialog'
+import { Button } from '@/components/atoms/Button'
 import { ReviewArtifactCard } from './ReviewArtifactCard'
 import {
   downloadReviewArtifactHtml,

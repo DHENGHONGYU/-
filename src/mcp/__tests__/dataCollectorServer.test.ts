@@ -11,9 +11,9 @@ describe('DataCollectorServer', () => {
     expect(server.info.dependencies).toContain('fetcher')
   })
 
-  it('应该register 2 tools', () => {
+  it('应该register 3 tools', () => {
     const tools = server.listTools()
-    expect(tools.length).toBe(2)
+    expect(tools.length).toBe(3)
     for (const tool of tools) {
       expect(tool.name).toBeTruthy()
       expect(tool.description).toBeTruthy()
@@ -28,6 +28,14 @@ describe('DataCollectorServer', () => {
     expect(tool).toBeDefined()
     expect(tool!.inputSchema.required).toContain('symbol')
     expect(tool!.inputSchema.properties).toHaveProperty('days')
+  })
+
+  it('应该有 build_collection_report tool', () => {
+    const tools = server.listTools()
+    const tool = tools.find((t) => t.name === 'build_collection_report')
+    expect(tool).toBeDefined()
+    expect(tool!.inputSchema.properties).toHaveProperty('traceSpans')
+    expect(tool!.inputSchema.properties).toHaveProperty('taskStatuses')
   })
 
   it('应该有 detect_missing_reports tool', () => {

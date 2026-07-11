@@ -7,14 +7,14 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/Breadcrumb'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/Tabs'
-import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
-import { Select } from '@/components/ui/Select'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table'
-import { DataState } from '@/components/ui/DataState'
+} from '@/components/atoms/Breadcrumb'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Tabs, TabsList, TabsTrigger } from '@/components/molecules/Tabs'
+import { Button } from '@/components/atoms/Button'
+import { Badge } from '@/components/atoms/Badge'
+import { Select } from '@/components/atoms/Select'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/atoms/Table'
+import { DataState } from '@/components/molecules/DataState'
 import { BarChart } from '@/components/chart/BarChart'
 import { LineChart } from '@/components/chart/LineChart'
 import { useScoreDocStore } from '@/store/scoreDocStore'

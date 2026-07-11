@@ -76,9 +76,9 @@ describe('ValuePitWidget', () => {
     expect(screen.getByText('价值洼地策略')).toBeInTheDocument()
   })
 
-  it('空数据 → 「暂无价值洼地策略数据」', () => {
+  it('空数据 → 「暂无价值洼地策略」', () => {
     render(<ValuePitWidget config={buildConfig()} data={{ valuePit: [] }} />)
-    expect(screen.getByText('暂无价值洼地策略数据')).toBeInTheDocument()
+    expect(screen.getByText('暂无价值洼地策略')).toBeInTheDocument()
   })
 
   it('渲染候选名称与综合评分（toFixed(2)）', () => {

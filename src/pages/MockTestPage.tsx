@@ -4,11 +4,11 @@
  * 用途: 手动/自动化验证 Slider、Sheet、Toggle、Engine 的实际渲染与交互效果
  */
 import { useState } from 'react'
-import { Slider } from '@/components/ui/Slider'
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/Sheet'
-import { Toggle } from '@/components/ui/Toggle'
-import { Label } from '@/components/ui/Label'
-import { Button } from '@/components/ui/Button'
+import { Slider } from '@/components/atoms/Slider'
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/atoms/Sheet'
+import { Toggle } from '@/components/atoms/Toggle'
+import { Label } from '@/components/atoms/Label'
+import { Button } from '@/components/atoms/Button'
 import { create } from 'zustand'
 import { eventBus } from '@/lib/eventBus'
 

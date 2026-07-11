@@ -12,7 +12,7 @@
 import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { createRef } from 'react'
-import { Skeleton } from '@/components/ui/Skeleton'
+import { Skeleton } from '@/components/molecules/states/Skeleton'
 
 describe('Skeleton', () => {
   it('默认渲染 div 元素', () => {

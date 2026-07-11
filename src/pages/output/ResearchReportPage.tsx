@@ -1,17 +1,17 @@
 import { memo, useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router'
 import { FileText, Download, RefreshCw, ArrowLeft } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
-import { Select, SelectItem } from '@/components/ui/Select'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Button } from '@/components/atoms/Button'
+import { Badge } from '@/components/atoms/Badge'
+import { Select, SelectItem } from '@/components/atoms/Select'
 import {
   Breadcrumb,
   BreadcrumbList,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbPage,
-} from '@/components/ui/Breadcrumb'
+} from '@/components/atoms/Breadcrumb'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { useScoreDocStore } from '@/store/scoreDocStore'
 import { useToast } from '@/hooks/useToast'

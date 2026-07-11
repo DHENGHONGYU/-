@@ -53,5 +53,3 @@ export type { SearchBarProps } from './SearchBar'
 
 export { FilterChip } from './FilterChip'
 export type { FilterChipProps } from './FilterChip'
-
-export { PageContainer } from './PageContainer'

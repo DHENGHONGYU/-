@@ -8,10 +8,10 @@ import {
   Settings,
   ArrowRight,
 } from 'lucide-react'
-import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
-import { PageContainer } from '@/components/ui/PageContainer'
-import { PageHeader } from '@/components/ui/PageHeader'
+import { Button } from '@/components/atoms/Button'
+import { Badge } from '@/components/atoms/Badge'
+import { PageContainer } from '@/components/templates/PageContainer'
+import { PageHeader } from '@/components/molecules/PageHeader'
 
 interface FeatureCardProps {
   icon: React.ElementType

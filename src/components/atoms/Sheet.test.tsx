@@ -23,7 +23,7 @@ import {
   SheetTitle,
   SheetDescription,
   SheetClose,
-} from '@/components/ui/Sheet'
+} from '@/components/atoms/Sheet'
 
 describe('Sheet 组件族', () => {
   it('open=false 时不渲染任何内容', () => {

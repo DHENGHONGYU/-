@@ -16,7 +16,7 @@
 import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { createRef } from 'react'
-import { Progress } from '@/components/ui/Progress'
+import { Progress } from '@/components/atoms/Progress'
 
 describe('Progress', () => {
   it('默认渲染进度条容器', () => {

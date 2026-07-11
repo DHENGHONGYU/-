@@ -1,7 +1,7 @@
 import React from 'react'
-import { Button } from '@/components/ui/Button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Badge } from '@/components/ui/Badge'
+import { Button } from '@/components/atoms/Button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Badge } from '@/components/atoms/Badge'
 import type { Portfolio, StrategyClassification, StrategyResult } from '@/data/types'
 import { twBg, twText } from '@/constants/theme.tokens'
 

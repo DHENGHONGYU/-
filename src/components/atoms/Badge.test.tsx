@@ -12,7 +12,7 @@
 import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { createRef } from 'react'
-import { Badge } from '@/components/ui/Badge'
+import { Badge } from '@/components/atoms/Badge'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 
 describe('Badge', () => {

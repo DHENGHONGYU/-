@@ -6,8 +6,8 @@
 
 import React, { useCallback } from 'react'
 import { Search, RotateCcw, Download } from 'lucide-react'
-import { Button } from '@/components/ui/Button'
-import { Card, CardContent } from '@/components/ui/Card'
+import { Button } from '@/components/atoms/Button'
+import { Card, CardContent } from '@/components/atoms/Card'
 import { TRADE_DIRECTION_OPTIONS } from '@/constants/trade.constants'
 import type { FilterState, FilterHandlers } from '@/types/modules/trade.types'
 import { getLogger } from '@/lib/logger'

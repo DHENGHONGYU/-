@@ -1,16 +1,16 @@
 import { memo, useState, useEffect } from 'react'
 import { Link } from 'react-router'
 import { BarChart3, Download, RefreshCw, ArrowLeft } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Button } from '@/components/atoms/Button'
+import { Badge } from '@/components/atoms/Badge'
 import {
   Breadcrumb,
   BreadcrumbList,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbPage,
-} from '@/components/ui/Breadcrumb'
+} from '@/components/atoms/Breadcrumb'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { useDisciplineStore } from '@/store/disciplineStore'
 import type { TradeReviewReport } from '@/services/trading/tradeReviewAI'

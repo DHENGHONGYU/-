@@ -1,8 +1,8 @@
 import React from 'react'
 import { Activity, Smile, TrendingUp, Droplets } from 'lucide-react'
 import { WidgetStateShell } from './components/WidgetStateShell'
-import { Skeleton } from '@/components/ui/states'
-import { Badge } from '@/components/ui/Badge'
+import { Skeleton } from '@/components/molecules/states'
+import { Badge } from '@/components/atoms/Badge'
 import {
   Table,
   TableBody,
@@ -10,7 +10,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/Table'
+} from '@/components/atoms/Table'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
 import type { WidgetConfig, MarketData, KaiDimension, KaiDetailItem } from '@/types/modules/widget.types'
 import { SCORE_LEVELS } from '@/constants/cockpit.constants'
@@ -39,15 +39,15 @@ function getScoreLevel(score: number) {
 export default function KaiScoreWidget({ config, data }: KaiScoreWidgetProps): React.JSX.Element {
   const { data: marketData, loadingMap, errorMap, refreshWidget } = useMarketData()
   const sourceData = data ?? marketData
-  const kai = sourceData.analysisScores.kai
+  const kai = sourceData?.analysisScores?.kai
 
-  const loading = !!loadingMap[config.instanceId]
-  const error = errorMap[config.instanceId] ?? null
+  const loading = !!loadingMap?.[config.instanceId]
+  const error = errorMap?.[config.instanceId] ?? null
   const visualState = error
     ? 'error'
     : loading
       ? 'loading'
-      : kai.dimensions.length === 0
+      : !kai || kai.dimensions.length === 0
         ? 'empty'
         : 'ready'
 

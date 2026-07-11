@@ -1,5 +1,5 @@
 /**
- * @module components/ui/PageContainer
+ * @module components/templates/PageContainer
  * @description 页面统一容器组件
  *
  * 提供一致的页面最大宽度（1200px）、内边距（24px）与居中策略，

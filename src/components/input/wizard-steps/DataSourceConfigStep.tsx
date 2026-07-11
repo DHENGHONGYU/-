@@ -10,9 +10,9 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { cn } from '@/lib/utils'
 import { useCollectionWizardStore } from '@/store/collectionWizardStore'
-import { Card, CardContent } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
+import { Card, CardContent } from '@/components/atoms/Card'
+import { Button } from '@/components/atoms/Button'
+import { Input } from '@/components/atoms/Input'
 import {
   COLOR_TOKENS,
   twText,

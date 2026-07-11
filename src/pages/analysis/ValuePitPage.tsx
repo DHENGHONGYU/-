@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router'
 import { Target, RefreshCw, ChevronDown, ChevronUp, AlertCircle, CheckCircle, XCircle, Clock } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
-import { Progress } from '@/components/ui/Progress'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Button } from '@/components/atoms/Button'
+import { Badge } from '@/components/atoms/Badge'
+import { Progress } from '@/components/atoms/Progress'
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-} from '@/components/ui/Breadcrumb'
+} from '@/components/atoms/Breadcrumb'
 import type { ValuePitScore } from '@/data/types'
 import type { RotationSignal } from '@/services/scoring/rotationSignalDetector'
 import { useValuePitStore, type ValuePitSectorResult } from '@/store/valuePitStore'

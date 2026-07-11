@@ -8,9 +8,9 @@
 import React, { useRef } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { TrendingDown, TrendingUp } from 'lucide-react'
-import { Button } from '@/components/ui/Button'
-import { Skeleton } from '@/components/ui/Skeleton'
-import { Badge } from '@/components/ui/Badge'
+import { Button } from '@/components/atoms/Button'
+import { Skeleton } from '@/components/molecules/states/Skeleton'
+import { Badge } from '@/components/atoms/Badge'
 import {
   HOLDING_ACTION,
   HOLDING_ACTION_LABELS,

@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router'
 import { RefreshCw, Sparkles } from 'lucide-react'
-import { Badge } from '@/components/ui/Badge'
-import { Button } from '@/components/ui/Button'
+import { Badge } from '@/components/atoms/Badge'
+import { Button } from '@/components/atoms/Button'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,14 +10,14 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/Breadcrumb'
+} from '@/components/atoms/Breadcrumb'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/Dialog'
+} from '@/components/molecules/Dialog'
 import { NewsCard } from '@/components/news/NewsCard'
 import { NewsFilterPanel, type NewsFilterState } from '@/components/news/NewsFilterPanel'
 import { NewsSentimentTrend } from '@/components/analysis/news/NewsSentimentTrend'

@@ -13,7 +13,7 @@
 import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { createRef } from 'react'
-import { Separator } from '@/components/ui/Separator'
+import { Separator } from '@/components/atoms/Separator'
 
 describe('Separator', () => {
   it('默认 orientation=horizontal 渲染横线（h-[1px] w-full）', () => {

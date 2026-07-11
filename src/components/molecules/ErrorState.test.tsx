@@ -21,7 +21,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { UI_TEXT } from '@/constants/uiText'
-import { ErrorState } from '@/components/ui/ErrorState'
+import { ErrorState } from '@/components/molecules/ErrorState'
 
 describe('ErrorState', () => {
   it('默认 variant=card 渲染卡片模式（红框 + 重试按钮）', () => {

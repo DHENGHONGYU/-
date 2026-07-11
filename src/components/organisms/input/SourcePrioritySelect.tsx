@@ -6,8 +6,8 @@
  */
 
 import { useMemo } from 'react'
-import { Select, SelectItem } from '@/components/ui/Select'
-import { Switch } from '@/components/ui/Switch'
+import { Select, SelectItem } from '@/components/atoms/Select'
+import { Switch } from '@/components/atoms/Switch'
 import { DATA_SOURCE_ENDPOINTS } from '@/config/dataSourceRegistry'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import type {

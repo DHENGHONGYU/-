@@ -512,9 +512,11 @@ describe('collectionWizardPersistence - 多数据源配置 CRUD', () => {
       const allConfigs = await loadAllWizardConfigs()
       expect(allConfigs).toHaveLength(7)
 
-      // 验证每个配置的维度组合
-      allConfigs.forEach((config, index) => {
-        expect(config.selectedDimensions).toEqual(dimensionCombinations[index])
+      // 验证每个配置的维度组合（loadAllWizardConfigs 按 updatedAt 降序排序，不强制顺序）
+      const actualCombinations = allConfigs.map((config) => config.selectedDimensions)
+      expect(actualCombinations).toHaveLength(dimensionCombinations.length)
+      dimensionCombinations.forEach((combo) => {
+        expect(actualCombinations).toContainEqual(combo)
       })
     })
   })

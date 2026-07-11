@@ -1,5 +1,5 @@
 import React from 'react'
-import { Badge } from '@/components/ui/Badge'
+import { Badge } from '@/components/atoms/Badge'
 import { twText, COLOR_SHADES } from '@/constants/theme.tokens'
 import type { StockDataQuality } from '@/data/types'
 

@@ -5,10 +5,10 @@
  */
 
 import { memo, useState } from 'react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/Dialog'
-import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
-import { Card, CardContent } from '@/components/ui/Card'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/molecules/Dialog'
+import { Button } from '@/components/atoms/Button'
+import { Badge } from '@/components/atoms/Badge'
+import { Card, CardContent } from '@/components/atoms/Card'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import { getLogger } from '@/lib/logger'
 import { TEST_API_ENDPOINTS } from '@/config/collectConfig'

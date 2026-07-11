@@ -6,22 +6,22 @@ import {
   ArrowRight,
   Bot,
 } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
-import { Input } from '@/components/ui/Input'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Button } from '@/components/atoms/Button'
+import { Badge } from '@/components/atoms/Badge'
+import { Input } from '@/components/atoms/Input'
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-} from '@/components/ui/Breadcrumb'
+} from '@/components/atoms/Breadcrumb'
 import {
   Tabs,
   TabsList,
   TabsTrigger,
-} from '@/components/ui/Tabs'
+} from '@/components/molecules/Tabs'
 import { getLogger } from '@/lib/logger'
 import { getAllAgentComponents } from '@/agents/agentComponentRegistry'
 import type { AgentComponentEntry } from '@/agents/agentComponentRegistry'

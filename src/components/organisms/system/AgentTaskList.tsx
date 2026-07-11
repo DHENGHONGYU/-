@@ -6,9 +6,9 @@
  */
 
 import React, { useEffect, useState, memo } from 'react'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card'
-import { Badge } from '@/components/ui/Badge'
-import { Button } from '@/components/ui/Button'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/atoms/Card'
+import { Badge } from '@/components/atoms/Badge'
+import { Button } from '@/components/atoms/Button'
 import { useSystemMonitorStore } from '@/store/systemMonitorStore'
 import { useAgentStore } from '@/store/agentStore'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'

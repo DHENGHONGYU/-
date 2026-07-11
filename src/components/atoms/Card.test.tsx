@@ -20,7 +20,7 @@ import {
   CardAction,
   CardContent,
   CardFooter,
-} from '@/components/ui/Card'
+} from '@/components/atoms/Card'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 
 describe('Card 组件族', () => {

@@ -5,10 +5,10 @@
  */
 
 import React, { useCallback, useState } from 'react'
-import { Button } from '@/components/ui/Button'
+import { Button } from '@/components/atoms/Button'
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
-} from '@/components/ui/Dialog'
+} from '@/components/molecules/Dialog'
 import {
   HOLDING_ACTION,
   HOLDING_ACTION_LABELS,

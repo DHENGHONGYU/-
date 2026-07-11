@@ -5,11 +5,11 @@
  * 整合数据源优先级、字段选择、重试/超时/降级策略，供七维配置页复用。
  */
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Badge } from '@/components/ui/Badge'
-import { Switch } from '@/components/ui/Switch'
-import { Select, SelectItem } from '@/components/ui/Select'
-import { Label } from '@/components/ui/Label'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Badge } from '@/components/atoms/Badge'
+import { Switch } from '@/components/atoms/Switch'
+import { Select, SelectItem } from '@/components/atoms/Select'
+import { Label } from '@/components/atoms/Label'
 import SourcePrioritySelect from './SourcePrioritySelect'
 import FieldSelector from './FieldSelector'
 import PolicyForm from './PolicyForm'

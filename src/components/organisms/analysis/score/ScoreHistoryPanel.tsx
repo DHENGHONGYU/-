@@ -6,9 +6,9 @@
 
 import { useEffect } from 'react'
 import { twText } from '@/constants/theme.tokens'
-import { LoadingState } from '@/components/ui/LoadingState'
-import { EmptyState } from '@/components/ui/EmptyState'
-import { ErrorState } from '@/components/ui/ErrorState'
+import { LoadingState } from '@/components/molecules/LoadingState'
+import { EmptyState } from '@/components/molecules/EmptyState'
+import { ErrorState } from '@/components/molecules/ErrorState'
 import { useScoreDocStore } from '@/store/scoreDocStore'
 
 interface ScoreHistoryPanelProps {

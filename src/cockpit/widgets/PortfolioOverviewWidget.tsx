@@ -2,7 +2,7 @@ import React from 'react'
 import { TrendingUp, Wallet, Target, AlertTriangle, ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { WidgetStateShell } from './components/WidgetStateShell'
-import { Skeleton } from '@/components/ui/states'
+import { Skeleton } from '@/components/molecules/states'
 import type { WidgetConfig, HoldingItem, RebalancePlanItem } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
 import { COLORS } from '@/constants/cockpit.constants'
@@ -107,9 +107,9 @@ function RebalanceActionRow({ item }: { item: RebalancePlanItem }): React.JSX.El
  */
 export default function PortfolioOverviewWidget({ config }: PortfolioOverviewWidgetProps): React.JSX.Element {
   const { data, loadingMap, errorMap, refreshWidget } = useMarketData()
-  const portfolio = data.portfolio
-  const loading = loadingMap[config.instanceId] ?? true
-  const error = errorMap[config.instanceId]
+  const portfolio = data?.portfolio
+  const loading = loadingMap?.[config.instanceId] ?? true
+  const error = errorMap?.[config.instanceId]
 
   let visualState: 'ready' | 'loading' | 'empty' | 'error' = 'ready'
   if (error) {
@@ -139,6 +139,7 @@ export default function PortfolioOverviewWidget({ config }: PortfolioOverviewWid
         </div>
       }
     >
+      {portfolio && (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <span className={cn('text-sm', COLOR_SHADES.gray[500])}>总资产</span>
@@ -163,7 +164,7 @@ export default function PortfolioOverviewWidget({ config }: PortfolioOverviewWid
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <div className="rounded-lg p-3 bg-card border">
+          <div className={cn('rounded-lg p-3 border', twBg('green', 50))}>
             <div className={cn('text-xs', COLOR_SHADES.gray[500])}>当日盈亏</div>
             <div className="flex items-center gap-1">
               <TrendingUp className="h-4 w-4" style={{ color: COLORS.UP }} />
@@ -230,6 +231,7 @@ export default function PortfolioOverviewWidget({ config }: PortfolioOverviewWid
           )}
         </div>
       </div>
+      )}
     </WidgetStateShell>
   )
 }

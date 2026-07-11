@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import { ArrowUpCircle, ArrowDownCircle } from 'lucide-react'
 import { WidgetStateShell } from './components/WidgetStateShell'
-import { Skeleton } from '@/components/ui/states'
+import { Skeleton } from '@/components/molecules/states'
 import type { WidgetConfig } from '@/types/modules/widget.types'
 import { MockMarketDataProvider, type FundFlow } from '@/cockpit/data/mockDataProvider'
 import { STOCK_COLOR_MAPPING } from '@/constants/cockpit.constants'

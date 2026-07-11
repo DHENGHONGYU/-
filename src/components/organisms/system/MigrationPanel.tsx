@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/molecules/Tabs'
 import { getLogger } from '@/lib/logger'
 import { useMcpMigration } from './migration/useMcpMigration'
 import { MigrationUploadTab } from './migration/MigrationUploadTab'

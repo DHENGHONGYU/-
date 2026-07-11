@@ -16,7 +16,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { createRef } from 'react'
-import { Button } from '@/components/ui/Button'
+import { Button } from '@/components/atoms/Button'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 
 describe('Button', () => {

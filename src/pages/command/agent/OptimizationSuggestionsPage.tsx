@@ -7,9 +7,9 @@ import {
   Search,
   ExternalLink,
 } from 'lucide-react'
-import { PageContainer } from '@/components/ui/PageContainer'
-import { PageHeader } from '@/components/ui/PageHeader'
-import { PRIORITY_BADGE, SUGGESTION_STATUS_BADGE, CATEGORY_ICON_COLOR, DEFAULT_BADGE } from '@/components/ui/statusColors'
+import { PageContainer } from '@/components/templates/PageContainer'
+import { PageHeader } from '@/components/molecules/PageHeader'
+import { PRIORITY_BADGE, SUGGESTION_STATUS_BADGE, CATEGORY_ICON_COLOR, DEFAULT_BADGE } from '@/components/atoms/statusColors'
 
 /**
  * 优化建议展示页面

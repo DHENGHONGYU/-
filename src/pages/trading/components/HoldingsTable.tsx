@@ -7,12 +7,12 @@
 
 import React from 'react'
 import { TrendingDown, TrendingUp } from 'lucide-react'
-import { Button } from '@/components/ui/Button'
+import { Button } from '@/components/atoms/Button'
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
-} from '@/components/ui/Table'
-import { Skeleton } from '@/components/ui/Skeleton'
-import { Badge } from '@/components/ui/Badge'
+} from '@/components/atoms/Table'
+import { Skeleton } from '@/components/molecules/states/Skeleton'
+import { Badge } from '@/components/atoms/Badge'
 import {
   HOLDING_ACTION,
   HOLDING_ACTION_LABELS,

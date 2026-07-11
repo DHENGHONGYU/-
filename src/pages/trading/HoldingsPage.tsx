@@ -21,7 +21,7 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-} from '@/components/ui/Breadcrumb'
+} from '@/components/atoms/Breadcrumb'
 import { useToast } from '@/hooks/useToast'
 import HoldingsFilter from './components/HoldingsFilter'
 import HoldingsTable from './components/HoldingsTable'

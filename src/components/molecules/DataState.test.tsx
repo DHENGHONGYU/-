@@ -22,7 +22,7 @@ import {
   DataState,
   LoadingErrorState,
   LoadingEmptyState,
-} from '@/components/ui/DataState'
+} from '@/components/molecules/DataState'
 
 describe('DataState', () => {
   it('isLoading=true 时渲染 LoadingState', () => {

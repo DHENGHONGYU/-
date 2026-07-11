@@ -1,9 +1,9 @@
 import { useEffect, useMemo } from 'react'
 import { Link } from 'react-router'
 import { Save, History, Camera } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Button } from '@/components/atoms/Button'
+import { Badge } from '@/components/atoms/Badge'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,8 +11,8 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/Breadcrumb'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs'
+} from '@/components/atoms/Breadcrumb'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/molecules/Tabs'
 import { StrategyGroupCard } from '@/components/strategy/StrategyGroupCard'
 import { ChangeLogPanel } from '@/components/strategy/ChangeLogPanel'
 import { useStrategySnapshotStore } from '@/store/strategySnapshotStore'

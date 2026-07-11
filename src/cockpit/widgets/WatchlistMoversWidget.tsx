@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { TrendingUp, TrendingDown, Activity } from 'lucide-react'
-import { Skeleton } from '@/components/ui/states'
+import { Skeleton } from '@/components/molecules/states'
 import { WidgetStateShell } from './components/WidgetStateShell'
 import type { WidgetConfig } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
@@ -23,13 +23,7 @@ export default function WatchlistMoversWidget({ config }: WatchlistMoversWidgetP
 
   const movers = useMemo(() => computeWatchlistMovers(watchlist, 5), [watchlist])
 
-  const visualState = error
-    ? 'error'
-    : loading
-      ? 'loading'
-      : watchlist.length === 0
-        ? 'empty'
-        : 'ready'
+  const visualState = error ? 'error' : loading ? 'loading' : 'ready'
 
   return (
     <WidgetStateShell

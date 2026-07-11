@@ -7,10 +7,10 @@
 
 import { memo, useMemo } from 'react'
 import { cn } from '@/lib/utils'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/Tabs'
-import { Badge } from '@/components/ui/Badge'
-import { DataState } from '@/components/ui/DataState'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Tabs, TabsList, TabsTrigger } from '@/components/molecules/Tabs'
+import { Badge } from '@/components/atoms/Badge'
+import { DataState } from '@/components/molecules/DataState'
 import { AreaChart } from '@/components/chart/AreaChart'
 import {
   SCORE_TREND_PERIOD_OPTIONS,

@@ -76,8 +76,8 @@ describe('WatchlistWidget 颜色逻辑', () => {
       { 'watchlist-1': true },
     ))
     renderWithProvider(<WatchlistWidget config={defaultConfig} />)
-    // 骨架屏应有 4 个占位块
-    const skeletons = document.querySelectorAll('.rounded')
+    // 自定义骨架屏使用 Skeleton 组件（animate-pulse rounded-sm）
+    const skeletons = document.querySelectorAll('.animate-pulse')
     expect(skeletons.length).toBeGreaterThan(0)
   })
 

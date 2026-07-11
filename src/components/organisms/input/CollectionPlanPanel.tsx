@@ -5,9 +5,9 @@
  */
 
 import { memo, useMemo } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Badge } from '@/components/ui/Badge'
-import { Separator } from '@/components/ui/Separator'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Badge } from '@/components/atoms/Badge'
+import { Separator } from '@/components/atoms/Separator'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
 import { DATA_SOURCE_ENDPOINTS } from '@/config/dataSourceRegistry'

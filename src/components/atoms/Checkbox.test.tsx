@@ -15,7 +15,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { createRef } from 'react'
-import { Checkbox } from '@/components/ui/Checkbox'
+import { Checkbox } from '@/components/atoms/Checkbox'
 
 describe('Checkbox', () => {
   it('默认渲染 input[type=checkbox]', () => {

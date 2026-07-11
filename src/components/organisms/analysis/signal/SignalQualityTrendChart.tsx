@@ -23,9 +23,9 @@
 
 import { memo, useMemo } from 'react'
 import { cn } from '@/lib/utils'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Badge } from '@/components/ui/Badge'
-import { DataState } from '@/components/ui/DataState'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Badge } from '@/components/atoms/Badge'
+import { DataState } from '@/components/molecules/DataState'
 import { LineChart } from '@/components/chart/LineChart'
 import { CHART_PALETTE } from '@/constants/theme.tokens'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'

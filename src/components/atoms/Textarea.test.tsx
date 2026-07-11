@@ -16,7 +16,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { createRef } from 'react'
-import { Textarea } from '@/components/ui/Textarea'
+import { Textarea } from '@/components/atoms/Textarea'
 
 describe('Textarea', () => {
   it('默认渲染 textarea 元素', () => {

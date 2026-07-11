@@ -16,7 +16,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { createRef } from 'react'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/molecules/Tabs'
 
 describe('Tabs 组件族', () => {
   it('TabsTrigger 在 TabsContext 缺失时抛出错误', () => {

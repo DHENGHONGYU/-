@@ -8,9 +8,9 @@ import {
   Clock,
   Download,
 } from 'lucide-react'
-import { PageContainer } from '@/components/ui/PageContainer'
-import { PageHeader } from '@/components/ui/PageHeader'
-import { CHANGELOG_TYPE_BADGE, DEFAULT_BADGE } from '@/components/ui/statusColors'
+import { PageContainer } from '@/components/templates/PageContainer'
+import { PageHeader } from '@/components/molecules/PageHeader'
+import { CHANGELOG_TYPE_BADGE, DEFAULT_BADGE } from '@/components/atoms/statusColors'
 
 /**
  * 更新日志页面

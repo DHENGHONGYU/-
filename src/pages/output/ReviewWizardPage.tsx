@@ -15,8 +15,8 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbPage,
-} from '@/components/ui/Breadcrumb'
-import { Button } from '@/components/ui/Button'
+} from '@/components/atoms/Breadcrumb'
+import { Button } from '@/components/atoms/Button'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import ReviewWizard from '@/components/output/ReviewWizard'
 

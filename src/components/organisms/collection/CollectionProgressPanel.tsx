@@ -6,8 +6,8 @@
  */
 
 import React from 'react'
-import { Badge } from '@/components/ui/Badge'
-import { Progress } from '@/components/ui/Progress'
+import { Badge } from '@/components/atoms/Badge'
+import { Progress } from '@/components/atoms/Progress'
 import type { CollectionProgressItem } from '@/services/data-collector/collectionReportService'
 import { COLOR_TOKENS, COLOR_SHADES } from '@/constants/theme.tokens'
 

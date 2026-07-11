@@ -6,8 +6,8 @@
 
 import React, { useCallback, useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { Button } from '@/components/ui/Button'
-import { Select } from '@/components/ui/Select'
+import { Button } from '@/components/atoms/Button'
+import { Select } from '@/components/atoms/Select'
 import {
   PAGINATION_DEFAULTS,
   PAGINATION_MAX_VISIBLE,

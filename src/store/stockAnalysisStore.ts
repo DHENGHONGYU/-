@@ -104,9 +104,9 @@ export const useStockAnalysisStore = create<StockAnalysisState>((set) => ({
       })
 
       set({
-        stock: stockData,
-        quotes: quotesData,
-        v6Score: scoreData,
+        stock: stockData ?? null,
+        quotes: quotesData ?? null,
+        v6Score: scoreData ?? null,
         loading: false,
         error: null,
       })
@@ -157,7 +157,7 @@ export const useStockAnalysisStore = create<StockAnalysisState>((set) => ({
       })
 
       set({
-        v6Score: latest ?? result.data,
+        v6Score: latest ?? result.data ?? null,
         scoreLoading: false,
       })
       logger.info(`[stockAnalysisStore] refreshScore 完成: ${symbol}, 总耗时 ${Date.now() - t0}ms`)

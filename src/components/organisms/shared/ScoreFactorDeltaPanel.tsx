@@ -1,4 +1,4 @@
-import { Badge } from '@/components/ui/Badge'
+import { Badge } from '@/components/atoms/Badge'
 import { twText, twBg, twBorder } from '@/constants/theme.tokens'
 
 interface Dimension {

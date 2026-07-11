@@ -30,15 +30,15 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-} from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
-import { Switch } from '@/components/ui/Switch'
-import { Select, SelectItem } from '@/components/ui/Select'
-import { Input } from '@/components/ui/Input'
-import { Label } from '@/components/ui/Label'
-import { Progress } from '@/components/ui/Progress'
-import { Separator } from '@/components/ui/Separator'
+} from '@/components/atoms/Card'
+import { Button } from '@/components/atoms/Button'
+import { Badge } from '@/components/atoms/Badge'
+import { Switch } from '@/components/atoms/Switch'
+import { Select, SelectItem } from '@/components/atoms/Select'
+import { Input } from '@/components/atoms/Input'
+import { Label } from '@/components/atoms/Label'
+import { Progress } from '@/components/atoms/Progress'
+import { Separator } from '@/components/atoms/Separator'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -46,7 +46,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/Breadcrumb'
+} from '@/components/atoms/Breadcrumb'
 import {
   STRATEGY_TEMPLATES,
   DEFAULT_DIMENSIONS,

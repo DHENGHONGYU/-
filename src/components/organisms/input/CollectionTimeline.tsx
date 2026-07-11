@@ -6,8 +6,8 @@
  */
 
 import { useMemo } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Badge } from '@/components/ui/Badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Badge } from '@/components/atoms/Badge'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import type {
   CollectionTraceSpan,

@@ -6,7 +6,7 @@
 import React from 'react'
 import { cn } from '@/lib/utils'
 import { useCollectionWizardStore } from '@/store/collectionWizardStore'
-import { Card, CardContent } from '@/components/ui/Card'
+import { Card, CardContent } from '@/components/atoms/Card'
 import { COLOR_SHADES } from '@/constants/theme.tokens'
 
 /**

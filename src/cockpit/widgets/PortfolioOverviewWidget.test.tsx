@@ -186,7 +186,7 @@ describe('PortfolioOverviewWidget', () => {
     setupMarketData({ portfolio: null, loading: false, error: '加载失败' })
     render(<PortfolioOverviewWidget config={buildConfig()} />)
 
-    const errorText = screen.getByText('加载失败')
+    const errorText = screen.getAllByText('加载失败')[0]!
     const errorContainer = errorText.parentElement
     expect(errorContainer).not.toBeNull()
     expect(errorContainer).toHaveClass(COLOR_TOKENS.danger.tailwind)

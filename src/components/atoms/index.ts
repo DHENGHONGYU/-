@@ -95,4 +95,13 @@ export type { DatePickerProps } from './DatePicker'
 
 export { StockPriceChange } from './StockPriceChange'
 
-// 注：PageContainer 属分子层，已在 molecules/index.ts 导出，原子桶不重复导出
+export {
+  DEFAULT_BADGE,
+  PRIORITY_BADGE,
+  SUGGESTION_STATUS_BADGE,
+  CATEGORY_ICON_COLOR,
+  CHANGELOG_TYPE_BADGE,
+} from './statusColors'
+export type { BadgeStyle } from './statusColors'
+
+// 注：PageContainer 属模板层，已在 templates/index.ts 导出，原子桶不重复导出

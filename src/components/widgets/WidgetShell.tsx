@@ -4,7 +4,7 @@ import { WidgetContext } from '../../core/WidgetContext'
 import { widgetEventBus } from '../../core/widgetEventBus'
 import type { WidgetConfig } from '../../types/widget'
 import { THEME_TOKENS } from '@/constants/theme.tokens'
-import { Loading, Empty, ErrorState } from '@/components/ui/states'
+import { Loading, Empty, ErrorState } from '@/components/molecules/states'
 
 /**
  * Widget 视觉状态：控制 Loading/Empty/Error 占位，默认 ready 渲染 children。

@@ -8,7 +8,7 @@ import {
   twBg,
   twBorder,
 } from '@/constants/theme.tokens'
-import { Badge } from '@/components/ui/Badge'
+import { Badge } from '@/components/atoms/Badge'
 import type { ShowcaseGroup } from './types'
 
 export function buildStockDataShowcase(): ShowcaseGroup {

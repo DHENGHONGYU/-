@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
+import { Button } from '@/components/atoms/Button'
+import { Badge } from '@/components/atoms/Badge'
 import { twText, COLOR_SHADES } from '@/constants/theme.tokens'
 
 export interface ScoreUpdateAlertProps {

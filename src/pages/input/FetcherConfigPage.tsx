@@ -28,11 +28,11 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
-import { Skeleton } from '@/components/ui/Skeleton'
-import { EmptyState } from '@/components/ui/EmptyState'
+} from '@/components/atoms/Card'
+import { Button } from '@/components/atoms/Button'
+import { Badge } from '@/components/atoms/Badge'
+import { Skeleton } from '@/components/molecules/states/Skeleton'
+import { EmptyState } from '@/components/molecules/EmptyState'
 import {
   Table,
   TableBody,
@@ -40,7 +40,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/Table'
+} from '@/components/atoms/Table'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -48,7 +48,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/Breadcrumb'
+} from '@/components/atoms/Breadcrumb'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import { DATA_SOURCE_ENDPOINTS } from '@/config/dataSourceRegistry'
 import type { DataSourceEndpoint } from '@/types/modules/collection.types'

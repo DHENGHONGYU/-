@@ -14,7 +14,7 @@
 import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { createRef } from 'react'
-import { Label } from '@/components/ui/Label'
+import { Label } from '@/components/atoms/Label'
 
 describe('Label', () => {
   it('渲染 children 文本', () => {

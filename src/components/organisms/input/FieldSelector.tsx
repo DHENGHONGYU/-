@@ -5,7 +5,7 @@
  * 从 `FIELD_REGISTRY` 读取维度可用字段，以可点击 Badge 形式展示。
  */
 
-import { Badge } from '@/components/ui/Badge'
+import { Badge } from '@/components/atoms/Badge'
 import { FIELD_REGISTRY } from '@/config/collectConfig'
 import type { CollectionFieldDef } from '@/types/modules/collection.types'
 

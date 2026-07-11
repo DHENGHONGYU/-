@@ -26,9 +26,9 @@ import {
   TrendingDown,
   Award,
 } from 'lucide-react'
-import { Badge } from '@/components/ui/Badge'
-import { Button } from '@/components/ui/Button'
-import { Skeleton } from '@/components/ui/states'
+import { Badge } from '@/components/atoms/Badge'
+import { Button } from '@/components/atoms/Button'
+import { Skeleton } from '@/components/molecules/states'
 import { WidgetStateShell } from './components/WidgetStateShell'
 import {
   useSignalQualityStore,

@@ -125,14 +125,14 @@ describe('HotSectorWidget', () => {
     setupStore([])
     render(<HotSectorWidget config={buildConfig()} />)
 
-    expect(screen.getByText('暂无热门板块策略数据')).toBeInTheDocument()
+    expect(screen.getByText('暂无热门板块策略')).toBeInTheDocument()
   })
 
   it('renders empty state when data prop hotSectors is empty', () => {
     setupStore(buildHotSectors())
     render(<HotSectorWidget config={buildConfig()} data={{ hotSectors: [] }} />)
 
-    expect(screen.getByText('暂无热门板块策略数据')).toBeInTheDocument()
+    expect(screen.getByText('暂无热门板块策略')).toBeInTheDocument()
   })
 
   // ----------------------------------------------------------

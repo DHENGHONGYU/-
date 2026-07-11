@@ -1,6 +1,6 @@
 import React from 'react'
-import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
+import { Button } from '@/components/atoms/Button'
+import { Badge } from '@/components/atoms/Badge'
 import type { MigrationReport } from '@/services/system/v6MigrationService'
 
 interface MigrationReportTabProps {

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Input } from '@/components/ui/Input'
+import { Input } from '@/components/atoms/Input'
 import { useInputHubStore } from '@/store/inputHubStore'
 import type { StockSearchResult } from '@/services/input/inputService'
 import { INPUT_CONFIG } from '@/config/inputConfig'

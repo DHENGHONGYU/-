@@ -9,12 +9,12 @@
  */
 
 import { useMemo } from 'react'
-import { Button } from '@/components/ui/Button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Input } from '@/components/ui/Input'
-import { Badge } from '@/components/ui/Badge'
-import { Select, SelectItem } from '@/components/ui/Select'
-import { Skeleton } from '@/components/ui/Skeleton'
+import { Button } from '@/components/atoms/Button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Input } from '@/components/atoms/Input'
+import { Badge } from '@/components/atoms/Badge'
+import { Select, SelectItem } from '@/components/atoms/Select'
+import { Skeleton } from '@/components/molecules/states/Skeleton'
 import { useDataTestStore } from '@/store/dataTestStore'
 import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
 import { useCollectionRuntimeStore } from '@/store/collectionRuntimeStore'

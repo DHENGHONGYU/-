@@ -11,12 +11,12 @@
  */
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Input } from '@/components/ui/Input'
-import { Label } from '@/components/ui/Label'
-import { Switch } from '@/components/ui/Switch'
-import { Select, SelectItem } from '@/components/ui/Select'
-import { Button } from '@/components/ui/Button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Input } from '@/components/atoms/Input'
+import { Label } from '@/components/atoms/Label'
+import { Switch } from '@/components/atoms/Switch'
+import { Select, SelectItem } from '@/components/atoms/Select'
+import { Button } from '@/components/atoms/Button'
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -24,7 +24,7 @@ import {
   BreadcrumbLink,
   BreadcrumbSeparator,
   BreadcrumbPage,
-} from '@/components/ui/Breadcrumb'
+} from '@/components/atoms/Breadcrumb'
 import { LLMConfigWidget } from '@/components/shared/LLMConfigWidget'
 import { isLlmConfigured, type PartialLlmConfig } from '@/config/llmConfig'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'

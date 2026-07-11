@@ -16,8 +16,8 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/Dialog'
-import { Button } from '@/components/ui/Button'
+} from '@/components/molecules/Dialog'
+import { Button } from '@/components/atoms/Button'
 import { Check, ChevronLeft, ChevronRight, Pause, Square } from 'lucide-react'
 import { useCollectionWizardStore } from '@/store/collectionWizardStore'
 import { COLOR_TOKENS, COLOR_SHADES } from '@/constants/theme.tokens'

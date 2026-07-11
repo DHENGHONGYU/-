@@ -6,9 +6,9 @@
 
 import { Link } from 'react-router'
 import { Zap, Scale, FlaskConical } from 'lucide-react'
-import { Card, CardContent, CardHeader } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
+import { Card, CardContent, CardHeader } from '@/components/atoms/Card'
+import { Button } from '@/components/atoms/Button'
+import { Badge } from '@/components/atoms/Badge'
 import {
   ANALYSIS_TEMPLATES,
   ANALYSIS_TEMPLATE_GRID_COLUMNS,

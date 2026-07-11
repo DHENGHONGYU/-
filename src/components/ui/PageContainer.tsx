@@ -1,1 +1,2 @@
-export * from '@/components/molecules/PageContainer'
+export * from '@/components/templates/PageContainer'
+export { default } from '@/components/templates/PageContainer'

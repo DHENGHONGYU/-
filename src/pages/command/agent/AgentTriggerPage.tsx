@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router'
 import { Play, RefreshCw, AlertCircle, CheckCircle2, Bot } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Button } from '@/components/atoms/Button'
+import { Input } from '@/components/atoms/Input'
 import {
   Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage,
-} from '@/components/ui/Breadcrumb'
+} from '@/components/atoms/Breadcrumb'
 import { useAgentStore } from '@/store/agentStore'
 import { agentRuntime } from '@/agents/agentRuntime'
 import { getAllAgentComponents } from '@/agents/agentComponentRegistry'

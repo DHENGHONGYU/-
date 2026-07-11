@@ -1,8 +1,8 @@
 import React, { memo } from 'react'
 import { Flame, TrendingUp, Smile, Activity, DollarSign, Globe } from 'lucide-react'
 import { WidgetStateShell } from './components/WidgetStateShell'
-import { Badge } from '@/components/ui/Badge'
-import { Progress } from '@/components/ui/Progress'
+import { Badge } from '@/components/atoms/Badge'
+import { Progress } from '@/components/atoms/Progress'
 import { useDualStrategyStore } from '@/store/dualStrategyStore'
 import type { WidgetConfig, HotSectorData } from '@/types/modules/widget.types'
 import { SCORE_LEVELS } from '@/constants/cockpit.constants'
@@ -57,7 +57,7 @@ const DIMENSION_NAMES: Record<string, string> = {
  */
 const HotSectorWidget = memo(function HotSectorWidget({ config, data }: HotSectorWidgetProps): React.JSX.Element {
   const storeHotSectors = useDualStrategyStore((s) => s.hotSectorScores)
-  const hotSectors = (data?.hotSectors ?? storeHotSectors as unknown as HotSectorData[]) ?? []
+  const hotSectors = (data?.hotSectors ?? storeHotSectors) ?? []
   const visualState = hotSectors.length === 0 ? 'empty' : 'ready'
 
   return (

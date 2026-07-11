@@ -9,8 +9,8 @@
  */
 
 import type { ReactNode } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Loading, Empty, ErrorState } from '@/components/ui/states'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Loading, Empty, ErrorState } from '@/components/molecules/states'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 
 export type WidgetVisualState = 'ready' | 'loading' | 'empty' | 'error'

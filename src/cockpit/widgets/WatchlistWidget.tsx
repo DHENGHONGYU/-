@@ -1,7 +1,7 @@
 import React from 'react'
 import { TrendingUp, TrendingDown, Minus, Eye } from 'lucide-react'
 import { WidgetStateShell } from './components/WidgetStateShell'
-import { Skeleton } from '@/components/ui/states'
+import { Skeleton } from '@/components/molecules/states'
 import type { WidgetConfig, WatchlistData } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
 import { getStockColorHex, twText, twBg } from '@/constants/theme.tokens'

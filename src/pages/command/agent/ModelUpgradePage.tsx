@@ -10,7 +10,7 @@ import {
   Plus,
   Search,
 } from 'lucide-react'
-import { PageContainer } from '@/components/ui/PageContainer'
+import { PageContainer } from '@/components/templates/PageContainer'
 
 /**
  * 模型升级流程管理页面

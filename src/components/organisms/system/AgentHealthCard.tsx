@@ -6,9 +6,9 @@
  */
 
 import React, { useEffect, memo, useState } from 'react'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card'
-import { Badge } from '@/components/ui/Badge'
-import { Progress } from '@/components/ui/Progress'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/atoms/Card'
+import { Badge } from '@/components/atoms/Badge'
+import { Progress } from '@/components/atoms/Progress'
 import { useSystemMonitorStore } from '@/store/systemMonitorStore'
 import { HEALTH_STATUS, HEALTH_STATUS_MAP } from '@/constants/health.constants'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'

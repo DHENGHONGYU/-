@@ -23,8 +23,8 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from '@/components/ui/Dialog'
-import { Button } from '@/components/ui/Button'
+} from '@/components/molecules/Dialog'
+import { Button } from '@/components/atoms/Button'
 
 /**
  * 确认对话框选项

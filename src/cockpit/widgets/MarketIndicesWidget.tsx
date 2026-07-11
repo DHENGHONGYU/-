@@ -2,7 +2,7 @@ import React from 'react'
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { WidgetStateShell } from './components/WidgetStateShell'
-import { Skeleton } from '@/components/ui/states'
+import { Skeleton } from '@/components/molecules/states'
 import type { WidgetConfig, MarketIndexData } from '@/types/modules/widget.types'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
 import {

@@ -17,9 +17,9 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-} from '@/components/ui/Breadcrumb'
-import { PageContainer } from '@/components/ui/PageContainer'
-import { PageHeader } from '@/components/ui/PageHeader'
+} from '@/components/atoms/Breadcrumb'
+import { PageContainer } from '@/components/templates/PageContainer'
+import { PageHeader } from '@/components/molecules/PageHeader'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { MultiFactorFilterPanel } from '@/components/analysis/screening/MultiFactorFilterPanel'
 

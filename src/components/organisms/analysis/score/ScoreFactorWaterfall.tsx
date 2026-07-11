@@ -17,9 +17,9 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
-import { LoadingState } from '@/components/ui/LoadingState'
-import { EmptyState } from '@/components/ui/EmptyState'
-import { ErrorState } from '@/components/ui/ErrorState'
+import { LoadingState } from '@/components/molecules/LoadingState'
+import { EmptyState } from '@/components/molecules/EmptyState'
+import { ErrorState } from '@/components/molecules/ErrorState'
 import { COLOR_TOKENS, twBg, twText } from '@/constants/theme.tokens'
 import type { FactorContribution, ScoreAuditTrail } from '@/services/scoring/v6-engine'
 import type { DimensionScore } from '@/data/types'

@@ -10,7 +10,7 @@ import {
   XCircleIcon,
   ArrowPathIcon,
 } from '@heroicons/react/24/outline'
-import { PageContainer } from '@/components/ui/PageContainer'
+import { PageContainer } from '@/components/templates/PageContainer'
 
 import { nanoid } from 'nanoid'
 /**

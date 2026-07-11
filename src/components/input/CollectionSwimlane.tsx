@@ -7,8 +7,8 @@
  */
 
 import { useMemo } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Badge } from '@/components/ui/Badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Badge } from '@/components/atoms/Badge'
 import { getColorHex, getColorBgClass } from '@/constants/theme.tokens'
 import type { ColorTokenKey } from '@/constants/theme.tokens'
 import { DATA_SOURCE_ENDPOINT_MAP } from '@/config/dataSourceRegistry'

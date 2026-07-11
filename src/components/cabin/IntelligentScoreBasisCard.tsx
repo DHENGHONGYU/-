@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Badge } from '@/components/ui/Badge'
-import { Button } from '@/components/ui/Button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Badge } from '@/components/atoms/Badge'
+import { Button } from '@/components/atoms/Button'
 import type { IntelligentScore, ResearchLog } from '@/data/types'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 

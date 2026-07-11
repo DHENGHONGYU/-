@@ -7,10 +7,10 @@
  */
 
 import React, { useEffect, useMemo, useState, useCallback } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Select, SelectItem } from '@/components/ui/Select'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Select, SelectItem } from '@/components/atoms/Select'
 import { BarChart } from '@/components/chart'
-import { DataState } from '@/components/ui/DataState'
+import { DataState } from '@/components/molecules/DataState'
 import type { SentimentTrendDimension } from '@/types/modules/news.types'
 import { SENTIMENT_TREND_COLORS } from '@/config/chartColors'
 import { newsColors } from '@/constants/newsColorTokens'

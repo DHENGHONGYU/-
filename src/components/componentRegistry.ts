@@ -58,6 +58,7 @@ export const COMPONENT_REGISTRY: ComponentEntry[] = [
   { name: 'Table', level: 'atom', sourcePath: 'src/components/ui/Table.tsx', targetPath: 'src/components/atoms/Table.tsx', status: 'active', description: '表格' },
   { name: 'DatePicker', level: 'atom', sourcePath: 'src/components/ui/DatePicker.tsx', targetPath: 'src/components/atoms/DatePicker.tsx', status: 'active', description: '日期选择' },
   { name: 'StockPriceChange', level: 'atom', sourcePath: 'src/components/ui/StockPriceChange.tsx', targetPath: 'src/components/atoms/StockPriceChange.tsx', status: 'active', description: '股价变化' },
+  { name: 'statusColors', level: 'atom', sourcePath: 'src/components/ui/statusColors.ts', targetPath: 'src/components/atoms/statusColors.ts', status: 'active', description: '状态/优先级/类型 → 语义色映射' },
 
   // ============================================================
   // Molecules（分子）— 2+ 原子组合，无业务逻辑
@@ -74,6 +75,10 @@ export const COMPONENT_REGISTRY: ComponentEntry[] = [
   { name: 'MetricCard', level: 'molecule', sourcePath: 'src/components/molecules/MetricCard.tsx', targetPath: 'src/components/molecules/MetricCard.tsx', status: 'active', description: '指标卡（标题 + 数值 + 趋势）' },
   { name: 'SearchBar', level: 'molecule', sourcePath: 'src/components/molecules/SearchBar.tsx', targetPath: 'src/components/molecules/SearchBar.tsx', status: 'active', description: '搜索栏' },
   { name: 'FilterChip', level: 'molecule', sourcePath: 'src/components/molecules/FilterChip.tsx', targetPath: 'src/components/molecules/FilterChip.tsx', status: 'active', description: '可关闭筛选标签' },
+  { name: 'Loading', level: 'molecule', sourcePath: 'src/components/ui/states/Loading.tsx', targetPath: 'src/components/molecules/states/Loading.tsx', status: 'active', description: '加载状态（P3 交互状态组件）' },
+  { name: 'Empty', level: 'molecule', sourcePath: 'src/components/ui/states/Empty.tsx', targetPath: 'src/components/molecules/states/Empty.tsx', status: 'active', description: '空状态（P3 交互状态组件）' },
+  { name: 'ErrorState', level: 'molecule', sourcePath: 'src/components/ui/states/Error.tsx', targetPath: 'src/components/molecules/states/Error.tsx', status: 'active', description: '错误状态（P3 交互状态组件）' },
+  { name: 'Skeleton', level: 'molecule', sourcePath: 'src/components/ui/states/Skeleton.tsx', targetPath: 'src/components/molecules/states/Skeleton.tsx', status: 'active', description: '骨架屏状态（P3 交互状态组件）' },
 
   // ============================================================
   // Organisms（有机体）— 业务领域复合组件
@@ -82,6 +87,7 @@ export const COMPONENT_REGISTRY: ComponentEntry[] = [
   { name: 'PoolCard', level: 'organism', sourcePath: 'src/components/pool/PoolCard.tsx', targetPath: 'src/components/organisms/pool/PoolCard.tsx', status: 'active', description: '股票池卡片' },
   { name: 'PoolColumn', level: 'organism', sourcePath: 'src/components/pool/PoolColumn.tsx', targetPath: 'src/components/organisms/pool/PoolColumn.tsx', status: 'active', description: '股票池列视图' },
   { name: 'PoolList', level: 'organism', sourcePath: 'src/components/pool/PoolList.tsx', targetPath: 'src/components/organisms/pool/PoolList.tsx', status: 'active', description: '股票池列表' },
+  { name: 'usePoolDataFromStore', level: 'organism', sourcePath: 'src/components/pool/usePoolDataFromStore.ts', targetPath: 'src/components/organisms/pool/usePoolDataFromStore.ts', status: 'active', description: '股票池数据桥接 hook' },
   { name: 'CollectionProgressPanel', level: 'organism', sourcePath: 'src/components/collection/CollectionProgressPanel.tsx', targetPath: 'src/components/organisms/collection/CollectionProgressPanel.tsx', status: 'active', description: '采集进度面板' },
   { name: 'CollectionReportPanel', level: 'organism', sourcePath: 'src/components/collection/CollectionReportPanel.tsx', targetPath: 'src/components/organisms/collection/CollectionReportPanel.tsx', status: 'active', description: '采集汇报面板' },
 
@@ -118,21 +124,21 @@ export const COMPONENT_REGISTRY: ComponentEntry[] = [
   { name: 'StrategyGroupCard', level: 'organism', sourcePath: 'src/components/strategy/StrategyGroupCard.tsx', targetPath: 'src/components/organisms/strategy/StrategyGroupCard.tsx', status: 'active', description: '策略组卡片' },
   { name: 'ChangeLogPanel', level: 'organism', sourcePath: 'src/components/strategy/ChangeLogPanel.tsx', targetPath: 'src/components/organisms/strategy/ChangeLogPanel.tsx', status: 'active', description: '变更日志面板' },
   { name: 'LocalDocCard', level: 'organism', sourcePath: 'src/components/localDoc/LocalDocCard.tsx', targetPath: 'src/components/organisms/localDoc/LocalDocCard.tsx', status: 'active', description: '本地文档卡片' },
-  { name: 'WidgetShell', level: 'organism', sourcePath: 'src/components/widgets/WidgetShell.tsx', targetPath: 'src/components/organisms/widgets/WidgetShell.tsx', status: 'migrating', description: 'Widget 外壳' },
-  { name: 'IndustryHistoryCard', level: 'organism', sourcePath: 'src/components/cabin/IndustryHistoryCard.tsx', targetPath: 'src/components/organisms/cabin/IndustryHistoryCard.tsx', status: 'migrating', description: '行业历史卡片' },
-  { name: 'IndustrySkillSnapshotCard', level: 'organism', sourcePath: 'src/components/cabin/IndustrySkillSnapshotCard.tsx', targetPath: 'src/components/organisms/cabin/IndustrySkillSnapshotCard.tsx', status: 'migrating', description: '行业技能快照卡' },
-  { name: 'ScoreSnapshot', level: 'organism', sourcePath: 'src/components/cabin/ScoreSnapshot.tsx', targetPath: 'src/components/organisms/cabin/ScoreSnapshot.tsx', status: 'migrating', description: '评分快照' },
-  { name: 'ScoreSummary', level: 'organism', sourcePath: 'src/components/cabin/ScoreSummary.tsx', targetPath: 'src/components/organisms/cabin/ScoreSummary.tsx', status: 'migrating', description: '评分汇总' },
-  { name: 'ScoreHistoryTable', level: 'organism', sourcePath: 'src/components/cabin/ScoreHistoryTable.tsx', targetPath: 'src/components/organisms/cabin/ScoreHistoryTable.tsx', status: 'migrating', description: '评分历史表' },
-  { name: 'ScoreItem', level: 'organism', sourcePath: 'src/components/cabin/ScoreItem.tsx', targetPath: 'src/components/organisms/cabin/ScoreItem.tsx', status: 'migrating', description: '评分项' },
-  { name: 'IntelligentScoreBasisCard', level: 'organism', sourcePath: 'src/components/cabin/IntelligentScoreBasisCard.tsx', targetPath: 'src/components/organisms/cabin/IntelligentScoreBasisCard.tsx', status: 'migrating', description: '智能评分依据卡' },
-  { name: 'LineChart', level: 'organism', sourcePath: 'src/components/chart/LineChart.tsx', targetPath: 'src/components/organisms/chart/LineChart.tsx', status: 'migrating', description: '折线图' },
-  { name: 'BarChart', level: 'organism', sourcePath: 'src/components/chart/BarChart.tsx', targetPath: 'src/components/organisms/chart/BarChart.tsx', status: 'migrating', description: '柱状图' },
-  { name: 'AreaChart', level: 'organism', sourcePath: 'src/components/chart/AreaChart.tsx', targetPath: 'src/components/organisms/chart/AreaChart.tsx', status: 'migrating', description: '面积图' },
-  { name: 'CandlestickChart', level: 'organism', sourcePath: 'src/components/chart/CandlestickChart.tsx', targetPath: 'src/components/organisms/chart/CandlestickChart.tsx', status: 'migrating', description: 'K线图' },
-  { name: 'GaugeChart', level: 'organism', sourcePath: 'src/components/chart/GaugeChart.tsx', targetPath: 'src/components/organisms/chart/GaugeChart.tsx', status: 'migrating', description: '仪表盘图' },
-  { name: 'ScoreRadar', level: 'organism', sourcePath: 'src/components/chart/ScoreRadar.tsx', targetPath: 'src/components/organisms/chart/ScoreRadar.tsx', status: 'migrating', description: '评分雷达图' },
-  { name: 'FactorHeatmap', level: 'organism', sourcePath: 'src/components/chart/FactorHeatmap.tsx', targetPath: 'src/components/organisms/chart/FactorHeatmap.tsx', status: 'migrating', description: '因子热力图' },
+  { name: 'WidgetShell', level: 'organism', sourcePath: 'src/components/widgets/WidgetShell.tsx', targetPath: 'src/components/widgets/WidgetShell.tsx', status: 'active', description: 'Widget 外壳' },
+  { name: 'IndustryHistoryCard', level: 'organism', sourcePath: 'src/components/cabin/IndustryHistoryCard.tsx', targetPath: 'src/components/cabin/IndustryHistoryCard.tsx', status: 'active', description: '行业历史卡片' },
+  { name: 'IndustrySkillSnapshotCard', level: 'organism', sourcePath: 'src/components/cabin/IndustrySkillSnapshotCard.tsx', targetPath: 'src/components/cabin/IndustrySkillSnapshotCard.tsx', status: 'active', description: '行业技能快照卡' },
+  { name: 'ScoreSnapshot', level: 'organism', sourcePath: 'src/components/cabin/ScoreSnapshot.tsx', targetPath: 'src/components/cabin/ScoreSnapshot.tsx', status: 'active', description: '评分快照' },
+  { name: 'ScoreSummary', level: 'organism', sourcePath: 'src/components/cabin/ScoreSummary.tsx', targetPath: 'src/components/cabin/ScoreSummary.tsx', status: 'active', description: '评分汇总' },
+  { name: 'ScoreHistoryTable', level: 'organism', sourcePath: 'src/components/cabin/ScoreHistoryTable.tsx', targetPath: 'src/components/cabin/ScoreHistoryTable.tsx', status: 'active', description: '评分历史表' },
+  { name: 'ScoreItem', level: 'organism', sourcePath: 'src/components/cabin/ScoreItem.tsx', targetPath: 'src/components/cabin/ScoreItem.tsx', status: 'active', description: '评分项' },
+  { name: 'IntelligentScoreBasisCard', level: 'organism', sourcePath: 'src/components/cabin/IntelligentScoreBasisCard.tsx', targetPath: 'src/components/cabin/IntelligentScoreBasisCard.tsx', status: 'active', description: '智能评分依据卡' },
+  { name: 'LineChart', level: 'organism', sourcePath: 'src/components/chart/LineChart.tsx', targetPath: 'src/components/chart/LineChart.tsx', status: 'active', description: '折线图' },
+  { name: 'BarChart', level: 'organism', sourcePath: 'src/components/chart/BarChart.tsx', targetPath: 'src/components/chart/BarChart.tsx', status: 'active', description: '柱状图' },
+  { name: 'AreaChart', level: 'organism', sourcePath: 'src/components/chart/AreaChart.tsx', targetPath: 'src/components/chart/AreaChart.tsx', status: 'active', description: '面积图' },
+  { name: 'CandlestickChart', level: 'organism', sourcePath: 'src/components/chart/CandlestickChart.tsx', targetPath: 'src/components/chart/CandlestickChart.tsx', status: 'active', description: 'K线图' },
+  { name: 'GaugeChart', level: 'organism', sourcePath: 'src/components/chart/GaugeChart.tsx', targetPath: 'src/components/chart/GaugeChart.tsx', status: 'active', description: '仪表盘图' },
+  { name: 'ScoreRadar', level: 'organism', sourcePath: 'src/components/chart/ScoreRadar.tsx', targetPath: 'src/components/chart/ScoreRadar.tsx', status: 'active', description: '评分雷达图' },
+  { name: 'FactorHeatmap', level: 'organism', sourcePath: 'src/components/chart/FactorHeatmap.tsx', targetPath: 'src/components/chart/FactorHeatmap.tsx', status: 'active', description: '因子热力图' },
   { name: 'SectorRotationHeatmap', level: 'organism', sourcePath: 'src/components/analysis/sector/SectorRotationHeatmap.tsx', targetPath: 'src/components/organisms/analysis/sector/SectorRotationHeatmap.tsx', status: 'active', description: '行业轮动热力图' },
   { name: 'SignalQualityTrendChart', level: 'organism', sourcePath: 'src/components/analysis/signal/SignalQualityTrendChart.tsx', targetPath: 'src/components/organisms/analysis/signal/SignalQualityTrendChart.tsx', status: 'active', description: '信号质量趋势图' },
 
@@ -151,11 +157,15 @@ export const COMPONENT_REGISTRY: ComponentEntry[] = [
   { name: 'CollectionSwimlane', level: 'organism', sourcePath: 'src/components/input/CollectionSwimlane.tsx', targetPath: 'src/components/organisms/input/CollectionSwimlane.tsx', status: 'active', description: '采集泳道图' },
   { name: 'QuotaEstimatePanel', level: 'organism', sourcePath: 'src/components/input/QuotaEstimatePanel.tsx', targetPath: 'src/components/organisms/input/QuotaEstimatePanel.tsx', status: 'active', description: '配额估算面板' },
   { name: 'ApiTestDialog', level: 'organism', sourcePath: 'src/components/input/ApiTestDialog.tsx', targetPath: 'src/components/organisms/input/ApiTestDialog.tsx', status: 'active', description: 'API 测试弹窗' },
+  { name: 'CollectionStrategyStep', level: 'organism', sourcePath: 'src/components/input/wizard-steps/CollectionStrategyStep.tsx', targetPath: 'src/components/organisms/input/wizard-steps/CollectionStrategyStep.tsx', status: 'active', description: '采集向导-策略步骤' },
+  { name: 'DataSourceConfigStep', level: 'organism', sourcePath: 'src/components/input/wizard-steps/DataSourceConfigStep.tsx', targetPath: 'src/components/organisms/input/wizard-steps/DataSourceConfigStep.tsx', status: 'active', description: '采集向导-数据源配置步骤' },
+  { name: 'ExecutionMonitorStep', level: 'organism', sourcePath: 'src/components/input/wizard-steps/ExecutionMonitorStep.tsx', targetPath: 'src/components/organisms/input/wizard-steps/ExecutionMonitorStep.tsx', status: 'active', description: '采集向导-执行监控步骤' },
+  { name: 'TaskPreviewStep', level: 'organism', sourcePath: 'src/components/input/wizard-steps/TaskPreviewStep.tsx', targetPath: 'src/components/organisms/input/wizard-steps/TaskPreviewStep.tsx', status: 'active', description: '采集向导-任务预览步骤' },
 
   // ============================================================
   // Templates（模板）— 页面级布局
   // ============================================================
-  { name: 'PageContainer', level: 'template', sourcePath: 'src/components/ui/PageContainer.tsx', targetPath: 'src/components/templates/PageContainer.tsx', status: 'migrating', description: '页面内容容器' },
+  { name: 'PageContainer', level: 'template', sourcePath: 'src/components/ui/PageContainer.tsx', targetPath: 'src/components/templates/PageContainer.tsx', status: 'active', description: '页面内容容器' },
   { name: 'DashboardLayout', level: 'template', sourcePath: 'src/components/templates/DashboardLayout.tsx', targetPath: 'src/components/templates/DashboardLayout.tsx', status: 'active', description: '仪表盘布局' },
   { name: 'SidebarLayout', level: 'template', sourcePath: 'src/components/templates/SidebarLayout.tsx', targetPath: 'src/components/templates/SidebarLayout.tsx', status: 'active', description: '侧边栏布局' },
   { name: 'CockpitLayout', level: 'template', sourcePath: 'src/components/templates/CockpitLayout.tsx', targetPath: 'src/components/templates/CockpitLayout.tsx', status: 'active', description: '驾驶舱布局' },
@@ -170,6 +180,8 @@ export const COMPONENT_REGISTRY: ComponentEntry[] = [
   { name: 'installGlobalErrorHandler', level: 'organism', sourcePath: 'src/components/installGlobalErrorHandler.ts', targetPath: 'src/components/organisms/shared/installGlobalErrorHandler.ts', status: 'active', description: '全局错误监听安装函数（非 UI 组件，基础设施）' },
   { name: 'ScoreFactorDeltaPanel', level: 'organism', sourcePath: 'src/components/ScoreFactorDeltaPanel.tsx', targetPath: 'src/components/organisms/shared/ScoreFactorDeltaPanel.tsx', status: 'active', description: '评分因子差异面板' },
   { name: 'ScoreUpdateAlert', level: 'organism', sourcePath: 'src/components/ScoreUpdateAlert.tsx', targetPath: 'src/components/organisms/shared/ScoreUpdateAlert.tsx', status: 'active', description: '评分更新提醒' },
+  { name: 'LLMConfigWidget', level: 'organism', sourcePath: 'src/components/shared/LLMConfigWidget.tsx', targetPath: 'src/components/organisms/shared/LLMConfigWidget.tsx', status: 'active', description: 'LLM 配置 Widget' },
+  { name: 'ScoreDocVersionTable', level: 'organism', sourcePath: 'src/components/scoreDoc/ScoreDocVersionTable.tsx', targetPath: 'src/components/organisms/scoreDoc/ScoreDocVersionTable.tsx', status: 'active', description: '评分文档版本表' },
   { name: 'SignalSpectrum', level: 'organism', sourcePath: 'src/components/cockpit/SignalSpectrum.tsx', targetPath: 'src/components/cockpit/SignalSpectrum.tsx', status: 'active', description: '信号频谱（cockpit 域，仅 registry 标注不物理搬）' },
 ]
 

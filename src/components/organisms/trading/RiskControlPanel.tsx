@@ -3,11 +3,11 @@
  * 展示风险指标与预警
  */
 import React, { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert'
-import { Input } from '@/components/ui/Input'
-import { Label } from '@/components/ui/Label'
-import { Button } from '@/components/ui/Button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Alert, AlertDescription, AlertTitle } from '@/components/molecules/Alert'
+import { Input } from '@/components/atoms/Input'
+import { Label } from '@/components/atoms/Label'
+import { Button } from '@/components/atoms/Button'
 import { AlertTriangle } from 'lucide-react'
 import { getLogger } from '@/lib/logger'
 

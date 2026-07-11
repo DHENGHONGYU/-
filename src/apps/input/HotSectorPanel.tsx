@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { Button } from '@/components/ui/Button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Badge } from '@/components/ui/Badge'
-import { Select, SelectItem } from '@/components/ui/Select'
+import { Button } from '@/components/atoms/Button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Badge } from '@/components/atoms/Badge'
+import { Select, SelectItem } from '@/components/atoms/Select'
 import {
   getHotSectors,
   getHotSectorByCode,
@@ -14,7 +14,7 @@ import { usePoolStore, getAllGroups } from '@/store/poolStore'
 import { useToast } from '@/hooks/useToast'
 import { getLogger } from '@/lib/logger'
 import { twText, twBg } from '@/constants/theme.tokens'
-import { Skeleton } from '@/components/ui/Skeleton'
+import { Skeleton } from '@/components/molecules/states/Skeleton'
 
 const logger = getLogger()
 

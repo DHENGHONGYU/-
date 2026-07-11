@@ -16,9 +16,9 @@
  */
 
 import React, { useEffect, useRef, useState, memo } from 'react'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card'
-import { Badge } from '@/components/ui/Badge'
-import { Button } from '@/components/ui/Button'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/atoms/Card'
+import { Badge } from '@/components/atoms/Badge'
+import { Button } from '@/components/atoms/Button'
 import {
   getMonitorLogService,
   type MonitorLogFilter,

@@ -4,7 +4,7 @@
  */
 import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { PageContainer } from '@/components/ui/PageContainer'
+import { PageContainer } from '@/components/templates/PageContainer'
 
 describe('PageContainer', () => {
   it('默认渲染并居中（限制最大宽度 1200px）', () => {

@@ -7,9 +7,9 @@
  */
 
 import React, { useEffect, useState, memo } from 'react'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card'
-import { Badge } from '@/components/ui/Badge'
-import { Progress } from '@/components/ui/Progress'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/atoms/Card'
+import { Badge } from '@/components/atoms/Badge'
+import { Progress } from '@/components/atoms/Progress'
 import { useEngineStore } from '@/store/engineStore'
 import { useSystemMonitorStore } from '@/store/systemMonitorStore'
 import {

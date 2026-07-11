@@ -25,7 +25,7 @@ import {
   DialogTitle,
   DialogDescription,
   DialogClose,
-} from '@/components/ui/Dialog'
+} from '@/components/molecules/Dialog'
 
 /**
  * @status known-failing

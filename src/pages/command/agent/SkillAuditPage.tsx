@@ -8,8 +8,8 @@ import {
   CheckCircle,
 } from 'lucide-react'
 import { THEME_TOKENS, COLOR_TOKENS } from '@/constants/theme.tokens'
-import { PageContainer } from '@/components/ui/PageContainer'
-import { PageHeader } from '@/components/ui/PageHeader'
+import { PageContainer } from '@/components/templates/PageContainer'
+import { PageHeader } from '@/components/molecules/PageHeader'
 import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()

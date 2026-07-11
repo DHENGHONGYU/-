@@ -12,8 +12,8 @@
 
 import { describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { ToastItem } from '@/components/ui/Toast'
-import type { Toast } from '@/components/ui/Toast'
+import { ToastItem } from '@/components/atoms/Toast'
+import type { Toast } from '@/components/atoms/Toast'
 
 vi.mock('@/hooks/useToast', () => ({
   ToastContext: {

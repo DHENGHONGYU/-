@@ -7,8 +7,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useDataSource, useMarketDataStore } from '@/store/marketDataStore'
-import { DataState } from '@/components/ui/DataState'
-import { Select, SelectItem } from '@/components/ui/Select'
+import { DataState } from '@/components/molecules/DataState'
+import { Select, SelectItem } from '@/components/atoms/Select'
 import type { SectorHeatmapData } from '@/types/modules/widget.types'
 import type { DataSourceConfig } from '@/types/modules/widget.types'
 import {

@@ -6,11 +6,11 @@
  */
 
 import { memo, useMemo } from 'react'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card'
-import { Badge } from '@/components/ui/Badge'
-import { Progress } from '@/components/ui/Progress'
-import { Select, SelectItem } from '@/components/ui/Select'
-import { Separator } from '@/components/ui/Separator'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/atoms/Card'
+import { Badge } from '@/components/atoms/Badge'
+import { Progress } from '@/components/atoms/Progress'
+import { Select, SelectItem } from '@/components/atoms/Select'
+import { Separator } from '@/components/atoms/Separator'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import { GLOBAL_LIMITS } from '@/config/collectConfig'
 

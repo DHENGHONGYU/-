@@ -1,6 +1,6 @@
 import { twText } from '@/constants/theme.tokens'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Badge } from '@/components/ui/Badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Badge } from '@/components/atoms/Badge'
 import type { StrategySnapshot } from '@/data/types'
 
 export interface ChangeLogPanelProps {

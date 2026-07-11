@@ -8,8 +8,8 @@ import {
   MagnifyingGlassIcon,
 } from '@heroicons/react/24/outline'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
-import { PageContainer } from '@/components/ui/PageContainer'
-import { PageHeader } from '@/components/ui/PageHeader'
+import { PageContainer } from '@/components/templates/PageContainer'
+import { PageHeader } from '@/components/molecules/PageHeader'
 
 import { nanoid } from 'nanoid'
 /**

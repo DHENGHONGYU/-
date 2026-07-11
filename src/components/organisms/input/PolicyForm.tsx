@@ -3,9 +3,9 @@
  * @description 维度级重试/超时/降级策略表单。
  */
 
-import { Label } from '@/components/ui/Label'
-import { Input } from '@/components/ui/Input'
-import { Switch } from '@/components/ui/Switch'
+import { Label } from '@/components/atoms/Label'
+import { Input } from '@/components/atoms/Input'
+import { Switch } from '@/components/atoms/Switch'
 import type {
   RetryPolicy,
   TimeoutPolicy,

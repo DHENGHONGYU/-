@@ -7,10 +7,10 @@
 
 import React, { useEffect, useRef } from 'react'
 import { cn } from '@/lib/utils'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Badge } from '@/components/ui/Badge'
-import { Progress } from '@/components/ui/Progress'
-import { Button } from '@/components/ui/Button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Badge } from '@/components/atoms/Badge'
+import { Progress } from '@/components/atoms/Progress'
+import { Button } from '@/components/atoms/Button'
 import { useCollectionWizardStore } from '@/store/collectionWizardStore'
 import { COLOR_TOKENS, COLOR_SHADES, twText, twBorder } from '@/constants/theme.tokens'
 import {

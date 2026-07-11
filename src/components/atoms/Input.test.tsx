@@ -16,7 +16,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { createRef } from 'react'
-import { Input } from '@/components/ui/Input'
+import { Input } from '@/components/atoms/Input'
 
 describe('Input', () => {
   it('默认渲染 input 元素', () => {

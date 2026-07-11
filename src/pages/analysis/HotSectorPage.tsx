@@ -1,15 +1,15 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router'
 import { TrendingUp, RefreshCw, ChevronDown, ChevronUp, AlertCircle } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Button } from '@/components/atoms/Button'
+import { Badge } from '@/components/atoms/Badge'
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbPage,
-} from '@/components/ui/Breadcrumb'
+} from '@/components/atoms/Breadcrumb'
 import type { HotSectorScore } from '@/services/scoring/hotSectorAnalyzer'
 import { useHotSectorStore } from '@/store/hotSectorStore'
 import { getLogger } from '@/lib/logger'

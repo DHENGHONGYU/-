@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router'
 import { Download } from 'lucide-react'
-import { Button } from '@/components/ui/Button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Badge } from '@/components/ui/Badge'
-import { Select, SelectItem } from '@/components/ui/Select'
+import { Button } from '@/components/atoms/Button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Badge } from '@/components/atoms/Badge'
+import { Select, SelectItem } from '@/components/atoms/Select'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import {
   useOutputStore,

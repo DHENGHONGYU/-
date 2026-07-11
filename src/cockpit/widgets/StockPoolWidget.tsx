@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { Plus, ChevronLeft, ChevronRight } from 'lucide-react'
 import { WidgetStateShell } from './components/WidgetStateShell'
-import { Skeleton } from '@/components/ui/states'
-import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
+import { Skeleton } from '@/components/molecules/states'
+import { Button } from '@/components/atoms/Button'
+import { Badge } from '@/components/atoms/Badge'
 import {
   Table,
   TableBody,
@@ -11,7 +11,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/Table'
+} from '@/components/atoms/Table'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
 import type { WidgetConfig, MarketData, StockPoolItem } from '@/types/modules/widget.types'
 import { getStockColorClass } from '@/constants/theme.tokens'

@@ -13,7 +13,7 @@
 
 import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { Tooltip } from '@/components/ui/Tooltip'
+import { Tooltip } from '@/components/atoms/Tooltip'
 
 describe('Tooltip', () => {
   it('默认渲染 children', () => {

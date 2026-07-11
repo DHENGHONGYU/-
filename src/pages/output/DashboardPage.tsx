@@ -1,7 +1,7 @@
 import { memo, useEffect } from 'react'
 import { Link } from 'react-router'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card'
-import { Badge } from '@/components/ui/Badge'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/atoms/Card'
+import { Badge } from '@/components/atoms/Badge'
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -9,7 +9,7 @@ import {
   BreadcrumbLink,
   BreadcrumbSeparator,
   BreadcrumbPage,
-} from '@/components/ui/Breadcrumb'
+} from '@/components/atoms/Breadcrumb'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { useCommandStore } from '@/store/commandStore'
 import { useScoreDocStore } from '@/store/scoreDocStore'

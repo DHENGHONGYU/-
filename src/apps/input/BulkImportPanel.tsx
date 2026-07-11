@@ -1,9 +1,9 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react'
-import { Button } from '@/components/ui/Button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Select, SelectItem } from '@/components/ui/Select'
-import { Progress } from '@/components/ui/Progress'
-import { Badge } from '@/components/ui/Badge'
+import { Button } from '@/components/atoms/Button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Select, SelectItem } from '@/components/atoms/Select'
+import { Progress } from '@/components/atoms/Progress'
+import { Badge } from '@/components/atoms/Badge'
 import {
   parseBulkInput,
   parseFile,

@@ -9,17 +9,17 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/Breadcrumb'
-import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
-import { Badge } from '@/components/ui/Badge'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+} from '@/components/atoms/Breadcrumb'
+import { Button } from '@/components/atoms/Button'
+import { Input } from '@/components/atoms/Input'
+import { Badge } from '@/components/atoms/Badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from '@/components/ui/Tabs'
+} from '@/components/molecules/Tabs'
 import { LocalDocCard } from '@/components/localDoc/LocalDocCard'
 import { useLocalKnowledgeStore, type LocalKnowledgeTab } from '@/store/localKnowledgeStore'
 import type { LocalDoc } from '@/data/types'

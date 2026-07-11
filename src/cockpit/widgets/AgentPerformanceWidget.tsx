@@ -5,8 +5,8 @@
 
 import React, { memo, useEffect } from 'react'
 import { Users } from 'lucide-react'
-import { Badge } from '@/components/ui/Badge'
-import { Skeleton } from '@/components/ui/states'
+import { Badge } from '@/components/atoms/Badge'
+import { Skeleton } from '@/components/molecules/states'
 import { WidgetStateShell } from './components/WidgetStateShell'
 import type { WidgetConfig, MarketData } from '@/types/modules/widget.types'
 import AgentHealthCard from '@/components/system/AgentHealthCard'

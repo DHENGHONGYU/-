@@ -7,11 +7,11 @@
  */
 
 import { useEffect, useMemo, useState, useCallback } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
-import { Progress } from '@/components/ui/Progress'
-import { Select, SelectItem } from '@/components/ui/Select'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Button } from '@/components/atoms/Button'
+import { Badge } from '@/components/atoms/Badge'
+import { Progress } from '@/components/atoms/Progress'
+import { Select, SelectItem } from '@/components/atoms/Select'
 import { COLOR_TOKENS, getColorBgClass } from '@/constants/theme.tokens'
 import type {
   CollectionTraceSpan,

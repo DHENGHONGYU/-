@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import { Link } from 'react-router'
 import { Server, ToggleLeft, ToggleRight, Wrench, BookOpen, FileText, Play, Eye, EyeOff, RefreshCw } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Button } from '@/components/atoms/Button'
+import { Badge } from '@/components/atoms/Badge'
 import {
   Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage,
-} from '@/components/ui/Breadcrumb'
+} from '@/components/atoms/Breadcrumb'
 import { useMCPServerStore } from '@/store/mcpServerStore'
 import { mcpRegistry } from '@/mcp/core/registry'
 import { mcpBridge } from '@/mcp/bridge/mcpBridge'

@@ -7,8 +7,8 @@
  */
 
 import React, { useEffect, useState, memo } from 'react'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card'
-import { Badge } from '@/components/ui/Badge'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/atoms/Card'
+import { Badge } from '@/components/atoms/Badge'
 import {
   getArchitectureService,
   type ArchitectureSnapshot,

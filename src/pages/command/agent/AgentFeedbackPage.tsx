@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router'
 import { Star, MessageSquare, CheckCircle2, TrendingUp, Clock } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Button } from '@/components/atoms/Button'
+import { Badge } from '@/components/atoms/Badge'
 import {
   Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage,
-} from '@/components/ui/Breadcrumb'
+} from '@/components/atoms/Breadcrumb'
 import { useAgentFeedbackStore } from '@/store/agentFeedbackStore'
 import { useAgentStore } from '@/store/agentStore'
 import { getLogger } from '@/lib/logger'

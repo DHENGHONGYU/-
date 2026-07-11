@@ -1,6 +1,6 @@
 import type { NewsArticle } from '@/data/types'
-import { Badge } from '@/components/ui/Badge'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import { Badge } from '@/components/atoms/Badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { twBg } from '@/constants/theme.tokens'
 
 export interface NewsCardProps {

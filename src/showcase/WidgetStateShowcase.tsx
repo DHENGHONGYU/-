@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { LayoutTemplate } from 'lucide-react'
 import { WidgetStateShell, type WidgetVisualState } from '@/cockpit/widgets/components/WidgetStateShell'
-import { Button } from '@/components/ui/Button'
+import { Button } from '@/components/atoms/Button'
 import { cn } from '@/lib/utils'
 import { THEME_TOKENS, twText } from '@/constants/theme.tokens'
 import type { ShowcaseGroup } from './types'

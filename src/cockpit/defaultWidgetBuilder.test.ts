@@ -71,8 +71,8 @@ describe('DefaultWidgetBuilder', () => {
       const config: WidgetConfig = builder.buildDefaultConfig('marketIndices')
 
       expect(config.widgetId).toBe('marketIndices')
-      // instanceId 格式为 ${widgetId}_${timestamp}
-      expect(config.instanceId).toMatch(/^marketIndices_\d+$/)
+      // instanceId 格式为 ${widgetId}_${nanoid(8)}
+      expect(config.instanceId).toMatch(/^marketIndices_[A-Za-z0-9_-]{8}$/)
       expect(config.size).toEqual({ cols: 2, rows: 2 })
       expect(config.title).toBe('Widget marketIndices')
       expect(config.settings).toEqual({})
@@ -80,17 +80,13 @@ describe('DefaultWidgetBuilder', () => {
       expect(config.collapsed).toBe(false)
     })
 
-    it('instanceId 的 timestamp 部分与调用时刻的 Date.now() 一致', () => {
-      const before = Date.now()
+    it('instanceId 的 nanoid 后缀为 8 位 URL-safe 字符串', () => {
       const config = builder.buildDefaultConfig('testWidget')
-      const after = Date.now()
 
-      const timestampStr = config.instanceId.split('testWidget_')[1]
-      expect(timestampStr).toBeDefined()
-      const timestamp = Number(timestampStr)
-      expect(Number.isFinite(timestamp)).toBe(true)
-      expect(timestamp).toBeGreaterThanOrEqual(before)
-      expect(timestamp).toBeLessThanOrEqual(after)
+      const suffix = config.instanceId.split('testWidget_')[1]
+      expect(suffix).toBeDefined()
+      expect(suffix).toHaveLength(8)
+      expect(suffix).toMatch(/^[A-Za-z0-9_-]+$/)
     })
 
     it('默认配置 visible=true, collapsed=false, settings={}', () => {
