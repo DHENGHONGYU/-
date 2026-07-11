@@ -65,6 +65,30 @@
 - [ ] 确认相关交互（弹窗、表单、Tab 切换）正常
 - [ ] 确认移动端/响应式布局未受影响
 
+## 迁移收尾：全文件类型扫描（必须执行）
+
+> **背景**：迁移完成后，源码（.tsx/.ts）中的旧路径引用通常已清理干净，但**非源码文件**（文档、脚本注释、AI 行为契约、配置）中的旧路径引用容易被遗漏。这些引用虽然不影响编译，但会误导 AI 辅助开发工具和人类开发者使用已删除的旧路径。
+
+- [ ] 执行全文件类型扫描（不仅限于 .tsx/.ts）：
+
+```bash
+# 扫描所有文件类型中的旧路径引用，排除构建产物
+grep -rn "@/components/旧路径/" \
+  --include="*.tsx" --include="*.ts" --include="*.md" \
+  --include="*.json" --include="*.mjs" --include="*.cjs" \
+  --include="*.yaml" --include="*.yml" --include="*.sh" \
+  src/ scripts/ docs/ prompts/ AGENTS.md .husky/ \
+  | grep -v "coverage" | grep -v "dist-test" | grep -v "eslint-" \
+  | grep -v "docs/reports/" | grep -v "patch-bundle"
+```
+
+- [ ] 检查 **AGENTS.md**（AI 行为契约）中的目录结构描述是否已更新
+- [ ] 检查 **docs/ 中的活跃指南文档**（非历史报告）的代码示例是否使用新路径
+- [ ] 检查 **scripts/ 中的审计脚本**是否有硬编码的旧路径（含注释）
+- [ ] 检查 **prompts/ 中的 AI 提示词模板**是否引用旧路径
+- [ ] 检查 **.husky/ 中的钩子脚本**是否引用旧路径
+- [ ] 确认构建产物（coverage/、dist-test/、docs/reports/）中的旧路径**无需手动修改**（会自动重新生成）
+
 ## 常见陷阱
 
 | 陷阱 | 表现 | 排查方法 |
@@ -74,4 +98,5 @@
 | 路由未同步 | 页面空白或 404 | 检查 `routes.ts` 与导航配置 |
 | 硬编码颜色回潮 | `lint:colors` 失败 | 运行 `npm run lint:colors` |
 | 测试路径未更新 | 测试找不到源文件 | 运行 `npm run test -- --run` |
+| **非源码旧路径残留** | **AI 生成错误代码 / 文档误导开发者** | **全文件类型扫描（见上方"迁移收尾"节）** |
 

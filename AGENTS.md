@@ -59,6 +59,13 @@ npm run audit:layers
 
 每步可独立回滚，完成后运行 `npx tsc --noEmit` 验证类型安全。
 
+**迁移收尾：全文件类型扫描**（参见 `docs/ui-migration-checklist.md`）：
+- 组件目录迁移或重构完成后，必须对**全文件类型**（不仅限于 .tsx/.ts）扫描旧路径残留
+- 扫描范围：`src/`、`scripts/`、`docs/`（排除历史报告）、`prompts/`、`AGENTS.md`、`.husky/`
+- 扫描文件类型：`.tsx`、`.ts`、`.md`、`.json`、`.mjs`、`.cjs`、`.yaml`、`.yml`、`.sh`
+- 特别关注 `AGENTS.md`（AI 行为契约）中的目录结构描述——引用旧目录会直接导致 AI 生成错误代码
+- 构建产物（coverage/、dist-test/、docs/reports/）中的旧路径无需手动修改
+
 **回滚验证流程**：
 - 回滚后必须执行 `npx tsc --noEmit` 验证类型安全
 - 回滚后必须执行 `npm run audit:docs` 检查文档同步状态
