@@ -23,6 +23,7 @@ import {
   BreadcrumbPage,
 } from '@/components/atoms/Breadcrumb'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { PageContainer, PageHeader } from '@/components/templates'
 import { getLogger } from '@/lib/logger'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 
@@ -72,7 +73,7 @@ const RiskControlPage = memo(() => {
 
   return (
     <ErrorBoundary>
-      <div className="space-y-4 p-4">
+      <PageContainer className="space-y-4">
         <Breadcrumb aria-label="breadcrumb">
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -93,7 +94,7 @@ const RiskControlPage = memo(() => {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <h1 className="text-2xl font-bold tracking-tight">风险控制</h1>
+        <PageHeader title="风险控制" description="熔断状态 · 风险等级 · 预警监控" />
 
         {/* 风控状态概览 */}
         <div className="grid gap-4 md:grid-cols-3">
@@ -243,7 +244,7 @@ const RiskControlPage = memo(() => {
             )}
           </CardContent>
         </Card>
-      </div>
+      </PageContainer>
     </ErrorBoundary>
   )
 })

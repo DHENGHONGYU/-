@@ -39,9 +39,6 @@ export {
 
 export { Tabs, TabsContent, TabsList, TabsTrigger } from './Tabs'
 
-export { PageHeader } from './PageHeader'
-export type { PageHeaderProps } from './PageHeader'
-
 export { FormField } from './FormField'
 export type { FormFieldProps } from './FormField'
 

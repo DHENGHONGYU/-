@@ -5,6 +5,7 @@
  */
 
 export { PageContainer } from './PageContainer'
+export { PageHeader } from './PageHeader'
 
 export { DashboardLayout } from './DashboardLayout'
 export { SidebarLayout } from './SidebarLayout'

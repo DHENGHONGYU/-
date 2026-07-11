@@ -19,6 +19,7 @@ import {
   DialogTitle,
 } from '@/components/molecules'
 import { Select, SelectItem } from '@/components/atoms'
+import { PageContainer, PageHeader } from '@/components/templates'
 import { PoolBoard } from '@/components/organisms/pool/PoolBoard'
 import { useStockPoolBoard } from '@/hooks/useStockPoolBoard'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
@@ -30,18 +31,16 @@ export default function StockPoolBoardPage(): React.JSX.Element {
   const board = useStockPoolBoard()
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-bold">股票池看板</h1>
-          <p className="text-sm text-muted-foreground">
-            研究状态池管理 · 分组筛选 · 批量流转
-          </p>
-        </div>
-        <Badge variant="outline" className={COLOR_TOKENS.info.tailwind}>
-          {board.stocks.length} 只标的
-        </Badge>
-      </div>
+    <PageContainer className="space-y-4">
+      <PageHeader
+        title="股票池看板"
+        description="研究状态池管理 · 分组筛选 · 批量流转"
+        actions={
+          <Badge variant="outline" className={COLOR_TOKENS.info.tailwind}>
+            {board.stocks.length} 只标的
+          </Badge>
+        }
+      />
 
       <Card>
         <CardHeader>
@@ -188,6 +187,6 @@ export default function StockPoolBoardPage(): React.JSX.Element {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </PageContainer>
   )
 }

@@ -70,7 +70,7 @@ export const COMPONENT_REGISTRY: ComponentEntry[] = [
   { name: 'ErrorState', level: 'molecule', sourcePath: 'src/components/ui/ErrorState.tsx', targetPath: 'src/components/molecules/ErrorState.tsx', status: 'active', description: '错误状态' },
   { name: 'EmptyState', level: 'molecule', sourcePath: 'src/components/ui/EmptyState.tsx', targetPath: 'src/components/molecules/EmptyState.tsx', status: 'active', description: '空状态' },
   { name: 'LoadingState', level: 'molecule', sourcePath: 'src/components/ui/LoadingState.tsx', targetPath: 'src/components/molecules/LoadingState.tsx', status: 'active', description: '加载状态' },
-  { name: 'PageHeader', level: 'molecule', sourcePath: 'src/components/ui/PageHeader.tsx', targetPath: 'src/components/molecules/PageHeader.tsx', status: 'active', description: '页面标题 + 操作区' },
+  { name: 'PageHeader', level: 'template', sourcePath: 'src/components/molecules/PageHeader.tsx', targetPath: 'src/components/templates/PageHeader.tsx', status: 'active', description: '页面标题 + 操作区（阶段 4 提取到 templates/）' },
   { name: 'FormField', level: 'molecule', sourcePath: 'src/components/molecules/FormField.tsx', targetPath: 'src/components/molecules/FormField.tsx', status: 'active', description: '表单字段（Label + 控件 + 错误）' },
   { name: 'MetricCard', level: 'molecule', sourcePath: 'src/components/molecules/MetricCard.tsx', targetPath: 'src/components/molecules/MetricCard.tsx', status: 'active', description: '指标卡（标题 + 数值 + 趋势）' },
   { name: 'SearchBar', level: 'molecule', sourcePath: 'src/components/molecules/SearchBar.tsx', targetPath: 'src/components/molecules/SearchBar.tsx', status: 'active', description: '搜索栏' },
