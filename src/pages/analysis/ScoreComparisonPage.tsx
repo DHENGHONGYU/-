@@ -17,6 +17,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { DataState } from '@/components/molecules/DataState'
 import { BarChart } from '@/components/chart/BarChart'
 import { LineChart } from '@/components/chart/LineChart'
+import { PageContainer, PageHeader } from '@/components/templates'
 import { useScoreDocStore } from '@/store/scoreDocStore'
 import { getLogger } from '@/lib/logger'
 import { CHART_PALETTE, STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
@@ -321,7 +322,7 @@ export default function ScoreComparisonPage(): React.JSX.Element {
   const hasResult = comparisonResult !== null
 
   return (
-    <div className="space-y-6">
+    <PageContainer className="space-y-6">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -342,14 +343,10 @@ export default function ScoreComparisonPage(): React.JSX.Element {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">历史评分比对看板</h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            对比同股票不同版本或不同股票的最新评分，洞察维度变化与评级迁移
-          </p>
-        </div>
-      </div>
+      <PageHeader
+        title="历史评分比对看板"
+        description="对比同股票不同版本或不同股票的最新评分，洞察维度变化与评级迁移"
+      />
 
       <Card>
         <CardHeader>
@@ -539,6 +536,6 @@ export default function ScoreComparisonPage(): React.JSX.Element {
           </div>
         )}
       </DataState>
-    </div>
+    </PageContainer>
   )
 }

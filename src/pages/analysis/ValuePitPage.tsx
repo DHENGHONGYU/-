@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/atoms/Button'
 import { Badge } from '@/components/atoms/Badge'
 import { Progress } from '@/components/atoms/Progress'
+import { PageContainer, PageHeader } from '@/components/templates'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -87,10 +88,12 @@ export default function ValuePitPage(): React.JSX.Element {
 
   if (loading) {
     return (
-      <div className="flex min-h-[400px] flex-col items-center justify-center space-y-4">
-        <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
-        <p className="text-sm text-muted-foreground">正在计算价值洼地评分...</p>
-      </div>
+      <PageContainer>
+        <div className="flex min-h-[400px] flex-col items-center justify-center space-y-4">
+          <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
+          <p className="text-sm text-muted-foreground">正在计算价值洼地评分...</p>
+        </div>
+      </PageContainer>
     )
   }
 
@@ -100,14 +103,16 @@ export default function ValuePitPage(): React.JSX.Element {
 
   if (error) {
     return (
-      <div className="flex min-h-[400px] flex-col items-center justify-center space-y-4">
-        <AlertCircle className="h-8 w-8 text-destructive" />
-        <p className="text-sm text-destructive">{error}</p>
-        <Button variant="outline" onClick={runAnalysis}>
-          <RefreshCw className="mr-2 h-4 w-4" />
-          重试
-        </Button>
-      </div>
+      <PageContainer>
+        <div className="flex min-h-[400px] flex-col items-center justify-center space-y-4">
+          <AlertCircle className="h-8 w-8 text-destructive" />
+          <p className="text-sm text-destructive">{error}</p>
+          <Button variant="outline" onClick={runAnalysis}>
+            <RefreshCw className="mr-2 h-4 w-4" />
+            重试
+          </Button>
+        </div>
+      </PageContainer>
     )
   }
 
@@ -117,14 +122,16 @@ export default function ValuePitPage(): React.JSX.Element {
 
   if (combinedResults.length === 0) {
     return (
-      <div className="flex min-h-[400px] flex-col items-center justify-center space-y-4">
-        <Target className="h-8 w-8 text-muted-foreground" />
-        <p className="text-sm text-muted-foreground">暂无评分数据</p>
-        <Button variant="outline" onClick={runAnalysis}>
-          <RefreshCw className="mr-2 h-4 w-4" />
-          刷新
-        </Button>
-      </div>
+      <PageContainer>
+        <div className="flex min-h-[400px] flex-col items-center justify-center space-y-4">
+          <Target className="h-8 w-8 text-muted-foreground" />
+          <p className="text-sm text-muted-foreground">暂无评分数据</p>
+          <Button variant="outline" onClick={runAnalysis}>
+            <RefreshCw className="mr-2 h-4 w-4" />
+            刷新
+          </Button>
+        </div>
+      </PageContainer>
     )
   }
 
@@ -133,7 +140,7 @@ export default function ValuePitPage(): React.JSX.Element {
   // ============================================================
 
   return (
-    <div className="space-y-6 p-4">
+    <PageContainer className="space-y-6">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -152,18 +159,16 @@ export default function ValuePitPage(): React.JSX.Element {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">价值洼地策略</h1>
-          <p className="text-muted-foreground">
-            五维评分引擎 · 催化确定性 · 估值安全垫 · 筹码结构 · 轮动位置 · 流动性
-          </p>
-        </div>
-        <Button variant="outline" onClick={runAnalysis} disabled={loading}>
-          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-          刷新
-        </Button>
-      </div>
+      <PageHeader
+        title="价值洼地策略"
+        description="五维评分引擎 · 催化确定性 · 估值安全垫 · 筹码结构 · 轮动位置 · 流动性"
+        actions={
+          <Button variant="outline" onClick={runAnalysis} disabled={loading}>
+            <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+            刷新
+          </Button>
+        }
+      />
 
       {/* 板块列表 */}
       <div className="grid gap-4">
@@ -294,6 +299,6 @@ export default function ValuePitPage(): React.JSX.Element {
           )
         })}
       </div>
-    </div>
+    </PageContainer>
   )
 }

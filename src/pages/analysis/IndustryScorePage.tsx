@@ -6,6 +6,7 @@ import { Input } from '@/components/atoms/Input'
 import { Progress } from '@/components/atoms/Progress'
 import { Textarea } from '@/components/atoms/Textarea'
 import { Tooltip } from '@/components/atoms/Tooltip'
+import { PageContainer, PageHeader } from '@/components/templates'
 import { ScoreFactorDeltaPanel } from '@/components/organisms/shared/ScoreFactorDeltaPanel'
 import { ScoreUpdateAlert } from '@/components/organisms/shared/ScoreUpdateAlert'
 import { IndustrySkillSnapshotCard } from '@/components/cabin/IndustrySkillSnapshotCard'
@@ -90,11 +91,10 @@ export default function IndustryScorePage(): React.JSX.Element {
   )
 
   return (
-    <div className="space-y-4 p-4">
+    <PageContainer className="space-y-4">
+      <PageHeader title="V4 行业评分 · 第四次工业革命稀缺核心资源" />
+
       <Card>
-        <CardHeader>
-          <CardTitle>V4 行业评分 · 第四次工业革命稀缺核心资源</CardTitle>
-        </CardHeader>
         <CardContent className="space-y-4">
           <ScoreUpdateAlert
             lastScoredAt={previousResult?.scoredAt}
@@ -310,6 +310,6 @@ export default function IndustryScorePage(): React.JSX.Element {
       {selectedSector && <IndustrySkillSnapshotCard sector={selectedSector} />}
 
       {history.length > 0 && <IndustryHistoryCard history={history} logs={logs} />}
-    </div>
+    </PageContainer>
   )
 }

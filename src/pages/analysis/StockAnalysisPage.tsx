@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo } from 'react'
 import { useParams } from 'react-router'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Card, CardContent } from '@/components/atoms/Card'
 import { Button } from '@/components/atoms/Button'
 import { Badge } from '@/components/atoms/Badge'
+import { PageContainer, PageHeader } from '@/components/templates'
 import { ScoreHistoryPanel } from '@/components/organisms/analysis/score/ScoreHistoryPanel'
 import { CandlestickChart, type CandlestickChartData } from '@/components/chart/CandlestickChart'
 import { useStockAnalysisStore } from '@/store/stockAnalysisStore'
@@ -79,11 +80,10 @@ export default function StockAnalysisPage(): React.JSX.Element {
   }
 
   return (
-    <div className="p-4">
+    <PageContainer className="space-y-4">
+      <PageHeader title="个股分析" />
+
       <Card>
-        <CardHeader>
-          <CardTitle>个股分析</CardTitle>
-        </CardHeader>
         <CardContent className="space-y-4">
           {stock ? (
             <>
@@ -182,6 +182,6 @@ export default function StockAnalysisPage(): React.JSX.Element {
 
       {/* 评分历史面板 */}
       {stock && score && <ScoreHistoryPanel symbol={stock.symbol} />}
-    </div>
+    </PageContainer>
   )
 }

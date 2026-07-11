@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react'
+import { RefreshCw } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
 import { Button } from '@/components/atoms/Button'
+import { PageContainer, PageHeader } from '@/components/templates'
 import { useSectorAnalysisStore } from '@/store/sectorAnalysisStore'
 import { SectorRotationHeatmap } from '@/components/organisms/analysis/sector/SectorRotationHeatmap'
 import { getLogger } from '@/lib/logger'
@@ -31,19 +33,19 @@ export default function SectorAnalysisPage(): React.JSX.Element {
 
   if (loading) {
     return (
-      <div className="p-4">
+      <PageContainer>
         <Card>
           <CardContent className="p-8 text-center text-muted-foreground">
             加载中...
           </CardContent>
         </Card>
-      </div>
+      </PageContainer>
     )
   }
 
   if (error) {
     return (
-      <div className="p-4">
+      <PageContainer>
         <Card>
           <CardContent className="p-8 text-center text-destructive">
             <p>{error}</p>
@@ -52,12 +54,23 @@ export default function SectorAnalysisPage(): React.JSX.Element {
             </Button>
           </CardContent>
         </Card>
-      </div>
+      </PageContainer>
     )
   }
 
   return (
-    <div className="p-4 space-y-4">
+    <PageContainer className="space-y-4">
+      <PageHeader
+        title="板块轮动评分"
+        description="板块轮动评分与行业评分概览"
+        actions={
+          <Button variant="outline" size="sm" onClick={handleRetry}>
+            <RefreshCw className="mr-2 h-4 w-4" />
+            刷新
+          </Button>
+        }
+      />
+
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -137,6 +150,6 @@ export default function SectorAnalysisPage(): React.JSX.Element {
           <SectorRotationHeatmap />
         </CardContent>
       </Card>
-    </div>
+    </PageContainer>
   )
 }

@@ -8,6 +8,7 @@ import { Badge } from '@/components/atoms/Badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/atoms/Table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/molecules/Tabs'
 import { Download, RotateCcw, Play, BarChart3, TrendingUp, AlertCircle, Info } from 'lucide-react'
+import { PageContainer, PageHeader } from '@/components/templates'
 import { useBacktestStore, type BacktestStrategy } from '@/store/backtestStore'
 import { STOCK_COLOR_MAPPING } from '@/constants/cockpit.constants'
 import { COLOR_TOKENS, CHART_PALETTE } from '@/constants/theme.tokens'
@@ -46,16 +47,12 @@ export default function BacktestPage(): React.JSX.Element {
     : []
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">策略回测</h1>
-          <p className="text-muted-foreground">
-            基于历史信号/订单数据的策略验证与绩效分析
-          </p>
-        </div>
-        <Badge variant="secondary">分析舱</Badge>
-      </div>
+    <PageContainer className="space-y-6">
+      <PageHeader
+        title="策略回测"
+        description="基于历史信号/订单数据的策略验证与绩效分析"
+        actions={<Badge variant="secondary">分析舱</Badge>}
+      />
 
       <Card>
         <CardHeader>
@@ -317,6 +314,6 @@ export default function BacktestPage(): React.JSX.Element {
           </CardContent>
         </Card>
       )}
-    </div>
+    </PageContainer>
   )
 }

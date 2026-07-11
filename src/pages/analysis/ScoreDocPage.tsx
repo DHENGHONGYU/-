@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Button } from '@/components/atoms/Button'
 import { Select } from '@/components/atoms/Select'
+import { PageContainer, PageHeader } from '@/components/templates'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -64,7 +65,7 @@ export default function ScoreDocPage(): React.JSX.Element {
   }
 
   return (
-    <div className="space-y-6">
+    <PageContainer className="space-y-6">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -85,12 +86,10 @@ export default function ScoreDocPage(): React.JSX.Element {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">评分文档版本库</h1>
-          <p className="text-muted-foreground">查看与管理 V6 评分文档版本</p>
-        </div>
-      </div>
+      <PageHeader
+        title="评分文档版本库"
+        description="查看与管理 V6 评分文档版本"
+      />
 
       <Card>
         <CardHeader>
@@ -136,6 +135,6 @@ export default function ScoreDocPage(): React.JSX.Element {
           )}
         </CardContent>
       </Card>
-    </div>
+    </PageContainer>
   )
 }

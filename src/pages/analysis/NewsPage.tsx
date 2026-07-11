@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import { RefreshCw, Sparkles } from 'lucide-react'
 import { Badge } from '@/components/atoms/Badge'
 import { Button } from '@/components/atoms/Button'
+import { PageContainer, PageHeader } from '@/components/templates'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -64,7 +65,7 @@ export default function NewsPage(): React.JSX.Element {
   }
 
   return (
-    <div className="space-y-6">
+    <PageContainer className="space-y-6">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -85,13 +86,11 @@ export default function NewsPage(): React.JSX.Element {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">智能资讯</h1>
-          <p className="text-muted-foreground">资讯抓取、情感分析与关联个股</p>
-        </div>
-        <Badge variant="secondary">News Feed</Badge>
-      </div>
+      <PageHeader
+        title="智能资讯"
+        description="资讯抓取、情感分析与关联个股"
+        actions={<Badge variant="secondary">News Feed</Badge>}
+      />
 
       <div className="flex flex-wrap gap-2">
         <Button onClick={() => void handleGenerateMock()} disabled={loading}>
@@ -182,6 +181,6 @@ export default function NewsPage(): React.JSX.Element {
           )}
         </DialogContent>
       </Dialog>
-    </div>
+    </PageContainer>
   )
 }
