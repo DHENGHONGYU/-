@@ -270,8 +270,8 @@ font-variant-numeric: tabular-nums;  /* 等宽数字 */
 | `Input` | `@/components/atoms/Input` | 标的数、历史天数等全局参数输入 |
 | `Label` | `@/components/atoms/Label` | 表单字段关联标签 |
 | `Progress` | `@/components/atoms/Progress` | 额度预估可视化 |
-| `Separator` | `@/components/ui/Separator` | 模块间分隔线 |
-| `Breadcrumb` 系列 | `@/components/ui/Breadcrumb` | 顶部面包屑导航（首页 / 输入舱 / 七维采集配置） |
+| `Separator` | `@/components/atoms/Separator` | 模块间分隔线 |
+| `Breadcrumb` 系列 | `@/components/atoms/Breadcrumb` | 顶部面包屑导航（首页 / 输入舱 / 七维采集配置） |
 
 **子组件**：
 

@@ -81,7 +81,7 @@ function extractComponentImports(filePath: string): Map<string, number> {
   const patterns = [
     // import { Xxx } from '@/components/...'
     /import\s+\{([^}]+)\}\s+from\s+['"]@\/components\/[^'"]+['"]/g,
-    // import { Xxx } from '@/components/ui/...'
+    // import { Xxx } from '@/components/atoms/...'
     /import\s+\{([^}]+)\}\s+from\s+['"]@\/components\/ui\/[^'"]+['"]/g,
     // import Xxx from '@/components/...'
     /import\s+(\w+)\s+from\s+['"]@\/components\/[^'"]+['"]/g,

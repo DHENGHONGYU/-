@@ -20,7 +20,7 @@ src/lib/          ← 库函数（logger/format/errors/utils/localStorageManager
 src/services/      ← 服务层（20个子域：analysis/scoring/fetcher/news/llm/trading/execution/...）
 src/store/        ← 状态层（49个Zustand Store + helpers/withBroadcast）
 src/pages/        ← 页面层（5舱：input/analysis/trading/output/command）
-src/components/   ← 组件层（ui/cabin/chart/pool/news/strategy/...）
+src/components/   ← 组件层（atoms/molecules/organisms/templates + chart/cabin/cockpit/widgets）
 src/portal/       ← PortalShell 舱室入口层
 src/constants/    ← 常量层（零硬编码锚点）
 ```

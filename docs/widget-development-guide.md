@@ -341,9 +341,9 @@ function getScoreColor(score: number): string {
 // 1. 导入
 import React from 'react'
 import { Gem } from 'lucide-react'              // lucide 图标
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Badge } from '@/components/ui/Badge'
-import { Progress } from '@/components/ui/Progress'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Badge } from '@/components/atoms/Badge'
+import { Progress } from '@/components/atoms/Progress'
 import { useDualStrategyStore } from '@/store/dualStrategyStore'  // Store
 import type { WidgetConfig, ValuePitData } from '@/types/modules/widget.types'  // 类型
 import { SCORE_LEVELS } from '@/constants/cockpit.constants'      // 业务常量

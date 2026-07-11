@@ -9,8 +9,8 @@
 ## 架构与门禁
 - 分层依赖见 `AGENTS.md` §一；新增模块按「类型→Store→Service→UI」四步集成。
 - 质量门禁用**系统 Node 24** + 项目 `node_modules` 关沙箱跑：`npm run audit`（10 道）+ `tsc:prod` + `lint:colors`。
-- **Husky 预提交门禁**（`.husky/pre-commit`）：lint-staged → `lint:colors` → `tsc:prod` → `audit:layers` → `audit:docs` → `verify:tokens` → `audit:tokens` → `audit:jsdoc` → `audit:complexity`，共 9 项；`pre-push` 运行 `test:clean` + `build`。
-- 当前为 **11 道门禁全绿/预存不阻塞** 基线；新增代码不得触发 layers/hardcode/token/lint:colors/tests 阻塞。
+- **Husky 预提交门禁**（`.husky/pre-commit`）：lint-staged → `lint:colors` → `tsc:prod` → `audit:layers` → `audit:atomic` → `audit:docs` → `verify:tokens` → `audit:tokens` → `audit:jsdoc` → `audit:complexity`，共 10 项；`pre-push` 运行 `test:clean` + `build`。
+- 当前为 **12 道门禁全绿/预存不阻塞** 基线；新增代码不得触发 layers/atomic/hardcode/token/lint:colors/tests 阻塞。
 - 行情 URL 已集中至 `src/config/marketDataEndpoints.ts`；API 路径/接口映射必须进 `src/config/collectConfig.ts`。
 
 ## 原子组件体系（Atomic Design）

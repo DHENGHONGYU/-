@@ -51,8 +51,8 @@ export function WidgetErrorBoundary({ widgetId, children }: WidgetErrorBoundaryP
 
 ```tsx
 // src/cockpit/components/WidgetErrorFallback.tsx
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { Button } from '@/components/atoms/Button'
 import { AlertTriangle, RefreshCw } from 'lucide-react'
 
 interface Props {

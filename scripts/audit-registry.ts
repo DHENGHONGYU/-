@@ -268,7 +268,7 @@ function checkUnregisteredComponents(registeredPaths: Set<string>): string[] {
   return allComponentFiles
     .filter(f => {
       // 将文件路径转为 importPath 格式进行比对
-      // 例：src/components/system/LogStreamPanel.tsx → @/components/system/LogStreamPanel
+      // 例：src/components/organisms/system/LogStreamPanel.tsx → @/components/organisms/system/LogStreamPanel
       const rel = path.relative(SRC, f).replace(/\\/g, '/')
       const withoutExt = rel.replace(/\.tsx$/, '').replace(/\.ts$/, '')
       const importPath = `@/${withoutExt}`
