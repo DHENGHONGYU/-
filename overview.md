@@ -183,3 +183,48 @@
 
 ### 阶段 3 总结
 步骤 0–3 全部完成。**11 个业务域共 63 个文件**已物理迁移到 `organisms/` 下对应子目录，原位置全部保留纯 re-export shim，**全量消费者引用零改动、零类型错误、零阻断违规**。`chart/`、`cockpit/cabin/widgets` 按决策仅 registry 标注不物理搬（Widget 注册表耦合）。后续阶段 4（模板提取）+ 阶段 5（shim 清理）可独立排期。
+
+---
+
+## 补充：校对遗漏修复（2026-07-11 复查）
+
+对阶段 1–3 全量迁移做系统性校对，发现并修复 **3 类遗漏 + 1 处断裂 shim**：
+
+### 遗漏 1：顶层散落文件未迁移（7 实现 + 6 测试）
+- `ErrorBoundary.tsx` / `RouteErrorBoundary.tsx` / `WidgetErrorBoundary.tsx` / `PageSkeleton.tsx`（注册表标注 `migrating` 但从未执行）
+- `installGlobalErrorHandler.ts` / `ScoreFactorDeltaPanel.tsx` / `ScoreUpdateAlert.tsx`（注册表未登记）
+- **修复**：全部迁移到 `organisms/shared/`，原位置留 shim，注册表补登 + 状态翻转
+
+### 遗漏 2：阶段 2 ui/ 迁移漏掉的子目录与 .ts 文件（9 文件）
+- `ui/states/` 子目录（Empty/Error/Loading/Skeleton + index.ts）→ `molecules/states/`
+- `ui/statusColors.ts` → `atoms/`
+- **修复**：迁移 + shim + 注册表补登
+
+### 遗漏 3：其他业务域遗漏（3 文件）
+- `scoreDoc/ScoreDocVersionTable.tsx` → `organisms/scoreDoc/`（整个业务域遗漏）
+- `shared/LLMConfigWidget.tsx` → `organisms/shared/`（遗漏的 shared/ 目录）
+- `pool/usePoolDataFromStore.ts` → `organisms/pool/`（pool/ 迁移漏掉的 hook）
+- **修复**：迁移 + shim + 注册表补登
+
+### 断裂 shim 修复：PageContainer
+- `ui/PageContainer.tsx` shim 指向 `molecules/PageContainer`（不存在），实际文件在 `templates/PageContainer.tsx`
+- `molecules/index.ts` 桶导出 `./PageContainer`（断裂引用）
+- `templates/index.ts` 从 `ui/PageContainer` shim 导出（绕路链）
+- **修复**：shim 改指 `templates/PageContainer` + 删除 molecules 桶断裂行 + templates 桶改直指 `./PageContainer` + 注册表状态翻转
+
+### 校对后验证结果（全门禁通过）
+
+| 门禁 | 结果 |
+|------|------|
+| `tsc:prod` | ✅ 0 类型错误 |
+| `build` | ✅ 14.87s |
+| `audit:layers` | ✅ 0 违规 |
+| `audit:atomic` | ✅ 0 阻断违规；182 warning（173 stale-ui-import + 9 unregistered 含测试文件） |
+| `audit:docs` | ✅ 0 违规 |
+| `audit:routes` | ✅ exit 0 |
+| `audit:tokens` | ✅ 0 硬编码 |
+| `lint:colors` | ✅ exit 0 |
+| `audit:hardcode` | ⚠️ 29 基线 Warning（exit 0） |
+
+### 校对结论
+校对发现阶段 1–3 共遗漏 **19 个实现文件 + 6 个测试文件**，另修复 **1 处断裂 shim**（PageContainer）。全部修复后全门禁通过。`audit:atomic` unregistered 从 30 降至 9（剩余为测试文件 + chart/cabin/widgets 未搬域）。**当前迁移完整性确认无遗漏。**

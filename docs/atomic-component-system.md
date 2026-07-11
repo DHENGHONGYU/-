@@ -359,17 +359,19 @@ export interface MetricCardProps {
 
 **收尾验证（2026-07-11 步骤 2+3）**：`tsc:prod` 0 错误 / `build` ✅（28.96s）/ `audit:layers` 0 违规 / `audit:atomic` 0 阻断（194 warning 过渡期预期）/ `audit:docs` 0 违规 / `audit:routes` exit 0 / `audit:tokens` 0 硬编码 / `lint:colors` ✅ / `audit:hardcode` 29 基线 Warning
 
-### 阶段 4：模板提取（v1.3）
+### 阶段 4：模板提取（v1.3）— 已完成 ✅（2026-07-11）
 
-- [ ] 提取 `PageContainer`、`PageHeader` 到 `templates/`
-- [ ] 新增 `DashboardLayout`、`SidebarLayout`
-- [ ] 统一页面布局
+- [x] 提取 `PageContainer` 到 `templates/`（`src/components/molecules/PageContainer.tsx` → `src/components/templates/PageContainer.tsx`；`PageHeader` 按注册表保留在 `molecules/`，属分子层复合组件）。
+- [x] `DashboardLayout` / `SidebarLayout` / `CockpitLayout` 已存在于 `templates/`。
+- [x] 更新 `templates/index.ts`、原子桶注释、`ui/PageContainer.tsx` shim、注册表 status `migrating` → `active`。
 
-### 阶段 5：清理（v2.0）
+### 阶段 5：清理（v2.0）— 进行中
 
+- [x] 已建立全部目标目录的真实文件与旧位置 shim（`pool/`、`scoreDoc/`、`shared/`、`ui/statusColors.ts`、`ui/states/` 等）。
 - [ ] 删除所有 shim 文件
 - [ ] 强制使用 `@/components/{atoms,molecules,organisms,templates}` 导入
 - [ ] 更新 lint 规则禁止跨层级导入
+
 
 ---
 
