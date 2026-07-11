@@ -16,10 +16,10 @@
 ## 原子组件体系（Atomic Design）
 - **四层目录**：`src/components/{atoms,molecules,organisms,templates}/`，各层有 `index.ts` 桶导出。
 - **层级边界**（`audit:atomic` 强制）：atom 不引 store/service/molecule/organism/template/page/app；molecule 不引 organism/template/store/service；template 不引 organism/store/service。
-- **迁移状态**：阶段 1（体系建立）✅ + 阶段 2（ui/ → atoms/molecules 物理迁移）✅ + 阶段 3（业务目录有机体化，11 域 63 文件迁入 organisms/）✅ + stale-ui-import 全量清理（173→0）✅；待执行：阶段 4（模板提取）、阶段 5（shim 清理）。
-- **shim 兼容模式**：旧路径保留纯 re-export shim，但消费者引用已全部改为 `@/components/{atoms,molecules,organisms,templates}/X` 新路径（stale-ui-import = 0）；shim 仅作向后兼容兜底，阶段 5 可安全删除。
+- **迁移状态**：阶段 1（体系建立）✅ + 阶段 2（ui/ → atoms/molecules 物理迁移）✅ + 阶段 3（业务目录有机体化，11 域 63 文件迁入 organisms/）✅ + stale-ui-import 全量清理（173→0）✅ + 阶段 4（PageContainer/PageHeader 提取到 templates/）✅ + 阶段 5（遗留 shim 目录删除、全量导入归一化）✅。
+- **目录现状**：`src/components/{atoms,molecules,organisms,templates}/` 四层齐备；`src/components/ui/` 及 `src/components/{agent,analysis,...,trading}/` 等遗留 shim 目录已删除；消费者导入全部走 `@/components/{atoms,molecules,organisms,templates}/...` 规范路径。
 - **注册表**：`src/components/componentRegistry.ts` 登记 sourcePath/targetPath/level/status，全量 `active`（0 migrating）。
-- **audit:atomic 基线**：**0 违规、0 警告**（243 文件全量通过，stale-ui-import = 0、unregistered = 0）。
+- **audit:atomic 基线**：**0 违规、0 警告**（140 文件全量通过）。
 - **chart/ 与 cockpit/cabin/widgets**：registry 标注 active + targetPath=sourcePath（不物理搬，Widget 注册表耦合）。
 
 ## 数据采集
