@@ -7,6 +7,7 @@ import { Badge } from '@/components/atoms/Badge'
 import {
   Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage,
 } from '@/components/atoms/Breadcrumb'
+import { PageContainer, PageHeader } from '@/components/templates'
 import { useMCPServerStore } from '@/store/mcpServerStore'
 import { mcpRegistry } from '@/mcp/core/registry'
 import { mcpBridge } from '@/mcp/bridge/mcpBridge'
@@ -67,7 +68,7 @@ export default function MCPServerDashboardPage(): React.JSX.Element {
   const { servers, isLoading, error } = store
 
   return (
-    <div className="space-y-6">
+    <PageContainer className="space-y-6">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -82,16 +83,16 @@ export default function MCPServerDashboardPage(): React.JSX.Element {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">MCP Server 管理</h1>
-          <p className="text-muted-foreground">管理所有已注册的 MCP Server，查看工具、资源和 Prompt</p>
-        </div>
-        <Button variant="outline" size="sm" onClick={() => store.refreshServers()}>
-          <RefreshCw className="mr-2 h-4 w-4" />
-          刷新
-        </Button>
-      </div>
+      <PageHeader
+        title="MCP Server 管理"
+        description="管理所有已注册的 MCP Server，查看工具、资源和 Prompt"
+        actions={
+          <Button variant="outline" size="sm" onClick={() => store.refreshServers()}>
+            <RefreshCw className="mr-2 h-4 w-4" />
+            刷新
+          </Button>
+        }
+      />
 
       {isLoading && (
         <Card>
@@ -245,6 +246,6 @@ export default function MCPServerDashboardPage(): React.JSX.Element {
           </Card>
         ))}
       </div>
-    </div>
+    </PageContainer>
   )
 }

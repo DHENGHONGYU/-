@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { BookOpen } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { PageContainer, PageHeader } from '@/components/templates'
 import { THEME_TOKENS, twText, twBg, twBorder } from '@/constants/theme.tokens'
 import {
   ShowcaseSection,
@@ -29,18 +30,23 @@ export default function ComponentShowcasePage(): React.JSX.Element {
   )
 
   return (
-    <div className={cn('min-h-screen p-6 space-y-6', twBg('stone', 50))}>
-      <header className={cn('space-y-2', THEME_TOKENS.stackGap.sm)}>
-        <div className="flex items-center gap-2">
-          <BookOpen className={cn('h-6 w-6', twText('emerald', 600))} />
-          <h1 className={cn('text-2xl font-bold', twText('stone', 800))}>
-            组件示例库
-          </h1>
-        </div>
-        <p className={cn('text-sm', twText('gray', 500))}>
-          汇总项目常用 UI 组件、驾驶舱 Widget 状态、颜色令牌与股票数据展示模式，用于 AI 生成样例与人工复用参考。
-        </p>
-      </header>
+    <PageContainer
+      centered={false}
+      className={cn('min-h-screen space-y-6', twBg('stone', 50))}
+    >
+      <PageHeader
+        title={
+          <span className="flex items-center gap-2">
+            <BookOpen className={cn('h-6 w-6', twText('emerald', 600))} />
+            <span className={cn(twText('stone', 800))}>组件示例库</span>
+          </span>
+        }
+        description={
+          <span className={cn(twText('gray', 500))}>
+            汇总项目常用 UI 组件、驾驶舱 Widget 状态、颜色令牌与股票数据展示模式，用于 AI 生成样例与人工复用参考。
+          </span>
+        }
+      />
 
       <div className={cn('grid gap-6', THEME_TOKENS.stackGap.lg)}>
         {groups.map((group) => (
@@ -57,6 +63,6 @@ export default function ComponentShowcasePage(): React.JSX.Element {
       >
         提示：新增组件示例时，请同步更新 src/showcase/ 下对应文件，并在 ComponentShowcasePage 中注册。
       </footer>
-    </div>
+    </PageContainer>
   )
 }

@@ -67,6 +67,7 @@ import CollectionTimeline from '@/components/organisms/input/CollectionTimeline'
 import CollectionSwimlane from '@/components/organisms/input/CollectionSwimlane'
 import TraceReplayPanel from '@/components/organisms/input/TraceReplayPanel'
 import type { CollectionTaskRuntime } from '@/types/modules/collection.types'
+import { PageContainer, PageHeader } from '@/components/templates'
 
 const logger = getLogger()
 
@@ -312,7 +313,7 @@ export default function CollectTaskPage(): React.JSX.Element {
 
   return (
     <ErrorBoundary>
-      <div className="space-y-6 p-6">
+      <PageContainer className="space-y-6">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -333,15 +334,11 @@ export default function CollectTaskPage(): React.JSX.Element {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-bold">采集任务监控</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              任务列表 · 维度健康度 · 采集日志 · 链路可视化
-            </p>
-          </div>
-          <Badge variant="outline">D-1 框架</Badge>
-        </div>
+        <PageHeader
+          title="采集任务监控"
+          description="任务列表 · 维度健康度 · 采集日志 · 链路可视化"
+          actions={<Badge variant="outline">D-1 框架</Badge>}
+        />
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <Card>
@@ -876,7 +873,7 @@ export default function CollectTaskPage(): React.JSX.Element {
             <TraceReplayPanel spans={selectedTraces} />
           </TabsContent>
         </Tabs>
-      </div>
+      </PageContainer>
     </ErrorBoundary>
   )
 }

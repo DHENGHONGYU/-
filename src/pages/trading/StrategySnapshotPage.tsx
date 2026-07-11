@@ -17,6 +17,7 @@ import { StrategyGroupCard } from '@/components/organisms/strategy/StrategyGroup
 import { ChangeLogPanel } from '@/components/organisms/strategy/ChangeLogPanel'
 import { useStrategySnapshotStore } from '@/store/strategySnapshotStore'
 import { getLogger } from '@/lib/logger'
+import { PageContainer, PageHeader } from '@/components/templates'
 
 
 const logger = getLogger()
@@ -122,7 +123,7 @@ export default function StrategySnapshotPage(): React.JSX.Element {
   }
 
   return (
-    <div className="space-y-6">
+    <PageContainer className="space-y-6">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -143,13 +144,11 @@ export default function StrategySnapshotPage(): React.JSX.Element {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">策略快照</h1>
-          <p className="text-muted-foreground">三策略分组快照、版本管理与变更追踪</p>
-        </div>
-        <Badge variant="secondary">V6 Pro</Badge>
-      </div>
+      <PageHeader
+        title="策略快照"
+        description="三策略分组快照、版本管理与变更追踪"
+        actions={<Badge variant="secondary">V6 Pro</Badge>}
+      />
 
       <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'current' | 'history')}>
         <TabsList>
@@ -287,6 +286,6 @@ export default function StrategySnapshotPage(): React.JSX.Element {
           )}
         </TabsContent>
       </Tabs>
-    </div>
+    </PageContainer>
   )
 }

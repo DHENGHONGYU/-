@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import {
-  List,
   Search,
   ArrowRight,
   Bot,
@@ -26,6 +25,7 @@ import { getLogger } from '@/lib/logger'
 import { getAllAgentComponents } from '@/agents/agentComponentRegistry'
 import type { AgentComponentEntry } from '@/agents/agentComponentRegistry'
 import { useAgentStore } from '@/store/agentStore'
+import { PageContainer, PageHeader } from '@/components/templates'
 
 const logger = getLogger()
 
@@ -80,7 +80,7 @@ export default function AgentRegistryPage(): React.JSX.Element {
   }
 
   return (
-    <div className="space-y-6">
+    <PageContainer className="space-y-6">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -104,20 +104,11 @@ export default function AgentRegistryPage(): React.JSX.Element {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="flex items-start justify-between">
-        <div className="flex items-start gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
-            <List className="h-6 w-6" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">智能体注册表</h1>
-            <p className="text-muted-foreground">
-              系统中所有已注册的智能体及其配置信息
-            </p>
-          </div>
-        </div>
-        <Badge variant="secondary">{allAgents.length} 个智能体</Badge>
-      </div>
+      <PageHeader
+        title="智能体注册表"
+        description="系统中所有已注册的智能体及其配置信息"
+        actions={<Badge variant="secondary">{allAgents.length} 个智能体</Badge>}
+      />
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <Tabs value={activeFilter} onValueChange={handleFilterChange} className="w-full sm:w-auto">
@@ -196,6 +187,6 @@ export default function AgentRegistryPage(): React.JSX.Element {
           })}
         </div>
       )}
-    </div>
+    </PageContainer>
   )
 }

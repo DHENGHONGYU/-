@@ -28,6 +28,7 @@ import {
   BreadcrumbPage,
 } from '@/components/atoms/Breadcrumb'
 import { useAgentStore } from '@/store/agentStore'
+import { PageContainer, PageHeader } from '@/components/templates'
 
 
 interface MetricCard {
@@ -160,7 +161,7 @@ export default function AgentHubPage(): React.JSX.Element {
   ]
 
   return (
-    <div className="space-y-6">
+    <PageContainer className="space-y-6">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -179,15 +180,11 @@ export default function AgentHubPage(): React.JSX.Element {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">智能体总控台</h1>
-          <p className="text-muted-foreground">
-            注册、调度、监控 V9 系统中的所有智能体
-          </p>
-        </div>
-        <Badge variant="secondary">Agent System</Badge>
-      </div>
+      <PageHeader
+        title="智能体总控台"
+        description="注册、调度、监控 V9 系统中的所有智能体"
+        actions={<Badge variant="secondary">Agent System</Badge>}
+      />
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {metricCards.map((card) => {
@@ -240,6 +237,6 @@ export default function AgentHubPage(): React.JSX.Element {
           })}
         </div>
       </section>
-    </div>
+    </PageContainer>
   )
 }

@@ -12,6 +12,7 @@ import {
   BreadcrumbPage,
 } from '@/components/atoms/Breadcrumb'
 import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
+import { PageContainer, PageHeader } from '@/components/templates'
 
 interface HubModule {
   title: string
@@ -51,7 +52,7 @@ const OUTPUT_MODULES: HubModule[] = [
 export default memo(function OutputHubPage(): React.JSX.Element {
   return (
     <ErrorBoundary>
-      <div className="space-y-6">
+      <PageContainer className="space-y-6">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -65,13 +66,11 @@ export default memo(function OutputHubPage(): React.JSX.Element {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">输出舱</h1>
-            <p className="text-muted-foreground">报告导出与数据输出管理</p>
-          </div>
-          <Badge variant="secondary">V3.0 模块五</Badge>
-        </div>
+        <PageHeader
+          title="输出舱"
+          description="报告导出与数据输出管理"
+          actions={<Badge variant="secondary">V3.0 模块五</Badge>}
+        />
 
         <section className="space-y-3">
           <h2 className="text-lg font-semibold">功能模块</h2>
@@ -112,8 +111,8 @@ export default memo(function OutputHubPage(): React.JSX.Element {
               )
             })}
           </div>
-        </section>
-      </div>
-    </ErrorBoundary>
+      </section>
+    </PageContainer>
+  </ErrorBoundary>
   )
 })

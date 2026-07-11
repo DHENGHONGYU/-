@@ -11,6 +11,7 @@ import { useAgentFeedbackStore } from '@/store/agentFeedbackStore'
 import { useAgentStore } from '@/store/agentStore'
 import { getLogger } from '@/lib/logger'
 import type { AgentFeedback } from '@/types/modules/agent.types'
+import { PageContainer, PageHeader } from '@/components/templates'
 
 import { nanoid } from 'nanoid'
 const logger = getLogger()
@@ -65,7 +66,7 @@ export default function AgentFeedbackPage(): React.JSX.Element {
   const feedbacks = feedbackStore.feedbacks
 
   return (
-    <div className="space-y-6">
+    <PageContainer className="space-y-6">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -83,12 +84,10 @@ export default function AgentFeedbackPage(): React.JSX.Element {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">反馈控制台</h1>
-          <p className="text-muted-foreground">收集和处理智能体执行反馈</p>
-        </div>
-      </div>
+      <PageHeader
+        title="反馈控制台"
+        description="收集和处理智能体执行反馈"
+      />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
@@ -228,6 +227,6 @@ export default function AgentFeedbackPage(): React.JSX.Element {
           )}
         </CardContent>
       </Card>
-    </div>
+    </PageContainer>
   )
 }

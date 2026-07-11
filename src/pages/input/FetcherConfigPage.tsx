@@ -62,6 +62,7 @@ import type {
   QuoteDataSourceId,
   SourcePriorityItem,
 } from '@/types/modules/collection.types'
+import { PageContainer, PageHeader } from '@/components/templates'
 
 const logger = getLogger()
 
@@ -165,7 +166,7 @@ export default function FetcherConfigPage(): React.JSX.Element {
 
   return (
     <ErrorBoundary>
-      <div className="space-y-6 p-6">
+      <PageContainer className="space-y-6">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -186,15 +187,11 @@ export default function FetcherConfigPage(): React.JSX.Element {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-bold">抓取引擎配置</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              数据源管理 · 连通性测试 · 维度映射 · 实时日志
-            </p>
-          </div>
-          <Badge variant="outline">D-2 框架</Badge>
-        </div>
+        <PageHeader
+          title="抓取引擎配置"
+          description="数据源管理 · 连通性测试 · 维度映射 · 实时日志"
+          actions={<Badge variant="outline">D-2 框架</Badge>}
+        />
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <Card>
@@ -457,7 +454,7 @@ export default function FetcherConfigPage(): React.JSX.Element {
         </Card>
 
         <LiveLogStream logs={logs} onClear={clearLogs} maxHeight="300px" />
-      </div>
+      </PageContainer>
     </ErrorBoundary>
   )
 }

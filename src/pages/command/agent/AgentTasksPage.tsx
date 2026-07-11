@@ -11,6 +11,7 @@ import { useAgentStore } from '@/store/agentStore'
 import { agentRuntime } from '@/agents/agentRuntime'
 import { getLogger } from '@/lib/logger'
 import type { AgentTaskFilter } from '@/types/modules/agent.types'
+import { PageContainer, PageHeader } from '@/components/templates'
 
 const logger = getLogger()
 
@@ -88,7 +89,7 @@ export default function AgentTasksPage(): React.JSX.Element {
   }, [store])
 
   return (
-    <div className="space-y-6">
+    <PageContainer className="space-y-6">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -106,26 +107,26 @@ export default function AgentTasksPage(): React.JSX.Element {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">任务列表</h1>
-          <p className="text-muted-foreground">查看所有智能体任务的执行状态和历史记录</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setAutoRefresh(!autoRefresh)}
-          >
-            <RefreshCw className={`mr-2 h-4 w-4 ${autoRefresh ? 'animate-spin' : ''}`} />
-            {autoRefresh ? '自动刷新中' : '已暂停'}
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => store.refreshStats()}>
-            <RefreshCw className="mr-2 h-4 w-4" />
-            刷新
-          </Button>
-        </div>
-      </div>
+      <PageHeader
+        title="任务列表"
+        description="查看所有智能体任务的执行状态和历史记录"
+        actions={
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setAutoRefresh(!autoRefresh)}
+            >
+              <RefreshCw className={`mr-2 h-4 w-4 ${autoRefresh ? 'animate-spin' : ''}`} />
+              {autoRefresh ? '自动刷新中' : '已暂停'}
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => store.refreshStats()}>
+              <RefreshCw className="mr-2 h-4 w-4" />
+              刷新
+            </Button>
+          </div>
+        }
+      />
 
       <div className="flex gap-2">
         {FILTER_TABS.map((tab) => (
@@ -205,6 +206,6 @@ export default function AgentTasksPage(): React.JSX.Element {
           )}
         </CardContent>
       </Card>
-    </div>
+    </PageContainer>
   )
 }

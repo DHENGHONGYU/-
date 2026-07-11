@@ -16,6 +16,7 @@ import {
 import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
 import { getLogger } from '@/lib/logger'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
+import { PageContainer, PageHeader } from '@/components/templates'
 
 const logger = getLogger()
 
@@ -43,7 +44,7 @@ const PortfolioPage = memo(() => {
 
   return (
     <ErrorBoundary>
-      <div className="space-y-4 p-4">
+      <PageContainer className="space-y-4">
         <Breadcrumb aria-label="breadcrumb">
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -64,7 +65,10 @@ const PortfolioPage = memo(() => {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <h1 className="text-2xl font-bold tracking-tight">投资组合</h1>
+        <PageHeader
+          title="投资组合"
+          description="核心组合管理与策略筛选结果"
+        />
 
         {/* 操作按钮 */}
         <div className="flex flex-wrap gap-2">
@@ -164,7 +168,7 @@ const PortfolioPage = memo(() => {
             </CardContent>
           </Card>
         )}
-      </div>
+      </PageContainer>
     </ErrorBoundary>
   )
 })

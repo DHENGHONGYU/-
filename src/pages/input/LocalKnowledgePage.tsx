@@ -24,6 +24,7 @@ import { LocalDocCard } from '@/components/organisms/localDoc/LocalDocCard'
 import { useLocalKnowledgeStore, type LocalKnowledgeTab } from '@/store/localKnowledgeStore'
 import type { LocalDoc } from '@/data/types'
 import { getLogger } from '@/lib/logger'
+import { PageContainer, PageHeader } from '@/components/templates'
 
 const logger = getLogger()
 
@@ -109,7 +110,7 @@ export default function LocalKnowledgePage(): React.JSX.Element {
   }, [docs])
 
   return (
-    <div className="space-y-6">
+    <PageContainer className="space-y-6">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -130,16 +131,16 @@ export default function LocalKnowledgePage(): React.JSX.Element {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">本地知识库</h1>
-          <p className="text-muted-foreground">管理本地文档、研报、财报与策略笔记</p>
-        </div>
-        <Button variant="outline" size="sm" onClick={handleScanFolder} disabled={loading}>
-          <FolderOpen className="mr-2 h-4 w-4" />
-          导入文件夹
-        </Button>
-      </div>
+      <PageHeader
+        title="本地知识库"
+        description="管理本地文档、研报、财报与策略笔记"
+        actions={
+          <Button variant="outline" size="sm" onClick={handleScanFolder} disabled={loading}>
+            <FolderOpen className="mr-2 h-4 w-4" />
+            导入文件夹
+          </Button>
+        }
+      />
 
       {message && (
         <div
@@ -266,6 +267,6 @@ export default function LocalKnowledgePage(): React.JSX.Element {
           </div>
         </TabsContent>
       </Tabs>
-    </div>
+    </PageContainer>
   )
 }

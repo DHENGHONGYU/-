@@ -19,11 +19,12 @@ import {
 import { Button } from '@/components/atoms/Button'
 import { ErrorBoundary } from '@/components/organisms/shared/ErrorBoundary'
 import ReviewWizard from '@/components/organisms/output/ReviewWizard'
+import { PageContainer, PageHeader } from '@/components/templates'
 
 export default memo(function ReviewWizardPage(): React.JSX.Element {
   return (
     <ErrorBoundary>
-      <div className="space-y-6 p-4">
+      <PageContainer className="space-y-6">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -42,21 +43,21 @@ export default memo(function ReviewWizardPage(): React.JSX.Element {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">复盘向导</h1>
-            <p className="text-muted-foreground">四步渐进式复盘，逐维揭示，一键导出成品卡</p>
-          </div>
-          <Button variant="outline" size="sm" asChild>
-            <Link to="/output">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              返回
-            </Link>
-          </Button>
-        </div>
+        <PageHeader
+          title="复盘向导"
+          description="四步渐进式复盘，逐维揭示，一键导出成品卡"
+          actions={
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/output">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                返回
+              </Link>
+            </Button>
+          }
+        />
 
         <ReviewWizard />
-      </div>
+      </PageContainer>
     </ErrorBoundary>
   )
 })

@@ -17,6 +17,7 @@ import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import { mcpBridge } from '@/mcp/bridge/mcpBridge'
 import type { MockTradingData } from '@/services/trading/mockDataGenerator'
 import { Database } from 'lucide-react'
+import { PageContainer, PageHeader } from '@/components/templates'
 
 const logger = getLogger()
 
@@ -464,20 +465,18 @@ export default function TradingFlowPage(): React.JSX.Element {
       }
 
   return (
-    <div className="space-y-6 p-6">
+    <PageContainer className="space-y-6">
       {/* 页面标题 */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">交易流程</h1>
-          <p className="text-muted-foreground mt-2">
-            完整的交易流程管理：信号生成 → 订单执行 → 持仓管理 → 风险控制
-          </p>
-        </div>
-        <Button onClick={openWizard} variant="outline">
-          <Database className="mr-2 h-4 w-4" />
-          数据采集
-        </Button>
-      </div>
+      <PageHeader
+        title="交易流程"
+        description="完整的交易流程管理：信号生成 → 订单执行 → 持仓管理 → 风险控制"
+        actions={
+          <Button onClick={openWizard} variant="outline">
+            <Database className="mr-2 h-4 w-4" />
+            数据采集
+          </Button>
+        }
+      />
 
       {/* 统计卡片 */}
       <div className="grid gap-4 md:grid-cols-4">
@@ -626,6 +625,6 @@ export default function TradingFlowPage(): React.JSX.Element {
 
       {/* 数据采集向导 */}
       <DataCollectionWizard />
-    </div>
+    </PageContainer>
   )
 }

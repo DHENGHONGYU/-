@@ -74,9 +74,11 @@ function tierFromDir(relativePath: string): AtomicLevel | 'shim' | 'business' | 
   if (parts[0] === 'molecules') return 'molecule'
   if (parts[0] === 'organisms') return 'organism'
   if (parts[0] === 'templates') return 'template'
+  // LEGACY: ui/ 目录已删除（阶段 5 shim 清理），保留分类作为安全网
   if (parts[0] === 'ui') return 'shim'
   if (parts[0] === 'shared') return 'organism'
-  // 其余（analysis/input/trading/output/cockpit/cabin/chart/widgets/news/strategy/localDoc/agent/system 等）= 旧位置业务组件
+  // LEGACY: 旧业务目录（collection/pool/input/trading/output/news/strategy/agent/localDoc/system/analysis/scoreDoc）已删除
+  // 保留 'business' 分类用于 cockpit/cabin/chart/widgets 等按决策保留的目录
   return 'business'
 }
 
@@ -143,6 +145,8 @@ function extractImports(content: string): string[] {
 // 匹配「非 re-export 的 export」（即实现体）
 const IMPL_EXPORT_RE = /(^|\n)\s*export\s+(?:default\s+)?(?:async\s+)?(function|const|class|interface|type|enum)\b(?![^;{]*\bfrom\s+['"])/
 
+// LEGACY: ui/ 目录已删除（阶段 5 shim 清理），此函数仅作历史文档保留。
+// 如果未来重新引入 shim 机制，可参考此实现。
 function checkShimPurity(relativePath: string, content: string): AtomicViolation[] {
   const violations: AtomicViolation[] = []
   // 去除块注释与行注释，避免误判
@@ -206,6 +210,7 @@ export function scan(): AtomicReport {
       const dirTier = tierFromDir(relativePath)
 
       // —— shim 纯度校验 ——
+      // LEGACY: ui/ shim 已删除，此分支不会触发，保留作安全网
       if (dirTier === 'shim') {
         violations.push(...checkShimPurity(relativePath, content))
         // shim 层级本身不进行跨层 import 边界校验（由纯度校验覆盖）
@@ -263,7 +268,8 @@ export function scan(): AtomicReport {
         }
       }
 
-      // —— shim 兼容层残留检测：新位置文件仍引用 @/components/ui ——
+      // SAFETY NET: 检测是否有文件仍引用已删除的 @/components/ui/ 路径
+      // ui/ 目录已删除（阶段 5），但保留此规则防止未来误创建
       if (dirTier !== 'shim') {
         for (const spec of imports) {
           if (classifyImport(spec) === 'shim') {

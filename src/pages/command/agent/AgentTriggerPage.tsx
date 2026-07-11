@@ -13,6 +13,7 @@ import { getAllAgentComponents } from '@/agents/agentComponentRegistry'
 import { mcpRegistry } from '@/mcp/core/registry'
 import { getLogger } from '@/lib/logger'
 import type { AgentTriggerPayload } from '@/types/modules/agent.types'
+import { PageContainer, PageHeader } from '@/components/templates'
 
 const logger = getLogger()
 
@@ -98,7 +99,7 @@ export default function AgentTriggerPage(): React.JSX.Element {
   }, [selectedAgentId, selectedServerName, selectedToolName, payloadJson, timeout, store])
 
   return (
-    <div className="space-y-6">
+    <PageContainer className="space-y-6">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -116,12 +117,10 @@ export default function AgentTriggerPage(): React.JSX.Element {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">任务触发</h1>
-          <p className="text-muted-foreground">手动选择智能体并触发任务执行</p>
-        </div>
-      </div>
+      <PageHeader
+        title="任务触发"
+        description="手动选择智能体并触发任务执行"
+      />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
@@ -257,6 +256,6 @@ export default function AgentTriggerPage(): React.JSX.Element {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </PageContainer>
   )
 }

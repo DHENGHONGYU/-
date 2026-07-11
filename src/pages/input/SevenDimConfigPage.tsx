@@ -68,6 +68,7 @@ import type {
   TimeoutPolicy,
   FallbackPolicy,
 } from '@/types/modules/collection.types'
+import { PageContainer, PageHeader } from '@/components/templates'
 
 const logger = getLogger()
 
@@ -335,7 +336,7 @@ export default function SevenDimConfigPage() {
 
   return (
     <ErrorBoundary>
-      <div className="space-y-6 p-6">
+      <PageContainer className="space-y-6">
         {/* 面包屑 */}
         <Breadcrumb>
           <BreadcrumbList>
@@ -358,15 +359,11 @@ export default function SevenDimConfigPage() {
         </Breadcrumb>
 
         {/* 页面标题 */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-bold">七维采集配置</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              采集维度 · 策略模板 · 额度预估 · 执行采集
-            </p>
-          </div>
-          <Badge variant="outline">V9 新建</Badge>
-        </div>
+        <PageHeader
+          title="七维采集配置"
+          description="采集维度 · 策略模板 · 额度预估 · 执行采集"
+          actions={<Badge variant="outline">V9 新建</Badge>}
+        />
 
         {/* 错误提示 */}
         {store.error && (
@@ -553,7 +550,7 @@ export default function SevenDimConfigPage() {
 
         {/* 接口测试弹窗 */}
         <ApiTestDialog open={showApiTest} onOpenChange={setShowApiTest} />
-      </div>
+      </PageContainer>
     </ErrorBoundary>
   )
 }

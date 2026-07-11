@@ -31,6 +31,7 @@ import {
   DEFAULT_LLM_FACTOR_OVERRIDES,
 } from '@/config/llmConfig'
 import { STOCK_SCORE_FACTORS, type ScoreFactor } from '@/config/scoreFactors'
+import { PageContainer, PageHeader } from '@/components/templates'
 
 const logger = getLogger()
 
@@ -268,7 +269,7 @@ export default function LlmManagementPage(): React.JSX.Element {
   }, [recommendScenario])
 
   return (
-    <div className="space-y-6">
+    <PageContainer className="space-y-6">
       {/* 面包屑导航 */}
       <Breadcrumb>
         <BreadcrumbList>
@@ -294,15 +295,11 @@ export default function LlmManagementPage(): React.JSX.Element {
       </Breadcrumb>
 
       {/* 页面标题 */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">LLM 管理</h1>
-          <p className="text-muted-foreground">
-            配置和管理 LLM 模型与 API Key
-          </p>
-        </div>
-        <Badge variant="secondary">Phase E</Badge>
-      </div>
+      <PageHeader
+        title="LLM 管理"
+        description="配置和管理 LLM 模型与 API Key"
+        actions={<Badge variant="secondary">Phase E</Badge>}
+      />
 
       {/* 统计卡片 */}
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -1041,6 +1038,6 @@ export default function LlmManagementPage(): React.JSX.Element {
           )}
         </Button>
       </div>
-    </div>
+    </PageContainer>
   )
 }

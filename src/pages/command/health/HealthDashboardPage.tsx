@@ -4,6 +4,7 @@ import { Badge } from '@/components/atoms/Badge'
 import { Button } from '@/components/atoms/Button'
 import { Skeleton } from '@/components/molecules/states/Skeleton'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
+import { PageContainer, PageHeader } from '@/components/templates'
 import { mcpBridge } from '@/mcp/bridge/mcpBridge'
 import type { HealthMetric, HealthReport } from '@/types/modules/health.types'
 import { Activity, AlertCircle, CheckCircle2, RefreshCw, ShieldAlert, XCircle } from 'lucide-react'
@@ -92,20 +93,20 @@ export default function HealthDashboardPage(): React.JSX.Element {
 
   if (loading) {
     return (
-      <div className="space-y-4 p-4">
+      <PageContainer className="space-y-4">
         <Skeleton className="h-8 w-64" />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
             <Skeleton key={i} className="h-32" />
           ))}
         </div>
-      </div>
+      </PageContainer>
     )
   }
 
   if (error || !report) {
     return (
-      <div className="space-y-4 p-4">
+      <PageContainer className="space-y-4">
         <div className="flex items-center gap-2 text-destructive">
           <ShieldAlert className="h-5 w-5" />
           <span>加载健康报告失败：{error ?? '未知错误'}</span>
@@ -114,26 +115,24 @@ export default function HealthDashboardPage(): React.JSX.Element {
           <RefreshCw className="mr-2 h-4 w-4" />
           重试
         </Button>
-      </div>
+      </PageContainer>
     )
   }
 
   const generated = new Date(report.generatedAt).toLocaleString('zh-CN')
 
   return (
-    <div className="space-y-6 p-4">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">架构健康度仪表盘</h1>
-          <p className="text-muted-foreground">
-            AGENTS.md {report.agentsVersion} · 生成于 {generated}
-          </p>
-        </div>
-        <Button variant="outline" size="sm" onClick={() => void load()}>
-          <RefreshCw className="mr-2 h-4 w-4" />
-          刷新
-        </Button>
-      </div>
+    <PageContainer className="space-y-6">
+      <PageHeader
+        title="架构健康度仪表盘"
+        description={`AGENTS.md ${report.agentsVersion} · 生成于 ${generated}`}
+        actions={
+          <Button variant="outline" size="sm" onClick={() => void load()}>
+            <RefreshCw className="mr-2 h-4 w-4" />
+            刷新
+          </Button>
+        }
+      />
 
       {/* 综合得分 */}
       <Card
@@ -214,6 +213,6 @@ export default function HealthDashboardPage(): React.JSX.Element {
           </p>
         </CardContent>
       </Card>
-    </div>
+    </PageContainer>
   )
 }

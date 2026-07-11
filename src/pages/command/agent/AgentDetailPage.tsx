@@ -11,6 +11,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
 } from '@/components/atoms/Breadcrumb'
+import { PageContainer, PageHeader } from '@/components/templates'
 import { PageSkeleton } from '@/components/organisms/shared/PageSkeleton'
 import { getLogger } from '@/lib/logger'
 import { getAgentDetailComponent, hasAgentComponent } from '@/agents/agentComponentRegistry'
@@ -40,7 +41,7 @@ export default function AgentDetailPage({ agentId }: AgentDetailPageProps): Reac
 
   if (notFound) {
     return (
-      <div className="space-y-6">
+      <PageContainer className="space-y-6">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -69,6 +70,8 @@ export default function AgentDetailPage({ agentId }: AgentDetailPageProps): Reac
           </BreadcrumbList>
         </Breadcrumb>
 
+        <PageHeader title="智能体未找到" description="该智能体可能不存在、尚未注册或已被移除" />
+
         <Card className="border-destructive/50">
           <CardContent className="flex flex-col items-center justify-center py-16 text-center">
             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10">
@@ -94,25 +97,30 @@ export default function AgentDetailPage({ agentId }: AgentDetailPageProps): Reac
             </div>
           </CardContent>
         </Card>
-      </div>
+      </PageContainer>
     )
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-2">
-        <Button variant="ghost" size="sm" asChild>
-          <Link to="/command/agents/registry">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            返回注册表
-          </Link>
-        </Button>
-        {!isRegistered && <Badge variant="destructive">未注册到运行时</Badge>}
-      </div>
+    <PageContainer className="space-y-6">
+      <PageHeader
+        title="智能体详情"
+        description="查看智能体运行状态与配置"
+        actions={
+          <Button variant="ghost" size="sm" asChild>
+            <Link to="/command/agents/registry">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              返回注册表
+            </Link>
+          </Button>
+        }
+      />
+
+      {!isRegistered && <Badge variant="destructive">未注册到运行时</Badge>}
 
       <Suspense fallback={<PageSkeleton />}>
         <DetailComponent agentId={agentId} />
       </Suspense>
-    </div>
+    </PageContainer>
   )
 }

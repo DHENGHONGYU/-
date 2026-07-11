@@ -17,6 +17,7 @@ import { useScoreDocStore } from '@/store/scoreDocStore'
 import { useToast } from '@/hooks/useToast'
 import { usePageGuard } from '@/hooks/usePageGuard'
 import type { ScoreDocVersion } from '@/data/types'
+import { PageContainer, PageHeader } from '@/components/templates'
 
 export default memo(function ResearchReportPage(): React.JSX.Element {
   const [symbols, setSymbols] = useState<string[]>([])
@@ -122,7 +123,7 @@ export default memo(function ResearchReportPage(): React.JSX.Element {
 
   return (
     <ErrorBoundary>
-      <div className="space-y-6 p-4">
+      <PageContainer className="space-y-6">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -141,18 +142,18 @@ export default memo(function ResearchReportPage(): React.JSX.Element {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">研究报告</h1>
-            <p className="text-muted-foreground">基于评分文档生成个股研究报告</p>
-          </div>
-          <Button variant="outline" size="sm" asChild>
-            <Link to="/output">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              返回
-            </Link>
-          </Button>
-        </div>
+        <PageHeader
+          title="研究报告"
+          description="基于评分文档生成个股研究报告"
+          actions={
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/output">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                返回
+              </Link>
+            </Button>
+          }
+        />
 
         <Card>
           <CardHeader>
@@ -235,7 +236,7 @@ export default memo(function ResearchReportPage(): React.JSX.Element {
             </CardContent>
           </Card>
         )}
-      </div>
+      </PageContainer>
     </ErrorBoundary>
   )
 })

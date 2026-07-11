@@ -18,6 +18,7 @@ import { useToast } from '@/hooks/useToast'
 import { usePageGuard } from '@/hooks/usePageGuard'
 import { ReviewArtifactModal } from '@/components/organisms/output/ReviewArtifactModal'
 import type { Order } from '@/data/types'
+import { PageContainer, PageHeader } from '@/components/templates'
 
 interface ReviewData {
   report: TradeReviewReport
@@ -109,7 +110,7 @@ export default memo(function TradeReviewPage(): React.JSX.Element {
 
   return (
     <ErrorBoundary>
-      <div className="space-y-6 p-4">
+      <PageContainer className="space-y-6">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -128,18 +129,18 @@ export default memo(function TradeReviewPage(): React.JSX.Element {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">交易复盘</h1>
-            <p className="text-muted-foreground">基于交易记录生成六维复盘报告</p>
-          </div>
-          <Button variant="outline" size="sm" asChild>
-            <Link to="/output">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              返回
-            </Link>
-          </Button>
-        </div>
+        <PageHeader
+          title="交易复盘"
+          description="基于交易记录生成六维复盘报告"
+          actions={
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/output">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                返回
+              </Link>
+            </Button>
+          }
+        />
 
         <Card>
           <CardHeader>
@@ -324,7 +325,7 @@ export default memo(function TradeReviewPage(): React.JSX.Element {
           report={review?.report ?? null}
           generatedAt={review ? new Date(review.generatedAt).toLocaleString('zh-CN') : ''}
         />
-      </div>
+      </PageContainer>
     </ErrorBoundary>
   )
 })

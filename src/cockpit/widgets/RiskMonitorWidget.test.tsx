@@ -159,10 +159,10 @@ describe('RiskMonitorWidget', () => {
     const { container } = render(<RiskMonitorWidget config={buildConfig()} />)
 
     expect(screen.getByText('风险数据加载失败')).toBeInTheDocument()
-    // CardContent 使用 COLOR_TOKENS.danger.hex 作为文本内联色
+    // WidgetStateShell 的 error 状态将 COLOR_TOKENS.danger.tailwind 注入 ErrorState 外层容器
     const cardContent = container.querySelector('.text-center')
     expect(cardContent).not.toBeNull()
-    expectInlineColor(cardContent as HTMLElement, COLOR_TOKENS.danger.hex)
+    expect((cardContent as HTMLElement).className).toContain(COLOR_TOKENS.danger.tailwind)
   })
 
   // ----------------------------------------------------------

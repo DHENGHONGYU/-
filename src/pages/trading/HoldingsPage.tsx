@@ -34,6 +34,7 @@ import type { HoldingAction } from '@/constants/trade.constants'
 import { useHoldingsStore, buildHoldingsParams, initHoldingsStoreSubscriptions } from '@/store/holdingsStore'
 import { usePageGuard } from '@/hooks/usePageGuard'
 import { getLogger } from '@/lib/logger'
+import { PageContainer, PageHeader } from '@/components/templates'
 
 const logger = getLogger()
 
@@ -242,7 +243,7 @@ export default function HoldingsPage(): React.JSX.Element {
   )
 
   return (
-    <div className="space-y-4">
+    <PageContainer className="space-y-4">
       {/* 面包屑导航 */}
       <Breadcrumb>
         <BreadcrumbList>
@@ -263,18 +264,16 @@ export default function HoldingsPage(): React.JSX.Element {
       </Breadcrumb>
 
       {/* 页面标题 */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">交易持仓管理</h1>
-          <p className="text-sm text-muted-foreground">
-            统一管理投资组合持仓，支持策略评分对比与资产配置全局视图
-          </p>
-        </div>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <FileText className="h-4 w-4" />
-          共 {pagination.total} 条持仓记录
-        </div>
-      </div>
+      <PageHeader
+        title="交易持仓管理"
+        description="统一管理投资组合持仓，支持策略评分对比与资产配置全局视图"
+        actions={
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <FileText className="h-4 w-4" />
+            共 {pagination.total} 条持仓记录
+          </div>
+        }
+      />
 
       {/* 筛选区 */}
       <HoldingsFilter
@@ -312,6 +311,6 @@ export default function HoldingsPage(): React.JSX.Element {
         onClose={handleCloseModal}
         onConfirm={(item, action, quantity) => void handleConfirmTrade(item, action, quantity)}
       />
-    </div>
+    </PageContainer>
   )
 }

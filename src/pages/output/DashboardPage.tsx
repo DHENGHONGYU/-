@@ -17,6 +17,7 @@ import { useDisciplineStore } from '@/store/disciplineStore'
 import { useSectorAnalysisStore } from '@/store/sectorAnalysisStore'
 import { COLOR_TOKENS, COLOR_SHADES, twBg, twText } from '@/constants/theme.tokens'
 import { getLogger } from '@/lib/logger'
+import { PageContainer, PageHeader } from '@/components/templates'
 
 const logger = getLogger()
 
@@ -54,7 +55,7 @@ const DashboardPage = memo(() => {
 
   return (
     <ErrorBoundary>
-      <div className="space-y-4 p-4">
+      <PageContainer className="space-y-4">
         <Breadcrumb aria-label="breadcrumb">
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -75,10 +76,11 @@ const DashboardPage = memo(() => {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold tracking-tight">输出舱 · 仪表盘</h1>
-          <Badge variant="secondary">实时统计</Badge>
-        </div>
+        <PageHeader
+          title="输出舱 · 仪表盘"
+          description="系统统计概览与关键指标监控"
+          actions={<Badge variant="secondary">实时统计</Badge>}
+        />
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
@@ -228,7 +230,7 @@ const DashboardPage = memo(() => {
             </CardContent>
           </Card>
         </div>
-      </div>
+      </PageContainer>
     </ErrorBoundary>
   )
 })

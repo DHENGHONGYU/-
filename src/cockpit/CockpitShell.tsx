@@ -93,7 +93,7 @@ function WidgetWrapper(props: WidgetWrapperProps): React.JSX.Element {
   // 防止 widget 组件内部解构 { config } 时收到 null props 导致崩溃
   // 注意：useMemo 必须在所有条件返回之前调用（rules of hooks）
   const SafeComponent = useMemo(() => {
-    if (!Component) return () => <></>
+    if (!Component) return null
     const SafeWrapper = (wrapperProps: { config: unknown; data?: MarketData }): React.JSX.Element => {
       if (!wrapperProps?.config) {
         logger.warn('[CockpitShell] SafeWrapper: widget received null props', { widgetId: config?.widgetId })
