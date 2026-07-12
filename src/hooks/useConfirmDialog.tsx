@@ -80,29 +80,27 @@ export function useConfirmDialog() {
     })
   }, [])
 
+  const resolveAndClear = useCallback((value: boolean): void => {
+    if (resolverRef.current) {
+      resolverRef.current(value)
+      resolverRef.current = null
+    }
+  }, [])
+
   const handleOpenChange = useCallback((nextOpen: boolean) => {
     setOpen(nextOpen)
-    if (!nextOpen && resolverRef.current) {
-      resolverRef.current(false)
-      resolverRef.current = null
-    }
-  }, [])
+    if (!nextOpen) resolveAndClear(false)
+  }, [resolveAndClear])
 
   const handleConfirm = useCallback(() => {
-    if (resolverRef.current) {
-      resolverRef.current(true)
-      resolverRef.current = null
-    }
+    resolveAndClear(true)
     setOpen(false)
-  }, [])
+  }, [resolveAndClear])
 
   const handleCancel = useCallback(() => {
-    if (resolverRef.current) {
-      resolverRef.current(false)
-      resolverRef.current = null
-    }
+    resolveAndClear(false)
     setOpen(false)
-  }, [])
+  }, [resolveAndClear])
 
   const ConfirmDialog = (
     <Dialog open={open} onOpenChange={handleOpenChange}>

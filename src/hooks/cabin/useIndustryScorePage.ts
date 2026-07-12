@@ -140,12 +140,13 @@ export function useIndustryScorePage(): UseIndustryScorePageReturn {
   )
 
   useEffect(() => {
-    if (!selectedCode) return
-    loadIndustryScoreHistory(selectedCode).then((sorted) => {
-      setHistory(sorted)
-      setPreviousResult(sorted[0])
-    })
-    loadResearchLogsForTarget(selectedCode).then(setLogs)
+    if (selectedCode) {
+      loadIndustryScoreHistory(selectedCode).then((sorted) => {
+        setHistory(sorted)
+        setPreviousResult(sorted[0])
+      })
+      loadResearchLogsForTarget(selectedCode).then(setLogs)
+    }
   }, [selectedCode])
 
   const configReady = useMemo(() => isConfigReady(llmConfig), [llmConfig])

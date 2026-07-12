@@ -170,6 +170,21 @@ export default function TradingFlowPage(): React.JSX.Element {
     })
   }, [stocks.length, orders.length, signals.length, message, riskAlerts.length])
 
+  // 统一处理下单/撤单结果：单一 success 分支判断，避免重复条件
+  const reportOrderOutcome = async (
+    result: { success: boolean },
+    onSuccess: () => Promise<void> | void,
+    successLog: () => void,
+    failureLog: () => void,
+  ): Promise<void> => {
+    if (result.success) {
+      successLog()
+      await onSuccess()
+    } else {
+      failureLog()
+    }
+  }
+
   // 从信号创建订单
   const handleCreateOrderFromSignal = async (signal: { symbol: string; action: string }): Promise<void> => {
     const timestamp = new Date().toISOString()
@@ -211,28 +226,30 @@ export default function TradingFlowPage(): React.JSX.Element {
     
     const result = await useOrderStore.getState().addOrder(orderData)
     
-    if (result.success) {
-      logger.info('[TradingFlowPage] 从信号创建订单 - 成功', {
-        timestamp: new Date().toISOString(),
-        traceId,
-        operation: 'CREATE_ORDER_FROM_SIGNAL',
-        statusCode: 200,
-        orderId: result.data?.id,
-        orderData: result.data,
-        executionTime: Date.now() - new Date(timestamp).getTime(),
-      })
-      await loadOrders()
-    } else {
-      logger.error('[TradingFlowPage] 从信号创建订单 - 失败', {
-        timestamp: new Date().toISOString(),
-        traceId,
-        operation: 'CREATE_ORDER_FROM_SIGNAL',
-        statusCode: 500,
-        errorCode: result.error,
-        errorMessage: result.error,
-        executionTime: Date.now() - new Date(timestamp).getTime(),
-      })
-    }
+    await reportOrderOutcome(
+      result,
+      loadOrders,
+      () =>
+        logger.info('[TradingFlowPage] 从信号创建订单 - 成功', {
+          timestamp: new Date().toISOString(),
+          traceId,
+          operation: 'CREATE_ORDER_FROM_SIGNAL',
+          statusCode: 200,
+          orderId: result.data?.id,
+          orderData: result.data,
+          executionTime: Date.now() - new Date(timestamp).getTime(),
+        }),
+      () =>
+        logger.error('[TradingFlowPage] 从信号创建订单 - 失败', {
+          timestamp: new Date().toISOString(),
+          traceId,
+          operation: 'CREATE_ORDER_FROM_SIGNAL',
+          statusCode: 500,
+          errorCode: result.error,
+          errorMessage: result.error,
+          executionTime: Date.now() - new Date(timestamp).getTime(),
+        }),
+    )
   }
 
   // 创建订单
@@ -281,28 +298,30 @@ export default function TradingFlowPage(): React.JSX.Element {
     
     const result = await useOrderStore.getState().addOrder(orderData)
     
-    if (result.success) {
-      logger.info('[TradingFlowPage] 创建订单 - 成功', {
-        timestamp: new Date().toISOString(),
-        traceId,
-        operation: 'CREATE_ORDER',
-        statusCode: 200,
-        orderId: result.data?.id,
-        orderData: result.data,
-        executionTime: Date.now() - new Date(timestamp).getTime(),
-      })
-      await loadOrders()
-    } else {
-      logger.error('[TradingFlowPage] 创建订单 - 失败', {
-        timestamp: new Date().toISOString(),
-        traceId,
-        operation: 'CREATE_ORDER',
-        statusCode: 500,
-        errorCode: result.error,
-        errorMessage: result.error,
-        executionTime: Date.now() - new Date(timestamp).getTime(),
-      })
-    }
+    await reportOrderOutcome(
+      result,
+      loadOrders,
+      () =>
+        logger.info('[TradingFlowPage] 创建订单 - 成功', {
+          timestamp: new Date().toISOString(),
+          traceId,
+          operation: 'CREATE_ORDER',
+          statusCode: 200,
+          orderId: result.data?.id,
+          orderData: result.data,
+          executionTime: Date.now() - new Date(timestamp).getTime(),
+        }),
+      () =>
+        logger.error('[TradingFlowPage] 创建订单 - 失败', {
+          timestamp: new Date().toISOString(),
+          traceId,
+          operation: 'CREATE_ORDER',
+          statusCode: 500,
+          errorCode: result.error,
+          errorMessage: result.error,
+          executionTime: Date.now() - new Date(timestamp).getTime(),
+        }),
+    )
   }
 
   // 取消订单
@@ -347,32 +366,34 @@ export default function TradingFlowPage(): React.JSX.Element {
       status: 'cancelled',
     })
     
-    if (result.success) {
-      logger.info('[TradingFlowPage] 取消订单 - 成功', {
-        timestamp: new Date().toISOString(),
-        traceId,
-        operation: 'CANCEL_ORDER',
-        statusCode: 200,
-        orderId,
-        dataChange: {
-          before: beforeState,
-          after: afterState,
-        },
-        executionTime: Date.now() - new Date(timestamp).getTime(),
-      })
-      await loadOrders()
-    } else {
-      logger.error('[TradingFlowPage] 取消订单 - 失败', {
-        timestamp: new Date().toISOString(),
-        traceId,
-        operation: 'CANCEL_ORDER',
-        statusCode: 500,
-        errorCode: result.error,
-        errorMessage: result.error,
-        orderId,
-        executionTime: Date.now() - new Date(timestamp).getTime(),
-      })
-    }
+    await reportOrderOutcome(
+      result,
+      loadOrders,
+      () =>
+        logger.info('[TradingFlowPage] 取消订单 - 成功', {
+          timestamp: new Date().toISOString(),
+          traceId,
+          operation: 'CANCEL_ORDER',
+          statusCode: 200,
+          orderId,
+          dataChange: {
+            before: beforeState,
+            after: afterState,
+          },
+          executionTime: Date.now() - new Date(timestamp).getTime(),
+        }),
+      () =>
+        logger.error('[TradingFlowPage] 取消订单 - 失败', {
+          timestamp: new Date().toISOString(),
+          traceId,
+          operation: 'CANCEL_ORDER',
+          statusCode: 500,
+          errorCode: result.error,
+          errorMessage: result.error,
+          orderId,
+          executionTime: Date.now() - new Date(timestamp).getTime(),
+        }),
+    )
   }
 
   // 更新风控规则

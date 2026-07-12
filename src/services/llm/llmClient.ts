@@ -347,8 +347,11 @@ export async function streamingChat(
   const controller = new AbortController()
   const totalTimeoutId = config.timeout ? setTimeout(() => controller.abort(), config.timeout) : null
   let idleTimer: ReturnType<typeof setTimeout> | null = null
-  const resetIdleTimer = (): void => {
+  const clearIdleTimer = (): void => {
     if (idleTimer) clearTimeout(idleTimer)
+  }
+  const resetIdleTimer = (): void => {
+    clearIdleTimer()
     idleTimer = setTimeout(() => controller.abort(), STREAM_IDLE_TIMEOUT_MS)
   }
   resetIdleTimer()
@@ -393,7 +396,7 @@ export async function streamingChat(
   } finally {
     // P0-02: 清理所有定时器并主动释放
     if (totalTimeoutId) clearTimeout(totalTimeoutId)
-    if (idleTimer) clearTimeout(idleTimer)
+    clearIdleTimer()
     controller.abort()
     if (reader) {
       reader.releaseLock()

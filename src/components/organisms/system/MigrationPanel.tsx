@@ -209,40 +209,49 @@ export default function MigrationPanel(): React.JSX.Element {
     }
   }, [transformed, overwrite, exportAll, importToV9])
 
+  const withBackup = useCallback(
+    (fn: (currentBackup: BackupSnapshot) => void): void => {
+      if (!backup) return
+      fn(backup)
+    },
+    [backup],
+  )
+
   const handleDownloadBackup = useCallback(() => {
-    if (!backup) return
-    logger.info('[MigrationPanel] handleDownloadBackup/start', {
-      stores: backup.stores,
-      totalRecords: backup.totalRecords,
-      createdAt: backup.createdAt,
+    withBackup((currentBackup) => {
+      logger.info('[MigrationPanel] handleDownloadBackup/start', {
+        stores: currentBackup.stores,
+        totalRecords: currentBackup.totalRecords,
+        createdAt: currentBackup.createdAt,
+      })
+      const json = JSON.stringify(currentBackup.data, null, 2)
+      const blob = new Blob([json], { type: 'application/json' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `v9-backup-${new Date(currentBackup.createdAt).toISOString().replace(/[:.]/g, '-')}.json`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+      logger.info('[MigrationPanel] 备份已下载', {
+        stores: currentBackup.stores,
+        totalRecords: currentBackup.totalRecords,
+        filename: a.download,
+        blobSize: blob.size,
+      })
     })
-    const json = JSON.stringify(backup.data, null, 2)
-    const blob = new Blob([json], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `v9-backup-${new Date(backup.createdAt).toISOString().replace(/[:.]/g, '-')}.json`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
-    logger.info('[MigrationPanel] 备份已下载', {
-      stores: backup.stores,
-      totalRecords: backup.totalRecords,
-      filename: a.download,
-      blobSize: blob.size,
-    })
-  }, [backup])
+  }, [withBackup])
 
   const handleRollback = useCallback(() => {
-    if (!backup) return
-    logger.warn('[MigrationPanel] handleRollback/start', {
-      backupCreatedAt: backup.createdAt,
-      backupStores: backup.stores,
-      backupTotalRecords: backup.totalRecords,
-      timestamp: Date.now(),
-    })
-    setRollbackStatus('rolling')
+    withBackup((currentBackup) => {
+      logger.warn('[MigrationPanel] handleRollback/start', {
+        backupCreatedAt: currentBackup.createdAt,
+        backupStores: currentBackup.stores,
+        backupTotalRecords: currentBackup.totalRecords,
+        timestamp: Date.now(),
+      })
+      setRollbackStatus('rolling')
     logger.info('[MigrationPanel] 触发备份下载以供手动恢复')
     handleDownloadBackup()
     setRollbackStatus('done')
@@ -251,11 +260,12 @@ export default function MigrationPanel(): React.JSX.Element {
       message: '已下载备份文件,等待用户手动恢复',
     })
     setError(
-      `已下载备份文件(共 ${backup.stores} 个 store,${backup.totalRecords} 条记录)。\n` +
+      `已下载备份文件(共 ${currentBackup.stores} 个 store,${currentBackup.totalRecords} 条记录)。\n` +
       '请使用「上传」功能导入此备份文件以恢复数据。\n' +
       '注意:恢复前请先在总控舱点击「重置数据」清空当前状态。'
     )
-  }, [backup, handleDownloadBackup])
+  })
+}, [withBackup, handleDownloadBackup])
 
   const handleRunMigration = useCallback(async () => {
     if (!rawJson) return

@@ -100,16 +100,25 @@ export function usePoolDataFromStore(): UsePoolDataResult {
     await storeRefresh()
   }, [storeRefresh])
 
+  const logUpdateOutcome = (
+    op: string,
+    symbol: string,
+    target: string,
+    ok: boolean,
+  ): void => {
+    if (!ok) {
+      logger.error(`[usePoolDataFromStore] ${op} 失败: ${symbol} → ${target}`)
+    } else {
+      logger.info(`[usePoolDataFromStore] ${op} 成功: ${symbol} → ${target}`)
+    }
+  }
+
   // 状态流转方法
   const handleTransition = useCallback(
     async (symbol: string, toStatus: ResearchStatus): Promise<void> => {
       logger.info(`[usePoolDataFromStore] handleTransition: ${symbol} → ${toStatus}`)
       const success = await updateStatus(symbol, toStatus)
-      if (!success) {
-        logger.error(`[usePoolDataFromStore] handleTransition 失败: ${symbol} → ${toStatus}`)
-      } else {
-        logger.info(`[usePoolDataFromStore] handleTransition 成功: ${symbol} → ${toStatus}`)
-      }
+      logUpdateOutcome('handleTransition', symbol, toStatus, success)
     },
     [updateStatus],
   )
@@ -119,11 +128,7 @@ export function usePoolDataFromStore(): UsePoolDataResult {
     async (symbol: string, group: string): Promise<void> => {
       logger.info(`[usePoolDataFromStore] handleChangeGroup: ${symbol} → ${group}`)
       const success = await updateGroup(symbol, group)
-      if (!success) {
-        logger.error(`[usePoolDataFromStore] handleChangeGroup 失败: ${symbol} → ${group}`)
-      } else {
-        logger.info(`[usePoolDataFromStore] handleChangeGroup 成功: ${symbol} → ${group}`)
-      }
+      logUpdateOutcome('handleChangeGroup', symbol, group, success)
     },
     [updateGroup],
   )

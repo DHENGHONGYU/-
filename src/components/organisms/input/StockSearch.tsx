@@ -36,10 +36,14 @@ export function StockSearch({
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const inputRef = useRef<HTMLInputElement | null>(null)
 
-  useEffect(() => {
+  const clearSearchDebounce = (): void => {
     if (debounceRef.current) {
       clearTimeout(debounceRef.current)
     }
+  }
+
+  useEffect(() => {
+    clearSearchDebounce()
 
     const trimmed = query.trim()
     if (trimmed.length < INPUT_CONFIG.search.minQueryLength) {
@@ -57,9 +61,7 @@ export function StockSearch({
     }, INPUT_CONFIG.search.debounceMs)
 
     return () => {
-      if (debounceRef.current) {
-        clearTimeout(debounceRef.current)
-      }
+      clearSearchDebounce()
     }
   }, [query, storeSearchStocks])
 

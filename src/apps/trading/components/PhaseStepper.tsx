@@ -34,14 +34,10 @@ export function PhaseStepper({ phase, cancelled, result }: PhaseStepperProps): R
   const currentIndex = PHASES.indexOf(phase)
   const cancelledIndex = PHASES.indexOf('cancelled')
 
-  const isPhaseReached = (index: number): boolean => {
-    if (cancelled) {
-      // 取消模式下，当前 phase 及之前阶段为已到达，cancelled 本身也为已到达
-      if (index === cancelledIndex) return true
-      return index <= currentIndex
-    }
-    return index <= currentIndex
-  }
+  const isPhaseReached = (index: number): boolean =>
+    cancelled
+      ? index === cancelledIndex || index <= currentIndex
+      : index <= currentIndex
 
   const isPhaseCurrent = (index: number): boolean => {
     if (cancelled) {

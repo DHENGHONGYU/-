@@ -20,7 +20,7 @@ import {
   type ModuleId,
   type StoreName,
 } from '@/config/dbConfig'
-import { dataBridge } from '@/core/databridge'
+import { dataBridge, type QueryRequest } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
 import { getLogger } from '@/lib/logger'
 import type { DataLayerResult } from './types'
@@ -75,6 +75,19 @@ export function createRepository<T, TKey = string>(
   const source: ModuleId = config.source ?? 'system'
   const sourceId = MODULE_ID[source]
 
+  const safeQuery = async <R,>(
+    request: QueryRequest,
+    op: string,
+    onFail: () => R,
+  ): Promise<R> => {
+    const res = await dataBridge.query<R>(request)
+    if (!res.success) {
+      logger.error(`[Repository] ${config.store} ${op} 失败`, { error: res.error })
+      return onFail()
+    }
+    return res.data as R
+  }
+
   const forward = async (
     action: keyof typeof ENVELOPE_ACTION,
     payload: unknown,
@@ -102,50 +115,42 @@ export function createRepository<T, TKey = string>(
     store: config.store,
 
     async get(key: TKey): Promise<T | undefined> {
-      const res = await dataBridge.query<T>({
-        action: ENVELOPE_ACTION.queryGet,
-        store: config.store,
-        key: key as string,
-        source: sourceId,
-      })
-      if (!res.success) {
-        logger.error(`[Repository] ${config.store} get 失败: key=${String(key)}`, {
-          error: res.error,
-        })
-        return undefined
-      }
-      return res.data
+      return safeQuery<T | undefined>(
+        {
+          action: ENVELOPE_ACTION.queryGet,
+          store: config.store,
+          key: key as string,
+          source: sourceId,
+        },
+        `get: key=${String(key)}`,
+        () => undefined,
+      )
     },
 
     async getAll(): Promise<T[]> {
-      const res = await dataBridge.query<T[]>({
-        action: ENVELOPE_ACTION.queryList,
-        store: config.store,
-        source: sourceId,
-      })
-      if (!res.success) {
-        logger.error(`[Repository] ${config.store} getAll 失败`, { error: res.error })
-        return []
-      }
-      return res.data ?? []
+      return safeQuery<T[]>(
+        {
+          action: ENVELOPE_ACTION.queryList,
+          store: config.store,
+          source: sourceId,
+        },
+        'getAll',
+        () => [],
+      )
     },
 
     async queryByIndex(indexName: string, value: unknown): Promise<T[]> {
-      const res = await dataBridge.query<T[]>({
-        action: ENVELOPE_ACTION.queryByIndex,
-        store: config.store,
-        indexName,
-        indexValue: value,
-        source: sourceId,
-      })
-      if (!res.success) {
-        logger.error(
-          `[Repository] ${config.store} queryByIndex 失败: index=${indexName}`,
-          { error: res.error },
-        )
-        return []
-      }
-      return res.data ?? []
+      return safeQuery<T[]>(
+        {
+          action: ENVELOPE_ACTION.queryByIndex,
+          store: config.store,
+          indexName,
+          indexValue: value,
+          source: sourceId,
+        },
+        `queryByIndex: index=${indexName}`,
+        () => [],
+      )
     },
 
     async put(entity: T, key: TKey): Promise<DataLayerResult<void>> {

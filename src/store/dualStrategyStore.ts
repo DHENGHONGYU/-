@@ -508,55 +508,44 @@ export function initDualStrategyStoreSubscriptions(): () => void {
 
   logger.info('[dualStrategyStore] 初始化 DataBridge 订阅')
 
+  const handleEnvelope = (
+    envelope: Parameters<Parameters<typeof dataBridge.subscribe>[1]>[0],
+    label: string,
+  ): void => {
+    if (shouldSkipSelf(envelope)) return
+    logger.info(`[dualStrategyStore] ${label} 频道收到变更`, {
+      action: envelope.meta.action,
+      source: envelope.meta.source,
+      traceId: envelope.meta.traceId,
+    })
+    debouncedRefresh()
+  }
+
   _unsubscribeHot = dataBridge.subscribe(
     STORE_NAME.hotSectorScores,
     (envelope) => {
-      if (shouldSkipSelf(envelope)) return
-      logger.info('[dualStrategyStore] hotSectorScores 频道收到变更', {
-        action: envelope.meta.action,
-        source: envelope.meta.source,
-        traceId: envelope.meta.traceId,
-      })
-      debouncedRefresh()
+      handleEnvelope(envelope, 'hotSectorScores')
     },
   )
 
   _unsubscribeValue = dataBridge.subscribe(
     STORE_NAME.valuePitScores,
     (envelope) => {
-      if (shouldSkipSelf(envelope)) return
-      logger.info('[dualStrategyStore] valuePitScores 频道收到变更', {
-        action: envelope.meta.action,
-        source: envelope.meta.source,
-        traceId: envelope.meta.traceId,
-      })
-      debouncedRefresh()
+      handleEnvelope(envelope, 'valuePitScores')
     },
   )
 
   _unsubscribeRotation = dataBridge.subscribe(
     STORE_NAME.rotationScores,
     (envelope) => {
-      if (shouldSkipSelf(envelope)) return
-      logger.info('[dualStrategyStore] rotationScores 频道收到变更', {
-        action: envelope.meta.action,
-        source: envelope.meta.source,
-        traceId: envelope.meta.traceId,
-      })
-      debouncedRefresh()
+      handleEnvelope(envelope, 'rotationScores')
     },
   )
 
   _unsubscribeSignals = dataBridge.subscribe(
     STORE_NAME.signals,
     (envelope) => {
-      if (shouldSkipSelf(envelope)) return
-      logger.info('[dualStrategyStore] signals 频道收到变更', {
-        action: envelope.meta.action,
-        source: envelope.meta.source,
-        traceId: envelope.meta.traceId,
-      })
-      debouncedRefresh()
+      handleEnvelope(envelope, 'signals')
     },
   )
 

@@ -157,9 +157,8 @@ function LogStreamPanelBase({
     // 订阅日志变更通知（仅用于触发刷新，数据通过 Store 获取）
     const service = getMonitorLogService()
     const unsubscribe = service.subscribe(() => {
-      if (!isPaused) {
-        fetchFilteredLogs()
-      }
+      if (isPaused) return
+      fetchFilteredLogs()
     })
 
     // 轮询定时器（暂停时不启动）
@@ -181,9 +180,8 @@ function LogStreamPanelBase({
 
   // 自动滚动到底部（暂停时保持当前视图）
   useEffect(() => {
-    if (isPaused) return
     const container = logContainerRef.current
-    if (container) {
+    if (!isPaused && container) {
       container.scrollTop = container.scrollHeight
     }
   }, [monitorLogs, isPaused])

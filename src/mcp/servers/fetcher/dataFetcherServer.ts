@@ -184,6 +184,11 @@ export class DataFetcherServer extends MCPServerBase {
   // ============================================================
 
   protected getResources(): ResourceTemplate[] {
+    const warnMissingSymbol = (symbol: string, uri: string, kind: string): void => {
+      if (!symbol) {
+        logger.warn(`[fetcher] resource ${kind}: missing symbol in URI`, { uri })
+      }
+    }
     return [
       {
         uriTemplate: 'fetcher://{symbol}/basic',
@@ -192,9 +197,7 @@ export class DataFetcherServer extends MCPServerBase {
         mimeType: 'application/json',
         resolver: async (uri) => {
           const symbol = uri.split('/')[2] ?? ''
-          if (!symbol) {
-            logger.warn('[fetcher] resource basic: missing symbol in URI', { uri })
-          }
+          warnMissingSymbol(symbol, uri, 'basic')
           logger.info(`[fetcher] resource: fetcher://${symbol}/basic`)
           const result = await fetchStockBasic(symbol)
           return {
@@ -211,9 +214,7 @@ export class DataFetcherServer extends MCPServerBase {
         mimeType: 'application/json',
         resolver: async (uri) => {
           const symbol = uri.split('/')[2] ?? ''
-          if (!symbol) {
-            logger.warn('[fetcher] resource kline: missing symbol in URI', { uri })
-          }
+          warnMissingSymbol(symbol, uri, 'kline')
           logger.info(`[fetcher] resource: fetcher://${symbol}/kline`)
           const result = await fetchStockKline(symbol, { period: 'daily', adjust: 'qfq' })
           return {

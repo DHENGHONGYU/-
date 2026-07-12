@@ -13,27 +13,31 @@ interface MigrationUploadTabProps {
  * @param onFileSelected }
  */
 export function MigrationUploadTab({ error, onFileSelected }: MigrationUploadTabProps): React.JSX.Element {
-  const handleDrop = useCallback(
-    (e: React.DragEvent<HTMLDivElement>) => {
-      e.preventDefault()
-      const file = e.dataTransfer.files[0]
-      if (file) {
-        logger.info('[MigrationUploadTab] File dropped', { fileName: file.name, fileSize: file.size })
-        onFileSelected(file)
-      }
+  const acceptMigrationFile = useCallback(
+    (file: File | undefined, via: 'drop' | 'input'): void => {
+      if (!file) return
+      logger.info(`[MigrationUploadTab] File selected via ${via}`, {
+        fileName: file.name,
+        fileSize: file.size,
+      })
+      onFileSelected(file)
     },
     [onFileSelected],
   )
 
+  const handleDrop = useCallback(
+    (e: React.DragEvent<HTMLDivElement>) => {
+      e.preventDefault()
+      acceptMigrationFile(e.dataTransfer.files[0], 'drop')
+    },
+    [acceptMigrationFile],
+  )
+
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0]
-      if (file) {
-        logger.info('[MigrationUploadTab] File selected via input', { fileName: file.name, fileSize: file.size })
-        onFileSelected(file)
-      }
+      acceptMigrationFile(e.target.files?.[0], 'input')
     },
-    [onFileSelected],
+    [acceptMigrationFile],
   )
 
   return (

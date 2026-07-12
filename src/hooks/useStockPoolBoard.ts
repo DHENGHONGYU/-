@@ -83,26 +83,41 @@ export function useStockPoolBoard() {
     )
   }, [])
 
+  const handleResultFailure = (
+    result: { success: boolean; error?: string },
+    onFail: () => void,
+  ): void => {
+    if (!result.success) onFail()
+  }
+
+  const reportBulkResult = (results: string[], targetCount: number, op: string): void => {
+    if (results.length > 0) {
+      setMessage(`批量${op}完成，部分失败：${results.join('；')}`)
+    } else {
+      setMessage(`已批量${op} ${targetCount} 只标的`)
+    }
+  }
+
   const handleTransition = useCallback(
     async (symbol: string, toStatus: ResearchStatus): Promise<void> => {
       const result = await transitionStock(symbol, toStatus)
       await refresh()
-      if (!result.success) {
-        setMessage(`${symbol} 流转失败：${result.error ?? '未知错误'}`)
-      }
+      handleResultFailure(result, () =>
+        setMessage(`${symbol} 流转失败：${result.error ?? '未知错误'}`),
+      )
     },
-    [refresh],
+    [refresh, handleResultFailure],
   )
 
   const handleChangeGroup = useCallback(
     async (symbol: string, group: string): Promise<void> => {
       const result = await updateStockGroup(symbol, group)
       await refresh()
-      if (!result.success) {
-        setMessage(`${symbol} 移入分组失败：${result.error ?? '未知错误'}`)
-      }
+      handleResultFailure(result, () =>
+        setMessage(`${symbol} 移入分组失败：${result.error ?? '未知错误'}`),
+      )
     },
-    [refresh],
+    [refresh, handleResultFailure],
   )
 
   const handleRefreshKline = useCallback(
@@ -131,19 +146,15 @@ export function useStockPoolBoard() {
       const results: string[] = []
       for (const stock of targets) {
         const result = await transitionStock(stock.symbol, toStatus)
-        if (!result.success) {
-          results.push(`${stock.symbol}: ${result.error ?? '失败'}`)
-        }
+        handleResultFailure(result, () =>
+          results.push(`${stock.symbol}: ${result.error ?? '失败'}`),
+        )
       }
       setSelectedSymbols([])
       await refresh()
-      if (results.length > 0) {
-        setMessage(`批量流转完成，部分失败：${results.join('；')}`)
-      } else {
-        setMessage(`已批量流转 ${targets.length} 只标的到 ${toStatus}`)
-      }
+      reportBulkResult(results, targets.length, '流转')
     },
-    [stocks, selectedSymbols, refresh],
+    [stocks, selectedSymbols, refresh, handleResultFailure, reportBulkResult],
   )
 
   const runBulkChangeGroup = useCallback(
@@ -152,19 +163,15 @@ export function useStockPoolBoard() {
       const results: string[] = []
       for (const stock of targets) {
         const result = await updateStockGroup(stock.symbol, targetGroup)
-        if (!result.success) {
-          results.push(`${stock.symbol}: ${result.error ?? '失败'}`)
-        }
+        handleResultFailure(result, () =>
+          results.push(`${stock.symbol}: ${result.error ?? '失败'}`),
+        )
       }
       setSelectedSymbols([])
       await refresh()
-      if (results.length > 0) {
-        setMessage(`批量移入分组完成，部分失败：${results.join('；')}`)
-      } else {
-        setMessage(`已批量移入 ${targets.length} 只标的到 ${targetGroup}`)
-      }
+      reportBulkResult(results, targets.length, '移入分组')
     },
-    [stocks, selectedSymbols, refresh],
+    [stocks, selectedSymbols, refresh, handleResultFailure, reportBulkResult],
   )
 
   const handleBulkArchive = useCallback((): Promise<void> => {

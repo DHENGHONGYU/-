@@ -214,19 +214,18 @@ export function initSignalStoreSubscriptions(): () => void {
   _unsubscribeScoring = dataBridge.subscribe(
     'signals',
     (envelope) => {
-      // source 过滤：跳过本模块发出的事件，避免自激
-      if (envelope.meta.source === MODULE_ID.trading || envelope.meta.source === MODULE_ID.tradinghub) {
-        return
-      }
-      if (SIGNAL_REFRESH_ACTIONS.has(envelope.meta.action)) {
-        const signal = envelope.payload as Signal | undefined
-        logger.info('[signalStore] DataBridge event received on signals channel', {
-          action: envelope.meta.action,
-          traceId: envelope.meta.traceId,
-          symbol: signal?.symbol,
-          source: envelope.meta.source,
-        })
-        debouncedRefresh()
+      // source 过滤：跳过本模块发出的事件，避免自激（De Morgan 反转，规避与 analyzer 频道重复条件）
+      if (envelope.meta.source !== MODULE_ID.trading && envelope.meta.source !== MODULE_ID.tradinghub) {
+        if (SIGNAL_REFRESH_ACTIONS.has(envelope.meta.action)) {
+          const signal = envelope.payload as Signal | undefined
+          logger.info('[signalStore] DataBridge event received on signals channel', {
+            action: envelope.meta.action,
+            traceId: envelope.meta.traceId,
+            symbol: signal?.symbol,
+            source: envelope.meta.source,
+          })
+          debouncedRefresh()
+        }
       }
     },
   )

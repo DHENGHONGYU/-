@@ -58,7 +58,7 @@ function WidgetWrapper(props: WidgetWrapperProps): React.JSX.Element {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!config) {
+    if (config == null) {
       setLoading(false)
       return
     }
@@ -143,8 +143,8 @@ function WidgetWrapper(props: WidgetWrapperProps): React.JSX.Element {
             onRetry={async () => {
               setLoading(true)
               setError(null)
-              const success = await widgetEngine.refreshInstance(config.instanceId)
-              if (success) {
+              const refreshed = await widgetEngine.refreshInstance(config.instanceId)
+              if (refreshed) {
                 const component = await widgetEngine.loadComponent(config.widgetId)
                 setComponent(component)
               } else {

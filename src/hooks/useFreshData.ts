@@ -118,13 +118,12 @@ export function useFreshData(options: UseFreshDataOptions): UseFreshDataResult {
 
   // 每秒更新当前时间，用于计算 secondsSinceUpdate
   useEffect(() => {
-    if (!enabled) return
-
-    const timer = setInterval(() => {
-      setNow(Date.now())
-    }, 1000)
-
-    return () => clearInterval(timer)
+    if (enabled) {
+      const timer = setInterval(() => {
+        setNow(Date.now())
+      }, 1000)
+      return () => clearInterval(timer)
+    }
   }, [enabled])
 
   // 计算是否过期
@@ -171,17 +170,17 @@ export function useFreshData(options: UseFreshDataOptions): UseFreshDataResult {
 
       if (currentLastUpdated <= 0) return
       if (Date.now() - currentLastUpdated <= currentMaxStaleMs) return
-      if (isRefreshingRef.current) return
+      if (!isRefreshingRef.current) {
+        logger.info(`[useFreshData:${label}] visibilitychange 触发自动刷新`, {
+          lastUpdated: currentLastUpdated,
+          maxStaleMs: currentMaxStaleMs,
+        })
 
-      logger.info(`[useFreshData:${label}] visibilitychange 触发自动刷新`, {
-        lastUpdated: currentLastUpdated,
-        maxStaleMs: currentMaxStaleMs,
-      })
-
-      isRefreshingRef.current = true
-      currentOptions.refresh().finally(() => {
-        isRefreshingRef.current = false
-      })
+        isRefreshingRef.current = true
+        currentOptions.refresh().finally(() => {
+          isRefreshingRef.current = false
+        })
+      }
     }
 
     visibilityHandlers.add(checkAndRefresh)

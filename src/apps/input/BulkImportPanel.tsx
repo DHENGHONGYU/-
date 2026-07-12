@@ -115,15 +115,16 @@ export default function BulkImportPanel(): React.JSX.Element {
     e.preventDefault()
     setDragOver(false)
   }
+  const acceptFile = (file?: File): void => {
+    if (file) void handleFile(file)
+  }
   const handleDrop = (e: React.DragEvent): void => {
     e.preventDefault()
     setDragOver(false)
-    const file = e.dataTransfer.files[0]
-    if (file) void handleFile(file)
+    acceptFile(e.dataTransfer.files[0])
   }
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const file = e.target.files?.[0]
-    if (file) void handleFile(file)
+    acceptFile(e.target.files?.[0])
   }
 
   // ── 导入执行 ──
@@ -204,19 +205,22 @@ export default function BulkImportPanel(): React.JSX.Element {
   }
 
   // ── 主按钮文案 ──
-  const primaryButtonLabel = (): string => {
-    if (importPhase === 'importing') return `导入中 ${importProgress}%`
-    if (importPhase === 'done' && importResult) {
-      return `完成 · 成功 ${importResult.success} 条`
+  const getPrimaryButton = (): {
+    label: string
+    variant: 'primary' | 'success' | 'secondary'
+  } => {
+    if (importPhase === 'importing') {
+      return { label: `导入中 ${importProgress}%`, variant: 'secondary' }
     }
-    if (stats.valid === 0 && stats.total > 0) return '无可导入行'
-    return `确认导入${stats.valid > 0 ? ` (${stats.valid})` : ''}`
-  }
-
-  const primaryButtonVariant = (): 'primary' | 'success' | 'secondary' => {
-    if (importPhase === 'done' && importResult && importResult.success > 0) return 'success'
-    if (importPhase === 'importing') return 'secondary'
-    return 'primary'
+    if (importPhase === 'done' && importResult) {
+      const isSuccess = importResult.success > 0
+      return {
+        label: `完成 · 成功 ${importResult.success} 条`,
+        variant: isSuccess ? 'success' : 'primary',
+      }
+    }
+    if (stats.valid === 0 && stats.total > 0) return { label: '无可导入行', variant: 'primary' }
+    return { label: `确认导入${stats.valid > 0 ? ` (${stats.valid})` : ''}`, variant: 'primary' }
   }
 
   // ── 步骤指引 ──
@@ -517,12 +521,12 @@ export default function BulkImportPanel(): React.JSX.Element {
               </Button>
             )}
             <Button
-              variant={primaryButtonVariant()}
+              variant={getPrimaryButton().variant}
               size="sm"
               onClick={() => void handleConfirmImport()}
               disabled={stats.valid === 0 || importPhase === 'importing'}
             >
-              {primaryButtonLabel()}
+              {getPrimaryButton().label}
             </Button>
           </div>
         </CardContent>

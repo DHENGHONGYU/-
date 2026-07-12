@@ -114,38 +114,37 @@ export class V6Database {
         const tx = db.transaction(storeNames, mode)
         let settled = false
 
+        const settleOnce = (kind: 'resolve' | 'reject', value: T | Error): boolean => {
+          if (settled) return false
+          settled = true
+          if (kind === 'resolve') {
+            resolve(value as T)
+          } else {
+            reject(value)
+          }
+          return true
+        }
+
         tx.oncomplete = () => {
           logger.info('[DB] withTransaction completed')
         }
         tx.onabort = () => {
-          if (!settled) {
-            settled = true
-            reject(new Error('Transaction aborted'))
-          }
+          settleOnce('reject', new Error('Transaction aborted'))
         }
         tx.onerror = () => {
-          if (!settled) {
-            settled = true
-            reject(tx.error instanceof Error ? tx.error : new Error(String(tx.error)))
-          }
+          settleOnce('reject', tx.error instanceof Error ? tx.error : new Error(String(tx.error)))
         }
 
         Promise.resolve(callback(tx))
           .then((result) => {
-            if (!settled) {
-              settled = true
-              resolve(result)
-            }
+            settleOnce('resolve', result)
           })
           .catch((err) => {
-            if (!settled) {
-              settled = true
-              logger.error('[DB] withTransaction callback error, aborting', {
-                error: err instanceof Error ? err.message : String(err),
-              })
-              tx.abort()
-              reject(err instanceof Error ? err : new Error(String(err)))
-            }
+            logger.error('[DB] withTransaction callback error, aborting', {
+              error: err instanceof Error ? err.message : String(err),
+            })
+            tx.abort()
+            settleOnce('reject', err instanceof Error ? err : new Error(String(err)))
           })
       })
     } catch (err) {

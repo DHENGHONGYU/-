@@ -87,6 +87,13 @@ const agentSubscriptions: Array<() => void> = []
  */
 export function initAgentSubscriptions(): () => void {
   destroyAgentSubscriptions()
+  const syncTask = (taskId: string): void => {
+    const task = agentRuntime.getTask(taskId)
+    if (task) {
+      useAgentStore.getState().updateTask(task)
+    }
+    useAgentStore.getState().refreshStats()
+  }
   agentSubscriptions.push(
     eventBus.on('AGENT_REGISTERED', (payload) => {
       const { agentId } = payload as { agentId: string }
@@ -95,43 +102,23 @@ export function initAgentSubscriptions(): () => void {
     }),
     eventBus.on('AGENT_TASK_STARTED', (payload) => {
       const { taskId } = payload as { taskId: string }
-      const task = agentRuntime.getTask(taskId)
-      if (task) {
-        useAgentStore.getState().updateTask(task)
-      }
-      useAgentStore.getState().refreshStats()
+      syncTask(taskId)
     }),
     eventBus.on('AGENT_TASK_COMPLETED', (payload) => {
       const { taskId } = payload as { taskId: string }
-      const task = agentRuntime.getTask(taskId)
-      if (task) {
-        useAgentStore.getState().updateTask(task)
-      }
-      useAgentStore.getState().refreshStats()
+      syncTask(taskId)
     }),
     eventBus.on('AGENT_TASK_FAILED', (payload) => {
       const { taskId } = payload as { taskId: string }
-      const task = agentRuntime.getTask(taskId)
-      if (task) {
-        useAgentStore.getState().updateTask(task)
-      }
-      useAgentStore.getState().refreshStats()
+      syncTask(taskId)
     }),
     eventBus.on('AGENT_TASK_TIMEOUT', (payload) => {
       const { taskId } = payload as { taskId: string }
-      const task = agentRuntime.getTask(taskId)
-      if (task) {
-        useAgentStore.getState().updateTask(task)
-      }
-      useAgentStore.getState().refreshStats()
+      syncTask(taskId)
     }),
     eventBus.on('AGENT_TASK_CANCELLED', (payload) => {
       const { taskId } = payload as { taskId: string }
-      const task = agentRuntime.getTask(taskId)
-      if (task) {
-        useAgentStore.getState().updateTask(task)
-      }
-      useAgentStore.getState().refreshStats()
+      syncTask(taskId)
     }),
   )
   return () => destroyAgentSubscriptions()

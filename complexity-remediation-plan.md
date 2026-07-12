@@ -90,9 +90,10 @@
 
 ## 五、执行进度（2026-07-12 实时）
 
-> **最终结论（本轮收尾后实测 `measure-complexity-now.ts`）**：
-> - 文件扫描 707；总违规 29 = 深度嵌套 **0** + 长链 **0** + 重复条件 **29**。
+> **最终结论（重复条件整改后实测 `complexity-scan.ts` + `measure-complexity-now.ts`）**：
+> - 文件扫描 905（complexity-scan）/ 707（measure）；总违规 **0** = 深度嵌套 **0** + 长链 **0** + 重复条件 **0**。
 > - 38 文件逻辑嵌套清单（D4）已全部平铺归零；深度嵌套从基准 64 降到 **0**。
+> - 重复条件 29 处（C1–C28 提取合并 + C29 熔断状态机维持）现已归零：C1–C28 通过抽具名 helper / 卫语句一正一反 / De Morgan 反转全部消除；C29 `resilience.guard` 两处 `state === 'half-open'` 分属 `createCircuitBreaker` 与内部 `<arrow>` 两个不同函数，官方 per-function 扫描不计为重复，维持原样。
 
 ### 本轮收尾（6 个被中断子代理批次遗留文件，逐一平铺 + 单文件 tsc 自检通过）
 | 文件 | 函数 | 手法 | 深度 |
@@ -115,7 +116,11 @@
 - SkillManage 入口错（非真不可用）已核实。
 - ⚠️ 根目录新建文件疑似被清理机制莫名删除：已改用内联 `grep` / 临时 `_cx_*.json` + `_cx_filter.cjs` 规避。
 
+### 重复条件整改（C1–C28 已落实，2026-07-12 收尾批次）
+- 手法统一为四类：① 抽具名 helper 把 `if` 收进唯一一处（StockSearch / TraceReplayPanel / usePoolDataFromStore / LogStreamPanel / MigrationUploadTab / MigrationPanel / db / repository / useConfirmDialog / useStockPoolBoard / dataFetcherServer / llmClient / HoldingsPage / TradingFlowPage / agentStore / dualStrategyStore / positionStore）；② 卫语句一正一反（BulkImportPanel / PhaseStepper / CockpitShell / useIndustryScorePage / useFreshData / StockAnalysisPage / IntelligentScorePage / ScoreDocPage / TradeModal）；③ `if (result.success)` 三处合并为 `reportOrderOutcome` 回调 helper（TradingFlowPage）；④ `signalStore` 两处同义 source 过滤经 De Morgan 反转区分（analyzer `=== || ===` vs signals `!== && !==`）。
+- 门禁复测（系统 Node24 直驱）：`tsc:prod` 0 错；`audit:layers` 868 文件 0 违规；`audit:atomic` 133 文件 0 违规；`complexity-scan` 重复 if 条件 **0**（深层嵌套 0 / 长链 0）。
+- C29 `resilience.guard` 维持原样（熔断状态机并发语义，官方 per-function 扫描不计重复）。
+
 ### 剩余（非本 38 文件清单范围）
-- **重复条件 29 处**（C1–C28 可提取合并 + C29 `resilience.guard` 维持并注释）——属独立类别，留作后续批次，不在逻辑嵌套 38 文件清单内。
-- 长链条件：0。深度嵌套：0。
+- 长链条件：0。深度嵌套：0。重复条件：0（已全部归零）。
 

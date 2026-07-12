@@ -64,14 +64,15 @@ export default function TradeModal({
   )
 
   const handleConfirm = useCallback(() => {
-    if (!modal.holding || !modal.action) return
-    logger.info('[TradeModal] 用户确认交易', {
+    if (modal.holding && modal.action) {
+      logger.info('[TradeModal] 用户确认交易', {
       code: modal.holding.code,
       action: modal.action,
       quantity,
       holdingQuantity: modal.holding.quantity,
     })
-    onConfirm(modal.holding, modal.action, quantity)
+      onConfirm(modal.holding, modal.action, quantity)
+    }
   }, [modal.holding, modal.action, quantity, onConfirm])
 
   if (!modal.holding || !modal.action) return <></>

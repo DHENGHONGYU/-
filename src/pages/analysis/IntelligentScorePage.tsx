@@ -238,9 +238,10 @@ export default function IntelligentScorePage(): React.JSX.Element {
   const [trendPeriod, setTrendPeriod] = useState<ScoreTrendPeriod>('month')
 
   useEffect(() => {
-    if (!symbol) return
-    logger.info('[IntelligentScorePage] 加载评分趋势', { symbol, trendPeriod })
-    void loadScoreTrend(symbol, trendPeriod)
+    if (symbol) {
+      logger.info('[IntelligentScorePage] 加载评分趋势', { symbol, trendPeriod })
+      void loadScoreTrend(symbol, trendPeriod)
+    }
   }, [symbol, trendPeriod, loadScoreTrend])
 
   const runTooltip = loading

@@ -53,9 +53,10 @@ export default function ScoreDocPage(): React.JSX.Element {
   }, [symbol, loadVersions])
 
   const handleRefresh = (): void => {
-    if (!symbol) return
-    logger.info('[ScoreDocPage] 手动刷新版本列表', { symbol })
-    void refresh()
+    if (symbol) {
+      logger.info('[ScoreDocPage] 手动刷新版本列表', { symbol })
+      void refresh()
+    }
   }
 
   const handleExportAll = async (): Promise<void> => {

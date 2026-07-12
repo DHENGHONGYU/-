@@ -49,14 +49,16 @@ export default function StockAnalysisPage(): React.JSX.Element {
     // 创建 AbortController 用于取消请求
     const controller = new AbortController()
 
+    const runIfNotAborted = (fn: () => void): void => {
+      if (!controller.signal.aborted) {
+        fn()
+      }
+    }
+
     loadStockAnalysis(symbol, controller.signal).then(() => {
-      if (!controller.signal.aborted) {
-        logger.info('[StockAnalysisPage] 数据加载完成', { symbol })
-      }
+      runIfNotAborted(() => logger.info('[StockAnalysisPage] 数据加载完成', { symbol }))
     }).catch((err) => {
-      if (!controller.signal.aborted) {
-        logger.error('[StockAnalysisPage] 数据加载失败', { symbol, error: err.message })
-      }
+      runIfNotAborted(() => logger.error('[StockAnalysisPage] 数据加载失败', { symbol, error: err.message }))
     })
 
     return () => {
@@ -67,15 +69,15 @@ export default function StockAnalysisPage(): React.JSX.Element {
 
   // 刷新评分
   const handleScore = async (): Promise<void> => {
-    if (!symbol) return
+    if (symbol) {
+      logger.info('[StockAnalysisPage] 开始刷新 V6 评分', { symbol })
 
-    logger.info('[StockAnalysisPage] 开始刷新 V6 评分', { symbol })
-
-    try {
-      await refreshScore(symbol)
-      logger.info('[StockAnalysisPage] V6 评分刷新完成', { symbol })
-    } catch (err) {
-      logger.error('[StockAnalysisPage] V6 评分刷新失败', { symbol, error: err instanceof Error ? err.message : String(err) })
+      try {
+        await refreshScore(symbol)
+        logger.info('[StockAnalysisPage] V6 评分刷新完成', { symbol })
+      } catch (err) {
+        logger.error('[StockAnalysisPage] V6 评分刷新失败', { symbol, error: err instanceof Error ? err.message : String(err) })
+      }
     }
   }
 

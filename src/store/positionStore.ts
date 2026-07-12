@@ -226,11 +226,15 @@ export function initPositionStoreSubscriptions(): () => void {
     return _unsubscribeOrders
   }
 
-  const handleOrdersChanged = () => {
-    logger.info('[positionStore] ORDERS_CHANGED event received, scheduling debounced recompute')
+  const clearDebounceTimer = (): void => {
     if (_debounceTimer) {
       clearTimeout(_debounceTimer)
     }
+  }
+
+  const handleOrdersChanged = () => {
+    logger.info('[positionStore] ORDERS_CHANGED event received, scheduling debounced recompute')
+    clearDebounceTimer()
     _debounceTimer = setTimeout(() => {
       _debounceTimer = null
       if (_isRefreshing) {
@@ -249,10 +253,8 @@ export function initPositionStoreSubscriptions(): () => void {
   logger.info('[positionStore] ORDERS_CHANGED event subscription initialized (debounce=200ms)')
 
   return () => {
-    if (_debounceTimer) {
-      clearTimeout(_debounceTimer)
-      _debounceTimer = null
-    }
+    clearDebounceTimer()
+    _debounceTimer = null
     _unsubscribeOrders?.()
     _unsubscribeOrders = null
     _isRefreshing = false

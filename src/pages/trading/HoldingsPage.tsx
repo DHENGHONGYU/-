@@ -66,6 +66,13 @@ export default function HoldingsPage(): React.JSX.Element {
     }
   }, [])
 
+  // 仅在组件仍挂载时更新 loading 状态，避免卸载后 setState 警告
+  const setLoadingIfMounted = (patch: Parameters<typeof setLoading>[0]): void => {
+    if (isMountedRef.current) {
+      setLoading(patch)
+    }
+  }
+
   /** 初始化 DataBridge 订阅（组件卸载时自动清理） */
   useEffect(() => {
     return initHoldingsStoreSubscriptions()
@@ -167,9 +174,7 @@ export default function HoldingsPage(): React.JSX.Element {
         variant: 'error',
       })
     } finally {
-      if (isMountedRef.current) {
-        setLoading({ isExporting: false })
-      }
+      setLoadingIfMounted({ isExporting: false })
     }
   }, [buildParams, setLoading, toast])
 
@@ -234,9 +239,7 @@ export default function HoldingsPage(): React.JSX.Element {
           variant: 'error',
         })
       } finally {
-        if (isMountedRef.current) {
-          setLoading({ isActionLoading: false })
-        }
+      setLoadingIfMounted({ isActionLoading: false })
       }
     },
     [loadData, setLoading, closeModal, toast],
