@@ -1,0 +1,37 @@
+# Docker build 排除清单（减少镜像体积 + 避免缓存失效）
+# 注意：此文件位于 e2e/.dockerignore，但 Docker build context 是项目根目录
+# 所以路径需要相对于项目根目录
+
+# 构建产物
+dist
+dist-test
+coverage
+
+# 依赖（通过 package*.json 重新安装）
+node_modules
+
+# 大型数据/日志
+docs/reports
+*.log
+*.md
+
+# IDE
+.vscode
+.idea
+
+# 版本控制
+.git
+.gitignore
+
+# 操作系统
+.DS_Store
+Thumbs.db
+
+# 临时文件
+tmp
+temp
+*.tmp
+
+# 其他测试产物
+test-results
+playwright-report

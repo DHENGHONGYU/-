@@ -1,0 +1,39 @@
+# V9 视觉回归 — Docker Compose 配置
+# 提供两种模式：
+#   docker compose -f e2e/docker-compose.yml run --rm visual-test    (比对)
+#   docker compose -f e2e/docker-compose.yml run --rm visual-update  (更新基线)
+
+services:
+  # ── 模式1：视觉回归比对（CI 默认） ──
+  visual-test:
+    build:
+      context: ..
+      dockerfile: e2e/Dockerfile
+    container_name: v9-visual-test
+    # 挂载 e2e 目录，使容器内可读取基线、写入 test-results
+    volumes:
+      - ../e2e:/app/e2e
+    # 确保 Playwright 在容器内能启动浏览器（需要 IPC 命名空间）
+    ipc: host
+    # 禁用沙箱（容器内必须）
+    environment:
+      - CI=true
+      - PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+      - PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+    command: npm run test:e2e:visual
+
+  # ── 模式2：更新基线（本地维护时使用） ──
+  visual-update:
+    build:
+      context: ..
+      dockerfile: e2e/Dockerfile
+    container_name: v9-visual-update
+    volumes:
+      - ../e2e:/app/e2e
+    ipc: host
+    environment:
+      - CI=true
+      - PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+      - PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+    # --update-snapshots 重新冻结基线
+    command: npm run test:e2e:visual:update

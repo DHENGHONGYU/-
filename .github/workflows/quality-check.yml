@@ -102,13 +102,104 @@ jobs:
           node-version: 20
           cache: 'npm'
       - run: npm ci --ignore-scripts --no-audit
+      # P0 阻塞性检查（必须通过）
       - run: npm run audit:layers
       - run: npm run audit:hardcode
-      - run: npm run audit:deadcode
-      - run: npm run audit:docs
+      # 文档同步审计 — 阻断性门禁（exit code 非零则 CI 失败）
+      - name: Documentation sync audit (P0 blocking gate)
+        run: npm run audit:docs
+        continue-on-error: false
+      - name: Semantic validation (P0 blocking gate)
+        run: npm run audit:semantic
+        continue-on-error: false
       - run: npm run lint:colors
       # npm audit: 检查依赖漏洞（audit-level=high 时 high/critical 才失败）
       - run: npm audit --audit-level=high
+
+  # 依赖分析：检测循环依赖、孤立模块、不可达模块
+  dependency-analysis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d71f2d81a # v4.1.0
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci --ignore-scripts --no-audit
+      # P1 重要检查：循环依赖为错误级别会阻止合并
+      - name: Run dependency analysis (P1 important check)
+        run: npm run audit:dependencies
+      # 上传依赖分析报告
+      - name: Upload dependency analysis report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-analysis-report
+          path: docs/reports/dependency-analysis.*
+          retention-days: 7
+
+  # 质量门禁汇总：汇总所有检查结果并生成报告
+  quality-gate-summary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [lint, typecheck, route-verify, test, audit, dependency-analysis]
+    if: always()
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d71f2d81a # v4.1.0
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci --ignore-scripts --no-audit
+      - name: Generate quality gate summary
+        run: |
+          echo "=== 质量门禁检查汇总 ==="
+          echo "P0 阻塞性检查:"
+          echo "  - lint: ${{ needs.lint.result }}"
+          echo "  - typecheck: ${{ needs.typecheck.result }}"
+          echo "  - route-verify: ${{ needs.route-verify.result }}"
+          echo "  - test: ${{ needs.test.result }}"
+          echo "  - audit (P0 checks): ${{ needs.audit.result }}"
+          echo ""
+          echo "P1 重要检查:"
+          echo "  - dependency-analysis: ${{ needs.dependency-analysis.result }}"
+          echo ""
+          echo "P2 建议性检查（在单独的 workflow 中执行）"
+      - name: Check P0 gate status
+        run: |
+          FAILURE=false
+          
+          if [ "${{ needs.lint.result }}" != "success" ] && [ "${{ needs.lint.result }}" != "skipped" ]; then
+            echo "❌ P0 检查失败: lint"
+            FAILURE=true
+          fi
+          
+          if [ "${{ needs.typecheck.result }}" != "success" ] && [ "${{ needs.typecheck.result }}" != "skipped" ]; then
+            echo "❌ P0 检查失败: typecheck"
+            FAILURE=true
+          fi
+          
+          if [ "${{ needs.route-verify.result }}" != "success" ] && [ "${{ needs.route-verify.result }}" != "skipped" ]; then
+            echo "❌ P0 检查失败: route-verify"
+            FAILURE=true
+          fi
+          
+          if [ "${{ needs.test.result }}" != "success" ] && [ "${{ needs.test.result }}" != "skipped" ]; then
+            echo "❌ P0 检查失败: test"
+            FAILURE=true
+          fi
+          
+          if [ "${{ needs.audit.result }}" != "success" ] && [ "${{ needs.audit.result }}" != "skipped" ]; then
+            echo "❌ P0 检查失败: audit"
+            FAILURE=true
+          fi
+          
+          if [ "$FAILURE" = true ]; then
+            exit 1
+          else
+            echo "✅ 所有 P0 阻塞性检查通过"
+          fi
 
   # 契约验证：验证所有类型契约的运行时合规性
   contract-validation:
@@ -121,18 +212,88 @@ jobs:
           node-version: 20
           cache: 'npm'
       - run: npm ci --ignore-scripts --no-audit
-      # 运行契约验证测试（通过 setupFiles 自动加载契约验证器）
-      # 契约验证器会在测试执行前后自动注册和验证所有契约
       - name: Run contract validation tests
         run: npm run test:clean -- --reporter=verbose
         env:
           CI: true
-          # 启用契约验证日志输出
           CONTRACT_VALIDATION_LOG: true
-      # 检查是否有契约违反记录
-      - name: Check for contract violations
+
+  # 快照测试：检测 API 响应、文档和数据 schema 的意外变更
+  snapshot-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d71f2d81a # v4.1.0
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci --ignore-scripts --no-audit
+      - name: Run snapshot tests
+        run: npx vitest run tests/__tests__/snapshot/ --reporter=basic
+        env:
+          CI: true
+      - name: Upload snapshot report
         if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: snapshot-report
+          path: tests/__tests__/snapshot/__snapshots__/
+          retention-days: 7
+
+  # API 提取：从代码生成 API 文档
+  api-extraction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d71f2d81a # v4.1.0
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci --ignore-scripts --no-audit
+      - name: Extract API documentation
+        run: npm run api:extract
+      - name: Upload API report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-report
+          path: docs/reports/api-report.md
+          retention-days: 7
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # 视觉回归测试（EXPERIMENTAL — Docker 统一环境，逐步去实验性标志）
+  # ════════════════════════════════════════════════════════════════════════════
+  # 运行方式：通过 e2e/docker-compose.yml 启动 Playwright 官方容器
+  #   - 容器内预装 Ubuntu + Chromium + 中文字体 → 消除 Windows/macOS 渲染差异
+  #   - 基线真相源：本地运行 `npm run test:e2e:visual:docker:update` 后提交
+  #   - CI 回归：运行 `npm run test:e2e:visual:docker` 做 diff
+  #
+  # 当前仍标记 continue-on-error: true，待收集 2-3 次 CI 稳定运行数据后移除。
+  # ════════════════════════════════════════════════════════════════════════════
+  visual-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # 实验性：收集 Docker 方案稳定度，稳定后移除
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      # 安装 Docker Compose（ubuntu-latest 已内置，显式确保版本）
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@988b5a0280414a5213010198a302fdf5e5322a6c # v3.6.1
+      # 构建并运行视觉回归
+      - name: Build & run visual regression (Docker)
         run: |
-          # 契约验证器会在测试输出中报告违反情况
-          # 如果有违反，测试会失败并在此步骤中显示
-          echo "Contract validation completed. Check test output above for any violations."
+          docker compose -f e2e/docker-compose.yml build visual-test
+          docker compose -f e2e/docker-compose.yml run --rm visual-test
+      # 上传失败截图（含 diff / actual / expected）便于调试
+      - name: Upload visual regression artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-regression-failures
+          path: |
+            test-results/
+            e2e/visual-regression.spec.ts-snapshots/
+          retention-days: 7
