@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>V9 上线前体检 · 逆向核对与综合整改方案</title>
+<style>
+:root{--bg:#f6f8fb;--panel:#fff;--border:#e4e9f0;--text:#1f2733;--muted:#6b7686;--brand:#2563eb;}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:14px;line-height:1.6}
+.wrap{max-width:1280px;margin:0 auto;padding:24px 20px 60px}
+h1{font-size:22px;margin:0 0 4px}h2{font-size:18px;margin:26px 0 12px;border-left:4px solid var(--brand);padding-left:10px}
+h3{font-size:15px;margin:18px 0 8px}
+.sub{color:var(--muted);font-size:13px}
+.scope{background:#fff8e6;border:1px solid #f4dc94;border-left:4px solid #d99e0b;border-radius:10px;padding:12px 14px;margin:14px 0 8px;font-size:12.5px;color:#5c4a16}
+.scope b{color:#7a5b06}
+.mod-block{margin:16px 0;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.mod-block h3{margin:0 0 8px}
+.mc{font-size:12px;color:var(--muted);font-weight:400;margin-left:8px}
+table.rt{width:100%;border-collapse:collapse;font-size:12.5px}
+table.rt th,table.rt td{border:1px solid var(--border);padding:7px 8px;text-align:left;vertical-align:top}
+table.rt th{background:#f1f5fb;font-weight:600}
+td.c{text-align:center;white-space:nowrap}
+td.std{color:#3a4656}
+.prio{display:inline-block;padding:1px 8px;border-radius:999px;font-size:11px;font-weight:600;color:#fff}
+.p-block{background:#dc2626}.p-high{background:#ea580c}.p-mid{background:#2563eb}.p-low{background:#64748b}
+.vtag{display:inline-block;padding:1px 7px;border-radius:6px;font-size:11px;font-weight:600;margin-bottom:3px}
+.vb{background:#fdecec;color:#b91c1c}.vi{background:#fff1e6;color:#c2410c}.vb2{background:#eaf1ff;color:#1d4ed8}
+.vm{background:#eef1f5;color:#475569}.vl{background:#f1f4f8;color:#64748b}.vc{background:#ecfdf5;color:#047857}
+.nn{font-size:12px;color:#2a3543}.mt{font-size:11px;color:var(--muted);margin-top:3px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin:10px 0}
+.card p{margin:6px 0 0;font-size:13px;color:#33404f}
+.ch{display:flex;align-items:baseline;gap:8px}
+.rel{display:inline-block;padding:1px 8px;border-radius:6px;background:#eef3ff;color:#1e40af;font-size:11px;font-weight:600}
+.rank{display:inline-block;padding:2px 10px;border-radius:6px;font-weight:700;color:#fff;font-size:12px}
+.rank.P0{background:#dc2626}.rank.P1{background:#ea580c}.rank.P2{background:#2563eb}.rank.P3{background:#64748b}
+.constraint{background:#f0f6ff;border:1px solid #cfe0ff;border-radius:10px;padding:12px 16px;font-size:13px;white-space:pre-line;color:#1f3a66;margin-top:8px}
+.legend{font-size:12px;color:var(--muted);margin:6px 0}
+@media print{body{font-size:11px}.mod-block,.card{break-inside:avoid}}
+</style></head><body><div class="wrap">
+<h1>智能投研复盘系统 V9 · 上线前体检：逆向核对与综合整改方案</h1>
+<div class="sub">基于 78 项体检清单（checklist_record.json）· 逆向顺序(78→1)逐项核对 · 按功能板块归类 · 含依赖/时序与整改方案</div>
+
+<div class="scope">
+<b>范围校准（重要）：</b>本系统为<b>个人股票研究/复盘辅助分析工具，非金融产品、不涉及即时交易</b>。
+故「合规与免责」模块已按<b>最低要求</b>执行：等保三级、金融监管备案等持牌义务<b>标记为豁免</b>；
+重点保留<b>本地数据自管、AI 内容免责声明、分享前脱敏提示</b>。其余模块仍按原标准严格体检。
+本方案中该模块优先级降至 <b>P3（不阻塞发布）</b>。
+</div>
+
+<h2>一、78 项逆向逐项核对（板块逆序 · 板块内从第 N 项至第 1 项）</h2>
+<div class="legend">结论标签：必须·阻断=上线硬门槛｜重要/高=强要求｜基础=基本可用｜校准=已按最低要求放宽。所有 78 项均已遍历，无遗漏。</div>
+<div class="mod-block"><h3>架构与质量门禁 <span class="mc">8 项 · 逆向核对</span></h3><table class="rt"><thead><tr><th>序号</th><th>ID</th><th>检查项</th><th>优先级</th><th>具体标准</th><th>核对结论 / 动作</th></tr></thead><tbody><tr>
+      <td class="c">78</td>
+      <td class="c"><b>A08</b></td>
+      <td>事件清理规范</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">所有 useEffect 订阅/监听/定时器均清理（AGENTS.md 标准模板），测试 fakeTimers 复位</td>
+      <td><span class="vtag vi">高</span><div class="nn">所有 useEffect 订阅/监听/定时器均清理（AGENTS.md 模板）；fakeTimers 复位。</div><div class="mt">方法：代码审查 + 测试 ｜ 责任：前端</div></td>
+    </tr><tr>
+      <td class="c">77</td>
+      <td class="c"><b>A07</b></td>
+      <td>令牌消费合规</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">颜色严格引用令牌(L1–L5)；股票红涨绿跌用 STOCK_COLOR_TOKENS 固定色，不随主题变</td>
+      <td><span class="vtag vi">高</span><div class="nn">颜色严格引用令牌(L1–L5)；股票红涨绿跌用 STOCK_COLOR_TOKENS 固定色。</div><div class="mt">方法：grep + 视觉核对 ｜ 责任：前端</div></td>
+    </tr><tr>
+      <td class="c">76</td>
+      <td class="c"><b>A06</b></td>
+      <td>路由/契约校验</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">audit:routes 全路由可达；数据 Blueprint 校验通过(validate:blueprint)</td>
+      <td><span class="vtag vi">高</span><div class="nn">audit:routes 全路由可达；validate:blueprint 数据契约校验通过。</div><div class="mt">方法：CI 运行 ｜ 责任：前端</div></td>
+    </tr><tr>
+      <td class="c">75</td>
+      <td class="c"><b>A05</b></td>
+      <td>测试覆盖与通过</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">单测通过率达标(建议≥80%)、关键路径 e2e 通过；audit:tests 通过</td>
+      <td><span class="vtag vi">高</span><div class="nn">单测通过率≥80%、关键路径 e2e 通过；audit:tests 通过。</div><div class="mt">方法：CI(npm test + test:e2e) ｜ 责任：测试</div></td>
+    </tr><tr>
+      <td class="c">74</td>
+      <td class="c"><b>A04</b></td>
+      <td>类型安全</td>
+      <td><span class="prio p-block">阻断</span></td>
+      <td class="std">tsc --noEmit 0 error；禁 any/@ts-ignore；复杂泛型有 Expect&lt;Equals&gt; 测试</td>
+      <td><span class="vtag vb">必须·阻断</span><div class="nn">tsc --noEmit 0 error；禁 any/@ts-ignore；复杂泛型有 Expect&lt;Equals&gt;。</div><div class="mt">方法：CI typecheck + 类型测试 ｜ 责任：前端</div></td>
+    </tr><tr>
+      <td class="c">73</td>
+      <td class="c"><b>A03</b></td>
+      <td>死代码与文档同步</td>
+      <td><span class="prio p-mid">中</span></td>
+      <td class="std">audit:deadcode、audit:docs 通过，避免代码与文档脱节</td>
+      <td><span class="vtag vm">中</span><div class="nn">audit:deadcode、audit:docs 通过，避免代码与文档脱节。</div><div class="mt">方法：CI 运行 ｜ 责任：前端</div></td>
+    </tr><tr>
+      <td class="c">72</td>
+      <td class="c"><b>A02</b></td>
+      <td>零硬编码</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">npm run audit:hardcode + lint:colors 0 告警（颜色/锚点走令牌）</td>
+      <td><span class="vtag vi">高</span><div class="nn">npm run audit:hardcode + lint:colors 0 告警（颜色/锚点走令牌）。</div><div class="mt">方法：CI 门禁 ｜ 责任：前端</div></td>
+    </tr><tr>
+      <td class="c">71</td>
+      <td class="c"><b>A01</b></td>
+      <td>分层依赖零违规</td>
+      <td><span class="prio p-block">阻断</span></td>
+      <td class="std">npm run audit:layers = 0 violations/0 warnings（pages→store/services，禁跨层调 db）</td>
+      <td><span class="vtag vb">必须·阻断</span><div class="nn">npm run audit:layers = 0 violations/0 warnings（分层依赖方向）。</div><div class="mt">方法：CI 运行 audit:layers ｜ 责任：架构守护</div></td>
+    </tr></tbody></table></div><div class="mod-block"><h3>发布与回滚 <span class="mc">7 项 · 逆向核对</span></h3><table class="rt"><thead><tr><th>序号</th><th>ID</th><th>检查项</th><th>优先级</th><th>具体标准</th><th>核对结论 / 动作</th></tr></thead><tbody><tr>
+      <td class="c">70</td>
+      <td class="c"><b>R07</b></td>
+      <td>版本与变更记录</td>
+      <td><span class="prio p-mid">中</span></td>
+      <td class="std">CHANGELOG/commit 规范，可追溯到需求与 PR</td>
+      <td><span class="vtag vm">中</span><div class="nn">CHANGELOG/commit 规范，可追溯到需求与 PR。</div><div class="mt">方法：changelog 核对 ｜ 责任：前端/PM</div></td>
+    </tr><tr>
+      <td class="c">69</td>
+      <td class="c"><b>R06</b></td>
+      <td>通知与值班</td>
+      <td><span class="prio p-mid">中</span></td>
+      <td class="std">提前通知相关方；上线后 4h 黄金观察期值班；次日复盘</td>
+      <td><span class="vtag vm">中</span><div class="nn">提前通知相关方；上线后 4h 黄金观察期值班；次日复盘。</div><div class="mt">方法：检查通知记录与排班 ｜ 责任：PM</div></td>
+    </tr><tr>
+      <td class="c">68</td>
+      <td class="c"><b>R05</b></td>
+      <td>预发冒烟通过</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">部署后 5min 内核心流程(登录/核心交易)冒烟通过</td>
+      <td><span class="vtag vi">高</span><div class="nn">部署后 5min 内核心流程冒烟通过（登录/核心复盘）。</div><div class="mt">方法：预发冒烟测试 ｜ 责任：测试</div></td>
+    </tr><tr>
+      <td class="c">67</td>
+      <td class="c"><b>R04</b></td>
+      <td>后端/配置变更齐备</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">DDL/DML/回滚脚本齐备并预发验证；环境变量清单与生产设置核对(无密钥泄露)</td>
+      <td><span class="vtag vi">高</span><div class="nn">DDL/DML/回滚脚本齐备并预发验证；环境变量清单与生产设置核对。</div><div class="mt">方法：变更评审 + 配置核对 ｜ 责任：数据/运维</div></td>
+    </tr><tr>
+      <td class="c">66</td>
+      <td class="c"><b>R03</b></td>
+      <td>回滚方案就绪</td>
+      <td><span class="prio p-block">阻断</span></td>
+      <td class="std">前端静态回滚 + 接口兼容；回滚脚本/版本标签就绪并可演练</td>
+      <td><span class="vtag vb">必须·阻断</span><div class="nn">前端静态回滚 + 接口兼容；回滚脚本/版本标签就绪并演练。</div><div class="mt">方法：回滚演练 ｜ 责任：运维</div></td>
+    </tr><tr>
+      <td class="c">65</td>
+      <td class="c"><b>R02</b></td>
+      <td>构建产物校验</td>
+      <td><span class="prio p-block">阻断</span></td>
+      <td class="std">构建成功；tsc:prod 0 error；audit:layers 0 violation；死代码/文档同步通过</td>
+      <td><span class="vtag vb">必须·阻断</span><div class="nn">构建成功；tsc:prod 0 error；audit:layers 0 violation；死代码/文档同步通过。</div><div class="mt">方法：CI 门禁(npm run audit) ｜ 责任：前端/CI</div></td>
+    </tr><tr>
+      <td class="c">64</td>
+      <td class="c"><b>R01</b></td>
+      <td>发布计划与窗口</td>
+      <td><span class="prio p-block">阻断</span></td>
+      <td class="std">明确时间窗、负责人、灰度策略、回滚触发条件，经发布评审</td>
+      <td><span class="vtag vb">必须·阻断</span><div class="nn">明确时间窗/负责人/灰度策略/回滚触发条件，经发布评审。</div><div class="mt">方法：发布评审会议 ｜ 责任：PM/运维</div></td>
+    </tr></tbody></table></div><div class="mod-block"><h3>监控与运维 <span class="mc">6 项 · 逆向核对</span></h3><table class="rt"><thead><tr><th>序号</th><th>ID</th><th>检查项</th><th>优先级</th><th>具体标准</th><th>核对结论 / 动作</th></tr></thead><tbody><tr>
+      <td class="c">63</td>
+      <td class="c"><b>M06</b></td>
+      <td>容量与降级方案</td>
+      <td><span class="prio p-mid">中</span></td>
+      <td class="std">接口/WS 限流与降级(降级到 Mock/缓存) 方案就绪</td>
+      <td><span class="vtag vm">中</span><div class="nn">接口/WS 限流与降级(降级到 Mock/缓存) 方案就绪。</div><div class="mt">方法：压测 + 降级演练 ｜ 责任：运维/数据</div></td>
+    </tr><tr>
+      <td class="c">62</td>
+      <td class="c"><b>M05</b></td>
+      <td>灰度与功能开关</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">功能开关可控灰度(1%→100%)，可秒级回滚/关闭</td>
+      <td><span class="vtag vi">高</span><div class="nn">功能开关可控灰度(1%→100%)，可秒级回滚/关闭。</div><div class="mt">方法：开关演练 ｜ 责任：运维/前端</div></td>
+    </tr><tr>
+      <td class="c">61</td>
+      <td class="c"><b>M04</b></td>
+      <td>日志规范</td>
+      <td><span class="prio p-mid">中</span></td>
+      <td class="std">核心分支 logger.info 打印、错误带 context（遵守 AGENTS.md 日志规范）</td>
+      <td><span class="vtag vm">中</span><div class="nn">核心分支 logger.info、错误带 context（AGENTS.md 日志规范）。</div><div class="mt">方法：grep 关键路径日志输出 ｜ 责任：前端</div></td>
+    </tr><tr>
+      <td class="c">60</td>
+      <td class="c"><b>M03</b></td>
+      <td>告警与阈值就绪</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">错误率/白屏/接口失败等关键指标告警阈值已配并演练</td>
+      <td><span class="vtag vi">高</span><div class="nn">错误率/白屏/接口失败等关键指标告警阈值已配并演练。</div><div class="mt">方法：告警演练(注入异常) ｜ 责任：运维</div></td>
+    </tr><tr>
+      <td class="c">59</td>
+      <td class="c"><b>M02</b></td>
+      <td>业务埋点准确</td>
+      <td><span class="prio p-mid">中</span></td>
+      <td class="std">选股/复盘/导出/对话等核心操作埋点不遗漏、不重复</td>
+      <td><span class="vtag vm">中</span><div class="nn">选股/复盘/导出/对话等核心操作埋点不遗漏不重复。</div><div class="mt">方法：埋点校验(调试面板) ｜ 责任：数据/产品</div></td>
+    </tr><tr>
+      <td class="c">58</td>
+      <td class="c"><b>M01</b></td>
+      <td>前端监控接入</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">web-vitals(LCP/INP/CLS) + JS Error/UnhandledRejection 上报可用</td>
+      <td><span class="vtag vi">高</span><div class="nn">web-vitals(LCP/INP/CLS) + JS Error/UnhandledRejection 上报可用。</div><div class="mt">方法：主动触发错误看监控面板 ｜ 责任：前端/运维</div></td>
+    </tr></tbody></table></div><div class="mod-block"><h3>数据完整性 <span class="mc">6 项 · 逆向核对</span></h3><table class="rt"><thead><tr><th>序号</th><th>ID</th><th>检查项</th><th>优先级</th><th>具体标准</th><th>核对结论 / 动作</th></tr></thead><tbody><tr>
+      <td class="c">57</td>
+      <td class="c"><b>D06</b></td>
+      <td>时间与时区正确</td>
+      <td><span class="prio p-mid">中</span></td>
+      <td class="std">行情/复盘时间戳统一时区，跨日切分与排序正确</td>
+      <td><span class="vtag vm">中</span><div class="nn">时间戳统一时区，跨日切分与排序正确。</div><div class="mt">方法：跨日数据验证 ｜ 责任：数据</div></td>
+    </tr><tr>
+      <td class="c">56</td>
+      <td class="c"><b>D05</b></td>
+      <td>导出数据一致</td>
+      <td><span class="prio p-mid">中</span></td>
+      <td class="std">xlsx/pdf 导出与界面数据一致、精度不丢、排序正确</td>
+      <td><span class="vtag vm">中</span><div class="nn">xlsx/pdf 导出与界面数据一致、精度不丢、排序正确。</div><div class="mt">方法：抽样比对 ｜ 责任：功能</div></td>
+    </tr><tr>
+      <td class="c">55</td>
+      <td class="c"><b>D04</b></td>
+      <td>极端/脏数据健壮</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">极端值/空数组/超大数不崩溃、不误显、不溢出</td>
+      <td><span class="vtag vi">高</span><div class="nn">极端值/空数组/超大数不崩溃、不误显、不溢出；脏数据注入测试。</div><div class="mt">方法：脏数据注入测试 ｜ 责任：数据/前端</div></td>
+    </tr><tr>
+      <td class="c">54</td>
+      <td class="c"><b>D03</b></td>
+      <td>数据源结构对齐</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">Mock 与真实 API 经 Adapter 对齐，字段含义/单位一致</td>
+      <td><span class="vtag vi">高</span><div class="nn">Mock 与真实 API 经 Adapter 对齐，字段含义/单位一致。</div><div class="mt">方法：schema 对比 + 单元测试 ｜ 责任：数据层</div></td>
+    </tr><tr>
+      <td class="c">53</td>
+      <td class="c"><b>D02</b></td>
+      <td>刷新/跨 Tab 一致</td>
+      <td><span class="prio p-mid">中</span></td>
+      <td class="std">状态持久化刷新后不丢、不串；withBroadcast 同步一致</td>
+      <td><span class="vtag vm">中</span><div class="nn">刷新后状态不丢不串；withBroadcast 同步一致。</div><div class="mt">方法：刷新/多 Tab 实测 ｜ 责任：状态层</div></td>
+    </tr><tr>
+      <td class="c">52</td>
+      <td class="c"><b>D01</b></td>
+      <td>持久化可靠</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">IndexedDB 写入/读取/版本迁移正确；损坏可恢复或优雅降级</td>
+      <td><span class="vtag vi">高</span><div class="nn">IndexedDB 写入/读取/版本迁移正确；损坏可恢复或优雅降级。</div><div class="mt">方法：异常注入(写入中断/版本升级)验证 ｜ 责任：数据层</div></td>
+    </tr></tbody></table></div><div class="mod-block"><h3>用户体验 <span class="mc">8 项 · 逆向核对</span></h3><table class="rt"><thead><tr><th>序号</th><th>ID</th><th>检查项</th><th>优先级</th><th>具体标准</th><th>核对结论 / 动作</th></tr></thead><tbody><tr>
+      <td class="c">51</td>
+      <td class="c"><b>U08</b></td>
+      <td>主题切换一致</td>
+      <td><span class="prio p-mid">中</span></td>
+      <td class="std">若有暗色/主题切换，全站一致；股票红涨绿跌固定色不随主题变</td>
+      <td><span class="vtag vm">中</span><div class="nn">主题切换全站一致；股票红涨绿跌固定色不随主题变。</div><div class="mt">方法：主题切换巡检 ｜ 责任：前端</div></td>
+    </tr><tr>
+      <td class="c">50</td>
+      <td class="c"><b>U07</b></td>
+      <td>关键操作防错</td>
+      <td><span class="prio p-mid">中</span></td>
+      <td class="std">清空/导出/删除等破坏性操作有二次确认；重要流程可撤销</td>
+      <td><span class="vtag vm">中</span><div class="nn">清空/导出/删除等破坏性操作二次确认；重要流程可撤销。</div><div class="mt">方法：走查交互 ｜ 责任：UX</div></td>
+    </tr><tr>
+      <td class="c">49</td>
+      <td class="c"><b>U06</b></td>
+      <td>文案与金融术语</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">术语准确、单位(¥/%)规范；涨跌红绿符合 A 股习惯(STOCK_COLOR_TOKENS)</td>
+      <td><span class="vtag vi">高</span><div class="nn">术语准确、单位(¥/%)规范；涨跌红绿符合 A 股习惯(STOCK_COLOR_TOKENS)。</div><div class="mt">方法：业务校对 + 视觉核对 ｜ 责任：业务/UX</div></td>
+    </tr><tr>
+      <td class="c">48</td>
+      <td class="c"><b>U05</b></td>
+      <td>可访问性(A11y)</td>
+      <td><span class="prio p-mid">中</span></td>
+      <td class="std">键盘可达、焦点管理、ARIA、prefers-reduced-motion、对比度达标</td>
+      <td><span class="vtag vm">中</span><div class="nn">键盘可达、焦点管理、ARIA、prefers-reduced-motion、对比度达标。</div><div class="mt">方法：axe-core + 键盘走查 ｜ 责任：UX/前端</div></td>
+    </tr><tr>
+      <td class="c">47</td>
+      <td class="c"><b>U04</b></td>
+      <td>令牌体系一致</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">颜色/间距/字体严格引用令牌(THEME_TOKENS/COLOR_TOKENS)；npm run lint:colors 0 告警</td>
+      <td><span class="vtag vi">高</span><div class="nn">颜色/间距/字体严格引用令牌；npm run lint:colors 0 告警。</div><div class="mt">方法：npm run audit:hardcode + lint:colors ｜ 责任：前端</div></td>
+    </tr><tr>
+      <td class="c">46</td>
+      <td class="c"><b>U03</b></td>
+      <td>空状态设计</td>
+      <td><span class="prio p-mid">中</span></td>
+      <td class="std">无数据/首次使用有引导说明，而非空白页</td>
+      <td><span class="vtag vm">中</span><div class="nn">无数据/首次使用有引导而非空白页。</div><div class="mt">方法：空态走查 ｜ 责任：UX</div></td>
+    </tr><tr>
+      <td class="c">45</td>
+      <td class="c"><b>U02</b></td>
+      <td>错误可恢复</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">错误页有重试/返回首页/联系入口；不白屏不卡死</td>
+      <td><span class="vtag vi">高</span><div class="nn">错误页有重试/返回首页/联系入口；不白屏不卡死。</div><div class="mt">方法：强制错误路径走查 ｜ 责任：UX/前端</div></td>
+    </tr><tr>
+      <td class="c">44</td>
+      <td class="c"><b>U01</b></td>
+      <td>加载与操作反馈</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">异步操作有 loading/进度/骨架屏；无“假死”无响应</td>
+      <td><span class="vtag vi">高</span><div class="nn">异步操作有 loading/进度/骨架屏；无假死无响应。</div><div class="mt">方法：弱网实测交互反馈 ｜ 责任：UX/前端</div></td>
+    </tr></tbody></table></div><div class="mod-block"><h3>兼容性 <span class="mc">6 项 · 逆向核对</span></h3><table class="rt"><thead><tr><th>序号</th><th>ID</th><th>检查项</th><th>优先级</th><th>具体标准</th><th>核对结论 / 动作</th></tr></thead><tbody><tr>
+      <td class="c">43</td>
+      <td class="c"><b>B06</b></td>
+      <td>多网络环境可达</td>
+      <td><span class="prio p-mid">中</span></td>
+      <td class="std">REST/WS 代理在公司/公网/弱网下可达；降级到 Mock 的开关可用</td>
+      <td><span class="vtag vm">中</span><div class="nn">REST/WS 在公司/公网/弱网下可达；降级 Mock 开关可用。</div><div class="mt">方法：网络环境切换验证 ｜ 责任：运维/数据</div></td>
+    </tr><tr>
+      <td class="c">42</td>
+      <td class="c"><b>B05</b></td>
+      <td>编码与时区一致</td>
+      <td><span class="prio p-mid">中</span></td>
+      <td class="std">全链路 UTF-8，中文/emoji 不乱码；时间戳时区统一(dayjs)</td>
+      <td><span class="vtag vm">中</span><div class="nn">全链路 UTF-8，中文/emoji 不乱码；时间戳时区统一(dayjs)。</div><div class="mt">方法：多区域/脏数据检查 ｜ 责任：前端</div></td>
+    </tr><tr>
+      <td class="c">41</td>
+      <td class="c"><b>B04</b></td>
+      <td>图表与字体渲染</td>
+      <td><span class="prio p-mid">中</span></td>
+      <td class="std">自绘图表/lightweight-charts 跨浏览器一致；中文字体回退正确</td>
+      <td><span class="vtag vm">中</span><div class="nn">自绘图表/lightweight-charts 跨浏览器一致；中文字体回退正确。</div><div class="mt">方法：跨浏览器截图对比 ｜ 责任：前端</div></td>
+    </tr><tr>
+      <td class="c">40</td>
+      <td class="c"><b>B03</b></td>
+      <td>移动端/平板适配</td>
+      <td><span class="prio p-mid">中</span></td>
+      <td class="std">若支持触控则布局与手势正常；若仅桌面则明确提示不支持</td>
+      <td><span class="vtag vm">中</span><div class="nn">若仅桌面则明确提示不支持；若支持触控则手势正常。</div><div class="mt">方法：真机/模拟器实测 ｜ 责任：前端/UX</div></td>
+    </tr><tr>
+      <td class="c">39</td>
+      <td class="c"><b>B02</b></td>
+      <td>分辨率与布局适配</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">驾驶舱 react-grid-layout 在不同分辨率/系统缩放下不溢出错位；响应式断点正常</td>
+      <td><span class="vtag vi">高</span><div class="nn">react-grid-layout 不同分辨率/125%/150% 缩放不溢出错位；响应式断点正常。</div><div class="mt">方法：多分辨率 + 125%/150% 缩放实测 ｜ 责任：前端</div></td>
+    </tr><tr>
+      <td class="c">38</td>
+      <td class="c"><b>B01</b></td>
+      <td>目标浏览器矩阵</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">Chrome/Edge/Safari/Firefox 主流版本功能与样式一致；明确最低支持版本</td>
+      <td><span class="vtag vi">高</span><div class="nn">Chrome/Edge/Safari/Firefox 主流版本功能样式一致；明确最低支持版本。</div><div class="mt">方法：BrowserStack/多浏览器实测 ｜ 责任：前端</div></td>
+    </tr></tbody></table></div><div class="mod-block"><h3>合规与免责（个人研究工具） <span class="mc">8 项 · 逆向核对</span></h3><table class="rt"><thead><tr><th>序号</th><th>ID</th><th>检查项</th><th>优先级</th><th>具体标准</th><th>核对结论 / 动作</th></tr></thead><tbody><tr>
+      <td class="c">37</td>
+      <td class="c"><b>C08</b></td>
+      <td>第三方 SDK 合规</td>
+      <td><span class="prio p-low">低</span></td>
+      <td class="std">若使用统计/AI SDK，选合规供应商、最小化采集、声明中说明；不引入未知来源 SDK</td>
+      <td><span class="vtag vc">校准·低</span><div class="nn">若用统计/AI SDK 选合规供应商、最小化采集、声明说明；不引未知来源。</div><div class="mt">方法：SDK 清单核对 ｜ 责任：开发者</div></td>
+    </tr><tr>
+      <td class="c">36</td>
+      <td class="c"><b>C07</b></td>
+      <td>AI内容免责声明</td>
+      <td><span class="prio p-mid">中</span></td>
+      <td class="std">AI 生成内容标注“仅供参考、非投资建议、不构成交易依据”；避免“保证收益/必涨”等表述</td>
+      <td><span class="vtag vc">校准·中</span><div class="nn">AI 内容标注"仅供参考、非投资建议、不构成交易依据"；避"保证收益/必涨"。</div><div class="mt">方法：内容/文案合规核对 ｜ 责任：业务/开发者</div></td>
+    </tr><tr>
+      <td class="c">35</td>
+      <td class="c"><b>C06</b></td>
+      <td>数据本地化</td>
+      <td><span class="prio p-low">低</span></td>
+      <td class="std">数据本地(IndexedDB)存储为主、不出境；接入外部行情/AI 仅传输必要查询参数</td>
+      <td><span class="vtag vc">校准·低</span><div class="nn">数据本地存储为主、不出境；外部接口仅传必要查询参数。</div><div class="mt">方法：数据流自查 ｜ 责任：数据</div></td>
+    </tr><tr>
+      <td class="c">34</td>
+      <td class="c"><b>C05</b></td>
+      <td>监管备案(豁免确认)</td>
+      <td><span class="prio p-low">低</span></td>
+      <td class="std">非金融产品、无即时交易、非持牌机构，无需金融监管总局移动应用备案；确认定位并记录豁免理由</td>
+      <td><span class="vtag vc">校准·低·豁免</span><div class="nn">非金融产品、无即时交易，无需监管备案；确认定位并记录豁免理由。</div><div class="mt">方法：确认产品定位并记录豁免理由 ｜ 责任：开发者</div></td>
+    </tr><tr>
+      <td class="c">33</td>
+      <td class="c"><b>C04</b></td>
+      <td>等保要求(豁免确认)</td>
+      <td><span class="prio p-low">低</span></td>
+      <td class="std">个人研究工具、非对外持牌金融服务，不要求等保三级/备案；记录豁免理由，后续对外部署再评估</td>
+      <td><span class="vtag vc">校准·低·豁免</span><div class="nn">非持牌对外金融服务，不要求等保三级；记录豁免理由。</div><div class="mt">方法：逐项确认不适用并记录理由 ｜ 责任：开发者</div></td>
+    </tr><tr>
+      <td class="c">32</td>
+      <td class="c"><b>C03</b></td>
+      <td>分享/导出脱敏提示</td>
+      <td><span class="prio p-low">低</span></td>
+      <td class="std">导出或截图分享前提示脱敏；日志不落明文账户信息(个人工具数据自管，标准放宽为分享前自行脱敏)</td>
+      <td><span class="vtag vc">校准·低</span><div class="nn">导出/截图分享前提示脱敏；日志不落明文账户信息。</div><div class="mt">方法：导出/分享场景提示核对 ｜ 责任：数据</div></td>
+    </tr><tr>
+      <td class="c">31</td>
+      <td class="c"><b>C02</b></td>
+      <td>免责声明与使用说明</td>
+      <td><span class="prio p-low">低</span></td>
+      <td class="std">提供简明免责声明：本地数据自管、内容仅供参考非投资建议、不作为交易依据；联网(行情/AI)时告知用途</td>
+      <td><span class="vtag vc">校准·低</span><div class="nn">页面提供简明免责声明：本地自管、仅供参考非投资建议、不作为交易依据。</div><div class="mt">方法：页面声明文案核对 ｜ 责任：开发者</div></td>
+    </tr><tr>
+      <td class="c">30</td>
+      <td class="c"><b>C01</b></td>
+      <td>个人信息保护(PIPL·最小必要)</td>
+      <td><span class="prio p-mid">中</span></td>
+      <td class="std">个人本地研究工具，数据以本地(IndexedDB)为主、不上传；仅采集复盘必需信息，不收集无关数据</td>
+      <td><span class="vtag vc">校准·中</span><div class="nn">个人本地工具，数据以 IndexedDB 为主、不上传；仅采集复盘必需信息。</div><div class="mt">方法：本地数据范围自查 + 最小必要核对 ｜ 责任：开发者/产品</div></td>
+    </tr></tbody></table></div><div class="mod-block"><h3>安全合规 <span class="mc">9 项 · 逆向核对</span></h3><table class="rt"><thead><tr><th>序号</th><th>ID</th><th>检查项</th><th>优先级</th><th>具体标准</th><th>核对结论 / 动作</th></tr></thead><tbody><tr>
+      <td class="c">29</td>
+      <td class="c"><b>S09</b></td>
+      <td>外链与跳转安全</td>
+      <td><span class="prio p-low">低</span></td>
+      <td class="std">外部链接 rel=noopener；无 open redirect / 钓鱼跳转风险</td>
+      <td><span class="vtag vl">低</span><div class="nn">外链 rel=noopener；无 open redirect / 钓鱼跳转。</div><div class="mt">方法：代码审查外链处理 ｜ 责任：前端</div></td>
+    </tr><tr>
+      <td class="c">28</td>
+      <td class="c"><b>S08</b></td>
+      <td>会话与本地凭证安全</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">登录态过期/续期/登出清理正确；IndexedDB 中敏感数据加密存储</td>
+      <td><span class="vtag vi">高</span><div class="nn">登录态过期/续期/登出清理正确；IndexedDB 敏感数据加密存储。</div><div class="mt">方法：登出后重放/本地存储检查 ｜ 责任：安全</div></td>
+    </tr><tr>
+      <td class="c">27</td>
+      <td class="c"><b>S07</b></td>
+      <td>错误信息不泄露</td>
+      <td><span class="prio p-mid">中</span></td>
+      <td class="std">错误日志/界面不暴露堆栈、内部路径、密钥、SQL</td>
+      <td><span class="vtag vm">中</span><div class="nn">错误日志/界面不暴露堆栈、内部路径、密钥、SQL。</div><div class="mt">方法：主动触发错误查看输出 ｜ 责任：前端</div></td>
+    </tr><tr>
+      <td class="c">26</td>
+      <td class="c"><b>S06</b></td>
+      <td>第三方依赖安全</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">无已知高危漏洞（npm audit 0 high/critical）；依赖最小化</td>
+      <td><span class="vtag vi">高</span><div class="nn">npm audit 0 high/critical；依赖最小化并接入 CI。</div><div class="mt">方法：npm audit / SCA 扫描接入 CI ｜ 责任：安全/前端</div></td>
+    </tr><tr>
+      <td class="c">25</td>
+      <td class="c"><b>S05</b></td>
+      <td>输入校验与限流</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">前端校验 + 服务端校验双保险；接口限流防刷防击穿</td>
+      <td><span class="vtag vi">高</span><div class="nn">前端 + 服务端双校验；接口限流防刷防击穿。</div><div class="mt">方法：异常/超长输入测试 + 压测限流 ｜ 责任：前后端</div></td>
+    </tr><tr>
+      <td class="c">24</td>
+      <td class="c"><b>S04</b></td>
+      <td>CSRF / 请求伪造防护</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">敏感操作带 Token/同源校验；API 校验来源与幂等</td>
+      <td><span class="vtag vi">高</span><div class="nn">敏感操作带 Token/同源校验；API 校验来源与幂等。</div><div class="mt">方法：跨站请求/重放测试 ｜ 责任：安全/后端</div></td>
+    </tr><tr>
+      <td class="c">23</td>
+      <td class="c"><b>S03</b></td>
+      <td>XSS 防护</td>
+      <td><span class="prio p-block">阻断</span></td>
+      <td class="std">AI 对话/富文本等动态内容均转义或 sanitize；禁止滥用 dangerouslySetInnerHTML</td>
+      <td><span class="vtag vb">必须·阻断</span><div class="nn">AI 对话/富文本动态内容均转义或 sanitize；禁滥用 dangerouslySetInnerHTML。</div><div class="mt">方法：渗透测试 + 输入 &lt;script&gt;/&lt;img onerror&gt; 验证 ｜ 责任：安全</div></td>
+    </tr><tr>
+      <td class="c">22</td>
+      <td class="c"><b>S02</b></td>
+      <td>HTTPS 与安全响应头</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">全站 HTTPS；配置 CSP、X-Frame-Options、X-Content-Type-Options、Referrer-Policy、HSTS</td>
+      <td><span class="vtag vi">高</span><div class="nn">全站 HTTPS；配 CSP/X-Frame-Options/X-Content-Type-Options/Referrer-Policy/HSTS。</div><div class="mt">方法：securityheaders.com / 响应头检测 ｜ 责任：运维/安全</div></td>
+    </tr><tr>
+      <td class="c">21</td>
+      <td class="c"><b>S01</b></td>
+      <td>密钥不进前端包</td>
+      <td><span class="prio p-block">阻断</span></td>
+      <td class="std">VITE_LLM_API_KEY 等密钥不硬编码、不出现在 bundle/SourceMap；前端仅经后端代理或无密钥</td>
+      <td><span class="vtag vb">必须·阻断</span><div class="nn">构建产物 grep 密钥 + SourceMap 泄露检查；前端仅经后端代理或无密钥。</div><div class="mt">方法：构建产物 grep 密钥 + SourceMap 泄露检查 ｜ 责任：安全/前端</div></td>
+    </tr></tbody></table></div><div class="mod-block"><h3>性能表现 <span class="mc">10 项 · 逆向核对</span></h3><table class="rt"><thead><tr><th>序号</th><th>ID</th><th>检查项</th><th>优先级</th><th>具体标准</th><th>核对结论 / 动作</th></tr></thead><tbody><tr>
+      <td class="c">20</td>
+      <td class="c"><b>P10</b></td>
+      <td>长会话稳定性</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">长时间挂机“越用越卡”问题消除：内存/CPU 平稳，无累积泄漏</td>
+      <td><span class="vtag vi">高</span><div class="nn">24h 留页/压测看内存 CPU 平稳，消除"越用越卡"。</div><div class="mt">方法：24h 留页/压测观察 ｜ 责任：前端/测试</div></td>
+    </tr><tr>
+      <td class="c">19</td>
+      <td class="c"><b>P09</b></td>
+      <td>缓存策略正确</td>
+      <td><span class="prio p-mid">中</span></td>
+      <td class="std">静态资源 CDN + 内容哈希长效缓存；IndexedDB 缓存命中与失效逻辑正确</td>
+      <td><span class="vtag vm">中</span><div class="nn">CDN + 内容哈希长效缓存；IndexedDB 缓存命中与失效逻辑正确。</div><div class="mt">方法：缓存命中率/失效用例验证 ｜ 责任：运维/前端</div></td>
+    </tr><tr>
+      <td class="c">18</td>
+      <td class="c"><b>P08</b></td>
+      <td>静态资源优化</td>
+      <td><span class="prio p-mid">中</span></td>
+      <td class="std">图片/字体压缩、图标按需(lucide/heroicons)、避免大 base64 内联</td>
+      <td><span class="vtag vm">中</span><div class="nn">图片/字体压缩、图标按需(lucide)、避免大 base64 内联。</div><div class="mt">方法：Lighthouse 资源项 + 产物检查 ｜ 责任：前端</div></td>
+    </tr><tr>
+      <td class="c">17</td>
+      <td class="c"><b>P07</b></td>
+      <td>实时数据不拖垮主线程</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">TaskScheduler 采集批处理/节流；WebSocket 断线重连 + 心跳；弱网不卡 UI</td>
+      <td><span class="vtag vi">高</span><div class="nn">TaskScheduler 批处理/节流；WebSocket 断线重连 + 心跳；弱网不卡 UI。</div><div class="mt">方法：弱网/断网模拟 + 主线程卡顿观测 ｜ 责任：数据层</div></td>
+    </tr><tr>
+      <td class="c">16</td>
+      <td class="c"><b>P06</b></td>
+      <td>无内存泄漏</td>
+      <td><span class="prio p-block">阻断</span></td>
+      <td class="std">window/EventBus/WebSocket/定时器 等监听均在 cleanup 移除（遵守 AGENTS.md 清理模板）</td>
+      <td><span class="vtag vb">必须·阻断</span><div class="nn">window/EventBus/WebSocket/定时器监听均在 cleanup 移除（AGENTS.md 模板）；长时运行堆快照对比。</div><div class="mt">方法：长时间运行 + DevTools Memory 堆快照对比 ｜ 责任：前端</div></td>
+    </tr><tr>
+      <td class="c">15</td>
+      <td class="c"><b>P05</b></td>
+      <td>图表渲染性能</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">Recharts/lightweight-charts 大量数据点下不卡顿；避免每帧重渲染(useMemo/节流)</td>
+      <td><span class="vtag vi">高</span><div class="nn">Recharts/lightweight-charts 大量点下用 useMemo/节流避免每帧重渲染；Profiler 定位。</div><div class="mt">方法：Chrome Profiler 定位重渲染 ｜ 责任：前端</div></td>
+    </tr><tr>
+      <td class="c">14</td>
+      <td class="c"><b>P04</b></td>
+      <td>长列表虚拟化</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">股票池、历史记录等大数据用 @tanstack/react-virtual 虚拟化，滚动不掉帧</td>
+      <td><span class="vtag vi">高</span><div class="nn">股票池/历史记录用 @tanstack/react-virtual 虚拟化，万级数据实测 FPS 不掉帧。</div><div class="mt">方法：万级数据实测 FPS ｜ 责任：前端</div></td>
+    </tr><tr>
+      <td class="c">13</td>
+      <td class="c"><b>P03</b></td>
+      <td>代码分割与懒加载</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">路由级与重量级 Widget(图表/PDF 导出) 用 React.lazy 动态加载，首屏不打包全量</td>
+      <td><span class="vtag vi">高</span><div class="nn">路由级与重 Widget(图表/PDF 导出) 用 React.lazy 动态加载，首屏不打包全量。</div><div class="mt">方法：Network 面板检查 chunk 拆分 ｜ 责任：前端</div></td>
+    </tr><tr>
+      <td class="c">12</td>
+      <td class="c"><b>P02</b></td>
+      <td>包体积预算受控</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">主包与分 chunk 不超预算；无超大 vendor；无用依赖剔除</td>
+      <td><span class="vtag vi">高</span><div class="nn">vite build + rollup-plugin-visualizer / stats.html 分析，剔除超大 vendor 与无用依赖。</div><div class="mt">方法：vite build + rollup-plugin-visualizer / stats.html 分析 ｜ 责任：前端</div></td>
+    </tr><tr>
+      <td class="c">11</td>
+      <td class="c"><b>P01</b></td>
+      <td>核心 Web 指标达标</td>
+      <td><span class="prio p-block">阻断</span></td>
+      <td class="std">LCP&lt;2.5s、INP&lt;200ms、CLS&lt;0.1、TTFB 合理（项目已引入 web-vitals 监控）</td>
+      <td><span class="vtag vb">必须·阻断</span><div class="nn">Lighthouse + RUM 实测 LCP&lt;2.5s、INP&lt;200ms、CLS&lt;0.1；项目已接 web-vitals。</div><div class="mt">方法：Lighthouse + RUM 实测（生产/预发） ｜ 责任：前端/性能</div></td>
+    </tr></tbody></table></div><div class="mod-block"><h3>功能完整性 <span class="mc">10 项 · 逆向核对</span></h3><table class="rt"><thead><tr><th>序号</th><th>ID</th><th>检查项</th><th>优先级</th><th>具体标准</th><th>核对结论 / 动作</th></tr></thead><tbody><tr>
+      <td class="c">10</td>
+      <td class="c"><b>F10</b></td>
+      <td>权限/可见性过滤</td>
+      <td><span class="prio p-mid">中</span></td>
+      <td class="std">若含多角色，导航与数据按权限过滤正确，无越权可见</td>
+      <td><span class="vtag vb2">基础·可简化</span><div class="nn">个人工具多角色少，若存在角色则验越权可见/数据过滤。</div><div class="mt">方法：越权用例测试 ｜ 责任：安全/前端</div></td>
+    </tr><tr>
+      <td class="c">9</td>
+      <td class="c"><b>F09</b></td>
+      <td>空/异常态覆盖</td>
+      <td><span class="prio p-mid">中</span></td>
+      <td class="std">无数据、加载中、错误、网络超时均有明确 UI 反馈，不白屏</td>
+      <td><span class="vtag vb2">基础</span><div class="nn">无数据/加载中/错误/超时均有明确 UI 反馈，不白屏。</div><div class="mt">方法：人工 + 组件测试(mock 异常) ｜ 责任：前端</div></td>
+    </tr><tr>
+      <td class="c">8</td>
+      <td class="c"><b>F08</b></td>
+      <td>跨 Tab 状态同步</td>
+      <td><span class="prio p-mid">中</span></td>
+      <td class="std">Zustand withBroadcast 多 Tab 广播正确，无死循环/竞态/重复写入</td>
+      <td><span class="vtag vb2">基础</span><div class="nn">Zustand withBroadcast 多 Tab 实测：无死循环/竞态/重复写入。</div><div class="mt">方法：多 Tab 实测状态联动 ｜ 责任：状态层负责人</div></td>
+    </tr><tr>
+      <td class="c">7</td>
+      <td class="c"><b>F07</b></td>
+      <td>评分与信号逻辑一致</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">KAI 评分、SCORE_LEVELS、信号分级与业务定义一致；边界值(0/满分的临界)正确</td>
+      <td><span class="vtag vi">重要</span><div class="nn">KAI 评分、SCORE_LEVELS、信号分级与业务定义一致；边界值(0/满分)单测。</div><div class="mt">方法：边界用例 + 单元测试 ｜ 责任：业务/前端</div></td>
+    </tr><tr>
+      <td class="c">6</td>
+      <td class="c"><b>F06</b></td>
+      <td>AI 对话(StockChat) 健壮</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">请求/流式响应正常；超时、限流、网络错误均有降级与友好提示</td>
+      <td><span class="vtag vi">重要</span><div class="nn">StockChat 流式响应正常；超时/限流/网络错误均有降级与友好提示。</div><div class="mt">方法：e2e + 网络异常(mock 失败)模拟 ｜ 责任：AI/服务负责人</div></td>
+    </tr><tr>
+      <td class="c">5</td>
+      <td class="c"><b>F05</b></td>
+      <td>导出功能正确</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">xlsx(jspdf) 导出内容完整、列/精度正确、中文与 ¥/% 不乱码</td>
+      <td><span class="vtag vi">重要</span><div class="nn">xlsx/jspdf 导出中文、¥、% 不乱码，抽样与界面比对列/精度/排序。</div><div class="mt">方法：实际导出抽样与界面数据比对 ｜ 责任：功能开发</div></td>
+    </tr><tr>
+      <td class="c">4</td>
+      <td class="c"><b>F04</b></td>
+      <td>适配器字段兜底</td>
+      <td><span class="prio p-block">阻断</span></td>
+      <td class="std">任意字段缺失时 MarketDataAdapter 返回合法默认值，下游组件绝不崩溃</td>
+      <td><span class="vtag vb">必须·阻断</span><div class="nn">构造缺字段 payload 单测；MarketDataAdapter 兜底默认值，下游组件绝不崩。</div><div class="mt">方法：构造缺字段 payload 单元测试 + Provider 集成测试 ｜ 责任：服务层负责人</div></td>
+    </tr><tr>
+      <td class="c">3</td>
+      <td class="c"><b>F03</b></td>
+      <td>三数据源切换正确</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">VITE_DATA_SOURCE_TYPE=mock/rest/websocket 切换后视图层零侵入、端点不硬编码、无残留 mock 分支</td>
+      <td><span class="vtag vi">重要</span><div class="nn">grep 硬编码端点/地址；mock/rest/websocket 三环境各验一遍，视图层零侵入。</div><div class="mt">方法：三环境分别验证 + grep 硬编码端点/地址 ｜ 责任：数据层负责人</div></td>
+    </tr><tr>
+      <td class="c">2</td>
+      <td class="c"><b>F02</b></td>
+      <td>全页面/Widget 按架构渲染</td>
+      <td><span class="prio p-high">高</span></td>
+      <td class="std">5 舱(input/analysis/trading/output/command) 与驾驶舱 5 类 Widget 无空白、无崩溃、无控制台报错</td>
+      <td><span class="vtag vi">重要</span><div class="nn">audit:routes 全路由可达；5 舱 + 驾驶舱 5 类 Widget 实测无空白/崩溃/控制台报错。</div><div class="mt">方法：npm run audit:routes 全路由可达 + 人工遍历巡检 ｜ 责任：前端负责人</div></td>
+    </tr><tr>
+      <td class="c">1</td>
+      <td class="c"><b>F01</b></td>
+      <td>核心业务流程端到端可用</td>
+      <td><span class="prio p-block">阻断</span></td>
+      <td class="std">登录 → 选股/复盘 → KAI 评分 → 导出 主流程在预发环境 100% 走通，无阻断性缺陷</td>
+      <td><span class="vtag vb">必须·阻断</span><div class="nn">用 test:e2e 走 登录→选股→KAI评分→导出；注意 trading 舱是"复盘"非"下单"，流程定义避开交易措辞。</div><div class="mt">方法：Playwright e2e 关键路径冒烟（npm run test:e2e） ｜ 责任：测试负责人</div></td>
+    </tr></tbody></table></div>
+
+<h2>二、板块归类与合理性分析（10 板块）</h2>
+<div class="card"><div class="ch"><b>功能完整性</b><span class="mc">10项 · 阻断:F01/F04</span></div><p>地基性模块，含 2 个阻断项(F01/F04)。trading 舱语义须明确为"复盘"而非"交易"，避免与金融产品混淆。适配器兜底(F04)是隐藏的阻断风险点，建议与数据完整性(D)同批早期联调。</p></div><div class="card"><div class="ch"><b>性能表现</b><span class="mc">10项 · 阻断:P01/P06</span></div><p>含 2 个阻断项(P01/P06)。内存泄漏(P06)与架构事件清理(A08)强耦合；图表/虚拟化(P04/P05)与令牌体系、组件层联动。长会话稳定(P10)需在整改末期 24h 验证。</p></div><div class="card"><div class="ch"><b>安全合规</b><span class="mc">9项 · 阻断:S01/S03</span></div><p>上线硬门槛，含 2 个阻断项(S01 密钥 / S03 XSS)。密钥不进包(S01)须在构建产物阶段(R02)检查；AI 对话内容(S03)须 sanitize。这两项零容忍，必须最先闭环。</p></div><div class="card"><div class="ch"><b>合规与免责（个人研究工具）</b><span class="mc">8项</span></div><p>已按"非金融产品、无即时交易"校准为最低要求。C04/C05(等保/监管备案)标记为豁免并留理由；C01/C07(最小必要/AI免责声明)保留为个人工具底线，务必留痕但不阻塞发布。</p></div><div class="card"><div class="ch"><b>兼容性</b><span class="mc">6项</span></div><p>高但可并行，B02 驾驶舱 react-grid-layout 布局是重点。建议与 UX(U)同批在 W3 集中验证，不前置。</p></div><div class="card"><div class="ch"><b>用户体验</b><span class="mc">8项</span></div><p>U04/U06 与令牌体系(A07)强绑定，应随架构令牌整改同批；U01/U02 错误反馈与功能/数据异常态联动。A股红涨绿跌(U06)用 STOCK_COLOR_TOKENS 固定色。</p></div><div class="card"><div class="ch"><b>数据完整性</b><span class="mc">6项</span></div><p>D01/D03/D04 与适配器、IndexedDB 紧密耦合，其缺陷会表现为功能(F)或性能(P)的阻断现象，建议前置到 W1 与 F04 联调。</p></div><div class="card"><div class="ch"><b>监控与运维</b><span class="mc">6项</span></div><p>贯穿上线前后。M05 灰度开关与 R 发布呼应；M01/M03 告警须在上线前演练。可在 W3 与发布准备并行。</p></div><div class="card"><div class="ch"><b>发布与回滚</b><span class="mc">7项 · 阻断:R01/R02/R03</span></div><p>最后闸门，含 3 个阻断项(R01/R02/R03)。R02 构建门禁依赖 A01/A04；R03 回滚演练须真实可执行。</p></div><div class="card"><div class="ch"><b>架构与质量门禁</b><span class="mc">8项 · 阻断:A01/A04</span></div><p>CI 地基，含 2 个阻断项(A01/A04)。须最先稳定，否则下游所有"阻断"判定无法成立。A08 事件清理直接决定 P06 内存泄漏。</p></div>
+
+<h2>三、板块间依赖与时序影响</h2>
+<p class="legend">含前置依赖、并行执行可能性、后续联动影响。源板块整改会直接决定目标板块能否通过或是否返工。</p>
+<table class="rt"><thead><tr><th>源板块/项</th><th>影响板块/项</th><th>关系</th><th>时序说明</th></tr></thead><tbody><tr><td><b>A01/A04 分层与类型门禁</b></td><td>F/P/S/U/D 全部整改</td><td><span class="rel">前置</span></td><td class="std">A 系列是 CI 地基，不过则下游阻断判定全红，须 W1 最先闭环</td></tr><tr><td><b>A08 事件清理</b></td><td>P06 内存泄漏 / P10 长会话</td><td><span class="rel">强耦合</span></td><td class="std">清理模板到位，P06/P10 才能验证通过；同批整改</td></tr><tr><td><b>A07/U04/U06 令牌与文案</b></td><td>UX 视觉验收</td><td><span class="rel">前置</span></td><td class="std">令牌未对齐则视觉验收无意义；红涨绿跌固定色须先定</td></tr><tr><td><b>F04/D01/D03/D04 适配与持久化</b></td><td>F01/F02 功能流程</td><td><span class="rel">前置</span></td><td class="std">数据层兜底不过，流程必崩；W1 早期联调</td></tr><tr><td><b>S01 密钥检查</b></td><td>R02 构建产物</td><td><span class="rel">嵌入</span></td><td class="std">密钥检查须在 R02 构建阶段执行，非独立阶段</td></tr><tr><td><b>M05 灰度开关 + M03 告警</b></td><td>R01/R03 发布与回滚</td><td><span class="rel">联动</span></td><td class="std">灰度与告警就绪，回滚才有意义；W3 并行</td></tr><tr><td><b>C01/C07 免责留痕</b></td><td>发布评审 R01</td><td><span class="rel">独立·不阻塞</span></td><td class="std">合规校准项可任意阶段留痕，不阻塞发布闸门</td></tr><tr><td><b>R03 回滚演练</b></td><td>R01 发布评审 + R02 构建</td><td><span class="rel">后置</span></td><td class="std">回滚演练必须在评审通过且构建成功后执行</td></tr></tbody></table>
+
+<h2>四、综合整改方案</h2>
+<div class="plan"><h3>板块整改优先级排序</h3><table class="rt"><thead><tr><th>优先级</th><th>板块</th><th>排序理由</th></tr></thead><tbody><tr><td><span class="rank P0">P0</span></td><td><b>架构与质量门禁</b></td><td class="std">2 阻断(A01/A04)为 CI 地基，不过则全红；最先闭环</td></tr><tr><td><span class="rank P0">P0</span></td><td><b>安全合规</b></td><td class="std">2 阻断(S01/S03)上线硬门槛，零容忍</td></tr><tr><td><span class="rank P0">P0</span></td><td><b>发布与回滚</b></td><td class="std">3 阻断(R01/R02/R03)最后闸门，须预演</td></tr><tr><td><span class="rank P0">P0</span></td><td><b>功能完整性</b></td><td class="std">2 阻断(F01/F04)，主流程与适配器兜底</td></tr><tr><td><span class="rank P1">P1</span></td><td><b>性能表现</b></td><td class="std">2 阻断(P01/P06)影响体验与稳定，与 A08 联动</td></tr><tr><td><span class="rank P1">P1</span></td><td><b>数据完整性</b></td><td class="std">D01/D03/D04 前置联调功能，隐藏阻断</td></tr><tr><td><span class="rank P1">P1</span></td><td><b>用户体验</b></td><td class="std">U01/U02/U04/U06 高，令牌强绑定架构</td></tr><tr><td><span class="rank P1">P1</span></td><td><b>监控与运维</b></td><td class="std">M01/M03/M05 高，上线前后贯通</td></tr><tr><td><span class="rank P2">P2</span></td><td><b>兼容性</b></td><td class="std">B01/B02 高但可并行，W3 集中</td></tr><tr><td><span class="rank P3">P3</span></td><td><b>合规与免责（个人研究工具）</b></td><td class="std">已校准最低，仅留痕不阻塞</td></tr></tbody></table><h3>整改时间线规划（按周，兼顾彻底性与效率）</h3><table class="rt"><thead><tr><th>周期</th><th>整改项</th><th>目标</th><th>主要风险</th></tr></thead><tbody><tr><td><b>W1 地基与硬门槛</b></td><td class="std">A01 A04 A02 A08 · S01 S03 · R02 门禁跑通 · F01 F04 D01 D03 D04 早期联调</td><td class="std">闭环全部阻断地基项；跑通 CI 门禁；数据层兜底单测</td><td class="std">A 门禁历史债务可能大面积违规(P0风险)</td></tr><tr><td><b>W2 性能与稳定</b></td><td class="std">P01 P03 P04 P05 P06 P07 P10 · U04 U06 A07 令牌对齐</td><td class="std">合入虚拟化/代码分割/图表优化；令牌与红涨绿跌对齐</td><td class="std">P06 泄漏隐蔽，需长会话验证</td></tr><tr><td><b>W3 兼容 UX 与监控</b></td><td class="std">B01-B06 · U01-U03 U05 U07 U08 · M01 M02 M03 M05</td><td class="std">多浏览器/分辨率实测；错误反馈与监控告警演练</td><td class="std">驾驶舱布局溢出风险</td></tr><tr><td><b>W4 发布与回归</b></td><td class="std">R01 R03 R04 R05 R06 R07 · C01-C08 留痕 · 全量 e2e</td><td class="std">发布评审+回滚演练+预发冒烟；合规校准项留痕</td><td class="std">回滚未演练则事故难恢复</td></tr></tbody></table><h3>风险点标注</h3><table class="rt"><thead><tr><th>风险</th><th>等级</th><th>应对</th></tr></thead><tbody><tr><td><b>A 门禁历史债务</b></td><td><span class="prio p-high">高</span></td><td class="std">W1 即跑 audit:layers，若大面积违规先立专项清理，避免后期阻塞</td></tr><tr><td><b>P06 内存泄漏隐蔽</b></td><td><span class="prio p-high">高</span></td><td class="std">长会话 + DevTools 堆快照对比，配合 A08 清理模板复查</td></tr><tr><td><b>三数据源硬编码端点</b></td><td><span class="prio p-high">高</span></td><td class="std">grep 端点/地址，F03 与 S01 同查，防止击穿功能与安全</td></tr><tr><td><b>合规虽最低但 C07 免责缺失</b></td><td><span class="prio p-mid">中</span></td><td class="std">AI 内容免责声明务必保留留痕，规避声誉/法律边际风险</td></tr><tr><td><b>R03 回滚未演练</b></td><td><span class="prio p-high">高</span></td><td class="std">回滚脚本真实可执行演练，不流于文档</td></tr><tr><td><b>令牌未对齐即视觉验收</b></td><td><span class="prio p-mid">中</span></td><td class="std">U04/A07 先闭环再验收，避免返工</td></tr></tbody></table></div>
+<h3>板块间时序约束关系说明</h3>
+<div class="constraint">板块间时序约束关系：
+① 架构门禁(A01/A04)必须在任何"阻断"判定前完成——它是 CI 地基，否则功能/性能/安全/发布的阻断项无法成立。
+② S01 密钥检查嵌入 R02 构建产物阶段，不独立成段；R02 依赖 A01/A04 通过。
+③ A08 事件清理 ↔ P06 内存泄漏 ↔ P10 长会话稳定 三者同批整改、同批验证。
+④ U04/A07 令牌对齐 + U06 涨跌红绿 必须在 UX 视觉验收前完成，避免返工。
+⑤ M05 灰度开关 + M03 告警 与 R 发布同周期准备，回滚(R03)演练须在 R01 评审通过且 R02 构建成功后执行。
+⑥ 合规校准项(C01–C08)独立、不阻塞发布，可任意阶段留痕；其中 C04/C05 标记为豁免并记录理由即可。</div>
+
+<div class="scope" style="margin-top:24px">
+<b>执行原则：</b>① 先稳地基(A 门禁/S 硬门槛/R 闸门/F 阻断)再扩面；② 同批强耦合项(P06↔A08、U04/A07↔U06)合并整改避免返工；
+③ 合规校准项独立留痕不阻塞；④ 每完成一批即以 audit 脚本 + e2e 回归，将对现有系统稳定性影响压到最低；⑤ 上线后 4h 黄金观察期 + 次日复盘，新发现回填清单持续迭代。
+</div>
+</div></body></html>

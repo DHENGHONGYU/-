@@ -1,0 +1,1 @@
+﻿[INFO] [HotSectorPanel] handleAddHotStock 鎴愬姛 { symbol: [32m'600519.SH'[39m, elapsedMs: [33m9[39m }

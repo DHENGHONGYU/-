@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>代码安全校对报告 - 测试项目</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 1000px; margin: 0 auto; padding: 2rem; }
+    h1 { color: #1e293b; }
+    h2 { color: #334155; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; }
+    .info-box { background: #f8fafc; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; }
+    .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1rem; }
+    .stat-item { text-align: center; padding: 1rem; border-radius: 0.5rem; }
+    .stat-value { font-size: 2rem; font-weight: bold; }
+    .stat-label { font-size: 0.875rem; color: #64748b; }
+    .critical { background: #fef2f2; color: #dc2626; }
+    .high { background: #fff7ed; color: #ea580c; }
+    .medium { background: #fffbeb; color: #ca8a04; }
+    .low { background: #f0fdf4; color: #65a30d; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #e2e8f0; }
+    th { background: #f8fafc; font-weight: 600; }
+    .summary { background: #eff6ff; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; }
+    .recommendations { background: #f8fafc; padding: 1rem; border-radius: 0.5rem; }
+    .recommendation-item { margin-bottom: 0.5rem; padding-left: 1rem; border-left: 3px solid #3b82f6; }
+  </style>
+</head>
+<body>
+  <h1>代码安全校对报告</h1>
+  
+  <div class="info-box">
+    <strong>项目名称:</strong> 测试项目<br>
+    <strong>项目 ID:</strong> test-project-1<br>
+    <strong>扫描时间:</strong> 2026/7/8 22:00:42<br>
+    <strong>总体风险等级:</strong> <span style="color: #dc2626">危急</span>
+  </div>
+
+  <h2>问题统计</h2>
+  <div class="stat-grid">
+    <div class="stat-item critical"><div class="stat-value">2</div><div class="stat-label">严重</div></div>
+    <div class="stat-item high"><div class="stat-value">0</div><div class="stat-label">高危</div></div>
+    <div class="stat-item medium"><div class="stat-value">1</div><div class="stat-label">中危</div></div>
+    <div class="stat-item low"><div class="stat-value">0</div><div class="stat-label">低危</div></div>
+  </div>
+
+  <h2>摘要</h2>
+  <div class="summary">项目 测试项目 的代码安全校对已完成。 本地扫描共检查 2 个文件。 云端风险检查共验证 2 个文件哈希，发现 0 个风险文件。 发现 2 个严重问题，建议立即修复。 发现 1 个中危问题，建议规划修复。</div>
+
+  <h2>修复建议</h2>
+  <div class="recommendations">
+    <div class="recommendation-item">1. [Hardcoded Password] 检测硬编码的密码，请修复文件 C:\Users\huawei\AppData\Local\Temp\hybrid-proofread-test-FkOeYn/src/config/env.ts 第 6 行</div><div class="recommendation-item">2. [Hardcoded Password] 检测硬编码的密码，请修复文件 C:\Users\huawei\AppData\Local\Temp\hybrid-proofread-test-FkOeYn/src/index.ts 第 2 行</div><div class="recommendation-item">3. [HTTP URL Usage] 检测使用 HTTP 而非 HTTPS 的 URL</div>
+  </div>
+
+  <h2>扫描详情</h2>
+  <table>
+    <tr><th>指标</th><th>数值</th></tr>
+    <tr><td>扫描文件数</td><td>2</td></tr>
+    <tr><td>跳过文件数</td><td>0</td></tr>
+    <tr><td>规则匹配数</td><td>3</td></tr>
+    <tr><td>云端风险文件数</td><td>0</td></tr>
+  </table>
+</body>
+</html>

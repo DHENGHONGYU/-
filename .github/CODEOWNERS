@@ -1,0 +1,101 @@
+# CODEOWNERS — 自动指定审查者
+
+> **规则**: 文件路径匹配到的第一个 Pattern 生效
+> **审查者**: 目前单人开发，所有文件指定一个审查者
+> **注意**: 如果后续有团队成员，可以恢复为多人审查模式
+
+---
+
+## 架构层（核心模块）
+
+# 配置层
+src/config/**                          @DENGHONGYU
+src/constants/**                      @DENGHONGYU
+
+# 核心工具层
+src/core/**                           @DENGHONGYU
+
+# 数据层
+src/data/**                           @DENGHONGYU
+src/types/**                          @DENGHONGYU
+
+---
+
+## 服务层（核心业务逻辑）
+
+src/services/analysis/**              @DENGHONGYU
+src/services/scoring/**              @DENGHONGYU
+src/services/trading/**              @DENGHONGYU
+src/services/execution/**            @DENGHONGYU
+src/services/news/**                 @DENGHONGYU
+src/services/llm/**                 @DENGHONGYU
+
+# 其他服务模块
+src/services/**                       @DENGHONGYU
+
+---
+
+## 状态层（Zustand Store）
+
+src/store/**                          @DENGHONGYU
+
+---
+
+## 页面层 & 组件层（UI 模块）
+
+src/pages/**                          @DENGHONGYU
+src/components/**                     @DENGHONGYU
+src/portal/**                         @DENGHONGYU
+src/cockpit/**                        @DENGHONGYU
+
+---
+
+## 库函数 & 工具函数
+
+src/lib/**                            @DENGHONGYU
+src/hooks/**                          @DENGHONGYU
+src/utils/**                          @DENGHONGYU
+
+---
+
+## 测试 & 文档
+
+tests/**                              @DENGHONGYU
+e2e/**                                @DENGHONGYU
+docs/**                               @DENGHONGYU
+*.md                                  @DENGHONGYU
+
+---
+
+## 构建 & 配置
+
+package.json                          @DENGHONGYU
+tsconfig.json                         @DENGHONGYU
+vite.config.ts                        @DENGHONGYU
+eslint*.js                            @DENGHONGYU
+postcss.config.js                     @DENGHONGYU
+tailwind.config.js                    @DENGHONGYU
+
+---
+
+## 脚本 & 工具
+
+scripts/**                            @DENGHONGYU
+python/**                             @DENGHONGYU
+.github/**                            @DENGHONGYU
+
+---
+
+## 根目录文件
+
+AGENTS.md                             @DENGHONGYU
+ARCHITECTURE.md                       @DENGHONGYU
+DATA_DEFINITION.md                    @DENGHONGYU
+CODE-REVIEW.md                        @DENGHONGYU
+CHANGELOG.md                          @DENGHONGYU
+
+---
+
+## 默认审查者（未匹配上述规则的文件）
+
+*                                     @DENGHONGYU

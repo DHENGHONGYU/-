@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Stock Data Schema",
+  "description": "Schema for stock data in the V9 intelligent research review system",
+  "type": "object",
+  "required": ["symbol", "name", "researchStatus", "source", "dataVersion"],
+  "properties": {
+    "symbol": {
+      "type": "string",
+      "description": "Stock symbol/ticker"
+    },
+    "name": {
+      "type": "string",
+      "description": "Stock name"
+    },
+    "price": {
+      "type": "number",
+      "description": "Current price"
+    },
+    "pe": {
+      "type": "number",
+      "description": "Price-to-earnings ratio"
+    },
+    "pb": {
+      "type": "number",
+      "description": "Price-to-book ratio"
+    },
+    "roe": {
+      "type": "number",
+      "description": "Return on equity"
+    },
+    "marketCap": {
+      "type": "number",
+      "description": "Market capitalization"
+    },
+    "researchStatus": {
+      "type": "string",
+      "enum": ["pending", "researching", "completed", "failed"],
+      "description": "Research status"
+    },
+    "source": {
+      "type": "string",
+      "enum": ["local", "api", "scanner"],
+      "description": "Data source"
+    },
+    "dataVersion": {
+      "type": "number",
+      "description": "Data version number"
+    },
+    "dataQuality": {
+      "type": "object",
+      "properties": {
+        "basic": { "type": "boolean" },
+        "kline": { "type": "boolean" },
+        "finance": { "type": "boolean" },
+        "lastChecked": { "type": "number" }
+      },
+      "required": ["basic", "kline", "finance"]
+    },
+    "ingestedAt": {
+      "type": "number",
+      "description": "Timestamp when data was ingested"
+    },
+    "updatedAt": {
+      "type": "number",
+      "description": "Timestamp when data was last updated"
+    },
+    "industryCode": {
+      "type": "string",
+      "description": "Industry classification code"
+    },
+    "theme": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Theme tags"
+    },
+    "sector": {
+      "type": "string",
+      "description": "Sector name"
+    },
+    "group": {
+      "type": "string",
+      "description": "User-defined group name"
+    }
+  }
+}

@@ -1,0 +1,136 @@
+/**
+ * @fileoverview dataLayer - 数据访问层统一入口
+ *
+ * 职责：
+ * - 聚合所有 domain store 为 dataLayer barrel 对象
+ * - 提供 dataManager（reset/export/import）数据库管理操作
+ * - re-export 所有子模块的 store，保持原导入路径兼容
+ *
+ * 子模块（从本文件拆分）：
+ * - dataLayerHelpers.ts: sendWriteEnvelope / queryGet / queryList / queryByIndex
+ * - dataLayerStockStores.ts: stockStore / dailyQuoteStore / financialReportStore
+ * - dataLayerScoreStores.ts: v6ScoreStore / intelligentScoreStore / industryScoreStore /
+ *   rotationScoreStore / hotSectorScoreStore / valuePitScoreStore / sectorScoreStore / scoreDocStore
+ * - dataLayerTradingStores.ts: orderStore / signalStore / executionPlanStore /
+ *   executionLogStore / portfolioStore / tradeReviewStore
+ * - dataLayerContentStores.ts: researchLogStore / strategySnapshotStore / localDocStore /
+ *   newsStore / newsStockMapStore / sentimentCacheStore / missingReportStore
+ * - dataLayerWatchlistStore.ts: watchlistStore（观察列表快照，修复 C4 孤立表）
+ */
+import { db } from './db'
+
+// re-export 子模块的 store，保持原导入路径兼容
+export { stockStore, dailyQuoteStore, financialReportStore } from './dataLayerStockStores'
+export {
+  v6ScoreStore,
+  intelligentScoreStore,
+  industryScoreStore,
+  rotationScoreStore,
+  hotSectorScoreStore,
+  valuePitScoreStore,
+  sectorScoreStore,
+  scoreDocStore,
+} from './dataLayerScoreStores'
+export {
+  orderStore,
+  signalStore,
+  executionPlanStore,
+  executionLogStore,
+  portfolioStore,
+  tradeReviewStore,
+} from './dataLayerTradingStores'
+export {
+  researchLogStore,
+  strategySnapshotStore,
+  localDocStore,
+  newsStore,
+  newsStockMapStore,
+  sentimentCacheStore,
+  missingReportStore,
+  customAgentStore, // 阶段 B-1：用户自定义智能体（v26 新增）
+} from './dataLayerContentStores'
+export { watchlistStore } from './dataLayerWatchlistStore'
+
+// 子模块 store 导入（用于组装 dataLayer barrel）
+import { stockStore, dailyQuoteStore, financialReportStore } from './dataLayerStockStores'
+import {
+  v6ScoreStore,
+  intelligentScoreStore,
+  industryScoreStore,
+  rotationScoreStore,
+  hotSectorScoreStore,
+  valuePitScoreStore,
+  sectorScoreStore,
+  scoreDocStore,
+} from './dataLayerScoreStores'
+import {
+  orderStore,
+  signalStore,
+  executionPlanStore,
+  executionLogStore,
+  portfolioStore,
+  tradeReviewStore,
+} from './dataLayerTradingStores'
+import {
+  researchLogStore,
+  strategySnapshotStore,
+  localDocStore,
+  newsStore,
+  newsStockMapStore,
+  sentimentCacheStore,
+  missingReportStore,
+  customAgentStore,
+} from './dataLayerContentStores'
+import { watchlistStore } from './dataLayerWatchlistStore'
+
+/**
+ * 数据库管理器（reset/export/import）
+ */
+export const dataManager = {
+  async reset(): Promise<void> {
+    await db.reset()
+  },
+
+  async export(): Promise<Record<string, unknown[]>> {
+    return db.export()
+  },
+
+  async import(data: Record<string, unknown[]>): Promise<void> {
+    await db.import(data)
+  },
+}
+
+/**
+ * dataLayer barrel - 聚合所有 store 的统一入口
+ * 外部模块通过 `import { dataLayer } from '@/data/dataLayer'` 访问所有 store
+ */
+export const dataLayer = {
+  stocks: stockStore,
+  v6Scores: v6ScoreStore,
+  dailyQuotes: dailyQuoteStore,
+  financialReports: financialReportStore,
+  intelligentScores: intelligentScoreStore,
+  industryScores: industryScoreStore,
+  researchLogs: researchLogStore,
+  orders: orderStore,
+  signals: signalStore,
+  rotationScores: rotationScoreStore,
+  sectorScores: sectorScoreStore,
+  scoreDocs: scoreDocStore,
+  strategySnapshots: strategySnapshotStore,
+  localDocs: localDocStore,
+  news: newsStore,
+  newsStockMap: newsStockMapStore,
+  sentimentCache: sentimentCacheStore,
+  hotSectorScores: hotSectorScoreStore,
+  valuePitScores: valuePitScoreStore,
+  executionPlans: executionPlanStore,
+  executionLogs: executionLogStore,
+  missingReports: missingReportStore,
+  portfolios: portfolioStore,
+  tradeReviews: tradeReviewStore,
+  watchlists: watchlistStore,
+  // 阶段 B-1：用户自定义智能体
+  customAgents: customAgentStore,
+  manager: dataManager,
+}

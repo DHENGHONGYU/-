@@ -1,0 +1,113 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  darkMode: 'class',
+  content: [
+    "./index.html",
+    "./src/**/*.{ts,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
+        },
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))',
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
+        },
+        accent: {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
+        },
+        card: {
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))',
+        },
+        popover: {
+          DEFAULT: 'hsl(var(--popover))',
+          foreground: 'hsl(var(--popover-foreground))',
+        },
+        'ru-blue': 'hsl(var(--ru-blue))',
+        'guan-green': 'hsl(var(--guan-green))',
+        cinnabar: 'hsl(var(--cinnabar))',
+        ivory: 'hsl(var(--ivory))',
+        'warm-gray': 'hsl(var(--warm-gray))',
+
+        // ===== 统一设计系统 · 语义色角色 =====
+        /** 次级表面：卡片内嵌 / 悬浮底 / 嵌套区块 */
+        'surface-2': 'hsl(var(--surface-2))',
+        /** 三级文字：辅助说明 / 占位 */
+        tertiary: 'hsl(var(--text-tertiary))',
+        /** 强边框：分区强调 / 聚焦态 */
+        divider: 'hsl(var(--divider))',
+        /** 正向 / 成功 */
+        success: {
+          DEFAULT: 'hsl(var(--success))',
+          foreground: 'hsl(var(--success-foreground))',
+        },
+        /** 警示 / 注意 */
+        warning: {
+          DEFAULT: 'hsl(var(--warning))',
+          foreground: 'hsl(var(--warning-foreground))',
+        },
+        /** 信息 / 链接 */
+        info: {
+          DEFAULT: 'hsl(var(--info))',
+          foreground: 'hsl(var(--info-foreground))',
+        },
+      },
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
+      },
+      boxShadow: {
+        // ===== 统一设计系统 · 层级阴影 =====
+        'elevation-1': 'var(--shadow-sm)',
+        'elevation-2': 'var(--shadow-md)',
+        'elevation-3': 'var(--shadow-lg)',
+      },
+      fontFamily: {
+        sans: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+      },
+      fontSize: {
+        // ===== 统一设计系统 · 排版阶梯（单一信息层级） =====
+        /** 页面主标题 / 英雄区 */
+        display: ['1.75rem', { lineHeight: '1.2', fontWeight: '700', letterSpacing: '-0.01em' }],
+        /** 一级标题 */
+        h1: ['1.5rem', { lineHeight: '1.25', fontWeight: '700', letterSpacing: '-0.01em' }],
+        /** 二级标题 */
+        h2: ['1.25rem', { lineHeight: '1.3', fontWeight: '600' }],
+        /** 三级标题 */
+        h3: ['1.125rem', { lineHeight: '1.4', fontWeight: '600' }],
+        /** 四级标题 */
+        h4: ['1rem', { lineHeight: '1.4', fontWeight: '600' }],
+        /** 正文（大） */
+        'body-lg': ['1rem', { lineHeight: '1.6', fontWeight: '400' }],
+        /** 正文（默认） */
+        body: ['0.875rem', { lineHeight: '1.6', fontWeight: '400' }],
+        /** 正文（小） */
+        'body-sm': ['0.8125rem', { lineHeight: '1.5', fontWeight: '400' }],
+        /** 辅助文字 / 说明 */
+        caption: ['0.75rem', { lineHeight: '1.4', fontWeight: '400' }],
+        /** 标签 / 微型标注 */
+        overline: ['0.6875rem', { lineHeight: '1.4', fontWeight: '600', letterSpacing: '0.08em' }],
+      },
+    },
+  },
+  plugins: [],
+}

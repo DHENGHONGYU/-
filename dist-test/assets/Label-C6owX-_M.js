@@ -1,0 +1,2 @@
+import{j as e,f as l}from"./index-DipZtv7q.js";import{r as d}from"./vendor-DQzRmtlW.js";const m=d.forwardRef(({className:s,children:a,optional:r,...t},o)=>e.jsxs("label",{ref:o,className:l("text-sm font-medium leading-none","peer-disabled:cursor-not-allowed peer-disabled:opacity-70",s),...t,children:[a,r&&e.jsx("span",{className:"ml-1 text-xs text-muted-foreground",children:"(可选)"})]}));m.displayName="Label";export{m as L};
+//# sourceMappingURL=Label-C6owX-_M.js.map

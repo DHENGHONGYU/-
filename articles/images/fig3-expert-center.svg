@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 340" font-family="-apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+  <defs>
+    <filter id="sh3" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#292524" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arr3" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#a8a29e"/>
+    </marker>
+  </defs>
+  <rect width="680" height="340" fill="#fafaf9"/>
+  <text x="340" y="34" text-anchor="middle" font-size="20" font-weight="700" fill="#1c1917">专家中心配置 · 给分身挂载专业人设</text>
+  <text x="340" y="56" text-anchor="middle" font-size="12" fill="#78716c">一个分身只挂一个主专家，避免人设打架</text>
+
+  <!-- 步骤1 选分身 -->
+  <rect x="24" y="96" width="138" height="120" rx="10" fill="#ffffff" stroke="#d6d3d1" stroke-width="1.5" filter="url(#sh3)"/>
+  <circle cx="93" cy="124" r="14" fill="#d1fae5" stroke="#10b981" stroke-width="1.5"/>
+  <text x="93" y="129" text-anchor="middle" font-size="14" font-weight="700" fill="#047857">1</text>
+  <text x="93" y="156" text-anchor="middle" font-size="13" font-weight="600" fill="#1c1917">选定分身</text>
+  <text x="93" y="178" text-anchor="middle" font-size="11" fill="#57534e">明确该分身的</text>
+  <text x="93" y="194" text-anchor="middle" font-size="11" fill="#57534e">单一专业职责</text>
+  <text x="93" y="210" text-anchor="middle" font-size="10" fill="#a8a29e">如：合并报表复核</text>
+
+  <line x1="166" y1="156" x2="194" y2="156" stroke="#a8a29e" stroke-width="1.8" marker-end="url(#arr3)"/>
+
+  <!-- 步骤2 挂载专家 -->
+  <rect x="196" y="96" width="138" height="120" rx="10" fill="#ffffff" stroke="#d6d3d1" stroke-width="1.5" filter="url(#sh3)"/>
+  <circle cx="265" cy="124" r="14" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="265" y="129" text-anchor="middle" font-size="14" font-weight="700" fill="#1d4ed8">2</text>
+  <text x="265" y="156" text-anchor="middle" font-size="13" font-weight="600" fill="#1c1917">挂载专家</text>
+  <text x="265" y="178" text-anchor="middle" font-size="11" fill="#57534e">从 100+ 领域专家</text>
+  <text x="265" y="194" text-anchor="middle" font-size="11" fill="#57534e">中选一个匹配的</text>
+  <text x="265" y="210" text-anchor="middle" font-size="10" fill="#a8a29e">如：财务专家</text>
+
+  <line x1="338" y1="156" x2="366" y2="156" stroke="#a8a29e" stroke-width="1.8" marker-end="url(#arr3)"/>
+
+  <!-- 步骤3 加载上下文 -->
+  <rect x="368" y="96" width="138" height="120" rx="10" fill="#ffffff" stroke="#d6d3d1" stroke-width="1.5" filter="url(#sh3)"/>
+  <circle cx="437" cy="124" r="14" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="437" y="129" text-anchor="middle" font-size="14" font-weight="700" fill="#b45309">3</text>
+  <text x="437" y="156" text-anchor="middle" font-size="13" font-weight="600" fill="#1c1917">加载专业上下文</text>
+  <text x="437" y="178" text-anchor="middle" font-size="11" fill="#57534e">分身自动继承该</text>
+  <text x="437" y="194" text-anchor="middle" font-size="11" fill="#57534e">领域的知识与规范</text>
+  <text x="437" y="210" text-anchor="middle" font-size="10" fill="#a8a29e">准则·口径·标准</text>
+
+  <line x1="510" y1="156" x2="538" y2="156" stroke="#a8a29e" stroke-width="1.8" marker-end="url(#arr3)"/>
+
+  <!-- 步骤4 执行任务 -->
+  <rect x="540" y="96" width="138" height="120" rx="10" fill="#ffffff" stroke="#10b981" stroke-width="2" filter="url(#sh3)"/>
+  <circle cx="609" cy="124" r="14" fill="#10b981"/>
+  <text x="609" y="129" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">4</text>
+  <text x="609" y="156" text-anchor="middle" font-size="13" font-weight="600" fill="#1c1917">执行任务</text>
+  <text x="609" y="178" text-anchor="middle" font-size="11" fill="#57534e">输出质量显著</text>
+  <text x="609" y="194" text-anchor="middle" font-size="11" fill="#57534e">高于"裸跑"</text>
+  <text x="609" y="210" text-anchor="middle" font-size="10" fill="#10b981" font-weight="600">专业·规范·可验收</text>
+
+  <!-- 底部对比 -->
+  <rect x="24" y="244" width="318" height="68" rx="8" fill="#fef2f2" stroke="#fecaca" stroke-width="1.2"/>
+  <text x="40" y="266" font-size="12" font-weight="600" fill="#b91c1c">✗ 裸跑（不挂专家）</text>
+  <text x="40" y="286" font-size="11" fill="#7f1d1d">通用知识作答，口径不统一，常需人工返工</text>
+  <text x="40" y="302" font-size="11" fill="#7f1d1d">回答在多种解读间摇摆，专业度不足</text>
+
+  <rect x="358" y="244" width="318" height="68" rx="8" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1.2"/>
+  <text x="374" y="266" font-size="12" font-weight="600" fill="#047857">✓ 挂载专家后</text>
+  <text x="374" y="286" font-size="11" fill="#065f46">自动加载领域准则与口径，输出贴合行业规范</text>
+  <text x="374" y="302" font-size="11" fill="#065f46">复核意见可直接进入验收环节，返工率下降</text>
+</svg>

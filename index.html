@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#10b981" />
+    <title>智能投研复盘系统 V9</title>
+    <!--
+      P1 防 FOUC（主题闪烁）：
+      在 React 挂载前同步读取已保存的主题偏好（v9-theme），解析 system 后
+      立即设置 data-theme 与 dark 类，避免首屏白底/暗底闪烁。
+      与 ThemeProvider（defaultMode="dark"）保持一致：无保存偏好时默认暗色。
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('v9-theme');
+          var mode = stored === 'light' || stored === 'dark' || stored === 'system' ? stored : 'dark';
+          var resolved = mode === 'system'
+            ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+            : mode;
+          var root = document.documentElement;
+          root.setAttribute('data-theme', resolved);
+          if (resolved === 'dark') root.classList.add('dark');
+          else root.classList.remove('dark');
+        } catch (e) { /* 无 localStorage 时静默降级为默认（暗色） */ }
+      })();
+    </script>
+    <!--
+      HashRouter 路由说明：
+      本应用使用 React Router HashRouter，所有路由需以 /#/ 前缀访问。
+      例如：/mock-test 路由需访问 /#/mock-test
+      以下脚本确保直接访问非 hash 路径时自动重定向到对应 hash 路径。
+    -->
+    <script>
+      (function () {
+        var path = window.location.pathname;
+        var hash = window.location.hash;
+        // 如果路径是非根路径（静态文件或 SPA fallback）且当前没有 hash 导航
+        if (path !== '/' && !hash && !path.endsWith('.js') && !path.endsWith('.css') && !path.endsWith('.svg') && !path.endsWith('.png') && !path.endsWith('.ico')) {
+          // 将路径转为 hash 路由并重定向
+          window.location.replace(window.location.origin + '/#' + path);
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

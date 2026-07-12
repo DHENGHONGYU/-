@@ -1,0 +1,387 @@
+/**
+ * sevenDimConfigStore 单元测试
+ *
+ * 覆盖场景：
+ * 1. 初始状态验证
+ * 2. 策略模板切换（5个模板 × 维度数验证）
+ * 3. 维度开关（toggleDimension）
+ * 4. 维度频率/数据源修改
+ * 5. 全局参数（标的数/历史天数）边界值
+ * 6. 派生计算（enabledCount / monthlyCallEstimate / isClickable）
+ * 7. 异步操作（saveConfig / runCollection）
+ * 8. reset / clearError
+ */
+
+import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
+import { STRATEGY_TEMPLATES, GLOBAL_LIMITS } from '@/config/collectConfig'
+
+beforeEach(() => {
+  useSevenDimConfigStore.getState().reset()
+})
+
+describe('sevenDimConfigStore - 初始状态', () => {
+  it('activeTemplate 初始为 "value"', () => {
+    expect(useSevenDimConfigStore.getState().activeTemplate).toBe('value')
+  })
+
+  it('dimensions 包含 8 个维度', () => {
+    expect(useSevenDimConfigStore.getState().dimensions).toHaveLength(8)
+  })
+
+  it('symbolCount 初始为 40', () => {
+    expect(useSevenDimConfigStore.getState().symbolCount).toBe(40)
+  })
+
+  it('historyDays 初始为 252', () => {
+    expect(useSevenDimConfigStore.getState().historyDays).toBe(252)
+  })
+
+  it('isDirty 初始为 false', () => {
+    expect(useSevenDimConfigStore.getState().isDirty).toBe(false)
+  })
+
+  it('isSaving / isCollecting 初始为 false', () => {
+    const state = useSevenDimConfigStore.getState()
+    expect(state.isSaving).toBe(false)
+    expect(state.isCollecting).toBe(false)
+  })
+
+  it('error 初始为 null', () => {
+    expect(useSevenDimConfigStore.getState().error).toBe(null)
+  })
+
+  it('collectProgress 初始为 0', () => {
+    expect(useSevenDimConfigStore.getState().collectProgress).toBe(0)
+  })
+})
+
+describe('sevenDimConfigStore - 策略模板切换', () => {
+  it('value 模板启用 4 个维度 (01/02/03/04)', () => {
+    const state = useSevenDimConfigStore.getState()
+    expect(state.enabledCount()).toBe(4)
+    const enabledCodes = state.dimensions.filter((d) => d.enabled).map((d) => d.code)
+    expect(enabledCodes).toEqual(['01', '02', '03', '04'])
+  })
+
+  it('切换到 growth 模板启用 5 个维度', () => {
+    useSevenDimConfigStore.getState().applyTemplate('growth')
+    const state = useSevenDimConfigStore.getState()
+    expect(state.activeTemplate).toBe('growth')
+    expect(state.enabledCount()).toBe(5)
+  })
+
+  it('切换到 defense 模板启用 4 个维度', () => {
+    useSevenDimConfigStore.getState().applyTemplate('defense')
+    expect(useSevenDimConfigStore.getState().enabledCount()).toBe(4)
+  })
+
+  it('切换到 cycle 模板启用 5 个维度', () => {
+    useSevenDimConfigStore.getState().applyTemplate('cycle')
+    expect(useSevenDimConfigStore.getState().enabledCount()).toBe(5)
+  })
+
+  it('切换到 full 模板启用全部 8 个维度', () => {
+    useSevenDimConfigStore.getState().applyTemplate('full')
+    expect(useSevenDimConfigStore.getState().enabledCount()).toBe(8)
+  })
+
+  it('切换模板后 isDirty 变为 true', () => {
+    useSevenDimConfigStore.getState().applyTemplate('growth')
+    expect(useSevenDimConfigStore.getState().isDirty).toBe(true)
+  })
+
+  it('切换模板后 historyDays 同步更新', () => {
+    useSevenDimConfigStore.getState().applyTemplate('full')
+    const fullTemplate = STRATEGY_TEMPLATES.find((t) => t.id === 'full')!
+    expect(useSevenDimConfigStore.getState().historyDays).toBe(fullTemplate.historyDays)
+  })
+
+  it('切换到 defense 后 historyDays 为 504', () => {
+    useSevenDimConfigStore.getState().applyTemplate('defense')
+    expect(useSevenDimConfigStore.getState().historyDays).toBe(504)
+  })
+
+  it('无效模板ID不修改状态', () => {
+    const beforeState = useSevenDimConfigStore.getState().activeTemplate
+    useSevenDimConfigStore.getState().applyTemplate('invalid' as never)
+    expect(useSevenDimConfigStore.getState().activeTemplate).toBe(beforeState)
+  })
+})
+
+describe('sevenDimConfigStore - 维度开关', () => {
+  it('禁用已启用维度 (01)', () => {
+    useSevenDimConfigStore.getState().toggleDimension('01')
+    const dim = useSevenDimConfigStore.getState().dimensions.find((d) => d.code === '01')
+    expect(dim?.enabled).toBe(false)
+  })
+
+  it('启用未启用维度 (05)', () => {
+    // value 模板默认不启用 05
+    useSevenDimConfigStore.getState().toggleDimension('05')
+    const dim = useSevenDimConfigStore.getState().dimensions.find((d) => d.code === '05')
+    expect(dim?.enabled).toBe(true)
+  })
+
+  it('切换后 isDirty 变为 true', () => {
+    useSevenDimConfigStore.getState().toggleDimension('01')
+    expect(useSevenDimConfigStore.getState().isDirty).toBe(true)
+  })
+
+  it('连续切换同一维度恢复原状', () => {
+    const original = useSevenDimConfigStore.getState().dimensions.find((d) => d.code === '01')!.enabled
+    useSevenDimConfigStore.getState().toggleDimension('01')
+    useSevenDimConfigStore.getState().toggleDimension('01')
+    const restored = useSevenDimConfigStore.getState().dimensions.find((d) => d.code === '01')!.enabled
+    expect(restored).toBe(original)
+  })
+
+  it('切换不存在的维度code不影响其他维度', () => {
+    const beforeCount = useSevenDimConfigStore.getState().enabledCount()
+    useSevenDimConfigStore.getState().toggleDimension('99')
+    expect(useSevenDimConfigStore.getState().enabledCount()).toBe(beforeCount)
+  })
+
+  it('full 模板下禁用全部维度后 enabledCount 为 0', () => {
+    useSevenDimConfigStore.getState().applyTemplate('full')
+    const allCodes = useSevenDimConfigStore.getState().dimensions.map((d) => d.code)
+    for (const code of allCodes) {
+      useSevenDimConfigStore.getState().toggleDimension(code)
+    }
+    expect(useSevenDimConfigStore.getState().enabledCount()).toBe(0)
+  })
+})
+
+describe('sevenDimConfigStore - 维度频率与数据源', () => {
+  it('设置维度频率', () => {
+    useSevenDimConfigStore.getState().setDimensionFrequency('01', 'weekly')
+    const dim = useSevenDimConfigStore.getState().dimensions.find((d) => d.code === '01')
+    expect(dim?.frequency).toBe('weekly')
+  })
+
+  it('设置频率后 isDirty 变为 true', () => {
+    useSevenDimConfigStore.getState().setDimensionFrequency('01', 'daily')
+    expect(useSevenDimConfigStore.getState().isDirty).toBe(true)
+  })
+
+  it('设置维度数据源', () => {
+    useSevenDimConfigStore.getState().setDimensionSources('02', ['akshare', 'yahoo'])
+    const dim = useSevenDimConfigStore.getState().dimensions.find((d) => d.code === '02')
+    expect(dim?.sources).toEqual(['akshare', 'yahoo'])
+  })
+
+  it('设置数据源后 isDirty 变为 true', () => {
+    useSevenDimConfigStore.getState().setDimensionSources('03', ['ifind'])
+    expect(useSevenDimConfigStore.getState().isDirty).toBe(true)
+  })
+
+  it('修改不存在的维度频率不影响其他维度', () => {
+    const beforeFreq = useSevenDimConfigStore.getState().dimensions.find((d) => d.code === '01')!.frequency
+    useSevenDimConfigStore.getState().setDimensionFrequency('99', 'realtime')
+    const afterFreq = useSevenDimConfigStore.getState().dimensions.find((d) => d.code === '01')!.frequency
+    expect(afterFreq).toBe(beforeFreq)
+  })
+})
+
+describe('sevenDimConfigStore - 全局参数', () => {
+  it('设置标的数为 100', () => {
+    useSevenDimConfigStore.getState().setSymbolCount(100)
+    expect(useSevenDimConfigStore.getState().symbolCount).toBe(100)
+  })
+
+  it('标的数设置后 isDirty 变为 true', () => {
+    useSevenDimConfigStore.getState().setSymbolCount(50)
+    expect(useSevenDimConfigStore.getState().isDirty).toBe(true)
+  })
+
+  it('标的数下限为 1（传入 0 被钳制）', () => {
+    useSevenDimConfigStore.getState().setSymbolCount(0)
+    expect(useSevenDimConfigStore.getState().symbolCount).toBe(1)
+  })
+
+  it('标的数下限为 1（传入负数被钳制）', () => {
+    useSevenDimConfigStore.getState().setSymbolCount(-10)
+    expect(useSevenDimConfigStore.getState().symbolCount).toBe(1)
+  })
+
+  it('标的数上限为 maxSymbols', () => {
+    useSevenDimConfigStore.getState().setSymbolCount(GLOBAL_LIMITS.maxSymbols + 100)
+    expect(useSevenDimConfigStore.getState().symbolCount).toBe(GLOBAL_LIMITS.maxSymbols)
+  })
+
+  it('设置历史天数为 500', () => {
+    useSevenDimConfigStore.getState().setHistoryDays(500)
+    expect(useSevenDimConfigStore.getState().historyDays).toBe(500)
+  })
+
+  it('历史天数下限为 1', () => {
+    useSevenDimConfigStore.getState().setHistoryDays(0)
+    expect(useSevenDimConfigStore.getState().historyDays).toBe(1)
+  })
+
+  it('历史天数上限为 1000', () => {
+    useSevenDimConfigStore.getState().setHistoryDays(2000)
+    expect(useSevenDimConfigStore.getState().historyDays).toBe(1000)
+  })
+})
+
+describe('sevenDimConfigStore - 派生计算', () => {
+  it('enabledCount 正确反映启用维度数', () => {
+    expect(useSevenDimConfigStore.getState().enabledCount()).toBe(4)
+    useSevenDimConfigStore.getState().toggleDimension('05')
+    expect(useSevenDimConfigStore.getState().enabledCount()).toBe(5)
+  })
+
+  it('monthlyCallEstimate 大于 0（有启用维度时）', () => {
+    expect(useSevenDimConfigStore.getState().monthlyCallEstimate()).toBeGreaterThan(0)
+  })
+
+  it('monthlyCallEstimate 为 0（全部禁用时）', () => {
+    useSevenDimConfigStore.getState().applyTemplate('value')
+    const dims = useSevenDimConfigStore.getState().dimensions
+    for (const dim of dims) {
+      if (dim.enabled) useSevenDimConfigStore.getState().toggleDimension(dim.code)
+    }
+    expect(useSevenDimConfigStore.getState().monthlyCallEstimate()).toBe(0)
+  })
+
+  it('isClickable 初始为 true', () => {
+    expect(useSevenDimConfigStore.getState().isClickable()).toBe(true)
+  })
+
+  it('isClickable 在 isSaving 时为 false', () => {
+    useSevenDimConfigStore.setState({ isSaving: true })
+    expect(useSevenDimConfigStore.getState().isClickable()).toBe(false)
+  })
+
+  it('isClickable 在 isCollecting 时为 false', () => {
+    useSevenDimConfigStore.setState({ isCollecting: true })
+    expect(useSevenDimConfigStore.getState().isClickable()).toBe(false)
+  })
+
+  it('tooltipText 在 isSaving 时返回保存提示', () => {
+    useSevenDimConfigStore.setState({ isSaving: true, isCollecting: false })
+    expect(useSevenDimConfigStore.getState().tooltipText()).toContain('保存')
+  })
+
+  it('tooltipText 在 isCollecting 时返回采集提示', () => {
+    useSevenDimConfigStore.setState({ isSaving: false, isCollecting: true })
+    expect(useSevenDimConfigStore.getState().tooltipText()).toContain('采集')
+  })
+
+  it('tooltipText 在空闲时返回空字符串', () => {
+    useSevenDimConfigStore.setState({ isSaving: false, isCollecting: false })
+    expect(useSevenDimConfigStore.getState().tooltipText()).toBe('')
+  })
+})
+
+describe('sevenDimConfigStore - reset', () => {
+  it('reset 恢复 activeTemplate 为 value', () => {
+    useSevenDimConfigStore.getState().applyTemplate('full')
+    useSevenDimConfigStore.getState().reset()
+    expect(useSevenDimConfigStore.getState().activeTemplate).toBe('value')
+  })
+
+  it('reset 恢复 symbolCount 为 40', () => {
+    useSevenDimConfigStore.getState().setSymbolCount(200)
+    useSevenDimConfigStore.getState().reset()
+    expect(useSevenDimConfigStore.getState().symbolCount).toBe(40)
+  })
+
+  it('reset 恢复 historyDays 为 252', () => {
+    useSevenDimConfigStore.getState().setHistoryDays(756)
+    useSevenDimConfigStore.getState().reset()
+    expect(useSevenDimConfigStore.getState().historyDays).toBe(252)
+  })
+
+  it('reset 恢复 isDirty 为 false', () => {
+    useSevenDimConfigStore.getState().toggleDimension('01')
+    useSevenDimConfigStore.getState().reset()
+    expect(useSevenDimConfigStore.getState().isDirty).toBe(false)
+  })
+
+  it('reset 清除 error', () => {
+    useSevenDimConfigStore.setState({ error: '测试错误' })
+    useSevenDimConfigStore.getState().reset()
+    expect(useSevenDimConfigStore.getState().error).toBe(null)
+  })
+
+  it('reset 恢复 enabledCount 为 4（value 模板）', () => {
+    useSevenDimConfigStore.getState().applyTemplate('full')
+    useSevenDimConfigStore.getState().reset()
+    expect(useSevenDimConfigStore.getState().enabledCount()).toBe(4)
+  })
+})
+
+describe('sevenDimConfigStore - saveConfig', () => {
+  it('保存成功后 isSaving 恢复 false', async () => {
+    await useSevenDimConfigStore.getState().saveConfig()
+    expect(useSevenDimConfigStore.getState().isSaving).toBe(false)
+  })
+
+  it('保存成功后 isDirty 恢复 false', async () => {
+    useSevenDimConfigStore.getState().toggleDimension('01')
+    expect(useSevenDimConfigStore.getState().isDirty).toBe(true)
+    await useSevenDimConfigStore.getState().saveConfig()
+    expect(useSevenDimConfigStore.getState().isDirty).toBe(false)
+  })
+
+  it('isSaving 时重复调用不执行', async () => {
+    useSevenDimConfigStore.setState({ isSaving: true })
+    await useSevenDimConfigStore.getState().saveConfig()
+    // 仍然 isSaving=true，因为被拦截
+    expect(useSevenDimConfigStore.getState().isSaving).toBe(true)
+  })
+})
+
+describe('sevenDimConfigStore - runCollection', () => {
+  it('采集完成后 isCollecting 恢复 false', async () => {
+    await useSevenDimConfigStore.getState().runCollection()
+    expect(useSevenDimConfigStore.getState().isCollecting).toBe(false)
+  })
+
+  it('采集完成后 collectProgress 为 100', async () => {
+    await useSevenDimConfigStore.getState().runCollection()
+    expect(useSevenDimConfigStore.getState().collectProgress).toBe(100)
+  })
+
+  it('isCollecting 时重复调用不执行', async () => {
+    useSevenDimConfigStore.setState({ isCollecting: true })
+    await useSevenDimConfigStore.getState().runCollection()
+    expect(useSevenDimConfigStore.getState().isCollecting).toBe(true)
+  })
+})
+
+describe('sevenDimConfigStore - clearError', () => {
+  it('clearError 清除错误信息', () => {
+    useSevenDimConfigStore.setState({ error: '测试错误' })
+    useSevenDimConfigStore.getState().clearError()
+    expect(useSevenDimConfigStore.getState().error).toBe(null)
+  })
+})
+
+describe('sevenDimConfigStore - Store 订阅', () => {
+  it('toggleDimension 触发订阅回调', () => {
+    const callback = vi.fn()
+    const unsubscribe = useSevenDimConfigStore.subscribe(callback)
+    useSevenDimConfigStore.getState().toggleDimension('01')
+    expect(callback).toHaveBeenCalled()
+    unsubscribe()
+  })
+
+  it('applyTemplate 触发订阅回调', () => {
+    const callback = vi.fn()
+    const unsubscribe = useSevenDimConfigStore.subscribe(callback)
+    useSevenDimConfigStore.getState().applyTemplate('growth')
+    expect(callback).toHaveBeenCalled()
+    unsubscribe()
+  })
+
+  it('unsubscribe 后不再接收回调', () => {
+    const callback = vi.fn()
+    const unsubscribe = useSevenDimConfigStore.subscribe(callback)
+    unsubscribe()
+    useSevenDimConfigStore.getState().toggleDimension('01')
+    expect(callback).not.toHaveBeenCalled()
+  })
+})

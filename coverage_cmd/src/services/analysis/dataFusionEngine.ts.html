@@ -1,0 +1,1795 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Code coverage report for src/services/analysis/dataFusionEngine.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../prettify.css" />
+    <link rel="stylesheet" href="../../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+    
+<body>
+<div class='wrapper'>
+    <div class='pad1'>
+        <h1><a href="../../../index.html">All files</a> / <a href="index.html">src/services/analysis</a> dataFusionEngine.ts</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>0/571</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>0/1</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>0/1</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>0/571</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
+    </div>
+    <div class='status-line low'></div>
+    <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a>
+<a name='L3'></a><a href='#L3'>3</a>
+<a name='L4'></a><a href='#L4'>4</a>
+<a name='L5'></a><a href='#L5'>5</a>
+<a name='L6'></a><a href='#L6'>6</a>
+<a name='L7'></a><a href='#L7'>7</a>
+<a name='L8'></a><a href='#L8'>8</a>
+<a name='L9'></a><a href='#L9'>9</a>
+<a name='L10'></a><a href='#L10'>10</a>
+<a name='L11'></a><a href='#L11'>11</a>
+<a name='L12'></a><a href='#L12'>12</a>
+<a name='L13'></a><a href='#L13'>13</a>
+<a name='L14'></a><a href='#L14'>14</a>
+<a name='L15'></a><a href='#L15'>15</a>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a>
+<a name='L120'></a><a href='#L120'>120</a>
+<a name='L121'></a><a href='#L121'>121</a>
+<a name='L122'></a><a href='#L122'>122</a>
+<a name='L123'></a><a href='#L123'>123</a>
+<a name='L124'></a><a href='#L124'>124</a>
+<a name='L125'></a><a href='#L125'>125</a>
+<a name='L126'></a><a href='#L126'>126</a>
+<a name='L127'></a><a href='#L127'>127</a>
+<a name='L128'></a><a href='#L128'>128</a>
+<a name='L129'></a><a href='#L129'>129</a>
+<a name='L130'></a><a href='#L130'>130</a>
+<a name='L131'></a><a href='#L131'>131</a>
+<a name='L132'></a><a href='#L132'>132</a>
+<a name='L133'></a><a href='#L133'>133</a>
+<a name='L134'></a><a href='#L134'>134</a>
+<a name='L135'></a><a href='#L135'>135</a>
+<a name='L136'></a><a href='#L136'>136</a>
+<a name='L137'></a><a href='#L137'>137</a>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a>
+<a name='L140'></a><a href='#L140'>140</a>
+<a name='L141'></a><a href='#L141'>141</a>
+<a name='L142'></a><a href='#L142'>142</a>
+<a name='L143'></a><a href='#L143'>143</a>
+<a name='L144'></a><a href='#L144'>144</a>
+<a name='L145'></a><a href='#L145'>145</a>
+<a name='L146'></a><a href='#L146'>146</a>
+<a name='L147'></a><a href='#L147'>147</a>
+<a name='L148'></a><a href='#L148'>148</a>
+<a name='L149'></a><a href='#L149'>149</a>
+<a name='L150'></a><a href='#L150'>150</a>
+<a name='L151'></a><a href='#L151'>151</a>
+<a name='L152'></a><a href='#L152'>152</a>
+<a name='L153'></a><a href='#L153'>153</a>
+<a name='L154'></a><a href='#L154'>154</a>
+<a name='L155'></a><a href='#L155'>155</a>
+<a name='L156'></a><a href='#L156'>156</a>
+<a name='L157'></a><a href='#L157'>157</a>
+<a name='L158'></a><a href='#L158'>158</a>
+<a name='L159'></a><a href='#L159'>159</a>
+<a name='L160'></a><a href='#L160'>160</a>
+<a name='L161'></a><a href='#L161'>161</a>
+<a name='L162'></a><a href='#L162'>162</a>
+<a name='L163'></a><a href='#L163'>163</a>
+<a name='L164'></a><a href='#L164'>164</a>
+<a name='L165'></a><a href='#L165'>165</a>
+<a name='L166'></a><a href='#L166'>166</a>
+<a name='L167'></a><a href='#L167'>167</a>
+<a name='L168'></a><a href='#L168'>168</a>
+<a name='L169'></a><a href='#L169'>169</a>
+<a name='L170'></a><a href='#L170'>170</a>
+<a name='L171'></a><a href='#L171'>171</a>
+<a name='L172'></a><a href='#L172'>172</a>
+<a name='L173'></a><a href='#L173'>173</a>
+<a name='L174'></a><a href='#L174'>174</a>
+<a name='L175'></a><a href='#L175'>175</a>
+<a name='L176'></a><a href='#L176'>176</a>
+<a name='L177'></a><a href='#L177'>177</a>
+<a name='L178'></a><a href='#L178'>178</a>
+<a name='L179'></a><a href='#L179'>179</a>
+<a name='L180'></a><a href='#L180'>180</a>
+<a name='L181'></a><a href='#L181'>181</a>
+<a name='L182'></a><a href='#L182'>182</a>
+<a name='L183'></a><a href='#L183'>183</a>
+<a name='L184'></a><a href='#L184'>184</a>
+<a name='L185'></a><a href='#L185'>185</a>
+<a name='L186'></a><a href='#L186'>186</a>
+<a name='L187'></a><a href='#L187'>187</a>
+<a name='L188'></a><a href='#L188'>188</a>
+<a name='L189'></a><a href='#L189'>189</a>
+<a name='L190'></a><a href='#L190'>190</a>
+<a name='L191'></a><a href='#L191'>191</a>
+<a name='L192'></a><a href='#L192'>192</a>
+<a name='L193'></a><a href='#L193'>193</a>
+<a name='L194'></a><a href='#L194'>194</a>
+<a name='L195'></a><a href='#L195'>195</a>
+<a name='L196'></a><a href='#L196'>196</a>
+<a name='L197'></a><a href='#L197'>197</a>
+<a name='L198'></a><a href='#L198'>198</a>
+<a name='L199'></a><a href='#L199'>199</a>
+<a name='L200'></a><a href='#L200'>200</a>
+<a name='L201'></a><a href='#L201'>201</a>
+<a name='L202'></a><a href='#L202'>202</a>
+<a name='L203'></a><a href='#L203'>203</a>
+<a name='L204'></a><a href='#L204'>204</a>
+<a name='L205'></a><a href='#L205'>205</a>
+<a name='L206'></a><a href='#L206'>206</a>
+<a name='L207'></a><a href='#L207'>207</a>
+<a name='L208'></a><a href='#L208'>208</a>
+<a name='L209'></a><a href='#L209'>209</a>
+<a name='L210'></a><a href='#L210'>210</a>
+<a name='L211'></a><a href='#L211'>211</a>
+<a name='L212'></a><a href='#L212'>212</a>
+<a name='L213'></a><a href='#L213'>213</a>
+<a name='L214'></a><a href='#L214'>214</a>
+<a name='L215'></a><a href='#L215'>215</a>
+<a name='L216'></a><a href='#L216'>216</a>
+<a name='L217'></a><a href='#L217'>217</a>
+<a name='L218'></a><a href='#L218'>218</a>
+<a name='L219'></a><a href='#L219'>219</a>
+<a name='L220'></a><a href='#L220'>220</a>
+<a name='L221'></a><a href='#L221'>221</a>
+<a name='L222'></a><a href='#L222'>222</a>
+<a name='L223'></a><a href='#L223'>223</a>
+<a name='L224'></a><a href='#L224'>224</a>
+<a name='L225'></a><a href='#L225'>225</a>
+<a name='L226'></a><a href='#L226'>226</a>
+<a name='L227'></a><a href='#L227'>227</a>
+<a name='L228'></a><a href='#L228'>228</a>
+<a name='L229'></a><a href='#L229'>229</a>
+<a name='L230'></a><a href='#L230'>230</a>
+<a name='L231'></a><a href='#L231'>231</a>
+<a name='L232'></a><a href='#L232'>232</a>
+<a name='L233'></a><a href='#L233'>233</a>
+<a name='L234'></a><a href='#L234'>234</a>
+<a name='L235'></a><a href='#L235'>235</a>
+<a name='L236'></a><a href='#L236'>236</a>
+<a name='L237'></a><a href='#L237'>237</a>
+<a name='L238'></a><a href='#L238'>238</a>
+<a name='L239'></a><a href='#L239'>239</a>
+<a name='L240'></a><a href='#L240'>240</a>
+<a name='L241'></a><a href='#L241'>241</a>
+<a name='L242'></a><a href='#L242'>242</a>
+<a name='L243'></a><a href='#L243'>243</a>
+<a name='L244'></a><a href='#L244'>244</a>
+<a name='L245'></a><a href='#L245'>245</a>
+<a name='L246'></a><a href='#L246'>246</a>
+<a name='L247'></a><a href='#L247'>247</a>
+<a name='L248'></a><a href='#L248'>248</a>
+<a name='L249'></a><a href='#L249'>249</a>
+<a name='L250'></a><a href='#L250'>250</a>
+<a name='L251'></a><a href='#L251'>251</a>
+<a name='L252'></a><a href='#L252'>252</a>
+<a name='L253'></a><a href='#L253'>253</a>
+<a name='L254'></a><a href='#L254'>254</a>
+<a name='L255'></a><a href='#L255'>255</a>
+<a name='L256'></a><a href='#L256'>256</a>
+<a name='L257'></a><a href='#L257'>257</a>
+<a name='L258'></a><a href='#L258'>258</a>
+<a name='L259'></a><a href='#L259'>259</a>
+<a name='L260'></a><a href='#L260'>260</a>
+<a name='L261'></a><a href='#L261'>261</a>
+<a name='L262'></a><a href='#L262'>262</a>
+<a name='L263'></a><a href='#L263'>263</a>
+<a name='L264'></a><a href='#L264'>264</a>
+<a name='L265'></a><a href='#L265'>265</a>
+<a name='L266'></a><a href='#L266'>266</a>
+<a name='L267'></a><a href='#L267'>267</a>
+<a name='L268'></a><a href='#L268'>268</a>
+<a name='L269'></a><a href='#L269'>269</a>
+<a name='L270'></a><a href='#L270'>270</a>
+<a name='L271'></a><a href='#L271'>271</a>
+<a name='L272'></a><a href='#L272'>272</a>
+<a name='L273'></a><a href='#L273'>273</a>
+<a name='L274'></a><a href='#L274'>274</a>
+<a name='L275'></a><a href='#L275'>275</a>
+<a name='L276'></a><a href='#L276'>276</a>
+<a name='L277'></a><a href='#L277'>277</a>
+<a name='L278'></a><a href='#L278'>278</a>
+<a name='L279'></a><a href='#L279'>279</a>
+<a name='L280'></a><a href='#L280'>280</a>
+<a name='L281'></a><a href='#L281'>281</a>
+<a name='L282'></a><a href='#L282'>282</a>
+<a name='L283'></a><a href='#L283'>283</a>
+<a name='L284'></a><a href='#L284'>284</a>
+<a name='L285'></a><a href='#L285'>285</a>
+<a name='L286'></a><a href='#L286'>286</a>
+<a name='L287'></a><a href='#L287'>287</a>
+<a name='L288'></a><a href='#L288'>288</a>
+<a name='L289'></a><a href='#L289'>289</a>
+<a name='L290'></a><a href='#L290'>290</a>
+<a name='L291'></a><a href='#L291'>291</a>
+<a name='L292'></a><a href='#L292'>292</a>
+<a name='L293'></a><a href='#L293'>293</a>
+<a name='L294'></a><a href='#L294'>294</a>
+<a name='L295'></a><a href='#L295'>295</a>
+<a name='L296'></a><a href='#L296'>296</a>
+<a name='L297'></a><a href='#L297'>297</a>
+<a name='L298'></a><a href='#L298'>298</a>
+<a name='L299'></a><a href='#L299'>299</a>
+<a name='L300'></a><a href='#L300'>300</a>
+<a name='L301'></a><a href='#L301'>301</a>
+<a name='L302'></a><a href='#L302'>302</a>
+<a name='L303'></a><a href='#L303'>303</a>
+<a name='L304'></a><a href='#L304'>304</a>
+<a name='L305'></a><a href='#L305'>305</a>
+<a name='L306'></a><a href='#L306'>306</a>
+<a name='L307'></a><a href='#L307'>307</a>
+<a name='L308'></a><a href='#L308'>308</a>
+<a name='L309'></a><a href='#L309'>309</a>
+<a name='L310'></a><a href='#L310'>310</a>
+<a name='L311'></a><a href='#L311'>311</a>
+<a name='L312'></a><a href='#L312'>312</a>
+<a name='L313'></a><a href='#L313'>313</a>
+<a name='L314'></a><a href='#L314'>314</a>
+<a name='L315'></a><a href='#L315'>315</a>
+<a name='L316'></a><a href='#L316'>316</a>
+<a name='L317'></a><a href='#L317'>317</a>
+<a name='L318'></a><a href='#L318'>318</a>
+<a name='L319'></a><a href='#L319'>319</a>
+<a name='L320'></a><a href='#L320'>320</a>
+<a name='L321'></a><a href='#L321'>321</a>
+<a name='L322'></a><a href='#L322'>322</a>
+<a name='L323'></a><a href='#L323'>323</a>
+<a name='L324'></a><a href='#L324'>324</a>
+<a name='L325'></a><a href='#L325'>325</a>
+<a name='L326'></a><a href='#L326'>326</a>
+<a name='L327'></a><a href='#L327'>327</a>
+<a name='L328'></a><a href='#L328'>328</a>
+<a name='L329'></a><a href='#L329'>329</a>
+<a name='L330'></a><a href='#L330'>330</a>
+<a name='L331'></a><a href='#L331'>331</a>
+<a name='L332'></a><a href='#L332'>332</a>
+<a name='L333'></a><a href='#L333'>333</a>
+<a name='L334'></a><a href='#L334'>334</a>
+<a name='L335'></a><a href='#L335'>335</a>
+<a name='L336'></a><a href='#L336'>336</a>
+<a name='L337'></a><a href='#L337'>337</a>
+<a name='L338'></a><a href='#L338'>338</a>
+<a name='L339'></a><a href='#L339'>339</a>
+<a name='L340'></a><a href='#L340'>340</a>
+<a name='L341'></a><a href='#L341'>341</a>
+<a name='L342'></a><a href='#L342'>342</a>
+<a name='L343'></a><a href='#L343'>343</a>
+<a name='L344'></a><a href='#L344'>344</a>
+<a name='L345'></a><a href='#L345'>345</a>
+<a name='L346'></a><a href='#L346'>346</a>
+<a name='L347'></a><a href='#L347'>347</a>
+<a name='L348'></a><a href='#L348'>348</a>
+<a name='L349'></a><a href='#L349'>349</a>
+<a name='L350'></a><a href='#L350'>350</a>
+<a name='L351'></a><a href='#L351'>351</a>
+<a name='L352'></a><a href='#L352'>352</a>
+<a name='L353'></a><a href='#L353'>353</a>
+<a name='L354'></a><a href='#L354'>354</a>
+<a name='L355'></a><a href='#L355'>355</a>
+<a name='L356'></a><a href='#L356'>356</a>
+<a name='L357'></a><a href='#L357'>357</a>
+<a name='L358'></a><a href='#L358'>358</a>
+<a name='L359'></a><a href='#L359'>359</a>
+<a name='L360'></a><a href='#L360'>360</a>
+<a name='L361'></a><a href='#L361'>361</a>
+<a name='L362'></a><a href='#L362'>362</a>
+<a name='L363'></a><a href='#L363'>363</a>
+<a name='L364'></a><a href='#L364'>364</a>
+<a name='L365'></a><a href='#L365'>365</a>
+<a name='L366'></a><a href='#L366'>366</a>
+<a name='L367'></a><a href='#L367'>367</a>
+<a name='L368'></a><a href='#L368'>368</a>
+<a name='L369'></a><a href='#L369'>369</a>
+<a name='L370'></a><a href='#L370'>370</a>
+<a name='L371'></a><a href='#L371'>371</a>
+<a name='L372'></a><a href='#L372'>372</a>
+<a name='L373'></a><a href='#L373'>373</a>
+<a name='L374'></a><a href='#L374'>374</a>
+<a name='L375'></a><a href='#L375'>375</a>
+<a name='L376'></a><a href='#L376'>376</a>
+<a name='L377'></a><a href='#L377'>377</a>
+<a name='L378'></a><a href='#L378'>378</a>
+<a name='L379'></a><a href='#L379'>379</a>
+<a name='L380'></a><a href='#L380'>380</a>
+<a name='L381'></a><a href='#L381'>381</a>
+<a name='L382'></a><a href='#L382'>382</a>
+<a name='L383'></a><a href='#L383'>383</a>
+<a name='L384'></a><a href='#L384'>384</a>
+<a name='L385'></a><a href='#L385'>385</a>
+<a name='L386'></a><a href='#L386'>386</a>
+<a name='L387'></a><a href='#L387'>387</a>
+<a name='L388'></a><a href='#L388'>388</a>
+<a name='L389'></a><a href='#L389'>389</a>
+<a name='L390'></a><a href='#L390'>390</a>
+<a name='L391'></a><a href='#L391'>391</a>
+<a name='L392'></a><a href='#L392'>392</a>
+<a name='L393'></a><a href='#L393'>393</a>
+<a name='L394'></a><a href='#L394'>394</a>
+<a name='L395'></a><a href='#L395'>395</a>
+<a name='L396'></a><a href='#L396'>396</a>
+<a name='L397'></a><a href='#L397'>397</a>
+<a name='L398'></a><a href='#L398'>398</a>
+<a name='L399'></a><a href='#L399'>399</a>
+<a name='L400'></a><a href='#L400'>400</a>
+<a name='L401'></a><a href='#L401'>401</a>
+<a name='L402'></a><a href='#L402'>402</a>
+<a name='L403'></a><a href='#L403'>403</a>
+<a name='L404'></a><a href='#L404'>404</a>
+<a name='L405'></a><a href='#L405'>405</a>
+<a name='L406'></a><a href='#L406'>406</a>
+<a name='L407'></a><a href='#L407'>407</a>
+<a name='L408'></a><a href='#L408'>408</a>
+<a name='L409'></a><a href='#L409'>409</a>
+<a name='L410'></a><a href='#L410'>410</a>
+<a name='L411'></a><a href='#L411'>411</a>
+<a name='L412'></a><a href='#L412'>412</a>
+<a name='L413'></a><a href='#L413'>413</a>
+<a name='L414'></a><a href='#L414'>414</a>
+<a name='L415'></a><a href='#L415'>415</a>
+<a name='L416'></a><a href='#L416'>416</a>
+<a name='L417'></a><a href='#L417'>417</a>
+<a name='L418'></a><a href='#L418'>418</a>
+<a name='L419'></a><a href='#L419'>419</a>
+<a name='L420'></a><a href='#L420'>420</a>
+<a name='L421'></a><a href='#L421'>421</a>
+<a name='L422'></a><a href='#L422'>422</a>
+<a name='L423'></a><a href='#L423'>423</a>
+<a name='L424'></a><a href='#L424'>424</a>
+<a name='L425'></a><a href='#L425'>425</a>
+<a name='L426'></a><a href='#L426'>426</a>
+<a name='L427'></a><a href='#L427'>427</a>
+<a name='L428'></a><a href='#L428'>428</a>
+<a name='L429'></a><a href='#L429'>429</a>
+<a name='L430'></a><a href='#L430'>430</a>
+<a name='L431'></a><a href='#L431'>431</a>
+<a name='L432'></a><a href='#L432'>432</a>
+<a name='L433'></a><a href='#L433'>433</a>
+<a name='L434'></a><a href='#L434'>434</a>
+<a name='L435'></a><a href='#L435'>435</a>
+<a name='L436'></a><a href='#L436'>436</a>
+<a name='L437'></a><a href='#L437'>437</a>
+<a name='L438'></a><a href='#L438'>438</a>
+<a name='L439'></a><a href='#L439'>439</a>
+<a name='L440'></a><a href='#L440'>440</a>
+<a name='L441'></a><a href='#L441'>441</a>
+<a name='L442'></a><a href='#L442'>442</a>
+<a name='L443'></a><a href='#L443'>443</a>
+<a name='L444'></a><a href='#L444'>444</a>
+<a name='L445'></a><a href='#L445'>445</a>
+<a name='L446'></a><a href='#L446'>446</a>
+<a name='L447'></a><a href='#L447'>447</a>
+<a name='L448'></a><a href='#L448'>448</a>
+<a name='L449'></a><a href='#L449'>449</a>
+<a name='L450'></a><a href='#L450'>450</a>
+<a name='L451'></a><a href='#L451'>451</a>
+<a name='L452'></a><a href='#L452'>452</a>
+<a name='L453'></a><a href='#L453'>453</a>
+<a name='L454'></a><a href='#L454'>454</a>
+<a name='L455'></a><a href='#L455'>455</a>
+<a name='L456'></a><a href='#L456'>456</a>
+<a name='L457'></a><a href='#L457'>457</a>
+<a name='L458'></a><a href='#L458'>458</a>
+<a name='L459'></a><a href='#L459'>459</a>
+<a name='L460'></a><a href='#L460'>460</a>
+<a name='L461'></a><a href='#L461'>461</a>
+<a name='L462'></a><a href='#L462'>462</a>
+<a name='L463'></a><a href='#L463'>463</a>
+<a name='L464'></a><a href='#L464'>464</a>
+<a name='L465'></a><a href='#L465'>465</a>
+<a name='L466'></a><a href='#L466'>466</a>
+<a name='L467'></a><a href='#L467'>467</a>
+<a name='L468'></a><a href='#L468'>468</a>
+<a name='L469'></a><a href='#L469'>469</a>
+<a name='L470'></a><a href='#L470'>470</a>
+<a name='L471'></a><a href='#L471'>471</a>
+<a name='L472'></a><a href='#L472'>472</a>
+<a name='L473'></a><a href='#L473'>473</a>
+<a name='L474'></a><a href='#L474'>474</a>
+<a name='L475'></a><a href='#L475'>475</a>
+<a name='L476'></a><a href='#L476'>476</a>
+<a name='L477'></a><a href='#L477'>477</a>
+<a name='L478'></a><a href='#L478'>478</a>
+<a name='L479'></a><a href='#L479'>479</a>
+<a name='L480'></a><a href='#L480'>480</a>
+<a name='L481'></a><a href='#L481'>481</a>
+<a name='L482'></a><a href='#L482'>482</a>
+<a name='L483'></a><a href='#L483'>483</a>
+<a name='L484'></a><a href='#L484'>484</a>
+<a name='L485'></a><a href='#L485'>485</a>
+<a name='L486'></a><a href='#L486'>486</a>
+<a name='L487'></a><a href='#L487'>487</a>
+<a name='L488'></a><a href='#L488'>488</a>
+<a name='L489'></a><a href='#L489'>489</a>
+<a name='L490'></a><a href='#L490'>490</a>
+<a name='L491'></a><a href='#L491'>491</a>
+<a name='L492'></a><a href='#L492'>492</a>
+<a name='L493'></a><a href='#L493'>493</a>
+<a name='L494'></a><a href='#L494'>494</a>
+<a name='L495'></a><a href='#L495'>495</a>
+<a name='L496'></a><a href='#L496'>496</a>
+<a name='L497'></a><a href='#L497'>497</a>
+<a name='L498'></a><a href='#L498'>498</a>
+<a name='L499'></a><a href='#L499'>499</a>
+<a name='L500'></a><a href='#L500'>500</a>
+<a name='L501'></a><a href='#L501'>501</a>
+<a name='L502'></a><a href='#L502'>502</a>
+<a name='L503'></a><a href='#L503'>503</a>
+<a name='L504'></a><a href='#L504'>504</a>
+<a name='L505'></a><a href='#L505'>505</a>
+<a name='L506'></a><a href='#L506'>506</a>
+<a name='L507'></a><a href='#L507'>507</a>
+<a name='L508'></a><a href='#L508'>508</a>
+<a name='L509'></a><a href='#L509'>509</a>
+<a name='L510'></a><a href='#L510'>510</a>
+<a name='L511'></a><a href='#L511'>511</a>
+<a name='L512'></a><a href='#L512'>512</a>
+<a name='L513'></a><a href='#L513'>513</a>
+<a name='L514'></a><a href='#L514'>514</a>
+<a name='L515'></a><a href='#L515'>515</a>
+<a name='L516'></a><a href='#L516'>516</a>
+<a name='L517'></a><a href='#L517'>517</a>
+<a name='L518'></a><a href='#L518'>518</a>
+<a name='L519'></a><a href='#L519'>519</a>
+<a name='L520'></a><a href='#L520'>520</a>
+<a name='L521'></a><a href='#L521'>521</a>
+<a name='L522'></a><a href='#L522'>522</a>
+<a name='L523'></a><a href='#L523'>523</a>
+<a name='L524'></a><a href='#L524'>524</a>
+<a name='L525'></a><a href='#L525'>525</a>
+<a name='L526'></a><a href='#L526'>526</a>
+<a name='L527'></a><a href='#L527'>527</a>
+<a name='L528'></a><a href='#L528'>528</a>
+<a name='L529'></a><a href='#L529'>529</a>
+<a name='L530'></a><a href='#L530'>530</a>
+<a name='L531'></a><a href='#L531'>531</a>
+<a name='L532'></a><a href='#L532'>532</a>
+<a name='L533'></a><a href='#L533'>533</a>
+<a name='L534'></a><a href='#L534'>534</a>
+<a name='L535'></a><a href='#L535'>535</a>
+<a name='L536'></a><a href='#L536'>536</a>
+<a name='L537'></a><a href='#L537'>537</a>
+<a name='L538'></a><a href='#L538'>538</a>
+<a name='L539'></a><a href='#L539'>539</a>
+<a name='L540'></a><a href='#L540'>540</a>
+<a name='L541'></a><a href='#L541'>541</a>
+<a name='L542'></a><a href='#L542'>542</a>
+<a name='L543'></a><a href='#L543'>543</a>
+<a name='L544'></a><a href='#L544'>544</a>
+<a name='L545'></a><a href='#L545'>545</a>
+<a name='L546'></a><a href='#L546'>546</a>
+<a name='L547'></a><a href='#L547'>547</a>
+<a name='L548'></a><a href='#L548'>548</a>
+<a name='L549'></a><a href='#L549'>549</a>
+<a name='L550'></a><a href='#L550'>550</a>
+<a name='L551'></a><a href='#L551'>551</a>
+<a name='L552'></a><a href='#L552'>552</a>
+<a name='L553'></a><a href='#L553'>553</a>
+<a name='L554'></a><a href='#L554'>554</a>
+<a name='L555'></a><a href='#L555'>555</a>
+<a name='L556'></a><a href='#L556'>556</a>
+<a name='L557'></a><a href='#L557'>557</a>
+<a name='L558'></a><a href='#L558'>558</a>
+<a name='L559'></a><a href='#L559'>559</a>
+<a name='L560'></a><a href='#L560'>560</a>
+<a name='L561'></a><a href='#L561'>561</a>
+<a name='L562'></a><a href='#L562'>562</a>
+<a name='L563'></a><a href='#L563'>563</a>
+<a name='L564'></a><a href='#L564'>564</a>
+<a name='L565'></a><a href='#L565'>565</a>
+<a name='L566'></a><a href='#L566'>566</a>
+<a name='L567'></a><a href='#L567'>567</a>
+<a name='L568'></a><a href='#L568'>568</a>
+<a name='L569'></a><a href='#L569'>569</a>
+<a name='L570'></a><a href='#L570'>570</a>
+<a name='L571'></a><a href='#L571'>571</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >/**</span></span></span>
+<span class="cstat-no" title="statement not covered" > * DataFusionEngine — 多源数据融合引擎</span>
+<span class="cstat-no" title="statement not covered" > *</span>
+<span class="cstat-no" title="statement not covered" > * 将 Stock、DailyQuotes、V6Score、IntelligentScore、Signal 等多源数据</span>
+<span class="cstat-no" title="statement not covered" > * 融合为统一的 UnifiedStockData 视图，作为上层分析组件的数据感知统一入口。</span>
+<span class="cstat-no" title="statement not covered" > *</span>
+<span class="cstat-no" title="statement not covered" > * 核心能力：</span>
+<span class="cstat-no" title="statement not covered" > * - 并行加载多源数据</span>
+<span class="cstat-no" title="statement not covered" > * - 计算技术指标（MA/RSI/MACD/KDJ/BOLL/ATR）</span>
+<span class="cstat-no" title="statement not covered" > * - 数据质量评估与版本一致性校验</span>
+<span class="cstat-no" title="statement not covered" > * - 按需加载非核心维度（lazy）</span>
+<span class="cstat-no" title="statement not covered" > *</span>
+<span class="cstat-no" title="statement not covered" > * @module services/analysis/dataFusionEngine</span>
+<span class="cstat-no" title="statement not covered" > * @created 2026-06-27 - 基于引擎规格 §1.2</span>
+<span class="cstat-no" title="statement not covered" > */</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >import { dataLayer } from '@/data/dataLayer'</span>
+<span class="cstat-no" title="statement not covered" >import type {</span>
+<span class="cstat-no" title="statement not covered" >  DataLayerResult,</span>
+<span class="cstat-no" title="statement not covered" >  KlineBar,</span>
+<span class="cstat-no" title="statement not covered" >  UnifiedStockData,</span>
+<span class="cstat-no" title="statement not covered" >} from '@/data/types'</span>
+<span class="cstat-no" title="statement not covered" >import { getLogger } from '@/lib/logger'</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >const logger = getLogger()</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >// ============================================================</span>
+<span class="cstat-no" title="statement not covered" >// 融合选项</span>
+<span class="cstat-no" title="statement not covered" >// ============================================================</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >export interface FusionOptions {</span>
+<span class="cstat-no" title="statement not covered" >  /** 是否加载智能评分（LLM增强），默认 false（按需加载） */</span>
+<span class="cstat-no" title="statement not covered" >  includeIntelligentScore?: boolean</span>
+<span class="cstat-no" title="statement not covered" >  /** 是否加载行业评分，默认 false */</span>
+<span class="cstat-no" title="statement not covered" >  includeIndustryScore?: boolean</span>
+<span class="cstat-no" title="statement not covered" >  /** 是否加载交易信号，默认 false */</span>
+<span class="cstat-no" title="statement not covered" >  includeSignals?: boolean</span>
+<span class="cstat-no" title="statement not covered" >  /** 是否计算全量技术指标，默认 true */</span>
+<span class="cstat-no" title="statement not covered" >  computeIndicators?: boolean</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >// ============================================================</span>
+<span class="cstat-no" title="statement not covered" >// 技术指标计算</span>
+<span class="cstat-no" title="statement not covered" >// ============================================================</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >function computeMA(closes: number[], period: number): number | null {</span>
+<span class="cstat-no" title="statement not covered" >  if (closes.length &lt; period) return null</span>
+<span class="cstat-no" title="statement not covered" >  const slice = closes.slice(-period)</span>
+<span class="cstat-no" title="statement not covered" >  return slice.reduce((a, b) =&gt; a + b, 0) / period</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >function computeEMA(closes: number[], period: number): number | null {</span>
+<span class="cstat-no" title="statement not covered" >  if (closes.length &lt; period) return null</span>
+<span class="cstat-no" title="statement not covered" >  const k = 2 / (period + 1)</span>
+<span class="cstat-no" title="statement not covered" >  let ema = closes.slice(0, period).reduce((a, b) =&gt; a + b, 0) / period</span>
+<span class="cstat-no" title="statement not covered" >  for (let i = period; i &lt; closes.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >    ema = (closes[i]! - ema) * k + ema</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >  return ema</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >function computeRSI(closes: number[], period: number): number | null {</span>
+<span class="cstat-no" title="statement not covered" >  if (closes.length &lt; period + 1) return null</span>
+<span class="cstat-no" title="statement not covered" >  const window = closes.slice(-(period + 1))</span>
+<span class="cstat-no" title="statement not covered" >  let gains = 0</span>
+<span class="cstat-no" title="statement not covered" >  let losses = 0</span>
+<span class="cstat-no" title="statement not covered" >  for (let i = 1; i &lt; window.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >    const delta = window[i]! - window[i - 1]!</span>
+<span class="cstat-no" title="statement not covered" >    if (delta &gt; 0) gains += delta</span>
+<span class="cstat-no" title="statement not covered" >    else losses -= delta</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >  if (losses === 0) return 100</span>
+<span class="cstat-no" title="statement not covered" >  return 100 - 100 / (1 + gains / losses)</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >function computeMACD(</span>
+<span class="cstat-no" title="statement not covered" >  closes: number[],</span>
+<span class="cstat-no" title="statement not covered" >  fast = 12,</span>
+<span class="cstat-no" title="statement not covered" >  slow = 26,</span>
+<span class="cstat-no" title="statement not covered" >  signal = 9,</span>
+<span class="cstat-no" title="statement not covered" >): { dif: number; dea: number; macd: number } | null {</span>
+<span class="cstat-no" title="statement not covered" >  if (closes.length &lt; slow + signal) return null</span>
+<span class="cstat-no" title="statement not covered" >  const emaFast = computeEMA(closes, fast)!</span>
+<span class="cstat-no" title="statement not covered" >  const emaSlow = computeEMA(closes, slow)!</span>
+<span class="cstat-no" title="statement not covered" >  const dif = emaFast - emaSlow</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  // 计算 DEA (DIF 的 signal 周期 EMA)</span>
+<span class="cstat-no" title="statement not covered" >  const recentCloses = closes.slice(-(slow + signal))</span>
+<span class="cstat-no" title="statement not covered" >  const difs: number[] = []</span>
+<span class="cstat-no" title="statement not covered" >  for (let i = slow; i &lt; recentCloses.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >    const ef = computeEMA(recentCloses.slice(0, i + 1), fast)!</span>
+<span class="cstat-no" title="statement not covered" >    const es = computeEMA(recentCloses.slice(0, i + 1), slow)!</span>
+<span class="cstat-no" title="statement not covered" >    difs.push(ef - es)</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >  const k = 2 / (signal + 1)</span>
+<span class="cstat-no" title="statement not covered" >  let dea = difs.slice(0, signal).reduce((a, b) =&gt; a + b, 0) / signal</span>
+<span class="cstat-no" title="statement not covered" >  for (let i = signal; i &lt; difs.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >    dea = (difs[i]! - dea) * k + dea</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  return { dif, dea, macd: (dif - dea) * 2 }</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >function computeKDJ(</span>
+<span class="cstat-no" title="statement not covered" >  highs: number[],</span>
+<span class="cstat-no" title="statement not covered" >  lows: number[],</span>
+<span class="cstat-no" title="statement not covered" >  closes: number[],</span>
+<span class="cstat-no" title="statement not covered" >  period = 9,</span>
+<span class="cstat-no" title="statement not covered" >): { k: number; d: number; j: number } | null {</span>
+<span class="cstat-no" title="statement not covered" >  if (closes.length &lt; period) return null</span>
+<span class="cstat-no" title="statement not covered" >  const window = closes.slice(-period)</span>
+<span class="cstat-no" title="statement not covered" >  const highWindow = highs.slice(-period)</span>
+<span class="cstat-no" title="statement not covered" >  const lowWindow = lows.slice(-period)</span>
+<span class="cstat-no" title="statement not covered" >  const highestHigh = Math.max(...highWindow)</span>
+<span class="cstat-no" title="statement not covered" >  const lowestLow = Math.min(...lowWindow)</span>
+<span class="cstat-no" title="statement not covered" >  const rsv =</span>
+<span class="cstat-no" title="statement not covered" >    lowestLow === highestHigh</span>
+<span class="cstat-no" title="statement not covered" >      ? 50</span>
+<span class="cstat-no" title="statement not covered" >      : ((window[window.length - 1]! - lowestLow) / (highestHigh - lowestLow)) * 100</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  // 简化：使用 RSV 作为 K 值，D 取 K 的 3 日均值</span>
+<span class="cstat-no" title="statement not covered" >  const k = rsv</span>
+<span class="cstat-no" title="statement not covered" >  const d = k // 初版简化</span>
+<span class="cstat-no" title="statement not covered" >  const j = 3 * k - 2 * d</span>
+<span class="cstat-no" title="statement not covered" >  return { k, d, j }</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >function computeBollinger(</span>
+<span class="cstat-no" title="statement not covered" >  closes: number[],</span>
+<span class="cstat-no" title="statement not covered" >  period = 20,</span>
+<span class="cstat-no" title="statement not covered" >  multiplier = 2,</span>
+<span class="cstat-no" title="statement not covered" >): { upper: number; mid: number; lower: number } | null {</span>
+<span class="cstat-no" title="statement not covered" >  if (closes.length &lt; period) return null</span>
+<span class="cstat-no" title="statement not covered" >  const slice = closes.slice(-period)</span>
+<span class="cstat-no" title="statement not covered" >  const mid = slice.reduce((a, b) =&gt; a + b, 0) / period</span>
+<span class="cstat-no" title="statement not covered" >  const variance =</span>
+<span class="cstat-no" title="statement not covered" >    slice.reduce((sum, v) =&gt; sum + (v - mid) ** 2, 0) / period</span>
+<span class="cstat-no" title="statement not covered" >  const std = Math.sqrt(variance)</span>
+<span class="cstat-no" title="statement not covered" >  return {</span>
+<span class="cstat-no" title="statement not covered" >    upper: mid + multiplier * std,</span>
+<span class="cstat-no" title="statement not covered" >    mid,</span>
+<span class="cstat-no" title="statement not covered" >    lower: mid - multiplier * std,</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >function computeATR(</span>
+<span class="cstat-no" title="statement not covered" >  bars: KlineBar[],</span>
+<span class="cstat-no" title="statement not covered" >  period = 14,</span>
+<span class="cstat-no" title="statement not covered" >): number | null {</span>
+<span class="cstat-no" title="statement not covered" >  if (bars.length &lt; period + 1) return null</span>
+<span class="cstat-no" title="statement not covered" >  const trs: number[] = []</span>
+<span class="cstat-no" title="statement not covered" >  for (let i = 1; i &lt; bars.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >    const curr = bars[i]!</span>
+<span class="cstat-no" title="statement not covered" >    const prev = bars[i - 1]!</span>
+<span class="cstat-no" title="statement not covered" >    const tr = Math.max(</span>
+<span class="cstat-no" title="statement not covered" >      curr.high - curr.low,</span>
+<span class="cstat-no" title="statement not covered" >      Math.abs(curr.high - prev.close),</span>
+<span class="cstat-no" title="statement not covered" >      Math.abs(curr.low - prev.close),</span>
+<span class="cstat-no" title="statement not covered" >    )</span>
+<span class="cstat-no" title="statement not covered" >    trs.push(tr)</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >  const recent = trs.slice(-period)</span>
+<span class="cstat-no" title="statement not covered" >  return recent.reduce((a, b) =&gt; a + b, 0) / period</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >// ============================================================</span>
+<span class="cstat-no" title="statement not covered" >// 数据质量评估</span>
+<span class="cstat-no" title="statement not covered" >// ============================================================</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >interface DataQualityReport {</span>
+<span class="cstat-no" title="statement not covered" >  basic: boolean</span>
+<span class="cstat-no" title="statement not covered" >  kline: boolean</span>
+<span class="cstat-no" title="statement not covered" >  v6Score: boolean</span>
+<span class="cstat-no" title="statement not covered" >  intelligentScore: boolean</span>
+<span class="cstat-no" title="statement not covered" >  industryScore: boolean</span>
+<span class="cstat-no" title="statement not covered" >  signals: boolean</span>
+<span class="cstat-no" title="statement not covered" >  completeness: number // 0-1</span>
+<span class="cstat-no" title="statement not covered" >  warnings: string[]</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >function assessDataQuality(</span>
+<span class="cstat-no" title="statement not covered" >  stock: unknown,</span>
+<span class="cstat-no" title="statement not covered" >  quotes: unknown,</span>
+<span class="cstat-no" title="statement not covered" >  v6Score: unknown,</span>
+<span class="cstat-no" title="statement not covered" >  intelligentScore: unknown,</span>
+<span class="cstat-no" title="statement not covered" >  industryScore: unknown,</span>
+<span class="cstat-no" title="statement not covered" >  signals: unknown,</span>
+<span class="cstat-no" title="statement not covered" >): DataQualityReport {</span>
+<span class="cstat-no" title="statement not covered" >  const basic = stock !== undefined &amp;&amp; stock !== null</span>
+<span class="cstat-no" title="statement not covered" >  const kline = quotes !== undefined &amp;&amp; quotes !== null</span>
+<span class="cstat-no" title="statement not covered" >  const v6 = v6Score !== undefined &amp;&amp; v6Score !== null</span>
+<span class="cstat-no" title="statement not covered" >  const intel = intelligentScore !== undefined &amp;&amp; intelligentScore !== null</span>
+<span class="cstat-no" title="statement not covered" >  const industry = industryScore !== undefined &amp;&amp; industryScore !== null</span>
+<span class="cstat-no" title="statement not covered" >  const sig = signals !== undefined &amp;&amp; signals !== null &amp;&amp; (Array.isArray(signals) ? signals.length &gt; 0 : true)</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  const flags = [basic, kline, v6, intel, industry, sig]</span>
+<span class="cstat-no" title="statement not covered" >  const completeness = flags.filter(Boolean).length / flags.length</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  const warnings: string[] = []</span>
+<span class="cstat-no" title="statement not covered" >  if (!basic) warnings.push('基础数据缺失')</span>
+<span class="cstat-no" title="statement not covered" >  if (!kline) warnings.push('K线数据缺失')</span>
+<span class="cstat-no" title="statement not covered" >  if (!v6) warnings.push('V6评分缺失')</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  return { basic, kline, v6Score: v6, intelligentScore: intel, industryScore: industry, signals: sig, completeness, warnings }</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >// ============================================================</span>
+<span class="cstat-no" title="statement not covered" >// 核心融合函数</span>
+<span class="cstat-no" title="statement not covered" >// ============================================================</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >/**</span>
+<span class="cstat-no" title="statement not covered" > * 将单只股票的多源数据融合为 UnifiedStockData。</span>
+<span class="cstat-no" title="statement not covered" > *</span>
+<span class="cstat-no" title="statement not covered" > * 融合策略：</span>
+<span class="cstat-no" title="statement not covered" > * 1. 基础数据（Stock）为必选项，缺失则返回错误</span>
+<span class="cstat-no" title="statement not covered" > * 2. K线数据优先，用于计算技术指标</span>
+<span class="cstat-no" title="statement not covered" > * 3. V6评分 / 智能评分 / 行业评分按需加载</span>
+<span class="cstat-no" title="statement not covered" > * 4. 任一数据源加载失败不影响其他源，标记缺失并降级</span>
+<span class="cstat-no" title="statement not covered" > *</span>
+<span class="cstat-no" title="statement not covered" > * @param symbol 股票代码</span>
+<span class="cstat-no" title="statement not covered" > * @param options 融合选项</span>
+<span class="cstat-no" title="statement not covered" > * @returns 融合后的 UnifiedStockData 或错误</span>
+<span class="cstat-no" title="statement not covered" > */</span>
+<span class="cstat-no" title="statement not covered" >export async function fuseStockData(</span>
+<span class="cstat-no" title="statement not covered" >  symbol: string,</span>
+<span class="cstat-no" title="statement not covered" >  options: FusionOptions = {},</span>
+<span class="cstat-no" title="statement not covered" >): Promise&lt;DataLayerResult&lt;UnifiedStockData&gt;&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  const {</span>
+<span class="cstat-no" title="statement not covered" >    includeIntelligentScore = false,</span>
+<span class="cstat-no" title="statement not covered" >    includeIndustryScore = false,</span>
+<span class="cstat-no" title="statement not covered" >    includeSignals = false,</span>
+<span class="cstat-no" title="statement not covered" >    computeIndicators = true,</span>
+<span class="cstat-no" title="statement not covered" >  } = options</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  logger.info(</span>
+<span class="cstat-no" title="statement not covered" >    `[dataFusionEngine] 开始融合 ${symbol}: ` +</span>
+<span class="cstat-no" title="statement not covered" >    `includeIntelligentScore=${includeIntelligentScore} ` +</span>
+<span class="cstat-no" title="statement not covered" >    `includeIndustryScore=${includeIndustryScore} ` +</span>
+<span class="cstat-no" title="statement not covered" >    `includeSignals=${includeSignals} ` +</span>
+<span class="cstat-no" title="statement not covered" >    `computeIndicators=${computeIndicators}`,</span>
+<span class="cstat-no" title="statement not covered" >  )</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  try {</span>
+<span class="cstat-no" title="statement not covered" >    // 并行加载基础数据源</span>
+<span class="cstat-no" title="statement not covered" >    const fetchTasks: Promise&lt;unknown&gt;[] = [</span>
+<span class="cstat-no" title="statement not covered" >      dataLayer.stocks.get(symbol),</span>
+<span class="cstat-no" title="statement not covered" >      dataLayer.dailyQuotes.get(symbol).catch(() =&gt; undefined),</span>
+<span class="cstat-no" title="statement not covered" >      dataLayer.v6Scores.get(symbol).catch(() =&gt; undefined),</span>
+<span class="cstat-no" title="statement not covered" >    ]</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    if (includeIntelligentScore) {</span>
+<span class="cstat-no" title="statement not covered" >      fetchTasks.push(dataLayer.intelligentScores.getLatestBySymbol(symbol).catch(() =&gt; undefined))</span>
+<span class="cstat-no" title="statement not covered" >    } else {</span>
+<span class="cstat-no" title="statement not covered" >      fetchTasks.push(Promise.resolve(undefined))</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    if (includeIndustryScore) {</span>
+<span class="cstat-no" title="statement not covered" >      fetchTasks.push(</span>
+<span class="cstat-no" title="statement not covered" >        dataLayer.stocks.get(symbol).then((s) =&gt;</span>
+<span class="cstat-no" title="statement not covered" >          s?.industryCode</span>
+<span class="cstat-no" title="statement not covered" >            ? dataLayer.industryScores.getLatestByCode(s.industryCode).catch(() =&gt; undefined)</span>
+<span class="cstat-no" title="statement not covered" >            : undefined,</span>
+<span class="cstat-no" title="statement not covered" >        ),</span>
+<span class="cstat-no" title="statement not covered" >      )</span>
+<span class="cstat-no" title="statement not covered" >    } else {</span>
+<span class="cstat-no" title="statement not covered" >      fetchTasks.push(Promise.resolve(undefined))</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    if (includeSignals) {</span>
+<span class="cstat-no" title="statement not covered" >      fetchTasks.push(dataLayer.signals.listBySymbol(symbol).catch(() =&gt; []))</span>
+<span class="cstat-no" title="statement not covered" >    } else {</span>
+<span class="cstat-no" title="statement not covered" >      fetchTasks.push(Promise.resolve([]))</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    const [stock, quotes, v6Score, intelligentScore, industryScore, signals] =</span>
+<span class="cstat-no" title="statement not covered" >      (await Promise.all(fetchTasks)) as [</span>
+<span class="cstat-no" title="statement not covered" >        Awaited&lt;ReturnType&lt;typeof dataLayer.stocks.get&gt;&gt;,</span>
+<span class="cstat-no" title="statement not covered" >        Awaited&lt;ReturnType&lt;typeof dataLayer.dailyQuotes.get&gt;&gt;,</span>
+<span class="cstat-no" title="statement not covered" >        Awaited&lt;ReturnType&lt;typeof dataLayer.v6Scores.get&gt;&gt;,</span>
+<span class="cstat-no" title="statement not covered" >        Awaited&lt;ReturnType&lt;typeof dataLayer.intelligentScores.getLatestBySymbol&gt;&gt;,</span>
+<span class="cstat-no" title="statement not covered" >        Awaited&lt;ReturnType&lt;typeof dataLayer.industryScores.getLatestByCode&gt;&gt;,</span>
+<span class="cstat-no" title="statement not covered" >        Awaited&lt;ReturnType&lt;typeof dataLayer.signals.listBySymbol&gt;&gt;,</span>
+<span class="cstat-no" title="statement not covered" >      ]</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    logger.info(</span>
+<span class="cstat-no" title="statement not covered" >      `[dataFusionEngine] ${symbol} 数据源加载完成: ` +</span>
+<span class="cstat-no" title="statement not covered" >      `stock=${stock ? '有' : '无'} ` +</span>
+<span class="cstat-no" title="statement not covered" >      `quotes=${quotes ? `有(${quotes.history.length}条)` : '无'} ` +</span>
+<span class="cstat-no" title="statement not covered" >      `v6Score=${v6Score ? `有(score=${v6Score.score})` : '无'} ` +</span>
+<span class="cstat-no" title="statement not covered" >      `intelligentScore=${intelligentScore ? '有' : '无'} ` +</span>
+<span class="cstat-no" title="statement not covered" >      `industryScore=${industryScore ? '有' : '无'} ` +</span>
+<span class="cstat-no" title="statement not covered" >      `signals=${Array.isArray(signals) ? `${signals.length}条` : '无'}`,</span>
+<span class="cstat-no" title="statement not covered" >    )</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    if (!stock) {</span>
+<span class="cstat-no" title="statement not covered" >      logger.warn(`[dataFusionEngine] ${symbol} 股票数据缺失，融合中断`)</span>
+<span class="cstat-no" title="statement not covered" >      return { success: false, error: `股票 ${symbol} 不存在` }</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    const quality = assessDataQuality(stock, quotes, v6Score, intelligentScore, industryScore, signals)</span>
+<span class="cstat-no" title="statement not covered" >    logger.info(`[dataFusionEngine] ${symbol} 数据完整度: ${(quality.completeness * 100).toFixed(0)}%`)</span>
+<span class="cstat-no" title="statement not covered" >    if (quality.warnings.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >      logger.warn(`[dataFusionEngine] ${symbol} 数据质量警告: ${quality.warnings.join(', ')}`)</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    // 基础数据</span>
+<span class="cstat-no" title="statement not covered" >    const hasQuotes = quotes !== undefined &amp;&amp; quotes !== null &amp;&amp; quotes.history.length &gt; 0</span>
+<span class="cstat-no" title="statement not covered" >    const latest = hasQuotes ? quotes!.latest : null</span>
+<span class="cstat-no" title="statement not covered" >    const history = hasQuotes ? quotes!.history : []</span>
+<span class="cstat-no" title="statement not covered" >    const closes = history.map((b) =&gt; b.close)</span>
+<span class="cstat-no" title="statement not covered" >    const highs = history.map((b) =&gt; b.high)</span>
+<span class="cstat-no" title="statement not covered" >    const lows = history.map((b) =&gt; b.low)</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    // 技术指标</span>
+<span class="cstat-no" title="statement not covered" >    let ma5: number | null = null</span>
+<span class="cstat-no" title="statement not covered" >    let ma10: number | null = null</span>
+<span class="cstat-no" title="statement not covered" >    let ma20: number | null = null</span>
+<span class="cstat-no" title="statement not covered" >    let rsi6: number | null = null</span>
+<span class="cstat-no" title="statement not covered" >    let rsi12: number | null = null</span>
+<span class="cstat-no" title="statement not covered" >    let rsi24: number | null = null</span>
+<span class="cstat-no" title="statement not covered" >    let macdResult: ReturnType&lt;typeof computeMACD&gt; = null</span>
+<span class="cstat-no" title="statement not covered" >    let kdjResult: ReturnType&lt;typeof computeKDJ&gt; = null</span>
+<span class="cstat-no" title="statement not covered" >    let bollResult: ReturnType&lt;typeof computeBollinger&gt; = null</span>
+<span class="cstat-no" title="statement not covered" >    let atr: number | null = null</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    if (computeIndicators &amp;&amp; hasQuotes) {</span>
+<span class="cstat-no" title="statement not covered" >      logger.info(`[dataFusionEngine] ${symbol} 开始计算技术指标 (K线${history.length}条)`)</span>
+<span class="cstat-no" title="statement not covered" >      ma5 = computeMA(closes, 5)</span>
+<span class="cstat-no" title="statement not covered" >      ma10 = computeMA(closes, 10)</span>
+<span class="cstat-no" title="statement not covered" >      ma20 = computeMA(closes, 20)</span>
+<span class="cstat-no" title="statement not covered" >      rsi6 = computeRSI(closes, 6)</span>
+<span class="cstat-no" title="statement not covered" >      rsi12 = computeRSI(closes, 12)</span>
+<span class="cstat-no" title="statement not covered" >      rsi24 = computeRSI(closes, 24)</span>
+<span class="cstat-no" title="statement not covered" >      macdResult = computeMACD(closes)</span>
+<span class="cstat-no" title="statement not covered" >      kdjResult = computeKDJ(highs, lows, closes)</span>
+<span class="cstat-no" title="statement not covered" >      bollResult = computeBollinger(closes)</span>
+<span class="cstat-no" title="statement not covered" >      atr = computeATR(history)</span>
+<span class="cstat-no" title="statement not covered" >      logger.info(</span>
+<span class="cstat-no" title="statement not covered" >        `[dataFusionEngine] ${symbol} 技术指标计算完成: ` +</span>
+<span class="cstat-no" title="statement not covered" >        `MA5=${ma5?.toFixed(2) ?? 'N/A'} ` +</span>
+<span class="cstat-no" title="statement not covered" >        `MA20=${ma20?.toFixed(2) ?? 'N/A'} ` +</span>
+<span class="cstat-no" title="statement not covered" >        `RSI6=${rsi6?.toFixed(1) ?? 'N/A'} ` +</span>
+<span class="cstat-no" title="statement not covered" >        `MACD=${macdResult?.macd.toFixed(3) ?? 'N/A'} ` +</span>
+<span class="cstat-no" title="statement not covered" >        `ATR=${atr?.toFixed(2) ?? 'N/A'}`,</span>
+<span class="cstat-no" title="statement not covered" >      )</span>
+<span class="cstat-no" title="statement not covered" >    } else if (computeIndicators &amp;&amp; !hasQuotes) {</span>
+<span class="cstat-no" title="statement not covered" >      logger.warn(`[dataFusionEngine] ${symbol} 无K线数据，跳过技术指标计算`)</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    // 均线信号判定</span>
+<span class="cstat-no" title="statement not covered" >    let maSignal: UnifiedStockData['maSignal'] = null</span>
+<span class="cstat-no" title="statement not covered" >    if (ma5 !== null &amp;&amp; ma20 !== null) {</span>
+<span class="cstat-no" title="statement not covered" >      if (ma5 &gt; ma20) maSignal = 'golden_cross'</span>
+<span class="cstat-no" title="statement not covered" >      else if (ma5 &lt; ma20) maSignal = 'death_cross'</span>
+<span class="cstat-no" title="statement not covered" >      else maSignal = 'neutral'</span>
+<span class="cstat-no" title="statement not covered" >      logger.info(`[dataFusionEngine] ${symbol} 均线信号: ${maSignal} (MA5=${ma5.toFixed(2)}, MA20=${ma20.toFixed(2)})`)</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    // RSI 信号判定</span>
+<span class="cstat-no" title="statement not covered" >    let rsiSignal: UnifiedStockData['rsiSignal'] = null</span>
+<span class="cstat-no" title="statement not covered" >    if (rsi6 !== null) {</span>
+<span class="cstat-no" title="statement not covered" >      if (rsi6 &gt; 80) rsiSignal = 'overbought'</span>
+<span class="cstat-no" title="statement not covered" >      else if (rsi6 &lt; 20) rsiSignal = 'oversold'</span>
+<span class="cstat-no" title="statement not covered" >      else rsiSignal = 'neutral'</span>
+<span class="cstat-no" title="statement not covered" >      logger.info(`[dataFusionEngine] ${symbol} RSI信号: ${rsiSignal} (RSI6=${rsi6.toFixed(1)})`)</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    // MACD 信号判定</span>
+<span class="cstat-no" title="statement not covered" >    let macdSignal: UnifiedStockData['macdSignal'] = null</span>
+<span class="cstat-no" title="statement not covered" >    if (macdResult !== null) {</span>
+<span class="cstat-no" title="statement not covered" >      if (macdResult.macd &gt; 0) macdSignal = 'bullish'</span>
+<span class="cstat-no" title="statement not covered" >      else if (macdResult.macd &lt; 0) macdSignal = 'bearish'</span>
+<span class="cstat-no" title="statement not covered" >      else macdSignal = 'neutral'</span>
+<span class="cstat-no" title="statement not covered" >      logger.info(</span>
+<span class="cstat-no" title="statement not covered" >        `[dataFusionEngine] ${symbol} MACD信号: ${macdSignal} ` +</span>
+<span class="cstat-no" title="statement not covered" >        `(DIF=${macdResult.dif.toFixed(3)}, DEA=${macdResult.dea.toFixed(3)}, MACD=${macdResult.macd.toFixed(3)})`,</span>
+<span class="cstat-no" title="statement not covered" >      )</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    // 评分数据</span>
+<span class="cstat-no" title="statement not covered" >    const v6Factors = v6Score?.factors</span>
+<span class="cstat-no" title="statement not covered" >    const intelScore = intelligentScore?.overallScore ?? null</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    // 信号判定</span>
+<span class="cstat-no" title="statement not covered" >    const latestSignal = Array.isArray(signals) &amp;&amp; signals.length &gt; 0 ? signals[signals.length - 1] : null</span>
+<span class="cstat-no" title="statement not covered" >    let signalType: UnifiedStockData['signalType'] = null</span>
+<span class="cstat-no" title="statement not covered" >    let signalReason: string | null = null</span>
+<span class="cstat-no" title="statement not covered" >    if (latestSignal) {</span>
+<span class="cstat-no" title="statement not covered" >      if (latestSignal.direction === 'buy' &amp;&amp; latestSignal.confidence &gt;= 0.7) {</span>
+<span class="cstat-no" title="statement not covered" >        signalType = 'strong_buy'</span>
+<span class="cstat-no" title="statement not covered" >      } else if (latestSignal.direction === 'buy') {</span>
+<span class="cstat-no" title="statement not covered" >        signalType = 'buy'</span>
+<span class="cstat-no" title="statement not covered" >      } else if (latestSignal.direction === 'hold') {</span>
+<span class="cstat-no" title="statement not covered" >        signalType = 'hold'</span>
+<span class="cstat-no" title="statement not covered" >      } else if (latestSignal.direction === 'watch') {</span>
+<span class="cstat-no" title="statement not covered" >        signalType = 'watch'</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >      signalReason = latestSignal.rationale</span>
+<span class="cstat-no" title="statement not covered" >      logger.info(</span>
+<span class="cstat-no" title="statement not covered" >        `[dataFusionEngine] ${symbol} 交易信号映射: ${signalType} ` +</span>
+<span class="cstat-no" title="statement not covered" >        `(direction=${latestSignal.direction}, confidence=${latestSignal.confidence}, reason=${latestSignal.rationale})`,</span>
+<span class="cstat-no" title="statement not covered" >      )</span>
+<span class="cstat-no" title="statement not covered" >    } else if (includeSignals) {</span>
+<span class="cstat-no" title="statement not covered" >      logger.info(`[dataFusionEngine] ${symbol} 无可用交易信号`)</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    const currentPrice = latest?.close ?? stock.price ?? 0</span>
+<span class="cstat-no" title="statement not covered" >    if (latest?.close == null &amp;&amp; stock.price == null) {</span>
+<span class="cstat-no" title="statement not covered" >      logger.warn('[dataFusionEngine] 价格数据缺失，使用默认值', { field: 'close/price', context: `symbol=${stock.symbol}` })</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >    const prevClose = history.length &gt;= 2 ? history[history.length - 2]!.close : currentPrice</span>
+<span class="cstat-no" title="statement not covered" >    const change = currentPrice - prevClose</span>
+<span class="cstat-no" title="statement not covered" >    const changePct = prevClose !== 0 ? (change / prevClose) * 100 : 0</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    const unified: UnifiedStockData = {</span>
+<span class="cstat-no" title="statement not covered" >      symbol: stock.symbol,</span>
+<span class="cstat-no" title="statement not covered" >      name: stock.name,</span>
+<span class="cstat-no" title="statement not covered" >      price: currentPrice,</span>
+<span class="cstat-no" title="statement not covered" >      change: Math.round(change * 100) / 100,</span>
+<span class="cstat-no" title="statement not covered" >      changePct: Math.round(changePct * 100) / 100,</span>
+<span class="cstat-no" title="statement not covered" >      volume: latest?.volume ?? 0,</span>
+<span class="cstat-no" title="statement not covered" >      amount: latest?.amount ?? 0,</span>
+<span class="cstat-no" title="statement not covered" >      open: latest?.open ?? currentPrice,</span>
+<span class="cstat-no" title="statement not covered" >      high: latest?.high ?? currentPrice,</span>
+<span class="cstat-no" title="statement not covered" >      low: latest?.low ?? currentPrice,</span>
+<span class="cstat-no" title="statement not covered" >      prevClose,</span>
+<span class="cstat-no" title="statement not covered" >      turnover: null,</span>
+<span class="cstat-no" title="statement not covered" >      marketCap: stock.marketCap ?? null,</span>
+<span class="cstat-no" title="statement not covered" >      pe: stock.pe ?? null,</span>
+<span class="cstat-no" title="statement not covered" >      pb: stock.pb ?? null,</span>
+<span class="cstat-no" title="statement not covered" >      roe: stock.roe ?? null,</span>
+<span class="cstat-no" title="statement not covered" >      grossMargin: null,</span>
+<span class="cstat-no" title="statement not covered" >      netMargin: null,</span>
+<span class="cstat-no" title="statement not covered" >      revenueGrowth: null,</span>
+<span class="cstat-no" title="statement not covered" >      profitGrowth: null,</span>
+<span class="cstat-no" title="statement not covered" >      debtRatio: null,</span>
+<span class="cstat-no" title="statement not covered" >      eps: null,</span>
+<span class="cstat-no" title="statement not covered" >      ma5: ma5 !== null ? Math.round(ma5 * 100) / 100 : null,</span>
+<span class="cstat-no" title="statement not covered" >      ma10: ma10 !== null ? Math.round(ma10 * 100) / 100 : null,</span>
+<span class="cstat-no" title="statement not covered" >      ma20: ma20 !== null ? Math.round(ma20 * 100) / 100 : null,</span>
+<span class="cstat-no" title="statement not covered" >      macd: macdResult !== null ? Math.round(macdResult.macd * 100) / 100 : null,</span>
+<span class="cstat-no" title="statement not covered" >      rsi6: rsi6 !== null ? Math.round(rsi6 * 100) / 100 : null,</span>
+<span class="cstat-no" title="statement not covered" >      rsi12: rsi12 !== null ? Math.round(rsi12 * 100) / 100 : null,</span>
+<span class="cstat-no" title="statement not covered" >      rsi24: rsi24 !== null ? Math.round(rsi24 * 100) / 100 : null,</span>
+<span class="cstat-no" title="statement not covered" >      k: kdjResult !== null ? Math.round(kdjResult.k * 100) / 100 : null,</span>
+<span class="cstat-no" title="statement not covered" >      d: kdjResult !== null ? Math.round(kdjResult.d * 100) / 100 : null,</span>
+<span class="cstat-no" title="statement not covered" >      j: kdjResult !== null ? Math.round(kdjResult.j * 100) / 100 : null,</span>
+<span class="cstat-no" title="statement not covered" >      bollUpper: bollResult !== null ? Math.round(bollResult.upper * 100) / 100 : null,</span>
+<span class="cstat-no" title="statement not covered" >      bollMid: bollResult !== null ? Math.round(bollResult.mid * 100) / 100 : null,</span>
+<span class="cstat-no" title="statement not covered" >      bollLower: bollResult !== null ? Math.round(bollResult.lower * 100) / 100 : null,</span>
+<span class="cstat-no" title="statement not covered" >      atr: atr !== null ? Math.round(atr * 100) / 100 : null,</span>
+<span class="cstat-no" title="statement not covered" >      maSignal,</span>
+<span class="cstat-no" title="statement not covered" >      rsiSignal,</span>
+<span class="cstat-no" title="statement not covered" >      macdSignal,</span>
+<span class="cstat-no" title="statement not covered" >      sentimentScore: intelScore,</span>
+<span class="cstat-no" title="statement not covered" >      sentimentConfidence: null,</span>
+<span class="cstat-no" title="statement not covered" >      sectorName: stock.sector ?? stock.industryCode ?? null,</span>
+<span class="cstat-no" title="statement not covered" >      sectorRank: null,</span>
+<span class="cstat-no" title="statement not covered" >      sectorStrength: null,</span>
+<span class="cstat-no" title="statement not covered" >      trendScore: v6Factors?.动量 ?? null,</span>
+<span class="cstat-no" title="statement not covered" >      valueScore: v6Factors?.估值 ?? null,</span>
+<span class="cstat-no" title="statement not covered" >      fundScore: v6Factors?.质量 ?? null,</span>
+<span class="cstat-no" title="statement not covered" >      sentimentFactorScore: v6Factors?.情绪 ?? null,</span>
+<span class="cstat-no" title="statement not covered" >      totalScore: v6Score?.score ?? null,</span>
+<span class="cstat-no" title="statement not covered" >      signalType,</span>
+<span class="cstat-no" title="statement not covered" >      signalReason,</span>
+<span class="cstat-no" title="statement not covered" >      var95: null,</span>
+<span class="cstat-no" title="statement not covered" >      maxDrawdown: null,</span>
+<span class="cstat-no" title="statement not covered" >      timestamp: new Date().toISOString(),</span>
+<span class="cstat-no" title="statement not covered" >      dataSource: `fusion:v1:completeness=${quality.completeness.toFixed(2)}`,</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    logger.info(</span>
+<span class="cstat-no" title="statement not covered" >      `[dataFusionEngine] ${symbol} 融合完成: ` +</span>
+<span class="cstat-no" title="statement not covered" >      `price=${unified.price} ` +</span>
+<span class="cstat-no" title="statement not covered" >      `changePct=${unified.changePct}% ` +</span>
+<span class="cstat-no" title="statement not covered" >      `totalScore=${unified.totalScore ?? 'N/A'} ` +</span>
+<span class="cstat-no" title="statement not covered" >      `signal=${unified.signalType ?? '无'} ` +</span>
+<span class="cstat-no" title="statement not covered" >      `completeness=${quality.completeness.toFixed(2)}`,</span>
+<span class="cstat-no" title="statement not covered" >    )</span>
+<span class="cstat-no" title="statement not covered" >    return { success: true, data: unified }</span>
+<span class="cstat-no" title="statement not covered" >  } catch (error) {</span>
+<span class="cstat-no" title="statement not covered" >    const message = error instanceof Error ? error.message : String(error)</span>
+<span class="cstat-no" title="statement not covered" >    logger.error(`[dataFusionEngine] ${symbol} 融合失败: ${message}`)</span>
+<span class="cstat-no" title="statement not covered" >    return { success: false, error: message }</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >/**</span>
+<span class="cstat-no" title="statement not covered" > * 批量融合多只股票数据。</span>
+<span class="cstat-no" title="statement not covered" > *</span>
+<span class="cstat-no" title="statement not covered" > * 采用并行加载，单只失败不影响其他。</span>
+<span class="cstat-no" title="statement not covered" > *</span>
+<span class="cstat-no" title="statement not covered" > * @param symbols 股票代码数组</span>
+<span class="cstat-no" title="statement not covered" > * @param options 融合选项</span>
+<span class="cstat-no" title="statement not covered" > * @returns 成功融合的 UnifiedStockData 列表</span>
+<span class="cstat-no" title="statement not covered" > */</span>
+<span class="cstat-no" title="statement not covered" >export async function fuseStockDataBatch(</span>
+<span class="cstat-no" title="statement not covered" >  symbols: string[],</span>
+<span class="cstat-no" title="statement not covered" >  options: FusionOptions = {},</span>
+<span class="cstat-no" title="statement not covered" >): Promise&lt;UnifiedStockData[]&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  if (symbols.length === 0) return []</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  logger.info(`[dataFusionEngine] 批量融合开始: ${symbols.length} 只`)</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  const results = await Promise.allSettled(</span>
+<span class="cstat-no" title="statement not covered" >    symbols.map((symbol) =&gt; fuseStockData(symbol, options)),</span>
+<span class="cstat-no" title="statement not covered" >  )</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  const fused: UnifiedStockData[] = []</span>
+<span class="cstat-no" title="statement not covered" >  let failed = 0</span>
+<span class="cstat-no" title="statement not covered" >  const failedSymbols: string[] = []</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  for (const result of results) {</span>
+<span class="cstat-no" title="statement not covered" >    if (result.status === 'fulfilled' &amp;&amp; result.value.success &amp;&amp; result.value.data) {</span>
+<span class="cstat-no" title="statement not covered" >      fused.push(result.value.data)</span>
+<span class="cstat-no" title="statement not covered" >    } else {</span>
+<span class="cstat-no" title="statement not covered" >      failed++</span>
+<span class="cstat-no" title="statement not covered" >      const err =</span>
+<span class="cstat-no" title="statement not covered" >        result.status === 'fulfilled'</span>
+<span class="cstat-no" title="statement not covered" >          ? result.value.error</span>
+<span class="cstat-no" title="statement not covered" >          : result.reason instanceof Error</span>
+<span class="cstat-no" title="statement not covered" >            ? result.reason.message</span>
+<span class="cstat-no" title="statement not covered" >            : String(result.reason)</span>
+<span class="cstat-no" title="statement not covered" >      logger.warn(`[dataFusionEngine] 单只融合失败: ${err}`)</span>
+<span class="cstat-no" title="statement not covered" >      if (result.status === 'fulfilled' &amp;&amp; result.value.error) {</span>
+<span class="cstat-no" title="statement not covered" >        const match = result.value.error.match(/股票 (\S+) 不存在/)</span>
+<span class="cstat-no" title="statement not covered" >        if (match) failedSymbols.push(match[1]!)</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  if (failed &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >    logger.warn(</span>
+<span class="cstat-no" title="statement not covered" >      `[dataFusionEngine] 批量融合完成: ${fused.length}/${symbols.length} (失败 ${failed})` +</span>
+<span class="cstat-no" title="statement not covered" >      (failedSymbols.length &gt; 0 ? `, 缺失股票: ${failedSymbols.join(', ')}` : ''),</span>
+<span class="cstat-no" title="statement not covered" >    )</span>
+<span class="cstat-no" title="statement not covered" >  } else {</span>
+<span class="cstat-no" title="statement not covered" >    logger.info(`[dataFusionEngine] 批量融合完成: ${fused.length}/${symbols.length}`)</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >  return fused</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >/**</span>
+<span class="cstat-no" title="statement not covered" > * 异步生成器：逐只融合并逐个 yield，用于大数据量场景避免内存峰值。</span>
+<span class="cstat-no" title="statement not covered" > *</span>
+<span class="cstat-no" title="statement not covered" > * @param symbols 股票代码数组</span>
+<span class="cstat-no" title="statement not covered" > * @param options 融合选项</span>
+<span class="cstat-no" title="statement not covered" > */</span>
+<span class="cstat-no" title="statement not covered" >export async function* fuseStockDataStream(</span>
+<span class="cstat-no" title="statement not covered" >  symbols: string[],</span>
+<span class="cstat-no" title="statement not covered" >  options: FusionOptions = {},</span>
+<span class="cstat-no" title="statement not covered" >): AsyncGenerator&lt;DataLayerResult&lt;UnifiedStockData&gt;&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  logger.info(`[dataFusionEngine] 流式融合开始: ${symbols.length} 只`)</span>
+<span class="cstat-no" title="statement not covered" >  let yielded = 0</span>
+<span class="cstat-no" title="statement not covered" >  let failed = 0</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  for (const symbol of symbols) {</span>
+<span class="cstat-no" title="statement not covered" >    const result = await fuseStockData(symbol, options)</span>
+<span class="cstat-no" title="statement not covered" >    if (result.success) {</span>
+<span class="cstat-no" title="statement not covered" >      yielded++</span>
+<span class="cstat-no" title="statement not covered" >    } else {</span>
+<span class="cstat-no" title="statement not covered" >      failed++</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >    yield result</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  logger.info(</span>
+<span class="cstat-no" title="statement not covered" >    `[dataFusionEngine] 流式融合完成: ${yielded}成功 / ${failed}失败 / ${symbols.length}总计`,</span>
+<span class="cstat-no" title="statement not covered" >  )</span>
+<span class="cstat-no" title="statement not covered" >}</span></pre></td></tr></table></pre>
+
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2026-07-05T12:24:56.865Z
+            </div>
+        <script src="../../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../../sorter.js"></script>
+        <script src="../../../block-navigation.js"></script>
+    </body>
+</html>
+    

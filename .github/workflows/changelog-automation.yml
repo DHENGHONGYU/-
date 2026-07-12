@@ -1,0 +1,88 @@
+name: Changelog Automation
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'docs/changelogs/**'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'docs/changelogs/**'
+  workflow_dispatch:
+
+jobs:
+  validate-and-report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate changelog JSON
+        run: |
+          echo "验证 changelog 文件格式..."
+          find docs/changelogs -name "*.json" -not -name "index.json" | while read file; do
+            if ! jq empty "$file" 2>/dev/null; then
+              echo "❌ 无效的 JSON 文件: $file"
+              exit 1
+            fi
+          done
+          echo "✅ 所有 changelog 文件格式正确"
+
+      - name: Generate summary report
+        run: |
+          npm run changelog:summary > changelog-summary.txt
+          cat changelog-summary.txt
+
+      - name: Generate monthly report
+        run: |
+          MONTH=$(date +%Y-%m)
+          npm run changelog:query -- --date=$MONTH --export=markdown --output=docs/reports/monthly-$MONTH.md
+          echo "✅ 生成月度报告: docs/reports/monthly-$MONTH.md"
+
+      - name: Commit and push generated reports
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/reports/
+          if git diff --staged --quiet; then
+            echo "没有新的报告需要提交"
+          else
+            git commit -m "docs: 自动生成月度报告 [skip ci]"
+            git push
+            echo "✅ 已提交并推送生成的报告"
+          fi
+
+      - name: Upload reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: changelog-reports
+          path: |
+            changelog-summary.txt
+            docs/reports/*.md
+          retention-days: 30
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const summary = fs.readFileSync('changelog-summary.txt', 'utf8');
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 📋 Changelog 摘要\n\n\`\`\`\n${summary}\n\`\`\``
+            });

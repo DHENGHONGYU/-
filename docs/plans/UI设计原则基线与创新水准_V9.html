@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UI 设计原则基线与创新水准 · V9</title>
+<style>
+  :root{
+    --bg:#f6f8fa; --surface:#ffffff; --surface-2:#f1f5f9;
+    --ink:#0f172a; --ink-2:#334155; --ink-3:#64748b;
+    --line:#e2e8f0; --line-2:#cbd5e1;
+    --accent:#0f9d76; --accent-weak:#e6f6f0; --accent-ink:#0b6e54;
+    --v6:#10b981; --wb:#3b6fed; --gold:#b45309;
+    --r:14px; --r-sm:10px;
+    --shadow:0 1px 2px rgba(15,23,42,.04),0 8px 24px rgba(15,23,42,.06);
+    --shadow-sm:0 1px 2px rgba(15,23,42,.06);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.65;font-size:14px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:32px 24px 80px}
+  header.hero{background:linear-gradient(135deg,#1e293b 0%,#0f9d76 70%,#10b981 100%);color:#fff;border-radius:20px;padding:34px 36px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  header.hero::after{content:"";position:absolute;right:-50px;bottom:-70px;width:240px;height:240px;background:radial-gradient(circle,rgba(255,255,255,.14),transparent 70%);border-radius:50%}
+  header.hero h1{margin:0 0 8px;font-size:25px;letter-spacing:.4px}
+  header.hero p{margin:0;opacity:.92;max-width:780px}
+  .tag{display:inline-block;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);padding:3px 10px;border-radius:999px;font-size:12px;margin-right:8px;margin-top:14px}
+  section{margin-top:34px}
+  h2{font-size:20px;margin:0 0 6px;display:flex;align-items:center;gap:10px}
+  h2 .num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:var(--accent);color:#fff;border-radius:8px;font-size:14px;font-weight:700}
+  .sub{color:var(--ink-3);margin:0 0 16px;font-size:13px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;box-shadow:var(--shadow-sm)}
+  .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:860px){.grid2,.grid3{grid-template-columns:1fr}}
+  /* principle card */
+  .pc{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;padding:16px 18px;background:var(--surface);box-shadow:var(--shadow-sm)}
+  .pc h3{margin:0 0 4px;font-size:15px;display:flex;align-items:center;gap:8px}
+  .pc .en{font-size:11px;color:var(--ink-3);font-weight:600;letter-spacing:.3px}
+  .pc p{margin:8px 0 0;color:var(--ink-2);font-size:12.8px}
+  .pc .gap{margin-top:10px;font-size:12px;background:var(--accent-weak);border:1px solid #bfe6d6;color:var(--accent-ink);border-radius:8px;padding:7px 10px}
+  .pc .gap b{color:var(--accent-ink)}
+  .scorebar{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:11px;color:var(--ink-3)}
+  .sb{height:7px;flex:1;background:var(--surface-2);border-radius:99px;overflow:hidden}
+  .sb i{display:block;height:100%;background:var(--accent);border-radius:99px}
+  .lvl{font-weight:700;font-size:11px}
+  .lv-h{color:#0b7a55}.lv-m{color:#b45309}.lv-l{color:#b91c1c}
+  /* innovation */
+  .inno{border:1px solid var(--line);border-radius:14px;padding:0;overflow:hidden;box-shadow:var(--shadow-sm);margin-bottom:14px}
+  .inno-h{display:flex;align-items:center;gap:12px;padding:14px 18px;background:linear-gradient(90deg,#0b3d2e,#0f9d76);color:#fff}
+  .inno-h .ic{flex:none;width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:16px}
+  .inno-h h3{margin:0;font-size:15px}
+  .inno-h .diff{margin-left:auto;font-size:11px;background:rgba(255,255,255,.18);padding:3px 9px;border-radius:99px}
+  .inno-b{padding:14px 18px}
+  .inno-b p{margin:0 0 8px;color:var(--ink-2);font-size:13px}
+  .inno-b .why{font-size:12px;color:var(--gold);font-weight:600}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .chip{font-size:11px;padding:2px 8px;border-radius:6px;background:var(--surface-2);border:1px solid var(--line);color:var(--ink-2)}
+  .chip.phase{background:#eef6ff;border-color:#cfe2ff;color:#1d4ed8;font-weight:600}
+  /* scorecard table */
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:var(--surface-2);color:var(--ink-2);font-weight:600;font-size:12.5px}
+  tr:last-child td{border-bottom:none}
+  .pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:600}
+  .ph{background:#dcfce7;color:#15803d}.pm{background:#fef3c7;color:#92660a}.pl{background:#fee2e2;color:#b91c1c}
+  .radar{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+  .radar svg{flex:none}
+  .legend{font-size:12px;color:var(--ink-2)}
+  .legend div{display:flex;align-items:center;gap:7px;margin:5px 0}
+  .legend .sw{width:12px;height:12px;border-radius:3px}
+  /* checklist */
+  .check li{margin:7px 0;font-size:13px;color:var(--ink-2)}
+  .check input{margin-right:8px;transform:translateY(1px)}
+  .note{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:12px 16px;color:#92660a;font-size:12.8px;margin-top:14px}
+  .gate{background:var(--accent-weak);border:1px solid #bfe6d6;border-radius:10px;padding:12px 16px;font-size:12.8px;color:var(--accent-ink);margin-top:14px}
+  /* glossary */
+  .gl{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .gl div{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 13px}
+  .gl b{color:var(--ink);font-size:13px}
+  .gl span{color:var(--ink-3);font-size:12px}
+  footer{margin-top:40px;color:var(--ink-3);font-size:12px;text-align:center}
+  .quote{border-left:3px solid var(--accent);padding:6px 0 6px 16px;color:var(--ink-2);font-style:italic;margin:10px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <h1>UI 设计原则基线与创新水准</h1>
+    <p>你不必是设计专家。我把业界公认的「经典设计美学原则」立为一把标尺：先定义什么叫"设计水准"，再给 V9 逐条打分、定位缺口，并标出 V9 能<b>超越参考站、做出自身创新</b>的方向。这份文档就是你的评审尺与创意清单。</p>
+    <div>
+      <span class="tag">经典原则标尺</span>
+      <span class="tag">V9 设计水准打分</span>
+      <span class="tag">专属创新点</span>
+      <span class="tag">非专家评审清单</span>
+    </div>
+  </header>
+
+  <!-- ============ 一、经典原则基线 ============ -->
+  <section>
+    <h2><span class="num">1</span>经典设计原则基线（你的评审尺）</h2>
+    <p class="sub">下面 10 条来自设计界公认的权威框架，按"美学 / 可用 / 一致 / 创新"四类组织。每条都给出：大白话解释 + V9 当前水准 + 对应缺口动作。评分：<span class="lvl lv-h">高</span> 已达标 / <span class="lvl lv-m">中</span> 部分 / <span class="lvl lv-l">低</span> 缺失。</p>
+
+    <h3 style="font-size:14px;color:var(--ink-2);margin:18px 0 10px">🎨 美学层（好看且有秩序）</h3>
+    <div class="grid2">
+      <div class="pc">
+        <h3>① 视觉层次 <span class="en">Visual Hierarchy</span></h3>
+        <p>用<strong>大小、粗细、留白、颜色</strong>告诉用户"先看哪、再看哪"。好界面像报纸头版，重点一眼可见。</p>
+        <div class="gap"><b>V9 缺口：</b>信息密度高但层级靠"堆"，关键数字与次要标签视觉权重拉不开。</div>
+        <div class="scorebar"><span class="lvl lv-m">中</span><span class="sb"><i style="width:55%"></i></span></div>
+      </div>
+      <div class="pc">
+        <h3>② 留白与节奏 <span class="en">Negative Space</span></h3>
+        <p>空白不是浪费，是<strong>呼吸感</strong>。恰当的间距让界面"贵气"且易读（WorkBuddy 的克制留白即此理）。</p>
+        <div class="gap"><b>V9 缺口：</b>卡片内边距/段距偏紧，密集表格缺乏分组留白。</div>
+        <div class="scorebar"><span class="lvl lv-m">中</span><span class="sb"><i style="width:50%"></i></span></div>
+      </div>
+      <div class="pc">
+        <h3>③ 色彩节制 <span class="en">60-30-10 / Restraint</span></h3>
+        <p>主色占 60%、辅色 30%、强调色仅 10%。<strong>强调色越稀有，点击欲越强</strong>（Rams：尽可能少设计）。</p>
+        <div class="gap"><b>V9 缺口：</b>语义色（涨红跌绿+评分+信号）多，强调色被稀释；需"单一克制强调色"公约。</div>
+        <div class="scorebar"><span class="lvl lv-m">中</span><span class="sb"><i style="width:60%"></i></span></div>
+      </div>
+      <div class="pc">
+        <h3>④ 排版秩序 <span class="en">Typographic Scale</span></h3>
+        <p>字号/字重成<strong>比例阶梯</strong>（如 1.25 倍率），而非随手定。数字用等宽/表格数字对齐，专业感立现。</p>
+        <div class="gap"><b>V9 缺口：</b>金融数字未强制 tabular-nums，跨行对不齐；字号阶梯未完全令牌化。</div>
+        <div class="scorebar"><span class="lvl lv-m">中</span><span class="sb"><i style="width:58%"></i></span></div>
+      </div>
+    </div>
+
+    <h3 style="font-size:14px;color:var(--ink-2);margin:18px 0 10px">🧭 可用层（好用且不费脑）</h3>
+    <div class="grid2">
+      <div class="pc">
+        <h3>⑤ 系统状态可见 <span class="en">Nielsen #1</span></h3>
+        <p>用户随时知道"系统在干嘛、数据新不新"。加载中、刷新时间、过期提醒都要明示。</p>
+        <div class="gap"><b>V9 缺口：</b>板块轮动等合成数据缺"示例/时效"标识（已知约定），四态（加载/空/错/骨架）未规范。</div>
+        <div class="scorebar"><span class="lvl lv-l">低</span><span class="sb"><i style="width:35%"></i></span></div>
+      </div>
+      <div class="pc">
+        <h3>⑥ 一致性 <span class="en">Nielsen #4 / Tokens</span></h3>
+        <p>相同操作处处相同。靠<strong>设计令牌</strong>而非散落常量保证——V9 的 6 层令牌体系正是为此。</p>
+        <div class="gap"><b>V9 缺口：</b>令牌迁移债（裸色类）仍在，跨 widget 视觉漂移风险。</div>
+        <div class="scorebar"><span class="lvl lv-h">高</span><span class="sb"><i style="width:75%"></i></span></div>
+      </div>
+      <div class="pc">
+        <h3>⑦ 渐进披露 <span class="en">Progressive Disclosure</span></h3>
+        <p>新手看精简，专家挖深层。<strong>不一次倒出所有</strong>，按需要展开（WorkBuddy 模式切换即范例）。</p>
+        <div class="gap"><b>V9 缺口：</b>五舱全屏平铺，新手易迷失；缺"向导式复盘"。</div>
+        <div class="scorebar"><span class="lvl lv-l">低</span><span class="sb"><i style="width:30%"></i></span></div>
+      </div>
+      <div class="pc">
+        <h3>⑧ 容错与安心 <span class="en">Nielsen #5/#9</span></h3>
+        <p>防呆 + 出错可恢复。金融场景尤其要"这是 AI 参考、非建议"的安心标识。</p>
+        <div class="gap"><b>V9 缺口：</b>错误态/空态未统一；免责标注散落，未成体系。</div>
+        <div class="scorebar"><span class="lvl lv-m">中</span><span class="sb"><i style="width:45%"></i></span></div>
+      </div>
+    </div>
+
+    <h3 style="font-size:14px;color:var(--ink-2);margin:18px 0 10px">💡 创新层（超越而非照搬）</h3>
+    <div class="grid2">
+      <div class="pc" style="border-left-color:var(--gold)">
+        <h3>⑨ 签名母题 <span class="en">Signature Metaphor</span></h3>
+        <p>一个<strong>全局一致的视觉母题</strong>作记忆点（V6 的"九层漏斗"即此）。比配色更能让人记住你。</p>
+        <div class="gap"><b>V9 缺口：</b>缺专属锚点；这是"创新"而非"修补"的主战场。</div>
+        <div class="scorebar"><span class="lvl lv-l">低</span><span class="sb"><i style="width:25%"></i></span></div>
+      </div>
+      <div class="pc" style="border-left-color:var(--gold)">
+        <h3>⑩ 有意义的美 <span class="en">Rams: Aesthetic + Honest</span></h3>
+        <p>美不是装饰，要<strong>诚实表达数据</strong>。动画/配色都在"帮用户理解"，而非炫技。</p>
+        <div class="gap"><b>V9 机会：</b>把"复盘叙事""可解释配色"做成有思想的创新，而非堆特效。</div>
+        <div class="scorebar"><span class="lvl lv-m">中</span><span class="sb"><i style="width:50%"></i></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 二、V9 设计水准打分卡 ============ -->
+  <section>
+    <h2><span class="num">2</span>V9 设计水准打分卡</h2>
+    <p class="sub">综合 10 条原则给出当前水位。可读图：外圈=达标，内圈=缺口。结论：<b>工程/一致性强，体验/创新弱</b>。</p>
+    <div class="card">
+      <div class="radar">
+        <svg width="320" height="320" viewBox="0 0 320 320">
+          <g transform="translate(160,160)">
+            <!-- grid rings -->
+            <circle r="120" fill="none" stroke="#e2e8f0"/>
+            <circle r="90" fill="none" stroke="#e2e8f0"/>
+            <circle r="60" fill="none" stroke="#e2e8f0"/>
+            <circle r="30" fill="none" stroke="#e2e8f0"/>
+            <!-- axes labels: 10 principles -->
+            <!-- we'll plot a decagon -->
+            <g font-size="10" fill="#64748b" text-anchor="middle">
+              <text x="0" y="-132">①层次</text>
+              <text x="92" y="-92">②留白</text>
+              <text x="120" y="-20">③色彩</text>
+              <text x="98" y="64">④排版</text>
+              <text x="40" y="120">⑤状态</text>
+              <text x="-40" y="120">⑥一致</text>
+              <text x="-104" y="64">⑦披露</text>
+              <text x="-128" y="-20">⑧容错</text>
+              <text x="-96" y="-92">⑨母题</text>
+              <text x="0" y="-8" style="display:none"></text>
+            </g>
+            <g font-size="10" fill="#64748b" text-anchor="middle">
+              <text x="-92" y="-92">⑩意义</text>
+            </g>
+            <!-- current polygon (scores %): 55,50,60,58,35,75,30,45,25,50 -->
+            <!-- radius scale: 120 = 100% -->
+            <!-- points at angle -90 + i*36 -->
+            <!-- ① -90: (0,-66) -->
+            <!-- ② -54: (96.5*0.5? compute) r=120*0.55=66; angle -54 => x=66*cos(-54)=38.8, y=66*sin(-54)=-53.4 -->
+            <!-- simpler: precomputed coords -->
+            <polygon points="0,-66 39,-53 72,-20 59,42 24,72 -24,72 -62,42 -81,-14 -58,-53 -48,-53"
+              fill="rgba(15,157,118,.22)" stroke="#0f9d76" stroke-width="2"/>
+            <!-- target ring at 80% -->
+            <polygon points="0,-96 56,-78 92,-29 76,61 31,105 -31,105 -80,61 -105,-21 -85,-78 -70,-78"
+              fill="none" stroke="#cbd5e1" stroke-dasharray="4 4"/>
+          </g>
+        </svg>
+        <div class="legend">
+          <div><span class="sw" style="background:#0f9d76"></span> V9 当前水位</div>
+          <div><span class="sw" style="background:#cbd5e1"></span> 设计水准目标线（80%）</div>
+          <div style="margin-top:8px">
+            <table style="width:auto">
+              <tr><th>原则</th><th>水位</th></tr>
+              <tr><td>① 视觉层次</td><td><span class="pill pm">中 55%</span></td></tr>
+              <tr><td>② 留白节奏</td><td><span class="pill pm">中 50%</span></td></tr>
+              <tr><td>③ 色彩节制</td><td><span class="pill pm">中 60%</span></td></tr>
+              <tr><td>④ 排版秩序</td><td><span class="pill pm">中 58%</span></td></tr>
+              <tr><td>⑤ 状态可见</td><td><span class="pill pl">低 35%</span></td></tr>
+              <tr><td>⑥ 一致性</td><td><span class="pill ph">高 75%</span></td></tr>
+              <tr><td>⑦ 渐进披露</td><td><span class="pill pl">低 30%</span></td></tr>
+              <tr><td>⑧ 容错安心</td><td><span class="pill pm">中 45%</span></td></tr>
+              <tr><td>⑨ 签名母题</td><td><span class="pill pl">低 25%</span></td></tr>
+              <tr><td>⑩ 有意义的美</td><td><span class="pill pm">中 50%</span></td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="note">读图结论：V9 的"一致性(⑥)"已超目标线，是优势护城河；而 <b>⑤状态可见、⑦渐进披露、⑨签名母题</b> 三项最低——它们恰好是"体验层"与"创新层"，正是上一版路线图 P1/P2/P5/P6 的主攻点。设计水准的提升 = 把低分项拉到目标线，而非推倒重来。</div>
+    </div>
+  </section>
+
+  <!-- ============ 三、V9 专属创新点 ============ -->
+  <section>
+    <h2><span class="num">3</span>V9 专属创新点（超越 V6 / WorkBuddy）</h2>
+    <p class="sub">创新不是堆特效，而是用经典原则解决 V9 独有场景（A股复盘、AI 辅助、个人研究）。下面 5 个点是"V9 味"的创新，避免与参考站同质化。</p>
+
+    <div class="inno">
+      <div class="inno-h"><div class="ic">🧭</div><h3>创新 1 · 复盘叙事流（Review Narrative）</h3><span class="diff">差异化 · 高</span></div>
+      <div class="inno-b">
+        <p>V6 是"网格平铺 dashboard"，WorkBuddy 是"对话流"。V9 可做第三种形态：把复盘结论组织成一条<strong>可滚动的"叙事时间轴"</strong>——从"今日信号 → 持仓变化 → 策略反思 → 明日预案"，像读一份有逻辑的投研笔记，而非看一堆卡片。</p>
+        <p class="why">为何创新：契合"复盘"语义（叙事性），比网格更有记忆点，且天然适配渐进披露（新手看主线，专家展开支线）。</p>
+        <div class="chips"><span class="chip phase">P5</span><span class="chip">叙事时间轴组件</span><span class="chip">区别于 V6 网格</span></div>
+      </div>
+    </div>
+
+    <div class="inno">
+      <div class="inno-h"><div class="ic">🎚️</div><h3>创新 2 · 自适应密度（Adaptive Density）</h3><span class="diff">体验 · 中</span></div>
+      <div class="inno-b">
+        <p>遵循 Rams"为不同的人设计"。提供<strong>舒适 / 紧凑</strong>两档密度切换：新手用舒适档（大留白、少数据），老手用紧凑档（一屏更多 Alpha）。密度由令牌（间距/字号）统一驱动，不破坏一致性。</p>
+        <p class="why">为何创新：金融用户两极分化明显，单一密度难兼顾；这是"专业工具"的高级信号。</p>
+        <div class="chips"><span class="chip phase">P0/P2</span><span class="chip">密度令牌</span><span class="chip">用户偏好持久化</span></div>
+      </div>
+    </div>
+
+    <div class="inno">
+      <div class="inno-h"><div class="ic">🫧</div><h3>创新 3 · 专注模式（Focus Dimming）</h3><span class="diff">暗色 · 中</span></div>
+      <div class="inno-b">
+        <p>暗色驾驶舱下，hover/选中某只标的或某条信号时，<strong>其余面板自动"压暗"</strong>，让注意力聚焦。这是暗色主题独有的"光影叙事"，亮色难以实现。</p>
+        <p class="why">为何创新：把 P1 的"暗色优先"从"能看"升级为"会引导注意力"，是暗色价值的真正兑现。</p>
+        <div class="chips"><span class="chip phase">P1</span><span class="chip">暗色压暗动效</span><span class="chip">注意力引导</span></div>
+      </div>
+    </div>
+
+    <div class="inno">
+      <div class="inno-h"><div class="ic">🔍</div><h3>创新 4 · 可解释配色（Explainable Color）</h3><span class="diff">信任 · 高</span></div>
+      <div class="inno-b">
+        <p>悬停任意带色元素（红/绿/评分条），浮层说明<strong>"为什么是这个颜色 / 数据来自哪 / 是否示例"</strong>。把"AI 仅供参考"的合规要求，变成一种<strong>透明、可信任</strong>的交互体验。</p>
+        <p class="why">为何创新：金融场景"信任"是核心；把免责变成产品亮点，而非角落小字——这是 V9（个人研究工具）独有的合规创新。</p>
+        <div class="chips"><span class="chip phase">P3/P5</span><span class="chip">颜色悬停释义</span><span class="chip">合规即体验</span></div>
+      </div>
+    </div>
+
+    <div class="inno">
+      <div class="inno-h"><div class="ic">🪢</div><h3>创新 5 · 信号脉络（Signal Spectrum 母题）</h3><span class="diff">签名 · 高</span></div>
+      <div class="inno-b">
+        <p>作为 V9 的<strong>全局签名母题</strong>（对标 V6 九层漏斗）：一条贯穿所有 widget 的"信号强度谱"——用统一的渐变光谱表达"弱→强"信号，既是视觉锚点，又自带数据含义。</p>
+        <p class="why">为何创新：母题本身承载信息（不只是装饰），符合原则⑩"有意义的美"；且光谱隐喻比漏斗更契合"市场情绪连续体"。</p>
+        <div class="chips"><span class="chip phase">P2</span><span class="chip">SignalSpectrum 组件</span><span class="chip">全局锚点</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 四、非专家评审清单 ============ -->
+  <section>
+    <h2><span class="num">4</span>非专家也能用的设计评审清单</h2>
+    <p class="sub">你不需要懂设计，按这条清单逐条打勾，就能守住"设计水准"。每条都对应上面的经典原则。</p>
+    <div class="card">
+      <ul class="check">
+        <li><input type="checkbox"> <b>层次：</b>打开任意页面，3 秒内能否说出"最重要的一个数字/动作"在哪？（原则①）</li>
+        <li><input type="checkbox"> <b>留白：</b>卡片之间、段落之间是否有"呼吸感"，不挤成一团？（原则②）</li>
+        <li><input type="checkbox"> <b>色彩：</b>全站是否只有一个最显眼的"主行动色"，其余都是中性/语义色？（原则③）</li>
+        <li><input type="checkbox"> <b>数字：</b>表格里的金额/百分比是否上下对齐、等宽，不歪歪扭扭？（原则④）</li>
+        <li><input type="checkbox"> <b>状态：</b>加载时、没数据时、出错时，界面是否都有明确反馈，不空白卡死？（原则⑤）</li>
+        <li><input type="checkbox"> <b>一致：</b>相同按钮/卡片在不同页面是否长得一样？（原则⑥）</li>
+        <li><input type="checkbox"> <b>渐进：</b>新手进来是否有引导，老手能否一键跳过看深层？（原则⑦）</li>
+        <li><input type="checkbox"> <b>安心：</b>AI 生成内容是否清晰标注"仅供参考/非建议"？（原则⑧）</li>
+        <li><input type="checkbox"> <b>母题：</b>能否用一句话说清 V9 的"视觉招牌"是什么？（原则⑨）</li>
+        <li><input type="checkbox"> <b>意义：</b>每一个动画/配色是否都在"帮理解"，而非单纯好看？（原则⑩）</li>
+      </ul>
+      <div class="gate">使用法：每次发布前过一遍，任一项打不了勾 → 对应阶段（P0–P6）回炉。这把"我觉得不好看"变成"第 X 条原则未达标"的客观判断。</div>
+    </div>
+  </section>
+
+  <!-- ============ 五、与路线图衔接 ============ -->
+  <section>
+    <h2><span class="num">5</span>原则 → 路线图 映射</h2>
+    <p class="sub">经典原则不是空中楼阁，逐条落到上一版《实操方案》的 P0–P6 阶段。</p>
+    <div class="card">
+      <table>
+        <thead><tr><th>原则</th><th>承载阶段</th><th>具体动作</th></tr></thead>
+        <tbody>
+          <tr><td>③ 色彩节制 / ⑥ 一致性</td><td>P0 + P4</td><td>单强调色公约 + 令牌总账 + lint 禁裸色类</td></tr>
+          <tr><td>① 层次 / ④ 排版</td><td>P0 + P2</td><td>排版令牌(tabilar-nums) + 锚点母题拉层次</td></tr>
+          <tr><td>② 留白</td><td>P0 + P2</td><td>间距令牌 + 自适应密度档</td></tr>
+          <tr><td>⑤ 状态可见</td><td>P1 + P3</td><td>暗色档 + loading/empty/error/skeleton 四态</td></tr>
+          <tr><td>⑦ 渐进披露</td><td>P5</td><td>向导式复盘 + 复盘叙事流</td></tr>
+          <tr><td>⑧ 容错安心</td><td>P3 + P5</td><td>统一错误/空态 + 可解释配色(合规即体验)</td></tr>
+          <tr><td>⑨ 签名母题 / ⑩ 有意义的美</td><td>P2 + 创新 1–5</td><td>SignalSpectrum + 专注模式 + 叙事流 + 可解释配色</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 六、术语表 ============ -->
+  <section>
+    <h2><span class="num">6</span>小白术语表</h2>
+    <p class="sub">评审时遇到听不懂的词，查这里。</p>
+    <div class="card">
+      <div class="gl">
+        <div><b>设计令牌 (Token)</b><span>把颜色/间距/圆角等存成"变量"，全站统一引用，改一处全局变。</span></div>
+        <div><b>视觉层次</b><span>用大小粗细引导视线先看哪，像报纸头版。</span></div>
+        <div><b>留白 (Negative Space)</b><span>元素之间的空，不是浪费，是呼吸感与高级感来源。</span></div>
+        <div><b>60-30-10</b><span>配色比例法则：主色60%、辅色30%、强调色仅10%。</span></div>
+        <div><b>渐进披露</b><span>先给简单，需要时再展开复杂，避免一次倒给用户。</span></div>
+        <div><b>签名母题</b><span>一个贯穿全站的视觉符号/隐喻，让人记住你（如 V6 漏斗）。</span></div>
+        <div><b>暗色优先</b><span>交易类工具默认深色底，护眼且数据更突出。</span></div>
+        <div><b>WCAG AA</b><span>无障碍对比度国际标准，文字与背景亮度差≥4.5:1 才算合格。</span></div>
+        <div><b>tabular-nums</b><span>数字等宽对齐，表格金额上下对齐不乱。</span></div>
+        <div><b>FOUC</b><span>页面先白闪再变暗的瑕疵，需提前设主题避免。</span></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    本篇是《UI 设计优化实操方案 V6×V9×WorkBuddy》的"原则基线"配套：前者给路线图，本篇给<b>评审尺与创新清单</b>。<br>
+    两者配合，你无需成为设计专家，也能用经典原则守住水准、并做出 V9 专属创新。
+  </footer>
+
+</div>
+</body>
+</html>

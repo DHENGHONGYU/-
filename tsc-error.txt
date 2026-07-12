@@ -1,0 +1,1 @@
+﻿src/store/signalStore.test.ts(434,7): error TS2739: Type '{ source: "analyzer"; action: "SAVE_SCORES"; traceId: string; }' is missing the following properties from type 'EnvelopeMeta': target, timestamp

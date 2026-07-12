@@ -1,0 +1,220 @@
+import { getLogger } from '@/lib/logger'
+import { eventBus } from '@/lib/eventBus'
+
+const logger = getLogger()
+
+export interface AgentConfig {
+  id: string
+  name: string
+  description: string
+  defaultTimeout: number
+  maxConcurrent: number
+  mcpServerName?: string
+  defaultToolName?: string
+}
+
+export interface AgentTask {
+  id: string
+  agentId: string
+  type: string
+  payload: unknown
+  timeout: number
+  status: 'pending' | 'running' | 'completed' | 'failed' | 'timeout'
+  result?: unknown
+  error?: string
+  createdAt: number
+  startedAt?: number
+  completedAt?: number
+}
+
+export class AgentRuntime {
+  private agents = new Map<string, AgentConfig>()
+  private tasks = new Map<string, AgentTask>()
+  private runningTasks = new Map<string, { controller: AbortController; timeout: ReturnType<typeof setTimeout> }>()
+
+  constructor() {
+    logger.info('[AgentRuntime] Initializing...')
+  }
+
+  register(config: AgentConfig): void {
+    logger.debug(`[AgentRuntime] register() called for agent "${config.id}"`)
+
+    if (this.agents.has(config.id)) {
+      logger.warn(`[AgentRuntime] Agent "${config.id}" already registered, overwriting`)
+    }
+
+    this.agents.set(config.id, config)
+    eventBus.emit('AGENT_REGISTERED', { agentId: config.id })
+    logger.info(`[AgentRuntime] Agent "${config.id}" registered (timeout=${config.defaultTimeout}ms, maxConcurrent=${config.maxConcurrent})`)
+  }
+
+  async execute(agentId: string, type: string, payload: unknown, timeout?: number): Promise<AgentTask> {
+    logger.debug(`[AgentRuntime] execute() called: agentId="${agentId}", type="${type}"`)
+
+    const agent = this.agents.get(agentId)
+    if (!agent) {
+      logger.error(`[AgentRuntime] Execute failed: Agent not found "${agentId}"`)
+      throw new Error(`Agent not found: ${agentId}`)
+    }
+
+    const taskId = `${agentId}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
+    const effectiveTimeout = timeout ?? agent.defaultTimeout
+    const task: AgentTask = {
+      id: taskId,
+      agentId,
+      type,
+      payload,
+      timeout: effectiveTimeout,
+      status: 'pending',
+      createdAt: Date.now(),
+    }
+    this.tasks.set(taskId, task)
+
+    logger.info(`[AgentRuntime] Task created: taskId="${taskId}", agentId="${agentId}", type="${type}", timeout=${effectiveTimeout}ms`)
+    eventBus.emit('AGENT_TASK_STARTED', { taskId, agentId, type })
+
+    return new Promise((resolve) => {
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => {
+        task.status = 'timeout'
+        task.error = `Task timeout after ${task.timeout}ms`
+        task.completedAt = Date.now()
+        this.runningTasks.delete(taskId)
+        controller.abort()
+
+        logger.warn(`[AgentRuntime] Task timeout: taskId="${taskId}", agentId="${agentId}", elapsed=${task.timeout}ms`)
+        eventBus.emit('AGENT_TASK_TIMEOUT', { taskId, agentId, type })
+        resolve(task)
+      }, effectiveTimeout)
+
+      task.status = 'running'
+      task.startedAt = Date.now()
+      this.runningTasks.set(taskId, { controller, timeout: timeoutId })
+      logger.debug(`[AgentRuntime] Task started: taskId="${taskId}", timeout=${effectiveTimeout}ms`)
+
+      this.runAgent(agentId, task, controller.signal)
+        .then((result) => {
+          task.status = 'completed'
+          task.result = result
+          task.completedAt = Date.now()
+          const duration = task.completedAt - (task.startedAt ?? task.createdAt)
+
+          logger.info(`[AgentRuntime] Task completed: taskId="${taskId}", duration=${duration}ms`)
+          eventBus.emit('AGENT_TASK_COMPLETED', { taskId, agentId, type, result })
+        })
+        .catch((error) => {
+          task.status = 'failed'
+          task.error = error instanceof Error ? error.message : String(error)
+          task.completedAt = Date.now()
+          const duration = task.completedAt - (task.startedAt ?? task.createdAt)
+
+          logger.error(`[AgentRuntime] Task failed: taskId="${taskId}", duration=${duration}ms, error="${task.error}"`)
+          eventBus.emit('AGENT_TASK_FAILED', { taskId, agentId, type, error: task.error })
+        })
+        .finally(() => {
+          clearTimeout(timeoutId)
+          this.runningTasks.delete(taskId)
+          logger.debug(`[AgentRuntime] Task cleanup: taskId="${taskId}", runningTasks=${this.runningTasks.size}`)
+          resolve(task)
+        })
+    })
+  }
+
+  private async runAgent(agentId: string, task: AgentTask, signal: AbortSignal): Promise<unknown> {
+    logger.info(`[AgentRuntime] runAgent() executing via MCP: agentId="${agentId}", taskId="${task.id}"`)
+
+    const agent = this.agents.get(agentId)
+    if (!agent) throw new Error(`Agent not found: ${agentId}`)
+
+    const { mcpBridge } = await import('@/mcp/bridge')
+    const serverName = agent.mcpServerName ?? agentId
+    const toolName = agent.defaultToolName ?? task.type
+    const result = await mcpBridge.callTool(serverName, toolName, task.payload as Record<string, unknown>)
+
+    if (signal.aborted) {
+      logger.debug(`[AgentRuntime] runAgent() aborted: taskId="${task.id}"`)
+      throw new Error('Task aborted')
+    }
+
+    if (result.isError) {
+      const errorText = result.content[0]?.text ?? 'Unknown MCP error'
+      logger.error('[AgentRuntime] MCP call failed', { serverName, toolName, error: errorText })
+      throw new Error(`MCP call failed: ${errorText}`)
+    }
+
+    logger.info(`[AgentRuntime] MCP call completed: ${serverName}.${toolName}`)
+    return { success: true, serverName, toolName, result }
+  }
+
+  async executeParallel(tasks: Array<{ agentId: string; type: string; payload: unknown; timeout?: number }>): Promise<AgentTask[]> {
+    logger.info(`[AgentRuntime] executeParallel() called: ${tasks.length} tasks`)
+
+    const promises = tasks.map((t, index) => {
+      logger.debug(`[AgentRuntime] Parallel task #${index}: agentId="${t.agentId}", type="${t.type}"`)
+      return this.execute(t.agentId, t.type, t.payload, t.timeout)
+    })
+
+    const results = await Promise.all(promises)
+    const successCount = results.filter((r) => r.status === 'completed').length
+    logger.info(`[AgentRuntime] executeParallel() completed: ${successCount}/${tasks.length} succeeded`)
+
+    return results
+  }
+
+  getTask(id: string): AgentTask | undefined {
+    const task = this.tasks.get(id)
+    if (!task) {
+      logger.debug(`[AgentRuntime] getTask() not found: id="${id}"`)
+    } else {
+      logger.debug(`[AgentRuntime] getTask() found: id="${id}", status="${task.status}"`)
+    }
+    return task
+  }
+
+  listTasks(status: AgentTask['status'] | 'all' = 'all'): AgentTask[] {
+    const allTasks = Array.from(this.tasks.values())
+    const filtered = status !== 'all' ? allTasks.filter((t) => t.status === status) : allTasks
+    logger.debug(`[AgentRuntime] listTasks(): status="${status}", count=${filtered.length}`)
+    return filtered
+  }
+
+  cancelTask(id: string): boolean {
+    logger.debug(`[AgentRuntime] cancelTask() called: id="${id}"`)
+
+    const running = this.runningTasks.get(id)
+    if (running) {
+      logger.debug(`[AgentRuntime] Cancelling running task: id="${id}"`)
+      running.controller.abort()
+      clearTimeout(running.timeout)
+      this.runningTasks.delete(id)
+    }
+
+    const task = this.tasks.get(id)
+    if (task) {
+      task.status = 'failed'
+      task.error = 'Task cancelled'
+      task.completedAt = Date.now()
+
+      logger.info(`[AgentRuntime] Task cancelled: id="${id}"`)
+      eventBus.emit('AGENT_TASK_CANCELLED', { taskId: id })
+      return true
+    }
+
+    logger.warn(`[AgentRuntime] cancelTask() failed: task not found "${id}"`)
+    return false
+  }
+
+  getStats() {
+    const stats = {
+      totalAgents: this.agents.size,
+      pendingTasks: this.listTasks('pending').length,
+      runningTasks: this.listTasks('running').length,
+      completedTasks: this.listTasks('completed').length,
+      failedTasks: this.listTasks('failed').length + this.listTasks('timeout').length,
+    }
+    logger.debug(`[AgentRuntime] getStats(): ${JSON.stringify(stats)}`)
+    return stats
+  }
+}
+
+export const agentRuntime = new AgentRuntime()
