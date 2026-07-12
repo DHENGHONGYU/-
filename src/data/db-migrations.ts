@@ -88,7 +88,7 @@ function rollbackMigrations(
 ): void {
   for (let i = applied.length - 1; i >= 0; i--) {
     const m = applied[i]
-    if (!m || !m.down) continue
+    if (!m?.down) continue
     try {
       log.warn(`[DB] Migration rollback ↓ v${m.version}: ${m.name}`)
       m.down({ db, tx })

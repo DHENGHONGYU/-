@@ -238,7 +238,7 @@ async function exportPdf(
         Number(p['当前价格'] ?? 0),
         Number(p['市值'] ?? 0),
         Number(p['浮动盈亏'] ?? 0),
-      ]) as Array<Array<string | number>>,
+      ]),
       styles: { fontSize: PDF_TABLE_FONT_SIZE },
       headStyles: { fillColor: [...PDF_TABLE_HEADER_COLOR] },
     })
@@ -260,7 +260,7 @@ async function exportPdf(
         Number(t['盈亏'] ?? 0),
         String(t['盈亏比例'] ?? ''),
         String(t['原因'] ?? ''),
-      ]) as Array<Array<string | number>>,
+      ]),
       styles: { fontSize: PDF_TABLE_FONT_SIZE },
       headStyles: { fillColor: [...PDF_TABLE_HEADER_COLOR] },
     })
@@ -277,7 +277,7 @@ async function exportPdf(
         Number(d['总资产'] ?? 0),
         Number(d['现金'] ?? 0),
         Number(d['净值'] ?? 0),
-      ]) as Array<Array<string | number>>,
+      ]),
       styles: { fontSize: PDF_TABLE_FONT_SIZE },
       headStyles: { fillColor: [...PDF_TABLE_HEADER_COLOR] },
     })

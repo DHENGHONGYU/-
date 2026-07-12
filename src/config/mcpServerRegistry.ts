@@ -103,33 +103,12 @@ export const MCP_SERVER_REGISTRY: ReadonlyArray<MCPServerConfigEntry> = [
     priority: 'medium',
     enabled: true,
   },
-  {
-    name: 'screening:main',
-    modulePath: '@/mcp/servers/screening/screeningServer',
-    exportName: 'ScreeningServer',
-    priority: 'medium',
-    enabled: true,
-  },
 
   // Phase 4: 本地知识库 & AI 检索 Server（中优先级）
   {
     name: 'knowledge:local',
     modulePath: '@/mcp/servers/knowledge/knowledgeServer',
     exportName: 'KnowledgeServer',
-    priority: 'medium',
-    enabled: true,
-  },
-  {
-    name: 'backtest:main',
-    modulePath: '@/mcp/servers/backtest/backtestServer',
-    exportName: 'BacktestServer',
-    priority: 'medium',
-    enabled: true,
-  },
-  {
-    name: 'stockpool:main',
-    modulePath: '@/mcp/servers/stockpool/stockPoolServer',
-    exportName: 'StockPoolServer',
     priority: 'medium',
     enabled: true,
   },
@@ -156,27 +135,7 @@ export const MCP_SERVER_REGISTRY: ReadonlyArray<MCPServerConfigEntry> = [
     priority: 'medium',
     enabled: true,
   },
-  {
-    name: 'export:main',
-    modulePath: '@/mcp/servers/export/exportServer',
-    exportName: 'ExportServer',
-    priority: 'medium',
-    enabled: true,
-  },
-  {
-    name: 'input:main',
-    modulePath: '@/mcp/servers/input/inputServer',
-    exportName: 'InputServer',
-    priority: 'medium',
-    enabled: true,
-  },
-  {
-    name: 'trade:main',
-    modulePath: '@/mcp/servers/trade/tradeServer',
-    exportName: 'TradeServer',
-    priority: 'medium',
-    enabled: true,
-  },
+
 
   // Phase 5: AI 工作流自动化（2026-07-13）
   {

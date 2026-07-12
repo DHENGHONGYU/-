@@ -324,7 +324,7 @@ class DeleteStockHandler implements EnvelopeHandler {
       const allRecords = await db.getAll<{ id: string; symbol?: string }>(store)
       const toDelete = allRecords.filter((r) => r.symbol === symbol && Boolean(r.id))
       for (const rec of toDelete) {
-        await db.delete(store, rec.id as string)
+        await db.delete(store, rec.id)
       }
       if (toDelete.length > 0) {
         logger.debug(`[DataBridge] 级联删除(扫描): ${store} count=${toDelete.length}`)

@@ -45,14 +45,11 @@ export const MCP_ACL_MATRIX: Readonly<Record<McpCallerRole, McpPermissionRule>> 
   ui: {
     allowedServers: [
       'fetcher',
-      'stockpool',
       'scoring:v6',
       'analysis',
       'news',
       'llm',
       'portfolio',
-      'screening',
-      'backtest',
       'system',
     ],
     allowedTools: [
@@ -62,9 +59,6 @@ export const MCP_ACL_MATRIX: Readonly<Record<McpCallerRole, McpPermissionRule>> 
       'fetch_*',
       'score_stock',
       'screen_stocks',
-      'run_backtest',
-      'list_pool_stocks',
-      'list_groups',
     ],
   },
 
