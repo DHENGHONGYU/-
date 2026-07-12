@@ -81,7 +81,7 @@ export class DataCollectorServer extends MCPServerBase {
         handler: async (args) => {
           const symbol = args.symbol as string | undefined
           logger.info('[DataCollectorServer] detect_missing_reports called', { symbol })
-          const result = symbol && symbol.trim() ? await listBySymbol(symbol) : await listUnresolved()
+          const result = symbol?.trim() ? await listBySymbol(symbol) : await listUnresolved()
           return { content: [{ type: 'text', text: JSON.stringify(result) }] }
         },
       },

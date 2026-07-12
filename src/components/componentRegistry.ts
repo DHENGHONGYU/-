@@ -59,6 +59,7 @@ export const COMPONENT_REGISTRY: ComponentEntry[] = [
   { name: 'DatePicker', level: 'atom', sourcePath: 'src/components/atoms/DatePicker.tsx', targetPath: 'src/components/atoms/DatePicker.tsx', status: 'active', description: '日期选择' },
   { name: 'StockPriceChange', level: 'atom', sourcePath: 'src/components/atoms/StockPriceChange.tsx', targetPath: 'src/components/atoms/StockPriceChange.tsx', status: 'active', description: '股价变化' },
   { name: 'statusColors', level: 'atom', sourcePath: 'src/components/atoms/statusColors.ts', targetPath: 'src/components/atoms/statusColors.ts', status: 'active', description: '状态/优先级/类型 → 语义色映射' },
+  { name: 'ComplianceDisclaimer', level: 'atom', sourcePath: 'src/components/atoms/ComplianceDisclaimer.tsx', targetPath: 'src/components/atoms/ComplianceDisclaimer.tsx', status: 'active', description: '合规声明（仅供参考非投资建议）' },
 
   // ============================================================
   // Molecules（分子）— 2+ 原子组合，无业务逻辑

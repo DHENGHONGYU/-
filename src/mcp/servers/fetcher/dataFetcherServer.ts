@@ -24,6 +24,15 @@ import { DataSourceRegistry } from '@/services/fetcher/dataSourceRegistry'
 import { AkshareProvider } from '@/services/fetcher/akshareProvider'
 import { MockProvider } from '@/services/fetcher/mockProvider'
 import type { DataSourceProvider } from '@/services/fetcher/types'
+import type { ResearchStatus } from '@/config/dbConfig'
+import {
+  addStock,
+  addStockFromSearch,
+  searchStocks,
+  exportPool,
+  importPool,
+  listStocks as listInputStocks,
+} from '@/services/input/inputService'
 
 const logger = getLogger()
 
@@ -174,6 +183,108 @@ export class DataFetcherServer extends MCPServerBase {
             content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
             isError: !result.ok,
           }
+        },
+      },
+      // ── 原 input:main 合并过来的工具 ──
+      {
+        name: 'add_stock',
+        description: '添加股票到股票池',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            symbol: { type: 'string', description: '股票代码' },
+            name: { type: 'string', description: '股票名称' },
+            poolId: { type: 'string', description: '目标股票池 ID（可选）' },
+          },
+          required: ['symbol', 'name'],
+        },
+        handler: async (args) => {
+          logger.info('[fetcher] add_stock called', { symbol: args.symbol })
+          const result = await addStock({
+            symbol: args.symbol as string,
+            name: args.name as string,
+          })
+          return { content: [{ type: 'text', text: JSON.stringify(result) }] }
+        },
+      },
+      {
+        name: 'search_stocks',
+        description: '搜索股票',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            query: { type: 'string', description: '搜索关键词（代码或名称）' },
+          },
+          required: ['query'],
+        },
+        handler: async (args) => {
+          const query = args.query as string
+          logger.info('[fetcher] search_stocks called', { query })
+          const results = searchStocks(query)
+          return { content: [{ type: 'text', text: JSON.stringify(results) }] }
+        },
+      },
+      {
+        name: 'add_stock_from_search',
+        description: '从搜索结果添加股票',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            symbol: { type: 'string', description: '股票代码' },
+          },
+          required: ['symbol'],
+        },
+        handler: async (args) => {
+          const symbol = args.symbol as string
+          logger.info('[fetcher] add_stock_from_search called', { symbol })
+          const matches = searchStocks(symbol)
+          const match = matches.find((m) => m.symbol === symbol) ?? matches[0]
+          if (!match) {
+            return { content: [{ type: 'text', text: JSON.stringify({ error: `未找到股票: ${symbol}` }) }] }
+          }
+          const result = await addStockFromSearch(match)
+          return { content: [{ type: 'text', text: JSON.stringify(result) }] }
+        },
+      },
+      {
+        name: 'list_input_stocks',
+        description: '列出已录入的股票',
+        inputSchema: { type: 'object', properties: {} },
+        handler: async () => {
+          logger.info('[fetcher] list_input_stocks called')
+          const result = await listInputStocks()
+          return { content: [{ type: 'text', text: JSON.stringify(result) }] }
+        },
+      },
+      {
+        name: 'export_stock_pool',
+        description: '导出股票池（按研究状态筛选）',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            status: { type: 'string', description: '研究状态（可选，如 candidate/analyzed/invested）' },
+          },
+        },
+        handler: async (args) => {
+          logger.info('[fetcher] export_stock_pool called', { status: args.status })
+          const result = await exportPool(args.status as ResearchStatus | undefined)
+          return { content: [{ type: 'text', text: JSON.stringify(result) }] }
+        },
+      },
+      {
+        name: 'import_stock_pool',
+        description: '导入股票池',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            payload: { type: 'object', description: '导入数据' },
+          },
+          required: ['payload'],
+        },
+        handler: async (args) => {
+          logger.info('[fetcher] import_stock_pool called')
+          const result = await importPool(args.payload as never)
+          return { content: [{ type: 'text', text: JSON.stringify(result) }] }
         },
       },
     ]

@@ -6,6 +6,7 @@
  */
 import { AlertTriangle, FileText, Shield } from 'lucide-react'
 import type React from 'react'
+import { COLOR_SHADES } from '@/constants/theme.tokens'
 
 /** 卡片变体 */
 export type ComplianceVariant = 'default' | 'compact' | 'tooltip'
@@ -53,7 +54,7 @@ export function ComplianceDisclaimer({
 
   if (variant === 'compact') {
     return (
-      <div className={`flex items-start gap-2 rounded-md border border-amber-200 bg-amber-50 p-2 text-xs text-amber-800 dark:border-amber-800/30 dark:bg-amber-950/30 dark:text-amber-300 ${className}`}>
+      <div className={`flex items-start gap-2 rounded-md border ${COLOR_SHADES.amber[200]} ${COLOR_SHADES.amber[50]} p-2 text-xs ${COLOR_SHADES.amber[800]} ${COLOR_SHADES.amber['900DarkBorder']} ${COLOR_SHADES.amber['900DarkBg']} ${COLOR_SHADES.amber['300DarkText']} ${className}`}>
         <AlertTriangle className="h-3 w-3 shrink-0 mt-0.5" />
         <span>{DISCLAIMER_TEXT.general}</span>
       </div>

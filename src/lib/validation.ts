@@ -391,8 +391,8 @@ export function sanitizeObject<T>(
   if (maxDepth < 0 || obj === null || obj === undefined || typeof obj !== 'object') return obj
 
   // 循环引用保护：已访问过则直接返回原引用，避免栈溢出
-  if (seen.has(obj as object)) return obj
-  seen.add(obj as object)
+  if (seen.has(obj)) return obj
+  seen.add(obj)
 
   if (Array.isArray(obj)) {
     return obj.map((item) => sanitizeObject(item, maxDepth - 1, seen)) as unknown as T

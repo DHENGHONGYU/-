@@ -67,6 +67,8 @@ export const COLOR_SHADES = {
     500: 'text-amber-500',
     600: 'text-amber-600',
     700: 'text-amber-700',
+    800: 'text-amber-800',
+    '300DarkText': 'dark:text-amber-300',
     '900DarkBg': 'dark:bg-amber-950',
     '900DarkBorder': 'dark:border-amber-900',
     hex: {

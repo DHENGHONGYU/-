@@ -29,13 +29,16 @@ import { mcpRegistry } from '@/mcp/core/registry'
 import { getLogger } from '@/lib/logger'
 import { eventBus } from '@/lib/eventBus'
 import { recordPerf } from '@/lib/perf'
+import { createRepository } from '@/data/repository'
+import { STORE_NAME } from '@/config/dbConfig'
+import type { Repository } from '@/data/repository'
 
 const logger = getLogger()
 
 /** 工作流 Server 唯一标识（与 src/config/mcpServerRegistry.ts 的 entry.name 保持一致） */
 export const WORKFLOW_SERVER_NAME = 'workflow:main'
 
-/** 工作流定义持久化键（localStorage，node/测试环境自动降级为纯内存） */
+/** 工作流定义持久化键（localStorage 回退，node/测试环境自动降级为纯内存） */
 const WORKFLOW_DEFS_STORAGE_KEY = 'mcp:workflow:defs'
 
 /** 运行实例内存上限，超过时自动清理最旧记录（防 OOM） */
@@ -43,6 +46,9 @@ const MAX_RUNS_IN_MEMORY = 500
 
 /** 单步执行默认超时（毫秒），防止下游 tool 挂起导致 run 永久 stuck */
 const STEP_TIMEOUT_MS = 300_000
+
+/** 运行历史保留天数（超过自动清理） */
+const RUN_HISTORY_RETENTION_DAYS = 7
 
 /** 工作流性能监控标签（配合 lib/perf.ts 的 measureAsync/recordPerf 使用） */
 const PERF_WORKFLOW = {
@@ -247,11 +253,209 @@ export class WorkflowServer extends MCPServerBase {
   /** 触发器取消订阅函数 */
   private readonly triggerUnsubs = new Map<string, () => void>()
 
+  // ── IndexedDB Repository（write-through 异步备份层，不可用时静默降级） ──
+  private defRepo: Repository<WorkflowDef> | null = null
+  private scheduleRepo: Repository<ScheduleDef> | null = null
+  private triggerRepo: Repository<TriggerDef> | null = null
+  private runRepo: Repository<WorkflowRun> | null = null
+
   constructor() {
     // 引擎内部以 system 角色调用下游 Tool（全权限）；外部 caller 仍受自身 ACL 约束
     super('system')
-    this.loadDefs()
+
+    // C1: 先从 localStorage 加载 defs（向后兼容旧数据）
+    this.loadDefsFromLocalStorage()
+
+    // C1/C2/C3/D2: 异步从 IndexedDB 加载更完整的状态，并重建调度/触发/恢复
+    this.initFromIndexedDB().catch((err) =>
+      logger.warn('[WorkflowServer] IndexedDB init failed, running in memory-only mode', { error: err }),
+    )
+
     logger.info('[WorkflowServer] initialized', { loadedDefs: this.defs.size })
+  }
+
+  /**
+   * 异步初始化：从 IndexedDB 加载数据 + 重建调度器 + 重订阅事件 + 恢复中断运行。
+   *
+   * 设计原则：
+   * - 内存是主存储，IndexedDB 是异步备份层
+   * - initFromIndexedDB 失败时静默降级为纯内存运行（不阻止 Server 启动）
+   * - 测试环境无 IndexedDB 时自动降级（与之前行为一致）
+   */
+  private async initFromIndexedDB(): Promise<void> {
+    // 初始化 Repository（DB 不可用时静默返回 null）
+    await this.initRepositories()
+    if (!this.defRepo) return // DB 不可用，纯内存运行
+
+    // C1: 从 IndexedDB 加载 defs（不覆盖内存中已从 localStorage 加载的）
+    try {
+      const storedDefs = await this.defRepo.getAll()
+      for (const d of storedDefs) {
+        if (!this.defs.has(d.id)) {
+          this.defs.set(d.id, d)
+        }
+      }
+    } catch (err) {
+      logger.warn('[WorkflowServer] load defs from IndexedDB failed', { error: err })
+    }
+
+    // C2: 从 IndexedDB 加载 schedules + 重建定时器
+    try {
+      const storedSchedules = this.scheduleRepo ? await this.scheduleRepo.getAll() : []
+      for (const s of storedSchedules) {
+        this.schedules.set(s.id, s)
+      }
+      this.rebuildSchedules()
+    } catch (err) {
+      logger.warn('[WorkflowServer] load schedules from IndexedDB failed', { error: err })
+    }
+
+    // C3: 从 IndexedDB 加载 triggers + 重订阅事件
+    try {
+      const storedTriggers = this.triggerRepo ? await this.triggerRepo.getAll() : []
+      for (const t of storedTriggers) {
+        this.triggers.set(t.id, t)
+      }
+      this.resubscribeTriggers()
+    } catch (err) {
+      logger.warn('[WorkflowServer] load triggers from IndexedDB failed', { error: err })
+    }
+
+    // D2: 从 IndexedDB 加载未完成的 runs + 标记中断
+    try {
+      const storedRuns = this.runRepo ? await this.runRepo.getAll() : []
+      for (const r of storedRuns) {
+        this.runs.set(r.runId, r)
+      }
+      this.recoverIncompleteRuns()
+      this.pruneExpiredRuns()
+    } catch (err) {
+      logger.warn('[WorkflowServer] load runs from IndexedDB failed', { error: err })
+    }
+  }
+
+  /**
+   * 安全初始化 Repository 实例（IndexedDB 不可用时静默降级）。
+   */
+  private async initRepositories(): Promise<void> {
+    try {
+      this.defRepo = createRepository<WorkflowDef>({
+        store: STORE_NAME.workflowDefs,
+        writeAction: 'saveWorkflowDef',
+        deleteAction: 'deleteWorkflowDef',
+        keyOf: (d) => d.id,
+      })
+      this.scheduleRepo = createRepository<ScheduleDef>({
+        store: STORE_NAME.workflowSchedules,
+        writeAction: 'saveWorkflowSchedule',
+        deleteAction: 'deleteWorkflowSchedule',
+        keyOf: (s) => s.id,
+      })
+      this.triggerRepo = createRepository<TriggerDef>({
+        store: STORE_NAME.workflowTriggers,
+        writeAction: 'saveWorkflowTrigger',
+        deleteAction: 'deleteWorkflowTrigger',
+        keyOf: (t) => t.id,
+      })
+      this.runRepo = createRepository<WorkflowRun>({
+        store: STORE_NAME.workflowRuns,
+        writeAction: 'saveWorkflowRun',
+        deleteAction: 'saveWorkflowRun', // run 不删除，用 TTL 清理
+        keyOf: (r) => r.runId,
+      })
+    } catch (err) {
+      logger.warn('[WorkflowServer] Repository init failed, running in memory-only mode', {
+        error: err instanceof Error ? err.message : String(err),
+      })
+      this.defRepo = null
+      this.scheduleRepo = null
+      this.triggerRepo = null
+      this.runRepo = null
+    }
+  }
+
+  /**
+   * 重建定时调度器（C2）：遍历已加载的 schedules，为 enabled=true 的重建 setInterval。
+   */
+  private rebuildSchedules(): void {
+    let count = 0
+    for (const [, s] of this.schedules) {
+      if (!s.enabled) continue
+      const intervalMs = this.toMs(s.every)
+      if (intervalMs <= 0) continue
+      const id = s.id
+      const timer = setInterval(() => {
+        const sch = this.schedules.get(id)
+        if (!sch?.enabled) return
+        sch.lastRunAt = Date.now()
+        sch.nextRunAt = Date.now() + intervalMs
+        void this.runScheduled(id)
+      }, intervalMs)
+      this.scheduleTimers.set(id, timer)
+      count++
+    }
+    if (count > 0) {
+      logger.info('[WorkflowServer] rebuildSchedules', { restored: count })
+    }
+  }
+
+  /**
+   * 重订阅事件触发器（C3）：遍历已加载的 triggers，为 enabled=true 的重建 eventBus.on()。
+   */
+  private resubscribeTriggers(): void {
+    let count = 0
+    for (const [, t] of this.triggers) {
+      if (!t.enabled) continue
+      const id = t.id
+      const unsub = eventBus.on(t.event, (payload) => {
+        const trig = this.triggers.get(id)
+        if (!trig?.enabled) return
+        const targets = trig.targets ?? this.extractTargetsFromPayload(payload)
+        void this.runTriggered(id, targets)
+      })
+      this.triggerUnsubs.set(id, unsub)
+      count++
+    }
+    if (count > 0) {
+      logger.info('[WorkflowServer] resubscribeTriggers', { restored: count })
+    }
+  }
+
+  /**
+   * 恢复中断的运行（D2）：标记 status='running' 的 run 为失败。
+   * 进程崩溃时正在执行的 run 会卡在 running 态，需要标记为 failed。
+   */
+  private recoverIncompleteRuns(): void {
+    let count = 0
+    for (const [, r] of this.runs) {
+      if (r.status === 'running') {
+        r.status = 'failed'
+        r.error = 'interrupted by server restart'
+        r.finishedAt = Date.now()
+        count++
+      }
+    }
+    if (count > 0) {
+      logger.info('[WorkflowServer] recoverIncompleteRuns', { recovered: count })
+    }
+  }
+
+  /**
+   * 清理过期运行记录（D2）：删除 createdAt > RUN_HISTORY_RETENTION_DAYS 的已终态 run。
+   */
+  private pruneExpiredRuns(): void {
+    const cutoff = Date.now() - RUN_HISTORY_RETENTION_DAYS * 86_400_000
+    const terminalStates = new Set<RunStatus>(['success', 'failed', 'partial', 'cancelled'])
+    let count = 0
+    for (const [id, r] of this.runs) {
+      if (terminalStates.has(r.status) && r.createdAt < cutoff) {
+        this.runs.delete(id)
+        count++
+      }
+    }
+    if (count > 0) {
+      logger.info('[WorkflowServer] pruneExpiredRuns', { pruned: count })
+    }
   }
 
   // ============================================================
@@ -289,6 +493,7 @@ export class WorkflowServer extends MCPServerBase {
           const def: WorkflowDef = { id, name, description, steps, createdAt: now, updatedAt: now }
           this.defs.set(id, def)
           this.persistDefs()
+          this.persistDefToRepo(def)
           logger.info('[WorkflowServer] create_workflow', { id, name, stepCount: steps.length })
           return this.ok(def)
         },
@@ -319,7 +524,7 @@ export class WorkflowServer extends MCPServerBase {
         },
         handler: async (args) => {
           const def = this.defs.get(args.workflowId as string)
-          if (!def) return this.err(`workflow not found: ${args.workflowId}`)
+          if (!def) return this.err(`workflow not found: ${String(args.workflowId)}`)
           return this.ok(def)
         },
       },
@@ -338,12 +543,13 @@ export class WorkflowServer extends MCPServerBase {
         },
         handler: async (args) => {
           const def = this.defs.get(args.workflowId as string)
-          if (!def) return this.err(`workflow not found: ${args.workflowId}`)
+          if (!def) return this.err(`workflow not found: ${String(args.workflowId)}`)
           if (typeof args.name === 'string') def.name = args.name
           if (typeof args.description === 'string') def.description = args.description
           if (Array.isArray(args.steps)) def.steps = args.steps as WorkflowStep[]
           def.updatedAt = Date.now()
           this.persistDefs()
+          this.persistDefToRepo(def)
           logger.info('[WorkflowServer] update_workflow', { id: def.id })
           return this.ok(def)
         },
@@ -358,8 +564,9 @@ export class WorkflowServer extends MCPServerBase {
         },
         handler: async (args) => {
           const ok = this.defs.delete(args.workflowId as string)
-          if (!ok) return this.err(`workflow not found: ${args.workflowId}`)
+          if (!ok) return this.err(`workflow not found: ${String(args.workflowId)}`)
           this.persistDefs()
+          this.deleteDefFromRepo(args.workflowId as string)
           logger.info('[WorkflowServer] delete_workflow', { id: args.workflowId })
           return this.ok({ deleted: true, workflowId: args.workflowId })
         },
@@ -380,7 +587,7 @@ export class WorkflowServer extends MCPServerBase {
         },
         handler: async (args) => {
           const def = this.defs.get(args.workflowId as string)
-          if (!def) return this.err(`workflow not found: ${args.workflowId}`)
+          if (!def) return this.err(`workflow not found: ${String(args.workflowId)}`)
           const targets = Array.isArray(args.targets) ? (args.targets as string[]) : []
           const run = this.createRun(def, targets, (args.trigger as string) ?? 'manual')
           void this.executeRun(run).catch((err) =>
@@ -397,16 +604,31 @@ export class WorkflowServer extends MCPServerBase {
       },
       {
         name: 'get_run_status',
-        description: '查询某次运行的实时状态、进度、逐步结果与错误',
+        description: '查询某次运行的实时状态、进度、逐步结果与错误。支持 stepResults 分页（limit/offset）。',
         inputSchema: {
           type: 'object',
-          properties: { runId: { type: 'string', description: '运行 ID' } },
+          properties: {
+            runId: { type: 'string', description: '运行 ID' },
+            limit: { type: 'number', description: 'stepResults 返回条数上限（默认 100，填 0 则不返回）', default: 100 },
+            offset: { type: 'number', description: 'stepResults 起始偏移（默认 0）', default: 0 },
+          },
           required: ['runId'],
         },
         handler: async (args) => {
           const run = this.runs.get(args.runId as string)
-          if (!run) return this.err(`run not found: ${args.runId}`)
-          return this.ok(run)
+          if (!run) return this.err(`run not found: ${String(args.runId)}`)
+          const resultLimit = typeof args.limit === 'number' ? (args.limit) : 100
+          const resultOffset = typeof args.offset === 'number' ? (args.offset) : 0
+          const totalStepResults = run.stepResults.length
+          const page = resultLimit <= 0
+            ? []
+            : run.stepResults.slice(resultOffset, resultOffset + resultLimit)
+          return this.ok({
+            ...run,
+            stepResults: page,
+            stepResultsTotal: totalStepResults,
+            stepResultsPage: { offset: resultOffset, limit: resultLimit, returned: page.length },
+          })
         },
       },
       {
@@ -421,7 +643,7 @@ export class WorkflowServer extends MCPServerBase {
         },
         handler: async (args) => {
           const workflowId = args.workflowId as string | undefined
-          const limit = typeof args.limit === 'number' ? (args.limit as number) : 50
+          const limit = typeof args.limit === 'number' ? (args.limit) : 50
           const list = Array.from(this.runs.values())
             .filter((r) => !workflowId || r.workflowId === workflowId)
             .sort((a, b) => b.createdAt - a.createdAt)
@@ -450,7 +672,7 @@ export class WorkflowServer extends MCPServerBase {
         },
         handler: async (args) => {
           const run = this.runs.get(args.runId as string)
-          if (!run) return this.err(`run not found: ${args.runId}`)
+          if (!run) return this.err(`run not found: ${String(args.runId)}`)
           if (run.status === 'success' || run.status === 'failed' || run.status === 'cancelled') {
             return this.ok({ cancelled: false, status: run.status, message: 'run already finished' })
           }
@@ -482,7 +704,7 @@ export class WorkflowServer extends MCPServerBase {
         },
         handler: async (args) => {
           const def = this.defs.get(args.workflowId as string)
-          if (!def) return this.err(`workflow not found: ${args.workflowId}`)
+          if (!def) return this.err(`workflow not found: ${String(args.workflowId)}`)
           const every = args.every as ScheduleEvery
           const intervalMs = this.toMs(every)
           if (intervalMs <= 0) return this.err('every.value 必须为正数')
@@ -499,9 +721,11 @@ export class WorkflowServer extends MCPServerBase {
             createdAt: now,
           }
           this.schedules.set(id, schedule)
+          // C2: write-through 持久化到 IndexedDB（fire-and-forget）
+          this.persistScheduleToRepo(schedule)
           const timer = setInterval(() => {
             const s = this.schedules.get(id)
-            if (!s || !s.enabled) return
+            if (!s?.enabled) return
             s.lastRunAt = Date.now()
             s.nextRunAt = Date.now() + intervalMs
             void this.runScheduled(id)
@@ -529,7 +753,7 @@ export class WorkflowServer extends MCPServerBase {
         },
         handler: async (args) => {
           const ok = this.removeSchedule(args.scheduleId as string)
-          if (!ok) return this.err(`schedule not found: ${args.scheduleId}`)
+          if (!ok) return this.err(`schedule not found: ${String(args.scheduleId)}`)
           return this.ok({ removed: true, scheduleId: args.scheduleId })
         },
       },
@@ -549,7 +773,7 @@ export class WorkflowServer extends MCPServerBase {
         },
         handler: async (args) => {
           const def = this.defs.get(args.workflowId as string)
-          if (!def) return this.err(`workflow not found: ${args.workflowId}`)
+          if (!def) return this.err(`workflow not found: ${String(args.workflowId)}`)
           const event = args.event as string
           if (!event) return this.err('event 不能为空')
           const id = this.genId('trig')
@@ -565,12 +789,14 @@ export class WorkflowServer extends MCPServerBase {
           }
           const unsub = eventBus.on(event, (payload) => {
             const t = this.triggers.get(id)
-            if (!t || !t.enabled) return
+            if (!t?.enabled) return
             const targets = t.targets ?? this.extractTargetsFromPayload(payload)
             void this.runTriggered(id, targets)
           })
           this.triggers.set(id, trigger)
           this.triggerUnsubs.set(id, unsub)
+          // C3: write-through 持久化到 IndexedDB（fire-and-forget）
+          this.persistTriggerToRepo(trigger)
           logger.info('[WorkflowServer] register_trigger', { id, event, workflowId: def.id })
           return this.ok(trigger)
         },
@@ -593,8 +819,72 @@ export class WorkflowServer extends MCPServerBase {
         },
         handler: async (args) => {
           const ok = this.removeTrigger(args.triggerId as string)
-          if (!ok) return this.err(`trigger not found: ${args.triggerId}`)
+          if (!ok) return this.err(`trigger not found: ${String(args.triggerId)}`)
           return this.ok({ removed: true, triggerId: args.triggerId })
+        },
+      },
+
+      // ---------- 导出/导入（F4） ----------
+      {
+        name: 'export_workflows',
+        description: '导出全部工作流定义为 JSON 字符串（含 defs/schedules/triggers），用于备份与迁移',
+        inputSchema: { type: 'object', properties: {} },
+        handler: async () => {
+          const payload = {
+            exportedAt: Date.now(),
+            version: '1.0',
+            defs: Array.from(this.defs.values()),
+            schedules: Array.from(this.schedules.values()),
+            triggers: Array.from(this.triggers.values()),
+          }
+          return this.ok(payload)
+        },
+      },
+      {
+        name: 'import_workflows',
+        description: '从 JSON 字符串导入工作流定义。支持增量导入（同名不覆盖）。返回导入统计。',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            data: {
+              type: 'string',
+              description: '由 export_workflows 导出的完整 JSON 字符串',
+            },
+            overwrite: {
+              type: 'boolean',
+              description: '是否覆盖已有同名定义（默认 false=跳过已有）',
+              default: false,
+            },
+          },
+          required: ['data'],
+        },
+        handler: async (args) => {
+          const overwrite = args.overwrite === true
+          let payload: { defs?: WorkflowDef[]; schedules?: ScheduleDef[]; triggers?: TriggerDef[] }
+          try {
+            payload = JSON.parse(args.data as string)
+          } catch {
+            return this.err('data 不是有效的 JSON 字符串')
+          }
+          const stats = { imported: 0, skipped: 0, errors: 0 }
+          if (Array.isArray(payload.defs)) {
+            for (const d of payload.defs) {
+              if (!d.id || !d.name || !Array.isArray(d.steps)) {
+                stats.errors++
+                continue
+              }
+              if (this.defs.has(d.id) && !overwrite) {
+                stats.skipped++
+                continue
+              }
+              d.updatedAt = Date.now()
+              this.defs.set(d.id, d)
+              this.persistDefs()
+              this.persistDefToRepo(d)
+              stats.imported++
+            }
+          }
+          return this.ok(stats)
         },
       },
     ]
@@ -753,6 +1043,8 @@ export class WorkflowServer extends MCPServerBase {
           }
           const result = await this.executeStep(step, target, prevOutputs)
           run.stepResults.push(result)
+          // D1: checkpoint — 每步完成时异步写 IndexedDB（fire-and-forget，不阻塞执行）
+          this.persistRunCheckpoint(run)
           if (result.status === 'success' && result.output !== undefined) {
             prevOutputs[step.id] = result.output
           }
@@ -831,7 +1123,7 @@ export class WorkflowServer extends MCPServerBase {
         return result
       }
 
-      return { ...base, status: 'failed', error: `unknown step type: ${step.type}`, finishedAt: Date.now() }
+      return { ...base, status: 'failed', error: `unknown step type: ${String(step.type)}`, finishedAt: Date.now() }
     } catch (err) {
       return {
         ...base,
@@ -974,29 +1266,37 @@ export class WorkflowServer extends MCPServerBase {
     const p = payload as Record<string, unknown>
     if (typeof p.symbol === 'string') return [p.symbol]
     if (typeof p.code === 'string') return [p.code]
-    if (Array.isArray(p.targets)) return p.targets.filter((x) => typeof x === 'string') as string[]
-    if (Array.isArray(p.symbols)) return p.symbols.filter((x) => typeof x === 'string') as string[]
+    if (Array.isArray(p.targets)) return p.targets.filter((x) => typeof x === 'string')
+    if (Array.isArray(p.symbols)) return p.symbols.filter((x) => typeof x === 'string')
     return []
   }
 
-  /** 移除调度并清理定时器 */
+  /** 移除调度并清理定时器（同步删内存 + 异步删 Repository） */
   private removeSchedule(id: string): boolean {
     const timer = this.scheduleTimers.get(id)
     if (timer) {
       clearInterval(timer)
       this.scheduleTimers.delete(id)
     }
-    return this.schedules.delete(id)
+    const existed = this.schedules.delete(id)
+    if (existed && this.scheduleRepo) {
+      void this.scheduleRepo.delete(id).catch(() => {})
+    }
+    return existed
   }
 
-  /** 移除触发器并取消订阅 */
+  /** 移除触发器并取消订阅（同步删内存 + 异步删 Repository） */
   private removeTrigger(id: string): boolean {
     const unsub = this.triggerUnsubs.get(id)
     if (unsub) {
       unsub()
       this.triggerUnsubs.delete(id)
     }
-    return this.triggers.delete(id)
+    const existed = this.triggers.delete(id)
+    if (existed && this.triggerRepo) {
+      void this.triggerRepo.delete(id).catch(() => {})
+    }
+    return existed
   }
 
   // ============================================================
@@ -1067,8 +1367,8 @@ export class WorkflowServer extends MCPServerBase {
     return { uri, mimeType: 'application/json', text }
   }
 
-  /** 从 localStorage 加载持久化的工作流定义（不可用时静默降级为纯内存） */
-  private loadDefs(): void {
+  /** 从 localStorage 加载持久化的工作流定义（向后兼容旧数据） */
+  private loadDefsFromLocalStorage(): void {
     if (typeof globalThis.localStorage === 'undefined') return
     try {
       const raw = globalThis.localStorage.getItem(WORKFLOW_DEFS_STORAGE_KEY)
@@ -1076,7 +1376,7 @@ export class WorkflowServer extends MCPServerBase {
       const arr = JSON.parse(raw) as WorkflowDef[]
       for (const d of arr) this.defs.set(d.id, d)
     } catch (err) {
-      logger.warn('[WorkflowServer] loadDefs failed', { error: err })
+      logger.warn('[WorkflowServer] loadDefsFromLocalStorage failed', { error: err })
     }
   }
 
@@ -1088,5 +1388,36 @@ export class WorkflowServer extends MCPServerBase {
     } catch (err) {
       logger.warn('[WorkflowServer] persistDefs failed', { error: err })
     }
+  }
+
+  // ── IndexedDB write-through 辅助方法（fire-and-forget，失败静默降级） ──
+
+  private persistDefToRepo(def: WorkflowDef): void {
+    if (!this.defRepo) return
+    void this.defRepo.put(def, def.id).catch(() => {})
+  }
+
+  private deleteDefFromRepo(id: string): void {
+    if (!this.defRepo) return
+    void this.defRepo.delete(id).catch(() => {})
+  }
+
+  private persistScheduleToRepo(schedule: ScheduleDef): void {
+    if (!this.scheduleRepo) return
+    void this.scheduleRepo.put(schedule, schedule.id).catch(() => {})
+  }
+
+  private persistTriggerToRepo(trigger: TriggerDef): void {
+    if (!this.triggerRepo) return
+    void this.triggerRepo.put(trigger, trigger.id).catch(() => {})
+  }
+
+  /**
+   * 异步持久化运行实例到 IndexedDB（D1 checkpoint）。
+   * 每步完成后由 executeRun 调用，fire-and-forget 不阻塞执行流。
+   */
+  private persistRunCheckpoint(run: WorkflowRun): void {
+    if (!this.runRepo) return
+    void this.runRepo.put(run, run.runId).catch(() => {})
   }
 }

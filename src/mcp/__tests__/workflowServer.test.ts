@@ -52,9 +52,9 @@ describe('WorkflowServer', () => {
   })
 
   describe('listTools', () => {
-    it('应返回 15 个 Tool', () => {
+    it('应返回 17 个 Tool', () => {
       const tools = server.listTools()
-      expect(tools).toHaveLength(15)
+      expect(tools).toHaveLength(17)
       const names = tools.map((t) => t.name)
       expect(names).toContain('create_workflow')
       expect(names).toContain('run_workflow')
@@ -62,6 +62,8 @@ describe('WorkflowServer', () => {
       expect(names).toContain('schedule_workflow')
       expect(names).toContain('register_trigger')
       expect(names).toContain('remove_trigger')
+      expect(names).toContain('export_workflows')
+      expect(names).toContain('import_workflows')
     })
 
     it('每个 Tool 应有 description 和 object 类型 inputSchema', () => {

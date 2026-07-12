@@ -10,8 +10,8 @@ export type VirtualDirectory = {
   files: string[]
 }
 
-let fileContents = new Map<string, string>()
-let dirMap = new Map<string, Set<string>>()
+const fileContents = new Map<string, string>()
+const dirMap = new Map<string, Set<string>>()
 
 export function setupVirtualFS(files: VirtualFile[]): void {
   fileContents.clear()

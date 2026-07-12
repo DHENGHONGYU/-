@@ -3,7 +3,7 @@
  * @description 执行日志服务单元测试（E-2-6）
  */
 
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
+ 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 vi.mock('@/data/dataLayer', () => ({
