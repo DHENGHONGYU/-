@@ -6,12 +6,11 @@
  * - 写操作统一经 DataBridge.forward() 转发，确保 ACL 校验与审计日志
  */
 
-import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID } from '@/config/dbConfig'
+import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
 import { DEFAULT_SECTORS, ROTATION_FACTORS } from '@/config/rotationConfig'
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
 import { SECTOR_DEFINITIONS } from '@/data/sectorDefinitions'
-import { dataLayer } from '@/data/dataLayer'
 import type {
   DataLayerResult,
   RotationFactor,
@@ -140,11 +139,19 @@ export async function saveDefaultRotationScores(scoreDate?: string): Promise<Dat
 export async function getRotationScores(sectorCode?: string): Promise<DataLayerResult<RotationSectorScore[]>> {
   try {
     if (sectorCode) {
-      const list = await dataLayer.rotationScores.listBySector(sectorCode)
-      return { success: true, data: list }
+      const result = await dataBridge.query<RotationSectorScore[]>({
+        action: ENVELOPE_ACTION.queryByIndex,
+        store: STORE_NAME.rotationScores,
+        indexName: 'by-sector',
+        indexValue: sectorCode,
+      })
+      return { success: result.success, data: result.success ? (result.data ?? []) : undefined }
     }
-    const list = await dataLayer.rotationScores.list()
-    return { success: true, data: list }
+    const result = await dataBridge.query<RotationSectorScore[]>({
+      action: ENVELOPE_ACTION.queryList,
+      store: STORE_NAME.rotationScores,
+    })
+    return { success: result.success, data: result.success ? (result.data ?? []) : undefined }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     return { success: false, error: message }

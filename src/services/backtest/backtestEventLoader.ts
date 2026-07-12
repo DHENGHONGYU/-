@@ -16,7 +16,8 @@
  * @see src/data/dataLayer.ts — 数据源
  */
 
-import { dataLayer } from '@/data/dataLayer'
+import { dataBridge } from '@/core/databridge'
+import { ENVELOPE_ACTION, STORE_NAME } from '@/config/dbConfig'
 import type { DailyQuotes, Signal, Order } from '@/data/types'
 import { getLogger } from '@/lib/logger'
 import type { BacktestEngineConfig } from './BacktestEngine'
@@ -81,7 +82,11 @@ export async function loadSignalEvents(
 ): Promise<BacktestEvent[]> {
   let signals: Signal[] = []
   try {
-    signals = await dataLayer.signals.list()
+    const result = await dataBridge.query<Signal[]>({
+      action: ENVELOPE_ACTION.queryList,
+      store: STORE_NAME.signals,
+    })
+    signals = result.success ? (result.data ?? []) : []
   } catch {
     logger.warn('[BacktestEngine] 读取 signals 失败')
     return []
@@ -100,7 +105,12 @@ export async function loadSignalEvents(
   const quotesCache = new Map<string, DailyQuotes>()
   for (const s of filtered) {
     if (!quotesCache.has(s.symbol)) {
-      const q = await dataLayer.dailyQuotes.get(s.symbol)
+      const result = await dataBridge.query<DailyQuotes>({
+        action: ENVELOPE_ACTION.queryGet,
+        store: STORE_NAME.dailyQuotes,
+        key: s.symbol,
+      })
+      const q = result.success ? result.data : undefined
       if (q) quotesCache.set(s.symbol, q)
     }
   }
@@ -134,7 +144,11 @@ export async function loadOrderEvents(
 ): Promise<BacktestEvent[]> {
   let orders: Order[] = []
   try {
-    orders = await dataLayer.orders.list()
+    const result = await dataBridge.query<Order[]>({
+      action: ENVELOPE_ACTION.queryList,
+      store: STORE_NAME.orders,
+    })
+    orders = result.success ? (result.data ?? []) : []
   } catch {
     logger.warn('[BacktestEngine] 读取 orders 失败')
     return []
@@ -201,7 +215,12 @@ export async function preloadQuotes(events: BacktestEvent[]): Promise<Map<string
   const cache = new Map<string, DailyQuotes>()
   const symbols = new Set(events.map((e) => e.symbol))
   for (const sym of symbols) {
-    const q = await dataLayer.dailyQuotes.get(sym)
+    const result = await dataBridge.query<DailyQuotes>({
+      action: ENVELOPE_ACTION.queryGet,
+      store: STORE_NAME.dailyQuotes,
+      key: sym,
+    })
+    const q = result.success ? result.data : undefined
     if (q) cache.set(sym, q)
   }
   return cache

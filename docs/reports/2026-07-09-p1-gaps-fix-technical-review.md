@@ -30,9 +30,9 @@
 | 文件 | 修改内容 |
 |------|---------|
 | [routes.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/config/routes.ts) | 新增 `/trading/portfolio`、`/trading/risk`、`/output/dashboard` 路由注册 |
-| [TradingApp.tsx](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/apps/trading/TradingApp.tsx) | 新增 PortfolioPage、RiskControlPage 的懒加载导入和路由分发分支 |
-| [OutputApp.tsx](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/apps/output/OutputApp.tsx) | 新增 DashboardPage 的懒加载导入和路由分发分支 |
-| [p1-fix-regression.test.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/tests/__tests__/regression/p1-fix-regression.test.ts) | 清空 `KNOWN_GAPS` 和 `KNOWN_MISMATCHES`，所有测试转为通过 |
+| [TradingApp.tsx](../../src/apps/trading/TradingApp.tsx) | 新增 PortfolioPage、RiskControlPage 的懒加载导入和路由分发分支 |
+| [OutputApp.tsx](../../src/apps/output/OutputApp.tsx) | 新增 DashboardPage 的懒加载导入和路由分发分支 |
+| [p1-fix-regression.test.ts](../../tests/__tests__/regression/p1-fix-regression.test.ts) | 清空 `KNOWN_GAPS` 和 `KNOWN_MISMATCHES`，所有测试转为通过 |
 
 ---
 

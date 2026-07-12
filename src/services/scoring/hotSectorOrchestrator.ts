@@ -12,8 +12,10 @@
  */
 
 import { HOT_SECTOR_THRESHOLDS } from '@/config/thresholds'
-import { dataLayer } from '@/data/dataLayer'
+import { dataBridge } from '@/core/databridge'
+import { ENVELOPE_ACTION, STORE_NAME } from '@/config/dbConfig'
 import { checkStrategyScoreFreshness } from '@/core/freshnessGuard'
+import type { Stock, V6Score, DailyQuotes } from '@/data/types'
 import type { HotSectorScore } from '@/data/types'
 import { getLogger } from '@/lib/logger'
 
@@ -36,11 +38,15 @@ const logger = getLogger()
 export async function analyzeBySymbol(symbol: string): Promise<HotSectorScore | null> {
   logger.info(`[hotSectorAnalyzer] 开始分析 ${symbol}`)
 
-  const [stock, quotes, v6Score] = await Promise.all([
-    dataLayer.stocks.get(symbol),
-    dataLayer.dailyQuotes.get(symbol).catch(() => undefined),
-    dataLayer.v6Scores.get(symbol).catch(() => undefined),
+  const [stockResult, quotesResult, v6ScoreResult] = await Promise.all([
+    dataBridge.query<Stock>({ action: ENVELOPE_ACTION.queryGet, store: STORE_NAME.stocks, key: symbol }),
+    dataBridge.query<DailyQuotes>({ action: ENVELOPE_ACTION.queryGet, store: STORE_NAME.dailyQuotes, key: symbol }).catch(() => ({ success: false, data: undefined })),
+    dataBridge.query<V6Score>({ action: ENVELOPE_ACTION.queryGet, store: STORE_NAME.v6Scores, key: symbol }).catch(() => ({ success: false, data: undefined })),
   ])
+
+  const stock = stockResult.success ? stockResult.data : undefined
+  const quotes = quotesResult.success ? quotesResult.data : undefined
+  const v6Score = v6ScoreResult.success ? v6ScoreResult.data : undefined
 
   if (!stock) {
     logger.warn(`[hotSectorAnalyzer] 股票数据缺失: ${symbol}`)

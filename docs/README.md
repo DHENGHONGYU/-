@@ -1,76 +1,108 @@
-# 智能投研复盘系统 V9 — 项目文档体系
+---
+# Kimi 加载提示：本项目为 V9 智能投研复盘系统，按 AGENTS.md v1.4.3 分层架构运行
+# 快速入口：docs/GOVERNANCE.md | docs/architecture/overview.md | docs/00-meta/文档体系体检报告-v9.md
+# 加载策略：先读取本文件获取文档地图，再按需深入对应子类；不要逐个扫描 docs/ 全部文件
+title: V9 智能投研复盘系统 — 文档中心（主控索引）
+code_version: 2.0.0
+kimi_index: true
+---
 
-> **Status**: Current  
-> **Version**: v2.5.0  
-> **Last Updated**: 2026-07-05
->
-> **项目代号**：V9-IRRS（Intelligent Research & Review System）  
-> **定位**：面向中国 A 股个人投资者的研究决策与复盘工具  
-> **技术栈**：React 19 + TypeScript + Vite + Tailwind CSS + Zustand + IndexedDB  
-> **架构**：纯前端 PWA，数据本地主权，离线可用
+# V9 智能投研复盘系统 — 文档中心（主控索引）
+
+> **用途**：本文件是 `docs/` 的唯一顶层入口。任何新成员或 AI Agent 应从这里 1 步定位核心文档。
+> **维护规则**：新增/移动文档后必须同步更新本索引（见 `GOVERNANCE.md` 保鲜规则）。
+> **AI 加载提示（Kimi / 通用 LLM）**："请先读取 `docs/README.md` 获取文档地图，再按需深入对应子类；不要逐个扫描 `docs/` 全部 1794 个文件。"
 
 ---
 
-## 文档导航
+## 一、文档归类体系（A–H 八类）
 
-> 本文档体系当前统一版本为 `v2.5.0`，表示知识图谱 Token 消耗优化与协议缺陷修正后的版本；历史版本（`v0.9.0-docs-base`、`v0.9.0-docs-review`、`v0.9.0-migration-implemented`）仅用于版本比对参考。
+基于《文档归类体系结构.md》，所有文档归入以下八类。每类下给出**现有锚点**与**缺口标记（🔴 缺 / 🟡 弱 / ✅ 就绪）**。
 
-本文档体系是项目架构与实现的**唯一真相源**。历史讨论、临时笔记若与本文档冲突，以本文档为准。
-
-| 编号 | 文档 | 状态 | 版本 | 内容 |
-|------|------|------|------|------|
-| 01 | [愿景与目标](./01-vision-and-goals.md) | ✅ Current (Active) | v0.9.0-migration-implemented | 系统愿景、目标用户、价值主张、SMART 目标 |
-| 02 | [功能规格](./02-functional-specs.md) | ✅ Current (Active) | v0.9.0-migration-implemented | 功能模块清单、用户故事、核心流程、非功能需求 |
-| 03 | [架构标准](./03-architecture-standards.md) | ✅ Current (Active) | v0.9.0-migration-implemented | 五层架构、分层调用规则、数据架构、Schema、信封结构 |
-| 04 | [UI/UX 规范](./04-ui-ux-specs.md) | ✅ Current (Active) | v0.9.0-migration-implemented | 五舱 + 驾驶舱 UI 规范、主题系统、组件库 |
-| 05 | [引擎规格](./05-engine-specs.md) | ✅ Current (Active) | v0.9.0-migration-implemented | 分析引擎、交易引擎、评分模型、DataBridge 信封协议 |
-| 06 | [路由规格](./06-routing-specs.md) | ✅ Current (Active) | v0.9.0-migration-implemented | 路由注册表、舱室切换、懒加载策略 |
-| 07 | [运营策略](./07-operation-strategy.md) | ✅ Current (Active) | v0.9.0-migration-implemented | 开发流程、版本策略、风险控制、ADR、外部参考管控 |
-| 08 | [实施计划](./08-implementation-plan.md) | ✅ Current (Active) | v0.9.0-migration-implemented | 分阶段实施计划、验收标准、风险登记 |
-| 09 | [质量门禁](./09-quality-gates.md) | ✅ Current (Active) | v0.9.0-migration-implemented | 质量门禁、CI 流水线、测试策略、扫描脚本 |
-| 10 | [词汇表](./10-glossary.md) | ✅ Current (Active) | v0.9.0-migration-implemented | 领域词汇表、命名规范、废弃命名对照 |
-
-### 专项文档
-
-| 文档 | 内容 | 状态 |
-|------|------|------|
-| [因子迭代路线图](./implementation/factor-tracking-roadmap.md) | V6/V4 评分因子的五阶段优化与扩容路径 | Current (Active) |
-| [交易核心因子导入](./implementation/trading-core-factors.md) | 从 v6-pro-cockpit 交易策略报告提取的核心痛点、参数与落地建议 | Future Reference / Deferred |
-| [输入舱业务规格](./implementation/input-cabin-spec.md) | 输入舱端到端流程、子页职责、服务契约、UI 组件映射 | Current (Active) |
-| [输入舱 UI 改造](./implementation/input-cabin-ui-reshaping.md) | 输入舱看板/列表视图、批量操作、搜索模式增强的 UI 改造记录 | Current (Active) |
-| [数据交互协议](./implementation/data-interaction-protocols.md) | 信封结构、调用矩阵、事件总线、数据血缘、输入舱专用契约 | Current (Active) |
-| [投资流程阶段分析](./implementation/investment-pipeline-stage-analysis.md) | 从候选股到持仓复盘共 13 个阶段的逐项分析 | Current (Active) |
-| [实施治理与 ADR](./implementation/implementation-governance.md) | 架构决策记录模板、版本比对机制、审计基线维护、代码-文档同步规则 | Current (Active) |
-| [架构版本比对](./implementation/architecture-version-comparison.md) | 架构文档从规划基线到校对版的全量差异对照 | Current (Active) |
-| [输入舱升级策略报告](./implementation/v9-input-cabin-strategy-report.md) | 输入舱 UI/代码/路由/映射修改策略、利弊分析与实施计划 | Current (Active) |
-| [v6 UI 参考](./implementation/v6-cockpit-ui-reference.md) | v6-pro-cockpit 可复用的 UI 组件与模式总结 | Future Reference / Deferred |
-| [V10 架构对齐报告](./implementation/v10-architecture-alignment.md) | V10 白皮书框架思想与 V9 的对齐、吸收、暂缓建议 | Future Reference / Deferred |
-| [V6 Pro UI 模块对齐报告](./implementation/deprecated/DEPRECATED_ui-module-alignment.md) | V6 Pro UI 模块比对结论与 V9 的吸收/保持/暂缓清单 | Future Reference / Deferred |
-| [V6 Pro → V9 数据迁移规范](./implementation/v6-to-v9-migration-spec.md) | V6 Pro JSON 全量导出 → V9 的字段映射、转换规则、导入顺序与冲突处理 | Current (Active) |
-| [V9 整体架构蓝图](./implementation/v9-system-blueprint.md) | 愿景、架构、数据协议、路由映射、UI 范式、实施路线统一归纳 | Current (Active) |
-| [第四次工业革命稀缺核心资源交易策略](./implementation/fourth-industrial-revolution-core-resource-strategy.md) | 解析 v6-pro-cockpit 核心稀缺策略，Phase 1（Schema/主题/评分/组合）已落地 | Current (Active) |
-| [更新日志](../CHANGELOG.md) | 版本变更、架构决策、验收数据、已知问题 | Future Reference / Deferred |
-| [AI Center 数据字典](./AI_CENTER_DATA_DEFINITION.md) | AI 智能体调度中心 + 健康监控 + 诊断分析 数据字典 | Current (Active) |
-| [交易持仓 API 契约](./trade/API_CONTRACT.md) | 交易持仓管理模块 API 契约 | Current (Active) |
-| [Cockpit 数据字典](./cockpit/DATA_DEFINITION.md) | Cockpit Widget 框架数据字典（类型 + 枚举常量） | Current (Active) |
-| [News 数据字典](./news/DATA_DEFINITION.md) | 新闻资讯模块数据字典 | Current (Active) |
-| [Data Collection 数据字典](./data-collection/DATA_DEFINITION.md) | 数据采集模块三层架构数据字典 | Current (Active) |
+| 类 | 名称 | 职责 | 现有锚点 | 状态 |
+|----|------|------|----------|------|
+| **A** | 导航与治理 | 索引、宪法、归类、体检 | `README.md`(本文件)、`GOVERNANCE.md`、`00-meta/文档归类体系结构.md`、`00-meta/trae-file-management-review.md`、`00-meta/prompt-execute-remediation.md`、`00-meta/V9-文档治理修复行动计划.md`、`00-meta/V9-项目健康状态总览.md`、`00-meta/文档体系体检报告-v9.md`、`00-meta/文档理解核查报告.md`、`00-meta/文档管理系统评分报告.md`、`00-meta/REGISTRY_INDEX.md`、`00-meta/执行校验报告.md` | ✅ |
+| **B** | 架构设计 | 全局架构、舱室、服务、引擎、数据层、安全模型 | `architecture/overview.md`(P0✅)、`architecture/cabins-overview.md`(P0✅)、`architecture/services-catalog.md`(P0✅)、`architecture/security-model.md`(P1✅)、`architecture/deployment.md`(P1✅)、`modules/data-layer-overview.md`(P1✅)、`02-design/05-engine-specs.md`、`02-design/06-routing-specs.md`、`02-design/00-README.md` | ✅ |
+| **C** | 功能模块 | 各舱 spec、Widget、页面 | `01-requirements/input-cabin-spec.md`、`02-design/analysis-cabin-spec.md`(P0✅)、`trading-cabin-spec.md`(P0✅)、`output-cabin-spec.md`(P0✅)、`command-cabin-spec.md`(P0✅)、`02-design/atomic-component-system.md` | ✅ |
+| **D** | 技术规范 | 分层、门禁、令牌、复杂度、API 契约 | `AGENTS.md`(根)、`eslint.colors.config.js`、`docs/03-development/complexity-governance.md`、`02-design/design-token-mapping.md`、`jsdoc-convention.md`、`02-design/API_CONTRACT.md`(P0✅) | ✅ |
+| **E** | 测试策略 | 单元/e2e/覆盖率 | `04-testing/testing-strategy.md`(P1✅)、`testing/test-catalog.md` | ✅ |
+| **F** | AI 辅助工程治理 | 提示词模板、记忆层、飞轮、AI 工程入口 | `prompts/README.md`、`ai/README.md`(P1✅)、`ai/store-integration-guide.md`、`ai/service-integration-guide.md`、`docs/ai-memory-layer.md`、`docs/ai-generate-audit-fix-loop.md`、`ui-migration-checklist.md`、`widget-integration-checklist.md` | ✅ |
+| **G** | 过程与质量产物 | 报告、审计、changelog、草稿 | `reports/`（自动产物，已隔离规划）、`CHANGELOG.md`(根)、`GOVERNANCE.md`(P1✅)、`CLEANUP_SCHEDULE.md`(P1✅) | ✅ |
+| **H** | 跨域补充 | 入门、How-to、安全、部署、i18n | `guides/getting-started.md`(P1✅)、`guides/how-to-add-widget.md`(P1✅)、`guides/how-to-add-store.md`(P1✅)、`guides/how-to-add-service.md`(P1✅)、`guides/mcp-acl-guide.md`、`architecture/security-model.md`(P1✅)、`architecture/deployment.md`(P1✅)、`design/song-aesthetics.md`(P2)、`design/a11y-i18n.md`(P2)、`ops/runbook.md`(P2✅)、`standards/coding-conventions.md`(P0✅) | ✅ |
 
 ---
 
-## 快速决策原则
+## 二、按使用场景的快速入口
 
-1. **数据优先于界面**：IndexedDB schema 是最高优先级保护对象；任何 schema 变更必须同步更新迁移逻辑与类型定义。
-2. **离线可用**：所有核心功能不依赖网络；LLM 评分仅在联网时增强，离线时回退到自动评分。
-3. **信封通信**：所有跨模块写操作走 `DataBridge.forward(StandardEnvelope)`，禁止 L5/L4 直接调用 `dataLayer`。
-4. **配置驱动**：所有常量、阈值、权重、股票代码池来自 `src/config/`；禁止引擎层与 UI 层硬编码业务数字。
-5. **测试先行**：关键引擎函数必须附带防御性测试；新增功能必须同步补充验收测试。
-6. **架构诚实**：文档必须记录当前代码与架构策略的真实偏差，禁止用愿景替代现状。
+| 场景 | 推荐文档路径 |
+|------|-------------|
+| **新成员 30 分钟上手** | `H/getting-started.md` → `B/architecture/overview.md` → `C/*-cabin-spec.md` |
+| **新增 Widget** | `F/widget-integration-checklist.md` + `H/how-to-add-widget.md` + `02-design/atomic-component-system.md` |
+| **新增 Store / Service / Page** | `F/*-prompt-template.md` + `H/how-to-add-*.md` + `AGENTS.md` §二 四步集成 |
+| **了解全局架构** | `B/architecture/overview.md` → `B/architecture/cabins-overview.md` → `B/architecture/services-catalog.md` |
+| **代码评审 / 合规检查** | `D/AGENTS.md` + `D/eslint.colors.config.js` + `npm run audit:layers` |
+| **查安全架构** | `B/architecture/security-model.md` → `H/guides/mcp-acl-guide.md` → `D/AGENTS.md` §三/六/八 |
+| **查部署基线** | `B/architecture/deployment.md` → `B/ops/runbook.md` → `.github/workflows/quality-check.yml` |
+| **查 AI 工程治理** | `F/ai/README.md` → `F/prompts/README.md` → `F/ai/service-integration-guide.md` |
+| **查数据层架构** | `B/modules/data-layer-overview.md` → `standards/DATA_DICTIONARY_INDEX.md` |
+| **查数据字段定义** | `standards/DATA_DICTIONARY_INDEX.md` → `02-design/API_CONTRACT.md` |
+| **查 API 契约** | `02-design/API_CONTRACT.md` → `B/modules/data-layer-overview.md` |
+| **质量门禁结果** | `G/reports/` + 根 `audit-*-result.txt` |
+| **AI Agent 快速加载** | `docs/.ai-index/`（code-graph + ai-memory-index） |
 
 ---
 
-## 文档维护规范
+## 三、目录健康与治理状态（实时锚点）
 
-- 新增文档请按编号顺序放入 `docs/` 根目录；专项实施文档放入 `docs/implementation/`。
-- 每次发布版本必须同步更新本页「文档版本」与根目录 `CHANGELOG.md`。
-- 文档中涉及的文件路径、函数名、接口字段必须与代码保持一致；重构后须先更新文档再合并。
+- **文档治理层评分**：85/100 → 目标 90+（见 `00-meta/V9-文档治理修复行动计划.md`）
+- **双向一致性评分**：85/100 → 目标 90+（同上）
+- **当前迭代**：**P1 已完成**（A–H 八类全部 ✅）
+- **P2 已完成**：
+  - ✅ 自动化索引生成（`docs/.ai-index/`：code-graph 708 文件 / 138K 行 + ai-memory-index 288KB）
+  - ✅ 视觉回归基线冻结（6 → 20 场景，20/20 全量回归通过，基线 1.6MB）
+  - ✅ 根级 `audit-*-result.txt` 迁移（已确认根级无残留，`docs/reports/audit/` 已创建）
+- **归档目录**：`07-archive/`（DEPRECATED 文档统一归此）
+- **自动产物**：`reports/`（由 `CLEANUP_SCHEDULE.md` 管理保留期，CI 生成）
+- **本次新增 / 更新文档清单（全量）**：
+  - `architecture/security-model.md` — 安全模型总览（L1-L7 纵深防御）
+  - `architecture/deployment.md` — 部署基线（纯前端 SPA + CI/CD）
+  - `ai/README.md` — AI 工程治理入口（LLM 调用栈 / Agent 系统 / 提示词工程）
+  - `04-testing/testing-strategy.md` — 三层测试策略 v2.0.0（金字塔 / 契约 / 覆盖率）
+  - `GOVERNANCE.md` — 文档治理宪法（A–H 归类 / 版本规范 / 归档规则）
+  - `CLEANUP_SCHEDULE.md` — 自动产物清理周期表（保留矩阵 / 清理脚本）
+  - `02-design/API_CONTRACT.md` — 交易持仓 API 契约（v1.4.0 已检索更新）
+  - `docs/README.md` — 主控索引更新（A–H 全部 ✅，14 条快速入口）
+
+---
+
+## 四、贡献约定（摘要，详见 GOVERNANCE.md）
+
+1. 所有新增文档必须落入 A–H 对应子类目录，**禁止散落 `docs/` 根**。
+2. 文件名 `kebab-case`，英文/数字优先；数据定义统一 `*-data-definition.md`（见 `DATA_DICTIONARY_INDEX.md`）。
+3. 新增文档后**必须**回链本 README 对应类目。
+4. 破坏性移动/删除需先列清单确认，并 `git status` 核对。
+
+---
+
+---
+
+## 五、二级子类速查表（P2-3）
+
+> 基于《文档体系体检报告》§3.1，A–H 八类扩展为以下二级子类，用于更精确归类孤儿文档。
+> 新增文档时，先落入一级类，再按内容归入对应二级子类。
+
+| 二级子类 | 归属一级类 | 说明 | 代表文档 |
+|----------|-----------|------|----------|
+| **A2 需求规格** | A | 愿景、功能规格、目标 | `01-requirements/01-vision-and-goals.md`、`02-functional-specs.md` |
+| **A3 插件集成** | A | 插件/扩展文档 | `plugins/*.md`（10 份 + index） |
+| **B5 版本发布** | B | 版本说明、发布计划、PR 描述 | `05-deployment/RELEASE_NOTES.md`、`05-deployment/PR_DESCRIPTION.md`、`发布计划与评审_R01.md` |
+| **C7 数据字典** | C | 数据定义、字段契约、ER 图 | `standards/DATA_DICTIONARY_INDEX.md` + 7 份 `*-data-definition.md` |
+| **D5 迁移规范** | D | 版本迁移、Schema 升级、架构对齐 | `v6-to-v9-migration-spec.md`、`db-migration-v4-to-v6.md` |
+| **G4 草稿/临时** | G | 过程草稿、临时产物 | `drafts/*.md`（8 份 + .log） |
+| **G5 发布管理** | G | 发布计划、回滚方案、过程排期 | `02-design/发布计划与评审_R01.md`、`回滚方案与演练_R03.md`、`plans/` |
+
+> **命名规范**：二级子类文档命名建议加子类前缀，如 `a2-vision-and-goals.md`、`c7-data-dictionary-index.md`（可选，不强制）。
+
+---
+
+_本索引由文档治理整改（P0）创建，P1 已补全（A–H 八类 ✅），P2-3 已扩展二级子类，随 P3 迭代持续优化。_

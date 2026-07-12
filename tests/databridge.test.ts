@@ -321,12 +321,12 @@ describe('DataBridge.query()', () => {
       }
       await db.put('stocks', stock)
 
-      // 使用未授权的模块（fetcher 没有 stocks 的读权限）
+      // 使用未授权的模块（user 没有 stocks 的读权限）
       const result = await dataBridge.query<Stock>({
         action: ENVELOPE_ACTION.queryGet,
         store: STORE_NAME.stocks,
         key: '000001.SZ',
-        source: MODULE_ID.fetcher, // fetcher 没有 stocks 的读权限
+        source: MODULE_ID.user, // 2026-07-12 修正：fetcher.read 已含 stocks，改用 user 作为未授权模块
       })
 
       expect(result.success).toBe(false)

@@ -1,7 +1,7 @@
-import { dataLayer } from '@/data/dataLayer'
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
-import { MODULE_ID, ENVELOPE_TARGET, ENVELOPE_ACTION } from '@/config/dbConfig'
+import { dataLayer } from '@/data/dataLayer'
+import { MODULE_ID, ENVELOPE_TARGET, ENVELOPE_ACTION, STORE_NAME } from '@/config/dbConfig'
 import type { DataLayerResult } from '@/data/types'
 
 import { nanoid } from 'nanoid'
@@ -16,17 +16,17 @@ export interface SystemStats {
  */
 export async function loadSystemStats(): Promise<DataLayerResult<SystemStats>> {
   try {
-    const [stocks, orders, scores] = await Promise.all([
-      dataLayer.stocks.list(),
-      dataLayer.orders.list(),
-      dataLayer.v6Scores.list(),
+    const [stocksResult, ordersResult, scoresResult] = await Promise.all([
+      dataBridge.query<unknown[]>({ action: ENVELOPE_ACTION.queryList, store: STORE_NAME.stocks, source: MODULE_ID.system }),
+      dataBridge.query<unknown[]>({ action: ENVELOPE_ACTION.queryList, store: STORE_NAME.orders, source: MODULE_ID.system }),
+      dataBridge.query<unknown[]>({ action: ENVELOPE_ACTION.queryList, store: STORE_NAME.v6Scores, source: MODULE_ID.system }),
     ])
     return {
       success: true,
       data: {
-        stocks: stocks.length,
-        orders: orders.length,
-        scores: scores.length,
+        stocks: stocksResult.success && stocksResult.data ? stocksResult.data.length : 0,
+        orders: ordersResult.success && ordersResult.data ? ordersResult.data.length : 0,
+        scores: scoresResult.success && scoresResult.data ? scoresResult.data.length : 0,
       },
     }
   } catch (err) {
@@ -82,6 +82,7 @@ export async function exportAll(): Promise<DataLayerResult<Record<string, unknow
 
   try {
     await dataBridge.forward(envelope)
+    // TODO: dataLayer.manager.export() 需要后续迁移到 DataBridge
     const data = await dataLayer.manager.export()
     return { success: true, data }
   } catch (err) {

@@ -163,14 +163,17 @@ describe('套件1: UI 场景权限拦截', () => {
     assertAclDenied(result, 'server "execution"')
   }, { timeout: 60000 })
 
-  it('UI 调用 system.get_engine_config 应被 Server 级拦截', async () => {
+  it('UI 调用 scoring:v6.get_engine_config（get_* 通配符）应放行', async () => {
+    // 2026-07-12 修正：get_engine_config 实际注册在 scoring:v6 Server（见 v6ScoringServer），
+    // 且 MCP_ACL_MATRIX 允许 ui 角色调用 scoring:v6 的 get_* 工具（权威单测 mcpAclInterceptor.test.ts:128 已锁定）。
+    // 原用例误写为 system.get_engine_config 且期望 ACL_PERMISSION_DENIED，与矩阵冲突。
     const result = await mcpBridge.callTool(
-      'system',
+      'scoring:v6',
       'get_engine_config',
       {},
       UI_CALLER,
     )
-    assertAclDenied(result, 'server "system"')
+    assertAclAllowed(result)
   }, { timeout: 60000 })
 })
 
@@ -189,14 +192,16 @@ describe('套件2: CI 场景权限拦截', () => {
     assertAclAllowed(result)
   }, { timeout: 60000 })
 
-  it('CI 调用 system.get_engine_config（get_* 通配符）应放行', async () => {
+  it('CI 调用 scoring:v6.get_engine_config（非 system Server）应被 Server 级拦截', async () => {
+    // 2026-07-12 修正：get_engine_config 注册在 scoring:v6（非 system）。
+    // ci 角色仅允许 system Server（MCP_ACL_MATRIX），故 CI 调用 scoring:v6 应被拒绝。
     const result = await mcpBridge.callTool(
-      'system',
+      'scoring:v6',
       'get_engine_config',
       {},
       CI_CALLER,
     )
-    assertAclAllowed(result)
+    assertAclDenied(result, 'server "scoring:v6"')
   }, { timeout: 60000 })
 
   it('CI 调用 stockpool.list_pool_stocks 应被 Server 级拦截', async () => {
@@ -245,9 +250,10 @@ describe('套件3: Agent 场景权限拦截', () => {
     assertAclAllowed(result)
   }, { timeout: 60000 })
 
-  it('Agent 调用 system.get_engine_config 应放行', async () => {
+  it('Agent 调用 scoring:v6.get_engine_config 应放行', async () => {
+    // 2026-07-12 修正：get_engine_config 注册在 scoring:v6；agent 角色拥有全权限，应放行。
     const result = await mcpBridge.callTool(
-      'system',
+      'scoring:v6',
       'get_engine_config',
       {},
       AGENT_CALLER,
@@ -425,11 +431,14 @@ describe('套件7: 双端校验一致性验证', () => {
       expectedKeyword: 'server "trading"',
     },
     {
-      desc: 'UI 调用 system（Server 级拒绝）',
+      // 2026-07-12 修正：原用例误用 system.get_engine_config 作为 UI 拒绝场景，
+      // 但 get_engine_config 实际注册于 scoring:v6，且 ui 角色按矩阵允许 get_*（权威单测已锁定），
+      // 无法构成 UI 拒绝。改用 UI 不允许的 system.reset_database（Tool 级拒绝）作为真实拒绝场景。
+      desc: 'UI 调用 system.reset_database（Tool 级拒绝）',
       server: 'system',
-      tool: 'get_engine_config',
+      tool: 'reset_database',
       caller: UI_CALLER,
-      expectedKeyword: 'server "system"',
+      expectedKeyword: 'tool "reset_database"',
     },
     {
       desc: 'CI 调用 stockpool（Server 级拒绝）',

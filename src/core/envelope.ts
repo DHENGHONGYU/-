@@ -97,3 +97,4 @@ export class EnvelopeFactory {
 }
 
 export type { ModuleId, EnvelopeTarget, EnvelopeAction, EnvelopeMeta }
+export { ENVELOPE_TARGET } from '@/config/dbConfig'

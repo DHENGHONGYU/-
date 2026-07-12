@@ -14,6 +14,7 @@
  * @module components/ui/ErrorState
  */
 
+import { fallback } from '@/lib/safeCoerce'
 import { memo, useCallback } from 'react'
 import { AlertCircle, RotateCcw, WifiOff, Clock } from 'lucide-react'
 import { Button } from '@/components/atoms/Button'
@@ -107,7 +108,7 @@ function getErrorInfo(error: Error | string, errorCode?: ErrorStateProps['errorC
   return {
     code: 'business',
     title: '操作失败',
-    defaultMessage: errorMessage || '发生了未知错误',
+    defaultMessage: errorMessage || fallback.error,
   }
 }
 

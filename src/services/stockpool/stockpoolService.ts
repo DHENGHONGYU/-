@@ -1,9 +1,6 @@
-import {
-  DEFAULT_POOL_GROUP,
-  RESEARCH_STATUS,
-  type ResearchStatus,
-} from '@/config/dbConfig'
-import { dataLayer } from '@/data/dataLayer'
+import { DEFAULT_POOL_GROUP, RESEARCH_STATUS, type ResearchStatus } from '@/constants/stockpool.constants'
+import { dataBridge, ENVELOPE_ACTION, STORE_NAME, MODULE_ID } from '@/core/databridge'
+import { EnvelopeFactory, ENVELOPE_TARGET } from '@/core/envelope'
 import {
   getPoolLabel,
   getPoolTransitionOptions,
@@ -11,6 +8,7 @@ import {
   type PoolTransitionOption,
 } from '@/core/poolTransitionEngine'
 import type { DataLayerResult, Stock } from '@/data/types'
+import { nanoid } from 'nanoid'
 
 export type { PoolTransitionOption } from '@/core/poolTransitionEngine'
 export { getPoolTransitionOptions } from '@/core/poolTransitionEngine'
@@ -29,8 +27,15 @@ export { DEFAULT_POOL_GROUP }
  */
 export async function listStocks(): Promise<DataLayerResult<Stock[]>> {
   try {
-    const list = await dataLayer.stocks.list()
-    return { success: true, data: list }
+    const result = await dataBridge.query<Stock[]>({
+      action: ENVELOPE_ACTION.queryList,
+      store: STORE_NAME.stocks,
+      source: MODULE_ID.stockpool,
+    })
+    if (!result.success) {
+      return { success: false, error: result.error }
+    }
+    return { success: true, data: result.data ?? [] }
   } catch (err) {
     return {
       success: false,
@@ -42,7 +47,7 @@ export async function listStocks(): Promise<DataLayerResult<Stock[]>> {
 /**
  * 将股票流转到目标状态
  *
- * 校验由 poolTransitionEngine 执行，写操作经 dataLayer → DataBridge。
+ * 校验由 poolTransitionEngine 执行，写操作经 DataBridge 信封协议。
  */
 export async function transitionStock(
   symbol: string,
@@ -53,10 +58,16 @@ export async function transitionStock(
     return { success: false, error: '股票代码不能为空' }
   }
 
-  const stock = await dataLayer.stocks.get(normalized)
-  if (!stock) {
+  const stockResult = await dataBridge.query<Stock>({
+    action: ENVELOPE_ACTION.queryGet,
+    store: STORE_NAME.stocks,
+    key: normalized,
+    source: MODULE_ID.stockpool,
+  })
+  if (!stockResult.success || !stockResult.data) {
     return { success: false, error: `股票不存在: ${normalized}` }
   }
+  const stock = stockResult.data
 
   if (!isValidTransition(stock.researchStatus, toStatus)) {
     return {
@@ -65,16 +76,32 @@ export async function transitionStock(
     }
   }
 
-  const updateResult = await dataLayer.stocks.updateStatus(normalized, toStatus)
-  if (!updateResult.success) {
-    return { success: false, error: updateResult.error }
+  const envelope = EnvelopeFactory.create(
+    {
+      source: MODULE_ID.stockpool,
+      target: ENVELOPE_TARGET.db,
+      action: ENVELOPE_ACTION.updateStockStatus,
+      traceId: `pool-transition-${nanoid(8)}-${normalized}`,
+    },
+    { symbol: normalized, status: toStatus },
+  )
+  try {
+    await dataBridge.forward(envelope)
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    return { success: false, error: message }
   }
 
-  const updated = await dataLayer.stocks.get(normalized)
-  if (!updated) {
+  const updatedResult = await dataBridge.query<Stock>({
+    action: ENVELOPE_ACTION.queryGet,
+    store: STORE_NAME.stocks,
+    key: normalized,
+    source: MODULE_ID.stockpool,
+  })
+  if (!updatedResult.success || !updatedResult.data) {
     return { success: false, error: `流转后未找到股票: ${normalized}` }
   }
-  return { success: true, data: updated }
+  return { success: true, data: updatedResult.data }
 }
 
 /**
@@ -84,8 +111,17 @@ export async function getStocksByStatus(
   status: ResearchStatus,
 ): Promise<DataLayerResult<Stock[]>> {
   try {
-    const list = await dataLayer.stocks.listByStatus(status)
-    return { success: true, data: list }
+    const result = await dataBridge.query<Stock[]>({
+      action: ENVELOPE_ACTION.queryByIndex,
+      store: STORE_NAME.stocks,
+      indexName: 'by-status',
+      indexValue: status,
+      source: MODULE_ID.stockpool,
+    })
+    if (!result.success) {
+      return { success: false, error: result.error }
+    }
+    return { success: true, data: result.data ?? [] }
   } catch (err) {
     return {
       success: false,
@@ -127,7 +163,17 @@ export async function getAllPoolGroups(): Promise<DataLayerResult<PoolGroup[]>> 
  */
 export async function getPoolGroups(): Promise<DataLayerResult<string[]>> {
   try {
-    const groups = await dataLayer.stocks.listGroups()
+    const result = await dataBridge.query<string[]>({
+      action: ENVELOPE_ACTION.queryList,
+      store: STORE_NAME.stocks,
+      source: MODULE_ID.stockpool,
+    })
+    if (!result.success || !result.data) {
+      return { success: false, error: result.error ?? '获取分组失败' }
+    }
+    // 从全部股票中提取唯一分组名
+    const stocks = result.data as unknown as Stock[]
+    const groups = [...new Set(stocks.map((s) => s.group ?? DEFAULT_POOL_GROUP))]
     return { success: true, data: groups }
   } catch (err) {
     return {
@@ -144,7 +190,15 @@ export async function getStocksByGroup(
   group: string,
 ): Promise<DataLayerResult<Stock[]>> {
   try {
-    const list = await dataLayer.stocks.listByGroup(group)
+    const result = await dataBridge.query<Stock[]>({
+      action: ENVELOPE_ACTION.queryList,
+      store: STORE_NAME.stocks,
+      source: MODULE_ID.stockpool,
+    })
+    if (!result.success || !result.data) {
+      return { success: false, error: result.error ?? '获取股票失败' }
+    }
+    const list = result.data.filter((s) => (s.group ?? DEFAULT_POOL_GROUP) === group)
     return { success: true, data: list }
   } catch (err) {
     return {
@@ -169,7 +223,32 @@ export async function updateStockGroup(
     return { success: false, error: '分组名称不能为空' }
   }
 
-  return dataLayer.stocks.updateGroup(normalized, group)
+  const envelope = EnvelopeFactory.create(
+    {
+      source: MODULE_ID.stockpool,
+      target: ENVELOPE_TARGET.db,
+      action: ENVELOPE_ACTION.updateStockGroup,
+      traceId: `pool-group-${nanoid(8)}-${normalized}`,
+    },
+    { symbol: normalized, group },
+  )
+  try {
+    await dataBridge.forward(envelope)
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    return { success: false, error: message }
+  }
+
+  const updatedResult = await dataBridge.query<Stock>({
+    action: ENVELOPE_ACTION.queryGet,
+    store: STORE_NAME.stocks,
+    key: normalized,
+    source: MODULE_ID.stockpool,
+  })
+  if (!updatedResult.success || !updatedResult.data) {
+    return { success: false, error: `更新后未找到股票: ${normalized}` }
+  }
+  return { success: true, data: updatedResult.data }
 }
 
 /**

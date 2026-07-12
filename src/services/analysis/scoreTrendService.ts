@@ -5,10 +5,12 @@
  * 所有标签、阈值均来自配置与类型，组件层零硬编码。
  */
 
-import { dataLayer } from '@/data/dataLayer'
+import { dataBridge } from '@/core/databridge'
+import { ENVELOPE_ACTION, STORE_NAME } from '@/config/dbConfig'
 import { getLogger } from '@/lib/logger'
 import type { ScoreTrendPeriod } from '@/types/modules/score.types'
-import { MS_PER_DAY } from '@/config/mathConstants'
+import { MS_PER_DAY } from '@/constants/math.constants'
+import type { IndustryScore, IntelligentScore } from '@/data/types'
 
 const logger = getLogger()
 
@@ -174,7 +176,13 @@ export async function loadIndustryScoreTrend(
   period: ScoreTrendPeriod,
 ): Promise<{ success: true; data: ScoreTrendData } | { success: false; error: string }> {
   try {
-    const scores = await dataLayer.industryScores.listByCode(code)
+    const result = await dataBridge.query<IndustryScore[]>({
+      action: ENVELOPE_ACTION.queryByIndex,
+      store: STORE_NAME.industryScores,
+      indexName: 'by-code',
+      indexValue: code,
+    })
+    const scores = result.success ? (result.data ?? []) : []
     const points = aggregateScoresByPeriod(
       scores,
       period,
@@ -202,7 +210,13 @@ export async function loadStockScoreTrend(
   period: ScoreTrendPeriod,
 ): Promise<{ success: true; data: ScoreTrendData } | { success: false; error: string }> {
   try {
-    const scores = await dataLayer.intelligentScores.listBySymbol(symbol)
+    const result = await dataBridge.query<IntelligentScore[]>({
+      action: ENVELOPE_ACTION.queryByIndex,
+      store: STORE_NAME.intelligentScores,
+      indexName: 'by-symbol',
+      indexValue: symbol,
+    })
+    const scores = result.success ? (result.data ?? []) : []
     const points = aggregateScoresByPeriod(
       scores,
       period,

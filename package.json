@@ -55,6 +55,8 @@
     "audit:fix-p0:execute": "tsx scripts/fix-p0-violations.ts --execute",
     "audit:complexity": "npm run complexity-scan",
     "audit:widget-registry": "tsx scripts/audit-widget-registry.ts",
+    "audit:ai-output": "tsx scripts/audit-ai-output.ts",
+    "scaffold:widget": "tsx scripts/scaffold-widget.ts",
     "complexity-scan": "tsx scripts/complexity-scan.ts",
     "verify:tokens": "tsx scripts/verify-design-tokens.ts",
     "build:health": "tsx scripts/build-health-report.ts",
@@ -180,8 +182,10 @@
     "api:extract": "tsc -p tsconfig.api.json && api-extractor run"
   },
   "dependencies": {
+    "@duckdb/duckdb-wasm": "1.33.1-dev57.0",
     "@heroicons/react": "2.2.0",
     "@tanstack/react-virtual": "^3.14.4",
+    "@xenova/transformers": "2.17.2",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.21",
     "jspdf": "^4.2.1",

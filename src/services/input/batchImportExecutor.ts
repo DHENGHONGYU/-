@@ -15,7 +15,7 @@
  */
 
 import { INPUT_CONFIG } from '@/config/inputConfig'
-import { dataLayer } from '@/data/dataLayer'
+import { dataBridge, ENVELOPE_ACTION, STORE_NAME, MODULE_ID } from '@/core/databridge'
 import type { DataLayerResult, Stock } from '@/data/types'
 import { getLogger } from '@/lib/logger'
 import { eventBus } from '@/lib/eventBus'
@@ -78,7 +78,13 @@ export async function importStocks(
     }
     seen.add(row.symbol)
 
-    const exists = await dataLayer.stocks.get(row.symbol)
+    const existsResult = await dataBridge.query<Stock>({
+      action: ENVELOPE_ACTION.queryGet,
+      store: STORE_NAME.stocks,
+      key: row.symbol,
+      source: MODULE_ID.stockpool,
+    })
+    const exists = existsResult.success && existsResult.data != null
     if (exists) {
       result.failed++
       result.errors.push({
@@ -144,7 +150,13 @@ async function importOneRow(
   try {
     if (options.skipDuplicates !== false && seen.has(row.symbol)) return { ok: false, row: globalIdx, raw: `${row.code} ${row.name}`, error: '重复的代码', stock: null }
     seen.add(row.symbol)
-    const exists = await dataLayer.stocks.get(row.symbol)
+    const existsResult = await dataBridge.query<Stock>({
+      action: ENVELOPE_ACTION.queryGet,
+      store: STORE_NAME.stocks,
+      key: row.symbol,
+      source: MODULE_ID.stockpool,
+    })
+    const exists = existsResult.success && existsResult.data != null
     if (exists) return { ok: false, row: globalIdx, raw: `${row.code} ${row.name}`, error: '股票已存在', stock: null }
     const addResult = await addStock(
       { symbol: row.symbol, name: row.name },
@@ -171,6 +183,13 @@ function applyOutcome(result: BulkImportResult, o: RowImportOutcome): void {
   result.errors.push({ row: o.row + 1, raw: o.raw, error: o.error })
 }
 
+/**
+ * 带进度回调的批量导入执行器。
+ * @param rows 要导入的行数据
+ * @param options 导入选项
+ * @param onProgress 进度回调 (completed, total, percent)
+ * @returns 导入结果（成功/失败统计）
+ */
 export async function importStocksWithProgress(
   rows: BulkImportRow[],
   options: ImportStocksOptions = {},

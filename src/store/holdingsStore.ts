@@ -29,7 +29,7 @@ import type {
   HoldingsQueryParams,
 } from '@/types/modules/trade.types'
 import type { HoldingAction } from '@/constants/trade.constants'
-import { HTTP_OK, HTTP_INTERNAL_ERROR } from '@/config/mathConstants'
+import { HTTP_OK, HTTP_INTERNAL_ERROR } from '@/constants/math.constants'
 
 import { nanoid } from 'nanoid'
 const logger = getLogger()

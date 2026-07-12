@@ -11,7 +11,7 @@ import type { SkillDevelopment, SkillDimensionCode } from './tradeReviewAI.types
 import { SKILL_DIMENSIONS, scoreToSkillLevel, getTargetLevel, getTargetScore } from './tradeReviewAI.dimensions'
 import { TRADE_REVIEW_AI_THRESHOLDS } from '@/config/thresholds'
 import { MAX_SCORE } from '@/constants/trade.constants'
-import { MS_PER_DAY } from '@/config/mathConstants'
+import { MS_PER_DAY } from '@/constants/math.constants'
 
 import { nanoid } from 'nanoid'
 const logger = getLogger()

@@ -1,3 +1,4 @@
+import { fallback } from '@/lib/safeCoerce'
 import { useEffect, useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
@@ -109,7 +110,7 @@ export default function HealthDashboardPage(): React.JSX.Element {
       <PageContainer className="space-y-4">
         <div className="flex items-center gap-2 text-destructive">
           <ShieldAlert className="h-5 w-5" />
-          <span>加载健康报告失败：{error ?? '未知错误'}</span>
+          <span>加载健康报告失败：{error ?? fallback.error}</span>
         </div>
         <Button variant="outline" size="sm" onClick={() => void load()}>
           <RefreshCw className="mr-2 h-4 w-4" />

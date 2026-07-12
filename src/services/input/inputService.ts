@@ -1,7 +1,6 @@
-import { dataLayer } from '@/data/dataLayer'
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
-import { MODULE_ID, ENVELOPE_TARGET, ENVELOPE_ACTION, RESEARCH_STATUS, DEFAULT_POOL_GROUP, type ResearchStatus } from '@/config/dbConfig'
+import { MODULE_ID, ENVELOPE_TARGET, ENVELOPE_ACTION, RESEARCH_STATUS, DEFAULT_POOL_GROUP, STORE_NAME, type ResearchStatus } from '@/config/dbConfig'
 import { INPUT_CONFIG } from '@/config/inputConfig'
 import type { DataLayerResult, Stock } from '@/data/types'
 import { fetchBasicDataUseCase, fetchKlineDataUseCase } from '@/services/useCase/fetcherOrchestrator.useCase'
@@ -101,6 +100,12 @@ async function fetchKlineIfNeeded(
   return { stock, warning: klineResult.error ?? '未知错误' }
 }
 
+/**
+ * 添加股票到股票池：规范化 symbol + 名称，获取 K 线数据，写入 dataLayer。
+ * @param input 添加股票的输入（symbol, name 等）
+ * @param options 可选配置项
+ * @returns 添加结果，包含 Stock 数据
+ */
 export async function addStock(
   input: AddStockInput,
   options: AddStockOptions = {},
@@ -227,7 +232,23 @@ export async function exportPool(
   status?: ResearchStatus,
 ): Promise<DataLayerResult<PoolExportPayload>> {
   try {
-    const list = status ? await dataLayer.stocks.listByStatus(status) : await dataLayer.stocks.list()
+    const listResult = status
+      ? await dataBridge.query<Stock[]>({
+          action: ENVELOPE_ACTION.queryByIndex,
+          store: STORE_NAME.stocks,
+          indexName: 'by-status',
+          indexValue: status,
+          source: MODULE_ID.stockpool,
+        })
+      : await dataBridge.query<Stock[]>({
+          action: ENVELOPE_ACTION.queryList,
+          store: STORE_NAME.stocks,
+          source: MODULE_ID.stockpool,
+        })
+    if (!listResult.success) {
+      return { success: false, error: listResult.error }
+    }
+    const list = listResult.data ?? []
     return {
       success: true,
       data: {
@@ -258,8 +279,13 @@ export async function importPool(payload: PoolExportPayload): Promise<DataLayerR
 
   const processOne = async (stock: PoolExportPayload['stocks'][number]) => {
     const normalized = normalizeSymbol(stock.symbol)
-    const existing = await dataLayer.stocks.get(normalized)
-    if (existing) return { ok: false, normalized }
+    const existingResult = await dataBridge.query<Stock>({
+      action: ENVELOPE_ACTION.queryGet,
+      store: STORE_NAME.stocks,
+      key: normalized,
+      source: MODULE_ID.stockpool,
+    })
+    if (existingResult.success && existingResult.data) return { ok: false, normalized }
     const envelope = EnvelopeFactory.create(
       {
         source: MODULE_ID.stockpool,
@@ -320,8 +346,15 @@ export async function _legacyAddStock(input: AddStockInput): Promise<DataLayerRe
  */
 export async function listStocks(): Promise<DataLayerResult<Stock[]>> {
   try {
-    const list = await dataLayer.stocks.list()
-    return { success: true, data: list }
+    const result = await dataBridge.query<Stock[]>({
+      action: ENVELOPE_ACTION.queryList,
+      store: STORE_NAME.stocks,
+      source: MODULE_ID.stockpool,
+    })
+    if (!result.success) {
+      return { success: false, error: result.error }
+    }
+    return { success: true, data: result.data ?? [] }
   } catch (err) {
     return {
       success: false,
@@ -335,8 +368,17 @@ export async function listStocks(): Promise<DataLayerResult<Stock[]>> {
  */
 export async function listStocksByStatus(status: ResearchStatus): Promise<DataLayerResult<Stock[]>> {
   try {
-    const list = await dataLayer.stocks.listByStatus(status)
-    return { success: true, data: list }
+    const result = await dataBridge.query<Stock[]>({
+      action: ENVELOPE_ACTION.queryByIndex,
+      store: STORE_NAME.stocks,
+      indexName: 'by-status',
+      indexValue: status,
+      source: MODULE_ID.stockpool,
+    })
+    if (!result.success) {
+      return { success: false, error: result.error }
+    }
+    return { success: true, data: result.data ?? [] }
   } catch (err) {
     return {
       success: false,

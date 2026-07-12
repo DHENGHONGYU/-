@@ -8,6 +8,7 @@
  * - 仅做状态呈现，数据获取仍由消费方通过 store/hook 提供
  */
 
+import { fallback } from '@/lib/safeCoerce'
 import type { ReactNode } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Loading, Empty, ErrorState } from '@/components/molecules/states'
@@ -64,13 +65,13 @@ export function WidgetStateShell({
 }: WidgetStateShellProps): React.JSX.Element {
   const renderState = (): ReactNode => {
     if (visualState === 'loading') {
-      return skeleton ?? <Loading label={loadingLabel ?? '加载中…'} />
+      return skeleton ?? <Loading label={loadingLabel ?? fallback.loading} />
     }
 
     if (visualState === 'empty') {
       return (
         <Empty
-          title={emptyTitle ?? '暂无数据'}
+          title={emptyTitle ?? fallback.empty}
           description={emptyDescription}
           action={emptyAction}
         />
@@ -82,7 +83,7 @@ export function WidgetStateShell({
         <ErrorState
           className={COLOR_TOKENS.danger.tailwind}
           title="加载失败"
-          description={error ?? '请求异常，请稍后重试'}
+          description={error ?? fallback.error}
           onRetry={onRetry}
           retryLabel="重试"
         />

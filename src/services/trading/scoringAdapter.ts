@@ -1,4 +1,5 @@
-import { dataLayer } from '@/data/dataLayer'
+import { dataBridge } from '@/core/databridge'
+import { ENVELOPE_ACTION, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
 import type { IndustryScore, IntelligentScore, Stock, V6Score } from '@/data/types'
 import { getLogger } from '@/lib/logger'
 
@@ -80,13 +81,25 @@ export async function getCompositeScore(
   let industryScore: IndustryScore | undefined
 
   try {
-    v6Score = await dataLayer.v6Scores.get(stock.symbol)
+    const v6Result = await dataBridge.query<V6Score>({
+      action: ENVELOPE_ACTION.queryGet,
+      store: STORE_NAME.v6Scores,
+      key: stock.symbol,
+      source: MODULE_ID.trading,
+    })
+    v6Score = v6Result.success && v6Result.data ? v6Result.data : undefined
   } catch (e) {
     logger.warn('[scoringAdapter] 读取 V6 评分失败', { symbol: stock.symbol, error: e })
   }
 
   try {
-    intelligentScore = await dataLayer.intelligentScores.getLatestBySymbol(stock.symbol)
+    const intelligentResult = await dataBridge.query<IntelligentScore>({
+      action: ENVELOPE_ACTION.queryGet,
+      store: STORE_NAME.intelligentScores,
+      key: stock.symbol,
+      source: MODULE_ID.trading,
+    })
+    intelligentScore = intelligentResult.success && intelligentResult.data ? intelligentResult.data : undefined
   } catch (e) {
     logger.warn('[scoringAdapter] 读取智能评分失败', { symbol: stock.symbol, error: e })
   }
@@ -94,7 +107,12 @@ export async function getCompositeScore(
   // 行业评分：优先通过股票 sector 名称匹配行业评分 code
   try {
     if (stock.sector) {
-      const allIndustryScores = await dataLayer.industryScores.list()
+      const allIndustryScoresResult = await dataBridge.query<IndustryScore[]>({
+        action: ENVELOPE_ACTION.queryList,
+        store: STORE_NAME.industryScores,
+        source: MODULE_ID.trading,
+      })
+      const allIndustryScores = allIndustryScoresResult.success && allIndustryScoresResult.data ? allIndustryScoresResult.data : []
       const matched = allIndustryScores
         .filter((s) => s.name.includes(stock.sector!) || stock.sector!.includes(s.name))
       const missingScoredAt = matched.filter((s) => s.scoredAt == null)

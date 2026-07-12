@@ -18,7 +18,7 @@ import {
   SINA_QUOTE_API,
   NETEASE_HISTORY_API,
 } from '@/config/dataSourceUrls'
-import { WAN_TO_YUAN_MULTIPLIER } from '@/config/mathConstants'
+import { WAN_TO_YUAN_MULTIPLIER } from '@/constants/math.constants'
 
 const logger = getLogger()
 

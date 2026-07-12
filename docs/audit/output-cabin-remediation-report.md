@@ -1,3 +1,8 @@
+---
+title: 输出舱模块未显示问题 — 整改报告
+code_version: 2.0.0
+---
+
 # 输出舱模块未显示问题 — 整改报告
 
 > **报告编号**: V9-OUTPUT-CABIN-REMEDIATION-20260704  

@@ -16,6 +16,12 @@ export interface LocalDoc {
   sourcePath: string
   size: number
   addedAt: number
+  /** 可选的嵌入向量（384维，由 localEmbeddingService 生成） */
+  embedding?: number[]
+  /** 数据来源标记（如：用户导入、Tushare、券商API、公开数据等） */
+  source?: string
+  /** 授权状态 */
+  authorizationStatus?: 'authorized' | 'unauthorized' | 'pending' | 'public_domain'
 }
 
 /** 外部财经源抓取资讯 */

@@ -41,6 +41,7 @@ import {
   type AclEventType,
   type AclAlertLevel,
 } from '@/config/mcpAclMonitoring'
+import type { McpCallerRole } from '@/types/modules/mcp.types'
 
 const logger = getLogger()
 
@@ -269,7 +270,7 @@ class McpAclMonitor {
         timestamp: now,
         matchCount,
         description: rule.description,
-        lastCaller: record.caller,
+        lastCaller: record.caller as McpCallerRole,
         lastServer: record.serverName,
         lastResource: record.resourceName,
       }

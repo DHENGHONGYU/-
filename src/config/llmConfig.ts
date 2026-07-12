@@ -1,3 +1,4 @@
+import { getSafeString } from '@/lib/safeCoerce'
 import { STOCK_SCORE_FACTORS } from './scoreFactors'
 import { defaultStorage } from '@/lib/localStorageManager'
 import { getLogger } from '@/lib/logger'
@@ -187,7 +188,7 @@ function getCachedApiKey(): string {
 export async function getLlmApiKeyAsync(): Promise<string> {
   try {
     const key = await defaultStorage.getEncrypted<string>(LLM_API_KEY_STORAGE)
-    cachedApiKey = key || ''
+    cachedApiKey = getSafeString(key)
     apiKeyCacheInit = true
     return cachedApiKey
   } catch (err) {

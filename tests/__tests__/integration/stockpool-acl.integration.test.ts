@@ -363,17 +363,19 @@ describe('ACL 拒绝验证', () => {
     await addTestStock()
   })
 
-  it('fetcher 模块没有 stocks 的 SELECT 权限（read 为空数组）', { timeout: 60000 }, async () => {
+  it('fetcher 模块没有 dailyQuotes 的 SELECT 权限（read 不含 dailyQuotes）', { timeout: 60000 }, async () => {
+    // 2026-07-12 修正：fetcher.read 已含 stocks（fetchStockBasic/fetchStockKline 需读取现有 stock 合并字段）。
+    // 改用 dailyQuotes（fetcher 仅 write 不 read）作为真实拒绝场景。
     const result = await dataBridge.query<Stock[]>({
       action: ENVELOPE_ACTION.queryList,
-      store: STORE_NAME.stocks,
+      store: STORE_NAME.dailyQuotes,
       source: MODULE_ID.fetcher,
     })
     expect(result.success).toBe(false)
     expect(result.error).toBeTruthy()
   })
 
-  it('fetcher 模块应能写入 stocks（write 权限）但不能查询', { timeout: 60000 }, async () => {
+  it('fetcher 模块应能写入并查询 stocks（write + read 权限）', { timeout: 60000 }, async () => {
     // 写入应成功（fetcher.write 包含 stocks，actions 包含 insert）
     await dataBridge.forward({
       meta: {
@@ -394,14 +396,15 @@ describe('ACL 拒绝验证', () => {
       },
     })
 
-    // fetcher 查询应失败（read 为空数组）
+    // 2026-07-12 修正：fetcher.read 已含 stocks，查询应成功
     const queryResult = await dataBridge.query<Stock>({
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
       key: 'FETCHER001',
       source: MODULE_ID.fetcher,
     })
-    expect(queryResult.success).toBe(false)
+    expect(queryResult.success).toBe(true)
+    expect(queryResult.data?.name).toBe('fetcher写入股票')
 
     // stockpool 查询应能验证 fetcher 写入的数据
     const verifyResult = await dataBridge.query<Stock>({

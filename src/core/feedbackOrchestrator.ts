@@ -20,16 +20,33 @@
 
 import { getLogger } from '@/lib/logger'
 import { dataBridge } from './databridge'
-import { dataLayer } from '@/data/dataLayer'
-import { MODULE_ID, ENVELOPE_TARGET, ENVELOPE_ACTION } from '@/config/dbConfig'
-import { runV6Score, getV6ScoreQuality } from '@/services/scoring/v6ScoreService'
-import { fetchStockBasic, fetchStockKline, fetchFinancial } from '@/services/fetcher/fetcherService'
+import { MODULE_ID, ENVELOPE_ACTION, STORE_NAME } from '@/config/dbConfig'
 import {
   checkV6ScoreFreshness,
 } from './freshnessGuard'
 import type { V6Score } from '@/data/types'
+import type { Stock } from '@/data/types'
+import type { V6ScoreService, FetcherService } from '@/types/modules/service.types'
 
 const logger = getLogger()
+
+let injectedServices: FeedbackServices | undefined
+
+/**
+ * 注入反馈编排器依赖的服务实例。
+ * @param services 反馈服务集合
+ */
+export function setFeedbackServices(services: FeedbackServices): void {
+  injectedServices = services
+  logger.info('[FeedbackOrchestrator] 反馈服务已注入')
+}
+
+function getServices(): FeedbackServices {
+  if (!injectedServices) {
+    throw new Error('FeedbackServices 未注入，请在启动时调用 setFeedbackServices')
+  }
+  return injectedServices
+}
 
 export interface FeedbackIssue {
   type: 'incomplete_score' | 'insufficient_evidence' | 'stale_data' | 'quality_warning'
@@ -128,8 +145,13 @@ export class FeedbackOrchestrator {
   async detectIssues(symbol: string): Promise<FeedbackIssue[]> {
     const issues: FeedbackIssue[] = []
 
-    const scoreResult = await dataLayer.v6Scores.get(symbol)
-    if (!scoreResult) {
+    const scoreResult = await dataBridge.query<V6Score>({
+      action: ENVELOPE_ACTION.queryGet,
+      store: STORE_NAME.v6Scores,
+      key: symbol,
+      source: MODULE_ID.system,
+    })
+    if (!scoreResult.success || !scoreResult.data) {
       issues.push({
         type: 'incomplete_score',
         severity: 'critical',
@@ -140,9 +162,10 @@ export class FeedbackOrchestrator {
       return issues
     }
 
-    const score = scoreResult
+    const score = scoreResult.data
 
-    const quality = getV6ScoreQuality(symbol, score.factors)
+    const services = getServices()
+    const quality = services.getV6ScoreQuality(symbol, score.factors)
     if (quality.dataCompleteness < this.config.completenessThreshold) {
       issues.push({
         type: 'incomplete_score',
@@ -210,9 +233,21 @@ export class FeedbackOrchestrator {
   private async checkDataFreshness(symbol: string, score: V6Score): Promise<FeedbackIssue[]> {
     const issues: FeedbackIssue[] = []
 
-    const quotesResult = await dataLayer.dailyQuotes.get(symbol)
-    if (quotesResult) {
-      const quotes = quotesResult
+    const quotesResult = await dataBridge.query<{
+      symbol: string
+      latest: { date: string; open: number; high: number; low: number; close: number; volume: number; amount: number }
+      history: unknown[]
+      period: string
+      adjust: string
+      updatedAt: number
+    }>({
+      action: ENVELOPE_ACTION.queryGet,
+      store: STORE_NAME.dailyQuotes,
+      key: symbol,
+      source: MODULE_ID.system,
+    })
+    if (quotesResult.success && quotesResult.data) {
+      const quotes = quotesResult.data
       const freshnessCheck = checkV6ScoreFreshness(score.calculatedAt, quotes.updatedAt)
       if (!freshnessCheck.valid) {
         issues.push({
@@ -283,10 +318,11 @@ export class FeedbackOrchestrator {
   private async triggerReCollection(symbol: string): Promise<boolean> {
     logger.info(`[FeedbackOrchestrator] 开始重新采集: ${symbol}`)
 
+    const services = getServices()
     const results = await Promise.allSettled([
-      fetchStockBasic(symbol),
-      fetchStockKline(symbol),
-      fetchFinancial(symbol),
+      services.fetchStockBasic(symbol),
+      services.fetchStockKline(symbol),
+      services.fetchFinancial(symbol),
     ])
 
     const successCount = results.filter((r) => r.status === 'fulfilled' && r.value.success).length
@@ -303,7 +339,8 @@ export class FeedbackOrchestrator {
   private async triggerReScore(symbol: string): Promise<{ success: boolean; score?: V6Score }> {
     logger.info(`[FeedbackOrchestrator] 开始重新评分: ${symbol}`)
 
-    const result = await runV6Score(symbol)
+    const services = getServices()
+    const result = await services.runV6Score(symbol)
 
     if (result.success && result.data) {
       logger.info(`[FeedbackOrchestrator] 重新评分成功: ${symbol}, score=${result.data.score}`)
@@ -320,7 +357,7 @@ export class FeedbackOrchestrator {
     const envelope = {
       meta: {
         source: MODULE_ID.analyzer,
-        target: ENVELOPE_TARGET.event,
+        target: 'event' as const,
         action: ENVELOPE_ACTION.feedbackIssuesDetected,
         traceId: `feedback-${symbol}-${Date.now()}`,
         timestamp: Date.now(),
@@ -343,7 +380,16 @@ export class FeedbackOrchestrator {
   async checkAllStocks(): Promise<Record<string, FeedbackResult>> {
     logger.info('[FeedbackOrchestrator] 开始检查所有股票')
 
-    const stocks = await dataLayer.stocks.list()
+    const stocksResult = await dataBridge.query<Stock[]>({
+      action: ENVELOPE_ACTION.queryList,
+      store: STORE_NAME.stocks,
+      source: MODULE_ID.system,
+    })
+    if (!stocksResult.success || !stocksResult.data) {
+      logger.warn('[FeedbackOrchestrator] 批量检查失败: 无法获取股票列表', { error: stocksResult.error })
+      return {}
+    }
+    const stocks = stocksResult.data
     const results: Record<string, FeedbackResult> = {}
 
     for (const stock of stocks) {
@@ -367,3 +413,9 @@ export class FeedbackOrchestrator {
  * feedbackOrchestrator
  */
 export const feedbackOrchestrator = new FeedbackOrchestrator()
+
+export type FeedbackServices = V6ScoreService & FetcherService
+
+export interface FeedbackOrchestratorOptions {
+  services?: FeedbackServices
+}

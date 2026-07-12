@@ -126,6 +126,24 @@ export const MIGRATIONS: readonly Migration[] = [
       }
     },
   },
+  // ── v28 workflow 4 表版本标记（WorkflowServer 数据冗余） ──
+  // store 本身由 createSchema 创建；此处仅记录版本标记
+  {
+    version: 28,
+    name: 'seed_workflow_stores_tracker',
+    up({ tx }) {
+      if (!tx) return
+      if (tx.db.objectStoreNames.contains(STORE_NAME.schemaMigrations)) {
+        const tracker = tx.objectStore(STORE_NAME.schemaMigrations)
+        tracker.put({
+          id: 'workflow_stores_initialized',
+          version: 28,
+          appliedAt: Date.now(),
+          note: 'workflow_defs/schedules/triggers/runs stores created by createSchema (baseline)',
+        })
+      }
+    },
+  },
   // ── v27 trace_records 表版本标记 ──
   // store 本身由 createSchema 创建；此处仅记录版本标记
   {

@@ -130,9 +130,10 @@ describe('IndustryScorePage', () => {
       useIndustryScoreStore.setState({ loading: true })
     })
 
-    const btn = screen.getByRole('button', { name: '评分中...' })
-    expect(btn).toBeInTheDocument()
-    expect(btn).toBeDisabled()
+    const btns = screen.getAllByRole('button', { name: '评分中...' })
+    expect(btns.length).toBeGreaterThan(0)
+    expect(btns[0]).toBeInTheDocument()
+    expect(btns[0]).toBeDisabled()
   })
 
   // ================================================================

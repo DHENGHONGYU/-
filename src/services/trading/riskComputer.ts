@@ -11,7 +11,7 @@
 
 import type { SymbolTradePair, PositionItem } from './positionComputer'
 import type { PnLSummary } from './pnlComputer'
-import { TRADING_DAYS_PER_YEAR, VAR_95_Z_SCORE } from '@/config/mathConstants'
+import { TRADING_DAYS_PER_YEAR, VAR_95_Z_SCORE } from '@/constants/math.constants'
 import { RISK_THRESHOLDS } from '@/config/thresholds'
 
 // ============================================================

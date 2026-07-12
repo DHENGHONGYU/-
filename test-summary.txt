@@ -1,5 +1,0 @@
-﻿
-[2m   Duration [22m 114.17s[2m (transform 68.97s, setup 255.41s, collect 126
-.96s, tests 169.78s, environment 761.80s, prepare 108.62s)[22m
-
-

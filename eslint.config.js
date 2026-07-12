@@ -45,6 +45,10 @@ export default tseslint.config(
       'no-unused-expressions': ['warn', { allowShortCircuit: true, allowTernary: true }],
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'no-hardcoded-colors/no-hardcoded-tailwind-colors': 'warn',
+      'no-debugger': 'error',
+      'no-eval': 'error',
+      'no-with': 'error',
+      'no-implied-eval': 'error',
     },
   },
   tseslint.config(

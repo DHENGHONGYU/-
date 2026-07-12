@@ -1,1 +1,0 @@
-import{s as o,g as s}from"./index-BxngZjDM.js";const a=s();function g(t,e){try{o.emit(t,e)}catch(r){a.error(`[withBroadcast] emit failed: event="${t}", error=${r instanceof Error?r.message:String(r)}`)}}export{g as w};

@@ -1,2 +1,0 @@
-function i(t,n=0){if(t==null||t==="")return n;const r=Number(t);return Number.isFinite(r)?r:n}function o(t){if(t==null||t==="")return;const n=Number(t);return Number.isFinite(n)?n:void 0}function f(t,n=""){return t==null?n:typeof t=="string"?t:typeof t=="number"||typeof t=="boolean"||typeof t=="bigint"||typeof t=="symbol"?t.toString():String(t)}export{o as a,i as b,f as t};
-//# sourceMappingURL=safeCoerce-B1mLvn4L.js.map

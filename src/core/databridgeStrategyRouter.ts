@@ -13,16 +13,37 @@ import { ENVELOPE_ACTION } from '@/config/dbConfig'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { eventBus } from '@/lib/eventBus'
 import { getLogger } from '@/lib/logger'
-import { analyze as analyzeHotSector, type HotSectorAnalyzerInput } from '@/services/scoring/hotSectorAnalyzer'
-import { detect as detectRotation, type RotationSignalInput } from '@/services/scoring/rotationSignalDetector'
-import { analyze as analyzeValuePit, type ValuePitAnalyzerInput } from '@/services/scoring/valuePitAnalyzer'
+import type { 
+  HotSectorAnalyzerInput, 
+  RotationSignalInput, 
+  ValuePitAnalyzerInput,
+  StrategyAnalyzers,
+  HotSectorScore,
+  RotationSignal,
+  ValuePitScore,
+} from '@/types/modules/strategy.types'
 import { EnvelopeError, type StandardEnvelope } from './envelope'
 
 const logger = getLogger()
 
+let injectedAnalyzers: StrategyAnalyzers | undefined
+
 /**
- * 信封回调类型（与 DataBridge 内部保持一致）
+ * 注入策略分析器实例。
+ * @param analyzers 策略分析器集合
  */
+export function setStrategyAnalyzers(analyzers: StrategyAnalyzers): void {
+  injectedAnalyzers = analyzers
+  logger.info('[databridgeStrategyRouter] 策略分析器已注入')
+}
+
+function getAnalyzers(): StrategyAnalyzers {
+  if (!injectedAnalyzers) {
+    throw new Error('StrategyAnalyzers 未注入，请在启动时调用 setStrategyAnalyzers')
+  }
+  return injectedAnalyzers
+}
+
 type EnvelopeCallback = (envelope: StandardEnvelope) => void
 
 /**
@@ -122,8 +143,9 @@ function handleHotSectorRefresh(
     logger.info(`[DataBridge] HotSector refresh: 输入数量=${inputs.length}, 板块列表=[${inputs.map((i) => i.symbol).join(', ')}]`)
 
     // ===== 2. 逐板块评分 =====
-    const scores = inputs.map((input) => {
-      const score = analyzeHotSector(input)
+    const analyzers = getAnalyzers()
+    const scores: HotSectorScore[] = inputs.map((input) => {
+      const score = analyzers.analyzeHotSector(input)
       logger.info(
         `[DataBridge] HotSector: ${input.symbol} ` +
         `momentum=${score.dimensions.momentum.toFixed(2)} ` +
@@ -191,8 +213,9 @@ function handleValuePitRefresh(
     logger.info(`[DataBridge] ValuePit refresh: 输入数量=${inputs.length}, 板块列表=[${inputs.map((i) => i.symbol).join(', ')}]`)
 
     // ===== 2. 逐板块评分 =====
-    const scores = inputs.map((input) => {
-      const score = analyzeValuePit(input)
+    const analyzers = getAnalyzers()
+    const scores: ValuePitScore[] = inputs.map((input) => {
+      const score = analyzers.analyzeValuePit(input)
       logger.info(
         `[DataBridge] ValuePit: ${input.symbol} ` +
         `catalyst=${score.dimensions.catalyst.toFixed(2)} ` +
@@ -267,8 +290,9 @@ function handleRotationSignalDetect(
     )
 
     // ===== 2. 逐板块检测 =====
-    const signals = inputs.map((input) => {
-      const signal = detectRotation(input)
+    const analyzers = getAnalyzers()
+    const signals: RotationSignal[] = inputs.map((input) => {
+      const signal = analyzers.detectRotation(input)
       logger.info(
         `[DataBridge] RotationSignal: ${input.sectorId} ` +
         `volumeBreakthrough=${signal.conditions.volumeBreakthrough} ` +
@@ -312,4 +336,10 @@ function handleRotationSignalDetect(
     logger.error(`[DataBridge] RotationSignal detect 失败`, { error: err })
     throw err
   }
+}
+
+export type { StrategyAnalyzers } from '@/types/modules/strategy.types'
+
+export interface StrategyRouterOptions {
+  analyzers?: StrategyAnalyzers
 }

@@ -72,7 +72,7 @@ export interface AclAlertEvent {
   /** 告警描述 */
   readonly description: string
   /** 最近一次匹配的 caller */
-  readonly lastCaller: McpCallerRole | string
+  readonly lastCaller: McpCallerRole
   /** 最近一次匹配的 Server */
   readonly lastServer: string
   /** 最近一次匹配的 Tool/Resource */

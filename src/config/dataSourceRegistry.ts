@@ -50,13 +50,13 @@ export const DATA_SOURCE_ENDPOINTS: DataSourceEndpoint[] = [
     name: '网易财经',
     type: 'http',
     baseUrl: NETEASE_API_BASE,
-    timeoutMs: 10000,
-    retries: 2,
-    enabled: true,
+    timeoutMs: 3000,
+    retries: 1,
+    enabled: false,
     supportsQuote: false,
     supportsKline: true,
     requiresProxy: true,
-    description: '历史 K 线数据（浏览器 CORS 需代理）',
+    description: '历史 K 线（已不可用，DNS 不可达）',
   },
   {
     id: 'akshare',
@@ -101,9 +101,9 @@ export const DEFAULT_QUOTE_PRIORITY: SourcePriorityItem[] = [
   { id: 'mock', priority: 4, enabled: true },
 ]
 
-/** 默认 K 线数据源优先级（等价于旧硬编码链：网易 → Mock） */
+/** 默认 K 线数据源优先级（网易已不可用 DNS 不可达，退回 Mock） */
 export const DEFAULT_KLINE_PRIORITY: SourcePriorityItem[] = [
-  { id: 'netease', priority: 1, enabled: true },
+  { id: 'netease', priority: 1, enabled: false },
   { id: 'mock', priority: 2, enabled: true },
 ]
 

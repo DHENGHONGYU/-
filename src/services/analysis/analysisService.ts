@@ -1,4 +1,5 @@
-import { dataLayer } from '@/data/dataLayer'
+import { dataBridge } from '@/core/databridge'
+import { ENVELOPE_ACTION, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
 import type { DataLayerResult, Stock, V6Score } from '@/data/types'
 
 /**
@@ -6,8 +7,15 @@ import type { DataLayerResult, Stock, V6Score } from '@/data/types'
  */
 export async function listStocks(): Promise<DataLayerResult<Stock[]>> {
   try {
-    const list = await dataLayer.stocks.list()
-    return { success: true, data: list }
+    const result = await dataBridge.query<Stock[]>({
+      action: ENVELOPE_ACTION.queryList,
+      store: STORE_NAME.stocks,
+      source: MODULE_ID.analyzer,
+    })
+    if (!result.success) {
+      return { success: false, error: result.error }
+    }
+    return { success: true, data: result.data ?? [] }
   } catch (err) {
     return {
       success: false,
@@ -21,8 +29,15 @@ export async function listStocks(): Promise<DataLayerResult<Stock[]>> {
  */
 export async function listV6Scores(): Promise<DataLayerResult<V6Score[]>> {
   try {
-    const list = await dataLayer.v6Scores.list()
-    return { success: true, data: list }
+    const result = await dataBridge.query<V6Score[]>({
+      action: ENVELOPE_ACTION.queryList,
+      store: STORE_NAME.v6Scores,
+      source: MODULE_ID.analyzer,
+    })
+    if (!result.success) {
+      return { success: false, error: result.error }
+    }
+    return { success: true, data: result.data ?? [] }
   } catch (err) {
     return {
       success: false,

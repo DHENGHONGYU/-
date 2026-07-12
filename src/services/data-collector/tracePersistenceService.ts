@@ -90,7 +90,10 @@ export async function queryTraceRecords(options: QueryTracesOptions = {}): Promi
       .sort((a, b) => b.startedAt - a.startedAt)
       .slice(0, limit)
 
-    return filtered.map(({ persistedAt, ...span }) => span)
+    return filtered.map((record) => {
+      const { persistedAt, ...span } = record
+      return span
+    })
   } catch (err) {
     const error = err instanceof Error ? err.message : String(err)
     logger.error('[tracePersistenceService] 查询 trace 失败', { error })

@@ -101,7 +101,7 @@ console.log(`${LOG_PREFIX} [P1-FIX] 智能评分导航：侧边栏按钮实际�
 
 ## 四、PortalShell 日志埋点增强
 
-[PortalShell.tsx](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/portal/PortalShell.tsx) 中新增 3 处关键日志：
+[PortalShell.tsx](../../src/portal/PortalShell.tsx) 中新增 3 处关键日志：
 
 ### 4.1 Hub 页面重定向日志（L248-261）
 
@@ -173,7 +173,7 @@ useEffect(() => {
 
 ## 五、回归单元测试架构
 
-[`tests/__tests__/regression/p1-fix-regression.test.ts`](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/tests/__tests__/regression/p1-fix-regression.test.ts) — 70 个测试，8 个套件：
+[`tests/__tests__/regression/p1-fix-regression.test.ts`](../../tests/__tests__/regression/p1-fix-regression.test.ts) — 70 个测试，8 个套件：
 
 | 测试套件 | 用例数 | 覆盖内容 |
 |----------|--------|---------|

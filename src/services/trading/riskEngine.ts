@@ -1,6 +1,8 @@
 import { getEffectiveTradingConfig } from '@/config/tradingConfig'
 import type { SignalDirection } from '@/config/tradingConfig'
-import { dataLayer } from '@/data/dataLayer'
+import { dataBridge } from '@/core/databridge'
+import { ENVELOPE_ACTION, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
+import type { Order } from '@/data/types'
 import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
@@ -68,7 +70,13 @@ export async function checkOrderRisk(input: OrderRiskInput): Promise<RiskCheckRe
   const normalized = input.symbol.trim().toUpperCase()
 
   // 1. 行情数据新鲜度
-  const quotes = await dataLayer.dailyQuotes.get(normalized)
+  const quotesResult = await dataBridge.query<{ updatedAt: number }>({
+    action: ENVELOPE_ACTION.queryGet,
+    store: STORE_NAME.dailyQuotes,
+    key: normalized,
+    source: MODULE_ID.trading,
+  })
+  const quotes = quotesResult.success && quotesResult.data ? quotesResult.data : undefined
   if (!quotes?.updatedAt) {
     blocks.push('无有效行情数据')
   } else if (!isWithinHours(quotes.updatedAt, risk.dataFreshnessHours)) {
@@ -76,7 +84,12 @@ export async function checkOrderRisk(input: OrderRiskInput): Promise<RiskCheckRe
   }
 
   // 2. 同标的冷却期
-  const orders = await dataLayer.orders.list()
+  const ordersResult = await dataBridge.query<Order[]>({
+    action: ENVELOPE_ACTION.queryList,
+    store: STORE_NAME.orders,
+    source: MODULE_ID.trading,
+  })
+  const orders = ordersResult.success && ordersResult.data ? ordersResult.data : []
 
   // 检测 createdAt 缺失的订单
   const missingCreatedAtOrders = orders.filter((o) => o.symbol === normalized && o.createdAt == null)

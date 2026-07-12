@@ -4,7 +4,8 @@
  * 负责从 dataLayer + unifiedStockService 加载股票、执行条件组筛选、生成 CSV。
  */
 
-import { dataLayer } from '@/data/dataLayer'
+import { dataBridge } from '@/core/databridge'
+import { ENVELOPE_ACTION, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
 import { getUnifiedStockViews } from '@/services/unifiedStockService'
 import { getLogger } from '@/lib/logger'
 import type {
@@ -83,7 +84,12 @@ function evaluateGroup(stock: ScreenableStockData, group: ScreeningConditionGrou
 export async function loadScreenableStocks(): Promise<ScreenableStockData[]> {
   logger.info('[multiFactorScreeningEngine] 开始加载可筛选股票池')
 
-  const stocks = await dataLayer.stocks.list()
+  const stocksResult = await dataBridge.query<{ symbol: string }[]>({
+    action: ENVELOPE_ACTION.queryList,
+    store: STORE_NAME.stocks,
+    source: MODULE_ID.analyzer,
+  })
+  const stocks = stocksResult.success && stocksResult.data ? stocksResult.data : []
   if (stocks.length === 0) {
     logger.info('[multiFactorScreeningEngine] 股票池为空')
     return []

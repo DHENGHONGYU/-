@@ -64,21 +64,19 @@ describe('SectorHeatmapWidget', () => {
     const { container } = render(<SectorHeatmapWidget config={buildConfig()} />)
 
     expect(screen.getByText('板块热力图')).toBeInTheDocument()
-    // skeleton 应包含 bg-muted 类
-    const skeletons = container.querySelectorAll('.bg-muted')
+    // skeleton 应包含 bg-gray-100 类（THEME_TOKENS.color.mutedBackground）
+    const skeletons = container.querySelectorAll('.bg-gray-100')
     expect(skeletons.length).toBeGreaterThan(0)
   })
 
   it('renders empty heatmap when sectors array is empty', () => {
     mockUseMarketData.mockReturnValue(withData([]))
 
-    const { container } = render(<SectorHeatmapWidget config={buildConfig()} />)
+    render(<SectorHeatmapWidget config={buildConfig()} />)
 
     expect(screen.getByText('板块热力图')).toBeInTheDocument()
-    expect(screen.queryByText('领涨 Top5')).toBeInTheDocument()
-    expect(screen.queryByText('领跌 Top5')).toBeInTheDocument()
-    const topGainerSection = container.querySelectorAll('.grid.grid-cols-2')[0]
-    expect(topGainerSection).toBeDefined()
+    // 空数据时 WidgetStateShell 渲染 Empty 状态，不渲染排行榜内容
+    expect(screen.getByText('暂无数据')).toBeInTheDocument()
   })
 
   // ----------------------------------------------------------

@@ -14,7 +14,7 @@ import { DataState } from '@/components/molecules/DataState'
 import { ScoreRadar } from '@/components/chart/ScoreRadar'
 import { FactorHeatmap, type FactorHeatmapData } from '@/components/chart/FactorHeatmap'
 import { ScoreFactorWaterfall } from '@/components/organisms/analysis/score/ScoreFactorWaterfall'
-import { sanitizeLlmOutput } from '@/utils/xssSanitizer'
+import { sanitizeLlmOutput } from '@/lib/xssSanitizer'
 import type { IntelligentScore } from '@/data/types'
 import {
   INTELLIGENT_SCORE_EXPLANATION_CONFIG,

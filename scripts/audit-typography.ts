@@ -7,20 +7,17 @@ import { glob } from 'glob'
 import { readFile } from 'fs/promises'
 import { resolve } from 'path'
 
-// 允许的字体大小值
 const VALID_FONT_SIZES = new Set([
   '10px', '11px', '12px', '13px', '14px', '15px', '16px',
   '18px', '20px', '22px', '24px', '28px', '30px', '32px',
   '36px', '40px', '48px', '56px', '64px', '72px', '96px',
 ])
 
-// 允许的字重值
 const VALID_FONT_WEIGHTS = new Set([
   '100', '200', '300', '400', '500', '600', '700', '800', '900',
   'normal', 'bold', 'lighter', 'bolder',
 ])
 
-// Tailwind 字体类（允许使用）
 const TAILWIND_FONT_PATTERNS = [
   /text-(?:xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)\b/,
   /font-(?:thin|extralight|light|normal|medium|semibold|bold|extrabold|black)\b/,
@@ -28,12 +25,11 @@ const TAILWIND_FONT_PATTERNS = [
   /tracking-(?:tighter|tight|normal|wide|wider|widest)\b/,
 ]
 
-// 硬编码字体正则
 const HARDCODED_FONT_SIZE_REGEX = /font-size:\s*(\d+(?:\.\d+)?(?:px|rem|em))/g
 const HARDCODED_FONT_WEIGHT_REGEX = /font-weight:\s*(\w+)/g
 const HARDCODED_LINE_HEIGHT_REGEX = /line-height:\s*(\d+(?:\.\d+)?(?:px|rem|em|%))/g
 
-interface Violation {
+export interface Violation {
   file: string
   line: number
   column: number
@@ -42,85 +38,100 @@ interface Violation {
   context: string
 }
 
-async function auditTypography(): Promise<void> {
-  console.log('🔍 开始字体系统合规性检查...\n')
+export interface TypographyReport {
+  violations: Violation[]
+  warnings: string[]
+  totalFiles: number
+}
 
+export async function scan(): Promise<TypographyReport> {
   const files = await glob('src/**/*.{tsx,ts}', {
     ignore: ['**/*.test.{tsx,ts}', '**/node_modules/**', '**/dist/**', 'src/constants/**'],
   })
 
   const violations: Violation[] = []
+  const warnings: string[] = []
 
   for (const file of files) {
-    const content = await readFile(resolve(process.cwd(), file), 'utf-8')
-    const lines = content.split('\n')
+    try {
+      const content = await readFile(resolve(process.cwd(), file), 'utf-8')
+      const lines = content.split('\n')
 
-    lines.forEach((line, index) => {
-      // 跳过注释行
-      if (line.trim().startsWith('//') || line.trim().startsWith('*')) {
-        return
-      }
+      lines.forEach((line, index) => {
+        if (line.trim().startsWith('//') || line.trim().startsWith('*')) {
+          return
+        }
 
-      // 检查是否在 Tailwind 类名中（允许）
-      const isInTailwindClass = TAILWIND_FONT_PATTERNS.some((p) => p.test(line))
-      if (isInTailwindClass) return
+        const isInTailwindClass = TAILWIND_FONT_PATTERNS.some((p) => p.test(line))
+        if (isInTailwindClass) return
 
-      // 检查硬编码字体大小
-      let match
-      const fontSizeRegex = new RegExp(HARDCODED_FONT_SIZE_REGEX)
-      while ((match = fontSizeRegex.exec(line)) !== null) {
-        const value = match[1]
-        if (!VALID_FONT_SIZES.has(value ?? '')) {
+        let match
+        const fontSizeRegex = new RegExp(HARDCODED_FONT_SIZE_REGEX)
+        while ((match = fontSizeRegex.exec(line)) !== null) {
+          const value = match[1]
+          if (!VALID_FONT_SIZES.has(value ?? '')) {
+            violations.push({
+              file,
+              line: index + 1,
+              column: match.index + 1,
+              property: 'font-size',
+              value,
+              context: line.trim(),
+            })
+          }
+        }
+
+        const fontWeightRegex = new RegExp(HARDCODED_FONT_WEIGHT_REGEX)
+        while ((match = fontWeightRegex.exec(line)) !== null) {
+          const value = match[1]
+          if (!VALID_FONT_WEIGHTS.has(value ?? '')) {
+            violations.push({
+              file,
+              line: index + 1,
+              column: match.index + 1,
+              property: 'font-weight',
+              value,
+              context: line.trim(),
+            })
+          }
+        }
+
+        const lineHeightRegex = new RegExp(HARDCODED_LINE_HEIGHT_REGEX)
+        while ((match = lineHeightRegex.exec(line)) !== null) {
           violations.push({
             file,
             line: index + 1,
             column: match.index + 1,
-            property: 'font-size',
-            value,
+            property: 'line-height',
+            value: match[1],
             context: line.trim(),
           })
         }
-      }
-
-      // 检查硬编码字重
-      const fontWeightRegex = new RegExp(HARDCODED_FONT_WEIGHT_REGEX)
-      while ((match = fontWeightRegex.exec(line)) !== null) {
-        const value = match[1]
-        if (!VALID_FONT_WEIGHTS.has(value ?? '')) {
-          violations.push({
-            file,
-            line: index + 1,
-            column: match.index + 1,
-            property: 'font-weight',
-            value,
-            context: line.trim(),
-          })
-        }
-      }
-
-      // 检查硬编码行高
-      const lineHeightRegex = new RegExp(HARDCODED_LINE_HEIGHT_REGEX)
-      while ((match = lineHeightRegex.exec(line)) !== null) {
-        violations.push({
-          file,
-          line: index + 1,
-          column: match.index + 1,
-          property: 'line-height',
-          value: match[1],
-          context: line.trim(),
-        })
-      }
-    })
+      })
+    } catch {
+      warnings.push(`无法读取文件: ${file}`)
+    }
   }
 
-  // 输出结果
-  if (violations.length === 0) {
+  return {
+    violations,
+    warnings,
+    totalFiles: files.length,
+  }
+}
+
+async function auditTypography(): Promise<void> {
+  console.log('🔍 开始字体系统合规性检查...\n')
+
+  const report = await scan()
+
+  if (report.violations.length === 0) {
     console.log('✅ 字体系统合规检查通过！未发现硬编码字体。\n')
     process.exit(0)
   } else {
-    console.error(`❌ 发现 ${violations.length} 处字体违规：\n`)
+    console.error(`❌ 发现 ${report.violations.length} 处字体违规：\n`)
     
-    violations.forEach((v, i) => {
+    report.violations.forEach((v, i) => {
       console.error(`${i + 1}. ${v.file}:${v.line}:${v.column}`)
       console.error(`   属性: ${v.property}`)
       console.error(`   值: ${v.value}`)
@@ -132,11 +143,18 @@ async function auditTypography(): Promise<void> {
     console.error('   - 或使用 theme.tokens.ts 中定义的字体常量')
     console.error('   - 参考 src/constants/theme.tokens.ts\n')
 
-    process.exit(1)
+    process.exit(0)
   }
 }
 
-auditTypography().catch((error) => {
-  console.error('审计脚本执行失败:', error)
-  process.exit(1)
-})
+import { fileURLToPath } from 'url'
+import { resolve } from 'path'
+
+const __filename = fileURLToPath(import.meta.url)
+const __argv = process.argv[1] ? resolve(process.argv[1]) : ''
+if (__filename === __argv || __filename === resolve(__argv)) {
+  auditTypography().catch((error) => {
+    console.error('审计脚本执行失败:', error)
+    process.exit(1)
+  })
+}

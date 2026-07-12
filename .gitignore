@@ -24,6 +24,9 @@ logs
 .vscode
 .idea
 
+# ESLint 缓存
+.eslintcache
+
 # OS
 .DS_Store
 Thumbs.db
@@ -40,6 +43,9 @@ screenshots/
 
 # Temporary files
 temp/
+
+# 工作产物输出目录（AI 测试/治理产物，不入 VCS）
+/outputs/
 
 # Verification artifacts (generated during this remediation)
 *.report.md
@@ -110,7 +116,9 @@ __pycache__/
 # Script-generated outputs
 /scripts/component-audit-report.txt
 /scripts/component-audit-data.json
-NUL
+
+# Source-generated artifacts (rebuilt by npm run generate:tokens during prebuild)
+src/generated/
 
 # --- 2026-07-08 补充：排除构建/测试噪声，保持版本库整洁 ---
 # Vite 临时配置快照（dev/build 时生成，可重建）
@@ -134,3 +142,34 @@ checklist_record.json
 
 # Agent 工作日志（保留 .workbuddy/memory 与 .workbuddy/skills 纳入版本控制）
 .workbuddy/*.log
+
+# --- 2026-07-12 文档治理整改（P1）补充 ---
+# 自动产物（报告/审计 HTML，由 npm run audit:* / build:health 生成，不入 VCS）
+docs/reports/
+
+# 发布包 / 压缩归档（根级散落已迁 releases/）
+releases/
+*.zip
+
+# 独立工具子包（原根级 file-management-system/，建议后续抽子仓）
+tools/file-management-system/
+
+# 资产归档（articles 已迁 docs/assets/articles，按需保留或忽略）
+# docs/assets/articles/
+
+# --- 2026-07-12 文件治理整改（去重与整理）补充 ---
+# 集中存放一次性生成物 / 治理备份（由治理脚本创建，不入 VCS）
+build-artifacts/
+
+# 之前遗漏、会被误提交的构建 / 测试快照
+/dist-test/
+/dist-verify/
+/coverage_cmd/
+/e2e-test-report/
+
+# 根级散落审计 / 日志 / 报告产物（可重建，不入 VCS）
+/lint_output.txt
+/nested-code-review-report.json
+/complexity-plan2.json
+/audit-*.txt
+/split-output.txt

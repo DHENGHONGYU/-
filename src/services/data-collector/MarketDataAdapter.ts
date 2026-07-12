@@ -121,6 +121,11 @@ export class MarketDataAdapter {
   // 私有适配方法（原有）
   // ============================================================
 
+  /**
+   * 适配指数数据，支持 code/symbol、name/shortName、price/value/current 等字段别名。
+   * @param payload 原始指数数据（数组）
+   * @returns 标准化后的 MarketIndexData[]
+   */
   private adaptIndices(payload: unknown): MarketIndexData[] {
     if (!Array.isArray(payload)) {
       logger.warn('[MarketDataAdapter] indices payload 不是数组')
@@ -139,6 +144,11 @@ export class MarketDataAdapter {
     }))
   }
 
+  /**
+   * 适配板块数据，支持 name/sectorName、code/sectorCode 等字段别名。
+   * @param payload 原始板块数据（数组）
+   * @returns 标准化后的 SectorHeatmapData[]
+   */
   private adaptSectors(payload: unknown): SectorHeatmapData[] {
     if (!Array.isArray(payload)) {
       logger.warn('[MarketDataAdapter] sectors payload 不是数组')
@@ -153,6 +163,11 @@ export class MarketDataAdapter {
     }))
   }
 
+  /**
+   * 适配资金流向数据，自动映射 FUND_FLOW_NAMES 名称。
+   * @param payload 原始资金流向数据（数组）
+   * @returns 标准化后的 FundFlowData[]
+   */
   private adaptFundFlows(payload: unknown): FundFlowData[] {
     if (!Array.isArray(payload)) {
       logger.warn('[MarketDataAdapter] fundFlows payload 不是数组')
@@ -167,6 +182,11 @@ export class MarketDataAdapter {
     }))
   }
 
+  /**
+   * 适配市场情绪数据，支持 fearGreedIndex/fgi 等字段别名；异常时回退默认值。
+   * @param payload 原始市场情绪数据
+   * @returns 标准化后的 SentimentData
+   */
   private adaptSentiment(payload: unknown): SentimentData {
     if (!payload || typeof payload !== 'object') {
       logger.warn('[MarketDataAdapter] sentiment payload 不是对象')
@@ -187,6 +207,11 @@ export class MarketDataAdapter {
     }
   }
 
+  /**
+   * 适配自选股数据，支持 name/stockName、price/currentPrice 等字段别名。
+   * @param payload 原始自选股数据（数组）
+   * @returns 标准化后的 WatchlistData[]
+   */
   private adaptWatchlist(payload: unknown): WatchlistData[] {
     if (!Array.isArray(payload)) {
       logger.warn('[MarketDataAdapter] watchlist payload 不是数组')
@@ -201,6 +226,11 @@ export class MarketDataAdapter {
     }))
   }
 
+  /**
+   * 适配持仓概览数据，支持 totalAssets/total_assets 等字段别名；异常时回退默认值。
+   * @param payload 原始持仓概览数据
+   * @returns 标准化后的 PortfolioData
+   */
   private adaptPortfolio(payload: unknown): PortfolioData {
     if (!payload || typeof payload !== 'object') {
       logger.warn('[MarketDataAdapter] portfolio payload 不是对象')
@@ -222,6 +252,11 @@ export class MarketDataAdapter {
     }
   }
 
+  /**
+   * 适配交易复盘数据，支持 winRate/win_rate/winPct 等字段别名；异常时回退默认值。
+   * @param payload 原始交易复盘数据
+   * @returns 标准化后的 TradeReviewData
+   */
   private adaptTradeReview(payload: unknown): TradeReviewData {
     if (!payload || typeof payload !== 'object') {
       logger.warn('[MarketDataAdapter] tradeReview payload 不是对象')
@@ -262,6 +297,11 @@ export class MarketDataAdapter {
     }
   }
 
+  /**
+   * 适配投资画像数据，包含 tags 与 metrics 字段。
+   * @param payload 原始画像数据
+   * @returns 标准化后的 AnalysisScores['profile']
+   */
   private adaptProfile(payload: unknown): AnalysisScores['profile'] {
     if (!payload || typeof payload !== 'object') {
       return { tags: [], metrics: [] }
@@ -281,6 +321,11 @@ export class MarketDataAdapter {
     }
   }
 
+  /**
+   * 适配 KAI 评分数据，支持 totalScore/total_score/score 等字段别名；异常时回退默认值。
+   * @param payload 原始 KAI 评分数据
+   * @returns 标准化后的 AnalysisScores['kai']
+   */
   private adaptKaiScore(payload: unknown): AnalysisScores['kai'] {
     if (!payload || typeof payload !== 'object') {
       return this.getDefaultAnalysisScores().kai
@@ -337,6 +382,11 @@ export class MarketDataAdapter {
     }
   }
 
+  /**
+   * 适配单个模型信息，包含 id、name、version、score 字段。
+   * @param payload 原始模型信息
+   * @returns 标准化后的 ModelComparison['leftModel']
+   */
   private adaptModelInfo(payload: unknown): ModelComparison['leftModel'] {
     if (!payload || typeof payload !== 'object') {
       return { id: '', name: '', version: '', score: 0 }
@@ -371,6 +421,11 @@ export class MarketDataAdapter {
     }
   }
 
+  /**
+   * 适配单个股票池条目，支持 code/symbol、name/stockName 等字段别名。
+   * @param item 单个股票池原始条目
+   * @returns 标准化后的 StockPoolItem
+   */
   private adaptStockPoolItem(item: unknown): StockPoolItem {
     const it = item as Record<string, unknown>
     return {
@@ -404,6 +459,11 @@ export class MarketDataAdapter {
     }
   }
 
+  /**
+   * 适配单条聊天消息，支持 id、role、content、timestamp/ts 等字段别名。
+   * @param item 单条原始消息
+   * @returns 标准化后的 ChatMessage
+   */
   private adaptChatMessage(item: unknown): ChatMessage {
     const it = item as Record<string, unknown>
     return {
@@ -418,6 +478,10 @@ export class MarketDataAdapter {
   // 默认值方法
   // ============================================================
 
+  /**
+   * 获取市场情绪默认值，fearGreedIndex=50（中性）。
+   * @returns 默认 SentimentData
+   */
   private getDefaultSentiment(): SentimentData {
     return {
       fearGreedIndex: 50,
@@ -431,6 +495,10 @@ export class MarketDataAdapter {
     }
   }
 
+  /**
+   * 获取持仓概览默认值，资产相关字段为 '0'，列表为空数组。
+   * @returns 默认 PortfolioData
+   */
   private getDefaultPortfolio(): PortfolioData {
     return {
       totalAssets: '0',
@@ -445,6 +513,10 @@ export class MarketDataAdapter {
     }
   }
 
+  /**
+   * 获取交易复盘默认值，所有数值字段为 0。
+   * @returns 默认 TradeReviewData
+   */
   private getDefaultTradeReview(): TradeReviewData {
     return {
       totalTrades: 0,
@@ -456,6 +528,10 @@ export class MarketDataAdapter {
     }
   }
 
+  /**
+   * 获取分析评分默认值，profile 为空、kai 评分为 0。
+   * @returns 默认 AnalysisScores
+   */
   private getDefaultAnalysisScores(): AnalysisScores {
     return {
       profile: { tags: [], metrics: [] },
@@ -470,6 +546,10 @@ export class MarketDataAdapter {
     }
   }
 
+  /**
+   * 获取模型对比默认值，左右模型信息为空。
+   * @returns 默认 ModelComparison
+   */
   private getDefaultModelComparison(): ModelComparison {
     return {
       leftModel: { id: '', name: '', version: '', score: 0 },
@@ -479,6 +559,10 @@ export class MarketDataAdapter {
     }
   }
 
+  /**
+   * 获取股票池默认值，股票列表为空、页码为 1、每页大小为 10。
+   * @returns 默认 StockPool
+   */
   private getDefaultStockPool(): StockPool {
     return {
       stocks: [],
@@ -488,6 +572,10 @@ export class MarketDataAdapter {
     }
   }
 
+  /**
+   * 获取聊天历史默认值，目标为空、目标类型为 'stock'。
+   * @returns 默认 ChatHistory
+   */
   private getDefaultChatHistory(): ChatHistory {
     return {
       target: '',
@@ -496,6 +584,11 @@ export class MarketDataAdapter {
     }
   }
 
+  /**
+   * 适配热门板块数据，包含四维评分及计算后的综合维度分。
+   * @param payload 原始热门板块数据（数组）
+   * @returns 标准化后的 HotSectorData[]
+   */
   private adaptHotSectors(payload: unknown): HotSectorData[] {
     if (!Array.isArray(payload)) {
       logger.warn('[MarketDataAdapter] hotSectors payload 不是数组')
@@ -522,6 +615,11 @@ export class MarketDataAdapter {
     })
   }
 
+  /**
+   * 适配价值洼地数据，包含五维评分及计算后的综合维度分。
+   * @param payload 原始价值洼地数据（数组）
+   * @returns 标准化后的 ValuePitData[]
+   */
   private adaptValuePit(payload: unknown): ValuePitData[] {
     if (!Array.isArray(payload)) {
       logger.warn('[MarketDataAdapter] valuePit payload 不是数组')

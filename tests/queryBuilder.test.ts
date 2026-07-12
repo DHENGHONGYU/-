@@ -121,12 +121,20 @@ describe('QueryBuilder', () => {
     qb = new QueryBuilder()
   })
 
+  function unwrap<T>(result: { ok: boolean; value?: T; error?: unknown }): T {
+    expect(result.ok).toBe(true)
+    expect(result.value).toBeDefined()
+    return result.value as T
+  }
+
   it('应该query stock with basic and v6Score dimensions', async () => {
-    const result = await qb.queryStock({
-      symbol: '000001.SZ',
-      includeBasic: true,
-      includeV6Score: true,
-    })
+    const result = unwrap(
+      await qb.queryStock({
+        symbol: '000001.SZ',
+        includeBasic: true,
+        includeV6Score: true,
+      }),
+    )
     expect(result.stock).toBeDefined()
     expect(result.stock!.symbol).toBe('000001.SZ')
     expect(result.stock!.name).toBe('平安银行')
@@ -137,10 +145,12 @@ describe('QueryBuilder', () => {
   })
 
   it('应该返回 undefined for unrequested dimensions', async () => {
-    const result = await qb.queryStock({
-      symbol: '000001.SZ',
-      includeBasic: true,
-    })
+    const result = unwrap(
+      await qb.queryStock({
+        symbol: '000001.SZ',
+        includeBasic: true,
+      }),
+    )
     expect(result.stock).toBeDefined()
     expect(result.v6Score).toBeUndefined()
     expect(result.quotes).toBeUndefined()
@@ -151,10 +161,12 @@ describe('QueryBuilder', () => {
   })
 
   it('应该query quotes dimension', async () => {
-    const result = await qb.queryStock({
-      symbol: '000001.SZ',
-      includeQuotes: true,
-    })
+    const result = unwrap(
+      await qb.queryStock({
+        symbol: '000001.SZ',
+        includeQuotes: true,
+      }),
+    )
     expect(result.quotes).toBeDefined()
     expect(result.quotes!.symbol).toBe('000001.SZ')
     expect(result.quotes!.latest.close).toBe(12.3)
@@ -162,20 +174,24 @@ describe('QueryBuilder', () => {
   })
 
   it('应该query intelligentScore dimension', async () => {
-    const result = await qb.queryStock({
-      symbol: '000001.SZ',
-      includeIntelligentScore: true,
-    })
+    const result = unwrap(
+      await qb.queryStock({
+        symbol: '000001.SZ',
+        includeIntelligentScore: true,
+      }),
+    )
     expect(result.intelligentScore).toBeDefined()
     expect(result.intelligentScore!.overallScore).toBe(82)
     expect(mockIntelligentScoresGetLatest).toHaveBeenCalledWith('000001.SZ')
   })
 
   it('应该query industryScore dimension via industryCode', async () => {
-    const result = await qb.queryStock({
-      symbol: '000001.SZ',
-      includeIndustryScore: true,
-    })
+    const result = unwrap(
+      await qb.queryStock({
+        symbol: '000001.SZ',
+        includeIndustryScore: true,
+      }),
+    )
     expect(result.industryScore).toBeDefined()
     expect(result.industryScore!.code).toBe('801780')
     expect(result.industryScore!.overallScore).toBe(75)
@@ -194,19 +210,23 @@ describe('QueryBuilder', () => {
       dataVersion: 1,
     })
 
-    const result = await qb.queryStock({
-      symbol: '000001.SZ',
-      includeIndustryScore: true,
-    })
+    const result = unwrap(
+      await qb.queryStock({
+        symbol: '000001.SZ',
+        includeIndustryScore: true,
+      }),
+    )
     expect(result.industryScore).toBeUndefined()
     expect(mockIndustryScoresGetLatest).not.toHaveBeenCalled()
   })
 
   it('应该query signals dimension', async () => {
-    const result = await qb.queryStock({
-      symbol: '000001.SZ',
-      includeSignals: true,
-    })
+    const result = unwrap(
+      await qb.queryStock({
+        symbol: '000001.SZ',
+        includeSignals: true,
+      }),
+    )
     expect(result.signals).toBeDefined()
     expect(result.signals!.length).toBe(1)
     expect((result.signals as any)[0].direction).toBe('buy')
@@ -214,10 +234,12 @@ describe('QueryBuilder', () => {
   })
 
   it('应该query news dimension via newsStockMap', async () => {
-    const result = await qb.queryStock({
-      symbol: '000001.SZ',
-      includeNews: true,
-    })
+    const result = unwrap(
+      await qb.queryStock({
+        symbol: '000001.SZ',
+        includeNews: true,
+      }),
+    )
     expect(result.news).toBeDefined()
     expect(result.news!.length).toBe(2)
     expect((result.news as any)[0].id).toBe('n1')
@@ -231,11 +253,13 @@ describe('QueryBuilder', () => {
     mockStocksGet.mockResolvedValueOnce(undefined)
     mockV6ScoresGet.mockResolvedValueOnce(undefined)
 
-    const result = await qb.queryStock({
-      symbol: '999999.SZ',
-      includeBasic: true,
-      includeV6Score: true,
-    })
+    const result = unwrap(
+      await qb.queryStock({
+        symbol: '999999.SZ',
+        includeBasic: true,
+        includeV6Score: true,
+      }),
+    )
     expect(result.stock).toBeUndefined()
     expect(result.v6Score).toBeUndefined()
   })
@@ -243,11 +267,13 @@ describe('QueryBuilder', () => {
   it('应该处理错误 in basic dimension gracefully', async () => {
     mockStocksGet.mockRejectedValueOnce(new Error('DB error'))
 
-    const result = await qb.queryStock({
-      symbol: '000001.SZ',
-      includeBasic: true,
-      includeV6Score: true,
-    })
+    const result = unwrap(
+      await qb.queryStock({
+        symbol: '000001.SZ',
+        includeBasic: true,
+        includeV6Score: true,
+      }),
+    )
     expect(result.stock).toBeUndefined()
     expect(result.errors).toContain('basic')
     expect(result.v6Score).toBeDefined()
@@ -256,10 +282,12 @@ describe('QueryBuilder', () => {
   it('应该返回 empty array for signals on error', async () => {
     mockSignalsListBySymbol.mockRejectedValueOnce(new Error('DB error'))
 
-    const result = await qb.queryStock({
-      symbol: '000001.SZ',
-      includeSignals: true,
-    })
+    const result = unwrap(
+      await qb.queryStock({
+        symbol: '000001.SZ',
+        includeSignals: true,
+      }),
+    )
     expect(result.signals).toEqual([])
     expect(result.errors).toContain('signals')
   })
@@ -267,25 +295,29 @@ describe('QueryBuilder', () => {
   it('应该返回 empty array for news on error', async () => {
     mockNewsStockMapListBySymbol.mockRejectedValueOnce(new Error('DB error'))
 
-    const result = await qb.queryStock({
-      symbol: '000001.SZ',
-      includeNews: true,
-    })
+    const result = unwrap(
+      await qb.queryStock({
+        symbol: '000001.SZ',
+        includeNews: true,
+      }),
+    )
     expect(result.news).toEqual([])
     expect(result.errors).toContain('news')
   })
 
   it('应该query all dimensions in parallel', async () => {
-    const result = await qb.queryStock({
-      symbol: '000001.SZ',
-      includeBasic: true,
-      includeQuotes: true,
-      includeV6Score: true,
-      includeIntelligentScore: true,
-      includeIndustryScore: true,
-      includeSignals: true,
-      includeNews: true,
-    })
+    const result = unwrap(
+      await qb.queryStock({
+        symbol: '000001.SZ',
+        includeBasic: true,
+        includeQuotes: true,
+        includeV6Score: true,
+        includeIntelligentScore: true,
+        includeIndustryScore: true,
+        includeSignals: true,
+        includeNews: true,
+      }),
+    )
 
     expect(result.stock).toBeDefined()
     expect(result.quotes).toBeDefined()
@@ -298,18 +330,21 @@ describe('QueryBuilder', () => {
   })
 
   it('应该batch query multiple symbols', async () => {
-    const results = await qb.queryStocksBatch(['000001.SZ', '600036.SH'], {
+    const result = await qb.queryStocksBatch(['000001.SZ', '600036.SH'], {
       includeBasic: true,
     })
+    expect(result.ok).toBe(true)
+    const results = result.value
     expect(results.size).toBe(2)
     expect(results.get('000001.SZ')?.stock?.symbol).toBe('000001.SZ')
     expect(results.get('600036.SH')?.stock?.symbol).toBe('600036.SH')
   })
 
   it('应该处理空值 symbols in batch query', async () => {
-    const results = await qb.queryStocksBatch([], {
+    const result = await qb.queryStocksBatch([], {
       includeBasic: true,
     })
-    expect(results.size).toBe(0)
+    expect(result.ok).toBe(true)
+    expect(result.value.size).toBe(0)
   })
 })

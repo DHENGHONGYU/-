@@ -410,20 +410,20 @@ async function tryBatchSource(
  * 批量获取实时行情（仍使用默认优先级链，暂不支持单维度配置）
  */
 export async function getBatchQuotes(codes: string[]): Promise<CollectionResult<RealtimeQuote[]>> {
-  const chain: DataSource[] = ['tencent']
+  const chain: DataSource[] = ['sina']
   const start = Date.now()
 
-  // 层 1: 腾讯批量
-  const tencentResult = await tryBatchSource(() => tencentBatchQuotes(codes), 'tencent', start, chain)
-  if (tencentResult) {
-    return tencentResult
-  }
-
-  // 层 2: 新浪批量
-  chain.push('sina')
+  // 层 1: 新浪批量（首选：更快 + UTF-8 中文名）
   const sinaResult = await tryBatchSource(() => sinaBatchQuotes(codes), 'sina', start, chain)
   if (sinaResult) {
     return sinaResult
+  }
+
+  // 层 2: 腾讯批量（兜底）
+  chain.push('tencent')
+  const tencentResult = await tryBatchSource(() => tencentBatchQuotes(codes), 'tencent', start, chain)
+  if (tencentResult) {
+    return tencentResult
   }
 
   // 层 3: Mock 批量
@@ -708,6 +708,11 @@ async function probeSource(source: DataSource, start: number): Promise<SourceCon
   return { ok: false, latencyMs: Date.now() - start, message: `未知数据源 ${String(source)}` }
 }
 
+/**
+ * 测试指定数据源的连接连通性。
+ * @param source 数据源标识（如 mock, market 等）
+ * @returns 连通性结果（ok、延迟、消息）
+ */
 export async function testSourceConnectivity(source: DataSource): Promise<SourceConnectivityResult> {
   const start = Date.now()
 

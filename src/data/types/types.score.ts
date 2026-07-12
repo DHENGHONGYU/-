@@ -60,6 +60,10 @@ export interface IntelligentScore {
   configSnapshot: {
     model: string
     baseURL: string
+    /** 如果使用 v6 实时因子引擎，记录引擎版本 */
+    v6EngineVersion?: string
+    /** 如果使用 v6 实时因子引擎，记录引擎综合分 */
+    v6Score?: number
   }
   modelResponse: string
   dataVersion: number
@@ -94,6 +98,10 @@ export interface IndustryScore {
   configSnapshot: {
     model: string
     baseURL: string
+    /** 如果使用 v6 实时因子引擎，记录引擎版本 */
+    v6EngineVersion?: string
+    /** 如果使用 v6 实时因子引擎，记录引擎综合分 */
+    v6Score?: number
   }
   modelResponse: string
   scoredAt: number

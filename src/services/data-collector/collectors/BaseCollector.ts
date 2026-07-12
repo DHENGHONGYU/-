@@ -10,10 +10,17 @@ const logger = getLogger()
  * @abstract 所有具体采集器必须继承此类
  */
 export abstract class BaseCollector {
+  /** 采集器配置（超时 / 重试次数 / 重试间隔 / 请求头） */
   protected config: CollectorConfig
+  /** 请求中断控制器，用于超时与取消 */
   protected abortController: AbortController | null = null
+  /** 当前是否处于采集运行中 */
   protected isRunning = false
 
+  /**
+   * 构造采集器基类，合并默认配置与传入的部分配置。
+   * @param config 部分采集器配置（超时 / 重试 / 请求头），缺省时使用 COLLECTOR_DEFAULT_CONFIG
+   */
   constructor(config?: Partial<CollectorConfig>) {
     this.config = {
       timeout: config?.timeout ?? COLLECTOR_DEFAULT_CONFIG.TIMEOUT,
@@ -61,6 +68,11 @@ export abstract class BaseCollector {
     throw lastError ?? new Error('采集失败，已达到最大重试次数')
   }
 
+  /**
+   * 执行单次采集尝试，初始化 AbortController 并委托 executeWithTimeout。
+   * @param dataSource 数据源配置
+   * @returns 原始市场数据
+   */
   private async tryCollectOnce(dataSource: DataSourceConfig): Promise<RawMarketData> {
     this.abortController = new AbortController()
     return await this.executeWithTimeout(dataSource)

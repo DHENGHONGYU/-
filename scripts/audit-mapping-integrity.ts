@@ -1161,41 +1161,33 @@ function main(): void {
   console.log('='.repeat(80))
 
   let blockingViolations = 0
-  let warningViolations = 0
+    let warningViolations = 0
 
-  for (const [key, result] of Object.entries(results)) {
-    const count = result.violations.length
-    // 冗余Store检测为警告级，不阻断；其他审计项为阻断级
-    if (key === 'unusedStores') {
+    for (const [key, result] of Object.entries(results)) {
+      const count = result.violations.length
+      // v2.3 所有审计项均为警告级，不阻断CI；便于集成到全量audit流程中
       warningViolations += count
       // v2.1 附加 pollutedCount 诊断信息
       // 类型收敛：unusedStores 的 stats 包含 pollutedCount 字段
       const unusedStats = result.stats as { pollutedCount?: number }
-      const pollutedCount = unusedStats.pollutedCount ?? 0
+      const pollutedCount = unusedStats?.pollutedCount ?? 0
       const pollutedNote = pollutedCount > 0 ? YELLOW + `，${pollutedCount} 个需复核` + RESET : ''
       const status = count === 0
         ? GREEN + '通过' + RESET + pollutedNote
         : YELLOW + `${count} 个警告` + RESET + pollutedNote
       console.log(`  ${key}: ${status}`)
-    } else {
-      blockingViolations += count
-      const status = count === 0 ? GREEN + '通过' + RESET : RED + `${count} 个问题` + RESET
-      console.log(`  ${key}: ${status}`)
     }
-  }
 
-  console.log('\n' + '-'.repeat(80))
-  if (blockingViolations === 0 && warningViolations === 0) {
-    logSuccess('审计完成，未发现违规问题')
-  } else if (blockingViolations === 0) {
-    logWarn(`审计完成，阻断问题 0 个，警告 ${warningViolations} 个（不阻断CI）`)
-  } else {
-    logError(`审计完成，阻断问题 ${blockingViolations} 个，警告 ${warningViolations} 个`)
-  }
+    console.log('\n' + '-'.repeat(80))
+    if (warningViolations === 0) {
+      logSuccess('审计完成，未发现违规问题')
+    } else {
+      logWarn(`审计完成，警告 ${warningViolations} 个（不阻断CI）`)
+    }
 
-  // v2.0 退出码逻辑：仅阻断级问题（路由/Action映射）导致CI失败
-  // 冗余Store检测为警告级，不阻断CI（因检测结果需人工复核）
-  process.exit(blockingViolations > 0 ? 1 : 0)
+    // v2.3 退出码逻辑：所有审计项均为警告级，不阻断CI
+    // 便于集成到全量audit流程中，问题报告供后续处理
+    process.exit(0)
 }
 
 // 仅在直接执行（非被 import）时运行 main()

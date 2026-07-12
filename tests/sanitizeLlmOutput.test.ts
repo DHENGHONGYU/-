@@ -18,7 +18,7 @@ import {
   sanitizeMarkdown,
   sanitizeHtml,
   escapeHtml,
-} from '@/utils/xssSanitizer'
+} from '@/lib/xssSanitizer'
 
 describe('sanitizeLlmOutput — LLM 输出消毒逻辑', () => {
   // ============================================================

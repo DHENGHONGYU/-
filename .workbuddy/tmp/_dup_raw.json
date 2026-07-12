@@ -1,0 +1,243 @@
+{
+  "summary": {
+    "filesScanned": 707,
+    "totalViolations": 29,
+    "byType": {
+      "dup-condition": 29
+    }
+  },
+  "violations": [
+    {
+      "file": "src\\apps\\input\\BulkImportPanel.tsx",
+      "func": "BulkImportPanel",
+      "line": 44,
+      "type": "dup-condition",
+      "metric": 2,
+      "detail": "重复条件 2 组"
+    },
+    {
+      "file": "src\\apps\\trading\\components\\PhaseStepper.tsx",
+      "func": "PhaseStepper",
+      "line": 33,
+      "type": "dup-condition",
+      "metric": 1,
+      "detail": "重复条件 1 组"
+    },
+    {
+      "file": "src\\cockpit\\CockpitShell.tsx",
+      "func": "WidgetWrapper",
+      "line": 50,
+      "type": "dup-condition",
+      "metric": 2,
+      "detail": "重复条件 2 组"
+    },
+    {
+      "file": "src\\components\\organisms\\input\\StockSearch.tsx",
+      "func": "StockSearch",
+      "line": 20,
+      "type": "dup-condition",
+      "metric": 1,
+      "detail": "重复条件 1 组"
+    },
+    {
+      "file": "src\\components\\organisms\\input\\TraceReplayPanel.tsx",
+      "func": "TraceReplayPanel",
+      "line": 82,
+      "type": "dup-condition",
+      "metric": 1,
+      "detail": "重复条件 1 组"
+    },
+    {
+      "file": "src\\components\\organisms\\pool\\usePoolDataFromStore.ts",
+      "func": "usePoolDataFromStore",
+      "line": 39,
+      "type": "dup-condition",
+      "metric": 1,
+      "detail": "重复条件 1 组"
+    },
+    {
+      "file": "src\\components\\organisms\\system\\LogStreamPanel.tsx",
+      "func": "LogStreamPanelBase",
+      "line": 125,
+      "type": "dup-condition",
+      "metric": 1,
+      "detail": "重复条件 1 组"
+    },
+    {
+      "file": "src\\components\\organisms\\system\\migration\\MigrationUploadTab.tsx",
+      "func": "MigrationUploadTab",
+      "line": 15,
+      "type": "dup-condition",
+      "metric": 1,
+      "detail": "重复条件 1 组"
+    },
+    {
+      "file": "src\\components\\organisms\\system\\MigrationPanel.tsx",
+      "func": "MigrationPanel",
+      "line": 23,
+      "type": "dup-condition",
+      "metric": 1,
+      "detail": "重复条件 1 组"
+    },
+    {
+      "file": "src\\data\\db.ts",
+      "func": "withTransaction",
+      "line": 104,
+      "type": "dup-condition",
+      "metric": 1,
+      "detail": "重复条件 1 组"
+    },
+    {
+      "file": "src\\data\\repository.ts",
+      "func": "createRepository",
+      "line": 72,
+      "type": "dup-condition",
+      "metric": 1,
+      "detail": "重复条件 1 组"
+    },
+    {
+      "file": "src\\hooks\\cabin\\useIndustryScorePage.ts",
+      "func": "useIndustryScorePage",
+      "line": 103,
+      "type": "dup-condition",
+      "metric": 1,
+      "detail": "重复条件 1 组"
+    },
+    {
+      "file": "src\\hooks\\useConfirmDialog.tsx",
+      "func": "useConfirmDialog",
+      "line": 67,
+      "type": "dup-condition",
+      "metric": 1,
+      "detail": "重复条件 1 组"
+    },
+    {
+      "file": "src\\hooks\\useFreshData.ts",
+      "func": "useFreshData",
+      "line": 111,
+      "type": "dup-condition",
+      "metric": 2,
+      "detail": "重复条件 2 组"
+    },
+    {
+      "file": "src\\hooks\\useStockPoolBoard.ts",
+      "func": "useStockPoolBoard",
+      "line": 28,
+      "type": "dup-condition",
+      "metric": 2,
+      "detail": "重复条件 2 组"
+    },
+    {
+      "file": "src\\mcp\\servers\\fetcher\\dataFetcherServer.ts",
+      "func": "getResources",
+      "line": 186,
+      "type": "dup-condition",
+      "metric": 1,
+      "detail": "重复条件 1 组"
+    },
+    {
+      "file": "src\\pages\\analysis\\IntelligentScorePage.tsx",
+      "func": "IntelligentScorePage",
+      "line": 175,
+      "type": "dup-condition",
+      "metric": 1,
+      "detail": "重复条件 1 组"
+    },
+    {
+      "file": "src\\pages\\analysis\\ScoreDocPage.tsx",
+      "func": "ScoreDocPage",
+      "line": 24,
+      "type": "dup-condition",
+      "metric": 1,
+      "detail": "重复条件 1 组"
+    },
+    {
+      "file": "src\\pages\\analysis\\StockAnalysisPage.tsx",
+      "func": "StockAnalysisPage",
+      "line": 17,
+      "type": "dup-condition",
+      "metric": 2,
+      "detail": "重复条件 2 组"
+    },
+    {
+      "file": "src\\pages\\trading\\components\\TradeModal.tsx",
+      "func": "TradeModal",
+      "line": 40,
+      "type": "dup-condition",
+      "metric": 1,
+      "detail": "重复条件 1 组"
+    },
+    {
+      "file": "src\\pages\\trading\\HoldingsPage.tsx",
+      "func": "HoldingsPage",
+      "line": 48,
+      "type": "dup-condition",
+      "metric": 1,
+      "detail": "重复条件 1 组"
+    },
+    {
+      "file": "src\\pages\\trading\\TradingFlowPage.tsx",
+      "func": "TradingFlowPage",
+      "line": 30,
+      "type": "dup-condition",
+      "metric": 1,
+      "detail": "重复条件 1 组"
+    },
+    {
+      "file": "src\\services\\llm\\llmClient.ts",
+      "func": "streamingChat",
+      "line": 322,
+      "type": "dup-condition",
+      "metric": 1,
+      "detail": "重复条件 1 组"
+    },
+    {
+      "file": "src\\services\\resilience.ts",
+      "func": "createCircuitBreaker",
+      "line": 180,
+      "type": "dup-condition",
+      "metric": 1,
+      "detail": "重复条件 1 组"
+    },
+    {
+      "file": "src\\services\\resilience.ts",
+      "func": "guard",
+      "line": 191,
+      "type": "dup-condition",
+      "metric": 1,
+      "detail": "重复条件 1 组"
+    },
+    {
+      "file": "src\\store\\agentStore.ts",
+      "func": "initAgentSubscriptions",
+      "line": 88,
+      "type": "dup-condition",
+      "metric": 1,
+      "detail": "重复条件 1 组"
+    },
+    {
+      "file": "src\\store\\dualStrategyStore.ts",
+      "func": "initDualStrategyStoreSubscriptions",
+      "line": 503,
+      "type": "dup-condition",
+      "metric": 1,
+      "detail": "重复条件 1 组"
+    },
+    {
+      "file": "src\\store\\positionStore.ts",
+      "func": "initPositionStoreSubscriptions",
+      "line": 223,
+      "type": "dup-condition",
+      "metric": 1,
+      "detail": "重复条件 1 组"
+    },
+    {
+      "file": "src\\store\\signalStore.ts",
+      "func": "initSignalStoreSubscriptions",
+      "line": 186,
+      "type": "dup-condition",
+      "metric": 1,
+      "detail": "重复条件 1 组"
+    }
+  ]
+}

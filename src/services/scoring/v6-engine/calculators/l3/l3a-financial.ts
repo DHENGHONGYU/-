@@ -16,7 +16,7 @@ import type { LayerInput, LayerScore, LayerCalculator, RiskWarningResult, IPCRes
 import { LAYER_LABELS } from '../../types'
 import { V6_CALCULATOR_THRESHOLDS } from '@/config/thresholds'
 import { RISK_WARNINGS, IPC_CONFIG } from '../../config'
-import { safeArrayGet } from '@/utils/precision'
+import { safeArrayGet } from '@/lib/precision'
 import { clamp, type FinancialDimensionScore } from './utils'
 
 const logger = getLogger()

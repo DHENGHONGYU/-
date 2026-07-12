@@ -270,5 +270,5 @@ npm run audit:token    # Token 消耗
 
 - [P1 批次行动清单](../changelogs/2026-07/action-list-p1.md)
 - [P1 批次完整性画像](../changelogs/2026-07/completeness-profile-p1.md)
-- [MCP 耦合分析报告](../architecture/mcp-coupling-analysis-report.md)
+- [MCP 耦合分析报告](../02-design/mcp-coupling-analysis-report.md)
 - [Token 优化最佳实践](./token-optimization-best-practices.md)

@@ -1,0 +1,34 @@
+{
+  "$schema": "https://catalog.deva.msh.team/schemas/kimi.plugin.schema.json",
+  "name": "ifind",
+  "version": "0.1.7",
+  "description": "Query iFinD financial data for global markets, securities, financial statements, prices, announcements, holders, forecasts, and stock screening through agent-gw.",
+  "keywords": [
+    "ifind",
+    "tonghuashun",
+    "financial data",
+    "stock data",
+    "financial statements",
+    "stock screening",
+    "A-shares",
+    "Hong Kong stocks",
+    "US stocks",
+    "同花顺",
+    "金融数据",
+    "股票筛选"
+  ],
+  "author": "Moonshot AI",
+  "homepage": "https://www.51ifind.com/",
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "skillInstructions": "Use the iFinD skill when the user needs financial market data, stock information, financial statements, balance sheets, income statements, cash flow statements, business segmentation, historical or real-time stock prices, announcements, shareholder or holder information, analyst forecasts, or intelligent stock screening across China A-shares, Hong Kong stocks, US stocks, or other supported global markets. First inspect the datasource description, choose the exact API documented there, build parameters exactly as required, and call the datasource through the bundled script. Do not invent market or company data when the datasource call fails or returns no result. Treat returned financial data as third-party market data and include relevant date, market, currency, reporting-period, or coverage caveats when the returned content provides them.",
+  "interface": {
+    "displayName": "Hithink Finance Data",
+    "shortDescription": "A leading domestic financial data and stock market information service platform.",
+    "longDescription": "Hithink Finance Data, also known as Tonghuashun iFinD, is a domestic-only financial data and stock market information service platform provided by iFinD Inc. It is designed for mainland China financial-market workflows and offers comprehensive financial analysis across domestic securities and listed companies, including stock information, securities profiles, financial statements (balance sheet, income statement, cash flow), business segmentation, historical and real-time stock prices, announcements, shareholder and holder information, analyst forecasts, and intelligent stock screening with multi-dimensional filtering capabilities. It is suitable for domestic stock research, financial analysis, quote tracking, company fundamentals, announcement lookup, holding-structure analysis, investment research, and China-market data analysis.",
+    "developerName": "iFinD Inc.",
+    "websiteURL": "https://www.51ifind.com/",
+    "iconUrl": "https://avatar.moonshot.cn/avatar/plugin/tonghuashun.png",
+    "category": "PRODUCTIVITY"
+  }
+}

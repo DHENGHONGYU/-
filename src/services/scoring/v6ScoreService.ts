@@ -6,7 +6,9 @@
  * 结果映射为 V6Score 持久化到 IndexedDB。
  */
 
-import { dataLayer } from '@/data/dataLayer'
+import { dataBridge } from '@/core/databridge'
+import { EnvelopeFactory } from '@/core/envelope'
+import { ENVELOPE_ACTION, STORE_NAME, MODULE_ID } from '@/config/dbConfig'
 import { getLogger } from '@/lib/logger'
 import { eventBus } from '@/lib/eventBus'
 import type { DataLayerResult, DailyQuotes, Stock, V6Score } from '@/data/types'
@@ -17,6 +19,7 @@ import {
   ALL_LAYER_IDS,
 } from '@/services/scoring/v6-engine'
 import type { CompositeScore, FinancialData, V6ScoreInput } from '@/services/scoring/v6-engine'
+import { nanoid } from 'nanoid'
 
 const logger = getLogger()
 
@@ -25,15 +28,37 @@ const logger = getLogger()
  *
  * 若数据库中无记录，返回空对象（引擎各层会降级处理）。
  */
-async function buildFinancialData(symbol: string): Promise<FinancialData> {
+export async function buildFinancialData(symbol: string): Promise<FinancialData> {
   logger.info('[v6ScoreService] buildFinancialData 开始读取财务数据', { symbol })
 
-  const report = await dataLayer.financialReports.get(symbol)
+  const reportResult = await dataBridge.query<{
+    revenue: number
+    revenueYoY: number
+    netProfit: number
+    netProfitYoY: number
+    grossMargin: number
+    netMargin: number
+    operatingCF: number
+    rdRatio: number
+    receivables: number
+    inventoryTurnoverDays: number
+    interestBearingDebt: number
+    goodwill: number
+    netAssets: number
+    shareholderPledge: number
+    reportDate: string
+  }>({
+    action: ENVELOPE_ACTION.queryGet,
+    store: STORE_NAME.financialReports,
+    key: symbol,
+    source: MODULE_ID.analyzer,
+  })
 
-  if (!report) {
+  if (!reportResult.success || !reportResult.data) {
     logger.info('[v6ScoreService] buildFinancialData 未找到财务数据，返回空对象', { symbol })
     return {}
   }
+  const report = reportResult.data
 
   const financialData: FinancialData = {
     revenue: report.revenue,
@@ -154,8 +179,15 @@ function compositeToV6Score(
  */
 export async function getAllV6Scores(): Promise<DataLayerResult<V6Score[]>> {
   try {
-    const list = await dataLayer.v6Scores.list()
-    return { success: true, data: list }
+    const result = await dataBridge.query<V6Score[]>({
+      action: ENVELOPE_ACTION.queryList,
+      store: STORE_NAME.v6Scores,
+      source: MODULE_ID.analyzer,
+    })
+    if (!result.success) {
+      return { success: false, error: result.error }
+    }
+    return { success: true, data: result.data ?? [] }
   } catch (err) {
     return {
       success: false,
@@ -179,11 +211,17 @@ export interface V6ScoreQuality {
 export async function runV6Score(symbol: string): Promise<DataLayerResult<V6Score>> {
   logger.info(`[v6ScoreService] runV6Score 开始`, { symbol })
 
-  const stock = await dataLayer.stocks.get(symbol)
-  if (!stock) {
+  const stockResult = await dataBridge.query<Stock>({
+    action: ENVELOPE_ACTION.queryGet,
+    store: STORE_NAME.stocks,
+    key: symbol,
+    source: MODULE_ID.analyzer,
+  })
+  if (!stockResult.success || !stockResult.data) {
     logger.warn(`[v6ScoreService] runV6Score Stock 不存在`, { symbol })
     return { success: false, error: `Stock not found: ${symbol}` }
   }
+  const stock = stockResult.data
 
   logger.info(`[v6ScoreService] runV6Score Stock 已加载`, {
     symbol,
@@ -197,7 +235,13 @@ export async function runV6Score(symbol: string): Promise<DataLayerResult<V6Scor
     industryCode: stock.industryCode,
   })
 
-  const quotesOrNull = (await dataLayer.dailyQuotes.get(symbol)) ?? null
+  const quotesResult = await dataBridge.query<DailyQuotes>({
+    action: ENVELOPE_ACTION.queryGet,
+    store: STORE_NAME.dailyQuotes,
+    key: symbol,
+    source: MODULE_ID.analyzer,
+  })
+  const quotesOrNull = quotesResult.success && quotesResult.data ? quotesResult.data : null
 
   logger.info(`[v6ScoreService] runV6Score K线数据状态`, {
     symbol,
@@ -276,13 +320,24 @@ export async function runV6Score(symbol: string): Promise<DataLayerResult<V6Scor
     })
 
     logger.info(`[v6ScoreService] runV6Score 准备持久化到 IndexedDB`, { symbol })
-    const result = await dataLayer.v6Scores.save(v6Score)
-    if (!result.success) {
+    const envelope = EnvelopeFactory.create(
+      {
+        source: MODULE_ID.analyzer,
+        target: 'db' as const,
+        action: ENVELOPE_ACTION.saveScores,
+        traceId: `v6score-${nanoid(8)}-${symbol}`,
+      },
+      v6Score,
+    )
+    try {
+      await dataBridge.forward(envelope)
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : String(err)
       logger.error(`[v6ScoreService] runV6Score 持久化失败`, {
         symbol,
-        error: result.error,
+        error: errorMsg,
       })
-      return { success: false, error: result.error }
+      return { success: false, error: errorMsg }
     }
 
     logger.info(`[v6ScoreService] runV6Score 评分完成并已持久化`, {

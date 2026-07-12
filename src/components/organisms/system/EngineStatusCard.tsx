@@ -6,6 +6,7 @@
  *   - 展示引擎运行状态、DataFlow 连接、Agent 运行时统计与 V6 引擎层权重
  */
 
+import { getSafeNumber } from '@/lib/safeCoerce'
 import React, { useEffect, useState, memo } from 'react'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
@@ -125,7 +126,7 @@ function EngineStatusCard(): React.JSX.Element {
 
   const overallStatus = mapOverallStatus(healthSummary?.overallStatus)
   const statusMeta = HEALTH_STATUS_MAP[overallStatus]
-  const uptime = formatUptime(started, startedAt || 0, now)
+  const uptime = formatUptime(started, getSafeNumber(startedAt), now)
 
   // 加载态：系统监控正在加载且尚无健康摘要数据时展示占位文本
   const showLoading = systemMonitorIsLoading && !healthSummary

@@ -198,6 +198,17 @@ export class WidgetRegistry {
         },
         component: () => import('@/cockpit/widgets/ValuePitWidget'),
       },
+      {
+        meta: {
+          id: 'signalQuality',
+          name: DEFAULT_WIDGET_CONFIG.signalQuality.title,
+          category: DEFAULT_WIDGET_CONFIG.signalQuality.category,
+          description: '信号质量复盘仪表盘，展示准确率/胜率/Sharpe 等绩效指标',
+          defaultSize: DEFAULT_WIDGET_CONFIG.signalQuality.size,
+          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.signalQuality,
+        },
+        component: () => import('@/cockpit/widgets/SignalQualityDashboardWidget'),
+      },
       // ============================================================
       // 系统监控与高级分析 Widget 注册
       // ============================================================
@@ -278,6 +289,17 @@ export class WidgetRegistry {
         },
         component: () => import('@/cockpit/widgets/SignalMonitorWidget'),
       },
+      {
+        meta: {
+          id: 'industryChain',
+          name: DEFAULT_WIDGET_CONFIG.industryChain.title,
+          category: DEFAULT_WIDGET_CONFIG.industryChain.category,
+          description: '19 个行业节点上下游产业链关系图谱',
+          defaultSize: DEFAULT_WIDGET_CONFIG.industryChain.size,
+          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.industryChain,
+        },
+        component: () => import('@/cockpit/widgets/IndustryChainWidget'),
+      },
     ]
 
     widgets.forEach((widget) => this.register(widget))
@@ -288,9 +310,11 @@ export class WidgetRegistry {
     const defaultLayout = [
       { widgetId: 'marketIndices', position: { x: 0, y: 0 } },
       { widgetId: 'sectorHeatmap', position: { x: 0, y: 2 } },
+      { widgetId: 'industryChain', position: { x: 2, y: 2 } },
       { widgetId: 'fundFlow', position: { x: 0, y: 4 } },
       { widgetId: 'marketSentiment', position: { x: 2, y: 4 } },
       { widgetId: 'watchlist', position: { x: 0, y: 6 } },
+      { widgetId: 'watchlistMovers', position: { x: 0, y: 7 } },
       { widgetId: 'portfolioOverview', position: { x: 0, y: 8 } },
       { widgetId: 'aiTradeReview', position: { x: 0, y: 10 } },
       // ============================================================
@@ -303,6 +327,7 @@ export class WidgetRegistry {
       { widgetId: 'stockChat', position: { x: 0, y: 23 } },
       { widgetId: 'hotSector', position: { x: 0, y: 27 } },
       { widgetId: 'valuePit', position: { x: 0, y: 29 } },
+      { widgetId: 'signalQuality', position: { x: 0, y: 31 } },
       // ============================================================
       // 系统监控与高级分析 Widget 默认布局
       // ============================================================

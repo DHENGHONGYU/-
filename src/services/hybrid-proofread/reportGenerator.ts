@@ -332,8 +332,8 @@ export class ReportGenerator {
     .info-box { background: ${CSS_COLOR_BG}; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; }
     .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1rem; }
     .stat-item { text-align: center; padding: 1rem; border-radius: 0.5rem; }
-    .stat-value { font-size: 2rem; font-weight: bold; }
-    .stat-label { font-size: 0.875rem; color: ${COLOR_SHADES.slate.hex[500]}; }
+    .stat-value { font-size: 24px; font-weight: 700; }
+    .stat-label { font-size: 13px; color: ${COLOR_SHADES.slate.hex[500]}; }
     .critical { background: ${COLOR_SHADES.red.hex[50]}; color: ${COLOR_SHADES.red.hex[600]}; }
     .high { background: ${COLOR_SHADES.orange.hex[100]}; color: ${COLOR_SHADES.orange.hex[600]}; }
     .medium { background: ${COLOR_SHADES.yellow.hex[50]}; color: ${COLOR_SHADES.yellow.hex[600]}; }

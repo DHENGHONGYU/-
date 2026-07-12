@@ -15,7 +15,7 @@ import type { LayerInput, LayerScore, LayerCalculator } from '../types'
 import type { LayerId } from '../types'
 import { LAYER_LABELS } from '../types'
 import { V6_CALCULATOR_THRESHOLDS } from '@/config/thresholds'
-import { safeArrayGet } from '@/utils/precision'
+import { safeArrayGet } from '@/lib/precision'
 
 const logger = getLogger()
 

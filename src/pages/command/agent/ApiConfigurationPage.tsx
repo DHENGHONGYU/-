@@ -68,6 +68,7 @@ const ApiConfigurationPage: React.FC = () => {
       id: 'api-001',
       name: 'DeepSeek API',
       provider: 'deepseek',
+      // 占位示例密钥（非真实凭证，仅 UI 演示用，避免被密钥审计误报为真实 sk-）
       apiKey: 'sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       permissions: [
         { resource: 'chat', actions: ['read', 'write'] },

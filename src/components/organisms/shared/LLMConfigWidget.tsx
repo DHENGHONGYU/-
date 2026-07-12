@@ -21,7 +21,7 @@ import {
   isValidLlmBaseURL,
   isValidLlmApiKey,
   isValidLlmModel,
-} from '@/utils/dataValidation'
+} from '@/lib/validation'
 
 interface Props {
   /** 当前 LLM 配置 */

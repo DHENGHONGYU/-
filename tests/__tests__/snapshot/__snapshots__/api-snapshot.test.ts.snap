@@ -1,0 +1,37 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`API 响应快照测试 > 应该匹配 BridgeQueryResult 成功响应的快照 1`] = `
+{
+  "data": {
+    "count": 1,
+    "stocks": [
+      {
+        "changePercent": 2.5,
+        "code": "000001",
+        "name": "平安银行",
+        "price": 12.34,
+      },
+    ],
+  },
+  "fromCache": false,
+  "success": true,
+  "traceId": StringMatching /\\^test-trace-id-\\\\d\\+\\$/,
+}
+`;
+
+exports[`API 响应快照测试 > 应该匹配 BridgeQueryResult 错误响应的快照 1`] = `
+{
+  "error": "网络请求超时",
+  "success": false,
+  "traceId": StringMatching /\\^test-trace-id-\\\\d\\+\\$/,
+}
+`;
+
+exports[`API 响应快照测试 > 应该匹配空数据响应的快照 1`] = `
+{
+  "data": [],
+  "fromCache": true,
+  "success": true,
+  "traceId": StringMatching /\\^test-trace-id-\\\\d\\+\\$/,
+}
+`;

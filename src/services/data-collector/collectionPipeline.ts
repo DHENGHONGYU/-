@@ -169,9 +169,9 @@ export function resolveQuoteChain(dimension: DimensionPipelineConfig): QuoteData
  */
 export function resolveKlineChain(dimension: DimensionPipelineConfig): QuoteDataSourceId[] {
   const quoteChain = resolveQuoteChain(dimension)
-  const klineSources = quoteChain.filter((id) => id === 'netease' || id === 'mock')
+  const klineSources = quoteChain.filter((id) => id === 'mock')
   if (klineSources.length > 0) return klineSources
-  return ['netease', 'mock']
+  return ['mock']
 }
 
 /**

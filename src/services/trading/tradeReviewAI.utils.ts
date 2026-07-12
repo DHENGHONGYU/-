@@ -37,6 +37,11 @@ function pairOneSymbolOrders(symOrders: Order[]): TradePair[] {
   return pairs
 }
 
+/**
+ * 从订单列表构建交易对列表：按 symbol 分组，将买入/卖出配对。
+ * @param orders 原始订单数组
+ * @returns 配对的交易对列表
+ */
 export function buildTradePairs(orders: Order[]): TradePair[] {
   const pairs: TradePair[] = []
   const bySymbol = new Map<string, Order[]>()

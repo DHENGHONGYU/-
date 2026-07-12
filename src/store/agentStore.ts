@@ -4,7 +4,7 @@ import { eventBus } from '@/lib/eventBus'
 import { getLogger } from '@/lib/logger'
 import type { AgentTask } from '@/agents/agentRuntime'
 import type { AgentTriggerPayload, AgentTaskFilter, MCPCallRecord } from '@/types/modules/agent.types'
-import { MCP_CALL_HISTORY_MAX_SIZE } from '@/config/mathConstants'
+import { MCP_CALL_HISTORY_MAX_SIZE } from '@/constants/math.constants'
 
 const logger = getLogger()
 

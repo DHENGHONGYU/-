@@ -11,6 +11,7 @@
  * - databridgeHandlers.ts: EnvelopeHandler 类族 + HandlerRegistry + createHandlerRegistry
  * - databridgeStrategyRouter.ts: STRATEGY_CHANNEL + routeToStrategy 策略路由逻辑
  */
+
 import { ENVELOPE_ACTION, STORE_NAME, type DbOperation, type ModuleId, type StoreName } from '@/config/dbConfig'
 import { db } from '@/data/db'
 import { CHANGED_SUFFIX } from '@/constants/store-channels.constants'
@@ -31,6 +32,8 @@ import {
 export { STRATEGY_CHANNEL } from './databridgeStrategyRouter'
 export type { StrategyChannel } from './databridgeStrategyRouter'
 export type { EnvelopeHandler } from './databridgeHandlers'
+export { ENVELOPE_ACTION, STORE_NAME, MODULE_ID } from '@/config/dbConfig'
+export type { EnvelopeAction, StoreName, ModuleId } from '@/config/dbConfig'
 
 const logger = getLogger()
 
@@ -112,6 +115,8 @@ const ACTION_TO_STORE_MAP: Record<string, StoreName> = {
   [ENVELOPE_ACTION.saveCustomAgent]: STORE_NAME.customAgents,
   [ENVELOPE_ACTION.deleteCustomAgent]: STORE_NAME.customAgents,
   [ENVELOPE_ACTION.saveTraceRecord]: STORE_NAME.traceRecords,
+  [ENVELOPE_ACTION.updateStockStatus]: STORE_NAME.stocks,
+  [ENVELOPE_ACTION.updateStockGroup]: STORE_NAME.stocks,
 }
 
 // 查询动作集合（目标 store 由 payload 传入，**不**走 ACTION_TO_STORE_MAP）
@@ -335,6 +340,15 @@ export class DataBridge {
     logger.info(`[DataBridge] invalidateCache() completed: store="${store}", cacheSizeAfter=${statsAfter.size}, clearedEntries=${statsBefore.size - statsAfter.size}`)
   }
 
+  /**
+   * 清空全部读缓存（不区分 store）。
+   * 用于测试隔离与手动全局重置；invalidateCache 已等价于全清，
+   * 本方法提供语义化显式入口。
+   */
+  invalidateAll(): void {
+    this.readCache.clear()
+  }
+
   private buildCacheKey(request: QueryRequest): string {
     const parts: string[] = [request.action, request.store]
     if (request.key != null) parts.push(`key=${request.key}`)
@@ -361,19 +375,33 @@ export class DataBridge {
 
   async forward(envelope: StandardEnvelope): Promise<void> {
     const startTs = Date.now()
-    logger.info(`[DataBridge] forward() called: action="${envelope.meta.action}", source="${envelope.meta.source}", traceId="${envelope.meta.traceId}"`)
+    
+    const payloadInfo = envelope.payload !== null && typeof envelope.payload === 'object'
+      ? { keys: Object.keys(envelope.payload), type: Array.isArray(envelope.payload) ? 'array' : 'object' }
+      : { keys: [], type: typeof envelope.payload }
+    
+    logger.info(
+      `[DataBridge] forward() called: action="${envelope.meta.action}", source="${envelope.meta.source}", traceId="${envelope.meta.traceId}"\n` +
+      `  目标: ${envelope.meta.target || 'N/A'}\n` +
+      `  Payload 类型: ${payloadInfo.type}\n` +
+      `  Payload 字段: ${payloadInfo.keys.length > 0 ? payloadInfo.keys.join(', ') : '(空)'}`
+    )
 
     const validation = EnvelopeFactory.validate(envelope)
     if (!validation.valid) {
-      logger.error(`[DataBridge] Invalid envelope: ${validation.error}, action="${envelope.meta.action}"`)
+      logger.error(
+        `[DataBridge] ❌ Envelope 验证失败: action="${envelope.meta.action}", traceId="${envelope.meta.traceId}"\n` +
+        `  错误: ${validation.error}\n` +
+        `  Meta: ${JSON.stringify(envelope.meta)}\n` +
+        `  Payload: ${JSON.stringify(envelope.payload).slice(0, 300)}`
+      )
       throw new EnvelopeError(`Invalid envelope: ${validation.error}`)
     }
-    logger.debug(`[DataBridge] Envelope validated: action="${envelope.meta.action}", target="${envelope.meta.target}"`)
+    logger.debug(`[DataBridge] ✅ Envelope 验证通过: action="${envelope.meta.action}", target="${envelope.meta.target}"`)
 
     const { meta } = envelope
     const operation = inferOperation(meta.action)
 
-    // 1. Query 路径：从 payload 解析真实目标 store（不查 ACTION_TO_STORE_MAP）
     let targetStore: StoreName
     if (QUERY_ACTIONS.has(meta.action)) {
       const payloadStore = envelope.payload != null && typeof envelope.payload === 'object'
@@ -381,6 +409,10 @@ export class DataBridge {
         ? (envelope.payload as Record<string, unknown>).store
         : undefined
       if (typeof payloadStore !== 'string' || payloadStore === '') {
+        logger.error(
+          `[DataBridge] ❌ Query 动作缺少 payload.store: action="${meta.action}", traceId="${meta.traceId}"\n` +
+          `  Payload: ${JSON.stringify(envelope.payload)}`
+        )
         throw new EnvelopeError(`Query action "${meta.action}" requires payload.store`)
       }
       targetStore = payloadStore as StoreName
@@ -388,26 +420,37 @@ export class DataBridge {
       targetStore = inferStore(meta.action)
     }
 
-    logger.debug(`[DataBridge] Route determined: action="${meta.action}", targetStore="${targetStore}", operation="${operation}"`)
+    logger.info(
+      `[DataBridge] 路由确定: action="${meta.action}", targetStore="${targetStore}", operation="${operation}"\n` +
+      `  Action 类型: ${STRATEGY_ACTIONS.has(meta.action) ? '策略' : QUERY_ACTIONS.has(meta.action) ? '查询' : EVENT_ACTIONS.has(meta.action) ? '事件' : 'DB操作'}`
+    )
 
     const shouldContinue = await this.assertAclWithFallback(envelope, targetStore, operation)
-    if (!shouldContinue) return
+    if (!shouldContinue) {
+      logger.info(`[DataBridge] ACL 校验未通过，已降级处理: action="${meta.action}", traceId="${meta.traceId}"`)
+      return
+    }
 
     this.writeAuditLog(envelope, targetStore).catch((err) => {
-      logger.error(`[DataBridge] Audit log failed: action="${meta.action}", traceId="${meta.traceId}"`, { error: err })
+      logger.error(`[DataBridge] 审计日志写入失败: action="${meta.action}", traceId="${meta.traceId}"`, { error: err })
     })
 
     try {
       await this.routeToAction(envelope, targetStore)
     } catch (err) {
-      logger.error(`[DataBridge] forward() failed: action="${meta.action}", traceId="${meta.traceId}"`, { error: err })
+      logger.error(
+        `[DataBridge] ❌ forward() 失败: action="${meta.action}", traceId="${meta.traceId}", targetStore="${targetStore}"\n` +
+        `  错误类型: ${err instanceof Error ? err.constructor.name : typeof err}\n` +
+        `  错误信息: ${err instanceof Error ? err.message : String(err)}`,
+        { error: err }
+      )
       throw err
     } finally {
       const duration = Date.now() - startTs
       if (duration > FORWARD_SLOW_THRESHOLD_MS) {
-        logger.warn(`[DataBridge] forward() took ${duration}ms for action "${meta.action}"`)
+        logger.warn(`[DataBridge] ⚠️ forward() 执行缓慢: action="${meta.action}", duration=${duration}ms`)
       }
-      logger.info(`[DataBridge] forward() completed: action="${meta.action}", duration=${duration}ms`)
+      logger.info(`[DataBridge] ✅ forward() 完成: action="${meta.action}", duration=${duration}ms`)
     }
   }
 
@@ -490,11 +533,8 @@ export class DataBridge {
   }
 
   private getMatchingSubscribers(channel: string): Set<EnvelopeCallback> {
-    // 严格匹配：只匹配订阅了完全相同 channel 的回调
-    // 历史曾支持通配（'event:*'）与前缀匹配（'test' 匹配 'test:foo'），均无调用方依赖
-    // 且与 symbol 级精确广播（bypass 模糊匹配）冲突，移除以保持单一行为
     const callbacks = this.subscribers.get(channel)
-    return new Set(callbacks ?? [])
+    return callbacks ?? new Set<EnvelopeCallback>()
   }
 
   private extractSymbolFromPayload(payload: unknown): string | undefined {

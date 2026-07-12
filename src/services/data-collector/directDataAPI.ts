@@ -16,6 +16,7 @@ import {
   TENCENT_API_BASE,
   TENCENT_REFERER,
   SINA_API_BASE,
+  SINA_REFERER,
   NETEASE_API_BASE,
 } from '@/config/marketDataEndpoints'
 
@@ -66,14 +67,17 @@ function toNeteaseCode(code: string): string {
   return `1${code}`
 }
 
-/** 安全 fetch（带超时） */
-async function safeFetch(url: string, timeoutMs = 5000): Promise<string | null> {
+/** 安全 fetch（带超时+可配自定义请求头） */
+async function safeFetch(url: string, timeoutMs = 5000, extraHeaders: Record<string, string> = {}): Promise<string | null> {
   try {
     const controller = new AbortController()
     const timer = setTimeout(() => controller.abort(), timeoutMs)
     const res = await fetch(url, {
       signal: controller.signal,
-      headers: { Referer: TENCENT_REFERER },
+      headers: {
+        'Referer': TENCENT_REFERER,
+        ...extraHeaders,
+      },
     })
     clearTimeout(timer)
     if (!res.ok) {
@@ -182,7 +186,7 @@ export async function sinaQuote(code: string): Promise<RealtimeQuote | null> {
   const url = `${SINA_API_BASE}${sinaCode}`
   const start = Date.now()
 
-  const text = await safeFetch(url)
+  const text = await safeFetch(url, 5000, { Referer: SINA_REFERER })
   if (!text) return null
 
   try {
@@ -221,7 +225,7 @@ export async function sinaQuote(code: string): Promise<RealtimeQuote | null> {
 export async function sinaBatchQuotes(codes: string[]): Promise<RealtimeQuote[]> {
   const sinaCodes = codes.map(toSinaCode).join(',')
   const url = `${SINA_API_BASE}${sinaCodes}`
-  const text = await safeFetch(url)
+  const text = await safeFetch(url, 5000, { Referer: SINA_REFERER })
   if (!text) return []
 
   const results: RealtimeQuote[] = []
@@ -270,7 +274,7 @@ export async function neteaseHistory(
   const url = `${NETEASE_API_BASE}?code=${neteaseCode}&start=${startDate}&end=${endDate}&fields=${fields}`
   const start = Date.now()
 
-  const text = await safeFetch(url, 10000)
+  const text = await safeFetch(url, 3000, { Referer: 'https://quotes.163.com' })
   if (!text) return []
 
   try {

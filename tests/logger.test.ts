@@ -22,25 +22,25 @@ describe('logger', () => {
   it('应该记录 debug at debug level', () => {
     const logger = getLogger()
     logger.debug('debug msg')
-    expect(debugSpy).toHaveBeenCalledWith('[DEBUG] debug msg', '')
+    expect(debugSpy).toHaveBeenCalledWith('[DEBUG] debug msg', expect.any(Object))
   })
 
   it('应该记录 info at debug level', () => {
     const logger = getLogger()
     logger.info('info msg')
-    expect(logSpy).toHaveBeenCalledWith('[INFO] info msg', '')
+    expect(logSpy).toHaveBeenCalledWith('[INFO] info msg', expect.any(Object))
   })
 
   it('应该记录 warn at debug level', () => {
     const logger = getLogger()
     logger.warn('warn msg')
-    expect(warnSpy).toHaveBeenCalledWith('[WARN] warn msg', '')
+    expect(warnSpy).toHaveBeenCalledWith('[WARN] warn msg', expect.any(Object))
   })
 
   it('应该记录 error at debug level', () => {
     const logger = getLogger()
     logger.error('error msg')
-    expect(errorSpy).toHaveBeenCalledWith('[ERROR] error msg', '')
+    expect(errorSpy).toHaveBeenCalledWith('[ERROR] error msg', expect.any(Object))
   })
 
   it('应该suppress debug when level is info', () => {

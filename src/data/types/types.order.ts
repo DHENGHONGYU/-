@@ -21,6 +21,8 @@ export interface Order {
   accountType: AccountType
   createdAt: number
   userId?: string
+  /** 订单类型（限价/市价），缺省按 limit 处理 */
+  type?: 'limit' | 'market'
 }
 
 /** 观察列表 */

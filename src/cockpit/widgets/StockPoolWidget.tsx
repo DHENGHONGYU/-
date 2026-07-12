@@ -53,7 +53,7 @@ export default function StockPoolWidget({ config, data }: StockPoolWidgetProps):
         : 'ready'
 
   const handleAddStock = () => {
-    // TODO: 未来替换为真实 API 调用，打开添加股票弹窗并提交到后端
+    // TODO[阻塞·UI]: 需弹窗收集 symbol 后调 inputService.addStock；Widget 不内嵌弹窗，待 onAddStock 回调或全局弹窗方案。关联 #7 接真实数据源。
     // 当前 Mock 阶段为占位交互，点击后无实际后端调用
   }
 

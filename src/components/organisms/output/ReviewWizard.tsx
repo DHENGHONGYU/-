@@ -8,6 +8,7 @@
  *
  * @module components/output/ReviewWizard
  */
+import { getSafeArray } from '@/lib/safeCoerce'
 import { memo, useEffect, useRef, useState } from 'react'
 import { ArrowLeft, ArrowRight, CheckCircle2, FileBarChart, Sparkles, Wand2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -44,7 +45,7 @@ interface WizardProps {
 
 export default memo(function ReviewWizard({ initialOrders }: WizardProps): React.JSX.Element {
   const [step, setStep] = useState(0)
-  const [orders, setOrders] = useState<Order[]>(initialOrders ?? [])
+  const [orders, setOrders] = useState<Order[]>(getSafeArray(initialOrders))
   const [loadingOrders, setLoadingOrders] = useState(!initialOrders)
   const [review, setReview] = useState<ReviewData | null>(null)
   const [generating, setGenerating] = useState(false)

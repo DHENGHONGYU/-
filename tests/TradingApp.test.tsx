@@ -17,6 +17,11 @@ vi.mock('@/services/trading/portfolioBuilder', () => ({
   computeHoldingsFromOrders: mockComputeHoldingsFromOrders,
 }))
 
+const mockLoadPortfolioInput = vi.hoisted(() => vi.fn())
+vi.mock('@/services/trading/portfolioService', () => ({
+  loadPortfolioInput: mockLoadPortfolioInput,
+}))
+
 import TradingApp from '@/apps/trading/TradingApp'
 import type { Stock, Order, Portfolio, StrategyResult } from '@/data/types'
 import type { TradeAdvice } from '@/services/trading/tradingService'
@@ -207,6 +212,9 @@ describe('TradingApp', () => {
 
     // 防止 loadPortfolio 内部调用 loadOrders 时触发真实 dataLayer DB 查询而挂起
     vi.spyOn(useOrderStore.getState(), 'refresh').mockResolvedValue(undefined)
+
+    // loadPortfolioInput 走真实 DataBridge 会需要初始化 IndexedDB，mock 为直接返回输入
+    mockLoadPortfolioInput.mockResolvedValue({ stocks: [], orders: [] })
   })
 
   afterEach(() => {

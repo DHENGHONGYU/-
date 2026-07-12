@@ -23,6 +23,7 @@
  * @see docs/CHANGELOG.md — Phase 2 变更记录（version 0.9.9）
  */
 
+import { getSafeString } from '@/lib/safeCoerce'
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'
 import { taskScheduler } from '@/services/data-collector/TaskScheduler'
@@ -459,7 +460,7 @@ function handleCollectionResult(
       status: hasAnyData ? 'ready' : s.status,
     }))
 
-    logger.debug(`[marketDataStore] 数据已更新: taskId=${taskId}, key=${key ?? 'unknown'}`)
+    logger.debug(`[marketDataStore] 数据已更新: taskId=${taskId}, key=${getSafeString(key) || 'unknown'}`)
   }
 }
 

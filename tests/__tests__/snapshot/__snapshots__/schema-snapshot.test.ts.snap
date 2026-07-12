@@ -1,0 +1,104 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`数据 Schema 快照测试 > 应该匹配 Stock Schema 验证无效数据的快照 1`] = `
+[
+  {
+    "code": "too_small",
+    "inclusive": true,
+    "message": "Too small: expected string to have >=1 characters",
+    "minimum": 1,
+    "origin": "string",
+    "path": [
+      "code",
+    ],
+  },
+  {
+    "code": "too_small",
+    "inclusive": true,
+    "message": "Too small: expected string to have >=1 characters",
+    "minimum": 1,
+    "origin": "string",
+    "path": [
+      "name",
+    ],
+  },
+  {
+    "code": "too_small",
+    "inclusive": false,
+    "message": "Too small: expected number to be >0",
+    "minimum": 0,
+    "origin": "number",
+    "path": [
+      "price",
+    ],
+  },
+  {
+    "code": "invalid_type",
+    "expected": "number",
+    "message": "Invalid input: expected number, received string",
+    "path": [
+      "changePercent",
+    ],
+  },
+  {
+    "code": "invalid_type",
+    "expected": "number",
+    "message": "Invalid input: expected number, received string",
+    "path": [
+      "volume",
+    ],
+  },
+]
+`;
+
+exports[`数据 Schema 快照测试 > 应该匹配 Stock Schema 验证有效数据的快照 1`] = `
+{
+  "data": {
+    "changePercent": 1.25,
+    "code": "600519",
+    "marketCap": 2100000000000,
+    "name": "贵州茅台",
+    "price": 1688,
+    "volume": 100000,
+  },
+  "success": true,
+}
+`;
+
+exports[`数据 Schema 快照测试 > 应该匹配质量门禁配置的快照 1`] = `
+{
+  "checks": [
+    {
+      "blocking": true,
+      "name": "lint",
+      "tier": "P0",
+    },
+    {
+      "blocking": true,
+      "name": "typecheck",
+      "tier": "P0",
+    },
+    {
+      "blocking": true,
+      "name": "test",
+      "tier": "P0",
+    },
+    {
+      "blocking": false,
+      "name": "audit:layers",
+      "tier": "P1",
+    },
+    {
+      "blocking": false,
+      "name": "audit:dependencies",
+      "tier": "P1",
+    },
+  ],
+  "thresholds": {
+    "maxBrokenLinks": 0,
+    "minContractMatch": 1,
+    "minCoverage": 0.8,
+    "minFreshness": 60,
+  },
+}
+`;

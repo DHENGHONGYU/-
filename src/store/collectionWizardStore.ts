@@ -42,7 +42,7 @@ import {
   importConfigFromJSON,
   validateImportedConfig,
 } from '@/services/collection/configExportService'
-import { validateConfigName } from '@/utils/dataValidation'
+import { validateConfigName } from '@/lib/validation'
 
 const logger = getLogger()
 

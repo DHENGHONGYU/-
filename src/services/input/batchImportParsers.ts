@@ -391,6 +391,11 @@ function parseJsonRows(rawList: unknown[]): BulkImportRow[] {
   return results
 }
 
+/**
+ * 解析上传的 JSON 批量导入文件。
+ * @param file 上传的 File 对象
+ * @returns 解析后的批量导入行数组
+ */
 export async function parseJsonFile(file: File): Promise<BulkImportRow[]> {
   logger.info('[batchImport] 解析 JSON 文件', { name: file.name, size: file.size })
   try {

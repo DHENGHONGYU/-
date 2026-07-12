@@ -120,7 +120,7 @@ export class V6Database {
           if (kind === 'resolve') {
             resolve(value as T)
           } else {
-            reject(value)
+            reject(value instanceof Error ? value : new Error(String(value)))
           }
           return true
         }

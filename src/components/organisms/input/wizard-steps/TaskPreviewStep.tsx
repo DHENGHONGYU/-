@@ -15,7 +15,7 @@ import { useCollectionWizardStore } from '@/store/collectionWizardStore'
 import { COLOR_TOKENS, twBorder, twText, twBg } from '@/constants/theme.tokens'
 import { FileText, Save, AlertCircle } from 'lucide-react'
 import { getLogger } from '@/lib/logger'
-import { validateConfigName } from '@/utils/dataValidation'
+import { validateConfigName } from '@/lib/validation'
 
 const logger = getLogger()
 

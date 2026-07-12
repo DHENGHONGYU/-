@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import * as path from 'node:path'
 import { readFileSync, readdirSync, existsSync, writeFileSync, statSync } from 'node:fs'
+import { createTestLogger } from './_helpers/test-logger'
 
 /**
  * audit-hardcode.ts 单元测试（v3.0 白盒模式）
@@ -34,16 +35,26 @@ const mockWriteFileSync = vi.mocked(writeFileSync)
 type TestFiles = Record<string, string>
 
 describe('audit-hardcode.ts v3.0（白盒测试）', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-    vi.resetModules()
+  const logger = createTestLogger('audit-hardcode')
 
+  beforeEach(() => {
+    logger.info('===== beforeEach 清理开始 =====')
+    logger.step('vi.clearAllMocks()')
+    vi.clearAllMocks()
+    logger.step('vi.resetModules()')
+    vi.resetModules()
+    logger.step('设置 mockWriteFileSync')
     mockWriteFileSync.mockImplementation(() => undefined)
+    logger.step('设置 mockExistsSync')
     mockExistsSync.mockImplementation((() => true) as unknown as typeof existsSync)
+    logger.info('===== beforeEach 清理结束 =====')
   })
 
   afterEach(() => {
+    logger.info('===== afterEach 清理开始 =====')
+    logger.step('vi.restoreAllMocks()')
     vi.restoreAllMocks()
+    logger.info('===== afterEach 清理结束 =====')
   })
 
   /**
@@ -116,6 +127,8 @@ describe('audit-hardcode.ts v3.0（白盒测试）', () => {
 
   describe('scan() 硬编码检测', () => {
     it('检测 UI 层 HEX 颜色硬编码', async () => {
+      logger.testStart('检测 UI 层 HEX 颜色硬编码')
+      logger.step('设置虚拟文件系统...')
       setupVirtualFS({
         'components/BadComponent.tsx': `
 export function BadComponent() {
@@ -123,15 +136,19 @@ export function BadComponent() {
 }
 `,
       })
+      logger.step('动态导入 scan 函数...')
       const { scan } = await importScan()
+      logger.step('执行 scan()...')
       const report = scan()
-
-      expect(report.violations).toContainEqual(
-        expect.objectContaining({
-          category: '硬编码 HEX 颜色',
-          message: expect.stringContaining('#ef4444'),
-        }),
-      )
+      logger.wrapAssert('violations 包含 HEX 颜色硬编码', () => {
+        expect(report.violations).toContainEqual(
+          expect.objectContaining({
+            category: '硬编码 HEX 颜色',
+            message: expect.stringContaining('#ef4444'),
+          }),
+        )
+      })
+      logger.testEnd('检测 UI 层 HEX 颜色硬编码')
     })
 
     it('检测 UI 层 Tailwind 颜色类硬编码', async () => {

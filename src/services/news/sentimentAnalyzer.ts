@@ -1,7 +1,11 @@
 import { dataLayer } from '@/data/dataLayer'
 import type { NewsArticle, SentimentCache } from '@/data/types'
+import { getLogger } from '@/lib/logger'
+
+const logger = getLogger()
 
 export type SentimentLabel = 'positive' | 'negative' | 'neutral'
+export type SentimentMethod = 'rule' | 'llm' | 'hybrid'
 
 export interface SentimentResult {
   sentiment: SentimentLabel
@@ -249,4 +253,145 @@ export async function getOrAnalyzeSentiment(
 
   await dataLayer.sentimentCache.save(cacheEntry)
   return { ...result, contentHash }
+}
+
+// ============================================================
+// LLM 增强情绪分析（v6.0 新增）
+// ============================================================
+
+/**
+ * 使用 LLM 分析文本情绪
+ * @param title 文章标题
+ * @param content 文章内容
+ * @returns LLM 情感分析结果；LLM 不可用时返回 null
+ */
+export async function analyzeWithLLM(
+  title: string,
+  content: string,
+): Promise<SentimentResult | null> {
+  try {
+    const { chat } = await import('@/services/llm/llmGateway')
+
+    const prompt = `你是一名金融情绪分析师。请分析以下新闻/资讯的情绪倾向。
+
+标题: ${title.slice(0, 200)}
+内容: ${content.slice(0, 1500)}
+
+请严格按 JSON 格式返回（不包含其他文本）：
+{"sentiment": "positive"|"negative"|"neutral", "score": 0.0~1.0, "confidence": 0.0~1.0, "reason": "简要理由"}
+
+其中 score 在 [-1, 1] 范围（正=积极，负=消极），confidence 在 [0, 1] 范围。`
+
+    const response = await chat([
+      { role: 'system', content: '你是一个金融NLP工具，只输出JSON。' },
+      { role: 'user', content: prompt },
+    ], { model: 'deepseek-chat', baseURL: '', apiKey: '' })
+
+    // 从回复中提取 JSON
+    const text = response.content
+    const jsonMatch = text.match(/\{[\s\S]*?"sentiment"[\s\S]*?"confidence"[\s\S]*?\}/)
+    if (!jsonMatch) {
+      logger.warn('[SentimentAnalyzer] LLM 返回非 JSON 格式', { snippet: text.slice(0, 100) })
+      return null
+    }
+
+    const parsed = JSON.parse(jsonMatch[0]) as { sentiment: string; score: number; confidence: number; reason?: string }
+
+    if (!['positive', 'negative', 'neutral'].includes(parsed.sentiment)) {
+      return null
+    }
+
+    const score = Math.max(-1, Math.min(1, parsed.score))
+    const confidence = Math.max(0, Math.min(1, parsed.confidence))
+
+    logger.info('[SentimentAnalyzer] LLM 分析完成', {
+      sentiment: parsed.sentiment,
+      score,
+      confidence,
+      reason: parsed.reason?.slice(0, 50),
+    })
+
+    return {
+      sentiment: parsed.sentiment as SentimentLabel,
+      confidence,
+      score,
+    }
+  } catch (err) {
+    logger.warn('[SentimentAnalyzer] LLM 分析失败，降级', {
+      error: err instanceof Error ? err.message : String(err),
+    })
+    return null
+  }
+}
+
+/**
+ * 混合分析：优先使用 LLM（置信度高时采用），否则回退词典规则
+ * @param title 文章标题
+ * @param content 文章内容
+ * @returns 情感分析结果（含来源方法标记）
+ */
+export async function hybridAnalyze(
+  title: string,
+  content: string,
+): Promise<SentimentResult & { method: SentimentMethod }> {
+  // Step 1: 尝试 LLM 分析
+  const llmResult = await analyzeWithLLM(title, content)
+
+  if (llmResult && llmResult.confidence >= 0.6) {
+    return { ...llmResult, method: 'llm' }
+  }
+
+  // Step 2: 回退词典规则
+  const ruleResult = analyzeNewsArticle({ title, content })
+
+  if (llmResult && llmResult.confidence >= 0.3) {
+    // 低置信 LLM 结果与规则结果加权混合
+    const blendedScore = llmResult.score * 0.4 + ruleResult.score * 0.6
+    const blendedConfidence = Math.max(llmResult.confidence, ruleResult.confidence)
+    return {
+      sentiment: classifySentiment(blendedScore),
+      score: blendedScore,
+      confidence: blendedConfidence,
+      method: 'hybrid',
+    }
+  }
+
+  return { ...ruleResult, method: 'rule' }
+}
+
+// ============================================================
+// 时间一致性检查
+// ============================================================
+
+export interface TimeConsistencyResult {
+  consistent: boolean
+  delta: number
+  warning?: string
+}
+
+/**
+ * 检查同一内容的两次情感分析是否随时间一致
+ * @param earlier 较早的分析结果
+ * @param later 较晚的分析结果
+ * @param maxDelta 允许的最大分数变化（绝对值）
+ * @returns 一致性检查结果
+ */
+export function checkTimeConsistency(
+  earlier: { score: number; timestamp: number },
+  later: { score: number; timestamp: number },
+  maxDelta: number = 0.3,
+): TimeConsistencyResult {
+  const delta = Math.abs(later.score - earlier.score)
+  const timeGapMs = later.timestamp - earlier.timestamp
+  const timeGapHours = timeGapMs / (1000 * 60 * 60)
+
+  if (delta > maxDelta) {
+    return {
+      consistent: false,
+      delta,
+      warning: `情感分数在 ${timeGapHours.toFixed(1)} 小时内变化 ${delta.toFixed(2)}（阈值 ${maxDelta}），可能受新信息影响`,
+    }
+  }
+
+  return { consistent: true, delta }
 }

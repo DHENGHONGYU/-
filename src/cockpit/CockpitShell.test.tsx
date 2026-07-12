@@ -61,6 +61,9 @@ vi.mock('lucide-react', () => ({
 // Mock 4: react-grid-layout（直接渲染 children，避免 jsdom 布局问题）
 // ============================================================
 vi.mock('react-grid-layout', () => ({
+  default: ({ children }: { children: ReactNode }) => (
+    <div data-testid="grid-layout">{children}</div>
+  ),
   GridLayout: ({ children }: { children: ReactNode }) => (
     <div data-testid="grid-layout">{children}</div>
   ),

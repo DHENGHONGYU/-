@@ -45,7 +45,7 @@ import type {
   ValidationFinding,
   ValidationStatus,
 } from '../src/types/modules/doc-validation.types'
-import { syncCrossReferences } from './doc-cross-ref-sync'
+import { syncCrossReferences, extractRelativeLinks, classifyLinkTarget } from './doc-cross-ref-sync'
 import { recordVersionHistory } from './doc-version-history'
 
 // ─── 常量 ─────────────────────────────────────────────────────────────────────
@@ -536,35 +536,40 @@ export function validateConsistency(files: readonly ScannedFile[]): SubValidator
       continue
     }
 
-    const links = extractMarkdownLinks(content)
+    const links = extractRelativeLinks(content)
     const sourceDir = file.absolutePath.replace(/\\/g, '/').split('/').slice(0, -1).join('/')
-    const brokenLinks: string[] = []
+    /** 断链的 filePath 级归因（resolved target + line:column） */
+    const brokenFilePaths: string[] = []
+    /** 断链原始文本（保留用于日志） */
+    const brokenRawTargets: string[] = []
 
     totalLinksChecked += links.length
 
     for (const link of links) {
-      const resolved = resolveRelativeLink(sourceDir, link)
-      const existsInScan = allPaths.has(resolved)
-      const existsOnDisk = existsSync(resolved)
+      const cls = classifyLinkTarget(sourceDir, link.target, Array.from(allPaths))
+      const existsInScan = allPaths.has(cls.resolvedTargetPath)
+      const existsOnDisk = existsSync(cls.resolvedTargetPath)
       logger.info(`[DailyDocValidation] 检查交叉引用`, {
         source: file.relativePath,
-        link,
-        resolved,
+        target: link.target,
+        resolved: cls.resolvedTargetPath,
+        fixable: cls.fixable,
         existsInScan,
         existsOnDisk,
       })
       if (!existsInScan && !existsOnDisk) {
-        brokenLinks.push(link)
+        brokenFilePaths.push(`${cls.resolvedTargetPath}:${link.line}:${link.column}`)
+        brokenRawTargets.push(link.target)
       }
     }
 
-    if (brokenLinks.length > 0) {
-      totalBrokenLinks += brokenLinks.length
+    if (brokenFilePaths.length > 0) {
+      totalBrokenLinks += brokenFilePaths.length
       filesWithBrokenLinks++
-      logger.info(`[DailyDocValidation] 发现断裂交叉引用`, {
+      logger.info(`[DailyDocValidation] 发现断裂交叉引用（filePath 级归因）`, {
         file: file.relativePath,
-        brokenCount: brokenLinks.length,
-        brokenLinks,
+        brokenCount: brokenFilePaths.length,
+        brokenFilePaths,
       })
       findings.push(
         createFinding(
@@ -572,9 +577,9 @@ export function validateConsistency(files: readonly ScannedFile[]): SubValidator
           'high',
           'warning',
           file.relativePath,
-          `发现 ${brokenLinks.length} 个断裂的交叉引用`,
+          `发现 ${brokenFilePaths.length} 个断裂的交叉引用（filePath 级归因：${brokenFilePaths.join(', ')})`,
           '运行 npx tsx scripts/doc-cross-ref-sync.ts 自动修复',
-          brokenLinks,
+          brokenFilePaths,
         ),
       )
     }

@@ -165,6 +165,13 @@ function pushStubDimension(result: CollectResult, item: CollectedItem): void {
   result.stubDimensions!.push(item.dimension)
 }
 
+/**
+ * 按维度采集数据：对一组 symbol 执行指定维度的数据采集。
+ * @param dimension 数据维度标识
+ * @param symbols 待采集的股票 symbol 列表
+ * @param deps 采集依赖（读取器、缓存等）
+ * @returns 采集结果
+ */
 export async function collectDimension(
   dimension: string,
   symbols: string[],

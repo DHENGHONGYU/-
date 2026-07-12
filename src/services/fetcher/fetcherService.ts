@@ -1,7 +1,6 @@
-import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID } from '@/config/dbConfig'
+import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
-import { dataLayer } from '@/data/dataLayer'
 import { getLogger } from '@/lib/logger'
 import type { DataLayerResult, DailyQuotes, FinancialReport, Stock } from '@/data/types'
 import { adaptBasicDataToStock, adaptFinancialDataToReport, adaptKlineDataToDailyQuotes } from './fetcherAdapter'
@@ -28,11 +27,16 @@ async function sendUpdateStock(
     )
     await dataBridge.forward(envelope)
 
-    const updated = await dataLayer.stocks.get(update.symbol)
-    if (!updated) {
+    const updatedResult = await dataBridge.query<Stock>({
+      action: ENVELOPE_ACTION.queryGet,
+      store: STORE_NAME.stocks,
+      key: update.symbol,
+      source: MODULE_ID.fetcher,
+    })
+    if (!updatedResult.success || !updatedResult.data) {
       return { success: false, error: `更新后未找到股票: ${update.symbol}` }
     }
-    return { success: true, data: updated }
+    return { success: true, data: updatedResult.data }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     logger.error('[fetcherService] 更新股票失败', { symbol: update.symbol, error: message })
@@ -77,11 +81,17 @@ export async function fetchStockBasic(symbol: string): Promise<DataLayerResult<S
 
   logger.info('[fetcherService] fetchStockBasic 开始', { symbol: normalized })
 
-  const existing = await dataLayer.stocks.get(normalized)
-  if (!existing) {
+  const existingResult = await dataBridge.query<Stock>({
+    action: ENVELOPE_ACTION.queryGet,
+    store: STORE_NAME.stocks,
+    key: normalized,
+    source: MODULE_ID.fetcher,
+  })
+  if (!existingResult.success || !existingResult.data) {
     logger.warn('[fetcherService] fetchStockBasic 股票不存在', { symbol: normalized })
     return { success: false, error: `股票不存在: ${normalized}` }
   }
+  const existing = existingResult.data
 
   logger.info('[fetcherService] fetchStockBasic 本地股票已找到', {
     symbol: normalized,
@@ -183,11 +193,17 @@ export async function fetchStockKline(
     endDate: options.endDate,
   })
 
-  const existing = await dataLayer.stocks.get(normalized)
-  if (!existing) {
+  const existingResult = await dataBridge.query<Stock>({
+    action: ENVELOPE_ACTION.queryGet,
+    store: STORE_NAME.stocks,
+    key: normalized,
+    source: MODULE_ID.fetcher,
+  })
+  if (!existingResult.success || !existingResult.data) {
     logger.warn('[fetcherService] fetchStockKline 股票不存在', { symbol: normalized })
     return { success: false, error: `股票不存在: ${normalized}` }
   }
+  const existing = existingResult.data
 
   logger.info('[fetcherService] fetchStockKline 本地股票已找到', {
     symbol: normalized,
@@ -390,14 +406,20 @@ export async function fetchFinancial(
 
     // 4. 验证保存结果
     logger.info('[fetcherService] fetchFinancial 开始验证保存结果', { symbol: normalized })
-    const saved = await dataLayer.financialReports.get(normalized)
+    const savedResult = await dataBridge.query<FinancialReport>({
+      action: ENVELOPE_ACTION.queryGet,
+      store: STORE_NAME.financialReports,
+      key: normalized,
+      source: MODULE_ID.fetcher,
+    })
 
-    if (!saved) {
+    if (!savedResult.success || !savedResult.data) {
       logger.error('[fetcherService] fetchFinancial 验证失败: 保存后未找到记录', {
         symbol: normalized,
       })
       return { success: false, error: '保存后未找到财务数据记录' }
     }
+    const saved = savedResult.data
 
     logger.info('[fetcherService] fetchFinancial 验证成功: 财务数据已保存', {
       symbol: normalized,

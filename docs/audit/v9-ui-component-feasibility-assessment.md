@@ -1,3 +1,8 @@
+---
+title: V9 UI 组件增加可行性评估报告
+code_version: 2.0.0
+---
+
 # V9 UI 组件增加可行性评估报告
 
 > 评估日期: 2026-07-01
@@ -524,4 +529,4 @@
 ## 📁 相关文档
 
 - [V6-V9 UI 组件比对报告](./v6-v9-ui-component-comparison-report.md)
-- [UI 设计系统文档](../implementation/ui-design-system.md)
+- [UI 设计系统文档](../02-design/ui-design-system.md)
