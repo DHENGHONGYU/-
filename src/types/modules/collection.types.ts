@@ -258,6 +258,10 @@ export interface CollectionTraceSpan {
   result: 'success' | 'fail' | 'partial'
   /** 总耗时（毫秒） */
   totalDurationMs: number
+  /** 单次耗时（毫秒，简化版查询用） */
+  durationMs?: number
+  /** 附加元数据 */
+  metadata?: Record<string, unknown>
   /** 最终数据源 */
   finalSource?: QuoteDataSourceId
   /** 降级次数 */

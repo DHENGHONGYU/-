@@ -14,6 +14,7 @@ import { MultiPeriodTrendChart } from '@/components/organisms/analysis/score/Mul
 import { IntelligentScoreExplanation } from '@/components/organisms/analysis/score/IntelligentScoreExplanation'
 import type { ScoreTrendPeriod } from '@/types/modules/score.types'
 import { IntelligentScoreBasisCard } from '@/components/cabin/IntelligentScoreBasisCard'
+import { ComplianceDisclaimer } from '@/components/atoms/ComplianceDisclaimer'
 import {
   useIntelligentScoreStore,
   selectConfigReady,
@@ -417,6 +418,16 @@ export default function IntelligentScorePage(): React.JSX.Element {
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-base">
                         评分结果 · {result.symbol}
+                        {result.configSnapshot.v6EngineVersion && (
+                          <Badge variant="secondary" className="ml-2 text-xs" title={`v6 引擎版本 ${result.configSnapshot.v6EngineVersion}`}>
+                            V6 实时因子
+                          </Badge>
+                        )}
+                        {!result.configSnapshot.v6EngineVersion && !result.dimensionScores.some((d) => d.usedLlm) && (
+                          <Badge variant="outline" className="ml-2 text-xs">
+                            LLM 合成
+                          </Badge>
+                        )}
                       </CardTitle>
                       <div className="flex gap-2">
                         <Tooltip content="导出 JSON">
@@ -536,6 +547,9 @@ export default function IntelligentScorePage(): React.JSX.Element {
       )}
 
       {result && <IntelligentScoreBasisCard result={result} history={history} logs={logs} />}
+
+      {/* 合规层 — 免责声明 */}
+      <ComplianceDisclaimer variant="compact" />
     </PageContainer>
   )
 }

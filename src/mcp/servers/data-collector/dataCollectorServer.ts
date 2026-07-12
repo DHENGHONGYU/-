@@ -37,7 +37,7 @@ export class DataCollectorServer extends MCPServerBase {
           const symbol = args.symbol as string
           const days = (args.days as number) ?? 30
           logger.info('[DataCollectorServer] fetch_market_data called', { symbol, days })
-          // TODO: MarketDataAdapter 尚未实现 fetchMarketData，当前返回占位响应
+          // TODO[阻塞·#7]: MarketDataAdapter 仅有 adapt/merge，fetchMarketData 未实现；待接真实数据源（AKShare/HTTP）后补全。
           return { content: [{ type: 'text', text: JSON.stringify({ symbol, days, data: [], note: 'fetchMarketData 尚未实现' }) }] }
         },
       },

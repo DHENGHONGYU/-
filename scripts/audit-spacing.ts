@@ -7,7 +7,6 @@ import { glob } from 'glob'
 import { readFile } from 'fs/promises'
 import { resolve } from 'path'
 
-// 允许的间距值（4px 栅格系统）
 const VALID_SPACING_VALUES = new Set([
   '0', '0px',
   '1px',
@@ -34,16 +33,14 @@ const VALID_SPACING_VALUES = new Set([
   '128px',
 ])
 
-// Tailwind 标准间距类（允许使用）
 const TAILWIND_SPACING_PATTERNS = [
   /(?:p|m|gap|space-[xy])-(?:0|0\.5|1|1\.5|2|2\.5|3|3\.5|4|5|6|7|8|9|10|11|12|14|16|20|24|28|32|36|40|44|48|52|56|60|64|72|80|96)\b/,
   /(?:px|py|mx|my|pt|pb|pl|pr|mt|mb|ml|mr)-(?:0|0\.5|1|1\.5|2|2\.5|3|3\.5|4|5|6|7|8|9|10|11|12|14|16|20|24|28|32|36|40|44|48|52|56|60|64|72|80|96)\b/,
 ]
 
-// 硬编码间距正则（需要检查）
 const HARDCODED_SPACING_REGEX = /(?:padding|margin|gap|top|right|bottom|left|width|height|min-width|min-height|max-width|max-height):\s*(\d+(?:\.\d+)?)px/g
 
-interface Violation {
+export interface Violation {
   file: string
   line: number
   column: number
@@ -51,56 +48,73 @@ interface Violation {
   context: string
 }
 
-async function auditSpacing(): Promise<void> {
-  console.log('🔍 开始间距系统合规性检查...\n')
+export interface SpacingReport {
+  violations: Violation[]
+  warnings: string[]
+  totalFiles: number
+}
 
+export async function scan(): Promise<SpacingReport> {
   const files = await glob('src/**/*.{tsx,ts}', {
     ignore: ['**/*.test.{tsx,ts}', '**/node_modules/**', '**/dist/**', 'src/constants/**'],
   })
 
   const violations: Violation[] = []
+  const warnings: string[] = []
 
   for (const file of files) {
-    const content = await readFile(resolve(process.cwd(), file), 'utf-8')
-    const lines = content.split('\n')
+    try {
+      const content = await readFile(resolve(process.cwd(), file), 'utf-8')
+      const lines = content.split('\n')
 
-    lines.forEach((line, index) => {
-      // 跳过注释行
-      if (line.trim().startsWith('//') || line.trim().startsWith('*')) {
-        return
-      }
-
-      // 检查硬编码间距
-      let match
-      const regex = new RegExp(HARDCODED_SPACING_REGEX)
-      
-      while ((match = regex.exec(line)) !== null) {
-        const value = match[1] + 'px'
-        
-        // 检查是否在 Tailwind 类名中（允许）
-        const isInTailwindClass = TAILWIND_SPACING_PATTERNS.some((p) => p.test(line))
-        
-        if (!isInTailwindClass && !VALID_SPACING_VALUES.has(value)) {
-          violations.push({
-            file,
-            line: index + 1,
-            column: match.index + 1,
-            value,
-            context: line.trim(),
-          })
+      lines.forEach((line, index) => {
+        if (line.trim().startsWith('//') || line.trim().startsWith('*')) {
+          return
         }
-      }
-    })
+
+        let match
+        const regex = new RegExp(HARDCODED_SPACING_REGEX)
+        
+        while ((match = regex.exec(line)) !== null) {
+          const value = match[1] + 'px'
+          
+          const isInTailwindClass = TAILWIND_SPACING_PATTERNS.some((p) => p.test(line))
+          
+          if (!isInTailwindClass && !VALID_SPACING_VALUES.has(value)) {
+            violations.push({
+              file,
+              line: index + 1,
+              column: match.index + 1,
+              value,
+              context: line.trim(),
+            })
+          }
+        }
+      })
+    } catch {
+      warnings.push(`无法读取文件: ${file}`)
+    }
   }
 
-  // 输出结果
-  if (violations.length === 0) {
+  return {
+    violations,
+    warnings,
+    totalFiles: files.length,
+  }
+}
+
+async function auditSpacing(): Promise<void> {
+  console.log('🔍 开始间距系统合规性检查...\n')
+
+  const report = await scan()
+
+  if (report.violations.length === 0) {
     console.log('✅ 间距系统合规检查通过！未发现硬编码间距。\n')
     process.exit(0)
   } else {
-    console.error(`❌ 发现 ${violations.length} 处间距违规：\n`)
+    console.error(`❌ 发现 ${report.violations.length} 处间距违规：\n`)
     
-    violations.forEach((v, i) => {
+    report.violations.forEach((v, i) => {
       console.error(`${i + 1}. ${v.file}:${v.line}:${v.column}`)
       console.error(`   值: ${v.value}`)
       console.error(`   上下文: ${v.context}\n`)
@@ -115,7 +129,9 @@ async function auditSpacing(): Promise<void> {
   }
 }
 
-auditSpacing().catch((error) => {
-  console.error('审计脚本执行失败:', error)
-  process.exit(1)
-})
+if (require.main === module) {
+  auditSpacing().catch((error) => {
+    console.error('审计脚本执行失败:', error)
+    process.exit(1)
+  })
+}

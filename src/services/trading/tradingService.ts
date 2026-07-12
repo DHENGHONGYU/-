@@ -7,9 +7,9 @@ import {
   ORDER_DIRECTION,
   ORDER_STATUS,
   RESEARCH_STATUS,
+  STORE_NAME,
 } from '@/config/dbConfig'
 import { getEffectiveTradingConfig } from '@/config/tradingConfig'
-import { dataLayer } from '@/data/dataLayer'
 import type { DataLayerResult, Order, Stock } from '@/data/types'
 import {
   generateSignalsForSymbol,
@@ -66,7 +66,15 @@ async function computePositionForSignal(
     return { success: false, error: '股票价格无效' }
   }
 
-  const orders = await dataLayer.orders.list()
+  const ordersResult = await dataBridge.query<Order[]>({
+    action: ENVELOPE_ACTION.queryList,
+    store: STORE_NAME.orders,
+    source: MODULE_ID.trading,
+  })
+  if (!ordersResult.success || !ordersResult.data) {
+    return { success: false, error: ordersResult.error ?? '获取订单失败' }
+  }
+  const orders = ordersResult.data
   const price = stock.price
   const portfolioValue = getEffectiveTradingConfig().risk.portfolioValue
 
@@ -225,8 +233,17 @@ async function createOrderWithRiskCheck(
  */
 export async function getWatchlistStocks(): Promise<DataLayerResult<Stock[]>> {
   try {
-    const list = await dataLayer.stocks.listByStatus(RESEARCH_STATUS.watching)
-    return { success: true, data: list }
+    const result = await dataBridge.query<Stock[]>({
+      action: ENVELOPE_ACTION.queryByIndex,
+      store: STORE_NAME.stocks,
+      indexName: 'by-status',
+      indexValue: RESEARCH_STATUS.watching,
+      source: MODULE_ID.trading,
+    })
+    if (!result.success) {
+      return { success: false, error: result.error }
+    }
+    return { success: true, data: result.data ?? [] }
   } catch (err) {
     return {
       success: false,
@@ -240,8 +257,15 @@ export async function getWatchlistStocks(): Promise<DataLayerResult<Stock[]>> {
  */
 export async function getOrders(): Promise<DataLayerResult<Order[]>> {
   try {
-    const list = await dataLayer.orders.list()
-    return { success: true, data: list }
+    const result = await dataBridge.query<Order[]>({
+      action: ENVELOPE_ACTION.queryList,
+      store: STORE_NAME.orders,
+      source: MODULE_ID.trading,
+    })
+    if (!result.success) {
+      return { success: false, error: result.error }
+    }
+    return { success: true, data: result.data ?? [] }
   } catch (err) {
     return {
       success: false,

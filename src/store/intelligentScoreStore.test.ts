@@ -113,6 +113,7 @@ beforeEach(() => {
     showConfig: false,
     progress: {
       fetchBasicData: 'pending',
+      v6EngineCalculation: 'pending',
       readSupplementaryFiles: 'pending',
       prepareReportText: 'pending',
       llmAnalysis: 'pending',
@@ -503,7 +504,7 @@ describe('intelligentScoreStore', () => {
     useIntelligentScoreStore.setState({
       symbol: '600519',
       llmConfig: { baseURL: 'https://api.test.com', apiKey: 'sk-test', model: 'test-model' },
-      progress: { fetchBasicData: 'done', readSupplementaryFiles: 'done', prepareReportText: 'done', llmAnalysis: 'done', parseScore: 'done', saveResult: 'done' },
+      progress: { fetchBasicData: 'done', v6EngineCalculation: 'done', readSupplementaryFiles: 'done', prepareReportText: 'done', llmAnalysis: 'done', parseScore: 'done', saveResult: 'done' },
       progressMessage: '之前的消息',
       error: '之前的错误',
       result: createMockIntelligentScore('000001', 3.0),
@@ -530,7 +531,7 @@ describe('intelligentScoreStore', () => {
       previousResult: createMockIntelligentScore('600519', 4.2),
       history: [createMockIntelligentScore('600519', 4.5)],
       logs: [{ traceId: '1', timestamp: Date.now(), actor: 'system', action: 'score', targetType: 'stock', targetCode: '600519' }],
-      progress: { fetchBasicData: 'done', readSupplementaryFiles: 'done', prepareReportText: 'done', llmAnalysis: 'done', parseScore: 'done', saveResult: 'done' },
+      progress: { fetchBasicData: 'done', v6EngineCalculation: 'done', readSupplementaryFiles: 'done', prepareReportText: 'done', llmAnalysis: 'done', parseScore: 'done', saveResult: 'done' },
       progressMessage: '完成',
       error: '某错误',
     })

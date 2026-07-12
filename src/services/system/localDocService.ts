@@ -2,6 +2,7 @@ import { dataLayer } from '@/data/dataLayer'
 import { generateId } from '@/data/db'
 import type { DataLayerResult, LocalDoc } from '@/data/types'
 import { getLogger } from '@/lib/logger'
+import { embedText, findTopK, getEmbeddingStatus } from '@/services/system/localEmbeddingService'
 
 const logger = getLogger()
 
@@ -273,12 +274,25 @@ export async function importFilesToDatabase(
 }
 
 /**
- * createLocalDoc
+ * createLocalDoc — 创建本地文档（自动生成嵌入向量）
  */
 export async function createLocalDoc(
   doc: Omit<LocalDoc, 'id' | 'addedAt'>,
 ): Promise<DataLayerResult<LocalDoc>> {
   const fullDoc: LocalDoc = { ...doc, id: generateId(), addedAt: Date.now() }
+
+  // 尝试生成嵌入向量（失败不阻塞，仅降级）
+  try {
+    const status = getEmbeddingStatus()
+    if (status.loaded || !status.loading) {
+      const embeddingResult = await embedText(fullDoc.content)
+      if (embeddingResult.success) {
+        fullDoc.embedding = embeddingResult.vector
+      }
+    }
+  } catch {
+    // 嵌入生成失败不阻断文档创建
+  }
 
   const result = await dataLayer.localDocs.save(fullDoc)
   if (!result.success) {
@@ -335,6 +349,113 @@ export async function searchLocalDocs(
     const message = err instanceof Error ? err.message : String(err)
     logger.error('searchLocalDocs failed', { error: message })
     return { success: false, error: message }
+  }
+}
+
+/**
+ * searchLocalDocsSemantic — 语义搜索本地知识库
+ *
+ * 使用向量嵌入 + 余弦相似度进行语义检索。
+ * 当嵌入不可用时静默降级为关键词搜索。
+ */
+export async function searchLocalDocsSemantic(
+  query: string,
+  topK: number = 5,
+  symbol?: string,
+): Promise<DataLayerResult<LocalDoc[]>> {
+  try {
+    const all = await dataLayer.localDocs.list()
+    let docs = all
+
+    // 按标的筛选
+    if (symbol) {
+      docs = docs.filter((d) => d.symbol === symbol || d.symbol === 'ALL')
+    }
+
+    if (docs.length === 0) {
+      return { success: true, data: [] }
+    }
+
+    // 尝试语义检索
+    try {
+      const queryResult = await embedText(query)
+      if (queryResult.success) {
+        const candidates = docs
+          .filter((d) => d.embedding && d.embedding.length > 0)
+          .map((d) => ({ id: d.id, vector: d.embedding! }))
+
+        if (candidates.length > 0) {
+          const hits = findTopK(queryResult.vector, candidates, topK)
+          const hitIds = new Set(hits.map((h) => h.id))
+          const semanticDocs = hits
+            .map((h) => docs.find((d) => d.id === h.id))
+            .filter((d): d is LocalDoc => d !== undefined)
+
+          // 补充：未命中嵌入但关键词匹配的文档
+          const fallbackDocs = docs.filter((d) => !hitIds.has(d.id))
+
+          return { success: true, data: [...semanticDocs, ...fallbackDocs].slice(0, topK) }
+        }
+      }
+    } catch {
+      // 嵌入检索失败，静默降级
+      logger.warn('[localDocService] 语义检索不可用，回退关键词搜索')
+    }
+
+    // 降级：纯关键词搜索
+    const normalizedQuery = query.trim().toLowerCase()
+    const keywordHits = docs
+      .map((doc) => ({ doc, score: calculateMatchScore(doc, normalizedQuery) }))
+      .filter((item) => item.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .map((item) => item.doc)
+      .slice(0, topK)
+
+    return { success: true, data: keywordHits }
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    logger.error('searchLocalDocsSemantic failed', { error: message })
+    return { success: false, error: message }
+  }
+}
+
+/**
+ * batchEmbedLocalDocs — 为没有嵌入向量的文档批量生成嵌入（后台任务）
+ * @param limit 每次处理的最大文档数
+ */
+export async function batchEmbedLocalDocs(limit: number = 10): Promise<{ processed: number; failed: number }> {
+  try {
+    const all = await dataLayer.localDocs.list()
+    const pending = all.filter((d) => !d.embedding || d.embedding.length === 0).slice(0, limit)
+
+    let processed = 0
+    let failed = 0
+
+    for (const doc of pending) {
+      try {
+        const result = await embedText(doc.content)
+        if (result.success) {
+          doc.embedding = result.vector
+          const saveResult = await dataLayer.localDocs.save(doc)
+          if (saveResult.success) {
+            processed++
+          } else {
+            failed++
+          }
+        } else {
+          failed++
+        }
+      } catch {
+        failed++
+      }
+    }
+
+    logger.info('[localDocService] batchEmbedLocalDocs 完成', { processed, failed, total: pending.length })
+    return { processed, failed }
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    logger.error('[localDocService] batchEmbedLocalDocs 失败', { error: message })
+    return { processed: 0, failed: 0 }
   }
 }
 

@@ -1,9 +1,17 @@
 import { calculateWeightedScore, getEnabledStockFactorNames } from '@/config/scoreFactors'
-import { dataLayer } from '@/data/dataLayer'
-import type { DataLayerResult, DimensionScore, IntelligentScore, Stock } from '@/data/types'
+import { dataBridge } from '@/core/databridge'
+import { ENVELOPE_ACTION, STORE_NAME } from '@/config/dbConfig'
+import type { DataLayerResult, DailyQuotes, DimensionScore, IntelligentScore, Stock } from '@/data/types'
 import type { LlmConfig, LlmTransparencyConfig } from '@/config/llmConfig'
 import { chat, LlmApiError } from '@/services/llm/llmGateway'
 import { buildIntelligentScorePrompt } from './intelligentScorePrompt'
+import { createV6Engine, stockToBasicData, quotesToQuoteData } from '@/services/scoring/v6-engine'
+import type { CompositeScore, LayerScore } from '@/services/scoring/v6-engine/types'
+import { buildFinancialData } from '@/services/scoring/v6ScoreService'
+import { validateScoreBeforeSave } from '@/services/scoring/aiOutputValidator'
+import { getLogger } from '@/lib/logger'
+
+const logger = getLogger()
 
 const DIMENSION_NAMES = getEnabledStockFactorNames()
 
@@ -24,6 +32,7 @@ export interface ScoreStepStatus {
 
 export type ScoreStep =
   | 'fetchBasicData'
+  | 'v6EngineCalculation'
   | 'readSupplementaryFiles'
   | 'prepareReportText'
   | 'llmAnalysis'
@@ -166,6 +175,92 @@ function calculateOverallScore(dimensions: DimensionScore[]): number | null {
   )
 }
 
+/** 获取 v6 层名映射中层的得分，返回 [0,5] 的分数 */
+function scoreFromLayer(layer: LayerScore | undefined): number | null {
+  return layer ? Math.max(0, Math.min(5, layer.score)) : null
+}
+
+/** 从多个 v6 层中取综合得分（平均各层分） */
+function averageFromLayers(...layers: (LayerScore | undefined)[]): number | null {
+  const scores = layers.filter((l): l is LayerScore => l !== undefined).map((l) => l.score)
+  if (scores.length === 0) return null
+  return scores.reduce((a, b) => a + b, 0) / scores.length
+}
+
+/** 将 v6 11 层 CompositeScore 映射为 9 因子 DimensionScore[] */
+function v6CompositeToDimensionScores(
+  composite: CompositeScore,
+  factorNames: string[],
+): DimensionScore[] {
+  const layers = composite.layers
+  const weight = 1 / factorNames.length
+
+  return factorNames.map((name) => {
+    let score: number | null
+    let rationale: string
+    let evidence: string[]
+
+    switch (name) {
+      case '估值':
+        score = scoreFromLayer(layers.l3v)
+        rationale = layers.l3v?.summary ?? 'v6 估值层评分'
+        evidence = layers.l3v?.evidence ?? []
+        break
+      case '成长':
+        score = averageFromLayers(layers.l7, layers.l5)
+        rationale = [layers.l7?.summary, layers.l5?.summary].filter(Boolean).join('; ')
+        evidence = [...(layers.l7?.evidence ?? []), ...(layers.l5?.evidence ?? [])]
+        break
+      case '盈利':
+        score = scoreFromLayer(layers.l3f)
+        rationale = layers.l3f?.summary ?? 'v6 财务健康层评分'
+        evidence = layers.l3f?.evidence ?? []
+        break
+      case '质量':
+        score = averageFromLayers(layers.l1, layers.l3f)
+        rationale = [layers.l1?.summary, layers.l3f?.summary].filter(Boolean).join('; ')
+        evidence = [...(layers.l1?.evidence ?? []), ...(layers.l3f?.evidence ?? [])]
+        break
+      case '动量':
+        score = scoreFromLayer(layers.l8)
+        rationale = layers.l8?.summary ?? 'v6 技术筹码层评分'
+        evidence = layers.l8?.evidence ?? []
+        break
+      case '波动':
+        score = scoreFromLayer(layers.l8)
+        rationale = '波动率来自 v6 L8 技术筹码层'
+        evidence = layers.l8?.evidence ?? []
+        break
+      case '流动性':
+        score = scoreFromLayer(layers.l8)
+        rationale = '流动性来自 v6 L8 技术筹码层'
+        evidence = layers.l8?.evidence ?? []
+        break
+      case '行业':
+        score = averageFromLayers(layers.lMinus1, layers.l0, layers.l2)
+        rationale = [layers.lMinus1?.summary, layers.l0?.summary, layers.l2?.summary]
+          .filter(Boolean).join('; ')
+        evidence = [
+          ...(layers.lMinus1?.evidence ?? []),
+          ...(layers.l0?.evidence ?? []),
+          ...(layers.l2?.evidence ?? []),
+        ]
+        break
+      case '情绪':
+        score = averageFromLayers(layers.l6, layers.l4)
+        rationale = [layers.l6?.summary, layers.l4?.summary].filter(Boolean).join('; ')
+        evidence = [...(layers.l6?.evidence ?? []), ...(layers.l4?.evidence ?? [])]
+        break
+      default:
+        score = null
+        rationale = '未知因子'
+        evidence = []
+    }
+
+    return { name, score, rationale, evidence, weight, usedLlm: false }
+  })
+}
+
 /**
  * runIntelligentScore
  */
@@ -184,9 +279,40 @@ export async function runIntelligentScore(
   try {
     currentStep = 'fetchBasicData'
     reportProgress(currentStep, 'running', '读取基础数据...')
-    const stock = await dataLayer.stocks.get(symbol)
+    const stockResult = await dataBridge.query<Stock>({ action: ENVELOPE_ACTION.queryGet, store: STORE_NAME.stocks, key: symbol })
+    const stock = stockResult.success ? stockResult.data : undefined
     const basicMissingFields = detectMissingBasicFields(stock)
     reportProgress(currentStep, 'done', stock ? `已读取 ${stock.name}(${stock.symbol})` : '未找到基础数据')
+
+    currentStep = 'v6EngineCalculation'
+    reportProgress(currentStep, 'running', '执行 V6 实时因子引擎 ...')
+    let v6Composite: CompositeScore | null = null
+    try {
+      const quotesResult = await dataBridge.query<DailyQuotes>({
+        action: ENVELOPE_ACTION.queryGet,
+        store: STORE_NAME.dailyQuotes,
+        key: symbol,
+      })
+      const quotesOrNull = quotesResult.success ? quotesResult.data : null
+
+      const engine = createV6Engine()
+      const inputSymbol = stock?.symbol ?? symbol
+      const input = {
+        symbol: inputSymbol,
+        stock: stock ? stockToBasicData(stock) : stockToBasicData({ price: 0 } as Stock),
+        financials: await buildFinancialData(inputSymbol),
+        quotes: quotesOrNull
+          ? quotesToQuoteData(quotesOrNull)
+          : { latestClose: stock?.price ?? 0, history: [], volumeHistory: [] },
+      }
+      const composite = await engine.calculateAll(input)
+      v6Composite = composite
+      reportProgress(currentStep, 'done', `V6 引擎完成，综合分 ${composite.score.toFixed(2)}`)
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err)
+      logger.warn('[runIntelligentScore] V6 引擎不可用，将回退 LLM', { symbol, error: msg })
+      reportProgress(currentStep, 'done', 'V6 引擎数据不足，将使用 LLM 评分')
+    }
 
     currentStep = 'readSupplementaryFiles'
     reportProgress(currentStep, 'running', `读取 ${files.length} 个补充文件...`)
@@ -205,21 +331,53 @@ export async function runIntelligentScore(
 
     currentStep = 'parseScore'
     reportProgress(currentStep, 'running', '解析评分结果...')
-    const rawOutput = parseRawScoreOutput(response.content)
-    const normalized = normalizeScoreOutput(rawOutput, input.transparencyConfig)
-    const overallScore = calculateOverallScore(normalized.dimensions)
-    reportProgress(currentStep, 'done', overallScore !== null ? `综合分 ${overallScore}` : '综合分无法计算')
+
+    // 核心策略：v6 真实因子优先，LLM 仅提供文本增强
+    const dimensionNames = getEnabledStockFactorNames()
+    let dimensions: DimensionScore[]
+    let overallScore: number | null
+
+    if (v6Composite) {
+      // 使用 v6 真实因子分数
+      dimensions = v6CompositeToDimensionScores(v6Composite, dimensionNames)
+      // 尝试从 LLM 输出中提取文本增强（rationale 的丰富化），但不覆盖分数
+      try {
+        const rawOutput = parseRawScoreOutput(response.content)
+        for (const rawDim of (rawOutput.dimensions ?? [])) {
+          if (rawDim.name && rawDim.rationale && rawDim.rationale !== '未提供评分依据') {
+            const matched = dimensions.find((d) => d.name.includes(rawDim.name!) || rawDim.name!.includes(d.name))
+            if (matched && matched.rationale.length < (rawDim.rationale?.length ?? 0)) {
+              matched.rationale = rawDim.rationale!
+            }
+          }
+        }
+      } catch {
+        // LLM 解析失败不影响 v6 分数
+        logger.warn('[runIntelligentScore] LLM 文本增强解析失败，仅使用 v6 因子分数')
+      }
+      overallScore = v6Composite.score
+    } else {
+      // v6 不可用，完全回退 LLM 合成分数（原行为）
+      const rawOutput = parseRawScoreOutput(response.content)
+      const normalized = normalizeScoreOutput(rawOutput, input.transparencyConfig)
+      dimensions = normalized.dimensions
+      overallScore = calculateOverallScore(normalized.dimensions)
+    }
+
+    reportProgress(currentStep, 'done', overallScore !== null ? `综合分 ${overallScore.toFixed(2)}` : '综合分无法计算')
 
     const finalMissingFields = Array.from(
-      new Set([...basicMissingFields, ...normalized.missingFields]),
+      new Set([...basicMissingFields]),
     )
 
     const score: IntelligentScore = {
       symbol,
       overallScore,
-      dimensionScores: normalized.dimensions,
-      summary: normalized.summary,
-      basis: normalized.basis,
+      dimensionScores: dimensions,
+      summary: response.content.slice(0, 500), // LLM 回复摘要
+      basis: v6Composite
+        ? `V6 实时因子引擎 (v${v6Composite.engineVersion})，基于 ${Object.keys(v6Composite.layers).length} 层因子计算`
+        : 'LLM 生成评分（数据不足，未触发 v6 引擎）',
       missingFields: finalMissingFields,
       sourceSnapshot: {
         stock,
@@ -229,14 +387,34 @@ export async function runIntelligentScore(
       configSnapshot: {
         model: llmConfig?.model ?? '',
         baseURL: llmConfig?.baseURL ?? '',
+        v6EngineVersion: v6Composite?.engineVersion,
+        v6Score: v6Composite?.score,
       },
       modelResponse: response.content,
       dataVersion: stock?.dataVersion ?? 0,
       scoredAt: Date.now(),
     }
 
+    // V9-003: AI 输出三道校验（持久化前拦截异常数据）
+    const validationReport = validateScoreBeforeSave(score, {
+      v6EngineScore: v6Composite?.score,
+    })
+    if (validationReport.severity === 'block') {
+      const msg = `评分校验未通过（${validationReport.issues.filter((i) => i.severity === 'block').length} 项阻塞），不保存`
+      logger.error('[runIntelligentScore] ' + msg, { symbol, issues: validationReport.issues })
+      return { success: false, error: msg }
+    }
+    if (validationReport.severity === 'warn') {
+      logger.warn('[runIntelligentScore] 评分校验通过但有警告', {
+        symbol,
+        warns: validationReport.issues.filter((i) => i.severity === 'warn'),
+      })
+    }
+
     currentStep = 'saveResult'
     reportProgress(currentStep, 'running', '保存评分结果...')
+    // TODO[P2]: 迁移至 DataBridge.forward()
+    const { dataLayer } = await import('@/data/dataLayer')
     const saveResult = await dataLayer.intelligentScores.save(score)
     if (!saveResult.success) {
       reportProgress(currentStep, 'error', saveResult.error ?? '保存失败')

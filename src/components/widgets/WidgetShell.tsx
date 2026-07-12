@@ -1,3 +1,4 @@
+
 import React, { useCallback } from 'react'
 import type { ReactNode } from 'react'
 import { WidgetContext } from '../../core/WidgetContext'
@@ -87,7 +88,7 @@ export function WidgetShell({
   state,
   stateConfig,
 }: WidgetShellProps): React.ReactElement {
-  const visualState: WidgetVisualState = state ?? 'ready'
+  const visualState: WidgetVisualState = state ?? 'ready' /* default: ready state */ /* default: ready state */
 
   const renderContent = (): React.ReactNode => {
     if (visualState === 'loading') {

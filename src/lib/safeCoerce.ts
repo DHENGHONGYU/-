@@ -155,3 +155,21 @@ export function toSafeString(value: unknown, defaultValue = ''): string {
   // eslint-disable-next-line @typescript-eslint/no-base-to-string -- 回退分支：value 已经过所有基本类型检查，此处为 object，调用 String() 是合理的最后手段
   return String(value)
 }
+
+/** 安全获取字符串值的别名 */
+export const getSafeString = toSafeString
+/** 安全获取数字值的别名 */
+export const getSafeNumber = toSafeNumber
+/** 安全获取数组值的别名 */
+export const getSafeArray = toSafeArray
+
+/**
+ * 通用回退文案集合：用于 loading / empty / error / 未知 状态的展示。
+ */
+export const fallback = {
+  loading: '加载中…',
+  empty: '暂无数据',
+  error: '请求异常，请稍后重试',
+  unknown: '未知',
+  noContent: '无内容摘要',
+}

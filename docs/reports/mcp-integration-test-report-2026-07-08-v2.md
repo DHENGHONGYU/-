@@ -35,7 +35,7 @@
 
 **问题背景**: fetcher 工具的 `collectBasic`、`collectKline`、`collectFinancial` 三个方法缺少详细日志和耗时记录，无法排查 Python 服务调用性能问题。
 
-**修复内容**: [src/services/fetcher/fetcherClient.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/services/fetcher/fetcherClient.ts)
+**修复内容**: [src/services/fetcher/fetcherClient.ts](../../src/services/fetcher/fetcherClient.ts)
 
 | 方法 | 修复前 | 修复后 |
 |------|--------|--------|
@@ -63,8 +63,8 @@
 
 | 文件 | 修改内容 |
 |------|----------|
-| [src/data/db.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/data/db.ts) | 新增 `V6Database.close()` 方法 + 导出 `close()` 函数（关闭 IDBDatabase 连接 + 重置 `_isReady=false` + 重建 ready Promise + `resetDbInstance()`） |
-| [src/data/db-migrations.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/data/db-migrations.ts) | **预存 bug 修复**: `rbacMigrationV24` 未注册到 `MIGRATIONS` 数组，导致 6 个 RBAC store 未创建，`db.reset()` 清理时 `NOT_FOUND_ERR` |
+| [src/data/db.ts](../../src/data/db.ts) | 新增 `V6Database.close()` 方法 + 导出 `close()` 函数（关闭 IDBDatabase 连接 + 重置 `_isReady=false` + 重建 ready Promise + `resetDbInstance()`） |
+| [src/data/db-migrations.ts](../../src/data/db-migrations.ts) | **预存 bug 修复**: `rbacMigrationV24` 未注册到 `MIGRATIONS` 数组，导致 6 个 RBAC store 未创建，`db.reset()` 清理时 `NOT_FOUND_ERR` |
 | 两个测试文件 | `afterAll(() => close())` 确保文件间 db 单例完全隔离 |
 
 **冲突根因分析**:
@@ -285,4 +285,4 @@ npx vitest run tests/__tests__/integration/stockpool-acl.integration.test.ts --r
 ---
 
 *报告生成时间: 2026-07-08 19:32 (Asia/Shanghai)*
-*测试日志: [integration-rerun-2026-07-08.txt](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/docs/reports/test-logs/integration-rerun-2026-07-08.txt)*
+*测试日志: [integration-rerun-2026-07-08.txt](./test-logs/integration-rerun-2026-07-08.txt)*

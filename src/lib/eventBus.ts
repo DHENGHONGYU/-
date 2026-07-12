@@ -93,6 +93,15 @@ class EventBus {
     logger.debug(`[EventBus] getStats(): ${JSON.stringify(stats)}`)
     return stats
   }
+
+  /**
+   * 清空所有事件监听（仅供测试隔离与手动重置使用）。
+   * 注意：组件 cleanup 中禁止使用，避免误清其它订阅者；
+   * 仅用于测试 afterEach 全局隔离跨文件污染。
+   */
+  clearAll(): void {
+    this.listeners.clear()
+  }
 }
 
 /**

@@ -380,4 +380,46 @@ export function createSchema(
       { name: 'by-result', keyPath: 'result' },
     ],
   })
+
+  // ── workflowDefs：工作流定义（v28 新增，write-through 持久化） ──
+  ensureStore(db, STORE_NAME.workflowDefs, logger, {
+    storeOptions: { keyPath: 'id' },
+    logLevel: 'info',
+    indexes: [
+      { name: 'by-updated-at', keyPath: 'updatedAt' },
+      { name: 'by-name', keyPath: 'name' },
+    ],
+  })
+
+  // ── workflowSchedules：定时调度定义（v28 新增，write-through 持久化） ──
+  ensureStore(db, STORE_NAME.workflowSchedules, logger, {
+    storeOptions: { keyPath: 'id' },
+    logLevel: 'info',
+    indexes: [
+      { name: 'by-workflow-id', keyPath: 'workflowId' },
+      { name: 'by-enabled', keyPath: 'enabled' },
+    ],
+  })
+
+  // ── workflowTriggers：事件触发器定义（v28 新增，write-through 持久化） ──
+  ensureStore(db, STORE_NAME.workflowTriggers, logger, {
+    storeOptions: { keyPath: 'id' },
+    logLevel: 'info',
+    indexes: [
+      { name: 'by-workflow-id', keyPath: 'workflowId' },
+      { name: 'by-event', keyPath: 'event' },
+      { name: 'by-enabled', keyPath: 'enabled' },
+    ],
+  })
+
+  // ── workflowRuns：运行实例（v28 新增，checkpoint 持久化） ──
+  ensureStore(db, STORE_NAME.workflowRuns, logger, {
+    storeOptions: { keyPath: 'runId' },
+    logLevel: 'info',
+    indexes: [
+      { name: 'by-workflow-id', keyPath: 'workflowId' },
+      { name: 'by-status', keyPath: 'status' },
+      { name: 'by-created-at', keyPath: 'createdAt' },
+    ],
+  })
 }

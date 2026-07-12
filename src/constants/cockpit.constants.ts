@@ -21,6 +21,18 @@ export const GRID_ROW_HEIGHT = 120
 
 export const GRID_GAP = 16
 
+/**
+ * 实时行情查询的 SLA 延迟预算（毫秒）
+ *
+ * 盘中问答/行情的最大可接受延迟。
+ * - WebSocket 实时推送：目标 < 500ms
+ * - REST 轮询（1s interval）：目标 < 2000ms
+ * - Mock 模式（开发环境）：不受此限制
+ *
+ * 当实际延迟超过此值时，UI 应显示"数据延迟"警告。
+ */
+export const REALTIME_SLA_MS = 2_000
+
 export const WIDGET_SIZE = {
   FULL_WIDTH: { cols: 4, rows: 2 },
   HALF_WIDTH: { cols: 2, rows: 2 },
@@ -358,13 +370,6 @@ export const WIDGET_DEFAULT_DATA_SOURCE = {
     endpoint: '/strategy/value-pit',
     enabled: true,
   },
-  sectorRotation: {
-    type: ACTIVE_DATA_SOURCE,
-    mode: COLLECTION_MODE.ONCE,
-    interval: 0,
-    endpoint: '/strategy/sector-rotation',
-    enabled: true,
-  },
   signalQuality: {
     type: ACTIVE_DATA_SOURCE,
     mode: COLLECTION_MODE.ONCE,
@@ -372,7 +377,6 @@ export const WIDGET_DEFAULT_DATA_SOURCE = {
     endpoint: '/strategy/signal-quality',
     enabled: true,
   },
-  // ============================================================
   // 系统监控与高级分析 Widget 数据源
   // ============================================================
   agentPerformance: {
@@ -422,6 +426,13 @@ export const WIDGET_DEFAULT_DATA_SOURCE = {
     mode: COLLECTION_MODE.POLLING,
     interval: 60000,
     endpoint: API_TRADE_SIGNALS,
+    enabled: true,
+  },
+  industryChain: {
+    type: ACTIVE_DATA_SOURCE,
+    mode: COLLECTION_MODE.ONCE,
+    interval: 0,
+    endpoint: '/industry/chain',
     enabled: true,
   },
 }
@@ -505,11 +516,6 @@ export const DEFAULT_WIDGET_CONFIG = {
     size: WIDGET_SIZE.LARGE_HEIGHT,
     category: 'strategy',
   },
-  sectorRotation: {
-    title: '板块轮动信号',
-    size: WIDGET_SIZE.LARGE_HEIGHT,
-    category: 'strategy',
-  },
   signalQuality: {
     title: '信号质量复盘',
     size: WIDGET_SIZE.LARGE_HEIGHT,
@@ -552,5 +558,10 @@ export const DEFAULT_WIDGET_CONFIG = {
     title: '信号监控',
     category: '交易分析',
     size: { cols: 1, rows: 2 },
+  },
+  industryChain: {
+    title: '产业链图谱',
+    category: '行业分析',
+    size: { cols: 2, rows: 2 },
   },
 }

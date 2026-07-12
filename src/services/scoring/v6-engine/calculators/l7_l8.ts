@@ -15,7 +15,7 @@ import { LAYER_LABELS } from '../types'
 import { CHIP_LEVELS } from '../config'
 import type { ChipLevel } from '../config'
 import { V6_CALCULATOR_THRESHOLDS } from '@/config/thresholds'
-import { safeArrayGet } from '@/utils/precision'
+import { safeArrayGet } from '@/lib/precision'
 
 const logger = getLogger()
 

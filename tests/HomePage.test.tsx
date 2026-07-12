@@ -26,9 +26,9 @@ describe('HomePage', () => {
       </MemoryRouter>,
     )
 
-    expect(screen.getByRole('link', { name: /进入输入舱/i })).toHaveAttribute('href', '/input/hub')
+    expect(screen.getByRole('link', { name: /进入输入舱/i })).toHaveAttribute('href', '/input')
     expect(screen.getByRole('link', { name: /打开驾驶舱/i })).toHaveAttribute('href', '/cockpit')
-    expect(screen.getByRole('link', { name: /总控中心/i })).toHaveAttribute('href', '/command/hub')
+    expect(screen.getByRole('link', { name: /总控中心/i })).toHaveAttribute('href', '/command')
   })
 
   it('renders feature descriptions', () => {

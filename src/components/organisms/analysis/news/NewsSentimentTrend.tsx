@@ -6,6 +6,7 @@
  * 禁止直接调用 sentimentTrendEngine，所有计算通过 Store action 完成。
  */
 
+import { getSafeString } from '@/lib/safeCoerce'
 import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Select, SelectItem } from '@/components/atoms/Select'
@@ -63,7 +64,7 @@ export function NewsSentimentTrend({ loading = false, error = null }: NewsSentim
 
   const trend = useMemo(() => sentimentTrend ?? {
     dimension,
-    value: value || '',
+    value: getSafeString(value),
     data: [],
     summary: { totalArticles: 0, positiveCount: 0, negativeCount: 0, neutralCount: 0, avgDailyArticles: 0 },
   }, [sentimentTrend, dimension, value])
@@ -136,7 +137,7 @@ export function NewsSentimentTrend({ loading = false, error = null }: NewsSentim
           isError={error !== null}
           isEmpty={isEmpty || trend.data.length === 0}
           data={trend}
-          errorProps={{ error: error || '' }}
+          errorProps={{ error: getSafeString(error) }}
           emptyProps={{
             title: '暂无趋势数据',
             description: '当前筛选条件下没有足够资讯生成情感趋势',

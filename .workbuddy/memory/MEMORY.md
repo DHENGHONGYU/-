@@ -10,6 +10,7 @@
 - 分层依赖见 `AGENTS.md` §一；新增模块按「类型→Store→Service→UI」四步集成。
 - 质量门禁用**系统 Node 24** + 项目 `node_modules` 关沙箱跑：`npm run audit`（10 道）+ `tsc:prod` + `lint:colors`。
 - **Husky 预提交门禁**（`.husky/pre-commit`）：lint-staged → `lint:colors` → `tsc:prod` → `audit:layers` → `audit:atomic` → `audit:docs` → `verify:tokens` → `audit:tokens` → `audit:jsdoc` → `audit:complexity`，共 10 项；`pre-push` 运行 `test:clean` + `build`。
+- **⚠️ Vitest exclude 陷阱（2026-07-12 修复）**：`vite.config.ts` 的 `test.exclude` 必须写 `**/node_modules/**`（前导 globstar），仅写 `node_modules/**` 无法匹配**嵌套**的 `packages/*/node_modules`，会把 pino/thread-stream/process-warning 等第三方测试误收进门禁（造成 141 个"失败文件"噪声、pre-push 长期假红）。`test:clean` 当前为 `vitest run`（无 --exclude）+ 正确 exclude；剩余 38 个真实失败见 Task #9。
 - 当前为 **12 道门禁全绿/预存不阻塞** 基线；新增代码不得触发 layers/atomic/hardcode/token/lint:colors/tests 阻塞。
 - 行情 URL 已集中至 `src/config/marketDataEndpoints.ts`；API 路径/接口映射必须进 `src/config/collectConfig.ts`。
 
@@ -40,7 +41,7 @@
 ## 架构健康度
 - **仪表盘**：总控舱 `/command/health` 展示综合得分与 7 项指标（跨层调用、颜色硬编码、深层嵌套、长链式条件、重复 if 条件、JSDoc 缺失、文档同步）。
 - **报告生成**：`npm run build:health` → `public/health-report.json`。
-- **当前基线**：综合得分 93；跨层调用 0、颜色硬编码 0、深层嵌套 7、长链式条件 0、重复 if 条件 0、JSDoc 缺失 0、文档同步 0。
+- **当前基线（2026-07-12 实测 public/health-report.json）**：综合得分 **90**；跨层调用 0、颜色硬编码 0、深层嵌套 0、长链式条件 0、重复 if 条件 0、**JSDoc 缺失 9**、文档同步 0。（注：本文件此前记"93 / JSDoc 0"为旧记忆，已据实修正。）
 
 ## 真实开发成本与盲区（2026-07-10 复盘）
 - **UI 组件调配是高成本环节**：股票池看板跨舱迁移、驾驶舱 Widget 三处注册同步、颜色硬编码回扫（峰值 140 处）占用大量时间；AI 对架构治理型改动（迁移、目录重组、引用同步）稳定性不足。
@@ -49,3 +50,15 @@
 
 - 个人股票研究/复盘辅助工具，非金融产品；本地 IndexedDB 自管；AI 输出标注「仅供参考非投资建议」。
 - 五因子评分当前为合成种子，UI 须标「示例」；真实信号走 `detectBySector`。
+
+## 复杂度整改（2026-07-12 已全归零）
+- 三类债务权威口径（`complexity-scan`）现已 **0 深层嵌套 / 0 长链 / 0 重复条件**；自研 `measure-complexity-now.ts`（同函数逐字）仅余 C29 熔断状态机两处（per-function 不计重复，维持）。
+- **重复条件清除四手法（必记）**：① 抽具名 helper 把 `if` 收进唯一一处（调用点不再有 `if`）；② 卫语句一正一反使文本不同；③ De Morgan 反转同义过滤；④ 多处分支合并为回调 helper。注意：单纯抽共享变量 `if (cond)` 两处仍判重，必须把 `if` 收进唯一一处或使文本真正不同。
+- 门禁复测须用**系统 Node24 直驱 tsx**：`node ./node_modules/tsx/dist/cli.mjs scripts/xxx.ts`（`npm run` 在 git-bash 下偶报 "Could not determine Node.js install directory"，非真违规）。`.bin/tsc`/`.bin/tsx` 是 shell 包装，直跑会 `SyntaxError`。
+
+## 文档自动更新体系（2026-07-12 N2/N3 闭环）
+- **映射表**：`docs/00-meta/doc-trigger-action-map.md` §二是触发→动作 1:1 单一事实源；`scripts/doc-update-trigger.ts` `TRIGGER_RULES`（T1–T10）须与映射表同步。
+- **目标文档**：T1–T9 共 19 个 `docsToUpdate` 路径已全部对齐磁盘真实文件（9 修订指向 `01-requirements/`、`02-design/`；4 新建 `STATE_MANAGEMENT/HOOKS_GUIDE/PAGE_STRUCTURE/cockpit-DATA_DEFINITION`）。
+- **`--auto-update` 已落地**（非空桩）：`DocGenerator` 注册表扩展点（`defaultDocGenerator` 建骨架+幂等 `<!-- auto-update -->` 标记、`versionCheckGenerator` 对接 `doc:version-check`）；按 `auditDocs` 调 `audit:docs`。完整正文生成可后续注入生成器。
+- **看板**：`docs/00-meta/doc-auto-update-kanban.md`（P0/P1/P2 全 ✅，体系任务全闭环：N1-N5、A1-A10、T1-T8、T7b、B7、C1-C5、B12、B15）。
+- **坑**：JSDoc 注释禁含字面 `*/`（`**/` 会提前闭合块注释致 tsc 级联报错）。

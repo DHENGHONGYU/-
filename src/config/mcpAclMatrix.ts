@@ -53,6 +53,7 @@ export const MCP_ACL_MATRIX: Readonly<Record<McpCallerRole, McpPermissionRule>> 
       'portfolio',
       'screening',
       'backtest',
+      'system',
     ],
     allowedTools: [
       'health_check',

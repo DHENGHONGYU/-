@@ -1,6 +1,7 @@
 import { getEffectiveTradingConfig } from '@/config/tradingConfig'
 import type { SignalDirection } from '@/config/tradingConfig'
-import { dataLayer } from '@/data/dataLayer'
+import { dataBridge } from '@/core/databridge'
+import { ENVELOPE_ACTION, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
 import type { DailyQuotes, KlineBar, Signal, SignalSnapshot, Stock } from '@/data/types'
 import { generateId } from '@/data/db'
 import { SIGNAL_GENERATOR_THRESHOLDS } from '@/config/thresholds'
@@ -200,8 +201,20 @@ export async function generateSignalsForSymbol(
   symbol: string,
 ): Promise<TradingSignal[]> {
   const normalized = symbol.trim().toUpperCase()
-  const stock = await dataLayer.stocks.get(normalized)
-  const quotes = await dataLayer.dailyQuotes.get(normalized)
+  const stockResult = await dataBridge.query<Stock>({
+    action: ENVELOPE_ACTION.queryGet,
+    store: STORE_NAME.stocks,
+    key: normalized,
+    source: MODULE_ID.trading,
+  })
+  const quotesResult = await dataBridge.query<DailyQuotes>({
+    action: ENVELOPE_ACTION.queryGet,
+    store: STORE_NAME.dailyQuotes,
+    key: normalized,
+    source: MODULE_ID.trading,
+  })
+  const stock = stockResult.success && stockResult.data ? stockResult.data : undefined
+  const quotes = quotesResult.success && quotesResult.data ? quotesResult.data : undefined
 
   if (!stock) {
     return []

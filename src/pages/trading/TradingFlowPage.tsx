@@ -410,7 +410,7 @@ export default function TradingFlowPage(): React.JSX.Element {
       operation: 'UPDATE_RISK_RULES',
       statusCode: 200,
     })
-    // TODO: 实现风控规则持久化逻辑
+    // TODO[阻塞·API]: riskStore 无 persistRiskRules 持久化 API；待补全后落盘 IndexedDB。
   }
 
   // 数据源选择：开发环境使用模拟数据，生产环境使用真实数据
@@ -562,7 +562,7 @@ export default function TradingFlowPage(): React.JSX.Element {
             name: stocks.find((st) => st.symbol === s.symbol)?.name ?? s.symbol,
             action: s.direction as 'buy' | 'sell' | 'hold',
             strength: Math.round(s.confidence * 100),
-            targetPrice: 0, // TODO: 从信号获取目标价
+            targetPrice: 0, // TODO[阻塞·类型]: 信号类型无 targetPrice 字段；待信号类型扩展后接入。
             generatedAt: Date.now(),
             reason: s.rationale,
           }))}
@@ -577,7 +577,7 @@ export default function TradingFlowPage(): React.JSX.Element {
             side: o.direction,
             quantity: o.quantity,
             price: o.price,
-            type: 'limit', // TODO: 从订单获取类型
+            type: o.type ?? 'limit',
             status: o.status,
             createdAt: o.createdAt,
           }))}

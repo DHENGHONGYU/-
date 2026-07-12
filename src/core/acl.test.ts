@@ -92,14 +92,25 @@ describe('AclEngine', () => {
   })
 
   it('操作不允许时应抛出 AclError', () => {
-    // fetcher 模块: actions = [INSERT, UPDATE]，不允许 SELECT
+    // fetcher 模块: read 不含 dailyQuotes（仅 write），SELECT 应被拒绝
+    expect(() =>
+      engine.assert({
+        module: MODULE_ID.fetcher,
+        store: STORE_NAME.dailyQuotes,
+        operation: DB_OPERATION.select,
+      }),
+    ).toThrow(AclError)
+  })
+
+  it('fetcher 模块允许 SELECT stocks（刷新前读取现有记录合并字段）', () => {
+    // 2026-07-12 修复：fetchStockBasic / fetchStockKline 需先读取现有 stock
     expect(() =>
       engine.assert({
         module: MODULE_ID.fetcher,
         store: STORE_NAME.stocks,
         operation: DB_OPERATION.select,
       }),
-    ).toThrow(AclError)
+    ).not.toThrow()
   })
 
   it('store 不允许时应抛出 AclError', () => {
@@ -114,11 +125,12 @@ describe('AclEngine', () => {
   })
 
   it('SELECT 操作检查 read 列表', () => {
-    // fetcher 模块: read = [], SELECT 不应在 read 中的 store 通过
+    // fetcher 模块: read = [stocks, traceRecords, collectConfig]，
+    // SELECT 不在 read 中的 store（如 dailyQuotes）应通过 read 校验失败
     expect(() =>
       engine.assert({
         module: MODULE_ID.fetcher,
-        store: STORE_NAME.stocks,
+        store: STORE_NAME.dailyQuotes,
         operation: DB_OPERATION.select,
       }),
     ).toThrow(AclError)
@@ -244,10 +256,19 @@ describe('AclEngine.check', () => {
   it('操作不允许返回 allowed=false', () => {
     const result = engine.check({
       module: MODULE_ID.fetcher,
-      store: STORE_NAME.stocks,
+      store: STORE_NAME.dailyQuotes,
       operation: DB_OPERATION.select,
     })
     expect(result.allowed).toBe(false)
+  })
+
+  it('fetcher SELECT stocks 返回 allowed=true', () => {
+    const result = engine.check({
+      module: MODULE_ID.fetcher,
+      store: STORE_NAME.stocks,
+      operation: DB_OPERATION.select,
+    })
+    expect(result.allowed).toBe(true)
   })
 })
 

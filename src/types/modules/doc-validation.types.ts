@@ -11,7 +11,7 @@
 export type ValidationStatus = 'pass' | 'warning' | 'failure'
 
 /** 文档/材料更新类型 */
-export type UpdateType = 'added' | 'modified' | 'deleted' | 'format-converted' | 'unchanged'
+export type UpdateType = 'added' | 'modified' | 'deleted' | 'format-converted' | 'unchanged' | 'missing'
 
 /** 问题严重程度 */
 export type SeverityLevel = 'critical' | 'high' | 'medium' | 'low'
@@ -167,4 +167,96 @@ export interface SubValidatorResult {
   readonly findings: readonly ValidationFinding[]
   /** 该验证器扫描的文件数 */
   readonly scannedCount: number
+}
+
+/** 文档元数据 */
+export interface DocMeta {
+  /** 文档唯一标识（如相对路径） */
+  readonly id: string
+  /** 当前文件路径 */
+  readonly path: string
+  /** 最后修改时间（ISO） */
+  readonly lastUpdated: string
+  /** 关联的代码文件列表（相对路径） */
+  readonly codeDependencies: readonly string[]
+  /** 文档版本号（语义化） */
+  readonly version: string
+  /** 内容哈希，用于检测实际变更 */
+  readonly hash: string
+}
+
+/** API 参数定义 */
+export interface ApiParameter {
+  /** 参数名称 */
+  readonly name: string
+  /** 参数类型 */
+  readonly type: string
+  /** 是否可选 */
+  readonly optional: boolean
+}
+
+/** 契约定义（API 文档与代码的接口） */
+export interface ApiContract {
+  /** 函数名称 */
+  readonly functionName: string
+  /** 参数列表 */
+  readonly parameters: readonly ApiParameter[]
+  /** 返回类型 */
+  readonly returnType: string
+  /** 对应文档位置 */
+  readonly docPath: string
+}
+
+/** 质量评分 */
+export interface QualityScores {
+  /** 文档覆盖率（已关联代码的文档数 / 总代码模块数） */
+  readonly coverage: number
+  /** 平均保鲜度得分 */
+  readonly freshness: number
+  /** 链接健康率（有效链接/总链接） */
+  readonly linkHealth: number
+  /** 契约匹配率 */
+  readonly contractMatch: number
+}
+
+/** 契约不匹配详情 */
+export interface ContractMismatch {
+  /** 文档路径 */
+  readonly doc: string
+  /** 期望的契约定义 */
+  readonly expected: string
+  /** 实际的契约定义 */
+  readonly actual: string
+}
+
+/** 质量问题清单 */
+export interface QualityIssues {
+  /** 过期文档路径 */
+  readonly staleDocs: readonly string[]
+  /** 死链列表 */
+  readonly brokenLinks: readonly string[]
+  /** 契约不匹配列表 */
+  readonly contractMismatches: readonly ContractMismatch[]
+}
+
+/** 质量快照 */
+export interface QualitySnapshot {
+  /** 快照时间戳 */
+  readonly timestamp: string
+  /** 各项质量评分 */
+  readonly scores: QualityScores
+  /** 发现的问题 */
+  readonly issues: QualityIssues
+}
+
+/** 质量门禁阈值 */
+export interface QualityGate {
+  /** 最小文档覆盖率（例如 0.8 = 80%） */
+  readonly minCoverage: number
+  /** 最小保鲜度得分（百分制） */
+  readonly minFreshness: number
+  /** 最大允许死链数 */
+  readonly maxBrokenLinks: number
+  /** 最小契约匹配率 */
+  readonly minContractMatch: number
 }

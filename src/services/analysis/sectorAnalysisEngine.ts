@@ -8,10 +8,9 @@
  * @created 2026-06-30 - 基于检索功能与引擎映射整改
  */
 
-import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID } from '@/config/dbConfig'
+import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
-import { dataLayer } from '@/data/dataLayer'
 import type { DataLayerResult, IndustryScore, RotationSectorScore } from '@/data/types'
 import { getLogger } from '@/lib/logger'
 import { saveDefaultRotationScores, listRotationScores } from '@/services/analysis/rotationScoreService'
@@ -143,8 +142,11 @@ export async function getRotationScores(): Promise<DataLayerResult<RotationSecto
  */
 export async function getIndustryScores(): Promise<DataLayerResult<IndustryScore[]>> {
   try {
-    const list = await dataLayer.industryScores.list()
-    return { success: true, data: list }
+    const result = await dataBridge.query<IndustryScore[]>({
+      action: ENVELOPE_ACTION.queryList,
+      store: STORE_NAME.industryScores,
+    })
+    return { success: result.success, data: result.success ? result.data ?? [] : undefined, error: result.error }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     logger.error(`[sectorAnalysisEngine] 获取行业评分失败: ${message}`)

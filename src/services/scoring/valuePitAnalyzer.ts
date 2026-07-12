@@ -15,9 +15,11 @@
  */
 
 import { getDefaultDualStrategyRuleConfig, type DualStrategyRuleConfig } from '@/config/dualStrategyRules'
-import { dataLayer } from '@/data/dataLayer'
-import type { DataLayerResult, Stock, ValuePitScore } from '@/data/types'
+import { dataBridge } from '@/core/databridge'
+import { ENVELOPE_ACTION, STORE_NAME } from '@/config/dbConfig'
+import type { DataLayerResult, Stock, ValuePitScore, V6Score, DailyQuotes } from '@/data/types'
 import { getLogger } from '@/lib/logger'
+import { dataLayer } from '@/data/dataLayer'
 
 const logger = getLogger()
 
@@ -363,17 +365,21 @@ function computeMA(closes: number[], period: number): number | undefined {
 }
 
 /**
- * 根据 symbol 从 dataLayer 获取数据并执行五维评分。
+ * 根据 symbol 通过 DataBridge 获取数据并执行五维评分。
  * 返回 null 表示数据不足无法评分。
  */
 export async function analyzeBySymbol(symbol: string): Promise<ValuePitScore | null> {
   logger.info(`[valuePitAnalyzer] 开始分析 ${symbol}`)
 
-  const [stock, quotes, v6Score] = await Promise.all([
-    dataLayer.stocks.get(symbol),
-    dataLayer.dailyQuotes.get(symbol).catch(() => undefined),
-    dataLayer.v6Scores.get(symbol).catch(() => undefined),
+  const [stockResult, quotesResult, v6ScoreResult] = await Promise.all([
+    dataBridge.query<Stock>({ action: ENVELOPE_ACTION.queryGet, store: STORE_NAME.stocks, key: symbol }),
+    dataBridge.query<DailyQuotes>({ action: ENVELOPE_ACTION.queryGet, store: STORE_NAME.dailyQuotes, key: symbol }).catch(() => ({ success: false, data: undefined })),
+    dataBridge.query<V6Score>({ action: ENVELOPE_ACTION.queryGet, store: STORE_NAME.v6Scores, key: symbol }).catch(() => ({ success: false, data: undefined })),
   ])
+
+  const stock = stockResult.success ? stockResult.data : undefined
+  const quotes = quotesResult.success ? quotesResult.data : undefined
+  const v6Score = v6ScoreResult.success ? v6ScoreResult.data : undefined
 
   if (!stock) {
     logger.warn(`[valuePitAnalyzer] 股票数据缺失: ${symbol}`)
@@ -484,7 +490,8 @@ export async function analyzeValuePits(
   const filtered = []
 
   for (const stock of stocks) {
-    const v6Score = await dataLayer.v6Scores.get(stock.symbol).catch(() => undefined)
+    const v6Result = await dataBridge.query<V6Score>({ action: ENVELOPE_ACTION.queryGet, store: STORE_NAME.v6Scores, key: stock.symbol }).catch(() => ({ success: false, data: undefined }))
+    const v6Score = v6Result.success ? v6Result.data : undefined
     const score = v6Score?.score ?? 0
     if (score >= ruleConfig.valuePitV6Min && score <= ruleConfig.valuePitV6Max) {
       filtered.push(stock.symbol)
@@ -494,6 +501,7 @@ export async function analyzeValuePits(
   const scores = await analyzeBatch(filtered)
 
   for (const score of scores) {
+    // TODO[P2]: 迁移至 DataBridge.forward()
     await dataLayer.valuePitScores.save(score)
   }
 
@@ -504,5 +512,6 @@ export async function analyzeValuePits(
  * 获取指定 symbol 最新的一条 ValuePitScore。
  */
 export async function getLatestValuePitScore(symbol: string): Promise<ValuePitScore | undefined> {
-  return dataLayer.valuePitScores.get(symbol).catch(() => undefined)
+  const result = await dataBridge.query<ValuePitScore>({ action: ENVELOPE_ACTION.queryGet, store: STORE_NAME.valuePitScores, key: symbol }).catch(() => ({ success: false, data: undefined }))
+  return result.success ? result.data : undefined
 }

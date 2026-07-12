@@ -7,6 +7,7 @@
 import { MCPServerBase } from '@/mcp/core/server'
 import type { ServerInfo, ToolDescriptor } from '@/types/modules/mcp.types'
 import { getLogger } from '@/lib/logger'
+import type { ResearchStatus } from '@/config/dbConfig'
 import {
   addStock,
   addStockFromSearch,
@@ -108,9 +109,8 @@ export class InputServer extends MCPServerBase {
           },
         },
         handler: async (args) => {
-          // TODO: exportPool 接受 ResearchStatus 筛选，非 poolId；当前忽略 poolId 导出全量
           logger.info('[InputServer] export_stock_pool called', { status: args.status })
-          const result = await exportPool()
+          const result = await exportPool(args.status as ResearchStatus | undefined)
           return { content: [{ type: 'text', text: JSON.stringify(result) }] }
         },
       },

@@ -768,7 +768,7 @@ describe('LLMScoreEnhancer 集成测试 — L4/L7 增强层 LLM 调用场景', (
     it('建议修复方向：渲染层应调用 sanitizeLlmOutput 处理 enhancer 输出', async () => {
       // 此测试验证 sanitizeLlmOutput 能正确处理 LLM 输出中的 XSS 内容
       // 提醒：渲染 enhancer 输出前必须先消毒
-      const { sanitizeLlmOutput } = await import('@/utils/xssSanitizer')
+      const { sanitizeLlmOutput } = await import('@/lib/xssSanitizer')
 
       const xssContent = '<script>alert(1)</script>正常内容'
       const sanitized = sanitizeLlmOutput(xssContent)

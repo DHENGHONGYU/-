@@ -72,6 +72,7 @@ Before | After
 - [ ] `npm run audit:hardcode` - 硬编码检查通过
 - [ ] `npm run audit:deadcode` - 死代码检查通过
 - [ ] `npm run audit:docs` - 文档同步检查通过
+- [ ] 文档已同步（触发-动作映射表 `docs/00-meta/doc-trigger-action-map.md` 已对齐，无遗漏/缺失目标文档）；如涉及 `package.json` version bump，已跑 `npm run doc:version-check`
 
 ### L3: 代码质量（P0 问题必须修复）
 - [ ] **类型安全**: 无 `any` 类型、无 `@ts-ignore`

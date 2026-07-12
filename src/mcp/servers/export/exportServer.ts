@@ -37,7 +37,7 @@ export class ExportServer extends MCPServerBase {
           const resultId = args.resultId as string
           const format = args.format as 'pdf' | 'excel'
           logger.info('[ExportServer] export_backtest_report called', { resultId, format })
-          // TODO: 需根据 resultId 从 Store 查询完整 BacktestResult 和 BacktestConfig
+          // TODO[阻塞·API]: backtestStore 无 getBacktestById(resultId) 查询 API；待补全后替换 stub。
           const stubResult = { resultId } as unknown as BacktestResult
           const stubConfig = {} as unknown as BacktestConfig
           const result = await exportBacktestReport(stubResult, stubConfig, { format })

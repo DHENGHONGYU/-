@@ -5,7 +5,7 @@ import { Button } from '@/components/atoms/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
 import { WidgetErrorBoundary } from '@/components/organisms/shared/WidgetErrorBoundary'
-import { GridLayout } from 'react-grid-layout'
+import ReactGridLayout, { type Layout } from 'react-grid-layout'
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
 import { widgetRegistry } from '@/cockpit/core/widgetRegistry'
@@ -14,6 +14,7 @@ import { MarketDataProvider, useMarketData } from '@/cockpit/providers/MarketDat
 import { GRID_COLUMNS, GRID_ROW_HEIGHT, GRID_GAP } from '@/constants/cockpit.constants'
 import { getLogger } from '@/lib/logger'
 import { Loading, Empty, ErrorState } from '@/components/molecules/states'
+import { ComplianceDisclaimer } from '@/components/atoms/ComplianceDisclaimer'
 import type { WidgetConfig, MarketData } from '@/types/modules/widget.types'
 
 const logger = getLogger()
@@ -200,12 +201,12 @@ function CockpitContent(): React.JSX.Element {
     return unsubscribe
   }, [])
 
-  const handleLayoutChange = (newLayout: readonly { i: string; x: number; y: number; w: number; h: number }[]) => {
+  const handleLayoutChange = (newLayout: Layout): void => {
     saveLayout([...newLayout])
     logger.info('[CockpitShell] Layout saved', { items: newLayout.length })
   }
 
-  const layout = (() => {
+  const layout: Layout = (() => {
     const persisted = loadLayout()
     return instances.map((instance) => {
       const saved = persisted?.[instance.instanceId]
@@ -258,7 +259,7 @@ function CockpitContent(): React.JSX.Element {
       </header>
 
       <main className="mx-auto max-w-7xl p-4">
-        <GridLayout
+        <ReactGridLayout
           className="bg-background"
           layout={layout}
           width={1100}
@@ -268,12 +269,8 @@ function CockpitContent(): React.JSX.Element {
             margin: [GRID_GAP, GRID_GAP],
             containerPadding: [GRID_GAP, GRID_GAP],
           }}
-          dragConfig={{
-            enabled: true,
-          }}
-          resizeConfig={{
-            enabled: true,
-          }}
+          dragConfig={{ enabled: true }}
+          resizeConfig={{ enabled: true }}
           onLayoutChange={handleLayoutChange}
         >
           {instances.map((instance) => (
@@ -281,8 +278,13 @@ function CockpitContent(): React.JSX.Element {
               <WidgetWrapper config={instance} data={data} />
             </div>
           ))}
-        </GridLayout>
+        </ReactGridLayout>
       </main>
+
+      {/* 合规层 — 免责声明 */}
+      <footer className="mx-auto max-w-7xl px-4 pb-4">
+        <ComplianceDisclaimer variant="compact" />
+      </footer>
     </div>
   )
 }

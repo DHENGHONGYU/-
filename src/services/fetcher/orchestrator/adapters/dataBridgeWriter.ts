@@ -21,7 +21,7 @@ import type { IDataBridgeWriter } from '../ports'
 const logger = getLogger()
 
 /** 阶段 A-3：根据 source 推断 provenance 标识 */
-function inferProvenance(source: StockQuote['source'] | string | undefined): 'real' | 'mock' | 'unknown' {
+function inferProvenance(source: string | undefined): 'real' | 'mock' | 'unknown' {
   if (source === 'mock') return 'mock'
   if (source === 'tencent' || source === 'sina' || source === 'netease' || source === 'akshare') return 'real'
   return 'unknown'

@@ -7,7 +7,6 @@ import { MemoryRouter } from 'react-router'
 import AgentHubPage from '@/pages/command/agent/AgentHubPage'
 import AgentRegistryPage from '@/pages/command/agent/AgentRegistryPage'
 import AgentDetailPage from '@/pages/command/agent/AgentDetailPage'
-import AgentPlaceholderPage from '@/pages/command/agent/AgentPlaceholderPage'
 import { getAllAgentComponents, getAgentDetailComponent, hasAgentComponent } from '@/agents/agentComponentRegistry'
 import type { AgentTask } from '@/agents/agentRuntime'
 
@@ -83,20 +82,12 @@ async function renderDetailPage(agentId: string): Promise<void> {
   await waitFor(
     () => {
       const hasGeneric = screen.queryByText('通用智能体详情页') !== null
-      const hasNotFound = screen.queryByText('智能体未找到') !== null
+      const hasNotFound = screen.queryAllByText('智能体未找到').length > 0
       const hasV6 = screen.queryByText('评分层级') !== null
       const hasMoreFeature = screen.queryByText('更多功能开发中') !== null
       return hasGeneric || hasNotFound || hasV6 || hasMoreFeature
     },
     { timeout: 8000 },
-  )
-}
-
-function renderPlaceholderPage(path: string): void {
-  render(
-    <MemoryRouter initialEntries={[path]}>
-      <AgentPlaceholderPage />
-    </MemoryRouter>,
   )
 }
 
@@ -181,8 +172,9 @@ describe('Agent 模块集成测试', () => {
 
     it('未注册智能体 - 显示未找到页面', async () => {
       await renderDetailPage('non-existent-agent-xyz')
-      expect(screen.getByRole('heading', { level: 3, name: '智能体未找到' })).toBeInTheDocument()
-      expect(screen.getByText(/不存在/)).toBeInTheDocument()
+      // 未找到页在 PageHeader(h1) 与 CardTitle(h3) 各渲染一次「智能体未找到」
+      expect(screen.getAllByRole('heading', { name: '智能体未找到' }).length).toBeGreaterThan(0)
+      expect(screen.getAllByText(/不存在/).length).toBeGreaterThan(0)
     })
   })
 
@@ -219,8 +211,8 @@ describe('Agent 模块集成测试', () => {
 
     it('未找到页面返回注册表链接正确', async () => {
       await renderDetailPage('unknown-agent')
-      const backLink = screen.getByRole('link', { name: /返回注册表/ })
-      expect(backLink.getAttribute('href')).toBe('/command/agents/registry')
+      const backLinks = screen.getAllByRole('link', { name: /返回注册表/ })
+      expect(backLinks[0].getAttribute('href')).toBe('/command/agents/registry')
     })
   })
 
@@ -427,26 +419,6 @@ describe('Agent 模块集成测试', () => {
     })
   })
 
-  describe('占位页渲染验证', () => {
-    const placeholderPaths: Array<{ path: string; title: string }> = [
-      { path: '/command/agents/trigger', title: '任务触发' },
-      { path: '/command/agents/tasks', title: '任务列表' },
-      { path: '/command/agents/custom', title: '自定义智能体' },
-      { path: '/command/agents/llm', title: 'LLM 管理' },
-      { path: '/command/agents/capability-graph', title: '能力图谱' },
-      { path: '/command/agents/dag-scheduler', title: 'DAG 调度器' },
-      { path: '/command/agents/feedback', title: '反馈控制台' },
-    ]
-
-    placeholderPaths.forEach(({ path, title }) => {
-      it(`占位页 - ${title} 正确渲染`, () => {
-        renderPlaceholderPage(path)
-        expect(screen.getAllByText(title).length).toBeGreaterThan(0)
-        expect(screen.getByText('功能建设中')).toBeInTheDocument()
-      })
-    })
-  })
-
   describe('数据流与状态集成', () => {
     it('注册表页面渲染 5 个智能体卡片', () => {
       renderRegistryPage()
@@ -458,7 +430,7 @@ describe('Agent 模块集成测试', () => {
 
     it('已注册智能体详情页不显示未找到', async () => {
       await renderDetailPage('v6-scoring-agent')
-      expect(screen.queryByText('智能体未找到')).not.toBeInTheDocument()
+      expect(screen.queryAllByText('智能体未找到').length).toBe(0)
     })
 
     it('总控台从 store 获取统计数据', () => {

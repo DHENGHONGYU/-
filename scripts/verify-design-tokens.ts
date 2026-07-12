@@ -1,19 +1,6 @@
 #!/usr/bin/env node
 /**
  * @fileoverview 设计令牌映射校验脚本
- *
- * 职责：
- * 1. 读取 design-tokens/figma-to-project.json，自动生成反向映射 project-to-figma.json。
- * 2. 校验映射表格式：每个条目必须包含 figma、project、themeAware、usage。
- * 3. 校验 project 路径是否指向已知的代码令牌层级（L1-L6）。
- * 4. 检测重复 figma 变量名或重复 project 路径。
- * 5. 输出 JSON 报告，供 CI 或 pre-commit 调用。
- *
- * 使用：
- *   tsx scripts/verify-design-tokens.ts
- *   tsx scripts/verify-design-tokens.ts --check-only   # 不写入 project-to-figma.json
- *
- * @module scripts/verify-design-tokens
  */
 
 import { readFileSync, writeFileSync, existsSync } from 'node:fs'
@@ -28,18 +15,18 @@ const FIGMA_TO_PROJECT_PATH = resolve(rootDir, 'design-tokens', 'figma-to-projec
 const PROJECT_TO_FIGMA_PATH = resolve(rootDir, 'design-tokens', 'project-to-figma.json')
 const TOKENS_PATH = resolve(rootDir, 'design-tokens', 'tokens.json')
 
-interface MappingEntry {
+export interface MappingEntry {
   figma: string
   project: string
   themeAware: boolean
   usage: string
 }
 
-interface FigmaToProjectFile {
+export interface FigmaToProjectFile {
   mappings: MappingEntry[]
 }
 
-interface VerificationReport {
+export interface VerificationReport {
   valid: boolean
   errors: string[]
   warnings: string[]
@@ -100,10 +87,7 @@ function validateMapping(entry: MappingEntry, index: number): string[] {
   return errors
 }
 
-function main(): void {
-  const args = process.argv.slice(2)
-  const checkOnly = args.includes('--check-only')
-
+export function validate(checkOnly = false): VerificationReport {
   const report: VerificationReport = {
     valid: true,
     errors: [],
@@ -120,17 +104,14 @@ function main(): void {
   }
 
   try {
-    // 1. 加载 figma-to-project.json
     const figmaToProject = loadJson<FigmaToProjectFile>(FIGMA_TO_PROJECT_PATH)
     const mappings = figmaToProject.mappings ?? []
     report.summary.totalMappings = mappings.length
 
-    // 2. 校验每个条目格式
     mappings.forEach((entry, index) => {
       report.errors.push(...validateMapping(entry, index))
     })
 
-    // 3. 检测重复
     const figmaCount = new Map<string, number>()
     const projectCount = new Map<string, number>()
     mappings.forEach((entry) => {
@@ -157,7 +138,6 @@ function main(): void {
       }
     })
 
-    // 4. 校验 project 路径层级是否已知
     mappings.forEach((entry) => {
       const layer = getLayer(entry.project)
       if (!KNOWN_LAYERS.includes(layer)) {
@@ -166,7 +146,6 @@ function main(): void {
       }
     })
 
-    // 5. 生成反向映射 project-to-figma.json
     const projectToFigma = {
       $schema: 'https://design-tokens.github.io/community-group/format/',
       $description: 'V9 代码令牌到 Figma / MasterGo 设计变量的反向映射（Project → Figma）',
@@ -186,32 +165,39 @@ function main(): void {
       writeFileSync(PROJECT_TO_FIGMA_PATH, `${JSON.stringify(projectToFigma, null, 2)}\n`, 'utf-8')
     }
 
-    // 6. 校验 tokens.json 存在（设计变量源文件）
     if (!existsSync(TOKENS_PATH)) {
       report.warnings.push(`未找到设计变量源文件: ${TOKENS_PATH}`)
     }
 
     report.valid = report.errors.length === 0
-
-    // 7. 输出报告
-    console.log(JSON.stringify(report, null, 2))
-
-    if (!report.valid) {
-      console.error(`\n❌ 设计令牌映射校验失败，共 ${report.errors.length} 个错误。`)
-      process.exit(1)
-    }
-
-    console.log(`\n✅ 设计令牌映射校验通过，共 ${mappings.length} 条映射。`)
-    if (!checkOnly) {
-      console.log(`📝 已生成反向映射文件: design-tokens/project-to-figma.json`)
-    }
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
     report.valid = false
     report.errors.push(message)
-    console.error(JSON.stringify(report, null, 2))
+  }
+
+  return report
+}
+
+function main(): void {
+  const args = process.argv.slice(2)
+  const checkOnly = args.includes('--check-only')
+
+  const report = validate(checkOnly)
+
+  console.log(JSON.stringify(report, null, 2))
+
+  if (!report.valid) {
+    console.error(`\n❌ 设计令牌映射校验失败，共 ${report.errors.length} 个错误。`)
     process.exit(1)
+  }
+
+  console.log(`\n✅ 设计令牌映射校验通过，共 ${report.summary.totalMappings} 条映射。`)
+  if (!checkOnly) {
+    console.log(`📝 已生成反向映射文件: design-tokens/project-to-figma.json`)
   }
 }
 
-main()
+if (require.main === module) {
+  main()
+}

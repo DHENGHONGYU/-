@@ -177,8 +177,8 @@ describe('SevenDimConfigPage - 维度开关面板', () => {
   it('启用维度显示字段标签', () => {
     renderPage()
     // 01 维度启用，应显示 name/industry 等 fields
-    expect(screen.getByText('name')).toBeInTheDocument()
-    expect(screen.getByText('industry')).toBeInTheDocument()
+    expect(screen.getAllByText('name').length).toBeGreaterThanOrEqual(1)
+    expect(screen.getAllByText('industry').length).toBeGreaterThanOrEqual(1)
   })
 })
 
@@ -320,7 +320,10 @@ describe('SevenDimConfigPage - 额度预估', () => {
 
   it('渲染日调用上限值', () => {
     renderPage()
-    expect(screen.getByText('2000')).toBeInTheDocument()
+    const label = screen.getByText('日调用上限')
+    expect(label).toBeInTheDocument()
+    const value = label.nextElementSibling ?? label.parentElement?.querySelector('span:last-child')
+    expect(value?.textContent).toBe('2000')
   })
 
   it('渲染额度使用率', () => {

@@ -1,10 +1,12 @@
-import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
+import {
+  describe, expect, it, vi, beforeEach, afterEach,
+} from 'vitest'
 import {
   createDataBridgeAdapter,
   getDataBridgeAdapter,
   destroyDataBridgeAdapter,
   DataBridgeAdapter,
-} from '@/databridge'
+} from '@/core/databridgeAdapter'
 
 describe('DataBridgeAdapter', () => {
   beforeEach(() => {

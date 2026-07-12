@@ -13,12 +13,12 @@
  * @created 2026-07-07 - 从 hotSectorAnalyzer.ts 拆分
  */
 
-import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID } from '@/config/dbConfig'
+import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
 import { getDefaultDualStrategyRuleConfig, type DualStrategyRuleConfig } from '@/config/dualStrategyRules'
 import { HOT_SECTOR_THRESHOLDS } from '@/config/thresholds'
+import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
-import { dataLayer } from '@/data/dataLayer'
-import type { DataLayerResult, HotSectorScore, Stock } from '@/data/types'
+import type { DataLayerResult, HotSectorScore, Stock, V6Score } from '@/data/types'
 import { getLogger } from '@/lib/logger'
 import { nanoid } from 'nanoid'
 
@@ -47,7 +47,14 @@ export async function analyzeHotSectors(
   const filtered: string[] = []
 
   const v6Settled = await Promise.allSettled(
-    stocks.map((stock) => dataLayer.v6Scores.get(stock.symbol).catch(() => undefined))
+    stocks.map(async (stock) => {
+      const result = await dataBridge.query<V6Score>({
+        action: ENVELOPE_ACTION.queryGet,
+        store: STORE_NAME.v6Scores,
+        key: stock.symbol,
+      })
+      return result.success ? result.data : undefined
+    })
   )
   for (let i = 0; i < stocks.length; i++) {
     const result = v6Settled[i]!
@@ -60,8 +67,9 @@ export async function analyzeHotSectors(
   // 编排逻辑通过 hotSectorOrchestrator 静态导入，已无循环依赖
   const scores = await analyzeBatch(filtered)
 
-  // 动态导入 dataBridge 避免循环依赖（databridge.ts 也引用了 hotSectorAnalyzer）
-  const { dataBridge } = await import('@/core/databridge')
+  // 写入操作保留原样，通过 DataBridge.forward() 路由
+  // TODO[P2]: 迁移至 DataBridge.forward()
+  const { dataBridge: dataBridgeDynamic } = await import('@/core/databridge')
 
   for (const score of scores) {
     if (score.dataVersion == null) {
@@ -79,7 +87,7 @@ export async function analyzeHotSectors(
         },
         score,
       )
-      await dataBridge.forward(envelope)
+      await dataBridgeDynamic.forward(envelope)
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
       logger.error(`[hotSectorAnalyzer] DataBridge.forward failed for ${score.symbol}`, { error: message })
@@ -93,5 +101,10 @@ export async function analyzeHotSectors(
  * 获取指定 symbol 最新的一条 HotSectorScore。
  */
 export async function getLatestHotSectorScore(symbol: string): Promise<HotSectorScore | undefined> {
-  return dataLayer.hotSectorScores.get(symbol).catch(() => undefined)
+  const result = await dataBridge.query<HotSectorScore>({
+    action: ENVELOPE_ACTION.queryGet,
+    store: STORE_NAME.hotSectorScores,
+    key: symbol,
+  })
+  return result.success ? result.data : undefined
 }

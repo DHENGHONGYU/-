@@ -13,8 +13,9 @@
  */
 
 import { getDefaultDualStrategyRuleConfig, type DualStrategyRuleConfig } from '@/config/dualStrategyRules'
-import { dataLayer } from '@/data/dataLayer'
-import type { DataLayerResult, KlineBar, Signal, ValuePitScore } from '@/data/types'
+import { dataBridge } from '@/core/databridge'
+import { ENVELOPE_ACTION, STORE_NAME } from '@/config/dbConfig'
+import type { DataLayerResult, DailyQuotes, KlineBar, RotationSectorScore, Signal, Stock, ValuePitScore } from '@/data/types'
 import { getLogger } from '@/lib/logger'
 import { ROTATION_SIGNAL_THRESHOLDS } from '@/config/thresholds'
 
@@ -251,7 +252,8 @@ async function aggregateSectorBars(
   let count = 0
 
   for (const stock of sectorStocks.slice(0, MAX_SECTOR_STOCKS_FOR_AGGREGATION)) {
-    const quotes = await dataLayer.dailyQuotes.get(stock.symbol).catch(() => undefined)
+    const quotesResult = await dataBridge.query<DailyQuotes>({ action: ENVELOPE_ACTION.queryGet, store: STORE_NAME.dailyQuotes, key: stock.symbol }).catch(() => ({ success: false as const, error: 'query failed' }))
+    const quotes = quotesResult.success ? quotesResult.data : undefined
     if (!quotes || quotes.history.length < MIN_HISTORY_DAYS) {
       logger.warn(`[rotationSignalDetector] 股票历史数据不足，跳过`, {
         symbol: stock.symbol,
@@ -304,7 +306,8 @@ export async function detectBySector(sectorId: string): Promise<RotationSignal |
     logger.info(`[rotationSignalDetector] 开始检测板块 ${sectorId}`)
 
     // 获取板块内所有股票
-    const allStocks = await dataLayer.stocks.list()
+    const allStocksResult = await dataBridge.query<Stock[]>({ action: ENVELOPE_ACTION.queryList, store: STORE_NAME.stocks })
+    const allStocks = allStocksResult.success ? (allStocksResult.data ?? []) : []
     const sectorStocks = allStocks.filter(
       (s) =>
         s.sector === sectorId ||
@@ -378,13 +381,15 @@ export async function detectRotationSignals(
   )
 
   for (const score of candidates) {
-    const stock = await dataLayer.stocks.get(score.symbol).catch(() => undefined)
+    const stockResult = await dataBridge.query<Stock>({ action: ENVELOPE_ACTION.queryGet, store: STORE_NAME.stocks, key: score.symbol }).catch(() => ({ success: false as const, error: 'query failed' }))
+    const stock = stockResult.success ? stockResult.data : undefined
     if (!stock) {
       watchlistCandidates.push({ symbol: score.symbol, reason: '基础数据缺失，无法检测轮动信号' })
       continue
     }
 
-    const quotes = await dataLayer.dailyQuotes.get(score.symbol).catch(() => undefined)
+    const quotesResult = await dataBridge.query<DailyQuotes>({ action: ENVELOPE_ACTION.queryGet, store: STORE_NAME.dailyQuotes, key: score.symbol }).catch(() => ({ success: false as const, error: 'query failed' }))
+    const quotes = quotesResult.success ? quotesResult.data : undefined
     if (!quotes || quotes.history.length < 25) {
       watchlistCandidates.push({ symbol: score.symbol, reason: '行情数据不足，无法检测量价条件' })
       continue
@@ -407,7 +412,8 @@ export async function detectRotationSignals(
     const priceToMA20 = ma20 > 0 ? latestPrice / ma20 : 0
 
     const sector = stock.sector ?? stock.industryCode ?? ''
-    const rotationScores = await dataLayer.rotationScores.listBySector(sector).catch(() => [])
+    const rotationScoresResult = await dataBridge.query<RotationSectorScore[]>({ action: ENVELOPE_ACTION.queryByIndex, store: STORE_NAME.rotationScores, indexName: 'by-sector', indexValue: sector }).catch(() => ({ success: false as const, error: 'query failed' }))
+    const rotationScores = rotationScoresResult.success ? (rotationScoresResult.data ?? []) : []
     const latestRotation = rotationScores.length > 0
       ? rotationScores.sort((a, b) => b.scoreDate.localeCompare(a.scoreDate))[0]
       : undefined

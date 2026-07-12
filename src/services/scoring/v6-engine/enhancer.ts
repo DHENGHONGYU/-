@@ -15,7 +15,7 @@ import type { LlmConfig } from '@/config/llmConfig'
 import { isLlmConfigured } from '@/config/llmConfig'
 import { chat } from '@/services/llm/llmGateway'
 import type { LlmMessage } from '@/services/llm/llmTypes'
-import { LOG_SNIPPET_MAX_CHARS } from '@/config/mathConstants'
+import { LOG_SNIPPET_MAX_CHARS } from '@/constants/math.constants'
 
 const logger = getLogger()
 

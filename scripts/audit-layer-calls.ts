@@ -88,8 +88,10 @@ const IMPORT_STORE_PATTERN = /from\s+['"](?:\.\.\/store\/|@\/store\/)(?!types\/)
 const DYNAMIC_IMPORT_STORE_PATTERN = /import\s*\(\s*['"](?:\.\.\/store\/|@\/store\/)(?!types\/)[^'"]+['"]\s*\)/
 
 // v2.2 新增：检测 services 依赖 lib 中的业务模块（排除基础设施）
-// services 可以依赖 lib 中的基础设施（logger、withBroadcast、eventBus、safeCoerce），但不能依赖业务模块
-const SERVICES_IMPORT_LIB_BUSINESS = /from\s+['"](?:\.\.\/lib\/|@\/lib\/)(?!logger|withBroadcast|eventBus|format|errors|utils|localStorageManager|safeCoerce)[^'"]+['"]/
+// services 可以依赖 lib 中的基础设施（logger、withBroadcast、eventBus、format、errors、utils、localStorageManager、safeCoerce、perf、precision、validation），但不能依赖业务模块
+// 注：precision 为金融数值精度/数组安全工具（safeArrayGet/safeFirst/safeLast/formatPrice），validation 为数据校验/XSS/脱敏工具（validateConfigName/isValidLlmBaseURL 等），二者均为无业务依赖的纯函数基础设施
+// 注：perf 为性能监控基础设施（measureAsync/measureSync/getPerfStats），与 logger 同属 lib 基础设施
+const SERVICES_IMPORT_LIB_BUSINESS = /from\s+['"](?:\.\.\/lib\/|@\/lib\/)(?!logger|withBroadcast|eventBus|format|errors|utils|localStorageManager|safeCoerce|perf|precision|validation)[^'"]+['"]/
 
 // v2.1 修复：检测 lib 层依赖上层（排除 types 层）
 const LIB_IMPORT_UPPER_LAYER = /from\s+['"](?:\.\.\/(services|store|pages|components|apps|portal|cockpit)\/(?!types\/)|@\/(services|store|pages|components|apps|portal|cockpit)\/(?!types\/))[^'"]+['"]/
@@ -290,7 +292,7 @@ function scanFile(file: string): Pick<Report, 'violations' | 'warnings'> {
           line: i + 1,
           column: (libBusinessMatch.index ?? 0) + 1,
           type: 'services 依赖 lib 业务模块',
-          message: '引擎层仅可依赖 lib 中的基础设施（logger/withBroadcast/eventBus/format/errors/utils/localStorageManager）',
+          message: '引擎层仅可依赖 lib 中的基础设施（logger/withBroadcast/eventBus/format/errors/utils/localStorageManager/safeCoerce/perf/precision/validation）',
           context: trimmed!.slice(0, 80),
         })
       }

@@ -470,7 +470,7 @@ npm run build
 - [Design Tokens 社区规范](https://design-tokens.github.io/community-group/format/)
 - [Tailwind CSS 文档](https://tailwindcss.com/docs)
 - [React Context API](https://react.dev/reference/react/useContext)
-- [V9 架构指南](./architecture.md)
+- [V9 架构指南](../02-design/v9-strategy-architecture.md)
 - [V9 颜色令牌规范](../../AGENTS.md)
 
 ---

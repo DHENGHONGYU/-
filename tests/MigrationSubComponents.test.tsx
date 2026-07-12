@@ -73,8 +73,8 @@ describe('MigrationUploadTab', () => {
     
     expect(mockOnFileSelected).toHaveBeenCalledWith(file)
     expect(mockLogger.info).toHaveBeenCalledWith(
-      '[MigrationUploadTab] File dropped',
-      expect.objectContaining({ fileName: 'test.json' })
+      '[MigrationUploadTab] File selected via drop',
+      expect.objectContaining({ fileName: 'test.json', fileSize: file.size })
     )
   })
 

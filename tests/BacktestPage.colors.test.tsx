@@ -215,8 +215,8 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
       switchToTradesTab()
 
       const buyBadge = screen.getByText(UI_TEXT.errors.buy)
-      expect(buyBadge.className).toContain('bg-red-100')
-      expect(buyBadge.className).toContain('text-red-700')
+      expect(buyBadge.className).toContain('bg-destructive/10')
+      expect(buyBadge.className).toContain('text-destructive')
     })
 
     it('卖出方向应渲染为绿色标签（A 股惯例：卖出=绿跌）', () => {
@@ -229,8 +229,8 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
       switchToTradesTab()
 
       const sellBadge = screen.getByText(UI_TEXT.errors.sell)
-      expect(sellBadge.className).toContain('bg-green-100')
-      expect(sellBadge.className).toContain('text-green-700')
+      expect(sellBadge.className).toContain('bg-success/10')
+      expect(sellBadge.className).toContain('text-success')
     })
 
     it('买入方向不应使用绿色背景（国际惯例已被替换）', () => {
@@ -243,8 +243,8 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
       switchToTradesTab()
 
       const buyBadge = screen.getByText(UI_TEXT.errors.buy)
-      expect(buyBadge.className).not.toContain('bg-green-100')
-      expect(buyBadge.className).not.toContain('text-green-700')
+      expect(buyBadge.className).not.toContain('bg-success/10')
+      expect(buyBadge.className).not.toContain('text-success')
     })
 
     it('卖出方向不应使用红色背景（国际惯例已被替换）', () => {
@@ -257,8 +257,8 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
       switchToTradesTab()
 
       const sellBadge = screen.getByText(UI_TEXT.errors.sell)
-      expect(sellBadge.className).not.toContain('bg-red-100')
-      expect(sellBadge.className).not.toContain('text-red-700')
+      expect(sellBadge.className).not.toContain('bg-destructive/10')
+      expect(sellBadge.className).not.toContain('text-destructive')
     })
 
     it('混合买入/卖出交易应分别使用对应颜色', () => {
@@ -276,8 +276,8 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
       const buyBadge = screen.getByText(UI_TEXT.errors.buy)
       const sellBadge = screen.getByText(UI_TEXT.errors.sell)
 
-      expect(buyBadge.className).toContain('bg-red-100')
-      expect(sellBadge.className).toContain('bg-green-100')
+      expect(buyBadge.className).toContain('bg-destructive/10')
+      expect(sellBadge.className).toContain('bg-success/10')
     })
   })
 

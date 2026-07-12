@@ -7,7 +7,7 @@
 
 ## 1. 架构总览
 
-系统采用 **React 18 + TypeScript + Vite** 构建，驾驶舱模块基于 **React-Grid-Layout** 实现可拖拽、可缩放的 Widget 化布局。所有金融业务数据统一收敛到 `MarketData` 接口，通过 `MarketDataProvider` 注入视图层；底层采集逻辑由 `TaskScheduler` + `Collector` 负责，支持 Mock / REST / WebSocket 三种数据源无缝切换。
+系统采用 **React 19 + TypeScript + Vite** 构建，驾驶舱模块基于 **React-Grid-Layout** 实现可拖拽、可缩放的 Widget 化布局。所有金融业务数据统一收敛到 `MarketData` 接口，通过 `MarketDataProvider` 注入视图层；底层采集逻辑由 `TaskScheduler` + `Collector` 负责，支持 Mock / REST / WebSocket 三种数据源无缝切换。
 
 ### 1.1 核心设计原则
 

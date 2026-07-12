@@ -98,6 +98,22 @@ export default defineConfig({
   },
   server: {
     port: 3000,
+    proxy: {
+      // 腾讯行情 API 代理（解决浏览器 CORS）
+      '/api/proxy/tencent': {
+        target: 'https://qt.gtimg.cn',
+        changeOrigin: true,
+        rewrite: (path) => '/q=' + path.replace('/api/proxy/tencent/', ''),
+        headers: { Referer: 'https://finance.qq.com' },
+      },
+      // 新浪行情 API 代理（需正确 Referer 头）
+      '/api/proxy/sina': {
+        target: 'https://hq.sinajs.cn',
+        changeOrigin: true,
+        rewrite: (path) => '/list=' + path.replace('/api/proxy/sina/', ''),
+        headers: { Referer: 'https://finance.sina.com.cn' },
+      },
+    },
   },
   build: {
     target: 'es2022',
@@ -124,7 +140,10 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./tests/setup.ts', './tests/contracts/setup.ts'],
-    exclude: ['e2e/**', 'node_modules/**', 'dist/**', 'temp/**'],
+    // 注意：必须写 **/node_modules/**（前导 globstar），否则无法匹配嵌套的
+    // packages/*/node_modules，会导致把 pino/thread-stream/process-warning 等
+    // 第三方依赖的测试误收进门禁（TD-013 衍生噪声）。见 test:clean 治理。
+    exclude: ['e2e/**', '**/node_modules/**', 'dist/**', 'temp/**'],
     testTimeout: 30000,
     hookTimeout: 30000,
     retry: 2,

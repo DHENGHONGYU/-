@@ -1,6 +1,6 @@
 # AGENTS.md — V9 智能投研复盘系统 AI 行为约束契约
 
-> **版本**: v1.4.3 | **日期**: 2026-07-10
+> **版本**: v1.4.5 | **日期**: 2026-07-20
 > **适用范围**: 所有 AI 辅助开发工具（Claude Code、Cursor、Trae 等）
 > **强制等级**: 所有 AI 生成的代码必须遵守以下约束
 
@@ -15,14 +15,26 @@
 ```
 src/config/       ← 配置层（零硬编码锚点）
 src/core/         ← 核心工具与类型守卫（DataBridge/ACL/Envelope/MemoryCache/EventBus）
+src/agents/       ← AI 行为扩展（运行时模块，core 层扩展）
 src/data/         ← 数据层（IndexedDB/dataLayer/queryBuilder/types）
 src/lib/          ← 库函数（logger/format/errors/utils/localStorageManager）
-src/services/      ← 服务层（20个子域：analysis/scoring/fetcher/news/llm/trading/execution/...）
+src/services/      ← 服务层（20+子域：analysis/scoring/fetcher/news/llm/trading/execution/...）
 src/store/        ← 状态层（49个Zustand Store + helpers/withBroadcast）
 src/pages/        ← 页面层（5舱：input/analysis/trading/output/command）
 src/components/   ← 组件层（atoms/molecules/organisms/templates + chart/cabin/cockpit/widgets）
 src/portal/       ← PortalShell 舱室入口层
+src/apps/         ← App 分发器（React.lazy 加载，三级加载链中间层）
+src/cockpit/      ← 驾驶舱层（core/data/providers/widgets，独立布局域）
 src/constants/    ← 常量层（零硬编码锚点）
+src/types/        ← 零依赖（纯类型定义，可被所有层引用）
+src/hooks/        ← 自定义 React Hooks（跨组件共享逻辑）
+src/devtools/     ← 开发环境调试工具（DEV 注入）
+src/fixtures/     ← Mock 数据供给（测试数据）
+src/i18n/         ← 国际化配置与翻译资源
+src/mcp/          ← MCP 服务器层（20+ 子服务器：analysis/backstock/data-collector/...）
+src/schema/       ← Zod/JSON Schema 校验定义（类型守卫扩展）
+src/showcase/     ← 组件展示页（开发环境专用，不进入生产构建）
+src/generated/    ← 代码自动生成产物（令牌/类型/脚本输出）
 ```
 
 ### 依赖方向规则
@@ -30,7 +42,7 @@ src/constants/    ← 常量层（零硬编码锚点）
 - `pages/` 和 `components/` → 只能依赖 `store/` 和 `services/`，禁止直接调用 `dataLayer` 或 `db`
 - `store/` → 只能依赖 `services/` 和 `core/`
 - `services/` → 只能依赖 `core/`、`data/` 和 `lib/`（仅限基础设施），禁止直接写 `db`（通过 `DataBridge.forward()`）
-  - **lib 基础设施白名单**：`logger`、`withBroadcast`、`eventBus`、`format`、`errors`、`utils`、`localStorageManager`、`safeCoerce`
+  - **lib 基础设施白名单**：`logger`、`withBroadcast`、`eventBus`、`format`、`errors`、`utils`、`localStorageManager`、`safeCoerce`、`perf`、`precision`、`validation`
   - 禁止依赖 `lib/` 中的业务模块
 - `lib/` → 仅可依赖 `core/` 和 `config/`，禁止依赖 `services/`、`store/`、`pages/`、`components/`、`apps/`
 - `core/` → 禁止依赖 `pages/`、`components/`、`apps/`、`lib/`
@@ -38,6 +50,16 @@ src/constants/    ← 常量层（零硬编码锚点）
 - `constants/` → 禁止依赖任何运行时模块（仅导出常量，可被所有层引用）
 - `types/` → 零依赖（纯类型定义，可被所有层引用）
 - `agents/` → 仅可依赖 `core/` 和 `data/`（属于 core 层扩展）
+- `hooks/` → 可依赖 `store/`、`services/` 和 `lib/`，可被 `pages/` 和 `components/` 依赖（跨组件共享逻辑层）
+- `devtools/` → 仅开发环境使用，可依赖 `core/` 和 `lib/`（禁止引入生产逻辑）
+- `fixtures/` → 测试数据层，仅被 `tests/` 依赖（禁止被生产代码引用）
+- `i18n/` → 可依赖 `lib/`，可被 `components/` 和 `pages/` 引用（国际化工具层）
+- `apps/` → 可依赖 `pages/`、`components/`、`store/`、`services/`，被 `portal/` 引用（App 分发器，三级加载链中间层）
+- `cockpit/` → 可依赖 `components/`、`store/`、`services/`，可被 `pages/` 引用（驾驶舱独立布局域）
+- `mcp/` → 可依赖 `core/`、`data/`、`lib/`、`services/`，可被 `services/` 和 `pages/` 引用（MCP 服务器扩展层）
+- `schema/` → 仅可依赖 `types/` 和 `constants/`，可被 `services/`、`data/`、`components/` 引用（Schema 校验定义层）
+- `showcase/` → 仅开发环境使用，可依赖 `components/`、`constants/`、`lib/`（开发展示页，禁止引入生产逻辑）
+- `generated/` → 零依赖（纯自动生成产物），可被 `services/`、`components/`、`pages/` 引用（代码生成层）
 
 ### 验证命令
 
@@ -45,6 +67,56 @@ src/constants/    ← 常量层（零硬编码锚点）
 npm run audit:layers
 # 期望：0 violations, 0 warnings
 ```
+
+> 文件归位规则、目录映射与文件生命周期管理详见 [FILE-MANAGEMENT-GUIDE.md](docs/01-requirements/FILE-MANAGEMENT-GUIDE.md)。
+
+### 📌 教训 1：架构契约是文档编写的唯一真相源
+
+**适用场景**：任何需要描述项目架构、目录结构、分层规则的技术文档编写。
+
+**具体原则**：
+1. 文档编写前必须打开并阅读架构契约的**当前版本**（如 `AGENTS.md`、`ARCHITECTURE.md`），不能只凭记忆。
+2. 必须逐条对比架构契约中的**每一项定义**（如每个目录、每个命名规则、每个验证命令），确保文档覆盖 100%。
+3. 当架构契约与文档存在冲突时，必须以架构契约为准修改文档，不能反向修改架构契约（除非经过架构评审）。
+
+**检查方法**：
+```powershell
+# 编写前执行：提取所有目录定义
+grep -E '^\s*(src/|\.agents/|packages/|docs/)' AGENTS.md
+# 编写后执行：对比目录列表，计算遗漏率（目标：0%）
+```
+
+**反例**：
+- ❌ 凭记忆写："源代码放在 `src/` 下，按 `core/`、`data/`、`services/` 等分层"（遗漏了 `portal/`、`constants/` 等）
+- ❌ 引用旧版本：文档依据 `AGENTS.md v1.0.0` 编写，而项目实际使用的是 `v1.4.3`
+
+**正例**：
+- ✅ 逐条复制：将 `AGENTS.md` §一的所有目录定义逐条复制到文档表格中，再添加文件管理特有的补充说明
+- ✅ 版本对齐：文档头部明确标注"本文档基于 `AGENTS.md v1.4.3` 编写，当 `AGENTS.md` 版本升级时需同步修订本文档"
+
+### 📌 教训 6：多个同类目录必须明确区分
+
+**适用场景**：任何存在多个相似目录（如 `agents/` 与 `.agents/`、`utils/` 与 `lib/`、`config/` 与 `settings/`）的项目。
+
+**具体原则**：
+1. 对于每个目录，必须说明其**职责**（存放什么）、**依赖方向**（可依赖哪些层、可被哪些层依赖）、**与相似目录的区别**。
+2. 目录命名必须避免歧义：如果两套 `agents` 目录存在，必须明确区分 `src/agents/`（运行时模块）和 `.agents/skills/`（AI 技能定义文件）。
+3. 在文件归位规则表中，相似目录必须相邻排列，并附注对比说明。
+
+**检查方法**：
+- 搜索仓库中是否存在名称相似的目录（如含相同关键词的目录）。
+- 检查文档中是否对每个相似目录都有独立的说明行和职责描述。
+- 检查是否说明了目录间的依赖关系（如 `src/agents/` 仅可依赖 `src/core/` 和 `src/data/`）。
+
+**反例**：
+- ❌ 文档只写"`.agents/skills/`：AI Skill"，未提及 `src/agents/` 的存在
+- ❌ 文档只写"库函数：`src/lib/`"，未说明 `src/utils/` 是旧目录还是新目录
+
+**正例**：
+- ✅ 相邻排列对比：
+  - `| src/agents/ | AI 行为扩展（运行时模块，core 层扩展） | 仅可依赖 core/ 和 data/ |`
+  - `| .agents/skills/ | AI 辅助技能定义文件 | 可被所有层引用 |`
+- ✅ 废弃目录明确标注：`| src/utils/ | ⚠️ 已废弃，请使用 src/lib/ | 保留至 v1.5.0 迁移期结束 |`
 
 ---
 
@@ -72,6 +144,31 @@ npm run audit:layers
 - 若回滚涉及接口签名变更，必须更新 `docs/06-routing-specs.md` 或相关数据字典
 - 回滚后必须执行 `npm run audit:layers` 确认无跨层调用违规
 - 回滚后必须执行 `npm run test -- --run` 确认单元测试通过
+
+### 📌 教训 5：文件管理规范必须覆盖"入-移-出"全生命周期
+
+**适用场景**：任何需要管理文件从创建到归档/删除全生命周期的项目。
+
+**具体原则**：
+1. **入（创建）**：新文件/目录的存放规则（目录映射、命名规范）。
+2. **移（迁移）**：文件从一个目录迁移到另一个目录的 SOP（包括 import 路径更新、旧路径清理、跨层调用检查）。
+3. **出（清理/归档）**：临时文件清理策略（`temp/` 保留期限、AI 产物归档周期、废弃目录清理时机）。
+4. 迁移操作完成后必须执行架构审计（`audit:layers`）确认无跨层违规。
+
+**检查方法**：
+- 检查文档是否包含"临时文件/目录清理策略"章节。
+- 检查文档是否包含"文件迁移 SOP"章节（含 import 路径更新、残留检查）。
+- 检查文档是否包含"AI 生成产物管理"章节（存放位置、命名规则、保留期限）。
+- 检查是否遗漏了"验证命令清单"的完整覆盖（如 `AGENTS.md` 定义了 7 项，文档必须全部列出）。
+
+**反例**：
+- ❌ 只定义"新文件放在 `src/` 下"，未定义"文件迁移时如何清理旧路径"（导致 `toolkit/` 残留、`src/utils/` 与 `src/lib/` 并存）
+- ❌ 只定义"`.gitignore` 新增规则"，未定义"`.gitignore` 文档如何与实际同步"
+- ❌ 提交前检查只列 3 项命令，遗漏了 `audit:hardcode`、`audit:deadcode` 等
+
+**正例**：
+- ✅ 包含"生命周期管理"章节：创建规则（第1节）、迁移 SOP（第2节）、清理策略（第3节）、定期审计（第4节）
+- ✅ 验证命令完整列出：`tsc`、`lint`、`audit:layers`、`audit:hardcode`、`audit:deadcode`、`audit:docs`、`audit:token`
 
 ---
 
@@ -579,6 +676,28 @@ npm run audit:hardcode
 - **类型**: PascalCase + Interface 前缀（如 `interface StockData`）
 - **UI 组件 import 路径**: 大小写必须一致（如 `Card` 而非 `card`）
 
+### 📌 教训 3：文档编写必须使用标准化模板/Checklist
+
+**适用场景**：任何项目级规范文档（文件管理规范、编码规范、API 规范、数据规范）的编写。
+
+**具体原则**：
+1. 每种文档类型必须有一个"必须包含章节清单"（Mandatory Section Checklist），编写者必须逐项勾选。
+2. 文件管理规范必须包含的章节：目录映射表、命名规范、生命周期管理（创建/迁移/清理）、忽略规则、验证命令、交叉引用、版本管理。
+3. 对于架构复杂项目，文档必须采用**穷尽性原则**而非**最小化原则**——任何文件都必须能在规范中找到归属规则。
+
+**检查方法**：
+- 编写前：读取该文档类型的模板 Checklist，确认所有章节都有覆盖计划。
+- 编写后：对照 Checklist 逐项打勾，未覆盖的章节必须说明原因（如"本项目不适用"）。
+- 审查时：审查者首先检查 Checklist 完成度，再检查内容质量。
+
+**反例**：
+- ❌ 凭经验写文件管理规范："文件放在 `src/` 下，测试放在 `tests/` 下，其他按常识处理"（遗漏命名规范、Schema 变更 SOP、temp 清理策略等）
+- ❌ 采用"最小化原则"：只写最确定的规则，灰色地带留给"开发者自行判断"
+
+**正例**：
+- ✅ 使用模板：文件管理规范模板要求包含 8 个章节（目录映射、命名规范、`.gitignore`、提交前检查、定期审计、生命周期管理、交叉引用、变更日志），缺一不可
+- ✅ 穷尽性原则：每个目录、每种文件类型、每个命名场景都必须在规范中有明确归属
+
 ---
 
 ## 五、路由注册规则
@@ -643,6 +762,7 @@ npm run build
 # 架构审计
 npm run audit          # 全部审计
 npm run audit:layers   # 分层调用
+npm run audit:directory # 目录结构（v1.4.5 新增）
 npm run audit:hardcode # 硬编码
 npm run audit:deadcode # 死代码
 npm run audit:docs     # 文档同步
@@ -784,6 +904,7 @@ npm run changelog:summary
 git log --oneline -5          # 确认当前 commit 位置
 git status --short            # 确认工作区状态
 读取相关方案文档               # 确认任务边界
+读取 docs-as-mirror 快速参考卡  # 防止文档编写违背 5 大核心原则（v1.4.5 新增）
 记录 contextAnchor 快照        # 后续对照防漂移
 ```
 
@@ -837,6 +958,50 @@ git status --short            # 确认工作区状态
 
 - [task-graph-template.md](../docs/templates/task-graph-template.md) — 任务图模板
 - [regression-suite.md](../docs/templates/regression-suite.md) — 回归测试套件模板
+
+### 📌 教训 2：描述文件系统状态的文档必须通过自动化扫描验证
+
+**适用场景**：任何描述仓库文件结构、目录内容、`.gitignore` 规则、忽略类别的文档。
+
+**具体原则**：
+1. 文档中描述的文件/目录/规则必须与实际仓库中的文件一致，不能基于"理想模板"或"常见实践"编写。
+2. 对于 `.gitignore` 类文档，必须通过 `cat .gitignore` 读取实际文件，逐行对比文档描述。
+3. 对于目录结构类文档，必须通过 `find` 或 `tree` 命令扫描实际文件系统，确认每个目录的存在性和归属。
+
+**检查方法**：
+- `.gitignore` 文档：将文档中列出的规则与 `.gitignore` 实际内容做 `diff`，统计文档未覆盖的规则比例（目标：<5%）。
+- 目录结构文档：运行 `find . -maxdepth 2 -type d | sort` 与文档目录列表对比，确认所有非标准目录都有说明。
+- 格式一致性：检查文档中的规则格式（如尾部斜杠）与 `.gitignore` 实际格式是否一致。
+
+**反例**：
+- ❌ 凭模板写 `.gitignore` 说明："通常包含 `node_modules/`、`dist/`、`.env`"（实际仓库可能还有 20 个其他规则未被提及）
+- ❌ 文档写 `"Playwright": "/playwright-report/"`，实际 `.gitignore` 还包含 `screenshots/`、`.playwright-mcp/`
+
+**正例**：
+- ✅ 先扫描再编写：`cat .gitignore | grep -v '^#' | grep -v '^$' | sort` 获取实际规则列表，分类后写入文档
+- ✅ 文档末尾附注："本文档基于 `.gitignore`（167 行规则）编写，新增规则时须同步更新本节"
+
+### 📌 教训 4：文档必须完成"注册-引用-同步"才能视为完成
+
+**适用场景**：任何项目文档的发布和生命周期管理。
+
+**具体原则**：
+1. **注册**：新文档必须注册到文档索引（如 `docs/README.md` 或 `REGISTRY_INDEX.md`），包含标题、路径、一句话描述、版本号。
+2. **引用**：新文档必须引用所有相关文档（如文件管理规范必须引用 `AGENTS.md`），并在相关文档中反向建立引用（如 `AGENTS.md` 引用文件管理规范）。
+3. **同步**：文档的"完成定义"（DoD）必须包含"已注册"和"已引用"两个检查项，未经 DoD 检查的文档视为草稿（Draft），不得发布。
+
+**检查方法**：
+- 注册检查：在文档索引中搜索新文档的文件名，确认已被收录。
+- 引用检查：在新文档中搜索所有相关文档的引用链接（如 `[AGENTS.md]`），确认双向引用完整。
+- 反向检查：在相关文档中搜索新文档的引用，确认引用链路是双向的而非单向的。
+
+**反例**：
+- ❌ 文档写完直接存到 `docs/01-requirements/`，未更新 `docs/01-requirements/README.md` 索引
+- ❌ 文档引用了 `AGENTS.md`，但 `AGENTS.md` 中没有任何地方引用该文档（单向引用）
+
+**正例**：
+- ✅ 文档头部明确列出"相关文档"段落：`[AGENTS.md](../../AGENTS.md) | [trae-file-management-review.md](../00-meta/trae-file-management-review.md)`
+- ✅ 文档索引中新增条目：`| 文件管理规范 | FILE-MANAGEMENT-GUIDE.md | 源代码归位、.gitignore 维护、提交前检查 | v1.0.0 |`
 
 ## 十三、模块分拆必要性评估框架
 
@@ -1070,6 +1235,28 @@ npx tsc --noEmit | findstr /R "mcpAcl mcpBridge MCPServer MCPClient"
 3. 检查 `MCP_ACL_MATRIX[caller].allowedTools` 是否匹配目标 Tool（注意通配符规则）
 4. 查看日志中的 `[MCP:ACL]` 前缀信息
 
+### 📌 教训 7：版本号体系必须在文档发布前明确并统一
+
+**适用场景**：任何多文档协同的项目，特别是文档体系与代码体系版本不同步的情况。
+
+**具体原则**：
+1. 采用"项目级版本 + 文档修订号"双版本号体系：项目级版本（如 `v2.5.0`）标识文档体系兼容性，文档修订号（如 `rev.3`）标识该文档自身的修订次数。
+2. 或采用统一版本号：所有文档与项目版本保持一致（如全部使用 `v2.5.0`），通过修订日期区分文档更新。
+3. 任何情况下，文档头部必须明确说明其版本号体系，以及与其他文档的版本兼容关系。
+
+**检查方法**：
+- 检查文档头部是否包含版本号声明和版本号体系说明。
+- 检查文档索引中记录的版本号是否与文档实际版本号一致。
+- 检查相关文档间的版本号是否有明显冲突（如一个 `v1.0.0`，一个 `v2.5.0`，无法判断谁更旧）。
+
+**反例**：
+- ❌ 文档写 `v1.0.0`，README 写 `v2.5.0`，`AGENTS.md` 写 `v1.4.3`——三者无法比较新旧
+- ❌ 文档只写版本号，不写版本号体系说明（如"这是文档独立版本还是项目版本？"）
+
+**正例**：
+- ✅ `> 文档体系版本: v2.5.0 | 本文档修订: rev.1 | 兼容 AGENTS.md v1.4.3+`
+- ✅ 变更日志中记录与相关文档的版本同步关系：`v1.1.0 (2026-07-20) | 同步 AGENTS.md v1.4.3 的目录定义`
+
 ---
 
 ## 十一、变更日志
@@ -1091,3 +1278,94 @@ npx tsc --noEmit | findstr /R "mcpAcl mcpBridge MCPServer MCPClient"
 | v1.2.0 | 2026-07-04 | §5 新增三级加载链架构说明、新增页面 SOP、审计排除规则；audit:deadcode v2.0 支持 App 分发器扫描 |
 | v1.1.0 | 2026-07-04 | 新增自主决策规则、日志记录要求 |
 | v1.0.0 | 2026-07-02 | 初始版本：分层规则、四步契约、类型安全、零硬编码、路由注册、引擎架构、验证命令、数据库版本管理、LLM透明度 |
+
+---
+
+## 附录：文件管理快速参考卡
+
+> 来源：`docs/00-meta/FILE-MANAGEMENT-GUIDE-optimization-prompt.md`（2026-07-20）
+
+### 快速检查表
+
+| 检查项 | 检查命令/方法 | 通过标准 | 失败后果 |
+|--------|-------------|---------|---------|
+| 目录完整性 | 对比 `AGENTS.md` §一 vs 文件归位规则表 | 13 个目录 100% 一致 | 文件放错位置，架构漂移 |
+| 命名规范 | 扫描新增文件名 | kebab-case/PascalCase/camelCase+Store/UPPER_SNAKE_CASE | 构建失败，认知负荷增加 |
+| `.gitignore` 同步 | 逐行对比 `.gitignore` vs 文档 2.2 节 | 类别覆盖率 100%，格式一致 | 文档权威性丧失，重复提交 |
+| 文件流浪 | `git status --short` + `find . -name '*.ts'` | 无 `src/` 外源码，无重复目录 | 维护成本倍增，`audit:layers` 失败 |
+| 文档引用 | 检查文档末尾引用 + `README.md` 索引 | 引用 `AGENTS.md`，被 `README` 收录 | 信息孤岛，无法发现相关规范 |
+| 版本号对齐 | 对比文档头部 vs 项目体系版本 | 双版本号一致（项目级+文档级） | 版本混乱，难以追踪变更 |
+| 验证命令完整性 | 对比文档检查清单 vs `AGENTS.md` §七 | 9 条命令 100% 一致 | 遗漏关键检查，技术债务积累 |
+| Schema 变更同步 | 检查 `DB_VERSION` + `STORE_NAME` + `ACL` + `Migration` | 全部同步更新 | 运行时崩溃，数据丢失 |
+| docs 分层 | 确认文件放入 `00-07` 正确子目录 | 编号体系一致 | 文档无法导航，检索困难 |
+| 禁止事项例外 | 检查根目录新增文件 | 标准配置文件/根级文档除外 | 根目录混乱，文件难以管理 |
+
+### 场景速查
+
+**场景 A：AI 生成新文件 → 确保正确目录**
+```
+1. 读取 AGENTS.md §一，确定文件应放入哪个 src/ 子目录
+2. 检查文件归位规则表是否包含该目录（若无，先补文档）
+3. 按命名规范确定文件名（kebab-case/PascalCase/camelCase+Store/UPPER_SNAKE_CASE）
+4. 确认不创建在 src/ 外的独立目录
+5. 确认不创建与已有目录重复的职责目录
+```
+
+**场景 B：AI 修改 .gitignore → 确保同步文档**
+```
+1. 在 .gitignore 新增规则的同时，在文档 2.2 节新增对应类别行
+2. 确认类别分组注释清晰
+3. 确认格式一致（尾部斜杠、前导 /）
+4. 禁止只修改 .gitignore 而不修改文档
+5. 禁止只修改文档而不修改 .gitignore
+```
+
+**场景 C：AI 编写文档 → 确保与 AGENTS.md 一致**
+```
+1. 读取 AGENTS.md 最新版本，确认目录名 100% 一致
+2. 在文档中引用 AGENTS.md 相关章节（如 §一分层、§四命名）
+3. 确认文档被 docs/01-requirements/README.md 索引收录
+4. 确认版本号与项目体系版本一致
+5. 确认提交前检查清单与 AGENTS.md §七 100% 一致
+```
+
+**场景 D：AI 代码迁移 → 防止文件流浪**
+```
+1. 迁移前确认目标目录已在文件归位规则表中定义
+2. 迁移后执行全文件类型扫描（不仅 .tsx/.ts，还包括 .md/.json/.mjs/.cjs/.yaml/.yml/.sh）
+3. 检查旧路径是否有残留（文件内容和 import 路径）
+4. 检查 AGENTS.md 中的目录结构描述是否引用旧路径（如引用旧目录会导致 AI 生成错误代码）
+5. 运行 npm run audit:layers 确认无新增跨层违规
+
+---
+
+## 十五、部署架构原则：本地优先，拒绝云原生过度工程（v1.4.6 新增）
+
+### 15.1 原则声明
+
+FinSightV9 是**个人本地投研复盘工具**，定位决定了部署架构必须坚持 **本地优先**，拒绝云原生过度工程。
+
+### 15.2 约束规则
+
+1. **不引入后端微服务**：不落地 FastAPI / Kafka / 云端多数据库集群。所有计算在浏览器端完成。
+2. **重计算走本地**：需要密集计算的功能（回测、因子计算、嵌入）优先走 Web Worker 或 WASM，不依赖远程计算节点。
+3. **存储优先本地轻量引擎**：
+   - 关系型/文档数据 → IndexedDB（现有 `dataLayer`）
+   - 高频行情 → 需要时用 DuckDB / sql.js 列式存储本地
+   - 向量检索 → 需要时用 LanceDB / Chroma 本地库，不自建 Milvus 集群
+4. **可选云端适配层**：所有数据接入层（Collector / Adapter）预留 Mock/REST/WebSocket 三态切换能力，为未来「本地 + 可选云端」折中方案保留路径。
+5. **实时性 SLA**：盘中实时查询的延迟预算由 `src/constants/cockpit.constants.ts` 中的 `REALTIME_SLA_MS`（当前默认 2000ms）约束。当真实行情接入时，WebSocket 推送目标 <500ms，REST 轮询目标 <2000ms。超时时 UI 应显示「数据延迟」警告。
+
+### 15.3 与本文件其他条目的关系
+
+- 本节与 §一（项目分层规则）一致：所有层均运行在浏览器进程内，无需跨服务调用。
+- §三「零硬编码」：所有云端端点路径集中在 `src/config/`，不嵌入源码。
+- §七「验证命令」不变——门禁依然在本地运行，不依赖外部服务健康状态。
+- 新增代码/模块引入本节约束：若提议引入后端依赖（消息队列、远程推理、云端数据库），必须先经 §十三（模块分拆必要性评估）评估。
+
+### 15.4 验证方式
+
+- 新增模块代码审查时检查：是否违反 15.2 中的任一约束。
+- 所有新增 npm 依赖审查：避免引入服务端运行时依赖。
+
+```

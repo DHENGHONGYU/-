@@ -1,7 +1,7 @@
 import { getDefaultLlmConfig, getLlmApiKeyAsync, type LlmConfig } from '@/config/llmConfig'
 import type { LlmMessage, LlmResponse, LlmUsage, LlmStreamCallback, LlmStreamChunk } from './llmTypes'
 import { getLogger } from '@/lib/logger'
-import { isValidLlmBaseURL } from '@/utils/dataValidation'
+import { isValidLlmBaseURL } from '@/lib/validation'
 
 const logger = getLogger()
 

@@ -6,10 +6,12 @@ import userEvent from '@testing-library/user-event'
 // Mock: batchImportService
 // ============================================================
 const mockParseBulkInput = vi.fn()
-const mockImportStocks = vi.fn()
+const mockImportStocksWithProgress = vi.fn()
+const mockDetectDuplicates = vi.fn()
 vi.mock('@/services/input/batchImportService', () => ({
   parseBulkInput: (...args: unknown[]) => mockParseBulkInput(...args),
-  importStocks: (...args: unknown[]) => mockImportStocks(...args),
+  importStocksWithProgress: (...args: unknown[]) => mockImportStocksWithProgress(...args),
+  detectDuplicates: (...args: unknown[]) => mockDetectDuplicates(...args),
 }))
 
 // ============================================================
@@ -48,7 +50,10 @@ describe('BulkImportPanel', () => {
     poolStoreState.refresh.mockResolvedValue(undefined)
     mockGetAllGroups.mockReturnValue(['默认', '自选'])
     mockParseBulkInput.mockReturnValue([])
-    mockImportStocks.mockResolvedValue({
+    mockDetectDuplicates.mockImplementation((rows: unknown[]) =>
+      rows.map((r) => ({ ...(r as Record<string, unknown>), status: 'valid' })),
+    )
+    mockImportStocksWithProgress.mockResolvedValue({
       success: true,
       data: { success: 0, failed: 0, errors: [] },
     })
@@ -72,7 +77,7 @@ describe('BulkImportPanel', () => {
     render(<BulkImportPanel />)
 
     expect(screen.getByText('批量导入候选股票')).toBeInTheDocument()
-    expect(screen.getByPlaceholderText(/600519,贵州茅台/)).toBeInTheDocument()
+    expect(screen.getByPlaceholderText(/600519\.SH,贵州茅台/)).toBeInTheDocument()
   })
 
   it('renders target group select with allGroups options', async () => {
@@ -94,7 +99,7 @@ describe('BulkImportPanel', () => {
 
     render(<BulkImportPanel />)
 
-    const textarea = screen.getByPlaceholderText(/600519,贵州茅台/)
+    const textarea = screen.getByPlaceholderText(/600519\.SH,贵州茅台/)
     await user.type(textarea, '600519,贵州茅台')
 
     expect(mockParseBulkInput).toHaveBeenCalledWith('600519,贵州茅台')
@@ -109,7 +114,7 @@ describe('BulkImportPanel', () => {
 
     render(<BulkImportPanel />)
 
-    const textarea = screen.getByPlaceholderText(/600519,贵州茅台/)
+    const textarea = screen.getByPlaceholderText(/600519\.SH,贵州茅台/)
     await user.type(textarea, '600519,贵州茅台\n000001,平安银行')
 
     await waitFor(() => {
@@ -126,23 +131,26 @@ describe('BulkImportPanel', () => {
     mockParseBulkInput.mockReturnValue([
       { code: '600519', name: '贵州茅台', symbol: '600519.SH' },
     ])
-    mockImportStocks.mockResolvedValue({
+    mockImportStocksWithProgress.mockResolvedValue({
       success: true,
       data: { success: 1, failed: 0, errors: [] },
     })
 
     render(<BulkImportPanel />)
 
-    const textarea = screen.getByPlaceholderText(/600519,贵州茅台/)
+    const textarea = screen.getByPlaceholderText(/600519\.SH,贵州茅台/)
     await user.type(textarea, '600519,贵州茅台')
 
     const confirmButton = screen.getByRole('button', { name: /确认导入/ })
     await user.click(confirmButton)
 
     await waitFor(() => {
-      expect(mockImportStocks).toHaveBeenCalledWith(
-        [{ code: '600519', name: '贵州茅台', symbol: '600519.SH' }],
+      expect(mockImportStocksWithProgress).toHaveBeenCalledWith(
+        expect.arrayContaining([
+          expect.objectContaining({ code: '600519', name: '贵州茅台', symbol: '600519.SH', status: 'valid' }),
+        ]),
         expect.objectContaining({ fetchBasicAfterAdd: false }),
+        expect.any(Function),
       )
     })
   })
@@ -152,14 +160,14 @@ describe('BulkImportPanel', () => {
     mockParseBulkInput.mockReturnValue([
       { code: '600519', name: '贵州茅台', symbol: '600519.SH' },
     ])
-    mockImportStocks.mockResolvedValue({
+    mockImportStocksWithProgress.mockResolvedValue({
       success: true,
       data: { success: 1, failed: 0, errors: [] },
     })
 
     render(<BulkImportPanel />)
 
-    const textarea = screen.getByPlaceholderText(/600519,贵州茅台/)
+    const textarea = screen.getByPlaceholderText(/600519\.SH,贵州茅台/)
     await user.type(textarea, '600519,贵州茅台')
 
     const confirmButton = screen.getByRole('button', { name: /确认导入/ })
@@ -176,21 +184,22 @@ describe('BulkImportPanel', () => {
     mockParseBulkInput.mockReturnValue([
       { code: '600519', name: '贵州茅台', symbol: '600519.SH' },
     ])
-    mockImportStocks.mockResolvedValue({
+    mockImportStocksWithProgress.mockResolvedValue({
       success: true,
       data: { success: 1, failed: 0, errors: [] },
     })
 
     render(<BulkImportPanel />)
 
-    const textarea = screen.getByPlaceholderText(/600519,贵州茅台/)
+    const textarea = screen.getByPlaceholderText(/600519\.SH,贵州茅台/)
     await user.type(textarea, '600519,贵州茅台')
 
     const confirmButton = screen.getByRole('button', { name: /确认导入/ })
     await user.click(confirmButton)
 
     await waitFor(() => {
-      expect(screen.getByText(/批量导入完成：成功 1 条，失败 0 条/)).toBeInTheDocument()
+      expect(screen.getByText(/导入完成/)).toBeInTheDocument()
+      expect(screen.getByText(/成功 1 条/)).toBeInTheDocument()
     })
   })
 
@@ -202,14 +211,14 @@ describe('BulkImportPanel', () => {
     mockParseBulkInput.mockReturnValue([
       { code: '600519', name: '贵州茅台', symbol: '600519.SH' },
     ])
-    mockImportStocks.mockResolvedValue({
+    mockImportStocksWithProgress.mockResolvedValue({
       success: false,
       error: '数据库写入失败',
     })
 
     render(<BulkImportPanel />)
 
-    const textarea = screen.getByPlaceholderText(/600519,贵州茅台/)
+    const textarea = screen.getByPlaceholderText(/600519\.SH,贵州茅台/)
     await user.type(textarea, '600519,贵州茅台')
 
     const confirmButton = screen.getByRole('button', { name: /确认导入/ })
@@ -226,11 +235,11 @@ describe('BulkImportPanel', () => {
 
     render(<BulkImportPanel />)
 
-    const textarea = screen.getByPlaceholderText(/600519,贵州茅台/)
+    const textarea = screen.getByPlaceholderText(/600519\.SH,贵州茅台/)
     await user.type(textarea, 'invalid text')
 
     const confirmButton = screen.getByRole('button', { name: /确认导入/ })
     expect(confirmButton).toBeDisabled()
-    expect(confirmButton).toHaveTextContent('确认导入 (0)')
+    expect(confirmButton).toHaveTextContent('确认导入')
   })
 })

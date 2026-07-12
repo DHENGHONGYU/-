@@ -1,1 +1,0 @@
-import{j as r,c as s}from"./index-BxngZjDM.js";function e({children:a,className:t,centered:n=!0}){return r.jsx("main",{className:s("w-full px-6 py-6",n&&"mx-auto max-w-[1200px]",t),children:a})}export{e as P};

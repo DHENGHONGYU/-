@@ -8,6 +8,10 @@
  * 3. 全局 mock jsdom 缺失的 Browser API（matchMedia/IntersectionObserver/ResizeObserver/URL.createObjectURL）
  * 4. 每个测试后自动清理 React 渲染树
  *
+ * 全局隔离策略（afterEach 兜底，消除 forks 池 + fileParallelism=false 下的跨文件状态污染 TD-013）：
+ * - 重置 IndexedDB 数据 + db 单例：db.reset() + resetDbInstance()
+ * - 清空 DataBridge 读缓存：dataBridge.invalidateAll()
+ * - 清空 EventBus 监听：eventBus.clearAll()
  * 不在此处做的事（避免全局副作用）：
  * - 不重置 Zustand Store（按需在测试文件中使用 tests/utils/storeReset）
  * - 不启动 vi.useFakeTimers（按需在测试文件中启用，并在 afterEach 中 useRealTimers）
@@ -18,6 +22,10 @@ import 'fake-indexeddb/auto'
 import '@testing-library/jest-dom/vitest'
 import { cleanup } from '@testing-library/react'
 import { afterEach } from 'vitest'
+import { db } from '@/data/db'
+import { dataBridge } from '@/core/dataBridge'
+import { resetDbInstance } from '@/data/db-connection'
+import { eventBus } from '@/lib/eventBus'
 
 // 为每个测试文件生成独立的 IndexedDB 名称，避免并行运行时的状态污染与事务竞争
 process.env.TEST_DB_NAME = `V6ProDB-test-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`
@@ -108,6 +116,30 @@ if (typeof URL.revokeObjectURL !== 'function') {
 // ============================================================
 
 // 每个测试后清理 React 渲染树，避免 DOM 残留与事件监听累积
-afterEach(() => {
+afterEach(async () => {
   cleanup()
+
+  // 跨文件隔离：消除 forks 池 + fileParallelism=false 下共享单例造成的状态污染（TD-013）
+  // 同一 TEST_DB_NAME / dataBridge 缓存 / eventBus 监听在所有测试文件间串行共享，
+  // 若某文件未彻底清理，脏状态会泄漏到后续文件。统一在 afterEach 兜底隔离。
+  try {
+    await db.reset()
+  } catch {
+    /* db 未初始化或无需重置时跳过 */
+  }
+  try {
+    resetDbInstance()
+  } catch {
+    /* noop */
+  }
+  try {
+    dataBridge.invalidateAll()
+  } catch {
+    /* noop */
+  }
+  try {
+    eventBus.clearAll()
+  } catch {
+    /* noop */
+  }
 })

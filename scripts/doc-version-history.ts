@@ -11,6 +11,7 @@
  */
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { execSync } from 'node:child_process'
 import { join } from 'node:path'
 import type { DocUpdateEntry, ScannedFile, UpdateType } from '../src/types/modules/doc-validation.types'
 
@@ -20,6 +21,16 @@ export interface VersionHistoryResult {
   updates: DocUpdateEntry[]
   /** 历史文件路径 */
   historyFilePath: string
+}
+
+/** 版本关联引用（约束 3 · T5）：将文档变更与代码版本强绑定 */
+interface CodeRef {
+  /** 关联的 git tag（无 tag 时退化为 commit sha） */
+  readonly gitTag: string
+  /** package.json 的 version */
+  readonly packageVersion: string
+  /** 当前 commit sha */
+  readonly commitSha: string
 }
 
 /** 历史条目 */
@@ -34,6 +45,8 @@ interface HistoryEntry {
   readonly category: string
   /** 文件大小（字节） */
   readonly sizeBytes: number
+  /** 版本关联引用（T5） */
+  readonly codeRef?: CodeRef
 }
 
 // ─── 工具函数 ─────────────────────────────────────────────────────────────────
@@ -50,6 +63,39 @@ function pad2(n: number): string {
   return n.toString().padStart(2, '0')
 }
 
+/**
+ * 解析当前代码版本关联引用（T5）：
+ * - packageVersion 取自 package.json
+ * - commitSha 取自 `git rev-parse HEAD`
+ * - gitTag 取自 `git describe --tags --always`（无 tag 时退化为 sha）
+ * 任何一步失败都优雅降级，绝不抛出。
+ */
+function resolveCodeRef(rootDir: string): CodeRef {
+  let packageVersion = '0.0.0'
+  try {
+    const pkg = JSON.parse(readFileSync(join(rootDir, 'package.json'), 'utf-8')) as {
+      version?: string
+    }
+    if (pkg.version) packageVersion = pkg.version
+  } catch {
+    /* 降级 */
+  }
+  let commitSha = 'unknown'
+  try {
+    commitSha = execSync('git rev-parse HEAD', { cwd: rootDir, encoding: 'utf-8' }).trim()
+  } catch {
+    /* 降级 */
+  }
+  let gitTag = commitSha
+  try {
+    const tag = execSync('git describe --tags --always', { cwd: rootDir, encoding: 'utf-8' }).trim()
+    if (tag) gitTag = tag
+  } catch {
+    /* 降级为 sha */
+  }
+  return { gitTag, packageVersion, commitSha }
+}
+
 function getHistoryPaths(rootDir: string, date: Date): { dir: string; file: string } {
   const year = date.getUTCFullYear()
   const month = pad2(date.getUTCMonth() + 1)
@@ -59,7 +105,7 @@ function getHistoryPaths(rootDir: string, date: Date): { dir: string; file: stri
   return { dir, file }
 }
 
-function renderHistoryHeader(date: Date): string {
+function renderHistoryHeader(date: Date, codeRef: CodeRef): string {
   const year = date.getUTCFullYear()
   const month = pad2(date.getUTCMonth() + 1)
   const day = pad2(date.getUTCDate())
@@ -67,6 +113,9 @@ function renderHistoryHeader(date: Date): string {
 
 > 本文件由每日文档验证流程自动生成，记录当天所有材料的变更情况。
 > 生成时间：${formatTimestampSeconds(new Date())}
+> code_version：${codeRef.packageVersion}
+> git_tag：${codeRef.gitTag}
+> commit_sha：${codeRef.commitSha}
 
 ## 变更汇总
 
@@ -97,12 +146,13 @@ function renderHistoryRow(entry: HistoryEntry): string {
 function renderHistoryContent(
   date: Date,
   entries: readonly HistoryEntry[],
+  codeRef: CodeRef,
 ): string {
   const addedCount = entries.filter((e) => e.updateType === 'added').length
   const modifiedCount = entries.filter((e) => e.updateType === 'modified').length
   const deletedCount = entries.filter((e) => e.updateType === 'deleted').length
 
-  let content = renderHistoryHeader(date)
+  let content = renderHistoryHeader(date, codeRef)
     .replace('{{addedCount}}', String(addedCount))
     .replace('{{modifiedCount}}', String(modifiedCount))
     .replace('{{deletedCount}}', String(deletedCount))
@@ -155,6 +205,7 @@ export function recordVersionHistory(
 ): VersionHistoryResult {
   const now = new Date()
   const { dir, file } = getHistoryPaths(rootDir, now)
+  const codeRef = resolveCodeRef(rootDir)
 
   if (!existsSync(dir)) {
     mkdirSync(dir, { recursive: true })
@@ -170,6 +221,7 @@ export function recordVersionHistory(
     updateType: scannedFile.updateType,
     category: scannedFile.category,
     sizeBytes: scannedFile.sizeBytes,
+    codeRef,
   }))
 
   const existingEntries = parseExistingHistory(file)
@@ -188,7 +240,7 @@ export function recordVersionHistory(
   merged.sort((a, b) => a.relativePath.localeCompare(b.relativePath))
 
   const isNewFile = !existsSync(file)
-  const content = renderHistoryContent(now, merged)
+  const content = renderHistoryContent(now, merged, codeRef)
   writeFileSync(file, content, 'utf-8')
 
   const updates: DocUpdateEntry[] = [

@@ -115,36 +115,68 @@ export function getRegisteredContracts(): string[] {
  * @param contractName 契约名称
  * @param data 待验证数据
  * @param testName 测试用例名称（用于报告）
+ * @param sourceInfo 来源信息（可选，用于追踪数据来源）
  * @throws 如果数据不符合契约
  */
 export function assertContract(
   contractName: string,
   data: unknown,
   testName: string,
+  sourceInfo?: { module?: string; method?: string; traceId?: string },
 ): void {
   const contract = registry.get(contractName)
   if (!contract) {
+    const availableContracts = getRegisteredContracts()
+    logger.error(
+      `[ContractValidator] 契约未找到: "${contractName}"\n` +
+      `  来源: ${sourceInfo?.module || 'unknown'}::${sourceInfo?.method || 'unknown'}\n` +
+      `  已注册契约数: ${availableContracts.length}\n` +
+      `  已注册契约: ${availableContracts.slice(0, 10).join(', ')}${availableContracts.length > 10 ? '...' : ''}`
+    )
     throw new Error(
       `[ContractValidator] 未注册的契约: "${contractName}"\n` +
-      `  已注册的契约: ${getRegisteredContracts().join(', ') || '(无)'}`
+      `  已注册的契约: ${availableContracts.join(', ') || '(无)'}`
     )
   }
 
   stats.totalValidations++
 
+  logger.info(
+    `[ContractValidator] 开始验证: contract="${contractName}", test="${testName}"\n` +
+    `  来源: ${sourceInfo?.module || 'unknown'}::${sourceInfo?.method || 'unknown'}\n` +
+    `  traceId: ${sourceInfo?.traceId || 'N/A'}\n` +
+    `  数据类型: ${typeof data}\n` +
+    `  数据大小: ${JSON.stringify(data).length} chars`
+  )
+
+  if (data !== null && typeof data === 'object') {
+    const keys = Object.keys(data)
+    logger.debug(
+      `[ContractValidator] 数据字段: ${keys.join(', ')}\n` +
+      `  字段数: ${keys.length}`
+    )
+  }
+
   const result = contract.schema.safeParse(data)
 
   if (result.success) {
     stats.passedValidations++
-    logger.debug(`[ContractValidator] 验证通过: ${contractName} in "${testName}"`)
+    logger.info(
+      `[ContractValidator] ✅ 验证通过: contract="${contractName}", test="${testName}"\n` +
+      `  来源: ${sourceInfo?.module || 'unknown'}::${sourceInfo?.method || 'unknown'}`
+    )
     return
   }
 
-  // 验证失败
   stats.failedValidations++
 
   const errors = result.error.issues.map(
-    (issue) => `${issue.path.join('.')}: ${issue.message}`
+    (issue) => {
+      const pathStr = issue.path.join('.')
+      const detail = `字段 "${pathStr}" 验证失败: ${issue.message}`
+      logger.error(`[ContractValidator] ❌ ${detail}`)
+      return detail
+    }
   )
 
   const violation: ContractViolation = {
@@ -157,17 +189,25 @@ export function assertContract(
 
   violations.push(violation)
 
+  const dataPreview = typeof data === 'object' && data !== null
+    ? JSON.stringify(data, null, 2).slice(0, 500)
+    : String(data)
+
   logger.error(
-    `[ContractValidator] 契约违反: ${contractName}\n` +
-    `  测试: ${testName}\n` +
-    `  错误:\n${errors.map((e) => `    - ${e}`).join('\n')}\n` +
-    `  数据: ${JSON.stringify(data, null, 2).slice(0, 300)}`
+    `[ContractValidator] ❌ 契约违反: contract="${contractName}", test="${testName}"\n` +
+    `  来源: ${sourceInfo?.module || 'unknown'}::${sourceInfo?.method || 'unknown'}\n` +
+    `  traceId: ${sourceInfo?.traceId || 'N/A'}\n` +
+    `  错误数量: ${errors.length}\n` +
+    `  错误详情:\n${errors.map((e, i) => `    ${i + 1}. ${e}`).join('\n')}\n` +
+    `  数据快照: ${dataPreview}\n` +
+    `  契约描述: ${contract.description || '(无)'}`
   )
 
   throw new Error(
     `[ContractValidator] 契约违反: ${contractName}\n` +
     `  测试: ${testName}\n` +
-    `  错误:\n${errors.map((e) => `    - ${e}`).join('\n')}`
+    `  来源: ${sourceInfo?.module || 'unknown'}::${sourceInfo?.method || 'unknown'}\n` +
+    `  错误:\n${errors.map((e, i) => `    ${i + 1}. ${e}`).join('\n')}`
   )
 }
 

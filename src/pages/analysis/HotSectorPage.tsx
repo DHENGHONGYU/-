@@ -1,3 +1,4 @@
+import { getSafeString, getSafeNumber } from '@/lib/safeCoerce'
 import { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router'
 import { TrendingUp, RefreshCw, ChevronDown, ChevronUp, AlertCircle } from 'lucide-react'
@@ -69,7 +70,7 @@ export default function HotSectorPage(): React.JSX.Element {
   const toggleExpand = useCallback((symbol: string) => {
     setExpandedSymbol((prev) => {
       const next = prev === symbol ? null : symbol
-      logger.info(`[HotSectorPage] 切换展开: ${symbol} → ${next || '收起'}`)
+      logger.info(`[HotSectorPage] 切换展开: ${symbol} → ${getSafeString(next) || '收起'}`)
       return next
     })
   }, [])
@@ -177,7 +178,7 @@ export default function HotSectorPage(): React.JSX.Element {
             // 构造雷达图数据
             const radarData: ScoreRadarData[] = Object.entries(score.dimensions || {}).map(([key, value]) => ({
               dimension: DIMENSION_LABELS[key] || key,
-              score: (value || 0) * 100,
+              score: (getSafeNumber(value) * 100),
               fullMark: 100,
             }))
 

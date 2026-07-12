@@ -5,6 +5,7 @@
  * 实时展示采集任务执行状态、日志流和维度进度
  */
 
+import { fallback } from '@/lib/safeCoerce'
 import React, { useEffect, useRef } from 'react'
 import { cn } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
@@ -185,7 +186,7 @@ export function ExecutionMonitorStep(): React.JSX.Element {
           <div className="grid grid-cols-3 gap-4">
             <div>
               <div className={cn('text-sm', COLOR_TOKENS.textMuted.tailwind)}>任务名称</div>
-              <div className="font-medium mt-1">{taskName || taskId || '未命名任务'}</div>
+              <div className="font-medium mt-1">{taskName || taskId || fallback.unknown}</div>
             </div>
             <div>
               <div className={cn('text-sm', COLOR_TOKENS.textMuted.tailwind)}>维度进度</div>

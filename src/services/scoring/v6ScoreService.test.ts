@@ -11,7 +11,6 @@ import {
   runV6Score,
   getV6ScoreQuality,
 } from './v6ScoreService'
-import { dataLayer } from '@/data/dataLayer'
 import type { Stock, DailyQuotes, V6Score, KlineBar } from '@/data/types'
 
 // ============================================================
@@ -27,13 +26,15 @@ vi.mock('@/lib/logger', () => ({
   }),
 }))
 
-vi.mock('@/data/dataLayer', () => ({
-  dataLayer: {
-    stocks: { get: vi.fn() },
-    dailyQuotes: { get: vi.fn() },
-    financialReports: { get: vi.fn().mockResolvedValue(undefined) },
-    v6Scores: { list: vi.fn().mockResolvedValue([]), save: vi.fn().mockResolvedValue({ success: true }) },
-  },
+// 2026-07-12 修正：v6ScoreService 已迁移到 dataBridge.query/forward（不再直接用 dataLayer）。
+// 原 mock 仅覆盖 @/data/dataLayer，导致真实 dataBridge.query → db.ready() 永久挂起（测试超时）。
+// 改为 mock @/core/databridge，按调用顺序用 mockResolvedValueOnce 注入数据。
+const { mockQuery, mockForward } = vi.hoisted(() => ({
+  mockQuery: vi.fn(),
+  mockForward: vi.fn().mockResolvedValue(undefined),
+}))
+vi.mock('@/core/databridge', () => ({
+  dataBridge: { query: mockQuery, forward: mockForward },
 }))
 
 // Mock v6-engine：避免在测试中运行真实 11 层计算器
@@ -142,7 +143,7 @@ describe('getAllV6Scores', () => {
     const mockScores: V6Score[] = [
       { symbol: '600519.SH', score: 4.5, factors: {}, algorithmVersion: 'v6-engine-1.0', calculatedAt: Date.now(), dataVersion: 1 },
     ]
-    vi.mocked(dataLayer.v6Scores.list).mockResolvedValue(mockScores)
+    mockQuery.mockResolvedValueOnce({ success: true, data: mockScores })
 
     const result = await getAllV6Scores()
 
@@ -151,7 +152,7 @@ describe('getAllV6Scores', () => {
   })
 
   test('失败返回 error', async () => {
-    vi.mocked(dataLayer.v6Scores.list).mockRejectedValue(new Error('DB error'))
+    mockQuery.mockRejectedValueOnce(new Error('DB error'))
 
     const result = await getAllV6Scores()
 
@@ -170,7 +171,8 @@ describe('runV6Score', () => {
   })
 
   test('股票不存在返回错误', async () => {
-    vi.mocked(dataLayer.stocks.get).mockResolvedValue(undefined)
+    // runV6Score 首次 dataBridge.query(stocks) → data 为空 → Stock not found
+    mockQuery.mockResolvedValueOnce({ success: true, data: null })
 
     const result = await runV6Score('UNKNOWN')
 
@@ -179,8 +181,11 @@ describe('runV6Score', () => {
   })
 
   test('正常评分流程 — 调用 v6-engine 并映射结果', async () => {
-    vi.mocked(dataLayer.stocks.get).mockResolvedValue(createMockStock())
-    vi.mocked(dataLayer.dailyQuotes.get).mockResolvedValue(createMockQuotes())
+    // dataBridge.query 调用顺序：stocks → dailyQuotes → financialReports（buildFinancialData）
+    mockQuery
+      .mockResolvedValueOnce({ success: true, data: createMockStock() })
+      .mockResolvedValueOnce({ success: true, data: createMockQuotes() })
+      .mockResolvedValueOnce({ success: true, data: null })
 
     const result = await runV6Score('600519.SH')
 
@@ -204,8 +209,10 @@ describe('runV6Score', () => {
   })
 
   test('无 K线数据时仍可评分（引擎自行降级）', async () => {
-    vi.mocked(dataLayer.stocks.get).mockResolvedValue(createMockStock())
-    vi.mocked(dataLayer.dailyQuotes.get).mockResolvedValue(undefined)
+    mockQuery
+      .mockResolvedValueOnce({ success: true, data: createMockStock() })
+      .mockResolvedValueOnce({ success: true, data: null })
+      .mockResolvedValueOnce({ success: true, data: null })
 
     const result = await runV6Score('600519.SH')
 

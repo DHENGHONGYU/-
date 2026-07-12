@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import * as path from 'node:path'
 import { readFileSync, readdirSync } from 'node:fs'
+import { createTestLogger } from './_helpers/test-logger'
 
 /**
  * audit-layer-calls.ts 单元测试（v3.0 白盒模式）
@@ -32,13 +33,22 @@ const mockReaddirSync = vi.mocked(readdirSync)
 type TestFiles = Record<string, string>
 
 describe('audit-layer-calls.ts v3.0（白盒测试）', () => {
+  const logger = createTestLogger('audit-layer-calls')
+
   beforeEach(() => {
+    logger.info('===== beforeEach 清理开始 =====')
+    logger.step('vi.clearAllMocks()')
     vi.clearAllMocks()
+    logger.step('vi.resetModules()')
     vi.resetModules()
+    logger.info('===== beforeEach 清理结束 =====')
   })
 
   afterEach(() => {
+    logger.info('===== afterEach 清理开始 =====')
+    logger.step('vi.restoreAllMocks()')
     vi.restoreAllMocks()
+    logger.info('===== afterEach 清理结束 =====')
   })
 
   /**

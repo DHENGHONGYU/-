@@ -1,3 +1,4 @@
+import { getSafeNumber } from '@/lib/safeCoerce'
 import React, { memo } from 'react'
 import { Flame, TrendingUp, Smile, Activity, DollarSign, Globe } from 'lucide-react'
 import { WidgetStateShell } from './components/WidgetStateShell'
@@ -99,8 +100,8 @@ const HotSectorWidget = memo(function HotSectorWidget({ config, data }: HotSecto
                         {DIMENSION_ICONS[key]}
                         <span>{DIMENSION_NAMES[key]}</span>
                       </div>
-                      <Progress value={(value || 0) * 20} className="h-1.5" />
-                      <div className="text-xs font-medium text-right">{(value || 0).toFixed(1)}</div>
+                      <Progress value={(getSafeNumber(value) * 20)} className="h-1.5" />
+                      <div className="text-xs font-medium text-right">{getSafeNumber(value).toFixed(1)}</div>
                     </div>
                   ))}
                 </div>

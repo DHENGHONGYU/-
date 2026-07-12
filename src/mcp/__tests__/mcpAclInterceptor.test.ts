@@ -384,9 +384,11 @@ describe('权限拒绝场景全覆盖', () => {
     expect(result.allowed).toBe(false)
   })
 
-  it('ui 角色应拒绝访问 system Server', () => {
+  it('ui 角色应拒绝访问 system Server 的非查询类工具（reset_database）', () => {
+    // 2026-07-12 修正：UI 按矩阵允许 system 的 get_* 工具（如 get_stats，权威单测 line 128 已锁定）。
+    // 原用 get_stats 期望拒绝与矩阵冲突；改用 reset_database（不在 ui.allowedTools）作为真实拒绝场景。
     const result = mcpAclInterceptor.check({
-      caller: 'ui', serverName: 'system', resourceName: 'get_stats',
+      caller: 'ui', serverName: 'system', resourceName: 'reset_database',
     })
     expect(result.allowed).toBe(false)
   })
@@ -639,9 +641,10 @@ describe('四角色权限对比矩阵', () => {
       expected: { agent: true, ui: false, ci: true, system: true },
     },
     {
+      // 2026-07-12 修正：get_stats 匹配 ui.allowedTools 的 get_* 通配符，UI 应放行
       desc: 'system.get_stats（系统统计）',
       server: 'system', tool: 'get_stats',
-      expected: { agent: true, ui: false, ci: true, system: true },
+      expected: { agent: true, ui: true, ci: true, system: true },
     },
     {
       desc: 'execution.list_execution_plans（执行计划查询）',

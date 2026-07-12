@@ -96,7 +96,13 @@ function validateDirection(direction: unknown): string | null {
     return 'direction 不能为空'
   }
   if (direction !== 'buy' && direction !== 'sell') {
-    return `direction 必须为 'buy' 或 'sell'，当前: ${String(direction)}`
+    let directionStr: string
+    try {
+      directionStr = JSON.stringify(direction)
+    } catch {
+      directionStr = typeof direction === 'string' ? direction : '(无法序列化)'
+    }
+    return `direction 必须为 'buy' 或 'sell'，当前: ${directionStr}`
   }
   return null
 }

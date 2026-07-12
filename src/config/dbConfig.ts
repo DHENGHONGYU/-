@@ -1,8 +1,11 @@
 const testDbName = typeof process !== 'undefined' ? process.env.TEST_DB_NAME : undefined
 export const DB_NAME = testDbName ? testDbName : ('V6ProDB' as const)
-export const DB_VERSION = 27 as const
+export const DB_VERSION = 28 as const
 
 // DB_VERSION 升级历史：
+// v27 → v28: 新增 workflow_defs、workflow_schedules、workflow_triggers、workflow_runs 存储，
+//            支撑 WorkflowServer 数据冗余（三层：Memory+IndexedDB+Export）。
+// v26 → v27: 新增 trace_records 存储，用于持久化采集链路追踪数据。
 // v3 → v4: 新增 daily_quotes 存储，用于保存 K线/行情数据。
 // v4 → v5: stocks 存储新增 group 字段与 by-group 索引，历史数据回退为默认分组。
 // v5 → v6: 新增 rotation_scores、sector_scores、score_docs、strategy_snapshots、
@@ -127,6 +130,10 @@ export const ENVELOPE_ACTION = {
   updateOrder: 'UPDATE_ORDER',
   deleteOrder: 'DELETE_ORDER',
   resetAll: 'RESET_ALL',
+  /** 更新股票研究状态 */
+  updateStockStatus: 'UPDATE_STOCK_STATUS',
+  /** 更新股票分组 */
+  updateStockGroup: 'UPDATE_STOCK_GROUP',
   importAll: 'IMPORT_ALL',
   exportAll: 'EXPORT_ALL',
   /** 策略：触发热门板块重新计算 */
@@ -185,6 +192,21 @@ export const ENVELOPE_ACTION = {
   deleteCustomAgent: 'DELETE_CUSTOM_AGENT',
   /** 保存采集链路追踪记录（v27 新增） */
   saveTraceRecord: 'SAVE_TRACE_RECORD',
+  // ── 工作流存储（v28 新增，支撑 WorkflowServer 数据冗余） ──
+  /** 保存/更新工作流定义 */
+  saveWorkflowDef: 'SAVE_WORKFLOW_DEF',
+  /** 删除工作流定义 */
+  deleteWorkflowDef: 'DELETE_WORKFLOW_DEF',
+  /** 保存/更新定时调度 */
+  saveWorkflowSchedule: 'SAVE_WORKFLOW_SCHEDULE',
+  /** 删除定时调度 */
+  deleteWorkflowSchedule: 'DELETE_WORKFLOW_SCHEDULE',
+  /** 保存/更新事件触发器 */
+  saveWorkflowTrigger: 'SAVE_WORKFLOW_TRIGGER',
+  /** 删除事件触发器 */
+  deleteWorkflowTrigger: 'DELETE_WORKFLOW_TRIGGER',
+  /** 保存/更新运行实例（含 checkpoint） */
+  saveWorkflowRun: 'SAVE_WORKFLOW_RUN',
   // ── 批量操作（BulkEnvelope） ──
   /** 批量插入股票 */
   bulkInsertStock: 'BULK_INSERT_STOCK',
@@ -280,6 +302,11 @@ export const STORE_NAME = {
   customAgents: 'custom_agents',
   // ── 采集链路追踪存储（v27 新增） ──
   traceRecords: 'trace_records',
+  // ── 工作流存储（v28 新增，支撑 WorkflowServer 数据冗余） ──
+  workflowDefs: 'workflow_defs',
+  workflowSchedules: 'workflow_schedules',
+  workflowTriggers: 'workflow_triggers',
+  workflowRuns: 'workflow_runs',
 } as const
 
 export type StoreName = (typeof STORE_NAME)[keyof typeof STORE_NAME]
@@ -301,7 +328,11 @@ export interface AclPermission {
 
 export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
   [MODULE_ID.fetcher]: {
-    read: [STORE_NAME.traceRecords, STORE_NAME.collectConfig],
+    // 2026-07-12 修复：新增 STORE_NAME.stocks 至 read。
+    // fetchStockBasic / fetchStockKline 在 forward 更新前需 SELECT 现有 stock
+    // （合并 dataVersion / dataQuality / source、校验存在性），原配置仅授予 write 会触发
+    // ACL_PERMISSION_DENIED（"Module fetcher cannot SELECT on store stocks"）。
+    read: [STORE_NAME.stocks, STORE_NAME.financialReports, STORE_NAME.traceRecords, STORE_NAME.collectConfig],
     write: [STORE_NAME.stocks, STORE_NAME.dailyQuotes, STORE_NAME.financialReports, STORE_NAME.collectConfig, STORE_NAME.traceRecords],
     actions: [DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete, DB_OPERATION.select],
   },
@@ -322,6 +353,10 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
       STORE_NAME.hotSectorScores,
       STORE_NAME.valuePitScores,
       STORE_NAME.signals,
+      // 2026-07-12 修复：V6 评分引擎需读取行情(K线)与财务数据计算因子，
+      // 原 read 列表缺失导致 runV6Score 触发 ACL_PERMISSION_DENIED
+      STORE_NAME.dailyQuotes,
+      STORE_NAME.financialReports,
     ],
     write: [
       STORE_NAME.v6Scores,

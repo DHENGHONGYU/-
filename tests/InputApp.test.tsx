@@ -1,7 +1,7 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { MemoryRouter } from 'react-router'
+import { MemoryRouter, HashRouter } from 'react-router'
 import InputApp from '@/apps/input/InputApp'
 import * as inputService from '@/services/input/inputService'
 import * as fetcherService from '@/services/fetcher/fetcherService'
@@ -12,6 +12,7 @@ import type { Stock } from '@/data/types'
 import { UI_TEXT } from '@/constants/uiText'
 import { dataLayer } from '@/data/dataLayer'
 import { db } from '@/data/db'
+import { dataBridge } from '@/core/databridge'
 
 // InputDashboard 通过 usePoolStore -> dataLayer.stocks.list() 加载股票池，
 // 而非直接调用 stockpoolService.getAllPoolGroups。需 mock dataLayer 数据源。
@@ -71,6 +72,10 @@ const mockHotSector = {
 
 describe('InputApp', () => {
   beforeEach(() => {
+    vi.spyOn(dataBridge, 'query').mockResolvedValue({
+      success: true,
+      data: [mockStock, mockStockMissingBasic],
+    } as never)
     vi.spyOn(stockpoolService, 'getAllPoolGroups').mockResolvedValue({
       success: true,
       data: mockPoolGroups as never,
@@ -95,10 +100,13 @@ describe('InputApp', () => {
     vi.spyOn(batchImportService, 'parseBulkInput').mockReturnValue([
       { code: '600519', name: '贵州茅台', symbol: '600519.SH' },
     ])
-    vi.spyOn(batchImportService, 'importStocks').mockResolvedValue({
+    vi.spyOn(batchImportService, 'detectDuplicates').mockReturnValue([
+      { code: '600519', name: '贵州茅台', symbol: '600519.SH', status: 'valid' } as never,
+    ])
+    vi.spyOn(batchImportService, 'importStocksWithProgress').mockResolvedValue({
       success: true,
       data: { total: 1, success: 1, failed: 0, errors: [], stocks: [mockStock] },
-    })
+    } as never)
     vi.spyOn(hotSectorService, 'getHotSectors').mockReturnValue([mockHotSector])
     vi.spyOn(hotSectorService, 'getHotSectorByCode').mockReturnValue(mockHotSector)
     vi.spyOn(hotSectorService, 'addHotSectorStock').mockResolvedValue({
@@ -116,12 +124,14 @@ describe('InputApp', () => {
     vi.clearAllMocks()
   })
 
-  const renderApp = (initialEntries = ['/input']) =>
-    render(
-      <MemoryRouter initialEntries={initialEntries}>
+  const renderApp = (initialPath = '/input') => {
+    window.location.hash = '#/' + initialPath.replace(/^\//, '')
+    return render(
+      <HashRouter>
         <InputApp />
-      </MemoryRouter>,
+      </HashRouter>,
     )
+  }
 
   it('renders input dashboard', async () => {
     renderApp()
@@ -174,7 +184,7 @@ describe('InputApp', () => {
       expect(screen.getByText(UI_TEXT.input.dashboard.batchImportCandidateStock)).toBeInTheDocument()
     })
 
-    await userEvent.type(screen.getByPlaceholderText(/600519,贵州茅台/), '600519,贵州茅台')
+    await userEvent.type(screen.getByPlaceholderText(/600519\.SH,贵州茅台/), '600519.SH,贵州茅台')
 
     await waitFor(() => {
       expect(screen.getByText('600519.SH')).toBeInTheDocument()
@@ -183,7 +193,7 @@ describe('InputApp', () => {
     await userEvent.click(screen.getByRole('button', { name: new RegExp(UI_TEXT.input.import.confirmImport, 'i') }))
 
     await waitFor(() => {
-      expect(batchImportService.importStocks).toHaveBeenCalled()
+      expect(batchImportService.importStocksWithProgress).toHaveBeenCalled()
     })
   })
 
@@ -219,7 +229,8 @@ describe('InputApp', () => {
     })
   })
 
-  it('toggles list view', async () => {
+  // @status known-failing - InputDashboard 已移除看板/列表视图切换，该用例待重构
+  it.skip('toggles list view', async () => {
     renderApp()
     await waitFor(() => screen.getByText(UI_TEXT.input.dashboard.stockPoolBoard))
 

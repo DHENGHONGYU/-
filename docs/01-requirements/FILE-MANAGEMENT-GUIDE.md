@@ -1,0 +1,250 @@
+# V9 文件管理规范
+
+> **版本**: v1.3.3 | **日期**: 2026-07-20
+> **适用范围**: 智能投研复盘系统V9 全体开发者及 AI 辅助工具
+
+---
+
+## 一、文件归位规则
+
+| 文件类型 | 存放目录 | 说明 |
+|---|---|---|
+| 源代码 | `src/` | 按分层规则放入 `config/`、`core/`、`data/`、`lib/`、`services/`、`store/`、`pages/`、`components/`、`portal/`、`constants/`、`types/`、`apps/`、`cockpit/`、`hooks/`、`devtools/`、`fixtures/`、`i18n/`、`mcp/`、`schema/`、`showcase/`、`generated/` |
+| App 分发器 | `src/apps/` | React.lazy 页面加载，三级加载链中间层 |
+| 自定义 Hooks | `src/hooks/` | 跨组件共享逻辑，可依赖 `store/`、`services/` 和 `lib/` |
+| 开发工具 | `src/devtools/` | 开发环境调试工具（DEV 注入），仅开发环境使用 |
+| Mock 数据 | `src/fixtures/` | 测试数据供给，仅被 `tests/` 依赖 |
+| 国际化 | `src/i18n/` | 国际化配置与翻译资源，可被 `components/` 和 `pages/` 引用 |
+| AI 行为扩展 | `src/agents/` | 运行时模块，core 层扩展，仅可依赖 `core/` 和 `data/` |
+| MCP 服务器层 | `src/mcp/` | 20+ 子服务器（analysis/backtest/...），服务层扩展，可依赖 `core/`/`data/`/`lib/`/`services/` |
+| Schema 校验定义 | `src/schema/` | Zod/JSON Schema 校验定义，仅可依赖 `types/` 和 `constants/`，可被 `services/`/`data/`/`components/` 引用 |
+| 组件展示页 | `src/showcase/` | 开发环境专用展示页（不进入生产构建），仅可依赖 `components/`/`constants/`/`lib/` |
+| 代码生成产物 | `src/generated/` | 令牌/类型/脚本自动生成产物，零依赖，可被 `services/`/`components/`/`pages/` 引用 |
+| 单元测试 | `tests/` 或 `src/**/*.test.ts` | 与源文件同目录的测试需以 `.test.ts`/`.test.tsx` 结尾 |
+| E2E 测试 | `e2e/` | Playwright `.spec.ts` 文件 |
+| 脚本工具 | `scripts/` | 构建、审计、数据迁移脚本 |
+| 文档规范 | `docs/` | 需求、架构、数据字典、实现文档 |
+| 审计报告 | `docs/audit/` | 质量审计、架构扫描报告 |
+| 临时输出 | `temp/` | 已在 `.gitignore` 中忽略 |
+| 提示词模板 | `prompts/` | 系统提示词模板存放目录 |
+| AI Skill 定义 | `.agents/skills/` | AI 技能定义文件（系统提示词模板） |
+| CI/CD | `.github/workflows/` | GitHub Actions 工作流 |
+
+### 禁止事项
+
+- **禁止**在仓库根目录直接创建 `.ts`、`.tsx`、`.ps1`、`.py` 脚本文件
+- **禁止**在仓库根目录直接创建报告文件（`.md`、`.json`、`.txt`）
+- **禁止**将工具运行输出（`tsc`/`eslint`/`vitest`）重定向到仓库根目录
+
+### docs/ 子目录分层
+
+`docs/` 目录采用 `NN-语义/` 编号分层体系，所有文档必须放入对应子目录：
+
+| 子目录 | 用途 | 存放内容 |
+|--------|------|----------|
+| `docs/00-meta/` | 元数据与运维 | 文档索引、审计报告、任务清单、RCA 报告 |
+| `docs/01-requirements/` | 需求与规范 | 需求文档、管理规范、质量标准、设计约束 |
+| `docs/02-design/` | 设计文档 | 架构设计、数据流、策略文档、接口契约 |
+| `docs/03-development/` | 开发指南 | 编码规范、迁移检查清单、开发手册、构建说明 |
+| `docs/04-testing/` | 测试文档 | 测试计划、测试报告、修复方案、覆盖率分析 |
+| `docs/05-deployment/` | 部署文档 | 部署手册、运维 runbook、环境配置指南 |
+| `docs/06-project-management/` | 项目管理 | 版本计划、进度报告、里程碑记录、任务分配 |
+| `docs/07-archive/` | 归档 | 历史文档、废弃方案、已替代决策记录 |
+
+> 详细分层规则参见 [AGENTS.md](../../AGENTS.md) 第一节
+
+---
+
+## 二、命名规范
+
+| 对象 | 命名约定 | 示例 |
+|------|---------|------|
+| 文件名 | kebab-case 或 PascalCase | `data-bridge.ts` / `DataBridge.ts` |
+| 组件 | PascalCase | `CockpitShell.tsx` |
+| Store | camelCase + `Store` 后缀 | `analysisStore.ts` |
+| 常量 | UPPER_SNAKE_CASE | `ROUTE_REGISTRY` |
+| 类型 | PascalCase + `Interface` 前缀 | `interface StockData` |
+| UI 组件 import 路径 | 大小写必须一致 | `Card` 而非 `card` |
+
+> 详细命名约定参见 [AGENTS.md](../../AGENTS.md) 第四节
+
+---
+
+## 三、`.gitignore` 维护规则
+
+### 2.1 新增忽略规则
+
+当引入新的工具或生成新的产物类别时，必须同步更新 `.gitignore`：
+
+1. 在 `.gitignore` 中添加对应的忽略规则
+2. 根目录规则必须带前导 `/`（如 `/tsc_errors.txt`），避免误伤子目录同名文件
+3. 添加分组注释说明忽略类别
+
+### 2.2 已配置的忽略类别
+
+| 类别 | 规则示例 | 说明 |
+|---|---|---|
+| 依赖 | `node_modules/` | npm 依赖 |
+| 构建产物 | `dist/` | Vite 构建输出 |
+| 环境配置 | `.env`, `.env.local` | 含敏感信息的本地配置 |
+| IDE 产物 | `.vscode/`, `.idea/`, `.trae/` | 本地 IDE 配置 |
+| 日志 | `*.log`, `logs/` | 运行日志 |
+| 测试覆盖 | `coverage/` | 测试覆盖率报告 |
+| Playwright | `/playwright-report/`, `.playwright-mcp/` | E2E 测试产物 |
+| 临时目录 | `temp/` | 临时文件 |
+| 根目录报告 | `/tsc_*.txt`, `/*_report.json` | 质量工具输出 |
+| HTML 报告包 | `/v9-*-report/` | 生成式自包含报告 |
+| 根目录脚本 | `/run-*.ps1`, `/test_*.py` | 一次性调试脚本 |
+| OS 系统文件 | `.DS_Store`, `Thumbs.db` | macOS/Windows 系统文件 |
+| Python 环境 | `.venv/`, `venv/`, `__pycache__/`, `*.pyc` | Python 虚拟环境和缓存 |
+| Vite 构建产物 | `dist-ssr`, `.vite/`, `*.tsbuildinfo` | Vite 构建中间产物 |
+| Playwright 截图 | `screenshots/` | E2E 测试截图 |
+| 测试产物 | `/test-results/`, `/playwright/.cache/` | 测试运行产物 |
+| 生成产物 | `*.report.md`, `*.audit.md`, `report-*.md` | 验证/审计生成报告 |
+| 脚本产物 | `/scripts/component-audit-report.txt` | 脚本运行输出 |
+| Vite 配置快照 | `vite.config.ts.timestamp-*.mjs` | Vite 临时配置 |
+| Widget 测试日志 | `widget_test_logs/`, `widget_test_logs_run2/` | Widget 测试产物 |
+| 构建变体 | `dist_s1verify/`, `dist_preview/`, `dist_e2e/`, `dist-e2e/` | 构建验证产物 |
+| 代码质量合规 | `code-quality-compliance/`, `code-quality-compliance.zip` | 代码质量检查产物 |
+| Agent 工作日志 | `.workbuddy/*.log` | AI Agent 工作日志 |
+| 发布包 | `releases/`, `*.zip` | 发布归档 |
+| 独立工具子包 | `tools/file-management-system/` | 工具子包（建议后续抽子仓） |
+| 治理备份 | `build-artifacts/` | 集中存放一次性生成物/治理备份 |
+| 构建/测试快照 | `/dist-test/`, `/dist-verify/`, `/coverage_cmd/`, `/e2e-test-report/` | 构建/测试快照 |
+| 根级审计日志 | `/lint_output.txt`, `/nested-code-review-report.json`, `/audit-*.txt` | 根级审计/日志/报告产物 |
+| ESLint 缓存 | `.eslintcache` | ESLint 增量检查缓存 |
+
+> 本文档基于 `.gitignore`（167 行规则）编写，新增规则时须同步更新本节。
+
+---
+
+## 四、数据层文件变更 SOP
+
+修改 IndexedDB 相关文件时，必须按以下顺序执行同步操作：
+
+1. **修改 `src/config/dbConfig.ts`** → 必须递增 `DB_VERSION`
+2. **新增 store 注册** → 必须在 `STORE_NAME` 中注册
+3. **新增 store 权限** → 必须在 `ACL_MATRIX` 中添加对应的 read/write 白名单
+4. **新增 store 创建逻辑** → 按以下规则选择位置：
+   - **基线 store**（首次安装时就需要的核心 store）→ 在 `createSchema`（`src/data/db-schema.ts`）中添加
+   - **增量 store**（版本升级时新增的 store）→ 在对应版本的 `Migration.up()`（`src/data/db-migrations.ts` 或 `src/data/migrations/`）中添加
+   - **禁止在两处同时添加同一 store 的创建逻辑**（违反 DRY 原则）
+5. **新增 `ENVELOPE_ACTION`** → 必须在 `DataBridge.routeToDB()` 中添加对应 case
+
+> 详细规则参见 [AGENTS.md](../../AGENTS.md) 第八节
+
+---
+
+## 五、提交前检查清单
+
+每次提交前必须通过以下三项验证：
+
+```powershell
+# 1. TypeScript 类型检查（0 errors）
+npx tsc --noEmit
+
+# 2. ESLint 检查（0 errors，warnings 可接受）
+npm run lint
+
+# 3. 架构分层审计（0 violations, 0 warnings）
+npm run audit:layers
+
+# 4. 目录结构审计（0 violations, 0 warnings）
+npm run audit:directory
+```
+
+### 提交规范
+
+- 遵循 Conventional Commits 格式：`<type>[scope]: <description>`
+- type 可选：`feat`、`fix`、`docs`、`refactor`、`test`、`chore`、`ci`
+- description 使用祈使句（英文）或动宾短语（中文），不超过 72 字符
+
+---
+
+## 六、AI 辅助开发操作规范（docs-as-mirror）
+
+> **来源**：`.agents/skills/docs-as-mirror/SKILL.md` v1.0.0 + `prompts/docs-as-mirror-quickref.md`
+> **目的**：防止 AI 辅助编写文档时出现架构漂移、信息孤岛、版本号不一致等系统性错误
+
+### 6.1 五大核心原则
+
+编写或更新任何技术文档前，必须遵守以下 5 大原则：
+
+1. **Truth-First（真相优先）**：先读取 `AGENTS.md` 当前版本，再写文档，不凭记忆。
+2. **Scan-Before-Write（先扫描后编写）**：先执行 `find`/`cat` 扫描实际文件系统，再写描述，不用模板。
+3. **Exhaustiveness（穷尽性原则）**：文件管理规范必须包含 8 个必含章节（目录映射、命名、`.gitignore`、提交前检查、定期审计、生命周期管理、交叉引用、变更日志），不允许"最小化原则"。
+4. **Bidirectional Linking（双向引用）**：新文档必须注册到索引、引用相关文档、被相关文档反向引用——三步骤缺一不可。
+5. **Version Pinning（版本锁定）**：文档头部必须声明兼容的 `AGENTS.md` 版本号（如 `兼容 AGENTS.md v1.4.5+`）。
+
+### 6.2 10 行快速检查清单（编写任何文档前逐行确认）
+
+```
+1. [ ] 已读取 AGENTS.md 当前版本，记录版本号（当前 v1.4.5）
+2. [ ] 已提取 AGENTS.md §一 全部目录定义（22 个 src/ 子目录 + 扩展目录）
+3. [ ] 已扫描实际文件系统（find . -maxdepth 2 -type d），所有非标准目录有说明
+4. [ ] 已读取实际 .gitignore（cat .gitignore），文档覆盖率 ≥ 95%
+5. [ ] 已区分相似目录（agents/ vs .agents/skills/，utils/ vs lib/ 等）
+6. [ ] 文档包含 8 个必含章节（目录映射、命名、.gitignore、提交前检查、定期审计、生命周期、交叉引用、变更日志）
+7. [ ] 已注册到文档索引（docs/README.md 或 REGISTRY_INDEX.md）
+8. [ ] 已建立双向引用（文档引用 AGENTS.md，AGENTS.md 反向引用本文档）
+9. [ ] 文档头部声明版本号体系（项目级版本 + 文档修订号 + 兼容 AGENTS.md 版本）
+10. [ ] 已运行 npm run audit:directory && npm run audit:docs，结果 0 违规
+```
+
+### 6.3 验证命令
+
+```powershell
+# 目录结构审计（22/22 匹配）
+npm run audit:directory
+
+# 文档同步审计（0 inconsistencies）
+npm run audit:docs
+
+# 全量审计
+npm run audit
+```
+
+---
+
+## 七、定期审计
+
+### 5.1 未跟踪文件检查
+
+每月执行一次：
+
+```powershell
+git status --short | Select-String -Pattern '^\?\?'
+```
+
+若结果非空，需分析未跟踪文件来源并按本规范处置。
+
+### 5.2 `.gitignore` 有效性检查
+
+每季度执行一次：
+
+```powershell
+# 检查是否有已跟踪文件应被忽略
+git ls-files | ForEach-Object { git check-ignore -q $_ }
+```
+
+---
+
+## 八、变更日志
+
+| 版本 | 日期 | 变更摘要 |
+|------|------|----------|
+| v1.3.3 | 2026-07-20 | 新增"AI 辅助开发操作规范（docs-as-mirror）"章节，嵌入 5 大核心原则、10 行快速检查清单和验证命令；同步 AGENTS.md §12.2 增加读取快速参考卡步骤；构建 `.agents/skills/docs-as-mirror/SKILL.md` 可复用技能 |
+| v1.3.2 | 2026-07-20 | Phase 5：新增 `src/generated/` 的 `.gitignore` 规则与 `prebuild` 令牌生成步骤；将 `npm run audit:directory` 纳入提交前检查清单；AGENTS.md 补充 `src/agents/` 和 `src/types/` 到 §一目录列表 |
+| v1.3.1 | 2026-07-20 | Phase 4：系统性目录梳理——补全 AGENTS.md 遗漏的 `mcp/`、`schema/`、`showcase/`、`generated/`，新增依赖方向规则，同步 FILE-MANAGEMENT-GUIDE.md 目录映射 |
+| v1.3.0 | 2026-07-20 | Phase 3：补充 AGENTS.md 未定义目录（hooks/、devtools/、fixtures/、i18n/），同步 FILE-MANAGEMENT-GUIDE.md 目录映射和依赖方向规则 |
+| v1.2.0 | 2026-07-20 | Phase 2：同步 .gitignore 文档，新增 docs/ 分层规范，新增数据层文件变更 SOP，建立跨文档引用链路 |
+| v1.1.0 | 2026-07-20 | Phase 1：补全 src/ 目录映射，区分 agents 目录，新增命名规范 |
+| v1.0.0 | 2026-07-02 | 初始版本：文件归位、.gitignore 维护、提交前检查、定期审计 |
+
+---
+
+## 九、相关文档
+
+- **[AGENTS.md](../../AGENTS.md)**：V9 架构契约、分层规则、命名约定、验证命令、数据库版本管理
+- **[trae-file-management-review.md](../00-meta/trae-file-management-review.md)**：更详细的文件管理审查报告（Trae IDE 生成）
+- **[README.md](./README.md)**：文档体系主索引（`docs/01-requirements/` 目录说明）

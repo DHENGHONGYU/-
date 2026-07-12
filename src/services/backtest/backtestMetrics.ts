@@ -21,7 +21,7 @@ import type {
   BacktestResult,
   BacktestTrade,
 } from '@/types/modules/backtest.types'
-import { TRADING_DAYS_PER_YEAR } from '@/config/mathConstants'
+import { TRADING_DAYS_PER_YEAR } from '@/constants/math.constants'
 import type {
   BacktestEngineConfig,
   VirtualOrder,
@@ -169,6 +169,12 @@ function applySell(
   }
 }
 
+/**
+ * 从虚拟订单列表构建回测交易列表，计算均价成本。
+ * @param trades 虚拟订单数组
+ * @param _config 回测引擎配置
+ * @returns 回测交易列表
+ */
 export function buildBacktestTrades(
   trades: VirtualOrder[],
   _config: BacktestEngineConfig,

@@ -16,6 +16,13 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
 import { STRATEGY_TEMPLATES, GLOBAL_LIMITS } from '@/config/collectConfig'
 
+vi.mock('@/core/databridge', () => ({
+  dataBridge: {
+    forward: vi.fn().mockResolvedValue({ success: true }),
+    query: vi.fn().mockResolvedValue({ success: false }),
+  },
+}))
+
 beforeEach(() => {
   useSevenDimConfigStore.getState().reset()
 })

@@ -223,7 +223,7 @@ describe('MigrationPanel', () => {
     await userEvent.click(screen.getByRole('button', { name: /一键迁移/i }))
 
     await waitFor(() => {
-      expect(mockCallTool).toHaveBeenCalledWith('system', 'run_v6_migration', expect.anything())
+      expect(mockCallTool).toHaveBeenCalledWith('system', 'run_v6_migration', expect.anything(), expect.anything())
     })
 
     // 断言 1:handleRunMigration/start 日志
@@ -329,7 +329,7 @@ describe('MigrationPanel', () => {
     await userEvent.click(screen.getByRole('button', { name: /执行导入/i }))
 
     await waitFor(() => {
-      expect(mockCallTool).toHaveBeenCalledWith('system', 'import_to_v9', expect.anything())
+      expect(mockCallTool).toHaveBeenCalledWith('system', 'import_to_v9', expect.anything(), expect.anything())
     })
 
     // 断言 1:handleImport/start 日志
@@ -371,7 +371,7 @@ describe('MigrationPanel', () => {
     )
 
     // 断言 5:export_data 不应被调用(overwrite=false)
-    expect(mockCallTool).not.toHaveBeenCalledWith('system', 'export_data', expect.anything())
+    expect(mockCallTool).not.toHaveBeenCalledWith('system', 'export_data', expect.anything(), expect.anything())
   })
 
   // ──────────────────────────────────────────────────────────────

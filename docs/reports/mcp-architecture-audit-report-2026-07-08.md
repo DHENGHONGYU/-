@@ -24,7 +24,7 @@
 
 #### 不符合项 1：MCP Tool/Resource 调用无权限控制
 
-- **位置**: [src/mcp/core/client.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/mcp/core/client.ts)、[src/mcp/bridge/mcpBridge.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/mcp/bridge/mcpBridge.ts) 全文
+- **位置**: [src/mcp/core/client.ts](../../src/mcp/core/client.ts)、[src/mcp/bridge/mcpBridge.ts](../../src/mcp/bridge/mcpBridge.ts) 全文
 - **问题**: MCP 层无任何 ACL/权限校验，未与 `src/core/acl.ts` 的 ACL_MATRIX 集成。任何调用方可执行任何 Server 的任何 Tool，包括 `trading:main` 的下单工具
 - **潜在影响**: 违反 AGENTS.md §1 最小权限原则和 §6 引擎架构约束；误调用或恶意调用可执行敏感操作
 - **修复建议**: 在 `MCPClientImpl.callTool`/`readResource` 入口集成 `aclEngine.assert()`
@@ -38,7 +38,7 @@
 
 #### 不符合项 3：V6 评分 LLM 增强层控制未通过 MCP 暴露
 
-- **位置**: [src/mcp/servers/scoring/v6ScoringServer.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/mcp/servers/scoring/v6ScoringServer.ts)
+- **位置**: [src/mcp/servers/scoring/v6ScoringServer.ts](../../src/mcp/servers/scoring/v6ScoringServer.ts)
 - **问题**: `score_stock` 工具仅接受 `symbol` 参数，无 LLM 增强层开关、无模型选择、评分结果无 LLM 标注
 - **潜在影响**: 违反 AGENTS.md §六"LLM 模型选择和评分因子使用必须通过接口暴露给用户"和 §九"评分结果必须清晰标注哪些因子使用 LLM 增强 vs 自动计算"
 - **修复建议**: 新增 `llmEnhanceLayers`/`llmModel` 参数，结果增加 `llmEnhanced` 标注
@@ -54,21 +54,21 @@
 
 | # | 不符合项 | 位置 | 影响 |
 |---|---------|------|------|
-| 5 | apps 层直接 import service 运行时调用 | [InputDashboard.tsx](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/apps/input/InputDashboard.tsx) L17-21 | apps 分发器完全绕过 MCP |
+| 5 | apps 层直接 import service 运行时调用 | [InputDashboard.tsx](../../src/apps/input/InputDashboard.tsx) L17-21 | apps 分发器完全绕过 MCP |
 | 6 | store 层 42 项值导入绕过 MCP | `src/store/` 21 个文件 | 架构规则冲突（AGENTS.md §1 允许 store→service，但违背 MCP 解耦理念） |
-| 7 | 缺少标准 stdio/SSE 传输 | [transport.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/mcp/core/transport.ts) | 无法作为独立 MCP Server 暴露给外部 AI 客户端 |
-| 8 | MCPBridge 未实现 Store→Resource 同步 | [mcpBridge.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/mcp/bridge/mcpBridge.ts) L1-13 | Resource 数据可能与 Store 状态不一致 |
+| 7 | 缺少标准 stdio/SSE 传输 | [transport.ts](../../src/mcp/core/transport.ts) | 无法作为独立 MCP Server 暴露给外部 AI 客户端 |
+| 8 | MCPBridge 未实现 Store→Resource 同步 | [mcpBridge.ts](../../src/mcp/bridge/mcpBridge.ts) L1-13 | Resource 数据可能与 Store 状态不一致 |
 | 9 | ai-center 孤立模块无 MCP Server | `src/services/ai-center/` | 僵尸模块，全项目无引用 |
 | 10 | useCase 协调层 7/8 未暴露 | `src/services/useCase/` | 核心编排（统一股票视图、双策略运行）无法通过 MCP 调用 |
-| 11 | useMcpMigration.ts:64 callTool 参数缺失 BUG | [useMcpMigration.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/components/system/migration/useMcpMigration.ts) L64 | 调用 `generateMigrationReport()` 必然失败 |
+| 11 | useMcpMigration.ts:64 callTool 参数缺失 BUG | [useMcpMigration.ts](../../src/components/organisms/system/migration/useMcpMigration.ts) L64 | 调用 `generateMigrationReport()` 必然失败 |
 
 ### 🟢 P2 — 低风险（4 项）
 
 | # | 不符合项 | 位置 | 影响 |
 |---|---------|------|------|
 | 12 | pages/components 层 7 项类型导入 | 3 个 pages + 4 个 components | 类型应迁移至 `src/types/modules/` |
-| 13 | MCPServer 接口缺少 health_check 方法定义 | [mcp.types.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/types/modules/mcp.types.ts) L158-180 | 无法通过统一接口轮询健康状态 |
-| 14 | JSONRPCRequest/Response 类型定义但未使用 | [mcp.types.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/types/modules/mcp.types.ts) L231-248 | 死类型 |
+| 13 | MCPServer 接口缺少 health_check 方法定义 | [mcp.types.ts](../../src/types/modules/mcp.types.ts) L158-180 | 无法通过统一接口轮询健康状态 |
+| 14 | JSONRPCRequest/Response 类型定义但未使用 | [mcp.types.ts](../../src/types/modules/mcp.types.ts) L231-248 | 死类型 |
 | 15 | SystemServer 未暴露诊断能力 | `src/services/system/` | 架构自诊断、监控日志未通过 MCP 暴露 |
 
 ---

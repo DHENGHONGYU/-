@@ -17,9 +17,26 @@
 import { getLogger } from '@/lib/logger'
 import { dataBridge } from './databridge'
 import { ENVELOPE_ACTION, STORE_NAME } from '@/config/dbConfig'
-import { runV6Score } from '@/services/scoring/v6ScoreService'
 
 const logger = getLogger()
+
+let injectedServices: PipelineServices | undefined
+
+/**
+ * 注入管道调度器依赖的服务实例。
+ * @param services 管道服务集合
+ */
+export function setPipelineServices(services: PipelineServices): void {
+  injectedServices = services
+  logger.info('[PipelineScheduler] 管道服务已注入')
+}
+
+function getServices(): PipelineServices {
+  if (!injectedServices) {
+    throw new Error('PipelineServices 未注入，请在启动时调用 setPipelineServices')
+  }
+  return injectedServices
+}
 
 export interface CycleStatus {
   name: string
@@ -460,7 +477,8 @@ export class DataIntegrityGuard {
 
   private async repairSymbol(symbol: string): Promise<boolean> {
     try {
-      const scoreResult = await runV6Score(symbol)
+      const services = getServices()
+      const scoreResult = await services.runV6Score(symbol)
       if (scoreResult.success) {
         logger.info(`[DataIntegrityGuard] 修复成功: ${symbol}`)
         return true
@@ -482,3 +500,10 @@ export const pipelineScheduler = new PipelineScheduler()
  * dataIntegrityGuard
  */
 export const dataIntegrityGuard = new DataIntegrityGuard()
+import type { V6ScoreService } from '@/types/modules/service.types'
+
+export type PipelineServices = Pick<V6ScoreService, 'runV6Score'>
+
+export interface PipelineSchedulerOptions {
+  services?: PipelineServices
+}

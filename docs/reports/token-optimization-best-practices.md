@@ -1330,8 +1330,8 @@ npm run changelog:summary
 ## 📚 参考资源
 
 - [V9项目Token消耗分析报告](./token-consumption-analysis-2026-07-04.md)
-- [V9架构规范](../03-architecture-standards.md)
-- [V9数据架构修订建议](../《V9数据架构修订建议》.md)
+- [V9架构规范](../01-requirements/03-architecture-standards.md)
+- [V9数据架构修订建议](../02-design/《V9数据架构修订建议》.md)
 - [V9核心数据字典](../《V9核心数据字典与类型定义(整合版)》.md)
 - [AGENTS.md](../../AGENTS.md) - AI行为约束契约
 

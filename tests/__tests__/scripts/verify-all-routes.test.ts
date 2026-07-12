@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { createTestLogger } from './_helpers/test-logger'
 
 /**
  * verify-all-routes.ts 单元测试（v3.0 白盒模式）
@@ -40,16 +41,26 @@ vi.mock('../../../src/config/routes', () => ({
 }))
 
 describe('verify-all-routes.ts v3.0（白盒测试）', () => {
+  const logger = createTestLogger('verify-all-routes')
+
   beforeEach(() => {
+    logger.info('===== beforeEach 清理开始 =====')
+    logger.step('重置 mock 路由状态')
     mockAllPaths = []
     mockHasRouteMap = new Map()
     mockRoutesShouldThrow = false
+    logger.step('vi.clearAllMocks()')
     vi.clearAllMocks()
+    logger.step('vi.resetModules()')
     vi.resetModules()
+    logger.info('===== beforeEach 清理结束 =====')
   })
 
   afterEach(() => {
+    logger.info('===== afterEach 清理开始 =====')
+    logger.step('vi.restoreAllMocks()')
     vi.restoreAllMocks()
+    logger.info('===== afterEach 清理结束 =====')
   })
 
   /** 动态导入 scan 函数 */
@@ -73,23 +84,29 @@ describe('verify-all-routes.ts v3.0（白盒测试）', () => {
 
   describe('scan() 重复路径检测', () => {
     it('检测 ROUTE_REGISTRY 中的重复路径', async () => {
-      // 设置重复路径
+      logger.testStart('检测 ROUTE_REGISTRY 中的重复路径')
+      logger.step('设置重复路径...')
       setupRoutes(
         ['/input', '/input', '/analysis', '/trading'],
         { '/input': true, '/analysis': true, '/trading': true },
       )
-
+      logger.step('动态导入 scan 函数...')
       const { scan } = await importScan()
+      logger.step('执行 scan()...')
       const report = scan()
-
-      expect(report.violations).toContainEqual(
-        expect.objectContaining({
-          type: 'duplicate-path',
-          path: '/input',
-          message: expect.stringContaining('重复'),
-        }),
-      )
-      expect(report.summary.duplicatePaths).toBe(1)
+      logger.wrapAssert('violations 包含重复路径', () => {
+        expect(report.violations).toContainEqual(
+          expect.objectContaining({
+            type: 'duplicate-path',
+            path: '/input',
+            message: expect.stringContaining('重复'),
+          }),
+        )
+      })
+      logger.wrapAssert('duplicatePaths 统计正确', () => {
+        expect(report.summary.duplicatePaths).toBe(1)
+      })
+      logger.testEnd('检测 ROUTE_REGISTRY 中的重复路径')
     })
 
     it('无重复路径时 duplicatePaths === 0', async () => {
@@ -163,7 +180,7 @@ describe('verify-all-routes.ts v3.0（白盒测试）', () => {
         '/command/agents/data-labels', '/command/agents/api-config',
         '/command/agents/skill-audit', '/command/agents/optimization',
         '/command/agents/changelog', '/command/mcp-servers', '/command/monitor',
-        '/command/config',
+        '/command/config', '/command/showcase', '/command/health',
         // portal
         '/', '/cockpit', '/mock-test',
       ]

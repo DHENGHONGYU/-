@@ -20,6 +20,7 @@ import { getEnabledStockFactorNames } from '@/config/scoreFactors'
  */
 export const STEP_LABELS: Record<ScoreStep, { label: string; description: string }> = {
   fetchBasicData: { label: '读取基础数据', description: '从数据采集层获取标的字段' },
+  v6EngineCalculation: { label: 'V6 引擎计算', description: '使用实时因子引擎计算真实评分' },
   readSupplementaryFiles: { label: '解析补充文件', description: '读取本地上传文件内容' },
   prepareReportText: { label: '整理行业报告', description: '汇总用户输入的分析资料' },
   llmAnalysis: { label: '大模型分析', description: '调用最新大模型进行评分推理' },
@@ -32,6 +33,7 @@ export const STEP_LABELS: Record<ScoreStep, { label: string; description: string
  */
 export const STEP_ORDER: ScoreStep[] = [
   'fetchBasicData',
+  'v6EngineCalculation',
   'readSupplementaryFiles',
   'prepareReportText',
   'llmAnalysis',
@@ -64,6 +66,7 @@ function isConfigReady(config: LlmConfig): boolean {
 
 const INITIAL_PROGRESS: Record<ScoreStep, ScoreStepStatus['status']> = {
   fetchBasicData: 'pending',
+  v6EngineCalculation: 'pending',
   readSupplementaryFiles: 'pending',
   prepareReportText: 'pending',
   llmAnalysis: 'pending',

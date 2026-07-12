@@ -12,6 +12,7 @@
  * @see src/core/dataflow/defaultDataBuilder.ts
  */
 
+import { getSafeString } from '@/lib/safeCoerce'
 import { getLogger } from '@/lib/logger'
 import { eventBus } from '@/lib/eventBus'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
@@ -98,7 +99,7 @@ export class DataFlowEngine {
       logger.debug('[DataFlowEngine] connect() skipped - already connected')
       return
     }
-    logger.info(`[DataFlowEngine] connect() called, url=${url || 'none (polling mode)'}`)
+    logger.info(`[DataFlowEngine] connect() called, url=${getSafeString(url) || 'none (polling mode)'}`)
 
     if (url && typeof EventSource !== 'undefined') {
       logger.debug('[DataFlowEngine] Attempting SSE connection...')

@@ -8,8 +8,8 @@ import type {
 import { DATA_SOURCE_TYPE } from '@/constants/cockpit.constants'
 import { BaseCollector } from './collectors/BaseCollector'
 import { MockCollector } from './collectors/MockCollector'
-import { RestCollector } from './collectors/RestCollector'
 import { WebSocketCollector } from './collectors/WebSocketCollector'
+import { LiveCollector } from './collectors/LiveCollector'
 import { eventBus } from '@/lib/eventBus'
 import { COLLECTION_EVENTS } from '@/types/modules/collection.types'
 import { runSingleTrace } from './collectionPipeline'
@@ -366,7 +366,7 @@ export class TaskScheduler {
       case DATA_SOURCE_TYPE.MOCK:
         return new MockCollector()
       case DATA_SOURCE_TYPE.REST:
-        return new RestCollector()
+        return new LiveCollector()
       case DATA_SOURCE_TYPE.WEBSOCKET:
         return new WebSocketCollector()
       default:

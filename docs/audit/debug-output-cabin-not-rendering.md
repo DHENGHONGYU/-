@@ -1,3 +1,8 @@
+---
+title: "Debug Session: output-cabin-not-rendering"
+code_version: 2.0.0
+---
+
 # Debug Session: output-cabin-not-rendering
 
 > **Session ID**: `output-cabin-not-rendering`

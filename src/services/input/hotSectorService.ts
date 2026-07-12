@@ -1,5 +1,5 @@
 import { addStock } from './inputService'
-import { dataLayer } from '@/data/dataLayer'
+import { dataBridge, ENVELOPE_ACTION, STORE_NAME, MODULE_ID } from '@/core/databridge'
 import type { AddStockOptions } from './inputService'
 import type { DataLayerResult, Stock } from '@/data/types'
 
@@ -118,7 +118,13 @@ export async function addHotSectorStocks(
   const result: AddHotSectorStockResult = { added: [], failed: [] }
 
   for (const stock of sector.stocks) {
-    const exists = await dataLayer.stocks.get(stock.symbol)
+    const existsResult = await dataBridge.query<Stock>({
+      action: ENVELOPE_ACTION.queryGet,
+      store: STORE_NAME.stocks,
+      key: stock.symbol,
+      source: MODULE_ID.stockpool,
+    })
+    const exists = existsResult.success && existsResult.data != null
     if (exists) {
       result.failed.push({ symbol: stock.symbol, error: '股票已存在' })
       continue
@@ -156,7 +162,13 @@ export async function addHotSectorStock(
     return { success: false, error: `${symbol} 不在 ${sector.name} 推荐列表中` }
   }
 
-  const exists = await dataLayer.stocks.get(stock.symbol)
+  const existsResult = await dataBridge.query<Stock>({
+    action: ENVELOPE_ACTION.queryGet,
+    store: STORE_NAME.stocks,
+    key: stock.symbol,
+    source: MODULE_ID.stockpool,
+  })
+  const exists = existsResult.success && existsResult.data != null
   if (exists) {
     return { success: false, error: '股票已存在' }
   }

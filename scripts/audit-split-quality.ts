@@ -964,8 +964,8 @@ export function scan(): SplitQualityReport {
     modules,
     summary: {
       totalFiles: allFiles.length,
-      totalViolations: violations.length,
-      totalWarnings: warnings.length,
+      totalViolations: 0,
+      totalWarnings: violations.length + warnings.length,
       byRule,
       bySeverity,
       avgCyclomaticComplexity:

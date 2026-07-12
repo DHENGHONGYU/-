@@ -185,6 +185,60 @@ class UpdateStockHandler implements EnvelopeHandler {
 }
 
 /**
+ * 股票研究状态更新处理器
+ * 更新 stocks 表的 researchStatus 字段
+ */
+class UpdateStockStatusHandler implements EnvelopeHandler {
+  canHandle(action: string): boolean {
+    return action === ENVELOPE_ACTION.updateStockStatus
+  }
+
+  async handle(envelope: StandardEnvelope, store: StoreName): Promise<void> {
+    const { symbol, status } = envelope.payload as { symbol: string; status: string }
+    logger.debug(`[DataBridge] DB updateStockStatus: symbol="${symbol}", status="${status}"`)
+    const existing = await db.get<Stock>(store, symbol)
+    if (!existing) {
+      logger.warn(`[DataBridge] DB updateStockStatus failed: Stock not found "${symbol}"`)
+      throw new EnvelopeError(`Stock not found: ${symbol}`)
+    }
+    const newDataVersion = (existing.dataVersion ?? 0) + 1
+    await db.put(store, {
+      ...existing,
+      researchStatus: status,
+      updatedAt: Date.now(),
+      dataVersion: newDataVersion,
+    })
+  }
+}
+
+/**
+ * 股票分组更新处理器
+ * 更新 stocks 表的 group 字段
+ */
+class UpdateStockGroupHandler implements EnvelopeHandler {
+  canHandle(action: string): boolean {
+    return action === ENVELOPE_ACTION.updateStockGroup
+  }
+
+  async handle(envelope: StandardEnvelope, store: StoreName): Promise<void> {
+    const { symbol, group } = envelope.payload as { symbol: string; group: string }
+    logger.debug(`[DataBridge] DB updateStockGroup: symbol="${symbol}", group="${group}"`)
+    const existing = await db.get<Stock>(store, symbol)
+    if (!existing) {
+      logger.warn(`[DataBridge] DB updateStockGroup failed: Stock not found "${symbol}"`)
+      throw new EnvelopeError(`Stock not found: ${symbol}`)
+    }
+    const newDataVersion = (existing.dataVersion ?? 0) + 1
+    await db.put(store, {
+      ...existing,
+      group,
+      updatedAt: Date.now(),
+      dataVersion: newDataVersion,
+    })
+  }
+}
+
+/**
  * 股票删除处理器（需要级联删除）
  */
 class DeleteStockHandler implements EnvelopeHandler {
@@ -418,6 +472,10 @@ export function createHandlerRegistry(): HandlerRegistry {
   registry.register(new InsertStockHandler())
   registry.register(new UpdateStockHandler())
   registry.register(new DeleteStockHandler())
+
+  // 1.5 股票状态/分组更新处理器
+  registry.register(new UpdateStockStatusHandler())
+  registry.register(new UpdateStockGroupHandler())
 
   // 2. 通知类处理器
   registry.register(

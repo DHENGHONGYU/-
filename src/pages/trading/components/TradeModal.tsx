@@ -4,6 +4,7 @@
  * 所有标题、描述文本从 @/constants/trade.constants 引用，禁止硬编码。
  */
 
+import { getSafeString } from '@/lib/safeCoerce'
 import React, { useCallback, useState } from 'react'
 import { Button } from '@/components/atoms/Button'
 import {
@@ -134,7 +135,7 @@ export default function TradeModal({
                 type="number"
                 min={100}
                 step={100}
-                value={quantity || ''}
+                value={getSafeString(quantity)}
                 onChange={(e) => setQuantity(Number(e.target.value))}
                 placeholder="请输入补仓数量"
                 className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"

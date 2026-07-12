@@ -2,14 +2,14 @@ import { dataLayer } from '@/data/dataLayer'
 import { generateId } from '@/data/db'
 import type { DataLayerResult, NewsArticle, NewsStockMap, Stock } from '@/data/types'
 import { getLogger } from '@/lib/logger'
-import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID } from '@/config/dbConfig'
+import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
 import { analyzeNewsArticle, getOrAnalyzeSentiment } from './sentimentAnalyzer'
 import type { StockInfo, StockLink } from './stockLinker'
 import { DEFAULT_STOCK_LIBRARY, linkArticleToStocks } from './stockLinker'
 import { MOCK_NEWS_URL_PREFIX } from '@/config/dataSourceUrls'
-import { DJB2_HASH_INIT, DJB2_HASH_MULTIPLIER } from '@/config/mathConstants'
+import { DJB2_HASH_INIT, DJB2_HASH_MULTIPLIER } from '@/constants/math.constants'
 
 import { nanoid } from 'nanoid'
 const logger = getLogger()
@@ -40,7 +40,8 @@ async function resolveStockLibrary(explicitStocks?: StockInfo[]): Promise<StockI
   if (explicitStocks && explicitStocks.length > 0) {
     return explicitStocks
   }
-  const poolStocks = await dataLayer.stocks.list()
+  const result = await dataBridge.query<Stock[]>({ action: ENVELOPE_ACTION.queryList, store: STORE_NAME.stocks })
+  const poolStocks = result.success ? result.data ?? [] : []
   if (poolStocks.length > 0) {
     return poolStocks.map(toStockInfo)
   }
@@ -52,7 +53,7 @@ async function resolveStockLibrary(explicitStocks?: StockInfo[]): Promise<StockI
  */
 async function saveNewsStockMaps(maps: NewsStockMap[]): Promise<DataLayerResult<void>> {
   for (const map of maps) {
-    const saveMapResult = await dataLayer.newsStockMap.save(map)
+    const saveMapResult = await dataLayer.newsStockMap.save(map) // TODO[P2]: 迁移至 DataBridge.forward()
     if (!saveMapResult.success) {
       return { success: false, error: saveMapResult.error }
     }
@@ -69,7 +70,13 @@ export async function saveNewsArticle(
 ): Promise<DataLayerResult<NewsArticle>> {
   try {
     const hash = buildHash(article)
-    const existing = await dataLayer.news.getByHash(hash)
+    const existingResult = await dataBridge.query<NewsArticle | undefined>({
+      action: ENVELOPE_ACTION.queryByIndex,
+      store: STORE_NAME.news,
+      indexName: 'by-hash',
+      indexValue: hash,
+    })
+    const existing = existingResult.success ? existingResult.data : undefined
     if (existing) {
       return { success: true, data: existing }
     }
@@ -110,7 +117,7 @@ export async function saveNewsArticle(
       return { success: false, error: mapSave.error }
     }
 
-    const saveResult = await dataLayer.news.save(fullArticle)
+    const saveResult = await dataLayer.news.save(fullArticle) // TODO[P2]: 迁移至 DataBridge.forward()
     if (!saveResult.success) {
       return { success: false, error: saveResult.error }
     }
@@ -174,7 +181,8 @@ export async function listNews(options?: {
   limit?: number
 }): Promise<DataLayerResult<NewsArticle[]>> {
   try {
-    let articles = await dataLayer.news.list()
+    const result = await dataBridge.query<NewsArticle[]>({ action: ENVELOPE_ACTION.queryList, store: STORE_NAME.news })
+    let articles = result.success ? result.data ?? [] : []
 
     if (options?.source) {
       articles = articles.filter((article) => article.source === options.source)
@@ -186,7 +194,13 @@ export async function listNews(options?: {
       articles = articles.filter((article) => article.sentiment === options.sentiment)
     }
     if (options?.symbol) {
-      const maps = await dataLayer.newsStockMap.listBySymbol(options.symbol)
+      const mapsResult = await dataBridge.query<NewsStockMap[]>({
+        action: ENVELOPE_ACTION.queryByIndex,
+        store: STORE_NAME.newsStockMap,
+        indexName: 'by-symbol',
+        indexValue: options.symbol,
+      })
+      const maps = mapsResult.success ? mapsResult.data ?? [] : []
       const newsIds = new Set(maps.map((map) => map.newsId))
       articles = articles.filter((article) => newsIds.has(article.id))
     }
@@ -208,7 +222,7 @@ export async function listNews(options?: {
     articles.sort((a, b) => b.publishTime.localeCompare(a.publishTime))
 
     const limit = options?.limit ?? articles.length
-    const result = articles.slice(0, limit)
+    const slicedArticles = articles.slice(0, limit)
 
     // DataBridge 事件转发：记录新闻列表加载（用于可观测性）
     // 使用 try-catch 确保 forward 失败不影响列表查询结果
@@ -220,7 +234,7 @@ export async function listNews(options?: {
           action: ENVELOPE_ACTION.newsArticleLoaded,
           traceId: `news-list-${nanoid(8)}`,
         },
-        { count: result.length, total: articles.length, options },
+        { count: slicedArticles.length, total: articles.length, options },
       )
       void dataBridge.forward(envelope).catch((forwardErr) => {
         logger.error('[newsService] DataBridge forward failed for listNews', { error: forwardErr })
@@ -229,7 +243,7 @@ export async function listNews(options?: {
       logger.error('[newsService] Failed to create listNews envelope', { error: err })
     }
 
-    return { success: true, data: result }
+    return { success: true, data: slicedArticles }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     logger.error('listNews failed', { error: message })
@@ -244,11 +258,22 @@ export async function getNewsBySymbol(
   symbol: string,
 ): Promise<DataLayerResult<NewsArticle[]>> {
   try {
-    const maps = await dataLayer.newsStockMap.listBySymbol(symbol)
+    const mapsResult = await dataBridge.query<NewsStockMap[]>({
+      action: ENVELOPE_ACTION.queryByIndex,
+      store: STORE_NAME.newsStockMap,
+      indexName: 'by-symbol',
+      indexValue: symbol,
+    })
+    const maps = mapsResult.success ? mapsResult.data ?? [] : []
     const newsIds = Array.from(new Set(maps.map((map) => map.newsId)))
     const articles: NewsArticle[] = []
     for (const newsId of newsIds) {
-      const article = await dataLayer.news.get(newsId)
+      const articleResult = await dataBridge.query<NewsArticle | undefined>({
+        action: ENVELOPE_ACTION.queryGet,
+        store: STORE_NAME.news,
+        key: newsId,
+      })
+      const article = articleResult.success ? articleResult.data : undefined
       if (!article) continue
       articles.push(article)
     }
@@ -267,7 +292,13 @@ export async function getNewsByHash(
   hash: string,
 ): Promise<DataLayerResult<NewsArticle | undefined>> {
   try {
-    const article = await dataLayer.news.getByHash(hash)
+    const result = await dataBridge.query<NewsArticle | undefined>({
+      action: ENVELOPE_ACTION.queryByIndex,
+      store: STORE_NAME.news,
+      indexName: 'by-hash',
+      indexValue: hash,
+    })
+    const article = result.success ? result.data : undefined
     return { success: true, data: article }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)

@@ -110,6 +110,15 @@ export const MCP_SERVER_REGISTRY: ReadonlyArray<MCPServerConfigEntry> = [
     priority: 'medium',
     enabled: true,
   },
+
+  // Phase 4: 本地知识库 & AI 检索 Server（中优先级）
+  {
+    name: 'knowledge:local',
+    modulePath: '@/mcp/servers/knowledge/knowledgeServer',
+    exportName: 'KnowledgeServer',
+    priority: 'medium',
+    enabled: true,
+  },
   {
     name: 'backtest:main',
     modulePath: '@/mcp/servers/backtest/backtestServer',
@@ -165,6 +174,15 @@ export const MCP_SERVER_REGISTRY: ReadonlyArray<MCPServerConfigEntry> = [
     name: 'trade:main',
     modulePath: '@/mcp/servers/trade/tradeServer',
     exportName: 'TradeServer',
+    priority: 'medium',
+    enabled: true,
+  },
+
+  // Phase 5: AI 工作流自动化（2026-07-13）
+  {
+    name: 'workflow:main',
+    modulePath: '@/mcp/servers/workflow/workflowServer',
+    exportName: 'WorkflowServer',
     priority: 'medium',
     enabled: true,
   },
