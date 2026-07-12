@@ -250,34 +250,69 @@ function parseErrorMessageFromResponse(response: Response): Promise<string> {
     })
 }
 
+/**
+ * 处理单条 SSE 流数据行（被 processStreamLines 循环调用）。
+ * 返回 false 表示遇到 [DONE]，调用方应终止循环；其余情况返回 true 继续。
+ */
+function processOneStreamLine(
+  line: string,
+  callback: LlmStreamCallback,
+  state: { isFinished: boolean },
+): boolean {
+  if (line.trim().length === 0) return true
+  if (!line.startsWith('data: ')) return true
+
+  const dataStr = line.slice(6)
+  if (dataStr === '[DONE]') {
+    if (!state.isFinished) {
+      callback({ content: '', isDone: true })
+    }
+    return false
+  }
+
+  try {
+    const chunkRaw = JSON.parse(dataStr) as RawStreamResponse
+    const chunk = parseStreamChunk(chunkRaw)
+    if (!chunk) return true
+    callback(chunk)
+    if (chunk.isDone) {
+      state.isFinished = true
+    }
+  } catch (parseErr) {
+    logger.warn('[llmClient] Failed to parse stream chunk', { error: parseErr })
+  }
+  return true
+}
+
 function processStreamLines(
   lines: string[],
   callback: LlmStreamCallback,
   state: { isFinished: boolean },
 ): void {
   for (const line of lines) {
-    if (line.trim().length === 0) continue
-    if (!line.startsWith('data: ')) continue
+    if (!processOneStreamLine(line, callback, state)) return
+  }
+}
 
-    const dataStr = line.slice(6)
-    if (dataStr === '[DONE]') {
-      if (!state.isFinished) {
-        callback({ content: '', isDone: true })
-      }
-      return
-    }
-
-    try {
-      const chunkRaw = JSON.parse(dataStr) as RawStreamResponse
-      const chunk = parseStreamChunk(chunkRaw)
-      if (!chunk) continue
-      callback(chunk)
-      if (chunk.isDone) {
-        state.isFinished = true
-      }
-    } catch (parseErr) {
-      logger.warn('[llmClient] Failed to parse stream chunk', { error: parseErr })
-    }
+/**
+ * 持续读取流式响应体并逐行解析（被 streamingChat 调用），封装读循环以降低嵌套深度。
+ */
+async function pumpStream(
+  reader: ReadableStreamDefaultReader<Uint8Array>,
+  decoder: TextDecoder,
+  callback: LlmStreamCallback,
+  state: { isFinished: boolean },
+  resetIdleTimer: () => void,
+): Promise<void> {
+  let buffer = ''
+  while (true) {
+    const { done, value } = await reader.read()
+    resetIdleTimer()
+    if (done) break
+    buffer += decoder.decode(value, { stream: true })
+    const lines = buffer.split('\n')
+    buffer = lines.pop() ?? ''
+    processStreamLines(lines, callback, state)
   }
 }
 
@@ -343,22 +378,9 @@ export async function streamingChat(
     }
 
     const decoder = new TextDecoder()
-    let buffer = ''
     const state = { isFinished: false }
 
-    while (true) {
-      const { done, value } = await reader.read()
-      resetIdleTimer() // P0-02: 每次读取后重置空闲定时器
-
-      if (done) {
-        break
-      }
-
-      buffer += decoder.decode(value, { stream: true })
-      const lines = buffer.split('\n')
-      buffer = lines.pop() ?? ''
-      processStreamLines(lines, callback, state)
-    }
+    await pumpStream(reader, decoder, callback, state, resetIdleTimer)
   } catch (err) {
     // P0-02: 识别 AbortError（总超时或空闲超时）
     if (err instanceof DOMException && err.name === 'AbortError') {

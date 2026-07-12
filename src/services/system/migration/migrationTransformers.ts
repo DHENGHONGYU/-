@@ -235,7 +235,7 @@ export function transformV6DailyQuotes(v6Quotes: V6DailyQuote[]): DailyQuotes[] 
         if (ts == null) {
           logger.warn('[migrationTransformers] 字段缺失，使用默认值', { field: 'tradeDate', context: `symbol=${symbol}` })
         }
-        return ts || 0
+        return ts != null ? ts : 0
       })(),
     )
 
@@ -260,9 +260,7 @@ export function transformV6Score(v6: V6ScoreRecord): V6Score {
   const factors: Record<string, number> = {}
   if (v6.layers) {
     for (const [key, layer] of Object.entries(v6.layers)) {
-      if (layer && typeof layer.score === 'number' && Number.isFinite(layer.score)) {
-        factors[key] = layer.score
-      }
+      if (layer && typeof layer.score === 'number' && Number.isFinite(layer.score)) factors[key] = layer.score
     }
   }
 
@@ -287,12 +285,10 @@ export function transformV6ScoreToDoc(v6: V6ScoreRecord): ScoreDocVersion {
   const layers: Record<string, V6LayerScore> = {}
   if (v6.layers) {
     for (const [key, layer] of Object.entries(v6.layers)) {
-      if (layer && typeof layer.score === 'number') {
-        layers[key] = {
-          score: layer.score,
-          reason: typeof layer.reason === 'string' ? layer.reason : '',
-          weight: typeof layer.weight === 'number' && Number.isFinite(layer.weight) ? layer.weight : 0,
-        }
+      if (layer && typeof layer.score === 'number') layers[key] = {
+        score: layer.score,
+        reason: typeof layer.reason === 'string' ? layer.reason : '',
+        weight: typeof layer.weight === 'number' && Number.isFinite(layer.weight) ? layer.weight : 0,
       }
     }
   }

@@ -58,9 +58,7 @@ export function detectChaseHighSellLow(orders: Order[], _map: Map<string, Order[
     )
     // 买入后一天内卖出且亏损 >5%
     for (const sell of nearSells) {
-      if (sell.price < buy.price * 0.95) {
-        relatedIds.push(buy.id, sell.id)
-      }
+      if (sell.price < buy.price * 0.95) relatedIds.push(buy.id, sell.id)
     }
   }
 
@@ -175,9 +173,7 @@ function detectAgainstTrendForSymbol(symOrders: Order[]): string[] {
   for (const order of symOrders) {
     if (prevPrice > 0 && order.price < prevPrice) {
       consecutiveCount++
-      if (consecutiveCount >= 2) {
-        relatedIds.push(order.id)
-      }
+      if (consecutiveCount >= 2) relatedIds.push(order.id)
     } else {
       consecutiveCount = 0
     }

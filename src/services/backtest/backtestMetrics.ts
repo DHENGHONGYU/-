@@ -138,6 +138,37 @@ export function calculateBacktestMetrics(
  * 将 VirtualOrder 序列转换为 BacktestTrade，计算每笔交易的盈亏。
  * 采用平均成本法：买入记录成本，卖出时按 avgCost 计算实现盈亏。
  */
+function applySell(
+  t: VirtualOrder,
+  qty: number,
+  avgCost: number,
+  quantities: Map<string, number>,
+  avgCosts: Map<string, number>,
+  result: BacktestTrade[],
+): void {
+  const sellQty = Math.min(t.quantity, qty)
+  if (sellQty <= 0) return
+  const grossPnL = (t.price - avgCost) * sellQty - t.commission
+  const pnlPct = avgCost > 0 ? ((t.price - avgCost) / avgCost) * 100 : 0
+  result.push({
+    symbol: t.symbol,
+    direction: 'sell',
+    price: t.price,
+    quantity: sellQty,
+    date: t.date,
+    pnl: Math.round(grossPnL * 100) / 100,
+    pnlPct: Math.round(pnlPct * 100) / 100,
+    reason: '策略信号卖出',
+  })
+  const remaining = qty - sellQty
+  if (remaining <= 0) {
+    quantities.delete(t.symbol)
+    avgCosts.delete(t.symbol)
+  } else {
+    quantities.set(t.symbol, remaining)
+  }
+}
+
 export function buildBacktestTrades(
   trades: VirtualOrder[],
   _config: BacktestEngineConfig,
@@ -170,30 +201,7 @@ export function buildBacktestTrades(
     } else {
       const qty = quantities.get(t.symbol) ?? 0
       const avgCost = avgCosts.get(t.symbol) ?? 0
-      const sellQty = Math.min(t.quantity, qty)
-      if (sellQty <= 0) continue
-
-      const grossPnL = (t.price - avgCost) * sellQty - t.commission
-      const pnlPct = avgCost > 0 ? ((t.price - avgCost) / avgCost) * 100 : 0
-
-      result.push({
-        symbol: t.symbol,
-        direction: 'sell',
-        price: t.price,
-        quantity: sellQty,
-        date: t.date,
-        pnl: Math.round(grossPnL * 100) / 100,
-        pnlPct: Math.round(pnlPct * 100) / 100,
-        reason: '策略信号卖出',
-      })
-
-      const remaining = qty - sellQty
-      if (remaining <= 0) {
-        quantities.delete(t.symbol)
-        avgCosts.delete(t.symbol)
-      } else {
-        quantities.set(t.symbol, remaining)
-      }
+      applySell(t, qty, avgCost, quantities, avgCosts, result)
     }
   }
 

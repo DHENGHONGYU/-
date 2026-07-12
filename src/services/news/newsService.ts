@@ -48,6 +48,19 @@ async function resolveStockLibrary(explicitStocks?: StockInfo[]): Promise<StockI
 }
 
 /**
+ * 批量保存新闻-股票关联映射，任一失败即返回错误
+ */
+async function saveNewsStockMaps(maps: NewsStockMap[]): Promise<DataLayerResult<void>> {
+  for (const map of maps) {
+    const saveMapResult = await dataLayer.newsStockMap.save(map)
+    if (!saveMapResult.success) {
+      return { success: false, error: saveMapResult.error }
+    }
+  }
+  return { success: true }
+}
+
+/**
  * saveNewsArticle
  */
 export async function saveNewsArticle(
@@ -92,11 +105,9 @@ export async function saveNewsArticle(
       relatedStocks: links.map((link) => link.symbol),
     }
 
-    for (const map of maps) {
-      const saveMapResult = await dataLayer.newsStockMap.save(map)
-      if (!saveMapResult.success) {
-        return { success: false, error: saveMapResult.error }
-      }
+    const mapSave = await saveNewsStockMaps(maps)
+    if (!mapSave.success) {
+      return { success: false, error: mapSave.error }
     }
 
     const saveResult = await dataLayer.news.save(fullArticle)
@@ -238,9 +249,8 @@ export async function getNewsBySymbol(
     const articles: NewsArticle[] = []
     for (const newsId of newsIds) {
       const article = await dataLayer.news.get(newsId)
-      if (article) {
-        articles.push(article)
-      }
+      if (!article) continue
+      articles.push(article)
     }
     return { success: true, data: articles }
   } catch (err) {

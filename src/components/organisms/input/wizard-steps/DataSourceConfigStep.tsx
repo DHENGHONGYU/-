@@ -18,6 +18,7 @@ import {
   twText,
   twBg,
   twBorder,
+  FOCUS,
 } from '@/constants/theme.tokens'
 import {
   FolderOpen,
@@ -29,6 +30,11 @@ import {
   ChevronUp,
   Clock,
   Layers,
+  Search,
+  Filter,
+  XCircle,
+  Download,
+  Upload,
 } from 'lucide-react'
 import { getLogger } from '@/lib/logger'
 import type { PersistedWizardConfig } from '@/types/modules/collection.types'
@@ -92,12 +98,14 @@ function ConfigTemplateCard({
   onLoad,
   onDelete,
   onRename,
+  onExport,
 }: {
   config: PersistedWizardConfig
   isLoaded: boolean
   onLoad: () => void
   onDelete: () => void
   onRename: (newName: string) => void
+  onExport: () => void
 }): React.JSX.Element {
   const [isEditing, setIsEditing] = useState(false)
   const [editName, setEditName] = useState(config.name)
@@ -280,6 +288,17 @@ function ConfigTemplateCard({
                 <Pencil className={cn('h-3.5 w-3.5', COLOR_TOKENS.textMuted.tailwind)} />
               </Button>
             )}
+            {!isEditing && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onExport}
+                className="h-7 w-7 p-0"
+                title="导出配置"
+              >
+                <Download className={cn('h-3.5 w-3.5', COLOR_TOKENS.textMuted.tailwind)} />
+              </Button>
+            )}
             <Button
               variant="ghost"
               size="sm"
@@ -324,9 +343,40 @@ export function DataSourceConfigStep(): React.JSX.Element {
   const loadConfigToWizard = useCollectionWizardStore((s) => s.loadConfigToWizard)
   const deleteSavedConfig = useCollectionWizardStore((s) => s.deleteSavedConfig)
   const renameSavedConfig = useCollectionWizardStore((s) => s.renameSavedConfig)
+  const exportConfig = useCollectionWizardStore((s) => s.exportConfig)
+  const importConfig = useCollectionWizardStore((s) => s.importConfig)
   const taskName = useCollectionWizardStore((s) => s.taskName)
 
   const [isTemplateListCollapsed, setIsTemplateListCollapsed] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedFilterDimension, setSelectedFilterDimension] = useState<string>('')
+  const [selectedFilterFrequency, setSelectedFilterFrequency] = useState<string>('')
+  const [importError, setImportError] = useState('')
+  const [importSuccess, setImportSuccess] = useState('')
+
+  const filteredConfigs = savedConfigs.filter((config) => {
+    const matchesSearch = searchQuery === '' ||
+      config.name.toLowerCase().includes(searchQuery.toLowerCase())
+    
+    const matchesDimension = selectedFilterDimension === '' ||
+      config.selectedDimensions.includes(selectedFilterDimension)
+    
+    const matchesFrequency = selectedFilterFrequency === '' ||
+      config.frequency === selectedFilterFrequency
+    
+    return matchesSearch && matchesDimension && matchesFrequency
+  })
+
+  const hasActiveFilters = searchQuery !== '' ||
+    selectedFilterDimension !== '' ||
+    selectedFilterFrequency !== ''
+
+  const handleClearFilters = (): void => {
+    setSearchQuery('')
+    setSelectedFilterDimension('')
+    setSelectedFilterFrequency('')
+    logger.info('[DataSourceConfigStep] 清除筛选条件')
+  }
 
   const handleLoadConfig = (config: PersistedWizardConfig): void => {
     logger.info('[DataSourceConfigStep] 加载配置模板', {
@@ -346,6 +396,32 @@ export function DataSourceConfigStep(): React.JSX.Element {
     void renameSavedConfig(configId, newName)
   }
 
+  const handleExportConfig = (configId: string): void => {
+    logger.info('[DataSourceConfigStep] 导出配置模板', { configId })
+    exportConfig(configId)
+  }
+
+  const handleImportConfig = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setImportError('')
+    setImportSuccess('')
+
+    logger.info('[DataSourceConfigStep] 导入配置模板', { fileName: file.name })
+    const result = await importConfig(file)
+
+    if (result.success) {
+      setImportSuccess(`配置 "${file.name}" 导入成功`)
+      setTimeout(() => setImportSuccess(''), 3000)
+    } else {
+      setImportError(result.error)
+      setTimeout(() => setImportError(''), 5000)
+    }
+
+    e.target.value = ''
+  }
+
   /** 判断当前向导是否加载了某个模板 */
   const isConfigLoaded = (config: PersistedWizardConfig): boolean => {
     return (
@@ -360,44 +436,162 @@ export function DataSourceConfigStep(): React.JSX.Element {
       {/* 配置模板列表 */}
       {savedConfigs.length > 0 && (
         <div>
-          <button
-            type="button"
-            className={cn(
-              'flex items-center gap-1.5 text-sm font-medium mb-2 hover:opacity-80 transition-opacity',
-              COLOR_TOKENS.textPrimary.tailwind,
-            )}
-            onClick={() => setIsTemplateListCollapsed(!isTemplateListCollapsed)}
-          >
-            {isTemplateListCollapsed ? (
-              <ChevronDown className="h-4 w-4" />
-            ) : (
-              <ChevronUp className="h-4 w-4" />
-            )}
-            <FolderOpen className="h-4 w-4" />
-            已保存的配置模板
-            <span
+          <div className="flex items-center justify-between mb-2">
+            <button
+              type="button"
               className={cn(
-                'text-xs px-1.5 py-0.5 rounded-full',
-                twBg('gray', 100),
-                twText('gray', 600),
+                'flex items-center gap-1.5 text-sm font-medium hover:opacity-80 transition-opacity',
+                COLOR_TOKENS.textPrimary.tailwind,
               )}
+              onClick={() => setIsTemplateListCollapsed(!isTemplateListCollapsed)}
             >
-              {savedConfigs.length}
-            </span>
-          </button>
+              {isTemplateListCollapsed ? (
+                <ChevronDown className="h-4 w-4" />
+              ) : (
+                <ChevronUp className="h-4 w-4" />
+              )}
+              <FolderOpen className="h-4 w-4" />
+              已保存的配置模板
+              <span
+                className={cn(
+                  'text-xs px-1.5 py-0.5 rounded-full',
+                  twBg('gray', 100),
+                  twText('gray', 600),
+                )}
+              >
+                {savedConfigs.length}
+              </span>
+            </button>
+            
+            <label className={cn(
+              'flex items-center gap-1.5 text-xs font-medium px-2 py-1 rounded-md cursor-pointer',
+              twBg('blue', 50),
+              twText('blue', 600),
+              'hover:opacity-80 transition-opacity',
+            )}>
+              <Upload className="h-3.5 w-3.5" />
+              导入配置
+              <input
+                type="file"
+                accept=".json"
+                onChange={handleImportConfig}
+                className="hidden"
+              />
+            </label>
+          </div>
 
           {!isTemplateListCollapsed && (
-            <div className="space-y-2">
-              {savedConfigs.map((config) => (
-                <ConfigTemplateCard
-                  key={config.id}
-                  config={config}
-                  isLoaded={isConfigLoaded(config)}
-                  onLoad={() => handleLoadConfig(config)}
-                  onDelete={() => handleDeleteConfig(config.id)}
-                  onRename={(newName) => handleRenameConfig(config.id, newName)}
-                />
-              ))}
+            <div className="space-y-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="relative flex-1 min-w-[180px]">
+                  <Search className={cn(
+                    'absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5',
+                    COLOR_TOKENS.textMuted.tailwind,
+                  )} />
+                  <Input
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="搜索配置名称..."
+                    className="pl-8 h-8 text-sm"
+                  />
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <Filter className={cn('h-3.5 w-3.5', COLOR_TOKENS.textMuted.tailwind)} />
+                  <select
+                    value={selectedFilterDimension}
+                    onChange={(e) => setSelectedFilterDimension(e.target.value)}
+                    className={cn(
+                      'h-8 px-2 text-xs rounded-md border',
+                      twBorder('gray', 200),
+                      COLOR_TOKENS.textPrimary.tailwind,
+                      'bg-white focus:outline-none focus:ring-2',
+                      FOCUS.ringEmerald400_30,
+                      FOCUS.borderEmerald400,
+                    )}
+                  >
+                    <option value="">全部维度</option>
+                    {AVAILABLE_DIMENSIONS.map((dim) => (
+                      <option key={dim.code} value={dim.code}>
+                        {dim.name}
+                      </option>
+                    ))}
+                  </select>
+                  
+                  <select
+                    value={selectedFilterFrequency}
+                    onChange={(e) => setSelectedFilterFrequency(e.target.value)}
+                    className={cn(
+                      'h-8 px-2 text-xs rounded-md border',
+                      twBorder('gray', 200),
+                      COLOR_TOKENS.textPrimary.tailwind,
+                      'bg-white focus:outline-none focus:ring-2',
+                      FOCUS.ringEmerald400_30,
+                      FOCUS.borderEmerald400,
+                    )}
+                  >
+                    <option value="">全部频率</option>
+                    <option value="realtime">实时</option>
+                    <option value="hourly">每小时</option>
+                    <option value="daily">每日</option>
+                    <option value="custom">自定义</option>
+                  </select>
+                  
+                  {hasActiveFilters && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleClearFilters}
+                      className="h-8 px-2 text-xs"
+                    >
+                      <XCircle className="h-3.5 w-3.5 mr-1" />
+                      清除
+                    </Button>
+                  )}
+                </div>
+              </div>
+              
+              {importSuccess && (
+                <div className={cn(
+                  'text-center py-2 text-sm rounded-md',
+                  twBg('green', 50),
+                  twText('green', 600),
+                )}>
+                  {importSuccess}
+                </div>
+              )}
+              {importError && (
+                <div className={cn(
+                  'text-center py-2 text-sm rounded-md',
+                  twBg('red', 50),
+                  twText('red', 600),
+                )}>
+                  {importError}
+                </div>
+              )}
+              
+              {filteredConfigs.length > 0 ? (
+                <div className="space-y-2">
+                  {filteredConfigs.map((config) => (
+                    <ConfigTemplateCard
+                      key={config.id}
+                      config={config}
+                      isLoaded={isConfigLoaded(config)}
+                      onLoad={() => handleLoadConfig(config)}
+                      onDelete={() => handleDeleteConfig(config.id)}
+                      onRename={(newName) => handleRenameConfig(config.id, newName)}
+                      onExport={() => handleExportConfig(config.id)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className={cn(
+                  'text-center py-8 text-sm',
+                  COLOR_TOKENS.textMuted.tailwind,
+                )}>
+                  未找到匹配的配置模板
+                </div>
+              )}
             </div>
           )}
         </div>

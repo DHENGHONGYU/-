@@ -158,9 +158,7 @@ export async function updateWizardConfig(
     // 记录更新前后的对比
     const changes: Record<string, { before: unknown; after: unknown }> = {}
     for (const key of Object.keys(updates) as Array<keyof typeof updates>) {
-      if (existing[key] !== updates[key]) {
-        changes[key] = { before: existing[key], after: updates[key] }
-      }
+      if (existing[key] !== updates[key]) changes[key] = { before: existing[key], after: updates[key] }
     }
 
     logger.debug('[CollectionWizardPersistence] updateWizardConfig - 配置变更对比', {

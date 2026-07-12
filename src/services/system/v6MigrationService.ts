@@ -113,11 +113,7 @@ export function generateMigrationReport(result: MigrationReport): string {
   lines.push('')
   for (const detail of result.details) {
     lines.push(`[${detail.store}] 总计 ${detail.total}，成功 ${detail.success}，跳过 ${detail.skipped}，失败 ${detail.failed}`)
-    if (detail.errors && detail.errors.length > 0) {
-      for (const error of detail.errors.slice(0, 3)) {
-        lines.push(`  - ${error.id ?? `#${error.index}`}: ${error.error}`)
-      }
-    }
+    if (detail.errors && detail.errors.length > 0) for (const error of detail.errors.slice(0, 3)) lines.push(`  - ${error.id ?? `#${error.index}`}: ${error.error}`)
   }
   return lines.join('\n')
 }

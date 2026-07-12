@@ -146,9 +146,8 @@ describe('runMigrations (D-01)', () => {
   })
 
   it('MIGRATIONS 注册表包含 schema 追踪迁移且版本等于 DB_VERSION', () => {
-    const first = MIGRATIONS[0]
-    expect(first).toBeDefined()
-    expect(first?.version).toBe(DB_VERSION)
-    expect(first?.name).toBe('seed_schema_migrations_tracker')
+    const tracker = MIGRATIONS.find((m) => m.name === 'seed_schema_migrations_tracker')
+    expect(tracker).toBeDefined()
+    expect(tracker?.version).toBe(DB_VERSION)
   })
 })

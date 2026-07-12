@@ -208,18 +208,21 @@ class PipelineCycle {
   }
 
   private async triggerHealthCheck(): Promise<void> {
-    if (this.config.integrityCheck) {
-      logger.info(`[PipelineScheduler] 循环 "${this.config.name}" 触发完整性检查`)
-      try {
-        const result = await this.config.integrityCheck()
-        logger.info(`[PipelineScheduler] 完整性检查结果: ${result.status}, missing=${result.missingCount}`)
+    if (!this.config.integrityCheck) return
+    logger.info(`[PipelineScheduler] 循环 "${this.config.name}" 触发完整性检查`)
+    await this.runIntegrityCheck()
+  }
 
-        if (result.status !== 'healthy') {
-          await this.attemptRepair(result)
-        }
-      } catch (err) {
-        logger.error(`[PipelineScheduler] 完整性检查失败`, { error: err })
+  private async runIntegrityCheck(): Promise<void> {
+    try {
+      const result = await this.config.integrityCheck!()
+      logger.info(`[PipelineScheduler] 完整性检查结果: ${result.status}, missing=${result.missingCount}`)
+
+      if (result.status !== 'healthy') {
+        await this.attemptRepair(result)
       }
+    } catch (err) {
+      logger.error(`[PipelineScheduler] 完整性检查失败`, { error: err })
     }
   }
 
@@ -443,19 +446,9 @@ export class DataIntegrityGuard {
     let failureCount = 0
 
     for (const symbol of missingSymbols) {
-      try {
-        const scoreResult = await runV6Score(symbol)
-        if (scoreResult.success) {
-          successCount++
-          logger.info(`[DataIntegrityGuard] 修复成功: ${symbol}`)
-        } else {
-          failureCount++
-          logger.warn(`[DataIntegrityGuard] 修复失败: ${symbol}, ${scoreResult.error}`)
-        }
-      } catch (err) {
-        failureCount++
-        logger.error(`[DataIntegrityGuard] 修复异常: ${symbol}`, { error: err })
-      }
+      const ok = await this.repairSymbol(symbol)
+      if (ok) successCount++
+      else failureCount++
     }
 
     logger.info('[DataIntegrityGuard] 自动修复完成', {
@@ -463,6 +456,21 @@ export class DataIntegrityGuard {
       success: successCount,
       failure: failureCount,
     })
+  }
+
+  private async repairSymbol(symbol: string): Promise<boolean> {
+    try {
+      const scoreResult = await runV6Score(symbol)
+      if (scoreResult.success) {
+        logger.info(`[DataIntegrityGuard] 修复成功: ${symbol}`)
+        return true
+      }
+      logger.warn(`[DataIntegrityGuard] 修复失败: ${symbol}, ${scoreResult.error}`)
+      return false
+    } catch (err) {
+      logger.error(`[DataIntegrityGuard] 修复异常: ${symbol}`, { error: err })
+      return false
+    }
   }
 }
 

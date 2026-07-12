@@ -7,6 +7,7 @@ import { useDualStrategyStore } from '@/store/dualStrategyStore'
 import type { WidgetConfig, HotSectorData } from '@/types/modules/widget.types'
 import { SCORE_LEVELS } from '@/constants/cockpit.constants'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
+import { UI_TEXT } from '@/constants/uiText'
 
 interface HotSectorWidgetProps {
   config: WidgetConfig
@@ -65,7 +66,7 @@ const HotSectorWidget = memo(function HotSectorWidget({ config, data }: HotSecto
       title={config.title}
       titleIcon={<Flame className={`h-4 w-4 ${COLOR_TOKENS.orange.tailwind}`} />}
       visualState={visualState}
-      emptyTitle="暂无热门板块策略"
+      emptyTitle={UI_TEXT.analysis.hotSector.noData}
       emptyDescription="当前未获取到热门板块评分与跟进建议"
       className="h-full flex flex-col"
     >

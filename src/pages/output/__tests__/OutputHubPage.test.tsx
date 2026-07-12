@@ -9,6 +9,7 @@ vi.mock('lucide-react', () => ({
   BarChart3: () => <svg data-testid="icon-bar" />,
   Database: () => <svg data-testid="icon-database" />,
   ArrowRight: () => <svg data-testid="icon-arrow-right" />,
+  Wand2: () => <svg data-testid="icon-wand2" />,
 }))
 
 vi.mock('@/components/organisms/shared/ErrorBoundary', () => ({

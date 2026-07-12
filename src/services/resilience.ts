@@ -81,6 +81,19 @@ async function handleRetryAttempt(
 }
 
 /**
+ * 安全调用，将异常收敛为判别联合类型，避免在重试循环内使用 try/catch 嵌套。
+ */
+async function safeCall<T>(
+  fn: () => Promise<T>,
+): Promise<{ ok: true; value: T } | { ok: false; err: unknown }> {
+  try {
+    return { ok: true, value: await fn() }
+  } catch (err) {
+    return { ok: false, err }
+  }
+}
+
+/**
  * 指数退避重试。
  * 全部尝试失败后，抛出经 `captureError` 收敛并上报的 `V9Error`。
  */
@@ -94,24 +107,24 @@ export async function withRetry<T>(fn: () => Promise<T>, options: RetryOptions =
 
   let lastErr: unknown
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    try {
-      return await fn()
-    } catch (err) {
-      lastErr = err
-      const shouldContinue = await handleRetryAttempt(
-        err,
-        attempt,
-        maxAttempts,
-        shouldRetry,
-        options.onRetry,
-        sleep,
-        baseDelayMs,
-        maxDelayMs,
-        factor,
-      )
-      if (!shouldContinue) {
-        break
-      }
+    const result = await safeCall(fn)
+    if (result.ok) {
+      return result.value
+    }
+    lastErr = result.err
+    const shouldContinue = await handleRetryAttempt(
+      result.err,
+      attempt,
+      maxAttempts,
+      shouldRetry,
+      options.onRetry,
+      sleep,
+      baseDelayMs,
+      maxDelayMs,
+      factor,
+    )
+    if (!shouldContinue) {
+      break
     }
   }
 

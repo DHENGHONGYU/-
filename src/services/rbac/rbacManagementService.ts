@@ -649,9 +649,8 @@ export async function getUserEffectivePermissions(
     const permIds = new Set<string>()
     for (const ur of activeRoles) {
       const rpRes = await getRolePermissions(ur.roleId)
-      if (rpRes.success) {
-        rpRes.data.filter((rp) => rp.status === 'active').forEach((rp) => permIds.add(rp.permissionId))
-      }
+      if (!rpRes.success) continue
+      rpRes.data.filter((rp) => rp.status === 'active').forEach((rp) => permIds.add(rp.permissionId))
     }
 
     // 3. 按 permissionId 查 PermissionEntity
@@ -664,9 +663,8 @@ export async function getUserEffectivePermissions(
         indexValue: pid,
         source: 'system',
       })
-      if (permRes.success && permRes.data) {
-        perms.push(permRes.data)
-      }
+      if (!permRes.success || !permRes.data) continue
+      perms.push(permRes.data)
     }
 
     trace(`getUserEffectivePermissions(${userId}): found ${perms.length}`, tId)

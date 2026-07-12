@@ -103,7 +103,7 @@ const A_SHARE_CODE_REGEX = /^\d{6}$/
 /** 港股代码：5位数字 */
 const HK_SHARE_CODE_REGEX = /^\d{5}$/
 
-/** 美股代码：1-5 位字母或 1-4 位字母 + .O/.N/.A 后缀 */
+/** 美股代码：1-5 位字母，可选 .交易所后缀（1-2 位，如 AAPL.US） */
 const US_SHARE_CODE_REGEX = /^[A-Z]{1,5}(?:\.[A-Z]{1,2})?$/
 
 /** 股票代码格式验证（6位数字，兼容 A 股） */
@@ -111,9 +111,12 @@ export function isValidStockCode(code: string): boolean {
   return A_SHARE_CODE_REGEX.test(code)
 }
 
-/** 股票代码格式化（补零） */
+/** 股票代码格式化（补零，仅适用于 A 股纯数字代码） */
 export function formatStockCode(code: string | number): string {
-  return String(code).padStart(6, '0')
+  const str = String(code)
+  // 非纯数字（如港股 00700.HK、美股 AAPL）原样返回，避免被错误补零成 '0AAPL'
+  if (!/^\d+$/.test(str)) return str
+  return str.padStart(6, '0')
 }
 
 /**
@@ -158,16 +161,19 @@ export function isValidSymbolWithExchange(symbol: string): boolean {
 
 /** 百分比范围验证（0-100） */
 export function isValidPercent(value: number): boolean {
+  if (typeof value !== 'number' || isNaN(value)) return false
   return value >= 0 && value <= 100
 }
 
 /** 评分范围验证（0-100） */
 export function isValidScore(value: number): boolean {
+  if (typeof value !== 'number' || isNaN(value)) return false
   return value >= 0 && value <= 100
 }
 
 /** 价格正数验证 */
 export function isValidPrice(value: number): boolean {
+  if (typeof value !== 'number' || isNaN(value)) return false
   return value > 0 && isFinite(value)
 }
 
@@ -288,10 +294,17 @@ export function isValidLlmModel(model: string): boolean {
  * @param apiKey 原 API Key
  * @returns 脱敏后的字符串
  */
+/**
+ * 脱敏通用实现：长度 ≤ 8 全替换，否则保留前 4 后 4。
+ */
+function maskSecret(secret: string): string {
+  if (secret.length <= 8) return '****'
+  return `${secret.slice(0, 4)}****${secret.slice(-4)}`
+}
+
 export function maskApiKey(apiKey: string): string {
   if (typeof apiKey !== 'string' || apiKey.length === 0) return '(empty)'
-  if (apiKey.length <= 8) return '****'
-  return `${apiKey.slice(0, 4)}****${apiKey.slice(-4)}`
+  return maskSecret(apiKey)
 }
 
 /**
@@ -302,8 +315,7 @@ export function maskApiKey(apiKey: string): string {
  */
 export function maskToken(token: string): string {
   if (typeof token !== 'string' || token.length === 0) return '(empty)'
-  if (token.length <= 8) return '****'
-  return `${token.slice(0, 4)}****${token.slice(-4)}`
+  return maskSecret(token)
 }
 
 /**
@@ -337,15 +349,20 @@ export const SENSITIVE_FIELD_NAMES = [
 export function isSensitiveField(fieldName: string): boolean {
   if (typeof fieldName !== 'string') return false
   const lower = fieldName.toLowerCase()
-  return SENSITIVE_FIELD_NAMES.some((sensitive) => lower === sensitive || lower.includes(sensitive))
+  return SENSITIVE_FIELD_NAMES.some((sensitive) => {
+    // 精确匹配
+    if (lower === sensitive) return true
+    // 词边界匹配，避免 "author" 误判为 "auth"、"tokenize" 误判为 "token"
+    return new RegExp(`(^|[^a-z0-9_])${sensitive}([^a-z0-9_]|$)`, 'i').test(lower)
+  })
 }
 
-function sanitizeValue(key: string, value: unknown, maxDepth: number): unknown {
+function sanitizeValue(key: string, value: unknown, maxDepth: number, seen: WeakSet<object>): unknown {
   if (isSensitiveField(key) && typeof value === 'string') {
     return maskApiKey(value)
   }
   if (typeof value === 'object' && value !== null) {
-    return sanitizeObject(value, maxDepth - 1)
+    return sanitizeObject(value, maxDepth - 1, seen)
   }
   return value
 }
@@ -353,28 +370,32 @@ function sanitizeValue(key: string, value: unknown, maxDepth: number): unknown {
 /**
  * 对任意对象进行脱敏处理，递归遍历所有字段。
  *
+ * 使用 WeakSet 记录已访问对象，防止循环引用导致无限递归 / 栈溢出
+ * （日志上下文对象常含环引用，如事件对象互指）。
+ *
  * @param obj 原始对象
  * @param maxDepth 最大递归深度（默认 5）
+ * @param seen 内部使用：已访问对象集合（循环引用保护）
  * @returns 脱敏后的新对象（不修改原对象）
  */
-export function sanitizeObject<T>(obj: T, maxDepth = 5): T {
-  if (maxDepth < 0 || obj === null || obj === undefined) return obj
+export function sanitizeObject<T>(
+  obj: T,
+  maxDepth = 5,
+  seen: WeakSet<object> = new WeakSet<object>(),
+): T {
+  if (maxDepth < 0 || obj === null || obj === undefined || typeof obj !== 'object') return obj
 
-  if (typeof obj === 'string') {
-    return obj
-  }
+  // 循环引用保护：已访问过则直接返回原引用，避免栈溢出
+  if (seen.has(obj as object)) return obj
+  seen.add(obj as object)
 
   if (Array.isArray(obj)) {
-    return obj.map((item) => sanitizeObject(item, maxDepth - 1)) as unknown as T
+    return obj.map((item) => sanitizeObject(item, maxDepth - 1, seen)) as unknown as T
   }
 
-  if (typeof obj === 'object') {
-    const result: Record<string, unknown> = {}
-    for (const [key, value] of Object.entries(obj as Record<string, unknown>)) {
-      result[key] = sanitizeValue(key, value, maxDepth)
-    }
-    return result as unknown as T
+  const result: Record<string, unknown> = {}
+  for (const [key, value] of Object.entries(obj as Record<string, unknown>)) {
+    result[key] = sanitizeValue(key, value, maxDepth, seen)
   }
-
-  return obj
+  return result as unknown as T
 }

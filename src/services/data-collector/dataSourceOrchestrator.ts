@@ -196,6 +196,108 @@ function createTraceId(prefix: string, code: string): string {
   return `${prefix}-${code}-${Date.now()}`
 }
 
+/** 单源行情尝试结果（区分成功 / 空 / 异常，便于调用方精确保留事件序列） */
+type QuoteAttempt =
+  | { kind: 'success'; result: CollectionResult<RealtimeQuote> }
+  | { kind: 'empty' }
+  | { kind: 'error' }
+
+/** 单源 K 线尝试结果 */
+type KlineAttempt =
+  | { kind: 'success'; result: CollectionResult<KlineBar[]> }
+  | { kind: 'empty' }
+  | { kind: 'error' }
+
+/**
+ * 尝试单个行情数据源（由 getQuoteWithConfig 的降级循环调用）。
+ * 精确保留 SOURCE_SUCCESS / SOURCE_FAIL 事件与质量指标采集语义。
+ */
+async function attemptQuoteSource(
+  code: string,
+  source: DataSource,
+  index: number,
+  chain: DataSource[],
+  traceId: string,
+  config: QuoteFetchConfig,
+  start: number,
+): Promise<QuoteAttempt> {
+  try {
+    const result = await tryQuoteSource(code, source)
+    if (!result) return { kind: 'empty' }
+    const latency = Date.now() - start
+    const fallbackChain = chain.slice(0, index + 1)
+    getQualityMetrics().recordCollect(true, source, latency, fallbackChain)
+    emitLifecycleEvent(COLLECTION_EVENTS.SOURCE_SUCCESS, {
+      traceId,
+      taskId: config.taskId,
+      dimensionCode: config.dimensionCode,
+      symbol: code,
+      sourceId: source,
+      durationMs: latency,
+      message: `${source} 获取成功`,
+    })
+    return { kind: 'success', result: { success: true, data: result, source, latency, fallbackChain } }
+  } catch (err) {
+    const errorMsg = err instanceof Error ? err.message : String(err)
+    logger.warn(`[orchestrator] 数据源 ${source} 异常: ${code}`, { error: errorMsg })
+    emitLifecycleEvent(COLLECTION_EVENTS.SOURCE_FAIL, {
+      traceId,
+      taskId: config.taskId,
+      dimensionCode: config.dimensionCode,
+      symbol: code,
+      sourceId: source,
+      message: `${source} 异常`,
+      error: errorMsg,
+    })
+    return { kind: 'error' }
+  }
+}
+
+/**
+ * 尝试单个 K 线数据源（由 getKlineWithConfig 的降级循环调用）。
+ */
+async function attemptKlineSource(
+  code: string,
+  days: number,
+  source: DataSource,
+  index: number,
+  chain: DataSource[],
+  traceId: string,
+  config: KlineFetchConfig,
+  start: number,
+): Promise<KlineAttempt> {
+  try {
+    const result = await tryKlineSource(code, days, source)
+    if (!result || result.length === 0) return { kind: 'empty' }
+    const latency = Date.now() - start
+    const fallbackChain = chain.slice(0, index + 1)
+    getQualityMetrics().recordCollect(true, source, latency, fallbackChain)
+    emitLifecycleEvent(COLLECTION_EVENTS.SOURCE_SUCCESS, {
+      traceId,
+      taskId: config.taskId,
+      dimensionCode: config.dimensionCode,
+      symbol: code,
+      sourceId: source,
+      durationMs: latency,
+      message: `${source} K 线获取成功，共 ${result.length} 条`,
+    })
+    return { kind: 'success', result: { success: true, data: result, source, latency, fallbackChain } }
+  } catch (err) {
+    const errorMsg = err instanceof Error ? err.message : String(err)
+    logger.warn(`[orchestrator] K 线数据源 ${source} 异常: ${code}`, { error: errorMsg })
+    emitLifecycleEvent(COLLECTION_EVENTS.SOURCE_FAIL, {
+      traceId,
+      taskId: config.taskId,
+      dimensionCode: config.dimensionCode,
+      symbol: code,
+      sourceId: source,
+      message: `${source} K 线异常`,
+      error: errorMsg,
+    })
+    return { kind: 'error' }
+  }
+}
+
 /**
  * 获取实时行情（按配置优先级链降级）
  */
@@ -226,43 +328,9 @@ export async function getQuoteWithConfig(
       message: `尝试数据源: ${source}`,
     })
 
-    try {
-      const result = await tryQuoteSource(code, source)
-      if (result) {
-        const latency = Date.now() - start
-        const fallbackChain = chain.slice(0, i + 1)
-        getQualityMetrics().recordCollect(true, source, latency, fallbackChain)
-        emitLifecycleEvent(COLLECTION_EVENTS.SOURCE_SUCCESS, {
-          traceId,
-          taskId: config.taskId,
-          dimensionCode: config.dimensionCode,
-          symbol: code,
-          sourceId: source,
-          durationMs: latency,
-          message: `${source} 获取成功`,
-        })
-        return {
-          success: true,
-          data: result,
-          source,
-          latency,
-          fallbackChain,
-        }
-      }
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : String(err)
-      logger.warn(`[orchestrator] 数据源 ${source} 异常: ${code}`, { error: errorMsg })
-      emitLifecycleEvent(COLLECTION_EVENTS.SOURCE_FAIL, {
-        traceId,
-        taskId: config.taskId,
-        dimensionCode: config.dimensionCode,
-        symbol: code,
-        sourceId: source,
-        message: `${source} 异常`,
-        error: errorMsg,
-      })
-      continue
-    }
+    const attempt = await attemptQuoteSource(code, source, i, chain, traceId, config, start)
+    if (attempt.kind === 'success') return attempt.result
+    if (attempt.kind === 'error') continue
 
     emitLifecycleEvent(COLLECTION_EVENTS.SOURCE_FAIL, {
       traceId,
@@ -281,9 +349,9 @@ export async function getQuoteWithConfig(
         dimensionCode: config.dimensionCode,
         symbol: code,
         sourceId: nextSource,
-        message: `${source} 失败，降级到 ${nextSource ?? '无'}`,
+        message: `${source} 失败，降级到 ${nextSource !== undefined ? nextSource : '无'}`,
       })
-      logger.warn(`[orchestrator] ${source} 行情失败，降级到 ${nextSource ?? '结束'}: ${code}`)
+      logger.warn(`[orchestrator] ${source} 行情失败，降级到 ${nextSource !== undefined ? nextSource : '结束'}: ${code}`)
     }
   }
 
@@ -420,43 +488,9 @@ export async function getKlineWithConfig(
       message: `尝试 K 线数据源: ${source}`,
     })
 
-    try {
-      const result = await tryKlineSource(code, days, source)
-      if (result && result.length > 0) {
-        const latency = Date.now() - start
-        const fallbackChain = chain.slice(0, i + 1)
-        getQualityMetrics().recordCollect(true, source, latency, fallbackChain)
-        emitLifecycleEvent(COLLECTION_EVENTS.SOURCE_SUCCESS, {
-          traceId,
-          taskId: config.taskId,
-          dimensionCode: config.dimensionCode,
-          symbol: code,
-          sourceId: source,
-          durationMs: latency,
-          message: `${source} K 线获取成功，共 ${result.length} 条`,
-        })
-        return {
-          success: true,
-          data: result,
-          source,
-          latency,
-          fallbackChain,
-        }
-      }
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : String(err)
-      logger.warn(`[orchestrator] K 线数据源 ${source} 异常: ${code}`, { error: errorMsg })
-      emitLifecycleEvent(COLLECTION_EVENTS.SOURCE_FAIL, {
-        traceId,
-        taskId: config.taskId,
-        dimensionCode: config.dimensionCode,
-        symbol: code,
-        sourceId: source,
-        message: `${source} K 线异常`,
-        error: errorMsg,
-      })
-      continue
-    }
+    const attempt = await attemptKlineSource(code, days, source, i, chain, traceId, config, start)
+    if (attempt.kind === 'success') return attempt.result
+    if (attempt.kind === 'error') continue
 
     emitLifecycleEvent(COLLECTION_EVENTS.SOURCE_FAIL, {
       traceId,
@@ -475,9 +509,9 @@ export async function getKlineWithConfig(
         dimensionCode: config.dimensionCode,
         symbol: code,
         sourceId: nextSource,
-        message: `${source} K 线失败，降级到 ${nextSource ?? '无'}`,
+        message: `${source} K 线失败，降级到 ${nextSource !== undefined ? nextSource : '无'}`,
       })
-      logger.warn(`[orchestrator] ${source} K线失败，降级到 ${nextSource ?? '结束'}: ${code}`)
+      logger.warn(`[orchestrator] ${source} K线失败，降级到 ${nextSource !== undefined ? nextSource : '结束'}: ${code}`)
     }
   }
 
@@ -653,6 +687,27 @@ const TEST_KLINE_DAYS = 5
 /**
  * 测试单个数据源的连通性（不触发降级，直接探测）。
  */
+/**
+ * 探测单数据源连通性（testSourceConnectivity 内部使用，不触发降级）。
+ */
+async function probeSource(source: DataSource, start: number): Promise<SourceConnectivityResult> {
+  if (source === 'tencent' || source === 'sina') {
+    const result = await tryQuoteSource(TEST_SYMBOL_QUOTE, source)
+    if (result) return { ok: true, latencyMs: Date.now() - start, message: `${source} 连通正常` }
+    return { ok: false, latencyMs: Date.now() - start, message: `${source} 返回空` }
+  }
+
+  if (source === 'netease') {
+    const result = await tryKlineSource(TEST_SYMBOL_KLINE, TEST_KLINE_DAYS, source)
+    if (result && result.length > 0) {
+      return { ok: true, latencyMs: Date.now() - start, message: `网易 K 线连通，返回 ${result.length} 条` }
+    }
+    return { ok: false, latencyMs: Date.now() - start, message: '网易 K 线返回空' }
+  }
+
+  return { ok: false, latencyMs: Date.now() - start, message: `未知数据源 ${String(source)}` }
+}
+
 export async function testSourceConnectivity(source: DataSource): Promise<SourceConnectivityResult> {
   const start = Date.now()
 
@@ -666,23 +721,7 @@ export async function testSourceConnectivity(source: DataSource): Promise<Source
   }
 
   try {
-    if (source === 'tencent' || source === 'sina') {
-      const result = await tryQuoteSource(TEST_SYMBOL_QUOTE, source)
-      if (result) {
-        return { ok: true, latencyMs: Date.now() - start, message: `${source} 连通正常` }
-      }
-      return { ok: false, latencyMs: Date.now() - start, message: `${source} 返回空` }
-    }
-
-    if (source === 'netease') {
-      const result = await tryKlineSource(TEST_SYMBOL_KLINE, TEST_KLINE_DAYS, source)
-      if (result && result.length > 0) {
-        return { ok: true, latencyMs: Date.now() - start, message: `网易 K 线连通，返回 ${result.length} 条` }
-      }
-      return { ok: false, latencyMs: Date.now() - start, message: '网易 K 线返回空' }
-    }
-
-    return { ok: false, latencyMs: Date.now() - start, message: `未知数据源 ${String(source)}` }
+    return await probeSource(source, start)
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     return { ok: false, latencyMs: Date.now() - start, message }

@@ -149,6 +149,25 @@ function applyTheme(theme: AppConfig['theme']): void {
 // ConfigApp 组件
 // ============================================================
 
+function isNumericFieldRejected<K extends keyof AppConfig>(
+  key: K,
+  value: AppConfig[K],
+  prev: AppConfig,
+): boolean {
+  if (typeof value !== 'number') return false
+  const range = NUMBER_FIELD_RANGES[key]
+  if (!range) return false
+  const safeValue = toSafeNumberInRange(value, range.min, range.max, prev[key] as number)
+  if (safeValue === value) return false
+  logger.info('[ConfigApp] updateField/拒绝无效数值', {
+    field: String(key),
+    rawValue: value,
+    reason: !Number.isFinite(value) ? (!Number.isNaN(value) ? 'Infinity' : 'NaN') : 'OutOfRange',
+    range: { min: range.min, max: range.max },
+  })
+  return true
+}
+
 export default function ConfigApp(): React.JSX.Element {
   const [config, setConfig] = useState<AppConfig>(loadConfig)
   const [saved, setSaved] = useState(false)
@@ -205,29 +224,8 @@ export default function ConfigApp(): React.JSX.Element {
       // 同时拦截 NaN(由 'abc' 触发)、Infinity(由 '1e309' 触发)、越界值(如负数、超 100%)
       // 复用 lib/safeCoerce.toSafeNumberInRange,避免数据流入口重复守卫逻辑
       // 越界值默认回退到 prev[key],React controlled input 会自动重置为 prev 的值
-      if (typeof value === 'number') {
-        const range = NUMBER_FIELD_RANGES[key]
-        if (range) {
-          const safeValue = toSafeNumberInRange(
-            value,
-            range.min,
-            range.max,
-            prev[key] as number,
-          )
-          // 若 safeValue !== value,说明被守卫修正(NaN/Infinity/越界),不写入
-          if (safeValue !== value) {
-            const reason = !Number.isFinite(value)
-              ? (!Number.isNaN(value) ? 'Infinity' : 'NaN')
-              : 'OutOfRange'
-            logger.info('[ConfigApp] updateField/拒绝无效数值', {
-              field: String(key),
-              rawValue: value,
-              reason,
-              range: { min: range.min, max: range.max },
-            })
-            return prev
-          }
-        }
+      if (isNumericFieldRejected(key, value, prev)) {
+        return prev
       }
 
       const next = { ...prev, [key]: value }

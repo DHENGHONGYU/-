@@ -126,11 +126,10 @@ export function computeTransitiveReachability(
 
     const newReachable: string[] = []
     for (const imported of imports) {
-      if (!reachable.has(imported)) {
-        reachable.add(imported)
-        queue.push(imported)
-        newReachable.push(imported)
-      }
+      if (reachable.has(imported)) continue
+      reachable.add(imported)
+      queue.push(imported)
+      newReachable.push(imported)
     }
     if (newReachable.length > 0) {
       traversalPath.push({ current, newReachable })

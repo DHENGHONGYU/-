@@ -219,6 +219,18 @@ describe('敏感信息脱敏', () => {
     expect(sanitizeObject('string')).toBe('string')
     expect(sanitizeObject(123)).toBe(123)
   })
+
+  it('sanitizeObject: 循环引用不导致栈溢出', () => {
+    const obj: Record<string, unknown> = { name: 'cyclic' }
+    obj.self = obj
+    expect(() => sanitizeObject(obj)).not.toThrow()
+    const result = sanitizeObject(obj)
+    expect((result as Record<string, unknown>).name).toBe('cyclic')
+    // 数组自引用也应安全
+    const arr: unknown[] = ['a']
+    arr.push(arr)
+    expect(() => sanitizeObject(arr)).not.toThrow()
+  })
 })
 
 describe('配置名称校验 validateConfigName', () => {

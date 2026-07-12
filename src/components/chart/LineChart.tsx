@@ -34,6 +34,7 @@ import {
 } from 'recharts'
 import { cn } from '@/lib/utils'
 import { CHART_PALETTE } from '@/constants/theme.tokens'
+import { usePerfTrace } from '@/hooks/usePerfTrace'
 
 interface LineChartProps {
   /** 数据源，每项为一个数据点 */
@@ -106,6 +107,8 @@ export const LineChart = memo(
       },
       ref,
     ) => {
+      usePerfTrace('LineChart', { points: data.length, series: lines.length })
+
       return (
         <div ref={ref} className={cn('w-full', className)}>
           <ResponsiveContainer width="100%" height={height}>

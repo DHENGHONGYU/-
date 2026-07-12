@@ -37,6 +37,11 @@ import {
   deleteWizardConfig,
   updateWizardConfig,
 } from '@/services/collection/collectionWizardPersistence'
+import {
+  exportAndDownloadConfig,
+  importConfigFromJSON,
+  validateImportedConfig,
+} from '@/services/collection/configExportService'
 import { validateConfigName } from '@/utils/dataValidation'
 
 const logger = getLogger()
@@ -160,6 +165,10 @@ interface CollectionWizardActions {
   deleteSavedConfig: (configId: string) => Promise<void>
   /** 重命名配置模板，返回 { success, error? } */
   renameSavedConfig: (configId: string, newName: string) => Promise<{ success: boolean; error?: string }>
+  /** 导出配置模板为 JSON 文件 */
+  exportConfig: (configId: string) => void
+  /** 从 JSON 文件导入配置模板 */
+  importConfig: (file: File) => Promise<{ success: true; configId: string } | { success: false; error: string }>
 }
 
 type CollectionWizardStore = typeof INITIAL_STATE & CollectionWizardActions
@@ -243,7 +252,7 @@ export const useCollectionWizardStore = create<CollectionWizardStore>()(
       const previous = apiConfigs[code]
       logger.info('[CollectionWizardStore] updateApiConfig', {
         code,
-        previous: previous ?? null,
+        previous: previous !== undefined ? previous : null,
         updated: config,
       })
       set({ apiConfigs: { ...apiConfigs, [code]: config } })
@@ -359,7 +368,7 @@ export const useCollectionWizardStore = create<CollectionWizardStore>()(
 
       get().addLog({
         level: 'info',
-        message: `任务 ${taskName || '未命名'} 已启动`,
+        message: `任务 ${taskName !== '' ? taskName : '未命名'} 已启动`,
         traceId,
         stage: 'task:start',
       })
@@ -696,6 +705,68 @@ export const useCollectionWizardStore = create<CollectionWizardStore>()(
           traceId,
           configId,
           newName,
+          error: error instanceof Error ? error.message : String(error),
+        })
+        return { success: false, error: error instanceof Error ? error.message : String(error) }
+      }
+    },
+
+    exportConfig: (configId: string) => {
+      const config = get().savedConfigs.find((c) => c.id === configId)
+      if (!config) {
+        logger.warn('[CollectionWizardStore] exportConfig - 配置不存在', { configId })
+        return
+      }
+      logger.info('[CollectionWizardStore] exportConfig', { configId, name: config.name })
+      exportAndDownloadConfig(config)
+    },
+
+    importConfig: async (file: File): Promise<{ success: true; configId: string } | { success: false; error: string }> => {
+      const traceId = generateTraceId()
+      logger.info('[CollectionWizardStore] importConfig - 开始', {
+        traceId,
+        fileName: file.name,
+        fileSize: file.size,
+      })
+
+      try {
+        const exportFile = await importConfigFromJSON(file)
+        const { config } = exportFile
+
+        const existingNames = get().savedConfigs.map((c) => c.name)
+        const validation = validateImportedConfig(config, existingNames)
+        if (!validation.ok) {
+          logger.warn('[CollectionWizardStore] importConfig - 校验失败', {
+            traceId,
+            fileName: file.name,
+            error: validation.error,
+          })
+          return { success: false, error: validation.error }
+        }
+
+        const newConfig: PersistedWizardConfig = {
+          ...config,
+          id: `wizard_config_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        }
+
+        await saveWizardConfig(newConfig)
+        set((state) => ({ savedConfigs: [...state.savedConfigs, newConfig] }))
+
+        logger.info('[CollectionWizardStore] importConfig - 完成', {
+          traceId,
+          fileName: file.name,
+          newConfigId: newConfig.id,
+          newConfigName: newConfig.name,
+        })
+
+        broadcastWizard('importConfig', { configId: newConfig.id, name: newConfig.name })
+        return { success: true, configId: newConfig.id }
+      } catch (error) {
+        logger.error('[CollectionWizardStore] importConfig - 失败', {
+          traceId,
+          fileName: file.name,
           error: error instanceof Error ? error.message : String(error),
         })
         return { success: false, error: error instanceof Error ? error.message : String(error) }

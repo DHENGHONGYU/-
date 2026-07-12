@@ -58,9 +58,7 @@ function buildRotationScoreMap(rotationScores: RotationSectorScore[]): Map<strin
       score.swLevel3,
     ].filter((k): k is string => typeof k === 'string' && k.length > 0)
     for (const key of keys) {
-      if (!map.has(key)) {
-        map.set(key, score)
-      }
+      if (!map.has(key)) map.set(key, score)
     }
   }
   return map

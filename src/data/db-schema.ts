@@ -103,6 +103,25 @@ function ensureStore(
  * @param request 触发 onupgradeneeded 的 IDBOpenDBRequest（用于访问 upgradeTx）
  * @param logger 结构化日志记录器
  */
+/**
+ * 游标遍历 stocks store，将缺失的 group 字段 backfill 为 DEFAULT_POOL_GROUP。
+ * 抽取为独立函数以避免 createSchema 内多层回调嵌套（深度 > 3）。
+ */
+function backfillGroupField(store: IDBObjectStore, logger: SchemaLogger): void {
+  const cursorRequest = store.openCursor()
+  cursorRequest.onsuccess = () => {
+    const cursor = cursorRequest.result
+    if (!cursor) return
+    const stock = cursor.value as Record<string, unknown>
+    if (stock.group === undefined) {
+      logger.debug(`[DB] Backfilling missing "group" field for stock: ${String(stock.symbol)}`)
+      stock.group = DEFAULT_POOL_GROUP
+      cursor.update(stock)
+    }
+    cursor.continue()
+  }
+}
+
 export function createSchema(
   db: IDBDatabase,
   request: IDBOpenDBRequest,
@@ -126,19 +145,7 @@ export function createSchema(
     }
 
     if (store) {
-      const cursorRequest = store.openCursor()
-      cursorRequest.onsuccess = () => {
-        const cursor = cursorRequest.result
-        if (cursor) {
-          const stock = cursor.value as Record<string, unknown>
-          if (stock.group === undefined) {
-            logger.debug(`[DB] Backfilling missing "group" field for stock: ${String(stock.symbol)}`)
-            stock.group = DEFAULT_POOL_GROUP
-            cursor.update(stock)
-          }
-          cursor.continue()
-        }
-      }
+      backfillGroupField(store, logger)
     }
   }
 

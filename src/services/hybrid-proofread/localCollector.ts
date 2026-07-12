@@ -125,6 +125,26 @@ export class LocalCollector {
     const results: string[] = []
     const abortControllerRef = this.abortController
 
+    async function handleEntry(
+      entry: import('fs').Dirent,
+      dir: string,
+      relativeDir: string,
+    ): Promise<void> {
+      const relativePath = relativeDir ? `${relativeDir}/${entry.name}` : entry.name
+      if (isPathExcluded(relativePath, excludes)) return
+
+      const fullPath = `${dir}/${entry.name}`
+      if (entry.isDirectory()) {
+        if (!abortControllerRef?.signal.aborted) {
+          await traverse(fullPath, relativePath)
+        }
+        return
+      }
+      if (entry.isFile()) {
+        await collectFileIfIncluded(fullPath, relativePath, includes, results)
+      }
+    }
+
     async function traverse(dir: string, relativeDir: string): Promise<void> {
       if (abortControllerRef?.signal.aborted) return
 
@@ -133,21 +153,7 @@ export class LocalCollector {
         const entries = await fs.promises.readdir(dir, { withFileTypes: true })
 
         for (const entry of entries) {
-          const relativePath = relativeDir ? `${relativeDir}/${entry.name}` : entry.name
-
-          if (isPathExcluded(relativePath, excludes)) {
-            continue
-          }
-
-          const fullPath = `${dir}/${entry.name}`
-
-          if (entry.isDirectory()) {
-            await traverse(fullPath, relativePath)
-            continue
-          }
-          if (entry.isFile()) {
-            await collectFileIfIncluded(fullPath, relativePath, includes, results)
-          }
+          await handleEntry(entry, dir, relativeDir)
         }
       } catch {
         logger.warn(`[LocalCollector] 读取目录失败: ${dir}`)

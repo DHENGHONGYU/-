@@ -339,14 +339,22 @@ export class TaskScheduler {
       logger.error(`[TaskScheduler] 任务执行失败: ${taskId}`, { error })
 
       // 通知监听器错误
-      this.listeners.forEach((listener) => {
-        try {
-          listener(taskId, null, error instanceof Error ? error : new Error(String(error)))
-        } catch (err) {
-          logger.error('[TaskScheduler] 错误监听器执行失败', { error: err })
-        }
-      })
+      this.notifyErrorListeners(taskId, error instanceof Error ? error : new Error(String(error)))
     }
+  }
+
+  /**
+   * 向所有监听器广播任务错误，单监听器异常不影响其余监听器。
+   * 抽取为独立方法以消除调用处的 forEach+try/catch 嵌套（深度 > 3）。
+   */
+  private notifyErrorListeners(taskId: string, error: Error): void {
+    this.listeners.forEach((listener) => {
+      try {
+        listener(taskId, null, error)
+      } catch (err) {
+        logger.error('[TaskScheduler] 错误监听器执行失败', { error: err })
+      }
+    })
   }
 
   /**

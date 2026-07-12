@@ -138,10 +138,9 @@ export function classifyErrors(orders: Order[]): ErrorClassificationResult {
   for (const detector of detectors) {
     try {
       const result = detector.fn(orders, dayGroups)
-      if (result) {
-        detectedErrors.push(result)
-        logger.info(`[TradeErrorClassifier] 检测到错误: ${result.name} (${result.severity}), count=${result.count}`)
-      }
+      if (!result) continue
+      detectedErrors.push(result)
+      logger.info(`[TradeErrorClassifier] 检测到错误: ${result.name} (${result.severity}), count=${result.count}`)
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
       logger.error(`[TradeErrorClassifier] 检测器执行异常`, { error: message })

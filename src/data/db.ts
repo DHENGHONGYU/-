@@ -314,16 +314,20 @@ export class V6Database {
     }
   }
 
+  private async importStoreItems(storeName: typeof STORE_NAMES[number], items: unknown[]): Promise<void> {
+    await this.clear(storeName)
+    for (const item of items) {
+      await this.put(storeName, item)
+    }
+  }
+
   async import(data: Record<string, unknown[]>): Promise<void> {
     try {
       logger.info('[DB] import: starting data import')
       for (const storeName of STORE_NAMES) {
-        await this.clear(storeName)
         const items = data[storeName] ?? []
         logger.debug(`[DB] import: importing ${items.length} items to store="${storeName}"`)
-        for (const item of items) {
-          await this.put(storeName, item)
-        }
+        await this.importStoreItems(storeName, items)
       }
       logger.info('[DB] import completed successfully')
     } catch (err) {

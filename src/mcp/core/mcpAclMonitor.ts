@@ -241,10 +241,7 @@ class McpAclMonitor {
       if (rule.callerPattern !== '*' && rule.callerPattern !== record.caller) continue
 
       // 3. Server 名称不匹配 → 跳过
-      if (rule.serverPattern !== '*') {
-        const serverRegex = new RegExp(rule.serverPattern)
-        if (!serverRegex.test(record.serverName)) continue
-      }
+      if (!this.isServerMatch(rule, record.serverName)) continue
 
       // 4. 统计时间窗口内的匹配事件数
       const ruleWindowStart = now - rule.windowMs
@@ -262,13 +259,7 @@ class McpAclMonitor {
 
       // 6. 告警去重检查 —— 同一规则在去重窗口内只触发一次
       const lastTriggered = this.triggeredAlerts.get(rule.id)
-      if (lastTriggered) {
-        const dedupWindow = MCP_ACL_MONITORING_THRESHOLDS.alertDedupWindowMs
-        if (now - lastTriggered.timestamp < dedupWindow) {
-          // 在去重窗口内，跳过
-          continue
-        }
-      }
+      if (lastTriggered && now - lastTriggered.timestamp < MCP_ACL_MONITORING_THRESHOLDS.alertDedupWindowMs) continue
 
       // 7. 触发告警
       const alertEvent: AclAlertEvent = {
@@ -289,6 +280,11 @@ class McpAclMonitor {
 
     // 清理过期的告警去重记录
     this.cleanupTriggeredAlerts(now, windowStart)
+  }
+
+  private isServerMatch(rule: (typeof MCP_ACL_ALERT_RULES)[number], serverName: string): boolean {
+    if (rule.serverPattern === '*') return true
+    return new RegExp(rule.serverPattern).test(serverName)
   }
 
   /**

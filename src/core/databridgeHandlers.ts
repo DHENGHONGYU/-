@@ -235,37 +235,50 @@ class DeleteStockHandler implements EnvelopeHandler {
       STORE_NAME.missingReports,
     ]
     for (const s of stores) {
-      try {
-        const records = await db.getAllByIndex<{ id: string; symbol?: string }>(s, 'by-symbol', symbol)
-        for (const rec of records) {
-          if (!rec.id) continue
-          await db.delete(s, rec.id)
-        }
-        if (records.length > 0) {
-          logger.debug(`[DataBridge] 级联删除(索引): ${s} count=${records.length}`)
-        }
-      } catch (err) {
-        logger.warn(`[DataBridge] 级联删除失败(索引): ${s}`, { error: err instanceof Error ? err.message : String(err) })
+      await this.deleteBySymbolIndex(s, symbol)
+    }
+  }
+
+  /** 按 by-symbol 索引级联删除某标的记录，单 store 失败不影响其他 store */
+  private async deleteBySymbolIndex(store: StoreName, symbol: string): Promise<void> {
+    try {
+      const records = await db.getAllByIndex<{ id: string; symbol?: string }>(store, 'by-symbol', symbol)
+      const ids = records.map((r) => r.id).filter((id): id is string => Boolean(id))
+      for (const id of ids) {
+        await db.delete(store, id)
       }
+      if (ids.length > 0) {
+        logger.debug(`[DataBridge] 级联删除(索引): ${store} count=${ids.length}`)
+      }
+    } catch (err) {
+      logger.warn(`[DataBridge] 级联删除失败(索引): ${store}`, {
+        error: err instanceof Error ? err.message : String(err),
+      })
     }
   }
 
   private async deleteScannedRecords(symbol: string): Promise<void> {
     const stores = [STORE_NAME.orders, STORE_NAME.signals, STORE_NAME.watchlists]
     for (const s of stores) {
-      try {
-        const allRecords = await db.getAll<{ id: string; symbol?: string }>(s)
-        const toDelete = allRecords.filter((r) => r.symbol === symbol)
-        for (const rec of toDelete) {
-          if (!rec.id) continue
-          await db.delete(s, rec.id)
-        }
-        if (toDelete.length > 0) {
-          logger.debug(`[DataBridge] 级联删除(扫描): ${s} count=${toDelete.length}`)
-        }
-      } catch (err) {
-        logger.warn(`[DataBridge] 级联删除失败(扫描): ${s}`, { error: err instanceof Error ? err.message : String(err) })
+      await this.deleteBySymbolScan(s, symbol)
+    }
+  }
+
+  /** 全表扫描按 symbol 匹配后级联删除，单 store 失败不影响其他 store */
+  private async deleteBySymbolScan(store: StoreName, symbol: string): Promise<void> {
+    try {
+      const allRecords = await db.getAll<{ id: string; symbol?: string }>(store)
+      const toDelete = allRecords.filter((r) => r.symbol === symbol && Boolean(r.id))
+      for (const rec of toDelete) {
+        await db.delete(store, rec.id as string)
       }
+      if (toDelete.length > 0) {
+        logger.debug(`[DataBridge] 级联删除(扫描): ${store} count=${toDelete.length}`)
+      }
+    } catch (err) {
+      logger.warn(`[DataBridge] 级联删除失败(扫描): ${store}`, {
+        error: err instanceof Error ? err.message : String(err),
+      })
     }
   }
 }

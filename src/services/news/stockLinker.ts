@@ -227,15 +227,19 @@ function matchText(
       candidates.push(...matchIndustry(text, stock, source, sourceWeight))
     }
 
-    if (candidates.length > 0) {
-      const best = candidates.sort((a, b) => b.confidence - a.confidence)[0]!
-      if (best.confidence >= config.confidenceThreshold) {
-        links.push(best)
-      }
-    }
+    const best = selectBestLink(candidates, config.confidenceThreshold)
+    if (best) links.push(best)
   }
 
   return links
+}
+
+/** 从候选链接中挑出置信度最高且达阈值者，否则返回 null */
+function selectBestLink(candidates: StockLink[], threshold: number): StockLink | null {
+  if (candidates.length === 0) return null
+  const best = candidates.sort((a, b) => b.confidence - a.confidence)[0]
+  if (!best || best.confidence < threshold) return null
+  return best
 }
 
 /** 对单篇资讯进行股票关联，返回 links 并填充 article.relatedStocks */

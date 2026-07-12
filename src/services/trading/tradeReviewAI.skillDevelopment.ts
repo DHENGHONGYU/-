@@ -35,16 +35,15 @@ function calculateSkillDimensionScores(
   for (const error of classification.errors) {
     for (const dim of SKILL_DIMENSIONS) {
       // 使用 indexOf() 避免 readonly tuple 上 includes() 的类型推断问题
-      if (dim.relatedErrors.indexOf(error.type) !== -1) {
-        const current = scores.get(dim.code) ?? TRADE_REVIEW_AI_THRESHOLDS.DIMENSION_DEFAULT_SCORE
-        const penalty =
-          error.severity === 'critical'
-            ? TRADE_REVIEW_AI_THRESHOLDS.ERROR_PENALTY_CRITICAL
-            : error.severity === 'major'
-              ? TRADE_REVIEW_AI_THRESHOLDS.ERROR_PENALTY_MAJOR
-              : TRADE_REVIEW_AI_THRESHOLDS.ERROR_PENALTY_MINOR
-        scores.set(dim.code, Math.max(0, current - penalty * error.count))
-      }
+      if (dim.relatedErrors.indexOf(error.type) === -1) continue
+      const current = scores.get(dim.code) ?? TRADE_REVIEW_AI_THRESHOLDS.DIMENSION_DEFAULT_SCORE
+      const penalty =
+        error.severity === 'critical'
+          ? TRADE_REVIEW_AI_THRESHOLDS.ERROR_PENALTY_CRITICAL
+          : error.severity === 'major'
+            ? TRADE_REVIEW_AI_THRESHOLDS.ERROR_PENALTY_MAJOR
+            : TRADE_REVIEW_AI_THRESHOLDS.ERROR_PENALTY_MINOR
+      scores.set(dim.code, Math.max(0, current - penalty * error.count))
     }
   }
 

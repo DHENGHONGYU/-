@@ -115,20 +115,7 @@ export class DataFlowEngine {
           eventBus.emit(EVENT_NAMES.DATAFLOW_CONNECTED, { connected: true })
           this._notifyConnectionChange(true)
         }
-        this.eventSource.onmessage = (event) => {
-          logger.debug(`[DataFlowEngine] SSE message received, length=${event.data.length}`)
-          try {
-            const packet = JSON.parse(event.data as string) as DataPacket
-            if (packet.channel) {
-              logger.debug(`[DataFlowEngine] Parsed packet: channel=${packet.channel}, seq=${packet.seq}`)
-              this._distribute(packet)
-            } else {
-              logger.warn('[DataFlowEngine] Invalid packet: missing channel field')
-            }
-          } catch (parseErr) {
-            logger.error('[DataFlowEngine] Failed to parse SSE message', { error: parseErr })
-          }
-        }
+        this.eventSource.onmessage = (event) => this._handleSseMessage(event)
         this.eventSource.onerror = () => {
           this.connected = false
           logger.warn('[DataFlowEngine] SSE connection error')
@@ -147,6 +134,22 @@ export class DataFlowEngine {
       this.connected = true
       eventBus.emit(EVENT_NAMES.DATAFLOW_CONNECTED, { connected: true })
       this._notifyConnectionChange(true)
+    }
+  }
+
+  /** 解析并分发单条 SSE 消息（从 connect() 中抽取，降低嵌套深度） */
+  private _handleSseMessage(event: MessageEvent): void {
+    logger.debug(`[DataFlowEngine] SSE message received, length=${event.data.length}`)
+    try {
+      const packet = JSON.parse(event.data as string) as DataPacket
+      if (packet.channel) {
+        logger.debug(`[DataFlowEngine] Parsed packet: channel=${packet.channel}, seq=${packet.seq}`)
+        this._distribute(packet)
+      } else {
+        logger.warn('[DataFlowEngine] Invalid packet: missing channel field')
+      }
+    } catch (parseErr) {
+      logger.error('[DataFlowEngine] Failed to parse SSE message', { error: parseErr })
     }
   }
 

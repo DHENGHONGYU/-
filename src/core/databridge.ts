@@ -195,81 +195,23 @@ export class DataBridge {
 
     try {
       // 0. 等待数据库就绪（store 层不再直接依赖 db.ready）
-      if (!db.isReady()) {
-        logger.info('[DataBridge] query() waiting for database ready...')
-        await db.ready()
-        logger.info('[DataBridge] query() database ready confirmed')
-      }
+      await this.waitForDbReady()
 
       // 1. 生成缓存 key
       const cacheKey = this.buildCacheKey(request)
       logger.debug(`[DataBridge] query() cache key generated: "${cacheKey}"`)
 
       // 2. 查缓存
-      const cached = this.readCache.get(cacheKey) as T | undefined
-      if (cached !== undefined) {
-        const cacheStats = this.readCache.getStats()
-        logger.info(`[DataBridge] query() cache HIT: key="${cacheKey}", cacheSize=${cacheStats.size}, hitRate=${(cacheStats.hitRate * 100).toFixed(1)}%`)
-        const duration = Date.now() - startTs
-        logger.info(`[DataBridge] query() completed (from cache): action="${request.action}", store="${request.store}", duration=${duration}ms`)
-        return { success: true, data: cached }
-      }
+      const cachedResult = this.tryServeFromCache<T>(request, cacheKey, startTs)
+      if (cachedResult) return cachedResult
       logger.info(`[DataBridge] query() cache MISS: key="${cacheKey}", proceeding to database query`)
 
       // 3. ACL 校验
-      try {
-        logger.debug(`[DataBridge] query() ACL check starting: module="${source}", store="${request.store}", operation="SELECT"`)
-        aclEngine.assert({
-          module: source,
-          store: request.store,
-          operation: 'SELECT',
-        })
-        logger.info(`[DataBridge] query() ACL check PASSED: module="${source}", store="${request.store}", operation="SELECT"`)
-      } catch (aclErr) {
-        const aclErrorMessage = aclErr instanceof Error ? aclErr.message : String(aclErr)
-        logger.error(`[DataBridge] query() ACL check FAILED: module="${source}", store="${request.store}", operation="SELECT", reason="${aclErrorMessage}"`)
-        throw aclErr
-      }
+      this.assertQueryAcl(source, request.store)
 
       // 4. 执行数据库操作
       logger.debug(`[DataBridge] query() executing database operation: action="${request.action}", store="${request.store}"`)
-      let result: T
-      switch (request.action) {
-        case ENVELOPE_ACTION.queryGet: {
-          if (request.key == null) {
-            logger.error(`[DataBridge] query() parameter validation failed: queryGet requires key parameter`)
-            throw new EnvelopeError('queryGet requires key parameter')
-          }
-          logger.debug(`[DataBridge] query() executing db.get: store="${request.store}", key="${request.key}"`)
-          result = await db.get(request.store, request.key) as T
-          logger.debug(`[DataBridge] query() db.get completed: found=${result != null}`)
-          break
-        }
-        case ENVELOPE_ACTION.queryList: {
-          logger.debug(`[DataBridge] query() executing db.getAll: store="${request.store}"`)
-          result = await db.getAll(request.store) as T
-          const listLength = Array.isArray(result) ? result.length : 'N/A'
-          logger.debug(`[DataBridge] query() db.getAll completed: resultCount=${listLength}`)
-          break
-        }
-        case ENVELOPE_ACTION.queryByIndex: {
-          if (request.indexName == null || request.indexValue === undefined) {
-            logger.error(`[DataBridge] query() parameter validation failed: queryByIndex requires indexName and indexValue parameters`)
-            throw new EnvelopeError('queryByIndex requires indexName and indexValue parameters')
-          }
-          const indexValueStr = typeof request.indexValue === 'string' ? request.indexValue : JSON.stringify(request.indexValue)
-          logger.debug(`[DataBridge] query() executing db.getAllByIndex: store="${request.store}", indexName="${request.indexName}", indexValue="${indexValueStr}"`)
-          result = await db.getAllByIndex(request.store, request.indexName, request.indexValue as string) as T
-          const indexListLength = Array.isArray(result) ? result.length : 'N/A'
-          logger.debug(`[DataBridge] query() db.getAllByIndex completed: resultCount=${indexListLength}`)
-          break
-        }
-        default: {
-          const unknownAction = request.action as string
-          logger.error(`[DataBridge] query() unknown action: "${unknownAction}"`)
-          throw new EnvelopeError(`Unknown query action: ${unknownAction}`)
-        }
-      }
+      const result = await this.executeQueryAction<T>(request)
 
       // 5. 缓存结果
       this.readCache.set(cacheKey, result)
@@ -291,6 +233,92 @@ export class DataBridge {
       logger.error(`[DataBridge] query() FAILED: action="${request.action}", store="${request.store}", errorName="${errorName}", errorMessage="${message}"`)
       return { success: false, error: message }
     }
+  }
+
+  /**
+   * 等待数据库就绪（query 内部抽出，降低主函数嵌套深度）
+   */
+  private async waitForDbReady(): Promise<void> {
+    if (db.isReady()) return
+    logger.info('[DataBridge] query() waiting for database ready...')
+    await db.ready()
+    logger.info('[DataBridge] query() database ready confirmed')
+  }
+
+  /**
+   * 命中缓存时直接返回；未命中返回 null（query 内部抽出，降低主函数嵌套深度）
+   */
+  private tryServeFromCache<T>(request: QueryRequest, cacheKey: string, startTs: number): { success: true; data: T } | null {
+    const cached = this.readCache.get(cacheKey) as T | undefined
+    if (cached === undefined) return null
+    const cacheStats = this.readCache.getStats()
+    logger.info(`[DataBridge] query() cache HIT: key="${cacheKey}", cacheSize=${cacheStats.size}, hitRate=${(cacheStats.hitRate * 100).toFixed(1)}%`)
+    const duration = Date.now() - startTs
+    logger.info(`[DataBridge] query() completed (from cache): action="${request.action}", store="${request.store}", duration=${duration}ms`)
+    return { success: true, data: cached }
+  }
+
+  /**
+   * 执行 query 的 ACL 校验，校验失败抛出原错误（query 内部抽出，降低主函数嵌套深度）
+   */
+  private assertQueryAcl(source: ModuleId, store: StoreName): void {
+    try {
+      logger.debug(`[DataBridge] query() ACL check starting: module="${source}", store="${store}", operation="SELECT"`)
+      aclEngine.assert({ module: source, store, operation: 'SELECT' })
+      logger.info(`[DataBridge] query() ACL check PASSED: module="${source}", store="${store}", operation="SELECT"`)
+    } catch (aclErr) {
+      const aclErrorMessage = aclErr instanceof Error ? aclErr.message : String(aclErr)
+      logger.error(`[DataBridge] query() ACL check FAILED: module="${source}", store="${store}", operation="SELECT", reason="${aclErrorMessage}"`)
+      throw aclErr
+    }
+  }
+
+  /**
+   * 根据 action 执行具体数据库读取操作（query 内部抽出，降低主函数嵌套深度）
+   */
+  private async executeQueryAction<T>(request: QueryRequest): Promise<T> {
+    switch (request.action) {
+      case ENVELOPE_ACTION.queryGet: {
+        this.assertQueryGetKey(request)
+        logger.debug(`[DataBridge] query() executing db.get: store="${request.store}", key="${request.key}"`)
+        const getResult = await db.get(request.store, request.key!) as T
+        logger.debug(`[DataBridge] query() db.get completed: found=${getResult != null}`)
+        return getResult
+      }
+      case ENVELOPE_ACTION.queryList: {
+        logger.debug(`[DataBridge] query() executing db.getAll: store="${request.store}"`)
+        const listResult = await db.getAll(request.store) as T
+        const listLength = Array.isArray(listResult) ? listResult.length : 'N/A'
+        logger.debug(`[DataBridge] query() db.getAll completed: resultCount=${listLength}`)
+        return listResult
+      }
+      case ENVELOPE_ACTION.queryByIndex: {
+        this.assertQueryByIndexKey(request)
+        const indexValueStr = typeof request.indexValue === 'string' ? request.indexValue : JSON.stringify(request.indexValue)
+        logger.debug(`[DataBridge] query() executing db.getAllByIndex: store="${request.store}", indexName="${request.indexName}", indexValue="${indexValueStr}"`)
+        const indexResult = await db.getAllByIndex(request.store, request.indexName!, request.indexValue as string) as T
+        const indexListLength = Array.isArray(indexResult) ? indexResult.length : 'N/A'
+        logger.debug(`[DataBridge] query() db.getAllByIndex completed: resultCount=${indexListLength}`)
+        return indexResult
+      }
+      default: {
+        const unknownAction = request.action as string
+        logger.error(`[DataBridge] query() unknown action: "${unknownAction}"`)
+        throw new EnvelopeError(`Unknown query action: ${unknownAction}`)
+      }
+    }
+  }
+
+  private assertQueryGetKey(request: QueryRequest): void {
+    if (request.key != null) return
+    logger.error(`[DataBridge] query() parameter validation failed: queryGet requires key parameter`)
+    throw new EnvelopeError('queryGet requires key parameter')
+  }
+
+  private assertQueryByIndexKey(request: QueryRequest): void {
+    if (request.indexName != null && request.indexValue !== undefined) return
+    logger.error(`[DataBridge] query() parameter validation failed: queryByIndex requires indexName and indexValue parameters`)
+    throw new EnvelopeError('queryByIndex requires indexName and indexValue parameters')
   }
 
   /**
@@ -470,17 +498,15 @@ export class DataBridge {
   }
 
   private extractSymbolFromPayload(payload: unknown): string | undefined {
-    if (payload != null && typeof payload === 'object') {
-      if ('symbol' in payload) {
-        return String((payload as Record<string, unknown>).symbol)
-      }
-      if (Array.isArray(payload) && payload.length > 0) {
-        const firstItem = payload[0]
-        if (typeof firstItem === 'object' && firstItem != null && 'symbol' in firstItem) {
-          const symbol = (firstItem as Record<string, unknown>).symbol
-          return typeof symbol === 'string' ? symbol : undefined
-        }
-      }
+    if (payload == null || typeof payload !== 'object') return undefined
+    if ('symbol' in payload) {
+      return String((payload as Record<string, unknown>).symbol)
+    }
+    if (!Array.isArray(payload) || payload.length === 0) return undefined
+    const firstItem = payload[0]
+    if (typeof firstItem === 'object' && firstItem != null && 'symbol' in firstItem) {
+      const symbol = (firstItem as Record<string, unknown>).symbol
+      return typeof symbol === 'string' ? symbol : undefined
     }
     return undefined
   }

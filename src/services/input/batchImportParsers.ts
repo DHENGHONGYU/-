@@ -267,26 +267,28 @@ function buildRowFromFields(fields: string[]): BulkImportRow | null {
   let name = ''
   let exchange = ''
 
-  for (let i = 0; i < fields.length && !code; i++) {
-    code = extractStockCode(fields[i]!)
-    if (code) {
-      const rawField = fields[i]!.trim()
-      const exchangeMatch = rawField.match(/\.(SH|SZ|BJ)$/i)
-      if (exchangeMatch?.[1]) {
-        exchange = exchangeMatch[1].toUpperCase()
-      } else {
-        exchange = detectExchange(code)
-      }
-      if (i + 1 < fields.length) {
-        name = fields[i + 1]!.trim().slice(0, MAX_NAME_LENGTH)
-      }
+  for (let i = 0; i < fields.length; i++) {
+    const candidate = extractStockCode(fields[i]!)
+    if (!candidate) continue
+    code = candidate
+    const rawField = fields[i]!.trim()
+    exchange = resolveExchange(code, rawField)
+    if (i + 1 < fields.length) {
+      name = fields[i + 1]!.trim().slice(0, MAX_NAME_LENGTH)
     }
+    break
   }
 
   if (!code) return null
   if (!name) name = code
 
   return { code, name, symbol: `${code}.${exchange}`, status: 'valid' }
+}
+
+/** 从原始字段解析交易所代码：优先后缀 (.SH/.SZ/.BJ)，否则按代码规则推断 */
+function resolveExchange(code: string, rawField: string): string {
+  const match = rawField.match(/\.(SH|SZ|BJ)$/i)
+  return match?.[1] ? match[1].toUpperCase() : detectExchange(code)
 }
 
 /** 解析 CSV 文本为 BulkImportRow[] */
@@ -380,6 +382,15 @@ function parseJsonRow(item: unknown, maxRows: number, currentCount: number): Bul
  * - 数组：[{"code":"600519","name":"贵州茅台"}, ...]
  * - 对象：{"stocks": [{"code":"600519","name":"贵州茅台"}]}
  */
+function parseJsonRows(rawList: unknown[]): BulkImportRow[] {
+  const results: BulkImportRow[] = []
+  for (let i = 0; i < rawList.length && i < INPUT_CONFIG.bulkImport.maxRows; i++) {
+    const row = parseJsonRow(rawList[i], INPUT_CONFIG.bulkImport.maxRows, i)
+    if (row) results.push(row)
+  }
+  return results
+}
+
 export async function parseJsonFile(file: File): Promise<BulkImportRow[]> {
   logger.info('[batchImport] 解析 JSON 文件', { name: file.name, size: file.size })
   try {
@@ -399,13 +410,7 @@ export async function parseJsonFile(file: File): Promise<BulkImportRow[]> {
       throw new Error('JSON 格式不支持：需为数组或 { stocks: [...] } 结构')
     }
 
-    const results: BulkImportRow[] = []
-    for (let i = 0; i < rawList.length && i < INPUT_CONFIG.bulkImport.maxRows; i++) {
-      const row = parseJsonRow(rawList[i], INPUT_CONFIG.bulkImport.maxRows, i)
-      if (row) {
-        results.push(row)
-      }
-    }
+    const results = parseJsonRows(rawList)
 
     logger.info('[batchImport] JSON 解析完成', { name: file.name, rowCount: results.length })
     return results

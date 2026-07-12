@@ -12,6 +12,7 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import { CHART_PALETTE } from '@/constants/theme.tokens'
+import { usePerfTrace } from '@/hooks/usePerfTrace'
 
 export interface ScoreRadarData {
   dimension: string
@@ -46,6 +47,8 @@ const ScoreRadar = forwardRef<HTMLDivElement, ScoreRadarProps>(
       score: ((item.score / maxScore) * 100).toFixed(1),
       fullMark: 100,
     }))
+
+    usePerfTrace('ScoreRadar', { points: data.length })
 
     return (
       <div ref={ref} style={{ height }} {...divProps}>

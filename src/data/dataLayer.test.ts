@@ -89,6 +89,8 @@ import {
   executionPlanStore,
   portfolioStore,
   tradeReviewStore,
+  watchlistStore,
+  customAgentStore,
   dataManager,
   dataLayer,
 } from './dataLayer'
@@ -1498,7 +1500,7 @@ describe('dataLayer', () => {
   // ─── dataLayer 聚合器 ───────────────────────────────────
 
   describe('dataLayer aggregator', () => {
-    it('暴露全部 24 个 store 及 manager', () => {
+    it('暴露全部 26 个 store 及 manager', () => {
       expect(dataLayer.stocks).toBe(stockStore)
       expect(dataLayer.v6Scores).toBe(v6ScoreStore)
       expect(dataLayer.dailyQuotes).toBe(dailyQuoteStore)
@@ -1523,11 +1525,13 @@ describe('dataLayer', () => {
       expect(dataLayer.missingReports).toBe(missingReportStore)
       expect(dataLayer.portfolios).toBe(portfolioStore)
       expect(dataLayer.tradeReviews).toBe(tradeReviewStore)
+      expect(dataLayer.watchlists).toBe(watchlistStore)
+      expect(dataLayer.customAgents).toBe(customAgentStore)
       expect(dataLayer.manager).toBe(dataManager)
     })
 
-    it('共计 25 个属性', () => {
-      expect(Object.keys(dataLayer)).toHaveLength(26)
+    it('共计 27 个属性', () => {
+      expect(Object.keys(dataLayer)).toHaveLength(27)
     })
   })
 

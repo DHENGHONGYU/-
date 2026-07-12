@@ -11,6 +11,7 @@ import {
 } from 'recharts'
 import { cn } from '@/lib/utils'
 import { CHART_PALETTE } from '@/constants/theme.tokens'
+import { usePerfTrace } from '@/hooks/usePerfTrace'
 
 interface BarChartProps {
   data: Array<Record<string, unknown>>
@@ -51,6 +52,8 @@ export const BarChart = memo(
       ref,
     ) => {
       const isHorizontal = layout === 'vertical'
+
+      usePerfTrace('BarChart', { points: data.length, series: bars.length })
 
       return (
         <div ref={ref} className={cn('w-full', className)}>

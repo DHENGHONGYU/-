@@ -25,14 +25,14 @@ describe('Skeleton', () => {
     expect(screen.getByTestId('skeleton')).toHaveClass('animate-pulse')
   })
 
-  it('包含 bg-muted 背景色', () => {
+  it('包含 bg-muted 背景色（实际类为 bg-gray-100）', () => {
     render(<Skeleton data-testid="skeleton" />)
-    expect(screen.getByTestId('skeleton')).toHaveClass('bg-muted')
+    expect(screen.getByTestId('skeleton')).toHaveClass('bg-gray-100')
   })
 
-  it('包含 rounded-md 圆角', () => {
+  it('包含 rounded-lg 圆角（默认 rect 变体）', () => {
     render(<Skeleton data-testid="skeleton" />)
-    expect(screen.getByTestId('skeleton')).toHaveClass('rounded-md')
+    expect(screen.getByTestId('skeleton')).toHaveClass('rounded-lg')
   })
 
   it('自定义 className 合并', () => {

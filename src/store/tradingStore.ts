@@ -112,21 +112,26 @@ export const useTradingStore = create<TradingState>()((set, get) => ({
   // loadStocks —— 加载观察池并生成建议（委托）
   // ----------------------------------------------------------
   loadStocks: async () => {
+    if (get().isRefreshing) return
+    set({ isRefreshing: true })
     logger.info('[tradingStore] loadStocks 开始（委托给 watchlistStore + signalAdviceStore）')
+    try {
+      await useWatchlistStore.getState().loadStocks()
+      const stocks = useWatchlistStore.getState().stocks
 
-    await useWatchlistStore.getState().loadStocks()
-    const stocks = useWatchlistStore.getState().stocks
-
-    if (stocks.length > 0) {
-      await useSignalAdviceStore.getState().generateAdviceForStocks(stocks)
-      // 同步子 Store 状态到 Facade
-      set({
-        stocks,
-        adviceMap: useSignalAdviceStore.getState().adviceMap,
-        message: '观察池与交易建议已更新',
-      })
-    } else {
-      set({ stocks: [], message: '观察池为空' })
+      if (stocks.length > 0) {
+        await useSignalAdviceStore.getState().generateAdviceForStocks(stocks)
+        // 同步子 Store 状态到 Facade
+        set({
+          stocks,
+          adviceMap: useSignalAdviceStore.getState().adviceMap,
+          message: '观察池与交易建议已更新',
+        })
+      } else {
+        set({ stocks: [], message: '观察池为空' })
+      }
+    } finally {
+      set({ isRefreshing: false })
     }
   },
 
@@ -134,12 +139,18 @@ export const useTradingStore = create<TradingState>()((set, get) => ({
   // loadOrders —— 加载订单（委托）
   // ----------------------------------------------------------
   loadOrders: async () => {
-    logger.info('[tradingStore] loadOrders 开始（委托给 orderStore）')
-    await useOrderStore.getState().refresh()
-    const orders = useOrderStore.getState().orders
-    set({ orders })
-    if (orders.length === 0) {
-      set({ message: '订单列表为空' })
+    if (get().isRefreshing) return
+    set({ isRefreshing: true })
+    try {
+      logger.info('[tradingStore] loadOrders 开始（委托给 orderStore）')
+      await useOrderStore.getState().refresh()
+      const orders = useOrderStore.getState().orders
+      set({ orders })
+      if (orders.length === 0) {
+        set({ message: '订单列表为空' })
+      }
+    } finally {
+      set({ isRefreshing: false })
     }
   },
 
@@ -147,16 +158,24 @@ export const useTradingStore = create<TradingState>()((set, get) => ({
   // scanSignals —— 扫描信号（委托）
   // ----------------------------------------------------------
   scanSignals: async () => {
-    logger.info('[tradingStore] scanSignals 开始（委托给 signalAdviceStore）')
-    await useSignalAdviceStore.getState().scanSignals()
-    const signals = useSignalAdviceStore.getState().signals
-    set({ signals, message: `扫描完成，共 ${signals.length} 条信号` })
+    if (get().isRefreshing) return
+    set({ isRefreshing: true })
+    try {
+      logger.info('[tradingStore] scanSignals 开始（委托给 signalAdviceStore）')
+      await useSignalAdviceStore.getState().scanSignals()
+      const signals = useSignalAdviceStore.getState().signals
+      set({ signals, message: `扫描完成，共 ${signals.length} 条信号` })
+    } finally {
+      set({ isRefreshing: false })
+    }
   },
 
   // ----------------------------------------------------------
   // loadPortfolio —— 构建核心组合（从真实数据源构建）
   // ----------------------------------------------------------
   loadPortfolio: async () => {
+    if (get().isRefreshing) return
+    set({ isRefreshing: true })
     logger.info('[tradingStore] loadPortfolio 开始（从真实数据源构建组合）')
 
     set({ portfolioLoading: true })
@@ -166,8 +185,11 @@ export const useTradingStore = create<TradingState>()((set, get) => ({
       await usePortfolioStore.getState().buildPortfolio(stocks, orders)
 
       const portfolio = usePortfolioStore.getState().portfolio
+      const strategyResult = usePortfolioStore.getState().strategyResult
       set({
         portfolioLoading: false,
+        portfolio,
+        strategyResult,
         message:
           portfolio && portfolio.holdings.length > 0
             ? `核心稀缺组合已构建，共 ${portfolio.holdings.length} 只标的`
@@ -178,6 +200,8 @@ export const useTradingStore = create<TradingState>()((set, get) => ({
       logger.error('[tradingStore] loadPortfolio 失败', { error: message })
       usePortfolioStore.setState({ error: message, loading: false })
       set({ portfolioLoading: false, message: `组合加载失败：${message}` })
+    } finally {
+      set({ isRefreshing: false })
     }
   },
 
@@ -193,7 +217,7 @@ export const useTradingStore = create<TradingState>()((set, get) => ({
     try {
       const adviceMap = useSignalAdviceStore.getState().adviceMap
       const advice = adviceMap[stock.symbol]
-      const quantity = advice?.sizing?.action === 'buy' ? advice.sizing.targetShares : 100
+      const quantity = advice?.sizing?.action === 'buy' ? (advice.sizing.targetShares ?? 100) : 100
       const result = await createBuyOrder(stock, quantity)
 
       if (result.success) {
@@ -225,7 +249,7 @@ export const useTradingStore = create<TradingState>()((set, get) => ({
       const advice = adviceMap[stock.symbol]
       const quantity =
         advice?.sizing?.action === 'sell'
-          ? advice.sizing.targetShares
+          ? (advice.sizing.targetShares ?? 100)
           : get().getHoldingShares(stock.symbol) || 100
       const result = await createSellOrder(stock, quantity)
 

@@ -7,6 +7,7 @@ import { useOptionalMarketData } from '@/cockpit/providers/MarketDataProvider'
 import type { WidgetConfig, ValuePitData } from '@/types/modules/widget.types'
 import { SCORE_LEVELS } from '@/constants/cockpit.constants'
 import { COLOR_TOKENS, twBg } from '@/constants/theme.tokens'
+import { UI_TEXT } from '@/constants/uiText'
 
 interface ValuePitWidgetProps {
   config: WidgetConfig
@@ -70,7 +71,7 @@ export default function ValuePitWidget({ config, data }: ValuePitWidgetProps): R
       title={config.title}
       titleIcon={<Gem className={`h-4 w-4 ${COLOR_TOKENS.info.tailwind}`} />}
       visualState={visualState}
-      emptyTitle="暂无价值洼地策略"
+      emptyTitle={UI_TEXT.analysis.valuePit.noData}
       emptyDescription="当前未获取到价值洼地候选与建仓信号"
       className="h-full flex flex-col"
     >

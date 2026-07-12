@@ -169,11 +169,10 @@ export class MCPClientImpl implements MCPClient {
   private findResourceMatch(uri: string): { server: MCPServer; resource: ResourceTemplate } | null {
     for (const entry of this.registry.listServers()) {
       if (entry.options.enabled === false) continue
-      for (const resource of entry.server.listResources()) {
-        if (this.uriTemplateToRegex(resource.uriTemplate).test(uri)) {
-          return { server: entry.server, resource }
-        }
-      }
+      const matched = entry.server.listResources().find((r) =>
+        this.uriTemplateToRegex(r.uriTemplate).test(uri),
+      )
+      if (matched) return { server: entry.server, resource: matched }
     }
     return null
   }

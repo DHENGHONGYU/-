@@ -107,6 +107,50 @@ function computeHoldDays(buyTimestamp: number, sellTimestamp: number): number {
  * 2. 每组内按 createdAt 升序排列
  * 3. 买单入队，卖单从队头取买单进行 FIFO 配对
  * 4. 未配对的买单累积为当前持仓，计算平均成本价
+ */
+
+interface BuyQueueItem {
+  id: string
+  price: number
+  quantity: number
+  createdAt: number
+  amount: number
+}
+
+function pairOneSymbol(sorted: Order[]): {
+  pairs: MatchedTradePair[]
+  realizedPnl: number
+  openPositions: number
+  avgCostPrice: number
+} {
+  const buyQueue: BuyQueueItem[] = []
+  const pairs: MatchedTradePair[] = []
+  let realizedPnl = 0
+
+  for (const order of sorted) {
+    if (order.direction === 'buy') {
+      buyQueue.push({
+        id: order.id,
+        price: order.price,
+        quantity: order.quantity,
+        createdAt: order.createdAt,
+        amount: order.amount,
+      })
+      continue
+    }
+    if (order.direction === 'sell' && buyQueue.length > 0) {
+      const matchResult = matchSellWithBuys(order, buyQueue)
+      pairs.push(...matchResult.pairs)
+      realizedPnl += matchResult.realizedPnl
+    }
+  }
+
+  const openPositions = buyQueue.reduce((sum, b) => sum + b.quantity, 0)
+  const totalOpenCost = buyQueue.reduce((sum, b) => sum + b.amount, 0)
+  const avgCostPrice = openPositions > 0 ? round2(totalOpenCost / openPositions) : 0
+  return { pairs, realizedPnl, openPositions, avgCostPrice }
+}
+
 /**
  * buildTradePairs
  * @param orders
@@ -130,41 +174,7 @@ export function buildTradePairs(orders: Order[]): SymbolTradePair[] {
     const totalSell = sellOrders.reduce((sum, o) => sum + o.amount, 0)
 
     const sorted = [...symOrders].sort((a, b) => a.createdAt - b.createdAt)
-
-    // FIFO 配对队列：每个元素为 { id, price, quantity, createdAt, amount }
-    interface BuyQueueItem {
-      id: string
-      price: number
-      quantity: number
-      createdAt: number
-      amount: number
-    }
-    const buyQueue: BuyQueueItem[] = []
-    const pairs: MatchedTradePair[] = []
-    let realizedPnl = 0
-
-    for (const order of sorted) {
-      if (order.direction === 'buy') {
-        buyQueue.push({
-          id: order.id,
-          price: order.price,
-          quantity: order.quantity,
-          createdAt: order.createdAt,
-          amount: order.amount,
-        })
-        continue
-      }
-      if (order.direction === 'sell' && buyQueue.length > 0) {
-        const matchResult = matchSellWithBuys(order, buyQueue)
-        pairs.push(...matchResult.pairs)
-        realizedPnl += matchResult.realizedPnl
-      }
-    }
-
-    // 计算未平仓持仓
-    const openPositions = buyQueue.reduce((sum, b) => sum + b.quantity, 0)
-    const totalOpenCost = buyQueue.reduce((sum, b) => sum + b.amount, 0)
-    const avgCostPrice = openPositions > 0 ? round2(totalOpenCost / openPositions) : 0
+    const { pairs, realizedPnl, openPositions, avgCostPrice } = pairOneSymbol(sorted)
 
     tradePairs.push({
       symbol,
@@ -180,14 +190,6 @@ export function buildTradePairs(orders: Order[]): SymbolTradePair[] {
   }
 
   return tradePairs
-}
-
-interface BuyQueueItem {
-  id: string
-  price: number
-  quantity: number
-  createdAt: number
-  amount: number
 }
 
 interface MatchResult {

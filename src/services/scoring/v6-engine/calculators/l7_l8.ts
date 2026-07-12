@@ -314,9 +314,7 @@ export const L8ChipCalculator: LayerCalculator = {
       const evidence: string[] = []
       for (const level of CHIP_LEVELS) {
         const val = chip.levels[level]
-        if (val !== null) {
-          evidence.push(`${level}: ${val.toFixed(1)}`)
-        }
+        if (val !== null) evidence.push(`${level}: ${val.toFixed(1)}`)
       }
 
       if (chip.riskLevel === 'high') {

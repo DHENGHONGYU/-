@@ -149,24 +149,12 @@ export function syncWithConfig(): SyncResult {
     const isRegistered = registeredNames.has(entry.name)
 
     if (!entry.enabled) {
-      if (isRegistered) {
-        // 配置中禁用但 Registry 中存在 → 注销
-        mcpRegistry.unregister(entry.name)
-        result.removed.push(entry.name)
-        logger.info(`[MCP:sync] disabled & unregistered: ${entry.name}`)
-      }
+      handleDisabledEntry(entry, isRegistered, result)
       continue
     }
 
     if (!isRegistered) {
-      // 新增注册
-      const server = instantiateServer(entry.modulePath, entry.exportName)
-      if (server) {
-        mcpRegistry.register(server, { priority: entry.priority })
-        result.added.push(entry.name)
-      } else {
-        result.failed.push(entry.name)
-      }
+      handleNewEntry(entry, result)
       continue
     }
 
@@ -175,11 +163,10 @@ export function syncWithConfig(): SyncResult {
 
   // Step 2: 注销 Registry 中存在但配置中不存在的 Server
   for (const name of registeredNames) {
-    if (!configNames.has(name)) {
-      mcpRegistry.unregister(name)
-      result.removed.push(name)
-      logger.info(`[MCP:sync] not in config & unregistered: ${name}`)
-    }
+    if (configNames.has(name)) continue
+    mcpRegistry.unregister(name)
+    result.removed.push(name)
+    logger.info(`[MCP:sync] not in config & unregistered: ${name}`)
   }
 
   logger.info('[MCP:sync] complete', {
@@ -190,6 +177,27 @@ export function syncWithConfig(): SyncResult {
   })
 
   return result
+}
+
+function handleDisabledEntry(
+  entry: (typeof MCP_SERVER_REGISTRY)[number],
+  isRegistered: boolean,
+  result: SyncResult,
+): void {
+  if (!isRegistered) return
+  mcpRegistry.unregister(entry.name)
+  result.removed.push(entry.name)
+  logger.info(`[MCP:sync] disabled & unregistered: ${entry.name}`)
+}
+
+function handleNewEntry(entry: (typeof MCP_SERVER_REGISTRY)[number], result: SyncResult): void {
+  const server = instantiateServer(entry.modulePath, entry.exportName)
+  if (server) {
+    mcpRegistry.register(server, { priority: entry.priority })
+    result.added.push(entry.name)
+  } else {
+    result.failed.push(entry.name)
+  }
 }
 
 /** 增量同步结果 */

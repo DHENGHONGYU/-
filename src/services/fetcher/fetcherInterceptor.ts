@@ -130,38 +130,49 @@ export async function interceptedFetch(
 ): Promise<Response> {
   const config = getInterceptorConfig()
   const url = typeof input === 'string' ? input : input instanceof URL ? input.toString() : input.url
-  let lastError: HttpError | null = null
 
   for (let attempt = 0; attempt <= config.maxRetries; attempt++) {
-    const response = await tryOnce(input, init).catch((err) => ({ error: createNetworkError(err, url) }))
-
-    if ('error' in response) {
-      const networkError = response.error
-      if (shouldRetry(networkError, config, attempt)) {
-        lastError = networkError
-        await delay(calculateBackoff(attempt, config.baseDelay, config.maxDelay))
-        continue
-      }
-      throw networkError
-    }
-
-    if (response.ok) {
-      return response
-    }
-
-    const error = createHttpErrorFromResponse(response, url)
-    triggerAuthCallbacks(error.type, config)
-
-    if (shouldRetry(error, config, attempt)) {
-      lastError = error
-      await delay(calculateBackoff(attempt, config.baseDelay, config.maxDelay))
-      continue
-    }
-
-    throw error
+    const outcome = await attemptOnce(input, init, config, url, attempt)
+    if (outcome.type === 'response') return outcome.response
+    if (outcome.type === 'throw') throw outcome.error
   }
 
-  throw lastError || new HttpError('请求失败', HttpErrorType.UNKNOWN, undefined, url)
+  throw new HttpError('请求失败', HttpErrorType.UNKNOWN, undefined, url)
+}
+
+type FetchAttemptOutcome =
+  | { type: 'response'; response: Response }
+  | { type: 'throw'; error: HttpError }
+  | { type: 'continue' }
+
+async function shouldRetryWithDelay(
+  error: HttpError,
+  config: InterceptorConfig,
+  attempt: number,
+): Promise<boolean> {
+  if (!shouldRetry(error, config, attempt)) return false
+  await delay(calculateBackoff(attempt, config.baseDelay, config.maxDelay))
+  return true
+}
+
+async function attemptOnce(
+  input: RequestInfo | URL,
+  init: RequestInit | undefined,
+  config: InterceptorConfig,
+  url: string,
+  attempt: number,
+): Promise<FetchAttemptOutcome> {
+  const response = await tryOnce(input, init).catch((err) => ({ error: createNetworkError(err, url) }))
+  if ('error' in response) {
+    const networkError = response.error
+    if (await shouldRetryWithDelay(networkError, config, attempt)) return { type: 'continue' }
+    return { type: 'throw', error: networkError }
+  }
+  if (response.ok) return { type: 'response', response }
+  const error = createHttpErrorFromResponse(response, url)
+  triggerAuthCallbacks(error.type, config)
+  if (await shouldRetryWithDelay(error, config, attempt)) return { type: 'continue' }
+  return { type: 'throw', error }
 }
 
 function delay(ms: number): Promise<void> {

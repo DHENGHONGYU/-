@@ -9,6 +9,7 @@
  */
 
 import { getLogger } from '@/lib/logger'
+import { measureAsync, PERF } from '@/lib/perf'
 import type {
   LayerId, LayerInput, LayerScore, CompositeScore, ScoreAuditTrail,
   AuditEntry, V6ScoreInput, LayerCalculator,
@@ -169,36 +170,42 @@ export class V6ScoreEngine {
 
   /** 计算所有层返回综合评分 */
   async calculateAll(input: V6ScoreInput): Promise<CompositeScore> {
-    const layerInput: LayerInput = {
-      ...input,
-      config: this.config,
-    }
+    return measureAsync(
+      PERF.SCORING_CALCULATE_ALL,
+      async () => {
+        const layerInput: LayerInput = {
+          ...input,
+          config: this.config,
+        }
 
-    const layerResults: Record<string, LayerScore> = {}
-    const allRisks: string[] = []
+        const layerResults: Record<string, LayerScore> = {}
+        const allRisks: string[] = []
 
-    if (this.config.auditEnabled) {
-      this.auditTrail = {
-        symbol: input.symbol,
-        timestamp: Date.now(),
-        config: this.config,
-        layers: {} as Record<LayerId, AuditEntry[]>,
-        composite: { weightedSum: 0, layers: {} as Record<LayerId, number>, rating: '' },
-        factorContributions: [],
-      }
-    }
+        if (this.config.auditEnabled) {
+          this.auditTrail = {
+            symbol: input.symbol,
+            timestamp: Date.now(),
+            config: this.config,
+            layers: {} as Record<LayerId, AuditEntry[]>,
+            composite: { weightedSum: 0, layers: {} as Record<LayerId, number>, rating: '' },
+            factorContributions: [],
+          }
+        }
 
-    for (const layerId of ALL_LAYER_IDS) {
-      const result = await this.calculateLayer(layerId, layerInput)
-      layerResults[layerId] = result
-      allRisks.push(...result.risks)
+        for (const layerId of ALL_LAYER_IDS) {
+          const result = await this.calculateLayer(layerId, layerInput)
+          layerResults[layerId] = result
+          allRisks.push(...result.risks)
 
-      if (this.auditTrail && result.auditTrail) {
-        this.auditTrail.layers[layerId] = result.auditTrail
-      }
-    }
+          if (this.auditTrail && result.auditTrail) {
+            this.auditTrail.layers[layerId] = result.auditTrail
+          }
+        }
 
-    return this.aggregate(layerResults, allRisks)
+        return this.aggregate(layerResults, allRisks)
+      },
+      { symbol: input.symbol },
+    )
   }
 
   /** 聚合各层得分为综合评分 */
@@ -217,19 +224,18 @@ export class V6ScoreEngine {
 
     for (const layerId of ALL_LAYER_IDS) {
       const layer = layers[layerId]
-      if (layer) {
-        const w = weightMap[layerId]
-        
-        // NaN 防护：验证 layer.score 是否有效
-        if (!Number.isFinite(layer.score)) {
-          logger.warn(`[V6ScoreEngine] aggregate: ${layerId} 层评分无效 (${layer.score})，跳过该层`)
-          failedLayers.push(layerId)
-          continue
-        }
-        
-        weightedSum += layer.score * w
-        totalWeight += w
+      if (!layer) continue
+      const w = weightMap[layerId]
+
+      // NaN 防护：验证 layer.score 是否有效
+      if (!Number.isFinite(layer.score)) {
+        logger.warn(`[V6ScoreEngine] aggregate: ${layerId} 层评分无效 (${layer.score})，跳过该层`)
+        failedLayers.push(layerId)
+        continue
       }
+
+      weightedSum += layer.score * w
+      totalWeight += w
     }
 
     // 归一化，防止除以零

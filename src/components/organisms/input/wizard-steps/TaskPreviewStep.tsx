@@ -5,16 +5,17 @@
  * 汇总所有配置，生成任务摘要
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Label } from '@/components/atoms/Label'
 import { Input } from '@/components/atoms/Input'
 import { Checkbox } from '@/components/atoms/Checkbox'
 import { useCollectionWizardStore } from '@/store/collectionWizardStore'
-import { COLOR_TOKENS, twBorder, twText } from '@/constants/theme.tokens'
+import { COLOR_TOKENS, twBorder, twText, twBg } from '@/constants/theme.tokens'
 import { FileText, Save, AlertCircle } from 'lucide-react'
 import { getLogger } from '@/lib/logger'
+import { validateConfigName } from '@/utils/dataValidation'
 
 const logger = getLogger()
 
@@ -32,9 +33,33 @@ export function TaskPreviewStep(): React.JSX.Element {
   const saveAsTemplate = useCollectionWizardStore((s) => s.saveAsTemplate)
   const setSaveAsTemplate = useCollectionWizardStore((s) => s.setSaveAsTemplate)
 
+  const [taskNameError, setTaskNameError] = useState<string | null>(null)
+
   const handleTaskNameChange = (value: string): void => {
     logger.info('[TaskPreviewStep] 任务名称变更', { value })
+
+    // 空值允许（任务名称可选）
+    if (!value || value.trim() === '') {
+      setTaskName(value)
+      setTaskNameError(null)
+      return
+    }
+
+    // 校验任务名称格式
+    const validation = validateConfigName(value)
+    if (!validation.valid) {
+      setTaskNameError(validation.error ?? '名称不合法')
+      logger.warn('[TaskPreviewStep] 任务名称校验失败', {
+        value,
+        error: validation.error,
+      })
+      // 仍然更新 store，但在 UI 显示错误
+      setTaskName(value)
+      return
+    }
+
     setTaskName(value)
+    setTaskNameError(null)
   }
 
   const handleSaveAsTemplateChange = (checked: boolean): void => {
@@ -105,7 +130,22 @@ export function TaskPreviewStep(): React.JSX.Element {
               placeholder="输入任务名称（可选）"
               value={taskName}
               onChange={(e) => handleTaskNameChange(e.target.value)}
+              className={cn(
+                taskNameError && cn('ring-2', twBorder('red', 400)),
+              )}
+              maxLength={50}
             />
+            {taskNameError && (
+              <div
+                className={cn(
+                  'text-xs px-2 py-1 rounded',
+                  twBg('red', 50),
+                  twText('red', 600),
+                )}
+              >
+                {taskNameError}
+              </div>
+            )}
           </div>
 
           <div className="flex items-center space-x-2">

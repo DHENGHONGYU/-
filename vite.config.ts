@@ -129,16 +129,16 @@ export default defineConfig({
     hookTimeout: 30000,
     retry: 2,
     // Windows 环境下 Worker 崩溃问题对策（TD-010）
-    // 关键配置：forks 池 + maxForks=1 + fileParallelism=false
-    // 每个测试文件使用独立 fork 进程，防止内存累积导致崩溃
-    // 注：fileParallelism=true 在本机 Windows 会触发 tinypool "Worker exited
-    // unexpectedly" 崩溃，故保持单 fork。跨文件模块状态污染（TD-013）改用测试内
-    // beforeEach 重置共享单例（store/db）解决，见 tests/setup.ts 与各测试文件。
+    // 关键配置：forks 池 + fileParallelism=false（避免 threads 池 tinypool 崩溃）
+    // maxForks=4：允许 vitest 在文件间回收 fork 进程，避免单 fork 跨全部文件累积内存
+    // 导致 "Worker exited unexpectedly"（旧 maxForks=1 恰恰造成单进程内存累积致死）。
+    // 每个文件复用/轮换到较新的 fork，内存得以释放。跨文件模块状态污染（TD-013）
+    // 改用测试内 beforeEach 重置共享单例（store/db）解决，见 tests/setup.ts。
     pool: 'forks',
     poolOptions: {
       forks: {
         minForks: 1,
-        maxForks: 1,
+        maxForks: 4,
       },
     },
     fileParallelism: false,

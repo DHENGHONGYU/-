@@ -278,26 +278,7 @@ export async function neteaseHistory(
     if (lines.length < 2) return []
 
     // 网易 CSV 格式: 日期,股票代码,名称,收盘价,最高价,最低价,开盘价,前收盘,涨跌额,涨跌幅,换手率,成交量,成交金额
-    const klines: KlineBar[] = []
-    for (let i = 1; i < lines.length; i++) {
-      const line = lines[i]
-      if (!line) continue
-      const cols = line.split(',')
-      if (cols.length < 13) continue
-
-      const date = (cols[0] || '').trim()
-      const close = parseFloat(cols[3] || '0') || 0
-      const high = parseFloat(cols[4] || '0') || 0
-      const low = parseFloat(cols[5] || '0') || 0
-      const open = parseFloat(cols[6] || '0') || 0
-      const volume = parseInt(cols[11] || '0') || 0
-      const amount = parseFloat(cols[12] || '0') || 0
-
-      if (date && close > 0) {
-        klines.push({ date, open, high, low, close, volume, amount })
-      }
-    }
-
+    const klines = parseNeteaseLines(lines)
     klines.reverse() // 网易返回的是倒序（最新在前），反转为正序
     logger.info(`[directDataAPI] 网易K线获取成功: ${code}, ${klines.length} 条`, { latency: Date.now() - start })
     return klines
@@ -305,6 +286,34 @@ export async function neteaseHistory(
     logger.warn(`[directDataAPI] 网易K线解析失败: ${code}`, { error: err instanceof Error ? err.message : String(err) })
     return []
   }
+}
+
+/** 解析单条网易 CSV 行为 KlineBar（非法行返回 null） */
+function parseNeteaseLine(line: string | undefined): KlineBar | null {
+  if (!line) return null
+  const cols = line.split(',')
+  if (cols.length < 13) return null
+
+  const date = (cols[0] || '').trim()
+  const close = parseFloat(cols[3] || '0') || 0
+  const high = parseFloat(cols[4] || '0') || 0
+  const low = parseFloat(cols[5] || '0') || 0
+  const open = parseFloat(cols[6] || '0') || 0
+  const volume = parseInt(cols[11] || '0') || 0
+  const amount = parseFloat(cols[12] || '0') || 0
+
+  if (!date || close <= 0) return null
+  return { date, open, high, low, close, volume, amount }
+}
+
+/** 解析网易 CSV 历史 K 线文本为多根 KlineBar（正序） */
+function parseNeteaseLines(lines: string[]): KlineBar[] {
+  const klines: KlineBar[] = []
+  for (let i = 1; i < lines.length; i++) {
+    const kline = parseNeteaseLine(lines[i])
+    if (kline) klines.push(kline)
+  }
+  return klines
 }
 
 // ── 类型转换工具 ──

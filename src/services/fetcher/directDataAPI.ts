@@ -325,24 +325,29 @@ export async function tencentKline(code: string, period = 'day', count: number):
   }
 }
 
+/** 从腾讯 K 线响应中取出目标股票的 data 节点（含前缀兜底），无有效节点返回 null */
+function resolveStockData(json: Record<string, unknown>, code: string): Record<string, unknown> | null {
+  const data = json.data as Record<string, unknown> | undefined
+  if (!data) {
+    logger.warn('[directDataAPI] parseTencentKline: no data field', { code })
+    return null
+  }
+  const stockData = data[code] as Record<string, unknown> | undefined
+  if (stockData) return stockData
+  // 兜底：部分响应以带前缀的 key 返回
+  const prefix = getMarketPrefix(code)
+  const prefixed = data[`${prefix}${code}`] as Record<string, unknown> | undefined
+  if (!prefixed) {
+    logger.warn('[directDataAPI] parseTencentKline: no stock entry', { code })
+    return null
+  }
+  return prefixed
+}
+
 function parseTencentKline(json: Record<string, unknown>, code: string): KlineItem[] {
   try {
-    const data = json.data as Record<string, unknown> | undefined
-    if (!data) {
-      logger.warn('[directDataAPI] parseTencentKline: no data field', { code })
-      return []
-    }
-    const stockData = data[code] as Record<string, unknown> | undefined
-    if (!stockData) {
-      // 兜底：部分响应以带前缀的 key 返回
-      const prefix = getMarketPrefix(code)
-      const prefixed = data[`${prefix}${code}`] as Record<string, unknown> | undefined
-      if (!prefixed) {
-        logger.warn('[directDataAPI] parseTencentKline: no stock entry', { code })
-        return []
-      }
-      return extractTencentKlineRows(prefixed, code)
-    }
+    const stockData = resolveStockData(json, code)
+    if (!stockData) return []
     return extractTencentKlineRows(stockData, code)
   } catch (err) {
     logger.warn('[directDataAPI] parseTencentKline exception', {

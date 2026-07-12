@@ -119,6 +119,52 @@ async function writeCollectedItem(item: CollectedItem, deps: CollectDeps): Promi
 /**
  * collectDimension
  */
+async function collectOneSymbol(
+  code: string,
+  dimension: string,
+  deps: CollectDeps,
+): Promise<CollectedItem> {
+  try {
+    const type = resolveDimensionType(dimension)
+    if (type === 'quote') return { code, quote: await deps.fetcher.fetchQuote(code) }
+    if (type === 'kline') return { code, kline: await deps.fetcher.fetchKline(code, DEFAULT_KLINE_DAYS) }
+    return await collectStub(code, dimension, deps.collectBasic)
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    return { code, error: msg }
+  }
+}
+
+async function processCollectedItem(
+  result: CollectResult,
+  item: CollectedItem,
+  deps: CollectDeps,
+): Promise<void> {
+  if (item.error !== undefined) {
+    result.failed.push(item.code)
+    result.partial = true
+    return
+  }
+  if (item.isStub === true) {
+    pushStubDimension(result, item)
+    result.partial = true
+    return
+  }
+  const ok = await writeCollectedItem(item, deps)
+  if (ok) {
+    result.success.push(item.code)
+  } else {
+    result.failed.push(item.code)
+    result.partial = true
+  }
+}
+
+function pushStubDimension(result: CollectResult, item: CollectedItem): void {
+  if (item.dimension === undefined) return
+  if (result.stubDimensions!.includes(item.dimension)) return
+  result.stubDimensions!.push(item.dimension)
+}
+
 export async function collectDimension(
   dimension: string,
   symbols: string[],
@@ -139,59 +185,18 @@ export async function collectDimension(
   const parallel = isParallelDimension(dimension)
 
   // ===== 采集阶段 =====
-  const collected: CollectedItem[] = []
-
-  const collectOne = async (code: string): Promise<void> => {
-    try {
-      const type = resolveDimensionType(dimension)
-      if (type === 'quote') {
-        const quote = await deps.fetcher.fetchQuote(code)
-        collected.push({ code, quote })
-        return
-      }
-      if (type === 'kline') {
-        const kline = await deps.fetcher.fetchKline(code, DEFAULT_KLINE_DAYS)
-        collected.push({ code, kline })
-        return
-      }
-      const item = await collectStub(code, dimension, deps.collectBasic)
-      collected.push(item)
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err)
-      collected.push({ code, error: msg })
-    }
-  }
-
-  if (parallel) {
-    await Promise.allSettled(symbols.map((c) => collectOne(c)))
-  } else {
+  const collected: CollectedItem[] = parallel
+    ? await Promise.all(symbols.map((c) => collectOneSymbol(c, dimension, deps)))
+    : []
+  if (!parallel) {
     for (const code of symbols) {
-      await collectOne(code)
+      collected.push(await collectOneSymbol(code, dimension, deps))
     }
   }
 
   // ===== 写入阶段（Phase 4 屏障：维度级别） =====
   for (const item of collected) {
-    if (item.error !== undefined) {
-      result.failed.push(item.code)
-      result.partial = true
-      continue
-    }
-    // stub 项：仅触发后端采集，前端不写入数据，不计入 success
-    if (item.isStub === true) {
-      if (item.dimension !== undefined && !result.stubDimensions!.includes(item.dimension)) {
-        result.stubDimensions!.push(item.dimension)
-      }
-      result.partial = true
-      continue
-    }
-    const ok = await writeCollectedItem(item, deps)
-    if (ok) {
-      result.success.push(item.code)
-    } else {
-      result.failed.push(item.code)
-      result.partial = true
-    }
+    await processCollectedItem(result, item, deps)
   }
 
   // 检查 Mock 数据（标记 stale）：同时检查 quote 与 kline 的 source

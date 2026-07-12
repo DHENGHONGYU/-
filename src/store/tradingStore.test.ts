@@ -108,6 +108,12 @@ vi.mock('./orderStore', () => ({
   },
 }))
 
+// ---- portfolioService 输入 mock（loadPortfolio 已改为从真实数据源构建） ----
+const mockLoadPortfolioInput = vi.hoisted(() => vi.fn())
+vi.mock('@/services/trading/portfolioService', () => ({
+  loadPortfolioInput: mockLoadPortfolioInput,
+}))
+
 // ============================================================
 // Imports（mock 之后）
 // ============================================================
@@ -231,6 +237,7 @@ beforeEach(() => {
   mockPortfolio.reset.mockImplementation(() => {})
   mockOrder.refresh.mockResolvedValue(undefined)
   mockOrder.reset.mockImplementation(() => {})
+  mockLoadPortfolioInput.mockResolvedValue({ stocks: [], orders: [] })
 })
 
 // ============================================================
@@ -339,8 +346,7 @@ describe('useTradingStore', () => {
       const testOrders: Order[] = [buildOrder()]
       const testPortfolio = buildPortfolio()
       const testStrategyResult = emptyStrategyResult()
-      mockWatchlist.stocks = testStocks
-      mockOrder.orders = testOrders
+      mockLoadPortfolioInput.mockResolvedValueOnce({ stocks: testStocks, orders: testOrders })
       let loadingDuringCall = false
       mockPortfolio.buildPortfolio.mockImplementation(async () => {
         loadingDuringCall = useTradingStore.getState().portfolioLoading
@@ -361,8 +367,7 @@ describe('useTradingStore', () => {
     it('holdings 非空时 message 应包含标的数', async () => {
       const testStocks: Stock[] = [buildTestStock()]
       const testOrders: Order[] = [buildOrder()]
-      mockWatchlist.stocks = testStocks
-      mockOrder.orders = testOrders
+      mockLoadPortfolioInput.mockResolvedValueOnce({ stocks: testStocks, orders: testOrders })
       const portfolio = buildPortfolio() // 默认 2 个 holdings
       mockPortfolio.buildPortfolio.mockImplementation(async () => {
         mockPortfolio.portfolio = portfolio

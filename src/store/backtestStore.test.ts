@@ -38,6 +38,7 @@ vi.mock('@/core/databridge', () => ({
 }))
 
 vi.mock('@/config/dbConfig', () => ({
+  DB_VERSION: 1,
   ENVELOPE_ACTION: {
     insertOrder: 'INSERT_ORDER',
     updateOrder: 'UPDATE_ORDER',

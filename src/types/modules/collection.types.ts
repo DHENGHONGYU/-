@@ -412,6 +412,19 @@ export interface PersistedWizardConfig {
   updatedAt: number
 }
 
+/** 导出配置元数据 */
+export interface ConfigExportMeta {
+  exportVersion: string
+  exportedAt: number
+  sourceName: string
+}
+
+/** 导出配置文件结构 */
+export interface ExportedConfigFile {
+  meta: ConfigExportMeta
+  config: PersistedWizardConfig
+}
+
 /** 数据采集向导状态 */
 export interface CollectionWizardState {
   // 向导状态
@@ -457,4 +470,8 @@ export interface CollectionWizardState {
   resumeTask: () => void
   stopTask: () => void
   resetWizard: () => void
+  
+  // 配置导出/导入
+  exportConfig: (configId: string) => void
+  importConfig: (file: File) => Promise<{ success: true; configId: string } | { success: false; error: string }>
 }

@@ -151,6 +151,46 @@ function DimHealthCard({
 }
 
 /**
+ * 处理采集报告工具调用结果（从 useEffect 回调中抽取，降低组件嵌套深度）
+ */
+function handleCollectionReportResult(
+  result: Awaited<ReturnType<typeof mcpBridge.callTool>>,
+  cancelled: boolean,
+  setReport: React.Dispatch<React.SetStateAction<CollectionReport>>,
+): void {
+  if (cancelled || result.isError) return
+  const text = result.content[0]?.text
+  if (!text) return
+  try {
+    setReport(JSON.parse(text) as CollectionReport)
+  } catch {
+    logger.warn('[CollectTaskPage] 采集报告 JSON 解析失败', { text })
+  }
+}
+
+function computeAvgIntervalHours(scoreHistory: Array<{ scoredAt: number | string }>): number {
+  if (scoreHistory.length < 2) return 0
+  const sorted = [...scoreHistory].sort(
+    (a, b) => new Date(b.scoredAt).getTime() - new Date(a.scoredAt).getTime(),
+  )
+  const intervals: number[] = []
+  for (let i = 0; i < sorted.length - 1; i++) {
+    pushInterval(intervals, sorted[i], sorted[i + 1])
+  }
+  return intervals.length > 0 ? intervals.reduce((a, b) => a + b, 0) / intervals.length : 0
+}
+
+function pushInterval(
+  intervals: number[],
+  current: { scoredAt: number | string } | undefined,
+  next: { scoredAt: number | string } | undefined,
+): void {
+  if (!current || !next) return
+  const diff = new Date(current.scoredAt).getTime() - new Date(next.scoredAt).getTime()
+  intervals.push(diff / (1000 * 60 * 60))
+}
+
+/**
  * CollectTaskPage
  */
 export default function CollectTaskPage(): React.JSX.Element {
@@ -186,16 +226,7 @@ export default function CollectTaskPage(): React.JSX.Element {
         traceSpans,
         taskStatuses,
       })
-      .then((result) => {
-        if (cancelled || result.isError) return
-        const text = result.content[0]?.text
-        if (!text) return
-        try {
-          setCollectionReport(JSON.parse(text) as CollectionReport)
-        } catch {
-          logger.warn('[CollectTaskPage] 采集报告 JSON 解析失败', { text })
-        }
-      })
+      .then((result) => handleCollectionReportResult(result, cancelled, setCollectionReport))
       .catch((err) => {
         logger.warn('[CollectTaskPage] 调用 build_collection_report 失败', {
           error: err instanceof Error ? err.message : String(err),
@@ -270,22 +301,7 @@ export default function CollectTaskPage(): React.JSX.Element {
     )
     const lastScoredAt = sortedHistory[0]?.scoredAt ?? null
     
-    let avgIntervalHours = 0
-    if (sortedHistory.length >= 2) {
-      const intervals: number[] = []
-      for (let i = 0; i < sortedHistory.length - 1; i++) {
-        const current = sortedHistory[i]
-        const next = sortedHistory[i + 1]
-        if (current && next) {
-          const diff = new Date(current.scoredAt).getTime() - 
-                       new Date(next.scoredAt).getTime()
-          intervals.push(diff / (1000 * 60 * 60)) // 转换为小时
-        }
-      }
-      avgIntervalHours = intervals.length > 0 
-        ? intervals.reduce((a, b) => a + b, 0) / intervals.length 
-        : 0
-    }
+    const avgIntervalHours = computeAvgIntervalHours(scoreHistory)
 
     // 预估下次评分时间
     const nextEstimateAt = lastScoredAt && avgIntervalHours > 0

@@ -11,6 +11,7 @@ import {
 } from 'recharts'
 import { cn } from '@/lib/utils'
 import { CHART_PALETTE } from '@/constants/theme.tokens'
+import { usePerfTrace } from '@/hooks/usePerfTrace'
 
 interface AreaChartProps {
   data: Array<Record<string, unknown>>
@@ -50,6 +51,8 @@ export const AreaChart = memo(
       },
       ref,
     ) => {
+      usePerfTrace('AreaChart', { points: data.length, series: areas.length })
+
       return (
         <div ref={ref} className={cn('w-full', className)}>
           <ResponsiveContainer width="100%" height={height}>

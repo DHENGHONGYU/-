@@ -93,64 +93,46 @@ export async function getUnifiedStockViewUseCase(
     let quotes: DailyQuotes | undefined
     if (opts.includeQuotes) {
       quotes = await dataLayer.dailyQuotes.get(symbol)
-      if (quotes) {
-        timestamps.push(quotes.updatedAt ?? Date.now())
-      } else {
-        missing.push('quotes')
-      }
+      if (quotes) timestamps.push(quotes.updatedAt ?? Date.now())
+      else missing.push('quotes')
     }
 
     let v6Score: V6Score | undefined
     if (opts.includeV6Score) {
       v6Score = await dataLayer.v6Scores.get(symbol)
-      if (v6Score) {
-        timestamps.push(v6Score.calculatedAt)
-      } else {
-        missing.push('v6Score')
-      }
+      if (v6Score) timestamps.push(v6Score.calculatedAt)
+      else missing.push('v6Score')
     }
 
     let intelligentScore: IntelligentScore | undefined
     if (opts.includeIntelligentScore) {
       intelligentScore = await dataLayer.intelligentScores.getLatestBySymbol(symbol)
-      if (intelligentScore) {
-        timestamps.push(intelligentScore.scoredAt)
-      } else {
-        missing.push('intelligentScore')
-      }
+      if (intelligentScore) timestamps.push(intelligentScore.scoredAt)
+      else missing.push('intelligentScore')
     }
 
     let industryScore: IndustryScore | undefined
     if (opts.includeIndustryScore) {
       const scores = await dataLayer.industryScores.listByCode(stock.sector ?? '')
       industryScore = scores[0]
-      if (industryScore) {
-        timestamps.push(industryScore.scoredAt)
-      } else {
-        missing.push('industryScore')
-      }
+      if (industryScore) timestamps.push(industryScore.scoredAt)
+      else missing.push('industryScore')
     }
 
     let rotationScore: RotationSectorScore | undefined
     if (opts.includeRotationScore) {
       const scores = await dataLayer.rotationScores.list()
       rotationScore = scores.find((s) => s.sectorCode === stock.industryCode)
-      if (rotationScore) {
-        timestamps.push(rotationScore.createdAt ? new Date(rotationScore.createdAt).getTime() : Date.now())
-      } else {
-        missing.push('rotationScore')
-      }
+      if (rotationScore) timestamps.push(rotationScore.createdAt ? new Date(rotationScore.createdAt).getTime() : Date.now())
+      else missing.push('rotationScore')
     }
 
     let signal: Signal | undefined
     if (opts.includeSignal) {
       const signals = await dataLayer.signals.listBySymbol(symbol)
       signal = signals[0]
-      if (signal) {
-        timestamps.push(signal.createdAt)
-      } else {
-        missing.push('signal')
-      }
+      if (signal) timestamps.push(signal.createdAt)
+      else missing.push('signal')
     }
 
     let holding: PortfolioHolding | undefined

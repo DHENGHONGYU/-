@@ -1,5 +1,6 @@
 import { getDefaultFetcherServiceConfig } from '@/config/fetcherConfig'
 import { getLogger } from '@/lib/logger'
+import { measureAsync, PERF } from '@/lib/perf'
 import { API_COLLECT_BASIC, API_COLLECT_FINANCIAL, API_COLLECT_KLINE } from '@/config/apiPaths'
 import type {
   CollectBasicData,
@@ -80,33 +81,44 @@ async function request<T>(
   options: RequestInit = {},
   retries?: number,
 ): Promise<T> {
-  const { timeoutMs, retries: defaultRetries } = getConfig()
+  const { retries: defaultRetries } = getConfig()
   const maxRetries = retries ?? defaultRetries
-  let lastError: unknown
+  return measureAsync(
+    PERF.DATA_FETCH_REQUEST,
+    async () => {
+      const { timeoutMs } = getConfig()
+      let lastError: unknown
 
-  for (let attempt = 0; attempt <= maxRetries; attempt++) {
-    const result = await tryRequest<T>(path, options, timeoutMs)
-    if (result.ok) {
-      return result.data
-    }
+      for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        const result = await tryRequest<T>(path, options, timeoutMs)
+        if (result.ok) {
+          return result.data
+        }
 
-    lastError = result.error
-    const isNetworkError = result.error instanceof TypeError || result.error instanceof FetcherError
-    if (!isNetworkError || attempt === maxRetries) {
-      break
-    }
-    logger.warn(`[fetcherClient] 请求失败，第 ${attempt + 1} 次重试`, { path, err: result.error })
-  }
+        lastError = result.error
+        const isNetworkError =
+          result.error instanceof TypeError || result.error instanceof FetcherError
+        if (!isNetworkError || attempt === maxRetries) {
+          break
+        }
+        logger.warn(`[fetcherClient] 请求失败，第 ${attempt + 1} 次重试`, {
+          path,
+          err: result.error,
+        })
+      }
 
-  if (lastError instanceof TypeError) {
-    throw new FetcherError(
-      '数据采集服务未启动或无法连接，请检查 Python 服务是否运行',
-      lastError,
-    )
-  }
-  throw lastError instanceof Error
-    ? new FetcherError(lastError.message, lastError)
-    : new FetcherError(String(lastError), lastError)
+      if (lastError instanceof TypeError) {
+        throw new FetcherError(
+          '数据采集服务未启动或无法连接，请检查 Python 服务是否运行',
+          lastError,
+        )
+      }
+      throw lastError instanceof Error
+        ? new FetcherError(lastError.message, lastError)
+        : new FetcherError(String(lastError), lastError)
+    },
+    { path, maxRetries },
+  )
 }
 
 /**

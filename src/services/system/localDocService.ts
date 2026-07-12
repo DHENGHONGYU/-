@@ -154,6 +154,17 @@ export function splitIntoChunks(
 }
 
 /**
+ * 读取单个文件内容：二进制文件返回占位文本，超长文本截断到 MAX_CONTENT_LENGTH。
+ */
+async function readDocContent(file: File, ext: string): Promise<string> {
+  if (BINARY_EXTENSIONS.has(ext)) {
+    return `[${ext.toUpperCase()}文件: ${file.name}]`
+  }
+  const text = await file.text()
+  return text.length > MAX_CONTENT_LENGTH ? text.slice(0, MAX_CONTENT_LENGTH) : text
+}
+
+/**
  * scanFolder
  * @returns Promise<ScanResult | null>
  */
@@ -180,16 +191,7 @@ export async function scanFolder(): Promise<ScanResult | null> {
     try {
       const fileHandle = entry as FileSystemFileHandleLike
       const file = await fileHandle.getFile()
-
-      let content: string
-      if (BINARY_EXTENSIONS.has(ext)) {
-        content = `[${ext.toUpperCase()}文件: ${file.name}]`
-      } else {
-        content = await file.text()
-        if (content.length > MAX_CONTENT_LENGTH) {
-          content = content.slice(0, MAX_CONTENT_LENGTH)
-        }
-      }
+      const content = await readDocContent(file, ext)
 
       result.files.push({
         name: file.name,

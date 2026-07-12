@@ -5,6 +5,25 @@ import type { MigrationReport, MigrationOptions, StoreImportContext, V9ImportSha
 
 const logger = getLogger()
 
+async function importOneItem<T>(
+  ctx: StoreImportContext<T>,
+  item: T,
+): Promise<{ outcome: 'skip' | 'ok' | 'fail'; key: string; error?: string }> {
+  const key = ctx.keyPath(item)
+  try {
+    const existing = await ctx.get(key)
+    if (existing && !ctx.overwrite) {
+      return { outcome: 'skip', key }
+    }
+    await ctx.save(item)
+    return { outcome: 'ok', key }
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    logger.error(`导入 ${ctx.storeName} 失败`, { key, error: message })
+    return { outcome: 'fail', key, error: message }
+  }
+}
+
 async function importStoreItems<T>(ctx: StoreImportContext<T>): Promise<{
   success: number
   skipped: number
@@ -19,20 +38,12 @@ async function importStoreItems<T>(ctx: StoreImportContext<T>): Promise<{
   for (let i = 0; i < ctx.items.length; i++) {
     const item = ctx.items[i]
     if (!item) continue
-    const key = ctx.keyPath(item)
-    try {
-      const existing = await ctx.get(key)
-      if (existing && !ctx.overwrite) {
-        skipped++
-        continue
-      }
-      await ctx.save(item)
-      success++
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err)
-      logger.error(`导入 ${ctx.storeName} 失败`, { key, error: message })
+    const r = await importOneItem(ctx, item)
+    if (r.outcome === 'skip') skipped++
+    else if (r.outcome === 'ok') success++
+    else {
       failed++
-      errors.push({ index: i, id: key, error: message })
+      errors.push({ index: i, id: r.key, error: r.error ?? 'unknown' })
     }
   }
 

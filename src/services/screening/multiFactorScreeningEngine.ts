@@ -140,9 +140,7 @@ export function runMultiFactorScreening(
 
     for (const group of groups) {
       const groupResult = evaluateGroup(stock, group)
-      if (groupResult) {
-        matchedGroups.push(group.id)
-      }
+      if (groupResult) matchedGroups.push(group.id)
     }
 
     // 多条件组之间是 AND 逻辑：必须匹配所有条件组才入选

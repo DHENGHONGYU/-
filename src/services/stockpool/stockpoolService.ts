@@ -104,9 +104,7 @@ export async function getAllPoolGroups(): Promise<DataLayerResult<PoolGroup[]>> 
 
     for (const status of allStatuses) {
       const result = await getStocksByStatus(status)
-      if (!result.success) {
-        return { success: false, error: result.error }
-      }
+      if (!result.success) return { success: false, error: result.error }
       groups.push({
         status,
         label: getPoolLabel(status),

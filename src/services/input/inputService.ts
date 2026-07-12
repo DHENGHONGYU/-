@@ -65,6 +65,42 @@ const addStockInFlight = new Set<string>()
  * - 避免「A 读不存在 + B 读不存在 → 双方同时 forward insertStock」竞态
  * - 跨进程/跨 Tab 互斥由 IDB 主键冲突兜底（dataVersion 仍=1，下次 update 会覆盖）
  */
+/**
+ * 按 options 拉取基础数据并合并到 stock；未开启或失败时返回 warning 但不中断主流程。
+ */
+async function fetchBasicIfNeeded(
+  stock: Stock,
+  options: AddStockOptions,
+): Promise<{ stock: Stock; warning?: string }> {
+  if (!options.fetchBasicAfterAdd) return { stock }
+  logger.info('[inputService] 拉取基础数据', { symbol: stock.symbol })
+  const fetchResult = await fetchBasicDataUseCase({ symbol: stock.symbol })
+  if (fetchResult.success && fetchResult.data) {
+    logger.info('[inputService] 基础数据拉取成功', { symbol: stock.symbol })
+    return { stock: { ...fetchResult.data, group: stock.group } }
+  }
+  logger.warn('[inputService] 基础数据拉取失败', { symbol: stock.symbol, error: fetchResult.error })
+  return { stock, warning: fetchResult.error ?? '未知错误' }
+}
+
+/**
+ * 按 options 拉取 K 线数据并合并到 stock；未开启或失败时返回 warning 但不中断主流程。
+ */
+async function fetchKlineIfNeeded(
+  stock: Stock,
+  options: AddStockOptions,
+): Promise<{ stock: Stock; warning?: string }> {
+  if (!options.fetchKlineAfterAdd) return { stock }
+  logger.info('[inputService] 拉取 K线数据', { symbol: stock.symbol })
+  const klineResult = await fetchKlineDataUseCase({ symbol: stock.symbol })
+  if (klineResult.success && klineResult.data) {
+    logger.info('[inputService] K线数据拉取成功', { symbol: stock.symbol })
+    return { stock: { ...klineResult.data, group: stock.group } }
+  }
+  logger.warn('[inputService] K线数据拉取失败', { symbol: stock.symbol, error: klineResult.error })
+  return { stock, warning: klineResult.error ?? '未知错误' }
+}
+
 export async function addStock(
   input: AddStockInput,
   options: AddStockOptions = {},
@@ -118,35 +154,23 @@ export async function addStock(
     await dataBridge.forward(envelope)
     logger.info('[inputService] 数据库写入成功', { symbol })
 
-    if (options.fetchBasicAfterAdd) {
-      logger.info('[inputService] 拉取基础数据', { symbol })
-      const fetchResult = await fetchBasicDataUseCase({ symbol })
-      if (fetchResult.success && fetchResult.data) {
-        stock = { ...fetchResult.data, group: stock.group }
-        logger.info('[inputService] 基础数据拉取成功', { symbol })
-      } else {
-        logger.warn('[inputService] 基础数据拉取失败', { symbol, error: fetchResult.error })
-        return {
-          success: true,
-          data: stock,
-          error: `录入成功，但基础数据拉取失败：${fetchResult.error ?? '未知错误'}`,
-        }
+    const basic = await fetchBasicIfNeeded(stock, options)
+    stock = basic.stock
+    if (basic.warning) {
+      return {
+        success: true,
+        data: stock,
+        error: `录入成功，但基础数据拉取失败：${basic.warning}`,
       }
     }
 
-    if (options.fetchKlineAfterAdd) {
-      logger.info('[inputService] 拉取 K线数据', { symbol })
-      const klineResult = await fetchKlineDataUseCase({ symbol })
-      if (klineResult.success && klineResult.data) {
-        stock = { ...klineResult.data, group: stock.group }
-        logger.info('[inputService] K线数据拉取成功', { symbol })
-      } else {
-        logger.warn('[inputService] K线数据拉取失败', { symbol, error: klineResult.error })
-        return {
-          success: true,
-          data: stock,
-          error: `录入成功，但 K线数据拉取失败：${klineResult.error ?? '未知错误'}`,
-        }
+    const kline = await fetchKlineIfNeeded(stock, options)
+    stock = kline.stock
+    if (kline.warning) {
+      return {
+        success: true,
+        data: stock,
+        error: `录入成功，但 K线数据拉取失败：${kline.warning}`,
       }
     }
 
@@ -232,36 +256,36 @@ export async function importPool(payload: PoolExportPayload): Promise<DataLayerR
 
   const result: PoolImportResult = { success: 0, failed: 0, errors: [] }
 
+  const processOne = async (stock: PoolExportPayload['stocks'][number]) => {
+    const normalized = normalizeSymbol(stock.symbol)
+    const existing = await dataLayer.stocks.get(normalized)
+    if (existing) return { ok: false, normalized }
+    const envelope = EnvelopeFactory.create(
+      {
+        source: MODULE_ID.stockpool,
+        target: ENVELOPE_TARGET.db,
+        action: ENVELOPE_ACTION.insertStock,
+        traceId: `import-${nanoid(8)}-${normalized}`,
+      },
+      {
+        ...stock,
+        symbol: normalized,
+        researchStatus: stock.researchStatus ?? RESEARCH_STATUS.candidate,
+        source: stock.source ?? 'import',
+        group: stock.group ?? DEFAULT_POOL_GROUP,
+        dataVersion: 1,
+        ingestedAt: Date.now(),
+        updatedAt: Date.now(),
+      },
+    )
+    await dataBridge.forward(envelope)
+    return { ok: true, normalized }
+  }
+
   for (const stock of payload.stocks) {
     try {
-      const normalized = normalizeSymbol(stock.symbol)
-      const existing = await dataLayer.stocks.get(normalized)
-      if (existing) {
-        result.failed++
-        result.errors.push(`${normalized}: 已存在`)
-        continue
-      }
-
-      const envelope = EnvelopeFactory.create(
-        {
-          source: MODULE_ID.stockpool,
-          target: ENVELOPE_TARGET.db,
-          action: ENVELOPE_ACTION.insertStock,
-          traceId: `import-${nanoid(8)}-${normalized}`,
-        },
-        {
-          ...stock,
-          symbol: normalized,
-          researchStatus: stock.researchStatus ?? RESEARCH_STATUS.candidate,
-          source: stock.source ?? 'import',
-          group: stock.group ?? DEFAULT_POOL_GROUP,
-          dataVersion: 1,
-          ingestedAt: Date.now(),
-          updatedAt: Date.now(),
-        },
-      )
-      await dataBridge.forward(envelope)
-      result.success++
+      const r = await processOne(stock)
+      applyImportOutcome(result, r)
     } catch (err) {
       result.failed++
       result.errors.push(`${stock.symbol}: ${err instanceof Error ? err.message : String(err)}`)
@@ -269,6 +293,19 @@ export async function importPool(payload: PoolExportPayload): Promise<DataLayerR
   }
 
   return { success: true, data: result }
+}
+
+/** 将单条导入结果归入汇总（已存在 → failed，否则 → success） */
+function applyImportOutcome(
+  result: PoolImportResult,
+  r: { ok: boolean; normalized: string },
+): void {
+  if (r.ok) {
+    result.success++
+    return
+  }
+  result.failed++
+  result.errors.push(`${r.normalized}: 已存在`)
 }
 
 /**

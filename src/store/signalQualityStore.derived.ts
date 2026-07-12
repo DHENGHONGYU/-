@@ -258,10 +258,9 @@ export function bestReview(): SignalReviewRecord | null {
   const reviews = useSignalQualityStore.getState().reviews
   let best: SignalReviewRecord | null = null
   for (const r of reviews) {
-    if (r.pnlPercent !== undefined) {
-      if (best === null || (r.pnlPercent > (best.pnlPercent ?? -Infinity))) {
-        best = r
-      }
+    if (r.pnlPercent === undefined) continue
+    if (best === null || (r.pnlPercent > (best.pnlPercent ?? -Infinity))) {
+      best = r
     }
   }
   return best
@@ -274,10 +273,9 @@ export function worstReview(): SignalReviewRecord | null {
   const reviews = useSignalQualityStore.getState().reviews
   let worst: SignalReviewRecord | null = null
   for (const r of reviews) {
-    if (r.pnlPercent !== undefined) {
-      if (worst === null || (r.pnlPercent < (worst.pnlPercent ?? Infinity))) {
-        worst = r
-      }
+    if (r.pnlPercent === undefined) continue
+    if (worst === null || (r.pnlPercent < (worst.pnlPercent ?? Infinity))) {
+      worst = r
     }
   }
   return worst

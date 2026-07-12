@@ -135,6 +135,42 @@ export async function importStocks(
 /**
  * importStocksWithProgress
  */
+async function importOneRow(
+  row: BulkImportRow,
+  globalIdx: number,
+  options: ImportStocksOptions,
+  seen: Set<string>,
+): Promise<RowImportOutcome> {
+  try {
+    if (options.skipDuplicates !== false && seen.has(row.symbol)) return { ok: false, row: globalIdx, raw: `${row.code} ${row.name}`, error: '重复的代码', stock: null }
+    seen.add(row.symbol)
+    const exists = await dataLayer.stocks.get(row.symbol)
+    if (exists) return { ok: false, row: globalIdx, raw: `${row.code} ${row.name}`, error: '股票已存在', stock: null }
+    const addResult = await addStock(
+      { symbol: row.symbol, name: row.name },
+      {
+        fetchBasicAfterAdd: options.fetchBasicAfterAdd,
+        fetchKlineAfterAdd: options.fetchKlineAfterAdd,
+        group: options.group,
+      },
+    )
+    if (addResult.success && addResult.data) return { ok: true, row: globalIdx, raw: '', error: '', stock: addResult.data }
+    return { ok: false, row: globalIdx, raw: `${row.code} ${row.name}`, error: addResult.error ?? '导入失败', stock: null }
+  } catch (err) {
+    return { ok: false, row: globalIdx, raw: `${row.code} ${row.name}`, error: err instanceof Error ? err.message : String(err), stock: null }
+  }
+}
+
+function applyOutcome(result: BulkImportResult, o: RowImportOutcome): void {
+  if (o.ok && o.stock) {
+    result.success++
+    result.stocks.push(o.stock)
+    return
+  }
+  result.failed++
+  result.errors.push({ row: o.row + 1, raw: o.raw, error: o.error })
+}
+
 export async function importStocksWithProgress(
   rows: BulkImportRow[],
   options: ImportStocksOptions = {},
@@ -173,71 +209,11 @@ export async function importStocksWithProgress(
     const batch = importableRows.slice(i, i + batchSize)
 
     const outcomes = await Promise.all(
-      batch.map(async (row, batchIdx): Promise<RowImportOutcome> => {
-        const globalIdx = i + batchIdx
-        try {
-          // 批次内重复检测（同步阶段即可生效）
-          if (options.skipDuplicates !== false && seen.has(row.symbol)) {
-            return {
-              ok: false,
-              row: globalIdx,
-              raw: `${row.code} ${row.name}`,
-              error: '重复的代码',
-              stock: null,
-            }
-          }
-          seen.add(row.symbol)
-
-          const exists = await dataLayer.stocks.get(row.symbol)
-          if (exists) {
-            return {
-              ok: false,
-              row: globalIdx,
-              raw: `${row.code} ${row.name}`,
-              error: '股票已存在',
-              stock: null,
-            }
-          }
-
-          const addResult = await addStock(
-            { symbol: row.symbol, name: row.name },
-            {
-              fetchBasicAfterAdd: options.fetchBasicAfterAdd,
-              fetchKlineAfterAdd: options.fetchKlineAfterAdd,
-              group: options.group,
-            },
-          )
-
-          if (addResult.success && addResult.data) {
-            return { ok: true, row: globalIdx, raw: '', error: '', stock: addResult.data }
-          }
-          return {
-            ok: false,
-            row: globalIdx,
-            raw: `${row.code} ${row.name}`,
-            error: addResult.error ?? '导入失败',
-            stock: null,
-          }
-        } catch (err) {
-          return {
-            ok: false,
-            row: globalIdx,
-            raw: `${row.code} ${row.name}`,
-            error: err instanceof Error ? err.message : String(err),
-            stock: null,
-          }
-        }
-      }),
+      batch.map((row, batchIdx) => importOneRow(row, i + batchIdx, options, seen)),
     )
 
     for (const o of outcomes) {
-      if (o.ok && o.stock) {
-        result.success++
-        result.stocks.push(o.stock)
-      } else {
-        result.failed++
-        result.errors.push({ row: o.row + 1, raw: o.raw, error: o.error })
-      }
+      applyOutcome(result, o)
     }
 
     const completed = Math.min(i + batchSize, total)
@@ -246,9 +222,7 @@ export async function importStocksWithProgress(
     onProgress?.(completed, total, percent)
 
     // 批次间隔（最后一批不需要）
-    if (i + batchSize < importableRows.length) {
-      await new Promise((resolve) => setTimeout(resolve, intervalMs))
-    }
+    if (i + batchSize < importableRows.length) await new Promise((resolve) => setTimeout(resolve, intervalMs))
   }
 
   logger.info('[batchImport] 分批导入完成', {

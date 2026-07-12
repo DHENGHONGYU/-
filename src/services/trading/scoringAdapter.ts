@@ -98,9 +98,7 @@ export async function getCompositeScore(
       const matched = allIndustryScores
         .filter((s) => s.name.includes(stock.sector!) || stock.sector!.includes(s.name))
       const missingScoredAt = matched.filter((s) => s.scoredAt == null)
-      if (missingScoredAt.length > 0) {
-        logger.warn('[ScoringAdapter] 字段缺失，使用默认值', { field: 'scoredAt', symbol: stock.symbol, missingCount: missingScoredAt.length })
-      }
+      if (missingScoredAt.length > 0) logger.warn('[ScoringAdapter] 字段缺失，使用默认值', { field: 'scoredAt', symbol: stock.symbol, missingCount: missingScoredAt.length })
       industryScore = matched
         .sort((a, b) => {
           const ta = a.scoredAt ?? 0

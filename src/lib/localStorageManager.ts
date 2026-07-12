@@ -397,10 +397,7 @@ export class LocalStorageManager {
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i)
       if (key) {
-        const value = localStorage.getItem(key)
-        if (value) {
-          usedBytes += byteLength(key) + byteLength(value)
-        }
+        usedBytes += LocalStorageManager.accumulateKeyBytes(key)
       }
     }
 
@@ -479,6 +476,23 @@ export class LocalStorageManager {
   // ============================================================
 
   /**
+   * 累计单个 key 在 localStorage 中占用的字节数（含 key 与 value）。
+   */
+  private static accumulateKeyBytes(key: string): number {
+    const value = localStorage.getItem(key)
+    if (!value) return 0
+    return byteLength(key) + byteLength(value)
+  }
+
+  /**
+   * 从完整 key 中提取命名空间前缀；无分隔符或前缀为空时返回 null。
+   */
+  private static extractNamespace(key: string): string | null {
+    const sepIndex = key.indexOf(NS_SEPARATOR)
+    return sepIndex > 0 ? key.slice(0, sepIndex) : null
+  }
+
+  /**
    * 列出所有已知命名空间。
    */
   static listNamespaces(): string[] {
@@ -487,10 +501,8 @@ export class LocalStorageManager {
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i)
       if (key) {
-        const sepIndex = key.indexOf(NS_SEPARATOR)
-        if (sepIndex > 0) {
-          nsSet.add(key.slice(0, sepIndex))
-        }
+        const ns = LocalStorageManager.extractNamespace(key)
+        if (ns) nsSet.add(ns)
       }
     }
 
@@ -515,10 +527,7 @@ export class LocalStorageManager {
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i)
       if (key) {
-        const value = localStorage.getItem(key)
-        if (value) {
-          usedBytes += byteLength(key) + byteLength(value)
-        }
+        usedBytes += LocalStorageManager.accumulateKeyBytes(key)
       }
     }
 

@@ -412,9 +412,8 @@ export function quotesToQuoteData(quotes: DailyQuotes): QuoteData {
     for (let i = history.length - 20; i < history.length; i++) {
       const prev = history[i - 1]?.close
       const curr = history[i]?.close
-      if (prev !== undefined && prev !== 0 && curr !== undefined) {
-        returns.push((curr - prev) / prev)
-      }
+      if (prev === undefined || prev === 0 || curr === undefined) continue
+      returns.push((curr - prev) / prev)
     }
     if (returns.length > 0) {
       const mean = returns.reduce((a, b) => a + b, 0) / returns.length

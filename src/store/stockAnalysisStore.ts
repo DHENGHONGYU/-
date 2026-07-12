@@ -104,9 +104,9 @@ export const useStockAnalysisStore = create<StockAnalysisState>((set) => ({
       })
 
       set({
-        stock: stockData ?? null,
-        quotes: quotesData ?? null,
-        v6Score: scoreData ?? null,
+        stock: stockData != null ? stockData : null,
+        quotes: quotesData != null ? quotesData : null,
+        v6Score: scoreData != null ? scoreData : null,
         loading: false,
         error: null,
       })

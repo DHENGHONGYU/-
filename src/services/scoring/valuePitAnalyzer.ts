@@ -302,6 +302,17 @@ export function calculateLiquidity(data: LiquidityInput): number {
 // ============================================================
 
 /**
+ * 按综合评分阈值解析操作建议。
+ * 阈值降序匹配，首个满足即返回（等价原 if-else-if 链）。
+ */
+function resolveAction(score: number): ValuePitScore['action'] {
+  if (score >= 4.0) return 'immediate'
+  if (score >= 3.5) return 'probe'
+  if (score >= 3.0) return 'wait'
+  return 'ignore'
+}
+
+/**
  * 执行五维综合评分，输出 ValuePitScore。
  */
 export function analyze(input: ValuePitAnalyzerInput): ValuePitScore {
@@ -320,16 +331,7 @@ export function analyze(input: ValuePitAnalyzerInput): ValuePitScore {
 
   const rounded = Math.round(overallScore * 100) / 100
 
-  let action: ValuePitScore['action']
-  if (rounded >= 4.0) {
-    action = 'immediate'
-  } else if (rounded >= 3.5) {
-    action = 'probe'
-  } else if (rounded >= 3.0) {
-    action = 'wait'
-  } else {
-    action = 'ignore'
-  }
+  const action = resolveAction(rounded)
 
   return {
     symbol: input.symbol,

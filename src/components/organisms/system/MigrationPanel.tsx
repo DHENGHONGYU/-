@@ -97,6 +97,66 @@ export default function MigrationPanel(): React.JSX.Element {
     reader.readAsText(file)
   }, [parseV6Export, transformV6ToV9])
 
+  async function prepareBackup(): Promise<BackupSnapshot | null> {
+    logger.info('[MigrationPanel] overwrite=true,触发二次确认对话框')
+    const confirmed = window.confirm(
+      '⚠️ 警告:覆盖式导入将删除现有数据!\n\n' +
+      '系统将在导入前自动备份当前数据。\n' +
+      '如导入失败,可使用「回滚到备份」按钮恢复。\n\n' +
+      '确定继续执行覆盖式导入?'
+    )
+    if (!confirmed) {
+      logger.info('[MigrationPanel] 用户取消覆盖式导入')
+      return null
+    }
+    logger.info('[MigrationPanel] 用户确认覆盖式导入,开始备份')
+    try {
+      logger.info('[MigrationPanel] exportAll/start')
+      const backupResult = await exportAll()
+      logger.info('[MigrationPanel] exportAll/response', {
+        success: backupResult.success,
+        hasData: !!backupResult.data,
+        error: backupResult.error,
+      })
+      if (!backupResult.success || !backupResult.data) {
+        const backupError = backupResult.error ?? '未知错误'
+        setError(`备份失败,已中止导入(防止数据丢失):${backupError}`)
+        logger.error('[MigrationPanel] 备份失败,中止导入', {
+          error: backupError,
+          timestamp: Date.now(),
+        })
+        return null
+      }
+      const backupData = backupResult.data
+      const stores = Object.keys(backupData)
+      const totalRecords = stores.reduce(
+        (sum, store) => sum + (backupData[store]?.length ?? 0),
+        0,
+      )
+      const snapshot: BackupSnapshot = {
+        data: backupData,
+        createdAt: Date.now(),
+        stores: stores.length,
+        totalRecords,
+      }
+      setBackup(snapshot)
+      logger.info('[MigrationPanel] 备份完成', {
+        stores: stores.length,
+        totalRecords,
+        storeNames: stores,
+      })
+      return snapshot
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      setError(`备份异常,已中止导入:${message}`)
+      logger.error('[MigrationPanel] 备份异常', {
+        error: message,
+        stack: err instanceof Error ? err.stack : undefined,
+      })
+      return null
+    }
+  }
+
   const handleImport = useCallback(async () => {
     if (!transformed) return
     logger.info('[MigrationPanel] handleImport/start', {
@@ -108,64 +168,8 @@ export default function MigrationPanel(): React.JSX.Element {
 
     let backupSnapshot: BackupSnapshot | null = null
     if (overwrite) {
-      logger.info('[MigrationPanel] overwrite=true,触发二次确认对话框')
-      const confirmed = window.confirm(
-        '⚠️ 警告:覆盖式导入将删除现有数据!\n\n' +
-        '系统将在导入前自动备份当前数据。\n' +
-        '如导入失败,可使用「回滚到备份」按钮恢复。\n\n' +
-        '确定继续执行覆盖式导入?'
-      )
-      if (!confirmed) {
-        logger.info('[MigrationPanel] 用户取消覆盖式导入')
-        return
-      }
-      logger.info('[MigrationPanel] 用户确认覆盖式导入,开始备份')
-
-      try {
-        logger.info('[MigrationPanel] exportAll/start')
-        const backupResult = await exportAll()
-        logger.info('[MigrationPanel] exportAll/response', {
-          success: backupResult.success,
-          hasData: !!backupResult.data,
-          error: backupResult.error,
-        })
-        if (backupResult.success && backupResult.data) {
-          const backupData = backupResult.data
-          const stores = Object.keys(backupData)
-          const totalRecords = stores.reduce(
-            (sum, store) => sum + (backupData[store]?.length ?? 0),
-            0,
-          )
-          backupSnapshot = {
-            data: backupData,
-            createdAt: Date.now(),
-            stores: stores.length,
-            totalRecords,
-          }
-          setBackup(backupSnapshot)
-          logger.info('[MigrationPanel] 备份完成', {
-            stores: stores.length,
-            totalRecords,
-            storeNames: stores,
-          })
-        } else {
-          const backupError = backupResult.error ?? '未知错误'
-          setError(`备份失败,已中止导入(防止数据丢失):${backupError}`)
-          logger.error('[MigrationPanel] 备份失败,中止导入', {
-            error: backupError,
-            timestamp: Date.now(),
-          })
-          return
-        }
-      } catch (err) {
-        const message = err instanceof Error ? err.message : String(err)
-        setError(`备份异常,已中止导入:${message}`)
-        logger.error('[MigrationPanel] 备份异常', {
-          error: message,
-          stack: err instanceof Error ? err.stack : undefined,
-        })
-        return
-      }
+      backupSnapshot = await prepareBackup()
+      if (backupSnapshot === null) return
     } else {
       logger.info('[MigrationPanel] overwrite=false,跳过备份直接导入')
     }

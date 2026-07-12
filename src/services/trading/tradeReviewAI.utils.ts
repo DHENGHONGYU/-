@@ -23,6 +23,20 @@ function createTradePair(sellOrder: Order, buys: Order[]): TradePair | null {
 /**
  * 将订单配对为交易对（买→卖）
  */
+function pairOneSymbolOrders(symOrders: Order[]): TradePair[] {
+  const pairs: TradePair[] = []
+  const buys: Order[] = []
+  for (const order of symOrders) {
+    if (order.direction === 'buy') {
+      buys.push(order)
+      continue
+    }
+    const pair = createTradePair(order, buys)
+    if (pair) pairs.push(pair)
+  }
+  return pairs
+}
+
 export function buildTradePairs(orders: Order[]): TradePair[] {
   const pairs: TradePair[] = []
   const bySymbol = new Map<string, Order[]>()
@@ -35,17 +49,7 @@ export function buildTradePairs(orders: Order[]): TradePair[] {
 
   for (const [, symOrders] of bySymbol) {
     symOrders.sort((a, b) => a.createdAt - b.createdAt)
-    const buys: Order[] = []
-    for (const order of symOrders) {
-      if (order.direction === 'buy') {
-        buys.push(order)
-        continue
-      }
-      const pair = createTradePair(order, buys)
-      if (pair) {
-        pairs.push(pair)
-      }
-    }
+    pairs.push(...pairOneSymbolOrders(symOrders))
   }
 
   return pairs

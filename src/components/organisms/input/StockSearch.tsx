@@ -64,46 +64,47 @@ export function StockSearch({
   }, [query, storeSearchStocks])
 
   const handleSelect = async (result: StockSearchResult): Promise<void> => {
-    if (mode === 'add') {
-      if (isAddingStock) return
-      try {
-        const addResult = await storeAddStockFromSearch(result, {
-          fetchBasicAfterAdd: false,
-          fetchKlineAfterAdd: false,
-        })
-        if (addResult.success) {
-          toast({
-            variant: 'success',
-            title: '录入成功',
-            description: `${result.symbol} ${result.name} 已加入候选池`,
-          })
-          onAdded?.(result)
-          setQuery('')
-          setResults([])
-          setOpen(false)
-          setActiveIndex(-1)
-          inputRef.current?.blur()
-        } else {
-          toast({
-            variant: 'error',
-            title: '录入失败',
-            description: addResult.error ?? '无法录入标的',
-          })
-        }
-      } catch (err) {
-        toast({
-          variant: 'error',
-          title: '录入失败',
-          description: err instanceof Error ? err.message : '无法录入标的',
-        })
-      }
-    } else {
+    if (mode !== 'add') {
       onSelect?.(result)
       setQuery('')
       setResults([])
       setOpen(false)
       setActiveIndex(-1)
       inputRef.current?.blur()
+      return
+    }
+
+    if (isAddingStock) return
+    try {
+      const addResult = await storeAddStockFromSearch(result, {
+        fetchBasicAfterAdd: false,
+        fetchKlineAfterAdd: false,
+      })
+      if (!addResult.success) {
+        toast({
+          variant: 'error',
+          title: '录入失败',
+          description: addResult.error ?? '无法录入标的',
+        })
+        return
+      }
+      toast({
+        variant: 'success',
+        title: '录入成功',
+        description: `${result.symbol} ${result.name} 已加入候选池`,
+      })
+      onAdded?.(result)
+      setQuery('')
+      setResults([])
+      setOpen(false)
+      setActiveIndex(-1)
+      inputRef.current?.blur()
+    } catch (err) {
+      toast({
+        variant: 'error',
+        title: '录入失败',
+        description: err instanceof Error ? err.message : '无法录入标的',
+      })
     }
   }
 

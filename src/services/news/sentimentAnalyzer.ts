@@ -135,9 +135,7 @@ function analyzeTextRaw(text: string): RawSentimentResult {
         const degreeMultiplier = findDegreeMultiplier(text, position, 2)
         hit *= degreeMultiplier
 
-        if (hasWindowWord(text, position, NEGATION_WORDS, 2)) {
-          hit *= -1
-        }
+        hit *= hasWindowWord(text, position, NEGATION_WORDS, 2) ? -1 : 1
 
         rawScore += hit
         matchCount++

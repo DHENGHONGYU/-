@@ -58,6 +58,23 @@ function createTradePair(sellOrder: Order, buys: Order[]): TradePair | null {
 }
 
 /**
+ * 单标的买卖配对（FIFO）
+ */
+function pairOneSymbolOrders(symOrders: Order[]): TradePair[] {
+  const pairs: TradePair[] = []
+  const buys: Order[] = []
+  for (const order of symOrders) {
+    if (order.direction === 'buy') {
+      buys.push(order)
+      continue
+    }
+    const pair = createTradePair(order, buys)
+    if (pair) pairs.push(pair)
+  }
+  return pairs
+}
+
+/**
  * 构建买卖配对
  * 简化逻辑：按 symbol 和日期排序，pair 买入和卖出
  *
@@ -75,17 +92,7 @@ export function buildTradePairs(orders: Order[]): TradePair[] {
 
   for (const [, symOrders] of bySymbol) {
     symOrders.sort((a, b) => a.createdAt - b.createdAt)
-    const buys: Order[] = []
-    for (const order of symOrders) {
-      if (order.direction === 'buy') {
-        buys.push(order)
-        continue
-      }
-      const pair = createTradePair(order, buys)
-      if (pair) {
-        pairs.push(pair)
-      }
-    }
+    pairs.push(...pairOneSymbolOrders(symOrders))
   }
 
   return pairs

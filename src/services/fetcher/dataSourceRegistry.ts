@@ -20,16 +20,8 @@ export class DataSourceRegistry {
 
   async getActiveProvider(): Promise<DataSourceProvider> {
     for (const provider of this.providers) {
-      try {
-        const health = await provider.healthCheck()
-        if (health.status === 'healthy') {
-          return provider
-        }
-        logger.warn(`[DataSourceRegistry] Provider "${provider.name}" is ${health.status}`)
-      } catch (err) {
-        const message = err instanceof Error ? err.message : String(err)
-        logger.error(`[DataSourceRegistry] Provider "${provider.name}" healthCheck failed: ${message}`)
-      }
+      const result = await this.checkProviderHealth(provider)
+      if (result === 'healthy') return provider
     }
     // 全部 unhealthy，返回最后一个（降级策略）
     const fallback = this.providers[this.providers.length - 1]
@@ -38,6 +30,22 @@ export class DataSourceRegistry {
       return fallback
     }
     throw new Error('[DataSourceRegistry] No providers registered')
+  }
+
+  /** 执行单个 provider 的健康检查，归一化为健康状态枚举 */
+  private async checkProviderHealth(provider: DataSourceProvider): Promise<'healthy' | 'unhealthy' | 'error'> {
+    try {
+      const health = await provider.healthCheck()
+      if (health.status !== 'healthy') {
+        logger.warn(`[DataSourceRegistry] Provider "${provider.name}" is ${health.status}`)
+        return 'unhealthy'
+      }
+      return 'healthy'
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      logger.error(`[DataSourceRegistry] Provider "${provider.name}" healthCheck failed: ${message}`)
+      return 'error'
+    }
   }
 
   getAllProviders(): DataSourceProvider[] {
