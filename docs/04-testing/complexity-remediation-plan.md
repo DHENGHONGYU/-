@@ -133,3 +133,11 @@
 - **运行效率基准**（`docs/reports/remediation-efficiency.json`）：dualStrategyStore 订阅热路径 5 频道批量派发 50 万次信封，**798,311 ops/sec**（626ms）。抽取守卫后与整改前结构等价，守卫开销微秒级，**无运行时回归**。
 - **全量回归**：既有 store 套件（dualStrategyStore 32 + signalStore 16 + positionStore 20 = 68 用例）全部通过，证明 27 个源文件抽取/反转改法未改变既有行为。
 
+### 38 文件逻辑嵌套（D4）测试补充（2026-07-12 续）
+- **覆盖范围**：38 个 D4 平铺文件中，既有测试已覆盖 10 个（localStorageManager / llmClient / db / databridge / collectionWizardPersistence / stockLinker / l7_l8 / multiFactorScreeningEngine / tradeReviewAI.skillDevelopment / tradeReviewAI.utils）；其余约 28 个为测试缺口。
+- **新增行为不变量测试**（`tests/remediation/d4-purelogic-invariant.test.ts`，15 用例）：针对「最易因平铺引入行为偏差、且无既有测试」的纯逻辑模块锁定输入/输出语义：
+  - `sentimentAnalyzer.ts`（D12）：`classifySentiment` 三态边界 + 自定义阈值、`analyzeText` 正/负/中性方向、`analyzeNewsArticle` 标题/正文权重融合与空输入中性、`hashContent` 稳定可复现。
+  - `batchImportParsers.ts`（D9）：`detectExchange` 交易所推断、`parseBulkInput` 四种格式解析 + 无效行标记 + 空文本、`parseCsvText` 表头自动跳过。
+  - `tradeErrorDetectors.ts`（D15）：7 个独立型检测器（重仓豪赌 / 违反计划 / 逆势加仓 / 报复性交易 / 犹豫错过 / 过度交易 / 追涨杀跌）命中与返回 null 的双向断言。
+- **全量回归**：`vitest run` 完整套件在后台运行（验证 38 文件平铺无 broad 回归），完成自动通知；本批新增测试单文件 15 用例全过。
+
