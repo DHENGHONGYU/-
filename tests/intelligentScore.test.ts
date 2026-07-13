@@ -57,6 +57,7 @@ describe('intelligent score service', () => {
       pb: 1.2,
       researchStatus: RESEARCH_STATUS.candidate,
       source: 'manual',
+      pool: 'research',
     })
 
     vi.mocked(chat).mockResolvedValueOnce({

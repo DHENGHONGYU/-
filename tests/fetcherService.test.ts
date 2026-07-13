@@ -53,6 +53,7 @@ describe('fetcherService', () => {
       name: 'Old Name',
       researchStatus: 'candidate',
       source: 'manual',
+      pool: 'research',
     })
 
     global.fetch = mockFetch(BASIC_RESPONSE)
@@ -85,6 +86,7 @@ describe('fetcherService', () => {
       name: '平安银行',
       researchStatus: 'candidate',
       source: 'manual',
+      pool: 'research',
     })
 
     global.fetch = mockFetch({
@@ -109,6 +111,7 @@ describe('fetcherService', () => {
       name: '平安银行',
       researchStatus: 'candidate',
       source: 'manual',
+      pool: 'research',
     })
 
     global.fetch = mockFetch(BASIC_RESPONSE)
@@ -125,6 +128,7 @@ describe('fetcherService', () => {
       name: '平安银行',
       researchStatus: 'candidate',
       source: 'manual',
+      pool: 'research',
     })
 
     global.fetch = mockFetch(BASIC_RESPONSE)

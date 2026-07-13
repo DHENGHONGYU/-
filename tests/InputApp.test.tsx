@@ -24,6 +24,7 @@ const mockStock: Stock = {
   name: '平安银行',
   researchStatus: 'candidate',
   source: 'manual',
+  pool: 'research',
   dataVersion: 1,
   dataQuality: { basic: true, kline: true, finance: true },
 }
@@ -33,6 +34,7 @@ const mockStockMissingBasic: Stock = {
   name: '贵州茅台',
   researchStatus: 'candidate',
   source: 'manual',
+  pool: 'research',
   dataVersion: 1,
 }
 

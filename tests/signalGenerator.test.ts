@@ -58,6 +58,7 @@ describe('signalGenerator', () => {
       name: '测试',
       researchStatus: 'watching',
       source: 'manual',
+      pool: 'research',
     })
 
     const signals = await generateSignalsForSymbol('000001.SZ')

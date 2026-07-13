@@ -117,6 +117,7 @@ describe('核心数据类型 类型级单元测试', () => {
       name: '贵州茅台',
       researchStatus: 'candidate',
       source: 'manual',
+      pool: 'research',
       dataVersion: 1,
     }
     expectType<string>(sampleStock.symbol)

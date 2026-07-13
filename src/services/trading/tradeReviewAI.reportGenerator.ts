@@ -115,16 +115,16 @@ export function generateDisciplineAnalysis(
   classification: ErrorClassificationResult,
 ): DisciplineAnalysis {
   const hasPlanViolation = classification.errors.some(
-    (e) => e.type === TradeErrorType.PLAN_VIOLATION,
+    (e) => (e.type as TradeErrorType) === TradeErrorType.PLAN_VIOLATION,
   )
   const hasStopLossIssue = classification.errors.some(
-    (e) => e.type === TradeErrorType.NO_STOP_LOSS || e.type === TradeErrorType.IGNORE_STOP_LOSS,
+    (e) => (e.type as TradeErrorType) === TradeErrorType.NO_STOP_LOSS || (e.type as TradeErrorType) === TradeErrorType.IGNORE_STOP_LOSS,
   )
   const hasPositionIssue = classification.errors.some(
-    (e) => e.type === TradeErrorType.HEAVY_GAMBLING,
+    (e) => (e.type as TradeErrorType) === TradeErrorType.HEAVY_GAMBLING,
   )
   const hasEmotionIssue = classification.errors.some(
-    (e) => e.type === TradeErrorType.REVENGE_TRADING || e.type === TradeErrorType.FOMO_ENTRY,
+    (e) => (e.type as TradeErrorType) === TradeErrorType.REVENGE_TRADING || (e.type as TradeErrorType) === TradeErrorType.FOMO_ENTRY,
   )
 
   const planAdherenceRate = hasPlanViolation ? 60 : 85

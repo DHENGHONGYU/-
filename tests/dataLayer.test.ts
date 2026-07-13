@@ -21,6 +21,7 @@ describe('dataLayer', () => {
       name: '平安银行',
       researchStatus: 'candidate',
       source: 'manual',
+      pool: 'research',
     })
 
     expect(result.success).toBe(true)
@@ -36,6 +37,7 @@ describe('dataLayer', () => {
       name: '平安银行',
       researchStatus: 'candidate',
       source: 'manual',
+      pool: 'research',
     })
 
     const stock = await dataLayer.stocks.get('000001.SZ')
@@ -48,6 +50,7 @@ describe('dataLayer', () => {
       name: '平安银行',
       researchStatus: 'candidate',
       source: 'manual',
+      pool: 'research',
     })
 
     const result = await dataLayer.stocks.add({
@@ -55,6 +58,7 @@ describe('dataLayer', () => {
       name: '平安银行',
       researchStatus: 'candidate',
       source: 'manual',
+      pool: 'research',
     })
 
     expect(result.success).toBe(false)
@@ -66,6 +70,7 @@ describe('dataLayer', () => {
       name: '平安银行',
       researchStatus: 'candidate',
       source: 'manual',
+      pool: 'research',
       group: '核心持仓',
     })
     await dataLayer.stocks.add({
@@ -73,6 +78,7 @@ describe('dataLayer', () => {
       name: '贵州茅台',
       researchStatus: 'candidate',
       source: 'manual',
+      pool: 'research',
       group: '成长配置',
     })
 
@@ -87,6 +93,7 @@ describe('dataLayer', () => {
       name: '平安银行',
       researchStatus: 'candidate',
       source: 'manual',
+      pool: 'research',
       group: '核心持仓',
     })
     await dataLayer.stocks.add({
@@ -94,6 +101,7 @@ describe('dataLayer', () => {
       name: '贵州茅台',
       researchStatus: 'candidate',
       source: 'manual',
+      pool: 'research',
       group: '成长配置',
     })
 
@@ -109,6 +117,7 @@ describe('dataLayer', () => {
       name: '平安银行',
       researchStatus: 'candidate',
       source: 'manual',
+      pool: 'research',
     })
 
     const before = await dataLayer.stocks.get('000001.SZ')

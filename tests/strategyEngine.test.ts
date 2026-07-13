@@ -127,6 +127,7 @@ describe('strategyEngine', () => {
       name: `股票${i}`,
       researchStatus: 'watching',
       source: 'manual',
+      pool: 'research',
       dataVersion: 1,
       price: 10 + i,
       sector: i % 2 === 0 ? '人工智能' : '银行',
