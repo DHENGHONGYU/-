@@ -1,5 +1,5 @@
 /**
- * 股票池三分拆 Store 单元测试
+ * 三池三分拆 Store 单元测试
  *
  * 覆盖场景：
  * 1. intentionPoolStore / researchPoolStore / positionPoolStore 初始状态
@@ -21,8 +21,6 @@ const {
   mockOn,
   mockQuery,
   mockForward,
-  capturedRef: _capturedRef,
-  unsubscribeFn: _unsubscribeFn,
 } = vi.hoisted(() => {
   const capturedRef = { callback: null as ((envelope: StandardEnvelope) => void) | null }
   const unsubscribeFn = vi.fn()
