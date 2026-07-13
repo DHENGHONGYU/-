@@ -904,11 +904,9 @@ describe('BacktestEngine', () => {
         maxPositionPct: 0.2,
       })
 
-      // DEBUG
-      console.log('DEBUG mockDataBridgeQuery calls:', mockDataBridgeQuery.mock.calls)
-      console.log('DEBUG result.trades:', result.trades)
-      console.log('DEBUG result.dailyValues:', result.dailyValues)
-      console.log('DEBUG result.metrics.tradeCount:', result.metrics.tradeCount)
+      // DEBUG removed (console.log triggers ESLint no-console)
+      // const mockLogger = getLogger() // not needed here
+      // mockLogger.debug('DEBUG mockDataBridgeQuery calls:', mockDataBridgeQuery.mock.calls)
 
       // 包含买入和卖出双向交易
       const buyTrades = result.trades.filter((t) => t.direction === 'buy')
