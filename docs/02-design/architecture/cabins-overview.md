@@ -20,9 +20,27 @@
 
 ---
 
-## 2. 加载机制
+## 2. 加载机制与 App 角色定位
 
-每个舱对应 `src/apps/{cabin}/{Cabin}App.tsx` 分发器，经 `PortalShell` 统一壳后懒加载 `src/pages/{cabin}/*Page.tsx`（详见 `architecture/overview.md` §3）。
+### 2.1 三级加载链
+
+```
+PortalShell (src/portal/PortalShell.tsx)
+  └─ React.lazy(() => import('@/apps/{cabin}/{Xxx}App'))   ← 二级：舱分发器
+       └─ <{Xxx}App /> → 渲染 src/pages/{cabin}/*Page.tsx   ← 三级：页面
+```
+
+### 2.2 逐舱 App 分发器角色
+
+| 舱 | App 分发器（`src/apps/`） | 角色 | 调用链 | 备注 |
+|----|------|------|------|------|
+| input | `InputApp.tsx` | 输入舱分发器 | PortalShell→InputApp→pages/input/* | ⚠️ 待整改：`apps/input/` 含 `BulkImportPanel`/`DataTestPanel`/`HotSectorPanel`/`InputDashboard`，应迁 `pages/` 或 `components/` |
+| analysis | `AnalysisApp.tsx` | 分析舱分发器 | PortalShell→AnalysisApp→pages/analysis/* | ✅ 干净 |
+| trading | `TradingApp.tsx` | 交易舱分发器 | PortalShell→TradingApp→pages/trading/* | ⚠️ 待整改：`apps/trading/` 含 `components/` `panels/` |
+| output | `OutputApp.tsx` | 产出舱分发器 | PortalShell→OutputApp→pages/output/* | ✅ 干净 |
+| command | `CommandApp.tsx` `AgentApp.tsx` `ConfigApp.tsx` | 命令舱分发器（三 dispatcher） | PortalShell→CommandApp/AgentApp；CommandApp 内 `React.lazy(ConfigApp)` 服务 `/command/config` | ⚠️ 二级嵌套，文档须显式呈现 |
+
+> **角色边界**：`apps/` 仅承载 `{Cabin}App.tsx` 分发器，页面组件一律在 `pages/{cabin}/` 或 `components/`。目录指南 `DIRECTORY_STRUCTURE_GUIDE.md` §2.3.1 同此约束。
 
 ---
 

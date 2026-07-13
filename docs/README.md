@@ -79,6 +79,14 @@ kimi_index: true
 - `docs/03-development/complexity-governance.md` — 代码复杂度治理规范
 - `docs/03-development/templates/task-graph-template.md` — 任务图模板
 - `docs/03-development/templates/regression-suite.md` — 回归测试套件模板
+- `docs/00-meta/DIRECTORY_STRUCTURE_GUIDE.md` — 项目目录结构规范与使用指南（对齐 AGENTS.md v1.4.6）
+- `docs/00-meta/DIRECTORY_AUDIT_FEASIBILITY_PLAN.md` — 目录结构审计可行性复核方案
+- `docs/00-meta/DIRECTORY_AUDIT_TODO.md` — 目录结构审计整改 TODO
+- `docs/00-meta/DIRECTORY_STRUCTURE_AUDIT_REPORT.md` — 目录结构文档审计报告（已归档）
+- `docs/00-meta/V9-PRE-LAUNCH-AUDIT-REPORT-20260713.md` — V9 上线前系统性梳理报告
+- `docs/00-meta/CHANGELOG_WARNINGS_HANDLING_STRATEGY.md` — CHANGELOG 警告项处理策略
+- `docs/01-requirements/v9-code-quality-audit-report-20260713.md` — V9 代码质量量化审计报告
+- `archive/ARCHIVE_INDEX.md` — 归档目录索引
 
 ---
 
