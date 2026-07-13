@@ -46,19 +46,27 @@ const SRC = path.join(ROOT, 'src')
 const MCP_DIR = path.join(SRC, 'mcp', 'servers')
 
 // 已知的服务子域（来自 src/services/ 目录，且应有对应 MCP Server）
-// 注：以下子域在 Phase E 清理后不再要求独立 MCP Server：
-//   backtest / export / input / screening / stockpool / trade
-//   （功能已合并或降级为 service 函数）
+// 注：backtest / export / input / screening / stockpool / trade 共 6 个 Server
+//   经 2026-07-13 复盘决策「保持独立」——它们与 trading/fetcher 是互补数据流
+//   （持仓管理 vs 订单引擎、本地池录入 vs 远程行情），后端为不同 service，
+//   无工具重名或逻辑重复，故不合并（详见 outputs/mcp-p1-merge-decision.md）。
+//   已重新启用并纳入 Agent 默认配置；此处纳入覆盖率校验以防再次被误删。
 const KNOWN_SERVICE_DOMAINS = [
   'analysis',
+  'backtest',
   'data-collector',
   'execution',
+  'export',
   'fetcher',
+  'input',
   'llm',
   'news',
   'portfolio',
   'scoring',
+  'screening',
+  'stockpool',
   'system',
+  'trade',
   'trading',
 ]
 

@@ -76,6 +76,7 @@ function refHash(obj: unknown): string {
  */
 function logVerbose(msg: string): void {
   if (VERBOSE) {
+    // eslint-disable-next-line no-console
     console.log(`\x1b[36m[DerivedCache]\x1b[0m ${msg}`)
   }
 }

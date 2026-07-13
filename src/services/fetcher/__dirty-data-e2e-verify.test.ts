@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * A 类根治方案端到端验证
  *

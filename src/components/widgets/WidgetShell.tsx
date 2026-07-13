@@ -169,7 +169,6 @@ export function WidgetShell({
             <button
               onClick={() => {
                 // 预留：打开设置面板
-                console.log('[WidgetShell] Settings clicked for', widgetId)
               }}
               style={{
                 padding: '4px 8px',

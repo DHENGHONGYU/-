@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * PWA Service Worker 注册模块
  * 质量门禁 #11 - PWA 离线验证
