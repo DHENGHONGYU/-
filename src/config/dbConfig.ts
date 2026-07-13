@@ -1,8 +1,9 @@
 const testDbName = typeof process !== 'undefined' ? process.env.TEST_DB_NAME : undefined
 export const DB_NAME = testDbName ?? ('V6ProDB' as const)
-export const DB_VERSION = 29 as const
+export const DB_VERSION = 30 as const
 
 // DB_VERSION 升级历史：
+// v29 → v30: 新增 analysis_results 存储，支撑 AnalysisOrchestrator 持久化分析结论。
 // v28 → v29: stocks 存储新增 pool 字段与 by-pool 索引，支撑股票池三分拆（intention/research/position）。
 // v27 → v28: 新增 workflow_defs、workflow_schedules、workflow_triggers、workflow_runs 存储，
 //            支撑 WorkflowServer 数据冗余（三层：Memory+IndexedDB+Export）。
@@ -213,6 +214,10 @@ export const ENVELOPE_ACTION = {
   queryList: 'QUERY_LIST',
   /** 按索引查询记录 */
   queryByIndex: 'QUERY_BY_INDEX',
+  /** 保存分析结果（v30 新增） */
+  saveAnalysisResult: 'SAVE_ANALYSIS_RESULT',
+  /** 删除记录（通用，lifecycle 使用） */
+  deleteRecord: 'DELETE_RECORD',
 } as const
 
 export type EnvelopeAction =
@@ -295,6 +300,8 @@ export const STORE_NAME = {
   workflowSchedules: 'workflow_schedules',
   workflowTriggers: 'workflow_triggers',
   workflowRuns: 'workflow_runs',
+  // ── 分析结果存储（v30 新增，支撑 AnalysisOrchestrator） ──
+  analysisResults: 'analysis_results',
 } as const
 
 export type StoreName = (typeof STORE_NAME)[keyof typeof STORE_NAME]
@@ -353,6 +360,7 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
       STORE_NAME.scoreDocs,
       STORE_NAME.hotSectorScores,
       STORE_NAME.valuePitScores,
+      STORE_NAME.analysisResults,
     ],
     actions: [DB_OPERATION.select, DB_OPERATION.insert, DB_OPERATION.update],
   },

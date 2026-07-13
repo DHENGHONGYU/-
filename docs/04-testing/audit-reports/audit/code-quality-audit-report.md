@@ -319,7 +319,7 @@ const processSubItems = (items) => items.map(...)
 
 ## 附录：详细数据
 
-- [硬编码分析详细报告](computer://c:\Users\huawei\Documents\kimi\Workspaces\智能投研复盘系统V9\hardcode_analysis_final_report.json)
+- [硬编码分析详细报告](computer://hardcode_analysis_final_report.json)
 - [代码复杂度报告](computer://c:\Users\Huawei\Documents\kimi\Workspaces\智能投研复盘系统V9\code_quality_report.json)
 - [类型安全报告](computer://c:\Users\Huawei\Documents\kimi\Workspaces\智能投研复盘系统V9\typescript_analysis_results.json)
 - [质量考核标准](./code-quality-rubric.md)

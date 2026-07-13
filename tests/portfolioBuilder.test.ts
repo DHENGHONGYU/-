@@ -19,6 +19,7 @@ function buildStock(
     symbol,
     name: `${symbol} 测试`,
     price,
+    pool: 'research',
     researchStatus: 'watching',
     source: 'manual',
     dataVersion: 1,

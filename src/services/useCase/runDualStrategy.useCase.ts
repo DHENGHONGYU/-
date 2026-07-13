@@ -76,15 +76,16 @@ export async function runDualStrategyUseCase(
   const signals: Signal[] = []
   const watchlistCandidates: Array<{ symbol: string; reason: string }> = []
 
-  for (const score of valuePitScores) {
-    if (score.action !== 'immediate' && score.action !== 'probe' && score.action !== 'wait') {
-      continue
-    }
+  const rotationResults = await Promise.all(
+    valuePitScores
+      .filter((score) => score.action === 'immediate' || score.action === 'probe' || score.action === 'wait')
+      .map(async (score) => {
+        const rotation = await detectBySector(score.name)
+        return { score, isRotationTriggered: rotation?.triggered ?? false }
+      }),
+  )
 
-    const rotation = await detectBySector(score.name)
-    const isRotationTriggered = rotation?.triggered ?? false
-
-    // 更新 score 的 rotationSignal 标志
+  for (const { score, isRotationTriggered } of rotationResults) {
     score.rotationSignal = isRotationTriggered
 
     if (isRotationTriggered && (score.action === 'probe' || score.action === 'wait')) {

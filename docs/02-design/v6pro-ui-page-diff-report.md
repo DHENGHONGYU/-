@@ -14,7 +14,7 @@ change_log:
 > **Status**: Current / Analysis  
 > **Date**: 2026-06-24  
 > **Sources**:
-> - V9 当前项目: `c:\Users\huawei\Documents\kimi\Workspaces\智能投研复盘系统V9`
+> - V9 当前项目: 项目根目录
 > - V6 Pro 备份源码: `D:\有价值对话\v6pro_source_backup.tar\v6pro_source_backup\app`
 > - 线上部署站点: `https://hslqownhhwaig.ok.kimi.link/`
 >

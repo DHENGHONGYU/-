@@ -32,14 +32,14 @@
 
 | 类 | 名称 | 目录 | 文档示例 | 准入规则 |
 |----|------|------|---------|---------|
-| **A** | 导航与治理 | `docs/00-meta/` | 本文件、README、体检报告 | 全局规则，禁止业务细节 |
-| **B** | 架构设计 | `docs/architecture/` | 舱室总览、服务目录、安全模型 | 架构决策、模块关系、接口定义 |
-| **C** | 功能模块 | `docs/02-design/` | 舱室 spec、页面结构 | 功能规格、业务流程、UI 映射 |
-| **D** | 技术规范 | `docs/standards/` + 根级 | AGENTS.md、编码规范 | 分层规则、令牌规范、门禁标准 |
-| **E** | 测试策略 | `docs/04-testing/` | 测试策略、测试目录 | 测试分层、覆盖率、清理义务 |
-| **F** | AI 辅助工程治理 | `docs/ai/` + `prompts/` | 提示词模板、记忆层 | AI 约束、提示词工程、飞轮流程 |
-| **G** | 过程与质量产物 | `docs/reports/` + 根级 | CHANGELOG、审计报告 | 自动产物、变更日志、质量报告 |
-| **H** | 跨域补充 | `docs/guides/` + `docs/ops/` | 入门指南、运维手册 | 操作指南、How-to、Runbook |
+| **A** | 导航与治理 | `docs/00-meta/`, `docs/01-requirements/`, `docs/03-development/plugins/` | README、GOVERNANCE、体检报告、愿景目标、插件文档 | 全局规则，禁止业务细节 |
+| **B** | 架构设计 | `docs/02-design/architecture/`, `docs/05-deployment/` | overview、cabins-overview、services-catalog、安全模型、RELEASE_NOTES | 架构决策、模块关系、接口定义 |
+| **C** | 功能模块 | `docs/02-design/cabins/`, `docs/02-design/components/`, `docs/02-design/cockpit/`, `docs/02-design/store/`, `docs/02-design/services/`, `docs/02-design/data-layer/` | 舱室 spec、组件体系、Widget、Store、服务契约、数据字典 | 功能规格、业务流程、UI 映射 |
+| **D** | 技术规范 | `docs/02-design/standards/`, `docs/03-development/` | AGENTS.md、编码规范、设计令牌、质量门禁、JSDoc 规范、迁移规范 | 分层规则、令牌规范、门禁标准 |
+| **E** | 测试策略 | `docs/04-testing/` | 测试策略、测试用例、覆盖率报告、门禁 | 测试分层、覆盖率、清理义务 |
+| **F** | AI 辅助工程治理 | `docs/03-development/ai/`, `docs/02-design/ai/`, `docs/03-development/checklists/` | 提示词模板、记忆层、AI 工程入口、检查表 | AI 约束、提示词工程、飞轮流程 |
+| **G** | 过程与质量产物 | `docs/reports/`, `docs/06-project-management/changelogs/` | 审计报告、变更日志、复盘报告、草稿、发布管理 | 自动产物、变更日志、质量报告 |
+| **H** | 跨域补充 | `docs/03-development/guides/`, `docs/05-deployment/ops/` | 入门指南、How-to、安全模型、部署架构、Runbook、无障碍 | 操作指南、How-to、Runbook |
 
 ### 2.1 禁止散落规则
 

@@ -12,6 +12,7 @@ function buildStock(symbol: string, overrides: Partial<Omit<Stock, 'dataVersion'
     symbol,
     name: `${symbol} 测试`,
     price: 100,
+    pool: 'research',
     researchStatus: 'candidate',
     source: 'manual',
     dataVersion: 1,

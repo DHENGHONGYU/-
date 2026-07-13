@@ -58,7 +58,7 @@ function main() {
     interfaces.push(...collectInterfaceNames(SERVICES_DIR))
   }
 
-  const expectedStores = 40
+  const expectedStores = 41
   if (storeNames.length !== expectedStores) {
     throw new Error(`Store count mismatch: expected ${expectedStores}, got ${storeNames.length}`)
   }

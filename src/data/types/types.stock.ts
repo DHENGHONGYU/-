@@ -56,7 +56,7 @@ export interface Stock {
    * - research: 研究精选池
    * - position: 持仓池
    */
-  pool: PoolType
+  pool?: PoolType
   /**
    * 研究状态（三分拆后类型扩展为 PoolStatus）。
    * 字段名保留 researchStatus 以兼容现有索引与历史数据。
