@@ -1,5 +1,5 @@
 import { calculateWeightedScore, getEnabledIndustryFactorNames } from '@/config/scoreFactors'
-import { dataLayer } from '@/data/dataLayer'
+import { sendWriteEnvelope } from '@/data/dataLayerHelpers'
 import type { IndustryDimensionScore, IndustryScore } from '@/data/types'
 import { getSectorSkillMap } from '@/data/sectorSkillData'
 import type { LlmConfig } from '@/config/llmConfig'
@@ -208,7 +208,7 @@ export async function runIndustryScore(
 
     currentStep = 'saveResult'
     reportProgress(currentStep, 'running', '保存评分结果...')
-    const saveResult = await dataLayer.industryScores.save(score)
+    const saveResult = await sendWriteEnvelope('saveIndustryScores', score, 'analyzer')
     if (!saveResult.success) {
       reportProgress(currentStep, 'error', saveResult.error ?? '保存失败')
       return { success: false, error: saveResult.error ?? '保存评分结果失败' }

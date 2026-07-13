@@ -1,5 +1,6 @@
-import { dataLayer } from '@/data/dataLayer'
+import { STORE_NAME } from '@/config/dbConfig'
 import type { NewsArticle, SentimentCache } from '@/data/types'
+import { queryByIndex, sendWriteEnvelope } from '@/data/dataLayerHelpers'
 import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
@@ -224,7 +225,8 @@ export function hashContent(content: string): string {
 export async function getSentimentFromCache(
   contentHash: string,
 ): Promise<SentimentCache | undefined> {
-  return dataLayer.sentimentCache.getByContentHash(contentHash)
+  const list = await queryByIndex<SentimentCache>(STORE_NAME.sentimentCache, 'by-content-hash', contentHash)
+  return list[0]
 }
 
 /**
@@ -257,7 +259,7 @@ export async function getOrAnalyzeSentiment(
     analyzedAt: Date.now(),
   }
 
-  await dataLayer.sentimentCache.save(cacheEntry)
+  await sendWriteEnvelope('saveSentimentCache', cacheEntry, 'news')
   return { ...result, contentHash }
 }
 

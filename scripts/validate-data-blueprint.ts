@@ -9,6 +9,8 @@ import * as path from 'path'
 const ROOT = process.cwd()
 const DB_CONFIG_PATH = path.join(ROOT, 'src', 'config', 'dbConfig.ts')
 const TYPES_DIR = path.join(ROOT, 'src', 'data', 'types')
+const MODULE_TYPES_DIR = path.join(ROOT, 'src', 'types', 'modules')
+const SERVICES_DIR = path.join(ROOT, 'src', 'services')
 
 function extractStoreNames(content: string): string[] {
   const match = content.match(/export const STORE_NAME = \{[\s\S]*?\} as const/)
@@ -48,8 +50,15 @@ function main() {
 
   const storeNames = extractStoreNames(dbConfig)
   const interfaces = collectInterfaceNames(TYPES_DIR)
+  if (fs.existsSync(MODULE_TYPES_DIR)) {
+    interfaces.push(...collectInterfaceNames(MODULE_TYPES_DIR))
+  }
+  if (fs.existsSync(SERVICES_DIR)) {
+    // 扫描 services 层 *.types.ts 中定义的数据实体接口（如 TradeReviewRecord）
+    interfaces.push(...collectInterfaceNames(SERVICES_DIR))
+  }
 
-  const expectedStores = 35
+  const expectedStores = 40
   if (storeNames.length !== expectedStores) {
     throw new Error(`Store count mismatch: expected ${expectedStores}, got ${storeNames.length}`)
   }
@@ -70,10 +79,18 @@ function main() {
     'NewsArticle',
     'NewsStockMap',
     'SentimentCache',
+    'NewsBookmark',
     'Order',
     'Signal',
     'Watchlist',
     'ResearchLog',
+    'ExecutionPlan',
+    'ExecutionLog',
+    'MissingReport',
+    'Portfolio',
+    'TradeReviewRecord',
+    'FinancialReport',
+    'CustomAgent',
   ]
 
   const missing = requiredInterfaces.filter((i) => !interfaces.includes(i))

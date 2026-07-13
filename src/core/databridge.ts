@@ -117,6 +117,16 @@ const ACTION_TO_STORE_MAP: Record<string, StoreName> = {
   [ENVELOPE_ACTION.saveTraceRecord]: STORE_NAME.traceRecords,
   [ENVELOPE_ACTION.updateStockStatus]: STORE_NAME.stocks,
   [ENVELOPE_ACTION.updateStockGroup]: STORE_NAME.stocks,
+  // ── Workflow 存储写入通道（v28 新增）──
+  [ENVELOPE_ACTION.saveWorkflowDef]: STORE_NAME.workflowDefs,
+  [ENVELOPE_ACTION.deleteWorkflowDef]: STORE_NAME.workflowDefs,
+  [ENVELOPE_ACTION.saveWorkflowSchedule]: STORE_NAME.workflowSchedules,
+  [ENVELOPE_ACTION.deleteWorkflowSchedule]: STORE_NAME.workflowSchedules,
+  [ENVELOPE_ACTION.saveWorkflowTrigger]: STORE_NAME.workflowTriggers,
+  [ENVELOPE_ACTION.deleteWorkflowTrigger]: STORE_NAME.workflowTriggers,
+  [ENVELOPE_ACTION.saveWorkflowRun]: STORE_NAME.workflowRuns,
+  // ── RBAC 审计日志归档删除通道（v24 新增）──
+  [ENVELOPE_ACTION.deleteRbacAuditLog]: STORE_NAME.rbacPermissionAuditLogs,
 }
 
 // 查询动作集合（目标 store 由 payload 传入，**不**走 ACTION_TO_STORE_MAP）
@@ -132,6 +142,7 @@ const EVENT_ACTIONS: ReadonlySet<string> = new Set([
   ENVELOPE_ACTION.holdingsDataLoaded,
   ENVELOPE_ACTION.tradeActionExecuted,
   ENVELOPE_ACTION.loadHoldingsData,
+  ENVELOPE_ACTION.feedbackIssuesDetected,
 ])
 
 // 策略路由动作集合（路由到 routeToStrategy）

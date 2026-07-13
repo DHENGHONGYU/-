@@ -24,7 +24,6 @@ describe('DataBridge priority broadcast', () => {
     db.subscribe('test', () => order.push('first'))
     db.subscribe('test', () => order.push('second'))
 
-    // @ts-expect-error - accessing private method for testing
     db.broadcast('test', mockEnvelope)
     expect(order).toEqual(['first', 'second'])
   })
@@ -38,7 +37,6 @@ describe('DataBridge priority broadcast', () => {
     db.subscribe('test', () => order.push('second'))
     db.subscribe('test', () => order.push('third'))
 
-    // @ts-expect-error - accessing private method for testing
     db.broadcast('test', mockEnvelope)
     expect(order).toEqual(['first', 'second', 'third'])
   })
@@ -53,7 +51,6 @@ describe('DataBridge priority broadcast', () => {
 
     unsubscribe()
 
-    // @ts-expect-error - accessing private method for testing
     db.broadcast('test', mockEnvelope)
     expect(order).toEqual(['remaining'])
   })
@@ -62,7 +59,7 @@ describe('DataBridge priority broadcast', () => {
     const db = new DataBridge()
     const mockEnvelope = createMockEnvelope()
 
-    // @ts-expect-error - accessing private method for testing
+    
     expect(() => db.broadcast('nonexistent-channel', mockEnvelope)).not.toThrow()
   })
 
@@ -80,7 +77,6 @@ describe('DataBridge priority broadcast', () => {
     )
     db.subscribe('test', () => order.push('after-error'))
 
-    // @ts-expect-error - accessing private method for testing
     db.broadcast('test', mockEnvelope)
     expect(order).toEqual(['error', 'after-error'])
   })

@@ -2,7 +2,7 @@
 
 > **版本**: v1.0.0 | **生成日期**: 2026-07-13 | **来源**: 12 份审计报告 + 3 份历史教训文件 + 本次对话关键决策
 > **覆盖范围**: MCP Server 治理、Agent 运行时、代码质量、UI 路由、类型系统、数据层、文档管理、测试策略、调试方法论、SKILL 与代码差距
-> **统计**: 共 **21 条**结构化教训（P0: 9 条 | P1: 7 条 | P2: 5 条）
+> **统计**: 共 **33 条**结构化教训（P0: 9 条 | P1: 18 条 | P2: 6 条）
 
 ---
 
@@ -337,6 +337,21 @@
   3. 同步修复 `systemService.test.ts` 中缺失的 `STORE_NAME` 和 `dataBridge.query` mock，避免测试因重构暴露的预存缺陷而失败。
 - **严重级**: 🟡 P1
 
+### 教训 27：业务常量跨层重复会污染 import 依赖图
+
+- **What**：`RESEARCH_STATUS`、`ResearchStatus`、`DEFAULT_POOL_GROUP` 同时在 `src/config/dbConfig.ts` 和 `src/constants/stockpool.constants.ts` 定义。20+ 生产文件和 4 个测试文件从 `src/config/dbConfig.ts` 导入这些业务常量，违反 AGENTS.md「`config/` 禁止被业务常量污染」的分层意图。
+- **Why**：早期实现将股票池业务常量放入配置层，后续为消除 services→config 跨层违规在 constants 层重建定义，但未清理旧定义和旧导入路径，形成「双真相源」。
+- **Where**：`src/config/dbConfig.ts`（旧定义） vs `src/constants/stockpool.constants.ts`（新真相源），影响 `poolStore.ts`、`poolTransitionEngine.ts`、`dataLayerStockStores.ts`、`PoolBoard.tsx` 等 20+ 文件及 `poolStore.test.ts` 等测试。
+- **When**：2026-07-13 股票池统一存储清理中确认并修复。
+- **Who**：常量迁移执行者 + 代码评审（未在定义重复阶段拦截）。
+- **How**：
+  1. 明确权威位置：`src/constants/` 承载业务语义常量，`src/config/` 仅保留基础设施配置；
+  2. 删除 `src/config/dbConfig.ts` 中的重复定义，批量将生产代码 import 路径迁移到 `src/constants/stockpool.constants.ts`；
+  3. 同步更新测试中的 `vi.mock('@/config/dbConfig', ...)`，被迁移常量必须在新模块 mock 中提供；
+  4. 迁移脚本必须使用防跨越正则（`[^{}]*` 限制 import body），避免误改相邻 import；
+  5. 迁移后搜索旧模块名在注释中的残留（如 "与 dbConfig ResearchStatus 保持一致"）并同步更新。
+- **严重级**: 🟡 P1
+
 ---
 
 ## 附录 A：预防措施清单（按执行频率）
@@ -396,9 +411,9 @@
 
 | 严重级 | 数量 | 占比 | 核心特征 |
 |-------|------|------|---------|
-| 🔴 P0 | 9 | 37.5% | 系统阻断性、数据丢失、进程崩溃、功能名不副实 |
-| 🟡 P1 | 9 | 37.5% | 架构决策、类型安全、文档断层、调试效率 |
-| 🟡 P2 | 6 | 25.0% | 可维护性、状态管理、知识噪音、方法论差距 |
+| 🔴 P0 | 9 | 28.1% | 系统阻断性、数据丢失、进程崩溃、功能名不副实 |
+| 🟡 P1 | 17 | 53.1% | 架构决策、类型安全、文档断层、调试效率、分层合规、数据层引用一致性 |
+| 🟡 P2 | 6 | 18.8% | 可维护性、状态管理、知识噪音、方法论差距 |
 
 **P0 教训聚焦三大根因**：
 1. **配置与文件不同步**（MCP Server 6 个缺失）
@@ -414,3 +429,75 @@
 > **文档归档**: 本文档已纳入 `docs/06-project-management/lessons-learned.md`
 > **信息源**: `docs/audit/` 下 12 份审计报告 + `docs/reports/lessons-learned/` 下 3 份历史文件（内容为空，已标注）
 > **维护建议**: 每次新增审计报告后，由架构组更新本文件，保持教训的时效性和可追踪性。
+
+---
+
+## 主题 6：数据库定义与引用一致性
+
+> 来源: `outputs/audit-db-references-report.txt`（2026-07-13）
+> 相关 SKILL: `.agents/skills/db-reference-audit/SKILL.md`
+
+### 教训 28：新增 Store 必须同步四个位置
+
+- **What**：`DB_VERSION 28` 下 `STORE_NAME` 已含 40 个 store，但 `validate-data-consistency.ts` 早期版本只解析 `src/data/db-schema.ts`，未扫描 `src/data/migrations/*.ts`，导致基线/增量 store 统计错误。
+- **Why**：Schema 校验脚本未随 Schema 拆分而更新，仍然假设所有 store 都在 `db-schema.ts` 中创建。
+- **Where**：`scripts/validate-data-consistency.ts`、`src/data/db-schema.ts`、`src/data/migrations/rbacMigrationV24.ts`。
+- **When**：2026-07-13 数据库交叉引用审计时发现。
+- **Who**：Schema 拆分开发者 + 校验脚本维护者。
+- **How**：校验脚本必须同时扫描 `db-schema.ts` 与 `migrations/*.ts`；新增 Store 必须检查“四同步”：`STORE_NAME`、Schema/Migration、`ACTION_TO_STORE_MAP`、`ACL_MATRIX`、`dataLayer.ts`。
+- **严重级**: 🟡 P1
+
+### 教训 29：业务实体类型不应散落在 services 层
+
+- **What**：`trade_reviews` store 对应的 `TradeReviewRecord` interface 位于 `src/services/trading/tradeReviewAI.types.ts`，`src/data/types/` 中无定义。
+- **Why**：早期设计将 Store 实体类型与业务服务类型混放，导致数据层校验脚本无法自动发现对应 Interface。
+- **Where**：`src/services/trading/tradeReviewAI.types.ts` vs `src/data/types/`。
+- **When**：2026-07-13 蓝图一致性校验时发现。
+- **Who**：类型系统维护者 + 交易复盘模块开发者。
+- **How**：Store 实体 Interface 应归位到 `src/data/types/*.ts` 或 `src/types/modules/*.ts`（零依赖），services 从数据层导入；校验脚本可扩展扫描 `src/types/modules` 作为过渡，但长期应消除反向依赖。
+- **严重级**: 🟡 P1
+
+### 教训 30：services 层直接访问 dataLayer 是绕过 ACL 的隐患
+
+- **What**：`services/news/newsService.ts`、`services/analysis/scoreDocService.ts`、`services/system/localDocService.ts` 等仍直接调用 `dataLayer.news.save()`、`dataLayer.scoreDocs.listBySymbol()` 等。
+- **Why**：DataBridge/ACL/Gateway 规范尚未完全落地，部分服务沿用旧模式直接读写 IndexedDB。
+- **Where**：`src/services/**` 中 60+ 处直接访问。
+- **When**：2026-07-13 直接访问扫描时发现。
+- **Who**：服务层开发者 + 架构组。
+- **How**：读操作逐步迁移到 `dataBridge.query()`；写操作必须改为 `dataBridge.forward()` + 注册 handler，确保走 ACL、审计日志、缓存失效和 fallbackQueue。
+- **严重级**: 🟡 P1
+
+### 教训 31：ENVELOPE_ACTION 新增后必须补 ACTION_TO_STORE_MAP
+
+- **What**：`saveWorkflowDef`、`deleteWorkflowDef`、`saveWorkflowSchedule`、`deleteWorkflowSchedule`、`saveWorkflowTrigger`、`deleteWorkflowTrigger`、`saveWorkflowRun`、`deleteRbacAuditLog`、`feedbackIssuesDetected` 等 action 已定义，但未在 `ACTION_TO_STORE_MAP` 中映射。
+- **Why**：新增 action 时只更新了 `ENVELOPE_ACTION` 常量，未同步更新 DataBridge 的路由表。
+- **Where**：`src/core/databridge.ts` 中 `ACTION_TO_STORE_MAP`。
+- **When**：2026-07-13 交叉引用审计时发现。
+- **Who**：新增 Workflow/RBAC action 的开发者。
+- **How**：将 `audit-db-references.ts` 加入 CI 门禁；任何新增 action 必须同时说明是 query/event/strategy/manager/db 类型，db 类型必须补映射。
+- **严重级**: 🟡 P1
+
+### 教训 32：dataLayer barrel 必须与 STORE_NAME 保持对齐
+
+- **What**：`dataLayer.ts` 未暴露 `newsBookmarks`、`collectConfig`、`traceRecords`、`workflowDefs`、`workflowSchedules`、`workflowTriggers`、`workflowRuns`。
+- **Why**：新增 store 后未同步更新 `dataLayer.ts` barrel 导出。
+- **Where**：`src/data/dataLayer.ts`。
+- **When**：2026-07-13 交叉引用审计时发现。
+- **Who**：Store 新增开发者。
+- **How**：业务 Store 必须加入 `dataLayer.ts` barrel；框架内部表（如 `schemaMigrations`、RBAC 6 表）可声明为例外，但需在审计脚本中显式列出。
+- **严重级**: 🟡 P2
+
+### 教训 33：迁移 services 层 dataLayer 直接访问应复用 dataLayerHelpers
+
+- **What**：P4 阶段清除了 `services/system/migration/storeMigrators.ts`、`services/analysis/scoreDocService.ts`、`services/trading/strategyEngine.ts` 等 15+ 文件中的 66 处 `dataLayer.xxx` 直接访问。迁移过程中若每个服务都手写 `EnvelopeFactory.create` + `dataBridge.forward`，代码冗余且容易写错 `source`/`target`/`traceId`。
+- **Why**：`src/data/dataLayerHelpers.ts` 已提供 `queryGet` / `queryList` / `queryByIndex` / `sendWriteEnvelope` 四个无状态封装，内部统一走 `dataBridge`，并带正确的 `MODULE_ID.datalayer` 源和日志。services 层可直接依赖这些 helper，既满足架构约束又减少样板代码。
+- **Where**：`src/services/**` 中所有直接访问 `dataLayer.<store>.get/list/save` 的位置。
+- **When**：2026-07-13 P4-1 迁移执行时发现。
+- **Who**：服务层开发者 + 数据层维护者。
+- **How**：
+  1. 读操作：用 `queryGet<T>(STORE_NAME.xxx, key)`、`queryList<T>(STORE_NAME.xxx)`、`queryByIndex<T>(STORE_NAME.xxx, 'by-symbol', value)` 替换。
+  2. 写操作：用 `sendWriteEnvelope('saveXxx', payload, 'module')` 替换，action 名从 `ENVELOPE_ACTION` 中选取。
+  3. 避免在 services 层直接 `import { db }` 或调用 `db.put`；若需要生成 ID，优先使用 `nanoid` 或从 `data/db` 导入纯工具函数 `generateId`/`now`，不依赖 db 连接。
+  4. 迁移后必须运行 `audit:db-references` 确认 0 warning，再跑相关 vitest 回归。
+- **严重级**: 🟡 P1
+

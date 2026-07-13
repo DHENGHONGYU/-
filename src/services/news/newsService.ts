@@ -1,4 +1,3 @@
-import { dataLayer } from '@/data/dataLayer'
 import { generateId } from '@/data/db'
 import type { DataLayerResult, NewsArticle, NewsStockMap, Stock } from '@/data/types'
 import { getLogger } from '@/lib/logger'
@@ -53,9 +52,21 @@ async function resolveStockLibrary(explicitStocks?: StockInfo[]): Promise<StockI
  */
 async function saveNewsStockMaps(maps: NewsStockMap[]): Promise<DataLayerResult<void>> {
   for (const map of maps) {
-    const saveMapResult = await dataLayer.newsStockMap.save(map) // TODO[P2]: 迁移至 DataBridge.forward()
-    if (!saveMapResult.success) {
-      return { success: false, error: saveMapResult.error }
+    try {
+      const envelope = EnvelopeFactory.create(
+        {
+          source: MODULE_ID.news,
+          target: ENVELOPE_TARGET.db,
+          action: ENVELOPE_ACTION.saveNewsStockMap,
+          traceId: `news-map-${nanoid(8)}-${map.newsId}`,
+        },
+        map,
+      )
+      await dataBridge.forward(envelope)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      logger.error('[newsService] saveNewsStockMap failed', { error: message, newsId: map.newsId })
+      return { success: false, error: message }
     }
   }
   return { success: true }
@@ -117,13 +128,6 @@ export async function saveNewsArticle(
       return { success: false, error: mapSave.error }
     }
 
-    const saveResult = await dataLayer.news.save(fullArticle) // TODO[P2]: 迁移至 DataBridge.forward()
-    if (!saveResult.success) {
-      return { success: false, error: saveResult.error }
-    }
-
-    // DataBridge 事件转发：通知所有订阅者新文章已保存
-    // 使用 try-catch 确保 forward 失败不影响已成功保存的文章
     try {
       const envelope = EnvelopeFactory.create(
         {
@@ -136,8 +140,10 @@ export async function saveNewsArticle(
       )
       await dataBridge.forward(envelope)
       logger.info('[newsService] DataBridge forwarded: saveNews', { id, title: article.title.slice(0, 30) })
-    } catch (forwardErr) {
-      logger.error('[newsService] DataBridge forward failed for saveNews', { id, error: forwardErr })
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      logger.error('[newsService] saveNews failed', { id, error: message })
+      return { success: false, error: message }
     }
 
     return { success: true, data: fullArticle }

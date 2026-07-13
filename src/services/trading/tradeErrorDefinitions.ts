@@ -24,6 +24,9 @@
 // 类型定义
 // ============================================================
 
+import type { DetectedError } from '@/types/modules/tradeReviewAI.types'
+export type { DetectedError }
+
 /** 错误严重等级 */
 export type ErrorSeverity = 'critical' | 'major' | 'minor'
 
@@ -67,24 +70,6 @@ export interface TradeErrorDef {
   psychologicalRoot: string
   /** 检测描述 */
   detectionDescription: string
-}
-
-/** 检测到的错误实例 */
-export interface DetectedError {
-  /** 错误类型 */
-  type: TradeErrorType
-  /** 中文名称 */
-  name: string
-  /** 严重等级 */
-  severity: ErrorSeverity
-  /** 心理根源 */
-  psychologicalRoot: string
-  /** 关联的订单 ID 列表 */
-  relatedOrderIds: string[]
-  /** 发生次数 */
-  count: number
-  /** 扣分 */
-  penalty: number
 }
 
 /** 分类结果 */

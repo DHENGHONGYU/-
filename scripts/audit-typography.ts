@@ -68,7 +68,7 @@ export async function scan(): Promise<TypographyReport> {
         let match
         const fontSizeRegex = new RegExp(HARDCODED_FONT_SIZE_REGEX)
         while ((match = fontSizeRegex.exec(line)) !== null) {
-          const value = match[1]
+          const value = match[1]!
           if (!VALID_FONT_SIZES.has(value ?? '')) {
             violations.push({
               file,
@@ -83,7 +83,7 @@ export async function scan(): Promise<TypographyReport> {
 
         const fontWeightRegex = new RegExp(HARDCODED_FONT_WEIGHT_REGEX)
         while ((match = fontWeightRegex.exec(line)) !== null) {
-          const value = match[1]
+          const value = match[1]!
           if (!VALID_FONT_WEIGHTS.has(value ?? '')) {
             violations.push({
               file,
@@ -103,7 +103,7 @@ export async function scan(): Promise<TypographyReport> {
             line: index + 1,
             column: match.index + 1,
             property: 'line-height',
-            value: match[1],
+            value: match[1]!,
             context: line.trim(),
           })
         }
@@ -148,7 +148,6 @@ async function auditTypography(): Promise<void> {
 }
 
 import { fileURLToPath } from 'url'
-import { resolve } from 'path'
 
 const __filename = fileURLToPath(import.meta.url)
 const __argv = process.argv[1] ? resolve(process.argv[1]) : ''

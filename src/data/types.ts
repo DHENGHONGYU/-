@@ -196,3 +196,29 @@ export type {
 
 // ── 阶段 B-1：自定义智能体（v26 新增） ──
 export type { CustomAgent, CustomAgentType, CustomAgentApiConfig } from './types/types.customAgent'
+
+// ── 采集与工作流类型（v27/v28 新增，支撑 dataLayer 暴露） ──
+export type { PersistedWizardConfig } from './types/types.collectConfig'
+export type { CollectionTraceSpan } from './types/types.traceRecords'
+export type {
+  WorkflowDef,
+  WorkflowRun,
+  ScheduleDef,
+  TriggerDef,
+} from './types/types.workflow'
+
+// ── Schema 迁移追踪记录类型 ──
+export type { SchemaMigrationRecord } from './types/types.schemaMigrations'
+
+// ── 交易复盘持久化实体（v29 新增，P1-3 类型归位） ──
+export type { TradeReviewRecord } from './types/types.tradeReview'
+
+// ── RBAC 6 表持久化实体（v24 新增，P2-1 类型归位） ──
+export type {
+  RbacUser,
+  RbacRole,
+  RbacPermission,
+  RbacUserRole,
+  RbacRolePermission,
+  RbacPermissionAuditLog,
+} from './types/types.rbac'

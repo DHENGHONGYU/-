@@ -17,9 +17,9 @@
 import { getDefaultDualStrategyRuleConfig, type DualStrategyRuleConfig } from '@/config/dualStrategyRules'
 import { dataBridge } from '@/core/databridge'
 import { ENVELOPE_ACTION, STORE_NAME } from '@/config/dbConfig'
+import { sendWriteEnvelope } from '@/data/dataLayerHelpers'
 import type { DataLayerResult, Stock, ValuePitScore, V6Score, DailyQuotes } from '@/data/types'
 import { getLogger } from '@/lib/logger'
-import { dataLayer } from '@/data/dataLayer'
 
 const logger = getLogger()
 
@@ -501,8 +501,7 @@ export async function analyzeValuePits(
   const scores = await analyzeBatch(filtered)
 
   for (const score of scores) {
-    // TODO[P2]: 迁移至 DataBridge.forward()
-    await dataLayer.valuePitScores.save(score)
+    await sendWriteEnvelope('saveValuePitScores', score, 'analyzer')
   }
 
   return { success: true, data: scores }

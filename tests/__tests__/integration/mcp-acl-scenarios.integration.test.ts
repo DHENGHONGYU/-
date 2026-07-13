@@ -84,8 +84,8 @@ const UNKNOWN_CALLER = {
 function assertAclDenied(result: ToolResult, expectedKeyword?: string): void {
   expect(result.isError).toBe(true)
   expect(result.content).toHaveLength(1)
-  expect(result.content[0].type).toBe('text')
-  const text = result.content[0].text ?? ''
+  expect(result.content[0]!.type).toBe('text')
+  const text = result.content[0]!.text ?? ''
   expect(text).toContain('ACL_PERMISSION_DENIED')
   if (expectedKeyword) {
     expect(text).toContain(expectedKeyword)
@@ -488,8 +488,8 @@ describe('套件7: 双端校验一致性验证', () => {
       assertAclDenied(serverResult, expectedKeyword)
 
       // 3. 验证两端返回的拒绝文本都包含相同关键字
-      const clientText = clientResult.content[0].text ?? ''
-      const serverText = serverResult.content[0].text ?? ''
+      const clientText = clientResult.content[0]!.text ?? ''
+      const serverText = serverResult.content[0]!.text ?? ''
       expect(clientText).toContain(expectedKeyword)
       expect(serverText).toContain(expectedKeyword)
     }, { timeout: 60000 })
@@ -519,7 +519,7 @@ describe('套件8: ACL_PERMISSION_DENIED 结构化格式验证', () => {
       UI_CALLER,
     )
     expect(result.content).toHaveLength(1)
-    expect(result.content[0].type).toBe('text')
+    expect(result.content[0]!.type).toBe('text')
   }, { timeout: 60000 })
 
   it('拒绝文本应以 ACL_PERMISSION_DENIED: 前缀开头', async () => {
@@ -529,7 +529,7 @@ describe('套件8: ACL_PERMISSION_DENIED 结构化格式验证', () => {
       {},
       UI_CALLER,
     )
-    expect(result.content[0].text).toMatch(/^ACL_PERMISSION_DENIED:/)
+    expect(result.content[0]!.text).toMatch(/^ACL_PERMISSION_DENIED:/)
   }, { timeout: 60000 })
 
   it('Server 级拒绝文本应包含 caller 和 server 信息', async () => {
@@ -539,7 +539,7 @@ describe('套件8: ACL_PERMISSION_DENIED 结构化格式验证', () => {
       {},
       UI_CALLER,
     )
-    const text = result.content[0].text ?? ''
+    const text = result.content[0]!.text ?? ''
     expect(text).toContain('Caller "ui"')
     expect(text).toContain('server "trading"')
   }, { timeout: 60000 })
@@ -551,7 +551,7 @@ describe('套件8: ACL_PERMISSION_DENIED 结构化格式验证', () => {
       {},
       UI_CALLER,
     )
-    const text = result.content[0].text ?? ''
+    const text = result.content[0]!.text ?? ''
     expect(text).toContain('Caller "ui"')
     expect(text).toContain('server "stockpool"')
     expect(text).toContain('tool "delete_stock"')
