@@ -8,8 +8,7 @@ import { MCPServerBase } from '@/mcp/core/server'
 import type { ServerInfo, ToolDescriptor, ResourceTemplate } from '@/mcp/core/types'
 import { getLogger } from '@/lib/logger'
 import { listStocks, transitionStock, getStocksByStatus, getPoolGroups } from '@/services/stockpool/stockpoolService'
-import type { ResearchStatus } from '@/config/dbConfig'
-
+import type { ResearchStatus } from '@/constants/stockpool.constants'
 const logger = getLogger()
 
 const VALID_STATUSES: ResearchStatus[] = ['candidate', 'screened', 'deepDive', 'watching', 'archived']

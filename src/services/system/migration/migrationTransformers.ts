@@ -1,16 +1,7 @@
 import { generateId } from '@/data/db'
 import { getLogger } from '@/lib/logger'
-import {
-  DATA_SOURCE,
-  DEFAULT_POOL_GROUP,
-  ORDER_DIRECTION,
-  ORDER_STATUS,
-  ACCOUNT_TYPE,
-  RESEARCH_STATUS,
-  type DataSource,
-  type OrderDirection,
-  type ResearchStatus,
-} from '@/config/dbConfig'
+import { DATA_SOURCE, ORDER_DIRECTION, ORDER_STATUS, ACCOUNT_TYPE, type DataSource, type OrderDirection } from '@/config/dbConfig'
+import { DEFAULT_POOL_GROUP, RESEARCH_STATUS, type ResearchStatus } from '@/constants/stockpool.constants'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import type {
   DailyQuotes,

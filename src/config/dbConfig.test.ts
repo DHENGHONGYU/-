@@ -8,12 +8,12 @@ import {
   MODULE_ID,
   ENVELOPE_ACTION,
   ENVELOPE_TARGET,
-  RESEARCH_STATUS,
   DATA_SOURCE,
   ORDER_DIRECTION,
   ORDER_STATUS,
   ACCOUNT_TYPE,
 } from './dbConfig'
+import { RESEARCH_STATUS } from '@/constants/stockpool.constants'
 
 // ------------------------------------------------------------------
 // 测试套件

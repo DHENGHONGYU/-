@@ -13,8 +13,8 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { useScoreDocStore } from './scoreDocStore'
 import { getRecentVersions } from '@/services/analysis/scoreDocService'
 import type { ScoreDocVersion, Stock } from '@/data/types'
-import { RESEARCH_STATUS, DATA_SOURCE } from '@/config/dbConfig'
-
+import { DATA_SOURCE } from '@/config/dbConfig'
+import { RESEARCH_STATUS } from '@/constants/stockpool.constants'
 vi.mock('@/services/analysis/scoreDocService', () => ({
   getRecentVersions: vi.fn(),
   exportSymbolMd: vi.fn(),

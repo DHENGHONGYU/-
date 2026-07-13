@@ -13,7 +13,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { usePoolStore } from '@/store/poolStore'
 import { getLogger } from '@/lib/logger'
-import { RESEARCH_STATUS, type ResearchStatus } from '@/config/dbConfig'
+import { RESEARCH_STATUS, type ResearchStatus } from '@/constants/stockpool.constants'
 import { getPoolLabel, getNextStatuses, getTransitionLabel, type PoolTransitionOption } from '@/core/poolTransitionEngine'
 import type { PoolGroup } from '@/services/stockpool/stockpoolService'
 

@@ -9,12 +9,8 @@
  * 与 TradingFlowPage 的持仓数据一致：当前持仓股数均从同一 orders 表流水计算。
  */
 import { dataBridge } from '@/core/databridge'
-import {
-  ENVELOPE_ACTION,
-  MODULE_ID,
-  RESEARCH_STATUS,
-  STORE_NAME,
-} from '@/config/dbConfig'
+import { ENVELOPE_ACTION, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
+import { RESEARCH_STATUS } from '@/constants/stockpool.constants'
 import type { Order, Stock } from '@/data/types'
 import { getLogger } from '@/lib/logger'
 import {

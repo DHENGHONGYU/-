@@ -1,6 +1,6 @@
 # V9 体系化上线测试 TODO LIST
 
-> **生成时间**: 2026-07-13 11:09:49  
+> **生成时间**: 2026-07-13 11:09:49 ｜ **更新**: 2026-07-13（tsc:prod 零错误，tsc:test ~393 待修复）  
 > **基准**: 项目现有 78 项体检清单 + 行业标准（Front-End-Checklist / Cortex / CloudBees / 证监会金融规范 / 华泰/中信证券技术规范）  
 > **适用范围**: V9 智能投研复盘系统后续二开及同类项目
 
@@ -14,12 +14,8 @@
 | `audit:hardcode` | ⚠️ 基本通过 | 0 违规, 1 警告 | `src/mcp/servers/knowledge/knowledgeServer.ts:86` 静默回退 `?? []` |
 | `audit:deadcode` | ✅ 通过 | 0 死代码 | 4 处条件返回 `null` 均为预期空状态保护 |
 | `audit:docs` | ✅ 通过 | 0 违规 | 文档同步，版本一致 |
-| `tsc --noEmit` | ✅ 通过 | 0 error | `duckDBProvider.ts` 类型转换已修复 |
-| `test:clean` | ✅ 通过 | 14/14 通过 | `backtestStore.test.ts` dataBridge mock 已修复 |
-| **E2E 关键路径** | ⏱️ 未测 | — | 建议用 `npm run test:e2e` 验证 |
-| **Lighthouse 性能** | ⏱️ 未测 | — | 建议跑 LCP/INP/CLS 基线 |
-| `audit:docs` | ✅ 通过 | 0 违规 | 文档同步，版本一致 |
-| `tsc --noEmit` | ❌ 未通过 | 1 error | `duckDBProvider.ts` 类型转换不兼容 |
+| `tsc:prod` | ✅ 通过 | 0 error | `src/services/input/` 模块补齐，类型修复 |
+| `tsc:test` | ❌ 未通过 | ~393 errors | 测试文件/审计脚本类型错误，待逐批修复 |
 | `test:clean` | ✅ 通过 | 14/14 通过 | `backtestStore.test.ts` dataBridge mock 已修复 |
 | **E2E 关键路径** | ⏱️ 未测 | — | 建议用 `npm run test:e2e` 验证 |
 | **Lighthouse 性能** | ⏱️ 未测 | — | 建议跑 LCP/INP/CLS 基线 |
@@ -105,7 +101,8 @@
 
 | ID | 检查项 | 状态 | 验证方法 | 结果 |
 |----|--------|------|----------|------|
-| TODO-P0-01 | 修复 tsc 类型错误（duckDBProvider.ts 类型转换） | ✅ 完成 | `npx tsc --noEmit` | 0 error |
+| TODO-P0-01 | 修复 tsc:prod 类型错误（补齐 `src/services/input/` 缺失模块 + backtest 类型修复） | ✅ 完成 | `npm run tsc:prod` | 0 error |
+| TODO-P0-01b | 修复 tsc:test 类型错误（~393 errors，测试文件/审计脚本） | ⏳ 进行中 | `npm run tsc:test` | 逐批修复，目标 0 error |
 | TODO-P0-02 | 确认并处理 audit:deadcode 4处条件返回 null | ✅ 完成 | 代码审查 | 均为预期空状态保护，无需修改 |
 | TODO-P0-03 | 渗透测试（OWASP ZAP 或 Burp Suite） | ✅ 完成 | 代码静态审计 | XSS/CSRF/注入等代码层无高危漏洞，详见 `penetration-test-report.md` |
 | TODO-P0-04 | 漏洞扫描（npm audit + SCA 工具） | ✅ 完成 | `npm audit` | 13个漏洞已分类：2个生产相关（xlsx+protobufjs）需处理，11个dev-only可接受，详见 `vulnerability-scan-report.md` |
@@ -199,7 +196,22 @@ W4 发布与回归
 
 ---
 
-## 五、教训总结（10条）
+## 五、教训总结（14条）
+
+1. 分层审计脚本(audit:layers)是CI地基，必须先稳定。本项目已做到0违规，但行业标准还要求代码安全扫描(CodeQL/SonarQube)作为补充。
+2. 类型安全(tsc:prod)必须零error。本次12个TS2307/TS7006错误的根因是服务目录重构后，新目录 `src/services/input/` 下模块文件未同步创建，导致import解析失败。说明目录迁移必须全链路同步。
+3. 硬编码审计不能止于颜色/锚点。行业实践还包括密钥泄露、调试代码残留、console.log清理等。
+4. 测试排除文件是技术债务。8个排除文件意味着基线不完整，行业标准要求交易相关功能覆盖率100%。
+5. 安全测试需要专业工具。仅靠npm audit不足以覆盖OWASP Top 10，需引入ZAP/Burp/CodeQL。
+6. 性能监控不能只靠Lighthouse。需要建立RUM(Real User Monitoring)和APM，才能在生产环境发现问题。
+7. 灰度发布需要功能开关。文字描述的灰度策略无法秒级回滚，需要Feature Flag平台或配置中心。
+8. 数据一致性测试容易被忽视。Mock/REST/WS三端对齐不够，还需验证服务端接收与客户端发送的一致性。
+9. 长时间稳定性是隐藏风险。内存泄漏可能在短测试中发现不了，需24h+挂机或monkey测试。
+10. 合规文档必须留痕。即使按个人工具豁免，豁免理由也需要文档化，以防后续监管变化。
+11. **vi.mock STORE_NAME 必须完整**：测试中 mock `dbConfig` 的 `STORE_NAME` 时，必须包含所有被测试代码引用的 store 名。遗漏会导致运行时 `undefined`，引发级联错误（如 `quotes.history.find` 在空数组上调用）。
+12. **dataBridge.query mock 必须与 STORE_NAME 实际值对齐**：`STORE_NAME.dailyQuotes` 实际值为 `'daily_quotes'`（带下划线），mock 中若写 `'dailyQuotes'` 会导致不匹配，返回空数组 `[ ]`（truthy），被存入 cache 后触发 `.find is not a function` 错误。
+13. **服务目录迁移必须全链路同步**：从 `src/services/fetcher/` 迁移到 `src/services/input/` 时，不仅要新建目标模块，还要同步更新所有调用方的 import 路径、测试 mock 路径、以及 tsconfig 的 include 范围。漏一步即导致 tsc 批量 TS2307 错误。
+14. **区分 tsc:prod 与 tsc:test 的修复优先级**：`tsc:prod`（生产代码）必须零容忍零错误；`tsc:test`（测试+脚本）错误可能更多（当前 ~393），应分批处理，不阻塞生产构建。
 
 1. 分层审计脚本(audit:layers)是CI地基，必须先稳定。本项目已做到0违规，但行业标准还要求代码安全扫描(CodeQL/SonarQube)作为补充。
 2. 类型安全(tsc --noEmit)必须零error。当前1个DuckDB类型错误即阻断发布，说明第三方库类型升级可能破坏构建。

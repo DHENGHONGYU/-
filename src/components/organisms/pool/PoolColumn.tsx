@@ -1,5 +1,5 @@
 import React from 'react'
-import type { ResearchStatus } from '@/config/dbConfig'
+import type { ResearchStatus } from '@/constants/stockpool.constants'
 import type { Stock } from '@/data/types'
 import { PoolCard } from './PoolCard'
 

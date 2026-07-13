@@ -8,14 +8,8 @@
  * @updated 2026-07-07 - PR-1：从 data/types.ts 拆分
  */
 
-import type {
-  AccountType,
-  DataSource,
-  OrderDirection,
-  OrderStatus,
-  ResearchStatus,
-} from '@/config/dbConfig'
-
+import type { AccountType, DataSource, OrderDirection, OrderStatus } from '@/config/dbConfig'
+import type { ResearchStatus } from '@/constants/stockpool.constants'
 // 从 dbConfig 重新导出，供其他模块使用
 export type { AccountType, DataSource, OrderDirection, OrderStatus, ResearchStatus }
 

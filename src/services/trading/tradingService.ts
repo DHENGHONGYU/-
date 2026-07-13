@@ -1,14 +1,7 @@
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
-import {
-  MODULE_ID,
-  ENVELOPE_TARGET,
-  ENVELOPE_ACTION,
-  ORDER_DIRECTION,
-  ORDER_STATUS,
-  RESEARCH_STATUS,
-  STORE_NAME,
-} from '@/config/dbConfig'
+import { MODULE_ID, ENVELOPE_TARGET, ENVELOPE_ACTION, ORDER_DIRECTION, ORDER_STATUS, STORE_NAME } from '@/config/dbConfig'
+import { RESEARCH_STATUS } from '@/constants/stockpool.constants'
 import { getEffectiveTradingConfig } from '@/config/tradingConfig'
 import type { DataLayerResult, Order, Stock, Watchlist } from '@/data/types'
 import {

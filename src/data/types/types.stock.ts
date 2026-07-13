@@ -7,8 +7,8 @@
  * @updated 2026-07-07 - PR-1：从 data/types.ts 拆分
  */
 
-import type { DataSource, ResearchStatus } from '@/config/dbConfig'
-
+import type { DataSource } from '@/config/dbConfig'
+import type { ResearchStatus } from '@/constants/stockpool.constants'
 /** 股票数据质量标记 */
 export interface StockDataQuality {
   basic: boolean

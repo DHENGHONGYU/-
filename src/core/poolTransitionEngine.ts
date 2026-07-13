@@ -1,9 +1,5 @@
 import { getLogger } from '@/lib/logger'
-import {
-  RESEARCH_STATUS,
-  type ResearchStatus,
-} from '@/config/dbConfig'
-
+import { RESEARCH_STATUS, type ResearchStatus } from '@/constants/stockpool.constants'
 const logger = getLogger()
 
 /**

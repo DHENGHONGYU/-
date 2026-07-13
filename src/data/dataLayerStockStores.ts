@@ -6,13 +6,8 @@
  * - dailyQuoteStore: 日行情 save/get
  * - financialReportStore: 财报 save/get/list（含详细日志）
  */
-import {
-  DATA_SOURCE,
-  DEFAULT_POOL_GROUP,
-  RESEARCH_STATUS,
-  STORE_NAME,
-  type ResearchStatus,
-} from '@/config/dbConfig'
+import { DATA_SOURCE, STORE_NAME } from '@/config/dbConfig'
+import { DEFAULT_POOL_GROUP, RESEARCH_STATUS, type ResearchStatus } from '@/constants/stockpool.constants'
 import { getLogger } from '@/lib/logger'
 import { now } from './db'
 import type { DataLayerResult, DailyQuotes, FinancialReport, Stock } from './types'
