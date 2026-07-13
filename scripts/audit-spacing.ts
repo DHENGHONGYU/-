@@ -6,6 +6,7 @@
 import { glob } from 'glob'
 import { readFile } from 'fs/promises'
 import { resolve } from 'path'
+import { pathToFileURL } from 'node:url'
 
 const VALID_SPACING_VALUES = new Set([
   '0', '0px',
@@ -129,7 +130,7 @@ async function auditSpacing(): Promise<void> {
   }
 }
 
-if (require.main === module) {
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   auditSpacing().catch((error) => {
     console.error('审计脚本执行失败:', error)
     process.exit(1)
