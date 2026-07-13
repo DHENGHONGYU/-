@@ -10,7 +10,7 @@ import {
   STORE_NAME,
 } from '@/config/dbConfig'
 import { getEffectiveTradingConfig } from '@/config/tradingConfig'
-import type { DataLayerResult, Order, Stock } from '@/data/types'
+import type { DataLayerResult, Order, Stock, Watchlist } from '@/data/types'
 import {
   generateSignalsForSymbol,
   pickStrongestSignal,
@@ -318,4 +318,38 @@ export async function createSellOrder(
     quantity,
     price: stock.price,
   })
+}
+
+/**
+ * 持久化观察列表快照（watchlists 表离线缓存）
+ *
+ * 通过 DataBridge.forward() 写入，确保 ACL 校验与审计日志。
+ * Store 层不再直接依赖 dataLayer。
+ */
+export async function persistWatchlistSnapshot(stocks: Stock[]): Promise<DataLayerResult<void>> {
+  const ts = Date.now()
+  const snapshot: Watchlist = {
+    id: 'default',
+    name: '观察池',
+    items: stocks.map((s) => s.symbol),
+    createdAt: ts,
+    updatedAt: ts,
+  }
+
+  try {
+    const envelope = EnvelopeFactory.create(
+      {
+        source: MODULE_ID.trading,
+        target: ENVELOPE_TARGET.db,
+        action: ENVELOPE_ACTION.saveWatchlist,
+        traceId: `watchlist-snapshot-${nanoid(8)}`,
+      },
+      snapshot,
+    )
+    await dataBridge.forward(envelope)
+    return { success: true }
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    return { success: false, error: message }
+  }
 }

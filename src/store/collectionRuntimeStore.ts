@@ -177,9 +177,7 @@ export const useCollectionRuntimeStore = create<CollectionRuntimeState>((set) =>
       set((state) => {
         const merged = { ...state.traceSpans }
         for (const span of spans) {
-          if (!merged[span.traceId]) {
-            merged[span.traceId] = span
-          }
+          merged[span.traceId] ??= span
         }
         return { traceSpans: merged }
       })

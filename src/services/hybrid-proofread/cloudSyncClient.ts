@@ -252,11 +252,11 @@ export class CloudSyncClient {
     const startTime = Date.now()
     logger.info(`[CloudSyncClient] uploadHashBatch - 开始上传哈希批次`, {
       hash_count: hashes.length,
-      project_id: hashes[0]?.project_id || 'N/A',
+      project_id: hashes[0]?.project_id ?? 'N/A',
     })
 
     const hashList = hashes.map((h) => h.file_hash)
-    const response = await this.batchVerifyHashes({ hash_list: hashList, project_id: hashes[0]?.project_id || '' })
+    const response = await this.batchVerifyHashes({ hash_list: hashList, project_id: hashes[0]?.project_id ?? '' })
 
     logger.info(`[CloudSyncClient] uploadHashBatch - 上传完成`, {
       hash_count: hashes.length,

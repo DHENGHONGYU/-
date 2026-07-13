@@ -530,7 +530,7 @@ const ModelUpgradePage: React.FC = () => {
                   </div>
                   <div>
                     <span className={`text-sm text-muted-foreground`}>完成时间：</span>
-                    <div className="text-foreground">{record.completedAt || '-'}</div>
+                    <div className="text-foreground">{record.completedAt ?? '-'}</div>
                   </div>
                   {record.errorMessage && (
                     <div className="md:col-span-2">

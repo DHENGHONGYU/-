@@ -138,6 +138,7 @@ export const useAnalysisNewsStore = create<AnalysisNewsState>((set, get) => ({
     const industryOptions = extractIndustryOptions(articles)
     const trend = aggregateSentimentTrend(articles, {
       dimension,
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       value: value || undefined,
       fillGaps: true,
     })

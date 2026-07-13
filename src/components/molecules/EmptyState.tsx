@@ -54,6 +54,7 @@ export const EmptyState = memo(function EmptyState({
   secondaryAction,
   className,
 }: EmptyStateProps) {
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const hasActions = action || secondaryAction
 
   return (

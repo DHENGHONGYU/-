@@ -102,6 +102,7 @@ function WidgetWrapper(props: WidgetWrapperProps): React.JSX.Element {
       }
       return <Component {...wrapperProps} />
     }
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     SafeWrapper.displayName = `Safe(${Component.displayName || Component.name || 'Widget'})`
     return SafeWrapper
   }, [Component, config?.widgetId])

@@ -117,7 +117,7 @@ export function ExecutionMonitorStep(): React.JSX.Element {
       completed: { label: '已完成', variant: 'success' },
       failed: { label: '失败', variant: 'destructive' },
     }
-    const config = statusMap[status] || { label: status, variant: 'outline' }
+    const config = statusMap[status] ?? { label: status, variant: 'outline' }
     return <Badge variant={config.variant}>{config.label}</Badge>
   }
 
@@ -186,7 +186,7 @@ export function ExecutionMonitorStep(): React.JSX.Element {
           <div className="grid grid-cols-3 gap-4">
             <div>
               <div className={cn('text-sm', COLOR_TOKENS.textMuted.tailwind)}>任务名称</div>
-              <div className="font-medium mt-1">{taskName || taskId || fallback.unknown}</div>
+              <div className="font-medium mt-1">{taskName ?? taskId ?? fallback.unknown}</div>
             </div>
             <div>
               <div className={cn('text-sm', COLOR_TOKENS.textMuted.tailwind)}>维度进度</div>
@@ -309,7 +309,7 @@ export function ExecutionMonitorStep(): React.JSX.Element {
                     {log.stage && (
                       <Badge variant="outline" className="text-xs">
                         <Tag className="w-3 h-3 mr-1" />
-                        {STAGE_LABELS[log.stage] || log.stage}
+                        {STAGE_LABELS[log.stage] ?? log.stage}
                       </Badge>
                     )}
                     {log.durationMs !== undefined && (

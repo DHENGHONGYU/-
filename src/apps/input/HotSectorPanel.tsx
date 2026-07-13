@@ -9,7 +9,7 @@ import {
   addHotSectorStock,
   addHotSectorStocks,
   type HotSector,
-} from '@/services/input/hotSectorService'
+} from '@/services/fetcher/hotSectorService'
 import { usePoolStore, getAllGroups } from '@/store/poolStore'
 import { useToast } from '@/hooks/useToast'
 import { getLogger } from '@/lib/logger'

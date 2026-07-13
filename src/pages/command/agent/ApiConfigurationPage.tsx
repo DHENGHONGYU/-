@@ -306,7 +306,7 @@ const ApiConfigurationPage: React.FC = () => {
                     </span>
                   </div>
                   <p className={`${'text-muted-foreground'} text-sm`}>
-                    提供商: {api.provider} | 端点: {api.endpoint || '默认'}
+                    提供商: {api.provider} | 端点: {api.endpoint ?? '默认'}
                   </p>
                 </div>
               </div>
@@ -370,7 +370,7 @@ const ApiConfigurationPage: React.FC = () => {
                 </button>
               </div>
               <div className={`font-mono text-sm ${'bg-muted'} p-2 rounded`}>
-                {maskApiKey(api.apiKey, showApiKey[api.id] || false)}
+                {maskApiKey(api.apiKey, showApiKey[api.id] ?? false)}
               </div>
             </div>
 
@@ -509,6 +509,7 @@ const ApiConfigurationPage: React.FC = () => {
                 </label>
                 <input
                   type="text"
+                  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
                   value={editingApi.endpoint || ''}
                   onChange={(e) => setEditingApi(prev => prev ? { ...prev, endpoint: e.target.value } : null)}
                   className={`w-full px-3 py-2 border ${'border-border'} rounded-lg focus:outline-none focus:ring-2 focus:ring-primary`}

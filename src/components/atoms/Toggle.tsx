@@ -28,7 +28,7 @@ export const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
     ref,
   ) => {
     const [internalPressed, setInternalPressed] = useState(defaultPressed)
-    const isPressed = pressed !== undefined ? pressed : internalPressed
+    const isPressed = pressed ?? internalPressed
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
       const next = !isPressed

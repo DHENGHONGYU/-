@@ -11,7 +11,7 @@ import type {
   StrategyResult,
 } from '@/data/types'
 import { hotSectorQueryUseCase } from '@/services/useCase/hotSectorQuery.useCase'
-import type { HotSector } from '@/services/input/hotSectorService'
+import type { HotSector } from '@/services/fetcher/hotSectorService'
 import { matchesTheme } from '@/config/themeRegistry'
 import { getLogger } from '@/lib/logger'
 import { getCompositeScores } from './scoringAdapter'
@@ -279,15 +279,15 @@ function buildReasons(
     case 'core-scarce':
       return [`核心稀缺主题匹配，综合分 ${composite.toFixed(2)}`]
     case 'value-bargain': {
-      const vs = valuationScore?.toFixed(2) || '-'
+      const vs = valuationScore?.toFixed(2) ?? '-'
       return [`价值洼地：估值分 ${vs}，综合分 ${composite.toFixed(2)}`]
     }
     case 'hot-momentum': {
-      const mv = momentum != null ? momentum : 0
+      const mv = momentum ?? 0
       if (momentum === null) {
         logger.warn('[strategyEngine] 字段缺失，使用默认值', { field: 'momentum', context: 'hot-momentum' })
       }
-      const s = sector != null ? sector : '-'
+      const s = sector ?? '-'
       return [`热门追涨：板块 ${s}，动量 ${(mv * 100).toFixed(1)}%`]
     }
     case 'excluded':

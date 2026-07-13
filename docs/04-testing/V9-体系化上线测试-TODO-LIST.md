@@ -12,10 +12,15 @@
 |--------|------|------|------|
 | `audit:layers` | ✅ 通过 | 0 violations, 0 warnings | 883 文件扫描，分层合规 |
 | `audit:hardcode` | ⚠️ 基本通过 | 0 违规, 1 警告 | `src/mcp/servers/knowledge/knowledgeServer.ts:86` 静默回退 `?? []` |
-| `audit:deadcode` | ⚠️ 需确认 | 0 死代码, 4 提示 | 4 处条件返回 `null`（需确认是否预期空状态） |
+| `audit:deadcode` | ✅ 通过 | 0 死代码 | 4 处条件返回 `null` 均为预期空状态保护 |
+| `audit:docs` | ✅ 通过 | 0 违规 | 文档同步，版本一致 |
+| `tsc --noEmit` | ✅ 通过 | 0 error | `duckDBProvider.ts` 类型转换已修复 |
+| `test:clean` | ✅ 通过 | 14/14 通过 | `backtestStore.test.ts` dataBridge mock 已修复 |
+| **E2E 关键路径** | ⏱️ 未测 | — | 建议用 `npm run test:e2e` 验证 |
+| **Lighthouse 性能** | ⏱️ 未测 | — | 建议跑 LCP/INP/CLS 基线 |
 | `audit:docs` | ✅ 通过 | 0 违规 | 文档同步，版本一致 |
 | `tsc --noEmit` | ❌ 未通过 | 1 error | `duckDBProvider.ts` 类型转换不兼容 |
-| `test:clean` | ⏱️ 超时 | 未返回 | 需手动验证，建议修复8个排除文件 |
+| `test:clean` | ✅ 通过 | 14/14 通过 | `backtestStore.test.ts` dataBridge mock 已修复 |
 | **E2E 关键路径** | ⏱️ 未测 | — | 建议用 `npm run test:e2e` 验证 |
 | **Lighthouse 性能** | ⏱️ 未测 | — | 建议跑 LCP/INP/CLS 基线 |
 

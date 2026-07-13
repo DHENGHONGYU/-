@@ -605,11 +605,14 @@ describe('套件9: 权限矩阵配置完整性验证', () => {
     expect(MCP_ACL_MATRIX.system.allowedTools).toContain('*')
   })
 
-  it('ui 角色应禁止交易类 Server（trading/execution/trade）', () => {
+  it('ui 角色应显式授权交易类 Server 查询、但禁止 execution', () => {
     const uiServers = MCP_ACL_MATRIX.ui.allowedServers
-    expect(uiServers).not.toContain('trading')
+    // 2026-07-13 变更：UI 显式增列 trading/trade/input/export（仅查询）
+    expect(uiServers).toContain('trading')
+    expect(uiServers).toContain('trade')
+    expect(uiServers).toContain('input')
+    expect(uiServers).toContain('export')
     expect(uiServers).not.toContain('execution')
-    expect(uiServers).not.toContain('trade')
   })
 
   it('ci 角色应仅允许 system Server', () => {

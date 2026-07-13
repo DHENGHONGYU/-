@@ -349,9 +349,9 @@ export async function getQuoteWithConfig(
         dimensionCode: config.dimensionCode,
         symbol: code,
         sourceId: nextSource,
-        message: `${source} 失败，降级到 ${nextSource !== undefined ? nextSource : '无'}`,
+        message: `${source} 失败，降级到 ${nextSource ?? '无'}`,
       })
-      logger.warn(`[orchestrator] ${source} 行情失败，降级到 ${nextSource !== undefined ? nextSource : '结束'}: ${code}`)
+      logger.warn(`[orchestrator] ${source} 行情失败，降级到 ${nextSource ?? '结束'}: ${code}`)
     }
   }
 
@@ -509,9 +509,9 @@ export async function getKlineWithConfig(
         dimensionCode: config.dimensionCode,
         symbol: code,
         sourceId: nextSource,
-        message: `${source} K 线失败，降级到 ${nextSource !== undefined ? nextSource : '无'}`,
+        message: `${source} K 线失败，降级到 ${nextSource ?? '无'}`,
       })
-      logger.warn(`[orchestrator] ${source} K线失败，降级到 ${nextSource !== undefined ? nextSource : '结束'}: ${code}`)
+      logger.warn(`[orchestrator] ${source} K线失败，降级到 ${nextSource ?? '结束'}: ${code}`)
     }
   }
 

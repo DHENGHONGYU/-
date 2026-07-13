@@ -98,15 +98,16 @@ export const useStockAnalysisStore = create<StockAnalysisState>((set) => ({
       logger.info(`[stockAnalysisStore] Promise.all 返回`, {
         symbol,
         hasStock: stockData != null,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         quotesCount: quotesData ? ((quotesData as { dates?: unknown[] }).dates?.length || 'N/A') : 0,
         hasScore: scoreData != null,
         elapsedMs: Date.now() - t0,
       })
 
       set({
-        stock: stockData != null ? stockData : null,
-        quotes: quotesData != null ? quotesData : null,
-        v6Score: scoreData != null ? scoreData : null,
+        stock: stockData ?? null,
+        quotes: quotesData ?? null,
+        v6Score: scoreData ?? null,
         loading: false,
         error: null,
       })

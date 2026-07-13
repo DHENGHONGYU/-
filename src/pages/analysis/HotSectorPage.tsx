@@ -177,7 +177,7 @@ export default function HotSectorPage(): React.JSX.Element {
 
             // 构造雷达图数据
             const radarData: ScoreRadarData[] = Object.entries(score.dimensions || {}).map(([key, value]) => ({
-              dimension: DIMENSION_LABELS[key] || key,
+              dimension: DIMENSION_LABELS[key] ?? key,
               score: (getSafeNumber(value) * 100),
               fullMark: 100,
             }))

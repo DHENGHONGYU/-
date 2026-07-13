@@ -43,11 +43,15 @@ describe('MCP ACL 权限矩阵配置', () => {
     expect(MCP_ACL_MATRIX.system.allowedTools).toContain('*')
   })
 
-  it('ui 角色应限制交易类 Server 访问', () => {
+  it('ui 角色应显式授权交易类 Server 查询访问、但禁止 execution', () => {
     const uiServers = MCP_ACL_MATRIX.ui.allowedServers
-    expect(uiServers).not.toContain('trading')
+    // 2026-07-13 变更：UI 显式增列 trade/input/trading/export，仅放行查询类工具
+    expect(uiServers).toContain('trading')
+    expect(uiServers).toContain('trade')
+    expect(uiServers).toContain('input')
+    expect(uiServers).toContain('export')
+    // execution 仍禁止（写操作 Server）
     expect(uiServers).not.toContain('execution')
-    expect(uiServers).not.toContain('trade')
     expect(uiServers).toContain('fetcher')
     expect(uiServers).toContain('stockpool')
   })
@@ -92,15 +96,14 @@ describe('McpAclInterceptor - agent 角色', () => {
 // ============================================================
 
 describe('McpAclInterceptor - ui 角色', () => {
-  it('应拒绝访问 trading Server（不在 allowedServers 中）', () => {
+  it('应允许访问 trading Server 的查询类 Tool（get_orders 匹配 get_*）', () => {
     const result = mcpAclInterceptor.check({
       caller: 'ui',
       serverName: 'trading',
       resourceName: 'get_orders',
     })
-    expect(result.allowed).toBe(false)
-    expect(result.reason).toContain('not allowed to access server')
-    expect(result.reason).toContain('trading')
+    expect(result.allowed).toBe(true)
+    expect(result.reason).toBe('Permission granted')
   })
 
   it('应拒绝调用交易类写 Tool（即使在允许的 Server 上）', () => {
@@ -238,10 +241,11 @@ describe('McpAclInterceptor.assert()', () => {
   })
 
   it('McpAclError 应包含 detail 字段（含拒绝原因）', () => {
+    // 2026-07-13 变更：trading 已加入 ui.allowedServers，改用仍为禁止的 execution
     try {
       mcpAclInterceptor.assert({
         caller: 'ui',
-        serverName: 'trading',
+        serverName: 'execution',
         resourceName: 'create_buy_order',
       })
       expect.fail('应抛出异常')
@@ -250,7 +254,7 @@ describe('McpAclInterceptor.assert()', () => {
       const aclErr = err as McpAclError
       expect(aclErr.detail.allowed).toBe(false)
       expect(aclErr.detail.caller).toBe('ui')
-      expect(aclErr.detail.serverName).toBe('trading')
+      expect(aclErr.detail.serverName).toBe('execution')
       expect(aclErr.detail.resourceName).toBe('create_buy_order')
       expect(aclErr.message).toContain('not allowed to access server')
     }
@@ -347,13 +351,11 @@ describe('权限拒绝场景全覆盖', () => {
 
   // ── 9.2 ui 角色对所有禁止 Server 的拒绝 ──
 
-  it('ui 角色应拒绝访问 trading Server', () => {
+  it('ui 角色应允许访问 trading Server 的查询类 Tool', () => {
     const result = mcpAclInterceptor.check({
       caller: 'ui', serverName: 'trading', resourceName: 'get_orders',
     })
-    expect(result.allowed).toBe(false)
-    expect(result.reason).toContain('not allowed to access server')
-    expect(result.reason).toContain('trading')
+    expect(result.allowed).toBe(true)
   })
 
   it('ui 角色应拒绝访问 execution Server', () => {
@@ -363,25 +365,51 @@ describe('权限拒绝场景全覆盖', () => {
     expect(result.allowed).toBe(false)
   })
 
-  it('ui 角色应拒绝访问 trade Server', () => {
+  it('ui 角色应允许访问 trade Server 的查询类 Tool', () => {
     const result = mcpAclInterceptor.check({
       caller: 'ui', serverName: 'trade', resourceName: 'get_trades',
     })
-    expect(result.allowed).toBe(false)
+    expect(result.allowed).toBe(true)
   })
 
-  it('ui 角色应拒绝访问 input Server', () => {
+  it('ui 角色应允许访问 input Server 的查询类 Tool', () => {
     const result = mcpAclInterceptor.check({
       caller: 'ui', serverName: 'input', resourceName: 'get_inputs',
     })
-    expect(result.allowed).toBe(false)
+    expect(result.allowed).toBe(true)
   })
 
-  it('ui 角色应拒绝访问 export Server', () => {
+  it('ui 角色应允许访问 export Server 的回测报告导出 Tool', () => {
     const result = mcpAclInterceptor.check({
       caller: 'ui', serverName: 'export', resourceName: 'export_backtest_report',
     })
+    expect(result.allowed).toBe(true)
+  })
+
+  // ── 9.2b 写操作仍必须拒绝（授权模型核心边界） ──
+
+  it('ui 角色应拒绝调用 trading 写工具（create_buy_order）', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ui', serverName: 'trading', resourceName: 'create_buy_order',
+    })
     expect(result.allowed).toBe(false)
+    expect(result.reason).toContain('not allowed to call tool')
+  })
+
+  it('ui 角色应拒绝调用 trade 写工具（execute_trade_action）', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ui', serverName: 'trade', resourceName: 'execute_trade_action',
+    })
+    expect(result.allowed).toBe(false)
+    expect(result.reason).toContain('not allowed to call tool')
+  })
+
+  it('ui 角色应拒绝调用 input 写工具（import_stock_pool）', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ui', serverName: 'input', resourceName: 'import_stock_pool',
+    })
+    expect(result.allowed).toBe(false)
+    expect(result.reason).toContain('not allowed to call tool')
   })
 
   it('ui 角色应拒绝访问 system Server 的非查询类工具（reset_database）', () => {
@@ -527,8 +555,9 @@ describe('权限拒绝场景全覆盖', () => {
   // ── 9.7 Server 级别 vs Tool 级别拒绝原因区分 ──
 
   it('Server 级别拒绝原因应包含 "not allowed to access server"', () => {
+    // 2026-07-13 变更：trading 已加入 ui.allowedServers，改用仍为禁止的 execution Server
     const result = mcpAclInterceptor.check({
-      caller: 'ui', serverName: 'trading', resourceName: 'any_tool',
+      caller: 'ui', serverName: 'execution', resourceName: 'any_tool',
     })
     expect(result.allowed).toBe(false)
     expect(result.reason).toContain('not allowed to access server')
@@ -545,10 +574,10 @@ describe('权限拒绝场景全覆盖', () => {
   })
 
   it('Server 级别拒绝应优先于 Tool 级别检查', () => {
-    // ui 角色访问 trading Server 的 create_order Tool
-    // 应该先在 Server 级别被拒绝，而不是 Tool 级别
+    // 2026-07-13 变更：trading 已加入 ui.allowedServers，改用仍为禁止的 execution Server
+    // ui 角色访问 execution Server 的 create_order Tool 应在 Server 级别被拒绝
     const result = mcpAclInterceptor.check({
-      caller: 'ui', serverName: 'trading', resourceName: 'create_order',
+      caller: 'ui', serverName: 'execution', resourceName: 'create_order',
     })
     expect(result.allowed).toBe(false)
     expect(result.reason).toContain('not allowed to access server')
@@ -696,16 +725,17 @@ describe('assert() 拒绝场景全覆盖', () => {
 
   it('Server 级别拒绝时抛出的 McpAclError 应包含正确的 serverName', () => {
     try {
+      // 2026-07-13 变更：trading 已加入 ui.allowedServers，改用仍为禁止的 execution
       mcpAclInterceptor.assert({
-        caller: 'ui', serverName: 'trading', resourceName: 'get_orders',
+        caller: 'ui', serverName: 'execution', resourceName: 'get_orders',
       })
       expect.fail('应抛出异常')
     } catch (err) {
       expect(err).toBeInstanceOf(McpAclError)
       const aclErr = err as McpAclError
-      expect(aclErr.detail.serverName).toBe('trading')
+      expect(aclErr.detail.serverName).toBe('execution')
       expect(aclErr.detail.resourceName).toBe('get_orders')
-      expect(aclErr.detail.reason).toContain('trading')
+      expect(aclErr.detail.reason).toContain('execution')
     }
   })
 

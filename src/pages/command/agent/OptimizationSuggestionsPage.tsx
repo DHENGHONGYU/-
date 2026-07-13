@@ -279,7 +279,7 @@ const OptimizationSuggestionsPage: React.FC = () => {
                   <div className="rounded bg-muted p-3">
                     <div className="mb-1 text-body-sm text-muted-foreground">负责人</div>
                     <div className="font-semibold text-foreground">
-                      {suggestion.assignee || '未分配'}
+                      {suggestion.assignee ?? '未分配'}
                     </div>
                   </div>
                 </div>

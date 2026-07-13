@@ -13,7 +13,7 @@ import {
   type BulkImportRow,
   type BulkImportResult,
   type ImportStocksOptions,
-} from '@/services/input/batchImportService'
+} from '@/services/fetcher/batchImportService'
 import { usePoolStore, getAllGroups } from '@/store/poolStore'
 import { getLogger } from '@/lib/logger'
 import { twText, twBg, twBorder, DARK, HOVER, FOCUS, DIVIDE } from '@/constants/theme.tokens'
@@ -90,6 +90,7 @@ export default function BulkImportPanel(): React.JSX.Element {
   const handleFile = useCallback(async (file: File): Promise<void> => {
     setParsing(true)
     setMessage('')
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     setFileInfo({ name: file.name, size: file.size, type: file.type || file.name.split('.').pop() || 'unknown' })
     try {
       const rows = await parseFile(file)

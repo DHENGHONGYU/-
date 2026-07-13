@@ -103,9 +103,7 @@ let globalScheduler: FetcherScheduler | null = null
  * @returns FetcherScheduler
  */
 export function getFetcherScheduler(): FetcherScheduler {
-  if (!globalScheduler) {
-    globalScheduler = new FetcherScheduler()
-  }
+  globalScheduler ??= new FetcherScheduler()
   return globalScheduler
 }
 

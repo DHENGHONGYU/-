@@ -89,7 +89,7 @@ export const MCP_SERVER_REGISTRY: ReadonlyArray<MCPServerConfigEntry> = [
     modulePath: '@/mcp/servers/analysis/analysisServer',
     exportName: 'AnalysisServer',
     priority: 'medium',
-    enabled: true,
+    enabled: false, // 2026-07-20: 零业务调用，已注册 screening-agent 覆盖筛选能力
   },
   {
     name: 'news:main',
@@ -112,7 +112,7 @@ export const MCP_SERVER_REGISTRY: ReadonlyArray<MCPServerConfigEntry> = [
     modulePath: '@/mcp/servers/portfolio/portfolioServer',
     exportName: 'PortfolioServer',
     priority: 'medium',
-    enabled: true,
+    enabled: false, // 2026-07-20: 零业务调用，待 Agent 场景恢复
   },
   {
     name: 'screening:main',
@@ -128,7 +128,7 @@ export const MCP_SERVER_REGISTRY: ReadonlyArray<MCPServerConfigEntry> = [
     modulePath: '@/mcp/servers/knowledge/knowledgeServer',
     exportName: 'KnowledgeServer',
     priority: 'medium',
-    enabled: true,
+    enabled: false, // 2026-07-20: 零业务调用，待知识库场景恢复
   },
   {
     name: 'backtest:main',
@@ -165,7 +165,7 @@ export const MCP_SERVER_REGISTRY: ReadonlyArray<MCPServerConfigEntry> = [
     modulePath: '@/mcp/servers/execution/executionServer',
     exportName: 'ExecutionServer',
     priority: 'medium',
-    enabled: true,
+    enabled: false, // 2026-07-20: 零业务调用，待执行计划场景恢复
   },
 
 
@@ -175,6 +175,6 @@ export const MCP_SERVER_REGISTRY: ReadonlyArray<MCPServerConfigEntry> = [
     modulePath: '@/mcp/servers/workflow/workflowServer',
     exportName: 'WorkflowServer',
     priority: 'medium',
-    enabled: true,
+    enabled: false, // 2026-07-20: 零业务调用，待调度器场景恢复
   },
 ] as const

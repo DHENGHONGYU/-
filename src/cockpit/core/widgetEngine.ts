@@ -51,6 +51,7 @@ export class WidgetEngine {
         }
         return React.createElement(component, props)
       }
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       SafeWrapper.displayName = `Safe(${component.displayName || component.name || 'Widget'})`
 
       componentCache.set(widgetId, SafeWrapper)

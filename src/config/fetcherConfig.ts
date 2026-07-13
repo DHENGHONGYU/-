@@ -268,6 +268,7 @@ export function getApiHealthStatus(): ApiHealthReport {
   })
 
   // 2. REST Collector（行情 REST API）
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const restBaseUrl = import.meta.env.VITE_API_BASE_URL || '/api'
   const restChecks = [
     {
@@ -288,6 +289,7 @@ export function getApiHealthStatus(): ApiHealthReport {
   })
 
   // 3. WebSocket Collector（实时行情推送）
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const wsUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:8080/ws'
   const wsChecks = [
     {

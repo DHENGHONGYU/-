@@ -142,9 +142,7 @@ let _instance: QualityMetricsCollector | null = null
  * @returns QualityMetricsCollector
  */
 export function getQualityMetrics(): QualityMetricsCollector {
-  if (!_instance) {
-    _instance = new QualityMetricsCollector()
-  }
+  _instance ??= new QualityMetricsCollector()
   return _instance
 }
 
