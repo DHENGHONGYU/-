@@ -187,7 +187,7 @@ function parseConclusion(rawText: string, v6Rating: string | undefined): Analysi
 
   return {
     rating: rating as AnalysisConclusion['rating'],
-    summary: String(parsed['summary'] ?? ''),
+    summary: String(typeof parsed['summary'] === 'string' ? parsed['summary'] : ''),
     keyRisks: Array.isArray(parsed['keyRisks']) ? (parsed['keyRisks'] as string[]) : [],
     opportunities: Array.isArray(parsed['opportunities']) ? (parsed['opportunities'] as string[]) : [],
     consistentWithV6,

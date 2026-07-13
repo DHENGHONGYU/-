@@ -77,6 +77,7 @@
     "doc:freshness-alert": "tsx scripts/doc-freshness-alert.ts",
     "doc:version-check": "tsx scripts/doc-version-check.ts",
     "doc:arch-version-compare": "tsx scripts/doc-arch-version-compare.ts",
+    "doc:migrate": "tsx scripts/migrate-doc-categories.ts",
     "doc:dict-extract": "tsx scripts/doc-dict-ast-extract.ts",
     "release:changelog-bump": "tsx scripts/release-changelog-bump.ts",
     "postversion": "tsx scripts/release-changelog-bump.ts && tsx scripts/doc-version-check.ts --fix",

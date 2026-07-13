@@ -23,6 +23,7 @@ describe('themeRegistry', () => {
       name: '测试',
       researchStatus: 'candidate',
       source: 'manual',
+      pool: 'research',
       dataVersion: 1,
       theme: ['第四次工业革命稀缺核心资源'],
     }
@@ -36,6 +37,7 @@ describe('themeRegistry', () => {
       name: '北方华创',
       researchStatus: 'candidate',
       source: 'manual',
+      pool: 'research',
       dataVersion: 1,
     }
 
@@ -48,6 +50,7 @@ describe('themeRegistry', () => {
       name: '半导体测试',
       researchStatus: 'candidate',
       source: 'manual',
+      pool: 'research',
       dataVersion: 1,
       sector: '半导体设备',
     }
@@ -61,6 +64,7 @@ describe('themeRegistry', () => {
       name: 'AI测试',
       researchStatus: 'candidate',
       source: 'manual',
+      pool: 'research',
       dataVersion: 1,
       industryCode: 'C39 计算机、通信和其他电子设备制造业',
     }
@@ -74,6 +78,7 @@ describe('themeRegistry', () => {
       name: '食品饮料',
       researchStatus: 'candidate',
       source: 'manual',
+      pool: 'research',
       dataVersion: 1,
       sector: '白酒',
       industryCode: 'C15 酒、饮料和精制茶制造业',
@@ -88,6 +93,7 @@ describe('themeRegistry', () => {
       name: '北方华创',
       researchStatus: 'candidate',
       source: 'manual',
+      pool: 'research',
       dataVersion: 1,
     }
 

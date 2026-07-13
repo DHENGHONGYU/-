@@ -37,6 +37,7 @@ const mockStock: Stock = {
   name: '平安银行',
   researchStatus: 'watching',
   source: 'manual',
+  pool: 'research',
   dataVersion: 1,
   price: 100,
 }
