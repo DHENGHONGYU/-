@@ -39,6 +39,7 @@ const mockStocks: Stock[] = [
     roe: 30,
     marketCap: 2200000000000,
     sector: '白酒',
+    pool: 'research',
     researchStatus: 'watching',
     source: 'manual',
     dataVersion: 1,

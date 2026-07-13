@@ -72,8 +72,8 @@ export class MockCollector extends BaseCollector {
       return this.wrapData('modelComparison', comparison, 'mock')
     }
     if (endpoint.includes('stock-analysis/pool')) {
-      const pool = await MockStockAnalysisProvider.getStockPool()
-      return this.wrapData('stockPool', pool, 'mock')
+      const pool = await MockStockAnalysisProvider.getPoolBoard()
+      return this.wrapData('poolBoard', pool, 'mock')
     }
     if (endpoint.includes('stock-analysis/chat')) {
       const chat = await MockStockAnalysisProvider.getChatHistory()

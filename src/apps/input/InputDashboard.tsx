@@ -6,7 +6,7 @@ import { Badge } from '@/components/atoms/Badge'
 import { Select, SelectItem } from '@/components/atoms/Select'
 import { addStock } from '@/services/input/inputService'
 import { checkFetcherHealth } from '@/services/fetcher/fetcherService'
-import { usePoolStore, getAllGroups } from '@/store/poolStore'
+import { useIntentionPoolStore, getIntentionPoolGroups } from '@/store/intentionPoolStore'
 import { StockSearch } from '@/components/organisms/input/StockSearch'
 import type { StockSearchResult } from '@/services/input/inputService'
 import { getLogger } from '@/lib/logger'
@@ -17,11 +17,11 @@ import { GaugeRing } from '@/components/chart/GaugeChart'
 const logger = getLogger()
 
 export default function InputDashboard(): React.JSX.Element {
-  // 从 poolStore 获取状态
-  const stocks = usePoolStore((s) => s.stocks)
-  const loading = usePoolStore((s) => s.loading)
-  const error = usePoolStore((s) => s.error)
-  const refresh = usePoolStore((s) => s.refresh)
+  // 从 intentionPoolStore 获取状态
+  const items = useIntentionPoolStore((s) => s.items)
+  const loading = useIntentionPoolStore((s) => s.loading)
+  const error = useIntentionPoolStore((s) => s.error)
+  const refresh = useIntentionPoolStore((s) => s.refresh)
 
   // 本地 UI 状态
   const [symbol, setSymbol] = useState('')
@@ -38,8 +38,8 @@ export default function InputDashboard(): React.JSX.Element {
     void refresh()
   }, [refresh])
 
-  const allGroups = useMemo(() => getAllGroups(), [])
-  const allStocks = stocks
+  const allGroups = useMemo(() => getIntentionPoolGroups(), [items])
+  const allStocks = items
 
   const handleAdd = async (fetchBasic: boolean, fetchKline: boolean): Promise<void> => {
     if (!symbol || !name) {

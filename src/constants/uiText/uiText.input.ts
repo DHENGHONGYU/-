@@ -27,7 +27,7 @@ export const input = {
     viewAll: '查看全部',
     submitting: '提交中...',
     enterCandidateStock: '录入候选股票',
-    stockPoolBoard: '股票池看板',
+    poolBoard: '股票池看板',
     hotSectorsRecommendation: '热门板块推荐',
     dataCollectionAndInterface: '数据采集及接口',
     coreFunction: '核心功能',

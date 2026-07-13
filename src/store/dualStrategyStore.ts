@@ -552,7 +552,7 @@ export function initDualStrategyStoreSubscriptions(): () => void {
   _unsubscribeStocks = dataBridge.subscribe(
     STORE_NAME.stocks,
     (envelope) => {
-      if (envelope.meta.source === MODULE_ID.stockpool) return
+      if (envelope.meta.source === MODULE_ID.pool) return
       logger.info('[dualStrategyStore] stocks 频道收到变更', {
         action: envelope.meta.action,
         source: envelope.meta.source,

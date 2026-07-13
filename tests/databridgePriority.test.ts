@@ -6,7 +6,7 @@ import { MODULE_ID, ENVELOPE_TARGET, ENVELOPE_ACTION, type EnvelopeAction } from
 function createMockEnvelope(action: EnvelopeAction = ENVELOPE_ACTION.insertStock) {
   return EnvelopeFactory.create(
     {
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
       target: ENVELOPE_TARGET.db,
       action,
       traceId: `test-${Date.now()}`,

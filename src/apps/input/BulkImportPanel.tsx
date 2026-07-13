@@ -14,7 +14,7 @@ import {
   type BulkImportResult,
   type ImportStocksOptions,
 } from '@/services/input/batchImportService'
-import { usePoolStore, getAllGroups } from '@/store/poolStore'
+import { useIntentionPoolStore, getIntentionPoolGroups } from '@/store/intentionPoolStore'
 import { getLogger } from '@/lib/logger'
 import { twText, twBg, twBorder, DARK, HOVER, FOCUS, DIVIDE } from '@/constants/theme.tokens'
 import { cn } from '@/lib/utils'
@@ -42,9 +42,9 @@ const STEP_IDLE_TEXT = cn(twText('stone', 400), DARK.textNeutral500)
 const STEP_IDLE_BG = cn(twBg('stone', 100), twText('stone', 400), DARK.bgNeutral800, DARK.textNeutral500)
 
 export default function BulkImportPanel(): React.JSX.Element {
-  const refresh = usePoolStore((s) => s.refresh)
-  const stocks = usePoolStore((s) => s.stocks)
-  const allGroups = useMemo(() => getAllGroups(), [stocks])
+  const refresh = useIntentionPoolStore((s) => s.refresh)
+  const items = useIntentionPoolStore((s) => s.items)
+  const allGroups = useMemo(() => getIntentionPoolGroups(), [items])
 
   const [inputMode, setInputMode] = useState<InputMode>('text')
   const [importText, setImportText] = useState('')
@@ -81,7 +81,7 @@ export default function BulkImportPanel(): React.JSX.Element {
     setImportResult(null)
     setMessage('')
     const rows = parseBulkInput(text)
-    const existingSymbols = new Set(stocks.map(s => s.symbol))
+    const existingSymbols = new Set(items.map(s => s.symbol))
     const detectedRows = detectDuplicates(rows, existingSymbols)
     setImportPreview(detectedRows)
   }
@@ -94,7 +94,7 @@ export default function BulkImportPanel(): React.JSX.Element {
     setFileInfo({ name: file.name, size: file.size, type: file.type || file.name.split('.').pop() || 'unknown' })
     try {
       const rows = await parseFile(file)
-      const existingSymbols = new Set(stocks.map(s => s.symbol))
+      const existingSymbols = new Set(items.map(s => s.symbol))
       const detectedRows = detectDuplicates(rows, existingSymbols)
       setImportPreview(detectedRows)
       setImportResult(null)
@@ -105,7 +105,7 @@ export default function BulkImportPanel(): React.JSX.Element {
     } finally {
       setParsing(false)
     }
-  }, [stocks])
+  }, [items])
 
   // ── 拖拽事件 ──
   const handleDragOver = (e: React.DragEvent): void => {

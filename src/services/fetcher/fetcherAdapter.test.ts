@@ -214,6 +214,7 @@ describe('hasRealBasicData', () => {
       dataVersion: 1,
       source: 'akshare',
       updatedAt: Date.now(),
+      pool: 'research',
       researchStatus: 'watching',
     }
 
@@ -232,6 +233,7 @@ describe('hasRealBasicData', () => {
       dataVersion: 1,
       source: 'akshare',
       updatedAt: Date.now(),
+      pool: 'research',
       researchStatus: 'watching',
     }
 

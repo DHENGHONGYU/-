@@ -144,6 +144,24 @@ export const MIGRATIONS: readonly Migration[] = [
       }
     },
   },
+  // ── v29 股票池三分拆版本标记 ──
+  // store 本身由 createSchema 创建；pool 字段与 by-pool 索引在 createSchema 中补全。
+  {
+    version: 29,
+    name: 'seed_pool_split_tracker',
+    up({ tx }) {
+      if (!tx) return
+      if (tx.db.objectStoreNames.contains(STORE_NAME.schemaMigrations)) {
+        const tracker = tx.objectStore(STORE_NAME.schemaMigrations)
+        tracker.put({
+          id: 'pool_split_initialized',
+          version: 29,
+          appliedAt: Date.now(),
+          note: 'stocks store pool field + by-pool index created by createSchema',
+        })
+      }
+    },
+  },
   // ── v27 trace_records 表版本标记 ──
   // store 本身由 createSchema 创建；此处仅记录版本标记
   {

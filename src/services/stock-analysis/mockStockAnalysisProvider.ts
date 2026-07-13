@@ -20,7 +20,7 @@
 import type {
   AnalysisScores,
   ModelComparison,
-  StockPool,
+  PoolBoard,
   ChatHistory,
   ChatMessage,
   HotSectorData,
@@ -86,10 +86,10 @@ export class MockStockAnalysisProvider {
   }
 
   /**
-   * 获取股票池数据
+   * 获取股票池看板数据
    */
-  static getStockPool(page = 1, pageSize = 8): Promise<StockPool> {
-    return getStockAnalysisScoringStrategy().getStockPool(page, pageSize)
+  static getPoolBoard(page = 1, pageSize = 8): Promise<PoolBoard> {
+    return getStockAnalysisScoringStrategy().getPoolBoard(page, pageSize)
   }
 
   /**

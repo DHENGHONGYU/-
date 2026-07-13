@@ -13,7 +13,7 @@ import {
   ORDER_STATUS,
   ACCOUNT_TYPE,
 } from './dbConfig'
-import { RESEARCH_STATUS } from '@/constants/stockpool.constants'
+import { RESEARCH_STATUS } from '@/constants/pool.constants'
 
 // ------------------------------------------------------------------
 // 测试套件

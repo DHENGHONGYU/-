@@ -1,18 +1,18 @@
 /**
- * @module useStockPoolBoard
- * @description 股票池看板页面逻辑 Hook。
+ * @module usePoolBoard
+ * @description 股票池看板页面逻辑 Hook（三分拆后）。
  *
- * 将原 `InputDashboard` 中的股票池看板相关状态与操作抽离，
- * 供分析舱独立页面 `StockPoolBoardPage` 复用。
+ * 供分析舱独立页面 `PoolBoardPage` 复用，操作研究池（research）。
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { usePoolStore } from '@/store/poolStore'
-import { transitionStock, updateStockGroup } from '@/services/stockpool/stockpoolService'
+import { useResearchPoolStore } from '@/store/researchPoolStore'
+import { transitionPoolItem, updatePoolItemGroup } from '@/services/pool/poolService'
 import { refreshSymbolKline } from '@/services/fetcher/fetcherService'
-import { RESEARCH_STATUS, DEFAULT_POOL_GROUP, type ResearchStatus } from '@/constants/stockpool.constants'
-import type { Stock } from '@/data/types'
+import { RESEARCH_STATUS, DEFAULT_POOL_GROUP, type ResearchStatus } from '@/constants/pool.constants'
+import { POOL_TYPE } from '@/constants/pool.constants'
+import type { PoolItem } from '@/types/modules/pool.types'
 import { getLogger } from '@/lib/logger'
 import type { PoolViewMode } from '@/components/organisms/pool/PoolBoard'
 
@@ -23,15 +23,15 @@ type QualityFilter = 'all' | 'missingBasic' | 'missingKline' | 'missingFinance'
 const ALL_GROUPS_VALUE = '__all__'
 
 /**
- * useStockPoolBoard
+ * usePoolBoard
  */
-export function useStockPoolBoard() {
+export function usePoolBoard() {
   const navigate = useNavigate()
 
-  const stocks = usePoolStore((s) => s.stocks)
-  const loading = usePoolStore((s) => s.loading)
-  const error = usePoolStore((s) => s.error)
-  const refresh = usePoolStore((s) => s.refresh)
+  const items = useResearchPoolStore((s) => s.items)
+  const loading = useResearchPoolStore((s) => s.loading)
+  const error = useResearchPoolStore((s) => s.error)
+  const refresh = useResearchPoolStore((s) => s.refresh)
 
   const [viewMode, setViewMode] = useState<PoolViewMode>('kanban')
   const [selectedGroup, setSelectedGroup] = useState('')
@@ -42,20 +42,20 @@ export function useStockPoolBoard() {
   const [newGroupName, setNewGroupName] = useState('')
 
   useEffect(() => {
-    logger.info('[StockPoolBoard] 初始化，加载股票池数据')
+    logger.info('[PoolBoard] 初始化，加载研究池数据')
     void refresh()
   }, [refresh])
 
   const allGroups = useMemo(() => {
     const groups = new Set<string>()
-    for (const stock of stocks) {
-      groups.add(stock.group ?? DEFAULT_POOL_GROUP)
+    for (const item of items) {
+      groups.add(item.group ?? DEFAULT_POOL_GROUP)
     }
     return Array.from(groups).sort()
-  }, [stocks])
+  }, [items])
 
-  const filteredStocks = useMemo(() => {
-    let result = stocks
+  const filteredItems = useMemo(() => {
+    let result = items
     if (selectedGroup) {
       result = result.filter((s) => s.group === selectedGroup)
     }
@@ -73,7 +73,7 @@ export function useStockPoolBoard() {
           return true
       }
     })
-  }, [stocks, selectedGroup, qualityFilter])
+  }, [items, selectedGroup, qualityFilter])
 
   const handleSelectToggle = useCallback((targetSymbol: string): void => {
     setSelectedSymbols((prev) =>
@@ -100,7 +100,11 @@ export function useStockPoolBoard() {
 
   const handleTransition = useCallback(
     async (symbol: string, toStatus: ResearchStatus): Promise<void> => {
-      const result = await transitionStock(symbol, toStatus)
+      const result = await transitionPoolItem(symbol, {
+        pool: POOL_TYPE.research,
+        status: toStatus,
+        label: '状态流转',
+      })
       await refresh()
       handleResultFailure(result, () =>
         setMessage(`${symbol} 流转失败：${result.error ?? '未知错误'}`),
@@ -111,7 +115,7 @@ export function useStockPoolBoard() {
 
   const handleChangeGroup = useCallback(
     async (symbol: string, group: string): Promise<void> => {
-      const result = await updateStockGroup(symbol, group)
+      const result = await updatePoolItemGroup(symbol, group)
       await refresh()
       handleResultFailure(result, () =>
         setMessage(`${symbol} 移入分组失败：${result.error ?? '未知错误'}`),
@@ -121,10 +125,10 @@ export function useStockPoolBoard() {
   )
 
   const handleRefreshKline = useCallback(
-    async (stock: Stock): Promise<void> => {
-      const result = await refreshSymbolKline(stock.symbol)
+    async (item: PoolItem): Promise<void> => {
+      const result = await refreshSymbolKline(item.symbol)
       if (result.success) {
-        setMessage(`已刷新 ${stock.symbol} 行情`)
+        setMessage(`已刷新 ${item.symbol} 行情`)
         await refresh()
       } else {
         setMessage(result.error ?? '刷新行情失败')
@@ -142,36 +146,40 @@ export function useStockPoolBoard() {
 
   const runBulkTransition = useCallback(
     async (toStatus: ResearchStatus): Promise<void> => {
-      const targets = stocks.filter((s) => selectedSymbols.includes(s.symbol))
+      const targets = items.filter((s) => selectedSymbols.includes(s.symbol))
       const results: string[] = []
-      for (const stock of targets) {
-        const result = await transitionStock(stock.symbol, toStatus)
+      for (const item of targets) {
+        const result = await transitionPoolItem(item.symbol, {
+          pool: POOL_TYPE.research,
+          status: toStatus,
+          label: '批量流转',
+        })
         handleResultFailure(result, () =>
-          results.push(`${stock.symbol}: ${result.error ?? '失败'}`),
+          results.push(`${item.symbol}: ${result.error ?? '失败'}`),
         )
       }
       setSelectedSymbols([])
       await refresh()
       reportBulkResult(results, targets.length, '流转')
     },
-    [stocks, selectedSymbols, refresh, handleResultFailure, reportBulkResult],
+    [items, selectedSymbols, refresh, handleResultFailure, reportBulkResult],
   )
 
   const runBulkChangeGroup = useCallback(
     async (targetGroup: string): Promise<void> => {
-      const targets = stocks.filter((s) => selectedSymbols.includes(s.symbol))
+      const targets = items.filter((s) => selectedSymbols.includes(s.symbol))
       const results: string[] = []
-      for (const stock of targets) {
-        const result = await updateStockGroup(stock.symbol, targetGroup)
+      for (const item of targets) {
+        const result = await updatePoolItemGroup(item.symbol, targetGroup)
         handleResultFailure(result, () =>
-          results.push(`${stock.symbol}: ${result.error ?? '失败'}`),
+          results.push(`${item.symbol}: ${result.error ?? '失败'}`),
         )
       }
       setSelectedSymbols([])
       await refresh()
       reportBulkResult(results, targets.length, '移入分组')
     },
-    [stocks, selectedSymbols, refresh, handleResultFailure, reportBulkResult],
+    [items, selectedSymbols, refresh, handleResultFailure, reportBulkResult],
   )
 
   const handleBulkArchive = useCallback((): Promise<void> => {
@@ -195,13 +203,13 @@ export function useStockPoolBoard() {
   }, [allGroups, newGroupName])
 
   return {
-    stocks,
+    items,
     loading,
     error,
     message,
     refresh,
     allGroups,
-    filteredStocks,
+    filteredItems,
     viewMode,
     setViewMode,
     selectedGroup,

@@ -55,7 +55,7 @@ describe('MCP ACL 权限矩阵配置', () => {
     // execution 仍禁止（写操作 Server）
     expect(uiServers).not.toContain('execution')
     expect(uiServers).toContain('fetcher')
-    expect(uiServers).toContain('stockpool')
+    expect(uiServers).toContain('pool')
   })
 })
 
@@ -109,11 +109,11 @@ describe('McpAclInterceptor - ui 角色', () => {
   })
 
   it('应拒绝调用交易类写 Tool（即使在允许的 Server 上）', () => {
-    // 假设有 stockpool Server 暴露了 create_order Tool
-    // ui 角色虽可访问 stockpool Server，但 allowedTools 不包含 create_order
+    // 假设有 pool Server 暴露了 create_order Tool
+    // ui 角色虽可访问 pool Server，但 allowedTools 不包含 create_order
     const result = mcpAclInterceptor.check({
       caller: 'ui',
-      serverName: 'stockpool',
+      serverName: 'pool',
       resourceName: 'create_order',
     })
     expect(result.allowed).toBe(false)
@@ -124,8 +124,8 @@ describe('McpAclInterceptor - ui 角色', () => {
   it('应允许调用查询类 Tool（list_* 通配符匹配）', () => {
     const result = mcpAclInterceptor.check({
       caller: 'ui',
-      serverName: 'stockpool',
-      resourceName: 'list_pool_stocks',
+      serverName: 'pool',
+      resourceName: 'list_pool_items',
     })
     expect(result.allowed).toBe(true)
   })
@@ -284,12 +284,12 @@ describe('resolveCaller()', () => {
 // ============================================================
 
 describe('通配符匹配边界场景', () => {
-  it('list_* 应匹配 list_pool_stocks 但不匹配 listpoolstocks', () => {
+  it('list_* 应匹配 list_pool_items 但不匹配 listpoolstocks', () => {
     expect(
       mcpAclInterceptor.check({
         caller: 'ui',
-        serverName: 'stockpool',
-        resourceName: 'list_pool_stocks',
+        serverName: 'pool',
+        resourceName: 'list_pool_items',
       }).allowed,
     ).toBe(true)
 
@@ -297,7 +297,7 @@ describe('通配符匹配边界场景', () => {
     expect(
       mcpAclInterceptor.check({
         caller: 'ui',
-        serverName: 'stockpool',
+        serverName: 'pool',
         resourceName: 'listpoolstocks',
       }).allowed,
     ).toBe(false)
@@ -420,10 +420,10 @@ describe('权限拒绝场景全覆盖', () => {
     expect(result.reason).toContain('not allowed to access server')
   })
 
-  it('ui 角色调用已合并 input 的写工具（import_stock_pool）应被 Server 级拒绝', () => {
+  it('ui 角色调用已合并 input 的写工具（import_pool）应被 Server 级拒绝', () => {
     // input Server 已合并入 fetcher:data 并删除；写工具的拒绝现由 Server 级承接
     const result = mcpAclInterceptor.check({
-      caller: 'ui', serverName: 'input', resourceName: 'import_stock_pool',
+      caller: 'ui', serverName: 'input', resourceName: 'import_pool',
     })
     expect(result.allowed).toBe(false)
     expect(result.reason).toContain('not allowed to access server')
@@ -462,9 +462,9 @@ describe('权限拒绝场景全覆盖', () => {
     expect(result.allowed).toBe(false)
   })
 
-  it('ci 角色应拒绝访问 stockpool Server', () => {
+  it('ci 角色应拒绝访问 pool Server', () => {
     const result = mcpAclInterceptor.check({
-      caller: 'ci', serverName: 'stockpool', resourceName: 'list_pool_stocks',
+      caller: 'ci', serverName: 'pool', resourceName: 'list_pool_items',
     })
     expect(result.allowed).toBe(false)
   })
@@ -478,9 +478,9 @@ describe('权限拒绝场景全覆盖', () => {
 
   // ── 9.4 ui 角色对禁止 Tool 模式的拒绝（即使在允许的 Server 上） ──
 
-  it('ui 角色应拒绝调用 create_order Tool（即使在 stockpool Server 上）', () => {
+  it('ui 角色应拒绝调用 create_order Tool（即使在 pool Server 上）', () => {
     const result = mcpAclInterceptor.check({
-      caller: 'ui', serverName: 'stockpool', resourceName: 'create_order',
+      caller: 'ui', serverName: 'pool', resourceName: 'create_order',
     })
     expect(result.allowed).toBe(false)
     expect(result.reason).toContain('not allowed to call tool')
@@ -489,21 +489,21 @@ describe('权限拒绝场景全覆盖', () => {
 
   it('ui 角色应拒绝调用 update_stock Tool', () => {
     const result = mcpAclInterceptor.check({
-      caller: 'ui', serverName: 'stockpool', resourceName: 'update_stock',
+      caller: 'ui', serverName: 'pool', resourceName: 'update_stock',
     })
     expect(result.allowed).toBe(false)
   })
 
   it('ui 角色应拒绝调用 delete_stock Tool', () => {
     const result = mcpAclInterceptor.check({
-      caller: 'ui', serverName: 'stockpool', resourceName: 'delete_stock',
+      caller: 'ui', serverName: 'pool', resourceName: 'delete_stock',
     })
     expect(result.allowed).toBe(false)
   })
 
   it('ui 角色应拒绝调用 insert_stock Tool', () => {
     const result = mcpAclInterceptor.check({
-      caller: 'ui', serverName: 'stockpool', resourceName: 'insert_stock',
+      caller: 'ui', serverName: 'pool', resourceName: 'insert_stock',
     })
     expect(result.allowed).toBe(false)
   })
@@ -550,7 +550,7 @@ describe('权限拒绝场景全覆盖', () => {
 
   it('list_* 不应匹配 listpoolstocks（缺少下划线）', () => {
     const result = mcpAclInterceptor.check({
-      caller: 'ui', serverName: 'stockpool', resourceName: 'listpoolstocks',
+      caller: 'ui', serverName: 'pool', resourceName: 'listpoolstocks',
     })
     expect(result.allowed).toBe(false)
   })
@@ -583,7 +583,7 @@ describe('权限拒绝场景全覆盖', () => {
 
   it('Tool 级别拒绝原因应包含 "not allowed to call tool"', () => {
     const result = mcpAclInterceptor.check({
-      caller: 'ui', serverName: 'stockpool', resourceName: 'create_order',
+      caller: 'ui', serverName: 'pool', resourceName: 'create_order',
     })
     expect(result.allowed).toBe(false)
     expect(result.reason).toContain('not allowed to call tool')
@@ -667,8 +667,8 @@ describe('四角色权限对比矩阵', () => {
       expected: { agent: true, ui: true, ci: false, system: true },
     },
     {
-      desc: 'stockpool.list_pool_stocks（列表查询）',
-      server: 'stockpool', tool: 'list_pool_stocks',
+      desc: 'pool.list_pool_items（列表查询）',
+      server: 'pool', tool: 'list_pool_items',
       expected: { agent: true, ui: true, ci: false, system: true },
     },
     {
@@ -759,7 +759,7 @@ describe('assert() 拒绝场景全覆盖', () => {
   it('Tool 级别拒绝时抛出的 McpAclError 应包含正确的 resourceName', () => {
     try {
       mcpAclInterceptor.assert({
-        caller: 'ui', serverName: 'stockpool', resourceName: 'delete_stock',
+        caller: 'ui', serverName: 'pool', resourceName: 'delete_stock',
       })
       expect.fail('应抛出异常')
     } catch (err) {

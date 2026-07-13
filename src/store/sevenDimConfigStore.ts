@@ -140,7 +140,7 @@ function buildCollectionConfig(state: SevenDimConfigState): CollectionConfig {
 
 /**
  * 生成默认采集标的池。
- * TODO: 后端真实股票池服务就绪后，替换为从 stockPoolService / watchlist 获取的标的列表。
+ * TODO: 后端真实股票池服务就绪后，替换为从 poolService / watchlist 获取的标的列表。
  */
 function resolveDefaultSymbols(count: number): string[] {
   const normalized = MOCK_STOCK_LIBRARY

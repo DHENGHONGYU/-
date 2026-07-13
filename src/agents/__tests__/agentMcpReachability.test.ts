@@ -23,7 +23,7 @@ const AGENT_SERVER_BINDINGS: ReadonlyArray<{ id: string; mcpServerName: string }
   { id: 'fetcher-agent', mcpServerName: 'fetcher' },
   { id: 'news-analyzer-agent', mcpServerName: 'news' },
   { id: 'screening-agent', mcpServerName: 'screening' },
-  { id: 'stockpool-agent', mcpServerName: 'stockpool' },
+  { id: 'pool-agent', mcpServerName: 'pool' },
   { id: 'backtest-agent', mcpServerName: 'backtest' },
 ]
 

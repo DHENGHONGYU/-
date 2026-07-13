@@ -184,12 +184,12 @@ export const L4ScenarioCalculator: LayerCalculator = {
       return {
         layerId: 'l4' as LayerId,
         layerName: LAYER_LABELS.l4 ?? 'L4 情景推演',
-        score: 0,
+        score: Number.NaN,
         summary: `情景推演失败: ${msg}`,
         risks: [],
         evidence: [],
         weight,
-        weightedScore: 0,
+        weightedScore: Number.NaN,
         dataSources: [],
       }
     }
@@ -296,12 +296,12 @@ export const L5TMCalculator: LayerCalculator = {
       return {
         layerId: 'l5' as LayerId,
         layerName: LAYER_LABELS.l5 ?? 'L5 T-M 矩阵',
-        score: 0,
+        score: Number.NaN,
         summary: `T-M计算失败: ${msg}`,
         risks: [],
         evidence: [],
         weight,
-        weightedScore: 0,
+        weightedScore: Number.NaN,
         dataSources: [],
       }
     }
@@ -418,12 +418,12 @@ export const L6HypeCalculator: LayerCalculator = {
       return {
         layerId: 'l6' as LayerId,
         layerName: LAYER_LABELS.l6 ?? 'L6 Hype 周期',
-        score: 0,
+        score: Number.NaN,
         summary: `Hype计算失败: ${msg}`,
         risks: [],
         evidence: [],
         weight,
-        weightedScore: 0,
+        weightedScore: Number.NaN,
         dataSources: [],
       }
     }

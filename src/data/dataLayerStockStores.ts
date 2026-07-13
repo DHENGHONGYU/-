@@ -7,7 +7,12 @@
  * - financialReportStore: 财报 save/get/list（含详细日志）
  */
 import { DATA_SOURCE, STORE_NAME } from '@/config/dbConfig'
-import { DEFAULT_POOL_GROUP, RESEARCH_STATUS, type ResearchStatus } from '@/constants/stockpool.constants'
+import {
+  DEFAULT_POOL_GROUP,
+  DEFAULT_POOL_TYPE,
+  RESEARCH_STATUS,
+  type ResearchStatus,
+} from '@/constants/pool.constants'
 import { getLogger } from '@/lib/logger'
 import { now } from './db'
 import type { DataLayerResult, DailyQuotes, FinancialReport, Stock } from './types'
@@ -24,6 +29,7 @@ export const stockStore = {
 
     const fullStock: Stock = {
       ...stock,
+      pool: stock.pool ?? DEFAULT_POOL_TYPE,
       researchStatus: stock.researchStatus ?? RESEARCH_STATUS.candidate,
       source: stock.source ?? DATA_SOURCE.manual,
       group: stock.group ?? DEFAULT_POOL_GROUP,
@@ -32,7 +38,7 @@ export const stockStore = {
       updatedAt: now(),
     }
 
-    const result = await sendWriteEnvelope<Stock>('insertStock', fullStock, 'stockpool')
+    const result = await sendWriteEnvelope<Stock>('insertStock', fullStock, 'pool')
     if (!result.success) {
       return { success: false, error: result.error }
     }
@@ -74,7 +80,7 @@ export const stockStore = {
     return sendWriteEnvelope<void>(
       'updateStock',
       { symbol, researchStatus: status, updatedAt: now() },
-      'stockpool',
+      'pool',
     )
   },
 
@@ -92,7 +98,7 @@ export const stockStore = {
     const result = await sendWriteEnvelope<Stock>(
       'updateStock',
       { symbol, group: normalized, updatedAt: now() },
-      'stockpool',
+      'pool',
     )
     if (!result.success) {
       return { success: false, error: result.error }
@@ -106,7 +112,7 @@ export const stockStore = {
   },
 
   async remove(symbol: string): Promise<DataLayerResult<void>> {
-    return sendWriteEnvelope<void>('deleteStock', { symbol }, 'stockpool')
+    return sendWriteEnvelope<void>('deleteStock', { symbol }, 'pool')
   },
 }
 

@@ -20,7 +20,7 @@ export const EVENT_NAMES = {
   ROTATION_SIGNAL_TRIGGERED: 'strategy:rotationSignalTriggered',
   // ---- D-3 批次新增：Store 写操作广播 ----
   /** 股票池数据变更（poolStore 写操作触发） */
-  STOCK_POOL_CHANGED: 'stock_pool:changed',
+  POOL_CHANGED: 'pool:changed',
   /** 分析评分变更（analysisStore 写操作触发） */
   SCORES_CHANGED: 'scores:changed',
   /** 持仓数据变更（holdingsStore / positionStore 写操作触发） */

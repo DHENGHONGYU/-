@@ -8,7 +8,7 @@
  */
 
 import type { DataSource } from '@/config/dbConfig'
-import type { ResearchStatus } from '@/constants/stockpool.constants'
+import type { PoolStatus, PoolType } from '@/types/modules/pool.types'
 /** 股票数据质量标记 */
 export interface StockDataQuality {
   basic: boolean
@@ -50,7 +50,18 @@ export interface Stock {
   pb?: number
   roe?: number
   marketCap?: number
-  researchStatus: ResearchStatus
+  /**
+   * 股票池类型（三分拆后）。
+   * - intention: 意向候选池
+   * - research: 研究精选池
+   * - position: 持仓池
+   */
+  pool: PoolType
+  /**
+   * 研究状态（三分拆后类型扩展为 PoolStatus）。
+   * 字段名保留 researchStatus 以兼容现有索引与历史数据。
+   */
+  researchStatus: PoolStatus
   source: DataSource
   dataVersion: number
   dataQuality?: StockDataQuality
@@ -83,6 +94,10 @@ export interface Stock {
   dataProvenance?: 'real' | 'mock' | 'unknown'
   /** 实际数据源标识（tencent/sina/netease/akshare/mock/unknown） */
   dataSource?: 'tencent' | 'sina' | 'netease' | 'akshare' | 'mock' | 'unknown'
+  // ── 三分拆后持仓字段（仅 position 池使用） ──
+  quantity?: number
+  avgCost?: number
+  currentPrice?: number
 }
 
 /**
@@ -95,25 +110,18 @@ export interface PoolGroupMeta {
 }
 
 /**
- * 架构导航：PoolGroup 业务实体定义
+ * 架构导航：PoolLane 业务实体定义
  * ====================================
  *
- * `PoolGroup`（含 status/label/stocks/options 字段的完整业务实体）
- * 定义在 services 层，未包含在 data/types/ 中。
+ * `PoolLane`（含 status/label/items/options 字段的完整业务实体）
+ * 定义在 types/modules/pool.types.ts 中。
  *
- * 权威源：`src/services/stockpool/stockpoolService.ts`
- *
- * 未迁移至 data/types/ 的原因：
- * - `PoolGroup.options` 字段类型为 `PoolTransitionOption[]`
- * - `PoolTransitionOption` 定义在 `src/core/poolTransitionEngine`
- * - 迁移会导致 data 层反向依赖 core 层，违反 AGENTS.md 分层规则
- *
- * 引用方应直接从 services 层导入：
+ * 引用方应直接导入：
  * ```typescript
- * import type { PoolGroup } from '@/services/stockpool/stockpoolService'
+ * import type { PoolLane } from '@/types/modules/pool.types'
  * ```
  *
- * @see src/services/stockpool/stockpoolService.ts (PoolGroup 定义)
- * @see src/core/poolTransitionEngine.ts (PoolTransitionOption 定义)
- * @see src/components/pool/usePoolDataFromStore.ts (唯一类型引用方)
+ * @see src/types/modules/pool.types.ts (PoolLane 定义)
+ * @see src/core/poolTransitionEngine.ts (PoolTransitionTarget 定义)
+ * @see src/components/organisms/pool/usePoolDataFromStore.ts (类型引用方)
  */

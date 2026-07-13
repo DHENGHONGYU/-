@@ -79,7 +79,7 @@ export class TradingServer extends MCPServerBase {
           const symbol = args.symbol as string
           logger.info(`[trading] advise_stock: ${symbol}`)
           // 需要 Stock 对象，通过 symbol 构建最小 Stock
-          const stock = { symbol, name: symbol, price: 0, researchStatus: 'watching' as const, source: 'manual' as const, dataVersion: 1 }
+          const stock = { symbol, name: symbol, price: 0, pool: 'research' as const, researchStatus: 'watching' as const, source: 'manual' as const, dataVersion: 1 }
           const result = await adviseForStock(stock)
           return {
             content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
@@ -113,7 +113,7 @@ export class TradingServer extends MCPServerBase {
         handler: async (args) => {
           const symbol = args.symbol as string
           const quantity = args.quantity as number | undefined
-          const stock = { symbol, name: symbol, price: 0, researchStatus: 'watching' as const, source: 'manual' as const, dataVersion: 1 }
+          const stock = { symbol, name: symbol, price: 0, pool: 'research' as const, researchStatus: 'watching' as const, source: 'manual' as const, dataVersion: 1 }
           logger.info(`[trading] create_buy_order: ${symbol}`, { quantity })
           const result = await createBuyOrder(stock, quantity)
           return {
@@ -136,7 +136,7 @@ export class TradingServer extends MCPServerBase {
         handler: async (args) => {
           const symbol = args.symbol as string
           const quantity = args.quantity as number | undefined
-          const stock = { symbol, name: symbol, price: 0, researchStatus: 'watching' as const, source: 'manual' as const, dataVersion: 1 }
+          const stock = { symbol, name: symbol, price: 0, pool: 'research' as const, researchStatus: 'watching' as const, source: 'manual' as const, dataVersion: 1 }
           logger.info(`[trading] create_sell_order: ${symbol}`, { quantity })
           const result = await createSellOrder(stock, quantity)
           return {

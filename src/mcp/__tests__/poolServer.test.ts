@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest'
-import { StockPoolServer } from '@/mcp/servers/stockpool/stockPoolServer'
+import { PoolServer } from '@/mcp/servers/pool/poolServer'
 
-describe('StockPoolServer', () => {
-  const server = new StockPoolServer()
+describe('PoolServer', () => {
+  const server = new PoolServer()
 
   it('应该有 correct server info', () => {
-    expect(server.info.name).toBe('stockpool')
-    expect(server.info.version).toBe('1.0.0')
+    expect(server.info.name).toBe('pool')
+    expect(server.info.version).toBe('2.0.0')
     expect(server.info.description).toBeTruthy()
     expect(server.info.dependencies).toContain('fetcher')
   })
@@ -22,18 +22,19 @@ describe('StockPoolServer', () => {
     }
   })
 
-  it('应该有 list_pool_stocks tool', () => {
+  it('应该有 list_pool_items tool', () => {
     const tools = server.listTools()
-    const tool = tools.find((t) => t.name === 'list_pool_stocks')
+    const tool = tools.find((t) => t.name === 'list_pool_items')
     expect(tool).toBeDefined()
-    expect(tool!.inputSchema.properties!).toHaveProperty('status')
+    expect(tool!.inputSchema.properties!).toHaveProperty('pool')
   })
 
-  it('应该有 transition_stock tool（symbol/toStatus 必填）', () => {
+  it('应该有 transition_pool_item tool（symbol/toPool/toStatus 必填）', () => {
     const tools = server.listTools()
-    const tool = tools.find((t) => t.name === 'transition_stock')
+    const tool = tools.find((t) => t.name === 'transition_pool_item')
     expect(tool).toBeDefined()
     expect(tool!.inputSchema.required).toContain('symbol')
+    expect(tool!.inputSchema.required).toContain('toPool')
     expect(tool!.inputSchema.required).toContain('toStatus')
   })
 
@@ -48,8 +49,8 @@ describe('StockPoolServer', () => {
     const resources = server.listResources()
     expect(resources.length).toBe(2)
     const uris = resources.map((r) => r.uriTemplate)
-    expect(uris).toContain('stockpool://stocks')
-    expect(uris).toContain('stockpool://groups')
+    expect(uris).toContain('pool://items')
+    expect(uris).toContain('pool://groups')
   })
 
   it('应该有 no prompts', () => {

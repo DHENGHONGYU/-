@@ -866,13 +866,13 @@ export function checkBoundarySync(
     archDocContent = fs.readFileSync(archDocPath, 'utf-8')
   } catch {
     warnings.push({
-      file: 'docs/01-requirements/03-architecture-standards.md',
+      file: 'docs/A2-requirements/03-architecture-standards.md',
       line: 1,
       column: 1,
       rule: 'AP-010',
       severity: 'major',
       message: '架构标准文档不存在或无法读取',
-      suggestion: '确保 docs/01-requirements/03-architecture-standards.md 存在且可读',
+      suggestion: '确保 docs/A2-requirements/03-architecture-standards.md 存在且可读',
       context: '文件缺失',
     })
     return

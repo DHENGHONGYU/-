@@ -105,7 +105,7 @@ vi.mock('@/services/scoring/rotationSignalDetector', () => ({
 }))
 
 vi.mock('@/config/dbConfig', () => ({
-  MODULE_ID: { analyzer: 'analyzer', tradinghub: 'tradinghub', strategy: 'strategy', stockpool: 'stockpool' },
+  MODULE_ID: { analyzer: 'analyzer', tradinghub: 'tradinghub', strategy: 'strategy', pool: 'pool' },
   STORE_NAME: { hotSectorScores: 'hotSectorScores', valuePitScores: 'valuePitScores', rotationScores: 'rotationScores', signals: 'signals', stocks: 'stocks' },
   ENVELOPE_ACTION: { queryList: 'QUERY_LIST', saveScores: 'SAVE_SCORES', insertSignal: 'INSERT_SIGNAL', saveV6Score: 'SAVE_V6_SCORE' },
   ENVELOPE_TARGET: { db: 'db' },
@@ -670,7 +670,7 @@ describe('辅助函数', () => {
     expect(shouldSkipSelf({ meta: { source: 'analyzer', action: 'SAVE' } })).toBe(true)
     expect(shouldSkipSelf({ meta: { source: 'tradinghub', action: 'SAVE' } })).toBe(true)
     expect(shouldSkipSelf({ meta: { source: 'strategy', action: 'SAVE' } })).toBe(true)
-    expect(shouldSkipSelf({ meta: { source: 'stockpool', action: 'SAVE' } })).toBe(false)
+    expect(shouldSkipSelf({ meta: { source: 'pool', action: 'SAVE' } })).toBe(false)
     expect(shouldSkipSelf({ meta: { source: 'external', action: 'SAVE' } })).toBe(false)
   })
 

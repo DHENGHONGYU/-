@@ -205,6 +205,10 @@ export interface CompositeScore {
     level: string        // 七级置信度
     dataSources: Record<string, string> // 数据来源->分级
   }
+  /** 被跳过的层列表（数据缺失导致未参与计算） */
+  skippedLayers?: LayerId[]
+  /** 数据覆盖率（0-1，参与计算的层数 / 总层数） */
+  coverageRate?: number
 }
 
 // ============================================================

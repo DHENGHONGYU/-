@@ -88,11 +88,11 @@ describe('MarketDataAdapter - 字段映射（A/B/C 板块）', () => {
   // ============================================================
   // B. 股票池管理与监控
   // ============================================================
-  describe('B. 股票池管理 stockPool', () => {
-    it('应将原始 payload 映射为标准化 StockPool 结构', () => {
+  describe('B. 股票池管理 poolBoard', () => {
+    it('应将原始 payload 映射为标准化 PoolBoard 结构', () => {
       const raw: RawMarketData = {
         timestamp: Date.now(),
-        dataType: 'stockPool',
+        dataType: 'poolBoard',
         source: 'rest',
         payload: {
           stocks: [
@@ -114,20 +114,20 @@ describe('MarketDataAdapter - 字段映射（A/B/C 板块）', () => {
       }
 
       const result = marketDataAdapter.adapt(raw)
-      expect(result.stockPool).toBeDefined()
-      expect(result.stockPool?.stocks).toHaveLength(1)
-      expect(result.stockPool!.stocks[0]!.code).toBe('600519')
-      expect(result.stockPool!.stocks[0]!.name).toBe('贵州茅台')
-      expect(result.stockPool!.stocks[0]!.price).toBe(1680.0)
-      expect(result.stockPool!.stocks[0]!.changePercent).toBe(2.35)
-      expect(result.stockPool!.stocks[0]!.statusColor).toBe('bg-green-500')
-      expect(result.stockPool!.total).toBe(12)
+      expect(result.poolBoard).toBeDefined()
+      expect(result.poolBoard?.items).toHaveLength(1)
+      expect(result.poolBoard!.items[0]!.code).toBe('600519')
+      expect(result.poolBoard!.items[0]!.name).toBe('贵州茅台')
+      expect(result.poolBoard!.items[0]!.price).toBe(1680.0)
+      expect(result.poolBoard!.items[0]!.changePercent).toBe(2.35)
+      expect(result.poolBoard!.items[0]!.statusColor).toBe('bg-green-500')
+      expect(result.poolBoard!.total).toBe(12)
     })
 
     it('应支持股票池字段别名映射', () => {
       const raw: RawMarketData = {
         timestamp: Date.now(),
-        dataType: 'stockPool',
+        dataType: 'poolBoard',
         source: 'rest',
         payload: {
           stocks: [
@@ -149,28 +149,28 @@ describe('MarketDataAdapter - 字段映射（A/B/C 板块）', () => {
       }
 
       const result = marketDataAdapter.adapt(raw)
-      const stock = result.stockPool!.stocks[0]!
+      const stock = result.poolBoard!.items[0]!
       expect(stock.code).toBe('000858')
       expect(stock.name).toBe('五粮液')
       expect(stock.price).toBe(145.0)
       expect(stock.changePercent).toBe(-1.2)
       expect(stock.turnoverRate).toBe('1.05%')
       expect(stock.statusColor).toBe('bg-amber-500')
-      expect(result.stockPool!.pageSize).toBe(10)
+      expect(result.poolBoard!.pageSize).toBe(10)
     })
 
     it('非法 payload 应返回空股票池默认值', () => {
       const raw: RawMarketData = {
         timestamp: Date.now(),
-        dataType: 'stockPool',
+        dataType: 'poolBoard',
         source: 'rest',
         payload: 'invalid',
       }
 
       const result = marketDataAdapter.adapt(raw)
-      expect(result.stockPool?.stocks).toEqual([])
-      expect(result.stockPool?.total).toBe(0)
-      expect(result.stockPool?.page).toBe(1)
+      expect(result.poolBoard?.items).toEqual([])
+      expect(result.poolBoard?.total).toBe(0)
+      expect(result.poolBoard?.page).toBe(1)
     })
   })
 
@@ -270,8 +270,8 @@ describe('MarketDataAdapter - 字段映射（A/B/C 板块）', () => {
       expect(merged.analysisScores.profile.tags).toEqual([])
       expect(merged.modelComparison).toBeDefined()
       expect(merged.modelComparison.dimensions).toEqual([])
-      expect(merged.stockPool).toBeDefined()
-      expect(merged.stockPool.stocks).toEqual([])
+      expect(merged.poolBoard).toBeDefined()
+      expect(merged.poolBoard.items).toEqual([])
       expect(merged.chatHistory).toBeDefined()
       expect(merged.chatHistory.messages).toEqual([])
     })
@@ -296,7 +296,7 @@ describe('MarketDataAdapter - 字段映射（A/B/C 板块）', () => {
 
       const partial2 = marketDataAdapter.adapt({
         timestamp: Date.now(),
-        dataType: 'stockPool',
+        dataType: 'poolBoard',
         source: 'mock',
         payload: {
           stocks: [{ code: '000001', name: '平安银行', price: 11, changePercent: 0, turnover: '', turnoverRate: '', statusColor: '', statusLabel: '' }],
@@ -309,7 +309,7 @@ describe('MarketDataAdapter - 字段映射（A/B/C 板块）', () => {
       const merged = marketDataAdapter.merge(partial1, partial2)
       expect(merged.analysisScores.profile.tags).toEqual(['测试'])
       expect(merged.analysisScores.kai.totalScore).toBe(90)
-      expect(merged.stockPool.total).toBe(1)
+      expect(merged.poolBoard.total).toBe(1)
     })
   })
 })

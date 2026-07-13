@@ -169,7 +169,7 @@ export const CHAT_DEMO_TARGETS = [
 /** 股票池状态颜色映射
  * @remarks 用于股票池列表状态条颜色
  */
-export const STOCK_POOL_STATUS_COLORS = {
+export const POOL_STATUS_COLORS = {
   ACTIVE: { color: '#22c55e', bgClass: 'bg-green-500', label: '活跃' },
   WARM: { color: '#3b82f6', bgClass: 'bg-blue-500', label: '温热' },
   COOL: { color: '#f59e0b', bgClass: 'bg-amber-500', label: '冷清' },
@@ -341,7 +341,7 @@ export const WIDGET_DEFAULT_DATA_SOURCE = {
     endpoint: '/stock-analysis/profile',
     enabled: true,
   },
-  stockPool: {
+  poolBoard: {
     type: ACTIVE_DATA_SOURCE,
     mode: COLLECTION_MODE.POLLING,
     interval: COLLECTOR_DEFAULT_CONFIG.DEFAULT_POLLING_INTERVAL,
@@ -499,7 +499,7 @@ export const DEFAULT_WIDGET_CONFIG = {
     size: WIDGET_SIZE.FULL_WIDTH,
     category: 'analysis',
   },
-  stockPool: {
+  poolBoard: {
     title: '股票池管理与监控',
     size: WIDGET_SIZE.FULL_WIDTH,
     category: 'analysis',

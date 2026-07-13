@@ -44,10 +44,10 @@ import type {
 // 常量：4 种调用方上下文（模拟真实业务场景）
 // ============================================================
 
-/** UI 组件调用上下文（StockPoolPanel 查询股票池） */
+/** UI 组件调用上下文（PoolPanel 查询股票池） */
 const UI_CALLER: McpCallerContext = {
   caller: 'ui',
-  callerId: 'StockPoolPanel',
+  callerId: 'PoolPanel',
 }
 
 /** CI 流水线调用上下文（GitHub Actions 触发迁移报告） */
@@ -104,7 +104,7 @@ function assertAclAllowed(result: ToolResult): void {
 // ============================================================
 // 文件级初始化：注册所有 MCP Server + 初始化 db
 //
-// 权限放行的用例会触发真实 Tool 执行（如 list_pool_stocks 查询 stocks store），
+// 权限放行的用例会触发真实 Tool 执行（如 list_pool_items 查询 stocks store），
 // 因此需要初始化 IndexedDB。权限拒绝的用例在 ACL 层拦截，不会触及 db。
 // ============================================================
 
@@ -123,10 +123,10 @@ afterAll(() => {
 // ============================================================
 
 describe('套件1: UI 场景权限拦截', () => {
-  it('UI 调用 stockpool.list_pool_stocks（查询类）应放行', async () => {
+  it('UI 调用 pool.list_pool_items（查询类）应放行', async () => {
     const result = await mcpBridge.callTool(
-      'stockpool',
-      'list_pool_stocks',
+      'pool',
+      'list_pool_items',
       {},
       UI_CALLER,
     )
@@ -204,14 +204,14 @@ describe('套件2: CI 场景权限拦截', () => {
     assertAclDenied(result, 'server "scoring:v6"')
   }, { timeout: 60000 })
 
-  it('CI 调用 stockpool.list_pool_stocks 应被 Server 级拦截', async () => {
+  it('CI 调用 pool.list_pool_items 应被 Server 级拦截', async () => {
     const result = await mcpBridge.callTool(
-      'stockpool',
-      'list_pool_stocks',
+      'pool',
+      'list_pool_items',
       {},
       CI_CALLER,
     )
-    assertAclDenied(result, 'server "stockpool"')
+    assertAclDenied(result, 'server "pool"')
   }, { timeout: 60000 })
 
   it('CI 调用 fetcher.health_check 应被 Server 级拦截（非 system Server）', async () => {
@@ -317,15 +317,15 @@ describe('套件5: 绕过 Client 直接调用 Server 的拦截', () => {
     assertAclDenied(result, 'server "trading"')
   }, { timeout: 60000 })
 
-  it('CI 角色绕过 Client 调用 stockpool.callTool 应被 Server 端拦截', async () => {
-    const entry = mcpRegistry.getServer('stockpool')
+  it('CI 角色绕过 Client 调用 pool.callTool 应被 Server 端拦截', async () => {
+    const entry = mcpRegistry.getServer('pool')
     expect(entry).toBeDefined()
     const result = await entry!.server.callTool(
-      'list_pool_stocks',
+      'list_pool_items',
       {},
       CI_CALLER,
     )
-    assertAclDenied(result, 'server "stockpool"')
+    assertAclDenied(result, 'server "pool"')
   }, { timeout: 60000 })
 
   it('Agent 角色绕过 Client 直接调用 Server 应放行（全权限）', async () => {
@@ -385,14 +385,14 @@ describe('套件6: 未知角色与边界场景', () => {
   }, { timeout: 60000 })
 
   it('UI 调用不匹配通配符的 Tool 应被 Tool 级拦截', async () => {
-    // list_pool_stocks 在 allowedTools 显式列出，但 delete_stock 不在
+    // list_pool_items 在 allowedTools 显式列出，但 delete_pool_item 不在
     const result = await mcpBridge.callTool(
-      'stockpool',
-      'delete_stock',
+      'pool',
+      'delete_pool_item',
       { symbol: 'TEST001' },
       UI_CALLER,
     )
-    assertAclDenied(result, 'tool "delete_stock"')
+    assertAclDenied(result, 'tool "delete_pool_item"')
   }, { timeout: 60000 })
 
   it('CI 调用非 get_* / generate_migration_report 的 Tool 应被 Tool 级拦截', async () => {
@@ -441,11 +441,11 @@ describe('套件7: 双端校验一致性验证', () => {
       expectedKeyword: 'tool "reset_database"',
     },
     {
-      desc: 'CI 调用 stockpool（Server 级拒绝）',
-      server: 'stockpool',
-      tool: 'list_pool_stocks',
+      desc: 'CI 调用 pool（Server 级拒绝）',
+      server: 'pool',
+      tool: 'list_pool_items',
       caller: CI_CALLER,
-      expectedKeyword: 'server "stockpool"',
+      expectedKeyword: 'server "pool"',
     },
     {
       desc: 'CI 调用 system.reset_database（Tool 级拒绝）',
@@ -455,11 +455,11 @@ describe('套件7: 双端校验一致性验证', () => {
       expectedKeyword: 'tool "reset_database"',
     },
     {
-      desc: 'UI 调用 stockpool.delete_stock（Tool 级拒绝）',
-      server: 'stockpool',
-      tool: 'delete_stock',
+      desc: 'UI 调用 pool.delete_pool_item（Tool 级拒绝）',
+      server: 'pool',
+      tool: 'delete_pool_item',
       caller: UI_CALLER,
-      expectedKeyword: 'tool "delete_stock"',
+      expectedKeyword: 'tool "delete_pool_item"',
     },
     {
       desc: '未知角色 guest 调用（角色级拒绝）',
@@ -546,15 +546,15 @@ describe('套件8: ACL_PERMISSION_DENIED 结构化格式验证', () => {
 
   it('Tool 级拒绝文本应包含 caller、server、tool 信息', async () => {
     const result = await mcpBridge.callTool(
-      'stockpool',
-      'delete_stock',
+      'pool',
+      'delete_pool_item',
       {},
       UI_CALLER,
     )
     const text = result.content[0]!.text ?? ''
     expect(text).toContain('Caller "ui"')
-    expect(text).toContain('server "stockpool"')
-    expect(text).toContain('tool "delete_stock"')
+    expect(text).toContain('server "pool"')
+    expect(text).toContain('tool "delete_pool_item"')
   }, { timeout: 60000 })
 
   it('McpAclError 应携带 detail 结构化字段（assert 接口）', () => {

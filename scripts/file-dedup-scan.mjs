@@ -25,7 +25,7 @@ const EXCLUDE_DIRS = new Set([
   'widget_test_logs_run2', 'widget_test_logs_run3', '.git', '.workbuddy',
   'packages', 'temp', 'public', 'releases', 'e2e', 'tests', 'test-output',
   '.venv', '.playwright-mcp', '.github', '.trae', '.trae-cn', '.codebuddy',
-  '.agents', '.dbg', 'docs/reports', 'docs/assets', 'docs/00-meta', 'docs/07-archive',
+  '.agents', '.dbg', 'docs/G-reports', 'docs/assets', 'docs/G4-drafts', 'docs/G5-release-management',
   'reports', // docs/reports 生成物（按基名排除）
   '_',        // .husky/_ 钩子模板（husky 必需，非源码重复）
   'node_modules',

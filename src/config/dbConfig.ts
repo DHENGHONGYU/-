@@ -1,8 +1,9 @@
 const testDbName = typeof process !== 'undefined' ? process.env.TEST_DB_NAME : undefined
 export const DB_NAME = testDbName ?? ('V6ProDB' as const)
-export const DB_VERSION = 28 as const
+export const DB_VERSION = 29 as const
 
 // DB_VERSION 升级历史：
+// v28 → v29: stocks 存储新增 pool 字段与 by-pool 索引，支撑股票池三分拆（intention/research/position）。
 // v27 → v28: 新增 workflow_defs、workflow_schedules、workflow_triggers、workflow_runs 存储，
 //            支撑 WorkflowServer 数据冗余（三层：Memory+IndexedDB+Export）。
 // v26 → v27: 新增 trace_records 存储，用于持久化采集链路追踪数据。
@@ -219,7 +220,7 @@ export type EnvelopeAction =
 
 export const MODULE_ID = {
   fetcher: 'fetcher',
-  stockpool: 'stockpool',
+  pool: 'pool',
   analyzer: 'analyzer',
   tradinghub: 'tradinghub',
   system: 'system',
@@ -323,7 +324,7 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
     write: [STORE_NAME.stocks, STORE_NAME.dailyQuotes, STORE_NAME.financialReports, STORE_NAME.collectConfig, STORE_NAME.traceRecords],
     actions: [DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete, DB_OPERATION.select],
   },
-  [MODULE_ID.stockpool]: {
+  [MODULE_ID.pool]: {
     read: [STORE_NAME.stocks, STORE_NAME.v6Scores],
     write: [STORE_NAME.stocks],
     // 修复 2026-07-08: 添加 DB_OPERATION.select，允许 poolStore 通过 DataBridge 查询 stocks/v6Scores

@@ -6,12 +6,17 @@
  *
  * @module data/types/types.dataLayer
  * @updated 2026-07-07 - PR-1：从 data/types.ts 拆分
+ * @updated 2026-07-13 三分拆：ResearchStatus → PoolStatus/PoolType
  */
 
 import type { AccountType, DataSource, OrderDirection, OrderStatus } from '@/config/dbConfig'
-import type { ResearchStatus } from '@/constants/stockpool.constants'
+import type { PoolStatus, PoolType } from '@/types/modules/pool.types'
 // 从 dbConfig 重新导出，供其他模块使用
-export type { AccountType, DataSource, OrderDirection, OrderStatus, ResearchStatus }
+export type { AccountType, DataSource, OrderDirection, OrderStatus }
+// 从 pool.types 重新导出股票池相关类型（兼容旧 ResearchStatus 调用方）
+export type { PoolStatus, PoolType }
+/** @deprecated 使用 PoolStatus */
+export type ResearchStatus = PoolStatus
 
 /**
  * 数据层统一结果封装。

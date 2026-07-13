@@ -23,7 +23,7 @@ const logger = getLogger()
  * 使用示例：
  * ```ts
  * set((s) => ({ stocks: [...s.stocks, stock] }))
- * withBroadcast(EVENT_NAMES.STOCK_POOL_CHANGED, { symbol: stock.symbol })
+ * withBroadcast(EVENT_NAMES.POOL_CHANGED, { symbol: stock.symbol })
  * ```
 /**
  * withBroadcast

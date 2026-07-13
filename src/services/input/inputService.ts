@@ -1,7 +1,7 @@
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
 import { MODULE_ID, ENVELOPE_TARGET, ENVELOPE_ACTION, STORE_NAME } from '@/config/dbConfig'
-import { RESEARCH_STATUS, DEFAULT_POOL_GROUP, type ResearchStatus } from '@/constants/stockpool.constants'
+import { RESEARCH_STATUS, DEFAULT_POOL_GROUP, DEFAULT_POOL_TYPE, type ResearchStatus } from '@/constants/pool.constants'
 import { INPUT_CONFIG } from '@/config/inputConfig'
 import type { DataLayerResult, Stock } from '@/data/types'
 import { fetchBasicDataUseCase, fetchKlineDataUseCase } from '@/services/useCase/fetcherOrchestrator.useCase'
@@ -135,6 +135,7 @@ export async function addStock(
   let stock: Stock = {
     symbol,
     name,
+    pool: DEFAULT_POOL_TYPE,
     researchStatus: RESEARCH_STATUS.candidate,
     source: 'manual',
     group: options.group ?? DEFAULT_POOL_GROUP,
@@ -145,7 +146,7 @@ export async function addStock(
 
   const envelope = EnvelopeFactory.create(
     {
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
       target: ENVELOPE_TARGET.db,
       action: ENVELOPE_ACTION.insertStock,
       traceId: `input-${nanoid(8)}-${symbol}`,
@@ -239,12 +240,12 @@ export async function exportPool(
           store: STORE_NAME.stocks,
           indexName: 'by-status',
           indexValue: status,
-          source: MODULE_ID.stockpool,
+          source: MODULE_ID.pool,
         })
       : await dataBridge.query<Stock[]>({
           action: ENVELOPE_ACTION.queryList,
           store: STORE_NAME.stocks,
-          source: MODULE_ID.stockpool,
+          source: MODULE_ID.pool,
         })
     if (!listResult.success) {
       return { success: false, error: listResult.error }
@@ -284,12 +285,12 @@ export async function importPool(payload: PoolExportPayload): Promise<DataLayerR
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
       key: normalized,
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
     })
     if (existingResult.success && existingResult.data) return { ok: false, normalized }
     const envelope = EnvelopeFactory.create(
       {
-        source: MODULE_ID.stockpool,
+        source: MODULE_ID.pool,
         target: ENVELOPE_TARGET.db,
         action: ENVELOPE_ACTION.insertStock,
         traceId: `import-${nanoid(8)}-${normalized}`,
@@ -297,6 +298,7 @@ export async function importPool(payload: PoolExportPayload): Promise<DataLayerR
       {
         ...stock,
         symbol: normalized,
+        pool: stock.pool ?? DEFAULT_POOL_TYPE,
         researchStatus: stock.researchStatus ?? RESEARCH_STATUS.candidate,
         source: stock.source ?? 'import',
         group: stock.group ?? DEFAULT_POOL_GROUP,
@@ -350,7 +352,7 @@ export async function listStocks(): Promise<DataLayerResult<Stock[]>> {
     const result = await dataBridge.query<Stock[]>({
       action: ENVELOPE_ACTION.queryList,
       store: STORE_NAME.stocks,
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
     })
     if (!result.success) {
       return { success: false, error: result.error }
@@ -374,7 +376,7 @@ export async function listStocksByStatus(status: ResearchStatus): Promise<DataLa
       store: STORE_NAME.stocks,
       indexName: 'by-status',
       indexValue: status,
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
     })
     if (!result.success) {
       return { success: false, error: result.error }

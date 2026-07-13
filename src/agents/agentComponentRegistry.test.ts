@@ -29,7 +29,7 @@ describe('agentComponentRegistry', () => {
       expect(ids).toContain('fetcher-agent')
       expect(ids).toContain('news-analyzer-agent')
       expect(ids).toContain('screening-agent')
-      expect(ids).toContain('stockpool-agent')
+      expect(ids).toContain('pool-agent')
     })
   })
 
@@ -74,7 +74,7 @@ describe('agentComponentRegistry', () => {
 
   describe('键一致性契约（UI key ⊆ 运行时 Agent id）', () => {
     // 硬编码已知运行时 Agent id，避免导入 @/agents 触发 initAgentSystem 副作用。
-    // 若未来 UI 注册表出现无法对应运行时 Agent 的 key（如曾经的 stockpool-inspector 错 key），
+    // 若未来 UI 注册表出现无法对应运行时 Agent 的 key（如曾经的 pool-inspector 错 key），
     // 本测试会立即失败，防止两系统连接契约被破坏。
     const RUNTIME_AGENT_IDS = [
       'v6-scoring-agent',
@@ -83,7 +83,7 @@ describe('agentComponentRegistry', () => {
       'fetcher-agent',
       'news-analyzer-agent',
       'screening-agent',
-      'stockpool-agent',
+      'pool-agent',
       'backtest-agent',
     ]
 

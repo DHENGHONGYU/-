@@ -134,14 +134,14 @@ export class WidgetRegistry {
       },
       {
         meta: {
-          id: 'stockPool',
-          name: DEFAULT_WIDGET_CONFIG.stockPool.title,
-          category: DEFAULT_WIDGET_CONFIG.stockPool.category,
+          id: 'poolBoard',
+          name: DEFAULT_WIDGET_CONFIG.poolBoard.title,
+          category: DEFAULT_WIDGET_CONFIG.poolBoard.category,
           description: '股票池管理与监控列表',
-          defaultSize: DEFAULT_WIDGET_CONFIG.stockPool.size,
-          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.stockPool,
+          defaultSize: DEFAULT_WIDGET_CONFIG.poolBoard.size,
+          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.poolBoard,
         },
-        component: () => import('@/cockpit/widgets/StockPoolWidget'),
+        component: () => import('@/cockpit/widgets/PoolBoardWidget'),
       },
       {
         meta: {
@@ -332,7 +332,7 @@ export class WidgetRegistry {
       // 新增金融业务 Widget 默认布局
       // ============================================================
       { widgetId: 'investmentProfile', position: { x: 0, y: 13 } },
-      { widgetId: 'stockPool', position: { x: 0, y: 15 } },
+      { widgetId: 'poolBoard', position: { x: 0, y: 15 } },
       { widgetId: 'kaiScore', position: { x: 0, y: 17 } },
       { widgetId: 'modelCompare', position: { x: 0, y: 20 } },
       { widgetId: 'stockChat', position: { x: 0, y: 23 } },
