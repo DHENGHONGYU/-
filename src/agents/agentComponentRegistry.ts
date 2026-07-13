@@ -1,5 +1,5 @@
 import React from 'react'
-import { Bot, Activity, Newspaper, Sparkles, Wifi, type LucideIcon } from 'lucide-react'
+import { Bot, Activity, Newspaper, Sparkles, Wifi, Filter, Database, type LucideIcon } from 'lucide-react'
 import V6ScoringAgentDetail from '@/components/organisms/agent/V6ScoringAgentDetail'
 import GenericAgentDetail from '@/components/organisms/agent/GenericAgentDetail'
 
@@ -83,6 +83,30 @@ register({
   priority: 60,
   mcpServerName: 'news',
   defaultToolName: 'fetch_news',
+})
+
+register({
+  agentId: 'screening-agent',
+  displayName: '多因子筛选智能体',
+  icon: Filter,
+  description: '执行全量多因子筛选与单股评估，返回符合条件的股票列表',
+  tags: ['screening', 'filter', 'system'],
+  detailComponent: GenericAgentDetail,
+  priority: 50,
+  mcpServerName: 'screening:main',
+  defaultToolName: 'run_screening',
+})
+
+register({
+  agentId: 'stockpool-inspector',
+  displayName: '股票池内省智能体',
+  icon: Database,
+  description: '查询股票池标的、研究状态流转与分组管理',
+  tags: ['stockpool', 'pool', 'system'],
+  detailComponent: GenericAgentDetail,
+  priority: 45,
+  mcpServerName: 'stockpool:main',
+  defaultToolName: 'list_pool_stocks',
 })
 
 export function getAgentComponent(agentId: string): AgentComponentEntry | undefined {

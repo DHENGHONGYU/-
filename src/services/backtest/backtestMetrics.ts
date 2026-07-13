@@ -277,5 +277,7 @@ export function createEmptyMetrics(_config: BacktestEngineConfig): BacktestResul
     avgLoss: 0,
     pnlCurve: [1.0],
     trades: [],
+    positions: [],
+    dailyValues: [],
   }
 }

@@ -1,6 +1,6 @@
-import { addStock } from './inputService'
+import { addStock } from './fetcherInputService'
 import { dataBridge, ENVELOPE_ACTION, STORE_NAME, MODULE_ID } from '@/core/databridge'
-import type { AddStockOptions } from './inputService'
+import type { AddStockOptions } from './fetcherInputService'
 import type { DataLayerResult, Stock } from '@/data/types'
 
 export interface HotSectorStock {

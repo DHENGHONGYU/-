@@ -85,6 +85,7 @@ export const useHybridProofreadStore = create<HybridProofreadState>((set, get) =
           riskLevel: result.report.overall_risk_level,
         })
       } else {
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         throw new Error(result.error || 'Unknown error during proofread')
       }
     } catch (error) {

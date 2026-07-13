@@ -328,7 +328,7 @@ const CapabilityGraphPage: React.FC = () => {
                           <div key={index} className={`p-2 ${'bg-muted'} rounded text-sm`}>
                             <div className="flex items-center gap-1">
                               <LinkIcon className="w-3 h-3" />
-                              <span>{otherAgent?.name || otherAgentId}</span>
+                              <span>{otherAgent?.name ?? otherAgentId}</span>
                             </div>
                             <div className="text-xs text-tertiary mt-1">
                               能力: {edge.capability}, 强度: {Math.round(edge.strength * 100)}%
@@ -349,14 +349,14 @@ const CapabilityGraphPage: React.FC = () => {
                 <div>
                   <span className={`text-sm ${'text-tertiary'}`}>源智能体</span>
                   <p className={'text-foreground'}>
-                    {agents.find(a => a.id === selectedEdge.source)?.name || selectedEdge.source}
+                    {agents.find(a => a.id === selectedEdge.source)?.name ?? selectedEdge.source}
                   </p>
                 </div>
 
                 <div>
                   <span className={`text-sm ${'text-tertiary'}`}>目标智能体</span>
                   <p className={'text-foreground'}>
-                    {agents.find(a => a.id === selectedEdge.target)?.name || selectedEdge.target}
+                    {agents.find(a => a.id === selectedEdge.target)?.name ?? selectedEdge.target}
                   </p>
                 </div>
 

@@ -179,9 +179,7 @@ export function transformV6Order(v6: V6Order): Order {
     const parsed = Date.parse(`${v6.date}${timePart}`)
     createdAt = Number.isFinite(parsed) ? parsed : undefined
   }
-  if (createdAt === undefined) {
-    createdAt = parseTimestamp(v6.createdAt) ?? Date.now()
-  }
+  createdAt ??= parseTimestamp(v6.createdAt) ?? Date.now()
 
   return {
     id: generateId(),
@@ -216,11 +214,17 @@ export function transformV6DailyQuotes(v6Quotes: V6DailyQuote[]): DailyQuotes[] 
     const history: KlineBar[] = sorted
       .map((q) => ({
         date: q.tradeDate,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         open: safeNumber(q.open) || 0,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         high: safeNumber(q.high) || 0,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         low: safeNumber(q.low) || 0,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         close: safeNumber(q.price) || 0,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         volume: safeNumber(q.volume) || 0,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         amount: safeNumber(q.amount) || 0,
       }))
       .filter((bar) => bar.date)
@@ -229,13 +233,14 @@ export function transformV6DailyQuotes(v6Quotes: V6DailyQuote[]): DailyQuotes[] 
     if (!latest) continue
 
     const updatedAt = Math.max(
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       ...sorted.map((q) => parseTimestamp(q.updatedAt) || 0),
       (() => {
         const ts = parseTimestamp(sorted[sorted.length - 1]?.tradeDate)
         if (ts == null) {
           logger.warn('[migrationTransformers] 字段缺失，使用默认值', { field: 'tradeDate', context: `symbol=${symbol}` })
         }
-        return ts != null ? ts : 0
+        return ts ?? 0
       })(),
     )
 

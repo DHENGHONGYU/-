@@ -116,14 +116,22 @@ export async function tencentQuote(code: string): Promise<RealtimeQuote | null> 
 
     const quote: RealtimeQuote = {
       symbol: code,
-      name: fields[1] || '',
+      name: fields[1] ?? '',
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       price: parseFloat(fields[3] || '0') || 0,
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       change: parseFloat(fields[31] || '0') || 0,
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       changePercent: parseFloat(fields[32] || '0') || 0,
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       open: parseFloat(fields[5] || '0') || 0,
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       high: parseFloat(fields[33] || '0') || 0,
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       low: parseFloat(fields[34] || '0') || 0,
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       volume: parseInt(fields[36] || '0') || 0,
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       amount: parseFloat(fields[37] || '0') || 0,
       timestamp: Date.now(),
     }
@@ -159,14 +167,22 @@ export async function tencentBatchQuotes(codes: string[]): Promise<RealtimeQuote
     if (fields.length >= 50) {
       results.push({
         symbol: code,
-        name: fields[1] || '',
+        name: fields[1] ?? '',
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         price: parseFloat(fields[3] || '0') || 0,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         change: parseFloat(fields[31] || '0') || 0,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         changePercent: parseFloat(fields[32] || '0') || 0,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         open: parseFloat(fields[5] || '0') || 0,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         high: parseFloat(fields[33] || '0') || 0,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         low: parseFloat(fields[34] || '0') || 0,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         volume: parseInt(fields[36] || '0') || 0,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         amount: parseFloat(fields[37] || '0') || 0,
         timestamp: Date.now(),
       })
@@ -200,14 +216,26 @@ export async function sinaQuote(code: string): Promise<RealtimeQuote | null> {
 
     const quote: RealtimeQuote = {
       symbol: code,
-      name: fields[0] || '',
+      name: fields[0] ?? '',
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       price: parseFloat(fields[3] || '0') || 0,
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       change: (parseFloat(fields[3] || '0') || 0) - (parseFloat(fields[2] || '0') || 0),
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       changePercent: parseFloat(fields[2] || '0') > 0 ? ((parseFloat(fields[3] || '0') - parseFloat(fields[2] || '0')) / parseFloat(fields[2] || '0')) * 100 : 0,
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       open: parseFloat(fields[1] || '0') || 0,
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       high: parseFloat(fields[4] || '0') || 0,
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       low: parseFloat(fields[5] || '0') || 0,
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       volume: parseInt(fields[8] || '0') || 0,
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       amount: parseFloat(fields[9] || '0') || 0,
       timestamp: Date.now(),
     }
@@ -242,14 +270,26 @@ export async function sinaBatchQuotes(codes: string[]): Promise<RealtimeQuote[]>
     if (fields.length >= 10) {
       results.push({
         symbol: code,
-        name: fields[0] || '',
+        name: fields[0] ?? '',
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         price: parseFloat(fields[3] || '0') || 0,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         change: (parseFloat(fields[3] || '0') || 0) - (parseFloat(fields[2] || '0') || 0),
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         changePercent: parseFloat(fields[2] || '0') > 0 ? ((parseFloat(fields[3] || '0') - parseFloat(fields[2] || '0')) / parseFloat(fields[2] || '0')) * 100 : 0,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         open: parseFloat(fields[1] || '0') || 0,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         high: parseFloat(fields[4] || '0') || 0,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         low: parseFloat(fields[5] || '0') || 0,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         volume: parseInt(fields[8] || '0') || 0,
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         amount: parseFloat(fields[9] || '0') || 0,
         timestamp: Date.now(),
       })
@@ -299,12 +339,18 @@ function parseNeteaseLine(line: string | undefined): KlineBar | null {
   const cols = line.split(',')
   if (cols.length < 13) return null
 
-  const date = (cols[0] || '').trim()
+  const date = (cols[0] ?? '').trim()
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const close = parseFloat(cols[3] || '0') || 0
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const high = parseFloat(cols[4] || '0') || 0
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const low = parseFloat(cols[5] || '0') || 0
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const open = parseFloat(cols[6] || '0') || 0
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const volume = parseInt(cols[11] || '0') || 0
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const amount = parseFloat(cols[12] || '0') || 0
 
   if (!date || close <= 0) return null

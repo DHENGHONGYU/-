@@ -155,7 +155,7 @@ export const Alert = memo(function Alert({
       {...props}
     >
       <div className={cn('shrink-0 mt-0.5', styles.icon)}>
-        {icon || defaultIcon}
+        {icon ?? defaultIcon}
       </div>
       <div className="flex-1 min-w-0">
         {children}

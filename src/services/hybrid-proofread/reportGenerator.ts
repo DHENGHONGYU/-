@@ -23,7 +23,7 @@ export class ReportGenerator {
     logger.info(`[ReportGenerator] 生成报告: ${projectId}`)
 
     const { critical_issues, high_issues, medium_issues, low_issues, total_issues } =
-      this.countIssues(localScan.rule_matches, cloudRisk?.risks || [])
+      this.countIssues(localScan.rule_matches, cloudRisk?.risks ?? [])
 
     const overall_risk_level = this.calculateOverallRiskLevel(
       critical_issues,
@@ -43,7 +43,7 @@ export class ReportGenerator {
 
     const recommendations = this.generateRecommendations(
       localScan.rule_matches,
-      cloudRisk?.risks || [],
+      cloudRisk?.risks ?? [],
     )
 
     const report: ProofreadReport = {

@@ -44,7 +44,7 @@ export function SignalSpectrum({
 
   return (
     <div className={cn('flex w-full flex-col', THEME_TOKENS.gap.xs, className)} {...props}>
-      {(label || showValue) && (
+      {(label ?? showValue) && (
         <div
           className={cn(
             'flex items-center justify-between',

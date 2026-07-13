@@ -320,6 +320,8 @@ function generateValuePit(): ValuePitData[] {
 }
 
 function generateChatHistory(target = '000858'): ChatHistory {
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const stock = MOCK_STOCK_NAMES.find((s) => s.code === target) || MOCK_STOCK_NAMES[0] || { name: '未知', code: target }
 
   return {
@@ -337,6 +339,8 @@ function generateChatHistory(target = '000858'): ChatHistory {
 }
 
 function generateMockAnswer(target: string): string {
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const stock = MOCK_STOCK_NAMES.find((s) => s.code === target) || MOCK_STOCK_NAMES[0] || { name: '未知', code: target }
 
   return `## ${stock.name}（${stock.code}）分析结论\n\n**综合判断**：当前股价处于震荡上行区间，短期受板块情绪带动明显。\n\n### 主要观点\n1. **基本面**：公司盈利能力稳健，ROE 保持在 15% 以上，现金流充裕。\n2. **技术面**：MACD 红柱放大，量价配合良好，上方压力位在近期前高附近。\n3. **资金面**：近 5 日主力资金净流入约 2.3 亿元，北向资金小幅增持。\n4. **风险提示**：大盘波动及行业政策变化可能带来回调风险，建议关注支撑位。\n\n> 以上分析由 AI 模型生成，仅供参考，不构成投资建议。`

@@ -38,9 +38,7 @@ export class MCPBridge {
 
   /** 获取 MCPBridge 单例 */
   static getInstance(): MCPBridge {
-    if (!MCPBridge.instance) {
-      MCPBridge.instance = new MCPBridge()
-    }
+    MCPBridge.instance ??= new MCPBridge()
     return MCPBridge.instance
   }
 

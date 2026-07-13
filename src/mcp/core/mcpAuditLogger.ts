@@ -58,9 +58,7 @@ export class MCPAuditLogger {
 
   /** 获取 MCPAuditLogger 单例 */
   static getInstance(): MCPAuditLogger {
-    if (!MCPAuditLogger.instance) {
-      MCPAuditLogger.instance = new MCPAuditLogger()
-    }
+    MCPAuditLogger.instance ??= new MCPAuditLogger()
     return MCPAuditLogger.instance
   }
 

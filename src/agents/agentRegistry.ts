@@ -119,9 +119,7 @@ export function createAgentRegistry(): AgentRegistry {
 }
 
 export function getAgentRegistry(): AgentRegistry {
-  if (!registryInstance) {
-    registryInstance = new AgentRegistry()
-  }
+  registryInstance ??= new AgentRegistry()
   return registryInstance
 }
 

@@ -17,9 +17,8 @@
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'
-import { getWatchlistStocks } from '@/services/trading/tradingService'
-import type { Stock, Watchlist } from '@/data/types'
-import { dataLayer } from '@/data/dataLayer'
+import { getWatchlistStocks, persistWatchlistSnapshot } from '@/services/trading/tradingService'
+import type { Stock } from '@/data/types'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { withBroadcast } from '@/store/helpers/withBroadcast'
 
@@ -104,7 +103,7 @@ export const useWatchlistStore = create<WatchlistState>()((set, get) => ({
         logger.info('[watchlistStore] loadStocks 完成', { count: result.data.length })
         withBroadcast(EVENT_NAMES.STOCKS_CHANGED, { action: 'loadWatchlist', count: result.data.length })
         // [C4 修正] 观察列表快照落表，修复孤立的 watchlists 物理表（离线缓存，fire-and-forget）
-        void persistWatchlistSnapshot(result.data)
+        void localPersistWatchlistSnapshot(result.data)
       } else {
         const errorMsg = result.error ?? '加载观察池失败'
         logger.error('[watchlistStore] loadStocks 失败', { error: errorMsg })
@@ -144,15 +143,9 @@ export const useWatchlistStore = create<WatchlistState>()((set, get) => ({
 /**
  * 将当前观察池写入 watchlists 表（upsert，按 id='default' 覆盖）。
  * 作为离线缓存，失败不影响主流程。
+ *
+ * 已由 tradingService.persistWatchlistSnapshot 实现，Store 层仅做 fire-and-forget 调用。
  */
-function persistWatchlistSnapshot(stocks: Stock[]): void {
-  const ts = Date.now()
-  const snapshot: Watchlist = {
-    id: 'default',
-    name: '观察池',
-    items: stocks.map((s) => s.symbol),
-    createdAt: ts,
-    updatedAt: ts,
-  }
-  void dataLayer.watchlists.save(snapshot)
+function localPersistWatchlistSnapshot(stocks: Stock[]): void {
+  void persistWatchlistSnapshot(stocks)
 }

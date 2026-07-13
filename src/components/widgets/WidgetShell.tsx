@@ -164,7 +164,7 @@ export function WidgetShell({
             }}
           >
             <span style={{ fontWeight: 500, fontSize: '14px' }}>
-              {(config.settings?.title as string | undefined) || widgetId}
+              {(config.settings?.title as string | undefined) ?? widgetId}
             </span>
             <button
               onClick={() => {

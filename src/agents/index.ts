@@ -111,39 +111,6 @@ export const AGENT_BACKTEST: AgentConfig = {
   defaultToolName: 'run_backtest',
 }
 
-/** 回测导出 Agent */
-export const AGENT_EXPORT: AgentConfig = {
-  id: 'export-agent',
-  name: '回测导出 Agent',
-  description: '将回测结果与配置导出为报告（PDF/Excel）',
-  defaultTimeout: 30000,
-  maxConcurrent: 3,
-  mcpServerName: 'export',
-  defaultToolName: 'export_backtest_report',
-}
-
-/** 数据录入 Agent */
-export const AGENT_INPUT: AgentConfig = {
-  id: 'input-agent',
-  name: '数据录入 Agent',
-  description: '执行股票添加、搜索、股票池导入导出',
-  defaultTimeout: 15000,
-  maxConcurrent: 5,
-  mcpServerName: 'input',
-  defaultToolName: 'add_stock',
-}
-
-/** 持仓管理 Agent */
-export const AGENT_TRADE: AgentConfig = {
-  id: 'trade-agent',
-  name: '持仓管理 Agent',
-  description: '执行持仓查询、交易操作、持仓导出',
-  defaultTimeout: 20000,
-  maxConcurrent: 3,
-  mcpServerName: 'trade',
-  defaultToolName: 'fetch_holdings',
-}
-
 /** 默认 Agent 配置列表 */
 export const DEFAULT_AGENTS: AgentConfig[] = [
   AGENT_V6_SCORING,
@@ -154,9 +121,6 @@ export const DEFAULT_AGENTS: AgentConfig[] = [
   AGENT_SCREENING,
   AGENT_STOCKPOOL,
   AGENT_BACKTEST,
-  AGENT_EXPORT,
-  AGENT_INPUT,
-  AGENT_TRADE,
 ]
 
 // ============================================================================

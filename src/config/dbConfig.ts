@@ -1,5 +1,5 @@
 const testDbName = typeof process !== 'undefined' ? process.env.TEST_DB_NAME : undefined
-export const DB_NAME = testDbName ? testDbName : ('V6ProDB' as const)
+export const DB_NAME = testDbName ?? ('V6ProDB' as const)
 export const DB_VERSION = 28 as const
 
 // DB_VERSION 升级历史：

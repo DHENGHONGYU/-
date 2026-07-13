@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Input } from '@/components/atoms/Input'
 import { useInputHubStore } from '@/store/inputHubStore'
-import type { StockSearchResult } from '@/services/input/inputService'
+import type { StockSearchResult } from '@/services/fetcher/fetcherInputService'
 import { INPUT_CONFIG } from '@/config/inputConfig'
 import { useToast } from '@/hooks/useToast'
 import { cn } from '@/lib/utils'

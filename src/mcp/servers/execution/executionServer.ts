@@ -66,6 +66,7 @@ export class ExecutionServer extends MCPServerBase {
           // 委托给完整 UseCase，走完整风控流程
           const result = await createExecutionPlanUseCase({ signal, source: 'mcp' })
           if (!result.success || !result.plan) {
+            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
             return { content: [{ type: 'text', text: JSON.stringify({ error: result.error || '创建失败', errorCode: result.errorCode }) }] }
           }
           return { content: [{ type: 'text', text: JSON.stringify(result.plan) }] }

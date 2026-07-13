@@ -69,7 +69,7 @@ export function calculateSectorScore(scores: Record<string, number>): {
   if (missingKeys.length > 0) {
     logger.warn('[rotationCalculator] 板块因子得分缺失，使用默认值', { field: missingKeys.join(','), context: 'calculateSectorScore' })
   }
-  const s = (v: number | undefined): number => v != null ? v : 0
+  const s = (v: number | undefined): number => v ?? 0
   const f1 = s(scores.F1A) + s(scores.F1B) + s(scores.F1C) + s(scores.F1D) + s(scores.F1E)
   const f2 = s(scores.F2A) + s(scores.F2B) + s(scores.F2C) + s(scores.F2D)
   const f3 = s(scores.F3A) + s(scores.F3B) + s(scores.F3C)

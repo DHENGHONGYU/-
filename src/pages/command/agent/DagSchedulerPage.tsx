@@ -363,11 +363,11 @@ const DagSchedulerPage: React.FC = () => {
                 </div>
                 <div>
                   <span className={`text-sm text-tertiary`}>上次运行</span>
-                  <p className="text-foreground">{workflow.lastRun || '-'}</p>
+                  <p className="text-foreground">{workflow.lastRun ?? '-'}</p>
                 </div>
                 <div>
                   <span className={`text-sm text-tertiary`}>下次运行</span>
-                  <p className="text-foreground">{workflow.nextRun || '-'}</p>
+                  <p className="text-foreground">{workflow.nextRun ?? '-'}</p>
                 </div>
               </div>
 

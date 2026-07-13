@@ -57,7 +57,7 @@ export function ErrorState({
           {description}
         </p>
       )}
-      {(onRetry || action) && (
+      {(onRetry ?? action) && (
         <div className="mt-2">
           {onRetry && (
             <button

@@ -34,7 +34,24 @@ const { mockSubscribe, capturedCallbacks, unsubscribes } = vi.hoisted(() => {
 })
 
 vi.mock('@/core/databridge', () => ({
-  dataBridge: { subscribe: mockSubscribe },
+  dataBridge: {
+    subscribe: mockSubscribe,
+    query: vi.fn(async (request: { store: string; key?: string }) => {
+      if (request.store === 'orders') {
+        const data = await mockOrdersList()
+        return { success: true, data }
+      }
+      if (request.store === 'signals') {
+        const data = await mockSignalsList()
+        return { success: true, data }
+      }
+      if (request.store === 'daily_quotes') {
+        const data = await mockDailyQuotesGet(request.key)
+        return { success: true, data }
+      }
+      return { success: true, data: [] }
+    }),
+  },
 }))
 
 vi.mock('@/config/dbConfig', () => ({
@@ -45,7 +62,7 @@ vi.mock('@/config/dbConfig', () => ({
     deleteOrder: 'DELETE_ORDER',
   },
   MODULE_ID: { tradinghub: 'tradinghub' },
-  STORE_NAME: { orders: 'orders' },
+  STORE_NAME: { orders: 'orders', signals: 'signals', dailyQuotes: 'daily_quotes' },
 }))
 
 // ============================================================

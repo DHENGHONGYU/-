@@ -141,9 +141,7 @@ let globalThresholds: UnifiedThresholds | null = null
  * 获取当前阈值配置（单例）
  */
 export function getThresholds(): UnifiedThresholds {
-  if (!globalThresholds) {
-    globalThresholds = getDefaultThresholds()
-  }
+  globalThresholds ??= getDefaultThresholds()
   return globalThresholds
 }
 

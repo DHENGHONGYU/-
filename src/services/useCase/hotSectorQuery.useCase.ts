@@ -8,7 +8,7 @@
 
 import { getLogger } from '@/lib/logger'
 import { tryResult, type Result } from '@/services/contracts'
-import { getHotSectors, type HotSector } from '@/services/input/hotSectorService'
+import { getHotSectors, type HotSector } from '@/services/fetcher/hotSectorService'
 
 const logger = getLogger()
 
