@@ -417,10 +417,10 @@ class BulkHandler implements EnvelopeHandler {
     const startTime = Date.now()
 
     try {
-      await db.withTransaction([store], 'readwrite', async (tx) => {
+      await db.withTransaction([store], 'readwrite', (tx) => {
         const objectStore = tx.objectStore(store)
         for (const item of items) {
-          await objectStore.put(item)
+          objectStore.put(item)
         }
       })
 
