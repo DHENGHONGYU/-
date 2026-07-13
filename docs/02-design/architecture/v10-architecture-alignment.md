@@ -14,7 +14,7 @@ change_log:
 > **Status: Future Reference / Deferred**  
 > 本文档为外部参考蓝图，仅用于与 V9 当前架构对齐参考，禁止直接作为当前 V9 代码依据。任何落地须先经过 ADR 评审并更新 `docs/01~10` 规格。
 
-> 将 `C:\Users\huawei\Desktop\智能股票系统测试测试\v10-architecture-whitepaper.md` 的框架性设计思想与 V9 当前实现进行校对，明确**可直接吸收**、**需适配后吸收**、**暂不采纳**三类内容，统一纳入 V9 文档体系。
+> 将 `(参考文档)v10-architecture-whitepaper.md` 的框架性设计思想与 V9 当前实现进行校对，明确**可直接吸收**、**需适配后吸收**、**暂不采纳**三类内容，统一纳入 V9 文档体系。
 
 ---
 

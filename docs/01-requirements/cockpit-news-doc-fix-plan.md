@@ -189,7 +189,7 @@ DataSourceConfig ──→ TaskScheduler ──→ BaseCollector（Mock/Rest/Web
 
 **目标文件**: `docs/cockpit/DATA_DEFINITION.md`（新建）
 
-**文件路径**: `c:\Users\huawei\Documents\kimi\Workspaces\智能投研复盘系统V9\docs\cockpit\DATA_DEFINITION.md`
+**文件路径**: `docs\cockpit\DATA_DEFINITION.md`
 
 **完整内容详见下方 §三**。
 
@@ -199,7 +199,7 @@ DataSourceConfig ──→ TaskScheduler ──→ BaseCollector（Mock/Rest/Web
 
 **目标文件**: `docs/news/DATA_DEFINITION.md`（新建）
 
-**文件路径**: `c:\Users\huawei\Documents\kimi\Workspaces\智能投研复盘系统V9\docs\news\DATA_DEFINITION.md`
+**文件路径**: `docs\news\DATA_DEFINITION.md`
 
 **完整内容详见下方 §四**。
 

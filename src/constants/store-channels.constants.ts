@@ -50,6 +50,8 @@ export const EVENT_NAMES = {
   BACKTEST_CHANGED: 'backtest:changed',
   /** 评分文档数据变更（scoreDocStore 写操作触发） */
   SCORE_DOCS_CHANGED: 'score_docs:changed',
+  /** 分析结果变更（analysisOrchestratorStore 写操作触发） */
+  ANALYSIS_RESULT_CHANGED: 'analysis_result:changed',
   // ---- DataFlow 引擎事件 ----
   /** 数据流连接成功 */
   DATAFLOW_CONNECTED: 'dataflow:connected',

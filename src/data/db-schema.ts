@@ -450,4 +450,15 @@ export function createSchema(
     ],
   })
 
+  // ── analysisResults：分析结果（v30 新增，AnalysisOrchestrator 持久化） ──
+  ensureStore(db, STORE_NAME.analysisResults, logger, {
+    storeOptions: { keyPath: 'docId' },
+    logLevel: 'info',
+    indexes: [
+      { name: 'by-symbol', keyPath: 'symbol' },
+      { name: 'by-symbol-version', keyPath: ['symbol', 'version'], options: { unique: true } },
+      { name: 'by-created-at', keyPath: 'createdAt' },
+    ],
+  })
+
 }

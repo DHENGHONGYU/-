@@ -209,6 +209,16 @@ export interface CompositeScore {
   skippedLayers?: LayerId[]
   /** 数据覆盖率（0-1，参与计算的层数 / 总层数） */
   coverageRate?: number
+  /** 交叉验证结果（P2-5） */
+  crossValidation?: {
+    passed: boolean
+    issues: Array<{
+      ruleId: string
+      severity: 'info' | 'warning' | 'critical'
+      title: string
+      description: string
+    }>
+  }
 }
 
 // ============================================================

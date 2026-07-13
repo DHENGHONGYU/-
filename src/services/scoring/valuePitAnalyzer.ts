@@ -462,10 +462,10 @@ export async function analyzeBySymbol(symbol: string): Promise<ValuePitScore | n
  * 批量分析多只股票。
  */
 export async function analyzeBatch(symbols: string[]): Promise<ValuePitScore[]> {
+  const settled = await Promise.allSettled(symbols.map((s) => analyzeBySymbol(s)))
   const results: ValuePitScore[] = []
-  for (const symbol of symbols) {
-    const score = await analyzeBySymbol(symbol)
-    if (score) results.push(score)
+  for (const r of settled) {
+    if (r.status === 'fulfilled' && r.value) results.push(r.value)
   }
   logger.info(`[valuePitAnalyzer] 批量分析完成: ${results.length}/${symbols.length}`)
   return results
@@ -487,22 +487,22 @@ export async function analyzeValuePits(
   options: ValuePitAnalyzerOptions = {},
 ): Promise<DataLayerResult<ValuePitScore[]>> {
   const ruleConfig = options.ruleConfig ?? getDefaultDualStrategyRuleConfig()
-  const filtered = []
 
-  for (const stock of stocks) {
-    const v6Result = await dataBridge.query<V6Score>({ action: ENVELOPE_ACTION.queryGet, store: STORE_NAME.v6Scores, key: stock.symbol }).catch(() => ({ success: false, data: undefined }))
-    const v6Score = v6Result.success ? v6Result.data : undefined
-    const score = v6Score?.score ?? 0
-    if (score >= ruleConfig.valuePitV6Min && score <= ruleConfig.valuePitV6Max) {
-      filtered.push(stock.symbol)
-    }
-  }
+  const filterResults = await Promise.all(
+    stocks.map(async (stock) => {
+      const v6Result = await dataBridge.query<V6Score>({ action: ENVELOPE_ACTION.queryGet, store: STORE_NAME.v6Scores, key: stock.symbol }).catch(() => ({ success: false, data: undefined }))
+      const v6Score = v6Result.success ? v6Result.data : undefined
+      const score = v6Score?.score ?? 0
+      return (score >= ruleConfig.valuePitV6Min && score <= ruleConfig.valuePitV6Max) ? stock.symbol : undefined
+    }),
+  )
+  const filtered = filterResults.filter((s): s is string => s !== undefined)
 
   const scores = await analyzeBatch(filtered)
 
-  for (const score of scores) {
-    await sendWriteEnvelope('saveValuePitScores', score, 'analyzer')
-  }
+  await Promise.allSettled(
+    scores.map((score) => sendWriteEnvelope('saveValuePitScores', score, 'analyzer')),
+  )
 
   return { success: true, data: scores }
 }

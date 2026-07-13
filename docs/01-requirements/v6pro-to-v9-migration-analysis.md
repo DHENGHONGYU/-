@@ -15,7 +15,7 @@ change_log:
 > **Version**: v0.9.0-migration-review  
 > **Last Updated**: 2026-06-25  
 > **Source**: `D:/有价值对话/v6pro_source_backup.tar/v6pro_source_backup/app`  
-> **Target**: `C:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9`
+> **Target**: ``
 
 ---
 

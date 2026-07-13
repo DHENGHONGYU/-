@@ -9,6 +9,8 @@ change_log:
     desc: 批次 E 全部完成（E-2 写入模块 + E-3 Freshness 校验）；4 个新 Service + 67 测试用例通过
   - date: 2026-06-30
     desc: 新增批次 E（v15/v16 Store 蓝图补全）；执行看板补 4 个新 Store 的蓝图与未覆盖写入模块
+  - date: 2026-07-13
+    desc: Store 数量 24→41 同步（v17-v30 升级：customAgents/traceRecords/workflow/analysisResults）；DB_VERSION 30
   - date: 2026-06-30
     desc: Store 数量 20→24 同步（执行 v15/v16 升级后）；每周检查单数量同步
   - date: 2026-06-30
@@ -164,7 +166,7 @@ export function checkFreshness(
 1. `docs/blueprints/v9-data-relationship-er.md` 已在 §1 Store 清单追加 4 行；§2 实体关系补 4 条；
    §3 ER 图新增 4 条边；DB_VERSION 14→16
 2. `docs/blueprints/v9-data-timeline.md` 已在 §1 追加 P12/P13/P14/P15 四个管线阶段；§3.1 刷新频率表补 4 行
-3. `scripts/validate-data-blueprint.ts` 的 Store 数量预期从 20→24
+3. `scripts/validate-data-blueprint.ts` 的 Store 数量预期从 20→41（当前 expectedStores=41）
 
 **验收标准：**
 - 4 个新 Store 实体/索引/关系/时序全部登记

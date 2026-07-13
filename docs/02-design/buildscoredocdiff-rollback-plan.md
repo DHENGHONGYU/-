@@ -134,7 +134,7 @@ const coreStocks = all.filter((d) => d.composite >= DEFAULT_THRESHOLDS.rating.st
 
 ```powershell
 # 步骤 1:进入项目目录
-cd C:\Users\huawei\Documents\kimi\Workspaces\智能投研复盘系统V9
+cd . (项目根目录)
 
 # 步骤 2:查看 git 状态,确认修改文件
 git status src/services/analysis/scoreDocService.ts
@@ -363,7 +363,7 @@ npm run build
 | 文件路径 | 影响类型 | 说明 |
 |----------|----------|------|
 | [src/components/analysis/score/ScoreHistoryPanel.tsx](../../src/components/organisms/analysis/score/ScoreHistoryPanel.tsx) | 引用方 | 调用 `buildScoreDocDiff`,类型检查通过 |
-| [src/services/analysis/__tests__/scoreDocService.test.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/services/analysis/__tests__/scoreDocService.test.ts) | 测试 | 4 个 buildScoreDocDiff 测试用例通过 |
+| [src/services/analysis/__tests__/scoreDocService.test.ts](src/services/analysis/__tests__/scoreDocService.test.ts) | 测试 | 4 个 buildScoreDocDiff 测试用例通过 |
 | [tests/__tests__/integration/walkthroughScoreDoc.sampled.test.ts](../../tests/__tests__/integration/walkthroughScoreDoc.sampled.test.ts) | 测试 | 43 个穿行测试用例通过 |
 
 ---

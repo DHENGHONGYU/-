@@ -18,7 +18,7 @@ change_log:
 > **Version**: v0.9.0-migration-implemented  
 > **Last Updated**: 2026-06-24
 >
-> 本文档以 `C:\Users\huawei\Desktop\智能股票系统测试测试\v10-architecture-whitepaper.md` 与 `ui_module_comparison.md` 为参考基座，结合本轮文档校对成果，对 V9 的愿景、架构、数据协议、UI 映射、实施路线、质量门禁进行整体归纳，作为项目当前阶段的统一入口。
+> 本文档以 `(参考文档)v10-architecture-whitepaper.md` 与 `ui_module_comparison.md` 为参考基座，结合本轮文档校对成果，对 V9 的愿景、架构、数据协议、UI 映射、实施路线、质量门禁进行整体归纳，作为项目当前阶段的统一入口。
 
 ---
 
