@@ -9,7 +9,7 @@
  * - tradeReviewAI 异步 LLM 增强模式
  */
 
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
+ 
 import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest'
 import { chat, LlmConfigError, LlmApiError } from '@/services/llm/llmClient'
 import type { LlmConfig } from '@/config/llmConfig'

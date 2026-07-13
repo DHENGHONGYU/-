@@ -17,8 +17,8 @@
 | 设计令牌规范 | `docs/design-token-mapping.md` |
 | UI 迁移检查 | `docs/ui-migration-checklist.md` |
 | Widget 集成检查 | `docs/widget-integration-checklist.md` |
-| 文档与注释规范 | `docs/jsdoc-convention.md` |
-| 复杂度治理 | `docs/complexity-governance.md` |
+| 文档与注释规范 | `docs/03-development/jsdoc-convention.md` |
+| 复杂度治理 | `docs/03-development/complexity-governance.md` |
 | 测试策略 | `docs/testing-strategy.md` |
 | 提示词模板 | `prompts/*.md` |
 

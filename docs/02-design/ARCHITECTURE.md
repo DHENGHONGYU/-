@@ -303,7 +303,7 @@ flowchart LR
 #### Step 9 — 验证构建
 
 ```bash
-npm run typecheck
+npm run tsc:prod
 npm run test
 npm run build
 ```
@@ -343,7 +343,7 @@ flowchart TB
 ### 5.3 代码质量门禁
 
 - `npm run lint`：ESLint 通过。
-- `npm run typecheck`：TypeScript 类型检查通过。
+- `npm run tsc:prod`：TypeScript 类型检查通过。
 - `npm run test`：单元测试通过率 100%。
 - `npm run build`：生产构建成功。
 

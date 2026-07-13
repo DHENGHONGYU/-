@@ -82,7 +82,19 @@ echo ""
 echo "📂 [warn] 运行 audit:path-match（文档目录-内容匹配检查，warn 模式）..."
 npx tsx scripts/audit-path-match.ts || true
 
+# 16. 文档-代码双向完整性（warn 模式，不阻断）
+echo ""
+echo "📂 [warn] 运行 audit:doc-integrity（文档-代码双向完整性检查，warn 模式）..."
+npm run audit:doc-integrity || true
+
 echo ""
 echo "================================================"
-echo "✅ V9 预提交门禁全部通过（14/14 阻断项 + 1 warn 项），允许提交。"
+echo "✅ V9 预提交门禁全部通过（14/14 阻断项 + 2 warn 项），允许提交。"
 echo ""
+
+# 文件系统规范检查
+npm run file:check
+if [ $? -ne 0 ]; then
+  echo "❌ 文件系统检查失败，请修复后重新提交"
+  exit 1
+fi

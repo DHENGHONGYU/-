@@ -1,5 +1,14 @@
 #!/usr/bin/env tsx
 
+/**
+ * @file deploy-rectification-toolkit.ts
+ * @description 部署整改工具包到目标目录（含验证脚本、补丁工具、安全函数模板）
+ * @status 孤立脚本（未在 package.json 中引用）
+ * @category 部署/运维 — 保留
+ * @maintainer 待定
+ * @lastVerified 2026-07-13
+ */
+
 import * as fs from 'fs/promises'
 import * as path from 'path'
 import { fileURLToPath } from 'url'

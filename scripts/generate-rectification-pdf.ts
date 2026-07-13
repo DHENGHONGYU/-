@@ -1,5 +1,14 @@
 #!/usr/bin/env tsx
 
+/**
+ * @file generate-rectification-pdf.ts
+ * @description 生成 V9 系统整改完成报告 PDF（基于 jsPDF + autotable）
+ * @status 孤立脚本（未在 package.json 中引用）
+ * @category 未接入审计流水线 — 评估后接入
+ * @maintainer 待定
+ * @lastVerified 2026-07-13
+ */
+
 import { writeFileSync, readFileSync, existsSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'

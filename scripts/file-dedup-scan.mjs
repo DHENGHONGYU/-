@@ -1,4 +1,13 @@
 // 内容哈希去重扫描器（仅用于文件治理评估，不修改任何文件）
+/**
+ * @file file-dedup-scan.mjs
+ * @description 基于内容哈希的文件去重扫描器，识别完全相同及命名近似碰撞文件
+ * @status 孤立脚本（未在 package.json 中引用）
+ * @category 未接入审计流水线 — 评估后接入
+ * @maintainer 待定
+ * @lastVerified 2026-07-13
+ */
+
 import { readdirSync, statSync, readFileSync, existsSync, writeFileSync } from 'node:fs'
 import { join, relative, extname, basename, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'

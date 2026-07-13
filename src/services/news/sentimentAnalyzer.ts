@@ -13,6 +13,12 @@ export interface SentimentResult {
   score: number // normalized score in [-1, +1]
 }
 
+/** LLM 情感分析时内容截断长度（控制 token 消耗） */
+const LLM_CONTENT_MAX_LENGTH = 1500
+
+/** 标题截断长度（控制 token 消耗） */
+const LLM_TITLE_MAX_LENGTH = 200
+
 /** 正面情感词典（中文财经为主，不少于 20 个） */
 export const POSITIVE_WORDS: string[] = [
   '增长',
@@ -274,8 +280,8 @@ export async function analyzeWithLLM(
 
     const prompt = `你是一名金融情绪分析师。请分析以下新闻/资讯的情绪倾向。
 
-标题: ${title.slice(0, 200)}
-内容: ${content.slice(0, 1500)}
+标题: ${title.slice(0, LLM_TITLE_MAX_LENGTH)}
+内容: ${content.slice(0, LLM_CONTENT_MAX_LENGTH)}
 
 请严格按 JSON 格式返回（不包含其他文本）：
 {"sentiment": "positive"|"negative"|"neutral", "score": 0.0~1.0, "confidence": 0.0~1.0, "reason": "简要理由"}

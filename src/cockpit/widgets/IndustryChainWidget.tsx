@@ -9,6 +9,11 @@ import React, { useMemo } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
 import { INDUSTRY_CHAIN } from '@/services/analysis/industryChainData'
+import {
+  INDUSTRY_CHAIN_EDGE_COLORS,
+  INDUSTRY_CHAIN_NODE_COLORS,
+  INDUSTRY_CHAIN_LABEL_COLOR,
+} from '@/config/chartColors'
 
 // ============================================================
 // 布局常量
@@ -26,10 +31,10 @@ const COLUMN_X: Record<string, number> = {
 }
 
 const EDGE_COLORS: Record<string, string> = {
-  supply: '#3b82f6',
-  competition: '#ef4444',
-  synergy: '#22c55e',
-  substitute: '#f59e0b',
+  supply: INDUSTRY_CHAIN_EDGE_COLORS.supply,
+  competition: INDUSTRY_CHAIN_EDGE_COLORS.competition,
+  synergy: INDUSTRY_CHAIN_EDGE_COLORS.synergy,
+  substitute: INDUSTRY_CHAIN_EDGE_COLORS.substitute,
 }
 
 const EDGE_LABELS: Record<string, string> = {
@@ -70,6 +75,14 @@ function computeLayout() {
 // Component
 // ============================================================
 
+/**
+ * 产业链图谱可视化组件
+ * @returns JSX 元素
+ */
+/**
+ * 产业链图谱可视化组件
+ * @returns 产业链 SVG 关系图
+ */
 export function IndustryChainWidget(): React.JSX.Element {
   const layout = useMemo(() => computeLayout(), [])
 
@@ -98,7 +111,7 @@ export function IndustryChainWidget(): React.JSX.Element {
         <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} className="w-full h-auto" style={{ maxHeight: SVG_H }}>
           {/* 列标签 */}
           {Object.entries(POSITION_LABELS).map(([pos, label]) => (
-            <text key={pos} x={COLUMN_X[pos] ?? 200} y={20} textAnchor="middle" fill="#9ca3af" fontSize="12" fontFamily="sans-serif">
+            <text key={pos} x={COLUMN_X[pos] ?? 200} y={20} textAnchor="middle" fill={INDUSTRY_CHAIN_LABEL_COLOR} fontSize="12" fontFamily="sans-serif">
               {label}
             </text>
           ))}
@@ -120,7 +133,7 @@ export function IndustryChainWidget(): React.JSX.Element {
                 y1={source.y + dy * (NODE_RADIUS / dist)}
                 x2={target.x - dx * (NODE_RADIUS / dist)}
                 y2={target.y - dy * (NODE_RADIUS / dist)}
-                stroke={EDGE_COLORS[edge.relation] ?? '#888'}
+                stroke={EDGE_COLORS[edge.relation] ?? INDUSTRY_CHAIN_EDGE_COLORS.fallback}
                 strokeWidth={1}
                 strokeDasharray={edge.relation === 'synergy' ? '4,3' : undefined}
                 opacity={0.5}
@@ -133,11 +146,11 @@ export function IndustryChainWidget(): React.JSX.Element {
             <g key={node.id}>
               {/* SVG title 用于 tooltip */}
               <title>{node.name} — {node.keywords.join(', ')}</title>
-              <circle cx={node.x} cy={node.y} r={NODE_RADIUS} fill="#d1fae5" stroke="#10b981" strokeWidth={1.5} />
-              <text x={node.x} y={node.y + 1} textAnchor="middle" dominantBaseline="middle" fill="#047857" fontSize="10" fontFamily="sans-serif" fontWeight="bold">
+              <circle cx={node.x} cy={node.y} r={NODE_RADIUS} fill={INDUSTRY_CHAIN_NODE_COLORS.fill} stroke={INDUSTRY_CHAIN_NODE_COLORS.stroke} strokeWidth={1.5} />
+              <text x={node.x} y={node.y + 1} textAnchor="middle" dominantBaseline="middle" fill={INDUSTRY_CHAIN_NODE_COLORS.text} fontSize="10" fontFamily="sans-serif" fontWeight="bold">
                 {node.id}
               </text>
-              <text x={node.x} y={node.y + NODE_RADIUS + 14} textAnchor="middle" fill="#6b7280" fontSize="9" fontFamily="sans-serif">
+              <text x={node.x} y={node.y + NODE_RADIUS + 14} textAnchor="middle" fill={INDUSTRY_CHAIN_NODE_COLORS.name} fontSize="9" fontFamily="sans-serif">
                 {node.name}
               </text>
             </g>

@@ -184,6 +184,39 @@ export const DEFAULT_RECOMMENDATION_COLORS = {
 } as const
 
 // ============================================================
+// 产业链图谱配色（IndustryChainWidget）
+// ============================================================
+
+/** 产业链图谱边关系配色 */
+export const INDUSTRY_CHAIN_EDGE_COLORS = {
+  /** 供应关系 - 蓝 */
+  supply: COLOR_TOKENS.info.hex,
+  /** 竞争关系 - 红 */
+  competition: COLOR_TOKENS.danger.hex,
+  /** 协同关系 - 绿 */
+  synergy: COLOR_TOKENS.success.hex,
+  /** 替代关系 - 琥珀 */
+  substitute: COLOR_TOKENS.warning.hex,
+  /** 未知关系回退 - 中性灰 */
+  fallback: NEUTRAL_COLOR,
+} as const
+
+/** 产业链图谱节点配色 */
+export const INDUSTRY_CHAIN_NODE_COLORS = {
+  /** 节点填充色 - emerald 100（标准色阶，当前 COLOR_SHADES 未覆盖此色阶 hex） */
+  fill: '#d1fae5',
+  /** 节点描边色 - emerald 500 */
+  stroke: COLOR_TOKENS.emerald.hex,
+  /** 节点文字色 - emerald 700（标准色阶，当前 COLOR_SHADES 未覆盖此色阶 hex） */
+  text: '#047857',
+  /** 节点名称文字色 - 灰500 */
+  name: COLOR_TOKENS.gray500.hex,
+} as const
+
+/** 产业链图谱列标签配色 */
+export const INDUSTRY_CHAIN_LABEL_COLOR = COLOR_TOKENS.neutral.hex
+
+// ============================================================
 // 资讯情感趋势配色（DA-008）
 // ============================================================
 

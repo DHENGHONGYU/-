@@ -84,7 +84,7 @@ export class SystemServer extends MCPServerBase {
         handler: async (args) => {
           logger.info('[SystemServer] parse_v6_export called')
           try {
-            const v6 = parseV6Export(args.json as never)
+            const v6 = parseV6Export(args.json)
             return { content: [{ type: 'text', text: JSON.stringify(v6) }] }
           } catch (err) {
             return {

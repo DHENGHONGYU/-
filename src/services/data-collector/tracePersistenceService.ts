@@ -91,7 +91,8 @@ export async function queryTraceRecords(options: QueryTracesOptions = {}): Promi
       .slice(0, limit)
 
     return filtered.map((record) => {
-      const { persistedAt, ...span } = record
+      const span = { ...record }
+      delete (span as Record<string, unknown>).persistedAt
       return span
     })
   } catch (err) {
@@ -114,7 +115,8 @@ export async function getTraceRecord(traceId: string): Promise<CollectionTraceSp
     })
     const record = response?.data
     if (!record) return undefined
-    const { persistedAt, ...span } = record
+    const span = { ...record }
+    delete (span as Record<string, unknown>).persistedAt
     return span
   } catch (err) {
     const error = err instanceof Error ? err.message : String(err)

@@ -24,7 +24,7 @@ kimi_index: true
 | **A** | 导航与治理 | 索引、宪法、归类、体检 | `README.md`(本文件)、`GOVERNANCE.md`、`00-meta/文档归类体系结构.md`、`00-meta/trae-file-management-review.md`、`00-meta/prompt-execute-remediation.md`、`00-meta/V9-文档治理修复行动计划.md`、`00-meta/V9-项目健康状态总览.md`、`00-meta/文档体系体检报告-v9.md`、`00-meta/文档理解核查报告.md`、`00-meta/文档管理系统评分报告.md`、`00-meta/REGISTRY_INDEX.md`、`00-meta/执行校验报告.md` | ✅ |
 | **B** | 架构设计 | 全局架构、舱室、服务、引擎、数据层、安全模型 | `architecture/overview.md`(P0✅)、`architecture/cabins-overview.md`(P0✅)、`architecture/services-catalog.md`(P0✅)、`architecture/security-model.md`(P1✅)、`architecture/deployment.md`(P1✅)、`modules/data-layer-overview.md`(P1✅)、`02-design/05-engine-specs.md`、`02-design/06-routing-specs.md`、`02-design/00-README.md` | ✅ |
 | **C** | 功能模块 | 各舱 spec、Widget、页面 | `01-requirements/input-cabin-spec.md`、`02-design/analysis-cabin-spec.md`(P0✅)、`trading-cabin-spec.md`(P0✅)、`output-cabin-spec.md`(P0✅)、`command-cabin-spec.md`(P0✅)、`02-design/atomic-component-system.md` | ✅ |
-| **D** | 技术规范 | 分层、门禁、令牌、复杂度、API 契约 | `AGENTS.md`(根)、`eslint.colors.config.js`、`docs/03-development/complexity-governance.md`、`02-design/design-token-mapping.md`、`jsdoc-convention.md`、`02-design/API_CONTRACT.md`(P0✅) | ✅ |
+| **D** | 技术规范 | 分层、门禁、令牌、复杂度、API 契约、开发工作流 | `AGENTS.md`(根)、`eslint.colors.config.js`、`03-development/complexity-governance.md`、`03-development/jsdoc-convention.md`、`03-development/development-workflow-sop.md`、`02-design/design-token-mapping.md`、`02-design/API_CONTRACT.md`(P0✅) | ✅ |
 | **E** | 测试策略 | 单元/e2e/覆盖率 | `04-testing/testing-strategy.md`(P1✅)、`testing/test-catalog.md` | ✅ |
 | **F** | AI 辅助工程治理 | 提示词模板、记忆层、飞轮、AI 工程入口 | `prompts/README.md`、`ai/README.md`(P1✅)、`ai/store-integration-guide.md`、`ai/service-integration-guide.md`、`docs/ai-memory-layer.md`、`docs/ai-generate-audit-fix-loop.md`、`ui-migration-checklist.md`、`widget-integration-checklist.md` | ✅ |
 | **G** | 过程与质量产物 | 报告、审计、changelog、草稿 | `reports/`（自动产物，已隔离规划）、`CHANGELOG.md`(根)、`GOVERNANCE.md`(P1✅)、`CLEANUP_SCHEDULE.md`(P1✅) | ✅ |
@@ -40,7 +40,9 @@ kimi_index: true
 | **新增 Widget** | `F/widget-integration-checklist.md` + `H/how-to-add-widget.md` + `02-design/atomic-component-system.md` |
 | **新增 Store / Service / Page** | `F/*-prompt-template.md` + `H/how-to-add-*.md` + `AGENTS.md` §二 四步集成 |
 | **了解全局架构** | `B/architecture/overview.md` → `B/architecture/cabins-overview.md` → `B/architecture/services-catalog.md` |
-| **代码评审 / 合规检查** | `D/AGENTS.md` + `D/eslint.colors.config.js` + `npm run audit:layers` |
+| **代码评审 / 合规检查** | `D/AGENTS.md` + `D/03-development/development-workflow-sop.md` + `D/eslint.colors.config.js` + `npm run audit:layers` |
+| **了解开发工作流** | `D/03-development/development-workflow-sop.md` → `D/AGENTS.md` → `F/*-prompt-template.md` |
+| **拆解复杂任务 / 回归套件** | `D/03-development/templates/task-graph-template.md` + `D/03-development/templates/regression-suite.md` |
 | **查安全架构** | `B/architecture/security-model.md` → `H/guides/mcp-acl-guide.md` → `D/AGENTS.md` §三/六/八 |
 | **查部署基线** | `B/architecture/deployment.md` → `B/ops/runbook.md` → `.github/workflows/quality-check.yml` |
 | **查 AI 工程治理** | `F/ai/README.md` → `F/prompts/README.md` → `F/ai/service-integration-guide.md` |
@@ -72,6 +74,11 @@ kimi_index: true
   - `CLEANUP_SCHEDULE.md` — 自动产物清理周期表（保留矩阵 / 清理脚本）
   - `02-design/API_CONTRACT.md` — 交易持仓 API 契约（v1.4.0 已检索更新）
   - `docs/README.md` — 主控索引更新（A–H 全部 ✅，14 条快速入口）
+- `docs/03-development/development-workflow-sop.md` — V9 开发工作流 SOP（编码前/中/后/上线后全周期）
+- `docs/03-development/jsdoc-convention.md` — JSDoc 编写规范
+- `docs/03-development/complexity-governance.md` — 代码复杂度治理规范
+- `docs/03-development/templates/task-graph-template.md` — 任务图模板
+- `docs/03-development/templates/regression-suite.md` — 回归测试套件模板
 
 ---
 

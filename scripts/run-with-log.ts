@@ -1,3 +1,12 @@
+/**
+ * @file run-with-log.ts
+ * @description 带日志捕获的脚本执行器（自动保存输出到 docs/drafts/）
+ * @status 孤立脚本（未在 package.json 中引用）
+ * @category 其他 — 保留
+ * @maintainer 待定
+ * @lastVerified 2026-07-13
+ */
+
 import { exec } from 'node:child_process'
 import { writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'

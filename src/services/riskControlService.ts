@@ -67,7 +67,7 @@ function mapExecutionPlanToVerdict(plan: ExecutionPlan): RiskVerdict {
     id: plan.id,
     timestamp: plan.createdAt,
     symbol: plan.symbol,
-    direction: plan.direction as SignalDirection,
+    direction: plan.direction,
     input,
     result: { ok: triState !== 'blocked', warnings, blocks },
     triState,

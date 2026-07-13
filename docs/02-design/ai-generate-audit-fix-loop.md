@@ -28,7 +28,7 @@
   npx tsx scripts/query-ai-memory.ts "<关键词>" --top 5
   ```
 - 输出顺序：文件清单 → 类型定义 → Store → Service → UI。
-- 每个导出公共实体必须附带 JSDoc（`docs/jsdoc-convention.md`）。
+- 每个导出公共实体必须附带 JSDoc（`docs/03-development/jsdoc-convention.md`）。
 
 ### 3.2 审计阶段
 

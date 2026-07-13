@@ -47,16 +47,23 @@ jobs:
         run: npm run audit:docs
         continue-on-error: false
 
-      # 4. frontmatter code_version 校验（P1，非阻塞）
+      # 4. 文档-代码双向完整性审计（P1，非阻塞，生成报告供审阅）
+      - name: Documentation-Code integrity audit (P1)
+        run: npm run audit:doc-integrity
+        continue-on-error: true
+
+      # 5. frontmatter code_version 校验（P1，非阻塞）
       - name: Doc version check (P1)
         run: npm run doc:version-check
         continue-on-error: true
 
-      # 上传 doc-auto-update 报告作为 artifact（供后续分析）
-      - name: Upload doc-auto-update report
+      # 上传 doc-auto-update + doc-integrity 报告作为 artifact（供后续分析）
+      - name: Upload doc reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: doc-auto-update-report
-          path: docs/reports/doc-auto-update/
+          path: |
+            docs/reports/doc-auto-update/
+            docs/reports/audit/audit-doc-integrity-*.json
           retention-days: 7

@@ -109,6 +109,17 @@ jobs:
       - name: Documentation sync audit (P0 blocking gate)
         run: npm run audit:docs
         continue-on-error: false
+      # 文档-代码双向完整性审计 — 非阻塞，先积累基线数据
+      - name: Documentation-Code integrity audit (baseline collection)
+        run: npm run audit:doc-integrity
+        continue-on-error: true
+      - name: Upload doc-integrity report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: doc-integrity-report
+          path: docs/reports/audit/audit-doc-integrity-*.json
+          retention-days: 7
       - name: Semantic validation (P0 blocking gate)
         run: npm run audit:semantic
         continue-on-error: false

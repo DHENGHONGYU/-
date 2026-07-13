@@ -119,7 +119,7 @@ export async function embedText(
 
     // transformers.js 返回 Tensor，通过 as 安全提取
     const tensorData = result as unknown as { data: number[]; dims: number[] }
-    const vector = Array.from(tensorData.data) as number[]
+    const vector = Array.from(tensorData.data)
     const elapsed = ((performance.now() - startTime) * 1000).toFixed(0)
 
     logger.info('[LocalEmbedding] 嵌入完成', {

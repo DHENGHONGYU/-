@@ -7,6 +7,15 @@
  * 非导出。M3 的映射逻辑通过 tsc 编译 + 代码审查 验证。
  */
 
+/**
+ * @file verify-m2-m3.ts
+ * @description 验收 M2（三道校验关）与 M3（v6 真实因子映射）核心逻辑
+ * @status 孤立脚本（未在 package.json 中引用）
+ * @category 调试/验证 — 保留
+ * @maintainer 待定
+ * @lastVerified 2026-07-13
+ */
+
 async function main(): Promise<void> {
   console.log('\n  =========================================')
   console.log('  验收 M2 + M3 核心逻辑')
