@@ -90,14 +90,14 @@ export const AGENT_SCREENING: AgentConfig = {
 }
 
 /** 股票池管理 Agent */
-export const AGENT_STOCKPOOL: AgentConfig = {
-  id: 'stockpool-agent',
+export const AGENT_POOL: AgentConfig = {
+  id: 'pool-agent',
   name: '股票池管理 Agent',
   description: '管理股票池研究状态流转与分组',
   defaultTimeout: 15000,
   maxConcurrent: 5,
-  mcpServerName: 'stockpool',
-  defaultToolName: 'list_pool_stocks',
+  mcpServerName: 'pool',
+  defaultToolName: 'list_pool_items',
 }
 
 /** 回测引擎 Agent */
@@ -119,7 +119,7 @@ export const DEFAULT_AGENTS: AgentConfig[] = [
   AGENT_FETCHER,
   AGENT_NEWS_ANALYZER,
   AGENT_SCREENING,
-  AGENT_STOCKPOOL,
+  AGENT_POOL,
   AGENT_BACKTEST,
 ]
 

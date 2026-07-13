@@ -21,11 +21,11 @@ import { nanoid } from 'nanoid'
 import type {
   AnalysisScores,
   ModelComparison,
-  StockPool,
+  PoolBoard,
   ChatHistory,
   InvestmentProfile,
   KaiScore,
-  StockPoolItem,
+  PoolBoardItem,
   ChatMessage,
   HotSectorData,
   ValuePitData,
@@ -33,7 +33,7 @@ import type {
 import {
   KAI_DIMENSION_NAMES,
   LLM_MODEL_VERSIONS,
-  STOCK_POOL_STATUS_COLORS,
+  POOL_STATUS_COLORS,
   INVESTMENT_PROFILE_METRICS,
 } from '@/constants/cockpit.constants'
 
@@ -95,8 +95,8 @@ export interface StockAnalysisScoringStrategy {
   getAnalysisScores(): Promise<AnalysisScores>
   /** 获取 AI 大模型对比数据 */
   getModelComparison(): Promise<ModelComparison>
-  /** 获取股票池数据 */
-  getStockPool(page?: number, pageSize?: number): Promise<StockPool>
+  /** 获取股票池看板数据 */
+  getPoolBoard(page?: number, pageSize?: number): Promise<PoolBoard>
   /** 获取聊天历史数据 */
   getChatHistory(target?: string): Promise<ChatHistory>
   /** 获取热门板块策略评分数据 */
@@ -123,9 +123,9 @@ export class MockStockAnalysisScoringStrategy implements StockAnalysisScoringStr
     return this.generateModelComparison()
   }
 
-  async getStockPool(page = 1, pageSize = 8): Promise<StockPool> {
+  async getPoolBoard(page = 1, pageSize = 8): Promise<PoolBoard> {
     await this.delay(450)
-    return this.generateStockPool(page, pageSize)
+    return this.generatePoolBoard(page, pageSize)
   }
 
   async getChatHistory(target = '000858'): Promise<ChatHistory> {
@@ -245,13 +245,13 @@ export class MockStockAnalysisScoringStrategy implements StockAnalysisScoringStr
     }
   }
 
-  generateStockPool(page = 1, pageSize = 8): StockPool {
-    const stocks: StockPoolItem[] = MOCK_STOCK_NAMES.map((item) => {
+  generatePoolBoard(page = 1, pageSize = 8): PoolBoard {
+    const items: PoolBoardItem[] = MOCK_STOCK_NAMES.map((item) => {
       const changePercent = Number((Math.random() * 6 - 3).toFixed(2))
       const price = Number((Math.random() * 300 + 20).toFixed(2))
-      const statusKeys = Object.keys(STOCK_POOL_STATUS_COLORS) as Array<keyof typeof STOCK_POOL_STATUS_COLORS>
-      const statusKey = statusKeys[Math.floor(Math.random() * statusKeys.length)] as keyof typeof STOCK_POOL_STATUS_COLORS
-      const status = STOCK_POOL_STATUS_COLORS[statusKey]
+      const statusKeys = Object.keys(POOL_STATUS_COLORS) as Array<keyof typeof POOL_STATUS_COLORS>
+      const statusKey = statusKeys[Math.floor(Math.random() * statusKeys.length)] as keyof typeof POOL_STATUS_COLORS
+      const status = POOL_STATUS_COLORS[statusKey]
 
       return {
         code: item.code,
@@ -269,8 +269,8 @@ export class MockStockAnalysisScoringStrategy implements StockAnalysisScoringStr
     const end = start + pageSize
 
     return {
-      stocks: stocks.slice(start, end),
-      total: stocks.length,
+      items: items.slice(start, end),
+      total: items.length,
       page,
       pageSize,
     }
@@ -392,9 +392,9 @@ export class RealStockAnalysisScoringStrategy implements StockAnalysisScoringStr
     throw new Error('RealStockAnalysisScoringStrategy.getModelComparison() not implemented')
   }
 
-  async getStockPool(_page = 1, _pageSize = 8): Promise<StockPool> {
+  async getPoolBoard(_page = 1, _pageSize = 8): Promise<PoolBoard> {
     // TODO: 接入证券行情 API 获取自选股/监控池实时行情
-    throw new Error('RealStockAnalysisScoringStrategy.getStockPool() not implemented')
+    throw new Error('RealStockAnalysisScoringStrategy.getPoolBoard() not implemented')
   }
 
   async getChatHistory(_target = '000858'): Promise<ChatHistory> {

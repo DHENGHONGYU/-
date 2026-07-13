@@ -112,16 +112,16 @@ register({
 })
 
 register({
-  agentId: 'stockpool-agent',
+  agentId: 'pool-agent',
   displayName: '股票池内省智能体',
   icon: Database,
   description: '查询股票池标的、研究状态流转与分组管理',
-  tags: ['stockpool', 'pool', 'system'],
+  tags: ['pool', 'system'],
   detailComponent: StandardAgentDetail,
   priority: 45,
-  mcpServerName: 'stockpool',
-  defaultToolName: 'list_pool_stocks',
-  detailLink: { to: '/analysis/stock-pool', label: '前往股票池看板' },
+  mcpServerName: 'pool',
+  defaultToolName: 'list_pool_items',
+  detailLink: { to: '/analysis/pool-board', label: '前往股票池看板' },
 })
 
 register({

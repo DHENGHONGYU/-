@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { MockCollector } from '@/services/data-collector/collectors/MockCollector'
 import type { DataSourceConfig } from '@/types/modules/widget.types'
-import { KAI_DIMENSION_NAMES, STOCK_POOL_STATUS_COLORS } from '@/constants/cockpit.constants'
+import { KAI_DIMENSION_NAMES, POOL_STATUS_COLORS } from '@/constants/cockpit.constants'
 
 /**
  * MockCollector 单元测试
@@ -61,11 +61,11 @@ describe('MockCollector - 随机数据生成（A/B/C 板块）', () => {
   // B. 股票池管理与监控
   // ============================================================
   describe('B. 股票池管理 /stock-analysis/pool', () => {
-    it('应返回 dataType=stockPool 的 RawMarketData', async () => {
+    it('应返回 dataType=poolBoard 的 RawMarketData', async () => {
       const ds = createDataSource('/stock-analysis/pool')
       const raw = await collector.collect(ds)
 
-      expect(raw.dataType).toBe('stockPool')
+      expect(raw.dataType).toBe('poolBoard')
       expect(raw.source).toBe('mock')
     })
 
@@ -74,9 +74,9 @@ describe('MockCollector - 随机数据生成（A/B/C 板块）', () => {
       const raw = await collector.collect(ds)
       const pool = raw.payload as Record<string, unknown>
 
-      expect(Array.isArray(pool.stocks)).toBe(true)
-      expect((pool.stocks as unknown[]).length).toBeGreaterThan(0)
-      expect(pool.total).toBeGreaterThanOrEqual((pool.stocks as unknown[]).length)
+      expect(Array.isArray(pool.items)).toBe(true)
+      expect((pool.items as unknown[]).length).toBeGreaterThan(0)
+      expect(pool.total).toBeGreaterThanOrEqual((pool.items as unknown[]).length)
       expect(pool.page).toBe(1)
       expect(pool.pageSize).toBeGreaterThan(0)
     })
@@ -85,9 +85,9 @@ describe('MockCollector - 随机数据生成（A/B/C 板块）', () => {
       const ds = createDataSource('/stock-analysis/pool')
       const raw = await collector.collect(ds)
       const pool = raw.payload as Record<string, unknown>
-      const stocks = pool.stocks as Array<Record<string, unknown>>
+      const items = pool.items as Array<Record<string, unknown>>
 
-      stocks.forEach((stock) => {
+      items.forEach((stock) => {
         expect(typeof stock.code).toBe('string')
         expect(typeof stock.name).toBe('string')
         expect(typeof stock.price).toBe('number')
@@ -103,10 +103,10 @@ describe('MockCollector - 随机数据生成（A/B/C 板块）', () => {
       const ds = createDataSource('/stock-analysis/pool')
       const raw = await collector.collect(ds)
       const pool = raw.payload as Record<string, unknown>
-      const stocks = pool.stocks as Array<{ statusColor: string }>
+      const items = pool.items as Array<{ statusColor: string }>
 
-      const validColors = Object.values(STOCK_POOL_STATUS_COLORS).map((c) => c.bgClass)
-      stocks.forEach((stock) => {
+      const validColors = Object.values(POOL_STATUS_COLORS).map((c) => c.bgClass)
+      items.forEach((stock) => {
         expect(validColors).toContain(stock.statusColor)
       })
     })
@@ -183,10 +183,10 @@ describe('MockCollector - 随机数据生成（A/B/C 板块）', () => {
       const raw1 = await collector.collect(ds)
       const raw2 = await collector.collect(ds)
 
-      const stocks1 = (raw1.payload as Record<string, unknown>).stocks as Array<{ price: number }>
-      const stocks2 = (raw2.payload as Record<string, unknown>).stocks as Array<{ price: number }>
+      const items1 = (raw1.payload as Record<string, unknown>).items as Array<{ price: number }>
+      const items2 = (raw2.payload as Record<string, unknown>).items as Array<{ price: number }>
 
-      const allSame = stocks1.every((s, i) => s.price === stocks2[i]?.price)
+      const allSame = items1.every((s, i) => s.price === items2[i]?.price)
       expect(allSame).toBe(false)
     })
   })

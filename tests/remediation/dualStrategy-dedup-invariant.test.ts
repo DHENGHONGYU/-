@@ -61,7 +61,7 @@ vi.mock('@/services/scoring/valuePitAnalyzer', () => ({ analyze: mockValuePitAna
 vi.mock('@/services/scoring/rotationSignalDetector', () => ({ detect: mockRotationDetect }))
 
 vi.mock('@/config/dbConfig', () => ({
-  MODULE_ID: { analyzer: 'analyzer', tradinghub: 'tradinghub', strategy: 'strategy', stockpool: 'stockpool' },
+  MODULE_ID: { analyzer: 'analyzer', tradinghub: 'tradinghub', strategy: 'strategy', pool: 'pool' },
   STORE_NAME: {
     hotSectorScores: 'hotSectorScores',
     valuePitScores: 'valuePitScores',
@@ -115,12 +115,12 @@ describe('dualStrategy 重复条件整改回归 — 单守卫不变量', () => {
       expect(cb, `频道 ${ch} 应有订阅回调`).toBeDefined()
       cb!(makeEnvelope('strategy'))
     }
-    // stocks 频道用其专属守卫 stockpool（同样被拦截），隔离 4 频道验证
+    // stocks 频道用其专属守卫 pool（同样被拦截），隔离 4 频道验证
     const stocksCb = capturedCallbacks.get('stocks')!
-    stocksCb(makeEnvelope('stockpool'))
+    stocksCb(makeEnvelope('pool'))
 
     await new Promise((r) => setTimeout(r, 150))
-    // 所有 self/stockpool 来源均被拦截 → 任何 refresh 都不应触发
+    // 所有 self/pool 来源均被拦截 → 任何 refresh 都不应触发
     expect(mockDataBridgeQuery).not.toHaveBeenCalled()
   })
 
@@ -162,7 +162,7 @@ describe('dualStrategy 订阅热路径 — 运行效率基准', () => {
     const callbacks = CHANNELS.map((ch) => capturedCallbacks.get(ch)!)
 
     const N = 500_000
-    const sources = ['strategy', 'analyzer', 'stockpool', 'external']
+    const sources = ['strategy', 'analyzer', 'pool', 'external']
     const t0 = performance.now()
     for (let i = 0; i < N; i++) {
       const cb = callbacks[i % callbacks.length]!

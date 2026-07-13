@@ -67,6 +67,7 @@ function createMockStock(symbol: string, name: string): Stock {
   return {
     symbol,
     name,
+    pool: 'research' as const,
     researchStatus: 'watching' as const,
     source: 'manual' as const,
     dataVersion: 1,

@@ -119,12 +119,12 @@ export const L3vValuationCalculator: LayerCalculator = {
       return {
         layerId: 'l3v',
         layerName: LAYER_LABELS.l3v ?? 'L3b 估值水平',
-        score: 0,
+        score: Number.NaN,
         summary: `估值计算失败: ${msg}`,
         risks: [],
         evidence: [],
         weight,
-        weightedScore: 0,
+        weightedScore: Number.NaN,
         dataSources: [],
       }
     }

@@ -110,7 +110,7 @@ export const ALERT_LEVEL_COLORS = {
 } as const
 
 /** 股票池状态颜色（活跃/温热/冷清/冷淡） */
-export const STOCK_POOL_STATUS_RAW_COLORS = [
+export const POOL_STATUS_RAW_COLORS = [
   COLOR_TOKENS.success.hex,   // 活跃 - #22c55e
   COLOR_TOKENS.info.hex,      // 温热 - #3b82f6
   COLOR_TOKENS.warning.hex,   // 冷清 - #f59e0b

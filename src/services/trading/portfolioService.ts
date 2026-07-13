@@ -10,7 +10,7 @@
  */
 import { dataBridge } from '@/core/databridge'
 import { ENVELOPE_ACTION, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
-import { RESEARCH_STATUS } from '@/constants/stockpool.constants'
+import { RESEARCH_STATUS } from '@/constants/pool.constants'
 import type { Order, Stock } from '@/data/types'
 import { getLogger } from '@/lib/logger'
 import {

@@ -5,7 +5,7 @@ import {
   getTransitionLabel,
   isValidTransition,
 } from '@/core/poolTransitionEngine'
-import { RESEARCH_STATUS } from '@/constants/stockpool.constants'
+import { RESEARCH_STATUS } from '@/constants/pool.constants'
 
 describe('poolTransitionEngine', () => {
   it('应该返回 correct next statuses for candidate', () => {

@@ -2,7 +2,7 @@ import { describe, expect, it, beforeEach } from 'vitest'
 import { dataLayer } from '@/data/dataLayer'
 import { dataBridge } from '@/core/databridge'
 import { db } from '@/data/db'
-import { DEFAULT_POOL_GROUP } from '@/constants/stockpool.constants'
+import { DEFAULT_POOL_GROUP } from '@/constants/pool.constants'
 import { STORE_NAME } from '@/config/dbConfig'
 
 describe('dataLayer', () => {

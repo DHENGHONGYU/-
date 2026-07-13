@@ -82,7 +82,7 @@ export async function importStocks(
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
       key: row.symbol,
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
     })
     const exists = existsResult.success && existsResult.data != null
     if (exists) {
@@ -154,7 +154,7 @@ async function importOneRow(
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
       key: row.symbol,
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
     })
     const exists = existsResult.success && existsResult.data != null
     if (exists) return { ok: false, row: globalIdx, raw: `${row.code} ${row.name}`, error: '股票已存在', stock: null }

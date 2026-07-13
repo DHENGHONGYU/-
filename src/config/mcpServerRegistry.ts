@@ -14,7 +14,7 @@
  *   复盘待办进展：
  *   P0 ✅ 已执行 —— export/trade/input MCP 层清理完毕
  *   P1 待执行 —— input Service 层合并入 fetcher:data（需评估）
- *   P2 保留 —— backtest/screening/stockpool 待 Agent 场景恢复
+ *   P2 保留 —— backtest/screening/pool 待 Agent 场景恢复
  *
  * 使用方式：
  *   - 应用启动：`import '@/mcp/register'` → 自动读取本配置并注册
@@ -138,9 +138,9 @@ export const MCP_SERVER_REGISTRY: ReadonlyArray<MCPServerConfigEntry> = [
     enabled: true,
   },
   {
-    name: 'stockpool:main',
-    modulePath: '@/mcp/servers/stockpool/stockPoolServer',
-    exportName: 'StockPoolServer',
+    name: 'pool:main',
+    modulePath: '@/mcp/servers/pool/poolServer',
+    exportName: 'PoolServer',
     priority: 'medium',
     enabled: true,
   },

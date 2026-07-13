@@ -352,7 +352,7 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     description: '多因子筛选（条件组增删 / 因子编辑 / 模板持久化）',
   },
   {
-    path: '/analysis/stock-pool',
+    path: '/analysis/pool-board',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'analysis',
     description: '股票池看板',

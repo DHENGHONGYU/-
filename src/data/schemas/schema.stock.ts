@@ -23,7 +23,7 @@ export const dataSourceSchema = z.enum([
   'unknown',
 ])
 
-/** 研究状态（与 stockpool.constants ResearchStatus 保持一致） */
+/** 研究状态（与 pool.constants ResearchStatus 保持一致） */
 export const researchStatusSchema = z.enum([
   'pending',
   'researching',

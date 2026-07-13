@@ -113,7 +113,7 @@ const {
         dimensions: [],
         riskHint: '',
       },
-      stockPool: { stocks: [], total: 0, page: 1, pageSize: 10 },
+      poolBoard: { items: [], total: 0, page: 1, pageSize: 10 },
       chatHistory: { target: '', targetType: 'stock', messages: [] },
       hotSectors: [],
       valuePit: [],

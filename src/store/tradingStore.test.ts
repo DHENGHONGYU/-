@@ -131,6 +131,7 @@ function buildTestStock(overrides: Partial<Stock> = {}): Stock {
     symbol: '600519.SH',
     name: '贵州茅台',
     price: 1800,
+    pool: 'research',
     researchStatus: 'watching',
     source: 'akshare',
     dataVersion: 1,

@@ -150,7 +150,7 @@ export const errors = {
   noStocksAdded: '还没有添加任何股票',
   poolEmptyTip: '你可以通过搜索录入、批量导入或从热门板块发现标的，开始构建你的研究股票池。',
   enterFirstStock: '录入第一只股票',
-  stockPoolBoard: '股票池看板',
+  poolBoard: '股票池看板',
   refreshing: '刷新中...',
   refreshBoard: '刷新看板',
   kanbanView: '看板视图',

@@ -68,7 +68,7 @@ export function getDeveloperRoleAllowedModules(role: DeveloperRole): ModuleId[] 
       return [
         MODULE_ID.fetcher,
         MODULE_ID.datalayer,
-        MODULE_ID.stockpool,
+        MODULE_ID.pool,
         MODULE_ID.rotation,
         MODULE_ID.sector,
         MODULE_ID.news,

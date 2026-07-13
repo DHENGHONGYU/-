@@ -339,7 +339,7 @@ export class PipelineScheduler {
  * DataIntegrityGuard
  */
 export class DataIntegrityGuard {
-  async checkStockPool(): Promise<IntegrityResult> {
+  async checkPoolBoard(): Promise<IntegrityResult> {
     logger.info('[DataIntegrityGuard] 开始校验股票池数据完整性')
 
     const stocksResult = await dataBridge.query<{ symbol: string }[]>({
@@ -450,7 +450,7 @@ export class DataIntegrityGuard {
   async repairMissingScores(): Promise<void> {
     logger.info('[DataIntegrityGuard] 开始自动修复缺失评分')
 
-    const result = await this.checkStockPool()
+    const result = await this.checkPoolBoard()
     if (result.status === 'healthy') {
       logger.info('[DataIntegrityGuard] 数据完整，无需修复')
       return

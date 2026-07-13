@@ -54,7 +54,7 @@ export interface McpAclCheckResult {
  *   - `'prefix_*'`：匹配以 `prefix_` 开头的字符串（保留末尾下划线）
  *
  * @param pattern - 权限规则中的模式（如 `'*'`、`'list_*'`、`'health_check'`）
- * @param value - 待匹配的实际值（如 `'list_pool_stocks'`）
+ * @param value - 待匹配的实际值（如 `'list_pool_items'`）
  * @returns 是否匹配
  */
 function matchPattern(pattern: string, value: string): boolean {

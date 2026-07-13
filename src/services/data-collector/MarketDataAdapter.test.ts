@@ -24,7 +24,7 @@ const OBJECT_TYPES: RawMarketData['dataType'][] = [
   'tradeReview',
   'analysisScores',
   'modelComparison',
-  'stockPool',
+  'poolBoard',
   'chatHistory',
 ]
 // 数组类数据类型
@@ -73,7 +73,7 @@ describe('MarketDataAdapter 字段兜底 (F04)', () => {
       adapter.adapt(raw('portfolio', {})),
       adapter.adapt(raw('tradeReview', {})),
       adapter.adapt(raw('analysisScores', {})),
-      adapter.adapt(raw('stockPool', {})),
+      adapter.adapt(raw('poolBoard', {})),
     )
     // 顶层字段齐全
     expect(Array.isArray(merged.indices)).toBe(true)
@@ -81,7 +81,7 @@ describe('MarketDataAdapter 字段兜底 (F04)', () => {
     expect(merged.portfolio).toBeDefined()
     expect(merged.tradeReview).toBeDefined()
     expect(merged.analysisScores).toBeDefined()
-    expect(merged.stockPool).toBeDefined()
+    expect(merged.poolBoard).toBeDefined()
     // 嵌套必填字段为安全类型（非 undefined）
     expect(merged.indices.length).toBe(1)
     expect(typeof merged.indices[0]?.price).toBe('number')
@@ -99,7 +99,7 @@ describe('MarketDataAdapter 字段兜底 (F04)', () => {
     expect(m.portfolio.totalAssets).toBe('0')
     expect(m.tradeReview.winRate).toBe(0)
     expect(m.analysisScores.kai).toBeDefined()
-    expect(m.stockPool).toBeDefined()
+    expect(m.poolBoard).toBeDefined()
   })
 
   it('极端脏数据（字段为错误类型/超大数/NaN/Infinity）不抛错', () => {

@@ -1,19 +1,19 @@
 import React from 'react'
 import { Badge, Button, Checkbox } from '@/components/atoms'
 import { QualityIndicator } from '@/components/organisms/input/QualityIndicator'
-import { DEFAULT_POOL_GROUP } from '@/constants/stockpool.constants'
-import type { ResearchStatus } from '@/constants/stockpool.constants'
-import type { Stock } from '@/data/types'
+import { DEFAULT_POOL_GROUP } from '@/constants/pool.constants'
+import type { ResearchStatus } from '@/constants/pool.constants'
+import type { PoolItem, PoolTransitionTarget } from '@/types/modules/pool.types'
 
 export interface PoolCardProps {
-  stock: Stock
-  options: Array<{ value: ResearchStatus; label: string }>
+  item: PoolItem
+  options: PoolTransitionTarget[]
   allGroups?: string[]
   selected?: boolean
   onSelectToggle?: (symbol: string) => void
   onTransition: (symbol: string, toStatus: ResearchStatus) => void
   onChangeGroup?: (symbol: string, group: string) => void
-  onRefreshKline?: (stock: Stock) => void
+  onRefreshKline?: (item: PoolItem) => void
   onAnalyze?: (symbol: string) => void
 }
 
@@ -21,7 +21,7 @@ export interface PoolCardProps {
  * PoolCard
  */
 export function PoolCard({
-  stock,
+  item,
   options,
   allGroups = [],
   selected,
@@ -31,7 +31,7 @@ export function PoolCard({
   onRefreshKline,
   onAnalyze,
 }: PoolCardProps): React.JSX.Element {
-  const group = stock.group ?? DEFAULT_POOL_GROUP
+  const group = item.group ?? DEFAULT_POOL_GROUP
   const availableGroups = allGroups.filter((g) => g !== group)
 
   return (
@@ -41,41 +41,41 @@ export function PoolCard({
           {onSelectToggle && (
             <Checkbox
               checked={selected}
-              onChange={() => onSelectToggle(stock.symbol)}
-              aria-label={`选择 ${stock.symbol}`}
+              onChange={() => onSelectToggle(item.symbol)}
+              aria-label={`选择 ${item.symbol}`}
             />
           )}
           <div className="min-w-0">
-            <p className="font-medium">{stock.symbol}</p>
-            <p className="truncate text-sm text-muted-foreground">{stock.name}</p>
+            <p className="font-medium">{item.symbol}</p>
+            <p className="truncate text-sm text-muted-foreground">{item.name}</p>
           </div>
         </div>
         <Badge variant="outline" className="shrink-0 text-xs">
-          {stock.source}
+          {item.source}
         </Badge>
       </div>
 
       <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-        {stock.price !== undefined && <span>价 {stock.price.toFixed(2)}</span>}
-        {stock.pe !== undefined && <span>PE {stock.pe.toFixed(2)}</span>}
-        {stock.pb !== undefined && <span>PB {stock.pb.toFixed(2)}</span>}
+        {item.price !== undefined && <span>价 {item.price.toFixed(2)}</span>}
+        {item.pe !== undefined && <span>PE {item.pe.toFixed(2)}</span>}
+        {item.pb !== undefined && <span>PB {item.pb.toFixed(2)}</span>}
         <Badge variant="secondary" className="text-xs">
           {group}
         </Badge>
       </div>
 
       <div className="mt-2">
-        <QualityIndicator quality={stock.dataQuality} />
+        <QualityIndicator quality={item.dataQuality} />
       </div>
 
       <div className="mt-3 flex flex-wrap gap-1">
         {options.map((option) => (
           <Button
-            key={option.value}
+            key={`${option.pool}-${option.status}`}
             variant="secondary"
             size="sm"
             className="h-7 px-2 text-xs"
-            onClick={() => onTransition(stock.symbol, option.value)}
+            onClick={() => onTransition(item.symbol, option.status as ResearchStatus)}
           >
             {option.label}
           </Button>
@@ -86,10 +86,10 @@ export function PoolCard({
             value=""
             onChange={(e) => {
               if (e.target.value) {
-                onChangeGroup(stock.symbol, e.target.value)
+                onChangeGroup(item.symbol, e.target.value)
               }
             }}
-            aria-label={`切换 ${stock.symbol} 分组`}
+            aria-label={`切换 ${item.symbol} 分组`}
           >
             <option value="">移入分组</option>
             {availableGroups.map((g) => (
@@ -104,7 +104,7 @@ export function PoolCard({
             variant="ghost"
             size="sm"
             className="h-7 px-2 text-xs"
-            onClick={() => onAnalyze(stock.symbol)}
+            onClick={() => onAnalyze(item.symbol)}
           >
             分析
           </Button>
@@ -114,7 +114,7 @@ export function PoolCard({
             variant="ghost"
             size="sm"
             className="h-7 px-2 text-xs"
-            onClick={() => onRefreshKline(stock)}
+            onClick={() => onRefreshKline(item)}
           >
             刷新行情
           </Button>

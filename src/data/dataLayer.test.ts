@@ -109,6 +109,7 @@ function makeStock(overrides: Record<string, unknown> = {}) {
     symbol: '600519',
     name: '贵州茅台',
     price: 1800,
+    pool: 'research' as const,
     researchStatus: 'candidate' as const,
     source: 'manual' as const,
     group: '默认分组',

@@ -1,8 +1,8 @@
 /**
- * @fileoverview Stockpool ACL 权限验证集成测试
+ * @fileoverview Pool ACL 权限验证集成测试
  *
  * 测试目标：
- *   验证 ACL_MATRIX 中 stockpool 模块的读写权限配置，以及 DataBridge
+ *   验证 ACL_MATRIX 中 pool 模块的读写权限配置，以及 DataBridge
  *   在 ACL 校验下的查询（query）和转发（forward）行为。
  *
  * 设计要点：
@@ -36,7 +36,7 @@ import {
   type AclPermission,
   type DataSource,
 } from '@/config/dbConfig'
-import { RESEARCH_STATUS, type ResearchStatus } from '@/constants/stockpool.constants'
+import { RESEARCH_STATUS, type ResearchStatus } from '@/constants/pool.constants'
 import { mcpRegistry } from '@/mcp/core/registry'
 import { registerAllServers } from '@/mcp/register'
 import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest'
@@ -95,27 +95,27 @@ beforeAll(() => {
 // ============================================================
 
 describe('ACL_MATRIX 配置验证', () => {
-  it('stockpool 模块应在 ACL_MATRIX 中定义', { timeout: 60000 }, () => {
-    const permission: AclPermission = ACL_MATRIX[MODULE_ID.stockpool]
+  it('pool 模块应在 ACL_MATRIX 中定义', { timeout: 60000 }, () => {
+    const permission: AclPermission = ACL_MATRIX[MODULE_ID.pool]
     expect(permission).toBeDefined()
   })
 
-  it('stockpool 的 actions 应包含 SELECT/INSERT/UPDATE/DELETE', { timeout: 60000 }, () => {
-    const actions = ACL_MATRIX[MODULE_ID.stockpool].actions
+  it('pool 的 actions 应包含 SELECT/INSERT/UPDATE/DELETE', { timeout: 60000 }, () => {
+    const actions = ACL_MATRIX[MODULE_ID.pool].actions
     expect(actions).toContain(DB_OPERATION.select)
     expect(actions).toContain(DB_OPERATION.insert)
     expect(actions).toContain(DB_OPERATION.update)
     expect(actions).toContain(DB_OPERATION.delete)
   })
 
-  it('stockpool 的 read 列表应包含 stocks 和 v6Scores', { timeout: 60000 }, () => {
-    const read = ACL_MATRIX[MODULE_ID.stockpool].read
+  it('pool 的 read 列表应包含 stocks 和 v6Scores', { timeout: 60000 }, () => {
+    const read = ACL_MATRIX[MODULE_ID.pool].read
     expect(read).toContain(STORE_NAME.stocks)
     expect(read).toContain(STORE_NAME.v6Scores)
   })
 
-  it('stockpool 的 write 列表应包含 stocks', { timeout: 60000 }, () => {
-    const write = ACL_MATRIX[MODULE_ID.stockpool].write
+  it('pool 的 write 列表应包含 stocks', { timeout: 60000 }, () => {
+    const write = ACL_MATRIX[MODULE_ID.pool].write
     expect(write).toContain(STORE_NAME.stocks)
   })
 })
@@ -133,34 +133,34 @@ describe('DataBridge.query 读权限验证', () => {
     await addTestStock()
   })
 
-  it('stockpool 应能通过 QUERY_LIST 查询 stocks store', { timeout: 60000 }, async () => {
+  it('pool 应能通过 QUERY_LIST 查询 stocks store', { timeout: 60000 }, async () => {
     const result = await dataBridge.query<Stock[]>({
       action: ENVELOPE_ACTION.queryList,
       store: STORE_NAME.stocks,
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
     })
     expect(result.success).toBe(true)
     expect(result.data).toHaveLength(1)
     expect(result.data?.[0]?.symbol).toBe(TEST_STOCK_SYMBOL)
   })
 
-  it('stockpool 应能通过 QUERY_GET 按 key 查询 stocks store', { timeout: 60000 }, async () => {
+  it('pool 应能通过 QUERY_GET 按 key 查询 stocks store', { timeout: 60000 }, async () => {
     const result = await dataBridge.query<Stock>({
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
       key: TEST_STOCK_SYMBOL,
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
     })
     expect(result.success).toBe(true)
     expect(result.data?.symbol).toBe(TEST_STOCK_SYMBOL)
     expect(result.data?.name).toBe(TEST_STOCK_NAME)
   })
 
-  it('stockpool 应能查询 v6Scores store（read 权限）', { timeout: 60000 }, async () => {
+  it('pool 应能查询 v6Scores store（read 权限）', { timeout: 60000 }, async () => {
     const result = await dataBridge.query<unknown[]>({
       action: ENVELOPE_ACTION.queryList,
       store: STORE_NAME.v6Scores,
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
     })
     expect(result.success).toBe(true)
   })
@@ -170,7 +170,7 @@ describe('DataBridge.query 读权限验证', () => {
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
       key: 'NONEXISTENT_KEY',
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
     })
     expect(result.success).toBe(true)
     // IndexedDB get() 返回 undefined 而非 null，用 toBeFalsy() 断言
@@ -191,10 +191,10 @@ describe('DataBridge.forward 写权限验证', () => {
     await addTestStock()
   })
 
-  it('stockpool 应能通过 forward 更新 stocks store', { timeout: 60000 }, async () => {
+  it('pool 应能通过 forward 更新 stocks store', { timeout: 60000 }, async () => {
     const envelope = {
       meta: {
-        source: MODULE_ID.stockpool,
+        source: MODULE_ID.pool,
         target: ENVELOPE_TARGET.db,
         action: ENVELOPE_ACTION.updateStock,
         traceId: 'test-forward-update-1',
@@ -216,17 +216,17 @@ describe('DataBridge.forward 写权限验证', () => {
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
       key: TEST_STOCK_SYMBOL,
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
     })
     expect(result.success).toBe(true)
     expect(result.data?.name).toBe('forward更新后的名称')
   })
 
-  it('stockpool 应能多次 forward 更新同一股票', { timeout: 60000 }, async () => {
+  it('pool 应能多次 forward 更新同一股票', { timeout: 60000 }, async () => {
     // 第一次更新
     await dataBridge.forward({
       meta: {
-        source: MODULE_ID.stockpool,
+        source: MODULE_ID.pool,
         target: ENVELOPE_TARGET.db,
         action: ENVELOPE_ACTION.updateStock,
         traceId: 'test-forward-multi-1',
@@ -246,7 +246,7 @@ describe('DataBridge.forward 写权限验证', () => {
     // 第二次更新
     await dataBridge.forward({
       meta: {
-        source: MODULE_ID.stockpool,
+        source: MODULE_ID.pool,
         target: ENVELOPE_TARGET.db,
         action: ENVELOPE_ACTION.updateStock,
         traceId: 'test-forward-multi-2',
@@ -267,7 +267,7 @@ describe('DataBridge.forward 写权限验证', () => {
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
       key: TEST_STOCK_SYMBOL,
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
     })
     expect(result.success).toBe(true)
     expect(result.data?.name).toBe('第二次更新')
@@ -294,7 +294,7 @@ describe('所有 ResearchStatus 状态流转', () => {
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
       key: 'TEST_CANDIDATE',
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
     })
     expect(result.success).toBe(true)
     expect(result.data?.researchStatus).toBe(RESEARCH_STATUS.candidate)
@@ -306,7 +306,7 @@ describe('所有 ResearchStatus 状态流转', () => {
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
       key: 'TEST_SCREENED',
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
     })
     expect(result.success).toBe(true)
     expect(result.data?.researchStatus).toBe(RESEARCH_STATUS.screened)
@@ -318,7 +318,7 @@ describe('所有 ResearchStatus 状态流转', () => {
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
       key: 'TEST_DEEPDIVE',
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
     })
     expect(result.success).toBe(true)
     expect(result.data?.researchStatus).toBe(RESEARCH_STATUS.deepDive)
@@ -330,7 +330,7 @@ describe('所有 ResearchStatus 状态流转', () => {
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
       key: 'TEST_WATCHING',
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
     })
     expect(result.success).toBe(true)
     expect(result.data?.researchStatus).toBe(RESEARCH_STATUS.watching)
@@ -342,7 +342,7 @@ describe('所有 ResearchStatus 状态流转', () => {
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
       key: 'TEST_ARCHIVED',
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
     })
     expect(result.success).toBe(true)
     expect(result.data?.researchStatus).toBe(RESEARCH_STATUS.archived)
@@ -405,12 +405,12 @@ describe('ACL 拒绝验证', () => {
     expect(queryResult.success).toBe(true)
     expect(queryResult.data?.name).toBe('fetcher写入股票')
 
-    // stockpool 查询应能验证 fetcher 写入的数据
+    // pool 查询应能验证 fetcher 写入的数据
     const verifyResult = await dataBridge.query<Stock>({
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
       key: 'FETCHER001',
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
     })
     expect(verifyResult.success).toBe(true)
     expect(verifyResult.data?.name).toBe('fetcher写入股票')
@@ -452,13 +452,13 @@ describe('缓存与 ACL 一致性', () => {
     await addTestStock()
   })
 
-  it('invalidateCache 后 stockpool 仍能正确查询', { timeout: 60000 }, async () => {
+  it('invalidateCache 后 pool 仍能正确查询', { timeout: 60000 }, async () => {
     // 第一次查询（缓存未命中 → DB → 写入缓存）
     const r1 = await dataBridge.query<Stock>({
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
       key: TEST_STOCK_SYMBOL,
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
     })
     expect(r1.success).toBe(true)
     expect(r1.data?.symbol).toBe(TEST_STOCK_SYMBOL)
@@ -471,7 +471,7 @@ describe('缓存与 ACL 一致性', () => {
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
       key: TEST_STOCK_SYMBOL,
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
     })
     expect(r2.success).toBe(true)
     expect(r2.data?.symbol).toBe(TEST_STOCK_SYMBOL)
@@ -483,19 +483,19 @@ describe('缓存与 ACL 一致性', () => {
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
       key: TEST_STOCK_SYMBOL,
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
     })
     const r2 = await dataBridge.query<Stock>({
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
       key: TEST_STOCK_SYMBOL,
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
     })
     const r3 = await dataBridge.query<Stock>({
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
       key: TEST_STOCK_SYMBOL,
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
     })
     expect(r1.success).toBe(true)
     expect(r2.success).toBe(true)
