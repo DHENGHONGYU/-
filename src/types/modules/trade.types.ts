@@ -76,26 +76,6 @@ export interface HoldingsApiResponse<T = HoldingsListData> {
   message?: string
 }
 
-/** 交易操作请求参数 */
-export interface TradeActionRequest {
-  /** 证券代码 */
-  code: string
-  /** 操作类型 */
-  action: HoldingAction
-  /** 操作数量（股） */
-  quantity: number
-}
-
-/** 交易操作响应 */
-export interface TradeActionResponse {
-  /** 状态码 */
-  code: number
-  /** 是否成功 */
-  success: boolean
-  /** 提示信息 */
-  message: string
-}
-
 // ============================================================
 // 分页状态
 // ============================================================

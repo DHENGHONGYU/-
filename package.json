@@ -40,6 +40,7 @@
     "audit:semantic": "tsx scripts/semantic-validation.ts --all",
     "audit:routes": "tsx scripts/verify-all-routes.ts",
     "audit:mcp": "tsx scripts/audit-mcp.ts",
+    "audit:mcp-usage": "tsx scripts/audit-mcp-tool-usage.ts",
     "audit:token": "tsx scripts/audit-token-consumption.ts",
     "audit:tests": "tsx scripts/audit-tests.ts",
     "audit:reserved-stores": "tsx scripts/audit-reserved-stores.ts",

@@ -17,9 +17,10 @@ import { ENVELOPE_ACTION, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
 import type { StandardEnvelope } from '@/core/envelope'
 import { BacktestEngine } from '@/services/backtest'
 import { exportBacktestReport } from '@/services/export/backtestExportService'
-import type { BacktestExportConfig, BacktestExportResult, BacktestStrategy } from '@/types/modules/backtest.types'
+import type { BacktestExportConfig, BacktestExportResult, BacktestStrategy, BacktestHistoryRecord, BacktestHistoryQuery } from '@/types/modules/backtest.types'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { withBroadcast } from '@/store/helpers/withBroadcast'
+import { nanoid } from 'nanoid'
 
 const logger = getLogger()
 
@@ -91,6 +92,9 @@ interface BacktestState {
   // ---- 回测结果 ----
   results: BacktestResult | null
 
+  // ---- 回测历史记录 ----
+  history: BacktestHistoryRecord[]
+
   // ---- 加载 / 错误 ----
   loading: boolean
   error: string | null
@@ -100,12 +104,18 @@ interface BacktestState {
   setConfig: (partial: Partial<BacktestConfig>) => void
   runBacktest: () => Promise<void>
   clearResults: () => void
-  /** 导出回测报告（封装 backtestExportService，避免页面直接调用 Service） */
+  /** 按 ID 获取历史回测记录 */
+  getBacktestById: (id: string) => BacktestHistoryRecord | undefined
+  /** 查询历史回测记录 */
+  listBacktestHistory: (query?: BacktestHistoryQuery) => BacktestHistoryRecord[]
+  /** 导出当前回测报告（封装 backtestExportService，避免页面直接调用 Service） */
   exportReport: (
     results: BacktestResult,
     config: BacktestConfig,
     options: BacktestExportConfig,
   ) => Promise<BacktestExportResult>
+  /** 按历史记录 ID 导出回测报告 */
+  exportReportById: (id: string, options: BacktestExportConfig) => Promise<BacktestExportResult>
 }
 
 // ============================================================
@@ -138,6 +148,7 @@ const initialState = {
     initialCapital: DEFAULT_CAPITAL,
   },
   results: null as BacktestResult | null,
+  history: [] as BacktestHistoryRecord[],
   loading: false,
   error: null as string | null,
   lastRunAt: null as number | null,
@@ -174,16 +185,25 @@ export const useBacktestStore = create<BacktestState>((set, get) => ({
         maxPositionPct: 0.2,
       })
 
-      set({
+      const record: BacktestHistoryRecord = {
+        id: nanoid(),
+        config: { ...config },
+        result: engineResult.metrics,
+        createdAt: Date.now(),
+      }
+
+      set((state) => ({
         results: engineResult.metrics,
+        history: [record, ...state.history].slice(0, 50), // 保留最近 50 条
         loading: false,
         lastRunAt: Date.now(),
-      })
+      }))
 
       logger.info('[backtestStore] runBacktest completed', {
         totalReturn: engineResult.metrics.totalReturn,
         sharpeRatio: engineResult.metrics.sharpeRatio,
         tradeCount: engineResult.metrics.tradeCount,
+        recordId: record.id,
       })
     } catch (err) {
       const message = err instanceof Error ? err.message : '回测执行失败'
@@ -214,6 +234,51 @@ export const useBacktestStore = create<BacktestState>((set, get) => ({
     } catch (err) {
       const message = err instanceof Error ? err.message : '导出失败'
       logger.error('[backtestStore] exportReport failed', { error: message })
+      throw err
+    }
+  },
+
+  getBacktestById: (id) => {
+    const { history } = get()
+    return history.find((r) => r.id === id)
+  },
+
+  listBacktestHistory: (query) => {
+    const { history } = get()
+    let filtered = [...history]
+    const { strategy, fromDate, toDate, limit } = query ?? {}
+
+    if (strategy) {
+      filtered = filtered.filter((r) => r.config.strategy === strategy)
+    }
+    if (fromDate !== undefined) {
+      filtered = filtered.filter((r) => r.createdAt >= fromDate)
+    }
+    if (toDate !== undefined) {
+      filtered = filtered.filter((r) => r.createdAt <= toDate)
+    }
+    if (limit && limit > 0) {
+      filtered = filtered.slice(0, limit)
+    }
+
+    return filtered
+  },
+
+  exportReportById: async (id, options) => {
+    const record = get().getBacktestById(id)
+    if (!record) {
+      const msg = `未找到回测记录: ${id}`
+      logger.error('[backtestStore] exportReportById failed', { error: msg })
+      throw new Error(msg)
+    }
+    logger.info('[backtestStore] exportReportById started', { id, format: options.format })
+    try {
+      const result = await exportBacktestReport(record.result, record.config, options)
+      logger.info('[backtestStore] exportReportById completed', { id })
+      return result
+    } catch (err) {
+      const message = err instanceof Error ? err.message : '导出失败'
+      logger.error('[backtestStore] exportReportById failed', { error: message, id })
       throw err
     }
   },

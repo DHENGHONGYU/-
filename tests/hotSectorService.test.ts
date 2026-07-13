@@ -8,7 +8,7 @@ import {
   getHotSectorByCode,
   addHotSectorStock,
   addHotSectorStocks,
-} from '@/services/fetcher/hotSectorService'
+} from '@/services/input/hotSectorService'
 
 describe('hotSectorService', () => {
   beforeEach(async () => {

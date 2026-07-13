@@ -3,10 +3,10 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, HashRouter } from 'react-router'
 import InputApp from '@/apps/input/InputApp'
-import * as inputService from '@/services/fetcher/fetcherInputService'
+import * as inputService from '@/services/input/inputService'
 import * as fetcherService from '@/services/fetcher/fetcherService'
-import * as batchImportService from '@/services/fetcher/batchImportService'
-import * as hotSectorService from '@/services/fetcher/hotSectorService'
+import * as batchImportService from '@/services/input/batchImportService'
+import * as hotSectorService from '@/services/input/hotSectorService'
 import * as stockpoolService from '@/services/stockpool/stockpoolService'
 import type { Stock } from '@/data/types'
 import { UI_TEXT } from '@/constants/uiText'
@@ -48,7 +48,7 @@ const mockStockMissingBasic: Stock = {
 const mockPoolGroups = [
   {
     status: 'candidate',
-    label: '候选池',
+    label: '意向候选池',
     stocks: [mockStock, mockStockMissingBasic],
     options: [],
   },
@@ -217,7 +217,7 @@ describe('InputApp', () => {
     await userEvent.click(screen.getByRole('button', { name: new RegExp(UI_TEXT.errors.hotSectors, 'i') }))
     await waitFor(() => screen.getByText('比亚迪'))
 
-    const addButtons = screen.getAllByRole('button', { name: /^加入候选池$/ })
+    const addButtons = screen.getAllByRole('button', { name: /^加入意向候选池$/ })
     await userEvent.click(addButtons[0]!)
 
     await waitFor(() => {

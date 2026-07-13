@@ -37,7 +37,7 @@ import {
 } from '@/config/collectConfig'
 import { upgradeDimensionsToPipeline, runBatchTrace } from '@/services/data-collector/collectionPipeline'
 import { useCollectionRuntimeStore } from '@/store/collectionRuntimeStore'
-import { MOCK_STOCK_LIBRARY } from '@/services/fetcher/mockStockLibrary'
+import { MOCK_STOCK_LIBRARY } from '@/services/input/mockStockLibrary'
 
 const logger = getLogger()
 

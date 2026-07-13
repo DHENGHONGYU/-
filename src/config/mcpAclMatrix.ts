@@ -42,9 +42,8 @@ export const MCP_ACL_MATRIX: Readonly<Record<McpCallerRole, McpPermissionRule>> 
   },
 
   // UI 层：仅可调用查询类 Tool，禁止交易类写操作
-  // 2026-07-13 变更：显式增列 trade/input/trading/export 4 个 Server，
-  //   仅放行其「查询/分析/导出」类 Tool；写操作（下单、持仓/池写入、导入）一律不放行。
-  //   此举取代「合并 trade/input 到 trading/fetcher」的绕过方案，使授权模型保持显式可追溯。
+  // 2026-07-13 变更：移除已废弃/合并的 trade/input/export Server，
+  //   实际功能已合并至 trading:main / fetcher:data。
   // 显式排除的写操作（allowedTools 中故意不列出）：
   //   execute_trade_action / create_buy_order / create_sell_order（交易执行）
   //   add_stock / add_stock_from_search / import_stock_pool（股票池写入）
@@ -60,10 +59,7 @@ export const MCP_ACL_MATRIX: Readonly<Record<McpCallerRole, McpPermissionRule>> 
       'screening',
       'backtest',
       'system',
-      'trade',
-      'input',
       'trading',
-      'export',
     ],
     allowedTools: [
       'health_check',
@@ -75,13 +71,6 @@ export const MCP_ACL_MATRIX: Readonly<Record<McpCallerRole, McpPermissionRule>> 
       'run_backtest',
       'list_pool_stocks',
       'list_groups',
-      // trade（持仓查询 / CSV 导出，纯读）
-      'fetch_holdings',
-      'export_holdings_csv',
-      // input（股票池查询 / 池导出，纯读）
-      'search_stocks',
-      'list_input_stocks',
-      'export_stock_pool',
       // trading（信号/订单/仓位/快照 查询与交易分析，纯读）
       'scan_signals',
       'advise_stock',
@@ -91,8 +80,6 @@ export const MCP_ACL_MATRIX: Readonly<Record<McpCallerRole, McpPermissionRule>> 
       'get_strategy_snapshot',
       'generate_trade_review',
       'generate_mock_trading_data',
-      // export（回测报告导出，接收 result/config 生成文件，纯读）
-      'export_backtest_report',
     ],
   },
 

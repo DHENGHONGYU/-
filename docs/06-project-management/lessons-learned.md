@@ -2,7 +2,7 @@
 
 > **版本**: v1.0.0 | **生成日期**: 2026-07-13 | **来源**: 12 份审计报告 + 3 份历史教训文件 + 本次对话关键决策
 > **覆盖范围**: MCP Server 治理、Agent 运行时、代码质量、UI 路由、类型系统、数据层、文档管理、测试策略、调试方法论、SKILL 与代码差距
-> **统计**: 共 **20 条**结构化教训（P0: 9 条 | P1: 6 条 | P2: 5 条）
+> **统计**: 共 **21 条**结构化教训（P0: 9 条 | P1: 7 条 | P2: 5 条）
 
 ---
 
@@ -302,6 +302,39 @@
 - **When**：2026-06-27 Agent 审计（§9 追加分析）。
 - **Who**：方法论团队（SKILL 定义）+ 代码实现团队（stockAnalysisEngine）。
 - **How**：① 建立「SKILL 方法论的代码实现跟踪矩阵」，每项方法论必须有对应的代码实现和测试用例；② 代码权重表必须与 SKILL 权重表一致（如 L-1 10%、L3 财务+估值各 10%）；③ 层命名和定义必须同步（如 L5 应为 T-M 矩阵而非 T+0 策略）。
+- **严重级**: 🟡 P1
+
+---
+
+## 主题 11：架构分层与目录归位
+
+> 来源: 本次架构清理任务（2026-07-13）
+
+### 教训 25：语义重复与目录错位会绕过静态审计
+
+- **What**：`src/services/fetcher/` 目录下长期存放 `fetcherInputService.ts`、`hotSectorService.ts`、`batchImportExecutor.ts` 等输入域（input）服务，与 `src/services/input/` 职责重叠，形成「同名不同目录」的语义重复。`audit:layers` 和 `audit:deadcode` 均报告 0 违规，因为脚本只检测跨层调用和未注册页面，不检测领域目录错位。
+- **Why**：早期代码把「数据获取（fetcher）」和「候选股票录入（input）」混在同一目录；后续重构只新建了 `src/services/input/` 的部分文件，未清理旧位置，导致引用方分裂为 `@/services/fetcher/...` 和 `@/services/input/...` 两派，测试中也同时存在两种路径。
+- **Where**：`src/services/fetcher/` vs `src/services/input/`，影响 `InputDashboard.tsx`、`HotSectorPanel.tsx`、`StockSearch.tsx`、`inputHubStore.ts`、`strategyEngine.ts` 及 9 个测试文件。
+- **When**：2026-07-13 架构专项清理中确认并修复。
+- **Who**：架构清理执行者 + 代码评审（未在 PR 阶段发现目录错位）。
+- **How**：
+  1. 新增 `architecture-cleanup` SKILL，要求重构前用 `diff`/`Grep` 扫描疑似重复文件和分裂的 import 路径；
+  2. 将 input 域文件统一归位到 `src/services/input/`，`fetcherInputService.ts` 重命名为 `inputService.ts`；
+  3. 批量更新 `src/` 与 `tests/` 的 import 路径；
+  4. 把「候选池」UI 文案统一为状态机官方名称「意向候选池」，并同步更新测试中断言。
+- **严重级**: 🟡 P1
+
+### 教训 26：Store 层直接依赖 data/ 是隐蔽的跨层违规
+
+- **What**：`customAgentStore.ts` 和 `watchlistStore.ts` 直接 `import { dataLayer } from '@/data/dataLayer'`，调用 `dataLayer.customAgents.*` 和 `dataLayer.watchlists.save()`。`audit:layers` v3.0 未报告这两处为违规（脚本未将 Store→data 导入纳入检测规则），但明确违反 `AGENTS.md`「`store/` 只能依赖 `services/` 和 `core/`」的分层规则。
+- **Why**：Store 开发时为图方便直接复用 dataLayer API；审计脚本规则滞后于架构契约。
+- **Where**：`src/store/customAgentStore.ts:14`、`src/store/watchlistStore.ts:22`。
+- **When**：2026-07-13 架构专项清理中确认并修复。
+- **Who**：Store 开发者 + 审计脚本维护者。
+- **How**：
+  1. 新建 `src/services/system/customAgentService.ts` 和 `src/services/trading/tradingService.ts#persistWatchlistSnapshot`，将 dataLayer 调用下沉到服务层；
+  2. Store 仅依赖 Service；
+  3. 同步修复 `systemService.test.ts` 中缺失的 `STORE_NAME` 和 `dataBridge.query` mock，避免测试因重构暴露的预存缺陷而失败。
 - **严重级**: 🟡 P1
 
 ---

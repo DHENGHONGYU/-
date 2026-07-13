@@ -226,7 +226,7 @@ export function searchStocks(query: string): StockSearchResult[] {
 }
 
 /**
- * 导出候选池（全部或按状态过滤）
+ * 导出意向候选池（全部或按状态过滤）
  */
 export async function exportPool(
   status?: ResearchStatus,
@@ -266,7 +266,7 @@ export async function exportPool(
 }
 
 /**
- * 导入候选池
+ * 导入意向候选池
  *
  * 通过 DataBridge.forward() 逐条写入，避免 UI 层直接操作 dataLayer。
  */

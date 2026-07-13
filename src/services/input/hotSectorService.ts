@@ -1,6 +1,6 @@
-import { addStock } from './fetcherInputService'
+import { addStock } from './inputService'
 import { dataBridge, ENVELOPE_ACTION, STORE_NAME, MODULE_ID } from '@/core/databridge'
-import type { AddStockOptions } from './fetcherInputService'
+import type { AddStockOptions } from './inputService'
 import type { DataLayerResult, Stock } from '@/data/types'
 
 export interface HotSectorStock {
@@ -104,7 +104,7 @@ export interface AddHotSectorStockResult {
 }
 
 /**
- * 将指定热门板块的全部推荐股票加入候选池
+ * 将指定热门板块的全部推荐股票加入意向候选池
  */
 export async function addHotSectorStocks(
   sectorCode: string,
@@ -145,7 +145,7 @@ export async function addHotSectorStocks(
 }
 
 /**
- * 将单只热门推荐股票加入候选池
+ * 将单只热门推荐股票加入意向候选池
  */
 export async function addHotSectorStock(
   sectorCode: string,

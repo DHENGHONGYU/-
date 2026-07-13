@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Input } from '@/components/atoms/Input'
 import { useInputHubStore } from '@/store/inputHubStore'
-import type { StockSearchResult } from '@/services/fetcher/fetcherInputService'
+import type { StockSearchResult } from '@/services/input/inputService'
 import { INPUT_CONFIG } from '@/config/inputConfig'
 import { useToast } from '@/hooks/useToast'
 import { cn } from '@/lib/utils'
@@ -21,7 +21,7 @@ export function StockSearch({
   onSelect,
   onAdded,
   mode = 'fill',
-  placeholder = mode === 'add' ? '搜索并直接录入候选池' : '搜索代码 / 名称 / 行业',
+  placeholder = mode === 'add' ? '搜索并直接录入意向候选池' : '搜索代码 / 名称 / 行业',
   className,
 }: StockSearchProps): React.JSX.Element {
   const storeSearchStocks = useInputHubStore((s) => s.searchStocks)
@@ -93,7 +93,7 @@ export function StockSearch({
       toast({
         variant: 'success',
         title: '录入成功',
-        description: `${result.symbol} ${result.name} 已加入候选池`,
+        description: `${result.symbol} ${result.name} 已加入意向候选池`,
       })
       onAdded?.(result)
       setQuery('')

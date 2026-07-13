@@ -1,5 +1,5 @@
 import type { WidgetConfig, SectorHeatmapData } from '@/types/modules/widget.types'
-import type { HotSector } from '@/services/fetcher/hotSectorService'
+import type { HotSector } from '@/services/input/hotSectorService'
 
 /**
  * @fileoverview Widget 组件测试公共辅助函数

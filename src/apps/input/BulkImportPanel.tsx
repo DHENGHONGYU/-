@@ -13,7 +13,7 @@ import {
   type BulkImportRow,
   type BulkImportResult,
   type ImportStocksOptions,
-} from '@/services/fetcher/batchImportService'
+} from '@/services/input/batchImportService'
 import { usePoolStore, getAllGroups } from '@/store/poolStore'
 import { getLogger } from '@/lib/logger'
 import { twText, twBg, twBorder, DARK, HOVER, FOCUS, DIVIDE } from '@/constants/theme.tokens'

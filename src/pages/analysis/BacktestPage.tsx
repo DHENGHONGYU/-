@@ -7,18 +7,28 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/atoms/Badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/atoms/Table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/molecules/Tabs'
-import { Download, RotateCcw, Play, BarChart3, TrendingUp, AlertCircle, Info } from 'lucide-react'
+import { Download, RotateCcw, Play, BarChart3, TrendingUp, AlertCircle, Info, History } from 'lucide-react'
 import { PageContainer, PageHeader } from '@/components/templates'
 import { useBacktestStore, type BacktestStrategy } from '@/store/backtestStore'
 import { STOCK_COLOR_MAPPING } from '@/constants/cockpit.constants'
-import { COLOR_TOKENS, CHART_PALETTE } from '@/constants/theme.tokens'
+import { COLOR_TOKENS, CHART_PALETTE, THEME_TOKENS } from '@/constants/theme.tokens'
 
 /**
  * BacktestPage
  */
 export default function BacktestPage(): React.JSX.Element {
-  const { config, results, loading, error, setConfig, runBacktest, clearResults, exportReport } =
-    useBacktestStore()
+  const {
+    config,
+    results,
+    history,
+    loading,
+    error,
+    setConfig,
+    runBacktest,
+    clearResults,
+    exportReport,
+    exportReportById,
+  } = useBacktestStore()
 
   const [activeTab, setActiveTab] = useState('results')
 
@@ -30,6 +40,14 @@ export default function BacktestPage(): React.JSX.Element {
     if (!results) return
     try {
       await exportReport(results, config, { format: 'pdf' })
+    } catch {
+      // 导出失败由 store 处理日志
+    }
+  }
+
+  const handleExportById = async (id: string) => {
+    try {
+      await exportReportById(id, { format: 'pdf' })
     } catch {
       // 导出失败由 store 处理日志
     }
@@ -314,6 +332,78 @@ export default function BacktestPage(): React.JSX.Element {
           </CardContent>
         </Card>
       )}
+      {history.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <History className="h-5 w-5" />
+              历史回测记录
+              <span className={THEME_TOKENS.typography.fontSize.sm}>
+                <Badge variant="outline">{history.length} 条</Badge>
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>策略</TableHead>
+                  <TableHead>时间区间</TableHead>
+                  <TableHead>总收益率</TableHead>
+                  <TableHead>夏普比率</TableHead>
+                  <TableHead>交易次数</TableHead>
+                  <TableHead>回测时间</TableHead>
+                  <TableHead className="text-right">操作</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {history.map((record) => (
+                  <TableRow key={record.id}>
+                    <TableCell>
+                      <Badge variant="secondary">
+                        {record.config.strategy === 'hot_sector'
+                          ? '热门板块'
+                          : record.config.strategy === 'value_pit'
+                            ? '价值洼地'
+                            : '复合策略'}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-muted-foreground text-sm">
+                      {record.config.startDate} ~ {record.config.endDate}
+                    </TableCell>
+                    <TableCell
+                      className={
+                        record.result.totalReturn >= 0
+                          ? STOCK_COLOR_MAPPING.UP_CLASS
+                          : STOCK_COLOR_MAPPING.DOWN_CLASS
+                      }
+                    >
+                      {record.result.totalReturn >= 0 ? '+' : ''}
+                      {record.result.totalReturn.toFixed(2)}%
+                    </TableCell>
+                    <TableCell>{record.result.sharpeRatio.toFixed(2)}</TableCell>
+                    <TableCell>{record.result.tradeCount}</TableCell>
+                    <TableCell className="text-muted-foreground text-sm">
+                      {new Date(record.createdAt).toLocaleString('zh-CN')}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => void handleExportById(record.id)}
+                      >
+                        <Download className="h-4 w-4 mr-1" />
+                        导出
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      )}
+
     </PageContainer>
   )
 }

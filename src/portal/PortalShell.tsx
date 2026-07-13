@@ -86,7 +86,7 @@ interface PanelGroup {
 const PANEL_ITEMS: Record<CabinType, PanelGroup[]> = {
   input: [
     {
-      group: '候选池',
+      group: '意向候选池',
       items: [
         { key: 'dashboard', label: '录入看板', path: '/input', icon: LayoutDashboard },
         { key: 'stock-pool', label: '股票池看板（已迁分析舱）', path: '/analysis/stock-pool', icon: Database },

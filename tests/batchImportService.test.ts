@@ -1,6 +1,6 @@
 import { describe, expect, it, beforeEach } from 'vitest'
 import { db } from '@/data/db'
-import { parseBulkInput, importStocks } from '@/services/fetcher/batchImportService'
+import { parseBulkInput, importStocks } from '@/services/input/batchImportService'
 import { parseCsvText } from '@/services/input/batchImportParsers'
 import { dataLayer } from '@/data/dataLayer'
 import { dataBridge } from '@/core/databridge'

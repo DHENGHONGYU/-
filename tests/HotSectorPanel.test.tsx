@@ -173,7 +173,7 @@ describe('HotSectorPanel', () => {
     const select = screen.getByLabelText('热门板块目标分组')
     await user.selectOptions(select, '自选')
 
-    const addButtons = screen.getAllByRole('button', { name: '加入候选池' })
+    const addButtons = screen.getAllByRole('button', { name: '加入意向候选池' })
     await user.click(addButtons[0]!)
 
     await waitFor(() => {
@@ -186,14 +186,14 @@ describe('HotSectorPanel', () => {
   })
 
   // ----------------------------------------------------------
-  // 单只加入候选池
+  // 单只加入意向候选池
   // ----------------------------------------------------------
-  it('calls addHotSectorStock when "加入候选池" button is clicked', async () => {
+  it('calls addHotSectorStock when "加入意向候选池" button is clicked', async () => {
     const user = userEvent.setup()
     render(<HotSectorPanel />)
     await waitForLoadingToFinish()
 
-    const addButtons = screen.getAllByRole('button', { name: '加入候选池' })
+    const addButtons = screen.getAllByRole('button', { name: '加入意向候选池' })
     await user.click(addButtons[0]!)
 
     await waitFor(() => {
@@ -210,11 +210,11 @@ describe('HotSectorPanel', () => {
     render(<HotSectorPanel />)
     await waitForLoadingToFinish()
 
-    const addButtons = screen.getAllByRole('button', { name: '加入候选池' })
+    const addButtons = screen.getAllByRole('button', { name: '加入意向候选池' })
     await user.click(addButtons[0]!)
 
     await waitFor(() => {
-      expect(screen.getByText('已将 600519.SH 加入候选池')).toBeInTheDocument()
+      expect(screen.getByText('已将 600519.SH 加入意向候选池')).toBeInTheDocument()
     })
   })
 
@@ -224,7 +224,7 @@ describe('HotSectorPanel', () => {
     render(<HotSectorPanel />)
     await waitForLoadingToFinish()
 
-    const addButtons = screen.getAllByRole('button', { name: '加入候选池' })
+    const addButtons = screen.getAllByRole('button', { name: '加入意向候选池' })
     await user.click(addButtons[0]!)
 
     await waitFor(() => {
@@ -233,14 +233,14 @@ describe('HotSectorPanel', () => {
   })
 
   // ----------------------------------------------------------
-  // 批量加入候选池
+  // 批量加入意向候选池
   // ----------------------------------------------------------
-  it('calls addHotSectorStocks when "全部加入候选池" button is clicked', async () => {
+  it('calls addHotSectorStocks when "全部加入意向候选池" button is clicked', async () => {
     const user = userEvent.setup()
     render(<HotSectorPanel />)
     await waitForLoadingToFinish()
 
-    const batchButton = screen.getByRole('button', { name: /全部加入候选池/ })
+    const batchButton = screen.getByRole('button', { name: /全部加入意向候选池/ })
     await user.click(batchButton)
 
     await waitFor(() => {
@@ -256,7 +256,7 @@ describe('HotSectorPanel', () => {
     render(<HotSectorPanel />)
     await waitForLoadingToFinish()
 
-    const batchButton = screen.getByRole('button', { name: /全部加入候选池/ })
+    const batchButton = screen.getByRole('button', { name: /全部加入意向候选池/ })
     await user.click(batchButton)
 
     await waitFor(() => {
@@ -278,7 +278,7 @@ describe('HotSectorPanel', () => {
     render(<HotSectorPanel />)
     await waitForLoadingToFinish()
 
-    const batchButton = screen.getByRole('button', { name: /全部加入候选池/ })
+    const batchButton = screen.getByRole('button', { name: /全部加入意向候选池/ })
     await user.click(batchButton)
 
     await waitFor(() => {
@@ -292,7 +292,7 @@ describe('HotSectorPanel', () => {
   })
 
   // ----------------------------------------------------------
-  // "已加入"状态（已在候选池中的股票）
+  // "已加入"状态（已在意向候选池中的股票）
   // ----------------------------------------------------------
   it('shows "已加入" and disables button for stocks already in pool', async () => {
     setupPoolStore([{ symbol: '600519.SH', name: '贵州茅台', group: '默认' }])
@@ -302,7 +302,7 @@ describe('HotSectorPanel', () => {
 
     const addedButton = screen.getByRole('button', { name: '已加入' })
     expect(addedButton).toBeDisabled()
-    expect(screen.getAllByRole('button', { name: '加入候选池' }).length).toBe(2)
+    expect(screen.getAllByRole('button', { name: '加入意向候选池' }).length).toBe(2)
   })
 
   // ----------------------------------------------------------
@@ -316,7 +316,7 @@ describe('HotSectorPanel', () => {
     render(<HotSectorPanel />)
     await waitForLoadingToFinish()
 
-    const batchButton = screen.getByRole('button', { name: /全部加入候选池/ })
+    const batchButton = screen.getByRole('button', { name: /全部加入意向候选池/ })
     await user.click(batchButton)
 
     // 批量按钮应变为 disabled 且文本为"加入中..."
@@ -331,7 +331,7 @@ describe('HotSectorPanel', () => {
     resolveBatch!({ success: true, data: { added: [], failed: [] } })
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /全部加入候选池/ })).toBeEnabled()
+      expect(screen.getByRole('button', { name: /全部加入意向候选池/ })).toBeEnabled()
     }, { timeout: 5000 })
   })
 })
