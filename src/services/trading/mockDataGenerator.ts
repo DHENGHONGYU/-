@@ -394,6 +394,7 @@ export function generateMockTradingData(): MockTradingData {
 export function exportMockDataToStorage(data: MockTradingData): void {
   try {
     localStorage.setItem('mock_trading_data', JSON.stringify(data))
+    // eslint-disable-next-line no-console
     console.log('[MockDataGenerator] 模拟数据已导出到 localStorage')
   } catch (error) {
     console.error('[MockDataGenerator] 导出模拟数据失败', error)

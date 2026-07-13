@@ -103,6 +103,7 @@ export function getStockColorHex(change: number): string {
   const result = getStockColor(change).hex
   // 调试日志：帮助排查颜色计算问题
   if (typeof window !== 'undefined' && (window as Window & { __DEBUG_STOCK_COLORS__?: boolean }).__DEBUG_STOCK_COLORS__) {
+    // eslint-disable-next-line no-console
     console.debug(
       `[StockColor] getStockColorHex(${change}) => ${result}`,
       { change, result, direction: change > 0 ? 'up' : change < 0 ? 'down' : 'neutral' }

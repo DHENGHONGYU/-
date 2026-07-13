@@ -44,10 +44,6 @@ vi.mock('@/lib/logger', () => ({
   getLogger: () => ({ info: vi.fn(), error: vi.fn(), warn: vi.fn(), debug: vi.fn() }),
 }))
 
-vi.mock('@/services/trade/holdingsService', () => ({
-  fetchHoldings: vi.fn(),
-}))
-
 vi.mock('@/core/databridge', () => ({
   dataBridge: { subscribe: mockSubscribe },
 }))

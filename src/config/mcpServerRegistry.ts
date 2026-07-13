@@ -5,12 +5,16 @@
  * 配置驱动的 MCP Server 自动注册与热更新。
  * 新增/移除/禁用 Server 只需修改此文件，无需改动注册逻辑。
  *
- * 当前状态（2026-07-13 回溯恢复后）：
- *   18 个 Registry 条目 → 18 个 enabled（源码已从 git 历史恢复）
- *   此前 6 个 disabled（screening/stockpool/backtest/export/input/trade）因
- *   Phase E 清理被删除且回溯恢复未落盘；现已从 d4200a7^ 取回源码并重新启用。
- *   待办：P0 实现 backtestStore.getBacktestById 解除 export 阻塞；
- *         P1 决策 trade/input 合并方案；P2 为 screening/stockpool 补测试。
+ * 当前状态（2026-07-20 P0 清理后）：
+ *   15 个 Registry 条目 → 15 个 enabled
+ *   已移除 3 个 Server（export/trade/input）的 MCP 包装层：
+ *   - export: 降级为纯 Service 函数（backtestExportService 保留）
+ *   - trade: 合并入 trading:main（holdingsService 删除，功能由 trading 覆盖）
+ *   - input: MCP 层移除（inputService 保留在 services/input/，业务代码直接调用）
+ *   复盘待办进展：
+ *   P0 ✅ 已执行 —— export/trade/input MCP 层清理完毕
+ *   P1 待执行 —— input Service 层合并入 fetcher:data（需评估）
+ *   P2 保留 —— backtest/screening/stockpool 待 Agent 场景恢复
  *
  * 使用方式：
  *   - 应用启动：`import '@/mcp/register'` → 自动读取本配置并注册
@@ -148,27 +152,6 @@ export const MCP_SERVER_REGISTRY: ReadonlyArray<MCPServerConfigEntry> = [
     enabled: true,
   },
 
-  {
-    name: 'input:main',
-    modulePath: '@/mcp/servers/input/inputServer',
-    exportName: 'InputServer',
-    priority: 'medium',
-    enabled: true,
-  },
-  {
-    name: 'trade:main',
-    modulePath: '@/mcp/servers/trade/tradeServer',
-    exportName: 'TradeServer',
-    priority: 'medium',
-    enabled: true,
-  },
-  {
-    name: 'export:main',
-    modulePath: '@/mcp/servers/export/exportServer',
-    exportName: 'ExportServer',
-    priority: 'medium',
-    enabled: true,
-  },
   // Phase 4: 补充已就绪的 MCP Server
   {
     name: 'data-collector:main',

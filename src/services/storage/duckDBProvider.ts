@@ -73,10 +73,12 @@ export class DuckDBProviderImpl implements TimeSeriesProvider {
 
     try {
       // 动态导入 duckdb-wasm（首次调用时加载 ~15MB wasm）
-      const ddb = await import('@duckdb/duckdb-wasm') as {
+      // 使用 unknown 中转避免类型断言与模块版本不兼容
+      const ddbModule = await import('@duckdb/duckdb-wasm')
+      const ddb = ddbModule as unknown as {
         getJsDelivrBundles(): DuckDBBundles
         selectBundle(bundles: DuckDBBundles): Promise<DuckDBBundle>
-        ConsoleLogger: new () => { log(): void }
+        ConsoleLogger: new (...args: unknown[]) => unknown
         AsyncDuckDB: new (logger: unknown, worker: Worker) => AsyncDuckDB
       }
       const bundles = ddb.getJsDelivrBundles()

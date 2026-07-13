@@ -19,7 +19,11 @@ function shouldLog(level: LogLevel): boolean {
 
 /**
  * getLogger
+ *
+ * Logger 底层实现，直接调用 console — 本文件豁免 no-console 规则。
+ * 生产环境通过 setLogLevel 控制日志级别，默认 debug 输出全部。
  */
+/* eslint-disable no-console */
 export function getLogger() {
   return {
     debug(message: string, context?: LogContext): void {
