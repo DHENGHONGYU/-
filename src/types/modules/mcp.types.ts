@@ -9,6 +9,8 @@
  * @created 2026-07-04 - Phase 0 MCP 基础设施层建设
  */
 
+import type { UserRole, DeveloperRole } from '@/types/role.types'
+
 // ============================================================
 // JSON Schema 子集（用于 Tool inputSchema）
 // ============================================================
@@ -163,6 +165,8 @@ export interface PromptTemplate {
  *   - MCP_ACL_MATRIX: caller → server → tool（工具层）
  */
 export type McpCallerRole = 'agent' | 'ui' | 'ci' | 'system'
+
+export type McpEffectiveRole = McpCallerRole | UserRole | DeveloperRole
 
 /**
  * MCP 调用方上下文 — 在 Client/Bridge 调用入口传入，用于权限校验和审计。

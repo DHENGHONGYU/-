@@ -16,11 +16,9 @@ const { mockForward, mockStocksList, mockOrdersList, mockV6ScoresList, mockExpor
 /* ------------------------------------------------------------------ */
 /*  Mock 模块                                                          */
 /* ------------------------------------------------------------------ */
+// P4 后 manager.export 仍直接访问 dataLayer，保留该 mock；其余数据查询已迁移到 DataBridge。
 vi.mock('@/data/dataLayer', () => ({
   dataLayer: {
-    stocks: { list: mockStocksList },
-    orders: { list: mockOrdersList },
-    v6Scores: { list: mockV6ScoresList },
     manager: { export: mockExport },
   },
 }))

@@ -1,6 +1,8 @@
 /**
  * @module multiFactorScreeningEngine.test
  * @description 多因子筛选引擎单元测试。
+ *
+ * P4 重构后 loadScreenableStocks 走 DataBridge.query，本测试改为 mock @/core/databridge。
  */
 
 import { describe, it, expect, vi } from 'vitest'
@@ -12,14 +14,19 @@ import {
 } from './multiFactorScreeningEngine'
 import type { ScreeningConditionGroup, ScreenableStockData } from '@/types/modules/screening.types'
 
-const listMock = vi.fn()
-const getUnifiedStockViewsMock = vi.fn()
+const { listMock, getUnifiedStockViewsMock } = vi.hoisted(() => ({
+  listMock: vi.fn(),
+  getUnifiedStockViewsMock: vi.fn(),
+}))
 
-vi.mock('@/data/dataLayer', () => ({
-  dataLayer: {
-    stocks: {
-      list: () => listMock(),
-    },
+vi.mock('@/core/databridge', () => ({
+  dataBridge: {
+    query: vi.fn(async (request: { action: string; store: string }) => {
+      if (request.action === 'QUERY_LIST' && request.store === 'stocks') {
+        return { success: true, data: await listMock() }
+      }
+      return { success: false, error: `unmocked query: ${request.action}/${request.store}` }
+    }),
   },
 }))
 

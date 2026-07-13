@@ -19,14 +19,6 @@ vi.mock('@/services/export/backtestExportService', () => ({
   exportBacktestReport: mockExportBacktestReport,
 }))
 
-vi.mock('@/data/dataLayer', () => ({
-  dataLayer: {
-    orders: { list: mockOrdersList },
-    signals: { list: mockSignalsList },
-    dailyQuotes: { get: mockDailyQuotesGet },
-  },
-}))
-
 const { mockSubscribe, capturedCallbacks, unsubscribes } = vi.hoisted(() => {
   const capturedCallbacks = new Map<string, ((envelope: StandardEnvelope) => void)>()
   const unsubscribes: Array<ReturnType<typeof vi.fn>> = []
@@ -39,23 +31,21 @@ const { mockSubscribe, capturedCallbacks, unsubscribes } = vi.hoisted(() => {
   return { mockSubscribe, capturedCallbacks, unsubscribes }
 })
 
+// P4 后 BacktestEngine 与 backtestStore 统一走 DataBridge，不再直接访问 dataLayer。
 vi.mock('@/core/databridge', () => ({
   dataBridge: {
     subscribe: mockSubscribe,
-    query: vi.fn(async (request: { store: string; key?: string }) => {
-      if (request.store === 'orders') {
-        const data = await mockOrdersList()
-        return { success: true, data }
+    query: vi.fn(async (request: { action: string; store: string; key?: string }) => {
+      if (request.action === 'QUERY_LIST' && request.store === 'orders') {
+        return { success: true, data: await mockOrdersList() }
       }
-      if (request.store === 'signals') {
-        const data = await mockSignalsList()
-        return { success: true, data }
+      if (request.action === 'QUERY_LIST' && request.store === 'signals') {
+        return { success: true, data: await mockSignalsList() }
       }
-      if (request.store === 'daily_quotes') {
-        const data = await mockDailyQuotesGet(request.key)
-        return { success: true, data }
+      if (request.action === 'QUERY_GET' && request.store === 'daily_quotes') {
+        return { success: true, data: await mockDailyQuotesGet(request.key) }
       }
-      return { success: true, data: [] }
+      return { success: false, error: `unmocked query: ${request.action}/${request.store}` }
     }),
   },
 }))
@@ -66,6 +56,8 @@ vi.mock('@/config/dbConfig', () => ({
     insertOrder: 'INSERT_ORDER',
     updateOrder: 'UPDATE_ORDER',
     deleteOrder: 'DELETE_ORDER',
+    queryList: 'QUERY_LIST',
+    queryGet: 'QUERY_GET',
   },
   MODULE_ID: { tradinghub: 'tradinghub' },
   STORE_NAME: { orders: 'orders', signals: 'signals', dailyQuotes: 'daily_quotes' },
