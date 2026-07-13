@@ -8,6 +8,15 @@
  * 6. intelligentScoreStore.ts — 补全 v6EngineCalculation
  * 7. intelligentScoreStore.test.ts — 补全 v6EngineCalculation
  */
+/**
+ * @file batch-fix-tsc.ts
+ * @description 批量修复 tsc 既存类型错误（如导入清理、字段补全、导出修复）
+ * @status 孤立脚本（未在 package.json 中引用）
+ * @category 未接入审计流水线 — 评估后接入
+ * @maintainer 待定
+ * @lastVerified 2026-07-13
+ */
+
 import * as fs from 'fs'
 import * as path from 'path'
 

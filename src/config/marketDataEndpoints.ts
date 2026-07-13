@@ -24,3 +24,6 @@ export const SINA_REFERER = 'https://finance.sina.com.cn'
 
 /** 网易历史行情 API 地址（已不可用，DNS 不可达，保留占位） */
 export const NETEASE_API_BASE = '/api/proxy/netease'
+
+/** 网易 API Referer */
+export const NETEASE_REFERER = 'https://quotes.163.com'

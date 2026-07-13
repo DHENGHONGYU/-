@@ -75,7 +75,7 @@ export function PhaseStepper({ phase, cancelled, result }: PhaseStepperProps): R
       {PHASES.map((p, index) => {
         const reached = isPhaseReached(index)
         const current = isPhaseCurrent(index)
-        const colors = PHASE_COLORS[p]!
+        const colors = PHASE_COLORS[p]
         const lineStyle = getLineStyle(index)
         const isPendingSpinner = p === 'pending' && current && !cancelled
 

@@ -5,6 +5,15 @@
  * 预期：全部测试通过，退出码 0
  */
 
+/**
+ * @file verify-m1.ts
+ * @description 验收 M1（RAG 向量检索）核心逻辑：嵌入服务、MCP knowledgeServer、语义搜索
+ * @status 孤立脚本（未在 package.json 中引用）
+ * @category 调试/验证 — 保留
+ * @maintainer 待定
+ * @lastVerified 2026-07-13
+ */
+
 async function main(): Promise<void> {
   console.log('\n  =========================================')
   console.log('  验收 M1 — RAG 本地向量检索')

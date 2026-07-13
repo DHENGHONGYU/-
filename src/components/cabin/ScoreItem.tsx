@@ -20,7 +20,7 @@ interface ScoreItemProps {
  */
 export const ScoreItem = memo(function ScoreItem({ name, score, prevScore }: ScoreItemProps): React.JSX.Element {
   const hasDelta = prevScore !== null && prevScore !== undefined && score !== null
-  const delta = hasDelta ? score! - prevScore! : null
+  const delta = hasDelta ? score - prevScore : null
   const isPositive = delta !== null && delta > 0
   const isNegative = delta !== null && delta < 0
 

@@ -804,7 +804,7 @@ main();
 - [ ] 登记现有技术债（填写本文档 §3）
 - [ ] 创建 GitHub Issue 模板（`.github/ISSUE_TEMPLATE/tech-debt.md`）
 - [ ] 创建 GitHub Project 看板（技术债管理）
-- [ ] 配置自动化脚本（`npm run tech-debt:report`）
+- [ ] 配置自动化脚本（`npm run generate:techDebtReport`）
 - [ ] 规划首次技术债清理迭代
 
 ---

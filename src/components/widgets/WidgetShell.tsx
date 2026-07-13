@@ -85,10 +85,10 @@ export function WidgetShell({
   config,
   children,
   onError,
-  state,
+  state = 'ready',
   stateConfig,
 }: WidgetShellProps): React.ReactElement {
-  const visualState: WidgetVisualState = state ?? 'ready' /* default: ready state */ /* default: ready state */
+  const visualState: WidgetVisualState = state
 
   const renderContent = (): React.ReactNode => {
     if (visualState === 'loading') {

@@ -15,6 +15,12 @@
 
 import { getLogger } from '@/lib/logger'
 import type {
+  AsyncDuckDB,
+  AsyncDuckDBConnection,
+  DuckDBBundle,
+  DuckDBBundles,
+} from '@duckdb/duckdb-wasm'
+import type {
   GetOptions,
   ListOptions,
   SaveOptions,
@@ -47,8 +53,8 @@ export class DuckDBProviderImpl implements TimeSeriesProvider {
   readonly morphologies: ['time_series'] = ['time_series']
 
   // DuckDB 实例（惰性初始化）
-  private db: any = null
-  private conn: any = null
+  private db: AsyncDuckDB | null = null
+  private conn: AsyncDuckDBConnection | null = null
   private initialized = false
 
   /** 已建表缓存 */
@@ -67,12 +73,20 @@ export class DuckDBProviderImpl implements TimeSeriesProvider {
 
     try {
       // 动态导入 duckdb-wasm（首次调用时加载 ~15MB wasm）
-      // 使用 any 绕过 duckdb-wasm 复杂类型，后续运行时验证
-      const ddb: any = await import('@duckdb/duckdb-wasm')
+      const ddb = await import('@duckdb/duckdb-wasm') as {
+        getJsDelivrBundles(): DuckDBBundles
+        selectBundle(bundles: DuckDBBundles): Promise<DuckDBBundle>
+        ConsoleLogger: new () => { log(): void }
+        AsyncDuckDB: new (logger: unknown, worker: Worker) => AsyncDuckDB
+      }
       const bundles = ddb.getJsDelivrBundles()
-      const bundle = ddb.selectBundle(bundles)
+      const bundle = await ddb.selectBundle(bundles)
 
-      const worker = new Worker(bundle.mainWorker.url)
+      const workerUrl = bundle.mainWorker
+      if (!workerUrl) {
+        throw new Error('DuckDB bundle 不包含 worker URL')
+      }
+      const worker = new Worker(workerUrl)
       const logger_ = new ddb.ConsoleLogger()
       this.db = new ddb.AsyncDuckDB(logger_, worker)
       await this.db.instantiate(bundle.mainModule, bundle.pthreadWorker)
@@ -225,7 +239,7 @@ export class DuckDBProviderImpl implements TimeSeriesProvider {
   /**
    * OHLCV 聚合查询
    */
-  async aggregate(symbol: string, windowMs: number): Promise<ListResult<any>> {
+  async aggregate(symbol: string, windowMs: number): Promise<ListResult<OHLCVRow>> {
     if (!this.initialized) {
       const ok = await this.init()
       if (!ok) return { success: false, data: [], error: 'DuckDB 未初始化' }
@@ -247,7 +261,7 @@ export class DuckDBProviderImpl implements TimeSeriesProvider {
       `
 
       const result = await this.conn!.query(sql)
-      const rows: any[] = []
+      const rows: OHLCVRow[] = []
       for (let i = 0; i < result.numRows; i++) {
         rows.push({
           timestamp: Number(result.getChild('bucket')?.get(i) ?? 0),
@@ -264,4 +278,14 @@ export class DuckDBProviderImpl implements TimeSeriesProvider {
       return { success: false, data: [], error: err instanceof Error ? err.message : String(err) }
     }
   }
+}
+
+/** OHLCV 聚合结果行 */
+interface OHLCVRow {
+  timestamp: number
+  open: number
+  high: number
+  low: number
+  close: number
+  volume: number
 }

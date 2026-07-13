@@ -337,7 +337,7 @@ npm run changelog:query -- --participant=架构师
 npm run changelog:query -- --type=code_refactor
 
 # 生成周报
-npm run changelog:report -- --period=week
+npm run changelog:summary
 ```
 
 ### 3.4 日志自动化
@@ -359,7 +359,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Generate changelog entry
         run: |
-          npm run changelog:generate
+          npm run release:changelog-bump
       - name: Commit changes
         run: |
           git config user.name "github-actions[bot]"

@@ -2,6 +2,15 @@
  * 批量补齐 JSDoc 缺失（基于 audit-jsdoc.ts 报告）
  * 在 29 处缺失点插入标准 JSDoc 注释。
  */
+/**
+ * @file batch-add-jsdoc.ts
+ * @description 批量补齐 JSDoc 缺失（基于 audit-jsdoc.ts 报告），在缺失点插入标准 JSDoc 注释
+ * @status 孤立脚本（未在 package.json 中引用）
+ * @category 未接入审计流水线 — 评估后接入
+ * @maintainer 待定
+ * @lastVerified 2026-07-13
+ */
+
 import * as fs from 'fs'
 import * as path from 'path'
 

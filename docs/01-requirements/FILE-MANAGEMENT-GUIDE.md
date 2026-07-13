@@ -1,6 +1,6 @@
 # V9 文件管理规范
 
-> **版本**: v1.3.3 | **日期**: 2026-07-20
+> **版本**: v1.4.0 | **日期**: 2026-07-20
 > **适用范围**: 智能投研复盘系统V9 全体开发者及 AI 辅助工具
 
 ---
@@ -29,12 +29,23 @@
 | 提示词模板 | `prompts/` | 系统提示词模板存放目录 |
 | AI Skill 定义 | `.agents/skills/` | AI 技能定义文件（系统提示词模板） |
 | CI/CD | `.github/workflows/` | GitHub Actions 工作流 |
+| Monorepo 子包 | `packages/` | 可独立发布的子包（audit-utils、store-audit） |
+| Python 数据服务 | `python/data_service/` | Python 数据服务层，含 MCP 数据服务子目录 |
+| MCP/数据源插件 | `plugins/` | 10 子目录：ifind/imf/kimi-webbridge/scholar/sec_edgar/tianyancha/world_bank_open_data/yahoo_finance/yuandian_law + README.md |
 
 ### 禁止事项
 
 - **禁止**在仓库根目录直接创建 `.ts`、`.tsx`、`.ps1`、`.py` 脚本文件
 - **禁止**在仓库根目录直接创建报告文件（`.md`、`.json`、`.txt`）
 - **禁止**将工具运行输出（`tsc`/`eslint`/`vitest`）重定向到仓库根目录
+- **禁止**在根目录新建与 `packages/`、`python/`、`plugins/` 职责重叠的独立目录
+
+### 例外条款
+
+以下文件不受根目录禁止规则限制：
+- 标准项目配置文件：`package.json`、`tsconfig.*.json`、`*.config.ts`、`vite.config.ts` 等
+- 项目根级文档：`README.md`、`AGENTS.md`、`CHANGELOG.md`、`ARCHITECTURE.md` 等
+- CI/CD 配置文件：`.github/workflows/*.yml`、`.husky/*` 等
 
 ### docs/ 子目录分层
 
@@ -137,7 +148,7 @@
 
 ## 五、提交前检查清单
 
-每次提交前必须通过以下三项验证：
+每次提交前必须通过以下验证：
 
 ```powershell
 # 1. TypeScript 类型检查（0 errors）
@@ -151,6 +162,21 @@ npm run audit:layers
 
 # 4. 目录结构审计（0 violations, 0 warnings）
 npm run audit:directory
+
+# 5. 颜色硬编码扫描（0 violations）
+npm run audit:hardcode
+
+# 6. 死代码/未注册页面扫描（0 unregistered）
+npm run audit:deadcode
+
+# 7. 文档同步状态检查（0 inconsistencies）
+npm run audit:docs
+
+# 8. Token 消耗检测（0 violations）
+npm run audit:token
+
+# 9. AI 输出结构校验（0 violations）
+npm run audit:ai-output
 ```
 
 ### 提交规范
@@ -161,12 +187,43 @@ npm run audit:directory
 
 ---
 
-## 六、AI 辅助开发操作规范（docs-as-mirror）
+## 六、生命周期管理
+
+### 6.1 AI 生成产物管理
+
+- **存放位置**：`docs/drafts/` 为 AI 辅助生成的草稿/建议文件专用目录
+- **当前存量**：9 个文件（api-doc-draft-*.md 2个、complete-api-doc.md 1个、doc-update-list-*.md 2个、doc-update-suggestion-*.md 3个、script-output-*.log 1个）
+- **保留期限**：
+  - `.md` 草稿文件：生成后 7 天内若未采纳/迁移，应归档至 `docs/07-archive/drafts/` 或删除
+  - `.log` 输出文件：生成后 3 天内保留，过期删除
+- **迁移规则**：有价值的草稿内容应在 7 天内合并到正式文档（`docs/01-requirements/`、`docs/03-development/` 等），并删除原草稿
+- **命名规范**：AI 生成文件建议带时间戳前缀，如 `doc-update-suggestion-YYYY-MM-DDTHH-mm-ss.md`
+
+### 6.2 临时文件清理策略
+
+- **存放位置**：`temp/` 已在 `.gitignore` 中忽略，不进入版本控制
+- **当前存量**：83 个文件（agent_fail*.log、backend_verification_report.json、build_output.txt、check-vitest-env.test.ts、clean*.log、cockpit*.log、coverage-run*.log 等）
+- **保留期限**：
+  - `.log` 日志文件：保留 7 天，过期自动清理
+  - `.json`/`.txt` 报告：保留 14 天，过期归档或删除
+  - `.test.ts` 临时测试文件：验证完成后立即删除
+- **自动化方案**：建议添加 `scripts/cleanup-temp.ts`，在 `npm run audit` 或 CI 中调用，清理超过保留期限的文件
+- **手动清理命令**：
+  ```powershell
+  # 清理 7 天前的日志
+  find temp/ -name "*.log" -mtime +7 -delete
+  # 清理 14 天前的报告
+  find temp/ -name "*.json" -o -name "*.txt" | Where-Object { $_.LastWriteTime -lt (Get-Date).AddDays(-14) } | Remove-Item
+  ```
+
+---
+
+## 七、AI 辅助开发操作规范（docs-as-mirror）
 
 > **来源**：`.agents/skills/docs-as-mirror/SKILL.md` v1.0.0 + `prompts/docs-as-mirror-quickref.md`
 > **目的**：防止 AI 辅助编写文档时出现架构漂移、信息孤岛、版本号不一致等系统性错误
 
-### 6.1 五大核心原则
+### 7.1 五大核心原则
 
 编写或更新任何技术文档前，必须遵守以下 5 大原则：
 
@@ -176,7 +233,7 @@ npm run audit:directory
 4. **Bidirectional Linking（双向引用）**：新文档必须注册到索引、引用相关文档、被相关文档反向引用——三步骤缺一不可。
 5. **Version Pinning（版本锁定）**：文档头部必须声明兼容的 `AGENTS.md` 版本号（如 `兼容 AGENTS.md v1.4.5+`）。
 
-### 6.2 10 行快速检查清单（编写任何文档前逐行确认）
+### 7.2 10 行快速检查清单（编写任何文档前逐行确认）
 
 ```
 1. [ ] 已读取 AGENTS.md 当前版本，记录版本号（当前 v1.4.5）
@@ -191,7 +248,7 @@ npm run audit:directory
 10. [ ] 已运行 npm run audit:directory && npm run audit:docs，结果 0 违规
 ```
 
-### 6.3 验证命令
+### 7.3 验证命令
 
 ```powershell
 # 目录结构审计（22/22 匹配）
@@ -206,9 +263,9 @@ npm run audit
 
 ---
 
-## 七、定期审计
+## 八、定期审计
 
-### 5.1 未跟踪文件检查
+### 8.1 未跟踪文件检查
 
 每月执行一次：
 
@@ -218,7 +275,7 @@ git status --short | Select-String -Pattern '^\?\?'
 
 若结果非空，需分析未跟踪文件来源并按本规范处置。
 
-### 5.2 `.gitignore` 有效性检查
+### 8.2 `.gitignore` 有效性检查
 
 每季度执行一次：
 
@@ -229,11 +286,11 @@ git ls-files | ForEach-Object { git check-ignore -q $_ }
 
 ---
 
-## 八、变更日志
+## 九、变更日志
 
 | 版本 | 日期 | 变更摘要 |
 |------|------|----------|
-| v1.3.3 | 2026-07-20 | 新增"AI 辅助开发操作规范（docs-as-mirror）"章节，嵌入 5 大核心原则、10 行快速检查清单和验证命令；同步 AGENTS.md §12.2 增加读取快速参考卡步骤；构建 `.agents/skills/docs-as-mirror/SKILL.md` 可复用技能 |
+| v1.4.0 | 2026-07-20 | P2 补全：新增 monorepo/多语言目录规范（packages/python/plugins）；新增生命周期管理章节（AI产物管理+temp清理策略）；章节重编号 |
 | v1.3.2 | 2026-07-20 | Phase 5：新增 `src/generated/` 的 `.gitignore` 规则与 `prebuild` 令牌生成步骤；将 `npm run audit:directory` 纳入提交前检查清单；AGENTS.md 补充 `src/agents/` 和 `src/types/` 到 §一目录列表 |
 | v1.3.1 | 2026-07-20 | Phase 4：系统性目录梳理——补全 AGENTS.md 遗漏的 `mcp/`、`schema/`、`showcase/`、`generated/`，新增依赖方向规则，同步 FILE-MANAGEMENT-GUIDE.md 目录映射 |
 | v1.3.0 | 2026-07-20 | Phase 3：补充 AGENTS.md 未定义目录（hooks/、devtools/、fixtures/、i18n/），同步 FILE-MANAGEMENT-GUIDE.md 目录映射和依赖方向规则 |
@@ -243,7 +300,7 @@ git ls-files | ForEach-Object { git check-ignore -q $_ }
 
 ---
 
-## 九、相关文档
+## 十、相关文档
 
 - **[AGENTS.md](../../AGENTS.md)**：V9 架构契约、分层规则、命名约定、验证命令、数据库版本管理
 - **[trae-file-management-review.md](../00-meta/trae-file-management-review.md)**：更详细的文件管理审查报告（Trae IDE 生成）

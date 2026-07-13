@@ -6,7 +6,7 @@
 
 > **提示词模板与检查清单**：为降低 AI 上下文漂移与人工返工，本项目在 `prompts/` 目录维护系统提示词模板，在 `docs/` 目录维护 `ui-migration-checklist.md`、`widget-integration-checklist.md`、`ai-memory-layer.md` 与 `ai-generate-audit-fix-loop.md`。AI 辅助开发时应优先加载对应模板，执行迁移、新增 Widget、记忆检索或飞轮流程时应按文档逐项核对。
 >
-> **文档与复杂度规范**：为提升代码可维护性，新增公共函数、组件、Hook、Store 必须补充 JSDoc（见 `docs/jsdoc-convention.md`）；新增代码应避免深层嵌套、长链式条件与过长函数（见 `docs/complexity-governance.md`）。
+> **文档与复杂度规范**：为提升代码可维护性，新增公共函数、组件、Hook、Store 必须补充 JSDoc（见 `docs/03-development/jsdoc-convention.md`）；新增代码应避免深层嵌套、长链式条件与过长函数（见 `docs/03-development/complexity-governance.md`）。
 
 ---
 
@@ -956,8 +956,8 @@ git status --short            # 确认工作区状态
 
 ### 12.7 模板文件
 
-- [task-graph-template.md](../docs/templates/task-graph-template.md) — 任务图模板
-- [regression-suite.md](../docs/templates/regression-suite.md) — 回归测试套件模板
+- [task-graph-template.md](../docs/03-development/templates/task-graph-template.md) — 任务图模板
+- [regression-suite.md](../docs/03-development/templates/regression-suite.md) — 回归测试套件模板
 
 ### 📌 教训 2：描述文件系统状态的文档必须通过自动化扫描验证
 
@@ -1367,5 +1367,16 @@ FinSightV9 是**个人本地投研复盘工具**，定位决定了部署架构�
 
 - 新增模块代码审查时检查：是否违反 15.2 中的任一约束。
 - 所有新增 npm 依赖审查：避免引入服务端运行时依赖。
+
+---
+
+## 附录二：相关参考文档
+
+| 文档 | 路径 | 说明 |
+|------|------|------|
+| 开发工作流 SOP | `docs/03-development/development-workflow-sop.md` | 编码前/中/后/上线后全周期操作指南 |
+| 文档治理宪法 | `docs/GOVERNANCE.md` | `docs/` 目录治理规则 |
+| 编码规范摘要 | `docs/standards/coding-conventions.md` | AGENTS.md 工程约束速查版 |
+| Widget 开发指南 | `docs/widget-development-guide.md` | 驾驶舱 Widget 扩展指南 |
 
 ```

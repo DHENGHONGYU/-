@@ -92,6 +92,11 @@ export async function getStorageFor(morphology: DataMorphology): Promise<Storage
   return provider
 }
 
+/**
+ * 设置指定数据形态的存储后端
+ * @param morphology - 数据形态
+ * @param backend - 后端名称
+ */
 export function setStorageBackend(morphology: DataMorphology, backend: string): void {
   if (!providerCache.has(backend) && !['duckdb', 'vector'].includes(backend)) {
     logger.warn('[StorageFactory] 未知后端，映射未生效', { morphology, backend })
@@ -101,15 +106,27 @@ export function setStorageBackend(morphology: DataMorphology, backend: string): 
   logger.info('[StorageFactory] 后端映射已更新', { morphology, backend })
 }
 
+/**
+ * 注册自定义存储提供者
+ * @param name - 提供者名称
+ * @param provider - 存储提供者实例
+ */
 export function registerProvider(name: string, provider: StorageProvider): void {
   providerCache.set(name, provider)
   logger.info('[StorageFactory] Provider 已注册', { name, backend: provider.backend })
 }
 
+/**
+ * 获取当前后端映射的副本
+ * @returns 只读的后端映射表
+ */
 export function getBackendMapping(): Readonly<BackendMapping> {
   return { ...currentMapping }
 }
 
+/**
+ * 将后端映射重置为默认值
+ */
 export function resetBackendMapping(): void {
   currentMapping = { ...defaultMapping }
   logger.info('[StorageFactory] 后端映射已重置为默认')

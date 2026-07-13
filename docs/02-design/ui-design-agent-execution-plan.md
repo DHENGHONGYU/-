@@ -174,7 +174,7 @@
 - **输入文件**：`scripts/token-scan.cjs` 输出
 - **输出文件**：`tests/visual/` 目录、Playwright 配置
 - **验收标准**：
-  - 本地可运行 `npm run test:visual`
+  - 本地可运行 `npm run test:e2e:visual`
   - 不阻塞沙箱 CI
 - **工期**：1 天（本地执行）
 

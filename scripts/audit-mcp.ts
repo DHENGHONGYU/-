@@ -45,23 +45,20 @@ const ROOT = path.resolve(__dirname, '..')
 const SRC = path.join(ROOT, 'src')
 const MCP_DIR = path.join(SRC, 'mcp', 'servers')
 
-// 已知的服务子域（来自 src/services/ 目录）
+// 已知的服务子域（来自 src/services/ 目录，且应有对应 MCP Server）
+// 注：以下子域在 Phase E 清理后不再要求独立 MCP Server：
+//   backtest / export / input / screening / stockpool / trade
+//   （功能已合并或降级为 service 函数）
 const KNOWN_SERVICE_DOMAINS = [
   'analysis',
-  'backtest',
   'data-collector',
-  'fetcher',
   'execution',
-  'export',
-  'input',
+  'fetcher',
   'llm',
   'news',
   'portfolio',
   'scoring',
-  'screening',
-  'stockpool',
   'system',
-  'trade',
   'trading',
 ]
 

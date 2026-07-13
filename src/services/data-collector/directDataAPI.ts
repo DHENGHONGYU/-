@@ -18,6 +18,7 @@ import {
   SINA_API_BASE,
   SINA_REFERER,
   NETEASE_API_BASE,
+  NETEASE_REFERER,
 } from '@/config/marketDataEndpoints'
 
 const logger = getLogger()
@@ -274,7 +275,7 @@ export async function neteaseHistory(
   const url = `${NETEASE_API_BASE}?code=${neteaseCode}&start=${startDate}&end=${endDate}&fields=${fields}`
   const start = Date.now()
 
-  const text = await safeFetch(url, 3000, { Referer: 'https://quotes.163.com' })
+  const text = await safeFetch(url, 3000, { Referer: NETEASE_REFERER })
   if (!text) return []
 
   try {

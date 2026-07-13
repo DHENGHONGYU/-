@@ -18,6 +18,15 @@
  *   npx tsx scripts/llm-doc-generator.ts [--scan-all] [--force]
  */
 
+/**
+ * @file llm-doc-generator.ts
+ * @description 基于语义校验结果，利用 LLM 自动生成文档更新建议草稿
+ * @status 孤立脚本（未在 package.json 中引用）
+ * @category 数据处理/分析 — 评估后接入
+ * @maintainer 待定
+ * @lastVerified 2026-07-13
+ */
+
 import { execSync } from 'node:child_process'
 import { readFileSync, writeFileSync, mkdirSync, statSync } from 'node:fs'
 import { join, relative, dirname } from 'node:path'
