@@ -23,6 +23,9 @@ vi.mock('lucide-react', () => ({
   Newspaper: () => <svg data-testid="icon-newspaper" />,
   Sparkles: () => <svg data-testid="icon-sparkles" />,
   Wifi: () => <svg data-testid="icon-wifi" />,
+  Filter: () => <svg data-testid="icon-filter" />,
+  Database: () => <svg data-testid="icon-database" />,
+  History: () => <svg data-testid="icon-history" />,
 }))
 
 vi.mock('@/lib/logger', () => ({
@@ -52,7 +55,7 @@ describe('AgentRegistryPage', () => {
     expect(screen.getByRole('heading', { level: 1, name: '智能体注册表' })).toBeInTheDocument()
   })
 
-  it('显示 5 个智能体卡片', () => {
+  it('显示智能体卡片', () => {
     renderPage()
     const cards = screen.getAllByText(/智能体|Agent/)
     expect(cards.length).toBeGreaterThan(0)

@@ -28,6 +28,7 @@ import {
   BreadcrumbPage,
 } from '@/components/atoms/Breadcrumb'
 import { useAgentStore } from '@/store/agentStore'
+import { getAllAgentComponents } from '@/agents/agentComponentRegistry'
 import { PageContainer, PageHeader } from '@/components/templates'
 
 
@@ -52,7 +53,7 @@ const NAV_CARDS: NavCard[] = [
     description: '查看所有已注册的智能体及其配置',
     path: '/command/agents/registry',
     icon: List,
-    badge: '5 个 Agent',
+    badge: `${getAllAgentComponents().length} 个 Agent`,
   },
   {
     title: '任务触发',
