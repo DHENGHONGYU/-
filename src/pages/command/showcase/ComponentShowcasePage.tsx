@@ -9,6 +9,7 @@ import {
   buildWidgetStateShowcase,
   buildColorTokenShowcase,
   buildStockDataShowcase,
+  buildAgentDetailShowcase,
 } from '@/showcase'
 
 /**
@@ -25,6 +26,7 @@ export default function ComponentShowcasePage(): React.JSX.Element {
       buildWidgetStateShowcase(),
       buildColorTokenShowcase(),
       buildStockDataShowcase(),
+      buildAgentDetailShowcase(),
     ],
     [],
   )

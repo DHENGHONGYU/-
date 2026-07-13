@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router'
 import ComponentShowcasePage from '@/pages/command/showcase/ComponentShowcasePage'
 import {
   buildUIComponentShowcase,
@@ -10,12 +11,17 @@ import {
 
 describe('ComponentShowcasePage', () => {
   it('renders the showcase title and sections', () => {
-    render(<ComponentShowcasePage />)
+    render(
+      <MemoryRouter>
+        <ComponentShowcasePage />
+      </MemoryRouter>,
+    )
     expect(screen.getByText('组件示例库')).toBeInTheDocument()
     expect(screen.getByText('基础 UI 组件')).toBeInTheDocument()
     expect(screen.getByText('Widget 状态外壳')).toBeInTheDocument()
     expect(screen.getByText('颜色令牌')).toBeInTheDocument()
     expect(screen.getByText('股票数据展示')).toBeInTheDocument()
+    expect(screen.getByText('智能体详情面板')).toBeInTheDocument()
   })
 })
 
