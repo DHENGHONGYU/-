@@ -2,8 +2,8 @@ import React from 'react'
 import { Badge, Button, Checkbox } from '@/components/atoms'
 import { QualityIndicator } from '@/components/organisms/input/QualityIndicator'
 import { getPoolLabel, getPoolTransitionOptions } from '@/core/poolTransitionEngine'
-import { DEFAULT_POOL_GROUP } from '@/config/dbConfig'
-import type { ResearchStatus } from '@/config/dbConfig'
+import { DEFAULT_POOL_GROUP } from '@/constants/stockpool.constants'
+import type { ResearchStatus } from '@/constants/stockpool.constants'
 import type { Stock } from '@/data/types'
 
 export interface PoolListProps {

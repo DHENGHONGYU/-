@@ -1,4 +1,5 @@
-import { RESEARCH_STATUS, ENVELOPE_ACTION, STORE_NAME, MODULE_ID, type ResearchStatus } from '@/config/dbConfig'
+import { ENVELOPE_ACTION, STORE_NAME, MODULE_ID } from '@/config/dbConfig'
+import { RESEARCH_STATUS, type ResearchStatus } from '@/constants/stockpool.constants'
 import { getDefaultScreeningConfig } from '@/config/screeningConfig'
 import { dataBridge } from '@/core/databridge'
 import type { DataLayerResult, Stock } from '@/data/types'

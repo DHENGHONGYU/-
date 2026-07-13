@@ -1,5 +1,5 @@
 import React from 'react'
-import { RESEARCH_STATUS, type ResearchStatus } from '@/config/dbConfig'
+import { RESEARCH_STATUS, type ResearchStatus } from '@/constants/stockpool.constants'
 import { getPoolLabel, getPoolTransitionOptions } from '@/core/poolTransitionEngine'
 import type { Stock } from '@/data/types'
 import { PoolColumn } from './PoolColumn'

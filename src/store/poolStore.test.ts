@@ -56,14 +56,6 @@ vi.mock('@/core/poolTransitionEngine', () => ({
 
 vi.mock('@/config/dbConfig', () => ({
   DATA_SOURCE: { manual: 'manual' },
-  DEFAULT_POOL_GROUP: 'default',
-  RESEARCH_STATUS: {
-    candidate: 'candidate',
-    screened: 'screened',
-    watching: 'watching',
-    researched: 'researched',
-    archived: 'archived',
-  },
   ENVELOPE_ACTION: {
     insertStock: 'INSERT_STOCK',
     updateStock: 'UPDATE_STOCK',
@@ -74,6 +66,17 @@ vi.mock('@/config/dbConfig', () => ({
   ENVELOPE_TARGET: { db: 'DB' },
   MODULE_ID: { stockpool: 'stockpool' },
   STORE_NAME: { stocks: 'stocks' },
+}))
+
+vi.mock('@/constants/stockpool.constants', () => ({
+  DEFAULT_POOL_GROUP: 'default',
+  RESEARCH_STATUS: {
+    candidate: 'candidate',
+    screened: 'screened',
+    watching: 'watching',
+    deepDive: 'deepDive',
+    archived: 'archived',
+  },
 }))
 
 import {

@@ -4,7 +4,8 @@ import {
   setFeedbackServices,
   type FeedbackIssue,
 } from './feedbackOrchestrator'
-import { STORE_NAME, RESEARCH_STATUS } from '@/config/dbConfig'
+import { STORE_NAME } from '@/config/dbConfig'
+import { RESEARCH_STATUS } from '@/constants/stockpool.constants'
 import type { V6Score, Stock } from '@/data/types'
 
 vi.mock('@/lib/logger', () => ({

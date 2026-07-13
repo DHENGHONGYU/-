@@ -29,19 +29,6 @@ export const DB_VERSION = 28 as const
 // v26 → v27: 新增 trace_records 存储，用于持久化采集链路追踪数据。
 // @compliance AGENTS.md §八：DB_VERSION 必须与浏览器现有版本匹配或更高
 
-export const DEFAULT_POOL_GROUP = '默认分组' as const
-
-export const RESEARCH_STATUS = {
-  candidate: 'candidate',
-  screened: 'screened',
-  deepDive: 'deepDive',
-  watching: 'watching',
-  archived: 'archived',
-} as const
-
-export type ResearchStatus =
-  (typeof RESEARCH_STATUS)[keyof typeof RESEARCH_STATUS]
-
 export const DATA_SOURCE = {
   manual: 'manual',
   import: 'import',

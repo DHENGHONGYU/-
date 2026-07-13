@@ -21,16 +21,9 @@
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'
-import type { ResearchStatus } from '@/config/dbConfig'
-import {
-  DATA_SOURCE,
-  DEFAULT_POOL_GROUP,
-  ENVELOPE_ACTION,
-  ENVELOPE_TARGET,
-  MODULE_ID,
-  RESEARCH_STATUS,
-  STORE_NAME,
-} from '@/config/dbConfig'
+import type { ResearchStatus } from '@/constants/stockpool.constants'
+import { DATA_SOURCE, ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
+import { DEFAULT_POOL_GROUP, RESEARCH_STATUS } from '@/constants/stockpool.constants'
 import type { Stock } from '@/data/types'
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'

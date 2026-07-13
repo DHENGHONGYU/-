@@ -1,6 +1,7 @@
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
-import { MODULE_ID, ENVELOPE_TARGET, ENVELOPE_ACTION, RESEARCH_STATUS, DEFAULT_POOL_GROUP, STORE_NAME, type ResearchStatus } from '@/config/dbConfig'
+import { MODULE_ID, ENVELOPE_TARGET, ENVELOPE_ACTION, STORE_NAME } from '@/config/dbConfig'
+import { RESEARCH_STATUS, DEFAULT_POOL_GROUP, type ResearchStatus } from '@/constants/stockpool.constants'
 import { INPUT_CONFIG } from '@/config/inputConfig'
 import type { DataLayerResult, Stock } from '@/data/types'
 import { fetchBasicDataUseCase, fetchKlineDataUseCase } from '@/services/useCase/fetcherOrchestrator.useCase'
