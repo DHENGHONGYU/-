@@ -16,6 +16,7 @@ import type {
 } from './types'
 import { ALL_LAYER_IDS, LAYER_LABELS } from './types'
 import { buildFactorContributions } from './factorContributions'
+import { crossValidate } from './crossValidator'
 import type { V6ScoreEngineConfig, V6ScoreConfigOverride } from './config'
 import { DEFAULT_ENGINE_CONFIG } from './config'
 
@@ -189,8 +190,14 @@ export class V6ScoreEngine {
           }
         }
 
-        for (const layerId of ALL_LAYER_IDS) {
-          const result = await this.calculateLayer(layerId, layerInput)
+        const layerScores = await Promise.all(
+          ALL_LAYER_IDS.map(async (layerId) => {
+            const result = await this.calculateLayer(layerId, layerInput)
+            return { layerId, result }
+          }),
+        )
+
+        for (const { layerId, result } of layerScores) {
           layerResults[layerId] = result
           allRisks.push(...result.risks)
 
@@ -256,6 +263,18 @@ export class V6ScoreEngine {
       engineVersion: ENGINE_VERSION,
       skippedLayers,
       coverageRate: Math.round(((ALL_LAYER_IDS.length - skippedLayers.length) / ALL_LAYER_IDS.length) * 100) / 100,
+    }
+
+    // P2-5：交叉验证
+    const cv = crossValidate(result)
+    result.crossValidation = {
+      passed: cv.passed,
+      issues: cv.issues.map((i) => ({
+        ruleId: i.ruleId,
+        severity: i.severity,
+        title: i.title,
+        description: i.description,
+      })),
     }
 
     if (this.auditTrail) {

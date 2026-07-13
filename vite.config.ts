@@ -156,7 +156,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'vendor': ['react', 'react-dom', 'react-router', 'zustand', 'dayjs'],
+          'vendor': ['react', 'react-dom', 'react-router', 'zustand'],
           'ui': ['lucide-react', 'clsx', 'tailwind-merge', '@heroicons/react'],
           'charts': ['recharts', 'lightweight-charts'],
           'pdf': ['jspdf', 'jspdf-autotable'],

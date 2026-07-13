@@ -64,7 +64,7 @@
 
 ### 2.1 测试样本来源
 
-样本与 [walkthroughTest.sampled.test.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/tests/__tests__/integration/walkthroughTest.sampled.test.ts) 一致,采用 PowerShell `Get-Random -Count 5` 无放回随机抽样,抽样日期 2026-07-03。
+样本与 [walkthroughTest.sampled.test.ts](tests/__tests__/integration/walkthroughTest.sampled.test.ts) 一致,采用 PowerShell `Get-Random -Count 5` 无放回随机抽样,抽样日期 2026-07-03。
 
 ### 2.2 样本数据设计
 
@@ -419,7 +419,7 @@ const coreStocks = all.filter((d) => d.composite >= DEFAULT_THRESHOLDS.rating.st
 
 ### 8.1 新增背景
 
-本次测试发现 [ScoreHistoryPanel.tsx](../../src/components/organisms/analysis/score/ScoreHistoryPanel.tsx) 与 [src/services/analysis/__tests__/scoreDocService.test.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/services/analysis/__tests__/scoreDocService.test.ts) 引用了不存在的 `buildScoreDocDiff` 函数与 `ScoreDocDiff` 类型,导致编译错误。
+本次测试发现 [ScoreHistoryPanel.tsx](../../src/components/organisms/analysis/score/ScoreHistoryPanel.tsx) 与 [src/services/analysis/__tests__/scoreDocService.test.ts](src/services/analysis/__tests__/scoreDocService.test.ts) 引用了不存在的 `buildScoreDocDiff` 函数与 `ScoreDocDiff` 类型,导致编译错误。
 
 ### 8.2 修复方案
 
@@ -640,10 +640,10 @@ npx vitest run walkthroughScoreDoc --reporter=default
 |------|------|------|
 | [tests/__tests__/integration/walkthroughScoreDoc.sampled.test.ts](../../tests/__tests__/integration/walkthroughScoreDoc.sampled.test.ts) | 本次穿行测试文件 | ✅ 已创建并通过 |
 | [src/services/analysis/scoreDocService.ts](../../src/services/analysis/scoreDocService.ts) | 被测核心服务 | ✅ 已修复(P1 + buildScoreDocDiff) |
-| [src/services/scoring/v6-engine/config.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/services/scoring/v6-engine/config.ts) | 评分判断标准配置 | 未修改 |
-| [src/data/types.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/data/types.ts) | ScoreDocVersion 等类型定义 | 未修改 |
+| [src/services/scoring/v6-engine/config.ts](src/services/scoring/v6-engine/config.ts) | 评分判断标准配置 | 未修改 |
+| [src/data/types.ts](src/data/types.ts) | ScoreDocVersion 等类型定义 | 未修改 |
 | [src/components/analysis/score/ScoreHistoryPanel.tsx](../../src/components/organisms/analysis/score/ScoreHistoryPanel.tsx) | 历史面板组件 | ✅ 引用错误已消除(无需修改) |
-| [src/services/analysis/__tests__/scoreDocService.test.ts](file:///c:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/services/analysis/__tests__/scoreDocService.test.ts) | buildScoreDocDiff 单元测试 | ✅ 4/4 通过 |
+| [src/services/analysis/__tests__/scoreDocService.test.ts](src/services/analysis/__tests__/scoreDocService.test.ts) | buildScoreDocDiff 单元测试 | ✅ 4/4 通过 |
 
 ## 附录 C:AGENTS.md 合规性检查
 

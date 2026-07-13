@@ -14,12 +14,12 @@
 
 ```
 src/config/       ← 配置层（零硬编码锚点）
-src/core/         ← 核心工具与类型守卫（DataBridge/ACL/Envelope/MemoryCache/EventBus）
+src/core/         ← 核心工具与类型守卫（DataBridge/ACL/Envelope/MemoryCache/EventBus/workerPool）
 src/agents/       ← AI 行为扩展（运行时模块，core 层扩展）
 src/data/         ← 数据层（IndexedDB/dataLayer/queryBuilder/types/gateway）
 src/lib/          ← 库函数（logger/format/errors/utils/localStorageManager）
 src/services/      ← 服务层（20+子域：analysis/scoring/fetcher/news/llm/trading/execution/...）
-src/store/        ← 状态层（49个Zustand Store + helpers/withBroadcast）
+src/store/        ← 状态层（49个Zustand Store + helpers/withBroadcast；含 intentionPoolStore.ts / researchPoolStore.ts / positionPoolStore.ts 三分拆）
 src/pages/        ← 页面层（5舱：input/analysis/trading/output/command）
 src/components/   ← 组件层（atoms/molecules/organisms/templates + chart/cabin/cockpit/widgets）
 src/portal/       ← PortalShell 舱室入口层
@@ -27,7 +27,7 @@ src/apps/         ← App 分发器（React.lazy 加载，三级加载链中间�
 src/cockpit/      ← 驾驶舱层（core/data/providers/widgets，独立布局域）
 src/constants/    ← 常量层（零硬编码锚点）
 src/types/        ← 零依赖（纯类型定义，可被所有层引用）
-src/hooks/        ← 自定义 React Hooks（跨组件共享逻辑）
+src/hooks/        ← 自定义 React Hooks（跨组件共享逻辑；含 usePoolBoard.ts）
 src/devtools/     ← 开发环境调试工具（DEV 注入）
 src/fixtures/     ← Mock 数据供给（测试数据）
 src/i18n/         ← 国际化配置与翻译资源
@@ -35,6 +35,7 @@ src/mcp/          ← MCP 服务器层（20+ 子服务器：analysis/backstock/d
 src/schema/       ← Zod/JSON Schema 校验定义（类型守卫扩展）
 src/showcase/     ← 组件展示页（开发环境专用，不进入生产构建）
 src/generated/    ← 代码自动生成产物（令牌/类型/脚本输出）
+src/workers/      ← Web Worker 脚本（纯计算逻辑，禁止引 store/pages/components）
 ```
 
 ### 依赖方向规则
@@ -61,6 +62,7 @@ src/generated/    ← 代码自动生成产物（令牌/类型/脚本输出）
 - `schema/` → 仅可依赖 `types/` 和 `constants/`，可被 `services/`、`data/`、`components/` 引用（Schema 校验定义层）
 - `showcase/` → 仅开发环境使用，可依赖 `components/`、`constants/`、`lib/`（开发展示页，禁止引入生产逻辑）
 - `generated/` → 零依赖（纯自动生成产物），可被 `services/`、`components/`、`pages/` 引用（代码生成层）
+- `workers/` → 仅可依赖 `core/`、`lib/`、`config/`、`data/`、`types/`、`constants/`，禁止依赖 `store/`、`pages/`、`components/`、`apps/`（Web Worker 纯计算层，无 DOM/React 访问；`core/workerPool/` 管理 Worker 生命周期，可被 `services/` 和 `store/` 引用）
 
 ### 验证命令
 

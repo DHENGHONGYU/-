@@ -58,6 +58,8 @@ export type {
 // 引擎
 export { V6ScoreEngine } from './engine'
 export { buildFactorContributions } from './factorContributions'
+export { crossValidate } from './crossValidator'
+export type { CrossValidationResult, CrossValidationIssue, CrossValidatorConfig } from './crossValidator'
 
 // 计算器
 export { LMinus1Calculator } from './calculators/lMinus1'

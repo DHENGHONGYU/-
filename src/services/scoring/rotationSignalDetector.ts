@@ -380,70 +380,80 @@ export async function detectRotationSignals(
     (s) => s.action === 'wait' || s.action === 'probe',
   )
 
-  for (const score of candidates) {
-    const stockResult = await dataBridge.query<Stock>({ action: ENVELOPE_ACTION.queryGet, store: STORE_NAME.stocks, key: score.symbol }).catch(() => ({ success: false as const, error: 'query failed' }))
-    const stock = stockResult.success ? stockResult.data : undefined
-    if (!stock) {
-      watchlistCandidates.push({ symbol: score.symbol, reason: '基础数据缺失，无法检测轮动信号' })
-      continue
-    }
+  const candidateResults = await Promise.allSettled(
+    candidates.map(async (score): Promise<{ signal: Signal | undefined; watchlist: { symbol: string; reason: string } | undefined }> => {
+      const stockResult = await dataBridge.query<Stock>({ action: ENVELOPE_ACTION.queryGet, store: STORE_NAME.stocks, key: score.symbol }).catch(() => ({ success: false as const, error: 'query failed' }))
+      const stock = stockResult.success ? stockResult.data : undefined
+      if (!stock) {
+        return { signal: undefined, watchlist: { symbol: score.symbol, reason: '基础数据缺失，无法检测轮动信号' } }
+      }
 
-    const quotesResult = await dataBridge.query<DailyQuotes>({ action: ENVELOPE_ACTION.queryGet, store: STORE_NAME.dailyQuotes, key: score.symbol }).catch(() => ({ success: false as const, error: 'query failed' }))
-    const quotes = quotesResult.success ? quotesResult.data : undefined
-    if (!quotes || quotes.history.length < 25) {
-      watchlistCandidates.push({ symbol: score.symbol, reason: '行情数据不足，无法检测量价条件' })
-      continue
-    }
+      const quotesResult = await dataBridge.query<DailyQuotes>({ action: ENVELOPE_ACTION.queryGet, store: STORE_NAME.dailyQuotes, key: score.symbol }).catch(() => ({ success: false as const, error: 'query failed' }))
+      const quotes = quotesResult.success ? quotesResult.data : undefined
+      if (!quotes || quotes.history.length < 25) {
+        return { signal: undefined, watchlist: { symbol: score.symbol, reason: '行情数据不足，无法检测量价条件' } }
+      }
 
-    const closes = quotes.history.map((b) => b.close)
-    const volumes = quotes.history.map((b) => b.volume)
+      const closes = quotes.history.map((b) => b.close)
+      const volumes = quotes.history.map((b) => b.volume)
 
-    const recentVolumes = volumes.slice(-5)
-    const priorVolumes = volumes.slice(-25, -5)
+      const recentVolumes = volumes.slice(-5)
+      const priorVolumes = volumes.slice(-25, -5)
 
-    const recentAvgVolume = recentVolumes.reduce((a, b) => a + b, 0) / recentVolumes.length
-    const priorAvgVolume = priorVolumes.length > 0
-      ? priorVolumes.reduce((a, b) => a + b, 0) / priorVolumes.length
-      : 0
-    const volumeRatio = priorAvgVolume > 0 ? recentAvgVolume / priorAvgVolume : 0
+      const recentAvgVolume = recentVolumes.reduce((a, b) => a + b, 0) / recentVolumes.length
+      const priorAvgVolume = priorVolumes.length > 0
+        ? priorVolumes.reduce((a, b) => a + b, 0) / priorVolumes.length
+        : 0
+      const volumeRatio = priorAvgVolume > 0 ? recentAvgVolume / priorAvgVolume : 0
 
-    const ma20 = closes.slice(-20).reduce((a, b) => a + b, 0) / 20
-    const latestPrice = closes[closes.length - 1]!
-    const priceToMA20 = ma20 > 0 ? latestPrice / ma20 : 0
+      const ma20 = closes.slice(-20).reduce((a, b) => a + b, 0) / 20
+      const latestPrice = closes[closes.length - 1]!
+      const priceToMA20 = ma20 > 0 ? latestPrice / ma20 : 0
 
-    const sector = stock.sector ?? stock.industryCode ?? ''
-    const rotationScoresResult = await dataBridge.query<RotationSectorScore[]>({ action: ENVELOPE_ACTION.queryByIndex, store: STORE_NAME.rotationScores, indexName: 'by-sector', indexValue: sector }).catch(() => ({ success: false as const, error: 'query failed' }))
-    const rotationScores = rotationScoresResult.success ? (rotationScoresResult.data ?? []) : []
-    const latestRotation = rotationScores.length > 0
-      ? rotationScores.sort((a, b) => b.scoreDate.localeCompare(a.scoreDate))[0]
-      : undefined
+      const sector = stock.sector ?? stock.industryCode ?? ''
+      const rotationScoresResult = await dataBridge.query<RotationSectorScore[]>({ action: ENVELOPE_ACTION.queryByIndex, store: STORE_NAME.rotationScores, indexName: 'by-sector', indexValue: sector }).catch(() => ({ success: false as const, error: 'query failed' }))
+      const rotationScores = rotationScoresResult.success ? (rotationScoresResult.data ?? []) : []
+      const latestRotation = rotationScores.length > 0
+        ? rotationScores.sort((a, b) => b.scoreDate.localeCompare(a.scoreDate))[0]
+        : undefined
 
-    const fundFlowOk = latestRotation !== undefined && latestRotation.f2Zijin >= 20
+      const fundFlowOk = latestRotation !== undefined && latestRotation.f2Zijin >= 20
 
-    const volumeOk = volumeRatio >= ruleConfig.rotationVolumeSurgeRatio
-    const priceOk = priceToMA20 >= ruleConfig.rotationPriceToMA20Threshold
+      const volumeOk = volumeRatio >= ruleConfig.rotationVolumeSurgeRatio
+      const priceOk = priceToMA20 >= ruleConfig.rotationPriceToMA20Threshold
 
-    if (volumeOk && priceOk && fundFlowOk) {
-      signals.push({
-        id: `rot-${score.symbol}-${nanoid(8)}`,
-        symbol: score.symbol,
-        direction: 'buy',
-        type: 'buy_rotation',
-        strategy: 'rotation',
-        confidence: Math.min(1, Math.round(score.score) / 5),
-        rationale: `轮动信号触发：量比 ${volumeRatio.toFixed(2)}，价格/MA20 ${priceToMA20.toFixed(3)}，板块资金因子 ${latestRotation?.f2Zijin ?? 0}`,
-        snapshot: {
-          pePercentile: score.dimensions.valuation,
-          volumeRatio,
-        },
-        createdAt: Date.now(),
-      })
-    } else {
-      const reasons: string[] = []
-      if (!volumeOk) reasons.push(`量比 ${volumeRatio.toFixed(2)} 低于阈值 ${ruleConfig.rotationVolumeSurgeRatio}`)
-      if (!priceOk) reasons.push(`价格/MA20 ${priceToMA20.toFixed(3)} 低于阈值 ${ruleConfig.rotationPriceToMA20Threshold}`)
-      if (!fundFlowOk) reasons.push('板块资金流入不足')
-      watchlistCandidates.push({ symbol: score.symbol, reason: reasons.join('；') })
+      if (volumeOk && priceOk && fundFlowOk) {
+        return {
+          signal: {
+            id: `rot-${score.symbol}-${nanoid(8)}`,
+            symbol: score.symbol,
+            direction: 'buy',
+            type: 'buy_rotation',
+            strategy: 'rotation',
+            confidence: Math.min(1, Math.round(score.score) / 5),
+            rationale: `轮动信号触发：量比 ${volumeRatio.toFixed(2)}，价格/MA20 ${priceToMA20.toFixed(3)}，板块资金因子 ${latestRotation?.f2Zijin ?? 0}`,
+            snapshot: {
+              pePercentile: score.dimensions.valuation,
+              volumeRatio,
+            },
+            createdAt: Date.now(),
+          },
+          watchlist: undefined,
+        }
+      } else {
+        const reasons: string[] = []
+        if (!volumeOk) reasons.push(`量比 ${volumeRatio.toFixed(2)} 低于阈值 ${ruleConfig.rotationVolumeSurgeRatio}`)
+        if (!priceOk) reasons.push(`价格/MA20 ${priceToMA20.toFixed(3)} 低于阈值 ${ruleConfig.rotationPriceToMA20Threshold}`)
+        if (!fundFlowOk) reasons.push('板块资金流入不足')
+        return { signal: undefined, watchlist: { symbol: score.symbol, reason: reasons.join('；') } }
+      }
+    }),
+  )
+
+  for (const r of candidateResults) {
+    if (r.status === 'fulfilled' && r.value) {
+      if (r.value.signal) signals.push(r.value.signal)
+      if (r.value.watchlist) watchlistCandidates.push(r.value.watchlist)
     }
   }
 

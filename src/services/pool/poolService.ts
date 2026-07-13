@@ -30,7 +30,7 @@ export function mapStockToPoolItem(stock: Stock): PoolItem {
   const base = {
     symbol: stock.symbol,
     name: stock.name,
-    pool: stock.pool,
+    pool: stock.pool ?? POOL_TYPE.research,
     status: stock.researchStatus,
     price: stock.price,
     pe: stock.pe,
@@ -133,10 +133,11 @@ export async function transitionPoolItem(
   }
   const stock = stockResult.data
 
-  if (!isValidTransition(stock.pool, stock.researchStatus, target.pool, target.status)) {
+  const currentPool = stock.pool ?? POOL_TYPE.research
+  if (!isValidTransition(currentPool, stock.researchStatus, target.pool, target.status)) {
     return {
       success: false,
-      error: `非法流转: ${getPoolLabel(stock.pool, stock.researchStatus)} → ${getPoolLabel(target.pool, target.status)}`,
+      error: `非法流转: ${getPoolLabel(currentPool, stock.researchStatus)} → ${getPoolLabel(target.pool, target.status)}`,
     }
   }
 
@@ -228,9 +229,9 @@ export async function getAllPoolLanes(): Promise<DataLayerResult<PoolLane[]>> {
       } else {
         lanes.push({
           status: stock.researchStatus,
-          label: getPoolLabel(stock.pool, stock.researchStatus),
+          label: getPoolLabel(stock.pool ?? POOL_TYPE.research, stock.researchStatus),
           items: [item],
-          options: getPoolTransitionOptions(stock.pool, stock.researchStatus),
+          options: getPoolTransitionOptions(stock.pool ?? POOL_TYPE.research, stock.researchStatus),
         })
       }
     }

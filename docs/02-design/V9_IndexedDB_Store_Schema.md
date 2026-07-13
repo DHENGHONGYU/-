@@ -13,8 +13,8 @@
 | 项目 | 值 |
 |------|-----|
 | 数据库名称 | `V6ProDB` |
-| 当前版本号 | **21** |
-| Store 总数 | **25** |
+| 当前版本号 | **30** |
+| Store 总数 | **41** |
 | 存储引擎 | IndexedDB（浏览器本地存储） |
 | 封装类 | `V6Database`（`src/data/db.ts`） |
 
@@ -932,7 +932,7 @@
 | `skillRoadmap` | `string[]` | 是 | 技能发展路线图 |
 | `psychologicalProfile` | `PsychologicalProfile \| null` | 是 | 心理画像（可为 null） |
 
-> **注意**：`TradeReviewRecord` 是 25 个 Store 中唯一不在 `src/data/types.ts` 中定义的类型，其类型定义位于 `src/services/trading/tradeReviewAI.types.ts`。
+> **注意**：`TradeReviewRecord` 是 41 个 Store 中唯一不在 `src/data/types.ts` 中定义的类型，其类型定义位于 `src/services/trading/tradeReviewAI.types.ts`。
 
 ---
 

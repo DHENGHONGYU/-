@@ -20,6 +20,10 @@ import {
 } from '@/services/scoring/v6-engine'
 import type { CompositeScore, FinancialData, V6ScoreInput } from '@/services/scoring/v6-engine'
 import { nanoid } from 'nanoid'
+import {
+  V6ScoreTaskScheduler,
+  type BatchScoreStats,
+} from '@/services/workers/v6ScoreTaskScheduler'
 
 const logger = getLogger()
 
@@ -363,6 +367,186 @@ export async function runV6Score(symbol: string): Promise<DataLayerResult<V6Scor
       stack,
     })
     return { success: false, error: message }
+  }
+}
+
+/**
+ * 批量 V6 分层评分（Worker 并行化）
+ *
+ * 流程：
+ * 1. 主线程并行读取所有 stock / quotes / financials
+ * 2. 组装 V6ScoreInput[]
+ * 3. 提交 TaskScheduler（Worker 池或主线程回退）
+ * 4. 结果映射并批量持久化
+ * 5. 返回统计 + 结果
+ *
+ * @param symbols    股票代码列表
+ * @param options    批量选项（Worker 数、进度回调等）
+ */
+export interface BatchScoreOptions {
+  /** Worker 实例数上限（默认 min(硬件并发, 4)） */
+  maxWorkers?: number
+  /** 单任务超时（ms），默认 30s */
+  taskTimeoutMs?: number
+  /** 强制主线程回退（调试用） */
+  forceMainThread?: boolean
+  /** 进度回调 (completed, total) */
+  onProgress?: (completed: number, total: number) => void
+}
+
+export interface BatchScoreResult {
+  scores: V6Score[]
+  stats: BatchScoreStats
+  errors: { symbol: string; error: string }[]
+}
+
+export async function runV6ScoreBatch(
+  symbols: string[],
+  options: BatchScoreOptions = {},
+): Promise<DataLayerResult<BatchScoreResult>> {
+  if (symbols.length === 0) {
+    return {
+      success: true,
+      data: {
+        scores: [],
+        stats: {
+          total: 0, completed: 0, failed: 0, skipped: 0,
+          totalMs: 0, avgMs: 0, workerCount: 0, fallbackToMainThread: false,
+        },
+        errors: [],
+      },
+    }
+  }
+
+  logger.info(`[v6ScoreService] runV6ScoreBatch 开始，共 ${symbols.length} 只股票`, {
+    symbolCount: symbols.length,
+    maxWorkers: options.maxWorkers,
+    forceMainThread: options.forceMainThread,
+  })
+
+  const scheduler = new V6ScoreTaskScheduler({
+    maxWorkers: options.maxWorkers,
+    taskTimeoutMs: options.taskTimeoutMs,
+    forceMainThread: options.forceMainThread,
+  })
+
+  try {
+    // 1. 并行加载所有 stock 数据
+    const stockStart = performance.now()
+    const stockResults = await Promise.all(
+      symbols.map(async (symbol) => {
+        const [stockRes, quotesRes] = await Promise.all([
+          dataBridge.query<Stock>({
+            action: ENVELOPE_ACTION.queryGet,
+            store: STORE_NAME.stocks,
+            key: symbol,
+            source: MODULE_ID.analyzer,
+          }),
+          dataBridge.query<DailyQuotes>({
+            action: ENVELOPE_ACTION.queryGet,
+            store: STORE_NAME.dailyQuotes,
+            key: symbol,
+            source: MODULE_ID.analyzer,
+          }),
+        ])
+        return {
+          symbol,
+          stock: stockRes.success ? stockRes.data : null,
+          quotes: quotesRes.success ? quotesRes.data : null,
+        }
+      }),
+    )
+    logger.info(
+      `[v6ScoreService] 批量加载 stock/quotes 完成，耗时 ${Math.round(performance.now() - stockStart)}ms`,
+      { loaded: stockResults.filter((r) => r.stock).length, total: symbols.length },
+    )
+
+    // 2. 组装引擎输入
+    const inputs: { stock: Stock; input: V6ScoreInput }[] = []
+    const errors: { symbol: string; error: string }[] = []
+    for (const r of stockResults) {
+      if (!r.stock) {
+        errors.push({ symbol: r.symbol, error: 'Stock not found' })
+        continue
+      }
+      try {
+        const input = await buildEngineInput(r.stock, r.quotes ?? null)
+        inputs.push({ stock: r.stock, input })
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err)
+        errors.push({ symbol: r.symbol, error: msg })
+      }
+    }
+
+    if (inputs.length === 0) {
+      return {
+        success: false,
+        error: `所有股票数据加载失败: ${errors.map((e) => e.symbol).join(', ')}`,
+      }
+    }
+
+    // 3. Worker 批量计算
+    const { stats, results } = await scheduler.calculateBatch(
+      inputs.map((i) => i.input),
+      undefined,
+      options.onProgress,
+    )
+
+    // 4. 映射 + 持久化
+    const scores: V6Score[] = []
+    const savePromises: Promise<unknown>[] = []
+
+    for (let i = 0; i < inputs.length; i++) {
+      const input = inputs[i]
+      if (input == null) continue
+      const composite = results[i]
+      if (composite == null) {
+        errors.push({ symbol: input.stock.symbol, error: 'Calculation failed' })
+        continue
+      }
+      const v6Score = compositeToV6Score(input.stock, composite)
+      scores.push(v6Score)
+
+      // 异步持久化（不阻塞后续评分）
+      const envelope = EnvelopeFactory.create(
+        {
+          source: MODULE_ID.analyzer,
+          target: 'db' as const,
+          action: ENVELOPE_ACTION.saveScores,
+          traceId: `v6score-batch-${nanoid(6)}-${v6Score.symbol}`,
+        },
+        v6Score,
+      )
+      savePromises.push(
+        dataBridge.forward(envelope).catch((err) => {
+          const msg = err instanceof Error ? err.message : String(err)
+          logger.error(`[v6ScoreService] 批量持久化失败`, { symbol: v6Score.symbol, error: msg })
+          errors.push({ symbol: v6Score.symbol, error: `Save failed: ${msg}` })
+        }),
+      )
+    }
+
+    await Promise.all(savePromises)
+
+    logger.info('[v6ScoreService] runV6ScoreBatch 完成', {
+      total: symbols.length,
+      scored: scores.length,
+      failed: errors.length,
+      workerCount: stats.workerCount,
+      fallback: stats.fallbackToMainThread,
+      totalMs: stats.totalMs,
+      avgMs: stats.avgMs,
+    })
+
+    return { success: true, data: { scores, stats, errors } }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    logger.error(`[v6ScoreService] runV6ScoreBatch 失败`, { error: msg })
+    return { success: false, error: msg }
+  } finally {
+    // 批量模式：每次批量完成后销毁调度器，避免长期持有 Worker
+    // 高频场景下可改用全局单例（getGlobalScheduler）
+    scheduler.destroy()
   }
 }
 

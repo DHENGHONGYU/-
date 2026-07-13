@@ -67,7 +67,7 @@ V6数据工场 `/data-hub` 含4个Tab，V9的迁移情况：
 
 | 组件 | 文件 | ErrorBoundary | 四步契约 | 加载/错误/空态 | 综合评价 |
 |:---|:---|:---:|:---:|:---:|:---:|
-| `InputHubPage` | [InputHubPage.tsx](file:///C:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/pages/input/InputHubPage.tsx) | ✅ | 部分 | 无（静态页） | 🟢 良好 |
+| `InputHubPage` | [InputHubPage.tsx](file:////src/pages/input/InputHubPage.tsx) | ✅ | 部分 | 无（静态页） | 🟢 良好 |
 | `SevenDimConfigPage` | [SevenDimConfigPage.tsx](../../src/pages/input/SevenDimConfigPage.tsx) | ✅ | 良好 | 全覆盖 | 🟢 良好 |
 | `LocalKnowledgePage` | [LocalKnowledgePage.tsx](../../src/pages/input/LocalKnowledgePage.tsx) | ❌ | 良好 | 全覆盖 | 🟡 需补EB |
 | `InputDashboard` | [InputDashboard.tsx](../../src/apps/input/InputDashboard.tsx) | ❌ | **违规** | 有加载/错误 | 🔴 DF-002 |
@@ -223,7 +223,7 @@ V6数据工场 `/data-hub` 含4个Tab，V9的迁移情况：
 
 | 编号 | 操作 | 文件 | 复杂度 |
 |:---:|:---|:---|:---:|
-| F-01 | `/input/seven-dim` 注册到 `ROUTE_REGISTRY` | [routes.ts](file:///C:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/config/routes.ts) | ✅ 已完成 |
+| F-01 | `/input/seven-dim` 注册到 `ROUTE_REGISTRY` | [routes.ts](file:////src/config/routes.ts) | ✅ 已完成 |
 | F-02 | 替换 OutputApp 的 PlaceholderPanel → 实际页面 | [OutputApp.tsx](../../src/apps/output/OutputApp.tsx) | ✅ 已完成 |
 | F-03 | 同步 docs/06-routing-specs.md 路由表 | [06-routing-specs.md](06-routing-specs.md) | 中 |
 

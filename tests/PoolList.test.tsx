@@ -2,15 +2,16 @@ import { describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { PoolList } from '@/components/organisms/pool/PoolList'
-import { DEFAULT_POOL_GROUP } from '@/constants/pool.constants'
-import type { Stock } from '@/data/types'
+import { DEFAULT_POOL_GROUP, POOL_TYPE, RESEARCH_STATUS } from '@/constants/pool.constants'
+import type { PoolItem } from '@/types/modules/pool.types'
 import { UI_TEXT } from '@/constants/uiText'
 
-const mockStocks: Stock[] = [
+const mockItems: PoolItem[] = [
   {
     symbol: '000001.SZ',
     name: '平安银行',
-    researchStatus: 'candidate',
+    pool: POOL_TYPE.research,
+    status: RESEARCH_STATUS.candidate,
     source: 'manual',
     dataVersion: 1,
     group: '核心持仓',
@@ -20,7 +21,8 @@ const mockStocks: Stock[] = [
   {
     symbol: '600519.SH',
     name: '贵州茅台',
-    researchStatus: 'watching',
+    pool: POOL_TYPE.research,
+    status: RESEARCH_STATUS.watching,
     source: 'akshare',
     dataVersion: 1,
     price: 1800,
@@ -32,7 +34,7 @@ describe('PoolList', () => {
   it('renders stocks in table', () => {
     render(
       <PoolList
-        stocks={mockStocks}
+        items={mockItems}
         selectedSymbols={[]}
         onSelectToggle={vi.fn()}
         onTransition={vi.fn()}
@@ -47,7 +49,7 @@ describe('PoolList', () => {
     const onSelectToggle = vi.fn()
     render(
       <PoolList
-        stocks={mockStocks}
+        items={mockItems}
         selectedSymbols={[]}
         onSelectToggle={onSelectToggle}
         onTransition={vi.fn()}
@@ -63,7 +65,7 @@ describe('PoolList', () => {
   it('renders quality indicator for each row', () => {
     render(
       <PoolList
-        stocks={mockStocks}
+        items={mockItems}
         selectedSymbols={[]}
         onSelectToggle={vi.fn()}
         onTransition={vi.fn()}
@@ -76,7 +78,7 @@ describe('PoolList', () => {
   it('renders group column with fallback to default group', () => {
     render(
       <PoolList
-        stocks={mockStocks}
+        items={mockItems}
         selectedSymbols={[]}
         onSelectToggle={vi.fn()}
         onTransition={vi.fn()}
@@ -91,7 +93,7 @@ describe('PoolList', () => {
     const onChangeGroup = vi.fn()
     render(
       <PoolList
-        stocks={mockStocks}
+        items={mockItems}
         selectedSymbols={[]}
         allGroups={['核心持仓', '成长配置', DEFAULT_POOL_GROUP]}
         onSelectToggle={vi.fn()}
