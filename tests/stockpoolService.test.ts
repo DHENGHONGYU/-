@@ -2,7 +2,8 @@ import { describe, expect, it, beforeEach } from 'vitest'
 import { dataLayer } from '@/data/dataLayer'
 import { dataBridge } from '@/core/databridge'
 import { db } from '@/data/db'
-import { DEFAULT_POOL_GROUP, RESEARCH_STATUS, STORE_NAME } from '@/config/dbConfig'
+import { DEFAULT_POOL_GROUP, RESEARCH_STATUS } from '@/constants/stockpool.constants'
+import { STORE_NAME } from '@/config/dbConfig'
 import {
   getPoolGroups,
   getPoolTransitionOptions,

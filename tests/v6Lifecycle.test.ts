@@ -21,13 +21,13 @@ import { runV6Score } from '@/services/scoring/v6ScoreService'
 import { runStrategy } from '@/services/trading/strategyEngine'
 import { fetchStockBasic } from '@/services/fetcher/fetcherService'
 import { LLMScoreEnhancer } from '@/services/scoring/v6-engine/enhancer'
+import type { DailyQuotes } from '@/data/types'
 import type { LayerCalculator, LayerInput, LayerScore, LayerId } from '@/services/scoring/v6-engine/types'
 import type { LlmConfig } from '@/config/llmConfig'
 import {
   mockLlmChatSuccess,
   mockLlmHttpError,
   mockLlmNetworkError,
-  mockLlmTimeout,
   restoreFetch,
   getFetchCallCount,
 } from './helpers/llmMockFetch'
@@ -153,7 +153,6 @@ describe('数据校验测试', () => {
         name: '平安银行',
         researchStatus: 'watching',
         source: 'manual',
-        dataVersion: 1,
         price: 12.5,
       })
 
@@ -206,7 +205,6 @@ describe('数据校验测试', () => {
         name: '平安银行',
         researchStatus: 'watching',
         source: 'manual',
-        dataVersion: 1,
         price: 12.5,
         pe: 8.5,
         pb: 0.9,
@@ -230,7 +228,7 @@ describe('数据校验测试', () => {
 
     it('完整数据应记录详细日志', async () => {
       await dataLayer.stocks.add(MOCK_STOCK_HIGH_QUALITY)
-      await dataLayer.dailyQuotes.save(MOCK_QUOTES_HIGH_QUALITY)
+      await dataLayer.dailyQuotes.save(MOCK_QUOTES_HIGH_QUALITY as DailyQuotes)
 
       const result = await runV6Score(MOCK_STOCK_HIGH_QUALITY.symbol)
 
@@ -522,7 +520,6 @@ describe('完整数据流测试', () => {
       name: '平安银行',
       researchStatus: 'watching',
       source: 'manual',
-      dataVersion: 1,
       price: 12.5,
       pe: 8.5,
       pb: 0.9,
@@ -580,7 +577,6 @@ describe('完整数据流测试', () => {
         name: '北方华创',
         researchStatus: 'watching' as const,
         source: 'manual' as const,
-        dataVersion: 1,
         price: 300,
         sector: '半导体设备',
       },
@@ -589,7 +585,6 @@ describe('完整数据流测试', () => {
         name: '工业富联',
         researchStatus: 'watching' as const,
         source: 'manual' as const,
-        dataVersion: 1,
         price: 25,
         sector: 'AI服务器',
       },
@@ -693,7 +688,6 @@ describe('边界条件测试', () => {
         name: `测试股票${symbol}`,
         researchStatus: 'watching',
         source: 'manual',
-        dataVersion: 1,
         price: 10,
       })
     }

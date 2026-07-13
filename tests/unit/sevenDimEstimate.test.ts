@@ -3,6 +3,7 @@
  */
 
 import { describe, it, expect } from 'vitest'
+import type { DimensionConfig, DataSourceType } from '@/types/modules/collection.types'
 import {
   estimateMonthlyCalls,
   estimateTotalMonthlyCalls,
@@ -19,7 +20,7 @@ describe('七维采集额度预估计算', () => {
         enabled: true,
         frequency: 'daily' as const,
         batchSize: 100,
-        sources: ['akshare'] as const,
+        sources: ['akshare'] as DataSourceType[],
         cacheTtl: 1440,
         storageType: 'full' as const,
         fields: ['open', 'close'],
@@ -41,7 +42,7 @@ describe('七维采集额度预估计算', () => {
         enabled: true,
         frequency: 'weekly' as const,
         batchSize: 20,
-        sources: ['akshare'] as const,
+        sources: ['akshare'] as DataSourceType[],
         cacheTtl: 10080,
         storageType: 'lightweight' as const,
         fields: ['industryRank'],
@@ -60,7 +61,7 @@ describe('七维采集额度预估计算', () => {
       const dimension = {
         ...DEFAULT_DIMENSIONS[0],
         enabled: false,
-      }
+      } as DimensionConfig
       const result = estimateMonthlyCalls(dimension, 100)
       expect(result).toBe(0)
     })
@@ -69,7 +70,7 @@ describe('七维采集额度预估计算', () => {
       const dimension = {
         ...DEFAULT_DIMENSIONS[0],
         frequency: 'manual' as const,
-      }
+      } as DimensionConfig
       const result = estimateMonthlyCalls(dimension, 100)
       expect(result).toBe(0)
     })

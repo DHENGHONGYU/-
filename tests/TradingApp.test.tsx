@@ -47,6 +47,7 @@ const mockBuyAdvice: TradeAdvice = {
     symbol: '000001.SZ',
     direction: 'buy',
     type: 'buy_dip',
+    strategy: 'test',
     confidence: 0.65,
     rationale: '超卖',
     snapshot: {},
@@ -74,6 +75,7 @@ const mockSellAdvice: TradeAdvice = {
     symbol: '000001.SZ',
     direction: 'sell',
     type: 'sell_profit_taking',
+    strategy: 'test',
     confidence: 0.7,
     rationale: '超买',
     snapshot: {},
@@ -112,6 +114,7 @@ const mockSignal: TradingSignal = {
   symbol: '000001.SZ',
   direction: 'buy',
   type: 'buy_pivot',
+  strategy: 'test',
   confidence: 0.75,
   rationale: '突破均线，放量上涨',
   snapshot: {},
@@ -124,6 +127,7 @@ const mockWarningAdvice: TradeAdvice = {
     symbol: '000001.SZ',
     direction: 'buy',
     type: 'buy_dip',
+    strategy: 'test',
     confidence: 0.6,
     rationale: '回调买入',
     snapshot: {},
@@ -151,6 +155,7 @@ const mockBlockedAdvice: TradeAdvice = {
     symbol: '000001.SZ',
     direction: 'buy',
     type: 'buy_dip',
+    strategy: 'test',
     confidence: 0.6,
     rationale: '回调买入',
     snapshot: {},
@@ -421,7 +426,7 @@ describe('TradingApp', () => {
 
     // 使用 getAllByText 获取所有匹配元素，取第一个（观察池卡片中的）
     const symbolElements = screen.getAllByText('000001.SZ')
-    const card = symbolElements[0].closest('.rounded-md') as HTMLElement
+    const card = symbolElements[0]!.closest('.rounded-md') as HTMLElement
     expect(within(card).getByText('平安银行')).toBeInTheDocument()
     expect(within(card).getByText('watching')).toBeInTheDocument()
     expect(within(card).getByText('BUY')).toBeInTheDocument()
@@ -447,7 +452,7 @@ describe('TradingApp', () => {
 
     // 使用 getAllByText 获取所有匹配元素，取第一个（观察池卡片中的）
     const symbolElements = screen.getAllByText('000001.SZ')
-    const card = symbolElements[0].closest('.rounded-md') as HTMLElement
+    const card = symbolElements[0]!.closest('.rounded-md') as HTMLElement
     expect(within(card).getByText(/风控提示：仓位接近单笔上限/)).toBeInTheDocument()
   })
 
@@ -467,7 +472,7 @@ describe('TradingApp', () => {
 
     // 使用 getAllByText 获取所有匹配元素，取第一个（观察池卡片中的）
     const symbolElements = screen.getAllByText('000001.SZ')
-    const card = symbolElements[0].closest('.rounded-md') as HTMLElement
+    const card = symbolElements[0]!.closest('.rounded-md') as HTMLElement
     expect(within(card).getByText(/风控阻塞：今日交易次数已达上限 5/)).toBeInTheDocument()
   })
 

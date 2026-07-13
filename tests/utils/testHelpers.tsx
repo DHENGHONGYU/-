@@ -27,6 +27,8 @@ import { render, type RenderOptions } from '@testing-library/react'
 import type { ReactElement, ReactNode } from 'react'
 import type { StoreApi, UseBoundStore } from 'zustand'
 
+import type { StoreName } from '@/config/dbConfig'
+
 // ============================================================
 // renderWithProviders：带 ThemeProvider 的渲染辅助
 // ============================================================
@@ -294,7 +296,7 @@ export async function resetDbWithCache(additionalStores: readonly string[] = [])
   await db.reset()
 
   // 清理所有已知 store 的缓存
-  const allStores = Object.values(STORE_NAME) as string[]
+  const allStores = Object.values(STORE_NAME) as StoreName[]
   for (const store of allStores) {
     dataBridge.invalidateCache(store)
   }
