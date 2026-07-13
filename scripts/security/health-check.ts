@@ -106,7 +106,11 @@ function checkAuthorizationConsistency(policy: SecurityPolicy): void {
     'query_knowledge',
     'list_execution_plans', 'get_orphan_plans',
     'analyze_stock',
-    'list_files', 'read_file', 'directory_listing'
+    'list_files', 'read_file', 'directory_listing',
+    'fetch_market_data', 'detect_missing_reports',
+    'screen_single',
+    'list_pool_stocks', 'list_groups',
+    'get_stats', 'parse_v6_export', 'transform_v6_to_v9', 'generate_migration_report', 'fetch_health_report'
   ]
   const autoToolsValid = policy.authorizationRules.autoApprove.every((t) => readOnlyTools.includes(t))
   addResult('授权策略', 'autoApprove 只读性', autoToolsValid ? 'PASS' : 'WARN', autoToolsValid ? '全部为只读工具' : '包含非只读工具')
