@@ -291,6 +291,17 @@ export class WidgetRegistry {
       },
       {
         meta: {
+          id: 'mechanismHealth',
+          name: DEFAULT_WIDGET_CONFIG.mechanismHealth.title,
+          category: DEFAULT_WIDGET_CONFIG.mechanismHealth.category,
+          description: 'SOP 触发 / 文档自动更新 / 日志自动更新 三类机制自扫描监控',
+          defaultSize: DEFAULT_WIDGET_CONFIG.mechanismHealth.size,
+          defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.mechanismHealth,
+        },
+        component: () => import('@/cockpit/widgets/MechanismHealthWidget'),
+      },
+      {
+        meta: {
           id: 'industryChain',
           name: DEFAULT_WIDGET_CONFIG.industryChain.title,
           category: DEFAULT_WIDGET_CONFIG.industryChain.category,
@@ -338,6 +349,7 @@ export class WidgetRegistry {
       { widgetId: 'positionControl', position: { x: 0, y: 39 } },
       { widgetId: 'riskMonitor', position: { x: 0, y: 41 } },
       { widgetId: 'signalMonitor', position: { x: 2, y: 41 } },
+      { widgetId: 'mechanismHealth', position: { x: 0, y: 43 } },
     ]
 
     defaultLayout.forEach((item) => {

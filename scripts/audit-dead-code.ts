@@ -403,7 +403,7 @@ function collectDynamicImports(): DynamicImportScanResult {
           regex.lastIndex = 0
           let match: RegExpExecArray | null
           while ((match = regex.exec(line ?? '')) !== null) {
-            const importPath = match[1]
+            const importPath = match[1]!
 
             // 去重：同一行同一导入路径只记录一次（优先记录更具体的模式）
             const dedupKey = `${relFile}:${i + 1}:${importPath}`
@@ -483,7 +483,7 @@ function isExcludedFromPageAudit(relativePath: string): boolean {
   if (/pages\/\w+\/types\//.test(relativePath)) return true
   // v2.0 新增：文件名以 use 开头（React hooks）
   const fileName = relativePath.split('/').pop() || ''
-  if (fileName?.startsWith('use') && fileName[3] >= 'A' && fileName[3] <= 'Z') return true
+  if (fileName.startsWith('use') && fileName[3]! >= 'A' && fileName[3]! <= 'Z') return true
   // v2.0 新增：纯类型文件
   if (fileName.endsWith('types.ts') || fileName.endsWith('interfaces.ts')) return true
   return false

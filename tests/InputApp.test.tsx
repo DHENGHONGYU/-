@@ -1,7 +1,7 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { MemoryRouter, HashRouter } from 'react-router'
+import { HashRouter } from 'react-router'
 import InputApp from '@/apps/input/InputApp'
 import * as inputService from '@/services/input/inputService'
 import * as fetcherService from '@/services/fetcher/fetcherService'
@@ -98,7 +98,7 @@ describe('InputApp', () => {
       data: undefined as never,
     })
     vi.spyOn(batchImportService, 'parseBulkInput').mockReturnValue([
-      { code: '600519', name: '贵州茅台', symbol: '600519.SH' },
+      { code: '600519', name: '贵州茅台', symbol: '600519.SH', status: 'valid' },
     ])
     vi.spyOn(batchImportService, 'detectDuplicates').mockReturnValue([
       { code: '600519', name: '贵州茅台', symbol: '600519.SH', status: 'valid' } as never,

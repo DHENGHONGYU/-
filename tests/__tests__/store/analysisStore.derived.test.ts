@@ -2,10 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import {
   analysisStoreNormalState,
   analysisStoreEmptyState,
-  mockStocks,
   mockScores,
-  mockTrendData,
-  emptyTrendData,
   singlePointTrendData,
 } from '../../fixtures/store-mock-data'
 import { resetCacheStats, getCacheStatsSnapshot, resetAllMemoCaches } from '@/lib/derivedCache'
@@ -77,35 +74,35 @@ describe('analysisStore.derived.ts 派生查询单元测试', () => {
 
   describe('基础聚合派生', () => {
     it('isLoadingAny 应返回 loading || trendLoading', () => {
-      mockGetState.mockReturnValue({ ...analysisStoreNormalState, loading: false, trendLoading: false })
+      mockGetState.mockReturnValue({ ...analysisStoreNormalState, loading: false, trendLoading: false } as never)
       expect(isLoadingAny()).toBe(false)
 
-      mockGetState.mockReturnValue({ ...analysisStoreNormalState, loading: true, trendLoading: false })
+      mockGetState.mockReturnValue({ ...analysisStoreNormalState, loading: true, trendLoading: false } as never)
       expect(isLoadingAny()).toBe(true)
 
-      mockGetState.mockReturnValue({ ...analysisStoreNormalState, loading: false, trendLoading: true })
+      mockGetState.mockReturnValue({ ...analysisStoreNormalState, loading: false, trendLoading: true } as never)
       expect(isLoadingAny()).toBe(true)
     })
 
     it('errorUnion 应优先返回主错误', () => {
-      mockGetState.mockReturnValue({ ...analysisStoreNormalState, error: '主错误', trendError: null })
+      mockGetState.mockReturnValue({ ...analysisStoreNormalState, error: '主错误', trendError: null } as never)
       expect(errorUnion()).toBe('主错误')
 
-      mockGetState.mockReturnValue({ ...analysisStoreNormalState, error: null, trendError: '趋势错误' })
+      mockGetState.mockReturnValue({ ...analysisStoreNormalState, error: null, trendError: '趋势错误' } as never)
       expect(errorUnion()).toBe('趋势错误')
 
-      mockGetState.mockReturnValue({ ...analysisStoreNormalState, error: '主错误', trendError: '趋势错误' })
+      mockGetState.mockReturnValue({ ...analysisStoreNormalState, error: '主错误', trendError: '趋势错误' } as never)
       expect(errorUnion()).toBe('主错误')
 
-      mockGetState.mockReturnValue({ ...analysisStoreNormalState, error: null, trendError: null })
+      mockGetState.mockReturnValue({ ...analysisStoreNormalState, error: null, trendError: null } as never)
       expect(errorUnion()).toBe(null)
     })
 
     it('hasError 应正确判断是否有错误', () => {
-      mockGetState.mockReturnValue({ ...analysisStoreNormalState, error: null, trendError: null })
+      mockGetState.mockReturnValue({ ...analysisStoreNormalState, error: null, trendError: null } as never)
       expect(hasError()).toBe(false)
 
-      mockGetState.mockReturnValue({ ...analysisStoreNormalState, error: 'err', trendError: null })
+      mockGetState.mockReturnValue({ ...analysisStoreNormalState, error: 'err', trendError: null } as never)
       expect(hasError()).toBe(true)
     })
 
@@ -260,12 +257,12 @@ describe('analysisStore.derived.ts 派生查询单元测试', () => {
     })
 
     it('trendDirection 无数据应返回 flat', () => {
-      mockGetState.mockReturnValue({ ...analysisStoreNormalState, trendData: undefined })
+      mockGetState.mockReturnValue({ ...analysisStoreNormalState, trendData: undefined } as never)
       expect(trendDirection()).toBe('flat')
     })
 
     it('trendDirection 单点数据应返回 flat', () => {
-      mockGetState.mockReturnValue({ ...analysisStoreNormalState, trendData: singlePointTrendData })
+      mockGetState.mockReturnValue({ ...analysisStoreNormalState, trendData: singlePointTrendData } as never)
       expect(trendDirection()).toBe('flat')
     })
 
@@ -292,7 +289,7 @@ describe('analysisStore.derived.ts 派生查询单元测试', () => {
 
     it('hasTrendData 应正确判断是否有趋势数据', () => {
       expect(hasTrendData()).toBe(true)
-      mockGetState.mockReturnValue({ ...analysisStoreNormalState, trendData: undefined })
+      mockGetState.mockReturnValue({ ...analysisStoreNormalState, trendData: undefined } as never)
       expect(hasTrendData()).toBe(false)
     })
   })

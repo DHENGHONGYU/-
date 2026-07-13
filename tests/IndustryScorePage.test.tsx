@@ -4,7 +4,6 @@ import { MemoryRouter } from 'react-router'
 import IndustryScorePage from '@/pages/analysis/IndustryScorePage'
 import { useIndustryScoreStore } from '@/store/industryScoreStore'
 import * as scorePageService from '@/services/analysis/scorePageService'
-import { UI_TEXT } from '@/constants/uiText'
 
 // ------------------------------------------------------------------
 // Mock 子组件，减少渲染树噪音

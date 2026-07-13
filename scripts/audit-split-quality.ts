@@ -125,7 +125,6 @@ const CORE_IMPORT_STORE_PATTERN =
 const INTERFACE_FIELD_PATTERN = /^\s+(\w+)[\??]:\s+/
 
 /** AP-007：重复函数检测（收集所有 export function 名称） */
-const EXPORT_FUNCTION_PATTERN = /export\s+function\s+(\w+)\s*\(/g
 
 /** AP-009：预览文件模式 */
 const PREVIEW_FILE_PATTERN = /\.preview\.ts$/
@@ -582,7 +581,7 @@ export function checkCyclomaticComplexity(
 export function checkReExport(
   filePath: string,
   lines: string[],
-  findings: SplitQualityFinding[],
+  _findings: SplitQualityFinding[],
   warnings: SplitQualityFinding[],
 ): void {
   const relPath = getRelativePath(filePath)
@@ -692,7 +691,6 @@ export function checkDeprecatedFields(
   if (!relPath.includes('tradeError') && !relPath.includes('TradePair')) return
 
   let inInterface = false
-  let interfaceName = ''
   let lastCommentWasDeprecated = false
 
   lines.forEach((line, idx) => {
@@ -702,7 +700,6 @@ export function checkDeprecatedFields(
     const interfaceMatch = line.match(/export\s+interface\s+(\w+)/)
     if (interfaceMatch) {
       inInterface = true
-      interfaceName = interfaceMatch[1]!
       return
     }
 

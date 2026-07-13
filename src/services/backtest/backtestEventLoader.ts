@@ -20,29 +20,13 @@ import { dataBridge } from '@/core/databridge'
 import { ENVELOPE_ACTION, STORE_NAME } from '@/config/dbConfig'
 import type { DailyQuotes, Signal, Order } from '@/data/types'
 import { getLogger } from '@/lib/logger'
-import type { BacktestEngineConfig } from './BacktestEngine'
+import type { BacktestEngineConfig, BacktestEvent } from './backtestTypes'
 
 const logger = getLogger()
 
-/** 毫秒精度：一天结束时刻的毫秒部分 */
 const MS_END_OF_DAY = 999
 
-/** 信号事件不足此数量时，用订单事件补充合并 */
 const MIN_SIGNAL_EVENTS_FOR_COMBINE = 5
-
-// ============================================================
-// 类型定义（从 BacktestEngine.ts 迁出，供主文件 + metrics 共享）
-// ============================================================
-
-export interface BacktestEvent {
-  symbol: string
-  direction: 'buy' | 'sell'
-  date: string
-  price: number
-  confidence: number
-  source: 'signal' | 'order'
-  strategy?: string
-}
 
 // ============================================================
 // 事件加载

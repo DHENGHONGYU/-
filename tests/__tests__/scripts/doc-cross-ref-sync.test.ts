@@ -53,8 +53,9 @@ function scannedFilesForDir(tmp: string): ScannedFile[] {
         relativePath: path.relative(tmp, full).replace(/\\/g, '/'),
         category: 'doc',
         hash: 'deadbeef',
-        size: fs.statSync(full).size,
-        lastModified: new Date().toISOString(),
+        sizeBytes: fs.statSync(full).size,
+        lastModifiedAt: new Date().toISOString(),
+        updateType: 'unchanged',
       })
     }
   }
@@ -106,18 +107,18 @@ describe('extractRelativeLinks — 带行/列号的链接提取', () => {
     const content = '# Title\n\nSome [link](./ref.md) here.\nAnother [absent](./gone.md).\n'
     const links = extractRelativeLinks(content)
     expect(links.length).toBe(2)
-    expect(links[0].target).toBe('./ref.md')
-    expect(links[0].line).toBe(3)  // 行 3（1-based）
-    expect(links[0].column).toBeGreaterThanOrEqual(0)
-    expect(links[1].target).toBe('./gone.md')
-    expect(links[1].line).toBe(4)
+    expect(links[0]!.target).toBe('./ref.md')
+    expect(links[0]!.line).toBe(3)  // 行 3（1-based）
+    expect(links[0]!.column).toBeGreaterThanOrEqual(0)
+    expect(links[1]!.target).toBe('./gone.md')
+    expect(links[1]!.line).toBe(4)
   })
 
   it('跳过外部链接和锚点', () => {
     const content = '# Title\n\n[web](https://example.com) [local](./ref.md) [anchor](#top)\n'
     const links = extractRelativeLinks(content)
     expect(links).toHaveLength(1)
-    expect(links[0].target).toBe('./ref.md')
+    expect(links[0]!.target).toBe('./ref.md')
   })
 })
 
@@ -166,8 +167,9 @@ describe('findBrokenCrossReferences — 只读 filePath 级归因扫描', () => 
       relativePath: 'ambiguous.md',
       category: 'doc',
       hash: 'cafebabe',
-      size: fs.statSync(ambiguousFile).size,
-      lastModified: new Date().toISOString(),
+      sizeBytes: fs.statSync(ambiguousFile).size,
+      lastModifiedAt: new Date().toISOString(),
+      updateType: 'added',
     })
 
     const report = findBrokenCrossReferences(tmp, files)

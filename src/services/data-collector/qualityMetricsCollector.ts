@@ -9,7 +9,9 @@
  * - 降级计数
  */
 import { getLogger } from '@/lib/logger'
-import type { DataSource } from './dataSourceOrchestrator'
+import type { QuoteDataSourceId } from '@/types/modules/collection.types'
+
+type DataSource = QuoteDataSourceId
 
 const logger = getLogger()
 

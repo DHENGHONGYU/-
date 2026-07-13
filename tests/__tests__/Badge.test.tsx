@@ -188,7 +188,7 @@ describe('Badge 组件', () => {
       const ref = vi.fn()
       render(<Badge ref={ref}>测试</Badge>)
       expect(ref).toHaveBeenCalled()
-      expect(ref.mock.calls[0][0].tagName).toBe('SPAN')
+      expect(ref.mock.calls[0]![0].tagName).toBe('SPAN')
     })
   })
 

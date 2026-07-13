@@ -775,7 +775,7 @@ npm run audit:token    # Token 消耗检测（v1.3.0 新增）
 **背景**：知识图谱构建和 AI 辅助开发过程中存在严重的 Token 无谓消耗（月度 1.4M-2.3M tokens），主要来源于脚本重复解析、AI 重复搜索、架构合规检查冗余。
 
 **强制规则**：
-- **知识图谱优先**：理解代码关系时，必须先查询 `docs/reports/code-graph.json`，禁止直接使用 grep/searchCodebase 重复搜索已存在的依赖关系
+- **知识图谱优先**：理解代码关系时，必须先查询 `docs/00-meta/ai-index/.ai-index/code-graph.json`，禁止直接使用 grep/searchCodebase 重复搜索已存在的依赖关系
 - **增量解析**：`extract-code-graph.ts` 必须支持增量更新（基于文件 mtime），禁止每次全量解析 466+ 文件
 - **缓存查询结果**：常用查询（Store 依赖、跨层违规、最大文件）必须使用 `scripts/quick-query.sh` 模板，禁止重复构建查询逻辑
 - **Token 预算**：单次 AI 会话 Token 消耗不得超过 50,000 tokens，超出必须使用知识图谱替代手动搜索
@@ -950,7 +950,7 @@ git status --short            # 确认工作区状态
 
 ```
 理解代码关系时:
-├── 优先查询 docs/reports/code-graph.json     # 缓存的依赖关系
+├── 优先查询 docs/00-meta/ai-index/.ai-index/code-graph.json     # 缓存的依赖关系
 ├── 常用查询用 scripts/quick-query.sh 模板    # 14 个预置查询
 └── 仅当图谱未覆盖时才用 Grep/SearchCodebase
 ```

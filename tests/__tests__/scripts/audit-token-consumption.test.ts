@@ -360,10 +360,9 @@ query-top-imported
   describe('scan() 边界条件', () => {
     it('文件存在但读取失败时返回"读取失败"违规', async () => {
       // existsSync 返回 true，但 readFileSync 抛错
-      const rootDir = path.resolve(__dirname, '../../..').replace(/\\/g, '/')
 
       mockExistsSync.mockImplementation((() => true) as unknown as typeof fs.existsSync)
-      mockReadFileSync.mockImplementation(((filePath: string) => {
+      mockReadFileSync.mockImplementation(((_filePath: string) => {
         const err = new Error(`EACCES: permission denied`) as NodeJS.ErrnoException
         err.code = 'EACCES'
         throw err

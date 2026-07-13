@@ -424,8 +424,8 @@ export default function IntelligentScorePage(): React.JSX.Element {
                           </Badge>
                         )}
                         {!result.configSnapshot.v6EngineVersion && !result.dimensionScores.some((d) => d.usedLlm) && (
-                          <Badge variant="outline" className="ml-2 text-xs">
-                            LLM 合成
+                          <Badge variant="outline" className="ml-2 text-xs" title="当前为合成示例数据，非真实引擎信号">
+                            示例 · LLM 合成
                           </Badge>
                         )}
                       </CardTitle>

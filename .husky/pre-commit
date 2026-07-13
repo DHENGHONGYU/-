@@ -37,7 +37,12 @@ echo ""
 echo "⚛️  [6/14] 运行 audit:atomic（原子层级边界检查）..."
 npm run audit:atomic
 
-# 6.5 Agent → MCP Server 绑定一致性审计（阻断：防止悬空 Agent / UI 注册表失配）
+# 6.5 数据库定义交叉引用审计（阻断：STORE_NAME / ENVELOPE_ACTION / ACL / dataLayer 暴露一致性）
+echo ""
+echo "🗄️  [6.5/14] 运行 audit:db-references（数据库定义交叉引用审计）..."
+npm run audit:db-references
+
+# 6.6 Agent → MCP Server 绑定一致性审计（阻断：防止悬空 Agent / UI 注册表失配）
 echo ""
 echo "🔗 运行 audit:mcp（Agent→MCP 绑定一致性 / 悬空 Agent 检查）..."
 npm run audit:mcp

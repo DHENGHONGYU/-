@@ -7,7 +7,6 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { resetDbWithCache, createCacheResetHook } from './testHelpers'
 import { dataBridge } from '@/core/databridge'
 import { STORE_NAME } from '@/config/dbConfig'
-import { db } from '@/data/db'
 
 describe('testHelpers - 缓存清理工具', () => {
   beforeEach(() => {

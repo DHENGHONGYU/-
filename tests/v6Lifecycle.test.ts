@@ -228,7 +228,7 @@ describe('数据校验测试', () => {
 
     it('完整数据应记录详细日志', async () => {
       await dataLayer.stocks.add(MOCK_STOCK_HIGH_QUALITY)
-      await dataLayer.dailyQuotes.save(MOCK_QUOTES_HIGH_QUALITY as DailyQuotes)
+      await dataLayer.dailyQuotes.save(MOCK_QUOTES_HIGH_QUALITY as unknown as DailyQuotes)
 
       const result = await runV6Score(MOCK_STOCK_HIGH_QUALITY.symbol)
 
@@ -579,6 +579,7 @@ describe('完整数据流测试', () => {
         source: 'manual' as const,
         price: 300,
         sector: '半导体设备',
+        dataVersion: 1,
       },
       {
         symbol: '601138.SH',
@@ -587,6 +588,7 @@ describe('完整数据流测试', () => {
         source: 'manual' as const,
         price: 25,
         sector: 'AI服务器',
+        dataVersion: 1,
       },
     ]
 

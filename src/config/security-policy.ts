@@ -33,6 +33,16 @@ export interface BlockedMcpServer {
   blockedReason: string
 }
 
+export interface ObservedMcpServer {
+  source: string
+  package: string
+  observedReason: string
+  allowedTools: string[]
+  restrictedTools: string[]
+  restrictedReason: string
+  networkOrigins: string[]
+}
+
 export interface AuditConfig {
   logEnabled: boolean
   logPath: string
@@ -49,6 +59,7 @@ export interface SecurityPolicy {
   scope: string
   trustedMcpServers: Record<string, TrustedMcpServer>
   blockedMcpServers: Record<string, BlockedMcpServer>
+  observedMcpServers?: Record<string, ObservedMcpServer>
   authorizationRules: Record<AuthorizationLevel, string[]>
   audit: AuditConfig
 }

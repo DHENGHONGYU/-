@@ -15,12 +15,25 @@ const mockSignalsList = vi.hoisted(() => vi.fn())
 const mockOrdersList = vi.hoisted(() => vi.fn())
 const mockDailyQuotesGet = vi.hoisted(() => vi.fn())
 
-vi.mock('@/data/dataLayer', () => ({
-  dataLayer: {
-    signals: { list: mockSignalsList },
-    orders: { list: mockOrdersList },
-    dailyQuotes: { get: mockDailyQuotesGet },
-  },
+// BacktestEventLoader 在 P4 后统一走 DataBridge.query，不再直接访问 dataLayer。
+// 本 mock 将 query 路由到原 dataLayer mock 函数，保持测试语义不变。
+const mockDataBridgeQuery = vi.hoisted(() => vi.fn(async (request: { action: string; store: string; key?: string }) => {
+  if (request.action === 'QUERY_LIST' && request.store === 'signals') {
+    const data = await mockSignalsList()
+    return { success: true, data }
+  }
+  if (request.action === 'QUERY_LIST' && request.store === 'orders') {
+    const data = await mockOrdersList()
+    return { success: true, data }
+  }
+  if (request.action === 'QUERY_GET' && request.store === 'daily_quotes') {
+    const data = await mockDailyQuotesGet(request.key)
+    return { success: true, data }
+  }
+  return { success: false, error: `unmocked query: ${request.action}/${request.store}` }
+}))
+vi.mock('@/core/databridge', () => ({
+  dataBridge: { query: mockDataBridgeQuery },
 }))
 
 const mockCalculatePosition = vi.hoisted(() => vi.fn())
@@ -890,6 +903,12 @@ describe('BacktestEngine', () => {
         slippage: 0.001,
         maxPositionPct: 0.2,
       })
+
+      // DEBUG
+      console.log('DEBUG mockDataBridgeQuery calls:', mockDataBridgeQuery.mock.calls)
+      console.log('DEBUG result.trades:', result.trades)
+      console.log('DEBUG result.dailyValues:', result.dailyValues)
+      console.log('DEBUG result.metrics.tradeCount:', result.metrics.tradeCount)
 
       // 包含买入和卖出双向交易
       const buyTrades = result.trades.filter((t) => t.direction === 'buy')

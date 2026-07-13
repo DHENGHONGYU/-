@@ -26,12 +26,6 @@ const TW_PREFIXES = [
   'placeholder',
 ]
 
-const COLOR_NAME_SET = new Set([
-  'white', 'black', 'red', 'green', 'blue', 'yellow', 'orange', 'purple', 'pink',
-  'gray', 'grey', 'cyan', 'teal', 'indigo', 'violet', 'lime', 'amber', 'emerald',
-  'rose', 'fuchsia', 'slate', 'zinc', 'neutral', 'stone', 'transparent', 'currentColor',
-  'brown', 'lightblue', 'lightgreen', 'darkblue', 'darkred', 'magenta', 'gold', 'silver',
-])
 
 const COLOR_VALUE_RE = /(?:#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\b)|(?:rgba?|hsla?)\s*\([^)]*\)|var\([^)]*\)|\b(?:white|black|red|green|blue|yellow|orange|purple|pink|gray|grey|cyan|teal|indigo|violet|lime|amber|emerald|rose|fuchsia|slate|zinc|neutral|stone|transparent|currentColor|brown|lightblue|lightgreen|darkblue|darkred|magenta|gold|silver)\b/g
 
@@ -191,6 +185,6 @@ function main(): void {
   process.exit(0)
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (import.meta.url === pathToFileURL(process.argv[1]!).href) {
   main()
 }

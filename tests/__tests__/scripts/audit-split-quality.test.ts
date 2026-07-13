@@ -23,21 +23,11 @@ import {
   calculateCohesionScore,
   calculateCouplingScore,
   checkMaxLines,
-  checkCoreLayerViolations,
   checkPreviewFiles,
   checkDuplicateFunctions,
   type SplitQualityFinding,
   type ModuleAnalysis,
 } from '../../../scripts/audit-split-quality'
-
-// ============================================================
-// 辅助函数
-// ============================================================
-
-/** 创建模拟的 SplitQualityFinding 数组 */
-function createFindings(): SplitQualityFinding[] {
-  return []
-}
 
 /** 创建模拟的模块分析对象 */
 function createMockModule(overrides: Partial<ModuleAnalysis> = {}): ModuleAnalysis {
@@ -466,16 +456,14 @@ describe('audit-split-quality 模块拆分质量审计器', () => {
     })
 
     it('未超过阈值的文件不应生成违规', () => {
-      const lines = Array(100).fill('  console.log("line")')
-      const findings: SplitQualityFinding[] = []
-      expect(findings.length).toBe(0)
+      const _findings: SplitQualityFinding[] = []
+      expect(_findings.length).toBe(0)
     })
   })
 
   describe('checkCoreLayerViolations() AP-005 core 层违规', () => {
     it('core 层直接 import services 应生成 critical 违规', () => {
       const lines = ["import { analyze } from '@/services/scoring/analyzer'"]
-      const findings: SplitQualityFinding[] = []
 
       // 需要模拟路径包含 /core/
       // 实际测试通过 scan() 集成验证
@@ -484,7 +472,7 @@ describe('audit-split-quality 模块拆分质量审计器', () => {
 
     it('import type 应豁免', () => {
       const lines = ["import type { MyType } from '@/services/types'"]
-      expect(lines[0].trim().startsWith('import type ')).toBe(true)
+      expect(lines[0]!.trim().startsWith('import type ')).toBe(true)
     })
   })
 

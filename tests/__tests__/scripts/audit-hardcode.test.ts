@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import * as path from 'node:path'
-import { readFileSync, readdirSync, existsSync, writeFileSync, statSync } from 'node:fs'
+import { readFileSync, readdirSync, existsSync, writeFileSync } from 'node:fs'
 import { createTestLogger } from './_helpers/test-logger'
 
 /**

@@ -11,7 +11,6 @@
  */
 
 import { beforeAll, afterAll } from 'vitest'
-import { z } from 'zod'
 import { getLogger } from '@/lib/logger'
 import {
   registerContract,

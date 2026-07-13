@@ -265,7 +265,7 @@ describe('openDB VersionError 处理', () => {
 
     // 恢复原 DEV 值
     if (originalDev === undefined) {
-      vi.unstubEnv('DEV')
+      // DEV 未设置，无需恢复
     } else {
       vi.stubEnv('DEV', originalDev)
     }
@@ -285,7 +285,7 @@ describe('openDB VersionError 处理', () => {
     await expect(promise).rejects.toThrow('数据库版本冲突')
 
     if (originalDev === undefined) {
-      vi.unstubEnv('DEV')
+      // DEV 未设置，无需恢复
     } else {
       vi.stubEnv('DEV', originalDev)
     }

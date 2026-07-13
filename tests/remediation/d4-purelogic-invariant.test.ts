@@ -36,11 +36,12 @@ import { TradeErrorType } from '@/services/trading/tradeErrorDefinitions'
 // ============================================================
 // 辅助：构造最小合法 Order
 // ============================================================
-function makeOrder(p: Partial<Order> & Pick<Order, 'id' | 'symbol' | 'direction' | 'price' | 'amount' | 'createdAt'>): Order {
+function makeOrder(p: Partial<Order> & Pick<Order, 'id' | 'symbol' | 'direction' | 'price' | 'createdAt'> & { amount?: number }): Order {
   return {
     quantity: 100,
     status: 'filled',
     accountType: 'paper',
+    amount: 100,
     ...p,
   } as Order
 }
@@ -110,7 +111,7 @@ describe('D4 纯逻辑不变量 · batchImportParsers', () => {
     expect(rows[0]).toMatchObject({ code: '600519', name: '贵州茅台', symbol: '600519.SH', status: 'valid' })
     expect(rows[1]).toMatchObject({ code: '600519', symbol: '600519.SH', status: 'valid' })
     expect(rows[2]).toMatchObject({ code: '600519', symbol: '600519.SH', status: 'valid' })
-    expect(rows[3].status).toBe('invalid')
+    expect(rows[3]!.status).toBe('invalid')
   })
 
   it('parseBulkInput 空文本返回空数组', () => {
