@@ -31,9 +31,15 @@ L1 基础设施层：lib/, config/, core/
 ## 快速启动
 
 ```bash
-npm install
+npm ci          # ⚠️ 强制使用 npm ci，禁止使用 npm install（确保依赖版本锁定）
 npm run dev
 ```
+
+> **新环境安装关键提示**：若功能窗口（帮助文档、AI 面板、上下文弹窗）无法打开，请按序检查：
+> 1. IDE 扩展：安装 `.vscode/extensions.json` 推荐的所有扩展。
+> 2. 工作区信任：VSCode/Cursor 需将本文件夹设为"受信任工作区"。
+> 3. 浏览器弹窗：若 `window.open()` 无反应，检查浏览器弹窗拦截设置。
+> 4. 详见 `.agents/skills/feature-window-context-doc/SKILL.md` 完整诊断流程。
 
 ## 常用命令
 
