@@ -1,0 +1,8 @@
+# 自动产物排除规则
+# 所有 _generated/ 下的文件由 CI/脚本自动生成，不纳入 Git
+
+# 自动产物目录（保留目录结构，不跟踪内容）
+_generated/
+
+# 例外：保留 README.md 用于说明
+!_generated/README.md
