@@ -37,6 +37,11 @@ echo ""
 echo "⚛️  [6/14] 运行 audit:atomic（原子层级边界检查）..."
 npm run audit:atomic
 
+# 6.5 Agent → MCP Server 绑定一致性审计（阻断：防止悬空 Agent / UI 注册表失配）
+echo ""
+echo "🔗 运行 audit:mcp（Agent→MCP 绑定一致性 / 悬空 Agent 检查）..."
+npm run audit:mcp
+
 # 7. 文档规范检查
 echo ""
 echo "📋 [7/14] 运行 file:check（文档规范检查）..."
@@ -89,7 +94,7 @@ npm run audit:doc-integrity || true
 
 echo ""
 echo "================================================"
-echo "✅ V9 预提交门禁全部通过（14/14 阻断项 + 2 warn 项），允许提交。"
+echo "✅ V9 预提交门禁全部通过（15/15 阻断项 + 2 warn 项），允许提交。"
 echo ""
 
 # 文件系统规范检查

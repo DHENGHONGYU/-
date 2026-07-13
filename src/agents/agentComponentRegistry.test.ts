@@ -8,9 +8,9 @@ import {
 
 describe('agentComponentRegistry', () => {
   describe('getAllAgentComponents', () => {
-    it('返回所有已注册的 Agent 组件（共 5 个）', () => {
+    it('返回所有已注册的 Agent 组件（共 7 个）', () => {
       const all = getAllAgentComponents()
-      expect(all.length).toBe(5)
+      expect(all.length).toBe(7)
     })
 
     it('按 priority 降序排列', () => {
@@ -20,7 +20,7 @@ describe('agentComponentRegistry', () => {
       }
     })
 
-    it('包含 5 个预定义 Agent', () => {
+    it('包含 7 个预定义 Agent', () => {
       const all = getAllAgentComponents()
       const ids = all.map((a) => a.agentId)
       expect(ids).toContain('v6-scoring-agent')
@@ -28,6 +28,8 @@ describe('agentComponentRegistry', () => {
       expect(ids).toContain('llm-intelligent-agent')
       expect(ids).toContain('fetcher-agent')
       expect(ids).toContain('news-analyzer-agent')
+      expect(ids).toContain('screening-agent')
+      expect(ids).toContain('stockpool-inspector')
     })
   })
 

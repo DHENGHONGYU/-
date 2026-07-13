@@ -45,20 +45,17 @@ const ROOT = path.resolve(__dirname, '..')
 const SRC = path.join(ROOT, 'src')
 const MCP_DIR = path.join(SRC, 'mcp', 'servers')
 
-// 已知的服务子域（来自 src/services/ 目录，且应有对应 MCP Server）
-// 注：backtest / export / input / screening / stockpool / trade 共 6 个 Server
-//   经 2026-07-13 复盘决策「保持独立」——它们与 trading/fetcher 是互补数据流
-//   （持仓管理 vs 订单引擎、本地池录入 vs 远程行情），后端为不同 service，
-//   无工具重名或逻辑重复，故不合并（详见 outputs/mcp-p1-merge-decision.md）。
-//   已重新启用并纳入 Agent 默认配置；此处纳入覆盖率校验以防再次被误删。
+// 已知的服务子域（来自 src/services/ 目录，且历史上应有对应 MCP Server）
+// 注：export / input / trade 三个 Server 已在 2026-07-20 P0 清理中移除
+//   （export→纯 Service 函数、trade→合并入 trading:main、input→MCP 层移除），
+//   故不再列入覆盖率校验，避免每次审计产生误导性的 "mcp-server-missing" 警告。
+//   筛选/回测/股票池（screening/backtest/stockpool）保留为独立 Server 并已接入 Agent。
 const KNOWN_SERVICE_DOMAINS = [
   'analysis',
   'backtest',
   'data-collector',
   'execution',
-  'export',
   'fetcher',
-  'input',
   'llm',
   'news',
   'portfolio',
@@ -66,7 +63,6 @@ const KNOWN_SERVICE_DOMAINS = [
   'screening',
   'stockpool',
   'system',
-  'trade',
   'trading',
 ]
 
@@ -207,6 +203,136 @@ function checkToolCompleteness(): { violations: Finding[]; warnings: Finding[] }
 }
 
 // ============================================================
+// 检查 4: Agent → MCP Server 绑定一致性（防止悬空 Agent）
+// ============================================================
+//
+// 路由真相：agentRuntime.execute() 经 agent.mcpServerName 查找 MCPRegistry，
+// registry key = server.info.name（无模糊匹配）。若 agent 的 mcpServerName 与
+// 任何「已启用」Server 的 info.name 都不一致，运行时必返回 Server not found。
+//
+// 同理，UI 组件注册表（agentComponentRegistry.ts）的 mcpServerName 被
+// AgentTriggerPage 用于 server 查找（servers.find(info.name === mcpServerName)），
+// 失配会导致工具下拉为空。
+//
+// 本检查为静态分析（audit 脚本运行于 tsx，import.meta.glob 不可用），
+// 因此直接解析源码：从已启用 Server 模块提取真实 info.name，比对 Agent 引用。
+
+/** 从 Server 模块源码提取 info.name（registry 真实注册键） */
+function extractServerInfoName(filePath: string): string | null {
+  if (!fs.existsSync(filePath)) return null
+  const content = fs.readFileSync(filePath, 'utf-8')
+  // 兼容两种写法：
+  //   info = { name: 'x' }
+  //   info: MCPServerInfo = { name: 'x' }   ← 类型注解在 info 与 { 之间
+  const m = content.match(/info\s*[:=][^;{]*\{[\s\S]*?name:\s*['"]([^'"]+)['"]/)
+  return m ? m[1] : null
+}
+
+/** 提取源码中所有 mcpServerName: '...' 及其行号 */
+function extractMcpServerNamesWithLine(content: string): Array<{ name: string; line: number }> {
+  const result: Array<{ name: string; line: number }> = []
+  const re = /mcpServerName:\s*['"]([^'"]+)['"]/g
+  let m: RegExpExecArray | null
+  while ((m = re.exec(content)) !== null) {
+    const line = content.slice(0, m.index).split('\n').length
+    result.push({ name: m[1], line })
+  }
+  return result
+}
+
+/** 收集所有「已启用」Server 的真实 info.name 集合 */
+function getRegisteredServerNames(): { names: Set<string>; warnings: Finding[] } {
+  const warnings: Finding[] = []
+  const names = new Set<string>()
+  const configPath = path.join(SRC, 'config', 'mcpServerRegistry.ts')
+  if (!fs.existsSync(configPath)) {
+    warnings.push({
+      file: 'src/config/mcpServerRegistry.ts',
+      line: 0, column: 0,
+      type: 'mcp-config-missing',
+      message: 'MCP Server 配置清单不存在',
+      context: '无法推导已注册 Server 集合',
+    })
+    return { names, warnings }
+  }
+
+  const content = fs.readFileSync(configPath, 'utf-8')
+  const entryRe = /name:\s*'([^']+)'[\s\S]*?modulePath:\s*'([^']+)'[\s\S]*?exportName:\s*'([^']+)'[\s\S]*?enabled:\s*(true|false)/g
+  let m: RegExpExecArray | null
+  while ((m = entryRe.exec(content)) !== null) {
+    const enabled = m[4] === 'true'
+    if (!enabled) continue
+    const modulePath = m[2]
+    const filePath = modulePath.replace(/^@\//, SRC + '/') + '.ts'
+    const infoName = extractServerInfoName(filePath)
+    if (infoName) {
+      names.add(infoName)
+    } else {
+      warnings.push({
+        file: path.relative(ROOT, filePath),
+        line: 0, column: 0,
+        type: 'mcp-server-info-name-unreadable',
+        message: `无法从 Server 模块提取 info.name：${modulePath}`,
+        context: '该 Server 的 Agent 绑定检查将被跳过；请检查 info 对象定义',
+      })
+    }
+  }
+  return { names, warnings }
+}
+
+function checkAgentServerBindings(): { violations: Finding[]; warnings: Finding[] } {
+  const violations: Finding[] = []
+  const { names: registered, warnings } = getRegisteredServerNames()
+
+  if (registered.size === 0) {
+    warnings.push({
+      file: 'src/config/mcpServerRegistry.ts',
+      line: 0, column: 0,
+      type: 'mcp-no-servers',
+      message: '未解析到任何已注册的 MCP Server',
+      context: 'Agent 绑定检查无意义，请先确认 Server 注册',
+    })
+    return { violations, warnings }
+  }
+
+  // 4a. 运行时 Agent（DEFAULT_AGENTS in src/agents/index.ts）
+  const agentsPath = path.join(SRC, 'agents', 'index.ts')
+  if (fs.existsSync(agentsPath)) {
+    const agentContent = fs.readFileSync(agentsPath, 'utf-8')
+    for (const { name, line } of extractMcpServerNamesWithLine(agentContent)) {
+      if (!registered.has(name)) {
+        violations.push({
+          file: 'src/agents/index.ts',
+          line, column: 1,
+          type: 'dangling-agent',
+          message: `运行时 Agent 引用的 MCP Server "${name}" 未注册（悬空 Agent）`,
+          context: `agent.mcpServerName="${name}" 无对应 server.info.name；运行时将 Server not found`,
+        })
+      }
+    }
+  }
+
+  // 4b. UI 组件注册表（agentComponentRegistry.ts）
+  const uiPath = path.join(SRC, 'agents', 'agentComponentRegistry.ts')
+  if (fs.existsSync(uiPath)) {
+    const uiContent = fs.readFileSync(uiPath, 'utf-8')
+    for (const { name, line } of extractMcpServerNamesWithLine(uiContent)) {
+      if (!registered.has(name)) {
+        violations.push({
+          file: 'src/agents/agentComponentRegistry.ts',
+          line, column: 1,
+          type: 'dangling-agent-ui',
+          message: `UI 组件注册表引用的 MCP Server "${name}" 未注册（UI 触发将找不到 Server）`,
+          context: `agentComponentRegistry mcpServerName="${name}" 与真实 server.info.name 不一致`,
+        })
+      }
+    }
+  }
+
+  return { violations, warnings }
+}
+
+// ============================================================
 // 主流程
 // ============================================================
 
@@ -248,6 +374,11 @@ function main(): void {
   const toolResult = checkToolCompleteness()
   report.violations.push(...toolResult.violations)
   report.warnings.push(...toolResult.warnings)
+
+  // 检查 Agent → MCP Server 绑定一致性（悬空 Agent 检测）
+  const bindingResult = checkAgentServerBindings()
+  report.violations.push(...bindingResult.violations)
+  report.warnings.push(...bindingResult.warnings)
 
   // 汇总
   report.summary.totalViolations = report.violations.length

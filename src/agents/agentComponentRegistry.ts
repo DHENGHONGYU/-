@@ -93,7 +93,7 @@ register({
   tags: ['screening', 'filter', 'system'],
   detailComponent: GenericAgentDetail,
   priority: 50,
-  mcpServerName: 'screening:main',
+  mcpServerName: 'screening',
   defaultToolName: 'run_screening',
 })
 
@@ -105,7 +105,7 @@ register({
   tags: ['stockpool', 'pool', 'system'],
   detailComponent: GenericAgentDetail,
   priority: 45,
-  mcpServerName: 'stockpool:main',
+  mcpServerName: 'stockpool',
   defaultToolName: 'list_pool_stocks',
 })
 
