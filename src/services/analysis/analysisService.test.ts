@@ -1,16 +1,27 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { listStocks, listV6Scores } from './analysisService'
-import { dataLayer } from '@/data/dataLayer'
 import type { Stock, V6Score } from '@/data/types'
 
 // ============================================================
-// Mock dataLayer
+// vi.hoisted DataBridge mocks
 // ============================================================
 
-vi.mock('@/data/dataLayer', () => ({
-  dataLayer: {
-    stocks: { list: vi.fn() },
-    v6Scores: { list: vi.fn() },
+const { mockStocksList, mockV6ScoresList } = vi.hoisted(() => ({
+  mockStocksList: vi.fn(),
+  mockV6ScoresList: vi.fn(),
+}))
+
+vi.mock('@/core/databridge', () => ({
+  dataBridge: {
+    query: vi.fn(async (request: { action: string; store: string }) => {
+      if (request.action === 'QUERY_LIST' && request.store === 'stocks') {
+        return { success: true, data: await mockStocksList() }
+      }
+      if (request.action === 'QUERY_LIST' && request.store === 'v6_scores') {
+        return { success: true, data: await mockV6ScoresList() }
+      }
+      return { success: false, error: `unmocked query: ${request.action}/${request.store}` }
+    }),
   },
 }))
 
@@ -63,18 +74,18 @@ describe('listStocks', () => {
   })
 
   test('成功返回数据', async () => {
-    vi.mocked(dataLayer.stocks.list).mockResolvedValue(mockStocks)
+    mockStocksList.mockResolvedValue(mockStocks)
 
     const result = await listStocks()
 
     expect(result.success).toBe(true)
     expect(result.data).toEqual(mockStocks)
     expect(result.error).toBeUndefined()
-    expect(dataLayer.stocks.list).toHaveBeenCalledTimes(1)
+    expect(mockStocksList).toHaveBeenCalledTimes(1)
   })
 
   test('dataLayer 返回空数组', async () => {
-    vi.mocked(dataLayer.stocks.list).mockResolvedValue([])
+    mockStocksList.mockResolvedValue([])
 
     const result = await listStocks()
 
@@ -85,7 +96,7 @@ describe('listStocks', () => {
 
   test('dataLayer 抛异常，返回 { success: false, error }', async () => {
     const errorMessage = '数据库连接失败'
-    vi.mocked(dataLayer.stocks.list).mockRejectedValue(new Error(errorMessage))
+    mockStocksList.mockRejectedValue(new Error(errorMessage))
 
     const result = await listStocks()
 
@@ -95,7 +106,7 @@ describe('listStocks', () => {
   })
 
   test('dataLayer 返回非 Error 对象，正确转换为字符串', async () => {
-    vi.mocked(dataLayer.stocks.list).mockRejectedValue('字符串错误')
+    mockStocksList.mockRejectedValue('字符串错误')
 
     const result = await listStocks()
 
@@ -114,18 +125,18 @@ describe('listV6Scores', () => {
   })
 
   test('成功返回数据', async () => {
-    vi.mocked(dataLayer.v6Scores.list).mockResolvedValue(mockV6Scores)
+    mockV6ScoresList.mockResolvedValue(mockV6Scores)
 
     const result = await listV6Scores()
 
     expect(result.success).toBe(true)
     expect(result.data).toEqual(mockV6Scores)
     expect(result.error).toBeUndefined()
-    expect(dataLayer.v6Scores.list).toHaveBeenCalledTimes(1)
+    expect(mockV6ScoresList).toHaveBeenCalledTimes(1)
   })
 
   test('dataLayer 返回空数组', async () => {
-    vi.mocked(dataLayer.v6Scores.list).mockResolvedValue([])
+    mockV6ScoresList.mockResolvedValue([])
 
     const result = await listV6Scores()
 
@@ -136,7 +147,7 @@ describe('listV6Scores', () => {
 
   test('dataLayer 抛异常', async () => {
     const errorMessage = 'V6评分数据获取失败'
-    vi.mocked(dataLayer.v6Scores.list).mockRejectedValue(new Error(errorMessage))
+    mockV6ScoresList.mockRejectedValue(new Error(errorMessage))
 
     const result = await listV6Scores()
 
@@ -147,7 +158,7 @@ describe('listV6Scores', () => {
 
   test('错误信息正确传递', async () => {
     const customError = new Error('自定义错误信息')
-    vi.mocked(dataLayer.v6Scores.list).mockRejectedValue(customError)
+    mockV6ScoresList.mockRejectedValue(customError)
 
     const result = await listV6Scores()
 

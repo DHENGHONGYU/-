@@ -38,56 +38,69 @@ import {
 } from '@/services/scoring/v6-engine/config'
 
 // ============================================================
-// vi.hoisted Mock:隔离 dataLayer 与 logger,被测模块使用真实实现
+// vi.hoisted Mock:隔离 dataBridge 与 logger,被测模块使用真实实现
 // ============================================================
 
-const { mockScoreDocsStore, mockLogger } = vi.hoisted(() => ({
-  mockScoreDocsStore: {
-    save: vi.fn(),
-    listBySymbol: vi.fn(),
-    list: vi.fn(),
-  },
-  mockLogger: {
-    info: vi.fn(),
-    warn: vi.fn(),
-    error: vi.fn(),
-    debug: vi.fn(),
-  },
-}))
+const { memoryStore, mockLogger } = vi.hoisted(() => {
+  class InMemoryScoreDocStore {
+    private docs: Map<string, ScoreDocVersion> = new Map()
 
-vi.mock('@/data/dataLayer', () => ({
-  dataLayer: { scoreDocs: mockScoreDocsStore },
-}))
+    reset(): void {
+      this.docs.clear()
+    }
+
+    async save(doc: ScoreDocVersion): Promise<{ success: true }> {
+      this.docs.set(doc.docId, doc)
+      return { success: true }
+    }
+
+    async listBySymbol(symbol: string): Promise<ScoreDocVersion[]> {
+      return Array.from(this.docs.values())
+        .filter((d) => d.symbol === symbol)
+        .sort((a, b) => a.version - b.version)
+    }
+
+    async list(): Promise<ScoreDocVersion[]> {
+      return Array.from(this.docs.values())
+    }
+  }
+
+  return {
+    memoryStore: new InMemoryScoreDocStore(),
+    mockLogger: {
+      info: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
+      debug: vi.fn(),
+    },
+  }
+})
 vi.mock('@/lib/logger', () => ({ getLogger: () => mockLogger }))
 
-// ============================================================
-// 内存存储:模拟 IndexedDB scoreDocs store 行为
-// ============================================================
-
-class InMemoryScoreDocStore {
-  private docs: Map<string, ScoreDocVersion> = new Map()
-
-  reset(): void {
-    this.docs.clear()
-  }
-
-  async save(doc: ScoreDocVersion): Promise<{ success: true }> {
-    this.docs.set(doc.docId, doc)
-    return { success: true }
-  }
-
-  async listBySymbol(symbol: string): Promise<ScoreDocVersion[]> {
-    return Array.from(this.docs.values())
-      .filter((d) => d.symbol === symbol)
-      .sort((a, b) => a.version - b.version)
-  }
-
-  async list(): Promise<ScoreDocVersion[]> {
-    return Array.from(this.docs.values())
-  }
-}
-
-const memoryStore = new InMemoryScoreDocStore()
+// P4 后 scoreDocService 统一走 DataBridge。
+// 查询走 DataBridge.query,保存走 DataBridge.forward(SAVE_SCORE_DOCS)。
+vi.mock('@/core/databridge', () => ({
+  dataBridge: {
+    query: vi.fn(async (request: { action: string; store: string; indexName?: string; indexValue?: unknown }) => {
+      if (request.store === 'score_docs') {
+        if (request.action === 'QUERY_BY_INDEX' && request.indexName === 'by-symbol') {
+          return { success: true, data: await memoryStore.listBySymbol(request.indexValue as string) }
+        }
+        if (request.action === 'QUERY_LIST') {
+          return { success: true, data: await memoryStore.list() }
+        }
+      }
+      return { success: false, error: `unmocked query: ${request.action}/${request.store}` }
+    }),
+    forward: vi.fn(async (envelope: { meta: { action: string }; payload: ScoreDocVersion }) => {
+      if (envelope.meta.action === 'SAVE_SCORE_DOCS') {
+        await memoryStore.save(envelope.payload)
+        return
+      }
+      throw new Error(`unmocked forward: ${envelope.meta.action}`)
+    }),
+  },
+}))
 
 // ============================================================
 // 测试样本:5 只随机抽样股票(与前序 walkthroughTest 一致)
@@ -198,9 +211,6 @@ const walkthroughResults: StepResult[] = []
 describe('评分拍照比对穿行测试 — 5 只随机抽样股票', () => {
   beforeEach(() => {
     memoryStore.reset()
-    mockScoreDocsStore.save.mockImplementation((doc: ScoreDocVersion) => memoryStore.save(doc))
-    mockScoreDocsStore.listBySymbol.mockImplementation((symbol: string) => memoryStore.listBySymbol(symbol))
-    mockScoreDocsStore.list.mockImplementation(() => memoryStore.list())
     vi.clearAllMocks()
   })
 
