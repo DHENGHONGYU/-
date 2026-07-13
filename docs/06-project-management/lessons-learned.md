@@ -2,7 +2,7 @@
 
 > **版本**: v1.0.0 | **生成日期**: 2026-07-13 | **来源**: 12 份审计报告 + 3 份历史教训文件 + 本次对话关键决策
 > **覆盖范围**: MCP Server 治理、Agent 运行时、代码质量、UI 路由、类型系统、数据层、文档管理、测试策略、调试方法论、SKILL 与代码差距
-> **统计**: 共 **33 条**结构化教训（P0: 9 条 | P1: 18 条 | P2: 6 条）
+> **统计**: 共 **36 条**结构化教训（P0: 9 条 | P1: 20 条 | P2: 7 条）
 
 ---
 
@@ -411,9 +411,9 @@
 
 | 严重级 | 数量 | 占比 | 核心特征 |
 |-------|------|------|---------|
-| 🔴 P0 | 9 | 28.1% | 系统阻断性、数据丢失、进程崩溃、功能名不副实 |
-| 🟡 P1 | 17 | 53.1% | 架构决策、类型安全、文档断层、调试效率、分层合规、数据层引用一致性 |
-| 🟡 P2 | 6 | 18.8% | 可维护性、状态管理、知识噪音、方法论差距 |
+| 🔴 P0 | 9 | 25.0% | 系统阻断性、数据丢失、进程崩溃、功能名不副实 |
+| 🟡 P1 | 20 | 55.6% | 架构决策、类型安全、文档断层、调试效率、分层合规、数据层引用一致性、MCP ACL 契约 |
+| 🟡 P2 | 7 | 19.4% | 可维护性、状态管理、知识噪音、方法论差距、门禁噪音隔离 |
 
 **P0 教训聚焦三大根因**：
 1. **配置与文件不同步**（MCP Server 6 个缺失）
@@ -500,4 +500,43 @@
   3. 避免在 services 层直接 `import { db }` 或调用 `db.put`；若需要生成 ID，优先使用 `nanoid` 或从 `data/db` 导入纯工具函数 `generateId`/`now`，不依赖 db 连接。
   4. 迁移后必须运行 `audit:db-references` 确认 0 warning，再跑相关 vitest 回归。
 - **严重级**: 🟡 P1
+
+### 教训 34：MCP ACL 矩阵变更必须与测试契约同步
+
+- **What**：P5 修复 `mcpAclMatrix.ts` 的 `ui` 角色时，仅把 `trade`/`input`/`export` 加入 `allowedServers` 并把查询/导出工具加入 `allowedTools`，但 `mcpAclInterceptor.test.ts` 中仍有"ui 禁止访问 trade/input/export Server"的旧断言，导致 6 个用例失败。
+- **Why**：权限矩阵与测试契约分属两个文件，开发者容易只改矩阵不改测试；而 MCP ACL 是阻断性门禁，测试失败会卡死 Husky 预提交。
+- **Where**：`src/config/mcpAclMatrix.ts` + `src/mcp/__tests__/mcpAclInterceptor.test.ts` + `tests/__tests__/integration/mcp-acl-scenarios.integration.test.ts`。
+- **When**：2026-07-13 P5 UI 层 ACL 显式授权执行时发现。
+- **Who**：权限配置开发者 + 测试维护者。
+- **How**：
+  1. 任何 `MCP_ACL_MATRIX` 变更必须同步检查两处分支：allowedServers 变更影响 server 级拒绝测试；allowedTools 变更影响 tool 级拒绝测试。
+  2. 对读写混合的 Server，优先用"加入 allowedServers + 不加入写工具"实现工具级拒绝，确保测试断言 `reason` 包含 `not allowed to call tool`。
+  3. 新增 SKILL `.agents/skills/mcp-ui-acl-authorization/SKILL.md` 固化 SOP。
+- **严重级**: 🟡 P1
+
+### 教训 35：Server 下线后 ACL 矩阵可保留兼容授权
+
+- **What**：`trade`/`input`/`export` 三个 MCP Server 的包装层已在 P0 清理中移除（功能合并至 `trading:main` / `fetcher:data` / `backtestExportService`），但 `mcpAclInterceptor.test.ts` 的测试契约仍期望 `ui` 角色能访问这些旧 Server 的查询 Tool。
+- **Why**：Server 注册表与 ACL 矩阵的变更节奏不同：registry 随 P0 清理立即移除，但测试契约、历史 Agent 配置、UI 调用点可能仍有引用；强行同步删除会导致大面积契约断裂。
+- **Where**：`src/config/mcpServerRegistry.ts`（无此 Server） vs `src/config/mcpAclMatrix.ts`（保留兼容授权）。
+- **When**：2026-07-13 P5 执行时发现并决策。
+- **Who**：MCP 治理负责人 + 架构组。
+- **How**：
+  1. ACL 矩阵对 `ui`/`agent` 等角色可保留已下线 Server 的兼容授权条目，但必须在注释中声明"Server 已不存在于 registry，仅 ACL 保留"。
+  2. 定期进行 `audit:mcp` 检查悬空 Agent（Agent.mcpServerName 无对应 registry Server），避免运行时 `Server not found`。
+  3. 若未来决定彻底删除 ACL 兼容条目，必须先移除所有测试/配置引用，并走技术评审。
+- **严重级**: 🟡 P1
+
+### 教训 36：提交前应隔离无关工作树的门禁噪音
+
+- **What**：P4/P5 提交在 Husky 预提交中因 `audit:complexity` 失败——当前 24 处、基线 22 处，超基线 2 处。但新增复杂度全部来自仓库中其他未提交改动（`mechanismMonitorService.ts`、`indexedDBProvider.ts`、`localDocService.ts` 嵌套），与本次 P4/P5 提交无关。
+- **Why**：Husky 预提交门禁扫描整个工作树（含未跟踪/未暂存文件），而非仅 staged 文件；当仓库中存在多个并行任务遗留改动时，一个任务的提交会被其他任务的债务阻断。
+- **Where**：Husky pre-commit → `audit:complexity`；`src/services/system/mechanismMonitorService.ts`、`src/services/storage/indexedDBProvider.ts`、`src/services/system/localDocService.ts`。
+- **When**：2026-07-13 P4/P5 提交时连续两次被 complexity-scan 拦截。
+- **Who**：提交者 + 门禁设计者。
+- **How**：
+  1. 提交前先用 `git status` 确认工作树中是否存在无关改动；若存在，优先单独处理或 stash。
+  2. 若确认失败由无关改动引起且本次提交无法修复，可记录原因后使用 `git commit --no-verify`，但必须在提交信息中说明。
+  3. 长期改进：complexity-scan 等门禁可支持 `--staged-only` 模式，仅扫描暂存文件。
+- **严重级**: 🟡 P2
 
