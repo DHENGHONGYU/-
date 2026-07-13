@@ -265,8 +265,8 @@ describe('strategySnapshotService', () => {
       expect(list.success).toBe(true)
       expect(list.data).toHaveLength(2)
 
-      const first = list.data![0]
-      const second = list.data![1]
+      const first = list.data![0]!
+      const second = list.data![1]!
       expect(first.timestamp).toBeGreaterThan(second.timestamp)
 
       const limited = await listSnapshots(1)

@@ -250,7 +250,7 @@ export async function migrateLegacyPoolStorage(): Promise<void> {
 | `screener_pool` | 已删除 |
 | `v6_paper_trading` | 已删除 |
 | `localStorage.watchlist` | 已删除 |
-| 从 `@/config/dbConfig` 导入 `RESEARCH_STATUS` / `ResearchStatus` / `DEFAULT_POOL_GROUP` | 待清理 |
+| 从 `@/config/dbConfig` 导入 `RESEARCH_STATUS` / `ResearchStatus` / `DEFAULT_POOL_GROUP` | 已清理（20+ 文件迁移到 `@/constants/stockpool.constants`） |
 
 ### 5.2 重复定义清理
 
@@ -279,3 +279,4 @@ npx tsc --noEmit
 - [V9 AGENTS.md](../../AGENTS.md) — 分层规则
 - [Glossary](../02-design/10-glossary.md) — 废弃命名映射表
 - [Gateway 写入权限规范](./gateway-write-permission-spec.md) — 写入收口规范
+- [核心数据策略报告](../02-design/core-data-strategy-report.md) — 数据架构、数据库定义、传递协议与蓝图校对

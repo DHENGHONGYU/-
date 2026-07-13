@@ -4,16 +4,21 @@
  *
  * 职责：
  * - 为 `useCustomAgentStore` 提供 CRUD 接口，避免 Store 直接依赖 `data/` 层。
- * - 内部通过 `dataLayer.customAgents` 访问 IndexedDB（服务层允许依赖 data/）。
+ * - 写操作通过 DataBridge.forward() 走信封协议（服务层允许依赖 data/ 读操作）。
  *
  * @compliance
  * - Store 层仅依赖 services/ 与 core/，不再直接引入 @/data/dataLayer。
  * @see src/store/customAgentStore.ts
  */
-import { dataLayer } from '@/data/dataLayer'
+import { STORE_NAME } from '@/config/dbConfig'
 import type { CustomAgent, CustomAgentType } from '@/data/types'
 import type { DataLayerResult } from '@/data/types'
+import { queryGet, queryList, queryByIndex } from '@/data/dataLayerHelpers'
+import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID } from '@/config/dbConfig'
+import { dataBridge } from '@/core/databridge'
+import { EnvelopeFactory } from '@/core/envelope'
 import { getLogger } from '@/lib/logger'
+import { nanoid } from 'nanoid'
 
 const logger = getLogger()
 
@@ -22,7 +27,7 @@ const logger = getLogger()
  */
 export async function loadCustomAgents(): Promise<CustomAgent[]> {
   try {
-    const list = await dataLayer.customAgents.list()
+    const list = await queryList<CustomAgent>(STORE_NAME.customAgents)
     logger.info('[customAgentService] loadCustomAgents 成功', { count: list.length })
     return list
   } catch (err) {
@@ -37,7 +42,7 @@ export async function loadCustomAgents(): Promise<CustomAgent[]> {
  */
 export async function loadCustomAgentsByType(type: CustomAgentType): Promise<CustomAgent[]> {
   try {
-    const list = await dataLayer.customAgents.listByType(type)
+    const list = await queryByIndex<CustomAgent>(STORE_NAME.customAgents, 'by-type', type)
     logger.info('[customAgentService] loadCustomAgentsByType 成功', { type, count: list.length })
     return list
   } catch (err) {
@@ -52,7 +57,7 @@ export async function loadCustomAgentsByType(type: CustomAgentType): Promise<Cus
  */
 export async function getCustomAgent(id: string): Promise<CustomAgent | undefined> {
   try {
-    const agent = await dataLayer.customAgents.get(id)
+    const agent = await queryGet<CustomAgent>(STORE_NAME.customAgents, id)
     logger.info('[customAgentService] getCustomAgent', { id, found: agent != null })
     return agent
   } catch (err) {
@@ -69,13 +74,18 @@ export async function saveCustomAgent(
   agent: Omit<CustomAgent, 'createdAt' | 'updatedAt'> & { createdAt?: number },
 ): Promise<DataLayerResult<CustomAgent>> {
   try {
-    const result = await dataLayer.customAgents.save(agent)
-    if (!result.success) {
-      logger.error('[customAgentService] saveCustomAgent 失败', { id: agent.id, error: result.error })
-      return result
-    }
+    const envelope = EnvelopeFactory.create(
+      {
+        source: MODULE_ID.user,
+        target: ENVELOPE_TARGET.db,
+        action: ENVELOPE_ACTION.saveCustomAgent,
+        traceId: `custom-agent-${nanoid(8)}-${agent.id}`,
+      },
+      agent,
+    )
+    await dataBridge.forward(envelope)
     logger.info('[customAgentService] saveCustomAgent 成功', { id: agent.id })
-    return result
+    return { success: true, data: agent as CustomAgent }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     logger.error('[customAgentService] saveCustomAgent 异常', { id: agent.id, error: message })
@@ -88,13 +98,18 @@ export async function saveCustomAgent(
  */
 export async function deleteCustomAgent(id: string): Promise<DataLayerResult<void>> {
   try {
-    const result = await dataLayer.customAgents.remove(id)
-    if (!result.success) {
-      logger.error('[customAgentService] deleteCustomAgent 失败', { id, error: result.error })
-      return result
-    }
+    const envelope = EnvelopeFactory.create(
+      {
+        source: MODULE_ID.user,
+        target: ENVELOPE_TARGET.db,
+        action: ENVELOPE_ACTION.deleteCustomAgent,
+        traceId: `custom-agent-del-${nanoid(8)}-${id}`,
+      },
+      { id },
+    )
+    await dataBridge.forward(envelope)
     logger.info('[customAgentService] deleteCustomAgent 成功', { id })
-    return result
+    return { success: true }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     logger.error('[customAgentService] deleteCustomAgent 异常', { id, error: message })
