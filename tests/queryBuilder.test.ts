@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { QueryBuilder, type QueryBuilderResult } from '@/data/queryBuilder'
 
-// --- Mock dataLayer ---
+// --- Mock dataBridge ---
 const mockStocksGet = vi.fn().mockImplementation(async (symbol: string) => ({
   symbol,
   name: symbol === '000001.SZ' ? '平安银行' : symbol === '600036.SH' ? '招商银行' : 'Unknown',
@@ -75,32 +75,36 @@ const mockNewsGet = vi.fn().mockImplementation(async (id: string) => ({
   hash: 'abc123',
 }))
 
-vi.mock('@/data/dataLayer', () => ({
-  dataLayer: {
-    stocks: {
-      get: (...args: unknown[]) => mockStocksGet(...args),
-    },
-    dailyQuotes: {
-      get: (...args: unknown[]) => mockDailyQuotesGet(...args),
-    },
-    v6Scores: {
-      get: (...args: unknown[]) => mockV6ScoresGet(...args),
-    },
-    intelligentScores: {
-      getLatestBySymbol: (...args: unknown[]) => mockIntelligentScoresGetLatest(...args),
-    },
-    industryScores: {
-      getLatestByCode: (...args: unknown[]) => mockIndustryScoresGetLatest(...args),
-    },
-    signals: {
-      listBySymbol: (...args: unknown[]) => mockSignalsListBySymbol(...args),
-    },
-    newsStockMap: {
-      listBySymbol: (...args: unknown[]) => mockNewsStockMapListBySymbol(...args),
-    },
-    news: {
-      get: (...args: unknown[]) => mockNewsGet(...args),
-    },
+// P4 后 queryBuilder 统一走 DataBridge.query，按 action/store 路由到原 mock 函数。
+vi.mock('@/core/databridge', () => ({
+  dataBridge: {
+    query: vi.fn(async (request: { action: string; store: string; key?: string; indexName?: string; indexValue?: unknown }) => {
+      if (request.action === 'QUERY_GET' && request.store === 'stocks') {
+        return { success: true, data: await mockStocksGet(request.key) }
+      }
+      if (request.action === 'QUERY_GET' && request.store === 'daily_quotes') {
+        return { success: true, data: await mockDailyQuotesGet(request.key) }
+      }
+      if (request.action === 'QUERY_GET' && request.store === 'v6_scores') {
+        return { success: true, data: await mockV6ScoresGet(request.key) }
+      }
+      if (request.action === 'QUERY_BY_INDEX' && request.store === 'intelligent_scores' && request.indexName === 'by-symbol') {
+        return { success: true, data: [await mockIntelligentScoresGetLatest(request.indexValue)] }
+      }
+      if (request.action === 'QUERY_BY_INDEX' && request.store === 'industry_scores' && request.indexName === 'by-code') {
+        return { success: true, data: [await mockIndustryScoresGetLatest(request.indexValue)] }
+      }
+      if (request.action === 'QUERY_BY_INDEX' && request.store === 'signals' && request.indexName === 'by-symbol') {
+        return { success: true, data: await mockSignalsListBySymbol(request.indexValue) }
+      }
+      if (request.action === 'QUERY_BY_INDEX' && request.store === 'news_stock_map' && request.indexName === 'by-symbol') {
+        return { success: true, data: await mockNewsStockMapListBySymbol(request.indexValue) }
+      }
+      if (request.action === 'QUERY_GET' && request.store === 'news') {
+        return { success: true, data: await mockNewsGet(request.key) }
+      }
+      return { success: false, error: `unmocked query: ${request.action}/${request.store}` }
+    }),
   },
 }))
 

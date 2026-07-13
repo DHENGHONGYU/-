@@ -10,20 +10,11 @@ import * as hotSectorService from '@/services/input/hotSectorService'
 import * as stockpoolService from '@/services/stockpool/stockpoolService'
 import type { Stock } from '@/data/types'
 import { UI_TEXT } from '@/constants/uiText'
-import { dataLayer } from '@/data/dataLayer'
 import { db } from '@/data/db'
 import { dataBridge } from '@/core/databridge'
 
-// InputDashboard 通过 usePoolStore -> dataLayer.stocks.list() 加载股票池，
-// 而非直接调用 stockpoolService.getAllPoolGroups。需 mock dataLayer 数据源。
-vi.mock('@/data/dataLayer', () => ({
-  dataLayer: {
-    stocks: {
-      list: vi.fn(),
-    },
-  },
-}))
-
+// InputDashboard 通过 usePoolStore -> dataBridge.query() 加载股票池。
+// P4 后 poolStore 统一走 DataBridge，mock dataBridge.query 提供股票池数据源。
 vi.mock('@/hooks/useToast', () => ({
   useToast: () => ({ toast: vi.fn(), toasts: [], dismiss: vi.fn() }),
 }))
@@ -72,6 +63,7 @@ const mockHotSector = {
 
 describe('InputApp', () => {
   beforeEach(() => {
+    // 股票池数据源：poolStore.refresh() -> dataBridge.query({ action: 'QUERY_LIST', store: 'stocks' })
     vi.spyOn(dataBridge, 'query').mockResolvedValue({
       success: true,
       data: [mockStock, mockStockMissingBasic],
@@ -80,8 +72,6 @@ describe('InputApp', () => {
       success: true,
       data: mockPoolGroups as never,
     })
-    // 股票池数据源：poolStore.refresh() -> dataLayer.stocks.list()
-    vi.mocked(dataLayer.stocks.list).mockResolvedValue([mockStock, mockStockMissingBasic] as never)
     // db.init() 在测试环境不会调用，导致 db.ready() 的 _readyPromise 永不 resolve，
     // 进而 poolStore.refresh() 卡死。mock db.isReady/ready 绕过数据库初始化。
     vi.spyOn(db, 'isReady').mockReturnValue(true)

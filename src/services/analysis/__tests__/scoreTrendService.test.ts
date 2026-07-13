@@ -2,6 +2,9 @@
  * scoreTrendService 单元测试
  *
  * 覆盖：周期标签格式化、周期聚合、行业/个股趋势加载、空数据与 null 分数处理
+ *
+ * P4 重构后，行业/个股评分趋势查询统一走 DataBridge.queryByIndex，
+ * 本测试改为 mock @/core/databridge。
  */
 
 import { describe, test, expect, vi, beforeEach } from 'vitest'
@@ -11,7 +14,6 @@ import {
   loadIndustryScoreTrend,
   loadStockScoreTrend,
 } from '../scoreTrendService'
-import { dataLayer } from '@/data/dataLayer'
 import type { IndustryScore, IntelligentScore } from '@/data/types'
 
 vi.mock('@/lib/logger', () => ({
@@ -23,10 +25,39 @@ vi.mock('@/lib/logger', () => ({
   }),
 }))
 
-vi.mock('@/data/dataLayer', () => ({
-  dataLayer: {
-    industryScores: { listByCode: vi.fn() },
-    intelligentScores: { listBySymbol: vi.fn() },
+const { mockIndustryScoresByCode, mockIntelligentScoresBySymbol } = vi.hoisted(() => ({
+  mockIndustryScoresByCode: vi.fn(),
+  mockIntelligentScoresBySymbol: vi.fn(),
+}))
+
+vi.mock('@/core/databridge', () => ({
+  dataBridge: {
+    query: vi.fn(async (request: {
+      action: string
+      store: string
+      indexName?: string
+      indexValue?: unknown
+    }) => {
+      const { action, store, indexName, indexValue } = request
+
+      if (
+        action === 'QUERY_BY_INDEX' &&
+        store === 'industry_scores' &&
+        indexName === 'by-code'
+      ) {
+        return { success: true, data: await mockIndustryScoresByCode(indexValue) }
+      }
+
+      if (
+        action === 'QUERY_BY_INDEX' &&
+        store === 'intelligent_scores' &&
+        indexName === 'by-symbol'
+      ) {
+        return { success: true, data: await mockIntelligentScoresBySymbol(indexValue) }
+      }
+
+      return { success: false, error: `unmocked query: ${action}/${store}` }
+    }),
   },
 }))
 
@@ -145,7 +176,7 @@ describe('loadIndustryScoreTrend', () => {
 
   test('成功加载行业评分趋势', async () => {
     const scoredAt = new Date('2026-07-02T10:00:00.000+08:00').getTime()
-    vi.mocked(dataLayer.industryScores.listByCode).mockResolvedValue([
+    mockIndustryScoresByCode.mockResolvedValue([
       createIndustryScore({ code: 'AI', overallScore: 4, scoredAt }),
     ])
 
@@ -161,7 +192,7 @@ describe('loadIndustryScoreTrend', () => {
   })
 
   test('失败返回 error', async () => {
-    vi.mocked(dataLayer.industryScores.listByCode).mockRejectedValue(new Error('DB error'))
+    mockIndustryScoresByCode.mockRejectedValue(new Error('DB error'))
 
     const result = await loadIndustryScoreTrend('AI', 'week')
 
@@ -179,7 +210,7 @@ describe('loadStockScoreTrend', () => {
 
   test('成功加载个股评分趋势并聚合维度', async () => {
     const scoredAt = new Date('2026-07-02T10:00:00.000+08:00').getTime()
-    vi.mocked(dataLayer.intelligentScores.listBySymbol).mockResolvedValue([
+    mockIntelligentScoresBySymbol.mockResolvedValue([
       createIntelligentScore({ symbol: '600519.SH', overallScore: 4, scoredAt }),
     ])
 

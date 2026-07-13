@@ -12,6 +12,8 @@
  * - getUnifiedStockViewsByStatus 按状态筛选
  * - getScoreView 评分专用视图
  * - getTradingView 交易专用视图
+ *
+ * P4 重构后，生产代码统一走 DataBridge，本测试改为 mock @/core/databridge。
  */
 
 import { describe, test, expect, vi, beforeEach } from 'vitest'
@@ -22,7 +24,6 @@ import {
   getScoreView,
   getTradingView,
 } from './unifiedStockService'
-import { dataLayer } from '@/data/dataLayer'
 import type {
   Stock,
   DailyQuotes,
@@ -34,33 +35,67 @@ import type {
 } from '@/data/types'
 
 // ============================================================
-// Mock dataLayer
+// vi.hoisted DataBridge mocks
 // ============================================================
 
-vi.mock('@/data/dataLayer', () => ({
-  dataLayer: {
-    stocks: {
-      get: vi.fn(),
-      list: vi.fn(),
-    },
-    dailyQuotes: {
-      get: vi.fn(),
-    },
-    v6Scores: {
-      get: vi.fn(),
-    },
-    intelligentScores: {
-      getLatestBySymbol: vi.fn(),
-    },
-    industryScores: {
-      listByCode: vi.fn(),
-    },
-    rotationScores: {
-      list: vi.fn(),
-    },
-    signals: {
-      listBySymbol: vi.fn(),
-    },
+const {
+  mockStocksGet,
+  mockStocksList,
+  mockDailyQuotesGet,
+  mockV6ScoresGet,
+  mockIntelligentScoresBySymbol,
+  mockIndustryScoresByCode,
+  mockRotationScoresList,
+  mockSignalsList,
+} = vi.hoisted(() => ({
+  mockStocksGet: vi.fn(),
+  mockStocksList: vi.fn(),
+  mockDailyQuotesGet: vi.fn(),
+  mockV6ScoresGet: vi.fn(),
+  mockIntelligentScoresBySymbol: vi.fn(),
+  mockIndustryScoresByCode: vi.fn(),
+  mockRotationScoresList: vi.fn(),
+  mockSignalsList: vi.fn(),
+}))
+
+vi.mock('@/core/databridge', () => ({
+  dataBridge: {
+    query: vi.fn(async (request: {
+      action: string
+      store: string
+      key?: string
+      indexName?: string
+      indexValue?: unknown
+    }) => {
+      const { action, store, key, indexName, indexValue } = request
+
+      if (action === 'QUERY_GET' && store === 'stocks') {
+        return { success: true, data: await mockStocksGet(key) }
+      }
+      if (action === 'QUERY_GET' && store === 'daily_quotes') {
+        return { success: true, data: await mockDailyQuotesGet(key) }
+      }
+      if (action === 'QUERY_GET' && store === 'v6_scores') {
+        return { success: true, data: await mockV6ScoresGet(key) }
+      }
+      if (action === 'QUERY_BY_INDEX' && store === 'intelligent_scores' && indexName === 'by-symbol') {
+        return { success: true, data: await mockIntelligentScoresBySymbol(indexValue) }
+      }
+      if (action === 'QUERY_BY_INDEX' && store === 'industry_scores' && indexName === 'by-code') {
+        return { success: true, data: await mockIndustryScoresByCode(indexValue) }
+      }
+      if (action === 'QUERY_LIST' && store === 'rotation_scores') {
+        return { success: true, data: await mockRotationScoresList() }
+      }
+      if (action === 'QUERY_LIST' && store === 'signals') {
+        return { success: true, data: await mockSignalsList() }
+      }
+      if (action === 'QUERY_LIST' && store === 'stocks') {
+        return { success: true, data: await mockStocksList() }
+      }
+
+      return { success: false, error: `unmocked query: ${action}/${store}` }
+    }),
   },
 }))
 
@@ -200,7 +235,7 @@ describe('getUnifiedStockView', () => {
   })
 
   test('stock 不存在时返回失败', async () => {
-    vi.mocked(dataLayer.stocks.get).mockResolvedValue(undefined)
+    mockStocksGet.mockResolvedValue(undefined)
 
     const result = await getUnifiedStockView('000001.SZ')
 
@@ -209,9 +244,9 @@ describe('getUnifiedStockView', () => {
   })
 
   test('默认选项仅加载 stock + quotes + v6Score', async () => {
-    vi.mocked(dataLayer.stocks.get).mockResolvedValue(makeStock())
-    vi.mocked(dataLayer.dailyQuotes.get).mockResolvedValue(makeQuotes())
-    vi.mocked(dataLayer.v6Scores.get).mockResolvedValue(makeV6Score())
+    mockStocksGet.mockResolvedValue(makeStock())
+    mockDailyQuotesGet.mockResolvedValue(makeQuotes())
+    mockV6ScoresGet.mockResolvedValue(makeV6Score())
 
     const result = await getUnifiedStockView('600519.SH')
 
@@ -228,9 +263,9 @@ describe('getUnifiedStockView', () => {
   })
 
   test('quotes 缺失时记录到 missing 列表', async () => {
-    vi.mocked(dataLayer.stocks.get).mockResolvedValue(makeStock())
-    vi.mocked(dataLayer.dailyQuotes.get).mockResolvedValue(undefined)
-    vi.mocked(dataLayer.v6Scores.get).mockResolvedValue(makeV6Score())
+    mockStocksGet.mockResolvedValue(makeStock())
+    mockDailyQuotesGet.mockResolvedValue(undefined)
+    mockV6ScoresGet.mockResolvedValue(makeV6Score())
 
     const result = await getUnifiedStockView('600519.SH')
 
@@ -240,9 +275,9 @@ describe('getUnifiedStockView', () => {
   })
 
   test('v6Score 缺失时记录到 missing 列表', async () => {
-    vi.mocked(dataLayer.stocks.get).mockResolvedValue(makeStock())
-    vi.mocked(dataLayer.dailyQuotes.get).mockResolvedValue(makeQuotes())
-    vi.mocked(dataLayer.v6Scores.get).mockResolvedValue(undefined)
+    mockStocksGet.mockResolvedValue(makeStock())
+    mockDailyQuotesGet.mockResolvedValue(makeQuotes())
+    mockV6ScoresGet.mockResolvedValue(undefined)
 
     const result = await getUnifiedStockView('600519.SH')
 
@@ -252,13 +287,13 @@ describe('getUnifiedStockView', () => {
   })
 
   test('全量数据源融合（开启所有选项）', async () => {
-    vi.mocked(dataLayer.stocks.get).mockResolvedValue(makeStock())
-    vi.mocked(dataLayer.dailyQuotes.get).mockResolvedValue(makeQuotes())
-    vi.mocked(dataLayer.v6Scores.get).mockResolvedValue(makeV6Score())
-    vi.mocked(dataLayer.intelligentScores.getLatestBySymbol).mockResolvedValue(makeIntelligentScore())
-    vi.mocked(dataLayer.industryScores.listByCode).mockResolvedValue([makeIndustryScore()])
-    vi.mocked(dataLayer.rotationScores.list).mockResolvedValue([makeRotationScore()])
-    vi.mocked(dataLayer.signals.listBySymbol).mockResolvedValue([makeSignal()])
+    mockStocksGet.mockResolvedValue(makeStock())
+    mockDailyQuotesGet.mockResolvedValue(makeQuotes())
+    mockV6ScoresGet.mockResolvedValue(makeV6Score())
+    mockIntelligentScoresBySymbol.mockResolvedValue([makeIntelligentScore()])
+    mockIndustryScoresByCode.mockResolvedValue([makeIndustryScore()])
+    mockRotationScoresList.mockResolvedValue([makeRotationScore()])
+    mockSignalsList.mockResolvedValue([makeSignal()])
 
     const result = await getUnifiedStockView('600519.SH', {
       includeQuotes: true,
@@ -285,8 +320,8 @@ describe('getUnifiedStockView', () => {
   })
 
   test('intelligentScore 缺失时记录到 missing', async () => {
-    vi.mocked(dataLayer.stocks.get).mockResolvedValue(makeStock())
-    vi.mocked(dataLayer.intelligentScores.getLatestBySymbol).mockResolvedValue(undefined)
+    mockStocksGet.mockResolvedValue(makeStock())
+    mockIntelligentScoresBySymbol.mockResolvedValue([])
 
     const result = await getUnifiedStockView('600519.SH', {
       includeQuotes: false,
@@ -299,8 +334,8 @@ describe('getUnifiedStockView', () => {
   })
 
   test('industryScore 缺失时记录到 missing', async () => {
-    vi.mocked(dataLayer.stocks.get).mockResolvedValue(makeStock())
-    vi.mocked(dataLayer.industryScores.listByCode).mockResolvedValue([])
+    mockStocksGet.mockResolvedValue(makeStock())
+    mockIndustryScoresByCode.mockResolvedValue([])
 
     const result = await getUnifiedStockView('600519.SH', {
       includeQuotes: false,
@@ -313,8 +348,8 @@ describe('getUnifiedStockView', () => {
   })
 
   test('rotationScore 未匹配到时记录到 missing', async () => {
-    vi.mocked(dataLayer.stocks.get).mockResolvedValue(makeStock({ industryCode: 'SW3402' }))
-    vi.mocked(dataLayer.rotationScores.list).mockResolvedValue([
+    mockStocksGet.mockResolvedValue(makeStock({ industryCode: 'SW3402' }))
+    mockRotationScoresList.mockResolvedValue([
       makeRotationScore({ sectorCode: 'SW3401' }),
     ])
 
@@ -329,8 +364,8 @@ describe('getUnifiedStockView', () => {
   })
 
   test('signal 缺失时记录到 missing', async () => {
-    vi.mocked(dataLayer.stocks.get).mockResolvedValue(makeStock())
-    vi.mocked(dataLayer.signals.listBySymbol).mockResolvedValue([])
+    mockStocksGet.mockResolvedValue(makeStock())
+    mockSignalsList.mockResolvedValue([])
 
     const result = await getUnifiedStockView('600519.SH', {
       includeQuotes: false,
@@ -343,11 +378,11 @@ describe('getUnifiedStockView', () => {
   })
 
   test('completeness 计算正确', async () => {
-    vi.mocked(dataLayer.stocks.get).mockResolvedValue(makeStock())
+    mockStocksGet.mockResolvedValue(makeStock())
     // 仅激活 3 个数据源：quotes + v6Score + intelligentScore
-    vi.mocked(dataLayer.dailyQuotes.get).mockResolvedValue(makeQuotes())       // 成功
-    vi.mocked(dataLayer.v6Scores.get).mockResolvedValue(undefined)            // 缺失
-    vi.mocked(dataLayer.intelligentScores.getLatestBySymbol).mockResolvedValue(makeIntelligentScore()) // 成功
+    mockDailyQuotesGet.mockResolvedValue(makeQuotes())       // 成功
+    mockV6ScoresGet.mockResolvedValue(undefined)            // 缺失
+    mockIntelligentScoresBySymbol.mockResolvedValue([makeIntelligentScore()]) // 成功
 
     const result = await getUnifiedStockView('600519.SH', {
       includeQuotes: true,
@@ -366,9 +401,9 @@ describe('getUnifiedStockView', () => {
   })
 
   test('freshness 取所有源中最新的时间戳', async () => {
-    vi.mocked(dataLayer.stocks.get).mockResolvedValue(makeStock({ updatedAt: 1000 }))
-    vi.mocked(dataLayer.dailyQuotes.get).mockResolvedValue(makeQuotes({ updatedAt: 3000 }))
-    vi.mocked(dataLayer.v6Scores.get).mockResolvedValue(makeV6Score({ calculatedAt: 2000 }))
+    mockStocksGet.mockResolvedValue(makeStock({ updatedAt: 1000 }))
+    mockDailyQuotesGet.mockResolvedValue(makeQuotes({ updatedAt: 3000 }))
+    mockV6ScoresGet.mockResolvedValue(makeV6Score({ calculatedAt: 2000 }))
 
     const result = await getUnifiedStockView('600519.SH')
 
@@ -377,7 +412,7 @@ describe('getUnifiedStockView', () => {
   })
 
   test('dataLayer 抛出异常时返回失败', async () => {
-    vi.mocked(dataLayer.stocks.get).mockRejectedValue(new Error('DB 连接失败'))
+    mockStocksGet.mockRejectedValue(new Error('DB 连接失败'))
 
     const result = await getUnifiedStockView('600519.SH')
 
@@ -386,7 +421,7 @@ describe('getUnifiedStockView', () => {
   })
 
   test('fusedAt 是有效时间戳', async () => {
-    vi.mocked(dataLayer.stocks.get).mockResolvedValue(makeStock())
+    mockStocksGet.mockResolvedValue(makeStock())
 
     const before = Date.now()
     const result = await getUnifiedStockView('600519.SH', {
@@ -411,7 +446,7 @@ describe('getUnifiedStockViews', () => {
   })
 
   test('批量融合多只股票', async () => {
-    vi.mocked(dataLayer.stocks.get)
+    mockStocksGet
       .mockResolvedValueOnce(makeStock({ symbol: '600519.SH', name: '茅台' }))
       .mockResolvedValueOnce(makeStock({ symbol: '000858.SZ', name: '五粮液' }))
       .mockResolvedValueOnce(makeStock({ symbol: '002304.SZ', name: '洋河' }))
@@ -429,7 +464,7 @@ describe('getUnifiedStockViews', () => {
   })
 
   test('批量融合部分失败时返回失败详情', async () => {
-    vi.mocked(dataLayer.stocks.get)
+    mockStocksGet
       .mockResolvedValueOnce(makeStock({ symbol: '600519.SH' }))
       .mockResolvedValueOnce(undefined) // 第二只失败
       .mockResolvedValueOnce(makeStock({ symbol: '002304.SZ' }))
@@ -462,12 +497,12 @@ describe('getUnifiedStockViewsByStatus', () => {
   })
 
   test('按 researchStatus 筛选股票', async () => {
-    vi.mocked(dataLayer.stocks.list).mockResolvedValue([
+    mockStocksList.mockResolvedValue([
       makeStock({ symbol: '600519.SH', researchStatus: 'watching' }),
       makeStock({ symbol: '000858.SZ', researchStatus: 'watching' }),
       makeStock({ symbol: '002304.SZ', researchStatus: 'candidate' }),
     ])
-    vi.mocked(dataLayer.stocks.get)
+    mockStocksGet
       .mockResolvedValueOnce(makeStock({ symbol: '600519.SH', researchStatus: 'watching' }))
       .mockResolvedValueOnce(makeStock({ symbol: '000858.SZ', researchStatus: 'watching' }))
 
@@ -483,7 +518,7 @@ describe('getUnifiedStockViewsByStatus', () => {
   })
 
   test('无匹配状态时返回空数组', async () => {
-    vi.mocked(dataLayer.stocks.list).mockResolvedValue([
+    mockStocksList.mockResolvedValue([
       makeStock({ symbol: '600519.SH', researchStatus: 'watching' }),
     ])
 
@@ -507,10 +542,10 @@ describe('getScoreView', () => {
   })
 
   test('返回评分专用视图（仅评分相关字段）', async () => {
-    vi.mocked(dataLayer.stocks.get).mockResolvedValue(makeStock())
-    vi.mocked(dataLayer.v6Scores.get).mockResolvedValue(makeV6Score())
-    vi.mocked(dataLayer.intelligentScores.getLatestBySymbol).mockResolvedValue(makeIntelligentScore())
-    vi.mocked(dataLayer.industryScores.listByCode).mockResolvedValue([makeIndustryScore()])
+    mockStocksGet.mockResolvedValue(makeStock())
+    mockV6ScoresGet.mockResolvedValue(makeV6Score())
+    mockIntelligentScoresBySymbol.mockResolvedValue([makeIntelligentScore()])
+    mockIndustryScoresByCode.mockResolvedValue([makeIndustryScore()])
 
     const result = await getScoreView('600519.SH')
 
@@ -528,7 +563,7 @@ describe('getScoreView', () => {
   })
 
   test('stock 不存在时返回失败', async () => {
-    vi.mocked(dataLayer.stocks.get).mockResolvedValue(undefined)
+    mockStocksGet.mockResolvedValue(undefined)
 
     const result = await getScoreView('000001.SZ')
 
@@ -546,10 +581,10 @@ describe('getTradingView', () => {
   })
 
   test('返回交易专用视图（仅交易相关字段）', async () => {
-    vi.mocked(dataLayer.stocks.get).mockResolvedValue(makeStock())
-    vi.mocked(dataLayer.dailyQuotes.get).mockResolvedValue(makeQuotes())
-    vi.mocked(dataLayer.v6Scores.get).mockResolvedValue(makeV6Score())
-    vi.mocked(dataLayer.signals.listBySymbol).mockResolvedValue([makeSignal()])
+    mockStocksGet.mockResolvedValue(makeStock())
+    mockDailyQuotesGet.mockResolvedValue(makeQuotes())
+    mockV6ScoresGet.mockResolvedValue(makeV6Score())
+    mockSignalsList.mockResolvedValue([makeSignal()])
 
     const result = await getTradingView('600519.SH')
 
@@ -568,7 +603,7 @@ describe('getTradingView', () => {
   })
 
   test('stock 不存在时返回失败', async () => {
-    vi.mocked(dataLayer.stocks.get).mockResolvedValue(undefined)
+    mockStocksGet.mockResolvedValue(undefined)
 
     const result = await getTradingView('000001.SZ')
 
