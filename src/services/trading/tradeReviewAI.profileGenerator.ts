@@ -167,10 +167,10 @@ export function generateRiskProfile(
   logger.info('[TradeReviewAI] 生成风险画像')
 
   const hasHeavyGambling = classification.errors.some(
-    (e) => e.type === TradeErrorType.HEAVY_GAMBLING,
+    (e) => (e.type as TradeErrorType) === TradeErrorType.HEAVY_GAMBLING,
   )
   const hasNoStopLoss = classification.errors.some(
-    (e) => e.type === TradeErrorType.NO_STOP_LOSS,
+    (e) => (e.type as TradeErrorType) === TradeErrorType.NO_STOP_LOSS,
   )
 
   let riskAppetite: RiskProfile['riskAppetite'] = 'moderate'

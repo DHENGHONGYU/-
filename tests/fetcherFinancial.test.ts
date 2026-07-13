@@ -59,6 +59,7 @@ describe('fetcherService - 财务数据采集', () => {
       name: '平安银行',
       researchStatus: 'candidate',
       source: 'manual',
+      pool: 'research',
     })
 
     global.fetch = mockFetch(FINANCIAL_RESPONSE)

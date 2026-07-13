@@ -62,6 +62,7 @@ describe('fetcherKline', () => {
       name: '平安银行',
       researchStatus: 'candidate',
       source: 'manual',
+      pool: 'research',
     })
 
     global.fetch = mockFetch(buildKlineResponse('000001.SZ'))
@@ -84,6 +85,7 @@ describe('fetcherKline', () => {
       name: '平安银行',
       researchStatus: 'candidate',
       source: 'manual',
+      pool: 'research',
     })
 
     global.fetch = mockFetch(buildKlineResponse('000001.SZ'))
@@ -113,6 +115,7 @@ describe('fetcherKline', () => {
       name: '平安银行',
       researchStatus: 'candidate',
       source: 'manual',
+      pool: 'research',
     })
 
     global.fetch = mockFetch({

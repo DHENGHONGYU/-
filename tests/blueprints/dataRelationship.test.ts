@@ -74,6 +74,7 @@ describe('V9 data timeline rules', () => {
       dataVersion: 1,
       researchStatus: 'candidate',
       source: 'manual',
+      pool: 'research',
     }
     const quotes: DailyQuotes = {
       symbol: '600519',

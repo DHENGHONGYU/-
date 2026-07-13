@@ -47,6 +47,7 @@ describe('batchImportService', () => {
       name: '贵州茅台',
       researchStatus: 'candidate',
       source: 'manual',
+      pool: 'research',
     })
 
     const rows = parseBulkInput('600519,贵州茅台\n600519,贵州茅台\n000001,平安银行')
