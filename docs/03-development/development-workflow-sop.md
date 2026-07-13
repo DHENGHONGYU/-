@@ -249,10 +249,11 @@ git add -A && git commit -m "feat(scope): 描述"
 | 12/14 | audit:complexity | 代码复杂度（基线采集） | ⚠️ 警告 |
 | 13/14 | audit:widget-registry | Widget 三处注册一致性 | ✅ 阻断 |
 | 14/14 | audit:ai-output | AI 输出三道校验 | ✅ 阻断 |
+| 15/15 | audit:db-references | DB 引用一致性审计 | ✅ 阻断 |
 | warn | audit:path-match | 文档目录-内容匹配 | ⚠️ 警告（不阻断） |
 | warn | audit:doc-integrity | 文档-代码双向完整性（npm scripts / 脚本文件 / 路径存在性） | ⚠️ 警告（不阻断） |
 
-> **注**：`.husky/pre-commit` 中编号存在历史跳跃（3/10 后直接 5/14），实际执行顺序以上表为准；warn 项不纳入 14 步编号。
+> **注**：`.husky/pre-commit` 中编号存在历史跳跃（3/10 后直接 5/14），实际执行顺序以上表为准；warn 项不纳入 15 步编号。
 
 **如果门禁失败**：
 1. 不要 `--no-verify` 跳过（除非修复的是门禁本身的问题）
@@ -265,7 +266,7 @@ git add -A && git commit -m "feat(scope): 描述"
 
 | 事件 | 触发源 | 运行内容 | 阻断性 |
 |------|--------|----------|--------|
-| `git commit` | `.husky/pre-commit` | 14 步阻断门禁 + `audit:path-match` + `audit:doc-integrity` | `audit:doc-integrity` 为 warn，不阻断 |
+| `git commit` | `.husky/pre-commit` | 15 步阻断门禁 + `audit:path-match` + `audit:doc-integrity` | `audit:doc-integrity` 为 warn，不阻断 |
 | `push` / `pull_request` → `main` | `.github/workflows/quality-check.yml` | lint + typecheck + route + test + audit + `audit:doc-integrity` | `audit:doc-integrity` 非阻塞（基线采集） |
 | `push` / `pull_request` → `main` | `.github/workflows/doc-automation.yml` | `doc-update-trigger` + `doc-auto-updater --dry-run` + `audit:docs` + `audit:doc-integrity` + `doc:version-check` | `audit:doc-integrity` 非阻塞 |
 | 本地全量审计 | `npm run audit` | 15 项审计链（含 `audit:doc-integrity`） | 由子命令自身决定 |

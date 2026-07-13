@@ -40,42 +40,72 @@ console.log('')
 
 let allMismatches: { server: string; type: string; tools: string[] }[] = []
 
+function extractToolsFromContent(content: string): string[] {
+  const tools: string[] = []
+  
+  const getToolsIndex = content.indexOf('protected getTools')
+  if (getToolsIndex === -1) {
+    return tools
+  }
+  
+  let braceDepth = 0
+  let inReturnArray = false
+  let arrayDepth = 0
+  let startIndex = getToolsIndex
+  
+  for (let i = getToolsIndex; i < content.length; i++) {
+    const char = content[i]
+    
+    if (char === '{') {
+      braceDepth++
+      if (braceDepth === 1 && !inReturnArray) {
+        continue
+      }
+    } else if (char === '}') {
+      braceDepth--
+      if (braceDepth === 0) {
+        break
+      }
+    } else if (char === '[' && braceDepth > 0 && !inReturnArray) {
+      const prevChars = content.substring(Math.max(0, i - 10), i)
+      if (prevChars.includes('return')) {
+        inReturnArray = true
+        arrayDepth = 1
+        continue
+      }
+    } else if (char === '[' && inReturnArray) {
+      arrayDepth++
+    } else if (char === ']' && inReturnArray) {
+      arrayDepth--
+      if (arrayDepth === 0) {
+        inReturnArray = false
+        break
+      }
+    }
+    
+    if (inReturnArray) {
+      const nameMatch = content.substring(i).match(/^name:\s*['"]([^'"]+)['"]/)
+      if (nameMatch) {
+        const toolName = nameMatch[1]
+        if (!toolName.includes(' ') && !toolName.includes('/')) {
+          if (!tools.includes(toolName)) {
+            tools.push(toolName)
+          }
+        }
+      }
+    }
+  }
+  
+  return tools
+}
+
 serverFiles.forEach(file => {
   const content = fs.readFileSync(file, 'utf-8')
   
   const nameMatch = content.match(/info:\s*ServerInfo\s*=\s*\{[^}]*name:\s*['"]([^'"]+)['"]/s)
   const serverName = nameMatch ? nameMatch[1] : path.basename(file, '.ts').replace('Server', '').toLowerCase()
   
-  const lines = content.split('\n')
-  const inGetTools = lines.findIndex(l => l.includes('protected getTools'))
-  const inGetResources = lines.findIndex(l => l.includes('protected getResources'))
-  const inGetPrompts = lines.findIndex(l => l.includes('protected getPrompts'))
-  
-  const sourceTools: string[] = []
-  
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]
-    
-    if (inGetResources > 0 && i > inGetResources && inGetPrompts > 0 && i < inGetPrompts) {
-      continue
-    }
-    if (inGetPrompts > 0 && i > inGetPrompts) {
-      continue
-    }
-    if (inGetResources > 0 && inGetPrompts === -1 && i > inGetResources) {
-      continue
-    }
-    
-    const nameMatch = line.match(/name:\s*['"]([^'"]+)['"]/)
-    if (nameMatch) {
-      const toolName = nameMatch[1]
-      if (!toolName.includes(' ') && !toolName.includes('/')) {
-        if (!sourceTools.includes(toolName)) {
-          sourceTools.push(toolName)
-        }
-      }
-    }
-  }
+  const sourceTools = extractToolsFromContent(content)
   
   const whitelistServerTools = whitelistTools[serverName] || whitelistTools[serverName.replace(':main', '')] || whitelistTools[serverName.split(':')[0]] || []
   
