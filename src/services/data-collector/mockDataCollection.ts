@@ -12,6 +12,11 @@
  */
 
 import { DATA_COLLECTION_TIMEOUT_MS } from '@/config/timeouts'
+import { MockStockAnalysisScoringStrategy } from '@/services/stock-analysis/scoringStrategy'
+import { getTradeReviewScoreCalculator } from '@/services/trading/tradeReviewScoring'
+
+/** 评分数据生成策略实例（P5-7：评分计算从采集层移回分析层） */
+const stockAnalysisScoring = new MockStockAnalysisScoringStrategy()
 
 // ============================================================
 // 内联类型（避免 @/ 别名导入在 vite.config 上下文中无法解析）
@@ -542,68 +547,21 @@ function generateTradeReviewPayload(): TradeReviewData {
     losing: totalTrades - profitable,
     winRate: Number((profitable / totalTrades).toFixed(2)),
     profitLossRatio: randFloat(1.0, 3.5),
-    disciplineScore: randInt(50, 100),
+    // P5-7：纪律分通过交易复盘评分计算器获取，采集层不再硬编码
+    disciplineScore: getTradeReviewScoreCalculator().calculateDisciplineScore(),
   }
 }
 
 /** 生成投资画像 + KAI 评分 payload */
 function generateAnalysisScoresPayload(): AnalysisScores {
-  const profileMetrics: ProfileMetric[] = [
-    { name: '投资能力', score: randInt(40, 95), description: '综合收益与风险控制能力' },
-    { name: '投资风格', score: randInt(40, 95), description: '价值/成长/均衡等风格倾向' },
-    { name: '风控能力', score: randInt(40, 95), description: '回撤控制与仓位管理能力' },
-    { name: '持仓透视', score: randInt(40, 95), description: '集中度与行业配置分析' },
-    { name: '择时风格', score: randInt(40, 95), description: '左侧/右侧交易倾向' },
-  ]
-
-  const kaiDimensions: KaiDimension[] = [
-    { name: '竞争力', score: randInt(40, 95), weight: 0.15, status: '良好', color: '#3b82f6' },
-    { name: '技术面', score: randInt(40, 95), weight: 0.20, status: '优秀', color: '#22c55e' },
-    { name: '基本面', score: randInt(40, 95), weight: 0.20, status: '一般', color: '#f59e0b' },
-    { name: '情绪面', score: randInt(40, 95), weight: 0.15, status: '良好', color: '#3b82f6' },
-    { name: '资金面', score: randInt(40, 95), weight: 0.15, status: '良好', color: '#3b82f6' },
-    { name: '行业面', score: randInt(40, 95), weight: 0.15, status: '较强', color: '#22c55e' },
-  ]
-
-  const detailItems: KaiDetailItem[] = kaiDimensions.map((d) => ({
-    dimensionName: d.name,
-    itemName: `${d.name}指标`,
-    score: d.score,
-    weight: d.weight,
-    color: d.color,
-  }))
-
-  const totalScore = Math.round(kaiDimensions.reduce((sum, d) => sum + d.score * d.weight, 0))
-
-  return {
-    profile: {
-      tags: ['老股民', '择时', '价值投资'],
-      metrics: profileMetrics,
-    },
-    kai: {
-      totalScore,
-      sentiment: randInt(0, 100),
-      trend: randInt(0, 100),
-      flow: randInt(0, 100),
-      dimensions: kaiDimensions,
-      detailDistribution: detailItems,
-    },
-  }
+  // P5-7：评分计算委托给分析层策略，采集层不再硬编码评分
+  return stockAnalysisScoring.generateAnalysisScores() as AnalysisScores
 }
 
 /** 生成模型对比 payload */
 function generateModelComparisonPayload(): ModelComparison {
-  return {
-    leftModel: { id: 'kaillm-v2.1', name: 'KAILLM v2.1', version: 'v2.1', score: randInt(70, 95) },
-    rightModel: { id: 'baseline-v1.5', name: '基准模型 v1.5', version: 'v1.5', score: randInt(60, 85) },
-    dimensions: [
-      { name: '选股准确率', leftScore: randInt(70, 95), rightScore: randInt(60, 85), weight: 0.3 },
-      { name: '回撤控制', leftScore: randInt(65, 90), rightScore: randInt(55, 80), weight: 0.25 },
-      { name: '夏普比率', leftScore: randInt(60, 90), rightScore: randInt(50, 80), weight: 0.25 },
-      { name: '最大回撤', leftScore: randInt(60, 85), rightScore: randInt(50, 75), weight: 0.2 },
-    ],
-    riskHint: '本对比结果基于历史数据回测，不构成投资建议。模型表现可能因市场环境变化而波动。',
-  }
+  // P5-7：评分计算委托给分析层策略，采集层不再硬编码评分
+  return stockAnalysisScoring.generateModelComparison()
 }
 
 /** 生成股票池 payload */
