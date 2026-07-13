@@ -605,13 +605,14 @@ describe('套件9: 权限矩阵配置完整性验证', () => {
     expect(MCP_ACL_MATRIX.system.allowedTools).toContain('*')
   })
 
-  it('ui 角色应显式授权交易类 Server 查询、但禁止 execution', () => {
+  it('ui 角色应授权 trading 查询、但禁止 execution 与已合并的 trade/input/export', () => {
     const uiServers = MCP_ACL_MATRIX.ui.allowedServers
-    // 2026-07-13 变更：UI 显式增列 trading/trade/input/export（仅查询）
+    // Phase E 合并后：trade/input/export Server 已删除（并入 trading:main /
+    // fetcher:data / backtestExportService）；UI 查询授权由存活的 trading 承接。
     expect(uiServers).toContain('trading')
-    expect(uiServers).toContain('trade')
-    expect(uiServers).toContain('input')
-    expect(uiServers).toContain('export')
+    expect(uiServers).not.toContain('trade')
+    expect(uiServers).not.toContain('input')
+    expect(uiServers).not.toContain('export')
     expect(uiServers).not.toContain('execution')
   })
 

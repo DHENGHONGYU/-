@@ -6,7 +6,7 @@
 import { readdirSync, readFileSync, writeFileSync } from 'fs'
 import { join, extname, basename } from 'path'
 
-const PROJECT_ROOT = 'c:\\Users\\huawei\\Documents\\kimi\\Workspaces\\智能投研复盘系统V9'
+const PROJECT_ROOT = process.cwd()
 const SRC_DIR = join(PROJECT_ROOT, 'src')
 const COMPONENTS_DIR = join(SRC_DIR, 'components')
 

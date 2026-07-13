@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { PoolBoard } from '@/components/organisms/pool/PoolBoard'
-import { DEFAULT_POOL_GROUP } from '@/config/dbConfig'
+import { DEFAULT_POOL_GROUP } from '@/constants/stockpool.constants'
 import type { Stock } from '@/data/types'
 import { UI_TEXT } from '@/constants/uiText'
 

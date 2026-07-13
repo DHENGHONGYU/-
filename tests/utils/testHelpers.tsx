@@ -303,7 +303,7 @@ export async function resetDbWithCache(additionalStores: readonly string[] = [])
 
   // 清理额外指定的 store
   for (const store of additionalStores) {
-    dataBridge.invalidateCache(store)
+    dataBridge.invalidateCache(store as StoreName)
   }
 }
 

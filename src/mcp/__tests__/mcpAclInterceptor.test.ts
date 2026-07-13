@@ -43,13 +43,15 @@ describe('MCP ACL 权限矩阵配置', () => {
     expect(MCP_ACL_MATRIX.system.allowedTools).toContain('*')
   })
 
-  it('ui 角色应显式授权交易类 Server 查询访问、但禁止 execution', () => {
+  it('ui 角色应授权 trading 查询访问、但禁止 execution', () => {
     const uiServers = MCP_ACL_MATRIX.ui.allowedServers
-    // 2026-07-13 变更：UI 显式增列 trade/input/trading/export，仅放行查询类工具
+    // 2026-07-13 变更：UI 显式授权 trading（仅放行查询类工具）。
+    // trade/input/export 已在 Phase E 合并入 trading:main / fetcher:data / backtestExportService，
+    // Server 已删除，故 UI 矩阵不再含这三者（授权由存活的 trading 承接）。
     expect(uiServers).toContain('trading')
-    expect(uiServers).toContain('trade')
-    expect(uiServers).toContain('input')
-    expect(uiServers).toContain('export')
+    expect(uiServers).not.toContain('trade')
+    expect(uiServers).not.toContain('input')
+    expect(uiServers).not.toContain('export')
     // execution 仍禁止（写操作 Server）
     expect(uiServers).not.toContain('execution')
     expect(uiServers).toContain('fetcher')
@@ -365,23 +367,36 @@ describe('权限拒绝场景全覆盖', () => {
     expect(result.allowed).toBe(false)
   })
 
-  it('ui 角色应允许访问 trade Server 的查询类 Tool', () => {
+  // Phase E 合并后：trade/input/export Server 已删除（功能并入 trading:main /
+  // fetcher:data / backtestExportService），不在 ui.allowedServers 中，
+  // 故 UI 访问这三者应在 Server 级被拒绝。存活的查询能力由 trading 承接（见下方用例）。
+  it('ui 角色访问已合并的 trade Server 应被 Server 级拒绝', () => {
     const result = mcpAclInterceptor.check({
       caller: 'ui', serverName: 'trade', resourceName: 'get_trades',
     })
-    expect(result.allowed).toBe(true)
+    expect(result.allowed).toBe(false)
+    expect(result.reason).toContain('not allowed to access server')
   })
 
-  it('ui 角色应允许访问 input Server 的查询类 Tool', () => {
+  it('ui 角色访问已合并的 input Server 应被 Server 级拒绝', () => {
     const result = mcpAclInterceptor.check({
       caller: 'ui', serverName: 'input', resourceName: 'get_inputs',
     })
-    expect(result.allowed).toBe(true)
+    expect(result.allowed).toBe(false)
+    expect(result.reason).toContain('not allowed to access server')
   })
 
-  it('ui 角色应允许访问 export Server 的回测报告导出 Tool', () => {
+  it('ui 角色访问已合并的 export Server 应被 Server 级拒绝', () => {
     const result = mcpAclInterceptor.check({
       caller: 'ui', serverName: 'export', resourceName: 'export_backtest_report',
+    })
+    expect(result.allowed).toBe(false)
+    expect(result.reason).toContain('not allowed to access server')
+  })
+
+  it('ui 角色应允许访问存活的 trading Server 的查询类 Tool', () => {
+    const result = mcpAclInterceptor.check({
+      caller: 'ui', serverName: 'trading', resourceName: 'get_orders',
     })
     expect(result.allowed).toBe(true)
   })
@@ -396,20 +411,22 @@ describe('权限拒绝场景全覆盖', () => {
     expect(result.reason).toContain('not allowed to call tool')
   })
 
-  it('ui 角色应拒绝调用 trade 写工具（execute_trade_action）', () => {
+  it('ui 角色调用已合并 trade 的写工具（execute_trade_action）应被 Server 级拒绝', () => {
+    // trade Server 已合并入 trading:main 并删除；写工具的拒绝现由 Server 级承接
     const result = mcpAclInterceptor.check({
       caller: 'ui', serverName: 'trade', resourceName: 'execute_trade_action',
     })
     expect(result.allowed).toBe(false)
-    expect(result.reason).toContain('not allowed to call tool')
+    expect(result.reason).toContain('not allowed to access server')
   })
 
-  it('ui 角色应拒绝调用 input 写工具（import_stock_pool）', () => {
+  it('ui 角色调用已合并 input 的写工具（import_stock_pool）应被 Server 级拒绝', () => {
+    // input Server 已合并入 fetcher:data 并删除；写工具的拒绝现由 Server 级承接
     const result = mcpAclInterceptor.check({
       caller: 'ui', serverName: 'input', resourceName: 'import_stock_pool',
     })
     expect(result.allowed).toBe(false)
-    expect(result.reason).toContain('not allowed to call tool')
+    expect(result.reason).toContain('not allowed to access server')
   })
 
   it('ui 角色应拒绝访问 system Server 的非查询类工具（reset_database）', () => {

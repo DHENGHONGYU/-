@@ -3,8 +3,6 @@ import {
   signalQualityStoreNormalState,
   signalQualityStoreEmptyState,
   mockSignalReviews,
-  emptySignalReviews,
-  mockSignalQualityMetrics,
 } from '../../fixtures/store-mock-data'
 import { resetCacheStats, getCacheStatsSnapshot, resetAllMemoCaches } from '@/lib/derivedCache'
 

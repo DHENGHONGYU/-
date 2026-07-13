@@ -142,7 +142,7 @@ function makeScoreDocInput(sample: SampleStock, version: 1 | 2): ScoreDocInput {
     composite,
     l3v,
     layers: makeLayers(composite),
-    recommendation: getRecommendation(composite),
+    recommendation: getRecommendation(composite)!,
     targetPrice: { bull: composite * 12, base: composite * 10, bear: composite * 8 },
     keyRisks: ['风险1', '风险2'],
     keyCatalysts: ['催化1', '催化2'],
@@ -170,7 +170,7 @@ function getRecommendation(composite: number): { key: string; label: string; col
     sell: { key: 'sell', label: '卖出', color: '#ef4444' },
     strong_sell: { key: 'strong_sell', label: '强烈卖出', color: '#b91c1c' },
   }
-  return map[rating] ?? map.hold
+  return map[rating]! ?? map.hold
 }
 
 // ============================================================

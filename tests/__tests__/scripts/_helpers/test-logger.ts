@@ -1,4 +1,4 @@
-import { getLogger } from '@/lib/logger'
+import { getLogger, type LogContext } from '@/lib/logger'
 import { vi } from 'vitest'
 
 const logger = getLogger()
@@ -43,10 +43,10 @@ export function createTestLogger(moduleName: string): TestLogger {
       logger.info(`[${moduleName}]   → ${message}`)
     },
     info(message: string, data?: unknown) {
-      logger.info(`[${moduleName}]   ${message}`, data)
+      logger.info(`[${moduleName}]   ${message}`, data as LogContext)
     },
     error(message: string, data?: unknown) {
-      logger.error(`[${moduleName}] ✗ ${message}`, data)
+      logger.error(`[${moduleName}] ✗ ${message}`, data as LogContext)
     },
     assertStart(assertionName: string) {
       logger.info(`[${moduleName}]     ◇ 断言 "${assertionName}" 开始...`)
@@ -66,7 +66,7 @@ export function createTestLogger(moduleName: string): TestLogger {
         return result
       } catch (error) {
         this.assertEnd(assertionName, false)
-        logger.error(`[${moduleName}]     ✗ 断言 "${assertionName}" 详细错误:`, error)
+        logger.error(`[${moduleName}]     ✗ 断言 "${assertionName}" 详细错误:`, error as LogContext)
         throw error
       }
     },
@@ -78,7 +78,7 @@ export function createTestLogger(moduleName: string): TestLogger {
         return result
       } catch (error) {
         this.assertEnd(assertionName, false)
-        logger.error(`[${moduleName}]     ✗ 断言 "${assertionName}" 详细错误:`, error)
+        logger.error(`[${moduleName}]     ✗ 断言 "${assertionName}" 详细错误:`, error as LogContext)
         throw error
       }
     },
@@ -92,7 +92,7 @@ export function createTestLogger(moduleName: string): TestLogger {
         return result
       } catch (error) {
         const duration = (performance.now() - startTime).toFixed(2)
-        logger.error(`[${moduleName}]   ⏱ 测量失败: ${label} (${duration}ms)`, error)
+        logger.error(`[${moduleName}]   ⏱ 测量失败: ${label} (${duration}ms)`, error as LogContext)
         throw error
       }
     },
@@ -106,12 +106,12 @@ export function createTestLogger(moduleName: string): TestLogger {
         return result
       } catch (error) {
         const duration = (performance.now() - startTime).toFixed(2)
-        logger.error(`[${moduleName}]   ⏱ 测量失败: ${label} (${duration}ms)`, error)
+        logger.error(`[${moduleName}]   ⏱ 测量失败: ${label} (${duration}ms)`, error as LogContext)
         throw error
       }
     },
     snapshot(name: string, data: unknown) {
-      logger.info(`[${moduleName}]   📸 数据快照 "${name}":`, data)
+      logger.info(`[${moduleName}]   📸 数据快照 "${name}":`, data as LogContext)
     },
     section(title: string) {
       logger.info(`[${moduleName}] ── ${title} ──`)

@@ -1,8 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { clearVirtualFS } from './_helpers/vfs-helpers'
 import { createTestLogger, logBeforeEach, logAfterEach } from './_helpers/test-logger'
-
-const suiteLogger = createTestLogger('ColorTokensSuite')
 
 describe('颜色与设计令牌审计域', () => {
   beforeEach(() => {

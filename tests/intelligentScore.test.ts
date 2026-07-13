@@ -2,7 +2,8 @@ import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { db } from '@/data/db'
 import { dataBridge } from '@/core/databridge'
 import { dataLayer } from '@/data/dataLayer'
-import { RESEARCH_STATUS, STORE_NAME } from '@/config/dbConfig'
+import { STORE_NAME } from '@/config/dbConfig'
+import { RESEARCH_STATUS } from '@/constants/stockpool.constants'
 import { runIntelligentScore } from '@/services/scoring/intelligentScoreService'
 
 vi.mock('@/services/llm/llmClient', () => ({

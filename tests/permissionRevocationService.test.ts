@@ -72,7 +72,6 @@ function makeUser(overrides: Partial<UserEntity> & { id: string; username: strin
   const now = Date.now()
   return {
     email: `${overrides.username}@test.com`,
-    fullName: overrides.username,
     status: 'active',
     lastActiveAt: now,
     createdAt: now,
@@ -113,6 +112,20 @@ describe('权限自动回收服务（PermissionRevocationService）', () => {
       revocationBatchSize: 10,
       permissionCheckCacheTtlMs: 10000,
       permissionCheckCacheMaxEntries: 200,
+      auditLogRetentionDays: 90,
+      auditLogArchiveIntervalMs: 7 * 24 * 60 * 60 * 1000,
+      deleteAlertThresholds: {
+        overallErrorRatePct: 10,
+        byErrorType: {
+          EnvelopeError: 5,
+          DataError: 15,
+          QuotaExceededError: 1,
+          InvalidStateError: 5,
+          UnknownError: 10,
+        },
+        cooldownMs: 60 * 60 * 1000,
+        webhookUrl: null,
+      },
     })
   })
 

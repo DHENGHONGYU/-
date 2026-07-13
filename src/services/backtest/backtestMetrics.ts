@@ -27,17 +27,9 @@ import type {
   VirtualOrder,
   VirtualPosition,
   BacktestEngineResult,
-} from './BacktestEngine'
+  InternalPosition,
+} from './backtestTypes'
 import { getPriceForDate } from './backtestEventLoader'
-
-// ============================================================
-// 类型定义（从 BacktestEngine.ts 迁出，供主文件 + metrics 共享）
-// ============================================================
-
-export interface InternalPosition {
-  quantity: number
-  avgCost: number
-}
 
 // ============================================================
 // 绩效指标计算

@@ -4,8 +4,6 @@ import {
   chatStoreStreamingState,
   chatStoreEmptyState,
   mockChatMessages,
-  streamingChatMessages,
-  emptyChatMessages,
 } from '../../fixtures/store-mock-data'
 import { resetCacheStats, getCacheStatsSnapshot, resetAllMemoCaches } from '@/lib/derivedCache'
 

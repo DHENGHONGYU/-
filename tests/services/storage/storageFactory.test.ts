@@ -13,7 +13,7 @@ import {
 } from '@/services/storage/storageFactory'
 import type { StorageProvider, DataMorphology, QueryResult, ListResult } from '@/services/storage/storageProvider'
 
-function createMockProvider(name: string, backend: string): StorageProvider {
+function createMockProvider(_name: string, backend: string): StorageProvider {
   return {
     backend: backend as StorageProvider['backend'],
     morphologies: ['document'],

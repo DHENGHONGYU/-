@@ -26,7 +26,7 @@
 
 import { describe, it, expect, beforeAll } from 'vitest'
 import { V6ScoreEngine } from '@/services/scoring/v6-engine/engine'
-import type { LayerInput, V6ScoreInput } from '@/services/scoring/v6-engine/types'
+import type { V6ScoreInput } from '@/services/scoring/v6-engine/types'
 import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
@@ -34,22 +34,25 @@ const logger = getLogger()
 // ============================================================
 // 测试数据生成器
 // ============================================================
-
-interface BenchmarkResult {
-  dataSize: number
-  totalTime: number
-  avgTimePerStock: number
-  memoryUsage: number
-}
-
 function generateMockStockData(count: number): V6ScoreInput[] {
   const stocks: V6ScoreInput[] = []
-  
+
   for (let i = 0; i < count; i++) {
+    const price = 10 + Math.random() * 100
+    const history = Array.from({ length: 60 }, () => price * (0.9 + Math.random() * 0.2))
+    const volumeHistory = Array.from({ length: 60 }, () => 1000000 + Math.random() * 10000000)
+
     stocks.push({
       symbol: `TEST${String(i).padStart(4, '0')}`,
-      name: `测试股票${i}`,
-      sector: i % 10 === 0 ? '银行' : i % 10 === 1 ? '科技' : '制造业',
+      stock: {
+        symbol: `TEST${String(i).padStart(4, '0')}`,
+        name: `测试股票${i}`,
+        sector: i % 10 === 0 ? '银行' : i % 10 === 1 ? '科技' : '制造业',
+        price,
+        marketCap: 1000000000 + Math.random() * 9000000000,
+        pe: 10 + Math.random() * 40,
+        pb: 1 + Math.random() * 5,
+      },
       financials: {
         revenue: 1000000 + Math.random() * 9000000,
         revenueYoY: (Math.random() - 0.3) * 0.5,
@@ -59,38 +62,18 @@ function generateMockStockData(count: number): V6ScoreInput[] {
         ordersInHand: 500000 + Math.random() * 2000000,
         newOrders: Math.random() > 0.5 ? 100000 + Math.random() * 500000 : 0,
       },
-      valuation: {
-        pe: 10 + Math.random() * 40,
-        pb: 1 + Math.random() * 5,
-        ps: 2 + Math.random() * 10,
-        pcf: 5 + Math.random() * 20,
+      quotes: {
+        latestClose: price,
+        return20d: (Math.random() - 0.5) * 0.1,
+        return60d: (Math.random() - 0.5) * 0.2,
+        volatility20d: Math.random() * 0.05,
+        avgTurnover20d: Math.random() * 0.1,
+        history,
+        volumeHistory,
       },
-      marketData: {
-        price: 10 + Math.random() * 100,
-        changePercent: (Math.random() - 0.5) * 10,
-        volume: 1000000 + Math.random() * 10000000,
-        turnoverRate: Math.random() * 0.1,
-        marketCap: 1000000000 + Math.random() * 9000000000,
-      },
-      technical: {
-        ma5: 50 + Math.random() * 50,
-        ma20: 45 + Math.random() * 55,
-        ma60: 40 + Math.random() * 60,
-        rsi: 30 + Math.random() * 40,
-        macd: (Math.random() - 0.5) * 2,
-      },
-      chipDistribution: {
-        concentration: Math.random(),
-        avgCost: 50 + Math.random() * 50,
-        profitRatio: Math.random(),
-      },
-      news: [
-        { title: '公司新闻1', sentiment: Math.random() > 0.5 ? 'positive' : 'negative', timestamp: Date.now() - 86400000 },
-        { title: '公司新闻2', sentiment: Math.random() > 0.5 ? 'positive' : 'neutral', timestamp: Date.now() - 172800000 },
-      ],
     })
   }
-  
+
   return stocks
 }
 
@@ -123,16 +106,7 @@ describe('TD-001: 评分引擎性能基准测试', () => {
     // 执行评分
     const results = await Promise.all(
       stocks.map(async (stock) => {
-        const input: LayerInput = {
-          symbol: stock.symbol,
-          financials: stock.financials,
-          valuation: stock.valuation,
-          marketData: stock.marketData,
-          technical: stock.technical,
-          chipDistribution: stock.chipDistribution,
-          news: stock.news,
-        }
-        return engine.calculateAll(input)
+                return engine.calculateAll(stock)
       })
     )
     
@@ -143,12 +117,6 @@ describe('TD-001: 评分引擎性能基准测试', () => {
     const avgTimePerStock = (totalTime / dataSize) * 1000 // 微秒
     const memoryUsage = endMemory - startMemory
     
-    const result: BenchmarkResult = {
-      dataSize,
-      totalTime,
-      avgTimePerStock,
-      memoryUsage,
-    }
     
     logger.info('[Benchmark] 小规模数据性能测试结果', {
       dataSize,
@@ -171,16 +139,7 @@ describe('TD-001: 评分引擎性能基准测试', () => {
     
     const results = await Promise.all(
       stocks.map(async (stock) => {
-        const input: LayerInput = {
-          symbol: stock.symbol,
-          financials: stock.financials,
-          valuation: stock.valuation,
-          marketData: stock.marketData,
-          technical: stock.technical,
-          chipDistribution: stock.chipDistribution,
-          news: stock.news,
-        }
-        return engine.calculateAll(input)
+                return engine.calculateAll(stock)
       })
     )
     
@@ -191,12 +150,6 @@ describe('TD-001: 评分引擎性能基准测试', () => {
     const avgTimePerStock = (totalTime / dataSize) * 1000
     const memoryUsage = endMemory - startMemory
     
-    const result: BenchmarkResult = {
-      dataSize,
-      totalTime,
-      avgTimePerStock,
-      memoryUsage,
-    }
     
     logger.info('[Benchmark] 中规模数据性能测试结果', {
       dataSize,
@@ -219,16 +172,7 @@ describe('TD-001: 评分引擎性能基准测试', () => {
     
     const results = await Promise.all(
       stocks.map(async (stock) => {
-        const input: LayerInput = {
-          symbol: stock.symbol,
-          financials: stock.financials,
-          valuation: stock.valuation,
-          marketData: stock.marketData,
-          technical: stock.technical,
-          chipDistribution: stock.chipDistribution,
-          news: stock.news,
-        }
-        return engine.calculateAll(input)
+                return engine.calculateAll(stock)
       })
     )
     
@@ -239,12 +183,6 @@ describe('TD-001: 评分引擎性能基准测试', () => {
     const avgTimePerStock = (totalTime / dataSize) * 1000
     const memoryUsage = endMemory - startMemory
     
-    const result: BenchmarkResult = {
-      dataSize,
-      totalTime,
-      avgTimePerStock,
-      memoryUsage,
-    }
     
     logger.info('[Benchmark] 大规模数据性能测试结果', {
       dataSize,
@@ -267,16 +205,7 @@ describe('TD-001: 评分引擎性能基准测试', () => {
     
     const results = await Promise.all(
       stocks.map(async (stock) => {
-        const input: LayerInput = {
-          symbol: stock.symbol,
-          financials: stock.financials,
-          valuation: stock.valuation,
-          marketData: stock.marketData,
-          technical: stock.technical,
-          chipDistribution: stock.chipDistribution,
-          news: stock.news,
-        }
-        return engine.calculateAll(input)
+                return engine.calculateAll(stock)
       })
     )
     
@@ -287,12 +216,6 @@ describe('TD-001: 评分引擎性能基准测试', () => {
     const avgTimePerStock = (totalTime / dataSize) * 1000
     const memoryUsage = endMemory - startMemory
     
-    const result: BenchmarkResult = {
-      dataSize,
-      totalTime,
-      avgTimePerStock,
-      memoryUsage,
-    }
     
     logger.info('[Benchmark] 超大规模数据性能测试结果', {
       dataSize,
@@ -317,16 +240,7 @@ describe('TD-001: 评分引擎性能基准测试', () => {
     const start1 = performance.now()
     await Promise.all(
       stocks1000.map(async (stock) => {
-        const input: LayerInput = {
-          symbol: stock.symbol,
-          financials: stock.financials,
-          valuation: stock.valuation,
-          marketData: stock.marketData,
-          technical: stock.technical,
-          chipDistribution: stock.chipDistribution,
-          news: stock.news,
-        }
-        return engine.calculateAll(input)
+                return engine.calculateAll(stock)
       })
     )
     const time1000 = performance.now() - start1
@@ -334,16 +248,7 @@ describe('TD-001: 评分引擎性能基准测试', () => {
     const start2 = performance.now()
     await Promise.all(
       stocks2000.map(async (stock) => {
-        const input: LayerInput = {
-          symbol: stock.symbol,
-          financials: stock.financials,
-          valuation: stock.valuation,
-          marketData: stock.marketData,
-          technical: stock.technical,
-          chipDistribution: stock.chipDistribution,
-          news: stock.news,
-        }
-        return engine.calculateAll(input)
+                return engine.calculateAll(stock)
       })
     )
     const time2000 = performance.now() - start2

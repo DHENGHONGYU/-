@@ -1,11 +1,11 @@
 ---
 name: "databridge-migration"
-description: "将直接操作 dataLayer 的代码迁移到 DataBridge 信封协议。涵盖 core/层违规修复、services/读取改为 dataBridge.query、写操作改为 dataBridge.forward + 新增 ENVELOPE_ACTION/Handler。Invoke when user finds direct dataLayer.stocks/v6Scores/dailyQuotes/orders access in core/ or services/ layers, or when audit:layers reports violations."
+description: "将直接操作 dataLayer 的代码迁移到 DataBridge 信封协议。涵盖 core/层违规修复、services/读取改为 dataBridge.query、写操作改为 dataBridge.forward + 新增 ENVELOPE_ACTION/Handler、迁移时保留业务逻辑、持久化实体类型归位。Invoke when user finds direct dataLayer.stocks/v6Scores/dailyQuotes/orders access in core/ or services/ layers, or when audit:layers reports violations."
 ---
 
-# DataBridge 迁移技能 (DataBridge Migration Skill) — v1.1.0
+# DataBridge 迁移技能 (DataBridge Migration Skill) — v1.2.0
 
-> **版本**: v1.1.0 | **日期**: 2026-07-12 | **校验基准**: V9 v1.4.3
+> **版本**: v1.2.0 | **日期**: 2026-07-13 | **校验基准**: V9 v1.4.6
 > **迁移性质**: 代码重构，修改 import 与调用方式
 > **输出格式**: 变更文件清单 + 类型检查结果 + 架构审计结果
 
@@ -310,6 +310,39 @@ const versions = result.success && result.data
   : []
 ```
 
+### 模式 F：迁移写入时保留 dataLayer 业务逻辑
+
+**违规示例**：
+```typescript
+// ❌ 违规：直接 forward 后丢失时间戳填充
+await dataBridge.forward(envelope) // payload 中无 createdAt/updatedAt
+```
+
+**迁移后**：新增 Handler 复刻原 dataLayer 逻辑
+```typescript
+// src/core/databridgeHandlers.ts
+class CustomAgentSaveHandler implements EnvelopeHandler {
+  canHandle(action: string): boolean {
+    return action === ENVELOPE_ACTION.saveCustomAgent
+  }
+
+  async handle(envelope: StandardEnvelope, store: StoreName): Promise<void> {
+    const agent = envelope.payload as Omit<CustomAgent, 'createdAt' | 'updatedAt'> & { createdAt?: number }
+    const existing = await db.get<CustomAgent>(store, agent.id)
+    const full: CustomAgent = {
+      ...agent,
+      createdAt: existing?.createdAt ?? agent.createdAt ?? now(),
+      updatedAt: now(),
+    }
+    await db.put(store, full)
+  }
+}
+```
+
+**判定标准**：
+- 若原 `dataLayer.xxx.save()` 只是简单 `sendWriteEnvelope`，直接 `forward` 即可
+- 若原方法含时间戳、合并、默认值、级联，必须在 Handler 或调用方保留等价逻辑
+
 ---
 
 ## 四、迁移检查清单
@@ -335,6 +368,8 @@ const versions = result.success && result.data
 - [ ] 所有 `dataLayer.xxx.listByStatus()` 改为 `dataBridge.query()` + `action: queryByIndex`
 - [ ] 所有 `dataLayer.xxx.save/put/update` 改为 `dataBridge.forward()` + try/catch
 - [ ] 对模式 E 复杂查询，添加 `// TODO: 迁移至 DataBridge` 标记
+- [ ] 对模式 F，检查原 dataLayer 方法是否含时间戳/合并逻辑，并在 Handler 中复刻
+- [ ] 若迁移持久化实体类型，同步更新 `src/data/types/` 与 `validate-data-consistency.ts` 映射
 
 ### 4.3 修改后验证
 
@@ -358,6 +393,9 @@ const versions = result.success && result.data
 | 索引查询缺参数 | `queryByIndex` 缺少 `indexName`/`indexValue` | 必须同时提供 `indexName` 和 `indexValue`，否则运行时断言失败 |
 | 复杂查询无直接等价物 | `listBySymbol` / `getLatest` 等自定义方法 | 评估客户端过滤或保留 TODO 标记，后续统一新增 action |
 | 测试 mock 未同步 | 测试失败，mock 的 dataLayer 方法未被调用 | 将 `vi.mocked(dataLayer.xxx.get)` 改为 `vi.mocked(dataBridge.query)` |
+| Handler 丢失原 dataLayer 业务逻辑 | `customAgent.save` 迁移后 `createdAt/updatedAt` 不再写入 | 若 `dataLayer.xxx.save()` 含时间戳/合并逻辑，必须在 Handler 中复刻或保留 dataLayer 调用 |
+| 类型层迁移后 validator 扫描不到字段 | `validate-data-consistency.ts` 报字段缺失 | validator 不识别 `interface A extends B {}`，需在 `src/data/types/` 中给出完整字段定义 |
+| 读操作全部改为 `dataBridge.query` 成本过高 | 简单查询可改，复杂聚合改不动 | data/ 层内部工具（如 queryBuilder）可保留 dataLayer 读；跨层 services 优先改为 DataBridge |
 
 ---
 
@@ -397,3 +435,4 @@ node node_modules/tsx/dist/cli.mjs scripts/audit-deadcode.ts
 |------|------|----------|
 | v1.0.0 | 2026-07-12 | 初始版本：基于 P0/P1 修复实践总结，覆盖 4 种迁移模式（core读取/service读取验证/service写入/service列表查询）、新增 Handler SOP、常见陷阱清单 |
 | v1.1.0 | 2026-07-12 | 新增模式 E（复杂查询/自定义方法处理策略）、客户端过滤示例、TODO 标记规范、测试 mock 同步陷阱 |
+| v1.2.0 | 2026-07-13 | 新增 Handler 业务逻辑保留、持久化实体类型归位、validator interface extends 限制、读操作分层策略 |

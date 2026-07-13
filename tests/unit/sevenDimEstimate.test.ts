@@ -80,7 +80,7 @@ describe('七维采集额度预估计算', () => {
         ...DEFAULT_DIMENSIONS[1],
         frequency: 'realtime' as const,
         batchSize: 50,
-      }
+      } as DimensionConfig
       const symbolCount = 100
       // realtime = 5分钟
       // 每个标的每月调用次数 = ceil(43200 / 5) = 8640
@@ -94,7 +94,7 @@ describe('七维采集额度预估计算', () => {
       const dimension = {
         ...DEFAULT_DIMENSIONS[0],
         batchSize: 200,
-      }
+      } as DimensionConfig
       const symbolCount = 100
       // 批次 = ceil(100 / 200) = 1
       const result = estimateMonthlyCalls(dimension, symbolCount)

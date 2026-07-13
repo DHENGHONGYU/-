@@ -228,8 +228,8 @@ describe('LLMScoreEnhancer 集成测试 — L4/L7 增强层 LLM 调用场景', (
       expect(Array.isArray(body['messages'])).toBe(true)
       const messages = body['messages'] as Array<{ role: string; content: string }>
       expect(messages).toHaveLength(2)
-      expect(messages[0].role).toBe('system')
-      expect(messages[1].role).toBe('user')
+      expect(messages[0]!.role).toBe('system')
+      expect(messages[1]!.role).toBe('user')
 
       // 验证：结果合并正确
       expect(result.layerId).toBe('l4')
@@ -292,7 +292,7 @@ describe('LLMScoreEnhancer 集成测试 — L4/L7 增强层 LLM 调用场景', (
       const lastCall = getLastFetchCall()
       const body = lastCall?.body as Record<string, unknown>
       const messages = body['messages'] as Array<{ role: string; content: string }>
-      const systemPrompt = messages[0].content
+      const systemPrompt = messages[0]!.content
       // system prompt 应包含层名、规则引擎评分、规则引擎摘要
       expect(systemPrompt).toContain('测试层 l4')
       expect(systemPrompt).toContain('3.00')
@@ -909,7 +909,7 @@ describe('LLMScoreEnhancer 集成测试 — L4/L7 增强层 LLM 调用场景', (
         const body = JSON.parse(init?.body as string) as {
           messages: Array<{ content: string }>
         }
-        const systemPrompt = body.messages[0].content
+        const systemPrompt = body.messages[0]!.content
 
         if (systemPrompt.includes('测试层 l4')) {
           return {

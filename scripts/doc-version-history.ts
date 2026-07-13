@@ -139,6 +139,7 @@ function renderHistoryRow(entry: HistoryEntry): string {
     deleted: '删除',
     'format-converted': '格式转换',
     unchanged: '无变化',
+    missing: '缺失',
   }
   return `| ${entry.timestamp} | ${entry.relativePath} | ${typeMap[entry.updateType]} | ${entry.category} | ${entry.sizeBytes} |`
 }

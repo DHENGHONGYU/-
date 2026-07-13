@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-07-12T06:04:09.207Z",
-  "agentsVersion": "v1.4.3",
-  "overallScore": 90,
+  "generatedAt": "2026-07-13T04:55:28.374Z",
+  "agentsVersion": "v1.4.6",
+  "overallScore": 93,
   "metrics": [
     {
       "name": "layers",
@@ -22,7 +22,7 @@
     {
       "name": "deepNesting",
       "label": "深层嵌套（≥4 层）",
-      "value": 0,
+      "value": 22,
       "baseline": 104,
       "unit": "处",
       "status": "warning",
@@ -40,7 +40,7 @@
     {
       "name": "duplicateConditions",
       "label": "重复 if 条件",
-      "value": 0,
+      "value": 2,
       "baseline": 39,
       "unit": "处",
       "status": "warning",
@@ -49,10 +49,10 @@
     {
       "name": "jsdoc",
       "label": "JSDoc 缺失",
-      "value": 9,
+      "value": 0,
       "baseline": 0,
       "unit": "处",
-      "status": "warning",
+      "status": "healthy",
       "detail": "audit:jsdoc"
     },
     {

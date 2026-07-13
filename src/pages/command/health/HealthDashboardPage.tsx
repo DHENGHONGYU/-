@@ -8,6 +8,7 @@ import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import { PageContainer, PageHeader } from '@/components/templates'
 import { mcpBridge } from '@/mcp/bridge/mcpBridge'
 import type { HealthMetric, HealthReport } from '@/types/modules/health.types'
+import MechanismHealthPanel from './MechanismHealthPanel'
 import { Activity, AlertCircle, CheckCircle2, RefreshCw, ShieldAlert, XCircle } from 'lucide-react'
 
 function statusIcon(status: HealthMetric['status']) {
@@ -189,6 +190,9 @@ export default function HealthDashboardPage(): React.JSX.Element {
           </Card>
         ))}
       </div>
+
+      {/* 自动化机制健康下钻面板 */}
+      <MechanismHealthPanel />
 
       {/* 说明 */}
       <Card>

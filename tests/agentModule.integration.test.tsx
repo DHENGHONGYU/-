@@ -1,5 +1,4 @@
 import '@testing-library/jest-dom/vitest'
-import React from 'react'
 import { describe, expect, it, vi } from 'vitest'
 import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -89,12 +88,6 @@ async function renderDetailPage(agentId: string): Promise<void> {
     },
     { timeout: 8000 },
   )
-}
-
-function getAgentDisplayName(agentId: string): string {
-  const entry = getAllAgentComponents().find((a) => a.agentId === agentId)
-  if (!entry) throw new Error(`Agent ${agentId} not found`)
-  return entry.displayName
 }
 
 function expectTextToExist(text: string): void {
@@ -212,7 +205,7 @@ describe('Agent 模块集成测试', () => {
     it('未找到页面返回注册表链接正确', async () => {
       await renderDetailPage('unknown-agent')
       const backLinks = screen.getAllByRole('link', { name: /返回注册表/ })
-      expect(backLinks[0].getAttribute('href')).toBe('/command/agents/registry')
+      expect(backLinks[0]!.getAttribute('href')).toBe('/command/agents/registry')
     })
   })
 
@@ -387,7 +380,7 @@ describe('Agent 模块集成测试', () => {
     it('智能体按 priority 降序排列', () => {
       const all = getAllAgentComponents()
       for (let i = 1; i < all.length; i++) {
-        expect(all[i - 1].priority).toBeGreaterThanOrEqual(all[i].priority)
+        expect(all[i - 1]!.priority).toBeGreaterThanOrEqual(all[i]!.priority)
       }
     })
   })

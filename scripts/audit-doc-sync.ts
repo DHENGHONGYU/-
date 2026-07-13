@@ -48,11 +48,8 @@ export interface Report extends AuditReport {
   }
 }
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = join(relative(process.cwd(), fileURLToPath(import.meta.url)), '..').split(/[\\/]/).reduce((acc, p) => join(acc, p), process.cwd())
-// 修正 __dirname：使用 path.dirname
-import { dirname as _dirname } from 'node:path'
-const ROOT = _dirname(fileURLToPath(import.meta.url)).replace(/[\\/]scripts$/, '')
+import { dirname } from 'node:path'
+const ROOT = dirname(fileURLToPath(import.meta.url)).replace(/[\\/]scripts$/, '')
 const SRC_DIR = join(ROOT, 'src')
 const DOCS_DIR = join(ROOT, 'docs')
 

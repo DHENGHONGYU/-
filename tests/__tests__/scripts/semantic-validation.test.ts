@@ -116,11 +116,11 @@ describe('语义级校验脚本', () => {
       timestamp: '2026-07-12T00:00:00.000Z',
       totalFiles: 2,
       totalViolations: 1,
-      scanMode: 'all',
+      scanMode: 'all' as const,
       findings: [{
         file: 'src/test.ts',
         symbolName: 'TestInterface',
-        symbolType: 'interface',
+        symbolType: 'interface' as const,
         missingSemantics: ['missingField'],
         matchedSemantics: ['id', 'name'],
       }],
