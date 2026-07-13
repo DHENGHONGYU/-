@@ -78,7 +78,7 @@ vi.mock('@/config/dbConfig', () => ({
   ENVELOPE_TARGET: { db: 'db' },
 }))
 
-import { initDualStrategyStoreSubscriptions, useDualStrategyStore } from '@/store/dualStrategyStore'
+import { initDualStrategyStoreSubscriptions } from '@/store/dualStrategyStore'
 
 let cleanup: (() => void) | undefined
 

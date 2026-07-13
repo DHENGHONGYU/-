@@ -103,8 +103,6 @@ const CONSTANTS_IMPORT_BUSINESS = /from\s+['"](?:\.\.\/(services|store|pages|com
 const IMPORT_TYPE_PATTERN = /^\s*import\s+type\s+/
 
 // v2.0 新增：检测动态 import() 和 re-export
-const DYNAMIC_IMPORT_PATTERN = /import\s*\(\s*['"]([^'"]+)['"]\s*\)/
-const REEXPORT_PATTERN = /export\s+(?:\*|{[^}]*})\s+from\s+['"]([^'"]+)['"]/
 
 function isTsFile(name: string): boolean {
   return name.endsWith('.ts') || name.endsWith('.tsx')
@@ -339,7 +337,7 @@ function scanFile(file: string): Pick<Report, 'violations' | 'warnings'> {
         column: 1,
         type: 'L5/L4 导入数据层（读）',
         message: 'L5/L4 经 dataLayer 读取是过渡期允许行为，建议逐步迁移到 Service',
-        context: lines[importLine].trim().slice(0, 80),
+        context: lines[importLine]!.trim().slice(0, 80),
       })
     }
   }

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { QueryBuilder } from '@/data/queryBuilder'
+import { QueryBuilder, type QueryBuilderResult } from '@/data/queryBuilder'
 
 // --- Mock dataLayer ---
 const mockStocksGet = vi.fn().mockImplementation(async (symbol: string) => ({
@@ -334,7 +334,7 @@ describe('QueryBuilder', () => {
       includeBasic: true,
     })
     expect(result.ok).toBe(true)
-    const results = result.value
+    const results = (result as { ok: true; value: Map<string, QueryBuilderResult> }).value
     expect(results.size).toBe(2)
     expect(results.get('000001.SZ')?.stock?.symbol).toBe('000001.SZ')
     expect(results.get('600036.SH')?.stock?.symbol).toBe('600036.SH')
@@ -345,6 +345,6 @@ describe('QueryBuilder', () => {
       includeBasic: true,
     })
     expect(result.ok).toBe(true)
-    expect(result.value.size).toBe(0)
+    expect((result as { ok: true; value: Map<string, QueryBuilderResult> }).value.size).toBe(0)
   })
 })

@@ -3,7 +3,6 @@ import {
   rotationSignalStoreNormalState,
   mockRotationSignals,
   emptyRotationSignals,
-  singleRotationSignal,
 } from '../../fixtures/store-mock-data'
 import { resetCacheStats, getCacheStatsSnapshot, resetAllMemoCaches } from '@/lib/derivedCache'
 
@@ -62,7 +61,7 @@ describe('rotationSignalStore.derived.ts 派生查询单元测试', () => {
   describe('基础聚合派生', () => {
     it('isSignalsEmpty 应正确判断空列表', () => {
       expect(isSignalsEmpty()).toBe(false)
-      mockGetState.mockReturnValue({ ...rotationSignalStoreNormalState, signals: emptyRotationSignals })
+      mockGetState.mockReturnValue({ ...rotationSignalStoreNormalState, signals: emptyRotationSignals } as never)
       expect(isSignalsEmpty()).toBe(true)
     })
 
@@ -72,13 +71,13 @@ describe('rotationSignalStore.derived.ts 派生查询单元测试', () => {
 
     it('isLoading 应返回加载状态', () => {
       expect(isLoading()).toBe(false)
-      mockGetState.mockReturnValue({ ...rotationSignalStoreNormalState, loading: true })
+      mockGetState.mockReturnValue({ ...rotationSignalStoreNormalState, loading: true } as never)
       expect(isLoading()).toBe(true)
     })
 
     it('hasError 应正确判断是否有错误', () => {
       expect(hasError()).toBe(false)
-      mockGetState.mockReturnValue({ ...rotationSignalStoreNormalState, error: 'err' })
+      mockGetState.mockReturnValue({ ...rotationSignalStoreNormalState, error: 'err' } as never)
       expect(hasError()).toBe(true)
     })
   })
@@ -128,7 +127,7 @@ describe('rotationSignalStore.derived.ts 派生查询单元测试', () => {
 
     it('hasAnyTriggered 应正确判断是否有触发', () => {
       expect(hasAnyTriggered()).toBe(true)
-      mockGetState.mockReturnValue({ ...rotationSignalStoreNormalState, signals: emptyRotationSignals })
+      mockGetState.mockReturnValue({ ...rotationSignalStoreNormalState, signals: emptyRotationSignals } as never)
       expect(hasAnyTriggered()).toBe(false)
     })
   })
@@ -208,7 +207,7 @@ describe('rotationSignalStore.derived.ts 派生查询单元测试', () => {
 
   describe('边界情况', () => {
     beforeEach(() => {
-      mockGetState.mockReturnValue({ ...rotationSignalStoreNormalState, signals: emptyRotationSignals })
+      mockGetState.mockReturnValue({ ...rotationSignalStoreNormalState, signals: emptyRotationSignals } as never)
     })
 
     it('空状态：所有聚合应返回零值', () => {

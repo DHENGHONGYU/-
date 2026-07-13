@@ -35,19 +35,18 @@ import type { DailyQuotes } from '@/data/types'
 import { getLogger } from '@/lib/logger'
 import { calculatePosition } from '@/services/trading/positionSizer'
 import type { BacktestStrategy, BacktestResult } from '@/types/modules/backtest.types'
+import type { BacktestEvent, InternalPosition } from './backtestTypes'
 import {
   loadBacktestEvents,
   groupEventsByDate,
   preloadQuotes,
   getPriceForDate,
   generateDateRange,
-  type BacktestEvent,
 } from './backtestEventLoader'
 import {
   calculateBacktestMetrics,
   buildVirtualPositions,
   createEmptyResult,
-  type InternalPosition,
 } from './backtestMetrics'
 
 const logger = getLogger()

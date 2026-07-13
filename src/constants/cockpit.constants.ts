@@ -322,6 +322,16 @@ export const WIDGET_DEFAULT_DATA_SOURCE = {
     enabled: true,
   },
   // ============================================================
+  // 系统机制健康监控 Widget 数据源（数据来自 mechanismHealthStore，非真实端点）
+  // ============================================================
+  mechanismHealth: {
+    type: ACTIVE_DATA_SOURCE,
+    mode: COLLECTION_MODE.ONCE,
+    interval: 0,
+    endpoint: '/system/mechanism-health',
+    enabled: false,
+  },
+  // ============================================================
   // 新增金融业务 Widget 数据源
   // ============================================================
   investmentProfile: {
@@ -565,6 +575,11 @@ export const DEFAULT_WIDGET_CONFIG = {
   industryChain: {
     title: '产业链图谱',
     category: '行业分析',
+    size: { cols: 2, rows: 2 },
+  },
+  mechanismHealth: {
+    title: '机制健康监控',
+    category: 'system',
     size: { cols: 2, rows: 2 },
   },
 }

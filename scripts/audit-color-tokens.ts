@@ -112,7 +112,7 @@ async function auditColorTokens(): Promise<void> {
 
 import { pathToFileURL } from 'node:url'
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (import.meta.url === pathToFileURL(process.argv[1]!).href) {
   auditColorTokens().catch((error) => {
     console.error('审计脚本执行失败:', error)
     process.exit(1)

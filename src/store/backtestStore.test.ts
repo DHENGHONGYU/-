@@ -13,6 +13,12 @@ const mockOrdersList = vi.hoisted(() => vi.fn())
 const mockSignalsList = vi.hoisted(() => vi.fn())
 const mockDailyQuotesGet = vi.hoisted(() => vi.fn())
 
+const mockExportBacktestReport = vi.hoisted(() => vi.fn())
+
+vi.mock('@/services/export/backtestExportService', () => ({
+  exportBacktestReport: mockExportBacktestReport,
+}))
+
 vi.mock('@/data/dataLayer', () => ({
   dataLayer: {
     orders: { list: mockOrdersList },
@@ -116,10 +122,12 @@ beforeEach(() => {
       initialCapital: 1_000_000,
     },
     results: null,
+    history: [],
     loading: false,
     error: null,
     lastRunAt: null,
   })
+  mockExportBacktestReport.mockClear()
 })
 
 // ============================================================
@@ -279,6 +287,118 @@ describe('useBacktestStore', () => {
     expect(state.results!.positions).toBeDefined()
     expect(state.results!.dailyValues).toBeDefined()
     expect(state.results!.dailyValues!.length).toBeGreaterThan(0)
+  })
+
+  // ---- 历史回测记录（P0 新增 API） ----
+
+  it('runBacktest: 执行后自动保存到 history', async () => {
+    mockOrdersList.mockResolvedValue([createMockOrder()])
+
+    await useBacktestStore.getState().runBacktest()
+
+    const state = useBacktestStore.getState()
+    expect(state.history.length).toBe(1)
+    expect(state.history[0]!.config.strategy).toBe('hot_sector')
+    expect(state.history[0]!.result).toEqual(state.results)
+    expect(state.history[0]!.id).toBeDefined()
+    expect(state.history[0]!.createdAt).toBeGreaterThan(0)
+  })
+
+  it('getBacktestById: 返回匹配的历史记录', async () => {
+    mockOrdersList.mockResolvedValue([createMockOrder()])
+    await useBacktestStore.getState().runBacktest()
+
+    const record = useBacktestStore.getState().history[0]!
+    const found = useBacktestStore.getState().getBacktestById(record.id)
+
+    expect(found).toBeDefined()
+    expect(found!.id).toBe(record.id)
+    expect(found!.config).toEqual(record.config)
+  })
+
+  it('getBacktestById: 不存在的 ID 返回 undefined', () => {
+    const found = useBacktestStore.getState().getBacktestById('non-existent-id')
+    expect(found).toBeUndefined()
+  })
+
+  it('listBacktestHistory: 无过滤返回全部', async () => {
+    mockOrdersList.mockResolvedValue([createMockOrder()])
+    await useBacktestStore.getState().runBacktest()
+    useBacktestStore.getState().setConfig({ strategy: 'value_pit' })
+    await useBacktestStore.getState().runBacktest()
+
+    const all = useBacktestStore.getState().listBacktestHistory()
+    expect(all.length).toBe(2)
+  })
+
+  it('listBacktestHistory: 按策略过滤', async () => {
+    mockOrdersList.mockResolvedValue([createMockOrder()])
+    await useBacktestStore.getState().runBacktest()
+    useBacktestStore.getState().setConfig({ strategy: 'value_pit' })
+    await useBacktestStore.getState().runBacktest()
+
+    const hotSector = useBacktestStore.getState().listBacktestHistory({ strategy: 'hot_sector' })
+    expect(hotSector.length).toBe(1)
+    expect(hotSector[0]!.config.strategy).toBe('hot_sector')
+
+    const valuePit = useBacktestStore.getState().listBacktestHistory({ strategy: 'value_pit' })
+    expect(valuePit.length).toBe(1)
+    expect(valuePit[0]!.config.strategy).toBe('value_pit')
+  })
+
+  it('listBacktestHistory: 按时间范围过滤', async () => {
+    mockOrdersList.mockResolvedValue([createMockOrder()])
+    await useBacktestStore.getState().runBacktest()
+
+    const now = Date.now()
+    const past = now - 86_400_000 // 1天前
+    const future = now + 86_400_000 // 1天后
+
+    const inRange = useBacktestStore.getState().listBacktestHistory({ fromDate: past, toDate: future })
+    expect(inRange.length).toBe(1)
+
+    const outOfRange = useBacktestStore.getState().listBacktestHistory({ fromDate: future, toDate: future + 1000 })
+    expect(outOfRange.length).toBe(0)
+  })
+
+  it('listBacktestHistory: 按 limit 限制条数', async () => {
+    mockOrdersList.mockResolvedValue([createMockOrder()])
+    await useBacktestStore.getState().runBacktest()
+    await useBacktestStore.getState().runBacktest()
+    await useBacktestStore.getState().runBacktest()
+
+    const limited = useBacktestStore.getState().listBacktestHistory({ limit: 2 })
+    expect(limited.length).toBe(2)
+  })
+
+  it('history 保留上限为 50 条', async () => {
+    mockOrdersList.mockResolvedValue([createMockOrder()])
+
+    // 连续执行 55 次回测
+    for (let i = 0; i < 55; i++) {
+      await useBacktestStore.getState().runBacktest()
+    }
+
+    const state = useBacktestStore.getState()
+    expect(state.history.length).toBe(50)
+  })
+
+  it('exportReportById: 按历史记录 ID 导出成功', async () => {
+    mockExportBacktestReport.mockResolvedValue({ success: true, filename: 'report.pdf', blob: new Blob() })
+    mockOrdersList.mockResolvedValue([createMockOrder()])
+    await useBacktestStore.getState().runBacktest()
+
+    const record = useBacktestStore.getState().history[0]!
+    const result = await useBacktestStore.getState().exportReportById(record.id, { format: 'pdf' })
+
+    expect(result.success).toBe(true)
+    expect(mockExportBacktestReport).toHaveBeenCalledWith(record.result, record.config, { format: 'pdf' })
+  })
+
+  it('exportReportById: 不存在的 ID 抛出错误', async () => {
+    await expect(
+      useBacktestStore.getState().exportReportById('non-existent-id', { format: 'pdf' }),
+    ).rejects.toThrow('未找到回测记录')
   })
 })
 

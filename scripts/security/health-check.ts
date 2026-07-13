@@ -94,7 +94,24 @@ function checkAuthorizationConsistency(policy: SecurityPolicy): void {
   const evaluateInAdmin = policy.authorizationRules.requireAdminApproval.includes('playwright_evaluate')
   addResult('授权策略', 'evaluate 授权级别', evaluateInAdmin ? 'PASS' : 'FAIL', evaluateInAdmin ? 'requireAdminApproval（正确）' : '应在 requireAdminApproval 中')
 
-  const readOnlyTools = ['playwright_navigate', 'playwright_screenshot', 'playwright_get_visible_text']
+  const readOnlyTools = [
+    'playwright_navigate', 'playwright_screenshot', 'playwright_get_visible_text', 'playwright_close',
+    'fetch_stock_basic', 'fetch_stock_kline', 'fetch_financial_report', 'fetch_trading_calendar', 'fetch_sector_data',
+    'get_score_history', 'get_score_factors',
+    'get_orders', 'check_order_risk', 'calculate_position', 'get_strategy_snapshot',
+    'fetch_news', 'fetch_news_by_stock', 'analyze_sentiment', 'get_news_bookmarks',
+    'list_factors', 'get_screen_templates',
+    'get_backtest_results', 'get_backtest_history',
+    'list_pool_stocks', 'get_stock_groups',
+    'health_check', 'get_system_status', 'get_config', 'generate_migration_report',
+    'get_collect_tasks', 'get_collect_progress', 'get_collect_history',
+    'list_files', 'read_file', 'directory_listing',
+    'list_workflows', 'get_workflow', 'get_run_status', 'list_runs', 'list_schedules', 'list_triggers', 'export_workflows',
+    'list_by_theme',
+    'query_knowledge',
+    'list_execution_plans', 'get_orphan_plans',
+    'analyze_stock'
+  ]
   const autoToolsValid = policy.authorizationRules.autoApprove.every((t) => readOnlyTools.includes(t))
   addResult('授权策略', 'autoApprove 只读性', autoToolsValid ? 'PASS' : 'WARN', autoToolsValid ? '全部为只读工具' : '包含非只读工具')
 }
@@ -167,8 +184,10 @@ function checkMcpConsistency(policy: SecurityPolicy): void {
       for (const server of registeredServers) {
         if (server in policy.trustedMcpServers) {
           addResult('MCP 配置', `${server} 信任状态`, 'PASS', '在 trustedMcpServers 中')
+        } else if (policy.observedMcpServers && server in policy.observedMcpServers) {
+          addResult('MCP 配置', `${server} 观察状态`, 'PASS', '在 observedMcpServers 中')
         } else {
-          addResult('MCP 配置', `${server} 信任状态`, 'FAIL', '已注册但未在 trustedMcpServers 中')
+          addResult('MCP 配置', `${server} 信任状态`, 'FAIL', '已注册但未在 trustedMcpServers 或 observedMcpServers 中')
         }
       }
 

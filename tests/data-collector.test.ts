@@ -78,8 +78,8 @@ describe('E-2: data-collector 核心功能', () => {
       const { klinesToDailyQuotes } = await import('@/services/data-collector/directDataAPI')
 
       const klines = [
-        { date: '2026-07-01', open: 10, close: 11, high: 11.5, low: 9.8, volume: 1000000, turnover: 11000000 },
-        { date: '2026-07-02', open: 11, close: 10.5, high: 11.2, low: 10.3, volume: 1200000, turnover: 12600000 },
+        { date: '2026-07-01', open: 10, close: 11, high: 11.5, low: 9.8, volume: 1000000, amount: 11000000 },
+        { date: '2026-07-02', open: 11, close: 10.5, high: 11.2, low: 10.3, volume: 1200000, amount: 12600000 },
       ]
 
       const result = klinesToDailyQuotes('sz000001', klines)

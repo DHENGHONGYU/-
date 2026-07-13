@@ -30,14 +30,13 @@ import {
   MODULE_ID,
   STORE_NAME,
   DB_OPERATION,
-  RESEARCH_STATUS,
   DATA_SOURCE,
   ENVELOPE_ACTION,
   ENVELOPE_TARGET,
   type AclPermission,
-  type ResearchStatus,
   type DataSource,
 } from '@/config/dbConfig'
+import { RESEARCH_STATUS, type ResearchStatus } from '@/constants/stockpool.constants'
 import { mcpRegistry } from '@/mcp/core/registry'
 import { registerAllServers } from '@/mcp/register'
 import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest'

@@ -5,6 +5,39 @@ import path from 'node:path'
 export default defineConfig({
   plugins: [
     react(),
+    // P1-2 安全合规：生产构建注入 Content-Security-Policy 响应头（等价 meta）
+    // 仅 build 阶段注入（apply:'build'），避免破坏 dev 的 HMR/WebSocket；
+    // script-src 'self' 禁用 unsafe-inline（原内联脚本已外置为 public/theme-boot.js）。
+    // 说明：style-src 保留 'unsafe-inline' 是 React 动态行内样式的刚需；
+    // connect-src 当前放行 'self' https:，上线前应收紧为精确行情域名白名单。
+    {
+      name: 'inject-csp-meta',
+      apply: 'build',
+      transformIndexHtml(html) {
+        const csp = [
+          "default-src 'self'",
+          "script-src 'self'",
+          "style-src 'self' 'unsafe-inline'",
+          "img-src 'self' data: https:",
+          "font-src 'self' data:",
+          "connect-src 'self' https:",
+          "worker-src 'self' blob:",
+          "object-src 'none'",
+          "base-uri 'self'",
+          "frame-ancestors 'none'",
+        ].join('; ')
+        return {
+          html,
+          tags: [
+            {
+              tag: 'meta',
+              attrs: { 'http-equiv': 'Content-Security-Policy', content: csp },
+              injectTo: 'head-prepend',
+            },
+          ],
+        }
+      },
+    },
     {
       name: 'mock-trade-api',
       configureServer(server) {
@@ -118,20 +151,20 @@ export default defineConfig({
   build: {
     target: 'es2022',
     outDir: 'dist',
-    sourcemap: false,  // PR-5 5.2：关闭生产 sourcemap，调试时改为 'hidden'
+    sourcemap: false,
+    chunkSizeWarningLimit: 800,
     rollupOptions: {
       output: {
         manualChunks: {
-          // 核心框架
           'vendor': ['react', 'react-dom', 'react-router', 'zustand', 'dayjs'],
-          // UI 组件库
           'ui': ['lucide-react', 'clsx', 'tailwind-merge', '@heroicons/react'],
-          // 图表库（PR-5 5.1：消除 recharts 重复打包 ~662 kB）
           'charts': ['recharts', 'lightweight-charts'],
-          // PDF 导出（PR-5 5.1：配合 backtestExportService 懒加载）
           'pdf': ['jspdf', 'jspdf-autotable'],
-          // Excel 处理（PR-5 5.1：配合 backtestExportService 懒加载）
           'excel': ['xlsx'],
+          'transformers': ['@xenova/transformers'],
+          'duckdb': ['@duckdb/duckdb-wasm'],
+          'purify': ['dompurify'],
+          'html2canvas': ['html2canvas'],
         },
       },
     },

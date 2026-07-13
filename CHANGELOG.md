@@ -2,6 +2,8 @@
 
 > 本日志按 [SemVer](https://semver.org/lang/zh-CN/) 记录 V9 智能投研复盘系统的版本变更、架构决策与验收数据。  
 > 未发布版本以 `Unreleased` 开头；已发布版本附带构建与测试硬指标。
+> 
+> ⚠️ **历史引用声明**：本日志中 v2.4.0 之前的条目引用的部分文档路径（如 `docs/03-architecture-standards.md`、`docs/CODE-REVIEW.md`、`docs/reports/code-graph.json` 等）可能因文档体系重构（SDLC 目录重组）已发生变更。如需最新路径，请查询 `docs/README.md` 或 `docs/00-meta/` 索引。
 
 ---
 
@@ -25,6 +27,7 @@
   - 新增 `docs/RISK_DERIVED_DATA_DEFINITION.md`：`riskStore.derived.ts` 详细文档（风控三态规则、熔断状态机、趋势分析规则）。
   - 更新 `docs/DATA_DICTIONARY_INDEX.md`：添加 Store 派生计算、事件订阅、基础设施模块等索引条目。
   - 更新 `docs/03-architecture-standards.md`：新增 Store 派生计算与事件订阅架构说明（§3.1.10）、V6 评分引擎 L3 层辅助函数说明（§3.5.1）。
+  - 新增机制健康监控模块文档：`src/store/mechanismHealthStore.ts`、`src/services/system/mechanismMonitorService.ts`、`src/cockpit/widgets/MechanismHealthWidget.tsx`、`src/pages/command/health/MechanismHealthPanel.tsx` 已在 CHANGELOG 中记录。
 
 - **审计脚本修复（v2.6.0）**：
   - 修复 `scripts/audit-doc-sync.ts` 逻辑缺陷：将完整路径检查移到噪音词检查之前。原逻辑中，文件名是噪音词（如 `helpers`）的文件即使在文档中有完整路径引用，也会被误判为未文档化。修复后，完整路径引用优先于噪音词过滤，避免误判。

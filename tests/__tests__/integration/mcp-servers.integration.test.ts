@@ -22,13 +22,13 @@ import { dataLayer } from '@/data/dataLayer'
 import {
   STORE_NAME,
   MODULE_ID,
-  RESEARCH_STATUS,
   DATA_SOURCE,
   ENVELOPE_ACTION,
   ENVELOPE_TARGET,
   ACL_MATRIX,
   DB_OPERATION,
 } from '@/config/dbConfig'
+import { RESEARCH_STATUS } from '@/constants/stockpool.constants'
 import { mcpRegistry } from '@/mcp/core/registry'
 import { registerAllServers } from '@/mcp/register'
 

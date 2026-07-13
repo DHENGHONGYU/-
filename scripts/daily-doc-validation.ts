@@ -475,26 +475,7 @@ function validateIntegrity(files: readonly ScannedFile[]): SubValidatorResult {
   return { name: 'integrity', findings, scannedCount: files.length }
 }
 
-function extractMarkdownLinks(content: string): string[] {
-  const links: string[] = []
-  // [text](path) 或 [text](./path)
-  const markdownLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/g
-  let match
-  while ((match = markdownLinkRegex.exec(content)) !== null) {
-    const target = match[2]
-    if (!target) continue
-    if (target.startsWith('http://') || target.startsWith('https://') || target.startsWith('#')) {
-      continue
-    }
-    links.push(target)
-  }
-  return links
-}
 
-function resolveRelativeLink(sourceDir: string, link: string): string {
-  const normalized = link.split('#')[0] ?? link
-  return resolve(sourceDir, normalized).replace(/\\/g, '/')
-}
 
 export function validateConsistency(files: readonly ScannedFile[]): SubValidatorResult {
   logger.info(`[DailyDocValidation] 开始一致性验证`, { totalFiles: files.length })

@@ -115,7 +115,7 @@ describe('MigrationPreviewTab', () => {
     news: [],
     newsStockMaps: [],
     sentimentCache: [],
-  }
+  } as unknown as import('@/services/system/migration/migrationTypes').V9ImportShape
 
   const mockBackup = {
     data: { stocks: [] },

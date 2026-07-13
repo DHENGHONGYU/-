@@ -4,9 +4,6 @@ import { db } from '@/data/db'
 import { dataBridge } from '@/core/databridge'
 import { STORE_NAME } from '@/config/dbConfig'
 import { fetchFinancial } from '@/services/fetcher/fetcherService'
-import { getLogger } from '@/lib/logger'
-
-const logger = getLogger()
 
 function mockFetch(response: unknown, ok = true) {
   return vi.fn().mockResolvedValue({

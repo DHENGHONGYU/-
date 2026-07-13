@@ -270,7 +270,7 @@ function checkTokenOptimizationDocs(): Finding[] {
   return findings
 }
 
-function estimateTokenSavings(violations: Finding[], warnings: Finding[]): number {
+function estimateTokenSavings(violations: Finding[], _warnings: Finding[]): number {
   let savings = 0
 
   // 增量更新节省：7.5M tokens/月

@@ -1,7 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import type { SectorHeatmapData } from '@/types/modules/widget.types'
-import { UI_TEXT } from '@/constants/uiText'
 import { buildWidgetConfig } from './helpers/widget-test.utils'
 
 // ============================================================
@@ -188,7 +187,7 @@ describe('SectorHeatmapWidget', () => {
     const spans = cell?.querySelectorAll('span') ?? []
     expect(spans.length).toBeGreaterThanOrEqual(2)
     const changeSpan = spans[1]
-    expect(changeSpan.getAttribute('style')).toContain('color')
+    expect(changeSpan!.getAttribute('style')).toContain('color')
   })
 
   it('uses danger color for negative change text in heatmap cell', () => {
@@ -201,7 +200,7 @@ describe('SectorHeatmapWidget', () => {
     const spans = cell?.querySelectorAll('span') ?? []
     expect(spans.length).toBeGreaterThanOrEqual(2)
     const changeSpan = spans[1]
-    expect(changeSpan.getAttribute('style')).toContain('color')
+    expect(changeSpan!.getAttribute('style')).toContain('color')
   })
 
   // ----------------------------------------------------------

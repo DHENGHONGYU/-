@@ -4,7 +4,6 @@ import {
   riskStoreBlockedState,
   mockRiskVerdicts,
   emptyRiskVerdicts,
-  allBlockedVerdicts,
 } from '../../fixtures/store-mock-data'
 import { resetCacheStats, getCacheStatsSnapshot, resetAllMemoCaches } from '@/lib/derivedCache'
 
@@ -61,19 +60,19 @@ describe('riskStore.derived.ts 派生查询单元测试', () => {
       mockGetState.mockReturnValue(riskStoreNormalState as never)
       expect(isExecutable()).toBe(true)
 
-      mockGetState.mockReturnValue({ ...riskStoreNormalState, triState: 'blocked' })
+      mockGetState.mockReturnValue({ ...riskStoreNormalState, triState: 'blocked' } as never)
       expect(isExecutable()).toBe(false)
 
-      mockGetState.mockReturnValue({ ...riskStoreNormalState, triState: 'warning' })
+      mockGetState.mockReturnValue({ ...riskStoreNormalState, triState: 'warning' } as never)
       expect(isExecutable()).toBe(true)
     })
 
     it('riskLevelText 应返回中文描述', () => {
-      mockGetState.mockReturnValue({ ...riskStoreNormalState, triState: 'normal' })
+      mockGetState.mockReturnValue({ ...riskStoreNormalState, triState: 'normal' } as never)
       expect(riskLevelText()).toBe('正常')
-      mockGetState.mockReturnValue({ ...riskStoreNormalState, triState: 'warning' })
+      mockGetState.mockReturnValue({ ...riskStoreNormalState, triState: 'warning' } as never)
       expect(riskLevelText()).toBe('警告')
-      mockGetState.mockReturnValue({ ...riskStoreNormalState, triState: 'blocked' })
+      mockGetState.mockReturnValue({ ...riskStoreNormalState, triState: 'blocked' } as never)
       expect(riskLevelText()).toBe('阻塞')
     })
 
@@ -84,7 +83,7 @@ describe('riskStore.derived.ts 派生查询单元测试', () => {
     })
 
     it('pendingBlocks 应返回最近裁决的 blocks', () => {
-      mockGetState.mockReturnValue({ ...riskStoreNormalState, triState: 'blocked' })
+      mockGetState.mockReturnValue({ ...riskStoreNormalState, triState: 'blocked' } as never)
       // verdict-3 的 blocks: ['单股集中度过高', '超出单笔限额']
       // 但 latestVerdict 是 verdict-4（triState: normal, blocks: []）
       expect(pendingBlocks()).toEqual([])
@@ -93,7 +92,7 @@ describe('riskStore.derived.ts 派生查询单元测试', () => {
       mockGetState.mockReturnValue({
         ...riskStoreNormalState,
         verdicts: [mockRiskVerdicts[2]!],  // verdict-3
-      })
+      } as never)
       expect(pendingBlocks()).toEqual(['单股集中度过高', '超出单笔限额'])
     })
 
@@ -117,16 +116,16 @@ describe('riskStore.derived.ts 派生查询单元测试', () => {
     })
 
     it('circuitStateText 应返回中文描述', () => {
-      mockGetState.mockReturnValue({ ...riskStoreNormalState, circuitState: 'closed' })
+      mockGetState.mockReturnValue({ ...riskStoreNormalState, circuitState: 'closed' } as never)
       expect(circuitStateText()).toBe('闭合')
-      mockGetState.mockReturnValue({ ...riskStoreNormalState, circuitState: 'open' })
+      mockGetState.mockReturnValue({ ...riskStoreNormalState, circuitState: 'open' } as never)
       expect(circuitStateText()).toBe('开启')
-      mockGetState.mockReturnValue({ ...riskStoreNormalState, circuitState: 'half-open' })
+      mockGetState.mockReturnValue({ ...riskStoreNormalState, circuitState: 'half-open' } as never)
       expect(circuitStateText()).toBe('半开')
     })
 
     it('isCircuitHalfOpen 应判断半开状态', () => {
-      mockGetState.mockReturnValue({ ...riskStoreNormalState, circuitState: 'half-open' })
+      mockGetState.mockReturnValue({ ...riskStoreNormalState, circuitState: 'half-open' } as never)
       expect(isCircuitHalfOpen()).toBe(true)
     })
   })
@@ -195,7 +194,8 @@ describe('riskStore.derived.ts 派生查询单元测试', () => {
 
   describe('memoizeByRef 缓存性能验证', () => {
     it('verdictStats 相同引用应命中缓存', () => {
-      const verdicts = mockRiskVerdicts
+      blockedCount()  // 内部调用 verdictStats
+      blockedCount()  // 内部调用 verdictStats
       blockedCount()  // 内部调用 verdictStats
       blockedCount()
       blockedCount()
@@ -211,11 +211,11 @@ describe('riskStore.derived.ts 派生查询单元测试', () => {
       const verdicts1 = mockRiskVerdicts
       const verdicts2 = [...mockRiskVerdicts]
 
-      mockGetState.mockReturnValue({ ...riskStoreNormalState, verdicts: verdicts1 })
+      mockGetState.mockReturnValue({ ...riskStoreNormalState, verdicts: verdicts1 } as never)
       blockedCount()  // miss
       blockedCount()  // hit
 
-      mockGetState.mockReturnValue({ ...riskStoreNormalState, verdicts: verdicts2 })
+      mockGetState.mockReturnValue({ ...riskStoreNormalState, verdicts: verdicts2 } as never)
       blockedCount()  // miss
 
       const stats = getCacheStatsSnapshot()['verdictStats']
@@ -226,7 +226,7 @@ describe('riskStore.derived.ts 派生查询单元测试', () => {
 
   describe('边界情况', () => {
     beforeEach(() => {
-      mockGetState.mockReturnValue({ ...riskStoreNormalState, verdicts: emptyRiskVerdicts })
+      mockGetState.mockReturnValue({ ...riskStoreNormalState, verdicts: emptyRiskVerdicts } as never)
     })
 
     it('空状态：latestVerdict 应返回 null', () => {
