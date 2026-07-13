@@ -1,7 +1,7 @@
 /**
  * dataLayer.ts 单元测试
  *
- * 覆盖全部 24 个 store 及 dataManager 的读写操作，
+ * 覆盖全部 33 个 store 及 dataManager 的读写操作，
  * 包含成功路径、失败路径、边界条件共 26+ 个测试场景。
  *
  * @vitest
@@ -91,6 +91,13 @@ import {
   tradeReviewStore,
   watchlistStore,
   customAgentStore,
+  newsBookmarkStore,
+  collectConfigStore,
+  traceRecordStore,
+  workflowDefStore,
+  workflowScheduleStore,
+  workflowTriggerStore,
+  workflowRunStore,
   dataManager,
   dataLayer,
 } from './dataLayer'
@@ -1500,7 +1507,7 @@ describe('dataLayer', () => {
   // ─── dataLayer 聚合器 ───────────────────────────────────
 
   describe('dataLayer aggregator', () => {
-    it('暴露全部 26 个 store 及 manager', () => {
+    it('暴露全部 33 个 store 及 manager', () => {
       expect(dataLayer.stocks).toBe(stockStore)
       expect(dataLayer.v6Scores).toBe(v6ScoreStore)
       expect(dataLayer.dailyQuotes).toBe(dailyQuoteStore)
@@ -1527,11 +1534,18 @@ describe('dataLayer', () => {
       expect(dataLayer.tradeReviews).toBe(tradeReviewStore)
       expect(dataLayer.watchlists).toBe(watchlistStore)
       expect(dataLayer.customAgents).toBe(customAgentStore)
+      expect(dataLayer.newsBookmarks).toBe(newsBookmarkStore)
+      expect(dataLayer.collectConfig).toBe(collectConfigStore)
+      expect(dataLayer.traceRecords).toBe(traceRecordStore)
+      expect(dataLayer.workflowDefs).toBe(workflowDefStore)
+      expect(dataLayer.workflowSchedules).toBe(workflowScheduleStore)
+      expect(dataLayer.workflowTriggers).toBe(workflowTriggerStore)
+      expect(dataLayer.workflowRuns).toBe(workflowRunStore)
       expect(dataLayer.manager).toBe(dataManager)
     })
 
-    it('共计 27 个属性', () => {
-      expect(Object.keys(dataLayer)).toHaveLength(27)
+    it('共计 34 个属性', () => {
+      expect(Object.keys(dataLayer)).toHaveLength(34)
     })
   })
 

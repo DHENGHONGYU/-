@@ -9,7 +9,9 @@
  * - searchVectors 用余弦相似度召回 top-k
  */
 
-import { dataLayer } from '@/data/dataLayer'
+import { STORE_NAME } from '@/config/dbConfig'
+import type { LocalDoc } from '@/data/types'
+import { queryGet, queryList, sendWriteEnvelope } from '@/data/dataLayerHelpers'
 import { getLogger } from '@/lib/logger'
 import { cosineSimilarity } from '@/services/system/localEmbeddingService'
 import type {
@@ -46,7 +48,7 @@ export class VectorProviderImpl implements StorageProvider {
 
   async get<T>(options: GetOptions): Promise<QueryResult<T>> {
     try {
-      const result = await dataLayer.localDocs.get(String(options.key))
+      const result = await queryGet<LocalDoc>(STORE_NAME.localDocs, String(options.key))
       return { success: true, data: result as unknown as T }
     } catch (err) {
       return { success: false, error: err instanceof Error ? err.message : String(err) }
@@ -55,7 +57,7 @@ export class VectorProviderImpl implements StorageProvider {
 
   async list<T>(_options?: ListOptions): Promise<ListResult<T>> {
     try {
-      const docs = await dataLayer.localDocs.list()
+      const docs = await queryList<LocalDoc>(STORE_NAME.localDocs)
       const data = docs as unknown as T[]
       return { success: true, data }
     } catch (err) {
@@ -69,7 +71,7 @@ export class VectorProviderImpl implements StorageProvider {
 
   async delete(options: DeleteOptions): Promise<QueryResult<void>> {
     try {
-      await dataLayer.localDocs.get(String(options.key))
+      await queryGet<LocalDoc>(STORE_NAME.localDocs, String(options.key))
       return { success: true }
     } catch (err) {
       return { success: false, error: err instanceof Error ? err.message : String(err) }
@@ -78,7 +80,7 @@ export class VectorProviderImpl implements StorageProvider {
 
   async healthCheck(): Promise<boolean> {
     try {
-      await dataLayer.localDocs.list()
+      await queryList<LocalDoc>(STORE_NAME.localDocs)
       return true
     } catch {
       return false
@@ -92,10 +94,10 @@ export class VectorProviderImpl implements StorageProvider {
   /** 插入/更新单条向量记录 */
   async upsertVector(record: VectorRecord): Promise<QueryResult<void>> {
     try {
-      const existing = await dataLayer.localDocs.get(record.id)
+      const existing = await queryGet<LocalDoc>(STORE_NAME.localDocs, record.id)
       if (existing) {
         existing.embedding = record.vector
-        await dataLayer.localDocs.save(existing)
+        await sendWriteEnvelope('saveLocalDocs', existing, 'system')
       }
       return { success: true }
     } catch (err) {
@@ -117,7 +119,7 @@ export class VectorProviderImpl implements StorageProvider {
   /** 向量相似度搜索 */
   async searchVectors(query: VectorSearchQuery): Promise<ListResult<VectorSearchResult>> {
     try {
-      const allDocs = await dataLayer.localDocs.list()
+      const allDocs = await queryList<LocalDoc>(STORE_NAME.localDocs)
       const threshold = query.minScore ?? MIN_SIMILARITY
 
       const results: VectorSearchResult[] = []

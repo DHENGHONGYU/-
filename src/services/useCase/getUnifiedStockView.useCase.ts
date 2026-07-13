@@ -6,7 +6,8 @@
  * 使 Service 层保持薄入口，复杂编排下沉到 UseCase。
  */
 
-import { dataLayer } from '@/data/dataLayer'
+import { STORE_NAME } from '@/config/dbConfig'
+import { queryGet, queryList, queryByIndex } from '@/data/dataLayerHelpers'
 import { getLogger } from '@/lib/logger'
 import type {
   DailyQuotes,
@@ -82,7 +83,7 @@ export async function getUnifiedStockViewUseCase(
   try {
     const opts = { ...DEFAULT_OPTIONS, ...options }
 
-    const stock = await dataLayer.stocks.get(symbol)
+    const stock = await queryGet<Stock>(STORE_NAME.stocks, symbol)
     if (!stock) {
       return { success: false, error: `Stock not found: ${symbol}` }
     }
@@ -92,36 +93,37 @@ export async function getUnifiedStockViewUseCase(
 
     let quotes: DailyQuotes | undefined
     if (opts.includeQuotes) {
-      quotes = await dataLayer.dailyQuotes.get(symbol)
+      quotes = await queryGet<DailyQuotes>(STORE_NAME.dailyQuotes, symbol)
       if (quotes) timestamps.push(quotes.updatedAt ?? Date.now())
       else missing.push('quotes')
     }
 
     let v6Score: V6Score | undefined
     if (opts.includeV6Score) {
-      v6Score = await dataLayer.v6Scores.get(symbol)
+      v6Score = await queryGet<V6Score>(STORE_NAME.v6Scores, symbol)
       if (v6Score) timestamps.push(v6Score.calculatedAt)
       else missing.push('v6Score')
     }
 
     let intelligentScore: IntelligentScore | undefined
     if (opts.includeIntelligentScore) {
-      intelligentScore = await dataLayer.intelligentScores.getLatestBySymbol(symbol)
+      const intelligentScores = await queryByIndex<IntelligentScore>(STORE_NAME.intelligentScores, 'by-symbol', symbol)
+      intelligentScore = intelligentScores.sort((a, b) => b.scoredAt - a.scoredAt)[0]
       if (intelligentScore) timestamps.push(intelligentScore.scoredAt)
       else missing.push('intelligentScore')
     }
 
     let industryScore: IndustryScore | undefined
     if (opts.includeIndustryScore) {
-      const scores = await dataLayer.industryScores.listByCode(stock.sector ?? '')
-      industryScore = scores[0]
+      const scores = await queryByIndex<IndustryScore>(STORE_NAME.industryScores, 'by-code', stock.sector ?? '')
+      industryScore = scores.sort((a, b) => b.scoredAt - a.scoredAt)[0]
       if (industryScore) timestamps.push(industryScore.scoredAt)
       else missing.push('industryScore')
     }
 
     let rotationScore: RotationSectorScore | undefined
     if (opts.includeRotationScore) {
-      const scores = await dataLayer.rotationScores.list()
+      const scores = await queryList<RotationSectorScore>(STORE_NAME.rotationScores)
       rotationScore = scores.find((s) => s.sectorCode === stock.industryCode)
       if (rotationScore) timestamps.push(rotationScore.createdAt ? new Date(rotationScore.createdAt).getTime() : Date.now())
       else missing.push('rotationScore')
@@ -129,7 +131,8 @@ export async function getUnifiedStockViewUseCase(
 
     let signal: Signal | undefined
     if (opts.includeSignal) {
-      const signals = await dataLayer.signals.listBySymbol(symbol)
+      const allSignals = await queryList<Signal>(STORE_NAME.signals)
+      const signals = allSignals.filter((s) => s.symbol === symbol).sort((a, b) => b.createdAt - a.createdAt)
       signal = signals[0]
       if (signal) timestamps.push(signal.createdAt)
       else missing.push('signal')
@@ -208,7 +211,7 @@ export async function getUnifiedStockViewsByStatusUseCase(
   options: FusionOptions = DEFAULT_OPTIONS,
 ): Promise<DataLayerResult<UnifiedStockView[]>> {
   try {
-    const stocks = await dataLayer.stocks.list()
+    const stocks = await queryList<Stock>(STORE_NAME.stocks)
     const filtered = stocks.filter((s) => s.researchStatus === status)
     return getUnifiedStockViewsUseCase(filtered.map((s) => s.symbol), options)
   } catch (err) {

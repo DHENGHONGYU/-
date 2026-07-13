@@ -18,8 +18,8 @@ import type {
   Order,
   Portfolio,
   Signal,
+  TradeReviewRecord,
 } from './types'
-import type { TradeReviewRecord } from '@/services/trading/tradeReviewAI'
 import { sendWriteEnvelope, queryGet, queryList, queryByIndex } from './dataLayerHelpers'
 
 export const orderStore = {

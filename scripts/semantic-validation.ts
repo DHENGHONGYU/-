@@ -17,9 +17,9 @@
 import * as ts from 'typescript'
 import { execSync } from 'node:child_process'
 import { readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs'
-import { join, relative, extname, dirname } from 'node:path'
+import { join, relative, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { runAuditPipeline, colorize } from './_audit-pipeline'
+import { colorize } from './_audit-pipeline'
 
 export interface SemanticFinding {
   file: string
@@ -120,10 +120,10 @@ function extractSymbols(filePath: string): Array<{
         }
         node.members.forEach(member => {
           if (ts.isPropertySignature(member) && member.name) {
-            const memberName = ts.isIdentifier(member.name) ? member.name.text : String(member.name.text)
+            const memberName = ts.isIdentifier(member.name) ? (member.name as ts.Identifier).text : String((member.name as any).text)
             semantics.push(memberName)
           } else if (ts.isMethodSignature(member) && member.name) {
-            const memberName = ts.isIdentifier(member.name) ? member.name.text : String(member.name.text)
+            const memberName = ts.isIdentifier(member.name) ? (member.name as ts.Identifier).text : String((member.name as any).text)
             semantics.push(memberName)
           }
         })
@@ -137,7 +137,7 @@ function extractSymbols(filePath: string): Array<{
         semantics.push(name)
         node.parameters.forEach(param => {
           if (param.name) {
-            const paramName = ts.isIdentifier(param.name) ? param.name.text : String(param.name.text)
+            const paramName = ts.isIdentifier(param.name) ? (param.name as ts.Identifier).text : String((param.name as any).text)
             semantics.push(paramName)
             if (param.type) {
               semantics.push(getTypeText(param.type))
@@ -157,7 +157,7 @@ function extractSymbols(filePath: string): Array<{
         semantics.push(name)
         node.parameters.forEach(param => {
           if (param.name) {
-            const paramName = ts.isIdentifier(param.name) ? param.name.text : String(param.name.text)
+            const paramName = ts.isIdentifier(param.name) ? (param.name as ts.Identifier).text : String((param.name as any).text)
             semantics.push(paramName)
             if (param.type) {
               semantics.push(getTypeText(param.type))
@@ -179,7 +179,7 @@ function extractSymbols(filePath: string): Array<{
           if (ts.isArrowFunction(func)) {
             func.parameters.forEach(param => {
               if (param.name) {
-                const paramName = ts.isIdentifier(param.name) ? param.name.text : String(param.name.text)
+                const paramName = ts.isIdentifier(param.name) ? (param.name as ts.Identifier).text : String((param.name as any).text)
                 semantics.push(paramName)
                 if (param.type) {
                   semantics.push(getTypeText(param.type))
@@ -212,10 +212,10 @@ function extractSymbols(filePath: string): Array<{
         semantics.push(name)
         node.members.forEach(member => {
           if (ts.isPropertyDeclaration(member) && member.name) {
-            const memberName = ts.isIdentifier(member.name) ? member.name.text : String(member.name.text)
+            const memberName = ts.isIdentifier(member.name) ? (member.name as ts.Identifier).text : String((member.name as any).text)
             semantics.push(`prop_${memberName}`)
           } else if (ts.isMethodDeclaration(member) && member.name) {
-            const memberName = ts.isIdentifier(member.name) ? member.name.text : String(member.name.text)
+            const memberName = ts.isIdentifier(member.name) ? (member.name as ts.Identifier).text : String((member.name as any).text)
             semantics.push(`method_${memberName}`)
           }
         })
@@ -252,7 +252,7 @@ function extractUnionMemberNames(typeNode: ts.TypeNode | undefined, semantics: s
   } else if (ts.isTypeLiteralNode(typeNode)) {
     typeNode.members.forEach(member => {
       if (ts.isPropertySignature(member) && member.name) {
-        const memberName = ts.isIdentifier(member.name) ? member.name.text : String(member.name.text)
+        const memberName = ts.isIdentifier(member.name) ? (member.name as ts.Identifier).text : String((member.name as any).text)
         semantics.push(memberName)
       }
     })
@@ -391,7 +391,6 @@ export async function main() {
   const args = process.argv.slice(2)
   const jsonOutput = args.includes('--json')
   const quiet = args.includes('--quiet')
-  const outputPath = args.find(a => a.startsWith('--output='))?.split('=')[1]
   const noPersist = args.includes('--no-persist')
   const scanMode: 'changed' | 'all' = args.includes('--all') ? 'all' : 'changed'
 

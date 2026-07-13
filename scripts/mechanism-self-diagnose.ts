@@ -649,10 +649,10 @@ async function main(): Promise<void> {
   const stress: StressResult[] = []
   if (!NO_STRESS) {
     stress.push(await stressInProcess())
-    stress.push(runSub('S2', 'scripts/doc-update-trigger.ts', ['--check'], '文档触发器 fire（列出命中规则）'))
-    stress.push(runSub('S3', 'scripts/audit-layer-calls.ts', [], '门禁 audit:layers（0 违规基线）'))
-    stress.push(runSub('S4', 'scripts/build-health-report.ts', [], 'build:health 生成 health-report.json'))
-    stress.push(runSub('S5', 'scripts/doc-version-check.ts', ['--check'], 'doc-version-check 版本同步校验'))
+    stress.push(runSub('S2', 'doc-update-trigger.ts', ['--check'], '文档触发器 fire（列出命中规则）'))
+    stress.push(runSub('S3', 'audit-layer-calls.ts', [], '门禁 audit:layers（0 违规基线）'))
+    stress.push(runSub('S4', 'build-health-report.ts', [], 'build:health 生成 health-report.json'))
+    stress.push(runSub('S5', 'doc-version-check.ts', ['--check'], 'doc-version-check 版本同步校验'))
   } else {
     console.log('   ⏭️  已跳过压力测试（--no-stress）')
   }

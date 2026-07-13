@@ -3,8 +3,10 @@ import {
   getDefaultStrategyRuleConfig,
   type StrategyRuleConfig,
 } from '@/config/strategyRules'
-import { dataLayer } from '@/data/dataLayer'
+import { STORE_NAME } from '@/config/dbConfig'
+import { queryGet } from '@/data/dataLayerHelpers'
 import type {
+  DailyQuotes,
   Stock,
   StrategyCandidate,
   StrategyClassification,
@@ -315,7 +317,7 @@ async function fetchMomentumMap(stocks: Stock[]): Promise<Record<string, number>
 
   await Promise.all(
     stocks.map(async (stock) => {
-      const quotes = await dataLayer.dailyQuotes.get(stock.symbol)
+      const quotes = await queryGet<DailyQuotes>(STORE_NAME.dailyQuotes, stock.symbol)
       if (!quotes || quotes.history.length < 20) return
 
       const closes = quotes.history.map((bar) => bar.close)

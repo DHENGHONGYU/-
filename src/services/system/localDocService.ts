@@ -1,10 +1,38 @@
-import { dataLayer } from '@/data/dataLayer'
+import { STORE_NAME } from '@/config/dbConfig'
 import { generateId } from '@/data/db'
 import type { DataLayerResult, LocalDoc } from '@/data/types'
+import { queryList, queryByIndex } from '@/data/dataLayerHelpers'
+import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID } from '@/config/dbConfig'
+import { dataBridge } from '@/core/databridge'
+import { EnvelopeFactory } from '@/core/envelope'
 import { getLogger } from '@/lib/logger'
 import { embedText, findTopK, getEmbeddingStatus } from '@/services/system/localEmbeddingService'
+import { nanoid } from 'nanoid'
 
 const logger = getLogger()
+
+/**
+ * 通过 DataBridge 保存本地文档
+ */
+async function saveLocalDocViaBridge(doc: LocalDoc): Promise<DataLayerResult<void>> {
+  try {
+    const envelope = EnvelopeFactory.create(
+      {
+        source: MODULE_ID.system,
+        target: ENVELOPE_TARGET.db,
+        action: ENVELOPE_ACTION.saveLocalDocs,
+        traceId: `localdoc-${nanoid(8)}-${doc.id}`,
+      },
+      doc,
+    )
+    await dataBridge.forward(envelope)
+    return { success: true }
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    logger.error('[localDocService] saveLocalDocs failed', { id: doc.id, error: message })
+    return { success: false, error: message }
+  }
+}
 
 export interface FileEntry {
   name: string
@@ -262,7 +290,7 @@ export async function importFilesToDatabase(
       addedAt: Date.now(),
     }
 
-    const saveResult = await dataLayer.localDocs.save(doc)
+    const saveResult = await saveLocalDocViaBridge(doc)
     if (!saveResult.success) {
       errors.push(`Failed to import ${file.name}: ${saveResult.error}`)
     } else {
@@ -294,7 +322,7 @@ export async function createLocalDoc(
     // 嵌入生成失败不阻断文档创建
   }
 
-  const result = await dataLayer.localDocs.save(fullDoc)
+  const result = await saveLocalDocViaBridge(fullDoc)
   if (!result.success) {
     logger.error('createLocalDoc failed', { error: result.error })
     return { success: false, error: result.error }
@@ -331,7 +359,7 @@ export async function searchLocalDocs(
   keyword: string,
 ): Promise<DataLayerResult<LocalDoc[]>> {
   try {
-    const all = await dataLayer.localDocs.list()
+    const all = await queryList<LocalDoc>(STORE_NAME.localDocs)
     const normalizedKeyword = keyword.trim().toLowerCase()
 
     if (!normalizedKeyword) {
@@ -364,7 +392,7 @@ export async function searchLocalDocsSemantic(
   symbol?: string,
 ): Promise<DataLayerResult<LocalDoc[]>> {
   try {
-    const all = await dataLayer.localDocs.list()
+    const all = await queryList<LocalDoc>(STORE_NAME.localDocs)
     let docs = all
 
     // 按标的筛选
@@ -425,7 +453,7 @@ export async function searchLocalDocsSemantic(
  */
 export async function batchEmbedLocalDocs(limit: number = 10): Promise<{ processed: number; failed: number }> {
   try {
-    const all = await dataLayer.localDocs.list()
+    const all = await queryList<LocalDoc>(STORE_NAME.localDocs)
     const pending = all.filter((d) => !d.embedding || d.embedding.length === 0).slice(0, limit)
 
     let processed = 0
@@ -436,7 +464,7 @@ export async function batchEmbedLocalDocs(limit: number = 10): Promise<{ process
         const result = await embedText(doc.content)
         if (result.success) {
           doc.embedding = result.vector
-          const saveResult = await dataLayer.localDocs.save(doc)
+          const saveResult = await saveLocalDocViaBridge(doc)
           if (saveResult.success) {
             processed++
           } else {
@@ -468,8 +496,8 @@ export async function listLocalDocs(
   try {
     const docs =
       symbol !== undefined && symbol.trim() !== ''
-        ? await dataLayer.localDocs.listBySymbol(symbol)
-        : await dataLayer.localDocs.list()
+        ? await queryByIndex<LocalDoc>(STORE_NAME.localDocs, 'by-symbol', symbol)
+        : await queryList<LocalDoc>(STORE_NAME.localDocs)
     return { success: true, data: docs }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)

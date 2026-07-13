@@ -63,6 +63,7 @@ export interface Report extends AuditReport {
   summary: {
     totalFiles: number
     totalViolations: number
+    totalWarnings: number
     bySeverity: Record<string, number>
     byCategory: Record<string, number>
   }
@@ -170,7 +171,7 @@ function isInArrayLiteral(line: string, numPos: number): boolean {
 }
 
 // v2.4：检查数字是否在对象属性值位置（如 { key: 123 }）
-function isObjectPropertyValue(line: string, numStr: string, numPos: number): boolean {
+function isObjectPropertyValue(line: string, numPos: number): boolean {
   // 查找数字前方是否有 `: ` 模式（对象属性值标志）
   const before = line.slice(0, numPos).trimEnd()
   return before.endsWith(':') || before.endsWith(':,')
@@ -271,7 +272,7 @@ function scanFile(file: string): Finding[] {
   const rel = relative(file)
 
   for (let i = 0; i < lines.length; i++) {
-    const raw = lines[i]
+    const raw = lines[i]!
     const trimmed = raw.trim()
 
     if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*')) continue
@@ -302,14 +303,14 @@ function scanFile(file: string): Finding[] {
       const magicMatch = raw.match(/[^0-9a-zA-Z_\.\[\]]([0-9]{3,})[^0-9a-zA-Z_\.]/)
       // v2.3：排除字符串字面量内的数字（含多行模板字符串）
       const numPos = magicMatch ? magicMatch.index! + 1 : -1
-      const inStringLiteral = magicMatch && numPos >= 0 && isPositionInsideStringLiteral(raw ?? '', numPos)
+      const inStringLiteral = magicMatch && numPos >= 0 && isPositionInsideStringLiteral(raw, numPos)
       // v2.3：排除命名常量声明行（const FOO = 123）和行内注释（// ... 123）
-      const isConstDecl = magicMatch && isConstDeclarationValue(raw, magicMatch[1])
+      const isConstDecl = magicMatch && isConstDeclarationValue(raw, magicMatch[1]!)
       const commentIdx = raw.indexOf('//')
       const inComment = magicMatch && commentIdx >= 0 && numPos > commentIdx
       // v2.4：排除数组字面量、对象属性值、枚举声明、return/throw 中的数字
       const inArrayLiteral = magicMatch && numPos >= 0 && isInArrayLiteral(raw, numPos)
-      const inObjectValue = magicMatch && numPos >= 0 && isObjectPropertyValue(raw, magicMatch[1], numPos)
+      const inObjectValue = magicMatch && numPos >= 0 && isObjectPropertyValue(raw, numPos)
       const inEnum = isInEnumDeclaration(raw)
       const inReturnThrow = magicMatch && numPos >= 0 && isReturnOrThrowValue(raw, numPos)
       if (magicMatch && !inStringLiteral && !isConstDecl && !inComment &&
@@ -416,7 +417,7 @@ function scanFile(file: string): Finding[] {
           // - to-bottom-{number}/to-top-{number}/to-left-{number}/to-right-{number}：动画方向，非颜色
           const fullMatch = twMatch[0]
           const prefix = twMatch[1]
-          const colorPart = twMatch[2]
+          const colorPart = twMatch[2]!
           const isFalsePositive =
             (prefix === 'ring' && colorPart.startsWith('offset-')) ||
             (prefix === 'border' && /^[tblr]-\d+$/.test(colorPart)) ||

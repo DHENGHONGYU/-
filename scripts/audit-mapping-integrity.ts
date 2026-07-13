@@ -94,15 +94,6 @@ function logVerbose(msg: string): void {
   }
 }
 
-/**
- * VERBOSE 模式下输出对象（JSON 序列化），用于复杂结构查看
- */
-function logVerboseObj(label: string, obj: unknown): void {
-  if (VERBOSE) {
-    console.log(`${CYAN}[V] ${label}:${RESET} ${JSON.stringify(obj)}`)
-  }
-}
-
 // ═══════════════════════════════════════════════════════════════════════════════
 // 审计项1: 路由注册完整性（保持不变）
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -123,9 +114,9 @@ function extractRoutesFromConfig(): RouteEntry[] {
   let match
   while ((match = routeRegex.exec(content)) !== null) {
     routes.push({
-      path: match[1],
-      category: match[2],
-      description: match[3],
+      path: match[1]!,
+      category: match[2]!,
+      description: match[3]!,
     })
   }
 
@@ -198,10 +189,10 @@ function extractAppDispatchers(): AppDispatchEntry[] {
     const pathRegex = /path\s*===?\s*['"]([^'"]+)['"]/g
     let match
     while ((match = pathRegex.exec(content)) !== null) {
-      const routePath = match[1]
+      const routePath = match[1]!
       // 尝试提取对应的组件名
       const componentMatch = content.substring(match.index).match(/(?:import|React\.lazy)\s*\(\s*\(\)\s*=>\s*import\s*\(['"]@\/pages\/[^'"]+\/([^'"]+)['"]\)/)
-      const componentName = componentMatch ? componentMatch[1] : 'Unknown'
+      const componentName = componentMatch ? componentMatch[1]! : 'Unknown'
       entries.push({ cabin, routePath, componentName })
     }
   }
@@ -283,7 +274,7 @@ function auditActionStoreMapping(): { violations: string[]; stats: { total: numb
   const entryRegex = /\[ENVELOPE_ACTION\.(\w+)\]:\s*STORE_NAME\.(\w+)/g
   let match
   while ((match = entryRegex.exec(mapContent ?? '')) !== null) {
-    entries.push({ action: match[1], store: match[2] })
+    entries.push({ action: match[1]!, store: match[2]! })
   }
 
   logInfo(`  发现 ${entries.length} 个Action→Store映射`)
@@ -405,10 +396,10 @@ export function extractStoreHookName(filePath: string): string | null {
   const content = readFileSync(filePath, 'utf-8')
   // 匹配 export const useXxxStore = create
   const hookMatch = content.match(/export\s+const\s+(use\w+Store)\s*=\s*create/)
-  if (hookMatch) return hookMatch[1]
+  if (hookMatch) return hookMatch[1] ?? null
   // 兜底：匹配 export function useXxxStore
   const fnMatch = content.match(/export\s+function\s+(use\w+Store)/)
-  if (fnMatch) return fnMatch[1]
+  if (fnMatch) return fnMatch[1] ?? null
   return null
 }
 
@@ -454,8 +445,8 @@ export function extractStoreImports(filePath: string): Array<{ target: string; l
     // 优先匹配相对路径
     const relMatch = line?.match(relRegex)
     if (relMatch) {
-      const importPath = relMatch[1]
-      const targetName = importPath?.replace(/^.*\//, '')
+      const importPath = relMatch[1]!
+      const targetName = importPath.replace(/^.*\//, '')
       results.push({ target: targetName, line: i + 1, importPath })
       continue
     }
@@ -463,7 +454,7 @@ export function extractStoreImports(filePath: string): Array<{ target: string; l
     // 匹配绝对路径（v2.1 新增）
     const absMatch = line?.match(absRegex)
     if (absMatch) {
-      const targetName = absMatch[1]
+      const targetName = absMatch[1]!
       results.push({ target: targetName, line: i + 1, importPath: `@/store/${targetName}` })
     }
   }
@@ -1160,8 +1151,7 @@ function main(): void {
   console.log('审计汇总')
   console.log('='.repeat(80))
 
-  let blockingViolations = 0
-    let warningViolations = 0
+  let warningViolations = 0
 
     for (const [key, result] of Object.entries(results)) {
       const count = result.violations.length

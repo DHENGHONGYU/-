@@ -75,16 +75,16 @@ export const _orderQuantityNotAny: Expect<Equals<IsAny<Order['quantity']>, false
 
 /** V6Score 必填字段不得为 null */
 export const _v6ScoreNoNullFields: Expect<
-  Equals<NullKeys<Pick<V6Score, 'symbol' | 'totalScore' | 'calculatedAt'>>, never>
+  Equals<NullKeys<Pick<V6Score, 'symbol' | 'score' | 'calculatedAt'>>, never>
 > = true
 
 /** V6Score 必填字段不得为 undefined */
 export const _v6ScoreNoUndefinedFields: Expect<
-  Equals<UndefinedKeys<Pick<V6Score, 'symbol' | 'totalScore' | 'calculatedAt'>>, never>
+  Equals<UndefinedKeys<Pick<V6Score, 'symbol' | 'score' | 'calculatedAt'>>, never>
 > = true
 
 /** V6Score.totalScore 不得为 any */
-export const _v6ScoreTotalScoreNotAny: Expect<Equals<IsAny<V6Score['totalScore']>, false>> = true
+export const _v6ScoreTotalScoreNotAny: Expect<Equals<IsAny<V6Score['score']>, false>> = true
 
 // ============================================================
 // Signal 类型断言
@@ -115,7 +115,7 @@ describe('核心数据类型 类型级单元测试', () => {
     const sampleStock: Stock = {
       symbol: '600519.SH',
       name: '贵州茅台',
-      researchStatus: 'researching',
+      researchStatus: 'candidate',
       source: 'manual',
       dataVersion: 1,
     }
@@ -131,6 +131,9 @@ describe('核心数据类型 类型级单元测试', () => {
       direction: 'buy',
       quantity: 100,
       price: 1800,
+      amount: 1800,
+      status: 'filled',
+      accountType: 'real',
       createdAt: Date.now(),
     }
     expectType<string>(sampleOrder.id)
@@ -141,11 +144,14 @@ describe('核心数据类型 类型级单元测试', () => {
   it('V6Score 必填字段类型安全', () => {
     const sampleScore: V6Score = {
       symbol: '600519.SH',
-      totalScore: 85.5,
+      score: 85.5,
+      factors: {},
+      algorithmVersion: 'v6.0',
       calculatedAt: Date.now(),
+      dataVersion: 1,
     }
     expectType<string>(sampleScore.symbol)
-    expectType<number>(sampleScore.totalScore)
+    expectType<number>(sampleScore.score)
   })
 
   it('Signal 必填字段类型安全', () => {
@@ -154,7 +160,10 @@ describe('核心数据类型 类型级单元测试', () => {
       symbol: '600519.SH',
       direction: 'buy',
       type: 'v6_score',
+      strategy: 'v6',
       confidence: 0.85,
+      rationale: '综合评分高',
+      snapshot: {},
       createdAt: Date.now(),
     }
     expectType<string>(sampleSignal.id)
@@ -171,7 +180,7 @@ describe('核心数据类型 类型级单元测试', () => {
   })
 
   it('V6Score 必填字段不得为 null', () => {
-    assertNever<NullKeys<Pick<V6Score, 'symbol' | 'totalScore' | 'calculatedAt'>>>()
+    assertNever<NullKeys<Pick<V6Score, 'symbol' | 'score' | 'calculatedAt'>>>()
   })
 
   it('Signal 必填字段不得为 null', () => {

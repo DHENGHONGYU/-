@@ -10,8 +10,8 @@
  * 因此可独立测试与扩展。
  */
 import { ENVELOPE_ACTION, STORE_NAME, type StoreName } from '@/config/dbConfig'
-import { db } from '@/data/db'
-import type { Stock } from '@/data/types'
+import { db, now } from '@/data/db'
+import type { CustomAgent, Stock } from '@/data/types'
 import { getLogger } from '@/lib/logger'
 import { EnvelopeError, type StandardEnvelope } from './envelope'
 import { cascadeExecutor } from './cascadeExecutor'
@@ -235,6 +235,28 @@ class UpdateStockGroupHandler implements EnvelopeHandler {
       updatedAt: Date.now(),
       dataVersion: newDataVersion,
     })
+  }
+}
+
+/**
+ * 自定义智能体保存处理器
+ * 在写入前自动补齐 createdAt / updatedAt 时间戳（兼容新增与更新）。
+ */
+class CustomAgentSaveHandler implements EnvelopeHandler {
+  canHandle(action: string): boolean {
+    return action === ENVELOPE_ACTION.saveCustomAgent
+  }
+
+  async handle(envelope: StandardEnvelope, store: StoreName): Promise<void> {
+    const agent = envelope.payload as Omit<CustomAgent, 'createdAt' | 'updatedAt'> & { createdAt?: number }
+    const existing = await db.get<CustomAgent>(store, agent.id)
+    const full: CustomAgent = {
+      ...agent,
+      createdAt: existing?.createdAt ?? agent.createdAt ?? now(),
+      updatedAt: now(),
+    }
+    logger.debug(`[DataBridge] DB saveCustomAgent: id="${agent.id}"`)
+    await db.put(store, full)
   }
 }
 
@@ -502,7 +524,10 @@ export function createHandlerRegistry(): HandlerRegistry {
   )
 
   // 3. DELETE 操作处理器
-  registry.register(new DeleteHandler([ENVELOPE_ACTION.deleteExecutionPlan]))
+  registry.register(new DeleteHandler([ENVELOPE_ACTION.deleteExecutionPlan, ENVELOPE_ACTION.deleteCustomAgent]))
+
+  // 3.5 自定义智能体保存处理器（补齐时间戳）
+  registry.register(new CustomAgentSaveHandler())
 
   // 4. 通用 PUT 操作处理器（处理所有简单的 db.put() 操作）
   registry.register(

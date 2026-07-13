@@ -49,6 +49,15 @@ export {
   missingReportStore,
   customAgentStore, // 阶段 B-1：用户自定义智能体（v26 新增）
 } from './dataLayerContentStores'
+export {
+  newsBookmarkStore, // v13 资讯收藏
+  collectConfigStore, // v25 采集配置
+  traceRecordStore, // v27 采集链路追踪
+  workflowDefStore, // v28 工作流定义
+  workflowScheduleStore, // v28 工作流定时调度
+  workflowTriggerStore, // v28 工作流事件触发器
+  workflowRunStore, // v28 工作流运行实例
+} from './dataLayerInternalStores'
 export { watchlistStore } from './dataLayerWatchlistStore'
 
 // 子模块 store 导入（用于组装 dataLayer barrel）
@@ -81,6 +90,15 @@ import {
   missingReportStore,
   customAgentStore,
 } from './dataLayerContentStores'
+import {
+  newsBookmarkStore,
+  collectConfigStore,
+  traceRecordStore,
+  workflowDefStore,
+  workflowScheduleStore,
+  workflowTriggerStore,
+  workflowRunStore,
+} from './dataLayerInternalStores'
 import { watchlistStore } from './dataLayerWatchlistStore'
 
 /**
@@ -132,5 +150,16 @@ export const dataLayer = {
   watchlists: watchlistStore,
   // 阶段 B-1：用户自定义智能体
   customAgents: customAgentStore,
+  // v13 资讯收藏
+  newsBookmarks: newsBookmarkStore,
+  // v25 采集配置
+  collectConfig: collectConfigStore,
+  // v27 采集链路追踪
+  traceRecords: traceRecordStore,
+  // v28 工作流存储
+  workflowDefs: workflowDefStore,
+  workflowSchedules: workflowScheduleStore,
+  workflowTriggers: workflowTriggerStore,
+  workflowRuns: workflowRunStore,
   manager: dataManager,
 }

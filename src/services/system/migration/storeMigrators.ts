@@ -1,7 +1,10 @@
-import { dataLayer } from '@/data/dataLayer'
+import { STORE_NAME } from '@/config/dbConfig'
+import { sendWriteEnvelope, queryGet, queryByIndex } from '@/data/dataLayerHelpers'
+import { generateId } from '@/data/db'
 import { getLogger } from '@/lib/logger'
 import { writeMigrationAuditLog } from './migrationValidators'
 import type { MigrationReport, MigrationOptions, StoreImportContext, V9ImportShape } from './migrationTypes'
+import type { NewsStockMap, Order } from '@/data/types'
 
 const logger = getLogger()
 
@@ -78,8 +81,8 @@ export async function migrateStocks(
     'stocks',
     transformed.stocks,
     (s) => s.symbol,
-    (key) => dataLayer.stocks.get(key),
-    (s) => dataLayer.stocks.add(s),
+    (key) => queryGet(STORE_NAME.stocks, key),
+    (s) => sendWriteEnvelope('insertStock', s, 'system'),
     options.overwriteExisting,
   )
 }
@@ -97,8 +100,8 @@ export async function migrateDailyQuotes(
     'daily_quotes',
     transformed.dailyQuotes,
     (q) => q.symbol,
-    (key) => dataLayer.dailyQuotes.get(key),
-    (q) => dataLayer.dailyQuotes.save(q),
+    (key) => queryGet(STORE_NAME.dailyQuotes, key),
+    (q) => sendWriteEnvelope('saveDailyQuotes', q, 'system'),
     options.overwriteExisting,
   )
 }
@@ -116,8 +119,8 @@ export async function migrateV6Scores(
     'v6_scores',
     transformed.v6Scores,
     (s) => s.symbol,
-    (key) => dataLayer.v6Scores.get(key),
-    (s) => dataLayer.v6Scores.save(s),
+    (key) => queryGet(STORE_NAME.v6Scores, key),
+    (s) => sendWriteEnvelope('saveScores', s, 'system'),
     options.overwriteExisting,
   )
 }
@@ -136,8 +139,8 @@ export async function migrateScoreDocs(
     'score_docs',
     docs,
     (d) => d.docId,
-    (key) => dataLayer.scoreDocs.get(key),
-    (d) => dataLayer.scoreDocs.save(d),
+    (key) => queryGet(STORE_NAME.scoreDocs, key),
+    (d) => sendWriteEnvelope('saveScoreDocs', d, 'system'),
     options.overwriteExisting,
   )
 }
@@ -155,8 +158,15 @@ export async function migrateOrders(
     'orders',
     transformed.orders,
     (o) => o.id,
-    (key) => dataLayer.orders.list().then((list) => list.find((x) => x.id === key)),
-    (o) => dataLayer.orders.add(o),
+    (key) => queryGet(STORE_NAME.orders, key),
+    (o) => {
+      const fullOrder: Order = {
+        ...o,
+        id: o.id || generateId(),
+        createdAt: o.createdAt || Date.now(),
+      }
+      return sendWriteEnvelope('insertOrder', fullOrder, 'system')
+    },
     options.overwriteExisting,
   )
 }
@@ -174,8 +184,8 @@ export async function migrateSectorScores(
     'sector_scores',
     transformed.sectorScores,
     (s) => s.id,
-    (key) => dataLayer.sectorScores.get(key),
-    (s) => dataLayer.sectorScores.save(s),
+    (key) => queryGet(STORE_NAME.sectorScores, key),
+    (s) => sendWriteEnvelope('saveSectorScores', s, 'system'),
     options.overwriteExisting,
   )
 }
@@ -193,8 +203,8 @@ export async function migrateRotationScores(
     'rotation_scores',
     transformed.rotationScores,
     (r) => r.id,
-    (key) => dataLayer.rotationScores.get(key),
-    (r) => dataLayer.rotationScores.save(r),
+    (key) => queryGet(STORE_NAME.rotationScores, key),
+    (r) => sendWriteEnvelope('saveRotationScores', r, 'system'),
     options.overwriteExisting,
   )
 }
@@ -212,8 +222,8 @@ export async function migrateStrategySnapshots(
     'strategy_snapshots',
     transformed.strategySnapshots,
     (s) => s.id,
-    (key) => dataLayer.strategySnapshots.get(key),
-    (s) => dataLayer.strategySnapshots.save(s),
+    (key) => queryGet(STORE_NAME.strategySnapshots, key),
+    (s) => sendWriteEnvelope('saveStrategySnapshots', s, 'system'),
     options.overwriteExisting,
   )
 }
@@ -231,8 +241,8 @@ export async function migrateLocalDocs(
     'local_docs',
     transformed.localDocs,
     (d) => d.id,
-    (key) => dataLayer.localDocs.get(key),
-    (d) => dataLayer.localDocs.save(d),
+    (key) => queryGet(STORE_NAME.localDocs, key),
+    (d) => sendWriteEnvelope('saveLocalDocs', d, 'system'),
     options.overwriteExisting,
   )
 }
@@ -250,8 +260,8 @@ export async function migrateSentimentCache(
     'sentiment_cache',
     transformed.sentimentCache,
     (c) => c.id,
-    (key) => dataLayer.sentimentCache.get(key),
-    (c) => dataLayer.sentimentCache.save(c),
+    (key) => queryGet(STORE_NAME.sentimentCache, key),
+    (c) => sendWriteEnvelope('saveSentimentCache', c, 'system'),
     options.overwriteExisting,
   )
 }
@@ -269,8 +279,8 @@ export async function migrateNews(
     'news',
     transformed.news,
     (n) => n.id,
-    (key) => dataLayer.news.get(key),
-    (n) => dataLayer.news.save(n),
+    (key) => queryGet(STORE_NAME.news, key),
+    (n) => sendWriteEnvelope('saveNews', n, 'system'),
     options.overwriteExisting,
   )
 }
@@ -289,10 +299,10 @@ export async function migrateNewsStockMaps(
     transformed.newsStockMaps,
     (m) => m.id,
     (key) =>
-      dataLayer.newsStockMap
-        .listBySymbol(key.split('_')[0] ?? '')
-        .then((list) => list.find((x) => x.id === key)),
-    (m) => dataLayer.newsStockMap.save(m),
+      queryByIndex<NewsStockMap>(STORE_NAME.newsStockMap, 'by-symbol', key.split('_')[0] ?? '').then((list) =>
+        list.find((x) => x.id === key),
+      ),
+    (m) => sendWriteEnvelope('saveNewsStockMap', m, 'system'),
     options.overwriteExisting,
   )
 }

@@ -515,10 +515,10 @@ describe('DataBridge.query()', () => {
       // 查询审计日志
       const logs = await db.getAll('research_logs')
       expect(logs.length).toBeGreaterThan(0)
-      const queryLog = logs.find((log) => log.action === ENVELOPE_ACTION.queryGet)
+      const queryLog = logs.find((log: any) => log.action === ENVELOPE_ACTION.queryGet)
       expect(queryLog).toBeDefined()
-      expect(queryLog?.actor).toBe(MODULE_ID.datalayer)
-      expect(queryLog?.targetType).toBe(STORE_NAME.stocks)
+      expect((queryLog as Record<string, unknown>).actor).toBe(MODULE_ID.datalayer)
+      expect((queryLog as Record<string, unknown>).targetType).toBe(STORE_NAME.stocks)
     })
   })
 })

@@ -1,6 +1,7 @@
 import { calculateWeightedScore, getEnabledStockFactorNames } from '@/config/scoreFactors'
 import { dataBridge } from '@/core/databridge'
 import { ENVELOPE_ACTION, STORE_NAME } from '@/config/dbConfig'
+import { sendWriteEnvelope } from '@/data/dataLayerHelpers'
 import type { DataLayerResult, DailyQuotes, DimensionScore, IntelligentScore, Stock } from '@/data/types'
 import type { LlmConfig, LlmTransparencyConfig } from '@/config/llmConfig'
 import { chat, LlmApiError } from '@/services/llm/llmGateway'
@@ -413,9 +414,7 @@ export async function runIntelligentScore(
 
     currentStep = 'saveResult'
     reportProgress(currentStep, 'running', '保存评分结果...')
-    // TODO[P2]: 迁移至 DataBridge.forward()
-    const { dataLayer } = await import('@/data/dataLayer')
-    const saveResult = await dataLayer.intelligentScores.save(score)
+    const saveResult = await sendWriteEnvelope('saveIntelligentScores', score, 'analyzer')
     if (!saveResult.success) {
       reportProgress(currentStep, 'error', saveResult.error ?? '保存失败')
       return { success: false, error: saveResult.error ?? '保存评分结果失败' }

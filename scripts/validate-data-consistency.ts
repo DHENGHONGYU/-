@@ -54,7 +54,8 @@ function resolveProjectRoot(): string {
 
 const PROJECT_ROOT = resolveProjectRoot()
 const TYPES_FILE = path.join(PROJECT_ROOT, 'src', 'data', 'types.ts')
-const DB_FILE = path.join(PROJECT_ROOT, 'src', 'data', 'db.ts')
+const DB_SCHEMA_FILE = path.join(PROJECT_ROOT, 'src', 'data', 'db-schema.ts')
+const DB_MIGRATIONS_FILE = path.join(PROJECT_ROOT, 'src', 'data', 'migrations', 'rbacMigrationV24.ts')
 const DB_CONFIG_FILE = path.join(PROJECT_ROOT, 'src', 'config', 'dbConfig.ts')
 
 // ============================================================
@@ -137,6 +138,25 @@ function parseInterfaces(filePath: string): InterfaceInfo[] {
 }
 
 /**
+ * 递归收集指定目录下所有 .ts 文件中的 export interface。
+ */
+function collectInterfaces(dir: string): InterfaceInfo[] {
+  const interfaces: InterfaceInfo[] = []
+  const entries = fs.readdirSync(dir, { withFileTypes: true })
+
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name)
+    if (entry.isDirectory()) {
+      interfaces.push(...collectInterfaces(fullPath))
+    } else if (entry.isFile() && entry.name.endsWith('.ts')) {
+      interfaces.push(...parseInterfaces(fullPath))
+    }
+  }
+
+  return interfaces
+}
+
+/**
  * 从指定位置开始提取平衡的大括号体。
  * 支持多层嵌套大括号匹配。
  */
@@ -181,7 +201,7 @@ function extractFields(body: string): string[] {
     // 注意：进入嵌套对象的那一行本身可能也有字段名（如 sourceSnapshot: {）
     // 这种情况下我们只提取字段名，不深入嵌套内部字段
     if (prevDepth === 0 && nestedBraceDepth >= 0) {
-      const fieldMatch = trimmed.match(/^(\w+)\s*[?:]/)
+      const fieldMatch = trimmed.match(/^(?:readonly\s+)?(\w+)\s*\??\s*:/)
       if (fieldMatch) {
         fields.push(fieldMatch[1] ?? '')
       }
@@ -227,7 +247,7 @@ function parseStoreNames(filePath: string): Record<string, string> {
 }
 
 // ============================================================
-// 解析器：db.ts —— 提取 createObjectStore 和 createIndex
+// 解析器：db-schema.ts —— 提取 ensureStore 和 createObjectStore
 // ============================================================
 
 function parseStoreSchemas(
@@ -237,100 +257,130 @@ function parseStoreSchemas(
   const content = fs.readFileSync(filePath, 'utf-8')
   const stores: StoreSchema[] = []
 
-  // 匹配所有 createObjectStore 调用（使用 STORE_NAME.xxx 的形式
-  // 捕获组 1: config key, 捕获组 2: options 对象内容
-  const createStoreRegex =
-    /createObjectStore\(\s*STORE_NAME\.(\w+)\s*,\s*\{([^}]+)\}\s*\)/g
+  // 1. 匹配 ensureStore(db, STORE_NAME.xxx, logger, { storeOptions: {...}, indexes: [...] })
+  const ensureStoreRegex =
+    /ensureStore\(\s*db\s*,\s*STORE_NAME\.(\w+)\s*,\s*\w+\s*,\s*\{([\s\S]*?)\}\s*\)/g
   let match: RegExpExecArray | null
 
-  // 收集所有 store 的位置信息，用于确定每个 store 的索引范围
-  const storePositions: Array<{
-    configKey: string
-    optionsStr: string
-    startPos: number
-    endPos: number
-  }> = []
-
-  while ((match = createStoreRegex.exec(content)) !== null) {
-    storePositions.push({
-      configKey: match[1],
-      optionsStr: match[2],
-      startPos: match.index,
-      endPos: match.index + match[0].length,
-    })
-  }
-
-  for (let i = 0; i < storePositions.length; i++) {
-    const sp = storePositions[i]
-    const storeName = storeNameMap[sp?.configKey]
+  while ((match = ensureStoreRegex.exec(content)) !== null) {
+    const configKey = match[1]
+    const optionsBlock = match[2]
+    const storeName = storeNameMap[configKey]
 
     if (!storeName) {
       console.warn(
         color(
-          `⚠️  db.ts 中引用了 STORE_NAME.${sp?.configKey}，但在 dbConfig.ts 中未找到`,
+          `⚠️  db-schema.ts 中引用了 STORE_NAME.${configKey}，但在 dbConfig.ts 中未找到`,
           COLORS.yellow,
         ),
       )
       continue
     }
 
-    // 解析 keyPath
-    const keyPathMatch = sp?.optionsStr.match(/keyPath\s*:\s*['"]([^'"]+)['"]/)
+    const storeOptionsMatch = optionsBlock.match(/storeOptions\s*:\s*\{([^}]*)\}/)
+    const storeOptionsStr = storeOptionsMatch ? storeOptionsMatch[1] : ''
+
+    const keyPathMatch = storeOptionsStr.match(/keyPath\s*:\s*['"]([^'"]+)['"]/)
     const keyPath = keyPathMatch ? keyPathMatch[1] : ''
+    const autoIncrement = /autoIncrement\s*:\s*true/.test(storeOptionsStr)
 
-    // 解析 autoIncrement
-    const autoIncrement = /autoIncrement\s*:\s*true/.test(sp?.optionsStr ?? '')
-
-    // 确定索引搜索范围：从当前 store 结束位置 到 下一个 store 开始位置
-    const searchStart = sp?.endPos
-    const searchEnd =
-      i < storePositions.length - 1
-        ? storePositions[i + 1].startPos
-        : content.length
-
-    const storeContext = content.slice(searchStart, searchEnd)
-
-    // 提取该 store 的所有索引（按名称去重，因为迁移代码中可能重复定义）
-    const rawIndexes = parseIndexesInContext(storeContext)
-    const seenIndexNames = new Set<string>()
-    const indexes: IndexInfo[] = []
-    for (const idx of rawIndexes) {
-      if (!seenIndexNames.has(idx.name)) {
-        seenIndexNames.add(idx.name)
-        indexes.push(idx)
-      }
-    }
+    const indexes = parseIndexesInBlock(optionsBlock)
 
     stores.push({
       storeName,
-      configKey: sp?.configKey,
+      configKey,
       keyPath,
       autoIncrement,
       indexes,
     })
   }
 
+  // 2. 特殊处理 stocks：createObjectStore(STORE_NAME.stocks, { keyPath: 'symbol' })
+  const stocksBlockRegex =
+    /if\s*\(\s*!db\.objectStoreNames\.contains\(\s*STORE_NAME\.stocks\s*\)\s*\)\s*\{([\s\S]*?)\}\s*else\s*\{/
+  const stocksMatch = content.match(stocksBlockRegex)
+  if (stocksMatch && !stores.some((s) => s.storeName === 'stocks')) {
+    stores.unshift({
+      storeName: 'stocks',
+      configKey: 'stocks',
+      keyPath: 'symbol',
+      autoIncrement: false,
+      indexes: parseIndexesInBlock(stocksMatch[1] ?? ''),
+    })
+  }
+
   return stores
 }
 
-function parseIndexesInContext(context: string): IndexInfo[] {
+/**
+ * 解析迁移文件中的 createObjectStore 调用（如 RBAC 6 表）。
+ * 仅处理 `createObjectStore(STORE_NAME.xxx, { keyPath: 'yyy' })` 及其后的 createIndex。
+ */
+function parseMigrationSchemas(
+  filePath: string,
+  storeNameMap: Record<string, string>,
+): StoreSchema[] {
+  const content = fs.readFileSync(filePath, 'utf-8')
+  const stores: StoreSchema[] = []
+
+  const createStoreRegex =
+    /createObjectStore\(\s*STORE_NAME\.(\w+)\s*,\s*\{\s*keyPath\s*:\s*['"]([^'"]+)['"]\s*(?:,\s*autoIncrement\s*:\s*(true|false))?\s*\}\s*\)/g
+  let match: RegExpExecArray | null
+
+  while ((match = createStoreRegex.exec(content)) !== null) {
+    const configKey = match[1]
+    const keyPath = match[2]
+    const autoIncrement = match[3] === 'true'
+    const storeName = storeNameMap[configKey]
+
+    if (!storeName) {
+      console.warn(
+        color(
+          `⚠️  迁移文件中引用了 STORE_NAME.${configKey}，但在 dbConfig.ts 中未找到`,
+          COLORS.yellow,
+        ),
+      )
+      continue
+    }
+
+    // 提取该 createObjectStore 之后的索引（直到下一个 createObjectStore 或块结束）
+    const afterCreate = content.slice(match.index + match[0].length)
+    const nextCreateMatch = afterCreate.match(/createObjectStore\(/)
+    const indexBlock = nextCreateMatch
+      ? afterCreate.slice(0, nextCreateMatch.index)
+      : afterCreate
+
+    stores.push({
+      storeName,
+      configKey,
+      keyPath,
+      autoIncrement,
+      indexes: parseIndexesInBlock(indexBlock),
+    })
+  }
+
+  return stores
+}
+
+function parseIndexesInBlock(block: string): IndexInfo[] {
   const indexes: IndexInfo[] = []
+  const seenIndexNames = new Set<string>()
 
   // 匹配 createIndex 调用
-  // 形式1: createIndex('name', 'field', { unique: false })
-  // 形式2: createIndex('name', ['f1', 'f2'], { unique: true })
   const indexRegex = /createIndex\(\s*['"]([^'"]+)['"]\s*,\s*(.+?)\s*(?:,\s*\{([^}]*)\}\s*)?\)/g
   let match: RegExpExecArray | null
 
-  while ((match = indexRegex.exec(context)) !== null) {
+  while ((match = indexRegex.exec(block)) !== null) {
     const indexName = match[1]
+    if (seenIndexNames.has(indexName)) continue
+    seenIndexNames.add(indexName)
+
     const keyPathRaw = match[2]!.trim()
     const optionsStr = match[3] || ''
 
     let keyPath: string | string[]
 
     if (keyPathRaw.startsWith('[') && keyPathRaw.endsWith(']')) {
-      // 数组形式
       const fields: string[] = []
       const fieldRegex = /['"]([^'"]+)['"]/g
       let fieldMatch: RegExpExecArray | null
@@ -339,7 +389,6 @@ function parseIndexesInContext(context: string): IndexInfo[] {
       }
       keyPath = fields
     } else {
-      // 单字段形式
       const singleMatch = keyPathRaw.match(/['"]([^'"]+)['"]/)
       keyPath = singleMatch ? singleMatch[1] : keyPathRaw
     }
@@ -384,9 +433,32 @@ const STORE_TO_TYPE_MAP: Record<string, string> = {
   news: 'NewsArticle',
   news_stock_map: 'NewsStockMap',
   sentiment_cache: 'SentimentCache',
-  news_bookmarks: '', // 预留：如果有类型可以补充
+  news_bookmarks: 'NewsBookmark',
   hot_sector_scores: 'HotSectorScore',
   value_pit_scores: 'ValuePitScore',
+  financial_reports: 'FinancialReport',
+  execution_plans: 'ExecutionPlan',
+  execution_logs: 'ExecutionLog',
+  missing_reports: 'MissingReport',
+  portfolios: 'Portfolio',
+  trade_reviews: 'TradeReviewRecord',
+  // schema_migrations / collect_config / trace_records 类型定义见 src/data/types/
+  schema_migrations: 'SchemaMigrationRecord',
+  collect_config: 'PersistedWizardConfig',
+  trace_records: 'CollectionTraceSpan',
+  // rbac_* 类型定义见 src/data/types/types.rbac.ts
+  rbac_users: 'RbacUser',
+  rbac_roles: 'RbacRole',
+  rbac_permissions: 'RbacPermission',
+  rbac_user_roles: 'RbacUserRole',
+  rbac_role_permissions: 'RbacRolePermission',
+  rbac_permission_audit_logs: 'RbacPermissionAuditLog',
+  custom_agents: 'CustomAgent',
+  // workflow_* 类型定义见 src/data/types/types.workflow.ts
+  workflow_defs: 'WorkflowDef',
+  workflow_schedules: 'ScheduleDef',
+  workflow_triggers: 'TriggerDef',
+  workflow_runs: 'WorkflowRun',
 }
 
 function inferTypeName(storeName: string): string {
@@ -720,7 +792,8 @@ function main(): void {
   // 检查文件是否存在
   const filesToCheck: Array<[string, string]> = [
     ['types.ts', TYPES_FILE],
-    ['db.ts', DB_FILE],
+    ['db-schema.ts', DB_SCHEMA_FILE],
+    ['rbacMigrationV24.ts', DB_MIGRATIONS_FILE],
     ['dbConfig.ts', DB_CONFIG_FILE],
   ]
 
@@ -732,9 +805,14 @@ function main(): void {
   }
 
   // 解析
-  const interfaces = parseInterfaces(TYPES_FILE)
+  const typesDir = path.join(PROJECT_ROOT, 'src', 'data', 'types')
+  const interfaces = fs.existsSync(typesDir)
+    ? collectInterfaces(typesDir)
+    : parseInterfaces(TYPES_FILE)
   const storeNames = parseStoreNames(DB_CONFIG_FILE)
-  const storeSchemas = parseStoreSchemas(DB_FILE, storeNames)
+  const schemaStores = parseStoreSchemas(DB_SCHEMA_FILE, storeNames)
+  const migrationStores = parseMigrationSchemas(DB_MIGRATIONS_FILE, storeNames)
+  const storeSchemas = [...schemaStores, ...migrationStores]
 
   // 校验
   const result = validate(interfaces, storeNames, storeSchemas)

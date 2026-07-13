@@ -2,18 +2,45 @@ import { z } from 'zod'
 import { ok, fail, type Result } from '@/services/contracts'
 import { ValidationError } from '@/lib/errors'
 import { getLogger } from '@/lib/logger'
-import { dataLayer } from '@/data/dataLayer'
+import { dataBridge } from '@/core/databridge'
+import { ENVELOPE_ACTION, STORE_NAME } from '@/config/dbConfig'
 import type {
   DailyQuotes,
   IndustryScore,
   IntelligentScore,
   NewsArticle,
+  NewsStockMap,
   Signal,
   Stock,
   V6Score,
 } from '@/data/types'
 
 const logger = getLogger()
+
+async function queryGet<T>(store: typeof STORE_NAME[keyof typeof STORE_NAME], key: string): Promise<T | undefined> {
+  const result = await dataBridge.query<T | undefined>({
+    action: ENVELOPE_ACTION.queryGet,
+    store,
+    key,
+    source: 'datalayer',
+  })
+  return result.success ? result.data : undefined
+}
+
+async function queryListByIndex<T>(
+  store: typeof STORE_NAME[keyof typeof STORE_NAME],
+  indexName: string,
+  indexValue: unknown,
+): Promise<T[]> {
+  const result = await dataBridge.query<T[]>({
+    action: ENVELOPE_ACTION.queryByIndex,
+    store,
+    indexName,
+    indexValue,
+    source: 'datalayer',
+  })
+  return result.success ? result.data ?? [] : []
+}
 
 /** 查询粒度开关（参数 schema，运行时校验） */
 export const unifiedStockQuerySchema = z.object({
@@ -63,7 +90,7 @@ type TaskResult = { key: keyof Omit<QueryBuilderResult, 'errors'>; value: unknow
 /**
  * QueryBuilder — 绕开 Store 综合查询引擎（D-02 类型安全化）
  *
- * 封装 dataLayer 多个 Store 的并发查询，一次性获取某只股票在
+ * 封装 DataBridge 多个 Store 的并发查询，一次性获取某只股票在
  * 基础信息 / 行情 / V6评分 / 智能评分 / 行业评分 / 交易信号 / 关联新闻
  * 等多个维度的数据，返回统一的 `Result<QueryBuilderResult>`。
  *
@@ -97,7 +124,7 @@ export class QueryBuilder {
       tasks.push(
         (async (): Promise<TaskResult> => {
           try {
-            const value = await dataLayer.stocks.get(symbol)
+            const value = await queryGet<Stock>(STORE_NAME.stocks, symbol)
             return { key: 'stock', value }
           } catch (err) {
             const msg = `Failed to fetch basic data for ${symbol}: ${String(err)}`
@@ -115,7 +142,7 @@ export class QueryBuilder {
       tasks.push(
         (async (): Promise<TaskResult> => {
           try {
-            const value = await dataLayer.dailyQuotes.get(symbol)
+            const value = await queryGet<DailyQuotes>(STORE_NAME.dailyQuotes, symbol)
             return { key: 'quotes', value }
           } catch (err) {
             const msg = `Failed to fetch quotes for ${symbol}: ${String(err)}`
@@ -133,7 +160,7 @@ export class QueryBuilder {
       tasks.push(
         (async (): Promise<TaskResult> => {
           try {
-            const value = await dataLayer.v6Scores.get(symbol)
+            const value = await queryGet<V6Score>(STORE_NAME.v6Scores, symbol)
             return { key: 'v6Score', value }
           } catch (err) {
             const msg = `Failed to fetch V6 score for ${symbol}: ${String(err)}`
@@ -151,7 +178,8 @@ export class QueryBuilder {
       tasks.push(
         (async (): Promise<TaskResult> => {
           try {
-            const value = await dataLayer.intelligentScores.getLatestBySymbol(symbol)
+            const list = await queryListByIndex<IntelligentScore>(STORE_NAME.intelligentScores, 'by-symbol', symbol)
+            const value = list.sort((a, b) => b.scoredAt - a.scoredAt)[0]
             return { key: 'intelligentScore', value }
           } catch (err) {
             const msg = `Failed to fetch intelligent score for ${symbol}: ${String(err)}`
@@ -169,9 +197,10 @@ export class QueryBuilder {
       tasks.push(
         (async (): Promise<TaskResult> => {
           try {
-            const stock = await dataLayer.stocks.get(symbol).catch(() => undefined)
+            const stock = await queryGet<Stock>(STORE_NAME.stocks, symbol)
             if (stock?.industryCode) {
-              const value = await dataLayer.industryScores.getLatestByCode(stock.industryCode)
+              const list = await queryListByIndex<IndustryScore>(STORE_NAME.industryScores, 'by-code', stock.industryCode)
+              const value = list.sort((a, b) => b.scoredAt - a.scoredAt)[0]
               return { key: 'industryScore', value }
             }
             return { key: 'industryScore', value: undefined }
@@ -191,7 +220,7 @@ export class QueryBuilder {
       tasks.push(
         (async (): Promise<TaskResult> => {
           try {
-            const value = await dataLayer.signals.listBySymbol(symbol)
+            const value = await queryListByIndex<Signal>(STORE_NAME.signals, 'by-symbol', symbol)
             return { key: 'signals', value }
           } catch (err) {
             const msg = `Failed to fetch signals for ${symbol}: ${String(err)}`
@@ -221,9 +250,9 @@ function collectSuccessfulNews(
       tasks.push(
         (async (): Promise<TaskResult> => {
           try {
-            const mappings = await dataLayer.newsStockMap.listBySymbol(symbol)
+            const mappings = await queryListByIndex<NewsStockMap>(STORE_NAME.newsStockMap, 'by-symbol', symbol)
             const newsResults = await Promise.allSettled(
-              mappings.map((m) => dataLayer.news.get(m.newsId)),
+              mappings.map((m) => queryGet<NewsArticle>(STORE_NAME.news, m.newsId)),
             )
             const newsList = collectSuccessfulNews(newsResults)
             return { key: 'news', value: newsList }

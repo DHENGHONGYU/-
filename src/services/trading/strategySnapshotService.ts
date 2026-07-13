@@ -5,7 +5,8 @@
  * 生成策略快照并持久化到 IndexedDB 的 strategy_snapshots 存储。
  */
 
-import { dataLayer } from '@/data/dataLayer'
+import { STORE_NAME } from '@/config/dbConfig'
+import { queryList, sendWriteEnvelope } from '@/data/dataLayerHelpers'
 import type {
   DataLayerResult,
   RotationSectorScore,
@@ -316,7 +317,7 @@ export async function saveStrategySnapshot(
       trigger,
     }
 
-    const result = await dataLayer.strategySnapshots.save(snapshot)
+    const result = await sendWriteEnvelope('saveStrategySnapshots', snapshot, 'tradinghub')
     if (!result.success) {
       return { success: false, error: result.error }
     }
@@ -334,8 +335,9 @@ export async function saveStrategySnapshot(
  */
 export async function getLatestSnapshot(): Promise<DataLayerResult<StrategySnapshot | undefined>> {
   try {
-    const snapshot = await dataLayer.strategySnapshots.getLatest()
-    return { success: true, data: snapshot }
+    const list = await queryList<StrategySnapshot>(STORE_NAME.strategySnapshots)
+    const sorted = list.sort((a, b) => b.timestamp - a.timestamp)
+    return { success: true, data: sorted[0] }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     logger.error('获取最新策略快照失败', { error: message })
@@ -350,7 +352,7 @@ export async function getLatestSnapshot(): Promise<DataLayerResult<StrategySnaps
  */
 export async function listSnapshots(limit?: number): Promise<DataLayerResult<StrategySnapshot[]>> {
   try {
-    const list = await dataLayer.strategySnapshots.list()
+    const list = await queryList<StrategySnapshot>(STORE_NAME.strategySnapshots)
     const sorted = list.sort((a, b) => b.timestamp - a.timestamp)
     return { success: true, data: limit ? sorted.slice(0, limit) : sorted }
   } catch (err) {

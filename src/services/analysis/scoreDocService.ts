@@ -5,19 +5,47 @@
  * 自动递增版本号并计算与上一版的差异。
  */
 
-import { dataLayer } from '@/data/dataLayer'
+import { STORE_NAME } from '@/config/dbConfig'
 import type { DataLayerResult, FileLibraryStats, ScoreDocVersion, V6LayerScore } from '@/data/types'
+import { queryByIndex, queryList } from '@/data/dataLayerHelpers'
 import type {
   ScoreComparisonMode,
   ScoreComparisonResult,
   DimensionComparisonItem,
   ScoreComparisonTimelineItem,
 } from '@/types/modules/score.types'
+import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID } from '@/config/dbConfig'
+import { dataBridge } from '@/core/databridge'
+import { EnvelopeFactory } from '@/core/envelope'
 import { getLogger } from '@/lib/logger'
 import { DEFAULT_THRESHOLDS } from '@/services/scoring/v6-engine/config'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
+import { nanoid } from 'nanoid'
 
 const logger = getLogger()
+
+/**
+ * 通过 DataBridge 保存评分文档
+ */
+async function saveScoreDocViaBridge(doc: ScoreDocVersion): Promise<DataLayerResult<void>> {
+  try {
+    const envelope = EnvelopeFactory.create(
+      {
+        source: MODULE_ID.analyzer,
+        target: ENVELOPE_TARGET.db,
+        action: ENVELOPE_ACTION.saveScoreDocs,
+        traceId: `score-doc-${nanoid(8)}-${doc.docId}`,
+      },
+      doc,
+    )
+    await dataBridge.forward(envelope)
+    return { success: true }
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    logger.error('[scoreDocService] saveScoreDocs failed', { docId: doc.docId, error: message })
+    return { success: false, error: message }
+  }
+}
 
 /**
  * makeScoreDocId
@@ -215,7 +243,7 @@ export function buildScoreDocDiff(
  * @returns Promise<number>
  */
 export async function getNextVersion(symbol: string): Promise<number> {
-  const versions = await dataLayer.scoreDocs.listBySymbol(symbol)
+  const versions = await queryByIndex<ScoreDocVersion>(STORE_NAME.scoreDocs, 'by-symbol', symbol)
   if (versions.length === 0) return 1
   return Math.max(...versions.map((d) => d.version)) + 1
 }
@@ -284,7 +312,7 @@ export async function saveScoreDoc(input: ScoreDocInput): Promise<DataLayerResul
       doc.reportMd = buildReportMarkdown(doc)
     }
 
-    const result = await dataLayer.scoreDocs.save(doc)
+    const result = await saveScoreDocViaBridge(doc)
     if (!result.success) {
       return { success: false, error: result.error }
     }
@@ -303,7 +331,7 @@ export async function getVersion(
   symbol: string,
   version: number,
 ): Promise<ScoreDocVersion | undefined> {
-  const versions = await dataLayer.scoreDocs.listBySymbol(symbol)
+  const versions = await queryByIndex<ScoreDocVersion>(STORE_NAME.scoreDocs, 'by-symbol', symbol)
   return versions.find((d) => d.version === version)
 }
 
@@ -315,7 +343,7 @@ export async function getRecentVersions(
   limit = 4,
 ): Promise<DataLayerResult<ScoreDocVersion[]>> {
   try {
-    const versions = await dataLayer.scoreDocs.listBySymbol(symbol)
+    const versions = await queryByIndex<ScoreDocVersion>(STORE_NAME.scoreDocs, 'by-symbol', symbol)
     const sorted = versions.sort((a, b) => b.version - a.version).slice(0, limit)
     return { success: true, data: sorted }
   } catch (err) {
@@ -331,7 +359,7 @@ export async function getRecentVersions(
  */
 export async function exportSymbolMd(symbol: string): Promise<DataLayerResult<string>> {
   try {
-    const versions = await dataLayer.scoreDocs.listBySymbol(symbol)
+    const versions = await queryByIndex<ScoreDocVersion>(STORE_NAME.scoreDocs, 'by-symbol', symbol)
     if (versions.length === 0) return { success: true, data: '' }
 
     const sorted = versions.sort((a, b) => b.version - a.version)
@@ -349,7 +377,7 @@ export async function exportSymbolMd(symbol: string): Promise<DataLayerResult<st
  */
 export async function getFileLibraryStats(): Promise<DataLayerResult<FileLibraryStats>> {
   try {
-    const all = await dataLayer.scoreDocs.list()
+    const all = await queryList<ScoreDocVersion>(STORE_NAME.scoreDocs)
     const symbols = new Set(all.map((d) => d.symbol))
     const totalComposite = all.reduce((sum, d) => sum + d.composite, 0)
     const coreStocks = all.filter((d) => d.composite >= DEFAULT_THRESHOLDS.rating.strongBuy).length
@@ -378,7 +406,7 @@ export async function listScoreDocsBySymbol(
   symbol: string,
 ): Promise<DataLayerResult<ScoreDocVersion[]>> {
   try {
-    const list = await dataLayer.scoreDocs.listBySymbol(symbol)
+    const list = await queryByIndex<ScoreDocVersion>(STORE_NAME.scoreDocs, 'by-symbol', symbol)
     return { success: true, data: list }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
@@ -497,7 +525,7 @@ export async function compareTwoVersions(
   rightVersion: number,
 ): Promise<DataLayerResult<ScoreComparisonResult>> {
   try {
-    const versions = await dataLayer.scoreDocs.listBySymbol(symbol)
+    const versions = await queryByIndex<ScoreDocVersion>(STORE_NAME.scoreDocs, 'by-symbol', symbol)
     const leftDoc = versions.find((v) => v.version === leftVersion)
     const rightDoc = versions.find((v) => v.version === rightVersion)
 
@@ -526,8 +554,8 @@ export async function compareTwoStocksLatest(
 ): Promise<DataLayerResult<ScoreComparisonResult>> {
   try {
     const [leftVersions, rightVersions] = await Promise.all([
-      dataLayer.scoreDocs.listBySymbol(leftSymbol),
-      dataLayer.scoreDocs.listBySymbol(rightSymbol),
+      queryByIndex<ScoreDocVersion>(STORE_NAME.scoreDocs, 'by-symbol', leftSymbol),
+      queryByIndex<ScoreDocVersion>(STORE_NAME.scoreDocs, 'by-symbol', rightSymbol),
     ])
 
     const leftSorted = [...leftVersions].sort((a, b) => b.version - a.version)
@@ -559,7 +587,7 @@ export async function getScoreTimeline(
   symbol: string,
 ): Promise<DataLayerResult<ScoreComparisonTimelineItem[]>> {
   try {
-    const versions = await dataLayer.scoreDocs.listBySymbol(symbol)
+    const versions = await queryByIndex<ScoreDocVersion>(STORE_NAME.scoreDocs, 'by-symbol', symbol)
     const timeline = buildScoreTimeline(versions)
     return { success: true, data: timeline }
   } catch (err) {
