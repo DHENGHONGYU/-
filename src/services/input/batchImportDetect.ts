@@ -22,11 +22,11 @@ const logger = getLogger()
  * 检测重复并标记每行状态
  *
  * - 代码格式不合规 → invalid
- * - 与现有候选池重复 / 批次内重复 → duplicate
+ * - 与现有意向候选池重复 / 批次内重复 → duplicate
  * - 其余 → valid
  *
  * @param rows 待检测的行
- * @param existingSymbols 现有候选池 symbol 集合（如 "600519.SH"）
+ * @param existingSymbols 现有意向候选池 symbol 集合（如 "600519.SH"）
  */
 export function detectDuplicates(
   rows: BulkImportRow[],
@@ -48,12 +48,12 @@ export function detectDuplicates(
         statusReason: '代码格式不合规（需为 6 位数字）',
       }
     }
-    // 与候选池重复
+    // 与意向候选池重复
     if (existingSymbols.has(row.symbol)) {
       return {
         ...row,
         status: 'duplicate' as const,
-        statusReason: '与候选池已存在重复',
+        statusReason: '与意向候选池已存在重复',
       }
     }
     // 批次内重复

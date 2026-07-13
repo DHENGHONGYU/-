@@ -11,7 +11,7 @@ import type {
   StrategyResult,
 } from '@/data/types'
 import { hotSectorQueryUseCase } from '@/services/useCase/hotSectorQuery.useCase'
-import type { HotSector } from '@/services/fetcher/hotSectorService'
+import type { HotSector } from '@/services/input/hotSectorService'
 import { matchesTheme } from '@/config/themeRegistry'
 import { getLogger } from '@/lib/logger'
 import { getCompositeScores } from './scoringAdapter'

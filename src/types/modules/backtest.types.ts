@@ -96,3 +96,27 @@ export interface BacktestConfig {
   endDate: string
   initialCapital: number
 }
+
+/** 回测历史记录项 */
+export interface BacktestHistoryRecord {
+  /** 唯一标识 */
+  id: string
+  /** 回测配置（快照） */
+  config: BacktestConfig
+  /** 回测结果 */
+  result: BacktestResult
+  /** 创建时间戳 */
+  createdAt: number
+}
+
+/** 回测历史记录查询参数 */
+export interface BacktestHistoryQuery {
+  /** 按策略过滤 */
+  strategy?: BacktestStrategy
+  /** 最早时间 */
+  fromDate?: number
+  /** 最晚时间 */
+  toDate?: number
+  /** 最大条数 */
+  limit?: number
+}

@@ -9,10 +9,11 @@
  * 4. 数据写入通过 DataBridge 保持一致性
  *
  * 新增 `callerContext` 参数透传至 MCPClient，实现工具层权限控制。
+ * 新增 Tool 调用计数器，支持月度审计统计。
  *
  * @module mcp/bridge/mcpBridge
  * @created 2026-07-04 - Phase 1 MCP 适配层建设
- * @updated 2026-07-08 - P0 透传 callerContext 支持权限校验
+ * @updated 2026-07-13 - P2 添加 Tool 调用计数器
  */
 
 import { getLogger } from '@/lib/logger'
@@ -30,9 +31,12 @@ const logger = getLogger()
 export class MCPBridge {
   private static instance: MCPBridge | null = null
   private client: MCPClientImpl
+  /** Tool 调用计数器：key = `${serverName}.${toolName}` */
+  private toolCallStats: Map<string, number>
 
   private constructor() {
     this.client = new MCPClientImpl(mcpRegistry)
+    this.toolCallStats = new Map()
     logger.info('[MCPBridge] initialized with ACL support')
   }
 
@@ -70,6 +74,10 @@ export class MCPBridge {
     )
 
     try {
+      // 计数器递增
+      const statKey = `${serverName}.${toolName}`
+      this.toolCallStats.set(statKey, (this.toolCallStats.get(statKey) ?? 0) + 1)
+
       const result = await this.client.callTool(serverName, toolName, args, context)
       const durationMs = performance.now() - startTime
 
@@ -139,6 +147,25 @@ export class MCPBridge {
   /** 获取注册统计信息 */
   getStats() {
     return mcpRegistry.getStats()
+  }
+
+  /**
+   * 获取 Tool 调用次数统计。
+   *
+   * @returns 按 serverName.toolName 聚合的调用次数映射
+   */
+  getToolUsageStats(): Record<string, number> {
+    const stats: Record<string, number> = {}
+    for (const [key, count] of this.toolCallStats.entries()) {
+      stats[key] = count
+    }
+    return stats
+  }
+
+  /** 重置 Tool 调用计数器 */
+  resetToolUsageStats(): void {
+    this.toolCallStats.clear()
+    logger.info('[MCPBridge] tool usage stats reset')
   }
 }
 

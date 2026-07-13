@@ -11,7 +11,7 @@ import {
   addStockFromSearch as addStockFromSearchService,
   type StockSearchResult,
   type AddStockOptions,
-} from '@/services/fetcher/fetcherInputService'
+} from '@/services/input/inputService'
 import type { DataLayerResult, Stock } from '@/data/types'
 import { getLogger } from '@/lib/logger'
 

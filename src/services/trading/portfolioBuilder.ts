@@ -37,7 +37,7 @@ const DEFAULT_OPTIONS: PortfolioBuilderOptions = {
  * 根据主题与评分构建目标投资组合。
  *
  * 流程：
- * 1. 从候选池中筛选匹配主题的标的。
+ * 1. 从意向候选池中筛选匹配主题的标的。
  * 2. 获取综合评分，剔除低于 minCompositeScore 的标的。
  * 3. 按综合评分降序排序。
  * 4. 在主题总仓位内等权分配，受 singleMaxPct / singleMinPct 约束。

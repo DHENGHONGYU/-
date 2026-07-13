@@ -1,7 +1,7 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { runStrategy } from '@/services/trading/strategyEngine'
 import * as scoringAdapter from '@/services/trading/scoringAdapter'
-import * as hotSectorService from '@/services/fetcher/hotSectorService'
+import * as hotSectorService from '@/services/input/hotSectorService'
 import { CORE_RESOURCE_THEME } from '@/config/themeRegistry'
 import type { Stock } from '@/data/types'
 import type { CompositeScoreView } from '@/services/trading/scoringAdapter'

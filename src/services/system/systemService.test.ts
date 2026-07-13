@@ -26,7 +26,15 @@ vi.mock('@/data/dataLayer', () => ({
 }))
 
 vi.mock('@/core/databridge', () => ({
-  dataBridge: { forward: mockForward },
+  dataBridge: {
+    forward: mockForward,
+    query: vi.fn(({ store }) => {
+      if (store === 'stocks') return mockStocksList().then((data: unknown[]) => ({ success: true, data }))
+      if (store === 'orders') return mockOrdersList().then((data: unknown[]) => ({ success: true, data }))
+      if (store === 'v6Scores') return mockV6ScoresList().then((data: unknown[]) => ({ success: true, data }))
+      return Promise.resolve({ success: true, data: [] })
+    }),
+  },
 }))
 
 vi.mock('@/core/envelope', () => ({
@@ -37,6 +45,7 @@ vi.mock('@/config/dbConfig', () => ({
   MODULE_ID: { system: 'system' },
   ENVELOPE_TARGET: { system: 'system' },
   ENVELOPE_ACTION: { resetAll: 'RESET_ALL', exportAll: 'EXPORT_ALL' },
+  STORE_NAME: { stocks: 'stocks', orders: 'orders', v6Scores: 'v6Scores' },
 }))
 
 /* ------------------------------------------------------------------ */

@@ -20,7 +20,7 @@ import type { DataLayerResult, Stock } from '@/data/types'
 import { getLogger } from '@/lib/logger'
 import { eventBus } from '@/lib/eventBus'
 
-import { addStock, type AddStockOptions } from './fetcherInputService'
+import { addStock, type AddStockOptions } from './inputService'
 import type { BulkImportResult, BulkImportRow } from './batchImportParsers'
 
 const logger = getLogger()

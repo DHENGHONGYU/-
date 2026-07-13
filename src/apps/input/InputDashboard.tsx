@@ -4,11 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Car
 import { Input } from '@/components/atoms/Input'
 import { Badge } from '@/components/atoms/Badge'
 import { Select, SelectItem } from '@/components/atoms/Select'
-import { addStock } from '@/services/fetcher/fetcherInputService'
+import { addStock } from '@/services/input/inputService'
 import { checkFetcherHealth } from '@/services/fetcher/fetcherService'
 import { usePoolStore, getAllGroups } from '@/store/poolStore'
 import { StockSearch } from '@/components/organisms/input/StockSearch'
-import type { StockSearchResult } from '@/services/fetcher/fetcherInputService'
+import type { StockSearchResult } from '@/services/input/inputService'
 import { getLogger } from '@/lib/logger'
 import { COLOR_TOKENS, twText, twBg } from '@/constants/theme.tokens'
 import { Skeleton } from '@/components/molecules/states/Skeleton'
@@ -103,7 +103,7 @@ export default function InputDashboard(): React.JSX.Element {
           <>
             <Card>
               <CardContent className="p-5">
-                <p className="text-xs text-muted-foreground">候选池标的</p>
+                <p className="text-xs text-muted-foreground">意向候选池标的</p>
                 <div className="flex items-baseline gap-2">
                   <p className="text-2xl font-bold">{stats.total}</p>
                   {stats.total > 0 && (
@@ -184,7 +184,7 @@ export default function InputDashboard(): React.JSX.Element {
               variant={searchMode === 'add' ? 'secondary' : 'ghost'}
               onClick={() => setSearchMode('add')}
             >
-              直接录入候选池
+              直接录入意向候选池
             </Button>
           </div>
           <StockSearch
@@ -196,7 +196,7 @@ export default function InputDashboard(): React.JSX.Element {
               setMessage(`已选择 ${result.symbol} ${result.name}，请选择录入方式`)
             }}
             onAdded={async (): Promise<void> => {
-              setMessage('搜索标的已录入候选池')
+              setMessage('搜索标的已录入意向候选池')
               await refresh()
             }}
           />

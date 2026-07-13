@@ -9,7 +9,7 @@ import {
   addHotSectorStock,
   addHotSectorStocks,
   type HotSector,
-} from '@/services/fetcher/hotSectorService'
+} from '@/services/input/hotSectorService'
 import { usePoolStore, getAllGroups } from '@/store/poolStore'
 import { useToast } from '@/hooks/useToast'
 import { getLogger } from '@/lib/logger'
@@ -89,7 +89,7 @@ export default function HotSectorPanel(): React.JSX.Element {
           symbol: symbolToAdd,
           elapsedMs: Date.now() - startTime,
         })
-        setMessage(`已将 ${symbolToAdd} 加入候选池`)
+        setMessage(`已将 ${symbolToAdd} 加入意向候选池`)
         await refresh()
       } else {
         logger.error('[HotSectorPanel] handleAddHotStock 失败', {
@@ -209,7 +209,7 @@ export default function HotSectorPanel(): React.JSX.Element {
               <div className="flex items-center justify-between border-b p-3">
                 <h4 className="font-medium">{activeHotSector.name} 关联股票</h4>
                 <Button size="sm" variant="secondary" onClick={() => void handleAddAllHotStocks()} disabled={addingAll}>
-                  {addingAll ? '加入中...' : '全部加入候选池'}
+                  {addingAll ? '加入中...' : '全部加入意向候选池'}
                 </Button>
               </div>
               <div className="max-h-96 overflow-auto">
@@ -238,7 +238,7 @@ export default function HotSectorPanel(): React.JSX.Element {
                           disabled={isAdded || isAdding}
                           variant={isAdded ? 'secondary' : 'primary'}
                         >
-                          {isAdded ? '已加入' : isAdding ? '加入中...' : '加入候选池'}
+                          {isAdded ? '已加入' : isAdding ? '加入中...' : '加入意向候选池'}
                         </Button>
                       </div>
                     )

@@ -1,6 +1,6 @@
 # AGENTS.md — V9 智能投研复盘系统 AI 行为约束契约
 
-> **版本**: v1.4.5 | **日期**: 2026-07-20
+> **版本**: v1.4.6 | **日期**: 2026-07-20
 > **适用范围**: 所有 AI 辅助开发工具（Claude Code、Cursor、Trae 等）
 > **强制等级**: 所有 AI 生成的代码必须遵守以下约束
 
@@ -16,7 +16,7 @@
 src/config/       ← 配置层（零硬编码锚点）
 src/core/         ← 核心工具与类型守卫（DataBridge/ACL/Envelope/MemoryCache/EventBus）
 src/agents/       ← AI 行为扩展（运行时模块，core 层扩展）
-src/data/         ← 数据层（IndexedDB/dataLayer/queryBuilder/types）
+src/data/         ← 数据层（IndexedDB/dataLayer/queryBuilder/types/gateway）
 src/lib/          ← 库函数（logger/format/errors/utils/localStorageManager）
 src/services/      ← 服务层（20+子域：analysis/scoring/fetcher/news/llm/trading/execution/...）
 src/store/        ← 状态层（49个Zustand Store + helpers/withBroadcast）
@@ -41,11 +41,12 @@ src/generated/    ← 代码自动生成产物（令牌/类型/脚本输出）
 
 - `pages/` 和 `components/` → 只能依赖 `store/` 和 `services/`，禁止直接调用 `dataLayer` 或 `db`
 - `store/` → 只能依赖 `services/` 和 `core/`
-- `services/` → 只能依赖 `core/`、`data/` 和 `lib/`（仅限基础设施），禁止直接写 `db`（通过 `DataBridge.forward()`）
+- `services/` → 只能依赖 `core/`、`data/` 和 `lib/`（仅限基础设施），禁止直接写 `db`；所有写入必须封装为 `StandardEnvelope` 并通过 `DataBridge.forward()` 发起，最终由 `data/gateway/` 执行
   - **lib 基础设施白名单**：`logger`、`withBroadcast`、`eventBus`、`format`、`errors`、`utils`、`localStorageManager`、`safeCoerce`、`perf`、`precision`、`validation`
   - 禁止依赖 `lib/` 中的业务模块
+- `data/` → `data/gateway/` 是唯一允许直接操作 `dataLayer` 与 `db` 的入口；`dataLayer` 子模块仅被 `data/gateway/` 与同级 `data/` 基础设施依赖
 - `lib/` → 仅可依赖 `core/` 和 `config/`，禁止依赖 `services/`、`store/`、`pages/`、`components/`、`apps/`
-- `core/` → 禁止依赖 `pages/`、`components/`、`apps/`、`lib/`
+- `core/` → 禁止依赖 `pages/`、`components/`、`apps/`、`lib/`；`DataBridge` 写操作必须委托 `data/gateway/`，禁止直接 `import { db }` 或 `dataLayer` store
 - `config/` → 禁止依赖 `services/`、`pages/`、`components/`、`lib/`
 - `constants/` → 禁止依赖任何运行时模块（仅导出常量，可被所有层引用）
 - `types/` → 零依赖（纯类型定义，可被所有层引用）
@@ -1263,6 +1264,7 @@ npx tsc --noEmit | findstr /R "mcpAcl mcpBridge MCPServer MCPClient"
 
 | 版本 | 日期 | 变更摘要 |
 |------|------|----------|
+| v1.4.6 | 2026-07-20 | §一 新增 `data/gateway/` 层定义；明确 Gateway 是唯一允许直接操作 `dataLayer`/`db` 的入口，`DataBridge` 写操作必须委托 Gateway；新增 `docs/03-development/gateway-write-permission-spec.md` 规范文档 |
 | v1.4.3 | 2026-07-10 | 标题区新增 JSDoc 与复杂度规范引用；新增 `docs/jsdoc-convention.md`、`docs/complexity-governance.md`、`scripts/audit-jsdoc.ts`、`scripts/audit-complexity.ts`；Husky 预提交门禁扩展为 9 项检查（新增 audit:jsdoc、audit:complexity） |
 | v1.4.2 | 2026-07-10 | §3.5 颜色令牌规范新增 `docs/design-token-mapping.md` 与 `.vscode/token-snippets.code-snippets` 引用；新增 `design-tokens/figma-to-project.json`、`design-tokens/project-to-figma.json` 双向映射与 `scripts/verify-design-tokens.ts`；Husky 预提交门禁扩展为 7 项检查并新增 `pre-push` 门禁 |
 | v1.4.1 | 2026-07-10 | 新增提示词模板与检查清单引用：在标题区引用 `prompts/` 系统提示词模板、`docs/ui-migration-checklist.md` 与 `docs/widget-integration-checklist.md` |
@@ -1375,6 +1377,7 @@ FinSightV9 是**个人本地投研复盘工具**，定位决定了部署架构�
 | 文档 | 路径 | 说明 |
 |------|------|------|
 | 开发工作流 SOP | `docs/03-development/development-workflow-sop.md` | 编码前/中/后/上线后全周期操作指南 |
+| Gateway 写入权限规范 | `docs/03-development/gateway-write-permission-spec.md` | Gateway 层职责、StandardEnvelope 格式、迁移路径与验证方式 |
 | 文档治理宪法 | `docs/GOVERNANCE.md` | `docs/` 目录治理规则 |
 | 编码规范摘要 | `docs/standards/coding-conventions.md` | AGENTS.md 工程约束速查版 |
 | Widget 开发指南 | `docs/widget-development-guide.md` | 驾驶舱 Widget 扩展指南 |
