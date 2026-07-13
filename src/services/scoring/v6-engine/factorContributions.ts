@@ -10,9 +10,6 @@ import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
 
-/** 因子评分或权重缺失时的默认零值 */
-const DEFAULT_MISSING_VALUE = 0
-
 /**
  * 根据审计追踪计算因子贡献明细。
  *
@@ -53,14 +50,14 @@ export function buildFactorContributions(trail: ScoreAuditTrail): FactorContribu
   const activeLayers = ALL_LAYER_IDS.filter((id) => {
     const rawScore = layerScores[id]
     const rawWeight = weights[id]
-    const score = rawScore ?? DEFAULT_MISSING_VALUE
-    const weight = rawWeight ?? DEFAULT_MISSING_VALUE
+    const score = rawScore ?? Number.NaN
+    const weight = rawWeight ?? Number.NaN
     return score > 0 && weight > 0
   })
 
   const totalWeight = activeLayers.reduce((sum, id) => {
     const rawW = weights[id]
-    const w = rawW ?? DEFAULT_MISSING_VALUE
+    const w = rawW ?? Number.NaN
     return sum + w
   }, 0)
 

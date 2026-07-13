@@ -1,122 +1,202 @@
 import { getLogger } from '@/lib/logger'
-import { RESEARCH_STATUS, type ResearchStatus } from '@/constants/stockpool.constants'
+import {
+  INTENTION_STATUS,
+  POSITION_STATUS,
+  RESEARCH_STATUS,
+  POOL_TYPE,
+  type PoolType,
+  type PoolStatus,
+} from '@/constants/pool.constants'
+import type { PoolTransitionTarget } from '@/types/modules/pool.types'
+
 const logger = getLogger()
 
 /**
  * POOL_TRANSITIONS
+ *
+ * 三分拆后流转规则：
+ * - intention: screening → watchlist → archived
+ * - research: candidate → screened → deepDive → watching → archived
+ * - position: holding → partial → closed
+ * - 跨池：research.watching → position.holding（买入）
+ *        position.closed → research.archived（清仓后归档）
  */
 export const POOL_TRANSITIONS: Record<
-  ResearchStatus,
-  { next: ResearchStatus[]; label: string }
+  PoolType,
+  Partial<Record<PoolStatus, { next: PoolTransitionTarget[]; label: string }>>
 > = {
-  [RESEARCH_STATUS.candidate]: {
-    next: [RESEARCH_STATUS.screened, RESEARCH_STATUS.archived],
-    label: '意向候选池',
+  [POOL_TYPE.intention]: {
+    [INTENTION_STATUS.screening]: {
+      next: [
+        { pool: POOL_TYPE.intention, status: INTENTION_STATUS.watchlist, label: '加入观察' },
+        { pool: POOL_TYPE.intention, status: INTENTION_STATUS.archived, label: '归档' },
+        { pool: POOL_TYPE.research, status: RESEARCH_STATUS.candidate, label: '晋升研究' },
+      ],
+      label: '初步筛选',
+    },
+    [INTENTION_STATUS.watchlist]: {
+      next: [
+        { pool: POOL_TYPE.intention, status: INTENTION_STATUS.archived, label: '归档' },
+        { pool: POOL_TYPE.research, status: RESEARCH_STATUS.candidate, label: '晋升研究' },
+      ],
+      label: '观察列表',
+    },
+    [INTENTION_STATUS.archived]: {
+      next: [
+        { pool: POOL_TYPE.intention, status: INTENTION_STATUS.screening, label: '恢复筛选' },
+      ],
+      label: '已归档',
+    },
   },
-  [RESEARCH_STATUS.screened]: {
-    next: [RESEARCH_STATUS.deepDive, RESEARCH_STATUS.archived],
-    label: '研究精选池',
+  [POOL_TYPE.research]: {
+    [RESEARCH_STATUS.candidate]: {
+      next: [
+        { pool: POOL_TYPE.research, status: RESEARCH_STATUS.screened, label: '精选研究' },
+        { pool: POOL_TYPE.research, status: RESEARCH_STATUS.archived, label: '归档' },
+      ],
+      label: '研究候选',
+    },
+    [RESEARCH_STATUS.screened]: {
+      next: [
+        { pool: POOL_TYPE.research, status: RESEARCH_STATUS.deepDive, label: '深度研究' },
+        { pool: POOL_TYPE.research, status: RESEARCH_STATUS.archived, label: '归档' },
+      ],
+      label: '精选研究',
+    },
+    [RESEARCH_STATUS.deepDive]: {
+      next: [
+        { pool: POOL_TYPE.research, status: RESEARCH_STATUS.watching, label: '加入观察' },
+        { pool: POOL_TYPE.research, status: RESEARCH_STATUS.archived, label: '归档' },
+      ],
+      label: '深度研究',
+    },
+    [RESEARCH_STATUS.watching]: {
+      next: [
+        { pool: POOL_TYPE.position, status: POSITION_STATUS.holding, label: '买入持仓' },
+        { pool: POOL_TYPE.research, status: RESEARCH_STATUS.archived, label: '归档' },
+      ],
+      label: '观察池',
+    },
+    [RESEARCH_STATUS.archived]: {
+      next: [
+        { pool: POOL_TYPE.research, status: RESEARCH_STATUS.candidate, label: '恢复候选' },
+      ],
+      label: '已归档',
+    },
   },
-  [RESEARCH_STATUS.deepDive]: {
-    next: [RESEARCH_STATUS.watching, RESEARCH_STATUS.archived],
-    label: '深度研究池',
-  },
-  [RESEARCH_STATUS.watching]: {
-    next: [RESEARCH_STATUS.archived],
-    label: '观察池',
-  },
-  [RESEARCH_STATUS.archived]: {
-    next: [RESEARCH_STATUS.candidate],
-    label: '归档池',
+  [POOL_TYPE.position]: {
+    [POSITION_STATUS.holding]: {
+      next: [
+        { pool: POOL_TYPE.position, status: POSITION_STATUS.partial, label: '减仓' },
+        { pool: POOL_TYPE.position, status: POSITION_STATUS.closed, label: '清仓' },
+      ],
+      label: '持仓中',
+    },
+    [POSITION_STATUS.partial]: {
+      next: [
+        { pool: POOL_TYPE.position, status: POSITION_STATUS.closed, label: '清仓' },
+      ],
+      label: '部分减仓',
+    },
+    [POSITION_STATUS.closed]: {
+      next: [
+        { pool: POOL_TYPE.research, status: RESEARCH_STATUS.archived, label: '归档研究' },
+      ],
+      label: '已清仓',
+    },
   },
 }
 
 /**
- * getNextStatuses
- * @param status
- * @returns ResearchStatus[]
+ * 获取指定池/状态的下一跳选项。
  */
-export function getNextStatuses(status: ResearchStatus): ResearchStatus[] {
-  const nextStatuses = POOL_TRANSITIONS[status].next
-  logger.debug(`[PoolTransition] getNextStatuses: current="${status}", next=${JSON.stringify(nextStatuses)}`)
-  return nextStatuses
+export function getPoolTransitionOptions(
+  pool: PoolType,
+  status: PoolStatus,
+): PoolTransitionTarget[] {
+  const transitions = POOL_TRANSITIONS[pool]?.[status]
+  if (!transitions) {
+    logger.warn(`[PoolTransition] 未找到流转定义: pool="${pool}", status="${status}"`)
+    return []
+  }
+  return transitions.next
 }
 
 /**
- * getPoolLabel
- * @param status
- * @returns string
+ * 获取池/状态标签。
  */
-export function getPoolLabel(status: ResearchStatus): string {
-  const label = POOL_TRANSITIONS[status].label
-  logger.debug(`[PoolTransition] getPoolLabel: status="${status}", label="${label}"`)
+export function getPoolLabel(pool: PoolType, status: PoolStatus): string {
+  const label = POOL_TRANSITIONS[pool]?.[status]?.label
+  if (!label) {
+    logger.warn(`[PoolTransition] 未找到标签: pool="${pool}", status="${status}"`)
+    return `${pool}:${status}`
+  }
   return label
 }
 
 /**
- * isValidTransition
+ * 校验流转是否合法。
  */
 export function isValidTransition(
-  from: ResearchStatus,
-  to: ResearchStatus,
+  fromPool: PoolType,
+  fromStatus: PoolStatus,
+  toPool: PoolType,
+  toStatus: PoolStatus,
 ): boolean {
-  const isValid = POOL_TRANSITIONS[from].next.includes(to)
+  const options = getPoolTransitionOptions(fromPool, fromStatus)
+  const isValid = options.some(
+    (opt) => opt.pool === toPool && opt.status === toStatus,
+  )
   if (isValid) {
-    logger.info(`[PoolTransition] isValidTransition: valid, from="${from}" → to="${to}"`)
+    logger.info(
+      `[PoolTransition] isValidTransition: valid, from="${fromPool}:${fromStatus}" → to="${toPool}:${toStatus}"`,
+    )
   } else {
-    logger.warn(`[PoolTransition] isValidTransition: invalid, from="${from}" → to="${to}", allowed=${JSON.stringify(POOL_TRANSITIONS[from].next)}`)
+    logger.warn(
+      `[PoolTransition] isValidTransition: invalid, from="${fromPool}:${fromStatus}" → to="${toPool}:${toStatus}", allowed=${JSON.stringify(options)}`,
+    )
   }
   return isValid
 }
 
 /**
- * getTransitionLabel
+ * 获取流转标签。
  */
 export function getTransitionLabel(
-  from: ResearchStatus,
-  to: ResearchStatus,
+  fromPool: PoolType,
+  fromStatus: PoolStatus,
+  toPool: PoolType,
+  toStatus: PoolStatus,
 ): string {
-  const labels: Record<ResearchStatus, string> = {
-    [RESEARCH_STATUS.candidate]: '退回候选',
-    [RESEARCH_STATUS.screened]: '精选研究',
-    [RESEARCH_STATUS.deepDive]: '深度研究',
-    [RESEARCH_STATUS.watching]: '加入观察',
-    [RESEARCH_STATUS.archived]: '归档',
-  }
-  const label = labels[to] ?? '流转'
-  logger.debug(`[PoolTransition] getTransitionLabel: from="${from}" → to="${to}", label="${label}"`)
-  return label
+  const options = getPoolTransitionOptions(fromPool, fromStatus)
+  const match = options.find(
+    (opt) => opt.pool === toPool && opt.status === toStatus,
+  )
+  return match?.label ?? '流转'
 }
 
 /**
- * transitionStatus
+ * 执行状态流转（纯计算函数）。
  */
 export function transitionStatus(
-  from: ResearchStatus,
-  to: ResearchStatus,
-): ResearchStatus | null {
-  logger.debug(`[PoolTransition] transitionStatus() called: from="${from}", to="${to}"`)
+  fromPool: PoolType,
+  fromStatus: PoolStatus,
+  toPool: PoolType,
+  toStatus: PoolStatus,
+): { pool: PoolType; status: PoolStatus } | null {
+  logger.debug(
+    `[PoolTransition] transitionStatus() called: from="${fromPool}:${fromStatus}" → to="${toPool}:${toStatus}"`,
+  )
 
-  if (!isValidTransition(from, to)) {
-    logger.error(`[PoolTransition] transitionStatus() failed: Invalid transition from="${from}" to="${to}"`)
+  if (!isValidTransition(fromPool, fromStatus, toPool, toStatus)) {
+    logger.error(
+      `[PoolTransition] transitionStatus() failed: Invalid transition from="${fromPool}:${fromStatus}" to="${toPool}:${toStatus}"`,
+    )
     return null
   }
 
-  logger.info(`[PoolTransition] transitionStatus() success: from="${from}" → to="${to}"`)
-  return to
-}
-
-export interface PoolTransitionOption {
-  value: ResearchStatus
-  label: string
-}
-
-/**
- * 获取某状态的流转选项（纯计算函数，无数据 CRUD）
- */
-export function getPoolTransitionOptions(status: ResearchStatus): PoolTransitionOption[] {
-  return getNextStatuses(status).map((value) => ({
-    value,
-    label: getTransitionLabel(status, value),
-  }))
+  logger.info(
+    `[PoolTransition] transitionStatus() success: from="${fromPool}:${fromStatus}" → to="${toPool}:${toStatus}"`,
+  )
+  return { pool: toPool, status: toStatus }
 }

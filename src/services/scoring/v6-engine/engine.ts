@@ -135,10 +135,7 @@ export class V6ScoreEngine {
       const sanitizedResult = {
         ...result,
         score: sanitizedScore,
-        weightedScore: sanitizedScore * (result.weight ?? (() => {
-          logger.warn('[V6Engine] 字段缺失，使用默认值', { field: 'weight', context: `layer=${layerId}` })
-          return 0
-        })()),
+        weightedScore: sanitizedScore * result.weight,
       }
 
       this.recordAudit(audit, {
@@ -212,7 +209,7 @@ export class V6ScoreEngine {
   aggregate(layers: Record<LayerId, LayerScore>, allRisks: string[]): CompositeScore {
     let weightedSum = 0
     let totalWeight = 0
-    const failedLayers: string[] = []
+    const skippedLayers: LayerId[] = []
 
     const { weights, thresholds } = this.config
 
@@ -230,7 +227,7 @@ export class V6ScoreEngine {
       // NaN 防护：验证 layer.score 是否有效
       if (!Number.isFinite(layer.score)) {
         logger.warn(`[V6ScoreEngine] aggregate: ${layerId} 层评分无效 (${layer.score})，跳过该层`)
-        failedLayers.push(layerId)
+        skippedLayers.push(layerId)
         continue
       }
 
@@ -241,22 +238,24 @@ export class V6ScoreEngine {
     // 归一化，防止除以零
     const normalizedScore = totalWeight > 0
       ? Math.max(0, Math.min(5, (weightedSum / totalWeight)))
-      : 0
+      : Number.NaN
 
     // 最终结果再次验证
-    const finalScore = Number.isFinite(normalizedScore) ? normalizedScore : 0
+    const finalScore = Number.isFinite(normalizedScore) ? normalizedScore : Number.NaN
 
     const rating = this.mapRating(finalScore, thresholds)
     const recommendation = this.generateRecommendation(rating, allRisks)
 
     const result: CompositeScore = {
-      score: Math.round(finalScore * 100) / 100,
+      score: Number.isFinite(finalScore) ? Math.round(finalScore * 100) / 100 : Number.NaN,
       rating,
       layers,
       allRisks,
       recommendation,
       timestamp: Date.now(),
       engineVersion: ENGINE_VERSION,
+      skippedLayers,
+      coverageRate: Math.round(((ALL_LAYER_IDS.length - skippedLayers.length) / ALL_LAYER_IDS.length) * 100) / 100,
     }
 
     if (this.auditTrail) {
@@ -270,8 +269,8 @@ export class V6ScoreEngine {
       }
       
       // 记录失败层信息
-      if (failedLayers.length > 0) {
-        logger.warn(`[V6ScoreEngine] aggregate: ${failedLayers.length} 层评分无效，已跳过: ${failedLayers.join(', ')}`)
+      if (skippedLayers.length > 0) {
+        logger.warn(`[V6ScoreEngine] aggregate: ${skippedLayers.length} 层评分无效，已跳过: ${skippedLayers.join(', ')}`)
       }
       
       this.auditTrail.factorContributions = buildFactorContributions(this.auditTrail)
@@ -306,12 +305,12 @@ export class V6ScoreEngine {
     return {
       layerId,
       layerName,
-      score: 0,
+      score: Number.NaN,
       summary,
-      risks: errorMsg ? [errorMsg] : [],
+      risks: ['数据缺失：该层评分未参与综合计算'],
       evidence: [],
       weight,
-      weightedScore: 0,
+      weightedScore: Number.NaN,
       dataSources: [],
     }
   }

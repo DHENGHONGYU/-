@@ -14,14 +14,14 @@ import { useScoreDocStore } from './scoreDocStore'
 import { getRecentVersions } from '@/services/analysis/scoreDocService'
 import type { ScoreDocVersion, Stock } from '@/data/types'
 import { DATA_SOURCE } from '@/config/dbConfig'
-import { RESEARCH_STATUS } from '@/constants/stockpool.constants'
+import { RESEARCH_STATUS } from '@/constants/pool.constants'
 vi.mock('@/services/analysis/scoreDocService', () => ({
   getRecentVersions: vi.fn(),
   exportSymbolMd: vi.fn(),
 }))
 
-vi.mock('@/services/stockpool/stockpoolService', () => ({
-  listStocks: vi.fn(),
+vi.mock('@/services/pool/poolService', () => ({
+  listPoolItems: vi.fn(),
 }))
 
 beforeEach(() => {
@@ -174,7 +174,7 @@ describe('scoreDocStore', () => {
 
   test('clear 重置 symbol、versions、error、loading，保留 stocks', async () => {
     const mockStocks: Stock[] = [
-      { symbol: '600519', name: '贵州茅台', researchStatus: RESEARCH_STATUS.watching, source: DATA_SOURCE.manual, dataVersion: 1 },
+      { symbol: '600519', name: '贵州茅台', pool: 'research', researchStatus: RESEARCH_STATUS.watching, source: DATA_SOURCE.manual, dataVersion: 1 },
     ]
     useScoreDocStore.setState({
       symbol: '600519',

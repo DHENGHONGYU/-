@@ -67,7 +67,7 @@ function mockMarketData(partial: Partial<MarketData> = {}, loading = false, erro
       dimensions: [],
       riskHint: '',
     },
-    stockPool: { stocks: [], total: 0, page: 1, pageSize: 20 },
+    poolBoard: { items: [], total: 0, page: 1, pageSize: 20 },
     chatHistory: { target: '', targetType: 'stock', messages: [] },
     hotSectors: [],
     valuePit: [],

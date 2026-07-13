@@ -12,9 +12,9 @@ import type {
   TradeReviewData,
   AnalysisScores,
   ModelComparison,
-  StockPool,
+  PoolBoard,
   ChatHistory,
-  StockPoolItem,
+  PoolBoardItem,
   ChatMessage,
   HotSectorData,
   ValuePitData,
@@ -59,8 +59,8 @@ export class MarketDataAdapter {
         return { analysisScores: this.adaptAnalysisScores(rawData.payload) }
       case 'modelComparison':
         return { modelComparison: this.adaptModelComparison(rawData.payload) }
-      case 'stockPool':
-        return { stockPool: this.adaptStockPool(rawData.payload) }
+      case 'poolBoard':
+        return { poolBoard: this.adaptPoolBoard(rawData.payload) }
       case 'chatHistory':
         return { chatHistory: this.adaptChatHistory(rawData.payload) }
       case 'hotSectors':
@@ -90,7 +90,7 @@ export class MarketDataAdapter {
       // 新增金融业务数据默认值
       analysisScores: this.getDefaultAnalysisScores(),
       modelComparison: this.getDefaultModelComparison(),
-      stockPool: this.getDefaultStockPool(),
+      poolBoard: this.getDefaultPoolBoard(),
       chatHistory: this.getDefaultChatHistory(),
       hotSectors: [],
       valuePit: [],
@@ -108,7 +108,7 @@ export class MarketDataAdapter {
       // 新增金融业务数据合并
       if (partial.analysisScores) merged.analysisScores = partial.analysisScores
       if (partial.modelComparison) merged.modelComparison = partial.modelComparison
-      if (partial.stockPool) merged.stockPool = partial.stockPool
+      if (partial.poolBoard) merged.poolBoard = partial.poolBoard
       if (partial.chatHistory) merged.chatHistory = partial.chatHistory
       if (partial.hotSectors) merged.hotSectors = partial.hotSectors
       if (partial.valuePit) merged.valuePit = partial.valuePit
@@ -404,18 +404,18 @@ export class MarketDataAdapter {
   /**
    * 适配股票池数据
    */
-  private adaptStockPool(payload: unknown): StockPool {
+  private adaptPoolBoard(payload: unknown): PoolBoard {
     if (!payload || typeof payload !== 'object') {
-      logger.warn('[MarketDataAdapter] stockPool payload 不是对象')
-      return this.getDefaultStockPool()
+      logger.warn('[MarketDataAdapter] poolBoard payload 不是对象')
+      return this.getDefaultPoolBoard()
     }
 
     const p = payload as Record<string, unknown>
-    const stocks = Array.isArray(p.stocks) ? p.stocks : []
+    const items = Array.isArray(p.items) ? p.items : Array.isArray(p.stocks) ? p.stocks : []
 
     return {
-      stocks: stocks.map((item) => this.adaptStockPoolItem(item)),
-      total: toSafeNumber(p.total ?? stocks.length),
+      items: items.map((item) => this.adaptPoolBoardItem(item)),
+      total: toSafeNumber(p.total ?? items.length),
       page: toSafeNumber(p.page ?? 1),
       pageSize: toSafeNumber(p.pageSize ?? p.page_size ?? p.limit ?? 10),
     }
@@ -424,9 +424,9 @@ export class MarketDataAdapter {
   /**
    * 适配单个股票池条目，支持 code/symbol、name/stockName 等字段别名。
    * @param item 单个股票池原始条目
-   * @returns 标准化后的 StockPoolItem
+   * @returns 标准化后的 PoolBoardItem
    */
-  private adaptStockPoolItem(item: unknown): StockPoolItem {
+  private adaptPoolBoardItem(item: unknown): PoolBoardItem {
     const it = item as Record<string, unknown>
     return {
       code: toSafeString(it.code ?? it.symbol),
@@ -561,11 +561,11 @@ export class MarketDataAdapter {
 
   /**
    * 获取股票池默认值，股票列表为空、页码为 1、每页大小为 10。
-   * @returns 默认 StockPool
+   * @returns 默认 PoolBoard
    */
-  private getDefaultStockPool(): StockPool {
+  private getDefaultPoolBoard(): PoolBoard {
     return {
-      stocks: [],
+      items: [],
       total: 0,
       page: 1,
       pageSize: 10,

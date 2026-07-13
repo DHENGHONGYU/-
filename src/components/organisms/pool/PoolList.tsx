@@ -2,18 +2,18 @@ import React from 'react'
 import { Badge, Button, Checkbox } from '@/components/atoms'
 import { QualityIndicator } from '@/components/organisms/input/QualityIndicator'
 import { getPoolLabel, getPoolTransitionOptions } from '@/core/poolTransitionEngine'
-import { DEFAULT_POOL_GROUP } from '@/constants/stockpool.constants'
-import type { ResearchStatus } from '@/constants/stockpool.constants'
-import type { Stock } from '@/data/types'
+import { DEFAULT_POOL_GROUP, POOL_TYPE } from '@/constants/pool.constants'
+import type { ResearchStatus } from '@/constants/pool.constants'
+import type { PoolItem } from '@/types/modules/pool.types'
 
 export interface PoolListProps {
-  stocks: Stock[]
+  items: PoolItem[]
   selectedSymbols: string[]
   allGroups?: string[]
   onSelectToggle: (symbol: string) => void
   onTransition: (symbol: string, toStatus: ResearchStatus) => void
   onChangeGroup?: (symbol: string, group: string) => void
-  onRefreshKline?: (stock: Stock) => void
+  onRefreshKline?: (item: PoolItem) => void
   onAnalyze?: (symbol: string) => void
 }
 
@@ -21,7 +21,7 @@ export interface PoolListProps {
  * PoolList
  */
 export function PoolList({
-  stocks,
+  items,
   selectedSymbols,
   allGroups = [],
   onSelectToggle,
@@ -49,31 +49,31 @@ export function PoolList({
           </tr>
         </thead>
         <tbody>
-          {stocks.length === 0 ? (
+          {items.length === 0 ? (
             <tr>
               <td colSpan={11} className="py-8 text-center text-muted-foreground">
                 暂无标的
               </td>
             </tr>
           ) : (
-            stocks.map((stock) => {
-              const options = getPoolTransitionOptions(stock.researchStatus)
-              const group = stock.group ?? DEFAULT_POOL_GROUP
+            items.map((item) => {
+              const options = getPoolTransitionOptions(POOL_TYPE.research, item.status as ResearchStatus)
+              const group = item.group ?? DEFAULT_POOL_GROUP
               const availableGroups = allGroups.filter((g) => g !== group)
               return (
-                <tr key={stock.symbol} className="border-t hover:bg-accent/30">
+                <tr key={item.symbol} className="border-t hover:bg-accent/30">
                   <td className="px-3 py-2">
                     <Checkbox
-                      checked={selectedSymbols.includes(stock.symbol)}
-                      onChange={() => onSelectToggle(stock.symbol)}
-                      aria-label={`选择 ${stock.symbol}`}
+                      checked={selectedSymbols.includes(item.symbol)}
+                      onChange={() => onSelectToggle(item.symbol)}
+                      aria-label={`选择 ${item.symbol}`}
                     />
                   </td>
-                  <td className="px-3 py-2 font-medium">{stock.symbol}</td>
-                  <td className="px-3 py-2">{stock.name}</td>
+                  <td className="px-3 py-2 font-medium">{item.symbol}</td>
+                  <td className="px-3 py-2">{item.name}</td>
                   <td className="px-3 py-2">
                     <Badge variant="outline" className="text-xs">
-                      {getPoolLabel(stock.researchStatus)}
+                      {getPoolLabel(POOL_TYPE.research, item.status as ResearchStatus)}
                     </Badge>
                   </td>
                   <td className="px-3 py-2">
@@ -81,8 +81,8 @@ export function PoolList({
                       <select
                         className="h-7 rounded-md border bg-background px-2 text-xs"
                         value={group}
-                        onChange={(e) => onChangeGroup(stock.symbol, e.target.value)}
-                        aria-label={`${stock.symbol} 分组`}
+                        onChange={(e) => onChangeGroup(item.symbol, e.target.value)}
+                        aria-label={`${item.symbol} 分组`}
                       >
                         <option value={group}>{group}</option>
                         {availableGroups.map((g) => (
@@ -97,28 +97,28 @@ export function PoolList({
                       </Badge>
                     )}
                   </td>
-                  <td className="px-3 py-2">{stock.source}</td>
+                  <td className="px-3 py-2">{item.source}</td>
                   <td className="px-3 py-2 text-right">
-                    {stock.price !== undefined ? stock.price.toFixed(2) : '—'}
+                    {item.price !== undefined ? item.price.toFixed(2) : '—'}
                   </td>
                   <td className="px-3 py-2 text-right">
-                    {stock.pe !== undefined ? stock.pe.toFixed(2) : '—'}
+                    {item.pe !== undefined ? item.pe.toFixed(2) : '—'}
                   </td>
                   <td className="px-3 py-2 text-right">
-                    {stock.pb !== undefined ? stock.pb.toFixed(2) : '—'}
+                    {item.pb !== undefined ? item.pb.toFixed(2) : '—'}
                   </td>
                   <td className="px-3 py-2">
-                    <QualityIndicator quality={stock.dataQuality} />
+                    <QualityIndicator quality={item.dataQuality} />
                   </td>
                   <td className="px-3 py-2">
                     <div className="flex flex-wrap gap-1">
                       {options.map((option) => (
                         <Button
-                          key={option.value}
+                          key={`${option.pool}-${option.status}`}
                           variant="secondary"
                           size="sm"
                           className="h-6 px-1.5 text-xs"
-                          onClick={() => onTransition(stock.symbol, option.value)}
+                          onClick={() => onTransition(item.symbol, option.status as ResearchStatus)}
                         >
                           {option.label}
                         </Button>
@@ -128,7 +128,7 @@ export function PoolList({
                           variant="ghost"
                           size="sm"
                           className="h-6 px-1.5 text-xs"
-                          onClick={() => onAnalyze(stock.symbol)}
+                          onClick={() => onAnalyze(item.symbol)}
                         >
                           分析
                         </Button>
@@ -138,7 +138,7 @@ export function PoolList({
                           variant="ghost"
                           size="sm"
                           className="h-6 px-1.5 text-xs"
-                          onClick={() => onRefreshKline(stock)}
+                          onClick={() => onRefreshKline(item)}
                         >
                           刷新行情
                         </Button>

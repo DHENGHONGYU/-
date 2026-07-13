@@ -54,7 +54,7 @@ export type MarketDataSourceKey =
   | 'modelCompare'
   | 'investmentProfile'
   | 'kaiScore'
-  | 'stockPool'
+  | 'poolBoard'
   | 'stockChat'
   | 'hotSector'
   | 'valuePit'
@@ -169,7 +169,7 @@ const WIDGET_ID_TO_DATA_SOURCE_KEY: Record<string, MarketDataSourceKey> = {
   portfolioOverview: 'portfolioOverview',
   aiTradeReview: 'aiTradeReview',
   investmentProfile: 'investmentProfile',
-  stockPool: 'stockPool',
+  poolBoard: 'poolBoard',
   kaiScore: 'kaiScore',
   modelCompare: 'modelCompare',
   stockChat: 'stockChat',

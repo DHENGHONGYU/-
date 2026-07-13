@@ -7,7 +7,7 @@ import * as inputService from '@/services/input/inputService'
 import * as fetcherService from '@/services/fetcher/fetcherService'
 import * as batchImportService from '@/services/input/batchImportService'
 import * as hotSectorService from '@/services/input/hotSectorService'
-import * as stockpoolService from '@/services/stockpool/stockpoolService'
+import * as poolService from '@/services/pool/poolService'
 import type { Stock } from '@/data/types'
 import { UI_TEXT } from '@/constants/uiText'
 import { db } from '@/data/db'
@@ -68,7 +68,7 @@ describe('InputApp', () => {
       success: true,
       data: [mockStock, mockStockMissingBasic],
     } as never)
-    vi.spyOn(stockpoolService, 'getAllPoolGroups').mockResolvedValue({
+    vi.spyOn(poolService, 'getAllPoolLanes').mockResolvedValue({
       success: true,
       data: mockPoolGroups as never,
     })
@@ -222,7 +222,7 @@ describe('InputApp', () => {
   // @status known-failing - InputDashboard 已移除看板/列表视图切换，该用例待重构
   it.skip('toggles list view', async () => {
     renderApp()
-    await waitFor(() => screen.getByText(UI_TEXT.input.dashboard.stockPoolBoard))
+    await waitFor(() => screen.getByText(UI_TEXT.input.dashboard.poolBoard))
 
     await userEvent.click(screen.getByRole('button', { name: new RegExp(UI_TEXT.errors.listView, 'i') }))
 
@@ -234,7 +234,7 @@ describe('InputApp', () => {
   // @status known-failing - 与本次 databridge.ts 修复无关的已知失败
   it.skip('filters stocks by data quality', async () => {
     renderApp()
-    await waitFor(() => screen.getByText(UI_TEXT.input.dashboard.stockPoolBoard))
+    await waitFor(() => screen.getByText(UI_TEXT.input.dashboard.poolBoard))
 
     const filterSelect = screen.getByLabelText(UI_TEXT.errors.dataQualityFilter)
     await userEvent.selectOptions(filterSelect, 'missingBasic')
@@ -250,12 +250,12 @@ describe('InputApp', () => {
 
   // @status known-failing - 与本次 databridge.ts 修复无关的已知失败
   it.skip('bulk archives selected stocks', async () => {
-    vi.spyOn(stockpoolService, 'transitionStock').mockResolvedValue({
+    vi.spyOn(poolService, 'transitionPoolItem').mockResolvedValue({
       success: true,
       data: { ...mockStock, researchStatus: 'archived' } as never,
     })
     renderApp()
-    await waitFor(() => screen.getByText(UI_TEXT.input.dashboard.stockPoolBoard))
+    await waitFor(() => screen.getByText(UI_TEXT.input.dashboard.poolBoard))
 
     await userEvent.click(screen.getByRole('button', { name: new RegExp(UI_TEXT.errors.listView, 'i') }))
     await waitFor(() => screen.getByText(UI_TEXT.common.code))
@@ -272,7 +272,11 @@ describe('InputApp', () => {
     await userEvent.click(screen.getByRole('button', { name: /批量归档/i }))
 
     await waitFor(() => {
-      expect(stockpoolService.transitionStock).toHaveBeenCalledWith('000001.SZ', 'archived')
+      expect(poolService.transitionPoolItem).toHaveBeenCalledWith('000001.SZ', {
+        pool: 'research',
+        status: 'archived',
+        label: '批量归档',
+      })
     })
   })
 })

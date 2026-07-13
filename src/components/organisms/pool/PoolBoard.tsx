@@ -1,21 +1,22 @@
 import React from 'react'
-import { RESEARCH_STATUS, type ResearchStatus } from '@/constants/stockpool.constants'
+import { RESEARCH_STATUS, type ResearchStatus } from '@/constants/pool.constants'
+import { POOL_TYPE } from '@/constants/pool.constants'
 import { getPoolLabel, getPoolTransitionOptions } from '@/core/poolTransitionEngine'
-import type { Stock } from '@/data/types'
+import type { PoolItem } from '@/types/modules/pool.types'
 import { PoolColumn } from './PoolColumn'
 import { PoolList } from './PoolList'
 
 export type PoolViewMode = 'kanban' | 'list'
 
 export interface PoolBoardProps {
-  stocks: Stock[]
+  items: PoolItem[]
   viewMode?: PoolViewMode
   selectedSymbols?: string[]
   allGroups?: string[]
   onSelectToggle?: (symbol: string) => void
   onTransition: (symbol: string, toStatus: ResearchStatus) => void
   onChangeGroup?: (symbol: string, group: string) => void
-  onRefreshKline?: (stock: Stock) => void
+  onRefreshKline?: (item: PoolItem) => void
   onAnalyze?: (symbol: string) => void
 }
 
@@ -31,7 +32,7 @@ const STATUS_ORDER: ResearchStatus[] = [
  * PoolBoard
  */
 export function PoolBoard({
-  stocks,
+  items,
   viewMode = 'kanban',
   selectedSymbols = [],
   allGroups = [],
@@ -44,7 +45,7 @@ export function PoolBoard({
   if (viewMode === 'list') {
     return (
       <PoolList
-        stocks={stocks}
+        items={items}
         selectedSymbols={selectedSymbols}
         allGroups={allGroups}
         onSelectToggle={onSelectToggle ?? (() => {})}
@@ -56,27 +57,28 @@ export function PoolBoard({
     )
   }
 
-  const grouped = new Map<ResearchStatus, Stock[]>()
+  const grouped = new Map<ResearchStatus, PoolItem[]>()
   for (const status of STATUS_ORDER) {
     grouped.set(status, [])
   }
-  for (const stock of stocks) {
-    const list = grouped.get(stock.researchStatus) ?? []
-    list.push(stock)
-    grouped.set(stock.researchStatus, list)
+  for (const item of items) {
+    if (!STATUS_ORDER.includes(item.status as ResearchStatus)) continue
+    const list = grouped.get(item.status as ResearchStatus) ?? []
+    list.push(item)
+    grouped.set(item.status as ResearchStatus, list)
   }
 
   return (
     <div className="flex gap-3 overflow-x-auto pb-2">
       {STATUS_ORDER.map((status) => {
         const list = grouped.get(status) ?? []
-        const options = getPoolTransitionOptions(status)
+        const options = getPoolTransitionOptions(POOL_TYPE.research, status)
         return (
           <PoolColumn
             key={status}
-            title={getPoolLabel(status)}
+            title={getPoolLabel(POOL_TYPE.research, status)}
             status={status}
-            stocks={list}
+            items={list}
             options={options}
             allGroups={allGroups}
             selectedSymbols={selectedSymbols}

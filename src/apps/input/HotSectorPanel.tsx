@@ -10,7 +10,7 @@ import {
   addHotSectorStocks,
   type HotSector,
 } from '@/services/input/hotSectorService'
-import { usePoolStore, getAllGroups } from '@/store/poolStore'
+import { useIntentionPoolStore, getIntentionPoolGroups } from '@/store/intentionPoolStore'
 import { useToast } from '@/hooks/useToast'
 import { getLogger } from '@/lib/logger'
 import { twText, twBg } from '@/constants/theme.tokens'
@@ -19,11 +19,11 @@ import { Skeleton } from '@/components/molecules/states/Skeleton'
 const logger = getLogger()
 
 export default function HotSectorPanel(): React.JSX.Element {
-  // 从 poolStore 获取状态
-  const refresh = usePoolStore((s) => s.refresh)
-  const stocks = usePoolStore((s) => s.stocks)
-  const loading = usePoolStore((s) => s.loading)
-  const allGroups = useMemo(() => getAllGroups(), [stocks])
+  // 从 intentionPoolStore 获取状态
+  const refresh = useIntentionPoolStore((s) => s.refresh)
+  const items = useIntentionPoolStore((s) => s.items)
+  const loading = useIntentionPoolStore((s) => s.loading)
+  const allGroups = useMemo(() => getIntentionPoolGroups(), [items])
   
   const [hotSectors] = useState<HotSector[]>(() => getHotSectors())
   const [selectedHotSector, setSelectedHotSector] = useState<string>(
@@ -36,8 +36,8 @@ export default function HotSectorPanel(): React.JSX.Element {
   const { toast } = useToast()
 
   const existingSymbols = useMemo(
-    () => new Set(stocks.map((s) => s.symbol)),
-    [stocks],
+    () => new Set(items.map((s) => s.symbol)),
+    [items],
   )
 
   const activeHotSector = useMemo(
@@ -213,7 +213,7 @@ export default function HotSectorPanel(): React.JSX.Element {
                 </Button>
               </div>
               <div className="max-h-96 overflow-auto">
-                {loading && stocks.length === 0 ? (
+                {loading && items.length === 0 ? (
                   <div className="space-y-2 p-3">
                     <Skeleton className="h-10 w-full" />
                     <Skeleton className="h-10 w-full" />

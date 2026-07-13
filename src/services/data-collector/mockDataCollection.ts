@@ -35,7 +35,7 @@ type DataType =
   | 'tradeReview'
   | 'analysisScores'
   | 'modelComparison'
-  | 'stockPool'
+  | 'poolBoard'
   | 'chatHistory'
 
 const DATA_SOURCE_TYPE = { MOCK: 'mock' as const, REST: 'rest' as const, WEBSOCKET: 'websocket' as const }
@@ -245,8 +245,8 @@ interface ModelComparison {
   riskHint: string
 }
 
-/** 股票池条目 */
-interface StockPoolItem {
+/** 股票池看板条目 */
+interface PoolBoardItem {
   code: string
   name: string
   price: number
@@ -257,9 +257,9 @@ interface StockPoolItem {
   statusLabel: string
 }
 
-/** 股票池数据 */
-interface StockPool {
-  stocks: StockPoolItem[]
+/** 股票池看板数据 */
+interface PoolBoard {
+  items: PoolBoardItem[]
   total: number
   page: number
   pageSize: number
@@ -329,7 +329,7 @@ const WIDGET_IDS = [
   'portfolioOverview',
   'aiTradeReview',
   'investmentProfile',
-  'stockPool',
+  'poolBoard',
   'kaiScore',
   'modelCompare',
   'stockChat',
@@ -344,7 +344,7 @@ const WIDGET_ENDPOINTS: Record<string, string> = {
   portfolioOverview: '/portfolio/overview',
   aiTradeReview: '/trade/review',
   investmentProfile: '/stock-analysis/profile',
-  stockPool: '/stock-analysis/pool',
+  poolBoard: '/stock-analysis/pool',
   kaiScore: '/stock-analysis/kai-score',
   modelCompare: '/stock-analysis/model-compare',
   stockChat: '/chat/stock-analysis',
@@ -564,11 +564,11 @@ function generateModelComparisonPayload(): ModelComparison {
   return stockAnalysisScoring.generateModelComparison()
 }
 
-/** 生成股票池 payload */
-function generateStockPoolPayload(): StockPool {
+/** 生成股票池看板 payload */
+function generatePoolBoardPayload(): PoolBoard {
   const statusColors = ['#22c55e', '#3b82f6', '#f59e0b', '#9ca3af']
   const statusLabels = ['活跃', '温热', '冷清', '冷淡']
-  const stocks: StockPoolItem[] = [
+  const items: PoolBoardItem[] = [
     { code: '600519', name: '贵州茅台' },
     { code: '000858', name: '五粮液' },
     { code: '300750', name: '宁德时代' },
@@ -592,7 +592,7 @@ function generateStockPoolPayload(): StockPool {
     }
   })
 
-  return { stocks, total: 50, page: 1, pageSize: 10 }
+  return { items, total: 50, page: 1, pageSize: 10 }
 }
 
 /** 生成聊天历史 payload */
@@ -628,7 +628,7 @@ export function generateRawMarketData(
     tradeReview: generateTradeReviewPayload,
     analysisScores: generateAnalysisScoresPayload,
     modelComparison: generateModelComparisonPayload,
-    stockPool: generateStockPoolPayload,
+    poolBoard: generatePoolBoardPayload,
     chatHistory: generateChatHistoryPayload,
   }
 
@@ -647,7 +647,7 @@ export function generateAllRawMarketData(): RawMarketData[] {
   const types: DataType[] = [
     'indices', 'sectors', 'fundFlow', 'sentiment', 'watchlist',
     'portfolio', 'tradeReview', 'analysisScores', 'modelComparison',
-    'stockPool', 'chatHistory',
+    'poolBoard', 'chatHistory',
   ]
   return types.map((t) => generateRawMarketData(t))
 }
@@ -818,7 +818,7 @@ export function createMockTaskScheduler() {
       portfolioOverview: 'portfolio',
       aiTradeReview: 'tradeReview',
       investmentProfile: 'analysisScores',
-      stockPool: 'stockPool',
+      poolBoard: 'poolBoard',
       kaiScore: 'analysisScores',
       modelCompare: 'modelComparison',
       stockChat: 'chatHistory',
@@ -937,8 +937,8 @@ export function mockAdaptMarketData(rawData: RawMarketData): Record<string, unkn
       return { analysisScores: rawData.payload }
     case 'modelComparison':
       return { modelComparison: rawData.payload }
-    case 'stockPool':
-      return { stockPool: rawData.payload }
+    case 'poolBoard':
+      return { poolBoard: rawData.payload }
     case 'chatHistory':
       return { chatHistory: rawData.payload }
     default:

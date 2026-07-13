@@ -122,7 +122,7 @@ export async function addHotSectorStocks(
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
       key: stock.symbol,
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
     })
     const exists = existsResult.success && existsResult.data != null
     if (exists) {
@@ -166,7 +166,7 @@ export async function addHotSectorStock(
     action: ENVELOPE_ACTION.queryGet,
     store: STORE_NAME.stocks,
     key: stock.symbol,
-    source: MODULE_ID.stockpool,
+    source: MODULE_ID.pool,
   })
   const exists = existsResult.success && existsResult.data != null
   if (exists) {

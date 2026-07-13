@@ -27,13 +27,21 @@ import {
   compareTwoStocksLatest,
   getScoreTimeline,
 } from '@/services/analysis/scoreDocService'
-import { listStocks } from '@/services/stockpool/stockpoolService'
+import { listPoolItems } from '@/services/pool/poolService'
+import type { PoolItem } from '@/types/modules/pool.types'
 import { dataBridge } from '@/core/databridge'
 import { ENVELOPE_ACTION, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { withBroadcast } from '@/store/helpers/withBroadcast'
 
 const logger = getLogger()
+
+function poolItemToStock(item: PoolItem): Stock {
+  return {
+    ...item,
+    researchStatus: item.status,
+  }
+}
 
 // ============================================================
 // 类型定义
@@ -152,10 +160,11 @@ export const useScoreDocStore = create<ScoreDocState>((set, get) => ({
     set({ loading: true, error: null })
 
     try {
-      const result = await listStocks()
+      const result = await listPoolItems()
       if (result.success && result.data) {
-        set({ stocks: result.data, loading: false })
-        logger.info(`[scoreDocStore] loadStocks 完成: ${result.data.length} 只股票`)
+        const stocks = result.data.map((item) => poolItemToStock(item))
+        set({ stocks, loading: false })
+        logger.info(`[scoreDocStore] loadStocks 完成: ${stocks.length} 只股票`)
       } else {
         const message = result.error ?? '加载股票列表失败'
         logger.error(`[scoreDocStore] loadStocks 失败: ${message}`)

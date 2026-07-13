@@ -104,7 +104,7 @@ describe('rolePermissionMapper', () => {
       const modules = getDeveloperRoleAllowedModules('data')
       expect(modules).toContain(MODULE_ID.fetcher)
       expect(modules).toContain(MODULE_ID.datalayer)
-      expect(modules).toContain(MODULE_ID.stockpool)
+      expect(modules).toContain(MODULE_ID.pool)
       expect(modules).toContain(MODULE_ID.rotation)
       expect(modules).toContain(MODULE_ID.sector)
       expect(modules).toContain(MODULE_ID.news)
@@ -160,8 +160,8 @@ describe('rolePermissionMapper', () => {
       expect(checkDeveloperRolePermission('frontend', MODULE_ID.fetcher, DB_OPERATION.select)).toBe(false)
     })
 
-    it('should allow data engineer access to stockpool module', () => {
-      expect(checkDeveloperRolePermission('data', MODULE_ID.stockpool, DB_OPERATION.select)).toBe(true)
+    it('should allow data engineer access to pool module', () => {
+      expect(checkDeveloperRolePermission('data', MODULE_ID.pool, DB_OPERATION.select)).toBe(true)
     })
 
     it('should allow ai-agent engineer access to analyzer module', () => {

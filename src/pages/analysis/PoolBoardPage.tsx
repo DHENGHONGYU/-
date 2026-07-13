@@ -1,8 +1,8 @@
 /**
- * @module StockPoolBoardPage
- * @description 分析舱 · 股票池看板独立页面。
+ * @module PoolBoardPage
+ * @description 分析舱 · 股票池看板独立页面（三分拆后）。
  *
- * 原“输入舱”中的股票池看板迁移至此，专注于研究状态池管理、分组筛选与批量流转。
+ * 专注于研究池（research）状态管理、分组筛选与批量流转。
  */
 
 import React from 'react'
@@ -21,30 +21,30 @@ import {
 import { Select, SelectItem } from '@/components/atoms'
 import { PageContainer, PageHeader } from '@/components/templates'
 import { PoolBoard } from '@/components/organisms/pool/PoolBoard'
-import { useStockPoolBoard } from '@/hooks/useStockPoolBoard'
+import { usePoolBoard } from '@/hooks/usePoolBoard'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 
 /**
- * StockPoolBoardPage
+ * PoolBoardPage
  */
-export default function StockPoolBoardPage(): React.JSX.Element {
-  const board = useStockPoolBoard()
+export default function PoolBoardPage(): React.JSX.Element {
+  const board = usePoolBoard()
 
   return (
     <PageContainer className="space-y-4">
       <PageHeader
-        title="股票池看板"
+        title="研究池看板"
         description="研究状态池管理 · 分组筛选 · 批量流转"
         actions={
           <Badge variant="outline" className={COLOR_TOKENS.info.tailwind}>
-            {board.stocks.length} 只标的
+            {board.items.length} 只标的
           </Badge>
         }
       />
 
       <Card>
         <CardHeader>
-          <CardTitle>股票池</CardTitle>
+          <CardTitle>研究池</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="mb-3 flex flex-wrap items-center gap-2">
@@ -150,14 +150,14 @@ export default function StockPoolBoardPage(): React.JSX.Element {
           )}
 
           <PoolBoard
-            stocks={board.filteredStocks}
+            items={board.filteredItems}
             viewMode={board.viewMode}
             selectedSymbols={board.selectedSymbols}
             allGroups={board.allGroups}
             onSelectToggle={board.handleSelectToggle}
             onTransition={(symbol, status) => void board.handleTransition(symbol, status)}
             onChangeGroup={(symbol, group) => void board.handleChangeGroup(symbol, group)}
-            onRefreshKline={(stock) => void board.handleRefreshKline(stock)}
+            onRefreshKline={(item) => void board.handleRefreshKline(item)}
             onAnalyze={board.handleAnalyze}
           />
         </CardContent>

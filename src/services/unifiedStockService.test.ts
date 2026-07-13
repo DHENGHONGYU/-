@@ -112,6 +112,7 @@ function makeStock(overrides: Partial<Stock> = {}): Stock {
     pb: 12,
     roe: 0.30,
     marketCap: 22000,
+    pool: 'research',
     researchStatus: 'watching',
     source: 'manual',
     dataVersion: 1,

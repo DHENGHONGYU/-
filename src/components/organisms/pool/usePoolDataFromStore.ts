@@ -1,26 +1,22 @@
 /**
  * @module usePoolDataFromStore
- * @description 桥接 hook：从 poolStore 读取数据，返回与 usePoolData 相同的接口。
- * 用于将 InputDashboard/HotSectorPanel/BulkImportPanel 从 usePoolData（内部 useState）
- * 迁移到 poolStore（Zustand），同时保持接口兼容性，无需修改面板组件。
+ * @description 桥接 hook：从 researchPoolStore 读取数据，返回 PoolLane[] 接口。
  *
- * @migration
- * - 替代 usePoolData hook，统一数据源到 poolStore
- * - 将 poolStore.stocks 转换为 PoolGroup[] 格式
- * - 保持 selectedGroup/refresh/handleTransition/handleChangeGroup 接口不变
+ * 用于将 PoolBoard 从本地 useState 迁移到 Zustand Store，同时保持看板接口兼容性。
  */
 
 import { useCallback, useMemo, useState } from 'react'
-import { usePoolStore } from '@/store/poolStore'
+import { useResearchPoolStore } from '@/store/researchPoolStore'
 import { getLogger } from '@/lib/logger'
-import { RESEARCH_STATUS, type ResearchStatus } from '@/constants/stockpool.constants'
-import { getPoolLabel, getNextStatuses, getTransitionLabel, type PoolTransitionOption } from '@/core/poolTransitionEngine'
-import type { PoolGroup } from '@/services/stockpool/stockpoolService'
+import type { ResearchStatus } from '@/constants/pool.constants'
+import { getPoolLabel, getPoolTransitionOptions } from '@/core/poolTransitionEngine'
+import { POOL_TYPE } from '@/constants/pool.constants'
+import type { PoolItem, PoolLane, PoolTransitionTarget } from '@/types/modules/pool.types'
 
 const logger = getLogger()
 
 export interface UsePoolDataResult {
-  groups: PoolGroup[]
+  lanes: PoolLane[]
   allGroups: string[]
   selectedGroup: string
   setSelectedGroup: (group: string) => void
@@ -32,71 +28,70 @@ export interface UsePoolDataResult {
 }
 
 /**
- * 从 poolStore 读取股票池数据，返回与 usePoolData 相同的接口。
- *
- * @returns 股票池数据及操作方法
+ * 从 researchPoolStore 读取研究池数据，返回看板所需接口。
  */
 export function usePoolDataFromStore(): UsePoolDataResult {
   const {
-    stocks,
+    items,
     loading,
     error,
     refresh: storeRefresh,
     updateStatus,
     updateGroup,
-  } = usePoolStore()
+  } = useResearchPoolStore()
 
   const [selectedGroup, setSelectedGroup] = useState<string>('')
 
-  // 将 poolStore.stocks 转换为 PoolGroup[] 格式
-  const groups = useMemo<PoolGroup[]>(() => {
-    logger.debug('[usePoolDataFromStore] 转换 stocks → PoolGroup[]', { stockCount: stocks.length })
+  const lanes = useMemo<PoolLane[]>(() => {
+    logger.debug('[usePoolDataFromStore] 转换 items → PoolLane[]', { itemCount: items.length })
 
-    const allStatuses = Object.values(RESEARCH_STATUS) as ResearchStatus[]
-    return allStatuses.map((status) => {
-      const statusStocks = stocks.filter((s) => s.researchStatus === status)
-      const nextStatuses = getNextStatuses(status)
-      const options: PoolTransitionOption[] = nextStatuses.map((value) => ({
-        value,
-        label: getTransitionLabel(status, value),
-      }))
+    const grouped = new Map<ResearchStatus, PoolItem[]>()
+    for (const item of items) {
+      if (item.pool !== POOL_TYPE.research) continue
+      const list = grouped.get(item.status as ResearchStatus) ?? []
+      list.push(item)
+      grouped.set(item.status as ResearchStatus, list)
+    }
+
+    return Array.from(grouped.entries()).map(([status, statusItems]) => {
+      const options: PoolTransitionTarget[] = getPoolTransitionOptions(
+        POOL_TYPE.research,
+        status,
+      )
       return {
         status,
-        label: getPoolLabel(status),
-        stocks: statusStocks,
+        label: getPoolLabel(POOL_TYPE.research, status),
+        items: statusItems,
         options,
       }
     })
-  }, [stocks])
+  }, [items])
 
-  // 获取所有分组名称
   const allGroups = useMemo<string[]>(() => {
     const groupSet = new Set<string>()
-    for (const stock of stocks) {
-      groupSet.add(stock.group ?? '默认')
+    for (const item of items) {
+      groupSet.add(item.group ?? '默认')
     }
     const sorted = Array.from(groupSet).sort()
     logger.debug('[usePoolDataFromStore] 提取分组名称', { groupCount: sorted.length, groups: sorted })
     return sorted
-  }, [stocks])
+  }, [items])
 
-  // 按选中分组筛选
-  const filteredGroups = useMemo<PoolGroup[]>(() => {
+  const filteredLanes = useMemo<PoolLane[]>(() => {
     if (!selectedGroup) {
       logger.debug('[usePoolDataFromStore] 未选择分组，返回全部')
-      return groups
+      return lanes
     }
-    const filtered = groups.map((g) => ({
-      ...g,
-      stocks: g.stocks.filter((s) => (s.group ?? '默认') === selectedGroup),
+    const filtered = lanes.map((lane) => ({
+      ...lane,
+      items: lane.items.filter((s) => (s.group ?? '默认') === selectedGroup),
     }))
-    logger.debug('[usePoolDataFromStore] 按分组筛选', { selectedGroup, filteredCount: filtered.reduce((sum, g) => sum + g.stocks.length, 0) })
+    logger.debug('[usePoolDataFromStore] 按分组筛选', { selectedGroup, filteredCount: filtered.reduce((sum, g) => sum + g.items.length, 0) })
     return filtered
-  }, [groups, selectedGroup])
+  }, [lanes, selectedGroup])
 
-  // 刷新方法
   const refresh = useCallback(async (): Promise<void> => {
-    logger.info('[usePoolDataFromStore] refresh 调用 poolStore.refresh')
+    logger.info('[usePoolDataFromStore] refresh 调用 researchPoolStore.refresh')
     await storeRefresh()
   }, [storeRefresh])
 
@@ -113,7 +108,6 @@ export function usePoolDataFromStore(): UsePoolDataResult {
     }
   }
 
-  // 状态流转方法
   const handleTransition = useCallback(
     async (symbol: string, toStatus: ResearchStatus): Promise<void> => {
       logger.info(`[usePoolDataFromStore] handleTransition: ${symbol} → ${toStatus}`)
@@ -123,7 +117,6 @@ export function usePoolDataFromStore(): UsePoolDataResult {
     [updateStatus],
   )
 
-  // 分组变更方法
   const handleChangeGroup = useCallback(
     async (symbol: string, group: string): Promise<void> => {
       logger.info(`[usePoolDataFromStore] handleChangeGroup: ${symbol} → ${group}`)
@@ -134,7 +127,7 @@ export function usePoolDataFromStore(): UsePoolDataResult {
   )
 
   return {
-    groups: filteredGroups,
+    lanes: filteredLanes,
     allGroups,
     selectedGroup,
     setSelectedGroup,

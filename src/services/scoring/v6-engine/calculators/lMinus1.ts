@@ -125,12 +125,12 @@ export const LMinus1Calculator: LayerCalculator & { matchIndustry: typeof matchI
       return {
         layerId: 'lMinus1' as LayerId,
         layerName: LAYER_LABELS.lMinus1 ?? 'L-1 行业评分估值',
-        score: 0,
+        score: Number.NaN,
         summary: '不在7行业覆盖范围（CoWoS/芯片设计/机器人/量子计算/AI应用/航天星链/创新药），L-1不纳入综合评分',
         risks: [],
         evidence: [],
         weight,
-        weightedScore: 0,
+        weightedScore: Number.NaN,
         dataSources: [],
       }
     }
@@ -140,16 +140,15 @@ export const LMinus1Calculator: LayerCalculator & { matchIndustry: typeof matchI
       return {
         layerId: 'lMinus1' as LayerId,
         layerName: LAYER_LABELS.lMinus1 ?? 'L-1 行业评分估值',
-        score: 0,
+        score: Number.NaN,
         summary: `匹配到行业 ${matched.sectorName} 但无评分数据`,
         risks: [],
         evidence: [],
         weight,
-        weightedScore: 0,
+        weightedScore: Number.NaN,
         dataSources: [],
       }
     }
-
     const bonus = LMinus1Calculator.calcSkillNBonus(sectorData.allocationBias)
     const score = Math.min(5, sectorData.skillC * matched.relevance + bonus)
 

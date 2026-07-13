@@ -47,7 +47,7 @@ export interface RawMarketData {
     | 'tradeReview'
     | 'analysisScores'
     | 'modelComparison'
-    | 'stockPool'
+    | 'poolBoard'
     | 'chatHistory'
     | 'hotSectors'
     | 'valuePit'
@@ -82,7 +82,7 @@ export interface MarketData {
   /** AI 大模型对比数据（新增） */
   modelComparison: ModelComparison
   /** 股票池管理与监控数据（新增） */
-  stockPool: StockPool
+  poolBoard: PoolBoard
   /** 个股深度分析 / 市场分析聊天数据（新增） */
   chatHistory: ChatHistory
   /** 热门板块策略评分数据（新增） */
@@ -311,12 +311,12 @@ export interface CompareDimension {
   weight: number
 }
 
-/** 股票池数据
+/** 股票池看板数据
  * @remarks 用于股票池管理与监控列表 Widget
  */
-export interface StockPool {
+export interface PoolBoard {
   /** 股票列表 */
-  stocks: StockPoolItem[]
+  items: PoolBoardItem[]
   /** 总条数 */
   total: number
   /** 当前页码 */
@@ -325,8 +325,8 @@ export interface StockPool {
   pageSize: number
 }
 
-/** 股票池条目 */
-export interface StockPoolItem {
+/** 股票池看板条目 */
+export interface PoolBoardItem {
   /** 股票代码 */
   code: string
   /** 股票名称 */

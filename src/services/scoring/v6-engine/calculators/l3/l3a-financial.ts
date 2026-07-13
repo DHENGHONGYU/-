@@ -356,14 +356,14 @@ export const L3aFinancialCalculator: LayerCalculator = {
       return {
         layerId: 'l3f',
         layerName: LAYER_LABELS.l3f ?? 'L3a 财务健康',
-        score: 0,
+        score: Number.NaN,
         summary: `财务评分计算失败: ${msg}`,
         risks: [],
         evidence: [],
         weight,
-        weightedScore: 0,
+        weightedScore: Number.NaN,
         dataSources: [],
       }
     }
-  },
+  }
 }

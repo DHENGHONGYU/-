@@ -11,7 +11,8 @@ import {
   listSnapshots,
   saveStrategySnapshot,
 } from '@/services/trading/strategySnapshotService'
-import { listStocks } from '@/services/stockpool/stockpoolService'
+import { listPoolItems } from '@/services/pool/poolService'
+import type { PoolItem } from '@/types/modules/pool.types'
 import { getAllV6Scores } from '@/services/scoring/v6ScoreService'
 import { listRotationScores } from '@/services/analysis/rotationScoreService'
 import type { RotationSectorScore, Stock, StrategySnapshot, V6Score } from '@/data/types'
@@ -22,6 +23,13 @@ import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { withBroadcast } from '@/store/helpers/withBroadcast'
 
 const logger = getLogger()
+
+function poolItemToStock(item: PoolItem): Stock {
+  return {
+    ...item,
+    researchStatus: item.status,
+  }
+}
 
 type ActiveTab = 'current' | 'history'
 
@@ -93,16 +101,16 @@ export const useStrategySnapshotStore = create<StrategySnapshotState & StrategyS
       logger.info('[strategySnapshotStore] loadCurrentStrategy 开始')
 
       try {
-        logger.info('[strategySnapshotStore] Promise.all 发起: stocks + v6Scores + rotationScores')
-        const [stockResult, v6Result, rotationResult] = await Promise.all([
-          listStocks(),
+        logger.info('[strategySnapshotStore] Promise.all 发起: poolItems + v6Scores + rotationScores')
+        const [poolResult, v6Result, rotationResult] = await Promise.all([
+          listPoolItems(),
           getAllV6Scores(),
           listRotationScores(),
         ])
 
         logger.info('[strategySnapshotStore] Promise.all 返回', {
-          stocksOk: stockResult.success,
-          stocksCount: stockResult.data?.length ?? 0,
+          stocksOk: poolResult.success,
+          stocksCount: poolResult.data?.length ?? 0,
           v6Ok: v6Result.success,
           v6Count: v6Result.data?.length ?? 0,
           rotationOk: rotationResult.success,
@@ -110,13 +118,13 @@ export const useStrategySnapshotStore = create<StrategySnapshotState & StrategyS
           elapsedMs: Date.now() - t0,
         })
 
-        if (!stockResult.success || !v6Result.success || !rotationResult.success) {
+        if (!poolResult.success || !v6Result.success || !rotationResult.success) {
           throw new Error(
-            stockResult.error ?? v6Result.error ?? rotationResult.error ?? '加载当前数据失败',
+            poolResult.error ?? v6Result.error ?? rotationResult.error ?? '加载当前数据失败',
           )
         }
 
-        const stocks = stockResult.data ?? []
+        const stocks = (poolResult.data ?? []).map((item) => poolItemToStock(item))
         const v6Scores = v6Result.data ?? []
         const rotationScores = rotationResult.data ?? []
 

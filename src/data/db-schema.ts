@@ -13,7 +13,7 @@
  * "if/else createObjectStore" 模式收敛为单次调用，CC 从 28 降至约 6。
  */
 import { STORE_NAME } from '@/config/dbConfig'
-import { DEFAULT_POOL_GROUP } from '@/constants/stockpool.constants'
+import { DEFAULT_POOL_GROUP, POOL_TYPE } from '@/constants/pool.constants'
 import type { LogContext } from '@/lib/logger'
 
 /** Schema 创建所需的日志接口（与 db.ts logger 兼容） */
@@ -123,6 +123,24 @@ function backfillGroupField(store: IDBObjectStore, logger: SchemaLogger): void {
   }
 }
 
+/**
+ * 游标遍历 stocks store，将缺失的 pool 字段 backfill 为 research（兼容旧数据）。
+ */
+function backfillPoolField(store: IDBObjectStore, logger: SchemaLogger): void {
+  const cursorRequest = store.openCursor()
+  cursorRequest.onsuccess = () => {
+    const cursor = cursorRequest.result
+    if (!cursor) return
+    const stock = cursor.value as Record<string, unknown>
+    if (stock.pool === undefined) {
+      logger.debug(`[DB] Backfilling missing "pool" field for stock: ${String(stock.symbol)}`)
+      stock.pool = POOL_TYPE.research
+      cursor.update(stock)
+    }
+    cursor.continue()
+  }
+}
+
 export function createSchema(
   db: IDBDatabase,
   request: IDBOpenDBRequest,
@@ -131,12 +149,15 @@ export function createSchema(
   // ── stocks：股票基础数据（特殊处理：含 backfill 与索引补全逻辑） ──
   // 不使用 ensureStore，因为需要在 store 已存在时：
   // 1. 补全缺失的 by-group 索引（v6 升级期）
-  // 2. backfill 缺失的 group 字段为 DEFAULT_POOL_GROUP
+  // 2. 补全缺失的 by-pool 索引（v29 三分拆）
+  // 3. backfill 缺失的 group 字段为 DEFAULT_POOL_GROUP
+  // 4. backfill 缺失的 pool 字段为 research（兼容旧数据）
   if (!db.objectStoreNames.contains(STORE_NAME.stocks)) {
     logger.debug(`[DB] Creating objectStore: "${STORE_NAME.stocks}"`)
     const store = db.createObjectStore(STORE_NAME.stocks, { keyPath: 'symbol' })
     store.createIndex('by-status', 'researchStatus', { unique: false })
     store.createIndex('by-group', 'group', { unique: false })
+    store.createIndex('by-pool', 'pool', { unique: false })
   } else {
     logger.debug(`[DB] ObjectStore "${STORE_NAME.stocks}" already exists, checking indexes...`)
     const store = request.transaction?.objectStore(STORE_NAME.stocks)
@@ -144,9 +165,14 @@ export function createSchema(
       logger.debug('[DB] Adding missing index: "by-group" on "stocks"')
       store.createIndex('by-group', 'group', { unique: false })
     }
+    if (store && !store.indexNames.contains('by-pool')) {
+      logger.debug('[DB] Adding missing index: "by-pool" on "stocks"')
+      store.createIndex('by-pool', 'pool', { unique: false })
+    }
 
     if (store) {
       backfillGroupField(store, logger)
+      backfillPoolField(store, logger)
     }
   }
 
@@ -423,4 +449,5 @@ export function createSchema(
       { name: 'by-created-at', keyPath: 'createdAt' },
     ],
   })
+
 }

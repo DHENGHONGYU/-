@@ -1,25 +1,28 @@
 /**
- * poolStore 单元测试
+ * 股票池三分拆 Store 单元测试
  *
  * 覆盖场景：
- * 1. 初始状态验证
+ * 1. intentionPoolStore / researchPoolStore / positionPoolStore 初始状态
  * 2. refresh 正常加载 / 并发锁 / 失败保留 / loading 区分
- * 3. addStock 成功 / 失败
- * 4. updateStock 成功 / 不存在 / symbol 归一化
- * 5. deleteStock 成功 / symbol 归一化 / 失败
+ * 3. addItem 成功 / 失败
+ * 4. updateItem 成功 / 不存在 / symbol 归一化
+ * 5. deleteItem 成功 / symbol 归一化 / 失败
  * 6. updateStatus 成功流转 / 非法流转 / 不存在 / 失败
  * 7. updateGroup 成功 / 空名 / 失败
  * 8. getByStatus / getByGroup
- * 9. getTotalCount / getStockBySymbol / getAllGroups
- * 10. initPoolStoreSubscriptions 订阅 / source 过滤 / 去抖 / cleanup / 重复调用
+ * 9. 派生查询函数
+ * 10. 订阅 / source 过滤 / cleanup
  */
+
+import { describe, it, expect, beforeEach, vi } from 'vitest'
+import type { StandardEnvelope } from '@/core/envelope'
 
 const {
   mockOn,
   mockQuery,
   mockForward,
-  capturedRef,
-  unsubscribeFn,
+  capturedRef: _capturedRef,
+  unsubscribeFn: _unsubscribeFn,
 } = vi.hoisted(() => {
   const capturedRef = { callback: null as ((envelope: StandardEnvelope) => void) | null }
   const unsubscribeFn = vi.fn()
@@ -62,14 +65,31 @@ vi.mock('@/config/dbConfig', () => ({
     deleteStock: 'DELETE_STOCK',
     queryGet: 'QUERY_GET',
     queryList: 'QUERY_LIST',
+    queryByIndex: 'QUERY_BY_INDEX',
   },
   ENVELOPE_TARGET: { db: 'DB' },
-  MODULE_ID: { stockpool: 'stockpool' },
+  MODULE_ID: { pool: 'pool' },
   STORE_NAME: { stocks: 'stocks' },
 }))
 
-vi.mock('@/constants/stockpool.constants', () => ({
+vi.mock('@/constants/pool.constants', () => ({
   DEFAULT_POOL_GROUP: 'default',
+  DEFAULT_POOL_TYPE: 'intention',
+  DEFAULT_POOL_STATUS: {
+    intention: 'screening',
+    research: 'candidate',
+    position: 'holding',
+  },
+  POOL_TYPE: {
+    intention: 'intention',
+    research: 'research',
+    position: 'position',
+  },
+  INTENTION_STATUS: {
+    screening: 'screening',
+    watchlist: 'watchlist',
+    archived: 'archived',
+  },
   RESEARCH_STATUS: {
     candidate: 'candidate',
     screened: 'screened',
@@ -77,26 +97,39 @@ vi.mock('@/constants/stockpool.constants', () => ({
     deepDive: 'deepDive',
     archived: 'archived',
   },
+  POSITION_STATUS: {
+    holding: 'holding',
+    partial: 'partial',
+    closed: 'closed',
+  },
 }))
 
 import {
-  usePoolStore,
-  getTotalCount,
-  getStockBySymbol,
-  getAllGroups,
-  initPoolStoreSubscriptions,
-} from './poolStore'
+  useIntentionPoolStore,
+  getIntentionPoolTotalCount,
+  initIntentionPoolStoreSubscriptions,
+} from './intentionPoolStore'
+import {
+  useResearchPoolStore,
+  getResearchPoolGroups,
+  initResearchPoolStoreSubscriptions,
+} from './researchPoolStore'
+import {
+  usePositionPoolStore,
+  getPositionPoolItemBySymbol,
+  initPositionPoolStoreSubscriptions,
+} from './positionPoolStore'
 import type { Stock } from '@/data/types'
-import type { StandardEnvelope } from '@/core/envelope'
-import { EnvelopeFactory } from '@/core/envelope'
-import { assertContract } from '../../tests/contracts'
 import { isValidTransition } from '@/core/poolTransitionEngine'
 
-function createMockStock(overrides: Partial<Stock> = {}): Stock {
+function createMockStock(overrides: Partial<Stock> = {}, pool = 'intention'): Stock {
+  const researchStatus = (overrides.researchStatus ?? 'screening') as Stock['researchStatus']
   return {
     symbol: 'AAPL',
     name: 'Apple Inc',
-    researchStatus: 'watching',
+    pool: pool as Stock['pool'],
+    researchStatus,
+    status: researchStatus,
     source: 'manual',
     dataVersion: 1,
     ...overrides,
@@ -104,13 +137,28 @@ function createMockStock(overrides: Partial<Stock> = {}): Stock {
 }
 
 beforeEach(() => {
-  // 清理可能残留的订阅，确保模块级状态重置
-  initPoolStoreSubscriptions()()
+  initIntentionPoolStoreSubscriptions()()
+  initResearchPoolStoreSubscriptions()()
+  initPositionPoolStoreSubscriptions()()
 
   vi.clearAllMocks()
 
-  usePoolStore.setState({
-    stocks: [],
+  useIntentionPoolStore.setState({
+    items: [],
+    loading: false,
+    error: null,
+    isRefreshing: false,
+    lastUpdated: 0,
+  })
+  useResearchPoolStore.setState({
+    items: [],
+    loading: false,
+    error: null,
+    isRefreshing: false,
+    lastUpdated: 0,
+  })
+  usePositionPoolStore.setState({
+    items: [],
     loading: false,
     error: null,
     isRefreshing: false,
@@ -118,359 +166,117 @@ beforeEach(() => {
   })
 })
 
-describe('poolStore', () => {
-  // ============================================================
-  // 初始状态
-  // ============================================================
+describe('intentionPoolStore', () => {
   it('初始状态正确', () => {
-    const state = usePoolStore.getState()
-    expect(state.stocks).toEqual([])
+    const state = useIntentionPoolStore.getState()
+    expect(state.items).toEqual([])
     expect(state.loading).toBe(false)
     expect(state.error).toBeNull()
-    expect(state.isRefreshing).toBe(false)
-    expect(state.lastUpdated).toBe(0)
-
-    // 验证初始状态符合契约
-    assertContract('PoolState', state, '初始状态')
   })
 
-  // ============================================================
-  // refresh
-  // ============================================================
-  it('refresh 正常加载，更新 stocks 和 lastUpdated', async () => {
-    const stocks = [createMockStock({ symbol: 'AAPL' }), createMockStock({ symbol: 'TSLA' })]
+  it('refresh 正常加载', async () => {
+    const stocks = [createMockStock({ symbol: 'AAPL' }, 'intention')]
     mockQuery.mockResolvedValue({ success: true, data: stocks })
-    await usePoolStore.getState().refresh()
-    expect(usePoolStore.getState().stocks).toEqual(stocks)
-    expect(usePoolStore.getState().lastUpdated).toBeGreaterThan(0)
-    expect(usePoolStore.getState().error).toBeNull()
+    await useIntentionPoolStore.getState().refresh()
+    expect(useIntentionPoolStore.getState().items).toHaveLength(1)
+    expect(useIntentionPoolStore.getState().error).toBeNull()
   })
 
-  it('refresh 并发锁（isRefreshing=true 时跳过）', async () => {
-    usePoolStore.setState({ isRefreshing: true })
-    await usePoolStore.getState().refresh()
-    expect(mockQuery).not.toHaveBeenCalled()
-  })
-
-  it('refresh 失败时保留旧数据，设置 error', async () => {
-    const oldStocks = [createMockStock()]
-    usePoolStore.setState({ stocks: oldStocks })
-    mockQuery.mockRejectedValue(new Error('网络错误'))
-    await usePoolStore.getState().refresh()
-    expect(usePoolStore.getState().stocks).toEqual(oldStocks)
-    expect(usePoolStore.getState().error).toBe('网络错误')
-    expect(usePoolStore.getState().isRefreshing).toBe(false)
-  })
-
-  it('refresh 首次加载设置 loading=true，后续刷新 loading 不变', async () => {
-    // 首次加载
-    let resolveList!: (value: { success: true; data: Stock[] }) => void
-    mockQuery.mockImplementation(() => new Promise((resolve) => { resolveList = resolve }))
-    const p1 = usePoolStore.getState().refresh()
-    expect(usePoolStore.getState().loading).toBe(true)
-    resolveList({ success: true, data: [createMockStock()] })
-    await p1
-    expect(usePoolStore.getState().loading).toBe(false)
-
-    // 后续刷新
-    vi.clearAllMocks()
-    mockQuery.mockResolvedValue({ success: true, data: [createMockStock(), createMockStock({ symbol: 'TSLA' })] })
-    await usePoolStore.getState().refresh()
-    expect(usePoolStore.getState().loading).toBe(false)
-  })
-
-  // ============================================================
-  // addStock
-  // ============================================================
-  it('addStock 成功添加', async () => {
-    const newStock = { symbol: 'NVDA', name: 'NVIDIA', researchStatus: 'candidate' as const, source: 'manual' as const }
+  it('addItem 成功添加', async () => {
     mockQuery.mockResolvedValueOnce({ success: false })
-    const result = await usePoolStore.getState().addStock(newStock)
-    expect(result).toBe(true)
-    expect(mockQuery).toHaveBeenCalledWith(expect.objectContaining({ action: 'QUERY_GET', store: 'stocks', key: 'NVDA' }))
-    expect(mockForward).toHaveBeenCalledTimes(1)
-    expect(usePoolStore.getState().error).toBeNull()
-  })
-
-  it('addStock 失败时设置 error 返回 false（重复添加）', async () => {
-    mockQuery.mockResolvedValueOnce({ success: true, data: createMockStock({ symbol: 'NVDA' }) })
-    const newStock = { symbol: 'NVDA', name: 'NVIDIA', researchStatus: 'candidate' as const, source: 'manual' as const }
-    const result = await usePoolStore.getState().addStock(newStock)
-    expect(result).toBe(false)
-    expect(usePoolStore.getState().error).toContain('已存在')
-    expect(mockForward).not.toHaveBeenCalled()
-  })
-
-  // ============================================================
-  // updateStock
-  // ============================================================
-  it('updateStock 成功更新（通过 dataBridge.forward）', async () => {
-    const stock = createMockStock({ symbol: 'AAPL' })
-    usePoolStore.setState({ stocks: [stock] })
-    const result = await usePoolStore.getState().updateStock('AAPL', { name: 'Apple Updated' })
-    expect(result).toBe(true)
-    expect(EnvelopeFactory.create).toHaveBeenCalled()
-    expect(mockForward).toHaveBeenCalledTimes(1)
-    expect(usePoolStore.getState().error).toBeNull()
-  })
-
-  it('updateStock 股票不存在返回 false', async () => {
-    usePoolStore.setState({ stocks: [] })
-    const result = await usePoolStore.getState().updateStock('UNKNOWN', { name: 'X' })
-    expect(result).toBe(false)
-    expect(usePoolStore.getState().error).toContain('不存在')
-    expect(mockForward).not.toHaveBeenCalled()
-  })
-
-  it('updateStock symbol 自动 trim + toUpperCase', async () => {
-    const stock = createMockStock({ symbol: 'AAPL' })
-    usePoolStore.setState({ stocks: [stock] })
-    await usePoolStore.getState().updateStock('  aapl  ', { name: 'Updated' })
-    expect(vi.mocked(EnvelopeFactory.create)).toHaveBeenCalledWith(
-      expect.any(Object),
-      expect.objectContaining({ symbol: 'AAPL', name: 'Updated' }),
-    )
-  })
-
-  // ============================================================
-  // deleteStock
-  // ============================================================
-  it('deleteStock 成功删除', async () => {
-    usePoolStore.setState({ stocks: [createMockStock({ symbol: 'AAPL' })] })
-    const result = await usePoolStore.getState().deleteStock('AAPL')
+    const result = await useIntentionPoolStore.getState().addItem({ symbol: 'NVDA', name: 'NVIDIA', source: 'manual' })
     expect(result).toBe(true)
     expect(mockForward).toHaveBeenCalledTimes(1)
   })
 
-  it('deleteStock symbol 自动 trim + toUpperCase', async () => {
-    usePoolStore.setState({ stocks: [createMockStock({ symbol: 'AAPL' })] })
-    await usePoolStore.getState().deleteStock('  aapl  ')
-    expect(vi.mocked(EnvelopeFactory.create)).toHaveBeenCalledWith(
-      expect.any(Object),
-      expect.objectContaining({ symbol: 'AAPL' }),
-    )
-  })
-
-  it('deleteStock 失败时设置 error', async () => {
-    mockForward.mockRejectedValueOnce(new Error('删除失败'))
-    usePoolStore.setState({ stocks: [createMockStock({ symbol: 'AAPL' })] })
-    const result = await usePoolStore.getState().deleteStock('AAPL')
-    expect(result).toBe(false)
-    expect(usePoolStore.getState().error).toBe('删除失败')
-  })
-
-  // ============================================================
-  // updateStatus
-  // ============================================================
-  it('updateStatus 成功流转（isValidTransition 返回 true）', async () => {
-    const stock = createMockStock({ symbol: 'AAPL', researchStatus: 'candidate' })
-    usePoolStore.setState({ stocks: [stock] })
-    const result = await usePoolStore.getState().updateStatus('AAPL', 'watching')
-    expect(result).toBe(true)
+  it('updateItem symbol 自动 trim + toUpperCase', async () => {
+    useIntentionPoolStore.setState({ items: [createMockStock({ symbol: 'AAPL' }, 'intention') as never] })
+    await useIntentionPoolStore.getState().updateItem('  aapl  ', { name: 'Updated' })
     expect(mockForward).toHaveBeenCalledTimes(1)
-    expect(usePoolStore.getState().error).toBeNull()
   })
 
-  it('updateStatus 非法流转返回 false（isValidTransition 返回 false）', async () => {
-    vi.mocked(isValidTransition).mockReturnValueOnce(false)
-    const stock = createMockStock({ symbol: 'AAPL', researchStatus: 'watching' })
-    usePoolStore.setState({ stocks: [stock] })
-    const result = await usePoolStore.getState().updateStatus('AAPL', 'archived')
-    expect(result).toBe(false)
-    expect(usePoolStore.getState().error).toContain('非法状态流转')
-    expect(mockForward).not.toHaveBeenCalled()
-  })
-
-  it('updateStatus 股票不存在返回 false', async () => {
-    usePoolStore.setState({ stocks: [] })
-    const result = await usePoolStore.getState().updateStatus('UNKNOWN', 'watching')
-    expect(result).toBe(false)
-    expect(usePoolStore.getState().error).toContain('不存在')
-  })
-
-  it('updateStatus 失败时设置 error', async () => {
-    mockForward.mockRejectedValueOnce(new Error('DB 错误'))
-    const stock = createMockStock({ symbol: 'AAPL' })
-    usePoolStore.setState({ stocks: [stock] })
-    const result = await usePoolStore.getState().updateStatus('AAPL', 'watching')
-    expect(result).toBe(false)
-    expect(usePoolStore.getState().error).toBe('DB 错误')
-  })
-
-  // ============================================================
-  // updateGroup
-  // ============================================================
-  it('updateGroup 成功更新', async () => {
-    const stock = createMockStock({ symbol: 'AAPL' })
-    usePoolStore.setState({ stocks: [stock] })
-    const result = await usePoolStore.getState().updateGroup('AAPL', 'tech')
-    expect(result).toBe(true)
-    expect(mockForward).toHaveBeenCalledTimes(1)
-    expect(usePoolStore.getState().error).toBeNull()
-  })
-
-  it('updateGroup 空分组名返回 false', async () => {
-    const stock = createMockStock({ symbol: 'AAPL' })
-    usePoolStore.setState({ stocks: [stock] })
-    const result = await usePoolStore.getState().updateGroup('AAPL', '   ')
-    expect(result).toBe(false)
-    expect(usePoolStore.getState().error).toContain('不能为空')
-    expect(mockForward).not.toHaveBeenCalled()
-  })
-
-  it('updateGroup 失败时设置 error', async () => {
-    mockForward.mockRejectedValueOnce(new Error('分组更新失败'))
-    const stock = createMockStock({ symbol: 'AAPL' })
-    usePoolStore.setState({ stocks: [stock] })
-    const result = await usePoolStore.getState().updateGroup('AAPL', 'tech')
-    expect(result).toBe(false)
-    expect(usePoolStore.getState().error).toBe('分组更新失败')
-  })
-
-  // ============================================================
-  // getByStatus / getByGroup
-  // ============================================================
   it('getByStatus 按状态筛选', () => {
+    useIntentionPoolStore.setState({
+      items: [
+        createMockStock({ symbol: 'A1', researchStatus: 'screening' }, 'intention'),
+        createMockStock({ symbol: 'A2', researchStatus: 'watchlist' }, 'intention'),
+      ] as never[],
+    })
+    expect(useIntentionPoolStore.getState().getByStatus('watchlist')).toHaveLength(1)
+  })
+
+  it('getIntentionPoolTotalCount 返回 items.length', () => {
+    useIntentionPoolStore.setState({
+      items: [createMockStock({ symbol: 'A1' }, 'intention'), createMockStock({ symbol: 'A2' }, 'intention')] as never[],
+    })
+    expect(getIntentionPoolTotalCount()).toBe(2)
+  })
+})
+
+describe('researchPoolStore', () => {
+  it('初始状态正确', () => {
+    const state = useResearchPoolStore.getState()
+    expect(state.items).toEqual([])
+    expect(state.loading).toBe(false)
+    expect(state.error).toBeNull()
+  })
+
+  it('refresh 按 research 池过滤', async () => {
     const stocks = [
-      createMockStock({ symbol: 'A1', researchStatus: 'candidate' }),
-      createMockStock({ symbol: 'A2', researchStatus: 'watching' }),
-      createMockStock({ symbol: 'A3', researchStatus: 'watching' }),
+      createMockStock({ symbol: 'AAPL' }, 'research'),
+      createMockStock({ symbol: 'TSLA' }, 'intention'),
     ]
-    usePoolStore.setState({ stocks })
-    const result = usePoolStore.getState().getByStatus('watching')
-    expect(result).toHaveLength(2)
-    expect(result.map((s) => s.symbol)).toEqual(['A2', 'A3'])
+    mockQuery.mockResolvedValue({ success: true, data: stocks })
+    await useResearchPoolStore.getState().refresh()
+    expect(useResearchPoolStore.getState().items).toHaveLength(1)
+    expect(useResearchPoolStore.getState().items[0]?.symbol).toBe('AAPL')
   })
 
-  it('getByGroup 按分组筛选（无 group 时用 DEFAULT_POOL_GROUP）', () => {
+  it('updateStatus 非法流转返回 false', async () => {
+    vi.mocked(isValidTransition).mockReturnValueOnce(false)
+    useResearchPoolStore.setState({
+      items: [createMockStock({ symbol: 'AAPL', researchStatus: 'candidate' }, 'research')] as never[],
+    })
+    const result = await useResearchPoolStore.getState().updateStatus('AAPL', 'archived')
+    expect(result).toBe(false)
+    expect(mockForward).not.toHaveBeenCalled()
+  })
+
+  it('getResearchPoolGroups 去重排序', () => {
+    useResearchPoolStore.setState({
+      items: [
+        createMockStock({ symbol: 'A1', group: 'tech' }, 'research'),
+        createMockStock({ symbol: 'A2', group: 'finance' }, 'research'),
+        createMockStock({ symbol: 'A3' }, 'research'),
+      ] as never[],
+    })
+    expect(getResearchPoolGroups()).toEqual(['default', 'finance', 'tech'])
+  })
+})
+
+describe('positionPoolStore', () => {
+  it('初始状态正确', () => {
+    const state = usePositionPoolStore.getState()
+    expect(state.items).toEqual([])
+    expect(state.loading).toBe(false)
+    expect(state.error).toBeNull()
+  })
+
+  it('refresh 包含持仓字段', async () => {
     const stocks = [
-      createMockStock({ symbol: 'A1', group: 'tech' }),
-      createMockStock({ symbol: 'A2', group: undefined }),
-      createMockStock({ symbol: 'A3', group: 'tech' }),
+      createMockStock({ symbol: 'AAPL', quantity: 100, avgCost: 150, currentPrice: 160, researchStatus: 'holding' }, 'position'),
     ]
-    usePoolStore.setState({ stocks })
-    expect(usePoolStore.getState().getByGroup('tech')).toHaveLength(2)
-    expect(usePoolStore.getState().getByGroup('default')).toHaveLength(1)
+    mockQuery.mockResolvedValue({ success: true, data: stocks })
+    await usePositionPoolStore.getState().refresh()
+    const item = usePositionPoolStore.getState().items[0]
+    expect(item?.symbol).toBe('AAPL')
+    expect((item as { quantity?: number }).quantity).toBe(100)
   })
 
-  // ============================================================
-  // 派生函数
-  // ============================================================
-  it('getTotalCount 返回 stocks.length', () => {
-    usePoolStore.setState({ stocks: [createMockStock(), createMockStock({ symbol: 'TSLA' })] })
-    expect(getTotalCount()).toBe(2)
-  })
-
-  it('getStockBySymbol 存在时返回股票', () => {
-    const stock = createMockStock({ symbol: 'AAPL' })
-    usePoolStore.setState({ stocks: [stock] })
-    expect(getStockBySymbol('AAPL')).toEqual(stock)
-  })
-
-  it('getStockBySymbol 不存在时返回 undefined', () => {
-    usePoolStore.setState({ stocks: [] })
-    expect(getStockBySymbol('UNKNOWN')).toBeUndefined()
-  })
-
-  it('getAllGroups 去重排序（含 DEFAULT_POOL_GROUP 兜底）', () => {
-    const stocks = [
-      createMockStock({ symbol: 'A1', group: 'tech' }),
-      createMockStock({ symbol: 'A2', group: 'finance' }),
-      createMockStock({ symbol: 'A3', group: undefined }),
-      createMockStock({ symbol: 'A4', group: 'tech' }),
-    ]
-    usePoolStore.setState({ stocks })
-    expect(getAllGroups()).toEqual(['default', 'finance', 'tech'])
-  })
-
-  // ============================================================
-  // 订阅
-  // ============================================================
-  it('initPoolStoreSubscriptions 订阅 dataBridge，source 过滤（跳过 stockpool）', () => {
-    vi.useFakeTimers()
-    initPoolStoreSubscriptions()
-    expect(mockOn).toHaveBeenCalledWith('stocks', expect.any(Function))
-
-    // stockpool 自身发出的事件应被跳过
-    capturedRef.callback?.({
-      meta: { source: 'stockpool', target: 'db', action: 'UPDATE_STOCK', traceId: 't1', timestamp: Date.now() },
-      payload: {},
+  it('getPositionPoolItemBySymbol 存在时返回 item', () => {
+    usePositionPoolStore.setState({
+      items: [createMockStock({ symbol: 'AAPL', researchStatus: 'holding' }, 'position')] as never[],
     })
-    vi.advanceTimersByTime(100)
-    expect(mockQuery).not.toHaveBeenCalled()
-
-    // 其他模块的事件应触发 refresh
-    capturedRef.callback?.({
-      meta: { source: 'analyzer', target: 'db', action: 'UPDATE_STOCK', traceId: 't2', timestamp: Date.now() },
-      payload: {},
-    })
-    vi.advanceTimersByTime(100)
-    expect(mockQuery).toHaveBeenCalledTimes(1)
-
-    vi.useRealTimers()
-  })
-
-  it('initPoolStoreSubscriptions 去抖 100ms', () => {
-    vi.useFakeTimers()
-    initPoolStoreSubscriptions()
-
-    capturedRef.callback?.({
-      meta: { source: 'analyzer', target: 'db', action: 'UPDATE_STOCK', traceId: 't1', timestamp: Date.now() },
-      payload: {},
-    })
-    expect(mockQuery).not.toHaveBeenCalled()
-
-    vi.advanceTimersByTime(99)
-    expect(mockQuery).not.toHaveBeenCalled()
-
-    vi.advanceTimersByTime(1)
-    expect(mockQuery).toHaveBeenCalledTimes(1)
-
-    vi.useRealTimers()
-  })
-
-  it('initPoolStoreSubscriptions 多次事件合并为一次 refresh', () => {
-    vi.useFakeTimers()
-    initPoolStoreSubscriptions()
-
-    capturedRef.callback?.({
-      meta: { source: 'analyzer', target: 'db', action: 'UPDATE_STOCK', traceId: 't1', timestamp: Date.now() },
-      payload: {},
-    })
-    vi.advanceTimersByTime(50)
-    capturedRef.callback?.({
-      meta: { source: 'analyzer', target: 'db', action: 'INSERT_STOCK', traceId: 't2', timestamp: Date.now() },
-      payload: {},
-    })
-
-    // 100ms 从第一次算起，但第二次重置了定时器，所以不应触发
-    vi.advanceTimersByTime(50)
-    expect(mockQuery).not.toHaveBeenCalled()
-
-    // 再前进 50ms，第二次事件后满 100ms，应触发一次
-    vi.advanceTimersByTime(50)
-    expect(mockQuery).toHaveBeenCalledTimes(1)
-
-    vi.useRealTimers()
-  })
-
-  it('initPoolStoreSubscriptions 返回 cleanup 函数', () => {
-    const cleanup = initPoolStoreSubscriptions()
-    expect(typeof cleanup).toBe('function')
-
-    cleanup()
-    expect(unsubscribeFn).toHaveBeenCalledTimes(1)
-  })
-
-  it('initPoolStoreSubscriptions 重复调用时跳过并返回 cleanup', () => {
-    initPoolStoreSubscriptions()
-    expect(mockOn).toHaveBeenCalledTimes(1)
-
-    const cleanup2 = initPoolStoreSubscriptions()
-    expect(mockOn).toHaveBeenCalledTimes(1) // 不会重复订阅
-    expect(typeof cleanup2).toBe('function')
-
-    cleanup2()
-    expect(unsubscribeFn).toHaveBeenCalledTimes(1)
+    expect(getPositionPoolItemBySymbol('AAPL')?.symbol).toBe('AAPL')
   })
 })

@@ -71,10 +71,10 @@ describe('AclEngine', () => {
   })
 
   it('权限通过时不应抛出异常', () => {
-    // stockpool 模块: actions = [INSERT, UPDATE, DELETE], write.stocks
+    // pool 模块: actions = [INSERT, UPDATE, DELETE], write.stocks
     expect(() =>
       engine.assert({
-        module: MODULE_ID.stockpool,
+        module: MODULE_ID.pool,
         store: STORE_NAME.stocks,
         operation: DB_OPERATION.insert,
       }),
@@ -114,10 +114,10 @@ describe('AclEngine', () => {
   })
 
   it('store 不允许时应抛出 AclError', () => {
-    // stockpool 模块: write = [stocks]，不允许写 orders
+    // pool 模块: write = [stocks]，不允许写 orders
     expect(() =>
       engine.assert({
-        module: MODULE_ID.stockpool,
+        module: MODULE_ID.pool,
         store: STORE_NAME.orders,
         operation: DB_OPERATION.insert,
       }),
@@ -235,7 +235,7 @@ describe('AclEngine.check', () => {
 
   it('合法操作返回 allowed=true', () => {
     const result = engine.check({
-      module: MODULE_ID.stockpool,
+      module: MODULE_ID.pool,
       store: STORE_NAME.stocks,
       operation: DB_OPERATION.insert,
     })
@@ -285,7 +285,7 @@ describe('AclEngine.wrap', () => {
   it('权限通过时执行操作并返回结果', async () => {
     const mockFn = async () => 'done'
     const result = await engine.wrap(
-      { module: MODULE_ID.stockpool, store: STORE_NAME.stocks, operation: DB_OPERATION.insert },
+      { module: MODULE_ID.pool, store: STORE_NAME.stocks, operation: DB_OPERATION.insert },
       mockFn,
     )
     expect(result).toBe('done')

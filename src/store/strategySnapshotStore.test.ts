@@ -16,8 +16,8 @@ const mockClassifyStocks = vi.hoisted(() => vi.fn())
 const mockListSnapshots = vi.hoisted(() => vi.fn())
 const mockSaveStrategySnapshot = vi.hoisted(() => vi.fn())
 
-vi.mock('@/services/stockpool/stockpoolService', () => ({
-  listStocks: mockListStocks,
+vi.mock('@/services/pool/poolService', () => ({
+  listPoolItems: mockListStocks,
 }))
 
 vi.mock('@/services/scoring/v6ScoreService', () => ({

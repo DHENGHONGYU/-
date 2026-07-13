@@ -28,7 +28,7 @@ import {
   ACL_MATRIX,
   DB_OPERATION,
 } from '@/config/dbConfig'
-import { RESEARCH_STATUS } from '@/constants/stockpool.constants'
+import { RESEARCH_STATUS } from '@/constants/pool.constants'
 import { mcpRegistry } from '@/mcp/core/registry'
 import { registerAllServers } from '@/mcp/register'
 
@@ -37,9 +37,8 @@ import { registerAllServers } from '@/mcp/register'
 // ============================================================
 
 const EXPECTED_SERVER_NAMES: string[] = [
-  'fetcher', 'scoring:v6', 'trading', 'analysis', 'news', 'llm',
-  'portfolio', 'screening', 'backtest', 'stockpool', 'system',
-  'data-collector', 'execution', 'export', 'input', 'trade',
+  'fetcher', 'scoring:v6', 'trading', 'news', 'llm',
+  'screening', 'backtest', 'pool', 'system', 'data-collector',
 ]
 
 // ============================================================
@@ -186,7 +185,8 @@ describe('套件2: MCP 工具调用冒烟测试', () => {
     expect(result).toBeDefined()
   }, { timeout: 60000 })
 
-  it('analysis: screen_stocks 应返回筛选结果', async () => {
+  // @status known-failing - analysis Server 已禁用（零业务调用），由 screening 覆盖筛选能力
+  it.skip('analysis: screen_stocks 应返回筛选结果', async () => {
     const result = await callTool('analysis', 'screen_stocks')
     expect(result).toBeDefined()
   }, { timeout: 60000 })
@@ -201,7 +201,8 @@ describe('套件2: MCP 工具调用冒烟测试', () => {
     expect(result).toBeDefined()
   }, { timeout: 60000 })
 
-  it('portfolio: list_by_theme 应返回组合列表', async () => {
+  // @status known-failing - portfolio Server 已禁用（零业务调用）
+  it.skip('portfolio: list_by_theme 应返回组合列表', async () => {
     const result = await callTool('portfolio', 'list_by_theme', { theme: '科技' })
     expect(result).toBeDefined()
   }, { timeout: 60000 })
@@ -220,19 +221,20 @@ describe('套件2: MCP 工具调用冒烟测试', () => {
     expect(result).toBeDefined()
   }, { timeout: 60000 })
 
-  it('stockpool: list_pool_stocks 应返回股票列表', async () => {
-    const result = await callTool('stockpool', 'list_pool_stocks')
+  it('pool: list_pool_items 应返回股票列表', async () => {
+    const result = await callTool('pool', 'list_pool_items')
     expect(result).toBeDefined()
   }, { timeout: 60000 })
 
-  it('stockpool: list_groups 应返回分组列表', async () => {
-    const result = await callTool('stockpool', 'list_groups')
+  it('pool: list_groups 应返回分组列表', async () => {
+    const result = await callTool('pool', 'list_groups')
     expect(result).toBeDefined()
   }, { timeout: 60000 })
 
-  it('stockpool: transition_stock 应返回状态变更结果', async () => {
-    const result = await callTool('stockpool', 'transition_stock', {
+  it('pool: transition_pool_item 应返回状态变更结果', async () => {
+    const result = await callTool('pool', 'transition_pool_item', {
       symbol: 'TEST001',
+      toPool: 'research',
       toStatus: 'screened',
     })
     expect(result).toBeDefined()
@@ -248,12 +250,14 @@ describe('套件2: MCP 工具调用冒烟测试', () => {
     expect(result).toBeDefined()
   }, { timeout: 60000 })
 
-  it('execution: list_execution_plans 应返回执行计划列表', async () => {
+  // @status known-failing - execution Server 已禁用（零业务调用）
+  it.skip('execution: list_execution_plans 应返回执行计划列表', async () => {
     const result = await callTool('execution', 'list_execution_plans')
     expect(result).toBeDefined()
   }, { timeout: 60000 })
 
-  it('export: export_backtest_report 应返回导出结果', async () => {
+  // @status known-failing - export Server 已移除，功能降级为纯 Service
+  it.skip('export: export_backtest_report 应返回导出结果', async () => {
     const result = await callTool('export', 'export_backtest_report', {
       resultId: 'test-result-001',
       format: 'pdf',
@@ -275,40 +279,40 @@ describe('套件3: ACL 权限验证', () => {
     await addTestStock()
   })
 
-  it('ACL_MATRIX 中 stockpool 的 actions 应包含 SELECT/INSERT/UPDATE/DELETE', () => {
-    const stockpoolAcl = ACL_MATRIX[MODULE_ID.stockpool]
-    expect(stockpoolAcl.actions).toContain(DB_OPERATION.select)
-    expect(stockpoolAcl.actions).toContain(DB_OPERATION.insert)
-    expect(stockpoolAcl.actions).toContain(DB_OPERATION.update)
-    expect(stockpoolAcl.actions).toContain(DB_OPERATION.delete)
+  it('ACL_MATRIX 中 pool 的 actions 应包含 SELECT/INSERT/UPDATE/DELETE', () => {
+    const poolAcl = ACL_MATRIX[MODULE_ID.pool]
+    expect(poolAcl.actions).toContain(DB_OPERATION.select)
+    expect(poolAcl.actions).toContain(DB_OPERATION.insert)
+    expect(poolAcl.actions).toContain(DB_OPERATION.update)
+    expect(poolAcl.actions).toContain(DB_OPERATION.delete)
   }, { timeout: 60000 })
 
-  it('stockpool 应能通过 DataBridge.query 查询 stocks store', async () => {
+  it('pool 应能通过 DataBridge.query 查询 stocks store', async () => {
     const result = await dataBridge.query({
       action: ENVELOPE_ACTION.queryList,
       store: STORE_NAME.stocks,
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
     })
     expect(result.success).toBe(true)
     expect(Array.isArray(result.data)).toBe(true)
     expect((result.data as unknown[]).length).toBeGreaterThan(0)
   }, { timeout: 60000 })
 
-  it('stockpool 应能通过 DataBridge.query 按 key 查询 stocks store', async () => {
+  it('pool 应能通过 DataBridge.query 按 key 查询 stocks store', async () => {
     const result = await dataBridge.query({
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
       key: 'TEST001',
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
     })
     expect(result.success).toBe(true)
     expect(result.data).toBeDefined()
   }, { timeout: 60000 })
 
-  it('stockpool 应能通过 DataBridge.forward 更新 stocks store', async () => {
+  it('pool 应能通过 DataBridge.forward 更新 stocks store', async () => {
     await dataBridge.forward({
       meta: {
-        source: MODULE_ID.stockpool,
+        source: MODULE_ID.pool,
         target: ENVELOPE_TARGET.db,
         action: ENVELOPE_ACTION.updateStock,
         traceId: 'test-acl-update-stock',
@@ -326,7 +330,7 @@ describe('套件3: ACL 权限验证', () => {
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.stocks,
       key: 'TEST001',
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
     })
     expect(result.success).toBe(true)
   }, { timeout: 60000 })
@@ -348,8 +352,8 @@ describe('套件4: 关键链路端到端测试', () => {
     expect(result).toHaveProperty('ok')
   }, { timeout: 60000 })
 
-  it('stockpool MCP 工具 list_pool_stocks → 应返回股票列表', async () => {
-    const result = await callTool('stockpool', 'list_pool_stocks')
+  it('pool MCP 工具 list_pool_items → 应返回股票列表', async () => {
+    const result = await callTool('pool', 'list_pool_items')
     expect(result).toBeDefined()
   }, { timeout: 60000 })
 
@@ -363,7 +367,7 @@ describe('套件4: 关键链路端到端测试', () => {
     // 写入
     await dataBridge.forward({
       meta: {
-        source: MODULE_ID.stockpool,
+        source: MODULE_ID.pool,
         target: ENVELOPE_TARGET.db,
         action: ENVELOPE_ACTION.insertStock,
         traceId: 'test-e2e-insert-stock',
@@ -385,7 +389,7 @@ describe('套件4: 关键链路端到端测试', () => {
     const result = await dataBridge.query({
       action: ENVELOPE_ACTION.queryList,
       store: STORE_NAME.stocks,
-      source: MODULE_ID.stockpool,
+      source: MODULE_ID.pool,
     })
     expect(result.success).toBe(true)
     const stocks = result.data as Array<{ symbol: string; name: string }>
@@ -413,12 +417,12 @@ describe('套件5: 工具调用幂等性', () => {
   }, { timeout: 60000 })
 
   it('工具调用不应产生副作用累积', async () => {
-    const before = await callTool('stockpool', 'list_pool_stocks') as unknown[]
+    const before = await callTool('pool', 'list_pool_items') as unknown[]
     const beforeCount = Array.isArray(before) ? before.length : 0
     // 连续调用多次读操作
-    await callTool('stockpool', 'list_pool_stocks')
-    await callTool('stockpool', 'list_pool_stocks')
-    const after = await callTool('stockpool', 'list_pool_stocks') as unknown[]
+    await callTool('pool', 'list_pool_items')
+    await callTool('pool', 'list_pool_items')
+    const after = await callTool('pool', 'list_pool_items') as unknown[]
     const afterCount = Array.isArray(after) ? after.length : 0
     expect(afterCount).toBe(beforeCount)
   }, { timeout: 60000 })

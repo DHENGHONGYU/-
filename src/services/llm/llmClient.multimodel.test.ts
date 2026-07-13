@@ -393,6 +393,7 @@ describe('buildV6ScorePrompt', () => {
       roe: 0.32,
       marketCap: 21200e8,
       dataVersion: 1,
+      pool: 'research',
       researchStatus: 'candidate',
       source: 'manual',
     },

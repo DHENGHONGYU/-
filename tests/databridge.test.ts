@@ -27,7 +27,7 @@ describe('DataBridge', () => {
 
     const envelope = EnvelopeFactory.create(
       {
-        source: MODULE_ID.stockpool,
+        source: MODULE_ID.pool,
         target: ENVELOPE_TARGET.db,
         action: ENVELOPE_ACTION.insertStock,
         traceId: 'test-1',
@@ -226,7 +226,7 @@ describe('DataBridge.query()', () => {
       // 执行写操作（通过 forward）
       const envelope = EnvelopeFactory.create(
         {
-          source: MODULE_ID.stockpool,
+          source: MODULE_ID.pool,
           target: ENVELOPE_TARGET.db,
           action: ENVELOPE_ACTION.updateStock,
           traceId: 'test-update',

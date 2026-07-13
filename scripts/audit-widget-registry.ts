@@ -392,7 +392,7 @@ function printReport(result: AuditResult): void {
     console.log('')
     console.log('  修复指南:')
     console.log('    1. 三处注册必须同步：widgetRegistry.ts + DEFAULT_WIDGET_CONFIG + WIDGET_DEFAULT_DATA_SOURCE')
-    console.log('    2. 参考 docs/02-design/widget-integration-checklist.md')
+    console.log('    2. 参考 docs/D-specs/widget-integration-checklist.md')
     console.log('    3. 或运行 npm run scaffold:widget <widgetId> <title> <category> 一键生成三处注册')
   } else if (p1Warnings.length > 0) {
     console.log('  Result: PASS with warnings (exit 0)')

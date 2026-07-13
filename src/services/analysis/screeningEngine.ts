@@ -1,9 +1,10 @@
 import { ENVELOPE_ACTION, STORE_NAME, MODULE_ID } from '@/config/dbConfig'
-import { RESEARCH_STATUS, type ResearchStatus } from '@/constants/stockpool.constants'
+import { RESEARCH_STATUS, type ResearchStatus } from '@/constants/pool.constants'
 import { getDefaultScreeningConfig } from '@/config/screeningConfig'
 import { dataBridge } from '@/core/databridge'
 import type { DataLayerResult, Stock } from '@/data/types'
-import { transitionStock } from '@/services/stockpool/stockpoolService'
+import { transitionPoolItem } from '@/services/pool/poolService'
+import { POOL_TYPE } from '@/constants/pool.constants'
 
 export interface ScreeningResult {
   promotedToScreened: string[]
@@ -88,7 +89,11 @@ async function tryPromote(
   const ok = await eligibility(stock)
   if (!ok) return
 
-  const transitionResult = await transitionStock(stock.symbol, toStatus)
+  const transitionResult = await transitionPoolItem(stock.symbol, {
+    pool: POOL_TYPE.research,
+    status: toStatus,
+    label: '筛选晋升',
+  })
   if (transitionResult.success) {
     result[targetKey].push(stock.symbol)
   } else {

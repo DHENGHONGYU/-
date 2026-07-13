@@ -127,7 +127,7 @@ describe('audit-layer-calls.ts v3.0（白盒测试）', () => {
 import { dataLayer } from '@/data/dataLayer'
 export function BadComponent() {
   const handleClick = () => {
-    dataLayer.stockPool.add({ code: '000001' })
+    dataLayer.stocks.add({ code: '000001' })
   }
   return null
 }
@@ -139,7 +139,7 @@ export function BadComponent() {
       expect(report.violations).toContainEqual(
         expect.objectContaining({
           type: 'L5/L4 直接写数据层',
-          context: expect.stringContaining('dataLayer.stockPool.add'),
+          context: expect.stringContaining('dataLayer.stocks.add'),
         }),
       )
     })

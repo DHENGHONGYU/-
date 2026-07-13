@@ -48,7 +48,7 @@ describe('DataBridge', () => {
       const envelope = EnvelopeFactory.create(
         {
           action: ENVELOPE_ACTION.insertStock,
-          source: 'stockpool' as ModuleId,
+          source: 'pool' as ModuleId,
           target: ENVELOPE_TARGET.db,
           traceId: 'test-1',
         },
@@ -63,7 +63,7 @@ describe('DataBridge', () => {
       const envelope = EnvelopeFactory.create(
         {
           action: 'UNKNOWN_ACTION' as EnvelopeAction,
-          source: 'stockpool' as ModuleId,
+          source: 'pool' as ModuleId,
           target: ENVELOPE_TARGET.db,
           traceId: 'test-2',
         },
@@ -82,12 +82,12 @@ describe('DataBridge', () => {
       const result1 = await bridge.query({
         action: ENVELOPE_ACTION.queryList,
         store: STORE_NAME.stocks,
-        source: 'stockpool',
+        source: 'pool',
       })
       const result2 = await bridge.query({
         action: ENVELOPE_ACTION.queryList,
         store: STORE_NAME.stocks,
-        source: 'stockpool',
+        source: 'pool',
       })
 
       expect(result1.success).toBe(true)
@@ -99,7 +99,7 @@ describe('DataBridge', () => {
       const result = await bridge.query({
         action: ENVELOPE_ACTION.queryGet,
         store: STORE_NAME.stocks,
-        source: 'stockpool',
+        source: 'pool',
       })
 
       expect(result.success).toBe(false)

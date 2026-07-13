@@ -157,12 +157,12 @@ export const L7SecondCurveCalculator: LayerCalculator = {
       return {
         layerId: 'l7' as LayerId,
         layerName: LAYER_LABELS.l7 ?? 'L7 第二曲线',
-        score: 0,
+        score: Number.NaN,
         summary: `第二曲线计算失败: ${msg}`,
         risks: [],
         evidence: [],
         weight,
-        weightedScore: 0,
+        weightedScore: Number.NaN,
         dataSources: [],
       }
     }
@@ -343,12 +343,12 @@ export const L8ChipCalculator: LayerCalculator = {
       return {
         layerId: 'l8' as LayerId,
         layerName: LAYER_LABELS.l8 ?? 'L8 技术筹码',
-        score: 0,
+        score: Number.NaN,
         summary: `筹码计算失败: ${msg}`,
         risks: [],
         evidence: [],
         weight,
-        weightedScore: 0,
+        weightedScore: Number.NaN,
         dataSources: [],
       }
     }

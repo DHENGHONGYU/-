@@ -89,7 +89,7 @@ const PANEL_ITEMS: Record<CabinType, PanelGroup[]> = {
       group: '意向候选池',
       items: [
         { key: 'dashboard', label: '录入看板', path: '/input', icon: LayoutDashboard },
-        { key: 'stock-pool', label: '股票池看板（已迁分析舱）', path: '/analysis/stock-pool', icon: Database },
+        { key: 'pool-board', label: '股票池看板（已迁分析舱）', path: '/analysis/pool-board', icon: Database },
         { key: 'bulk-import', label: '批量导入', path: '/input/bulk-import', icon: Upload },
         { key: 'hot-sectors', label: '热门板块', path: '/input/hot-sectors', icon: Flame },
         { key: 'local-knowledge', label: '本地知识库', path: '/input/local-knowledge', icon: BookOpen },
@@ -107,7 +107,7 @@ const PANEL_ITEMS: Record<CabinType, PanelGroup[]> = {
     {
       group: '股票池',
       items: [
-        { key: 'stock-pool', label: '股票池看板', path: '/analysis/stock-pool', icon: Database },
+        { key: 'pool-board', label: '股票池看板', path: '/analysis/pool-board', icon: Database },
       ],
     },
     {

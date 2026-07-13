@@ -37,6 +37,8 @@ export type {
   OrderDirection,
   OrderStatus,
   ResearchStatus,
+  PoolStatus,
+  PoolType,
 } from './types/types.dataLayer'
 export type { DataLayerResult } from './types/types.dataLayer'
 

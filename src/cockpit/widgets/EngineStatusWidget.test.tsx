@@ -116,7 +116,7 @@ function createMockMarketData(): MarketData {
     tradeReview: {} as MarketData['tradeReview'],
     analysisScores: {} as MarketData['analysisScores'],
     modelComparison: {} as MarketData['modelComparison'],
-    stockPool: {} as MarketData['stockPool'],
+    poolBoard: {} as MarketData['poolBoard'],
     chatHistory: {} as MarketData['chatHistory'],
     hotSectors: [],
     valuePit: [],
