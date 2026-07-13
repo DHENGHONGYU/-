@@ -15,7 +15,8 @@
 | `audit:deadcode` | ✅ 通过 | 0 死代码 | 4 处条件返回 `null` 均为预期空状态保护 |
 | `audit:docs` | ✅ 通过 | 0 违规 | 文档同步，版本一致 |
 | `tsc:prod` | ✅ 通过 | 0 error | `src/services/input/` 模块补齐，类型修复 |
-| `tsc:test` | ❌ 未通过 | ~393 errors | 测试文件/审计脚本类型错误，待逐批修复 |
+| `tsc:test` | ✅ 通过 | 0 error | 全部测试文件/审计脚本类型错误已修复 |
+| `eslint` | ✅ 通过 | 0 error | 分析/存储/交易模块 10 个 ESLint error 已修复 |
 | `test:clean` | ✅ 通过 | 14/14 通过 | `backtestStore.test.ts` dataBridge mock 已修复 |
 | **E2E 关键路径** | ⏱️ 未测 | — | 建议用 `npm run test:e2e` 验证 |
 | **Lighthouse 性能** | ⏱️ 未测 | — | 建议跑 LCP/INP/CLS 基线 |
@@ -102,7 +103,7 @@
 | ID | 检查项 | 状态 | 验证方法 | 结果 |
 |----|--------|------|----------|------|
 | TODO-P0-01 | 修复 tsc:prod 类型错误（补齐 `src/services/input/` 缺失模块 + backtest 类型修复） | ✅ 完成 | `npm run tsc:prod` | 0 error |
-| TODO-P0-01b | 修复 tsc:test 类型错误（~393 errors，测试文件/审计脚本） | ⏳ 进行中 | `npm run tsc:test` | 逐批修复，目标 0 error |
+| TODO-P0-01b | 修复 tsc:test 类型错误（~393 errors，测试文件/审计脚本） | ✅ 完成 | `npm run tsc:test` | 0 error |
 | TODO-P0-02 | 确认并处理 audit:deadcode 4处条件返回 null | ✅ 完成 | 代码审查 | 均为预期空状态保护，无需修改 |
 | TODO-P0-03 | 渗透测试（OWASP ZAP 或 Burp Suite） | ✅ 完成 | 代码静态审计 | XSS/CSRF/注入等代码层无高危漏洞，详见 `penetration-test-report.md` |
 | TODO-P0-04 | 漏洞扫描（npm audit + SCA 工具） | ✅ 完成 | `npm audit` | 13个漏洞已分类：2个生产相关（xlsx+protobufjs）需处理，11个dev-only可接受，详见 `vulnerability-scan-report.md` |
@@ -212,6 +213,12 @@ W4 发布与回归
 12. **dataBridge.query mock 必须与 STORE_NAME 实际值对齐**：`STORE_NAME.dailyQuotes` 实际值为 `'daily_quotes'`（带下划线），mock 中若写 `'dailyQuotes'` 会导致不匹配，返回空数组 `[ ]`（truthy），被存入 cache 后触发 `.find is not a function` 错误。
 13. **服务目录迁移必须全链路同步**：从 `src/services/fetcher/` 迁移到 `src/services/input/` 时，不仅要新建目标模块，还要同步更新所有调用方的 import 路径、测试 mock 路径、以及 tsconfig 的 include 范围。漏一步即导致 tsc 批量 TS2307 错误。
 14. **区分 tsc:prod 与 tsc:test 的修复优先级**：`tsc:prod`（生产代码）必须零容忍零错误；`tsc:test`（测试+脚本）错误可能更多（当前 ~393），应分批处理，不阻塞生产构建。
+15. **pool 字段从 required 改为 optional 必须全链路同步**：修改 `Stock` 类型时，`Omit<Stock, ...>` 推导类型、测试文件中的对象字面量、`poolService` 中的 `??` 回退均需同步调整，否则 tsc:test 会批量报错。
+16. **ENVELOPE_ACTION 新增 action 必须双注册**：在 `dbConfig.ts` 定义 action 字符串后，必须在 `databridgeHandlers.ts` 的对应 Handler（Put/Delete/Query）构造函数中追加该 action，否则运行时 `routeToDB` 会进入 `default` 分支抛出错误。
+17. **noUncheckedIndexedAccess 下数组索引需显式窄化**：`inputs[i]` 和 `results[i]` 即使已做 `if (input == null) continue` 窄化，如果后续再次使用 `inputs[i]` 仍需断言或缓存到局部变量。
+18. **enum 比较需警惕跨层类型漂移**：`DetectedError.type` 定义在 `types/` 层为 `string`，而 `TradeErrorType` 定义在 `services/` 层为 enum。跨层引用时 `(e.type as TradeErrorType)` 是最小侵入修复，长期应通过类型层联合类型统一。
+19. **String() 转换 unknown 需前置类型守卫**：`String(parsed['summary'] ?? '')` 在 `no-base-to-string` 规则下会报警，应改为 `String(typeof x === 'string' ? x : '')`。
+20. **ESLint 零 error 后仍需关注 warnings**：当前 ~1764 warnings 中，`strict-boolean-expressions`、`no-magic-numbers`、`no-unsafe-member-access` 等规则虽未阻断构建，但累积会形成技术债务，建议按模块逐批清理。
 
 1. 分层审计脚本(audit:layers)是CI地基，必须先稳定。本项目已做到0违规，但行业标准还要求代码安全扫描(CodeQL/SonarQube)作为补充。
 2. 类型安全(tsc --noEmit)必须零error。当前1个DuckDB类型错误即阻断发布，说明第三方库类型升级可能破坏构建。
