@@ -1,0 +1,11 @@
+{
+  "count": 1,
+  "entries": [
+    {
+      "file": "src\\services\\system\\mechanismMonitorService.ts",
+      "line": 60,
+      "name": "MECHANISM_ALERT_EVENT",
+      "type": "constant"
+    }
+  ]
+}

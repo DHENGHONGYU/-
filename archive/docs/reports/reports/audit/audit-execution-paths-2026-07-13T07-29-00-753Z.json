@@ -1,0 +1,15 @@
+{
+  "violations": [],
+  "summary": {
+    "totalFiles": 895,
+    "totalViolations": 0,
+    "byViolationType": {}
+  },
+  "meta": {
+    "scriptName": "audit-execution-paths",
+    "version": "1.0",
+    "timestamp": "2026-07-13T07:29:00.753Z",
+    "durationMs": 96,
+    "rootDir": "D:\\FinSightV9"
+  }
+}

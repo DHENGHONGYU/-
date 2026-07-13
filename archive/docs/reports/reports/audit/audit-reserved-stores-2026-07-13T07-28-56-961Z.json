@@ -1,0 +1,21 @@
+{
+  "violations": [],
+  "warnings": [],
+  "stores": [],
+  "summary": {
+    "totalReservedStores": 0,
+    "violatedStores": 0,
+    "cleanStores": 0,
+    "totalReferences": 0,
+    "totalVerifiedReferences": 0,
+    "totalSameNameCollisions": 0,
+    "totalFilesScanned": 536
+  },
+  "meta": {
+    "scriptName": "audit-reserved-stores",
+    "version": "1.1",
+    "timestamp": "2026-07-13T07:28:56.960Z",
+    "durationMs": 13,
+    "rootDir": "D:\\FinSightV9"
+  }
+}

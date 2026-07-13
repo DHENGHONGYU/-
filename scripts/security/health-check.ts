@@ -96,21 +96,17 @@ function checkAuthorizationConsistency(policy: SecurityPolicy): void {
 
   const readOnlyTools = [
     'playwright_navigate', 'playwright_screenshot', 'playwright_get_visible_text', 'playwright_close',
-    'fetch_stock_basic', 'fetch_stock_kline', 'fetch_financial_report', 'fetch_trading_calendar', 'fetch_sector_data',
-    'get_score_history', 'get_score_factors',
+    'fetch_stock_basic', 'fetch_stocks_basic', 'fetch_kline', 'refresh_symbol', 'test_source_connectivity',
+    'get_all_scores', 'get_engine_config',
     'get_orders', 'check_order_risk', 'calculate_position', 'get_strategy_snapshot',
-    'fetch_news', 'fetch_news_by_stock', 'analyze_sentiment', 'get_news_bookmarks',
-    'list_factors', 'get_screen_templates',
-    'get_backtest_results', 'get_backtest_history',
-    'list_pool_stocks', 'get_stock_groups',
-    'health_check', 'get_system_status', 'get_config', 'generate_migration_report',
-    'get_collect_tasks', 'get_collect_progress', 'get_collect_history',
-    'list_files', 'read_file', 'directory_listing',
+    'fetch_news', 'analyze_sentiment', 'get_sentiment_trend',
+    'list_models', 'get_model_config',
     'list_workflows', 'get_workflow', 'get_run_status', 'list_runs', 'list_schedules', 'list_triggers', 'export_workflows',
     'list_by_theme',
     'query_knowledge',
     'list_execution_plans', 'get_orphan_plans',
-    'analyze_stock'
+    'analyze_stock',
+    'list_files', 'read_file', 'directory_listing'
   ]
   const autoToolsValid = policy.authorizationRules.autoApprove.every((t) => readOnlyTools.includes(t))
   addResult('授权策略', 'autoApprove 只读性', autoToolsValid ? 'PASS' : 'WARN', autoToolsValid ? '全部为只读工具' : '包含非只读工具')
