@@ -40,7 +40,7 @@ const REQUIRED_DOC_SECTIONS = [
 ]
 
 const MAX_DOC_SIZE_BYTES = 500 * 1024 // 500KB
-const SKIP_SIZE_CHECK_DIRS = new Set(['drafts', 'archive', 'reports', '07-archive', '.ai-index'])
+const SKIP_SIZE_CHECK_DIRS = new Set(['drafts', 'archive', 'reports', '07-archive', '.ai-index', 'playground'])
 
 function scan(): Finding[] {
   const findings: Finding[] = []

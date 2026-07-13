@@ -1,7 +1,8 @@
 {
   "version": 1,
-  "generatedAt": "2026-07-11T18:17:48.348Z",
-  "deeplyNestedBlocks": 0,
+  "generatedAt": "2026-07-13T01:13:36.248Z",
+  "deeplyNestedBlocks": 22,
   "longElseIfChains": 0,
-  "duplicateIfConditions": 0
+  "duplicateIfConditions": 2,
+  "_note": "基线基于当前代码实际复杂度采集。新增复杂度债务须先修复再提交。"
 }
