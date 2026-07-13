@@ -25,8 +25,8 @@ export function hexToRgb(hex: string): string {
 export function rgbToHex(rgb: string): string {
   const match = rgb.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/)
   if (!match) throw new Error(`Invalid RGB format: ${rgb}`)
-  const r = parseInt(match[1], 10)
-  const g = parseInt(match[2], 10)
-  const b = parseInt(match[3], 10)
+  const r = parseInt(match[1]!, 10)
+  const g = parseInt(match[2]!, 10)
+  const b = parseInt(match[3]!, 10)
   return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`
 }

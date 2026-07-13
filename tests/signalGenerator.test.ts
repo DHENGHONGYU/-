@@ -186,9 +186,9 @@ describe('signalGenerator', () => {
 
   it('picks the strongest signal by direction priority and confidence', () => {
     const signals = [
-      { direction: 'hold' as const, confidence: 0.9, type: 'hold', id: '1', symbol: 'A', rationale: '', snapshot: {}, createdAt: 0 },
-      { direction: 'buy' as const, confidence: 0.5, type: 'buy_dip', id: '2', symbol: 'A', rationale: '', snapshot: {}, createdAt: 0 },
-      { direction: 'sell' as const, confidence: 0.8, type: 'sell', id: '3', symbol: 'A', rationale: '', snapshot: {}, createdAt: 0 },
+      { direction: 'hold' as const, confidence: 0.9, type: 'hold', strategy: 'test', id: '1', symbol: 'A', rationale: '', snapshot: {}, createdAt: 0 },
+      { direction: 'buy' as const, confidence: 0.5, type: 'buy_dip', strategy: 'test', id: '2', symbol: 'A', rationale: '', snapshot: {}, createdAt: 0 },
+      { direction: 'sell' as const, confidence: 0.8, type: 'sell', strategy: 'test', id: '3', symbol: 'A', rationale: '', snapshot: {}, createdAt: 0 },
     ]
 
     const strongest = pickStrongestSignal(signals)

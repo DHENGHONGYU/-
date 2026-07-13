@@ -23,7 +23,7 @@ import '@testing-library/jest-dom/vitest'
 import { cleanup } from '@testing-library/react'
 import { afterEach } from 'vitest'
 import { db } from '@/data/db'
-import { dataBridge } from '@/core/dataBridge'
+import { dataBridge } from '@/core/databridge'
 import { resetDbInstance } from '@/data/db-connection'
 import { eventBus } from '@/lib/eventBus'
 

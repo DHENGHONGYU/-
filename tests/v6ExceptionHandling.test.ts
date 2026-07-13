@@ -270,8 +270,8 @@ describe('enhancer.ts 异常处理', () => {
     it('baseResult.score 为非数字应跳过增强', async () => {
       const calculator: LayerCalculator = {
         layerId: 'l4',
-        calculate: vi.fn(async () => ({
-          layerId: 'l4',
+        calculate: vi.fn(async (_input: LayerInput) => ({
+          layerId: 'l4' as LayerId,
           layerName: '测试层',
           score: 'invalid' as unknown as number,
           summary: '测试',
@@ -357,8 +357,8 @@ describe('enhancer.ts 异常处理', () => {
       enhancer.configure(VALID_LLM_CONFIG)
       const calculator: LayerCalculator = {
         layerId: 'l4',
-        calculate: vi.fn(async () => ({
-          layerId: 'l4',
+        calculate: vi.fn(async (_input: LayerInput) => ({
+          layerId: 'l4' as LayerId,
           layerName: '测试层',
           score: NaN,
           summary: '测试摘要',
@@ -386,8 +386,8 @@ describe('enhancer.ts 异常处理', () => {
       enhancer.configure(VALID_LLM_CONFIG)
       const calculator: LayerCalculator = {
         layerId: 'l4',
-        calculate: vi.fn(async () => ({
-          layerId: 'l4',
+        calculate: vi.fn(async (_input: LayerInput) => ({
+          layerId: 'l4' as LayerId,
           layerName: '测试层',
           score: 3.5,
           summary: undefined as unknown as string,
@@ -481,7 +481,7 @@ describe('v6ScoreService.ts 异常处理', () => {
       const result = await runV6Score(stock.symbol)
 
       if (result.success) {
-        expect(result.data.score).toBe(0)
+        expect(result.data!.score).toBe(0)
       }
     })
   })

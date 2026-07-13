@@ -61,6 +61,7 @@ describe('Signal Persistence', () => {
       symbol: '000001.SZ',
       direction: 'buy',
       type: 'buy_dip',
+      strategy: 'test',
       confidence: 0.7,
       rationale: '测试信号',
       snapshot: { rsi14: 25 },
