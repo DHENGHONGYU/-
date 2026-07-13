@@ -29,60 +29,60 @@ npm run tsc:prod
 
 # 5. 分层调用审计
 echo ""
-echo "🏗️  [4/10] 运行 audit:layers（禁止跨层调用）..."
+echo "🏗️  [5/14] 运行 audit:layers（禁止跨层调用）..."
 npm run audit:layers
 
-# 5. 原子组件层级边界审计
+# 6. 原子组件层级边界审计
 echo ""
-echo "⚛️  [5/10] 运行 audit:atomic（原子层级边界检查）..."
+echo "⚛️  [6/14] 运行 audit:atomic（原子层级边界检查）..."
 npm run audit:atomic
 
-# 6. 文档规范检查
+# 7. 文档规范检查
 echo ""
-echo "📋 [6/10] 运行 file:check（文档规范检查）..."
+echo "📋 [7/14] 运行 file:check（文档规范检查）..."
 npm run file:check
 
-# 7. 文档同步审计
+# 8. 文档同步审计
 echo ""
-echo "📝 [7/10] 运行 audit:docs（文档同步检查）..."
+echo "📝 [8/14] 运行 audit:docs（文档同步检查）..."
 npm run audit:docs
 
-# 8. 设计令牌映射校验
+# 9. 设计令牌映射校验
 echo ""
-echo "🎨 [8/10] 运行 verify:tokens（设计令牌映射校验）..."
+echo "🎨 [9/14] 运行 verify:tokens（设计令牌映射校验）..."
 npm run verify:tokens
 
-# 9. 令牌消费审计
+# 10. 令牌消费审计
 echo ""
-echo "🪙 [9/10] 运行 audit:tokens（令牌消费检查）..."
+echo "🪙 [10/14] 运行 audit:tokens（令牌消费检查）..."
 npm run audit:tokens
 
-# 10. JSDoc 文档门禁（基线采集，当前不阻断）
+# 11. JSDoc 文档门禁（基线采集，当前不阻断）
 echo ""
-echo "📖 [10/10] 运行 audit:jsdoc（JSDoc 覆盖检查）..."
+echo "📖 [11/14] 运行 audit:jsdoc（JSDoc 覆盖检查）..."
 npm run audit:jsdoc
 
-# 11. 代码复杂度门禁（基线采集，当前不阻断）
+# 12. 代码复杂度门禁（基线采集，当前不阻断）
 echo ""
-echo "📊 [11/11] 运行 audit:complexity（代码复杂度检查）..."
+echo "📊 [12/14] 运行 audit:complexity（代码复杂度检查）..."
 npm run audit:complexity
 
-# 12. 驾驶舱 Widget 三处注册一致性审计（阻断：配置/数据源/registry/默认布局必须同步）
+# 13. 驾驶舱 Widget 三处注册一致性审计（阻断：配置/数据源/registry/默认布局必须同步）
 echo ""
-echo "🧩 [12/13] 运行 audit:widget-registry（Widget 三处注册一致性检查）..."
+echo "🧩 [13/14] 运行 audit:widget-registry（Widget 三处注册一致性检查）..."
 npm run audit:widget-registry
 
-# 13. AI 输出校验门禁（阻断：数值越界/未来时间戳必须拦截）
+# 14. AI 输出校验门禁（阻断：数值越界/未来时间戳必须拦截）
 echo ""
-echo "🤖 [13/14] 运行 audit:ai-output（AI 输出三道校验检查）..."
+echo "🤖 [14/14] 运行 audit:ai-output（AI 输出三道校验检查）..."
 npm run audit:ai-output
 
-# 14. 文档目录-内容匹配（warn 模式，不阻断，先积累数据）
+# 15. 文档目录-内容匹配（warn 模式，不阻断，先积累数据）
 echo ""
-echo "📂 [13/13] 运行 audit:path-match（文档目录-内容匹配检查，warn 模式）..."
+echo "📂 [warn] 运行 audit:path-match（文档目录-内容匹配检查，warn 模式）..."
 npx tsx scripts/audit-path-match.ts || true
 
 echo ""
 echo "================================================"
-echo "✅ V9 预提交门禁全部通过（12/12 阻断项 + 1 warn 项），允许提交。"
+echo "✅ V9 预提交门禁全部通过（14/14 阻断项 + 1 warn 项），允许提交。"
 echo ""
