@@ -17,8 +17,10 @@ import { nanoid } from 'nanoid'
 const logger = getLogger()
 
 export interface LlmGatewayOptions extends Partial<LlmConfig> {
-  /** 业务调用方标识，用于审计日志 */
+  /** 业务调用方角色（MCP ACL 合规：agent | ui | ci | system） */
   caller?: string
+  /** 业务调用方标识（如 'AnalysisOrchestrator'） */
+  callerId?: string
   /** 是否允许失败时静默降级（返回空内容而非抛错） */
   allowFallback?: boolean
 }
@@ -42,9 +44,10 @@ export interface LlmGatewayResult {
 export async function chat(messages: LlmMessage[], options: LlmGatewayOptions = {}): Promise<LlmResponse> {
   const traceId = `llm-${nanoid(8)}-${generateId().slice(0, 8)}`
   const caller = options.caller ?? 'unknown'
+  const callerId = options.callerId ?? 'unknown'
   const startTime = performance.now()
 
-  logger.info(`[LLMGateway] chat called by ${caller}`, { traceId, messageCount: messages.length })
+  logger.info(`[LLMGateway] chat called by ${caller} (${callerId})`, { traceId, messageCount: messages.length })
 
   try {
     const response = await rawChat(messages, options)
