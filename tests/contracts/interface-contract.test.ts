@@ -23,6 +23,7 @@ describe('模块间接口契约测试', () => {
   })
 
   afterEach(() => {
+    // eslint-disable-next-line no-console
     console.log('\n' + generateReport())
   })
 

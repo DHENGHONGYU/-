@@ -28,7 +28,7 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { runAuditPipeline, colorize, type AuditReport } from './_audit-pipeline'
+import { runAuditPipeline, colorize, type AuditReport } from './_debug/_audit-pipeline'
 
 /** Token 消耗违规/警告项 */
 export interface Finding {

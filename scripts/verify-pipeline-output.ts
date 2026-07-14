@@ -29,7 +29,7 @@ import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
-import { persistReport, type AuditReport } from './_audit-pipeline'
+import { persistReport, type AuditReport } from './_debug/_audit-pipeline'
 
 // ============================================================
 // 辅助：验证结果收集

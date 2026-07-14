@@ -23,9 +23,14 @@ echo ""
 echo "🧪 [3/4] 运行核心单元测试（npm run test:clean）..."
 npm run test:clean
 
+# 3.5 端到端全流程校对（防 F2 类落库回归 + V6 区分度基线）
+echo ""
+echo "E2E-VERIFY 运行 E2E 全流程校对（npm run test:e2e-verify）..."
+npm run test:e2e-verify
+
 # 4. 生产构建验证
 echo ""
-echo "📦 [4/4] 运行生产构建验证（npm run build）..."
+echo "BUILD 运行生产构建验证（npm run build）..."
 npm run build
 
 echo ""

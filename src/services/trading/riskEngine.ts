@@ -44,6 +44,7 @@ function startOfDayTimestamp(timestamp: number): number {
  *   - 买入后超出单笔/总仓位上限
  *   - 行情数据过期
  * 警告项：
+ *   - 无有效行情数据（数据未到达，已降级放行，非硬阻断）
  *   - 单日交易次数接近上限
  *   - 仓位接近上限
 /**
@@ -78,7 +79,9 @@ export async function checkOrderRisk(input: OrderRiskInput): Promise<RiskCheckRe
   })
   const quotes = quotesResult.success && quotesResult.data ? quotesResult.data : undefined
   if (!quotes?.updatedAt) {
-    blocks.push('无有效行情数据')
+    // P2 健壮化：行情「数据未到达」为可观测的降级警告（非硬阻断），
+    // 避免静默全拒；「数据过期」仍为硬阻断（见 else 分支）。
+    warnings.push('无有效行情数据（数据未到达，已降级放行，需关注数据源）')
   } else if (!isWithinHours(quotes.updatedAt, risk.dataFreshnessHours)) {
     blocks.push(`行情数据超过 ${risk.dataFreshnessHours} 小时未更新`)
   }

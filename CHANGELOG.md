@@ -11,6 +11,11 @@
 
 ### Added
 
+- **性能测试基础设施（v2.6.0）**：
+  - 新增 `src/lib/batchQueue.ts`：批量操作限流队列，控制并发操作数量，防止 IndexedDB 热 key 竞争。
+  - 新增 `src/lib/seededRandom.ts`：可播种伪随机数生成器（mulberry32），用于性能压测等需要可重复结果的场景。
+  - 新增 `src/store/perfMetricsStore.ts`：性能度量 Zustand Store，采集数据处理能力测算页的时序指标，支撑瓶颈定位与性能基线管理。
+
 - **T8 代码复杂度专项治理（v2.6.0）**：
   - 新增 `scripts/complexity-scan.ts`：基于 TypeScript AST 扫描深层嵌套、长链式条件、重复 if 条件，支持基线回归与 CI 集成。
   - 重构 `src/apps/analysis/AnalysisApp.tsx`、`src/apps/input/InputApp.tsx`、`src/apps/output/OutputApp.tsx`、`src/apps/trading/TradingApp.tsx`：将路由映射提取为 `ANALYSIS_ROUTES` / `INPUT_ROUTES` / `OUTPUT_ROUTES` / `TRADING_ROUTES`，消除 ≥6 分支的 if-else-if 链。

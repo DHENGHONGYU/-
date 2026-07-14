@@ -431,6 +431,7 @@ afterAll(() => {
   // 如果有违反记录，输出详细报告
   if (violations.length > 0) {
     logger.error(`[ContractValidator] afterAll: 发现 ${violations.length} 条契约违反，输出详细报告`)
+    // eslint-disable-next-line no-console
     console.log('\n' + generateReport())
   } else if (stats.totalValidations > 0) {
     // 有验证但无违反，输出简要统计

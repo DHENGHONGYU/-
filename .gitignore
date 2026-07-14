@@ -173,3 +173,8 @@ build-artifacts/
 /complexity-plan2.json
 /audit-*.txt
 /split-output.txt
+
+# Generated artifacts in docs/reports/
+docs/reports/_generated/
+docs/reports/**/*.html
+docs/reports/automation-pipeline/*.json

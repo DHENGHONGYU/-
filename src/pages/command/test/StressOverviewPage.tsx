@@ -19,7 +19,7 @@ import { Button } from '@/components/atoms/Button'
 import { Skeleton } from '@/components/molecules/states/Skeleton'
 import { PageContainer, PageHeader } from '@/components/templates'
 import { usePerfMetricsStore } from '@/store/perfMetricsStore'
-import { runStressTest } from '@/services/perf/stressTestService'
+import { useStressTest } from '@/hooks/useStressTest'
 import { LineChart } from '@/components/chart/LineChart'
 import { BarChart } from '@/components/chart/BarChart'
 import { FactorHeatmap } from '@/components/chart/FactorHeatmap'
@@ -57,6 +57,7 @@ export default function StressOverviewPage(): React.JSX.Element {
   const [busy, setBusy] = useState(false)
   const [localError, setLocalError] = useState<string | null>(null)
 
+  const { run: runStressTest } = useStressTest()
   const latest: StressTestResult | undefined = results.length > 0 ? results[results.length - 1] : undefined
   const isLoading = running || busy
 
@@ -103,6 +104,7 @@ export default function StressOverviewPage(): React.JSX.Element {
     setBusy(true)
     setLocalError(null)
     try {
+      // sink 由 useStressTest 内部注入（store → sink 适配），此处无需传参
       await runStressTest()
     } catch (err) {
       setLocalError(err instanceof Error ? err.message : String(err))

@@ -5,6 +5,7 @@ import { sendWriteEnvelope } from '@/data/dataLayerHelpers'
 import type { DataLayerResult, DailyQuotes, DimensionScore, IntelligentScore, Stock } from '@/data/types'
 import type { LlmConfig, LlmTransparencyConfig } from '@/config/llmConfig'
 import { chat, LlmApiError } from '@/services/llm/llmGateway'
+import type { LlmResponse } from '@/services/llm/llmTypes'
 import { buildIntelligentScorePrompt } from './intelligentScorePrompt'
 import { createV6Engine, stockToBasicData, quotesToQuoteData } from '@/services/scoring/v6-engine'
 import type { CompositeScore, LayerScore } from '@/services/scoring/v6-engine/types'
@@ -327,8 +328,17 @@ export async function runIntelligentScore(
     currentStep = 'llmAnalysis'
     reportProgress(currentStep, 'running', '调用大模型进行评分分析...')
     const messages = buildIntelligentScorePrompt({ symbol, stock, supplementaryTexts, reportText })
-    const response = await chat(messages, llmConfig)
-    reportProgress(currentStep, 'done', `模型 ${response.model} 返回分析结果`)
+    // 阶段 B：LLM 调用容错——数据驱动路径（v6 可用）不应因 LLM 不可达而整体失败
+    let response: LlmResponse | null = null
+    let llmError: string | null = null
+    try {
+      response = await chat(messages, llmConfig)
+      reportProgress(currentStep, 'done', `模型 ${response.model} 返回分析结果`)
+    } catch (err) {
+      llmError = err instanceof Error ? err.message : String(err)
+      logger.warn('[runIntelligentScore] LLM 调用失败，将按数据可用性决策', { symbol, error: llmError })
+      reportProgress(currentStep, 'done', `LLM 不可达（${llmError}），按既有数据决策`)
+    }
 
     currentStep = 'parseScore'
     reportProgress(currentStep, 'running', '解析评分结果...')
@@ -339,26 +349,32 @@ export async function runIntelligentScore(
     let overallScore: number | null
 
     if (v6Composite) {
-      // 使用 v6 真实因子分数
+      // 数据驱动：使用 v6 真实因子分数；LLM 仅做可选文本增强（不可达则跳过）
       dimensions = v6CompositeToDimensionScores(v6Composite, dimensionNames)
-      // 尝试从 LLM 输出中提取文本增强（rationale 的丰富化），但不覆盖分数
-      try {
-        const rawOutput = parseRawScoreOutput(response.content)
-        for (const rawDim of (rawOutput.dimensions ?? [])) {
-          if (rawDim.name && rawDim.rationale && rawDim.rationale !== '未提供评分依据') {
-            const matched = dimensions.find((d) => d.name.includes(rawDim.name!) || rawDim.name!.includes(d.name))
-            if (matched && matched.rationale.length < (rawDim.rationale?.length ?? 0)) {
-              matched.rationale = rawDim.rationale!
+      if (response) {
+        try {
+          const rawOutput = parseRawScoreOutput(response.content)
+          for (const rawDim of (rawOutput.dimensions ?? [])) {
+            if (rawDim.name && rawDim.rationale && rawDim.rationale !== '未提供评分依据') {
+              const matched = dimensions.find((d) => d.name.includes(rawDim.name!) || rawDim.name!.includes(d.name))
+              if (matched && matched.rationale.length < (rawDim.rationale?.length ?? 0)) {
+                matched.rationale = rawDim.rationale!
+              }
             }
           }
+        } catch {
+          // LLM 解析失败不影响 v6 分数
+          logger.warn('[runIntelligentScore] LLM 文本增强解析失败，仅使用 v6 因子分数')
         }
-      } catch {
-        // LLM 解析失败不影响 v6 分数
-        logger.warn('[runIntelligentScore] LLM 文本增强解析失败，仅使用 v6 因子分数')
       }
       overallScore = v6Composite.score
     } else {
-      // v6 不可用，完全回退 LLM 合成分数（原行为）
+      // v6 不可用：必须有 LLM 支撑，否则无法生成可信评分（禁止黑箱/崩溃）
+      if (!response) {
+        const msg = '无采集数据支撑（v6 引擎不可用）且 LLM 不可达，无法生成可信评分'
+        logger.error('[runIntelligentScore] ' + msg, { symbol })
+        return { success: false, error: msg }
+      }
       const rawOutput = parseRawScoreOutput(response.content)
       const normalized = normalizeScoreOutput(rawOutput, input.transparencyConfig)
       dimensions = normalized.dimensions
@@ -375,10 +391,16 @@ export async function runIntelligentScore(
       symbol,
       overallScore,
       dimensionScores: dimensions,
-      summary: response.content.slice(0, 500), // LLM 回复摘要
+      summary: response
+        ? response.content.slice(0, 500)
+        : (v6Composite
+            ? `V6 引擎数据驱动评分（综合分 ${v6Composite.score.toFixed(2)}），LLM 增强未启用`
+            : ''),
       basis: v6Composite
-        ? `V6 实时因子引擎 (v${v6Composite.engineVersion})，基于 ${Object.keys(v6Composite.layers).length} 层因子计算`
-        : 'LLM 生成评分（数据不足，未触发 v6 引擎）',
+        ? `V6 实时因子引擎 (v${v6Composite.engineVersion})，基于 ${Object.keys(v6Composite.layers).length} 层因子计算（数据驱动）`
+        : 'LLM 生成评分（数据不足，未触发 v6 引擎，黑箱合成）',
+      scoreProvenance: v6Composite ? 'data-driven' : 'llm-synthetic',
+      dataProvenance: stock?.dataProvenance ?? (stock?.dataSource ? 'real' : 'unknown'),
       missingFields: finalMissingFields,
       sourceSnapshot: {
         stock,
@@ -391,7 +413,7 @@ export async function runIntelligentScore(
         v6EngineVersion: v6Composite?.engineVersion,
         v6Score: v6Composite?.score,
       },
-      modelResponse: response.content,
+      modelResponse: response?.content ?? '',
       dataVersion: stock?.dataVersion ?? 0,
       scoredAt: Date.now(),
     }

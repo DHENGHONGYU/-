@@ -18,7 +18,7 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { runAuditPipeline, colorize, type AuditReport } from './_audit-pipeline'
+import { runAuditPipeline, colorize, type AuditReport } from './_debug/_audit-pipeline'
 import { COMPONENT_REGISTRY, type AtomicLevel } from '../src/components/componentRegistry'
 
 const __filename = fileURLToPath(import.meta.url)
