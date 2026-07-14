@@ -14,85 +14,85 @@ echo "📋 当前 AGENTS.md 版本: $AGENTS_VERSION"
 
 # 2. lint-staged：仅对暂存区文件运行 ESLint --fix
 echo ""
-echo "🧹 [1/10] 运行 lint-staged（ESLint --fix）..."
+echo "🧹 [1/15] 运行 lint-staged（ESLint --fix）..."
 npx lint-staged
 
 # 3. 颜色硬编码门禁
 echo ""
-echo "🎨 [2/10] 运行 lint:colors（颜色硬编码检查）..."
+echo "🎨 [2/15] 运行 lint:colors（颜色硬编码检查）..."
 npm run lint:colors
 
 # 4. 生产类型检查
 echo ""
-echo "🔍 [3/10] 运行 tsc:prod（生产类型检查）..."
+echo "🔍 [3/15] 运行 tsc:prod（生产类型检查）..."
 npm run tsc:prod
 
 # 5. 分层调用审计
 echo ""
-echo "🏗️  [5/14] 运行 audit:layers（禁止跨层调用）..."
+echo "🏗️ [4/15] 运行 audit:layers（禁止跨层调用）..."
 npm run audit:layers
 
 # 6. 原子组件层级边界审计
 echo ""
-echo "⚛️  [6/14] 运行 audit:atomic（原子层级边界检查）..."
+echo "⚛️ [5/15] 运行 audit:atomic（原子层级边界检查）..."
 npm run audit:atomic
 
-# 6.5 数据库定义交叉引用审计（阻断：STORE_NAME / ENVELOPE_ACTION / ACL / dataLayer 暴露一致性）
+# 7. 数据库定义交叉引用审计（阻断：STORE_NAME / ENVELOPE_ACTION / ACL / dataLayer 暴露一致性）
 echo ""
-echo "🗄️  [6.5/14] 运行 audit:db-references（数据库定义交叉引用审计）..."
+echo "🗄️ [6/15] 运行 audit:db-references（数据库定义交叉引用审计）..."
 npm run audit:db-references
 
-# 6.6 Agent → MCP Server 绑定一致性审计（阻断：防止悬空 Agent / UI 注册表失配）
+# 8. Agent → MCP Server 绑定一致性审计（阻断：防止悬空 Agent / UI 注册表失配）
 echo ""
-echo "🔗 运行 audit:mcp（Agent→MCP 绑定一致性 / 悬空 Agent 检查）..."
+echo "🔗 [7/15] 运行 audit:mcp（Agent→MCP 绑定一致性 / 悬空 Agent 检查）..."
 npm run audit:mcp
 
-# 7. 文档规范检查
+# 9. 文档规范检查
 echo ""
-echo "📋 [7/14] 运行 file:check（文档规范检查）..."
+echo "📋 [8/15] 运行 file:check（文档规范检查）..."
 npm run file:check
 
-# 8. 文档同步审计
+# 10. 文档门禁（阻断：过期草稿/目录结构/元文档缺失）
 echo ""
-echo "📝 [8/14] 运行 audit:docs（文档同步检查）..."
+echo "🔒 [9/15] 运行 doc:gate（文档门禁检查）..."
+npm run doc:gate
+
+# 11. 文档同步审计
+echo ""
+echo "📝 [10/15] 运行 audit:docs（文档同步检查）..."
 npm run audit:docs
 
-# 9. 设计令牌映射校验
+# 12. 设计令牌映射校验
 echo ""
-echo "🎨 [9/14] 运行 verify:tokens（设计令牌映射校验）..."
+echo "🎨 [11/15] 运行 verify:tokens（设计令牌映射校验）..."
 npm run verify:tokens
 
-# 10. 令牌消费审计
+# 13. 令牌消费审计
 echo ""
-echo "🪙 [10/14] 运行 audit:tokens（令牌消费检查）..."
+echo "🪙 [12/15] 运行 audit:tokens（令牌消费检查）..."
 npm run audit:tokens
 
-# 11. JSDoc 文档门禁（基线采集，当前不阻断）
+# 14. JSDoc 文档门禁（基线采集，当前不阻断）
 echo ""
-echo "📖 [11/14] 运行 audit:jsdoc（JSDoc 覆盖检查）..."
+echo "📖 [13/15] 运行 audit:jsdoc（JSDoc 覆盖检查）..."
 npm run audit:jsdoc
 
-# 12. 代码复杂度门禁（基线采集，当前不阻断）
+# 15. 驾驶舱 Widget 三处注册一致性审计（阻断）
 echo ""
-echo "📊 [12/14] 运行 audit:complexity（代码复杂度检查）..."
-npm run audit:complexity
-
-# 13. 驾驶舱 Widget 三处注册一致性审计（阻断：配置/数据源/registry/默认布局必须同步）
-echo ""
-echo "🧩 [13/14] 运行 audit:widget-registry（Widget 三处注册一致性检查）..."
+echo "🧩 [14/15] 运行 audit:widget-registry（Widget 三处注册一致性检查）..."
 npm run audit:widget-registry
 
-# 14. AI 输出校验门禁（阻断：数值越界/未来时间戳必须拦截）
+# 16. AI 输出校验门禁（阻断：数值越界/未来时间戳必须拦截）
 echo ""
-echo "🤖 [14/14] 运行 audit:ai-output（AI 输出三道校验检查）..."
+echo "🤖 [15/15] 运行 audit:ai-output（AI 输出三道校验检查）..."
 npm run audit:ai-output
 
-# 15. 文档目录-内容匹配（warn 模式，不阻断，先积累数据）
+# 17. 文档目录-内容匹配（warn 模式，不阻断，先积累数据）
 echo ""
 echo "📂 [warn] 运行 audit:path-match（文档目录-内容匹配检查，warn 模式）..."
 npx tsx scripts/audit-path-match.ts || true
 
-# 16. 文档-代码双向完整性（warn 模式，不阻断）
+# 18. 文档-代码双向完整性（warn 模式，不阻断）
 echo ""
 echo "📂 [warn] 运行 audit:doc-integrity（文档-代码双向完整性检查，warn 模式）..."
 npm run audit:doc-integrity || true
@@ -101,10 +101,3 @@ echo ""
 echo "================================================"
 echo "✅ V9 预提交门禁全部通过（15/15 阻断项 + 2 warn 项），允许提交。"
 echo ""
-
-# 文件系统规范检查
-npm run file:check
-if [ $? -ne 0 ]; then
-  echo "❌ 文件系统检查失败，请修复后重新提交"
-  exit 1
-fi

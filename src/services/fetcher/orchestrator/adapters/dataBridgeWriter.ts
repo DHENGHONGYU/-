@@ -15,6 +15,7 @@ import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID } from '@/config/dbConfig'
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
 import { getLogger } from '@/lib/logger'
+import { checkMarketDataContract } from '@/lib/validation/marketDataContract'
 import type { StockQuote, KlineItem } from '../../directDataAPI'
 import type { IDataBridgeWriter } from '../ports'
 
@@ -44,6 +45,23 @@ export class DataBridgeWriter implements IDataBridgeWriter {
     try {
       // 阶段 A-3：附带数据血缘元数据，供 UI 显示降级徽章
       const dataProvenance = inferProvenance(quote.source)
+      // 阶段 A-3：warn-only 契约校验（不阻断写入，仅记录异常）
+      const quoteCheck = checkMarketDataContract({
+        quote: {
+          price: quote.price,
+          open: quote.open,
+          high: quote.high,
+          low: quote.low,
+          volume: quote.volume,
+          amount: quote.amount,
+          timestamp: quote.timestamp,
+          changePercent: quote.changePercent,
+          source: quote.source,
+        },
+      })
+      if (!quoteCheck.ok || quoteCheck.issues.length > 0) {
+        logger.warn('[DataBridgeWriter] writeQuote 契约校验告警', { symbol: quote.code, issues: quoteCheck.issues })
+      }
       const envelope = EnvelopeFactory.create(
         {
           source: MODULE_ID.fetcher,
@@ -105,6 +123,21 @@ export class DataBridgeWriter implements IDataBridgeWriter {
 
     // 阶段 A-3：K 线数据整体 provenance 取决于第一条的 source
     const dataProvenance = inferProvenance(items[0]?.source)
+    // 阶段 A-3：warn-only 契约校验（不阻断写入，仅记录异常）
+    const klineCheck = checkMarketDataContract({
+      klines: items.map((k) => ({
+        date: k.date,
+        open: k.open,
+        high: k.high,
+        low: k.low,
+        close: k.close,
+        volume: k.volume,
+        amount: k.amount,
+      })),
+    })
+    if (!klineCheck.ok || klineCheck.issues.length > 0) {
+      logger.warn('[DataBridgeWriter] writeKline 契约校验告警', { symbol: code, issues: klineCheck.issues })
+    }
 
     try {
       const envelope = EnvelopeFactory.create(

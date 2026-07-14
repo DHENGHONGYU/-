@@ -576,7 +576,7 @@ export async function collectAndSaveQuote(code: string): Promise<CollectionResul
         },
         payload: {
           store: STORE_NAME.stocks,
-          data: quoteToStock(result.data),
+          data: quoteToStock(result.data, result.source),
         },
       })
       logger.info(`[orchestrator] 行情写入 DataBridge 成功: ${code}`, { source: result.source })
@@ -619,7 +619,7 @@ export async function collectAndSaveKline(code: string, days: number): Promise<C
         message: '准备写入 K 线到 IndexedDB',
       })
 
-      const dailyQuotes = klinesToDailyQuotes(code, result.data)
+      const dailyQuotes = klinesToDailyQuotes(code, result.data, result.source)
       await dataBridge.forward({
         meta: {
           source: MODULE_ID.fetcher,
@@ -628,10 +628,7 @@ export async function collectAndSaveKline(code: string, days: number): Promise<C
           traceId: `collect-kline-${code}-${Date.now()}`,
           timestamp: Date.now(),
         },
-        payload: {
-          store: STORE_NAME.dailyQuotes,
-          data: dailyQuotes,
-        },
+        payload: dailyQuotes,
       })
       logger.info(`[orchestrator] K线写入 DataBridge 成功: ${code}`, { source: result.source, bars: result.data.length })
       getQualityMetrics().recordWrite(true)

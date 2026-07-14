@@ -68,6 +68,10 @@ export interface IntelligentScore {
   modelResponse: string
   dataVersion: number
   scoredAt: number
+  /** 评分决策来源（透明度标记）：data-driven=v6 引擎基于采集数据计算；llm-synthetic=LLM 黑箱合成（无采集数据支撑） */
+  scoreProvenance?: 'data-driven' | 'llm-synthetic'
+  /** 底层评分所依据数据的血缘（继承自 stock.dataProvenance）：real / mock / unknown */
+  dataProvenance?: 'real' | 'mock' | 'unknown'
 }
 
 /** 行业评分维度 */

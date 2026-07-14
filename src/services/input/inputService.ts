@@ -1,7 +1,7 @@
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
 import { MODULE_ID, ENVELOPE_TARGET, ENVELOPE_ACTION, STORE_NAME } from '@/config/dbConfig'
-import { RESEARCH_STATUS, DEFAULT_POOL_GROUP, DEFAULT_POOL_TYPE, type ResearchStatus } from '@/constants/pool.constants'
+import { INTENTION_STATUS, DEFAULT_POOL_GROUP, DEFAULT_POOL_TYPE, type ResearchStatus } from '@/constants/pool.constants'
 import { INPUT_CONFIG } from '@/config/inputConfig'
 import type { DataLayerResult, Stock } from '@/data/types'
 import { fetchBasicDataUseCase, fetchKlineDataUseCase } from '@/services/useCase/fetcherOrchestrator.useCase'
@@ -136,7 +136,7 @@ export async function addStock(
     symbol,
     name,
     pool: DEFAULT_POOL_TYPE,
-    researchStatus: RESEARCH_STATUS.candidate,
+    researchStatus: INTENTION_STATUS.screening,
     source: 'manual',
     group: options.group ?? DEFAULT_POOL_GROUP,
     dataVersion: 1,
@@ -299,7 +299,7 @@ export async function importPool(payload: PoolExportPayload): Promise<DataLayerR
         ...stock,
         symbol: normalized,
         pool: stock.pool ?? DEFAULT_POOL_TYPE,
-        researchStatus: stock.researchStatus ?? RESEARCH_STATUS.candidate,
+        researchStatus: stock.researchStatus ?? INTENTION_STATUS.screening,
         source: stock.source ?? 'import',
         group: stock.group ?? DEFAULT_POOL_GROUP,
         dataVersion: 1,

@@ -76,15 +76,20 @@ export function mockQuote(code: string): StockQuote {
   const prevClose = basePrice
   const change = price - prevClose
   const changePercent = prevClose > 0 ? (change / prevClose) * 100 : 0
+  // OHLC 自洽：high 必须 >= max(open, price)，low 必须 <= min(open, price) 且 >= 0，
+  // 使 Mock 数据满足真实行情的不变式，可被契约校验（contractValidation）通过。
+  const open = prevClose + (Math.random() - MOCK_VOLATILITY)
+  const high = Math.max(open, price) + Math.random()
+  const low = Math.max(0, Math.min(open, price) - Math.random())
   return {
     code,
     name: `MOCK_${code}`,
     price: round2(price),
     change: round2(change),
     changePercent: round2(changePercent),
-    open: round2(prevClose + (Math.random() - MOCK_VOLATILITY)),
-    high: round2(price + Math.random()),
-    low: round2(price - Math.random()),
+    open: round2(open),
+    high: round2(high),
+    low: round2(low),
     prevClose: round2(prevClose),
     volume: Math.floor(Math.random() * MOCK_VOLUME_MAX) * VOLUME_MULTIPLIER,
     amount: Math.floor(Math.random() * MOCK_AMOUNT_MAX),

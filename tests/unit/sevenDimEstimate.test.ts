@@ -201,8 +201,11 @@ describe('七维采集额度预估计算', () => {
       expect(monthlyCalls).toBeLessThan(100000)
       
       // 输出实际值供人工验证
+      // eslint-disable-next-line no-console
       console.log('默认配置月调用总量:', monthlyCalls)
+      // eslint-disable-next-line no-console
       console.log('日上限:', 2000)
+      // eslint-disable-next-line no-console
       console.log('月使用率:', ((monthlyCalls / (2000 * 30)) * 100).toFixed(2) + '%')
     })
 
