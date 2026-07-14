@@ -186,7 +186,7 @@ export function getDimensionConfig(
 
 // ── DB 写入 ──
 
-async function writeQuoteToStock(symbol: string, quote: RealtimeQuote): Promise<void> {
+async function writeQuoteToStock(symbol: string, quote: RealtimeQuote, source?: string): Promise<void> {
   await dataBridge.forward({
     meta: {
       source: MODULE_ID.fetcher,
@@ -197,13 +197,13 @@ async function writeQuoteToStock(symbol: string, quote: RealtimeQuote): Promise<
     },
     payload: {
       store: STORE_NAME.stocks,
-      data: quoteToStock(quote),
+      data: quoteToStock(quote, source),
     },
   })
 }
 
-async function writeKlineToDailyQuotes(symbol: string, klines: KlineBar[]): Promise<void> {
-  const dailyQuotes = klinesToDailyQuotes(symbol, klines)
+async function writeKlineToDailyQuotes(symbol: string, klines: KlineBar[], source?: string): Promise<void> {
+  const dailyQuotes = klinesToDailyQuotes(symbol, klines, source)
   await dataBridge.forward({
     meta: {
       source: MODULE_ID.fetcher,
@@ -212,10 +212,7 @@ async function writeKlineToDailyQuotes(symbol: string, klines: KlineBar[]): Prom
       traceId: `pipeline-kline-${symbol}-${Date.now()}`,
       timestamp: Date.now(),
     },
-    payload: {
-      store: STORE_NAME.dailyQuotes,
-      data: dailyQuotes,
-    },
+    payload: dailyQuotes,
   })
 }
 
@@ -343,7 +340,7 @@ export async function runSingleTrace(
       })
       addStage('write:start', '准备写入 stocks', result.source)
 
-      await writeQuoteToStock(normalizedSymbol, result.data!)
+      await writeQuoteToStock(normalizedSymbol, result.data!, result.source)
       getQualityMetrics().recordWrite(true)
 
       emit(COLLECTION_EVENTS.WRITE_SUCCESS, {
@@ -415,7 +412,7 @@ export async function runSingleTrace(
       })
       addStage('write:start', '准备写入 daily_quotes', result.source)
 
-      await writeKlineToDailyQuotes(normalizedSymbol, result.data!)
+      await writeKlineToDailyQuotes(normalizedSymbol, result.data!, result.source)
       getQualityMetrics().recordWrite(true)
 
       emit(COLLECTION_EVENTS.WRITE_SUCCESS, {

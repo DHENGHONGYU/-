@@ -399,7 +399,7 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
     actions: [DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete],
   },
   [MODULE_ID.trading]: {
-    read: [STORE_NAME.stocks, STORE_NAME.orders, STORE_NAME.signals, STORE_NAME.strategySnapshots],
+    read: [STORE_NAME.stocks, STORE_NAME.orders, STORE_NAME.signals, STORE_NAME.strategySnapshots, STORE_NAME.dailyQuotes],
     write: [STORE_NAME.orders, STORE_NAME.signals],
     actions: [DB_OPERATION.select, DB_OPERATION.insert, DB_OPERATION.update],
   },

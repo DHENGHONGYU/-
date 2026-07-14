@@ -10,6 +10,7 @@
  */
 
 import { getLogger } from '@/lib/logger'
+import { checkMarketDataContract } from '@/lib/validation/marketDataContract'
 import type { Stock, DailyQuotes } from '@/data/types'
 import type { KlineBar } from '@/data/types/types.marketData'
 import {
@@ -219,12 +220,12 @@ export async function sinaQuote(code: string): Promise<RealtimeQuote | null> {
       name: fields[0] ?? '',
       // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       price: parseFloat(fields[3] || '0') || 0,
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+       
       // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       change: (parseFloat(fields[3] || '0') || 0) - (parseFloat(fields[2] || '0') || 0),
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+       
+       
+       
       // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       changePercent: parseFloat(fields[2] || '0') > 0 ? ((parseFloat(fields[3] || '0') - parseFloat(fields[2] || '0')) / parseFloat(fields[2] || '0')) * 100 : 0,
       // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
@@ -273,12 +274,12 @@ export async function sinaBatchQuotes(codes: string[]): Promise<RealtimeQuote[]>
         name: fields[0] ?? '',
         // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         price: parseFloat(fields[3] || '0') || 0,
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+         
         // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         change: (parseFloat(fields[3] || '0') || 0) - (parseFloat(fields[2] || '0') || 0),
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+         
+         
+         
         // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         changePercent: parseFloat(fields[2] || '0') > 0 ? ((parseFloat(fields[3] || '0') - parseFloat(fields[2] || '0')) / parseFloat(fields[2] || '0')) * 100 : 0,
         // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
@@ -369,8 +370,33 @@ function parseNeteaseLines(lines: string[]): KlineBar[] {
 
 // ── 类型转换工具 ──
 
+/** 阶段 A-3：根据 source 推断 provenance 标识 */
+function inferProvenance(source: string | undefined): 'real' | 'mock' | 'unknown' {
+  if (source === 'mock') return 'mock'
+  if (source === 'tencent' || source === 'sina' || source === 'netease' || source === 'akshare') return 'real'
+  return 'unknown'
+}
+
 /** RealtimeQuote → Stock（部分字段） */
-export function quoteToStock(quote: RealtimeQuote): Partial<Stock> {
+export function quoteToStock(quote: RealtimeQuote, source?: string): Partial<Stock> {
+  // 阶段 A-3：warn-only 契约校验（不阻断写入，仅记录异常，避免 Mock 掩盖真实源形态缺陷）
+  const check = checkMarketDataContract({
+    quote: {
+      price: quote.price,
+      open: quote.open,
+      high: quote.high,
+      low: quote.low,
+      volume: quote.volume,
+      amount: quote.amount,
+      timestamp: quote.timestamp,
+      changePercent: quote.changePercent,
+      source,
+    },
+  })
+  if (!check.ok || check.issues.length > 0) {
+    logger.warn('[quoteToStock] 行情契约校验告警', { symbol: quote.symbol, issues: check.issues })
+  }
+  // 阶段 A-3：透传数据源与血缘，使 UI 降级徽章可区分 Mock 与真实数据
   return {
     symbol: quote.symbol,
     name: quote.name,
@@ -378,11 +404,27 @@ export function quoteToStock(quote: RealtimeQuote): Partial<Stock> {
     pe: undefined,
     pb: undefined,
     updatedAt: quote.timestamp,
+    dataSource: source ? (source as Stock['dataSource']) : 'unknown',
+    dataProvenance: inferProvenance(source),
   }
 }
 
 /** KlineBar[] → DailyQuotes */
-export function klinesToDailyQuotes(symbol: string, klines: KlineBar[]): DailyQuotes {
+export function klinesToDailyQuotes(symbol: string, klines: KlineBar[], source?: string): DailyQuotes {
+  const check = checkMarketDataContract({
+    klines: klines.map((k) => ({
+      date: k.date,
+      open: k.open,
+      high: k.high,
+      low: k.low,
+      close: k.close,
+      volume: k.volume,
+      amount: k.amount,
+    })),
+  })
+  if (!check.ok || check.issues.length > 0) {
+    logger.warn('[klinesToDailyQuotes] K 线契约校验告警', { symbol, issues: check.issues })
+  }
   return {
     symbol,
     latest: klines[klines.length - 1] ?? { date: '', open: 0, high: 0, low: 0, close: 0, volume: 0, amount: 0 },
@@ -390,5 +432,7 @@ export function klinesToDailyQuotes(symbol: string, klines: KlineBar[]): DailyQu
     period: 'daily',
     adjust: 'qfq',
     updatedAt: Date.now(),
+    dataSource: source ? (source as DailyQuotes['dataSource']) : 'unknown',
+    dataProvenance: inferProvenance(source),
   }
 }

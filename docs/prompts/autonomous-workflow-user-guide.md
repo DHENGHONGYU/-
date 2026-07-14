@@ -318,8 +318,8 @@ GitHub Actions 工作流已配置以下自动化检查：
 
 - [自主工作流优化策略](autonomous-workflow-optimization.md)
 - [AI 行为约束契约](../../AGENTS.md)
-- [质量门禁](../02-design/standards/quality-gates/09-quality-gates.md)
-- [实施治理](../02-design/standards/implementation-governance.md)
+- [质量门禁](../explanation/09-quality-gates.md)
+- [实施治理](../explanation/implementation-governance.md)
 
 ---
 

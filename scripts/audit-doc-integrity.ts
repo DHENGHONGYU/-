@@ -15,7 +15,7 @@
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { join, resolve, dirname } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { runAuditPipeline, colorize, type AuditReport } from './_audit-pipeline'
+import { runAuditPipeline, colorize, type AuditReport } from './_debug/_audit-pipeline'
 
 // ============================================================
 // 类型定义

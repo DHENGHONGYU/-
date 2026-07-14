@@ -24,4 +24,8 @@ export interface DailyQuotes {
   period: string
   adjust: string
   updatedAt: number
+  /** 数据源标识（tencent/sina/netease/akshare/mock/unknown） */
+  dataSource?: 'tencent' | 'sina' | 'netease' | 'akshare' | 'mock' | 'unknown'
+  /** 数据血缘：real=真实采集 / mock=模拟 / unknown=未知 */
+  dataProvenance?: 'real' | 'mock' | 'unknown'
 }

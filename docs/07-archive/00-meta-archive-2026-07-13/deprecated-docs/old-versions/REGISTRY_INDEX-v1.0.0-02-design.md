@@ -54,15 +54,15 @@
 
 ### 01-vision-and-goals.md
 
-- [01. 愿景与目标](../01-requirements/01-vision-and-goals.md)
+- [01. 愿景与目标](../explanation/01-vision-and-goals.md)
 
 ### 02-functional-specs.md
 
-- [02. 功能规格](../01-requirements/02-functional-specs.md)
+- [02. 功能规格](../reference/02-functional-specs.md)
 
 ### 03-architecture-standards.md
 
-- [03. 架构标准](../01-requirements/03-architecture-standards.md)
+- [03. 架构标准](../explanation/03-architecture-standards.md)
 
 ### 04-ui-ux-specs.md
 
@@ -276,10 +276,10 @@
 
 ### implementation
 
-- [V9 技术实施文档索引](00-README.md)
+- [V9 技术实施文档索引](00-explanation/README.md)
 - [V9 数据架构五大问题治理计划](2026-06-29-data-architecture-governance.md)
 - [V9 无障碍（Accessibility）检查清单](../03-development/a11y-checklist.md)
-- [V9 五层追溯审计 — 修复行动清单](../01-requirements/action-list.md)
+- [V9 五层追溯审计 — 修复行动清单](../explanation/action-list.md)
 - [ADR-002: IndexedDB 替代 localStorage](../01-requirements/2026-06-20-indexeddb-over-localstorage.md)
 - [ADR-001: 纯前端无后端架构](2026-06-20-pure-frontend-architecture.md)
 - [ADR-003: DataBridge 替代直接 dataLayer 写入](../06-project-management/2026-06-21-databridge-over-direct-datalayer.md)
@@ -306,12 +306,12 @@
 - [V9 图表组件集成规格](../03-development/chart-integration.md)
 - [Cockpit + News 模块文档修正方案](../01-requirements/cockpit-news-doc-fix-plan.md)
 - [颜色整改总结报告](color-remediation-summary-report-20260703.md)
-- [V9 模块完成度剖面图 — 批次 1](../01-requirements/completeness-profile-batch1.md)
+- [V9 模块完成度剖面图 — 批次 1](../reference/completeness-profile-batch1.md)
 - [V9 模块完成度剖面图 — 批次 B（输入舱）](../04-testing/completeness-profile-batch2.md)
 - [V9 模块完成度剖面图 — 批次 C（分析舱）](../03-development/completeness-profile-batch3.md)
 - [V9 模块完成度剖面图 — 批次 D（交易舱）](completeness-profile-batch4.md)
-- [V9 批次 E：输出舱 + 总控舱 + 其他 — 完成度剖面图](../01-requirements/completeness-profile-batch5.md)
-- [V9 模块完成度剖面图 — 全量汇总](../01-requirements/completeness-profile.md)
+- [V9 批次 E：输出舱 + 总控舱 + 其他 — 完成度剖面图](../explanation/completeness-profile-batch5.md)
+- [V9 模块完成度剖面图 — 全量汇总](../explanation/completeness-profile.md)
 - [V9 组件弃用政策](../architecture/component-deprecation-policy)
 - [V9 UI 组件库使用指南](component-library-guide.md)
 - [数据采集模块架构设计](data-collection-architecture.md)
@@ -340,7 +340,7 @@
 - [因子提炼、扩容与追踪路径分析](../03-development/factor-tracking-roadmap.md)
 - [V9 功能入口清单](../04-testing/feature-entry-list.md)
 - [V9 操作反馈闭环规格](../03-development/feedback-loop-spec.md)
-- [第四次工业革命稀缺核心资源 — 交易策略解析与 V9 采用方案](../01-requirements/fourth-industrial-revolution-core-resource-strategy.md)
+- [第四次工业革命稀缺核心资源 — 交易策略解析与 V9 采用方案](../explanation/fourth-industrial-revolution-core-resource-strategy.md)
 - [V9 实施文档保鲜度告警清单](freshness-alerts.md)
 - [V9 实施文档健康度报告](health-report.md)
 - [实施治理与架构决策记录](implementation-governance.md)
@@ -378,11 +378,11 @@
 - [V9 代码质量校对分析 — 过程透明看板](v9-code-quality-kanban-20260629.md)
 - [V9 智能投研复盘系统 — 当前状态全面梳理（按实施进度）](v9-current-state-review.md)
 - [V9 文档体系化审计与补全建议书](v9-documentation-audit-report.md)
-- [V9 输入舱升级策略报告](../01-requirements/v9-input-cabin-strategy-report.md)
+- [V9 输入舱升级策略报告](../explanation/v9-input-cabin-strategy-report.md)
 - [V9 问题整改管理与调度记录](../04-testing/v9-issue-management.md)
 - [V9 P0 严重问题修复方案](v9-p0-remediation-plan.md)
 - [V9 问题修复排期报告](v9-remediation-plan.md)
-- [V9 智能投研复盘系统 — 整体架构蓝图](../01-requirements/v9-system-blueprint.md)
+- [V9 智能投研复盘系统 — 整体架构蓝图](../reference/v9-system-blueprint.md)
 - [V9 Widget 错误隔离与降级规格](widget-error-handling.md)
 
 ### jsdoc-convention.md
@@ -419,7 +419,7 @@
 - [网页测试检索校对是否纳入数据采集改进方案——比对分析与建议](网页测试检索校对纳入采集方案分析.md)
 - [V9 数据分析与筛选模块开发任务规划与 Agent 分配](analysis-screening-module-dev-plan.md)
 - [databridge.ts 详细分拆方案](../04-testing/databridge-split-plan.md)
-- [V9 智能投研复盘系统 — RM 剩余任务全量盘点与整改方案](../01-requirements/RM剩余任务全量盘点与整改方案_2026-07-08.md)
+- [V9 智能投研复盘系统 — RM 剩余任务全量盘点与整改方案](../reference/RM剩余任务全量盘点与整改方案_2026-07-08.md)
 - [SevenDimConfigPage 高级配置补全方案](seven-dim-advanced-config-implementation.md)
 - [V9 智能投研复盘系统 — UI 改善部分检索报告](UI改善部分检索报告.md)
 - [UI 设计优化实施计划（详细版）](UI设计优化实施计划_详细版.md)
@@ -436,7 +436,7 @@
 
 ### README.md
 
-- [智能投研复盘系统 V9 — 项目文档体系](../01-requirements/README.md)
+- [智能投研复盘系统 V9 — 项目文档体系](../01-requirements/explanation/README.md)
 
 ### REGISTRY_INDEX.md
 
@@ -540,7 +540,7 @@
 
 ### testing-strategy.md
 
-- [V9 三层测试策略](../04-testing/testing-strategy.md)
+- [V9 三层测试策略](../reference/testing-strategy.md)
 
 ### trade
 
@@ -584,7 +584,7 @@
 
 ### V9数据宪法.md
 
-- [V9 数据宪法（Data Constitution）](../01-requirements/V9数据宪法.md)
+- [V9 数据宪法（Data Constitution）](../reference/V9数据宪法.md)
 
 ### WEEKLY-TASKS-2026-07-05.md
 

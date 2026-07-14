@@ -3,7 +3,7 @@ import globals from 'globals'
 import tseslint from 'typescript-eslint'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
-import noHardcodedColors from './scripts/eslint-plugin-no-hardcoded-colors.js'
+import noHardcodedColors from './scripts/quality/eslint-plugin-no-hardcoded-colors.js'
 
 export default [
   { ignores: ['dist', 'node_modules', 'coverage', 'coverage_cmd', '.venv', '.husky', '.git', '.github', 'e2e', 'docs', 'scripts', 'public', 'test-results'] },

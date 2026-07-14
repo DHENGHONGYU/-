@@ -341,6 +341,13 @@ export const WIDGET_DEFAULT_DATA_SOURCE = {
     endpoint: '/stock-analysis/profile',
     enabled: true,
   },
+  researchPoolBoard: {
+    type: ACTIVE_DATA_SOURCE,
+    mode: COLLECTION_MODE.POLLING,
+    interval: COLLECTOR_DEFAULT_CONFIG.DEFAULT_POLLING_INTERVAL,
+    endpoint: '/stock-analysis/pool',
+    enabled: true,
+  },
   poolBoard: {
     type: ACTIVE_DATA_SOURCE,
     mode: COLLECTION_MODE.POLLING,
@@ -499,8 +506,13 @@ export const DEFAULT_WIDGET_CONFIG = {
     size: WIDGET_SIZE.FULL_WIDTH,
     category: 'analysis',
   },
-  poolBoard: {
+  researchPoolBoard: {
     title: '股票池管理与监控',
+    size: WIDGET_SIZE.FULL_WIDTH,
+    category: 'analysis',
+  },
+  poolBoard: {
+    title: '股票池看板',
     size: WIDGET_SIZE.FULL_WIDTH,
     category: 'analysis',
   },

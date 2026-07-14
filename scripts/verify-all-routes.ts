@@ -27,7 +27,7 @@
  */
 
 import { pathToFileURL } from 'node:url'
-import { runAuditPipeline, colorize, type AuditReport } from './_audit-pipeline'
+import { runAuditPipeline, colorize, type AuditReport } from './_debug/_audit-pipeline'
 import { hasRoute, getAllPaths } from '../src/config/routes.ts'
 
 // ============================================================

@@ -12,9 +12,28 @@ import { getLogger } from '@/lib/logger'
 import { dataBridge } from '@/core/databridge'
 import { nanoid } from 'nanoid'
 import { ENVELOPE_ACTION, STORE_NAME } from '@/config/dbConfig'
-import { usePerfMetricsStore } from '@/store/perfMetricsStore'
 import type { Stock } from '@/data/types'
 import type { StressTestConfig, StressTestResult, PerfMetric, StressTestSummary, TaskStatSummary } from '@/types/modules/perf.types'
+
+/**
+ * 压测指标写入接口（依赖注入契约）。
+ * services 层禁止直接依赖 store 层，因此服务不再 import 任何 store，
+ * 而是由调用方（页面 / 测试桩）注入一个实现了本接口的 sink 适配器。
+ */
+export interface PerfMetricsSink {
+  clearCurrent(): void
+  setRunning(running: boolean): void
+  addMetric(metric: PerfMetric): void
+  saveResult(result: StressTestResult): void
+}
+
+/** 默认 no-op sink：无 UI 订阅时的安全降级，避免空引用 */
+const noopSink: PerfMetricsSink = {
+  clearCurrent() {},
+  setRunning() {},
+  addMetric() {},
+  saveResult() {},
+}
 
 const logger = getLogger()
 
@@ -48,12 +67,16 @@ async function randomPickStocks(count: number): Promise<Stock[]> {
   return shuffled.slice(0, count)
 }
 
-/** 执行单次压测 */
-export async function runStressTest(cfg?: StressTestConfig): Promise<StressTestResult> {
+/**
+ * 执行单次压测。
+ * @param cfg 压测配置（可选）
+ * @param sink 指标写入适配器（依赖注入）。页面传入 usePerfMetricsStore.getState()，
+ *             使服务在零 store 依赖的前提下仍可驱动实时 UI；缺省为 no-op 安全降级。
+ */
+export async function runStressTest(cfg?: StressTestConfig, sink: PerfMetricsSink = noopSink): Promise<StressTestResult> {
   const config = { ...DEFAULT_CONFIG, ...cfg }
-  const store = usePerfMetricsStore.getState()
-  store.clearCurrent()
-  store.setRunning(true)
+  sink.clearCurrent()
+  sink.setRunning(true)
 
   const runId = `stress-${Date.now()}-${nanoid(6)}`
   const startTs = Date.now()
@@ -91,7 +114,7 @@ export async function runStressTest(cfg?: StressTestConfig): Promise<StressTestR
             startedAt,
             success: true,
           }
-          store.addMetric(metric)
+          sink.addMetric(metric)
           return metric
         } catch (err) {
           const durationMs = Date.now() - startedAt
@@ -103,7 +126,7 @@ export async function runStressTest(cfg?: StressTestConfig): Promise<StressTestR
             success: false,
             error: err instanceof Error ? err.message : String(err),
           }
-          store.addMetric(metric)
+          sink.addMetric(metric)
           return metric
         }
       }),
@@ -118,17 +141,17 @@ export async function runStressTest(cfg?: StressTestConfig): Promise<StressTestR
       if (config.includeV6Score) {
         const m = await measureTask('v6Score', symbol, () => runV6Score(symbol))
         metrics.push(m)
-        store.addMetric(m)
+        sink.addMetric(m)
       }
       if (config.includeDualStrategy) {
         const m = await measureTask('dualStrategy', symbol, () => runDualStrategy(symbol))
         metrics.push(m)
-        store.addMetric(m)
+        sink.addMetric(m)
       }
       if (config.includeRotationDetection) {
         const m = await measureTask('rotationDetection', symbol, () => runRotationDetection(symbol))
         metrics.push(m)
-        store.addMetric(m)
+        sink.addMetric(m)
       }
     }
   }
@@ -145,7 +168,7 @@ export async function runStressTest(cfg?: StressTestConfig): Promise<StressTestR
     taskSummaries,
   }
 
-  store.saveResult(result)
+  sink.saveResult(result)
 
   logger.info(`[stressTest] 压测完成: runId=${runId}, total=${summary.totalDurationMs}ms, p95=${summary.p95Ms}ms, success=${summary.successCount}/${metrics.length}`)
 

@@ -41,7 +41,7 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { runAuditPipeline, colorize, type AuditReport } from './_audit-pipeline'
+import { runAuditPipeline, colorize, type AuditReport } from './_debug/_audit-pipeline'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
