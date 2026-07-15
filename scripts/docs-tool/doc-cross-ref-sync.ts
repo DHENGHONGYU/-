@@ -6,7 +6,7 @@
  * 职责：
  * 1. 扫描 docs/ 目录下所有 Markdown 文件中的相对链接
  * 2. 检测断裂链接并尝试自动修复
- * 3. 维护 docs/registry-index.md 中的文档索引
+ * 3. 维护 docs/00-meta/registry-index.md 中的文档索引
  * 4. 返回更新记录供每日验证流程归档
  */
 
@@ -136,31 +136,55 @@ function computeLineColumn(content: string, index: number): { line: number; colu
 /**
  * 提取 Markdown 文档中的相对链接（排除 http/https/#/mailto 等外部与锚点）。
  * 同时计算每条链接的行号与列偏移，支撑 filePath 级归因。
+ *
+ * 边界处理（消除误报）：
+ * - 跳过围栏代码块（``` / ~~~）内的链接，避免把代码块里的正则/路径当作文档链接；
+ * - 目录导航链接（结尾 /）非文档文件链接，跳过；
+ * - 链接目标含 dotfile 段（如 `.husky/pre-commit`）属配置引用，跳过。
  */
 export function extractRelativeLinks(content: string): RawLink[] {
   const links: RawLink[] = []
-  const regex = /\[([^\]]+)\]\(([^)]+)\)/g
-  let match
-  while ((match = regex.exec(content)) !== null) {
-    const text = match[1]
-    const target = match[2]
-    if (!text || !target) continue
-    if (
-      target.startsWith('http://') ||
-      target.startsWith('https://') ||
-      target.startsWith('#') ||
-      target.startsWith('mailto:') ||
-      target.startsWith('file://')
-    ) {
+  const lines = content.split('\n')
+  let offset = 0
+  let inFence = false
+  for (let li = 0; li < lines.length; li++) {
+    const line = lines[li]
+    // 围栏代码块切换（``` 或 ~~~，忽略其后的语言标识）
+    if (/^\s*(```|~~~)/.test(line)) {
+      inFence = !inFence
+      offset += line.length + 1
       continue
     }
-    // 目录导航链接（结尾 /）非文档文件链接，跳过以避免误报
-    const targetNoAnchor = target.split('#')[0] ?? target
-    if (targetNoAnchor.endsWith('/')) continue
-    const startIndex = match.index
-    const endIndex = startIndex + match[0].length
-    const { line, column } = computeLineColumn(content, startIndex)
-    links.push({ text, target, startIndex, endIndex, line, column })
+    if (inFence) {
+      offset += line.length + 1
+      continue
+    }
+    // 链接 URL 允许包含一个内层括号对（如文件名 `v9核心数据字典与类型定义(整合版).md`），
+    // 与 GitHub 解析行为一致；否则半角 `)` 会错误截断 URL。
+    const regex = /\[([^\]]+)\]\(((?:[^()]+|\([^()]*\))*)\)/g
+    let match
+    while ((match = regex.exec(line)) !== null) {
+      const text = match[1]
+      const target = match[2]
+      if (!text || !target) continue
+      if (
+        target.startsWith('http://') ||
+        target.startsWith('https://') ||
+        target.startsWith('#') ||
+        target.startsWith('mailto:') ||
+        target.startsWith('file://') ||
+        target.startsWith('javascript:')
+      ) {
+        continue
+      }
+      // 目录导航链接（结尾 /）非文档文件链接，跳过以避免误报
+      const targetNoAnchor = target.split('#')[0] ?? target
+      if (targetNoAnchor.endsWith('/')) continue
+      const startIndex = offset + match.index
+      const endIndex = startIndex + match[0].length
+      links.push({ text, target, startIndex, endIndex, line: li + 1, column: match.index })
+    }
+    offset += line.length + 1
   }
   return links
 }
@@ -177,6 +201,14 @@ function isCodeOrAssetLink(target: string): boolean {
   if (!base.includes('.')) return false
   const ext = base.slice(base.lastIndexOf('.')).toLowerCase()
   return ext !== '.md'
+}
+
+/** 判断链接是否指向 dotfile/配置目录（如 `.husky/pre-commit`、`.github/...`）→ 配置引用，跳过 */
+function isDotfileLink(target: string): boolean {
+  const t = (target.split('#')[0] ?? target).split('?')[0] ?? target
+  return t
+    .split('/')
+    .some((seg) => seg.startsWith('.') && seg !== '.' && seg !== '..')
 }
 
 function findClosestPath(target: string, availablePaths: readonly string[]): string | null {
@@ -429,6 +461,8 @@ export function findBrokenCrossReferences(
       if (!resolved.startsWith(docsDir.replace(/\\/g, '/') + '/')) continue
       // 含非 .md 扩展名的链接（.ts/.tsx/.json 等）是代码/资源引用，非文档间链接
       if (isCodeOrAssetLink(link.target)) continue
+      // 指向 dotfile/配置目录（.husky 等）的链接是配置引用，非文档间链接
+      if (isDotfileLink(link.target)) continue
       if (allAbsolutePaths.includes(resolved) || existsSync(resolved)) continue
       const cls = classifyLinkTarget(sourceDir, link.target, allAbsolutePaths)
       broken.push({
@@ -490,6 +524,8 @@ export function syncCrossReferences(
       if (!resolved.startsWith(docsDir.replace(/\\/g, '/') + '/')) continue
       // 含非 .md 扩展名的链接（.ts/.tsx/.json 等）是代码/资源引用，非文档间链接
       if (isCodeOrAssetLink(link.target)) continue
+      // 指向 dotfile/配置目录（.husky 等）的链接是配置引用，非文档间链接
+      if (isDotfileLink(link.target)) continue
       if (!allAbsolutePaths.includes(resolved) && !existsSync(resolved)) {
         broken.push({
           sourcePath: docPath,

@@ -4,9 +4,13 @@
  *
  * 聚合现有文档检查脚本，作为 pre-commit / CI 的统一文档门禁：
  * 1. doc:version-check — frontmatter code_version 完整性与一致性
- * 2. doc:cross-ref-sync --check — 交叉引用有效性（无断链）
+ * 2. doc:cross-ref-sync --check — 文档间相对链接有效性（无断链）
  * 3. doc:update-trigger --check — TRIGGER_RULES docsToUpdate 路径存在性
  * 4. Diátaxis 目录结构合规性 — 关键目录存在
+ * 5. doc:rule-validate — 编制规则校验（R1-R8）
+ * 6. doc:proofread — 三类交叉引用（文档→代码 / 代码→文档 / 文档→文档），
+ *    依 doc-proofreading-strategy 仅对核心/重要文档执行；当前策略非阻断，
+ *    仅上报范围内断裂，待 backlog 清理后翻开 blocking 即自动阻断。
  *
  * 任一检查失败则非零退出（阻断门禁）。
  *
@@ -94,8 +98,19 @@ function main(): void {
   // 解析违规总数（F3：暴露计数，去虚假安全感）；pass/fail 直接沿用 validator 退出码
   // （validator 已正确区分「可修复 R1-R4」与「不可修复 R1-R4」——仅后者阻断，门禁应与之对齐）
   const totalViol = parseInt((ruleResult.stdout.match(/violations:\s*(\d+)/) || [, '0'])[1] as string, 10) || 0
+  // 阻断级违规（不可修复 R1-R4）：validator 仅在存在此类违规时非零退出；
+  // 进入全通过分支时 ruleResult.passed 必为 true，故阻断级为 0。
+  const blockingViol = ruleResult.passed ? 0 : totalViol
   ruleResult.detail = `违规总数 ${totalViol}${ruleResult.passed ? '（含 R5-R8 警告，不阻断）' : '（含不可修复 R1-R4，阻断提交）'}`
   results.push(ruleResult)
+
+  // 6. 三类交叉引用（核心/重要文档）— 依 doc-proofreading-strategy 执行
+  const proofreadResult = runScript('三类交叉引用(核心/重要)', [`"${join(TOOL_DIR, 'doc-proofread.ts')}"`])
+  // doc-proofread 仅在策略 blocking=true 且存在范围内断裂时返回非零；当前策略为仅上报
+  proofreadResult.detail = proofreadResult.passed
+    ? '核心/重要文档范围内无阻断级断裂（断链仅上报）'
+    : '存在阻断级断裂（策略 blocking=true）'
+  results.push(proofreadResult)
 
   // 汇总输出
   console.log('🔒 doc:gate — 文档门禁检查\n')
