@@ -27,36 +27,47 @@ const LAYER_IDS: readonly LayerId[] = [
   'lMinus1', 'l0', 'l1', 'l2', 'l3f', 'l3v', 'l4', 'l5', 'l6', 'l7', 'l8',
 ]
 
+/** 确定性伪随机数生成器（LCG），消除 flaky 测试 */
+function createSeededRng(seed = 42): () => number {
+  let state = seed
+  return () => {
+    state = (state * 1664525 + 1013904223) % 2 ** 32
+    return state / 2 ** 32
+  }
+}
+
+const rng = createSeededRng(42)
+
 /** 生成模拟层级评分（带行业偏差和随机性） */
 function generateMockLayerScores(count: number): Array<Record<LayerId, number>> {
   const results: Array<Record<LayerId, number>> = []
   for (let i = 0; i < count; i++) {
-    const baseQuality = 2 + Math.random() * 2 // 2-4 基础质量
-    const industryBias = (Math.random() - 0.5) * 1.5 // 行业偏差
+    const baseQuality = 2 + rng() * 2 // 2-4 基础质量
+    const industryBias = (rng() - 0.5) * 1.5 // 行业偏差
 
     const scores = {} as Record<LayerId, number>
     // L1 和 L3f 高度相关（基本面层）
-    const financialHealth = Math.max(0, Math.min(5, baseQuality + (Math.random() - 0.5) * 0.8))
-    scores.l1 = Math.max(0, Math.min(5, financialHealth + (Math.random() - 0.5) * 0.5))
+    const financialHealth = Math.max(0, Math.min(5, baseQuality + (rng() - 0.5) * 0.8))
+    scores.l1 = Math.max(0, Math.min(5, financialHealth + (rng() - 0.5) * 0.5))
     scores.l3f = financialHealth
     // L3v 与 L3f 弱负相关（财务好时估值通常高）
-    scores.l3v = Math.max(0, Math.min(5, 5 - financialHealth + (Math.random() - 0.5) * 1.0))
+    scores.l3v = Math.max(0, Math.min(5, 5 - financialHealth + (rng() - 0.5) * 1.0))
     // L7 与 L1 中度相关（增长依赖护城河）
-    scores.l7 = Math.max(0, Math.min(5, scores.l1 * 0.7 + Math.random() * 1.5))
+    scores.l7 = Math.max(0, Math.min(5, scores.l1 * 0.7 + rng() * 1.5))
     // L-1 独立性较高（行业评分）
     scores.lMinus1 = Math.max(0, Math.min(5, baseQuality + industryBias))
     // L0 宏观层较稳定
-    scores.l0 = Math.max(0, Math.min(5, 3 + (Math.random() - 0.5) * 1.0))
+    scores.l0 = Math.max(0, Math.min(5, 3 + (rng() - 0.5) * 1.0))
     // L2 竞品
-    scores.l2 = Math.max(0, Math.min(5, baseQuality + (Math.random() - 0.5) * 1.0))
+    scores.l2 = Math.max(0, Math.min(5, baseQuality + (rng() - 0.5) * 1.0))
     // L4 情景
-    scores.l4 = Math.max(0, Math.min(5, 3 + (Math.random() - 0.5) * 1.5))
+    scores.l4 = Math.max(0, Math.min(5, 3 + (rng() - 0.5) * 1.5))
     // L5 T-M 矩阵
-    scores.l5 = Math.max(0, Math.min(5, 2.5 + Math.random() * 2))
+    scores.l5 = Math.max(0, Math.min(5, 2.5 + rng() * 2))
     // L6 Hype
-    scores.l6 = Math.max(0, Math.min(5, 2 + Math.random() * 3))
+    scores.l6 = Math.max(0, Math.min(5, 2 + rng() * 3))
     // L8 技术筹码（独立性强）
-    scores.l8 = Math.max(0, Math.min(5, 2.5 + Math.random() * 2))
+    scores.l8 = Math.max(0, Math.min(5, 2.5 + rng() * 2))
 
     results.push(scores)
   }
