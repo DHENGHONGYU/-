@@ -47,6 +47,13 @@ import type {
 } from '../../src/types/modules/doc-validation.types'
 import { syncCrossReferences, extractRelativeLinks, classifyLinkTarget } from './doc-cross-ref-sync'
 import { recordVersionHistory } from './doc-version-history'
+import { scanDocReferences, scanCodeReferences, validateReference } from './cross-ref-engine'
+import {
+  PROOFREADING_STRATEGY,
+  resolveDocTier,
+  getCheckPolicy,
+  type DocTier,
+} from './doc-proofreading-strategy'
 
 // ─── 常量 ─────────────────────────────────────────────────────────────────────
 
@@ -778,6 +785,105 @@ export function validateCorrectness(files: readonly ScannedFile[]): SubValidator
   return { name: 'correctness', findings, scannedCount: docFiles.length + sampleTsFiles.length }
 }
 
+// ─── 交叉引用策略校验（自动文档校对策略：三类检查，仅核心/重要文档） ──────────────
+
+/**
+ * 依据 doc-proofreading-strategy 执行三类交叉引用校验：
+ *  - doc-to-code / doc-to-doc：仅对 tier ∈ appliesToTiers 的「源文档」执行
+ *  - code-to-doc：仅对 tier ∈ appliesToTiers 的「目标文档」执行
+ * 断裂引用按策略 severity 上报；blocking=false 时记为 warning（不阻断），
+ * blocking=true（待 backlog 清理后翻开）时记为 failure。
+ */
+export function validateCrossReferences(
+  files: readonly ScannedFile[],
+  rootDir: string,
+): SubValidatorResult {
+  const docsRoot = join(rootDir, 'docs')
+  const inScopeTiers = new Set<DocTier>(PROOFREADING_STRATEGY.appliesToTiers)
+
+  const docFiles = files.filter((f) => f.category === 'doc' && f.updateType !== 'deleted')
+  const codeFiles = files.filter(
+    (f) =>
+      (f.category === 'code' || f.category === 'script' || f.category === 'test') &&
+      f.updateType !== 'deleted',
+  )
+
+  // 预计算核心/重要文档的 tier，避免重复读盘
+  const docTierCache = new Map<string, DocTier>()
+  const getDocTier = (absPath: string): DocTier => {
+    let t = docTierCache.get(absPath)
+    if (!t) {
+      t = resolveDocTier(absPath, docsRoot)
+      docTierCache.set(absPath, t)
+    }
+    return t
+  }
+
+  const inScopeDocPaths = new Set(
+    docFiles
+      .map((f) => f.absolutePath.replace(/\\/g, '/'))
+      .filter((abs) => inScopeTiers.has(getDocTier(abs))),
+  )
+
+  const findings: ValidationFinding[] = []
+  let scannedCount = 0
+
+  // 1. 文档侧：doc-to-code / doc-to-doc（仅源文档在策略范围内）
+  for (const abs of inScopeDocPaths) {
+    scannedCount++
+    const refs = scanDocReferences(abs)
+    for (const ref of refs) {
+      if (validateReference(ref, rootDir)) continue
+      const policy = getCheckPolicy(ref.type)
+      findings.push(
+        createFinding(
+          'crossref',
+          policy.severity,
+          policy.blocking ? 'failure' : 'warning',
+          relative(rootDir, abs).replace(/\\/g, '/'),
+          `核心/重要文档存在断裂的${policy.name}（行 ${ref.line}）：${ref.target}`,
+          '运行 npx tsx scripts/audit/audit-doc-code-references.ts 查看详情，或修正引用路径',
+          [ref.target],
+        ),
+      )
+    }
+  }
+
+  // 2. 代码侧：code-to-doc（仅目标文档在策略范围内）
+  for (const file of codeFiles) {
+    const abs = file.absolutePath.replace(/\\/g, '/')
+    const refs = scanCodeReferences(abs)
+    for (const ref of refs) {
+      if (validateReference(ref, rootDir)) continue
+      // 解析目标文档绝对路径以判定其 tier
+      let targetAbs: string
+      if (ref.target.startsWith('docs/')) {
+        targetAbs = resolve(rootDir, ref.target)
+      } else {
+        const sourceDir = resolve(rootDir, dirname(ref.source))
+        targetAbs = resolve(sourceDir, ref.target)
+      }
+      const targetTier = getDocTier(targetAbs.replace(/\\/g, '/'))
+      if (!inScopeTiers.has(targetTier)) continue
+      const policy = getCheckPolicy('code-to-doc')
+      scannedCount++
+      findings.push(
+        createFinding(
+          'crossref',
+          policy.severity,
+          policy.blocking ? 'failure' : 'warning',
+          file.relativePath,
+          `代码引用了核心/重要文档但路径断裂（行 ${ref.line}）：${ref.target}`,
+          '运行 npx tsx scripts/audit/audit-doc-code-references.ts 查看详情，或修正引用路径',
+          [ref.target],
+        ),
+      )
+    }
+  }
+
+  return { name: 'crossref', findings, scannedCount }
+}
+
 // ─── 自动更新 ─────────────────────────────────────────────────────────────────
 
 async function runAutoUpdates(
@@ -965,21 +1071,24 @@ async function runDailyValidation(
     deletedCount: scannedFiles.filter((f) => f.updateType === 'deleted').length,
   })
 
-  // 2. 三维验证
+  // 2. 三维验证 + 交叉引用策略校验（第四维度）
   const integrityResult = validateIntegrity(scannedFiles)
   const consistencyResult = validateConsistency(scannedFiles)
   const correctnessResult = validateCorrectness(scannedFiles)
+  const crossrefResult = validateCrossReferences(scannedFiles, config.rootDir)
 
   const allFindings: ValidationFinding[] = [
     ...integrityResult.findings,
     ...consistencyResult.findings,
     ...correctnessResult.findings,
+    ...crossrefResult.findings,
   ]
 
   logger.info(`[DailyDocValidation] 验证阶段汇总`, {
     integrityFindings: integrityResult.findings.length,
     consistencyFindings: consistencyResult.findings.length,
     correctnessFindings: correctnessResult.findings.length,
+    crossrefFindings: crossrefResult.findings.length,
     totalFindings: allFindings.length,
   })
 
@@ -992,6 +1101,7 @@ async function runDailyValidation(
     buildDimensionSummary('integrity', allFindings, integrityResult.scannedCount),
     buildDimensionSummary('consistency', allFindings, consistencyResult.scannedCount),
     buildDimensionSummary('correctness', allFindings, correctnessResult.scannedCount),
+    buildDimensionSummary('crossref', allFindings, crossrefResult.scannedCount),
   ]
 
   const report: DailyDocValidationReport = {

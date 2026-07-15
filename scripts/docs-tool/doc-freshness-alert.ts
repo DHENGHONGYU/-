@@ -3,7 +3,7 @@
  * @module scripts/doc-freshness-alert
  * @description 激活保鲜度告警规则 ALERT-01~05（约束 2 · C1-C5）
  *
- * 读取 `docs/B-architecture/freshness-alerts.md` 的规则定义 + 当前 docs 状态，
+ * 读取 `../../docs/reports/retrospectives/freshness-alerts.md` 的规则定义 + 当前 docs 状态，
  * 逐条评估 ALERT-01~05，命中即经 `doc-notify`（T3）上报。
  *
  * 评估口径（确定性、可离线运行）：

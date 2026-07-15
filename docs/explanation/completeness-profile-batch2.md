@@ -1,9 +1,18 @@
 ---
+title: completeness-profile-batch2
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: V9 模块完成度剖面图 — 批次 B（输入舱）
 version: v1.0.0
 last_updated: 2026-06-27
 maintainer: Quality Auditor
 status: active
+code_version: 2.0.0
+tier: important
 ---
 
 # V9 模块完成度剖面图 — 批次 B（输入舱）
@@ -106,7 +115,7 @@ status: active
 | 编号 | 模块 | 严重度 | 问题描述 | 文件路径 |
 |:---|:---|:---|:---|:---|
 | B2-P2-001 | 录入看板 | P2 | 快捷操作卡片中保留 `/input/prototype` 链接，该路由已删除 | `src/apps/input/InputDashboard.tsx:248` |
-| B1-P2-002 | 输入舱 Hub | P2 | 无独立 Zustand Store，状态无法跨组件共享 | `src/pages/input/InputHubPage.tsx` |
+| B1-P2-002 | 输入舱 Hub | P2 | 无独立 Zustand Store，状态无法跨组件共享 | `src/apps/input/InputApp.tsx` |
 | B2-P2-003 | 录入看板 | P2 | 使用 `usePoolData` hook，无独立 Zustand Store | `src/apps/input/InputDashboard.tsx` |
 | B3-P2-004 | 批量导入 | P2 | 使用 `usePoolData` hook，无独立 Zustand Store | `src/apps/input/BulkImportPanel.tsx` |
 | B4-P2-005 | 热门板块 | P2 | 使用 `usePoolData` hook，无独立 Zustand Store | `src/apps/input/HotSectorPanel.tsx` |

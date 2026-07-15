@@ -1,3 +1,16 @@
+---
+title: core-data-strategy-report
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
+title: docs/explanation/core-data-strategy-report.md
+code_version: 2.0.0
+tier: reference
+---
+
 # V9 智能投研复盘系统 — 核心数据策略报告
 
 > **文档体系版本**: v2.0.0 | **本文档修订**: rev.1 | **兼容 AGENTS.md v1.4.6+
@@ -27,13 +40,13 @@
 - **数据架构全景图**：五层架构、层级职责、实体关系（ER）、数据流向。
 - **数据库定义规范**：IndexedDB `V6ProDB` 的 40 个 ObjectStore、主键、索引、字段类型、约束条件及版本迁移策略。
 - **数据传递机制**：`DataBridge` + `StandardEnvelope` + `ACL` 的读写协议、`EnvelopeAction` 路由、订阅广播机制。
-- **蓝图校对**：与 `docs/01-requirements/v9-system-blueprint.md`、`docs/02-design/V9_IndexedDB_Store_Schema.md`、`docs/02-design/data-flow-spec.md`、`docs/02-design/《V9核心数据字典与类型定义（整合版）》.md` 逐项比对，标注一致项、偏差项及修正建议。
+- **蓝图校对**：与 `../reference/v9-system-blueprint.md`、`../reference/v9-indexeddb-store-schema.md`、`../reference/data-flow-spec.md`、`../reference/../reference/../reference/v9核心数据字典与类型定义(整合版).md` 逐项比对，标注一致项、偏差项及修正建议。
 
 ### 1.2 真相源文件
 
 | 真相源 | 路径 | 作用 |
 |--------|------|------|
-| 架构契约 | `AGENTS.md` | 项目分层规则、目录职责、验证命令、Gateway 写入权限规范 |
+| 架构契约 | `../../AGENTS.md` | 项目分层规则、目录职责、验证命令、Gateway 写入权限规范 |
 | 数据库配置 | `src/config/dbConfig.ts` | `DB_VERSION`、`STORE_NAME`、`ENVELOPE_ACTION`、`ENVELOPE_TARGET`、`MODULE_ID`、`ACL_MATRIX` |
 | Schema 定义 | `src/data/db-schema.ts` | 基线 ObjectStore 创建逻辑、索引、字段回填 |
 | 迁移框架 | `src/data/db-migrations.ts` | 版本升级迁移逻辑、RBAC 6 表创建 |
@@ -41,7 +54,7 @@
 | 信封协议 | `src/core/envelope.ts` | `StandardEnvelope`、`EnvelopeMeta`、`EnvelopeFactory` |
 | 处理器注册 | `src/core/databridgeHandlers.ts` | 按 `EnvelopeAction` 路由到具体 DB 操作 |
 | 类型定义 | `src/data/types.ts` | 全部业务实体 TypeScript 类型 |
-| 股票池常量 | `src/constants/stockpool.constants.ts` | `RESEARCH_STATUS`、`DEFAULT_POOL_GROUP` |
+| 股票池常量 | `src/constants/pool.constants.ts` | `RESEARCH_STATUS`、`DEFAULT_POOL_GROUP` |
 | 股票池 Store | `src/data/dataLayerStockStores.ts` | `stocks` 表的 CRUD 与索引查询 |
 
 ### 1.3 版本基线
@@ -503,7 +516,7 @@ interface ExecutionLog {
 
 ### 3.5 股票池统一存储 Schema
 
-根据 `docs/03-development/unified-pool-storage-spec.md`，股票池采用**单表多状态模型**：
+根据 `../reference/unified-pool-storage-spec.md`，股票池采用**单表多状态模型**：
 
 | 池名 | 英文标识 | 存储位置 | 区分字段 |
 |---|---|---|---|
@@ -791,38 +804,38 @@ DataBridge.forward(envelope: StandardEnvelope): Promise<void>
 
 | 蓝图文档 | 一致内容 | 说明 |
 |---|---|---|
-| `v9-system-blueprint.md` | 五层架构分层原则 | L1~L5 职责与依赖方向与代码一致 |
-| `v9-system-blueprint.md` | DataBridge 作为统一数据桥接层 | `forward()` / `query()` / `subscribe()` 实现一致 |
-| `v9-system-blueprint.md` | 股票池五态流转 | candidate → screened → deepDive → watching → archived 一致 |
+| `../reference/v9-system-blueprint.md` | 五层架构分层原则 | L1~L5 职责与依赖方向与代码一致 |
+| `../reference/v9-system-blueprint.md` | DataBridge 作为统一数据桥接层 | `forward()` / `query()` / `subscribe()` 实现一致 |
+| `../reference/v9-system-blueprint.md` | 股票池五态流转 | candidate → screened → deepDive → watching → archived 一致 |
 | `data-flow-spec.md` | 异步数据三态要求 | `AsyncState<T>`（loading / data / error）在 Store 中普遍使用 |
 | `10-glossary.md` | 股票池术语 | 意向候选池/研究精选池/深度研究池/观察池/归档池与代码一致 |
-| `《V9数据架构修订建议》.md` | DataBridge + Envelope + ACL 通信体系 | 协议定义与实现一致 |
-| `《DataBridge端点与数据映射清单》.md` | 大部分 forward 端点映射 | 股票、评分、订单、资讯等核心映射一致 |
-| `V9_IndexedDB_Store_Schema.md` | 核心 Store 主键设计 | `stocks.symbol`、`orders.id`、`v6_scores.symbol` 等一致 |
+| `../reference/v9数据架构修订建议.md` | DataBridge + Envelope + ACL 通信体系 | 协议定义与实现一致 |
+| `../reference/../reference/../reference/databridge端点与数据映射清单.md` | 大部分 forward 端点映射 | 股票、评分、订单、资讯等核心映射一致 |
+| `../reference/v9-indexeddb-store-schema.md` | 核心 Store 主键设计 | `stocks.symbol`、`orders.id`、`v6_scores.symbol` 等一致 |
 
 ### 5.2 偏差项
 
 | 编号 | 蓝图文档 | 蓝图描述 | 代码实际 | 偏差等级 | 修正建议 |
 |---|---|---|---|---|---|
-| DEV-01 | `v9-system-blueprint.md` | IndexedDB 共 **17 个 Store** | 实际 **40 个 Store** | 🔴 严重 | 按 `STORE_NAME` 重新统计并更新 |
-| DEV-02 | `V9_IndexedDB_Store_Schema.md` | 版本 **v21**，25 个 Store | `DB_VERSION = 28`，40 个 Store | 🔴 严重 | 更新版本号，补充 v22~v28 变更与新增 Store |
-| DEV-03 | `《V9核心数据字典与类型定义（整合版）》.md` | 版本 **v16**，列出 `watchlist`(单数)、`news_articles`、`kline_data`、`rotation_signals` 等 | 实际为 `watchlists`、`news`、`daily_quotes`、`rotation_scores`；且多个 Store 不存在 | 🔴 严重 | 重新与 `src/config/dbConfig.ts` 和 `src/data/db-schema.ts` 对齐 |
-| DEV-04 | `ARCHITECTURE.md` | 文件名暗示整体架构 | 实际内容为 Cockpit Widget 架构说明 | 🟡 中等 | 重命名文件或补充整体架构章节 |
+| DEV-01 | `../reference/v9-system-blueprint.md` | IndexedDB 共 **17 个 Store** | 实际 **40 个 Store** | 🔴 严重 | 按 `STORE_NAME` 重新统计并更新 |
+| DEV-02 | `../reference/v9-indexeddb-store-schema.md` | 版本 **v21**，25 个 Store | `DB_VERSION = 28`，40 个 Store | 🔴 严重 | 更新版本号，补充 v22~v28 变更与新增 Store |
+| DEV-03 | `../reference/../reference/v9核心数据字典与类型定义(整合版).md` | 版本 **v16**，列出 `watchlist`(单数)、`news_articles`、`kline_data`、`rotation_signals` 等 | 实际为 `watchlists`、`news`、`daily_quotes`、`rotation_scores`；且多个 Store 不存在 | 🔴 严重 | 重新与 `src/config/dbConfig.ts` 和 `src/data/db-schema.ts` 对齐 |
+| DEV-04 | `architecture.md` | 文件名暗示整体架构 | 实际内容为 Cockpit Widget 架构说明 | 🟡 中等 | 重命名文件或补充整体架构章节 |
 | DEV-05 | `data-flow-spec.md` | 未提及 Gateway 层 | AGENTS.md v1.4.6 已新增 `data/gateway/` 为唯一写入入口 | 🟡 中等 | 补充 Gateway 写入权限规范引用 |
-| DEV-06 | `《DataBridge端点与数据映射清单》.md` | 部分端点与实际动作名不一致（如 `saveV6Score`、`createExecutionPlan`、`saveNewsBookmark`） | 实际 `ENVELOPE_ACTION` 为 `saveScores`、`saveExecutionPlan`、`newsArticleBookmarked` | 🟡 中等 | 统一端点命名与 `ENVELOPE_ACTION` 完全一致 |
+| DEV-06 | `../reference/../reference/../reference/databridge端点与数据映射清单.md` | 部分端点与实际动作名不一致（如 `saveV6Score`、`createExecutionPlan`、`saveNewsBookmark`） | 实际 `ENVELOPE_ACTION` 为 `saveScores`、`saveExecutionPlan`、`newsArticleBookmarked` | 🟡 中等 | 统一端点命名与 `ENVELOPE_ACTION` 完全一致 |
 | DEV-07 | Gateway 规范 | 要求 `DataBridge` 不直接 `import { db }` | `src/core/databridge.ts:16` 仍直接导入 `db`，`routeToDB()` 直接调用 `db.put` | 🔴 严重 | 创建 `src/data/gateway/dataGateway.ts`，将 `routeToDB()` 委托给 Gateway |
-| DEV-08 | `《DataBridge端点与数据映射清单》.md` | 声明 Watchlist / Signal 完整 CRUD | 实际仅 `saveWatchlist`、`insertSignal`，缺 `update/delete` | 🟡 中等 | 补充 `updateWatchlist` / `deleteWatchlist` / `updateSignal` / `deleteSignal` |
+| DEV-08 | `../reference/../reference/../reference/databridge端点与数据映射清单.md` | 声明 Watchlist / Signal 完整 CRUD | 实际仅 `saveWatchlist`、`insertSignal`，缺 `update/delete` | 🟡 中等 | 补充 `updateWatchlist` / `deleteWatchlist` / `updateSignal` / `deleteSignal` |
 | DEV-09 | `data-flow-spec.md` | EventBus / Envelope / DataChannel 关系未明确 | 代码中三者并存，职责边界模糊 | 🟢 轻微 | 增加通信体系对比说明 |
-| DEV-10 | `v9-system-blueprint.md` | L3 引擎层子模块映射不完整 | 策略、轮动、资讯等 P0 模块未体现 | 🟢 轻微 | 补充子模块与产出实体映射表 |
+| DEV-10 | `../reference/v9-system-blueprint.md` | L3 引擎层子模块映射不完整 | 策略、轮动、资讯等 P0 模块未体现 | 🟢 轻微 | 补充子模块与产出实体映射表 |
 
 ### 5.3 需修正部分（按优先级排序）
 
 #### P0 阻塞级
 
 1. **修正 Store 数量与版本号**：
-   - `v9-system-blueprint.md` 中 "17 个 Store" 修正为 40 个。
-   - `V9_IndexedDB_Store_Schema.md` 版本号从 v21 更新为 v28，并补充 v22~v28 的 Store 变更历史。
-   - `《V9核心数据字典与类型定义（整合版）》.md` 重新生成 Store 清单，删除不存在 Store（如 `kline_data`、`rotation_signals`、`data_channels` 等）。
+   - `../reference/v9-system-blueprint.md` 中 "17 个 Store" 修正为 40 个。
+   - `../reference/v9-indexeddb-store-schema.md` 版本号从 v21 更新为 v28，并补充 v22~v28 的 Store 变更历史。
+   - `../reference/../reference/v9核心数据字典与类型定义(整合版).md` 重新生成 Store 清单，删除不存在 Store（如 `kline_data`、`rotation_signals`、`data_channels` 等）。
 
 2. **落地 Gateway 层**：
    - 创建 `src/data/gateway/dataGateway.ts`，实现 `execute(envelope: StandardEnvelope): GatewayWriteResult`。
@@ -847,7 +860,7 @@ DataBridge.forward(envelope: StandardEnvelope): Promise<void>
    - 删除或标注规划中 Store。
 
 6. **文档结构修正**：
-   - `ARCHITECTURE.md` 重命名为 `cockpit-widget-architecture.md` 或补充整体架构章节。
+   - `architecture.md` 重命名为 `cockpit-widget-architecture.md` 或补充整体架构章节。
    - `data-flow-spec.md` 补充 Gateway 层说明与引用。
 
 #### P2 优化级
@@ -882,7 +895,7 @@ DataBridge.forward(envelope: StandardEnvelope): Promise<void>
 | **真实交易** | Real Trading | `accountType = 'real'`（占位） | `orders` |
 | **五舱** | Five Cabins | input / analysis / trading / output / command | `src/apps/` |
 | **驾驶舱** | Cockpit | 系统监控 Widget Dashboard | `src/cockpit/` |
-| **单一可信源** | SSOT | `poolStore` 作为股票池数据的唯一可信源 | `src/store/poolStore.ts` |
+| **单一可信源** | SSOT | `poolStore` 作为股票池数据的唯一可信源 | `src/store/poolStore.test.ts` |
 
 ---
 
@@ -911,18 +924,18 @@ npm.cmd run build
 
 | 文档 | 路径 | 说明 |
 |------|------|------|
-| 架构契约 | `AGENTS.md` | 项目分层规则与行为约束 |
-| 系统蓝图 | `docs/01-requirements/v9-system-blueprint.md` | 项目整体蓝图 |
-| IndexedDB Schema | `docs/02-design/V9_IndexedDB_Store_Schema.md` | IndexedDB 表结构（已滞后） |
-| 数据流规范 | `docs/02-design/data-flow-spec.md` | 数据流约束 |
-| 核心数据字典 | `docs/02-design/《V9核心数据字典与类型定义（整合版）》.md` | 类型定义（已滞后） |
-| 术语表 | `docs/02-design/10-glossary.md` | 领域术语 |
-| DataBridge 端点清单 | `docs/01-requirements/《DataBridge端点与数据映射清单》.md` | 端点映射 |
-| DataBridge 数据链路 | `docs/02-design/《DataBridge数据链路全景分析报告》.md` | 全链路分析 |
-| 数据架构修订建议 | `docs/02-design/《V9数据架构修订建议》.md` | 架构修订 |
-| 股票池统一存储 | `docs/03-development/unified-pool-storage-spec.md` | 统一存储方案 |
-| Gateway 写入权限 | `docs/03-development/gateway-write-permission-spec.md` | Gateway 规范 |
-| 数据关系 ER | `docs/03-development/v9-data-relationship-er.md` | ER 关系 |
+| 架构契约 | `../../AGENTS.md` | 项目分层规则与行为约束 |
+| 系统蓝图 | `../reference/v9-system-blueprint.md` | 项目整体蓝图 |
+| IndexedDB Schema | `../reference/v9-indexeddb-store-schema.md` | IndexedDB 表结构（已滞后） |
+| 数据流规范 | `../reference/data-flow-spec.md` | 数据流约束 |
+| 核心数据字典 | `../reference/../reference/../reference/v9核心数据字典与类型定义(整合版).md` | 类型定义（已滞后） |
+| 术语表 | `../reference/10-glossary.md` | 领域术语 |
+| DataBridge 端点清单 | `../reference/../reference/../reference/../reference/databridge端点与数据映射清单.md` | 端点映射 |
+| DataBridge 数据链路 | `./design/databridge数据链路全景分析报告.md` | 全链路分析 |
+| 数据架构修订建议 | `../reference/../reference/v9数据架构修订建议.md` | 架构修订 |
+| 股票池统一存储 | `../reference/unified-pool-storage-spec.md` | 统一存储方案 |
+| Gateway 写入权限 | `../reference/gateway-write-permission-spec.md` | Gateway 规范 |
+| 数据关系 ER | `./v9-data-relationship-er.md` | ER 关系 |
 
 ### 7.3 变更日志
 
@@ -932,4 +945,4 @@ npm.cmd run build
 
 ---
 
-> **维护建议**: 本报告应随每次 `DB_VERSION` 升级、`ENVELOPE_ACTION` 新增、`STORE_NAME` 变更而更新。建议在 `scripts/` 中新增 `validate-data-blueprint.ts`，自动比对 `src/config/dbConfig.ts` 与 `docs/02-design/V9_IndexedDB_Store_Schema.md`、`docs/02-design/《V9核心数据字典与类型定义（整合版）》.md` 的一致性。
+> **维护建议**: 本报告应随每次 `DB_VERSION` 升级、`ENVELOPE_ACTION` 新增、`STORE_NAME` 变更而更新。建议在 `scripts/` 中新增 `validate-data-blueprint.ts`，自动比对 `src/config/dbConfig.ts` 与 `../reference/v9-indexeddb-store-schema.md`、`../reference/../reference/../reference/v9核心数据字典与类型定义(整合版).md` 的一致性。

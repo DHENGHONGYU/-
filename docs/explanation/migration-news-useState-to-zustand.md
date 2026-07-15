@@ -1,4 +1,11 @@
 ---
+title: migration-news-usestate-to-zustand
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: 新闻模块 — useState → Zustand 迁移文档
 version: v1.0.0
 last_updated: 2026-06-27
@@ -8,6 +15,8 @@ change_log:
   - date: 2026-06-27
     author: Quality Auditor
     desc: 初始版本，记录 NewsPage + NewsFeed 从 useState 到 Zustand 的迁移
+code_version: 2.0.0
+tier: important
 ---
 
 # 新闻模块 — useState → Zustand 迁移文档
@@ -16,7 +25,7 @@ change_log:
 
 | 维度 | 迁移前 (useState) | 迁移后 (Zustand) |
 |:---|:---|:---|
-| 状态管理文件 | 无（状态散落在组件内） | `src/store/newsStore.ts` |
+| 状态管理文件 | 无（状态散落在组件内） | `src/store/analysisNewsStore.ts` |
 | NewsPage 状态声明 | 7 个 `useState` + 2 个工具函数 | 1 个 `useNewsStore()` 解构 |
 | NewsFeed 状态声明 | 4 个 `useState` + 1 个 `useRef` | 1 个 `useNewsStore()` 解构 |
 | NewsPage → NewsFeed props | 10 个 | 4 个（仅回调） |
@@ -26,7 +35,7 @@ change_log:
 
 ## 2. 新增文件
 
-### `src/store/newsStore.ts`
+### `src/store/analysisNewsStore.ts`
 
 单一 Zustand store，管理 13 个状态域 + 14 个 action：
 
@@ -46,7 +55,7 @@ change_log:
 
 ## 3. 变更文件
 
-### `src/pages/news-v6/NewsPage.tsx`
+### `src/pages/analysis/NewsPage.tsx`
 
 **变更清单：**
 

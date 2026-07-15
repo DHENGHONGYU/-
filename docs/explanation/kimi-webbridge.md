@@ -1,3 +1,16 @@
+---
+title: kimi-webbridge
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/explanation/kimi-webbridge.md
+code_version: 2.0.0
+tier: important
+---
+
 # Kimi WebBridge 插件
 
 > **功能域**: 浏览器自动化控制（导航、点击、输入、截图、PDF 保存）  

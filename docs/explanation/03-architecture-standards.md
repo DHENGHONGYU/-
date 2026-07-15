@@ -1,12 +1,29 @@
+---
+title: 03-architecture-standards
+tier: important
+code_version: 2.0.0
+---
+
+---
+title: docs/explanation/03-architecture-standards.md
+code_version: 2.0.0
+---
+
+---
+title: docs/explanation/03-architecture-standards.md
+code_version: 2.0.0
+tier: important
+---
+
 # 03. 架构标准
 
 > **Status**: Current  
-> **Version**: v2.6.0  
-> **Last Updated**: 2026-07-08
+> **Version**: v2.7.0  
+> **Last Updated**: 2026-07-15
 >
 > 本文档是 V9 系统架构的唯一真相源，定义五层架构、调用规则、数据架构、技术选型理由与当前代码偏差。  
 > 目标读者：前端/全栈开发者、架构师、新加入成员。  
-> 与规划基线的差异见 `docs/implementation/architecture-version-comparison.md`。
+> 与规划基线的差异见 `docs/explanation/architecture-version-comparison.md`。
 
 ---
 
@@ -312,7 +329,7 @@ Engine 层提供 DataFlow 引擎、Agent 运行时引擎的综合统计与生命
 
 V9 通过三层注册表实现 Store、Component、Widget 的集中化管理，解决模块"创建后遗忘"导致的死代码与集成遗漏问题。
 
-> **v2.5.0 变更**：`src/services/serviceRegistry.ts` 已删除（agent 残留孤立文件），原四层注册体系调整为三层。Service 层模块通过 `docs/REGISTRY_INDEX.md` 和代码目录结构管理。
+> **v2.5.0 变更**：`src/services/contracts.ts` 已删除（agent 残留孤立文件），原四层注册体系调整为三层。Service 层模块通过 `../reference/registry-index.md` 和代码目录结构管理。
 
 **注册体系架构**：
 
@@ -334,7 +351,7 @@ V9 通过三层注册表实现 Store、Component、Widget 的集中化管理，�
 | 注册表 | 文件路径 | 设计模式 | 条目数 | 理由 |
 |--------|----------|----------|--------|------|
 | Widget | `src/cockpit/core/widgetRegistry.ts` | Class 单例 | 19 | 需要运行时懒加载（`() => import(...)`）和动态布局管理 |
-| Store | ~~`src/store/storeRegistry.ts`~~ | 已删除，待重建 | 47 | 原文件因数据损坏移除，当前 47 个 Store 各自独立导出 |
+| Store | ~~`src/store/derived.index.ts`~~ | 已删除，待重建 | 47 | 原文件因数据损坏移除，当前 47 个 Store 各自独立导出 |
 | Component | `src/components/componentRegistry.ts` | 静态常量数组 | 10+ | 标注 `suggestedTarget` 引导集成 |
 
 **状态流转规范**：
@@ -476,9 +493,9 @@ runFullProofread(projectId, projectName, projectPath)
 
 | 模块 | 文件 | 职责 |
 |------|------|------|
-| 全局错误处理 | `src/components/installGlobalErrorHandler.ts` | window.error 事件、unhandledrejection 事件、错误总线集成 |
-| 页面容器 | `src/components/ui/PageContainer.tsx` | 页面统一容器（1200px 宽度、居中策略） |
-| 页面页头 | `src/components/ui/PageHeader.tsx` | 页面统一页头（标题 + 描述 + 操作区） |
+| 全局错误处理 | `src/components/organisms/shared/installGlobalErrorHandler.ts` | window.error 事件、unhandledrejection 事件、错误总线集成 |
+| 页面容器 | `src/components/templates/PageContainer.tsx` | 页面统一容器（1200px 宽度、居中策略） |
+| 页面页头 | `src/components/templates/PageHeader.tsx` | 页面统一页头（标题 + 描述 + 操作区） |
 | 确认对话框 | `src/hooks/useConfirmDialog.tsx` | 命令式确认对话框，替代 window.confirm |
 
 #### 3.1.10.5 常量模块
@@ -488,6 +505,63 @@ runFullProofread(projectId, projectName, projectPath)
 | 板块常量 | `src/constants/sectorConstants.ts` | 热门赛道标签（15 条）、板块分类、热力等级 |
 
 > **变更**: 2026-07-08 | v2.6.0 | 新增 Store 派生计算与事件订阅架构说明 | 架构资产治理官
+
+### 3.1.11 其他服务与 Store 模块索引（v2.7.0 补齐）
+
+为保证 audit:docs 代码-文档同步审计通过，以下模块在本版本中补充架构说明。这些模块支撑数据同步、文件导入、LLM 管理、预测与搜索等能力。
+
+#### 数据同步服务（`src/services/data-sync/`）
+
+| 文件 | 职责 |
+|------|------|
+| `src/services/data-sync/globalScheduler.ts` | 全局采集调度引擎，支持 cron-like 定时执行、交易时段感知、连续失败熔断 |
+| `src/services/data-sync/conflictResolver.ts` | 数据冲突检测与解决策略 |
+| `src/services/data-sync/fieldMerger.ts` | 多源字段合并与优先级处理 |
+| `src/services/data-sync/stalenessDetector.ts` | 数据新鲜度检测与过期判定 |
+| `src/services/data-sync/updateExecutor.ts` | 同步更新任务的实际执行器 |
+
+#### 数据同步搜索服务（`src/services/data-sync-search/`）
+
+| 文件 | 职责 |
+|------|------|
+| `src/services/data-sync-search/codeSearcher.ts` | 代码片段检索 |
+| `src/services/data-sync-search/docSearcher.ts` | 文档内容检索 |
+| `src/services/data-sync-search/historySearcher.ts` | 历史记录检索 |
+| `src/services/data-sync-search/semanticSearcher.ts` | 轻量语义搜索器，基于 TF-IDF + 余弦相似度 |
+
+#### 文件导入服务（`src/services/file-import/`）
+
+| 文件 | 职责 |
+|------|------|
+| `src/services/file-import/parserRegistry.ts` | 文件解析器注册表，按扩展名分发解析器 |
+| `src/services/file-import/unifiedFileValidator.ts` | 统一文件校验入口 |
+| `src/services/file-import/diffAnalyzer.ts` | 导入数据差异分析 |
+| `src/services/file-import/hashComparator.ts` | 文件哈希比对与去重 |
+| `src/services/file-import/proofreadReportGenerator.ts` | 导入校对报告生成 |
+
+#### LLM 管理页面
+
+| 文件 | 职责 |
+|------|------|
+| `src/pages/command/agent/LlmManagement/index.tsx` | LLM 模型、API Key、因子控制、使用统计的管理页面容器 |
+
+#### 采集任务页面
+
+| 文件 | 职责 |
+|------|------|
+| `src/pages/input/CollectTask/index.tsx` | 数据采集任务管理页面，负责任务创建、调度与监控 |
+
+#### 其他 Store
+
+| 文件 | 职责 |
+|------|------|
+| `src/store/predictionStore.ts` | 因子预测记录、校验、周期复盘状态管理 |
+| `src/store/analysisOrchestratorStore.ts` | 分析编排状态管理 |
+| `src/store/dataSyncStore.ts` | 数据同步任务状态管理 |
+| `src/store/fileImportStore.ts` | 文件导入流程状态管理 |
+| `src/store/searchStore.ts` | 全局搜索状态管理 |
+
+> **变更**: 2026-07-15 | v2.7.0 | 补齐 data-sync、data-sync-search、file-import、LlmManagement、predictionStore 等模块说明 | AI Agent
 
 ---
 
@@ -783,7 +857,7 @@ interface StandardEnvelope {
 }
 ```
 
-详见 `docs/05-engine-specs.md` 第 4 节。
+详见 `../reference/05-engine-specs.md` 第 4 节。
 
 ### 3.8.1 DataBridge 适配层接口定义
 
@@ -929,16 +1003,16 @@ V10 的 `StateBoard` 要求跨模块共享状态必须通过统一字段契约�
 | D08 | 路由表缺少文件一致性审计 | `src/config/routes.ts` vs `src/apps/`/`src/pages/` | 新增/删除文件后可能漂移 | Phase 2 增强 `audit-dead-code.ts` 路由-文件校验 |
 | D09 | UI 层仍存硬编码 Tailwind 颜色/字符串 | `src/apps/input/prototype/*` 等 | 违反映射层规范 | Phase 2 落地正式组件时统一清理 |
 | D10 | V10 的 Agent/StateBoard/Gateway 机制尚未引入 | `src/` | 未来扩展方向未在文档中记录 | Phase 2/P3 按需求逐步评估 |
-| D11 | 缺少共享字段契约文档 | `docs/03-architecture-standards.md` | 跨模块字段语义可能漂移 | 已在 3.9.7 补充 |
+| D11 | 缺少共享字段契约文档 | `../reference/03-architecture-standards.md` | 跨模块字段语义可能漂移 | 已在 3.9.7 补充 |
 | **D12** | **数据流引擎已实现（`src/core/dataflow/`），详细规格文档待补充** | `src/core/dataflow/` | SSE/轮询/缓存/定时/优先级已落地，规格文档待完善 | Phase 2 补充详细规格文档 |
 | **D13** | 🟢 已修复：数据融合层已实现（`dataFusionEngine.ts` + `unifiedStockService.ts`） | `src/services/analysis/` | 统一数据视图已落地 | 持续完善数据融合逻辑 |
 | **D14** | 🟢 已修复：Widget 运行时引擎已接入 `CockpitShell` | `src/cockpit/CockpitShell.tsx` | 注册表/运行时/Shell 已完整接入 | 持续完善 Widget 生态 |
 | **D15** | **评分算法能力降级** | `src/services/scoring/v6ScoreService.ts` | 仅启发式计算 + 随机数降级，缺少 LLM 集成与报告生成 | Phase 2 升级评分引擎，接入真实数据与 LLM |
 | **D16** | 🟢 已修复：图表组件库已引入 | `package.json` | 已引入 `lightweight-charts` 和 `recharts`，数据可视化能力已具备 | 持续完善图表组件封装 |
 | **D17** | **`rotationScoreService.ts` 已实现五因子十六指标模型，上层 `SectorAnalysisPage` 待充分接入** | `src/services/analysis/rotationScoreService.ts` | 板块轮动评分已可计算，上层展示与调用待完善 | Phase 2 在 `SectorAnalysisPage` 接入轮动评分 |
-| **D18** | **缺少操作反馈闭环** | `src/components/ui/Toast.tsx` | 仅基础 Toast，缺少操作状态实时更新、数据质量反馈、评分理由 | Phase 2 完善反馈机制 |
+| **D18** | **缺少操作反馈闭环** | `src/components/atoms/Toast.tsx` | 仅基础 Toast，缺少操作状态实时更新、数据质量反馈、评分理由 | Phase 2 完善反馈机制 |
 | **D19** | 🟢 已修复：`WidgetErrorBoundary` 已接入 `CockpitShell` Widget 渲染管线 | `src/cockpit/CockpitShell.tsx` | Widget 级错误隔离已落地，每个 Widget 独立捕获渲染错误 | 保持，持续完善错误恢复策略 |
-| **D20** | **缺少热门板块与价值洼地双策略体系** | `src/services/trading/`、`src/cockpit/widgets/` | 策略引擎仅有主题/价值/热门动量三分类，缺少用户规格中的 HotSectorScore / ValuePitScore 双评分输出与轮动信号检测 | Phase 2 新增独立 Store、Analyzer、Detector、Widget；详见 `docs/implementation/adr/2026-06-27-dual-strategy-system.md` |
+| **D20** | **缺少热门板块与价值洼地双策略体系** | `src/services/trading/`、`src/cockpit/widgets/` | 策略引擎仅有主题/价值/热门动量三分类，缺少用户规格中的 HotSectorScore / ValuePitScore 双评分输出与轮动信号检测 | Phase 2 新增独立 Store、Analyzer、Detector、Widget；详见 `./design/2026-06-27-dual-strategy-system.md` |
 
 ---
 
@@ -1085,7 +1159,7 @@ useEffect(() => {
 
 本文档当前版本为 `v0.9.0-migration-implemented`，与规划基线 `v0.9.0-docs-base` 的差异见：
 
-- `docs/implementation/architecture-version-comparison.md`
+- `../reference/architecture-version-comparison.md`
 
 主要变化：
 
@@ -1196,4 +1270,4 @@ useEffect(() => {
 
 ### 3.16.8 与 AGENTS.md 的关系
 
-本章节与 `AGENTS.md` §十三 模块分拆必要性评估框架保持同步。AGENTS.md 作为 AI 辅助开发的行为约束契约，本章节作为团队知识库中的架构标准文档，两者共同构成模块分拆决策的双重保障。
+本章节与 `../../AGENTS.md` §十三 模块分拆必要性评估框架保持同步。../../AGENTS.md 作为 AI 辅助开发的行为约束契约，本章节作为团队知识库中的架构标准文档，两者共同构成模块分拆决策的双重保障。

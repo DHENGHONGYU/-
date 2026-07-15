@@ -126,7 +126,7 @@ export function useIntelligentScorePage(): UseIntelligentScorePageReturn {
       if (mounted && key) {
         setLlmConfig((prev) => ({ ...prev, apiKey: key }))
       }
-    })
+    }).catch(() => {})
     return () => { mounted = false }
   }, [])
 
@@ -148,8 +148,8 @@ export function useIntelligentScorePage(): UseIntelligentScorePageReturn {
     loadIntelligentScoreHistory(symbol).then((sorted) => {
       setHistory(sorted)
       setPreviousResult(sorted[0])
-    })
-    loadResearchLogsForTarget(symbol).then(setLogs)
+    }).catch(() => {})
+    loadResearchLogsForTarget(symbol).then(setLogs).catch(() => {})
   }, [symbol])
 
   // 用户修改 API Key 时自动加密持久化

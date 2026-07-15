@@ -1,14 +1,23 @@
 ---
+title: stockpool-contract
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: stockpool-contract.md — 股票池管理子域接口契约
 status: draft
 owner: 架构组
 updated: 2026-07-12
+code_version: 2.0.0
+tier: important
 ---
 
 # stockpool-contract.md — 股票池管理子域接口契约
 
 > **定位**：定义 `stockpool` 子域的接口契约、职责边界、数据流与依赖关系。  
-> **关联**：`../../architecture/services-catalog.md`（24 子域总览）、`AGENTS.md` §一（分层规则）。
+> **关联**：`./services-catalog.md`（24 子域总览）、`../../AGENTS.md` §一（分层规则）。
 
 ---
 
@@ -131,7 +140,7 @@ components/pages (仅经 Store 取数)
 | `ENVELOPE_ACTION` | 多种 | 信封动作枚举 | `src/config/dbConfig` |
 | `RESEARCH_STATUS` | 多种 | 研究状态枚举 | `src/config/dbConfig` |
 
-> ⚠️ **架构备注**：`src/config/dbConfig` 被 `services/` 层导入，在 `AGENTS.md` 的依赖方向规则中，`services/` 只能依赖 `core/`、`data/`、`lib/`（白名单）。`config/` 不在 `services/` 的依赖白名单中，属于现有代码中的跨层依赖模式。建议后续将 `DEFAULT_POOL_GROUP`、`STORE_NAME`、`MODULE_ID` 等常量迁移至 `src/constants/` 层。
+> ⚠️ **架构备注**：`src/config/dbConfig` 被 `services/` 层导入，在 `../../AGENTS.md` 的依赖方向规则中，`services/` 只能依赖 `core/`、`data/`、`lib/`（白名单）。`config/` 不在 `services/` 的依赖白名单中，属于现有代码中的跨层依赖模式。建议后续将 `DEFAULT_POOL_GROUP`、`STORE_NAME`、`MODULE_ID` 等常量迁移至 `src/constants/` 层。
 
 ---
 
@@ -139,7 +148,7 @@ components/pages (仅经 Store 取数)
 
 | 测试类型 | 文件 | 说明 |
 |----------|------|------|
-| 单元测试 | `src/services/stockpool/__tests__/`（待创建） | `isDefaultGroup()` 纯函数；`getPoolGroups` 去重逻辑；`transitionStock` 校验分支 |
+| 单元测试 | `../../src/services/news/__tests__/`（待创建） | `isDefaultGroup()` 纯函数；`getPoolGroups` 去重逻辑；`transitionStock` 校验分支 |
 | 集成测试 | `tests/services/stockpool.integration.test.ts`（待创建） | `DataBridge` 交互、`EnvelopeFactory` 信封生成、IndexedDB 读写 |
 | Mock 策略 | `__mocks__/dataBridge.ts`（复用） | 隔离 `dataBridge.query` / `forward`，模拟 `DataLayerResult` 返回 |
 

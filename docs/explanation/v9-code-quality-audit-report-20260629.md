@@ -1,4 +1,17 @@
 ---
+title: v9-code-quality-audit-report-20260629
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
+title: docs/explanation/v9-code-quality-audit-report-20260629.md
+code_version: 2.0.0
+tier: reference
+---
+
+---
 title: V9 代码质量校对分析报告
 version: v2.3.0
 last_updated: 2026-06-30
@@ -29,6 +42,7 @@ changelog:
   - date: 2026-06-30
     author: V9 Quality Audit Team
     desc: 完成 G1 批次低风险优化（24 项：dataLayer 补 4 store + 重复字面量提取 + 24 个类型守卫 + 8 个错误子类 + 路径白名单 + 27 个新测试用例 + 文档同步）
+code_version: 2.0.0
 ---
 
 # V9 代码质量校对分析报告
@@ -460,7 +474,7 @@ changelog:
 > **审计日期**: 2026-06-29  
 > **审计版本**: v2.0.0  
 > **审计对象**: 代码编写规范、类型安全、错误处理、内存管理  
-> **详细报告**: [audit-b4-1-code-quality.md](./audit-b4-1-code-quality.md)
+> **详细报告**: [audit-b4-1-code-quality.md](../reference/audit-b4-1-code-quality.md)
 
 ### 12.1 审计概览
 
@@ -504,7 +518,7 @@ changelog:
 > **审计日期**: 2026-06-29  
 > **审计版本**: v2.0.0  
 > **审计对象**: 单元测试、集成测试、E2E 测试、边界条件测试  
-> **详细报告**: [audit-b4-2-test-quality.md](../03-development/audit-b4-2-test-quality.md)
+> **详细报告**: [audit-b4-2-test-quality.md](audit-b4-2-test-quality.md)
 
 ### 13.1 审计概览
 
@@ -545,7 +559,7 @@ changelog:
 > **审计日期**: 2026-06-29  
 > **审计版本**: v2.0.0  
 > **审计对象**: 请求瀑布、重复渲染、Bundle 体积  
-> **详细报告**: [audit-b4-3-performance.md](../02-design/audit-b4-3-performance.md)
+> **详细报告**: [audit-b4-3-performance.md](design/audit-b4-3-performance.md)
 
 ### 14.1 审计概览
 
@@ -584,7 +598,7 @@ changelog:
 > **审计日期**: 2026-06-29  
 > **审计版本**: v2.0.0  
 > **审计对象**: XSS 安全、本地存储安全、输入校验、敏感信息泄露  
-> **详细报告**: [audit-b4-4-security.md](../03-development/audit-b4-4-security.md)
+> **详细报告**: [audit-b4-4-security.md](../reference/audit-b4-4-security.md)
 
 ### 15.1 审计概览
 
@@ -637,7 +651,7 @@ changelog:
 
 ### 16.1 批次目标
 
-依据 `docs/implementation/audit-b4-3-performance.md` 第 2.3 节"低风险问题"清单，在不改变业务行为的前提下，补充 dataLayer 缺失 store、消除重复字面量、补齐类型守卫与错误类型细分，并完成路径白名单与文档同步。
+依据 `./design/audit-b4-3-performance.md` 第 2.3 节"低风险问题"清单，在不改变业务行为的前提下，补充 dataLayer 缺失 store、消除重复字面量、补齐类型守卫与错误类型细分，并完成路径白名单与文档同步。
 
 ### 16.2 优化项清单（24 项）
 
@@ -691,9 +705,9 @@ changelog:
 ## 10. 参考文档
 
 - [V9 架构标准](03-architecture-standards.md)
-- [V9 策略架构](../02-design/v9-strategy-architecture.md)
+- [V9 策略架构](v9-strategy-architecture.md)
 - [V9 模块完成度剖面图](./completeness-profile.md)
-- [V9 审计总结报告](../audit/audit-summary-report)
+- [V9 审计总结报告](./design/audit-summary-report.md)
 - [审计动态分析报告](../audit/dynamic_analysis_report.json)
 
 ---

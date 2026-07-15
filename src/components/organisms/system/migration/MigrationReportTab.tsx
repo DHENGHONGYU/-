@@ -21,7 +21,7 @@ export function MigrationReportTab({ report, onGenerateReport, onReset }: Migrat
   React.useEffect(() => {
     if (report && !reportText) {
       setLoading(true)
-      onGenerateReport(report)
+      void onGenerateReport(report)
         .then(setReportText)
         .finally(() => setLoading(false))
     }

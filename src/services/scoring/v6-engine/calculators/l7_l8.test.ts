@@ -274,7 +274,7 @@ describe('L7SecondCurveCalculator.calculate', () => {
       stock: { symbol: 'TEST' },
       config: { weights: { l7: 0.15 } },
     } as unknown as LayerInput)
-    expect(result.score).toBe(0)
+    expect(Number.isNaN(result.score)).toBe(true)
     expect(result.summary).toContain('第二曲线计算失败')
     expect(result.layerId).toBe('l7')
   })
@@ -336,7 +336,7 @@ describe('L8ChipCalculator.calculate', () => {
       stock: { symbol: 'TEST' },
       config: { weights: { l8: 0.04 } },
     } as unknown as LayerInput)
-    expect(result.score).toBe(0)
+    expect(Number.isNaN(result.score)).toBe(true)
     expect(result.summary).toContain('筹码计算失败')
     expect(result.layerId).toBe('l8')
   })

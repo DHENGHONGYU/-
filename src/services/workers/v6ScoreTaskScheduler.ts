@@ -28,6 +28,7 @@ interface TaskMeta {
   resolve: (result: CompositeScore) => void
   reject: (err: Error) => void
   startAt: number
+  timeoutTimer?: ReturnType<typeof setTimeout>
 }
 
 /** 批次统计 */
@@ -108,6 +109,9 @@ export class V6ScoreTaskScheduler {
     if (!task) return
 
     this.activeTasks.delete(res.id)
+    if (task.timeoutTimer) {
+      clearTimeout(task.timeoutTimer)
+    }
     const duration = Date.now() - task.startAt
 
     if (res.type === 'error') {
@@ -150,27 +154,25 @@ export class V6ScoreTaskScheduler {
 
   private flushQueue(): void {
     if (this.fallbackMode || this.workers.length === 0) {
-      // 回退模式下，任务已在 submit() 中直接处理，无需队列消费
       return
     }
 
     while (this.taskQueue.length > 0 && this.activeTasks.size < this.workers.length) {
       const task = this.taskQueue.shift()!
-      const worker = this.workers[this.activeTasks.size % this.workers.length]!
+      const workerIndex = this.activeTasks.size % this.workers.length
+      const worker = this.workers[workerIndex]!
       if (!worker) {
         logger.error('[TaskScheduler] Worker 分配失败，任务重新入队')
         this.taskQueue.unshift(task)
-        this.activeTasks.delete(task.id)
         task.reject(new Error('Worker not available'))
         continue
       }
       this.activeTasks.set(task.id, task)
       const req: WorkerRequest = { id: task.id, type: 'calculate', input: task.input, config: task.config }
       worker.postMessage(req)
-      logger.info(`[TaskScheduler] 分发任务 ${task.id} (${task.input.symbol})`)
+      logger.info(`[TaskScheduler] 分发任务 ${task.id} (${task.input.symbol}) -> worker#${workerIndex}`)
 
-      // 超时保护
-      setTimeout(() => {
+      task.timeoutTimer = setTimeout(() => {
         if (this.activeTasks.has(task.id)) {
           this.activeTasks.delete(task.id)
           task.reject(new Error(`Task timeout after ${this.taskTimeoutMs}ms`))
@@ -183,7 +185,8 @@ export class V6ScoreTaskScheduler {
   /** 提交单任务 */
   private submitTask(task: TaskMeta): void {
     if (this.fallbackMode || this.workers.length === 0) {
-      this.runOnMainThread(task)
+      void this.runOnMainThread(task)
+      return
       return
     }
     this.taskQueue.push(task)

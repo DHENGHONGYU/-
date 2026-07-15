@@ -2200,9 +2200,9 @@
     },
     {
       "old_path": "reports/changelogs/2026-07-05-ui-testing-optimization.md",
-      "new_path": "docs/reports/changelogs/2026-07-05-ui-testing-optimization.md",
-      "diataxis_category": "explanation",
-      "status": "pending"
+      "new_path": "docs/reference/changelogs/2026-07/2026-07-05-ui-testing-optimization.md",
+      "diataxis_category": "reference",
+      "status": "completed"
     },
     {
       "old_path": "reports/changelogs/action-list-p1.md",

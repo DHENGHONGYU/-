@@ -57,9 +57,9 @@ const PACKAGE_JSON_PATH = join(ROOT, 'package.json')
 
 const ROOT_DOC_FILES = [
   'AGENTS.md',
-  'ARCHITECTURE.md',
+  'architecture.md',
   'CHANGELOG.md',
-  'DATA_DEFINITION.md',
+  'data-definition.md',
   'README.md',
 ]
 
@@ -94,7 +94,7 @@ const ROOT_FILE_NAMES = [
   'eslint.colors.config.js',
 ]
 
-const SOP_PATH = 'docs/03-development/development-workflow-sop.md'
+const SOP_PATH = 'docs/reference/development-workflow-sop.md'
 const HUSKY_PRE_COMMIT_PATH = '.husky/pre-commit'
 
 // 排除列表：这些字符串看起来像脚本名但实际上是示例/占位符

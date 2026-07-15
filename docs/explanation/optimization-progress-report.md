@@ -1,3 +1,16 @@
+---
+title: optimization-progress-report
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
+title: docs/explanation/optimization-progress-report.md
+code_version: 2.0.0
+tier: reference
+---
+
 # 优化计划执行进度报告（P1 服务层中优项推进）
 
 > 生成时间：2026-07-11 00:25
@@ -25,7 +38,7 @@
 | `src/services/useCase/rebalancePortfolio.useCase.ts` | `<arrow>` | 提取 `updateHoldingForOrder` 持仓更新辅助函数 |
 | `src/services/hybrid-proofread/localCollector.ts` | `collectFiles` / `traverse` | 提取模块级 `isPathExcluded` / `isPathIncluded` / `collectFileIfIncluded` |
 | `src/services/hybrid-proofread/reportGenerator.ts` | `generateRecommendations` | 提取 `appendRecommendation` 去重辅助函数 |
-| `src/utils/dataValidation.ts` | `sanitizeObject` | 提取 `sanitizeValue` 单字段脱敏函数 |
+| `src/lib/validation.ts` | `sanitizeObject` | 提取 `sanitizeValue` 单字段脱敏函数 |
 | `src/store/analysisStore.derived.ts` | `scoreLevelDistribution` | 提取 `classifyScoreLevel` 分档函数 |
 | `src/store/rotationSignalStore.derived.ts` | `strengthDistribution` | 提取 `classifyStrength` 强度分类函数 |
 | `src/store/chatStore.derived.ts` | `messageStatsMemo` | 使用 `ROLE_STAT_KEY` 查找表替代 if-else 链 |
@@ -34,12 +47,12 @@
 | `src/lib/localStorageManager.ts` | `byteLength` / `getNamespaceInfo` | 提取 `utf8ByteCount` / `computeOldestNewest` |
 | `src/data/queryBuilder.ts` | 新闻任务 | 提取 `collectSuccessfulNews` 辅助函数 |
 | `src/services/system/localDocService.ts` | `searchLocalDocs` | 提取 `calculateMatchScore` 评分辅助函数 |
-| `src/services/trade/holdingsService.ts` | `requestWithRetry` | 改为递归重试，消除循环内嵌套 |
+| `src/services/trading/portfolioService.ts` | `requestWithRetry` | 改为递归重试，消除循环内嵌套 |
 | `src/services/scoring/v6-engine/calculators/l3/l3a-financial.ts` | `scoreFinancialDimensions` | 提取 `scoreCashFlow` / `scoreOrders` 阈值函数 |
 
 ### 1.2 类型/测试修复
 
-- 补充 `src/utils/dataValidation.test.ts` 缺失的 `validateConfigName` 导入。
+- 补充 `src/lib/dataValidation.test.ts` 缺失的 `validateConfigName` 导入。
 
 ### 1.3 2026-07-10 测试失败与 MCP 违规收尾（新增 3 项）
 
@@ -81,7 +94,7 @@
 | `src/services/news/stockLinker.ts` | `matchText` | 拆分 `matchExactCode` / `matchExactName` / `matchFuzzyName` / `matchIndustry` 四个策略函数 |
 | `src/services/scoring/rotationSignalDetector.ts` | `detectBySector` | 提取 `aggregateSectorBars` 聚合函数 |
 | `src/services/system/localDocService.ts` | `scanFolder` | 提取 `processFileEntry` 文件处理函数 |
-| `src/services/trade/holdingsService.ts` | `requestWithRetry` | 提取 `sleep` 辅助函数，循环体提前退出 |
+| `src/services/trading/portfolioService.ts` | `requestWithRetry` | 提取 `sleep` 辅助函数，循环体提前退出 |
 | `src/services/data-collector/collectors/BaseCollector.ts` | `collectWithRetry` | 提取 `tryCollectOnce` 单次尝试函数 |
 | `src/services/scoring/hotSectorDimensions.ts` | `calculateSentiment` | 排名映射改为 `RANK_TIERS` 数组查找 |
 | `src/services/scoring/v6-engine/calculators/l0_l1_l2.ts` | `scoreLongTermTrend` | 趋势评分改为 `TREND_SCORES` 映射表 |
@@ -171,8 +184,8 @@
 | `src/store/marketDataStore.ts` | `handleCollectionResult` | 提取 `updateDataSourceByKey` / `updateLoadingMapByInstanceId` |
 | `src/store/stockAnalysisStore.ts` | `<async>` | 反转 `signal?.aborted` 条件，消除重复守卫 |
 | `src/cockpit/providers/MarketDataProvider.tsx` | `<callback>` | 提取 `updateInstanceStatus` 辅助函数 |
-| `src/components/output/ReviewWizard.tsx` | `<async IIFE>` | 提取 `setIfActive` 辅助函数 |
-| `src/components/system/SystemArchitectureDiagram.tsx` | `<effect>` | 提取 `updateIfMounted` 辅助函数 |
+| `src/components/organisms/output/ReviewWizard.tsx` | `<async IIFE>` | 提取 `setIfActive` 辅助函数 |
+| `src/components/organisms/system/SystemArchitectureDiagram.tsx` | `<effect>` | 提取 `updateIfMounted` 辅助函数 |
 | `src/pages/output/ResearchReportPage.tsx` | `<async>` | 收集 error 与结果，在 `finally` 中统一判断 `signal?.aborted` |
 | `src/pages/trading/HoldingsPage.tsx` | `<async>` | 收集 error 与响应码，在 `finally` 中统一判断 `!isMountedRef.current` |
 
@@ -215,7 +228,7 @@
 
 ## 七、下一步建议执行（2026-07-12）
 
-> 对应 `optimization-summary-report.md` 第七章「下一步建议」四项，本次全部落地。
+> 对应 `./design/optimization-summary-report.md` 第七章「下一步建议」四项，本次全部落地。
 
 ### 7.1 按优先级推进优化计划（P0 → P1）
 
@@ -279,7 +292,7 @@
   - `rotationCalculator.calculateResonance`（计划 #14 称 7 分支链）→ 实际已改为 `tiers` 数组 + `.find()` 查表，**无任何链**。
   - `AnalysisApp.tsx`（计划 #13 称 12 分支链）→ 实际 `matchAnalysisRoute` 仅 2 分支 `if/else-if`，**无长链**。
 - 项目权威门禁 `npm run complexity-scan` 报告 **0/0/0**，但因其口径过保守（深层嵌套强制要求含循环 `loopDepth>=1`、长链阈值 `>=6`、重复条件要求同函数逐字）**漏报**真实债务。
-- 为此新建独立实测工具 `scripts/measure-complexity-now.ts`（口径对齐计划：嵌套深度≥4、链≥4、同函数逐字重复），扫描 **707 文件**，得真实债务 **95 项**：深层嵌套 65、重复条件 29、长链 1。
+- 为此新建独立实测工具 `scripts/quality/measure-complexity-now.ts`（口径对齐计划：嵌套深度≥4、链≥4、同函数逐字重复），扫描 **707 文件**，得真实债务 **95 项**：深层嵌套 65、重复条件 29、长链 1。
 
 ### 9.2 真实基线固化
 

@@ -1,3 +1,16 @@
+---
+title: audit-b4-2-test-quality
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
+title: docs/explanation/audit-b4-2-test-quality.md
+code_version: 2.0.0
+tier: reference
+---
+
 # V9 前端应用测试质量审计报告
 
 > 审计日期：2026-06-29  
@@ -88,7 +101,7 @@
 | **数据层** | `src/core/databridge.ts` | ⚠️ 中高 | 数据总线核心，通过集成测试间接覆盖 |
 | **组件层** | `src/components/` (UI 组件库) | ⚠️ 中 | 大量通用 UI 组件缺少单元测试（依赖页面级测试间接覆盖） |
 | **组件层** | `src/cockpit/widgets/` (仪表盘组件) | ⚠️ 中 | 仪表盘 Widget 组件缺少独立测试 |
-| **引擎层** | `src/engine/index.ts` (主引擎) | ⚠️ 中 | 核心引擎入口，缺少独立测试 |
+| **引擎层** | `src/showcase/index.ts` (主引擎) | ⚠️ 中 | 核心引擎入口，缺少独立测试 |
 | **引擎层** | `src/agents/agentRuntime.ts` | ⚠️ 中 | Agent 运行时，缺少独立测试 |
 | **核心层** | `src/core/dataflow/dataflowEngine.ts` | ⚠️ 中 | 数据流引擎，通过 store 间接测试 |
 | **工具库** | `src/lib/logger.ts` | 🟡 低 | 日志工具（注：tests/logger.test.ts 存在，已覆盖） |

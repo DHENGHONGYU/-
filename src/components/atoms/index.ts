@@ -105,3 +105,20 @@ export {
 export type { BadgeStyle } from './statusColors'
 
 // 注：PageContainer 属模板层，已在 templates/index.ts 导出，原子桶不重复导出
+
+// 全局签名母题：信号频谱（统一视觉锚点）
+export { SignalSpectrum } from '../cockpit/SignalSpectrum'
+export type { SignalSpectrumProps } from '../cockpit/SignalSpectrum'
+
+// 安全状态组件（本地加密存储状态展示）
+export { SecurityStatus, SecurityBadge } from '../cockpit/SecurityStatus'
+export type { SecurityStatusProps, SecurityBadgeProps } from '../cockpit/SecurityStatus'
+
+// 信息密度控制组件（渐进披露与自适应密度）
+export { DensityToggle } from '../cockpit/DensityToggle'
+export { DensityProvider, useDensity, useDensityConfig, useDensityClass } from '../cockpit/DensityContext'
+export type { DensityLevel, DensityConfig } from '../cockpit/DensityContext'
+
+// 交互状态组件（四态组件库：loading/empty/error/skeleton）
+export { Loading, Empty, ErrorState } from '../molecules/states'
+export type { LoadingProps, EmptyProps, ErrorStateProps } from '../molecules/states'

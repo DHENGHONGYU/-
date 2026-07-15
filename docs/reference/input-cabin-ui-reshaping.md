@@ -1,4 +1,11 @@
 ---
+title: input-cabin-ui-reshaping
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: 输入舱 UI 体系化重塑说明
 version: v0.9.0
 last_updated: 2026-06-25
@@ -8,6 +15,8 @@ change_log:
   - date: 2026-06-25
     author: Documentation Governor
     desc: 注入 Frontmatter 元数据（Phase 3 版本化）
+code_version: 2.0.0
+tier: important
 ---
 # 输入舱 UI 体系化重塑说明
 
@@ -27,7 +36,7 @@ change_log:
 | 顶部状态栏（56px） | `PortalShell` TopBar | `src/portal/PortalShell.tsx` |
 | 左侧侧边栏（260px，分组导航） | `PortalShell` Sidebar | `src/portal/PortalShell.tsx` |
 | 卡片网格 / 数据表格 | `Card`、`Table`、`PoolBoard` 等组件 | `src/components/ui/*`、`src/components/pool/*` |
-| 标签 / 徽章 | `Badge` 组件 | `src/components/ui/Badge.tsx` |
+| 标签 / 徽章 | `Badge` 组件 | `src/components/atoms/Badge.tsx` |
 | 进度条 | `DataTestPanel` 进度条 | `src/apps/input/DataTestPanel.tsx` |
 
 ---
@@ -86,8 +95,8 @@ change_log:
 | `src/config/routes.ts` | 注册输入舱子路由 |
 | `src/services/input/batchImportService.ts` | 修复 `代码,名称` 解析 bug |
 | `tests/InputApp.test.tsx` | 适配新的子页面结构 |
-| `docs/06-routing-specs.md` | 同步路由表与舱室映射 |
-| `docs/08-implementation-plan.md` | 更新实施状态 |
+| `./06-routing-specs.md` | 同步路由表与舱室映射 |
+| `./08-implementation-plan.md` | 更新实施状态 |
 | `CHANGELOG.md` | 记录本次重塑 |
 
 ---

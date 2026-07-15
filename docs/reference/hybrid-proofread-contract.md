@@ -1,14 +1,23 @@
 ---
+title: hybrid-proofread-contract
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: hybrid-proofread 服务契约
 status: draft
 owner: 架构组
 updated: 2026-07-12
+code_version: 2.0.0
+tier: important
 ---
 
 # hybrid-proofread-contract.md — 混合校对（人机协同校验）服务接口契约
 
 > **定位**：定义 `hybrid-proofread` 子域的接口契约、职责边界、数据流与依赖关系。  
-> **关联**：`../../architecture/services-catalog.md`（子域 #9）、`AGENTS.md` §一（分层规则）。
+> **关联**：`./services-catalog.md`（子域 #9）、`../../AGENTS.md` §一（分层规则）。
 
 ---
 

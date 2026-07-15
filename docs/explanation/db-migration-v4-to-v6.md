@@ -1,4 +1,11 @@
 ---
+title: db-migration-v4-to-v6
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: V6ProDB IndexedDB 升级规范（v4 → v6）
 version: v0.9.0
 last_updated: 2026-06-25
@@ -8,6 +15,8 @@ change_log:
   - date: 2026-06-25
     author: Documentation Governor
     desc: 注入 Frontmatter 元数据（Phase 3 版本化）
+code_version: 2.0.0
+tier: important
 ---
 > **Status**: Current  
 > **Version**: v0.9.0-migration-implemented  
@@ -156,5 +165,5 @@ IndexedDB 的 `onupgradeneeded` 只能向前升级，不支持自动回滚。因
 
 - `src/data/db.ts`：升级实现。
 - `src/config/dbConfig.ts`：`DB_NAME`、`DB_VERSION`、`DEFAULT_POOL_GROUP`、`STORE_NAME` 定义。
-- `docs/implementation/v6-to-v9-migration-spec.md`：V6 Pro JSON 迁移转换规范。
-- `docs/implementation/adr/2026-06-25-v6-migration.md`：V6 Pro 全量导出迁移决策记录。
+- `../reference/v6-to-v9-migration-spec.md`：V6 Pro JSON 迁移转换规范。
+- `./2026-06-25-v6-migration.md`：V6 Pro 全量导出迁移决策记录。

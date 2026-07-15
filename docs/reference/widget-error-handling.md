@@ -1,4 +1,11 @@
 ---
+title: widget-error-handling
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: V9 Widget 错误隔离与降级规格
 version: v0.9.0-doc-sync-batch2
 last_review: 2026-06-27
@@ -7,12 +14,14 @@ change_log:
   - date: 2026-06-27
     author: Documentation Governor
     desc: 首次定义 Widget ErrorBoundary、隔离策略、降级 UI 与错误上报机制
+code_version: 2.0.0
+tier: important
 ---
 
 # V9 Widget 错误隔离与降级规格
 
-> **对应蓝图**：`docs/implementation/v9-system-blueprint.md` §7.1 PortalShell/Widget 布局、§9 质量门禁（E2E / PWA / 死代码）、§10 偏差项 D19「Widget 级 ErrorBoundary 待专项接入」。
-> **依赖文档**：`docs/implementation/feedback-loop-spec.md`（错误状态的用户反馈）、`docs/implementation/chart-integration.md`（图表 Widget 的渲染错误处理）。
+> **对应蓝图**：`./v9-system-blueprint.md` §7.1 PortalShell/Widget 布局、§9 质量门禁（E2E / PWA / 死代码）、§10 偏差项 D19「Widget 级 ErrorBoundary 待专项接入」。
+> **依赖文档**：`./feedback-loop-spec.md`（错误状态的用户反馈）、`./chart-integration.md`（图表 Widget 的渲染错误处理）。
 
 ---
 
@@ -26,7 +35,7 @@ change_log:
 
 ### 2.1 复用全局 ErrorBoundary
 
-当前全局错误边界已实现于 `src/components/ErrorBoundary.tsx`，Widget 级复用该组件并传入自定义 `fallback`。
+当前全局错误边界已实现于 `src/components/organisms/shared/ErrorBoundary.tsx`，Widget 级复用该组件并传入自定义 `fallback`。
 
 ```tsx
 // src/cockpit/components/WidgetErrorBoundary.tsx
@@ -176,7 +185,7 @@ export function reportWidgetError(report: WidgetErrorReport): void {
 
 ### 5.2 与反馈服务的协作
 
-ErrorBoundary 捕获后，除渲染降级 UI 外，应通过 `feedbackService.notify()` 向用户提示严重错误。详见 `docs/implementation/feedback-loop-spec.md` §6。
+ErrorBoundary 捕获后，除渲染降级 UI 外，应通过 `feedbackService.notify()` 向用户提示严重错误。详见 `./feedback-loop-spec.md` §6。
 
 ```ts
 // 在 ErrorBoundary componentDidCatch 中扩展
@@ -216,7 +225,7 @@ componentDidCatch(error: Error, info: ErrorInfo) {
 
 ## 7. 相关链接
 
-- `docs/implementation/v9-system-blueprint.md` §7.1、§9、D19
-- `docs/04-ui-ux-specs.md` §4.5（ErrorBoundary 组件清单）
-- `docs/implementation/feedback-loop-spec.md` §6
-- `docs/implementation/chart-integration.md` §5.3（图表渲染错误处理）
+- `./v9-system-blueprint.md` §7.1、§9、D19
+- `./04-ui-ux-specs.md` §4.5（ErrorBoundary 组件清单）
+- `./feedback-loop-spec.md` §6
+- `./chart-integration.md` §5.3（图表渲染错误处理）

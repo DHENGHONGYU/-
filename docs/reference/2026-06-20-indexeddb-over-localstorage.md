@@ -1,4 +1,11 @@
 ---
+title: 2026-06-20-indexeddb-over-localstorage
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
 title: ADR-002: IndexedDB 替代 localStorage
 version: v0.9.0
 last_updated: 2026-06-24
@@ -8,6 +15,8 @@ change_log:
   - date: 2026-06-24
     author: Documentation Governor
     desc: 注入 Frontmatter 元数据（Phase 3 版本化）
+code_version: 2.0.0
+tier: reference
 ---
 # ADR-002: IndexedDB 替代 localStorage
 
@@ -42,4 +51,4 @@ change_log:
 
 ## 相关文档
 
-- `docs/03-architecture-standards.md`
+- `./03-architecture-standards.md`

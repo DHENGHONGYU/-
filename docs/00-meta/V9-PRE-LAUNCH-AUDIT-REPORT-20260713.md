@@ -1,3 +1,21 @@
+---
+title: v9-pre-launch-audit-report-20260713
+code_version: 2.0.0
+
+tier: core
+---
+
+---
+title: docs/00-meta/v9-pre-launch-audit-report-20260713.md
+code_version: 2.0.0
+tier: core
+---
+
+---
+title: docs/00-meta/v9-pre-launch-audit-report-20260713.md
+code_version: 2.0.0
+---
+
 # V9 上线前系统性梳理报告
 
 > **日期**: 2026-07-13  
@@ -21,9 +39,9 @@
 | 任务 | 状态 | 交付物 |
 |:---|:---|:---|
 | 模块功能完整性评估 | ✅ | 自动化审计套件全部通过 |
-| 量化评分报告更新 | ✅ | [v9-code-quality-audit-report-20260713.md](file:///d:/FinSightV9/docs/01-requirements/v9-code-quality-audit-report-20260713.md) |
+| 量化评分报告更新 | ✅ | [v9-code-quality-audit-report-20260713.md](../explanation/v9-code-quality-audit-report-20260713.md) |
 | 冗余文件归档索引 | ✅ | [ARCHIVE_INDEX.md](file:///d:/FinSightV9/archive/ARCHIVE_INDEX.md) |
-| CHANGELOG 警告处理 | ✅ | [CHANGELOG_WARNINGS_HANDLING_STRATEGY.md](file:///d:/FinSightV9/docs/00-meta/CHANGELOG_WARNINGS_HANDLING_STRATEGY.md) |
+| CHANGELOG 警告处理 | ✅ | [changelog-warnings-handling-strategy.md](./changelog-warnings-handling-strategy.md) |
 
 ---
 
@@ -78,9 +96,9 @@
 
 | 文件 | 说明 |
 |:---|:---|
-| [DIRECTORY_STRUCTURE_GUIDE.md](file:///d:/FinSightV9/docs/00-meta/DIRECTORY_STRUCTURE_GUIDE.md) | v3.1.0，与 AGENTS.md 逐条对齐 |
-| [DIRECTORY_AUDIT_TODO.md](file:///d:/FinSightV9/docs/00-meta/DIRECTORY_AUDIT_TODO.md) | 13 项任务全部完成 |
-| [DIRECTORY_AUDIT_FEASIBILITY_PLAN.md](file:///d:/FinSightV9/docs/00-meta/DIRECTORY_AUDIT_FEASIBILITY_PLAN.md) | 执行状态更新 |
+| [directory-structure-guide.md](./directory-structure-guide.md) | v3.1.0，与 AGENTS.md 逐条对齐 |
+| [directory-audit-todo.md](./directory-audit-todo.md) | 13 项任务全部完成 |
+| [directory-audit-feasibility-plan.md](./directory-audit-feasibility-plan.md) | 执行状态更新 |
 
 ---
 

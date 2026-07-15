@@ -1,3 +1,16 @@
+---
+title: yahoo_finance
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/yahoo_finance.md
+code_version: 2.0.0
+tier: important
+---
+
 # Yahoo Finance 插件
 
 > **数据域**: Yahoo Finance 全球股票数据  

@@ -1,3 +1,16 @@
+---
+title: audit-b4-1-code-quality
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
+title: docs/reference/audit-b4-1-code-quality.md
+code_version: 2.0.0
+tier: reference
+---
+
 # V9 前端应用代码编写质量审计报告 (B4-1)
 
 > 审计日期：2026-06-29  

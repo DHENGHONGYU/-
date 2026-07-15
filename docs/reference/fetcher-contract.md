@@ -1,14 +1,23 @@
 ---
+title: fetcher-contract
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: fetcher 服务契约
 status: active
 owner: fetcher 子域 / 架构组
 updated: 2026-07-12
+code_version: 2.0.0
+tier: important
 ---
 
 # fetcher-contract.md — 行情/资讯抓取服务
 
 > **定位**：统一外部行情/资讯 API 适配层，负责采集、限流、缓存、错误恢复。  
-> **关联**：`../../architecture/services-catalog.md`（子域 #8）、`AGENTS.md` §一（分层规则）。
+> **关联**：`./services-catalog.md`（子域 #8）、`../../AGENTS.md` §一（分层规则）。
 
 ---
 

@@ -1,3 +1,14 @@
+---
+title: docs/00-meta/ai-index/.ai-index/README.md
+code_version: 2.0.0
+---
+
+---
+title: docs/00-meta/ai-index/.ai-index/README.md
+code_version: 2.0.0
+tier: core
+---
+
 # V9 AI 索引缓存（.ai-index）
 
 > **定位**：存放供 AI Agent 快速加载的项目知识缓存，降低每次对话重复解析 `docs/` 与 `src/` 的 Token 消耗。遵循 AGENTS.md §七 Token 消耗控制规则。

@@ -123,7 +123,7 @@ export function useIndustryScorePage(): UseIndustryScorePageReturn {
       if (mounted && key) {
         setLlmConfig((prev) => ({ ...prev, apiKey: key }))
       }
-    })
+    }).catch(() => {})
     return () => { mounted = false }
   }, [])
 
@@ -144,8 +144,8 @@ export function useIndustryScorePage(): UseIndustryScorePageReturn {
       loadIndustryScoreHistory(selectedCode).then((sorted) => {
         setHistory(sorted)
         setPreviousResult(sorted[0])
-      })
-      loadResearchLogsForTarget(selectedCode).then(setLogs)
+      }).catch(() => {})
+      loadResearchLogsForTarget(selectedCode).then(setLogs).catch(() => {})
     }
   }, [selectedCode])
 

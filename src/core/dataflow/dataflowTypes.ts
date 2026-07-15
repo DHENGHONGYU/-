@@ -5,9 +5,11 @@ export type DataChannel =
   | 'market:emotion'
   | 'portfolio:summary'
   | 'portfolio:holding'
+  | 'portfolio:risk'
   | 'strategy:signal'
   | 'strategy:score'
   | 'agent:status'
+  | 'agent:logs'
   | 'system:health'
 
 export interface DataPacket<T = unknown> {

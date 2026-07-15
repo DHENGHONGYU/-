@@ -1,4 +1,11 @@
 ---
+title: data-collection-architecture
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: 数据采集模块架构设计
 version: v0.9.0
 last_updated: 2026-06-24
@@ -8,6 +15,8 @@ change_log:
   - date: 2026-06-24
     author: Documentation Governor
     desc: 注入 Frontmatter 元数据（Phase 3 版本化）
+code_version: 2.0.0
+tier: important
 ---
 # 数据采集模块架构设计
 
@@ -16,7 +25,7 @@ change_log:
 > **Last Updated**: 2026-06-24
 >
 > 本文档融合 v6-pro-cockpit 数据采集策略与 V9 五层架构，定义 V9 数据采集模块（Data Fetcher）的职责、数据流、接口契约与落地路径。  
-> 关联文档：`docs/05-engine-specs.md`、`docs/08-implementation-plan.md`
+> 关联文档：`../reference/05-engine-specs.md`、`../reference/08-implementation-plan.md`
 
 ---
 

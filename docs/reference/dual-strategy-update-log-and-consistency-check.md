@@ -1,9 +1,18 @@
 ---
+title: dual-strategy-update-log-and-consistency-check
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: V9 双策略体系 — 更新日志与一致性检查
 version: v1.0.0
 last_updated: 2026-06-27
 maintainer: V9 Architecture Team
 status: active
+code_version: 2.0.0
+tier: important
 ---
 
 # V9 双策略体系 — 更新日志与一致性检查
@@ -37,14 +46,14 @@ status: active
 
 | 文件 | 更新内容 |
 |:---|:---|
-| `docs/03-architecture-standards.md` | 新增 §3.3.2 双策略数据流；L3 引擎层增加 HotSectorAnalyzer / ValuePitAnalyzer / RotationSignalDetector / DualStrategyEngine；IndexedDB Schema 增加 `hot_sector_scores` / `value_pit_scores`；D20 偏差项标记为已验收 |
-| `docs/05-engine-specs.md` | 新增 §2.5 双策略评分引擎；明确热门/洼地五维权重；新增轮动信号检测；列出实现文件 |
-| `docs/02-functional-specs.md` | 新增 US-010/US-011 用户故事；新增流程 4「双策略选股 → 评分 → 交易信号」；新增 §2.4.15/§2.4.16 策略功能规格 |
-| `docs/10-glossary.md` | 新增 §10.10 双策略体系术语：热门板块策略、价值洼地策略、HotSectorScore、ValuePitScore、Rotation Signal Detector、Dual Strategy Engine、HotSectorWidget、ValuePitWidget |
-| `docs/implementation/v9-system-blueprint.md` | D20 标记为已落地；ADR-009 已接受；双策略数据流规格与差异分析文档索引 |
-| `docs/implementation/adr/2026-06-27-dual-strategy-system.md` | ADR-009 创建并 Accepted，决策采用「独立 Store + 独立 Analyzer + dualStrategyEngine 编排」 |
-| `docs/implementation/dual-strategy-dataflow-spec.md` | 用户输入规格文档化（proposal） |
-| `docs/implementation/dual-strategy-gap-analysis.md` | 差异分析报告（proposal） |
+| `./03-architecture-standards.md` | 新增 §3.3.2 双策略数据流；L3 引擎层增加 HotSectorAnalyzer / ValuePitAnalyzer / RotationSignalDetector / DualStrategyEngine；IndexedDB Schema 增加 `hot_sector_scores` / `value_pit_scores`；D20 偏差项标记为已验收 |
+| `./05-engine-specs.md` | 新增 §2.5 双策略评分引擎；明确热门/洼地五维权重；新增轮动信号检测；列出实现文件 |
+| `./02-functional-specs.md` | 新增 US-010/US-011 用户故事；新增流程 4「双策略选股 → 评分 → 交易信号」；新增 §2.4.15/§2.4.16 策略功能规格 |
+| `./10-glossary.md` | 新增 §10.10 双策略体系术语：热门板块策略、价值洼地策略、HotSectorScore、ValuePitScore、Rotation Signal Detector、Dual Strategy Engine、HotSectorWidget、ValuePitWidget |
+| `./v9-system-blueprint.md` | D20 标记为已落地；ADR-009 已接受；双策略数据流规格与差异分析文档索引 |
+| `../explanation/design/2026-06-27-dual-strategy-system.md` | ADR-009 创建并 Accepted，决策采用「独立 Store + 独立 Analyzer + dualStrategyEngine 编排」 |
+| `./dual-strategy-dataflow-spec.md` | 用户输入规格文档化（proposal） |
+| `../explanation/dual-strategy-gap-analysis.md` | 差异分析报告（proposal） |
 
 ### 2.2 配置层
 
@@ -68,9 +77,9 @@ status: active
 
 | 文件 | 职责 | 输入 | 输出 |
 |:---|:---|:---|:---|
-| `src/services/trading/hotSectorAnalyzer.ts` | 热门板块五维评分 | `Stock[]` | `HotSectorScore[]`（`src/data/types.ts`） |
-| `src/services/trading/valuePitAnalyzer.ts` | 价值洼地五维评分 | `Stock[]` | `ValuePitScore[]`（`src/data/types.ts`） |
-| `src/services/trading/rotationSignalDetector.ts` | 轮动信号检测 | `ValuePitScore[]` | `Signal[]` + watchlistCandidates |
+| `src/services/scoring/hotSectorAnalyzer.ts` | 热门板块五维评分 | `Stock[]` | `HotSectorScore[]`（`src/data/types.ts`） |
+| `src/services/scoring/valuePitAnalyzer.ts` | 价值洼地五维评分 | `Stock[]` | `ValuePitScore[]`（`src/data/types.ts`） |
+| `src/services/scoring/rotationSignalDetector.ts` | 轮动信号检测 | `ValuePitScore[]` | `Signal[]` + watchlistCandidates |
 | `src/services/trading/dualStrategyEngine.ts` | 双策略编排 | `Stock[]` | `DualStrategyResult` |
 
 #### 版本 B：`src/services/scoring/*`（基于自定义输入类型，被 DataBridge/页面/Store 使用）
@@ -115,7 +124,7 @@ status: active
 | 文件 | 更新内容 |
 |:---|:---|
 | `src/config/routes.ts` | 新增 `/analysis/hot-sectors`、`/analysis/value-pit` 路由 |
-| `docs/06-routing-specs.md` | 同步新增路由映射（已检查） |
+| `./06-routing-specs.md` | 同步新增路由映射（已检查） |
 
 ### 2.8 测试层
 
@@ -130,9 +139,9 @@ status: active
 | `src/services/scoring/hotSectorAnalyzer.test.ts` | 维度评分函数单元测试 |
 | `src/services/scoring/valuePitAnalyzer.test.ts` | 维度评分函数单元测试 |
 | `src/services/scoring/rotationSignalDetector.test.ts` | 成交量/资金/金叉检测单元测试 |
-| `src/services/trading/hotSectorAnalyzer.test.ts` | `trading` 版本热门板块分析 |
-| `src/services/trading/valuePitAnalyzer.test.ts` | `trading` 版本价值洼地分析 |
-| `src/services/trading/rotationSignalDetector.test.ts` | `trading` 版本轮动信号检测 |
+| `src/services/scoring/hotSectorAnalyzer.test.ts` | `trading` 版本热门板块分析 |
+| `src/services/scoring/valuePitAnalyzer.test.ts` | `trading` 版本价值洼地分析 |
+| `src/services/scoring/rotationSignalDetector.test.ts` | `trading` 版本轮动信号检测 |
 
 ---
 
@@ -144,7 +153,7 @@ status: active
 |:---|:---|
 | 文档与实现命名 | `HotSectorScore` / `ValuePitScore` / `RotationSignal` / `DualStrategyEngine` 在文档与代码中命名一致 |
 | 五维权重 | 文档与 `services/scoring/*` 实现中热门 35/25/20/15/5、洼地 30/25/20/15/10 权重一致 |
-| 阈值 | `src/config/dualStrategyRules.ts` 与 `docs/05-engine-specs.md`、`docs/02-functional-specs.md` 阈值一致 |
+| 阈值 | `src/config/dualStrategyRules.ts` 与 `./05-engine-specs.md`、`./02-functional-specs.md` 阈值一致 |
 | 数据层 | `hot_sector_scores` / `value_pit_scores` Store 在 `dbConfig.ts`、`db.ts`、`dataLayer.ts` 中一致 |
 | DataBridge | action 名称、channel 名称、ACL 授权在 `dbConfig.ts` 与 `databridge.ts` 中一致 |
 | Widget 注册 | `widgetRegistry.ts` 与 `cockpit.constants.ts`（通过 `DEFAULT_WIDGET_CONFIG`）一致 |
@@ -169,23 +178,23 @@ status: active
 
 | 编号 | 任务 | 涉及文件 | 验收标准 |
 |:---|:---|:---|:---|
-| FIX-001 | 统一双策略 Analyzer 实现 | `src/services/trading/hotSectorAnalyzer.ts`、`valuePitAnalyzer.ts`、`rotationSignalDetector.ts`、`dualStrategyEngine.ts` | 删除或合并重复实现；`tsc`、`lint`、`test` 全通过 |
+| FIX-001 | 统一双策略 Analyzer 实现 | `src/services/scoring/hotSectorAnalyzer.ts`、`valuePitAnalyzer.ts`、`rotationSignalDetector.ts`、`dualStrategyEngine.ts` | 删除或合并重复实现；`tsc`、`lint`、`test` 全通过 |
 | FIX-002 | 统一类型定义 | `src/data/types.ts`、`src/types/modules/widget.types.ts`、`src/services/scoring/*` | `HotSectorScore` / `ValuePitScore` 字段与 Widget 的 `HotSectorData` / `ValuePitData` 一致；消除类型转换警告 |
-| FIX-003 | 更新 ADR-009 实施状态 | `docs/implementation/adr/2026-06-27-dual-strategy-system.md` | 所有已实现项勾选为 `[x]`；未实现项（如交易执行差异化）保留为 `[ ]` 并说明计划 |
+| FIX-003 | 更新 ADR-009 实施状态 | `../explanation/design/2026-06-27-dual-strategy-system.md` | 所有已实现项勾选为 `[x]`；未实现项（如交易执行差异化）保留为 `[ ]` 并说明计划 |
 
 ### 4.2 中优先级（P1）
 
 | 编号 | 任务 | 涉及文件 | 验收标准 |
 |:---|:---|:---|:---|
 | FIX-004 | 移除页面/Store 中的硬编码样本 | `src/pages/analysis/HotSectorPage.tsx`、`ValuePitPage.tsx`、`src/store/hotSectorStore.ts`、`valuePitStore.ts`、`rotationSignalStore.ts` | 数据来自 `dataLayer` 或 `MarketDataProvider`；删除组件内硬编码样本 |
-| FIX-005 | 将 `dualStrategyEngine` 接入实际调用链 | `src/services/trading/tradingService.ts` 或 `src/pages/analysis/AnalysisHubPage.tsx` | 至少一个真实入口调用 `runDualStrategy`；输出可被 Widget/交易层消费 |
+| FIX-005 | 将 `dualStrategyEngine` 接入实际调用链 | `src/services/trading/tradingService.ts` 或 `src/apps/analysis/AnalysisApp.tsx` | 至少一个真实入口调用 `runDualStrategy`；输出可被 Widget/交易层消费 |
 | FIX-006 | 双策略评分驱动交易执行 | `src/services/trading/tradingService.ts`、`riskEngine.ts`、`positionSizer.ts`、`tradingConfig.ts` | `TradingSignal` 增加 `strategy` 字段；风控/仓位读取策略差异化配置 |
 
 ### 4.3 低优先级（P2）
 
 | 编号 | 任务 | 涉及文件 | 验收标准 |
 |:---|:---|:---|:---|
-| FIX-007 | 更新 `docs/08-implementation-plan.md` 中双策略任务状态 | `docs/08-implementation-plan.md` | 2.4.1 状态改为 🟢 已验收；补充 FIX-005/FIX-006 后续任务 |
+| FIX-007 | 更新 `./08-implementation-plan.md` 中双策略任务状态 | `./08-implementation-plan.md` | 2.4.1 状态改为 🟢 已验收；补充 FIX-005/FIX-006 后续任务 |
 | FIX-008 | 补全 CHANGELOG 双策略条目 | `CHANGELOG.md` | 在 `[Unreleased]` 或新版本中记录双策略落地明细 |
 
 ---

@@ -1,6 +1,14 @@
 ---
+title: complexity-remediation-plan
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
 title: 剩余复杂度整改任务清单与计划（2026-07-12）
 code_version: 2.0.0
+tier: reference
 ---
 
 # 剩余复杂度整改任务清单与计划（2026-07-12）
@@ -42,10 +50,10 @@ code_version: 2.0.0
 | D16 | `src/store/signalQualityStore.derived.ts` | 2 处 | 2 | 提取派生 helper |
 
 ### Tier 2 — 单文件单违规（服务/核心层，约 30 处，逐文件卫语句/helper）
-`src/core/databridge.ts`(query 段，谨慎)、`src/lib/store-audit/analyzer.ts`、`src/mcp/core/client.ts`、`src/mcp/core/mcpAclMonitor.ts`、`src/mcp/register.ts`、`src/services/backtest/backtestMetrics.ts`、`src/services/collection/collectionWizardPersistence.ts`、`src/services/data-collector/directDataAPI.ts`、`src/services/fetcher/dataSourceRegistry.ts`、`src/services/fetcher/directDataAPI.ts`、`src/services/fetcher/fetcherInterceptor.ts`、`src/services/fetcher/orchestrator/phaseOrchestrator.ts`、`src/services/input/batchImportExecutor.ts`、`src/services/news/stockLinker.ts`、`src/services/rbac/rbacManagementService.ts`、`src/services/scoring/v6-engine/calculators/l7_l8.ts`、`src/services/scoring/v6-engine/engine.ts`、`src/services/scoring/v6-engine/types.ts`、`src/services/screening/multiFactorScreeningEngine.ts`、`src/services/stockpool/stockpoolService.ts`、`src/services/system/migration/storeMigrators.ts`、`src/services/system/v6MigrationService.ts`、`src/services/trading/positionComputer.ts`、`src/services/trading/scoringAdapter.ts`、`src/services/trading/strategySnapshotService.ts`、`src/services/trading/tradeErrorClassifier.ts`、`src/services/trading/tradeErrorUtils.ts`、`src/services/trading/tradeReviewAI.skillDevelopment.ts`、`src/services/trading/tradeReviewAI.utils.ts`、`src/services/useCase/getUnifiedStockView.useCase.ts`
+`src/core/databridge.ts`(query 段，谨慎)、`src/lib/store-audit/analyzer.ts`、`src/mcp/core/client.ts`、`src/mcp/core/mcpAclMonitor.ts`、`src/mcp/register.ts`、`src/services/backtest/backtestMetrics.ts`、`src/services/collection/collectionWizardPersistence.ts`、`src/services/data-collector/directDataAPI.ts`、`src/services/fetcher/dataSourceRegistry.ts`、`src/services/fetcher/directDataAPI.ts`、`src/services/fetcher/fetcherInterceptor.ts`、`src/services/fetcher/orchestrator/phaseOrchestrator.ts`、`src/services/input/batchImportExecutor.ts`、`src/services/news/stockLinker.ts`、`src/services/rbac/rbacManagementService.ts`、`src/services/scoring/v6-engine/calculators/l7_l8.ts`、`src/services/scoring/v6-engine/engine.ts`、`src/services/scoring/v6-engine/types.ts`、`src/services/screening/multiFactorScreeningEngine.ts`、`src/services/pool/poolService.ts`、`src/services/system/migration/storeMigrators.ts`、`src/services/system/v6MigrationService.ts`、`src/services/trading/positionComputer.ts`、`src/services/trading/scoringAdapter.ts`、`src/services/trading/strategySnapshotService.ts`、`src/services/trading/tradeErrorClassifier.ts`、`src/services/trading/tradeErrorUtils.ts`、`src/services/trading/tradeReviewAI.skillDevelopment.ts`、`src/services/trading/tradeReviewAI.utils.ts`、`src/services/useCase/getUnifiedStockView.useCase.ts`
 
 ### Tier 3 — 单文件单违规（UI / 页面 / 组件 / Hook 层，约 18 处）
-`src/apps/command/ConfigApp.tsx`、`src/apps/input/BulkImportPanel.tsx`、`src/apps/trading/components/PhaseStepper.tsx`、`src/cockpit/CockpitShell.tsx`、`src/components/organisms/input/TraceReplayPanel.tsx`、`src/components/organisms/pool/usePoolDataFromStore.ts`、`src/components/organisms/system/LogStreamPanel.tsx`、`src/components/organisms/system/migration/MigrationUploadTab.tsx`、`src/data/repository.ts`(重复)、`src/hooks/cabin/useIndustryScorePage.ts`、`src/hooks/useConfirmDialog.tsx`、`src/hooks/useFreshData.ts`、`src/hooks/useStockPoolBoard.ts`、`src/pages/analysis/IntelligentScorePage.tsx`、`src/pages/analysis/ScoreDocPage.tsx`、`src/pages/analysis/StockAnalysisPage.tsx`、`src/pages/input/CollectTaskPage.tsx`、`src/pages/trading/components/TradeModal.tsx`、`src/pages/trading/HoldingsPage.tsx`、`src/pages/trading/TradingFlowPage.tsx`
+`src/apps/command/ConfigApp.tsx`、`src/apps/input/BulkImportPanel.tsx`、`src/apps/trading/components/PhaseStepper.tsx`、`src/cockpit/CockpitShell.tsx`、`src/components/organisms/input/TraceReplayPanel.tsx`、`src/components/organisms/pool/usePoolDataFromStore.ts`、`src/components/organisms/system/LogStreamPanel.tsx`、`src/components/organisms/system/migration/MigrationUploadTab.tsx`、`src/data/repository.ts`(重复)、`src/hooks/cabin/useIndustryScorePage.ts`、`src/hooks/useConfirmDialog.tsx`、`src/hooks/useFreshData.ts`、`src/hooks/usePoolBoard.ts`、`src/pages/analysis/IntelligentScorePage.tsx`、`src/pages/analysis/ScoreDocPage.tsx`、`src/pages/analysis/StockAnalysisPage.tsx`、`src/pages/input/CollectTask/index.tsx`、`src/pages/trading/components/TradeModal.tsx`、`src/pages/trading/HoldingsPage.tsx`、`src/pages/trading/TradingFlowPage.tsx`
 
 ## 三、重复条件（29 处）整改清单
 
@@ -66,7 +74,7 @@ code_version: 2.0.0
 | C12 | `src/hooks/cabin/useIndustryScorePage.ts` | L103 | Hook，安全 |
 | C13 | `src/hooks/useConfirmDialog.tsx` | L67 | Hook，安全 |
 | C14 | `src/hooks/useFreshData.ts` | L111 | Hook，安全 |
-| C15 | `src/hooks/useStockPoolBoard.ts` | L28 | Hook，安全 |
+| C15 | `src/hooks/usePoolBoard.ts` | L28 | Hook，安全 |
 | C16 | `src/mcp/servers/fetcher/dataFetcherServer.ts` | `getResources` L186 | 服务端判定，安全 |
 | C17 | `src/pages/analysis/IntelligentScorePage.tsx` | L175 | 页面，安全 |
 | C18 | `src/pages/analysis/ScoreDocPage.tsx` | L24 | 页面，安全 |

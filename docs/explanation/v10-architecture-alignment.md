@@ -1,4 +1,11 @@
 ---
+title: v10-architecture-alignment
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: V10 架构白皮书与 V9 对齐报告
 version: v0.9.0
 last_updated: 2026-06-24
@@ -8,6 +15,8 @@ change_log:
   - date: 2026-06-24
     author: Documentation Governor
     desc: 注入 Frontmatter 元数据（Phase 3 版本化）
+code_version: 2.0.0
+tier: important
 ---
 # V10 架构白皮书与 V9 对齐报告
 
@@ -39,9 +48,9 @@ change_log:
 
 | V10 原则 | V9 落地方式 |
 |----------|-------------|
-| 数据优先，界面其次 | 已在 `docs/03-architecture-standards.md` 强调 schema 最高优先级 |
+| 数据优先，界面其次 | 已在 `../reference/03-architecture-standards.md` 强调 schema 最高优先级 |
 | 研究体系不依赖交易层 | 已在 `03-architecture-standards.md` 写明；交易引擎已下沉到 `src/services/trading/` |
-| 采集层只采集不计算 | 已在 `fetcherService` 中遵循；需在 `docs/05-engine-specs.md` 中显式声明 |
+| 采集层只采集不计算 | 已在 `fetcherService` 中遵循；需在 `../reference/05-engine-specs.md` 中显式声明 |
 | 分析层不直接输出交易策略 | V9 `v6ScoreService` 仅输出评分，交易信号由 `signalGenerator` 生成；符合 |
 
 ### 2.2 数据层扩展参考
@@ -69,7 +78,7 @@ V10 20 个 Store 中，V9 已有或近期可扩展的 Store：
 
 ### 2.3 模块间桥梁思想
 
-V10 的「模块间桥梁定义表」可直接作为 V9 数据流文档模板。已在 `docs/implementation/data-interaction-protocols.md` 中吸收：
+V10 的「模块间桥梁定义表」可直接作为 V9 数据流文档模板。已在 `../reference/data-interaction-protocols.md` 中吸收：
 
 - 明确桥梁名称、起点、终点、数据类型、触发方式、文件位置。
 - 可作为后续扩展 Agent/TradingGateway 的参考。
@@ -93,7 +102,7 @@ V10 的「模块间桥梁定义表」可直接作为 V9 数据流文档模板。
 
 | V10 | V9 现状 | 适配建议 |
 |-----|---------|----------|
-| `src/trading/gateway.ts` + `PaperTradingGateway.ts` + `RealBrokerGateway.ts` | `src/services/trading/` 已有服务 | V9 已符合「交易引擎下沉」原则；未来若支持真实券商，再抽象 `ITradingGateway` 接口 |
+| `src/apps/trading/gateway.ts` + `PaperTradingGateway.ts` + `RealBrokerGateway.ts` | `src/services/trading/` 已有服务 | V9 已符合「交易引擎下沉」原则；未来若支持真实券商，再抽象 `ITradingGateway` 接口 |
 
 ### 3.3 板块因子层（Sector Factor Updater）
 
@@ -105,7 +114,7 @@ V10 的「模块间桥梁定义表」可直接作为 V9 数据流文档模板。
 
 | V10 | V9 现状 | 适配建议 |
 |-----|---------|----------|
-| `src/core/stateBoard.ts` 作为跨模块唯一状态 truth source | V9 使用 `eventBus` + Zustand + DataBridge | 可借鉴「字段契约」思想，但不必完全替换现有机制。建议在 `docs/implementation/data-interaction-protocols.md` 中增加「共享字段契约」章节 |
+| `src/core/stateBoard.ts` 作为跨模块唯一状态 truth source | V9 使用 `eventBus` + Zustand + DataBridge | 可借鉴「字段契约」思想，但不必完全替换现有机制。建议在 `../reference/data-interaction-protocols.md` 中增加「共享字段契约」章节 |
 
 ---
 
@@ -124,18 +133,18 @@ V10 的「模块间桥梁定义表」可直接作为 V9 数据流文档模板。
 
 ## 5. 对 V9 文档的更新建议
 
-1. **`docs/03-architecture-standards.md`**：
+1. **`../reference/03-architecture-standards.md`**：
    - 在「数据访问规范」中增加「共享字段契约」小节，借鉴 StateBoard 思想。
    - 在偏差清单中增加「V10 的 Agent/StateBoard/Gateway 暂未引入」说明。
 
-2. **`docs/05-engine-specs.md`**：
+2. **`../reference/05-engine-specs.md`**：
    - 在数据采集引擎约束中显式写明「采集层只采集不计算」。
    - 增加「未来可扩展」章节：Agent 调度、Trading Gateway、Sector Factor Updater。
 
-3. **`docs/08-implementation-plan.md`**：
+3. **`../reference/08-implementation-plan.md`**：
    - 将 StateBoard、Agent、Gateway、SectorFactorUpdater 列为 P2/P3 可选探索任务。
 
-4. **`docs/09-quality-gates.md`**：
+4. **`../reference/09-quality-gates.md`**：
    - 增加「与 V10 架构白皮书一致性评审」作为 P3 质量门禁项（可选）。
 
 ---
@@ -181,7 +190,7 @@ V10 的「模块间桥梁定义表」可直接作为 V9 数据流文档模板。
 |------|-----------|-------------|----------|
 | **L5 展示层** | DataHub / AgentHub / Analysis / Trading / System | `src/pages/*`（6 页）<br>`src/apps/*`（五舱）<br>`src/components/*`（16 个）<br>`src/portal/*` / `src/cockpit/*` | 参考图中 L5 颗粒度更细（Hub 化），V9 当前以“舱”为边界聚合页面与组件；AgentHub 尚未落地 |
 | **L4 应用层** | InputApp / AnalysisApp / TradingApp / OutputApp / CommandApp | `src/apps/input/*`<br>`src/apps/analysis/*`<br>`src/apps/trading/*`<br>`src/apps/output/*`<br>`src/apps/command/*` | 一一对应，但参考图中 `src/cockpit/*` 被放在 L4，V9 把 `cockpit/` 视为 L5 展示层入口组件 |
-| **L3 引擎层** | TradingOrchestrator / AnalysisScheduler / PaperTrading / StockScreener / SignalEngine | `src/services/trading/*`<br>`src/services/analysis/*`<br>`src/services/scoring/*`<br>`src/core/poolTransitionEngine.ts`<br>新增 `src/services/analysis/screeningEngine.ts` | 参考图有独立 `src/agents/` 和 `src/trading/` 目录；V9 引擎以 `src/services/` 为组织单元，Agent 目录未启用，`StockScreener` 刚刚补齐 |
+| **L3 引擎层** | TradingOrchestrator / AnalysisScheduler / PaperTrading / StockScreener / SignalEngine | `src/services/trading/*`<br>`src/services/analysis/*`<br>`src/services/scoring/*`<br>`src/core/poolTransitionEngine.ts`<br>新增 `src/services/analysis/screeningEngine.ts` | 参考图有独立 `src/agents/` 和 `src/apps/trading/` 目录；V9 引擎以 `src/services/` 为组织单元，Agent 目录未启用，`StockScreener` 刚刚补齐 |
 | **L2 数据层** | db.ts / dataLayer / dataAPI / akshareAdapter / localStorage | `src/data/db.ts`<br>`src/data/dataLayer.ts`<br>`src/services/fetcher/fetcherAdapter.ts`<br>`src/config/*`（本地配置） | V9 没有独立的 `dataAPI` 文件；查询封装在 `dataLayer`，适配在 `fetcherAdapter`；`localStorage` 暂未用于业务数据 |
 | **L1 基础设施层** | eventBus / DataBridge / logger / config / theme | `src/core/databridge.ts`<br>`src/lib/logger.ts`<br>`src/lib/eventBus.ts`<br>`src/config/*` | 对应关系清晰；`theme` 未作为独立目录，集中在 `src/index.css` + Tailwind 配置 |
 

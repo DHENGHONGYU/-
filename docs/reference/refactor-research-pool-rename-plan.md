@@ -1,3 +1,16 @@
+---
+title: refactor-research-pool-rename-plan
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/refactor-research-pool-rename-plan.md
+code_version: 2.0.0
+tier: important
+---
+
 # 「股票池」泛化旧名称 内部标识符重命名重构方案
 
 > **版本**: v1.0 | **日期**: 2026-07-20
@@ -76,7 +89,7 @@
 
 | 原路径 | 新路径 |
 |--------|--------|
-| `src/components/organisms/pool/` | `src/components/organisms/researchPool/` |
+| `src/components/organisms/pool/` | `src/store/researchPoolStore.ts` |
 | `src/components/organisms/pool/PoolBoard.tsx` | `src/components/organisms/researchPool/ResearchPoolBoard.tsx` |
 | `src/components/organisms/pool/PoolCard.tsx` | `src/components/organisms/researchPool/ResearchPoolCard.tsx` |
 | `src/components/organisms/pool/PoolColumn.tsx` | `src/components/organisms/researchPool/ResearchPoolColumn.tsx` |
@@ -264,7 +277,7 @@ npm run test -- --run
 
 | 原路径 | 新路径 |
 |--------|--------|
-| `src/components/organisms/pool/` | `src/components/organisms/researchPool/` |
+| `src/components/organisms/pool/` | `src/store/researchPoolStore.ts` |
 | `src/components/organisms/pool/PoolBoard.tsx` | `src/components/organisms/researchPool/ResearchPoolBoard.tsx` |
 | `src/components/organisms/pool/PoolCard.tsx` | `src/components/organisms/researchPool/ResearchPoolCard.tsx` |
 | `src/components/organisms/pool/PoolColumn.tsx` | `src/components/organisms/researchPool/ResearchPoolColumn.tsx` |
@@ -288,7 +301,7 @@ npm run test -- --run
 **⚠️ 特别注意**:
 - 目录重命名后，`src/components/organisms/index.ts` 中的导出路径需同步更新。
 - 如果使用 VSCode / WebStorm，建议用 IDE 的 "Rename Symbol" + "Move File" 功能自动追踪引用。
-- 重命名后需检查 `AGENTS.md` 中是否有对该目录的引用。
+- 重命名后需检查 `../../AGENTS.md` 中是否有对该目录的引用。
 
 **验证命令**:
 ```bash

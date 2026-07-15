@@ -1,3 +1,16 @@
+---
+title: tianyancha
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/tianyancha.md
+code_version: 2.0.0
+tier: important
+---
+
 # Tianyancha 插件
 
 > **数据域**: 天眼查企业数据库（中国大陆企业信息）  

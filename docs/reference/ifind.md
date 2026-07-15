@@ -1,3 +1,16 @@
+---
+title: ifind
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/ifind.md
+code_version: 2.0.0
+tier: important
+---
+
 # iFinD 插件
 
 > **数据域**: 同花顺金融数据平台（中国 A 股、港股、美股及其他市场）  

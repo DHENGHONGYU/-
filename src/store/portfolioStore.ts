@@ -11,7 +11,7 @@
  * - 失败时快照回滚，保留旧数据不被清空
  * - 添加详细的 logger.info 日志记录关键操作
  *
- * @see docs/《功能模块数据契约》.md — 交易信号 Store 模块契约（第 15 节）
+ * @see docs/reference/功能模块数据契约.md — 交易信号 Store 模块契约（第 15 节）
  * @see src/services/trading/portfolioBuilder.ts — 组合构建器
  */
 

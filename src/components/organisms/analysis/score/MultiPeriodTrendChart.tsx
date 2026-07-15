@@ -48,7 +48,7 @@ export const MultiPeriodTrendChart = memo(function MultiPeriodTrendChart({
   onRetry,
   className,
 }: MultiPeriodTrendChartProps) {
-  const points = data?.points ?? []
+  const points = useMemo(() => data?.points ?? [], [data?.points])
   const volatility = useMemo(() => computeVolatility(points), [points])
   const isEmpty = !loading && !error && points.length === 0
 

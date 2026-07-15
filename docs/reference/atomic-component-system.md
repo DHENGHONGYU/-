@@ -1,3 +1,16 @@
+---
+title: atomic-component-system
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/atomic-component-system.md
+code_version: 2.0.0
+tier: important
+---
+
 # V9 原子组件构成体系（Atomic Design System）
 
 > **版本**：v1.0.0  
@@ -335,7 +348,7 @@ export interface MetricCardProps {
 
 **步骤 1：`input/` 试点物理迁移到 `organisms/input/` — 已完成 ✅（2026-07-11）**
 
-- [x] 将 `src/components/input/` 18 个 `.tsx`（含 `wizard-steps/` 子目录）物理迁移到 `src/components/organisms/input/`
+- [x] 将 `../../src/services/input/` 18 个 `.tsx`（含 `wizard-steps/` 子目录）物理迁移到 `src/components/organisms/input/`
 - [x] 原 `input/X.tsx` 改写为纯 re-export shim，8 个消费者引用零改动
 - [x] 翻转注册表对应条目 status → `active`
 - [x] 收尾验证（系统 Node 24 驱动 tsx）：`tsc:prod` 0 错误 / `build` ✅ / `audit:layers` 0 违规 / `audit:atomic` 0 阻断（203 warning 过渡期预期）/ `audit:docs` 0 违规 / `audit:routes` 64 路由覆盖 / `audit:tokens` 0 硬编码 / `lint:colors` ✅ / `audit:hardcode` 29 基线 Warning

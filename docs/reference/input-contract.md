@@ -1,14 +1,23 @@
 ---
+title: input-contract
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: input-contract.md
 status: draft
 owner: 架构组
 updated: 2026-07-12
+code_version: 2.0.0
+tier: important
 ---
 
 # input-contract.md — 输入处理子域接口契约
 
 > **定位**：定义 `input` 子域的接口契约、职责边界、数据流与依赖关系。  
-> **关联**：`../../architecture/services-catalog.md`（24 子域总览）、`AGENTS.md` §一（分层规则）。
+> **关联**：`./services-catalog.md`（24 子域总览）、`../../AGENTS.md` §一（分层规则）。
 
 ---
 
@@ -227,7 +236,7 @@ components/pages (仅经 Store 取数)
 
 | 测试类型 | 文件 | 说明 |
 |----------|------|------|
-| 单元测试 | `src/services/input/__tests__/` | **当前缺失** — 建议补充 `inputService`、`batchImportParsers`、`batchImportExecutor` 的纯函数与计算逻辑测试 |
+| 单元测试 | `src/services/input/` | **当前缺失** — 建议补充 `inputService`、`batchImportParsers`、`batchImportExecutor` 的纯函数与计算逻辑测试 |
 | Store 测试 | `tests/__tests__/inputHubStore.enhanced.test.ts` | `inputHubStore` 的状态与交互测试（位于 Store 层） |
 | 集成测试 | `tests/services/input.integration.test.ts` | **当前缺失** — 建议补充 DataBridge 交互、批量导入全链路测试 |
 | Mock 策略 | `src/services/input/mockStockLibrary.ts` | 自带 mock 数据源，可用于隔离外部依赖 |
@@ -243,6 +252,6 @@ components/pages (仅经 Store 取数)
 ---
 
 > **TODO[子域 owner]**：
-> 1. 补充 `src/services/input/__tests__/` 单元测试（`batchImportParsers`、`inputService`）；
+> 1. 补充 `src/services/input/` 单元测试（`batchImportParsers`、`inputService`）；
 > 2. 收敛 `batchImportExecutor.ts` 与 `hotSectorService.ts` 中直接调用 `dataLayer.stocks.get()` 的写法，统一通过 `DataBridge.query()` 进行存在性校验；
 > 3. 完成后运行 `tsc --noEmit` + `audit:layers` 验证。

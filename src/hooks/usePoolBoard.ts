@@ -83,20 +83,26 @@ export function usePoolBoard() {
     )
   }, [])
 
-  const handleResultFailure = (
-    result: { success: boolean; error?: string },
-    onFail: () => void,
-  ): void => {
-    if (!result.success) onFail()
-  }
+  const handleResultFailure = useCallback(
+    (
+      result: { success: boolean; error?: string },
+      onFail: () => void,
+    ): void => {
+      if (!result.success) onFail()
+    },
+    [],
+  )
 
-  const reportBulkResult = (results: string[], targetCount: number, op: string): void => {
-    if (results.length > 0) {
-      setMessage(`批量${op}完成，部分失败：${results.join('；')}`)
-    } else {
-      setMessage(`已批量${op} ${targetCount} 只标的`)
-    }
-  }
+  const reportBulkResult = useCallback(
+    (results: string[], targetCount: number, op: string): void => {
+      if (results.length > 0) {
+        setMessage(`批量${op}完成，部分失败：${results.join('；')}`)
+      } else {
+        setMessage(`已批量${op} ${targetCount} 只标的`)
+      }
+    },
+    [],
+  )
 
   const handleTransition = useCallback(
     async (symbol: string, toStatus: ResearchStatus): Promise<void> => {

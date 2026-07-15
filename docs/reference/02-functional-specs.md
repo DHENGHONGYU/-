@@ -1,3 +1,16 @@
+---
+title: 02-functional-specs
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/02-functional-specs.md
+code_version: 2.0.0
+tier: important
+---
+
 # 02. 功能规格
 
 > **Status**: Current  
@@ -412,7 +425,7 @@ symbol,name,source
 
 本文档当前版本为 `v0.9.0-docs-review`，与规划基线 `v0.9.0-docs-base` 的差异见：
 
-- `docs/implementation/architecture-version-comparison.md`
+- `./architecture-version-comparison.md`
 
 主要变化：
 

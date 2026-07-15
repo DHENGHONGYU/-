@@ -162,16 +162,150 @@ export const customAgentStore = {
   async get(id: string): Promise<CustomAgent | undefined> {
     return queryGet<CustomAgent>(STORE_NAME.customAgents, id)
   },
-  async save(agent: Omit<CustomAgent, 'createdAt' | 'updatedAt'> & { createdAt?: number }): Promise<DataLayerResult<CustomAgent>> {
-    const existing = await queryGet<CustomAgent>(STORE_NAME.customAgents, agent.id)
-    const full: CustomAgent = {
-      ...agent,
-      createdAt: existing?.createdAt ?? agent.createdAt ?? now(),
-      updatedAt: now(),
-    }
-    return sendWriteEnvelope<CustomAgent>('saveCustomAgent', full, 'user')
-  },
+
   async remove(id: string): Promise<DataLayerResult<void>> {
-    return sendWriteEnvelope<void>('deleteCustomAgent', { id }, 'user')
+    const agent = await queryGet<CustomAgent>(STORE_NAME.customAgents, id)
+    if (!agent) return { success: false, error: 'Agent not found' }
+    return sendWriteEnvelope('deleteCustomAgent', { ...agent, _deleted: true }, 'system')
+  },
+}
+
+// ── 双通道数据同步 Store 操作（v31 新增，P2-1 整改） ──
+
+import type {
+  CollectionHistoryEntry,
+  FileImportProofreadReport,
+  GlobalScheduleConfig,
+} from '@/types/modules/data-sync.types'
+
+/** 冲突日志条目（内联类型，数据层操作专用） */
+interface ConflictLogEntry {
+  id: string
+  timestamp: string
+  symbol: string
+  fieldDiffs?: unknown[]
+  resolution?: string
+  resolvedBy?: 'auto' | 'user'
+  resolvedAt?: string
+}
+
+/** 文件导入记录条目（内联类型，数据层操作专用） */
+interface FileImportRecordEntry {
+  id: string
+  timestamp: string
+  fileName: string
+  fileHash: string
+  dataType?: string
+  targetStore?: string
+  recordCount?: number
+  status?: string
+}
+
+/** 采集历史 Store — collection_history */
+export const collectionHistoryStore = {
+  async save(entry: CollectionHistoryEntry): Promise<DataLayerResult<void>> {
+    return sendWriteEnvelope('saveCollectionHistory', entry, 'fetcher')
+  },
+
+  async list(): Promise<CollectionHistoryEntry[]> {
+    return queryList<CollectionHistoryEntry>(STORE_NAME.collectionHistory)
+  },
+
+  async listByChannel(channel: string): Promise<CollectionHistoryEntry[]> {
+    return queryByIndex<CollectionHistoryEntry>(STORE_NAME.collectionHistory, 'by-channel', channel)
+  },
+
+  async listByDate(date: string): Promise<CollectionHistoryEntry[]> {
+    return queryByIndex<CollectionHistoryEntry>(STORE_NAME.collectionHistory, 'by-date', date)
+  },
+
+  async listByStatus(status: string): Promise<CollectionHistoryEntry[]> {
+    return queryByIndex<CollectionHistoryEntry>(STORE_NAME.collectionHistory, 'by-status', status)
+  },
+
+  async remove(id: string): Promise<DataLayerResult<void>> {
+    return sendWriteEnvelope('deleteCollectionHistory', { id, _deleted: true }, 'fetcher')
+  },
+}
+
+/** 冲突日志 Store — conflict_log */
+export const conflictLogStore = {
+  async save(entry: ConflictLogEntry): Promise<DataLayerResult<void>> {
+    return sendWriteEnvelope('saveConflictLog', entry, 'fetcher')
+  },
+
+  async list(): Promise<ConflictLogEntry[]> {
+    return queryList<ConflictLogEntry>(STORE_NAME.conflictLog)
+  },
+
+  async listBySymbol(symbol: string): Promise<ConflictLogEntry[]> {
+    return queryByIndex<ConflictLogEntry>(STORE_NAME.conflictLog, 'by-symbol', symbol)
+  },
+
+  async listByResolution(resolution: string): Promise<ConflictLogEntry[]> {
+    return queryByIndex<ConflictLogEntry>(STORE_NAME.conflictLog, 'by-resolution', resolution)
+  },
+}
+
+/** 文件导入记录 Store — file_import_records */
+export const fileImportRecordStore = {
+  async save(entry: FileImportRecordEntry): Promise<DataLayerResult<void>> {
+    return sendWriteEnvelope('saveFileImportRecord', entry, 'fetcher')
+  },
+
+  async list(): Promise<FileImportRecordEntry[]> {
+    return queryList<FileImportRecordEntry>(STORE_NAME.fileImportRecords)
+  },
+
+  async getByHash(fileHash: string): Promise<FileImportRecordEntry | undefined> {
+    const list = await queryByIndex<FileImportRecordEntry>(STORE_NAME.fileImportRecords, 'by-hash', fileHash)
+    return list[0]
+  },
+
+  async listByFileName(fileName: string): Promise<FileImportRecordEntry[]> {
+    return queryByIndex<FileImportRecordEntry>(STORE_NAME.fileImportRecords, 'by-fileName', fileName)
+  },
+}
+
+/** 调度配置 Store — schedule_configs */
+export const scheduleConfigStore = {
+  async save(config: GlobalScheduleConfig): Promise<DataLayerResult<void>> {
+    return sendWriteEnvelope('saveScheduleConfig', { ...config, _timestamp: now() }, 'system')
+  },
+
+  async get(scheduleId: string): Promise<GlobalScheduleConfig | undefined> {
+    return queryGet<GlobalScheduleConfig>(STORE_NAME.scheduleConfigs, scheduleId)
+  },
+
+  async list(): Promise<GlobalScheduleConfig[]> {
+    return queryList<GlobalScheduleConfig>(STORE_NAME.scheduleConfigs)
+  },
+
+  async listEnabled(): Promise<GlobalScheduleConfig[]> {
+    return queryByIndex<GlobalScheduleConfig>(STORE_NAME.scheduleConfigs, 'by-enabled', 'true')
+  },
+
+  async remove(scheduleId: string): Promise<DataLayerResult<void>> {
+    return sendWriteEnvelope('deleteScheduleConfig', { scheduleId, _deleted: true }, 'system')
+  },
+}
+
+/** 校对报告 Store — proofread_reports（嵌套 keyPath: meta.reportId） */
+export const proofreadReportStore = {
+  async save(report: FileImportProofreadReport): Promise<DataLayerResult<void>> {
+    return sendWriteEnvelope('saveProofreadReport', report, 'fetcher')
+  },
+
+  async get(reportId: string): Promise<FileImportProofreadReport | undefined> {
+    return queryGet<FileImportProofreadReport>(STORE_NAME.proofreadReports, reportId)
+  },
+
+  async list(): Promise<FileImportProofreadReport[]> {
+    return queryList<FileImportProofreadReport>(STORE_NAME.proofreadReports)
+  },
+
+  async getByFileHash(fileHash: string): Promise<FileImportProofreadReport | undefined> {
+    const list = await queryByIndex<FileImportProofreadReport>(STORE_NAME.proofreadReports, 'by-fileHash', fileHash)
+    return list[0]
   },
 }

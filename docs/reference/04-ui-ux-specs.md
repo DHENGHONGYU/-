@@ -1,3 +1,16 @@
+---
+title: 04-ui-ux-specs
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/04-ui-ux-specs.md
+code_version: 2.0.0
+tier: important
+---
+
 # 04. UI/UX 规范
 
 > **Status**: Current  
@@ -248,14 +261,14 @@ mount → initData → subscribeChannels → render → updateData → unsubscri
 ## 4.5 组件库清单
 
 > **v2.1.0 变更**：组件库按原子设计（Atomic Design）分层，分为 `atoms`、`molecules`、`organisms`、`templates` 四级。
-> 详见 `docs/atomic-component-system.md` 与 `src/components/componentRegistry.ts`。
+> 详见 `./atomic-component-system.md` 与 `src/components/componentRegistry.ts`。
 > 过渡期内 `src/components/ui/` 仍保留兼容 shim，但新增组件须按原子层级放置。
 
 ### 原子组件（Atoms）
 
 | 组件 | 路径 | 说明 |
 |------|------|------|
-| Button | `src/components/atoms/Button.tsx`（shim: `src/components/ui/Button.tsx`） | 主/次/危险/幽灵按钮 |
+| Button | `src/components/atoms/Button.tsx`（shim: `src/components/atoms/Button.tsx`） | 主/次/危险/幽灵按钮 |
 | Card | `src/components/atoms/Card.tsx` | 卡片容器 |
 | Input | `src/components/atoms/Input.tsx` | 文本输入 |
 | Badge | `src/components/atoms/Badge.tsx` | 状态徽章 |
@@ -293,7 +306,7 @@ mount → initData → subscribeChannels → render → updateData → unsubscri
 | ErrorState | `src/components/molecules/ErrorState.tsx` | 错误状态 |
 | EmptyState | `src/components/molecules/EmptyState.tsx` | 空状态 |
 | LoadingState | `src/components/molecules/LoadingState.tsx` | 加载状态 |
-| PageHeader | `src/components/molecules/PageHeader.tsx` | 页面标题 + 操作区 |
+| PageHeader | `src/components/templates/PageHeader.tsx` | 页面标题 + 操作区 |
 | FormField | `src/components/molecules/FormField.tsx` | 表单字段（Label + 控件 + 错误） |
 | MetricCard | `src/components/molecules/MetricCard.tsx` | 指标卡（标题 + 数值 + 趋势） |
 | SearchBar | `src/components/molecules/SearchBar.tsx` | 搜索栏 |
@@ -318,12 +331,12 @@ mount → initData → subscribeChannels → render → updateData → unsubscri
 
 | 组件 | 路径 | 说明 |
 |------|------|------|
-| LineChart | `src/components/organisms/chart/LineChart.tsx` | 折线图 |
-| BarChart | `src/components/organisms/chart/BarChart.tsx` | 柱状图 |
-| CandlestickChart | `src/components/organisms/chart/CandlestickChart.tsx` | K 线图 |
-| AreaChart | `src/components/organisms/chart/AreaChart.tsx` | 面积图 |
-| ScoreRadar | `src/components/organisms/chart/ScoreRadar.tsx` | 评分雷达图 |
-| FactorHeatmap | `src/components/organisms/chart/FactorHeatmap.tsx` | 因子热力图 |
+| LineChart | `src/components/chart/LineChart.tsx` | 折线图 |
+| BarChart | `src/components/chart/BarChart.tsx` | 柱状图 |
+| CandlestickChart | `src/components/chart/CandlestickChart.tsx` | K 线图 |
+| AreaChart | `src/components/chart/AreaChart.tsx` | 面积图 |
+| ScoreRadar | `src/components/chart/ScoreRadar.tsx` | 评分雷达图 |
+| FactorHeatmap | `src/components/chart/FactorHeatmap.tsx` | 因子热力图 |
 
 ### 模板组件（Templates）
 
@@ -371,7 +384,7 @@ mount → initData → subscribeChannels → render → updateData → unsubscri
 
 本文档当前版本为 `v0.9.0-docs-review`，与规划基线 `v0.9.0-docs-base` 的差异见：
 
-- `docs/implementation/architecture-version-comparison.md`
+- `./architecture-version-comparison.md`
 
 主要变化：
 

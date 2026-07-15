@@ -40,6 +40,8 @@ interface SyncReport {
   triggerHits: { rule: string; matchedFiles: string[]; docsToUpdate: string[] }[]
   ruleViolations: number
   crossRefBroken: number
+  /** 三类交叉引用策略（核心/重要文档）范围内断裂总数 */
+  proofreadBroken: number
   gatePassed: boolean
   autoFixed: number
   summary: string
@@ -156,6 +158,21 @@ function main(): void {
   const crossRefResult = runCmd(`node "${TSX}" "${crossRefScript}" --check`)
   const crossRefBroken = crossRefResult.exitCode !== 0 ? 1 : 0
 
+  // 4.5 三类交叉引用策略校验（核心/重要文档，依 doc-proofreading-strategy）
+  const proofreadScript = join(ROOT, 'scripts/docs-tool/doc-proofread.ts')
+  const proofreadResult = runCmd(`node "${TSX}" "${proofreadScript}" --json`)
+  let proofreadBroken = 0
+  try {
+    const pr = JSON.parse(proofreadResult.stdout || '{}')
+    const stats = pr?.scopeStats ?? {}
+    proofreadBroken =
+      (stats['doc-to-code']?.broken ?? 0) +
+      (stats['code-to-doc']?.broken ?? 0) +
+      (stats['doc-to-doc']?.broken ?? 0)
+  } catch {
+    /* 解析失败时不计入 */
+  }
+
   // 5. doc:gate
   const gateScript = join(ROOT, 'scripts/doc-gatekeeper.ts')
   const gateResult = runCmd(`node "${TSX}" "${gateScript}"`)
@@ -176,9 +193,10 @@ function main(): void {
     triggerHits,
     ruleViolations,
     crossRefBroken,
+    proofreadBroken,
     gatePassed,
     autoFixed,
-    summary: `code:${codeChanges.length} doc:+${docChanges.added.length}/~${docChanges.modified.length}/-${docChanges.deleted.length} trigger:${triggerHits.length} violations:${ruleViolations} gate:${gatePassed ? 'PASS' : 'FAIL'}`,
+    summary: `code:${codeChanges.length} doc:+${docChanges.added.length}/~${docChanges.modified.length}/-${docChanges.deleted.length} trigger:${triggerHits.length} violations:${ruleViolations} proofreadBroken:${proofreadBroken} gate:${gatePassed ? 'PASS' : 'FAIL'}`,
   }
 
   const reportPath = join(REPORT_DIR, `sync-${timestamp.replace(/[:.]/g, '-')}.json`)

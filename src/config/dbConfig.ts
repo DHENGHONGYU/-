@@ -1,8 +1,10 @@
 const testDbName = typeof process !== 'undefined' ? process.env.TEST_DB_NAME : undefined
 export const DB_NAME = testDbName ?? ('V6ProDB' as const)
-export const DB_VERSION = 30 as const
+export const DB_VERSION = 31 as const
 
 // DB_VERSION 升级历史：
+// v30 → v31: 新增 collection_history、conflict_log、file_import_records、proofread_reports、
+//            schedule_configs 存储，支撑双通道数据采集与更新（P2-1 整改）。
 // v29 → v30: 新增 analysis_results 存储，支撑 AnalysisOrchestrator 持久化分析结论。
 // v28 → v29: stocks 存储新增 pool 字段与 by-pool 索引，支撑股票池三分拆（intention/research/position）。
 // v27 → v28: 新增 workflow_defs、workflow_schedules、workflow_triggers、workflow_runs 存储，
@@ -196,6 +198,21 @@ export const ENVELOPE_ACTION = {
   deleteWorkflowTrigger: 'DELETE_WORKFLOW_TRIGGER',
   /** 保存/更新运行实例（含 checkpoint） */
   saveWorkflowRun: 'SAVE_WORKFLOW_RUN',
+  // ── 双通道数据同步存储（v31 新增，P2-1 整改） ──
+  /** 保存采集历史记录 */
+  saveCollectionHistory: 'SAVE_COLLECTION_HISTORY',
+  /** 删除采集历史记录 */
+  deleteCollectionHistory: 'DELETE_COLLECTION_HISTORY',
+  /** 保存冲突日志 */
+  saveConflictLog: 'SAVE_CONFLICT_LOG',
+  /** 保存文件导入记录 */
+  saveFileImportRecord: 'SAVE_FILE_IMPORT_RECORD',
+  /** 保存调度配置 */
+  saveScheduleConfig: 'SAVE_SCHEDULE_CONFIG',
+  /** 删除调度配置 */
+  deleteScheduleConfig: 'DELETE_SCHEDULE_CONFIG',
+  /** 保存校对报告 */
+  saveProofreadReport: 'SAVE_PROOFREAD_REPORT',
   // ── 批量操作（BulkEnvelope） ──
   /** 批量插入股票 */
   bulkInsertStock: 'BULK_INSERT_STOCK',
@@ -302,6 +319,12 @@ export const STORE_NAME = {
   workflowRuns: 'workflow_runs',
   // ── 分析结果存储（v30 新增，支撑 AnalysisOrchestrator） ──
   analysisResults: 'analysis_results',
+  // ── 双通道数据同步存储（v31 新增，P2-1 整改） ──
+  collectionHistory: 'collection_history',
+  conflictLog: 'conflict_log',
+  fileImportRecords: 'file_import_records',
+  proofreadReports: 'proofread_reports',
+  scheduleConfigs: 'schedule_configs',
 } as const
 
 export type StoreName = (typeof STORE_NAME)[keyof typeof STORE_NAME]
@@ -328,7 +351,18 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
     // （合并 dataVersion / dataQuality / source、校验存在性），原配置仅授予 write 会触发
     // ACL_PERMISSION_DENIED（"Module fetcher cannot SELECT on store stocks"）。
     read: [STORE_NAME.stocks, STORE_NAME.financialReports, STORE_NAME.traceRecords, STORE_NAME.collectConfig],
-    write: [STORE_NAME.stocks, STORE_NAME.dailyQuotes, STORE_NAME.financialReports, STORE_NAME.collectConfig, STORE_NAME.traceRecords],
+    write: [
+      STORE_NAME.stocks,
+      STORE_NAME.dailyQuotes,
+      STORE_NAME.financialReports,
+      STORE_NAME.collectConfig,
+      STORE_NAME.traceRecords,
+      // ── 双通道数据同步存储（v31 新增，P2-1 整改） ──
+      STORE_NAME.collectionHistory,
+      STORE_NAME.conflictLog,
+      STORE_NAME.fileImportRecords,
+      STORE_NAME.proofreadReports,
+    ],
     actions: [DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete, DB_OPERATION.select],
   },
   [MODULE_ID.pool]: {

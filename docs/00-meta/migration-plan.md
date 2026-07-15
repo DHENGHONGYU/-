@@ -1,3 +1,16 @@
+---
+title: migration-plan
+code_version: 2.0.0
+
+tier: core
+---
+
+---
+title: docs/00-meta/migration-plan.md
+code_version: 2.0.0
+tier: core
+---
+
 # V9 文档迁移计划（A-H 分类体系）
 
 > **版本**: v1.0.0 | **日期**: 2026-07-13
@@ -43,7 +56,7 @@
 | D1 编码与分层规范 | D | `02-design/standards/` | AGENTS.md 契约、编码规范 |
 | D2 设计系统与令牌 | D | `02-design/standards/design-tokens/` | L1-L4 令牌、宋韵美学 |
 | D3 质量门禁与审计 | D | `02-design/standards/quality-gates/` | audit:* 脚本、复杂度治理 |
-| D4 注释与文档化 | D | `03-development/jsdoc-convention.md` | JSDoc 规范、Frontmatter 规范 |
+| D4 注释与文档化 | D | `../reference/jsdoc-convention.md` | JSDoc 规范、Frontmatter 规范 |
 | D5 迁移规范 | D | `03-development/migration/` | v6→v9 迁移、DB Schema 升级 |
 | E1 测试分层 | E | `04-testing/` | 单元/集成/E2E 分层 |
 | E2 用例与清单 | E | `04-testing/test-cases/` | 测试用例、清单 |
@@ -97,11 +110,11 @@
 
 | 文档 | 位置1 | 位置2 | 处理策略 |
 |------|-------|-------|----------|
-| DATA_DICTIONARY_INDEX.md | `02-design/` | `02-design/standards/` | 保留 standards/ 版本，归档 02-design/ 版本 |
-| CODE-REVIEW.md | `01-requirements/` | `04-testing/audit-reports/audit/` | 保留 01-requirements/ 版本，归档 audit/ 版本 |
-| V9 架构缺陷与整改行动清单.md | `02-design/` | `04-testing/audit-reports/audit/` | 保留 02-design/ 版本，归档 audit/ 版本 |
+| data-dictionary-index.md | `02-design/` | `02-design/standards/` | 保留 standards/ 版本，归档 02-design/ 版本 |
+| code-review.md | `01-requirements/` | `04-testing/audit-reports/audit/` | 保留 01-requirements/ 版本，归档 audit/ 版本 |
+| v9-架构缺陷与整改行动清单.md | `02-design/` | `04-testing/audit-reports/audit/` | 保留 02-design/ 版本，归档 audit/ 版本 |
 | code-quality-audit-report.md | `01-requirements/` | `04-testing/audit-reports/audit/` | 合并内容到 01-requirements/，归档 audit/ 版本 |
-| quality-gates-baseline.md | `03-development/` | `02-design/09-quality-gates.md` | 合并内容到 03-development/，归档 02-design/ 版本 |
+| quality-gates-baseline.md | `03-development/` | `../reference/09-quality-gates.md` | 合并内容到 03-development/，归档 02-design/ 版本 |
 
 ### 4.2 版本融合评估标准
 
@@ -138,7 +151,7 @@
 3. 按批次迁移文档
 4. 更新跨文档引用链接
 5. 运行 npm run audit:doc-integrity 验证
-6. 更新 README.md 和 GOVERNANCE.md
+6. 更新 README.md 和 governance.md
 7. 创建归档目录并迁移旧版本
 ```
 
@@ -148,10 +161,10 @@
 |------|------|------|
 | 2026-07-13 | 创建归档目录 `00-meta/deprecated-docs/old-versions/` 和 `00-meta/deprecated-docs/temporary/` | ✅ 完成 |
 | 2026-07-13 | 归档 deployment.md v1.0.0（02-design/architecture/ → deprecated-docs/old-versions/） | ✅ 完成 |
-| 2026-07-13 | 归档 DATA_DEFINITION.md v1.0.0-cockpit（02-design/cockpit/ → deprecated-docs/old-versions/） | ✅ 完成 |
+| 2026-07-13 | 归档 data-definition.md v1.0.0-cockpit（02-design/cockpit/ → deprecated-docs/old-versions/） | ✅ 完成 |
 | 2026-07-13 | 归档 regression-suite.md v1.0.0（02-design/ → deprecated-docs/old-versions/） | ✅ 完成 |
-| 2026-07-13 | 归档 DATA_DICTIONARY_INDEX.md v1.6.0（02-design/ → deprecated-docs/old-versions/） | ✅ 完成 |
-| 2026-07-13 | 归档 REGISTRY_INDEX.md v1.0.0-02-design（02-design/ → deprecated-docs/old-versions/） | ✅ 完成 |
+| 2026-07-13 | 归档 data-dictionary-index.md v1.6.0（02-design/ → deprecated-docs/old-versions/） | ✅ 完成 |
+| 2026-07-13 | 归档 registry-index.md v1.0.0-02-design（02-design/ → deprecated-docs/old-versions/） | ✅ 完成 |
 | 2026-07-13 | 分类规则扩展完成，408 个文档 100% 分类 | ✅ 完成 |
 
 ### 5.4 归档策略
@@ -221,6 +234,6 @@ docs/07-archive/
 - [ ] 跨文档引用全部更新
 - [ ] audit:doc-integrity 通过（零阻断性违规）
 - [ ] README.md 主控索引同步更新
-- [ ] GOVERNANCE.md 分类映射同步更新
+- [ ] governance.md 分类映射同步更新
 - [ ] 自动更新脚本已编写并测试
 - [ ] 归档目录已创建并配置

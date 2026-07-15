@@ -1,14 +1,23 @@
 ---
+title: rbac-contract
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: rbac-contract.md
 status: draft
 owner: 架构组
 updated: 2026-07-12
+code_version: 2.0.0
+tier: important
 ---
 
 # rbac-contract.md — RBAC 权限管理子域接口契约
 
 > **定位**：定义 `rbac` 子域的接口契约、职责边界、数据流与依赖关系。  
-> **关联**：`../../architecture/services-catalog.md`（24 子域总览）、`AGENTS.md` §一（分层规则）。
+> **关联**：`./services-catalog.md`（24 子域总览）、`../../AGENTS.md` §一（分层规则）。
 
 ---
 
@@ -354,10 +363,10 @@ rbacStore → UI 组件
 
 | 测试类型 | 文件 | 说明 |
 |----------|------|------|
-| 单元测试 | `src/services/rbac/__tests__/` | **待实现**：纯函数（如 `_filterExpiredMappings`、`_filterZombieUsers`）的独立测试 |
+| 单元测试 | `src/services/rbac/` | **待实现**：纯函数（如 `_filterExpiredMappings`、`_filterZombieUsers`）的独立测试 |
 | 集成测试 | `tests/services/rbac.integration.test.ts` | **待实现**：DataBridge 交互、Store 联动、事件发布验证 |
 | Mock 策略 | `__mocks__/rbacService.ts` | **待实现**：隔离 `dataBridge` 与 `eventBus` 外部依赖 |
-| 定时任务测试 | `src/services/rbac/__tests__/permissionRevocationService.test.ts` | **待实现**：`start/stop/runOnce` 生命周期、批量回收逻辑、边界条件（空数据、超时） |
+| 定时任务测试 | `src/services/rbac/permissionRevocationService.test.ts` | **待实现**：`start/stop/runOnce` 生命周期、批量回收逻辑、边界条件（空数据、超时） |
 
 ---
 
@@ -370,6 +379,6 @@ rbacStore → UI 组件
 ---
 
 > **TODO[子域 owner]**：
-> 1. 补充 `src/services/rbac/__tests__/` 目录及单元测试（覆盖 CRUD 与回收逻辑）。
+> 1. 补充 `src/services/rbac/` 目录及单元测试（覆盖 CRUD 与回收逻辑）。
 > 2. 确认 `rbacStore` 已订阅所有 `rbac:*` 事件并正确同步状态。
 > 3. 完成后运行 `tsc --noEmit` + `audit:layers` 验证。

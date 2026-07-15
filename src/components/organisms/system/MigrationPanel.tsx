@@ -207,7 +207,7 @@ export default function MigrationPanel(): React.JSX.Element {
     } finally {
       setLoading(false)
     }
-  }, [transformed, overwrite, exportAll, importToV9])
+  }, [transformed, overwrite, prepareBackup, importToV9])
 
   const withBackup = useCallback(
     (fn: (currentBackup: BackupSnapshot) => void): void => {

@@ -1,14 +1,23 @@
 ---
+title: _contract-template
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: Service 子域契约模板
 status: template
 owner: 架构组 / 各子域 owner
 updated: 2026-07-12
+code_version: 2.0.0
+tier: important
 ---
 
 # {subdomain}-contract.md — {子域中文名} 接口契约
 
 > **定位**：定义 `{subdomain}` 子域的接口契约、职责边界、数据流与依赖关系。  
-> **关联**：`../../architecture/services-catalog.md`（24 子域总览）、`AGENTS.md` §一（分层规则）。
+> **关联**：`./services-catalog.md`（24 子域总览）、`../../AGENTS.md` §一（分层规则）。
 
 ---
 

@@ -1,4 +1,17 @@
 ---
+title: v9-architecture-data-dictionary-validation-report
+code_version: 2.0.0
+
+tier: core
+---
+
+---
+title: docs/reference/v9-architecture-data-dictionary-validation-report.md
+code_version: 2.0.0
+tier: core
+---
+
+---
 title: V9 架构 Phase 4 一致性验证报告
 version: v1.0.0
 last_updated: 2026-06-27
@@ -115,7 +128,7 @@ Phase 4 一致性验证对 V9 架构体系进行了全维度自动化审计，�
 
 | 项目 | 详情 |
 |------|------|
-| 数据字典数量 | 5 个 DATA_DEFINITION.md |
+| 数据字典数量 | 5 个 data-definition.md |
 | 架构文档类型引用 | 全部覆盖 |
 | 结果 | ✅ **100% 覆盖** |
 | 说明 | 每个数据字典中的类型定义均在架构文档中有明确引用路径 |
@@ -144,7 +157,7 @@ Phase 4 一致性验证对 V9 架构体系进行了全维度自动化审计，�
 
 | 差异ID | 类别 | 修正操作 | 目标文件 |
 |--------|------|---------|---------|
-| DIFF-101 | 接口补充 | 补充 TradeSignal / TradingSignal 接口定义 | `trade/API_CONTRACT.md` |
+| DIFF-101 | 接口补充 | 补充 TradeSignal / TradingSignal 接口定义 | `trade/api-contract.md` |
 | DIFF-102 | 接口补充 | 补充 DataBridge 接口 #1 | `03-architecture-standards.md` §3.8 |
 | DIFF-103 | 接口补充 | 补充 DataBridge 接口 #2 | `03-architecture-standards.md` §3.8 |
 | DIFF-104 | 接口补充 | 补充 DataBridge 接口 #3 | `03-architecture-standards.md` §3.8 |
@@ -166,11 +179,11 @@ Phase 4 一致性验证对 V9 架构体系进行了全维度自动化审计，�
 
 | 差异ID | 类别 | 修正操作 | 目标文件 |
 |--------|------|---------|---------|
-| DIFF-201 | 规范补充 | 添加版本/日期头部 | 数据字典 #1 `DATA_DEFINITION.md` |
-| DIFF-202 | 规范补充 | 添加版本/日期头部 | 数据字典 #2 `DATA_DEFINITION.md` |
-| DIFF-203 | 规范补充 | 添加版本/日期头部 | 数据字典 #3 `DATA_DEFINITION.md` |
-| DIFF-204 | 规范补充 | 添加版本/日期头部 | 数据字典 #4 `DATA_DEFINITION.md` |
-| DIFF-205 | 规范补充 | 添加版本/日期头部 | 数据字典 #5 `DATA_DEFINITION.md` |
+| DIFF-201 | 规范补充 | 添加版本/日期头部 | 数据字典 #1 `data-definition.md` |
+| DIFF-202 | 规范补充 | 添加版本/日期头部 | 数据字典 #2 `data-definition.md` |
+| DIFF-203 | 规范补充 | 添加版本/日期头部 | 数据字典 #3 `data-definition.md` |
+| DIFF-204 | 规范补充 | 添加版本/日期头部 | 数据字典 #4 `data-definition.md` |
+| DIFF-205 | 规范补充 | 添加版本/日期头部 | 数据字典 #5 `data-definition.md` |
 | DIFF-206 | 工具修复 | 修复审计工具正则兼容 Markdown 加粗 | `audit-doc-sync.ts` |
 
 **P2 修正统计：共 6 项**
@@ -195,17 +208,17 @@ Phase 4 一致性验证对 V9 架构体系进行了全维度自动化审计，�
 | 02-component-design.md | v1.1.0 | 2026-06-26 | ✅ 已同步 |
 | 03-architecture-standards.md | v1.1.0 | 2026-06-26 | ✅ 已同步 |
 | 04-data-flow.md | v1.1.0 | 2026-06-26 | ✅ 已同步 |
-| trade/API_CONTRACT.md | v1.1.0 | 2026-06-26 | ✅ 已同步 |
+| trade/api-contract.md | v1.1.0 | 2026-06-26 | ✅ 已同步 |
 
 ### 4.2 数据字典版本
 
 | 数据字典 | 版本 | 最后更新 | 状态 |
 |---------|------|---------|------|
-| core/DATA_DEFINITION.md | v1.0.1 | 2026-06-26 | ✅ 已同步 |
-| trade/DATA_DEFINITION.md | v1.0.1 | 2026-06-26 | ✅ 已同步 |
-| pool/DATA_DEFINITION.md | v1.0.1 | 2026-06-26 | ✅ 已同步 |
-| review/DATA_DEFINITION.md | v1.0.1 | 2026-06-26 | ✅ 已同步 |
-| cockpit/DATA_DEFINITION.md | v1.0.1 | 2026-06-26 | ✅ 已同步 |
+| core/data-definition.md | v1.0.1 | 2026-06-26 | ✅ 已同步 |
+| trade/data-definition.md | v1.0.1 | 2026-06-26 | ✅ 已同步 |
+| pool/data-definition.md | v1.0.1 | 2026-06-26 | ✅ 已同步 |
+| review/data-definition.md | v1.0.1 | 2026-06-26 | ✅ 已同步 |
+| cockpit/data-definition.md | v1.0.1 | 2026-06-26 | ✅ 已同步 |
 
 ### 4.3 审计工具版本
 

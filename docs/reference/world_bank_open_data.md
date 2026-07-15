@@ -1,3 +1,16 @@
+---
+title: world_bank_open_data
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/world_bank_open_data.md
+code_version: 2.0.0
+tier: important
+---
+
 # World Bank Open Data 插件
 
 > **数据域**: 世界银行开放数据（全球发展指标）  

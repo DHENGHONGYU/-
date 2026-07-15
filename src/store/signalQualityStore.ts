@@ -16,7 +16,7 @@
  * 注意：与现有 TradeReviewPage（基于 disciplineStore 的订单复盘）是不同维度的复盘体系，不可混淆。
  * 删除前需确认未来无信号准确率复盘可视化需求。
  *
- * @see docs/reports/redundant-stores-supplementary-verification.md - 补充验证报告
+ * @see 补充验证报告（2026-07-06）：见上方 JSDoc 注释 1-5 条
  */
 
 import { create } from 'zustand'

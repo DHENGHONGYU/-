@@ -1,3 +1,16 @@
+---
+title: refactor-impact-analysis-2026-06-27
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/explanation/refactor-impact-analysis-2026-06-27.md
+code_version: 2.0.0
+tier: important
+---
+
 # 变更影响分析报告
 
 ## 1. 变更概览

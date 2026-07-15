@@ -1,3 +1,16 @@
+---
+title: getting-started
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/tutorials/getting-started.md
+code_version: 2.0.0
+tier: important
+---
+
 # V9 智能投研复盘系统 — 新成员 30 分钟上手指南
 
 > **版本**：v1.0.0  
@@ -211,15 +224,15 @@ npm run build
 
 | 我想了解... | 阅读文档 | 路径 |
 |-------------|----------|------|
-| 全局架构 | architecture/overview.md | `docs/architecture/overview.md` |
-| 舱室详情 | cabins-overview.md | `docs/architecture/cabins-overview.md` |
-| 服务子域 | services-catalog.md | `docs/architecture/services-catalog.md` |
-| 数据定义 | DATA_DICTIONARY_INDEX.md | `docs/standards/DATA_DICTIONARY_INDEX.md` |
-| 编码规范 | AGENTS.md | `AGENTS.md` |
-| 颜色令牌 | design-token-mapping.md | `docs/02-design/design-token-mapping.md` |
-| 如何新增 Store | how-to-add-store.md | `docs/guides/how-to-add-store.md` |
-| 如何新增 Service | how-to-add-service.md | `docs/guides/how-to-add-service.md` |
-| 如何新增 Widget | how-to-add-widget.md | `docs/guides/how-to-add-widget.md` |
+| 全局架构 | architecture/overview.md | `../explanation/overview.md` |
+| 舱室详情 | cabins-overview.md | `../explanation/cabins-overview.md` |
+| 服务子域 | services-catalog.md | `../reference/services-catalog.md` |
+| 数据定义 | data-dictionary-index.md | `../reference/data-dictionary-index.md` |
+| 编码规范 | ../../AGENTS.md | `../../AGENTS.md` |
+| 颜色令牌 | design-token-mapping.md | `../reference/design-token-mapping.md` |
+| 如何新增 Store | ../how-to/../how-to/how-to-add-store.md | `../how-to/../how-to/../how-to/how-to-add-store.md` |
+| 如何新增 Service | ../how-to/../how-to/how-to-add-service.md | `../how-to/../how-to/../how-to/how-to-add-service.md` |
+| 如何新增 Widget | ../how-to/../how-to/how-to-add-widget.md | `../how-to/../how-to/../how-to/how-to-add-widget.md` |
 
 ---
 
@@ -232,14 +245,14 @@ A：使用 `withBroadcast()` 广播变更事件。其他 Tab 的 Store 订阅相
 A：不能。必须通过 `DataBridge.forward()` 发送 Envelope，由 ACL 校验后路由到 DB。
 
 **Q3：新增页面需要注册路由吗？**  
-A：必须。在 `src/config/routes.ts` 的 `ROUTE_REGISTRY` 中注册，并同步更新 `docs/06-routing-specs.md`。
+A：必须。在 `src/config/routes.ts` 的 `ROUTE_REGISTRY` 中注册，并同步更新 `../reference/06-routing-specs.md`。
 
 **Q4：如何调试 IndexedDB 数据？**  
 A：浏览器 DevTools → Application → IndexedDB → `v9-database` → 查看各 store。
 
 ---
 
-> **下一步**：根据你的任务选择对应的 How-to 指南 → `how-to-add-store.md` / `how-to-add-service.md` / `how-to-add-widget.md`
+> **下一步**：根据你的任务选择对应的 How-to 指南 → `../how-to/../how-to/how-to-add-store.md` / `../how-to/../how-to/how-to-add-service.md` / `../how-to/../how-to/how-to-add-widget.md`
 ---
 
 ## 开发环境配置注意要点（每次安装/克隆后必做）
@@ -316,7 +329,7 @@ npm run tsc:prod
 
 **验证步骤**：
 1. 打开 Kimi 桌面客户端，确认已登录。
-2. 将 2-3 个项目文件（如 `README.md`、`AGENTS.md`）添加到上下文面板。
+2. 将 2-3 个项目文件（如 `../../README.md`、`../../AGENTS.md`）添加到上下文面板。
 3. 点击每个文件，确认能**打开预览内容**。
 4. 若点击无反应 → **完全退出客户端**（任务栏托盘右键退出）→ 重新打开 → 重试。
 5. 若仍无法打开 → **清除客户端缓存**（设置 → 高级 → 清除缓存）→ 重新登录。
@@ -364,4 +377,4 @@ npm run audit:layers
 
 ---
 
-> **下一步**：根据你的任务选择对应的 How-to 指南 → `how-to-add-store.md` / `how-to-add-service.md` / `how-to-add-widget.md`
+> **下一步**：根据你的任务选择对应的 How-to 指南 → `../how-to/../how-to/how-to-add-store.md` / `../how-to/../how-to/how-to-add-service.md` / `../how-to/../how-to/how-to-add-widget.md`

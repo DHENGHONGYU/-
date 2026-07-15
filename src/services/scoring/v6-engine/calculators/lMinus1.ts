@@ -115,6 +115,7 @@ export const LMinus1Calculator: LayerCalculator & { matchIndustry: typeof matchI
         weight,
         weightedScore: score * weight,
         dataSources: ['行业 SKILL 分析报告'],
+        participated: true,
       }
     }
 
@@ -132,6 +133,7 @@ export const LMinus1Calculator: LayerCalculator & { matchIndustry: typeof matchI
         weight,
         weightedScore: Number.NaN,
         dataSources: [],
+        participated: false,
       }
     }
 
@@ -147,6 +149,7 @@ export const LMinus1Calculator: LayerCalculator & { matchIndustry: typeof matchI
         weight,
         weightedScore: Number.NaN,
         dataSources: [],
+        participated: false,
       }
     }
     const bonus = LMinus1Calculator.calcSkillNBonus(sectorData.allocationBias)
@@ -170,6 +173,7 @@ export const LMinus1Calculator: LayerCalculator & { matchIndustry: typeof matchI
       weight,
       weightedScore: score * weight,
       dataSources: ['行业 SKILL 分析报告'],
+      participated: true,
     }
   },
 

@@ -4,7 +4,7 @@
  * 文档规范检查脚本（替代原 file-management-system/scripts/check-docs.js）
  *
  * 检查目标：
- * 1. 关键文档文件存在性（README.md / AGENTS.md / ARCHITECTURE.md / CHANGELOG.md）
+ * 1. 关键文档文件存在性（README.md / AGENTS.md / architecture.md / CHANGELOG.md）
  * 2. docs/ 目录结构完整性（00-meta ~ 04-testing 五舱）
  * 3. AGENTS.md 版本号格式合规
  * 4. 文档文件大小不过大（单文件 < 500KB，跳过 drafts/archive/reports）
@@ -27,7 +27,7 @@ interface Finding {
 const REQUIRED_ROOT_DOCS = [
   'README.md',
   'AGENTS.md',
-  'ARCHITECTURE.md',
+  'architecture.md',
   'CHANGELOG.md',
 ]
 

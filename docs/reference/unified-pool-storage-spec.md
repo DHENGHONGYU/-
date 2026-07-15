@@ -1,7 +1,25 @@
+---
+title: unified-pool-storage-spec
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/unified-pool-storage-spec.md
+code_version: 2.0.0
+tier: important
+---
+
+---
+title: docs/reference/unified-pool-storage-spec.md
+code_version: 2.0.0
+---
+
 # 股票池统一存储方案规范
 
 > **版本**: v1.0.0 | **日期**: 2026-07-13
-> **基于**: V9 AGENTS.md §一 分层规则、`docs/02-design/10-glossary.md` §10.1/10.7
+> **基于**: V9 AGENTS.md §一 分层规则、`./10-glossary.md` §10.1/10.7
 > **目标**: 消除 localStorage 意向池 / 研究精选池 / watchlist 与 IndexedDB 之间的双层存储不一致，统一以 IndexedDB `stocks` 表 + `orders` 表为唯一真相源
 
 ---
@@ -17,7 +35,7 @@ V9 早期版本存在以下分散存储：
 | `watchlist` | localStorage | 容量受限、无法索引、与 `stocks` 观察状态不一致 |
 | `v6_paper_trading` | localStorage | 模拟交易记录与 `orders` 表分离，复盘数据不完整 |
 
-当前代码已按 `docs/02-design/10-glossary.md` 完成主体改造，但仍有部分**旧命名兼容代码**和**重复常量定义**需要清理。
+当前代码已按 `./10-glossary.md` 完成主体改造，但仍有部分**旧命名兼容代码**和**重复常量定义**需要清理。
 
 ---
 
@@ -66,7 +84,7 @@ V9 早期版本存在以下分散存储：
 - **禁止创建独立表**存储各池数据。
 - **所有池查询统一走 `db.getAllByIndex('stocks', 'by-status', status)`**。
 - **交易持仓不走股票池流转引擎**，由交易服务独立管理。
-- **常量权威源**：`RESEARCH_STATUS`、`ResearchStatus`、`DEFAULT_POOL_GROUP` 统一出自 `src/constants/stockpool.constants.ts`。
+- **常量权威源**：`RESEARCH_STATUS`、`ResearchStatus`、`DEFAULT_POOL_GROUP` 统一出自 `src/constants/pool.constants.ts`。
 
 ---
 
@@ -254,8 +272,8 @@ export async function migrateLegacyPoolStorage(): Promise<void> {
 
 ### 5.2 重复定义清理
 
-- `RESEARCH_STATUS` 与 `DEFAULT_POOL_GROUP` 应仅存在于 `src/constants/stockpool.constants.ts`。
-- `src/config/dbConfig.ts` 中的同名导出应删除，所有引用方改从 `src/constants/stockpool.constants.ts` 导入。
+- `RESEARCH_STATUS` 与 `DEFAULT_POOL_GROUP` 应仅存在于 `src/constants/pool.constants.ts`。
+- `src/config/dbConfig.ts` 中的同名导出应删除，所有引用方改从 `src/constants/pool.constants.ts` 导入。
 
 ### 5.3 验证命令
 
@@ -277,6 +295,6 @@ npx tsc --noEmit
 ## 6. 相关文档
 
 - [V9 AGENTS.md](../../AGENTS.md) — 分层规则
-- [Glossary](../02-design/10-glossary.md) — 废弃命名映射表
+- [Glossary](../explanation/10-glossary.md) — 废弃命名映射表
 - [Gateway 写入权限规范](./gateway-write-permission-spec.md) — 写入收口规范
-- [核心数据策略报告](../02-design/core-data-strategy-report.md) — 数据架构、数据库定义、传递协议与蓝图校对
+- [核心数据策略报告](../explanation/core-data-strategy-report.md) — 数据架构、数据库定义、传递协议与蓝图校对

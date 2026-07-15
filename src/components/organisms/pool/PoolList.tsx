@@ -57,7 +57,7 @@ export function PoolList({
             </tr>
           ) : (
             items.map((item) => {
-              const options = getPoolTransitionOptions(POOL_TYPE.research, item.status as ResearchStatus)
+              const options = getPoolTransitionOptions(POOL_TYPE.research, item.status)
               const group = item.group ?? DEFAULT_POOL_GROUP
               const availableGroups = allGroups.filter((g) => g !== group)
               return (
@@ -73,7 +73,7 @@ export function PoolList({
                   <td className="px-3 py-2">{item.name}</td>
                   <td className="px-3 py-2">
                     <Badge variant="outline" className="text-xs">
-                      {getPoolLabel(POOL_TYPE.research, item.status as ResearchStatus)}
+                      {getPoolLabel(POOL_TYPE.research, item.status)}
                     </Badge>
                   </td>
                   <td className="px-3 py-2">

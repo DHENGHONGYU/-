@@ -1,4 +1,11 @@
 ---
+title: completeness-profile-batch5
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: V9 模块完成度逆向校验 — 批次 E（输出舱 + 总控舱）完成度剖面图
 version: v1.0.0
 last_updated: 2026-06-27
@@ -8,6 +15,8 @@ change_log:
   - date: 2026-06-27
     author: Quality Auditor
     desc: 初始创建：批次 E 审计完成
+code_version: 2.0.0
+tier: important
 ---
 
 # V9 批次 E：输出舱 + 总控舱 + 其他 — 完成度剖面图
@@ -38,7 +47,7 @@ change_log:
 
 | 层级 | 内容 | 状态 | 发现 |
 |:---|:---|:---|:---|
-| **L1 界面** | `src/pages/command/CommandHubPage.tsx` | ✅ | UI 完整，包含核心功能卡片（系统监控、配置管理）和可扩展能力卡片（AI体中心、风控网关、报告导出、信号质量复盘） |
+| **L1 界面** | `src/apps/command/CommandApp.tsx` | ✅ | UI 完整，包含核心功能卡片（系统监控、配置管理）和可扩展能力卡片（AI体中心、风控网关、报告导出、信号质量复盘） |
 | **L2 状态** | 无状态需求 | ✅ | 纯展示页面，无跨组件状态共享需求 |
 | **L3 数据** | 无数据需求 | ✅ | 纯导航页面，无需数据访问 |
 | **L4 逻辑** | 无业务逻辑 | ✅ | 仅展示功能入口，无复杂业务逻辑 |

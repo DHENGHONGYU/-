@@ -1,4 +1,11 @@
 ---
+title: completeness-profile-batch1
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: V9 模块完成度剖面图 — 批次 1
 version: v2.0.0
 last_updated: 2026-06-27
@@ -11,6 +18,8 @@ change_log:
   - date: 2026-06-27
     author: Quality Auditor
     desc: 批次 1：首页 + 驾驶舱 + 新闻资讯 + 交易持仓 + 录入看板 初始审计
+code_version: 2.0.0
+tier: important
 ---
 
 # V9 模块完成度剖面图 — 批次 1
@@ -75,7 +84,7 @@ change_log:
 
 | 层级 | 内容 | 状态 | 评估依据 |
 |:---|:---|:---|:---|
-| **L1 界面** | `src/pages/news-v6/NewsPage.tsx`（250 行） | ✅ 完整 | 含 `loading`/`error`/`empty` 三种状态（L33-36 状态声明，L122-130 错误提示，L133-143 NewsFeed 渲染）；文章详情弹窗（L146-247）；筛选变更回调；模拟数据生成按钮 |
+| **L1 界面** | `src/pages/analysis/NewsPage.tsx`（250 行） | ✅ 完整 | 含 `loading`/`error`/`empty` 三种状态（L33-36 状态声明，L122-130 错误提示，L133-143 NewsFeed 渲染）；文章详情弹窗（L146-247）；筛选变更回调；模拟数据生成按钮 |
 | **L2 状态** | 组件内 `useState`（无 Pinia Store） | 🟡 部分 | 状态管理完全在组件内实现（`articles`/`loading`/`hasMore`/`selectedArticle`/`error`），无独立 Store。缺少以下能力：① 跨组件共享（如 FilterPanel 筛选状态回传）；② 收藏状态持久化（`handleBookmark` L101-103 仅打印日志）；③ 新闻数据缓存 |
 | **L3 数据** | `src/services/news/newsService.ts`（通过 `dataLayer` 操作） | ✅ 完整 | `listNews`/`saveNewsArticles`/`generateMockArticles` 通过 `dataLayer.news` 操作 IndexedDB；`sentimentAnalyzer.getOrAnalyzeSentiment()` 分析情感；`stockLinker.linkArticleToStocks()` 关联股票 |
 | **L4 逻辑** | `src/services/news/`（3 文件） | ✅ 完整 | `newsService`：CRUD + 去重（hash）；`sentimentAnalyzer`：情感分析（positive/negative/neutral）；`stockLinker`：股票链接（关键词匹配 + 默认股票库）；`adaptV9ListToV6()` 适配器转换数据格式 |
@@ -99,8 +108,8 @@ change_log:
 |:---|:---|:---|:---|
 | **L1 界面** | `src/pages/trading/HoldingsPage.tsx`（439 行） | ✅ 完整 | 面包屑导航 + 标题 + 筛选区（`HoldingsFilter`）+ 数据表格（`HoldingsTable`）+ 分页（`Pagination`）+ 交易弹窗（`TradeModal`）；含 `isListLoading`/`isActionLoading`/`isExporting` 三种加载状态；含 toast 错误提示 |
 | **L2 状态** | 组件内 `useReducer`（无 Pinia Store） | ✅ 完整 | `HoldingsPageState` 含 `data`/`filter`/`pagination`/`loading`/`modal` 五个状态域；8 种 `HoldingsPageAction`（SET_DATA/SET_FILTER/SET_PAGE/SET_PAGE_SIZE/SET_LOADING/OPEN_MODAL/CLOSE_MODAL/RESET_FILTER）；`useReducer` 模式清晰，状态变更可追溯 |
-| **L3 数据** | `src/services/trade/holdingsService.ts` | ✅ 完整 | `fetchHoldings`（带超时 + 重试 + `AbortController`）+ `executeTradeAction` + `exportHoldingsCSV`；API 端点统一从 `HOLDINGS_API` 常量引用；响应格式 `HoldingsApiResponse` |
-| **L4 逻辑** | `src/services/trade/`（6 文件）+ `src/constants/trade.constants.ts` | ✅ 完整 | 策略引擎（`strategyEngine`：20进13筛选）、组合构建器（`portfolioBuilder`：主题等权分配）、仓位计算器（`positionSizer`：Kelly公式）、风控引擎（`riskEngine`：冷却期/仓位上限/行情新鲜度）、`HoldingsService` API 封装；所有魔法值从 `trade.constants` 引用 |
+| **L3 数据** | `src/services/trading/portfolioService.ts` | ✅ 完整 | `fetchHoldings`（带超时 + 重试 + `AbortController`）+ `executeTradeAction` + `exportHoldingsCSV`；API 端点统一从 `HOLDINGS_API` 常量引用；响应格式 `HoldingsApiResponse` |
+| **L4 逻辑** | `src/services/trading/`（6 文件）+ `src/constants/trade.constants.ts` | ✅ 完整 | 策略引擎（`strategyEngine`：20进13筛选）、组合构建器（`portfolioBuilder`：主题等权分配）、仓位计算器（`positionSizer`：Kelly公式）、风控引擎（`riskEngine`：冷却期/仓位上限/行情新鲜度）、`HoldingsService` API 封装；所有魔法值从 `trade.constants` 引用 |
 | **L5 集成** | `routes.ts` L187-191 | ✅ 完整 | 路由 `/trading/holdings` 注册，`React.lazy(() => import('@/pages/trading/HoldingsPage'))` |
 
 **综合评分**：🟢 92 / 100

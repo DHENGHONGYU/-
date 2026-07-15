@@ -1,3 +1,16 @@
+---
+title: sec_edgar
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/sec_edgar.md
+code_version: 2.0.0
+tier: important
+---
+
 # SEC EDGAR 插件
 
 > **数据域**: 美国 SEC 上市公司申报文件与财务数据  

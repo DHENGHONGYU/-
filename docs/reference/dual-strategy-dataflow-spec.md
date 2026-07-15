@@ -1,4 +1,11 @@
 ---
+title: dual-strategy-dataflow-spec
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: V9 双策略体系与数据流架构规格（用户输入版待校对）
 version: v0.1.0-proposal
 last_updated: 2026-06-27
@@ -8,6 +15,8 @@ change_log:
   - date: 2026-06-27
     author: Kimi Code CLI
     desc: 依据用户输入整理双策略（热门板块/价值洼地）数据流与策略规格，待与现有项目架构校对后进入 ADR 流程
+code_version: 2.0.0
+tier: important
 ---
 
 # V9 双策略体系与数据流架构规格
@@ -17,7 +26,7 @@ change_log:
 > **Last Updated**: 2026-06-27  
 >  
 > 本文档按用户给定开发策略整理，尚未经过架构评审，未与当前代码对齐。  
-> 校对目标：`docs/03-architecture-standards.md`、`docs/implementation/v9-system-blueprint.md`、  
+> 校对目标：`./03-architecture-standards.md`、`./v9-system-blueprint.md`、  
 > `src/services/trading/strategyEngine.ts`、`src/core/dataflow/`、`src/cockpit/`。
 
 ---
@@ -158,8 +167,8 @@ HotSectorScore [0-5]        ValuePitScore [0-5]
 ## 5. 下一步建议
 
 1. 由架构评审会确认是否以本规格替换/扩展当前 `strategyEngine.ts` 的策略分类。
-2. 若采纳，按 `docs/implementation/implementation-governance.md` 创建 ADR，状态从 `Proposal` 推进到 `Accepted`。
+2. 若采纳，按 `../explanation/design/implementation-governance.md` 创建 ADR，状态从 `Proposal` 推进到 `Accepted`。
 3. 更新 `src/config/strategyRules.ts` 或新增 `src/config/dualStrategyRules.ts` 以承载双策略阈值。
 4. 在 `src/services/trading/` 中新增 `hotSectorAnalyzer.ts`、`valuePitAnalyzer.ts`、`rotationSignalDetector.ts`。
 5. 在 `src/cockpit/widgets/` 中新增 `HotSectorWidget.tsx`、`ValuePitWidget.tsx`。
-6. 同步更新 `docs/03-architecture-standards.md`、`docs/05-engine-specs.md`、`docs/10-glossary.md`。
+6. 同步更新 `./03-architecture-standards.md`、`./05-engine-specs.md`、`./10-glossary.md`。

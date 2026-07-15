@@ -1,3 +1,16 @@
+---
+title: 08-implementation-plan
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/08-implementation-plan.md
+code_version: 2.0.0
+tier: important
+---
+
 # 08. 实施计划
 
 > **Status**: Current  
@@ -52,7 +65,7 @@
 | # | 任务 | 优先级 | 依赖 | 负责人 | 验收标准 |
 |---|------|--------|------|--------|----------|
 | 2.1 | AKShare 数据采集适配器 | P1 | 1.4 | ✅ | 可配置 Python 服务地址；能拉取单只股票基础数据；失败时给出明确错误 |
-| 2.1.1 | 数据采集架构文档 | P1 | - | ✅ | 新建 `docs/implementation/data-collection-architecture.md` |
+| 2.1.1 | 数据采集架构文档 | P1 | - | ✅ | 新建 `../explanation/data-collection-architecture.md` |
 | 2.1.2 | Fetcher 配置层 | P1 | - | ✅ | `src/config/fetcherConfig.ts` + `.env.example` |
 | 2.1.3 | Fetcher 服务层 | P1 | - | ✅ | `src/services/fetcher/*` |
 | 2.1.4 | 输入舱集成 | P1 | 2.1.3 | ✅ | 录入后可选拉取 AKShare 基础数据 |
@@ -60,11 +73,11 @@
 | 2.1.6 | Python 接口契约 | P1 | - | ✅ | `python/data_service/collect_endpoints.py` |
 | 2.1.7 | 单元测试 | P1 | 2.1.3 | ✅ | `tests/fetcherService.test.ts` |
 | **2.1.8** | **数据流引擎（DataFlow Engine）** | **P1** | **1.7** | **🟡** | **代码已存在 `src/core/dataflow/`，待文档补齐与正式验收** |
-| **2.1.9** | **数据融合引擎（Data Fusion）** | **P1** | **2.1.8** | **🔴** | **`src/services/analysis/unifiedStockService.ts`：统一 `UnifiedStockData` 视图** |
+| **2.1.9** | **数据融合引擎（Data Fusion）** | **P1** | **2.1.8** | **🔴** | **`src/services/unifiedStockService.ts`：统一 `UnifiedStockData` 视图** |
 | 2.2 | 真实行情/财务数据接入评分 | P1 | 2.1 | TBD | `v6ScoreService.ts` 使用真实数据计算因子分；综合分与随机数时代差异可解释 |
 | **2.2.1** | **评分报告生成** | **P1** | **2.2** | **🔴** | **`v6ScoreReportService.ts`：生成包含理由、目标价、风险的完整报告** |
 | 2.3 | 股票池流转 UI | P1 | 1.7, 1.9 | ✅ | candidate→screened→deepDive→watching→archived 可在 UI 上点击推送；流转经 `poolTransitionEngine` 校验 |
-| 2.3.1 | 股票池服务层 | P1 | - | ✅ | `src/services/stockpool/stockpoolService.ts` |
+| 2.3.1 | 股票池服务层 | P1 | - | ✅ | `src/services/pool/poolService.ts` |
 | 2.3.2 | 看板组件 | P1 | - | ✅ | `PoolBoard` / `PoolColumn` / `PoolCard` / `usePoolData` |
 | 2.3.3 | 分析舱股票池看板 | P1 | 2.3.2 | ✅ | `StockPoolBoardPage` 在 `/analysis/stock-pool` 展示五态池；输入舱侧栏保留跳转入口 |
 | 2.3.4 | 单元测试 | P1 | 2.3.1 | ✅ | `tests/stockpoolService.test.ts`、`tests/poolTransitionEngine.test.ts` |
@@ -75,7 +88,7 @@
 | 2.3.9 | 采集测试多维度健康度（P1） | P1 | 2.1 | 🟡 | `DataTestPanel` 多数据源健康列表、延迟、实时行情探测、清洗检查 |
 | 2.3.10 | 采集配置 UI（P2） | P2 | 2.1, 2.3.9 | 🔴 | `FetcherConfigPanel` 维度/频率/数据源优先级/限流配置；先内存配置，稳定后持久化到 IndexedDB |
 | 2.3.11 | 采集任务进度与汇报（P1） | P1 | 2.3.3, 2.1 | ✅ | `CollectionProgressPanel` / `CollectionReportPanel` 在 `/input/collect-tasks` 按 8 个采集维度展示进度与失败记录 |
-| 2.3.12 | 原子组件体系重构（P1） | P1 | 2.3.11 | ✅ | 建立 `atoms/molecules/organisms/templates` 四级目录；迁移 `PoolBoard`、`CollectionProgressPanel`、`CollectionReportPanel` 到 `organisms/`；新增 `componentRegistry.ts` 与 `docs/atomic-component-system.md` |
+| 2.3.12 | 原子组件体系重构（P1） | P1 | 2.3.11 | ✅ | 建立 `atoms/molecules/organisms/templates` 四级目录；迁移 `PoolBoard`、`CollectionProgressPanel`、`CollectionReportPanel` 到 `organisms/`；新增 `componentRegistry.ts` 与 `./atomic-component-system.md` |
 | 2.4 | 板块轮动与行业分析 | P1 | 1.9 | TBD | `SectorAnalysisPage` 展示行业评分与轮动信号；V4 行业评分可保存 |
 | **2.4.1** | **板块轮动评分引擎** | **P1** | **2.4** | **🟡** | **代码已存在，待上层 `SectorAnalysisPage` 接入** |
 | 2.5 | 择时信号引擎 | P0 | 2.2 | ✅ | 实现 SignalGenerator，输出 buy_dip / buy_pivot / sell_profit_taking / sell_trailing_stop / hold / watch / composite 信号；参数化配置 |
@@ -95,7 +108,7 @@
 | **2.19** | **错误边界组件** | **P1** | **-** | **✅** | **`ErrorBoundary.tsx` 已存在并被路由/App 使用** |
 | **2.20** | **操作反馈闭环增强** | **P1** | **-** | **🔴** | **评分理由反馈、数据质量可视化、操作状态实时更新** |
 | 2.21 | V6 Pro → V9 JSON 数据迁移 | P1 | 1.4, 2.1 | ✅ | `v6MigrationService.ts` + `MigrationPanel.tsx`：解析 V6 全量导出、按规范转换 12 个 store、导入 V9；默认跳过已存在，支持覆盖；单元测试覆盖每个转换函数 |
-| **2.22** | **代码-文档同步机制** | **P1** | **2.1, 2.3, 2.13** | **🟡** | **建立“扫描差异 → 补齐文档 → 验证”闭环；已输出 `docs/implementation/doc-sync-execution-plan.md`，落地 NewsPage / Widget / AI Center 数据字典；纳入 PR Checklist 待完成** |
+| **2.22** | **代码-文档同步机制** | **P1** | **2.1, 2.3, 2.13** | **🟡** | **建立“扫描差异 → 补齐文档 → 验证”闭环；已输出 `../reports/retrospectives/doc-sync-execution-plan.md`，落地 NewsPage / Widget / AI Center 数据字典；纳入 PR Checklist 待完成** |
 
 ### 3.2 依赖关系
 
@@ -169,7 +182,7 @@
 
 ## 5. Phase 4：发布准备（v1.0.0）
 
-- [ ] 完整功能验收（对照 `docs/02-functional-specs.md` 与 `docs/09-quality-gates.md`）。
+- [ ] 完整功能验收（对照 `./02-functional-specs.md` 与 `./09-quality-gates.md`）。
 - [ ] 文档更新：确保所有 `docs/` 与代码一致，`CHANGELOG.md` 更新到 v1.0.0。
 - [ ] 数据迁移测试：从 v0.9.0 数据导出 → v1.0.0 导入，验证无丢失。
 - [ ] 离线可用性验证：断网后核心页面可加载、数据可读取、评分可运行。
@@ -237,7 +250,7 @@
 
 本文档当前版本为 `v0.9.0-docs-review`，与规划基线 `v0.9.0-docs-base` 的差异见：
 
-- `docs/implementation/architecture-version-comparison.md`
+- `./architecture-version-comparison.md`
 
 主要变化：
 

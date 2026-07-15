@@ -129,22 +129,24 @@ describe('LMinus1Calculator.calculate', () => {
     expect(result.summary).toContain('CoWoS先进封装')
   })
 
-  test('未匹配 → score=0', async () => {
+  test('未匹配 → 不参与评分（score=NaN, participated=false）', async () => {
     const result = await LMinus1Calculator.calculate(createBaseInput({
       stock: { symbol: 'UNKNOWN', name: '某银行', sector: '银行' },
     }))
-    expect(result.score).toBe(0)
+    expect(Number.isNaN(result.score)).toBe(true)
+    expect(result.participated).toBe(false)
     expect(result.summary).toContain('不在7行业覆盖范围')
   })
 
-  test('匹配但无数据 → score=0', async () => {
+  test('匹配但无数据 → 不参与评分（score=NaN, participated=false）', async () => {
     const spy = vi.spyOn(LMinus1Calculator, 'matchIndustry').mockReturnValue({ sectorName: '不存在的行业', relevance: 1.0 })
 
     const result = await LMinus1Calculator.calculate(createBaseInput({
       stock: { symbol: 'TEST', name: '测试', sector: '某某' },
     }))
 
-    expect(result.score).toBe(0)
+    expect(Number.isNaN(result.score)).toBe(true)
+    expect(result.participated).toBe(false)
     expect(result.summary).toContain('匹配到行业 不存在的行业 但无评分数据')
 
     spy.mockRestore()

@@ -68,8 +68,8 @@ export class BacktestServer extends MCPServerBase {
         name: '回测默认配置',
         description: '回测引擎默认配置参数',
         mimeType: 'application/json',
-        resolver: async (uri) => {
-          return { uri, mimeType: 'application/json', text: JSON.stringify(DEFAULT_BACKTEST_CONFIG) }
+        resolver: (uri) => {
+          return Promise.resolve({ uri, mimeType: 'application/json', text: JSON.stringify(DEFAULT_BACKTEST_CONFIG) })
         },
       },
     ]

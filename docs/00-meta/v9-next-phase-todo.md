@@ -1,4 +1,17 @@
 ---
+title: v9-next-phase-todo
+code_version: 2.0.0
+
+tier: core
+---
+
+---
+title: docs/00-meta/v9-next-phase-todo.md
+code_version: 2.0.0
+tier: core
+---
+
+---
 title: V9 文档体系治理 — 下一阶段任务图（P4 执行计划）
 status: completed
 owner: 架构组 / docs 治理组
@@ -8,7 +21,7 @@ updated: 2026-07-14
 # V9 文档体系治理 — 下一阶段任务图（P4 执行计划）
 
 > **定位**：基于 `docs/00-meta/文档体系体检报告-v9.md`（第3次修订）和 Service 契约审查结果，提炼下一阶段任务，按优先级和自主决策等级排期，防止任务漂移。  
-> **参照**：`AGENTS.md` §十（自主决策规则）、§十二（任务图管理机制）、§十三（模块分拆评估框架）。
+> **参照**：`../../AGENTS.md` §十（自主决策规则）、§十二（任务图管理机制）、§十三（模块分拆评估框架）。
 
 ---
 
@@ -42,7 +55,7 @@ P0–P3 完成了**文档缺口填补**（README/GOVERNANCE/ADR/Service 契约�
 | T4 | 修复跨层依赖：stockpool → config/dbConfig | P1 | 🟡 高 | 代码 | ⚠️ 人工确认 | 1h | ✅ 已完成 |
 | T5 | 修复跨层依赖：input/analysis 直写 dataLayer | P1 | 🟡 高 | 代码 | ⚠️ 人工确认 | 2h | ✅ 已完成 |
 | T6 | 建立 DataBridge 主题包（`docs/topics/databridge/`） | P2 | 🟢 中 | 文档 | ✅ 自主执行 | 1h | ✅ 已完成 |
-| T7 | 制定 `docs/00-meta/CLEANUP_SCHEDULE.md` | P2 | 🟢 中 | 治理 | ✅ 自主执行 | 1h | ✅ 已完成 |
+| T7 | 制定 `docs/00-meta/cleanup-schedule.md` | P2 | 🟢 中 | 治理 | ✅ 自主执行 | 1h | ✅ 已完成 |
 | T8 | 扩展八类体系二级子类（A2/A3/B5/C7/D5/G4/G5） | P2 | 🔵 低 | 文档 | ✅ 自主执行 | 3h | ✅ 已完成 |
 | T9 | 引入文档门禁（Husky pre-commit） | P3 | 🔵 低 | 治理 | ⚠️ 人工确认 | 2h | ✅ 已完成（warn 模式） |
 | T10 | 文档保鲜度 Dashboard | P3 | 🔵 低 | 治理 | ⚠️ 人工确认 | 4h | ✅ 已完成 |
@@ -55,14 +68,14 @@ P0–P3 完成了**文档缺口填补**（README/GOVERNANCE/ADR/Service 契约�
 ### Phase 1：P1 高优先级（本周内）
 
 #### T1 — 数据定义去重整合
-- **目标**：将 02-design/ 下 7 份 `*_DATA_DEFINITION.md` 整合至 `standards/DATA_DICTIONARY_INDEX.md`，消除重复。
+- **目标**：将 02-design/ 下 7 份 `*_data-definition.md` 整合至 `../reference/data-dictionary-index.md`，消除重复。
 - **上下文锚点**：
   - `rootTask.intent`：消除数据定义重复，避免 AI 引用错误版本
   - `phase.boundary`：只迁移文档，不修改 `src/` 代码
   - `contextAnchor`：整合前 8 份 → 整合后 1 份（主字典）+ 引用映射
 - **方案**：
   1. 读取 7 份分散的 DATA_DEFINITION，提取差异字段
-  2. 合并至 `standards/DATA_DICTIONARY_INDEX.md`（已存在）
+  2. 合并至 `../reference/data-dictionary-index.md`（已存在）
   3. 原文件标记为 DEPRECATED 并移入 07-archive/
   4. 更新 `standards/` README 索引
 - **验证**：`find docs -name '*DATA_DEFINITION*' | wc -l` → 期望 = 1（仅主字典）
@@ -129,11 +142,11 @@ P0–P3 完成了**文档缺口填补**（README/GOVERNANCE/ADR/Service 契约�
 - **验证**：索引文件存在，回链完整
 - **回归测试**：L1
 
-#### T7 — 制定 CLEANUP_SCHEDULE.md
+#### T7 — 制定 cleanup-schedule.md
 - **目标**：定义 drafts/（7 天）、reports/_generated/（30 天）、changelogs/（永久保留）的清理周期。
 - **自主决策等级**：✅ **自主执行**
 - **方案**：
-  1. 新建 `docs/00-meta/CLEANUP_SCHEDULE.md`
+  1. 新建 `docs/00-meta/cleanup-schedule.md`
   2. 定义各目录保留期限、清理触发条件（GitHub Actions / 手动）
   3. 定义归档流程（谁有权删除、双人确认规则）
 - **验证**：文件存在，规则清晰
@@ -143,7 +156,7 @@ P0–P3 完成了**文档缺口填补**（README/GOVERNANCE/ADR/Service 契约�
 - **目标**：按体检报告 §3.1 新增 A2/A3/B5/C7/D5/G4/G5 子类。
 - **自主决策等级**：✅ **自主执行**
 - **方案**：
-  1. 更新 `docs/文档归类体系结构.md`（v1.0.0）→ v1.1.0
+  1. 更新 `./文档归类体系结构.md`（v1.0.0）→ v1.1.0
   2. 在 `docs/README.md` 的 A–H 索引中新增二级子类导航
   3. 将 ~47 个孤儿文档按新子类重新归类（或确认归入现有类）
 - **验证**：孤儿文档率 ≤ 5%
@@ -164,7 +177,7 @@ P0–P3 完成了**文档缺口填补**（README/GOVERNANCE/ADR/Service 契约�
 - **回归测试**：L2（`npm test -- --run` 验证 hook 不破坏正常提交）
 
 #### T10 — 文档保鲜度 Dashboard
-- **目标**：将 `docs/02-design/freshness-alerts.md` 升级为 GitHub Actions / CI 自动产物。
+- **目标**：将 `../reports/retrospectives/freshness-alerts.md` 升级为 GitHub Actions / CI 自动产物。
 - **自主决策等级**：⚠️ **人工确认**（涉及 CI/CD 配置变更）
 - **方案**：
   1. 调研现有 CI 配置（`.github/workflows/`）
@@ -181,7 +194,7 @@ P0–P3 完成了**文档缺口填补**（README/GOVERNANCE/ADR/Service 契约�
      ```yaml
      ---
      # Kimi 加载提示：本项目为 V9 智能投研复盘系统，按 AGENTS.md v1.4.3 分层架构运行
-     # 快速入口：docs/GOVERNANCE.md | docs/architecture/overview.md | docs/00-meta/文档体系体检报告-v9.md
+     # 快速入口：docs/governance.md | docs/architecture/overview.md | docs/00-meta/文档体系体检报告-v9.md
      ---
      ```
   2. 确保 Frontmatter 格式为 YAML（`---` 包裹），Kimi 可自动解析

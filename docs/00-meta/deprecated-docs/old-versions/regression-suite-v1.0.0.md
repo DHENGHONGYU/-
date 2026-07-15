@@ -1,3 +1,14 @@
+---
+title: docs/00-meta/deprecated-docs/old-versions/regression-suite-v1.0.0.md
+code_version: 2.0.0
+---
+
+---
+title: docs/00-meta/deprecated-docs/old-versions/regression-suite-v1.0.0.md
+code_version: 2.0.0
+tier: reference
+---
+
 # 回归测试套件模板
 
 > 本模板参照 AGENTS.md §12.4 三级回归测试套件。

@@ -1,7 +1,20 @@
+---
+title: command-cabin-spec
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/command-cabin-spec.md
+code_version: 2.0.0
+tier: important
+---
+
 # Command 舱规格（command-cabin-spec）
 
 > **定位**：command 舱（总控舱）的职责边界、子路由、数据流。补「4 舱缺 spec」缺口。
-> **权威契约**：`AGENTS.md`；路由见 `02-design/06-routing-specs.md`；总览见 `architecture/cabins-overview.md`。
+> **权威契约**：`../../AGENTS.md`；路由见 `./06-routing-specs.md`；总览见 `../explanation/cabins-overview.md`。
 > **状态**：✅ P0 新增（骨架版）
 
 ---
@@ -40,7 +53,7 @@
 
 ## 6. 文档锚点
 
-- 总览：`architecture/cabins-overview.md`
-- 路由：`02-design/06-routing-specs.md`
+- 总览：`../explanation/cabins-overview.md`
+- 路由：`./06-routing-specs.md`
 - 健康仪表盘：见 `/command/health` 与 `public/health-report.json`
-- 服务：`architecture/services-catalog.md`（system / ai-center / useCase）
+- 服务：`./services-catalog.md`（system / ai-center / useCase）

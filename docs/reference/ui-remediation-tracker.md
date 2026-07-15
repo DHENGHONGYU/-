@@ -1,7 +1,20 @@
+---
+title: ui-remediation-tracker
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
+title: docs/reference/ui-remediation-tracker.md
+code_version: 2.0.0
+tier: reference
+---
+
 # V6-V9 界面设计优化整改任务明细表
 
-> **版本**: v1.0 | **建立**: 2026-07-08 | **基准**: `V6-V9界面设计优化可行性计划.md` (RM-001~016)
-> **配套**: `V6-V9界面设计HTML精读报告.md` / `V6-V9界面设计优化可行性计划.md`
+> **版本**: v1.0 | **建立**: 2026-07-08 | **基准**: `../explanation/design/v6-v9界面设计优化可行性计划.md` (RM-001~016)
+> **配套**: `../explanation/design/v6-v9界面设计html精读报告.md` / `../explanation/design/v6-v9界面设计优化可行性计划.md`
 > **状态枚举**: 待启动 / 进行中 / 待验证 / 已通过 / 已豁免 / 沙箱不可跑
 
 ---
@@ -20,7 +33,7 @@
    - `light.primary` / `light.ring` 由 `emerald.600` → `emerald.700`。
 2. `src/index.css`
    - 亮色 `--primary` / `--ring` 由 `160 84% 31%`（≈emerald.600）→ `142 72% 30%`（=emerald.700 #15803d），更新注释。
-3. `scripts/a11y-contrast.cjs`
+3. `scripts/other/a11y-contrast.cjs`
    - 校验组合重标：`品牌主色(active emerald.700 #15803d) 白字 = 5.02 PASS`；旧 `emerald.600` 标为 deprecated 参考项。
 4. `scripts/generate-tokens.ts`（**修复令牌管线回归**）
    - TS 产物键名由 `  ${key}:` 改为 `  '${key}':`（含 `${shade}`），根治 `2xl/3xl/4xl` 等数字开头键未引号的非法 TS；使 `generate:tokens` 重生成幂等合法。
@@ -44,7 +57,7 @@
 问题：主题存在两套独立源且会冲突 —— `core/ThemeProvider`（`v9-theme` 键、默认 system）→ `apps/command/ConfigApp`（`v9-app-config` 键、自带 `applyTheme`）。`index.css` 的 `.dark` 规则已存在却**无任何代码激活**，暗色 CSS 形同虚设。
 
 改动：
-1. **新建 `src/store/themeStore.ts`** —— 全局主题【唯一数据源】：
+1. **新建 `src/core/ThemeProvider.tsx`** —— 全局主题【唯一数据源】：
    - 默认 `'dark'`（驾驶舱默认暗色，RM-004 要求），持久化键 `v9-theme`（与历史 ThemeProvider 一致，避免双源）。
    - 变更时同步应用 `.dark` class + `data-theme` 属性到 `<html>`；通过 `withBroadcast(EVENT_NAMES.THEME_CHANGED)` 广播（同 Tab 订阅）。
    - 监听 `window 'storage'` 事件实现**真·跨 Tab 同步**；`system` 模式实时跟随 `matchMedia` 变化。
@@ -121,7 +134,7 @@
    - `errorMap[instanceId]`（string）→ 渲染 `ErrorState`（`onRetry` 调用 `refreshWidget(instanceId)` 重试）。
    - **严格 `=== true` 判定**：FundFlow 等走本地 mock（`useState`）的 widget 不走 `loadingMap`，不会被误判为永久 loading。
    - 其余 → 渲染 `children`。
-2. **`src/components/WidgetErrorBoundary.tsx`** —— 渲染异常错误 UI 由手写 Card/Badge/Button 改为统一 `ErrorState`（带重试、达最大重试提示），四态视觉一致。
+2. **`src/components/organisms/shared/WidgetErrorBoundary.tsx`** —— 渲染异常错误 UI 由手写 Card/Badge/Button 改为统一 `ErrorState`（带重试、达最大重试提示），四态视觉一致。
 3. **`src/cockpit/CockpitShell.tsx`** —— 成功路径在 `WidgetErrorBoundary` 内、`SafeComponent` 外包 `<WidgetStateBoundary instanceId title>`；组件加载 loading 分支由 `RefreshCw` 手写 spinner 改为 `<Loading label>`；组件加载 error 分支由手写 danger Card 改为 `<ErrorState>`（重试逻辑保留）。移除不再使用的 `RefreshCw` import。
 4. **`src/cockpit/widgets/PortfolioOverviewWidget.tsx`** —— 两个裸色内联空态（`COLOR_SHADES.gray[400]`）替换为统一 `<Empty>`（保留 `data-testid` 兼容测试），消除裸色类。
 
@@ -143,7 +156,7 @@
 
 **关键发现（事先核查）**：`lint:colors` 的 ESLint 规则 `no-hardcoded-tailwind-colors` 早已存在且已置 error 级，RM-011 实质是**修缺口**而非从零建；真实 UI 源码（非测试/非令牌定义）裸色类原已为 0。
 
-**RM-011 扩展 ESLint 规则（`scripts/eslint-plugin-no-hardcoded-colors.js`）**
+**RM-011 扩展 ESLint 规则（`scripts/quality/eslint-plugin-no-hardcoded-colors.js`）**
 
 1. **缺口 A 修复（致命误报）**：`EXEMPT_FILES` 原仅列旧单文件 `src/constants/theme.tokens.ts`，但令牌已于 2026-07-07 拆分到 `src/constants/theme/theme.tokens.*.ts`，这些文件内含 `text-red-500` 等字面量 → 运行 `lint:colors` 会对**令牌定义本身误报 error**。现已纳入 `src/constants/theme/`（前缀）与 `src/constants/newsColorTokens.ts`（颜色定义真相源）。
 2. **缺口 B 修复（STOCK 白名单）**：新增 `STOCK_COLOR_WHITELIST`（精确 6 串 `text-red-500/bg-red-500/text-green-500/bg-green-500/text-gray-400/bg-gray-400`），在 `COLOR_PATTERNS` 命中后、上报前比对放行，语义对齐 `audit-hardcode.ts` 的 `isStockColorUsage`（A股红涨绿跌固定色，豁免主题切换）。
@@ -153,7 +166,7 @@
 
 - `COLOR_EXEMPT_FILES` 由精确 `Set.has(rel)` 改为前缀 `Array.some(rel.includes)` 匹配，补 `src/constants/theme/`、`src/constants/newsColorTokens.ts`，消除审计端同样误报，与 ESLint 规则口径一致。
 
-**RM-012 新建 `scripts/token-scan.cjs`（零依赖 Node CJS）**
+**RM-012 新建 `scripts/other/token-scan.cjs`（零依赖 Node CJS）**
 
 - 扫描 `src/components|pages|cockpit|apps|portal`，检测三类违规：① 裸 Tailwind 色类（text/bg/border + hover:/focus:/dark: 变体，与 `lint:colors` 同口径）② 裸 HEX ③ 裸 rgb()/hsl()（排除 `var(--x)` 与动态插值 `rgb(${...})`）。
 - 豁免：令牌定义文件 / 测试文件 / STOCK 6 串；**块注释 `/* */` 与行注释 `//` 均剥离**，避免注释中的色值误报。
@@ -172,7 +185,7 @@
 - `npm run audit:hardcode` → **阻塞级违规 0**（60 非阻塞 warning 均为"静默回退" `?? null` 防御性兜底，属规则过严误报，非颜色问题，见工作记忆）
 - 负向校验：`src/components/__token_scan_tmp__.tsx` 临时写 `text-blue-600/#ff0000` 等 → `lint:colors` 报错、`token-scan` 报 ≥1 违规且退出码非 0；校验后删除。
 
-本轮代码改动文件（P4）：`scripts/eslint-plugin-no-hardcoded-colors.js`、`scripts/audit-hardcode.ts`、`scripts/token-scan.cjs`（新）、`package.json`、`src/portal/PortalShell.tsx`。
+本轮代码改动文件（P4）：`scripts/quality/eslint-plugin-no-hardcoded-colors.js`、`scripts/audit-hardcode.ts`、`scripts/other/token-scan.cjs`（新）、`package.json`、`src/portal/PortalShell.tsx`。
 
 ---
 
@@ -184,7 +197,7 @@
 - 零裸色：`Card`/`Badge`/`Button` 语义令牌 + `THEME_TOKENS.motion` 动效（零魔法时长）。
 - 接入 `ResearchReportPage`：原裸 `<pre>` 报告块整块替换为 `<ResultCard content={report.markdown} onExport={...}/>`，移除不再使用的 `Download`/`Badge` 导入，报告正文转为统一成品卡（可预览/分享/导出）。
 
-**RM-014 ReviewWizard 向导式复盘（`src/components/output/ReviewWizard.tsx` 新）**
+**RM-014 ReviewWizard 向导式复盘（`src/components/organisms/output/ReviewWizard.tsx` 新）**
 
 - 把 `TradeReviewReport` 拆为 4 步向导（交易摘要/心理画像/纪律分析/行动计划）：
   - 顶部 `Progress` 进度条（第 N/4 步 + 当前步名）+ 可点击步骤点直达任意步。
@@ -279,7 +292,7 @@ M1 令牌层(constants/config) → M2 主题层(store/core) → M3 驾驶舱壳�
 
 - **已通过（16 RM + 6 R-TK）**：RM-001~016（P0+P1+P2+P3+P4+P5+P6）全量完成；P7 双令牌机制闭合（R-TK-1~6）已通过
 - **待启动（0）**：无
-- **本轮代码改动文件（P0+P1+P2）**：`design-tokens/tokens.json`、`src/index.css`、`scripts/a11y-contrast.cjs`、`scripts/generate-tokens.ts`、`src/generated/tokens.css`、`src/generated/tokens.ts`、`src/store/themeStore.ts`（新）、`src/store/themeStore.test.ts`（新测试）、`src/constants/store-channels.constants.ts`、`src/core/ThemeProvider.tsx`、`src/apps/command/ConfigApp.tsx`、`src/App.tsx`、`src/config/chartColors.ts`、`index.html`、`src/components/cockpit/SignalSpectrum.tsx`、`src/components/cockpit/SignalSpectrum.test.tsx`（新测试）、`src/components/widgets/WidgetAnchorBar.tsx`（新）、`src/components/widgets/WidgetAnchorBar.test.tsx`（新测试）、`src/components/widgets/index.ts`、`src/cockpit/CockpitShell.tsx`
+- **本轮代码改动文件（P0+P1+P2）**：`design-tokens/tokens.json`、`src/index.css`、`scripts/other/a11y-contrast.cjs`、`scripts/generate-tokens.ts`、`src/generated/tokens.css`、`src/generated/tokens.ts`、`src/core/ThemeProvider.tsx`（新）、`src/store/themeStore.test.ts`（新测试）、`src/constants/store-channels.constants.ts`、`src/core/ThemeProvider.tsx`、`src/apps/command/ConfigApp.tsx`、`src/App.tsx`、`src/config/chartColors.ts`、`index.html`、`src/components/cockpit/SignalSpectrum.tsx`、`src/components/cockpit/SignalSpectrum.test.tsx`（新测试）、`src/components/widgets/WidgetAnchorBar.tsx`（新）、`src/components/widgets/WidgetAnchorBar.test.tsx`（新测试）、`src/components/widgets/index.ts`、`src/cockpit/CockpitShell.tsx`
 
 ---
 
@@ -304,7 +317,7 @@ M1 令牌层(constants/config) → M2 主题层(store/core) → M3 驾驶舱壳�
 
 **改动清单**：
 - `scripts/generate-tokens.ts`：`generateCSS()` 删除 `[data-theme="light/dark"]` 两段输出（保留 `:root` 调色板 + 语义变量，作设计令牌文档）。
-- `src/store/themeStore.ts`：删 `root.setAttribute('data-theme', resolved)` 写入 + 更新 L9 注释。
+- `src/core/ThemeProvider.tsx`：删 `root.setAttribute('data-theme', resolved)` 写入 + 更新 L9 注释。
 - `index.html`：FOUC 内联脚本删 `data-theme` 写入，保留 `.dark` class 切换。
 - `src/store/themeStore.test.ts`：移除 `data-theme` 断言与 `removeAttribute` 清理，仅验证 `.dark` class 增删。
 - `src/generated/tokens.css` / `tokens.ts`：重生成（css 188→147 行，移除死变量块）。

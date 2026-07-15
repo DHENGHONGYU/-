@@ -1,3 +1,16 @@
+---
+title: 01-vision-and-goals
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/explanation/01-vision-and-goals.md
+code_version: 2.0.0
+tier: important
+---
+
 # 01. 愿景与目标
 
 > **Status**: Current  

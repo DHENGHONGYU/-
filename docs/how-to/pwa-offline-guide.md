@@ -1,4 +1,11 @@
 ---
+title: pwa-offline-guide
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: V9 PWA 离线化实施指南
 version: v0.9.0-doc-sync-batch2
 last_review: 2026-06-27
@@ -7,18 +14,20 @@ change_log:
   - date: 2026-06-27
     author: Documentation Governor
     desc: 首次定义 Service Worker 注册策略、缓存清单、更新机制与 Lighthouse 测试标准
+code_version: 2.0.0
+tier: important
 ---
 
 # V9 PWA 离线化实施指南
 
-> **对应蓝图**：`docs/implementation/v9-system-blueprint.md` §1 系统定位（离线需求）、§8 Phase 3（PWA manifest + service worker）、§9 质量门禁 11（PWA 离线验证）、§10 偏差 D18/D19 相关质量加固。
-> **依赖文档**：`docs/03-architecture-standards.md` §3.10.1（离线目标）、`docs/06-routing-specs.md`（HashRouter 与静态托管）。
+> **对应蓝图**：`../reference/v9-system-blueprint.md` §1 系统定位（离线需求）、§8 Phase 3（PWA manifest + service worker）、§9 质量门禁 11（PWA 离线验证）、§10 偏差 D18/D19 相关质量加固。
+> **依赖文档**：`../reference/03-architecture-standards.md` §3.10.1（离线目标）、`../reference/06-routing-specs.md`（HashRouter 与静态托管）。
 
 ---
 
 ## 1. 目标与范围
 
-本文档规定 V9 作为纯前端 PWA 的离线化实施细节，包括 Service Worker 注册策略、核心资源缓存清单、应用更新与版本管理机制，以及 Lighthouse 离线测试标准。不覆盖图表性能与操作反馈闭环（见 `chart-integration.md`、`feedback-loop-spec.md`）。
+本文档规定 V9 作为纯前端 PWA 的离线化实施细节，包括 Service Worker 注册策略、核心资源缓存清单、应用更新与版本管理机制，以及 Lighthouse 离线测试标准。不覆盖图表性能与操作反馈闭环（见 `../reference/chart-integration.md`、`feedback-loop-spec.md`）。
 
 ---
 
@@ -71,7 +80,7 @@ eventBus.on('pwa:update-available', () => {
 })
 ```
 
-> `feedbackService` 规范见 `docs/implementation/feedback-loop-spec.md` §3。
+> `feedbackService` 规范见 `../reference/feedback-loop-spec.md` §3。
 
 ---
 
@@ -220,7 +229,7 @@ test('离线后可进入首页与驾驶舱', async ({ page, context }) => {
 
 ## 7. 相关链接
 
-- `docs/implementation/v9-system-blueprint.md` §1、§8 Phase 3、§9、D18/D19
-- `docs/03-architecture-standards.md` §3.10.1
-- `docs/06-routing-specs.md` §1（HashRouter 说明）
-- `docs/implementation/feedback-loop-spec.md` §5.3（pwa:* 事件通过 EventBus 触发 Toast）
+- `../reference/v9-system-blueprint.md` §1、§8 Phase 3、§9、D18/D19
+- `../reference/03-architecture-standards.md` §3.10.1
+- `../reference/06-routing-specs.md` §1（HashRouter 说明）
+- `../reference/feedback-loop-spec.md` §5.3（pwa:* 事件通过 EventBus 触发 Toast）

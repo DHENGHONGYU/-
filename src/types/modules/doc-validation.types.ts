@@ -27,7 +27,7 @@ export type MaterialCategory =
   | 'other'
 
 /** 验证维度 */
-export type ValidationDimension = 'integrity' | 'consistency' | 'correctness'
+export type ValidationDimension = 'integrity' | 'consistency' | 'correctness' | 'crossref'
 
 /** 扫描到的单个文件记录 */
 export interface ScannedFile {

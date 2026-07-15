@@ -35,16 +35,35 @@ interface Scenario {
   priceTarget: number
 }
 
+/**
+ * 当财报净利润缺失或无效时，基于可用数据做保守估计。
+ * 优先级：市值/PE 反推 > 营收 * 近似净利率。
+ */
+function estimateNetProfit(
+  stock: LayerInput['stock'],
+  financials: LayerInput['financials'],
+): number | undefined {
+  // 市值/PE 反推（PE 有效时最可靠）
+  if (stock.pe !== undefined && stock.pe > 0 && stock.marketCap !== undefined && stock.marketCap > 0) {
+    const estimated = stock.marketCap / stock.pe
+    if (Number.isFinite(estimated) && estimated > 0) {
+      return estimated
+    }
+  }
+  // 营收 * 行业近似净利率 5%
+  if (financials.revenue !== undefined && financials.revenue > 0) {
+    return financials.revenue * 0.05
+  }
+  return undefined
+}
+
 function buildScenarios(
   currentPrice: number,
-  netProfit: number = 0,
+  netProfit: number,
   pe: number | undefined,
   revenueYoY: number | undefined,
 ): Scenario[] {
   const np = netProfit
-  if (np === 0) {
-    logger.warn('[L4] netProfit is undefined, using conservative estimate')
-  }
   const safeNp = np
   const basePE = pe ?? V6_CALCULATOR_THRESHOLDS.L4_SCENARIO_BASE_PE
   const growth = revenueYoY ?? V6_CALCULATOR_THRESHOLDS.L4_SCENARIO_BASE_GROWTH
@@ -52,17 +71,17 @@ function buildScenarios(
   // 上行：业绩超预期，PE 扩张
   const upNP = safeNp * (1 + Math.max(0.2, growth * 0.5))
   const upPE = basePE * V6_CALCULATOR_THRESHOLDS.L4_SCENARIO_UP_MULTIPLIER
-  const upPrice = (upNP / (safeNp || 1)) * currentPrice * (upPE / basePE)
+  const upPrice = (upNP / safeNp) * currentPrice * (upPE / basePE)
 
   // 基准：符合预期
   const baseNP = safeNp * (1 + Math.min(0.15, growth * 0.3))
   const basePE_ = basePE
-  const basePrice = (baseNP / (safeNp || 1)) * currentPrice
+  const basePrice = (baseNP / safeNp) * currentPrice
 
   // 下行：业绩不及预期，PE 收缩
   const downNP = safeNp * (1 - Math.max(0.05, Math.min(0.2, growth * 0.3)))
   const downPE = basePE * V6_CALCULATOR_THRESHOLDS.L4_SCENARIO_DOWN_MULTIPLIER
-  const downPrice = (downNP / (safeNp || 1)) * currentPrice * (downPE / basePE)
+  const downPrice = (downNP / safeNp) * currentPrice * (downPE / basePE)
 
   return [
     { name: '乐观', probability: V6_CALCULATOR_THRESHOLDS.L4_SCENARIO_BULL_PROB, netProfit: upNP, pe: upPE, priceTarget: upPrice },
@@ -71,12 +90,34 @@ function buildScenarios(
   ]
 }
 
-function scoreScenario(input: LayerInput): { score: number; summary: string; evidence: string[]; scenarios: Scenario[] } {
+function scoreScenario(input: LayerInput): { score: number; summary: string; evidence: string[]; scenarios: Scenario[]; participated: boolean } {
   const { stock, financials } = input
   const currentPrice = stock.price ?? 1
   const evidence: string[] = []
 
-  const scenarios = buildScenarios(currentPrice, financials.netProfit, stock.pe, financials.revenueYoY)
+  // P0 修复：净利润缺失时使用保守估计，仍无法估计则标记该层未参与
+  const rawNetProfit = financials.netProfit
+  const hasValidNetProfit = rawNetProfit !== undefined && Number.isFinite(rawNetProfit) && rawNetProfit > 0
+  const netProfit = hasValidNetProfit ? rawNetProfit : estimateNetProfit(stock, financials)
+  const participated = netProfit !== undefined && netProfit > 0
+
+  if (!participated) {
+    logger.warn(`[L4] ${stock.symbol}: 净利润数据缺失且无法估计，情景推演未参与`)
+    return {
+      score: Number.NaN,
+      summary: '净利润数据缺失，情景推演未参与',
+      evidence: ['净利润(undefined/≤0)且市值/PE/营收均不足，无法构建情景'],
+      scenarios: [],
+      participated: false,
+    }
+  }
+
+  if (!hasValidNetProfit) {
+    logger.info(`[L4] ${stock.symbol}: 净利润缺失，使用保守估计 ${netProfit.toFixed(2)} 亿`)
+    evidence.push(`净利润缺失，使用保守估计 ${netProfit.toFixed(2)} 亿`)
+  }
+
+  const scenarios = buildScenarios(currentPrice, netProfit, stock.pe, financials.revenueYoY)
 
   // 概率加权合理价
   const weightedPrice = scenarios.reduce((sum, s) => sum + s.priceTarget * s.probability, 0)
@@ -141,7 +182,7 @@ function scoreScenario(input: LayerInput): { score: number; summary: string; evi
 
   const summary = `基准上行 ${(baseUpside * 100).toFixed(0)}% | 收益比 ${rewardRatio.toFixed(1)}x | ${score >= 4 ? '情景积极' : score >= 3 ? '情景中性' : '情景偏弱'}`
 
-  return { score, summary, evidence, scenarios }
+  return { score, summary, evidence, scenarios, participated: true }
 }
 
 /**
@@ -156,7 +197,22 @@ export const L4ScenarioCalculator: LayerCalculator = {
     const risks: string[] = []
 
     try {
-      const { score, summary, evidence } = scoreScenario(input)
+      const { score, summary, evidence, participated } = scoreScenario(input)
+
+      if (!participated || !Number.isFinite(score)) {
+        return {
+          layerId: 'l4' as LayerId,
+          layerName: LAYER_LABELS.l4 ?? 'L4 情景推演',
+          score: Number.NaN,
+          summary,
+          risks: ['净利润数据缺失，情景推演未参与综合计算'],
+          evidence,
+          weight,
+          weightedScore: Number.NaN,
+          dataSources: [],
+          participated: false,
+        }
+      }
 
       if (score < V6_CALCULATOR_THRESHOLDS.L4_SCENARIO_RISK_THRESHOLD) {
         risks.push('基准情景已无上行空间或下行风险较大')
@@ -177,6 +233,7 @@ export const L4ScenarioCalculator: LayerCalculator = {
         weight,
         weightedScore: score * weight,
         dataSources: ['行情数据', '财报数据', '情景假设'],
+        participated: true,
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
@@ -191,6 +248,7 @@ export const L4ScenarioCalculator: LayerCalculator = {
         weight,
         weightedScore: Number.NaN,
         dataSources: [],
+        participated: false,
       }
     }
   },

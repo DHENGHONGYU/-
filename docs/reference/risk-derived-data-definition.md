@@ -1,15 +1,28 @@
 ---
+title: risk-derived-data-definition
+code_version: 2.0.0
+
+tier: core
+---
+
+---
+title: docs/reference/risk-derived-data-definition.md
+code_version: 2.0.0
+tier: core
+---
+
+---
 deprecated: true
 deprecated_date: 2026-07-14
-deprecated_reason: 已整合至 DATA_DICTIONARY_INDEX.md 索引，建议通过主索引访问
-replaced_by: docs/reference/DATA_DICTIONARY_INDEX.md
+deprecated_reason: 已整合至 data-dictionary-index.md 索引，建议通过主索引访问
+replaced_by: docs/reference/data-dictionary-index.md
 ---
 
 # DEPRECATED - risk-derived-data-definition.md
 
 > ⚠️ **此文件已废弃**（2026-07-14）
 > 
-> 数据定义已整合至 `docs/reference/DATA_DICTIONARY_INDEX.md`，请通过主索引访问最新定义。
+> 数据定义已整合至 `docs/reference/data-dictionary-index.md`，请通过主索引访问最新定义。
 
 ---
 

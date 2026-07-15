@@ -1,14 +1,27 @@
 ---
-title: useCase-contract.md — 业务用例编排接口契约
+title: usecase-contract
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/usecase-contract.md
+code_version: 2.0.0
+tier: important
+---
+
+---
+title: usecase-contract.md — 业务用例编排接口契约
 status: draft
 owner: 架构组
 updated: 2026-07-12
 ---
 
-# useCase-contract.md — 业务用例编排接口契约
+# usecase-contract.md — 业务用例编排接口契约
 
 > **定位**：定义 `useCase` 子域的接口契约、职责边界、数据流与依赖关系。  
-> **关联**：`../../architecture/services-catalog.md`（24 子域总览）、`AGENTS.md` §一（分层规则）。
+> **关联**：`./services-catalog.md`（24 子域总览）、`../../AGENTS.md` §一（分层规则）。
 
 ---
 

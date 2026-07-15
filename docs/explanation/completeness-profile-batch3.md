@@ -1,9 +1,18 @@
 ---
+title: completeness-profile-batch3
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: V9 模块完成度剖面图 — 批次 C（分析舱）
 version: v1.0.0
 last_updated: 2026-06-27
 maintainer: Quality Auditor
 status: active
+code_version: 2.0.0
+tier: important
 ---
 
 # V9 模块完成度剖面图 — 批次 C（分析舱）
@@ -147,7 +156,7 @@ status: active
 | 编号 | 模块 | 严重度 | 问题描述 | 文件路径 |
 |:---|:---|:---|:---|:---|
 | C6-P1-001 | 策略回测 | P1 | 仅占位页，核心功能完全未实现 | `src/pages/analysis/BacktestPage.tsx` |
-| C1-P2-002 | 分析舱 Hub | P2 | 无独立 Zustand Store | `src/pages/analysis/AnalysisHubPage.tsx` |
+| C1-P2-002 | 分析舱 Hub | P2 | 无独立 Zustand Store | `src/apps/analysis/AnalysisApp.tsx` |
 | C2-P2-003 | V4 行业评分 | P2 | 使用 `useIndustryScorePage` hook，无独立 Zustand Store | `src/hooks/cabin/useIndustryScorePage.ts` |
 | C3-P2-004 | V6 个股评分 | P2 | 使用 useState，无独立 Zustand Store | `src/pages/analysis/StockAnalysisPage.tsx` |
 | C4-P2-005 | V6 智能评分 | P2 | 使用 `useIntelligentScorePage` hook，无独立 Zustand Store | `src/hooks/cabin/useIntelligentScorePage.ts` |

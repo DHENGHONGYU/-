@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UI 设计对照与成熟度评估 · V6 智能选股 vs V9 智能投研复盘系统</title>
+<style>
+  :root{
+    --bg:#f6f8fa; --card:#ffffff; --ink:#0f172a; --sub:#475569;
+    --line:#e2e8f0; --teal:#0f9d76; --teal-soft:#e6f5f0;
+    --emerald:#10b981; --emerald-soft:#e7f7f1;
+    --amber:#e6930a; --blue:#3b82f6; --violet:#6366f1; --rose:#ef4444;
+    --shadow:0 1px 3px rgba(15,23,42,.06),0 8px 24px rgba(15,23,42,.05);
+    --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.65;font-size:15px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:32px 24px 64px}
+  header.hero{background:linear-gradient(135deg,#0f172a 0%,#16433a 55%,#0f9d76 130%);
+    color:#fff;border-radius:20px;padding:34px 36px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  header.hero::after{content:"";position:absolute;right:-60px;top:-60px;width:240px;height:240px;
+    background:radial-gradient(circle,rgba(16,185,129,.45),transparent 70%)}
+  header.hero h1{font-size:25px;font-weight:700;letter-spacing:.3px}
+  header.hero .sub{margin-top:8px;opacity:.85;font-size:14px}
+  header.hero .meta{margin-top:18px;display:flex;flex-wrap:wrap;gap:10px}
+  .chip{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);
+    padding:5px 12px;border-radius:999px;font-size:12.5px;backdrop-filter:blur(4px)}
+  .verdict{margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .vcard{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:16px 18px}
+  .vcard h3{font-size:14px;font-weight:600;opacity:.9;margin-bottom:6px}
+  .vcard .big{font-size:22px;font-weight:700}
+  .vcard p{font-size:13px;opacity:.85;margin-top:4px}
+
+  section{margin-top:34px}
+  h2{font-size:19px;font-weight:700;display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  h2 .n{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:8px;
+    background:var(--teal);color:#fff;font-size:13px;font-weight:700}
+  .lead{color:var(--sub);font-size:14px;margin-bottom:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{padding:11px 13px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:#f1f5f9;font-weight:600;color:#1e293b;font-size:12.5px;text-transform:uppercase;letter-spacing:.4px}
+  td:first-child{font-weight:600;color:#0f172a;white-space:nowrap}
+  tr:last-child td{border-bottom:none}
+  .tag{display:inline-block;padding:2px 9px;border-radius:6px;font-size:12px;font-weight:600}
+  .t-v6{background:var(--emerald-soft);color:#047857}
+  .t-v9{background:var(--teal-soft);color:#0b7a5b}
+  .t-eq{background:#eef2ff;color:#4338ca}
+
+  .swatches{display:flex;flex-wrap:wrap;gap:18px}
+  .pal{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;flex:1;min-width:280px;box-shadow:var(--shadow)}
+  .pal h4{font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+  .dot{width:13px;height:13px;border-radius:4px;display:inline-block}
+  .row{display:flex;align-items:center;gap:9px;margin:7px 0;font-size:12.5px;color:#334155}
+  .row .hex{margin-left:auto;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#64748b;font-size:11.5px}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+  @media(max-width:820px){.grid2,.verdict{grid-template-columns:1fr}.swatches{flex-direction:column}}
+  .radar-wrap{display:flex;justify-content:center;align-items:center;padding:6px}
+
+  .insight{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  @media(max-width:820px){.insight{grid-template-columns:1fr}}
+  .ic{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--teal);
+    border-radius:12px;padding:15px 17px;box-shadow:var(--shadow)}
+  .ic h4{font-size:14px;font-weight:700;margin-bottom:6px;color:#0f172a}
+  .ic p{font-size:13px;color:var(--sub)}
+  .ic .badge{font-size:11px;font-weight:700;color:var(--teal);letter-spacing:.5px;text-transform:uppercase}
+
+  .rec{display:flex;flex-direction:column;gap:11px}
+  .ritem{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);
+    display:grid;grid-template-columns:54px 1fr auto;gap:14px;align-items:center}
+  .prio{font-size:11px;font-weight:800;color:#fff;border-radius:8px;padding:6px 0;text-align:center;line-height:1.15}
+  .p-P0{background:#dc2626}.p-P1{background:#ea580c}.p-P2{background:#0f9d76}.p-P3{background:#64748b}
+  .ritem .body h4{font-size:14px;font-weight:700}
+  .ritem .body p{font-size:12.5px;color:var(--sub);margin-top:3px}
+  .eff{font-size:11px;color:#64748b;white-space:nowrap;text-align:right}
+  .eff b{display:block;color:#0f172a;font-size:12.5px}
+
+  .check{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow)}
+  .check ul{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:10px 24px}
+  @media(max-width:820px){.check ul{grid-template-columns:1fr}}
+  .check li{font-size:13px;color:#334155;padding-left:26px;position:relative}
+  .check li::before{content:"☐";position:absolute;left:0;top:0;color:var(--teal);font-size:15px}
+  .check li b{color:#0f172a}
+
+  footer{margin-top:40px;font-size:12px;color:#94a3b8;text-align:center;line-height:1.8}
+  code{background:#f1f5f9;padding:1px 6px;border-radius:5px;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#b91c1c}
+  .evi{font-size:12px;color:#64748b;margin-top:10px;padding:10px 12px;background:#f8fafc;border-radius:8px;border:1px dashed var(--line)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <h1>UI 设计对照与成熟度评估</h1>
+    <div class="sub">参考方案「V6 智能选股」× 本项目「V9 智能投研复盘系统」· 设计体系 / 配色 / 成熟度横向校对</div>
+    <div class="meta">
+      <span class="chip">检索日期 2026-07-08</span>
+      <span class="chip">参考源 hslqownhhwaig.ok.kimi.link</span>
+      <span class="chip">方法：SPA 外壳 + 构建产物(CSS/JS)逆向解析</span>
+    </div>
+    <div class="verdict">
+      <div class="vcard">
+        <h3>V6 · 产品完成度更优</h3>
+        <div class="big">深色优先 · 单屏闭环</div>
+        <p>移动 PWA + shadcn 默认体系 + 翡翠绿强调色，范围收敛＝视觉高度凝聚，开箱即精致。</p>
+      </div>
+      <div class="vcard">
+        <h3>V9 · 系统成熟度更优</h3>
+        <div class="big">6 层令牌 · 治理完备</div>
+        <p>桌面驾驶舱 + 40+ Widget + 主题感知 + 股票涨跌例外，架构与可扩展性领先，但单屏凝聚力待追平。</p>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <h2><span class="n">1</span>检索结论：V6 界面设计事实</h2>
+    <p class="lead">参考页为客户端渲染 SPA，WebFetch 仅能取到外壳。遂下载其构建产物逆向解析，得到以下可证事实：</p>
+    <div class="card">
+      <table>
+        <thead><tr><th>维度</th><th>V6 实测事实</th><th>证据</th></tr></thead>
+        <tbody>
+          <tr><td>技术形态</td><td>React + Vite + Recharts 的移动端 PWA（含 manifest / serviceWorker / modulepreload）</td><td><code>index.html</code> 外壳、<code>recharts</code> vendor、<code>/manifest.json</code></td></tr>
+          <tr><td>设计体系</td><td><b>shadcn/ui</b> 标准 HSL 变量模型（<code>--background/--primary/--card/--radius</code>），与 V9 同宗</td><td>CSS 中 92 个变量，含 <code>--radius:.625rem</code></td></tr>
+          <tr><td>配色基调</td><td><b>深色优先</b>：背景 <code>#0f172a</code>(slate-900)，强调色 <code>#10b981</code>(翡翠绿)，57 条 <code>.dark</code> 规则</td><td><code>manifest.json</code> theme/background color</td></tr>
+          <tr><td>界面结构</td><td>「九层漏斗 L0–L8 + v4 评分引擎」一体化：选股 / 分析 / 驾驶舱 / 自选 / 板块轮动 / 双引擎六维复盘 / 因子维度评分</td><td>JS 文案：「九层漏斗框架」「驾驶舱 / 一屏掌控全局」「交易复盘 / 双引擎12类错误检测」</td></tr>
+          <tr><td>数据可视化</td><td>Recharts + Tailwind 全色系类别色板（红涨绿跌符合 A 股习惯：<code>#ef4444</code> 涨 / <code>#22c55e</code> 跌）</td><td>JS 内 hex：<code>#ef4444 #3b82f6 #f59e0b #10b981 #f97316 #8b5cf6 #06b6d4 #22c55e #ec4899 #6366f1</code></td></tr>
+          <tr><td>字体</td><td>系统无衬线栈 <code>ui-sans-serif,system-ui</code> + emoji；数字用等宽栈</td><td>CSS font-family 定义</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">2</span>设计规格对照</h2>
+    <p class="lead">二者设计语言同源，差异集中在"默认主题、设备取向、范围与治理深度"。</p>
+    <div class="card">
+      <table>
+        <thead><tr><th>规格项</th><th><span class="tag t-v6">V6 智能选股</span></th><th><span class="tag t-v9">V9 投研复盘</span></th><th>同异</th></tr></thead>
+        <tbody>
+          <tr><td>设计体系</td><td>shadcn/ui 扁平令牌（默认中性）</td><td>shadcn 衍生 · 6 层令牌（L1–L6）+ 股票涨跌例外 L5</td><td><span class="tag t-eq">同源</span></td></tr>
+          <tr><td>主色 / 强调</td><td>翡翠绿 <code>#10b981</code>（≈ HSL 160,84%,39%）</td><td>青绿 <code>hsl(160,84%,31%)</code>≈<code>#0f9d76</code>（暗色 <code>160,70%,28%</code>）</td><td><span class="tag t-eq">≈同色相</span></td></tr>
+          <tr><td>默认主题</td><td><b>深色优先</b>（manifest 即暗底）</td><td><b>主题感知</b>、默认跟随系统（桌面多亮色）</td><td><span class="tag t-v6">V6 更果断</span></td></tr>
+          <tr><td>设备取向</td><td>移动优先 PWA（portrait，禁缩放）</td><td>桌面驾驶舱为主（5 舱 + 40+ Widget）</td><td><span class="tag t-v6">V6 移动优</span> / <span class="tag t-v9">V9 密度优</span></td></tr>
+          <tr><td>共享组件</td><td>单一屏幕，天然一致</td><td><code>WidgetShell.tsx</code> + <code>ui/Card.tsx</code> 共享外壳</td><td><span class="tag t-v9">V9 有基建</span></td></tr>
+          <tr><td>图表色板</td><td>Tailwind 默认全色系</td><td><code>chartColors.ts</code> 语义化（板块/轮动/信号分级）+ 同全色系</td><td><span class="tag t-v9">V9 更治理</span></td></tr>
+          <tr><td>统一隐喻</td><td>「九层漏斗」强心智模型 + 签名视觉</td><td>Widget 网格，缺统一视觉锚点</td><td><span class="tag t-v6">V6 更强</span></td></tr>
+          <tr><td>治理 / 文档</td><td>无（Kimi 生成 Demo）</td><td>AGENTS.md 分层约束、零硬编码、令牌强制、文档体系</td><td><span class="tag t-v9">V9 碾压</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">3</span>配色与字体对照</h2>
+    <div class="swatches">
+      <div class="pal">
+        <h4><span class="dot" style="background:#10b981"></span> V6 · 深色 + 翡翠绿</h4>
+        <div class="row"><span class="dot" style="background:#0f172a"></span> 深色背景 BG <span class="hex">#0f172a</span></div>
+        <div class="row"><span class="dot" style="background:#10b981"></span> 强调主色 Primary <span class="hex">#10b981</span></div>
+        <div class="row"><span class="dot" style="background:#1e293b"></span> 卡片/面板 Card <span class="hex">#1e293b</span></div>
+        <div class="row"><span class="dot" style="background:#ef4444"></span> 涨 / 危险 <span class="hex">#ef4444</span></div>
+        <div class="row"><span class="dot" style="background:#22c55e"></span> 跌 / 成功 <span class="hex">#22c55e</span></div>
+        <div class="row"><span class="dot" style="background:#3b82f6"></span> 信息 / 蓝 <span class="hex">#3b82f6</span></div>
+        <div class="row"><span class="dot" style="background:#f59e0b"></span> 警示 / 琥珀 <span class="hex">#f59e0b</span></div>
+        <div style="margin-top:10px;font-size:11.5px;color:#64748b">字体：system-ui 无衬线 / 数字等宽 · 圆角 .625rem · 36 渐变 / 33 阴影（克制）</div>
+      </div>
+      <div class="pal">
+        <h4><span class="dot" style="background:#0f9d76"></span> V9 · 主题感知 + 青绿</h4>
+        <div class="row"><span class="dot" style="background:#ffffff;border:1px solid #e2e8f0"></span> 亮色背景 BG <span class="hex">#ffffff</span></div>
+        <div class="row"><span class="dot" style="background:#0f9d76"></span> 主色 Primary <span class="hex">hsl(160,84%,31%)</span></div>
+        <div class="row"><span class="dot" style="background:#1b1d24"></span> 暗色背景 BG <span class="hex">hsl(240,10%,12%)</span></div>
+        <div class="row"><span class="dot" style="background:#ef4444"></span> 跌(主题) / 危险 <span class="hex">#ef4444</span></div>
+        <div class="row"><span class="dot" style="background:#22c55e"></span> 涨(主题) / 成功 <span class="hex">#22c55e</span></div>
+        <div class="row"><span class="dot" style="background:#8b5cf6"></span> 紫 / 因子 <span class="hex">#8b5cf6</span></div>
+        <div class="row"><span class="dot" style="background:#14b8a6"></span> 蓝绿(板块) <span class="hex">#14b8a6</span></div>
+        <div style="margin-top:10px;font-size:11.5px;color:#64748b">字体：同 system-ui 栈 · 排版阶梯 TYPOGRAPHY_SCALE(11 级) · ELEVATION 三级阴影 · LAYOUT_TOKENS 栅格</div>
+      </div>
+    </div>
+    <div class="evi">关键发现：V6 与 V9 的类别色板（蓝/绿/琥珀/红/紫/青/粉/橙/靛）几乎完全一致——说明 V9 在 V6 之后延续并增强了同一套设计基因，V9 额外补了 teal <code>#14b8a6</code> 与板块/轮动语义色。</div>
+  </section>
+
+  <section>
+    <h2><span class="n">4</span>成熟度评分卡</h2>
+    <p class="lead">9 个维度，5 分制（5＝最成熟）。V9 在"系统侧"占优，V6 在"产品表面侧"占优。</p>
+    <div class="grid2">
+      <div class="card radar-wrap">
+        <svg id="radar" width="380" height="380" viewBox="0 0 380 380" role="img" aria-label="成熟度雷达图"></svg>
+      </div>
+      <div class="card">
+        <table>
+          <thead><tr><th>维度</th><th>V6</th><th>V9</th><th>领先</th></tr></thead>
+          <tbody>
+            <tr><td>设计系统严谨度</td><td>3.0</td><td>5.0</td><td><span class="tag t-v9">V9</span></td></tr>
+            <tr><td>视觉凝聚力</td><td>5.0</td><td>3.5</td><td><span class="tag t-v6">V6</span></td></tr>
+            <tr><td>暗色 / 主题体验</td><td>4.0</td><td>3.0</td><td><span class="tag t-v6">V6</span></td></tr>
+            <tr><td>信息密度 / 数据可视化</td><td>3.0</td><td>4.5</td><td><span class="tag t-v9">V9</span></td></tr>
+            <tr><td>响应式 / 设备策略</td><td>4.5</td><td>2.5</td><td><span class="tag t-v6">V6</span></td></tr>
+            <tr><td>品牌差异化</td><td>2.5</td><td>3.0</td><td><span class="tag t-v9">V9</span></td></tr>
+            <tr><td>交互 / 状态设计</td><td>4.0</td><td>2.5</td><td><span class="tag t-v6">V6</span></td></tr>
+            <tr><td>治理 / 可扩展</td><td>2.0</td><td>5.0</td><td><span class="tag t-v9">V9</span></td></tr>
+            <tr><td>统一视觉隐喻</td><td>4.0</td><td>2.5</td><td><span class="tag t-v6">V6</span></td></tr>
+            <tr><td><b>综合均分</b></td><td><b>3.56</b></td><td><b>3.56</b></td><td><b>持平</b></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">5</span>核心洞察</h2>
+    <div class="insight">
+      <div class="ic"><span class="badge">Insight 01</span><h4>同源而异轨：系统是 V9，产品是 V6</h4><p>二者都生于 shadcn/ui，主色同处色相 160 附近。V9 把"设计系统"做成了工程资产（6 层令牌、治理），V6 把"设计"做成了用户可感知的成品。成熟度不是同一个坐标轴。</p></div>
+      <div class="ic"><span class="badge">Insight 02</span><h4>深色优先是交易类产品的默认正确</h4><p>V6 直接 dark-first（manifest 即暗底）；V9 默认跟随系统、桌面多亮色。投研/交易场景长时盯盘，暗色降低眩光、突出数据——V9 应为驾驶舱提供"暗色优先"或持久暗色档。</p></div>
+      <div class="ic"><span class="badge">Insight 03</span><h4>范围收敛＝视觉凝聚</h4><p>V6 单屏闭环天然一致；V9 的 40+ Widget 即便有 WidgetShell/Card，仍易各自漂移。凝聚不靠"少做"，靠"共享外壳 + 视觉 QA 闸门"。</p></div>
+      <div class="ic"><span class="badge">Insight 04</span><h4>缺一个签名视觉锚点</h4><p>V6 用「九层漏斗」建立强心智模型与签名图形；V9 是 Widget 网格，信息强但缺记忆点。需为驾驶舱注入统一隐喻（评分谱/漏斗/信号流）。</p></div>
+      <div class="ic"><span class="badge">Insight 05</span><h4>品牌色仍"通用"</h4><p>双方主色都是翡翠/青绿（emerald 系），专业但缺乏辨识度。可沉淀一个 finance-appropriate 的差异化主色（深青/靛/紫），并保证对比度可达 WCAG AA。</p></div>
+      <div class="ic"><span class="badge">Insight 06</span><h4>交互与状态设计是 V9 的空白带</h4><p>V9 的 AGENTS.md 强制日志与清理，却未规范 loading / empty / error / skeleton / 微动效。精致感恰来自这些"看不见"的状态。</p></div>
+      <div class="ic"><span class="badge">Insight 07</span><h4>令牌迁移债仍在</h4><p><code>THEME_TOKENS.color</code> 仍暴露 <code>text-blue-500</code> 等裸类（设计文件已标注"历史遗留"）。新代码应只走 <code>SEMANTIC_COLOR_ROLES</code>，否则主题切换会漏色。</p></div>
+      <div class="ic"><span class="badge">Insight 08</span><h4>移动端是 V9 的盲区</h4><p>V6 是 mobile-native PWA；V9 桌面优先，关键舱室无响应式兜底。投研者常在手机速览——至少核心驾驶舱/自选需移动适配。</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">6</span>整改事项清单（按优先级）</h2>
+    <div class="rec">
+      <div class="ritem"><div class="prio p-P0">P0</div><div class="body"><h4>驾驶舱暗色优先 + 持久暗色档</h4><p>为投研/交易场景默认暗色，提供"跟随系统 / 浅 / 深"三态，深为默认。复用现有 <code>.dark</code> 变量。</p></div><div class="eff"><b>中</b>影响：高</div></div>
+      <div class="ritem"><div class="prio p-P0">P0</div><div class="body"><h4>统一视觉锚点（评分谱 / 漏斗隐喻）</h4><p>在驾驶舱植入一个签名图形（如九层评分谱或信号流），建立记忆点，弥补 Widget 网格的松散感。</p></div><div class="eff"><b>中</b>影响：高</div></div>
+      <div class="ritem"><div class="prio p-P1">P1</div><div class="body"><h4>令牌迁移债清零</h4><p>逐步替换 <code>THEME_TOKENS.color</code> 裸类为 <code>SEMANTIC_COLOR_ROLES</code>；新增 lint 规则禁止 <code>text-blue-500</code> 等硬编码色类。</p></div><div class="eff"><b>中</b>影响：中</div></div>
+      <div class="ritem"><div class="prio p-P1">P1</div><div class="body"><h4>交互与状态设计标准</h4><p>补充 loading / empty / error / skeleton / hover·focus / 微动效规范，纳入 AGENTS.md 与组件审查清单。</p></div><div class="eff"><b>中</b>影响：高</div></div>
+      <div class="ritem"><div class="prio p-P1">P1</div><div class="body"><h4>视觉 QA 闸门（防规模漂移）</h4><p>CI 增加"设计令牌lint + 关键页截图 diff"，确保 40+ Widget 跨版本视觉一致。</p></div><div class="eff"><b>高</b>影响：高</div></div>
+      <div class="ritem"><div class="prio p-P2">P2</div><div class="body"><h4>差异化品牌主色</h4><p>在青绿基线上微调出专属色（如偏靛的深青），校验对比度 AA，统一应用到 accent / 选中 / 强调。</p></div><div class="eff"><b>低</b>影响：中</div></div>
+      <div class="ritem"><div class="prio p-P2">P2</div><div class="body"><h4>核心舱室移动适配</h4><p>驾驶舱 / 自选股至少做 responsive 兜底（栅格降列、触控目标≥44px），拥抱移动速览场景。</p></div><div class="eff"><b>中</b>影响：中</div></div>
+      <div class="ritem"><div class="prio p-P3">P3</div><div class="body"><h4>沉淀"设计对照"常态化机制</h4><p>把本次 SPA 逆向比对法固化为竞品/参考站巡检流程，定期校准配色与交互趋势。</p></div><div class="eff"><b>低</b>影响：低</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">7</span>网页设计与优化能力升级清单</h2>
+    <div class="check">
+      <ul>
+        <li><b>建立设计基线</b>：以现有 6 层令牌为唯一真源，所有 UI 经令牌取色，禁用裸 HEX/色类。</li>
+        <li><b>暗色优先决策</b>：数据密集型产品默认暗色，降低眩光、突出信息。</li>
+        <li><b>签名隐喻</b>：每个核心页面有一个可记忆的视觉锚点（谱/漏斗/流）。</li>
+        <li><b>共享外壳</b>：WidgetShell + Card 强制包裹，统一圆角/间距/标题/操作区。</li>
+        <li><b>状态全谱</b>：loading / empty / error / skeleton / 边界态均有设计，不裸奔。</li>
+        <li><b>微动效克制</b>：过渡 150–250ms，hover/focus 反馈明确，不炫技。</li>
+        <li><b>字体阶梯</b>：落实 TYPOGRAPHY_SCALE，数字用等宽栈右对齐，建立清晰层级。</li>
+        <li><b>对比度达标</b>：主色与背景对比度≥ WCAG AA（4.5:1 文本 / 3:1 大字号）。</li>
+        <li><b>间距栅格化</b>：用 LAYOUT_TOKENS 统一容器内边距与区块间距。</li>
+        <li><b>图表语义化</b>：类别色走 chartColors.ts，涨跌走股票例外令牌，禁止内联。</li>
+        <li><b>响应式兜底</b>：关键视图在窄屏可降级阅读，触控目标≥44px。</li>
+        <li><b>视觉回归</b>：CI 截图 diff + 令牌 lint，规模扩张不丢一致性。</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    方法说明：参考页为客户端渲染 SPA，WebFetch 仅取外壳；本报告通过下载其 <code>index.html</code> / <code>index.css</code> / <code>index.js</code> / <code>manifest.json</code> 并解析 CSS 变量、字体、配色频率与 JS 文案/路由完成逆向。<br/>
+    本项目事实取自 <code>src/constants/theme/*</code>、<code>src/index.css</code>、<code>src/config/chartColors.ts</code>、<code>src/components/widgets/WidgetShell.tsx</code>、<code>src/core/ThemeProvider.tsx</code>。<br/>
+    生成于 2026-07-08 · 仅供设计评审与优化参考。
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var labels=['设计系统严谨度','视觉凝聚力','暗色/主题','信息密度/可视化','响应式','品牌差异化','交互/状态','治理/可扩展','统一隐喻'];
+  var v6=[3,5,4,3,4.5,2.5,4,2,4];
+  var v9=[5,3.5,3,4.5,2.5,3,2.5,5,2.5];
+  var cx=190,cy=190,R=130,N=labels.length,max=5;
+  var svg=document.getElementById('radar');
+  var ns='http://www.w3.org/2000/svg';
+  function pt(i,val){var a=-Math.PI/2+i*2*Math.PI/N;var r=R*val/max;return [cx+r*Math.cos(a),cy+r*Math.sin(a)];}
+  // grid rings
+  for(var g=1;g<=5;g++){
+    var pts=[];for(var i=0;i<N;i++){var p=pt(i,g);pts.push(p[0].toFixed(1)+','+p[1].toFixed(1));}
+    var pl=document.createElementNS(ns,'polygon');pl.setAttribute('points',pts.join(' '));
+    pl.setAttribute('fill','none');pl.setAttribute('stroke','#e2e8f0');pl.setAttribute('stroke-width','1');
+    if(g===5){pl.setAttribute('stroke','#cbd5e1');}svg.appendChild(pl);
+  }
+  // axes + labels
+  for(var i=0;i<N;i++){
+    var p=pt(i,max);var ln=document.createElementNS(ns,'line');
+    ln.setAttribute('x1',cx);ln.setAttribute('y1',cy);ln.setAttribute('x2',p[0]);ln.setAttribute('y2',p[1]);
+    ln.setAttribute('stroke','#e2e8f0');svg.appendChild(ln);
+    var lp=pt(i,max+0.55);var tx=document.createElementNS(ns,'text');
+    tx.setAttribute('x',lp[0]);tx.setAttribute('y',lp[1]);tx.setAttribute('font-size','11');
+    tx.setAttribute('fill','#475569');tx.setAttribute('text-anchor',(p[0]<cx-5?'end':p[0]>cx+5?'start':'middle'));
+    tx.setAttribute('dominant-baseline','middle');tx.textContent=labels[i];svg.appendChild(tx);
+  }
+  function poly(data,stroke,fill){var pts=[];for(var i=0;i<N;i++){var p=pt(i,data[i]);pts.push(p[0].toFixed(1)+','+p[1].toFixed(1));}
+    var pl=document.createElementNS(ns,'polygon');pl.setAttribute('points',pts.join(' '));
+    pl.setAttribute('fill',fill);pl.setAttribute('stroke',stroke);pl.setAttribute('stroke-width','2.4');
+    pl.setAttribute('stroke-linejoin','round');svg.appendChild(pl);
+    for(var i=0;i<N;i++){var p=pt(i,data[i]);var c=document.createElementNS(ns,'circle');
+      c.setAttribute('cx',p[0]);c.setAttribute('cy',p[1]);c.setAttribute('r','3');c.setAttribute('fill',stroke);svg.appendChild(c);}
+  }
+  poly(v6,'#10b981','rgba(16,185,129,.18)');
+  poly(v9,'#0f9d76','rgba(15,157,118,.18)');
+  // legend
+  var lg=document.createElementNS(ns,'text');lg.setAttribute('x',cx);lg.setAttribute('y',372);
+  lg.setAttribute('font-size','12');lg.setAttribute('text-anchor','middle');lg.setAttribute('fill','#0f172a');
+  lg.innerHTML='<tspan fill="#10b981">■</tspan> V6  &nbsp;&nbsp; <tspan fill="#0f9d76">■</tspan> V9';
+  svg.appendChild(lg);
+})();
+</script>
+</body>
+</html>

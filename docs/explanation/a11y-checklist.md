@@ -1,3 +1,16 @@
+---
+title: a11y-checklist
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/explanation/a11y-checklist.md
+code_version: 2.0.0
+tier: important
+---
+
 # V9 无障碍（Accessibility）检查清单
 
 **版本**: v0.9.11 P2-A11Y
@@ -162,19 +175,19 @@
 
 | 组件 | 文件 | 无障碍特性 |
 |------|------|-----------|
-| Button | `src/components/ui/Button.tsx` | aria-disabled, aria-busy, focus-visible |
-| Dialog | `src/components/ui/Dialog.tsx` | aria-modal, aria-labelledby, FocusTrap, ESC 关闭 |
+| Button | `src/components/atoms/Button.tsx` | aria-disabled, aria-busy, focus-visible |
+| Dialog | `src/components/molecules/Dialog.tsx` | aria-modal, aria-labelledby, FocusTrap, ESC 关闭 |
 | FocusTrap | `src/components/ui/FocusTrap.tsx` | Tab 循环, 焦点管理 |
 
 ### 5.2 待更新组件
 
 | 组件 | 文件 | 待实现 |
 |------|------|--------|
-| Input | `src/components/ui/Input.tsx` | label 关联, error 关联 |
-| Select | `src/components/ui/Select.tsx` | listbox role |
-| Switch | `src/components/ui/Switch.tsx` | switch role |
-| Tabs | `src/components/ui/Tabs.tsx` | tablist/tab/tabpanel |
-| Tooltip | `src/components/ui/Tooltip.tsx` | aria-describedby |
+| Input | `src/components/atoms/Input.tsx` | label 关联, error 关联 |
+| Select | `src/components/atoms/Select.tsx` | listbox role |
+| Switch | `src/components/atoms/Switch.tsx` | switch role |
+| Tabs | `src/components/molecules/Tabs.tsx` | tablist/tab/tabpanel |
+| Tooltip | `src/components/atoms/Tooltip.tsx` | aria-describedby |
 
 ---
 
@@ -211,7 +224,7 @@ npx tsc --noEmit
 
 ## 七、无障碍工具函数
 
-位于 `src/utils/a11y.ts`：
+位于 `src/lib/validation.ts`：
 
 | 函数 | 用途 |
 |------|------|

@@ -1,3 +1,16 @@
+---
+title: rollback-drill-report
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
+title: docs/explanation/rollback-drill-report.md
+code_version: 2.0.0
+tier: reference
+---
+
 # V9 回滚方案演练记录（P0-08）
 
 > **生成时间**: 2026-07-13  

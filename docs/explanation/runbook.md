@@ -1,3 +1,16 @@
+---
+title: runbook
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/explanation/runbook.md
+code_version: 2.0.0
+tier: important
+---
+
 # 运维与发布手册（Runbook）
 
 > **定位**：定义 V9 的本地构建、预览、健康监控与常见故障处置，补 H 类运维缺口（P2-6）。
@@ -25,7 +38,7 @@ npm run preview        # 预览构建产物
 
 - 仪表盘：`/command/health`（综合评分 + 7 项指标：跨层调用 / 颜色硬编码 / 深层嵌套 / 长链 / 重复条件 / JSDoc 缺失 / 文档同步）。
 - 报告生成：`npm run build:health` → `public/health-report.json`。
-- 健康度基线：综合 93；7 项指标均 0/低（详见 `architecture/overview.md` §7）。
+- 健康度基线：综合 93；7 项指标均 0/低（详见 `./overview.md` §7）。
 
 ## 4. 常见故障处置
 
@@ -40,7 +53,7 @@ npm run preview        # 预览构建产物
 ## 5. 回滚
 
 - 代码回滚：`git revert` 对应提交，重跑 pre-push 门禁。
-- 文档回滚：归档至 `docs/07-archive/`，保留期 6 月（见 `07-archive/README.md`）。
+- 文档回滚：归档至 `docs/07-archive/`，保留期 6 月（见 `../README.md`）。
 
 ## 6. 发布检查清单
 

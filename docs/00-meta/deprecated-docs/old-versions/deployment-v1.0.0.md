@@ -1,3 +1,14 @@
+---
+title: docs/00-meta/deprecated-docs/old-versions/deployment-v1.0.0.md
+code_version: 2.0.0
+---
+
+---
+title: docs/00-meta/deprecated-docs/old-versions/deployment-v1.0.0.md
+code_version: 2.0.0
+tier: reference
+---
+
 # Deployment Guide — V9 智能投研复盘系统部署基线
 
 > **版本**: v1.0.0 | **日期**: 2026-07-10
@@ -460,13 +471,13 @@ npm run build:health
 
 | 文档 | 路径 | 内容 |
 |------|------|------|
-| 安全模型 | `docs/architecture/security-model.md` | ACL / 加密 / MCP ACL / RBAC |
+| 安全模型 | `../../../reference/security-model.md` | ACL / 加密 / MCP ACL / RBAC |
 | CI 配置 | `.github/workflows/quality-check.yml` | 质量门禁流水线 |
 | 系统巡检 | `.github/workflows/system-check-loop.yml` | 定时检查 + 自动告警 |
 | Vite 配置 | `vite.config.ts` | 构建/开发/测试配置 |
 | 包管理 | `package.json` | 依赖版本与脚本 |
 | 数据库配置 | `src/config/dbConfig.ts` | DB_VERSION / STORE_NAME / ACL_MATRIX |
-| AGENTS.md | `AGENTS.md` §八 | 数据库版本管理规范 |
+| ../../../../AGENTS.md | `../../../../AGENTS.md` §八 | 数据库版本管理规范 |
 
 ---
 
@@ -477,4 +488,4 @@ npm run build:health
 > 4. 是否需要 PWA 支持（Service Worker、离线缓存清单）？
 > 5. 是否需要接入外部监控（如 Sentry、LogRocket）？
 > 
-> 请确认上述信息后，继续生成 `ai/README.md`。
+> 请确认上述信息后，继续生成 `../../../README.md`。
