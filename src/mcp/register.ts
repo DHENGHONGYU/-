@@ -14,6 +14,7 @@
 
 import { mcpRegistry } from '@/mcp/core/registry'
 import { MCP_SERVER_REGISTRY, type MCPServerModule } from '@/config/mcpServerRegistry'
+import type { RegisteredServer } from '@/types/modules/mcp.types'
 import { getLogger } from '@/lib/logger'
 import type { MCPServer } from '@/types/modules/mcp.types'
 
@@ -112,7 +113,7 @@ export function registerAllServers(): void {
 
     const server = instantiateServer(entry.modulePath, entry.exportName)
     if (server) {
-      mcpRegistry.register(server, { priority: entry.priority })
+      mcpRegistry.register(server, { priority: entry.priority, modulePath: entry.modulePath })
     }
   }
 
@@ -127,46 +128,80 @@ export function registerAllServers(): void {
 /**
  * 增量同步：对比配置清单与当前 Registry，执行最小变更
  *
+ * 比对键采用 `modulePath`（配置条目的稳定身份），而非 Server 的 `info.name`，
+ * 因为配置 `name` 字段（如 `llm:main`）与 Server 实例 `info.name`（如 `llm`）
+ * 可能不一致。若按 `info.name` 比对，热更新时会误将全部 Server 注销（F2 根因）。
+ *
  * 操作逻辑：
- *   1. 配置中存在但 Registry 中不存在 → 新增注册
+ *   1. 配置中存在且 enabled 但 Registry 中不存在（按 modulePath）→ 新增注册
  *   2. Registry 中存在但配置中不存在 → 注销
- *   3. 配置中 enabled: false 但 Registry 中存在 → 注销
+ *   3. 配置中 enabled: false 且 Registry 中存在 → 注销
  *   4. 其余情况 → 跳过（不重复注册）
  *
- * @returns 同步结果摘要
+ * @returns 同步结果摘要（含 mismatched 防御性告警）
  */
 export function syncWithConfig(): SyncResult {
-  const result: SyncResult = { added: [], removed: [], skipped: [], failed: [] }
+  const result: SyncResult = {
+    added: [],
+    removed: [],
+    skipped: [],
+    failed: [],
+    mismatched: [],
+  }
 
-  const configNames = new Set<string>()
-  const registeredNames = new Set(
-    mcpRegistry.listServers().map((rs) => rs.server.info.name),
-  )
+  // 以 modulePath 作为配置 ↔ 运行时注册表的稳定身份标识。
+  // 避免依赖 Server.info.name 与配置 name 不一致（如 llm vs llm:main）
+  // 导致 syncWithConfig 误将全部 Server 注销（F2 根因）。
+  const registeredByModulePath = new Map<string, RegisteredServer>()
+  for (const rs of mcpRegistry.listServers()) {
+    const mp = rs.options.modulePath
+    if (mp) registeredByModulePath.set(mp, rs)
+  }
+
+  const configByModulePath = new Map<string, (typeof MCP_SERVER_REGISTRY)[number]>()
+  for (const e of MCP_SERVER_REGISTRY) configByModulePath.set(e.modulePath, e)
 
   // Step 1: 处理配置中的条目
   for (const entry of MCP_SERVER_REGISTRY) {
-    configNames.add(entry.name)
-    const isRegistered = registeredNames.has(entry.name)
+    const registered = registeredByModulePath.get(entry.modulePath)
 
     if (!entry.enabled) {
-      handleDisabledEntry(entry, isRegistered, result)
+      if (registered) {
+        mcpRegistry.unregister(registered.server.info.name)
+        result.removed.push(entry.modulePath)
+        logger.info(`[MCP:sync] disabled & unregistered: ${entry.modulePath}`)
+      }
       continue
     }
 
-    if (!isRegistered) {
-      handleNewEntry(entry, result)
+    if (!registered) {
+      const server = instantiateServer(entry.modulePath, entry.exportName)
+      if (server) {
+        mcpRegistry.register(server, { priority: entry.priority, modulePath: entry.modulePath })
+        result.added.push(entry.modulePath)
+        logger.info(`[MCP:sync] added: ${entry.modulePath}`)
+      } else {
+        result.failed.push(entry.modulePath)
+      }
       continue
     }
 
-    result.skipped.push(entry.name)
+    result.skipped.push(entry.modulePath)
   }
 
-  // Step 2: 注销 Registry 中存在但配置中不存在的 Server
-  for (const name of registeredNames) {
-    if (configNames.has(name)) continue
-    mcpRegistry.unregister(name)
-    result.removed.push(name)
-    logger.info(`[MCP:sync] not in config & unregistered: ${name}`)
+  // Step 2: 注销配置中已不存在的 Server（按 modulePath 比对）
+  for (const [mp, rs] of registeredByModulePath) {
+    if (configByModulePath.has(mp)) continue
+    mcpRegistry.unregister(rs.server.info.name)
+    result.removed.push(mp)
+    logger.info(`[MCP:sync] not in config & unregistered: ${mp}`)
+  }
+
+  // Step 3: 防御性不变量 —— 若注册表仍存在配置外无法归类的 Server，记录告警
+  for (const mp of registeredByModulePath.keys()) {
+    if (!configByModulePath.has(mp)) {
+      result.mismatched.push(mp)
+    }
   }
 
   logger.info('[MCP:sync] complete', {
@@ -174,42 +209,24 @@ export function syncWithConfig(): SyncResult {
     removed: result.removed.length,
     skipped: result.skipped.length,
     failed: result.failed.length,
+    mismatched: result.mismatched.length,
   })
 
   return result
 }
 
-function handleDisabledEntry(
-  entry: (typeof MCP_SERVER_REGISTRY)[number],
-  isRegistered: boolean,
-  result: SyncResult,
-): void {
-  if (!isRegistered) return
-  mcpRegistry.unregister(entry.name)
-  result.removed.push(entry.name)
-  logger.info(`[MCP:sync] disabled & unregistered: ${entry.name}`)
-}
-
-function handleNewEntry(entry: (typeof MCP_SERVER_REGISTRY)[number], result: SyncResult): void {
-  const server = instantiateServer(entry.modulePath, entry.exportName)
-  if (server) {
-    mcpRegistry.register(server, { priority: entry.priority })
-    result.added.push(entry.name)
-  } else {
-    result.failed.push(entry.name)
-  }
-}
-
 /** 增量同步结果 */
 export interface SyncResult {
-  /** 新增注册的 Server 名称 */
+  /** 新增注册的 Server（modulePath） */
   added: string[]
-  /** 注销的 Server 名称 */
+  /** 注销的 Server（modulePath） */
   removed: string[]
-  /** 已存在跳过的 Server 名称 */
+  /** 已存在跳过的 Server（modulePath） */
   skipped: string[]
-  /** 加载失败的 Server 名称 */
+  /** 加载失败的 Server（modulePath） */
   failed: string[]
+  /** 注册表与配置出现无法解释偏差的 Server（modulePath，防御性告警） */
+  mismatched: string[]
 }
 
 // ============================================================

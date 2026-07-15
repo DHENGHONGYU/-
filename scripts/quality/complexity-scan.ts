@@ -23,7 +23,9 @@ import * as ts from 'typescript'
 import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const ROOT = path.resolve(__dirname, '..')
+// 本脚本位于 scripts/quality/，需上溯两级才能到达仓库根（此前误写为 '..' 只到 scripts/，
+// 导致 SRC_DIR=scripts/src 空扫、BASELINE_PATH=scripts/.complexity-baseline.json 找不到基线）
+const ROOT = path.resolve(__dirname, '..', '..')
 const SRC_DIR = path.join(ROOT, 'src')
 const BASELINE_PATH = path.join(ROOT, '.complexity-baseline.json')
 

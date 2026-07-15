@@ -1,5 +1,6 @@
 import { getLogger } from '@/lib/logger'
 import { eventBus } from '@/lib/eventBus'
+import { taskQueue } from './taskQueue'
 
 const logger = getLogger()
 
@@ -70,53 +71,77 @@ export class AgentRuntime {
     }
     this.tasks.set(taskId, task)
 
-    logger.info(`[AgentRuntime] Task created: taskId="${taskId}", agentId="${agentId}", type="${type}", timeout=${effectiveTimeout}ms`)
-    eventBus.emit('AGENT_TASK_STARTED', { taskId, agentId, type })
+    // 并发控制在 TaskQueue 侧执行：按 agent 维度限制同时运行任务数（maxConcurrent）。
+    // 达到上限的任务进入队列等待，空出槽位后再由 drain 出队进入 running。
+    taskQueue.setMaxConcurrent(agentId, agent.maxConcurrent)
+
+    logger.info(`[AgentRuntime] Task created: taskId="${taskId}", agentId="${agentId}", type="${type}", timeout=${effectiveTimeout}ms, maxConcurrent=${agent.maxConcurrent}`)
 
     return new Promise((resolve) => {
       const controller = new AbortController()
+      let started = false
+      let subscribed = true
+
       const timeoutId = setTimeout(() => {
+        taskQueue.cancel(taskId)
         task.status = 'timeout'
         task.error = `Task timeout after ${task.timeout}ms`
         task.completedAt = Date.now()
         this.runningTasks.delete(taskId)
         controller.abort()
-
         logger.warn(`[AgentRuntime] Task timeout: taskId="${taskId}", agentId="${agentId}", elapsed=${task.timeout}ms`)
         eventBus.emit('AGENT_TASK_TIMEOUT', { taskId, agentId, type })
         resolve(task)
       }, effectiveTimeout)
 
-      task.status = 'running'
-      task.startedAt = Date.now()
-      this.runningTasks.set(taskId, { controller, timeout: timeoutId })
-      logger.debug(`[AgentRuntime] Task started: taskId="${taskId}", timeout=${effectiveTimeout}ms`)
+      const unsubscribe = taskQueue.subscribe((qt) => {
+        if (qt.id !== taskId) return
 
-      this.runAgent(agentId, task, controller.signal)
-        .then((result) => {
-          task.status = 'completed'
-          task.result = result
-          task.completedAt = Date.now()
-          const duration = task.completedAt - (task.startedAt ?? task.createdAt)
+        if (qt.status === 'running' && !started) {
+          started = true
+          task.status = 'running'
+          task.startedAt = Date.now()
+          this.runningTasks.set(taskId, { controller, timeout: timeoutId })
+          eventBus.emit('AGENT_TASK_STARTED', { taskId, agentId, type })
+          logger.debug(`[AgentRuntime] Task dequeued & started: taskId="${taskId}", timeout=${effectiveTimeout}ms`)
 
-          logger.info(`[AgentRuntime] Task completed: taskId="${taskId}", duration=${duration}ms`)
-          eventBus.emit('AGENT_TASK_COMPLETED', { taskId, agentId, type, result })
-        })
-        .catch((error) => {
-          task.status = 'failed'
-          task.error = error instanceof Error ? error.message : String(error)
-          task.completedAt = Date.now()
-          const duration = task.completedAt - (task.startedAt ?? task.createdAt)
+          this.runAgent(agentId, task, controller.signal)
+            .then((result) => {
+              task.status = 'completed'
+              task.result = result
+              task.completedAt = Date.now()
+              taskQueue.markCompleted(taskId, result)
+              const duration = task.completedAt - (task.startedAt ?? task.createdAt)
+              logger.info(`[AgentRuntime] Task completed: taskId="${taskId}", duration=${duration}ms`)
+              eventBus.emit('AGENT_TASK_COMPLETED', { taskId, agentId, type, result })
+            })
+            .catch((error) => {
+              task.status = 'failed'
+              task.error = error instanceof Error ? error.message : String(error)
+              task.completedAt = Date.now()
+              taskQueue.markFailed(taskId, task.error)
+              const duration = task.completedAt - (task.startedAt ?? task.createdAt)
+              logger.error(`[AgentRuntime] Task failed: taskId="${taskId}", duration=${duration}ms, error="${task.error}"`)
+              eventBus.emit('AGENT_TASK_FAILED', { taskId, agentId, type, error: task.error })
+            })
+            .finally(() => {
+              clearTimeout(timeoutId)
+              this.runningTasks.delete(taskId)
+              if (subscribed) { subscribed = false; unsubscribe() }
+              logger.debug(`[AgentRuntime] Task cleanup: taskId="${taskId}", runningTasks=${this.runningTasks.size}`)
+              resolve(task)
+            })
+          return
+        }
 
-          logger.error(`[AgentRuntime] Task failed: taskId="${taskId}", duration=${duration}ms, error="${task.error}"`)
-          eventBus.emit('AGENT_TASK_FAILED', { taskId, agentId, type, error: task.error })
-        })
-        .finally(() => {
-          clearTimeout(timeoutId)
-          this.runningTasks.delete(taskId)
-          logger.debug(`[AgentRuntime] Task cleanup: taskId="${taskId}", runningTasks=${this.runningTasks.size}`)
-          resolve(task)
-        })
+        // 队列侧终态（被取消/超时触发）：清理订阅（正常路径已在 finally 中处理）
+        if (subscribed && (qt.status === 'completed' || qt.status === 'failed' || qt.status === 'timeout' || qt.status === 'cancelled')) {
+          subscribed = false
+          unsubscribe()
+        }
+      })
+
+      taskQueue.enqueue({ id: taskId, agentId, type, payload, timeout: effectiveTimeout, priority: 'normal' })
     })
   }
 
@@ -180,6 +205,9 @@ export class AgentRuntime {
 
   cancelTask(id: string): boolean {
     logger.debug(`[AgentRuntime] cancelTask() called: id="${id}"`)
+
+    // 同步从 TaskQueue 中移除（pending 任务直接取消，running 任务标记 cancelled）
+    taskQueue.cancel(id)
 
     const running = this.runningTasks.get(id)
     if (running) {
