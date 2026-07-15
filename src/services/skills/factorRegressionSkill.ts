@@ -14,6 +14,13 @@ import type { SkillContext, SkillDefinition, SkillResult } from './skillTypes'
 
 const logger = getLogger()
 
+/**
+ * VIF 兜底哨兵值。
+ * 当回归分析的 VIF 计算结果缺失/非有限（如单因子退化、奇异矩阵前兆）时，
+ * 使用此大值表示「无法评估/高度可疑」，而非裸魔法数字 9999。
+ */
+const VIF_FALLBACK = 9999
+
 const FACTOR_IDS = [
   'lMinus1', 'l0', 'l1', 'l2', 'l3f', 'l3v', 'l4', 'l5', 'l6', 'l7', 'l8',
 ] as const
@@ -244,7 +251,7 @@ export async function executeFactorRegressionSkill(
       const beta = safeNumber(regression.coefficients[i + 1] ?? 0, 0)
       const tStat = safeNumber(regression.tStatistics[i + 1] ?? 0, 0)
       const pValue = safeNumber(regression.pValues[i + 1] ?? 1, 1)
-      const vif = safeNumber(regression.vif[i] ?? 1, 9999)
+      const vif = safeNumber(regression.vif[i] ?? 1, VIF_FALLBACK)
       const significant = pValue < significanceLevel
       const currentWeight = currentWeights?.[fid] ?? 0
       const recommendedWeight = calibratedWeights[fid] ?? currentWeight
@@ -327,7 +334,7 @@ export async function executeFactorRegressionSkill(
           regressionBeta: 0,
           tStatistic: 0,
           pValue: 1,
-          vif: 9999,
+          vif: VIF_FALLBACK,
           significant: false,
           recommendedWeight: currentWeights?.[fid] ?? 0,
           rationale: 'X\'X 矩阵奇异，存在完全多重共线性，无法估计回归系数',

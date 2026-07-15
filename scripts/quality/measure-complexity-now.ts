@@ -18,7 +18,8 @@ import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import ts from 'typescript'
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+// 本脚本位于 scripts/quality/，需上溯两级才能到达仓库根（此前误写为 '..' 只到 scripts/，导致空扫 scripts/src）
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..')
 const SRC = path.join(ROOT, 'src')
 
 const NEST_THRESHOLD = 4

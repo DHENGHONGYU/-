@@ -298,6 +298,14 @@ export interface ServerRegistrationOptions {
   priority: 'high' | 'medium' | 'low'
   /** 是否启用（默认 true） */
   enabled?: boolean
+  /**
+   * 配置模块路径（如 `@/mcp/servers/fetcher/dataFetcherServer`）
+   *
+   * 作为 Server 在「配置注册表 ↔ 运行时注册表」之间的稳定身份标识，
+   * 用于 `syncWithConfig()` 增量同步时精确比对，避免依赖 Server 的
+   * `info.name`（可能与配置 `name` 不同，如 `llm` vs `llm:main`）导致的误注销。
+   */
+  modulePath?: string
 }
 
 /** 已注册的 Server 条目 */

@@ -74,6 +74,10 @@ lint-colors-result.txt
 test-latest.txt
 test-results-latest.txt
 commit-message.txt
+# 临时测试产物变体（规范文件为 test-results.json，其余为一次性运行产物）
+test-results-final.json
+test-results-final2.json
+test-results2.json
 
 # Python virtual environments
 .venv/

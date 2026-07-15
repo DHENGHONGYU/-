@@ -50,7 +50,7 @@ const ROOT_DIR_WHITELIST = new Set([
   '.agents', '.trae', '.trae-cn', '.workbuddy', '.dbg', '.codebuddy',
   '.playwright-mcp', '.venv',
   'archive', 'code-quality-compliance', 'design-tokens', 'eslint-rules',
-  'test-results', 'toolkit', 'tools',
+  'test-results', 'toolkit', 'tools', 'deliverables',
 ]);
 
 function checkRootDir() {
