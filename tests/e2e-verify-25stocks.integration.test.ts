@@ -20,7 +20,7 @@ import path from 'node:path'
 import { db } from '@/data/db'
 import { importStocks } from '@/services/input/batchImportExecutor'
 import { getQuoteWithConfig, getKlineWithConfig } from '@/services/data-collector/dataSourceOrchestrator'
-import { klinesToDailyQuotes } from '@/services/data-collector/directDataAPI'
+import { klinesToDailyQuotes, type RealtimeQuote } from '@/services/data-collector/directDataAPI'
 import { runV6Score, getAllV6Scores } from '@/services/scoring/v6ScoreService'
 import { createV6Engine, stockToBasicData, quotesToQuoteData } from '@/services/scoring/v6-engine'
 import { generateSignalsForSymbol, pickStrongestSignal } from '@/services/trading/signalGenerator'
@@ -63,7 +63,7 @@ function pStats(arr: number[]) {
 }
 
 // ── 确定性 K 线（规避 Math.random，保证引擎双跑可比） ──
-function deterministicKlines(sym: string, n = 60): KlineBar[] {
+function deterministicKlines(_sym: string, n = 60): KlineBar[] {
   const bars: KlineBar[] = []
   let price = 50
   for (let i = 0; i < n; i++) {
@@ -125,7 +125,7 @@ it(
     expect(universe.length, `宇宙规模需≥${SAMPLE_SIZE}`).toBeGreaterThanOrEqual(SAMPLE_SIZE)
     const sample: Cand[] = shuffle(universe, RANDOM_SEED).slice(0, SAMPLE_SIZE)
 
-    const perStock: any[] = []
+    const perStock: Record<string, unknown>[] = []
     const tImport: number[] = []
     const tQuote: number[] = []
     const tKline: number[] = []
@@ -144,7 +144,7 @@ it(
 
     for (const c of sample) {
       const code = c.code
-      const rec: any = { code, name: c.name }
+      const rec: Record<string, unknown> = { code, name: c.name }
 
       // ── 输入舱：批量导入 ──
       const t0 = performance.now()
@@ -162,7 +162,7 @@ it(
       // ── 采集：实时行情（mock） ──
       const tq = performance.now()
       let quoteOk = false
-      let quote: any = null
+      let quote: RealtimeQuote | null = null
       try {
         const quoteRes = await getQuoteWithConfig(code, { sourcePriority: ['mock'] })
         quote = quoteRes.data
@@ -341,10 +341,12 @@ it(
         const r1 = await transitionPoolItem(code, {
           pool: POOL_TYPE.research,
           status: RESEARCH_STATUS.candidate,
+          label: '候选',
         })
         const r2 = await transitionPoolItem(code, {
           pool: POOL_TYPE.research,
           status: RESEARCH_STATUS.screened,
+          label: '初筛',
         })
         transitionOk = r1.success && r2.success
       } catch (e) {
@@ -359,7 +361,7 @@ it(
     }
 
     // ── 维度 C：异常处理矩阵 ──
-    const exceptionMatrix: any = {}
+    const exceptionMatrix: Record<string, unknown> = {}
 
     // 1) 非法代码导入：不抛异常，返回受控失败
     let invalidImportThrew = false
@@ -376,7 +378,9 @@ it(
     // 2) 非法池流转：intention 直接跳 position 应被拒（真正 await 每个结果）
     const illegalResults = await Promise.all(
       sample.map((c) =>
-        Promise.resolve(transitionPoolItem(c.code, { pool: POOL_TYPE.position, status: POSITION_STATUS.holding })).then(
+        Promise.resolve(
+          transitionPoolItem(c.code, { pool: POOL_TYPE.position, status: POSITION_STATUS.holding, label: '持仓' }),
+        ).then(
           (res) => res.success === false,
         ),
       ),
@@ -522,7 +526,7 @@ it(
     const grade = overall >= 90 ? '优秀' : overall >= 80 ? '良好' : overall >= 70 ? '合格' : '待改进'
 
     // ── 缺陷发现 ──
-    const findings: any[] = []
+    const findings: Record<string, unknown>[] = []
 
     // F1：导入落库状态与池流转表不匹配
     if (matrixResults[2] && matrixResults[2].ok === false && matrixResults[2].expect === false) {

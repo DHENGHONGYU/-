@@ -62,19 +62,24 @@ async function canPromoteToDeepDive(stock: Stock): Promise<boolean> {
     key: stock.symbol,
     source: MODULE_ID.analyzer,
   })
-  const intelligentResult = await dataBridge.query<{ overallScore: number | null }>({
-    action: ENVELOPE_ACTION.queryGet,
+  const intelligentResult = await dataBridge.query<Array<{ overallScore: number | null; scoredAt: number }>>({
+    action: ENVELOPE_ACTION.queryByIndex,
     store: STORE_NAME.intelligentScores,
-    key: stock.symbol,
+    indexName: 'by-symbol',
+    indexValue: stock.symbol,
     source: MODULE_ID.analyzer,
   })
 
   const v6Ok = v6Result.success && v6Result.data !== undefined && v6Result.data.score >= config.thresholds.minV6ScoreForDeepDive
+  const latestIntelligent = intelligentResult.success && intelligentResult.data
+    ? intelligentResult.data
+        .filter((s) => s.overallScore !== null)
+        .sort((a, b) => b.scoredAt - a.scoredAt)[0]
+    : undefined
   const intelligentOk =
-    intelligentResult.success &&
-    intelligentResult.data !== undefined &&
-    intelligentResult.data.overallScore !== null &&
-    intelligentResult.data.overallScore >= config.thresholds.minIntelligentScoreForDeepDive
+    latestIntelligent !== undefined &&
+    latestIntelligent.overallScore !== null &&
+    latestIntelligent.overallScore >= config.thresholds.minIntelligentScoreForDeepDive
 
   return v6Ok || intelligentOk
 }

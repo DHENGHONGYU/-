@@ -163,14 +163,15 @@ describe('verify-all-routes.ts v3.0（白盒测试）', () => {
         '/analysis/stock-score/:symbol', '/analysis/sector', '/analysis/backtest',
         '/analysis/industry-score', '/analysis/intelligent-score', '/analysis/score-docs',
         '/analysis/news', '/analysis/hot-sector', '/analysis/value-pit',
-        '/analysis/stock-pool', '/analysis/score-comparison', '/analysis/multi-factor',
+        '/analysis/pool-board', '/analysis/score-comparison', '/analysis/multi-factor',
         // trading
         '/trading', '/trading/strategy-snapshots', '/trading/holdings',
         '/trading/flow', '/trading/execution-plans', '/trading/execution',
         '/trading/portfolio', '/trading/risk',
         // output
         '/output', '/output/hub', '/output/research', '/output/review',
-        '/output/export', '/output/dashboard',
+        '/output/export', '/output/dashboard', '/output/wizard', '/output/prediction',
+        '/output/retrospective', '/output/factor-dashboard',
         // command
         '/command', '/command/hub', '/command/agents', '/command/agents/registry',
         '/command/agents/registry/:agentId', '/command/agents/trigger',
@@ -180,7 +181,7 @@ describe('verify-all-routes.ts v3.0（白盒测试）', () => {
         '/command/agents/data-labels', '/command/agents/api-config',
         '/command/agents/skill-audit', '/command/agents/optimization',
         '/command/agents/changelog', '/command/mcp-servers', '/command/monitor',
-        '/command/config', '/command/showcase', '/command/health',
+        '/command/config', '/command/showcase', '/command/health', '/command/test',
         // portal
         '/', '/cockpit', '/mock-test',
       ]

@@ -166,11 +166,12 @@ describe('L-1 行业评分估值', () => {
   test('不在覆盖范围内的股票', async () => {
     const result = await LMinus1Calculator.calculate({
       ...mockMinimalStock,
+      stock: { ...mockMinimalStock.stock, symbol: 'UNKNOWN', name: '某未知公司', sector: '某未知行业' },
       config: { weights: { lMinus1: 0.10 } } as never,
     })
     expect(Number.isNaN(result.score)).toBe(true)
     expect(result.participated).toBe(false)
-    expect(result.summary).toContain('不在7行业覆盖范围')
+    expect(result.summary).toContain('未匹配到行业评分覆盖范围')
   })
 })
 

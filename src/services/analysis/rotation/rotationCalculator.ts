@@ -69,12 +69,17 @@ export function calculateSectorScore(scores: Record<string, number>): {
   if (missingKeys.length > 0) {
     logger.warn('[rotationCalculator] 板块因子得分缺失，使用默认值', { field: missingKeys.join(','), context: 'calculateSectorScore' })
   }
-  const s = (v: number | undefined): number => v ?? 0
-  const f1 = s(scores.F1A) + s(scores.F1B) + s(scores.F1C) + s(scores.F1D) + s(scores.F1E)
-  const f2 = s(scores.F2A) + s(scores.F2B) + s(scores.F2C) + s(scores.F2D)
-  const f3 = s(scores.F3A) + s(scores.F3B) + s(scores.F3C)
-  const f4 = s(scores.F4A) + s(scores.F4B)
-  const f5 = Math.max(0, s(scores.F5A) + s(scores.F5B))
+  const resolveScore = (v: number | undefined): number => {
+    if (v === undefined || !Number.isFinite(v)) {
+      return 0
+    }
+    return v
+  }
+  const f1 = resolveScore(scores.F1A) + resolveScore(scores.F1B) + resolveScore(scores.F1C) + resolveScore(scores.F1D) + resolveScore(scores.F1E)
+  const f2 = resolveScore(scores.F2A) + resolveScore(scores.F2B) + resolveScore(scores.F2C) + resolveScore(scores.F2D)
+  const f3 = resolveScore(scores.F3A) + resolveScore(scores.F3B) + resolveScore(scores.F3C)
+  const f4 = resolveScore(scores.F4A) + resolveScore(scores.F4B)
+  const f5 = Math.max(0, resolveScore(scores.F5A) + resolveScore(scores.F5B))
   return { f1, f2, f3, f4, f5, total: f1 + f2 + f3 + f4 + f5 }
 }
 

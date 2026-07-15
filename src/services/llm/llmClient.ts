@@ -1,5 +1,5 @@
 import { getDefaultLlmConfig, getLlmApiKeyAsync, type LlmConfig } from '@/config/llmConfig'
-import type { LlmMessage, LlmResponse, LlmUsage, LlmStreamCallback, LlmStreamChunk } from './llmTypes'
+import type { LlmMessage, LlmResponse, LlmUsage, LlmStreamCallback, LlmStreamChunk, LlmStructuredOptions } from './llmTypes'
 import { getLogger } from '@/lib/logger'
 import { isValidLlmBaseURL } from '@/lib/validation'
 
@@ -104,7 +104,30 @@ function parseUsage(raw: RawUsage | undefined): LlmUsage | undefined {
   }
 }
 
-function parseResponse(raw: RawResponse): LlmResponse {
+function parseStructuredContent<T>(content: string, structured?: LlmStructuredOptions<T>): T | undefined {
+  if (!structured) return undefined
+
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(content)
+  } catch (err) {
+    logger.warn('[llmClient] 结构化输出 JSON 解析失败', { error: err, contentPreview: content.slice(0, 200) })
+    throw new LlmApiError(`结构化输出 JSON 解析失败: ${content.slice(0, 100)}`)
+  }
+
+  if (structured.zodSchema) {
+    const result = structured.zodSchema.safeParse(parsed)
+    if (!result.success) {
+      logger.warn('[llmClient] 结构化输出 Schema 校验失败', { issues: result.error.issues })
+      throw new LlmApiError(`结构化输出 Schema 校验失败: ${result.error.issues.map((i) => i.message).join('; ')}`)
+    }
+    return result.data
+  }
+
+  return parsed as T
+}
+
+function parseResponse<T>(raw: RawResponse, structured?: LlmStructuredOptions<T>): LlmResponse<T> {
   if (raw.error && typeof raw.error.message === 'string') {
     throw new LlmApiError(`LLM API 错误: ${raw.error.message}`)
   }
@@ -119,20 +142,28 @@ function parseResponse(raw: RawResponse): LlmResponse {
     throw new LlmApiError('LLM API 返回空内容')
   }
 
+  const parsed = structured ? parseStructuredContent(content, structured) : undefined
+
   return {
     content,
     model: typeof raw.model === 'string' ? raw.model : 'unknown',
     usage: parseUsage(raw.usage),
+    parsed,
   }
 }
 
 /**
  * chat
+ *
+ * @param messages LLM 消息列表
+ * @param override LLM 配置覆盖
+ * @param structured 结构化输出选项（可选）
  */
-export async function chat(
+export async function chat<T = unknown>(
   messages: LlmMessage[],
   override?: Partial<LlmConfig>,
-): Promise<LlmResponse> {
+  structured?: LlmStructuredOptions<T>,
+): Promise<LlmResponse<T>> {
   const config = buildConfig(override)
   // P0-01: 异步从加密 localStorage 读取 API Key
   if (!config.apiKey) {
@@ -149,6 +180,9 @@ export async function chat(
   }
   if (config.maxTokens !== undefined) {
     body.max_tokens = config.maxTokens
+  }
+  if (structured?.responseFormat) {
+    body.response_format = structured.responseFormat
   }
 
   const controller = new AbortController()
@@ -172,7 +206,7 @@ export async function chat(
     }
 
     const raw = (await response.json()) as RawResponse
-    return parseResponse(raw)
+    return parseResponse(raw, structured)
   } catch (err) {
     if (err instanceof LlmApiError) {
       throw err

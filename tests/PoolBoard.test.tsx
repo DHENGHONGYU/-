@@ -40,7 +40,7 @@ describe('PoolBoard', () => {
       />,
     )
 
-    expect(screen.getByText('意向候选池')).toBeInTheDocument()
+    expect(screen.getByText('研究候选')).toBeInTheDocument()
     expect(screen.getByText('平安银行')).toBeInTheDocument()
     expect(screen.getByText('贵州茅台')).toBeInTheDocument()
   })

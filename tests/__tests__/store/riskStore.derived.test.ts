@@ -194,16 +194,16 @@ describe('riskStore.derived.ts 派生查询单元测试', () => {
 
   describe('memoizeByRef 缓存性能验证', () => {
     it('verdictStats 相同引用应命中缓存', () => {
-      blockedCount()  // 内部调用 verdictStats
-      blockedCount()  // 内部调用 verdictStats
-      blockedCount()  // 内部调用 verdictStats
-      blockedCount()
-      blockedCount()
+      blockedCount()  // 内部调用 verdictStats（首次 miss）
+      blockedCount()  // 内部调用 verdictStats（hit）
+      blockedCount()  // 内部调用 verdictStats（hit）
+      blockedCount()  // 内部调用 verdictStats（hit）
+      blockedCount()  // 内部调用 verdictStats（hit）
 
       const stats = getCacheStatsSnapshot()['verdictStats']
       expect(stats).toBeDefined()
-      expect(stats!.totalCalls).toBe(3)
-      expect(stats!.hits).toBe(2)
+      expect(stats!.totalCalls).toBe(5)
+      expect(stats!.hits).toBe(4)
       expect(stats!.misses).toBe(1)
     })
 

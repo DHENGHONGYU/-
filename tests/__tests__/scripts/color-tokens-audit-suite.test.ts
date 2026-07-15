@@ -16,7 +16,7 @@ describe('颜色与设计令牌审计域', () => {
   describe('audit-color-tokens.ts', () => {
     const logger = createTestLogger('audit-color-tokens')
 
-    it('should export scan function', async () => {
+    it('应导出 scan 函数', async () => {
       logger.testStart('验证导出 scan 函数')
       logger.step('动态导入脚本...')
       const { scan } = await import('../../../scripts/audit-color-tokens')
@@ -27,7 +27,7 @@ describe('颜色与设计令牌审计域', () => {
       logger.testEnd('验证导出 scan 函数')
     })
 
-    it('should return report with violations array', async () => {
+    it('应返回包含 violations 数组的报告', async () => {
       logger.testStart('验证返回报告结构')
       logger.step('动态导入脚本...')
       const { scan } = await import('../../../scripts/audit-color-tokens')
@@ -51,7 +51,7 @@ describe('颜色与设计令牌审计域', () => {
   describe('audit-inline-colors.ts', () => {
     const logger = createTestLogger('audit-inline-colors')
 
-    it('should export scan function', async () => {
+    it('应导出 scan 函数', async () => {
       logger.testStart('验证导出 scan 函数')
       logger.step('动态导入脚本...')
       const { scan } = await import('../../../scripts/audit-inline-colors')
@@ -62,7 +62,7 @@ describe('颜色与设计令牌审计域', () => {
       logger.testEnd('验证导出 scan 函数')
     })
 
-    it('should return report with totals', async () => {
+    it('应返回包含 totals 的报告', async () => {
       logger.testStart('验证返回报告结构')
       logger.step('动态导入脚本...')
       const { scan } = await import('../../../scripts/audit-inline-colors')
@@ -89,7 +89,7 @@ describe('颜色与设计令牌审计域', () => {
   describe('audit-typography.ts', () => {
     const logger = createTestLogger('audit-typography')
 
-    it('should export scan function', async () => {
+    it('应导出 scan 函数', async () => {
       logger.testStart('验证导出 scan 函数')
       logger.step('动态导入脚本...')
       const { scan } = await import('../../../scripts/audit-typography')
@@ -100,7 +100,7 @@ describe('颜色与设计令牌审计域', () => {
       logger.testEnd('验证导出 scan 函数')
     })
 
-    it('should return report with violations array', async () => {
+    it('应返回包含 violations 数组的报告', async () => {
       logger.testStart('验证返回报告结构')
       logger.step('动态导入脚本...')
       const { scan } = await import('../../../scripts/audit-typography')
@@ -124,7 +124,7 @@ describe('颜色与设计令牌审计域', () => {
   describe('audit-spacing.ts', () => {
     const logger = createTestLogger('audit-spacing')
 
-    it('should export scan function', async () => {
+    it('应导出 scan 函数', async () => {
       logger.testStart('验证导出 scan 函数')
       logger.step('动态导入脚本...')
       const { scan } = await import('../../../scripts/audit-spacing')
@@ -135,7 +135,7 @@ describe('颜色与设计令牌审计域', () => {
       logger.testEnd('验证导出 scan 函数')
     })
 
-    it('should return report with violations array', async () => {
+    it('应返回包含 violations 数组的报告', async () => {
       logger.testStart('验证返回报告结构')
       logger.step('动态导入脚本...')
       const { scan } = await import('../../../scripts/audit-spacing')
@@ -159,7 +159,7 @@ describe('颜色与设计令牌审计域', () => {
   describe('verify-design-tokens.ts', () => {
     const logger = createTestLogger('verify-design-tokens')
 
-    it('should export validate function', async () => {
+    it('应导出 validate 函数', async () => {
       logger.testStart('验证导出 validate 函数')
       logger.step('动态导入脚本...')
       const { validate } = await import('../../../scripts/verify-design-tokens')
@@ -170,7 +170,7 @@ describe('颜色与设计令牌审计域', () => {
       logger.testEnd('验证导出 validate 函数')
     })
 
-    it('should return report with valid flag', async () => {
+    it('应返回包含 valid 标志的报告', async () => {
       logger.testStart('验证返回报告结构')
       logger.step('动态导入脚本...')
       const { validate } = await import('../../../scripts/verify-design-tokens')

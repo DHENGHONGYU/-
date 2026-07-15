@@ -64,8 +64,8 @@ export const Menu = memo(forwardRef<HTMLUListElement, MenuProps>(
 ))
 Menu.displayName = 'Menu'
 
-export interface MenuItemProps extends LiHTMLAttributes<HTMLLIElement> {
-  key: string
+export interface MenuItemProps extends Omit<LiHTMLAttributes<HTMLLIElement>, 'onClick'> {
+  itemKey: string
   icon?: React.ReactNode
   disabled?: boolean
   onClick?: React.MouseEventHandler<HTMLLIElement>
@@ -75,7 +75,7 @@ export interface MenuItemProps extends LiHTMLAttributes<HTMLLIElement> {
  * MenuItem
  */
 export const MenuItem = memo(forwardRef<HTMLLIElement, MenuItemProps>(
-  ({ className, icon, disabled, children, onClick, key: itemKey, ...props }, ref) => {
+  ({ className, icon, disabled, children, onClick, itemKey, ...props }, ref) => {
     const { selectedKeys, onSelect } = useMenu()
     const isSelected = selectedKeys.includes(itemKey)
 
@@ -117,7 +117,7 @@ export const MenuItem = memo(forwardRef<HTMLLIElement, MenuItemProps>(
 MenuItem.displayName = 'MenuItem'
 
 export interface SubMenuProps {
-  key: string
+  itemKey?: string
   title: React.ReactNode
   icon?: React.ReactNode
   disabled?: boolean

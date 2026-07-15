@@ -28,6 +28,8 @@ const RECOMMENDATION_LABELS: Record<string, string> = {
   balanced: '价格与性能均衡，适合大多数场景',
 }
 
+const DEFAULT_STAT_LABEL_CLASS = 'text-sm'
+
 export function LlmStatsTab({ usageStats }: LlmStatsTabProps): React.JSX.Element {
   const { tokenUsage, callsByFactor, callsByModel } = usageStats
   const inputRatio = tokenUsage.total > 0 ? (tokenUsage.input / tokenUsage.total) * 100 : 0
@@ -163,7 +165,7 @@ interface StatsListProps {
   valueClassName?: string
 }
 
-function StatsList({ title, emptyMessage, emptyHint, entries, renderValue, valueClassName }: StatsListProps): React.JSX.Element {
+function StatsList({ title, emptyMessage, emptyHint, entries, renderValue, valueClassName = DEFAULT_STAT_LABEL_CLASS }: StatsListProps): React.JSX.Element {
   return (
     <div className="space-y-3">
       <Label className="text-sm font-medium">{title}</Label>
@@ -177,7 +179,7 @@ function StatsList({ title, emptyMessage, emptyHint, entries, renderValue, value
         <div className="space-y-2">
           {entries.map(([key, count]) => (
             <div key={key} className="flex items-center justify-between rounded-lg border p-3">
-              <span className={valueClassName ?? 'text-sm'}>{key}</span>
+              <span className={valueClassName}>{key}</span>
               {renderValue(count)}
             </div>
           ))}

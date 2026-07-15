@@ -81,13 +81,14 @@ export async function saveNewsArticle(
 ): Promise<DataLayerResult<NewsArticle>> {
   try {
     const hash = buildHash(article)
-    const existingResult = await dataBridge.query<NewsArticle | undefined>({
+    const existingResult = await dataBridge.query<NewsArticle[]>({
       action: ENVELOPE_ACTION.queryByIndex,
       store: STORE_NAME.news,
       indexName: 'by-hash',
       indexValue: hash,
     })
-    const existing = existingResult.success ? existingResult.data : undefined
+    const existingList = existingResult.success ? existingResult.data : []
+    const existing = existingList && existingList.length > 0 ? existingList[0] : undefined
     if (existing) {
       return { success: true, data: existing }
     }
@@ -298,13 +299,14 @@ export async function getNewsByHash(
   hash: string,
 ): Promise<DataLayerResult<NewsArticle | undefined>> {
   try {
-    const result = await dataBridge.query<NewsArticle | undefined>({
+    const result = await dataBridge.query<NewsArticle[]>({
       action: ENVELOPE_ACTION.queryByIndex,
       store: STORE_NAME.news,
       indexName: 'by-hash',
       indexValue: hash,
     })
-    const article = result.success ? result.data : undefined
+    const list = result.success ? result.data : []
+    const article = list && list.length > 0 ? list[0] : undefined
     return { success: true, data: article }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)

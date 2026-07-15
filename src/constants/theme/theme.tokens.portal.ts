@@ -1,0 +1,109 @@
+/**
+ * @fileoverview L6 门户布局令牌（Portal Tokens）
+ *
+ * 职责：为 PortalShell 提供布局、导航、舱室切换、移动端导航、状态指示等
+ * 专用样式令牌，消除 PortalShell.tsx 中的硬编码 Tailwind 颜色类。
+ *
+ * 这些令牌属于 L6 设计系统层的扩展，所有颜色/尺寸均引用自 theme.tokens 的
+ * 下层令牌或 CSS 变量（如 bg-background、text-foreground 等）。
+ *
+ * @module constants/theme/portal
+ * @created 2026-07-15
+ */
+
+/** 门户布局容器令牌 */
+export const PORTAL_LAYOUT_TOKENS = {
+  /** 整个 Shell 背景（高级灰 / 宋韵宣纸） */
+  shellBg: 'bg-background',
+  /** 顶栏背景（带透明毛玻璃） */
+  headerBg: 'bg-background/90 backdrop-blur-md',
+  /** 顶栏下边框 */
+  headerBorder: 'border-border',
+  /** 侧边栏背景 */
+  sidebarBg: 'bg-muted/70',
+  /** 侧边栏右边框 */
+  sidebarBorder: 'border-border/80',
+  /** 主内容区背景 */
+  mainBg: 'bg-card',
+  /** 主内容区内边距 */
+  mainPadding: 'p-4 sm:p-5 lg:p-6',
+  /** 主内容区最大宽度 */
+  mainMaxWidth: 'max-w-[1400px]',
+} as const
+
+/** 舱室切换器令牌 */
+export const PORTAL_CABIN_TOKENS = {
+  /** 舱室切换器容器背景 */
+  containerBg: 'bg-muted',
+  /** 当前激活舱室 */
+  active: 'bg-card text-foreground shadow-sm',
+  /** 未激活舱室 */
+  inactive: 'text-muted-foreground hover:text-foreground hover:bg-muted/80',
+  /** 驾驶舱入口（独立于五舱） */
+  cockpit: 'text-muted-foreground hover:text-foreground',
+} as const
+
+/** 侧边栏导航令牌 */
+export const PORTAL_NAV_TOKENS = {
+  /** 抽屉/侧边栏头部下边框 */
+  drawerHeaderBorder: 'border-border/60',
+  /** 侧边栏标题文字 */
+  sidebarTitle: 'text-foreground',
+  /** 分组标签文字 */
+  groupLabel: 'text-muted-foreground',
+  /** 导航项激活态 */
+  active: 'bg-card text-foreground shadow-sm',
+  /** 导航项激活态左侧指示条 */
+  activeIndicator: 'before:bg-primary',
+  /** 导航项未激活态 */
+  inactive: 'text-muted-foreground hover:bg-muted hover:text-foreground',
+  /** 导航图标激活态 */
+  iconActive: 'text-primary',
+  /** 导航图标未激活态 */
+  iconInactive: 'text-muted-foreground',
+} as const
+
+/** 移动端令牌 */
+export const PORTAL_MOBILE_TOKENS = {
+  /** 汉堡按钮 */
+  hamburger: 'text-muted-foreground hover:bg-muted',
+  /** 底部导航背景 */
+  bottomNavBg: 'bg-background/95 backdrop-blur-md border-t border-border',
+  /** 底部导航项激活态 */
+  bottomNavActive: 'text-primary',
+  /** 底部导航项未激活态 */
+  bottomNavInactive: 'text-muted-foreground',
+} as const
+
+/** 状态指示令牌 */
+export const PORTAL_STATUS_TOKENS = {
+  /** 采集中 / 检查中 */
+  checking: 'bg-amber-400/80 ring-1 ring-amber-400/40 animate-pulse',
+  /** 采集正常 / 已连接 */
+  connected: 'bg-emerald-500/80 ring-1 ring-emerald-500/40',
+  /** 采集断连 / 未连接 */
+  disconnected: 'bg-destructive/80 ring-1 ring-destructive/40',
+} as const
+
+/** 品牌令牌 */
+export const PORTAL_BRAND_TOKENS = {
+  /** Logo 渐变 */
+  logoGradient: 'from-primary to-emerald-600',
+  /** Logo 文字色 */
+  logoText: 'text-white',
+  /** Logo 阴影 */
+  logoShadow: 'shadow-primary/20',
+} as const
+
+/** 聚合门户令牌（L6 设计系统扩展） */
+export const PORTAL_TOKENS = {
+  layout: PORTAL_LAYOUT_TOKENS,
+  cabin: PORTAL_CABIN_TOKENS,
+  nav: PORTAL_NAV_TOKENS,
+  mobile: PORTAL_MOBILE_TOKENS,
+  status: PORTAL_STATUS_TOKENS,
+  brand: PORTAL_BRAND_TOKENS,
+} as const
+
+/** 门户令牌键类型 */
+export type PortalTokenKey = keyof typeof PORTAL_TOKENS

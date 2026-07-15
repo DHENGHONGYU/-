@@ -49,12 +49,11 @@ describe('intelligent score service', () => {
 
   it('应该计算 overall score only from valid dimensions and save result', async () => {
 
+    // 仅保留身份字段，不注入 price/pe/pb 等基础数据，
+    // 使 V6 引擎因数据不足降级，从而验证 LLM 维度的综合分计算路径。
     await dataLayer.stocks.add({
       symbol: '000001.SZ',
       name: '平安银行',
-      price: 12.5,
-      pe: 15,
-      pb: 1.2,
       researchStatus: RESEARCH_STATUS.candidate,
       source: 'manual',
       pool: 'research',
@@ -87,6 +86,15 @@ describe('intelligent score service', () => {
   })
 
   it('应该返回 error when LLM config is missing', async () => {
+    // 同样不注入基础数据，强制走 LLM-only 路径；缺失配置时 LLM 不可达，应返回错误。
+    await dataLayer.stocks.add({
+      symbol: '000001.SZ',
+      name: '平安银行',
+      researchStatus: RESEARCH_STATUS.candidate,
+      source: 'manual',
+      pool: 'research',
+    })
+
     vi.mocked(chat).mockRejectedValueOnce(new Error('config missing'))
 
     const result = await runIntelligentScore({

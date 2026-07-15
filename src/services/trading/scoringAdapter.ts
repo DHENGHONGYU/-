@@ -85,7 +85,7 @@ export async function getCompositeScore(
       action: ENVELOPE_ACTION.queryGet,
       store: STORE_NAME.v6Scores,
       key: stock.symbol,
-      source: MODULE_ID.trading,
+      source: MODULE_ID.analyzer,
     })
     v6Score = v6Result.success && v6Result.data ? v6Result.data : undefined
   } catch (e) {
@@ -93,13 +93,17 @@ export async function getCompositeScore(
   }
 
   try {
-    const intelligentResult = await dataBridge.query<IntelligentScore>({
-      action: ENVELOPE_ACTION.queryGet,
+    const intelligentResult = await dataBridge.query<IntelligentScore[]>({
+      action: ENVELOPE_ACTION.queryByIndex,
       store: STORE_NAME.intelligentScores,
-      key: stock.symbol,
-      source: MODULE_ID.trading,
+      indexName: 'by-symbol',
+      indexValue: stock.symbol,
+      source: MODULE_ID.analyzer,
     })
-    intelligentScore = intelligentResult.success && intelligentResult.data ? intelligentResult.data : undefined
+    const intelligentList = intelligentResult.success && intelligentResult.data ? intelligentResult.data : []
+    intelligentScore = intelligentList
+      .filter((s) => s.scoredAt != null)
+      .sort((a, b) => b.scoredAt - a.scoredAt)[0]
   } catch (e) {
     logger.warn('[scoringAdapter] 读取智能评分失败', { symbol: stock.symbol, error: e })
   }
@@ -110,7 +114,7 @@ export async function getCompositeScore(
       const allIndustryScoresResult = await dataBridge.query<IndustryScore[]>({
         action: ENVELOPE_ACTION.queryList,
         store: STORE_NAME.industryScores,
-        source: MODULE_ID.trading,
+        source: MODULE_ID.analyzer,
       })
       const allIndustryScores = allIndustryScoresResult.success && allIndustryScoresResult.data ? allIndustryScoresResult.data : []
       const matched = allIndustryScores

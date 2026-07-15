@@ -13,7 +13,7 @@ import { LAYER_LABELS } from '../types'
 
 const logger = getLogger()
 
-/** 7行业评分速查表（来自 industry-score-mapping SKILL） */
+/** 行业评分速查表（来自 industry-score-mapping SKILL，已扩展至 11 个行业） */
 const INDUSTRY_SCORES: Record<string, { skillC: number; skillCRating: string; skillN: number; allocationBias: string }> = {
   'CoWoS先进封装': { skillC: 4.90, skillCRating: 'S级', skillN: 4.83, allocationBias: '极度超配' },
   '芯片设计': { skillC: 4.19, skillCRating: 'A级', skillN: 4.00, allocationBias: '超配' },
@@ -22,9 +22,13 @@ const INDUSTRY_SCORES: Record<string, { skillC: number; skillCRating: string; sk
   'AI应用及平台': { skillC: 3.84, skillCRating: 'A级', skillN: 3.67, allocationBias: '超配(择机)' },
   '航天星链': { skillC: 3.75, skillCRating: 'B+级', skillN: 3.50, allocationBias: '标配' },
   '创新药': { skillC: 3.73, skillCRating: 'B+级', skillN: 4.00, allocationBias: '超配' },
+  '医疗服务': { skillC: 3.20, skillCRating: 'B+级', skillN: 3.00, allocationBias: '标配' },
+  '消费': { skillC: 3.50, skillCRating: 'A级', skillN: 3.20, allocationBias: '标配' },
+  '金融': { skillC: 3.00, skillCRating: 'B+级', skillN: 2.80, allocationBias: '低配' },
+  '新能源': { skillC: 3.80, skillCRating: 'A级', skillN: 3.50, allocationBias: '标配' },
 }
 
-/** 核心标的→行业映射表（16只标的） */
+/** 核心标的→行业映射表（17只标的） */
 const CORE_STOCK_MAP: Record<string, { sector: string; relevance: number }> = {
   '6160.HK': { sector: '创新药', relevance: 1.0 },
   '9926.HK': { sector: '创新药', relevance: 1.0 },
@@ -42,6 +46,7 @@ const CORE_STOCK_MAP: Record<string, { sector: string; relevance: number }> = {
   '688017': { sector: '机器人', relevance: 1.0 },
   '600118': { sector: '航天星链', relevance: 1.0 },
   '688027': { sector: '量子计算', relevance: 1.0 },
+  '002044': { sector: '医疗服务', relevance: 1.0 },
 }
 
 /** 关键词→行业匹配表 */
@@ -52,7 +57,11 @@ const KEYWORD_SECTOR_MAP: Array<{ keywords: string[]; sector: string; relevance:
   { keywords: ['量子', '量子计算', '超导'], sector: '量子计算', relevance: 0.9 },
   { keywords: ['AI', '人工智能', '大模型', '应用', '平台', '云', '社交'], sector: 'AI应用及平台', relevance: 0.7 },
   { keywords: ['航天', '卫星', '星链', '火箭', '空间'], sector: '航天星链', relevance: 0.9 },
-  { keywords: ['创新药', 'CXO', '生物', 'ADC', '双抗', '基因', 'mRNA'], sector: '创新药', relevance: 0.9 },
+  { keywords: ['创新药', 'CXO', 'ADC', '双抗', '基因', 'mRNA'], sector: '创新药', relevance: 0.9 },
+  { keywords: ['体检', '医院', '医疗服务', '诊疗', '眼科', '牙科', '医美'], sector: '医疗服务', relevance: 0.9 },
+  { keywords: ['食品', '饮料', '白酒', '家电', '零售', '消费'], sector: '消费', relevance: 0.8 },
+  { keywords: ['银行', '保险', '证券', '金融', '信托', '期货'], sector: '金融', relevance: 0.9 },
+  { keywords: ['新能源', '光伏', '锂电', '储能', '风电', '电动车', '动力电池'], sector: '新能源', relevance: 0.9 },
 ]
 
 /**
@@ -122,12 +131,12 @@ export const LMinus1Calculator: LayerCalculator & { matchIndustry: typeof matchI
     // 尝试匹配行业
     const matched = LMinus1Calculator.matchIndustry(stock.symbol, stock.sector, stock.name)
     if (!matched) {
-      logger.info(`[L-1] ${stock.symbol}: 不在7行业覆盖范围，L-1不纳入`)
+      logger.info(`[L-1] ${stock.symbol}: 未匹配到行业评分覆盖范围，L-1不纳入`)
       return {
         layerId: 'lMinus1' as LayerId,
         layerName: LAYER_LABELS.lMinus1 ?? 'L-1 行业评分估值',
         score: Number.NaN,
-        summary: '不在7行业覆盖范围（CoWoS/芯片设计/机器人/量子计算/AI应用/航天星链/创新药），L-1不纳入综合评分',
+        summary: '未匹配到行业评分覆盖范围，L-1不纳入综合评分',
         risks: [],
         evidence: [],
         weight,

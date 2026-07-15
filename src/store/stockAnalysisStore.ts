@@ -104,10 +104,19 @@ export const useStockAnalysisStore = create<StockAnalysisState>((set) => ({
         elapsedMs: Date.now() - t0,
       })
 
+      if (stockData === undefined || quotesData === undefined || scoreData === undefined) {
+        logger.warn('[stockAnalysisStore] 部分分析数据缺失', {
+          symbol,
+          hasStock: stockData !== undefined,
+          hasQuotes: quotesData !== undefined,
+          hasScore: scoreData !== undefined,
+        })
+      }
+
       set({
-        stock: stockData ?? null,
-        quotes: quotesData ?? null,
-        v6Score: scoreData ?? null,
+        stock: stockData !== undefined ? stockData : null,
+        quotes: quotesData !== undefined ? quotesData : null,
+        v6Score: scoreData !== undefined ? scoreData : null,
         loading: false,
         error: null,
       })

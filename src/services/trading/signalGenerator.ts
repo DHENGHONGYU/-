@@ -54,7 +54,7 @@ function computeMACDDirection(closes: number[]): 'red' | 'green' | 'neutral' {
   return diff > 0 ? 'red' : diff < 0 ? 'green' : 'neutral'
 }
 
-function buildSnapshot(stock: Stock, quotes: DailyQuotes): SignalSnapshot {
+export function buildSnapshot(stock: Stock, quotes: DailyQuotes): SignalSnapshot {
   const closes = quotes.history.map((bar) => bar.close)
   const ma20 = computeMA(closes, 20)
   const ma60 = computeMA(closes, 60)
@@ -73,7 +73,7 @@ function buildSnapshot(stock: Stock, quotes: DailyQuotes): SignalSnapshot {
   }
 }
 
-function generateBuySignals(snapshot: SignalSnapshot): TradingSignal[] {
+export function generateBuySignals(snapshot: SignalSnapshot): TradingSignal[] {
   const signals: TradingSignal[] = []
   const config = getEffectiveTradingConfig().signalThresholds
 
@@ -143,7 +143,7 @@ function generateBuySignals(snapshot: SignalSnapshot): TradingSignal[] {
   return signals
 }
 
-function generateSellSignals(
+export function generateSellSignals(
   snapshot: SignalSnapshot,
   history: KlineBar[],
 ): TradingSignal[] {
