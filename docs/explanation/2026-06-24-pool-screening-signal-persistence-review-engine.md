@@ -1,4 +1,11 @@
 ---
+title: 2026-06-24-pool-screening-signal-persistence-review-engine
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
 title: ADR-007: 补齐筛选引擎、信号持久化与复盘引擎
 version: v0.9.0
 last_updated: 2026-06-24
@@ -8,6 +15,8 @@ change_log:
   - date: 2026-06-24
     author: Documentation Governor
     desc: 注入 Frontmatter 元数据（Phase 3 版本化）
+code_version: 2.0.0
+tier: reference
 ---
 # ADR-007: 补齐筛选引擎、信号持久化与复盘引擎
 
@@ -68,6 +77,6 @@ V9 已跑通“录入 → 评分 → 信号/下单 → 导出”的主链路，�
 
 ## 相关文档
 
-- `docs/implementation/investment-pipeline-stage-analysis.md`
-- `docs/10-glossary.md`
-- `docs/02-functional-specs.md`
+- `./design/investment-pipeline-stage-analysis.md`
+- `../reference/10-glossary.md`
+- `../reference/02-functional-specs.md`

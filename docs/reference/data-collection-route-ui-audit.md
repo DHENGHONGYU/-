@@ -1,3 +1,16 @@
+---
+title: data-collection-route-ui-audit
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
+title: docs/reference/data-collection-route-ui-audit.md
+code_version: 2.0.0
+tier: reference
+---
+
 # 数据采集模块路由与UI校对分析报告
 
 > 基于V9路由注册表、UI组件清单、F盘V6设计文档的三维交叉校对
@@ -29,7 +42,7 @@
 |:---:|:---|:---|:---|
 | **高** | `/input/seven-dim` 未在 `ROUTE_REGISTRY` 注册 | 脱离中央路由表管控，违反"所有业务路由必须在此注册"规则 | ✅ 已修复（2026-07-01） |
 | **高** | `ResearchReportPage.tsx` / `TradeReviewPage.tsx` 为完全孤儿 | 已实现的页面无法访问 | ✅ 已修复（2026-07-01） |
-| **中** | `docs/06-routing-specs.md` 第8节残留 `/hub` 和 `/analysis/news-v6` | 文档与代码不一致 | 同步文档映射表 |
+| **中** | `./06-routing-specs.md` 第8节残留 `/hub` 和 `/analysis/news-v6` | 文档与代码不一致 | 同步文档映射表 |
 | **中** | 文档版本号矛盾（v1.5.0 vs v1.2.0 / 29条 vs 31条） | 文档可信度降低 | 修正版本号与路由计数 |
 | **中** | 文档第7节"ErrorBoundary仅包裹根路由"描述滞后 | `RouteErrorBoundary` 已实现但文档未更新 | 更新文档标注已闭环 |
 | **低** | `OutputApp` 未显式包 `<React.Suspense>` | Suspense边界不明确 | 显式包裹 |
@@ -241,7 +254,7 @@ V6数据工场 `/data-hub` 含4个Tab，V9的迁移情况：
 
 | 编号 | 操作 | 新建文件 | 复杂度 |
 |:---:|:---|:---|:---:|
-| F-09 | 新建 CollectTaskPage（采集任务监控3Tab） | `src/pages/input/CollectTaskPage.tsx` | 高 |
+| F-09 | 新建 CollectTaskPage（采集任务监控3Tab） | `src/pages/input/CollectTask/index.tsx` | 高 |
 | F-10 | 新建 CollectMonitor（实时采集监控） | `src/pages/input/CollectMonitor.tsx` | 高 |
 | F-11 | 新建 FetcherConfigPage（抓取引擎配置） | `src/pages/input/FetcherConfigPage.tsx` | 中 |
 | F-12 | SevenDimConfigPage 补全采集方案整合面板 | SevenDimConfigPage.tsx | 中 |

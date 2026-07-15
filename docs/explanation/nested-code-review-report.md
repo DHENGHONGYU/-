@@ -1,3 +1,16 @@
+---
+title: nested-code-review-report
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
+title: docs/explanation/nested-code-review-report.md
+code_version: 2.0.0
+tier: reference
+---
+
 # 代码多层嵌套评审报告
 
 > 评审范围：`src/` 目录下全部非测试 TypeScript/TSX 文件  

@@ -48,7 +48,7 @@ const logger = getLogger()
 export default function HoldingsPage(): React.JSX.Element {
   const {
     data, filter, pagination, loading, modal,
-    setData, setPage, setPageSize, setLoading,
+    setPage, setPageSize, setLoading,
     openModal, closeModal, resetFilter, setFilter,
     fetchData, executeTrade, exportCSV,
   } = useHoldingsStore()
@@ -67,11 +67,11 @@ export default function HoldingsPage(): React.JSX.Element {
   }, [])
 
   // 仅在组件仍挂载时更新 loading 状态，避免卸载后 setState 警告
-  const setLoadingIfMounted = (patch: Parameters<typeof setLoading>[0]): void => {
+  const setLoadingIfMounted = useCallback((patch: Parameters<typeof setLoading>[0]): void => {
     if (isMountedRef.current) {
       setLoading(patch)
     }
-  }
+  }, [setLoading])
 
   /** 初始化 DataBridge 订阅（组件卸载时自动清理） */
   useEffect(() => {
@@ -127,7 +127,7 @@ export default function HoldingsPage(): React.JSX.Element {
       toast({ title: '加载失败', description: responseMessage || '未知错误', variant: 'error' })
     }
     setLoading({ isListLoading: false })
-  }, [buildParams, setData, setLoading, toast, pagination, data])
+  }, [buildParams, fetchData, setLoading, toast, pagination, data])
 
   // 初始加载 & 依赖变化时重新加载
   useEffect(() => {
@@ -176,7 +176,7 @@ export default function HoldingsPage(): React.JSX.Element {
     } finally {
       setLoadingIfMounted({ isExporting: false })
     }
-  }, [buildParams, setLoading, toast])
+  }, [buildParams, exportCSV, setLoading, setLoadingIfMounted, toast])
 
   // 操作列点击
   const handleAction = useCallback(
@@ -242,7 +242,7 @@ export default function HoldingsPage(): React.JSX.Element {
       setLoadingIfMounted({ isActionLoading: false })
       }
     },
-    [loadData, setLoading, closeModal, toast],
+    [loadData, executeTrade, setLoading, setLoadingIfMounted, closeModal, toast],
   )
 
   return (

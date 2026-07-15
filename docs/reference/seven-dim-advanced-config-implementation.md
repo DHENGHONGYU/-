@@ -1,3 +1,16 @@
+---
+title: seven-dim-advanced-config-implementation
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/seven-dim-advanced-config-implementation.md
+code_version: 2.0.0
+tier: important
+---
+
 # SevenDimConfigPage 高级配置补全方案
 
 ## 一、缺失功能清单
@@ -21,7 +34,7 @@
 
 ### 2.1 新增组件：CollectionPlanPanel
 
-**文件路径**：`src/components/input/CollectionPlanPanel.tsx`
+**文件路径**：`src/components/organisms/input/CollectionPlanPanel.tsx`
 
 ```typescript
 /**
@@ -255,7 +268,7 @@ CollectionPlanPanel.displayName = 'CollectionPlanPanel'
 
 ### 2.2 新增组件：ApiTestDialog
 
-**文件路径**：`src/components/input/ApiTestDialog.tsx`
+**文件路径**：`src/components/organisms/input/ApiTestDialog.tsx`
 
 ```typescript
 /**
@@ -512,8 +525,8 @@ const [showApiTest, setShowApiTest] = useState(false)
 
 ### Phase 1：创建组件文件（P2 - 中期）
 
-1. 创建 `src/components/input/CollectionPlanPanel.tsx`
-2. 创建 `src/components/input/ApiTestDialog.tsx`
+1. 创建 `src/components/organisms/input/CollectionPlanPanel.tsx`
+2. 创建 `src/components/organisms/input/ApiTestDialog.tsx`
 3. 修改 `src/pages/input/SevenDimConfigPage.tsx` 集成新组件
 
 ### Phase 2：实现真实 API 调用（P1 - 高）

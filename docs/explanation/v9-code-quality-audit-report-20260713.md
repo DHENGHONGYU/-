@@ -1,4 +1,11 @@
 ---
+title: v9-code-quality-audit-report-20260713
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
 title: V9 代码质量校对分析报告（2026-07-13 更新）
 version: v3.0.0
 last_updated: 2026-07-13
@@ -14,6 +21,8 @@ changelog:
   - date: 2026-07-13
     author: V9 Quality Audit Team
     desc: 目录结构文档全面更新（v3.1.0），与 AGENTS.md 逐条对齐
+code_version: 2.0.0
+tier: reference
 ---
 
 # V9 代码质量校对分析报告（2026-07-13 更新）

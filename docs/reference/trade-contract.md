@@ -1,14 +1,23 @@
 ---
+title: trade-contract
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: trade-contract.md — 交易域接口契约
 status: draft
 owner: 架构组
 updated: 2026-07-12
+code_version: 2.0.0
+tier: important
 ---
 
 # trade-contract.md — 交易域接口契约
 
 > **定位**：定义 `trade` 子域的接口契约、职责边界、数据流与依赖关系。  
-> **关联**：`../../architecture/services-catalog.md`（24 子域总览）、`AGENTS.md` §一（分层规则）。
+> **关联**：`./services-catalog.md`（24 子域总览）、`../../AGENTS.md` §一（分层规则）。
 
 ---
 
@@ -223,11 +232,11 @@ holdingsStore 订阅频道刷新状态 / UI 反馈操作结果
 
 | 测试类型 | 文件 | 说明 |
 |----------|------|------|
-| 单元测试 | `src/services/trade/__tests__/` | **待创建**：纯函数（如 `requestWithTimeout`、`requestWithRetry` 的 mock 测试）、错误重试逻辑 |
+| 单元测试 | `../../src/services/news/__tests__/` | **待创建**：纯函数（如 `requestWithTimeout`、`requestWithRetry` 的 mock 测试）、错误重试逻辑 |
 | 集成测试 | `tests/services/trade.integration.test.ts` | **待创建**：`fetchHoldings` 与 `DataBridge.forward()` 的交互验证、Store 订阅联动 |
 | Mock 策略 | `__mocks__/holdingsService.ts` | **待创建**：隔离 `fetch` 外部 API 调用，mock `DataBridge` 与 `EnvelopeFactory` |
 
-> 当前状态：`src/services/trade/` 下尚无 `__tests__` 目录或测试文件。建议在实现新增功能时同步补充单元测试，覆盖 `requestWithRetry` 的退避逻辑和 `fetchHoldings` 的 Envelope 构造路径。
+> 当前状态：`src/services/trading/` 下尚无 `__tests__` 目录或测试文件。建议在实现新增功能时同步补充单元测试，覆盖 `requestWithRetry` 的退避逻辑和 `fetchHoldings` 的 Envelope 构造路径。
 
 ---
 

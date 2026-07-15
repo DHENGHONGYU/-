@@ -1,3 +1,16 @@
+---
+title: 2026-06-29-data-relationship-blueprint
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
+title: docs/reference/2026-06-29-data-relationship-blueprint.md
+code_version: 2.0.0
+tier: reference
+---
+
 # V9 数据库数据关系与时间关系蓝图计划
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
@@ -14,20 +27,20 @@
 
 | 文件 | 类型 | 职责 |
 |------|------|------|
-| `docs/superpowers/plans/2026-06-29-data-relationship-blueprint.md` | 计划主文档 | 定义任务、关系表、时序、验证方法 |
-| `docs/blueprints/v9-data-relationship-er.md` | 创建 | 20 个 Store 的实体关系图与字段说明 |
-| `docs/blueprints/v9-data-timeline.md` | 创建 | 数据产生、刷新、消费的时序与生命周期 |
+| `./2026-06-29-data-relationship-blueprint.md` | 计划主文档 | 定义任务、关系表、时序、验证方法 |
+| `../explanation/v9-data-relationship-er.md` | 创建 | 20 个 Store 的实体关系图与字段说明 |
+| `./v9-data-timeline.md` | 创建 | 数据产生、刷新、消费的时序与生命周期 |
 | `docs/blueprints/v9-pipeline-sequence.mmd` | 创建 | 核心管线 Mermaid 序列图 |
-| `src/blueprints/__tests__/dataRelationship.test.ts` | 创建 | 关系与时间表的可执行校验测试 |
-| `scripts/validate-data-blueprint.ts` | 创建 | 扫描类型与 Store 定义，自动比对蓝图一致性 |
+| `src/blueprints/` | 创建 | 关系与时间表的可执行校验测试 |
+| `scripts/other/validate-data-blueprint.ts` | 创建 | 扫描类型与 Store 定义，自动比对蓝图一致性 |
 
 ---
 
 ### Task 1: 建立 V9 数据库实体关系蓝图 (ER)
 
 **Files:**
-- Create: `docs/blueprints/v9-data-relationship-er.md`
-- Reference: `src/data/types.ts`, `src/data/db.ts`, `docs/V9_IndexedDB_Store_Schema.md`, `docs/V9_数据血缘追踪.md`
+- Create: `../explanation/v9-data-relationship-er.md`
+- Reference: `src/data/types.ts`, `src/data/db.ts`, `./v9-indexeddb-store-schema.md`, `./v9-数据血缘追踪.md`
 
 - [ ] **Step 1: 列出全部 20 个 Store 及其主键/索引**
 
@@ -115,7 +128,7 @@ git commit -m "docs(blueprint): add V9 data relationship ER diagram"
 ### Task 2: 建立数据时间关系与生命周期蓝图
 
 **Files:**
-- Create: `docs/blueprints/v9-data-timeline.md`
+- Create: `./v9-data-timeline.md`
 - Reference: `src/services/scoring/v6ScoreService.ts`, `src/services/trading/dualStrategyEngine.ts`, `src/services/trading/signalGenerator.ts`, `src/services/data-collector/TaskScheduler.ts`, `src/core/dataflow/dataflowEngine.ts`
 
 - [ ] **Step 1: 定义数据产生时序（管线阶段）**
@@ -183,7 +196,7 @@ git commit -m "docs(blueprint): add V9 data timeline and freshness rules"
 
 **Files:**
 - Create: `docs/blueprints/v9-pipeline-sequence.mmd`
-- Reference: `docs/V9_数据血缘追踪.md` 第 3 章
+- Reference: `./v9-数据血缘追踪.md` 第 3 章
 
 - [ ] **Step 1: 绘制数据采集 → 评分 → 策略 → 信号 → 交易 → 复盘全链路序列图**
 
@@ -255,7 +268,7 @@ git commit -m "docs(blueprint): add V9 pipeline sequence diagram"
 ### Task 4: 编写数据关系可执行校验测试
 
 **Files:**
-- Create: `src/blueprints/__tests__/dataRelationship.test.ts`
+- Create: `src/blueprints/`
 - Modify: `package.json` 添加测试命令（若不存在）
 - Reference: `src/data/types.ts`, `src/data/db.ts`
 
@@ -398,7 +411,7 @@ git commit -m "test(blueprint): add data relationship and timeline validation te
 ### Task 5: 编写蓝图一致性扫描脚本
 
 **Files:**
-- Create: `scripts/validate-data-blueprint.ts`
+- Create: `scripts/other/validate-data-blueprint.ts`
 - Reference: `src/config/dbConfig.ts`, `src/data/types.ts`
 
 - [ ] **Step 1: 实现 TS 扫描脚本**
@@ -514,7 +527,7 @@ git commit -m "feat(blueprint): add automated blueprint consistency scanner"
 
 **Files:**
 - Modify: `.github/workflows/ci.yml` 或等效 CI 配置（若存在；当前项目无此文件则跳过 Step 1）
-- Modify: `docs/08-implementation-plan.md`
+- Modify: `./08-implementation-plan.md`
 
 - [ ] **Step 1: 在 CI 中增加蓝图校验步骤（如 CI 存在）**
 
@@ -525,13 +538,13 @@ git commit -m "feat(blueprint): add automated blueprint consistency scanner"
 
 - [ ] **Step 2: 在实现计划文档中引用蓝图**
 
-在 `docs/08-implementation-plan.md` 顶部追加：
+在 `./08-implementation-plan.md` 顶部追加：
 
 ```markdown
 ## 数据关系与时间关系蓝图
 
-- 实体关系图：`docs/blueprints/v9-data-relationship-er.md`
-- 数据生命周期：`docs/blueprints/v9-data-timeline.md`
+- 实体关系图：`../explanation/v9-data-relationship-er.md`
+- 数据生命周期：`./v9-data-timeline.md`
 - 核心管线序列图：`docs/blueprints/v9-pipeline-sequence.mmd`
 - 自动化校验：`npm run validate:blueprint`
 - 测试覆盖：`npx vitest run src/blueprints/__tests__/dataRelationship.test.ts`
@@ -568,15 +581,15 @@ git commit -m "docs(blueprint): integrate blueprint into dev workflow and CI"
 - 时间字段 `calculatedAt`, `updatedAt`, `createdAt`, `scoredAt`, `generatedAt` 与源码一致
 
 **4. Known gaps discovered during planning (resolved in execution):**
-- ~~`news_bookmarks` Store 已在 `STORE_NAME` 中定义，但 `src/data/types.ts` 中缺少对应的 `NewsBookmark` TypeScript 接口~~ → 已迁移 `src/store/newsStore.ts` 的 `NewsBookmarkRecord` 到 `src/data/types.ts` 的 `NewsBookmark`。
-- ~~`docs/V9_数据血缘追踪.md` 标注 `DB_VERSION = 15`，而 `src/config/dbConfig.ts` 实际导出 `DB_VERSION = 14`~~ → 已修正文档为 DB_VERSION = 14。
-- 项目当前无 `.github/workflows/ci.yml`，Task 6 的 CI 步骤为条件性，仅当 CI 配置存在时追加；否则仅更新 `docs/08-implementation-plan.md`。
+- ~~`news_bookmarks` Store 已在 `STORE_NAME` 中定义，但 `src/data/types.ts` 中缺少对应的 `NewsBookmark` TypeScript 接口~~ → 已迁移 `src/store/analysisNewsStore.ts` 的 `NewsBookmarkRecord` 到 `src/data/types.ts` 的 `NewsBookmark`。
+- ~~`./v9-数据血缘追踪.md` 标注 `DB_VERSION = 15`，而 `src/config/dbConfig.ts` 实际导出 `DB_VERSION = 14`~~ → 已修正文档为 DB_VERSION = 14。
+- 项目当前无 `.github/workflows/ci.yml`，Task 6 的 CI 步骤为条件性，仅当 CI 配置存在时追加；否则仅更新 `./08-implementation-plan.md`。
 
 ---
 
 ## Execution Handoff
 
-**Plan complete and saved to `docs/superpowers/plans/2026-06-29-data-relationship-blueprint.md`. Two execution options:**
+**Plan complete and saved to `./2026-06-29-data-relationship-blueprint.md`. Two execution options:**
 
 **1. Subagent-Driven (recommended)** - I dispatch a fresh subagent per task, review between tasks, fast iteration
 

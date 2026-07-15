@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>④ 模型运行机制 · FinSightV9 团队手册</title>
+<style>
+:root{
+  --bg:#fafaf9; --panel:#ffffff; --border:#e7e5e4; --text:#292524;
+  --text2:#57534e; --muted:#a8a29e; --accent:#10b981; --accent-bg:#ecfdf5;
+  --code-bg:#f5f5f4;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;line-height:1.75;font-size:15px}
+.layout{display:flex;align-items:flex-start;min-height:100vh}
+.sidebar{position:sticky;top:0;align-self:flex-start;width:240px;flex-shrink:0;height:100vh;
+  overflow-y:auto;background:var(--panel);border-right:1px solid var(--border);padding:24px 18px}
+.sidebar h2{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:0 0 12px}
+.sidebar a{display:block;color:var(--text2);text-decoration:none;font-size:14px;padding:7px 10px;
+  border-radius:8px;margin-bottom:2px}
+.sidebar a:hover{background:var(--accent-bg);color:#047857}
+.sidebar a.active{background:var(--accent);color:#fff}
+.sidebar .sub{font-size:11px;color:var(--muted);margin:14px 0 6px;padding-left:10px}
+.content{flex:1;max-width:880px;margin:0 auto;padding:40px 48px 80px}
+article h1{font-size:30px;font-weight:800;letter-spacing:-.5px;margin:0 0 6px;
+  border-bottom:3px solid var(--accent);padding-bottom:14px}
+article h2{font-size:22px;font-weight:700;margin:38px 0 12px;padding-left:12px;border-left:4px solid var(--accent)}
+article h3{font-size:18px;font-weight:700;margin:26px 0 8px;color:var(--text)}
+article h4{font-size:15.5px;font-weight:700;margin:18px 0 6px;color:var(--text2)}
+article p{margin:10px 0;color:var(--text2)}
+article ul,article ol{padding-left:24px;margin:10px 0;color:var(--text2)}
+article li{margin:5px 0}
+article a{color:var(--accent);text-decoration:none;border-bottom:1px solid #a7f3d0}
+article a:hover{color:#047857}
+article code{background:var(--code-bg);border:1px solid var(--border);border-radius:5px;padding:1px 6px;
+  font-size:13px;font-family:'SFMono-Regular',Consolas,monospace;color:#be123c}
+article pre{background:var(--code-bg);border:1px solid var(--border);border-radius:12px;padding:18px 20px;
+  overflow-x:auto;margin:14px 0}
+article pre code{background:none;border:none;padding:0;color:#1c1917;font-size:13px;line-height:1.6}
+article blockquote{border-left:4px solid var(--accent);background:var(--accent-bg);margin:14px 0;
+  padding:12px 18px;border-radius:0 10px 10px 0;color:#065f46}
+article table{border-collapse:collapse;width:100%;margin:16px 0;font-size:14px}
+article th,article td{border:1px solid var(--border);padding:9px 12px;text-align:left}
+article th{background:var(--panel);font-weight:700;color:var(--text)}
+article tr:nth-child(even) td{background:#fcfcfb}
+article hr{border:none;border-top:1px solid var(--border);margin:32px 0}
+article img{max-width:100%;border-radius:10px;border:1px solid var(--border)}
+pre.mermaid{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;}
+footer{text-align:center;color:var(--muted);font-size:12px;margin-top:48px;padding-top:20px;border-top:1px solid var(--border)}
+.back{display:inline-block;margin-bottom:18px;color:var(--accent);text-decoration:none;font-size:13px}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <h2>团队体系手册</h2>
+    <a href="index.html">📑 总览索引</a>
+    <div class="sub">手册正文</div>
+    <a href="README.html">总导航 · 团队手册地图</a>
+    <a href="01-design-philosophy.html">① 设计与原创思路</a>
+    <a href="02-architecture.html">② 整体架构设计</a>
+    <a href="03-ui-components.html">③ UI 组件设计</a>
+    <a href="04-model-runtime.html" class="active">④ 模型运行机制</a>
+    <a href="05-competitive-analysis.html">⑤ 竞品对比分析</a>
+    <div class="sub">补充资料</div>
+    <a href="supplementary/index.html">📁 高质量补充 HTML</a>
+  </aside>
+  <main class="content"><article>
+    <a class="back" href="index.html">← 返回总览</a>
+    <h1>04 · 模型运行思路（Model Runtime &amp; Data Flow）</h1>
+<blockquote>
+<p>本文回答&quot;<strong>模型怎么跑、数据怎么流</strong>&quot;。权威基线：<code>src/services/scoring/</code>、<code>src/services/data-collector/</code>、<code>src/core/</code>、<code>src/data/</code>、<code>src/agents/</code>、<code>src/services/llm/</code>、<code>src/mcp/</code>、<code>docs/reference/05-engine-specs.md</code>、<code>docs/reference/ai-memory-layer.md</code>、<code>docs/reference/ai-generate-audit-fix-loop.md</code>。
+⚠️ 概念澄清：<strong>五因子（板块轮动，合成种子）≠ V6 十一层引擎 ≠ 九维智能评分</strong>，三者独立。</p>
+</blockquote>
+<hr>
+<h2>1. 评分引擎总览（三个独立概念）</h2>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>文件</th>
+<th>性质</th>
+<th>UI 标注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>V6 规则引擎</strong>（个股/板块 11 层）</td>
+<td><code>src/services/scoring/v6-engine/</code></td>
+<td>白盒、100% 可解释</td>
+<td>实时引擎结果</td>
+</tr>
+<tr>
+<td><strong>九维智能评分</strong></td>
+<td><code>src/services/scoring/intelligentScoreService.ts</code></td>
+<td>数据驱动优先（V6→九维），LLM 仅增强</td>
+<td>数据不足时标 <code>llm-synthetic</code></td>
+</tr>
+<tr>
+<td><strong>板块轮动五因子</strong></td>
+<td><code>src/services/analysis/rotationScoreService.ts</code></td>
+<td><strong>合成种子</strong>（静态 composite 派生）</td>
+<td>必须标&quot;示例 · LLM 合成&quot;</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>2. V6 规则引擎（白盒可解释）</h2>
+<ul>
+<li><code>config.ts</code>：<strong>所有阈值/权重/公式参数集中注入</strong>，支持 <code>V6ScoreConfigOverride</code> 运行时覆盖（Backtestable 接口）。
+<ul>
+<li><code>DEFAULT_WEIGHTS</code>：11 层 L-1 ~ L8（如 <code>l1:0.15, l7:0.15, l0:0.08…</code>）。</li>
+<li><code>DEFAULT_THRESHOLDS.rating</code>：<code>strongBuy:4.0, buy:3.0, hold:2.0, sell:1.0</code>；分数范围 <code>[0,5]</code>。</li>
+<li><code>INDUSTRY_BENCHMARKS</code>：8 行业基准库；<code>RISK_WARNINGS</code>/<code>IPC_CONFIG</code>/<code>CHIP_LEVELS</code>/<code>CONFIDENCE_CONFIG</code>。</li>
+<li><code>DEFAULT_ENGINE_CONFIG</code>：<code>{ offlineMode:true, auditEnabled:true, llmEnabled:false }</code>。</li>
+</ul>
+</li>
+<li><code>engine.ts</code>：<code>V6ScoreEngine</code> 类。
+<ul>
+<li><code>calculateLayer()</code>：单层 + <code>sanitizeScore()</code>（NaN→0、∞→5/-∞→0、越界截断 [0,5]）。</li>
+<li><code>calculateAll()</code>：11 层 <code>Promise.all</code> 并行 → <code>aggregate()</code> 加权平均 + 归一化，NaN 层跳过并记录 <code>skippedLayers</code>。</li>
+<li><code>crossValidate()</code> 交叉验证；<code>mapRating()</code> → <code>strong_buy/buy/hold/sell/strong_sell</code>。</li>
+<li>引擎版本 <code>v6-engine-v1.0.0</code>。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2>3. 九维智能评分（数据驱动优先）</h2>
+<p><code>runIntelligentScore()</code> 编排：读基础数据 → V6 实时引擎 → 读补充文件/报告 →（可选）LLM → 解析 → 校验 → 保存。</p>
+<ul>
+<li>九维因子来自 <code>src/config/scoreFactors.ts</code> 的 <code>STOCK_SCORE_FACTORS</code>（估值/成长/盈利/质量/动量/波动/流动性/行业/情绪）。</li>
+<li><code>v6CompositeToDimensionScores()</code> 把 V6 的 11 层 <code>CompositeScore</code> 映射为 9 维（如 估值←l3v、成长←l7+l5、情绪←l6+l4）。</li>
+<li><strong>数据驱动优先策略</strong>：有 V6 结果则取其维度与总分；LLM 仅做可选文本增强。V6 不可用时必须有 LLM，否则返回失败（禁止黑箱/崩溃）。</li>
+<li><strong>来源溯源</strong>：<code>scoreProvenance: 'data-driven' | 'llm-synthetic'</code>；<code>validateScoreBeforeSave()</code>（V9-003 三道校验）拦截 <code>block</code> 级异常后再经 <code>sendWriteEnvelope('saveIntelligentScores')</code> 持久化。</li>
+</ul>
+<hr>
+<h2>4. 板块轮动五因子（合成种子，标&quot;示例&quot;）</h2>
+<ul>
+<li><code>rotationScoreService.ts</code> 的 <code>saveDefaultRotationScores()</code> 注释明确：“使用板块综合分映射到五因子（兜底方案，真实场景应由外部数据填充）”。子分数由静态 <code>sector.composite</code> 经固定系数派生（如 <code>F1A = composite*3</code>）。</li>
+<li>权重：<code>strategyConfig.ts</code> 景气 40% / 资金 25% / 估值 15% / β 12% / 量能 8%。</li>
+<li><strong>UI 强制标注</strong>：<code>IntelligentScorePage.tsx</code> 渲染 <code>&lt;Badge title=&quot;当前为合成示例数据，非真实引擎信号&quot;&gt;示例 · LLM 合成&lt;/Badge&gt;</code>。</li>
+</ul>
+<hr>
+<h2>5. 轮动信号检测（真实信号）</h2>
+<p><code>rotationSignalDetector.ts</code> 的 <code>detectBySector(sectorId)</code> 基于 <code>dataBridge.query</code> 聚合板块内股票真实 K 线，检测三条件全满足则 <code>triggered=true</code>：</p>
+<ol>
+<li>成交量突破 20% 历史分位（<code>checkVolumeBreakthrough</code>）。</li>
+<li>资金连续 N 日净流入（<code>checkCapitalInflow</code>，默认 3）。</li>
+<li>技术金叉（<code>checkGoldenCross</code>：短均线上穿长均线且价在短均线之上）。
+强度由量能突破幅度定（weak/medium/strong）。</li>
+</ol>
+<hr>
+<h2>6. 数据采集流水线</h2>
+<h3>6.1 事件类型（生命周期）</h3>
+<p><code>src/types/modules/collection.types.ts</code> 定义 <code>COLLECTION_EVENTS</code>：<code>collect:triggered</code> → <code>collect:source:start/success/fail</code> → <code>collect:fallback</code> → <code>collect:transform</code> → <code>collect:write:start/success/fail</code> → <code>collect:complete</code> → <code>collect:task:status</code>；另 <code>collectionPipeline.ts</code> 直接 <code>eventBus.emit('collect:trace', span)</code> 广播链路追踪。</p>
+<h3>6.2 编排器（四层降级）</h3>
+<p><code>dataSourceOrchestrator.ts</code>：按优先级链降级（腾讯 → 新浪 → AKShare → Mock），关键节点 emit 生命周期事件，结果经 <code>dataBridge.forward()</code> 写入 IndexedDB。AKShare 在浏览器不可用，Mock 为最终兜底。</p>
+<h3>6.3 配置化流水线</h3>
+<p><code>collectionPipeline.ts</code>：按 <code>CollectionConfig</code> 执行单次/批量采集 → orchestrator → <code>dataBridge.forward()</code> 写入 → 每阶段 emit 事件。不依赖任何 store（配置由调用方传入）。<code>createDefaultCollectionConfig()</code> 默认 <code>historyDays:252, maxSymbols:40</code>。</p>
+<h3>6.4 质量指标</h3>
+<p><code>qualityMetricsCollector.ts</code>（单例）：采集成功率/完整率/延迟/写入成功率/降级计数；告警阈值 <code>successRate&lt;80%</code>、<code>completeness&lt;90%</code>、<code>writeRate&lt;95%</code>。</p>
+<h3>6.5 配置与端点</h3>
+<ul>
+<li><code>dataSourceRegistry.ts</code>：<code>DATA_SOURCE_ENDPOINTS</code>（5 端点）、<code>DEFAULT_QUOTE_PRIORITY</code>（腾讯1→新浪2→akshare3[disabled]→mock4）。</li>
+<li><code>collectConfig.ts</code>：<code>DEFAULT_DIMENSIONS</code>（8 维）、<code>STRATEGY_TEMPLATES</code>（5 个）、<code>GLOBAL_LIMITS</code>。</li>
+<li><code>marketDataEndpoints.ts</code>：URL 收敛到 Vite dev proxy（<code>/api/proxy/tencent/</code> 等），<strong>严禁在 services 层硬编码外部 URL</strong>。</li>
+</ul>
+<h3>6.6 运行时 Store（消费事件）</h3>
+<ul>
+<li><code>collectionRuntimeStore.ts</code>：订阅 <code>COLLECTION_EVENTS</code>，维护 <code>traceSpans/logs/taskStatuses/overallProgress/stats</code>。</li>
+<li><code>sevenDimConfigStore.ts</code>：七维采集配置，经 <code>dataBridge.forward()</code> 持久化。</li>
+<li><code>dataTestStore.ts</code>：采集测试面板（单接口链路/批量测试）。</li>
+</ul>
+<hr>
+<h2>7. 核心基础设施（DataBridge 现状 vs 网关目标）</h2>
+<table>
+<thead>
+<tr>
+<th>模块</th>
+<th>现状</th>
+<th>目标</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>写入口</td>
+<td><code>core/databridge.ts</code> 直接 <code>import { db }</code> + <code>db.put</code>（见第 16、681 行）</td>
+<td>改为 <code>dataGateway.execute()</code>，仅 Gateway 能直写 <code>dataLayer</code></td>
+</tr>
+<tr>
+<td>信封</td>
+<td><code>envelope.ts</code> <code>StandardEnvelope{meta,payload}</code></td>
+<td>同现状</td>
+</tr>
+<tr>
+<td>ACL</td>
+<td><code>acl.ts</code> <code>ACL_MATRIX</code> module→store→operation</td>
+<td>下沉到 Gateway &quot;最后一公里&quot;二次校验（纵深防御）</td>
+</tr>
+<tr>
+<td>缓存</td>
+<td><code>memoryCache.ts</code> 读缓存（10s TTL/200 LRU）</td>
+<td>同现状</td>
+</tr>
+<tr>
+<td>事件</td>
+<td><code>eventBus.ts</code> 写后广播 <code>${store}Changed</code></td>
+<td>同现状</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️ 文档中&quot;services 写仅经 DataBridge → data/gateway/“目前<strong>未完全落地</strong>；DataGateway 仅存在于 <code>docs/reference/gateway-write-permission-spec.md</code>。手册表述为&quot;目标架构/待迁移”。</p>
+</blockquote>
+<h3>Web Worker 池（算力卸载）</h3>
+<ul>
+<li><code>src/services/workers/v6ScoreWorker.ts</code>：Vite 模块 Worker，<strong>纯计算、不触及 IndexedDB/DOM</strong>。</li>
+<li><code>v6ScoreTaskScheduler.ts</code>：<code>V6ScoreTaskScheduler</code> 管理 ≤<code>min(hardwareConcurrency,4)</code> 个 Worker；主线程负责 I/O，Worker 只算；优雅降级（初始化失败/<code>forceMainThread</code> 回退主线程 <code>Promise.all</code>）；单任务 30s 超时；全局单例 <code>getGlobalScheduler()</code>。</li>
+</ul>
+<hr>
+<h2>8. Agent / LLM / MCP 生态</h2>
+<h3>8.1 Agents</h3>
+<p><code>src/agents/</code>：<code>agentRuntime</code>/<code>agentRegistry</code>/<code>agentHealthMonitor</code>/<code>agentConfigManager</code>/<code>taskQueue</code>；预定义 <code>AGENT_V6_SCORING</code>(mcp <code>'scoring:v6'</code>)、<code>AGENT_LLM_INTelligent</code>(mcp <code>'llm'</code>) 等。</p>
+<h3>8.2 LLM</h3>
+<p><code>src/services/llm/llmGateway.ts</code>：<code>chat()</code>/<code>streamingChat()</code> 封装，做配置校验、调用审计、错误降级（<code>allowFallback</code> 返空）、Token 统计；<code>caller/callerId</code> 用于 MCP ACL 合规。</p>
+<h3>8.3 MCP（15 个 Server）</h3>
+<p><code>src/mcp/</code>：<code>register.ts</code> 用 <code>import.meta.glob('./servers/**/*.ts')</code> 同步加载并按 <code>MCP_SERVER_REGISTRY</code> 实例化；<code>syncWithConfig()</code> 支持热更新。类别目录：<code>analysis, backtest, data-collector, execution, fetcher, knowledge, lllm, news, pool, portfolio, scoring, screening, system, trading, workflow</code>。
+ACL：双端校验（Client <code>MCPClientImpl</code> 防君子 + Server <code>MCPServerBase.assertServerPermission()</code> 防小人）；4 角色 <code>agent/ui/ci/system</code>，矩阵 <code>MCP_ACL_MATRIX</code>（<code>src/config/mcpAclMatrix.ts</code>）。</p>
+<h3>8.4 AI 记忆层（RAG）</h3>
+<p><code>scripts/build-ai-memory-index.ts</code> 扫描 <code>AGENTS.md</code>/<code>docs/reference/*</code>/<code>prompts/*</code>，按标题切分建倒排索引 → <code>public/ai-memory-index.json</code>；运行时 <code>aiMemoryService.queryMemory(query, topK=5)</code> 关键词检索。</p>
+<h3>8.5 生成—审计—修正飞轮</h3>
+<p><code>docs/reference/ai-generate-audit-fix-loop.md</code>：AI 开发闭环 <code>生成 → 审计 → 修正 → 再审计</code>，审计须依次跑 <code>tsc</code> → <code>lint:colors</code> → <code>audit:layers</code> → <code>audit:docs</code> → <code>audit:tokens</code> → <code>audit:jsdoc</code> → <code>audit:complexity</code>；修正&quot;只改失败原因，不扩大改动范围&quot;。</p>
+<hr>
+<h2>9. 数据流到 UI 与性能</h2>
+<h3>9.1 分析结果 → UI</h3>
+<ol>
+<li>采集：<code>orchestrator/pipeline → dataBridge.forward(Envelope) → IndexedDB</code> → emit <code>WRITE_SUCCESS/COMPLETE</code> + <code>broadcast(store)</code>。</li>
+<li>评分：<code>intelligentScoreService</code> / <code>V6ScoreTaskScheduler</code> → Worker 算 <code>CompositeScore</code> → <code>validateScoreBeforeSave</code> → <code>sendWriteEnvelope('saveIntelligentScores')</code> → IndexedDB。</li>
+<li>UI 消费：Store 订阅 DataBridge/EventBus 频道刷新；<code>IntelligentScorePage</code> 对合成结果渲染&quot;示例 · LLM 合成&quot;Badge。</li>
+</ol>
+<h3>9.2 性能考量</h3>
+<ul>
+<li><strong>MemoryCache</strong>：DataBridge 读缓存 10s TTL / 200 LRU，<code>performance.now()</code> 时间戳。</li>
+<li><strong>精确性</strong>：<code>sanitizeScore</code> 截断 [0,5]，处理 ±∞/NaN；<code>aggregate</code> 用 <code>Math.round(score*100)/100</code>。</li>
+<li><strong>perf 库</strong>：<code>src/lib/perf.ts</code> 提供 <code>measureAsync/measureSync</code>，<code>PERF.SCORING_CALCULATE_ALL</code> 已包 V6 <code>calculateAll</code>；<code>getPerfStats()</code> 返回 count/avg/p50/p95/max。</li>
+<li><strong>计算卸载</strong>：V6 经 Web Worker 池（≤4）避免主线程阻塞，失败自动回退主线程。</li>
+</ul>
+<h3>9.3 IndexedDB 数据种类（节选）</h3>
+<p>行情/基础：<code>stocks</code>/<code>dailyQuotes</code>/<code>financialReports</code>；评分：<code>v6Scores</code>/<code>intelligentScores</code>/<code>industryScores</code>/<code>rotationScores</code>/<code>hotSectorScores</code>/<code>valuePitScores</code>/<code>sectorScores</code>/<code>scoreDocs</code>；信号/交易：<code>signals</code>/<code>orders</code>/<code>portfolio</code>/<code>tradeReviews</code>；内容：<code>researchLogs</code>/<code>news</code>/<code>localDocs</code>；内部：<code>collectConfig</code>/<code>traceRecords</code>/<code>workflow*</code>/<code>watchlists</code>/<code>rbac*</code>。</p>
+
+    <footer>FinSightV9 智能投研复盘系统 · 团队体系手册 · 由 markdown-it 自动转换生成</footer>
+  </article></main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ startOnLoad: true, theme: 'base',
+      themeVariables: { primaryColor:'#ecfdf5', lineColor:'#57534e', fontFamily:'sans-serif' } });
+  }
+</script>
+</body>
+</html>

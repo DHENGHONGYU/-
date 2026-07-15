@@ -1,8 +1,25 @@
+---
+title: 10-glossary
+tier: important
+code_version: 2.0.0
+---
+
+---
+title: docs/explanation/10-glossary.md
+code_version: 2.0.0
+---
+
+---
+title: docs/explanation/10-glossary.md
+code_version: 2.0.0
+tier: important
+---
+
 # 10. 领域词汇表
 
 > **Status**: Current  
-> **Version**: v2.5.0  
-> **Last Updated**: 2026-07-05
+> **Version**: v2.7.0  
+> **Last Updated**: 2026-07-15
 >
 > **原则**：所有概念在代码、UI、文档中必须使用本表规范命名。旧命名逐步迁移清零。
 
@@ -263,8 +280,8 @@ V9 采用**单表多状态**模型：所有标的统一存储在 `stocks` Store�
 
 | 术语 | 英文 | 定义 | 所属模块 |
 |------|------|------|---------|
-| **Store 注册表** | Store Registry | ~~`src/store/storeRegistry.ts`~~（文件已删除，待重建），项目当前共 47 个 Zustand Store 通过独立文件直接导出 | Store |
-| **Service 注册表** | Service Registry | ~~`src/services/serviceRegistry.ts`~~（文件已删除），原集中管理 52 个 Service 的元数据清单，覆盖 21 个域分类 | Services |
+| **Store 注册表** | Store Registry | ~~`src/store/derived.index.ts`~~（文件已删除，待重建），项目当前共 47 个 Zustand Store 通过独立文件直接导出 | Store |
+| **Service 注册表** | Service Registry | ~~`src/services/contracts.ts`~~（文件已删除），原集中管理 52 个 Service 的元数据清单，覆盖 21 个域分类 | Services |
 | **Component 注册表** | Component Registry | `src/components/componentRegistry.ts`，集中管理 10+ 个业务组件的注册信息与建议集成目标 | Components |
 | **Widget 注册表** | Widget Registry | `src/cockpit/core/widgetRegistry.ts`，Class 单例模式管理 19 个 Widget 模板注册、默认布局与运行时状态 | Cockpit |
 | **注册条目状态** | Registry Entry Status | 注册表条目的生命周期状态：`available`（可用未集成）→ `active`（已集成）→ `deprecated`（已废弃） | Registry |

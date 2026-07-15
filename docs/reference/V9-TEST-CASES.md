@@ -1,3 +1,16 @@
+---
+title: v9-test-cases
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/v9-test-cases.md
+code_version: 2.0.0
+tier: important
+---
+
 # V9 智能投研复盘系统 - 测试用例清单
 
 **版本**: v1.0.0  

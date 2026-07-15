@@ -102,6 +102,8 @@ export const L3vValuationCalculator: LayerCalculator = {
         risks.push('估值偏高，需关注回撤风险')
       }
 
+      const hasValuationData = (stock.pe !== undefined && stock.pe > 0) || (stock.peg !== undefined && stock.peg > 0)
+
       return {
         layerId: 'l3v',
         layerName: LAYER_LABELS.l3v ?? 'L3b 估值水平',
@@ -112,6 +114,7 @@ export const L3vValuationCalculator: LayerCalculator = {
         weight,
         weightedScore: score * weight,
         dataSources: ['行情数据', '行业基准库'],
+        participated: hasValuationData,
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
@@ -126,6 +129,7 @@ export const L3vValuationCalculator: LayerCalculator = {
         weight,
         weightedScore: Number.NaN,
         dataSources: [],
+        participated: false,
       }
     }
   },

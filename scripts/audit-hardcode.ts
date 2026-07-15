@@ -202,6 +202,12 @@ function isMockOrGeneratedFile(rel: string): boolean {
 // v2.5：颜色硬编码豁免文件（对应 AGENTS.md §3.5.7 豁免清单）
 const COLOR_EXEMPT_FILES = new Set([
   'src/constants/theme.tokens.ts',
+  'src/constants/theme/theme.tokens.base.ts',
+  'src/constants/theme/theme.tokens.color.ts',
+  'src/constants/theme/theme.tokens.shades.ts',
+  'src/constants/theme/theme.tokens.helpers.ts',
+  'src/constants/theme/theme.tokens.stock.ts',
+  'src/constants/theme/theme.tokens.design.ts',
   'src/config/chartColors.ts',
   'src/config/themeRegistry.ts',
   'src/theme.config.ts',

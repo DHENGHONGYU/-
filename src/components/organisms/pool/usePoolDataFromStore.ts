@@ -48,9 +48,9 @@ export function usePoolDataFromStore(): UsePoolDataResult {
     const grouped = new Map<ResearchStatus, PoolItem[]>()
     for (const item of items) {
       if (item.pool !== POOL_TYPE.research) continue
-      const list = grouped.get(item.status as ResearchStatus) ?? []
+      const list = grouped.get(item.status) ?? []
       list.push(item)
-      grouped.set(item.status as ResearchStatus, list)
+      grouped.set(item.status, list)
     }
 
     return Array.from(grouped.entries()).map(([status, statusItems]) => {

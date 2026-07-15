@@ -5,9 +5,9 @@
  * 包装 tradeReviewAI 服务，响应订单变更自动重算纪律评分与复盘报告，
  * 并将复盘摘要持久化到 trade_reviews store。
  *
- * @see docs/《V9核心数据字典与类型定义（整合版）》.md — DisciplineState 实体定义（#69）
- * @see docs/《功能模块数据契约》.md — 交易纪律与复盘模块契约（第 10 节）
- * @see docs/implementation/v9-system-blueprint.md — 5大Store架构（4.3 节）
+ * @see docs/reference/v9核心数据字典与类型定义(整合版).md — DisciplineState 实体定义（#69）
+ * @see docs/reference/功能模块数据契约.md — 交易纪律与复盘模块契约（第 10 节）
+ * @see docs/reference/v9-system-blueprint.md — 5大Store架构（4.3 节）
  * @see src/services/trading/tradeReviewAI.ts — AI 交易复盘服务
  * @see src/services/trading/tradeErrorClassifier.ts — 交易错误分类器
  *

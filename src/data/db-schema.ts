@@ -461,4 +461,53 @@ export function createSchema(
     ],
   })
 
+  // ── collectionHistory：采集/更新历史（v31 新增，P2-1） ──
+  ensureStore(db, STORE_NAME.collectionHistory, logger, {
+    storeOptions: { keyPath: 'id' },
+    indexes: [
+      { name: 'by-timestamp', keyPath: 'timestamp' },
+      { name: 'by-date', keyPath: 'date' },
+      { name: 'by-channel', keyPath: 'channel' },
+      { name: 'by-status', keyPath: 'status' },
+    ],
+  })
+
+  // ── conflictLog：冲突日志（v31 新增，P2-1） ──
+  ensureStore(db, STORE_NAME.conflictLog, logger, {
+    storeOptions: { keyPath: 'id' },
+    indexes: [
+      { name: 'by-timestamp', keyPath: 'timestamp' },
+      { name: 'by-symbol', keyPath: 'symbol' },
+      { name: 'by-resolution', keyPath: 'resolution' },
+    ],
+  })
+
+  // ── fileImportRecords：文件导入记录（v31 新增，P2-1） ──
+  ensureStore(db, STORE_NAME.fileImportRecords, logger, {
+    storeOptions: { keyPath: 'id' },
+    indexes: [
+      { name: 'by-timestamp', keyPath: 'timestamp' },
+      { name: 'by-hash', keyPath: 'fileHash' },
+      { name: 'by-fileName', keyPath: 'fileName' },
+    ],
+  })
+
+  // ── proofreadReports：校对报告（v31 新增，P2-1） ──
+  ensureStore(db, STORE_NAME.proofreadReports, logger, {
+    storeOptions: { keyPath: 'meta.reportId' },
+    indexes: [
+      { name: 'by-timestamp', keyPath: 'meta.generatedAt' },
+      { name: 'by-fileHash', keyPath: 'meta.fileHash' },
+    ],
+  })
+
+  // ── scheduleConfigs：调度配置（v31 新增，P2-1） ──
+  ensureStore(db, STORE_NAME.scheduleConfigs, logger, {
+    storeOptions: { keyPath: 'scheduleId' },
+    indexes: [
+      { name: 'by-enabled', keyPath: 'enabled' },
+      { name: 'by-nextRun', keyPath: 'nextRunAt' },
+    ],
+  })
+
 }

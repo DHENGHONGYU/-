@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import { Link } from 'react-router'
-import { FileText, BarChart3, Database, Wand2, ArrowRight } from 'lucide-react'
+import { FileText, BarChart3, Database, Wand2, ArrowRight, TrendingUp, RefreshCw, LayoutDashboard } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Button } from '@/components/atoms/Button'
 import { Badge } from '@/components/atoms/Badge'
@@ -46,6 +46,27 @@ const OUTPUT_MODULES: HubModule[] = [
     description: '四步渐进式复盘并导出成品卡',
     path: '/output/wizard',
     icon: Wand2,
+  },
+  {
+    title: '预测校验',
+    description: '因子预测记录与准确性校验',
+    path: '/output/prediction',
+    icon: TrendingUp,
+    badge: '新增',
+  },
+  {
+    title: '周期复盘',
+    description: '月度周期复盘与因子权重校准',
+    path: '/output/retrospective',
+    icon: RefreshCw,
+    badge: '新增',
+  },
+  {
+    title: '因子画板',
+    description: '因子监控画板与失效预警',
+    path: '/output/factor-dashboard',
+    icon: LayoutDashboard,
+    badge: '新增',
   },
 ]
 

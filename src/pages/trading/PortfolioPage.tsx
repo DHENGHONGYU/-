@@ -37,7 +37,7 @@ const PortfolioPage = memo(() => {
       stocksCount: stocks.length,
       ordersCount: orders.length,
     })
-    loadPortfolio()
+    void loadPortfolio()
     // loadPortfolio 为 Zustand action，引用稳定；仅在组件挂载时触发一次
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -77,7 +77,7 @@ const PortfolioPage = memo(() => {
             size="sm"
             onClick={() => {
               logger.info('[PortfolioPage] 加载投资组合')
-              loadPortfolio()
+              void loadPortfolio()
             }}
             disabled={portfolioLoading || pfLoading}
           >

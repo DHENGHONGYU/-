@@ -197,7 +197,7 @@ export function ScoreFactorWaterfall({
   error = null,
   height = 360,
 }: ScoreFactorWaterfallProps) {
-  const contributions = audit?.factorContributions ?? []
+  const contributions = useMemo(() => audit?.factorContributions ?? [], [audit?.factorContributions])
 
   const rows = useMemo(() => {
     if (contributions.length > 0) return buildWaterfallData(contributions)

@@ -1,3 +1,16 @@
+---
+title: visual-regression-guide
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/how-to/visual-regression-guide.md
+code_version: 2.0.0
+tier: important
+---
+
 # V9 视觉回归基线管理规范
 
 > **版本**: v1.0.0 | **日期**: 2026-07-12

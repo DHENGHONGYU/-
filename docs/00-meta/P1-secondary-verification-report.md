@@ -1,3 +1,16 @@
+---
+title: p1-secondary-verification-report
+code_version: 2.0.0
+
+tier: core
+---
+
+---
+title: docs/00-meta/p1-secondary-verification-report.md
+code_version: 2.0.0
+tier: core
+---
+
 # P1 二次校对报告
 
 > **日期**：2026-07-14  
@@ -24,9 +37,9 @@
 
 | 类型 | 数量 | 描述 |
 |------|------|------|
-| 空文件 | 1 | 删除 `变更摘要-2026-06-28-Phase0-数据层改造.md` |
+| 空文件 | 1 | 删除 `../reference/changelogs/变更摘要-2026-06-28-phase0-数据层改造.md` |
 | 脚本导入路径 | 7 | `docs-tool/*.ts` 和 `other/*.ts` 的 `../src/` → `../../src/` |
-| 文档索引 | 1 | 重新生成 `REGISTRY_INDEX.md`（454 个文件） |
+| 文档索引 | 1 | 重新生成 `registry-index.md`（454 个文件） |
 
 ### 2.2 遗留问题分类（P2 待办）
 

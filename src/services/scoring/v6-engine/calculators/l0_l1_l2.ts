@@ -95,6 +95,7 @@ export const L0MacroCalculator: LayerCalculator = {
       weight,
       weightedScore: score * weight,
       dataSources: ['宏观数据', '行业报告'],
+      participated: true,
     }
   },
 }
@@ -181,6 +182,7 @@ export const L1MoatCalculator: LayerCalculator = {
       weight,
       weightedScore: score * weight,
       dataSources: ['财报数据', '行业分析'],
+      participated: true,
     }
   },
 }
@@ -246,6 +248,7 @@ export const L2PeerCalculator: LayerCalculator = {
       weight,
       weightedScore: score * weight,
       dataSources: ['市值数据', '财报数据', '行业分析'],
+      participated: true,
     }
   },
 }

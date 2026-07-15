@@ -1,3 +1,16 @@
+---
+title: ai-generate-audit-fix-loop
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
+title: docs/explanation/ai-generate-audit-fix-loop.md
+code_version: 2.0.0
+tier: reference
+---
+
 # AI 生成—审计—修正飞轮
 
 > 版本：v1.0.0 | 日期：2026-07-10
@@ -28,7 +41,7 @@
   npx tsx scripts/query-ai-memory.ts "<关键词>" --top 5
   ```
 - 输出顺序：文件清单 → 类型定义 → Store → Service → UI。
-- 每个导出公共实体必须附带 JSDoc（`docs/03-development/jsdoc-convention.md`）。
+- 每个导出公共实体必须附带 JSDoc（`../reference/jsdoc-convention.md`）。
 
 ### 3.2 审计阶段
 

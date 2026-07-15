@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>① 设计与原创思路 · FinSightV9 团队手册</title>
+<style>
+:root{
+  --bg:#fafaf9; --panel:#ffffff; --border:#e7e5e4; --text:#292524;
+  --text2:#57534e; --muted:#a8a29e; --accent:#10b981; --accent-bg:#ecfdf5;
+  --code-bg:#f5f5f4;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;line-height:1.75;font-size:15px}
+.layout{display:flex;align-items:flex-start;min-height:100vh}
+.sidebar{position:sticky;top:0;align-self:flex-start;width:240px;flex-shrink:0;height:100vh;
+  overflow-y:auto;background:var(--panel);border-right:1px solid var(--border);padding:24px 18px}
+.sidebar h2{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:0 0 12px}
+.sidebar a{display:block;color:var(--text2);text-decoration:none;font-size:14px;padding:7px 10px;
+  border-radius:8px;margin-bottom:2px}
+.sidebar a:hover{background:var(--accent-bg);color:#047857}
+.sidebar a.active{background:var(--accent);color:#fff}
+.sidebar .sub{font-size:11px;color:var(--muted);margin:14px 0 6px;padding-left:10px}
+.content{flex:1;max-width:880px;margin:0 auto;padding:40px 48px 80px}
+article h1{font-size:30px;font-weight:800;letter-spacing:-.5px;margin:0 0 6px;
+  border-bottom:3px solid var(--accent);padding-bottom:14px}
+article h2{font-size:22px;font-weight:700;margin:38px 0 12px;padding-left:12px;border-left:4px solid var(--accent)}
+article h3{font-size:18px;font-weight:700;margin:26px 0 8px;color:var(--text)}
+article h4{font-size:15.5px;font-weight:700;margin:18px 0 6px;color:var(--text2)}
+article p{margin:10px 0;color:var(--text2)}
+article ul,article ol{padding-left:24px;margin:10px 0;color:var(--text2)}
+article li{margin:5px 0}
+article a{color:var(--accent);text-decoration:none;border-bottom:1px solid #a7f3d0}
+article a:hover{color:#047857}
+article code{background:var(--code-bg);border:1px solid var(--border);border-radius:5px;padding:1px 6px;
+  font-size:13px;font-family:'SFMono-Regular',Consolas,monospace;color:#be123c}
+article pre{background:var(--code-bg);border:1px solid var(--border);border-radius:12px;padding:18px 20px;
+  overflow-x:auto;margin:14px 0}
+article pre code{background:none;border:none;padding:0;color:#1c1917;font-size:13px;line-height:1.6}
+article blockquote{border-left:4px solid var(--accent);background:var(--accent-bg);margin:14px 0;
+  padding:12px 18px;border-radius:0 10px 10px 0;color:#065f46}
+article table{border-collapse:collapse;width:100%;margin:16px 0;font-size:14px}
+article th,article td{border:1px solid var(--border);padding:9px 12px;text-align:left}
+article th{background:var(--panel);font-weight:700;color:var(--text)}
+article tr:nth-child(even) td{background:#fcfcfb}
+article hr{border:none;border-top:1px solid var(--border);margin:32px 0}
+article img{max-width:100%;border-radius:10px;border:1px solid var(--border)}
+pre.mermaid{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;}
+footer{text-align:center;color:var(--muted);font-size:12px;margin-top:48px;padding-top:20px;border-top:1px solid var(--border)}
+.back{display:inline-block;margin-bottom:18px;color:var(--accent);text-decoration:none;font-size:13px}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <h2>团队体系手册</h2>
+    <a href="index.html">📑 总览索引</a>
+    <div class="sub">手册正文</div>
+    <a href="README.html">总导航 · 团队手册地图</a>
+    <a href="01-design-philosophy.html" class="active">① 设计与原创思路</a>
+    <a href="02-architecture.html">② 整体架构设计</a>
+    <a href="03-ui-components.html">③ UI 组件设计</a>
+    <a href="04-model-runtime.html">④ 模型运行机制</a>
+    <a href="05-competitive-analysis.html">⑤ 竞品对比分析</a>
+    <div class="sub">补充资料</div>
+    <a href="supplementary/index.html">📁 高质量补充 HTML</a>
+  </aside>
+  <main class="content"><article>
+    <a class="back" href="index.html">← 返回总览</a>
+    <h1>01 · 设计与原创思路（Design &amp; Original Thinking）</h1>
+<blockquote>
+<p>本文回答&quot;<strong>我们为什么这样设计</strong>&quot;。理解设计意图，团队才能在接手模块时做出符合初心的决策，而不是被历史代码牵着走。
+权威基线：<code>docs/explanation/01-vision-and-goals.md</code>、<code>docs/explanation/song-aesthetics.md</code>、<code>docs/explanation/design-tokens.md</code>、<code>docs/01-product/competitive-analysis.md</code>。</p>
+</blockquote>
+<hr>
+<h2>1. 项目定位与愿景</h2>
+<p>FinSightV9 不是又一个&quot;看盘软件&quot;，而是定位为：</p>
+<blockquote>
+<p><strong>中国 A 股个人投资者的「研究基础设施」</strong>——不替代券商交易软件，而是成为研究、分析、决策、复盘的<strong>独立工具</strong>。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>交易工具（同花顺/东财）</th>
+<th>机构终端（Wind/iFinD）</th>
+<th><strong>FinSightV9</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>核心关注</td>
+<td>行情、下单、资讯</td>
+<td>数据查询、研报</td>
+<td><strong>认知积累、模式识别、复盘学习</strong></td>
+</tr>
+<tr>
+<td>数据时效</td>
+<td>实时盘中</td>
+<td>实时 + 深度</td>
+<td><strong>盘后/历史回测为主</strong></td>
+</tr>
+<tr>
+<td>数据存储</td>
+<td>云端</td>
+<td>云端</td>
+<td><strong>本地 IndexedDB（数据主权）</strong></td>
+</tr>
+<tr>
+<td>使用频率</td>
+<td>高频盯盘</td>
+<td>高频专业</td>
+<td><strong>低频深度</strong></td>
+</tr>
+<tr>
+<td>离线</td>
+<td>弱</td>
+<td>弱</td>
+<td><strong>必须支持离线</strong></td>
+</tr>
+<tr>
+<td>架构</td>
+<td>重后端</td>
+<td>重后端</td>
+<td><strong>纯前端 PWA</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>蓝海定位</strong>：在&quot;行情交易工具&quot;和&quot;机构研究终端&quot;之间的空白地带——<strong>个人投资研究操作系统</strong>。</p>
+<hr>
+<h2>2. 四条核心设计哲学</h2>
+<ol>
+<li>
+<p><strong>宋瓷美学（克制、温润、留白）</strong>
+以暖灰为骨、低饱和为韵，对抗金融软件常见的信息过载与高彩度焦虑。详见 §3。</p>
+</li>
+<li>
+<p><strong>不切屏原则（Continuous Workflow）</strong>
+所有功能在<strong>当前舱内</strong>通过 Tab/面板切换实现，保持连续工作流，不跳出上下文。这是&quot;五舱工作流&quot;能成立的前提。</p>
+</li>
+<li>
+<p><strong>数据血缘（Data Lineage）</strong>
+每个评分、信号、订单必须<strong>可追溯其来源数据版本</strong>。这驱动了 Envelope 信封、<code>traceId</code>、采集生命周期事件、评分 <code>provenance</code> 字段等一整套设计。</p>
+</li>
+<li>
+<p><strong>可删除性（Deletability）</strong>
+交易层是<strong>可选插件</strong>，删除后研究体系仍完整运行。系统按&quot;研究内核 → 可选交易扩展&quot;分层，避免耦合。</p>
+</li>
+</ol>
+<hr>
+<h2>3. 宋韵美学（Song-yun Aesthetic）</h2>
+<p>设计指南见 <code>docs/explanation/song-aesthetics.md</code>，落地令牌见 <code>docs/explanation/design/ui-design-system.md</code>（命名语言 <strong>“Refined Finance”</strong>）。</p>
+<h3>3.1 明暗双模铁律</h3>
+<ul>
+<li><strong>亮色</strong>：默认 <code>stone</code> 暖灰系（底 <code>stone-50/100</code>、正文 <code>stone-800</code>、强调 <code>emerald-500</code> 低饱和绿=宋韵点翠）。</li>
+<li><strong>暗色</strong>：统一切 <code>neutral</code> 高级灰（hue 0，零彩度），<strong>只改 <code>dark:*</code> 段，禁止改动亮色 <code>stone</code> 段</strong>。</li>
+</ul>
+<h3>3.2 固定业务色（最重要的例外）</h3>
+<ul>
+<li><strong>A 股红涨绿跌为固定业务色（L5）</strong>，不随主题变化，暗色模式下亦不变。</li>
+<li>禁止用 <code>COLOR_TOKENS.up/down</code> 或 <code>THEMOTE_TOKENS.color.success/destructive</code> 替代，必须走 <code>STOCK_COLOR_TOKENS</code>。</li>
+</ul>
+<h3>3.3 为什么是&quot;克制温润&quot;？</h3>
+<p>选择宋韵而非高彩度金融风，是因为目标用户是<strong>长期做研究、需要低认知负担</strong>的投资者。克制的视觉降低疲劳，留白强化重点，文化语境（汝窑天青、官窑粉青、朱砂红、象牙白、高级灰）与中国 A 股个人投资者的审美产生共鸣。</p>
+<hr>
+<h2>4. 设计令牌体系（Design Token System）</h2>
+<p>单一数据源链路：</p>
+<pre><code>design-tokens/tokens.json
+  → scripts/generate-tokens.ts
+  → src/generated/tokens.css + tokens.ts
+  → src/constants/theme.tokens.ts / src/config/chartColors.ts
+  → 组件层
+</code></pre>
+<h3>4.1 六层令牌（L1–L6）</h3>
+<table>
+<thead>
+<tr>
+<th>层</th>
+<th>令牌</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L1</td>
+<td><code>THEME_TOKENS</code></td>
+<td>通用语义色/尺寸/间距/圆角/排版/图标/控件尺寸</td>
+</tr>
+<tr>
+<td>L2</td>
+<td><code>COLOR_TOKENS</code></td>
+<td>业务语义色（涨跌/状态/评分等级/信号分级）</td>
+</tr>
+<tr>
+<td>L3</td>
+<td><code>COLOR_SHADES</code> + <code>twText/twBg/twBorder</code></td>
+<td>色阶与 Tailwind 文本/背景/边框映射</td>
+</tr>
+<tr>
+<td>L4</td>
+<td><code>chartColors.ts</code></td>
+<td>图表专用调色板（饼图/轮动因子/市场风格/信号等级）</td>
+</tr>
+<tr>
+<td>L5</td>
+<td><code>STOCK_COLOR_TOKENS</code></td>
+<td><strong>股票红涨绿跌固定色</strong>（不随主题）</td>
+</tr>
+<tr>
+<td>L6</td>
+<td><code>SEMANTIC_COLOR_ROLES</code></td>
+<td>主题感知 CSS 变量 + 排版/海拔/布局令牌</td>
+</tr>
+</tbody>
+</table>
+<h3>4.2 决策树（写 UI 时怎么选）</h3>
+<ul>
+<li>股票涨跌幅 → <code>STOCK_COLOR_TOKENS</code></li>
+<li>图表配色 → <code>chartColors.ts</code></li>
+<li>特定色阶 → <code>COLOR_SHADES</code></li>
+<li>业务语义（状态/评分/信号）→ <code>COLOR_TOKENS</code></li>
+<li>暗色/悬停/Focus/渐变 → <code>DARK/HOVER/FOCUS/FILL/GRADIENT</code></li>
+<li>新模块 → 优先 <code>SEMANTIC_COLOR_ROLES</code></li>
+</ul>
+<h3>4.3 防硬编码治理（三道门禁）</h3>
+<p><code>lint:colors</code>（ESLint 禁 HEX/RGB/HSL 与 Tailwind 数字色类）+ <code>audit:tokens</code> + <code>verify:tokens</code>。
+豁免仅限：<code>theme.tokens.ts</code>、<code>chartColors.ts</code>、<code>themeRegistry.ts</code>、<code>theme.config.ts</code>、<code>src/generated/*</code>、<code>tests/</code>。</p>
+<hr>
+<h2>5. 原创思路（我们与典型股票工具的巧思）</h2>
+<ol>
+<li>
+<p><strong>双轨白盒评分</strong>
+V6 规则评分 100% 可解释，AI 评分透明可追溯，二者交叉验证。区别于市面&quot;黑箱 AI 投顾&quot;——用户始终掌握最终决策权。</p>
+</li>
+<li>
+<p><strong>五舱工作流 = 投资方法论软件化</strong>
+把&quot;输入 → 分析 → 交易 → 输出 → 总控&quot;固化为连续工作流，配合&quot;不切屏原则&quot;保持心流。竞品多偏&quot;数据查询&quot;，V9 偏&quot;研究方法论与复盘体系&quot;。</p>
+</li>
+<li>
+<p><strong>数据主权 / 本地优先</strong>
+纯前端 PWA + IndexedDB，数据 100% 属于用户、零上传。这是最根本的差异化，也是隐私觉醒趋势下越来越重要的卖点。</p>
+</li>
+<li>
+<p><strong>信封化 + 网关化数据治理</strong>
+在纯前端项目里实现了接近后端的&quot;写收口 / 审计 / 溯源&quot;能力（<code>DataBridge.forward(StandardEnvelope)</code> + ACL 双矩阵），呼应&quot;数据血缘&quot;哲学。</p>
+</li>
+<li>
+<p><strong>插件化可扩展（Widget + MCP + Worker）</strong>
+驾驶舱 Widget 市场 + 15 个 MCP Server 生态 + Web Worker 计算池，演进路线是&quot;工具 → 平台 → 生态&quot;。</p>
+</li>
+<li>
+<p><strong>认知复利 / 个人投资进化曲线</strong>
+评分历史 + 复盘笔记 + 知识库，把&quot;信息消费&quot;变成&quot;认知生产&quot;，迁移成本即护城河。</p>
+</li>
+</ol>
+<hr>
+<h2>6. 关键设计决策背后的思考逻辑</h2>
+<table>
+<thead>
+<tr>
+<th>决策</th>
+<th>选择</th>
+<th>背后的逻辑</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>架构形态</td>
+<td>纯前端无后端（ADR-001）</td>
+<td>规避合规风险、零运维成本、数据隐私、离线可用</td>
+</tr>
+<tr>
+<td>持久化</td>
+<td>IndexedDB 本地</td>
+<td>数据主权；无服务端即无集中数据管理成本</td>
+</tr>
+<tr>
+<td>美学</td>
+<td>宋韵克制</td>
+<td>降低研究疲劳、文化共鸣、差异化识别度</td>
+</tr>
+<tr>
+<td>颜色</td>
+<td>令牌化 + 红涨绿跌固定</td>
+<td>主题可换、业务语义不可变、防止硬编码回潮</td>
+</tr>
+<tr>
+<td>扩展</td>
+<td>客户端多实例 + Worker + MCP</td>
+<td>在&quot;无服务端&quot;边界内最大化横向/算力扩展</td>
+</tr>
+<tr>
+<td>评分</td>
+<td>规则引擎优先、LLM 增强</td>
+<td>可解释、可审计、不黑箱；LLM 仅做可选文本增强</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>回滚条件（ADR-001）</strong>：当用户规模 &gt; 1 万且需要集中数据管理时，在 V10 评估引入服务端。当前有意不追求服务端分布式。</p>
+</blockquote>
+<hr>
+<h2>附：本节与其他手册的关系</h2>
+<ul>
+<li>令牌落地细节 → <code>03-ui-components.md</code> §4</li>
+<li>信封/网关/数据血缘的运行机制 → <code>02-architecture.md</code> §3–§4、<code>04-model-runtime.md</code> §6</li>
+<li>差异化如何对比竞品 → <code>05-competitive-analysis.md</code></li>
+</ul>
+
+    <footer>FinSightV9 智能投研复盘系统 · 团队体系手册 · 由 markdown-it 自动转换生成</footer>
+  </article></main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ startOnLoad: true, theme: 'base',
+      themeVariables: { primaryColor:'#ecfdf5', lineColor:'#57534e', fontFamily:'sans-serif' } });
+  }
+</script>
+</body>
+</html>

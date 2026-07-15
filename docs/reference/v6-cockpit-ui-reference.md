@@ -1,4 +1,11 @@
 ---
+title: v6-cockpit-ui-reference
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: v6-pro-cockpit UI 组件参考（输入舱）
 version: v0.9.0
 last_updated: 2026-06-24
@@ -8,6 +15,8 @@ change_log:
   - date: 2026-06-24
     author: Documentation Governor
     desc: 注入 Frontmatter 元数据（Phase 3 版本化）
+code_version: 2.0.0
+tier: important
 ---
 # v6-pro-cockpit UI 组件参考（输入舱）
 
@@ -51,7 +60,7 @@ V6 输入舱本身已是一个完整原型，使用 **Tabs 导航**组织四大�
 
 **V9 映射**：`InputDashboard` 可引入质量指示圆点、复选批量操作、采集进度条、错误重试。
 
-### `src/components/StockSearch.tsx`
+### `src/components/organisms/input/StockSearch.tsx`
 
 - 防抖搜索（350ms）。
 - 下拉表格：名称代码 / 现价 / 涨跌 / 行业 / PE/PB / 市值 / 操作。
@@ -102,7 +111,7 @@ V6 输入舱本身已是一个完整原型，使用 **Tabs 导航**组织四大�
 - 五因子进度条：景气 / 资金 / 估值 / β / 量能。
 - 关联股票推荐：可「➕ 加入意向池」，已加入变灰禁用。
 
-### `src/apps/analysis/panels/HotSectorPanel.tsx`
+### `src/apps/input/HotSectorPanel.tsx`
 
 - 排名 `#1/#2/#3`、申万三级分类、板块强度计算、轮动建议文案。
 
@@ -169,12 +178,12 @@ V6 输入舱本身已是一个完整原型，使用 **Tabs 导航**组织四大�
 
 ### 组件文件
 
-- `src/components/ui/card.tsx` —— 圆角卡片
-- `src/components/ui/badge.tsx` —— 胶囊 Badge
-- `src/components/ui/table.tsx` —— 标准表格
-- `src/components/ui/progress.tsx` —— Radix Progress
-- `src/components/ui/tabs.tsx` —— Radix Tabs
-- `src/components/ui/button.tsx` —— CVA 变体按钮
+- `../../src/components/atoms/Card.tsx` —— 圆角卡片
+- `../../src/components/atoms/Badge.tsx` —— 胶囊 Badge
+- `src/components/atoms/Table.tsx` —— 标准表格
+- `src/mcp/core/progress.ts` —— Radix Progress
+- `../../src/components/molecules/Tabs.tsx` —— Radix Tabs
+- `../../src/components/atoms/Button.tsx` —— CVA 变体按钮
 
 **V9 映射**：基础组件已具备，可借鉴 V6 的配色映射与状态色配置。
 

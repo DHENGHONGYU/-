@@ -12,7 +12,7 @@
  * - 订阅 STORE_NAME.orders 频道，source 过滤防自激，100ms 去抖合并
  * - 保持 useOrderStore 导出名，向后兼容现有引用
  *
- * @see docs/《V9核心数据字典与类型定义（整合版）》.md
+ * @see docs/reference/v9核心数据字典与类型定义(整合版).md
  */
 
 import { create } from 'zustand'

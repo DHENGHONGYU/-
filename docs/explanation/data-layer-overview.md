@@ -1,4 +1,22 @@
 ---
+title: data-layer-overview
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/explanation/data-layer-overview.md
+code_version: 2.0.0
+tier: important
+---
+
+---
+title: docs/explanation/data-layer-overview.md
+code_version: 2.0.0
+---
+
+---
 title: 数据层总览（Data Layer Overview）
 status: draft
 owner: 架构组 / 数据层负责人
@@ -8,12 +26,12 @@ updated: 2026-07-12
 # V9 数据层总览
 
 > **定位**：本文档是 `src/data/` 与 `src/core/databridge.ts` 的权威全景说明，面向需要理解数据流、新增 store、排查数据一致性问题的开发者与 AI Agent。
-> **合规基准**：基于 `AGENTS.md` v1.4.3 §八（数据库版本管理）及 `src/data/` 实际源码编写。
+> **合规基准**：基于 `../../AGENTS.md` v1.4.3 §八（数据库版本管理）及 `src/data/` 实际源码编写。
 > **关联文档**：
-> - [架构总览](../architecture/overview.md) — 全局分层与依赖方向
+> - [架构总览](overview.md) — 全局分层与依赖方向
 > - [AGENTS.md](../../AGENTS.md) — 工程契约（禁止跨层调用、四步集成、DB_VERSION 规则）
-> - [数据字典索引](../standards/DATA_DICTIONARY_INDEX.md) — 字段级定义唯一索引
-> - [引擎规格](../02-design/05-engine-specs.md) — L0-L8 引擎分层说明
+> - [数据字典索引](design/data-dictionary-index.md) — 字段级定义唯一索引
+> - [引擎规格](../reference/05-engine-specs.md) — L0-L8 引擎分层说明
 
 ---
 
@@ -58,7 +76,7 @@ src/data/
 └── schemas/                 # JSON Schema / 校验定义（如存在）
 ```
 
-> **依赖规则**：`src/data/` 仅可依赖 `src/core/`、`src/config/`、`src/lib/`（基础设施）、`src/types/`；禁止反向依赖 `src/services/` 或 `src/store/`（见 `AGENTS.md` §一）。
+> **依赖规则**：`src/data/` 仅可依赖 `src/core/`、`src/config/`、`src/lib/`（基础设施）、`src/types/`；禁止反向依赖 `src/services/` 或 `src/store/`（见 `../../AGENTS.md` §一）。
 
 ---
 
@@ -101,7 +119,7 @@ src/data/
 | 29 | `customAgents` | `custom_agents` | `id` | `by-type`, `by-updated-at` | 用户自定义智能体（v26） |
 | 30 | `traceRecords` | `trace_records` | `traceId` | `by-symbol`, `by-dimension`, `by-started-at`, `by-result` | 采集链路追踪（v27） |
 
-> **注意**：`AGENTS.md` v1.4.3 §八 中列出的基线 store 为 29 个（截至 `customAgents`），`traceRecords`（v27）为后续新增，实际代码中 `createSchema` 已包含该 store。
+> **注意**：`../../AGENTS.md` v1.4.3 §八 中列出的基线 store 为 29 个（截至 `customAgents`），`traceRecords`（v27）为后续新增，实际代码中 `createSchema` 已包含该 store。
 
 ### 2.2 增量 Store（6 个，由 Migration 创建）
 
@@ -163,7 +181,7 @@ interface EnvelopeMeta {
 | RBAC | 7 | `SAVE_RBAC_USER` ~ `SAVE_RBAC_AUDIT_LOG`, `DELETE_RBAC_AUDIT_LOG` |
 | 采集/智能体 | 4 | `SAVE_COLLECT_CONFIG`, `DELETE_COLLECT_CONFIG`, `SAVE_CUSTOM_AGENT`, `DELETE_CUSTOM_AGENT`, `SAVE_TRACE_RECORD` |
 
-> **规则**：新增 `ENVELOPE_ACTION` 必须在 `DataBridge.routeToDB()` 中添加对应 case（见 `AGENTS.md` §八）。
+> **规则**：新增 `ENVELOPE_ACTION` 必须在 `DataBridge.routeToDB()` 中添加对应 case（见 `../../AGENTS.md` §八）。
 
 ### 3.3 路由流程图
 
@@ -330,7 +348,7 @@ L0 基础层          → types/types.dataLayer.ts
 | `Portfolio` | `types.portfolio.ts` | 投资组合（holdings / theme / metrics） |
 | `UnifiedStockData` | 由 `unifiedStockService` 聚合产出 | 数据融合统一契约，被 store 与各页面消费 |
 
-> **字段级定义** → 查询 [数据字典索引](../standards/DATA_DICTIONARY_INDEX.md)。
+> **字段级定义** → 查询 [数据字典索引](design/data-dictionary-index.md)。
 
 ---
 
@@ -484,14 +502,14 @@ export interface Repository<T, TKey = string> {
 
 所有字段级数据定义统一在以下索引中管理：
 
-→ **[数据字典索引](../standards/DATA_DICTIONARY_INDEX.md)**
+→ **[数据字典索引](design/data-dictionary-index.md)**
 
 该索引维护：
-- 1 份整合主字典（`docs/standards/DATA_DEFINITION.md`）— 全模块字段定义 SSOT
+- 1 份整合主字典（`../reference/data-definition.md`）— 全模块字段定义 SSOT
 - 7 份独立域定义（命名规范 `*-data-definition.md`）
 - `UnifiedStockData` 统一数据模型锚点
 
-**查询路径**：字段定义 → 先查 `DATA_DICTIONARY_INDEX.md` → 再进入对应文件，禁止在别处新建副本。
+**查询路径**：字段定义 → 先查 `../reference/data-dictionary-index.md` → 再进入对应文件，禁止在别处新建副本。
 
 ---
 
@@ -522,4 +540,4 @@ export interface Repository<T, TKey = string> {
 
 ---
 
-_本文档由文档治理流程创建，遵循 `AGENTS.md` §三 文档规范（Frontmatter / kebab-case / 引用代替副本）。如有 Schema 变更，请同步更新本文件并运行 `npm run audit:docs` 检查索引一致性。_
+_本文档由文档治理流程创建，遵循 `../../AGENTS.md` §三 文档规范（Frontmatter / kebab-case / 引用代替副本）。如有 Schema 变更，请同步更新本文件并运行 `npm run audit:docs` 检查索引一致性。_

@@ -1,4 +1,11 @@
 ---
+title: v9-data-timeline
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: V9 数据时间关系与生命周期蓝图
 version: v1.1.0
 last_updated: 2026-06-30
@@ -11,6 +18,8 @@ change_log:
     desc: Freshness 运行时校验补全到 6 条规则
   - date: 2026-06-29
     desc: 初始版本
+code_version: 2.0.0
+tier: reference
 ---
 
 # V9 数据时间关系与生命周期蓝图

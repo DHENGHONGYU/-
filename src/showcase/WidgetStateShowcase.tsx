@@ -29,6 +29,7 @@ export function buildWidgetStateShowcase(): ShowcaseGroup {
   }
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 function WidgetStateTransitionDemo(): React.JSX.Element {
   const [state, setState] = useState<WidgetVisualState>('ready')
 
@@ -63,6 +64,7 @@ function WidgetStateTransitionDemo(): React.JSX.Element {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 function WidgetStateGridDemo(): React.JSX.Element {
   const states: WidgetVisualState[] = ['ready', 'loading', 'empty', 'error']
 

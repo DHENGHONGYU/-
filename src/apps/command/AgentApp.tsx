@@ -9,7 +9,7 @@ const AgentDetailPage = React.lazy(() => import('@/pages/command/agent/AgentDeta
 const AgentTaskTriggerPage = React.lazy(() => import('@/pages/command/agent/AgentTriggerPage'))
 const AgentTasksPage = React.lazy(() => import('@/pages/command/agent/AgentTasksPage'))
 const AgentCustomPage = React.lazy(() => import('@/pages/command/agent/CustomAgentPage'))
-const AgentLlmPage = React.lazy(() => import('@/pages/command/agent/LlmManagementPage'))
+const AgentLlmPage = React.lazy(() => import('@/pages/command/agent/LlmManagement'))
 const AgentCapabilityGraphPage = React.lazy(() => import('@/pages/command/agent/CapabilityGraphPage'))
 const AgentDagSchedulerPage = React.lazy(() => import('@/pages/command/agent/DagSchedulerPage'))
 const AgentFeedbackPage = React.lazy(() => import('@/pages/command/agent/AgentFeedbackPage'))

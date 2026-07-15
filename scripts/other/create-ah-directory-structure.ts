@@ -138,9 +138,9 @@ function createRootIndex(): void {
   content += `---\n\n`;
   content += `## 快速导航\n\n`;
   content += `- [数字编码目录结构](../README.md)\n`;
-  content += `- [文档治理宪法](00-meta/GOVERNANCE.md)\n`;
+  content += `- [文档治理宪法](00-meta/governance.md)\n`;
   
-  writeFileSync(join(DOCS_DIR, 'A-H-INDEX.md'), content, 'utf-8');
+  writeFileSync(join(DOCS_DIR, 'a-h-index.md'), content, 'utf-8');
 }
 
 function main(): void {
@@ -187,7 +187,7 @@ function main(): void {
   }
   
   createRootIndex();
-  console.log(`Generated: A-H-INDEX.md\n`);
+  console.log(`Generated: a-h-index.md\n`);
   
   console.log(`=== Creation Complete ===`);
   console.log(`Total directories created: ${totalCreated}`);

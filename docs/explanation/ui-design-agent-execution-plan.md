@@ -1,6 +1,19 @@
+---
+title: ui-design-agent-execution-plan
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/explanation/ui-design-agent-execution-plan.md
+code_version: 2.0.0
+tier: important
+---
+
 # V9 UI 设计优化分布式 AGENT 任务执行清单
 
-> 聚合来源：`UI设计优化实施计划_详细版.md`（v3.0）  
+> 聚合来源：`../reference/ui设计优化实施计划-详细版.md`（v3.0）  
 > 生成日期：2026-07-10  
 > 目标：将 P0–P8 实施计划转化为可并行执行、可验收的具体任务，并分配至 AGENT 集群
 
@@ -34,7 +47,7 @@
 | **A4 · 投资组合页 AGENT** | PortfolioPage 接入真实持仓数据 | tradingStore、数据层 | `PortfolioPage.tsx`、`tradingStore.ts` | 真实投资组合展示 |
 | **A5 · 仪表盘 AGENT** | DashboardPage 补充可视化面板 | Recharts、Widget、数据聚合 | `DashboardPage.tsx` | 复盘摘要、热力图、导出记录面板 |
 | **A6 · Widget 四态接入 AGENT** | 现有数据 Widget 接入 Loading/Empty/Error/Skeleton | React、状态组件、useMarketData | `src/components/cockpit/widgets/**/*` | 四态覆盖的 Widget |
-| **A7 · 视觉 QA / 令牌审计 AGENT** | 令牌扫描、对比度校验、截图 diff 准备 | ESLint、token-scan、Playwright | `scripts/token-scan.cjs`、`.token-baseline.json` | 0 新增违规、对比度报告 |
+| **A7 · 视觉 QA / 令牌审计 AGENT** | 令牌扫描、对比度校验、截图 diff 准备 | ESLint、token-scan、Playwright | `scripts/other/token-scan.cjs`、`.token-baseline.json` | 0 新增违规、对比度报告 |
 | **A8 · 架构合规 AGENT** | 监控分层依赖、文档同步、测试通过 | AGENTS.md、audit:layers、audit:docs | 全仓库代码 | 合规报告 |
 
 ---
@@ -67,7 +80,7 @@
   1. `CollectionPlanPanel` 展示真实数据源架构（当前为静态 DATA_SOURCE_LAYERS）
   2. `ApiTestDialog` 可执行真实接口测试（当前 setTimeout 模拟）
   3. 维度接口映射表点击维度跳转对应配置行
-- **输入文件**：`src/components/input/CollectionPlanPanel.tsx`、`src/components/input/ApiTestDialog.tsx`
+- **输入文件**：`src/components/organisms/input/CollectionPlanPanel.tsx`、`src/components/organisms/input/ApiTestDialog.tsx`
 - **输出文件**：更新后的上述组件 + 可能的 service
 - **验收标准**：
   - CollectionPlanPanel 从 `dataSourceRegistry` / `collectConfig` 读取真实配置
@@ -121,7 +134,7 @@
 - **执行 AGENT**：A2
 - **任务描述**：新建额度预估面板，展示月调用量卡片、额度进度条、Kimi 套餐选择
 - **输入文件**：`src/config/collectConfig.ts`（GLOBAL_LIMITS）、`src/store/sevenDimConfigStore.ts`
-- **输出文件**：`src/components/input/QuotaEstimatePanel.tsx`
+- **输出文件**：`src/components/organisms/input/QuotaEstimatePanel.tsx`
 - **验收标准**：
   - 月调用量、日/小时上限、额度使用率可视化
   - 集成到 `SevenDimConfigPage`
@@ -130,7 +143,7 @@
 #### T-07 · 现有数据 Widget 四态接入
 - **所属阶段**：P3
 - **执行 AGENT**：A6
-- **任务描述**：将 `src/components/cockpit/widgets/` 下所有数据 Widget 的加载/空/错误/骨架态统一接入 `ui/states` 四态组件
+- **任务描述**：将 `src/cockpit/widgets/` 下所有数据 Widget 的加载/空/错误/骨架态统一接入 `ui/states` 四态组件
 - **输入文件**：`src/components/cockpit/widgets/**/*`、`src/components/ui/states/*`
 - **输出文件**：更新后的 Widget 文件
 - **验收标准**：
@@ -149,7 +162,7 @@
   1. 运行 `npm run audit:tokens -- --strict` 全量扫描
   2. 逐步消减 `.token-baseline.json` 中的债务（优先处理 apps 层 127 处）
   3. 更新基线并提交
-- **输入文件**：`.token-baseline.json`、`scripts/token-scan.cjs`
+- **输入文件**：`.token-baseline.json`、`scripts/other/token-scan.cjs`
 - **输出文件**：更新后的 `.token-baseline.json`
 - **验收标准**：
   - 默认模式 `npm run audit:tokens` 仍通过
@@ -160,7 +173,7 @@
 - **所属阶段**：P0-P4
 - **执行 AGENT**：A7
 - **任务描述**：运行 `node scripts/a11y-contrast.cjs`，对 emerald 主色在正文场景给出处理建议（如仅用于按钮/加深主色）
-- **输入文件**：`scripts/a11y-contrast.cjs`、`design-tokens/tokens.json`
+- **输入文件**：`scripts/other/a11y-contrast.cjs`、`design-tokens/tokens.json`
 - **输出文件**：对比度复核报告
 - **验收标准**：
   - 识别所有正文 AA 不达标的场景
@@ -171,7 +184,7 @@
 - **所属阶段**：P4
 - **执行 AGENT**：A7
 - **任务描述**：在本地环境（非沙箱）搭建 Playwright 截图 diff 流程，生成基准图与对比脚本
-- **输入文件**：`scripts/token-scan.cjs` 输出
+- **输入文件**：`scripts/other/token-scan.cjs` 输出
 - **输出文件**：`tests/visual/` 目录、Playwright 配置
 - **验收标准**：
   - 本地可运行 `npm run test:e2e:visual`
@@ -286,9 +299,9 @@ node scripts/a11y-contrast.cjs
 ## 八、交付物清单（本轮预计新增）
 
 - `src/store/sevenDimConfigStore.ts`（真实 saveConfig / runCollection）
-- `src/components/input/QuotaEstimatePanel.tsx`（新建）
-- `src/components/input/CollectionPlanPanel.tsx`（真实数据）
-- `src/components/input/ApiTestDialog.tsx`（真实 API 测试）
+- `src/components/organisms/input/QuotaEstimatePanel.tsx`（新建）
+- `src/components/organisms/input/CollectionPlanPanel.tsx`（真实数据）
+- `src/components/organisms/input/ApiTestDialog.tsx`（真实 API 测试）
 - `src/store/riskStore.ts` / `src/services/riskControlService.ts`（真实风控数据）
 - `src/store/tradingStore.ts`（真实投资组合数据）
 - `src/pages/output/DashboardPage.tsx`（新增可视化面板）

@@ -1,3 +1,16 @@
+---
+title: services-catalog
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/services-catalog.md
+code_version: 2.0.0
+tier: important
+---
+
 # V9 服务子域目录（Services Catalog）
 
 > **定位**：为 24 个服务子域提供统一文档锚点，消除「24 子域运行中但缺总览文档」的双向一致性落差。
@@ -9,7 +22,7 @@
 ## 使用约定
 
 - 本目录是 24 子域的**唯一索引**；各子域详细契约文档命名 `{subdomain}-contract.md`，置于 `docs/architecture/services/`。
-- 所有子域须遵守 `AGENTS.md` 分层：`services → core/data/lib(白名单)`，禁直写 db（经 `DataBridge`）。
+- 所有子域须遵守 `../../AGENTS.md` 分层：`services → core/data/lib(白名单)`，禁直写 db（经 `DataBridge`）。
 
 ---
 
@@ -37,9 +50,9 @@
 | 18 | stock-analysis | `src/services/stock-analysis/` | 个股分析：深度分析 | ✅ `stock-analysis-contract.md` |
 | 19 | stockpool | `src/services/stockpool/` | 股票池：池管理/监控 | ✅ `stockpool-contract.md` |
 | 20 | system | `src/services/system/` | 系统级：配置/健康/启动 | ✅ `system-contract.md` |
-| 21 | trade | `src/services/trade/` | 交易域：交易实体/状态 | ✅ `trade-contract.md` |
+| 21 | trade | `src/services/trading/` | 交易域：交易实体/状态 | ✅ `trade-contract.md` |
 | 22 | trading | `src/services/trading/` | 交易业务：组合/策略/风控编排 | ✅ `trading-contract.md` |
-| 23 | useCase | `src/services/useCase/` | 用例层：业务用例编排 | ✅ `useCase-contract.md` |
+| 23 | useCase | `src/services/useCase/` | 用例层：业务用例编排 | ✅ `usecase-contract.md` |
 
 ### 顶层服务文件（非子域目录）
 

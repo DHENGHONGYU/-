@@ -1,4 +1,17 @@
 ---
+title: adr-003-databridge-over-direct-datalayer
+code_version: 2.0.0
+
+tier: core
+---
+
+---
+title: docs/reference/adr-003-databridge-over-direct-datalayer.md
+code_version: 2.0.0
+tier: core
+---
+
+---
 title: ADR-003: DataBridge 替代直接 dataLayer 写入
 status: accepted
 owner: V9 Architecture Team
@@ -26,8 +39,8 @@ V9 作为纯前端智能投研系统，所有数据持久化于本地 IndexedDB�
 
 ### 触发条件
 
-- `mcp-coupling-analysis-report.md` §问题 1 指出：DataBridge 当前为 30+ case 的 switch，但至少有 5 个服务仍在绕开 DataBridge 直写 db。
-- `AGENTS.md` §一（分层规则）明确要求：services 层禁止直写 db，须经 DataBridge。
+- `../explanation/design/mcp-coupling-analysis-report.md` §问题 1 指出：DataBridge 当前为 30+ case 的 switch，但至少有 5 个服务仍在绕开 DataBridge 直写 db。
+- `../../AGENTS.md` §一（分层规则）明确要求：services 层禁止直写 db，须经 DataBridge。
 
 ### 相关前置决策
 
@@ -82,9 +95,9 @@ V9 作为纯前端智能投研系统，所有数据持久化于本地 IndexedDB�
 
 - 每个写入操作需构造 `StandardEnvelope`，增加 ~3 行样板代码。
 - `routeToDB()` 当前为 30+ case 的 switch，随着 Store 增加可能膨胀。
-  - **技术债登记**：`docs/02-design/TECH-DEBT.md` — 「DataBridge.routeToDB() 策略模式重构」（待 ADR-010）。
+  - **技术债登记**：`../explanation/design/tech-debt.md` — 「DataBridge.routeToDB() 策略模式重构」（待 ADR-010）。
 - 已有 5 个服务绕开 DataBridge 直写 db，需要逐步迁移。
-  - **迁移清单**：`mcp-coupling-analysis-report.md` §问题 5。
+  - **迁移清单**：`../explanation/design/mcp-coupling-analysis-report.md` §问题 5。
 
 ### 影响范围
 
@@ -102,11 +115,11 @@ V9 作为纯前端智能投研系统，所有数据持久化于本地 IndexedDB�
 
 ### 5.1 实施步骤 checklist
 
-- [x] Step 1：定义 `StandardEnvelope` Interface（`src/core/types.ts`）
+- [x] Step 1：定义 `StandardEnvelope` Interface（`../../src/showcase/types.ts`）
 - [x] Step 2：实现 `DataBridge.forward()` 路由方法
 - [x] Step 3：定义 `ENVELOPE_ACTION` 枚举和 `ACL_MATRIX`
 - [x] Step 4：在 `db-schema.ts` 中注册 `research_logs` 审计日志 Store
-- [ ] Step 5：迁移 5 个直写服务（见 `mcp-coupling-analysis-report.md` §问题 5）
+- [ ] Step 5：迁移 5 个直写服务（见 `../explanation/design/mcp-coupling-analysis-report.md` §问题 5）
 - [ ] Step 6：将 `routeToDB()` 的 switch 重构为策略模式（待 ADR-010）
 - [ ] Step 7：补充 `DataBridge` 集成测试（覆盖率 ≥ 80%）
 
@@ -142,13 +155,13 @@ npm run audit:docs
 
 | 文档 | 路径 | 说明 |
 |------|------|------|
-| 全局架构总览 | `../overview.md` | 数据流全景（§4） |
-| 引擎规格 | `../../02-design/05-engine-specs.md` | L3 纯计算层职责、数据流 §4 |
-| 路由规格 | `../../02-design/06-routing-specs.md` | 三级加载链 |
-| MCP 耦合分析 | `../../02-design/mcp-coupling-analysis-report.md` | DataBridge 问题 1-5 |
-| 数据层总览 | `../../modules/data-layer-overview.md` | DataBridge 路由机制、QueryBuilder |
-| DataBridge 主题包 | `../../topics/databridge/README.md` | DataBridge 相关文档聚合索引 |
-| 原始提案 | `../../06-project-management/2026-06-21-databridge-over-direct-datalayer.md` | ADR-003 的原始文件 |
+| 全局架构总览 | `../explanation/overview.md` | 数据流全景（§4） |
+| 引擎规格 | `./05-engine-specs.md` | L3 纯计算层职责、数据流 §4 |
+| 路由规格 | `../explanation/design/06-routing-specs.md` | 三级加载链 |
+| MCP 耦合分析 | `../explanation/design/mcp-coupling-analysis-report.md` | DataBridge 问题 1-5 |
+| 数据层总览 | `../explanation/data-layer-overview.md` | DataBridge 路由机制、QueryBuilder |
+| DataBridge 主题包 | `./project/plans/README.md` | DataBridge 相关文档聚合索引 |
+| 原始提案 | `./project/2026-06-21-databridge-over-direct-datalayer.md` | ADR-003 的原始文件 |
 
 ---
 

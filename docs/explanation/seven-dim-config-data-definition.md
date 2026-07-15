@@ -1,15 +1,28 @@
 ---
+title: seven-dim-config-data-definition
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/explanation/seven-dim-config-data-definition.md
+code_version: 2.0.0
+tier: important
+---
+
+---
 deprecated: true
 deprecated_date: 2026-07-14
-deprecated_reason: 已整合至 DATA_DICTIONARY_INDEX.md 索引，建议通过主索引访问
-replaced_by: docs/reference/DATA_DICTIONARY_INDEX.md
+deprecated_reason: 已整合至 data-dictionary-index.md 索引，建议通过主索引访问
+replaced_by: docs/reference/data-dictionary-index.md
 ---
 
 # DEPRECATED - seven-dim-config-data-definition.md
 
 > ⚠️ **此文件已废弃**（2026-07-14）
 > 
-> 数据定义已整合至 `docs/reference/DATA_DICTIONARY_INDEX.md`，请通过主索引访问最新定义。
+> 数据定义已整合至 `docs/reference/data-dictionary-index.md`，请通过主索引访问最新定义。
 
 ---
 
@@ -323,7 +336,7 @@ replaced_by: docs/reference/DATA_DICTIONARY_INDEX.md
 **与既有模块的关系**:
 - 维度 code `01`~`08` 与 `src/data/types.ts:694` 的 `DataDimensionType`（`01_basic`~`08_research`）对齐；8 个维度均已正式纳入 DataDimensionType 类型。
 - `StorageType`（`'full' | 'lightweight'`）与 `DataDimensionMeta.storageStrategy`（`src/data/types.ts:708`）语义一致。
-- `GLOBAL_LIMITS` 为全局限流基线，与 Widget 数据采集三层架构（`docs/data-collection/DATA_DEFINITION.md`）的 `COLLECTOR_DEFAULT_CONFIG` 互补：前者管宏观配额，后者管单任务执行参数。
+- `GLOBAL_LIMITS` 为全局限流基线，与 Widget 数据采集三层架构（`../reference/data-definition.md`）的 `COLLECTOR_DEFAULT_CONFIG` 互补：前者管宏观配额，后者管单任务执行参数。
 
 ---
 

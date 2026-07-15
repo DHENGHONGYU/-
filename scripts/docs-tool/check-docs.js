@@ -38,6 +38,7 @@ const ROOT_WHITELIST = new Set([
   '.env.local', '.env.local.example', '.env.development.local',
   '.cursorrules', '.complexity-baseline.json', '.token-baseline.json',
   '.dependency-cruiser.js',
+  'test-results.json',
 ]);
 
 // 根目录白名单目录（允许存在的目录）
@@ -79,6 +80,8 @@ function checkDocsStructure() {
     // - prompts：提示词文档
     // - explanation / how-to / reference / tutorials：Diátaxis 四分类（已迁至 docs/ 下）
     'drafts', 'prompts', 'explanation', 'how-to', 'reference', 'tutorials',
+    // 项目实际存在的扩展目录（用户工作树）
+    '01-product', 'archive', 'team-handbook', 'team-handbook-html',
   ];
   const docsPath = path.join(ROOT_DIR, 'docs');
   const actualDirs = fs.readdirSync(docsPath).filter(e => fs.statSync(path.join(docsPath, e)).isDirectory());

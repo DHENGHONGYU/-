@@ -1,4 +1,17 @@
 ---
+title: adr-001-pure-frontend-architecture
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
+title: docs/explanation/adr-001-pure-frontend-architecture.md
+code_version: 2.0.0
+tier: reference
+---
+
+---
 title: ADR-001: 纯前端无后端架构
 status: accepted
 owner: V9 Architecture Team
@@ -75,11 +88,11 @@ V9 作为面向个人投资者的智能投研复盘系统，需要满足以下�
 
 - **计算能力受限**：无法运行服务端复杂模型（如 LLM 微调、大规模回测），所有计算必须在浏览器端完成。
   - **缓解**：LLM 调用走外部 API（如 Kimi、OpenAI），本地仅做 prompt 编排和结果解析。
-  - **技术债**：`docs/02-design/TECH-DEBT.md` — 「浏览器端回测引擎性能瓶颈」（大样本回测可能导致 UI 卡顿）。
+  - **技术债**：`./design/tech-debt.md` — 「浏览器端回测引擎性能瓶颈」（大样本回测可能导致 UI 卡顿）。
 - **API Key 安全**：第三方 API Key 存储在 localStorage（加密存储），存在被提取的风险。
   - **缓解**：`localStorageManager.setEncrypted()` 加密存储；用户自行管理 API Key。
 - **数据同步**：多设备间数据无法自动同步，依赖用户手动导出/导入 JSON。
-  - **缓解**：`docs/ops/deployment.md` §数据备份/恢复策略。
+  - **缓解**：`../reference/deployment.md` §数据备份/恢复策略。
 
 ### 影响范围
 
@@ -123,11 +136,11 @@ npm run test:clean   # 验证核心测试通过
 
 | 文档 | 路径 |
 |------|------|
-| ADR-002（IndexedDB） | `adr-002-indexeddb-over-localstorage.md` |
+| ADR-002（IndexedDB） | `../reference/adr-002-indexeddb-over-localstorage.md` |
 | ADR-004（HashRouter） | `adr-004-hashrouter-static-hosting.md` |
-| 全局架构总览 | `../overview.md` §1、§2 |
-| 部署基线 | `../../ops/deployment.md` |
-| 原始提案 | `../../01-requirements/v9-system-blueprint.md` §2.1 |
+| 全局架构总览 | `./overview.md` §1、§2 |
+| 部署基线 | `docs/reference/deployment.md` |
+| 原始提案 | `docs/reference/v9-system-blueprint.md` §2.1 |
 
 ---
 

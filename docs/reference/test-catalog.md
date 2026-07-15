@@ -1,4 +1,22 @@
 ---
+title: test-catalog
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/test-catalog.md
+code_version: 2.0.0
+tier: important
+---
+
+---
+title: docs/reference/test-catalog.md
+code_version: 2.0.0
+---
+
+---
 title: V9 测试目录与策略
 description: 全量测试资产索引、运行命令、覆盖率基线与已知问题清单
 status: draft
@@ -14,8 +32,8 @@ version: v1.0.0
 > **关联文档**：
 > - [测试策略总览](../reference/testing-strategy.md) — 三层测试策略与改进路线
 > - [AGENTS.md](../../AGENTS.md) — 四步集成回滚验证、事件监听清理模板
-> - [运维基线](../ops/runbook.md) — CI/CD 流水线配置
-> - [编码规范](../standards/coding-conventions.md) — 测试命名与目录约定
+> - [运维基线](../explanation/runbook.md) — CI/CD 流水线配置
+> - [编码规范](coding-conventions.md) — 测试命名与目录约定
 
 ---
 
@@ -403,7 +421,7 @@ npx tsc --noEmit
 npm run audit:docs
 
 # 3. 接口签名一致性（若涉及路由或数据字典变更）
-# 手动更新 docs/02-design/06-routing-specs.md 或 DATA_DICTIONARY_INDEX.md
+# 手动更新 docs/02-design/06-routing-specs.md 或 data-dictionary-index.md
 
 # 4. 架构合规
 npm run audit:layers
@@ -486,5 +504,5 @@ npm run audit:tests       # 测试文件合规性扫描
 - [AGENTS.md §二 — 四步集成与回滚验证](../../AGENTS.md)
 - [AGENTS.md §三 — 事件监听清理模板](../../AGENTS.md)
 - [AGENTS.md §七 — 验证命令速查](../../AGENTS.md)
-- [编码规范](../standards/coding-conventions.md)
-- [运维基线](../ops/runbook.md)
+- [编码规范](coding-conventions.md)
+- [运维基线](../explanation/runbook.md)

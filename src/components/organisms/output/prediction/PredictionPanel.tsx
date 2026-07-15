@@ -8,24 +8,24 @@
  */
 
 import { usePredictionStore } from '@/store/predictionStore'
-import { twText, twBg, DARK } from '@/constants/theme.tokens'
+import { BADGE_COLORS, COLOR_TOKENS } from '@/constants/theme.tokens'
 import type { FactorPrediction, PredictionDirection, PredictionStatus } from '@/types/modules/prediction.types'
 
 const DIRECTION_LABELS: Record<PredictionDirection, { text: string; color: string }> = {
-  bullish: { text: '看涨', color: 'text-red-600 dark:text-red-400' },
-  bearish: { text: '看跌', color: 'text-green-600 dark:text-green-400' },
-  neutral: { text: '中性', color: 'text-stone-500' },
+  bullish: { text: '看涨', color: BADGE_COLORS.direction.bullish },
+  bearish: { text: '看跌', color: BADGE_COLORS.direction.bearish },
+  neutral: { text: '中性', color: BADGE_COLORS.direction.neutral },
 }
 
 const STATUS_LABELS: Record<PredictionStatus, { text: string; color: string }> = {
-  pending: { text: '待校验', color: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' },
-  verified: { text: '已校验', color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' },
-  expired: { text: '已过期', color: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-500' },
+  pending: { text: '待校验', color: BADGE_COLORS.predictionStatus.pending },
+  verified: { text: '已校验', color: BADGE_COLORS.predictionStatus.verified },
+  expired: { text: '已过期', color: BADGE_COLORS.predictionStatus.expired },
 }
 
 function PredictionCard({ prediction }: { prediction: FactorPrediction }): React.JSX.Element {
-  const dir = DIRECTION_LABELS[prediction.direction] ?? { text: '中性', color: 'text-stone-500' }
-  const status = STATUS_LABELS[prediction.status] ?? { text: '未知', color: 'bg-gray-100 text-gray-500' }
+  const dir = DIRECTION_LABELS[prediction.direction] ?? { text: '中性', color: BADGE_COLORS.direction.neutral }
+  const status = STATUS_LABELS[prediction.status] ?? { text: '未知', color: BADGE_COLORS.predictionStatus.unknown }
   const confidencePercent = Math.round(prediction.confidence * 100)
 
   return (
@@ -60,7 +60,7 @@ function PredictionCard({ prediction }: { prediction: FactorPrediction }): React
       </div>
 
       {prediction.sentimentDominant && (
-        <span className={`mt-1 inline-block rounded ${twBg('amber', 100)} px-1.5 py-0.5 text-xs ${twText('amber', 700)} ${DARK.bgAmber950_30} ${DARK.textAmber300}`}>
+        <span className={`mt-1 inline-block rounded px-1.5 py-0.5 text-xs ${BADGE_COLORS.sentimentDominant}`}>
           情绪主导
         </span>
       )}
@@ -68,11 +68,11 @@ function PredictionCard({ prediction }: { prediction: FactorPrediction }): React
       {prediction.status === 'verified' && prediction.actualReturn !== undefined && (
         <div className="mt-2 border-t pt-2 text-xs">
           <span className="text-muted-foreground">实际收益: </span>
-          <span className={prediction.actualReturn >= 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}>
+          <span className={prediction.actualReturn >= 0 ? BADGE_COLORS.direction.bullish : BADGE_COLORS.direction.bearish}>
             {prediction.actualReturn >= 0 ? '+' : ''}{prediction.actualReturn.toFixed(2)}%
           </span>
-          {prediction.hitDirection && <span className={`ml-2 ${twText('blue', 500)}`}>✓ 方向命中</span>}
-          {prediction.hitRange && <span className={`ml-1 ${twText('blue', 500)}`}>✓ 幅度命中</span>}
+          {prediction.hitDirection && <span className={`ml-2 ${BADGE_COLORS.hit}`}>✓ 方向命中</span>}
+          {prediction.hitRange && <span className={`ml-1 ${BADGE_COLORS.hit}`}>✓ 幅度命中</span>}
         </div>
       )}
 
@@ -117,15 +117,15 @@ export function PredictionPanel(): React.JSX.Element {
           <div className="text-xs text-muted-foreground">总预测</div>
         </div>
         <div className="rounded-lg border bg-card p-3 text-center shadow-sm">
-          <div className={`text-2xl font-bold ${twText('blue', 500)}`}>{stats.verified}</div>
+          <div className={`text-2xl font-bold ${COLOR_TOKENS.info.tailwind}`}>{stats.verified}</div>
           <div className="text-xs text-muted-foreground">已校验</div>
         </div>
         <div className="rounded-lg border bg-card p-3 text-center shadow-sm">
-          <div className={`text-2xl font-bold ${twText('red', 500)}`}>{(stats.directionHitRate * 100).toFixed(0)}%</div>
+          <div className={`text-2xl font-bold ${COLOR_TOKENS.up.tailwind}`}>{(stats.directionHitRate * 100).toFixed(0)}%</div>
           <div className="text-xs text-muted-foreground">方向准确率</div>
         </div>
         <div className="rounded-lg border bg-card p-3 text-center shadow-sm">
-          <div className={`text-2xl font-bold ${twText('green', 500)}`}>{(stats.rangeHitRate * 100).toFixed(0)}%</div>
+          <div className={`text-2xl font-bold ${COLOR_TOKENS.down.tailwind}`}>{(stats.rangeHitRate * 100).toFixed(0)}%</div>
           <div className="text-xs text-muted-foreground">幅度准确率</div>
         </div>
       </div>

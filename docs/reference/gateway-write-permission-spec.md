@@ -1,3 +1,21 @@
+---
+title: gateway-write-permission-spec
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/gateway-write-permission-spec.md
+code_version: 2.0.0
+tier: important
+---
+
+---
+title: docs/reference/gateway-write-permission-spec.md
+code_version: 2.0.0
+---
+
 # Gateway 层写入权限规范
 
 > **版本**: v1.0.0 | **日期**: 2026-07-13
@@ -308,5 +326,5 @@ npx tsc --noEmit
 ## 9. 相关文档
 
 - [V9 AGENTS.md](../../AGENTS.md) — 分层规则与依赖方向
-- [FILE-MANAGEMENT-GUIDE.md](../how-to/FILE-MANAGEMENT-GUIDE.md) — 文件入-移-出全生命周期
-- [核心数据策略报告](../02-design/core-data-strategy-report.md) — 数据架构、数据库定义、传递协议与蓝图校对
+- [file-management-guide.md](../how-to/file-management-guide.md) — 文件入-移-出全生命周期
+- [核心数据策略报告](../explanation/core-data-strategy-report.md) — 数据架构、数据库定义、传递协议与蓝图校对

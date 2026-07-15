@@ -78,7 +78,7 @@ export class LLMServer extends MCPServerBase {
         name: 'list_models',
         description: '获取当前 LLM 配置信息',
         inputSchema: { type: 'object', properties: {} },
-        handler: async () => {
+        handler: () => {
           logger.info('[LLMServer] list_models called')
           const config = getDefaultLlmConfig()
           const models = {
@@ -88,17 +88,17 @@ export class LLMServer extends MCPServerBase {
             temperature: config.temperature,
             availableModels: [config.model],
           }
-          return { content: [{ type: 'text', text: JSON.stringify(models) }] }
+          return Promise.resolve({ content: [{ type: 'text', text: JSON.stringify(models) }] })
         },
       },
       {
         name: 'get_model_config',
         description: '获取当前 LLM 模型配置',
         inputSchema: { type: 'object', properties: {} },
-        handler: async () => {
+        handler: () => {
           logger.info('[LLMServer] get_model_config called')
           const config = getDefaultLlmConfig()
-          return {
+          return Promise.resolve({
             content: [{
               type: 'text',
               text: JSON.stringify({
@@ -109,7 +109,7 @@ export class LLMServer extends MCPServerBase {
                 timeout: config.timeout,
               }),
             }],
-          }
+          })
         },
       },
     ]

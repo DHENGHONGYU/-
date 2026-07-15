@@ -1,3 +1,16 @@
+---
+title: overview
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/explanation/overview.md
+code_version: 2.0.0
+tier: important
+---
+
 # 股票池看板迁移 + 采集进度汇报 + 既有债务治理完成
 
 ## 完成内容
@@ -13,16 +26,16 @@
 - 同步更新 `scripts/verify-all-routes.ts`。
 
 ## 关键文件
-- 新增页面：`src/pages/analysis/StockPoolBoardPage.tsx`
-- 新增组件：`src/components/collection/CollectionProgressPanel.tsx`、`CollectionReportPanel.tsx`
-- 新增 Hook：`src/hooks/useStockPoolBoard.ts`
+- 新增页面：`src/pages/analysis/PoolBoardPage.tsx`
+- 新增组件：`src/components/organisms/collection/CollectionProgressPanel.tsx`、`CollectionReportPanel.tsx`
+- 新增 Hook：`src/hooks/usePoolBoard.ts`
 - 新增服务：`src/services/data-collector/collectionReportService.ts`
 - 新增测试：`src/services/data-collector/collectionReportService.test.ts`
 - 路由：`src/config/routes.ts`、`src/apps/analysis/AnalysisApp.tsx`、`scripts/verify-all-routes.ts`
-- 输入舱采集页：`src/pages/input/CollectTaskPage.tsx`
+- 输入舱采集页：`src/pages/input/CollectTask/index.tsx`
 - 导航：`src/portal/PortalShell.tsx`
 - 输入舱清理：`src/apps/input/InputDashboard.tsx`
-- 文档：`docs/06-routing-specs.md`、`docs/04-ui-ux-specs.md`、`docs/08-implementation-plan.md`、`docs/proposals/stock-pool-board-migration-proposal.md`
+- 文档：`docs/reference/06-routing-specs.md`、`docs/reference/04-ui-ux-specs.md`、`docs/reference/08-implementation-plan.md`、`../reference/stock-pool-board-migration-proposal.md`
 - 回归报告：`regression-test-report.md`
 
 ## 验证结果
@@ -53,7 +66,7 @@
 - 旧路径 `components/collection/*`、`components/pool/*` 重建为纯 re-export shim（`export * from '@/components/organisms/...'`），保持全量引用兼容、零改动成本。
 - 修复 `FilterChip.tsx` 中 `hover:bg-black/10` 硬编码，改为令牌类。
 - 更新 `CollectTaskPage`、`StockPoolBoardPage`、`useStockPoolBoard` 的导入指向 shim/原子层级路径。
-- 同步文档：`docs/atomic-component-system.md`（新建，含层级定义/目录/映射/迁移路径/门禁）、`docs/04-ui-ux-specs.md`（4.5 组件库清单）、`docs/08-implementation-plan.md`。
+- 同步文档：`docs/reference/atomic-component-system.md`（新建，含层级定义/目录/映射/迁移路径/门禁）、`docs/reference/04-ui-ux-specs.md`（4.5 组件库清单）、`docs/reference/08-implementation-plan.md`。
 
 ### 验证结果（2026-07-10 收尾）
 - `npm run build` ✅ 通过（20.75s，产物正常）
@@ -126,7 +139,7 @@
 
 ### 步骤 1：`input/` 试点物理迁移到 `organisms/input/` ✅
 
-- 将 `src/components/input/` 18 个 `.tsx`（含 `wizard-steps/` 子目录）物理迁移到 `src/components/organisms/input/`
+- 将 `../../src/services/input/` 18 个 `.tsx`（含 `wizard-steps/` 子目录）物理迁移到 `src/components/organisms/input/`
 - 原 `input/X.tsx` 改写为纯 re-export shim，8 个消费者引用（pages/apps/pool）零改动
 - 翻转注册表对应条目 status → `active`
 - 迁移后结构：`organisms/input/` 18 真实文件，`input/` 14 顶层 shim + `wizard-steps/` 子目录 shim

@@ -1,7 +1,20 @@
+---
+title: song-aesthetics
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/explanation/song-aesthetics.md
+code_version: 2.0.0
+tier: important
+---
+
 # 宋韵美学设计指南（Song Aesthetics）
 
 > **定位**：定义 V9 的「宋韵美学」视觉语言，补 H 类设计指南缺口（P2-2）。
-> **权威令牌**：`src/constants/theme.tokens.ts`（L1–L6）、`docs/02-design/design-token-mapping.md`、`docs/02-design/token-usage-cookbook.md`。
+> **权威令牌**：`src/constants/theme.tokens.ts`（L1–L6）、`../reference/design-token-mapping.md`、`./token-usage-cookbook.md`。
 > **状态**：✅ P2 新增（骨架版）
 
 ---
@@ -32,7 +45,7 @@
 
 ## 5. 留白与层级
 
-- 卡片用 `stone-50` 底 + `stone-200` 边框 + `radius.md`，保持呼吸感。
+- 卡片用 `stone-50` 底 + `stone-200` 边框 + `./song-aesthetics.md`，保持呼吸感。
 - 信息层级靠字号与 `stone` 明度差，而非描边/阴影堆叠。
 
 ## 6. 验收

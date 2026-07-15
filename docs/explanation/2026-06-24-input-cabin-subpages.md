@@ -1,4 +1,11 @@
 ---
+title: 2026-06-24-input-cabin-subpages
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
 title: ADR-006: 输入舱拆分为四子页面
 version: v0.9.0
 last_updated: 2026-06-24
@@ -8,6 +15,8 @@ change_log:
   - date: 2026-06-24
     author: Documentation Governor
     desc: 注入 Frontmatter 元数据（Phase 3 版本化）
+code_version: 2.0.0
+tier: reference
 ---
 # ADR-006: 输入舱拆分为四子页面
 
@@ -42,5 +51,5 @@ change_log:
 
 ## 相关文档
 
-- `docs/06-routing-specs.md`
-- `docs/implementation/input-cabin-spec.md`
+- `../reference/06-routing-specs.md`
+- `../reference/input-cabin-spec.md`

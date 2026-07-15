@@ -10,7 +10,7 @@
  * - 订阅 orderStore 内存状态，200ms 去抖合并 + isRefreshing 防重入
  * - 遵循现有 Zustand Store 风格
  *
- * @see docs/《V9核心数据字典与类型定义（整合版）》.md
+ * @see docs/reference/v9核心数据字典与类型定义(整合版).md
  * @see src/config/chartColors.ts - PIE_CHART_PALETTE
  */
 

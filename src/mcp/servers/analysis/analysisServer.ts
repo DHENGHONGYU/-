@@ -148,14 +148,14 @@ export class AnalysisServer extends MCPServerBase {
         arguments: [
           { name: 'symbol', description: '股票代码', required: true },
         ],
-        generator: async (args) => {
-          return [{
+        generator: (args) => {
+          return Promise.resolve([{
             role: 'user',
             content: {
               type: 'text',
               text: `请对股票 ${args.symbol} 进行全面的投研分析，包括：评分概况、护城河评估、财务健康度、估值水平、情景推演、技术面筹码分析。`,
             },
-          }]
+          }])
         },
       },
     ]

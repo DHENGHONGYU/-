@@ -1,3 +1,21 @@
+---
+title: autonomous-workflow-optimization
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/prompts/autonomous-workflow-optimization.md
+code_version: 2.0.0
+tier: reference
+---
+
+---
+title: docs/prompts/autonomous-workflow-optimization.md
+code_version: 2.0.0
+---
+
 # V9 自主工作流优化策略
 
 > **版本**: v1.0.0 | **日期**: 2026-07-04  
@@ -37,7 +55,7 @@
 ```yaml
 触发条件: 代码变更涉及类型定义、接口、数据模型
 自主动作:
-  - 更新对应 DATA_DEFINITION.md
+  - 更新对应 data-definition.md
   - 更新 CHANGELOG.md
   - 更新相关 ADR（如需要）
 验证机制:
@@ -147,9 +165,9 @@
   - src/types/modules/*.ts
   - src/services/scoring/v6-engine/types.ts
 触发动作:
-  - 更新 docs/DATA_DICTIONARY_INDEX.md
-  - 更新对应模块 DATA_DEFINITION.md
-  - 更新 docs/《V9核心数据字典与类型定义（整合版）》.md
+  - 更新 docs/data-dictionary-index.md
+  - 更新对应模块 data-definition.md
+  - 更新 docs/v9核心数据字典与类型定义(整合版).md
 验证命令:
   - npm run audit:docs
 ```
@@ -161,9 +179,9 @@
   - src/core/databridge.ts
   - src/data/dataLayer.ts
 触发动作:
-  - 更新 docs/trade/API_CONTRACT.md（如适用）
-  - 更新 docs/《DataBridge端点与数据映射清单》.md
-  - 更新 docs/《功能模块数据契约》.md
+  - 更新 docs/trade/api-contract.md（如适用）
+  - 更新 docs/databridge端点与数据映射清单.md
+  - 更新 docs/功能模块数据契约.md
 验证命令:
   - npm run audit:docs
 ```
@@ -177,7 +195,7 @@
 触发动作:
   - 更新 docs/03-architecture-standards.md
   - 更新 docs/06-routing-specs.md
-  - 更新 ARCHITECTURE.md
+  - 更新 architecture.md
   - 新增 ADR（如需要）
 验证命令:
   - npm run audit:layers
@@ -193,7 +211,7 @@
 触发动作:
   - 更新 docs/05-engine-specs.md
   - 更新 docs/09-quality-gates.md
-  - 更新相关 DATA_DEFINITION.md
+  - 更新相关 data-definition.md
 验证命令:
   - npm run audit:hardcode
   - npm run audit:docs
@@ -205,15 +223,15 @@
 
 | 文档类别 | 文档名称 | 更新条件 | 负责人 |
 |---------|---------|---------|--------|
-| **数据字典** | docs/DATA_DICTIONARY_INDEX.md | 类型定义变更 | AI自主 |
-| **数据字典** | docs/《V9核心数据字典与类型定义（整合版）》.md | 数据模型变更 | AI自主 |
-| **数据字典** | docs/cockpit/DATA_DEFINITION.md | 驾驶舱数据变更 | AI自主 |
-| **数据字典** | docs/news/DATA_DEFINITION.md | 新闻数据变更 | AI自主 |
-| **数据字典** | docs/trade/API_CONTRACT.md | 交易接口变更 | AI自主 |
+| **数据字典** | docs/data-dictionary-index.md | 类型定义变更 | AI自主 |
+| **数据字典** | docs/v9核心数据字典与类型定义(整合版).md | 数据模型变更 | AI自主 |
+| **数据字典** | docs/cockpit/data-definition.md | 驾驶舱数据变更 | AI自主 |
+| **数据字典** | docs/news/data-definition.md | 新闻数据变更 | AI自主 |
+| **数据字典** | docs/trade/api-contract.md | 交易接口变更 | AI自主 |
 | **数据定义** | docs/02-functional-specs.md | 功能规格变更 | 人工确认 |
 | **数据定义** | docs/05-engine-specs.md | 引擎规格变更 | 人工确认 |
 | **架构图** | docs/03-architecture-standards.md | 架构调整 | 人工确认 |
-| **架构图** | ARCHITECTURE.md | 组件关系变更 | AI自主 |
+| **架构图** | architecture.md | 组件关系变更 | AI自主 |
 | **技术规格** | docs/09-quality-gates.md | 质量标准变更 | 人工确认 |
 | **用户手册** | docs/07-operation-strategy.md | 操作流程变更 | 人工确认 |
 | **变更日志** | CHANGELOG.md | 每次发布 | AI自主 |
@@ -278,7 +296,7 @@
     "files_deleted": [],
     "docs_updated": [
       {
-        "path": "docs/DATA_DICTIONARY_INDEX.md",
+        "path": "docs/data-dictionary-index.md",
         "description": "新增数据融合服务类型定义",
         "version": "v1.2.0"
       }
@@ -488,9 +506,9 @@ const rules: WorkflowRule[] = [
 ### 7.1 相关文档
 
 - [AGENTS.md](../../AGENTS.md) — AI 行为约束契约
-- [CHANGELOG.md](../../CHANGELOG.md) — 版本变更日志
-- [09-quality-gates.md](09-quality-gates.md) — 质量门禁
-- [implementation-governance.md](./implementation-governance.md) — 实施治理
+- [CHANGELOG.md](../reference/CHANGELOG.md) — 版本变更日志
+- [09-quality-gates.md](../explanation/design/09-quality-gates.md) — 质量门禁
+- [implementation-governance.md](../explanation/design/implementation-governance.md) — 实施治理
 
 ### 7.2 术语表
 

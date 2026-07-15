@@ -1,4 +1,11 @@
 ---
+title: action-list
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: V9 五层追溯审计 — 修复行动清单
 version: v2.0.0
 last_updated: 2026-07-05
@@ -16,6 +23,8 @@ change_log:
   - date: 2026-06-27
     author: Quality Auditor
     desc: 初始版本：基于 28 模块审计结果
+code_version: 2.0.0
+tier: important
 ---
 
 # V9 五层追溯审计 — 修复行动清单
@@ -37,7 +46,7 @@ change_log:
 | **P0-01** | 七维分析页面全为 TODO 桩 | `src/pages/input/` 七维分析页 | 输入舱 B7 | 按四步契约实现：① 类型定义 → ② Store → ③ DataBridge → ④ UI。saveConfig 和 runCollection 需接入真实采集逻辑 | 8h |
 | **P0-02** | 采集器配置页全页 Mock | `src/pages/input/` 采集器配置页 | 输入舱 B8 | 实现采集器配置 CRUD：配置表单、校验逻辑、持久化到 IndexedDB、对接 DataBridge | 6h |
 | **P0-03** | 采集任务页全页 Mock | `src/pages/input/` 采集任务页 | 输入舱 B9 | 实现任务列表、任务创建/编辑/删除、任务状态追踪、执行日志展示 | 6h |
-| **P0-04** | TradingHubPage.tsx 文件不存在 | `src/pages/trading/TradingHubPage.tsx` | 交易舱 D1 | 创建交易舱 Hub 页面，包含快捷入口卡片、统计概览、导航到各子页面 | 2h |
+| **P0-04** | TradingHubPage.tsx 文件不存在 | `src/apps/trading/TradingApp.tsx` | 交易舱 D1 | 创建交易舱 Hub 页面，包含快捷入口卡片、统计概览、导航到各子页面 | 2h |
 | **P0-05** | 持仓交易操作为桩实现 | `src/pages/trading/HoldingsPage.tsx` | 交易舱 D4 | 实现真实买入/卖出/调仓逻辑，通过 DataBridge 写入交易记录，更新持仓数据 | 4h |
 | **P0-06** | 持仓导出为桩实现 | `src/pages/trading/HoldingsPage.tsx` | 交易舱 D4 | 实现 CSV/Excel 导出功能，支持当前持仓和历史交易两种导出模式 | 2h |
 | **P0-07** | 持仓数据未实际加载 | `src/pages/trading/HoldingsPage.tsx` + `holdingsStore` | 交易舱 D4 | 打通 DataBridge → holdingsStore → UI 的数据链路；fetchData 需真实查询 IndexedDB 并更新 Store | 4h |
@@ -54,7 +63,7 @@ change_log:
 | 编号 | 问题摘要 | 位置 | 影响范围 | 修复建议 | 预计工时 |
 |:---|:---|:---|:---|:---|:---|
 | **P1-01** | 批量导入无专属 Store | `src/apps/input/BulkImportPanel.tsx` | 输入舱 B3 | 新建 `bulkImportStore.ts`，迁移 useState → Zustand actions，接入 withBroadcast | 2h |
-| **P1-02** | 输入舱 Hub 状态层断裂 | `src/pages/input/InputHubPage.tsx` | 输入舱 B1 | 新建 `inputHubStore.ts`，统计数据从 Store 获取而非硬编码 | 1.5h |
+| **P1-02** | 输入舱 Hub 状态层断裂 | `src/apps/input/InputApp.tsx` | 输入舱 B1 | 新建 `inputHubStore.ts`，统计数据从 Store 获取而非硬编码 | 1.5h |
 | **P1-03** | 录入看板状态层断裂 | `src/apps/input/InputDashboard.tsx` | 输入舱 B2 | 统一接入 `poolStore` 或独立 Store，替换 usePoolData hook 的直接调用 | 2h |
 | **P1-04** | 热门板块绕过 Store 直用静态数据 | `src/apps/input/HotSectorPanel.tsx` | 输入舱 B4 | 接入 `hotSectorStore`，数据通过 DataBridge 流入而非静态常量 | 2h |
 | **P1-05** | 采集测试数据不持久化 | `src/apps/input/DataTestPanel.tsx` | 输入舱 B6 | 新建 `dataTestStore.ts`，测试结果通过 DataBridge 写入 IndexedDB | 2h |

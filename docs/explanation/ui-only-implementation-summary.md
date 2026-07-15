@@ -1,4 +1,11 @@
 ---
+title: ui-only-implementation-summary
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: V6 Pro UI / Page 吸收落地总结（仅 UI 展示层，不动数据架构）
 version: v0.9.0
 last_updated: 2026-06-24
@@ -8,6 +15,8 @@ change_log:
   - date: 2026-06-24
     author: Documentation Governor
     desc: 注入 Frontmatter 元数据（Phase 3 版本化）
+code_version: 2.0.0
+tier: important
 ---
 # V6 Pro UI / Page 吸收落地总结（仅 UI 展示层，不动数据架构）
 
@@ -44,10 +53,10 @@ change_log:
 
 | 页面 | 路径 | 文件 | 内容 |
 |---|---|---|---|
-| 输入舱首页 | `/input/hub` | `src/pages/input/InputHubPage.tsx` | 核心功能卡片 + V6 Pro 可扩展能力卡片 |
-| 分析舱首页 | `/analysis/hub` | `src/pages/analysis/AnalysisHubPage.tsx` | V4/V6 评分入口 + 板块轮动等扩展卡片 |
-| 交易舱首页 | `/trading/hub` | `src/pages/trading/TradingHubPage.tsx` | 交易信号/持仓 + 策略管理等扩展卡片 |
-| 总控舱首页 | `/command/hub` | `src/pages/command/CommandHubPage.tsx` | 系统监控 + AI 体中心等扩展卡片 |
+| 输入舱首页 | `/input/hub` | `src/apps/input/InputApp.tsx` | 核心功能卡片 + V6 Pro 可扩展能力卡片 |
+| 分析舱首页 | `/analysis/hub` | `src/apps/analysis/AnalysisApp.tsx` | V4/V6 评分入口 + 板块轮动等扩展卡片 |
+| 交易舱首页 | `/trading/hub` | `src/apps/trading/TradingApp.tsx` | 交易信号/持仓 + 策略管理等扩展卡片 |
+| 总控舱首页 | `/command/hub` | `src/apps/command/CommandApp.tsx` | 系统监控 + AI 体中心等扩展卡片 |
 
 这些页面：
 - 只展示现有功能入口和 V6 Pro 参考设计；
@@ -161,7 +170,7 @@ docs/06-routing-specs.md          # 更新路由表
 ### P2：数据层配合改造
 
 1. 股票池分组/策略模板（影响 `src/data/`、`src/services/`、`usePoolData`）。
-2. 七维采集配置 + 采集任务监控（影响 `src/data/collectConfig`、`fetcherService`）。
+2. 七维采集配置 + 采集任务监控（影响 `src/config/collectConfig.ts`、`fetcherService`）。
 3. 板块轮动（影响 `src/data/rotationData`、`rotationService`）。
 
 ### P3：可选新模块

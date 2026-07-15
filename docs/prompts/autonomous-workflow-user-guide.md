@@ -1,3 +1,21 @@
+---
+title: autonomous-workflow-user-guide
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/prompts/autonomous-workflow-user-guide.md
+code_version: 2.0.0
+tier: reference
+---
+
+---
+title: docs/prompts/autonomous-workflow-user-guide.md
+code_version: 2.0.0
+---
+
 # V9 自主工作流使用指南
 
 > **版本**: v1.0.0 | **日期**: 2026-07-04  
@@ -99,10 +117,10 @@ npm run doc:check
 
 | 触发器 | 监控路径 | 需要更新的文档 |
 |--------|---------|---------------|
-| **T1 类型定义变更** | `src/data/types.ts`<br>`src/types/modules/*.ts`<br>`src/services/scoring/v6-engine/types.ts` | `docs/DATA_DICTIONARY_INDEX.md`<br>`docs/《V9核心数据字典与类型定义（整合版）》.md` |
-| **T2 接口变更** | `src/services/**/index.ts`<br>`src/core/databridge.ts`<br>`src/data/dataLayer.ts` | `docs/trade/API_CONTRACT.md`<br>`docs/《DataBridge端点与数据映射清单》.md` |
-| **T3 架构调整** | `src/config/routes.ts`<br>`src/config/dbConfig.ts`<br>`AGENTS.md` | `docs/03-architecture-standards.md`<br>`docs/06-routing-specs.md`<br>`ARCHITECTURE.md` |
-| **T4 配置参数变更** | `src/constants/*.ts`<br>`src/config/thresholds.ts`<br>`src/services/scoring/v6-engine/config.ts` | `docs/05-engine-specs.md`<br>`docs/09-quality-gates.md` |
+| **T1 类型定义变更** | `src/data/types.ts`<br>`src/types/modules/*.ts`<br>`src/services/scoring/v6-engine/types.ts` | `../reference/data-dictionary-index.md`<br>`../reference/v9核心数据字典与类型定义(整合版).md` |
+| **T2 接口变更** | `src/services/**/index.ts`<br>`src/core/databridge.ts`<br>`src/data/dataLayer.ts` | `../reference/api-contract.md`<br>`../reference/databridge端点与数据映射清单.md` |
+| **T3 架构调整** | `src/config/routes.ts`<br>`src/config/dbConfig.ts`<br>`../../AGENTS.md` | `../reference/03-architecture-standards.md`<br>`../reference/06-routing-specs.md`<br>`../explanation/03-architecture-standards.md` |
+| **T4 配置参数变更** | `src/constants/*.ts`<br>`src/config/thresholds.ts`<br>`src/services/scoring/v6-engine/config.ts` | `../reference/05-engine-specs.md`<br>`../reference/09-quality-gates.md` |
 
 ### 3.3 工作流程
 
@@ -291,7 +309,7 @@ GitHub Actions 工作流已配置以下自动化检查：
 ### 7.2 获取帮助
 
 - 查看工具帮助：`npm run <command> -- --help`
-- 查看详细文档：`docs/implementation/autonomous-workflow-optimization.md`
+- 查看详细文档：`./autonomous-workflow-optimization.md`
 - 联系架构治理团队
 
 ---
@@ -318,8 +336,8 @@ GitHub Actions 工作流已配置以下自动化检查：
 
 - [自主工作流优化策略](autonomous-workflow-optimization.md)
 - [AI 行为约束契约](../../AGENTS.md)
-- [质量门禁](../explanation/09-quality-gates.md)
-- [实施治理](../explanation/implementation-governance.md)
+- [质量门禁](../explanation/design/09-quality-gates.md)
+- [实施治理](../explanation/design/implementation-governance.md)
 
 ---
 

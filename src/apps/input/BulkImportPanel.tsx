@@ -44,7 +44,7 @@ const STEP_IDLE_BG = cn(twBg('stone', 100), twText('stone', 400), DARK.bgNeutral
 export default function BulkImportPanel(): React.JSX.Element {
   const refresh = useIntentionPoolStore((s) => s.refresh)
   const items = useIntentionPoolStore((s) => s.items)
-  const allGroups = useMemo(() => getIntentionPoolGroups(), [items])
+  const allGroups = useMemo(() => getIntentionPoolGroups(), [])
 
   const [inputMode, setInputMode] = useState<InputMode>('text')
   const [importText, setImportText] = useState('')

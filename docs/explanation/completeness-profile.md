@@ -1,4 +1,11 @@
 ---
+title: completeness-profile
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: V9 模块完成度剖面图 — 全量汇总
 version: v7.0.0
 last_updated: 2026-07-05
@@ -28,6 +35,8 @@ change_log:
   - date: 2026-06-27
     author: Quality Auditor
     desc: 汇总批次 1（5 模块）五层剖面图
+code_version: 2.0.0
+tier: important
 ---
 
 # V9 模块完成度剖面图 — 全量汇总

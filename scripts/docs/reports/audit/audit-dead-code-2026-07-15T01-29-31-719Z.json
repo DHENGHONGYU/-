@@ -1,0 +1,770 @@
+{
+  "issues": [
+    {
+      "file": "src/cockpit/CockpitShell.tsx",
+      "line": 29,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "return null"
+    },
+    {
+      "file": "src/cockpit/CockpitShell.tsx",
+      "line": 100,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (!Component) return null"
+    },
+    {
+      "file": "src/cockpit/widgets/AITradeReviewWidget.tsx",
+      "line": 32,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (!tradeReview) return null"
+    },
+    {
+      "file": "src/cockpit/widgets/IndustryChainWidget.tsx",
+      "line": 123,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (!source || !target) return null"
+    },
+    {
+      "file": "src/cockpit/widgets/MarketSentimentWidget.tsx",
+      "line": 32,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (!sentiment) return null"
+    },
+    {
+      "file": "src/components/cabin/IntelligentScoreBasisCard.tsx",
+      "line": 149,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (d.score === null || pd?.score === null || pd?.score === undefined) return nu"
+    },
+    {
+      "file": "src/components/cabin/ScoreHistoryTable.tsx",
+      "line": 48,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (d.score === null || pd?.score === null || pd?.score === undefined) return nu"
+    },
+    {
+      "file": "src/components/organisms/analysis/sector/SectorRotationHeatmap.tsx",
+      "line": 43,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (value === undefined) return null"
+    },
+    {
+      "file": "src/components/organisms/analysis/signal/SignalQualityTrendChart.tsx",
+      "line": 190,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "return null"
+    },
+    {
+      "file": "src/components/organisms/analysis/signal/SignalQualityTrendChart.tsx",
+      "line": 200,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "return null"
+    },
+    {
+      "file": "src/components/organisms/input/ApiTestDialog.tsx",
+      "line": 168,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (!result) return null"
+    },
+    {
+      "file": "src/components/organisms/input/DataCollectionWizard.tsx",
+      "line": 97,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "return null"
+    },
+    {
+      "file": "src/components/organisms/input/wizard-steps/ExecutionMonitorStep.tsx",
+      "line": 108,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "return null"
+    },
+    {
+      "file": "src/components/organisms/input/wizard-steps/ExecutionMonitorStep.tsx",
+      "line": 135,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "return null"
+    },
+    {
+      "file": "src/components/organisms/output/ReviewArtifactCard.tsx",
+      "line": 215,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (items.length === 0) return null"
+    },
+    {
+      "file": "src/components/organisms/output/ReviewArtifactModal.tsx",
+      "line": 39,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (!report) return null"
+    },
+    {
+      "file": "src/components/organisms/output/ReviewWizard.tsx",
+      "line": 476,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "return null"
+    },
+    {
+      "file": "src/components/organisms/output/ReviewWizard.tsx",
+      "line": 492,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (items.length === 0) return null"
+    },
+    {
+      "file": "src/components/organisms/shared/LLMConfigWidget.tsx",
+      "line": 81,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (!currentPreset?.contextWindow) return null"
+    },
+    {
+      "file": "src/components/organisms/shared/LLMConfigWidget.tsx",
+      "line": 90,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (!currentPreset?.inputPrice) return null"
+    },
+    {
+      "file": "src/components/organisms/shared/ScoreFactorDeltaPanel.tsx",
+      "line": 42,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "return null"
+    },
+    {
+      "file": "src/components/organisms/system/MigrationPanel.tsx",
+      "line": 110,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "return null"
+    },
+    {
+      "file": "src/components/organisms/system/MigrationPanel.tsx",
+      "line": 128,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "return null"
+    },
+    {
+      "file": "src/components/organisms/system/MigrationPanel.tsx",
+      "line": 156,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "return null"
+    },
+    {
+      "file": "src/core/ThemeProvider.tsx",
+      "line": 44,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "return null"
+    },
+    {
+      "file": "src/core/ThemeProvider.tsx",
+      "line": 50,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "return null"
+    },
+    {
+      "file": "src/pages/analysis/IndustryScorePage.tsx",
+      "line": 283,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (!dimension) return null"
+    },
+    {
+      "file": "src/pages/analysis/IntelligentScorePage.tsx",
+      "line": 480,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (!dimension) return null"
+    },
+    {
+      "file": "src/pages/command/agent/CapabilityGraphPage.tsx",
+      "line": 192,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (!sourceAgent || !targetAgent) return null"
+    },
+    {
+      "file": "src/pages/trading/components/VirtualizedHoldingsTable.tsx",
+      "line": 257,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (!holding) return null"
+    },
+    {
+      "file": "src/pages/command/agent/LlmManagement/components/LlmAdvancedTab.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/command/agent/LlmManagement/components/LlmAdvancedTab.tsx"
+    },
+    {
+      "file": "src/pages/command/agent/LlmManagement/components/LlmConfigTab.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/command/agent/LlmManagement/components/LlmConfigTab.tsx"
+    },
+    {
+      "file": "src/pages/command/agent/LlmManagement/components/LlmFactorsTab.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/command/agent/LlmManagement/components/LlmFactorsTab.tsx"
+    },
+    {
+      "file": "src/pages/command/agent/LlmManagement/components/LlmStatsCards.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/command/agent/LlmManagement/components/LlmStatsCards.tsx"
+    },
+    {
+      "file": "src/pages/command/agent/LlmManagement/components/LlmStatsTab.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/command/agent/LlmManagement/components/LlmStatsTab.tsx"
+    },
+    {
+      "file": "src/pages/command/agent/LlmManagement/index.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/command/agent/LlmManagement/index.tsx"
+    },
+    {
+      "file": "src/pages/command/health/MechanismHealthPanel.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/command/health/MechanismHealthPanel.tsx"
+    },
+    {
+      "file": "src/pages/command/test/StressOverviewPage.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/command/test/StressOverviewPage.tsx"
+    },
+    {
+      "file": "src/pages/input/CollectTask/components/CollectTaskBreadcrumb.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/input/CollectTask/components/CollectTaskBreadcrumb.tsx"
+    },
+    {
+      "file": "src/pages/input/CollectTask/components/CollectTaskStatsCards.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/input/CollectTask/components/CollectTaskStatsCards.tsx"
+    },
+    {
+      "file": "src/pages/input/CollectTask/components/DimHealthCard.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/input/CollectTask/components/DimHealthCard.tsx"
+    },
+    {
+      "file": "src/pages/input/CollectTask/components/DimHealthTab.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/input/CollectTask/components/DimHealthTab.tsx"
+    },
+    {
+      "file": "src/pages/input/CollectTask/components/ScoreAnalysisTab.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/input/CollectTask/components/ScoreAnalysisTab.tsx"
+    },
+    {
+      "file": "src/pages/input/CollectTask/components/ScoreDistribution.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/input/CollectTask/components/ScoreDistribution.tsx"
+    },
+    {
+      "file": "src/pages/input/CollectTask/components/ScoreProgress.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/input/CollectTask/components/ScoreProgress.tsx"
+    },
+    {
+      "file": "src/pages/input/CollectTask/components/ScoreStatsCards.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/input/CollectTask/components/ScoreStatsCards.tsx"
+    },
+    {
+      "file": "src/pages/input/CollectTask/components/ScoreTrend.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/input/CollectTask/components/ScoreTrend.tsx"
+    },
+    {
+      "file": "src/pages/input/CollectTask/components/TaskListTab.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/input/CollectTask/components/TaskListTab.tsx"
+    },
+    {
+      "file": "src/pages/input/CollectTask/index.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/input/CollectTask/index.tsx"
+    },
+    {
+      "file": "src/pages/input/CollectTask/utils.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/input/CollectTask/utils.tsx"
+    },
+    {
+      "file": "src/pages/output/FactorDashboardPage.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/output/FactorDashboardPage.tsx"
+    },
+    {
+      "file": "src/pages/output/PredictionPage.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/output/PredictionPage.tsx"
+    },
+    {
+      "file": "src/pages/output/RetrospectivePage.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/output/RetrospectivePage.tsx"
+    }
+  ],
+  "violations": [],
+  "warnings": [
+    {
+      "file": "src/cockpit/CockpitShell.tsx",
+      "line": 29,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "return null"
+    },
+    {
+      "file": "src/cockpit/CockpitShell.tsx",
+      "line": 100,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (!Component) return null"
+    },
+    {
+      "file": "src/cockpit/widgets/AITradeReviewWidget.tsx",
+      "line": 32,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (!tradeReview) return null"
+    },
+    {
+      "file": "src/cockpit/widgets/IndustryChainWidget.tsx",
+      "line": 123,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (!source || !target) return null"
+    },
+    {
+      "file": "src/cockpit/widgets/MarketSentimentWidget.tsx",
+      "line": 32,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (!sentiment) return null"
+    },
+    {
+      "file": "src/components/cabin/IntelligentScoreBasisCard.tsx",
+      "line": 149,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (d.score === null || pd?.score === null || pd?.score === undefined) return nu"
+    },
+    {
+      "file": "src/components/cabin/ScoreHistoryTable.tsx",
+      "line": 48,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (d.score === null || pd?.score === null || pd?.score === undefined) return nu"
+    },
+    {
+      "file": "src/components/organisms/analysis/sector/SectorRotationHeatmap.tsx",
+      "line": 43,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (value === undefined) return null"
+    },
+    {
+      "file": "src/components/organisms/analysis/signal/SignalQualityTrendChart.tsx",
+      "line": 190,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "return null"
+    },
+    {
+      "file": "src/components/organisms/analysis/signal/SignalQualityTrendChart.tsx",
+      "line": 200,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "return null"
+    },
+    {
+      "file": "src/components/organisms/input/ApiTestDialog.tsx",
+      "line": 168,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (!result) return null"
+    },
+    {
+      "file": "src/components/organisms/input/DataCollectionWizard.tsx",
+      "line": 97,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "return null"
+    },
+    {
+      "file": "src/components/organisms/input/wizard-steps/ExecutionMonitorStep.tsx",
+      "line": 108,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "return null"
+    },
+    {
+      "file": "src/components/organisms/input/wizard-steps/ExecutionMonitorStep.tsx",
+      "line": 135,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "return null"
+    },
+    {
+      "file": "src/components/organisms/output/ReviewArtifactCard.tsx",
+      "line": 215,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (items.length === 0) return null"
+    },
+    {
+      "file": "src/components/organisms/output/ReviewArtifactModal.tsx",
+      "line": 39,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (!report) return null"
+    },
+    {
+      "file": "src/components/organisms/output/ReviewWizard.tsx",
+      "line": 476,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "return null"
+    },
+    {
+      "file": "src/components/organisms/output/ReviewWizard.tsx",
+      "line": 492,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (items.length === 0) return null"
+    },
+    {
+      "file": "src/components/organisms/shared/LLMConfigWidget.tsx",
+      "line": 81,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (!currentPreset?.contextWindow) return null"
+    },
+    {
+      "file": "src/components/organisms/shared/LLMConfigWidget.tsx",
+      "line": 90,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (!currentPreset?.inputPrice) return null"
+    },
+    {
+      "file": "src/components/organisms/shared/ScoreFactorDeltaPanel.tsx",
+      "line": 42,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "return null"
+    },
+    {
+      "file": "src/components/organisms/system/MigrationPanel.tsx",
+      "line": 110,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "return null"
+    },
+    {
+      "file": "src/components/organisms/system/MigrationPanel.tsx",
+      "line": 128,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "return null"
+    },
+    {
+      "file": "src/components/organisms/system/MigrationPanel.tsx",
+      "line": 156,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "return null"
+    },
+    {
+      "file": "src/core/ThemeProvider.tsx",
+      "line": 44,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "return null"
+    },
+    {
+      "file": "src/core/ThemeProvider.tsx",
+      "line": 50,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "return null"
+    },
+    {
+      "file": "src/pages/analysis/IndustryScorePage.tsx",
+      "line": 283,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (!dimension) return null"
+    },
+    {
+      "file": "src/pages/analysis/IntelligentScorePage.tsx",
+      "line": 480,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (!dimension) return null"
+    },
+    {
+      "file": "src/pages/command/agent/CapabilityGraphPage.tsx",
+      "line": 192,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (!sourceAgent || !targetAgent) return null"
+    },
+    {
+      "file": "src/pages/trading/components/VirtualizedHoldingsTable.tsx",
+      "line": 257,
+      "type": "条件返回 null",
+      "message": "组件在条件分支中返回 null（请确认是否为预期空状态）",
+      "context": "if (!holding) return null"
+    },
+    {
+      "file": "src/pages/command/agent/LlmManagement/components/LlmAdvancedTab.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/command/agent/LlmManagement/components/LlmAdvancedTab.tsx"
+    },
+    {
+      "file": "src/pages/command/agent/LlmManagement/components/LlmConfigTab.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/command/agent/LlmManagement/components/LlmConfigTab.tsx"
+    },
+    {
+      "file": "src/pages/command/agent/LlmManagement/components/LlmFactorsTab.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/command/agent/LlmManagement/components/LlmFactorsTab.tsx"
+    },
+    {
+      "file": "src/pages/command/agent/LlmManagement/components/LlmStatsCards.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/command/agent/LlmManagement/components/LlmStatsCards.tsx"
+    },
+    {
+      "file": "src/pages/command/agent/LlmManagement/components/LlmStatsTab.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/command/agent/LlmManagement/components/LlmStatsTab.tsx"
+    },
+    {
+      "file": "src/pages/command/agent/LlmManagement/index.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/command/agent/LlmManagement/index.tsx"
+    },
+    {
+      "file": "src/pages/command/health/MechanismHealthPanel.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/command/health/MechanismHealthPanel.tsx"
+    },
+    {
+      "file": "src/pages/command/test/StressOverviewPage.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/command/test/StressOverviewPage.tsx"
+    },
+    {
+      "file": "src/pages/input/CollectTask/components/CollectTaskBreadcrumb.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/input/CollectTask/components/CollectTaskBreadcrumb.tsx"
+    },
+    {
+      "file": "src/pages/input/CollectTask/components/CollectTaskStatsCards.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/input/CollectTask/components/CollectTaskStatsCards.tsx"
+    },
+    {
+      "file": "src/pages/input/CollectTask/components/DimHealthCard.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/input/CollectTask/components/DimHealthCard.tsx"
+    },
+    {
+      "file": "src/pages/input/CollectTask/components/DimHealthTab.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/input/CollectTask/components/DimHealthTab.tsx"
+    },
+    {
+      "file": "src/pages/input/CollectTask/components/ScoreAnalysisTab.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/input/CollectTask/components/ScoreAnalysisTab.tsx"
+    },
+    {
+      "file": "src/pages/input/CollectTask/components/ScoreDistribution.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/input/CollectTask/components/ScoreDistribution.tsx"
+    },
+    {
+      "file": "src/pages/input/CollectTask/components/ScoreProgress.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/input/CollectTask/components/ScoreProgress.tsx"
+    },
+    {
+      "file": "src/pages/input/CollectTask/components/ScoreStatsCards.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/input/CollectTask/components/ScoreStatsCards.tsx"
+    },
+    {
+      "file": "src/pages/input/CollectTask/components/ScoreTrend.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/input/CollectTask/components/ScoreTrend.tsx"
+    },
+    {
+      "file": "src/pages/input/CollectTask/components/TaskListTab.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/input/CollectTask/components/TaskListTab.tsx"
+    },
+    {
+      "file": "src/pages/input/CollectTask/index.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/input/CollectTask/index.tsx"
+    },
+    {
+      "file": "src/pages/input/CollectTask/utils.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/input/CollectTask/utils.tsx"
+    },
+    {
+      "file": "src/pages/output/FactorDashboardPage.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/output/FactorDashboardPage.tsx"
+    },
+    {
+      "file": "src/pages/output/PredictionPage.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/output/PredictionPage.tsx"
+    },
+    {
+      "file": "src/pages/output/RetrospectivePage.tsx",
+      "line": 1,
+      "type": "未注册页面",
+      "message": "pages/ 下页面未在路由表或 App 分发器中注册",
+      "context": "src/pages/output/RetrospectivePage.tsx"
+    }
+  ],
+  "summary": {
+    "totalFiles": 1035,
+    "totalViolations": 0,
+    "totalWarnings": 53,
+    "emptyFunctions": 0,
+    "missingRouteFiles": 0,
+    "unregisteredPages": 23,
+    "routeImports": 64,
+    "appImports": 44,
+    "portalImports": 1,
+    "dynamicImports": 142,
+    "dynamicImportSources": 9,
+    "dynamicRegisteredPages": 46
+  },
+  "meta": {
+    "scriptName": "audit-dead-code",
+    "version": "3.1",
+    "timestamp": "2026-07-15T01:29:31.714Z",
+    "durationMs": 106,
+    "rootDir": "G:\\FinSightV9\\scripts"
+  }
+}

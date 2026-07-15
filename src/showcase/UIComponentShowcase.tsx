@@ -40,6 +40,7 @@ export function buildUIComponentShowcase(): ShowcaseGroup {
   }
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 function ButtonVariantsDemo(): React.JSX.Element {
   return (
     <div className={cn('flex flex-wrap gap-3', THEME_TOKENS.gap.md)}>
@@ -53,6 +54,7 @@ function ButtonVariantsDemo(): React.JSX.Element {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 function BadgeVariantsDemo(): React.JSX.Element {
   return (
     <div className={cn('flex flex-wrap gap-2', THEME_TOKENS.gap.sm)}>
@@ -66,6 +68,7 @@ function BadgeVariantsDemo(): React.JSX.Element {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 function FormControlsDemo(): React.JSX.Element {
   const [checked, setChecked] = useState(false)
   const [enabled, setEnabled] = useState(true)

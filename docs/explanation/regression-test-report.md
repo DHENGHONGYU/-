@@ -1,3 +1,16 @@
+---
+title: regression-test-report
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
+title: docs/explanation/regression-test-report.md
+code_version: 2.0.0
+tier: reference
+---
+
 # 股票池看板迁移回归测试报告
 
 ## 测试范围
@@ -14,18 +27,18 @@
 
 | # | 问题 | 位置 | 修复方式 |
 |---|---|---|---|
-| 1 | 分组筛选未生效：`selectedGroup` 只设置状态，未参与 `filteredStocks` 计算 | `src/hooks/useStockPoolBoard.ts` | 在 `filteredStocks` 中先按 `selectedGroup` 过滤，再按质量状态过滤 |
-| 2 | `useMemo` 不必要依赖警告 + 依赖 `getAllGroups()` 内部读取 store | `src/hooks/useStockPoolBoard.ts` | 改为从 `stocks` 直接聚合分组，导入 `DEFAULT_POOL_GROUP` |
-| 3 | `navigate(...)` 浮游 Promise 警告 | `src/hooks/useStockPoolBoard.ts` | 改为 `void navigate(...)` |
-| 4 | 条件渲染中可空字符串隐式转换警告 | `src/pages/analysis/StockPoolBoardPage.tsx` | `Boolean(board.message \|\| board.error)` |
-| 5 | Promise 回调传给期望 void 的属性 | `src/pages/analysis/StockPoolBoardPage.tsx` | `onTransition={(s, st) => void board.handleTransition(s, st)}` 等 |
+| 1 | 分组筛选未生效：`selectedGroup` 只设置状态，未参与 `filteredStocks` 计算 | `src/hooks/usePoolBoard.ts` | 在 `filteredStocks` 中先按 `selectedGroup` 过滤，再按质量状态过滤 |
+| 2 | `useMemo` 不必要依赖警告 + 依赖 `getAllGroups()` 内部读取 store | `src/hooks/usePoolBoard.ts` | 改为从 `stocks` 直接聚合分组，导入 `DEFAULT_POOL_GROUP` |
+| 3 | `navigate(...)` 浮游 Promise 警告 | `src/hooks/usePoolBoard.ts` | 改为 `void navigate(...)` |
+| 4 | 条件渲染中可空字符串隐式转换警告 | `src/pages/analysis/PoolBoardPage.tsx` | `Boolean(board.message \|\| board.error)` |
+| 5 | Promise 回调传给期望 void 的属性 | `src/pages/analysis/PoolBoardPage.tsx` | `onTransition={(s, st) => void board.handleTransition(s, st)}` 等 |
 | 6 | `t.progress ?? 0` 不必要条件 | `src/services/data-collector/collectionReportService.ts` | 改为 `t.progress`（类型为 `number`） |
 | 7 | 可空数字三元表达式建议改用 `??` | `src/services/data-collector/collectionReportService.ts` | `s.completedAt ?? s.startedAt` |
 | 8 | 可空字符串数组过滤条件 | `src/services/data-collector/collectionReportService.ts` | `s.error != null` |
 | 9 | 时间格式化函数可空数字隐式转换 | `src/services/data-collector/collectionReportService.ts` | `timestamp == null` 等显式判断 |
 | 10 | 输入舱看板残留 `allGroups` 未使用 | `src/apps/input/InputDashboard.tsx` | 移除 `getAllGroups` 相关代码 |
 | 11 | 路由校验脚本缺失 `/input/collect-tasks` | `scripts/verify-all-routes.ts` | 在 input 预期路径中补录 |
-| 12 | `CollectTaskPage`「评分分析」Tab 使用硬编码 Tailwind 颜色类 | `src/pages/input/CollectTaskPage.tsx` | 保留 Tab；将 `border-l-primary`、`text-primary`、`bg-primary`、`border-l-emerald-500`、`border-l-amber-500`、`border-l-rose-500` 改为 `COLOR_TOKENS.*.hex` 内联样式 |
+| 12 | `CollectTaskPage`「评分分析」Tab 使用硬编码 Tailwind 颜色类 | `src/pages/input/CollectTask/index.tsx` | 保留 Tab；将 `border-l-primary`、`text-primary`、`bg-primary`、`border-l-emerald-500`、`border-l-amber-500`、`border-l-rose-500` 改为 `COLOR_TOKENS.*.hex` 内联样式 |
 | 13 | `/trading/risk` 在 `ROUTE_REGISTRY` 中重复注册 | `src/config/routes.ts` | 删除早期重复条目，保留「风险控制管理」 |
 | 14 | 路由预期列表与实际注册表不一致 | `scripts/verify-all-routes.ts` | 移除过期的 `/analysis/news-v6`、`/trading/hub`；补充 29 条真实孤儿路由到预期列表 |
 

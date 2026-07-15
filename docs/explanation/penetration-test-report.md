@@ -1,3 +1,16 @@
+---
+title: penetration-test-report
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
+title: docs/explanation/penetration-test-report.md
+code_version: 2.0.0
+tier: reference
+---
+
 # V9 渗透测试自查报告（P0-03）
 
 > **生成时间**: 2026-07-13  

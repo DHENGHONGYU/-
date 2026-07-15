@@ -33,12 +33,12 @@ export class DataCollectorServer extends MCPServerBase {
           },
           required: ['symbol'],
         },
-        handler: async (args) => {
+        handler: (args) => {
           const symbol = args.symbol as string
           const days = (args.days as number) ?? 30
           logger.info('[DataCollectorServer] fetch_market_data called', { symbol, days })
           // TODO[阻塞·#7]: MarketDataAdapter 仅有 adapt/merge，fetchMarketData 未实现；待接真实数据源（AKShare/HTTP）后补全。
-          return { content: [{ type: 'text', text: JSON.stringify({ symbol, days, data: [], note: 'fetchMarketData 尚未实现' }) }] }
+          return Promise.resolve({ content: [{ type: 'text', text: JSON.stringify({ symbol, days, data: [], note: 'fetchMarketData 尚未实现' }) }] })
         },
       },
       {
@@ -58,7 +58,7 @@ export class DataCollectorServer extends MCPServerBase {
           },
           required: ['traceSpans', 'taskStatuses'],
         },
-        handler: async (args) => {
+        handler: (args) => {
           const traceSpans = (args.traceSpans as Record<string, unknown>) ?? {}
           const taskStatuses = (args.taskStatuses as Record<string, unknown>) ?? {}
           logger.info('[DataCollectorServer] build_collection_report called', {
@@ -66,7 +66,7 @@ export class DataCollectorServer extends MCPServerBase {
             taskCount: Object.keys(taskStatuses).length,
           })
           const report = buildCollectionReport(traceSpans as never, taskStatuses as never)
-          return { content: [{ type: 'text', text: JSON.stringify(report) }] }
+          return Promise.resolve({ content: [{ type: 'text', text: JSON.stringify(report) }] })
         },
       },
       {

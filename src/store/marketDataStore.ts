@@ -15,12 +15,12 @@
  * 刷新失败时只更新对应 key 的 loading/error，不清除 data（即局部回滚保护）。
  * 无需全局快照回滚，因为不存在会清空所有数据源的全局 refresh 操作。
  *
- * @see docs/《V9核心数据字典与类型定义（整合版）》.md — MarketDataState / MarketDataSourceKey / DataSourceEntry / MarketDataStatus 实体定义
- * @see docs/《功能模块数据契约》.md — MarketDataStore 模块契约（总览/输入/输出/接口/订阅/迁移路线）
- * @see docs/implementation/v9-system-blueprint.md — Widget 数据流从 MarketDataProvider → Store 的迁移路径
- * @see docs/《DataBridge端点与数据映射清单》.md — MarketDataStore 订阅频道（orders → portfolioOverview 刷新）
- * @see docs/《V9现有数据资产清单》.md — marketDataStore 资产登记
- * @see docs/CHANGELOG.md — Phase 2 变更记录（version 0.9.9）
+ * @see docs/reference/v9核心数据字典与类型定义(整合版).md — MarketDataState / MarketDataSourceKey / DataSourceEntry / MarketDataStatus 实体定义
+ * @see docs/reference/功能模块数据契约.md — MarketDataStore 模块契约（总览/输入/输出/接口/订阅/迁移路线）
+ * @see docs/reference/v9-system-blueprint.md — Widget 数据流从 MarketDataProvider → Store 的迁移路径
+ * @see docs/reference/databridge端点与数据映射清单.md — MarketDataStore 订阅频道（orders → portfolioOverview 刷新）
+ * @see docs/reference/V9现有数据资产清单.md — marketDataStore 资产登记
+ * @see ../../docs/reports/changelogs/CHANGELOG.md — Phase 2 变更记录（version 0.9.9）
  */
 
 import { getSafeString } from '@/lib/safeCoerce'

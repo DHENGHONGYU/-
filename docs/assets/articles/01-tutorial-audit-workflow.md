@@ -1,3 +1,16 @@
+---
+title: 01-tutorial-audit-workflow
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
+title: docs/assets/articles/01-tutorial-audit-workflow.md
+code_version: 2.0.0
+tier: reference
+---
+
 # 我用 WorkBuddy 给审计团队搭了 20 个"分身"：一个审计合伙人的 AI 工作流改造实录 #WorkBuddy
 
 > 作者身份：资深审计合伙人，20 年审计从业经验。本文记录我用 WorkBuddy 把"一人复核"改造成"一支分身部队"的完整过程，含架构设计、分步实操、效果对比与避坑指南。

@@ -1,788 +1,338 @@
-#!/usr/bin/env tsx
+#!/usr/bin/env node
 /**
- * fix-doc-refs.ts
- * 自动校正文档中的跨文档错路径（P1 任务）
+ * @module scripts/fix-doc-refs
+ * @description 文档-代码断裂引用自动修复脚本
  *
- * 配套：scripts/audit-doc-integrity.ts v1.2
- * 消费其 "missing-file-path" 类警告（活跃文档的 .md 链接断链 + 历史/裸路径错引用），
- * 通过以下策略定位正确目标文件并将引用改写为正确的相对路径：
- *   1. basename 唯一匹配：绝大多数错路径只是目录迁移/改名，文件名（含扩展名）保持不变
- *   2. 无扩展名时回退补 .md 再匹配
- *   3. 同名多候选：用原引用中的目录线索（dirname）二次过滤，仍 >1 则判为歧义（不自动改）
- *   4. basename 也无匹配：模糊相似度（Levenshtein ratio ≥ 阈值）兜底，唯一高相似则采用
- *
- * 安全策略：
- *   - 默认 dry-run：仅报告，绝不写盘
- *   - --apply 才真正写盘；写前对每个被改文件生成 `.fixbak` 旁位备份（--no-backup 关闭）
- *   - 仅当目标「唯一确定」时才自动改写；歧义 / 无匹配 → 列入待人工清单
- *
- * 用法：
- *   node ./node_modules/tsx/dist/cli.mjs scripts/fix-doc-refs.ts [选项]
- *   选项：
- *     --apply            真正写盘（默认 dry-run）
- *     --scope <s>        active(默认) | historical | all  扫描范围
- *     --threshold <0-1>  模糊匹配相似度阈值（默认 0.8）
- *     --report <path>    输出 JSON 报告到指定路径
- *     --no-backup        写盘时不生成 .fixbak 备份
- *     --help             显示帮助
- *
- * 退出码：0（本脚本为修复辅助工具，不阻断；即使有未解决项也返回 0）
- * 版本：v1.0
+ * 策略：
+ * 1. 复用 audit-doc-code-references.ts 的审计能力
+ * 2. 对每个断裂引用，按 basename 在 docs/ / src/ / scripts/ 中模糊匹配真实文件
+ * 3. 唯一匹配时自动替换；多匹配/无匹配时汇总人工复核
+ * 4. 支持 --dry-run（默认）和 --apply 两种模式
+ * 5. v1.1 新增目录引用（以 / 结尾）的自动匹配修复
  */
 
-import {
-  existsSync,
-  readFileSync,
-  readdirSync,
-  statSync,
-  writeFileSync,
-  copyFileSync,
-  mkdirSync,
-} from 'node:fs'
-import { join, resolve, dirname, relative, basename, extname } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { readFileSync, writeFileSync, existsSync, statSync } from 'node:fs'
+import { dirname, join, relative, resolve, basename, extname } from 'node:path'
+import { globSync } from 'glob'
+import { audit, type Reference, type AuditResult } from './audit/audit-doc-code-references.js'
 
-// ============================================================
-// 路径与常量（与 audit-doc-integrity.ts v1.2 对齐）
-// ============================================================
+const args = process.argv.slice(2)
+const isDryRun = !args.includes('--apply')
+const scope = args.find(a => a.startsWith('--scope='))?.replace('--scope=', '') || 'all'
+const sourcePrefix = args.find(a => a.startsWith('--source-prefix='))?.replace('--source-prefix=', '') || ''
+const limit = parseInt(args.find(a => a.startsWith('--limit='))?.replace('--limit=', '') || '0', 10) || Infinity
+const usePathMap = args.includes('--use-path-map')
+const PROJECT_ROOT = resolve(process.cwd())
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
-const ROOT = resolve(__dirname, '..')
-
-const DOCS_DIR = join(ROOT, 'docs')
-const PROMPTS_DIR = join(ROOT, 'prompts')
-
-const ROOT_DOC_FILES = [
-  'AGENTS.md',
-  'ARCHITECTURE.md',
-  'CHANGELOG.md',
-  'DATA_DEFINITION.md',
-  'README.md',
-]
-
-const PATH_PREFIXES = [
-  'src/',
-  'scripts/',
-  'docs/',
-  'prompts/',
-  'e2e/',
-  'public/',
-  'design-tokens/',
-  'file-management-system/',
-  '.husky/',
-  '.github/',
-  'plugins/',
-  'packages/',
-]
-
-const ROOT_FILE_NAMES = [
-  'package.json',
-  'tsconfig.json',
-  'tsconfig.test.json',
-  'tsconfig.api.json',
-  'vite.config.ts',
-  'vite.config.js',
-  'tailwind.config.ts',
-  'tailwind.config.js',
-  'postcss.config.js',
-  'postcss.config.ts',
-  'eslint.config.js',
-  'eslint.config.ts',
-  'eslint.colors.config.js',
-]
-
-// 文档中故意引用的已废弃/占位/通配路径 → 跳过
-const IGNORED_FILE_PATHS = new Set(['src/utils/'])
-
-// 历史文档模式：其中的漂移通常不再修复（写盘时默认跳过，除非 --scope all）
-const HISTORICAL_DOC_PATTERNS = [
-  /^CHANGELOG\.md$/,
-  /^docs\/reports\//,
-  /^docs\/audit\//,
-  /^docs\/04-testing\/audit-reports\//,
-  /^docs\/07-archive\//,
-  /^docs\/[^/]+\/DEPRECATED_/,
-  /^docs\/00-meta\/.*-report\.md$/,
-  /^docs\/00-meta\/23.*\.md$/,
-]
-
-// 构建目标注册表时跳过的重型 / 无关目录
-const EXCLUDE_DIRS = new Set([
-  'node_modules',
-  'dist',
-  'build',
-  'coverage',
-  '.git',
-  '.workbuddy',
-])
-
-// ============================================================
-// 类型
-// ============================================================
-
-type Scope = 'active' | 'historical' | 'all'
-
-interface ExtractedRef {
-  /** 源文件中逐字出现的引用片段（含可能的 ./ 前缀与 #anchor） */
-  original: string
-  /** 归一化后的引用（去 ./、../、#anchor），用于匹配 */
-  normalized: string
-  line: number
-  kind: 'md-link' | 'inline-code' | 'bare-path'
-  /** 从 original 中析出的锚点（不含 #），无则为 '' */
-  anchor: string
-  /** 从 original 中析出的行号引用（不含 :，形如 123），无则为 '' */
-  lineRef: string
+interface PathMapConfig {
+  codePathMap: Record<string, string>
+  docPathMap: Record<string, string>
 }
 
-interface FixItem {
-  file: string
-  line: number
-  kind: ExtractedRef['kind']
-  oldRef: string
-  newRef: string
-}
+let pathMap: PathMapConfig | null = null
 
-interface AmbiguousItem {
-  file: string
-  line: number
-  oldRef: string
-  candidates: string[]
-}
-
-interface NotFoundItem {
-  file: string
-  line: number
-  oldRef: string
-}
-
-interface ScanResult {
-  scannedFiles: number
-  brokenRefs: number
-  fixed: FixItem[]
-  ambiguous: AmbiguousItem[]
-  notFound: NotFoundItem[]
-  skipped: number
-}
-
-// ============================================================
-// 工具函数
-// ============================================================
-
-function getLineNumber(content: string, index: number): number {
-  return content.slice(0, index).split('\n').length
-}
-
-function isExternalUrl(p: string): boolean {
-  return /^https?:\/\//i.test(p) || /^mailto:/i.test(p) || p.startsWith('#')
-}
-
-function normalizePath(p: string): string {
-  return p.replace(/^\.\//, '').replace(/^\.\.\//, '').replace(/#.*$/, '')
-}
-
-function fileExistsFromRoot(rel: string): boolean {
-  if (!rel) return false
-  return existsSync(join(ROOT, rel))
-}
-
-function dirExistsFromRoot(rel: string): boolean {
-  if (!rel) return false
-  const full = join(ROOT, rel)
-  return existsSync(full) && statSync(full).isDirectory()
-}
-
-function isHistoricalDoc(filePath: string): boolean {
-  return HISTORICAL_DOC_PATTERNS.some((re) => re.test(filePath))
-}
-
-// ============================================================
-// 目标文件注册表（basename → 相对路径列表）
-// ============================================================
-
-const basenameMap = new Map<string, string[]>()
-const dirBasenameMap = new Map<string, string[]>()
-
-function registerFile(absPath: string): void {
-  const rel = relative(ROOT, absPath).replace(/\\/g, '/')
-  const base = basename(rel)
-  const list = basenameMap.get(base) ?? []
-  list.push(rel)
-  basenameMap.set(base, list)
-}
-
-function registerDir(absPath: string): void {
-  const rel = relative(ROOT, absPath).replace(/\\/g, '/')
-  if (!rel) return
-  const base = basename(rel)
-  const list = dirBasenameMap.get(base) ?? []
-  list.push(rel)
-  dirBasenameMap.set(base, list)
-}
-
-function walkRegistry(dir: string): void {
-  if (!existsSync(dir)) return
-  let entries
+function loadPathMap(): PathMapConfig | null {
+  if (pathMap) return pathMap
+  const mapPath = join(PROJECT_ROOT, 'scripts', 'config', 'doc-ref-path-map.json')
+  if (!existsSync(mapPath)) return null
   try {
-    entries = readdirSync(dir, { withFileTypes: true })
+    const content = readFileSync(mapPath, 'utf-8')
+    pathMap = JSON.parse(content)
+    return pathMap
   } catch {
-    return
-  }
-  for (const entry of entries) {
-    if (entry.name === '.git' || entry.name === 'node_modules') continue
-    const full = join(dir, entry.name)
-    if (entry.isDirectory()) {
-      if (EXCLUDE_DIRS.has(entry.name)) continue
-      registerDir(full)
-      walkRegistry(full)
-    } else if (entry.isFile()) {
-      registerFile(full)
-    }
+    return null
   }
 }
 
-function buildRegistry(): void {
-  basenameMap.clear()
-  dirBasenameMap.clear()
-  for (const prefix of PATH_PREFIXES) {
-    walkRegistry(join(ROOT, prefix))
-  }
-  for (const name of ROOT_FILE_NAMES) {
-    if (existsSync(join(ROOT, name))) registerFile(join(ROOT, name))
-  }
-}
+function lookupPathMap(target: string, ref: Reference): string | null {
+  if (!usePathMap) return null
+  const map = loadPathMap()
+  if (!map) return null
 
-// ============================================================
-// 字符串相似度（Levenshtein ratio）
-// ============================================================
+  const targetMap = ref.type === 'doc-to-code' ? map.codePathMap : map.docPathMap
+  const normalizedTarget = normalizePath(target)
 
-function levenshtein(a: string, b: string): number {
-  const m = a.length
-  const n = b.length
-  if (m === 0) return n
-  if (n === 0) return m
-  let prevRow = new Array<number>(n + 1)
-  for (let j = 0; j <= n; j++) prevRow[j] = j
-  for (let i = 1; i <= m; i++) {
-    let prev = prevRow[0]!
-    prevRow[0] = i
-    for (let j = 1; j <= n; j++) {
-      const tmp = prevRow[j]!
-      const cost = a[i - 1] === b[j - 1] ? 0 : 1
-      prevRow[j] = Math.min(prevRow[j]! + 1, prevRow[j - 1]! + 1, prev + cost)
-      prev = tmp
-    }
-  }
-  return prevRow[n]!
-}
-
-function similarity(a: string, b: string): number {
-  const max = Math.max(a.length, b.length)
-  if (max === 0) return 1
-  return 1 - levenshtein(a, b) / max
-}
-
-// ============================================================
-// 引用提取（与 audit-doc-integrity.ts 的提取口径一致）
-// ============================================================
-
-function escapeRegex(s: string): string {
-  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-}
-
-function isIgnoredRef(normalized: string): boolean {
-  if (!normalized) return true
-  if (isExternalUrl(normalized)) return true
-  if (normalized.startsWith('node_modules/')) return true
-  if (IGNORED_FILE_PATHS.has(normalized)) return true
-  // glob 模式（含 * 或 ?）不是具体路径，跳过
-  if (normalized.includes('*') || normalized.includes('?')) return true
-  // 版本号
-  if (/^\d+\.\d+\.\d+/.test(normalized)) return true
-  const hasKnownPrefix = PATH_PREFIXES.some((p) => normalized.startsWith(p))
-  const isRootFile = ROOT_FILE_NAMES.includes(normalized)
-  if (!hasKnownPrefix && !isRootFile) return true
-  return false
-}
-
-function extractRefs(content: string): ExtractedRef[] {
-  const refs: ExtractedRef[] = []
-  const seen = new Set<string>()
-
-  const push = (original: string, index: number, kind: ExtractedRef['kind']): void => {
-    const hashIdx = original.indexOf('#')
-    let pathPart = hashIdx >= 0 ? original.slice(0, hashIdx) : original
-    const anchor = hashIdx >= 0 ? original.slice(hashIdx + 1) : ''
-    // 剥离尾部行号引用（形如 file.ts:123），改写后补回，避免模糊匹配误吞行号
-    const lineMatch = pathPart.match(/:(\d+)$/)
-    let lineRef = ''
-    if (lineMatch) {
-      lineRef = `:${lineMatch[1]}`
-      pathPart = pathPart.slice(0, lineMatch.index)
-    }
-    const normalized = normalizePath(pathPart)
-    if (isIgnoredRef(normalized)) return
-    const key = `${kind}:${normalized}`
-    if (seen.has(key)) return
-    seen.add(key)
-    refs.push({ original, normalized, line: getLineNumber(content, index), kind, anchor, lineRef })
+  if (targetMap[normalizedTarget]) {
+    return targetMap[normalizedTarget]
   }
 
-  // 1) Markdown 链接 [text](path)
-  const mdLinkRegex = /\[[^\]]*\]\(([^)]+)\)/g
-  let m: RegExpExecArray | null
-  while ((m = mdLinkRegex.exec(content)) !== null) {
-    const path = m[1]!
-    if (!path.startsWith('http') && !path.startsWith('mailto:') && !path.startsWith('#')) {
-      push(path, m.index, 'md-link')
+  for (const [oldPrefix, newPrefix] of Object.entries(targetMap)) {
+    if (oldPrefix.endsWith('/') && normalizedTarget.startsWith(oldPrefix)) {
+      const remainder = normalizedTarget.substring(oldPrefix.length)
+      return newPrefix + remainder
     }
   }
 
-  // 2) 行内代码 `path`
-  const inlineCodeRegex = /`([^`]+)`/g
-  while ((m = inlineCodeRegex.exec(content)) !== null) {
-    const code = m[1]!
-    if (
-      code.includes('/') &&
-      !code.startsWith('npm ') &&
-      !code.startsWith('npx ') &&
-      !/^https?:\/\//.test(code) &&
-      !/^v?\d+\.\d+\.\d+/.test(code)
-    ) {
-      push(code, m.index, 'inline-code')
-    }
-  }
-
-  // 3) 裸路径（以已知前缀或根文件名开头）
-  const prefixAlt = PATH_PREFIXES.map(escapeRegex).join('|')
-  const rootAlt = ROOT_FILE_NAMES.map(escapeRegex).join('|')
-  const bareSource = `(?:${prefixAlt}|${rootAlt})[a-zA-Z0-9/._-]*`
-  const bareRegex = new RegExp(bareSource, 'g')
-  const boundaryRe = /[\s"'([]/
-  let bm: RegExpExecArray | null
-  while ((bm = bareRegex.exec(content)) !== null) {
-    const start = bm.index
-    const before = start > 0 ? content[start - 1]! : ''
-    if (start > 0 && !boundaryRe.test(before)) continue
-    push(bm[0]!, bm.index, 'bare-path')
-  }
-
-  return refs
-}
-
-// ============================================================
-// 存在性判定 + 解析
-// ============================================================
-
-function refExists(normalized: string): boolean {
-  if (normalized.endsWith('/')) return dirExistsFromRoot(normalized)
-  if (fileExistsFromRoot(normalized)) return true
-  if (!/\.[^/]+$/.test(normalized)) return fileExistsFromRoot(`${normalized}.md`)
-  return false
-}
-
-interface Resolved {
-  status: 'fixed' | 'ambiguous' | 'notfound'
-  target?: string
-  candidates?: string[]
-}
-
-function fuzzyFind(base: string, threshold: number): string | null {
-  let bestKey: string | null = null
-  let bestScore = 0
-  for (const key of basenameMap.keys()) {
-    const s = similarity(base, key)
-    if (s > bestScore) {
-      bestScore = s
-      bestKey = key
-    }
-  }
-  if (bestKey && bestScore >= threshold) {
-    const list = basenameMap.get(bestKey)!
-    if (list.length === 1) return list[0]!
-  }
   return null
 }
 
-function resolveRef(normalized: string, threshold: number, fuzzy: boolean): Resolved {
-  const base = basename(normalized)
-  const triedBases = new Set<string>([base])
-  if (!extname(base)) triedBases.add(`${base}.md`)
+interface FixCandidate {
+  ref: Reference
+  suggestion: string | null
+  reason: 'unique' | 'multi' | 'none' | 'ignored'
+}
 
-  let candidates: string[] = []
-  for (const b of triedBases) {
-    const list = basenameMap.get(b)
-    if (list) candidates.push(...list)
-  }
-  candidates = [...new Set(candidates)]
+const CODE_DIRS = ['src', 'scripts']
+const DOC_DIRS = ['docs']
 
-  if (candidates.length === 0) {
-    if (!fuzzy) return { status: 'notfound' }
-    const fz = fuzzyFind(base, threshold)
-    return fz ? { status: 'fixed', target: fz } : { status: 'notfound' }
-  }
+function normalizePath(p: string): string {
+  return p.replace(/\\/g, '/')
+}
 
-  if (candidates.length === 1) {
-    return { status: 'fixed', target: candidates[0]! }
-  }
+function getSearchDirs(ref: Reference): string[] {
+  if (ref.type === 'doc-to-code') return CODE_DIRS
+  if (ref.type === 'code-to-doc') return DOC_DIRS
+  if (ref.type === 'doc-to-doc') return DOC_DIRS
+  return []
+}
 
-  // 同名多候选 → 用原引用的目录线索二次过滤
-  const hintDir = dirname(normalized).replace(/^\.\//, '')
-  const preferred = candidates.filter((c) => hintDir && c.includes(hintDir))
-  if (preferred.length === 1) {
-    return { status: 'fixed', target: preferred[0]! }
-  }
+function isPattern(target: string): boolean {
+  return target.includes('*') || target.includes('{') || target.includes('}') || target.includes('?')
+}
 
-  // 目录线索无果 → 尝试模糊兜底（针对每个候选的 basename）
-  if (fuzzy) {
-    const fz = fuzzyFind(base, threshold)
-    if (fz && candidates.includes(fz)) {
-      return { status: 'fixed', target: fz }
+function searchRealFiles(target: string, ref: Reference): string[] {
+  if (isPattern(target)) return []
+
+  const isDirRef = target.endsWith('/')
+  const targetName = basename(target)
+  const baseNoExt = targetName.replace(/\.(ts|tsx|md|js|jsx)$/, '')
+  const searchDirs = getSearchDirs(ref)
+  if (searchDirs.length === 0) return []
+
+  const roots = searchDirs.map(d => join(PROJECT_ROOT, d))
+  const found: string[] = []
+
+  for (const root of roots) {
+    if (!existsSync(root)) continue
+
+    if (isDirRef) {
+      // 目录引用：优先查找同名目录
+      const dirPattern = normalizePath(join(root, '**', targetName))
+      const dirMatches = globSync(dirPattern, { nodir: false, absolute: true })
+        .filter(p => existsSync(p) && statSync(p).isDirectory())
+      found.push(...dirMatches)
+    } else {
+      const pattern = normalizePath(join(root, '**', baseNoExt + '*'))
+      const matches = globSync(pattern, { nodir: false, absolute: true })
+        .filter(p => p.endsWith('.md') || p.endsWith('.ts') || p.endsWith('.tsx') || p.endsWith('.js'))
+      found.push(...matches)
     }
   }
 
-  return { status: 'ambiguous', candidates }
+  // 补充：项目根目录下的核心文档（如 AGENTS.md / README.md / CHANGELOG.md）
+  const rootCandidates = ['AGENTS.md', 'README.md', 'CHANGELOG.md', 'LICENSE', 'CONTRIBUTING.md']
+  if (rootCandidates.includes(targetName)) {
+    const rootPath = join(PROJECT_ROOT, targetName)
+    if (existsSync(rootPath)) {
+      found.push(rootPath)
+    }
+  }
+
+  if (isDirRef) {
+    // 目录引用：优先 basename 完全相等
+    const exactDir = found.filter(p => basename(p) === targetName)
+    if (exactDir.length > 0) return exactDir
+    return found
+  }
+
+  // 优先：basename 完全相等
+  const exactBasename = found.filter(p => basename(p) === targetName)
+  if (exactBasename.length > 0) return exactBasename
+
+  // 其次：去掉扩展名后 basename 相等
+  const noExtMatches = found.filter(p => basename(p).replace(/\.(ts|tsx|md|js|jsx)$/, '') === baseNoExt)
+  if (noExtMatches.length > 0) return noExtMatches
+
+  return found
 }
 
-// 计算从引用方文件目录到目标文件的相对路径（带 ./ 前缀规范化）
-function computeRelativeRef(fromFileRel: string, targetRel: string): string {
-  const fromDir = dirname(fromFileRel)
-  let rel = relative(fromDir, targetRel).replace(/\\/g, '/')
-  if (!rel.startsWith('.') && !/^[A-Za-z]:/.test(rel)) {
-    rel = `./${rel}`
+function buildSuggestion(ref: Reference, realPath: string): string {
+  const isDirRef = ref.target.endsWith('/')
+  const relFromRoot = normalizePath(relative(PROJECT_ROOT, realPath)) + (isDirRef ? '/' : '')
+
+  if (ref.type === 'code-to-doc' || ref.type === 'doc-to-code') {
+    // 代码↔文档引用：使用相对项目根目录的路径，便于跨文件定位
+    return relFromRoot
   }
+
+  // 文档↔文档引用：使用相对源文件的路径，适配 Markdown 链接
+  const sourceDir = dirname(resolve(PROJECT_ROOT, ref.source))
+  let rel = relative(sourceDir, realPath)
+  rel = normalizePath(rel) + (isDirRef ? '/' : '')
+  if (!rel.startsWith('.')) rel = './' + rel
   return rel
 }
 
-// ============================================================
-// 改写应用（按行，最长优先，避免子串误替）
-// ============================================================
+function generateCandidates(result: AuditResult): FixCandidate[] {
+  const candidates: FixCandidate[] = []
 
-interface LineFix {
-  original: string
-  newFull: string
-}
-
-function applyFixes(content: string, fixes: FixItem[]): string {
-  // 按 file:line 去重（同原始片段只改一次）
-  const uniq = new Map<string, FixItem>()
-  for (const f of fixes) {
-    const key = `${f.file}#${f.line}#${f.oldRef}`
-    if (!uniq.has(key)) uniq.set(key, f)
-  }
-
-  const byLine = new Map<number, LineFix[]>()
-  for (const f of uniq.values()) {
-    const lineFixes = byLine.get(f.line) ?? []
-    lineFixes.push({ original: f.oldRef, newFull: f.newRef })
-    byLine.set(f.line, lineFixes)
-  }
-
-  const lines = content.split('\n')
-  for (const [lineNo, lineFixes] of byLine) {
-    if (lineNo < 1 || lineNo > lines.length) continue
-    // 最长优先：先替换更长的原始片段，避免短片段在长片段内部被提前替换
-    lineFixes.sort((a, b) => b.original.length - a.original.length)
-    let line = lines[lineNo - 1]!
-    for (const lf of lineFixes) {
-      if (!line.includes(lf.original)) continue
-      line = line.replace(lf.original, lf.newFull)
+  for (const ref of result.brokenReferences) {
+    if (isPattern(ref.target)) {
+      candidates.push({ ref, suggestion: null, reason: 'ignored' })
+      continue
     }
-    lines[lineNo - 1] = line
-  }
-  return lines.join('\n')
-}
 
-// ============================================================
-// 收集待扫描文档
-// ============================================================
+    const isBasename = !ref.target.includes('/')
+    const mappedPath = lookupPathMap(ref.target, ref)
 
-function collectDocFiles(): string[] {
-  const files: string[] = []
-  const walk = (dir: string): void => {
-    if (!existsSync(dir)) return
-    for (const entry of readdirSync(dir, { withFileTypes: true })) {
-      const full = join(dir, entry.name)
-      if (entry.isDirectory()) walk(full)
-      else if (entry.name.endsWith('.md')) files.push(full)
-    }
-  }
-  walk(DOCS_DIR)
-  walk(PROMPTS_DIR)
-  for (const name of ROOT_DOC_FILES) {
-    const full = join(ROOT, name)
-    if (existsSync(full)) files.push(full)
-  }
-  const husky = join(ROOT, '.husky', 'pre-commit')
-  if (existsSync(husky)) files.push(husky)
-  return [...new Set(files)].sort()
-}
-
-// ============================================================
-// 扫描主逻辑
-// ============================================================
-
-function scan(scope: Scope, threshold: number, fuzzy: boolean): ScanResult {
-  const result: ScanResult = {
-    scannedFiles: 0,
-    brokenRefs: 0,
-    fixed: [],
-    ambiguous: [],
-    notFound: [],
-    skipped: 0,
-  }
-
-  const docFiles = collectDocFiles()
-  for (const absFile of docFiles) {
-    const relFile = relative(ROOT, absFile).replace(/\\/g, '/')
-    const historical = isHistoricalDoc(relFile)
-    if (scope === 'active' && historical) continue
-    if (scope === 'historical' && !historical) continue
-
-    const content = readFileSync(absFile, 'utf-8')
-    result.scannedFiles++
-    const refs = extractRefs(content)
-
-    for (const ref of refs) {
-      if (refExists(ref.normalized)) continue // 引用有效，跳过
-      result.brokenRefs++
-      const resolved = resolveRef(ref.normalized, threshold, fuzzy)
-      const newRel = resolved.target
-        ? computeRelativeRef(relFile, resolved.target)
-        : ''
-      const newRef = newRel
-        ? `${newRel}${ref.lineRef}${ref.anchor ? `#${ref.anchor}` : ''}`
-        : ''
-
-      if (resolved.status === 'fixed' && resolved.target) {
-        result.fixed.push({
-          file: relFile,
-          line: ref.line,
-          kind: ref.kind,
-          oldRef: ref.original,
-          newRef,
-        })
-      } else if (resolved.status === 'ambiguous') {
-        result.ambiguous.push({
-          file: relFile,
-          line: ref.line,
-          oldRef: ref.original,
-          candidates: resolved.candidates ?? [],
-        })
+    if (mappedPath) {
+      const isDirRef = ref.target.endsWith('/')
+      const fullMappedPath = resolve(PROJECT_ROOT, mappedPath)
+      if (existsSync(fullMappedPath)) {
+        const suggestion = buildSuggestion(ref, fullMappedPath)
+        candidates.push({ ref, suggestion, reason: 'unique' })
+        continue
       } else {
-        result.notFound.push({
-          file: relFile,
-          line: ref.line,
-          oldRef: ref.original,
+        const mappedDir = isDirRef ? mappedPath : dirname(mappedPath)
+        const mappedDirFull = resolve(PROJECT_ROOT, mappedDir)
+        if (existsSync(mappedDirFull) && statSync(mappedDirFull).isDirectory()) {
+          candidates.push({ ref, suggestion: mappedPath, reason: 'unique' })
+          continue
+        }
+      }
+    }
+
+    if (isBasename) {
+      candidates.push({ ref, suggestion: null, reason: 'ignored' })
+      continue
+    }
+
+    const matches = searchRealFiles(ref.target, ref)
+    if (matches.length === 0) {
+      candidates.push({ ref, suggestion: null, reason: 'none' })
+    } else if (matches.length === 1) {
+      const suggestion = buildSuggestion(ref, matches[0])
+      candidates.push({ ref, suggestion, reason: 'unique' })
+    } else {
+      const targetParts = ref.target.split('/').filter(Boolean)
+      const best = matches
+        .map(p => {
+          const rel = normalizePath(relative(PROJECT_ROOT, p))
+          const parts = rel.split('/').filter(Boolean)
+          let score = 0
+          for (let i = 0; i < Math.min(targetParts.length, parts.length); i++) {
+            if (targetParts[i] === parts[i]) score += 10
+            else if (targetParts[i].toLowerCase() === parts[i].toLowerCase()) score += 5
+          }
+          return { path: p, score }
         })
-      }
+        .sort((a, b) => b.score - a.score)[0]
+      const suggestion = buildSuggestion(ref, best.path)
+      candidates.push({ ref, suggestion, reason: 'multi' })
     }
   }
-  return result
+
+  return candidates
 }
 
-// ============================================================
-// 写盘
-// ============================================================
+function applyFix(candidate: FixCandidate): void {
+  if (!candidate.suggestion) return
+  const filePath = resolve(PROJECT_ROOT, candidate.ref.source)
+  const content = readFileSync(filePath, 'utf-8')
+  const lines = content.split('\n')
+  const lineIndex = candidate.ref.line - 1
+  if (lineIndex < 0 || lineIndex >= lines.length) return
 
-function applyWrites(result: ScanResult, makeBackup: boolean): string[] {
-  // 按文件聚合并一次性重写，避免同一文件多次 IO
-  const byFile = new Map<string, FixItem[]>()
-  for (const f of result.fixed) {
-    const arr = byFile.get(f.file) ?? []
-    arr.push(f)
-    byFile.set(f.file, arr)
-  }
+  const oldTarget = candidate.ref.target
+  const newTarget = candidate.suggestion
 
-  const written: string[] = []
-  for (const [relFile, fixes] of byFile) {
-    const abs = join(ROOT, relFile)
-    const content = readFileSync(abs, 'utf-8')
-    const updated = applyFixes(content, fixes)
-    if (updated === content) continue
-    if (makeBackup) {
-      const bak = `${abs}.fixbak`
-      if (!existsSync(bak)) copyFileSync(abs, bak)
-    }
-    writeFileSync(abs, updated, 'utf-8')
-    written.push(relFile)
-  }
-  return written
-}
+  // 使用转义后的目标进行替换，避免特殊字符问题
+  const escapedOld = oldTarget.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  lines[lineIndex] = lines[lineIndex].replace(new RegExp(escapedOld, 'g'), newTarget)
 
-// ============================================================
-// 报告
-// ============================================================
-
-function printSummary(result: ScanResult, scope: Scope, apply: boolean, fuzzy: boolean): void {
-  const mode = apply ? 'APPLY（已写盘）' : 'DRY-RUN（仅预览）'
-  console.log('══════════════════════════════════════════════════════')
-  console.log(`  fix-doc-refs v1.0  ·  scope=${scope}  ·  ${mode}  ·  ${fuzzy ? 'fuzzy=on' : 'fuzzy=off'}`)
-  console.log('══════════════════════════════════════════════════════')
-  console.log(`扫描文档数      : ${result.scannedFiles}`)
-  console.log(`断链引用总数    : ${result.brokenRefs}`)
-  console.log(`✅ 可自动修复   : ${result.fixed.length}`)
-  console.log(`⚠️  歧义(待人工) : ${result.ambiguous.length}`)
-  console.log(`❌ 无匹配(待人工): ${result.notFound.length}`)
-  console.log('────────────────────────────────────────────────────────')
-
-  if (result.fixed.length > 0) {
-    console.log('\n可自动修复（预览 old → new）：')
-    const byFile = new Map<string, FixItem[]>()
-    for (const f of result.fixed) {
-      const arr = byFile.get(f.file) ?? []
-      arr.push(f)
-      byFile.set(f.file, arr)
-    }
-    for (const [file, items] of byFile) {
-      console.log(`  📄 ${file}`)
-      for (const it of items.slice(0, 30)) {
-        console.log(`     L${it.line} [${it.kind}] ${it.oldRef}  →  ${it.newRef}`)
-      }
-      if (items.length > 30) console.log(`     ... 还有 ${items.length - 30} 处`)
-    }
-  }
-
-  if (result.ambiguous.length > 0) {
-    console.log('\n歧义（同名多候选，未自动修改，需人工确认）：')
-    for (const a of result.ambiguous.slice(0, 20)) {
-      console.log(`  📄 ${a.file}:${a.line}  ${a.oldRef}`)
-      for (const c of a.candidates.slice(0, 5)) console.log(`       ↳ ${c}`)
-      if (a.candidates.length > 5) console.log(`       ... 还有 ${a.candidates.length - 5} 个候选`)
-    }
-    if (result.ambiguous.length > 20)
-      console.log(`  ... 还有 ${result.ambiguous.length - 20} 处歧义`)
-  }
-
-  if (result.notFound.length > 0) {
-    console.log('\n无匹配（注册表中找不到对应文件，需人工确认）：')
-    for (const n of result.notFound.slice(0, 20)) {
-      console.log(`  📄 ${n.file}:${n.line}  ${n.oldRef}`)
-    }
-    if (result.notFound.length > 20)
-      console.log(`  ... 还有 ${result.notFound.length - 20} 处`)
-  }
-}
-
-function writeReport(result: ScanResult, reportPath: string, scope: Scope, apply: boolean): void {
-  const payload = {
-    generatedAt: new Date().toISOString(),
-    script: 'fix-doc-refs.ts',
-    version: '1.0',
-    scope,
-    mode: apply ? 'apply' : 'dry-run',
-    summary: {
-      scannedFiles: result.scannedFiles,
-      brokenRefs: result.brokenRefs,
-      fixed: result.fixed.length,
-      ambiguous: result.ambiguous.length,
-      notFound: result.notFound.length,
-    },
-    fixed: result.fixed,
-    ambiguous: result.ambiguous,
-    notFound: result.notFound,
-  }
-  const abs = resolve(reportPath)
-  const dir = dirname(abs)
-  if (!existsSync(dir)) {
-    const parts = relative(ROOT, dir).split('/').filter(Boolean)
-    let cur = ROOT
-    for (const p of parts) {
-      cur = join(cur, p)
-      if (!existsSync(cur)) mkdirSync(cur)
-    }
-  }
-  writeFileSync(abs, JSON.stringify(payload, null, 2), 'utf-8')
-  console.log(`\n📝 JSON 报告已写出: ${reportPath}`)
-}
-
-// ============================================================
-// CLI
-// ============================================================
-
-function showHelp(): void {
-  console.log(`fix-doc-refs.ts — 自动校正文档跨文档错路径（P1）
-
-用法:
-  node ./node_modules/tsx/dist/cli.mjs scripts/fix-doc-refs.ts [选项]
-
-选项:
-  --apply            真正写盘（默认 dry-run，仅预览）
-  --scope <s>        active(默认) | historical | all
-  --threshold <0-1> 模糊匹配相似度阈值（默认 0.8）
-  --no-fuzzy        关闭模糊匹配，仅做 basename 精确匹配（最保守）
-  --report <path>    输出 JSON 报告到指定路径
-  --no-backup        写盘时不生成 .fixbak 备份
-  --help             显示本帮助
-
-安全说明:
-  - 默认仅预览，绝不写盘
-  - 仅当目标「唯一确定」时才自动改写；歧义 / 无匹配列入待人工清单
-  - --apply 写前为每个被改文件生成 .fixbak 旁位备份
-`)
-}
-
-function parseArgs(argv: string[]): {
-  apply: boolean
-  scope: Scope
-  threshold: number
-  report: string | null
-  noBackup: boolean
-  noFuzzy: boolean
-  help: boolean
-} {
-  const out = {
-    apply: false,
-    scope: 'active' as Scope,
-    threshold: 0.8,
-    report: null as string | null,
-    noBackup: false,
-    noFuzzy: false,
-    help: false,
-  }
-  for (let i = 0; i < argv.length; i++) {
-    const a = argv[i]!
-    if (a === '--apply') out.apply = true
-    else if (a === '--no-backup') out.noBackup = true
-    else if (a === '--no-fuzzy') out.noFuzzy = true
-    else if (a === '--help' || a === '-h') out.help = true
-    else if (a === '--scope') out.scope = (argv[++i] ?? 'active') as Scope
-    else if (a === '--threshold') out.threshold = Number(argv[++i] ?? '0.8')
-    else if (a === '--report') out.report = argv[++i] ?? null
-  }
-  return out
+  writeFileSync(filePath, lines.join('\n'), 'utf-8')
 }
 
 function main(): void {
-  const argv = process.argv.slice(2)
-  const args = parseArgs(argv)
-  if (args.help) {
-    showHelp()
-    process.exit(0)
+  console.log(`[${new Date().toISOString()}] 开始修复文档-代码断裂引用...`)
+  console.log(`模式: ${isDryRun ? 'DRY-RUN（预览）' : 'APPLY（应用）'}`)
+  console.log(`范围: ${scope}`)
+
+  const result = audit()
+  let targetRefs = result.brokenReferences
+  if (scope !== 'all') {
+    targetRefs = targetRefs.filter(r => r.type === scope)
+  }
+  if (sourcePrefix) {
+    targetRefs = targetRefs.filter(r => normalizePath(r.source).startsWith(normalizePath(sourcePrefix)))
   }
 
-  buildRegistry()
-  const result = scan(args.scope, args.threshold, !args.noFuzzy)
-  printSummary(result, args.scope, args.apply, !args.noFuzzy)
+  console.log(`待修复断裂引用: ${targetRefs.length}`)
+  if (limit !== Infinity) {
+    console.log(`本次限制处理: ${limit} 条`)
+  }
 
-  if (args.apply) {
-    const written = applyWrites(result, !args.noBackup)
-    console.log(`\n💾 已写盘文件数: ${written.length}`)
-    if (written.length > 0 && !args.noBackup) {
-      console.log('   每个被改文件已生成 .fixbak 备份；如需回滚：git checkout <file> 或恢复 .fixbak')
+  // 构造一个只包含目标引用的结果对象
+  const scopedResult: AuditResult = {
+    ...result,
+    brokenReferences: targetRefs,
+    totalReferences: targetRefs.length,
+    validReferences: [],
+    summary: {
+      docToCode: { total: 0, broken: 0 },
+      codeToDoc: { total: 0, broken: 0 },
+      docToDoc: { total: 0, broken: 0 }
     }
-  } else {
-    console.log('\n（dry-run 模式，未做任何修改。加 --apply 才真正写盘）')
   }
 
-  if (args.report) {
-    writeReport(result, args.report, args.scope, args.apply)
+  const candidates = generateCandidates(scopedResult)
+  const unique = candidates.filter(c => c.reason === 'unique')
+  const multi = candidates.filter(c => c.reason === 'multi')
+  const none = candidates.filter(c => c.reason === 'none')
+  const ignored = candidates.filter(c => c.reason === 'ignored')
+
+  console.log(`\n修复建议统计:`)
+  console.log(`  唯一匹配可自动修复: ${unique.length}`)
+  console.log(`  多匹配需人工复核: ${multi.length}`)
+  console.log(`  无匹配需人工补充: ${none.length}`)
+  console.log(`  已忽略（通配符/纯 basename）: ${ignored.length}`)
+
+  if (unique.length > 0) {
+    console.log(`\n${isDryRun ? '【预览】' : '【应用】'}唯一匹配修复列表（前 20 条）:`)
+    for (const c of unique.slice(0, 20)) {
+      console.log(`  ${c.ref.source}:${c.ref.line}`)
+      console.log(`    ${c.ref.target} → ${c.suggestion}`)
+    }
+    if (unique.length > 20) {
+      console.log(`    ... 还有 ${unique.length - 20} 条 ...`)
+    }
   }
 
-  process.exit(0)
+  if (multi.length > 0) {
+    console.log(`\n多匹配待复核列表（前 10 条）:`)
+    for (const c of multi.slice(0, 10)) {
+      console.log(`  ${c.ref.source}:${c.ref.line}`)
+      console.log(`    ${c.ref.target} → ${c.suggestion}（建议人工确认）`)
+    }
+  }
+
+  if (!isDryRun) {
+    const toApply = unique.slice(0, limit)
+    let applied = 0
+    for (const c of toApply) {
+      applyFix(c)
+      applied++
+    }
+    console.log(`\n已应用修复: ${applied} / ${unique.length} 处`)
+    if (unique.length > limit) {
+      console.log(`剩余 ${unique.length - limit} 处唯一匹配未处理（可再次运行 --apply）`)
+    }
+
+    // 保存待复核清单
+    const reviewPath = join(PROJECT_ROOT, 'scripts', 'docs', 'reports', 'audit', 'doc-refs-manual-review.json')
+    const reviewData = {
+      multi: multi.map(c => ({ source: c.ref.source, line: c.ref.line, target: c.ref.target, suggestion: c.suggestion })),
+      none: none.map(c => ({ source: c.ref.source, line: c.ref.line, target: c.ref.target })),
+      ignored: ignored.map(c => ({ source: c.ref.source, line: c.ref.line, target: c.ref.target }))
+    }
+    writeFileSync(reviewPath, JSON.stringify(reviewData, null, 2), 'utf-8')
+    console.log(`待复核清单已保存: ${reviewPath}`)
+  }
+
+  console.log(`\n[${new Date().toISOString()}] 修复流程结束`)
+  if (isDryRun && unique.length > 0) {
+    console.log('提示: 使用 --apply 参数应用唯一匹配修复')
+  }
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  main()
-}
+main()

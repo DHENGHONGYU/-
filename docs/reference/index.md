@@ -1,3 +1,21 @@
+---
+title: index
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/index.md
+code_version: 2.0.0
+tier: important
+---
+
+---
+title: docs/reference/index.md
+code_version: 2.0.0
+---
+
 # 插件技能文档索引
 
 > **同步日期**: 2025-07-12  
@@ -14,7 +32,7 @@
 |---------|--------|------------|------------------------|-------------------|
 | **ifind** | 同花顺金融数据（A股/港股/美股） | [ifind.md](ifind.md) | [`plugins/ifind/SKILL.md`](../../plugins/ifind/SKILL.md) | [`plugins/ifind/skills/ifind/SKILL.md`](../../plugins/ifind/skills/ifind/SKILL.md) |
 | **imf** | IMF 全球宏观经济数据 | [imf.md](imf.md) | [`plugins/imf/SKILL.md`](../../plugins/imf/SKILL.md) | [`plugins/imf/skills/imf/SKILL.md`](../../plugins/imf/skills/imf/SKILL.md) |
-| **kimi-webbridge** | 浏览器自动化控制 | [kimi-webbridge.md](kimi-webbridge.md) | [`plugins/kimi-webbridge/SKILL.md`](../../plugins/kimi-webbridge/SKILL.md) | [`plugins/kimi-webbridge/skills/kimi-webbridge/SKILL.md`](../../plugins/kimi-webbridge/skills/kimi-webbridge/SKILL.md) |
+| **kimi-webbridge** | 浏览器自动化控制 | [kimi-webbridge.md](../explanation/kimi-webbridge.md) | [`plugins/kimi-webbridge/SKILL.md`](../../plugins/kimi-webbridge/SKILL.md) | [`plugins/kimi-webbridge/skills/kimi-webbridge/SKILL.md`](../../plugins/kimi-webbridge/skills/kimi-webbridge/SKILL.md) |
 | **scholar** | 学术文献检索 | [scholar.md](scholar.md) | [`plugins/scholar/SKILL.md`](../../plugins/scholar/SKILL.md) | [`plugins/scholar/skills/scholar/SKILL.md`](../../plugins/scholar/skills/scholar/SKILL.md) |
 | **sec_edgar** | 美国 SEC 上市公司财报 | [sec_edgar.md](sec_edgar.md) | [`plugins/sec_edgar/SKILL.md`](../../plugins/sec_edgar/SKILL.md) | [`plugins/sec_edgar/skills/sec_edgar/SKILL.md`](../../plugins/sec_edgar/skills/sec_edgar/SKILL.md) |
 | **tianyancha** | 天眼查企业数据库 | [tianyancha.md](tianyancha.md) | [`plugins/tianyancha/SKILL.md`](../../plugins/tianyancha/SKILL.md) | [`plugins/tianyancha/skills/tianyancha/SKILL.md`](../../plugins/tianyancha/skills/tianyancha/SKILL.md) |
@@ -48,7 +66,7 @@ plugins/ifind/skills/ifind/SKILL.md  ← ifind 重复出现，层级太深
 
 ### 推荐访问顺序
 
-1. **快速查阅** → 当前文件 [`docs/plugins/index.md`](index.md)
+1. **快速查阅** → 当前文件 [`./index.md`](index.md)
 2. **了解用法** → [`docs/plugins/<plugin>.md`](ifind.md)（中文整理版，含示例）
 3. **查看原文** → [`plugins/<plugin>/SKILL.md`](../../plugins/ifind/SKILL.md)（扁平化后的原始文件）
 4. **脚本调用** → [`plugins/<plugin>/scripts/<plugin>_tool.py`](../../plugins/ifind/scripts/ifind_tool.py)

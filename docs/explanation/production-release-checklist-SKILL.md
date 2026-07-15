@@ -1,4 +1,11 @@
 ---
+title: production-release-checklist-skill
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 name: production-release-checklist
 description: >
   体系化上线测试检查清单与执行流程。覆盖前端/全栈项目上线前的
@@ -10,6 +17,8 @@ trigger: >
   "生产环境检查"、"deployment checklist"、"上线准备"、"发布评审"
   "pre-launch check"、"go-live checklist"、"production readiness"
   或需要对项目进行上线前全面体检时触发。
+code_version: 2.0.0
+tier: important
 ---
 
 # 体系化上线测试检查清单 Skill

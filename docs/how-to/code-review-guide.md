@@ -1,3 +1,16 @@
+---
+title: code-review-guide
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
+title: docs/how-to/code-review-guide.md
+code_version: 2.0.0
+tier: reference
+---
+
 # 代码评审指南与质量门禁 SOP
 
 > **版本**: v1.0.0 | **日期**: 2026-07-12
@@ -150,7 +163,7 @@ useEffect(() => {
 
 ### 3.1 分层依赖 [P0 阻塞]
 
-> 完整规则见 `AGENTS.md` §一依赖方向规则
+> 完整规则见 `../../AGENTS.md` §一依赖方向规则
 
 - [ ] **`pages/` 和 `components/` 只依赖 `store/` 和 `services/`**
   - 禁止: 直接调用 `dataLayer`、`db`、IndexedDB API
@@ -201,7 +214,7 @@ useEffect(() => {
 
 ### 3.4 驾驶舱 Widget 三处注册 [P0 阻塞]
 
-> 新增 Widget 必改三处,详见 `docs/02-design/widget-integration-checklist.md`
+> 新增 Widget 必改三处,详见 `../reference/widget-integration-checklist.md`
 
 - [ ] **自动化校验通过** — `npm run audit:widget-registry` 期望 P0=0, P1=0
   - 脚本自动校验：registry ↔ DEFAULT_WIDGET_CONFIG ↔ WIDGET_DEFAULT_DATA_SOURCE 三处 key 一致性
@@ -215,10 +228,10 @@ useEffect(() => {
 
 ### 3.5 文件归位 [P1 需改]
 
-- [ ] **新文件放在正确目录** — 参见 `AGENTS.md` §一目录定义
-- [ ] **相似目录不混淆** — `src/agents/`(运行时) vs `.agents/skills/`(AI技能);`src/lib/`(库函数) vs `src/utils/`(已废弃)
+- [ ] **新文件放在正确目录** — 参见 `../../AGENTS.md` §一目录定义
+- [ ] **相似目录不混淆** — `src/agents/`(运行时) vs `.agents/skills/`(AI技能);`src/lib/`(库函数) vs `src/lib/`(已废弃)
 - [ ] **导入路径使用 `@/` 别名** — 不使用相对路径 `../../`
-- [ ] **无旧路径残留** — 全文件类型扫描(详见 `docs/03-development/ui-migration-checklist.md`)
+- [ ] **无旧路径残留** — 全文件类型扫描(详见 `../reference/ui-migration-checklist.md`)
 
 ---
 
@@ -268,10 +281,10 @@ useEffect(() => {
 
 ### 4.3 文档同步 [P1 需改]
 
-- [ ] **架构变更同步** — 修改 `AGENTS.md` 后同步相关文档
+- [ ] **架构变更同步** — 修改 `../../AGENTS.md` 后同步相关文档
 - [ ] **触发→动作映射** — 新增模块时检查 `docs/00-meta/doc-trigger-action-map.md`
-- [ ] **API 路径变更** — 更新 `docs/06-routing-specs.md` 或相关数据字典
-- [ ] **目录结构变更** — 更新 `AGENTS.md` §一目录定义
+- [ ] **API 路径变更** — 更新 `../reference/06-routing-specs.md` 或相关数据字典
+- [ ] **目录结构变更** — 更新 `../../AGENTS.md` §一目录定义
 
 **验证命令**: `npm run audit:docs` — 期望 `0 violations`
 
@@ -455,7 +468,7 @@ function processB(data: Data) {
 - **常规 PR**: 1 名 L1 评审者即可
 - **涉及新模块**: 至少 1 名 L2 评审者
 - **涉及架构变更**: 至少 1 名 L3 评审者 + 技术负责人 Approval
-- **涉及 `AGENTS.md` 修改**: 必须技术负责人 Approval
+- **涉及 `../../AGENTS.md` 修改**: 必须技术负责人 Approval
 
 ---
 
@@ -486,7 +499,7 @@ function processB(data: Data) {
 
 ### Q4: 评审意见产生分歧怎么办?
 
-1. 先以 `AGENTS.md` 契约为准 — 它是唯一真相源
+1. 先以 `../../AGENTS.md` 契约为准 — 它是唯一真相源
 2. 契约未覆盖的,以技术负责人裁决为准
 3. 重大分歧可发起架构评审会议(需 2 名以上 L3 评审者参与)
 
@@ -520,4 +533,4 @@ npm run build                 # 生产构建
 
 ---
 
-> **维护说明**: 本文档基于 `AGENTS.md v1.4.5` 编写。当 `AGENTS.md` 版本升级时,需同步修订本文档。任何评审规则的调整,需经技术负责人评审后更新。
+> **维护说明**: 本文档基于 `../../AGENTS.md v1.4.5` 编写。当 `../../AGENTS.md` 版本升级时,需同步修订本文档。任何评审规则的调整,需经技术负责人评审后更新。

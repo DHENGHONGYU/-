@@ -1,4 +1,11 @@
 ---
+title: feature-entry-list
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: V9 功能入口清单（阶段二）
 version: v1.0.0
 last_updated: 2026-06-27
@@ -8,13 +15,15 @@ change_log:
   - date: 2026-06-27
     author: Quality Auditor
     desc: 阶段二：扫描 routes.ts + pages/ + apps/ 生成完整功能入口清单
+code_version: 2.0.0
+tier: important
 ---
 
 # V9 功能入口清单
 
 > 扫描来源：`src/config/routes.ts`（路由唯一真相源）、`src/pages/`（25 页面组件）、`src/apps/`（15 应用/面板组件）  
 > 路由方式：`HashRouter`（`src/App.tsx`）  
-> 注：项目无 `src/router/index.ts`，路由定义在 `src/config/routes.ts`
+> 注：项目无 `../../src/showcase/index.ts`，路由定义在 `src/config/routes.ts`
 
 ---
 
@@ -32,7 +41,7 @@ change_log:
 
 | 序号 | 功能模块名称 | 页面路径 | 路由路径 | 用户操作描述 |
 |:---|:---|:---|:---|:---|
-| 4 | 输入舱 Hub | `src/pages/input/InputHubPage.tsx` | `/input/hub` | 输入舱模块首页，展示输入功能导航与概览 |
+| 4 | 输入舱 Hub | `src/apps/input/InputApp.tsx` | `/input/hub` | 输入舱模块首页，展示输入功能导航与概览 |
 | 5 | 录入看板 | `src/apps/input/InputApp.tsx` → `InputDashboard` | `/input` | 股票录入主面板，候选池管理 |
 | 6 | 批量导入 | `src/apps/input/InputApp.tsx` → `BulkImportPanel` | `/input/bulk-import` | 批量导入股票数据 |
 | 7 | 热门板块 | `src/apps/input/InputApp.tsx` → `HotSectorPanel` | `/input/hot-sectors` | 展示当前热门板块，支持一键加入候选池 |
@@ -46,7 +55,7 @@ change_log:
 
 | 序号 | 功能模块名称 | 页面路径 | 路由路径 | 用户操作描述 |
 |:---|:---|:---|:---|:---|
-| 10 | 分析舱 Hub | `src/pages/analysis/AnalysisHubPage.tsx` | `/analysis/hub` | 分析舱模块首页，展示分析功能导航 |
+| 10 | 分析舱 Hub | `src/apps/analysis/AnalysisApp.tsx` | `/analysis/hub` | 分析舱模块首页，展示分析功能导航 |
 | 11 | V4 行业评分 | `src/pages/analysis/IndustryScorePage.tsx` | `/analysis/industry-score` | V4 行业评分分析 |
 | 12 | V6 个股评分 | `src/pages/analysis/StockAnalysisPage.tsx` | `/analysis/stock-score` | V6 个股九维评分分析 |
 | 13 | V6 个股评分（带代码） | `src/pages/analysis/StockAnalysisPage.tsx` | `/analysis/stock-score/:symbol` | 带股票代码的个股九维评分分析 |
@@ -55,7 +64,7 @@ change_log:
 | 16 | 策略回测 | `src/pages/analysis/BacktestPage.tsx` | `/analysis/backtest` | 策略回测功能 |
 | 17 | 评分文档 | `src/pages/analysis/ScoreDocPage.tsx` | `/analysis/score-docs` | 评分文档版本库 |
 | 18 | 智能资讯 | `src/pages/analysis/NewsPage.tsx` | `/analysis/news` | 智能资讯（V9 原生版） |
-| 19 | 智能资讯 V6 | `src/pages/news-v6/NewsPage.tsx` | `/analysis/news-v6` | 智能资讯（V6 风格迁移版），含 NewsCard/NewsFeed/FilterPanel 子组件 |
+| 19 | 智能资讯 V6 | `src/pages/analysis/NewsPage.tsx` | `/analysis/news-v6` | 智能资讯（V6 风格迁移版），含 NewsCard/NewsFeed/FilterPanel 子组件 |
 
 ---
 
@@ -63,7 +72,7 @@ change_log:
 
 | 序号 | 功能模块名称 | 页面路径 | 路由路径 | 用户操作描述 |
 |:---|:---|:---|:---|:---|
-| 20 | 交易舱 Hub | `src/pages/trading/TradingHubPage.tsx` | `/trading/hub` | 交易舱模块首页 |
+| 20 | 交易舱 Hub | `src/apps/trading/TradingApp.tsx` | `/trading/hub` | 交易舱模块首页 |
 | 21 | 交易信号 | `src/apps/trading/TradingApp.tsx` | `/trading` | 交易信号面板，含 CoreResourcePanel 核心资源主题，支持观察池、订单、信号、策略组合 |
 | 22 | 策略快照 | `src/pages/trading/StrategySnapshotPage.tsx` | `/trading/strategy-snapshots` | 策略快照查看 |
 | 23 | 交易持仓 | `src/pages/trading/HoldingsPage.tsx` | `/trading/holdings` | 持仓列表查询/筛选/分页，含 TradeModal 补仓/平仓，支持 CSV 导出 |
@@ -75,7 +84,7 @@ change_log:
 | 序号 | 功能模块名称 | 页面路径 | 路由路径 | 用户操作描述 |
 |:---|:---|:---|:---|:---|
 | 24 | 输出舱 | `src/apps/output/OutputApp.tsx` | `/output` | 数据导出（JSON 全量导出），研究报告生成 |
-| 25 | 总控舱 Hub | `src/pages/command/CommandHubPage.tsx` | `/command/hub` | 总控舱模块首页 |
+| 25 | 总控舱 Hub | `src/apps/command/CommandApp.tsx` | `/command/hub` | 总控舱模块首页 |
 | 26 | 总控舱 | `src/apps/command/CommandApp.tsx` | `/command` | 系统监控（统计信息）、配置管理、数据重置、V6 迁移面板 |
 
 ---

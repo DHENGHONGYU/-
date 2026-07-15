@@ -58,37 +58,40 @@ function WidgetWrapper(props: WidgetWrapperProps): React.JSX.Element {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  const instanceId = config?.instanceId
+  const widgetId = config?.widgetId
+
   useEffect(() => {
-    if (config == null) {
+    if (instanceId == null || widgetId == null) {
       setLoading(false)
       return
     }
     const mount = async () => {
       try {
         // 使用 widgetEngine 完整生命周期管理
-        const success = await widgetEngine.mountInstance(config.instanceId)
+        const success = await widgetEngine.mountInstance(instanceId)
         if (success) {
-          const component = await widgetEngine.loadComponent(config.widgetId)
+          const component = await widgetEngine.loadComponent(widgetId)
           setComponent(component)
-          logger.info('[CockpitShell] Widget mounted successfully', { instanceId: config.instanceId, widgetId: config.widgetId })
+          logger.info('[CockpitShell] Widget mounted successfully', { instanceId, widgetId })
         } else {
           setError('挂载失败')
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : '加载失败')
-        logger.error('[CockpitShell] Widget mount error', { instanceId: config.instanceId, error: err })
+        logger.error('[CockpitShell] Widget mount error', { instanceId, error: err })
       } finally {
         setLoading(false)
       }
     }
-    mount()
+    void mount()
 
     // 清理：卸载实例
     return () => {
-      widgetEngine.unmountInstance(config.instanceId)
-      logger.info('[CockpitShell] Widget unmounted', { instanceId: config.instanceId })
+      widgetEngine.unmountInstance(instanceId)
+      logger.info('[CockpitShell] Widget unmounted', { instanceId })
     }
-  }, [config?.instanceId, config?.widgetId])
+  }, [instanceId, widgetId])
 
   // P0-2 深度修复：用 SafeWrapper 包裹动态加载的 Widget 组件
   // 防止 widget 组件内部解构 { config } 时收到 null props 导致崩溃

@@ -1,3 +1,16 @@
+---
+title: performance-baseline
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/explanation/performance-baseline.md
+code_version: 2.0.0
+tier: important
+---
+
 # V9 性能基线
 
 > 建立于 v0.9.11 | P2-PERF 性能整改

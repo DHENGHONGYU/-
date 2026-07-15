@@ -1,4 +1,17 @@
 ---
+title: adr-005-portalshell-dark-kimi-layout
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
+title: docs/explanation/adr-005-portalshell-dark-kimi-layout.md
+code_version: 2.0.0
+tier: reference
+---
+
+---
 title: ADR-005: PortalShell 深色 Kimi 经典布局
 status: accepted
 owner: V9 Architecture Team
@@ -72,9 +85,9 @@ V9 需要统一五舱（input/analysis/trading/output/command）的导航和布�
 ### 负面影响 / 技术债
 
 - PortalShell 本身需要精心设计（响应式、性能、动画）。
-  - **技术债**：`docs/02-design/TECH-DEBT.md` — 「PortalShell 首屏加载优化」。
+  - **技术债**：`./design/tech-debt.md` — 「PortalShell 首屏加载优化」。
 - 子页面需遵循 PortalShell 的布局约束（如内容区域最大宽度、内边距）。
-  - **缓解**：`AGENTS.md` §3.5 定义了令牌体系的 spacing/radius 规范。
+  - **缓解**：`../../AGENTS.md` §3.5 定义了令牌体系的 spacing/radius 规范。
 
 ---
 
@@ -103,11 +116,11 @@ npm run build            # 验证产物大小
 
 | 文档 | 路径 |
 |------|------|
-| 令牌体系 | `AGENTS.md` §3.5 |
-| 设计令牌映射 | `../../02-design/design-token-mapping.md` |
-| 令牌使用手册 | `../../02-design/token-usage-cookbook.md` |
-| 宋韵美学 | `../../design/song-aesthetics.md` |
-| 原始提案 | `../../03-development/2026-06-23-portalshell-dark-kimi-layout.md` |
+| 令牌体系 | `../../AGENTS.md` §3.5 |
+| 设计令牌映射 | `../reference/design-token-mapping.md` |
+| 令牌使用手册 | `./token-usage-cookbook.md` |
+| 宋韵美学 | `./song-aesthetics.md` |
+| 原始提案 | `./2026-06-23-portalshell-dark-kimi-layout.md` |
 
 ---
 

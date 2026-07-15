@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>智能投研复盘系统 V9 · APP 上线前体检清单</title>
+<style>
+  :root {
+    --bg: #f6f8fb;
+    --panel: #ffffff;
+    --border: #e4e9f0;
+    --text: #1f2733;
+    --muted: #6b7686;
+    --brand: #2563eb;
+    --brand-soft: #eef3ff;
+    /* priority */
+    --p-block: #dc2626;
+    --p-block-bg: #fdecec;
+    --p-high: #ea580c;
+    --p-high-bg: #fff1e6;
+    --p-mid: #2563eb;
+    --p-mid-bg: #eaf1ff;
+    --p-low: #64748b;
+    --p-low-bg: #eef1f5;
+    /* status */
+    --s-todo: #64748b;
+    --s-todo-bg: #eef1f5;
+    --s-doing: #2563eb;
+    --s-doing-bg: #eaf1ff;
+    --s-pass: #16a34a;
+    --s-pass-bg: #e7f6ec;
+    --s-block: #dc2626;
+    --s-block-bg: #fdecec;
+    --s-na: #94a3b8;
+    --s-na-bg: #f1f4f8;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+      "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 1320px; margin: 0 auto; padding: 24px 20px 60px; }
+  header.top { margin-bottom: 18px; }
+  header.top h1 { font-size: 22px; margin: 0 0 4px; }
+  header.top .sub { color: var(--muted); font-size: 13px; }
+  .basis {
+    background: var(--brand-soft);
+    border: 1px solid #d6e2ff;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin: 14px 0 18px;
+    font-size: 12.5px;
+    color: #2c3e63;
+  }
+  .basis b { color: #1d3a73; }
+  .scope-note {
+    background: #fff8e6;
+    border: 1px solid #f4dc94;
+    border-left: 4px solid #d99e0b;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin: 14px 0 18px;
+    font-size: 12.5px;
+    color: #5c4a16;
+    line-height: 1.7;
+  }
+  .scope-note b { color: #7a5b06; }
+  details.basis summary { cursor: pointer; font-weight: 600; color: #1d3a73; }
+  details.basis ul { margin: 8px 0 0; padding-left: 18px; }
+  details.basis li { margin: 3px 0; }
+
+  .toolbar {
+    position: sticky; top: 0; z-index: 20;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+    box-shadow: 0 2px 10px rgba(20,40,80,.04);
+  }
+  .toolbar .field { display: flex; flex-direction: column; gap: 3px; }
+  .toolbar label { font-size: 11px; color: var(--muted); }
+  .toolbar select, .toolbar input {
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 7px 9px; font-size: 13px; background: #fff; color: var(--text);
+    min-width: 130px;
+  }
+  .toolbar input[type="search"] { min-width: 200px; }
+  .btn {
+    border: 1px solid var(--border); background: #fff; color: var(--text);
+    border-radius: 8px; padding: 8px 12px; font-size: 13px; cursor: pointer;
+  }
+  .btn:hover { background: #f3f6fb; }
+  .btn.primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+  .btn.primary:hover { background: #1d4ed8; }
+  .spacer { flex: 1; }
+
+  .stats { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 10px; }
+  .stat {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+    padding: 8px 12px; min-width: 92px; text-align: center;
+  }
+  .stat .n { font-size: 20px; font-weight: 700; }
+  .stat .l { font-size: 11px; color: var(--muted); }
+  .progress-wrap { margin: 6px 0 14px; }
+  .progress-track { height: 10px; background: #e9eef5; border-radius: 999px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg,#22c55e,#16a34a); width: 0; transition: width .3s; }
+
+  .table-card {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden;
+  }
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    position: sticky; top: 64px; background: #f3f6fb; z-index: 5;
+    text-align: left; font-size: 12px; color: #44506a; font-weight: 600;
+    padding: 10px 10px; border-bottom: 1px solid var(--border); white-space: nowrap;
+  }
+  tbody td { padding: 10px 10px; border-bottom: 1px solid #eef1f5; vertical-align: top; font-size: 13px; }
+  tbody tr:hover { background: #f9fbff; }
+  .col-id { width: 56px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .col-item { font-weight: 600; min-width: 160px; }
+  .col-std { color: #3a4252; min-width: 240px; }
+  .col-method { color: var(--muted); min-width: 200px; font-size: 12px; }
+  .col-owner { min-width: 96px; white-space: nowrap; color: #3a4252; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .p-阻断 { color: var(--p-block); background: var(--p-block-bg); }
+  .p-高 { color: var(--p-high); background: var(--p-high-bg); }
+  .p-中 { color: var(--p-mid); background: var(--p-mid-bg); }
+  .p-低 { color: var(--p-low); background: var(--p-low-bg); }
+  .mod-tag { display:inline-block; padding:1px 7px; border-radius:6px; background:#eef1f5; color:#475569; font-size:11px; white-space:nowrap; }
+  select.status-sel { border: 1px solid var(--border); border-radius: 8px; padding: 5px 6px; font-size: 12px; background:#fff; cursor:pointer; }
+  .st-未开始 { color: var(--s-todo); }
+  .st-进行中 { color: var(--s-doing); }
+  .st-已通过 { color: var(--s-pass); }
+  .st-已阻断 { color: var(--s-block); }
+  .st-不适用 { color: var(--s-na); }
+  .status-dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:5px; vertical-align: middle; }
+  .dot-未开始 { background: var(--s-todo); }
+  .dot-进行中 { background: var(--s-doing); }
+  .dot-已通过 { background: var(--s-pass); }
+  .dot-已阻断 { background: var(--s-block); }
+  .dot-不适用 { background: var(--s-na); }
+
+  .empty { padding: 40px; text-align: center; color: var(--muted); }
+  footer.note { margin-top: 18px; font-size: 12px; color: var(--muted); }
+  .legend { display:flex; flex-wrap:wrap; gap:10px; margin-top:8px; font-size:11px; color:var(--muted); }
+  .legend span { display:inline-flex; align-items:center; }
+
+  @media print {
+    .toolbar, .stats, .progress-wrap, footer.note .noprint { display: none !important; }
+    body { background: #fff; }
+    .table-card { border: none; }
+    thead th { position: static; }
+  }
+  @media (max-width: 760px) {
+    .col-method, .col-owner { display: none; }
+    thead th.hide-sm { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>智能投研复盘系统 V9 · APP 上线前体检清单</h1>
+    <div class="sub">面向首次独立复杂 APP 上线 · 可筛选 · 可逐项标记状态 · 状态自动保存在本浏览器</div>
+  </header>
+
+  <div class="scope-note">
+    <b>系统定位与合规口径：</b>本系统为<b>个人股票研究 / 复盘辅助分析工具</b>，<b>非金融产品、不涉及即时交易</b>。
+    因此「合规与免责」模块（原金融合规专项）仅按<b>最低要求</b>执行：等保三级、金融监管备案等持牌机构义务<b>不适用（已记录豁免理由）</b>；
+    重点保留<b>本地数据自管、AI 内容免责声明、分享前脱敏提示</b>等个人工具应有底线。其余模块（功能/性能/安全/兼容/UX/数据/监控/发布/架构）仍按原标准严格体检。
+  </div>
+
+  <details class="basis" open>
+    <summary>调研依据与经验来源（点击收起）</summary>
+    <p>本清单综合了公开社区与行业的上线实践经验，并映射到本项目的真实技术栈（React 19 + Vite 6 / Zustand 47 Store + withBroadcast / Tailwind 令牌体系 / Recharts + lightweight-charts / IndexedDB / Mock·REST·WebSocket 三数据源 / LLM 接入 / Playwright + Vitest / 10+ audit 脚本 / 金融监管场景）：</p>
+    <ul>
+      <li><b>阿里云《上线前检查清单模板》</b>：&gt;60% 线上问题源于上线前准备疏漏；有效清单须“可执行、可更新、可验证”；四阶段（代码构建 / 数据配置 / 部署验证 / 协作沟通），强调灰度 1%→10%→50%→100% 与回滚触发条件、上线后 4h 黄金观察期与复盘。</li>
+      <li><b>Front-End-Checklist（80k★）</b>：七大维度——HTML / CSS / JavaScript / 性能 / 可访问性 / SEO / 安全；强调将清单集成进 CI/CD（ESLint、Lighthouse budget、axe-core、OWASP ZAP）并随项目演进。</li>
+      <li><b>金融 App 合规（腾讯云/安全社区）</b>：网络安全法、等保 2.0（金融通常三级）、PCI-DSS；金融监管总局《加强银行业保险业移动互联网应用程序管理的通知》（4 方面 18 条：备案、网络安全、数据安全、外包）；《个人信息保护法》最小必要、隐私政策与授权、SDK 合规；高频违规集中在超范围收集与未脱敏。</li>
+      <li><b>大型 React 应用生产踩坑</b>：首屏白屏、滚动掉帧、输入延迟、“越用越卡”、偶发全局崩溃；根因多为内存泄漏（监听/定时器/订阅未清理）、缺失代码分割与虚拟化、缺少性能预算。</li>
+    </ul>
+    <p>优先级定义：<b>阻断(P0)</b> 不通过禁止上线（事故/数据丢失/合规违法/安全泄露）；<b>高(P1)</b> 强烈建议上线前完成；<b>中(P2)</b> 上线前或首迭代内完成；<b>低(P3)</b> 优化项，可排期迭代。</p>
+  </details>
+
+  <div class="toolbar" id="toolbar">
+    <div class="field">
+      <label>模块</label>
+      <select id="f-mod"><option value="">全部模块</option></select>
+    </div>
+    <div class="field">
+      <label>优先级</label>
+      <select id="f-prio">
+        <option value="">全部</option>
+        <option value="阻断">阻断 P0</option>
+        <option value="高">高 P1</option>
+        <option value="中">中 P2</option>
+        <option value="低">低 P3</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>状态</label>
+      <select id="f-status">
+        <option value="">全部</option>
+        <option value="未开始">未开始</option>
+        <option value="进行中">进行中</option>
+        <option value="已通过">已通过</option>
+        <option value="已阻断">已阻断</option>
+        <option value="不适用">不适用</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>搜索</label>
+      <input type="search" id="f-search" placeholder="检查项 / 标准 / 方法…" />
+    </div>
+    <button class="btn" id="btn-reset-filter">重置筛选</button>
+    <div class="spacer"></div>
+    <button class="btn" id="btn-export">导出 CSV</button>
+    <button class="btn" id="btn-print">打印 / PDF</button>
+    <button class="btn primary" id="btn-reset-status">清空我的标记</button>
+  </div>
+
+  <div class="stats" id="stats"></div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="prog"></div></div>
+  </div>
+
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th class="col-id">编号</th>
+          <th>模块</th>
+          <th>检查项</th>
+          <th>具体标准（验收口径）</th>
+          <th>优先级</th>
+          <th class="hide-sm">检查方法 / 工具</th>
+          <th class="hide-sm">责任人模板</th>
+          <th>状态标记</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    <div class="empty" id="empty" style="display:none;">没有符合筛选条件的检查项。</div>
+  </div>
+
+  <footer class="note">
+    <div>使用说明：① 顶部按「模块 / 优先级 / 状态」筛选，或用搜索框定位；② 每一行右侧下拉框标记状态，自动保存于本浏览器 localStorage（换浏览器/清缓存会丢失，重要节点请用「导出 CSV」留存）；③ “不适用”用于标注本项目无关项（如纯前端无后端时部分数据/配置项）。</div>
+    <div class="legend">
+      <span><span class="status-dot dot-未开始"></span>未开始</span>
+      <span><span class="status-dot dot-进行中"></span>进行中</span>
+      <span><span class="status-dot dot-已通过"></span>已通过</span>
+      <span><span class="status-dot dot-已阻断"></span>已阻断</span>
+      <span><span class="status-dot dot-不适用"></span>不适用</span>
+      <span class="p-阻断 badge">阻断 P0</span>
+      <span class="p-高 badge">高 P1</span>
+      <span class="p-中 badge">中 P2</span>
+      <span class="p-低 badge">低 P3</span>
+    </div>
+    <div class="noprint" style="margin-top:6px;">推荐节奏：发布评审前 1 周启动逐项校对 → 阻断/高 项全绿方可进入灰度 → 上线后 4h 黄金观察期复核 → 次日复盘，将新增问题回填为清单条目持续迭代。</div>
+  </footer>
+</div>
+
+<script>
+const STORE_KEY = "v9_launch_checklist_status_v1";
+const STATUSES = ["未开始","进行中","已通过","已阻断","不适用"];
+const PRIOS = ["阻断","高","中","低"];
+
+// 检查项数据：id, mod(模块), item(检查项), std(具体标准), prio(优先级), method(检查方法), owner(责任人模板)
+const DATA = [
+  // 1. 功能完整性
+  {id:"F01", mod:"功能完整性", item:"核心业务流程端到端可用", std:"登录 → 选股/复盘 → KAI 评分 → 导出 主流程在预发环境 100% 走通，无阻断性缺陷", prio:"阻断", method:"Playwright e2e 关键路径冒烟（npm run test:e2e）", owner:"测试负责人"},
+  {id:"F02", mod:"功能完整性", item:"全页面/Widget 按架构渲染", std:"5 舱(input/analysis/trading/output/command) 与驾驶舱 5 类 Widget 无空白、无崩溃、无控制台报错", prio:"高", method:"npm run audit:routes 全路由可达 + 人工遍历巡检", owner:"前端负责人"},
+  {id:"F03", mod:"功能完整性", item:"三数据源切换正确", std:"VITE_DATA_SOURCE_TYPE=mock/rest/websocket 切换后视图层零侵入、端点不硬编码、无残留 mock 分支", prio:"高", method:"三环境分别验证 + grep 硬编码端点/地址", owner:"数据层负责人"},
+  {id:"F04", mod:"功能完整性", item:"适配器字段兜底", std:"任意字段缺失时 MarketDataAdapter 返回合法默认值，下游组件绝不崩溃", prio:"阻断", method:"构造缺字段 payload 单元测试 + Provider 集成测试", owner:"服务层负责人"},
+  {id:"F05", mod:"功能完整性", item:"导出功能正确", std:"xlsx(jspdf) 导出内容完整、列/精度正确、中文与 ¥/% 不乱码", prio:"高", method:"实际导出抽样与界面数据比对", owner:"功能开发"},
+  {id:"F06", mod:"功能完整性", item:"AI 对话(StockChat) 健壮", std:"请求/流式响应正常；超时、限流、网络错误均有降级与友好提示", prio:"高", method:"e2e + 网络异常(mock 失败)模拟", owner:"AI/服务负责人"},
+  {id:"F07", mod:"功能完整性", item:"评分与信号逻辑一致", std:"KAI 评分、SCORE_LEVELS、信号分级与业务定义一致；边界值(0/满分的临界)正确", prio:"高", method:"边界用例 + 单元测试", owner:"业务/前端"},
+  {id:"F08", mod:"功能完整性", item:"跨 Tab 状态同步", std:"Zustand withBroadcast 多 Tab 广播正确，无死循环/竞态/重复写入", prio:"中", method:"多 Tab 实测状态联动", owner:"状态层负责人"},
+  {id:"F09", mod:"功能完整性", item:"空/异常态覆盖", std:"无数据、加载中、错误、网络超时均有明确 UI 反馈，不白屏", prio:"中", method:"人工 + 组件测试(mock 异常)", owner:"前端"},
+  {id:"F10", mod:"功能完整性", item:"权限/可见性过滤", std:"若含多角色，导航与数据按权限过滤正确，无越权可见", prio:"中", method:"越权用例测试", owner:"安全/前端"},
+
+  // 2. 性能表现
+  {id:"P01", mod:"性能表现", item:"核心 Web 指标达标", std:"LCP<2.5s、INP<200ms、CLS<0.1、TTFB 合理（项目已引入 web-vitals 监控）", prio:"阻断", method:"Lighthouse + RUM 实测（生产/预发）", owner:"前端/性能"},
+  {id:"P02", mod:"性能表现", item:"包体积预算受控", std:"主包与分 chunk 不超预算；无超大 vendor；无用依赖剔除", prio:"高", method:"vite build + rollup-plugin-visualizer / stats.html 分析", owner:"前端"},
+  {id:"P03", mod:"性能表现", item:"代码分割与懒加载", std:"路由级与重量级 Widget(图表/PDF 导出) 用 React.lazy 动态加载，首屏不打包全量", prio:"高", method:"Network 面板检查 chunk 拆分", owner:"前端"},
+  {id:"P04", mod:"性能表现", item:"长列表虚拟化", std:"股票池、历史记录等大数据用 @tanstack/react-virtual 虚拟化，滚动不掉帧", prio:"高", method:"万级数据实测 FPS", owner:"前端"},
+  {id:"P05", mod:"性能表现", item:"图表渲染性能", std:"Recharts/lightweight-charts 大量数据点下不卡顿；避免每帧重渲染(useMemo/节流)", prio:"高", method:"Chrome Profiler 定位重渲染", owner:"前端"},
+  {id:"P06", mod:"性能表现", item:"无内存泄漏", std:"window/EventBus/WebSocket/定时器 等监听均在 cleanup 移除（遵守 AGENTS.md 清理模板）", prio:"阻断", method:"长时间运行 + DevTools Memory 堆快照对比", owner:"前端"},
+  {id:"P07", mod:"性能表现", item:"实时数据不拖垮主线程", std:"TaskScheduler 采集批处理/节流；WebSocket 断线重连 + 心跳；弱网不卡 UI", prio:"高", method:"弱网/断网模拟 + 主线程卡顿观测", owner:"数据层"},
+  {id:"P08", mod:"性能表现", item:"静态资源优化", std:"图片/字体压缩、图标按需(lucide/heroicons)、避免大 base64 内联", prio:"中", method:"Lighthouse 资源项 + 产物检查", owner:"前端"},
+  {id:"P09", mod:"性能表现", item:"缓存策略正确", std:"静态资源 CDN + 内容哈希长效缓存；IndexedDB 缓存命中与失效逻辑正确", prio:"中", method:"缓存命中率/失效用例验证", owner:"运维/前端"},
+  {id:"P10", mod:"性能表现", item:"长会话稳定性", std:"长时间挂机“越用越卡”问题消除：内存/CPU 平稳，无累积泄漏", prio:"高", method:"24h 留页/压测观察", owner:"前端/测试"},
+
+  // 3. 安全合规（Web）
+  {id:"S01", mod:"安全合规", item:"密钥不进前端包", std:"VITE_LLM_API_KEY 等密钥不硬编码、不出现在 bundle/SourceMap；前端仅经后端代理或无密钥", prio:"阻断", method:"构建产物 grep 密钥 + SourceMap 泄露检查", owner:"安全/前端"},
+  {id:"S02", mod:"安全合规", item:"HTTPS 与安全响应头", std:"全站 HTTPS；配置 CSP、X-Frame-Options、X-Content-Type-Options、Referrer-Policy、HSTS", prio:"高", method:"securityheaders.com / 响应头检测", owner:"运维/安全"},
+  {id:"S03", mod:"安全合规", item:"XSS 防护", std:"AI 对话/富文本等动态内容均转义或 sanitize；禁止滥用 dangerouslySetInnerHTML", prio:"阻断", method:"渗透测试 + 输入 <script>/<img onerror> 验证", owner:"安全"},
+  {id:"S04", mod:"安全合规", item:"CSRF / 请求伪造防护", std:"敏感操作带 Token/同源校验；API 校验来源与幂等", prio:"高", method:"跨站请求/重放测试", owner:"安全/后端"},
+  {id:"S05", mod:"安全合规", item:"输入校验与限流", std:"前端校验 + 服务端校验双保险；接口限流防刷防击穿", prio:"高", method:"异常/超长输入测试 + 压测限流", owner:"前后端"},
+  {id:"S06", mod:"安全合规", item:"第三方依赖安全", std:"无已知高危漏洞（npm audit 0 high/critical）；依赖最小化", prio:"高", method:"npm audit / SCA 扫描接入 CI", owner:"安全/前端"},
+  {id:"S07", mod:"安全合规", item:"错误信息不泄露", std:"错误日志/界面不暴露堆栈、内部路径、密钥、SQL", prio:"中", method:"主动触发错误查看输出", owner:"前端"},
+  {id:"S08", mod:"安全合规", item:"会话与本地凭证安全", std:"登录态过期/续期/登出清理正确；IndexedDB 中敏感数据加密存储", prio:"高", method:"登出后重放/本地存储检查", owner:"安全"},
+  {id:"S09", mod:"安全合规", item:"外链与跳转安全", std:"外部链接 rel=noopener；无 open redirect / 钓鱼跳转风险", prio:"低", method:"代码审查外链处理", owner:"前端"},
+
+  // 4. 合规与免责（个人研究工具，最低要求）
+  {id:"C01", mod:"合规与免责（个人研究工具）", item:"个人信息保护(PIPL·最小必要)", std:"个人本地研究工具，数据以本地(IndexedDB)为主、不上传；仅采集复盘必需信息，不收集无关数据", prio:"中", method:"本地数据范围自查 + 最小必要核对", owner:"开发者/产品"},
+  {id:"C02", mod:"合规与免责（个人研究工具）", item:"免责声明与使用说明", std:"提供简明免责声明：本地数据自管、内容仅供参考非投资建议、不作为交易依据；联网(行情/AI)时告知用途", prio:"低", method:"页面声明文案核对", owner:"开发者"},
+  {id:"C03", mod:"合规与免责（个人研究工具）", item:"分享/导出脱敏提示", std:"导出或截图分享前提示脱敏；日志不落明文账户信息(个人工具数据自管，标准放宽为分享前自行脱敏)", prio:"低", method:"导出/分享场景提示核对", owner:"数据"},
+  {id:"C04", mod:"合规与免责（个人研究工具）", item:"等保要求(豁免确认)", std:"个人研究工具、非对外持牌金融服务，不要求等保三级/备案；记录豁免理由，后续对外部署再评估", prio:"低", method:"逐项确认不适用并记录理由", owner:"开发者"},
+  {id:"C05", mod:"合规与免责（个人研究工具）", item:"监管备案(豁免确认)", std:"非金融产品、无即时交易、非持牌机构，无需金融监管总局移动应用备案；确认定位并记录豁免理由", prio:"低", method:"确认产品定位并记录豁免理由", owner:"开发者"},
+  {id:"C06", mod:"合规与免责（个人研究工具）", item:"数据本地化", std:"数据本地(IndexedDB)存储为主、不出境；接入外部行情/AI 仅传输必要查询参数", prio:"低", method:"数据流自查", owner:"数据"},
+  {id:"C07", mod:"合规与免责（个人研究工具）", item:"AI内容免责声明", std:"AI 生成内容标注“仅供参考、非投资建议、不构成交易依据”；避免“保证收益/必涨”等表述", prio:"中", method:"内容/文案合规核对", owner:"业务/开发者"},
+  {id:"C08", mod:"合规与免责（个人研究工具）", item:"第三方 SDK 合规", std:"若使用统计/AI SDK，选合规供应商、最小化采集、声明中说明；不引入未知来源 SDK", prio:"低", method:"SDK 清单核对", owner:"开发者"},
+
+  // 5. 兼容性
+  {id:"B01", mod:"兼容性", item:"目标浏览器矩阵", std:"Chrome/Edge/Safari/Firefox 主流版本功能与样式一致；明确最低支持版本", prio:"高", method:"BrowserStack/多浏览器实测", owner:"前端"},
+  {id:"B02", mod:"兼容性", item:"分辨率与布局适配", std:"驾驶舱 react-grid-layout 在不同分辨率/系统缩放下不溢出错位；响应式断点正常", prio:"高", method:"多分辨率 + 125%/150% 缩放实测", owner:"前端"},
+  {id:"B03", mod:"兼容性", item:"移动端/平板适配", std:"若支持触控则布局与手势正常；若仅桌面则明确提示不支持", prio:"中", method:"真机/模拟器实测", owner:"前端/UX"},
+  {id:"B04", mod:"兼容性", item:"图表与字体渲染", std:"自绘图表/lightweight-charts 跨浏览器一致；中文字体回退正确", prio:"中", method:"跨浏览器截图对比", owner:"前端"},
+  {id:"B05", mod:"兼容性", item:"编码与时区一致", std:"全链路 UTF-8，中文/emoji 不乱码；时间戳时区统一(dayjs)", prio:"中", method:"多区域/脏数据检查", owner:"前端"},
+  {id:"B06", mod:"兼容性", item:"多网络环境可达", std:"REST/WS 代理在公司/公网/弱网下可达；降级到 Mock 的开关可用", prio:"中", method:"网络环境切换验证", owner:"运维/数据"},
+
+  // 6. 用户体验
+  {id:"U01", mod:"用户体验", item:"加载与操作反馈", std:"异步操作有 loading/进度/骨架屏；无“假死”无响应", prio:"高", method:"弱网实测交互反馈", owner:"UX/前端"},
+  {id:"U02", mod:"用户体验", item:"错误可恢复", std:"错误页有重试/返回首页/联系入口；不白屏不卡死", prio:"高", method:"强制错误路径走查", owner:"UX/前端"},
+  {id:"U03", mod:"用户体验", item:"空状态设计", std:"无数据/首次使用有引导说明，而非空白页", prio:"中", method:"空态走查", owner:"UX"},
+  {id:"U04", mod:"用户体验", item:"令牌体系一致", std:"颜色/间距/字体严格引用令牌(THEME_TOKENS/COLOR_TOKENS)；npm run lint:colors 0 告警", prio:"高", method:"npm run audit:hardcode + lint:colors", owner:"前端"},
+  {id:"U05", mod:"用户体验", item:"可访问性(A11y)", std:"键盘可达、焦点管理、ARIA、prefers-reduced-motion、对比度达标", prio:"中", method:"axe-core + 键盘走查", owner:"UX/前端"},
+  {id:"U06", mod:"用户体验", item:"文案与金融术语", std:"术语准确、单位(¥/%)规范；涨跌红绿符合 A 股习惯(STOCK_COLOR_TOKENS)", prio:"高", method:"业务校对 + 视觉核对", owner:"业务/UX"},
+  {id:"U07", mod:"用户体验", item:"关键操作防错", std:"清空/导出/删除等破坏性操作有二次确认；重要流程可撤销", prio:"中", method:"走查交互", owner:"UX"},
+  {id:"U08", mod:"用户体验", item:"主题切换一致", std:"若有暗色/主题切换，全站一致；股票红涨绿跌固定色不随主题变", prio:"中", method:"主题切换巡检", owner:"前端"},
+
+  // 7. 数据完整性
+  {id:"D01", mod:"数据完整性", item:"持久化可靠", std:"IndexedDB 写入/读取/版本迁移正确；损坏可恢复或优雅降级", prio:"高", method:"异常注入(写入中断/版本升级)验证", owner:"数据层"},
+  {id:"D02", mod:"数据完整性", item:"刷新/跨 Tab 一致", std:"状态持久化刷新后不丢、不串；withBroadcast 同步一致", prio:"中", method:"刷新/多 Tab 实测", owner:"状态层"},
+  {id:"D03", mod:"数据完整性", item:"数据源结构对齐", std:"Mock 与真实 API 经 Adapter 对齐，字段含义/单位一致", prio:"高", method:"schema 对比 + 单元测试", owner:"数据层"},
+  {id:"D04", mod:"数据完整性", item:"极端/脏数据健壮", std:"极端值/空数组/超大数不崩溃、不误显、不溢出", prio:"高", method:"脏数据注入测试", owner:"数据/前端"},
+  {id:"D05", mod:"数据完整性", item:"导出数据一致", std:"xlsx/pdf 导出与界面数据一致、精度不丢、排序正确", prio:"中", method:"抽样比对", owner:"功能"},
+  {id:"D06", mod:"数据完整性", item:"时间与时区正确", std:"行情/复盘时间戳统一时区，跨日切分与排序正确", prio:"中", method:"跨日数据验证", owner:"数据"},
+
+  // 8. 监控与运维
+  {id:"M01", mod:"监控与运维", item:"前端监控接入", std:"web-vitals(LCP/INP/CLS) + JS Error/UnhandledRejection 上报可用", prio:"高", method:"主动触发错误看监控面板", owner:"前端/运维"},
+  {id:"M02", mod:"监控与运维", item:"业务埋点准确", std:"选股/复盘/导出/对话等核心操作埋点不遗漏、不重复", prio:"中", method:"埋点校验(调试面板)", owner:"数据/产品"},
+  {id:"M03", mod:"监控与运维", item:"告警与阈值就绪", std:"错误率/白屏/接口失败等关键指标告警阈值已配并演练", prio:"高", method:"告警演练(注入异常)", owner:"运维"},
+  {id:"M04", mod:"监控与运维", item:"日志规范", std:"核心分支 logger.info 打印、错误带 context（遵守 AGENTS.md 日志规范）", prio:"中", method:"grep 关键路径日志输出", owner:"前端"},
+  {id:"M05", mod:"监控与运维", item:"灰度与功能开关", std:"功能开关可控灰度(1%→100%)，可秒级回滚/关闭", prio:"高", method:"开关演练", owner:"运维/前端"},
+  {id:"M06", mod:"监控与运维", item:"容量与降级方案", std:"接口/WS 限流与降级(降级到 Mock/缓存) 方案就绪", prio:"中", method:"压测 + 降级演练", owner:"运维/数据"},
+
+  // 9. 发布与回滚
+  {id:"R01", mod:"发布与回滚", item:"发布计划与窗口", std:"明确时间窗、负责人、灰度策略、回滚触发条件，经发布评审", prio:"阻断", method:"发布评审会议", owner:"PM/运维"},
+  {id:"R02", mod:"发布与回滚", item:"构建产物校验", std:"构建成功；tsc:prod 0 error；audit:layers 0 violation；死代码/文档同步通过", prio:"阻断", method:"CI 门禁(npm run audit)", owner:"前端/CI"},
+  {id:"R03", mod:"发布与回滚", item:"回滚方案就绪", std:"前端静态回滚 + 接口兼容；回滚脚本/版本标签就绪并可演练", prio:"阻断", method:"回滚演练", owner:"运维"},
+  {id:"R04", mod:"发布与回滚", item:"后端/配置变更齐备", std:"DDL/DML/回滚脚本齐备并预发验证；环境变量清单与生产设置核对(无密钥泄露)", prio:"高", method:"变更评审 + 配置核对", owner:"数据/运维"},
+  {id:"R05", mod:"发布与回滚", item:"预发冒烟通过", std:"部署后 5min 内核心流程(登录/核心交易)冒烟通过", prio:"高", method:"预发冒烟测试", owner:"测试"},
+  {id:"R06", mod:"发布与回滚", item:"通知与值班", std:"提前通知相关方；上线后 4h 黄金观察期值班；次日复盘", prio:"中", method:"检查通知记录与排班", owner:"PM"},
+  {id:"R07", mod:"发布与回滚", item:"版本与变更记录", std:"CHANGELOG/commit 规范，可追溯到需求与 PR", prio:"中", method:"changelog 核对", owner:"前端/PM"},
+
+  // 10. 架构与质量门禁（本项目专项）
+  {id:"A01", mod:"架构与质量门禁", item:"分层依赖零违规", std:"npm run audit:layers = 0 violations/0 warnings（pages→store/services，禁跨层调 db）", prio:"阻断", method:"CI 运行 audit:layers", owner:"架构守护"},
+  {id:"A02", mod:"架构与质量门禁", item:"零硬编码", std:"npm run audit:hardcode + lint:colors 0 告警（颜色/锚点走令牌）", prio:"高", method:"CI 门禁", owner:"前端"},
+  {id:"A03", mod:"架构与质量门禁", item:"死代码与文档同步", std:"audit:deadcode、audit:docs 通过，避免代码与文档脱节", prio:"中", method:"CI 运行", owner:"前端"},
+  {id:"A04", mod:"架构与质量门禁", item:"类型安全", std:"tsc --noEmit 0 error；禁 any/@ts-ignore；复杂泛型有 Expect<Equals> 测试", prio:"阻断", method:"CI typecheck + 类型测试", owner:"前端"},
+  {id:"A05", mod:"架构与质量门禁", item:"测试覆盖与通过", std:"单测通过率达标(建议≥80%)、关键路径 e2e 通过；audit:tests 通过", prio:"高", method:"CI(npm test + test:e2e)", owner:"测试"},
+  {id:"A06", mod:"架构与质量门禁", item:"路由/契约校验", std:"audit:routes 全路由可达；数据 Blueprint 校验通过(validate:blueprint)", prio:"高", method:"CI 运行", owner:"前端"},
+  {id:"A07", mod:"架构与质量门禁", item:"令牌消费合规", std:"颜色严格引用令牌(L1–L5)；股票红涨绿跌用 STOCK_COLOR_TOKENS 固定色，不随主题变", prio:"高", method:"grep + 视觉核对", owner:"前端"},
+  {id:"A08", mod:"架构与质量门禁", item:"事件清理规范", std:"所有 useEffect 订阅/监听/定时器均清理（AGENTS.md 标准模板），测试 fakeTimers 复位", prio:"高", method:"代码审查 + 测试", owner:"前端"}
+];
+
+// ---------- 状态持久化 ----------
+let saved = {};
+try { saved = JSON.parse(localStorage.getItem(STORE_KEY) || "{}"); } catch(e) { saved = {}; }
+function setStatus(id, val){ saved[id] = val; localStorage.setItem(STORE_KEY, JSON.stringify(saved)); }
+
+// ---------- 渲染 ----------
+const tbody = document.getElementById("tbody");
+const emptyEl = document.getElementById("empty");
+const fMod = document.getElementById("f-mod");
+const fPrio = document.getElementById("f-prio");
+const fStatus = document.getElementById("f-status");
+const fSearch = document.getElementById("f-search");
+
+// 模块下拉
+[...new Set(DATA.map(d=>d.mod))].forEach(m=>{
+  const o = document.createElement("option"); o.value=m; o.textContent=m; fMod.appendChild(o);
+});
+
+function esc(s){ return String(s).replace(/[&<>]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+
+function render(){
+  const mod = fMod.value, prio = fPrio.value, st = fStatus.value;
+  const q = fSearch.value.trim().toLowerCase();
+  const rows = DATA.filter(d=>{
+    if(mod && d.mod!==mod) return false;
+    if(prio && d.prio!==prio) return false;
+    if(st && (saved[d.id]||"未开始")!==st) return false;
+    if(q){
+      const hay = (d.id+d.item+d.std+d.method+d.owner+d.mod).toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  });
+  tbody.innerHTML = rows.map(d=>{
+    const cur = saved[d.id] || "未开始";
+    const opts = STATUSES.map(s=>`<option value="${s}" ${s===cur?'selected':''}>${s}</option>`).join("");
+    return `<tr>
+      <td class="col-id">${d.id}</td>
+      <td><span class="mod-tag">${esc(d.mod)}</span></td>
+      <td class="col-item">${esc(d.item)}</td>
+      <td class="col-std">${esc(d.std)}</td>
+      <td><span class="badge p-${d.prio}">${d.prio}</span></td>
+      <td class="col-method hide-sm">${esc(d.method)}</td>
+      <td class="col-owner hide-sm">${esc(d.owner)}</td>
+      <td><select class="status-sel st-${cur}" data-id="${d.id}" onchange="onStatus(this)">${opts}</select></td>
+    </tr>`;
+  }).join("");
+  emptyEl.style.display = rows.length ? "none" : "block";
+  updateStats();
+}
+
+window.onStatus = function(sel){
+  const id = sel.getAttribute("data-id");
+  const val = sel.value;
+  setStatus(id, val);
+  sel.className = "status-sel st-"+val;
+  updateStats();
+};
+
+function updateStats(){
+  const total = DATA.length;
+  let pass=0, block=0, doing=0, todo=0, na=0;
+  DATA.forEach(d=>{
+    const s = saved[d.id]||"未开始";
+    if(s==="已通过") pass++;
+    else if(s==="已阻断") block++;
+    else if(s==="进行中") doing++;
+    else if(s==="不适用") na++;
+    else todo++;
+  });
+  const effTotal = total - na;
+  const pct = effTotal ? Math.round(pass/effTotal*100) : 0;
+  document.getElementById("stats").innerHTML = `
+    <div class="stat"><div class="n">${total}</div><div class="l">总项</div></div>
+    <div class="stat"><div class="n" style="color:var(--s-pass)">${pass}</div><div class="l">已通过</div></div>
+    <div class="stat"><div class="n" style="color:var(--s-doing)">${doing}</div><div class="l">进行中</div></div>
+    <div class="stat"><div class="n" style="color:var(--s-block)">${block}</div><div class="l">已阻断</div></div>
+    <div class="stat"><div class="n" style="color:var(--s-todo)">${todo}</div><div class="l">未开始</div></div>
+    <div class="stat"><div class="n" style="color:var(--s-na)">${na}</div><div class="l">不适用</div></div>
+    <div class="stat"><div class="n">${pct}%</div><div class="l">通过率(去NA)</div></div>`;
+  document.getElementById("prog").style.width = pct+"%";
+
+  // 阻断/高 未通过提醒
+  const blockers = DATA.filter(d=> (d.prio==="阻断"||d.prio==="高") && (saved[d.id]||"未开始")!=="已通过" && (saved[d.id]||"未开始")!=="不适用");
+  const warn = document.getElementById("blockwarn");
+  if(blockers.length){
+    if(!warn){ const d=document.createElement("div"); d.id="blockwarn"; d.className="stat"; d.style.minWidth="auto"; d.style.background="var(--p-block-bg)"; d.style.color="var(--p-block)"; d.style.fontWeight="600"; document.getElementById("stats").appendChild(d); }
+    document.getElementById("blockwarn").textContent = `⚠ 仍有 ${blockers.length} 项阻断/高未通过，不可进入灰度`;
+  } else if(warn){ warn.remove(); }
+}
+
+// ---------- 事件 ----------
+fMod.onchange = render; fPrio.onchange = render; fStatus.onchange = render; fSearch.oninput = render;
+document.getElementById("btn-reset-filter").onclick = ()=>{ fMod.value=""; fPrio.value=""; fStatus.value=""; fSearch.value=""; render(); };
+document.getElementById("btn-reset-status").onclick = ()=>{ if(confirm("确认清空本浏览器中所有的状态标记？此操作不可撤销。")){ saved={}; localStorage.removeItem(STORE_KEY); render(); } };
+document.getElementById("btn-print").onclick = ()=> window.print();
+document.getElementById("btn-export").onclick = ()=>{
+  const header = ["编号","模块","检查项","具体标准","优先级","检查方法","责任人","状态"];
+  const lines = [header.join(",")];
+  DATA.forEach(d=>{
+    const row = [d.id,d.mod,d.item,d.std,d.prio,d.method,d.owner,(saved[d.id]||"未开始")];
+    lines.push(row.map(v=>{
+      const s = String(v).replace(/"/g,'""');
+      return /[",\n]/.test(s) ? '"'+s+'"' : s;
+    }).join(","));
+  });
+  const blob = new Blob(["\uFEFF"+lines.join("\n")], {type:"text/csv;charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "V9上线前体检清单_"+new Date().toISOString().slice(0,10)+".csv";
+  a.click();
+  URL.revokeObjectURL(a.href);
+};
+
+render();
+</script>
+</body>
+</html>

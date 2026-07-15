@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>③ UI 组件设计 · FinSightV9 团队手册</title>
+<style>
+:root{
+  --bg:#fafaf9; --panel:#ffffff; --border:#e7e5e4; --text:#292524;
+  --text2:#57534e; --muted:#a8a29e; --accent:#10b981; --accent-bg:#ecfdf5;
+  --code-bg:#f5f5f4;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;line-height:1.75;font-size:15px}
+.layout{display:flex;align-items:flex-start;min-height:100vh}
+.sidebar{position:sticky;top:0;align-self:flex-start;width:240px;flex-shrink:0;height:100vh;
+  overflow-y:auto;background:var(--panel);border-right:1px solid var(--border);padding:24px 18px}
+.sidebar h2{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:0 0 12px}
+.sidebar a{display:block;color:var(--text2);text-decoration:none;font-size:14px;padding:7px 10px;
+  border-radius:8px;margin-bottom:2px}
+.sidebar a:hover{background:var(--accent-bg);color:#047857}
+.sidebar a.active{background:var(--accent);color:#fff}
+.sidebar .sub{font-size:11px;color:var(--muted);margin:14px 0 6px;padding-left:10px}
+.content{flex:1;max-width:880px;margin:0 auto;padding:40px 48px 80px}
+article h1{font-size:30px;font-weight:800;letter-spacing:-.5px;margin:0 0 6px;
+  border-bottom:3px solid var(--accent);padding-bottom:14px}
+article h2{font-size:22px;font-weight:700;margin:38px 0 12px;padding-left:12px;border-left:4px solid var(--accent)}
+article h3{font-size:18px;font-weight:700;margin:26px 0 8px;color:var(--text)}
+article h4{font-size:15.5px;font-weight:700;margin:18px 0 6px;color:var(--text2)}
+article p{margin:10px 0;color:var(--text2)}
+article ul,article ol{padding-left:24px;margin:10px 0;color:var(--text2)}
+article li{margin:5px 0}
+article a{color:var(--accent);text-decoration:none;border-bottom:1px solid #a7f3d0}
+article a:hover{color:#047857}
+article code{background:var(--code-bg);border:1px solid var(--border);border-radius:5px;padding:1px 6px;
+  font-size:13px;font-family:'SFMono-Regular',Consolas,monospace;color:#be123c}
+article pre{background:var(--code-bg);border:1px solid var(--border);border-radius:12px;padding:18px 20px;
+  overflow-x:auto;margin:14px 0}
+article pre code{background:none;border:none;padding:0;color:#1c1917;font-size:13px;line-height:1.6}
+article blockquote{border-left:4px solid var(--accent);background:var(--accent-bg);margin:14px 0;
+  padding:12px 18px;border-radius:0 10px 10px 0;color:#065f46}
+article table{border-collapse:collapse;width:100%;margin:16px 0;font-size:14px}
+article th,article td{border:1px solid var(--border);padding:9px 12px;text-align:left}
+article th{background:var(--panel);font-weight:700;color:var(--text)}
+article tr:nth-child(even) td{background:#fcfcfb}
+article hr{border:none;border-top:1px solid var(--border);margin:32px 0}
+article img{max-width:100%;border-radius:10px;border:1px solid var(--border)}
+pre.mermaid{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;}
+footer{text-align:center;color:var(--muted);font-size:12px;margin-top:48px;padding-top:20px;border-top:1px solid var(--border)}
+.back{display:inline-block;margin-bottom:18px;color:var(--accent);text-decoration:none;font-size:13px}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <h2>团队体系手册</h2>
+    <a href="index.html">📑 总览索引</a>
+    <div class="sub">手册正文</div>
+    <a href="README.html">总导航 · 团队手册地图</a>
+    <a href="01-design-philosophy.html">① 设计与原创思路</a>
+    <a href="02-architecture.html">② 整体架构设计</a>
+    <a href="03-ui-components.html" class="active">③ UI 组件设计</a>
+    <a href="04-model-runtime.html">④ 模型运行机制</a>
+    <a href="05-competitive-analysis.html">⑤ 竞品对比分析</a>
+    <div class="sub">补充资料</div>
+    <a href="supplementary/index.html">📁 高质量补充 HTML</a>
+  </aside>
+  <main class="content"><article>
+    <a class="back" href="index.html">← 返回总览</a>
+    <h1>03 · UI 组件设计思路（UI Component Design）</h1>
+<blockquote>
+<p>本文回答&quot;<strong>UI 怎么写、怎么复用</strong>&quot;。权威基线：<code>docs/reference/atomic-component-system.md</code>、<code>docs/reference/ui-migration-checklist.md</code>、<code>docs/reference/widget-integration-checklist.md</code>、<code>docs/reference/design-token-mapping.md</code>、<code>eslint.colors.config.js</code>、<code>docs/reference/jsdoc-convention.md</code>、<code>docs/reference/complexity-governance.md</code>。</p>
+</blockquote>
+<hr>
+<h2>1. 原子设计体系（Atomic Design）</h2>
+<p>目录：<code>src/components/{atoms, molecules, organisms, templates, chart, cabin, cockpit, widgets}</code>，各层有 <code>index.ts</code> 桶导出。</p>
+<h3>1.1 层级边界（由 <code>audit:atomic</code> 强制）</h3>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>可由谁组成</th>
+<th>禁止 import</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Atom</strong></td>
+<td>Tailwind / Tokens</td>
+<td>Store/Service/Molecule/Organism/Template/Page/App/业务</td>
+</tr>
+<tr>
+<td><strong>Molecule</strong></td>
+<td>Atom</td>
+<td>Organism/Template/Store/Service/Page/App/业务</td>
+</tr>
+<tr>
+<td><strong>Template</strong></td>
+<td>Molecule + Atom</td>
+<td>业务数据 / Store / Service</td>
+</tr>
+<tr>
+<td><strong>Organism</strong></td>
+<td>任意层级（含 Store/Service/Hook）</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>组合方向强制：<code>Page → Template → Organism → Molecule → Atom</code>（不可跨层跳跃）。</p>
+<h3>1.2 Barrel 导出</h3>
+<ul>
+<li><code>atoms/index.ts</code>：导出 28+ 原子（Button/Input/Card…），头注释&quot;原子不可再分，禁止依赖 Store/Service&quot;。</li>
+<li><code>molecules/index.ts</code>：导出 12 分子（Alert/Dialog/Tabs/FormField/MetricCard…）；<code>states/</code> 子目录的 <code>Loading/Empty/ErrorState</code> 因重名需直引 <code>@/components/molecules/states/Error</code>。</li>
+<li><code>organisms/index.ts</code>：业务有机体（pool/collection/analysis…）。</li>
+<li><code>templates/index.ts</code>：页面级布局骨架（<code>PageContainer</code>/<code>PageHeader</code>/<code>DashboardLayout</code>/<code>SidebarLayout</code>/<code>CockpitLayout</code>，无业务逻辑）。</li>
+</ul>
+<h3>1.3 迁移现状</h3>
+<p>阶段 1–5 全部完成：<strong>0 shim 残留、0 违规 0 警告</strong>，<code>audit:atomic</code> 133 文件通过。最终保留原位目录 <code>chart/cabin/cockpit/widgets</code>（因与 Widget 注册表耦合，仅 registry 标注，不物理搬）。</p>
+<hr>
+<h2>2. 组件注册表与门禁</h2>
+<ul>
+<li><code>src/components/componentRegistry.ts</code>：<code>COMPONENT_REGISTRY</code> 每项含 <code>name/level/sourcePath/targetPath/status/description</code>，<code>status: active|migrating|deprecated</code>（当前全量 active）。</li>
+<li><code>audit:atomic</code>（<code>scripts/audit-atomic.ts</code>）：依据 registry 推断层级，扫描 <code>src/components/**/*.ts(x)</code>，按 <code>FORBIDDEN</code> 跨层表判定阻断性违规；含 <code>stale-ui-import</code>（探测已删的 <code>@/components/ui/</code>）、<code>unregistered</code> 警告。</li>
+</ul>
+<hr>
+<h2>3. Widget 系统（驾驶舱组件）</h2>
+<p>所有 Widget 位于 <code>src/cockpit/widgets/</code>（注意：部分旧文档误写为 <code>src/components/widgets/</code>，以代码为准）。</p>
+<h3>3.1 三处注册（必须同步）</h3>
+<ol>
+<li><code>src/cockpit/core/widgetRegistry.ts</code> → <code>registerDefaultWidgets()</code> 的 <code>widgets[]</code>（含默认布局 <code>defaultLayout</code>）。</li>
+<li><code>src/constants/cockpit.constants.ts</code> 的 <code>DEFAULT_WIDGET_CONFIG</code>（key 含 <code>title/category/size</code>）。</li>
+<li><code>src/constants/cockpit.constants.ts</code> 的 <code>WIDGET_DEFAULT_DATA_SOURCE</code>（key 含 <code>type/mode/interval/endpoint/enabled</code>）。</li>
+</ol>
+<p>一致性由 <code>npm run audit:widget-registry</code> 校验（P0 违规 exit 1）。</p>
+<blockquote>
+<p>⚠️ 文档漂移：旧 <code>widget-integration-checklist.md</code> 示例用 <code>WIDGET_CATEGORY.MARKET</code> 枚举，但代码实际用<strong>字符串字面量</strong> category（如 <code>'market'</code>/<code>'analysis'</code>/<code>'系统监控'</code>）。新增时以代码为准。</p>
+</blockquote>
+<h3>3.2 数据消费（useMarketData）</h3>
+<p><code>MarketDataProvider</code>（Context）注入统一 <code>MarketData</code>；Widget 通过 <code>useMarketData()</code> 强校验消费（必须在 Provider 内），或 <code>useOptionalMarketData()</code>。Provider 在 <code>useEffect</code> 中按 <code>dataSource</code> 注册采集任务到 <code>taskScheduler</code>，结果经 <code>marketDataAdapter.adapt/merge</code> 注入，卸载时完整 cleanup。</p>
+<h3>3.3 四态外壳（复用）</h3>
+<p><code>src/cockpit/widgets/components/WidgetStateShell.tsx</code> 统一封装 <code>ready/loading/empty/error</code> 四态，颜色走 <code>COLOR_TOKENS.danger</code>。Widget 推荐复用此外壳，避免重复样板。</p>
+<hr>
+<h2>4. 设计令牌与颜色门禁</h2>
+<h3>4.1 lint:colors（强制令牌）</h3>
+<ul>
+<li>配置：<code>eslint.colors.config.js</code> + <code>eslint-rules/no-hardcoded-colors.js</code>（level: error）。</li>
+<li>检测：HEX / RGB / HSL 字符串与模板字面量；Tailwind 数字色类 <code>text|bg|border|ring|from|to|via-{red|blue|…}-\d{2,3}</code>。</li>
+<li>豁免：<code>src/constants/theme.tokens.ts</code>、<code>src/config/chartColors.ts</code>、<code>src/config/themeRegistry.ts</code>、<code>src/theme.config.ts</code>、<code>src/generated/*</code>、<code>tests/</code>。</li>
+</ul>
+<h3>4.2 红涨绿跌固定色（最重要例外）</h3>
+<p>所有个股/指数/ETF 涨跌幅必须用 <code>STOCK_COLOR_TOKENS</code>；<strong>暗色模式不变</strong>；禁止用 <code>COLOR_TOKENS.up/down</code> 替代。<code>cockpit.constants.ts</code> 的 <code>STOCK_COLOR_MAPPING</code> 已 <code>@deprecated</code>，改用 <code>STOCK_COLOR_TOKENS</code>。</p>
+<h3>4.3 开发提效</h3>
+<ul>
+<li><code>.vscode/token-snippets.code-snippets</code>：令牌导入/用法片段（如 <code>itt</code> 导入 theme tokens、<code>isc</code> 导入 stock colors、<code>icc</code> 导入 chart colors）。</li>
+<li><code>design-tokens/figma-to-project.json</code>：Figma/MasterGo 变量 ↔ V9 令牌双向映射；<code>npm run audit:tokens</code> 校验。</li>
+</ul>
+<hr>
+<h2>5. 复用机制与交互逻辑</h2>
+<h3>5.1 逻辑下沉到 Hook</h3>
+<ul>
+<li>数据/业务逻辑下沉到 <code>useXxxData</code> Hook，纯视图组件只收 props（见 <code>how-to-add-widget.md</code>）。</li>
+<li>代表：<code>src/hooks/usePoolBoard.ts</code> 操作研究池，用 <code>useState</code> 管纯 UI 局部态，<code>useMemo</code> 派生、<code>useCallback</code> 封装 handlers，业务动作委托 <code>poolService</code> 并回调 <code>refresh()</code> 同步 Store。</li>
+<li>Store 用 Zustand（<code>useXxxStore((s)=&gt;s.xxx)</code> 自动订阅，返回 unsubscribe 供 cleanup）。</li>
+</ul>
+<h3>5.2 模板与状态外壳</h3>
+<ul>
+<li>Templates：页面级布局骨架，无业务逻辑。</li>
+<li>四态组件：<code>src/components/molecules/states/</code>（Loading/Empty/Error/Skeleton）+ <code>WidgetStateShell</code>。</li>
+<li>全局视觉锚点：<code>SignalSpectrum</code>（信号频谱母题）、<code>DensityContext/DensityToggle</code>（信息密度）。</li>
+</ul>
+<h3>5.3 状态提升原则</h3>
+<p>业务数据进 Store，UI 局部态留组件内（Widget 是展示层，状态提升到 Store）。</p>
+<hr>
+<h2>6. UI 相关质量门禁</h2>
+<table>
+<thead>
+<tr>
+<th>门禁</th>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>颜色硬编码</td>
+<td><code>lint:colors</code></td>
+<td>禁止 HEX/RGB/HSL 与 Tailwind 数字色类</td>
+</tr>
+<tr>
+<td>原子层级</td>
+<td><code>audit:atomic</code></td>
+<td>校验跨层 import 禁令（阻断）</td>
+</tr>
+<tr>
+<td>令牌扫描</td>
+<td><code>audit:tokens</code></td>
+<td>无令牌硬编码违规</td>
+</tr>
+<tr>
+<td>JSDoc</td>
+<td><code>audit:jsdoc</code></td>
+<td>导出函数/组件/Hook/Store action 必须有 JSDoc</td>
+</tr>
+<tr>
+<td>复杂度</td>
+<td><code>audit:complexity</code></td>
+<td>嵌套≥4、链式 if≥6、重复 if 债务只减不增</td>
+</tr>
+<tr>
+<td>Widget 注册</td>
+<td><code>audit:widget-registry</code></td>
+<td>三处注册一致性</td>
+</tr>
+</tbody>
+</table>
+<p><strong>JSDoc 要点</strong>（<code>jsdoc-convention.md</code>）：导出函数需 <code>@param/@returns</code>；组件需 <code>@description</code>+props；复杂 Hook 需说明输入输出/副作用/清理；禁止空 JSDoc、<code>@ts-ignore</code>（用 <code>@ts-expect-error</code>+原因）。
+<strong>复杂度要点</strong>（<code>complexity-governance.md</code>）：卫语句+提前返回降嵌套；查找表替代长 if-else；提取常量/函数消除重复判断；基线对比 <code>.complexity-baseline.json</code>，债务只减不增。</p>
+<hr>
+<h2>7. UI 迁移与协作约定</h2>
+<p>迁移清单核心（<code>ui-migration-checklist.md</code>）：</p>
+<ol>
+<li>备份基线 → 移动文件 + 样式/类型/测试。</li>
+<li>更新所有 import + barrel <code>index.ts</code> 导出。</li>
+<li>更新路由/导航。</li>
+<li>Store/Service 归属校验（禁止 <code>dataLayer</code>/<code>db</code> 直引、EventBus 订阅配对）。</li>
+<li>颜色令牌替换（<code>THEME_TOKENS</code>/<code>COLOR_TOKENS</code>/<code>STOCK_COLOR_TOKENS</code>）。</li>
+<li>跑 <code>tsc</code> / <code>audit:layers</code> / <code>lint:colors</code> / 测试 / E2E。</li>
+<li>文档同步（含 CHANGELOG）。</li>
+</ol>
+<blockquote>
+<p>⚠️ 关键陷阱：<strong>非源码旧路径残留</strong>会导致 AI 生成错误代码。迁移后必须对 <code>*.tsx/.ts/.md/.json/.mjs/.cjs/.yaml/.yml/.sh</code> 全文件类型 grep 旧路径（排除 coverage/dist/docs/reports）。</p>
+</blockquote>
+
+    <footer>FinSightV9 智能投研复盘系统 · 团队体系手册 · 由 markdown-it 自动转换生成</footer>
+  </article></main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ startOnLoad: true, theme: 'base',
+      themeVariables: { primaryColor:'#ecfdf5', lineColor:'#57534e', fontFamily:'sans-serif' } });
+  }
+</script>
+</body>
+</html>

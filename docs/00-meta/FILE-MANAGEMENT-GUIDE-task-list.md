@@ -1,8 +1,21 @@
-# FILE-MANAGEMENT-GUIDE.md 修订任务清单
+---
+title: file-management-guide-task-list
+code_version: 2.0.0
+
+tier: core
+---
+
+---
+title: docs/00-meta/file-management-guide-task-list.md
+code_version: 2.0.0
+tier: core
+---
+
+# file-management-guide.md 修订任务清单
 
 > **生成时间**: 2026-07-20  
-> **关联报告**: `docs/audit/FILE-MANAGEMENT-GUIDE-test-report.md`  
-> **目标文件**: `docs/01-requirements/FILE-MANAGEMENT-GUIDE.md`  
+> **关联报告**: `../reports/audit/file-management-guide-test-report.md`  
+> **目标文件**: `../how-to/file-management-guide.md`  
 > **防止任务漂移原则**: 每个任务必须有明确的验收标准（AC），完成后打勾确认
 
 ---
@@ -23,7 +36,7 @@
 
 ### 任务 1.1：补全 `src/` 目录映射
 - **目标**: 将文件归位规则表与 AGENTS.md §一完全对齐
-- **修改位置**: `FILE-MANAGEMENT-GUIDE.md` 第 10-20 行
+- **修改位置**: `../how-to/file-management-guide.md` 第 10-20 行
 - **验收标准**:
   - [ ] `src/` 说明列包含完整子目录：`config/`、`core/`、`data/`、`lib/`、`services/`、`store/`、`pages/`、`components/`、`portal/`、`constants/`、`types/`、`apps/`、`cockpit/`
   - [ ] 每个子目录添加一句话说明其职责
@@ -34,7 +47,7 @@
 
 ### 任务 1.2：区分 `src/agents/` 与 `.agents/skills/`
 - **目标**: 消除两套 agents 目录的歧义
-- **修改位置**: `FILE-MANAGEMENT-GUIDE.md` 第 1 节文件归位规则表
+- **修改位置**: `../how-to/file-management-guide.md` 第 1 节文件归位规则表
 - **验收标准**:
   - [ ] 新增 `src/agents/` 行：说明为"AI 行为扩展（运行时模块，core 层扩展）"
   - [ ] 修正 `.agents/skills/` 行说明：明确为"AI 辅助技能定义文件"
@@ -44,7 +57,7 @@
 
 ### 任务 1.3：新增"命名规范"章节
 - **目标**: 将 AGENTS.md §四的命名约定纳入文件管理规范
-- **修改位置**: `FILE-MANAGEMENT-GUIDE.md` 新增第 2 节（或插入在现有第 1-2 节之间）
+- **修改位置**: `../how-to/file-management-guide.md` 新增第 2 节（或插入在现有第 1-2 节之间）
 - **验收标准**:
   - [ ] 新增"命名规范"章节，包含以下表格：
     | 对象 | 命名约定 | 示例 |
@@ -61,12 +74,12 @@
 - **负责人**: AI 辅助
 
 ### 任务 1.4：纳入文档体系索引
-- **目标**: 使 FILE-MANAGEMENT-GUIDE.md 可通过文档导航被发现
-- **修改位置**: `docs/01-requirements/README.md`
+- **目标**: 使 file-management-guide.md 可通过文档导航被发现
+- **修改位置**: `../reference/README.md`
 - **验收标准**:
-  - [ ] 在 README.md 的"专项文档"或新增"运维规范"分类中添加 `FILE-MANAGEMENT-GUIDE.md`
+  - [ ] 在 README.md 的"专项文档"或新增"运维规范"分类中添加 `../how-to/file-management-guide.md`
   - [ ] 添加一句话描述："文件管理规范：源代码归位、.gitignore 维护、提交前检查"
-  - [ ] 检查 docs/00-meta/REGISTRY_INDEX.md 是否也需更新
+  - [ ] 检查 docs/00-meta/registry-index.md 是否也需更新
 - **阻塞风险**: 无
 - **负责人**: AI 辅助 + 开发者确认
 
@@ -76,7 +89,7 @@
 
 ### 任务 2.1：同步 .gitignore 文档
 - **目标**: 消除文档与实际 `.gitignore` 的脱节
-- **修改位置**: `FILE-MANAGEMENT-GUIDE.md` 第 2.2 节
+- **修改位置**: `../how-to/file-management-guide.md` 第 2.2 节
 - **验收标准**:
   - [ ] 读取根目录 `.gitignore` 文件，逐行分析
   - [ ] 将未在文档中记录的规则按以下新增类别补充：
@@ -93,7 +106,7 @@
 
 ### 任务 2.2：新增 `docs/` 子目录分层规范
 - **目标**: 明确 docs/ 下 8 个编号子目录的用途和存放规则
-- **修改位置**: `FILE-MANAGEMENT-GUIDE.md` 第 1 节文件归位规则表
+- **修改位置**: `../how-to/file-management-guide.md` 第 1 节文件归位规则表
 - **验收标准**:
   - [ ] 新增表格（或扩展现有"文档规范"行）：
     | 子目录 | 用途 | 存放内容 |
@@ -113,13 +126,13 @@
 
 ### 任务 2.3：新增"数据层文件变更 SOP"
 - **目标**: 将 AGENTS.md §八的数据库版本管理规则转化为文件管理 SOP
-- **修改位置**: `FILE-MANAGEMENT-GUIDE.md` 新增章节
+- **修改位置**: `../how-to/file-management-guide.md` 新增章节
 - **验收标准**:
   - [ ] 新增"数据层文件变更 SOP"章节，规定 schema 变更时必须同步修改的文件清单：
     - `src/config/dbConfig.ts` → 递增 `DB_VERSION`
     - `src/data/db-schema.ts` → 基线 store 创建逻辑
     - `src/data/db-migrations.ts`（或 `src/data/migrations/`）→ 增量 store 创建逻辑
-    - `src/data/ACL.ts` → 新增 store 的 read/write 白名单
+    - `src/core/acl.ts` → 新增 store 的 read/write 白名单
     - `src/core/DataBridge.ts` → 新增 `ENVELOPE_ACTION` 的 case
   - [ ] 明确"基线 store"与"增量 store"的选择规则（v1.3.5 规则）
   - [ ] 引用 AGENTS.md §八
@@ -127,14 +140,14 @@
 - **负责人**: AI 辅助 + 开发者确认
 
 ### 任务 2.4：建立跨文档引用链路
-- **目标**: 打破信息孤岛，使 FILE-MANAGEMENT-GUIDE.md 与其他文档形成引用网络
-- **修改位置**: `FILE-MANAGEMENT-GUIDE.md` 全文 + 其他文档
+- **目标**: 打破信息孤岛，使 file-management-guide.md 与其他文档形成引用网络
+- **修改位置**: `../how-to/file-management-guide.md` 全文 + 其他文档
 - **验收标准**:
   - [ ] 在文件归位规则表后添加引用：`详细分层规则参见 [AGENTS.md](../../AGENTS.md) 第一节`
   - [ ] 在命名规范章节引用：`详细命名约定参见 [AGENTS.md](../../AGENTS.md) 第四节`
   - [ ] 在 docs/ 分层规范引用各子目录下的 README（如存在）
   - [ ] 在变更日志或附录添加引用：`更详细的文件管理审查报告参见 [trae-file-management-review.md](../00-meta/trae-file-management-review.md)`
-  - [ ] 在 AGENTS.md 的"迁移收尾：全文件类型扫描"段引用 FILE-MANAGEMENT-GUIDE.md
+  - [ ] 在 AGENTS.md 的"迁移收尾：全文件类型扫描"段引用 file-management-guide.md
 - **阻塞风险**: 需确认相对路径的正确性
 - **负责人**: AI 辅助
 
@@ -143,8 +156,8 @@
 - **修改位置**: 仓库文件系统
 - **验收标准**:
   - [ ] 核查 `toolkit/safeCoerce.ts` 与 `src/lib/safeCoerce.ts` 的关系，删除重复或统一合并至 `src/lib/`
-  - [ ] 核查 `src/databridge/` 的内容，若属于 core 层则迁移至 `src/core/databridge/`
-  - [ ] 核查 `src/utils/` 的内容，合并至 `src/lib/utils/` 或明确职责边界
+  - [ ] 核查 `src/core/databridge.ts` 的内容，若属于 core 层则迁移至 `src/core/databridge/`
+  - [ ] 核查 `src/lib/` 的内容，合并至 `src/lib/utils/` 或明确职责边界
   - [ ] 核查 `outputs/` 目录，制定管理策略（纳入 `temp/` 或补充 .gitignore）
   - [ ] 运行 `npm run audit:layers` 确认无新增跨层违规
 - **阻塞风险**: 文件移动可能破坏 import 路径，需谨慎
@@ -156,7 +169,7 @@
 
 ### 任务 3.1：补充 monorepo/多语言目录规范
 - **目标**: 覆盖 `packages/`、`python/`、`plugins/` 等特殊目录
-- **修改位置**: `FILE-MANAGEMENT-GUIDE.md` 新增"根目录特殊目录"章节
+- **修改位置**: `../how-to/file-management-guide.md` 新增"根目录特殊目录"章节
 - **验收标准**:
   - [ ] 新增表格：
     | 目录 | 用途 | 管理规则 |
@@ -170,10 +183,10 @@
 
 ### 任务 3.2：新增 AI 产物管理规范
 - **目标**: 规范 `docs/drafts/` 目录的使用
-- **修改位置**: `FILE-MANAGEMENT-GUIDE.md` 第 1 节
+- **修改位置**: `../how-to/file-management-guide.md` 第 1 节
 - **验收标准**:
   - [ ] 新增 `docs/drafts/` 行：说明用途为"AI 生成中间产物（草稿、建议、临时报告）"
-  - [ ] 规定命名规则：`<描述>-<ISO时间戳>.<ext>`（如 `api-doc-draft-2026-07-12T08-33-40-567Z.md`）
+  - [ ] 规定命名规则：`<描述>-<ISO时间戳>.<ext>`（如 `api-doc-draft-2026-07-12t08-33-40-567z.md`）
   - [ ] 规定保留策略："定期归档至 `docs/07-archive/drafts/` 或删除，保留期限不超过 30 天"
   - [ ] 规定 `.gitignore` 策略：drafts/ 是否纳入版本控制
 - **阻塞风险**: 无
@@ -181,7 +194,7 @@
 
 ### 任务 3.3：补充 `temp/` 清理策略
 - **目标**: 明确临时目录的生命周期管理
-- **修改位置**: `FILE-MANAGEMENT-GUIDE.md` 第 1 节或新增"生命周期管理"章节
+- **修改位置**: `../how-to/file-management-guide.md` 第 1 节或新增"生命周期管理"章节
 - **验收标准**:
   - [ ] 明确清理策略："每次 `npm run build` 前自动清空 `temp/`"
   - [ ] 或明确保留期限："`temp/` 下文件保留不超过 7 天，由 CI 自动清理"
@@ -191,7 +204,7 @@
 
 ### 任务 3.4：完善验证命令清单
 - **目标**: 使提交前检查与 AGENTS.md §七完全一致
-- **修改位置**: `FILE-MANAGEMENT-GUIDE.md` 第 3 节
+- **修改位置**: `../how-to/file-management-guide.md` 第 3 节
 - **验收标准**:
   - [ ] 在现有 3 项基础上补充：
     - `npm run audit:hardcode` — 扫描颜色硬编码违规
@@ -209,17 +222,17 @@
 
 ### 任务 4.1：统一版本号声明
 - **目标**: 消除文档版本号体系的不一致
-- **修改位置**: `FILE-MANAGEMENT-GUIDE.md` 头部 + 变更日志
+- **修改位置**: `../how-to/file-management-guide.md` 头部 + 变更日志
 - **验收标准**:
   - [ ] 在头部注明：`本文档遵循 docs/01-requirements/README.md 的文档体系版本 v2.5.0，自身修订版本为 v1.x.x`
   - [ ] 或：统一采用"项目级版本 + 文档修订号"双版本号体系
-  - [ ] 与 `docs/01-requirements/README.md` 的版本声明对齐
+  - [ ] 与 `../reference/README.md` 的版本声明对齐
 - **阻塞风险**: 需项目级决策
 - **负责人**: 开发者决策
 
 ### 任务 4.2：补充 `.eslintcache` 忽略
 - **目标**: 防止 ESLint 缓存文件被误提交
-- **修改位置**: `.gitignore` + `FILE-MANAGEMENT-GUIDE.md` 第 2.2 节
+- **修改位置**: `.gitignore` + `../how-to/file-management-guide.md` 第 2.2 节
 - **验收标准**:
   - [ ] 在 `.gitignore` 新增 `.eslintcache`
   - [ ] 在文档第 2.2 节新增"ESLint 缓存"类别
@@ -228,9 +241,9 @@
 
 ### 任务 4.3：增加禁止事项例外条款
 - **目标**: 明确根目录禁止规则的边界
-- **修改位置**: `FILE-MANAGEMENT-GUIDE.md` 第 2 节"禁止事项"
+- **修改位置**: `../how-to/file-management-guide.md` 第 2 节"禁止事项"
 - **验收标准**:
-  - [ ] 在禁止事项后添加例外条款："**例外**：标准项目配置文件（`package.json`、`tsconfig.*.json`、`*.config.ts` 等）及项目根级文档（`README.md`、`AGENTS.md` 等）不受此限制"
+  - [ ] 在禁止事项后添加例外条款："**例外**：标准项目配置文件（`package.json`、`tsconfig.*.json`、`*.config.ts` 等）及项目根级文档（`../../README.md`、`../../AGENTS.md` 等）不受此限制"
 - **阻塞风险**: 无
 - **负责人**: AI 辅助
 

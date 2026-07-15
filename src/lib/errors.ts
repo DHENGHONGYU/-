@@ -16,7 +16,7 @@
 export class V9Error extends Error {
   /** 错误分类，用于日志与 UI 区分 */
   public readonly category: 'data' | 'network' | 'validation' | 'permission' | 'business' | 'system'
-  /** 错误码，建议在 docs/10-glossary.md 维护统一注册表 */
+  /** 错误码，建议在 docs/explanation/10-glossary.md 维护统一注册表 */
   public readonly code: string
   /** 错误发生时间戳 */
   public readonly timestamp: number

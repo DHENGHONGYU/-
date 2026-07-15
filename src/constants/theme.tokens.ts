@@ -54,11 +54,12 @@ export type { ColorTokenKey } from './theme/theme.tokens.color'
 // ============================================================
 export { COLOR_SHADES, twText, twBg, twBorder } from './theme/theme.tokens.shades'
 
-// ============================================================
-// L3/4 辅助类（暗色/悬停/渐变 + 图表调色板 + 间距令牌）
+// L3/4 辅助类（暗色/悬停/渐变 + 图表调色板 + 间距令牌 + 徽章状态色）
 // ============================================================
 export { DARK, HOVER, FOCUS, FILL, GRADIENT, DIVIDE, CHART_PALETTE, SPACING_TOKENS } from './theme/theme.tokens.helpers'
 export type { SpacingKey } from './theme/theme.tokens.helpers'
+export { BADGE_COLORS } from './theme/theme.tokens.badges'
+export type { BadgeColorKey } from './theme/theme.tokens.badges'
 
 // ============================================================
 // L5 股票颜色（红涨绿跌例外规则，豁免主题切换）

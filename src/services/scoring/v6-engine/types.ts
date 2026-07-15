@@ -104,6 +104,14 @@ export interface QuoteData {
   history?: number[]
   /** 历史成交量序列 */
   volumeHistory?: number[]
+  /** 最近多期股东人数（期末，单位：户） */
+  shareholderCount?: number[]
+  /** 最近多期北向/陆股通持股（万股） */
+  northboundHoldings?: number[]
+  /** 最近多期主力资金净流入（亿元） */
+  mainForceFlow?: number[]
+  /** 最近多期融资余额（亿元） */
+  marginBalance?: number[]
 }
 
 /** 行业评分数据（来自 L-1 映射） */
@@ -153,6 +161,11 @@ export interface LayerInput {
   zeroToOneEvents?: ZeroToOneEvent[]
   /** 引擎配置 */
   config: V6ScoreEngineConfig
+  /** L1/L2 层得分（L3a IPC 跨层推理用） */
+  peerScores?: {
+    l1?: number
+    l2?: number
+  }
 }
 
 // ============================================================
@@ -181,6 +194,8 @@ export interface LayerScore {
   dataSources: string[]
   /** 审计追踪 */
   auditTrail?: AuditEntry[]
+  /** 该层是否真实参与综合评分（P0：区分"数据缺失消毒为0"与"真实计算"） */
+  participated?: boolean
 }
 
 /** 综合评分 */

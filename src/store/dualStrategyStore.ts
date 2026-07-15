@@ -10,9 +10,9 @@
  * - 持久化到 DataBridge：hot_sector_scores / value_pit_scores / signals（轮动信号）。
  * - 刷新时从 DataBridge 读取已持久化的评分与信号。
  *
- * @see docs/《V9核心数据字典与类型定义（整合版）》.md — DualStrategyState 实体定义（#68）
- * @see docs/《功能模块数据契约》.md — 双策略信号池模块契约（第 9 节）
- * @see docs/implementation/v9-system-blueprint.md — 5大Store架构（4.3 节）
+ * @see docs/reference/v9核心数据字典与类型定义(整合版).md — DualStrategyState 实体定义（#68）
+ * @see docs/reference/功能模块数据契约.md — 双策略信号池模块契约（第 9 节）
+ * @see docs/reference/v9-system-blueprint.md — 5大Store架构（4.3 节）
  * @see src/services/trading/dualStrategyEngine.ts — 双策略计算引擎
  * @see src/services/scoring/hotSectorAnalyzer.ts — 热门板块评分分析器
  * @see src/services/scoring/valuePitAnalyzer.ts — 价值洼地评分分析器

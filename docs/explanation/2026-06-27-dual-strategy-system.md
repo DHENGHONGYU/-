@@ -1,4 +1,11 @@
 ---
+title: 2026-06-27-dual-strategy-system
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
 title: ADR-009: 引入热门板块与价值洼地双策略体系
 version: v0.9.0
 last_updated: 2026-06-27
@@ -8,6 +15,8 @@ change_log:
   - date: 2026-06-27
     author: Kimi Code CLI
     desc: 依据用户输入的双策略规格创建 ADR，明确与 ADR-008 主题策略的关系
+code_version: 2.0.0
+tier: reference
 ---
 
 # ADR-009: 引入热门板块与价值洼地双策略体系
@@ -54,7 +63,7 @@ V9 当前已通过 ADR-008 引入「第四次工业革命稀缺核心资源」�
 ### 选项 A：新增独立 Store + 独立 Analyzer + dualStrategyEngine 编排（推荐）
 
 - 新增 `hot_sector_scores`、`value_pit_scores` 两个 IndexedDB Store；
-- 新增 `src/services/trading/hotSectorAnalyzer.ts`、`valuePitAnalyzer.ts`、`rotationSignalDetector.ts`；
+- 新增 `src/services/scoring/hotSectorAnalyzer.ts`、`valuePitAnalyzer.ts`、`rotationSignalDetector.ts`；
 - 新增 `src/services/trading/dualStrategyEngine.ts` 作为编排入口；
 - 新增 `src/config/dualStrategyRules.ts` 承载双策略阈值；
 - 驾驶舱新增 `HotSectorWidget`、`ValuePitWidget`，走 `MarketDataProvider` 统一数据管线；
@@ -124,13 +133,13 @@ V9 当前已通过 ADR-008 引入「第四次工业革命稀缺核心资源」�
 
 ### 第二阶段：分析引擎
 
-1. `src/services/trading/hotSectorAnalyzer.ts`：
+1. `src/services/scoring/hotSectorAnalyzer.ts`：
    - 输入：股票列表 + 市场热点；
    - 输出：`HotSectorScore[]`（momentum / sentiment / technical / valuation / composite 五维）。
-2. `src/services/trading/valuePitAnalyzer.ts`：
+2. `src/services/scoring/valuePitAnalyzer.ts`：
    - 输入：股票列表；
    - 输出：`ValuePitScore[]`（catalyst / valuation / chip / rotation / liquidity 五维，rotation 复用 `rotationScoreService.ts`）。
-3. `src/services/trading/rotationSignalDetector.ts`：
+3. `src/services/scoring/rotationSignalDetector.ts`：
    - 对 `ValuePitScore` 候选检测成交量放大 + 资金净流入 + 技术金叉；
    - 命中：生成 `TradingSignal`；
    - 未命中：返回观察池候选。
@@ -146,7 +155,7 @@ V9 当前已通过 ADR-008 引入「第四次工业革命稀缺核心资源」�
 
 ### 第四阶段：文档与测试
 
-1. 更新 `docs/03-architecture-standards.md`、`docs/05-engine-specs.md`、`docs/10-glossary.md`；
+1. 更新 `../reference/03-architecture-standards.md`、`../reference/05-engine-specs.md`、`../reference/10-glossary.md`；
 2. 新增单元测试与集成测试；
 3. 运行质量门禁：`lint`、`test`、`build`、`audit`。
 
@@ -193,13 +202,13 @@ V9 当前已通过 ADR-008 引入「第四次工业革命稀缺核心资源」�
 
 ## 相关文档
 
-- `docs/implementation/dual-strategy-dataflow-spec.md`
-- `docs/implementation/dual-strategy-gap-analysis.md`
-- `docs/implementation/adr/2026-06-24-adopt-v6-core-resource-trading-strategy.md`
-- `docs/03-architecture-standards.md`
-- `docs/05-engine-specs.md`
-- `docs/10-glossary.md`
-- `docs/08-implementation-plan.md`
+- `../reference/dual-strategy-dataflow-spec.md`
+- `./dual-strategy-gap-analysis.md`
+- `../reference/2026-06-24-adopt-v6-core-resource-trading-strategy.md`
+- `../reference/03-architecture-standards.md`
+- `../reference/05-engine-specs.md`
+- `../reference/10-glossary.md`
+- `../reference/08-implementation-plan.md`
 
 ---
 
@@ -212,11 +221,11 @@ V9 当前已通过 ADR-008 引入「第四次工业革命稀缺核心资源」�
 - [ ] 更新 `src/core/databridge.ts`（action 路由）
 - [ ] 更新 `src/data/dataLayer.ts`（Store helper）
 - [ ] 新建 `src/config/dualStrategyRules.ts`
-- [ ] 新建 `src/services/trading/hotSectorAnalyzer.ts`
-- [ ] 新建 `src/services/trading/valuePitAnalyzer.ts`
-- [ ] 新建 `src/services/trading/rotationSignalDetector.ts`
+- [ ] 新建 `src/services/scoring/hotSectorAnalyzer.ts`
+- [ ] 新建 `src/services/scoring/valuePitAnalyzer.ts`
+- [ ] 新建 `src/services/scoring/rotationSignalDetector.ts`
 - [ ] 新建 `src/services/trading/dualStrategyEngine.ts`
 - [ ] 新建 `src/cockpit/widgets/HotSectorWidget.tsx`
 - [ ] 新建 `src/cockpit/widgets/ValuePitWidget.tsx`
-- [ ] 更新 `docs/03-architecture-standards.md`、`docs/05-engine-specs.md`、`docs/10-glossary.md`
+- [ ] 更新 `../reference/03-architecture-standards.md`、`../reference/05-engine-specs.md`、`../reference/10-glossary.md`
 - [ ] 新增测试并确保质量门禁通过

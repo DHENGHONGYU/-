@@ -1,3 +1,16 @@
+---
+title: architecture
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/explanation/architecture.md
+code_version: 2.0.0
+tier: important
+---
+
 # 智能投研复盘系统 V9 — 驾驶舱 Widget 架构说明
 
 > 本文档面向后续接入的 AI 智能体与研发人员，说明驾驶舱（Cockpit）Widget 化框架的整体架构、核心数据流转、枚举映射以及新增 Widget 的标准作业程序（SOP）。

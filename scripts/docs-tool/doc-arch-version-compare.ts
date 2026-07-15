@@ -36,11 +36,11 @@ const WATCH: ReadonlyArray<{ readonly pkg: string; readonly pattern: RegExp; rea
 
 /** 待扫描的关键架构文档 */
 const DOCS: ReadonlyArray<string> = [
-  'ARCHITECTURE.md',
-  'docs/D-specs/05-engine-specs.md',
-  'docs/D-specs/ui-design-system.md',
-  'docs/D-specs/component-library-guide.md',
-  'docs/A2-requirements/03-architecture-standards.md',
+  'architecture.md',
+  'docs/reference/05-engine-specs.md',
+  'docs/explanation/design/ui-design-system.md',
+  'docs/explanation/design/component-library-guide.md',
+  '../../docs/reference/03-architecture-standards.md',
 ]
 
 interface Drift {

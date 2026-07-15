@@ -50,23 +50,74 @@ export interface CollectKlineData {
 
 /**
  * 财务数据采集响应（与Python端FinancialCollectData对齐）
+ * 
+ * 利润表字段（Income Statement）
+ * 资产负债表字段（Balance Sheet）
+ * 现金流量表字段（Cash Flow Statement）
  */
 export interface CollectFinancialData {
   report_date?: string
+  report_type?: 'annual' | 'quarterly' | 'semi-annual'
+
   revenue?: number
   revenue_yoy?: number
+  operating_cost?: number
+  operating_cost_yoy?: number
+  gross_profit?: number
+  gross_margin?: number
+  operating_expense?: number
+  operating_profit?: number
+  operating_profit_yoy?: number
+  total_profit?: number
+  total_profit_yoy?: number
   net_profit?: number
   net_profit_yoy?: number
-  gross_margin?: number
   net_margin?: number
-  operating_cf?: number
+  rd_expense?: number
   rd_ratio?: number
-  receivables?: number
-  inventory_turnover_days?: number
-  interest_bearing_debt?: number
-  goodwill?: number
+
+  total_assets?: number
+  total_assets_yoy?: number
+  current_assets?: number
+  non_current_assets?: number
+  total_liabilities?: number
+  total_liabilities_yoy?: number
+  current_liabilities?: number
+  non_current_liabilities?: number
   net_assets?: number
+  net_assets_yoy?: number
+  receivables?: number
+  receivables_yoy?: number
+  inventory?: number
+  inventory_yoy?: number
+  fixed_assets?: number
+  intangible_assets?: number
+  goodwill?: number
+  interest_bearing_debt?: number
+  short_term_debt?: number
+  long_term_debt?: number
   shareholder_pledge?: number
+
+  operating_cf?: number
+  operating_cf_yoy?: number
+  investing_cf?: number
+  financing_cf?: number
+  net_cf?: number
+
+  eps?: number
+  eps_yoy?: number
+  diluted_eps?: number
+  bps?: number
+  inventory_turnover_days?: number
+  receivables_turnover_days?: number
+  asset_turnover?: number
+  roa?: number
+  roe?: number
+  debt_to_asset_ratio?: number
+  current_ratio?: number
+  quick_ratio?: number
+  dividend_yield?: number
+  payout_ratio?: number
 }
 
 export interface CollectResponse<T = unknown> {

@@ -51,7 +51,7 @@ export class MCPRegistry {
     // 发送工具列表变更通知
     import('./notification').then(({ notificationManager: nm }) => {
       nm.emit('notifications/tools/list_changed', { serverName: server.info.name })
-    })
+    }).catch(() => {})
   }
 
   /** 注销 Server */
@@ -64,7 +64,7 @@ export class MCPRegistry {
       // 发送工具列表变更通知
       import('./notification').then(({ notificationManager: nm }) => {
         nm.emit('notifications/tools/list_changed', { serverName })
-      })
+      }).catch(() => {})
     }
     return existed
   }

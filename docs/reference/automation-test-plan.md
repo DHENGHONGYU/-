@@ -1,3 +1,16 @@
+---
+title: automation-test-plan
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/automation-test-plan.md
+code_version: 2.0.0
+tier: important
+---
+
 # V9 智能投研复盘系统 全面自动化测试实施计划
 
 ## 项目信息
@@ -155,5 +168,5 @@ npx playwright test <module-spec> --project=chromium
 ## 当前进度
 
 > **全部完成**。所有 24 个任务已执行完毕，综合评估报告已生成。
-> 详见 [自动化测试综合评估报告](../04-testing/automation-test-evaluation)
+> 详见 [自动化测试综合评估报告](../explanation/design/automation-test-evaluation.md)
 

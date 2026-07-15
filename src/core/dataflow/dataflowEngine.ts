@@ -24,7 +24,9 @@ const logger = getLogger()
 type DataCallback<T = unknown> = (packet: DataPacket<T>) => void
 
 const DEFAULT_CACHE_MAX_ENTRIES = 100
-const DEFAULT_TTL_MULTIPLIER = 3
+const DEFAULT_TTL_MULTIPLIER = 2
+const HIGH_PRIORITY_TTL_MULTIPLIER = 1.5
+const LOW_PRIORITY_TTL_MULTIPLIER = 4
 
 const PRIORITY_ORDER: Record<string, number> = {
   high: 0,
@@ -39,9 +41,11 @@ const DEFAULT_CHANNELS: ChannelMeta[] = [
   { channel: 'market:emotion', description: '市场情绪指标', refreshInterval: 30000, persist: false, priority: 'low' },
   { channel: 'portfolio:summary', description: '持仓总览', refreshInterval: 10000, persist: true, priority: 'high' },
   { channel: 'portfolio:holding', description: '持仓明细', refreshInterval: 30000, persist: true, priority: 'normal' },
+  { channel: 'portfolio:risk', description: '持仓风险', refreshInterval: 10000, persist: true, priority: 'high' },
   { channel: 'strategy:signal', description: '买卖信号', refreshInterval: 5000, persist: false, priority: 'high' },
   { channel: 'strategy:score', description: '股票评分', refreshInterval: 60000, persist: true, priority: 'normal' },
   { channel: 'agent:status', description: 'Agent状态', refreshInterval: 10000, persist: false, priority: 'normal' },
+  { channel: 'agent:logs', description: 'Agent日志', refreshInterval: 2000, persist: false, priority: 'high' },
   { channel: 'system:health', description: '系统健康', refreshInterval: 30000, persist: false, priority: 'low' },
 ]
 
@@ -88,8 +92,10 @@ export class DataFlowEngine {
     logger.info('[DataFlowEngine] Initializing...')
     DEFAULT_CHANNELS.forEach((c) => {
       const meta = defaultDataBuilder.buildChannelMeta(c.channel)
-      this.channelMeta.set(c.channel, { ...meta, ttl: meta.ttl ?? meta.refreshInterval * DEFAULT_TTL_MULTIPLIER })
-      logger.debug(`[DataFlowEngine] Registered channel: ${c.channel} (${c.priority}, ${c.refreshInterval}ms)`)
+      const ttlMultiplier = c.priority === 'high' ? HIGH_PRIORITY_TTL_MULTIPLIER : c.priority === 'low' ? LOW_PRIORITY_TTL_MULTIPLIER : DEFAULT_TTL_MULTIPLIER
+      const ttl = meta.ttl ?? meta.refreshInterval * ttlMultiplier
+      this.channelMeta.set(c.channel, { ...meta, ttl })
+      logger.debug(`[DataFlowEngine] Registered channel: ${c.channel} (${c.priority}, ${c.refreshInterval}ms, TTL=${Math.round(ttl)}ms)`)
     })
     logger.info(`[DataFlowEngine] Initialized with ${this.channelMeta.size} default channels`)
   }

@@ -1,3 +1,16 @@
+---
+title: a11y-contrast-report
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
+title: docs/explanation/a11y-contrast-report.md
+code_version: 2.0.0
+tier: reference
+---
+
 # T-09 WCAG 对比度复核报告
 
 - **任务**: T-09 WCAG 对比度复核
@@ -123,4 +136,4 @@
 本次复核发现 **6 组 Design Tokens 色对** 与 **20 处 src/ 文本色使用** 未满足 WCAG AA 正文对比度要求。emerald 主色（`#10b981`）在亮色背景下正文对比度仅约 3.0:1，在暗色背景下与浅色文字对比度仅 2.42:1，**不建议用于正文或小字号**。建议优先执行 P1 修复：将按钮/主色加深到 emerald-700（`#047857`），并调整文本色 token 为 emerald-700。
 
 ---
-报告由 `scripts/a11y-contrast.cjs` 自动生成。
+报告由 `scripts/other/a11y-contrast.cjs` 自动生成。

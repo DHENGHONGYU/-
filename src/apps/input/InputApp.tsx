@@ -10,7 +10,7 @@ import { getLogger } from '@/lib/logger'
 // 子页面懒加载（G4 集成：七维采集配置 / 抓取引擎配置 / 采集任务监控）
 const SevenDimConfigPage = React.lazy(() => import('@/pages/input/SevenDimConfigPage'))
 const FetcherConfigPage = React.lazy(() => import('@/pages/input/FetcherConfigPage'))
-const CollectTaskPage = React.lazy(() => import('@/pages/input/CollectTaskPage'))
+const CollectTaskPage = React.lazy(() => import('@/pages/input/CollectTask'))
 
 interface InputRoute {
   path: string

@@ -1,3 +1,16 @@
+---
+title: imf
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/imf.md
+code_version: 2.0.0
+tier: important
+---
+
 # IMF 插件
 
 > **数据域**: 国际货币基金组织（IMF）全球宏观经济数据  

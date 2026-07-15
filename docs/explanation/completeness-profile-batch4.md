@@ -1,9 +1,18 @@
 ---
+title: completeness-profile-batch4
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: V9 模块完成度剖面图 — 批次 D（交易舱）
 version: v1.0.0
 last_updated: 2026-06-27
 maintainer: Quality Auditor
 status: active
+code_version: 2.0.0
+tier: important
 ---
 
 # V9 模块完成度剖面图 — 批次 D（交易舱）
@@ -86,7 +95,7 @@ status: active
 | 编号 | 模块 | 严重度 | 问题描述 | 文件路径 |
 |:---|:---|:---|:---|:---|
 | D1-P2-001 | 交易舱 Hub | P2 | Hub 中"交易信号"和"模拟持仓"链接均指向 `/trading`，导航路径不明确 | `src/pages/trading/TradingHubPage.tsx:36/42` |
-| D1-P2-002 | 交易舱 Hub | P2 | 无独立 Zustand Store | `src/pages/trading/TradingHubPage.tsx` |
+| D1-P2-002 | 交易舱 Hub | P2 | 无独立 Zustand Store | `src/apps/trading/TradingApp.tsx` |
 | D2-P2-003 | 交易信号 | P2 | 使用 9 个 useState，状态管理分散，无独立 Zustand Store | `src/apps/trading/TradingApp.tsx` |
 | D3-P2-004 | 策略快照 | P2 | 使用 10 个 useState，状态管理分散，无独立 Zustand Store | `src/pages/trading/StrategySnapshotPage.tsx` |
 

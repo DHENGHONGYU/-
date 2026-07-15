@@ -33,6 +33,7 @@ import {
   Lightbulb,
   History,
   HeartPulse,
+  RefreshCw,
   type LucideIcon,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -144,6 +145,9 @@ const PANEL_ITEMS: Record<CabinType, PanelGroup[]> = {
         { key: 'export', label: '数据导出', path: '/output/export', icon: Database },
         { key: 'review', label: '交易复盘', path: '/output/review', icon: BarChart3 },
         { key: 'wizard', label: '复盘向导', path: '/output/wizard', icon: Sparkles },
+        { key: 'prediction', label: '预测校验', path: '/output/prediction', icon: TrendingUp },
+        { key: 'retrospective', label: '周期复盘', path: '/output/retrospective', icon: RefreshCw },
+        { key: 'factor', label: '因子画板', path: '/output/factor-dashboard', icon: TrendingUp },
       ],
     },
   ],
@@ -264,7 +268,7 @@ export default function PortalShell(): React.JSX.Element {
     setFetcherOk(null)
     checkFetcherHealth().then((result) => {
       if (mounted) setFetcherOk(result.ok)
-    })
+    }).catch(() => {})
     return () => {
       mounted = false
     }
@@ -278,7 +282,7 @@ export default function PortalShell(): React.JSX.Element {
   const handleCabinSwitch = (cabin: CabinType, path: string): void => {
     logger.info('[PortalShell] 切换舱室', { from: activeCabin, to: cabin, path })
     setActiveCabin(cabin)
-    navigate(path)
+    void navigate(path)
   }
 
   // P1-FIX: Hub 页面重定向逻辑 —— 当访问 /xxx/hub 时自动重定向到 /xxx
@@ -292,7 +296,7 @@ export default function PortalShell(): React.JSX.Element {
         cabin: activeCabin,
         reason: '非总控舱的 /hub 路径自动重定向到舱室首页',
       })
-      navigate(targetPath, { replace: true })
+      void navigate(targetPath, { replace: true })
     }
   }, [location.pathname, activeCabin, navigate])
 
@@ -366,7 +370,8 @@ export default function PortalShell(): React.JSX.Element {
                           path: item.path,
                           currentPath: location.pathname,
                         })
-                        navigate(item.path)
+                        void navigate(item.path)
+                        onNavigate?.()
                         onNavigate?.()
                       }}
                       className={cn(

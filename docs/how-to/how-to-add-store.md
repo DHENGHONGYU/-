@@ -1,3 +1,16 @@
+---
+title: how-to-add-store
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/how-to/how-to-add-store.md
+code_version: 2.0.0
+tier: important
+---
+
 # 如何新增一个 Store（Zustand + withBroadcast）
 
 > **版本**：v1.0.0  
@@ -10,7 +23,7 @@
 
 在开始之前，确认以下事项：
 
-- [ ] 已阅读 `docs/guides/getting-started.md`（了解四步集成契约）
+- [ ] 已阅读 `../tutorials/getting-started.md`（了解四步集成契约）
 - [ ] 已确定 Store 的数据类型（在 `src/types/` 或 `src/data/types.ts` 中定义 Interface）
 - [ ] 已确定对应的 Service 层接口（Store 只能依赖 `services/` 和 `core/`）
 - [ ] 已检查 `src/constants/store-channels.constants.ts` 中是否有合适的事件名，或需要新增
@@ -324,11 +337,11 @@ export function getTopSector(): SectorData | null {
 
 | 文档 | 路径 | 说明 |
 |------|------|------|
-| 新增 Service | `docs/guides/how-to-add-service.md` | Store 的下游依赖 |
-| 新增 Widget | `docs/guides/how-to-add-widget.md` | Store 的上游消费方 |
+| 新增 Service | `./how-to-add-service.md` | Store 的下游依赖 |
+| 新增 Widget | `./how-to-add-widget.md` | Store 的上游消费方 |
 | Store 广播规范 | `src/constants/store-channels.constants.ts` | 事件命名常量 |
 | withBroadcast 实现 | `src/lib/withBroadcast.ts` | 广播工具实现 |
-| AGENTS.md 契约 | `AGENTS.md` | 分层规则与四步集成 |
+| ../../AGENTS.md 契约 | `../../AGENTS.md` | 分层规则与四步集成 |
 
 ---
 

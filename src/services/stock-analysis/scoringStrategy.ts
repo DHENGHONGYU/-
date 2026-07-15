@@ -56,6 +56,12 @@ const MOCK_STOCK_NAMES = [
 /** 投资画像标签池 */
 const PROFILE_TAGS = ['老股民', '择时', '价值投资者', '成长风格', '均衡配置', '短线交易', '长期持有', '行业轮动']
 
+/** Mock 延迟时间（毫秒） */
+const MOCK_DELAY_MS = {
+  poolBoard: 450,
+  chatMessage: 1200,
+}
+
 /** KAI 评分细项池 */
 const KAI_DETAIL_ITEMS: Record<string, string[]> = {
   [KAI_DIMENSION_NAMES.COMPETITIVENESS]: ['市占率', 'ROE', '毛利率', '研发投入'],
@@ -124,7 +130,7 @@ export class MockStockAnalysisScoringStrategy implements StockAnalysisScoringStr
   }
 
   async getPoolBoard(page = 1, pageSize = 8): Promise<PoolBoard> {
-    await this.delay(450)
+    await this.delay(MOCK_DELAY_MS.poolBoard)
     return this.generatePoolBoard(page, pageSize)
   }
 
@@ -144,7 +150,7 @@ export class MockStockAnalysisScoringStrategy implements StockAnalysisScoringStr
   }
 
   async sendChatMessage(target: string, _question: string): Promise<ChatMessage> {
-    await this.delay(1200)
+    await this.delay(MOCK_DELAY_MS.chatMessage)
     return {
       id: `assistant_${nanoid(8)}`,
       role: 'assistant',

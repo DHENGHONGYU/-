@@ -1,3 +1,16 @@
+---
+title: 2026-07-04-ui-testing-optimization
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
+title: docs/reference/2026-07-04-ui-testing-optimization.md
+code_version: 2.0.0
+tier: reference
+---
+
 # V9 系统界面功能测试与优化执行方案
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
@@ -50,8 +63,8 @@
 #### Task 1.1: Button 组件全面测试
 
 **Files:**
-- Test: `src/components/ui/Button.test.tsx`
-- Component: `src/components/ui/Button.tsx`
+- Test: `src/components/atoms/Button.test.tsx`
+- Component: `src/components/atoms/Button.tsx`
 
 - [ ] **Step 1: 编写 Button 组件测试用例**
 
@@ -149,8 +162,8 @@ git commit -m "test: add comprehensive Button component tests"
 #### Task 1.2: Input 组件全面测试
 
 **Files:**
-- Test: `src/components/ui/Input.test.tsx`
-- Component: `src/components/ui/Input.tsx`
+- Test: `src/components/atoms/Input.test.tsx`
+- Component: `src/components/atoms/Input.tsx`
 
 - [ ] **Step 1: 编写 Input 组件测试用例**
 
@@ -232,8 +245,8 @@ git commit -m "test: add comprehensive Input component tests"
 #### Task 1.3: Dialog 组件全面测试
 
 **Files:**
-- Test: `src/components/ui/Dialog.test.tsx`
-- Component: `src/components/ui/Dialog.tsx`
+- Test: `src/components/molecules/Dialog.test.tsx`
+- Component: `src/components/molecules/Dialog.tsx`
 
 - [ ] **Step 1: 编写 Dialog 组件测试用例**
 
@@ -363,8 +376,8 @@ git commit -m "test: add comprehensive Dialog component tests"
 #### Task 1.4: Card 组件全面测试
 
 **Files:**
-- Test: `src/components/ui/Card.test.tsx`
-- Component: `src/components/ui/Card.tsx`
+- Test: `src/components/atoms/Card.test.tsx`
+- Component: `src/components/atoms/Card.tsx`
 
 - [ ] **Step 1: 编写 Card 组件测试用例**
 
@@ -473,7 +486,7 @@ git commit -m "test: add comprehensive Card component tests"
 
 **Files:**
 - Test: `src/pages/input/__tests__/InputHubPage.test.tsx`
-- Page: `src/pages/input/InputHubPage.tsx`
+- Page: `src/apps/input/InputApp.tsx`
 
 - [ ] **Step 1: 编写 InputHubPage 测试用例**
 
@@ -574,7 +587,7 @@ git commit -m "test: add InputHubPage integration tests"
 
 **Files:**
 - Test: `src/pages/analysis/__tests__/AnalysisHubPage.test.tsx`
-- Page: `src/pages/analysis/AnalysisHubPage.tsx`
+- Page: `src/apps/analysis/AnalysisApp.tsx`
 
 - [ ] **Step 1: 编写 AnalysisHubPage 测试用例**
 
@@ -663,7 +676,7 @@ git commit -m "test: add AnalysisHubPage integration tests"
 
 **Files:**
 - Test: `src/pages/trading/__tests__/TradingHubPage.test.tsx`
-- Page: `src/pages/trading/TradingHubPage.tsx`
+- Page: `src/apps/trading/TradingApp.tsx`
 
 - [ ] **Step 1: 编写 TradingHubPage 测试用例**
 
@@ -800,7 +813,7 @@ git commit -m "test: add OutputHubPage integration tests"
 
 **Files:**
 - Test: `src/pages/command/__tests__/CommandHubPage.test.tsx`
-- Page: `src/pages/command/CommandHubPage.tsx`
+- Page: `src/apps/command/CommandApp.tsx`
 
 - [ ] **Step 1: 编写 CommandHubPage 测试用例**
 
@@ -1051,7 +1064,7 @@ git commit -m "fix: standardize spacing to 4px grid system"
 #### Task 4.1: 加载状态优化
 
 **Files:**
-- Component: `src/components/PageSkeleton.tsx`
+- Component: `src/components/organisms/shared/PageSkeleton.tsx`
 - Target: 所有页面组件
 
 - [ ] **Step 1: 检查所有页面的加载状态**
@@ -1108,7 +1121,7 @@ git commit -m "feat: enhance PageSkeleton visual feedback"
 #### Task 4.2: 错误状态处理
 
 **Files:**
-- Component: `src/components/ui/ErrorState.tsx`
+- Component: `src/components/molecules/ErrorState.tsx`
 - Target: 所有数据获取页面
 
 - [ ] **Step 1: 检查 ErrorState 组件**
@@ -1162,7 +1175,7 @@ git commit -m "feat: improve ErrorState component with retry action"
 #### Task 4.3: 空状态处理
 
 **Files:**
-- Component: `src/components/ui/EmptyState.tsx`
+- Component: `src/components/molecules/EmptyState.tsx`
 - Target: 所有列表页面
 
 - [ ] **Step 1: 检查 EmptyState 组件**

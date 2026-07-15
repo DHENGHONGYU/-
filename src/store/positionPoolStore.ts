@@ -148,7 +148,7 @@ export const usePositionPoolStore = create<PositionPoolState>((set, get) => ({
         ...item,
         symbol: normalizedSymbol,
         pool: POOL,
-        researchStatus: DEFAULT_POOL_STATUS[POOL] as PositionStatus,
+        researchStatus: DEFAULT_POOL_STATUS[POOL],
         source: item.source ?? DATA_SOURCE.manual,
         group: item.group ?? DEFAULT_POOL_GROUP,
         dataVersion: 1,

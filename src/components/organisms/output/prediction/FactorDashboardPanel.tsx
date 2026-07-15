@@ -8,7 +8,7 @@
  */
 
 import { usePredictionStore } from '@/store/predictionStore'
-import { twText } from '@/constants/theme.tokens'
+import { BADGE_COLORS } from '@/constants/theme.tokens'
 
 const CYCLE_LABELS: Record<string, string> = {
   'left-bottom': '左侧底部',
@@ -17,24 +17,9 @@ const CYCLE_LABELS: Record<string, string> = {
   'left-down': '左侧下降',
 }
 
-const CYCLE_COLORS: Record<string, string> = {
-  'left-bottom': 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-  'right-up': 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-  'top': 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
-  'left-down': 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-}
-
-const ALERT_COLORS: Record<string, string> = {
-  info: 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300',
-  warning: 'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-300',
-  critical: 'bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-300',
-}
-
-const DIRECTION_COLORS: Record<string, string> = {
-  bullish: 'text-red-600 dark:text-red-400',
-  bearish: 'text-green-600 dark:text-green-400',
-  neutral: 'text-stone-500',
-}
+const CYCLE_COLORS = BADGE_COLORS.cycle as Record<string, string>
+const ALERT_COLORS = BADGE_COLORS.alert as Record<string, string>
+const DIRECTION_COLORS = BADGE_COLORS.direction as Record<string, string>
 
 /**
  * 因子画板面板
@@ -118,10 +103,10 @@ export function FactorDashboardPanel(): React.JSX.Element {
               <span className="w-8 text-right">{f.score.toFixed(1)}</span>
               <span className="w-10 text-right text-muted-foreground">×{f.weight.toFixed(1)}</span>
               {f.effectiveness === 'ineffective' && (
-                <span className={twText('red', 500)}>❌</span>
+                <span className={BADGE_COLORS.icon.danger}>❌</span>
               )}
               {f.effectiveness === 'weakening' && (
-                <span className={twText('yellow', 500)}>⚠️</span>
+                <span className={BADGE_COLORS.icon.warning}>⚠️</span>
               )}
             </div>
           ))}
