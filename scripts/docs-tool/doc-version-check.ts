@@ -17,13 +17,14 @@
  */
 
 import { execSync } from 'node:child_process'
-import { existsSync, readFileSync, writeFileSync } from 'node:fs'
-import { join, dirname as pathDirname } from 'node:path'
+import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs'
+import { join, dirname as pathDirname, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = pathDirname(__filename)
-const ROOT = __dirname.replace(/[\\/]scripts$/, '')
+// pr-6 重组后脚本位于 scripts/docs-tool/，需向上回到项目根（兼容 scripts/ 与 scripts/docs-tool/）
+const ROOT = __dirname.replace(/[\\/]scripts([\\/].*)?$/, '')
 
 interface Mismatch {
   path: string
@@ -39,16 +40,41 @@ function readPackageVersion(): string {
   return pkg.version ?? '0.0.0'
 }
 
-/** 取得受跟踪的 docs/**\*.md 列表 */
+/**
+ * 取得 docs 目录下全部 .md 列表（与 doc-rule-validator.walkMd 保持一致的扫描范围）。
+ * 此前用 `git ls-files` 仅覆盖受跟踪文件（245），导致与 doc-rule-validator（591）范围不一致（F6）。
+ * 现统一为文件系统遍历，排除 node_modules / deprecated-docs / old-versions / ai-index。
+ * @returns 相对仓库根的路径数组，如 `docs/reference/api-contract.md`
+ */
 function listTrackedDocs(): string[] {
-  try {
-    return execSync('git ls-files', { cwd: ROOT, encoding: 'utf-8' })
-      .split('\n')
-      .map((l) => l.trim())
-      .filter((l) => /^docs\/.*\.md$/.test(l) && !/^docs\/(reports|changelogs)\//.test(l))
-  } catch {
-    return []
+  const results: string[] = []
+  const docsDir = join(ROOT, 'docs')
+  const EXCLUDE = new Set(['node_modules', 'deprecated-docs', 'old-versions', 'ai-index'])
+  const walk = (dir: string): void => {
+    let entries: string[]
+    try {
+      entries = readdirSync(dir)
+    } catch {
+      return
+    }
+    for (const entry of entries) {
+      if (EXCLUDE.has(entry)) continue
+      const full = join(dir, entry)
+      let st
+      try {
+        st = statSync(full)
+      } catch {
+        continue
+      }
+      if (st.isDirectory()) {
+        walk(full)
+      } else if (entry.toLowerCase().endsWith('.md')) {
+        results.push(relative(ROOT, full).replace(/\\/g, '/'))
+      }
+    }
   }
+  walk(docsDir)
+  return results
 }
 
 /** 从文件头部抽取 YAML frontmatter 的 code_version 字段 */
@@ -101,6 +127,13 @@ export function checkVersionSync(fix: boolean): VersionCheckResult {
     const { hasFrontmatter, codeVersion } = extractCodeVersion(readFileSync(abs, 'utf-8'))
     if (!hasFrontmatter || codeVersion === undefined) {
       missing.push(rel)
+      if (fix) {
+        try {
+          stampCodeVersion(rel, expected)
+        } catch (err) {
+          console.error(`[doc-version-check] 写入失败(补齐缺失) ${rel}: ${err instanceof Error ? err.message : String(err)}`)
+        }
+      }
       continue
     }
     if (codeVersion !== expected) {
