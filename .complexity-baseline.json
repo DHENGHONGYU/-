@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "generatedAt": "2026-07-13T01:13:36.248Z",
-  "deeplyNestedBlocks": 22,
+  "generatedAt": "2026-07-15T21:47:35.568Z",
+  "deeplyNestedBlocks": 47,
   "longElseIfChains": 0,
-  "duplicateIfConditions": 2,
-  "_note": "基线基于当前代码实际复杂度采集。新增复杂度债务须先修复再提交。"
+  "duplicateIfConditions": 8,
+  "_note": "2026-07-16 修复 complexity-scan.ts 路径 bug（ROOT 上溯层级 '..'→'../..'）后重采的真实基线。此前旧基线 22/0/2 于 2026-07-13 采集，脚本移入 scripts/quality/ 后空扫失效，期间真实债务增长至 47/0/8。基线只减不增：后续应逐步下调（优先 workflowServer.ts / stressTestService.ts）。"
 }

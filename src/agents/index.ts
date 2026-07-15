@@ -5,6 +5,8 @@
  */
 
 import { getLogger } from '@/lib/logger'
+import '@/mcp/register'
+import { mcpRegistry } from '@/mcp/core/registry'
 import { agentRuntime, type AgentConfig } from './agentRuntime'
 import { getAgentRegistry, AgentRegistry } from './agentRegistry'
 import { getAgentHealthMonitor, AgentHealthMonitor } from './agentHealthMonitor'
@@ -124,6 +126,44 @@ export const DEFAULT_AGENTS: AgentConfig[] = [
 ]
 
 // ============================================================================
+// Agent 依赖不变量校验（F5）
+// ============================================================================
+
+/**
+ * 校验已注册 Agent 依赖的 MCP Server 是否均已注册且启用。
+ *
+ * 不变量：每个 Agent 的 `mcpServerName ?? id` 必须解析到注册表中
+ * 一个 `enabled` 的 Server，否则该 Agent 在运行时必失败。
+ *
+ * @returns 违反不变量（依赖缺失/禁用）的 Agent 列表；空数组表示全部满足。
+ */
+export function validateAgentMcpDependencies(): Array<{ agentId: string; serverName: string; reason: string }> {
+  const violations: Array<{ agentId: string; serverName: string; reason: string }> = []
+  const registry = getAgentRegistry()
+
+  for (const entry of registry.getAll()) {
+    const config = entry.config
+    const serverName = config.mcpServerName ?? config.id
+    const server = mcpRegistry.getServer(serverName)
+
+    if (!server) {
+      violations.push({ agentId: config.id, serverName, reason: 'MCP server not registered' })
+      logger.error(`[AgentSystem] Agent "${config.id}" depends on unregistered MCP server "${serverName}"`)
+      continue
+    }
+    if (server.options.enabled === false) {
+      violations.push({ agentId: config.id, serverName, reason: 'MCP server disabled' })
+      logger.error(`[AgentSystem] Agent "${config.id}" depends on disabled MCP server "${serverName}"`)
+    }
+  }
+
+  if (violations.length === 0) {
+    logger.info('[AgentSystem] All agent MCP dependencies satisfied')
+  }
+  return violations
+}
+
+// ============================================================================
 // Agent 系统初始化
 // ============================================================================
 
@@ -159,6 +199,12 @@ export function initAgentSystem(): void {
     registry.register(config, ['default', 'system'])
     agentRuntime.register(config)
     logger.info(`[AgentSystem] Agent "${config.id}" registered`)
+  }
+
+  // 启动期不变量校验：Agent 依赖的 MCP Server 必须已注册且启用（F5 守卫）
+  const depViolations = validateAgentMcpDependencies()
+  if (depViolations.length > 0) {
+    logger.error(`[AgentSystem] ${depViolations.length} agent MCP dependency violation(s) detected`, { violations: depViolations })
   }
 
   // 启动健康监控（30s 检查周期）

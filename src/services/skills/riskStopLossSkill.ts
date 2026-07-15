@@ -152,7 +152,7 @@ export async function executeRiskStopLossSkill(
       skillId: riskStopLossSkill.name,
       status: 'failed',
       evidence: [],
-      error: `不支持的交易方向: ${direction ?? 'undefined'}，仅支持 buy/sell`,
+      error: `不支持的交易方向: ${direction}，仅支持 buy/sell`,
       meta: { startedAt, durationMs: Date.now() - startedAt },
     }
   }

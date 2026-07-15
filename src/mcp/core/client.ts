@@ -98,6 +98,15 @@ export class MCPClientImpl implements MCPClient {
       }
     }
 
+    // 不变量守卫：已注册但被禁用（enabled: false）的 Server 不应被调用
+    if (entry.options.enabled === false) {
+      logger.warn(`[MCPClient] callTool() server disabled: ${serverName}`)
+      return {
+        content: [{ type: 'text', text: `Server disabled: ${serverName}` }],
+        isError: true,
+      }
+    }
+
     logger.info(`[MCPClient] callTool() ${serverName}.${toolName}`, { args, caller })
     // 透传 context 给 Server 基类（深度防御）
     const result = await entry.server.callTool(toolName, args, context)
