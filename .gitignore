@@ -178,3 +178,7 @@ build-artifacts/
 docs/reports/_generated/
 docs/reports/**/*.html
 docs/reports/automation-pipeline/*.json
+
+# Generated audit/proofread reports in scripts/docs/reports/
+/scripts/docs/reports/audit/*.json
+/scripts/docs/reports/proofread/*.json
