@@ -16,7 +16,7 @@ import { excelParser } from '@/services/file-import/parsers/excelParser'
 import { markdownParser } from '@/services/file-import/parsers/markdownParser'
 import { pdfParser } from '@/services/file-import/parsers/pdfParser'
 import { docxParser } from '@/services/file-import/parsers/docxParser'
-import { getParser, registerParser, clearParsers, getSupportedExtensions } from '@/services/file-import/parserRegistry'
+import { registerParser, clearParsers, getSupportedExtensions } from '@/services/file-import/parserRegistry'
 import type { CollectionHistoryEntry, GlobalScheduleConfig } from '@/types/modules/data-sync.types'
 
 // ============================================================

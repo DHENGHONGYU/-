@@ -17,29 +17,34 @@ vi.mock('@/services/input/hotSectorService', () => ({
 }))
 
 // ============================================================
-// Mock: usePoolStore
+// Mock: intentionPoolStore
 // ============================================================
 // 使用可变 store，避免 vi.clearAllMocks 清空 mockReturnValue 后同步测试拿不到值
-interface PoolStoreStock {
+interface IntentionPoolItem {
   symbol: string
   name: string
   group?: string
-  researchStatus: string
+  pool?: string
+  status?: string
 }
-const poolStoreState: {
-  stocks: PoolStoreStock[]
+const intentionPoolState: {
+  items: IntentionPoolItem[]
+  loading: boolean
   refresh: ReturnType<typeof vi.fn>
 } = {
-  stocks: [],
+  items: [],
+  loading: false,
   refresh: vi.fn().mockResolvedValue(undefined),
 }
 
-// Mock getAllGroups 函数
-const mockGetAllGroups = vi.fn().mockReturnValue(['默认', '自选'])
-
-vi.mock('@/store/poolStore', () => ({
-  usePoolStore: (selector: (state: typeof poolStoreState) => unknown) => selector(poolStoreState),
-  getAllGroups: () => mockGetAllGroups(),
+vi.mock('@/store/intentionPoolStore', () => ({
+  useIntentionPoolStore: (selector: (state: typeof intentionPoolState) => unknown) =>
+    selector(intentionPoolState),
+  getIntentionPoolGroups: () => {
+    const groups = new Set(intentionPoolState.items.map((s) => s.group ?? '默认'))
+    groups.add('自选')
+    return Array.from(groups).sort()
+  },
 }))
 
 // ============================================================
@@ -57,13 +62,11 @@ const HotSectorPanel = (await import('@/apps/input/HotSectorPanel')).default
 // 测试辅助函数
 // ============================================================
 function setupPoolStore(stocks: Array<{ symbol: string; name: string; group?: string }> = []) {
-  poolStoreState.stocks = stocks.map((s) => ({ ...s, researchStatus: 'candidate' }))
-  // 从 stocks 中提取分组，始终包含 '自选' 以匹配测试需求
-  const groups = [...new Set(stocks.map((s) => s.group ?? '默认'))]
-  if (!groups.includes('自选')) {
-    groups.push('自选')
-  }
-  mockGetAllGroups.mockReturnValue(groups)
+  intentionPoolState.items = stocks.map((s) => ({
+    ...s,
+    pool: 'intention',
+    status: 'candidate',
+  }))
 }
 
 /** 等待组件初始化动画（300ms setTimeout）完成，sector 卡片渲染出来 */
@@ -84,8 +87,7 @@ describe('HotSectorPanel', () => {
       success: true,
       data: { added: ['600519.SH', '000001.SZ'], failed: [] },
     })
-    poolStoreState.refresh.mockResolvedValue(undefined)
-    mockGetAllGroups.mockReturnValue(['默认', '自选'])
+    intentionPoolState.refresh.mockResolvedValue(undefined)
     setupPoolStore()
   })
 
@@ -96,7 +98,7 @@ describe('HotSectorPanel', () => {
     render(<HotSectorPanel />)
     await waitForLoadingToFinish()
 
-    expect(poolStoreState.refresh).toHaveBeenCalledTimes(1)
+    expect(intentionPoolState.refresh).toHaveBeenCalledTimes(1)
   })
 
   // ----------------------------------------------------------

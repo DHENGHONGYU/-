@@ -289,31 +289,37 @@ export async function runIntelligentScore(
     currentStep = 'v6EngineCalculation'
     reportProgress(currentStep, 'running', '执行 V6 实时因子引擎 ...')
     let v6Composite: CompositeScore | null = null
-    try {
-      const quotesResult = await dataBridge.query<DailyQuotes>({
-        action: ENVELOPE_ACTION.queryGet,
-        store: STORE_NAME.dailyQuotes,
-        key: symbol,
-      })
-      const quotesOrNull = quotesResult.success ? quotesResult.data : null
+    // 基础数据不完整时跳过 V6 引擎，避免以默认值生成不可信的合成评分
+    if (basicMissingFields.length > 0) {
+      logger.info('[runIntelligentScore] 基础数据不完整，跳过 V6 引擎', { symbol, missingFields: basicMissingFields })
+      reportProgress(currentStep, 'done', `基础数据缺失 ${basicMissingFields.join(', ')}，将使用 LLM 评分`)
+    } else {
+      try {
+        const quotesResult = await dataBridge.query<DailyQuotes>({
+          action: ENVELOPE_ACTION.queryGet,
+          store: STORE_NAME.dailyQuotes,
+          key: symbol,
+        })
+        const quotesOrNull = quotesResult.success ? quotesResult.data : null
 
-      const engine = createV6Engine()
-      const inputSymbol = stock?.symbol ?? symbol
-      const input = {
-        symbol: inputSymbol,
-        stock: stock ? stockToBasicData(stock) : stockToBasicData({ price: 0 } as Stock),
-        financials: await buildFinancialData(inputSymbol),
-        quotes: quotesOrNull
-          ? quotesToQuoteData(quotesOrNull)
-          : { latestClose: stock?.price ?? 0, history: [], volumeHistory: [] },
+        const engine = createV6Engine()
+        const inputSymbol = stock?.symbol ?? symbol
+        const input = {
+          symbol: inputSymbol,
+          stock: stock ? stockToBasicData(stock) : stockToBasicData({ price: 0 } as Stock),
+          financials: await buildFinancialData(inputSymbol),
+          quotes: quotesOrNull
+            ? quotesToQuoteData(quotesOrNull)
+            : { latestClose: stock?.price ?? 0, history: [], volumeHistory: [] },
+        }
+        const composite = await engine.calculateAll(input)
+        v6Composite = composite
+        reportProgress(currentStep, 'done', `V6 引擎完成，综合分 ${composite.score.toFixed(2)}`)
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err)
+        logger.warn('[runIntelligentScore] V6 引擎不可用，将回退 LLM', { symbol, error: msg })
+        reportProgress(currentStep, 'done', 'V6 引擎数据不足，将使用 LLM 评分')
       }
-      const composite = await engine.calculateAll(input)
-      v6Composite = composite
-      reportProgress(currentStep, 'done', `V6 引擎完成，综合分 ${composite.score.toFixed(2)}`)
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err)
-      logger.warn('[runIntelligentScore] V6 引擎不可用，将回退 LLM', { symbol, error: msg })
-      reportProgress(currentStep, 'done', 'V6 引擎数据不足，将使用 LLM 评分')
     }
 
     currentStep = 'readSupplementaryFiles'

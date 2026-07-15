@@ -50,6 +50,8 @@ export interface StockBasicData {
 
 /** 财务数据 */
 export interface FinancialData {
+  /** 数据完整度状态：完整 / 部分缺失 / 完全缺失 */
+  dataStatus?: 'complete' | 'partial' | 'missing'
   /** 营业收入（亿元） */
   revenue?: number
   /** 营收同比增速 */

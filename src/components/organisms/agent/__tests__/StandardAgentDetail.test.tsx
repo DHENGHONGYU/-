@@ -17,13 +17,13 @@ describe('StandardAgentDetail', () => {
     const entry = getAgentComponent('news-analyzer-agent')!
     renderDetail('news-analyzer-agent')
 
-    expect(screen.getByText(entry.displayName)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: entry.displayName })).toBeInTheDocument()
     const link = screen.getByRole('link', { name: new RegExp(entry.detailLink!.label) })
     expect(link).toHaveAttribute('href', entry.detailLink!.to)
   })
 
   it('未知 Agent 不崩溃（兜底显示）', () => {
     renderDetail('unknown-agent')
-    expect(screen.getByText('未知智能体')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: '未知智能体' })).toBeInTheDocument()
   })
 })

@@ -12,58 +12,58 @@ import { MODULE_ID, DB_OPERATION } from '@/config/dbConfig'
 
 describe('rolePermissionMapper', () => {
   describe('mapUserRoleToMcpRole', () => {
-    it('should map admin to system', () => {
+    it('应将 admin 映射为 system', () => {
       expect(mapUserRoleToMcpRole('admin')).toBe('system')
     })
 
-    it('should map trader to agent', () => {
+    it('应将 trader 映射为 agent', () => {
       expect(mapUserRoleToMcpRole('trader')).toBe('agent')
     })
 
-    it('should map analyst to ui', () => {
+    it('应将 analyst 映射为 ui', () => {
       expect(mapUserRoleToMcpRole('analyst')).toBe('ui')
     })
 
-    it('should map viewer to ui', () => {
+    it('应将 viewer 映射为 ui', () => {
       expect(mapUserRoleToMcpRole('viewer')).toBe('ui')
     })
   })
 
   describe('mapDeveloperRoleToMcpRole', () => {
-    it('should map architect to system', () => {
+    it('应将 architect 映射为 system', () => {
       expect(mapDeveloperRoleToMcpRole('architect')).toBe('system')
     })
 
-    it('should map fullstack to system', () => {
+    it('应将 fullstack 映射为 system', () => {
       expect(mapDeveloperRoleToMcpRole('fullstack')).toBe('system')
     })
 
-    it('should map data to system', () => {
+    it('应将 data 映射为 system', () => {
       expect(mapDeveloperRoleToMcpRole('data')).toBe('system')
     })
 
-    it('should map trading to system', () => {
+    it('应将 trading 映射为 system', () => {
       expect(mapDeveloperRoleToMcpRole('trading')).toBe('system')
     })
 
-    it('should map ai-agent to agent', () => {
+    it('应将 ai-agent 映射为 agent', () => {
       expect(mapDeveloperRoleToMcpRole('ai-agent')).toBe('agent')
     })
 
-    it('should map frontend to ui', () => {
+    it('应将 frontend 映射为 ui', () => {
       expect(mapDeveloperRoleToMcpRole('frontend')).toBe('ui')
     })
   })
 
   describe('getUserRoleAllowedModules', () => {
-    it('should return all modules for admin', () => {
+    it('admin 应返回全部模块', () => {
       const modules = getUserRoleAllowedModules('admin')
       expect(modules).toContain(MODULE_ID.fetcher)
       expect(modules).toContain(MODULE_ID.trading)
       expect(modules).toContain(MODULE_ID.system)
     })
 
-    it('should return trading-related modules for trader', () => {
+    it('trader 应返回交易相关模块', () => {
       const modules = getUserRoleAllowedModules('trader')
       expect(modules).toContain(MODULE_ID.trading)
       expect(modules).toContain(MODULE_ID.strategy)
@@ -71,14 +71,14 @@ describe('rolePermissionMapper', () => {
       expect(modules).toContain(MODULE_ID.fetcher)
     })
 
-    it('should return analysis modules for analyst', () => {
+    it('analyst 应返回分析模块', () => {
       const modules = getUserRoleAllowedModules('analyst')
       expect(modules).toContain(MODULE_ID.analyzer)
       expect(modules).toContain(MODULE_ID.fetcher)
       expect(modules).toContain(MODULE_ID.news)
     })
 
-    it('should return limited modules for viewer', () => {
+    it('viewer 应返回有限模块', () => {
       const modules = getUserRoleAllowedModules('viewer')
       expect(modules).toContain(MODULE_ID.analyzer)
       expect(modules).toContain(MODULE_ID.fetcher)
@@ -86,13 +86,13 @@ describe('rolePermissionMapper', () => {
   })
 
   describe('getDeveloperRoleAllowedModules', () => {
-    it('should return all modules for architect', () => {
+    it('architect 应返回全部模块', () => {
       const modules = getDeveloperRoleAllowedModules('architect')
       expect(modules).toContain(MODULE_ID.fetcher)
       expect(modules).toContain(MODULE_ID.trading)
     })
 
-    it('should return analysis, trading, system and fetcher modules for fullstack', () => {
+    it('fullstack 应返回 analyzer、trading、system 和 fetcher 模块', () => {
       const modules = getDeveloperRoleAllowedModules('fullstack')
       expect(modules).toContain(MODULE_ID.analyzer)
       expect(modules).toContain(MODULE_ID.trading)
@@ -100,7 +100,7 @@ describe('rolePermissionMapper', () => {
       expect(modules).toContain(MODULE_ID.fetcher)
     })
 
-    it('should return data-related modules for data engineer', () => {
+    it('data 工程师应返回数据相关模块', () => {
       const modules = getDeveloperRoleAllowedModules('data')
       expect(modules).toContain(MODULE_ID.fetcher)
       expect(modules).toContain(MODULE_ID.datalayer)
@@ -111,7 +111,7 @@ describe('rolePermissionMapper', () => {
       expect(modules).toContain(MODULE_ID.analyzer)
     })
 
-    it('should return AI-related modules for ai-agent engineer', () => {
+    it('ai-agent 工程师应返回 AI 相关模块', () => {
       const modules = getDeveloperRoleAllowedModules('ai-agent')
       expect(modules).toContain(MODULE_ID.news)
       expect(modules).toContain(MODULE_ID.analyzer)
@@ -119,7 +119,7 @@ describe('rolePermissionMapper', () => {
       expect(modules).toContain(MODULE_ID.system)
     })
 
-    it('should return trading-related modules for trading engineer', () => {
+    it('trading 工程师应返回交易相关模块', () => {
       const modules = getDeveloperRoleAllowedModules('trading')
       expect(modules).toContain(MODULE_ID.trading)
       expect(modules).toContain(MODULE_ID.strategy)
@@ -132,71 +132,71 @@ describe('rolePermissionMapper', () => {
       expect(modules).toContain(MODULE_ID.tradinghub)
     })
 
-    it('should return empty modules for frontend', () => {
+    it('frontend 应返回空模块', () => {
       const modules = getDeveloperRoleAllowedModules('frontend')
       expect(modules).toEqual([])
     })
   })
 
   describe('checkUserRolePermission', () => {
-    it('should allow admin full access', () => {
+    it('admin 应拥有完全权限', () => {
       expect(checkUserRolePermission('admin', MODULE_ID.fetcher, DB_OPERATION.select)).toBe(true)
       expect(checkUserRolePermission('admin', MODULE_ID.trading, DB_OPERATION.insert)).toBe(true)
       expect(checkUserRolePermission('admin', MODULE_ID.system, DB_OPERATION.delete)).toBe(true)
     })
 
-    it('should deny viewer access to trading module', () => {
+    it('viewer 应被拒绝访问 trading 模块', () => {
       expect(checkUserRolePermission('viewer', MODULE_ID.trading, DB_OPERATION.select)).toBe(false)
     })
   })
 
   describe('checkDeveloperRolePermission', () => {
-    it('should allow architect full access', () => {
+    it('architect 应拥有完全权限', () => {
       expect(checkDeveloperRolePermission('architect', MODULE_ID.fetcher, DB_OPERATION.select)).toBe(true)
       expect(checkDeveloperRolePermission('architect', MODULE_ID.trading, DB_OPERATION.insert)).toBe(true)
     })
 
-    it('should deny frontend access to any module', () => {
+    it('frontend 应被拒绝访问任何模块', () => {
       expect(checkDeveloperRolePermission('frontend', MODULE_ID.fetcher, DB_OPERATION.select)).toBe(false)
     })
 
-    it('should allow data engineer access to pool module', () => {
+    it('data 工程师应被允许访问 pool 模块', () => {
       expect(checkDeveloperRolePermission('data', MODULE_ID.pool, DB_OPERATION.select)).toBe(true)
     })
 
-    it('should allow ai-agent engineer access to analyzer module', () => {
+    it('ai-agent 工程师应被允许访问 analyzer 模块', () => {
       expect(checkDeveloperRolePermission('ai-agent', MODULE_ID.analyzer, DB_OPERATION.select)).toBe(true)
     })
 
-    it('should allow trading engineer access to orderstore module', () => {
+    it('trading 工程师应被允许访问 orderstore 模块', () => {
       expect(checkDeveloperRolePermission('trading', MODULE_ID.orderstore, DB_OPERATION.select)).toBe(true)
     })
   })
 
   describe('checkUserRoleDbOperation', () => {
-    it('should map INSERT action to insert operation', () => {
+    it('INSERT 动作应映射为 insert 操作', () => {
       expect(checkUserRoleDbOperation('admin', MODULE_ID.fetcher, 'INSERT_DATA')).toBeDefined()
     })
 
-    it('should map UPDATE action to update operation', () => {
+    it('UPDATE 动作应映射为 update 操作', () => {
       expect(checkUserRoleDbOperation('admin', MODULE_ID.fetcher, 'UPDATE_CONFIG')).toBeDefined()
     })
 
-    it('should map DELETE action to delete operation', () => {
+    it('DELETE 动作应映射为 delete 操作', () => {
       expect(checkUserRoleDbOperation('admin', MODULE_ID.fetcher, 'DELETE_RECORD')).toBeDefined()
     })
 
-    it('should default to select for unknown actions', () => {
+    it('未知动作应默认降级为 select', () => {
       expect(checkUserRoleDbOperation('admin', MODULE_ID.fetcher, 'UNKNOWN_ACTION')).toBeDefined()
     })
   })
 
   describe('checkDeveloperRoleDbOperation', () => {
-    it('should map SAVE action to insert operation', () => {
+    it('SAVE 动作应映射为 insert 操作', () => {
       expect(checkDeveloperRoleDbOperation('architect', MODULE_ID.fetcher, 'SAVE_DATA')).toBeDefined()
     })
 
-    it('should map CLEAR action to delete operation', () => {
+    it('CLEAR 动作应映射为 delete 操作', () => {
       expect(checkDeveloperRoleDbOperation('architect', MODULE_ID.fetcher, 'CLEAR_CACHE')).toBeDefined()
     })
   })

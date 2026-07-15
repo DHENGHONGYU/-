@@ -59,8 +59,8 @@ export async function buildFinancialData(symbol: string): Promise<FinancialData>
   })
 
   if (!reportResult.success || !reportResult.data) {
-    logger.info('[v6ScoreService] buildFinancialData 未找到财务数据，返回空对象', { symbol })
-    return {}
+    logger.info('[v6ScoreService] buildFinancialData 未找到财务数据，标记为 missing', { symbol })
+    return { dataStatus: 'missing' }
   }
   const report = reportResult.data
 
@@ -81,15 +81,20 @@ export async function buildFinancialData(symbol: string): Promise<FinancialData>
     shareholderPledge: report.shareholderPledge,
   }
 
+  const fieldCount = Object.values(financialData).filter((v) => v !== undefined).length
+  const totalFields = Object.keys(financialData).length
+  financialData.dataStatus = fieldCount === 0 ? 'missing' : fieldCount < totalFields ? 'partial' : 'complete'
+
   logger.info('[v6ScoreService] buildFinancialData 财务数据加载成功', {
     symbol,
     reportDate: report.reportDate,
+    dataStatus: financialData.dataStatus,
     revenue: financialData.revenue,
     netProfit: financialData.netProfit,
     grossMargin: financialData.grossMargin,
     netMargin: financialData.netMargin,
     rdRatio: financialData.rdRatio,
-    fieldCount: Object.values(financialData).filter(v => v !== undefined).length,
+    fieldCount,
   })
 
   return financialData
@@ -130,6 +135,7 @@ async function buildEngineInput(stock: Stock, quotes: DailyQuotes | null): Promi
 function compositeToV6Score(
   stock: Stock,
   composite: CompositeScore,
+  financials?: FinancialData,
 ): V6Score {
   // 分数校验：确保 composite.score 是有效数字
   const validScore = Number.isFinite(composite.score) ? composite.score : 0
@@ -170,6 +176,10 @@ function compositeToV6Score(
     // 质量警告
     ...(dataCompleteness < 100 && {
       qualityWarning: `数据完整度 ${dataCompleteness.toFixed(0)}%，${scoredLayers}/${totalLayers} 层有效评分`,
+    }),
+    // P1-M2：财务数据缺失显式标记
+    ...(financials?.dataStatus === 'missing' && {
+      missingFinancials: true,
     }),
   }
 
@@ -310,7 +320,7 @@ export async function runV6Score(symbol: string): Promise<DataLayerResult<V6Scor
       layerScores,
     })
 
-    const v6Score = compositeToV6Score(stock, composite)
+    const v6Score = compositeToV6Score(stock, composite, input.financials)
 
     logger.info(`[v6ScoreService] runV6Score V6Score 映射完成`, {
       symbol,
@@ -504,7 +514,7 @@ export async function runV6ScoreBatch(
         errors.push({ symbol: input.stock.symbol, error: 'Calculation failed' })
         continue
       }
-      const v6Score = compositeToV6Score(input.stock, composite)
+      const v6Score = compositeToV6Score(input.stock, composite, input.input.financials)
       scores.push(v6Score)
 
       // 异步持久化（不阻塞后续评分）

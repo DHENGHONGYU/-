@@ -44,7 +44,7 @@ describe('hotSectorService', () => {
     const stock = await dataLayer.stocks.get(target.symbol)
     expect(stock).toBeDefined()
     expect(stock?.name).toBe(target.name)
-    expect(stock?.researchStatus).toBe('candidate')
+    expect(stock?.researchStatus).toBe('screening')
   })
 
   it('skips adding existing hot sector stock', async () => {

@@ -51,7 +51,7 @@ describe('matchIndustry 行业匹配', () => {
   })
 
   test('未匹配', () => {
-    const result = matchIndustry('UNKNOWN', '银行', '某银行')
+    const result = matchIndustry('UNKNOWN', '某未知行业', '某未知公司')
     expect(result).toBeNull()
   })
 
@@ -131,11 +131,11 @@ describe('LMinus1Calculator.calculate', () => {
 
   test('未匹配 → 不参与评分（score=NaN, participated=false）', async () => {
     const result = await LMinus1Calculator.calculate(createBaseInput({
-      stock: { symbol: 'UNKNOWN', name: '某银行', sector: '银行' },
+      stock: { symbol: 'UNKNOWN', name: '某未知公司', sector: '某未知行业' },
     }))
     expect(Number.isNaN(result.score)).toBe(true)
     expect(result.participated).toBe(false)
-    expect(result.summary).toContain('不在7行业覆盖范围')
+    expect(result.summary).toContain('未匹配到行业评分覆盖范围')
   })
 
   test('匹配但无数据 → 不参与评分（score=NaN, participated=false）', async () => {

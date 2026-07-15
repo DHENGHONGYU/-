@@ -150,6 +150,7 @@ export const L7SecondCurveCalculator: LayerCalculator = {
         weight,
         weightedScore: score * weight,
         dataSources: ['财报数据', '订单数据', '行业分析'],
+        participated: true,
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
@@ -164,6 +165,7 @@ export const L7SecondCurveCalculator: LayerCalculator = {
         weight,
         weightedScore: Number.NaN,
         dataSources: [],
+        participated: false,
       }
     }
   },
@@ -336,6 +338,7 @@ export const L8ChipCalculator: LayerCalculator = {
         weight,
         weightedScore: chip.score * weight,
         dataSources: ['K线数据', '量价数据', '换手率数据'],
+        participated: true,
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
@@ -350,6 +353,7 @@ export const L8ChipCalculator: LayerCalculator = {
         weight,
         weightedScore: Number.NaN,
         dataSources: [],
+        participated: false,
       }
     }
   },

@@ -103,7 +103,7 @@ const EXPECTED_PATHS: Record<string, { path: string; label: string }[]> = {
     { path: '/analysis/news', label: '智能资讯' },
     { path: '/analysis/hot-sector', label: '热门板块策略' },
     { path: '/analysis/value-pit', label: '价值洼地策略' },
-    { path: '/analysis/stock-pool', label: '股票池看板' },
+    { path: '/analysis/pool-board', label: '股票池看板' },
     { path: '/analysis/score-comparison', label: '历史评分比对看板' },
     { path: '/analysis/multi-factor', label: '多因子筛选' },
   ],
@@ -124,6 +124,10 @@ const EXPECTED_PATHS: Record<string, { path: string; label: string }[]> = {
     { path: '/output/review', label: '交易复盘' },
     { path: '/output/export', label: '数据导出' },
     { path: '/output/dashboard', label: '输出舱仪表盘' },
+    { path: '/output/wizard', label: '复盘向导' },
+    { path: '/output/prediction', label: '预测校验' },
+    { path: '/output/retrospective', label: '周期复盘' },
+    { path: '/output/factor-dashboard', label: '因子画板' },
   ],
   command: [
     { path: '/command', label: '总控舱' },
@@ -149,6 +153,7 @@ const EXPECTED_PATHS: Record<string, { path: string; label: string }[]> = {
     { path: '/command/config', label: '配置管理' },
     { path: '/command/showcase', label: '组件示例库' },
     { path: '/command/health', label: '架构健康度仪表盘' },
+    { path: '/command/test', label: '压力测试' },
   ],
   portal: [
     { path: '/', label: '首页' },

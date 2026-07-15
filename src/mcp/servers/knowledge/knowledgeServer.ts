@@ -90,8 +90,8 @@ export class KnowledgeServer extends MCPServerBase {
               await applySemanticRanking(docs, query, topK)
             }
 
-            // Step 4: 截取 topK
-            const topDocs = (docs ?? []).slice(0, topK)
+            // Step 4: 截取 topK（docs 已在上面初始化为数组）
+            const topDocs = docs.slice(0, topK)
 
             // Step 5: 格式化为可读文本
             const formatted = topDocs.map((doc, i) => {

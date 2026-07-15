@@ -28,18 +28,19 @@ import { buildDashboardData } from '@/services/output/factorDashboard'
 import { olsRegression, formatRegressionTable } from '@/services/scoring/v6-engine/regressionAnalyzer'
 import { analyzeCorrelations, pearsonCorrelation, spearmanCorrelation } from '@/services/scoring/v6-engine/correlationAnalyzer'
 import { validateFile } from '@/services/file-import/unifiedFileValidator'
-import { analyzeDiff, quickDiff } from '@/services/file-import/diffAnalyzer'
-import { compareHashes, computeRecordHash } from '@/services/file-import/hashComparator'
+import { analyzeDiff } from '@/services/file-import/diffAnalyzer'
+import { computeRecordHash } from '@/services/file-import/hashComparator'
 import { generateProofreadReport, renderReportAsMarkdown } from '@/services/file-import/proofreadReportGenerator'
 import { checkStaleness, getStalenessThresholds } from '@/services/data-sync/stalenessDetector'
-import { detectConflict, resolveConflict, resolveConflictsBatch } from '@/services/data-sync/conflictResolver'
-import { mergeRecords, DEFAULT_MERGE_RULES } from '@/services/data-sync/fieldMerger'
+import { detectConflict } from '@/services/data-sync/conflictResolver'
+import { mergeRecords } from '@/services/data-sync/fieldMerger'
 import { selectUpdateMode } from '@/services/data-sync/updateExecutor'
 import { isWithinTradingHours } from '@/services/data-sync/globalScheduler'
-import { search, quickSearch } from '@/services/data-sync-search/searchEngine'
+import { search } from '@/services/data-sync-search/searchEngine'
 import { semanticSearch } from '@/services/data-sync-search/semanticSearcher'
 import { DEFAULT_CODE_INDEX } from '@/services/data-sync-search/codeSearcher'
 import type { CycleMetrics, FactorPrediction } from '@/types/modules/prediction.types'
+import type { LayerId } from '@/types/modules/engine.types'
 import { IC_THRESHOLDS, RIGHT_UP_WEIGHTS } from '@/types/modules/prediction.types'
 
 // ============================================================
@@ -488,7 +489,7 @@ describe('✅ 模块5: 相关性分析器 — 量化校验', () => {
       l3f: clamp(gaussian(3, 1)),
       l8: clamp(gaussian(2.5, 1.2)),
     }))
-    const result = analyzeCorrelations(scores)
+    const result = analyzeCorrelations(scores as Record<LayerId, number>[])
     expect(result.sampleSize).toBe(50)
     expect(result.summary.avgAbsCorrelation).toBeGreaterThanOrEqual(0)
     expect(result.independentPairs.length).toBeGreaterThan(0)

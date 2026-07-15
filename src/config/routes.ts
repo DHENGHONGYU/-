@@ -136,6 +136,31 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     description: '输出舱 - 仪表盘',
   },
   {
+    path: '/output/wizard',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'output',
+    description: '输出舱 - 复盘向导',
+  },
+  {
+    path: '/output/prediction',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'output',
+    description: '输出舱 - 预测校验',
+  },
+  {
+    path: '/output/retrospective',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'output',
+    description: '输出舱 - 周期复盘',
+  },
+  {
+    path: '/output/factor-dashboard',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'output',
+    description: '输出舱 - 因子画板',
+  },
+
+  {
     path: '/command/hub',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'command',
@@ -276,6 +301,12 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'command',
     description: '配置管理',
+  },
+  {
+    path: '/command/test',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'command',
+    description: '压力测试',
   },
 
   // 分析舱子页面（统一通过 PortalShell → AnalysisApp 分发，保持 TopBar + Sidebar 导航）

@@ -9,6 +9,7 @@ import {
   findBrokenCrossReferences,
   extractRelativeLinks,
   syncCrossReferences,
+  type BrokenCrossRef,
 } from '../../../scripts/doc-cross-ref-sync'
 
 /**
@@ -141,7 +142,7 @@ describe('findBrokenCrossReferences — 只读 filePath 级归因扫描', () => 
     const report = findBrokenCrossReferences(tmp, files)
     // existing.md 引用了 ./absent.md（不存在）
     const broken = report.brokenLinks.find(
-      (b) => b.sourceRelativePath.includes('existing.md') && b.originalTarget === './absent.md',
+      (b: BrokenCrossRef) => b.sourceRelativePath.includes('existing.md') && b.originalTarget === './absent.md',
     )
     expect(broken).toBeDefined()
     expect(broken!.fixable).toBe(false)
@@ -153,7 +154,7 @@ describe('findBrokenCrossReferences — 只读 filePath 级归因扫描', () => 
   it('有效链接不报为断链', () => {
     const report = findBrokenCrossReferences(tmp, files)
     const validBroken = report.brokenLinks.find(
-      (b) => b.originalTarget === './target.md',
+      (b: BrokenCrossRef) => b.originalTarget === './target.md',
     )
     expect(validBroken).toBeUndefined()
   })
@@ -174,7 +175,7 @@ describe('findBrokenCrossReferences — 只读 filePath 级归因扫描', () => 
 
     const report = findBrokenCrossReferences(tmp, files)
     const broken = report.brokenLinks.find(
-      (b) => b.sourceRelativePath === 'ambiguous.md',
+      (b: BrokenCrossRef) => b.sourceRelativePath === 'ambiguous.md',
     )
     expect(broken).toBeDefined()
     expect(broken!.fixable).toBe(false)
@@ -208,10 +209,10 @@ describe('syncCrossReferences — brokenLinks 字段包含全部断链', () => {
     const result = syncCrossReferences(tmp, files)
     expect(result.brokenLinks).toBeDefined()
     // 即使不可修复（0 候选），也应出现在 brokenLinks 中
-    const unfixable = result.brokenLinks.filter((b) => !b.fixable)
+    const unfixable = result.brokenLinks.filter((b: BrokenCrossRef) => !b.fixable)
     // existing.md 引了 ./absent.md（不存在，0 候选）→ 应被报告
     expect(unfixable.length).toBeGreaterThan(0)
-    expect(unfixable.some((b) => b.originalTarget === './absent.md')).toBe(true)
+    expect(unfixable.some((b: BrokenCrossRef) => b.originalTarget === './absent.md')).toBe(true)
   })
 
   it('每条 brokenLink 含 filePath 级归因字段（resolvedTargetPath/line/column/diagnostic）', () => {

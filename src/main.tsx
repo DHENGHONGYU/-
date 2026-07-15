@@ -3,8 +3,12 @@ import { createRoot } from 'react-dom/client'
 import { setLogLevel, getLogger } from '@/lib/logger'
 import App from './App'
 import { installGlobalErrorHandler } from '@/components/organisms/shared/installGlobalErrorHandler'
+// 提前导入并初始化 themeStore，确保在 React 首屏渲染前应用持久化主题
+import { useThemeStore } from '@/store/themeStore'
 import './index.css'
 import './generated/tokens.css'
+
+useThemeStore.getState()
 
 const LOG_LEVEL = (import.meta.env.VITE_LOG_LEVEL as 'debug' | 'info' | 'warn' | 'error') || 'info'
 

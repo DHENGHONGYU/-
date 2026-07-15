@@ -32,6 +32,7 @@ const logger = getLogger()
 const ConfigApp = React.lazy(() => import('@/apps/command/ConfigApp'))
 const ComponentShowcasePage = React.lazy(() => import('@/pages/command/showcase/ComponentShowcasePage'))
 const HealthDashboardPage = React.lazy(() => import('@/pages/command/health/HealthDashboardPage'))
+const StressOverviewPage = React.lazy(() => import('@/pages/command/test/StressOverviewPage'))
 
 /**
  * 总控舱子路由分发
@@ -59,6 +60,7 @@ const BRANCH_INFO: Record<string, { branch: string; componentName: string }> = {
   '/command/monitor': { branch: 'monitor', componentName: 'SystemMonitor' },
   '/command/showcase': { branch: 'showcase', componentName: 'ComponentShowcasePage' },
   '/command/health': { branch: 'health', componentName: 'HealthDashboardPage' },
+  '/command/test': { branch: 'stress', componentName: 'StressOverviewPage' },
 }
 
 function renderCommandContent(path: string): React.ReactNode {
@@ -83,6 +85,12 @@ function renderCommandContent(path: string): React.ReactNode {
       return (
         <React.Suspense fallback={<div className="p-4 text-muted-foreground">加载健康度面板中...</div>}>
           <HealthDashboardPage />
+        </React.Suspense>
+      )
+    case '/command/test':
+      return (
+        <React.Suspense fallback={<div className="p-4 text-muted-foreground">加载压力测试面板中...</div>}>
+          <StressOverviewPage />
         </React.Suspense>
       )
     default:

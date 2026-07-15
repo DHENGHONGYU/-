@@ -231,8 +231,9 @@ export function transformV6DailyQuotes(v6Quotes: V6DailyQuote[]): DailyQuotes[] 
         const ts = parseTimestamp(sorted[sorted.length - 1]?.tradeDate)
         if (ts == null) {
           logger.warn('[migrationTransformers] 字段缺失，使用默认值', { field: 'tradeDate', context: `symbol=${symbol}` })
+          return 0
         }
-        return ts ?? 0
+        return ts
       })(),
     )
 

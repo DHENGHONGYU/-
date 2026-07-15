@@ -35,24 +35,20 @@ function startOfDayTimestamp(timestamp: number): number {
 }
 
 /**
- * 风控检查
+ * 纯函数版本风控检查。
  *
- * 阻塞项：
- *   - 价格或数量非法
- *   - 同标的存在未完成买入且在冷却期内
- *   - 超出当日最大交易次数
- *   - 买入后超出单笔/总仓位上限
- *   - 行情数据过期
- * 警告项：
- *   - 无有效行情数据（数据未到达，已降级放行，非硬阻断）
- *   - 单日交易次数接近上限
- *   - 仓位接近上限
-/**
- * checkOrderRisk
- * @param input
- * @returns Promise<RiskCheckResult>
+ * 不直接访问 dataBridge，由调用方提供订单与行情快照，便于 SKILL、测试与离线场景复用。
+ *
+ * @param input 订单风险输入
+ * @param orders 当前订单列表（可选，默认空数组）
+ * @param quotes 行情快照（可选，含 updatedAt）
+ * @returns RiskCheckResult
  */
-export async function checkOrderRisk(input: OrderRiskInput): Promise<RiskCheckResult> {
+export function checkOrderRiskPure(
+  input: OrderRiskInput,
+  orders: Order[] = [],
+  quotes?: { updatedAt: number },
+): RiskCheckResult {
   const config = getEffectiveTradingConfig()
   const risk = config.risk
   const warnings: string[] = []
@@ -71,13 +67,6 @@ export async function checkOrderRisk(input: OrderRiskInput): Promise<RiskCheckRe
   const normalized = input.symbol.trim().toUpperCase()
 
   // 1. 行情数据新鲜度
-  const quotesResult = await dataBridge.query<{ updatedAt: number }>({
-    action: ENVELOPE_ACTION.queryGet,
-    store: STORE_NAME.dailyQuotes,
-    key: normalized,
-    source: MODULE_ID.trading,
-  })
-  const quotes = quotesResult.success && quotesResult.data ? quotesResult.data : undefined
   if (!quotes?.updatedAt) {
     // P2 健壮化：行情「数据未到达」为可观测的降级警告（非硬阻断），
     // 避免静默全拒；「数据过期」仍为硬阻断（见 else 分支）。
@@ -87,13 +76,6 @@ export async function checkOrderRisk(input: OrderRiskInput): Promise<RiskCheckRe
   }
 
   // 2. 同标的冷却期
-  const ordersResult = await dataBridge.query<Order[]>({
-    action: ENVELOPE_ACTION.queryList,
-    store: STORE_NAME.orders,
-    source: MODULE_ID.trading,
-  })
-  const orders = ordersResult.success && ordersResult.data ? ordersResult.data : []
-
   // 检测 createdAt 缺失的订单
   const missingCreatedAtOrders = orders.filter((o) => o.symbol === normalized && o.createdAt == null)
   if (missingCreatedAtOrders.length > 0) {
@@ -185,4 +167,45 @@ export async function checkOrderRisk(input: OrderRiskInput): Promise<RiskCheckRe
   }
 
   return { ok: blocks.length === 0, warnings, blocks }
+}
+
+/**
+ * 风控检查
+ *
+ * 阻塞项：
+ *   - 价格或数量非法
+ *   - 同标的存在未完成买入且在冷却期内
+ *   - 超出当日最大交易次数
+ *   - 买入后超出单笔/总仓位上限
+ *   - 行情数据过期
+ * 警告项：
+ *   - 无有效行情数据（数据未到达，已降级放行，非硬阻断）
+ *   - 单日交易次数接近上限
+ *   - 仓位接近上限
+/**
+ * checkOrderRisk
+ * @param input
+ * @returns Promise<RiskCheckResult>
+ */
+export async function checkOrderRisk(input: OrderRiskInput): Promise<RiskCheckResult> {
+  const normalized = input.symbol.trim().toUpperCase()
+
+  // 1. 行情数据新鲜度
+  const quotesResult = await dataBridge.query<{ updatedAt: number }>({
+    action: ENVELOPE_ACTION.queryGet,
+    store: STORE_NAME.dailyQuotes,
+    key: normalized,
+    source: MODULE_ID.trading,
+  })
+  const quotes = quotesResult.success && quotesResult.data ? quotesResult.data : undefined
+
+  // 2. 同标的冷却期 / 当日交易次数 / 仓位上限 / 卖出持仓充足性
+  const ordersResult = await dataBridge.query<Order[]>({
+    action: ENVELOPE_ACTION.queryList,
+    store: STORE_NAME.orders,
+    source: MODULE_ID.trading,
+  })
+  const orders = ordersResult.success && ordersResult.data ? ordersResult.data : []
+
+  return checkOrderRiskPure(input, orders, quotes)
 }

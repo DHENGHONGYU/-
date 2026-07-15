@@ -1,7 +1,7 @@
 /**
  * @fileoverview AnalysisOrchestrator — Route A 核心编排服务
  *
- * 6 步管线：gatherExternal → gatherInternal → assembleContext → callLLM → validateAndMaybeRollback → persistResult
+ * 6 步管线：gatherExternal → gatherInternal → callConclusionSkill → validateAndMaybeRollback → persistResult
  *
  * 分层合规：services → core/data/config/lib（白名单），不引 store。
  * 持久化：EnvelopeFactory.create + dataBridge.forward → IndexedDB analysisResults store。
@@ -16,9 +16,9 @@ import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
 import { feedbackOrchestrator } from '@/core/feedbackOrchestrator'
 import { getNewsBySymbol } from '@/services/news/newsService'
-import { chat as llmChat } from '@/services/llm/llmGateway'
+import { skillRegistry, analysisConclusionSkill } from '@/services/skills'
+import type { AnalysisConclusionOutput } from '@/services/skills'
 import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
-import type { LlmMessage } from '@/services/llm/llmTypes'
 import type { Stock, V6Score, NewsArticle } from '@/data/types'
 import type {
   AnalysisRequest,
@@ -36,6 +36,9 @@ import { ANALYSIS_RESULT_VERSION } from '@/types/modules/analysisOrchestrator.ty
 import { lightArchiveCheck } from '@/services/lifecycle/analysisResultLifecycle'
 
 const logger = getLogger()
+
+// Batch A: 注册分析结论 SKILL
+skillRegistry.register(analysisConclusionSkill)
 
 const DEFAULT_K = 2
 const DEFAULT_COMPLETENESS_THRESHOLD = 80
@@ -90,107 +93,55 @@ async function gatherInternal(
   return { snapshot, v6Score, stock }
 }
 
-function assembleContext(
+async function callConclusionSkill(
   external: ExternalNewsSnapshot,
   internal: InternalDataSnapshot,
-  v6Score: V6Score | undefined,
-): { system: string; user: string } {
-  const system = [
-    '你是一位专业的股票分析师。基于提供的外部资讯和内部评分数据，给出结构化的分析结论。',
-    '请严格按以下 JSON 格式输出（不要包含其他文字）：',
-    '{',
-    '  "rating": "strong_buy" | "buy" | "hold" | "sell" | "strong_sell",',
-    '  "summary": "一句话总结分析结论",',
-    '  "keyRisks": ["风险1", "风险2"],',
-    '  "opportunities": ["机会1", "机会2"]',
-    '}',
-  ].join('\n')
-
-  const newsLines = external.topArticles.length > 0
-    ? external.topArticles.map((a, i) => `${i + 1}. ${a.title}`).join('\n')
-    : '暂无资讯'
-
-  const user = [
-    `股票: ${internal.symbol} (${internal.stockName ?? '未知'})`,
-    `V6评分: ${internal.v6Score ?? 'N/A'} | 评级: ${internal.v6Rating ?? 'N/A'}`,
-    `数据版本: ${v6Score?.dataVersion ?? 'N/A'} | 算法版本: ${v6Score?.algorithmVersion ?? 'N/A'}`,
-    '',
-    '资讯摘要:',
-    newsLines,
-  ].join('\n')
-
-  return { system, user }
-}
-
-async function callLLM(
-  context: { system: string; user: string },
-  v6Rating: string | undefined,
 ): Promise<{
   conclusion: AnalysisConclusion | undefined
   rawText: string
   model: string
   tokenUsage?: { promptTokens: number; completionTokens: number; totalTokens: number }
 }> {
-  const messages: LlmMessage[] = [
-    { role: 'system', content: context.system },
-    { role: 'user', content: context.user },
-  ]
-
   try {
-    const response = await llmChat(messages, { caller: 'analysisOrchestrator', allowFallback: true })
-    const conclusion = parseConclusion(response.content, v6Rating)
-    const tokenUsage = response.usage
-      ? {
-          promptTokens: response.usage.promptTokens,
-          completionTokens: response.usage.completionTokens,
-          totalTokens: response.usage.totalTokens,
-        }
-      : undefined
-    return { conclusion, rawText: response.content, model: response.model, tokenUsage }
+    const skillResult = await skillRegistry.execute<AnalysisConclusionOutput>('analysis-conclusion', {
+      symbol: internal.symbol,
+      stockName: internal.stockName,
+      params: {
+        v6Score: internal.v6Score,
+        v6Rating: internal.v6Rating,
+        newsTitles: external.topArticles.map((a) => a.title),
+      },
+    })
+
+    if (skillResult.status !== 'success' || !skillResult.data) {
+      logger.warn(`[AnalysisOrchestrator] conclusion skill failed`, { error: skillResult.error })
+      return {
+        conclusion: undefined,
+        rawText: skillResult.rawText ?? '',
+        model: skillResult.meta.model ?? 'error',
+        tokenUsage: skillResult.meta.tokenUsage,
+      }
+    }
+
+    const data = skillResult.data
+    const conclusion: AnalysisConclusion = {
+      rating: data.rating,
+      summary: data.summary,
+      keyRisks: data.keyRisks,
+      opportunities: data.opportunities,
+      consistentWithV6: data.consistentWithV6 ?? data.rating === internal.v6Rating,
+      confidence: data.confidence,
+    }
+
+    return {
+      conclusion,
+      rawText: skillResult.rawText ?? '',
+      model: skillResult.meta.model ?? 'unknown',
+      tokenUsage: skillResult.meta.tokenUsage,
+    }
   } catch (err) {
-    logger.error(`[AnalysisOrchestrator] callLLM failed`, { error: err })
+    logger.error(`[AnalysisOrchestrator] callConclusionSkill failed`, { error: err })
     return { conclusion: undefined, rawText: '', model: 'error' }
-  }
-}
-
-function parseConclusion(rawText: string, v6Rating: string | undefined): AnalysisConclusion | undefined {
-  if (!rawText || rawText.trim().length === 0) return undefined
-
-  let jsonStr = rawText.trim()
-
-  const fenceMatch = jsonStr.match(/```(?:json)?\s*([\s\S]*?)```/)
-  if (fenceMatch) {
-    jsonStr = fenceMatch[1]?.trim() ?? jsonStr
-  }
-
-  const braceMatch = jsonStr.match(/\{[\s\S]*\}/)
-  if (braceMatch && !jsonStr.startsWith('{')) {
-    jsonStr = braceMatch[0]
-  }
-
-  let parsed: Record<string, unknown>
-  try {
-    parsed = JSON.parse(jsonStr)
-  } catch {
-    logger.warn('[AnalysisOrchestrator] parseConclusion: JSON 解析失败，降级为 undefined')
-    return undefined
-  }
-
-  const rating = parsed['rating'] as string | undefined
-  const validRatings = ['strong_buy', 'buy', 'hold', 'sell', 'strong_sell']
-  if (!rating || !validRatings.includes(rating)) {
-    logger.warn(`[AnalysisOrchestrator] parseConclusion: 无效 rating "${rating}"`)
-    return undefined
-  }
-
-  const consistentWithV6 = !v6Rating || rating === v6Rating
-
-  return {
-    rating: rating as AnalysisConclusion['rating'],
-    summary: String(typeof parsed['summary'] === 'string' ? parsed['summary'] : ''),
-    keyRisks: Array.isArray(parsed['keyRisks']) ? (parsed['keyRisks'] as string[]) : [],
-    opportunities: Array.isArray(parsed['opportunities']) ? (parsed['opportunities'] as string[]) : [],
-    consistentWithV6,
   }
 }
 
@@ -298,9 +249,7 @@ export async function runAnalysis(req: AnalysisRequest): Promise<AnalysisRunResu
     lastInternal = internalResult.snapshot
     lastV6Score = internalResult.v6Score
 
-    const context = assembleContext(external, lastInternal, lastV6Score)
-
-    const llmResult = await callLLM(context, lastInternal.v6Rating)
+    const llmResult = await callConclusionSkill(external, lastInternal)
     lastConclusion = llmResult.conclusion
     lastRawText = llmResult.rawText
     lastModel = llmResult.model

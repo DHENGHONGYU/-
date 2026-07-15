@@ -175,7 +175,7 @@ describe('P2-3: TimelineView 组件', () => {
   })
 
   it('点击应触发回调', () => {
-    let clicked: SearchItem | null = null
+    let clicked = null as SearchItem | null
     render(<TimelineView items={mockItems} onItemClick={(item) => { clicked = item }} />)
     fireEvent.click(screen.getByText('浦发银行分析报告'))
     expect(clicked?.id).toBe('2')

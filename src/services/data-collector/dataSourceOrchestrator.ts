@@ -343,15 +343,16 @@ export async function getQuoteWithConfig(
 
     if (i < chain.length - 1) {
       const nextSource = chain[i + 1]
+      const fallbackTarget = nextSource !== undefined ? nextSource : '无'
       emitLifecycleEvent(COLLECTION_EVENTS.FALLBACK, {
         traceId,
         taskId: config.taskId,
         dimensionCode: config.dimensionCode,
         symbol: code,
         sourceId: nextSource,
-        message: `${source} 失败，降级到 ${nextSource ?? '无'}`,
+        message: `${source} 失败，降级到 ${fallbackTarget}`,
       })
-      logger.warn(`[orchestrator] ${source} 行情失败，降级到 ${nextSource ?? '结束'}: ${code}`)
+      logger.warn(`[orchestrator] ${source} 行情失败，降级到 ${fallbackTarget}: ${code}`)
     }
   }
 
@@ -503,15 +504,16 @@ export async function getKlineWithConfig(
 
     if (i < chain.length - 1) {
       const nextSource = chain[i + 1]
+      const fallbackTarget = nextSource !== undefined ? nextSource : '无'
       emitLifecycleEvent(COLLECTION_EVENTS.FALLBACK, {
         traceId,
         taskId: config.taskId,
         dimensionCode: config.dimensionCode,
         symbol: code,
         sourceId: nextSource,
-        message: `${source} K 线失败，降级到 ${nextSource ?? '无'}`,
+        message: `${source} K 线失败，降级到 ${fallbackTarget}`,
       })
-      logger.warn(`[orchestrator] ${source} K线失败，降级到 ${nextSource ?? '结束'}: ${code}`)
+      logger.warn(`[orchestrator] ${source} K线失败，降级到 ${fallbackTarget}: ${code}`)
     }
   }
 
