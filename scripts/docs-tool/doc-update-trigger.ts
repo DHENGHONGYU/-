@@ -64,7 +64,8 @@ interface TriggerRule {
 
 /**
  * 触发规则权威集（单一事实源：docs/00-meta/doc-trigger-action-map.md §二）。
- * docsToUpdate 路径已对齐磁盘真实文档（N2 修订），新增/改动须同步映射表。
+ * docsToUpdate 路径已对齐 Diátaxis 新结构（2026-07-14 pr-6 重组后修订），
+ * 新增/改动须同步映射表。
  */
 export const TRIGGER_RULES: readonly TriggerRule[] = [
   {
@@ -77,10 +78,10 @@ export const TRIGGER_RULES: readonly TriggerRule[] = [
       'src/core/types.ts',
     ],
     docsToUpdate: [
-      'docs/02-design/DATA_DICTIONARY_INDEX.md',
-      'docs/02-design/《V9核心数据字典与类型定义（整合版）》.md',
-      'docs/cockpit/DATA_DEFINITION.md',
-      'docs/02-design/NEWS_DATA_DEFINITION.md',
+      'docs/reference/data-dictionary-index.md',
+      'docs/reference/v9核心数据字典与类型定义(整合版).md',
+      'docs/reference/cockpit/data-definition.md',
+      'docs/explanation/news-data-definition.md',
     ],
     description: '类型定义变更时，需更新数据字典文档',
     auditDocs: true,
@@ -96,9 +97,9 @@ export const TRIGGER_RULES: readonly TriggerRule[] = [
       'src/services/analysis/index.ts',
     ],
     docsToUpdate: [
-      'docs/02-design/API_CONTRACT.md',
-      'docs/01-requirements/《DataBridge端点与数据映射清单》.md',
-      'docs/02-design/《功能模块数据契约》.md',
+      'docs/reference/api-contract.md',
+      'docs/reference/databridge端点与数据映射清单.md',
+      'docs/reference/功能模块数据契约.md',
     ],
     description: '接口签名变更时，需更新 API 契约文档',
     auditDocs: true,
@@ -113,9 +114,9 @@ export const TRIGGER_RULES: readonly TriggerRule[] = [
       'src/config/thresholds.ts',
     ],
     docsToUpdate: [
-      'docs/01-requirements/03-architecture-standards.md',
-      'docs/02-design/06-routing-specs.md',
-      'ARCHITECTURE.md',
+      'docs/reference/03-architecture-standards.md',
+      'docs/reference/06-routing-specs.md',
+      'docs/explanation/architecture.md',
     ],
     description: '架构调整时，需更新架构标准文档',
     auditDocs: true,
@@ -129,8 +130,8 @@ export const TRIGGER_RULES: readonly TriggerRule[] = [
       'src/services/scoring/v6-engine/config.ts',
     ],
     docsToUpdate: [
-      'docs/02-design/05-engine-specs.md',
-      'docs/02-design/09-quality-gates.md',
+      'docs/reference/05-engine-specs.md',
+      'docs/reference/09-quality-gates.md',
     ],
     description: '配置参数变更时，需更新引擎规格文档',
     auditDocs: true,
@@ -140,8 +141,8 @@ export const TRIGGER_RULES: readonly TriggerRule[] = [
     name: 'Store 状态管理变更',
     patterns: ['src/store/**/*.ts'],
     docsToUpdate: [
-      'docs/02-design/STATE_MANAGEMENT.md',
-      'docs/02-design/data-flow-spec.md',
+      'docs/explanation/state-management.md',
+      'docs/reference/data-flow-spec.md',
     ],
     description: '状态管理变更时，需更新状态管理文档和数据流说明',
     auditDocs: true,
@@ -151,8 +152,8 @@ export const TRIGGER_RULES: readonly TriggerRule[] = [
     name: 'UI 组件变更',
     patterns: ['src/components/**/*.tsx', 'src/components/**/*.ts'],
     docsToUpdate: [
-      'docs/02-design/component-library-guide.md',
-      'docs/02-design/ui-design-system.md',
+      'docs/explanation/design/component-library-guide.md',
+      'docs/explanation/design/ui-design-system.md',
     ],
     description: 'UI 组件变更时，需更新组件文档和设计规范',
     auditDocs: true,
@@ -162,8 +163,8 @@ export const TRIGGER_RULES: readonly TriggerRule[] = [
     name: 'Hook 自定义变更',
     patterns: ['src/hooks/**/*.ts', 'src/hooks/**/*.tsx'],
     docsToUpdate: [
-      'docs/02-design/HOOKS_GUIDE.md',
-      'docs/02-design/data-flow-spec.md',
+      'docs/how-to/hooks-guide.md',
+      'docs/reference/data-flow-spec.md',
     ],
     description: '自定义 Hook 变更时，需更新 Hook 使用指南和数据流说明',
     auditDocs: true,
@@ -173,8 +174,8 @@ export const TRIGGER_RULES: readonly TriggerRule[] = [
     name: '页面组件变更',
     patterns: ['src/pages/**/*.tsx', 'src/pages/**/*.ts'],
     docsToUpdate: [
-      'docs/02-design/06-routing-specs.md',
-      'docs/02-design/PAGE_STRUCTURE.md',
+      'docs/reference/06-routing-specs.md',
+      'docs/explanation/page-structure.md',
     ],
     description: '页面组件变更时，需更新路由规格和页面结构文档',
     auditDocs: true,
@@ -184,8 +185,8 @@ export const TRIGGER_RULES: readonly TriggerRule[] = [
     name: 'Widget 注册表变更',
     patterns: ['src/cockpit/core/widgetRegistry.ts'],
     docsToUpdate: [
-      'docs/cockpit/DATA_DEFINITION.md',
-      'docs/REGISTRY_INDEX.md',
+      'docs/reference/cockpit/data-definition.md',
+      'docs/00-meta/registry-index.md',
     ],
     description: 'Widget 注册表结构变更时，需重写驾驶舱数据定义并增量维护注册索引',
     auditDocs: true,
@@ -642,6 +643,7 @@ function main(): void {
   console.log('')
 
   const docsToUpdate = new Set<string>()
+  const missingDocs: string[] = []
   for (const [rule, matchedFiles] of triggeredRules) {
     console.log(`${C.bold}${C.cyan}[${rule.id}] ${rule.name}${C.reset}`)
     console.log(`  ${C.dim}${rule.description}${C.reset}`)
@@ -656,6 +658,7 @@ function main(): void {
       const status = exists ? `${C.green}✓${C.reset}` : `${C.red}✗ 不存在${C.reset}`
       console.log(`    ${status} ${doc}`)
       if (exists) docsToUpdate.add(doc)
+      else missingDocs.push(doc)
     }
     console.log('')
   }
@@ -682,6 +685,15 @@ function main(): void {
 
   if (args.check) {
     console.log(`${C.dim}（仅检查模式，不生成更新建议）${C.reset}`)
+    if (missingDocs.length > 0) {
+      console.log(`${C.red}✗ 发现 ${missingDocs.length} 个触发文档缺失（映射表 docsToUpdate 路径不存在）：${C.reset}`)
+      for (const d of missingDocs) {
+        console.log(`    ${C.red}-${C.reset} ${d}`)
+      }
+      console.log(`${C.dim}请同步修正 docs/00-meta/doc-trigger-action-map.md §二 与 TRIGGER_RULES。${C.reset}`)
+      process.exit(1)
+    }
+    console.log(`${C.green}✓ 所有触发文档均存在${C.reset}`)
     return
   }
 

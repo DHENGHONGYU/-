@@ -6,12 +6,13 @@
  * 职责：
  * 1. 扫描 docs/ 目录下所有 Markdown 文件中的相对链接
  * 2. 检测断裂链接并尝试自动修复
- * 3. 维护 docs/REGISTRY_INDEX.md 中的文档索引
+ * 3. 维护 docs/registry-index.md 中的文档索引
  * 4. 返回更新记录供每日验证流程归档
  */
 
 import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs'
 import { dirname, extname, join, relative, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import type { DocUpdateEntry, ScannedFile } from '../../src/types/modules/doc-validation.types'
 
 /** 同步结果 */
@@ -75,7 +76,11 @@ function collectMarkdownFiles(dir: string, files: string[]): void {
     return
   }
 
+  // 与 doc-rule-validator.walkMd 保持一致的排除集（冻结历史文档不校验其链接）
+  const EXCLUDE = new Set(['node_modules', 'deprecated-docs', 'old-versions', 'ai-index'])
+
   for (const entry of entries) {
+    if (EXCLUDE.has(entry)) continue
     const fullPath = join(dir, entry)
     let stat
     try {
@@ -140,9 +145,18 @@ export function extractRelativeLinks(content: string): RawLink[] {
     const text = match[1]
     const target = match[2]
     if (!text || !target) continue
-    if (target.startsWith('http://') || target.startsWith('https://') || target.startsWith('#') || target.startsWith('mailto:')) {
+    if (
+      target.startsWith('http://') ||
+      target.startsWith('https://') ||
+      target.startsWith('#') ||
+      target.startsWith('mailto:') ||
+      target.startsWith('file://')
+    ) {
       continue
     }
+    // 目录导航链接（结尾 /）非文档文件链接，跳过以避免误报
+    const targetNoAnchor = target.split('#')[0] ?? target
+    if (targetNoAnchor.endsWith('/')) continue
     const startIndex = match.index
     const endIndex = startIndex + match[0].length
     const { line, column } = computeLineColumn(content, startIndex)
@@ -154,6 +168,15 @@ export function extractRelativeLinks(content: string): RawLink[] {
 function resolveLinkTarget(sourceDir: string, target: string): string {
   const withoutAnchor = target.split('#')[0] ?? target
   return resolve(sourceDir, withoutAnchor).replace(/\\/g, '/')
+}
+
+/** 判断链接是否指向代码/资源（非文档）：含非 .md 扩展名（.ts/.tsx/.json/.png 等）→ 代码引用，跳过 */
+function isCodeOrAssetLink(target: string): boolean {
+  const t = target.split('#')[0] ?? target
+  const base = t.split(/[\\/]/).pop() ?? ''
+  if (!base.includes('.')) return false
+  const ext = base.slice(base.lastIndexOf('.')).toLowerCase()
+  return ext !== '.md'
 }
 
 function findClosestPath(target: string, availablePaths: readonly string[]): string | null {
@@ -402,6 +425,10 @@ export function findBrokenCrossReferences(
 
     for (const link of links) {
       const resolved = resolveLinkTarget(sourceDir, link.target)
+      // 仅校验 docs 目录内的文档间链接；指向 src/ 等代码区或外部资源的链接属代码引用，跳过
+      if (!resolved.startsWith(docsDir.replace(/\\/g, '/') + '/')) continue
+      // 含非 .md 扩展名的链接（.ts/.tsx/.json 等）是代码/资源引用，非文档间链接
+      if (isCodeOrAssetLink(link.target)) continue
       if (allAbsolutePaths.includes(resolved) || existsSync(resolved)) continue
       const cls = classifyLinkTarget(sourceDir, link.target, allAbsolutePaths)
       broken.push({
@@ -459,6 +486,10 @@ export function syncCrossReferences(
 
     for (const link of links) {
       const resolved = resolveLinkTarget(sourceDir, link.target)
+      // 仅校验 docs 目录内的文档间链接；指向 src/ 等代码区或外部资源的链接属代码引用，跳过
+      if (!resolved.startsWith(docsDir.replace(/\\/g, '/') + '/')) continue
+      // 含非 .md 扩展名的链接（.ts/.tsx/.json 等）是代码/资源引用，非文档间链接
+      if (isCodeOrAssetLink(link.target)) continue
       if (!allAbsolutePaths.includes(resolved) && !existsSync(resolved)) {
         broken.push({
           sourcePath: docPath,
@@ -507,7 +538,7 @@ export function syncCrossReferences(
   }
 
   // 2. 更新索引文件（changed 作用域下增量合并，避免全仓库重写）
-  const indexPath = join(docsDir, 'REGISTRY_INDEX.md')
+  const indexPath = join(docsDir, 'registry-index.md')
   try {
     const entries = scope === 'changed' ? mergeIndexEntries(indexPath, scannedFiles) : buildIndexEntries(docsDir)
     const newIndex = renderIndex(entries)
@@ -534,4 +565,78 @@ export function syncCrossReferences(
   }
 
   return { updates, fixedLinkCount, brokenLinks: allBroken }
+}
+
+// ─── CLI 入口 ───────────────────────────────────────────────────────────────────
+
+const __dirnameCli = dirname(fileURLToPath(import.meta.url))
+/** docs 目录绝对路径（脚本位于 scripts/docs-tool/，向上两级即仓库根，再进 docs） */
+const DOCS_ROOT = resolve(__dirnameCli, '..', '..', 'docs')
+
+/** 将 docs 目录下全部 .md 构建为 ScannedFile[]（供 findBrokenCrossReferences / syncCrossReferences 使用） */
+function buildScannedFiles(docsDir: string): ScannedFile[] {
+  const files: string[] = []
+  collectMarkdownFiles(docsDir, files)
+  const result: ScannedFile[] = files.map((abs) => {
+    let size = 0
+    let mtime = ''
+    try {
+      const st = statSync(abs)
+      size = st.size
+      mtime = st.mtime.toISOString()
+    } catch {
+      /* 读取失败时使用占位值 */
+    }
+    return {
+      absolutePath: abs.replace(/\\/g, '/'),
+      relativePath: relative(docsDir, abs).replace(/\\/g, '/'),
+      category: 'doc',
+      updateType: 'unchanged',
+      sizeBytes: size,
+      lastModifiedAt: mtime,
+      hash: '',
+    }
+  })
+  return result
+}
+
+function main(): void {
+  const args = process.argv.slice(2)
+  const isCheck = args.includes('--check')
+  const docsDir = DOCS_ROOT
+
+  const scannedFiles = buildScannedFiles(docsDir)
+
+  if (isCheck) {
+    const report = findBrokenCrossReferences(docsDir, scannedFiles, { scope: 'all' })
+    console.log('[doc-cross-ref-sync] 扫描 %d 份文档，检查 %d 条相对链接', report.filesScanned, report.totalLinksChecked)
+    if (report.brokenLinks.length > 0) {
+      console.log('[doc-cross-ref-sync] ❌ 发现 %d 条断裂交叉引用：', report.brokenLinks.length)
+      for (const b of report.brokenLinks.slice(0, 30)) {
+        console.log('  ❌ %s:%d:%d 「%s」→ %s | %s', b.sourceRelativePath, b.line, b.column, b.originalText, b.originalTarget, b.diagnostic)
+      }
+      if (report.brokenLinks.length > 30) {
+        console.log('  ... 另有 %d 条', report.brokenLinks.length - 30)
+      }
+      process.exit(1)
+    }
+    console.log('[doc-cross-ref-sync] ✅ 无断裂交叉引用')
+    process.exit(0)
+  }
+
+  // 默认模式：执行同步（修复可修复断链 + 重建索引）
+  const result = syncCrossReferences(docsDir, scannedFiles, { scope: 'all' })
+  console.log('[doc-cross-ref-sync] 修复 %d 条链接，更新 %d 个文档', result.fixedLinkCount, result.updates.length)
+  const unfixable = result.brokenLinks.filter((b) => !b.fixable)
+  if (unfixable.length > 0) {
+    console.log('[doc-cross-ref-sync] ⚠️  仍有 %d 条不可自动修复的断链（需人工处理）：', unfixable.length)
+    for (const b of unfixable.slice(0, 20)) {
+      console.log('  ⚠️  %s:%d 「%s」→ %s | %s', b.sourceRelativePath, b.line, b.originalText, b.originalTarget, b.diagnostic)
+    }
+  }
+  process.exit(0)
+}
+
+if (process.argv[1] && process.argv[1].endsWith('doc-cross-ref-sync.ts')) {
+  main()
 }
