@@ -1,4 +1,11 @@
 ---
+title: v9-data-relationship-er
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: V9 数据库实体关系蓝图
 version: v1.1.0
 last_updated: 2026-06-30
@@ -9,6 +16,8 @@ change_log:
     desc: 补齐 v15/v16 新增 4 个 Store（execution_logs, missing_reports, executionPlans, portfolios）；DB_VERSION 14→16
   - date: 2026-06-29
     desc: 初始版本
+code_version: 2.0.0
+tier: important
 ---
 
 # V9 数据库实体关系蓝图 (ER)

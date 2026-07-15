@@ -1,0 +1,90 @@
+```mermaid
+sequenceDiagram
+    %% ============================
+    %% 参与者定义（五泳道）
+    %% ============================
+    participant UI as UI交互层
+    participant Store as 业务Store层
+    participant Bridge as DataBridge事件总线
+    participant Data as dataLayer持久化层
+    participant IDB as IndexedDB
+
+    %% ============================
+    %% 核心流程：新增订单
+    %% ============================
+    Note over UI,IDB: ━━━ 核心流程：用户新增订单 ━━━
+
+    UI->>Store: 新增订单 saveOrder()
+    activate Store
+
+    Store->>Data: dataLayer.save(order)
+    activate Data
+
+    Data->>Bridge: dataBridge.forward(channel:"orders")
+    activate Bridge
+
+    Bridge->>IDB: routeToDB() 写入orders表
+    activate IDB
+
+    %% IndexedDB写入
+    Note over IDB: 持久化操作<br/>put/transactions
+
+    IDB-->>Bridge: 写入成功 {ok: true}
+    deactivate IDB
+
+    Bridge-->>Data: resolve()
+    Data-->>Store: save完成
+
+    %% ============================
+    %% 关键时序缝隙标注
+    %% ============================
+    Note over Bridge,IDB: ⏱ 关键时序缝隙：先持久化 → 后广播<br/>（持久化完成后才触发广播，保证数据一致性）<br/><br/>对比方案：先广播 → 后持久化<br/>（可能导致UI刷新时数据尚未持久化）
+
+    %% ============================
+    %% 异步广播阶段
+    %% ============================
+    Note over Bridge,Store: ━━━ 异步广播阶段 ━━━
+
+    Bridge-)Store: broadcast("orders") [异步事件]
+    deactivate Bridge
+
+    %% ============================
+    %% 各Store订阅回调分支
+    %% ============================
+    Note over Store: ━━━ 各Store订阅回调（并行）━━━
+
+    %% --- orderStore（正常流程）---
+    Note right of Store: 【orderStore ✅ 正常】
+    Store->>Store: onOrdersChange()回调
+    Store->>Store: refresh() 刷新数据
+    Store->>UI: 触发UI重绘
+
+    %% --- positionStore（频道不匹配）---
+    Note right of Store: 【positionStore ❌ 频道不匹配】
+    Note over Store: ❌ 订阅频道 "trading"<br/>❌ 广播频道 "orders"<br/>❌ 频道不匹配 → 收不到事件 → 不刷新
+
+    %% --- signalStore（只打日志不刷新）---
+    Note right of Store: 【signalStore ⚠ 回调不刷新】
+    Store->>Store: onSignalEvent()回调
+    Store->>Store: console.log() 仅打日志
+    Note over Store: ⚠ 只打日志不调用refresh()<br/>⚠ UI数据不同步
+
+    %% --- hotSectorStore（无订阅）---
+    Note right of Store: 【hotSectorStore ❌ 完全无订阅】
+    Note over Store: ❌ 完全没有订阅机制<br/>❌ 订单变化无感
+
+    %% --- valuePitStore（无订阅）---
+    Note right of Store: 【valuePitStore ❌ 完全无订阅】
+    Note over Store: ❌ 完全没有订阅机制<br/>❌ 订单变化无感
+
+    deactivate Store
+
+    %% ============================
+    %% 底部总结
+    %% ============================
+    Note over UI,IDB: ━━━ 问题总结 ━━━<br/>
+    Note over UI,IDB: 1. 频道不匹配：positionStore订阅"trading"但广播"orders"<br/>
+    Note over UI,IDB: 2. 订阅回调不刷新：signalStore只打日志不refresh<br/>
+    Note over UI,IDB: 3. 完全无订阅：hotSectorStore / valuePitStore 未订阅任何频道<br/>
+    Note over UI,IDB: 4. 时序设计：当前为先持久化后广播（保证一致性）
+```

@@ -1,7 +1,20 @@
+---
+title: prompt-merge-dedup
+code_version: 2.0.0
+
+tier: core
+---
+
+---
+title: docs/00-meta/prompt-merge-dedup.md
+code_version: 2.0.0
+tier: core
+---
+
 # 增强提示词：多源信息合并去重（最新优先 / 冲突覆盖）
 
 > **用途**：将多个数据源（同名或同主题文件）的信息合并为一份去重且完整的产物。
-> **适用场景**：同名 `DATA_DEFINITION.md`、重复 spec、散落的检索日志/内部资料、多版本文档收敛。
+> **适用场景**：同名 `../reference/data-definition.md`、重复 spec、散落的检索日志/内部资料、多版本文档收敛。
 > **设计原则**：先核对事实再动手；可逆操作优先（`mv` 而非 `rm`）；不绕过任何门禁；合并后可审计。
 
 ---
@@ -48,7 +61,7 @@
 - [ ] 新建唯一主文件（SSOT）于最合适目录
 - [ ] 分区保留各模块**全部**内容；共享部分定义 1 次 + 引用接入
 - [ ] 写入：来源对照表 + 冲突解决策略 + 变更记录（审计轨迹）
-- [ ] 更新索引（如 `DATA_DICTIONARY_INDEX.md`）指向主文件
+- [ ] 更新索引（如 `../reference/data-dictionary-index.md`）指向主文件
 - [ ] 移除旧源（tracked→`git rm`，untracked→`rm`）
 
 ### 阶段 4 · 校验与归档
@@ -63,10 +76,10 @@
 
 | 项 | 内容 |
 |----|------|
-| 源 | 3 份同名 `DATA_DEFINITION.md`：交易持仓(07-08) / 数据采集(07-08) / Cockpit Widget(07-06) |
+| 源 | 3 份同名 `../reference/data-definition.md`：交易持仓(07-08) / 数据采集(07-08) / Cockpit Widget(07-06) |
 | 发现 | 同名异义（3 模块）；仅 B∩C 共享采集类型为真重复（v1.2.0 一致） |
 | 基准 | 采集类型以 07-08（模块 B）为准；C 引用 |
-| 产物 | `docs/standards/DATA_DEFINITION.md`（v2.0.0，1202 行） |
+| 产物 | `../reference/data-definition.md`（v2.0.0，1202 行） |
 | 去重 | 3→1；共享类型定义 1 次 |
 | 门禁 | audit:docs 0 / audit-path-match 0 |
 | 遗留 | 7 份域数据字典（`AI_CENTER_` 等）保持独立由索引登记，未并入 |

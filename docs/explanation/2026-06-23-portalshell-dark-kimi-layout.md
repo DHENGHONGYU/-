@@ -1,4 +1,11 @@
 ---
+title: 2026-06-23-portalshell-dark-kimi-layout
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
 title: ADR-005: PortalShell 深色 Kimi 经典布局
 version: v0.9.0
 last_updated: 2026-06-24
@@ -8,6 +15,8 @@ change_log:
   - date: 2026-06-24
     author: Documentation Governor
     desc: 注入 Frontmatter 元数据（Phase 3 版本化）
+code_version: 2.0.0
+tier: reference
 ---
 # ADR-005: PortalShell 深色 Kimi 经典布局
 
@@ -42,4 +51,4 @@ change_log:
 
 ## 相关文档
 
-- `docs/04-ui-ux-specs.md`
+- `../reference/04-ui-ux-specs.md`

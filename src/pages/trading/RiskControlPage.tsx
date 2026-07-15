@@ -43,7 +43,7 @@ const RiskControlPage = memo(() => {
   const blocks = usePendingBlocks()
 
   useEffect(() => {
-    loadRiskVerdicts()
+    void loadRiskVerdicts()
   }, [loadRiskVerdicts])
 
   useEffect(() => {

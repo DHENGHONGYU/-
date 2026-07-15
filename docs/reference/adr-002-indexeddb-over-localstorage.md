@@ -1,10 +1,19 @@
 ---
+title: adr-002-indexeddb-over-localstorage
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
 title: ADR-002: IndexedDB 替代 localStorage
 status: accepted
 owner: V9 Architecture Team
 decision_date: 2026-06-20
 supersedes: ""
 superseded_by: ""
+code_version: 2.0.0
+tier: reference
 ---
 
 # ADR-002: IndexedDB 替代 localStorage
@@ -112,10 +121,10 @@ npm run audit:docs   # 验证文档同步
 
 | 文档 | 路径 |
 |------|------|
-| ADR-001（纯前端架构） | `adr-001-pure-frontend-architecture.md` |
+| ADR-001（纯前端架构） | `../explanation/adr-001-pure-frontend-architecture.md` |
 | ADR-003（DataBridge） | `adr-003-databridge-over-direct-datalayer.md` |
-| 数据层总览 | `../modules/data-layer-overview.md` |
-| 原始提案 | `../../01-requirements/2026-06-20-indexeddb-over-localstorage.md` |
+| 数据层总览 | `../explanation/data-layer-overview.md` |
+| 原始提案 | `./2026-06-20-indexeddb-over-localstorage.md` |
 
 ---
 

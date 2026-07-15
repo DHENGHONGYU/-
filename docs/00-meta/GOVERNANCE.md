@@ -1,3 +1,16 @@
+---
+title: governance
+code_version: 2.0.0
+
+tier: core
+---
+
+---
+title: docs/00-meta/governance.md
+code_version: 2.0.0
+tier: core
+---
+
 # V9 文档治理宪法（GOVERNANCE）
 
 > **版本**: v1.0.0 | **日期**: 2026-07-12
@@ -16,7 +29,7 @@
 
 ### 1.2 双向一致性（Bidirectional Consistency）
 
-- **代码变更 → 文档同步**：代码变更后，必须同步更新相关文档（如 `AGENTS.md`、数据字典、API 契约）。
+- **代码变更 → 文档同步**：代码变更后，必须同步更新相关文档（如 `../../AGENTS.md`、数据字典、API 契约）。
 - **文档变更 → 代码验证**：文档变更后，必须运行 `npm run audit:docs` 验证代码-文档一致性。
 - 双向一致性评分目标：≥ 90/100（当前 82/100）。
 
@@ -43,7 +56,7 @@
 
 ### 2.1 禁止散落规则
 
-- ❌ 禁止在 `docs/` 根目录新建独立 `.md` 文件（`README.md` 和 `GOVERNANCE.md` 除外）。
+- ❌ 禁止在 `docs/` 根目录新建独立 `.md` 文件（`../../README.md` 和 `governance.md` 除外）。
 - ❌ 禁止在 `docs/` 根目录新建 `.txt`、`.json` 等产物文件。
 - ✅ 自动产物必须写入 `docs/reports/` 或 `docs/07-archive/`。
 - ✅ 临时草稿必须放入 `docs/drafts/`，并在定稿后迁移到对应类目或删除。
@@ -79,11 +92,11 @@
 
 | 类型 | 命名规则 | 示例 |
 |------|---------|------|
-| 规范文档 | `kebab-case.md` | `coding-conventions.md` |
+| 规范文档 | `kebab-case.md` | `../reference/coding-conventions.md` |
 | 数据定义 | `*-data-definition.md` | `news-data-definition.md` |
-| 索引文件 | `*-index.md` | `DATA_DICTIONARY_INDEX.md` |
+| 索引文件 | `*-index.md` | `../reference/data-dictionary-index.md` |
 | 报告文件 | `YYYY-MM-DD-*.md` | `2026-07-12-security-audit.md` |
-| 归档文件 | `DEPRECATED_*.md` | `DEPRECATED_batch1-merge-report.md` |
+| 归档文件 | `DEPRECATED_*.md` | `../explanation/design/deprecated-batch1-merge-report.md` |
 
 ### 3.4 版本号规则
 
@@ -103,7 +116,7 @@
 | **审计报告** | `npm run audit:*` | 30 天 | `docs/reports/audit/` | ❌ |
 | **覆盖率报告** | `npm run test:ci` | 14 天 | `coverage/` | ❌ (已 .gitignore) |
 | **视觉回归基线** | `npm run test:e2e:visual` | 永久 | `e2e/*-snapshots/` | ✅ |
-| **变更日志** | 手动维护 | 永久 | `CHANGELOG.md` (根) | ✅ |
+| **变更日志** | 手动维护 | 永久 | `../../CHANGELOG.md` (根) | ✅ |
 | **Code Graph** | `npm run build:ai-memory` | 7 天 | `docs/reports/code-graph/` | ❌ |
 | **系统巡检报告** | CI `system-check-loop.yml` | 7 天 | `docs/reports/system-check/` | ❌ |
 | **依赖分析报告** | `npm run audit:dependencies` | 30 天 | `docs/reports/dependency-analysis.*` | ❌ |
@@ -119,7 +132,7 @@
 7  天: 系统巡检报告, Code Graph, API 提取, 预审查
 ```
 
-> **清理机制**：由 `docs/CLEANUP_SCHEDULE.md` 定义自动化清理脚本，定期扫描并删除过期产物。
+> **清理机制**：由 `./cleanup-schedule.md` 定义自动化清理脚本，定期扫描并删除过期产物。
 
 ### 4.3 根级产物迁移计划
 
@@ -129,7 +142,7 @@
 |---------|---------|--------|
 | 根 `audit-*-result.txt` | `docs/reports/audit/` | P1 |
 | 根 `coverage/` | `coverage/`（已 .gitignore） | — |
-| 根 `CHANGELOG.md` | 保持根级（永久保留） | — |
+| 根 `../../CHANGELOG.md` | 保持根级（永久保留） | — |
 
 ---
 
@@ -172,8 +185,8 @@ npm run doc:freshness-alert
 # DEPRECATED_原文件名
 
 > **归档日期**: 2026-07-12
-> **归档原因**: 内容已合并到 `docs/architecture/overview.md`
-> **替代文档**: `docs/architecture/overview.md`
+> **归档原因**: 内容已合并到 `../explanation/overview.md`
+> **替代文档**: `../explanation/overview.md`
 > **状态**: 仅保留历史参考，不再维护
 
 ---
@@ -188,8 +201,8 @@ npm run doc:freshness-alert
 | 文档 | 路径 | 内容 |
 |------|------|------|
 | 文档主控索引 | `docs/README.md` | A–H 八类导航、快速入口 |
-| 清理周期表 | `docs/CLEANUP_SCHEDULE.md` | 自动产物保留期与清理脚本 |
+| 清理周期表 | `./cleanup-schedule.md` | 自动产物保留期与清理脚本 |
 | 文档体系体检 | `docs/00-meta/文档体系体检报告-v9.md` | 文档体系健康度评估 |
-| 变更日志 | `CHANGELOG.md` | 版本变更、质量指标 |
-| 代码审查标准 | `docs/CODE-REVIEW.md` | PR 审查清单 |
-| 技术债管理 | `docs/TECH-DEBT.md` | 技术债登记与清理计划 |
+| 变更日志 | `../../CHANGELOG.md` | 版本变更、质量指标 |
+| 代码审查标准 | `../reference/code-review.md` | PR 审查清单 |
+| 技术债管理 | `../explanation/design/tech-debt.md` | 技术债登记与清理计划 |

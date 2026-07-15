@@ -1,3 +1,16 @@
+---
+title: scholar
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/scholar.md
+code_version: 2.0.0
+tier: important
+---
+
 # Scholar 插件
 
 > **数据域**: 学术文献检索（Google Scholar 风格）  

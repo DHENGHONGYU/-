@@ -1,14 +1,23 @@
 ---
+title: trading-contract
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: trading-contract.md
 status: draft
 owner: 架构组
 updated: 2026-07-12
+code_version: 2.0.0
+tier: important
 ---
 
 # trading-contract.md — 交易业务子域接口契约
 
 > **定位**：定义 `trading` 子域的接口契约、职责边界、数据流与依赖关系。  
-> **关联**：`../../architecture/services-catalog.md`（24 子域总览）、`AGENTS.md` §一（分层规则）。
+> **关联**：`./services-catalog.md`（24 子域总览）、`../../AGENTS.md` §一（分层规则）。
 
 ---
 
@@ -460,7 +469,7 @@ pages/trading/* / apps/trading/* / cockpit/widgets (PortfolioOverviewWidget, Sig
 ---
 
 > **TODO[子域 owner]**：
-> 1. 确认 `useCase` / `input` / `llm` 跨子域依赖是否符合 `AGENTS.md` 分层规则（当前 `services/` 存在互调）。
+> 1. 确认 `useCase` / `input` / `llm` 跨子域依赖是否符合 `../../AGENTS.md` 分层规则（当前 `services/` 存在互调）。
 > 2. 将分散的测试文件归拢至 `__tests__/` 目录，或补充集成测试。
 > 3. 补充 `__mocks__/tradingService.ts` Mock 实现。
 > 4. 完成后运行 `tsc --noEmit` + `audit:layers` 验证。

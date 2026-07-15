@@ -1,6 +1,19 @@
+---
+title: token-usage-cookbook
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/explanation/token-usage-cookbook.md
+code_version: 2.0.0
+tier: important
+---
+
 # 令牌使用 Cookbook（token-usage-cookbook）
 
-> **定位**：`02-design/design-token-mapping.md`（令牌映射表）的**场景化补充**，补「令牌指南缺失（不可发现）」缺口。
+> **定位**：`../reference/design-token-mapping.md`（令牌映射表）的**场景化补充**，补「令牌指南缺失（不可发现）」缺口。
 > **原则**：UI 颜色一律走令牌，`lint:colors` 拦截零硬编码。A 股**红涨绿跌**固定色不随主题变化。
 > **状态**：✅ P1 新增（8 场景）
 
@@ -67,4 +80,4 @@ import { THEME_TOKENS } from '@/constants/theme.tokens'
 | L5 | 股票红涨绿跌固定色 | 不随主题 |
 | L6 | `SEMANTIC_COLOR_ROLES` | 语义角色映射 |
 
-> 映射总表见 `02-design/design-token-mapping.md`；偏离即触发 `lint:colors` / `audit:tokens` 门禁。
+> 映射总表见 `../reference/design-token-mapping.md`；偏离即触发 `lint:colors` / `audit:tokens` 门禁。

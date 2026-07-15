@@ -1,0 +1,369 @@
+{
+  "violations": [
+    {
+      "file": "src/components/cockpit/SecurityStatus.tsx",
+      "line": 58,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 text-emerald-500",
+      "context": "<ShieldCheck className=\"h-3.5 w-3.5 text-emerald-500\" />"
+    },
+    {
+      "file": "src/components/cockpit/SecurityStatus.tsx",
+      "line": 59,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 text-emerald-600",
+      "context": "<span className=\"text-emerald-600\">本地加密存储</span>"
+    },
+    {
+      "file": "src/components/cockpit/SecurityStatus.tsx",
+      "line": 60,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 text-emerald-400",
+      "context": "<Lock className=\"h-3 w-3 text-emerald-400\" />"
+    },
+    {
+      "file": "src/components/cockpit/SecurityStatus.tsx",
+      "line": 64,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 text-amber-500",
+      "context": "<Shield className=\"h-3.5 w-3.5 text-amber-500\" />"
+    },
+    {
+      "file": "src/components/cockpit/SecurityStatus.tsx",
+      "line": 65,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 text-amber-600",
+      "context": "<span className=\"text-amber-600\">加密可用</span>"
+    },
+    {
+      "file": "src/components/cockpit/SecurityStatus.tsx",
+      "line": 69,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 text-red-500",
+      "context": "<ShieldAlert className=\"h-3.5 w-3.5 text-red-500\" />"
+    },
+    {
+      "file": "src/components/cockpit/SecurityStatus.tsx",
+      "line": 70,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 text-red-600",
+      "context": "<span className=\"text-red-600\">加密不可用</span>"
+    },
+    {
+      "file": "src/components/cockpit/SecurityStatus.tsx",
+      "line": 121,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 bg-emerald-50",
+      "context": "<div className={`p-1.5 rounded-lg transition-colors ${isSecure ? 'bg-emerald-50 "
+    },
+    {
+      "file": "src/components/cockpit/SecurityStatus.tsx",
+      "line": 129,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 bg-emerald-50",
+      "context": "<div className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-xs ${isSecu"
+    },
+    {
+      "file": "src/components/cockpit/SecurityStatus.tsx",
+      "line": 139,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 text-emerald-500",
+      "context": "{isSecure ? <ShieldCheck className=\"h-4 w-4 text-emerald-500\" /> : <ShieldAlert "
+    },
+    {
+      "file": "src/components/organisms/search/GroupedView.tsx",
+      "line": 33,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 border-blue-300",
+      "context": "'collection-history': 'border-blue-300 dark:border-blue-700',"
+    },
+    {
+      "file": "src/components/organisms/search/GroupedView.tsx",
+      "line": 34,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 border-purple-300",
+      "context": "'local-doc': 'border-purple-300 dark:border-purple-700',"
+    },
+    {
+      "file": "src/components/organisms/search/GroupedView.tsx",
+      "line": 35,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 border-green-300",
+      "context": "'code-file': 'border-green-300 dark:border-green-700',"
+    },
+    {
+      "file": "src/components/organisms/search/GroupedView.tsx",
+      "line": 36,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 border-green-300",
+      "context": "'script-file': 'border-green-300 dark:border-green-700',"
+    },
+    {
+      "file": "src/components/organisms/search/GroupedView.tsx",
+      "line": 37,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 border-blue-300",
+      "context": "'auto-collect': 'border-blue-300 dark:border-blue-700',"
+    },
+    {
+      "file": "src/components/organisms/search/GroupedView.tsx",
+      "line": 38,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 border-orange-300",
+      "context": "'file-import': 'border-orange-300 dark:border-orange-700',"
+    },
+    {
+      "file": "src/components/organisms/search/GroupedView.tsx",
+      "line": 39,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 border-gray-300",
+      "context": "'manual-trigger': 'border-gray-300 dark:border-gray-700',"
+    },
+    {
+      "file": "src/components/organisms/search/GroupedView.tsx",
+      "line": 40,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 border-green-300",
+      "context": "'success': 'border-green-300 dark:border-green-700',"
+    },
+    {
+      "file": "src/components/organisms/search/GroupedView.tsx",
+      "line": 41,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 border-yellow-300",
+      "context": "'partial': 'border-yellow-300 dark:border-yellow-700',"
+    },
+    {
+      "file": "src/components/organisms/search/GroupedView.tsx",
+      "line": 42,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 border-red-300",
+      "context": "'failed': 'border-red-300 dark:border-red-700',"
+    },
+    {
+      "file": "src/components/organisms/search/GroupedView.tsx",
+      "line": 77,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 border-gray-300",
+      "context": "const colorClass = GROUP_COLORS[key] ?? 'border-gray-300 dark:border-gray-700'"
+    },
+    {
+      "file": "src/components/organisms/search/TimelineView.tsx",
+      "line": 90,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 bg-green-100",
+      "context": "? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'"
+    },
+    {
+      "file": "src/components/organisms/search/TimelineView.tsx",
+      "line": 92,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 bg-yellow-100",
+      "context": "? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'"
+    },
+    {
+      "file": "src/components/organisms/search/TimelineView.tsx",
+      "line": 93,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 bg-red-100",
+      "context": ": 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'"
+    },
+    {
+      "file": "src/mcp/servers/knowledge/knowledgeServer.ts",
+      "line": 94,
+      "severity": "Warning",
+      "category": "静默回退",
+      "message": "发现静默回退模式 ?? []",
+      "context": "const topDocs = (docs ?? []).slice(0, topK)"
+    },
+    {
+      "file": "src/pages/command/agent/LlmManagement/components/LlmStatsTab.tsx",
+      "line": 180,
+      "severity": "Warning",
+      "category": "静默回退",
+      "message": "发现静默回退模式 ?? \"\"",
+      "context": "<span className={valueClassName ?? 'text-sm'}>{key}</span>"
+    },
+    {
+      "file": "src/services/analysis/rotation/rotationCalculator.ts",
+      "line": 72,
+      "severity": "Warning",
+      "category": "静默回退",
+      "message": "发现静默回退模式 ?? 0",
+      "context": "const s = (v: number | undefined): number => v ?? 0"
+    },
+    {
+      "file": "src/services/data-collector/dataSourceOrchestrator.ts",
+      "line": 352,
+      "severity": "Warning",
+      "category": "静默回退",
+      "message": "发现静默回退模式 ?? \"\"",
+      "context": "message: `${source} 失败，降级到 ${nextSource ?? '无'}`,"
+    },
+    {
+      "file": "src/services/data-collector/dataSourceOrchestrator.ts",
+      "line": 512,
+      "severity": "Warning",
+      "category": "静默回退",
+      "message": "发现静默回退模式 ?? \"\"",
+      "context": "message: `${source} K 线失败，降级到 ${nextSource ?? '无'}`,"
+    },
+    {
+      "file": "src/services/data-sync/globalScheduler.ts",
+      "line": 45,
+      "severity": "Major",
+      "category": "魔法数字",
+      "message": "引擎层出现未解释数字 570",
+      "context": "if (time >= 570 && time <= 690) return true"
+    },
+    {
+      "file": "src/services/data-sync/globalScheduler.ts",
+      "line": 46,
+      "severity": "Major",
+      "category": "魔法数字",
+      "message": "引擎层出现未解释数字 780",
+      "context": "if (time >= 780 && time <= 900) return true"
+    },
+    {
+      "file": "src/services/data-sync-search/historySearcher.ts",
+      "line": 112,
+      "severity": "Warning",
+      "category": "静默回退",
+      "message": "发现静默回退模式 || \"\"",
+      "context": "title: `${entry.channel} — ${symbols || fileName || '未知'}`,"
+    },
+    {
+      "file": "src/services/fetcher/contractValidation.ts",
+      "line": 43,
+      "severity": "Major",
+      "category": "魔法数字",
+      "message": "引擎层出现未解释数字 1990",
+      "context": "const MIN_TIMESTAMP = Date.UTC(1990, 0, 1)"
+    },
+    {
+      "file": "src/services/fetcher/contractValidation.ts",
+      "line": 261,
+      "severity": "Major",
+      "category": "魔法数字",
+      "message": "引擎层出现未解释数字 3650",
+      "context": "} else if (typeof f.inventory_turnover_days === 'number' && (f.inventory_turnove"
+    },
+    {
+      "file": "src/services/stock-analysis/scoringStrategy.ts",
+      "line": 127,
+      "severity": "Major",
+      "category": "魔法数字",
+      "message": "引擎层出现未解释数字 450",
+      "context": "await this.delay(450)"
+    },
+    {
+      "file": "src/services/stock-analysis/scoringStrategy.ts",
+      "line": 147,
+      "severity": "Major",
+      "category": "魔法数字",
+      "message": "引擎层出现未解释数字 1200",
+      "context": "await this.delay(1200)"
+    },
+    {
+      "file": "src/services/system/migration/migrationTransformers.ts",
+      "line": 235,
+      "severity": "Warning",
+      "category": "静默回退",
+      "message": "发现静默回退模式 ?? 0",
+      "context": "return ts ?? 0"
+    },
+    {
+      "file": "src/services/trading/strategyEngine.ts",
+      "line": 288,
+      "severity": "Warning",
+      "category": "静默回退",
+      "message": "发现静默回退模式 ?? 0",
+      "context": "const mv = momentum ?? 0"
+    },
+    {
+      "file": "src/services/trading/strategyEngine.ts",
+      "line": 292,
+      "severity": "Warning",
+      "category": "静默回退",
+      "message": "发现静默回退模式 ?? \"\"",
+      "context": "const s = sector ?? '-'"
+    },
+    {
+      "file": "src/store/collectionWizardStore.ts",
+      "line": 255,
+      "severity": "Warning",
+      "category": "静默回退",
+      "message": "发现静默回退模式 ?? null",
+      "context": "previous: previous ?? null,"
+    },
+    {
+      "file": "src/store/stockAnalysisStore.ts",
+      "line": 108,
+      "severity": "Warning",
+      "category": "静默回退",
+      "message": "发现静默回退模式 ?? null",
+      "context": "stock: stockData ?? null,"
+    },
+    {
+      "file": "src/store/stockAnalysisStore.ts",
+      "line": 109,
+      "severity": "Warning",
+      "category": "静默回退",
+      "message": "发现静默回退模式 ?? null",
+      "context": "quotes: quotesData ?? null,"
+    },
+    {
+      "file": "src/store/stockAnalysisStore.ts",
+      "line": 110,
+      "severity": "Warning",
+      "category": "静默回退",
+      "message": "发现静默回退模式 ?? null",
+      "context": "v6Score: scoreData ?? null,"
+    }
+  ],
+  "summary": {
+    "totalFiles": 1011,
+    "totalViolations": 43,
+    "totalWarnings": 13,
+    "bySeverity": {
+      "Major": 30,
+      "Warning": 13
+    },
+    "byCategory": {
+      "硬编码 Tailwind 颜色类": 24,
+      "静默回退": 13,
+      "魔法数字": 6
+    }
+  },
+  "meta": {
+    "scriptName": "audit-hardcode",
+    "version": "3.0",
+    "timestamp": "2026-07-15T01:12:52.008Z",
+    "durationMs": 260,
+    "rootDir": "G:\\FinSightV9\\scripts"
+  }
+}

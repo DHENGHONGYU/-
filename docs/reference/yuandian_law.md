@@ -1,3 +1,16 @@
+---
+title: yuandian_law
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/yuandian_law.md
+code_version: 2.0.0
+tier: important
+---
+
 # Yuandian Law 插件
 
 > **数据域**: 元典法律数据库（中国大陆法律法规与案例）  

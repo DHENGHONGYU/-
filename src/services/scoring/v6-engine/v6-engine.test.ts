@@ -168,7 +168,8 @@ describe('L-1 行业评分估值', () => {
       ...mockMinimalStock,
       config: { weights: { lMinus1: 0.10 } } as never,
     })
-    expect(result.score).toBe(0)
+    expect(Number.isNaN(result.score)).toBe(true)
+    expect(result.participated).toBe(false)
     expect(result.summary).toContain('不在7行业覆盖范围')
   })
 })

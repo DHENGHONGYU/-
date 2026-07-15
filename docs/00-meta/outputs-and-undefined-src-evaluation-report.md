@@ -1,3 +1,16 @@
+---
+title: outputs-and-undefined-src-evaluation-report
+code_version: 2.0.0
+
+tier: core
+---
+
+---
+title: docs/00-meta/outputs-and-undefined-src-evaluation-report.md
+code_version: 2.0.0
+tier: core
+---
+
 # outputs/ 和未定义 src/ 目录评估报告
 
 > 评估时间: 2026-07-12
@@ -81,7 +94,7 @@ src/store/, src/pages/, src/components/, src/portal/, src/constants/, src/types/
 此外，AGENTS.md 其他章节明确提及或定义的目录：
 - `src/agents/` — 依赖方向规则中定义（"agents/ → 仅可依赖 core/ 和 data/，属于 core 层扩展"）
 - `src/apps/` — 路由注册规则中定义（App 分发器，三级加载链）
-- `src/utils/` — 明确标记为"已废弃，请使用 src/lib/"
+- `src/lib/` — 明确标记为"已废弃，请使用 src/lib/"
 - `src/cockpit/` — 颜色令牌规范中多次引用（作为 UI 层消费方）
 - `src/mcp/` — 架构治理和测试命令中多次引用
 
@@ -94,7 +107,7 @@ src/store/, src/pages/, src/components/, src/portal/, src/constants/, src/types/
 | 目录 | 文件数 | 引用数 | 用途判断 | 建议 | 风险等级 |
 |------|--------|--------|---------|------|---------|
 | `src/blueprints/` | 1 | 0 | 数据关系测试（单一测试文件） | **合并至 tests/ 或归档** | 低 |
-| `src/databridge/` | 1 | 2 | `core/databridge` 的适配层包装 | **评估合并至 src/core/databridge/** | 中 |
+| `src/core/databridge.ts` | 1 | 2 | `core/databridge` 的适配层包装 | **评估合并至 src/core/databridge/** | 中 |
 | `src/devtools/` | 1 | 0 | 开发环境调试工具（`__DEV__` 全局） | **保留并补充 AGENTS.md 定义** | 低 |
 | `src/fixtures/` | 1 | 1 | Mock 数据供给 | **保留并补充 AGENTS.md 定义** | 低 |
 | `src/generated/` | 2 | 0 | 令牌生成产物（CSS + TS） | **需进一步确认** | 低 |
@@ -116,7 +129,7 @@ src/store/, src/pages/, src/components/, src/portal/, src/constants/, src/types/
 
 ---
 
-#### 2.2.2 `src/databridge/` — DataBridge 适配层（1 文件）
+#### 2.2.2 `src/core/databridge.ts` — DataBridge 适配层（1 文件）
 
 - **文件清单**: `index.ts`（5431 字节，155 行）
 - **引用分析**:
@@ -128,11 +141,11 @@ src/store/, src/pages/, src/components/, src/portal/, src/constants/, src/types/
   - 单例模式管理，支持超时、fallback queue
 - **与 core 层关系**:
   - `src/core/databridge.ts`（33850 字节）已存在，为核心实现
-  - `src/databridge/index.ts` 是**适配层/门面层**，职责是提供更易用的 API
+  - `../../src/showcase/index.ts` 是**适配层/门面层**，职责是提供更易用的 API
 - **决策**: **需进一步确认** — 评估是否将 `DataBridgeAdapter` 合并至 `src/core/databridge.ts` 或保持独立
 - **执行建议**:
-  - 方案 A（推荐）：将 `DataBridgeAdapter` 迁移至 `src/core/databridgeAdapter.ts`，删除 `src/databridge/` 目录
-  - 方案 B：保留 `src/databridge/` 并在 AGENTS.md 中补充定义为"适配层"
+  - 方案 A（推荐）：将 `DataBridgeAdapter` 迁移至 `src/core/databridgeAdapter.ts`，删除 `src/core/databridge.ts` 目录
+  - 方案 B：保留 `src/core/databridge.ts` 并在 AGENTS.md 中补充定义为"适配层"
 - **风险**: 中（涉及 1 个测试文件和潜在的 API 使用方）
 
 ---
@@ -292,7 +305,7 @@ src/store/, src/pages/, src/components/, src/portal/, src/constants/, src/types/
 
 | 目录 | 需确认内容 | 确认方法 |
 |------|-----------|---------|
-| `src/databridge/` | `DataBridgeAdapter` 是否为 `core/databridge.ts` 的必要包装 | 审阅 `src/core/databridge.ts` 是否已包含同类功能；如重复，迁移合并 |
+| `src/core/databridge.ts` | `DataBridgeAdapter` 是否为 `core/databridge.ts` 的必要包装 | 审阅 `src/core/databridge.ts` 是否已包含同类功能；如重复，迁移合并 |
 | `src/schema/` | JSON Schema 是否被运行时校验使用 | 全局搜索 `zod`、`ajv`、`yup`、`schema`、`validate` 在 src/ 中的使用 |
 | `src/showcase/` | 是否有路由指向展示页面 | 搜索 `routes.ts` 中 `showcase`、`Showcase` 关键词 |
 | `src/generated/` | `tokens.css` 是否被 `index.css` 引用 | 搜索 `index.css` 和 vite 配置中的 import |

@@ -23,7 +23,7 @@ export default function HotSectorPanel(): React.JSX.Element {
   const refresh = useIntentionPoolStore((s) => s.refresh)
   const items = useIntentionPoolStore((s) => s.items)
   const loading = useIntentionPoolStore((s) => s.loading)
-  const allGroups = useMemo(() => getIntentionPoolGroups(), [items])
+  const allGroups = useMemo(() => getIntentionPoolGroups(), [])
   
   const [hotSectors] = useState<HotSector[]>(() => getHotSectors())
   const [selectedHotSector, setSelectedHotSector] = useState<string>(

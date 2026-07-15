@@ -1,3 +1,16 @@
+---
+title: 06-routing-specs
+code_version: 2.0.0
+
+tier: core
+---
+
+---
+title: docs/reference/06-routing-specs.md
+code_version: 2.0.0
+tier: core
+---
+
 # 06. 路由规格
 
 > **Status**: Current  
@@ -362,7 +375,7 @@ v6 项目强调「路由表即 UI 映射 truth source」，其做法值得 V9 �
 
 本文档当前版本为 `v0.9.0-migration-implemented`，与规划基线 `v0.9.0-docs-base` 的差异见：
 
-- `docs/implementation/architecture-version-comparison.md`
+- `./architecture-version-comparison.md`
 
 主要变化：
 

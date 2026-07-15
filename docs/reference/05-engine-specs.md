@@ -1,3 +1,16 @@
+---
+title: 05-engine-specs
+code_version: 2.0.0
+
+tier: core
+---
+
+---
+title: docs/reference/05-engine-specs.md
+code_version: 2.0.0
+tier: core
+---
+
 # 05. 引擎规格
 
 > **Status**: Current  
@@ -6,7 +19,7 @@
 >
 > 本文档定义 V9 的分析引擎、交易引擎、评分模型与跨模块通信协议（DataBridge / Envelope）。  
 > 目标读者：前端/全栈开发者、算法研究员、测试工程师。  
-> 与规划基线的差异见 `docs/implementation/architecture-version-comparison.md`。
+> 与规划基线的差异见 `./architecture-version-comparison.md`。
 
 ---
 
@@ -112,7 +125,7 @@ src/store/
 └── dataflowStore.ts       # 状态管理
 ```
 
-**当前状态**：🟡 部分实现。已支持 SSE/轮询、内存缓存、定时刷新、慢订阅者检测、通道 priority 字段；TTL/容量上限/按优先级排序分发待完善。详细字段与 API 见 `docs/DATAFLOW_DATA_DEFINITION.md`。
+**当前状态**：🟡 部分实现。已支持 SSE/轮询、内存缓存、定时刷新、慢订阅者检测、通道 priority 字段；TTL/容量上限/按优先级排序分发待完善。详细字段与 API 见 `./dataflow-data-definition.md`。
 
 ### 1.4 Hybrid Proofread 混合校对引擎（v2.6.0 新增）
 
@@ -427,9 +440,9 @@ runSectorRotation()
 
 | 文件 | 职责 |
 |------|------|
-| `src/services/trading/hotSectorAnalyzer.ts` | 热门板块策略五维评分 |
-| `src/services/trading/valuePitAnalyzer.ts` | 价值洼地策略五维评分 |
-| `src/services/trading/rotationSignalDetector.ts` | 价值洼地轮动信号检测 |
+| `src/services/scoring/hotSectorAnalyzer.ts` | 热门板块策略五维评分 |
+| `src/services/scoring/valuePitAnalyzer.ts` | 价值洼地策略五维评分 |
+| `src/services/scoring/rotationSignalDetector.ts` | 价值洼地轮动信号检测 |
 | `src/services/trading/dualStrategyEngine.ts` | 编排上述服务，输出 `DualStrategyResult` |
 | `src/config/dualStrategyRules.ts` | 双策略阈值与轮动信号条件配置 |
 
@@ -821,7 +834,7 @@ candidate → screened → deepDive → watching → archived
 
 本文档当前版本为 `v0.9.0-docs-review`，与规划基线 `v0.9.0-docs-base` 的差异见：
 
-- `docs/implementation/architecture-version-comparison.md`
+- `./architecture-version-comparison.md`
 
 主要变化：
 

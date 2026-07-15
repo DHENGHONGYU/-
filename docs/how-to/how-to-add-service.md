@@ -1,3 +1,16 @@
+---
+title: how-to-add-service
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/how-to/how-to-add-service.md
+code_version: 2.0.0
+tier: important
+---
+
 # 如何新增一个 Service（DataBridge + Envelope 路由）
 
 > **版本**：v1.0.0  
@@ -8,7 +21,7 @@
 
 ## 前置检查
 
-- [ ] 已阅读 `docs/guides/getting-started.md`（了解四步集成契约）
+- [ ] 已阅读 `../tutorials/getting-started.md`（了解四步集成契约）
 - [ ] 已确定 Service 的数据类型（在 `src/types/` 或 `src/data/types.ts` 中定义）
 - [ ] 已确认对应的 IndexedDB store（在 `src/config/dbConfig.ts` 的 `STORE_NAME` 中注册）
 - [ ] 已确认 ACL 权限（在 `src/config/dbConfig.ts` 的 `ACL_MATRIX` 中添加读写白名单）
@@ -361,9 +374,9 @@ export const useSectorAnalysisStore = create<SectorAnalysisState>((set, get) => 
 
 | 文档 | 路径 | 说明 |
 |------|------|------|
-| 新增 Store | `docs/guides/how-to-add-store.md` | Service 的上游消费方 |
-| 新增 Widget | `docs/guides/how-to-add-widget.md` | Service 的间接消费方 |
-| DataBridge 规范 | `AGENTS.md` §六 | L4 应用层调用约束 |
+| 新增 Store | `./how-to-add-store.md` | Service 的上游消费方 |
+| 新增 Widget | `./how-to-add-widget.md` | Service 的间接消费方 |
+| DataBridge 规范 | `../../AGENTS.md` §六 | L4 应用层调用约束 |
 | ACL 配置 | `src/config/dbConfig.ts` | 权限矩阵 |
 | Envelope 定义 | `src/core/envelope.ts` | 信封工厂 |
 

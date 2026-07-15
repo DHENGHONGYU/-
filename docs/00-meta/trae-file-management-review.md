@@ -1,3 +1,16 @@
+---
+title: trae-file-management-review
+code_version: 2.0.0
+
+tier: core
+---
+
+---
+title: docs/00-meta/trae-file-management-review.md
+code_version: 2.0.0
+tier: core
+---
+
 # V9 文件管理体系 × TRAE 开发习惯 审查评价报告
 
 > ⚠️ **本文档已过时（2026-07-12 标注，N5 治理）**：本报告描述的是「清理前」的快照状态。下列问题**均已处置**，本文件仅作历史审查记录保留，不作为当前文件管理依据——当前基准请查 `docs/README.md` + `docs/00-meta/doc-auto-update-kanban.md`：
@@ -6,7 +19,7 @@
 > - `docs/README.md` → 已建立
 > - `DATA_DEFINITION*` 10 份 → 已归并为 `docs/02-design/` 下各域单一文件
 >
-> **当前残留（已处置，见 `doc-auto-update-kanban.md` N4 ✅）**：`docs/reports/` tracked 产物已 `git rm --cached`（gitignore L146 已配）；`docs/design/` 2 文件迁 `02-design/`；根散落 `CLEANUP_SCHEDULE.md`/`GOVERNANCE.md` 迁 `00-meta/`。
+> **当前残留（已处置，见 `doc-auto-update-kanban.md` N4 ✅）**：`docs/reports/` tracked 产物已 `git rm --cached`（gitignore L146 已配）；`docs/design/` 2 文件迁 `02-design/`；根散落 `cleanup-schedule.md`/`governance.md` 迁 `00-meta/`。
 
 > **审查日期**：2026-07-12
 > **审查视角**：TRAE 开发工具（AI 编码助手）的项目结构 / 文件管理习惯
@@ -28,12 +41,12 @@
 | `docs/` 顶层子目录数 | **20** | `ls docs/` |
 | `docs/` 各目录文件数 | 01-requirements 42 / 02-design 140 / 03-development 35 / 04-testing 12 / 05-deployment 1 / 06-project-management 2 / 07-archive 1 / architecture 1 / architecture-radar-v2 58 / audit 43 / blueprints 1 / changelogs 27 / design **0** / drafts 9 / guides 1 / implementation 14 / plans 4 / plugins 10 / project-management **0** / reports **1414** | `find` |
 | `docs/reports/` 体积 | **90 MB / 1414 文件** | `du -sh` |
-| `DATA_DEFINITION*` 文件 | **10**（根 1 + 01-requirements 1 + 02-design 8；其中 **3 个同名** `DATA_DEFINITION.md`，**7 个按域命名**：AI_CENTER / BACKTEST / DATAFLOW / MULTI_FACTOR_SCREENING / NEWS / RISK_DERIVED / SEVEN_DIM_CONFIG） | `find -iname` |
+| `DATA_DEFINITION*` 文件 | **10**（根 1 + 01-requirements 1 + 02-design 8；其中 **3 个同名** `../reference/data-definition.md`，**7 个按域命名**：AI_CENTER / BACKTEST / DATAFLOW / MULTI_FACTOR_SCREENING / NEWS / RISK_DERIVED / SEVEN_DIM_CONFIG） | `find -iname` |
 | `DEPRECATED*` 文件（docs 内） | **9**（8 散落活跃目录，仅 1 在 `07-archive/`） | `find -iname` |
 | `.ai-index` / `.ai-cache` | **0**（不存在） | `find` |
 | `docs/README.md` | **缺失** | `ls` |
-| 根 `README.md` | **存在** | `ls *.md` |
-| `docs/01-requirements/README.md` | **存在**（子目录索引） | `find` |
+| 根 `../../README.md` | **存在** | `ls *.md` |
+| `../reference/README.md` | **存在**（子目录索引） | `find` |
 | 空目录 | `docs/design/`、`docs/project-management/`（各 0 文件） | `find` |
 | `file-management-system/` | **502 文件**，含**自有 `node_modules/`、`bin/`、`configs/`、`guides/`、`templates/`、`scripts/`**（实质是嵌在仓库根的自包含子包） | `find` |
 | `articles/` | **29 文件**（png/svg/cjs/txt/md） | `find` |
@@ -55,12 +68,12 @@
 | 检查项 | 原得分 | 本地核验 | 结论 | 修正说明 |
 |--------|:---:|------|:---:|------|
 | 体系覆盖 | 80 | 八类体系已建（`文档归类体系结构.md`） | ✅ 确认 | — |
-| 顶层入口 | 0 | `docs/README.md` 缺失，但根 `README.md` + `docs/01-requirements/README.md` **存在** | 🟡 偏差 | 缺口是"**docs 主控索引**"，非"全项目无 README"；AI 另有 `public/ai-memory-index.json` 可部分补偿 |
+| 顶层入口 | 0 | `docs/../../README.md` 缺失，但根 `../../README.md` + `../reference/../../README.md` **存在** | 🟡 偏差 | 缺口是"**docs 主控索引**"，非"全项目无 README"；AI 另有 `public/ai-memory-index.json` 可部分补偿 |
 | 应有文档 | 0 | 仅 `input` 有舱 spec；令牌 mapping **已存在**（缺 cookbook） | 🟡 偏差 | "5 个可能已存在"含令牌指南；非空洞 0 |
 | 孤儿文档 | 40 | 孤儿问题真实；但 `docs/` 根 8 个散落 `.md` + 根级 `file-management-system/`(502) + `articles/`(29) **未被计入** | 🔴 例外（低估） | 孤儿口径过窄（仅 docs 内），漏算根级散落 |
 | 目录健康 | 30 | 2 空目录（`design/`、`project-management/`）✅；3 错位含 `architecture/` vs `architecture-radar-v2/` 拆分、`file-management-system/` 根级 | ✅ 确认 | — |
 | 自动产物 | 50 | `docs/reports/` = 1414 文件 / 90 MB，gitignore 仅覆盖 `audit/*.json` | 🔴 例外（低估） | 这是**头号膨胀源**，33.1% 表述偏轻 |
-| 令牌指南 | 50 | `design-token-mapping.md` 存在（无场景 cookbook） | 🟡 偏差 | 非"全缺"，属"有映射无菜谱" |
+| 令牌指南 | 50 | `../reference/design-token-mapping.md` 存在（无场景 cookbook） | 🟡 偏差 | 非"全缺"，属"有映射无菜谱" |
 | 过程产物 | 40 | `drafts/`(9)+`plans/`(4)+`blueprints/`(1)+`.trae/logs/`+`lint-*.txt` 均未忽略 | 🔴 例外（外溢） | 过程产物还外溢到 `.trae/` 日志/ lint 输出 |
 | 数据一致 | 20 | 10 个 `DATA_DEFINITION*`，但**仅 3 个同名真重复**，7 个为独立域定义 | 🔴 例外（误报） | "10 份重复"应改为"3 真重复 + 7 按域拆分（命名不一致）" |
 | 归档状态 | 40 | 9 份 DEPRECATED，8 散落活跃目录，1 在 `07-archive/` | ✅ 确认 | — |
@@ -164,16 +177,16 @@
 ### P1（高优，建议两周内）
 | 动作 | 对应 TRAE 规则 | 文件/目录 | 验收 |
 |------|----------------|-----------|------|
-| 合并 `DATA_DEFINITION`：3 个同名 → 单一 `docs/02-design/data-definition.md`；7 个域定义重命名为 kebab（`ai-center-data-definition.md` 等） | kebab-case / SSOT | `docs/02-design/` | 同名 0、命名统一 |
+| 合并 `DATA_DEFINITION`：3 个同名 → 单一 `../reference/data-definition.md`；7 个域定义重命名为 kebab（`ai-center-data-definition.md` 等） | kebab-case / SSOT | `docs/02-design/` | 同名 0、命名统一 |
 | 将 8 份散落 DEPRECATED 移入 `07-archive/`；删除或填充 2 个空目录 | 归档状态 | `docs/` | 活跃目录无 DEPRECATED、无空目录 |
 | 合并 `architecture/` ↔ `architecture-radar-v2/` 为单一 `docs/architecture/` + 子目录 | 目录层级 / 命名 | `docs/` | 无割裂 |
-| 将 `docs/` 根 8 个散落 `.md`（含本报告）归入 `docs/00-meta/`（即本报告所在处，以身作则） | 禁止散落 | `docs/` | `docs/` 根仅留 `README.md` |
+| 将 `docs/` 根 8 个散落 `.md`（含本报告）归入 `docs/00-meta/`（即本报告所在处，以身作则） | 禁止散落 | `docs/` | `docs/` 根仅留 `../../README.md` |
 | 在 `.trae/rules` 中增补文件管理条款（公共目录单点收敛 / 归档标准 / kebab-case / 禁止散落） | 开发习惯一致性 | `.trae/rules` | 后续 AI 改动自动遵从 |
 
 ### P2（中优，持续）
 | 动作 | 对应 TRAE 规则 | 文件/目录 | 验收 |
 |------|----------------|-----------|------|
-| 建 `DECISIONS.md`（收口 9 份 ADR 式文档）+ 单一 Living PRD 索引（指向 `01-requirements/`） | 3 文件底线 | 根级 / `docs/01-requirements/README.md` | 决策有主索引、需求有唯一源 |
+| 建 `DECISIONS.md`（收口 9 份 ADR 式文档）+ 单一 Living PRD 索引（指向 `01-requirements/`） | 3 文件底线 | 根级 / `../reference/README.md` | 决策有主索引、需求有唯一源 |
 | 设节奏将 `drafts/plans/blueprints` 归档进 `07-archive/` | 最小中间文档 | `docs/` | 中间文档不长期堆项目内 |
 | 正式将 `public/ai-memory-index.json` 立为 AI 文档索引（命名可加 `.ai-index` 软链），关闭"AI 缓存 0%"缺口 | AI 索引 | `public/` | AI 检索有官方索引 |
 

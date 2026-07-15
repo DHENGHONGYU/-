@@ -1,0 +1,22 @@
+{
+  "violations": [
+    {
+      "file": "src/hooks/useStressTest.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、DATA_DEFINITION.md、ARCHITECTURE.md、CHANGELOG.md）中体现"
+    }
+  ],
+  "summary": {
+    "totalFiles": 19,
+    "totalViolations": 1,
+    "scanMode": "changed",
+    "docFilesCount": 887
+  },
+  "meta": {
+    "scriptName": "audit-doc-sync",
+    "version": "3.0",
+    "timestamp": "2026-07-14T13:48:28.087Z",
+    "durationMs": 3905,
+    "rootDir": "G:\\FinSightV9\\scripts"
+  }
+}

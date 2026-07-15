@@ -1,4 +1,22 @@
 ---
+title: v9-strategy-architecture
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/explanation/v9-strategy-architecture.md
+code_version: 2.0.0
+tier: important
+---
+
+---
+title: docs/explanation/v9-strategy-architecture.md
+code_version: 2.0.0
+---
+
+---
 title: V9 策略架构文档
 version: v0.9.8
 last_updated: 2026-06-29
@@ -523,12 +541,12 @@ L1 (配置层) ──禁止依赖──►  L3/L4/L5 (只能被上层依赖)
 ## 6. 相关文档
 
 - [选股策略总文档](stock-selection-strategy.md)
-- [核心稀缺资源策略](core-scarce-strategy.md)
-- [热门赛道策略](hot-momentum-strategy.md)
-- [价值洼地策略](value-bargain-strategy.md)
-- [观察仓策略](watchlist-strategy.md)
-- [ADR-008: 第四次工业革命稀缺核心资源策略](../01-requirements/2026-06-24-adopt-v6-core-resource-trading-strategy.md)
+- [核心稀缺资源策略](design/core-scarce-strategy.md)
+- [热门赛道策略](design/hot-momentum-strategy.md)
+- [价值洼地策略](design/value-bargain-strategy.md)
+- [观察仓策略](design/watchlist-strategy.md)
+- [ADR-008: 第四次工业革命稀缺核心资源策略](../reference/2026-06-24-adopt-v6-core-resource-trading-strategy.md)
 - [ADR-009: 双策略体系](2026-06-27-dual-strategy-system.md)
 - [架构标准](../explanation/03-architecture-standards.md)
-- [引擎规格](05-engine-specs.md)
-- [双策略数据流规格](dual-strategy-dataflow-spec.md)
+- [引擎规格](../reference/05-engine-specs.md)
+- [双策略数据流规格](design/dual-strategy-dataflow-spec.md)

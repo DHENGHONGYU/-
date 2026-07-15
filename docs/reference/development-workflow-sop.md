@@ -1,9 +1,27 @@
+---
+title: development-workflow-sop
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/development-workflow-sop.md
+code_version: 2.0.0
+tier: important
+---
+
+---
+title: docs/reference/development-workflow-sop.md
+code_version: 2.0.0
+---
+
 # V9 智能投研复盘系统 — 开发工作流 SOP
 
 > **文档体系版本**: v2.0.0 | **本文档修订**: rev.1 | **日期**: 2026-07-13
 > **适用范围**: 所有 FinSightV9 开发者（AI 辅助 + 人工编码）
 > **强制等级**: 必须遵守
-> **关联文档**: [AGENTS.md](../../AGENTS.md) v1.4.6+ | [ARCHITECTURE.md](../../ARCHITECTURE.md) | [GOVERNANCE.md](../GOVERNANCE.md) | [CHANGELOG.md](../../CHANGELOG.md)
+> **关联文档**: [AGENTS.md](../../AGENTS.md) v1.4.6+ | [architecture.md](../explanation/architecture.md) | [governance.md](../00-meta/governance.md) | [CHANGELOG.md](../../CHANGELOG.md)
 
 ---
 
@@ -67,7 +85,7 @@ bash scripts/quick-query.sh
 
 ### 2.3 建立任务图（复杂任务必做）
 
-对于任何涉及 3 个以上文件或跨模块的任务，必须建立任务图（参见 `docs/templates/task-graph-template.md`）：
+对于任何涉及 3 个以上文件或跨模块的任务，必须建立任务图（参见 `../explanation/task-graph-template.md`）：
 
 | 组成部分 | 说明 |
 |---------|------|
@@ -372,8 +390,8 @@ npm run changelog:summary
 
 代码变更后必须同步更新文档：
 - 类型定义变更 → 数据字典 / API 契约
-- 路由变更 → `docs/02-design/06-routing-specs.md`
-- 架构变更 → `ARCHITECTURE.md` / 相关 ADR
+- 路由变更 → `./06-routing-specs.md`
+- 架构变更 → `../explanation/03-architecture-standards.md` / 相关 ADR
 - AGENTS.md 变更 → 所有引用 AGENTS.md 的文档
 
 变更后运行：

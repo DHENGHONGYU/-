@@ -1,0 +1,40 @@
+{
+  "meta": {
+    "scriptName": "doc-proofread",
+    "strategyVersion": "1.0.0",
+    "appliesToTiers": [
+      "core",
+      "important"
+    ],
+    "timestamp": "2026-07-15T01:47:30.553Z"
+  },
+  "scopeStats": {
+    "doc-to-code": {
+      "total": 5430,
+      "broken": 768
+    },
+    "code-to-doc": {
+      "total": 97,
+      "broken": 24
+    },
+    "doc-to-doc": {
+      "total": 5592,
+      "broken": 738
+    }
+  },
+  "wouldBlock": false,
+  "fullSummary": {
+    "docToCode": {
+      "total": 6775,
+      "broken": 930
+    },
+    "codeToDoc": {
+      "total": 113,
+      "broken": 27
+    },
+    "docToDoc": {
+      "total": 6894,
+      "broken": 936
+    }
+  }
+}

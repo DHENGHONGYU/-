@@ -1,3 +1,16 @@
+---
+title: README
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/prompts/README.md
+code_version: 2.0.0
+tier: reference
+---
+
 # AI Engineering Governance — V9 智能投研复盘系统
 
 > **版本**: v1.0.0 | **日期**: 2026-07-10
@@ -266,27 +279,27 @@ DB_VERSION 26 引入 `custom_agents` 存储表，支持用户在「自定义智�
 
 ### 6.1 模板目录
 
-文件: `prompts/README.md`
+文件: `../README.md`
 
 | 模板 | 用途 | 关键约束 |
 |------|------|---------|
-| `system-prompt-template.md` | 通用系统提示词 | 项目架构、分层规则、颜色令牌、日志规范 |
-| `component-prompt-template.md` | UI 组件生成 | 设计体系、组件层级、Widget 三处注册 |
-| `service-prompt-template.md` | Service 生成 | DataBridge 使用、事件规范、日志规范 |
-| `store-prompt-template.md` | Store 生成 | `withBroadcast` 跨 Tab 广播 |
-| `types-prompt-template.md` | 类型定义生成 | 零依赖原则 |
+| `../../prompts/../../prompts/../../prompts/../../prompts/system-prompt-template.md` | 通用系统提示词 | 项目架构、分层规则、颜色令牌、日志规范 |
+| `../../prompts/component-prompt-template.md` | UI 组件生成 | 设计体系、组件层级、Widget 三处注册 |
+| `../../prompts/service-prompt-template.md` | Service 生成 | DataBridge 使用、事件规范、日志规范 |
+| `../../prompts/store-prompt-template.md` | Store 生成 | `withBroadcast` 跨 Tab 广播 |
+| `../../prompts/types-prompt-template.md` | 类型定义生成 | 零依赖原则 |
 
 ### 6.2 使用方式
 
-1. **系统提示词**: 将 `system-prompt-template.md` 粘贴到 Cursor / Trae / WorkBuddy 的系统提示词
+1. **系统提示词**: 将 `../../prompts/../../prompts/../../prompts/../../prompts/system-prompt-template.md` 粘贴到 Cursor / Trae / WorkBuddy 的系统提示词
 2. **`.cursorrules`**: 项目根目录已配置自动加载
 3. **任务级加载**: 复杂任务前手动追加对应模板
 
 ### 6.3 维护规范
 
-- `AGENTS.md` 变更 → 同步更新 `system-prompt-template.md`
+- `../../AGENTS.md` 变更 → 同步更新 `../../prompts/../../prompts/../../prompts/../../prompts/system-prompt-template.md`
 - 设计令牌体系变更 → 同步更新所有模板中的颜色引用
-- 新增分层规则 → 同步更新 `system-prompt-template.md` 依赖方向
+- 新增分层规则 → 同步更新 `../../prompts/../../prompts/../../prompts/../../prompts/system-prompt-template.md` 依赖方向
 
 ---
 
@@ -299,7 +312,7 @@ DB_VERSION 26 引入 `custom_agents` 存储表，支持用户在「自定义智�
 | 评分值域 | `sanitizeScore(score, layerId, context)` | `src/services/scoring/v6-engine/engine.ts` |
 | LLM 文本渲染 | `sanitizeLlmOutput()` | AGENTS.md §六 规范（渲染层实现） |
 | JSON 解析 | `parseRawScoreOutput()` + `extractJsonFromMarkdown()` | `intelligentScoreService.ts` |
-| baseURL 协议 | `isValidLlmBaseURL()` | `src/utils/dataValidation.ts` |
+| baseURL 协议 | `isValidLlmBaseURL()` | `src/lib/validation.ts` |
 
 ### 7.2 调用透明度
 
@@ -382,8 +395,8 @@ AGENTS.md §七.1 强制规则：
 | 评分引擎 | `src/services/scoring/v6-engine/` | 9 层计算器 + 配置 + 类型 |
 | 评分因子 | `src/config/scoreFactors.ts` | L0-L8 因子定义与权重 |
 | 提示词模板 | `prompts/` | 5 类场景模板 |
-| 数据校验 | `src/utils/dataValidation.ts` | `isValidLlmBaseURL` |
-| AGENTS.md LLM 约束 | `AGENTS.md` §六/九 | 引擎架构 / 调用透明度 |
+| 数据校验 | `src/lib/validation.ts` | `isValidLlmBaseURL` |
+| ../../AGENTS.md LLM 约束 | `../../AGENTS.md` §六/九 | 引擎架构 / 调用透明度 |
 
 ---
 

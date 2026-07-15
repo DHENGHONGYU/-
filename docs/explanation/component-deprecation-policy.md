@@ -1,3 +1,21 @@
+---
+title: component-deprecation-policy
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/explanation/component-deprecation-policy.md
+code_version: 2.0.0
+tier: important
+---
+
+---
+title: docs/explanation/component-deprecation-policy.md
+code_version: 2.0.0
+---
+
 # V9 组件弃用政策
 
 > 版本：v0.9.14 P6-DATA
@@ -170,7 +188,7 @@ npx tsx scripts/audit-component-usage.ts
 
 ## 5. 相关文档
 
-- [组件开发指南](../02-design/widget-development-guide.md)
+- [组件开发指南](../how-to/widget-development-guide.md)
 - [代码质量审计报告](v9-code-quality-audit-report-20260629.md)
-- [代码质量看板](../audit/v9-code-quality-kanban-20260629)
-- [数据流规范](../02-design/data-flow-spec.md)
+- [代码质量看板](../reports/audit/v9-code-quality-kanban-20260629.md)
+- [数据流规范](design/data-flow-spec.md)

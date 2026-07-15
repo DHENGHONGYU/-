@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>总导航 · 团队手册地图 · FinSightV9 团队手册</title>
+<style>
+:root{
+  --bg:#fafaf9; --panel:#ffffff; --border:#e7e5e4; --text:#292524;
+  --text2:#57534e; --muted:#a8a29e; --accent:#10b981; --accent-bg:#ecfdf5;
+  --code-bg:#f5f5f4;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;line-height:1.75;font-size:15px}
+.layout{display:flex;align-items:flex-start;min-height:100vh}
+.sidebar{position:sticky;top:0;align-self:flex-start;width:240px;flex-shrink:0;height:100vh;
+  overflow-y:auto;background:var(--panel);border-right:1px solid var(--border);padding:24px 18px}
+.sidebar h2{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:0 0 12px}
+.sidebar a{display:block;color:var(--text2);text-decoration:none;font-size:14px;padding:7px 10px;
+  border-radius:8px;margin-bottom:2px}
+.sidebar a:hover{background:var(--accent-bg);color:#047857}
+.sidebar a.active{background:var(--accent);color:#fff}
+.sidebar .sub{font-size:11px;color:var(--muted);margin:14px 0 6px;padding-left:10px}
+.content{flex:1;max-width:880px;margin:0 auto;padding:40px 48px 80px}
+article h1{font-size:30px;font-weight:800;letter-spacing:-.5px;margin:0 0 6px;
+  border-bottom:3px solid var(--accent);padding-bottom:14px}
+article h2{font-size:22px;font-weight:700;margin:38px 0 12px;padding-left:12px;border-left:4px solid var(--accent)}
+article h3{font-size:18px;font-weight:700;margin:26px 0 8px;color:var(--text)}
+article h4{font-size:15.5px;font-weight:700;margin:18px 0 6px;color:var(--text2)}
+article p{margin:10px 0;color:var(--text2)}
+article ul,article ol{padding-left:24px;margin:10px 0;color:var(--text2)}
+article li{margin:5px 0}
+article a{color:var(--accent);text-decoration:none;border-bottom:1px solid #a7f3d0}
+article a:hover{color:#047857}
+article code{background:var(--code-bg);border:1px solid var(--border);border-radius:5px;padding:1px 6px;
+  font-size:13px;font-family:'SFMono-Regular',Consolas,monospace;color:#be123c}
+article pre{background:var(--code-bg);border:1px solid var(--border);border-radius:12px;padding:18px 20px;
+  overflow-x:auto;margin:14px 0}
+article pre code{background:none;border:none;padding:0;color:#1c1917;font-size:13px;line-height:1.6}
+article blockquote{border-left:4px solid var(--accent);background:var(--accent-bg);margin:14px 0;
+  padding:12px 18px;border-radius:0 10px 10px 0;color:#065f46}
+article table{border-collapse:collapse;width:100%;margin:16px 0;font-size:14px}
+article th,article td{border:1px solid var(--border);padding:9px 12px;text-align:left}
+article th{background:var(--panel);font-weight:700;color:var(--text)}
+article tr:nth-child(even) td{background:#fcfcfb}
+article hr{border:none;border-top:1px solid var(--border);margin:32px 0}
+article img{max-width:100%;border-radius:10px;border:1px solid var(--border)}
+pre.mermaid{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;}
+footer{text-align:center;color:var(--muted);font-size:12px;margin-top:48px;padding-top:20px;border-top:1px solid var(--border)}
+.back{display:inline-block;margin-bottom:18px;color:var(--accent);text-decoration:none;font-size:13px}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <h2>团队体系手册</h2>
+    <a href="index.html">📑 总览索引</a>
+    <div class="sub">手册正文</div>
+    <a href="README.html" class="active">总导航 · 团队手册地图</a>
+    <a href="01-design-philosophy.html">① 设计与原创思路</a>
+    <a href="02-architecture.html">② 整体架构设计</a>
+    <a href="03-ui-components.html">③ UI 组件设计</a>
+    <a href="04-model-runtime.html">④ 模型运行机制</a>
+    <a href="05-competitive-analysis.html">⑤ 竞品对比分析</a>
+    <div class="sub">补充资料</div>
+    <a href="supplementary/index.html">📁 高质量补充 HTML</a>
+  </aside>
+  <main class="content"><article>
+    <a class="back" href="index.html">← 返回总览</a>
+    <h1>FinSightV9 团队体系手册（Team Handbook）</h1>
+<blockquote>
+<p>版本基线：以 <code>AGENTS.md</code>（架构契约，当前 v1.4.6）为权威真相源。
+适用对象：新加入的开发者、设计师、产品与架构评审人员。
+目标：用一份<strong>统一、层次分明</strong>的文档，让团队成员在 30 分钟内建立对系统&quot;设计意图 → 架构 → 组件 → 模型 → 竞品&quot;的整体认知，并能在协作中快速定位约束与扩展点。</p>
+</blockquote>
+<hr>
+<h2>一、为什么需要这份手册</h2>
+<p>FinSightV9 是一个<strong>纯前端、本地优先的个人 A 股投研复盘系统</strong>（React + TypeScript + Zustand + IndexedDB + Web Worker + MCP）。项目文档分散在 <code>docs/</code> 下 800+ 文件中，且存在多版本号并存、部分文档与代码漂移的现象。</p>
+<p>本手册把分散的&quot;设计思路、架构、组件规范、模型运行、竞品定位&quot;<strong>收敛到同一目录</strong>，作为团队分享与 onboarding 的单一入口。它不是文档的替代品，而是<strong>导航图 + 精华萃取</strong>。</p>
+<blockquote>
+<p>⚠️ 文档漂移提示（编写时已核正）</p>
+<ol>
+<li><strong>Gateway 网关</strong>：<code>docs/reference/gateway-write-permission-spec.md</code> 描述的 <code>dataGateway.execute()</code> 是<strong>目标架构</strong>，当前 <code>core/databridge.ts</code> 仍直接 <code>import { db }</code> 写库，尚未收口。手册中相关处已标注&quot;目标/现状&quot;。</li>
+<li><strong>MCP 规模</strong>：当前为 <strong>15 个 enabled Server</strong>（P0 清理后），非早期文档所述的&quot;20+&quot;。</li>
+<li><strong>五因子</strong>：指<strong>板块轮动五因子</strong>（合成种子，UI 标&quot;示例&quot;），与个股 V6 十一层引擎、九维智能评分是<strong>三个不同概念</strong>，请勿混淆。</li>
+</ol>
+</blockquote>
+<hr>
+<h2>二、文档地图（5 维度 + 索引）</h2>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>文档</th>
+<th>解决什么问题</th>
+<th>关键产出</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>00</td>
+<td><code>README.md</code>（本文件）</td>
+<td>全局导航与术语</td>
+<td>文档地图、权威基线、约定</td>
+</tr>
+<tr>
+<td>01</td>
+<td><code>01-design-philosophy.md</code></td>
+<td>我们<strong>为什么</strong>这样设计</td>
+<td>设计哲学、宋韵美学、令牌体系、原创思路</td>
+</tr>
+<tr>
+<td>02</td>
+<td><code>02-architecture.md</code></td>
+<td>系统<strong>怎么搭</strong>、模块<strong>怎么连</strong></td>
+<td>分层规则、数据流、五舱、扩展能力</td>
+</tr>
+<tr>
+<td>03</td>
+<td><code>03-ui-components.md</code></td>
+<td>UI <strong>怎么写</strong>、<strong>怎么复用</strong></td>
+<td>原子设计、Widget 三处注册、颜色门禁</td>
+</tr>
+<tr>
+<td>04</td>
+<td><code>04-model-runtime.md</code></td>
+<td>模型<strong>怎么跑</strong>、数据<strong>怎么流</strong></td>
+<td>V6 引擎、采集流水线、Agent/LLM/MCP</td>
+</tr>
+<tr>
+<td>05</td>
+<td><code>05-competitive-analysis.md</code></td>
+<td>我们<strong>凭什么</strong>差异化</td>
+<td>竞品矩阵、差异化支柱、能力差距</td>
+</tr>
+</tbody>
+</table>
+<p>建议阅读顺序：<strong>00 → 01 → 02 →（前端看 03 / 算法看 04）→ 05</strong>。</p>
+<hr>
+<h2>三、核心术语（速查）</h2>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>舱 / Cabin</strong></td>
+<td>五大业务域：<code>input</code>(输入) / <code>analysis</code>(分析) / <code>trading</code>(交易) / <code>output</code>(输出) / <code>command</code>(总控)。</td>
+</tr>
+<tr>
+<td><strong>Store</strong></td>
+<td>Zustand 状态容器（约 50 个），经 <code>withBroadcast</code> 跨 Tab 广播。</td>
+</tr>
+<tr>
+<td><strong>Envelope（标准信封）</strong></td>
+<td><code>{ meta, payload }</code> 统一写消息，经 <code>DataBridge.forward()</code> 路由。</td>
+</tr>
+<tr>
+<td><strong>DataBridge</strong></td>
+<td>唯一切面入口：校验信封 → ACL 鉴权 → 审计 → 路由 → 广播。</td>
+</tr>
+<tr>
+<td><strong>Widget</strong></td>
+<td>驾驶舱可拖拽/可缩放单元，数据收敛到 <code>MarketData</code> 经 <code>useMarketData()</code> 注入。</td>
+</tr>
+<tr>
+<td><strong>Token（设计令牌）</strong></td>
+<td>L1–L6 分层颜色/尺寸变量，UI 颜色必须引用，禁止硬编码。</td>
+</tr>
+<tr>
+<td><strong>MCP</strong></td>
+<td>Model Context Protocol，接入第三方工具/数据的扩展协议层（15 个 Server）。</td>
+</tr>
+<tr>
+<td><strong>Worker 池</strong></td>
+<td><code>V6ScoreTaskScheduler</code> 管理 ≤4 个 Web Worker，把评分计算移出主线程。</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>四、协作约定（写给所有人）</h2>
+<ol>
+<li><strong>架构以 <code>AGENTS.md</code> 为真相源</strong>：修改分层、目录、依赖前先读它；文档与代码冲突时以代码+契约为准，并同步修文档。</li>
+<li><strong>四步集成顺序不可乱</strong>：类型 → Store → Service/Builder → UI；每步可独立回滚。</li>
+<li><strong>颜色与令牌</strong>：任何 UI 颜色必须走令牌；A 股<strong>红涨绿跌</strong>固定，不随主题变化。</li>
+<li><strong>门禁是底线</strong>：提交前 <code>lint:colors</code> / <code>audit:atomic</code> / <code>audit:layers</code> / <code>audit:tokens</code> / <code>audit:jsdoc</code> / <code>audit:complexity</code> 不得新增违规。</li>
+<li><strong>文档同步</strong>：新增/迁移模块后，按 <code>docs/00-meta/doc-trigger-action-map.md</code> 同步触发文档（路径移动必须同步 3 处：映射表、TRIGGER_RULES、README）。</li>
+</ol>
+<hr>
+<h2>五、如何扩展这份手册</h2>
+<ul>
+<li>本目录是<strong>手工萃取的精华</strong>，不应被自动生成脚本覆盖；如需纳入新维度，新增 <code>0X-*.md</code> 并在本表登记。</li>
+<li>底层细节仍指向 <code>docs/explanation/</code>（架构类）、<code>docs/reference/</code>（规范类）、<code>docs/how-to/</code>（实操类）、<code>prompts/</code>（AI 提示词模板）。</li>
+<li>架构图可视化源文件见 <code>docs/architecture/architecture-diagrams.html</code>。</li>
+</ul>
+<blockquote>
+<p>本手册为团队内部资料，所有 AI 输出均标注&quot;仅供参考，非投资建议&quot;。</p>
+</blockquote>
+
+    <footer>FinSightV9 智能投研复盘系统 · 团队体系手册 · 由 markdown-it 自动转换生成</footer>
+  </article></main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ startOnLoad: true, theme: 'base',
+      themeVariables: { primaryColor:'#ecfdf5', lineColor:'#57534e', fontFamily:'sans-serif' } });
+  }
+</script>
+</body>
+</html>

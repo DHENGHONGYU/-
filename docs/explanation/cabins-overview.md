@@ -1,7 +1,20 @@
+---
+title: cabins-overview
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/explanation/cabins-overview.md
+code_version: 2.0.0
+tier: important
+---
+
 # V9 舱室总览（Cabins Overview）
 
 > **定位**：统览 5 大舱（cabin）的职责、页面与关键路由，补《文档理解核查报告》「舱职责文档分散」缺口。
-> **权威路由**：`src/config/routes.ts`（62 条）、`02-design/06-routing-specs.md`。
+> **权威路由**：`src/config/routes.ts`（62 条）、`../reference/06-routing-specs.md`。
 > **状态**：✅ P0 新增（骨架版，各舱详细 spec 见 `02-design/*-cabin-spec.md`）
 
 ---
@@ -40,7 +53,7 @@ PortalShell (src/portal/PortalShell.tsx)
 | output | `OutputApp.tsx` | 产出舱分发器 | PortalShell→OutputApp→pages/output/* | ✅ 干净 |
 | command | `CommandApp.tsx` `AgentApp.tsx` `ConfigApp.tsx` | 命令舱分发器（三 dispatcher） | PortalShell→CommandApp/AgentApp；CommandApp 内 `React.lazy(ConfigApp)` 服务 `/command/config` | ⚠️ 二级嵌套，文档须显式呈现 |
 
-> **角色边界**：`apps/` 仅承载 `{Cabin}App.tsx` 分发器，页面组件一律在 `pages/{cabin}/` 或 `components/`。目录指南 `DIRECTORY_STRUCTURE_GUIDE.md` §2.3.1 同此约束。
+> **角色边界**：`apps/` 仅承载 `{Cabin}App.tsx` 分发器，页面组件一律在 `pages/{cabin}/` 或 `components/`。目录指南 `../00-meta/directory-structure-guide.md` §2.3.1 同此约束。
 
 ---
 
@@ -72,7 +85,7 @@ Widget 集成三处必改：`src/cockpit/core/widgetRegistry.ts`、`src/constant
 
 ## 5. 文档锚点
 
-- input：`01-requirements/input-cabin-spec.md`（✅ 已有）
+- input：`../reference/input-cabin-spec.md`（✅ 已有）
 - analysis/trading/output/command：`02-design/{analysis,trading,output,command}-cabin-spec.md`（✅ P0 新增）
-- 路由明细：`02-design/06-routing-specs.md`
-- 全局架构：`architecture/overview.md`
+- 路由明细：`../reference/06-routing-specs.md`
+- 全局架构：`./overview.md`

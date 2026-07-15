@@ -1,3 +1,16 @@
+---
+title: publish-ready
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/assets/articles/publish-ready.md
+code_version: 2.0.0
+tier: reference
+---
+
 # 发文就绪卡 · 腾讯云开发者社区
 
 > 两篇文章已通过质检，以下为发布前可直接套用的元数据与操作清单。

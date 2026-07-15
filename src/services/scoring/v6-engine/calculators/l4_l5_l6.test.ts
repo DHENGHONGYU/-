@@ -48,17 +48,17 @@ describe('buildScenarios (via L4ScenarioCalculator evidence)', () => {
     expect(result.evidence).toContain('概率加权价: 111.24')
   })
 
-  it('使用默认值处理 undefined', async () => {
+  it('数据缺失时提前返回', async () => {
     const input = createInput({
       stock: { price: 100 },
       financials: {},
     })
     const result = await L4ScenarioCalculator.calculate(input)
-    // np=0→(np||1)=1, basePE=25(默认), growth=0.15(默认); np=0导致所有价格为0
-    expect(result.evidence).toContain('当前价: 100.00')
-    expect(result.evidence).toContain('乐观: 0.00 (30%)')
-    expect(result.evidence).toContain('基准: 0.00 (50%)')
-    expect(result.evidence).toContain('悲观: 0.00 (20%)')
+    expect(Number.isNaN(result.score)).toBe(true)
+    expect(result.participated).toBe(false)
+    expect(result.summary).toContain('净利润数据缺失')
+    expect(result.evidence.length).toBe(1)
+    expect(result.evidence[0]).toContain('无法构建情景')
   })
 
   it('当前价=1 时比例计算正确', async () => {
@@ -365,9 +365,12 @@ describe('L4ScenarioCalculator.calculate', () => {
       throw new Error('mock l4 error')
     })
 
-    const input = createInput()
+    const input = createInput({
+      stock: { price: 100, pe: 20 },
+      financials: { netProfit: 10, revenueYoY: 0.2 },
+    })
     const result = await L4ScenarioCalculator.calculate(input)
-    expect(result.score).toBe(0)
+    expect(Number.isNaN(result.score)).toBe(true)
     expect(result.summary).toContain('情景推演失败')
     expect(result.summary).toContain('mock l4 error')
     expect(result.evidence).toEqual([])
@@ -412,7 +415,7 @@ describe('L5TMCalculator.calculate', () => {
 
     const input = createInput()
     const result = await L5TMCalculator.calculate(input)
-    expect(result.score).toBe(0)
+    expect(Number.isNaN(result.score)).toBe(true)
     expect(result.summary).toContain('T-M计算失败')
     expect(result.summary).toContain('mock l5 error')
     expect(result.evidence).toEqual([])
@@ -461,7 +464,7 @@ describe('L6HypeCalculator.calculate', () => {
 
     const input = createInput()
     const result = await L6HypeCalculator.calculate(input)
-    expect(result.score).toBe(0)
+    expect(Number.isNaN(result.score)).toBe(true)
     expect(result.summary).toContain('Hype计算失败')
     expect(result.summary).toContain('mock l6 error')
     expect(result.evidence).toEqual([])

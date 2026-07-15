@@ -1,7 +1,20 @@
+---
+title: directory-audit-report-v1.4.3
+code_version: 2.0.0
+
+tier: core
+---
+
+---
+title: docs/00-meta/directory-audit-report-v1.4.3.md
+code_version: 2.0.0
+tier: core
+---
+
 # P4 系统性目录梳理报告
 
 > **生成日期**: 2026-07-20
-> **对比基准**: AGENTS.md v1.4.3 + FILE-MANAGEMENT-GUIDE.md v1.3.0
+> **对比基准**: AGENTS.md v1.4.3 + file-management-guide.md v1.3.0
 > **扫描范围**: `src/`（深度3层）、`tests/`、`docs/`、`scripts/`、`public/`、`design-tokens/`、`.husky/`
 
 ---
@@ -44,8 +57,8 @@
 
 | 目录 | 状态 | 说明 |
 |------|------|------|
-| `src/utils/` | ✅ 已删除 | 2026-07-20 清理完成，文件已迁移至 `src/lib/` |
-| `src/databridge/` | ✅ 已删除 | 2026-07-20 清理完成，适配器迁移至 `src/core/databridgeAdapter.ts` |
+| `src/lib/` | ✅ 已删除 | 2026-07-20 清理完成，文件已迁移至 `src/lib/` |
+| `src/core/databridge.ts` | ✅ 已删除 | 2026-07-20 清理完成，适配器迁移至 `src/core/databridgeAdapter.ts` |
 | `src/blueprints/` | ✅ 已迁移 | 2026-07-20 清理完成，迁移至 `tests/blueprints/` |
 
 ---
@@ -157,11 +170,11 @@ src/
 
 | 检查项 | 状态 | 说明 |
 |--------|------|------|
-| `src/utils/` 残留引用 | ✅ 已清理 | 生产代码中无 `@/utils/` 或 `src/utils/` 引用 |
-| `src/databridge/` 残留引用 | ✅ 已清理 | 适配器已迁移至 `src/core/databridgeAdapter.ts` |
+| `src/lib/` 残留引用 | ✅ 已清理 | 生产代码中无 `@/utils/` 或 `src/lib/` 引用 |
+| `src/core/databridge.ts` 残留引用 | ✅ 已清理 | 适配器已迁移至 `src/core/databridgeAdapter.ts` |
 | `src/blueprints/` 残留引用 | ✅ 已清理 | 已迁移至 `tests/blueprints/` |
-| AGENTS.md lib 白名单 `utils` | ✅ 正确 | 指 `src/lib/` 内的 `utils.ts`，非 `src/utils/` 目录 |
-| FILE-MANAGEMENT-GUIDE.md 目录映射 | ✅ 已同步 | v1.3.0 已包含 hooks/devtools/fixtures/i18n |
+| AGENTS.md lib 白名单 `utils` | ✅ 正确 | 指 `src/lib/` 内的 `utils.ts`，非 `src/lib/` 目录 |
+| file-management-guide.md 目录映射 | ✅ 已同步 | v1.3.0 已包含 hooks/devtools/fixtures/i18n |
 
 ---
 
@@ -203,7 +216,7 @@ src/
 
 | 优先级 | 行动项 | 预估工作量 | 影响范围 |
 |--------|--------|-----------|---------|
-| **P0** | 在 AGENTS.md §一 新增 `src/mcp/`、`src/schema/`、`src/showcase/`、`src/generated/` 定义 | 30min | AGENTS.md + FILE-MANAGEMENT-GUIDE.md |
+| **P0** | 在 AGENTS.md §一 新增 `src/mcp/`、`src/schema/`、`src/showcase/`、`src/generated/` 定义 | 30min | AGENTS.md + file-management-guide.md |
 | **P1** | 在 AGENTS.md §一 代码块中补全 `src/apps/` 和 `src/cockpit/`（当前只在描述/依赖规则中提及） | 15min | AGENTS.md |
 | **P2** | 明确 `src/mcp/` 的依赖方向规则（可依赖哪些层、可被哪些层依赖） | 1h | AGENTS.md |
 | **P2** | 检查 `src/generated/` 内容，决定是否加入 `.gitignore` 或定义其生命周期 | 30min | `.gitignore` + AGENTS.md |

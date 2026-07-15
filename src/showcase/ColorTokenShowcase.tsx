@@ -39,6 +39,7 @@ export function buildColorTokenShowcase(): ShowcaseGroup {
   }
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 function ThemeTokensDemo(): React.JSX.Element {
   const tokens = [
     { label: 'info', className: THEME_TOKENS.color.info },
@@ -68,6 +69,7 @@ function ThemeTokensDemo(): React.JSX.Element {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 function ColorTokensDemo(): React.JSX.Element {
   const tokens = [
     { label: 'up', className: COLOR_TOKENS.up.tailwind },
@@ -97,6 +99,7 @@ function ColorTokensDemo(): React.JSX.Element {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 function StockColorsDemo(): React.JSX.Element {
   const [change] = useState(2.35)
 

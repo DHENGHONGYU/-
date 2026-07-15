@@ -39,8 +39,11 @@ const SOURCES = ['tencent', 'sina', 'netease', 'akshare', 'mock', 'manual', 'unk
 /** 浮点比较容差（价格类字段） */
 const PRICE_EPSILON = 1e-6
 
-/** 允许的历史最早时间戳（1990-01-01） */
-const MIN_TIMESTAMP = Date.UTC(1990, 0, 1)
+/** 允许的历史最早年份 */
+const MIN_YEAR = 1990
+
+/** 允许的历史最早时间戳（MIN_YEAR-01-01） */
+const MIN_TIMESTAMP = Date.UTC(MIN_YEAR, 0, 1)
 
 /** 未来偏移容差（允许 5 分钟时钟误差） */
 const FUTURE_DRIFT_MS = 5 * 60 * 1000
@@ -255,11 +258,14 @@ export function validateFinancial(f: CollectFinancialData | null | undefined): C
     }
   }
 
-  // 存货周转天数（单位：天，可远大于 200），合理区间 [0, 3650]
+/** 存货周转天数合理上限（约 10 年） */
+const MAX_INVENTORY_TURNOVER_DAYS = 3650
+
+  // 存货周转天数（单位：天，可远大于 200），合理区间 [0, MAX_INVENTORY_TURNOVER_DAYS]
   if (!finiteOrUndef(f.inventory_turnover_days)) {
     push(issues, 'inventory_turnover_days', 'finite', `存货周转天数必须为有限数或 undefined，实际：${JSON.stringify(f.inventory_turnover_days)}`)
-  } else if (typeof f.inventory_turnover_days === 'number' && (f.inventory_turnover_days < 0 || f.inventory_turnover_days > 3650)) {
-    push(issues, 'inventory_turnover_days', 'range', `存货周转天数超出合理区间 [0,3650]，实际：${f.inventory_turnover_days}`)
+  } else if (typeof f.inventory_turnover_days === 'number' && (f.inventory_turnover_days < 0 || f.inventory_turnover_days > MAX_INVENTORY_TURNOVER_DAYS)) {
+    push(issues, 'inventory_turnover_days', 'range', `存货周转天数超出合理区间 [0,${MAX_INVENTORY_TURNOVER_DAYS}]，实际：${f.inventory_turnover_days}`)
   }
 
   if (f.revenue !== undefined && (!isFiniteNumber(f.revenue) || f.revenue <= 0)) {

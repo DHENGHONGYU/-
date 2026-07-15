@@ -1,10 +1,19 @@
 ---
+title: adr-008-v6-core-resource-trading-strategy
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
 title: ADR-008: 采用 V6 核心资源交易策略
 status: accepted
 owner: V9 Architecture Team
 decision_date: 2026-06-24
 supersedes: ""
 superseded_by: ""
+code_version: 2.0.0
+tier: reference
 ---
 
 # ADR-008: 采用 V6 核心资源交易策略
@@ -27,7 +36,7 @@ V9 需要引入一套成熟的交易策略作为投研参考。V6-pro-cockpit �
 
 ### 触发条件
 
-- `docs/01-requirements/2026-06-24-adopt-v6-core-resource-trading-strategy.md` 提出复用方案。
+- `../reference/2026-06-24-adopt-v6-core-resource-trading-strategy.md` 提出复用方案。
 - 产品评审：确认 V9 首版需要至少一套完整策略作为 MVP。
 
 ---
@@ -110,9 +119,9 @@ npm run audit:layers # 验证 trading 层依赖合规
 | 文档 | 路径 |
 |------|------|
 | ADR-009（双策略） | `adr-009-dual-strategy-system.md` |
-| 引擎规格 | `../../02-design/05-engine-specs.md` §3.3 |
-| 原始提案 | `../../01-requirements/2026-06-24-adopt-v6-core-resource-trading-strategy.md` |
-| 主题策略详情 | `../../01-requirements/fourth-industrial-revolution-core-resource-strategy.md` |
+| 引擎规格 | `../reference/05-engine-specs.md` §3.3 |
+| 原始提案 | `../reference/2026-06-24-adopt-v6-core-resource-trading-strategy.md` |
+| 主题策略详情 | `../reference/fourth-industrial-revolution-core-resource-strategy.md` |
 
 ---
 

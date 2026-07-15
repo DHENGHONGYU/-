@@ -1,4 +1,11 @@
 ---
+title: 2026-06-25-v6-migration
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
 title: ADR-009: V6 Pro JSON 全量导出迁移至 V9 IndexedDB
 version: v0.9.0
 last_updated: 2026-06-25
@@ -8,6 +15,8 @@ change_log:
   - date: 2026-06-25
     author: Documentation Governor
     desc: 注入 Frontmatter 元数据（Phase 3 版本化）
+code_version: 2.0.0
+tier: reference
 ---
 > **Status**: Current  
 > **Version**: v0.9.0-migration-implemented  
@@ -86,9 +95,9 @@ V6 Pro 在浏览器端积累了大量用户数据，包括自选股、评分、�
 
 | 文件 | 说明 |
 |------|------|
-| `src/services/v6Migration/v6MigrationService.ts` | 迁移服务入口：解析 JSON、按顺序导入、冲突处理 |
+| `src/services/system/v6MigrationService.ts` | 迁移服务入口：解析 JSON、按顺序导入、冲突处理 |
 | `src/services/v6Migration/converters/*.ts` | 12 个核心 store 的转换函数 |
-| `src/components/settings/MigrationPanel.tsx` | 迁移面板 UI：选择文件、显示进度、跳过/覆盖选项 |
+| `src/components/organisms/system/MigrationPanel.tsx` | 迁移面板 UI：选择文件、显示进度、跳过/覆盖选项 |
 | 对应 `*.test.ts` / `*.test.tsx` | 19 个单元测试 |
 
 ### 转换的 12 个核心 store
@@ -129,7 +138,7 @@ V6 Pro 在浏览器端积累了大量用户数据，包括自选股、评分、�
 - 新增 `MigrationPanel.tsx`，集成到设置/系统迁移页面。
 - 新增 12 个转换函数，每个函数对应一个 V6 → V9 store 映射。
 - 新增 19 个单元测试，覆盖转换函数、去重策略、错误处理。
-- V9 IndexedDB 版本从 v5 升级到 v6，新增 8 个迁移相关 Store（见 `docs/implementation/db-migration-v4-to-v6.md`）。
+- V9 IndexedDB 版本从 v5 升级到 v6，新增 8 个迁移相关 Store（见 `./db-migration-v4-to-v6.md`）。
 
 ---
 
@@ -154,5 +163,5 @@ V6 Pro 在浏览器端积累了大量用户数据，包括自选股、评分、�
 
 ## 相关文档
 
-- `docs/implementation/v6-to-v9-migration-spec.md`：详细转换规范。
-- `docs/implementation/db-migration-v4-to-v6.md`：IndexedDB 升级规范。
+- `../reference/v6-to-v9-migration-spec.md`：详细转换规范。
+- `./db-migration-v4-to-v6.md`：IndexedDB 升级规范。

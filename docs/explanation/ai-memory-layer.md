@@ -1,3 +1,16 @@
+---
+title: ai-memory-layer
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/explanation/ai-memory-layer.md
+code_version: 2.0.0
+tier: important
+---
+
 # 项目专属 AI 记忆层（RAG）
 
 > 版本：v1.0.0 | 日期：2026-07-10
@@ -13,13 +26,13 @@
 
 | 类别 | 文件 |
 |------|------|
-| AI 行为契约 | `AGENTS.md` |
-| 设计令牌规范 | `docs/design-token-mapping.md` |
-| UI 迁移检查 | `docs/ui-migration-checklist.md` |
-| Widget 集成检查 | `docs/widget-integration-checklist.md` |
-| 文档与注释规范 | `docs/03-development/jsdoc-convention.md` |
-| 复杂度治理 | `docs/03-development/complexity-governance.md` |
-| 测试策略 | `docs/testing-strategy.md` |
+| AI 行为契约 | `../../AGENTS.md` |
+| 设计令牌规范 | `../reference/design-token-mapping.md` |
+| UI 迁移检查 | `../reference/ui-migration-checklist.md` |
+| Widget 集成检查 | `../reference/widget-integration-checklist.md` |
+| 文档与注释规范 | `../reference/jsdoc-convention.md` |
+| 复杂度治理 | `../reference/complexity-governance.md` |
+| 测试策略 | `../reference/testing-strategy.md` |
 | 提示词模板 | `prompts/*.md` |
 
 ## 3. 生成与更新
@@ -57,8 +70,8 @@ for (const { chunk, score } of results) {
 
 在 `prompts/system-prompt-template.md` 中，已要求 AI 在生成代码前：
 
-1. 检查 `AGENTS.md` 分层与颜色规范；
-2. 对照 `docs/ui-migration-checklist.md` / `docs/widget-integration-checklist.md` 执行迁移或新增 Widget；
+1. 检查 `../../AGENTS.md` 分层与颜色规范；
+2. 对照 `../reference/ui-migration-checklist.md` / `../reference/widget-integration-checklist.md` 执行迁移或新增 Widget；
 3. 检索 AI 记忆索引获取相关片段，作为上下文注入。
 
 未来可在 AI 工具侧接入 `aiMemoryService.queryMemory()`，实现自动检索与注入。

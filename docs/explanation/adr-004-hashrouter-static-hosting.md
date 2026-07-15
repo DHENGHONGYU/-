@@ -1,10 +1,19 @@
 ---
+title: adr-004-hashrouter-static-hosting
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
 title: ADR-004: HashRouter 静态托管方案
 status: accepted
 owner: V9 Architecture Team
 decision_date: 2026-06-21
 supersedes: ""
 superseded_by: ""
+code_version: 2.0.0
+tier: reference
 ---
 
 # ADR-004: HashRouter 静态托管方案
@@ -97,9 +106,9 @@ npm run build
 | 文档 | 路径 |
 |------|------|
 | ADR-001（纯前端架构） | `adr-001-pure-frontend-architecture.md` |
-| 路由规格 | `../../02-design/06-routing-specs.md` §1 |
-| 部署基线 | `../../ops/deployment.md` §2（静态托管配置） |
-| 原始提案 | `../../05-deployment/2026-06-21-hashrouter-for-static-hosting.md` |
+| 路由规格 | `./design/06-routing-specs.md` §1 |
+| 部署基线 | `../reference/deployment.md` §2（静态托管配置） |
+| 原始提案 | `../reference/2026-06-21-hashrouter-for-static-hosting.md` |
 
 ---
 

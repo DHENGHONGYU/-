@@ -1,4 +1,22 @@
 ---
+title: cockpit-news-doc-fix-plan
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/cockpit-news-doc-fix-plan.md
+code_version: 2.0.0
+tier: important
+---
+
+---
+title: docs/reference/cockpit-news-doc-fix-plan.md
+code_version: 2.0.0
+---
+
+---
 title: Cockpit + News 模块文档修正方案
 version: v0.9.1
 last_updated: 2026-06-26
@@ -11,7 +29,7 @@ change_log:
 ---
 # Cockpit + News 模块文档修正方案
 
-> **基于**: [v9-architecture-data-diff-report.md](../02-design/v9-architecture-data-diff-report.md)  
+> **基于**: [v9-architecture-data-diff-report.md](../explanation/design/v9-architecture-data-diff-report.md)  
 > **Version**: v1.0.0  
 > **Date**: 2026-06-26  
 > **修正范围**: P0 级差异（DIFF-001, DIFF-004, DIFF-007, DIFF-008, DIFF-014）+ 关联 P1 差异（DIFF-006, DIFF-019, DIFF-020）
@@ -22,14 +40,14 @@ change_log:
 
 | 序号 | 差异ID | 修正动作 | 目标文件 | 操作类型 |
 |------|--------|---------|---------|---------|
-| 1 | DIFF-001 | Cockpit/Widget 架构补充 | `docs/03-architecture-standards.md` §3.1.1, §3.1.4 | 修改 |
-| 2 | DIFF-004 | News 模块架构 + 功能规格补充 | `docs/03-architecture-standards.md` §3.1.1, `docs/02-functional-specs.md` §2.1 | 修改 |
-| 3 | DIFF-007 | Widget 框架数据字典 | `docs/cockpit/DATA_DEFINITION.md` | 新建 |
-| 4 | DIFF-008 | Cockpit 常量枚举数据字典 | 并入 `docs/cockpit/DATA_DEFINITION.md` | 新建 |
-| 5 | DIFF-014 | News 模块数据字典 | `docs/news/DATA_DEFINITION.md` | 新建 |
+| 1 | DIFF-001 | Cockpit/Widget 架构补充 | `./03-architecture-standards.md` §3.1.1, §3.1.4 | 修改 |
+| 2 | DIFF-004 | News 模块架构 + 功能规格补充 | `./03-architecture-standards.md` §3.1.1, `./02-functional-specs.md` §2.1 | 修改 |
+| 3 | DIFF-007 | Widget 框架数据字典 | `./data-definition.md` | 新建 |
+| 4 | DIFF-008 | Cockpit 常量枚举数据字典 | 并入 `./data-definition.md` | 新建 |
+| 5 | DIFF-014 | News 模块数据字典 | `./data-definition.md` | 新建 |
 | 6 | DIFF-006 | 文档索引更新 | `docs/README.md` | 修改 |
-| 7 | DIFF-019 | 词汇表补充新概念 | `docs/10-glossary.md` | 修改 |
-| 8 | DIFF-020 | 功能模块总览补充 | `docs/02-functional-specs.md` §2.1 | 修改 |
+| 7 | DIFF-019 | 词汇表补充新概念 | `./10-glossary.md` | 修改 |
+| 8 | DIFF-020 | 功能模块总览补充 | `./02-functional-specs.md` §2.1 | 修改 |
 
 ---
 
@@ -37,7 +55,7 @@ change_log:
 
 ### 2.1 DIFF-001：Cockpit/Widget 框架架构补充
 
-**目标文件**: `docs/03-architecture-standards.md`
+**目标文件**: `./03-architecture-standards.md`
 
 **修改位置 1**: §3.1.1 目录与代码实际映射表格（第 36-42 行）
 
@@ -139,7 +157,7 @@ DataSourceConfig ──→ TaskScheduler ──→ BaseCollector（Mock/Rest/Web
 
 ### 2.2 DIFF-004：News 模块架构 + 功能规格补充
 
-**目标文件 A**: `docs/03-architecture-standards.md` §3.1.1
+**目标文件 A**: `./03-architecture-standards.md` §3.1.1
 
 **修改位置**: §3.1.1 目录与代码实际映射表格 L3 行（第 40 行）
 
@@ -153,7 +171,7 @@ DataSourceConfig ──→ TaskScheduler ──→ BaseCollector（Mock/Rest/Web
 | L3 引擎层 | `agents/`, `trading/`, `services/` | ✅ `services/`；交易引擎已下沉至 `src/services/trading/`；采集引擎位于 `src/services/fetcher/` 和 `src/services/data-collector/`；新闻服务位于 `src/services/news/`（newsService + sentimentAnalyzer + stockLinker）；🟡 `src/agents/agentRuntime.ts` 已存在，注册表/任务队列/健康监控待完善；🟡 `src/core/dataflow/` 已实现，数据融合层（UnifiedStockData）仍缺失 | 部分对齐，见偏差清单 |
 ```
 
-**目标文件 B**: `docs/02-functional-specs.md` §2.1
+**目标文件 B**: `./02-functional-specs.md` §2.1
 
 **修改位置**: §2.1 功能模块总览图中，在"数据采集层"之后插入"新闻资讯"模块
 
@@ -187,9 +205,9 @@ DataSourceConfig ──→ TaskScheduler ──→ BaseCollector（Mock/Rest/Web
 
 ### 2.3 DIFF-007 + DIFF-008：Cockpit Widget 数据字典（新建）
 
-**目标文件**: `docs/cockpit/DATA_DEFINITION.md`（新建）
+**目标文件**: `./data-definition.md`（新建）
 
-**文件路径**: `docs\cockpit\DATA_DEFINITION.md`
+**文件路径**: `docs\cockpit\data-definition.md`
 
 **完整内容详见下方 §三**。
 
@@ -197,9 +215,9 @@ DataSourceConfig ──→ TaskScheduler ──→ BaseCollector（Mock/Rest/Web
 
 ### 2.4 DIFF-014：News 模块数据字典（新建）
 
-**目标文件**: `docs/news/DATA_DEFINITION.md`（新建）
+**目标文件**: `./data-definition.md`（新建）
 
-**文件路径**: `docs\news\DATA_DEFINITION.md`
+**文件路径**: `docs\news\data-definition.md`
 
 **完整内容详见下方 §四**。
 
@@ -213,17 +231,17 @@ DataSourceConfig ──→ TaskScheduler ──→ BaseCollector（Mock/Rest/Web
 
 **新增行**:
 ```markdown
-| `AI_CENTER_DATA_DEFINITION.md` | AI 智能体调度中心 + 健康监控 + 诊断分析 数据字典 |
-| `trade/API_CONTRACT.md` | 交易持仓管理模块 API 契约 |
-| `cockpit/DATA_DEFINITION.md` | Cockpit Widget 框架数据字典（类型 + 枚举常量） |
-| `news/DATA_DEFINITION.md` | 新闻资讯模块数据字典 |
+| `ai-center-data-definition.md` | AI 智能体调度中心 + 健康监控 + 诊断分析 数据字典 |
+| `trade/api-contract.md` | 交易持仓管理模块 API 契约 |
+| `cockpit/data-definition.md` | Cockpit Widget 框架数据字典（类型 + 枚举常量） |
+| `news/data-definition.md` | 新闻资讯模块数据字典 |
 ```
 
 ---
 
 ### 2.6 DIFF-019 + DIFF-020：词汇表 + 功能模块补充
 
-**目标文件 A**: `docs/10-glossary.md`
+**目标文件 A**: `./10-glossary.md`
 
 **修改位置**: 在 §10.6 模块 ID 表（或末尾新增章节）追加
 
@@ -246,13 +264,13 @@ DataSourceConfig ──→ TaskScheduler ──→ BaseCollector（Mock/Rest/Web
 | **股票关联** | StockLinking | 将新闻资讯自动匹配到相关股票，支持代码精确匹配、名称模糊匹配、行业匹配 | News |
 ```
 
-**目标文件 B**: `docs/02-functional-specs.md` §2.1（已在 2.2 中处理）
+**目标文件 B**: `./02-functional-specs.md` §2.1（已在 2.2 中处理）
 
 ---
 
 ## 三、Cockpit Widget 数据字典内容
 
-> 以下为 `docs/cockpit/DATA_DEFINITION.md` 的完整内容，可直接写入文件。
+> 以下为 `./data-definition.md` 的完整内容，可直接写入文件。
 
 ---
 
@@ -814,7 +832,7 @@ changelog:
 
 ## 四、News 模块数据字典内容
 
-> 以下为 `docs/news/DATA_DEFINITION.md` 的完整内容，可直接写入文件。
+> 以下为 `./data-definition.md` 的完整内容，可直接写入文件。
 
 ---
 

@@ -1,4 +1,4 @@
-import { memo, useState, useEffect, useMemo } from 'react'
+import { memo, useState, useEffect, useMemo, useCallback } from 'react'
 import { Link } from 'react-router'
 import { FileText, Download, RefreshCw, ArrowLeft } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
@@ -37,21 +37,7 @@ export default memo(function ResearchReportPage(): React.JSX.Element {
     [versions, selectedSymbol],
   )
 
-  useEffect(() => {
-    const abortController = new AbortController()
-    void loadSymbols(abortController.signal)
-    return () => abortController.abort()
-  }, [loadVersions])
-
-  // 阶段 B-2：selectedSymbol 变化时先写入 store.symbol 再拉取 versions
-  useEffect(() => {
-    if (selectedSymbol) {
-      setSymbol(selectedSymbol)
-      void loadVersions()
-    }
-  }, [selectedSymbol, setSymbol, loadVersions])
-
-  const loadSymbols = async (signal?: AbortSignal): Promise<void> => {
+  const loadSymbols = useCallback(async (signal?: AbortSignal): Promise<void> => {
     setLoading(true)
     let error: Error | null = null
     let symbols: string[] = []
@@ -75,7 +61,21 @@ export default memo(function ResearchReportPage(): React.JSX.Element {
       setSymbols(symbols)
     }
     setLoading(false)
-  }
+  }, [loadStockSymbols, toast])
+
+  useEffect(() => {
+    const abortController = new AbortController()
+    void loadSymbols(abortController.signal)
+    return () => abortController.abort()
+  }, [loadSymbols])
+
+  // 阶段 B-2：selectedSymbol 变化时先写入 store.symbol 再拉取 versions
+  useEffect(() => {
+    if (selectedSymbol) {
+      setSymbol(selectedSymbol)
+      void loadVersions()
+    }
+  }, [selectedSymbol, setSymbol, loadVersions])
 
   const generateReport = async (): Promise<void> => {
     if (!selectedSymbol) {

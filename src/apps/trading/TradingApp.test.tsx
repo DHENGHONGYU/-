@@ -31,6 +31,10 @@ vi.mock('@/store/tradingStore', () => ({
   }),
 }))
 
+vi.mock('@/store/executionStoreSubscriptions', () => ({
+  initExecutionStoreSubscriptions: vi.fn(() => vi.fn()),
+}))
+
 vi.mock('@/store/executionStore', () => ({
   useExecutionStore: vi.fn((selector) => {
     const state = {

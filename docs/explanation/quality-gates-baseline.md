@@ -1,4 +1,11 @@
 ---
+title: quality-gates-baseline
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: 质量门禁实测基线（2026-06-25）
 version: v0.9.0
 last_updated: 2026-06-25
@@ -8,6 +15,8 @@ change_log:
   - date: 2026-06-25
     author: Documentation Governor
     desc: 注入 Frontmatter 元数据（Phase 3 版本化）
+code_version: 2.0.0
+tier: important
 ---
 > **Status**: Current  
 > **Version**: v0.9.0-migration-implemented  
@@ -88,7 +97,7 @@ coverage: {
 
 ### 4.2 后续补充计划
 
-- Phase 2 优先补齐 `src/services/v6Migration/` 的分支覆盖，目标达到 `src/services/**` 阈值 70%。
+- Phase 2 优先补齐 `src/services/system/v6MigrationService.ts` 的分支覆盖，目标达到 `src/services/**` 阈值 70%。
 - Phase 2 中晚期补充 `src/data/db.ts` 的升级逻辑测试，使用 `fake-indexeddb` 模拟 IndexedDB。
 - Phase 3 将 `src/core/**` 覆盖率提升至 85% 以上。
 

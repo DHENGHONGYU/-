@@ -1,14 +1,23 @@
 ---
+title: data-collector-contract
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: data-collector 服务契约
 status: active
 owner: data-collector 子域 / 架构组
 updated: 2026-07-12
+code_version: 2.0.0
+tier: important
 ---
 
 # data-collector-contract.md — 数据采集编排服务
 
 > **定位**：协调 fetcher 服务执行数据采集任务，管理采集管道、质量检测、缺失报告补全。  
-> **关联**：`../../architecture/services-catalog.md`（子域 #5）、`AGENTS.md` §一。
+> **关联**：`./services-catalog.md`（子域 #5）、`../../AGENTS.md` §一。
 
 ---
 

@@ -101,13 +101,11 @@ export default function TraceReplayPanel({ spans }: TraceReplayPanelProps): Reac
     [spans, selectedTraceId],
   )
 
-  const stages = selectedSpan?.stages ?? []
+  const stages = useMemo(() => selectedSpan?.stages ?? [], [selectedSpan?.stages])
   const currentStage = stages[index]
-  const isLastStage = (): boolean => index >= stages.length - 1
-
   const progress = useMemo(() => {
     if (!selectedSpan || stages.length === 0) return 0
-    if (isLastStage()) return 100
+    if (index >= stages.length - 1) return 100
     const currentStageTime = stages[index]?.timestamp ?? selectedSpan.startedAt
     const endTime = selectedSpan.completedAt ?? selectedSpan.startedAt + selectedSpan.totalDurationMs
     return Math.min(

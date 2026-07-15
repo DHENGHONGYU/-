@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>删除事项文件功能定位与保留优先级分析 — V9 智能投研复盘系统</title>
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --ink:#1f2933; --muted:#6b7280; --line:#e5e7eb;
+          --green:#0f9d58; --blue:#1a73e8; --amber:#f59e0b; --red:#e5484d; --purple:#7c3aed; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+         background:var(--bg); color:var(--ink); line-height:1.6; }
+  .wrap { max-width:1180px; margin:0 auto; padding:28px 22px 80px; }
+  h1 { font-size:24px; margin:0 0 6px; }
+  h2 { font-size:19px; margin:34px 0 12px; padding-left:10px; border-left:4px solid var(--blue); }
+  h3 { font-size:15.5px; margin:22px 0 8px; color:var(--blue); }
+  .sub { color:var(--muted); font-size:13px; margin-bottom:18px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px 20px; margin:14px 0;
+          box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .verdict { border-left:4px solid var(--green); }
+  .verdict.warn { border-left-color:var(--amber); }
+  table { width:100%; border-collapse:collapse; font-size:12.5px; margin:10px 0; }
+  th,td { border:1px solid var(--line); padding:7px 9px; text-align:left; vertical-align:top; }
+  th { background:#f0f3f7; font-weight:600; white-space:nowrap; }
+  code { background:#eef1f5; padding:1px 5px; border-radius:4px; font-size:11.5px; color:#b3206b; word-break:break-all; }
+  .tag { display:inline-block; padding:1px 8px; border-radius:999px; font-size:11px; font-weight:600; white-space:nowrap; }
+  .t-p1 { background:#fde8e8; color:var(--red); }
+  .t-p2 { background:#fef3e2; color:#b76e00; }
+  .t-p3 { background:#e7f6ee; color:var(--green); }
+  .t-safe { background:#e7f0ff; color:var(--blue); }
+  .t-gap { background:#fde8e8; color:var(--red); }
+  .mono { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:11.5px; }
+  .muted { color:var(--muted); }
+  .pill { font-size:11px; padding:1px 7px; border-radius:6px; background:#eef1f5; color:var(--muted); }
+  .findings li { margin:6px 0; }
+  .legend span { margin-right:14px; font-size:12px; }
+  .note { font-size:12.5px; color:var(--muted); margin:6px 0; }
+  ul.tight { margin:6px 0; padding-left:20px; }
+  ul.tight li { margin:3px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>删除事项文件功能定位与保留优先级分析</h1>
+<div class="sub">项目：V9 智能投研复盘系统（个人股票研究 / 复盘辅助工具，非金融产品） · 分析日期：2026-07-08 · 分支：<code>refactor/pr-6-module-split</code></div>
+
+<div class="card verdict">
+<h3 style="margin-top:4px">一、结论摘要（防"设计全面、实施缩水"）</h3>
+<p>本次"删除事项"有两类来源，性质完全不同：</p>
+<ul class="tight">
+<li><b>源码删除（35 个文件，git <code>--diff-filter=D</code> 已确认从工作树消失）</b>：经逐文件核验，<b>约 30 个属于"架构重构迁移"（pr-6-module-split）</b>——代码从扁平的 <code>services/trading/</code>、<code>pages/*</code>、<code>store/*</code> 重组成领域化的 <code>services/&lt;domain&gt;/</code>、<code>apps/*</code>、<code>data/types/</code>、<code>components/*</code>，功能<b>保留甚至增强</b>（如回测引擎独立成域并补了测试与 MCP 服务；Agent 管理从 1 页扩成 9+ 页套件）。</li>
+<li><b>文档删除（约 212 个，见 <code>docs/文件整理清单.md</code>）</b>：绝大多数是临时产物 / 过程报告 / 旧版副本 / 已废弃文档，<b>不含唯一功能设计</b>；功能设计规格（specs）均保留在 <code>docs/implementation/</code> 的"保留"清单中。</li>
+</ul>
+<p><b>真正需要"保留并优先修复/完善"的缺口只有约 5 项</b>（见 §三 C 组与 §四），集中在：<b>EngineMonitor 页面被砍（数据层却还在）、ai-center provider 被删导致数据未接线、ArchitecturePage 缺失、pool 类型契约丢失</b>。其余删除均不构成功能缩水。</p>
+<p class="note">佐证：对 35 个已删模块做"悬空引用"扫描 → <b>0 处</b>当前代码仍 import 已删路径；全量 <code>tsc --noEmit</code> 无 <code>error TS</code>（与既有零错误基线一致）。说明删除是<b>干净的重构</b>，未把构建搞断。</p>
+</div>
+
+<div class="card">
+<h3 style="margin-top:4px">二、分析范围与方法</h3>
+<table>
+<tr><th style="width:18%">数据源</th><th style="width:62%">说明</th><th style="width:20%">量级</th></tr>
+<tr><td>git 删除历史</td><td><code>git log --all --diff-filter=D --name-only</code> 提取所有曾被删除的<b>源码</b>文件，再用 <code>test -e</code> 核验当前是否还在工作树。</td><td>36 个（35 确删 + 1 仍在）</td></tr>
+<tr><td>文档清理清单</td><td><code>docs/文件整理清单.md</code>（v1.3.0，2026-06-29，声称删除 ~212 文件/目录）。</td><td>~212 文件/目录</td></tr>
+<tr><td>功能设计基准</td><td><code>docs/implementation/</code> 规格（保留）、<code>feature-entry-list.md</code>、<code>MEMORY.md</code> 中关于轮动信号/合规的约定。</td><td>—</td></tr>
+</table>
+<p class="note"><b>核验方法</b>：① 存在性（是否真删）；② 符号/引用扫描（功能是否在新路径"活体"存在）；③ 悬空 import 扫描（是否留下断裂引用）；④ 全量 tsc（编译完整性）。</p>
+<p class="note"><b>⚠️ 清单可靠性提示</b>：抽样发现 <code>文件整理清单.md</code> 声称"已删除"的 <code>.playwright-mcp/</code>、<code>docs/implementation/deprecated/</code>、<code>docs/AI_CENTER_VUE3_EXAMPLES.md</code>、<code>docs/implementation/v9-current-state-review.md</code> <b>实际仍在磁盘上</b>。该清单的"执行记录"与真实状态不一致，文档删除应以"当前磁盘存在性"为准，而非清单声称值。</p>
+</div>
+
+<h2>三、源码删除逐文件分析（35 个，含 4 项必填属性）</h2>
+<p class="sub">列：① 文件名称及原功能 · ② 删除理由 · ③ 是否存在未完成的代码或功能 · ④ 保留及修复优先级排序。末列"现状判定"标注安全/缺口。</p>
+
+<h3>A 组 · 安全重构：迁移 / 更名到领域化新路径（功能保留或增强）</h3>
+<table>
+<tr><th style="width:4%">#</th><th style="width:26%">① 文件 / 原功能</th><th style="width:26%">② 删除理由</th><th style="width:20%">③ 未完成代码/功能</th><th style="width:10%">④ 优先级</th><th style="width:14%">现状</th></tr>
+<tr><td>1</td><td><code>services/trading/rotationSignalDetector.ts</code><br>板块轮动真实信号检测（聚合 dailyQuotes 量能/资金/金叉）</td><td>迁移至 <code>services/scoring/rotationSignalDetector.ts</code>（同域归集）</td><td>无，且补了 <code>.test.ts</code></td><td><span class="tag t-p3">P3 已保留</span></td><td><span class="tag t-safe">安全·增强</span></td></tr>
+<tr><td>2</td><td><code>services/trading/hotSectorAnalyzer.ts</code><br>热门板块分析</td><td>迁移至 <code>services/scoring/hotSectorAnalyzer.ts</code>，并扩出 Orchestrator/Indicators/Dimensions/Persistence + <code>hotSectorStore</code> + <code>HotSectorPage</code></td><td>无，反而增强</td><td><span class="tag t-p3">P3 已保留</span></td><td><span class="tag t-safe">安全·增强</span></td></tr>
+<tr><td>3</td><td><code>services/trading/valuePitAnalyzer.ts</code><br>价值洼地分析</td><td>迁移至 <code>services/scoring/valuePitAnalyzer.ts</code> + <code>valuePitStore</code> + <code>ValuePitPage</code></td><td>无</td><td><span class="tag t-p3">P3 已保留</span></td><td><span class="tag t-safe">安全·增强</span></td></tr>
+<tr><td>4</td><td><code>services/trading/backtestEngine.ts</code><br>策略回测引擎</td><td>迁移至 <code>services/backtest/BacktestEngine.ts</code>，并补 <code>index.ts</code>/<code>.test.ts</code>/<code>backtestExportService</code>/<code>backtestServer</code>(MCP)/<code>backtestStore</code>/<code>BacktestPage</code></td><td>无，大幅增强</td><td><span class="tag t-p3">P3 已保留</span></td><td><span class="tag t-safe">安全·增强</span></td></tr>
+<tr><td>5</td><td><code>pages/analysis/MultiFactorScreeningPage.tsx</code> (+.test)<br>多因子筛选页</td><td>重构为 <code>MultiFactorFilterPage.tsx</code> + <code>components/analysis/screening/MultiFactorFilterPanel.tsx</code> + <code>services/screening/multiFactorScreeningEngine.ts</code>(+test) + <code>store/multiFactorScreeningStore.ts</code> + <code>config/multiFactorScreeningConfig.ts</code> + <code>types/modules/screening.types.ts</code> + <code>mcp/servers/screening/screeningServer.ts</code></td><td>无，从 1 页扩为完整模块</td><td><span class="tag t-p3">P3 已保留</span></td><td><span class="tag t-safe">安全·增强</span></td></tr>
+<tr><td>6</td><td><code>store/newsStore.ts</code><br>新闻状态</td><td>更名 <code>store/analysisNewsStore.ts</code></td><td>无</td><td><span class="tag t-p3">P3 已保留</span></td><td><span class="tag t-safe">安全</span></td></tr>
+<tr><td>7</td><td><code>components/pool/usePoolData.ts</code><br>候选池数据 Hook</td><td>更名 <code>components/pool/usePoolDataFromStore.ts</code></td><td>无</td><td><span class="tag t-p3">P3 已保留</span></td><td><span class="tag t-safe">安全</span></td></tr>
+<tr><td>8</td><td><code>types/modules/execution.types.ts</code><br>执行计划类型</td><td>迁移至 <code>data/types/types.execution.ts</code>，并补 <code>executionStore</code>/<code>executionPlanService</code>/<code>ExecutionPlanPanel</code>/<code>createExecutionPlan.useCase</code>/<code>executePlan.useCase</code>/<code>mcp/.../executionServer</code></td><td>无，增强</td><td><span class="tag t-p3">P3 已保留</span></td><td><span class="tag t-safe">安全·增强</span></td></tr>
+<tr><td>9</td><td><code>engine/index.ts</code><br>通用引擎入口</td><td>整合进 <code>services/scoring/v6-engine/index.ts</code>（V6ScoreEngine）</td><td>无</td><td><span class="tag t-p3">P3 已保留</span></td><td><span class="tag t-safe">安全</span></td></tr>
+<tr><td>10</td><td><code>pages/input/InputHubPage.tsx</code><br><code>pages/analysis/AnalysisHubPage.tsx</code><br><code>pages/trading/TradingHubPage.tsx</code><br><code>pages/command/CommandHubPage.tsx</code><br>四舱 Hub 首页</td><td>合并进 <code>apps/input/InputApp.tsx</code>、<code>apps/analysis/AnalysisApp.tsx</code>、<code>apps/trading/TradingApp.tsx</code>、<code>apps/command/CommandApp.tsx</code>（Hub 页以内部函数渲染，如 <code>CommandApp.tsx:160 CommandHubPage()</code>）。<code>feature-entry-list.md</code> 当时已过时。</td><td>无，路由入口仍在</td><td><span class="tag t-p3">P3 已保留</span></td><td><span class="tag t-safe">安全·合并</span></td></tr>
+<tr><td>11</td><td><code>store/backtestStore.ts</code>（git 历史曾删）</td><td>当前工作树<b>仍存在</b>，未真正删除</td><td>无</td><td><span class="tag t-p3">P3 已保留</span></td><td><span class="tag t-safe">安全·在库</span></td></tr>
+</table>
+
+<h3>B 组 · 有意替代：被更优的原生实现取代（news-v6）</h3>
+<table>
+<tr><th style="width:4%">#</th><th style="width:26%">① 文件 / 原功能</th><th style="width:26%">② 删除理由</th><th style="width:20%">③ 未完成代码/功能</th><th style="width:10%">④ 优先级</th><th style="width:14%">现状</th></tr>
+<tr><td>12</td><td><code>pages/news-v6/NewsPage.tsx</code> 及 <code>components/</code> 下 FilterPanel / NewsCard / newsCardFormatters / newsCardUtils / NewsFeed / newsFeedUtils、<code>types.ts</code>（共 8 文件）<br>V6 风格迁移版智能资讯</td><td>被 V9 原生 <code>pages/analysis/NewsPage.tsx</code> 取代（audit:routes 整改时已把 <code>/analysis/news-v6</code> 标 stale 并移除）</td><td>无，属技术债清理</td><td><span class="tag t-p3">P3 已保留</span></td><td><span class="tag t-safe">安全·替代</span></td></tr>
+</table>
+
+<h3>C 组 · 临时 / 原型代码（无功能损失，可删）</h3>
+<table>
+<tr><th style="width:4%">#</th><th style="width:26%">① 文件 / 原功能</th><th style="width:26%">② 删除理由</th><th style="width:20%">③ 未完成代码/功能</th><th style="width:10%">④ 优先级</th><th style="width:14%">现状</th></tr>
+<tr><td>13</td><td><code>apps/input/prototype/</code> 下 6 文件（BulkImportProto / DashboardProto / DataTestProto / HotSectorProto / InputPrototype / mockData）<br>录入舱交互原型</td><td><code>feature-entry-list.md</code> 明确标注 <code>/input/prototype</code> 为"临时交互原型页（路由已注册，非正式功能）"</td><td>原型本身即"未完成正式功能"</td><td><span class="tag t-p3">P3 可删</span></td><td><span class="tag t-safe">安全·临时</span></td></tr>
+</table>
+
+<h3>D 组 · ⚠️ 疑似缺口 / 需保留并完善（重点，防缩水）</h3>
+<table>
+<tr><th style="width:4%">#</th><th style="width:26%">① 文件 / 原功能</th><th style="width:26%">② 删除理由</th><th style="width:20%">③ 未完成代码/功能</th><th style="width:10%">④ 优先级</th><th style="width:14%">现状</th></tr>
+<tr><td>14</td><td><code>services/ai-center/mockAICenterProvider.ts</code><br>AI 中心数据提供器</td><td>被删；当前 <code>constants/ai-center.constants.ts</code> + <code>types/modules/ai-center.types.ts</code> 仍在，但<b>无任何 provider/service 消费 ai-center</b>（grep 仅类型自引用）。AI 中心数据层未接线。</td><td><b>是</b>：类型齐备但无 provider 填充 <code>AICenterData</code>，页面大概率空/降级</td><td><span class="tag t-p2">P2 需修复</span></td><td><span class="tag t-gap">缺口·待确认</span></td></tr>
+<tr><td>15</td><td><code>pages/command/EngineMonitorPage.tsx</code><br>引擎监控页</td><td>被删；但 <code>EngineMonitorSnapshot</code> 类型 + <code>monitorLogService.logEngineSnapshot()</code> <b>仍在</b>（数据层存活），<b>无任何页面消费该快照</b> → 典型"数据层建好、UI 未交付"。</td><td><b>是</b>：监控数据已采集，却无界面呈现</td><td><span class="tag t-p1">P1 优先修复</span></td><td><span class="tag t-gap">缺口·易补</span></td></tr>
+<tr><td>16</td><td><code>pages/command/ArchitecturePage.tsx</code><br>系统架构可视化页</td><td>被删，无替代文件；command 舱现已扩为 agent 套件 + MCP 仪表盘 + LLM 管理页。</td><td><b>可能</b>：若架构可视化属设计承诺，则缺失</td><td><span class="tag t-p2">P2 需确认</span></td><td><span class="tag t-gap">缺口·待定</span></td></tr>
+<tr><td>17</td><td><code>types/modules/pool.types.ts</code><br>候选池类型契约</td><td>被删；<code>usePoolDataFromStore</code> Hook 与 <code>poolStore</code> 仍在并可工作（<code>getStockPool()</code> 由 MockStockAnalysisProvider 供给），但<b>全仓无 <code>PoolData</code>/<code>PoolConfig</code> 类型定义</b> → 类型可能内联进 poolStore。</td><td><b>低</b>：功能可用，仅独立类型文件消失</td><td><span class="tag t-p3">P3 可接受</span></td><td><span class="tag t-safe">低风险</span></td></tr>
+<tr><td>18</td><td><code>services/analysis/stockAnalysisEngine.ts</code><br>个股分析引擎（旧）</td><td>被删；个股分析现由 <code>stockAnalysisStore</code>（Promise.all 聚合 stock+quotes+score）+ V6 九维评分引擎 + <code>MockStockAnalysisProvider</code>（mock）/ REST-SSE（真实 LLM）承载。旧中间引擎已被吸收。</td><td><b>否</b>：职责已分流入 store + 评分引擎</td><td><span class="tag t-p3">P3 已保留</span></td><td><span class="tag t-safe">安全·合并</span></td></tr>
+</table>
+
+<h3>E 组 · 死代码（安全，无功能）</h3>
+<table>
+<tr><th style="width:4%">#</th><th style="width:26%">① 文件 / 原功能</th><th style="width:26%">② 删除理由</th><th style="width:20%">③ 未完成代码/功能</th><th style="width:10%">④ 优先级</th><th style="width:14%">现状</th></tr>
+<tr><td>19</td><td><code>pages/defaultPageBuilder.ts</code><br>默认页构建辅助</td><td>全仓 <code>grep</code> 零引用 → 纯死代码</td><td>无</td><td><span class="tag t-p3">P3 可删</span></td><td><span class="tag t-safe">安全·死代码</span></td></tr>
+</table>
+
+<div class="card verdict warn">
+<h3 style="margin-top:4px">四、"设计全面、实施缩水"风险判定与保留/修复优先级总表</h3>
+<p><b>总判定：删除事项本身未造成大规模缩水</b>。35 个源码删除中 30 个为安全重构、3 个为有意替代/死代码；真正需"保留并优先修复"的<b>仅 D 组 4~5 项</b>。文档删除不含唯一功能设计。</p>
+<table>
+<tr><th style="width:22%">项目</th><th style="width:12%">优先级</th><th style="width:54%">处置动作</th><th style="width:12%">类型</th></tr>
+<tr><td><code>EngineMonitorPage</code></td><td><span class="tag t-p1">P1</span></td><td>新建轻量监控页，读取已存在的 <code>EngineMonitorSnapshot</code> + <code>monitorLogService</code>（数据层已就绪，成本低、价值高）。</td><td>恢复页面</td></tr>
+<tr><td><code>mockAICenterProvider</code></td><td><span class="tag t-p2">P2</span></td><td>先确认 AI 中心是否仍属发布范围；若是，恢复/新建 provider 填充 <code>AICenterData</code>，避免页面空渲染。</td><td>补 provider</td></tr>
+<tr><td><code>ArchitecturePage</code></td><td><span class="tag t-p2">P2</span></td><td>核对设计规格是否承诺架构可视化；若承诺则恢复页面，否则在规格中显式降级并记录。</td><td>确认/恢复</td></tr>
+<tr><td><code>pool.types.ts</code></td><td><span class="tag t-p3">P3</span></td><td>核验 <code>poolStore</code> 是否已内联全部池类型；若散落匿名类型，提炼回 <code>pool.types</code> 或并入 <code>types/modules</code>。</td><td>类型归位</td></tr>
+<tr><td>news-v6 / 原型 / 死代码 / 迁移项</td><td><span class="tag t-p3">P3</span></td><td><b>无需动作</b>，保持现状（已安全重构 / 有意替代 / 临时代码）。</td><td>已闭环</td></tr>
+</table>
+<p class="note"><b>延伸建议（非删除事项，但属同一风险）</b>：保留清单中的功能规格（<code>docs/implementation/</code> 的 rotation-score-spec、input-cabin-spec、feedback-loop-spec、pwa-offline-guide、chart-integration 等）应做一次"规格↔实现"对账，确认这些<b>设计承诺</b>是否都已落地——这才是"设计全面、实施缩水"最该防的地方。建议列为 P2 专项审计。</p>
+</div>
+
+<h2>五、文档删除分析（约 212 文件/目录）</h2>
+<p class="sub">按 <code>docs/文件整理清单.md</code> 分类；功能设计规格均不在删除列（保留在 §4.5）。下列为<b>已删</b>类别，逐类给出理由与优先级。</p>
+<table>
+<tr><th style="width:24%">类别（原清单编号）</th><th style="width:10%">数量</th><th style="width:42%">性质与理由</th><th style="width:12%">功能损失</th><th style="width:12%">优先级</th></tr>
+<tr><td>3.1 临时/可重建产物</td><td>~70</td><td><code>.playwright-mcp/</code>(49)、<code>screenshots/</code>(16)、<code>component-audit-*.json/txt</code>、<code>__pycache__</code>。调试快照/缓存，可随时再生。</td><td>无</td><td><span class="tag t-p3">P3 可删</span></td></tr>
+<tr><td>3.2 已完成迁移过程文档</td><td>5</td><td>NewsPage-PoC/验收/最佳实践/migration-fix-report、<code>migration-auto-fix.cjs</code>。一次性脚本/报告。</td><td>无</td><td><span class="tag t-p3">P3 可删</span></td></tr>
+<tr><td>3.3 已废弃文档 <code>deprecated/</code></td><td>9</td><td>已被替代文档覆盖。⚠️ 删除前需确认其中无"未实现的设计承诺"；当前已在保留 specs 中看到对应新版，风险低。</td><td>低</td><td><span class="tag t-p3">P3 可删</span></td></tr>
+<tr><td>3.4 过程性审计报告</td><td>~21</td><td>report-1~5、completeness-profile-batch1~5、batch-*-fix-plan、dual-strategy-* 等快照/汇总，已被 action-list.md 吸收。</td><td>无</td><td><span class="tag t-p3">P3 可删</span></td></tr>
+<tr><td>3.5 旧版重复文档</td><td>5</td><td>v1.0/v1.0.1 旧版、数据滞后副本，被 v1.2/最新版取代。</td><td>无</td><td><span class="tag t-p3">P3 可删</span></td></tr>
+<tr><td>3.6 虚拟环境</td><td>~90</td><td><code>.venv/</code>，可 <code>python -m venv</code> 重建。</td><td>无</td><td><span class="tag t-p3">P3 可删</span></td></tr>
+<tr><td><code>AI_CENTER_VUE3_EXAMPLES.md</code></td><td>1</td><td>项目已用 React/TS，Vue3 示例无效。</td><td>无</td><td><span class="tag t-p3">P3 可删</span></td></tr>
+</table>
+<p class="note">文档删除结论：<b>无功能设计损失</b>。但需注意 <code>文件整理清单.md</code> 与磁盘真实状态不符（4 处声称已删仍在），应重新跑一次存在性校验并修正清单，避免后续误判。</p>
+
+<h2>六、交付物与下一步</h2>
+<div class="card">
+<ul class="findings">
+<li><b>本报告即交付物</b>：源码 35 项逐文件 4 属性分析 + 文档删除分类 + 缩水风险判定。</li>
+<li><b>立即动作（P1）</b>：恢复 <code>EngineMonitorPage</code>，复用已有 <code>EngineMonitorSnapshot</code> + <code>monitorLogService</code>。</li>
+<li><b>近期动作（P2）</b>：确认并补 <code>ai-center</code> provider；核对 <code>ArchitecturePage</code> 设计承诺；对保留 specs 做"规格↔实现"对账审计。</li>
+<li><b>清理动作（P3）</b>：修正 <code>文件整理清单.md</code> 与实际磁盘不符的记录；<code>pool.types</code> 类型归位核验。</li>
+<li><b>未经确认不执行删除</b>：依项目约定，任何真实删除操作须先与你确认；本报告仅分析与建议，未改动任何文件（除本报告自身）。</li>
+</ul>
+</div>
+
+<p class="muted" style="margin-top:30px;font-size:11.5px">生成依据：git 删除历史核验 + 当前磁盘存在性 + 符号/引用扫描 + 悬空 import 扫描(0) + 全量 tsc(0 error)。所有结论均可复现。</p>
+
+</div>
+</body>
+</html>

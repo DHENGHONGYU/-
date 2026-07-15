@@ -95,7 +95,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps): React
 
       const taskId = taskScheduler.registerTask(widgetId, instanceId, dataSource)
       taskMapRef.current[instanceId] = taskId
-      taskScheduler.startTask(taskId)
+      void taskScheduler.startTask(taskId)
     })
 
     return () => {
@@ -124,8 +124,8 @@ export function MarketDataProvider({ children }: MarketDataProviderProps): React
     setLoadingMap((prev) => ({ ...prev, [instanceId]: true }))
     setErrorMap((prev) => ({ ...prev, [instanceId]: null }))
 
-    taskScheduler.stopTask(taskId)
-    taskScheduler.startTask(taskId)
+    void taskScheduler.stopTask(taskId)
+    void taskScheduler.startTask(taskId)
 
     logger.info(`[MarketDataProvider] 手动刷新: ${instanceId}`)
   }, [])
@@ -199,6 +199,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps): React
  * useMarketData
  * @returns MarketDataContextValue
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function useMarketData(): MarketDataContextValue {
   const context = useContext(MarketDataContext)
   if (!context) {
@@ -212,6 +213,7 @@ export function useMarketData(): MarketDataContextValue {
  * useOptionalMarketData
  * @returns MarketDataContextValue | undefined
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function useOptionalMarketData(): MarketDataContextValue | undefined {
   return useContext(MarketDataContext) ?? undefined
 }

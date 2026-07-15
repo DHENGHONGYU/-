@@ -1,4 +1,17 @@
 ---
+title: adr-007-screening-signal-persistence-review
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
+title: docs/explanation/adr-007-screening-signal-persistence-review.md
+code_version: 2.0.0
+tier: reference
+---
+
+---
 title: ADR-007: 补齐筛选引擎、信号持久化与复盘引擎
 status: accepted
 owner: V9 Architecture Team
@@ -27,7 +40,7 @@ V9 早期版本中，analysis 舱缺少三个关键引擎：
 
 ### 触发条件
 
-- `docs/03-development/2026-06-24-pool-screening-signal-persistence-review-engine.md` 提出补齐方案。
+- `./2026-06-24-pool-screening-signal-persistence-review-engine.md` 提出补齐方案。
 - 用户调研：80% 用户认为「筛选」和「复盘」是最高优先级功能。
 
 ---
@@ -70,7 +83,7 @@ V9 早期版本中，analysis 舱缺少三个关键引擎：
 ### 负面影响 / 技术债
 
 - 「热门板块」和「价值洼地」筛选逻辑被 ADR-009 的双策略体系取代，部分代码需要重构。
-  - **技术债**：`docs/02-design/TECH-DEBT.md` — 「ADR-007 筛选逻辑迁移至 ADR-009 双策略」。
+  - **技术债**：`./design/tech-debt.md` — 「ADR-007 筛选逻辑迁移至 ADR-009 双策略」。
 - 复盘引擎需要访问订单数据，涉及隐私敏感信息（持仓、盈亏）。
   - **缓解**：数据完全本地存储，不上传任何服务器；提供数据导出加密选项。
 
@@ -110,8 +123,8 @@ npm run audit:layers # 验证引擎层依赖合规
 | 文档 | 路径 |
 |------|------|
 | ADR-009（取代部分条款） | `adr-009-dual-strategy-system.md` |
-| 引擎规格 | `../../02-design/05-engine-specs.md` §3.7-3.8 |
-| 原始提案 | `../../03-development/2026-06-24-pool-screening-signal-persistence-review-engine.md` |
+| 引擎规格 | `../reference/05-engine-specs.md` §3.7-3.8 |
+| 原始提案 | `./2026-06-24-pool-screening-signal-persistence-review-engine.md` |
 
 ---
 

@@ -56,8 +56,37 @@
   - 修复 `src/cockpit/widgets/MarketIndicesWidget.tsx` 硬编码颜色（使用 `getStockColorClass()`）。
   - 修复 `src/cockpit/widgets/FundFlowWidget.tsx` 硬编码颜色（使用 `twBg()`）。
   - 修复 `src/cockpit/widgets/PortfolioOverviewWidget.tsx` 硬编码颜色（使用 `twBorder()`）。
+
+- **二次校验与遗漏问题修复（v2.6.1 - 2026-07-15）**：
+  - 二次运行 `npm run audit:docs`（含文档-代码引用完整性审计）发现 **4,616 个文档引用断裂**（占总数 34.9%），其中：doc-to-code 1,735 处、code-to-doc 96 处、doc-to-doc 2,785 处。
+  - Registry 索引缺失 4 个文件、孤立索引项 3 处。
+  - 修复 `src/lib/errors.ts:19` 文档引用断裂（`docs/10-glossary.md` → `docs/explanation/10-glossary.md`）。
+  - 修复 `src/hooks/useFreshData.ts:13` 文档引用断裂（`docs/implementation/freshness-alerts.md` → `docs/reports/retrospectives/freshness-alerts.md`）。
+  - 二次运行 `npm run lint` 发现 **1,655 个 ESLint 警告**（首次未运行 lint 漏检）：220 个 `no-unsafe-*`、108 个 `no-magic-numbers`、6 个 `prefer-nullish`，余 1,321 个其他类型。
+  - 全部自动化审计脚本（audit:layers / audit:hardcode / audit:deadcode / audit:docs）通过；TypeScript 编译 0 错误；madge 0 循环依赖。
+  - 修复 [P0-01] `src/store/executionStore.ts` ↔ `src/store/executionStoreSubscriptions.ts` 循环依赖（删除第 612 行重导出，拆分 `ExecutionPlanPanel.tsx` 与 `TradingApp.test.tsx` 导入）。
+  - **经验教训**：首次系统性评分仅运行了 4 个 audit:* 脚本，未运行 `npm run lint` 与文档-代码引用完整性审计。教训 1：完整 CI 门禁必须包含 lint + 全套 audit 脚本；教训 2：文档同步审计需区分"未文档化文件"与"文档引用断裂"两类问题；教训 3：架构评分需引入 lint 评分维度（warn 数量分等级），与 tsc、madge、audit 共同构成五维健康度。
+  - 详细分析见 `docs/00-meta/secondary-verification-report-2026-07-15.md`。
   - 删除 `.husky/_/prepare-commit-msg` 钩子（路径解析错误）。
   - 提交记录：`ca0c493`、`6d923ab`、`703abbb`、`9dd6ea8`、`1a8ca92`。
+
+- **P1-01 完成：拆分 LlmManagementPage.tsx（v2.6.1 - 2026-07-15）**：
+  - 将原 1042 行单体组件重构为容器+展示分层架构。
+  - 新建目录 `src/pages/command/agent/LlmManagement/`：
+    - `index.tsx` (122 行) — 容器主页面，状态编排 + Tab 路由
+    - `components/LlmStatsCards.tsx` (65 行) — 顶部统计卡片
+    - `components/LlmConfigTab.tsx` (495 行) — 基础配置 Tab（含 4 个内部子组件）
+    - `components/LlmAdvancedTab.tsx` (58 行) — 高级参数 Tab
+    - `components/LlmFactorsTab.tsx` (109 行) — 因子控制 Tab
+    - `components/LlmStatsTab.tsx` (170 行) — 使用统计 Tab
+    - `hooks/useLlmConfigState.ts` (137 行) — 状态管理 Hook
+    - `hooks/useLlmConfigActions.ts` (280 行) — 业务逻辑 Hook
+  - 删除原文件 `LlmManagementPage.tsx` 与备份文件 `LlmManagementPage.tsx.bak`。
+  - 更新 `src/apps/command/AgentApp.tsx` 引用路径（`LlmManagementPage` → `LlmManagement`）。
+  - 同步修复 4 个 lint 警告：no-misused-promises、strict-boolean-expressions、no-unused-vars、no-floating-promises。
+  - 验证通过：tsc 0 错误、madge 0 循环依赖、audit:layers 0 违规、该目录 0 lint 警告。
+  - 详细报告见 `docs/00-meta/p1-01-llm-management-split-report.md`。
+  - 拆分后最大文件 495 行（-52.5%），容器 122 行，**P1-01 任务完成**。
 
 ### Fixed
 

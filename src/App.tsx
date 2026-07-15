@@ -18,7 +18,7 @@ import '@/agents'
 import '@/mcp/register'
 
 if (import.meta.env.DEV) {
-  import('@/devtools/testDataFlow')
+  void import('@/devtools/testDataFlow')
 }
 
 const logger = getLogger()

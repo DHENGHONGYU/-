@@ -20,24 +20,77 @@ export interface StockDataQuality {
 /**
  * 财务分析报告（IndexedDB存储结构）
  * 用于支撑V6评分引擎L3a/L3v层的财务数据需求
+ * 
+ * 利润表字段（Income Statement）
+ * 资产负债表字段（Balance Sheet）
+ * 现金流量表字段（Cash Flow Statement）
+ * 财务比率（Financial Ratios）
  */
 export interface FinancialReport {
   symbol: string
   reportDate: string
+  reportType?: 'annual' | 'quarterly' | 'semi-annual'
+
   revenue?: number
   revenueYoY?: number
+  operatingCost?: number
+  operatingCostYoY?: number
+  grossProfit?: number
+  grossMargin?: number
+  operatingExpense?: number
+  operatingProfit?: number
+  operatingProfitYoY?: number
+  totalProfit?: number
+  totalProfitYoY?: number
   netProfit?: number
   netProfitYoY?: number
-  grossMargin?: number
   netMargin?: number
-  operatingCF?: number
+  rdExpense?: number
   rdRatio?: number
-  receivables?: number
-  inventoryTurnoverDays?: number
-  interestBearingDebt?: number
-  goodwill?: number
+
+  totalAssets?: number
+  totalAssetsYoY?: number
+  currentAssets?: number
+  nonCurrentAssets?: number
+  totalLiabilities?: number
+  totalLiabilitiesYoY?: number
+  currentLiabilities?: number
+  nonCurrentLiabilities?: number
   netAssets?: number
+  netAssetsYoY?: number
+  receivables?: number
+  receivablesYoY?: number
+  inventory?: number
+  inventoryYoY?: number
+  fixedAssets?: number
+  intangibleAssets?: number
+  goodwill?: number
+  interestBearingDebt?: number
+  shortTermDebt?: number
+  longTermDebt?: number
   shareholderPledge?: number
+
+  operatingCF?: number
+  operatingCFYoY?: number
+  investingCF?: number
+  financingCF?: number
+  netCF?: number
+
+  eps?: number
+  epsYoY?: number
+  dilutedEps?: number
+  bps?: number
+  inventoryTurnoverDays?: number
+  receivablesTurnoverDays?: number
+  assetTurnover?: number
+  roa?: number
+  roe?: number
+  debtToAssetRatio?: number
+  currentRatio?: number
+  quickRatio?: number
+  dividendYield?: number
+  payoutRatio?: number
+
   updatedAt: number
 }
 

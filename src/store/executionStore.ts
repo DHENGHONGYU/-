@@ -11,11 +11,11 @@
  * - 所有写操作通过 dataBridge.forward() 走信封协议
  * - 订阅 STORE_NAME.signals / STORE_NAME.orders 频道，source 过滤防自激
  *
- * @see docs/《V9核心数据字典与类型定义（整合版）》.md
- * @see docs/《功能模块数据契约》.md
- * @see docs/implementation/v9-system-blueprint.md
- * @see docs/《DataBridge端点与数据映射清单》.md
- * @see docs/《V9 架构缺陷与整改行动清单》.md
+ * @see docs/reference/v9核心数据字典与类型定义(整合版).md
+ * @see docs/reference/功能模块数据契约.md
+ * @see docs/reference/v9-system-blueprint.md
+ * @see docs/reference/databridge端点与数据映射清单.md
+ * @see docs/explanation/v9-架构缺陷与整改行动清单.md
  */
 
 import { create } from 'zustand'
@@ -608,5 +608,3 @@ async function forwardUpdateExecutionPlan(
 
   logger.info('[executionStore] forwardUpdateExecutionPlan DataBridge.forward 完成', { planId, traceId: envelope.meta.traceId })
 }
-
-export { initExecutionStoreSubscriptions } from './executionStoreSubscriptions'

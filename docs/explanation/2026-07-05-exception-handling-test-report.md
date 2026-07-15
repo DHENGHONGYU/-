@@ -1,3 +1,16 @@
+---
+title: 2026-07-05-exception-handling-test-report
+code_version: 2.0.0
+
+tier: reference
+---
+
+---
+title: docs/explanation/2026-07-05-exception-handling-test-report.md
+code_version: 2.0.0
+tier: reference
+---
+
 # 评分引擎异常处理优化测试报告
 
 **测试日期**: 2026-07-05  

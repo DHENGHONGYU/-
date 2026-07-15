@@ -1,0 +1,26 @@
+{
+  "issues": [],
+  "violations": [],
+  "warnings": [],
+  "summary": {
+    "totalFiles": 0,
+    "totalViolations": 0,
+    "totalWarnings": 0,
+    "emptyFunctions": 0,
+    "missingRouteFiles": 0,
+    "unregisteredPages": 0,
+    "routeImports": 0,
+    "appImports": 0,
+    "portalImports": 0,
+    "dynamicImports": 0,
+    "dynamicImportSources": 0,
+    "dynamicRegisteredPages": 0
+  },
+  "meta": {
+    "scriptName": "audit-dead-code",
+    "version": "3.1",
+    "timestamp": "2026-07-14T13:24:37.396Z",
+    "durationMs": 1,
+    "rootDir": "G:\\FinSightV9\\scripts\\audit"
+  }
+}

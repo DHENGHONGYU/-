@@ -1,4 +1,11 @@
 ---
+title: v9-system-blueprint
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: V9 智能投研复盘系统 — 整体架构蓝图
 version: v0.9.0-doc-sync-batch2
 last_updated: 2026-06-27
@@ -11,6 +18,8 @@ change_log:
   - date: 2026-06-25
     author: Documentation Governor
     desc: 注入 Frontmatter 元数据（Phase 3 版本化）
+code_version: 2.0.0
+tier: reference
 ---
 # V9 智能投研复盘系统 — 整体架构蓝图
 
@@ -355,10 +364,10 @@ interface StandardEnvelope {
 | **D13** | **缺少数据融合层** | `src/services/analysis/` 各服务分散获取数据，缺少统一 `UnifiedStockData` 视图 | Phase 2 实现 `unifiedStockService.ts` |
 | **D14** | **Widget 运行时引擎已存在（`src/cockpit/core/widgetEngine.ts`），`CockpitShell` 尚未接入** | 注册表/运行时基础已落地，`CockpitShell` 未调用 | Phase 2 将 CockpitShell 接入 Widget 引擎 |
 | **D15** | **评分算法能力降级** | `src/services/scoring/v6ScoreService.ts` 仅启发式计算 + 随机数降级，缺少 LLM 集成与报告生成 | Phase 2 升级评分引擎，接入真实数据与 LLM |
-| **D16** | **缺少图表组件库（规格已起草，代码待引入）** | `src/components/ui/` 无 `lightweight-charts` / `recharts`；`docs/implementation/chart-integration.md` 已定义选型、API 与 DataFlow 对接 | Phase 2 引入图表组件 |
+| **D16** | **缺少图表组件库（规格已起草，代码待引入）** | `src/components/ui/` 无 `lightweight-charts` / `recharts`；`./chart-integration.md` 已定义选型、API 与 DataFlow 对接 | Phase 2 引入图表组件 |
 | **D17** | **`rotationScoreService.ts` 已实现五因子十六指标模型，上层 `SectorAnalysisPage` 待充分接入** | 板块轮动评分已可计算，上层展示与调用待完善 | Phase 2 在 `SectorAnalysisPage` 接入轮动评分 |
-| **D18** | **缺少操作反馈闭环（规格已起草，代码待引入）** | `src/components/ui/Toast.tsx` 已提供基础组件；`docs/implementation/feedback-loop-spec.md` 已定义 FeedbackService 与 EventBus 集成 | Phase 2 完善反馈机制 |
-| **D19** | **`ErrorBoundary.tsx` 已存在并被 `App.tsx` 使用，Widget 级隔离待专项接入（规格已起草）** | 全局错误边界已落地；`docs/implementation/widget-error-handling.md` 已定义 Widget 级包裹与降级 UI | Phase 2 在 Widget 渲染管线中接入 ErrorBoundary |
+| **D18** | **缺少操作反馈闭环（规格已起草，代码待引入）** | `src/components/atoms/Toast.tsx` 已提供基础组件；`./feedback-loop-spec.md` 已定义 FeedbackService 与 EventBus 集成 | Phase 2 完善反馈机制 |
+| **D19** | **`ErrorBoundary.tsx` 已存在并被 `App.tsx` 使用，Widget 级隔离待专项接入（规格已起草）** | 全局错误边界已落地；`./widget-error-handling.md` 已定义 Widget 级包裹与降级 UI | Phase 2 在 Widget 渲染管线中接入 ErrorBoundary |
 | **D20** | **缺少热门板块与价值洼地双策略体系** | 策略引擎仅有主题/价值/热门动量三分类，缺少用户规格中的 HotSectorScore / ValuePitScore 双评分输出与轮动信号检测 | Phase 2 新增独立 Store、Analyzer、Detector、Widget；详见 ADR-009 |
 
 ---
@@ -399,37 +408,37 @@ interface StandardEnvelope {
 
 | 编号 | 文档 | 内容 |
 |------|------|------|
-| 01 | `docs/01-vision-and-goals.md` | 愿景、目标用户、价值主张 |
-| 02 | `docs/02-functional-specs.md` | 用户故事、核心流程、非功能需求 |
-| 03 | `docs/03-architecture-standards.md` | 五层架构、调用规则、数据 Schema |
-| 04 | `docs/04-ui-ux-specs.md` | UI/UX 规范、主题、布局 |
-| 05 | `docs/05-engine-specs.md` | 引擎规格、DataBridge、评分模型 |
-| 06 | `docs/06-routing-specs.md` | 路由注册表、舱室映射 |
-| 07 | `docs/07-operation-strategy.md` | 运营策略、ADR |
-| 08 | `docs/08-implementation-plan.md` | 分阶段实施计划 |
-| 09 | `docs/09-quality-gates.md` | 质量门禁、扫描脚本 |
-| 10 | `docs/10-glossary.md` | 词汇表、命名规范 |
+| 01 | `./01-vision-and-goals.md` | 愿景、目标用户、价值主张 |
+| 02 | `./02-functional-specs.md` | 用户故事、核心流程、非功能需求 |
+| 03 | `./03-architecture-standards.md` | 五层架构、调用规则、数据 Schema |
+| 04 | `./04-ui-ux-specs.md` | UI/UX 规范、主题、布局 |
+| 05 | `./05-engine-specs.md` | 引擎规格、DataBridge、评分模型 |
+| 06 | `./06-routing-specs.md` | 路由注册表、舱室映射 |
+| 07 | `./07-operation-strategy.md` | 运营策略、ADR |
+| 08 | `./08-implementation-plan.md` | 分阶段实施计划 |
+| 09 | `./09-quality-gates.md` | 质量门禁、扫描脚本 |
+| 10 | `./10-glossary.md` | 词汇表、命名规范 |
 
 ### 专项实施文档
 
 | 文档 | 内容 |
 |------|------|
-| `docs/implementation/v9-system-blueprint.md` | 本文档：整体架构蓝图 |
-| `docs/implementation/dual-strategy-dataflow-spec.md` | 用户输入的双策略/数据流规格 |
-| `docs/implementation/dual-strategy-gap-analysis.md` | 双策略规格与现有项目差异分析报告 |
-| `docs/implementation/architecture-version-comparison.md` | 架构文档版本比对 |
-| `docs/implementation/input-cabin-spec.md` | 输入舱业务规格与映射 |
-| `docs/implementation/data-interaction-protocols.md` | 数据交互协议 |
-| `docs/implementation/implementation-governance.md` | 实施治理与 ADR 规范 |
-| `docs/implementation/v9-input-cabin-strategy-report.md` | 输入舱升级策略报告 |
-| `docs/implementation/v10-architecture-alignment.md` | V10 白皮书对齐报告 |
-| `docs/implementation/ui-module-alignment.md` | V6 Pro UI 模块对齐报告 |
-| `docs/implementation/v6-cockpit-ui-reference.md` | v6 UI 参考 |
-| `docs/implementation/trading-core-factors.md` | 交易核心因子导入 |
-| `docs/implementation/chart-integration.md` | 图表组件技术选型与 DataBridge 对接 |
-| `docs/implementation/feedback-loop-spec.md` | 操作反馈闭环与 EventBus 集成 |
-| `docs/implementation/widget-error-handling.md` | Widget 错误边界与降级 UI |
-| `docs/implementation/pwa-offline-guide.md` | PWA Service Worker 与离线缓存 |
+| `./v9-system-blueprint.md` | 本文档：整体架构蓝图 |
+| `./dual-strategy-dataflow-spec.md` | 用户输入的双策略/数据流规格 |
+| `../explanation/dual-strategy-gap-analysis.md` | 双策略规格与现有项目差异分析报告 |
+| `./architecture-version-comparison.md` | 架构文档版本比对 |
+| `./input-cabin-spec.md` | 输入舱业务规格与映射 |
+| `./data-interaction-protocols.md` | 数据交互协议 |
+| `../explanation/design/implementation-governance.md` | 实施治理与 ADR 规范 |
+| `./v9-input-cabin-strategy-report.md` | 输入舱升级策略报告 |
+| `./v10-architecture-alignment.md` | V10 白皮书对齐报告 |
+| `docs/explanation/ui-module-alignment.md` | V6 Pro UI 模块对齐报告 |
+| `./v6-cockpit-ui-reference.md` | v6 UI 参考 |
+| `../explanation/trading-core-factors.md` | 交易核心因子导入 |
+| `./chart-integration.md` | 图表组件技术选型与 DataBridge 对接 |
+| `./feedback-loop-spec.md` | 操作反馈闭环与 EventBus 集成 |
+| `./widget-error-handling.md` | Widget 错误边界与降级 UI |
+| `./pwa-offline-guide.md` | PWA Service Worker 与离线缓存 |
 | `docs/implementation/adr/ADR-001~009.md` | 架构决策记录 |
 | `CHANGELOG.md` | 版本变更日志 |
 

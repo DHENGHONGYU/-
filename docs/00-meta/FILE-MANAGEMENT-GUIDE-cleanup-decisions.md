@@ -1,3 +1,16 @@
+---
+title: file-management-guide-cleanup-decisions
+code_version: 2.0.0
+
+tier: core
+---
+
+---
+title: docs/00-meta/file-management-guide-cleanup-decisions.md
+code_version: 2.0.0
+tier: core
+---
+
 # FILE-MANAGEMENT-GUIDE 代码清理决策报告
 
 > **生成时间**: 2026-07-20  
@@ -13,7 +26,7 @@
 | 项目 | 内容 |
 |------|------|
 | **决策** | ✅ **删除** |
-| **依据** | 1. `diff toolkit/safeCoerce.ts src/lib/safeCoerce.ts` 输出为空 → **逐行完全相同**<br>2. 全局搜索 `toolkit/safeCoerce` 无匹配 → **无任何引用**<br>3. `toolkit/README.md` 第39行明确说明"将 safeCoerce.ts 复制到项目的 src/lib/ 目录" → 该文件为**模板副本**，非生产代码<br>4. `src/lib/safeCoerce.ts` 为 AGENTS.md 白名单定义的唯一真相源 |
+| **依据** | 1. `diff toolkit/safeCoerce.ts src/lib/safeCoerce.ts` 输出为空 → **逐行完全相同**<br>2. 全局搜索 `toolkit/safeCoerce` 无匹配 → **无任何引用**<br>3. `../README.md` 第39行明确说明"将 safeCoerce.ts 复制到项目的 src/lib/ 目录" → 该文件为**模板副本**，非生产代码<br>4. `src/lib/safeCoerce.ts` 为 AGENTS.md 白名单定义的唯一真相源 |
 | **风险等级** | **零风险** |
 | **执行状态** | ✅ 已完成（2026-07-20） |
 | **验证** | `ls toolkit/` 确认 safeCoerce.ts 已不存在 |
@@ -32,37 +45,37 @@
 
 ## 二、建议执行但需确认的操作
 
-### 2.1 迁移 `src/blueprints/__tests__/dataRelationship.test.ts`
+### 2.1 迁移 `src/blueprints/`
 
 | 项目 | 内容 |
 |------|------|
 | **决策** | 🟡 **迁移至 `tests/blueprints/`**（建议执行，但需确认） |
-| **依据** | 1. `src/blueprints/` 仅含 1 个文件：`__tests__/dataRelationship.test.ts`<br>2. 全局搜索零生产代码引用<br>3. `src/blueprints/` 不在 AGENTS.md §一 目录列表中<br>4. 测试文件应统一存放于 `tests/` 目录（符合 FILE-MANAGEMENT-GUIDE.md 文件归位规则） |
+| **依据** | 1. `src/blueprints/` 仅含 1 个文件：`__tests__/dataRelationship.test.ts`<br>2. 全局搜索零生产代码引用<br>3. `src/blueprints/` 不在 AGENTS.md §一 目录列表中<br>4. 测试文件应统一存放于 `tests/` 目录（符合 file-management-guide.md 文件归位规则） |
 | **风险等级** | **低** |
 | **执行建议** | 1. `mkdir -p tests/blueprints/`<br>2. `mv src/blueprints/__tests__/dataRelationship.test.ts tests/blueprints/`<br>3. `rmdir src/blueprints/__tests__ src/blueprints`（如为空）<br>4. 检查该测试文件是否有内部引用需要更新（如相对路径） |
 | **执行状态** | ⏳ 待执行 |
 
-### 2.2 删除 `src/databridge/index.ts` + 迁移测试文件
+### 2.2 删除 `../../src/showcase/index.ts` + 迁移测试文件
 
 | 项目 | 内容 |
 |------|------|
 | **决策** | 🟡 **删除 src/databridge/ 目录**（建议执行，但需更新测试） |
-| **依据** | 1. `src/databridge/index.ts` 为 `src/core/databridge.ts` 的薄包装适配器（155行）<br>2. **零生产代码引用**（60+ 文件直接引用 `src/core/databridge` 而非 `src/databridge`）<br>3. 仅 `tests/databridgeAdapter.test.ts` 依赖此文件<br>4. AGENTS.md 未定义 `src/databridge/` 目录 |
+| **依据** | 1. `../../src/services/workers/index.ts` 为 `src/core/databridge.ts` 的薄包装适配器（155行）<br>2. **零生产代码引用**（60+ 文件直接引用 `src/core/databridge` 而非 `src/core/databridge.ts`）<br>3. 仅 `tests/databridgeAdapter.test.ts` 依赖此文件<br>4. AGENTS.md 未定义 `src/core/databridge.ts/` 目录 |
 | **风险等级** | **低**（但需修改测试文件） |
-| **执行建议** | 1. 将 `DataBridgeAdapter` 类合并至 `src/core/databridge.ts` 末尾，或新建 `src/core/databridgeAdapter.ts`<br>2. 更新 `tests/databridgeAdapter.test.ts` 的导入路径（`@/databridge` → `@/core/databridge` 或 `@/core/databridgeAdapter`）<br>3. 运行 `npm test -- --run` 确认测试通过<br>4. 删除 `src/databridge/` 空目录 |
+| **执行建议** | 1. 将 `DataBridgeAdapter` 类合并至 `src/core/databridge.ts` 末尾，或新建 `src/core/databridgeAdapter.ts`<br>2. 更新 `tests/databridgeAdapter.test.ts` 的导入路径（`@/databridge` → `@/core/databridge` 或 `@/core/databridgeAdapter`）<br>3. 运行 `npm test -- --run` 确认测试通过<br>4. 删除 `src/core/databridge.ts` 空目录 |
 | **执行状态** | ⏳ 待执行 |
 
-### 2.3 迁移 `src/utils/` 活跃文件至 `src/lib/`
+### 2.3 迁移 `src/lib/` 活跃文件至 `src/lib/`
 
 | 项目 | 内容 |
 |------|------|
 | **决策** | 🟡 **分步迁移**（建议执行，但影响 17 个 import 路径） |
-| **依据** | 1. `src/utils/` 不在 AGENTS.md §一 目录列表中，AGENTS.md 白名单已定义 `utils` 属于 `lib/` 层<br>2. `src/lib/utils.ts`（单文件，58+ 引用）与 `src/utils/`（目录，5 文件，~17 引用）并存，命名冲突<br>3. 活跃文件：dataValidation.ts (~11引用)、xssSanitizer.ts (2引用)、precision.ts (4引用) |
+| **依据** | 1. `src/lib/` 不在 AGENTS.md §一 目录列表中，AGENTS.md 白名单已定义 `utils` 属于 `lib/` 层<br>2. `src/lib/utils.ts`（单文件，58+ 引用）与 `src/lib/`（目录，5 文件，~17 引用）并存，命名冲突<br>3. 活跃文件：dataValidation.ts (~11引用)、xssSanitizer.ts (2引用)、precision.ts (4引用) |
 | **风险等级** | **中**（需修改约 17 个文件的 import 路径） |
-| **执行建议** | **方案 A（推荐）：逐个迁移，按功能重命名**<br>1. `src/utils/dataValidation.ts` → `src/lib/validation.ts`<br>2. `src/utils/xssSanitizer.ts` → `src/lib/sanitize.ts`<br>3. `src/utils/precision.ts` → `src/lib/financeFormat.ts`<br>4. 全局替换 `from '@/utils/...'` → `from '@/lib/...'`<br>5. 同步迁移对应测试文件<br>6. 运行 `npx tsc --noEmit` + `npm test -- --run` 验证 |
+| **执行建议** | **方案 A（推荐）：逐个迁移，按功能重命名**<br>1. `src/lib/validation.ts` → `src/lib/validation.ts`<br>2. `src/lib/xssSanitizer.ts` → `src/lib/sanitize.ts`<br>3. `src/lib/precision.ts` → `src/lib/financeFormat.ts`<br>4. 全局替换 `from '@/utils/...'` → `from '@/lib/...'`<br>5. 同步迁移对应测试文件<br>6. 运行 `npx tsc --noEmit` + `npm test -- --run` 验证 |
 | **执行状态** | ⏳ 待执行 |
 
-### 2.4 确认并处理 `src/utils/a11y.ts` 和 `src/utils/timeUtils.ts`
+### 2.4 确认并处理 `src/lib/validation.ts` 和 `src/lib/format.ts`
 
 | 项目 | 内容 |
 |------|------|
@@ -81,9 +94,9 @@
 | 项目 | 内容 |
 |------|------|
 | **决策** | ✅ **保留** |
-| **依据** | 1. `toolkit/README.md` 明确说明："本工具包包含整改过程中使用的补丁脚本和验证命令，可在新项目中直接复用"<br>2. `patch-error-handling-dynamic.ts`：272行补丁脚本，用于新项目修复静默回退模式<br>3. `auto-register-scripts.js`：215行脚本注册工具，用于新项目自动注册 package.json 脚本<br>4. `verify.bat` / `verify.sh`：验证脚本，用于新项目快速验证整改效果<br>5. 这些文件有明确用途，不属于 V9 项目本身的代码，而是**可复用的整改工具包** |
+| **依据** | 1. `../README.md` 明确说明："本工具包包含整改过程中使用的补丁脚本和验证命令，可在新项目中直接复用"<br>2. `patch-error-handling-dynamic.ts`：272行补丁脚本，用于新项目修复静默回退模式<br>3. `auto-register-scripts.js`：215行脚本注册工具，用于新项目自动注册 package.json 脚本<br>4. `verify.bat` / `verify.sh`：验证脚本，用于新项目快速验证整改效果<br>5. 这些文件有明确用途，不属于 V9 项目本身的代码，而是**可复用的整改工具包** |
 | **风险等级** | **无风险** |
-| **备注** | 建议在 FILE-MANAGEMENT-GUIDE.md 中补充 `toolkit/` 的说明："整改工具包（用于新项目复用，非 V9 生产代码）" |
+| **备注** | 建议在 file-management-guide.md 中补充 `toolkit/` 的说明："整改工具包（用于新项目复用，非 V9 生产代码）" |
 
 ### 3.2 `src/hooks/`、`src/devtools/`、`src/fixtures/`、`src/i18n/`
 
@@ -113,8 +126,8 @@
 | **P0** | 删除 `toolkit/safeCoerce.ts` | 零 | 0 | 1 min | ✅ 已完成 |
 | **P0** | `.gitignore` 补充 `/outputs/` | 零 | 0 | 1 min | ✅ 已完成 |
 | **P1** | 迁移 `src/blueprints/` → `tests/` | 低 | 1 | 15 min | ⏳ 待执行 |
-| **P1** | 删除 `src/databridge/` + 更新测试 | 低 | 2 | 30 min | ⏳ 待执行 |
-| **P2** | 迁移 `src/utils/` 活跃文件 → `src/lib/` | 中 | ~17 | 2-4 h | ⏳ 待执行 |
+| **P1** | 删除 `src/core/databridge.ts` + 更新测试 | 低 | 2 | 30 min | ⏳ 待执行 |
+| **P2** | 迁移 `src/lib/` 活跃文件 → `src/lib/` | 中 | ~17 | 2-4 h | ⏳ 待执行 |
 | **P2** | 确认并处理 `a11y.ts` + `timeUtils.ts` | 低 | 2 | 15 min | ⏳ 待确认 |
 | **P3** | 补充 AGENTS.md 未定义目录定义 | 低 | — | 1 h | ⏳ 待执行 |
 

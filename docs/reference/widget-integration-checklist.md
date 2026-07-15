@@ -1,3 +1,16 @@
+---
+title: widget-integration-checklist
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/widget-integration-checklist.md
+code_version: 2.0.0
+tier: important
+---
+
 # 驾驶舱 Widget 集成检查清单
 
 > 新增或修改驾驶舱 Widget 时，必须同步完成三处注册，并遵循设计令牌与数据消费规范。

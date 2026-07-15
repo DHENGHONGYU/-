@@ -1,0 +1,5506 @@
+{
+  "multi": [
+    {
+      "source": "docs\\00-meta\\23-core-docs-final-verification-report.md",
+      "line": 167,
+      "target": "../explanation/docs/explanation/09-quality-gates.md",
+      "suggestion": "../explanation/design/09-quality-gates.md"
+    },
+    {
+      "source": "docs\\00-meta\\23-core-docs-v2-final-report.md",
+      "line": 185,
+      "target": "../explanation/docs/explanation/09-quality-gates.md",
+      "suggestion": "../explanation/design/09-quality-gates.md"
+    },
+    {
+      "source": "docs\\00-meta\\development-log.md",
+      "line": 896,
+      "target": "src/databridge/index.ts",
+      "suggestion": "src/showcase/index.ts"
+    },
+    {
+      "source": "docs\\00-meta\\development-log.md",
+      "line": 899,
+      "target": "src/core/databridge.ts/index.ts",
+      "suggestion": "src/services/workers/index.ts"
+    },
+    {
+      "source": "docs\\00-meta\\development-log.md",
+      "line": 900,
+      "target": "scripts/_audit-pipeline.ts",
+      "suggestion": "scripts/_debug/_audit-pipeline.ts"
+    },
+    {
+      "source": "docs\\00-meta\\development-log.md",
+      "line": 1042,
+      "target": "src/core/types.ts → src/showcase/types.ts",
+      "suggestion": "src/services/scoring/v6-engine/types.ts"
+    },
+    {
+      "source": "docs\\00-meta\\development-log.md",
+      "line": 1315,
+      "target": "docs/explanation/data-flow-spec.md",
+      "suggestion": "../reference/data-flow-spec.md"
+    },
+    {
+      "source": "docs\\00-meta\\doc-file-management-optimization-plan.md",
+      "line": 102,
+      "target": "../reports/changelogs/../../CHANGELOG.md",
+      "suggestion": "../reports/changelogs/CHANGELOG.md"
+    },
+    {
+      "source": "docs\\00-meta\\p1-13-code-to-doc-refs-fix-report.md",
+      "line": 57,
+      "target": "docs/explanation/data-flow-spec.md",
+      "suggestion": "../reference/data-flow-spec.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档体系体检报告-v9.md",
+      "line": 144,
+      "target": "../reference/ai-center-../reference/data-definition.md",
+      "suggestion": "../reference/data-definition.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档体系体检报告-v9.md",
+      "line": 144,
+      "target": "BACKTEST_../reference/data-definition.md",
+      "suggestion": "../reference/data-definition.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档体系体检报告-v9.md",
+      "line": 144,
+      "target": "dataflow-../reference/data-definition.md",
+      "suggestion": "../reference/data-definition.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档体系体检报告-v9.md",
+      "line": 144,
+      "target": "NEWS_../reference/data-definition.md",
+      "suggestion": "../reference/data-definition.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档归类体系结构.md",
+      "line": 271,
+      "target": "../explanation/docs/explanation/09-quality-gates.md",
+      "suggestion": "../explanation/design/09-quality-gates.md"
+    },
+    {
+      "source": "docs\\01-product\\data-security-and-privacy.md",
+      "line": 413,
+      "target": "file:///g:/FinSightV9/docs/reference/testing-strategy.md",
+      "suggestion": "../reference/testing-strategy.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\pending-items-backlog-20260704.md",
+      "line": 172,
+      "target": "src/apps/input/mockData.ts",
+      "suggestion": "src/services/trading/mockDataGenerator.ts"
+    },
+    {
+      "source": "docs\\explanation\\pending-items-backlog-20260704.md",
+      "line": 183,
+      "target": "src/apps/input/mockData.ts",
+      "suggestion": "src/services/trading/mockDataGenerator.ts"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\doc-sync-execution-plan.md",
+      "line": 57,
+      "target": "../../reference/ai-center-../../reference/data-definition.md",
+      "suggestion": "../../reference/data-definition.md"
+    }
+  ],
+  "none": [
+    {
+      "source": "docs\\00-meta\\23-core-docs-final-verification-report.md",
+      "line": 74,
+      "target": "prompts/store-prompt-template.md"
+    },
+    {
+      "source": "docs\\00-meta\\23-core-docs-final-verification-report.md",
+      "line": 78,
+      "target": "prompts/service-prompt-template.md"
+    },
+    {
+      "source": "docs\\00-meta\\23-core-docs-final-verification-report.md",
+      "line": 147,
+      "target": "prompts/store-prompt-template.md"
+    },
+    {
+      "source": "docs\\00-meta\\23-core-docs-final-verification-report.md",
+      "line": 148,
+      "target": "prompts/service-prompt-template.md"
+    },
+    {
+      "source": "docs\\00-meta\\23-core-docs-v2-final-report.md",
+      "line": 75,
+      "target": "prompts/store-prompt-template.md"
+    },
+    {
+      "source": "docs\\00-meta\\23-core-docs-v2-final-report.md",
+      "line": 79,
+      "target": "prompts/service-prompt-template.md"
+    },
+    {
+      "source": "docs\\00-meta\\23-core-docs-v2-final-report.md",
+      "line": 158,
+      "target": "prompts/store-prompt-template.md"
+    },
+    {
+      "source": "docs\\00-meta\\23-core-docs-v2-final-report.md",
+      "line": 159,
+      "target": "prompts/service-prompt-template.md"
+    },
+    {
+      "source": "docs\\00-meta\\23个核心文档重新检索报告.md",
+      "line": 86,
+      "target": "file-management-system/templates/ADR-template.md"
+    },
+    {
+      "source": "docs\\00-meta\\23个核心文档重新检索报告.md",
+      "line": 285,
+      "target": "file-management-system/templates/ADR-template.md"
+    },
+    {
+      "source": "docs\\00-meta\\cleanup-schedule.md",
+      "line": 44,
+      "target": "scripts/cleanup-drafts.sh"
+    },
+    {
+      "source": "docs\\00-meta\\deprecated-docs\\old-versions\\data-dictionary-index-v1.6.0.md",
+      "line": 107,
+      "target": "docs/explanation/doc-sync-gap-list.md"
+    },
+    {
+      "source": "docs\\00-meta\\development-log.md",
+      "line": 1310,
+      "target": "docs/《功能模块数据契约》.md"
+    },
+    {
+      "source": "docs\\00-meta\\development-log.md",
+      "line": 1311,
+      "target": "docs/《V9核心数据字典与类型定义（整合版）》.md"
+    },
+    {
+      "source": "docs\\00-meta\\development-log.md",
+      "line": 1312,
+      "target": "docs/《DataBridge端点与数据映射清单》.md"
+    },
+    {
+      "source": "docs\\00-meta\\development-log.md",
+      "line": 1313,
+      "target": "docs/《V9 架构缺陷与整改行动清单》.md"
+    },
+    {
+      "source": "docs\\00-meta\\development-log.md",
+      "line": 1314,
+      "target": "docs/《V9现有数据资产清单》.md"
+    },
+    {
+      "source": "docs\\00-meta\\development-log.md",
+      "line": 1319,
+      "target": "docs/reports/redundant-stores-supplementary-verification.md"
+    },
+    {
+      "source": "docs\\00-meta\\development-log.md",
+      "line": 1324,
+      "target": "docs/《prompts/》AGENTS.md"
+    },
+    {
+      "source": "docs\\00-meta\\development-log.md",
+      "line": 1327,
+      "target": "docs/reports/silent-fallback-fix-report.md"
+    },
+    {
+      "source": "docs\\00-meta\\development-log.md",
+      "line": 1351,
+      "target": "docs/《V9现有数据资产清单》.md"
+    },
+    {
+      "source": "docs\\00-meta\\development-log.md",
+      "line": 1351,
+      "target": "docs/《V9 现有数据资产清单》.md"
+    },
+    {
+      "source": "docs\\00-meta\\doc-auto-update-kanban.md",
+      "line": 64,
+      "target": ".github/pull_request_template.md"
+    },
+    {
+      "source": "docs\\00-meta\\doc-auto-update-kanban.md",
+      "line": 124,
+      "target": "outputs/doc-audit-2026-07-14/诊断与重梳方案报告.md"
+    },
+    {
+      "source": "docs\\00-meta\\doc-file-management-optimization-plan.md",
+      "line": 51,
+      "target": "A/a-navigation-governance.md"
+    },
+    {
+      "source": "docs\\00-meta\\doc-file-management-optimization-plan.md",
+      "line": 51,
+      "target": "B/b-architecture-design.md"
+    },
+    {
+      "source": "docs\\00-meta\\doc-proofreading-strategy.md",
+      "line": 108,
+      "target": "../nonexistent.md"
+    },
+    {
+      "source": "docs\\00-meta\\doc-system-check-v9.md",
+      "line": 131,
+      "target": "file-management-system/templates/ADR-template.md"
+    },
+    {
+      "source": "docs\\00-meta\\doc-system-check-v9.md",
+      "line": 190,
+      "target": "docs/explanation/design/BACKTEST_data-definition.md"
+    },
+    {
+      "source": "docs\\00-meta\\doc-system-check-v9.md",
+      "line": 193,
+      "target": "docs/explanation/design/NEWS_data-definition.md"
+    },
+    {
+      "source": "docs\\00-meta\\doc-system-check-v9.md",
+      "line": 261,
+      "target": "docs/how-to/how-to-add-page.md"
+    },
+    {
+      "source": "docs\\00-meta\\doc-system-check-v9.md",
+      "line": 262,
+      "target": "docs/standards/type-evolution-guide.md"
+    },
+    {
+      "source": "docs\\00-meta\\doc-system-check-v9.md",
+      "line": 263,
+      "target": "docs/standards/react-lifecycle-patterns.md"
+    },
+    {
+      "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-cleanup-decisions.md",
+      "line": 75,
+      "target": "src/lib/sanitize.ts"
+    },
+    {
+      "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-cleanup-decisions.md",
+      "line": 75,
+      "target": "src/lib/financeFormat.ts"
+    },
+    {
+      "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-file-wandering-report.md",
+      "line": 99,
+      "target": "src/core/ ← 核心工具与类型守卫（DataBridge/ACL/Envelope/MemoryCache/EventBus）"
+    },
+    {
+      "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-file-wandering-report.md",
+      "line": 110,
+      "target": "src/core/databridge.ts ← DataBridge 适配层（core 层扩展）"
+    },
+    {
+      "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-file-wandering-report.md",
+      "line": 118,
+      "target": "src/lib/dataValidation.test.ts"
+    },
+    {
+      "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-file-wandering-report.md",
+      "line": 126,
+      "target": "src/lib/ ← 库函数（logger/format/errors/utils/localStorageManager）"
+    },
+    {
+      "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-file-wandering-report.md",
+      "line": 143,
+      "target": "src/lib/common-utils.ts"
+    },
+    {
+      "source": "docs\\00-meta\\GOVERNANCE.md",
+      "line": 123,
+      "target": "docs/reports/api-report.md"
+    },
+    {
+      "source": "docs\\00-meta\\p1-13-code-to-doc-refs-fix-report.md",
+      "line": 52,
+      "target": "docs/《功能模块数据契约》.md"
+    },
+    {
+      "source": "docs\\00-meta\\p1-13-code-to-doc-refs-fix-report.md",
+      "line": 53,
+      "target": "docs/《V9核心数据字典与类型定义（整合版）》.md"
+    },
+    {
+      "source": "docs\\00-meta\\p1-13-code-to-doc-refs-fix-report.md",
+      "line": 54,
+      "target": "docs/《DataBridge端点与数据映射清单》.md"
+    },
+    {
+      "source": "docs\\00-meta\\p1-13-code-to-doc-refs-fix-report.md",
+      "line": 55,
+      "target": "docs/《V9 架构缺陷与整改行动清单》.md"
+    },
+    {
+      "source": "docs\\00-meta\\p1-13-code-to-doc-refs-fix-report.md",
+      "line": 56,
+      "target": "docs/《V9现有数据资产清单》.md"
+    },
+    {
+      "source": "docs\\00-meta\\p1-13-code-to-doc-refs-fix-report.md",
+      "line": 61,
+      "target": "docs/reports/redundant-stores-supplementary-verification.md"
+    },
+    {
+      "source": "docs\\00-meta\\p1-13-code-to-doc-refs-fix-report.md",
+      "line": 100,
+      "target": "docs/《prompts/》AGENTS.md"
+    },
+    {
+      "source": "docs\\00-meta\\p1-13-code-to-doc-refs-fix-report.md",
+      "line": 104,
+      "target": "docs/reports/silent-fallback-fix-report.md"
+    },
+    {
+      "source": "docs\\00-meta\\secondary-verification-report-2026-07-15.md",
+      "line": 64,
+      "target": "docs/reference/v9核心数据字典与类型定义（整合版）.md"
+    },
+    {
+      "source": "docs\\00-meta\\src-directories-evaluation-report.md",
+      "line": 173,
+      "target": "src/lib/sanitize.ts"
+    },
+    {
+      "source": "docs\\00-meta\\src-directories-evaluation-report.md",
+      "line": 173,
+      "target": "src/lib/financeFormat.ts"
+    },
+    {
+      "source": "docs\\00-meta\\src-directories-evaluation-report.md",
+      "line": 209,
+      "target": "src/lib/sanitize.ts"
+    },
+    {
+      "source": "docs\\00-meta\\src-directories-evaluation-report.md",
+      "line": 210,
+      "target": "src/lib/financeFormat.ts"
+    },
+    {
+      "source": "docs\\00-meta\\trae-file-management-review.md",
+      "line": 31,
+      "target": "prd/feature-xxx.md"
+    },
+    {
+      "source": "docs\\00-meta\\trae-file-management-review.md",
+      "line": 55,
+      "target": "skills/v9-gatekeeper/SKILL.md"
+    },
+    {
+      "source": "docs\\00-meta\\trae-file-management-review.md",
+      "line": 129,
+      "target": "prd/feature-xxx.md"
+    },
+    {
+      "source": "docs\\00-meta\\执行校验报告.md",
+      "line": 67,
+      "target": "src/cockpit/CockpitShell.tsx(278): JSX 标签未闭合"
+    },
+    {
+      "source": "docs\\00-meta\\文档体系体检报告-v9.md",
+      "line": 133,
+      "target": "file-management-system/templates/ADR-template.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档体系体检报告-v9.md",
+      "line": 256,
+      "target": "docs/how-to/how-to-add-page.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档体系体检报告-v9.md",
+      "line": 257,
+      "target": "docs/standards/type-evolution-guide.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档体系体检报告-v9.md",
+      "line": 258,
+      "target": "docs/standards/react-lifecycle-patterns.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档归类体系结构.md",
+      "line": 237,
+      "target": "prompts/store-prompt-template.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档归类体系结构.md",
+      "line": 238,
+      "target": "prompts/service-prompt-template.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档归类体系结构.md",
+      "line": 297,
+      "target": "system/component/service/store/types-prompt-template.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档归类体系结构.md",
+      "line": 371,
+      "target": "prompts/service-prompt-template.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档自动更新体系-架构梳理与任务清单.md",
+      "line": 16,
+      "target": "outputs/doc-auto-updater-diagnosis-and-score.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档自动更新体系-架构梳理与任务清单.md",
+      "line": 150,
+      "target": "scripts/doc-notify.ts"
+    },
+    {
+      "source": "docs\\00-meta\\文档自动更新体系-架构梳理与任务清单.md",
+      "line": 163,
+      "target": "scripts/doc-pipeline.ts"
+    },
+    {
+      "source": "docs\\00-meta\\文档自动更新体系-架构梳理与任务清单.md",
+      "line": 274,
+      "target": "scripts/doc-pipeline.ts"
+    },
+    {
+      "source": "docs\\00-meta\\文档自动更新体系-架构梳理与任务清单.md",
+      "line": 275,
+      "target": "scripts/doc-retry.ts"
+    },
+    {
+      "source": "docs\\00-meta\\文档自动更新体系-架构梳理与任务清单.md",
+      "line": 276,
+      "target": "scripts/doc-notify.ts"
+    },
+    {
+      "source": "docs\\archive\\deprecated-v9-issue-execution-board.md",
+      "line": 40,
+      "target": "src/data/themeSymbolPool.ts"
+    },
+    {
+      "source": "docs\\explanation\\03-architecture-standards.md",
+      "line": 672,
+      "target": "src/config/weights.ts"
+    },
+    {
+      "source": "docs\\explanation\\2026-06-24-pool-screening-signal-persistence-review-engine.md",
+      "line": 53,
+      "target": "src/services/output/reviewEngine.ts"
+    },
+    {
+      "source": "docs\\explanation\\2026-06-24-pool-screening-signal-persistence-review-engine.md",
+      "line": 53,
+      "target": "src/services/system/reviewEngine.ts"
+    },
+    {
+      "source": "docs\\explanation\\a11y-checklist.md",
+      "line": 180,
+      "target": "src/components/ui/FocusTrap.tsx"
+    },
+    {
+      "source": "docs\\explanation\\a11y-contrast-report.md",
+      "line": 120,
+      "target": "src/pages/analysis/IntelligentScorePage.tsx:105-110"
+    },
+    {
+      "source": "docs\\explanation\\ai-center-data-definition.md",
+      "line": 224,
+      "target": "src/types/modules/agent.types.ts:7-15"
+    },
+    {
+      "source": "docs\\explanation\\ai-center-data-definition.md",
+      "line": 236,
+      "target": "src/types/modules/agent.types.ts:17-23"
+    },
+    {
+      "source": "docs\\explanation\\ai-center-data-definition.md",
+      "line": 248,
+      "target": "src/types/modules/agent.types.ts:25-33"
+    },
+    {
+      "source": "docs\\explanation\\ai-center-data-definition.md",
+      "line": 263,
+      "target": "src/types/modules/agent.types.ts:35-43"
+    },
+    {
+      "source": "docs\\explanation\\ai-center-data-definition.md",
+      "line": 280,
+      "target": "src/types/modules/agent.types.ts:51-66"
+    },
+    {
+      "source": "docs\\explanation\\ai-center-data-definition.md",
+      "line": 302,
+      "target": "src/types/modules/agent.types.ts:69-79"
+    },
+    {
+      "source": "docs\\explanation\\ai-center-data-definition.md",
+      "line": 319,
+      "target": "src/types/modules/agent.types.ts:82-94"
+    },
+    {
+      "source": "docs\\explanation\\ai-center-data-definition.md",
+      "line": 338,
+      "target": "src/types/modules/agent.types.ts:97-107"
+    },
+    {
+      "source": "docs\\explanation\\ai-center-data-definition.md",
+      "line": 353,
+      "target": "src/types/modules/agent.types.ts:114-120"
+    },
+    {
+      "source": "docs\\explanation\\ai-center-data-definition.md",
+      "line": 366,
+      "target": "src/types/modules/agent.types.ts:123-127"
+    },
+    {
+      "source": "docs\\explanation\\ai-center-data-definition.md",
+      "line": 377,
+      "target": "src/types/modules/agent.types.ts:130-141"
+    },
+    {
+      "source": "docs\\explanation\\ai-center-data-definition.md",
+      "line": 395,
+      "target": "src/types/modules/agent.types.ts:148-157"
+    },
+    {
+      "source": "docs\\explanation\\ai-center-data-definition.md",
+      "line": 411,
+      "target": "src/types/modules/agent.types.ts:160-165"
+    },
+    {
+      "source": "docs\\explanation\\ai-center-vue3-examples.md",
+      "line": 16,
+      "target": "src/services/ai-center/mockAICenterProvider.ts"
+    },
+    {
+      "source": "docs\\explanation\\ai-generate-audit-fix-loop.md",
+      "line": 109,
+      "target": "scripts/ai-dev-loop.ts"
+    },
+    {
+      "source": "docs\\explanation\\ai-memory-layer.md",
+      "line": 71,
+      "target": "prompts/system-prompt-template.md"
+    },
+    {
+      "source": "docs\\explanation\\completeness-profile-batch4.md",
+      "line": 97,
+      "target": "src/pages/trading/TradingHubPage.tsx:36/42"
+    },
+    {
+      "source": "docs\\explanation\\core-data-strategy-report.md",
+      "line": 826,
+      "target": "src/data/gateway/dataGateway.ts"
+    },
+    {
+      "source": "docs\\explanation\\core-data-strategy-report.md",
+      "line": 841,
+      "target": "src/data/gateway/dataGateway.ts"
+    },
+    {
+      "source": "docs\\explanation\\dataflow-data-definition.md",
+      "line": 170,
+      "target": "src/constants/dataflow.constants.ts"
+    },
+    {
+      "source": "docs\\explanation\\deprecated-v9-issue-resolution-schedule.md",
+      "line": 25,
+      "target": "src/App.tsx:9,12-16"
+    },
+    {
+      "source": "docs\\explanation\\deprecated-v9-issue-resolution-schedule.md",
+      "line": 26,
+      "target": "src/services/analysis/sectorScoreService.ts:8,52-53"
+    },
+    {
+      "source": "docs\\explanation\\deprecated-v9-issue-resolution-schedule.md",
+      "line": 29,
+      "target": "src/pages/analysis/ScoreDocPage.tsx:14,41"
+    },
+    {
+      "source": "docs\\explanation\\deprecated-v9-issue-resolution-schedule.md",
+      "line": 30,
+      "target": "src/data/themeSymbolPool.ts"
+    },
+    {
+      "source": "docs\\explanation\\deprecated-v9-issue-resolution-schedule.md",
+      "line": 32,
+      "target": "src/core/databridge.ts:97-104"
+    },
+    {
+      "source": "docs\\explanation\\deprecated-v9-issue-resolution-schedule.md",
+      "line": 33,
+      "target": "src/services/trading/tradingService.ts:60-66"
+    },
+    {
+      "source": "docs\\explanation\\deprecated-v9-issue-resolution-schedule.md",
+      "line": 34,
+      "target": "src/store/dataflowStore.ts:35-51"
+    },
+    {
+      "source": "docs\\explanation\\deprecated-v9-issue-resolution-schedule.md",
+      "line": 35,
+      "target": "src/core/databridge.ts:153-162"
+    },
+    {
+      "source": "docs\\explanation\\deprecated-v9-issue-resolution-schedule.md",
+      "line": 36,
+      "target": "src/core/databridge.ts:76-79"
+    },
+    {
+      "source": "docs\\explanation\\deprecated-v9-issue-resolution-schedule.md",
+      "line": 37,
+      "target": "src/core/dataflow/dataflowEngine.ts:74-79"
+    },
+    {
+      "source": "docs\\explanation\\deprecated-v9-issue-resolution-schedule.md",
+      "line": 38,
+      "target": "src/data/db.ts:265-273"
+    },
+    {
+      "source": "docs\\explanation\\deprecated-v9-issue-resolution-schedule.md",
+      "line": 39,
+      "target": "src/apps/trading/TradingApp.tsx:95-125,214-221"
+    },
+    {
+      "source": "docs\\explanation\\deprecated-v9-issue-resolution-schedule.md",
+      "line": 40,
+      "target": "src/apps/input/HotSectorPanel.tsx:63-85,147"
+    },
+    {
+      "source": "docs\\explanation\\deprecated-v9-issue-resolution-schedule.md",
+      "line": 41,
+      "target": "src/apps/analysis/AnalysisApp.tsx:15-39,50-52"
+    },
+    {
+      "source": "docs\\explanation\\deprecated-v9-issue-resolution-schedule.md",
+      "line": 42,
+      "target": "src/components/input/StockSearch.tsx:60-72"
+    },
+    {
+      "source": "docs\\explanation\\deprecated-v9-issue-resolution-schedule.md",
+      "line": 43,
+      "target": "src/pages/input/LocalKnowledgePage.tsx:81-124"
+    },
+    {
+      "source": "docs\\explanation\\deprecated-v9-issue-resolution-schedule.md",
+      "line": 45,
+      "target": "src/App.tsx:12-15"
+    },
+    {
+      "source": "docs\\explanation\\deprecated-v9-issue-resolution-schedule.md",
+      "line": 46,
+      "target": "src/vite-env.d.ts:3-7"
+    },
+    {
+      "source": "docs\\explanation\\design\\07-operation-strategy.md",
+      "line": 100,
+      "target": "docs/explanation/ui-module-alignment.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\2026-06-29-data-architecture-governance.md",
+      "line": 221,
+      "target": "src/core/priorityBroadcastQueue.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\2026-06-29-data-architecture-governance.md",
+      "line": 447,
+      "target": "src/services/analysis/dataFusionEngine.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\ai-center-data-definition.md",
+      "line": 207,
+      "target": "src/types/modules/agent.types.ts:7-15"
+    },
+    {
+      "source": "docs\\explanation\\design\\ai-center-data-definition.md",
+      "line": 219,
+      "target": "src/types/modules/agent.types.ts:17-23"
+    },
+    {
+      "source": "docs\\explanation\\design\\ai-center-data-definition.md",
+      "line": 231,
+      "target": "src/types/modules/agent.types.ts:25-33"
+    },
+    {
+      "source": "docs\\explanation\\design\\ai-center-data-definition.md",
+      "line": 246,
+      "target": "src/types/modules/agent.types.ts:35-43"
+    },
+    {
+      "source": "docs\\explanation\\design\\ai-center-data-definition.md",
+      "line": 263,
+      "target": "src/types/modules/agent.types.ts:51-66"
+    },
+    {
+      "source": "docs\\explanation\\design\\ai-center-data-definition.md",
+      "line": 285,
+      "target": "src/types/modules/agent.types.ts:69-79"
+    },
+    {
+      "source": "docs\\explanation\\design\\ai-center-data-definition.md",
+      "line": 302,
+      "target": "src/types/modules/agent.types.ts:82-94"
+    },
+    {
+      "source": "docs\\explanation\\design\\ai-center-data-definition.md",
+      "line": 321,
+      "target": "src/types/modules/agent.types.ts:97-107"
+    },
+    {
+      "source": "docs\\explanation\\design\\ai-center-data-definition.md",
+      "line": 336,
+      "target": "src/types/modules/agent.types.ts:114-120"
+    },
+    {
+      "source": "docs\\explanation\\design\\ai-center-data-definition.md",
+      "line": 349,
+      "target": "src/types/modules/agent.types.ts:123-127"
+    },
+    {
+      "source": "docs\\explanation\\design\\ai-center-data-definition.md",
+      "line": 360,
+      "target": "src/types/modules/agent.types.ts:130-141"
+    },
+    {
+      "source": "docs\\explanation\\design\\ai-center-data-definition.md",
+      "line": 378,
+      "target": "src/types/modules/agent.types.ts:148-157"
+    },
+    {
+      "source": "docs\\explanation\\design\\ai-center-data-definition.md",
+      "line": 394,
+      "target": "src/types/modules/agent.types.ts:160-165"
+    },
+    {
+      "source": "docs\\explanation\\design\\analysis-screening-module-dev-plan.md",
+      "line": 70,
+      "target": "src/types/modules/[module].types.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\analysis-screening-module-dev-plan.md",
+      "line": 71,
+      "target": "src/store/[module]Store.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\analysis-screening-module-dev-plan.md",
+      "line": 72,
+      "target": "src/services/[module]/[module]Service.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\analysis-screening-module-dev-plan.md",
+      "line": 184,
+      "target": "src/services/sector/sectorScoreService.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\analysis-screening-module-dev-plan.md",
+      "line": 186,
+      "target": "src/store/screeningStore.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\analysis-screening-module-dev-plan.md",
+      "line": 223,
+      "target": "src/services/backtest/backtestService.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\analysis-screening-module-dev-plan.md",
+      "line": 252,
+      "target": "src/services/score/V6ScoreEngine.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\analysis-screening-module-dev-plan.md",
+      "line": 252,
+      "target": "src/engine/V6ScoreEngine.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\analysis-screening-module-dev-plan.md",
+      "line": 253,
+      "target": "src/config/V6ScoreWeightsConfig.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\analysis-screening-module-dev-plan.md",
+      "line": 253,
+      "target": "src/config/V6ScoreThresholdsConfig.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\analysis-screening-module-dev-plan.md",
+      "line": 305,
+      "target": "src/pages/analysis/MultiFactorScreeningPage.tsx"
+    },
+    {
+      "source": "docs\\explanation\\design\\analysis-screening-module-dev-plan.md",
+      "line": 308,
+      "target": "src/components/analysis/score/FactorContributionWaterfall.tsx"
+    },
+    {
+      "source": "docs\\explanation\\design\\architecture-compliance-report.md",
+      "line": 85,
+      "target": "src/types/modules/trading.types.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\architecture-compliance-report.md",
+      "line": 98,
+      "target": "src/types/modules/trading.types.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\architecture-compliance-report.md",
+      "line": 118,
+      "target": "src/services/hybrid-proofread/reportGenerator.ts:286-291"
+    },
+    {
+      "source": "docs\\explanation\\design\\audit-b4-3-performance.md",
+      "line": 170,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:529-531"
+    },
+    {
+      "source": "docs\\explanation\\design\\audit-b4-3-performance.md",
+      "line": 170,
+      "target": "src/services/scoring/hotSectorAnalyzer.ts:624-626"
+    },
+    {
+      "source": "docs\\explanation\\design\\audit-b4-3-performance.md",
+      "line": 267,
+      "target": "src/pages/trading/components/VirtualizedHoldingsTable.tsx:59,122,159,240,243,257"
+    },
+    {
+      "source": "docs\\explanation\\design\\audit-b4-3-performance.md",
+      "line": 268,
+      "target": "src/components/ui/LoadingState.tsx:52,134"
+    },
+    {
+      "source": "docs\\explanation\\design\\audit-b4-3-performance.md",
+      "line": 269,
+      "target": "src/components/ui/Slider.tsx:41,69"
+    },
+    {
+      "source": "docs\\explanation\\design\\code-review-training.md",
+      "line": 475,
+      "target": "src/services/xxx.ts:120-180"
+    },
+    {
+      "source": "docs\\explanation\\design\\completeness-profile-batch4.md",
+      "line": 95,
+      "target": "src/pages/trading/TradingHubPage.tsx:36/42"
+    },
+    {
+      "source": "docs\\explanation\\design\\data-collection-route-ui-audit.md",
+      "line": 256,
+      "target": "src/pages/input/CollectMonitor.tsx"
+    },
+    {
+      "source": "docs\\explanation\\design\\data-collection-route-ui-audit.md",
+      "line": 259,
+      "target": "src/pages/input/DataDashboard.tsx"
+    },
+    {
+      "source": "docs\\explanation\\design\\data-collection-route-ui-audit.md",
+      "line": 260,
+      "target": "src/components/pipeline/DataPipeline.tsx"
+    },
+    {
+      "source": "docs\\explanation\\design\\data-definition.md",
+      "line": 28,
+      "target": "src/types/modules/widget.types.ts:63-92"
+    },
+    {
+      "source": "docs\\explanation\\design\\data-definition.md",
+      "line": 247,
+      "target": "src/types/modules/widget.types.ts:337-354"
+    },
+    {
+      "source": "docs\\explanation\\design\\data-definition.md",
+      "line": 260,
+      "target": "src/types/modules/widget.types.ts:357-377"
+    },
+    {
+      "source": "docs\\explanation\\design\\data-definition.md",
+      "line": 337,
+      "target": "src/cockpit/core/widgetRegistry.ts:9-14"
+    },
+    {
+      "source": "docs\\explanation\\design\\data-definition.md",
+      "line": 377,
+      "target": "src/constants/cockpit.constants.ts:163-167"
+    },
+    {
+      "source": "docs\\explanation\\design\\data-definition.md",
+      "line": 387,
+      "target": "src/constants/cockpit.constants.ts:170-174"
+    },
+    {
+      "source": "docs\\explanation\\design\\data-definition.md",
+      "line": 409,
+      "target": "src/constants/cockpit.constants.ts:7-13"
+    },
+    {
+      "source": "docs\\explanation\\design\\data-definition.md",
+      "line": 421,
+      "target": "src/constants/cockpit.constants.ts:15-20"
+    },
+    {
+      "source": "docs\\explanation\\design\\data-definition.md",
+      "line": 432,
+      "target": "src/constants/cockpit.constants.ts:29-33"
+    },
+    {
+      "source": "docs\\explanation\\design\\data-definition.md",
+      "line": 442,
+      "target": "src/constants/cockpit.constants.ts:51-57"
+    },
+    {
+      "source": "docs\\explanation\\design\\data-definition.md",
+      "line": 454,
+      "target": "src/constants/cockpit.constants.ts:62-81"
+    },
+    {
+      "source": "docs\\explanation\\design\\data-definition.md",
+      "line": 464,
+      "target": "src/constants/cockpit.constants.ts:86-92"
+    },
+    {
+      "source": "docs\\explanation\\design\\data-definition.md",
+      "line": 476,
+      "target": "src/constants/cockpit.constants.ts:97-104"
+    },
+    {
+      "source": "docs\\explanation\\design\\data-definition.md",
+      "line": 489,
+      "target": "src/constants/cockpit.constants.ts:109-114"
+    },
+    {
+      "source": "docs\\explanation\\design\\data-definition.md",
+      "line": 500,
+      "target": "src/constants/cockpit.constants.ts:119-125"
+    },
+    {
+      "source": "docs\\explanation\\design\\data-definition.md",
+      "line": 512,
+      "target": "src/constants/cockpit.constants.ts:141-146"
+    },
+    {
+      "source": "docs\\explanation\\design\\data-definition.md",
+      "line": 523,
+      "target": "src/constants/cockpit.constants.ts:41-49"
+    },
+    {
+      "source": "docs\\explanation\\design\\data-definition.md",
+      "line": 537,
+      "target": "src/constants/cockpit.constants.ts:176-223"
+    },
+    {
+      "source": "docs\\explanation\\design\\data-definition.md",
+      "line": 552,
+      "target": "src/constants/cockpit.constants.ts:1-5"
+    },
+    {
+      "source": "docs\\explanation\\design\\data-dictionary-index.md",
+      "line": 107,
+      "target": "docs/explanation/doc-sync-gap-list.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\dataflow-data-definition.md",
+      "line": 153,
+      "target": "src/constants/dataflow.constants.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\deprecated-doc-sync-gap-list.md",
+      "line": 26,
+      "target": "docs/explanation/v9-issue-resolution-schedule.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\doc-cross-check-report.md",
+      "line": 154,
+      "target": "src/store/sevenDimConfigStore.ts:35-87"
+    },
+    {
+      "source": "docs\\explanation\\design\\doc-sync-execution-plan.md",
+      "line": 90,
+      "target": "docs/explanation/v9-issue-resolution-schedule.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\doc-sync-execution-plan.md",
+      "line": 165,
+      "target": "docs/explanation/doc-sync-gap-list.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\input-cabin-spec.md",
+      "line": 232,
+      "target": "src/apps/input/FetcherConfigPanel.tsx"
+    },
+    {
+      "source": "docs\\explanation\\design\\mcp-coupling-analysis-report.md",
+      "line": 478,
+      "target": "src/constants/event-names.constants.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\multi-factor-screening-data-definition.md",
+      "line": 29,
+      "target": "src/pages/analysis/MultiFactorScreeningPage.tsx"
+    },
+    {
+      "source": "docs\\explanation\\design\\pending-items-backlog-20260704.md",
+      "line": 48,
+      "target": "src/agents/handlers/llmIntelligentHandler.ts:268,275"
+    },
+    {
+      "source": "docs\\explanation\\design\\pending-items-backlog-20260704.md",
+      "line": 51,
+      "target": "src/components/analysis/SectorRotationHeatmap.tsx:27,54"
+    },
+    {
+      "source": "docs\\explanation\\design\\pending-items-backlog-20260704.md",
+      "line": 167,
+      "target": "src/apps/input/BulkImportProto.tsx"
+    },
+    {
+      "source": "docs\\explanation\\design\\pending-items-backlog-20260704.md",
+      "line": 168,
+      "target": "src/apps/input/DashboardProto.tsx"
+    },
+    {
+      "source": "docs\\explanation\\design\\pending-items-backlog-20260704.md",
+      "line": 169,
+      "target": "src/apps/input/DataTestProto.tsx"
+    },
+    {
+      "source": "docs\\explanation\\design\\pending-items-backlog-20260704.md",
+      "line": 170,
+      "target": "src/apps/input/HotSectorProto.tsx"
+    },
+    {
+      "source": "docs\\explanation\\design\\pending-items-backlog-20260704.md",
+      "line": 171,
+      "target": "src/apps/input/InputPrototype.tsx"
+    },
+    {
+      "source": "docs\\explanation\\design\\quality-audit-plan.md",
+      "line": 55,
+      "target": "src/pages/input/InputHubPage"
+    },
+    {
+      "source": "docs\\explanation\\design\\quality-audit-plan.md",
+      "line": 69,
+      "target": "src/pages/analysis/AnalysisHubPage"
+    },
+    {
+      "source": "docs\\explanation\\design\\quality-audit-plan.md",
+      "line": 78,
+      "target": "src/pages/analysis/HotSectorStrategyPage"
+    },
+    {
+      "source": "docs\\explanation\\design\\quality-audit-plan.md",
+      "line": 86,
+      "target": "src/pages/trading/TradingHubPage"
+    },
+    {
+      "source": "docs\\explanation\\design\\quality-audit-plan.md",
+      "line": 107,
+      "target": "src/pages/command/CommandHubPage"
+    },
+    {
+      "source": "docs\\explanation\\design\\solo-review.md",
+      "line": 405,
+      "target": "src/lib/validators.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\tech-debt.md",
+      "line": 324,
+      "target": "src/lib/validators.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\trading-core-factors.md",
+      "line": 210,
+      "target": "src/services/trading/timingEngine.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\ui-design-agent-execution-plan.md",
+      "line": 308,
+      "target": "docs/ui-design-execution-plan.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\ui-only-implementation-summary.md",
+      "line": 172,
+      "target": "src/data/rotationData"
+    },
+    {
+      "source": "docs\\explanation\\design\\ui改善部分检索报告.md",
+      "line": 33,
+      "target": "src/generated/tokens.css\\|tokens.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\v6-v9-architecture-audit-action-list.md",
+      "line": 53,
+      "target": "src/portal/PortalShell.tsx:39-53"
+    },
+    {
+      "source": "docs\\explanation\\design\\v6-v9-architecture-audit-action-list.md",
+      "line": 66,
+      "target": "src/config/routes.ts:226-230"
+    },
+    {
+      "source": "docs\\explanation\\design\\v6-v9-architecture-audit-action-list.md",
+      "line": 81,
+      "target": "src/services/ai-center/mockAICenterProvider.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\v6-v9-architecture-audit-action-list.md",
+      "line": 81,
+      "target": "src/services/trading/mockHoldingsData.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\v6-v9-architecture-audit-action-list.md",
+      "line": 89,
+      "target": "src/config/routes.ts:214-244"
+    },
+    {
+      "source": "docs\\explanation\\design\\v6-v9界面设计优化可行性计划.md",
+      "line": 87,
+      "target": "src/components/output/ResultCard.tsx"
+    },
+    {
+      "source": "docs\\explanation\\design\\v6pro-ui-page-diff-report.md",
+      "line": 265,
+      "target": "src/pages/analysis/SectorRotationPage.tsx"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-acceptance-report.md",
+      "line": 169,
+      "target": "docs/explanation/dual-strategy-divergence-list.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-architecture-rectification-strategy.md",
+      "line": 190,
+      "target": "src/store/inputDashboardStore.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
+      "line": 60,
+      "target": "src/apps/input/InputDashboard.tsx:17-20"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
+      "line": 61,
+      "target": "src/apps/input/DataTestPanel.tsx:6-10"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
+      "line": 61,
+      "target": "src/services/input/dataTestService.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
+      "line": 63,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:160-170"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
+      "line": 64,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:173-178"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
+      "line": 65,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:181-185"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
+      "line": 66,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:188-194"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
+      "line": 67,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:212-218"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
+      "line": 68,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:221-227"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
+      "line": 69,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:230-236"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
+      "line": 70,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:253-263"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
+      "line": 71,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:290-300"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
+      "line": 72,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:303-309"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
+      "line": 73,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:312-316"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
+      "line": 74,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:345-353"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
+      "line": 75,
+      "target": "src/services/scoring/hotSectorAnalyzer.ts:139-145"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
+      "line": 76,
+      "target": "src/services/scoring/hotSectorAnalyzer.ts:148-152"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
+      "line": 77,
+      "target": "src/services/scoring/hotSectorAnalyzer.ts:183-193"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
+      "line": 78,
+      "target": "src/services/scoring/hotSectorAnalyzer.ts:245-251"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
+      "line": 79,
+      "target": "src/services/scoring/hotSectorAnalyzer.ts:278-290"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-code-quality-kanban-20260629.md",
+      "line": 80,
+      "target": "src/services/scoring/hotSectorAnalyzer.ts:377-383"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-current-state-review.md",
+      "line": 481,
+      "target": "src/services/output/reviewEngine.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-current-state-review.md",
+      "line": 481,
+      "target": "src/services/system/reviewEngine.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
+      "line": 104,
+      "target": "implementation/ui-module-alignment.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
+      "line": 242,
+      "target": "docs/explanation/route-registry-audit-notes.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
+      "line": 244,
+      "target": "docs/implementation/adr/2026-06-24-v6-migration.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
+      "line": 297,
+      "target": "docs/explanation/route-registry-audit-notes.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-p0-remediation-plan.md",
+      "line": 94,
+      "target": "src/config/fetcherConfig.ts:310-322"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-p0-remediation-plan.md",
+      "line": 112,
+      "target": "src/config/fetcherConfig.ts:310-322"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-p0-remediation-plan.md",
+      "line": 845,
+      "target": "src/components/analysis/sector/SectorRotationHeatmap.test.tsx"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-p0-remediation-plan.md",
+      "line": 854,
+      "target": "src/components/analysis/sector/SectorRotationHeatmap.test.tsx"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-p0-remediation-plan.md",
+      "line": 869,
+      "target": "src/components/analysis/sector/SectorRotationHeatmap.test.tsx"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9现有数据资产清单.md",
+      "line": 120,
+      "target": "docs/audit/report-1-architecture-health.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9现有数据资产清单.md",
+      "line": 121,
+      "target": "docs/audit/report-2-function-completeness.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9现有数据资产清单.md",
+      "line": 122,
+      "target": "docs/audit/report-3-data-type-consistency.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9现有数据资产清单.md",
+      "line": 123,
+      "target": "docs/audit/report-4-test-quality-gates.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9现有数据资产清单.md",
+      "line": 124,
+      "target": "docs/audit/report-5-documentation-completeness.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9现有数据资产清单.md",
+      "line": 126,
+      "target": "docs/audit/report-7-ui-component-supplementary-audit.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9现有数据资产清单.md",
+      "line": 142,
+      "target": "docs/explanation/dual-strategy-divergence-list.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9现有数据资产清单.md",
+      "line": 307,
+      "target": "src/services/analysis/dataFusionEngine.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9现有数据资产清单.md",
+      "line": 309,
+      "target": "src/services/analysis/sectorScoreService.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\数据治理路线图.md",
+      "line": 171,
+      "target": "docs/data-store-schema.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\数据治理路线图.md",
+      "line": 172,
+      "target": "docs/data-store-schema.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\数据治理路线图.md",
+      "line": 183,
+      "target": "src/types/modules/common.types.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\数据治理路线图.md",
+      "line": 184,
+      "target": "src/types/modules/common.types.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\数据治理路线图.md",
+      "line": 222,
+      "target": "scripts/audit-data-consistency.ts"
+    },
+    {
+      "source": "docs\\explanation\\design\\数据治理路线图.md",
+      "line": 230,
+      "target": "docs/data-lineage.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\数据治理路线图.md",
+      "line": 246,
+      "target": "docs/pwa-offline-data-strategy.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\踩坑规则门禁指南.md",
+      "line": 464,
+      "target": "file:///c:/Users/huawei/Desktop/LU/.trae/skills/ai-driven-app-development/prompts/踩坑备忘录.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\迁移风险复盘与应对策略文档.md",
+      "line": 389,
+      "target": "scripts/regression_news_v6_test.cjs"
+    },
+    {
+      "source": "docs\\explanation\\factor-tracking-roadmap.md",
+      "line": 73,
+      "target": "src/services/scoring/factorOptimizationService.ts"
+    },
+    {
+      "source": "docs\\explanation\\factor-tracking-roadmap.md",
+      "line": 90,
+      "target": "src/services/scoring/factorDriftService.ts"
+    },
+    {
+      "source": "docs\\explanation\\factor-tracking-roadmap.md",
+      "line": 111,
+      "target": "src/services/marketData/xxxAdapter.ts"
+    },
+    {
+      "source": "docs\\explanation\\migration-news-useState-to-zustand.md",
+      "line": 82,
+      "target": "src/pages/news-v6/components/NewsFeed.tsx"
+    },
+    {
+      "source": "docs\\explanation\\migration-news-useState-to-zustand.md",
+      "line": 183,
+      "target": "src/store/newsStore.selectors.ts"
+    },
+    {
+      "source": "docs\\explanation\\multi-factor-screening-data-definition.md",
+      "line": 46,
+      "target": "src/pages/analysis/MultiFactorScreeningPage.tsx"
+    },
+    {
+      "source": "docs\\explanation\\optimization-progress-report.md",
+      "line": 55,
+      "target": "src/lib/dataValidation.test.ts"
+    },
+    {
+      "source": "docs\\explanation\\optimization-progress-report.md",
+      "line": 210,
+      "target": "src/core/databridgeHandlers.ts::deleteIndexedRecords"
+    },
+    {
+      "source": "docs\\explanation\\optimization-progress-report.md",
+      "line": 214,
+      "target": "src/services/resilience.ts::withRetry"
+    },
+    {
+      "source": "docs\\explanation\\optimization-progress-report.md",
+      "line": 235,
+      "target": "src/mcp/core/server.ts::readResource"
+    },
+    {
+      "source": "docs\\explanation\\optimization-progress-report.md",
+      "line": 235,
+      "target": "src/mcp/core/client.ts::readResource"
+    },
+    {
+      "source": "docs\\explanation\\optimization-progress-report.md",
+      "line": 255,
+      "target": "src/services/fetcher/fetcherClient.ts::request"
+    },
+    {
+      "source": "docs\\explanation\\optimization-progress-report.md",
+      "line": 256,
+      "target": "src/services/scoring/v6-engine/engine.ts::calculateAll"
+    },
+    {
+      "source": "docs\\explanation\\optimization-progress-report.md",
+      "line": 314,
+      "target": "src/services/resilience.ts::guard"
+    },
+    {
+      "source": "docs\\explanation\\optimization-progress-report.md",
+      "line": 319,
+      "target": "src/store/marketDataStore.ts(462)"
+    },
+    {
+      "source": "docs\\explanation\\pending-items-backlog-20260704.md",
+      "line": 59,
+      "target": "src/agents/handlers/llmIntelligentHandler.ts:268,275"
+    },
+    {
+      "source": "docs\\explanation\\pending-items-backlog-20260704.md",
+      "line": 62,
+      "target": "src/components/analysis/SectorRotationHeatmap.tsx:27,54"
+    },
+    {
+      "source": "docs\\explanation\\pending-items-backlog-20260704.md",
+      "line": 178,
+      "target": "src/apps/input/BulkImportProto.tsx"
+    },
+    {
+      "source": "docs\\explanation\\pending-items-backlog-20260704.md",
+      "line": 179,
+      "target": "src/apps/input/DashboardProto.tsx"
+    },
+    {
+      "source": "docs\\explanation\\pending-items-backlog-20260704.md",
+      "line": 180,
+      "target": "src/apps/input/DataTestProto.tsx"
+    },
+    {
+      "source": "docs\\explanation\\pending-items-backlog-20260704.md",
+      "line": 181,
+      "target": "src/apps/input/HotSectorProto.tsx"
+    },
+    {
+      "source": "docs\\explanation\\pending-items-backlog-20260704.md",
+      "line": 182,
+      "target": "src/apps/input/InputPrototype.tsx"
+    },
+    {
+      "source": "docs\\explanation\\seven-dim-config-data-definition.md",
+      "line": 46,
+      "target": "src/config/collectConfig.ts:19-30"
+    },
+    {
+      "source": "docs\\explanation\\seven-dim-config-data-definition.md",
+      "line": 112,
+      "target": "src/config/collectConfig.ts:100-121"
+    },
+    {
+      "source": "docs\\explanation\\seven-dim-config-data-definition.md",
+      "line": 146,
+      "target": "src/config/collectConfig.ts:129-141"
+    },
+    {
+      "source": "docs\\explanation\\seven-dim-config-data-definition.md",
+      "line": 165,
+      "target": "src/config/collectConfig.ts:195-292"
+    },
+    {
+      "source": "docs\\explanation\\seven-dim-config-data-definition.md",
+      "line": 190,
+      "target": "src/data/types.ts:694-703"
+    },
+    {
+      "source": "docs\\explanation\\seven-dim-config-data-definition.md",
+      "line": 194,
+      "target": "src/config/collectConfig.ts:143-189"
+    },
+    {
+      "source": "docs\\explanation\\seven-dim-config-data-definition.md",
+      "line": 210,
+      "target": "src/config/collectConfig.ts:320-333"
+    },
+    {
+      "source": "docs\\explanation\\seven-dim-config-data-definition.md",
+      "line": 227,
+      "target": "src/config/collectConfig.ts:298-307"
+    },
+    {
+      "source": "docs\\explanation\\seven-dim-config-data-definition.md",
+      "line": 246,
+      "target": "src/config/collectConfig.ts:345-358"
+    },
+    {
+      "source": "docs\\explanation\\seven-dim-config-data-definition.md",
+      "line": 259,
+      "target": "src/store/sevenDimConfigStore.ts:35-87"
+    },
+    {
+      "source": "docs\\explanation\\trading-core-factors.md",
+      "line": 212,
+      "target": "src/services/trading/timingEngine.ts"
+    },
+    {
+      "source": "docs\\explanation\\ui-design-agent-execution-plan.md",
+      "line": 310,
+      "target": "docs/ui-design-execution-plan.md"
+    },
+    {
+      "source": "docs\\explanation\\ui-only-implementation-summary.md",
+      "line": 174,
+      "target": "src/data/rotationData"
+    },
+    {
+      "source": "docs\\explanation\\v10-architecture-alignment.md",
+      "line": 105,
+      "target": "src/apps/trading/gateway.ts"
+    },
+    {
+      "source": "docs\\explanation\\v10-architecture-alignment.md",
+      "line": 117,
+      "target": "src/core/stateBoard.ts"
+    },
+    {
+      "source": "docs\\explanation\\v6-v9-architecture-audit-action-list.md",
+      "line": 55,
+      "target": "src/portal/PortalShell.tsx:39-53"
+    },
+    {
+      "source": "docs\\explanation\\v6-v9-architecture-audit-action-list.md",
+      "line": 68,
+      "target": "src/config/routes.ts:226-230"
+    },
+    {
+      "source": "docs\\explanation\\v6-v9-architecture-audit-action-list.md",
+      "line": 83,
+      "target": "src/services/ai-center/mockAICenterProvider.ts"
+    },
+    {
+      "source": "docs\\explanation\\v6-v9-architecture-audit-action-list.md",
+      "line": 83,
+      "target": "src/services/trading/mockHoldingsData.ts"
+    },
+    {
+      "source": "docs\\explanation\\v6-v9-architecture-audit-action-list.md",
+      "line": 91,
+      "target": "src/config/routes.ts:214-244"
+    },
+    {
+      "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
+      "line": 332,
+      "target": "src/pages/SevenDimCollectPage.tsx"
+    },
+    {
+      "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
+      "line": 332,
+      "target": "src/components/collect/CollectParamPanel.tsx"
+    },
+    {
+      "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
+      "line": 333,
+      "target": "src/pages/StockPoolPage.tsx"
+    },
+    {
+      "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
+      "line": 333,
+      "target": "src/pages/StockPool.tsx"
+    },
+    {
+      "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
+      "line": 334,
+      "target": "src/data/rotationData.ts"
+    },
+    {
+      "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
+      "line": 343,
+      "target": "src/cockpit/core/bus.ts"
+    },
+    {
+      "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
+      "line": 345,
+      "target": "src/components/trading/PortfolioManager.tsx"
+    },
+    {
+      "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
+      "line": 346,
+      "target": "src/components/trading/SimulatedTrading.tsx"
+    },
+    {
+      "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
+      "line": 347,
+      "target": "src/components/trading/TradeReviewDashboard.tsx"
+    },
+    {
+      "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
+      "line": 349,
+      "target": "src/data/knowledgeBase.ts"
+    },
+    {
+      "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
+      "line": 349,
+      "target": "src/lib/rag.ts"
+    },
+    {
+      "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
+      "line": 355,
+      "target": "src/pages/AgentManagerPage.tsx"
+    },
+    {
+      "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
+      "line": 355,
+      "target": "src/components/agents/AgentManagerPanel.tsx"
+    },
+    {
+      "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
+      "line": 356,
+      "target": "src/pages/AIAssistant.tsx"
+    },
+    {
+      "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
+      "line": 357,
+      "target": "src/pages/DataManagement.tsx"
+    },
+    {
+      "source": "docs\\explanation\\v6pro-to-v9-migration-analysis.md",
+      "line": 357,
+      "target": "src/pages/DataHubPage.tsx"
+    },
+    {
+      "source": "docs\\explanation\\v6pro-ui-page-diff-report.md",
+      "line": 267,
+      "target": "src/pages/analysis/SectorRotationPage.tsx"
+    },
+    {
+      "source": "docs\\explanation\\v9-issue-management.md",
+      "line": 50,
+      "target": "src/data/themeSymbolPool.ts"
+    },
+    {
+      "source": "docs\\explanation\\v9-架构缺陷与整改行动清单.md",
+      "line": 76,
+      "target": "src/pages/trading/TradingHubPage.tsx:36/42"
+    },
+    {
+      "source": "docs\\explanation\\v9-架构缺陷与整改行动清单.md",
+      "line": 77,
+      "target": "src/pages/command/CommandHubPage.tsx:35/41"
+    },
+    {
+      "source": "docs\\explanation\\v9-架构缺陷与整改行动清单.md",
+      "line": 117,
+      "target": "src/pages/command/CommandHubPage.tsx:46-79"
+    },
+    {
+      "source": "docs\\explanation\\v9-架构缺陷与整改行动清单.md",
+      "line": 123,
+      "target": "src/pages/MockTestPage.tsx:16-26"
+    },
+    {
+      "source": "docs\\how-to\\code-review-guide.md",
+      "line": 221,
+      "target": "src/cockpit/widgets/XxxWidget.tsx"
+    },
+    {
+      "source": "docs\\how-to\\FILE-MANAGEMENT-GUIDE.md",
+      "line": 228,
+      "target": "scripts/cleanup-temp.ts"
+    },
+    {
+      "source": "docs\\how-to\\FILE-MANAGEMENT-GUIDE.md",
+      "line": 241,
+      "target": ".agents/skills/docs-as-mirror/SKILL.md"
+    },
+    {
+      "source": "docs\\how-to\\FILE-MANAGEMENT-GUIDE.md",
+      "line": 241,
+      "target": "prompts/docs-as-mirror-quickref.md"
+    },
+    {
+      "source": "docs\\how-to\\testing\\testing-strategy.md",
+      "line": 56,
+      "target": "src/xxx/ModuleName.test.ts"
+    },
+    {
+      "source": "docs\\how-to\\visual-regression-guide.md",
+      "line": 127,
+      "target": "scripts/compare-visual-baselines.sh"
+    },
+    {
+      "source": "docs\\prompts\\README.md",
+      "line": 286,
+      "target": "../../prompts/../../prompts/../../prompts/../../prompts/system-prompt-template.md"
+    },
+    {
+      "source": "docs\\prompts\\README.md",
+      "line": 294,
+      "target": "../../prompts/../../prompts/../../prompts/../../prompts/system-prompt-template.md"
+    },
+    {
+      "source": "docs\\prompts\\README.md",
+      "line": 300,
+      "target": "../../prompts/../../prompts/../../prompts/../../prompts/system-prompt-template.md"
+    },
+    {
+      "source": "docs\\prompts\\README.md",
+      "line": 302,
+      "target": "../../prompts/../../prompts/../../prompts/../../prompts/system-prompt-template.md"
+    },
+    {
+      "source": "docs\\prompts\\README.md",
+      "line": 326,
+      "target": "src/pages/command/agent/LlmManagementPage.tsx"
+    },
+    {
+      "source": "docs\\prompts\\README.md",
+      "line": 336,
+      "target": "scripts/quick-query.sh"
+    },
+    {
+      "source": "docs\\reference\\03-architecture-standards.md",
+      "line": 609,
+      "target": "src/config/weights.ts"
+    },
+    {
+      "source": "docs\\reference\\07-operation-strategy.md",
+      "line": 102,
+      "target": "docs/explanation/ui-module-alignment.md"
+    },
+    {
+      "source": "docs\\reference\\2026-07-04-ui-testing-optimization.md",
+      "line": 488,
+      "target": "src/pages/input/__tests__/InputHubPage.test.tsx"
+    },
+    {
+      "source": "docs\\reference\\2026-07-04-ui-testing-optimization.md",
+      "line": 589,
+      "target": "src/pages/analysis/__tests__/AnalysisHubPage.test.tsx"
+    },
+    {
+      "source": "docs\\reference\\2026-07-04-ui-testing-optimization.md",
+      "line": 678,
+      "target": "src/pages/trading/__tests__/TradingHubPage.test.tsx"
+    },
+    {
+      "source": "docs\\reference\\2026-07-04-ui-testing-optimization.md",
+      "line": 815,
+      "target": "src/pages/command/__tests__/CommandHubPage.test.tsx"
+    },
+    {
+      "source": "docs\\reference\\agent-audit-report.md",
+      "line": 36,
+      "target": "src/agents/index.ts:72-78"
+    },
+    {
+      "source": "docs\\reference\\agent-audit-report.md",
+      "line": 42,
+      "target": ".agents/skills/intelligent-score/SKILL.md"
+    },
+    {
+      "source": "docs\\reference\\agent-audit-report.md",
+      "line": 43,
+      "target": ".agents/skills/industry-score/SKILL.md"
+    },
+    {
+      "source": "docs\\reference\\agent-audit-report.md",
+      "line": 198,
+      "target": "src/agents/index.ts:178-184"
+    },
+    {
+      "source": "docs\\reference\\agent-audit-report.md",
+      "line": 274,
+      "target": "src/agents/agentRuntime.ts:94-117"
+    },
+    {
+      "source": "docs\\reference\\agent-audit-report.md",
+      "line": 324,
+      "target": ".agents/skills/v6-stock-analysis-model/SKILL.md"
+    },
+    {
+      "source": "docs\\reference\\agent-audit-report.md",
+      "line": 325,
+      "target": ".agents/skills/sector-analysis-framework/SKILL.md"
+    },
+    {
+      "source": "docs\\reference\\agent-audit-report.md",
+      "line": 326,
+      "target": ".agents/skills/valuation-financial-analysis/SKILL.md"
+    },
+    {
+      "source": "docs\\reference\\agent-audit-report.md",
+      "line": 327,
+      "target": ".agents/skills/industry-score-mapping/SKILL.md"
+    },
+    {
+      "source": "docs\\reference\\agent-audit-report.md",
+      "line": 328,
+      "target": ".agents/skills/v6-docx-output/SKILL.md"
+    },
+    {
+      "source": "docs\\reference\\agent-audit-report.md",
+      "line": 455,
+      "target": ".agents/skills/intelligent-score/SKILL.md"
+    },
+    {
+      "source": "docs\\reference\\agent-audit-report.md",
+      "line": 456,
+      "target": ".agents/skills/industry-score/SKILL.md"
+    },
+    {
+      "source": "docs\\reference\\ai-center-contract.md",
+      "line": 212,
+      "target": "src/services/ai-center/__tests__/aiCenterProvider.test.ts"
+    },
+    {
+      "source": "docs\\reference\\ai-center-data-definition.md",
+      "line": 207,
+      "target": "src/types/modules/agent.types.ts:7-15"
+    },
+    {
+      "source": "docs\\reference\\ai-center-data-definition.md",
+      "line": 219,
+      "target": "src/types/modules/agent.types.ts:17-23"
+    },
+    {
+      "source": "docs\\reference\\ai-center-data-definition.md",
+      "line": 231,
+      "target": "src/types/modules/agent.types.ts:25-33"
+    },
+    {
+      "source": "docs\\reference\\ai-center-data-definition.md",
+      "line": 246,
+      "target": "src/types/modules/agent.types.ts:35-43"
+    },
+    {
+      "source": "docs\\reference\\ai-center-data-definition.md",
+      "line": 263,
+      "target": "src/types/modules/agent.types.ts:51-66"
+    },
+    {
+      "source": "docs\\reference\\ai-center-data-definition.md",
+      "line": 285,
+      "target": "src/types/modules/agent.types.ts:69-79"
+    },
+    {
+      "source": "docs\\reference\\ai-center-data-definition.md",
+      "line": 302,
+      "target": "src/types/modules/agent.types.ts:82-94"
+    },
+    {
+      "source": "docs\\reference\\ai-center-data-definition.md",
+      "line": 321,
+      "target": "src/types/modules/agent.types.ts:97-107"
+    },
+    {
+      "source": "docs\\reference\\ai-center-data-definition.md",
+      "line": 336,
+      "target": "src/types/modules/agent.types.ts:114-120"
+    },
+    {
+      "source": "docs\\reference\\ai-center-data-definition.md",
+      "line": 349,
+      "target": "src/types/modules/agent.types.ts:123-127"
+    },
+    {
+      "source": "docs\\reference\\ai-center-data-definition.md",
+      "line": 360,
+      "target": "src/types/modules/agent.types.ts:130-141"
+    },
+    {
+      "source": "docs\\reference\\ai-center-data-definition.md",
+      "line": 378,
+      "target": "src/types/modules/agent.types.ts:148-157"
+    },
+    {
+      "source": "docs\\reference\\ai-center-data-definition.md",
+      "line": 394,
+      "target": "src/types/modules/agent.types.ts:160-165"
+    },
+    {
+      "source": "docs\\reference\\ai-generate-audit-fix-loop.md",
+      "line": 107,
+      "target": "scripts/ai-dev-loop.ts"
+    },
+    {
+      "source": "docs\\reference\\ai-memory-layer.md",
+      "line": 69,
+      "target": "prompts/system-prompt-template.md"
+    },
+    {
+      "source": "docs\\reference\\api-contract.md",
+      "line": 179,
+      "target": "src/services/trading/tradingService.ts:23-29"
+    },
+    {
+      "source": "docs\\reference\\api-contract.md",
+      "line": 191,
+      "target": "src/services/trading/tradingService.ts:55-59"
+    },
+    {
+      "source": "docs\\reference\\api-contract.md",
+      "line": 201,
+      "target": "src/data/types.ts:237-246"
+    },
+    {
+      "source": "docs\\reference\\api-contract.md",
+      "line": 228,
+      "target": "src/services/trading/riskEngine.ts:9-15"
+    },
+    {
+      "source": "docs\\reference\\api-contract.md",
+      "line": 240,
+      "target": "src/services/trading/riskEngine.ts:19-23"
+    },
+    {
+      "source": "docs\\reference\\api-contract.md",
+      "line": 253,
+      "target": "src/services/trading/positionSizer.ts:4-13"
+    },
+    {
+      "source": "docs\\reference\\api-contract.md",
+      "line": 268,
+      "target": "src/services/trading/positionSizer.ts:15-23"
+    },
+    {
+      "source": "docs\\reference\\api-contract.md",
+      "line": 282,
+      "target": "src/services/trading/scoringAdapter.ts:13-29"
+    },
+    {
+      "source": "docs\\reference\\api-contract.md",
+      "line": 297,
+      "target": "src/services/trading/portfolioBuilder.ts:10-22"
+    },
+    {
+      "source": "docs\\reference\\api-contract.md",
+      "line": 310,
+      "target": "src/services/trading/strategyEngine.ts:21-28"
+    },
+    {
+      "source": "docs\\reference\\api-contract.md",
+      "line": 357,
+      "target": "src/services/trading/tradingService.ts:22-28"
+    },
+    {
+      "source": "docs\\reference\\api-contract.md",
+      "line": 358,
+      "target": "src/services/trading/tradingService.ts:54-58"
+    },
+    {
+      "source": "docs\\reference\\api-contract.md",
+      "line": 359,
+      "target": "src/services/trading/riskEngine.ts:6-12"
+    },
+    {
+      "source": "docs\\reference\\api-contract.md",
+      "line": 360,
+      "target": "src/services/trading/riskEngine.ts:14-18"
+    },
+    {
+      "source": "docs\\reference\\api-contract.md",
+      "line": 361,
+      "target": "src/services/trading/positionSizer.ts:4-13"
+    },
+    {
+      "source": "docs\\reference\\api-contract.md",
+      "line": 362,
+      "target": "src/services/trading/positionSizer.ts:15-23"
+    },
+    {
+      "source": "docs\\reference\\api-contract.md",
+      "line": 363,
+      "target": "src/services/trading/scoringAdapter.ts:13-29"
+    },
+    {
+      "source": "docs\\reference\\api-contract.md",
+      "line": 364,
+      "target": "src/services/trading/portfolioBuilder.ts:9-21"
+    },
+    {
+      "source": "docs\\reference\\api-contract.md",
+      "line": 365,
+      "target": "src/services/trading/strategyEngine.ts:17-24"
+    },
+    {
+      "source": "docs\\reference\\batchB-fix-plan.md",
+      "line": 169,
+      "target": "src/store/localDocStore.ts"
+    },
+    {
+      "source": "docs\\reference\\batchD-fix-plan.md",
+      "line": 59,
+      "target": "src/pages/trading/TradingHubPage.tsx:32-51"
+    },
+    {
+      "source": "docs\\reference\\batchE-fix-plan.md",
+      "line": 73,
+      "target": "src/pages/command/CommandHubPage.tsx:32-44"
+    },
+    {
+      "source": "docs\\reference\\batchE-fix-plan.md",
+      "line": 94,
+      "target": "src/pages/command/SettingsPage.tsx"
+    },
+    {
+      "source": "docs\\reference\\batchE-fix-plan.md",
+      "line": 209,
+      "target": "src/services/report/reportService.ts"
+    },
+    {
+      "source": "docs\\reference\\batchE-fix-plan.md",
+      "line": 210,
+      "target": "src/pages/command/ReportExportPage.tsx"
+    },
+    {
+      "source": "docs\\reference\\CHANGELOG.md",
+      "line": 173,
+      "target": "src/mcp/servers/export/exportServer.ts"
+    },
+    {
+      "source": "docs\\reference\\CHANGELOG.md",
+      "line": 174,
+      "target": "src/mcp/servers/input/inputServer.ts"
+    },
+    {
+      "source": "docs\\reference\\CHANGELOG.md",
+      "line": 178,
+      "target": "src/mcp/__tests__/exportServer.test.ts"
+    },
+    {
+      "source": "docs\\reference\\CHANGELOG.md",
+      "line": 179,
+      "target": "src/mcp/__tests__/inputServer.test.ts"
+    },
+    {
+      "source": "docs\\reference\\CHANGELOG.md",
+      "line": 180,
+      "target": "src/mcp/__tests__/tradeServer.test.ts"
+    },
+    {
+      "source": "docs\\reference\\CHANGELOG.md",
+      "line": 191,
+      "target": "src/mcp/servers/export/exportServer.ts"
+    },
+    {
+      "source": "docs\\reference\\CHANGELOG.md",
+      "line": 192,
+      "target": "src/mcp/servers/input/inputServer.ts"
+    },
+    {
+      "source": "docs\\reference\\CHANGELOG.md",
+      "line": 587,
+      "target": "src/pages/news-v6/components/newsCardUtils.tsx"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\2026-07-05-ui-testing-optimization.md",
+      "line": 60,
+      "target": "src/pages/input/__tests__/InputHubPage.test.tsx"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\2026-07-05-ui-testing-optimization.md",
+      "line": 61,
+      "target": "src/pages/analysis/__tests__/AnalysisHubPage.test.tsx"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\2026-07-05-ui-testing-optimization.md",
+      "line": 62,
+      "target": "src/pages/trading/__tests__/TradingHubPage.test.tsx"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\2026-07-05-ui-testing-optimization.md",
+      "line": 64,
+      "target": "src/pages/command/__tests__/CommandHubPage.test.tsx"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
+      "line": 27,
+      "target": "src/services/backtest/backtestEngine.types.ts"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
+      "line": 29,
+      "target": "src/store/collectionWizardStore.configActions.ts"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
+      "line": 30,
+      "target": "src/store/collectionWizardStore.fieldActions.ts"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
+      "line": 31,
+      "target": "src/store/collectionWizardStore.taskActions.ts"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
+      "line": 32,
+      "target": "src/store/executionStore.actions.ts"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
+      "line": 33,
+      "target": "src/store/executionStore.planOps.ts"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
+      "line": 34,
+      "target": "src/store/marketDataStore.actions.ts"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
+      "line": 35,
+      "target": "src/store/orderStore.actions.ts"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
+      "line": 36,
+      "target": "src/store/orderStore.subscriptions.ts"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
+      "line": 37,
+      "target": "src/store/utils/collectionWizardStore.constants.ts"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
+      "line": 38,
+      "target": "src/store/utils/riskDerived.circuit.ts"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
+      "line": 39,
+      "target": "src/store/utils/riskDerived.execution.ts"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
+      "line": 40,
+      "target": "src/store/utils/riskDerived.stats.ts"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
+      "line": 41,
+      "target": "src/store/utils/riskDerived.symbol.ts"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
+      "line": 42,
+      "target": "src/store/utils/riskDerived.trend.ts"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
+      "line": 43,
+      "target": "outputs/architecture-cleanup-completion-report-2026-07-14.md"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
+      "line": 51,
+      "target": "src/services/scoring/v6-engine/confidence.ts"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-7-trade-error-classifier-split-plan.md",
+      "line": 718,
+      "target": "docs/changelogs/2026-07/pr-6-module-split-plan.md"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-7-trade-error-classifier-split-plan.md",
+      "line": 719,
+      "target": "docs/changelogs/2026-07/trade-error-classifier-split-completion-archive.md"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-audit-report.md",
+      "line": 57,
+      "target": "src/data/db-utils.ts:25-27"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-audit-report.md",
+      "line": 58,
+      "target": "src/lib/timeUtils.ts:31-33"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-audit-report.md",
+      "line": 86,
+      "target": "src/lib/timeUtils.ts:31-33"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-audit-report.md",
+      "line": 102,
+      "target": "src/hooks/cabin/useIndustryScorePage.ts:37-43"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-audit-report.md",
+      "line": 103,
+      "target": "src/store/industryScoreStore.ts:64-70"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-audit-report.md",
+      "line": 138,
+      "target": "src/hooks/cabin/useIntelligentScorePage.ts:38-44"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-audit-report.md",
+      "line": 139,
+      "target": "src/store/intelligentScoreStore.ts:68-74"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-audit-report.md",
+      "line": 214,
+      "target": "src/lib/safeCoerce.ts:26-30"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-audit-report.md",
+      "line": 215,
+      "target": "src/services/fetcher/strategyDataAdapter.ts:76-80"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-audit-report.md",
+      "line": 260,
+      "target": "src/lib/safeCoerce.ts:108-113"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-audit-report.md",
+      "line": 261,
+      "target": "src/services/fetcher/strategyDataAdapter.ts:97-102"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-audit-report.md",
+      "line": 310,
+      "target": "src/data/db-utils.ts:17-19"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-audit-report.md",
+      "line": 311,
+      "target": "src/lib/a11y.ts:11-13"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-audit-report.md",
+      "line": 358,
+      "target": "src/store/hotSectorStore.ts:221-223"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-audit-report.md",
+      "line": 359,
+      "target": "src/store/rotationSignalStore.derived.ts:131-133"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-audit-report.md",
+      "line": 411,
+      "target": "src/services/scoring/hotSectorDimensions.ts:365-418"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-audit-report.md",
+      "line": 412,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:328-372"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-plan.md",
+      "line": 68,
+      "target": "src/lib/timeUtils.ts:31-33"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-plan.md",
+      "line": 95,
+      "target": "src/hooks/cabin/useIndustryScorePage.ts:37-43"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-plan.md",
+      "line": 99,
+      "target": "src/store/industryScoreStore.ts:64-70"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-plan.md",
+      "line": 103,
+      "target": "src/hooks/cabin/useIntelligentScorePage.ts:38-44"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-plan.md",
+      "line": 106,
+      "target": "src/store/intelligentScoreStore.ts:68-74"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-plan.md",
+      "line": 132,
+      "target": "src/lib/safeCoerce.ts:108-113"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-plan.md",
+      "line": 166,
+      "target": "src/lib/a11y.ts:11-13"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-plan.md",
+      "line": 191,
+      "target": "src/store/hotSectorStore.ts:221-223"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-plan.md",
+      "line": 224,
+      "target": "src/services/scoring/_shared/weightedScore.ts"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-plan.md",
+      "line": 228,
+      "target": "src/services/scoring/hotSectorDimensions.ts:365-418"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\pr-8-dedup-plan.md",
+      "line": 232,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:328-372"
+    },
+    {
+      "source": "docs\\reference\\chart-integration.md",
+      "line": 212,
+      "target": "src/constants/chart.constants.ts"
+    },
+    {
+      "source": "docs\\reference\\cockpit\\data-definition.md",
+      "line": 28,
+      "target": "src/types/modules/widget.types.ts:63-92"
+    },
+    {
+      "source": "docs\\reference\\cockpit\\data-definition.md",
+      "line": 247,
+      "target": "src/types/modules/widget.types.ts:337-354"
+    },
+    {
+      "source": "docs\\reference\\cockpit\\data-definition.md",
+      "line": 260,
+      "target": "src/types/modules/widget.types.ts:357-377"
+    },
+    {
+      "source": "docs\\reference\\cockpit\\data-definition.md",
+      "line": 337,
+      "target": "src/cockpit/core/widgetRegistry.ts:9-14"
+    },
+    {
+      "source": "docs\\reference\\cockpit\\data-definition.md",
+      "line": 377,
+      "target": "src/constants/cockpit.constants.ts:163-167"
+    },
+    {
+      "source": "docs\\reference\\cockpit\\data-definition.md",
+      "line": 387,
+      "target": "src/constants/cockpit.constants.ts:170-174"
+    },
+    {
+      "source": "docs\\reference\\cockpit\\data-definition.md",
+      "line": 409,
+      "target": "src/constants/cockpit.constants.ts:7-13"
+    },
+    {
+      "source": "docs\\reference\\cockpit\\data-definition.md",
+      "line": 421,
+      "target": "src/constants/cockpit.constants.ts:15-20"
+    },
+    {
+      "source": "docs\\reference\\cockpit\\data-definition.md",
+      "line": 432,
+      "target": "src/constants/cockpit.constants.ts:29-33"
+    },
+    {
+      "source": "docs\\reference\\cockpit\\data-definition.md",
+      "line": 442,
+      "target": "src/constants/cockpit.constants.ts:51-57"
+    },
+    {
+      "source": "docs\\reference\\cockpit\\data-definition.md",
+      "line": 454,
+      "target": "src/constants/cockpit.constants.ts:62-81"
+    },
+    {
+      "source": "docs\\reference\\cockpit\\data-definition.md",
+      "line": 464,
+      "target": "src/constants/cockpit.constants.ts:86-92"
+    },
+    {
+      "source": "docs\\reference\\cockpit\\data-definition.md",
+      "line": 476,
+      "target": "src/constants/cockpit.constants.ts:97-104"
+    },
+    {
+      "source": "docs\\reference\\cockpit\\data-definition.md",
+      "line": 489,
+      "target": "src/constants/cockpit.constants.ts:109-114"
+    },
+    {
+      "source": "docs\\reference\\cockpit\\data-definition.md",
+      "line": 500,
+      "target": "src/constants/cockpit.constants.ts:119-125"
+    },
+    {
+      "source": "docs\\reference\\cockpit\\data-definition.md",
+      "line": 512,
+      "target": "src/constants/cockpit.constants.ts:141-146"
+    },
+    {
+      "source": "docs\\reference\\cockpit\\data-definition.md",
+      "line": 523,
+      "target": "src/constants/cockpit.constants.ts:41-49"
+    },
+    {
+      "source": "docs\\reference\\cockpit\\data-definition.md",
+      "line": 537,
+      "target": "src/constants/cockpit.constants.ts:176-223"
+    },
+    {
+      "source": "docs\\reference\\cockpit\\data-definition.md",
+      "line": 552,
+      "target": "src/constants/cockpit.constants.ts:1-5"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 300,
+      "target": "src/types/modules/widget.types.ts:61-86"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 579,
+      "target": "src/cockpit/core/widgetRegistry.ts:9-14"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 610,
+      "target": "src/constants/cockpit.constants.ts:163-167"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 620,
+      "target": "src/constants/cockpit.constants.ts:170-174"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 642,
+      "target": "src/constants/cockpit.constants.ts:7-13"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 654,
+      "target": "src/constants/cockpit.constants.ts:15-20"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 665,
+      "target": "src/constants/cockpit.constants.ts:29-33"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 675,
+      "target": "src/constants/cockpit.constants.ts:51-57"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 687,
+      "target": "src/constants/cockpit.constants.ts:62-81"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 697,
+      "target": "src/constants/cockpit.constants.ts:86-92"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 709,
+      "target": "src/constants/cockpit.constants.ts:97-104"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 722,
+      "target": "src/constants/cockpit.constants.ts:109-114"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 733,
+      "target": "src/constants/cockpit.constants.ts:119-125"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 745,
+      "target": "src/constants/cockpit.constants.ts:141-146"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 756,
+      "target": "src/constants/cockpit.constants.ts:41-49"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 770,
+      "target": "src/constants/cockpit.constants.ts:176-223"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 785,
+      "target": "src/constants/cockpit.constants.ts:1-5"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 863,
+      "target": "src/data/types.ts:565-579"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 888,
+      "target": "src/data/types.ts:582-590"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 902,
+      "target": "src/data/types.ts:593-601"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 916,
+      "target": "src/services/news/sentimentAnalyzer.ts:6-10"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 926,
+      "target": "src/services/news/stockLinker.ts:4-8"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 936,
+      "target": "src/services/news/stockLinker.ts:10-17"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 949,
+      "target": "src/services/news/stockLinker.ts:19-29"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 1003,
+      "target": "src/services/news/sentimentAnalyzer.ts:13-85"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 1014,
+      "target": "src/services/news/stockLinker.ts:44-55"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 1031,
+      "target": "src/services/news/stockLinker.ts:58-77"
+    },
+    {
+      "source": "docs\\reference\\CODE-REVIEW.md",
+      "line": 274,
+      "target": "src/services/xxx.ts"
+    },
+    {
+      "source": "docs\\reference\\CODE-REVIEW.md",
+      "line": 283,
+      "target": "src/services/xxx.ts:120-180"
+    },
+    {
+      "source": "docs\\reference\\completeness-profile-batch1.md",
+      "line": 69,
+      "target": "src/cockpit/widgets/StockPoolWidget.tsx"
+    },
+    {
+      "source": "docs\\reference\\data-collection\\data-definition.md",
+      "line": 162,
+      "target": "src/constants/cockpit.constants.ts:163-167"
+    },
+    {
+      "source": "docs\\reference\\data-collection\\data-definition.md",
+      "line": 172,
+      "target": "src/constants/cockpit.constants.ts:170-174"
+    },
+    {
+      "source": "docs\\reference\\data-collection\\data-definition.md",
+      "line": 194,
+      "target": "src/constants/cockpit.constants.ts:176-223"
+    },
+    {
+      "source": "docs\\reference\\data-collection-route-ui-audit.md",
+      "line": 258,
+      "target": "src/pages/input/CollectMonitor.tsx"
+    },
+    {
+      "source": "docs\\reference\\data-collection-route-ui-audit.md",
+      "line": 261,
+      "target": "src/pages/input/DataDashboard.tsx"
+    },
+    {
+      "source": "docs\\reference\\data-collection-route-ui-audit.md",
+      "line": 262,
+      "target": "src/components/pipeline/DataPipeline.tsx"
+    },
+    {
+      "source": "docs\\reference\\data-collector-contract.md",
+      "line": 142,
+      "target": "src/config/collection.config.ts"
+    },
+    {
+      "source": "docs\\reference\\data-collector-contract.md",
+      "line": 143,
+      "target": "src/config/collection.config.ts"
+    },
+    {
+      "source": "docs\\reference\\data-definition.md",
+      "line": 583,
+      "target": "src/constants/cockpit.constants.ts:163-167"
+    },
+    {
+      "source": "docs\\reference\\data-definition.md",
+      "line": 593,
+      "target": "src/constants/cockpit.constants.ts:170-174"
+    },
+    {
+      "source": "docs\\reference\\data-definition.md",
+      "line": 615,
+      "target": "src/constants/cockpit.constants.ts:176-223"
+    },
+    {
+      "source": "docs\\reference\\data-definition.md",
+      "line": 709,
+      "target": "src/types/modules/widget.types.ts:63-92"
+    },
+    {
+      "source": "docs\\reference\\data-definition.md",
+      "line": 928,
+      "target": "src/types/modules/widget.types.ts:337-354"
+    },
+    {
+      "source": "docs\\reference\\data-definition.md",
+      "line": 941,
+      "target": "src/types/modules/widget.types.ts:357-377"
+    },
+    {
+      "source": "docs\\reference\\data-definition.md",
+      "line": 991,
+      "target": "src/cockpit/core/widgetRegistry.ts:9-14"
+    },
+    {
+      "source": "docs\\reference\\data-definition.md",
+      "line": 1037,
+      "target": "src/constants/cockpit.constants.ts:7-13"
+    },
+    {
+      "source": "docs\\reference\\data-definition.md",
+      "line": 1049,
+      "target": "src/constants/cockpit.constants.ts:15-20"
+    },
+    {
+      "source": "docs\\reference\\data-definition.md",
+      "line": 1060,
+      "target": "src/constants/cockpit.constants.ts:29-33"
+    },
+    {
+      "source": "docs\\reference\\data-definition.md",
+      "line": 1070,
+      "target": "src/constants/cockpit.constants.ts:51-57"
+    },
+    {
+      "source": "docs\\reference\\data-definition.md",
+      "line": 1082,
+      "target": "src/constants/cockpit.constants.ts:62-81"
+    },
+    {
+      "source": "docs\\reference\\data-definition.md",
+      "line": 1092,
+      "target": "src/constants/cockpit.constants.ts:86-92"
+    },
+    {
+      "source": "docs\\reference\\data-definition.md",
+      "line": 1104,
+      "target": "src/constants/cockpit.constants.ts:97-104"
+    },
+    {
+      "source": "docs\\reference\\data-definition.md",
+      "line": 1117,
+      "target": "src/constants/cockpit.constants.ts:109-114"
+    },
+    {
+      "source": "docs\\reference\\data-definition.md",
+      "line": 1128,
+      "target": "src/constants/cockpit.constants.ts:119-125"
+    },
+    {
+      "source": "docs\\reference\\data-definition.md",
+      "line": 1140,
+      "target": "src/constants/cockpit.constants.ts:141-146"
+    },
+    {
+      "source": "docs\\reference\\data-definition.md",
+      "line": 1151,
+      "target": "src/constants/cockpit.constants.ts:41-49"
+    },
+    {
+      "source": "docs\\reference\\data-definition.md",
+      "line": 1167,
+      "target": "src/constants/cockpit.constants.ts:1-5"
+    },
+    {
+      "source": "docs\\reference\\data-definition.md",
+      "line": 1281,
+      "target": "src/constants/cockpit.constants.ts:163-167"
+    },
+    {
+      "source": "docs\\reference\\data-dictionary-index.md",
+      "line": 132,
+      "target": "docs/explanation/doc-sync-gap-list.md"
+    },
+    {
+      "source": "docs\\reference\\data-interaction-protocols.md",
+      "line": 89,
+      "target": "src/lib/eventNames.ts"
+    },
+    {
+      "source": "docs\\reference\\dataflow-data-definition.md",
+      "line": 153,
+      "target": "src/constants/dataflow.constants.ts"
+    },
+    {
+      "source": "docs\\reference\\deprecated-ui-module-alignment.md",
+      "line": 95,
+      "target": "src/components/trading/RiskBanner.tsx"
+    },
+    {
+      "source": "docs\\reference\\deprecated-ui-module-alignment.md",
+      "line": 96,
+      "target": "src/components/trading/FinalConfirm.tsx"
+    },
+    {
+      "source": "docs\\reference\\deprecated-ui-module-alignment.md",
+      "line": 97,
+      "target": "src/components/analysis/DebaterPanel.tsx"
+    },
+    {
+      "source": "docs\\reference\\deprecated-ui-module-alignment.md",
+      "line": 98,
+      "target": "src/components/command/GatewayPanel.tsx"
+    },
+    {
+      "source": "docs\\reference\\deprecated-ui-module-alignment.md",
+      "line": 99,
+      "target": "src/components/output/ReviewDrawer.tsx"
+    },
+    {
+      "source": "docs\\reference\\deprecated-ui-module-alignment.md",
+      "line": 101,
+      "target": "src/portal/components/LoopBanner.tsx"
+    },
+    {
+      "source": "docs\\reference\\fetcher-contract.md",
+      "line": 139,
+      "target": "src/config/fetcher.config.ts"
+    },
+    {
+      "source": "docs\\reference\\fetcher-contract.md",
+      "line": 140,
+      "target": "src/config/fetcher.config.ts"
+    },
+    {
+      "source": "docs\\reference\\fetcher-contract.md",
+      "line": 141,
+      "target": "src/config/fetcher.config.ts"
+    },
+    {
+      "source": "docs\\reference\\fourth-industrial-revolution-core-resource-strategy.md",
+      "line": 36,
+      "target": "src/data/v6StrategyEngine.ts"
+    },
+    {
+      "source": "docs\\reference\\fourth-industrial-revolution-core-resource-strategy.md",
+      "line": 38,
+      "target": "src/config/weights.ts"
+    },
+    {
+      "source": "docs\\reference\\fourth-industrial-revolution-core-resource-strategy.md",
+      "line": 39,
+      "target": "src/agents/trading/TradingOrchestrator.ts"
+    },
+    {
+      "source": "docs\\reference\\fourth-industrial-revolution-core-resource-strategy.md",
+      "line": 40,
+      "target": "src/agents/trading/paperTrading.ts"
+    },
+    {
+      "source": "docs\\reference\\fourth-industrial-revolution-core-resource-strategy.md",
+      "line": 42,
+      "target": "src/components/trading/PortfolioManager.tsx"
+    },
+    {
+      "source": "docs\\reference\\fourth-industrial-revolution-core-resource-strategy.md",
+      "line": 275,
+      "target": "src/services/trading/takeProfitEngine.ts"
+    },
+    {
+      "source": "docs\\reference\\fourth-industrial-revolution-core-resource-strategy.md",
+      "line": 282,
+      "target": "src/services/trading/tradingOrchestrator.ts"
+    },
+    {
+      "source": "docs\\reference\\fourth-industrial-revolution-core-resource-strategy.md",
+      "line": 306,
+      "target": "src/services/trading/takeProfitEngine.ts"
+    },
+    {
+      "source": "docs\\reference\\fourth-industrial-revolution-core-resource-strategy.md",
+      "line": 307,
+      "target": "src/services/trading/stopLossEngine.ts"
+    },
+    {
+      "source": "docs\\reference\\fourth-industrial-revolution-core-resource-strategy.md",
+      "line": 308,
+      "target": "src/services/trading/tradingOrchestrator.ts"
+    },
+    {
+      "source": "docs\\reference\\fourth-industrial-revolution-core-resource-strategy.md",
+      "line": 309,
+      "target": "src/services/trading/paperTradingEngine.ts"
+    },
+    {
+      "source": "docs\\reference\\fourth-industrial-revolution-core-resource-strategy.md",
+      "line": 311,
+      "target": "src/apps/trading/panels/PortfolioRebalancePanel.tsx"
+    },
+    {
+      "source": "docs\\reference\\gateway-write-permission-spec.md",
+      "line": 302,
+      "target": "src/data/gateway/dataGateway.ts"
+    },
+    {
+      "source": "docs\\reference\\hybrid-proofread-contract.md",
+      "line": 161,
+      "target": "src/services/hybrid-proofread/__tests__/hashService.test.ts"
+    },
+    {
+      "source": "docs\\reference\\hybrid-proofread-contract.md",
+      "line": 162,
+      "target": "src/services/hybrid-proofread/__tests__/ruleEngine.test.ts"
+    },
+    {
+      "source": "docs\\reference\\hybrid-proofread-contract.md",
+      "line": 163,
+      "target": "src/services/hybrid-proofread/__tests__/localCollector.test.ts"
+    },
+    {
+      "source": "docs\\reference\\hybrid-proofread-contract.md",
+      "line": 164,
+      "target": "src/services/hybrid-proofread/__tests__/reportGenerator.test.ts"
+    },
+    {
+      "source": "docs\\reference\\input-cabin-spec.md",
+      "line": 234,
+      "target": "src/apps/input/FetcherConfigPanel.tsx"
+    },
+    {
+      "source": "docs\\reference\\meta\\doc-auto-update-kanban.md",
+      "line": 58,
+      "target": ".github/pull_request_template.md"
+    },
+    {
+      "source": "docs\\reference\\multi-factor-screening-data-definition.md",
+      "line": 29,
+      "target": "src/pages/analysis/MultiFactorScreeningPage.tsx"
+    },
+    {
+      "source": "docs\\reference\\news\\data-definition.md",
+      "line": 28,
+      "target": "src/data/types.ts:727-742"
+    },
+    {
+      "source": "docs\\reference\\news\\data-definition.md",
+      "line": 53,
+      "target": "src/data/types.ts:744-752"
+    },
+    {
+      "source": "docs\\reference\\news\\data-definition.md",
+      "line": 67,
+      "target": "src/data/types.ts:755-763"
+    },
+    {
+      "source": "docs\\reference\\news\\data-definition.md",
+      "line": 81,
+      "target": "src/data/types.ts:766-769"
+    },
+    {
+      "source": "docs\\reference\\news\\data-definition.md",
+      "line": 91,
+      "target": "src/services/news/sentimentAnalyzer.ts:6-10"
+    },
+    {
+      "source": "docs\\reference\\news\\data-definition.md",
+      "line": 101,
+      "target": "src/services/news/stockLinker.ts:4-8"
+    },
+    {
+      "source": "docs\\reference\\news\\data-definition.md",
+      "line": 111,
+      "target": "src/services/news/stockLinker.ts:10-17"
+    },
+    {
+      "source": "docs\\reference\\news\\data-definition.md",
+      "line": 124,
+      "target": "src/services/news/stockLinker.ts:19-29"
+    },
+    {
+      "source": "docs\\reference\\news\\data-definition.md",
+      "line": 178,
+      "target": "src/services/news/sentimentAnalyzer.ts:13-85"
+    },
+    {
+      "source": "docs\\reference\\news\\data-definition.md",
+      "line": 189,
+      "target": "src/services/news/stockLinker.ts:44-55"
+    },
+    {
+      "source": "docs\\reference\\news\\data-definition.md",
+      "line": 206,
+      "target": "src/services/news/stockLinker.ts:58-77"
+    },
+    {
+      "source": "docs\\reference\\news\\data-definition.md",
+      "line": 281,
+      "target": "src/data/dataLayer.ts:371-385"
+    },
+    {
+      "source": "docs\\reference\\news\\data-definition.md",
+      "line": 294,
+      "target": "src/data/dataLayer.ts:387-401"
+    },
+    {
+      "source": "docs\\reference\\news\\data-definition.md",
+      "line": 306,
+      "target": "src/data/dataLayer.ts:403-420"
+    },
+    {
+      "source": "docs\\reference\\project\\changelogs\\2026-07\\2026-07-14-p4-completion.md",
+      "line": 57,
+      "target": "scripts/monthly-doc-check.ts"
+    },
+    {
+      "source": "docs\\reference\\rbac-contract.md",
+      "line": 369,
+      "target": "src/services/rbac/permissionRevocationService.test.ts"
+    },
+    {
+      "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
+      "line": 93,
+      "target": "src/components/organisms/researchPool/ResearchPoolBoard.tsx"
+    },
+    {
+      "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
+      "line": 94,
+      "target": "src/components/organisms/researchPool/ResearchPoolCard.tsx"
+    },
+    {
+      "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
+      "line": 95,
+      "target": "src/components/organisms/researchPool/ResearchPoolColumn.tsx"
+    },
+    {
+      "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
+      "line": 96,
+      "target": "src/components/organisms/researchPool/ResearchPoolList.tsx"
+    },
+    {
+      "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
+      "line": 97,
+      "target": "src/components/organisms/researchPool/useResearchPoolDataFromStore.ts"
+    },
+    {
+      "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
+      "line": 98,
+      "target": "src/hooks/useResearchPoolBoard.ts"
+    },
+    {
+      "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
+      "line": 99,
+      "target": "src/pages/analysis/ResearchPoolBoardPage.tsx"
+    },
+    {
+      "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
+      "line": 100,
+      "target": "src/cockpit/widgets/ResearchPoolBoardWidget.tsx"
+    },
+    {
+      "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
+      "line": 154,
+      "target": "src/components/componentRegistry.ts:87-91"
+    },
+    {
+      "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
+      "line": 281,
+      "target": "src/components/organisms/researchPool/ResearchPoolBoard.tsx"
+    },
+    {
+      "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
+      "line": 282,
+      "target": "src/components/organisms/researchPool/ResearchPoolCard.tsx"
+    },
+    {
+      "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
+      "line": 283,
+      "target": "src/components/organisms/researchPool/ResearchPoolColumn.tsx"
+    },
+    {
+      "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
+      "line": 284,
+      "target": "src/components/organisms/researchPool/ResearchPoolList.tsx"
+    },
+    {
+      "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
+      "line": 285,
+      "target": "src/components/organisms/researchPool/useResearchPoolDataFromStore.ts"
+    },
+    {
+      "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
+      "line": 286,
+      "target": "src/hooks/useResearchPoolBoard.ts"
+    },
+    {
+      "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
+      "line": 287,
+      "target": "src/pages/analysis/ResearchPoolBoardPage.tsx"
+    },
+    {
+      "source": "docs\\reference\\refactor-research-pool-rename-plan.md",
+      "line": 288,
+      "target": "src/cockpit/widgets/ResearchPoolBoardWidget.tsx"
+    },
+    {
+      "source": "docs\\reference\\release-notes.md",
+      "line": 44,
+      "target": "scripts/v9_dynamic_quality_engine.py"
+    },
+    {
+      "source": "docs\\reference\\release-notes.md",
+      "line": 67,
+      "target": "scripts/v9_dynamic_quality_engine.py"
+    },
+    {
+      "source": "docs\\reference\\release-notes.md",
+      "line": 68,
+      "target": "scripts/reports/chart_dynamic_01.png"
+    },
+    {
+      "source": "docs\\reference\\release-notes.md",
+      "line": 69,
+      "target": "scripts/reports/dynamic_analysis_report.json"
+    },
+    {
+      "source": "docs\\reference\\release-notes.md",
+      "line": 118,
+      "target": "scripts/migration-auto-fix.cjs"
+    },
+    {
+      "source": "docs\\reference\\rm剩余任务全量盘点与整改方案-2026-07-08.md",
+      "line": 306,
+      "target": "src/pages/command/agent/LlmManagementPage.tsx"
+    },
+    {
+      "source": "docs\\reference\\seven-dim-config-data-definition.md",
+      "line": 29,
+      "target": "src/config/collectConfig.ts:19-30"
+    },
+    {
+      "source": "docs\\reference\\seven-dim-config-data-definition.md",
+      "line": 95,
+      "target": "src/config/collectConfig.ts:100-121"
+    },
+    {
+      "source": "docs\\reference\\seven-dim-config-data-definition.md",
+      "line": 129,
+      "target": "src/config/collectConfig.ts:129-141"
+    },
+    {
+      "source": "docs\\reference\\seven-dim-config-data-definition.md",
+      "line": 148,
+      "target": "src/config/collectConfig.ts:195-292"
+    },
+    {
+      "source": "docs\\reference\\seven-dim-config-data-definition.md",
+      "line": 173,
+      "target": "src/data/types.ts:694-703"
+    },
+    {
+      "source": "docs\\reference\\seven-dim-config-data-definition.md",
+      "line": 177,
+      "target": "src/config/collectConfig.ts:143-189"
+    },
+    {
+      "source": "docs\\reference\\seven-dim-config-data-definition.md",
+      "line": 193,
+      "target": "src/config/collectConfig.ts:320-333"
+    },
+    {
+      "source": "docs\\reference\\seven-dim-config-data-definition.md",
+      "line": 210,
+      "target": "src/config/collectConfig.ts:298-307"
+    },
+    {
+      "source": "docs\\reference\\seven-dim-config-data-definition.md",
+      "line": 229,
+      "target": "src/config/collectConfig.ts:345-358"
+    },
+    {
+      "source": "docs\\reference\\seven-dim-config-data-definition.md",
+      "line": 242,
+      "target": "src/store/sevenDimConfigStore.ts:35-87"
+    },
+    {
+      "source": "docs\\reference\\stock-analysis-contract.md",
+      "line": 268,
+      "target": "src/config/stock-analysis.config.ts"
+    },
+    {
+      "source": "docs\\reference\\stockpool-contract.md",
+      "line": 170,
+      "target": "src/services/stockpool/__tests__/stockpoolService.test.ts"
+    },
+    {
+      "source": "docs\\reference\\testing-strategy.md",
+      "line": 500,
+      "target": "src/xxx/ModuleName.test.ts"
+    },
+    {
+      "source": "docs\\reference\\trade\\api-contract.md",
+      "line": 174,
+      "target": "src/services/trading/tradingService.ts:22-28"
+    },
+    {
+      "source": "docs\\reference\\trade\\api-contract.md",
+      "line": 186,
+      "target": "src/services/trading/tradingService.ts:54-58"
+    },
+    {
+      "source": "docs\\reference\\trade\\api-contract.md",
+      "line": 196,
+      "target": "src/data/types.ts:237-246"
+    },
+    {
+      "source": "docs\\reference\\trade\\api-contract.md",
+      "line": 223,
+      "target": "src/services/trading/riskEngine.ts:6-12"
+    },
+    {
+      "source": "docs\\reference\\trade\\api-contract.md",
+      "line": 235,
+      "target": "src/services/trading/riskEngine.ts:14-18"
+    },
+    {
+      "source": "docs\\reference\\trade\\api-contract.md",
+      "line": 248,
+      "target": "src/services/trading/positionSizer.ts:4-13"
+    },
+    {
+      "source": "docs\\reference\\trade\\api-contract.md",
+      "line": 263,
+      "target": "src/services/trading/positionSizer.ts:15-23"
+    },
+    {
+      "source": "docs\\reference\\trade\\api-contract.md",
+      "line": 277,
+      "target": "src/services/trading/scoringAdapter.ts:13-29"
+    },
+    {
+      "source": "docs\\reference\\trade\\api-contract.md",
+      "line": 292,
+      "target": "src/services/trading/portfolioBuilder.ts:9-21"
+    },
+    {
+      "source": "docs\\reference\\trade\\api-contract.md",
+      "line": 305,
+      "target": "src/services/trading/strategyEngine.ts:17-24"
+    },
+    {
+      "source": "docs\\reference\\trade-contract.md",
+      "line": 252,
+      "target": "src/services/trade/__tests__/holdingsService.test.ts"
+    },
+    {
+      "source": "docs\\reference\\ui-remediation-tracker.md",
+      "line": 98,
+      "target": "src/components/cockpit/SignalSpectrum.test.tsx"
+    },
+    {
+      "source": "docs\\reference\\ui-remediation-tracker.md",
+      "line": 105,
+      "target": "src/components/widgets/WidgetAnchorBar.tsx"
+    },
+    {
+      "source": "docs\\reference\\ui-remediation-tracker.md",
+      "line": 125,
+      "target": "src/components/ui/states/states.test.tsx"
+    },
+    {
+      "source": "docs\\reference\\ui-remediation-tracker.md",
+      "line": 132,
+      "target": "src/cockpit/WidgetStateBoundary.tsx"
+    },
+    {
+      "source": "docs\\reference\\ui-remediation-tracker.md",
+      "line": 171,
+      "target": "src/components|pages|cockpit|apps|portal"
+    },
+    {
+      "source": "docs\\reference\\ui-remediation-tracker.md",
+      "line": 186,
+      "target": "src/components/__token_scan_tmp__.tsx"
+    },
+    {
+      "source": "docs\\reference\\ui-remediation-tracker.md",
+      "line": 194,
+      "target": "src/components/output/ResultCard.tsx"
+    },
+    {
+      "source": "docs\\reference\\ui-remediation-tracker.md",
+      "line": 231,
+      "target": ".workbuddy/skills/ui-design-audit/SKILL.md"
+    },
+    {
+      "source": "docs\\reference\\ui-remediation-tracker.md",
+      "line": 295,
+      "target": "src/store/themeStore.test.ts"
+    },
+    {
+      "source": "docs\\reference\\ui-remediation-tracker.md",
+      "line": 295,
+      "target": "src/components/cockpit/SignalSpectrum.test.tsx"
+    },
+    {
+      "source": "docs\\reference\\ui-remediation-tracker.md",
+      "line": 295,
+      "target": "src/components/widgets/WidgetAnchorBar.tsx"
+    },
+    {
+      "source": "docs\\reference\\ui-remediation-tracker.md",
+      "line": 295,
+      "target": "src/components/widgets/WidgetAnchorBar.test.tsx"
+    },
+    {
+      "source": "docs\\reference\\ui-remediation-tracker.md",
+      "line": 302,
+      "target": "src/components/cockpit/SignalSpectrum.tsx(45,59)"
+    },
+    {
+      "source": "docs\\reference\\ui-remediation-tracker.md",
+      "line": 322,
+      "target": "src/store/themeStore.test.ts"
+    },
+    {
+      "source": "docs\\reference\\ui设计优化实施计划-详细版.md",
+      "line": 222,
+      "target": "src/components/output/ResultCard.tsx"
+    },
+    {
+      "source": "docs\\reference\\v10-architecture-alignment.md",
+      "line": 103,
+      "target": "src/apps/trading/gateway.ts"
+    },
+    {
+      "source": "docs\\reference\\v10-architecture-alignment.md",
+      "line": 115,
+      "target": "src/core/stateBoard.ts"
+    },
+    {
+      "source": "docs\\reference\\v6-cockpit-ui-reference.md",
+      "line": 72,
+      "target": "src/apps/analysis/panels/V6ScorePanel.tsx"
+    },
+    {
+      "source": "docs\\reference\\v6-cockpit-ui-reference.md",
+      "line": 95,
+      "target": "src/agents/input/StockInputAgent.ts"
+    },
+    {
+      "source": "docs\\reference\\v6-cockpit-ui-reference.md",
+      "line": 133,
+      "target": "src/components/collect/CollectMonitor.tsx"
+    },
+    {
+      "source": "docs\\reference\\v6-cockpit-ui-reference.md",
+      "line": 139,
+      "target": "src/components/collect/CollectParamPanel.tsx"
+    },
+    {
+      "source": "docs\\reference\\v6-cockpit-ui-reference.md",
+      "line": 156,
+      "target": "src/components/ScoringProgress.tsx"
+    },
+    {
+      "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
+      "line": 330,
+      "target": "src/pages/SevenDimCollectPage.tsx"
+    },
+    {
+      "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
+      "line": 330,
+      "target": "src/components/collect/CollectParamPanel.tsx"
+    },
+    {
+      "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
+      "line": 331,
+      "target": "src/pages/StockPoolPage.tsx"
+    },
+    {
+      "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
+      "line": 331,
+      "target": "src/pages/StockPool.tsx"
+    },
+    {
+      "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
+      "line": 332,
+      "target": "src/data/rotationData.ts"
+    },
+    {
+      "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
+      "line": 341,
+      "target": "src/cockpit/core/bus.ts"
+    },
+    {
+      "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
+      "line": 343,
+      "target": "src/components/trading/PortfolioManager.tsx"
+    },
+    {
+      "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
+      "line": 344,
+      "target": "src/components/trading/SimulatedTrading.tsx"
+    },
+    {
+      "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
+      "line": 345,
+      "target": "src/components/trading/TradeReviewDashboard.tsx"
+    },
+    {
+      "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
+      "line": 347,
+      "target": "src/data/knowledgeBase.ts"
+    },
+    {
+      "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
+      "line": 347,
+      "target": "src/lib/rag.ts"
+    },
+    {
+      "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
+      "line": 353,
+      "target": "src/pages/AgentManagerPage.tsx"
+    },
+    {
+      "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
+      "line": 353,
+      "target": "src/components/agents/AgentManagerPanel.tsx"
+    },
+    {
+      "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
+      "line": 354,
+      "target": "src/pages/AIAssistant.tsx"
+    },
+    {
+      "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
+      "line": 355,
+      "target": "src/pages/DataManagement.tsx"
+    },
+    {
+      "source": "docs\\reference\\v6pro-to-v9-migration-analysis.md",
+      "line": 355,
+      "target": "src/pages/DataHubPage.tsx"
+    },
+    {
+      "source": "docs\\reference\\v9-input-cabin-strategy-report.md",
+      "line": 139,
+      "target": "src/services/fetcher/fetcherConfigService.ts"
+    },
+    {
+      "source": "docs\\reference\\v9-input-cabin-strategy-report.md",
+      "line": 232,
+      "target": "docs/explanation/prototype-reference.md"
+    },
+    {
+      "source": "docs\\reference\\v9-system-blueprint.md",
+      "line": 435,
+      "target": "docs/explanation/ui-module-alignment.md"
+    },
+    {
+      "source": "docs\\reference\\v9-system-blueprint.md",
+      "line": 442,
+      "target": "docs/implementation/adr/ADR-001~009.md"
+    },
+    {
+      "source": "docs\\reference\\v9数据架构修订建议.md",
+      "line": 241,
+      "target": "src/services/scoring/sectorScoreService.ts"
+    },
+    {
+      "source": "docs\\reference\\v9核心数据字典与类型定义(整合版).md",
+      "line": 2685,
+      "target": "src/types/user.types.ts"
+    },
+    {
+      "source": "docs\\reference\\v9核心数据字典与类型定义(整合版).md",
+      "line": 2706,
+      "target": "src/types/user.types.ts"
+    },
+    {
+      "source": "docs\\reference\\v9核心数据字典与类型定义(整合版).md",
+      "line": 2728,
+      "target": "src/types/config.types.ts"
+    },
+    {
+      "source": "docs\\reference\\v9核心数据字典与类型定义(整合版).md",
+      "line": 2751,
+      "target": "src/types/config.types.ts"
+    },
+    {
+      "source": "docs\\reference\\v9核心数据字典与类型定义(整合版).md",
+      "line": 2882,
+      "target": "src/types/plugin.types.ts"
+    },
+    {
+      "source": "docs\\reference\\v9核心数据字典与类型定义(整合版).md",
+      "line": 2903,
+      "target": "src/types/plugin.types.ts"
+    },
+    {
+      "source": "docs\\reference\\v9核心数据字典与类型定义(整合版).md",
+      "line": 2976,
+      "target": "src/types/research.types.ts"
+    },
+    {
+      "source": "docs\\reference\\V9现有数据资产清单.md",
+      "line": 58,
+      "target": "docs/《V9核心数据字典与类型定义（整合版）》.md"
+    },
+    {
+      "source": "docs\\reference\\V9现有数据资产清单.md",
+      "line": 109,
+      "target": "docs/audit/report-1-architecture-health.md"
+    },
+    {
+      "source": "docs\\reference\\V9现有数据资产清单.md",
+      "line": 110,
+      "target": "docs/audit/report-2-function-completeness.md"
+    },
+    {
+      "source": "docs\\reference\\V9现有数据资产清单.md",
+      "line": 111,
+      "target": "docs/audit/report-3-data-type-consistency.md"
+    },
+    {
+      "source": "docs\\reference\\V9现有数据资产清单.md",
+      "line": 112,
+      "target": "docs/audit/report-4-test-quality-gates.md"
+    },
+    {
+      "source": "docs\\reference\\V9现有数据资产清单.md",
+      "line": 113,
+      "target": "docs/audit/report-5-documentation-completeness.md"
+    },
+    {
+      "source": "docs\\reference\\V9现有数据资产清单.md",
+      "line": 115,
+      "target": "docs/audit/report-7-ui-component-supplementary-audit.md"
+    },
+    {
+      "source": "docs\\reference\\V9现有数据资产清单.md",
+      "line": 117,
+      "target": "docs/《V9 架构缺陷与整改行动清单》.md"
+    },
+    {
+      "source": "docs\\reference\\V9现有数据资产清单.md",
+      "line": 124,
+      "target": "docs/《V9 目标功能清单》.md"
+    },
+    {
+      "source": "docs\\reference\\V9现有数据资产清单.md",
+      "line": 131,
+      "target": "docs/explanation/dual-strategy-divergence-list.md"
+    },
+    {
+      "source": "docs\\reference\\V9现有数据资产清单.md",
+      "line": 296,
+      "target": "src/services/analysis/dataFusionEngine.ts"
+    },
+    {
+      "source": "docs\\reference\\V9现有数据资产清单.md",
+      "line": 298,
+      "target": "src/services/analysis/sectorScoreService.ts"
+    },
+    {
+      "source": "docs\\reference\\功能模块数据契约.md",
+      "line": 885,
+      "target": "src/pages/news-v6/components/FilterPanel"
+    },
+    {
+      "source": "docs\\reference\\功能模块数据契约.md",
+      "line": 1536,
+      "target": "src/pages/news-v6/components/FilterPanel"
+    },
+    {
+      "source": "docs\\reference\\数据治理路线图.md",
+      "line": 171,
+      "target": "docs/data-store-schema.md"
+    },
+    {
+      "source": "docs\\reference\\数据治理路线图.md",
+      "line": 172,
+      "target": "docs/data-store-schema.md"
+    },
+    {
+      "source": "docs\\reference\\数据治理路线图.md",
+      "line": 183,
+      "target": "src/types/modules/common.types.ts"
+    },
+    {
+      "source": "docs\\reference\\数据治理路线图.md",
+      "line": 184,
+      "target": "src/types/modules/common.types.ts"
+    },
+    {
+      "source": "docs\\reference\\数据治理路线图.md",
+      "line": 222,
+      "target": "scripts/audit-data-consistency.ts"
+    },
+    {
+      "source": "docs\\reference\\数据治理路线图.md",
+      "line": 230,
+      "target": "docs/data-lineage.md"
+    },
+    {
+      "source": "docs\\reference\\数据治理路线图.md",
+      "line": 246,
+      "target": "docs/pwa-offline-data-strategy.md"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 46,
+      "target": "docs/V9核心数据字典与类型定义（整合版）.md"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 73,
+      "target": "scripts/migration-auto-fix.cjs"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 85,
+      "target": "docs/audit/report-1-architecture-health.md"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 86,
+      "target": "docs/audit/report-2-function-completeness.md"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 87,
+      "target": "docs/audit/report-3-data-type-consistency.md"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 88,
+      "target": "docs/audit/report-4-test-quality-gates.md"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 89,
+      "target": "docs/audit/report-5-documentation-completeness.md"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 90,
+      "target": "docs/explanation/completeness-profile-batch1~5.md"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 95,
+      "target": "docs/explanation/dual-strategy-divergence-list.md"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 113,
+      "target": "docs/V9核心数据字典与类型定义（整合版）.md"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 185,
+      "target": "docs/audit/report-9-data-layer-compliance.md"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 186,
+      "target": "docs/audit/report-10-mature-app-benchmark-comparison.md"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 187,
+      "target": "docs/audit/report-11-integration-maturity-test.md"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 189,
+      "target": "docs/audit/code-completeness-test-report.md"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 263,
+      "target": "scripts/regression_news_v6.py"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 264,
+      "target": "scripts/regression_news_v6_test.cjs"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 265,
+      "target": "scripts/run_browser_test.ps1"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 266,
+      "target": "scripts/test-news-v6.cjs"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 305,
+      "target": "scripts/migration-auto-fix.cjs"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 322,
+      "target": "docs/audit/code-completeness-test-report.md"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 340,
+      "target": "docs/《V9核心数据字典》.md"
+    },
+    {
+      "source": "docs\\reports\\2026-07-05-document-update-report.md",
+      "line": 41,
+      "target": "docs/BACKTEST_data-definition.md"
+    },
+    {
+      "source": "docs\\reports\\2026-07-09-four-category-problem-analysis.md",
+      "line": 365,
+      "target": "src/store/fetcherStrategyStore.ts"
+    },
+    {
+      "source": "docs\\reports\\2026-07-09-four-category-problem-analysis.md",
+      "line": 551,
+      "target": "src/store/fetcherStore.ts"
+    },
+    {
+      "source": "docs\\reports\\audit\\audit-warning-report.md",
+      "line": 219,
+      "target": "src/pages/command/agent/LlmManagementPage.tsx"
+    },
+    {
+      "source": "docs\\reports\\audit\\audit-warning-report.md",
+      "line": 258,
+      "target": "src/pages/command/agent/LlmManagementPage.tsx"
+    },
+    {
+      "source": "docs\\reports\\audit\\code-quality-audit-report.md",
+      "line": 314,
+      "target": "src/config/v6Thresholds.ts"
+    },
+    {
+      "source": "docs\\reports\\audit\\debug-output-cabin-not-rendering.md",
+      "line": 36,
+      "target": "scripts/verify-output-routes.ts"
+    },
+    {
+      "source": "docs\\reports\\audit\\file-management-guide-test-report.md",
+      "line": 91,
+      "target": "src/lib/dataValidation.ts"
+    },
+    {
+      "source": "docs\\reports\\audit\\output-cabin-remediation-report.md",
+      "line": 218,
+      "target": "scripts/check-types.sh"
+    },
+    {
+      "source": "docs\\reports\\audit\\output-cabin-remediation-report.md",
+      "line": 305,
+      "target": "scripts/verify-output-routes.ts"
+    },
+    {
+      "source": "docs\\reports\\audit\\quality-audit-plan.md",
+      "line": 55,
+      "target": "src/pages/input/InputHubPage"
+    },
+    {
+      "source": "docs\\reports\\audit\\quality-audit-plan.md",
+      "line": 69,
+      "target": "src/pages/analysis/AnalysisHubPage"
+    },
+    {
+      "source": "docs\\reports\\audit\\quality-audit-plan.md",
+      "line": 78,
+      "target": "src/pages/analysis/HotSectorStrategyPage"
+    },
+    {
+      "source": "docs\\reports\\audit\\quality-audit-plan.md",
+      "line": 86,
+      "target": "src/pages/trading/TradingHubPage"
+    },
+    {
+      "source": "docs\\reports\\audit\\quality-audit-plan.md",
+      "line": 107,
+      "target": "src/pages/command/CommandHubPage"
+    },
+    {
+      "source": "docs\\reports\\audit\\v9-code-quality-kanban-20260629.md",
+      "line": 62,
+      "target": "src/apps/input/InputDashboard.tsx:17-20"
+    },
+    {
+      "source": "docs\\reports\\audit\\v9-code-quality-kanban-20260629.md",
+      "line": 63,
+      "target": "src/apps/input/DataTestPanel.tsx:6-10"
+    },
+    {
+      "source": "docs\\reports\\audit\\v9-code-quality-kanban-20260629.md",
+      "line": 63,
+      "target": "src/services/input/dataTestService.ts"
+    },
+    {
+      "source": "docs\\reports\\audit\\v9-code-quality-kanban-20260629.md",
+      "line": 65,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:160-170"
+    },
+    {
+      "source": "docs\\reports\\audit\\v9-code-quality-kanban-20260629.md",
+      "line": 66,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:173-178"
+    },
+    {
+      "source": "docs\\reports\\audit\\v9-code-quality-kanban-20260629.md",
+      "line": 67,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:181-185"
+    },
+    {
+      "source": "docs\\reports\\audit\\v9-code-quality-kanban-20260629.md",
+      "line": 68,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:188-194"
+    },
+    {
+      "source": "docs\\reports\\audit\\v9-code-quality-kanban-20260629.md",
+      "line": 69,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:212-218"
+    },
+    {
+      "source": "docs\\reports\\audit\\v9-code-quality-kanban-20260629.md",
+      "line": 70,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:221-227"
+    },
+    {
+      "source": "docs\\reports\\audit\\v9-code-quality-kanban-20260629.md",
+      "line": 71,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:230-236"
+    },
+    {
+      "source": "docs\\reports\\audit\\v9-code-quality-kanban-20260629.md",
+      "line": 72,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:253-263"
+    },
+    {
+      "source": "docs\\reports\\audit\\v9-code-quality-kanban-20260629.md",
+      "line": 73,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:290-300"
+    },
+    {
+      "source": "docs\\reports\\audit\\v9-code-quality-kanban-20260629.md",
+      "line": 74,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:303-309"
+    },
+    {
+      "source": "docs\\reports\\audit\\v9-code-quality-kanban-20260629.md",
+      "line": 75,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:312-316"
+    },
+    {
+      "source": "docs\\reports\\audit\\v9-code-quality-kanban-20260629.md",
+      "line": 76,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:345-353"
+    },
+    {
+      "source": "docs\\reports\\audit\\v9-code-quality-kanban-20260629.md",
+      "line": 77,
+      "target": "src/services/scoring/hotSectorAnalyzer.ts:139-145"
+    },
+    {
+      "source": "docs\\reports\\audit\\v9-code-quality-kanban-20260629.md",
+      "line": 78,
+      "target": "src/services/scoring/hotSectorAnalyzer.ts:148-152"
+    },
+    {
+      "source": "docs\\reports\\audit\\v9-code-quality-kanban-20260629.md",
+      "line": 79,
+      "target": "src/services/scoring/hotSectorAnalyzer.ts:183-193"
+    },
+    {
+      "source": "docs\\reports\\audit\\v9-code-quality-kanban-20260629.md",
+      "line": 80,
+      "target": "src/services/scoring/hotSectorAnalyzer.ts:245-251"
+    },
+    {
+      "source": "docs\\reports\\audit\\v9-code-quality-kanban-20260629.md",
+      "line": 81,
+      "target": "src/services/scoring/hotSectorAnalyzer.ts:278-290"
+    },
+    {
+      "source": "docs\\reports\\audit\\v9-code-quality-kanban-20260629.md",
+      "line": 82,
+      "target": "src/services/scoring/hotSectorAnalyzer.ts:377-383"
+    },
+    {
+      "source": "docs\\reports\\audit\\v9-架构缺陷与整改行动清单.md",
+      "line": 121,
+      "target": "src/pages/trading/TradingHubPage.tsx:36/42"
+    },
+    {
+      "source": "docs\\reports\\audit\\v9-架构缺陷与整改行动清单.md",
+      "line": 132,
+      "target": "src/pages/command/CommandHubPage.tsx:35/41"
+    },
+    {
+      "source": "docs\\reports\\audit\\v9-架构缺陷与整改行动清单.md",
+      "line": 133,
+      "target": "src/pages/command/CommandHubPage.tsx:46-79"
+    },
+    {
+      "source": "docs\\reports\\audit\\v9-架构缺陷与整改行动清单.md",
+      "line": 135,
+      "target": "src/pages/MockTestPage.tsx:16-26"
+    },
+    {
+      "source": "docs\\reports\\audit\\代码质量合规审查报告_2026-07-08.md",
+      "line": 74,
+      "target": "src/config/dbConfig.ts:97/268"
+    },
+    {
+      "source": "docs\\reports\\audit\\文档-代码双向一致性检测报告_2026-07-08.md",
+      "line": 17,
+      "target": "scripts/doc-code-consistency.cjs"
+    },
+    {
+      "source": "docs\\reports\\audit\\文档-代码双向一致性检测报告_2026-07-08.md",
+      "line": 102,
+      "target": "references/doc-code-consistency.md"
+    },
+    {
+      "source": "docs\\reports\\audit\\文档-代码双向一致性检测报告_2026-07-08.md",
+      "line": 103,
+      "target": "scripts/doc-code-consistency.cjs"
+    },
+    {
+      "source": "docs\\reports\\audit\\文档-代码双向一致性检测报告_2026-07-08.md",
+      "line": 105,
+      "target": "references/checklist.md"
+    },
+    {
+      "source": "docs\\reports\\audit\\比对分析报告检索与比对报告.md",
+      "line": 29,
+      "target": "docs/reports/2026-07-07-comprehensive-audit-report.md"
+    },
+    {
+      "source": "docs\\reports\\audit-findings-2026-07-05.md",
+      "line": 108,
+      "target": "src/constants/colors.ts"
+    },
+    {
+      "source": "docs\\reports\\audit-findings-2026-07-05.md",
+      "line": 123,
+      "target": "src/config/limits.ts"
+    },
+    {
+      "source": "docs\\reports\\audit-findings-2026-07-05.md",
+      "line": 204,
+      "target": "scripts/quick-query.sh"
+    },
+    {
+      "source": "docs\\reports\\audit-hardcode-warning-distribution.md",
+      "line": 74,
+      "target": "src/services/analysis/dataFusionEngine.ts"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\CHANGELOG.md",
+      "line": 43,
+      "target": "src/components/cockpit/SecurityBadge.tsx"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\CHANGELOG.md",
+      "line": 337,
+      "target": "src/mcp/servers/export/exportServer.ts"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\CHANGELOG.md",
+      "line": 338,
+      "target": "src/mcp/servers/input/inputServer.ts"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\CHANGELOG.md",
+      "line": 342,
+      "target": "src/mcp/__tests__/exportServer.test.ts"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\CHANGELOG.md",
+      "line": 343,
+      "target": "src/mcp/__tests__/inputServer.test.ts"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\CHANGELOG.md",
+      "line": 344,
+      "target": "src/mcp/__tests__/tradeServer.test.ts"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\CHANGELOG.md",
+      "line": 355,
+      "target": "src/mcp/servers/export/exportServer.ts"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\CHANGELOG.md",
+      "line": 356,
+      "target": "src/mcp/servers/input/inputServer.ts"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\CHANGELOG.md",
+      "line": 751,
+      "target": "src/pages/news-v6/components/newsCardUtils.tsx"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-audit-report.md",
+      "line": 57,
+      "target": "src/data/db-utils.ts:25-27"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-audit-report.md",
+      "line": 58,
+      "target": "src/lib/timeUtils.ts:31-33"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-audit-report.md",
+      "line": 86,
+      "target": "src/lib/timeUtils.ts:31-33"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-audit-report.md",
+      "line": 102,
+      "target": "src/hooks/cabin/useIndustryScorePage.ts:37-43"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-audit-report.md",
+      "line": 103,
+      "target": "src/store/industryScoreStore.ts:64-70"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-audit-report.md",
+      "line": 138,
+      "target": "src/hooks/cabin/useIntelligentScorePage.ts:38-44"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-audit-report.md",
+      "line": 139,
+      "target": "src/store/intelligentScoreStore.ts:68-74"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-audit-report.md",
+      "line": 214,
+      "target": "src/lib/safeCoerce.ts:26-30"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-audit-report.md",
+      "line": 215,
+      "target": "src/services/fetcher/strategyDataAdapter.ts:76-80"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-audit-report.md",
+      "line": 260,
+      "target": "src/lib/safeCoerce.ts:108-113"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-audit-report.md",
+      "line": 261,
+      "target": "src/services/fetcher/strategyDataAdapter.ts:97-102"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-audit-report.md",
+      "line": 310,
+      "target": "src/data/db-utils.ts:17-19"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-audit-report.md",
+      "line": 311,
+      "target": "src/lib/a11y.ts:11-13"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-audit-report.md",
+      "line": 358,
+      "target": "src/store/hotSectorStore.ts:221-223"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-audit-report.md",
+      "line": 359,
+      "target": "src/store/rotationSignalStore.derived.ts:131-133"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-audit-report.md",
+      "line": 411,
+      "target": "src/services/scoring/hotSectorDimensions.ts:365-418"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-audit-report.md",
+      "line": 412,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:328-372"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-plan.md",
+      "line": 68,
+      "target": "src/lib/timeUtils.ts:31-33"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-plan.md",
+      "line": 95,
+      "target": "src/hooks/cabin/useIndustryScorePage.ts:37-43"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-plan.md",
+      "line": 99,
+      "target": "src/store/industryScoreStore.ts:64-70"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-plan.md",
+      "line": 103,
+      "target": "src/hooks/cabin/useIntelligentScorePage.ts:38-44"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-plan.md",
+      "line": 106,
+      "target": "src/store/intelligentScoreStore.ts:68-74"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-plan.md",
+      "line": 132,
+      "target": "src/lib/safeCoerce.ts:108-113"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-plan.md",
+      "line": 166,
+      "target": "src/lib/a11y.ts:11-13"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-plan.md",
+      "line": 191,
+      "target": "src/store/hotSectorStore.ts:221-223"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-plan.md",
+      "line": 224,
+      "target": "src/services/scoring/_shared/weightedScore.ts"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-plan.md",
+      "line": 228,
+      "target": "src/services/scoring/hotSectorDimensions.ts:365-418"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\pr-8-dedup-plan.md",
+      "line": 232,
+      "target": "src/services/scoring/valuePitAnalyzer.ts:328-372"
+    },
+    {
+      "source": "docs\\reports\\complexity-optimization-plan.md",
+      "line": 40,
+      "target": "src/pages/command/agent/LlmManagementPage.tsx"
+    },
+    {
+      "source": "docs\\reports\\full-audit-inventory-2026-07-05.md",
+      "line": 69,
+      "target": "src/mcp/servers/data-collector/data-collectorServer.ts"
+    },
+    {
+      "source": "docs\\reports\\full-audit-inventory-2026-07-05.md",
+      "line": 71,
+      "target": "src/mcp/servers/export/exportServer.ts"
+    },
+    {
+      "source": "docs\\reports\\full-audit-inventory-2026-07-05.md",
+      "line": 72,
+      "target": "src/mcp/servers/input/inputServer.ts"
+    },
+    {
+      "source": "docs\\reports\\full-audit-inventory-2026-07-05.md",
+      "line": 194,
+      "target": "src/config/limits.ts"
+    },
+    {
+      "source": "docs\\reports\\full-audit-inventory-2026-07-05.md",
+      "line": 196,
+      "target": "src/constants/animation.ts"
+    },
+    {
+      "source": "docs\\reports\\mcp-architecture-audit-report-2026-07-08.md",
+      "line": 62,
+      "target": "src/mcp/servers/rbac/rbacServer.ts"
+    },
+    {
+      "source": "docs\\reports\\mcp-architecture-remediation-plan-2026-07-08.md",
+      "line": 143,
+      "target": "src/types/modules/scoring.types.ts"
+    },
+    {
+      "source": "docs\\reports\\mcp-architecture-remediation-plan-2026-07-08.md",
+      "line": 206,
+      "target": "src/mcp/servers/rbac/rbacServer.ts"
+    },
+    {
+      "source": "docs\\reports\\mcp-architecture-remediation-plan-2026-07-08.md",
+      "line": 207,
+      "target": "src/mcp/servers/usecase/useCaseServer.ts"
+    },
+    {
+      "source": "docs\\reports\\mcp-architecture-remediation-plan-2026-07-08.md",
+      "line": 208,
+      "target": "src/mcp/servers/ai-center/aiCenterServer.ts"
+    },
+    {
+      "source": "docs\\reports\\refactoring-plan-2026-07-04.md",
+      "line": 144,
+      "target": "src/constants/colors.ts"
+    },
+    {
+      "source": "docs\\reports\\refactoring-plan-2026-07-04.md",
+      "line": 158,
+      "target": "src/config/timeoutConfig.ts"
+    },
+    {
+      "source": "docs\\reports\\refactoring-plan-2026-07-04.md",
+      "line": 159,
+      "target": "src/constants/uiDimensions.ts"
+    },
+    {
+      "source": "docs\\reports\\release-management\\README.md",
+      "line": 24,
+      "target": "docs/explanation/design/ui-optimization-plan.md"
+    },
+    {
+      "source": "docs\\reports\\release-management\\README.md",
+      "line": 25,
+      "target": "docs/explanation/design/design-principles.md"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\doc-sync-execution-plan.md",
+      "line": 90,
+      "target": "docs/explanation/v9-issue-resolution-schedule.md"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\doc-sync-execution-plan.md",
+      "line": 165,
+      "target": "docs/explanation/doc-sync-gap-list.md"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\lessons-learned.md",
+      "line": 114,
+      "target": "src/agents/agentRuntime.ts:49-119"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\lessons-learned.md",
+      "line": 122,
+      "target": "src/agents/index.ts:178-184"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\lessons-learned.md",
+      "line": 143,
+      "target": "src/config/v6Thresholds.ts"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\lessons-learned.md",
+      "line": 312,
+      "target": ".agents/skills/v6-stock-analysis-model/SKILL.md"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\lessons-learned.md",
+      "line": 346,
+      "target": "src/services/trading/tradingService.ts#persistWatchlistSnapshot"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\lessons-learned.md",
+      "line": 449,
+      "target": ".agents/skills/db-reference-audit/SKILL.md"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\lessons-learned.md",
+      "line": 525,
+      "target": ".agents/skills/mcp-ui-acl-authorization/SKILL.md"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\mcp-disabled-server-deep-dive.md",
+      "line": 147,
+      "target": "src/mcp/servers/export/exportServer.ts"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\mcp-disabled-server-deep-dive.md",
+      "line": 210,
+      "target": "src/mcp/servers/input/inputServer.ts"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\mcp-disabled-server-deep-dive.md",
+      "line": 331,
+      "target": "src/mcp/servers/stockpool/stockPoolServer.ts"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\mcp-disabled-server-deep-dive.md",
+      "line": 488,
+      "target": "docs/02-design/ADR/adr-xxx-mcp-server-lifecycle.md"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\mcp-disabled-server-deep-dive.md",
+      "line": 530,
+      "target": "scripts/mcp-tool-usage-audit.py"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\mcp-zombie-server-audit-report.md",
+      "line": 17,
+      "target": "scripts/mcp-tool-usage-audit.py"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\v9-current-state-review.md",
+      "line": 481,
+      "target": "src/services/output/reviewEngine.ts"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\v9-current-state-review.md",
+      "line": 481,
+      "target": "src/services/system/reviewEngine.ts"
+    },
+    {
+      "source": "docs\\reports\\token-optimization-best-practices.md",
+      "line": 231,
+      "target": "docs/quick-queries.md"
+    },
+    {
+      "source": "docs\\reports\\token-optimization-best-practices.md",
+      "line": 404,
+      "target": "src/config/engineConfig.ts"
+    },
+    {
+      "source": "docs\\reports\\token-optimization-best-practices.md",
+      "line": 579,
+      "target": "scripts/quick-query.sh"
+    },
+    {
+      "source": "docs\\reports\\token-optimization-best-practices.md",
+      "line": 929,
+      "target": "scripts/quick-query.sh"
+    },
+    {
+      "source": "docs\\reports\\token-optimization-best-practices.md",
+      "line": 1107,
+      "target": "src/config/engineConfig.ts"
+    },
+    {
+      "source": "docs\\tutorials\\getting-started.md",
+      "line": 376,
+      "target": ".agents/skills/feature-window-context-doc/SKILL.md"
+    },
+    {
+      "source": "scripts\\build\\build-ai-memory-index.ts",
+      "line": 8,
+      "target": "docs/、prompts/、AGENTS.md"
+    },
+    {
+      "source": "scripts\\build-ai-memory-index.ts",
+      "line": 8,
+      "target": "docs/、prompts/、AGENTS.md"
+    },
+    {
+      "source": "scripts\\fix\\fix-silent-fallback.ts",
+      "line": 168,
+      "target": "docs/reports/silent-fallback-fix-report.md"
+    },
+    {
+      "source": "scripts\\fix-silent-fallback.ts",
+      "line": 168,
+      "target": "docs/reports/silent-fallback-fix-report.md"
+    }
+  ],
+  "ignored": [
+    {
+      "source": "docs\\00-meta\\23-core-docs-final-verification-report.md",
+      "line": 118,
+      "target": "autonomous-workflow-user-guide.md"
+    },
+    {
+      "source": "docs\\00-meta\\23-core-docs-final-verification-report.md",
+      "line": 153,
+      "target": "autonomous-workflow-user-guide.md"
+    },
+    {
+      "source": "docs\\00-meta\\23-core-docs-final-verification-report.md",
+      "line": 178,
+      "target": "autonomous-workflow-user-guide.md"
+    },
+    {
+      "source": "docs\\00-meta\\23-core-docs-functional-match-report.md",
+      "line": 228,
+      "target": "ai-memory-layer.md"
+    },
+    {
+      "source": "docs\\00-meta\\23-core-docs-v2-final-report.md",
+      "line": 18,
+      "target": "v9-test-cases.md"
+    },
+    {
+      "source": "docs\\00-meta\\23-core-docs-v2-final-report.md",
+      "line": 116,
+      "target": "07-operation-strategy.md"
+    },
+    {
+      "source": "docs\\00-meta\\23-core-docs-v2-final-report.md",
+      "line": 120,
+      "target": "autonomous-workflow-user-guide.md"
+    },
+    {
+      "source": "docs\\00-meta\\23-core-docs-v2-final-report.md",
+      "line": 129,
+      "target": "migration-news-usestate-to-zustand.md"
+    },
+    {
+      "source": "docs\\00-meta\\23-core-docs-v2-final-report.md",
+      "line": 147,
+      "target": "v9-test-cases.md"
+    },
+    {
+      "source": "docs\\00-meta\\23-core-docs-v2-final-report.md",
+      "line": 162,
+      "target": "07-operation-strategy.md"
+    },
+    {
+      "source": "docs\\00-meta\\23-core-docs-v2-final-report.md",
+      "line": 164,
+      "target": "migration-news-usestate-to-zustand.md"
+    },
+    {
+      "source": "docs\\00-meta\\development-log.md",
+      "line": 497,
+      "target": "file.md"
+    },
+    {
+      "source": "docs\\00-meta\\development-log.md",
+      "line": 1325,
+      "target": "  ✅ README.md"
+    },
+    {
+      "source": "docs\\00-meta\\development-log.md",
+      "line": 1326,
+      "target": "v9核心数据字典与类型定义（整合版）.md"
+    },
+    {
+      "source": "docs\\00-meta\\directory-audit-todo.md",
+      "line": 141,
+      "target": "widget-integration-checklist.md"
+    },
+    {
+      "source": "docs\\00-meta\\directory-structure-guide.md",
+      "line": 175,
+      "target": "数据宪法.md"
+    },
+    {
+      "source": "docs\\00-meta\\doc-file-management-optimization-plan.md",
+      "line": 86,
+      "target": "…-file-wandering-report.md"
+    },
+    {
+      "source": "docs\\00-meta\\doc-file-management-optimization-plan.md",
+      "line": 86,
+      "target": "…-optimization-prompt.md"
+    },
+    {
+      "source": "docs\\00-meta\\doc-file-management-optimization-plan.md",
+      "line": 86,
+      "target": "…-RCA-report.md"
+    },
+    {
+      "source": "docs\\00-meta\\doc-file-management-optimization-plan.md",
+      "line": 86,
+      "target": "…-task-list.md"
+    },
+    {
+      "source": "docs\\00-meta\\doc-system-check-v9.md",
+      "line": 129,
+      "target": "quality-gates.md"
+    },
+    {
+      "source": "docs\\00-meta\\doc-system-check-v9.md",
+      "line": 143,
+      "target": "batchd-fix-plan.md"
+    },
+    {
+      "source": "docs\\00-meta\\doc-system-check-v9.md",
+      "line": 143,
+      "target": "batche-fix-plan.md"
+    },
+    {
+      "source": "docs\\00-meta\\doc-system-check-v9.md",
+      "line": 160,
+      "target": "component-deprecation-policy.md"
+    },
+    {
+      "source": "docs\\00-meta\\doc-system-check-v9.md",
+      "line": 161,
+      "target": "quality-audit-plan.md"
+    },
+    {
+      "source": "docs\\00-meta\\doc-system-check-v9.md",
+      "line": 165,
+      "target": "data_link_sequence_diagram.md"
+    },
+    {
+      "source": "docs\\00-meta\\doc-system-check-v9.md",
+      "line": 393,
+      "target": "service-subdomain-overview.md"
+    },
+    {
+      "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-file-wandering-report.md",
+      "line": 161,
+      "target": "system-maturity-assessment-2026-07-12.md"
+    },
+    {
+      "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-file-wandering-report.md",
+      "line": 161,
+      "target": "v9-system-check-report-2026-07-12.md"
+    },
+    {
+      "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-file-wandering-report.md",
+      "line": 164,
+      "target": "文件去重与整理治理方案.md"
+    },
+    {
+      "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-file-wandering-report.md",
+      "line": 164,
+      "target": "残留校对更新报告-2026-07-12.md"
+    },
+    {
+      "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-file-wandering-report.md",
+      "line": 165,
+      "target": "改进路线图实施计划.md"
+    },
+    {
+      "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-file-wandering-report.md",
+      "line": 246,
+      "target": "SKILL.md"
+    },
+    {
+      "source": "docs\\00-meta\\FILE-MANAGEMENT-GUIDE-task-list.md",
+      "line": 189,
+      "target": "api-doc-draft-2026-07-12t08-33-40-567z.md"
+    },
+    {
+      "source": "docs\\00-meta\\GOVERNANCE.md",
+      "line": 95,
+      "target": "kebab-case.md"
+    },
+    {
+      "source": "docs\\00-meta\\GOVERNANCE.md",
+      "line": 96,
+      "target": "news-data-definition.md"
+    },
+    {
+      "source": "docs\\00-meta\\GOVERNANCE.md",
+      "line": 98,
+      "target": "2026-07-12-security-audit.md"
+    },
+    {
+      "source": "docs\\00-meta\\GOVERNANCE.md",
+      "line": 179,
+      "target": "DEPRECATED_原文件名.md"
+    },
+    {
+      "source": "docs\\00-meta\\p1-13-code-to-doc-refs-fix-report.md",
+      "line": 102,
+      "target": "  ✅ README.md"
+    },
+    {
+      "source": "docs\\00-meta\\p1-13-code-to-doc-refs-fix-report.md",
+      "line": 103,
+      "target": "v9核心数据字典与类型定义（整合版）.md"
+    },
+    {
+      "source": "docs\\00-meta\\prompt-execute-remediation.md",
+      "line": 60,
+      "target": "DECISIONS.md"
+    },
+    {
+      "source": "docs\\00-meta\\registry-index.md",
+      "line": 268,
+      "target": "V6Pro_整体架构梳理_v3.md"
+    },
+    {
+      "source": "docs\\00-meta\\registry-index.md",
+      "line": 315,
+      "target": "v9-issue-execution-board.md"
+    },
+    {
+      "source": "docs\\00-meta\\registry-index.md",
+      "line": 572,
+      "target": "V6Pro_整体架构梳理_v3.md"
+    },
+    {
+      "source": "docs\\00-meta\\registry-index.md",
+      "line": 573,
+      "target": "batch1-merge-report.md"
+    },
+    {
+      "source": "docs\\00-meta\\registry-index.md",
+      "line": 634,
+      "target": "batch1-merge-report.md"
+    },
+    {
+      "source": "docs\\00-meta\\trae-file-management-review.md",
+      "line": 31,
+      "target": "DECISIONS.md"
+    },
+    {
+      "source": "docs\\00-meta\\trae-file-management-review.md",
+      "line": 87,
+      "target": "input-cabin-spec.md"
+    },
+    {
+      "source": "docs\\00-meta\\trae-file-management-review.md",
+      "line": 129,
+      "target": "DECISIONS.md"
+    },
+    {
+      "source": "docs\\00-meta\\trae-file-management-review.md",
+      "line": 130,
+      "target": "DECISIONS.md"
+    },
+    {
+      "source": "docs\\00-meta\\trae-file-management-review.md",
+      "line": 162,
+      "target": "DECISIONS.md"
+    },
+    {
+      "source": "docs\\00-meta\\trae-file-management-review.md",
+      "line": 180,
+      "target": "ai-center-data-definition.md"
+    },
+    {
+      "source": "docs\\00-meta\\trae-file-management-review.md",
+      "line": 189,
+      "target": "DECISIONS.md"
+    },
+    {
+      "source": "docs\\00-meta\\V9-文档治理修复行动计划.md",
+      "line": 74,
+      "target": "input-cabin-spec.md"
+    },
+    {
+      "source": "docs\\00-meta\\V9-文档治理修复行动计划.md",
+      "line": 75,
+      "target": "how-to-add-page.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档体系体检报告-v9.md",
+      "line": 131,
+      "target": "quality-gates.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档体系体检报告-v9.md",
+      "line": 145,
+      "target": "batchd-fix-plan.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档体系体检报告-v9.md",
+      "line": 145,
+      "target": "batche-fix-plan.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档体系体检报告-v9.md",
+      "line": 162,
+      "target": "component-deprecation-policy.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档体系体检报告-v9.md",
+      "line": 163,
+      "target": "quality-audit-plan.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档体系体检报告-v9.md",
+      "line": 167,
+      "target": "data_link_sequence_diagram.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档体系体检报告-v9.md",
+      "line": 385,
+      "target": "-contract.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档体系体检报告-v9.md",
+      "line": 399,
+      "target": "service-subdomain-overview.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档归类体系结构.md",
+      "line": 235,
+      "target": "component-deprecation-policy.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档归类体系结构.md",
+      "line": 235,
+      "target": "migration-news-usestate-to-zustand.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档归类体系结构.md",
+      "line": 236,
+      "target": "widget-integration-checklist.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档归类体系结构.md",
+      "line": 236,
+      "target": "widget-development-guide.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档归类体系结构.md",
+      "line": 237,
+      "target": "migration-news-usestate-to-zustand.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档归类体系结构.md",
+      "line": 264,
+      "target": "04-ui-ux-specs.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档归类体系结构.md",
+      "line": 283,
+      "target": "performance-baseline.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档归类体系结构.md",
+      "line": 299,
+      "target": "ai-generate-audit-fix-loop.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档归类体系结构.md",
+      "line": 368,
+      "target": "component-deprecation-policy.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档归类体系结构.md",
+      "line": 369,
+      "target": "widget-development-guide.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档归类体系结构.md",
+      "line": 370,
+      "target": "migration-news-usestate-to-zustand.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档归类体系结构.md",
+      "line": 373,
+      "target": "jsdoc-convention.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档归类体系结构.md",
+      "line": 374,
+      "target": "v9-test-cases.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档归类体系结构.md",
+      "line": 376,
+      "target": "ai-memory-layer.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档归类体系结构.md",
+      "line": 376,
+      "target": "ai-generate-audit-fix-loop.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档归类体系结构.md",
+      "line": 391,
+      "target": "input-cabin-spec.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档归类体系结构.md",
+      "line": 392,
+      "target": "jsdoc-convention.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档归类体系结构.md",
+      "line": 393,
+      "target": "v9-test-cases.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档归类体系结构.md",
+      "line": 394,
+      "target": "ai-generate-audit-fix-loop.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档自动更新体系-架构梳理与任务清单.md",
+      "line": 58,
+      "target": "api-report.md"
+    },
+    {
+      "source": "docs\\00-meta\\文档自动更新体系-架构梳理与任务清单.md",
+      "line": 97,
+      "target": "NEWS_data-definition.md"
+    },
+    {
+      "source": "docs\\explanation\\A-H-INDEX.md",
+      "line": 46,
+      "target": "v9数据宪法.md"
+    },
+    {
+      "source": "docs\\explanation\\b批次高价值孤儿集成状态报告-2026-07-08.md",
+      "line": 17,
+      "target": "B批次代码审查与改造报告_2026-07-08.md"
+    },
+    {
+      "source": "docs\\explanation\\b批次高价值孤儿集成状态报告-2026-07-08.md",
+      "line": 77,
+      "target": "04-ui-ux-specs.md"
+    },
+    {
+      "source": "docs\\explanation\\cabins-overview.md",
+      "line": 26,
+      "target": "input-cabin-spec.md"
+    },
+    {
+      "source": "docs\\explanation\\core-data-strategy-report.md",
+      "line": 810,
+      "target": "data-flow-spec.md"
+    },
+    {
+      "source": "docs\\explanation\\core-data-strategy-report.md",
+      "line": 824,
+      "target": "data-flow-spec.md"
+    },
+    {
+      "source": "docs\\explanation\\core-data-strategy-report.md",
+      "line": 828,
+      "target": "data-flow-spec.md"
+    },
+    {
+      "source": "docs\\explanation\\core-data-strategy-report.md",
+      "line": 863,
+      "target": "cockpit-widget-architecture.md"
+    },
+    {
+      "source": "docs\\explanation\\core-data-strategy-report.md",
+      "line": 864,
+      "target": "data-flow-spec.md"
+    },
+    {
+      "source": "docs\\explanation\\deprecated-batch2-merge-report.md",
+      "line": 53,
+      "target": "09-quality-gates.md"
+    },
+    {
+      "source": "docs\\explanation\\deprecated-batch2-merge-report.md",
+      "line": 55,
+      "target": "08-implementation-plan.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\07-operation-strategy.md",
+      "line": 78,
+      "target": "ui-module-alignment.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\batch-merge-reports.md",
+      "line": 22,
+      "target": "batch1-merge-report.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\batch-merge-reports.md",
+      "line": 22,
+      "target": "batch2-merge-report.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\batch-merge-reports.md",
+      "line": 22,
+      "target": "batch3-merge-report.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\doc-cross-check-report.md",
+      "line": 38,
+      "target": "v9数据宪法.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\doc-sync-execution-plan.md",
+      "line": 64,
+      "target": "NewsPage-迁移验收确认书.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\doc-sync-execution-plan.md",
+      "line": 105,
+      "target": "doc-sync-gap-list.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\doc-sync-execution-plan.md",
+      "line": 173,
+      "target": "v9-issue-resolution-schedule.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\doc-sync-execution-plan.md",
+      "line": 192,
+      "target": "v9-issue-resolution-schedule.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\news-data-definition.md",
+      "line": 18,
+      "target": "NewsPage-PoC验证报告.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\news-data-definition.md",
+      "line": 18,
+      "target": "NewsPage-迁移验收确认书.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\p4-文档去重清单与执行方案.md",
+      "line": 23,
+      "target": "基准: v6-v9界面设计优化可行性计划.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\quality-audit-plan.md",
+      "line": 225,
+      "target": "completeness-profile.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\quality-audit-plan.md",
+      "line": 225,
+      "target": "action-list.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\ui改善部分检索报告.md",
+      "line": 65,
+      "target": "-p2.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v6-v9-rectification-feasibility-report.md",
+      "line": 211,
+      "target": "action-list.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v6-v9-rectification-feasibility-report.md",
+      "line": 215,
+      "target": "completeness-profile.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v6-v9-rectification-feasibility-report.md",
+      "line": 266,
+      "target": "action-list.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v6-v9-rectification-feasibility-report.md",
+      "line": 270,
+      "target": "completeness-profile.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v6pro-v9-gap-analysis-final.md",
+      "line": 17,
+      "target": "V6Pro_整体架构梳理_v3.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v6pro-v9-gap-analysis-final.md",
+      "line": 17,
+      "target": "trade_review_ai_report.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-acceptance-report.md",
+      "line": 23,
+      "target": "V6Pro_整体架构梳理_v3.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-acceptance-report.md",
+      "line": 23,
+      "target": "trade_review_ai_report.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
+      "line": 57,
+      "target": "01~10.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-documentation-audit-report.md",
+      "line": 65,
+      "target": "ui-module-alignment.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-remediation-plan.md",
+      "line": 17,
+      "target": "V6Pro_整体架构梳理_v3.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\v9-remediation-plan.md",
+      "line": 17,
+      "target": "trade_review_ai_report.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\迁移风险复盘与应对策略文档.md",
+      "line": 18,
+      "target": "NewsPage-PoC验证报告.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\迁移风险复盘与应对策略文档.md",
+      "line": 18,
+      "target": "V6-V9迁移最佳实践指南.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\迁移风险复盘与应对策略文档.md",
+      "line": 380,
+      "target": "NewsPage-PoC验证报告.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\迁移风险复盘与应对策略文档.md",
+      "line": 381,
+      "target": "v6-news-page-assets.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\迁移风险复盘与应对策略文档.md",
+      "line": 382,
+      "target": "V6-V9迁移最佳实践指南.md"
+    },
+    {
+      "source": "docs\\explanation\\design\\迁移风险复盘与应对策略文档.md",
+      "line": 383,
+      "target": "NewsPage-迁移验收确认书.md"
+    },
+    {
+      "source": "docs\\explanation\\dual-strategy-gap-analysis.md",
+      "line": 131,
+      "target": "dual-strategy-dataflow-spec.md"
+    },
+    {
+      "source": "docs\\explanation\\news-data-definition.md",
+      "line": 35,
+      "target": "NewsPage-PoC验证报告.md"
+    },
+    {
+      "source": "docs\\explanation\\news-data-definition.md",
+      "line": 35,
+      "target": "NewsPage-迁移验收确认书.md"
+    },
+    {
+      "source": "docs\\explanation\\v10-architecture-alignment.md",
+      "line": 26,
+      "target": "(参考文档)v10-architecture-whitepaper.md"
+    },
+    {
+      "source": "docs\\explanation\\v9-issue-management.md",
+      "line": 24,
+      "target": "v9-issue-execution-board.md"
+    },
+    {
+      "source": "docs\\explanation\\v9-issue-management.md",
+      "line": 24,
+      "target": "v9-issue-resolution-schedule.md"
+    },
+    {
+      "source": "docs\\explanation\\v9-issue-management.md",
+      "line": 24,
+      "target": "v9-parallel-task-schedule.md"
+    },
+    {
+      "source": "docs\\explanation\\v9-rectification-tasks-v15-v16.md",
+      "line": 88,
+      "target": "v9-data-blueprint-task-tracking.md"
+    },
+    {
+      "source": "docs\\explanation\\weekly-check-2026-06-30.md",
+      "line": 97,
+      "target": "v9-data-blueprint-task-tracking.md"
+    },
+    {
+      "source": "docs\\how-to\\pwa-offline-guide.md",
+      "line": 30,
+      "target": "feedback-loop-spec.md"
+    },
+    {
+      "source": "docs\\reference\\07-operation-strategy.md",
+      "line": 80,
+      "target": "ui-module-alignment.md"
+    },
+    {
+      "source": "docs\\reference\\07-operation-strategy.md",
+      "line": 80,
+      "target": "trading-core-factors.md"
+    },
+    {
+      "source": "docs\\reference\\adr-003-databridge-over-direct-datalayer.md",
+      "line": 172,
+      "target": "databridge-over-direct-datalayer.md"
+    },
+    {
+      "source": "docs\\reference\\changelogs\\2026-07\\2026-07-14-architecture-governance.md",
+      "line": 71,
+      "target": "complexity-remediation-plan.md"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 210,
+      "target": "docs\\cockpit\\data-definition.md"
+    },
+    {
+      "source": "docs\\reference\\cockpit-news-doc-fix-plan.md",
+      "line": 220,
+      "target": "docs\\news\\data-definition.md"
+    },
+    {
+      "source": "docs\\reference\\data-dictionary-index.md",
+      "line": 48,
+      "target": "-data-definition.md"
+    },
+    {
+      "source": "docs\\reference\\data-dictionary-index.md",
+      "line": 57,
+      "target": "-data-definition.md"
+    },
+    {
+      "source": "docs\\reference\\data-dictionary-index.md",
+      "line": 64,
+      "target": "governance.md"
+    },
+    {
+      "source": "docs\\reference\\deprecated-ui-module-alignment.md",
+      "line": 17,
+      "target": "C:\\Users\\huawei\\Desktop\\智能股票系统测试测试\\ui_module_comparison.md"
+    },
+    {
+      "source": "docs\\reference\\file-naming-conventions.md",
+      "line": 127,
+      "target": "01-introduction.md"
+    },
+    {
+      "source": "docs\\reference\\file-naming-conventions.md",
+      "line": 128,
+      "target": "phase-01-report.md"
+    },
+    {
+      "source": "docs\\reference\\file-naming-conventions.md",
+      "line": 128,
+      "target": "phase-02-report.md"
+    },
+    {
+      "source": "docs\\reference\\file-naming-conventions.md",
+      "line": 129,
+      "target": "v1.0.0-release-notes.md"
+    },
+    {
+      "source": "docs\\reference\\file-naming-conventions.md",
+      "line": 143,
+      "target": "01-intro.md"
+    },
+    {
+      "source": "docs\\reference\\file-naming-conventions.md",
+      "line": 143,
+      "target": "01_intro.md"
+    },
+    {
+      "source": "docs\\reference\\file-naming-conventions.md",
+      "line": 252,
+      "target": "1-intro.md"
+    },
+    {
+      "source": "docs\\reference\\file-naming-conventions.md",
+      "line": 252,
+      "target": "01-intro.md"
+    },
+    {
+      "source": "docs\\reference\\file-naming-conventions.md",
+      "line": 253,
+      "target": "01_intro.md"
+    },
+    {
+      "source": "docs\\reference\\file-naming-conventions.md",
+      "line": 253,
+      "target": "01-intro.md"
+    },
+    {
+      "source": "docs\\reference\\index.md",
+      "line": 63,
+      "target": "SKILL.md"
+    },
+    {
+      "source": "docs\\reference\\meta\\doc-auto-update-kanban.md",
+      "line": 101,
+      "target": "governance.md"
+    },
+    {
+      "source": "docs\\reference\\news-data-definition.md",
+      "line": 18,
+      "target": "NewsPage-PoC验证报告.md"
+    },
+    {
+      "source": "docs\\reference\\news-data-definition.md",
+      "line": 18,
+      "target": "NewsPage-迁移验收确认书.md"
+    },
+    {
+      "source": "docs\\reference\\README.md",
+      "line": 26,
+      "target": "governance.md"
+    },
+    {
+      "source": "docs\\reference\\README.md",
+      "line": 86,
+      "target": "governance.md"
+    },
+    {
+      "source": "docs\\reference\\README.md",
+      "line": 132,
+      "target": "a2-vision-and-goals.md"
+    },
+    {
+      "source": "docs\\reference\\README.md",
+      "line": 132,
+      "target": "c7-data-dictionary-index.md"
+    },
+    {
+      "source": "docs\\reference\\release-notes.md",
+      "line": 114,
+      "target": "NewsPage-PoC验证报告.md"
+    },
+    {
+      "source": "docs\\reference\\release-notes.md",
+      "line": 115,
+      "target": "NewsPage-迁移验收确认书.md"
+    },
+    {
+      "source": "docs\\reference\\release-notes.md",
+      "line": 116,
+      "target": "V6-V9迁移最佳实践指南.md"
+    },
+    {
+      "source": "docs\\reference\\release-notes.md",
+      "line": 117,
+      "target": "migration-fix-report.md"
+    },
+    {
+      "source": "docs\\reference\\rm剩余任务全量盘点与整改方案-2026-07-08.md",
+      "line": 201,
+      "target": "regression-suite.md"
+    },
+    {
+      "source": "docs\\reference\\rm剩余任务全量盘点与整改方案-2026-07-08.md",
+      "line": 328,
+      "target": "task-graph-template.md"
+    },
+    {
+      "source": "docs\\reference\\rm剩余任务全量盘点与整改方案-2026-07-08.md",
+      "line": 329,
+      "target": "regression-suite.md"
+    },
+    {
+      "source": "docs\\reference\\v10-architecture-alignment.md",
+      "line": 24,
+      "target": "C:\\Users\\huawei\\Desktop\\智能股票系统测试测试\\v10-architecture-whitepaper.md"
+    },
+    {
+      "source": "docs\\reference\\v9-input-cabin-strategy-report.md",
+      "line": 49,
+      "target": "architecture-guide.md"
+    },
+    {
+      "source": "docs\\reference\\v9-input-cabin-strategy-report.md",
+      "line": 49,
+      "target": "v6_pro_full_architecture_redefinition.md"
+    },
+    {
+      "source": "docs\\reference\\v9-input-cabin-strategy-report.md",
+      "line": 52,
+      "target": "v6_pro_data_interaction_protocols.md"
+    },
+    {
+      "source": "docs\\reference\\v9-system-blueprint.md",
+      "line": 30,
+      "target": "(参考文档)v10-architecture-whitepaper.md"
+    },
+    {
+      "source": "docs\\reference\\v9-system-blueprint.md",
+      "line": 30,
+      "target": "ui_module_comparison.md"
+    },
+    {
+      "source": "docs\\reference\\v9数据架构修订建议.md",
+      "line": 14,
+      "target": "V9核心数据字典与类型定义（整合版）.md"
+    },
+    {
+      "source": "docs\\reference\\数据治理路线图.md",
+      "line": 145,
+      "target": "trading-core-factors.md"
+    },
+    {
+      "source": "docs\\reference\\数据治理路线图.md",
+      "line": 147,
+      "target": "trading-core-factors.md"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 69,
+      "target": "NewsPage-PoC验证报告.md"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 70,
+      "target": "NewsPage-迁移验收确认书.md"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 71,
+      "target": "V6-V9迁移最佳实践指南.md"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 72,
+      "target": "migration-fix-report.md"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 210,
+      "target": "performance-baseline.md"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 234,
+      "target": "doc-sync-execution-plan.md"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 235,
+      "target": "trading-core-factors.md"
+    },
+    {
+      "source": "docs\\reference\\文件整理清单.md",
+      "line": 239,
+      "target": "v6pro-ui-page-diff-report.md"
+    },
+    {
+      "source": "docs\\reports\\2026-07-09-collection-plan-panel-v6-audit.md",
+      "line": 23,
+      "target": "data-collection-route-ui-audit.md"
+    },
+    {
+      "source": "docs\\reports\\audit\\file-system-diagnosis-report-2026-07-20.md",
+      "line": 211,
+      "target": "governance.md"
+    },
+    {
+      "source": "docs\\reports\\audit\\file-system-diagnosis-report-2026-07-20.md",
+      "line": 214,
+      "target": "registry-index.md"
+    },
+    {
+      "source": "docs\\reports\\audit\\quality-audit-plan.md",
+      "line": 225,
+      "target": "completeness-profile.md"
+    },
+    {
+      "source": "docs\\reports\\audit\\quality-audit-plan.md",
+      "line": 225,
+      "target": "action-list.md"
+    },
+    {
+      "source": "docs\\reports\\audit\\untracked-files-remediation-report.md",
+      "line": 75,
+      "target": "type-safety-prompt-snippet.md"
+    },
+    {
+      "source": "docs\\reports\\audit\\untracked-files-remediation-report.md",
+      "line": 75,
+      "target": "v6-news-page-assets.md"
+    },
+    {
+      "source": "docs\\reports\\audit\\untracked-files-remediation-report.md",
+      "line": 87,
+      "target": "type-safety-prompt-snippet.md"
+    },
+    {
+      "source": "docs\\reports\\audit\\untracked-files-remediation-report.md",
+      "line": 87,
+      "target": "v6-news-page-assets.md"
+    },
+    {
+      "source": "docs\\reports\\audit\\代码清理待确认清单与信息孤岛整合建议.md",
+      "line": 20,
+      "target": "整改任务执行追踪.md"
+    },
+    {
+      "source": "docs\\reports\\audit\\文档-代码双向一致性检测报告_2026-07-08.md",
+      "line": 104,
+      "target": "SKILL.md"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\CHANGELOG.md",
+      "line": 666,
+      "target": "action-list.md"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\CHANGELOG.md",
+      "line": 869,
+      "target": "04-ui-ux-specs.md"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\CHANGELOG.md",
+      "line": 872,
+      "target": "07-operation-strategy.md"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\CHANGELOG.md",
+      "line": 873,
+      "target": "08-implementation-plan.md"
+    },
+    {
+      "source": "docs\\reports\\changelogs\\CHANGELOG.md",
+      "line": 874,
+      "target": "09-quality-gates.md"
+    },
+    {
+      "source": "docs\\reports\\doc-governance-audit-report-2026-07-13.md",
+      "line": 26,
+      "target": "governance.md"
+    },
+    {
+      "source": "docs\\reports\\doc-governance-audit-report-2026-07-13.md",
+      "line": 98,
+      "target": "code-review.md"
+    },
+    {
+      "source": "docs\\reports\\doc-governance-audit-report-2026-07-13.md",
+      "line": 119,
+      "target": "registry-index.md"
+    },
+    {
+      "source": "docs\\reports\\doc-governance-audit-report-2026-07-13.md",
+      "line": 125,
+      "target": "governance.md"
+    },
+    {
+      "source": "docs\\reports\\doc-governance-audit-report-2026-07-13.md",
+      "line": 179,
+      "target": "registry-index.md"
+    },
+    {
+      "source": "docs\\reports\\file-management-compliance-report-2026-07-12.md",
+      "line": 98,
+      "target": "类型_主题_日期.md"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\batch-merge-reports.md",
+      "line": 22,
+      "target": "batch1-merge-report.md"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\batch-merge-reports.md",
+      "line": 22,
+      "target": "batch2-merge-report.md"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\batch-merge-reports.md",
+      "line": 22,
+      "target": "batch3-merge-report.md"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\batch-merge-reports.md",
+      "line": 56,
+      "target": "08-implementation-plan.md"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\batch-merge-reports.md",
+      "line": 57,
+      "target": "09-quality-gates.md"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\batch-merge-reports.md",
+      "line": 92,
+      "target": "08-implementation-plan.md"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\doc-sync-execution-plan.md",
+      "line": 64,
+      "target": "NewsPage-迁移验收确认书.md"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\doc-sync-execution-plan.md",
+      "line": 105,
+      "target": "doc-sync-gap-list.md"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\doc-sync-execution-plan.md",
+      "line": 173,
+      "target": "v9-issue-resolution-schedule.md"
+    },
+    {
+      "source": "docs\\reports\\retrospectives\\doc-sync-execution-plan.md",
+      "line": 192,
+      "target": "v9-issue-resolution-schedule.md"
+    },
+    {
+      "source": "docs\\reports\\system-rectification-report-2026-07-12.md",
+      "line": 45,
+      "target": "TESTING-STRATEGY.md"
+    },
+    {
+      "source": "docs\\team-handbook\\03-ui-components.md",
+      "line": 50,
+      "target": "widget-integration-checklist.md"
+    },
+    {
+      "source": "docs\\team-handbook\\03-ui-components.md",
+      "line": 104,
+      "target": "jsdoc-convention.md"
+    },
+    {
+      "source": "scripts\\build\\deploy-rectification-toolkit.ts",
+      "line": 299,
+      "target": "  ✅ README.md"
+    },
+    {
+      "source": "scripts\\docs-tool\\doc-cross-ref-sync.ts",
+      "line": 162,
+      "target": "v9核心数据字典与类型定义(整合版).md"
+    }
+  ]
+}

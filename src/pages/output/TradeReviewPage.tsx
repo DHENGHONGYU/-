@@ -1,4 +1,4 @@
-import { memo, useState, useEffect } from 'react'
+import { memo, useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router'
 import { BarChart3, Download, RefreshCw, ArrowLeft } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
@@ -41,11 +41,7 @@ export default memo(function TradeReviewPage(): React.JSX.Element {
     ? { report: latestReport, generatedAt: new Date().toISOString() }
     : null
 
-  useEffect(() => {
-    void loadOrders()
-  }, [])
-
-  const loadOrders = async (): Promise<void> => {
+  const loadOrders = useCallback(async (): Promise<void> => {
     setLoading(true)
     try {
       const ordersList = await loadOrdersFromStore()
@@ -59,7 +55,11 @@ export default memo(function TradeReviewPage(): React.JSX.Element {
     } finally {
       setLoading(false)
     }
-  }
+  }, [loadOrdersFromStore, toast])
+
+  useEffect(() => {
+    void loadOrders()
+  }, [loadOrders])
 
   const generateReviewReportHandler = async (): Promise<void> => {
     if (orders.length === 0) {

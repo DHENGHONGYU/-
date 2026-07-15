@@ -1,0 +1,117 @@
+{
+  "violations": [
+    {
+      "file": "src/pages/command/agent/LlmManagement/index.tsx",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现"
+    },
+    {
+      "file": "src/services/data-sync/conflictResolver.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现"
+    },
+    {
+      "file": "src/services/data-sync/fieldMerger.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现"
+    },
+    {
+      "file": "src/services/data-sync/globalScheduler.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现"
+    },
+    {
+      "file": "src/services/data-sync/stalenessDetector.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现"
+    },
+    {
+      "file": "src/services/data-sync/updateExecutor.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现"
+    },
+    {
+      "file": "src/services/data-sync-search/codeSearcher.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现"
+    },
+    {
+      "file": "src/services/data-sync-search/docSearcher.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现"
+    },
+    {
+      "file": "src/services/data-sync-search/historySearcher.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现"
+    },
+    {
+      "file": "src/services/data-sync-search/semanticSearcher.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现"
+    },
+    {
+      "file": "src/services/file-import/diffAnalyzer.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现"
+    },
+    {
+      "file": "src/services/file-import/hashComparator.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现"
+    },
+    {
+      "file": "src/services/file-import/parserRegistry.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现"
+    },
+    {
+      "file": "src/services/file-import/proofreadReportGenerator.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现"
+    },
+    {
+      "file": "src/services/file-import/unifiedFileValidator.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现"
+    },
+    {
+      "file": "src/store/analysisOrchestratorStore.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现"
+    },
+    {
+      "file": "src/store/dataSyncStore.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现"
+    },
+    {
+      "file": "src/store/fileImportStore.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现"
+    },
+    {
+      "file": "src/store/predictionStore.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现"
+    },
+    {
+      "file": "src/store/searchStore.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现"
+    }
+  ],
+  "summary": {
+    "totalFiles": 740,
+    "totalViolations": 20,
+    "scanMode": "all",
+    "docFilesCount": 601
+  },
+  "meta": {
+    "scriptName": "audit-doc-sync",
+    "version": "3.0",
+    "timestamp": "2026-07-15T01:19:53.950Z",
+    "durationMs": 38716,
+    "rootDir": "G:\\FinSightV9\\scripts"
+  }
+}

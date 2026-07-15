@@ -41,6 +41,7 @@ const DEMO_STOCKS = [
   { code: '002594', name: '比亚迪', price: 258.6, changePercent: 2.78 },
 ]
 
+// eslint-disable-next-line react-refresh/only-export-components
 function WatchlistRowDemo(): React.JSX.Element {
   return (
     <div className={cn('space-y-2', THEME_TOKENS.stackGap.sm)}>
@@ -93,6 +94,7 @@ function getScoreVariant(score: number): 'success' | 'warning' | 'destructive' {
   return 'destructive'
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 function ScoreCardDemo(): React.JSX.Element {
   return (
     <div className={cn('grid grid-cols-2 md:grid-cols-3 gap-3', THEME_TOKENS.gap.md)}>

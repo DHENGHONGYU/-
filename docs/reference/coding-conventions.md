@@ -1,7 +1,20 @@
+---
+title: coding-conventions
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/coding-conventions.md
+code_version: 2.0.0
+tier: important
+---
+
 # V9 编码规范（Coding Conventions）
 
-> **定位**：汇总 `AGENTS.md` 中的工程约束为一页可速查的编码规范，补「应有文档：coding-conventions」缺口。
-> **权威契约**：`AGENTS.md`（不可替代）。本文是其摘要版。
+> **定位**：汇总 `../../AGENTS.md` 中的工程约束为一页可速查的编码规范，补「应有文档：coding-conventions」缺口。
+> **权威契约**：`../../AGENTS.md`（不可替代）。本文是其摘要版。
 > **状态**：✅ P0 新增（摘要版，冲突以 AGENTS.md 为准）
 
 ---
@@ -61,8 +74,8 @@ useEffect(() => {
 
 ## 6. 文档与 JSDoc
 
-- 新增公共函数/组件/Hook/Store 必须补 JSDoc（见 `docs/03-development/jsdoc-convention.md`）。
-- 避免深层嵌套、长链式条件、过长函数（见 `docs/03-development/complexity-governance.md`）。
+- 新增公共函数/组件/Hook/Store 必须补 JSDoc（见 `./jsdoc-convention.md`）。
+- 避免深层嵌套、长链式条件、过长函数（见 `./complexity-governance.md`）。
 
 ---
 
@@ -80,4 +93,4 @@ useEffect(() => {
 
 ---
 
-_规范冲突时以 `AGENTS.md` 为准；本文随规范演进持续更新。_
+_规范冲突时以 `../../AGENTS.md` 为准；本文随规范演进持续更新。_

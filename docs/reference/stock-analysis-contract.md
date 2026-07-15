@@ -1,14 +1,23 @@
 ---
+title: stock-analysis-contract
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: stock-analysis-contract.md — 个股分析子域接口契约
 status: draft
 owner: 架构组
 updated: 2026-07-12
+code_version: 2.0.0
+tier: important
 ---
 
 # stock-analysis-contract.md — 个股分析子域接口契约
 
 > **定位**：定义 `stock-analysis` 子域的接口契约、职责边界、数据流与依赖关系。  
-> **关联**：`../../architecture/services-catalog.md`（24 子域总览）、`AGENTS.md` §一（分层规则）。
+> **关联**：`./services-catalog.md`（24 子域总览）、`../../AGENTS.md` §一（分层规则）。
 
 ---
 
@@ -274,7 +283,7 @@ ChatMessage → 直接注入 Widget 本地会话
 
 | 测试类型 | 文件 | 说明 |
 |----------|------|------|
-| 单元测试 | `src/services/stock-analysis/__tests__/` | ⏳ 待创建：Mock 数据生成器、纯函数（randomScore、getScoreLabel 等） |
+| 单元测试 | `../../src/services/news/__tests__/` | ⏳ 待创建：Mock 数据生成器、纯函数（randomScore、getScoreLabel 等） |
 | 集成测试 | `tests/services/MarketDataAdapter.test.ts` | `MarketDataAdapter` 对 `analysisScores`、`modelComparison`、`stockPool` 等类型的适配逻辑 |
 | Mock 策略 | `src/services/stock-analysis/mockStockAnalysisProvider.ts` | 当前文件本身即为 Mock 提供者，被 `MockCollector` 和 `MarketDataProvider` 消费 |
 

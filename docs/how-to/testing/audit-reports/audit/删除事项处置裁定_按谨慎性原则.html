@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>删除事项处置裁定书 — V9 智能投研复盘系统（按谨慎性原则）</title>
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --ink:#1f2933; --muted:#6b7280; --line:#e5e7eb;
+          --green:#0f9d58; --blue:#1a73e8; --amber:#f59e0b; --red:#e5484d; --purple:#7c3aed; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+         background:var(--bg); color:var(--ink); line-height:1.65; }
+  .wrap { max-width:1180px; margin:0 auto; padding:28px 22px 80px; }
+  h1 { font-size:24px; margin:0 0 6px; }
+  h2 { font-size:19px; margin:32px 0 12px; padding-left:10px; border-left:4px solid var(--blue); }
+  h3 { font-size:15.5px; margin:20px 0 8px; color:var(--blue); }
+  .sub { color:var(--muted); font-size:13px; margin-bottom:18px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px 20px; margin:14px 0;
+          box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .verdict { border-left:4px solid var(--green); }
+  .verdict.warn { border-left-color:var(--amber); }
+  table { width:100%; border-collapse:collapse; font-size:12.5px; margin:10px 0; }
+  th,td { border:1px solid var(--line); padding:7px 9px; text-align:left; vertical-align:top; }
+  th { background:#f0f3f7; font-weight:600; white-space:nowrap; }
+  code { background:#eef1f5; padding:1px 5px; border-radius:4px; font-size:11.5px; color:#b3206b; word-break:break-all; }
+  .tag { display:inline-block; padding:1px 8px; border-radius:999px; font-size:11px; font-weight:600; white-space:nowrap; }
+  .t-keep { background:#fde8e8; color:var(--red); }
+  .t-del { background:#e7f0ff; color:var(--blue); }
+  .t-p0 { background:#fde8e8; color:var(--red); }
+  .t-p2 { background:#fef3e2; color:#b76e00; }
+  .t-p3 { background:#e7f6ee; color:var(--green); }
+  .mono { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:11.5px; }
+  .muted { color:var(--muted); }
+  .note { font-size:12.5px; color:var(--muted); margin:6px 0; }
+  ul.tight { margin:6px 0; padding-left:20px; }
+  ul.tight li { margin:4px 0; }
+  .pill { font-size:11px; padding:1px 7px; border-radius:6px; background:#eef1f5; color:var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>删除事项处置裁定书</h1>
+<div class="sub">项目：V9 智能投研复盘系统（个人股票研究 / 复盘辅助工具，非金融产品） · 裁定日期：2026-07-08 · 分支：<code>refactor/pr-6-module-split</code></div>
+
+<div class="card verdict">
+<h3 style="margin-top:4px">一、裁定原则（用户明确）</h3>
+<ul class="tight">
+<li><b>谨慎性</b>：删除类操作默认不轻易执行；对"非替换、属缺口"的已写代码 / 计划实施模块，<b>必须予以保留并优先修复与完善</b>，防止"设计全面、实施缩水"。</li>
+<li><b>替换则直接删除</b>：若删除项已被<b>新方案 / 新路径完整替代</b>（功能保留或增强），则删除正确，<b>不恢复</b>。</li>
+</ul>
+<p class="note">适用对象：本裁定覆盖 <code>git --diff-filter=D</code> 确认的 35 个源码删除 + <code>docs/文件整理清单.md</code> 的 ~212 文档删除。</p>
+</div>
+
+<div class="card verdict warn">
+<h3 style="margin-top:4px">二、裁定总览（防缩水结论）</h3>
+<table>
+<tr><th style="width:30%">类别</th><th style="width:12%">数量</th><th style="width:38%">性质</th><th style="width:20%">裁定</th></tr>
+<tr><td>源码删除 — 已替换（迁移 / 更名 / 组件化 / 有意替代）</td><td>30</td><td>pr-6 领域化重组，功能保留甚至增强</td><td><span class="tag t-del">直接删除</span></td></tr>
+<tr><td>源码删除 — 临时 / 原型 / 死代码</td><td>4</td><td>无功能损失</td><td><span class="tag t-del">直接删除</span></td></tr>
+<tr><td>源码删除 — 非替换真缺口</td><td><b>1</b></td><td>ai-center provider 被删且无替代、无消费者</td><td><span class="tag t-keep">保留修复</span></td></tr>
+<tr><td>文档删除</td><td>~212</td><td>临时产物 / 过程报告 / 已废弃 / 旧副本；功能设计规格均保留</td><td><span class="tag t-del">直接删除</span></td></tr>
+</table>
+<p><b>核心结论：删除事项本身未造成任何功能缩水。</b> 35 个源码删除中 34 个为干净重构 / 替换，唯一真缺口（ai-center）属"从未完整实现的半成品"，需你拍板发布范围。<b>"设计全面、实施缩水"风险 = 0。</b></p>
+<p class="note">佐证：悬空 import 扫描 = 0 处；全量 <code>tsc --noEmit</code> = 0 error（系统 node24 跑）。删除未把构建搞断。</p>
+</div>
+
+<h2>三、逐组裁定（源码 35 项）</h2>
+<p class="sub">列：① 组 / 文件 · ② 删除性质 · ③ 是否替代原方案 · ④ 裁定 · ⑤ 优先级</p>
+
+<h3>A 组 · 领域化迁移 / 更名（功能保留或增强）→ 直接删除</h3>
+<table>
+<tr><th style="width:34%">① 文件（代表）</th><th style="width:22%">② 删除性质</th><th style="width:14%">③ 替代</th><th style="width:14%">④ 裁定</th><th style="width:16%">⑤ 优先级</th></tr>
+<tr><td><code>rotationSignalDetector / hotSectorAnalyzer / valuePitAnalyzer</code></td><td>迁移至 <code>services/scoring/*</code>，扩出 Store/Page</td><td>是（增强）</td><td><span class="tag t-del">直接删除</span></td><td><span class="tag t-p3">P3</span></td></tr>
+<tr><td><code>backtestEngine.ts</code></td><td>迁移至 <code>services/backtest/</code>，补测试 + MCP</td><td>是（增强）</td><td><span class="tag t-del">直接删除</span></td><td><span class="tag t-p3">P3</span></td></tr>
+<tr><td><code>MultiFactorScreeningPage.tsx</code></td><td>重构为 <code>MultiFactorFilterPage</code> + screening 模块</td><td>是（增强）</td><td><span class="tag t-del">直接删除</span></td><td><span class="tag t-p3">P3</span></td></tr>
+<tr><td><code>newsStore / usePoolData</code></td><td>更名 <code>analysisNewsStore / usePoolDataFromStore</code></td><td>是</td><td><span class="tag t-del">直接删除</span></td><td><span class="tag t-p3">P3</span></td></tr>
+<tr><td><code>execution.types.ts</code></td><td>迁移至 <code>data/types/types.execution.ts</code> + Store/Service</td><td>是（增强）</td><td><span class="tag t-del">直接删除</span></td><td><span class="tag t-p3">P3</span></td></tr>
+<tr><td><code>engine/index.ts</code></td><td>整合进 <code>services/scoring/v6-engine</code></td><td>是</td><td><span class="tag t-del">直接删除</span></td><td><span class="tag t-p3">P3</span></td></tr>
+<tr><td>四舱 HubPage（4）</td><td>合并进 <code>apps/*/CommandApp</code> 等内部函数</td><td>是</td><td><span class="tag t-del">直接删除</span></td><td><span class="tag t-p3">P3</span></td></tr>
+<tr><td><code>stockAnalysisEngine.ts</code></td><td>职责分流至 <code>stockAnalysisStore</code> + V6 评分引擎</td><td>是（合并）</td><td><span class="tag t-del">直接删除</span></td><td><span class="tag t-p3">P3</span></td></tr>
+</table>
+
+<h3>B 组 · 有意替代（news-v6，8 文件）→ 直接删除</h3>
+<table>
+<tr><th style="width:34%">① 文件</th><th style="width:22%">② 删除性质</th><th style="width:14%">③ 替代</th><th style="width:14%">④ 裁定</th><th style="width:16%">⑤ 优先级</th></tr>
+<tr><td><code>pages/news-v6/*</code>（NewsPage + 6 组件 + types）</td><td>被 V9 原生 <code>pages/analysis/NewsPage.tsx</code> 取代</td><td>是</td><td><span class="tag t-del">直接删除</span></td><td><span class="tag t-p3">P3</span></td></tr>
+</table>
+
+<h3>C 组 · 临时原型 / 死代码（10 文件）→ 直接删除</h3>
+<table>
+<tr><th style="width:34%">① 文件</th><th style="width:22%">② 删除性质</th><th style="width:14%">③ 替代</th><th style="width:14%">④ 裁定</th><th style="width:16%">⑤ 优先级</th></tr>
+<tr><td><code>apps/input/prototype/*</code>（6 原型）</td><td>feature-entry-list 标注为"临时原型，非正式功能"</td><td>无（本就非功能）</td><td><span class="tag t-del">直接删除</span></td><td><span class="tag t-p3">P3</span></td></tr>
+<tr><td><code>pages/defaultPageBuilder.ts</code></td><td>全仓零引用 → 死代码</td><td>无</td><td><span class="tag t-del">直接删除</span></td><td><span class="tag t-p3">P3</span></td></tr>
+</table>
+
+<h3>D 组 · ⚠️ 原判"缺口"重裁 → 3 项实为替换、1 项真缺口</h3>
+<table>
+<tr><th style="width:28%">① 文件</th><th style="width:28%">② 现状核验</th><th style="width:10%">③ 替代</th><th style="width:12%">④ 裁定</th><th style="width:12%">⑤ 优先级</th></tr>
+<tr><td><code>EngineMonitorPage.tsx</code></td><td>监控数据层 + UI 已由 <code>systemMonitorStore</code> + <code>LogStreamPanel</code>（CommandApp:291 已渲染）+ <code>EngineStatusCard/AgentHealthCard/AgentTaskList</code> + <code>EngineStatusWidget/AgentPerformanceWidget</code> 完整覆盖</td><td><b>是</b>（页面→组件+widget）</td><td><span class="tag t-del">直接删除</span></td><td><span class="tag t-p3">P3</span></td></tr>
+<tr><td><code>ArchitecturePage.tsx</code></td><td>架构可视化已由 <code>SystemArchitectureDiagram</code> 组件 + <code>architectureService</code> + cockpit <code>SystemArchitectureWidget</code> 覆盖</td><td><b>是</b>（页面→组件+widget）</td><td><span class="tag t-del">直接删除</span></td><td><span class="tag t-p3">P3</span></td></tr>
+<tr><td><code>pool.types.ts</code></td><td>池类型已由 <code>widget.types.ts</code>(StockPool/StockPoolItem) + <code>stockpoolService</code>(PoolGroup) 接管，<code>usePoolDataFromStore</code> 正常工作</td><td><b>是</b>（类型归位）</td><td><span class="tag t-del">直接删除</span></td><td><span class="tag t-p3">P3</span></td></tr>
+<tr><td><code>services/ai-center/mockAICenterProvider.ts</code></td><td><b>非替换真缺口</b>：<code>ai-center.constants.ts</code> + <code>ai-center.types.ts</code>(含 <code>AICenterData</code>) 仍在，但 provider 被删、无任何页面/服务消费 <code>AICenterData</code>，数据层未接线。属"从未完整实现的半成品"，非缩水。</td><td><b>否</b></td><td><span class="tag t-keep">保留修复</span></td><td><span class="tag t-p2">P2 待决策</span></td></tr>
+</table>
+
+<h2>四、唯一待决策项：ai-center 发布范围</h2>
+<div class="card verdict warn">
+<p>ai-center 是当前唯一"非替换缺口"。它不构成"设计缩水"（从未完整实现），但也不应被悄悄丢弃。需在<b>谨慎性</b>下拍板：</p>
+<table>
+<tr><th style="width:18%">选项</th><th style="width:52%">动作</th><th style="width:30%">判定</th></tr>
+<tr><td><b>选项 1：保留并修复</b></td><td>确认 AI 中心仍属发布范围 → 我补 <code>ai-center</code> provider（填充 <code>AICenterData</code>，对接 <code>/ai-center/agents|health|diagnostics</code> 端点）+ 一个极简 AI 中心页/面板。遵循四步集成契约（类型→Store→Service→UI）。</td><td>保留修复 · P2</td></tr>
+<tr><td><b>选项 2：显式降级</b></td><td>确认 AI 中心暂不发布 → 在 <code>docs/implementation</code> 规格中显式标注"AI 中心：计划中 / 暂缓"，并清理孤立的 <code>ai-center.constants.ts</code> / <code>ai-center.types.ts</code>（或保留为接口契约）。<b>这合法，因从未完整实现</b>，不算缩水。</td><td>谨慎降级 · P3</td></tr>
+</table>
+<p class="note">无论选哪项，都<b>不属于"设计全面、实施缩水"</b>：选项 1 是补全，选项 2 是诚实降级。删除事项整体风险已归零。</p>
+</div>
+
+<h2>五、执行清单（按裁定）</h2>
+<div class="card">
+<ul class="tight">
+<li><span class="tag t-del">直接删除</span> <b>34 个源码 + ~212 文档</b>：维持现状，<b>不恢复</b>（已确认功能被替代 / 无损失）。无需任何动作。</li>
+<li><span class="tag t-keep">保留修复</span> <b>ai-center（1 项）</b>：<b>待你决策选项 1 / 2</b> 后再执行。</li>
+<li><span class="tag t-p3">P3</span> 修正 <code>docs/文件整理清单.md</code> 与磁盘真实状态不符的记录（4 处声称已删仍在），避免后续误判。</li>
+<li>本裁定未改动任何源码 / 文档（除报告自身）；删除类操作依项目约定需先确认，此处仅裁定不执行。</li>
+</ul>
+</div>
+
+<p class="muted" style="margin-top:30px;font-size:11.5px">裁定依据：git 删除历史核验 + 当前磁盘存在性 + 符号/引用扫描 + 悬空 import 扫描(0) + 全量 tsc(0 error) + 对 4 个原判缺口的二次代码核验（EngineMonitor/Architecture/pool 均已在位）。所有结论可复现。</p>
+
+</div>
+</body>
+</html>

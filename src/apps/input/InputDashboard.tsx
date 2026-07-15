@@ -38,7 +38,7 @@ export default function InputDashboard(): React.JSX.Element {
     void refresh()
   }, [refresh])
 
-  const allGroups = useMemo(() => getIntentionPoolGroups(), [items])
+  const allGroups = useMemo(() => getIntentionPoolGroups(), [])
   const allStocks = items
 
   const handleAdd = async (fetchBasic: boolean, fetchKline: boolean): Promise<void> => {

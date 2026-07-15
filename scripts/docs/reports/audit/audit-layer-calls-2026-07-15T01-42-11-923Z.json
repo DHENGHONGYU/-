@@ -1,0 +1,45 @@
+{
+  "violations": [
+    {
+      "file": "src/services/output/predictionVerifier.ts",
+      "line": 21,
+      "column": 32,
+      "type": "services 依赖 lib 业务模块",
+      "message": "引擎层仅可依赖 lib 中的基础设施（logger/withBroadcast/eventBus/format/errors/utils/localStorageManager/safeCoerce/perf/precision/validation）",
+      "context": "import { spearmanCorrelation } from '@/lib/statistics'"
+    },
+    {
+      "file": "src/services/scoring/v6-engine/correlationAnalyzer.ts",
+      "line": 12,
+      "column": 52,
+      "type": "services 依赖 lib 业务模块",
+      "message": "引擎层仅可依赖 lib 中的基础设施（logger/withBroadcast/eventBus/format/errors/utils/localStorageManager/safeCoerce/perf/precision/validation）",
+      "context": "import { pearsonCorrelation, spearmanCorrelation } from '@/lib/statistics'"
+    },
+    {
+      "file": "src/services/scoring/v6-engine/correlationAnalyzer.ts",
+      "line": 59,
+      "column": 52,
+      "type": "services 依赖 lib 业务模块",
+      "message": "引擎层仅可依赖 lib 中的基础设施（logger/withBroadcast/eventBus/format/errors/utils/localStorageManager/safeCoerce/perf/precision/validation）",
+      "context": "export { pearsonCorrelation, spearmanCorrelation } from '@/lib/statistics'"
+    }
+  ],
+  "warnings": [],
+  "summary": {
+    "totalFiles": 997,
+    "totalViolations": 3,
+    "totalWarnings": 0,
+    "byViolationType": {
+      "services 依赖 lib 业务模块": 3
+    },
+    "byWarningType": {}
+  },
+  "meta": {
+    "scriptName": "audit-layer-calls",
+    "version": "3.0",
+    "timestamp": "2026-07-15T01:42:11.923Z",
+    "durationMs": 109,
+    "rootDir": "G:\\FinSightV9\\scripts"
+  }
+}

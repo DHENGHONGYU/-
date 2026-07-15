@@ -1,4 +1,17 @@
 ---
+title: doc-auto-update-kanban
+code_version: 2.0.0
+
+tier: core
+---
+
+---
+title: docs/00-meta/doc-auto-update-kanban.md
+code_version: 2.0.0
+tier: core
+---
+
+---
 title: 文档自动更新体系 — 任务看板（单一事实源）
 code_version: 2.0.0
 ---
@@ -7,7 +20,7 @@ code_version: 2.0.0
 
 > 文档日期：2026-07-12（M1 收尾 + 维度二审查后建立）
 > 维护者：架构治理 Agent
-> 关联文档：`docs/00-meta/文档自动更新体系-架构梳理与任务清单.md`（原 §四 任务清单）、`docs/00-meta/doc-trigger-action-map.md`、`docs/02-design/freshness-alerts.md`
+> 关联文档：`docs/00-meta/文档自动更新体系-架构梳理与任务清单.md`（原 §四 任务清单）、`docs/00-meta/doc-trigger-action-map.md`、`../reports/retrospectives/freshness-alerts.md`
 >
 > **本文是自动更新体系任务的单一事实源（single source of truth）**。所有任务状态、依赖、负责人、截止以本文为准；原 §四 清单中已被本审查修订/推翻的项，以本文「修订」列标注。
 
@@ -76,8 +89,8 @@ code_version: 2.0.0
 
 > **本轮已交付（07-12）**：
 > - **A7** — `doc-auto-updater.ts` 增加 `--strict`：开启时对显式 `--files` 去重并以非零退出码反映 partial/failure；默认行为不变（契约测试仍 20/20）。
-> - **C1-C5** — 新增 `scripts/doc-freshness-alert.ts`，实现 ALERT-01~05 评估并接入 `doc-notify` 告警适配器；`npm run doc:freshness-alert` 可运行。
-> - **T4** — 新增 `scripts/doc-version-check.ts`，校验 `docs/**/*.md` frontmatter `code_version` 与 `package.json` 一致（CI 门禁用，默认只读，非零退出即阻断）；`npm run doc:version-check` 可运行。
+> - **C1-C5** — 新增 `scripts/docs-tool/doc-freshness-alert.ts`，实现 ALERT-01~05 评估并接入 `doc-notify` 告警适配器；`npm run doc:freshness-alert` 可运行。
+> - **T4** — 新增 `scripts/docs-tool/doc-version-check.ts`，校验 `docs/**/*.md` frontmatter `code_version` 与 `package.json` 一致（CI 门禁用，默认只读，非零退出即阻断）；`npm run doc:version-check` 可运行。
 > - **T5** — `doc-version-history.ts` 的每日 changelog 头部增加 `code_version` / `git_tag` / `commit_sha`（即 `codeRef`），从 `package.json` 与 `git` 解析，失败优雅降级。
 
 ---
@@ -88,21 +101,27 @@ code_version: 2.0.0
 
 | ID | 任务 | 优先级 | 状态 | 负责人 | 截止 |
 |----|------|--------|------|--------|------|
-| N1 | **修订 `doc-trigger-action-map.md` 以匹配真实文档基底**：14 个目标文档中 13 个在磁盘缺失（仅 `ARCHITECTURE.md` 存在）；字典索引路径应为 `docs/02-design/DATA_DICTIONARY_INDEX.md`（原表误写 `docs/DATA_DICTIONARY_INDEX.md` 已修正）；`docs/REGISTRY_INDEX.md` 已恢复（曾 tracked-but-deleted）。 | P0 | ✅ | 架构师 | 07-12（本次已闭环） |
-| N2 | **补齐 / 修订映射表指向的缺失目标文档**（STATE_MANAGEMENT.md、COMPONENT_GUIDE.md、HOOKS_GUIDE.md、PAGE_STRUCTURE.md、DATA_FLOW.md、DESIGN_SYSTEM.md、03-architecture-standards.md、05-engine-specs.md、06-routing-specs.md、09-quality-gates.md、trade/API_CONTRACT.md、cockpit/DATA_DEFINITION.md、news/DATA_DEFINITION.md）。选择：①按真实文档骨架创建最小骨架；②或修订映射表指向已有文档。**不解决则 `--auto-update` 实现后会因 FILE_NOT_FOUND 全失败。** | P0 | ✅ | 架构师 + 核心开发者 | 07-12（本次已做） |
+| N1 | **修订 `doc-trigger-action-map.md` 以匹配真实文档基底**：14 个目标文档中 13 个在磁盘缺失（仅 `../explanation/03-architecture-standards.md` 存在）；字典索引路径应为 `../reference/data-dictionary-index.md`（原表误写 `../reference/data-dictionary-index.md` 已修正）；`../reference/registry-index.md` 已恢复（曾 tracked-but-deleted）。 | P0 | ✅ | 架构师 | 07-12（本次已闭环） |
+| N2 | **补齐 / 修订映射表指向的缺失目标文档**（state-management.md、COMPONENT_GUIDE.md、../how-to/hooks-guide.md、../explanation/page-structure.md、DATA_FLOW.md、DESIGN_SYSTEM.md、03-architecture-standards.md、05-engine-specs.md、06-routing-specs.md、09-quality-gates.md、trade/api-contract.md、cockpit/data-definition.md、news/data-definition.md）。选择：①按真实文档骨架创建最小骨架；②或修订映射表指向已有文档。**不解决则 `--auto-update` 实现后会因 FILE_NOT_FOUND 全失败。** | P0 | ✅ | 架构师 + 核心开发者 | 07-12（本次已做） |
 | N3 | **`doc-update-trigger --auto-update` 空桩落地**（生成环节缺口）：当前 generate 阶段为 partial，仅透传变更给 doc-auto-updater。需按 T1 映射表实现「按触发规则生成/更新对应主文档」。 | P0 | ✅ | 核心开发者 | 07-12（本次已做） |
-| N4 | **维度一残留文件卫生**：已处置——`docs/design/` 2 文件迁 `02-design/`、`CLEANUP_SCHEDULE.md`/`GOVERNANCE.md` 迁 `00-meta/`、`docs/project-management/` 空目录删除、`docs/reports/` 461 tracked 产物 `git rm --cached`（gitignore L146 已配）。 | P1 | ✅ | 架构师 | 07-12（本次已做） |
+| N4 | **维度一残留文件卫生**：已处置——`docs/design/` 2 文件迁 `02-design/`、`cleanup-schedule.md`/`governance.md` 迁 `00-meta/`、`docs/project-management/` 空目录删除、`docs/reports/` 461 tracked 产物 `git rm --cached`（gitignore L146 已配）。 | P1 | ✅ | 架构师 | 07-12（本次已做） |
 | N5 | **stale 文档治理**：`trae-file-management-review.md` 描述的是清理前状态（file-management-system/、articles/ 已迁走、README 已建、DATA_DEFINITION 已归并），需标注「已过时/已执行」或刷新，避免误导后续 AI。 | P1 | ✅ | 架构师 | 07-12（已闭环，双重校对核实） |
 
 > **本轮已交付（07-12 N2/N3，P0 全闭环）**：
 > - **N1** — 映射表 §二 全部目标文档路径对齐磁盘真实文件；补充文档中文路径一并修正（`《DataBridge端点与数据映射清单》`→`docs/01-requirements/`、`《V9核心数据字典…》`/`《功能模块数据契约》`→`docs/02-design/`）。
-> - **N2** — 13 个原缺失目标文档全部可解析：9 个修订映射表指向已有真实文档（`01-requirements/`、`02-design/`），4 个确实缺失者已新建（`docs/02-design/STATE_MANAGEMENT.md`、`HOOKS_GUIDE.md`、`PAGE_STRUCTURE.md`、`docs/cockpit/DATA_DEFINITION.md`，内容均由代码实况派生、统一 blockquote 风格）。T1–T9 共 19 个 `docsToUpdate` 路径逐项验证 ✓ EXISTS。
+> - **N2** — 13 个原缺失目标文档全部可解析：9 个修订映射表指向已有真实文档（`01-requirements/`、`02-design/`），4 个确实缺失者已新建（`../explanation/state-management.md`、`../how-to/hooks-guide.md`、`../explanation/page-structure.md`、`../reference/data-definition.md`，内容均由代码实况派生、统一 blockquote 风格）。T1–T9 共 19 个 `docsToUpdate` 路径逐项验证 ✓ EXISTS。
 > - **N3** — `doc-update-trigger --auto-update` 空桩落地：新增 `--since/--base-ref/--files/--dry-run/--strict` 参数校验；`DocGenerator` 注册表扩展点（内置 `defaultDocGenerator`=建骨架+幂等校验标记、`versionCheckGenerator`=对接 `doc:version-check`）；按映射表路由生成 → 按需 `audit:docs`；修复 `matchPattern` 的 `**/*.ts` 不匹配顶层文件缺陷；新增 T9/T10 规则与 `auditDocs` 字段。
 > - **验证**：契约 20/20；`audit:layers` 0/0；`audit:docs` ✅；`lint:colors` 0；`doc:version-check` exit 0；`tsc` 0 错误；`--auto-update` 非 dry-run 实跑（写标记 + `audit:docs 通过` + exit 0，标记已回退）。
 
 > **N5 闭环核实（2026-07-12 双重校对）**：`trae-file-management-review.md` 顶部已实际标注「⚠️ 本文档已过时（2026-07-12，N5 治理）」并列出全部已处置项，故 N5 状态由 🔴 修订为 ✅（本次盘点发现看板状态滞后于实况的漂移，已同步）。
 >
-> **门禁基线校正（2026-07-12 实测）**：本轮实跑 `audit:docs` = 0 违规 / 644 文件（exit 0）、`doc:version-check` exit 0（186/198 含 code_version）、契约测试全通过、`--auto-update --dry-run` 路由正确（exit 0）。**唯 `audit:layers` 实测 6 违规（exit 1）**，均为 `src/services/` 引入 `@/lib/precision`、`@/lib/validation`（非 `AGENTS.md` lib 基础设施白名单成员）——属**代码层既有分层债务，与文档自动更新体系无关**，建议单独立项（不在本文档治理范围内改动）。上文历史 blockquote 中「`audit:layers` 0/0」为 N2/N3 那轮快照，保留不改。
+> **门禁基线校正（2026-07-12 实测）**：本轮实跑 `audit:docs` = 0 违规 / 644 文件（exit 0）、`doc:version-check` exit 0（186/198 含 code_version）、契约测试全通过、`--auto-update --dry-run` 路由正确（exit 0）。**唯 `audit:layers` 实测 6 违规（exit 1）**，均为 `src/services/` 引入 `@/lib/precision`、`@/lib/validation`（非 `../../AGENTS.md` lib 基础设施白名单成员）——属**代码层既有分层债务，与文档自动更新体系无关**，建议单独立项（不在本文档治理范围内改动）。上文历史 blockquote 中「`audit:layers` 0/0」为 N2/N3 那轮快照，保留不改。
+
+> **⚠️ N2 路径再次失效与重对齐（2026-07-14 pr-6 重组后修订）**：
+> pr-6 提交（4e736e9, 2026-07-14 "chore(refactor/pr-6): 偏差校对整改 R1-R8 落盘"）将 docs 从旧编号目录（`01-requirements/`、`02-design/`、`03-development/`、`04-testing/`、`05-deployment/`）整体迁移到 Diátaxis 新结构（`explanation/`、`reference/`、`how-to/`、`tutorials/`、`reports/`、`00-meta/`），导致 N2 上述"19 路径 ✓ EXISTS"的结论**全部失效**——映射表 §二 与代码 `TRIGGER_RULES.docsToUpdate` 仍指向旧路径，`--auto-update` 会 `FILE_NOT_FOUND`。
+> - **交叉比对验证**：git 历史显示 183 个 MD 文件被删除（diff-filter=D），但 **0 个真缺失**——全部有同名新文件存在（内容保留，属有计划移动非误删）；761 条重命名记录；88 个 basename 产生多副本（51 个内容完全相同的真重复）。
+> - **本次重对齐**：映射表 §二 与 `scripts/docs-tool/doc-update-trigger.ts` 的 `TRIGGER_RULES` 已同步修订，19 个 `docsToUpdate` 全部指向 Diátaxis 新结构权威位置（规范/契约→`reference/`、设计决策→`explanation/`、实操指南→`how-to/`、治理核心→`00-meta/`），逐项验证 ✓ EXISTS。
+> - **遗留**：51 个真重复副本待 P1 去重；命名规范化（kebab-case 统一）待 P2。详见 `outputs/doc-audit-2026-07-14/诊断与重梳方案报告.md`。
 
 ---
 

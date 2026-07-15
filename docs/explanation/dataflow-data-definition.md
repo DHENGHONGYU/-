@@ -1,15 +1,28 @@
 ---
+title: dataflow-data-definition
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/explanation/dataflow-data-definition.md
+code_version: 2.0.0
+tier: important
+---
+
+---
 deprecated: true
 deprecated_date: 2026-07-14
-deprecated_reason: 已整合至 DATA_DICTIONARY_INDEX.md 索引，建议通过主索引访问
-replaced_by: docs/reference/DATA_DICTIONARY_INDEX.md
+deprecated_reason: 已整合至 data-dictionary-index.md 索引，建议通过主索引访问
+replaced_by: docs/reference/data-dictionary-index.md
 ---
 
 # DEPRECATED - dataflow-data-definition.md
 
 > ⚠️ **此文件已废弃**（2026-07-14）
 > 
-> 数据定义已整合至 `docs/reference/DATA_DICTIONARY_INDEX.md`，请通过主索引访问最新定义。
+> 数据定义已整合至 `docs/reference/data-dictionary-index.md`，请通过主索引访问最新定义。
 
 ---
 
@@ -19,7 +32,7 @@ replaced_by: docs/reference/DATA_DICTIONARY_INDEX.md
 > **Version**: v1.2.0  
 > **Last Updated**: 2026-07-05  
 > 模块范围：`src/core/dataflow/`  
-> 关联任务：`docs/08-implementation-plan.md` 2.1.8
+> 关联任务：`../reference/08-implementation-plan.md` 2.1.8
 
 ---
 
@@ -168,6 +181,6 @@ v1.2.0 新增。`getStats()` 返回的缓存统计对象。
 
 ## 九、关联文档
 
-- `docs/03-architecture-standards.md` 3.1.2：数据流引擎设计
-- `docs/08-implementation-plan.md` 2.1.8：数据流引擎任务
-- `docs/DATA_DICTIONARY_INDEX.md`：数据字典总索引
+- `../reference/03-architecture-standards.md` 3.1.2：数据流引擎设计
+- `../reference/08-implementation-plan.md` 2.1.8：数据流引擎任务
+- `../reference/data-dictionary-index.md`：数据字典总索引

@@ -5,9 +5,9 @@
  * 存储：所有配置保存在 localStorage，变更即时生效
  * 数据流：ConfigApp <-> localStorage
  *
- * @see docs/《功能模块数据契约》.md — 18. ConfigApp 模块契约（配置管理页）
- * @see docs/《V9核心数据字典与类型定义（整合版）》.md — AppConfig 类型定义
- * @see docs/implementation/v9-system-blueprint.md — Phase 7 总控舱功能扩展
+ * @see docs/reference/功能模块数据契约.md — 18. ConfigApp 模块契约（配置管理页）
+ * @see docs/reference/v9核心数据字典与类型定义(整合版).md — AppConfig 类型定义
+ * @see docs/reference/v9-system-blueprint.md — Phase 7 总控舱功能扩展
  */
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router'

@@ -1,4 +1,11 @@
 ---
+title: v9-issue-management
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: V9 问题整改管理与调度记录
 version: v1.0.0
 last_updated: 2026-06-27
@@ -8,6 +15,8 @@ change_log:
   - date: 2026-06-27
     author: Documentation Governor
     desc: 合并 v9-issue-execution-board / v9-issue-resolution-schedule / v9-parallel-task-schedule 为统一文档
+code_version: 2.0.0
+tier: important
 ---
 
 # V9 问题整改管理与调度记录
@@ -50,7 +59,7 @@ change_log:
 | INT-001 | Interaction-Fix | Interaction-Fix | `src/apps/trading/TradingApp.tsx` | ✅ 已完成 |
 | INT-002 | Interaction-Fix | Interaction-Fix | `src/apps/input/HotSectorPanel.tsx` | ✅ 已完成 |
 | INT-003 | Interaction-Fix | Interaction-Fix | `src/apps/analysis/AnalysisApp.tsx` | ⏳ 待执行（批次1） |
-| INT-004 | Interaction-Fix | Interaction-Fix | `src/components/input/StockSearch.tsx` | ⏳ 待执行（批次1） |
+| INT-004 | Interaction-Fix | Interaction-Fix | `src/components/organisms/input/StockSearch.tsx` | ⏳ 待执行（批次1） |
 | INT-005 | Interaction-Fix | Interaction-Fix | `src/pages/input/LocalKnowledgePage.tsx` | ⏳ 待执行（批次1） |
 | INT-006 | Interaction-Fix | Architecture-Fix（JT-004） | `src/pages/analysis/IndustryScorePage.tsx`, `src/pages/analysis/IntelligentScorePage.tsx` | ⏳ 待执行（批次2） |
 | INT-007 | Interaction-Fix | Architecture-Fix（JT-001） | `src/App.tsx` | ✅ 已完成 |

@@ -270,4 +270,83 @@
 2. **添加注释头部** → 使用标准 JSDoc 头部（含 `@file`、`@description`、`@status`）
 3. **注册到 package.json** → 在 `scripts` 字段添加 `npm run xxx` 入口
 4. **更新本 README** → 在对应分类表中添加一行
-5. **验证** → 运行 `npx tsc --noEmit` 确保类型安全
+5. **更新分类目录 README** → 在对应分类目录（`audit/`、`verify/`、`generate/`、`fix/`、`build/`、`docs-tool/`、`migrate/`、`monitor/`、`quality/`、`security/`、`test-tool/`、`other/`）的 README 中添加条目
+6. **验证** → 运行 `npx tsc --noEmit` 确保类型安全
+
+---
+
+## 分类目录结构
+
+> **说明**: 由于根目录脚本包含内部相对路径引用（如 `../src/config/routes.ts`、`./_debug/_audit-pipeline`），直接移动脚本会导致路径失效。因此采用**文档化分类方案**：保持根级别文件位置不变，通过分类目录中的 README.md 进行逻辑分类。
+
+| 分类目录 | 说明 | 脚本数量 |
+|----------|------|----------|
+| `audit/` | 审计脚本（代码质量、架构规范、文档完整性等） | ~30 |
+| `verify/` | 验证脚本（路由验证、数据一致性、接口契约等） | ~10 |
+| `generate/` | 生成脚本（代码、文档、报告、配置等） | ~8 |
+| `fix/` | 修复脚本（代码违规、文档问题、配置错误等） | ~10 |
+| `build/` | 构建脚本（项目产物、索引、报告等） | ~3 |
+| `docs-tool/` | 文档工具脚本（文档管理、验证、同步、更新等） | ~14 |
+| `migrate/` | 迁移脚本（数据迁移、文档迁移、代码迁移等） | ~2 |
+| `monitor/` | 监控脚本（系统健康、异常检测、趋势分析等） | ~5 |
+| `quality/` | 质量脚本（代码质量评估、复杂度分析等） | ~4 |
+| `security/` | 安全脚本（安全审计、ACL 验证、安装策略等） | ~7 |
+| `test-tool/` | 测试工具脚本（测试运行、压力测试等） | ~12 |
+| `other/` | 其他脚本（未归类的辅助工具） | ~30 |
+
+### 目录结构示意
+
+```
+scripts/
+├── audit/              # 审计脚本
+│   ├── docs/           # 审计报告输出
+│   ├── _debug/         # 调试工具（内部引用）
+│   └── README.md       # 分类说明文档
+├── verify/             # 验证脚本
+│   ├── _debug/
+│   └── README.md
+├── generate/           # 生成脚本
+│   ├── _debug/
+│   └── README.md
+├── fix/                # 修复脚本
+│   ├── _debug/
+│   └── README.md
+├── build/              # 构建脚本
+│   ├── _debug/
+│   └── README.md
+├── docs-tool/          # 文档工具脚本
+│   ├── _debug/
+│   └── README.md
+├── migrate/            # 迁移脚本
+│   ├── _debug/
+│   └── README.md
+├── monitor/            # 监控脚本
+│   ├── _debug/
+│   └── README.md
+├── quality/            # 质量脚本
+│   ├── _debug/
+│   └── README.md
+├── security/           # 安全脚本
+│   ├── _debug/
+│   └── README.md
+├── test-tool/          # 测试工具脚本
+│   ├── _debug/
+│   └── README.md
+├── other/              # 其他脚本
+│   └── README.md
+├── _debug/             # 根级别调试工具
+├── README.md           # 总目录说明
+└── *.ts                # 实际执行脚本（保留在根目录）
+```
+
+### 为什么采用文档化分类？
+
+**风险评估**：
+- **高风险操作**：直接移动脚本文件会导致内部相对路径引用失效（如 `../src/config/routes.ts`、`./_debug/_audit-pipeline`）
+- **影响范围**：涉及 ~120 个脚本文件，部分脚本被 CI/CD 流水线和 npm scripts 引用
+- **回滚成本**：需要同步更新 package.json 和所有引用路径
+
+**解决方案**：
+- **逻辑分类**：通过分类目录中的 README.md 进行逻辑分类，不改变文件物理位置
+- **兼容性保障**：所有现有引用路径保持有效
+- **渐进式改进**：后续可逐步重构脚本中的相对路径引用，实现物理分类

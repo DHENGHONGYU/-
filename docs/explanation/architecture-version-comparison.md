@@ -1,4 +1,11 @@
 ---
+title: architecture-version-comparison
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: 架构设计文档版本比对
 version: v0.9.0
 last_updated: 2026-06-25
@@ -8,6 +15,8 @@ change_log:
   - date: 2026-06-25
     author: Documentation Governor
     desc: 注入 Frontmatter 元数据（Phase 3 版本化）
+code_version: 2.0.0
+tier: important
 ---
 # 架构设计文档版本比对
 
@@ -43,7 +52,7 @@ change_log:
 
 ---
 
-## 1. 架构分层（`docs/03-architecture-standards.md`）
+## 1. 架构分层（`docs/explanation/03-architecture-standards.md`）
 
 | 层级 | 规划目录 | v0.9.0-docs-base 描述 | v0.9.0-docs-review 更新 | v0.9.0-docs-v6pro-assessment 更新 | 影响 |
 |------|----------|------------------------|-------------------------|----------------------------------|------|
@@ -55,7 +64,7 @@ change_log:
 
 ---
 
-## 2. 调用方向与数据访问（`docs/03-architecture-standards.md`）
+## 2. 调用方向与数据访问（`docs/explanation/03-architecture-standards.md`）
 
 | 规则 | v0.9.0-docs-base | v0.9.0-docs-review | v0.9.0-docs-v6pro-assessment | 理由 |
 |------|------------------|--------------------|------------------------------|------|
@@ -65,7 +74,7 @@ change_log:
 
 ---
 
-## 3. 配置层清单（`docs/03-architecture-standards.md`）
+## 3. 配置层清单（`docs/explanation/03-architecture-standards.md`）
 
 | 文件 | v0.9.0-docs-base | v0.9.0-docs-review |
 |------|------------------|--------------------|
@@ -80,7 +89,7 @@ change_log:
 
 ---
 
-## 4. 数据 Schema（`docs/03-architecture-standards.md`）
+## 4. 数据 Schema（`docs/explanation/03-architecture-standards.md`）
 
 | Store | v0.9.0-docs-base | v0.9.0-docs-review | 说明 |
 |-------|------------------|--------------------|------|
@@ -91,7 +100,7 @@ change_log:
 
 ---
 
-## 5. 路由与 UI 映射（`docs/06-routing-specs.md`）
+## 5. 路由与 UI 映射（`docs/reference/06-routing-specs.md`）
 
 | 路径 | v0.9.0-docs-base | v0.9.0-docs-review | 组件 | 服务 |
 |------|------------------|--------------------|------|------|
@@ -105,7 +114,7 @@ change_log:
 
 ---
 
-## 6. UI/UX 规范（`docs/04-ui-ux-specs.md`）
+## 6. UI/UX 规范（`docs/reference/04-ui-ux-specs.md`）
 
 | 项目 | v0.9.0-docs-base | v0.9.0-docs-review | 理由 |
 |------|------------------|--------------------|------|
@@ -117,7 +126,7 @@ change_log:
 
 ---
 
-## 7. 实施计划（`docs/08-implementation-plan.md`）
+## 7. 实施计划（`docs/reference/08-implementation-plan.md`）
 
 | Phase | v0.9.0-docs-base | v0.9.0-docs-review |
 |-------|------------------|--------------------|
@@ -128,7 +137,7 @@ change_log:
 
 ---
 
-## 8. 质量门禁（`docs/09-quality-gates.md`）
+## 8. 质量门禁（`../reference/09-quality-gates.md`）
 
 | 门禁项 | v0.9.0-docs-base | v0.9.0-docs-review |
 |--------|------------------|--------------------|
@@ -140,7 +149,7 @@ change_log:
 
 ---
 
-## 9. 功能规格（`docs/02-functional-specs.md`）
+## 9. 功能规格（`docs/reference/02-functional-specs.md`）
 
 | 用户故事 | v0.9.0-docs-base | v0.9.0-docs-review |
 |----------|------------------|--------------------|
@@ -190,12 +199,26 @@ change_log:
 
 ## 附录：受影响的文档清单
 
-- `docs/03-architecture-standards.md`
-- `docs/02-functional-specs.md`
-- `docs/04-ui-ux-specs.md`
-- `docs/05-engine-specs.md`
-- `docs/06-routing-specs.md`
-- `docs/08-implementation-plan.md`
-- `docs/09-quality-gates.md`
-- `docs/implementation/architecture-version-comparison.md`
-- `CHANGELOG.md`
+- `../reference/03-architecture-standards.md`
+- `../reference/02-functional-specs.md`
+- `../reference/04-ui-ux-specs.md`
+- `../reference/05-engine-specs.md`
+- `../reference/06-routing-specs.md`
+- `../reference/08-implementation-plan.md`
+- `../reference/09-quality-gates.md`
+- `../reference/architecture-version-comparison.md`
+- `../../CHANGELOG.md`
+
+
+<!-- merge-source: docs/reference/architecture-version-comparison.md (2026-07-14 内容融合，避免去重丢失有效信息) -->
+## 补充内容（合并自 `docs/reference/architecture-version-comparison.md`）
+
+## 1. 架构分层（`../reference/03-architecture-standards.md`）
+## 2. 调用方向与数据访问（`../reference/03-architecture-standards.md`）
+## 3. 配置层清单（`../reference/03-architecture-standards.md`）
+## 4. 数据 Schema（`../reference/03-architecture-standards.md`）
+## 5. 路由与 UI 映射（`../reference/06-routing-specs.md`）
+## 6. UI/UX 规范（`../reference/04-ui-ux-specs.md`）
+## 7. 实施计划（`../reference/08-implementation-plan.md`）
+## 8. 质量门禁（`../reference/09-quality-gates.md`）
+## 9. 功能规格（`../reference/02-functional-specs.md`）

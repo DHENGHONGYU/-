@@ -1,3 +1,16 @@
+---
+title: 02-experience-five-pitfalls
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/assets/articles/02-experience-five-pitfalls.md
+code_version: 2.0.0
+tier: reference
+---
+
 # 审计场景下 WorkBuddy 的 5 个真实踩坑与解法 #WorkBuddy
 
 > 用 WorkBuddy 改造审计工作流三个月，我踩过不少坑。这篇文章挑 5 个最典型的，每个都给出现象、根因和解法。如果你也在专业服务场景用 WorkBuddy，这些坑大概率你会撞上。

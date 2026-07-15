@@ -1,15 +1,28 @@
 ---
+title: news-data-definition
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/explanation/news-data-definition.md
+code_version: 2.0.0
+tier: important
+---
+
+---
 deprecated: true
 deprecated_date: 2026-07-14
-deprecated_reason: 已整合至 DATA_DICTIONARY_INDEX.md 索引，建议通过主索引访问
-replaced_by: docs/reference/DATA_DICTIONARY_INDEX.md
+deprecated_reason: 已整合至 data-dictionary-index.md 索引，建议通过主索引访问
+replaced_by: docs/reference/data-dictionary-index.md
 ---
 
 # DEPRECATED - news-data-definition.md
 
 > ⚠️ **此文件已废弃**（2026-07-14）
 > 
-> 数据定义已整合至 `docs/reference/DATA_DICTIONARY_INDEX.md`，请通过主索引访问最新定义。
+> 数据定义已整合至 `docs/reference/data-dictionary-index.md`，请通过主索引访问最新定义。
 
 ---
 
@@ -18,7 +31,7 @@ replaced_by: docs/reference/DATA_DICTIONARY_INDEX.md
 > **版本**：v1.0.0  
 > **生成日期**：2026-06-26  
 > **最后更新**：2026-07-05（版本号补标）  
-> **模块范围**：`src/pages/news-v6/` · `src/services/news/` · `src/data/types.ts` · `src/config/routes.ts`  
+> **模块范围**：`src/pages/analysis/` · `src/services/news/` · `src/data/types.ts` · `src/config/routes.ts`  
 > **关联 PoC**：`NewsPage-PoC验证报告.md` · `NewsPage-迁移验收确认书.md`
 
 ---
@@ -106,7 +119,7 @@ replaced_by: docs/reference/DATA_DICTIONARY_INDEX.md
 
 - 存储位置：`STORE_NAME.newsBookmarks`（IndexedDB 表名 `news_bookmarks`）
 - 索引：`by-bookmarked-at`（按收藏时间排序）
-- 读写入口：`src/store/newsStore.ts` 的 `initBookmarks()` / `toggleBookmark()`
+- 读写入口：`src/store/analysisNewsStore.ts` 的 `initBookmarks()` / `toggleBookmark()`
 - 迁移策略：首次启动时若 IndexedDB 为空，自动从 `localStorage` 的 `v9_news_bookmarks` 迁移并清空旧 key
 
 ---
@@ -196,7 +209,7 @@ return 'neutral'
 
 | 路由 | 页面组件 | 说明 |
 |------|----------|------|
-| `/analysis/news-v6` | `src/pages/news-v6/NewsPage.tsx` | V6 迁移验证页面 |
+| `/analysis/news-v6` | `src/pages/analysis/NewsPage.tsx` | V6 迁移验证页面 |
 | `/analysis/news` | `src/pages/analysis/NewsPage.tsx` | V9 原生资讯页面 |
 
 ---

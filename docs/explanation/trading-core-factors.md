@@ -1,4 +1,11 @@
 ---
+title: trading-core-factors
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: 交易核心因子与复盘指标导入
 version: v0.9.0
 last_updated: 2026-06-24
@@ -8,6 +15,8 @@ change_log:
   - date: 2026-06-24
     author: Documentation Governor
     desc: 注入 Frontmatter 元数据（Phase 3 版本化）
+code_version: 2.0.0
+tier: important
 ---
 # 交易核心因子与复盘指标导入
 
@@ -196,13 +205,13 @@ $$纪律评分 = 100 - critical \times 15 - major \times 8 - minor \times 3$$
 
 | 本文件章节 | 应更新到的 V9 文档 | 应实现的代码模块 |
 |------------|-------------------|------------------|
-| 第 2 节 择时信号 | `docs/05-engine-specs.md` 交易引擎 | `src/services/trading/signalGenerator.ts` |
-| 第 3 节 仓位管理 | `docs/05-engine-specs.md` 风控/仓位 | `src/services/trading/positionSizer.ts` |
-| 第 5 节 12 类错误 | `docs/05-engine-specs.md` 复盘引擎 | `src/services/trading/tradeErrorClassifier.ts` |
-| 第 6 节 复盘指标 | `docs/02-functional-specs.md` 交易复盘 | `src/services/trading/tradeReviewAI.ts` |
-| 第 7 节 数据新鲜度 | `docs/05-engine-specs.md` 数据采集 | `src/services/trading/timingEngine.ts` |
-| 全部术语 | `docs/10-glossary.md` | — |
-| 实施计划 | `docs/08-implementation-plan.md` Phase 2 | — |
+| 第 2 节 择时信号 | `../reference/05-engine-specs.md` 交易引擎 | `src/services/trading/signalGenerator.ts` |
+| 第 3 节 仓位管理 | `../reference/05-engine-specs.md` 风控/仓位 | `src/services/trading/positionSizer.ts` |
+| 第 5 节 12 类错误 | `../reference/05-engine-specs.md` 复盘引擎 | `src/services/trading/tradeErrorClassifier.ts` |
+| 第 6 节 复盘指标 | `../reference/02-functional-specs.md` 交易复盘 | `src/services/trading/tradeReviewAI.ts` |
+| 第 7 节 数据新鲜度 | `../reference/05-engine-specs.md` 数据采集 | `src/services/trading/timingEngine.ts` |
+| 全部术语 | `../reference/10-glossary.md` | — |
+| 实施计划 | `../reference/08-implementation-plan.md` Phase 2 | — |
 
 ---
 

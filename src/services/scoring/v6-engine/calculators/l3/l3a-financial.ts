@@ -319,8 +319,10 @@ export const L3aFinancialCalculator: LayerCalculator = {
       risks.push(...riskResult.redDetails.map((r: string) => `[红色预警] ${r}`))
       risks.push(...riskResult.yellowDetails.map((r: string) => `[黄色预警] ${r}`))
 
-      // 3. IPC 临界点（需要 L1/L2 得分，这里用默认值）
-      const ipc = evaluateIPC(input, 3, 3)
+      // 3. IPC 临界点（P0 修复：使用真实 L1/L2 得分，缺失时降级为 3）
+      const l1Score = input.peerScores?.l1 ?? 3
+      const l2Score = input.peerScores?.l2 ?? 3
+      const ipc = evaluateIPC(input, l1Score, l2Score)
 
       // 最终得分
       const score = clamp(baseScore - riskPenalty + ipc.l3Bonus)
@@ -339,6 +341,14 @@ export const L3aFinancialCalculator: LayerCalculator = {
         evidence.push(`IPC: OCR=${ipc.ocrScore}, MCE=${ipc.mceScore}, TIMS=${ipc.timsScore}, IPC=${ipc.ipcScore}, 阶段=${ipc.stage}`)
       }
 
+      // 判断该层是否真实参与：至少存在一项核心财务字段
+      const hasFinancialData = [
+        input.financials.revenue,
+        input.financials.netProfit,
+        input.financials.grossMargin,
+        input.financials.operatingCF,
+      ].some((v) => v !== undefined && Number.isFinite(v))
+
       return {
         layerId: 'l3f',
         layerName: LAYER_LABELS.l3f ?? 'L3a 财务健康',
@@ -349,6 +359,7 @@ export const L3aFinancialCalculator: LayerCalculator = {
         weight,
         weightedScore: score * weight,
         dataSources: ['财报API', '行情数据', '公司公告'],
+        participated: hasFinancialData,
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
@@ -363,6 +374,7 @@ export const L3aFinancialCalculator: LayerCalculator = {
         weight,
         weightedScore: Number.NaN,
         dataSources: [],
+        participated: false,
       }
     }
   }

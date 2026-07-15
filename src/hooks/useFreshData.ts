@@ -10,7 +10,7 @@
  * 纯 UI 层 Hook，不改变现有 Store 接口。
  *
  * @see src/core/refreshCoordinator.ts -- 跨 Store 刷新协调
- * @see docs/implementation/freshness-alerts.md -- 数据新鲜度告警策略
+ * @see docs/reports/retrospectives/freshness-alerts.md -- 数据新鲜度告警策略
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react'
@@ -138,7 +138,7 @@ export function useFreshData(options: UseFreshDataOptions): UseFreshDataResult {
     }
     isRefreshingRef.current = true
     logger.info(`[useFreshData:${label}] forceRefresh triggered`)
-    refresh().finally(() => {
+    refresh().catch(() => {}).finally(() => {
       isRefreshingRef.current = false
     })
   }, [refresh, label])
@@ -154,7 +154,7 @@ export function useFreshData(options: UseFreshDataOptions): UseFreshDataResult {
     })
 
     isRefreshingRef.current = true
-    refresh().finally(() => {
+    refresh().catch(() => {}).finally(() => {
       isRefreshingRef.current = false
     })
   }, [enabled, isStale, lastUpdated, maxStaleMs, refresh, label, secondsSinceUpdate])
@@ -177,7 +177,7 @@ export function useFreshData(options: UseFreshDataOptions): UseFreshDataResult {
         })
 
         isRefreshingRef.current = true
-        currentOptions.refresh().finally(() => {
+        currentOptions.refresh().catch(() => {}).finally(() => {
           isRefreshingRef.current = false
         })
       }

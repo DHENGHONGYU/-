@@ -14,7 +14,7 @@ export class RuleEngine {
   private lastSyncTime: number = 0
 
   constructor() {
-    this.loadRules()
+    void this.loadRules()
   }
 
   async loadRules(): Promise<void> {

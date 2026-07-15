@@ -54,7 +54,7 @@ export type WorkerResponse = WorkerResultResponse | WorkerErrorResponse | Worker
 
 // ─── Worker 入口 ─────────────────────────────────────────────
 
-const ctx = self as unknown as DedicatedWorkerGlobalScope
+const ctx = self
 
 ctx.onmessage = async (e: MessageEvent<WorkerRequest>) => {
   const req = e.data

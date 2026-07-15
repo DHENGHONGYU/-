@@ -1,3 +1,16 @@
+---
+title: adr-mcp-server-lifecycle
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/reference/adr-mcp-server-lifecycle.md
+code_version: 2.0.0
+tier: important
+---
+
 # ADR-013: MCP Server 生命周期管理 SOP
 
 | 项目 | 内容 |
@@ -145,7 +158,7 @@ input:main, trade:main
 
 ## 7. 参考
 
-- `docs/06-project-management/mcp-module-status.md` — 模块历史变更记录
+- `../reports/retrospectives/mcp-module-status.md` — 模块历史变更记录
 - `src/config/mcpServerRegistry.ts` — Registry 配置
 - `src/config/mcpAclMatrix.ts` — ACL 权限矩阵
 - `src/mcp/bridge/mcpBridge.ts` — Tool 调用计数器

@@ -1,3 +1,16 @@
+---
+title: pending-items-backlog-20260704
+code_version: 2.0.0
+
+tier: important
+---
+
+---
+title: docs/explanation/pending-items-backlog-20260704.md
+code_version: 2.0.0
+tier: important
+---
+
 # V9 待处理事项清单（Backlog）
 
 > **生成日期**: 2026-07-04
@@ -8,11 +21,11 @@
 ---
 
 > ⚠️ **本文档已过时（2026-07-12 标注，N5 模式）**：本清单为 2026-07-04 快照。关键项已处置：
-> - "549 个 TS 编译错误" → 现仅 **9 处**（全在 `src/services/trading/riskEngine.ts`，见 `TECH-DEBT.md` TD-007）；
+> - "549 个 TS 编译错误" → 现仅 **9 处**（全在 `src/services/trading/riskEngine.ts`，见 `./design/tech-debt.md` TD-007）；
 > - "Pre-commit hook 失效" → 已修复（Husky 12 道门禁全绿）；
 > - "git config 未设置" → 需另行核实。
 >
-> 当前基准请查 `docs/00-meta/doc-auto-update-kanban.md` + `docs/02-design/TECH-DEBT.md`。本文件因被 REGISTRY_INDEX 引用故保留，不再作为待办依据。
+> 当前基准请查 `docs/00-meta/doc-auto-update-kanban.md` + `./design/tech-debt.md`。本文件因被 REGISTRY_INDEX 引用故保留，不再作为待办依据。
 
 ---
 
@@ -147,14 +160,14 @@
 
 ### 4.1 NewsPage 迁移的技术债
 
-- **问题内容**: `src/store/newsStore.ts` 有来自 pages 层的 value import，违反 AGENTS.md 分层规则（store 层禁止依赖 pages 层）
+- **问题内容**: `src/store/analysisNewsStore.ts` 有来自 pages 层的 value import，违反 AGENTS.md 分层规则（store 层禁止依赖 pages 层）
 - **影响范围**: 架构层级违规，可能影响后续重构
 - **优先级**: **P2**
 - **建议处理时机**: 下一迭代，重构 newsStore 解除对 pages 层的依赖
 
 ### 4.2 TypeScript 错误处理和类型安全检测报告.md 已删除
 
-- **问题内容**: 根目录的 `TypeScript错误处理和类型安全检测报告.md` 文件在工作区修改中标记为 deleted
+- **问题内容**: 根目录的 `../reports/audit/typescript错误处理和类型安全检测报告.md` 文件在工作区修改中标记为 deleted
 - **影响范围**: 文档丢失（但仍在 git 历史中可恢复）
 - **优先级**: **P3**
 - **建议处理时机**: 如需保留，从 git 历史恢复；如不需要，确认删除
@@ -162,12 +175,12 @@
 ### 4.3 旧版组件文件已删除
 
 - **问题内容**: 以下文件在工作区修改中标记为 deleted：
-  - `src/apps/input/prototype/BulkImportProto.tsx`
-  - `src/apps/input/prototype/DashboardProto.tsx`
-  - `src/apps/input/prototype/DataTestProto.tsx`
-  - `src/apps/input/prototype/HotSectorProto.tsx`
-  - `src/apps/input/prototype/InputPrototype.tsx`
-  - `src/apps/input/prototype/mockData.ts`
+  - `src/apps/input/BulkImportProto.tsx`
+  - `src/apps/input/DashboardProto.tsx`
+  - `src/apps/input/DataTestProto.tsx`
+  - `src/apps/input/HotSectorProto.tsx`
+  - `src/apps/input/InputPrototype.tsx`
+  - `src/apps/input/mockData.ts`
   - `src/pages/analysis/NewsPage.tsx`（旧版，已被 news-v6 替代）
   - `src/store/rotationSignalStore.ts` + 测试文件
 - **影响范围**: 旧版组件清理，符合架构演进

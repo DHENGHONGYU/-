@@ -1,0 +1,42 @@
+{
+  "violations": [
+    {
+      "file": "src/components/organisms/output/prediction/FactorDashboardPanel.tsx",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现"
+    },
+    {
+      "file": "src/components/organisms/output/prediction/PredictionPanel.tsx",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现"
+    },
+    {
+      "file": "src/core/statistics.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现"
+    },
+    {
+      "file": "src/services/output/predictionVerifier.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现"
+    },
+    {
+      "file": "src/services/scoring/v6-engine/correlationAnalyzer.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现"
+    }
+  ],
+  "summary": {
+    "totalFiles": 5,
+    "totalViolations": 5,
+    "scanMode": "changed",
+    "docFilesCount": 4
+  },
+  "meta": {
+    "scriptName": "audit-doc-sync",
+    "version": "3.0",
+    "timestamp": "2026-07-15T02:39:27.977Z",
+    "durationMs": 38,
+    "rootDir": "G:\\FinSightV9\\scripts\\audit"
+  }
+}

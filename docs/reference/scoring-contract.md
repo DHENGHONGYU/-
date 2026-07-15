@@ -1,14 +1,23 @@
 ---
+title: scoring-contract
+code_version: 2.0.0
+
+tier: important
+---
+
+---
 title: scoring 服务契约
 status: active
 owner: scoring 子域 / 架构组
 updated: 2026-07-12
+code_version: 2.0.0
+tier: important
 ---
 
 # scoring-contract.md — 评分引擎服务
 
 > **定位**：V9 核心投研评分引擎，包含 v6 五因子评分、热门板块/价值洼地双策略评分、轮动信号检测。  
-> **关联**：`../../architecture/services-catalog.md`（子域 #16）、`AGENTS.md` §一、ADR-009。
+> **关联**：`./services-catalog.md`（子域 #16）、`../../AGENTS.md` §一、ADR-009。
 
 ---
 
