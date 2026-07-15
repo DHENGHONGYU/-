@@ -178,8 +178,8 @@ code_version: 2.0.0
 | I-65 | DESIGN | Design Tokens 系统使用指南 | - | I-39 | C-37,I-81 | [design-tokens.md](../reference/design-tokens.md) |
 | I-66 | DESIGN | V6 Pro UI / Page 吸收落地总结（仅 UI 展示层，不动数据架构） | Status**: Implemented | - | C-37,I-81,I-82,R-037 | [ui-only-implementation-summary.md](../explanation/ui-only-implementation-summary.md) |
 | I-67 | DESIGN | V6 Pro UI / Page 吸收落地总结（仅 UI 展示层，不动数据架构） | Status**: Implemented | - | C-37,I-177,I-80 | [ui-only-implementation-summary.md](../explanation/design/ui-only-implementation-summary.md) |
-| I-68 | DESIGN | V9 UI 设计优化分布式 AGENT 任务执行清单 | 聚合来源：`../reference/../reference/ui设计优化实施计划-详细版.md`（v3.0） | - | C-37,I-82,R-037 | [ui-design-agent-execution-plan.md](../explanation/ui-design-agent-execution-plan.md) |
-| I-69 | DESIGN | V9 UI 设计优化分布式 AGENT 任务执行清单 | 聚合来源：`../reference/../reference/ui设计优化实施计划-详细版.md`（v3.0） | - | C-37,I-80 | [ui-design-agent-execution-plan.md](../explanation/design/ui-design-agent-execution-plan.md) |
+| I-68 | DESIGN | V9 UI 设计优化分布式 AGENT 任务执行清单 | 聚合来源：`../reference/ui设计优化实施计划-详细版.md`（v3.0） | - | C-37,I-82,R-037 | [ui-design-agent-execution-plan.md](../explanation/ui-design-agent-execution-plan.md) |
+| I-69 | DESIGN | V9 UI 设计优化分布式 AGENT 任务执行清单 | 聚合来源：`../reference/ui设计优化实施计划-详细版.md`（v3.0） | - | C-37,I-80 | [ui-design-agent-execution-plan.md](../explanation/design/ui-design-agent-execution-plan.md) |
 | I-70 | DESIGN | V9 UI 设计系统 | Status**: Current | - | C-37,I-80,I-81,I-82,R-037,R-11 | [ui-design-system.md](../explanation/design/ui-design-system.md) |
 | I-71 | DESIGN | V9 设计令牌映射表 | 文档编号**: DOC-TOKENS-002 | - | C-37,I-80,I-82,R-037 | [design-token-mapping.md](../reference/design-token-mapping.md) |
 | I-72 | DESIGN | V9 间距令牌规范（Spacing Tokens） | 版本**: v0.9.14 P5-SPACE | - | C-37,I-80,I-81,I-82,R-037 | [spacing-tokens.md](../explanation/design/spacing-tokens.md) |
@@ -263,7 +263,7 @@ code_version: 2.0.0
 | I-150 | MISC | SEC EDGAR 插件 | 数据域**: 美国 SEC 上市公司申报文件与财务数据 | - | C-37,I-225,I-82 | [sec_edgar.md](../reference/sec_edgar.md) |
 | I-151 | MISC | tech-debt.md — 技术债管理文档 | 版本**: v1.0.0 | **日期**: 2026-07-05 | - | C-37,I-146,I-80,I-81,I-82,R-03 | [tech-debt.md](../explanation/design/tech-debt.md) |
 | I-152 | MISC | Tianyancha 插件 | 数据域**: 天眼查企业数据库（中国大陆企业信息） | - | C-37,I-225,I-82 | [tianyancha.md](../reference/tianyancha.md) |
-| I-153 | MISC | UI 设计优化实施计划（详细版） | 合并《UI设计优化实操方案 V6×V9×WorkBuddy》与《UI设计原则基线 | - | C-37,I-80,I-82,R-037 | [../reference/../reference/ui设计优化实施计划-详细版.md](../reference/../reference/../reference/ui设计优化实施计划-详细版.md) |
+| I-153 | MISC | UI 设计优化实施计划（详细版） | 合并《UI设计优化实操方案 V6×V9×WorkBuddy》与《UI设计原则基线 | - | C-37,I-80,I-82,R-037 | [../reference/ui设计优化实施计划-详细版.md](../reference/../reference/ui设计优化实施计划-详细版.md) |
 | I-154 | MISC | V6 Pro UI 模块新旧比对与 V9 吸收报告 | Status: Future Reference / Deferred** | - | C-37,I-177,I-80,I-81,R-037 | [deprecated-ui-module-alignment.md](../reference/deprecated-ui-module-alignment.md) |
 | I-155 | MISC | V6 Pro → V9 架构差异分析报告 | 审计基准：`V6Pro_整体架构梳理_v3.md`、`trade_review_ | - | C-37,I-80,I-81,I-82,R-037 | [v6pro-v9-gap-analysis-final.md](../explanation/design/v6pro-v9-gap-analysis-final.md) |
 | I-156 | MISC | V6-V9 界面设计优化详细可行性计划 | 版本**: v1.0 | **日期**: 2026-07-08 | - | C-37,I-80,I-82,R-037 | [v6-v9界面设计优化可行性计划.md](../explanation/design/v6-v9界面设计优化可行性计划.md) |

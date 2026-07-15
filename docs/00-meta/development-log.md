@@ -557,7 +557,7 @@ code_version: 2.0.0
 | 类型 | 数量 | 典型修复 |
 |------|------|----------|
 | AGENTS.md 路径修正 | ~18 处 | `../../AGENTS.md` → `../../AGENTS.md` |
-| registry-index.md 引用修正 | ~4 处 | `../reference/../reference/../reference/v9-system-blueprint.md` → `../reference/../reference/../reference/v9-system-blueprint.md` |
+| registry-index.md 引用修正 | ~4 处 | `../reference/v9-system-blueprint.md` → `../reference/v9-system-blueprint.md` |
 | 其他路径修正 | ~4 处 | 各类相对路径修正 |
 
 #### 3. 修复前后对比
@@ -1198,7 +1198,7 @@ const className = useDensityClass('text-sm', 'text-base', 'text-lg');
 | `../explanation/03-architecture-standards.md` | 26 | 文档 basename |
 | `../explanation/design/00-readme.md` | 22 | 文档 basename |
 | `../reference/data-definition.md` | 20 | 文档 basename |
-| `../reference/../reference/v9-system-blueprint.md` | 20 | 文档 basename |
+| `../reference/v9-system-blueprint.md` | 20 | 文档 basename |
 | `../reference/data-dictionary-index.md` | 16 | 文档 basename |
 | `scripts/other/token-scan.cjs` | 15 | 已删除脚本 |
 | `src/apps/input/InputApp.tsx` | 15 | 已迁移页面 |
@@ -1227,8 +1227,8 @@ const className = useDensityClass('text-sm', 'text-base', 'text-lg');
 | `../explanation/token-usage-cookbook.md` | `docs/explanation/../explanation/token-usage-cookbook.md` |
 | `../reference/02-functional-specs.md` | `docs/reference/../reference/02-functional-specs.md` |
 | `../reference/services-catalog.md` | `docs/reference/../reference/services-catalog.md` |
-| `../reference/../reference/v9-system-blueprint.md` | `docs/reference/../reference/../reference/v9-system-blueprint.md` |
-| `../explanation/../explanation/a11y-checklist.md` | `docs/explanation/../explanation/../explanation/a11y-checklist.md` |
+| `../reference/v9-system-blueprint.md` | `docs/reference/../reference/v9-system-blueprint.md` |
+| `../explanation/a11y-checklist.md` | `docs/explanation/../explanation/a11y-checklist.md` |
 | `../explanation/a11y-i18n.md` | `docs/explanation/../explanation/a11y-i18n.md` |
 | `../reference/design-token-mapping.md` | `docs/reference/../reference/design-token-mapping.md` |
 
@@ -1255,9 +1255,9 @@ const className = useDensityClass('text-sm', 'text-base', 'text-lg');
 ### 遇到的问题及解决方案
 
 #### 问题 1：映射表目录映射导致修复指向目录
-- **现象**：`../explanation/../explanation/a11y-checklist.md → ../reference` 指向目录而非文件
-- **原因**：映射表中 `../explanation/../explanation/a11y-checklist.md` 配置为 `docs/reference/`
-- **解决方案**：修正为精确文件路径 `docs/explanation/../explanation/../explanation/a11y-checklist.md`
+- **现象**：`../explanation/a11y-checklist.md → ../reference` 指向目录而非文件
+- **原因**：映射表中 `../explanation/a11y-checklist.md` 配置为 `docs/reference/`
+- **解决方案**：修正为精确文件路径 `docs/explanation/../explanation/a11y-checklist.md`
 
 #### 问题 2：部分 basename 文档存在多份
 - **现象**：`../reference/data-definition.md` 在 5 个目录中存在
@@ -1292,11 +1292,11 @@ const className = useDensityClass('text-sm', 'text-base', 'text-lg');
 
 源代码（如 `src/store/executionStore.ts` 等 13 个 store）使用 `《》` 中文书名号包裹文档名作为 `@see` 引用，例如：
 ```
-@see docs/《功能模块数据契约》.md
-@see docs/《V9核心数据字典与类型定义（整合版）》.md
-@see docs/《DataBridge端点与数据映射清单》.md
-@see docs/《V9 架构缺陷与整改行动清单》.md
-@see docs/《V9 现有数据资产清单》.md
+@see docs/reference/功能模块数据契约.md
+@see docs/reference/v9核心数据字典与类型定义(整合版).md
+@see docs/reference/databridge端点与数据映射清单.md
+@see docs/explanation/v9-架构缺陷与整改行动清单.md
+@see docs/reference/V9现有数据资产清单.md
 ```
 
 实际文件已被迁移到 `docs/reference/` 或 `docs/explanation/`，且不再使用书名号，因此 27 处 code-to-doc 引用全部断裂。
@@ -1307,12 +1307,12 @@ const className = useDensityClass('text-sm', 'text-base', 'text-lg');
 
 | 旧引用 | 新引用 | 命中数 |
 |--------|--------|--------|
-| `docs/《功能模块数据契约》.md` | `docs/reference/功能模块数据契约.md` | 12 |
-| `docs/《V9核心数据字典与类型定义（整合版）》.md` | `docs/reference/v9核心数据字典与类型定义(整合版).md` | 10 |
-| `docs/《DataBridge端点与数据映射清单》.md` | `docs/reference/databridge端点与数据映射清单.md` | 3 |
-| `docs/《V9 架构缺陷与整改行动清单》.md` | `docs/explanation/v9-架构缺陷与整改行动清单.md` | 1 |
-| `docs/《V9现有数据资产清单》.md` | `docs/reference/V9现有数据资产清单.md` | 1 |
-| `docs/explanation/data-flow-spec.md` | `docs/explanation/design/data-flow-spec.md` | 1 |
+| `docs/reference/功能模块数据契约.md` | `docs/reference/功能模块数据契约.md` | 12 |
+| `docs/reference/v9核心数据字典与类型定义(整合版).md` | `docs/reference/v9核心数据字典与类型定义(整合版).md` | 10 |
+| `docs/reference/databridge端点与数据映射清单.md` | `docs/reference/databridge端点与数据映射清单.md` | 3 |
+| `docs/explanation/v9-架构缺陷与整改行动清单.md` | `docs/explanation/v9-架构缺陷与整改行动清单.md` | 1 |
+| `docs/reference/V9现有数据资产清单.md` | `docs/reference/V9现有数据资产清单.md` | 1 |
+| `docs/explanation/design/data-flow-spec.md` | `docs/explanation/design/data-flow-spec.md` | 1 |
 
 #### 3. 手动修正
 
@@ -1348,7 +1348,7 @@ const className = useDensityClass('text-sm', 'text-base', 'text-lg');
 ### 遇到的问题及解决方案
 
 #### 问题 1：书名号引用带/不带空格导致正则不匹配
-- **现象**：`docs/《V9现有数据资产清单》.md`（无空格）和 `docs/《V9 现有数据资产清单》.md`（有空格）两种写法
+- **现象**：`docs/reference/V9现有数据资产清单.md`（无空格）和 `docs/reference/V9现有数据资产清单.md`（有空格）两种写法
 - **原因**：不同时期不同作者使用了不同的空格习惯
 - **解决方案**：正则中使用 `\s?` 兼容两种写法
 

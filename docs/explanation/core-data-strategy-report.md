@@ -810,7 +810,7 @@ DataBridge.forward(envelope: StandardEnvelope): Promise<void>
 | `data-flow-spec.md` | 异步数据三态要求 | `AsyncState<T>`（loading / data / error）在 Store 中普遍使用 |
 | `10-glossary.md` | 股票池术语 | 意向候选池/研究精选池/深度研究池/观察池/归档池与代码一致 |
 | `../reference/v9数据架构修订建议.md` | DataBridge + Envelope + ACL 通信体系 | 协议定义与实现一致 |
-| `../reference/../reference/../reference/databridge端点与数据映射清单.md` | 大部分 forward 端点映射 | 股票、评分、订单、资讯等核心映射一致 |
+| `../reference/databridge端点与数据映射清单.md` | 大部分 forward 端点映射 | 股票、评分、订单、资讯等核心映射一致 |
 | `../reference/v9-indexeddb-store-schema.md` | 核心 Store 主键设计 | `stocks.symbol`、`orders.id`、`v6_scores.symbol` 等一致 |
 
 ### 5.2 偏差项
@@ -822,9 +822,9 @@ DataBridge.forward(envelope: StandardEnvelope): Promise<void>
 | DEV-03 | `../reference/../reference/v9核心数据字典与类型定义(整合版).md` | 版本 **v16**，列出 `watchlist`(单数)、`news_articles`、`kline_data`、`rotation_signals` 等 | 实际为 `watchlists`、`news`、`daily_quotes`、`rotation_scores`；且多个 Store 不存在 | 🔴 严重 | 重新与 `src/config/dbConfig.ts` 和 `src/data/db-schema.ts` 对齐 |
 | DEV-04 | `architecture.md` | 文件名暗示整体架构 | 实际内容为 Cockpit Widget 架构说明 | 🟡 中等 | 重命名文件或补充整体架构章节 |
 | DEV-05 | `data-flow-spec.md` | 未提及 Gateway 层 | AGENTS.md v1.4.6 已新增 `data/gateway/` 为唯一写入入口 | 🟡 中等 | 补充 Gateway 写入权限规范引用 |
-| DEV-06 | `../reference/../reference/../reference/databridge端点与数据映射清单.md` | 部分端点与实际动作名不一致（如 `saveV6Score`、`createExecutionPlan`、`saveNewsBookmark`） | 实际 `ENVELOPE_ACTION` 为 `saveScores`、`saveExecutionPlan`、`newsArticleBookmarked` | 🟡 中等 | 统一端点命名与 `ENVELOPE_ACTION` 完全一致 |
+| DEV-06 | `../reference/databridge端点与数据映射清单.md` | 部分端点与实际动作名不一致（如 `saveV6Score`、`createExecutionPlan`、`saveNewsBookmark`） | 实际 `ENVELOPE_ACTION` 为 `saveScores`、`saveExecutionPlan`、`newsArticleBookmarked` | 🟡 中等 | 统一端点命名与 `ENVELOPE_ACTION` 完全一致 |
 | DEV-07 | Gateway 规范 | 要求 `DataBridge` 不直接 `import { db }` | `src/core/databridge.ts:16` 仍直接导入 `db`，`routeToDB()` 直接调用 `db.put` | 🔴 严重 | 创建 `src/data/gateway/dataGateway.ts`，将 `routeToDB()` 委托给 Gateway |
-| DEV-08 | `../reference/../reference/../reference/databridge端点与数据映射清单.md` | 声明 Watchlist / Signal 完整 CRUD | 实际仅 `saveWatchlist`、`insertSignal`，缺 `update/delete` | 🟡 中等 | 补充 `updateWatchlist` / `deleteWatchlist` / `updateSignal` / `deleteSignal` |
+| DEV-08 | `../reference/databridge端点与数据映射清单.md` | 声明 Watchlist / Signal 完整 CRUD | 实际仅 `saveWatchlist`、`insertSignal`，缺 `update/delete` | 🟡 中等 | 补充 `updateWatchlist` / `deleteWatchlist` / `updateSignal` / `deleteSignal` |
 | DEV-09 | `data-flow-spec.md` | EventBus / Envelope / DataChannel 关系未明确 | 代码中三者并存，职责边界模糊 | 🟢 轻微 | 增加通信体系对比说明 |
 | DEV-10 | `../reference/v9-system-blueprint.md` | L3 引擎层子模块映射不完整 | 策略、轮动、资讯等 P0 模块未体现 | 🟢 轻微 | 补充子模块与产出实体映射表 |
 
@@ -930,9 +930,9 @@ npm.cmd run build
 | 数据流规范 | `../reference/data-flow-spec.md` | 数据流约束 |
 | 核心数据字典 | `../reference/../reference/../reference/v9核心数据字典与类型定义(整合版).md` | 类型定义（已滞后） |
 | 术语表 | `../reference/10-glossary.md` | 领域术语 |
-| DataBridge 端点清单 | `../reference/../reference/../reference/../reference/databridge端点与数据映射清单.md` | 端点映射 |
+| DataBridge 端点清单 | `../reference/../reference/databridge端点与数据映射清单.md` | 端点映射 |
 | DataBridge 数据链路 | `./design/databridge数据链路全景分析报告.md` | 全链路分析 |
-| 数据架构修订建议 | `../reference/../reference/v9数据架构修订建议.md` | 架构修订 |
+| 数据架构修订建议 | `../reference/v9数据架构修订建议.md` | 架构修订 |
 | 股票池统一存储 | `../reference/unified-pool-storage-spec.md` | 统一存储方案 |
 | Gateway 写入权限 | `../reference/gateway-write-permission-spec.md` | Gateway 规范 |
 | 数据关系 ER | `./v9-data-relationship-er.md` | ER 关系 |

@@ -160,12 +160,34 @@ function main(): void {
   }
 
   // 2. 收集所有源文件
-  const targets = ['src', 'scripts']
+  const targets = ['src', 'scripts', 'docs', 'prompts']
   const sourceFiles: string[] = []
   for (const t of targets) {
     const dir = path.join(ROOT, t)
     if (fs.existsSync(dir)) {
       sourceFiles.push(...collectFiles(dir))
+    }
+  }
+  // 同时收集所有 .md 文件
+  function collectMdFiles(dir: string): string[] {
+    const files: string[] = []
+    if (!fs.existsSync(dir)) return files
+    const entries = fs.readdirSync(dir, { withFileTypes: true })
+    for (const entry of entries) {
+      const full = path.join(dir, entry.name)
+      if (entry.isDirectory()) {
+        if (['node_modules', '.git', 'dist', 'coverage'].includes(entry.name)) continue
+        files.push(...collectMdFiles(full))
+      } else if (entry.isFile() && /\.md$/.test(entry.name)) {
+        files.push(full)
+      }
+    }
+    return files
+  }
+  for (const t of ['docs', 'prompts']) {
+    const dir = path.join(ROOT, t)
+    if (fs.existsSync(dir)) {
+      sourceFiles.push(...collectMdFiles(dir))
     }
   }
   console.log(`📂 扫描源文件: ${sourceFiles.length} 个\n`)
