@@ -75,7 +75,7 @@ tier: reference
 
 | 编号 | 问题描述 | 文件路径 | 影响 | 建议修复方式 | 批次 |
 |:---|:---|:---|:---|:---|:---|
-| P2-01 | 路由规格文档 `../reference/06-routing-specs.md` 与实际 `routes.ts` 不同步（29 vs 35 条） | `../reference/../reference/06-routing-specs.md` | 文档失效，新开发者易产生误解 | 按 `routes.ts` 实际 35 条路由更新文档 | D |
+| P2-01 | 路由规格文档 `../reference/06-routing-specs.md` 与实际 `routes.ts` 不同步（29 vs 35 条） | `../reference/06-routing-specs.md` | 文档失效，新开发者易产生误解 | 按 `routes.ts` 实际 35 条路由更新文档 | D |
 | P2-02 | DataBridge `DataAction` 枚举与 `EnvelopeAction` 语义缺口 | `../../src/showcase/index.ts` | 动作协议不一致，扩展受限 | 统一动作枚举或添加适配映射 | D |
 | P2-03 | 多数 Store 仅本地 setState，未通过 EventBus 广播变更 | `src/store/*` | 跨组件状态同步依赖隐式传递 | 为写操作统一补充 `eventBus.emit`；参考 `engineStore.ts` | D |
 | P2-04 | 页面层未普遍实现 `isVisible` / `isClickable` 计算变量与 Tooltip 反馈 | `src/pages/*` | 交互状态控制薄弱，不符合四步契约 | 在核心页面组件中补全；优先高交互页面 | D |

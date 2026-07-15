@@ -91,7 +91,7 @@ tier: core
 - **预期功能**：Store集成规范（从prompts抽离）
 - **判定理由**：无独立Store集成规范；仅prompts/store-prompt-template.md有片段
 
-**10. `../prompts/../prompts/service-integration-guide.md`** 🔴
+**10. `../prompts/service-integration-guide.md`** 🔴
 
 - **预期功能**：Service集成规范（从prompts抽离）
 - **判定理由**：无独立Service集成规范；仅prompts/service-prompt-template.md有片段
@@ -144,7 +144,7 @@ tier: core
 - **预期功能**：部署架构（静态托管/GitHub Pages）
 - **判定理由**：仅05-deployment/ADR-004 HashRouter，无部署架构文档
 
-**18. `../explanation/../explanation/runbook.md`** 🔴
+**18. `../explanation/runbook.md`** 🔴
 
 - **预期功能**：运行/故障手册
 - **判定理由**：无运行/故障手册

@@ -164,7 +164,7 @@ tier: core
 |------------------|----------|----------|
 | `../explanation/overview.md` | `../reference/v9-system-blueprint.md` | 建立软链接或迁移 |
 | `../reference/coding-conventions.md` | `../reference/03-architecture-standards.md` | 建立软链接或迁移 |
-| `../explanation/../explanation/quality-gates-baseline.md` | `../reference/09-quality-gates.md` + `../explanation/quality-gates-baseline.md` | 建立软链接或整合 |
+| `../explanation/quality-gates-baseline.md` | `../reference/09-quality-gates.md` + `../explanation/quality-gates-baseline.md` | 建立软链接或整合 |
 | `../how-to/how-to-add-widget.md` | `../reference/widget-development-guide.md` | 建立软链接或迁移 |
 
 ---

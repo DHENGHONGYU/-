@@ -1,0 +1,106 @@
+{
+  "violations": [
+    {
+      "file": "cockpit/DensityContext.tsx",
+      "tier": "unregistered",
+      "rule": "unregistered",
+      "level": "warning",
+      "message": "业务组件未在 componentRegistry 登记（默认按 organism 处理）。建议补登 targetPath 与层级。"
+    },
+    {
+      "file": "cockpit/DensityToggle.tsx",
+      "tier": "unregistered",
+      "rule": "unregistered",
+      "level": "warning",
+      "message": "业务组件未在 componentRegistry 登记（默认按 organism 处理）。建议补登 targetPath 与层级。"
+    },
+    {
+      "file": "cockpit/SecurityStatus.tsx",
+      "tier": "unregistered",
+      "rule": "unregistered",
+      "level": "warning",
+      "message": "业务组件未在 componentRegistry 登记（默认按 organism 处理）。建议补登 targetPath 与层级。"
+    },
+    {
+      "file": "organisms/agent/StandardAgentDetail.tsx",
+      "tier": "unregistered",
+      "rule": "unregistered",
+      "level": "warning",
+      "message": "业务组件未在 componentRegistry 登记（默认按 organism 处理）。建议补登 targetPath 与层级。"
+    },
+    {
+      "file": "organisms/output/prediction/CycleRetrospectivePanel.tsx",
+      "tier": "unregistered",
+      "rule": "unregistered",
+      "level": "warning",
+      "message": "业务组件未在 componentRegistry 登记（默认按 organism 处理）。建议补登 targetPath 与层级。"
+    },
+    {
+      "file": "organisms/output/prediction/FactorDashboardPanel.tsx",
+      "tier": "unregistered",
+      "rule": "unregistered",
+      "level": "warning",
+      "message": "业务组件未在 componentRegistry 登记（默认按 organism 处理）。建议补登 targetPath 与层级。"
+    },
+    {
+      "file": "organisms/output/prediction/PredictionPanel.tsx",
+      "tier": "unregistered",
+      "rule": "unregistered",
+      "level": "warning",
+      "message": "业务组件未在 componentRegistry 登记（默认按 organism 处理）。建议补登 targetPath 与层级。"
+    },
+    {
+      "file": "organisms/search/GroupedView.tsx",
+      "tier": "unregistered",
+      "rule": "unregistered",
+      "level": "warning",
+      "message": "业务组件未在 componentRegistry 登记（默认按 organism 处理）。建议补登 targetPath 与层级。"
+    },
+    {
+      "file": "organisms/search/SearchBar.tsx",
+      "tier": "unregistered",
+      "rule": "unregistered",
+      "level": "warning",
+      "message": "业务组件未在 componentRegistry 登记（默认按 organism 处理）。建议补登 targetPath 与层级。"
+    },
+    {
+      "file": "organisms/search/SearchFilters.tsx",
+      "tier": "unregistered",
+      "rule": "unregistered",
+      "level": "warning",
+      "message": "业务组件未在 componentRegistry 登记（默认按 organism 处理）。建议补登 targetPath 与层级。"
+    },
+    {
+      "file": "organisms/search/SearchResultList.tsx",
+      "tier": "unregistered",
+      "rule": "unregistered",
+      "level": "warning",
+      "message": "业务组件未在 componentRegistry 登记（默认按 organism 处理）。建议补登 targetPath 与层级。"
+    },
+    {
+      "file": "organisms/search/TimelineView.tsx",
+      "tier": "unregistered",
+      "rule": "unregistered",
+      "level": "warning",
+      "message": "业务组件未在 componentRegistry 登记（默认按 organism 处理）。建议补登 targetPath 与层级。"
+    }
+  ],
+  "summary": {
+    "totalFiles": 146,
+    "totalViolations": 12,
+    "totalWarnings": 12,
+    "byTier": {
+      "unregistered": 12
+    },
+    "byRule": {
+      "unregistered": 12
+    }
+  },
+  "meta": {
+    "scriptName": "audit-atomic",
+    "version": "1.0.0",
+    "timestamp": "2026-07-15T03:00:26.406Z",
+    "durationMs": 13,
+    "rootDir": "G:\\FinSightV9\\scripts"
+  }
+}

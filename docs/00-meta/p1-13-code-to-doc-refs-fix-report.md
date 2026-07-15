@@ -14,11 +14,11 @@
 在 Phase 13 完成 basename 引用修复后，code-to-doc 类型断裂引用仍有 27 处。审计报告显示出 12 个 store 文件和 1 个 backtest 文件存在伪路径引用：
 
 ```
-@see docs/《功能模块数据契约》.md
-@see docs/《V9核心数据字典与类型定义（整合版）》.md
-@see docs/《DataBridge端点与数据映射清单》.md
-@see docs/《V9 架构缺陷与整改行动清单》.md
-@see docs/《V9 现有数据资产清单》.md
+@see docs/reference/功能模块数据契约.md
+@see docs/reference/v9核心数据字典与类型定义(整合版).md
+@see docs/reference/databridge端点与数据映射清单.md
+@see docs/explanation/v9-架构缺陷与整改行动清单.md
+@see docs/reference/V9现有数据资产清单.md
 ```
 
 这些引用使用了 `《》` 中文书名号包裹文档名，但实际文件已被迁移到 `docs/reference/` 或 `docs/explanation/`，且不再使用书名号。
@@ -49,12 +49,12 @@
 
 | # | 旧引用 | 新引用 | 命中数 |
 |---|--------|--------|--------|
-| 1 | `docs/《功能模块数据契约》.md` | `docs/reference/功能模块数据契约.md` | 12 |
-| 2 | `docs/《V9核心数据字典与类型定义（整合版）》.md` | `docs/reference/v9核心数据字典与类型定义(整合版).md` | 10 |
-| 3 | `docs/《DataBridge端点与数据映射清单》.md` | `docs/reference/databridge端点与数据映射清单.md` | 3 |
-| 4 | `docs/《V9 架构缺陷与整改行动清单》.md` | `docs/explanation/v9-架构缺陷与整改行动清单.md` | 1 |
-| 5 | `docs/《V9现有数据资产清单》.md` | `docs/reference/V9现有数据资产清单.md` | 1 |
-| 6 | `docs/explanation/data-flow-spec.md` | `docs/explanation/design/data-flow-spec.md` | 1 |
+| 1 | `docs/reference/功能模块数据契约.md` | `docs/reference/功能模块数据契约.md` | 12 |
+| 2 | `docs/reference/v9核心数据字典与类型定义(整合版).md` | `docs/reference/v9核心数据字典与类型定义(整合版).md` | 10 |
+| 3 | `docs/reference/databridge端点与数据映射清单.md` | `docs/reference/databridge端点与数据映射清单.md` | 3 |
+| 4 | `docs/explanation/v9-架构缺陷与整改行动清单.md` | `docs/explanation/v9-架构缺陷与整改行动清单.md` | 1 |
+| 5 | `docs/reference/V9现有数据资产清单.md` | `docs/reference/V9现有数据资产清单.md` | 1 |
+| 6 | `docs/explanation/design/data-flow-spec.md` | `docs/explanation/design/data-flow-spec.md` | 1 |
 
 ### 2.3 手动修正
 

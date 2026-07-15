@@ -67,7 +67,7 @@ function normalizeRelPathFromFile(sourceFile: string, rawPath: string): string |
   return rel
 }
 
-function findRepeats(content: string): RepeatInfo[] {
+function findRepeats(content: string, sourceFile: string): RepeatInfo[] {
   const repeats: RepeatInfo[] = []
   for (const pat of REPEAT_PATTERNS) {
     let match: RegExpExecArray | null
@@ -81,7 +81,7 @@ function findRepeats(content: string): RepeatInfo[] {
         endIdx++
       }
       const fullPath = content.substring(startIdx, endIdx)
-      const normalized = normalizeRelPathFromFile('', fullPath)
+      const normalized = normalizeRelPathFromFile(sourceFile, fullPath)
       if (normalized && fullPath !== normalized) {
         repeats.push({
           original: fullPath,
@@ -128,7 +128,7 @@ function main(): void {
   for (const file of allFiles) {
     const rel = path.relative(ROOT, file).replace(/\\/g, '/')
     const content = fs.readFileSync(file, 'utf-8')
-    const repeats = findRepeats(content)
+    const repeats = findRepeats(content, rel)
     if (repeats.length === 0) continue
 
     const fileReplacements = new Map<string, string>()
