@@ -332,7 +332,7 @@ export default function BacktestPage(): React.JSX.Element {
           </CardContent>
         </Card>
       )}
-      {history.length > 0 && (
+      {history && history.length > 0 && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">

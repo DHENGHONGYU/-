@@ -22,9 +22,6 @@ import 'fake-indexeddb/auto'
 import '@testing-library/jest-dom/vitest'
 import { cleanup } from '@testing-library/react'
 import { afterEach } from 'vitest'
-import { db } from '@/data/db'
-import { dataBridge } from '@/core/databridge'
-import { resetDbInstance } from '@/data/db-connection'
 import { eventBus } from '@/lib/eventBus'
 
 // 为每个测试文件生成独立的 IndexedDB 名称，避免并行运行时的状态污染与事务竞争
@@ -122,18 +119,26 @@ afterEach(async () => {
   // 跨文件隔离：消除 forks 池 + fileParallelism=false 下共享单例造成的状态污染（TD-013）
   // 同一 TEST_DB_NAME / dataBridge 缓存 / eventBus 监听在所有测试文件间串行共享，
   // 若某文件未彻底清理，脏状态会泄漏到后续文件。统一在 afterEach 兜底隔离。
+  //
+  // 注意：db / dataBridge 使用动态导入，避免 setup 文件在测试文件之前静态加载这些模块，
+  // 导致测试文件内的 vi.mock 无法拦截已经加载的模块（IndexedDB/DataBridge 单例提前固化）。
   try {
-    await db.reset()
+    const { db } = await import('@/data/db')
+    if (db.isReady?.()) {
+      await db.reset()
+    }
   } catch {
-    /* db 未初始化或无需重置时跳过 */
+    /* db 未初始化、被 mock 或无需重置时跳过 */
   }
   try {
+    const { resetDbInstance } = await import('@/data/db-connection')
     resetDbInstance()
   } catch {
     /* noop */
   }
   try {
-    dataBridge.invalidateAll()
+    const { dataBridge } = await import('@/core/databridge')
+    dataBridge.invalidateAll?.()
   } catch {
     /* noop */
   }

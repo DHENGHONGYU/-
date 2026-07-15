@@ -10,7 +10,16 @@ import { getAllAgentComponents, getAgentDetailComponent, hasAgentComponent } fro
 import type { AgentTask } from '@/agents/agentRuntime'
 
 vi.mock('@/store/agentStore', () => {
-  const registered = ['v6-scoring-agent', 'v4-industrial-agent', 'llm-intelligent-agent', 'fetcher-agent', 'news-analyzer-agent']
+  const registered = [
+    'v6-scoring-agent',
+    'v4-industrial-agent',
+    'llm-intelligent-agent',
+    'fetcher-agent',
+    'news-analyzer-agent',
+    'screening-agent',
+    'pool-agent',
+    'backtest-agent',
+  ]
   return {
     useAgentStore: vi.fn((selector: (state: unknown) => unknown) => {
       const state = {
@@ -48,12 +57,15 @@ vi.mock('lucide-react', async (importOriginal) => {
   return { ...actual }
 })
 
-const FIVE_AGENT_IDS = [
+const EIGHT_AGENT_IDS = [
   'v6-scoring-agent',
   'v4-industrial-agent',
   'llm-intelligent-agent',
   'fetcher-agent',
   'news-analyzer-agent',
+  'screening-agent',
+  'pool-agent',
+  'backtest-agent',
 ]
 
 function renderHubPage(): void {
@@ -80,11 +92,11 @@ async function renderDetailPage(agentId: string): Promise<void> {
   )
   await waitFor(
     () => {
-      const hasGeneric = screen.queryByText('通用智能体详情页') !== null
       const hasNotFound = screen.queryAllByText('智能体未找到').length > 0
       const hasV6 = screen.queryByText('评分层级') !== null
-      const hasMoreFeature = screen.queryByText('更多功能开发中') !== null
-      return hasGeneric || hasNotFound || hasV6 || hasMoreFeature
+      const hasStandard = screen.queryByText('关联功能') !== null
+      const hasGeneric = screen.queryByText('通用智能体详情页') !== null
+      return hasNotFound || hasV6 || hasStandard || hasGeneric
     },
     { timeout: 8000 },
   )
@@ -95,7 +107,7 @@ function expectTextToExist(text: string): void {
 }
 
 describe('Agent 模块集成测试', () => {
-  describe('5 个智能体详情页渲染验证', () => {
+  describe('8 个智能体详情页渲染验证', () => {
     it('预热 lazy 组件（V6 + Generic）', async () => {
       render(
         <MemoryRouter>
@@ -113,7 +125,7 @@ describe('Agent 模块集成测试', () => {
         </MemoryRouter>,
       )
       await waitFor(
-        () => screen.queryByText('通用智能体详情页') !== null,
+        () => screen.queryByText('该智能体的核心能力已在对应功能域页提供') !== null,
         { timeout: 15000 },
       )
     })
@@ -145,22 +157,22 @@ describe('Agent 模块集成测试', () => {
       expect(screen.getByText('通用智能体详情页')).toBeInTheDocument()
     })
 
-    it('LLM 智能评分智能体 - 通用详情页 fallback', async () => {
+    it('LLM 智能评分智能体 - 标准详情页渲染', async () => {
       await renderDetailPage('llm-intelligent-agent')
       expectTextToExist('LLM 智能评分智能体')
-      expect(screen.getByText('通用智能体详情页')).toBeInTheDocument()
+      expect(screen.getByText('关联功能')).toBeInTheDocument()
     })
 
-    it('数据采集智能体 - 通用详情页 fallback', async () => {
+    it('数据采集智能体 - 标准详情页渲染', async () => {
       await renderDetailPage('fetcher-agent')
       expectTextToExist('数据采集智能体')
-      expect(screen.getByText('通用智能体详情页')).toBeInTheDocument()
+      expect(screen.getByText('关联功能')).toBeInTheDocument()
     })
 
-    it('新闻分析智能体 - 通用详情页 fallback', async () => {
+    it('新闻分析智能体 - 标准详情页渲染', async () => {
       await renderDetailPage('news-analyzer-agent')
       expectTextToExist('新闻分析智能体')
-      expect(screen.getByText('通用智能体详情页')).toBeInTheDocument()
+      expect(screen.getByText('关联功能')).toBeInTheDocument()
     })
 
     it('未注册智能体 - 显示未找到页面', async () => {
@@ -172,10 +184,10 @@ describe('Agent 模块集成测试', () => {
   })
 
   describe('注册表 → 详情页导航链接', () => {
-    it('注册表页面 5 个智能体卡片都有查看详情链接', () => {
+    it('注册表页面 8 个智能体卡片都有查看详情链接', () => {
       renderRegistryPage()
       const links = screen.getAllByRole('link', { name: /查看详情/ })
-      expect(links.length).toBe(5)
+      expect(links.length).toBe(8)
     })
 
     it('V6 评分智能体的查看详情链接指向正确路径', () => {
@@ -238,7 +250,7 @@ describe('Agent 模块集成测试', () => {
       expect(screen.queryByText('V6 评分智能体')).not.toBeInTheDocument()
     })
 
-    it('搜索空值重置为全部 5 个智能体', () => {
+    it('搜索空值重置为全部 8 个智能体', () => {
       renderRegistryPage()
       const searchInput = screen.getByPlaceholderText('搜索智能体...')
 
@@ -259,7 +271,7 @@ describe('Agent 模块集成测试', () => {
 
       const all = getAllAgentComponents()
       const systemAgents = all.filter((a) => a.tags.includes('system'))
-      expect(systemAgents.length).toBe(5)
+      expect(systemAgents.length).toBe(8)
 
       systemAgents.forEach((agent) => {
         expect(screen.getByText(agent.displayName)).toBeInTheDocument()
@@ -308,7 +320,7 @@ describe('Agent 模块集成测试', () => {
       expect(screen.getByText('已完成任务')).toBeInTheDocument()
       expect(screen.getByText('失败任务')).toBeInTheDocument()
 
-      expect(screen.getByText('5')).toBeInTheDocument()
+      expect(screen.getByText('8')).toBeInTheDocument()
       expect(screen.getByText('2')).toBeInTheDocument()
       expect(screen.getByText('10')).toBeInTheDocument()
       expect(screen.getByText('1')).toBeInTheDocument()
@@ -338,14 +350,14 @@ describe('Agent 模块集成测试', () => {
   })
 
   describe('组件映射注册表完整性', () => {
-    it('5 个智能体全部在注册表中注册', () => {
+    it('8 个智能体全部在注册表中注册', () => {
       const all = getAllAgentComponents()
       const ids = all.map((a) => a.agentId)
 
-      FIVE_AGENT_IDS.forEach((id) => {
+      EIGHT_AGENT_IDS.forEach((id) => {
         expect(ids).toContain(id)
       })
-      expect(all.length).toBe(5)
+      expect(all.length).toBe(8)
     })
 
     it('每个智能体都有完整的元数据', () => {
@@ -369,9 +381,9 @@ describe('Agent 模块集成测试', () => {
       expect(detail).toBeTruthy()
     })
 
-    it('其余 4 个智能体使用通用详情组件', () => {
-      const genericIds = FIVE_AGENT_IDS.filter((id) => id !== 'v6-scoring-agent')
-      genericIds.forEach((id) => {
+    it('其余 7 个智能体使用标准详情组件', () => {
+      const standardIds = EIGHT_AGENT_IDS.filter((id) => id !== 'v6-scoring-agent')
+      standardIds.forEach((id) => {
         const detail = getAgentDetailComponent(id)
         expect(detail).toBeTruthy()
       })
@@ -413,7 +425,7 @@ describe('Agent 模块集成测试', () => {
   })
 
   describe('数据流与状态集成', () => {
-    it('注册表页面渲染 5 个智能体卡片', () => {
+    it('注册表页面渲染 8 个智能体卡片', () => {
       renderRegistryPage()
       const all = getAllAgentComponents()
       all.forEach((agent) => {
@@ -428,7 +440,7 @@ describe('Agent 模块集成测试', () => {
 
     it('总控台从 store 获取统计数据', () => {
       renderHubPage()
-      expect(screen.getByText('5')).toBeInTheDocument()
+      expect(screen.getByText('8')).toBeInTheDocument()
       expect(screen.getByText('10')).toBeInTheDocument()
     })
 
@@ -447,7 +459,7 @@ describe('Agent 模块集成测试', () => {
       expect(screen.getByText(entry!.description)).toBeInTheDocument()
     })
 
-    it('5 个智能体全部带有 system 标签', () => {
+    it('8 个智能体全部带有 system 标签', () => {
       const all = getAllAgentComponents()
       all.forEach((agent) => {
         expect(agent.tags).toContain('system')

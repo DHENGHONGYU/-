@@ -8,7 +8,7 @@ import { ROUTE_REGISTRY } from '@/config/routes'
 import { RouteGuard } from '@/core/routeGuard'
 import { initializeApp } from '@/services/system/bootstrapService'
 import { getLogger } from '@/lib/logger'
-import { ThemeProvider } from '@/core/ThemeProvider'
+import { useThemeStore, initSystemThemeListener } from '@/store/themeStore'
 import { useRuntimeTradingConfigStore } from '@/store/runtimeTradingConfigStore'
 // 显式 import 智能体系统入口，触发 initAgentSystem() 自动初始化
 // （src/agents/index.ts 在模块加载时通过 setTimeout 延迟 100ms 调用 initAgentSystem）
@@ -25,6 +25,7 @@ const logger = getLogger()
 
 function AppContent(): React.JSX.Element {
   const { toast } = useToast()
+  const { markHydrated } = useThemeStore()
 
   useEffect(() => {
     initializeApp().catch((err) => {
@@ -39,7 +40,14 @@ function AppContent(): React.JSX.Element {
     })
     // 阶段 A-1：从 ConfigApp 写入的 localStorage 还原交易配置覆盖
     useRuntimeTradingConfigStore.getState().hydrateFromConfigApp()
-  }, [toast])
+
+    // 主题系统初始化：监听系统主题变化并标记 hydrate 完成
+    const unsubscribeTheme = initSystemThemeListener()
+    markHydrated()
+    return () => {
+      unsubscribeTheme()
+    }
+  }, [toast, markHydrated])
 
   return (
     <Suspense fallback={<PageSkeleton />}>
@@ -73,18 +81,16 @@ function NotFoundPage(): React.JSX.Element {
 }
 
 export default function App(): React.JSX.Element {
-  // P1 暗色优先：交易/投研类数据产品默认暗色更护眼、对比更佳；
-  // 用户若曾切换并持久化（localStorage v9-theme），则尊重其选择。
+  // 主题状态由 themeStore 统一管理（light/dark/system + localStorage 持久化）。
+  // ThemeProvider 已退役，避免与 themeStore 重复操作 DOM/CSS 变量。
   return (
-    <ThemeProvider defaultMode="dark">
-      <HashRouter>
-        <ErrorBoundary>
-          <ToastProvider>
-            <AppContent />
-            <Toaster />
-          </ToastProvider>
-        </ErrorBoundary>
-      </HashRouter>
-    </ThemeProvider>
+    <HashRouter>
+      <ErrorBoundary>
+        <ToastProvider>
+          <AppContent />
+          <Toaster />
+        </ToastProvider>
+      </ErrorBoundary>
+    </HashRouter>
   )
 }

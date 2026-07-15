@@ -15,27 +15,33 @@ vi.mock('@/services/input/batchImportService', () => ({
 }))
 
 // ============================================================
-// Mock: usePoolStore
+// Mock: intentionPoolStore
 // ============================================================
-interface PoolStoreStock {
+interface IntentionPoolItem {
   symbol: string
   name: string
   group?: string
-  researchStatus: string
+  pool?: string
+  status?: string
 }
-const poolStoreState: {
-  stocks: PoolStoreStock[]
+const intentionPoolState: {
+  items: IntentionPoolItem[]
+  loading: boolean
   refresh: ReturnType<typeof vi.fn>
 } = {
-  stocks: [],
+  items: [],
+  loading: false,
   refresh: vi.fn().mockResolvedValue(undefined),
 }
 
-const mockGetAllGroups = vi.fn().mockReturnValue(['默认', '自选'])
-
-vi.mock('@/store/poolStore', () => ({
-  usePoolStore: (selector: (state: typeof poolStoreState) => unknown) => selector(poolStoreState),
-  getAllGroups: () => mockGetAllGroups(),
+vi.mock('@/store/intentionPoolStore', () => ({
+  useIntentionPoolStore: (selector: (state: typeof intentionPoolState) => unknown) =>
+    selector(intentionPoolState),
+  getIntentionPoolGroups: () => {
+    const groups = new Set(intentionPoolState.items.map((s) => s.group ?? '默认'))
+    groups.add('自选')
+    return Array.from(groups).sort()
+  },
 }))
 
 // 延迟导入被测组件，确保 mock 先注册
@@ -47,8 +53,8 @@ const BulkImportPanel = (await import('@/apps/input/BulkImportPanel')).default
 describe('BulkImportPanel', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    poolStoreState.refresh.mockResolvedValue(undefined)
-    mockGetAllGroups.mockReturnValue(['默认', '自选'])
+    intentionPoolState.refresh.mockResolvedValue(undefined)
+    intentionPoolState.items = []
     mockParseBulkInput.mockReturnValue([])
     mockDetectDuplicates.mockImplementation((rows: unknown[]) =>
       rows.map((r) => ({ ...(r as Record<string, unknown>), status: 'valid' })),
@@ -66,7 +72,7 @@ describe('BulkImportPanel', () => {
     render(<BulkImportPanel />)
 
     await waitFor(() => {
-      expect(poolStoreState.refresh).toHaveBeenCalledTimes(1)
+      expect(intentionPoolState.refresh).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -175,7 +181,7 @@ describe('BulkImportPanel', () => {
 
     await waitFor(() => {
       // 初始化调用 1 次 + 导入成功后调用 1 次 = 2 次
-      expect(poolStoreState.refresh).toHaveBeenCalledTimes(2)
+      expect(intentionPoolState.refresh).toHaveBeenCalledTimes(2)
     })
   })
 

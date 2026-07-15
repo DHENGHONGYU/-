@@ -104,12 +104,13 @@ function toSearchItem(entry: CollectionHistoryEntry): SearchItem {
   const dims = entry.collectionInfo.dimensions.join(', ')
   const fileName = entry.collectionInfo.fileName ?? ''
   const snippet = `${entry.channel} | ${symbols} | 维度:${dims} | ${entry.status}${fileName ? ` | ${fileName}` : ''}`
+  const titleBody = symbols ? symbols : (fileName ? fileName : '未知')
 
   return {
     source: 'collection-history',
     id: entry.id,
     timestamp: entry.timestamp,
-    title: `${entry.channel} — ${symbols || fileName || '未知'}`,
+    title: `${entry.channel} — ${titleBody}`,
     snippet,
     details: {
       channel: entry.channel,

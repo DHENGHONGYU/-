@@ -11,7 +11,7 @@ import { getLogger } from '@/lib/logger'
 import { generateId } from '@/data/db'
 import { chat as rawChat, streamingChat as rawStreamingChat, LlmApiError } from '@/services/llm/llmClient'
 import type { LlmConfig } from '@/config/llmConfig'
-import type { LlmMessage, LlmResponse, LlmStreamCallback } from '@/services/llm/llmTypes'
+import type { LlmMessage, LlmResponse, LlmStreamCallback, LlmStructuredOptions } from '@/services/llm/llmTypes'
 
 import { nanoid } from 'nanoid'
 const logger = getLogger()
@@ -23,6 +23,8 @@ export interface LlmGatewayOptions extends Partial<LlmConfig> {
   callerId?: string
   /** 是否允许失败时静默降级（返回空内容而非抛错） */
   allowFallback?: boolean
+  /** 结构化输出选项 */
+  structured?: LlmStructuredOptions<unknown>
 }
 
 export interface LlmGatewayResult {
@@ -42,15 +44,20 @@ export interface LlmGatewayResult {
  * @returns LLM 响应
  */
 export async function chat(messages: LlmMessage[], options: LlmGatewayOptions = {}): Promise<LlmResponse> {
+  const { structured, ...configOverride } = options
   const traceId = `llm-${nanoid(8)}-${generateId().slice(0, 8)}`
   const caller = options.caller ?? 'unknown'
   const callerId = options.callerId ?? 'unknown'
   const startTime = performance.now()
 
-  logger.info(`[LLMGateway] chat called by ${caller} (${callerId})`, { traceId, messageCount: messages.length })
+  logger.info(`[LLMGateway] chat called by ${caller} (${callerId})`, {
+    traceId,
+    messageCount: messages.length,
+    structured: !!structured,
+  })
 
   try {
-    const response = await rawChat(messages, options)
+    const response = await rawChat(messages, configOverride, structured)
     const duration = Math.round(performance.now() - startTime)
     logger.info(`[LLMGateway] chat completed`, {
       traceId,

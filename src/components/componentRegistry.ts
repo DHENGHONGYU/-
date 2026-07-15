@@ -184,6 +184,18 @@ export const COMPONENT_REGISTRY: ComponentEntry[] = [
   { name: 'LLMConfigWidget', level: 'organism', sourcePath: 'src/components/organisms/shared/LLMConfigWidget.tsx', targetPath: 'src/components/organisms/shared/LLMConfigWidget.tsx', status: 'active', description: 'LLM 配置 Widget' },
   { name: 'ScoreDocVersionTable', level: 'organism', sourcePath: 'src/components/organisms/scoreDoc/ScoreDocVersionTable.tsx', targetPath: 'src/components/organisms/scoreDoc/ScoreDocVersionTable.tsx', status: 'active', description: '评分文档版本表' },
   { name: 'SignalSpectrum', level: 'organism', sourcePath: 'src/components/cockpit/SignalSpectrum.tsx', targetPath: 'src/components/cockpit/SignalSpectrum.tsx', status: 'active', description: '信号频谱（cockpit 域，仅 registry 标注不物理搬）' },
+  { name: 'DensityContext', level: 'organism', sourcePath: 'src/components/cockpit/DensityContext.tsx', targetPath: 'src/components/cockpit/DensityContext.tsx', status: 'active', description: '信息密度 Context' },
+  { name: 'DensityToggle', level: 'organism', sourcePath: 'src/components/cockpit/DensityToggle.tsx', targetPath: 'src/components/cockpit/DensityToggle.tsx', status: 'active', description: '信息密度切换' },
+  { name: 'SecurityStatus', level: 'organism', sourcePath: 'src/components/cockpit/SecurityStatus.tsx', targetPath: 'src/components/cockpit/SecurityStatus.tsx', status: 'active', description: '安全状态' },
+  { name: 'StandardAgentDetail', level: 'organism', sourcePath: 'src/components/organisms/agent/StandardAgentDetail.tsx', targetPath: 'src/components/organisms/agent/StandardAgentDetail.tsx', status: 'active', description: '标准 Agent 详情' },
+  { name: 'SearchBar', level: 'organism', sourcePath: 'src/components/organisms/search/SearchBar.tsx', targetPath: 'src/components/organisms/search/SearchBar.tsx', status: 'active', description: '搜索栏' },
+  { name: 'SearchFilters', level: 'organism', sourcePath: 'src/components/organisms/search/SearchFilters.tsx', targetPath: 'src/components/organisms/search/SearchFilters.tsx', status: 'active', description: '搜索筛选' },
+  { name: 'SearchResultList', level: 'organism', sourcePath: 'src/components/organisms/search/SearchResultList.tsx', targetPath: 'src/components/organisms/search/SearchResultList.tsx', status: 'active', description: '搜索结果列表' },
+  { name: 'GroupedView', level: 'organism', sourcePath: 'src/components/organisms/search/GroupedView.tsx', targetPath: 'src/components/organisms/search/GroupedView.tsx', status: 'active', description: '分组视图' },
+  { name: 'TimelineView', level: 'organism', sourcePath: 'src/components/organisms/search/TimelineView.tsx', targetPath: 'src/components/organisms/search/TimelineView.tsx', status: 'active', description: '时间线视图' },
+  { name: 'CycleRetrospectivePanel', level: 'organism', sourcePath: 'src/components/organisms/output/prediction/CycleRetrospectivePanel.tsx', targetPath: 'src/components/organisms/output/prediction/CycleRetrospectivePanel.tsx', status: 'active', description: '周期回顾面板' },
+  { name: 'FactorDashboardPanel', level: 'organism', sourcePath: 'src/components/organisms/output/prediction/FactorDashboardPanel.tsx', targetPath: 'src/components/organisms/output/prediction/FactorDashboardPanel.tsx', status: 'active', description: '因子仪表盘面板' },
+  { name: 'PredictionPanel', level: 'organism', sourcePath: 'src/components/organisms/output/prediction/PredictionPanel.tsx', targetPath: 'src/components/organisms/output/prediction/PredictionPanel.tsx', status: 'active', description: '预测面板' },
 ]
 
 /**

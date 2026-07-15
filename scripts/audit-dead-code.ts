@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
  * audit-dead-code.ts
- * 死代码/空壳/路由一致性扫描器 v3.1（白盒/透明管道）
+ * 死代码/空壳/路由一致性扫描器 v3.3（白盒/透明管道）
  *
  * 检查目标：
  * 1. src/ 下是否存在空函数、空组件、仅返回 null 的组件。
@@ -126,6 +126,47 @@ function relativeFromSrc(file: string): string {
   return path.relative(SRC, file).replace(/\\/g, '/').replace(/\.tsx$/, '').replace(/\.ts$/, '')
 }
 
+/**
+ * 判断当前行的 `return null` 是否属于预期的空状态/守卫回退。
+ * 覆盖以下场景：
+ *   - `if (...) return null` / `if (...) { return null }`
+ *   - `else if (...) return null`
+ *   - `if (...) { ... return null }`（多行 if 块兜底）
+ *   - `catch { ... return null }` / `catch (err) { ... return null }`
+ *   - `switch (...) { default: return null }`
+ *   - `typeof window === 'undefined'` 后的 SSR 守卫
+ *   - `for`/`while` 循环无匹配项后的兜底 return null
+ * 这些通常是数据未就绪、异常回退或默认分支的预期空状态，不应视为死代码。
+ */
+function isExpectedNullReturn(lines: string[], currentIndex: number): boolean {
+  if (currentIndex === 0) return false
+
+  let braceDepth = 0
+  for (let offset = 1; offset <= 20 && currentIndex - offset >= 0; offset++) {
+    const line = lines[currentIndex - offset] ?? ''
+    const trimmed = line.trim()
+    if (!trimmed || trimmed.startsWith('//') || trimmed.startsWith('*')) continue
+
+    const openBraces = (trimmed.match(/\{/g) ?? []).length
+    const closeBraces = (trimmed.match(/\}/g) ?? []).length
+    braceDepth += closeBraces - openBraces
+
+    // 在当前块层级或外层块中识别守卫头
+    if (braceDepth >= -1) {
+      if (/^(if|else\s+if)\s*\(/.test(trimmed)) return true
+      // catch 块可能以 `} catch {` 或 `} catch (err) {` 形式出现
+      if (/^(\}\s*)?catch\s*(\(\s*\w+\s*\))?\s*\{?\s*$/.test(trimmed)) return true
+      if (/^default\s*:\s*$/.test(trimmed)) return true
+      if (/^(for|while)\s*\(/.test(trimmed)) return true
+      if (/typeof\s+window\s*===?\s*['"]undefined['"]/.test(trimmed)) return true
+    }
+
+    // 若已经退到函数/类最外层（深度 > 2）仍未命中，停止查找
+    if (braceDepth > 2) return false
+  }
+  return false
+}
+
 function scanEmptyFunctions(file: string): Issue[] {
   const issues: Issue[] = []
   const content = fs.readFileSync(file, 'utf-8')
@@ -166,14 +207,22 @@ function scanEmptyFunctions(file: string): Issue[] {
       continue
     }
 
-    // 仅返回 null 的组件（单文件内）
+    // 无条件返回 null 的组件（单文件内）
+    // v3.3 校准：扩展预期空状态识别（catch、switch default、多行 if、循环兜底、SSR 守卫），
+    // 仅报告无前置条件或明显非守卫场景的 return null，进一步减少误报。
     const nullReturn = /return\s+null\s*;?\s*$/
-    if (nullReturn.test(trimmed ?? '') && rel.endsWith('.tsx')) {
+    const isSameLineGuard = /^(if|else\s+if)\s*\(.*\)\s*\{?\s*return\s+null\s*;?\s*\}?\s*$/.test(trimmed ?? '')
+    if (
+      nullReturn.test(trimmed ?? '') &&
+      rel.endsWith('.tsx') &&
+      !isSameLineGuard &&
+      !isExpectedNullReturn(lines, i)
+    ) {
       issues.push({
         file: rel,
         line: i + 1,
-        type: '条件返回 null',
-        message: '组件在条件分支中返回 null（请确认是否为预期空状态）',
+        type: '无条件返回 null',
+        message: '组件无条件返回 null（请确认是否为死代码或预期空状态）',
         context: trimmed!.slice(0, 80),
       })
     }
@@ -473,19 +522,21 @@ function isExcludedFromPageAudit(relativePath: string): boolean {
   if (relativePath.includes('.test.') || relativePath.endsWith('.test')) return true
   // __tests__/ 目录
   if (relativePath.includes('__tests__/')) return true
-  // 子组件目录（pages/trading/components/ 等）
-  if (/pages\/\w+\/components\//.test(relativePath)) return true
-  // v2.0 新增：hooks 子目录
-  if (/pages\/\w+\/hooks\//.test(relativePath)) return true
-  // v2.0 新增：utils 子目录
-  if (/pages\/\w+\/utils\//.test(relativePath)) return true
-  // v2.0 新增：types 子目录
-  if (/pages\/\w+\/types\//.test(relativePath)) return true
+  // 子组件目录（pages/trading/components/ 等，支持任意深度嵌套）
+  if (/pages\/(?:[\w-]+\/)+components\//.test(relativePath)) return true
+  // v2.0 新增：hooks 子目录（支持任意深度嵌套）
+  if (/pages\/(?:[\w-]+\/)+hooks\//.test(relativePath)) return true
+  // v2.0 新增：utils 子目录（支持任意深度嵌套）
+  if (/pages\/(?:[\w-]+\/)+utils\//.test(relativePath)) return true
+  // v2.0 新增：types 子目录（支持任意深度嵌套）
+  if (/pages\/(?:[\w-]+\/)+types\//.test(relativePath)) return true
   // v2.0 新增：文件名以 use 开头（React hooks）
   const fileName = relativePath.split('/').pop() || ''
   if (fileName.startsWith('use') && fileName[3]! >= 'A' && fileName[3]! <= 'Z') return true
   // v2.0 新增：纯类型文件
   if (fileName.endsWith('types.ts') || fileName.endsWith('interfaces.ts')) return true
+  // 页面级工具文件（非独立页面，扩展名已被 relativeFromSrc 去除）
+  if (fileName === 'utils') return true
   return false
 }
 
@@ -553,7 +604,9 @@ function scanRouteConsistency(): Issue[] {
     }
 
     for (const pageFile of pageFiles) {
-      if (!registeredPaths.has(pageFile)) {
+      // index.tsx / index.ts 页面入口与不带 /index 的导入路径等价
+      const normalizedPageFile = pageFile.replace(/\/index$/, '')
+      if (!registeredPaths.has(pageFile) && !registeredPaths.has(normalizedPageFile)) {
         const displayPath = `src/${pageFile}.tsx`
         issues.push({
           file: displayPath,

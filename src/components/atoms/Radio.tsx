@@ -90,7 +90,7 @@ export const Radio = memo(forwardRef<HTMLInputElement, RadioProps>(
           disabled={disabled}
           aria-checked={isChecked}
           role="radio"
-          onChange={() => onValueChange(value)}
+          onChange={() => !disabled && onValueChange(value)}
           className="sr-only"
           {...props}
         />

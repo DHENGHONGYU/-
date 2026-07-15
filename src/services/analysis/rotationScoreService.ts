@@ -27,9 +27,56 @@ import {
   validateSubScores,
 } from '@/services/analysis/rotation/rotationCalculator'
 import { getSignalGrade } from '@/services/analysis/rotation/rotationSignalGrader'
+import { detectBySector, type RotationSignal } from '@/services/scoring/rotationSignalDetector'
 
 import { nanoid } from 'nanoid'
 const logger = getLogger()
+
+// ============================================================
+// P1-S3: 板块轮动真实数据接入层
+// ============================================================
+
+/**
+ * 板块轮动数据提供者接口
+ *
+ * 允许外部注入真实量价/资金/估值数据源；默认实现基于 rotationSignalDetector
+ * 从 dataLayer 聚合板块内股票行情计算轮动信号。
+ */
+export interface RotationDataProvider {
+  /** 提供者名称（用于日志与 modelUsed 标记） */
+  readonly name: string
+  /** 获取指定板块的轮动信号 */
+  getSignal(sectorCode: string): Promise<RotationSignal | null>
+}
+
+/**
+ * 默认数据提供者：基于 rotationSignalDetector 检测板块轮动信号
+ */
+export class DefaultRotationDataProvider implements RotationDataProvider {
+  readonly name = 'rotationSignalDetector'
+
+  async getSignal(sectorCode: string): Promise<RotationSignal | null> {
+    return detectBySector(sectorCode)
+  }
+}
+
+/** 全局默认提供者实例 */
+let globalRotationDataProvider: RotationDataProvider = new DefaultRotationDataProvider()
+
+/**
+ * 设置全局板块轮动数据提供者
+ */
+export function setRotationDataProvider(provider: RotationDataProvider): void {
+  globalRotationDataProvider = provider
+  logger.info('[rotationScoreService] 全局 RotationDataProvider 已更新', { provider: provider.name })
+}
+
+/**
+ * 获取当前全局板块轮动数据提供者
+ */
+export function getRotationDataProvider(): RotationDataProvider {
+  return globalRotationDataProvider
+}
 
 // Re-export public helpers to keep existing consumers/test imports working
 export {
@@ -91,14 +138,22 @@ export async function saveRotationScore(input: {
   return { success: true, data: score }
 }
 
-/** 批量计算并保存十五五规划板块的轮动评分（使用板块定义中的静态数据作为兜底） */
-export async function saveDefaultRotationScores(scoreDate?: string): Promise<DataLayerResult<RotationSectorScore[]>> {
+/**
+ * 批量计算并保存十五五规划板块的轮动评分
+ *
+ * P1-S3：优先使用 RotationDataProvider 获取真实轮动信号增强子指标；
+ * 当信号缺失或数据不足时，回退到板块综合分推导的兜底方案。
+ */
+export async function saveDefaultRotationScores(
+  scoreDate?: string,
+  provider: RotationDataProvider = globalRotationDataProvider,
+): Promise<DataLayerResult<RotationSectorScore[]>> {
   const date = scoreDate ?? new Date().toISOString().slice(0, 10)
   const results: RotationSectorScore[] = []
 
   for (const sector of SECTOR_DEFINITIONS) {
-    // 使用板块综合分映射到五因子（兜底方案，真实场景应由外部数据填充）
-    const subScores: Record<string, number> = {
+    // 1. 兜底子指标：由板块综合分推导
+    const fallbackSubScores: Record<string, number> = {
       F1A: Math.round(sector.composite * 3),
       F1B: Math.round(sector.composite * 1.6),
       F1C: Math.round(sector.composite * 1.4),
@@ -117,14 +172,38 @@ export async function saveDefaultRotationScores(scoreDate?: string): Promise<Dat
       F5B: 1,
     }
 
+    // 2. 尝试接入真实轮动信号
+    let signal: RotationSignal | null = null
+    try {
+      signal = await provider.getSignal(sector.code)
+    } catch (err) {
+      logger.warn(`[rotationScoreService] 板块 ${sector.code} 轮动信号获取失败，使用兜底`, {
+        error: err instanceof Error ? err.message : String(err),
+      })
+    }
+
+    const subScores: Record<string, number> = { ...fallbackSubScores }
+    if (signal?.triggered) {
+      // 信号触发：增强景气、资金、量能因子
+      const strengthMultiplier = signal.strength === 'strong' ? 1.5 : signal.strength === 'medium' ? 1.2 : 1.0
+      subScores.F1A = Math.min(15, Math.round((subScores.F1A ?? 0) * strengthMultiplier))
+      subScores.F2A = Math.min(10, Math.round((subScores.F2A ?? 0) * (1 + 0.3 * strengthMultiplier)))
+      subScores.F2B = Math.min(10, Math.round((subScores.F2B ?? 0) * (1 + 0.2 * strengthMultiplier)))
+      subScores.F5A = Math.min(5, Math.round((subScores.F5A ?? 0) + 2 * strengthMultiplier))
+      logger.info(`[rotationScoreService] 板块 ${sector.code} 轮动信号触发`, {
+        strength: signal.strength,
+        conditions: signal.conditions,
+      })
+    }
+
     const result = await saveRotationScore({
       sectorCode: sector.code,
       sectorName: sector.name,
       scoreDate: date,
       subScores,
       poolStocks: sector.keyStocks.map((s) => ({ ...s, v6Composite: sector.composite })),
-      analysisReport: `${sector.name}：${sector.description}`,
-      modelUsed: 'rotation-v3.1-default',
+      analysisReport: `${sector.name}：${sector.description}${signal ? ` | 轮动信号: ${signal.triggered ? signal.strength : '无'}` : ''}`,
+      modelUsed: `rotation-v3.1-${provider.name}`,
     })
 
     if (result.success && result.data) {

@@ -38,6 +38,10 @@ interface Scenario {
 /**
  * 当财报净利润缺失或无效时，基于可用数据做保守估计。
  * 优先级：市值/PE 反推 > 营收 * 近似净利率。
+ *
+ * 单位约定：
+ * - stock.marketCap 为**元**（与 dataLayer Stock 一致）
+ * - 返回净利润为**亿元**（与 financials.netProfit 口径一致）
  */
 function estimateNetProfit(
   stock: LayerInput['stock'],
@@ -45,7 +49,8 @@ function estimateNetProfit(
 ): number | undefined {
   // 市值/PE 反推（PE 有效时最可靠）
   if (stock.pe !== undefined && stock.pe > 0 && stock.marketCap !== undefined && stock.marketCap > 0) {
-    const estimated = stock.marketCap / stock.pe
+    const estimatedYuan = stock.marketCap / stock.pe
+    const estimated = estimatedYuan / 1e8 // 元 -> 亿元
     if (Number.isFinite(estimated) && estimated > 0) {
       return estimated
     }
@@ -347,6 +352,7 @@ export const L5TMCalculator: LayerCalculator = {
         weight,
         weightedScore: score * weight,
         dataSources: ['行业分析', '技术评估'],
+        participated: true,
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
@@ -361,6 +367,7 @@ export const L5TMCalculator: LayerCalculator = {
         weight,
         weightedScore: Number.NaN,
         dataSources: [],
+        participated: false,
       }
     }
   },
@@ -469,6 +476,7 @@ export const L6HypeCalculator: LayerCalculator = {
         weight,
         weightedScore: hype.score * weight,
         dataSources: ['行业分析', 'Hype Cycle评估'],
+        participated: true,
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
@@ -483,6 +491,7 @@ export const L6HypeCalculator: LayerCalculator = {
         weight,
         weightedScore: Number.NaN,
         dataSources: [],
+        participated: false,
       }
     }
   },

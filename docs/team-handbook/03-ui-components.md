@@ -19,7 +19,7 @@
 组合方向强制：`Page → Template → Organism → Molecule → Atom`（不可跨层跳跃）。
 
 ### 1.2 Barrel 导出
-- `atoms/index.ts`：导出 28+ 原子（Button/Input/Card…），头注释"原子不可再分，禁止依赖 Store/Service"。
+- `atoms/index.ts`：导出 30+ 原子（Button/Input/Card…），头注释"原子不可再分，禁止依赖 Store/Service"。
 - `molecules/index.ts`：导出 12 分子（Alert/Dialog/Tabs/FormField/MetricCard…）；`states/` 子目录的 `Loading/Empty/ErrorState` 因重名需直引 `@/components/molecules/states/Error`。
 - `organisms/index.ts`：业务有机体（pool/collection/analysis…）。
 - `templates/index.ts`：页面级布局骨架（`PageContainer`/`PageHeader`/`DashboardLayout`/`SidebarLayout`/`CockpitLayout`，无业务逻辑）。

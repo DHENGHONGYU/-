@@ -88,3 +88,17 @@ export type {
   ElevationToken,
   LayoutToken,
 } from './theme/theme.tokens.design'
+
+// ============================================================
+// L6 门户布局令牌扩展（PortalShell 专用）
+// ============================================================
+export {
+  PORTAL_TOKENS,
+  PORTAL_LAYOUT_TOKENS,
+  PORTAL_CABIN_TOKENS,
+  PORTAL_NAV_TOKENS,
+  PORTAL_MOBILE_TOKENS,
+  PORTAL_STATUS_TOKENS,
+  PORTAL_BRAND_TOKENS,
+} from './theme/theme.tokens.portal'
+export type { PortalTokenKey } from './theme/theme.tokens.portal'

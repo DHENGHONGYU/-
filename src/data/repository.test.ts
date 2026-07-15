@@ -85,7 +85,7 @@ describe('createRepository — 读取路径', () => {
     const result = await repo.get('600000')
     expect(result).toBeUndefined()
     expect(mockLogger.error).toHaveBeenCalledWith(
-      expect.stringContaining('get 失败'),
+      expect.stringContaining('get: key=600000 失败'),
       expect.objectContaining({ error: 'boom' }),
     )
   })

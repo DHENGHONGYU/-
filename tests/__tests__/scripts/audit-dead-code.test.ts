@@ -149,10 +149,27 @@ export { emptyFunc }
       expect(emptyViolations.some(w => w.message.includes('emptyFunc'))).toBe(true)
     })
 
-    it('检测条件返回 null 的组件', async () => {
+    it('检测无条件返回 null 的组件', async () => {
       setupVirtualFS({
         'components/NullComponent.tsx': `
-export function NullComponent({ show }: { show: boolean }) {
+export function NullComponent() {
+  return null
+}
+`,
+        'config/routes.ts': 'export const ROUTES = []',
+      })
+      const { scan } = await importScan()
+      const report = scan()
+
+      const nullReturns = report.warnings.filter(w => w.type === '无条件返回 null')
+      expect(nullReturns.length).toBeGreaterThan(0)
+      expect(nullReturns.some(w => w.file.includes('NullComponent'))).toBe(true)
+    })
+
+    it('忽略 if 守卫中的 return null', async () => {
+      setupVirtualFS({
+        'components/GuardedNullComponent.tsx': `
+export function GuardedNullComponent({ show }: { show: boolean }) {
   if (!show) return null
   return <div>content</div>
 }
@@ -162,8 +179,8 @@ export function NullComponent({ show }: { show: boolean }) {
       const { scan } = await importScan()
       const report = scan()
 
-      const nullReturns = report.warnings.filter(w => w.type === '条件返回 null')
-      expect(nullReturns.length).toBeGreaterThan(0)
+      const nullReturns = report.warnings.filter(w => w.type === '无条件返回 null')
+      expect(nullReturns.some(w => w.file.includes('GuardedNullComponent'))).toBe(false)
     })
   })
 

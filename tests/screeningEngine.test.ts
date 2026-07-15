@@ -10,6 +10,7 @@ async function seedCandidate(symbol: string, score: number, dataQuality?: Stock[
   await dataLayer.stocks.add({
     symbol,
     name: `${symbol} 测试`,
+    pool: 'research',
     researchStatus: 'candidate',
     source: 'manual',
     dataQuality,
@@ -31,6 +32,7 @@ async function seedScreened(symbol: string, score: number, dataQuality?: Stock['
   await dataLayer.stocks.add({
     symbol,
     name: `${symbol} 测试`,
+    pool: 'research',
     researchStatus: 'screened',
     source: 'manual',
     dataQuality,

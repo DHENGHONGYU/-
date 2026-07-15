@@ -16,7 +16,7 @@
 
 import { describe, it, expect } from 'vitest'
 import { olsRegression, formatRegressionTable } from '@/services/scoring/v6-engine/regressionAnalyzer'
-import { analyzeCorrelations, pearsonCorrelation, spearmanCorrelation } from '@/services/scoring/v6-engine/correlationAnalyzer'
+import { pearsonCorrelation, spearmanCorrelation } from '@/services/scoring/v6-engine/correlationAnalyzer'
 
 // ============================================================
 // 模拟数据生成器
@@ -109,11 +109,11 @@ describe('板块1: 基本面评分因子体系', () => {
       }
     }
     // F1_1(ROE) 与 F1_2(营收增速) 应正相关
-    expect(matrix.F1_1.F1_2).toBeGreaterThan(0.3)
+    expect(matrix.F1_1!.F1_2).toBeGreaterThan(0.3)
     // F1_1(ROE) 与 F1_5(负债率) 应负相关
-    expect(matrix.F1_1.F1_5).toBeLessThan(0)
+    expect(matrix.F1_1!.F1_5).toBeLessThan(0)
     // 对角线 = 1
-    expect(matrix.F1_1.F1_1).toBeCloseTo(1, 1)
+    expect(matrix.F1_1!.F1_1).toBeCloseTo(1, 1)
   })
 
   it('应执行 OLS 回归并输出统计量', () => {
@@ -447,7 +447,7 @@ describe('板块5: 双通道同步效率因子体系', () => {
         ) * 100) / 100
       }
     }
-    expect(matrix.F5_1.F5_2).toBeGreaterThan(0.3)
+    expect(matrix.F5_1!.F5_2).toBeGreaterThan(0.3)
   })
 
   it('应执行 OLS 回归', () => {
@@ -476,7 +476,7 @@ describe('权威方案校对比较', () => {
       'HML(价值)': ['L3v 估值水平', 'L3f 财务健康'],
     }
     expect(Object.keys(mapping)).toHaveLength(3)
-    for (const [factor, layers] of Object.entries(mapping)) {
+    for (const [, layers] of Object.entries(mapping)) {
       expect(layers.length).toBeGreaterThan(0)
     }
   })

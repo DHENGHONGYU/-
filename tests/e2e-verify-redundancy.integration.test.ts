@@ -30,6 +30,7 @@ import { ENVELOPE_ACTION, STORE_NAME } from '@/config/dbConfig'
 import { MOCK_STOCK_LIBRARY } from '@/services/input/mockStockLibrary'
 import { CORE_RESOURCE_SYMBOL_WHITELIST } from '@/config/symbols'
 import type { KlineBar } from '@/data/types'
+import type { QuoteDataSourceId } from '@/types/modules/collection.types'
 
 // ── 强制真实源失败：保留其余导出（含 klinesToDailyQuotes），仅让真实源 getter 抛错 ──
 vi.mock('@/services/data-collector/directDataAPI', async (importOriginal) => {
@@ -88,7 +89,7 @@ function buildUniverse(): Cand[] {
   return out
 }
 // 确定性 K 线（规避 Math.random，仅供幂等/隔离用例构造合法结构）
-function deterministicKlines(sym: string, n = 60): KlineBar[] {
+function deterministicKlines(_sym: string, n = 60): KlineBar[] {
   const bars: KlineBar[] = []
   let price = 50
   for (let i = 0; i < n; i++) {
@@ -203,7 +204,7 @@ it('冗余设计 E2E 验证（R1 配置冗余 / R2 降级 / R3 幂等 / R4 隔�
       const code = c.code
       await importStocks([{ code, name: c.name, symbol: code, status: 'valid' }])
       if (code === faultCode) throw new Error('injected processing fault')
-      const q = await getQuoteWithConfig(code, { sourcePriority: ['mock'] })
+      await getQuoteWithConfig(code, { sourcePriority: ['mock'] })
       const k = await getKlineWithConfig(code, 60, { sourcePriority: ['mock'] })
       const d = klinesToDailyQuotes(code, k.data ?? [])
       await db.put(STORE_NAME.dailyQuotes, d as unknown as Record<string, unknown>)
@@ -220,7 +221,9 @@ it('冗余设计 E2E 验证（R1 配置冗余 / R2 降级 / R3 幂等 / R4 隔�
   let r5Ok = false
   let r5Detail = ''
   try {
-    const r = await getQuoteWithConfig('R5UNK.SH', { sourcePriority: ['unknownX', 'netease_bad', 'mock'] })
+    const r = await getQuoteWithConfig('R5UNK.SH', {
+      sourcePriority: ['unknownX', 'netease_bad', 'mock'] as QuoteDataSourceId[],
+    })
     r5Ok = r.success === true && r.source === 'mock' && (r.fallbackChain ?? []).includes('mock')
     r5Detail = `success=${r.success},source=${r.source},fallback=${JSON.stringify(r.fallbackChain)}`
   } catch (e) {
@@ -229,7 +232,7 @@ it('冗余设计 E2E 验证（R1 配置冗余 / R2 降级 / R3 幂等 / R4 隔�
   mark('R5-collector-fallback', r5Ok, r5Detail)
 
   // ── 评分：冗余维度分 = R1–R5 均值 ──
-  const rScores = [r1QuoteOk, r2Ok, r3Ok, r4Ok, r5Ok].map((b) => (b ? 100 : 0))
+  const rScores = [r1QuoteOk, r2Ok, r3Ok, r4Ok, r5Ok].map((b) => (b ? 100 : 0)) as number[]
   const redundancyScore = Math.round(rScores.reduce((a, b) => a + b, 0) / rScores.length)
   const grade = redundancyScore >= 90 ? '优秀' : redundancyScore >= 80 ? '良好' : redundancyScore >= 70 ? '合格' : '待改进'
 

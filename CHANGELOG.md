@@ -11,6 +11,23 @@
 
 ### Added
 
+- **PortalShell 与主题系统重构（v2.6.2 - 2026-07-15）**：
+  - 新增 `src/store/themeStore.ts`：基于 Zustand 的全局主题状态管理，支持 `light` / `dark` / `system` 三种模式，持久化到 `localStorage`，并提供 `setMode` / `toggleTheme` / `cycleMode` 三种切换方式。
+  - 新增 `src/constants/theme/theme.tokens.portal.ts`：L6 设计系统扩展，定义 `PORTAL_TOKENS`（布局 / 舱室切换 / 导航 / 移动端 / 状态指示 / 品牌），消除 `PortalShell.tsx` 中的硬编码颜色类。
+  - 新增 `src/apps/cabinDispatcher.ts` 与 `src/apps/{input,analysis,trading,output,command}/index.ts`：统一舱室应用懒加载分发器，支持相邻舱室 `requestIdleCallback` 预加载，降低舱室切换白屏时间。
+  - 重构 `src/portal/PortalShell.tsx`：全面改用 `PORTAL_TOKENS` 与 `themeStore`；新增顶栏主题切换按钮（`data-testid="theme-toggle"`）；新增移动端底部导航（五舱图标入口）；保留汉堡菜单抽屉作为子页面导航兜底。
+  - 更新 `src/App.tsx` 与 `src/main.tsx`：移除 `ThemeProvider` 包装，改由 `themeStore` 在应用启动前应用持久化主题，避免首屏闪烁。
+  - 更新 `docs/reference/design-tokens.md`：补充 `PORTAL_TOKENS` 使用说明与 `themeStore` API 文档。
+  - **PortalShell 导航同步补齐**：补充 8 个已注册子页面的侧边栏入口——输入舱 `七维采集配置` / `抓取引擎配置`、分析舱 `热门板块` / `价值洼地` / `多因子筛选`（新增“策略选股”分组）、交易舱 `持仓管理` / `执行计划` / `交易流程`，确保路由注册表、舱室应用内分发与 PortalShell 导航链接三者一致。
+  - **themeStore 测试修复**：修复 `src/store/themeStore.test.ts` 中 `system` 模式监听用例因 jsdom `matchMedia` 实例隔离导致的断言失败，8 个测试全部通过。
+
+- **原子组件审计与补齐（v2.6.2 - 2026-07-15）**：
+  - 修复 `src/components/atoms/Menu.tsx`：`MenuItem` / `SubMenu` 原使用 React 保留字 `key` 作为 props，会导致运行时无法读取标识；统一改为 `itemKey`。
+  - 修复 `src/components/atoms/Radio.tsx`：禁用状态下仍响应 `onChange` 并触发 `onValueChange`；现禁用时阻止值变更回调。
+  - 补充缺失单元测试：`Menu.test.tsx`（7 用例）、`Select.test.tsx`（4 用例）、`Radio.test.tsx`（5 用例）、`Popover.test.tsx`（6 用例）、`DatePicker.test.tsx`（6 用例）、`ComplianceDisclaimer.test.tsx`（4 用例），新增 32 个原子组件测试用例全部通过。
+  - **componentRegistry 同步**：补登 12 个未注册 organism 组件（`DensityContext` / `DensityToggle` / `SecurityStatus` / `StandardAgentDetail` / search 域 5 组件 / output/prediction 域 3 组件），`audit:atomic` 0 警告通过。
+  - **路由一致性修复**：`scripts/verify-all-routes.ts` 预期路径表由过时的 `/analysis/stock-pool` 修正为实际注册的 `/analysis/pool-board`，路由覆盖率达到 100%。
+
 - **性能测试基础设施（v2.6.0）**：
   - 新增 `src/lib/batchQueue.ts`：批量操作限流队列，控制并发操作数量，防止 IndexedDB 热 key 竞争。
   - 新增 `src/lib/seededRandom.ts`：可播种伪随机数生成器（mulberry32），用于性能压测等需要可重复结果的场景。
@@ -70,7 +87,18 @@
   - 删除 `.husky/_/prepare-commit-msg` 钩子（路径解析错误）。
   - 提交记录：`ca0c493`、`6d923ab`、`703abbb`、`9dd6ea8`、`1a8ca92`。
 
-- **P1-01 完成：拆分 LlmManagementPage.tsx（v2.6.1 - 2026-07-15）**：
+- **死代码审计 v3.3 校准与 tsc 回归（v2.6.2 - 2026-07-15）**：
+  - 复核 `npm run audit:deadcode` 报告的 11 处 `return null` 警告，确认全部属于合法预期空状态：`catch` 异常回退、`switch default` 默认分支、多行 `if` 守卫、`for`/`while` 循环无匹配兜底、`typeof window === 'undefined'` SSR 守卫。
+  - 升级 `scripts/audit-dead-code.ts` 的 null 返回检测：新增 `isExpectedNullReturn` 替代原 `isGuardedNullReturn`，基于花括号深度反向扫描，识别 `catch { ... }`、`} catch (err) {`、`default:`、`if (...) { ... }`、`for`/`while` 循环、`typeof window === 'undefined'` 等预期空状态模式。
+  - 放宽单行守卫正则，支持 `if (x) { return null }` 形式。
+  - 同步更新 `tests/__tests__/scripts/audit-dead-code.test.ts`：修正 null 返回测试用例以匹配 `'无条件返回 null'` 类型，并新增「忽略 if 守卫中的 return null」用例。
+  - 修复执行批次 D 回归验证时发现的阻塞性 TypeScript 错误：
+    - `src/services/skills/layerAnalysisSkillFactory.ts:53`：`z.record(z.unknown())` 改为 `z.record(z.string(), z.unknown())`。
+    - `src/services/skills/sentimentAnalysisSkill.ts` 与 `src/services/skills/bullBearDebateSkill.ts`：导出 `SentimentOutputSchema` / `SentimentInputSchema` / `BullBearDebateOutputSchema` / `BullBearDebateInputSchema`。
+    - `src/services/skills/batchDSkills.test.ts:97`：混合类型 SKILL 数组改用 `registry.registerAll(skills)`。
+  - 校准结果：`audit:deadcode` 0 违规、0 警告，扫描 1082 文件；`tsc:prod` 0 错误；`audit:layers` / `audit:routes` 通过；相关单元测试 42 个全部通过。
+
+- **P1-01 完成：拆分 LlmManagementPage.tsx（v2.6.1 - 2026-07-15）**:
   - 将原 1042 行单体组件重构为容器+展示分层架构。
   - 新建目录 `src/pages/command/agent/LlmManagement/`：
     - `index.tsx` (122 行) — 容器主页面，状态编排 + Tab 路由

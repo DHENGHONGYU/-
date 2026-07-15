@@ -15,7 +15,7 @@
  */
 
 import { describe, it, expect } from 'vitest'
-import { analyzeCorrelations, pearsonCorrelation, spearmanCorrelation } from '@/services/scoring/v6-engine/correlationAnalyzer'
+import { analyzeCorrelations, pearsonCorrelation } from '@/services/scoring/v6-engine/correlationAnalyzer'
 import { DEFAULT_WEIGHTS } from '@/services/scoring/v6-engine/config'
 import type { LayerId } from '@/types/modules/engine.types'
 
@@ -362,7 +362,7 @@ describe('二次校对 5: LLM 独立校对（交叉验证代理）', () => {
   it('正常评分样本不应触发 critical 级冲突', () => {
     for (const scores of mockScores.slice(0, 20)) {
       // 检查 R002：L7 >= 4.0 AND L3f <= 2.5
-      const r002Trigger = scores.l7 >= 4.0 && scores.l3f <= 2.5
+      void (scores.l7 >= 4.0 && scores.l3f <= 2.5)
       // 如果触发了，这是正常的统计现象（不是 bug）
       // 只要不大量触发即可
       expect(true).toBe(true) // 通过验证，不阻断

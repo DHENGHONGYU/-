@@ -1,6 +1,7 @@
 // @vitest-environment node
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import * as path from 'node:path'
+import type { SemanticFinding } from '../../../scripts/semantic-validation'
 
 let vfsDirMap = new Map<string, Set<string>>()
 let vfsFileContents = new Map<string, string>()
@@ -109,7 +110,7 @@ describe('语义级校验脚本', () => {
     return await import('../../../scripts/semantic-validation')
   }
 
-  it('should format report correctly', async () => {
+  it('应正确格式化报告', async () => {
     const { formatReport } = await importScan()
     
     const mockReport = {
@@ -139,7 +140,7 @@ describe('语义级校验脚本', () => {
     expect(formatted).toContain('80%')
   })
 
-  it('should detect interface field mismatches', async () => {
+  it('应检测到接口字段不匹配', async () => {
     setupVirtualFS({
       src: {
         'types/user.types.ts': `
@@ -170,14 +171,14 @@ describe('语义级校验脚本', () => {
     const report = scan('all')
 
     expect(report.summary.totalSymbols).toBeGreaterThan(0)
-    const userProfileFinding = report.findings.find(f => f.symbolName === 'UserProfile')
+    const userProfileFinding = report.findings.find((f: SemanticFinding) => f.symbolName === 'UserProfile')
     expect(userProfileFinding?.missingSemantics).toContain('email')
     expect(userProfileFinding?.missingSemantics).toContain('role')
     expect(userProfileFinding?.matchedSemantics).toContain('id')
     expect(userProfileFinding?.matchedSemantics).toContain('name')
   })
 
-  it('should exclude test files', async () => {
+  it('应排除测试文件', async () => {
     setupVirtualFS({
       src: {
         'utils/helper.test.ts': `
@@ -198,6 +199,6 @@ describe('语义级校验脚本', () => {
     const { scan } = await importScan()
     const report = scan('all')
 
-    expect(report.findings.find(f => f.symbolName === 'testHelper')).toBeUndefined()
+    expect(report.findings.find((f: SemanticFinding) => f.symbolName === 'testHelper')).toBeUndefined()
   })
 })

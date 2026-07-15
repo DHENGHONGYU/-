@@ -12,13 +12,13 @@
  * @created 2026-07-14 - 双通道整改 P1 测试
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { globalScheduler, isWithinTradingHours } from '@/services/data-sync/globalScheduler'
 import { checkStaleness, checkStalenessBatch, isAutoCollectable, getStalenessThresholds } from '@/services/data-sync/stalenessDetector'
 import { mergeRecords, DEFAULT_MERGE_RULES } from '@/services/data-sync/fieldMerger'
 import { detectConflict, resolveConflict, resolveConflictsBatch } from '@/services/data-sync/conflictResolver'
 import { selectUpdateMode, executeBatchUpdate, executeIncrementalUpdate } from '@/services/data-sync/updateExecutor'
-import type { GlobalScheduleConfig, ConflictPolicy, RecordDiff } from '@/types/modules/data-sync.types'
+import type { GlobalScheduleConfig, RecordDiff } from '@/types/modules/data-sync.types'
 import type { StoreName } from '@/config/dbConfig'
 
 // ============================================================

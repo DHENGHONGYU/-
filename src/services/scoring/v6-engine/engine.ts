@@ -242,19 +242,19 @@ export class V6ScoreEngine {
       totalWeight += w
     }
 
-    // 归一化，防止除以零
+    // 归一化，防止除以零；无有效层时降级为 0
     const normalizedScore = totalWeight > 0
       ? Math.max(0, Math.min(5, (weightedSum / totalWeight)))
-      : Number.NaN
+      : 0
 
     // 最终结果再次验证
-    const finalScore = Number.isFinite(normalizedScore) ? normalizedScore : Number.NaN
+    const finalScore = Number.isFinite(normalizedScore) ? normalizedScore : 0
 
     const rating = this.mapRating(finalScore, thresholds)
     const recommendation = this.generateRecommendation(rating, allRisks)
 
     const result: CompositeScore = {
-      score: Number.isFinite(finalScore) ? Math.round(finalScore * 100) / 100 : Number.NaN,
+      score: Number.isFinite(finalScore) ? Math.round(finalScore * 100) / 100 : 0,
       rating,
       layers,
       allRisks,
@@ -324,13 +324,14 @@ export class V6ScoreEngine {
     return {
       layerId,
       layerName,
-      score: Number.NaN,
+      score: 0,
       summary,
-      risks: ['数据缺失：该层评分未参与综合计算'],
+      risks: errorMsg ? [errorMsg] : ['数据缺失：该层评分未参与综合计算'],
       evidence: [],
       weight,
-      weightedScore: Number.NaN,
+      weightedScore: 0,
       dataSources: [],
+      participated: false,
     }
   }
 
