@@ -130,6 +130,46 @@ function main(): void {
   for (const b of dedupedBasename.slice(0, 30)) {
     console.log(`${b.count}  ${b.type}  ${b.target} -> ${b.candidates.join(' | ')}`)
   }
+
+  // All unique candidates (including path-based)
+  console.log('\n=== 全量唯一映射候选 ===')
+  const uniqueCandidates: { target: string; type: string; count: number; path: string }[] = []
+  const multiCandidates: { target: string; type: string; count: number; paths: string[] }[] = []
+  for (const [target, info] of sorted) {
+    if (isPattern(target)) continue
+    if (/^[a-zA-Z]:[\\/]|^file:\/\//.test(target)) continue
+    if (/\.(ts|tsx|md|js|jsx):\d/.test(target)) continue
+    const type = Object.keys(info.types)[0]
+    const c = searchRealFiles(target, type as Reference['type'])
+    if (c.length === 1) {
+      uniqueCandidates.push({
+        target,
+        type,
+        count: info.count,
+        path: normalize(c[0]).replace(normalize(PROJECT_ROOT) + '/', '')
+      })
+    } else if (c.length > 1) {
+      multiCandidates.push({
+        target,
+        type,
+        count: info.count,
+        paths: c.map(p => normalize(p).replace(normalize(PROJECT_ROOT) + '/', ''))
+      })
+    }
+  }
+  uniqueCandidates.sort((a, b) => b.count - a.count)
+  multiCandidates.sort((a, b) => b.count - a.count)
+  console.log(`唯一候选数: ${uniqueCandidates.length}`)
+  for (const u of uniqueCandidates.slice(0, 60)) {
+    console.log(`${u.count.toString().padStart(3)}  ${u.type.padEnd(12)} ${u.target} -> ${u.path}`)
+  }
+  if (uniqueCandidates.length > 60) console.log(`  ... 还有 ${uniqueCandidates.length - 60} 条唯一候选 ...`)
+
+  console.log('\n=== 全量多映射候选 Top 30 ===')
+  for (const m of multiCandidates.slice(0, 30)) {
+    console.log(`${m.count.toString().padStart(3)}  ${m.type.padEnd(12)} ${m.target}`)
+    for (const p of m.paths) console.log(`    -> ${p}`)
+  }
 }
 
 main()
