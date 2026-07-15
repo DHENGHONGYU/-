@@ -78,7 +78,7 @@ H. 跨域补充         ██░░░░░░░░  15 份（3.9%）   ← r
 ### 缺陷 2：18 个核心文档确认缺失 + 5 个可能已存在（P0）— 🟡 6/18 已补齐
 
 > **更新说明**：经全量 388 文件重新检索（关键词模糊匹配），原列出的 23 个文档中：
-> - **6 个已补齐**（P0 整改完成）：`../../README.md`、`governance.md`、`../explanation/overview.md`、`../explanation/cabins-overview.md`、`../reference/coding-conventions.md`、`../explanation/../explanation/runbook.md`
+> - **6 个已补齐**（P0 整改完成）：`../../README.md`、`governance.md`、`../explanation/overview.md`、`../explanation/cabins-overview.md`、`../reference/coding-conventions.md`、`../explanation/runbook.md`
 > - **12 个确认仍缺失**（无任何匹配文件）
 > - **5 个可能已存在**（有近似匹配文件，需人工复核是否满足需求）
 > - **2 个误报已纠正**：`../reference/api-contract.md` 实际存在于 `docs/02-design/`；`quality-gates` 文档实际存在于 `docs/02-design/` 和 `docs/03-development/`
@@ -113,7 +113,7 @@ H. 跨域补充         ██░░░░░░░░  15 份（3.9%）   ← r
 | `../explanation/overview.md` | `../explanation/overview.md` | ✅ 已创建 | `find docs/architecture -name '*.md'` |
 | `../explanation/cabins-overview.md` | `../explanation/cabins-overview.md` | ✅ 已创建 | 同上 |
 | `../reference/coding-conventions.md` | `../reference/coding-conventions.md` | ✅ 已创建 | `find docs/standards -name '*.md'` |
-| `../explanation/../explanation/runbook.md` | `../explanation/../explanation/runbook.md` | ✅ 已创建 | `find docs/ops -name '*.md'` |
+| `../explanation/runbook.md` | `../explanation/runbook.md` | ✅ 已创建 | `find docs/ops -name '*.md'` |
 | `../tutorials/../tutorials/getting-started.md` | `../tutorials/../tutorials/getting-started.md` | ✅ 已创建（P1） | `find docs/guides -name '../tutorials/getting-started.md'` |
 | `../how-to/how-to-add-widget.md` | `../how-to/how-to-add-widget.md` | ✅ 已创建（P1） | `find docs/guides -name 'how-to-add-widget.md'` |
 | `../how-to/../how-to/how-to-add-store.md` | `../how-to/../how-to/how-to-add-store.md` | ✅ 已创建（P1） | `find docs/guides -name '../how-to/how-to-add-store.md'` |
@@ -143,7 +143,7 @@ H. 跨域补充         ██░░░░░░░░  15 份（3.9%）   ← r
 - **整改/计划类**：`../reference/batchb-fix-plan.md`、`batchd-fix-plan.md`、`batche-fix-plan.md`、`../reference/rm剩余任务全量盘点与整改方案-2026-07-08.md`。
 - **插件文档**：`docs/plugins/*.md`（10 份 + `../reference/index.md`，体系已部分覆盖）。
 - **数据字典/ER图**：`../explanation/v9-data-relationship-er.md`。
-- **发布/PR/Release**：`../reference/../reference/pr-description.md`、`../reference/../reference/release-notes.md`、`../explanation/design/发布计划与评审-r01.md`、`../explanation/design/回滚方案与演练-r03.md`。
+- **发布/PR/Release**：`../reference/pr-description.md`、`../reference/release-notes.md`、`../explanation/design/发布计划与评审-r01.md`、`../explanation/design/回滚方案与演练-r03.md`。
 - **草稿/临时**：`docs/drafts/*.md`（8 份，无归档规则，较原 6 份增加）。
 
 > **根因**：体系 v1.0.0 缺少以下子类：
@@ -159,7 +159,7 @@ H. 跨域补充         ██░░░░░░░░  15 份（3.9%）   ← r
 |------|----------|----------|------------|------|
 | `docs/01-requirements/` | 需求规格 | 仍混入 `../explanation/architecture-version-comparison.md`、`../explanation/v10-architecture-alignment.md`、`component-deprecation-policy.md`、`DataBridge` 系列等架构/设计文档 | ~8 | 较原 11 份部分迁移 |
 | `docs/02-design/` | 设计文档 | 仍混入 `../explanation/design/audit-summary-report.md`、`../explanation/design/architecture-compliance-report.md`、`../explanation/design/test-expansion-design.md`、`quality-audit-plan.md` 等审计/测试/过程文档 | ~25 | 较原 37 份部分迁移 |
-| `docs/03-development/` | 开发实施 | 混入 `../reference/../reference/v6-to-v9-migration-spec.md`、`../reference/dataflow-engine-spec.md`（偏设计）等 | 少量 | 无变化 |
+| `docs/03-development/` | 开发实施 | 混入 `../reference/v6-to-v9-migration-spec.md`、`../reference/dataflow-engine-spec.md`（偏设计）等 | 少量 | 无变化 |
 | `docs/implementation/` | 实施文档 | **只有 14 张截图（.png），无 .md 文件** | 全部 | 无变化 |
 | `docs/05-deployment/` | 部署运维 | 仅 `../reference/2026-06-21-hashrouter-for-static-hosting.md`（1 份） | 严重不足 | 无变化 |
 | `docs/06-project-management/` | 项目管理 | 仅 `data_link_sequence_diagram.md` + 散落 1 份（2 份） | 严重不足 | 无变化 |
@@ -225,9 +225,9 @@ H. 跨域补充         ██░░░░░░░░  15 份（3.9%）   ← r
 |-------------|-----------|-------------|--------|
 | **A2 需求规格** | A | `../reference/01-vision-and-goals.md`、`../reference/02-functional-specs.md` | 高 |
 | **A3 插件集成** | A | `plugins/*.md`（10 份 + index） | 中 |
-| **B5 版本/发布** | B | `../reference/../reference/release-notes.md`、`../reference/pr-description.md`、`发布计划` | 中 |
+| **B5 版本/发布** | B | `../reference/release-notes.md`、`../reference/pr-description.md`、`发布计划` | 中 |
 | **C7 数据字典** | C | `../reference/index.md` + 8 份 DATA_DEFINITION | 高 |
-| **D5 迁移规范** | D | `../reference/../reference/v6-to-v9-migration-spec.md`、`../explanation/db-migration-v4-to-v6.md` | 中 |
+| **D5 迁移规范** | D | `../reference/v6-to-v9-migration-spec.md`、`../explanation/db-migration-v4-to-v6.md` | 中 |
 | **G4 草稿/临时** | G | `drafts/*.md`（8 份） | 中 |
 | **G5 发布管理** | G | `发布计划`、`回滚方案` | 低 |
 
@@ -277,7 +277,7 @@ Kimi 官方推荐的项目文件管理策略：
 | 4 | **隔离自动产物** | 🟡 规划中 | `reports/` 下 HTML 仍散落；建议 P1 移入 `_generated/` 并配置 `.gitignore` |
 | 5 | **新建 `./governance.md`** | ✅ 已完成 | v1.0.0，含保鲜规则、目录命名、贡献约定 |
 | — | **额外：新建 `../reference/services-catalog.md`** | ✅ 已完成 | 覆盖 23 个服务子域，超原清单预期 |
-| — | **额外：新建 `../explanation/../explanation/runbook.md`** | ✅ 已完成 | 运维基线文档 |
+| — | **额外：新建 `../explanation/runbook.md`** | ✅ 已完成 | 运维基线文档 |
 | — | **额外：新建 `docs/.ai-index/`** | ✅ 已完成 | 含 code-graph.json + ai-memory-index.json |
 
 ### 4.2 短期补齐（P1，2 周内）— 🟡 进行中
@@ -384,7 +384,7 @@ find docs/.ai-index -type f | sort                # 3 份（README/code-graph/ai
 
 > **「代码跑在文档前面」** —— 33 个页面、23 个子域、99 个 Store 文件、66 条路由已经全部落地，但对应的**设计规格文档、操作指南、架构说明**曾大量缺失或散落在过程产物中。
 
-> **P0 整改后** —— `docs/README.md`、`governance.md`、`../explanation/overview.md`、`../explanation/cabins-overview.md`、`../reference/services-catalog.md`、`../reference/coding-conventions.md`、`../explanation/../explanation/runbook.md`、`.ai-index/` 等 8 个核心缺口已补齐，文档层从「严重滞后」改善为「中等滞后」。
+> **P0 整改后** —— `docs/README.md`、`governance.md`、`../explanation/overview.md`、`../explanation/cabins-overview.md`、`../reference/services-catalog.md`、`../reference/coding-conventions.md`、`../explanation/runbook.md`、`.ai-index/` 等 8 个核心缺口已补齐，文档层从「严重滞后」改善为「中等滞后」。
 
 具体表现为三个"落差模式"（P0 后更新）：
 
