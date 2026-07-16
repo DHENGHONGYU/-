@@ -82,6 +82,8 @@ function checkDocsStructure() {
     'drafts', 'prompts', 'explanation', 'how-to', 'reference', 'tutorials',
     // 项目实际存在的扩展目录（用户工作树）
     '01-product', 'archive', 'team-handbook', 'team-handbook-html',
+    // PR-6 文档重构新增分类目录
+    'ai', 'architecture', 'design', 'guides', 'modules', 'ops', 'standards', 'testing',
   ];
   const docsPath = path.join(ROOT_DIR, 'docs');
   const actualDirs = fs.readdirSync(docsPath).filter(e => fs.statSync(path.join(docsPath, e)).isDirectory());
