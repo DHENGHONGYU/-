@@ -7,19 +7,21 @@ import {
   AlertTriangle,
   CheckCircle,
 } from 'lucide-react'
-import { THEME_TOKENS, COLOR_TOKENS } from '@/constants/theme.tokens'
 import { PageContainer } from '@/components/templates/PageContainer'
 import { PageHeader } from '@/components/templates/PageHeader'
+import { Button } from '@/components/atoms/Button'
+import { Input } from '@/components/atoms/Input'
+import { Badge } from '@/components/atoms/Badge'
 import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()
 
 /** Skill 状态徽章颜色配置 */
-const STATUS_BADGE_CONFIG: Record<string, { textColor: string; bgColorHex: string; text: string }> = {
-  'active': { textColor: 'text-success', bgColorHex: COLOR_TOKENS.success.hex, text: '运行中' },
-  'deprecated': { textColor: 'text-warning', bgColorHex: COLOR_TOKENS.warning.hex, text: '已废弃' },
-  'error': { textColor: 'text-destructive', bgColorHex: COLOR_TOKENS.danger.hex, text: '错误' },
-  'testing': { textColor: 'text-info', bgColorHex: COLOR_TOKENS.info.hex, text: '测试中' },
+const STATUS_BADGE_CONFIG: Record<string, { textColor: string; bgClass: string; text: string }> = {
+  'active': { textColor: 'text-success', bgClass: 'bg-success/15', text: '运行中' },
+  'deprecated': { textColor: 'text-warning', bgClass: 'bg-warning/15', text: '已废弃' },
+  'error': { textColor: 'text-destructive', bgClass: 'bg-destructive/15', text: '错误' },
+  'testing': { textColor: 'text-info', bgClass: 'bg-info/15', text: '测试中' },
 }
 
 /** 成功率阈值 */
@@ -87,14 +89,11 @@ const SkillAuditPage: React.FC = () => {
   ]
 
   const getStatusBadge = (status: string) => {
-    const badge = STATUS_BADGE_CONFIG[status] ?? STATUS_BADGE_CONFIG['active'] ?? { textColor: '', bgColorHex: '', text: '' }
+    const badge = STATUS_BADGE_CONFIG[status] ?? STATUS_BADGE_CONFIG['active'] ?? { textColor: '', bgClass: '', text: '' }
     return (
-      <span
-        className={`px-2 py-1 rounded text-xs font-medium ${badge.textColor}`}
-        style={{ backgroundColor: `${badge.bgColorHex}4D` }}
-      >
+      <Badge variant="outline" className={`text-xs ${badge.textColor} ${badge.bgClass}`}>
         {badge.text}
-      </span>
+      </Badge>
     )
   }
 
@@ -112,10 +111,11 @@ const SkillAuditPage: React.FC = () => {
           { key: 'dependencies' as const, label: '依赖关系', icon: GitBranch },
           { key: 'issues' as const, label: '问题检测', icon: AlertTriangle },
         ].map(tab => (
-          <button
+          <Button
             key={tab.key}
+            variant="ghost"
             onClick={() => setActiveTab(tab.key)}
-            className={`flex items-center gap-2 px-4 py-3 font-medium transition-colors ${
+            className={`flex items-center gap-2 px-4 py-3 font-medium ${
               activeTab === tab.key
                 ? `border-b-2 ${'border-info'} ${'text-info'}`
                 : 'text-tertiary'
@@ -123,19 +123,19 @@ const SkillAuditPage: React.FC = () => {
           >
             <tab.icon className="w-4 h-4" />
             {tab.label}
-          </button>
+          </Button>
         ))}
       </div>
 
       <div className="mb-6">
         <div className="relative">
           <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 ${'text-tertiary'}`} />
-          <input
+          <Input
             type="text"
             placeholder="搜索Skill..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className={`w-full pl-10 pr-4 py-2 ${'bg-card'} border ${'border-border'} rounded-lg text-foreground focus:outline-none ${THEME_TOKENS.focusVisible.ringWidth} ${THEME_TOKENS.focusVisible.ringColor}`}
+            className="pl-10 pr-4 py-2 rounded-lg"
           />
         </div>
       </div>
@@ -145,23 +145,23 @@ const SkillAuditPage: React.FC = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div className={`${'bg-card'} rounded p-4 border ${'border-border'}`}>
               <div className={`text-sm ${'text-tertiary'} mb-1`}>总Skill数</div>
-              <div className={`text-2xl font-bold ${'text-info'}`}>{skills.length}</div>
+              <div className={`text-h2 font-bold ${'text-info'}`}>{skills.length}</div>
             </div>
             <div className={`${'bg-card'} rounded p-4 border ${'border-border'}`}>
               <div className={`text-sm ${'text-tertiary'} mb-1`}>活跃Skill</div>
-              <div className={`text-2xl font-bold ${'text-success'}`}>
+              <div className={`text-h2 font-bold ${'text-success'}`}>
                 {skills.filter(s => s.status === 'active').length}
               </div>
             </div>
             <div className={`${'bg-card'} rounded p-4 border ${'border-border'}`}>
               <div className={`text-sm ${'text-tertiary'} mb-1`}>总使用次数</div>
-              <div className={`text-2xl font-bold ${'text-info'}`}>
+              <div className={`text-h2 font-bold ${'text-info'}`}>
                 {skills.reduce((sum, s) => sum + s.usageCount, 0).toLocaleString()}
               </div>
             </div>
             <div className={`${'bg-card'} rounded p-4 border ${'border-border'}`}>
               <div className={`text-sm ${'text-tertiary'} mb-1`}>平均成功率</div>
-              <div className={`text-2xl font-bold ${'text-success'}`}>
+              <div className={`text-h2 font-bold ${'text-success'}`}>
                 {(skills.reduce((sum, s) => sum + s.successRate, 0) / skills.length).toFixed(1)}%
               </div>
             </div>
@@ -174,17 +174,17 @@ const SkillAuditPage: React.FC = () => {
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-xl font-semibold text-foreground">
+                      <h3 className="text-h3 font-semibold text-foreground">
                         {skill.name}
                       </h3>
                       {getStatusBadge(skill.status)}
-                      <span className={`px-2 py-1 rounded text-xs ${'bg-muted'} ${'text-tertiary'}`}>
+                      <Badge variant="secondary" className="text-xs">
                         v{skill.version}
-                      </span>
+                      </Badge>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className={`text-2xl font-bold ${
+                    <div className={`text-h2 font-bold ${
                       skill.successRate >= SUCCESS_RATE_EXCELLENT ? 'text-success' :
                       skill.successRate >= SUCCESS_RATE_GOOD ? 'text-warning' : 'text-destructive'
                     }`}>
@@ -234,7 +234,7 @@ const SkillAuditPage: React.FC = () => {
                 <div className="flex items-start gap-4">
                   <AlertTriangle className={`w-8 h-8 ${'text-destructive'} flex-shrink-0`} />
                   <div className="flex-1">
-                    <h3 className="text-xl font-semibold text-foreground mb-2">
+                    <h3 className="text-h3 font-semibold text-foreground mb-2">
                       {skill.name}
                     </h3>
                     {skill.status === 'error' && (

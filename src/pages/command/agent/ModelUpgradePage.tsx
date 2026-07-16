@@ -11,6 +11,9 @@ import {
   Search,
 } from 'lucide-react'
 import { PageContainer } from '@/components/templates/PageContainer'
+import { Button } from '@/components/atoms/Button'
+import { Input } from '@/components/atoms/Input'
+import { Badge } from '@/components/atoms/Badge'
 
 /**
  * 模型升级流程管理页面
@@ -227,9 +230,9 @@ const ModelUpgradePage: React.FC = () => {
     }
     const badge = config[status] ?? config['draft'] ?? { color: '', text: '' }
     return (
-      <span className={`px-2 py-1 rounded text-xs font-medium ${badge.color}`}>
+      <Badge variant="outline" className={`text-xs ${badge.color}`}>
         {badge.text}
-      </span>
+      </Badge>
     )
   }
 
@@ -237,7 +240,7 @@ const ModelUpgradePage: React.FC = () => {
     <PageContainer className="min-h-screen bg-background text-foreground">
       {/* 页面标题 */}
       <div className="mb-8">
-        <h1 className={`text-3xl font-bold text-foreground mb-2`}>
+        <h1 className={`text-h1 font-bold text-foreground mb-2`}>
           模型升级流程管理
         </h1>
         <p className="text-muted-foreground">
@@ -252,18 +255,19 @@ const ModelUpgradePage: React.FC = () => {
           { key: 'plans' as const, label: '升级计划', icon: GitBranch },
           { key: 'history' as const, label: '升级历史', icon: Clock },
         ].map(tab => (
-          <button
+          <Button
             key={tab.key}
+            variant="ghost"
             onClick={() => setActiveTab(tab.key)}
-              className={`flex items-center gap-2 px-4 py-3 font-medium transition-colors ${
-                activeTab === tab.key
-                  ? 'border-b-2 text-info text-primary'
-                  : 'text-muted-foreground'
-              }`}
+            className={`flex items-center gap-2 px-4 py-3 font-medium ${
+              activeTab === tab.key
+                ? 'border-b-2 text-info'
+                : 'text-muted-foreground'
+            }`}
           >
             <tab.icon className="w-4 h-4" />
             {tab.label}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -271,22 +275,23 @@ const ModelUpgradePage: React.FC = () => {
       <div className="flex gap-4 mb-6">
         <div className="flex-1 relative">
           <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground`} />
-          <input
+          <Input
             type="text"
             placeholder="搜索模型或计划..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-card border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-info"
+            className="pl-10 pr-4 py-2 rounded-lg"
           />
         </div>
         {activeTab === 'plans' && (
-          <button
+          <Button
+            variant="primary"
             onClick={() => setShowCreatePlan(true)}
-            className={`flex items-center gap-2 px-4 py-2 bg-info hover:bg-info/80 rounded-lg transition-colors`}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-info text-info-foreground hover:bg-info/80"
           >
             <Plus className="w-4 h-4" />
             创建升级计划
-          </button>
+          </Button>
         )}
       </div>
 
@@ -303,7 +308,7 @@ const ModelUpgradePage: React.FC = () => {
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className={`text-xl font-semibold text-foreground`}>
+                      <h3 className={`text-h3 font-semibold text-foreground`}>
                         {version.name}
                       </h3>
                       {getStatusBadge(version.status)}
@@ -313,7 +318,7 @@ const ModelUpgradePage: React.FC = () => {
                     </p>
                   </div>
                   <div className="text-right">
-                    <div className={`text-2xl font-bold text-primary`}>
+                    <div className={`text-h2 font-bold text-primary`}>
                       {version.performanceScore}
                     </div>
                     <div className={`text-sm text-muted-foreground`}>
@@ -370,18 +375,18 @@ const ModelUpgradePage: React.FC = () => {
                 </div>
 
                 <div className="flex gap-2">
-                  <button className={`px-4 py-2 bg-muted hover:bg-muted/80 rounded-lg transition-colors`}>
+                  <Button variant="secondary" className="px-4 py-2 rounded-lg">
                     查看详情
-                  </button>
+                  </Button>
                   {version.status === 'testing' && (
-                    <button className={`px-4 py-2 bg-success hover:bg-success/80 rounded-lg transition-colors`}>
+                    <Button variant="success" className="px-4 py-2 rounded-lg">
                       批准上线
-                    </button>
+                    </Button>
                   )}
                   {version.status === 'active' && (
-                    <button className={`px-4 py-2 bg-warning hover:bg-warning/80 rounded-lg transition-colors`}>
+                    <Button variant="primary" className="px-4 py-2 rounded-lg bg-warning text-warning-foreground hover:bg-warning/80">
                       计划升级
-                    </button>
+                    </Button>
                   )}
                 </div>
               </div>
@@ -401,7 +406,7 @@ const ModelUpgradePage: React.FC = () => {
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className={`text-xl font-semibold text-foreground`}>
+                      <h3 className={`text-h3 font-semibold text-foreground`}>
                         {plan.name}
                       </h3>
                       {getStatusBadge(plan.status)}
@@ -462,27 +467,27 @@ const ModelUpgradePage: React.FC = () => {
                     <div>
                       <span className="text-muted-foreground">触发条件：</span>
                       {plan.rollbackStrategy.triggerConditions.map((condition, idx) => (
-                        <span key={idx} className={`inline-block px-2 py-1 bg-destructive/15 text-destructive rounded text-xs mr-2`}>
+                        <Badge key={idx} variant="outline" className="text-xs mr-2 bg-destructive/15 text-destructive">
                           {condition}
-                        </span>
+                        </Badge>
                       ))}
                     </div>
                   </div>
                 </div>
 
                 <div className="flex gap-2">
-                  <button className={`px-4 py-2 bg-muted hover:bg-muted/80 rounded-lg transition-colors`}>
+                  <Button variant="secondary" className="px-4 py-2 rounded-lg">
                     查看详情
-                  </button>
+                  </Button>
                   {plan.status === 'approved' && (
-                    <button className={`px-4 py-2 bg-success hover:bg-success/80 rounded-lg transition-colors`}>
+                    <Button variant="success" className="px-4 py-2 rounded-lg">
                       开始升级
-                    </button>
+                    </Button>
                   )}
                   {plan.status === 'in-progress' && (
-                    <button className={`px-4 py-2 bg-warning hover:bg-warning/80 rounded-lg transition-colors`}>
+                    <Button variant="primary" className="px-4 py-2 rounded-lg bg-warning text-warning-foreground hover:bg-warning/80">
                       监控进度
-                    </button>
+                    </Button>
                   )}
                 </div>
               </div>
@@ -502,7 +507,7 @@ const ModelUpgradePage: React.FC = () => {
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className={`text-xl font-semibold text-foreground`}>
+                      <h3 className={`text-h3 font-semibold text-foreground`}>
                         {record.planName}
                       </h3>
                       {getStatusBadge(record.status)}
@@ -512,7 +517,7 @@ const ModelUpgradePage: React.FC = () => {
                     </p>
                   </div>
                   <div className="text-right">
-                  <div className={`text-2xl font-bold ${
+                  <div className={`text-h2 font-bold ${
                     record.performanceDelta > 0 ? 'text-success' : 'text-destructive'
                   }`}>
                       {record.performanceDelta > 0 ? '+' : ''}{record.performanceDelta}%
@@ -541,13 +546,13 @@ const ModelUpgradePage: React.FC = () => {
                 </div>
 
                 <div className="flex gap-2">
-                  <button className={`px-4 py-2 bg-muted hover:bg-muted/80 rounded-lg transition-colors`}>
+                  <Button variant="secondary" className="px-4 py-2 rounded-lg">
                     查看详情
-                  </button>
+                  </Button>
                   {record.status === 'rolled-back' && (
-                    <button className={`px-4 py-2 bg-info hover:bg-info/80 rounded-lg transition-colors`}>
+                    <Button variant="primary" className="px-4 py-2 rounded-lg bg-info text-info-foreground hover:bg-info/80">
                       重新升级
-                    </button>
+                    </Button>
                   )}
                 </div>
               </div>

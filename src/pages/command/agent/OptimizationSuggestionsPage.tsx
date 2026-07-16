@@ -9,6 +9,10 @@ import {
 } from 'lucide-react'
 import { PageContainer } from '@/components/templates/PageContainer'
 import { PageHeader } from '@/components/templates/PageHeader'
+import { Button } from '@/components/atoms/Button'
+import { Input } from '@/components/atoms/Input'
+import { Select } from '@/components/atoms/Select'
+import { Badge } from '@/components/atoms/Badge'
 import { PRIORITY_BADGE, SUGGESTION_STATUS_BADGE, CATEGORY_ICON_COLOR, DEFAULT_BADGE } from '@/components/atoms/statusColors'
 
 /**
@@ -120,18 +124,18 @@ const OptimizationSuggestionsPage: React.FC = () => {
   const getPriorityBadge = (priority: string) => {
     const badge = PRIORITY_BADGE[priority] ?? DEFAULT_BADGE
     return (
-      <span className={`rounded px-2 py-1 text-xs font-medium ${badge.badge}`}>
+      <Badge variant="outline" className={badge.badge}>
         {badge.label}
-      </span>
+      </Badge>
     )
   }
 
   const getStatusBadge = (status: string) => {
     const badge = SUGGESTION_STATUS_BADGE[status] ?? DEFAULT_BADGE
     return (
-      <span className={`rounded px-2 py-1 text-xs font-medium ${badge.badge}`}>
+      <Badge variant="outline" className={badge.badge}>
         {badge.label}
-      </span>
+      </Badge>
     )
   }
 
@@ -197,40 +201,37 @@ const OptimizationSuggestionsPage: React.FC = () => {
             { key: 'in-progress' as const, label: '进行中' },
             { key: 'completed' as const, label: '已完成' },
           ].map(filter => (
-            <button
+            <Button
               key={filter.key}
+              variant={activeFilter === filter.key ? 'primary' : 'secondary'}
               onClick={() => setActiveFilter(filter.key)}
-              className={`rounded-lg px-4 py-2 transition-colors ${
-                activeFilter === filter.key
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-card text-muted-foreground hover:bg-accent'
-              }`}
+              className="rounded-lg px-4 py-2"
             >
               {filter.label}
-            </button>
+            </Button>
           ))}
         </div>
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-          <input
+          <Input
             type="text"
             placeholder="搜索建议..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-lg border border-border bg-card py-2 pl-10 pr-4 text-foreground focus:border-primary focus:outline-none"
+            className="rounded-lg py-2 pl-10 pr-4"
           />
         </div>
-        <select
+        <Select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          className="rounded-lg border border-border bg-card px-4 py-2 text-foreground focus:border-primary focus:outline-none"
+          className="rounded-lg px-4 py-2"
         >
           <option value="all">全部分类</option>
           <option value="performance">性能</option>
           <option value="quality">代码质量</option>
           <option value="security">安全</option>
           <option value="architecture">架构</option>
-        </select>
+        </Select>
       </div>
 
       {/* 建议列表 */}
@@ -296,23 +297,23 @@ const OptimizationSuggestionsPage: React.FC = () => {
                 <div className="flex gap-2">
                   {suggestion.status === 'open' && (
                     <>
-                      <button className="rounded-lg bg-primary px-4 py-2 text-primary-foreground transition-colors hover:bg-primary/90">
+                      <Button variant="primary" className="rounded-lg px-4 py-2">
                         开始处理
-                      </button>
-                      <button className="rounded-lg bg-muted px-4 py-2 text-foreground transition-colors hover:bg-accent">
+                      </Button>
+                      <Button variant="secondary" className="rounded-lg px-4 py-2">
                         忽略
-                      </button>
+                      </Button>
                     </>
                   )}
                   {suggestion.status === 'in-progress' && (
-                    <button className="rounded-lg bg-success px-4 py-2 text-success-foreground transition-colors hover:bg-success/90">
+                    <Button variant="success" className="rounded-lg px-4 py-2">
                       标记完成
-                    </button>
+                    </Button>
                   )}
-                  <button className="flex items-center gap-2 rounded-lg bg-muted px-4 py-2 text-foreground transition-colors hover:bg-accent">
+                  <Button variant="secondary" className="flex items-center gap-2 rounded-lg px-4 py-2">
                     <ExternalLink className="h-4 w-4" />
                     查看详情
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
