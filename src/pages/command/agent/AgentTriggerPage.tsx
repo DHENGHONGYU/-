@@ -4,12 +4,15 @@ import { Play, RefreshCw, AlertCircle, CheckCircle2, Bot } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Button } from '@/components/atoms/Button'
 import { Input } from '@/components/atoms/Input'
+import { Select } from '@/components/atoms/Select'
+import { Textarea } from '@/components/atoms/Textarea'
+import { Label } from '@/components/atoms/Label'
 import {
   Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage,
 } from '@/components/atoms/Breadcrumb'
 import { useAgentStore } from '@/store/agentStore'
 import { agentRuntime } from '@/agents/agentRuntime'
-import { getAllAgentComponents } from '@/agents/agentComponentRegistry'
+import { getAllAgentComponents } from '@/components/organisms/agent/agentComponentRegistry'
 import { mcpRegistry } from '@/mcp/core/registry'
 import { getLogger } from '@/lib/logger'
 import type { AgentTriggerPayload } from '@/types/modules/agent.types'
@@ -130,9 +133,9 @@ export default function AgentTriggerPage(): React.JSX.Element {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium">智能体</label>
-              <select
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              <Label className="text-sm font-medium">智能体</Label>
+              <Select
+                className="rounded-md"
                 value={selectedAgentId}
                 onChange={(e) => handleAgentChange(e.target.value)}
               >
@@ -142,13 +145,13 @@ export default function AgentTriggerPage(): React.JSX.Element {
                     {a.displayName} ({a.agentId})
                   </option>
                 ))}
-              </select>
+              </Select>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">MCP Server</label>
-              <select
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              <Label className="text-sm font-medium">MCP Server</Label>
+              <Select
+                className="rounded-md"
                 value={selectedServerName}
                 onChange={(e) => {
                   setSelectedServerName(e.target.value)
@@ -161,14 +164,14 @@ export default function AgentTriggerPage(): React.JSX.Element {
                     {s.server.info.name} v{s.server.info.version}
                   </option>
                 ))}
-              </select>
+              </Select>
             </div>
 
             {selectedServerName && (
               <div className="space-y-2">
-                <label className="text-sm font-medium">Tool</label>
-                <select
-                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                <Label className="text-sm font-medium">Tool</Label>
+                <Select
+                  className="rounded-md"
                   value={selectedToolName}
                   onChange={(e) => setSelectedToolName(e.target.value)}
                 >
@@ -178,12 +181,12 @@ export default function AgentTriggerPage(): React.JSX.Element {
                       {t.name} — {t.description}
                     </option>
                   ))}
-                </select>
+                </Select>
               </div>
             )}
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">超时 (ms)</label>
+              <Label className="text-sm font-medium">超时 (ms)</Label>
               <Input
                 type="number"
                 value={timeout}
@@ -194,9 +197,9 @@ export default function AgentTriggerPage(): React.JSX.Element {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Payload (JSON)</label>
-              <textarea
-                className="w-full min-h-[120px] rounded-md border border-input bg-background px-3 py-2 text-sm font-mono"
+              <Label className="text-sm font-medium">Payload (JSON)</Label>
+              <Textarea
+                className="min-h-[120px] font-mono"
                 value={payloadJson}
                 onChange={(e) => {
                   setPayloadJson(e.target.value)
