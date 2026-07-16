@@ -30,6 +30,9 @@ const RECOMMENDATION_LABELS: Record<string, string> = {
 
 const DEFAULT_STAT_LABEL_CLASS = 'text-sm'
 
+/**
+ * LlmStatsTab
+ */
 export function LlmStatsTab({ usageStats }: LlmStatsTabProps): React.JSX.Element {
   const { tokenUsage, callsByFactor, callsByModel } = usageStats
   const inputRatio = tokenUsage.total > 0 ? (tokenUsage.input / tokenUsage.total) * 100 : 0
@@ -130,7 +133,7 @@ function KpiCard({ icon, iconClass, value, label }: KpiCardProps): React.JSX.Ele
           {icon}
         </div>
         <div>
-          <p className="text-2xl font-bold">{value}</p>
+          <p className="text-h2 font-bold">{value}</p>
           <p className="text-sm text-muted-foreground">{label}</p>
         </div>
       </CardContent>

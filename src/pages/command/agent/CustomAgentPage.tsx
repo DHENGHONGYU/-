@@ -8,6 +8,14 @@ import {
 } from '@heroicons/react/24/outline'
 import { PageContainer } from '@/components/templates/PageContainer'
 import { PageHeader } from '@/components/templates/PageHeader'
+import { Button } from '@/components/atoms/Button'
+import { Card } from '@/components/atoms/Card'
+import { Input } from '@/components/atoms/Input'
+import { Textarea } from '@/components/atoms/Textarea'
+import { Select } from '@/components/atoms/Select'
+import { Switch } from '@/components/atoms/Switch'
+import { Checkbox } from '@/components/atoms/Checkbox'
+import { Label } from '@/components/atoms/Label'
 
 import { nanoid } from 'nanoid'
 import { useCustomAgentStore } from '@/store/customAgentStore'
@@ -75,6 +83,10 @@ function toCustomAgentEntity(config: CustomAgentConfig, existing?: CustomAgent):
  *
  * 阶段 B-1：所有 CRUD 走 useCustomAgentStore → dataLayer → DataBridge → IDB.custom_agents，
  * 跨刷新不再丢数据。
+ *
+ * 标准化改造（2026-07-16）：裸 div/input/button/select/textarea 与自定义 toggle 全部收敛到
+ * 原子组件（Card/Button/Input/Textarea/Select/Switch/Checkbox/Label），模态体改用 Card，
+ * 排版走 TYPOGRAPHY_SCALE（text-h2/text-h3），消除 text-white/bg-white 裸用法。
  */
 const CustomAgentPage: React.FC = () => {
   // 阶段 B-1：从 store 读取列表；表单中间态仍用本地 useState（editingAgent）
@@ -212,22 +224,15 @@ const CustomAgentPage: React.FC = () => {
       {/* 操作栏 */}
       <div className="mb-6 flex justify-between items-center">
         <div className="flex gap-4">
-          <button
-            onClick={() => handleOpenModal()}
-            className="flex items-center gap-2 px-4 py-2 bg-destructive text-white rounded-lg hover:opacity-90 transition-opacity"
-          >
+          <Button variant="primary" onClick={() => handleOpenModal()}>
             <PlusIcon className="w-5 h-5" />
             创建智能体
-          </button>
+          </Button>
 
-          <button
-            onClick={() => void loadAll()}
-            className="flex items-center gap-2 px-4 py-2 bg-muted text-foreground rounded-lg hover:opacity-90 transition-opacity"
-            disabled={storeLoading}
-          >
+          <Button variant="secondary" onClick={() => void loadAll()} disabled={storeLoading}>
             <ArrowPathIcon className="w-5 h-5" />
             {storeLoading ? '加载中...' : '刷新'}
-          </button>
+          </Button>
         </div>
 
         <div className="text-sm text-tertiary">
@@ -239,10 +244,7 @@ const CustomAgentPage: React.FC = () => {
       {/* 智能体列表 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {agents.map(agent => (
-          <div
-            key={agent.id}
-            className="bg-card rounded-lg shadow-sm border border-border p-6 hover:shadow-md transition-shadow"
-          >
+          <Card key={agent.id} className="p-6 hover:shadow-md transition-shadow">
             {/* 智能体头部 */}
             <div className="flex justify-between items-start mb-4">
               <div className="flex-1">
@@ -264,19 +266,12 @@ const CustomAgentPage: React.FC = () => {
               </div>
 
               <div className="flex items-center gap-2">
-                {/* 启用/禁用切换 */}
-                <button
-                  onClick={() => handleToggleAgent(agent.id)}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                    agent.isActive ? 'bg-destructive' : 'bg-muted'
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      agent.isActive ? 'translate-x-6' : 'translate-x-1'
-                    }`}
-                  />
-                </button>
+                {/* 启用/禁用切换（原子 Switch） */}
+                <Switch
+                  checked={agent.isActive}
+                  onChange={() => handleToggleAgent(agent.id)}
+                  aria-label={agent.isActive ? '禁用智能体' : '启用智能体'}
+                />
               </div>
             </div>
 
@@ -328,37 +323,28 @@ const CustomAgentPage: React.FC = () => {
 
             {/* 操作按钮 */}
             <div className="flex gap-2">
-              <button
-                onClick={() => handleOpenModal(agent)}
-                className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-muted text-foreground rounded hover:opacity-90 transition-opacity"
-              >
+              <Button variant="secondary" size="sm" onClick={() => handleOpenModal(agent)}>
                 <PencilIcon className="w-4 h-4" />
                 编辑
-              </button>
+              </Button>
 
-              <button
-                onClick={() => handleTestAgent(agent)}
-                className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-info text-white rounded hover:opacity-90 transition-opacity"
-              >
+              <Button variant="secondary" size="sm" onClick={() => handleTestAgent(agent)}>
                 <BeakerIcon className="w-4 h-4" />
                 测试
-              </button>
+              </Button>
 
-              <button
-                onClick={() => handleDeleteAgent(agent.id)}
-                className="flex items-center justify-center px-3 py-2 bg-destructive text-white rounded hover:opacity-90 transition-opacity"
-              >
+              <Button variant="danger" size="sm" onClick={() => handleDeleteAgent(agent.id)}>
                 <TrashIcon className="w-4 h-4" />
-              </button>
+              </Button>
             </div>
-          </div>
+          </Card>
         ))}
       </div>
 
       {/* 创建/编辑模态框 */}
       {showModal && editingAgent && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-card rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+          <Card className="p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <h2 className="text-h2 font-bold text-foreground mb-4">
               {agents.find(a => a.id === editingAgent.id) ? '编辑智能体' : '创建智能体'}
             </h2>
@@ -366,27 +352,20 @@ const CustomAgentPage: React.FC = () => {
             <div className="space-y-4">
               {/* 智能体名称 */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-1">
-                  智能体名称 *
-                </label>
-                <input
-                  type="text"
+                <Label className="mb-1">智能体名称 *</Label>
+                <Input
                   value={editingAgent.name}
                   onChange={(e) => setEditingAgent(prev => prev ? { ...prev, name: e.target.value } : null)}
-                  className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="输入智能体名称"
                 />
               </div>
 
               {/* 智能体描述 */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-1">
-                  描述 *
-                </label>
-                <textarea
+                <Label className="mb-1">描述 *</Label>
+                <Textarea
                   value={editingAgent.description}
                   onChange={(e) => setEditingAgent(prev => prev ? { ...prev, description: e.target.value } : null)}
-                  className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                   rows={3}
                   placeholder="输入智能体描述"
                 />
@@ -394,31 +373,25 @@ const CustomAgentPage: React.FC = () => {
 
               {/* 智能体类型 */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-1">
-                  类型 *
-                </label>
-                <select
+                <Label className="mb-1">类型 *</Label>
+                <Select
                   value={editingAgent.type}
                   onChange={(e) => setEditingAgent(prev => prev ? { ...prev, type: e.target.value as CustomAgentConfig['type'] } : null)}
-                  className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option value="analysis">分析</option>
                   <option value="trading">交易</option>
                   <option value="risk">风险</option>
                   <option value="data">数据</option>
                   <option value="custom">自定义</option>
-                </select>
+                </Select>
               </div>
 
               {/* 模型选择 */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-1">
-                  模型 *
-                </label>
-                <select
+                <Label className="mb-1">模型 *</Label>
+                <Select
                   value={editingAgent.model}
                   onChange={(e) => setEditingAgent(prev => prev ? { ...prev, model: e.target.value } : null)}
-                  className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option value="deepseek-chat">DeepSeek Chat</option>
                   <option value="deepseek-coder">DeepSeek Coder</option>
@@ -426,18 +399,15 @@ const CustomAgentPage: React.FC = () => {
                   <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
                   <option value="kimi-chat">Kimi Chat</option>
                   <option value="qwen-max">通义千问 Max</option>
-                </select>
+                </Select>
               </div>
 
               {/* 系统提示词 */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-1">
-                  系统提示词 *
-                </label>
-                <textarea
+                <Label className="mb-1">系统提示词 *</Label>
+                <Textarea
                   value={editingAgent.systemPrompt}
                   onChange={(e) => setEditingAgent(prev => prev ? { ...prev, systemPrompt: e.target.value } : null)}
-                  className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                   rows={5}
                   placeholder="输入系统提示词，定义智能体的角色和行为"
                 />
@@ -445,9 +415,7 @@ const CustomAgentPage: React.FC = () => {
 
               {/* 温度参数 */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-1">
-                  温度 (Temperature): {editingAgent.temperature}
-                </label>
+                <Label className="mb-1">温度 (Temperature): {editingAgent.temperature}</Label>
                 <input
                   type="range"
                   min="0"
@@ -466,41 +434,34 @@ const CustomAgentPage: React.FC = () => {
 
               {/* 最大Token */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-1">
-                  最大Token
-                </label>
-                <input
+                <Label className="mb-1">最大Token</Label>
+                <Input
                   type="number"
+                  min={100}
+                  max={8000}
                   value={editingAgent.maxTokens}
                   onChange={(e) => setEditingAgent(prev => prev ? { ...prev, maxTokens: parseInt(e.target.value) } : null)}
-                  className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                  min="100"
-                  max="8000"
                 />
               </div>
 
               {/* 能力配置 */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-1">
-                  能力 (Capabilities)
-                </label>
+                <Label className="mb-1">能力 (Capabilities)</Label>
                 <div className="space-y-2">
                   {['technical-analysis', 'fundamental-analysis', 'risk-monitoring', 'trading-signal', 'data-fetching', 'report-generation'].map(cap => (
-                    <label key={cap} className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={editingAgent.capabilities.includes(cap)}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setEditingAgent(prev => prev ? { ...prev, capabilities: [...prev.capabilities, cap] } : null)
-                          } else {
-                            setEditingAgent(prev => prev ? { ...prev, capabilities: prev.capabilities.filter(c => c !== cap) } : null)
-                          }
-                        }}
-                        className="rounded"
-                      />
-                      <span className="text-sm">{cap}</span>
-                    </label>
+                    <Checkbox
+                      key={cap}
+                      checked={editingAgent.capabilities.includes(cap)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setEditingAgent(prev => prev ? { ...prev, capabilities: [...prev.capabilities, cap] } : null)
+                        } else {
+                          setEditingAgent(prev => prev ? { ...prev, capabilities: prev.capabilities.filter(c => c !== cap) } : null)
+                        }
+                      }}
+                    >
+                      {cap}
+                    </Checkbox>
                   ))}
                 </div>
               </div>
@@ -508,31 +469,31 @@ const CustomAgentPage: React.FC = () => {
 
             {/* 按钮组 */}
             <div className="flex gap-4 mt-6">
-              <button
-                onClick={handleSaveAgent}
+              <Button
+                variant="primary"
                 disabled={!editingAgent.name || !editingAgent.description || !editingAgent.systemPrompt}
-                className="flex-1 px-4 py-2 bg-destructive text-white rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={handleSaveAgent}
               >
                 保存
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="secondary"
                 onClick={() => {
                   setShowModal(false)
                   setEditingAgent(null)
                 }}
-                className="flex-1 px-4 py-2 bg-muted text-foreground rounded-lg hover:opacity-90 transition-opacity"
               >
                 取消
-              </button>
+              </Button>
             </div>
-          </div>
+          </Card>
         </div>
       )}
 
       {/* 测试结果显示 */}
       {testingAgent && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-card rounded-lg p-6 w-full max-w-lg">
+          <Card className="p-6 w-full max-w-lg">
             <h3 className="text-h3 font-bold text-foreground mb-4">
               测试智能体: {testingAgent.name}
             </h3>
@@ -541,16 +502,16 @@ const CustomAgentPage: React.FC = () => {
                 {testResult}
               </pre>
             </div>
-            <button
+            <Button
+              variant="secondary"
               onClick={() => {
                 setTestingAgent(null)
                 setTestResult('')
               }}
-              className="w-full px-4 py-2 bg-destructive text-white rounded-lg hover:opacity-90 transition-opacity"
             >
               关闭
-            </button>
-          </div>
+            </Button>
+          </Card>
         </div>
       )}
     </PageContainer>

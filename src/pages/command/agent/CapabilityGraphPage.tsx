@@ -5,9 +5,11 @@ import {
   MagnifyingGlassIcon,
   ArrowsPointingOutIcon,
 } from '@heroicons/react/24/outline'
-import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import { PageContainer } from '@/components/templates/PageContainer'
 import { PageHeader } from '@/components/templates/PageHeader'
+import { Button } from '@/components/atoms/Button'
+import { Input } from '@/components/atoms/Input'
+import { Badge } from '@/components/atoms/Badge'
 
 /**
  * 智能体节点接口
@@ -67,16 +69,16 @@ const CapabilityGraphPage: React.FC = () => {
   const [zoomLevel, setZoomLevel] = useState(1)
 
   /**
-   * 获取智能体类型颜色
+   * 获取智能体类型颜色（语义令牌类名，配合 SVG stroke="currentColor" / fill="currentColor" 使用）
    */
   const getTypeColor = (type: AgentNode['type']) => {
     switch (type) {
-      case 'analysis': return COLOR_TOKENS.info.tailwind
-      case 'trading': return COLOR_TOKENS.up.tailwind
-      case 'risk': return COLOR_TOKENS.danger.tailwind
-      case 'data': return COLOR_TOKENS.warning.tailwind
-      case 'custom': return COLOR_TOKENS.purple.tailwind
-      default: return COLOR_TOKENS.textMuted.tailwind
+      case 'analysis': return 'text-info'
+      case 'trading': return 'text-destructive'
+      case 'risk': return 'text-destructive'
+      case 'data': return 'text-warning'
+      case 'custom': return 'text-primary'
+      default: return 'text-muted-foreground'
     }
   }
 
@@ -132,41 +134,44 @@ const CapabilityGraphPage: React.FC = () => {
           {/* 搜索框 */}
           <div className="relative">
             <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-tertiary" />
-            <input
+            <Input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="搜索智能体或能力..."
-              className={`pl-10 pr-4 py-2 border ${'border-border'} rounded-lg focus:outline-none focus:ring-2 focus:ring-primary`}
+              className="pl-10 pr-4 py-2 rounded-lg"
             />
           </div>
 
           {/* 缩放控制 */}
           <div className="flex items-center gap-2">
-            <button
+            <Button
+              variant="secondary"
               onClick={handleZoomOut}
-              className={`p-2 ${'bg-muted'} rounded hover:opacity-90 transition-opacity`}
+              className="p-2 rounded hover:opacity-90 transition-opacity"
               title="缩小"
             >
               -
-            </button>
+            </Button>
             <span className="text-sm text-muted-foreground min-w-[60px] text-center">
               {Math.round(zoomLevel * 100)}%
             </span>
-            <button
+            <Button
+              variant="secondary"
               onClick={handleZoomIn}
-              className={`p-2 ${'bg-muted'} rounded hover:opacity-90 transition-opacity`}
+              className="p-2 rounded hover:opacity-90 transition-opacity"
               title="放大"
             >
               +
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="secondary"
               onClick={handleResetZoom}
-              className={`p-2 ${'bg-muted'} rounded hover:opacity-90 transition-opacity`}
+              className="p-2 rounded hover:opacity-90 transition-opacity"
               title="重置"
             >
               <ArrowsPointingOutIcon className="w-4 h-4" />
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -200,7 +205,8 @@ const CapabilityGraphPage: React.FC = () => {
                     y1={sourceAgent.y}
                     x2={targetAgent.x}
                     y2={targetAgent.y}
-                    stroke={isHighlighted ? COLOR_TOKENS.danger.tailwind : COLOR_TOKENS.textMuted.tailwind}
+                    className={isHighlighted ? 'text-destructive' : 'text-muted-foreground'}
+                    stroke="currentColor"
                     strokeWidth={isHighlighted ? 3 : 2}
                     strokeOpacity={isHighlighted ? 1 : 0.5}
                   />
@@ -232,19 +238,20 @@ const CapabilityGraphPage: React.FC = () => {
                     cx={agent.x}
                     cy={agent.y}
                     r={isSelected ? 35 : 30}
-                    fill={getTypeColor(agent.type)}
+                    className={getTypeColor(agent.type)}
+                    fill="currentColor"
                     fillOpacity={isSelected ? 0.3 : 0.2}
-                    stroke={getTypeColor(agent.type)}
+                    stroke="currentColor"
                     strokeWidth={isSelected ? 3 : 2}
                   />
-                  
+
                   {/* 智能体图标 */}
                   <CubeTransparentIcon
                     x={agent.x - 12}
                     y={agent.y - 12}
                     width={24}
                     height={24}
-                    className="text-white"
+                    className="text-foreground"
                   />
 
                   {/* 智能体名称 */}
@@ -274,13 +281,13 @@ const CapabilityGraphPage: React.FC = () => {
 
         {/* 详细信息面板 */}
         <div className={`w-80 ${'bg-card'} rounded-lg shadow-sm border ${'border-border'} p-6`}>
-          <h3 className={`text-lg font-semibold ${'text-foreground'} mb-4`}>
+          <h3 className={`text-h3 font-semibold ${'text-foreground'} mb-4`}>
             详细信息
           </h3>
 
           {selectedNode ? (
             <div>
-              <h4 className={`text-md font-medium ${'text-foreground'} mb-2`}>
+              <h4 className={`text-h3 font-medium ${'text-foreground'} mb-2`}>
                 {selectedNode.name}
               </h4>
               <div className="space-y-3">
@@ -298,12 +305,13 @@ const CapabilityGraphPage: React.FC = () => {
                   <span className={`text-sm ${'text-tertiary'}`}>能力列表</span>
                   <div className="flex flex-wrap gap-1 mt-1">
                     {selectedNode.capabilities.map(cap => (
-                      <span
+                      <Badge
                         key={cap}
-                        className={`px-2 py-1 text-xs ${'bg-muted'} ${'text-muted-foreground'} rounded`}
+                        variant="secondary"
+                        className="text-xs"
                       >
                         {cap}
-                      </span>
+                      </Badge>
                     ))}
                   </div>
                 </div>
@@ -342,7 +350,7 @@ const CapabilityGraphPage: React.FC = () => {
             </div>
           ) : selectedEdge ? (
             <div>
-              <h4 className={`text-md font-medium ${'text-foreground'} mb-2`}>
+              <h4 className={`text-h3 font-medium ${'text-foreground'} mb-2`}>
                 能力边详情
               </h4>
               <div className="space-y-3">
@@ -393,17 +401,14 @@ const CapabilityGraphPage: React.FC = () => {
         <h4 className={`text-sm font-medium ${'text-foreground'} mb-2`}>图例</h4>
         <div className="flex gap-6">
           {[
-            { type: 'analysis', label: '分析', color: COLOR_TOKENS.info.tailwind },
-            { type: 'trading', label: '交易', color: COLOR_TOKENS.up.tailwind },
-            { type: 'risk', label: '风险', color: COLOR_TOKENS.danger.tailwind },
-            { type: 'data', label: '数据', color: COLOR_TOKENS.warning.tailwind },
-            { type: 'custom', label: '自定义', color: COLOR_TOKENS.purple.tailwind },
+            { type: 'analysis', label: '分析', color: 'bg-info' },
+            { type: 'trading', label: '交易', color: 'bg-destructive' },
+            { type: 'risk', label: '风险', color: 'bg-destructive' },
+            { type: 'data', label: '数据', color: 'bg-warning' },
+            { type: 'custom', label: '自定义', color: 'bg-primary' },
           ].map(item => (
             <div key={item.type} className="flex items-center gap-2">
-              <div
-                className="w-4 h-4 rounded"
-                style={{ backgroundColor: item.color }}
-              />
+              <span className={`inline-block w-4 h-4 rounded ${item.color}`} />
               <span className="text-sm">{item.label}</span>
             </div>
           ))}

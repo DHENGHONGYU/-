@@ -10,6 +10,9 @@ import {
 } from 'lucide-react'
 import { PageContainer } from '@/components/templates/PageContainer'
 import { PageHeader } from '@/components/templates/PageHeader'
+import { Button } from '@/components/atoms/Button'
+import { Badge } from '@/components/atoms/Badge'
+import { Card } from '@/components/atoms/Card'
 import { CHANGELOG_TYPE_BADGE, DEFAULT_BADGE } from '@/components/atoms/statusColors'
 
 /**
@@ -153,9 +156,9 @@ const ChangelogPage: React.FC = () => {
   const getTypeBadge = (type: string) => {
     const badge = CHANGELOG_TYPE_BADGE[type] ?? DEFAULT_BADGE
     return (
-      <span className={`rounded px-2 py-1 text-xs font-medium ${badge.badge}`}>
+      <Badge variant="outline" className={badge.badge}>
         {badge.label}
-      </span>
+      </Badge>
     )
   }
 
@@ -172,35 +175,29 @@ const ChangelogPage: React.FC = () => {
 
       {/* 版本选择 */}
       <div className="mb-6 flex flex-wrap gap-2">
-        <button
+        <Button
+          variant={selectedVersion === 'all' ? 'primary' : 'secondary'}
           onClick={() => setSelectedVersion('all')}
-          className={`rounded-lg px-4 py-2 transition-colors ${
-            selectedVersion === 'all'
-              ? 'bg-primary text-primary-foreground'
-              : 'bg-card text-muted-foreground hover:bg-accent'
-          }`}
+          className="rounded-lg px-4 py-2"
         >
           全部版本
-        </button>
+        </Button>
         {changelog.map(entry => (
-          <button
+          <Button
             key={entry.version}
+            variant={selectedVersion === entry.version ? 'primary' : 'secondary'}
             onClick={() => setSelectedVersion(entry.version)}
-            className={`rounded-lg px-4 py-2 transition-colors ${
-              selectedVersion === entry.version
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-card text-muted-foreground hover:bg-accent'
-            }`}
+            className="rounded-lg px-4 py-2"
           >
             v{entry.version}
-          </button>
+          </Button>
         ))}
       </div>
 
       {/* 更新日志列表 */}
       <div className="space-y-8">
         {filteredChangelog.map(entry => (
-          <div key={entry.version} className="rounded-lg border bg-card p-6">
+          <Card key={entry.version} className="p-6">
             <div className="mb-6 flex items-start justify-between">
               <div>
                 <div className="mb-2 flex items-center gap-3">
@@ -213,10 +210,10 @@ const ChangelogPage: React.FC = () => {
                   发布于 {entry.releaseDate}
                 </p>
               </div>
-              <button className="flex items-center gap-2 rounded-lg bg-muted px-4 py-2 text-foreground transition-colors hover:bg-accent">
+              <Button variant="secondary" className="flex items-center gap-2 rounded-lg px-4 py-2">
                 <Download className="h-4 w-4" />
                 下载此版本
-              </button>
+              </Button>
             </div>
 
             {/* 亮点 */}
@@ -347,7 +344,7 @@ const ChangelogPage: React.FC = () => {
                 </div>
               </div>
             )}
-          </div>
+          </Card>
         ))}
       </div>
     </PageContainer>

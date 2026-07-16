@@ -11,6 +11,13 @@ import {
   ArrowPathIcon,
 } from '@heroicons/react/24/outline'
 import { PageContainer } from '@/components/templates/PageContainer'
+import { Button } from '@/components/atoms/Button'
+import { Input } from '@/components/atoms/Input'
+import { Select } from '@/components/atoms/Select'
+import { Textarea } from '@/components/atoms/Textarea'
+import { Label } from '@/components/atoms/Label'
+import { Badge } from '@/components/atoms/Badge'
+import { Card } from '@/components/atoms/Card'
 
 import { nanoid } from 'nanoid'
 /**
@@ -254,7 +261,7 @@ const DagSchedulerPage: React.FC = () => {
     <PageContainer className="min-h-screen bg-background text-foreground">
       {/* 页面标题 */}
       <div className="mb-8">
-        <h1 className={`text-3xl font-bold text-foreground mb-2`}>
+        <h1 className={`text-h1 font-bold text-foreground mb-2`}>
           DAG 调度器
         </h1>
         <p className="text-muted-foreground">
@@ -265,21 +272,23 @@ const DagSchedulerPage: React.FC = () => {
       {/* 操作栏 */}
       <div className="mb-6 flex justify-between items-center">
         <div className="flex gap-4">
-          <button
+          <Button
+            variant="primary"
             onClick={() => handleOpenModal()}
-            className={`flex items-center gap-2 px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:opacity-90 transition-opacity`}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
           >
             <PlusIcon className="w-5 h-5" />
             创建工作流
-          </button>
+          </Button>
 
-          <button
+          <Button
+            variant="secondary"
             onClick={() => window.location.reload()}
-            className={`flex items-center gap-2 px-4 py-2 bg-muted text-foreground rounded-lg hover:opacity-90 transition-opacity`}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
           >
             <ArrowPathIcon className="w-5 h-5" />
             刷新
-          </button>
+          </Button>
         </div>
 
         <div className="text-sm text-tertiary">
@@ -301,14 +310,14 @@ const DagSchedulerPage: React.FC = () => {
               <div className="flex justify-between items-start mb-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <h3 className={`text-lg font-semibold text-foreground`}>
+                    <h3 className={`text-h3 font-semibold text-foreground`}>
                       {workflow.name}
                     </h3>
-                    <span className={`px-2 py-1 text-xs font-medium rounded ${statusColor.bg} ${statusColor.text}`}>
+                    <Badge variant="outline" className={`text-xs ${statusColor.bg} ${statusColor.text}`}>
                       {workflow.status === 'active' ? '运行中' :
                        workflow.status === 'paused' ? '已暂停' :
                        workflow.status === 'stopped' ? '已停止' : '错误'}
-                    </span>
+                    </Badge>
                   </div>
                   <p className={`text-muted-foreground text-sm`}>
                     {workflow.description}
@@ -317,37 +326,41 @@ const DagSchedulerPage: React.FC = () => {
 
                 <div className="flex items-center gap-2">
                   {/* 操作按钮 */}
-                  <button
+                  <Button
+                    variant="secondary"
                     onClick={() => handleToggleStatus(workflow.id)}
-                    className={`p-2 bg-muted rounded hover:opacity-90 transition-opacity`}
+                    className="p-2 rounded hover:opacity-90 transition-opacity"
                     title={workflow.status === 'active' ? '暂停' : '启动'}
                   >
                     {workflow.status === 'active' ? <PauseIcon className="w-5 h-5" /> : <PlayIcon className="w-5 h-5" />}
-                  </button>
+                  </Button>
 
-                  <button
+                  <Button
+                    variant="secondary"
                     onClick={() => handleTriggerWorkflow(workflow.id)}
-                    className={`p-2 bg-muted rounded hover:opacity-90 transition-opacity`}
+                    className="p-2 rounded hover:opacity-90 transition-opacity"
                     title="手动触发"
                   >
                     <PlayIcon className="w-5 h-5" />
-                  </button>
+                  </Button>
 
-                  <button
+                  <Button
+                    variant="secondary"
                     onClick={() => handleOpenModal(workflow)}
-                    className={`p-2 bg-muted rounded hover:opacity-90 transition-opacity`}
+                    className="p-2 rounded hover:opacity-90 transition-opacity"
                     title="编辑"
                   >
                     <PencilIcon className="w-5 h-5" />
-                  </button>
+                  </Button>
 
-                  <button
+                  <Button
+                    variant="danger"
                     onClick={() => handleDeleteWorkflow(workflow.id)}
-                    className={`p-2 bg-destructive/15 rounded hover:opacity-90 transition-opacity`}
+                    className="p-2 rounded hover:opacity-90 transition-opacity"
                     title="删除"
                   >
                     <TrashIcon className="w-5 h-5 text-destructive" />
-                  </button>
+                  </Button>
                 </div>
               </div>
 
@@ -377,7 +390,7 @@ const DagSchedulerPage: React.FC = () => {
                 <div className="space-y-2">
                   {workflow.tasks.map((task, index) => (
                     <div key={task.id} className={`flex items-center gap-4 p-3 bg-muted rounded-lg`}>
-                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white">
+                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-background">
                         <span className="text-sm font-medium">{index + 1}</span>
                       </div>
 
@@ -386,11 +399,11 @@ const DagSchedulerPage: React.FC = () => {
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
                           <span className={`text-sm font-medium text-foreground`}>{task.name}</span>
-                          <span className={`px-2 py-0.5 text-xs bg-card text-tertiary rounded`}>
+                          <Badge variant="secondary" className="text-xs">
                             {task.type === 'agent' ? '智能体' :
                              task.type === 'data' ? '数据' :
                              task.type === 'calculation' ? '计算' : '通知'}
-                          </span>
+                          </Badge>
                         </div>
                         {task.dependencies.length > 0 && (
                           <div className="text-xs text-tertiary mt-1">
@@ -416,35 +429,35 @@ const DagSchedulerPage: React.FC = () => {
       {/* 创建/编辑模态框 */}
       {showModal && editingWorkflow && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className={`bg-card rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto`}>
-            <h2 className={`text-2xl font-bold text-foreground mb-4`}>
+          <Card className="p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <h2 className={`text-h2 font-bold text-foreground mb-4`}>
               {workflows.find(w => w.id === editingWorkflow.id) ? '编辑工作流' : '创建工作流'}
             </h2>
 
             <div className="space-y-4">
               {/* 工作流名称 */}
               <div>
-                <label className={`block text-sm font-medium text-foreground mb-1`}>
+                <Label className={`block text-sm font-medium text-foreground mb-1`}>
                   工作流名称 *
-                </label>
-                <input
+                </Label>
+                <Input
                   type="text"
                   value={editingWorkflow.name}
                   onChange={(e) => setEditingWorkflow(prev => prev ? { ...prev, name: e.target.value } : null)}
-                  className={`w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary`}
+                  className="px-3 py-2 rounded-lg"
                   placeholder="输入工作流名称"
                 />
               </div>
 
               {/* 工作流描述 */}
               <div>
-                <label className={`block text-sm font-medium text-foreground mb-1`}>
+                <Label className={`block text-sm font-medium text-foreground mb-1`}>
                   描述 *
-                </label>
-                <textarea
+                </Label>
+                <Textarea
                   value={editingWorkflow.description}
                   onChange={(e) => setEditingWorkflow(prev => prev ? { ...prev, description: e.target.value } : null)}
-                  className={`w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary`}
+                  className="px-3 py-2 rounded-lg"
                   rows={3}
                   placeholder="输入工作流描述"
                 />
@@ -452,14 +465,14 @@ const DagSchedulerPage: React.FC = () => {
 
               {/* 调度配置 */}
               <div>
-                <label className={`block text-sm font-medium text-foreground mb-1`}>
+                <Label className={`block text-sm font-medium text-foreground mb-1`}>
                   Cron 调度表达式 *
-                </label>
-                <input
+                </Label>
+                <Input
                   type="text"
                   value={editingWorkflow.schedule}
                   onChange={(e) => setEditingWorkflow(prev => prev ? { ...prev, schedule: e.target.value } : null)}
-                  className={`w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary font-mono`}
+                  className="px-3 py-2 rounded-lg font-mono"
                   placeholder="0 0 * * *"
                 />
                 <p className="text-xs text-tertiary mt-1">
@@ -469,26 +482,26 @@ const DagSchedulerPage: React.FC = () => {
 
               {/* 状态 */}
               <div>
-                <label className={`block text-sm font-medium text-foreground mb-1`}>
+                <Label className={`block text-sm font-medium text-foreground mb-1`}>
                   状态
-                </label>
-                <select
+                </Label>
+                <Select
                   value={editingWorkflow.status}
                   onChange={(e) => setEditingWorkflow(prev => prev ? { ...prev, status: e.target.value as DagWorkflow['status'] } : null)}
-                  className={`w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary`}
+                  className="px-3 py-2 rounded-lg"
                 >
                   <option value="active">运行中</option>
                   <option value="paused">已暂停</option>
                   <option value="stopped">已停止</option>
                   <option value="error">错误</option>
-                </select>
+                </Select>
               </div>
 
               {/* 任务配置（简化版） */}
               <div>
-                <label className={`block text-sm font-medium text-foreground mb-1`}>
+                <Label className={`block text-sm font-medium text-foreground mb-1`}>
                   任务配置
-                </label>
+                </Label>
                 <div className={`p-4 bg-muted rounded-lg text-sm text-tertiary`}>
                   <p>任务配置界面正在开发中...</p>
                   <p>当前工作流有 {editingWorkflow.tasks.length} 个任务</p>
@@ -498,24 +511,26 @@ const DagSchedulerPage: React.FC = () => {
 
             {/* 按钮组 */}
             <div className="flex gap-4 mt-6">
-              <button
+              <Button
+                variant="primary"
                 onClick={handleSaveWorkflow}
                 disabled={!editingWorkflow.name || !editingWorkflow.description}
-                className={`flex-1 px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed`}
+                className="flex-1 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
               >
                 保存
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="secondary"
                 onClick={() => {
                   setShowModal(false)
                   setEditingWorkflow(null)
                 }}
-                className={`flex-1 px-4 py-2 bg-muted text-foreground rounded-lg hover:opacity-90 transition-opacity`}
+                className="flex-1 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
               >
                 取消
-              </button>
+              </Button>
             </div>
-          </div>
+          </Card>
         </div>
       )}
     </PageContainer>

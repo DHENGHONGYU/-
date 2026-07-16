@@ -4,6 +4,9 @@ import { Star, MessageSquare, CheckCircle2, TrendingUp, Clock } from 'lucide-rea
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Button } from '@/components/atoms/Button'
 import { Badge } from '@/components/atoms/Badge'
+import { Select } from '@/components/atoms/Select'
+import { Textarea } from '@/components/atoms/Textarea'
+import { Label } from '@/components/atoms/Label'
 import {
   Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage,
 } from '@/components/atoms/Breadcrumb'
@@ -97,40 +100,40 @@ export default function AgentFeedbackPage(): React.JSX.Element {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium">评分</label>
+              <Label className="text-sm font-medium">评分</Label>
               <div className="flex gap-1">
                 {[1, 2, 3, 4, 5].map((rating) => (
-                  <button
+                  <Button
                     key={rating}
+                    variant="ghost"
                     type="button"
-                    className={`p-1 rounded-md transition-colors ${
+                    className={`p-1 rounded-md ${
                       selectedRating >= rating ? 'text-warning' : 'text-muted-foreground'
                     }`}
                     onClick={() => setSelectedRating(rating)}
                   >
                     <Star className={`h-6 w-6 ${selectedRating >= rating ? 'fill-current' : ''}`} />
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">类别</label>
-              <select
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              <Label className="text-sm font-medium">类别</Label>
+              <Select
+                className="rounded-md"
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value as AgentFeedback['category'])}
               >
                 {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
                   <option key={key} value={key}>{label}</option>
                 ))}
-              </select>
+              </Select>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">评论</label>
-              <textarea
-                className="w-full min-h-[80px] rounded-md border border-input bg-background px-3 py-2 text-sm"
+              <Label className="text-sm font-medium">评论</Label>
+              <Textarea
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 placeholder="描述您的反馈..."
