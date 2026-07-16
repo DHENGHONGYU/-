@@ -28,7 +28,7 @@ import {
   BreadcrumbPage,
 } from '@/components/atoms/Breadcrumb'
 import { useAgentStore } from '@/store/agentStore'
-import { getAllAgentComponents } from '@/agents/agentComponentRegistry'
+import { getAllAgentComponents } from '@/components/organisms/agent/agentComponentRegistry'
 import { PageContainer, PageHeader } from '@/components/templates'
 
 
@@ -197,7 +197,7 @@ export default function AgentHubPage(): React.JSX.Element {
                   <Icon className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{card.value}</p>
+                  <p className="text-h2 font-bold">{card.value}</p>
                   <p className="text-sm text-muted-foreground">{card.label}</p>
                 </div>
               </CardContent>
