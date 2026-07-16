@@ -14,6 +14,9 @@ interface LlmStatsCardsProps {
   selectedPreset: string
 }
 
+/**
+ * LlmStatsCards
+ */
 export function LlmStatsCards({ selectedPreset }: LlmStatsCardsProps): React.JSX.Element {
   const currentModelName = selectedPreset
     ? (getPresetById(selectedPreset)?.name ?? '自定义')
@@ -27,7 +30,7 @@ export function LlmStatsCards({ selectedPreset }: LlmStatsCardsProps): React.JSX
             <Sparkles className="h-5 w-5" />
           </div>
           <div>
-            <p className="text-2xl font-bold">{currentModelName}</p>
+            <p className="text-h2 font-bold">{currentModelName}</p>
             <p className="text-sm text-muted-foreground">当前模型</p>
           </div>
         </CardContent>
@@ -39,7 +42,7 @@ export function LlmStatsCards({ selectedPreset }: LlmStatsCardsProps): React.JSX
             <Key className="h-5 w-5" />
           </div>
           <div>
-            <p className="text-2xl font-bold">{isLlmApiKeyConfigured() ? '已配置' : '未配置'}</p>
+            <p className="text-h2 font-bold">{isLlmApiKeyConfigured() ? '已配置' : '未配置'}</p>
             <p className="text-sm text-muted-foreground">API Key</p>
           </div>
         </CardContent>
@@ -51,7 +54,7 @@ export function LlmStatsCards({ selectedPreset }: LlmStatsCardsProps): React.JSX
             <Activity className="h-5 w-5" />
           </div>
           <div>
-            <p className="text-2xl font-bold">0</p>
+            <p className="text-h2 font-bold">0</p>
             <p className="text-sm text-muted-foreground">今日调用次数</p>
           </div>
         </CardContent>
@@ -63,7 +66,7 @@ export function LlmStatsCards({ selectedPreset }: LlmStatsCardsProps): React.JSX
             <Bot className="h-5 w-5" />
           </div>
           <div>
-            <p className="text-2xl font-bold">0</p>
+            <p className="text-h2 font-bold">0</p>
             <p className="text-sm text-muted-foreground">活跃 Agent</p>
           </div>
         </CardContent>

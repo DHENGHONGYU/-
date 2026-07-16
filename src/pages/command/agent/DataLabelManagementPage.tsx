@@ -7,9 +7,15 @@ import {
   ArrowUpTrayIcon,
   MagnifyingGlassIcon,
 } from '@heroicons/react/24/outline'
-import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import { PageContainer } from '@/components/templates/PageContainer'
 import { PageHeader } from '@/components/templates/PageHeader'
+import { Button } from '@/components/atoms/Button'
+import { Input } from '@/components/atoms/Input'
+import { Select } from '@/components/atoms/Select'
+import { Textarea } from '@/components/atoms/Textarea'
+import { Label } from '@/components/atoms/Label'
+import { Badge } from '@/components/atoms/Badge'
+import { Card } from '@/components/atoms/Card'
 
 import { nanoid } from 'nanoid'
 /**
@@ -45,7 +51,7 @@ const DataLabelManagementPage: React.FC = () => {
       id: 'label-001',
       name: '看涨',
       category: 'sentiment',
-      color: COLOR_TOKENS.up.tailwind,
+      color: 'bg-destructive',
       description: '表示对市场或个股的看涨情绪',
       exampleCount: 1250,
       createdAt: '2026-01-15',
@@ -55,7 +61,7 @@ const DataLabelManagementPage: React.FC = () => {
       id: 'label-002',
       name: '看跌',
       category: 'sentiment',
-      color: COLOR_TOKENS.danger.tailwind,
+      color: 'bg-destructive',
       description: '表示对市场或个股的看跌情绪',
       exampleCount: 980,
       createdAt: '2026-01-15',
@@ -65,7 +71,7 @@ const DataLabelManagementPage: React.FC = () => {
       id: 'label-003',
       name: '买入意图',
       category: 'intent',
-      color: COLOR_TOKENS.info.tailwind,
+      color: 'bg-info',
       description: '表示用户有买入股票的意图',
       exampleCount: 850,
       createdAt: '2026-02-20',
@@ -75,7 +81,7 @@ const DataLabelManagementPage: React.FC = () => {
       id: 'label-004',
       name: '卖出意图',
       category: 'intent',
-      color: COLOR_TOKENS.warning.tailwind,
+      color: 'bg-warning',
       description: '表示用户有卖出股票的意图',
       exampleCount: 720,
       createdAt: '2026-02-20',
@@ -85,7 +91,7 @@ const DataLabelManagementPage: React.FC = () => {
       id: 'label-005',
       name: '公司实体',
       category: 'entity',
-      color: COLOR_TOKENS.purple.tailwind,
+      color: 'bg-primary',
       description: '表示文本中提到的公司名称',
       exampleCount: 2100,
       createdAt: '2026-03-10',
@@ -109,7 +115,7 @@ const DataLabelManagementPage: React.FC = () => {
         id: `label-${nanoid(8)}`,
         name: '',
         category: 'custom',
-        color: COLOR_TOKENS.textPrimary.tailwind,
+        color: 'bg-foreground',
         description: '',
         exampleCount: 0,
         createdAt: new Date().toISOString().split('T')[0] ?? '',
@@ -206,53 +212,56 @@ const DataLabelManagementPage: React.FC = () => {
           {/* 搜索框 */}
           <div className="relative">
             <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-tertiary" />
-            <input
+            <Input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="搜索标签..."
-              className={`pl-10 pr-4 py-2 border ${'border-border'} rounded-lg focus:outline-none focus:ring-2 focus:ring-primary`}
+              className="pl-10 pr-4 py-2 rounded-lg"
             />
           </div>
 
           {/* 分类过滤 */}
-          <select
+          <Select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value as DataLabel['category'] | 'all')}
-            className={`px-4 py-2 border ${'border-border'} rounded-lg focus:outline-none focus:ring-2 focus:ring-primary`}
+            className="px-4 py-2 rounded-lg"
           >
             <option value="all">全部分类</option>
             <option value="sentiment">情感</option>
             <option value="intent">意图</option>
             <option value="entity">实体</option>
             <option value="custom">自定义</option>
-          </select>
+          </Select>
         </div>
 
         <div className="flex gap-2">
-          <button
+          <Button
+            variant="secondary"
             onClick={handleImportLabels}
-            className={`flex items-center gap-2 px-4 py-2 ${'bg-muted'} ${'text-foreground'} rounded-lg hover:opacity-90 transition-opacity`}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
           >
             <ArrowUpTrayIcon className="w-5 h-5" />
             导入
-          </button>
+          </Button>
 
-          <button
+          <Button
+            variant="secondary"
             onClick={handleExportLabels}
-            className={`flex items-center gap-2 px-4 py-2 ${'bg-muted'} ${'text-foreground'} rounded-lg hover:opacity-90 transition-opacity`}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
           >
             <ArrowDownTrayIcon className="w-5 h-5" />
             导出
-          </button>
+          </Button>
 
-          <button
+          <Button
+            variant="primary"
             onClick={() => handleOpenModal()}
-            className={`flex items-center gap-2 px-4 py-2 ${'bg-destructive'} text-destructive-foreground rounded-lg hover:opacity-90 transition-opacity`}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
           >
             <PlusIcon className="w-5 h-5" />
             创建标签
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -260,23 +269,23 @@ const DataLabelManagementPage: React.FC = () => {
       <div className="mb-6 grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className={`${'bg-card'} p-4 rounded-lg shadow-sm`}>
           <div className={`text-sm ${'text-tertiary'}`}>总标签数</div>
-          <div className={`text-2xl font-bold ${'text-foreground'}`}>{labels.length}</div>
+          <div className={`text-h2 font-bold ${'text-foreground'}`}>{labels.length}</div>
         </div>
         <div className={`${'bg-card'} p-4 rounded-lg shadow-sm`}>
           <div className={`text-sm ${'text-tertiary'}`}>总示例数</div>
-          <div className={`text-2xl font-bold ${'text-foreground'}`}>
+          <div className={`text-h2 font-bold ${'text-foreground'}`}>
             {labels.reduce((sum, l) => sum + l.exampleCount, 0).toLocaleString()}
           </div>
         </div>
         <div className={`${'bg-card'} p-4 rounded-lg shadow-sm`}>
           <div className={`text-sm ${'text-tertiary'}`}>情感标签</div>
-          <div className={`text-2xl font-bold ${'text-foreground'}`}>
+          <div className={`text-h2 font-bold ${'text-foreground'}`}>
             {labels.filter(l => l.category === 'sentiment').length}
           </div>
         </div>
         <div className={`${'bg-card'} p-4 rounded-lg shadow-sm`}>
           <div className={`text-sm ${'text-tertiary'}`}>意图标签</div>
-          <div className={`text-2xl font-bold ${'text-foreground'}`}>
+          <div className={`text-h2 font-bold ${'text-foreground'}`}>
             {labels.filter(l => l.category === 'intent').length}
           </div>
         </div>
@@ -292,17 +301,14 @@ const DataLabelManagementPage: React.FC = () => {
             {/* 标签头部 */}
             <div className="flex justify-between items-start mb-4">
               <div className="flex items-center gap-3">
-                <div
-                  className="w-4 h-4 rounded-full"
-                  style={{ backgroundColor: label.color }}
-                />
-                <h3 className={`text-lg font-semibold ${'text-foreground'}`}>
+                <div className={`w-4 h-4 rounded-full ${label.color}`} />
+                <h3 className={`text-h3 font-semibold ${'text-foreground'}`}>
                   {label.name}
                 </h3>
               </div>
-              <span className={`px-2 py-1 text-xs font-medium rounded ${'bg-muted'} ${'text-muted-foreground'}`}>
+              <Badge variant="secondary" className="text-xs">
                 {getCategoryLabel(label.category)}
-              </span>
+              </Badge>
             </div>
 
             {/* 标签描述 */}
@@ -328,20 +334,22 @@ const DataLabelManagementPage: React.FC = () => {
 
             {/* 操作按钮 */}
             <div className="flex gap-2">
-              <button
+              <Button
+                variant="secondary"
                 onClick={() => handleOpenModal(label)}
-                className={`flex-1 flex items-center justify-center gap-1 px-3 py-2 ${'bg-muted'} ${'text-foreground'} rounded hover:opacity-90 transition-opacity`}
+                className="flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-lg hover:opacity-90 transition-opacity"
               >
                 <PencilIcon className="w-4 h-4" />
                 编辑
-              </button>
+              </Button>
 
-              <button
+              <Button
+                variant="danger"
                 onClick={() => handleDeleteLabel(label.id)}
-                className={`flex items-center justify-center px-3 py-2 ${'bg-destructive'} text-destructive-foreground rounded hover:opacity-90 transition-opacity`}
+                className="flex items-center justify-center px-3 py-2 rounded-lg hover:opacity-90 transition-opacity"
               >
                 <TrashIcon className="w-4 h-4" />
-              </button>
+              </Button>
             </div>
           </div>
         ))}
@@ -350,57 +358,58 @@ const DataLabelManagementPage: React.FC = () => {
       {/* 创建/编辑模态框 */}
       {showModal && editingLabel && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className={`${'bg-card'} rounded-lg p-6 w-full max-w-lg`}>
-            <h2 className={`text-2xl font-bold ${'text-foreground'} mb-4`}>
+          <Card className="p-6 w-full max-w-lg">
+            <h2 className={`text-h2 font-bold ${'text-foreground'} mb-4`}>
               {labels.find(l => l.id === editingLabel.id) ? '编辑标签' : '创建标签'}
             </h2>
 
             <div className="space-y-4">
               {/* 标签名称 */}
               <div>
-                <label className={`block text-sm font-medium ${'text-foreground'} mb-1`}>
+                <Label className={`block text-sm font-medium ${'text-foreground'} mb-1`}>
                   标签名称 *
-                </label>
-                <input
+                </Label>
+                <Input
                   type="text"
                   value={editingLabel.name}
                   onChange={(e) => setEditingLabel(prev => prev ? { ...prev, name: e.target.value } : null)}
-                  className={`w-full px-3 py-2 border ${'border-border'} rounded-lg focus:outline-none focus:ring-2 focus:ring-primary`}
+                  className="px-3 py-2 rounded-lg"
                   placeholder="输入标签名称"
                 />
               </div>
 
               {/* 标签分类 */}
               <div>
-                <label className={`block text-sm font-medium ${'text-foreground'} mb-1`}>
+                <Label className={`block text-sm font-medium ${'text-foreground'} mb-1`}>
                   分类 *
-                </label>
-                <select
+                </Label>
+                <Select
                   value={editingLabel.category}
                   onChange={(e) => setEditingLabel(prev => prev ? { ...prev, category: e.target.value as DataLabel['category'] } : null)}
-                  className={`w-full px-3 py-2 border ${'border-border'} rounded-lg focus:outline-none focus:ring-2 focus:ring-primary`}
+                  className="px-3 py-2 rounded-lg"
                 >
                   <option value="sentiment">情感</option>
                   <option value="intent">意图</option>
                   <option value="entity">实体</option>
                   <option value="custom">自定义</option>
-                </select>
+                </Select>
               </div>
 
               {/* 标签颜色 */}
               <div>
-                <label className={`block text-sm font-medium ${'text-foreground'} mb-1`}>
+                <Label className={`block text-sm font-medium ${'text-foreground'} mb-1`}>
                   颜色 *
-                </label>
+                </Label>
                 <div className="flex gap-2">
-                  {[COLOR_TOKENS.up.tailwind, COLOR_TOKENS.danger.tailwind, COLOR_TOKENS.info.tailwind, COLOR_TOKENS.warning.tailwind, COLOR_TOKENS.purple.tailwind, COLOR_TOKENS.textPrimary.tailwind].map(color => (
-                    <button
+                  {['bg-destructive', 'bg-destructive', 'bg-info', 'bg-warning', 'bg-primary', 'bg-foreground'].map(color => (
+                    <Button
                       key={color}
+                      variant="ghost"
+                      type="button"
                       onClick={() => setEditingLabel(prev => prev ? { ...prev, color } : null)}
-                      className={`w-8 h-8 rounded-full border-2 ${
+                      className={`w-8 h-8 rounded-full border-2 p-0 ${
                         editingLabel.color === color ? 'border-foreground' : 'border-border'
-                      }`}
-                      style={{ backgroundColor: color }}
+                      } ${color}`}
                     />
                   ))}
                 </div>
@@ -408,13 +417,13 @@ const DataLabelManagementPage: React.FC = () => {
 
               {/* 标签描述 */}
               <div>
-                <label className={`block text-sm font-medium ${'text-foreground'} mb-1`}>
+                <Label className={`block text-sm font-medium ${'text-foreground'} mb-1`}>
                   描述 *
-                </label>
-                <textarea
+                </Label>
+                <Textarea
                   value={editingLabel.description}
                   onChange={(e) => setEditingLabel(prev => prev ? { ...prev, description: e.target.value } : null)}
-                  className={`w-full px-3 py-2 border ${'border-border'} rounded-lg focus:outline-none focus:ring-2 focus:ring-primary`}
+                  className="px-3 py-2 rounded-lg"
                   rows={3}
                   placeholder="输入标签描述"
                 />
@@ -423,24 +432,26 @@ const DataLabelManagementPage: React.FC = () => {
 
             {/* 按钮组 */}
             <div className="flex gap-4 mt-6">
-              <button
+              <Button
+                variant="primary"
                 onClick={handleSaveLabel}
                 disabled={!editingLabel.name || !editingLabel.description}
-                className={`flex-1 px-4 py-2 ${'bg-destructive'} text-destructive-foreground rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed`}
+                className="flex-1 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
               >
                 保存
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="secondary"
                 onClick={() => {
                   setShowModal(false)
                   setEditingLabel(null)
                 }}
-                className={`flex-1 px-4 py-2 ${'bg-muted'} ${'text-foreground'} rounded-lg hover:opacity-90 transition-opacity`}
+                className="flex-1 px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
               >
                 取消
-              </button>
+              </Button>
             </div>
-          </div>
+          </Card>
         </div>
       )}
     </PageContainer>
