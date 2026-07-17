@@ -159,7 +159,7 @@ export function extractRelativeLinks(content: string): RawLink[] {
       offset += line.length + 1
       continue
     }
-    // 链接 URL 允许包含一个内层括号对（如文件名 `v9核心数据字典与类型定义(整合版).md`），
+    // 链接 URL 允许包含一个内层括号对（如文件名 `docs/reference/v9核心数据字典与类型定义(整合版).md`），
     // 与 GitHub 解析行为一致；否则半角 `)` 会错误截断 URL。
     const regex = /\[([^\]]+)\]\(((?:[^()]+|\([^()]*\))*)\)/g
     let match
@@ -574,10 +574,18 @@ export function syncCrossReferences(
   }
 
   // 2. 更新索引文件（changed 作用域下增量合并，避免全仓库重写）
-  const indexPath = join(docsDir, 'registry-index.md')
+  const indexPath = join(docsDir, '00-meta', 'registry-index.md')
   try {
     const entries = scope === 'changed' ? mergeIndexEntries(indexPath, scannedFiles) : buildIndexEntries(docsDir)
-    const newIndex = renderIndex(entries)
+    // 修复路径基准：索引文件位于 docs/00-meta/ 子目录，但 entries.relativePath 是相对 docs 根的路径；
+    // 若直接作为链接目标，浏览器会按子目录解析导致前缀翻倍（如指向 00-meta/00-meta/x.md）。
+    // 此处将每个 entry 的 relativePath 转换为「相对索引文件所在目录」。
+    const indexDir = dirname(indexPath)
+    const adjustedEntries = entries.map((e) => ({
+      ...e,
+      relativePath: relative(indexDir, resolve(docsDir, e.relativePath)).replace(/\\/g, '/'),
+    }))
+    const newIndex = renderIndex(adjustedEntries)
     let shouldWrite = true
 
     if (existsSync(indexPath)) {
