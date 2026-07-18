@@ -21,9 +21,7 @@ export interface StockDictItem {
 
 /**
  * A+H 股全市场股票条目（四交易所完整列表，分块定义以避免 TS 联合类型爆炸）
- * 含 A 股 ~5200 只（沪市+深市主板+创业板+科创板+AB股）
- * 含 北交所 ~328 只
- * 含 H 股 ~2800 只（港股主板+创业板）
+ * 含 A 股 5200 只（沪 2308 + 深 2892）、北交所 328、H 股 2803。
  */
 const CHUNK_0: StockDictItem[] = [
   { symbol: '600000', name: '浦发银行', market: 'SH' },
