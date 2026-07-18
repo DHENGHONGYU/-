@@ -19,7 +19,7 @@ import { fileURLToPath } from 'node:url'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-const ROOT = path.resolve(__dirname, '..')
+const ROOT = path.resolve(__dirname, '..', '..')
 
 const PATHS = {
   dbConfig: path.join(ROOT, 'src', 'config', 'dbConfig.ts'),
@@ -362,6 +362,9 @@ function audit(): AuditIssue[] {
     'resetAll',
     'importAll',
     'exportAll',
+    // 通用删除动作：目标 store 由 payload 传入，不绑定单一 store（rolePermissionMapper 已将其纳入权限体系），
+    // 语义上等同 manager 级操作，无需在 ACTION_TO_STORE_MAP 中映射。
+    'deleteRecord',
   ])
   const mappedActions = new Set(Object.keys(actionToStore))
   for (const actionKey of actionKeys) {

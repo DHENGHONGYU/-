@@ -48,6 +48,12 @@ export {
   sentimentCacheStore,
   missingReportStore,
   customAgentStore, // 阶段 B-1：用户自定义智能体（v26 新增）
+  collectionHistoryStore, // v31 采集历史
+  conflictLogStore, // v31 冲突日志
+  fileImportRecordStore, // v31 文件导入记录
+  scheduleConfigStore, // v31 调度配置
+  proofreadReportStore, // v31 校对报告
+  analysisResultStore, // v30 分析结果
 } from './dataLayerContentStores'
 export {
   newsBookmarkStore, // v13 资讯收藏
@@ -89,6 +95,12 @@ import {
   sentimentCacheStore,
   missingReportStore,
   customAgentStore,
+  collectionHistoryStore,
+  conflictLogStore,
+  fileImportRecordStore,
+  scheduleConfigStore,
+  proofreadReportStore,
+  analysisResultStore,
 } from './dataLayerContentStores'
 import {
   newsBookmarkStore,
@@ -161,5 +173,12 @@ export const dataLayer = {
   workflowSchedules: workflowScheduleStore,
   workflowTriggers: workflowTriggerStore,
   workflowRuns: workflowRunStore,
+  // v30/v31 数据网关补全 Store（原未接入 barrel，审计告警）
+  collectionHistory: collectionHistoryStore,
+  conflictLog: conflictLogStore,
+  fileImportRecords: fileImportRecordStore,
+  scheduleConfigs: scheduleConfigStore,
+  proofreadReports: proofreadReportStore,
+  analysisResults: analysisResultStore,
   manager: dataManager,
 }

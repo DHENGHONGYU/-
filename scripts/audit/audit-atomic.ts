@@ -2,7 +2,10 @@
  * @module audit-atomic
  * @description 原子组件层级边界审计
  *
- * 校验 `src/components/` 下所有组件是否遵守 Atomic Design 层级约束：
+ * 校验 `src/components/` 与 `src/cockpit/widgets/` 下所有组件是否遵守 Atomic Design 层级约束：
+ * - `src/components/`：依据 componentRegistry 推断层级（盲区 1~4 已治理）
+ * - `src/cockpit/widgets/`：驾驶舱 widget 由 widgetRegistry 管理，按顶层有机体（organism）处理，
+ *   原子边界校验同样生效，但不触发 componentRegistry 的 'unregistered' 警告（盲区 5 闭合）
  * - Atom  ：只可由 Tailwind/Tokens 组装，禁止 import store/service/molecule/organism/template/page/app/business
  * - Molecule：只可由 Atom 组合，禁止 import organism/template/store/service/page/app/business
  * - Template：只可由 Molecule+Atom 组合，禁止 import organism/store/service/page/app/business
@@ -18,13 +21,14 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { runAuditPipeline, colorize, type AuditReport } from './_debug/_audit-pipeline.ts'
-import { COMPONENT_REGISTRY, type AtomicLevel } from '../src/components/componentRegistry'
+import { runAuditPipeline, colorize, type AuditReport } from './_debug/_audit-pipeline'
+import { COMPONENT_REGISTRY, type AtomicLevel } from '../../src/components/componentRegistry'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-const ROOT = path.resolve(__dirname, '..')
+const ROOT = path.resolve(__dirname, '..', '..')
 const COMPONENTS_DIR = path.join(ROOT, 'src', 'components')
+const COCKPIT_WIDGETS_DIR = path.join(ROOT, 'src', 'cockpit', 'widgets')
 
 // ============================================================
 // 类型
@@ -190,12 +194,12 @@ export function scan(): AtomicReport {
   const violations: AtomicViolation[] = []
   let totalFiles = 0
 
-  const walk = (dir: string): void => {
+  const walk = (dir: string, rootDir: string, isCockpit = false): void => {
     const entries = fs.readdirSync(dir, { withFileTypes: true })
     for (const entry of entries) {
       const full = path.join(dir, entry.name)
       if (entry.isDirectory()) {
-        walk(full)
+        walk(full, rootDir, isCockpit)
         continue
       }
       if (!/\.(ts|tsx)$/.test(entry.name)) continue
@@ -204,7 +208,7 @@ export function scan(): AtomicReport {
       if (entry.name === 'componentRegistry.ts') continue
 
       totalFiles++
-      const relativePath = path.relative(COMPONENTS_DIR, full).split(path.sep).join('/')
+      const relativePath = path.relative(rootDir, full).split(path.sep).join('/')
       const content = fs.readFileSync(full, 'utf-8')
 
       const dirTier = tierFromDir(relativePath)
@@ -221,6 +225,10 @@ export function scan(): AtomicReport {
       let tier: AtomicLevel
       if (dirTier === 'atom' || dirTier === 'molecule' || dirTier === 'template' || dirTier === 'organism') {
         tier = dirTier
+      } else if (isCockpit) {
+        // 驾驶舱 widget 由 widgetRegistry 管理（非 componentRegistry），按顶层有机体处理；
+        // 不触发 'unregistered' 警告，但原子边界校验仍生效（organism 级无禁止项）。
+        tier = 'organism'
       } else {
         // 旧位置业务组件：依据 registry 推断（同时匹配 sourcePath / targetPath）
         const regInfo = levelFromRegistry(`src/components/${relativePath}`)
@@ -287,7 +295,8 @@ export function scan(): AtomicReport {
     }
   }
 
-  walk(COMPONENTS_DIR)
+  walk(COMPONENTS_DIR, COMPONENTS_DIR, false)
+  if (fs.existsSync(COCKPIT_WIDGETS_DIR)) walk(COCKPIT_WIDGETS_DIR, COCKPIT_WIDGETS_DIR, true)
 
   const totalViolations = violations.length
   const totalWarnings = violations.filter((v) => v.level === 'warning').length
