@@ -487,6 +487,8 @@ export interface WidgetConfig {
   size: { cols: number; rows: number }
   position?: { x: number; y: number }
   title: string
+  /** widget 分类（用于驾驶舱标签筛选） */
+  category?: string
   settings: Record<string, unknown>
   visible: boolean
   collapsed: boolean

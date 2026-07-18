@@ -48,6 +48,30 @@ function getAgentsVersion(): string {
   return match?.[1] ?? 'unknown'
 }
 
+/**
+ * 读取 audit:jsdoc 最新写入的 JSON 报告，返回缺失 JSDoc 的导出实体数量。
+ *
+ * 为何不直接 `npm run audit:jsdoc`：原实现用 `run('npm run audit:jsdoc --silent')` 经 npm 派生子进程，
+ * 在 git-bash / 沙箱环境下 npm 偶发 "Could not determine Node.js install directory" 失败，
+ * 导致 parseNumberField 回退为 0（健康报告 jsdoc 维度失真）。
+ * 故改为直接用 tsx 运行审计并读取其 JSON 产物（单一事实源）。
+ */
+function readLatestJsdocReport(): number {
+  try {
+    const dir = path.join(ROOT, 'docs', 'reports', 'audit')
+    if (!fs.existsSync(dir)) return 0
+    const files = fs
+      .readdirSync(dir)
+      .filter((f) => f.startsWith('jsdoc-audit-') && f.endsWith('.json'))
+      .sort()
+    if (files.length === 0) return 0
+    const latest = JSON.parse(fs.readFileSync(path.join(dir, files[files.length - 1]), 'utf-8'))
+    return typeof latest.count === 'number' ? latest.count : latest.entries?.length ?? 0
+  } catch {
+    return 0
+  }
+}
+
 function main(): void {
   // 1. 跨层调用
   const layersOutput = run('npm run audit:layers --silent')
@@ -67,8 +91,9 @@ function main(): void {
   const duplicateConditions = parseNumberField(complexityOutput, (json) => json.summary?.duplicateConditions || 0, /重复 if 条件[\s\S]*?当前:\s*(\d+)/)
 
   // 4. JSDoc 缺失
-  const jsdocOutput = run('npm run audit:jsdoc --silent')
-  const jsdocMissing = parseNumberField(jsdocOutput, (json) => json.summary?.totalMissing || 0, /发现\s*(\d+)\s*个导出实体缺少 JSDoc/)
+  // 直接用 tsx 运行审计（规避 npm 在 git-bash 下的派生子进程失败），再读取其 JSON 报告。
+  run('node ./node_modules/tsx/dist/cli.mjs scripts/audit/audit-jsdoc.ts')
+  const jsdocMissing = { data: readLatestJsdocReport() }
 
   // 5. 文档同步
   const docsOutput = run('npm run audit:docs --silent')

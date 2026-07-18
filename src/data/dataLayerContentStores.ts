@@ -309,3 +309,35 @@ export const proofreadReportStore = {
     return list[0]
   },
 }
+
+/** 分析结果条目（内联类型，数据层操作专用；与 analysis_results store 对齐：keyPath=docId） */
+interface AnalysisResultEntry {
+  docId: string
+  symbol: string
+  version: string
+  createdAt: string
+  [key: string]: unknown
+}
+
+/**
+ * 分析结果 Store — analysis_results（v30 新增，AnalysisOrchestrator 持久化）
+ * 原仅创建于 db-schema 与 STORE_NAME，缺 domain store 对象，未接入 dataLayer barrel（审计告警）。
+ * module 使用 'analyzer' 以匹配 ACL_MATRIX[MODULE_ID.analyzer].write 的 analysisResults 授权。
+ */
+export const analysisResultStore = {
+  async save(entry: AnalysisResultEntry): Promise<DataLayerResult<void>> {
+    return sendWriteEnvelope('saveAnalysisResult', entry, 'analyzer')
+  },
+
+  async get(docId: string): Promise<AnalysisResultEntry | undefined> {
+    return queryGet<AnalysisResultEntry>(STORE_NAME.analysisResults, docId)
+  },
+
+  async list(): Promise<AnalysisResultEntry[]> {
+    return queryList<AnalysisResultEntry>(STORE_NAME.analysisResults)
+  },
+
+  async listBySymbol(symbol: string): Promise<AnalysisResultEntry[]> {
+    return queryByIndex<AnalysisResultEntry>(STORE_NAME.analysisResults, 'by-symbol', symbol)
+  },
+}

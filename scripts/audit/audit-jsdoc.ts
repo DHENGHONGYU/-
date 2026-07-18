@@ -93,26 +93,29 @@ function main(): void {
 
   if (entries.length === 0) {
     console.log('✅ 未发现缺失 JSDoc 的导出实体')
-    process.exit(0)
+  } else {
+    console.warn(`⚠️ 发现 ${entries.length} 个导出实体缺少 JSDoc：\n`)
+    for (const entry of entries.slice(0, 50)) {
+      console.warn(`  ${entry.file}:${entry.line}  ${entry.type} ${entry.name}`)
+    }
+    if (entries.length > 50) {
+      console.warn(`  ... 还有 ${entries.length - 50} 个未显示`)
+    }
   }
 
-  console.warn(`⚠️ 发现 ${entries.length} 个导出实体缺少 JSDoc：\n`)
-  for (const entry of entries.slice(0, 50)) {
-    console.warn(`  ${entry.file}:${entry.line}  ${entry.type} ${entry.name}`)
-  }
-  if (entries.length > 50) {
-    console.warn(`  ... 还有 ${entries.length - 50} 个未显示`)
-  }
+  // 始终写入报告文件（即使为 0 也要覆盖旧报告，保持单一事实源）
+  writeReport(entries)
 
-  // 报告写入文件但不阻断 CI（基线过高，先逐步治理）
+  // 当前基线较高，作为警告而非错误；治理完成后改为 process.exit(1)
+  process.exit(0)
+}
+
+function writeReport(entries: MissingEntry[]): void {
   const reportDir = path.join(process.cwd(), 'docs', 'reports', 'audit')
   fs.mkdirSync(reportDir, { recursive: true })
   const reportPath = path.join(reportDir, `jsdoc-audit-${new Date().toISOString().slice(0, 10)}.json`)
   fs.writeFileSync(reportPath, JSON.stringify({ count: entries.length, entries }, null, 2))
   console.log(`\n报告已写入：${reportPath}`)
-
-  // 当前基线较高，作为警告而非错误；治理完成后改为 process.exit(1)
-  process.exit(0)
 }
 
 main()
