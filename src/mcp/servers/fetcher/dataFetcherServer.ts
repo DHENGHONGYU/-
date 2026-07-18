@@ -176,6 +176,22 @@ export class DataFetcherServer extends MCPServerBase {
           }
         },
       },
+      {
+        name: 'check_health',
+        description: '检查行情数据采集器整体健康度',
+        inputSchema: {
+          type: 'object',
+          properties: {},
+          required: [],
+        },
+        handler: async () => {
+          const health = await checkFetcherHealth()
+          return {
+            content: [{ type: 'text', text: JSON.stringify(health) }],
+            isError: !health.ok,
+          }
+        },
+      },
     ]
   }
 
