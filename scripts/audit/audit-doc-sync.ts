@@ -30,7 +30,7 @@ import { execSync } from 'node:child_process'
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { join, relative, extname } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { runAuditPipeline, colorize, type AuditReport } from './_debug/_audit-pipeline.ts'
+import { runAuditPipeline, colorize, type AuditReport } from './_debug/_audit-pipeline'
 
 export interface Finding {
   file: string
@@ -49,7 +49,7 @@ export interface Report extends AuditReport {
 }
 
 import { dirname } from 'node:path'
-const ROOT = dirname(fileURLToPath(import.meta.url)).replace(/[\\/]scripts$/, '')
+const ROOT = dirname(fileURLToPath(import.meta.url)).replace(/[\\/]scripts(?:[\\/][^\\/]+)*$/, '')
 const SRC_DIR = join(ROOT, 'src')
 const DOCS_DIR = join(ROOT, 'docs')
 
