@@ -22,10 +22,22 @@ import { pearsonCorrelation, spearmanCorrelation } from '@/services/scoring/v6-e
 // 模拟数据生成器
 // ============================================================
 
-/** 生成正态分布随机数（Box-Muller） */
+/** 确定性 PRNG（mulberry32），固定种子消除合成数据随机性，根治统计显著性 flaky */
+function makeRng(seed: number): () => number {
+  let a = seed >>> 0
+  return function () {
+    a = (a + 0x6d2b79f5) | 0
+    let t = Math.imul(a ^ (a >>> 15), 1 | a)
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+  }
+}
+const rng = makeRng(0x9e3779b9)
+
+/** 生成正态分布随机数（Box-Muller，使用固定种子 RNG） */
 function gaussian(mean: number, std: number): number {
-  const u1 = Math.random() || 0.0001
-  const u2 = Math.random()
+  const u1 = rng() || 0.0001
+  const u2 = rng()
   const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2)
   return mean + std * z
 }
@@ -67,7 +79,7 @@ function generateFundamentalData(n: number) {
       F1_5: clamp(5 - quality * 0.5 + gaussian(0, 0.8)), // 负债率反向
       F1_6: clamp(quality * 0.5 + gaussian(1.5, 0.7)),  // 现金流
       F1_7: clamp(gaussian(2.5, 1.2)),                  // 研发独立
-      F1_8: clamp(5 - quality * 0.6 + gaussian(0.5, 0.9)), // PEG反向
+      F1_8: clamp(gaussian(2.5, 1)), // PEG 独立噪声（权重=0，应保持不显著，与 F2_8/F3_8 控制变量一致）
       // 新增因子
       F1_9: clamp(quality * 0.6 + gaussian(1, 0.8)),    // 应收周转率与质量正相关
       F1_10: clamp(quality * 0.5 + gaussian(1.5, 0.9)), // 存货周转率

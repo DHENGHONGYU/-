@@ -10,9 +10,15 @@
  * 子模块（从本文件拆分）：
  * - databridgeHandlers.ts: EnvelopeHandler 类族 + HandlerRegistry + createHandlerRegistry
  * - databridgeStrategyRouter.ts: STRATEGY_CHANNEL + routeToStrategy 策略路由逻辑
+ *
+ * @todo P1-16: 拆分计划（当前 957 行 CC=100，audit:split-quality 建议拆分）
+ *   Phase 1: 提取 routeToQuery/Event/Manager 到独立类（~200 行）
+ *   Phase 2: 提取 broadcast/subscribe/auditLog 到独立类（~150 行）
+ *   Phase 3: 提取 cache 逻辑到独立类（~100 行）
+ *   目标：主文件 < 400 行，CC < 30
  */
 
-import { ENVELOPE_ACTION, STORE_NAME, type DbOperation, type ModuleId, type StoreName } from '@/config/dbConfig'
+import { ENVELOPE_ACTION, ENVELOPE_TARGET, STORE_NAME, type DbOperation, type ModuleId, type StoreName } from '@/config/dbConfig'
 import { db } from '@/data/db'
 import { CHANGED_SUFFIX } from '@/constants/store-channels.constants'
 import { eventBus } from '@/lib/eventBus'
@@ -27,6 +33,7 @@ import {
   routeToStrategy,
   type StrategyRouterContext,
 } from './databridgeStrategyRouter'
+import { routeToQuery as routeToQueryFn, routeToEvent as routeToEventFn, routeToManager as routeToManagerFn } from './databridgeRouter'
 
 // re-export 子模块的公共 API，保持原导入路径兼容
 export { STRATEGY_CHANNEL } from './databridgeStrategyRouter'
@@ -127,6 +134,15 @@ const ACTION_TO_STORE_MAP: Record<string, StoreName> = {
   [ENVELOPE_ACTION.saveWorkflowRun]: STORE_NAME.workflowRuns,
   // ── RBAC 审计日志归档删除通道（v24 新增）──
   [ENVELOPE_ACTION.deleteRbacAuditLog]: STORE_NAME.rbacPermissionAuditLogs,
+  // ── 数据网关补全映射（v31 整改：原未映射导致 inferStore 抛 "Unknown action"，Store 写入静默失败）──
+  [ENVELOPE_ACTION.saveCollectionHistory]: STORE_NAME.collectionHistory,
+  [ENVELOPE_ACTION.deleteCollectionHistory]: STORE_NAME.collectionHistory,
+  [ENVELOPE_ACTION.saveConflictLog]: STORE_NAME.conflictLog,
+  [ENVELOPE_ACTION.saveFileImportRecord]: STORE_NAME.fileImportRecords,
+  [ENVELOPE_ACTION.saveScheduleConfig]: STORE_NAME.scheduleConfigs,
+  [ENVELOPE_ACTION.deleteScheduleConfig]: STORE_NAME.scheduleConfigs,
+  [ENVELOPE_ACTION.saveProofreadReport]: STORE_NAME.proofreadReports,
+  [ENVELOPE_ACTION.saveAnalysisResult]: STORE_NAME.analysisResults,
 }
 
 // 查询动作集合（目标 store 由 payload 传入，**不**走 ACTION_TO_STORE_MAP）
@@ -199,6 +215,20 @@ export class DataBridge {
   private fallbackQueue: FallbackQueue = fallbackQueue
   private handlerRegistry: HandlerRegistry = createHandlerRegistry()
   private readCache = new MemoryCache<unknown>({ namespace: 'databridge:read', defaultTTL: 10_000, maxSize: 200 })
+
+  /**
+   * 初始化数据库连接。
+   * 应用启动时调用，幂等：已初始化则直接返回。
+   */
+  async init(): Promise<void> {
+    if (db.isReady()) {
+      logger.debug('[DataBridge] init() called but already initialized, skipping')
+      return
+    }
+    logger.info('[DataBridge] init() called, initializing database...')
+    await db.init()
+    logger.info('[DataBridge] init() completed, database ready')
+  }
 
   /**
    * 查询数据（读操作）
@@ -360,6 +390,105 @@ export class DataBridge {
     this.readCache.clear()
   }
 
+  async exportAllData(source: ModuleId = 'system'): Promise<Record<string, unknown[]>> {
+    const startTs = Date.now()
+    logger.info(`[DataBridge] exportAllData() called: source="${source}"`)
+    await this.waitForDbReady()
+
+    const envelope = EnvelopeFactory.create(
+      {
+        source,
+        target: ENVELOPE_TARGET.system,
+        action: ENVELOPE_ACTION.exportAll,
+        traceId: `export-${nanoid(8)}`,
+      },
+      {},
+    )
+
+    const operation = inferOperation(ENVELOPE_ACTION.exportAll)
+    const targetStore = STORE_NAME.stocks
+    const shouldContinue = await this.assertAclWithFallback(envelope, targetStore, operation)
+    if (!shouldContinue) {
+      throw new EnvelopeError('Export rejected by ACL')
+    }
+
+    this.writeAuditLog(envelope, targetStore).catch((err) => {
+      logger.error(`[DataBridge] exportAll audit log failed`, { error: err })
+    })
+
+    const data = await db.export()
+    const duration = Date.now() - startTs
+    logger.info(`[DataBridge] exportAllData() completed: tables=${Object.keys(data).length}, duration=${duration}ms`)
+    return data
+  }
+
+  async importAllData(data: Record<string, unknown[]>, source: ModuleId = 'system'): Promise<void> {
+    const startTs = Date.now()
+    const tableCount = Object.keys(data).length
+    logger.info(`[DataBridge] importAllData() called: source="${source}", tables=${tableCount}`)
+    await this.waitForDbReady()
+
+    const envelope = EnvelopeFactory.create(
+      {
+        source,
+        target: ENVELOPE_TARGET.system,
+        action: ENVELOPE_ACTION.importAll,
+        traceId: `import-${nanoid(8)}`,
+      },
+      data,
+    )
+
+    const operation = inferOperation(ENVELOPE_ACTION.importAll)
+    const targetStore = STORE_NAME.stocks
+    const shouldContinue = await this.assertAclWithFallback(envelope, targetStore, operation)
+    if (!shouldContinue) {
+      throw new EnvelopeError('Import rejected by ACL')
+    }
+
+    this.writeAuditLog(envelope, targetStore).catch((err) => {
+      logger.error(`[DataBridge] importAll audit log failed`, { error: err })
+    })
+
+    await db.import(data)
+    this.invalidateAll()
+
+    const duration = Date.now() - startTs
+    logger.info(`[DataBridge] importAllData() completed: tables=${tableCount}, duration=${duration}ms`)
+  }
+
+  async resetAllData(source: ModuleId = 'system'): Promise<void> {
+    const startTs = Date.now()
+    logger.info(`[DataBridge] resetAllData() called: source="${source}"`)
+    await this.waitForDbReady()
+
+    const envelope = EnvelopeFactory.create(
+      {
+        source,
+        target: ENVELOPE_TARGET.system,
+        action: ENVELOPE_ACTION.resetAll,
+        traceId: `reset-${nanoid(8)}`,
+      },
+      {},
+    )
+
+    const operation = inferOperation(ENVELOPE_ACTION.resetAll)
+    const targetStore = STORE_NAME.stocks
+    const shouldContinue = await this.assertAclWithFallback(envelope, targetStore, operation)
+    if (!shouldContinue) {
+      throw new EnvelopeError('Reset rejected by ACL')
+    }
+
+    this.writeAuditLog(envelope, targetStore).catch((err) => {
+      logger.error(`[DataBridge] resetAll audit log failed`, { error: err })
+    })
+
+    await db.reset()
+    this.invalidateAll()
+
+    const duration = Date.now() - startTs
+    logger.info(`[DataBridge] resetAllData() completed: duration=${duration}ms`)
+  }
+
   private buildCacheKey(request: QueryRequest): string {
     const parts: string[] = [request.action, request.store]
     if (request.key != null) parts.push(`key=${request.key}`)
@@ -497,7 +626,8 @@ export class DataBridge {
     if (
       meta.action === ENVELOPE_ACTION.resetAll ||
       meta.action === ENVELOPE_ACTION.importAll ||
-      meta.action === ENVELOPE_ACTION.exportAll
+      meta.action === ENVELOPE_ACTION.exportAll ||
+      meta.action === ENVELOPE_ACTION.deleteRecord
     ) {
       logger.info(`[DataBridge] Routing to manager: action="${meta.action}"`)
       await this.routeToManager(envelope)
@@ -596,49 +726,13 @@ export class DataBridge {
   }
 
   private async routeToQuery(envelope: StandardEnvelope, store: StoreName): Promise<void> {
-    const { meta, payload } = envelope
-    
-    logger.info(`[DataBridge] routeToQuery() called: action="${meta.action}", store="${store}"`)
-
-    const queryRequest: QueryRequest = {
-      action: meta.action as QueryRequest['action'],
-      store,
-      key: payload != null && typeof payload === 'object' && 'key' in payload
-        ? String((payload as Record<string, unknown>).key)
-        : undefined,
-      indexName: payload != null && typeof payload === 'object' && 'indexName' in payload
-        ? String((payload as Record<string, unknown>).indexName)
-        : undefined,
-      indexValue: payload != null && typeof payload === 'object' && 'indexValue' in payload
-        ? (payload as Record<string, unknown>).indexValue
-        : undefined,
-      source: meta.source,
-    }
-
-    const result = await this.query(queryRequest)
-    
-    const newPayload = payload != null && typeof payload === 'object'
-      ? { ...(payload as Record<string, unknown>), queryResult: result }
-      : { queryResult: result }
-    
-    this.broadcast(`query:${store}`, {
-      meta: envelope.meta,
-      payload: newPayload,
-    })
-
-    logger.info(`[DataBridge] routeToQuery() completed: action="${meta.action}", success=${result.success}`)
+    // P1-16 Phase 1: 委托到 databridgeRouter.ts
+    await routeToQueryFn(envelope, store, this, this.broadcast.bind(this))
   }
 
   private async routeToEvent(envelope: StandardEnvelope): Promise<void> {
-    const { meta } = envelope
-    const eventChannel = `event:${meta.action.toLowerCase()}`
-    
-    logger.info(`[DataBridge] routeToEvent() called: action="${meta.action}", eventChannel="${eventChannel}"`)
-
-    this.broadcast(eventChannel, envelope)
-    this.broadcast('event:*', envelope)
-
-    logger.info(`[DataBridge] routeToEvent() completed: action="${meta.action}"`)
+    // P1-16 Phase 1: 委托到 databridgeRouter.ts
+    routeToEventFn(envelope, this.broadcast.bind(this))
   }
 
   get failedEnvelopes(): readonly StandardEnvelope[] {
@@ -694,42 +788,8 @@ export class DataBridge {
   }
 
   private async routeToManager(envelope: StandardEnvelope): Promise<void> {
-    const startTs = Date.now()
-    const { meta } = envelope
-    logger.debug(`[DataBridge] routeToManager() called: action="${meta.action}"`)
-
-    try {
-      switch (meta.action) {
-        case ENVELOPE_ACTION.resetAll: {
-          logger.info(`[DataBridge] Manager resetAll: clearing entire database`)
-          await db.reset()
-          break
-        }
-        case ENVELOPE_ACTION.importAll: {
-          const data = envelope.payload as Record<string, unknown[]>
-          const tableCount = Object.keys(data).length
-          const totalRecords = Object.values(data).reduce((sum, arr) => sum + arr.length, 0)
-          logger.info(`[DataBridge] Manager importAll: ${tableCount} tables, ${totalRecords} records`)
-          await db.import(data)
-          break
-        }
-        case ENVELOPE_ACTION.exportAll: {
-          logger.info(`[DataBridge] Manager exportAll: exporting all data`)
-          await db.export()
-          break
-        }
-        default: {
-          logger.error(`[DataBridge] routeToManager() failed: Unknown action "${meta.action}"`)
-          throw new EnvelopeError(`Unknown manager action: ${envelope.meta.action}`)
-        }
-      }
-
-      const duration = Date.now() - startTs
-      logger.info(`[DataBridge] routeToManager() completed: action="${meta.action}", duration=${duration}ms`)
-    } catch (err) {
-      logger.error(`[DataBridge] routeToManager() failed: action="${meta.action}"`, { error: err })
-      throw err
-    }
+    // P1-16 Phase 1: 委托到 databridgeRouter.ts
+    await routeToManagerFn(envelope)
   }
 
   private async writeAuditLog(

@@ -9,6 +9,9 @@ import { RouteGuard } from '@/core/routeGuard'
 import { initializeApp } from '@/services/system/bootstrapService'
 import { getLogger } from '@/lib/logger'
 import { useThemeStore, initSystemThemeListener } from '@/store/themeStore'
+import { initAllGlobalSubscriptions } from '@/store/initGlobalSubscriptions'
+import { widgetEngine } from '@/cockpit/core/widgetEngine'
+import { PRELOAD_WIDGETS } from '@/constants/cockpit.constants'
 import { useRuntimeTradingConfigStore } from '@/store/runtimeTradingConfigStore'
 // 显式 import 智能体系统入口，触发 initAgentSystem() 自动初始化
 // （src/agents/index.ts 在模块加载时通过 setTimeout 延迟 100ms 调用 initAgentSystem）
@@ -38,6 +41,16 @@ function AppContent(): React.JSX.Element {
         duration: 0,
       })
     })
+    // 全局Store订阅初始化（在widget懒加载前就绪，确保所有数据稳定）
+    // 统一初始化：信号、市场数据、双策略、风控等核心Store
+    initAllGlobalSubscriptions()
+
+    // 核心Widget预加载（渐进式加载，避免阻塞主线程）
+    // 在全局数据订阅就绪后，预加载常用widget组件，提升驾驶舱首屏加载速度
+    setTimeout(() => {
+      widgetEngine.preloadComponents([...PRELOAD_WIDGETS], 2)
+    }, 500)
+
     // 阶段 A-1：从 ConfigApp 写入的 localStorage 还原交易配置覆盖
     useRuntimeTradingConfigStore.getState().hydrateFromConfigApp()
 
