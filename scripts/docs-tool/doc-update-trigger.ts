@@ -14,6 +14,10 @@
  * - T8 页面组件变更 → 页面结构
  * - T9 Widget 注册表变更 → 驾驶舱数据定义
  * - T10 版本发布 → frontmatter code_version 同步（对接 doc:version-check）
+ * - T11 Mock 模块安全 → 映射表 + AGENTS.md §7.3
+ * - T12 ESLint/门禁变更 → AGENTS.md §三 + §七
+ * - T13 ACL 权限矩阵变更 → doc-trigger-action-map.md §二（映射表定义，本文件未实现运行时规则，故股票字典规则顺延 T14）
+ * - T14 股票字典生成/校验 → 股票字典生成参考文档（docs/reference/stock-dictionary-generation.md）
  *
  * 用法：
  *   npx tsx scripts/doc-update-trigger.ts [选项]
@@ -75,7 +79,7 @@ export const TRIGGER_RULES: readonly TriggerRule[] = [
       'src/data/types.ts',
       'src/types/modules/*.ts',
       'src/services/scoring/v6-engine/types.ts',
-      'src/core/types.ts',
+      'src/showcase/types.ts',
     ],
     docsToUpdate: [
       'docs/reference/data-dictionary-index.md',
@@ -94,8 +98,8 @@ export const TRIGGER_RULES: readonly TriggerRule[] = [
       'src/services/**/index.ts',
       'src/core/databridge.ts',
       'src/data/dataLayer.ts',
-      'src/services/fetcher/index.ts',
-      'src/services/analysis/index.ts',
+      'src/services/fetcher/**',
+      'src/services/analysis/**',
     ],
     docsToUpdate: [
       'docs/reference/api-contract.md',
@@ -158,6 +162,7 @@ export const TRIGGER_RULES: readonly TriggerRule[] = [
     name: 'UI 组件变更',
     patterns: ['src/components/**/*.tsx', 'src/components/**/*.ts'],
     docsToUpdate: [
+      'docs/design/component-specs.md',
       'docs/explanation/design/component-library-guide.md',
       'docs/explanation/design/ui-design-system.md',
       'docs/team-handbook/03-ui-components.md',
@@ -208,6 +213,39 @@ export const TRIGGER_RULES: readonly TriggerRule[] = [
     docsToUpdate: [],
     description: 'package.json version 变更时，同步全仓 frontmatter code_version（对接 doc:version-check）',
     auditDocs: false,
+  },
+  {
+    id: 'T11',
+    name: 'Mock 模块安全',
+    patterns: ['scripts/audit/audit-mock-modules.ts', 'tests/**/*.test.ts'],
+    docsToUpdate: ['docs/00-meta/doc-trigger-action-map.md'],
+    description: 'Mock 审计脚本变更或新增全量 mock 时，更新映射表 + AGENTS.md §7.3',
+    auditDocs: false,
+  },
+  {
+    id: 'T12',
+    name: 'ESLint/门禁变更',
+    patterns: ['eslint.config.js', 'eslint-rules/*.js', 'scripts/quality/*.js'],
+    docsToUpdate: [],
+    description: 'ESLint 规则或 npm scripts 段变更时，更新 AGENTS.md §三 类型安全 + §七 验证命令',
+    auditDocs: false,
+  },
+  // 注：T13 已分配给「ACL 权限矩阵变更」（见 doc-trigger-action-map.md §二 与 AGENTS.md §七），
+  // 本文件未实现 T13 运行时规则，故股票字典生成/校验规则顺延为 T14，避免 id 冲突。
+  {
+    id: 'T14',
+    name: '股票字典生成/校验',
+    patterns: [
+      'scripts/generate-stock-dict.py',
+      'scripts/verify-stock-dict.py',
+      'src/services/stock/stockDictionary.ts',
+    ],
+    docsToUpdate: [
+      'docs/reference/stock-dictionary-generation.md',
+      'docs/00-meta/doc-trigger-action-map.md',
+    ],
+    description: '股票字典生成/校验脚本或字典源文件变更时，更新「股票字典生成」参考文档（数据源=akshare、受管 venv python、四交易所 8331 条、单一事实源、每周自动刷新）',
+    auditDocs: true,
   },
 ]
 
@@ -614,6 +652,9 @@ ${C.bold}触发器类型（与映射表 §二 一一对应）:${C.reset}
   ${C.green}T8${C.reset} 页面组件变更 → 路由规格与页面结构
   ${C.green}T9${C.reset} Widget 注册表变更 → 驾驶舱数据定义
   ${C.green}T10${C.reset} 版本发布 → frontmatter code_version 同步
+  ${C.green}T11${C.reset} Mock 模块安全 → 映射表 + AGENTS.md §7.3
+  ${C.green}T12${C.reset} ESLint/门禁变更 → AGENTS.md §三 + §七
+  ${C.green}T14${C.reset} 股票字典生成/校验 → 股票字典生成参考文档
 `)
 }
 

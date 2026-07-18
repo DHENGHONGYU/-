@@ -1,12 +1,26 @@
 # AGENTS.md — V9 智能投研复盘系统 AI 行为约束契约
 
-> **版本**: v1.4.6 | **日期**: 2026-07-20
+> **版本**: v1.5.0 | **日期**: 2026-07-18
 > **适用范围**: 所有 AI 辅助开发工具（Claude Code、Cursor、Trae 等）
 > **强制等级**: 所有 AI 生成的代码必须遵守以下约束
+>
+> **v1.5.0 变更**：DataBridge 子模块拆分（databridgeAcl.ts Phase 1）；Widget 布局 5 层梯度 L1-L5；Widget 尺寸/分类枚举完成统一；pre-push 门禁重构（gate:quick + widget-registry + complexity-scan）；质量指标分离 Mock 假绿灯（realSuccessRate）；JSDoc 覆盖 37→19；新增 P1-6 directDataAPI 双份已知缺陷
+>
+> **v1.5.x 变更**：新增股票字典生成/校验门禁（build:stock-dict / build:stock-dict:verify），受管 venv python 固化于 package.json。
+>
+> **v1.4.9 变更**：新增 §七.4 数据质量断言三件套规则（auditRecord + recordCollect + refreshStats）；§七 验证命令新增 `audit:acl-consistency`；§八 新增 ENVELOPE_ACTION → handler 注册一致性规则
+>
+> **v1.4.8 变更**：强化 §八 ACL 白名单约束（新增 store → 必跑 audit:acl-consistency）；增加 §四 状态假红灯教训（recordCollect + recordWrite + refreshStats 三件套）
 
 > **提示词模板与检查清单**：为降低 AI 上下文漂移与人工返工，本项目在 `prompts/` 目录维护系统提示词模板，在 `docs/` 目录维护 `ui-migration-checklist.md`、`widget-integration-checklist.md`、`ai-memory-layer.md` 与 `ai-generate-audit-fix-loop.md`。AI 辅助开发时应优先加载对应模板，执行迁移、新增 Widget、记忆检索或飞轮流程时应按文档逐项核对。
 >
 > **文档与复杂度规范**：为提升代码可维护性，新增公共函数、组件、Hook、Store 必须补充 JSDoc（见 `docs/03-development/jsdoc-convention.md`）；新增代码应避免深层嵌套、长链式条件与过长函数（见 `docs/03-development/complexity-governance.md`）。
+>
+> **项目级 SKILL 索引**：本项目在 `.workbuddy/skills/` 维护可复用的 AI 操作技能，覆盖高频开发场景：
+> - `collection-pipeline-testing`：采集链路代码改动的测试验证（怎么测）
+> - `mock-data-diagnosis`：Mock 数据残留三维诊断（查什么）
+> - `data-flow-integrity-audit`：全链路数据流完整性审计（从哪查到哪）
+> - `devops-automation`：备份分支 + 批量部署（运维自动化）
 
 ---
 
@@ -14,7 +28,7 @@
 
 ```
 src/config/       ← 配置层（零硬编码锚点）
-src/core/         ← 核心工具与类型守卫（DataBridge/ACL/Envelope/MemoryCache/EventBus/workerPool）
+src/core/         ← 核心工具与类型守卫（DataBridge/databridgeAcl/databridgeHandlers/databridgeRouter/databridgeStrategyRouter/ACL/Envelope/MemoryCache/EventBus/workerPool）
 src/agents/       ← AI 行为扩展（运行时模块，core 层扩展）
 src/data/         ← 数据层（IndexedDB/dataLayer/queryBuilder/types/gateway）
 src/lib/          ← 库函数（logger/format/errors/utils/localStorageManager）
@@ -35,7 +49,7 @@ src/mcp/          ← MCP 服务器层（20+ 子服务器：analysis/backstock/d
 src/schema/       ← Zod/JSON Schema 校验定义（类型守卫扩展）
 src/showcase/     ← 组件展示页（开发环境专用，不进入生产构建）
 src/generated/    ← 代码自动生成产物（令牌/类型/脚本输出）
-src/workers/      ← Web Worker 脚本（纯计算逻辑，禁止引 store/pages/components）
+src/services/workers/  ← Web Worker 脚本（纯计算逻辑，禁止引 store/pages/components；原约定顶层 src/workers/ 已并入 services 下）
 ```
 
 ### 依赖方向规则
@@ -43,12 +57,13 @@ src/workers/      ← Web Worker 脚本（纯计算逻辑，禁止引 store/page
 - `pages/` 和 `components/` → 只能依赖 `store/` 和 `services/`，禁止直接调用 `dataLayer` 或 `db`
 - `store/` → 只能依赖 `services/` 和 `core/`
 - `services/` → 只能依赖 `core/`、`data/` 和 `lib/`（仅限基础设施），禁止直接写 `db`；所有写入必须封装为 `StandardEnvelope` 并通过 `DataBridge.forward()` 发起，最终由 `data/gateway/` 执行
-  - **lib 基础设施白名单**：`logger`、`withBroadcast`、`eventBus`、`format`、`errors`、`utils`、`localStorageManager`、`safeCoerce`、`perf`、`precision`、`validation`
+  - **lib 基础设施白名单**：`logger`、`withBroadcast`、`eventBus`、`format`、`errors`、`utils`、`localStorageManager`、`safeCoerce`、`perf`、`precision`、`validation`、`safeRegex`
   - 禁止依赖 `lib/` 中的业务模块
 - `data/` → `data/gateway/` 是唯一允许直接操作 `dataLayer` 与 `db` 的入口；`dataLayer` 子模块仅被 `data/gateway/` 与同级 `data/` 基础设施依赖
 - `lib/` → 仅可依赖 `core/` 和 `config/`，禁止依赖 `services/`、`store/`、`pages/`、`components/`、`apps/`
-- `core/` → 禁止依赖 `pages/`、`components/`、`apps/`、`lib/`；`DataBridge` 写操作必须委托 `data/gateway/`，禁止直接 `import { db }` 或 `dataLayer` store
-- `config/` → 禁止依赖 `services/`、`pages/`、`components/`、`lib/`
+- `core/` → 禁止依赖 `pages/`、`components/`、`apps/`；仅可依赖 `lib/` 中的**基础设施白名单**（`logger`/`withBroadcast`/`eventBus`/`format`/`errors`/`utils`/`localStorageManager`/`safeCoerce`/`perf`/`precision`/`validation`/`safeRegex`），禁止依赖 `lib/` 业务模块；`DataBridge` 写操作必须委托 `data/gateway/`，禁止直接 `import { db }` 或 `dataLayer` store
+  - **说明（v1.4.7）**：`logger`/`eventBus` 等为横切基础设施，被 `core/` 依赖属工程常态，与 `services/` 白名单保持一致；`audit:layers` v3.1 按白名单放行、对业务模块报违规
+- `config/` → 禁止依赖 `services/`、`pages/`、`components/`；仅可依赖 `lib/` 中的**基础设施白名单**（同上），禁止依赖 `lib/` 业务模块
 - `constants/` → 禁止依赖任何运行时模块（仅导出常量，可被所有层引用）
 - `types/` → 零依赖（纯类型定义，可被所有层引用）
 - `agents/` → 仅可依赖 `core/` 和 `data/`（属于 core 层扩展）
@@ -62,7 +77,7 @@ src/workers/      ← Web Worker 脚本（纯计算逻辑，禁止引 store/page
 - `schema/` → 仅可依赖 `types/` 和 `constants/`，可被 `services/`、`data/`、`components/` 引用（Schema 校验定义层）
 - `showcase/` → 仅开发环境使用，可依赖 `components/`、`constants/`、`lib/`（开发展示页，禁止引入生产逻辑）
 - `generated/` → 零依赖（纯自动生成产物），可被 `services/`、`components/`、`pages/` 引用（代码生成层）
-- `workers/` → 仅可依赖 `core/`、`lib/`、`config/`、`data/`、`types/`、`constants/`，禁止依赖 `store/`、`pages/`、`components/`、`apps/`（Web Worker 纯计算层，无 DOM/React 访问；`core/workerPool/` 管理 Worker 生命周期，可被 `services/` 和 `store/` 引用）
+- `services/workers/` → 仅可依赖 `core/`、`lib/`、`config/`、`data/`、`types/`、`constants/`，禁止依赖 `store/`、`pages/`、`components/`、`apps/`（Web Worker 纯计算层，无 DOM/React 访问；`core/workerPool/` 管理 Worker 生命周期，可被 `services/` 和 `store/` 引用；原约定顶层 `src/workers/` 已并入 `services/workers/`）
 
 ### 验证命令
 
@@ -181,6 +196,7 @@ grep -E '^\s*(src/|\.agents/|packages/|docs/)' AGENTS.md
 
 - 禁止使用 `any`（ESLint `@typescript-eslint/no-explicit-any: error`）
 - 禁止使用 `@ts-ignore`（使用 `@ts-expect-error` 并附带注释说明原因）
+- 禁止 `Record<string, string>` 作为 EnvelopeAction/branded type 的映射表类型标注（ESLint `no-record-string-string/no-record-string-to-branded: error`）。使用 `Record<string, EnvelopeAction>` 或移除显式类型标注让 TS 推断字面量类型（P3 教训）。
 - 所有数据结构必须先定义 TypeScript Interface
 - 复杂泛型必须有 `Expect<Equals>` 类型测试（位于 `tests/__tests__/types/`）
 - 修改 `UserType` 不得破坏 `user-type.spec.ts`
@@ -763,13 +779,23 @@ npm test -- --run
 npm run build
 
 # 架构审计
-npm run audit          # 全部审计
-npm run audit:layers   # 分层调用
-npm run audit:directory # 目录结构（v1.4.5 新增）
-npm run audit:hardcode # 硬编码
-npm run audit:deadcode # 死代码
-npm run audit:docs     # 文档同步
-npm run audit:token    # Token 消耗检测（v1.3.0 新增）
+npm run audit            # 全部审计
+npm run audit:layers     # 分层调用
+npm run audit:mock-modules # Mock 模块安全审查（v1.5.0 新增）
+npm run audit:acl-consistency # ACL 权限矩阵一致性（v1.4.9 新增）
+npm run audit:directory  # 目录结构
+npm run audit:hardcode   # 硬编码
+npm run audit:deadcode   # 死代码
+npm run audit:docs       # 文档同步
+npm run audit:token      # Token 消耗检测
+npm run audit:widget-registry # Widget 注册完整性审计
+
+# 股票字典生成与校验（数据资产门禁）
+npm run build:stock-dict          # akshare 重新生成 stockDictionary.ts（受管 venv python，T14 触发规则）
+npm run build:stock-dict:verify   # 校验四交易所完整性 + 零重复（T14 触发规则）
+
+# 快速门禁（提交前推荐）
+npm run gate:quick       # 分层 + Mock + 原子组件 + 文档 + DB 引用
 ```
 
 ### 7.1 Token 消耗控制规则（v1.3.0 新增）
@@ -788,13 +814,84 @@ npm run audit:token
 # 期望：0 violations, Token 消耗 < 50,000/会话
 ```
 
----
+### 7.2 驾驶舱 Widget 布局治理（v1.5.0 新增）
 
-## 八、数据库版本管理
+**背景**：驾驶舱是 FinSightV9 的主入口，Widget 的默认排列直接影响新用户的首次体验。产品定位为**股票研究复盘系统**（非实时交易系统），布局设计需体现「研究全景→深度分析→市场背景→持仓观察→系统运维」的五层梯度。
+
+**布局原则**：
+- **L1 研究全景**（首屏）：KAI 评分 + 股票池全景 + 投资画像 — 回答「我在研究什么？」
+- **L2 深度分析**（核心区）：AI 对比 + AI 复盘 + 策略信号 — 回答「怎么分析？」
+- **L3 市场背景**（辅助层）：大盘指数 + 板块热力 + 资金流向 — 提供研究上下文
+- **L4 持仓观察**（末端）：持仓概览 + 自选股 — 仅跟踪，非交易 ⚠️
+- **L5 系统运维**（末区）：引擎状态 + 风控 + Agent 性能 — 默认折叠
+
+**变更规则**：
+- 修改 `defaultLayout` 必须更新 `widgetRegistry.ts` 的 `createDefaultInstances()`
+- 新增 Widget 同步更新三处：`widgetRegistry.ts` + `DEFAULT_WIDGET_CONFIG` + `WIDGET_DEFAULT_DATA_SOURCE`
+- 变更后必须运行 `npm run audit:widget-registry` 确认 26/26 覆盖
+
+**验证命令**：
+```powershell
+npm run audit:widget-registry
+# 期望：0 P0 violations, 0 P1 warnings, 26/26 widgets placed
+```
+
+### 7.3 Mock 模块安全审查（v1.5.0 新增）
+
+**背景**：P8 教训 — mock `collectionPipeline` 时全量替换导致 `upgradeDimensionsToPipeline` 初始化逻辑丢失。测试中 mock 高风险模块（`@/core/`、`@/services/`、`@/store/`）时，优先使用 `importActual + 局部覆盖` 模式，避免丢失 file-level side effects。
+
+**Mock 安全清单**：
+- 高风险模块 mock 优先用 `vi.mock('...', async () => { const actual = await vi.importActual('...'); return { ...actual, fn: vi.fn() } })`
+- 全量替换仅在以下情况允许（需加入 `scripts/audit/audit-mock-modules.ts` allowlist）：
+  - 需要 `vi.hoisted()` 捕获 callback（如 databridge subscribe）
+  - 需自定义 memoryStore 实现
+  - 模块仅 1-2 个 export 且全部被覆盖
+- audit:mock-modules 提供 `SAFE_FULL_MOCKS` allowlist 机制，exit 0 表示无新增违规
+
+**验证命令**：
+```powershell
+npm run audit:mock-modules
+# 期望：0 violations, exit 0
+```
+
+### 7.4 数据质量断言三件套（v1.4.9 新增）
+
+**背景**：L21 教训 — 任务 361/361 完成但 KPI 显示 0%（假红灯）。根因是 `runSingleTrace` 从未调用 `recordCollect()`，且 `runCollection` 完成后未调用 `refreshStats()`。
+
+**三件套规则**：
+
+1. **auditRecord()** — 写入后断言（WAP Audit 阶段）
+   - 所有 `dataBridge.forward()` 写入路径之后，必须调用 `auditRecord(storeName, payload)` 校验关键字段非空
+   - 校验规则：stocks→symbol、dailyQuotes→symbol、news→id、sectorScores→id、researchLogs→id、traceRecords→traceId
+   - 文件：`src/services/data-collector/collectionPipeline.ts`
+
+2. **recordCollect()** — 采集统计
+   - `runSingleTrace` 的每个 return 点（成功/失败/unsupported/catch）必须调用 `getQualityMetrics().recordCollect(success, source, latency, fallbackChain)`
+   - 不能只调 `recordWrite()`，因为 qualityMetrics 有两个独立统计维度（collect + write）
+   - 文件：`src/services/data-collector/collectionPipeline.ts`（6 个 return 点）
+
+3. **refreshStats()** — 统计同步刷新
+   - `runCollection` 完成后（成功/失败/异常）必须调用 `runtime.refreshStats()` 同步 qualityMetrics 到 collectionRuntimeStore.stats
+   - 否则监控页 KPI 卡片显示初始值 0%（假红灯）
+   - 文件：`src/store/sevenDimConfigStore.ts`
+
+**验证命令**：
+```powershell
+# 验证三件套调用对称性
+grep -rn 'recordCollect' src/services/data-collector/collectionPipeline.ts  # 应有 6 处
+grep -rn 'recordWrite' src/services/data-collector/collectionPipeline.ts    # 应有 8 处（4 true + 4 false）
+grep -rn 'refreshStats' src/store/sevenDimConfigStore.ts                    # 应有 2 处（成功+异常）
+grep -rn 'auditRecord' src/services/data-collector/collectionPipeline.ts    # 应有 4 处（3 调用 + 1 定义）
+```
 
 - 修改 IndexedDB schema 必须递增 `DB_VERSION`（`src/config/dbConfig.ts`）
 - 新增 store 必须在 `STORE_NAME` 中注册
-- 新增 store 必须在 `ACL_MATRIX` 中添加对应的 read/write 白名单
+- **新增 store 必须在 `ACL_MATRIX` 中添加对应的 read/write 白名单**（v1.4.7 强化）
+  - 同时运行 `npm run audit:acl-consistency` 验证调用方有对应权限
+  - 教训：2026-07-18 03-08 维度采集报 ACL Permission denied，因 fetcher 缺 news/sectorScores/researchLogs 写权限
+- **新增 ENVELOPE_ACTION 必须在 `ACTION_TO_STORE_MAP` 和 `databridgeHandlers.ts` 中同步注册**（v1.4.9 新增）
+  - 运行 `npm run audit:acl-consistency` 验证 action→store→handler 配对一致性
+  - 教训：2026-07-18 `saveTraceRecord` 未注册到 PutHandler，fallback 到裸 put → keyPath 失败
 - 新增 store 必须有创建逻辑，按以下规则选择位置（v1.3.5 明确）：
   - **基线 store**（首次安装时就需要的核心 store）→ 在 `createSchema`（`src/data/db-schema.ts`）中添加
   - **增量 store**（版本升级时新增的 store）→ 在对应版本的 `Migration.up()`（`src/data/db-migrations.ts` 或 `src/data/migrations/`）中添加
@@ -803,6 +900,8 @@ npm run audit:token
   - 当前增量 store 清单（由 migration 创建）：RBAC 6 表（rbac_users / rbac_roles / rbac_permissions / rbac_user_roles / rbac_role_permissions / rbac_permission_audit_logs，由 rbacMigrationV24 创建）
   - 注意：schemaMigrations 表本身由 createSchema 创建（基线），但它的"种子数据"由 seed_schema_migrations_tracker migration 写入；customAgents 同理（store 由 createSchema 创建，种子数据由 seed_custom_agents_tracker migration 写入）
 - 新增 ENVELOPE_ACTION 必须在 `DataBridge.routeToDB()` 中添加对应 case
+- **修改 ACL_MATRIX / ENVELOPE_ACTION / ACTION_TO_STORE_MAP / databridgeHandlers 后必跑 `npm run audit:acl-consistency`**（v1.4.9 新增）
+  - T13 触发规则：见 `docs/00-meta/doc-trigger-action-map.md`
 
 ---
 
@@ -1266,6 +1365,8 @@ npx tsc --noEmit | findstr /R "mcpAcl mcpBridge MCPServer MCPClient"
 
 | 版本 | 日期 | 变更摘要 |
 |------|------|----------|
+| v1.4.9 | 2026-07-18 | §七.4 新增数据质量断言三件套规则（auditRecord + recordCollect + refreshStats）；§七 验证命令新增 `audit:acl-consistency`；§八 新增 ENVELOPE_ACTION → handler 注册一致性规则；新增 `scripts/audit/audit-acl-consistency.ts` 门禁脚本；Husky pre-commit 扩展为 16 项 |
+| v1.4.8 | 2026-07-18 | §八 强化 ACL 白名单约束（新增 store → 必跑 audit:acl-consistency）；增加 §四 状态假红灯教训（recordCollect + recordWrite + refreshStats 三件套） |
 | v1.4.6 | 2026-07-20 | §一 新增 `data/gateway/` 层定义；明确 Gateway 是唯一允许直接操作 `dataLayer`/`db` 的入口，`DataBridge` 写操作必须委托 Gateway；新增 `docs/03-development/gateway-write-permission-spec.md` 规范文档 |
 | v1.4.3 | 2026-07-10 | 标题区新增 JSDoc 与复杂度规范引用；新增 `docs/jsdoc-convention.md`、`docs/complexity-governance.md`、`scripts/audit-jsdoc.ts`、`scripts/audit-complexity.ts`；Husky 预提交门禁扩展为 9 项检查（新增 audit:jsdoc、audit:complexity） |
 | v1.4.2 | 2026-07-10 | §3.5 颜色令牌规范新增 `docs/design-token-mapping.md` 与 `.vscode/token-snippets.code-snippets` 引用；新增 `design-tokens/figma-to-project.json`、`design-tokens/project-to-figma.json` 双向映射与 `scripts/verify-design-tokens.ts`；Husky 预提交门禁扩展为 7 项检查并新增 `pre-push` 门禁 |
