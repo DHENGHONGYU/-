@@ -5,7 +5,7 @@
  *
  * 检查目标：
  * 扫描 src/ 中新增/修改的文件，检查是否已在文档
- * （docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中得到体现。
+ * （docs/ 全树、CHANGELOG.md、AGENTS.md）中得到体现。
  *
  * v3.0 改造（2026-07-06）：
  * - 采用白盒/透明管道模式：export scan() / formatReport() / main()
@@ -180,8 +180,8 @@ export function scan(): Report {
   // 收集文档文件
   const docFiles = new Set<string>()
   collectDocs(DOCS_DIR, docFiles)
-  docFiles.add(join(ROOT, 'data-definition.md'))
-  docFiles.add(join(ROOT, 'architecture.md'))
+  // 仅保留确实位于仓库根的根文档。
+  // 注：data-definition.md / architecture.md 已迁移至 docs/ 子树，由 collectDocs(DOCS_DIR) 递归扫描覆盖，此处不再硬编码（避免指向不存在的路径）。
   docFiles.add(join(ROOT, 'CHANGELOG.md'))
   docFiles.add(join(ROOT, 'AGENTS.md'))
 
@@ -212,7 +212,7 @@ export function scan(): Report {
       violations.push({
         file,
         type: '未文档化文件',
-        message: '文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现',
+        message: '文件可能尚未在文档（docs/ 全树、CHANGELOG.md、AGENTS.md）中体现',
       })
     }
   }
