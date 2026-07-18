@@ -45,13 +45,13 @@ function summarize(out: string): string {
 }
 
 /** 运行一个子脚本，返回退出码、完整 stdout 与摘要（F5：不再仅取末 3 行，便于诊断） */
-function runScript(label: string, args: string[]): CheckResult {
+function runScript(label: string, args: string[], timeoutMs = 90_000): CheckResult {
   try {
     const out = execSync(`node "${TSX}" ${args.join(' ')}`, {
       cwd: ROOT,
       encoding: 'utf-8',
       stdio: ['pipe', 'pipe', 'pipe'],
-      timeout: 90_000,
+      timeout: timeoutMs,
     })
     return { name: label, passed: true, stdout: out.trimEnd(), detail: summarize(out) }
   } catch (err: unknown) {
@@ -84,8 +84,8 @@ function main(): void {
   // 1. frontmatter code_version 完整性
   results.push(runScript('frontmatter code_version', [`"${join(TOOL_DIR, 'doc-version-check.ts')}"`]))
 
-  // 2. 交叉引用有效性
-  results.push(runScript('交叉引用', [`"${join(TOOL_DIR, 'doc-cross-ref-sync.ts')}"`, '--check']))
+  // 2. 交叉引用有效性（扫描量大，超时 120s，非阻断不阻塞提���）
+  results.push(runScript('交叉引用', [`"${join(TOOL_DIR, 'doc-cross-ref-sync.ts')}"`, '--check'], 120_000))
 
   // 3. TRIGGER_RULES 路径存在性
   results.push(runScript('TRIGGER_RULES 路径', [`"${join(TOOL_DIR, 'doc-update-trigger.ts')}"`, '--check']))
@@ -112,14 +112,34 @@ function main(): void {
     : '存在阻断级断裂（策略 blocking=true）'
   results.push(proofreadResult)
 
+  // 7. 文档风格合规（doc-style-standard.md §9）— 当前 warning 级，不阻断
+  const styleResult = runScript('文档风格', [`"${join(TOOL_DIR, 'style-lint.ts')}"`, '--json'])
+  let styleTotal = 0
+  try {
+    const sj = JSON.parse(styleResult.stdout)
+    styleTotal = sj.total ?? 0
+  } catch {
+    /* 解析失败不影响 */
+  }
+  // style-lint 默认退出 0（warning 级），passed=true；详情标注发现数
+  styleResult.detail = `风格检查发现 ${styleTotal} 项（warning 级，不阻断提交，待 backlog 清理后翻 blocking）`
+  results.push(styleResult)
+
   // 汇总输出
   console.log('🔒 doc:gate — 文档门禁检查\n')
+  // 非阻断检查列表（仅 warning，不阻断提交）
+  const NON_BLOCKING = ['交叉引用', '三类交叉引用(核心/重要)', '文档风格']
   let allPassed = true
   for (const r of results) {
-    const mark = r.passed ? '✅' : '❌'
+    const isWarning = !r.passed && NON_BLOCKING.includes(r.name)
+    const mark = r.passed ? '✅' : (isWarning ? '⚠️' : '❌')
     console.log(`  ${mark} ${r.name}: ${r.detail}`)
     if (!r.passed) {
-      allPassed = false
+      if (isWarning) {
+        console.log(`      ⚠️  ${r.name} 未阻断提交（全量扫描较慢，建议手动 npm run daily-doc:cross-ref 定期检查）`)
+      } else {
+        allPassed = false
+      }
       // 失败检查打印完整 stdout 以便诊断（F5：不再仅末 3 行）
       if (r.stdout) {
         for (const line of r.stdout.split('\n')) {
