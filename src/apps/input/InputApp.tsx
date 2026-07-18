@@ -7,10 +7,11 @@ import DataTestPanel from './DataTestPanel'
 import LocalKnowledgePage from '@/pages/input/LocalKnowledgePage'
 import { getLogger } from '@/lib/logger'
 
-// 子页面懒加载（G4 集成：七维采集配置 / 抓取引擎配置 / 采集任务监控）
+// 子页面懒加载（G4 集成：七维采集配置 / 抓取引擎配置 / 采集任务监控 / 股票池看板）
 const SevenDimConfigPage = React.lazy(() => import('@/pages/input/SevenDimConfigPage'))
 const FetcherConfigPage = React.lazy(() => import('@/pages/input/FetcherConfigPage'))
 const CollectTaskPage = React.lazy(() => import('@/pages/input/CollectTask'))
+const PoolBoardPage = React.lazy(() => import('@/pages/analysis/PoolBoardPage'))
 
 interface InputRoute {
   path: string
@@ -29,6 +30,7 @@ const INPUT_ROUTES: InputRoute[] = [
   { path: '/input/seven-dim', branch: 'seven-dim', componentName: 'SevenDimConfigPage', component: <SevenDimConfigPage />, fallback: '加载七维采集配置中...' },
   { path: '/input/fetcher-config', branch: 'fetcher-config', componentName: 'FetcherConfigPage', component: <FetcherConfigPage />, fallback: '加载抓取引擎配置中...' },
   { path: '/input/collect-tasks', branch: 'collect-tasks', componentName: 'CollectTaskPage', component: <CollectTaskPage />, fallback: '加载采集任务监控中...' },
+  { path: '/input/pool-board', branch: 'pool-board', componentName: 'PoolBoardPage', component: <PoolBoardPage />, fallback: '加载股票池看板中...' },
 ]
 
 function matchInputRoute(path: string): InputRoute {

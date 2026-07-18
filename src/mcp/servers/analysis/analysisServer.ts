@@ -10,6 +10,8 @@ import { getLogger } from '@/lib/logger'
 import { listStocks, listV6Scores } from '@/services/analysis/analysisService'
 import { calculateAndSaveDefaultRotationScores } from '@/services/analysis/sectorAnalysisEngine'
 import { runScreening } from '@/services/analysis/screeningEngine'
+import { runFullIndustryAnalysisEnhanced } from '@/services/analysis/industryAnalysisService'
+import { generateRotationSignals } from '@/services/analysis/industryV4Analyzer'
 
 const logger = getLogger()
 
@@ -94,6 +96,38 @@ export class AnalysisServer extends MCPServerBase {
           const result = await runScreening()
           return {
             content: [{ type: 'text', text: JSON.stringify(result) }],
+          }
+        },
+      },
+      {
+        name: 'analyze_industry_v4',
+        description: '增强版 V4 全量行业分析 + 轮动信号生成',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            data: { type: 'string', description: '序列化的 stocksWithData JSON 数组' },
+            hs300Pe: { type: 'number', description: '沪深300 PE' },
+            hs300Pb: { type: 'number', description: '沪深300 PB' },
+          },
+          required: ['data'],
+        },
+        handler: async (args) => {
+           
+           
+          const stocks = JSON.parse(args.data as string)
+
+          const options: { forceRefresh?: boolean; hs300Pe?: number; hs300Pb?: number } = {}
+          if (args.hs300Pe !== undefined) options.hs300Pe = args.hs300Pe as number
+          if (args.hs300Pb !== undefined) options.hs300Pb = args.hs300Pb as number
+          logger.info('[AnalysisServer] analyze_industry_v4 called', { stockCount: stocks.length })
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+          const results = await runFullIndustryAnalysisEnhanced(stocks, options)
+          const rotationSignals = generateRotationSignals(results.v4Analyses)
+          return {
+            content: [{ type: 'text', text: JSON.stringify({
+              v4Analyses: results.v4Analyses,
+              rotationSignals,
+            }) }],
           }
         },
       },
