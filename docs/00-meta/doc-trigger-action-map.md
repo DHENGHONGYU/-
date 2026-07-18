@@ -1,114 +1,124 @@
 ---
-title: doc-trigger-action-map
+title: ´¥·¢ÊÂ¼ş ¡ú ¸üĞÂ¶¯×÷ Ò»Ò»Ó³ÉäÈ¨Íş±í
+type: meta
+domain: project
+phase: design
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "ÎÄµµÈÕÆÚ£º2026-07-14£¨pr-6 Di¨¢taxis ÖØ×éºóÂ·¾¶Í¬²½ĞŞ¶©£© Î¬»¤Õß£º¼Ü¹¹ÖÎÀí£¨Àï³Ì±® M1 / T1 ²ú³ö£»N2/N3 ÊÕÎ²£»2026-07-14 pr-6 ÖØ×éºóÂ·¾¶ÖØ¶ÔÆë£©..."
+tags: [meta, documentation, automation, workflow, project]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: core
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/00-meta/doc-trigger-action-map.md
-code_version: 2.0.0
-tier: core
----
+# ´¥·¢ÊÂ¼ş ¡ú ¸üĞÂ¶¯×÷ Ò»Ò»Ó³ÉäÈ¨Íş±í
 
-# è§¦å‘äº‹ä»¶ â†’ æ›´æ–°åŠ¨ä½œ ä¸€ä¸€æ˜ å°„æƒå¨è¡¨
-
-> æ–‡æ¡£æ—¥æœŸï¼š2026-07-14ï¼ˆpr-6 DiÃ¡taxis é‡ç»„åè·¯å¾„åŒæ­¥ä¿®è®¢ï¼‰
-> ç»´æŠ¤è€…ï¼šæ¶æ„æ²»ç†ï¼ˆé‡Œç¨‹ç¢‘ M1 / T1 äº§å‡ºï¼›N2/N3 æ”¶å°¾ï¼›2026-07-14 pr-6 é‡ç»„åè·¯å¾„é‡å¯¹é½ï¼‰
-> å…³è”æ–‡æ¡£ï¼š`./æ–‡æ¡£è‡ªåŠ¨æ›´æ–°ä½“ç³»-æ¶æ„æ¢³ç†ä¸ä»»åŠ¡æ¸…å•.md` Â§ä¸‰ çº¦æŸ1ã€`scripts/docs-tool/doc-update-trigger.ts` çš„ `TRIGGER_RULES`
+> ÎÄµµÈÕÆÚ£º2026-07-14£¨pr-6 Di¨¢taxis ÖØ×éºóÂ·¾¶Í¬²½ĞŞ¶©£©
+> Î¬»¤Õß£º¼Ü¹¹ÖÎÀí£¨Àï³Ì±® M1 / T1 ²ú³ö£»N2/N3 ÊÕÎ²£»2026-07-14 pr-6 ÖØ×éºóÂ·¾¶ÖØ¶ÔÆë£©
+> ¹ØÁªÎÄµµ£º`./ÎÄµµ×Ô¶¯¸üĞÂÌåÏµ-¼Ü¹¹ÊáÀíÓëÈÎÎñÇåµ¥.md` ¡ìÈı Ô¼Êø1¡¢`scripts/docs-tool/doc-update-trigger.ts` µÄ `TRIGGER_RULES`
 
 ---
 
-## ä¸€ã€ç›®çš„ä¸èŒƒå›´
+## Ò»¡¢Ä¿µÄÓë·¶Î§
 
-æœ¬æ–‡ä»¶æ˜¯æ”¹è¿›è®¡åˆ’ **Â§ä¸‰ çº¦æŸ 1ã€Œè§¦å‘æ¡ä»¶ä¸æ›´æ–°åŠ¨ä½œéœ€ä¸€ä¸€æ˜ å°„ã€** çš„**å•ä¸€äº‹å®æºï¼ˆsingle source of truthï¼‰**ã€‚
+±¾ÎÄ¼şÊÇ¸Ä½ø¼Æ»® **¡ìÈı Ô¼Êø 1¡¸´¥·¢Ìõ¼şÓë¸üĞÂ¶¯×÷ĞèÒ»Ò»Ó³Éä¡¹** µÄ**µ¥Ò»ÊÂÊµÔ´£¨single source of truth£©**¡£
 
-**æ ¸å¿ƒçº¦æŸï¼š**
+**ºËĞÄÔ¼Êø£º**
 
-1. **1:1 æ˜ å°„**ï¼šæ¯ä¸ªè§¦å‘äº‹ä»¶**ç²¾ç¡®å¯¹åº”å”¯ä¸€ä¸»æ›´æ–°åŠ¨ä½œ**ï¼ˆä¸€ä¸ªæœ€å…·ä½“çš„ä¸»æ–‡æ¡£ï¼‰ã€‚å…¶ä½™ç›¸å…³æ–‡æ¡£åˆ—ä¸ºã€Œè¡¥å……æ–‡æ¡£ã€å¹¶åœ¨å¤‡æ³¨ä¸­è¯´æ˜ï¼Œæ›´æ–°å™¨ä¸å¾—è¶Šç•Œå†™å…¶å®ƒæ–‡ä»¶ã€‚
-2. **ç¦æ­¢æ— å·®åˆ«å…¨ä»“åº“æ‰«æ**ï¼šæ›´æ–°å™¨ï¼ˆ`doc-update-trigger --auto-update` ä»¥åŠ `doc-auto-updater`ï¼‰**ä¸¥ç¦**ã€Œæ‰«æå…¨ä»“åº“å¹¶æ‰¹é‡æ”¹å†™ã€å¼è¯¯å†™ï¼›å†™å…¥è·¯å¾„å¿…é¡»ä¸¥æ ¼è½åœ¨æœ¬è¡¨æŒ‡å®šèŒƒå›´ï¼Œæœªåˆ—äºæœ¬è¡¨çš„æ–‡æ¡£**ä¸å¾—è¢«è‡ªåŠ¨æ”¹å†™**ã€‚
-3. **ä¸ä»£ç åŒæ­¥**ï¼šæœ¬è¡¨çš„ **T1â€“T10** å¿…é¡»ä¸ `scripts/docs-tool/doc-update-trigger.ts` çš„ `TRIGGER_RULES` ä¿æŒåŒæ­¥ã€‚ä»£ç æ”¹åŠ¨ `TRIGGER_RULES` æ—¶ï¼Œæœ¬è¡¨é¡»åŒæ­¥ä¿®è®¢ï¼ˆåä¹‹äº¦ç„¶ï¼‰ã€‚
-4. **M2 è½åœ°ç‚¹**ï¼š`doc-update-trigger --auto-update`ï¼ˆ**å·²è½åœ°ï¼Œè§ N3**ï¼‰ä»¥æœ¬è¡¨ä¸ºå”¯ä¸€ä¾æ®ï¼Œå°†æ¯ä¸ªå‘½ä¸­æ¨¡å¼æ˜ å°„åˆ°å¯¹åº”ä¸»æ–‡æ¡£ + è¡¥å……æ–‡æ¡£ï¼Œå¹¶åœ¨å†™åè·‘ `audit:docs`ï¼ˆé™¤éæœ¬è¡¨æ ‡æ³¨ã€Œå¦ã€ï¼‰ã€‚å½“å‰å†…å®¹ç”Ÿæˆä¸º**æ‰©å±•ç‚¹**ï¼ˆ`DocGenerator` æ³¨å†Œè¡¨ï¼‰ï¼Œå†…ç½®é»˜è®¤ç”Ÿæˆå™¨ï¼ˆç¼ºå¤±å»ºéª¨æ¶ / å­˜åœ¨åˆ·æ–°æ ¡éªŒæ ‡è®°ï¼‰ä¸ T10 ç‰ˆæœ¬æ ¡éªŒç”Ÿæˆå™¨ï¼›åç»­å¯æ³¨å…¥æŒ‰è§¦å‘ç±»å‹ç”Ÿæˆæ­£æ–‡çš„ç”Ÿæˆå™¨ã€‚
+1. **1:1 Ó³Éä**£ºÃ¿¸ö´¥·¢ÊÂ¼ş**¾«È·¶ÔÓ¦Î¨Ò»Ö÷¸üĞÂ¶¯×÷**£¨Ò»¸ö×î¾ßÌåµÄÖ÷ÎÄµµ£©¡£ÆäÓàÏà¹ØÎÄµµÁĞÎª¡¸²¹³äÎÄµµ¡¹²¢ÔÚ±¸×¢ÖĞËµÃ÷£¬¸üĞÂÆ÷²»µÃÔ½½çĞ´ÆäËüÎÄ¼ş¡£
+2. **½ûÖ¹ÎŞ²î±ğÈ«²Ö¿âÉ¨Ãè**£º¸üĞÂÆ÷£¨`doc-update-trigger --auto-update` ÒÔ¼° `doc-auto-updater`£©**ÑÏ½û**¡¸É¨ÃèÈ«²Ö¿â²¢ÅúÁ¿¸ÄĞ´¡¹Ê½ÎóĞ´£»Ğ´ÈëÂ·¾¶±ØĞëÑÏ¸ñÂäÔÚ±¾±íÖ¸¶¨·¶Î§£¬Î´ÁĞÓÚ±¾±íµÄÎÄµµ**²»µÃ±»×Ô¶¯¸ÄĞ´**¡£
+3. **Óë´úÂëÍ¬²½**£º±¾±íµÄ **T1¨CT14** ±ØĞëÓë `scripts/docs-tool/doc-update-trigger.ts` µÄ `TRIGGER_RULES` ±£³ÖÍ¬²½¡£´úÂë¸Ä¶¯ `TRIGGER_RULES` Ê±£¬±¾±íĞëÍ¬²½ĞŞ¶©£¨·´Ö®ÒàÈ»£©¡£
+4. **M2 ÂäµØµã**£º`doc-update-trigger --auto-update`£¨**ÒÑÂäµØ£¬¼û N3**£©ÒÔ±¾±íÎªÎ¨Ò»ÒÀ¾İ£¬½«Ã¿¸öÃüÖĞÄ£Ê½Ó³Éäµ½¶ÔÓ¦Ö÷ÎÄµµ + ²¹³äÎÄµµ£¬²¢ÔÚĞ´ºóÅÜ `audit:docs`£¨³ı·Ç±¾±í±ê×¢¡¸·ñ¡¹£©¡£µ±Ç°ÄÚÈİÉú³ÉÎª**À©Õ¹µã**£¨`DocGenerator` ×¢²á±í£©£¬ÄÚÖÃÄ¬ÈÏÉú³ÉÆ÷£¨È±Ê§½¨¹Ç¼Ü / ´æÔÚË¢ĞÂĞ£Ñé±ê¼Ç£©Óë T10 °æ±¾Ğ£ÑéÉú³ÉÆ÷£»ºóĞø¿É×¢Èë°´´¥·¢ÀàĞÍÉú³ÉÕıÎÄµÄÉú³ÉÆ÷¡£
 
-> æœ¬æ–‡ä»¶ä¸ºçº¯è§„èŒƒæ–‡æ¡£ï¼Œä¸æ”¹åŠ¨ä»»ä½•æºç æˆ– CIã€‚
+> ±¾ÎÄ¼şÎª´¿¹æ·¶ÎÄµµ£¬²»¸Ä¶¯ÈÎºÎÔ´Âë»ò CI¡£
 
 ---
 
-## äºŒã€æƒå¨æ˜ å°„çŸ©é˜µ
+## ¶ş¡¢È¨ÍşÓ³Éä¾ØÕó
 
-åˆ—è¯´æ˜ï¼š
+ÁĞËµÃ÷£º
 
-- **ä¸»æ›´æ–°åŠ¨ä½œï¼ˆå”¯ä¸€ï¼‰**ï¼šè¯¥è§¦å‘äº‹ä»¶å¯¹åº”çš„**å”¯ä¸€æœ€å…·ä½“æ–‡æ¡£**ï¼Œæ›´æ–°å™¨ä¼˜å…ˆæ”¹å†™å®ƒã€‚
-- **æ˜¯å¦è§¦å‘ audit:docs**ï¼šå†™å®Œåæ˜¯å¦è¿è¡Œ `npm run audit:docs` åšå¼•ç”¨åŒæ­¥æ ¡éªŒã€‚
-- **è¡¥å……æ–‡æ¡£**ï¼šä¸ä¸»åŠ¨ä½œå¹¶åˆ—ã€éœ€åŒæ­¥ç»´æŠ¤çš„å…¶å®ƒæ–‡æ¡£ï¼ˆéè¶Šç•Œï¼Œä»å±æœ¬è§¦å‘äº‹ä»¶çš„æ˜ç¤ºèŒƒå›´ï¼‰ã€‚
+- **Ö÷¸üĞÂ¶¯×÷£¨Î¨Ò»£©**£º¸Ã´¥·¢ÊÂ¼ş¶ÔÓ¦µÄ**Î¨Ò»×î¾ßÌåÎÄµµ**£¬¸üĞÂÆ÷ÓÅÏÈ¸ÄĞ´Ëü¡£
+- **ÊÇ·ñ´¥·¢ audit:docs**£ºĞ´ÍêºóÊÇ·ñÔËĞĞ `npm run audit:docs` ×öÒıÓÃÍ¬²½Ğ£Ñé¡£
+- **²¹³äÎÄµµ**£ºÓëÖ÷¶¯×÷²¢ÁĞ¡¢ĞèÍ¬²½Î¬»¤µÄÆäËüÎÄµµ£¨·ÇÔ½½ç£¬ÈÔÊô±¾´¥·¢ÊÂ¼şµÄÃ÷Ê¾·¶Î§£©¡£
 
-> **è·¯å¾„åŸºå‡†ï¼ˆ2026-07-14 pr-6 é‡ç»„åé‡å¯¹é½ï¼‰**ï¼špr-6 æäº¤ï¼ˆ4e736e9ï¼‰å°† docs ä»æ—§ç¼–å·ç›®å½•ï¼ˆ`01-requirements/`ã€`02-design/`ã€`03-development/`ã€`04-testing/`ã€`05-deployment/`ï¼‰æ•´ä½“è¿ç§»åˆ° DiÃ¡taxis æ–°ç»“æ„ï¼ˆ`explanation/`ã€`reference/`ã€`how-to/`ã€`tutorials/`ã€`reports/`ã€`00-meta/`ï¼‰ã€‚æœ¬æ¬¡ä¿®è®¢å°†ä¸‹è¡¨æ‰€æœ‰ç›®æ ‡æ–‡æ¡£è·¯å¾„é‡æ–°å¯¹é½åˆ°æ–°ç»“æ„çš„çœŸå®æƒå¨ä½ç½®ï¼Œæ¶ˆé™¤ pr-6 é‡ç»„å¯¼è‡´çš„è·¯å¾„è„±èŠ‚ã€‚è§„èŒƒ/å¥‘çº¦/æ•°æ®å­—å…¸ç±»å½’ `reference/`ï¼Œè®¾è®¡å†³ç­–/ADR å½’ `explanation/`ï¼Œå®æ“æŒ‡å—å½’ `how-to/`ï¼Œæ²»ç†æ ¸å¿ƒå½’ `00-meta/`ã€‚
+> **Â·¾¶»ù×¼£¨2026-07-14 pr-6 ÖØ×éºóÖØ¶ÔÆë£©**£ºpr-6 Ìá½»£¨4e736e9£©½« docs ´Ó¾É±àºÅÄ¿Â¼£¨`01-requirements/`¡¢`02-design/`¡¢`03-development/`¡¢`04-testing/`¡¢`05-deployment/`£©ÕûÌåÇ¨ÒÆµ½ Di¨¢taxis ĞÂ½á¹¹£¨`explanation/`¡¢`reference/`¡¢`how-to/`¡¢`tutorials/`¡¢`reports/`¡¢`00-meta/`£©¡£±¾´ÎĞŞ¶©½«ÏÂ±íËùÓĞÄ¿±êÎÄµµÂ·¾¶ÖØĞÂ¶ÔÆëµ½ĞÂ½á¹¹µÄÕæÊµÈ¨ÍşÎ»ÖÃ£¬Ïû³ı pr-6 ÖØ×éµ¼ÖÂµÄÂ·¾¶ÍÑ½Ú¡£¹æ·¶/ÆõÔ¼/Êı¾İ×ÖµäÀà¹é `reference/`£¬Éè¼Æ¾ö²ß/ADR ¹é `explanation/`£¬Êµ²ÙÖ¸ÄÏ¹é `how-to/`£¬ÖÎÀíºËĞÄ¹é `00-meta/`¡£
 
-| è§¦å‘äº‹ä»¶ | åŒ¹é…æ¨¡å¼ (glob) | å¯¹åº”æ›´æ–°åŠ¨ä½œï¼ˆå”¯ä¸€ä¸»æ–‡æ¡£ï¼‰ | æ˜¯å¦è§¦å‘ audit:docs | å¤‡æ³¨ |
+| ´¥·¢ÊÂ¼ş | Æ¥ÅäÄ£Ê½ (glob) | ¶ÔÓ¦¸üĞÂ¶¯×÷£¨Î¨Ò»Ö÷ÎÄµµ£© | ÊÇ·ñ´¥·¢ audit:docs | ±¸×¢ |
 |---|---|---|---|---|
-| **T1 ç±»å‹å®šä¹‰å˜æ›´** | `src/data/types.ts`ã€`src/types/modules/*.ts`ã€`src/services/scoring/v6-engine/types.ts`ã€`../../src/showcase/types.ts` | æ›´æ–° `docs/reference/data-dictionary-index.md` | æ˜¯ | è¡¥å……ï¼š`docs/reference/v9æ ¸å¿ƒæ•°æ®å­—å…¸ä¸ç±»å‹å®šä¹‰(æ•´åˆç‰ˆ).md`ã€`docs/reference/cockpit/data-definition.md`ã€`docs/explanation/news-data-definition.md`ã€å›¢é˜Ÿæ‰‹å†Œ `docs/team-handbook/04-model-runtime.md`ã€‚ä»…æ”¹å‘½ä¸­æ–‡ä»¶å¯¹åº”çš„æ¡ç›®ï¼Œç¦æ­¢å…¨é‡é‡å†™ã€‚ |
-| **T2 æ¥å£å˜æ›´** | `src/services/**/index.ts`ã€`src/core/databridge.ts`ã€`src/data/dataLayer.ts`ã€`src/services/fetcher`ã€`src/services/analysis` | æ›´æ–° `docs/reference/api-contract.md` | æ˜¯ | è¡¥å……ï¼š`docs/reference/databridgeç«¯ç‚¹ä¸æ•°æ®æ˜ å°„æ¸…å•.md`ã€`docs/reference/åŠŸèƒ½æ¨¡å—æ•°æ®å¥‘çº¦.md`ã€å›¢é˜Ÿæ‰‹å†Œ `docs/team-handbook/02-architecture.md` ä¸ `docs/team-handbook/04-model-runtime.md`ã€‚æŒ‰å˜æ›´æ¥å£ç²¾ç¡®æ”¹å†™ç­¾å/ç«¯ç‚¹æ®µã€‚ |
-| **T3 æ¶æ„è°ƒæ•´** | `src/config/routes.ts`ã€`src/config/dbConfig.ts`ã€`../../AGENTS.md`ã€`src/config/thresholds.ts` | æ›´æ–° `docs/reference/03-architecture-standards.md` | æ˜¯ | è¡¥å……ï¼š`docs/reference/06-routing-specs.md`ã€`docs/explanation/architecture.md`ã€å›¢é˜Ÿæ‰‹å†Œ `docs/team-handbook/02-architecture.md`ã€‚æ³¨æ„ `src/config/thresholds.ts` åŒå± T4ï¼Œå‘½ä¸­æ—¶ T3/T4 å‡è§¦å‘ï¼Œå„è‡ªåªæ”¹æœ¬èŒæ–‡æ¡£ã€‚ |
-| **T4 é…ç½®å‚æ•°å˜æ›´** | `src/constants/*.ts`ã€`src/config/thresholds.ts`ã€`src/services/scoring/v6-engine/config.ts` | æ›´æ–° `docs/reference/05-engine-specs.md` | æ˜¯ | è¡¥å……ï¼š`docs/reference/09-quality-gates.md`ã€å›¢é˜Ÿæ‰‹å†Œ `docs/team-handbook/04-model-runtime.md`ã€‚ |
-| **T5 Store çŠ¶æ€ç®¡ç†å˜æ›´** | `src/store/**/*.ts` | æ›´æ–° `docs/explanation/state-management.md` | æ˜¯ | è¡¥å……ï¼š`docs/reference/data-flow-spec.md`ã€å›¢é˜Ÿæ‰‹å†Œ `docs/team-handbook/02-architecture.md`ã€‚ |
-| **T6 UI ç»„ä»¶å˜æ›´** | `src/components/**/*.tsx`ã€`src/components/**/*.ts` | æ›´æ–° `docs/explanation/design/component-library-guide.md` | æ˜¯ | è¡¥å……ï¼š`docs/explanation/design/ui-design-system.md`ã€å›¢é˜Ÿæ‰‹å†Œ `docs/team-handbook/03-ui-components.md`ã€‚ |
-| **T7 Hook è‡ªå®šä¹‰å˜æ›´** | `src/hooks/**/*.ts`ã€`src/hooks/**/*.tsx` | æ›´æ–° `docs/how-to/hooks-guide.md` | æ˜¯ | è¡¥å……ï¼š`docs/reference/data-flow-spec.md`ã€å›¢é˜Ÿæ‰‹å†Œ `docs/team-handbook/03-ui-components.md`ã€‚ |
-| **T8 é¡µé¢ç»„ä»¶å˜æ›´** | `src/pages/**/*.tsx`ã€`src/pages/**/*.ts` | æ›´æ–° `docs/reference/06-routing-specs.md` | æ˜¯ | è¡¥å……ï¼š`docs/explanation/page-structure.md`ã€å›¢é˜Ÿæ‰‹å†Œ `docs/team-handbook/02-architecture.md`ã€‚ |
-| **T9 Widget æ³¨å†Œè¡¨å˜æ›´** | `src/cockpit/core/widgetRegistry.ts` | é‡å†™ `docs/reference/cockpit/data-definition.md` | æ˜¯ | è¡¥å……ï¼šå¢é‡ç»´æŠ¤ `docs/00-meta/registry-index.md`ï¼ˆéå…¨é‡é‡å†™ï¼Œè§ä»»åŠ¡ A1ï¼‰ã€å›¢é˜Ÿæ‰‹å†Œ `docs/team-handbook/03-ui-components.md` + è·‘ `audit:docs`ã€‚æ³¨å†Œè¡¨ç»“æ„å˜æ›´æ—¶ cockpit æ•°æ®å®šä¹‰éœ€æ•´ä½“å¯¹é½ã€‚ |
-| **T10 ç‰ˆæœ¬å‘å¸ƒï¼ˆpackage.json version bumpï¼‰** | `package.json`ï¼ˆä»… `version` å­—æ®µå˜æ›´ï¼‰ | å…¨ä»“ `docs/**/*.md` frontmatter `code_version` åŒæ­¥ | å¦ï¼ˆç”± `doc:version-check` è¦†ç›–ï¼‰ | è¡¥å……ï¼šå°† `CHANGELOG` çš„ `[Unreleased]` æ®µæå‡ä¸ºå¯¹åº”ç‰ˆæœ¬æ®µï¼ˆå¯¹åº”è®¡åˆ’ T4/T5/T6ï¼‰ã€‚æ­¤äº‹ä»¶ä¸º**è·¨ä»“åº“å…ƒæ•°æ®åŒæ­¥**ï¼Œä¸è§¦è¾¾æ­£æ–‡ï¼Œæ•…ä¸è·‘ `audit:docs`ï¼›`--auto-update` å¯¹ T10 å¯¹æ¥ `npm run doc:version-check`ã€‚ |
+| **T1 ÀàĞÍ¶¨Òå±ä¸ü** | `src/data/types.ts`¡¢`src/types/modules/*.ts`¡¢`src/services/scoring/v6-engine/types.ts`¡¢`../../src/showcase/types.ts` | ¸üĞÂ `docs/reference/data-dictionary-index.md` | ÊÇ | ²¹³ä£º`docs/reference/v9ºËĞÄÊı¾İ×ÖµäÓëÀàĞÍ¶¨Òå(ÕûºÏ°æ).md`¡¢`docs/reference/cockpit/data-definition.md`¡¢`docs/explanation/news-data-definition.md`¡¢ÍÅ¶ÓÊÖ²á `docs/team-handbook/04-model-runtime.md`¡£½ö¸ÄÃüÖĞÎÄ¼ş¶ÔÓ¦µÄÌõÄ¿£¬½ûÖ¹È«Á¿ÖØĞ´¡£ |
+| **T2 ½Ó¿Ú±ä¸ü** | `src/services/**/index.ts`¡¢`src/core/databridge.ts`¡¢`src/data/dataLayer.ts`¡¢`src/services/fetcher`¡¢`src/services/analysis` | ¸üĞÂ `docs/reference/api-contract.md` | ÊÇ | ²¹³ä£º`docs/reference/databridge¶ËµãÓëÊı¾İÓ³ÉäÇåµ¥.md`¡¢`docs/reference/¹¦ÄÜÄ£¿éÊı¾İÆõÔ¼.md`¡¢ÍÅ¶ÓÊÖ²á `docs/team-handbook/02-architecture.md` Óë `docs/team-handbook/04-model-runtime.md`¡£°´±ä¸ü½Ó¿Ú¾«È·¸ÄĞ´Ç©Ãû/¶Ëµã¶Î¡£ |
+| **T3 ¼Ü¹¹µ÷Õû** | `src/config/routes.ts`¡¢`src/config/dbConfig.ts`¡¢`../../AGENTS.md`¡¢`src/config/thresholds.ts` | ¸üĞÂ `docs/reference/03-architecture-standards.md` | ÊÇ | ²¹³ä£º`docs/reference/06-routing-specs.md`¡¢`docs/explanation/architecture.md`¡¢ÍÅ¶ÓÊÖ²á `docs/team-handbook/02-architecture.md`¡£×¢Òâ `src/config/thresholds.ts` Í¬Êô T4£¬ÃüÖĞÊ± T3/T4 ¾ù´¥·¢£¬¸÷×ÔÖ»¸Ä±¾Ö°ÎÄµµ¡£ |
+| **T4 ÅäÖÃ²ÎÊı±ä¸ü** | `src/constants/*.ts`¡¢`src/config/thresholds.ts`¡¢`src/services/scoring/v6-engine/config.ts` | ¸üĞÂ `docs/reference/05-engine-specs.md` | ÊÇ | ²¹³ä£º`docs/reference/09-quality-gates.md`¡¢ÍÅ¶ÓÊÖ²á `docs/team-handbook/04-model-runtime.md`¡£ |
+| **T5 Store ×´Ì¬¹ÜÀí±ä¸ü** | `src/store/**/*.ts` | ¸üĞÂ `docs/explanation/state-management.md` | ÊÇ | ²¹³ä£º`docs/reference/data-flow-spec.md`¡¢ÍÅ¶ÓÊÖ²á `docs/team-handbook/02-architecture.md`¡£ |
+| **T6 UI ×é¼ş±ä¸ü** | `src/components/**/*.tsx`¡¢`src/components/**/*.ts` | ¸üĞÂ `docs/explanation/design/component-library-guide.md` | ÊÇ | ²¹³ä£º`docs/design/component-specs.md`£¨»ù´¡×é¼ş¹æ·¶Î¨Ò»ÊÂÊµÔ´£©¡¢`docs/explanation/design/ui-design-system.md`¡¢ÍÅ¶ÓÊÖ²á `docs/team-handbook/03-ui-components.md`¡£ |
+| **T7 Hook ×Ô¶¨Òå±ä¸ü** | `src/hooks/**/*.ts`¡¢`src/hooks/**/*.tsx` | ¸üĞÂ `docs/how-to/hooks-guide.md` | ÊÇ | ²¹³ä£º`docs/reference/data-flow-spec.md`¡¢ÍÅ¶ÓÊÖ²á `docs/team-handbook/03-ui-components.md`¡£ |
+| **T8 Ò³Ãæ×é¼ş±ä¸ü** | `src/pages/**/*.tsx`¡¢`src/pages/**/*.ts` | ¸üĞÂ `docs/reference/06-routing-specs.md` | ÊÇ | ²¹³ä£º`docs/explanation/page-structure.md`¡¢ÍÅ¶ÓÊÖ²á `docs/team-handbook/02-architecture.md`¡£ |
+| **T9 Widget ×¢²á±í±ä¸ü** | `src/cockpit/core/widgetRegistry.ts` | ÖØĞ´ `docs/reference/cockpit/data-definition.md` | ÊÇ | ²¹³ä£ºÔöÁ¿Î¬»¤ `docs/00-meta/registry-index.md`£¨·ÇÈ«Á¿ÖØĞ´£¬¼ûÈÎÎñ A1£©¡¢ÍÅ¶ÓÊÖ²á `docs/team-handbook/03-ui-components.md` + ÅÜ `audit:docs` ºÍ `audit:widget-registry`¡£±ä¸ü defaultLayout Ê±±ØĞëÍ¬²½¸üĞÂ `AGENTS.md` ¡ì7.2 ²¼¾ÖÔ­Ôò¡£ |
+| **T10 °æ±¾·¢²¼£¨package.json version bump£©** | `package.json`£¨½ö `version` ×Ö¶Î±ä¸ü£© | È«²Ö `docs/**/*.md` frontmatter `code_version` Í¬²½ | ·ñ£¨ÓÉ `doc:version-check` ¸²¸Ç£© | ²¹³ä£º½« `CHANGELOG` µÄ `[Unreleased]` ¶ÎÌáÉıÎª¶ÔÓ¦°æ±¾¶Î£¨¶ÔÓ¦¼Æ»® T4/T5/T6£©¡£´ËÊÂ¼şÎª**¿ç²Ö¿âÔªÊı¾İÍ¬²½**£¬²»´¥´ïÕıÎÄ£¬¹Ê²»ÅÜ `audit:docs`£»`--auto-update` ¶Ô T10 ¶Ô½Ó `npm run doc:version-check`¡£ |
+| **T11 Mock Ä£¿é°²È«** | `scripts/audit/audit-mock-modules.ts`¡¢`tests/**/*.test.ts`£¨ĞÂÔöÈ«Á¿ mock Ê±£© | ¸üĞÂ±¾±í£¨µ±Ç°ÎÄ¼ş£©+ `AGENTS.md` ¡ì7.3 | ·ñ | ĞÂÔö SAFE_FULL_MOCKS allowlist ÌõÄ¿±ØĞë¸½´ø `reason` ×¢ÊÍ¡£audit:mock-modules exit 0 ¼´ÎŞĞÂÔöÎ¥¹æ¡£ |
+| **T12 ESLint/ÃÅ½û±ä¸ü** | `eslint.config.js`¡¢`eslint-rules/*.js`¡¢`scripts/quality/*.js`¡¢`package.json`£¨scripts ¶Î£© | ¸üĞÂ `AGENTS.md` ¡ìÈı ÀàĞÍ°²È« + ¡ìÆß ÑéÖ¤ÃüÁî | ·ñ | ĞÂÔö¹æÔòĞèÔÚ AGENTS.md µÇ¼Ç¹æÔòÓÃÍ¾ºÍ±³¾°½ÌÑµ±àºÅ£¨Èç P3 ¡ú no-record-string-to-branded£©¡£ |
+| **T13 ACL È¨ÏŞ¾ØÕó±ä¸ü** | `src/config/dbConfig.ts`£¨ACL_MATRIX ¶Î£©¡¢`src/core/databridgeHandlers.ts`£¨PutHandler ¶Î£©¡¢`src/core/databridge.ts`£¨ACTION_TO_STORE_MAP ¶Î£© | ÔËĞĞ `npm run audit:acl-consistency` + ¸üĞÂ±¾±í | ·ñ | ĞŞ¸Ä ACL_MATRIX¡¢ENVELOPE_ACTION¡¢ACTION_TO_STORE_MAP »ò Handler ×¢²á±íºó±ØĞëÔËĞĞ audit:acl-consistency ÑéÖ¤Åä¶ÔÒ»ÖÂĞÔ¡£Î¥¹æ±ØĞëĞŞ¸´ºó²Å¿ÉÌá½»¡£
+| **T14 ¹ÉÆ±×ÖµäÉú³É/Ğ£Ñé** | `scripts/generate-stock-dict.py`¡¢`scripts/verify-stock-dict.py`¡¢`src/services/stock/stockDictionary.ts` | ¸üĞÂ `docs/reference/stock-dictionary-generation.md` | ÊÇ | ²¹³ä£ºÍ¬²½±¾±í£¨doc-trigger-action-map.md£©¡£Êı¾İÔ´=akshare£¨ÊÜ¹Ü venv python£©£¬ËÄ½»Ò×Ëù 8331 Ìõ£¨SH 2308 / SZ 2892 / BJ 328 / HK 2803£©£¬µ¥Ò»ÊÂÊµÔ´£»Ã¿ÖÜÈÕ 03:00 ×Ô¶¯Ë¢ĞÂ£¨automation-1784399510483£©¡£×¢£ºT13 ÒÑÓÉ¡¸ACL È¨ÏŞ¾ØÕó±ä¸ü¡¹Õ¼ÓÃ£¨¼û AGENTS.md ¡ìÆß£©£¬¹Ê±¾¹æÔòË³ÑÓÎª T14¡£
 
-> **å…³äº 1:1 çš„è¯´æ˜**ï¼šä¸Šè¡¨æ¯ä¸ªè§¦å‘äº‹ä»¶åªæœ‰ä¸€ä¸ªã€Œä¸»æ–‡æ¡£ã€ä½œä¸ºå”¯ä¸€ä¸»åŠ¨ä½œï¼›ã€Œè¡¥å……æ–‡æ¡£ã€æ˜¯è¯¥è§¦å‘äº‹ä»¶**æ˜ç¤ºé™„å¸¦**çš„åŒæ­¥èŒƒå›´ï¼Œä»å±æœ¬äº‹ä»¶ï¼Œä¸å±äºè¶Šç•Œã€‚ä»»ä½•æœªå‡ºç°åœ¨æœ¬è¡¨çš„æ–‡æ¡£éƒ½ä¸åœ¨è‡ªåŠ¨æ”¹å†™èŒƒå›´å†…ã€‚
+> **¹ØÓÚ 1:1 µÄËµÃ÷**£ºÉÏ±íÃ¿¸ö´¥·¢ÊÂ¼şÖ»ÓĞÒ»¸ö¡¸Ö÷ÎÄµµ¡¹×÷ÎªÎ¨Ò»Ö÷¶¯×÷£»¡¸²¹³äÎÄµµ¡¹ÊÇ¸Ã´¥·¢ÊÂ¼ş**Ã÷Ê¾¸½´ø**µÄÍ¬²½·¶Î§£¬ÈÔÊô±¾ÊÂ¼ş£¬²»ÊôÓÚÔ½½ç¡£ÈÎºÎÎ´³öÏÖÔÚ±¾±íµÄÎÄµµ¶¼²»ÔÚ×Ô¶¯¸ÄĞ´·¶Î§ÄÚ¡£
 
-> **å›¢é˜Ÿæ‰‹å†Œæ¥å…¥ï¼ˆ2026-07-15ï¼‰**ï¼šå›¢é˜Ÿä½“ç³»æ‰‹å†Œ `docs/team-handbook/`ï¼ˆ01 è®¾è®¡åŸåˆ› / 02 æ•´ä½“æ¶æ„ / 03 UI ç»„ä»¶ / 04 æ¨¡å‹è¿è¡Œ / 05 ç«å“å¯¹æ¯”ï¼‰å·²æ³¨å†Œä¸ºä¸Šè¿° T1â€“T9 çš„è¡¥å……æ–‡æ¡£ï¼ŒæŒ‰ç»´åº¦æ˜ å°„ï¼š02 æ•´ä½“æ¶æ„ â† T2/T3/T5/T8ï¼›03 UI ç»„ä»¶ â† T6/T7/T9ï¼›04 æ¨¡å‹è¿è¡Œ â† T1/T2/T4ã€‚è§¦å‘å¯¹åº”è§„åˆ™æ—¶ï¼Œ`--auto-update` ä¼šåˆ·æ–°æ‰‹å†Œ `.md` æœ«å°¾çš„ `<!-- auto-update -->` æ ¡éªŒæ ‡è®°å¹¶æç¤ºäººå·¥å¤æ ¸ï¼ˆæ‰‹å†Œä¸ºäººå·¥ç­–å±•æ–‡æ¡£ï¼Œç”Ÿæˆå™¨ä»…åˆ·æ–°æ ‡è®°ï¼Œä¸é‡å†™æ­£æ–‡ï¼‰ã€‚æ‰‹å†Œçš„ HTML ç‰ˆï¼ˆ`docs/team-handbook-html/`ï¼‰ç”± `node scripts/convert-handbook-to-html.mjs` ä» `.md` æ´¾ç”Ÿï¼Œ**`.md` æ›´æ–°åé¡»é‡è·‘è¯¥è„šæœ¬é‡æ–°ç”Ÿæˆ HTML**ï¼›HTML ä¸çº³å…¥è‡ªåŠ¨æ”¹å†™èŒƒå›´ï¼Œé¿å…è¦†ç›–æ´¾ç”Ÿäº§ç‰©ã€‚
+> **ÍÅ¶ÓÊÖ²á½ÓÈë£¨2026-07-15£©**£ºÍÅ¶ÓÌåÏµÊÖ²á `docs/team-handbook/`£¨01 Éè¼ÆÔ­´´ / 02 ÕûÌå¼Ü¹¹ / 03 UI ×é¼ş / 04 Ä£ĞÍÔËĞĞ / 05 ¾ºÆ·¶Ô±È£©ÒÑ×¢²áÎªÉÏÊö T1¨CT9 µÄ²¹³äÎÄµµ£¬°´Î¬¶ÈÓ³Éä£º02 ÕûÌå¼Ü¹¹ ¡û T2/T3/T5/T8£»03 UI ×é¼ş ¡û T6/T7/T9£»04 Ä£ĞÍÔËĞĞ ¡û T1/T2/T4¡£´¥·¢¶ÔÓ¦¹æÔòÊ±£¬`--auto-update` »áË¢ĞÂÊÖ²á `.md` Ä©Î²µÄ `<!-- auto-update -->` Ğ£Ñé±ê¼Ç²¢ÌáÊ¾ÈË¹¤¸´ºË£¨ÊÖ²áÎªÈË¹¤²ßÕ¹ÎÄµµ£¬Éú³ÉÆ÷½öË¢ĞÂ±ê¼Ç£¬²»ÖØĞ´ÕıÎÄ£©¡£ÊÖ²áµÄ HTML °æ£¨`docs/team-handbook-html/`£©ÓÉ `node scripts/convert-handbook-to-html.mjs` ´Ó `.md` ÅÉÉú£¬**`.md` ¸üĞÂºóĞëÖØÅÜ¸Ã½Å±¾ÖØĞÂÉú³É HTML**£»HTML ²»ÄÉÈë×Ô¶¯¸ÄĞ´·¶Î§£¬±ÜÃâ¸²¸ÇÅÉÉú²úÎï¡£
 
 ---
 
-## ä¸‰ã€é”™è¯¯ç åˆ†ç±»å­¦
+## Èı¡¢´íÎóÂë·ÖÀàÑ§
 
-æ›´æ–°å™¨ï¼ˆ`--auto-update`ã€`doc-auto-updater`ï¼‰å†™æ–‡æ¡£æ—¶å‘å‡ºçš„ç»“æ„åŒ–é”™è¯¯ç ï¼Œä¾›åç»­å‘Šè­¦é€‚é…å™¨ï¼ˆT3ï¼‰åšåˆ†è¯Šä¸é‡è¯•å†³ç­–ã€‚
+¸üĞÂÆ÷£¨`--auto-update`¡¢`doc-auto-updater`£©Ğ´ÎÄµµÊ±·¢³öµÄ½á¹¹»¯´íÎóÂë£¬¹©ºóĞø¸æ¾¯ÊÊÅäÆ÷£¨T3£©×ö·ÖÕïÓëÖØÊÔ¾ö²ß¡£
 
-| é”™è¯¯ç  | å«ä¹‰ | è§¦å‘åœºæ™¯ | æ˜¯å¦å¯é‡è¯• |
+| ´íÎóÂë | º¬Òå | ´¥·¢³¡¾° | ÊÇ·ñ¿ÉÖØÊÔ |
 |---|---|---|---|
-| `FILE_NOT_FOUND` | æ˜¾å¼æŒ‡å®šæ–‡ä»¶ä¸å­˜åœ¨ | `--files` ä¼ å…¥çš„è·¯å¾„åœ¨ç£ç›˜ä¸Šä¸å­˜åœ¨ï¼›æˆ–æœ¬è¡¨è¦æ±‚æ”¹å†™çš„ä¸»/è¡¥å……æ–‡æ¡£ç¼ºå¤± | å¦ï¼ˆç«‹å³å¤±è´¥ï¼Œå¯¹åº”ä»»åŠ¡ A2ï¼‰ |
-| `PATH_OUTSIDE_ROOT` | è·¯å¾„è¶Šç•Œ / ç›®å½•ç©¿è¶Šè¢«æ‹’ | å†™å…¥æˆ–è¯»å–è·¯å¾„è§£æåˆ°ä»“åº“æ ¹ç›®å½•ä¹‹å¤–ï¼ˆå¦‚ `../`ã€ç»å¯¹è·¯å¾„é€ƒé€¸ï¼‰ | å¦ï¼ˆå®‰å…¨æ‹’ç»ï¼Œç«‹å³å¤±è´¥ï¼‰ |
-| `IO` | è¯»å†™å¼‚å¸¸ | æ–‡ä»¶è¯»å†™å¤±è´¥ã€æƒé™ä¸è¶³ã€ç£ç›˜é”™è¯¯ | æ˜¯ï¼ˆæŒ‡æ•°é€€é¿ï¼Œé»˜è®¤ maxRetries=3ï¼Œå¯¹åº”ä»»åŠ¡ T2ï¼‰ |
-| `TRANSIENT` | å¯é‡è¯•çš„ç¬æ—¶é”™è¯¯ | ä¸´æ—¶æ€§é”å®šã€å¹¶å‘ç«äº‰ã€ç½‘ç»œ/ä¸´æ—¶æ–‡ä»¶ç³»ç»ŸæŠ–åŠ¨ | æ˜¯ï¼ˆæŒ‡æ•°é€€é¿ï¼Œé»˜è®¤ maxRetries=3ï¼Œå¯¹åº”ä»»åŠ¡ T2ï¼‰ |
+| `FILE_NOT_FOUND` | ÏÔÊ½Ö¸¶¨ÎÄ¼ş²»´æÔÚ | `--files` ´«ÈëµÄÂ·¾¶ÔÚ´ÅÅÌÉÏ²»´æÔÚ£»»ò±¾±íÒªÇó¸ÄĞ´µÄÖ÷/²¹³äÎÄµµÈ±Ê§ | ·ñ£¨Á¢¼´Ê§°Ü£¬¶ÔÓ¦ÈÎÎñ A2£© |
+| `PATH_OUTSIDE_ROOT` | Â·¾¶Ô½½ç / Ä¿Â¼´©Ô½±»¾Ü | Ğ´Èë»ò¶ÁÈ¡Â·¾¶½âÎöµ½²Ö¿â¸ùÄ¿Â¼Ö®Íâ£¨Èç `../`¡¢¾ø¶ÔÂ·¾¶ÌÓÒİ£© | ·ñ£¨°²È«¾Ü¾ø£¬Á¢¼´Ê§°Ü£© |
+| `IO` | ¶ÁĞ´Òì³£ | ÎÄ¼ş¶ÁĞ´Ê§°Ü¡¢È¨ÏŞ²»×ã¡¢´ÅÅÌ´íÎó | ÊÇ£¨Ö¸ÊıÍË±Ü£¬Ä¬ÈÏ maxRetries=3£¬¶ÔÓ¦ÈÎÎñ T2£© |
+| `TRANSIENT` | ¿ÉÖØÊÔµÄË²Ê±´íÎó | ÁÙÊ±ĞÔËø¶¨¡¢²¢·¢¾ºÕù¡¢ÍøÂç/ÁÙÊ±ÎÄ¼şÏµÍ³¶¶¶¯ | ÊÇ£¨Ö¸ÊıÍË±Ü£¬Ä¬ÈÏ maxRetries=3£¬¶ÔÓ¦ÈÎÎñ T2£© |
 
-> ä¸å¯é‡è¯•é”™è¯¯ï¼ˆ`FILE_NOT_FOUND` / `PATH_OUTSIDE_ROOT`ï¼‰åº”**ç«‹å³**å‘ T3 å‘Šè­¦é€‚é…å™¨ä¸ŠæŠ¥å¹¶ç»ˆæ­¢ï¼›å¯é‡è¯•é”™è¯¯ä»…å¯¹ `IO` / `TRANSIENT` é‡è¯•ï¼Œä¸”éœ€å— lockfileï¼ˆA6ï¼‰çº¦æŸï¼Œé¿å…ä¸¢å¤±æ›´æ–°ã€‚
-> `--auto-update` é»˜è®¤ç”Ÿæˆå™¨å¯¹ç¼ºå¤±æ–‡æ¡£ä¼š**åˆ›å»ºéª¨æ¶**è€Œéç¡¬å¤±è´¥ï¼ˆä¿éšœé¦–è·‘å¯ç”¨ï¼‰ï¼Œä»… `PATH_OUTSIDE_ROOT` ç«‹å³å¤±è´¥ã€‚
+> ²»¿ÉÖØÊÔ´íÎó£¨`FILE_NOT_FOUND` / `PATH_OUTSIDE_ROOT`£©Ó¦**Á¢¼´**Ïò T3 ¸æ¾¯ÊÊÅäÆ÷ÉÏ±¨²¢ÖÕÖ¹£»¿ÉÖØÊÔ´íÎó½ö¶Ô `IO` / `TRANSIENT` ÖØÊÔ£¬ÇÒĞèÊÜ lockfile£¨A6£©Ô¼Êø£¬±ÜÃâ¶ªÊ§¸üĞÂ¡£
+> `--auto-update` Ä¬ÈÏÉú³ÉÆ÷¶ÔÈ±Ê§ÎÄµµ»á**´´½¨¹Ç¼Ü**¶ø·ÇÓ²Ê§°Ü£¨±£ÕÏÊ×ÅÜ¿ÉÓÃ£©£¬½ö `PATH_OUTSIDE_ROOT` Á¢¼´Ê§°Ü¡£
 
 ---
 
-## å››ã€ä¸è®¡åˆ’ä»»åŠ¡å¯¹ç…§
+## ËÄ¡¢Óë¼Æ»®ÈÎÎñ¶ÔÕÕ
 
-æœ¬æƒå¨è¡¨æœåŠ¡çš„è®¡åˆ’ä»»åŠ¡ä¸åç»­è½åœ°ç‚¹ï¼š
+±¾È¨Íş±í·şÎñµÄ¼Æ»®ÈÎÎñÓëºóĞøÂäµØµã£º
 
-| è®¡åˆ’é¡¹ | å…³ç³» |
+| ¼Æ»®Ïî | ¹ØÏµ |
 |---|---|
-| **çº¦æŸ 1**ï¼ˆÂ§ä¸‰ï¼‰ | æœ¬æ–‡ä»¶å³çº¦æŸ 1 çš„è½åœ°è½½ä½“ï¼Œå®šä¹‰ã€Œè§¦å‘-åŠ¨ä½œä¸€ä¸€æ˜ å°„ã€ã€‚ |
-| **T1**ï¼ˆé‡Œç¨‹ç¢‘ M1ï¼ŒP0ï¼‰ | æœ¬æ–‡ä»¶å³ T1 äº¤ä»˜ç‰©ã€‚ |
-| **A1**ï¼ˆé™åŸŸ / é˜²è¶Šç•Œï¼‰ | æœ¬è¡¨ä¸º A1ã€Œcrossref é™åŸŸ `changedScanned`ã€REGISTRY_INDEX å¢é‡ã€æä¾›èŒƒå›´è¾¹ç•Œä¾æ®ã€‚ |
-| **T7b**ï¼ˆ`doc-automation.yml`ï¼ŒM2 CIï¼‰ | CI åœ¨ push/PR è§¦å‘æ—¶å¼•ç”¨æœ¬è¡¨åˆ¤å®šåº”æ”¹å†™æ–‡æ¡£ä¸æ˜¯å¦è·‘ `audit:docs`ã€‚ |
-| **N2**ï¼ˆP0ï¼Œå·²é—­ç¯ï¼‰ | æœ¬è¡¨ Â§äºŒ æ‰€æœ‰ç›®æ ‡æ–‡æ¡£è·¯å¾„å·²å¯¹é½ç£ç›˜çœŸå®æ–‡ä»¶ï¼ˆ9 ä¿®è®¢ + 4 æ–°å»ºï¼‰ï¼Œæ¶ˆé™¤ `FILE_NOT_FOUND` é£é™©ã€‚ |
-| **N3**ï¼ˆP0ï¼Œå·²è½åœ°ï¼‰ | `doc-update-trigger --auto-update` å·²æŒ‰æœ¬è¡¨ Â§äºŒ çŸ©é˜µå®ç°ï¼šè§¦å‘è§„åˆ™åŒ¹é… â†’ ä¸»/è¡¥å……æ–‡æ¡£ç”Ÿæˆï¼ˆæ‰©å±•ç‚¹ï¼‰â†’ æŒ‰éœ€ `audit:docs`ï¼›T10 å¯¹æ¥ `doc:version-check`ã€‚ |
+| **Ô¼Êø 1**£¨¡ìÈı£© | ±¾ÎÄ¼ş¼´Ô¼Êø 1 µÄÂäµØÔØÌå£¬¶¨Òå¡¸´¥·¢-¶¯×÷Ò»Ò»Ó³Éä¡¹¡£ |
+| **T1**£¨Àï³Ì±® M1£¬P0£© | ±¾ÎÄ¼ş¼´ T1 ½»¸¶Îï¡£ |
+| **A1**£¨ÏŞÓò / ·ÀÔ½½ç£© | ±¾±íÎª A1¡¸crossref ÏŞÓò `changedScanned`¡¢REGISTRY_INDEX ÔöÁ¿¡¹Ìá¹©·¶Î§±ß½çÒÀ¾İ¡£ |
+| **T7b**£¨`doc-automation.yml`£¬M2 CI£© | CI ÔÚ push/PR ´¥·¢Ê±ÒıÓÃ±¾±íÅĞ¶¨Ó¦¸ÄĞ´ÎÄµµÓëÊÇ·ñÅÜ `audit:docs`¡£ |
+| **N2**£¨P0£¬ÒÑ±Õ»·£© | ±¾±í ¡ì¶ş ËùÓĞÄ¿±êÎÄµµÂ·¾¶ÒÑ¶ÔÆë´ÅÅÌÕæÊµÎÄ¼ş£¨9 ĞŞ¶© + 4 ĞÂ½¨£©£¬Ïû³ı `FILE_NOT_FOUND` ·çÏÕ¡£ |
+| **N3**£¨P0£¬ÒÑÂäµØ£© | `doc-update-trigger --auto-update` ÒÑ°´±¾±í ¡ì¶ş ¾ØÕóÊµÏÖ£º´¥·¢¹æÔòÆ¥Åä ¡ú Ö÷/²¹³äÎÄµµÉú³É£¨À©Õ¹µã£©¡ú °´Ğè `audit:docs`£»T10 ¶Ô½Ó `doc:version-check`¡£ |
 
-> åŒæ­¥è¦æ±‚ï¼šä»»ä½•å¯¹ `scripts/docs-tool/doc-update-trigger.ts` `TRIGGER_RULES` çš„å¢åˆ æ”¹ï¼Œæˆ–å¯¹ `widgetRegistry.ts` / `package.json` è§¦å‘è¯­ä¹‰çš„è°ƒæ•´ï¼Œå‡é¡»åŒæ­¥ä¿®è®¢æœ¬è¡¨ï¼Œç¡®ä¿äºŒè€…å§‹ç»ˆä¸€è‡´ã€‚
+> Í¬²½ÒªÇó£ºÈÎºÎ¶Ô `scripts/docs-tool/doc-update-trigger.ts` `TRIGGER_RULES` µÄÔöÉ¾¸Ä£¨º¬ĞÂÔö´¥·¢¹æÔòÈç **T14 ¹ÉÆ±×ÖµäÉú³É/Ğ£Ñé**£©£¬»ò¶Ô `widgetRegistry.ts` / `package.json` ´¥·¢ÓïÒåµÄµ÷Õû£¬¾ùĞë**Ë«ÏòÍ¬²½**±¾±í ¡ì¶ş Óë `doc-update-trigger.ts`£¬È·±£¶şÕßÊ¼ÖÕÒ»ÖÂ¡¢¹æÔò id ²»³åÍ»¡£×¢Òâ£º±¾±í **T13£¨ACL È¨ÏŞ¾ØÕó±ä¸ü£©** ÎªÓ³Éä±í¶¨ÒåµÄ¹æÔò£¬µ±Ç° `doc-update-trigger.ts` Î´ÊµÏÖ¶ÔÓ¦ÔËĞĞÊ±¹æÔò£»ºóĞøÈô²¹ÊµÏÖĞë±£³Ö id Ò»ÖÂ£¬ÇÒĞÂÔö¹æÔòĞëË³ÑÓ±àºÅ±ÜÃâÓë¼ÈÓĞ T13 ³åÍ»¡£
 
 
-<!-- merge-source: docs/reference/meta/doc-trigger-action-map.md (2026-07-14 å†…å®¹èåˆï¼Œé¿å…å»é‡ä¸¢å¤±æœ‰æ•ˆä¿¡æ¯) -->
-## è¡¥å……å†…å®¹ï¼ˆåˆå¹¶è‡ª `docs/reference/meta/doc-trigger-action-map.md`ï¼‰
+<!-- merge-source: docs/reference/meta/doc-trigger-action-map.md (2026-07-14 ÄÚÈİÈÚºÏ£¬±ÜÃâÈ¥ÖØ¶ªÊ§ÓĞĞ§ĞÅÏ¢) -->
+## ²¹³äÄÚÈİ£¨ºÏ²¢×Ô `docs/reference/meta/doc-trigger-action-map.md`£©
 
-> æ–‡æ¡£æ—¥æœŸï¼š2026-07-12ï¼ˆN2/N3 ä¿®è®¢ï¼‰
-> ç»´æŠ¤è€…ï¼šæ¶æ„æ²»ç†ï¼ˆé‡Œç¨‹ç¢‘ M1 / T1 äº§å‡ºï¼›N2/N3 æ”¶å°¾ï¼‰
-> å…³è”æ–‡æ¡£ï¼š`./æ–‡æ¡£è‡ªåŠ¨æ›´æ–°ä½“ç³»-æ¶æ„æ¢³ç†ä¸ä»»åŠ¡æ¸…å•.md` Â§ä¸‰ çº¦æŸ1ã€`scripts/docs-tool/doc-update-trigger.ts` çš„ `TRIGGER_RULES`
-3. **ä¸ä»£ç åŒæ­¥**ï¼šæœ¬è¡¨çš„ **T1â€“T10** å¿…é¡»ä¸ `scripts/docs-tool/doc-update-trigger.ts` çš„ `TRIGGER_RULES` ä¿æŒåŒæ­¥ã€‚ä»£ç æ”¹åŠ¨ `TRIGGER_RULES` æ—¶ï¼Œæœ¬è¡¨é¡»åŒæ­¥ä¿®è®¢ï¼ˆåä¹‹äº¦ç„¶ï¼‰ã€‚
-> **è·¯å¾„åŸºå‡†ï¼ˆN2 ä¿®è®¢åï¼‰**ï¼šä¸‹è¡¨æ‰€æœ‰ç›®æ ‡æ–‡æ¡£è·¯å¾„å‡å·²å¯¹é½ç£ç›˜çœŸå®æ–‡ä»¶â€”â€”9 ä¸ªåŸæŒ‡å‘ `docs/` æ ¹çš„æ–‡æ¡£ä¿®è®¢ä¸ºçœŸå®è·¯å¾„ï¼ˆ`docs/01-requirements/`ã€`docs/02-design/`ï¼‰ï¼›4 ä¸ªåŸæœ¬ç¡®å®ç¼ºå¤±çš„æ–‡æ¡£ï¼ˆ`../reference/data-definition.md`ã€`../explanation/state-management.md`ã€`../how-to/hooks-guide.md`ã€`../explanation/page-structure.md`ï¼‰å·²æ–°å»ºã€‚æ•… `--auto-update` ä¸å†å›  `FILE_NOT_FOUND` å…¨å¤±è´¥ã€‚
-| **T1 ç±»å‹å®šä¹‰å˜æ›´** | `src/data/types.ts`ã€`src/types/modules/*.ts`ã€`src/services/scoring/v6-engine/types.ts`ã€`../../src/showcase/types.ts` | æ›´æ–° `../reference/data-dictionary-index.md` | æ˜¯ | è¡¥å……ï¼š`../reference/v9æ ¸å¿ƒæ•°æ®å­—å…¸ä¸ç±»å‹å®šä¹‰(æ•´åˆç‰ˆ).md`ã€`../reference/data-definition.md`ã€`../reference/news-data-definition.md`ã€‚ä»…æ”¹å‘½ä¸­æ–‡ä»¶å¯¹åº”çš„æ¡ç›®ï¼Œç¦æ­¢å…¨é‡é‡å†™ã€‚ |
-| **T2 æ¥å£å˜æ›´** | `src/services/**/index.ts`ã€`src/core/databridge.ts`ã€`src/data/dataLayer.ts`ã€`src/services/fetcher`ã€`src/services/analysis` | æ›´æ–° `../reference/api-contract.md` | æ˜¯ | è¡¥å……ï¼š`../reference/databridgeç«¯ç‚¹ä¸æ•°æ®æ˜ å°„æ¸…å•.md`ã€`../reference/åŠŸèƒ½æ¨¡å—æ•°æ®å¥‘çº¦.md`ã€‚æŒ‰å˜æ›´æ¥å£ç²¾ç¡®æ”¹å†™ç­¾å/ç«¯ç‚¹æ®µã€‚ |
-| **T3 æ¶æ„è°ƒæ•´** | `src/config/routes.ts`ã€`src/config/dbConfig.ts`ã€`../../AGENTS.md`ã€`src/config/thresholds.ts` | æ›´æ–° `../reference/03-architecture-standards.md` | æ˜¯ | è¡¥å……ï¼š`../reference/06-routing-specs.md`ã€`../explanation/03-architecture-standards.md`ã€‚æ³¨æ„ `src/config/thresholds.ts` åŒå± T4ï¼Œå‘½ä¸­æ—¶ T3/T4 å‡è§¦å‘ï¼Œå„è‡ªåªæ”¹æœ¬èŒæ–‡æ¡£ã€‚ |
-| **T4 é…ç½®å‚æ•°å˜æ›´** | `src/constants/*.ts`ã€`src/config/thresholds.ts`ã€`src/services/scoring/v6-engine/config.ts` | æ›´æ–° `../reference/05-engine-specs.md` | æ˜¯ | è¡¥å……ï¼š`../reference/09-quality-gates.md`ã€‚ |
-| **T5 Store çŠ¶æ€ç®¡ç†å˜æ›´** | `src/store/**/*.ts` | æ›´æ–° `../explanation/state-management.md` | æ˜¯ | è¡¥å……ï¼š`../reference/data-flow-spec.md`ã€‚ |
-| **T6 UI ç»„ä»¶å˜æ›´** | `src/components/**/*.tsx`ã€`src/components/**/*.ts` | æ›´æ–° `../explanation/design/component-library-guide.md` | æ˜¯ | è¡¥å……ï¼š`../explanation/design/ui-design-system.md`ã€‚ |
-| **T7 Hook è‡ªå®šä¹‰å˜æ›´** | `src/hooks/**/*.ts`ã€`src/hooks/**/*.tsx` | æ›´æ–° `../how-to/hooks-guide.md` | æ˜¯ | è¡¥å……ï¼š`../reference/data-flow-spec.md`ã€‚ |
-| **T8 é¡µé¢ç»„ä»¶å˜æ›´** | `src/pages/**/*.tsx`ã€`src/pages/**/*.ts` | æ›´æ–° `../reference/06-routing-specs.md` | æ˜¯ | è¡¥å……ï¼š`../explanation/page-structure.md`ã€‚ |
-| **T9 Widget æ³¨å†Œè¡¨å˜æ›´** | `src/cockpit/core/widgetRegistry.ts` | é‡å†™ `../reference/data-definition.md` | æ˜¯ | è¡¥å……ï¼šå¢é‡ç»´æŠ¤ `../reference/registry-index.md`ï¼ˆéå…¨é‡é‡å†™ï¼Œè§ä»»åŠ¡ A1ï¼‰+ è·‘ `audit:docs`ã€‚æ³¨å†Œè¡¨ç»“æ„å˜æ›´æ—¶ cockpit æ•°æ®å®šä¹‰éœ€æ•´ä½“å¯¹é½ã€‚ |
+> ÎÄµµÈÕÆÚ£º2026-07-12£¨N2/N3 ĞŞ¶©£©
+> Î¬»¤Õß£º¼Ü¹¹ÖÎÀí£¨Àï³Ì±® M1 / T1 ²ú³ö£»N2/N3 ÊÕÎ²£©
+> ¹ØÁªÎÄµµ£º`./ÎÄµµ×Ô¶¯¸üĞÂÌåÏµ-¼Ü¹¹ÊáÀíÓëÈÎÎñÇåµ¥.md` ¡ìÈı Ô¼Êø1¡¢`scripts/docs-tool/doc-update-trigger.ts` µÄ `TRIGGER_RULES`
+3. **Óë´úÂëÍ¬²½**£º±¾±íµÄ **T1¨CT14** ±ØĞëÓë `scripts/docs-tool/doc-update-trigger.ts` µÄ `TRIGGER_RULES` ±£³ÖÍ¬²½¡£´úÂë¸Ä¶¯ `TRIGGER_RULES` Ê±£¬±¾±íĞëÍ¬²½ĞŞ¶©£¨·´Ö®ÒàÈ»£©¡£
+> **Â·¾¶»ù×¼£¨N2 ĞŞ¶©ºó£©**£ºÏÂ±íËùÓĞÄ¿±êÎÄµµÂ·¾¶¾ùÒÑ¶ÔÆë´ÅÅÌÕæÊµÎÄ¼ş¡ª¡ª9 ¸öÔ­Ö¸Ïò `docs/` ¸ùµÄÎÄµµĞŞ¶©ÎªÕæÊµÂ·¾¶£¨`docs/01-requirements/`¡¢`docs/02-design/`£©£»4 ¸öÔ­±¾È·ÊµÈ±Ê§µÄÎÄµµ£¨`../reference/data-definition.md`¡¢`../explanation/state-management.md`¡¢`../how-to/hooks-guide.md`¡¢`../explanation/page-structure.md`£©ÒÑĞÂ½¨¡£¹Ê `--auto-update` ²»ÔÙÒò `FILE_NOT_FOUND` È«Ê§°Ü¡£
+| **T1 ÀàĞÍ¶¨Òå±ä¸ü** | `src/data/types.ts`¡¢`src/types/modules/*.ts`¡¢`src/services/scoring/v6-engine/types.ts`¡¢`../../src/showcase/types.ts` | ¸üĞÂ `../reference/data-dictionary-index.md` | ÊÇ | ²¹³ä£º`../reference/v9ºËĞÄÊı¾İ×ÖµäÓëÀàĞÍ¶¨Òå(ÕûºÏ°æ).md`¡¢`../reference/data-definition.md`¡¢`../reference/news-data-definition.md`¡£½ö¸ÄÃüÖĞÎÄ¼ş¶ÔÓ¦µÄÌõÄ¿£¬½ûÖ¹È«Á¿ÖØĞ´¡£ |
+| **T2 ½Ó¿Ú±ä¸ü** | `src/services/**/index.ts`¡¢`src/core/databridge.ts`¡¢`src/data/dataLayer.ts`¡¢`src/services/fetcher`¡¢`src/services/analysis` | ¸üĞÂ `../reference/api-contract.md` | ÊÇ | ²¹³ä£º`../reference/databridge¶ËµãÓëÊı¾İÓ³ÉäÇåµ¥.md`¡¢`../reference/¹¦ÄÜÄ£¿éÊı¾İÆõÔ¼.md`¡£°´±ä¸ü½Ó¿Ú¾«È·¸ÄĞ´Ç©Ãû/¶Ëµã¶Î¡£ |
+| **T3 ¼Ü¹¹µ÷Õû** | `src/config/routes.ts`¡¢`src/config/dbConfig.ts`¡¢`../../AGENTS.md`¡¢`src/config/thresholds.ts` | ¸üĞÂ `../reference/03-architecture-standards.md` | ÊÇ | ²¹³ä£º`../reference/06-routing-specs.md`¡¢`../explanation/03-architecture-standards.md`¡£×¢Òâ `src/config/thresholds.ts` Í¬Êô T4£¬ÃüÖĞÊ± T3/T4 ¾ù´¥·¢£¬¸÷×ÔÖ»¸Ä±¾Ö°ÎÄµµ¡£ |
+| **T4 ÅäÖÃ²ÎÊı±ä¸ü** | `src/constants/*.ts`¡¢`src/config/thresholds.ts`¡¢`src/services/scoring/v6-engine/config.ts` | ¸üĞÂ `../reference/05-engine-specs.md` | ÊÇ | ²¹³ä£º`../reference/09-quality-gates.md`¡£ |
+| **T5 Store ×´Ì¬¹ÜÀí±ä¸ü** | `src/store/**/*.ts` | ¸üĞÂ `../explanation/state-management.md` | ÊÇ | ²¹³ä£º`../reference/data-flow-spec.md`¡£ |
+| **T6 UI ×é¼ş±ä¸ü** | `src/components/**/*.tsx`¡¢`src/components/**/*.ts` | ¸üĞÂ `../explanation/design/component-library-guide.md` | ÊÇ | ²¹³ä£º`../explanation/design/ui-design-system.md`¡£ |
+| **T7 Hook ×Ô¶¨Òå±ä¸ü** | `src/hooks/**/*.ts`¡¢`src/hooks/**/*.tsx` | ¸üĞÂ `../how-to/hooks-guide.md` | ÊÇ | ²¹³ä£º`../reference/data-flow-spec.md`¡£ |
+| **T8 Ò³Ãæ×é¼ş±ä¸ü** | `src/pages/**/*.tsx`¡¢`src/pages/**/*.ts` | ¸üĞÂ `../reference/06-routing-specs.md` | ÊÇ | ²¹³ä£º`../explanation/page-structure.md`¡£ |
+| **T9 Widget ×¢²á±í±ä¸ü** | `src/cockpit/core/widgetRegistry.ts` | ÖØĞ´ `../reference/data-definition.md` | ÊÇ | ²¹³ä£ºÔöÁ¿Î¬»¤ `../reference/registry-index.md`£¨·ÇÈ«Á¿ÖØĞ´£¬¼ûÈÎÎñ A1£©+ ÅÜ `audit:docs`¡£×¢²á±í½á¹¹±ä¸üÊ± cockpit Êı¾İ¶¨ÒåĞèÕûÌå¶ÔÆë¡£ |

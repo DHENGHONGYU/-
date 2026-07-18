@@ -11,6 +11,41 @@
 
 ### Added
 
+- **股票字典重生为全市场离线搜索单一事实源（v2.7.0 - 2026-07-19）**：
+  - 字典重生为 **8331** 条，覆盖四交易所完整口径：上交所 SH 2308 / 深交所 SZ 2892 / 北交所 BJ 328 / 港交所 HK 2803，跨市场 symbol 零重复。
+  - 新增校验门禁 `npm run build:stock-dict:verify`（脚本 `scripts/verify-stock-dict.py`），校验四交易所完整性与零重复。
+  - 生成器 `scripts/generate-stock-dict.py` 以 akshare 三函数（`stock_info_a_code_name` / `stock_info_bj_name_code` / `stock_hk_spot`）为数据源，产物 `src/services/stock/stockDictionary.ts` 供 `FullMarketStockService` 离线搜索，禁止手改，改生成器后重跑。
+  - 新增每周日 03:00 自动化任务 `automation-1784399510483`：`build:stock-dict` → `build:stock-dict:verify` → 有变更则提交，覆盖新增上市 / 退市。
+
+- **采集链路全维度实现与质量指标分离（v2.7.0 - 2026-07-18）**：
+  - 采集管线 `collectionPipeline.ts` 验证：维度 01-08 全部就绪，真实 API 优先 + Mock 降级
+  - `qualityMetricsCollector.ts` 新增 `mockCollects` / `mockSuccesses` / `realSuccessRate`，Mock 数据不再虚增真实成功率
+  - TaskId 格式统一为 `parentTaskId-symbol-dimensionCode`，trace_records 完整水合回放（`loadPersistedTraces()`）
+  - 修复 DataQualityIndicator Token 属性名错误（`tailwindBg` → `bgClass`）
+
+- **DataBridge 子模块拆分 Phase 1（v2.7.0 - 2026-07-18）**：
+  - 新建 `src/core/databridgeAcl.ts`（82 行 CC=6）：提取 5 个 ACL 方法（assertQueryAcl 等）
+  - `databridge.ts` 从 894→843 行，CC 100→86
+  - 架构文档 `02-architecture.md` 更新为 5 子模块明细
+
+- **驾驶舱 Widget 布局 5 层梯度 + 系统区折叠 + KPI 摘要条（v2.7.0 - 2026-07-18）**：
+  - L1 研究全景 → L2 深度分析 → L3 市场背景 → L4 持仓观察 → L5 系统运维
+  - 持仓概览升级 FULL_WIDTH，12 Widget defaultLayout 全部就位
+  - P2-1: 系统运维区默认折叠（localStorage 持久化，ChevronRight 动画按钮）
+  - P2-3: 头部新增 4 标签 KPI 条（跟踪标的/待处理信号/采集任务/Widget）
+  - Widget 尺寸全部改用 `WIDGET_SIZE` 枚举，分类全英文统一为 7 类
+
+- **门禁体系增强（v2.7.0 - 2026-07-18）**：
+  - 新增 `audit:mock-modules`（Mock 安全审查，14 条豁免）、`audit:widget-registry`（26/26 PASS）
+  - `npm run gate:quick` 覆盖分层/Mock/ACL/原子/文档/DB 引用
+  - 5 个审计脚本 ROOT 路径修复（`..` → `../..`）
+  - pre-push 重构为 5 步管道
+
+- **评估器模块与质量审查扩展（v2.6.3 - 2026-07-16）**：
+  - 新增 `src/services/evaluators/consistencyEvaluator.ts`、`src/services/evaluators/evaluatorTypes.ts`、`src/services/evaluators/regressionEvaluator.ts`、`src/services/evaluators/rubricEvaluator.ts` 与 `src/services/evaluators/schemaEvaluator.ts`，为回归、基准、规则与一致性评估提供统一评估器接口。
+  - 这些模块已接入 `src/services/evaluators/` 目录并用于质量检查/自动化评估流程，支持 `expected` 基线、评分细则、结构一致性判断与回归差异分析。
+  - 相关变更已同步纳入代码质量审查与上线前验证流程，便于在 `npm run lint`、`npm run tsc:prod` 与审计脚本中统一确认。
+
 - **PortalShell 与主题系统重构（v2.6.2 - 2026-07-15）**：
   - 新增 `src/store/themeStore.ts`：基于 Zustand 的全局主题状态管理，支持 `light` / `dark` / `system` 三种模式，持久化到 `localStorage`，并提供 `setMode` / `toggleTheme` / `cycleMode` 三种切换方式。
   - 新增 `src/constants/theme/theme.tokens.portal.ts`：L6 设计系统扩展，定义 `PORTAL_TOKENS`（布局 / 舱室切换 / 导航 / 移动端 / 状态指示 / 品牌），消除 `PortalShell.tsx` 中的硬编码颜色类。
