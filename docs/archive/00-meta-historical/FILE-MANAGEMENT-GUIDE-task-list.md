@@ -2,6 +2,7 @@
 title: file-management-guide-task-list
 code_version: 2.0.0
 tier: core
+status: archived
 ---
 
 # file-management-guide.md 修订任务清单

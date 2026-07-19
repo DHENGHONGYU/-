@@ -1,6 +1,7 @@
 ---
 title: pr 6 module split plan
 tier: archive
+status: archived
 ---
 
 # pr 6 module split plan

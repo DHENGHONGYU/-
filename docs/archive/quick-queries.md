@@ -1,6 +1,7 @@
 ---
 title: quick queries
 tier: archive
+status: archived
 ---
 
 # quick queries

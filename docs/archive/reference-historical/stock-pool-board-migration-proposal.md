@@ -2,6 +2,7 @@
 title: stock-pool-board-migration-proposal
 tier: important
 code_version: 2.0.0
+status: archived
 ---
 
 # 股票池看板迁移至分析舱 — 可行性方案论证

@@ -1,6 +1,7 @@
 ---
 title: 2026 07 12 security audit
 tier: archive
+status: archived
 ---
 
 # 2026 07 12 security audit

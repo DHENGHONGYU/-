@@ -5,7 +5,7 @@ tier: important
 version: v0.9.1
 last_updated: 2026-06-26
 maintainer: V9 Architecture Team
-status: active
+status: archived
 change_log: 
 ---
 

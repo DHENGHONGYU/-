@@ -2,6 +2,7 @@
 title: prompt-merge-dedup
 code_version: 2.0.0
 tier: core
+status: archived
 ---
 
 # 增强提示词：多源信息合并去重（最新优先 / 冲突覆盖）

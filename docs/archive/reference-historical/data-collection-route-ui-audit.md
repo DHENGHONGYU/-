@@ -2,6 +2,7 @@
 title: data-collection-route-ui-audit
 code_version: 2.0.0
 tier: reference
+status: archived
 ---
 
 # 数据采集模块路由与UI校对分析报告

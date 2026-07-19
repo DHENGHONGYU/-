@@ -2,6 +2,7 @@
 title: doc-auto-update-kanban
 code_version: 2.0.0
 tier: core
+status: archived
 ---
 
 # 文档自动更新体系 — 任务看板（单一事实源）

@@ -3,6 +3,7 @@ title: 功能模块分类图示与开发者必读清单
 tier: core
 code_version: 2.0.0
 date: 2026-07-14
+status: archived
 ---
 
 # 功能模块分类图示与开发者必读清单

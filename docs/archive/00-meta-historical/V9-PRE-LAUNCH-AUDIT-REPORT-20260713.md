@@ -2,6 +2,7 @@
 title: v9-pre-launch-audit-report-20260713
 code_version: 2.0.0
 tier: core
+status: archived
 ---
 
 # V9 上线前系统性梳理报告

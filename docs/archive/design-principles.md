@@ -1,6 +1,7 @@
 ---
 title: design principles
 tier: archive
+status: archived
 ---
 
 # design principles

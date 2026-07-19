@@ -4,6 +4,7 @@ code_version: 2.0.0
 tier: core
 source: 文档风格统一整改方案（基于 doc-style-standard）
 generated: 2026-07-16
+status: archived
 ---
 
 # V9 文档风格整改方案（doc-style-remediation-plan）

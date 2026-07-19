@@ -5,7 +5,7 @@ tier: important
 version: v1.0.0
 last_updated: 2026-06-27
 maintainer: Quality Auditor
-status: draft
+status: archived
 ---
 
 # 批次 B P2 问题修复方案

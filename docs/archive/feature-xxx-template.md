@@ -1,6 +1,7 @@
 ---
 title: feature xxx template
 tier: archive
+status: archived
 ---
 
 # feature xxx template

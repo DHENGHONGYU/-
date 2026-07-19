@@ -1,6 +1,7 @@
 ---
 title: adr xxx mcp server lifecycle
 tier: archive
+status: archived
 ---
 
 # adr xxx mcp server lifecycle

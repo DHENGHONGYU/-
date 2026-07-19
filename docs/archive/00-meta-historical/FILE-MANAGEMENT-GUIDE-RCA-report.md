@@ -2,6 +2,7 @@
 title: file-management-guide-rca-report
 code_version: 2.0.0
 tier: core
+status: archived
 ---
 
 # file-management-guide.md 根因分析与二次开发教训报告

@@ -1,6 +1,7 @@
 ---
 title: pwa offline data strategy
 tier: archive
+status: archived
 ---
 
 # pwa offline data strategy

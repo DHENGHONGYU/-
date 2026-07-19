@@ -1,6 +1,7 @@
 ---
 title: trade error classifier split completion archive
 tier: archive
+status: archived
 ---
 
 # trade error classifier split completion archive

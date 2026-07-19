@@ -2,6 +2,7 @@
 title: databridge-split-plan
 code_version: 2.0.0
 tier: core
+status: archived
 ---
 
 # databridge.ts 详细分拆方案

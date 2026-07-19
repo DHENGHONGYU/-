@@ -1,6 +1,7 @@
 ---
 title: doc auto updater diagnosis and score
 tier: archive
+status: archived
 ---
 
 # doc auto updater diagnosis and score
