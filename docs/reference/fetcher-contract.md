@@ -1,64 +1,68 @@
 ---
-title: fetcher-contract
-code_version: 2.0.0
-
+title: fetcher ·şÎñÆõÔ¼
+type: reference
+domain: project
+phase: design
 tier: important
----
-
----
-title: fetcher æœåŠ¡å¥‘çº¦
 status: active
-owner: fetcher å­åŸŸ / æ¶æ„ç»„
-updated: 2026-07-12
+maintainer: fetcher ×ÓÓò / ¼Ü¹¹×é
+summary: "Í³Ò»Íâ²¿ĞĞÇé/×ÊÑ¶ API ÊÊÅä²ã£¬¸ºÔğ²É¼¯¡¢ÏŞÁ÷¡¢»º´æ¡¢´íÎó»Ö¸´¡£"
+tags: [project, collection, contract, reference, governance, documentation]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: important
+doc_id: V9-DOC-PROJ-092
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
-# fetcher-contract.md â€” è¡Œæƒ…/èµ„è®¯æŠ“å–æœåŠ¡
+# fetcher-contract.md ¡ª ĞĞÇé/×ÊÑ¶×¥È¡·şÎñ
 
-> **å®šä½**ï¼šç»Ÿä¸€å¤–éƒ¨è¡Œæƒ…/èµ„è®¯ API é€‚é…å±‚ï¼Œè´Ÿè´£é‡‡é›†ã€é™æµã€ç¼“å­˜ã€é”™è¯¯æ¢å¤ã€‚  
-> **å…³è”**ï¼š`./services-catalog.md`ï¼ˆå­åŸŸ #8ï¼‰ã€`../../AGENTS.md` Â§ä¸€ï¼ˆåˆ†å±‚è§„åˆ™ï¼‰ã€‚
+> **¶¨Î»**£ºÍ³Ò»Íâ²¿ĞĞÇé/×ÊÑ¶ API ÊÊÅä²ã£¬¸ºÔğ²É¼¯¡¢ÏŞÁ÷¡¢»º´æ¡¢´íÎó»Ö¸´¡£  
+> **Source**£º`./services-catalog.md`£¨×ÓÓò #8£©¡¢`../../AGENTS.md` ¡ìÒ»£¨·Ö²ã¹æÔò£©¡£
 
 ---
 
-## 1. èŒè´£è¾¹ç•Œ
+## 1. Ö°Ôğ±ß½ç
 
-### 1.1 æ ¸å¿ƒèŒè´£
+### 1.1 ºËĞÄÖ°Ôğ
 
-1. **å¤šæºé‡‡é›†**ï¼šå¯¹æ¥ Tushareã€Yahoo Financeã€AkShare ç­‰å¤–éƒ¨æ•°æ®æºï¼Œç»Ÿä¸€é€‚é…ä¸ºå†…éƒ¨æ•°æ®æ¨¡å‹ã€‚
-2. **é™æµä¸è°ƒåº¦**ï¼šæŒ‰ API é™é¢‘è§„åˆ™è°ƒåº¦è¯·æ±‚ï¼Œé¿å…è§¦å‘æºç«™å°ç¦ã€‚
-3. **ç¼“å­˜ä¸é™çº§**ï¼šçƒ­ç‚¹æ•°æ®æœ¬åœ°ç¼“å­˜ï¼›æºç«™ä¸å¯ç”¨æ—¶é™çº§åˆ°ç¼“å­˜æ•°æ®æˆ– mock æ•°æ®ã€‚
-4. **é”™è¯¯æ¢å¤**ï¼šç½‘ç»œè¶…æ—¶è‡ªåŠ¨é‡è¯•ï¼ˆæŒ‡æ•°é€€é¿ï¼‰ï¼Œè¿ç»­å¤±è´¥åˆ‡æ¢å¤‡ç”¨æºã€‚
+1. **¶àÔ´²É¼¯**£º¶Ô½Ó Tushare¡¢Yahoo Finance¡¢AkShare µÈÍâ²¿Êı¾İÔ´£¬Í³Ò»ÊÊÅäÎªÄÚ²¿Êı¾İÄ£ĞÍ¡£
+2. **ÏŞÁ÷Óëµ÷¶È**£º°´ API ÏŞÆµ¹æÔòµ÷¶ÈÇëÇó£¬±ÜÃâ´¥·¢Ô´Õ¾·â½û¡£
+3. **»º´æÓë½µ¼¶**£ºÈÈµãÊı¾İ±¾µØ»º´æ£»Ô´Õ¾²»¿ÉÓÃÊ±½µ¼¶µ½»º´æÊı¾İ»ò mock Êı¾İ¡£
+4. **´íÎó»Ö¸´**£ºÍøÂç³¬Ê±×Ô¶¯ÖØÊÔ£¨Ö¸ÊıÍË±Ü£©£¬Á¬ĞøÊ§°ÜÇĞ»»±¸ÓÃÔ´¡£
 
-### 1.2 åˆ†å±‚å®šä½
+### 1.2 ·Ö²ã¶¨Î»
 
-| ç»´åº¦ | è¯´æ˜ |
+| Î¬¶È | ËµÃ÷ |
 |------|------|
-| æ‰€å±å±‚ | `src/services/fetcher/`ï¼ˆæœåŠ¡å±‚ #8ï¼‰ |
-| ä¾èµ–æ–¹å‘ | `core/`ï¼ˆDataBridgeï¼‰ã€`lib/`ï¼ˆloggerã€errorsã€formatï¼‰ã€å¤–éƒ¨ API |
-| ç¦æ­¢äº‹é¡¹ | ç¦æ­¢ç›´å†™ IndexedDBï¼ˆé¡»ç» DataBridge.forward()ï¼‰ |
-| è¢«ä¾èµ–æ–¹ | `services/data-collector/`ï¼ˆé‡‡é›†ç¼–æ’ï¼‰ã€`services/analysis/`ï¼ˆåˆ†ææ¶ˆè´¹ï¼‰ |
+| ËùÊô²ã | `src/services/fetcher/`£¨·şÎñ²ã #8£© |
+| ÒÀÀµ·½Ïò | `core/`£¨DataBridge£©¡¢`lib/`£¨logger¡¢errors¡¢format£©¡¢Íâ²¿ API |
+| ½ûÖ¹ÊÂÏî | ½ûÖ¹Ö±Ğ´ IndexedDB£¨Ğë¾­ DataBridge.forward()£© |
+| ±»ÒÀÀµ·½ | `services/data-collector/`£¨²É¼¯±àÅÅ£©¡¢`services/analysis/`£¨·ÖÎöÏû·Ñ£© |
 
-### 1.3 ä¸ç›¸é‚»å­åŸŸçš„å…³ç³»
+### 1.3 ÓëÏàÁÚ×ÓÓòµÄ¹ØÏµ
 
-| ç›¸é‚»å­åŸŸ | å…³ç³» | æ•°æ®æµ |
+| ÏàÁÚ×ÓÓò | ¹ØÏµ | Êı¾İÁ÷ |
 |----------|------|--------|
-| `data-collector` | ä¸Šæ¸¸è°ƒç”¨æ–¹ | `data-collector` â†’ `fetcher`ï¼ˆè§¦å‘é‡‡é›†ä»»åŠ¡ï¼‰ |
-| `analysis` | ä¸‹æ¸¸æ¶ˆè´¹æ–¹ | `fetcher` â†’ DataBridge â†’ IndexedDB â†’ `analysis`ï¼ˆè¯»å–è¡Œæƒ…ï¼‰ |
-| `news` | ä¸‹æ¸¸æ¶ˆè´¹æ–¹ | `fetcher` â†’ DataBridge â†’ IndexedDB â†’ `news`ï¼ˆè¯»å–èµ„è®¯ï¼‰ |
+| `data-collector` | ÉÏÓÎµ÷ÓÃ·½ | `data-collector` ¡ú `fetcher`£¨´¥·¢²É¼¯ÈÎÎñ£© |
+| `analysis` | ÏÂÓÎÏû·Ñ·½ | `fetcher` ¡ú DataBridge ¡ú IndexedDB ¡ú `analysis`£¨¶ÁÈ¡ĞĞÇé£© |
+| `news` | ÏÂÓÎÏû·Ñ·½ | `fetcher` ¡ú DataBridge ¡ú IndexedDB ¡ú `news`£¨¶ÁÈ¡×ÊÑ¶£© |
 
 ---
 
-## 2. å…¬å…±æ¥å£
+## 2. ¹«¹²½Ó¿Ú
 
-### 2.1 ç±»å‹å®šä¹‰
+### 2.1 ÀàĞÍ¶¨Òå
 
 ```typescript
 // src/services/fetcher/fetcherTypes.ts
 
 export interface FetcherRequest {
   source: DataSource;        // 'tushare' | 'yahoo' | 'akshare' | 'mock'
-  symbol: string;            // è‚¡ç¥¨ä»£ç 
+  symbol: string;            // ¹ÉÆ±´úÂë
   endpoint: FetcherEndpoint; // 'daily_quotes' | 'financial_report' | 'news'
   params?: Record<string, unknown>;
   priority?: 'high' | 'normal' | 'low';
@@ -70,7 +74,7 @@ export interface FetcherResponse {
     source: DataSource;
     fetchedAt: string;       // ISO 8601
     cacheHit: boolean;
-    nextAvailableAt?: string; // é™æµæ¢å¤æ—¶é—´
+    nextAvailableAt?: string; // ÏŞÁ÷»Ö¸´Ê±¼ä
   };
 }
 
@@ -78,83 +82,83 @@ export type DataSource = 'tushare' | 'yahoo' | 'akshare' | 'mock';
 export type FetcherEndpoint = 'daily_quotes' | 'financial_report' | 'news' | 'sector_data';
 ```
 
-### 2.2 ä¸»å…¥å£å‡½æ•°
+### 2.2 Ö÷Èë¿Úº¯Êı
 
-| å‡½æ•° | ç­¾å | èŒè´£ | é”™è¯¯å¤„ç† |
+| º¯Êı | Ç©Ãû | Ö°Ôğ | ´íÎó´¦Àí |
 |------|------|------|----------|
-| `fetchQuotes()` | `(req: FetcherRequest) => Promise<FetcherResponse>` | æŒ‰æ•°æ®æºæ‹‰å–è¡Œæƒ… | é™æµç­‰å¾… â†’ é‡è¯• â†’ é™çº§ç¼“å­˜ â†’ ErrorBus ä¸ŠæŠ¥ |
-| `fetchBatch()` | `(reqs: FetcherRequest[]) => Promise<FetcherResponse[]>` | æ‰¹é‡å¹¶è¡Œæ‹‰å– | éƒ¨åˆ†å¤±è´¥è¿”å›æˆåŠŸé¡¹ + å¤±è´¥é¡¹åˆ—è¡¨ |
-| `scheduleFetch()` | `(req: FetcherRequest, cron: string) => void` | å®šæ—¶é‡‡é›†ï¼ˆå¦‚æ¯æ—¥ 15:30 æ”¶ç›˜åï¼‰ | å®šæ—¶å™¨å¼‚å¸¸ â†’ logger è®°å½• |
+| `fetchQuotes()` | `(req: FetcherRequest) => Promise<FetcherResponse>` | °´Êı¾İÔ´À­È¡ĞĞÇé | ÏŞÁ÷µÈ´ı ¡ú ÖØÊÔ ¡ú ½µ¼¶»º´æ ¡ú ErrorBus ÉÏ±¨ |
+| `fetchBatch()` | `(reqs: FetcherRequest[]) => Promise<FetcherResponse[]>` | ÅúÁ¿²¢ĞĞÀ­È¡ | ²¿·ÖÊ§°Ü·µ»Ø³É¹¦Ïî + Ê§°ÜÏîÁĞ±í |
+| `scheduleFetch()` | `(req: FetcherRequest, cron: string) => void` | ¶¨Ê±²É¼¯£¨ÈçÃ¿ÈÕ 15:30 ÊÕÅÌºó£© | ¶¨Ê±Æ÷Òì³£ ¡ú logger ¼ÇÂ¼ |
 
-### 2.3 äº‹ä»¶æ¥å£
+### 2.3 ÊÂ¼ş½Ó¿Ú
 
-| äº‹ä»¶å | å‘å¸ƒæ–¹ | è®¢é˜…æ–¹ | è¯´æ˜ |
+| ÊÂ¼şÃû | ·¢²¼·½ | ¶©ÔÄ·½ | ËµÃ÷ |
 |--------|--------|--------|------|
-| `fetcher:quotes:loaded` | fetcher | `data-collector` / `analysis` | è¡Œæƒ…åŠ è½½å®Œæˆ |
-| `fetcher:limit:hit` | fetcher | `errorBus` | API é™æµè§¦å‘ |
-| `fetcher:source:switch` | fetcher | `errorBus` | ä¸»æºå¤±è´¥ï¼Œåˆ‡æ¢å¤‡ç”¨æº |
+| `fetcher:quotes:loaded` | fetcher | `data-collector` / `analysis` | ĞĞÇé¼ÓÔØÍê³É |
+| `fetcher:limit:hit` | fetcher | `errorBus` | API ÏŞÁ÷´¥·¢ |
+| `fetcher:source:switch` | fetcher | `errorBus` | Ö÷Ô´Ê§°Ü£¬ÇĞ»»±¸ÓÃÔ´ |
 
 ---
 
-## 3. æ•°æ®æµ
+## 3. Êı¾İÁ÷
 
 ```
-å¤–éƒ¨ API (Tushare/Yahoo/AkShare)
-  â†“
+Íâ²¿ API (Tushare/Yahoo/AkShare)
+  ¡ı
 fetcherService.fetchQuotes()
-  â”œâ”€> é™æµæ£€æŸ¥ï¼ˆrateLimiterï¼‰
-  â”œâ”€> ç¼“å­˜æ£€æŸ¥ï¼ˆmemoryCache â†’ IndexedDB cache storeï¼‰
-  â”œâ”€> HTTP è¯·æ±‚ï¼ˆaxios/fetch adapterï¼‰
-  â”œâ”€> æ•°æ®è½¬æ¢ï¼ˆsource-specific â†’ UnifiedStockDataï¼‰
-  â†“
-DataBridge.forward(envelope) â†’ routeToDB() â†’ IndexedDB
-  â†“
+  ©À©¤> ÏŞÁ÷¼ì²é£¨rateLimiter£©
+  ©À©¤> »º´æ¼ì²é£¨memoryCache ¡ú IndexedDB cache store£©
+  ©À©¤> HTTP ÇëÇó£¨axios/fetch adapter£©
+  ©À©¤> Êı¾İ×ª»»£¨source-specific ¡ú UnifiedStockData£©
+  ¡ı
+DataBridge.forward(envelope) ¡ú routeToDB() ¡ú IndexedDB
+  ¡ı
 EventBus.publish('fetcher:quotes:loaded')
-  â†“
+  ¡ı
 store/stockStore (Zustand + withBroadcast)
-  â†“
+  ¡ı
 components/pages
 ```
 
 ---
 
-## 4. é…ç½®ä¸ä¾èµ–
+## 4. ÅäÖÃÓëÒÀÀµ
 
-### 4.1 ä¾èµ–ç™½åå•
+### 4.1 ÒÀÀµ°×Ãûµ¥
 
-| ä¾èµ– | è·¯å¾„ | ç”¨é€” |
+| ÒÀÀµ | Â·¾¶ | ÓÃÍ¾ |
 |------|------|------|
-| logger | `@/lib/logger` | é‡‡é›†æ—¥å¿—ã€é™æµæ—¥å¿—ã€é”™è¯¯æ—¥å¿— |
-| EventBus | `@/lib/eventBus` | åŠ è½½å®Œæˆäº‹ä»¶ |
-| errors | `@/lib/errors` | FetcherErrorã€RateLimitError |
-| format | `@/lib/format` | æ—¥æœŸæ ¼å¼åŒ–ã€æ•°å€¼æ ¼å¼åŒ– |
-| localStorageManager | `@/lib/localStorageManager` | API Key åŠ å¯†å­˜å‚¨ |
+| logger | `@/lib/logger` | ²É¼¯ÈÕÖ¾¡¢ÏŞÁ÷ÈÕÖ¾¡¢´íÎóÈÕÖ¾ |
+| EventBus | `@/lib/eventBus` | ¼ÓÔØÍê³ÉÊÂ¼ş |
+| errors | `@/lib/errors` | FetcherError¡¢RateLimitError |
+| format | `@/lib/format` | ÈÕÆÚ¸ñÊ½»¯¡¢ÊıÖµ¸ñÊ½»¯ |
+| localStorageManager | `@/lib/localStorageManager` | API Key ¼ÓÃÜ´æ´¢ |
 
-### 4.2 é…ç½®é¡¹
+### 4.2 ÅäÖÃÏî
 
-| é…ç½®å | é»˜è®¤å€¼ | è¯´æ˜ | æ¥æº |
+| ÅäÖÃÃû | Ä¬ÈÏÖµ | ËµÃ÷ | À´Ô´ |
 |--------|--------|------|------|
-| `VITE_TUSHARE_TOKEN` | '' | Tushare Pro API Token | ç”¨æˆ·è¾“å…¥ï¼ˆåŠ å¯†å­˜å‚¨ï¼‰ |
-| `VITE_YAHOO_API_KEY` | '' | Yahoo Finance API Key | ç”¨æˆ·è¾“å…¥ï¼ˆåŠ å¯†å­˜å‚¨ï¼‰ |
-| `FETCHER_RATE_LIMIT` | 200 | æ¯åˆ†é’Ÿæœ€å¤§è¯·æ±‚æ•° | `src/config/fetcher.config.ts` |
-| `FETCHER_RETRY_MAX` | 3 | æœ€å¤§é‡è¯•æ¬¡æ•° | `src/config/fetcher.config.ts` |
-| `FETCHER_CACHE_TTL` | 300000 | å†…å­˜ç¼“å­˜ TTLï¼ˆæ¯«ç§’ï¼‰ | `src/config/fetcher.config.ts` |
+| `VITE_TUSHARE_TOKEN` | '' | Tushare Pro API Token | ÓÃ»§ÊäÈë£¨¼ÓÃÜ´æ´¢£© |
+| `VITE_YAHOO_API_KEY` | '' | Yahoo Finance API Key | ÓÃ»§ÊäÈë£¨¼ÓÃÜ´æ´¢£© |
+| `FETCHER_RATE_LIMIT` | 200 | Ã¿·ÖÖÓ×î´óÇëÇóÊı | `src/config/fetcherConfig.ts` |
+| `FETCHER_RETRY_MAX` | 3 | ×î´óÖØÊÔ´ÎÊı | `src/config/fetcherConfig.ts` |
+| `FETCHER_CACHE_TTL` | 300000 | ÄÚ´æ»º´æ TTL£¨ºÁÃë£© | `src/config/fetcherConfig.ts` |
 
 ---
 
-## 5. æµ‹è¯•ç­–ç•¥
+## 5. ²âÊÔ²ßÂÔ
 
-| æµ‹è¯•ç±»å‹ | æ–‡ä»¶ | è¯´æ˜ |
+| ²âÊÔÀàĞÍ | ÎÄ¼ş | ËµÃ÷ |
 |----------|------|------|
-| å•å…ƒæµ‹è¯• | `fetcherAdapter.test.ts` | é€‚é…å™¨é€»è¾‘ã€æ•°æ®è½¬æ¢ |
-| å•å…ƒæµ‹è¯• | `fetcherInterceptor.test.ts` | æ‹¦æˆªå™¨ï¼ˆé™æµã€é‡è¯•ã€é”™è¯¯ï¼‰ |
-| é›†æˆæµ‹è¯• | `fetcherClient.test.ts` | ç«¯åˆ°ç«¯ HTTP è¯·æ±‚ï¼ˆmock serverï¼‰ |
-| E2E | `__dirty-data-e2e-verify.test.ts` | è„æ•°æ®éªŒè¯ |
+| µ¥Ôª²âÊÔ | `fetcherAdapter.test.ts` | ÊÊÅäÆ÷Âß¼­¡¢Êı¾İ×ª»» |
+| µ¥Ôª²âÊÔ | `fetcherInterceptor.test.ts` | À¹½ØÆ÷£¨ÏŞÁ÷¡¢ÖØÊÔ¡¢´íÎó£© |
+| ¼¯³É²âÊÔ | `fetcherClient.test.ts` | ¶Ëµ½¶Ë HTTP ÇëÇó£¨mock server£© |
+| E2E | `__dirty-data-e2e-verify.test.ts` | ÔàÊı¾İÑéÖ¤ |
 
 ---
 
-## 6. å˜æ›´æ—¥å¿—
+## 6. ±ä¸üÈÕÖ¾
 
-| æ—¥æœŸ | ç‰ˆæœ¬ | å˜æ›´ | ä½œè€… |
+| ÈÕÆÚ | °æ±¾ | ±ä¸ü | ×÷Õß |
 |------|------|------|------|
-| 2026-07-12 | v0.1.0 | å¥‘çº¦åˆç¨¿ | æ¶æ„ç»„ |
+| 2026-07-12 | v0.1.0 | ÆõÔ¼³õ¸å | ¼Ü¹¹×é |

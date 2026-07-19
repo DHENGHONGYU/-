@@ -1,69 +1,68 @@
 ---
-title: usecase-contract
+title: usecase-contract.md ¡ª ÒµÎñÓÃÀı±àÅÅ½Ó¿ÚÆõÔ¼
+type: reference
+domain: project
+phase: design
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "¶¨Î»£º¶¨Òå `useCase` ×ÓÓòµÄ½Ó¿ÚÆõÔ¼¡¢Ö°Ôğ±ß½ç¡¢Êı¾İÁ÷ÓëÒÀÀµ¹ØÏµ¡£ ¹ØÁª£º`./services-catalog.md`£¨24 ×ÓÓò×ÜÀÀ£©¡¢`../../AGENTS.md`..."
+tags: [project, contract, reference]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: important
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/reference/usecase-contract.md
-code_version: 2.0.0
-tier: important
----
+# usecase-contract.md ¡ª ÒµÎñÓÃÀı±àÅÅ½Ó¿ÚÆõÔ¼
 
----
-title: usecase-contract.md â€” ä¸šåŠ¡ç”¨ä¾‹ç¼–æ’æ¥å£å¥‘çº¦
-status: draft
-owner: æ¶æ„ç»„
-updated: 2026-07-12
----
-
-# usecase-contract.md â€” ä¸šåŠ¡ç”¨ä¾‹ç¼–æ’æ¥å£å¥‘çº¦
-
-> **å®šä½**ï¼šå®šä¹‰ `useCase` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ç³»ã€‚  
-> **å…³è”**ï¼š`./services-catalog.md`ï¼ˆ24 å­åŸŸæ€»è§ˆï¼‰ã€`../../AGENTS.md` Â§ä¸€ï¼ˆåˆ†å±‚è§„åˆ™ï¼‰ã€‚
+> **¶¨Î»**£º¶¨Òå `useCase` ×ÓÓòµÄ½Ó¿ÚÆõÔ¼¡¢Ö°Ôğ±ß½ç¡¢Êı¾İÁ÷ÓëÒÀÀµ¹ØÏµ¡£  
+> **¹ØÁª**£º`./services-catalog.md`£¨24 ×ÓÓò×ÜÀÀ£©¡¢`../../AGENTS.md` ¡ìÒ»£¨·Ö²ã¹æÔò£©¡£
 
 ---
 
-## 1. èŒè´£è¾¹ç•Œ
+## 1. Ö°Ôğ±ß½ç
 
-### 1.1 æ ¸å¿ƒèŒè´£
+### 1.1 ºËĞÄÖ°Ôğ
 
-- **ä¸šåŠ¡ç”¨ä¾‹ç¼–æ’**ï¼šå°†åˆ†æ•£åœ¨å„ service å­åŸŸçš„é•¿æµç¨‹ä¸šåŠ¡é€»è¾‘æŠ½å–ä¸ºç‹¬ç«‹çš„ UseCase å•å…ƒï¼Œéµå¾ª Clean Architecture Use Case Interactor æ¨¡å¼ã€‚æ¶µç›–äº¤æ˜“æ‰§è¡Œè®¡åˆ’åˆ›å»ºã€æŠ•èµ„ç»„åˆå†å¹³è¡¡ã€åŒç­–ç•¥è¿è¡Œã€äº¤æ˜“å¤ç›˜æŠ¥å‘Šç”Ÿæˆç­‰ã€‚
-- **è·¨åŸŸè°ƒç”¨åè°ƒ**ï¼šä½œä¸º Service å±‚ä¹‹é—´çš„åˆæ³•ä¸­ä»‹ï¼Œå°è£…å¯¹ `fetcher` / `input` / `scoring` / `trading` / `analysis` ç­‰åŸŸçš„è·¨åŸŸè°ƒç”¨ï¼Œé¿å… Service ä¹‹é—´ç›´æ¥è€¦åˆã€‚
-- **æ•°æ®èåˆä¸è§†å›¾ç»„è£…**ï¼šç»Ÿä¸€è‚¡ç¥¨è§†å›¾ï¼ˆ`UnifiedStockView`ï¼‰èåˆå¤šæºæ•°æ®ï¼ˆåŸºç¡€ä¿¡æ¯ã€Kçº¿ã€V6è¯„åˆ†ã€æ™ºèƒ½è¯„åˆ†ã€è¡Œä¸šè¯„åˆ†ã€è½®åŠ¨è¯„åˆ†ã€ä¿¡å·ã€æŒä»“ï¼‰ï¼Œæä¾›å¯é…ç½®çš„åˆ†å±‚è§†å›¾ï¼ˆ`ScoreView` / `TradingView`ï¼‰ã€‚
-- **æ¿å—åˆ†æä¸ç­–ç•¥æ•°æ®èšåˆ**ï¼šå¹¶è¡ŒåŠ è½½æ¿å—è½®åŠ¨è¯„åˆ†ä¸è¡Œä¸šè¯„åˆ†ï¼Œç©ºæ•°æ®æ—¶è‡ªåŠ¨è§¦å‘é»˜è®¤è®¡ç®—ï¼Œæ’åºåè¿”å›åˆå¹¶ç»“æœã€‚
+- **ÒµÎñÓÃÀı±àÅÅ**£º½«·ÖÉ¢ÔÚ¸÷ service ×ÓÓòµÄ³¤Á÷³ÌÒµÎñÂß¼­³éÈ¡Îª¶ÀÁ¢µÄ UseCase µ¥Ôª£¬×ñÑ­ Clean Architecture Use Case Interactor Ä£Ê½¡£º­¸Ç½»Ò×Ö´ĞĞ¼Æ»®´´½¨¡¢Í¶×Ê×éºÏÔÙÆ½ºâ¡¢Ë«²ßÂÔÔËĞĞ¡¢½»Ò×¸´ÅÌ±¨¸æÉú³ÉµÈ¡£
+- **¿çÓòµ÷ÓÃĞ­µ÷**£º×÷Îª Service ²ãÖ®¼äµÄºÏ·¨ÖĞ½é£¬·â×°¶Ô `fetcher` / `input` / `scoring` / `trading` / `analysis` µÈÓòµÄ¿çÓòµ÷ÓÃ£¬±ÜÃâ Service Ö®¼äÖ±½ÓñîºÏ¡£
+- **Êı¾İÈÚºÏÓëÊÓÍ¼×é×°**£ºÍ³Ò»¹ÉÆ±ÊÓÍ¼£¨`UnifiedStockView`£©ÈÚºÏ¶àÔ´Êı¾İ£¨»ù´¡ĞÅÏ¢¡¢KÏß¡¢V6ÆÀ·Ö¡¢ÖÇÄÜÆÀ·Ö¡¢ĞĞÒµÆÀ·Ö¡¢ÂÖ¶¯ÆÀ·Ö¡¢ĞÅºÅ¡¢³Ö²Ö£©£¬Ìá¹©¿ÉÅäÖÃµÄ·Ö²ãÊÓÍ¼£¨`ScoreView` / `TradingView`£©¡£
+- **°å¿é·ÖÎöÓë²ßÂÔÊı¾İ¾ÛºÏ**£º²¢ĞĞ¼ÓÔØ°å¿éÂÖ¶¯ÆÀ·ÖÓëĞĞÒµÆÀ·Ö£¬¿ÕÊı¾İÊ±×Ô¶¯´¥·¢Ä¬ÈÏ¼ÆËã£¬ÅÅĞòºó·µ»ØºÏ²¢½á¹û¡£
 
-### 1.2 åˆ†å±‚å®šä½
+### 1.2 ·Ö²ã¶¨Î»
 
-| ç»´åº¦ | è¯´æ˜ |
+| Î¬¶È | ËµÃ÷ |
 |------|------|
-| æ‰€å±å±‚ | `src/services/`ï¼ˆæœåŠ¡å±‚ï¼‰ |
-| ä¾èµ–æ–¹å‘ | åªèƒ½ä¾èµ– `core/`ã€`data/`ã€`lib/`ï¼ˆç™½åå•ï¼‰åŠåŒå±‚ `services/` å…¶ä»–å­åŸŸ |
-| ç¦æ­¢äº‹é¡¹ | ç¦æ­¢ç›´å†™ IndexedDBï¼ˆé¡»ç» `DataBridge.forward()` æˆ– `dataLayer` æä¾›çš„ APIï¼‰ |
-| è¢«ä¾èµ–æ–¹ | `store/`ï¼ˆçŠ¶æ€å±‚ï¼‰ã€`pages/`ï¼ˆé¡µé¢å±‚ï¼‰å¯æ¶ˆè´¹æœ¬æœåŠ¡è¾“å‡º |
+| ËùÊô²ã | `src/services/`£¨·şÎñ²ã£© |
+| ÒÀÀµ·½Ïò | Ö»ÄÜÒÀÀµ `core/`¡¢`data/`¡¢`lib/`£¨°×Ãûµ¥£©¼°Í¬²ã `services/` ÆäËû×ÓÓò |
+| ½ûÖ¹ÊÂÏî | ½ûÖ¹Ö±Ğ´ IndexedDB£¨Ğë¾­ `DataBridge.forward()` »ò `dataLayer` Ìá¹©µÄ API£© |
+| ±»ÒÀÀµ·½ | `store/`£¨×´Ì¬²ã£©¡¢`pages/`£¨Ò³Ãæ²ã£©¿ÉÏû·Ñ±¾·şÎñÊä³ö |
 
-### 1.3 ä¸ç›¸é‚»å­åŸŸçš„å…³ç³»
+### 1.3 ÓëÏàÁÚ×ÓÓòµÄ¹ØÏµ
 
-| ç›¸é‚»å­åŸŸ | å…³ç³» | æ•°æ®æµ |
+| ÏàÁÚ×ÓÓò | ¹ØÏµ | Êı¾İÁ÷ |
 |----------|------|--------|
-| `trading` | ä¸Šæ¸¸/ä¸‹æ¸¸ï¼šè°ƒç”¨ä»“ä½è®¡ç®—ã€é£æ§æ£€æŸ¥ã€äº¤æ˜“å¤ç›˜ç”Ÿæˆï¼›æ¥æ”¶äº¤æ˜“ä¿¡å· | `trading` â†’ `useCase`ï¼ˆpositionSizer / riskEngine / tradeReviewAIï¼‰ |
-| `fetcher` | ä¸Šæ¸¸ï¼šå§”æ‰˜è·å–è‚¡ç¥¨åŸºç¡€æ•°æ®ä¸ Kçº¿æ•°æ® | `fetcher` â†’ `useCase`ï¼ˆfetcherOrchestratorï¼‰ |
-| `scoring` | ä¸Šæ¸¸ï¼šè°ƒç”¨çƒ­é—¨æ¿å—åˆ†æã€ä»·å€¼æ´¼åœ°åˆ†æã€è½®åŠ¨ä¿¡å·æ£€æµ‹ | `scoring` â†’ `useCase`ï¼ˆhotSectorAnalyzer / valuePitAnalyzer / rotationSignalDetectorï¼‰ |
-| `analysis` | ä¸Šæ¸¸ï¼šè·å–æ¿å—è½®åŠ¨è¯„åˆ†ä¸è¡Œä¸šè¯„åˆ† | `analysis` â†’ `useCase`ï¼ˆsectorAnalysisEngineï¼‰ |
-| `input` | ä¸Šæ¸¸ï¼šè·å–çƒ­é—¨æ¿å—æ•°æ® | `input` â†’ `useCase`ï¼ˆhotSectorServiceï¼‰ |
-| `llm` | ä¸Šæ¸¸ï¼šå¼‚æ­¥å¤ç›˜æ—¶è°ƒç”¨ LLM æ·±åº¦æ´å¯Ÿ | `llm` â†’ `useCase`ï¼ˆllmGatewayï¼‰ |
-| `data` | ä¸‹æ¸¸ï¼šé€šè¿‡ `dataLayer` è¯»å–å¤šæºæ•°æ®ï¼Œé€šè¿‡ `DataBridge` å†™å…¥æ‰§è¡Œè®¡åˆ’ | `useCase` â†’ `data` |
-| `core` | ä¸‹æ¸¸ï¼šä½¿ç”¨ `DataBridge`ã€`EnvelopeFactory`ã€`runInTransaction`ã€`freshnessGuard` | `useCase` â†’ `core` |
+| `trading` | ÉÏÓÎ/ÏÂÓÎ£ºµ÷ÓÃ²ÖÎ»¼ÆËã¡¢·ç¿Ø¼ì²é¡¢½»Ò×¸´ÅÌÉú³É£»½ÓÊÕ½»Ò×ĞÅºÅ | `trading` ¡ú `useCase`£¨positionSizer / riskEngine / tradeReviewAI£© |
+| `fetcher` | ÉÏÓÎ£ºÎ¯ÍĞ»ñÈ¡¹ÉÆ±»ù´¡Êı¾İÓë KÏßÊı¾İ | `fetcher` ¡ú `useCase`£¨fetcherOrchestrator£© |
+| `scoring` | ÉÏÓÎ£ºµ÷ÓÃÈÈÃÅ°å¿é·ÖÎö¡¢¼ÛÖµÍİµØ·ÖÎö¡¢ÂÖ¶¯ĞÅºÅ¼ì²â | `scoring` ¡ú `useCase`£¨hotSectorAnalyzer / valuePitAnalyzer / rotationSignalDetector£© |
+| `analysis` | ÉÏÓÎ£º»ñÈ¡°å¿éÂÖ¶¯ÆÀ·ÖÓëĞĞÒµÆÀ·Ö | `analysis` ¡ú `useCase`£¨sectorAnalysisEngine£© |
+| `input` | ÉÏÓÎ£º»ñÈ¡ÈÈÃÅ°å¿éÊı¾İ | `input` ¡ú `useCase`£¨hotSectorService£© |
+| `llm` | ÉÏÓÎ£ºÒì²½¸´ÅÌÊ±µ÷ÓÃ LLM Éî¶È¶´²ì | `llm` ¡ú `useCase`£¨llmGateway£© |
+| `data` | ÏÂÓÎ£ºÍ¨¹ı `dataLayer` ¶ÁÈ¡¶àÔ´Êı¾İ£¬Í¨¹ı `DataBridge` Ğ´ÈëÖ´ĞĞ¼Æ»® | `useCase` ¡ú `data` |
+| `core` | ÏÂÓÎ£ºÊ¹ÓÃ `DataBridge`¡¢`EnvelopeFactory`¡¢`runInTransaction`¡¢`freshnessGuard` | `useCase` ¡ú `core` |
 
 ---
 
-## 2. å…¬å…±æ¥å£
+## 2. ¹«¹²½Ó¿Ú
 
-### 2.1 ç±»å‹å®šä¹‰ï¼ˆTypeScript Interfaceï¼‰
+### 2.1 ÀàĞÍ¶¨Òå£¨TypeScript Interface£©
 
 ```typescript
-// æ–‡ä»¶ï¼šsrc/services/useCase/createExecutionPlan.useCase.ts
+// ÎÄ¼ş£ºsrc/services/useCase/createExecutionPlan.useCase.ts
 
 export interface CreateExecutionPlanInput {
   readonly signal: Signal
@@ -85,12 +84,12 @@ export interface CreateExecutionPlanResult {
   errorCode?: ExecutionPlanErrorCode
 }
 
-// æ–‡ä»¶ï¼šsrc/services/useCase/fetcherOrchestrator.useCase.ts
+// ÎÄ¼ş£ºsrc/services/useCase/fetcherOrchestrator.useCase.ts
 
 export interface FetchBasicDataInput { symbol: string }
 export interface FetchKlineDataInput { symbol: string; options?: FetchKlineOptions }
 
-// æ–‡ä»¶ï¼šsrc/services/useCase/fetchSectorAnalysis.useCase.ts
+// ÎÄ¼ş£ºsrc/services/useCase/fetchSectorAnalysis.useCase.ts
 
 export interface FetchSectorAnalysisInput { _filter?: undefined }
 export interface FetchSectorAnalysisResult {
@@ -100,7 +99,7 @@ export interface FetchSectorAnalysisResult {
   error?: string
 }
 
-// æ–‡ä»¶ï¼šsrc/services/useCase/getUnifiedStockView.useCase.ts
+// ÎÄ¼ş£ºsrc/services/useCase/getUnifiedStockView.useCase.ts
 
 export interface UnifiedStockView {
   stock: Stock
@@ -125,12 +124,12 @@ export interface FusionOptions {
   includeHolding?: boolean
 }
 
-// æ–‡ä»¶ï¼šsrc/services/useCase/hotSectorQuery.useCase.ts
+// ÎÄ¼ş£ºsrc/services/useCase/hotSectorQuery.useCase.ts
 
 export interface HotSectorQueryInput { topN?: number }
 export interface HotSectorQueryResult { hotSectors: HotSector[] }
 
-// æ–‡ä»¶ï¼šsrc/services/useCase/rebalancePortfolio.useCase.ts
+// ÎÄ¼ş£ºsrc/services/useCase/rebalancePortfolio.useCase.ts
 
 export interface RebalanceOptions {
   now?: number
@@ -139,7 +138,7 @@ export interface RebalanceOptions {
   rebalanceThreshold?: number
 }
 
-// æ–‡ä»¶ï¼šsrc/services/useCase/runDualStrategy.useCase.ts
+// ÎÄ¼ş£ºsrc/services/useCase/runDualStrategy.useCase.ts
 
 export interface RunDualStrategyInput {
   stocks: Stock[]
@@ -148,142 +147,142 @@ export interface RunDualStrategyInput {
 }
 export type RunDualStrategyOptions = RunDualStrategyInput
 
-// ä» trading å­åŸŸå¯¼å…¥çš„ç±»å‹
+// ´Ó trading ×ÓÓòµ¼ÈëµÄÀàĞÍ
 import type { TradeReviewReport, TradeReviewOptions, AIDeepInsight } from '@/services/trading/tradeReviewAI.types'
 import type { PartialLlmConfig } from '@/config/llmConfig'
 ```
 
-### 2.2 ä¸»å…¥å£å‡½æ•°
+### 2.2 Ö÷Èë¿Úº¯Êı
 
-| å‡½æ•° | ç­¾å | èŒè´£ | é”™è¯¯å¤„ç† |
+| º¯Êı | Ç©Ãû | Ö°Ôğ | ´íÎó´¦Àí |
 |------|------|------|----------|
-| `createExecutionPlanUseCase` | `(input: CreateExecutionPlanInput) => Promise<CreateExecutionPlanResult>` | æ ¹æ®äº¤æ˜“ä¿¡å·è·å–è‚¡ä»·ã€è®¡ç®—ä»“ä½ã€æ‰§è¡Œé£æ§æ£€æŸ¥ï¼Œæ„é€  `ExecutionPlan` å¹¶é€šè¿‡ `DataBridge` æŒä¹…åŒ– | `logger.error` + ç»Ÿä¸€é”™è¯¯ç è¿”å› |
-| `fetchBasicDataUseCase` | `(input: FetchBasicDataInput) => Promise<DataLayerResult<Stock>>` | å§”æ‰˜ `fetcherService` è·å–è‚¡ç¥¨åŸºç¡€æ•°æ® | `logger` + è¿”å›é”™è¯¯ç»“æœ |
-| `fetchKlineDataUseCase` | `(input: FetchKlineDataInput) => Promise<DataLayerResult<Stock>>` | å§”æ‰˜ `fetcherService` è·å– Kçº¿æ•°æ® | `logger` + è¿”å›é”™è¯¯ç»“æœ |
-| `fetchSectorAnalysisUseCase` | `(input: FetchSectorAnalysisInput) => Promise<FetchSectorAnalysisResult>` | å¹¶è¡ŒæŸ¥è¯¢æ¿å—è½®åŠ¨è¯„åˆ†ä¸è¡Œä¸šè¯„åˆ†ï¼Œç©ºæ•°æ®æ—¶è‡ªåŠ¨è§¦å‘é»˜è®¤è®¡ç®— | `logger.error` + è¿”å›é”™è¯¯ç»“æœ |
-| `generateTradeReviewUseCase` | `(orders: Order[], now?: number) => TradeReviewReport` | åŒæ­¥ç”Ÿæˆäº¤æ˜“å¤ç›˜æŠ¥å‘Šï¼ˆæ—  LLM å¢å¼ºï¼‰ | çº¯è®¡ç®—ï¼Œæ— å‰¯ä½œç”¨ |
-| `generateTradeReviewAsyncUseCase` | `(orders: Order[], options?: TradeReviewOptions) => Promise<TradeReviewReport>` | å¼‚æ­¥ç”Ÿæˆäº¤æ˜“å¤ç›˜æŠ¥å‘Šï¼Œæ”¯æŒ LLM æ·±åº¦æ´å¯Ÿï¼ˆå¤±è´¥æ—¶é™çº§ä¸ºè§„åˆ™æ¨¡æ¿ï¼‰ | `logger.error` + é™çº§ä¸ºè§„åˆ™æ¨¡æ¿ |
-| `getUnifiedStockViewUseCase` | `(symbol: string, options?: FusionOptions) => Promise<DataLayerResult<UnifiedStockView>>` | èåˆå¤šæºæ•°æ®ï¼ˆåŸºç¡€ä¿¡æ¯ã€Kçº¿ã€è¯„åˆ†ã€ä¿¡å·ã€æŒä»“ï¼‰ä¸ºç»Ÿä¸€è§†å›¾ | `logger.error` + è¿”å›é”™è¯¯ç»“æœ |
-| `getUnifiedStockViewsUseCase` | `(symbols: string[], options?: FusionOptions) => Promise<DataLayerResult<UnifiedStockView[]>>` | æ‰¹é‡èåˆå¤šä¸ªè‚¡ç¥¨çš„ç»Ÿä¸€è§†å›¾ | `logger.warn` + è¿”å›é”™è¯¯ç»“æœ |
-| `getUnifiedStockViewsByStatusUseCase` | `(status: string, options?: FusionOptions) => Promise<DataLayerResult<UnifiedStockView[]>>` | æŒ‰ç ”ç©¶çŠ¶æ€ç­›é€‰è‚¡ç¥¨åæ‰¹é‡èåˆ | `logger.error` + è¿”å›é”™è¯¯ç»“æœ |
-| `getScoreViewUseCase` | `(symbol: string) => Promise<DataLayerResult<{stock, v6Score, intelligentScore, industryScore, completeness}>>` | ç®€åŒ–è¯„åˆ†è§†å›¾ï¼ˆä¸åŒ…å« Kçº¿ã€ä¿¡å·ã€æŒä»“ï¼‰ | `logger.error` + è¿”å›é”™è¯¯ç»“æœ |
-| `getTradingViewUseCase` | `(symbol: string) => Promise<DataLayerResult<{stock, quotes, v6Score, signal, holding, completeness}>>` | äº¤æ˜“ä¸“ç”¨è§†å›¾ï¼ˆåŒ…å« Kçº¿ã€ä¿¡å·ã€æŒä»“ï¼‰ | `logger.error` + è¿”å›é”™è¯¯ç»“æœ |
-| `hotSectorQueryUseCase` | `(input?: HotSectorQueryInput) => Promise<Result<HotSectorQueryResult>>` | æŸ¥è¯¢çƒ­é—¨æ¿å—å¹¶æŒ‰ score é™åºè¿”å› | `tryResult` + `logger.error` |
-| `rebalancePortfolioUseCase` | `(portfolioId: string, orders: Order[], options?: RebalanceOptions) => Promise<Portfolio \| undefined>` | äº‹åŠ¡å†…æ‰§è¡ŒæŠ•èµ„ç»„åˆå†å¹³è¡¡ï¼šæŒä»“æ›´æ–°ã€å¸‚å€¼é‡ç®—ã€å†å¹³è¡¡è®¡åˆ’ç”Ÿæˆ | `logger.error` + è¿”å› `undefined` |
-| `runDualStrategyUseCase` | `(input: RunDualStrategyInput) => Promise<DataLayerResult<DualStrategyResult>>` | å¹¶è¡Œæ‰§è¡Œçƒ­é—¨æ¿å—ç­–ç•¥ä¸ä»·å€¼æ´¼åœ°ç­–ç•¥ï¼Œç”Ÿæˆè½®åŠ¨ä¿¡å·ä¸è§‚å¯Ÿåˆ—è¡¨ | `logger` + è¿”å›é”™è¯¯ç»“æœ |
+| `createExecutionPlanUseCase` | `(input: CreateExecutionPlanInput) => Promise<CreateExecutionPlanResult>` | ¸ù¾İ½»Ò×ĞÅºÅ»ñÈ¡¹É¼Û¡¢¼ÆËã²ÖÎ»¡¢Ö´ĞĞ·ç¿Ø¼ì²é£¬¹¹Ôì `ExecutionPlan` ²¢Í¨¹ı `DataBridge` ³Ö¾Ã»¯ | `logger.error` + Í³Ò»´íÎóÂë·µ»Ø |
+| `fetchBasicDataUseCase` | `(input: FetchBasicDataInput) => Promise<DataLayerResult<Stock>>` | Î¯ÍĞ `fetcherService` »ñÈ¡¹ÉÆ±»ù´¡Êı¾İ | `logger` + ·µ»Ø´íÎó½á¹û |
+| `fetchKlineDataUseCase` | `(input: FetchKlineDataInput) => Promise<DataLayerResult<Stock>>` | Î¯ÍĞ `fetcherService` »ñÈ¡ KÏßÊı¾İ | `logger` + ·µ»Ø´íÎó½á¹û |
+| `fetchSectorAnalysisUseCase` | `(input: FetchSectorAnalysisInput) => Promise<FetchSectorAnalysisResult>` | ²¢ĞĞ²éÑ¯°å¿éÂÖ¶¯ÆÀ·ÖÓëĞĞÒµÆÀ·Ö£¬¿ÕÊı¾İÊ±×Ô¶¯´¥·¢Ä¬ÈÏ¼ÆËã | `logger.error` + ·µ»Ø´íÎó½á¹û |
+| `generateTradeReviewUseCase` | `(orders: Order[], now?: number) => TradeReviewReport` | Í¬²½Éú³É½»Ò×¸´ÅÌ±¨¸æ£¨ÎŞ LLM ÔöÇ¿£© | ´¿¼ÆËã£¬ÎŞ¸±×÷ÓÃ |
+| `generateTradeReviewAsyncUseCase` | `(orders: Order[], options?: TradeReviewOptions) => Promise<TradeReviewReport>` | Òì²½Éú³É½»Ò×¸´ÅÌ±¨¸æ£¬Ö§³Ö LLM Éî¶È¶´²ì£¨Ê§°ÜÊ±½µ¼¶Îª¹æÔòÄ£°å£© | `logger.error` + ½µ¼¶Îª¹æÔòÄ£°å |
+| `getUnifiedStockViewUseCase` | `(symbol: string, options?: FusionOptions) => Promise<DataLayerResult<UnifiedStockView>>` | ÈÚºÏ¶àÔ´Êı¾İ£¨»ù´¡ĞÅÏ¢¡¢KÏß¡¢ÆÀ·Ö¡¢ĞÅºÅ¡¢³Ö²Ö£©ÎªÍ³Ò»ÊÓÍ¼ | `logger.error` + ·µ»Ø´íÎó½á¹û |
+| `getUnifiedStockViewsUseCase` | `(symbols: string[], options?: FusionOptions) => Promise<DataLayerResult<UnifiedStockView[]>>` | ÅúÁ¿ÈÚºÏ¶à¸ö¹ÉÆ±µÄÍ³Ò»ÊÓÍ¼ | `logger.warn` + ·µ»Ø´íÎó½á¹û |
+| `getUnifiedStockViewsByStatusUseCase` | `(status: string, options?: FusionOptions) => Promise<DataLayerResult<UnifiedStockView[]>>` | °´ÑĞ¾¿×´Ì¬É¸Ñ¡¹ÉÆ±ºóÅúÁ¿ÈÚºÏ | `logger.error` + ·µ»Ø´íÎó½á¹û |
+| `getScoreViewUseCase` | `(symbol: string) => Promise<DataLayerResult<{stock, v6Score, intelligentScore, industryScore, completeness}>>` | ¼ò»¯ÆÀ·ÖÊÓÍ¼£¨²»°üº¬ KÏß¡¢ĞÅºÅ¡¢³Ö²Ö£© | `logger.error` + ·µ»Ø´íÎó½á¹û |
+| `getTradingViewUseCase` | `(symbol: string) => Promise<DataLayerResult<{stock, quotes, v6Score, signal, holding, completeness}>>` | ½»Ò××¨ÓÃÊÓÍ¼£¨°üº¬ KÏß¡¢ĞÅºÅ¡¢³Ö²Ö£© | `logger.error` + ·µ»Ø´íÎó½á¹û |
+| `hotSectorQueryUseCase` | `(input?: HotSectorQueryInput) => Promise<Result<HotSectorQueryResult>>` | ²éÑ¯ÈÈÃÅ°å¿é²¢°´ score ½µĞò·µ»Ø | `tryResult` + `logger.error` |
+| `rebalancePortfolioUseCase` | `(portfolioId: string, orders: Order[], options?: RebalanceOptions) => Promise<Portfolio \| undefined>` | ÊÂÎñÄÚÖ´ĞĞÍ¶×Ê×éºÏÔÙÆ½ºâ£º³Ö²Ö¸üĞÂ¡¢ÊĞÖµÖØËã¡¢ÔÙÆ½ºâ¼Æ»®Éú³É | `logger.error` + ·µ»Ø `undefined` |
+| `runDualStrategyUseCase` | `(input: RunDualStrategyInput) => Promise<DataLayerResult<DualStrategyResult>>` | ²¢ĞĞÖ´ĞĞÈÈÃÅ°å¿é²ßÂÔÓë¼ÛÖµÍİµØ²ßÂÔ£¬Éú³ÉÂÖ¶¯ĞÅºÅÓë¹Û²ìÁĞ±í | `logger` + ·µ»Ø´íÎó½á¹û |
 
-### 2.3 äº‹ä»¶æ¥å£
+### 2.3 ÊÂ¼ş½Ó¿Ú
 
-æœ¬ç”¨ä¾‹å­åŸŸ**æœªç›´æ¥å‘å¸ƒ/è®¢é˜… EventBus äº‹ä»¶**ã€‚æ‰€æœ‰çŠ¶æ€å˜æ›´é€šè¿‡å‡½æ•°è¿”å›å€¼ï¼ˆ`Promise<Result<...>>`ï¼‰å‘ä¸Šæ¸¸ä¼ é€’ã€‚å¦‚éœ€äº‹ä»¶é©±åŠ¨ï¼Œç”±æ¶ˆè´¹æ–¹ï¼ˆ`store/` å±‚ï¼‰åœ¨è·å–ç»“æœåè‡ªè¡Œè§¦å‘ã€‚å„ç”¨ä¾‹å†…éƒ¨ä½¿ç”¨ `logger.info` / `logger.warn` / `logger.error` è®°å½•å…³é”®åˆ†æ”¯æ—¥å¿—ã€‚
+±¾ÓÃÀı×ÓÓò**Î´Ö±½Ó·¢²¼/¶©ÔÄ EventBus ÊÂ¼ş**¡£ËùÓĞ×´Ì¬±ä¸üÍ¨¹ıº¯Êı·µ»ØÖµ£¨`Promise<Result<...>>`£©ÏòÉÏÓÎ´«µİ¡£ÈçĞèÊÂ¼şÇı¶¯£¬ÓÉÏû·Ñ·½£¨`store/` ²ã£©ÔÚ»ñÈ¡½á¹ûºó×ÔĞĞ´¥·¢¡£¸÷ÓÃÀıÄÚ²¿Ê¹ÓÃ `logger.info` / `logger.warn` / `logger.error` ¼ÇÂ¼¹Ø¼ü·ÖÖ§ÈÕÖ¾¡£
 
 ---
 
-## 3. æ•°æ®æµ
+## 3. Êı¾İÁ÷
 
-### å…¸å‹ç”¨ä¾‹ï¼šåˆ›å»ºæ‰§è¡Œè®¡åˆ’ï¼ˆ`createExecutionPlanUseCase`ï¼‰
+### µäĞÍÓÃÀı£º´´½¨Ö´ĞĞ¼Æ»®£¨`createExecutionPlanUseCase`£©
 
 ```
-[å¤–éƒ¨è¾“å…¥ï¼šäº¤æ˜“ä¿¡å· Signal]
-    â†“
+[Íâ²¿ÊäÈë£º½»Ò×ĞÅºÅ Signal]
+    ¡ı
 createExecutionPlanUseCase()
-    â”œâ”€â”€ 1. DataBridge.query<Stock>() â† dataLayer.stocks
-    â”œâ”€â”€ 2. DataBridge.query<Order[]>() â† dataLayer.orders
-    â”œâ”€â”€ 3. trading/positionSizer.calculatePosition() â†’ ä»“ä½è®¡ç®—
-    â”œâ”€â”€ 4. trading/riskEngine.checkOrderRisk() â†’ é£æ§æ£€æŸ¥
-    â”œâ”€â”€ 5. æ„é€  ExecutionPlan å¯¹è±¡
-    â†“ (DataBridge.forward())
-DataBridge â†’ routeToDB() â†’ dataLayer â†’ IndexedDB (STORE_NAME.executionPlans)
-    â†“ (å‡½æ•°è¿”å›)
-è°ƒç”¨æ–¹ï¼ˆstore/ æˆ–é¡µé¢ç»„ä»¶ï¼‰
+    ©À©¤©¤ 1. DataBridge.query<Stock>() ¡û dataLayer.stocks
+    ©À©¤©¤ 2. DataBridge.query<Order[]>() ¡û dataLayer.orders
+    ©À©¤©¤ 3. trading/positionSizer.calculatePosition() ¡ú ²ÖÎ»¼ÆËã
+    ©À©¤©¤ 4. trading/riskEngine.checkOrderRisk() ¡ú ·ç¿Ø¼ì²é
+    ©À©¤©¤ 5. ¹¹Ôì ExecutionPlan ¶ÔÏó
+    ¡ı (DataBridge.forward())
+DataBridge ¡ú routeToDB() ¡ú dataLayer ¡ú IndexedDB (STORE_NAME.executionPlans)
+    ¡ı (º¯Êı·µ»Ø)
+µ÷ÓÃ·½£¨store/ »òÒ³Ãæ×é¼ş£©
 ```
 
-### å…¸å‹ç”¨ä¾‹ï¼šç»Ÿä¸€è‚¡ç¥¨è§†å›¾ï¼ˆ`getUnifiedStockViewUseCase`ï¼‰
+### µäĞÍÓÃÀı£ºÍ³Ò»¹ÉÆ±ÊÓÍ¼£¨`getUnifiedStockViewUseCase`£©
 
 ```
-[å¤–éƒ¨è¾“å…¥ï¼šè‚¡ç¥¨ä»£ç  symbol]
-    â†“
+[Íâ²¿ÊäÈë£º¹ÉÆ±´úÂë symbol]
+    ¡ı
 getUnifiedStockViewUseCase(symbol, FusionOptions)
-    â”œâ”€â”€ dataLayer.stocks.get(symbol)
-    â”œâ”€â”€ dataLayer.dailyQuotes.get(symbol)       ï¼ˆå¯é€‰ï¼‰
-    â”œâ”€â”€ dataLayer.v6Scores.get(symbol)        ï¼ˆå¯é€‰ï¼‰
-    â”œâ”€â”€ dataLayer.intelligentScores.getLatestBySymbol(symbol) ï¼ˆå¯é€‰ï¼‰
-    â”œâ”€â”€ dataLayer.industryScores.listByCode(sector)           ï¼ˆå¯é€‰ï¼‰
-    â”œâ”€â”€ dataLayer.rotationScores.list()                     ï¼ˆå¯é€‰ï¼‰
-    â”œâ”€â”€ dataLayer.signals.listBySymbol(symbol)                ï¼ˆå¯é€‰ï¼‰
-    â†“
-èåˆä¸º UnifiedStockViewï¼ˆå« quality æŒ‡æ ‡ï¼šå®Œæ•´åº¦/æ–°é²œåº¦/ç¼ºå¤±åˆ—è¡¨ï¼‰
-    â†“ (å‡½æ•°è¿”å›)
-è°ƒç”¨æ–¹ï¼ˆstore/ æˆ–é¡µé¢ç»„ä»¶ï¼‰
+    ©À©¤©¤ dataLayer.stocks.get(symbol)
+    ©À©¤©¤ dataLayer.dailyQuotes.get(symbol)       £¨¿ÉÑ¡£©
+    ©À©¤©¤ dataLayer.v6Scores.get(symbol)        £¨¿ÉÑ¡£©
+    ©À©¤©¤ dataLayer.intelligentScores.getLatestBySymbol(symbol) £¨¿ÉÑ¡£©
+    ©À©¤©¤ dataLayer.industryScores.listByCode(sector)           £¨¿ÉÑ¡£©
+    ©À©¤©¤ dataLayer.rotationScores.list()                     £¨¿ÉÑ¡£©
+    ©À©¤©¤ dataLayer.signals.listBySymbol(symbol)                £¨¿ÉÑ¡£©
+    ¡ı
+ÈÚºÏÎª UnifiedStockView£¨º¬ quality Ö¸±ê£ºÍêÕû¶È/ĞÂÏÊ¶È/È±Ê§ÁĞ±í£©
+    ¡ı (º¯Êı·µ»Ø)
+µ÷ÓÃ·½£¨store/ »òÒ³Ãæ×é¼ş£©
 ```
 
-> æ³¨æ„ï¼š`getUnifiedStockView` ç³»åˆ—ç”¨ä¾‹**åªè¯»ä¸å†™**ï¼Œä¸ç»è¿‡ `DataBridge.forward()`ï¼Œç›´æ¥é€šè¿‡ `dataLayer` è¯»å–ã€‚
+> ×¢Òâ£º`getUnifiedStockView` ÏµÁĞÓÃÀı**Ö»¶Á²»Ğ´**£¬²»¾­¹ı `DataBridge.forward()`£¬Ö±½ÓÍ¨¹ı `dataLayer` ¶ÁÈ¡¡£
 
 ---
 
-## 4. é…ç½®ä¸ä¾èµ–
+## 4. ÅäÖÃÓëÒÀÀµ
 
-### 4.1 ä¾èµ–ç™½åå•ï¼ˆlib/ & core/ & data/ï¼‰
+### 4.1 ÒÀÀµ°×Ãûµ¥£¨lib/ & core/ & data/£©
 
-| ä¾èµ– | è·¯å¾„ | ç”¨é€” |
+| ÒÀÀµ | Â·¾¶ | ÓÃÍ¾ |
 |------|------|------|
-| logger | `@/lib/logger` | æ—¥å¿—è¾“å‡ºï¼ˆinfo / warn / errorï¼‰ |
-| dataBridge | `@/core/databridge` | åˆ›å»ºæ‰§è¡Œè®¡åˆ’æ—¶æŒä¹…åŒ–æ•°æ® |
-| EnvelopeFactory | `@/core/envelope` | æ„é€  DataBridge ä¿¡å° |
-| runInTransaction | `@/core/transaction` | ç»„åˆå†å¹³è¡¡æ—¶çš„äº‹åŠ¡æ§åˆ¶ |
-| freshnessGuard | `@/core/freshnessGuard` | å¤ç›˜æŠ¥å‘Šä¸å†å¹³è¡¡çš„ freshness æ ¡éªŒ |
-| dataLayer | `@/data/dataLayer` | ç»Ÿä¸€è§†å›¾ç”¨ä¾‹ç›´æ¥è¯»å–å¤šæºæ•°æ® |
-| data/db | `@/data/db` | ç”Ÿæˆ `generateId`ï¼ˆ`runDualStrategyUseCase`ï¼‰ |
-| contracts / tryResult | `@/services/contracts` | `hotSectorQueryUseCase` çš„ Result å°è£… |
+| logger | `@/lib/logger` | ÈÕÖ¾Êä³ö£¨info / warn / error£© |
+| dataBridge | `@/core/databridge` | ´´½¨Ö´ĞĞ¼Æ»®Ê±³Ö¾Ã»¯Êı¾İ |
+| EnvelopeFactory | `@/core/envelope` | ¹¹Ôì DataBridge ĞÅ·â |
+| runInTransaction | `@/core/transaction` | ×éºÏÔÙÆ½ºâÊ±µÄÊÂÎñ¿ØÖÆ |
+| freshnessGuard | `@/core/freshnessGuard` | ¸´ÅÌ±¨¸æÓëÔÙÆ½ºâµÄ freshness Ğ£Ñé |
+| dataLayer | `@/data/dataLayer` | Í³Ò»ÊÓÍ¼ÓÃÀıÖ±½Ó¶ÁÈ¡¶àÔ´Êı¾İ |
+| data/db | `@/data/db` | Éú³É `generateId`£¨`runDualStrategyUseCase`£© |
+| contracts / tryResult | `@/services/contracts` | `hotSectorQueryUseCase` µÄ Result ·â×° |
 
-### 4.2 åŒå±‚æœåŠ¡ä¾èµ–ï¼ˆservices/ï¼‰
+### 4.2 Í¬²ã·şÎñÒÀÀµ£¨services/£©
 
-| ä¾èµ– | è·¯å¾„ | ç”¨é€” |
+| ÒÀÀµ | Â·¾¶ | ÓÃÍ¾ |
 |------|------|------|
-| trading/positionSizer | `@/services/trading/positionSizer` | ä»“ä½è®¡ç®—ï¼ˆKelly å…¬å¼ï¼‰ |
-| trading/riskEngine | `@/services/trading/riskEngine` | é£æ§æ£€æŸ¥ |
-| trading/tradeReviewAI.* | `@/services/trading/tradeReviewAI.*` | äº¤æ˜“å¤ç›˜æŠ¥å‘Šç”Ÿæˆï¼ˆé”™è¯¯åˆ†ç±»ã€äº”ç»´è§„åˆ™ã€LLM æ´å¯Ÿï¼‰ |
-| fetcher/fetcherService | `@/services/fetcher/fetcherService` | å§”æ‰˜è·å–åŸºç¡€æ•°æ®ä¸ Kçº¿ |
-| analysis/sectorAnalysisEngine | `@/services/analysis/sectorAnalysisEngine` | è·å–/è®¡ç®—æ¿å—è½®åŠ¨è¯„åˆ†ä¸è¡Œä¸šè¯„åˆ† |
-| input/hotSectorService | `@/services/input/hotSectorService` | è·å–çƒ­é—¨æ¿å—åˆ—è¡¨ |
-| scoring/hotSectorAnalyzer | `@/services/scoring/hotSectorAnalyzer` | çƒ­é—¨æ¿å—ç­–ç•¥è¯„åˆ† |
-| scoring/valuePitAnalyzer | `@/services/scoring/valuePitAnalyzer` | ä»·å€¼æ´¼åœ°ç­–ç•¥è¯„åˆ† |
-| scoring/rotationSignalDetector | `@/services/scoring/rotationSignalDetector` | è½®åŠ¨ä¿¡å·æ£€æµ‹ |
-| llm/llmGateway | `@/services/llm/llmGateway` | LLM æ·±åº¦æ´å¯Ÿè°ƒç”¨ |
+| trading/positionSizer | `@/services/trading/positionSizer` | ²ÖÎ»¼ÆËã£¨Kelly ¹«Ê½£© |
+| trading/riskEngine | `@/services/trading/riskEngine` | ·ç¿Ø¼ì²é |
+| trading/tradeReviewAI.* | `@/services/trading/tradeReviewAI.*` | ½»Ò×¸´ÅÌ±¨¸æÉú³É£¨´íÎó·ÖÀà¡¢ÎåÎ¬¹æÔò¡¢LLM ¶´²ì£© |
+| fetcher/fetcherService | `@/services/fetcher/fetcherService` | Î¯ÍĞ»ñÈ¡»ù´¡Êı¾İÓë KÏß |
+| analysis/sectorAnalysisEngine | `@/services/analysis/sectorAnalysisEngine` | »ñÈ¡/¼ÆËã°å¿éÂÖ¶¯ÆÀ·ÖÓëĞĞÒµÆÀ·Ö |
+| input/hotSectorService | `@/services/input/hotSectorService` | »ñÈ¡ÈÈÃÅ°å¿éÁĞ±í |
+| scoring/hotSectorAnalyzer | `@/services/scoring/hotSectorAnalyzer` | ÈÈÃÅ°å¿é²ßÂÔÆÀ·Ö |
+| scoring/valuePitAnalyzer | `@/services/scoring/valuePitAnalyzer` | ¼ÛÖµÍİµØ²ßÂÔÆÀ·Ö |
+| scoring/rotationSignalDetector | `@/services/scoring/rotationSignalDetector` | ÂÖ¶¯ĞÅºÅ¼ì²â |
+| llm/llmGateway | `@/services/llm/llmGateway` | LLM Éî¶È¶´²ìµ÷ÓÃ |
 
-### 4.3 é…ç½®é¡¹
+### 4.3 ÅäÖÃÏî
 
-| é…ç½®å | é»˜è®¤å€¼ | è¯´æ˜ | æ¥æº |
+| ÅäÖÃÃû | Ä¬ÈÏÖµ | ËµÃ÷ | À´Ô´ |
 |--------|--------|------|------|
-| `accountType` | `'paper'` | è´¦æˆ·ç±»å‹ï¼ˆpaper / realï¼‰ | `CreateExecutionPlanInput` |
-| `cashReservePct` | 0.05 | ç°é‡‘å‚¨å¤‡æ¯”ä¾‹ | `@/constants/execution.constants` |
-| `maxHoldingWeight` | 0.25 | å•æ ‡çš„æƒé‡ä¸Šé™ | `@/constants/execution.constants` |
-| `rebalanceThreshold` | 0.05 | å†å¹³è¡¡è§¦å‘é˜ˆå€¼ï¼ˆæƒé‡åå·®ï¼‰ | `@/constants/execution.constants` |
-| `portfolioValue` | â€” | ç»„åˆå‡€å€¼ï¼ˆç”¨äºä»“ä½è®¡ç®—ï¼‰ | `@/config/tradingConfig` â†’ `getEffectiveTradingConfig()` |
-| `ruleConfig` | é»˜è®¤è§„åˆ™ | åŒç­–ç•¥è§„åˆ™é…ç½® | `@/config/dualStrategyRules` |
-| `llmConfig` | â€” | LLM è¦†ç›–é…ç½®ï¼ˆå¼‚æ­¥å¤ç›˜ç”¨ï¼‰ | `@/config/llmConfig` |
-| `FusionOptions` | è¯¦è§ `DEFAULT_OPTIONS` | ç»Ÿä¸€è§†å›¾æ•°æ®æºå¼€å…³ | `getUnifiedStockView.useCase.ts` |
+| `accountType` | `'paper'` | ÕË»§ÀàĞÍ£¨paper / real£© | `CreateExecutionPlanInput` |
+| `cashReservePct` | 0.05 | ÏÖ½ğ´¢±¸±ÈÀı | `@/constants/execution.constants` |
+| `maxHoldingWeight` | 0.25 | µ¥±êµÄÈ¨ÖØÉÏÏŞ | `@/constants/execution.constants` |
+| `rebalanceThreshold` | 0.05 | ÔÙÆ½ºâ´¥·¢ãĞÖµ£¨È¨ÖØÆ«²î£© | `@/constants/execution.constants` |
+| `portfolioValue` | ¡ª | ×éºÏ¾»Öµ£¨ÓÃÓÚ²ÖÎ»¼ÆËã£© | `@/config/tradingConfig` ¡ú `getEffectiveTradingConfig()` |
+| `ruleConfig` | Ä¬ÈÏ¹æÔò | Ë«²ßÂÔ¹æÔòÅäÖÃ | `@/config/dualStrategyRules` |
+| `llmConfig` | ¡ª | LLM ¸²¸ÇÅäÖÃ£¨Òì²½¸´ÅÌÓÃ£© | `@/config/llmConfig` |
+| `FusionOptions` | Ïê¼û `DEFAULT_OPTIONS` | Í³Ò»ÊÓÍ¼Êı¾İÔ´¿ª¹Ø | `getUnifiedStockView.useCase.ts` |
 
 ---
 
-## 5. æµ‹è¯•ç­–ç•¥
+## 5. ²âÊÔ²ßÂÔ
 
-| æµ‹è¯•ç±»å‹ | æ–‡ä»¶ | è¯´æ˜ |
+| ²âÊÔÀàĞÍ | ÎÄ¼ş | ËµÃ÷ |
 |----------|------|------|
-| å•å…ƒæµ‹è¯• | `src/services/useCase/createExecutionPlan.useCase.test.ts` | é£æ§é˜»æ–­/é€šè¿‡åœºæ™¯ã€è¾¹ç•Œæ•°å€¼ï¼ˆæå€¼è‚¡ä»·ã€NaNã€Infinityï¼‰ã€æ•°æ®ç¼ºå¤±ã€ç‰¹æ®Šå­—ç¬¦ã€å¹¶å‘è¯·æ±‚ã€æ•°æ®åº“æ“ä½œå¼‚å¸¸ã€é£æ§å¼•æ“å¼‚å¸¸ã€ä¿¡å·æ–¹å‘ç­‰ 15+ ä¸ª describe å¥—ä»¶ |
-| é›†æˆæµ‹è¯• | å»ºè®®è¡¥å……ï¼š`tests/services/useCase.integration.test.ts` | DataBridge äº¤äº’ã€è·¨åŸŸè°ƒç”¨ï¼ˆtrading/fetcher/scoringï¼‰ã€Store è”åŠ¨ |
-| Mock ç­–ç•¥ | æµ‹è¯•å†…è” mock | `DataBridge` / `positionSizer` / `riskEngine` / `tradingConfig` ç­‰ä¾èµ–ä½¿ç”¨ `vi.mock` éš”ç¦» |
+| µ¥Ôª²âÊÔ | `src/services/useCase/createExecutionPlan.useCase.test.ts` | ·ç¿Ø×è¶Ï/Í¨¹ı³¡¾°¡¢±ß½çÊıÖµ£¨¼«Öµ¹É¼Û¡¢NaN¡¢Infinity£©¡¢Êı¾İÈ±Ê§¡¢ÌØÊâ×Ö·û¡¢²¢·¢ÇëÇó¡¢Êı¾İ¿â²Ù×÷Òì³£¡¢·ç¿ØÒıÇæÒì³£¡¢ĞÅºÅ·½ÏòµÈ 15+ ¸ö describe Ì×¼ş |
+| ¼¯³É²âÊÔ | ½¨Òé²¹³ä£º`tests/services/useCase.integration.test.ts` | DataBridge ½»»¥¡¢¿çÓòµ÷ÓÃ£¨trading/fetcher/scoring£©¡¢Store Áª¶¯ |
+| Mock ²ßÂÔ | ²âÊÔÄÚÁª mock | `DataBridge` / `positionSizer` / `riskEngine` / `tradingConfig` µÈÒÀÀµÊ¹ÓÃ `vi.mock` ¸ôÀë |
 
 ---
 
-## 6. å˜æ›´æ—¥å¿—
+## 6. ±ä¸üÈÕÖ¾
 
-| æ—¥æœŸ | ç‰ˆæœ¬ | å˜æ›´ | ä½œè€… |
+| ÈÕÆÚ | °æ±¾ | ±ä¸ü | ×÷Õß |
 |------|------|------|------|
-| 2026-07-12 | v0.1.0 | å¥‘çº¦åˆç¨¿ | æ¶æ„ç»„ |
+| 2026-07-12 | v0.1.0 | ÆõÔ¼³õ¸å | ¼Ü¹¹×é |
 
 ---
 
-> **TODO[å­åŸŸ owner]**ï¼š
-> 1. ç¡®è®¤ `getUnifiedStockView` ç³»åˆ—ç”¨ä¾‹ç›´æ¥è®¿é—® `dataLayer` è€Œé `DataBridge` æ˜¯å¦ç¬¦åˆæ¶æ„è§„èŒƒï¼ˆå½“å‰ä¸ºåªè¯»èåˆï¼Œæœªå†™å…¥ï¼‰ã€‚
-> 2. è¡¥å……å‰©ä½™ç”¨ä¾‹çš„å•å…ƒæµ‹è¯•ï¼ˆå½“å‰ä»… `createExecutionPlan` æœ‰æµ‹è¯•ï¼‰ã€‚
-> 3. å®Œæˆåè¿è¡Œ `tsc --noEmit` + `audit:layers` éªŒè¯ã€‚
+> **TODO[×ÓÓò owner]**£º
+> 1. È·ÈÏ `getUnifiedStockView` ÏµÁĞÓÃÀıÖ±½Ó·ÃÎÊ `dataLayer` ¶ø·Ç `DataBridge` ÊÇ·ñ·ûºÏ¼Ü¹¹¹æ·¶£¨µ±Ç°ÎªÖ»¶ÁÈÚºÏ£¬Î´Ğ´Èë£©¡£
+> 2. ²¹³äÊ£ÓàÓÃÀıµÄµ¥Ôª²âÊÔ£¨µ±Ç°½ö `createExecutionPlan` ÓĞ²âÊÔ£©¡£
+> 3. Íê³ÉºóÔËĞĞ `tsc --noEmit` + `audit:layers` ÑéÖ¤¡£

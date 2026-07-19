@@ -323,12 +323,12 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
   // 否则会误匹配到 lucide 图标 SVG 的 path（图标 path 无 stroke 属性）。
   // ----------------------------------------------------------
   describe('净值曲线 SVG - 颜色常量引用', () => {
-    it('COLOR_TOKENS.success.hex 应为 #15803d（PNL 曲线 stroke 值，green-700 确保 WCAG AA 对比度）', () => {
-      expect(COLOR_TOKENS.success.hex).toBe('#15803d')
+    it('COLOR_TOKENS.success.hex 应为 #21c45d（PNL 曲线 stroke 值，与语义成功色一致）', () => {
+      expect(COLOR_TOKENS.success.hex).toBe('#21c45d')
     })
 
-    it('CHART_PALETTE.grid 应为 #e5e7eb（网格线 stroke 值）', () => {
-      expect(CHART_PALETTE.grid).toBe('#e5e7eb')
+    it('CHART_PALETTE.grid 应为 #e2e8f0（网格线 stroke 值，slate.200 中性收敛）', () => {
+      expect(CHART_PALETTE.grid).toBe('#e2e8f0')
     })
 
     it('净值曲线存在时应渲染 SVG path 元素', () => {
@@ -360,7 +360,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
       expect(svgPath?.getAttribute('stroke')).toBe(COLOR_TOKENS.success.hex)
     })
 
-    it('网格线 stroke 应引用 CHART_PALETTE.grid（非硬编码 #e5e7eb）', () => {
+    it('网格线 stroke 应引用 CHART_PALETTE.grid（非硬编码 #e2e8f0）', () => {
       setupStore({
         results: buildResult({ pnlCurve: [1.0, 1.05, 1.1, 1.08] }),
       })
@@ -380,7 +380,7 @@ describe('BacktestPage 颜色整改 - 批次 F', () => {
   // ----------------------------------------------------------
   describe('回归 - 禁止硬编码 HEX', () => {
     it('COLOR_TOKENS.success.hex 与 CHART_PALETTE.grid 应不相等', () => {
-      // 防止意外写反：success=#22c55e（绿），grid=#e5e7eb（灰）
+      // 防止意外写反：success=#22c55e（绿），grid=#e2e8f0（slate 中性）
       expect(COLOR_TOKENS.success.hex).not.toBe(CHART_PALETTE.grid)
     })
 

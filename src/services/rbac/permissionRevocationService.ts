@@ -65,7 +65,7 @@ class PermissionRevocationService {
     zombieIntervalMs: number = this.thresholds.zombieDetectionIntervalMs,
   ): void {
     if (this.running) {
-      logger.warn('[PermissionRevocationService] Already running, start() ignored')
+      logger.debug('[PermissionRevocationService] Already running, start() ignored')
       return
     }
 

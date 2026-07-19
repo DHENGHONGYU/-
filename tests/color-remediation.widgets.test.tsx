@@ -83,6 +83,18 @@ function buildMarketDataReturn(sentiment: SentimentData, instanceId = 'test-widg
   }
 }
 
+/** 构建 FundFlow 专用的 MarketData mock 返回值 */
+function buildFundFlowMarketDataReturn(flows: FundFlow[], instanceId = 'test-widget-1') {
+  return {
+    data: { fundFlows: flows },
+    loadingMap: { [instanceId]: false },
+    errorMap: {},
+    refreshWidget: vi.fn(),
+    getTaskStats: () => ({ total: 0, running: 0, error: 0 }),
+    sendChatMessage: vi.fn(),
+  }
+}
+
 function buildSentiment(overrides: Partial<SentimentData> = {}): SentimentData {
   return {
     fearGreedIndex: 65,
@@ -132,7 +144,7 @@ describe('颜色整改 - A 股惯例验证（批次 E）', () => {
 
     it('北向资金净流入（value > 0）应渲染红色上涨图标', async () => {
       const inflow = buildFundFlow({ type: 'north', value: 100, name: '北向资金流入' })
-      mockGetFundFlows.mockResolvedValue([inflow])
+      mockUseMarketData.mockReturnValue(buildFundFlowMarketDataReturn([inflow]))
 
       const { container } = render(<FundFlowWidget config={buildConfig('资金流向')} />)
 
@@ -147,7 +159,7 @@ describe('颜色整改 - A 股惯例验证（批次 E）', () => {
 
     it('北向资金净流出（value < 0）应渲染绿色下跌图标（A 股惯例）', async () => {
       const outflow = buildFundFlow({ type: 'north', value: -50, name: '北向资金流出' })
-      mockGetFundFlows.mockResolvedValue([outflow])
+      mockUseMarketData.mockReturnValue(buildFundFlowMarketDataReturn([outflow]))
 
       const { container } = render(<FundFlowWidget config={buildConfig('资金流向')} />)
 
@@ -162,7 +174,7 @@ describe('颜色整改 - A 股惯例验证（批次 E）', () => {
 
     it('净流入金额应渲染为红色（A 股惯例：红涨）', async () => {
       const inflow = buildFundFlow({ type: 'main', value: 200, name: '主力净流入', unit: '万' })
-      mockGetFundFlows.mockResolvedValue([inflow])
+      mockUseMarketData.mockReturnValue(buildFundFlowMarketDataReturn([inflow]))
 
       render(<FundFlowWidget config={buildConfig('资金流向')} />)
 
@@ -177,7 +189,7 @@ describe('颜色整改 - A 股惯例验证（批次 E）', () => {
 
     it('净流出金额应渲染为绿色（A 股惯例：绿跌）', async () => {
       const outflow = buildFundFlow({ type: 'main', value: -150, name: '主力净流出', unit: '万' })
-      mockGetFundFlows.mockResolvedValue([outflow])
+      mockUseMarketData.mockReturnValue(buildFundFlowMarketDataReturn([outflow]))
 
       render(<FundFlowWidget config={buildConfig('资金流向')} />)
 

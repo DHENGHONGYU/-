@@ -1,112 +1,111 @@
 ---
-title: input-cabin-ui-reshaping
-code_version: 2.0.0
-
-tier: important
----
-
----
-title: è¾“å…¥èˆ± UI ä½“ç³»åŒ–é‡å¡‘è¯´æ˜
-version: v0.9.0
-last_updated: 2026-06-25
-maintainer: V9 Architecture Team
+title: ÊäÈë²Õ UI ÌåÏµ»¯ÖØËÜËµÃ÷
+type: reference
+domain: frontend
+phase: design
+tier: standard
 status: active
-change_log:
-  - date: 2026-06-25
-    author: Documentation Governor
-    desc: æ³¨å…¥ Frontmatter å…ƒæ•°æ®ï¼ˆPhase 3 ç‰ˆæœ¬åŒ–ï¼‰
+maintainer: V9 Architecture Team
+summary: "²Î¿¼ `F:\Í¶×ÊÈüµÀ·ÖÎö\dashboard_v2.html` µÄ Kimi ¾­µä²¼¾Ö¼Ü¹¹£¬¶Ô V9 ÊäÈë²Õ½øĞĞÌåÏµ»¯ÖØËÜ¡£±¾´ÎÖØËÜ¼á³Ö¡¸React ×é¼ş»¯ + V9 Êı¾İĞ­Òé¡¹£¬½ûÖ¹¾²Ì¬Ç¶Èë UI..."
+tags: [frontend, input-cabin, api]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: important
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
-# è¾“å…¥èˆ± UI ä½“ç³»åŒ–é‡å¡‘è¯´æ˜
+
+# ÊäÈë²Õ UI ÌåÏµ»¯ÖØËÜËµÃ÷
 
 > **Status**: Current  
 > **Version**: v0.9.0-docs-review  
 > **Last Updated**: 2026-06-24
 >
-> å‚è€ƒ `F:\æŠ•èµ„èµ›é“åˆ†æ\dashboard_v2.html` çš„ Kimi ç»å…¸å¸ƒå±€æ¶æ„ï¼Œå¯¹ V9 è¾“å…¥èˆ±è¿›è¡Œä½“ç³»åŒ–é‡å¡‘ã€‚æœ¬æ¬¡é‡å¡‘åšæŒã€ŒReact ç»„ä»¶åŒ– + V9 æ•°æ®åè®®ã€ï¼Œç¦æ­¢é™æ€åµŒå…¥ UI ç»„ä»¶ã€‚
+> ²Î¿¼ `F:\Í¶×ÊÈüµÀ·ÖÎö\dashboard_v2.html` µÄ Kimi ¾­µä²¼¾Ö¼Ü¹¹£¬¶Ô V9 ÊäÈë²Õ½øĞĞÌåÏµ»¯ÖØËÜ¡£±¾´ÎÖØËÜ¼á³Ö¡¸React ×é¼ş»¯ + V9 Êı¾İĞ­Òé¡¹£¬½ûÖ¹¾²Ì¬Ç¶Èë UI ×é¼ş¡£
 
 ---
 
-## 1. å‚è€ƒå¸ƒå±€åˆ° V9 çš„æ˜ å°„
+## 1. ²Î¿¼²¼¾Öµ½ V9 µÄÓ³Éä
 
-| å‚è€ƒè¦ç´  | V9 å®ç° | æ–‡ä»¶ |
+| ²Î¿¼ÒªËØ | V9 ÊµÏÖ | ÎÄ¼ş |
 |----------|---------|------|
-| æ·±è‰²ä¸»é¢˜ï¼ˆ`#0f172a` èƒŒæ™¯ï¼‰ | Tailwind `dark` ç±» + ç°æœ‰ CSS å˜é‡ | `src/index.css`ã€`src/portal/PortalShell.tsx` |
-| é¡¶éƒ¨çŠ¶æ€æ ï¼ˆ56pxï¼‰ | `PortalShell` TopBar | `src/portal/PortalShell.tsx` |
-| å·¦ä¾§ä¾§è¾¹æ ï¼ˆ260pxï¼Œåˆ†ç»„å¯¼èˆªï¼‰ | `PortalShell` Sidebar | `src/portal/PortalShell.tsx` |
-| å¡ç‰‡ç½‘æ ¼ / æ•°æ®è¡¨æ ¼ | `Card`ã€`Table`ã€`PoolBoard` ç­‰ç»„ä»¶ | `src/components/ui/*`ã€`src/components/pool/*` |
-| æ ‡ç­¾ / å¾½ç«  | `Badge` ç»„ä»¶ | `src/components/atoms/Badge.tsx` |
-| è¿›åº¦æ¡ | `DataTestPanel` è¿›åº¦æ¡ | `src/apps/input/DataTestPanel.tsx` |
+| ÉîÉ«Ö÷Ìâ£¨`#0f172a` ±³¾°£© | Tailwind `dark` Àà + ÏÖÓĞ CSS ±äÁ¿ | `src/index.css`¡¢`src/portal/PortalShell.tsx` |
+| ¶¥²¿×´Ì¬À¸£¨56px£© | `PortalShell` TopBar | `src/portal/PortalShell.tsx` |
+| ×ó²à²à±ßÀ¸£¨260px£¬·Ö×éµ¼º½£© | `PortalShell` Sidebar | `src/portal/PortalShell.tsx` |
+| ¿¨Æ¬Íø¸ñ / Êı¾İ±í¸ñ | `Card`¡¢`Table`¡¢`PoolBoard` µÈ×é¼ş | `src/components/ui/*`¡¢`src/components/pool/*` |
+| ±êÇ© / »ÕÕÂ | `Badge` ×é¼ş | `src/components/atoms/Badge.tsx` |
+| ½ø¶ÈÌõ | `DataTestPanel` ½ø¶ÈÌõ | `src/apps/input/DataTestPanel.tsx` |
 
 ---
 
-## 2. æ¶æ„å˜æ›´
+## 2. ¼Ü¹¹±ä¸ü
 
-### 2.1 PortalShell é‡å¡‘
+### 2.1 PortalShell ÖØËÜ
 
-`PortalShell` ç°åœ¨æ˜¯å…¨å±€æ·±è‰²ç»å…¸å¸ƒå±€å®¹å™¨ï¼š
+`PortalShell` ÏÖÔÚÊÇÈ«¾ÖÉîÉ«¾­µä²¼¾ÖÈİÆ÷£º
 
-- **TopBar**ï¼šå·¦ä¾§ V9 Logo å¾½ç«  + ç³»ç»Ÿæ ‡é¢˜ï¼›ä¸­é—´äº”èˆ±å¯¼èˆª + é©¾é©¶èˆ±å…¥å£ï¼›å³ä¾§é‡‡é›†æœåŠ¡å¥åº·ç‚¹ã€è¿è¡Œæ—¶é•¿ã€ç‰ˆæœ¬å·ã€‚
-- **Sidebar**ï¼š260px å®½ï¼ŒæŒ‰èˆ±å®¤åˆ†ç»„æ˜¾ç¤ºåŠŸèƒ½å…¥å£ï¼Œæ”¯æŒåˆ†ç»„æ ‡é¢˜ã€å›¾æ ‡ã€å½“å‰é¡¹é«˜äº®ã€‚
-- **Main**ï¼šé¢åŒ…å±‘/æ ‡é¢˜åŒº + å­åº”ç”¨å†…å®¹åŒºã€‚
+- **TopBar**£º×ó²à V9 Logo »ÕÕÂ + ÏµÍ³±êÌâ£»ÖĞ¼äÎå²Õµ¼º½ + ¼İÊ»²ÕÈë¿Ú£»ÓÒ²à²É¼¯·şÎñ½¡¿µµã¡¢ÔËĞĞÊ±³¤¡¢°æ±¾ºÅ¡£
+- **Sidebar**£º260px ¿í£¬°´²ÕÊÒ·Ö×éÏÔÊ¾¹¦ÄÜÈë¿Ú£¬Ö§³Ö·Ö×é±êÌâ¡¢Í¼±ê¡¢µ±Ç°Ïî¸ßÁÁ¡£
+- **Main**£ºÃæ°üĞ¼/±êÌâÇø + ×ÓÓ¦ÓÃÄÚÈİÇø¡£
 
-### 2.2 è¾“å…¥èˆ±å­é¡µé¢æ‹†åˆ†
+### 2.2 ÊäÈë²Õ×ÓÒ³Ãæ²ğ·Ö
 
-`InputApp` ä¸å†æ˜¯å·¨çŸ³ç»„ä»¶ï¼Œè€Œæ˜¯æŒ‰è·¯å¾„åˆ†å‘çš„å¸ƒå±€ç»„ä»¶ï¼Œæ‰¿è½½å››ä¸ªå­é¡µé¢ï¼š
+`InputApp` ²»ÔÙÊÇ¾ŞÊ¯×é¼ş£¬¶øÊÇ°´Â·¾¶·Ö·¢µÄ²¼¾Ö×é¼ş£¬³ĞÔØËÄ¸ö×ÓÒ³Ãæ£º
 
-| è·¯å¾„ | ç»„ä»¶ | è¯´æ˜ |
+| Â·¾¶ | ×é¼ş | ËµÃ÷ |
 |------|------|------|
-| `/input` | `InputDashboard` | å½•å…¥çœ‹æ¿ï¼šç»Ÿè®¡å¡ç‰‡ã€å•æ¡å½•å…¥ã€è‚¡ç¥¨æ± çœ‹æ¿ |
-| `/input/bulk-import` | `BulkImportPanel` | æ‰¹é‡å¯¼å…¥ï¼šæ–‡æœ¬è§£æã€é¢„è§ˆã€å¯¼å…¥ç»“æœ |
-| `/input/hot-sectors` | `HotSectorPanel` | çƒ­é—¨æ¿å—ï¼šæ¿å—å¡ç‰‡ã€å…³è”è‚¡ç¥¨ã€åŠ å…¥å€™é€‰æ±  |
-| `/input/data-test` | `DataTestPanel` | é‡‡é›†æµ‹è¯•ï¼šæœåŠ¡å¥åº·ã€å•/æ‰¹é‡æ¥å£æµ‹è¯• |
+| `/input` | `InputDashboard` | Â¼Èë¿´°å£ºÍ³¼Æ¿¨Æ¬¡¢µ¥ÌõÂ¼Èë¡¢¹ÉÆ±³Ø¿´°å |
+| `/input/bulk-import` | `BulkImportPanel` | ÅúÁ¿µ¼Èë£ºÎÄ±¾½âÎö¡¢Ô¤ÀÀ¡¢µ¼Èë½á¹û |
+| `/input/hot-sectors` | `HotSectorPanel` | ÈÈÃÅ°å¿é£º°å¿é¿¨Æ¬¡¢¹ØÁª¹ÉÆ±¡¢¼ÓÈëºòÑ¡³Ø |
+| `/input/data-test` | `DataTestPanel` | ²É¼¯²âÊÔ£º·şÎñ½¡¿µ¡¢µ¥/ÅúÁ¿½Ó¿Ú²âÊÔ |
 
-### 2.3 è·¯ç”±ä¸ä¾§è¾¹æ æ˜ å°„
+### 2.3 Â·ÓÉÓë²à±ßÀ¸Ó³Éä
 
-- `src/config/routes.ts` æ³¨å†Œäº† `/input/bulk-import`ã€`/input/hot-sectors`ã€`/input/data-test`ã€‚
-- `PortalShell` çš„ `PANEL_ITEMS` æ‰©å±•ä¸ºåˆ†ç»„ç»“æ„ï¼Œè¾“å…¥èˆ±ä¾§è¾¹æ åˆ†ä¸ºã€Œå€™é€‰æ± ã€å’Œã€Œæ•°æ®é‡‡é›†ã€ä¸¤ç»„ã€‚
-- ç‚¹å‡»ä¾§è¾¹æ é¡¹ç›´æ¥å¯¼èˆªåˆ°å¯¹åº” URLï¼Œå®ç° URL ä¸è§†å›¾çš„åŒæ­¥ã€‚
+- `src/config/routes.ts` ×¢²áÁË `/input/bulk-import`¡¢`/input/hot-sectors`¡¢`/input/data-test`¡£
+- `PortalShell` µÄ `PANEL_ITEMS` À©Õ¹Îª·Ö×é½á¹¹£¬ÊäÈë²Õ²à±ßÀ¸·ÖÎª¡¸ºòÑ¡³Ø¡¹ºÍ¡¸Êı¾İ²É¼¯¡¹Á½×é¡£
+- µã»÷²à±ßÀ¸ÏîÖ±½Óµ¼º½µ½¶ÔÓ¦ URL£¬ÊµÏÖ URL ÓëÊÓÍ¼µÄÍ¬²½¡£
 
-### 2.4 æ•°æ®åè®®
+### 2.4 Êı¾İĞ­Òé
 
-æ‰€æœ‰æ•°æ®äº¤äº’ç»§ç»­ä½¿ç”¨ V9 æ—¢æœ‰æœåŠ¡å±‚ï¼š
+ËùÓĞÊı¾İ½»»¥¼ÌĞøÊ¹ÓÃ V9 ¼ÈÓĞ·şÎñ²ã£º
 
-- å•æ¡å½•å…¥ï¼š`inputService.addStock`
-- æ‰¹é‡å¯¼å…¥ï¼š`batchImportService.importStocks`
-- çƒ­é—¨æ¿å—ï¼š`hotSectorService.addHotSectorStock` / `addHotSectorStocks`
-- è‚¡ç¥¨æ± çœ‹æ¿ï¼š`usePoolData` + `PoolBoard`
-- åˆ†æå…¥å£ï¼šå¯¼èˆªåˆ° `/analysis/stock-score/:symbol`
+- µ¥ÌõÂ¼Èë£º`inputService.addStock`
+- ÅúÁ¿µ¼Èë£º`batchImportService.importStocks`
+- ÈÈÃÅ°å¿é£º`hotSectorService.addHotSectorStock` / `addHotSectorStocks`
+- ¹ÉÆ±³Ø¿´°å£º`usePoolData` + `PoolBoard`
+- ·ÖÎöÈë¿Ú£ºµ¼º½µ½ `/analysis/stock-score/:symbol`
 
-æœªå¼•å…¥ `dashboard_v2.html` ä¸­çš„ä»»ä½• `/api/*` è·¯å¾„ã€‚
-
----
-
-## 3. æ–‡ä»¶æ¸…å•
-
-| æ–‡ä»¶ | å˜æ›´ |
-|------|------|
-| `src/portal/PortalShell.tsx` | é‡å†™ä¸ºæ·±è‰²ç»å…¸å¸ƒå±€å®¹å™¨ |
-| `src/apps/input/InputApp.tsx` | æ”¹ä¸ºæŒ‰è·¯å¾„åˆ†å‘çš„å¸ƒå±€ç»„ä»¶ |
-| `src/apps/input/InputDashboard.tsx` | æ–°å¢å½•å…¥çœ‹æ¿ |
-| `src/apps/input/BulkImportPanel.tsx` | æ–°å¢æ‰¹é‡å¯¼å…¥é¡µé¢ |
-| `src/apps/input/HotSectorPanel.tsx` | æ–°å¢çƒ­é—¨æ¿å—é¡µé¢ |
-| `src/apps/input/DataTestPanel.tsx` | ä¿ç•™å¹¶ä½œä¸ºå­é¡µé¢ä½¿ç”¨ |
-| `src/config/routes.ts` | æ³¨å†Œè¾“å…¥èˆ±å­è·¯ç”± |
-| `src/services/input/batchImportService.ts` | ä¿®å¤ `ä»£ç ,åç§°` è§£æ bug |
-| `tests/InputApp.test.tsx` | é€‚é…æ–°çš„å­é¡µé¢ç»“æ„ |
-| `./06-routing-specs.md` | åŒæ­¥è·¯ç”±è¡¨ä¸èˆ±å®¤æ˜ å°„ |
-| `./08-implementation-plan.md` | æ›´æ–°å®æ–½çŠ¶æ€ |
-| `CHANGELOG.md` | è®°å½•æœ¬æ¬¡é‡å¡‘ |
+Î´ÒıÈë `dashboard_v2.html` ÖĞµÄÈÎºÎ `/api/*` Â·¾¶¡£
 
 ---
 
-## 4. éªŒæ”¶ç»“æœ
+## 3. ÎÄ¼şÇåµ¥
 
-| é—¨ç¦ | çŠ¶æ€ |
+| ÎÄ¼ş | ±ä¸ü |
 |------|------|
-| `tsc --noEmit` | âœ… é€šè¿‡ |
-| `eslint src/` | âœ… é€šè¿‡ |
-| `vitest run` | âœ… 291/291 é€šè¿‡ |
-| `vite build` | âœ… é€šè¿‡ |
-| `npm run audit:layers` | âœ… 0 è¿è§„ / 0 è­¦å‘Š |
+| `src/portal/PortalShell.tsx` | ÖØĞ´ÎªÉîÉ«¾­µä²¼¾ÖÈİÆ÷ |
+| `src/apps/input/InputApp.tsx` | ¸ÄÎª°´Â·¾¶·Ö·¢µÄ²¼¾Ö×é¼ş |
+| `src/apps/input/InputDashboard.tsx` | ĞÂÔöÂ¼Èë¿´°å |
+| `src/apps/input/BulkImportPanel.tsx` | ĞÂÔöÅúÁ¿µ¼ÈëÒ³Ãæ |
+| `src/apps/input/HotSectorPanel.tsx` | ĞÂÔöÈÈÃÅ°å¿éÒ³Ãæ |
+| `src/apps/input/DataTestPanel.tsx` | ±£Áô²¢×÷Îª×ÓÒ³ÃæÊ¹ÓÃ |
+| `src/config/routes.ts` | ×¢²áÊäÈë²Õ×ÓÂ·ÓÉ |
+| `src/services/input/batchImportService.ts` | ĞŞ¸´ `´úÂë,Ãû³Æ` ½âÎö bug |
+| `tests/InputApp.test.tsx` | ÊÊÅäĞÂµÄ×ÓÒ³Ãæ½á¹¹ |
+| `./06-routing-specs.md` | Í¬²½Â·ÓÉ±íÓë²ÕÊÒÓ³Éä |
+| `./08-implementation-plan.md` | ¸üĞÂÊµÊ©×´Ì¬ |
+| `CHANGELOG.md` | ¼ÇÂ¼±¾´ÎÖØËÜ |
+
+---
+
+## 4. ÑéÊÕ½á¹û
+
+| ÃÅ½û | ×´Ì¬ |
+|------|------|
+| `tsc --noEmit` | ? Í¨¹ı |
+| `eslint src/` | ? Í¨¹ı |
+| `vitest run` | ? 291/291 Í¨¹ı |
+| `vite build` | ? Í¨¹ı |
+| `npm run audit:layers` | ? 0 Î¥¹æ / 0 ¾¯¸æ |

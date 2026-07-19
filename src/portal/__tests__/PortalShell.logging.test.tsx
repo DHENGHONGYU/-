@@ -7,7 +7,7 @@
  *   3. [PortalShell] 切换舱室 (info) — 顶栏点击舱室按钮
  *   4. [PortalShell] 侧边栏导航 (info) — 侧边栏点击导航项
  *
- * 参考: docs/11-logging-standards.md 第三章核心埋点清单
+ * 参考: 日志规范文档（第三章核心埋点清单）
  */
 
 import { describe, expect, it, vi, beforeEach } from 'vitest'

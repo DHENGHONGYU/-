@@ -1,5 +1,5 @@
 import { Bot } from 'lucide-react'
-import { getAllAgentComponents } from '@/agents/agentComponentRegistry'
+import { getAllAgentComponents } from '@/components/organisms/agent/agentComponentRegistry'
 import type { ShowcaseGroup } from './types'
 
 /**

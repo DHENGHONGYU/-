@@ -15,6 +15,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
 import { STRATEGY_TEMPLATES, GLOBAL_LIMITS } from '@/config/collectConfig'
+import { seedDefaultPool, clearIntentionPool } from '../utils/seedTestData'
 
 vi.mock('@/core/databridge', () => ({
   dataBridge: {
@@ -23,13 +24,33 @@ vi.mock('@/core/databridge', () => ({
   },
 }))
 
+vi.mock('@/services/data-collector/collectionPipeline', async () => {
+  const actual = await vi.importActual<typeof import('@/services/data-collector/collectionPipeline')>(
+    '@/services/data-collector/collectionPipeline',
+  )
+  return {
+    ...actual,
+    runBatchTrace: vi.fn().mockResolvedValue(undefined),
+  }
+})
+
+vi.mock('@/store/collectionRuntimeStore', async () => {
+  const actual = await vi.importActual<typeof import('@/store/collectionRuntimeStore')>(
+    '@/store/collectionRuntimeStore',
+  )
+  return {
+    ...actual,
+    // runCollection 只调用 getState().setRunning()
+  }
+})
+
 beforeEach(() => {
   useSevenDimConfigStore.getState().reset()
 })
 
 describe('sevenDimConfigStore - 初始状态', () => {
-  it('activeTemplate 初始为 "value"', () => {
-    expect(useSevenDimConfigStore.getState().activeTemplate).toBe('value')
+  it('activeTemplate 初始为 "full"', () => {
+    expect(useSevenDimConfigStore.getState().activeTemplate).toBe('full')
   })
 
   it('dimensions 包含 8 个维度', () => {
@@ -64,11 +85,11 @@ describe('sevenDimConfigStore - 初始状态', () => {
 })
 
 describe('sevenDimConfigStore - 策略模板切换', () => {
-  it('value 模板启用 4 个维度 (01/02/03/04)', () => {
+  it('full 模板启用 8 个维度 (01-08)', () => {
     const state = useSevenDimConfigStore.getState()
-    expect(state.enabledCount()).toBe(4)
+    expect(state.enabledCount()).toBe(8)
     const enabledCodes = state.dimensions.filter((d) => d.enabled).map((d) => d.code)
-    expect(enabledCodes).toEqual(['01', '02', '03', '04'])
+    expect(enabledCodes).toEqual(['01', '02', '03', '04', '05', '06', '07', '08'])
   })
 
   it('切换到 growth 模板启用 5 个维度', () => {
@@ -123,11 +144,12 @@ describe('sevenDimConfigStore - 维度开关', () => {
     expect(dim?.enabled).toBe(false)
   })
 
-  it('启用未启用维度 (05)', () => {
-    // value 模板默认不启用 05
-    useSevenDimConfigStore.getState().toggleDimension('05')
-    const dim = useSevenDimConfigStore.getState().dimensions.find((d) => d.code === '05')
-    expect(dim?.enabled).toBe(true)
+  it('切换维度开关 (01)', () => {
+    // full 模板默认全部启用，切换 01 会禁用它
+    const wasEnabled = useSevenDimConfigStore.getState().dimensions.find((d) => d.code === '01')!.enabled
+    useSevenDimConfigStore.getState().toggleDimension('01')
+    const dim = useSevenDimConfigStore.getState().dimensions.find((d) => d.code === '01')
+    expect(dim?.enabled).toBe(!wasEnabled)
   })
 
   it('切换后 isDirty 变为 true', () => {
@@ -234,9 +256,9 @@ describe('sevenDimConfigStore - 全局参数', () => {
 
 describe('sevenDimConfigStore - 派生计算', () => {
   it('enabledCount 正确反映启用维度数', () => {
-    expect(useSevenDimConfigStore.getState().enabledCount()).toBe(4)
-    useSevenDimConfigStore.getState().toggleDimension('05')
-    expect(useSevenDimConfigStore.getState().enabledCount()).toBe(5)
+    expect(useSevenDimConfigStore.getState().enabledCount()).toBe(8)
+    useSevenDimConfigStore.getState().toggleDimension('01')
+    expect(useSevenDimConfigStore.getState().enabledCount()).toBe(7)
   })
 
   it('monthlyCallEstimate 大于 0（有启用维度时）', () => {
@@ -262,7 +284,7 @@ describe('sevenDimConfigStore - 派生计算', () => {
   })
 
   it('isClickable 在 isCollecting 时为 false', () => {
-    useSevenDimConfigStore.setState({ isCollecting: true })
+    useSevenDimConfigStore.setState({ collectingDimensions: ['01'] })
     expect(useSevenDimConfigStore.getState().isClickable()).toBe(false)
   })
 
@@ -272,7 +294,7 @@ describe('sevenDimConfigStore - 派生计算', () => {
   })
 
   it('tooltipText 在 isCollecting 时返回采集提示', () => {
-    useSevenDimConfigStore.setState({ isSaving: false, isCollecting: true })
+    useSevenDimConfigStore.setState({ isSaving: false, collectingDimensions: ['01'] })
     expect(useSevenDimConfigStore.getState().tooltipText()).toContain('采集')
   })
 
@@ -283,10 +305,10 @@ describe('sevenDimConfigStore - 派生计算', () => {
 })
 
 describe('sevenDimConfigStore - reset', () => {
-  it('reset 恢复 activeTemplate 为 value', () => {
-    useSevenDimConfigStore.getState().applyTemplate('full')
+  it('reset 恢复 activeTemplate 为 full', () => {
+    useSevenDimConfigStore.getState().applyTemplate('value')
     useSevenDimConfigStore.getState().reset()
-    expect(useSevenDimConfigStore.getState().activeTemplate).toBe('value')
+    expect(useSevenDimConfigStore.getState().activeTemplate).toBe('full')
   })
 
   it('reset 恢复 symbolCount 为 40', () => {
@@ -302,7 +324,8 @@ describe('sevenDimConfigStore - reset', () => {
   })
 
   it('reset 恢复 isDirty 为 false', () => {
-    useSevenDimConfigStore.getState().toggleDimension('01')
+    useSevenDimConfigStore.getState().toggleDimension('01') // 禁用 01（full 模板默认启用）
+    expect(useSevenDimConfigStore.getState().isDirty).toBe(true)
     useSevenDimConfigStore.getState().reset()
     expect(useSevenDimConfigStore.getState().isDirty).toBe(false)
   })
@@ -313,10 +336,10 @@ describe('sevenDimConfigStore - reset', () => {
     expect(useSevenDimConfigStore.getState().error).toBe(null)
   })
 
-  it('reset 恢复 enabledCount 为 4（value 模板）', () => {
-    useSevenDimConfigStore.getState().applyTemplate('full')
+  it('reset 恢复 enabledCount 为 8（full 模板）', () => {
+    useSevenDimConfigStore.getState().applyTemplate('value')
     useSevenDimConfigStore.getState().reset()
-    expect(useSevenDimConfigStore.getState().enabledCount()).toBe(4)
+    expect(useSevenDimConfigStore.getState().enabledCount()).toBe(8)
   })
 })
 
@@ -342,6 +365,10 @@ describe('sevenDimConfigStore - saveConfig', () => {
 })
 
 describe('sevenDimConfigStore - runCollection', () => {
+  beforeEach(() => {
+    seedDefaultPool()
+  })
+
   it('采集完成后 isCollecting 恢复 false', async () => {
     await useSevenDimConfigStore.getState().runCollection()
     expect(useSevenDimConfigStore.getState().isCollecting).toBe(false)
@@ -353,7 +380,7 @@ describe('sevenDimConfigStore - runCollection', () => {
   })
 
   it('isCollecting 时重复调用不执行', async () => {
-    useSevenDimConfigStore.setState({ isCollecting: true })
+    useSevenDimConfigStore.setState({ isCollecting: true, collectingDimensions: ['01'] })
     await useSevenDimConfigStore.getState().runCollection()
     expect(useSevenDimConfigStore.getState().isCollecting).toBe(true)
   })
@@ -364,6 +391,152 @@ describe('sevenDimConfigStore - clearError', () => {
     useSevenDimConfigStore.setState({ error: '测试错误' })
     useSevenDimConfigStore.getState().clearError()
     expect(useSevenDimConfigStore.getState().error).toBe(null)
+  })
+})
+
+describe('联动测试 — 数据链路 ↔ 按钮状态 (S1)', () => {
+  beforeEach(() => {
+    useSevenDimConfigStore.getState().reset()
+    seedDefaultPool()
+  })
+
+  // === S1.1: 采集中全局按钮不可点击，完成后恢复 ===
+  it('S1.1 采集中全局按钮不可点击，完成后恢复', async () => {
+    const collectPromise = useSevenDimConfigStore.getState().runCollection()
+
+    // 采集启动后按钮应立即锁定
+    expect(useSevenDimConfigStore.getState().isClickable()).toBe(false)
+
+    await collectPromise
+
+    // 采集完成后按钮应恢复
+    expect(useSevenDimConfigStore.getState().isClickable()).toBe(true)
+    expect(useSevenDimConfigStore.getState().collectProgress).toBe(100)
+    expect(useSevenDimConfigStore.getState().isCollecting).toBe(false)
+  })
+
+  // === S1.2: 维度级锁定 ===
+  it('S1.2 维度级锁定：01 采集时不影响 02 按钮', () => {
+    useSevenDimConfigStore.setState({ collectingDimensions: ['01'] })
+
+    expect(useSevenDimConfigStore.getState().isClickable('01')).toBe(false)
+    expect(useSevenDimConfigStore.getState().isClickable('02')).toBe(true)
+    // 无参查询应返回 false（有维度在采集中）
+    expect(useSevenDimConfigStore.getState().isClickable()).toBe(false)
+  })
+
+  // === S1.3: tooltipText 维度级提示 ===
+  it('S1.3 tooltipText 按维度显示不同提示', () => {
+    useSevenDimConfigStore.setState({ collectingDimensions: ['01', '03'] })
+
+    const text01 = useSevenDimConfigStore.getState().tooltipText('01')
+    const text02 = useSevenDimConfigStore.getState().tooltipText('02')
+    const textNoArg = useSevenDimConfigStore.getState().tooltipText()
+
+    expect(text01).toContain('01')
+    expect(text01).toContain('采集')
+    expect(text02).toBe('')
+    expect(textNoArg).toContain('01')
+    expect(textNoArg).toContain('03')
+  })
+
+  // === S1.4: 空意向池不锁定按钮 ===
+  it('S1.4 空意向池时按钮不被错误锁定', async () => {
+    clearIntentionPool()
+    await useSevenDimConfigStore.getState().runCollection()
+
+    // 无标的可采集，应保持未锁定
+    expect(useSevenDimConfigStore.getState().isClickable()).toBe(true)
+    expect(useSevenDimConfigStore.getState().isCollecting).toBe(false)
+  })
+
+  // === S1.5: 无启用维度时不锁定 ===
+  it('S1.5 无启用维度时不锁定按钮', async () => {
+    // 关闭所有维度
+    const state = useSevenDimConfigStore.getState()
+    state.dimensions.forEach((d) => {
+      if (d.enabled) useSevenDimConfigStore.getState().toggleDimension(d.code)
+    })
+
+    await useSevenDimConfigStore.getState().runCollection()
+
+    // 无可用维度，应保持未锁定
+    expect(useSevenDimConfigStore.getState().isClickable()).toBe(true)
+    expect(useSevenDimConfigStore.getState().isCollecting).toBe(false)
+  })
+})
+
+describe('联动测试 — 异常边界 (S3)', () => {
+  beforeEach(() => {
+    useSevenDimConfigStore.getState().reset()
+  })
+
+  // === S3.1: isSaving 优先级 ===
+  it('S3.1 isSaving 优先级高于采集 — 按钮不可点击', () => {
+    useSevenDimConfigStore.setState({ isSaving: true, collectingDimensions: [] })
+    expect(useSevenDimConfigStore.getState().isClickable()).toBe(false)
+    expect(useSevenDimConfigStore.getState().tooltipText()).toContain('保存')
+  })
+
+  // === S3.2: 全局锁定 ===
+  it('S3.2 collectingDimensions 全满时全局 isClickable 返回 false', () => {
+    useSevenDimConfigStore.setState({ collectingDimensions: ['01', '02', '03', '04'] })
+    expect(useSevenDimConfigStore.getState().isClickable()).toBe(false)
+    // 但具体维度仍是维度级锁定
+    expect(useSevenDimConfigStore.getState().isClickable('01')).toBe(false)
+    expect(useSevenDimConfigStore.getState().isClickable('05')).toBe(true)
+  })
+
+  // === S3.3: 守卫拦截 ===
+  it('S3.3 采集进行中重复调用 runCollection 被守卫拦截', () => {
+    useSevenDimConfigStore.setState({ collectingDimensions: ['01'], isCollecting: true })
+
+    const beforeDims = [...useSevenDimConfigStore.getState().collectingDimensions]
+    useSevenDimConfigStore.getState().runCollection()
+
+    // 状态不应改变（被守卫拦截）
+    expect(useSevenDimConfigStore.getState().collectingDimensions).toEqual(beforeDims)
+    expect(useSevenDimConfigStore.getState().isCollecting).toBe(true)
+  })
+
+  // === S3.4: 并发维度解锁时序 ===
+  it('S3.4 维度 01 采集完成 → 维度 02 仍在进行 → 01 按钮即时解锁', () => {
+    // 模拟 01 完成，02 仍在进行
+    useSevenDimConfigStore.setState({ collectingDimensions: ['02'] })
+
+    expect(useSevenDimConfigStore.getState().isClickable('01')).toBe(true)
+    expect(useSevenDimConfigStore.getState().isClickable('02')).toBe(false)
+  })
+
+  // === S3.5: 全维度完成后状态完全恢复 ===
+  it('S3.5 全维度完成后 collectingDimensions 清空且所有按钮恢复', () => {
+    useSevenDimConfigStore.setState({ collectingDimensions: [] })
+
+    expect(useSevenDimConfigStore.getState().isClickable()).toBe(true)
+    expect(useSevenDimConfigStore.getState().isClickable('01')).toBe(true)
+    expect(useSevenDimConfigStore.getState().isClickable('08')).toBe(true)
+    expect(useSevenDimConfigStore.getState().tooltipText()).toBe('')
+  })
+
+  // === S3.6: isClickable 在 isSaving 对特定维度也返回 false ===
+  it('S3.6 isSaving 时即使指定维度码也返回 false', () => {
+    useSevenDimConfigStore.setState({
+      isSaving: true,
+      collectingDimensions: [],
+    })
+    expect(useSevenDimConfigStore.getState().isClickable('01')).toBe(false)
+    expect(useSevenDimConfigStore.getState().isClickable('08')).toBe(false)
+  })
+
+  // === S3.7: tooltipText 在 isSaving 时忽略 dimensionCode ===
+  it('S3.7 tooltipText 在 isSaving 时忽略维度参数，统一返回保存提示', () => {
+    useSevenDimConfigStore.setState({
+      isSaving: true,
+      collectingDimensions: ['01'],  // 边缘：isSaving + 有维度采集中
+    })
+    const text = useSevenDimConfigStore.getState().tooltipText('01')
+    // isSaving 优先级最高，应返回保存提示而非采集提示
+    expect(text).toContain('保存')
   })
 })
 

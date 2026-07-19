@@ -6,6 +6,7 @@
  *
  * @compliance
  * - 所有数据展示来自 valuePitAnalyzer 服务，禁止硬编码
+ * - 无输入数据时返回空结果，不 fallback 到 Mock 数据
  * - 核心分支包含 logger.info 打印
  * - 遵循现有 Zustand Store 风格
  */
@@ -14,68 +15,12 @@ import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'
 import type { ValuePitScore } from '@/data/types'
 import { analyze, type ValuePitAnalyzerInput } from '@/services/scoring/valuePitAnalyzer'
-import { detect, type RotationSignalInput, type RotationSignal } from '@/services/scoring/rotationSignalDetector'
+import type { RotationSignal } from '@/services/scoring/rotationSignalDetector'
 
 const logger = getLogger()
 
-// ============================================================
-// 内部样本数据（后续由 dataLayer 替代）
-// ============================================================
-
-const DEFAULT_SAMPLES: ValuePitAnalyzerInput[] = [
-  {
-    symbol: '银行',
-    sectorName: '银行',
-    catalyst: { policyCatalyst: 4.0, cycleTurningPoint: 3.5, techBreakthrough: 2.0, orderSurge: 2.5 },
-    valuationMargin: { pePercentile: 5, pbPercentile: 8, dividendYield: 4.5, peg: 0.6 },
-    chipStructure: { northBoundChange: 2.5, fundPositionChange: 3.0, shareholderChange: -1.5 },
-    rotationPosition: { sectorVolumePercentile: 15, capitalInflowStrength: 4.0, hasGoldenCross: true },
-    liquidity: { avgDailyAmount: 80000, turnoverRate: 1.5, marketCap: 1500 },
-  },
-  {
-    symbol: '钢铁',
-    sectorName: '钢铁',
-    catalyst: { policyCatalyst: 3.0, cycleTurningPoint: 3.0, techBreakthrough: 2.0, orderSurge: 2.0 },
-    valuationMargin: { pePercentile: 15, pbPercentile: 20, dividendYield: 3.0, peg: 0.8 },
-    chipStructure: { northBoundChange: 1.0, fundPositionChange: 1.5, shareholderChange: -0.5 },
-    rotationPosition: { sectorVolumePercentile: 40, capitalInflowStrength: 3.0, hasGoldenCross: false },
-    liquidity: { avgDailyAmount: 30000, turnoverRate: 2.5, marketCap: 500 },
-  },
-  {
-    symbol: '煤炭',
-    sectorName: '煤炭',
-    catalyst: { policyCatalyst: 2.5, cycleTurningPoint: 2.0, techBreakthrough: 1.5, orderSurge: 1.5 },
-    valuationMargin: { pePercentile: 10, pbPercentile: 12, dividendYield: 5.0, peg: 0.5 },
-    chipStructure: { northBoundChange: -0.5, fundPositionChange: 0.5, shareholderChange: 2.0 },
-    rotationPosition: { sectorVolumePercentile: 55, capitalInflowStrength: 2.0, hasGoldenCross: false },
-    liquidity: { avgDailyAmount: 15000, turnoverRate: 1.0, marketCap: 300 },
-  },
-]
-
-// ============================================================
-// 轮动信号检测样本数据（与 DEFAULT_SAMPLES 对应）
-// ============================================================
-
-const DEFAULT_ROTATION_INPUTS: RotationSignalInput[] = [
-  {
-    sectorId: '银行',
-    volume: { history: [...Array(50).fill(60000), 100000, 110000, 120000, 115000, 105000] },
-    capitalFlow: { dailyNetFlow: [10, 20, 15, 30, 25] },
-    goldenCross: { closes: [...Array(20).fill(105), 100, 100, 100, 100, 130] },
-  },
-  {
-    sectorId: '钢铁',
-    volume: { history: [...Array(50).fill(30000), 35000, 32000, 31000, 33000, 34000] },
-    capitalFlow: { dailyNetFlow: [5, 3, -2, 8, 2] },
-    goldenCross: { closes: [...Array(25).fill(100)] },
-  },
-  {
-    sectorId: '煤炭',
-    volume: { history: [...Array(40).fill(15000), ...Array(10).fill(20000), 16000, 16000, 16000, 16000, 16000] },
-    capitalFlow: { dailyNetFlow: [-3, -5, -2, 1, -1] },
-    goldenCross: { closes: Array(25).fill(100).map((v, i) => v - i * 0.5) },
-  },
-]
+// 已移除内联 DEFAULT_SAMPLES / DEFAULT_ROTATION_INPUTS。
+// 无输入数据时 fetchScores / fetchRotationSignals 返回空结果。
 
 // ============================================================
 // 组合结果类型
@@ -136,30 +81,11 @@ export const useValuePitStore = create<ValuePitState>((set) => ({
   ...initialState,
 
   runAnalysis: () => {
-    logger.info('[valuePitStore] runAnalysis 开始')
+    logger.info('[valuePitStore] runAnalysis 开始（需外部注入输入数据）')
     set({ loading: true, error: null })
-
     try {
-      const combinedResults: ValuePitSectorResult[] = DEFAULT_SAMPLES.map((input, index) => {
-        const score = analyze(input)
-        const rotationInput = DEFAULT_ROTATION_INPUTS[index]!
-        const rotation = detect(rotationInput)
-        logger.info(
-          `[valuePitStore] ${input.symbol} 评分: score=${score.score.toFixed(2)} ` +
-          `action=${score.action} rotation=${rotation.triggered ? rotation.strength : '无'}`,
-        )
-        return { score, rotation }
-      })
-
-      combinedResults.sort((a, b) => b.score.score - a.score.score)
-      set({
-        scores: combinedResults.map((r) => r.score),
-        rotationSignals: combinedResults.map((r) => r.rotation),
-        combinedResults,
-        loading: false,
-        lastUpdated: Date.now(),
-      })
-      logger.info(`[valuePitStore] runAnalysis 完成: ${combinedResults.length} 个板块`)
+      logger.warn('[valuePitStore] runAnalysis: 无输入数据，请先调用 fetchScores(inputs)')
+      set({ loading: false })
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
       logger.error(`[valuePitStore] runAnalysis 失败: ${message}`)
@@ -172,7 +98,12 @@ export const useValuePitStore = create<ValuePitState>((set) => ({
     set({ loading: true, error: null })
 
     try {
-      const sourceInputs = inputs ?? DEFAULT_SAMPLES
+      if (!inputs || inputs.length === 0) {
+        logger.info('[valuePitStore] fetchScores: 无输入数据，返回空结果')
+        set({ loading: false })
+        return
+      }
+      const sourceInputs = inputs
       const results = sourceInputs.map((input) => {
         const score = analyze(input)
         logger.info(
@@ -197,7 +128,11 @@ export const useValuePitStore = create<ValuePitState>((set) => ({
 
   refreshScore: (symbol, inputs) => {
     logger.info(`[valuePitStore] refreshScore: ${symbol}`)
-    const sourceInputs = inputs ?? DEFAULT_SAMPLES
+    if (!inputs || inputs.length === 0) {
+      logger.warn(`[valuePitStore] refreshScore: 无输入数据`)
+      return
+    }
+    const sourceInputs = inputs
     const target = sourceInputs.find((i) => i.symbol === symbol)
 
     if (!target) {

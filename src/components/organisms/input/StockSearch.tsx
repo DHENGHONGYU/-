@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Input } from '@/components/atoms/Input'
+import { Badge } from '@/components/atoms/Badge'
 import { useInputHubStore } from '@/store/inputHubStore'
 import type { StockSearchResult } from '@/services/input/inputService'
 import { INPUT_CONFIG } from '@/config/inputConfig'
@@ -15,18 +16,44 @@ export interface StockSearchProps {
 }
 
 /**
- * StockSearch
+ * 市场标签映射
+ */
+const MARKET_LABELS: Record<string, { label: string; className: string }> = {
+  SH: { label: '沪', className: 'bg-yellow-100 text-yellow-800' },
+  SZ: { label: '深', className: 'bg-green-100 text-green-800' },
+  HK: { label: 'HK', className: 'bg-blue-100 text-blue-800' },
+  BJ: { label: '京', className: 'bg-purple-100 text-purple-800' },
+}
+
+function getMarketLabel(industry: string | undefined): { label: string; className: string } {
+  if (!industry) return { label: '—', className: 'bg-gray-100 text-gray-500' }
+  const key = industry.toUpperCase()
+  return MARKET_LABELS[key] ?? { label: industry, className: 'bg-gray-100 text-gray-600' }
+}
+
+/**
+ * StockSearch - A+H 股全市场搜索组件
+ *
+ * 支持本地字典搜索 + 腾讯 Smartbox API 回退。
+ * 已录入意向候选池的股票展示"已导入"标记。
  */
 export function StockSearch({
   onSelect,
   onAdded,
   mode = 'fill',
-  placeholder = mode === 'add' ? '搜索并直接录入意向候选池' : '搜索代码 / 名称 / 行业',
+  placeholder = mode === 'add' ? '搜索并直接录入意向候选池' : '搜索代码 / 名称',
   className,
 }: StockSearchProps): React.JSX.Element {
   const storeSearchStocks = useInputHubStore((s) => s.searchStocks)
   const storeAddStockFromSearch = useInputHubStore((s) => s.addStockFromSearch)
   const isAddingStock = useInputHubStore((s) => s.isAddingStock)
+  const existingSymbols = useInputHubStore((s) => s.existingSymbols)
+  const refreshExistingSymbols = useInputHubStore((s) => s.refreshExistingSymbols)
+
+  // 初始化时拉取已导入的 symbol 集合
+  useEffect(() => {
+    refreshExistingSymbols()
+  }, [refreshExistingSymbols])
 
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<StockSearchResult[]>([])
@@ -53,8 +80,8 @@ export function StockSearch({
       return
     }
 
-    debounceRef.current = setTimeout(() => {
-      const matches = storeSearchStocks(trimmed)
+    debounceRef.current = setTimeout(async () => {
+      const matches = await storeSearchStocks(trimmed)
       setResults(matches)
       setOpen(matches.length > 0)
       setActiveIndex(matches.length > 0 ? 0 : -1)
@@ -163,27 +190,37 @@ export function StockSearch({
           role="listbox"
           className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border bg-popover shadow-md"
         >
-          {results.map((result, index) => (
-            <div
-              key={result.symbol}
-              id={`stock-search-option-${index}`}
-              role="option"
-              aria-selected={index === activeIndex}
-              className={cn(
-                'cursor-pointer px-3 py-2 text-sm hover:bg-accent',
-                index === activeIndex && 'bg-accent',
-                isAddingStock && 'pointer-events-none opacity-50',
-              )}
-              onClick={() => void handleSelect(result)}
-              onMouseEnter={() => setActiveIndex(index)}
-            >
-              <div className="flex items-center justify-between">
-                <span className="font-medium">{result.symbol}</span>
-                <span className="text-xs text-muted-foreground">{result.industry}</span>
+          {results.map((result, index) => {
+            const marketInfo = getMarketLabel(result.industry)
+            return (
+              <div
+                key={result.symbol}
+                id={`stock-search-option-${index}`}
+                role="option"
+                aria-selected={index === activeIndex}
+                className={cn(
+                  'cursor-pointer px-3 py-2 text-sm hover:bg-accent',
+                  index === activeIndex && 'bg-accent',
+                  isAddingStock && 'pointer-events-none opacity-50',
+                )}
+                onClick={() => void handleSelect(result)}
+                onMouseEnter={() => setActiveIndex(index)}
+              >
+                  <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono font-medium">{result.symbol}</span>
+                    <span className={cn('rounded px-1.5 py-0.5 text-xs font-medium', marketInfo.className)}>
+                      {marketInfo.label}
+                    </span>
+                    <span className="text-muted-foreground">{result.name}</span>
+                  </div>
+                  {existingSymbols.has(result.symbol) && (
+                    <Badge variant="secondary" className="text-[10px]">已导入</Badge>
+                  )}
+                  </div>
               </div>
-              <div className="text-xs text-muted-foreground">{result.name}</div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
     </div>

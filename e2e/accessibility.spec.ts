@@ -62,7 +62,7 @@ test.describe('可访问性测试', () => {
     })
 
     test('交易舱 Hub 页面 - ARIA 标签完整', async ({ page }) => {
-      await page.goto('/#/trading/hub')
+      await page.goto('/#/trading')
       await page.waitForLoadState('networkidle')
 
       // 验证所有按钮都有 aria-label 或文本内容
@@ -134,7 +134,7 @@ test.describe('可访问性测试', () => {
     })
 
     test('交易舱 Hub 页面 - Tab 键导航', async ({ page }) => {
-      await page.goto('/#/trading/hub')
+      await page.goto('/#/trading')
       await page.waitForLoadState('networkidle')
 
       await page.keyboard.press('Tab')

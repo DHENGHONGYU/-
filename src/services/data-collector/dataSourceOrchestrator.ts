@@ -12,7 +12,7 @@
 
 import { getLogger } from '@/lib/logger'
 import { dataBridge } from '@/core/databridge'
-import { ENVELOPE_ACTION, STORE_NAME, MODULE_ID, ENVELOPE_TARGET } from '@/config/dbConfig'
+import { ENVELOPE_ACTION, MODULE_ID, ENVELOPE_TARGET } from '@/config/dbConfig'
 import type { DailyQuotes } from '@/data/types'
 import type { KlineBar } from '@/data/types/types.marketData'
 import { eventBus } from '@/lib/eventBus'
@@ -25,6 +25,7 @@ import {
 import {
   tencentQuote,
   tencentBatchQuotes,
+  tencentKline,
   sinaQuote,
   sinaBatchQuotes,
   neteaseHistory,
@@ -32,6 +33,14 @@ import {
   klinesToDailyQuotes,
   type RealtimeQuote,
 } from './directDataAPI'
+import {
+  tushareDaily,
+  tushareStockBasic,
+  fromTushareCode,
+  type TushareProviderError,
+} from './tushareProvider'
+import { mapDailyToQuote, mapDailyToKlines } from './tushareAdapter'
+import { fetchBaostockKline } from './crawlerProvider'
 import { getQualityMetrics } from './qualityMetricsCollector'
 
 const logger = getLogger()
@@ -90,6 +99,49 @@ function mockQuote(code: string): RealtimeQuote {
     volume: Math.floor(Math.random() * 1000000),
     amount: parseFloat((Math.random() * 100000000).toFixed(2)),
     timestamp: Date.now(),
+  }
+}
+
+// ── Tushare 适配 ──
+
+async function tushareQuote(code: string): Promise<RealtimeQuote | null> {
+  try {
+    const today = new Date()
+    const endDate = today.toISOString().slice(0, 10).replace(/-/g, '')
+    const start = new Date(today)
+    start.setDate(start.getDate() - 10)
+    const startDate = start.toISOString().slice(0, 10).replace(/-/g, '')
+    const records = await tushareDaily(code, startDate, endDate)
+    if (records.length === 0) return null
+    const latest = records[records.length - 1]
+    if (!latest) return null
+    const quote = mapDailyToQuote(latest)
+    // 补充名称：若 daily 无名称，尝试 stock_basic
+    const basic = await tushareStockBasic(code)
+    if (basic.length > 0) {
+      quote.name = fromTushareCode(String(basic[0]?.name ?? quote.name))
+    }
+    return quote
+  } catch (err) {
+    const code = (err as TushareProviderError)?.code ?? 'UNKNOWN'
+    logger.warn(`[orchestrator] Tushare 行情失败: ${code}`, { error: err instanceof Error ? err.message : String(err) })
+    return null
+  }
+}
+
+async function tushareKline(code: string, days: number): Promise<KlineBar[] | null> {
+  try {
+    const today = new Date()
+    const endDate = today.toISOString().slice(0, 10).replace(/-/g, '')
+    const start = new Date(today)
+    start.setDate(start.getDate() - days - 5)
+    const startDate = start.toISOString().slice(0, 10).replace(/-/g, '')
+    const records = await tushareDaily(code, startDate, endDate)
+    const klines = mapDailyToKlines(records)
+    return klines.length > 0 ? klines.slice(-days) : null
+  } catch (err) {
+    logger.warn('[orchestrator] Tushare K线失败', { error: err instanceof Error ? err.message : String(err) })
+    return null
   }
 }
 
@@ -168,6 +220,8 @@ function defaultKlinePriority(): DataSource[] {
 
 async function tryQuoteSource(code: string, source: DataSource): Promise<RealtimeQuote | null> {
   switch (source) {
+    case 'tushare':
+      return tushareQuote(code)
     case 'tencent':
       return tencentQuote(code)
     case 'sina':
@@ -443,12 +497,23 @@ export async function getBatchQuotes(codes: string[]): Promise<CollectionResult<
 // ── K 线 ──
 
 async function tryKlineSource(code: string, days: number, source: DataSource): Promise<KlineBar[] | null> {
+  if (source === 'tushare') {
+    return tushareKline(code, days)
+  }
+  if (source === 'tencent') {
+    const result = await tencentKline(code, days)
+    return result.length > 0 ? result : null
+  }
   if (source === 'netease') {
     const endDate = new Date().toISOString().slice(0, 10).replace(/-/g, '')
     const startDateObj = new Date()
     startDateObj.setDate(startDateObj.getDate() - days)
     const startDate = startDateObj.toISOString().slice(0, 10).replace(/-/g, '')
     const result = await neteaseHistory(code, startDate, endDate)
+    return result.length > 0 ? result : null
+  }
+  if (source === 'akshare') {
+    const result = await fetchBaostockKline(code, days)
     return result.length > 0 ? result : null
   }
   if (source === 'mock') {
@@ -576,10 +641,7 @@ export async function collectAndSaveQuote(code: string): Promise<CollectionResul
           traceId: `collect-quote-${code}-${Date.now()}`,
           timestamp: Date.now(),
         },
-        payload: {
-          store: STORE_NAME.stocks,
-          data: quoteToStock(result.data, result.source),
-        },
+        payload: quoteToStock(result.data, result.source),
       })
       logger.info(`[orchestrator] 行情写入 DataBridge 成功: ${code}`, { source: result.source })
       getQualityMetrics().recordWrite(true)
@@ -685,7 +747,6 @@ const TEST_KLINE_DAYS = 5
 
 /**
  * 测试单个数据源的连通性（不触发降级，直接探测）。
- */
 /**
  * 探测单数据源连通性（testSourceConnectivity 内部使用，不触发降级）。
  */

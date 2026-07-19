@@ -1,72 +1,78 @@
 ---
 title: 2026-07-04-ui-testing-optimization
-code_version: 2.0.0
-
+type: reference
+domain: qa
+phase: testing
 tier: reference
----
-
----
-title: docs/reference/2026-07-04-ui-testing-optimization.md
+status: active
+maintainer: V9 Architecture Team
+summary: "For agentic workers: REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended)..."
+tags: [qa, optimization, test, testing, component, reference]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: reference
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
-# V9 ç³»ç»Ÿç•Œé¢åŠŸèƒ½æµ‹è¯•ä¸ä¼˜åŒ–æ‰§è¡Œæ–¹æ¡ˆ
+# V9 ÏµÍ³½çÃæ¹¦ÄÜ²âÊÔÓëÓÅ»¯Ö´ĞĞ·½°¸
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** å¯¹ V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿçš„æ‰€æœ‰ç•Œé¢å…ƒç´ è¿›è¡Œå…¨é¢ã€ç³»ç»ŸåŒ–çš„æ¢³ç†ä¸é€é¡¹æµ‹è¯•ï¼Œç¡®ä¿åŠŸèƒ½å®Œæ•´æ€§ã€è§†è§‰ä¸€è‡´æ€§å’Œç”¨æˆ·ä½“éªŒè¾¾åˆ°è¡Œä¸šä¼˜è´¨æ ‡å‡†ã€‚
+**Goal:** ¶Ô V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³µÄËùÓĞ½çÃæÔªËØ½øĞĞÈ«Ãæ¡¢ÏµÍ³»¯µÄÊáÀíÓëÖğÏî²âÊÔ£¬È·±£¹¦ÄÜÍêÕûĞÔ¡¢ÊÓ¾õÒ»ÖÂĞÔºÍÓÃ»§ÌåÑé´ïµ½ĞĞÒµÓÅÖÊ±ê×¼¡£
 
-**Architecture:** é‡‡ç”¨åˆ†å±‚æµ‹è¯•ç­–ç•¥ï¼š(1) UI ç»„ä»¶å•å…ƒæµ‹è¯• â†’ (2) é¡µé¢åŠŸèƒ½é›†æˆæµ‹è¯• â†’ (3) è§†è§‰ä¸€è‡´æ€§å®¡æŸ¥ â†’ (4) äº¤äº’ä½“éªŒä¼˜åŒ–ã€‚åŸºäºç°æœ‰çš„äº”èˆ±æ¶æ„ï¼ˆè¾“å…¥/åˆ†æ/äº¤æ˜“/è¾“å‡º/æ€»æ§ï¼‰å’Œè®¾è®¡ä»¤ç‰Œç³»ç»Ÿï¼ˆtheme.tokens.tsï¼‰è¿›è¡Œç³»ç»ŸåŒ–éªŒè¯ã€‚
+**Architecture:** ²ÉÓÃ·Ö²ã²âÊÔ²ßÂÔ£º(1) UI ×é¼şµ¥Ôª²âÊÔ ¡ú (2) Ò³Ãæ¹¦ÄÜ¼¯³É²âÊÔ ¡ú (3) ÊÓ¾õÒ»ÖÂĞÔÉó²é ¡ú (4) ½»»¥ÌåÑéÓÅ»¯¡£»ùÓÚÏÖÓĞµÄÎå²Õ¼Ü¹¹£¨ÊäÈë/·ÖÎö/½»Ò×/Êä³ö/×Ü¿Ø£©ºÍÉè¼ÆÁîÅÆÏµÍ³£¨theme.tokens.ts£©½øĞĞÏµÍ³»¯ÑéÖ¤¡£
 
-**Tech Stack:** React 19, TypeScript, Tailwind CSS, Recharts, Vitest, Playwright, shadcn/ui ç»„ä»¶åº“
+**Tech Stack:** React 19, TypeScript, Tailwind CSS, Recharts, Vitest, Playwright, shadcn/ui ×é¼ş¿â
 
 ---
 
-## æµ‹è¯•èŒƒå›´æ¦‚è§ˆ
+## ²âÊÔ·¶Î§¸ÅÀÀ
 
-### 1. åŠŸèƒ½æ¨¡å—æ¸…å•
+### 1. ¹¦ÄÜÄ£¿éÇåµ¥
 
-| èˆ±å®¤ | æ ¸å¿ƒé¡µé¢ | æµ‹è¯•é‡ç‚¹ |
+| ²ÕÊÒ | ºËĞÄÒ³Ãæ | ²âÊÔÖØµã |
 |------|---------|---------|
-| **è¾“å…¥èˆ±** | InputHubPage, LocalKnowledgePage, FetcherConfigPage, SevenDimConfigPage, CollectTaskPage | æ•°æ®å½•å…¥ã€æ‰¹é‡å¯¼å…¥ã€é…ç½®ç®¡ç† |
-| **åˆ†æèˆ±** | StockAnalysisPage, IndustryScorePage, IntelligentScorePage, SectorAnalysisPage, BacktestPage, ScoreDocPage, NewsPage, HotSectorPage, ValuePitPage, MultiFactorScreeningPage | è¯„åˆ†è®¡ç®—ã€æ•°æ®å¯è§†åŒ–ã€ç­–ç•¥é€‰è‚¡ |
-| **äº¤æ˜“èˆ±** | TradingHubPage, HoldingsPage, StrategySnapshotPage, TradeModal | æŒä»“ç®¡ç†ã€äº¤æ˜“æ‰§è¡Œã€ç­–ç•¥å¿«ç…§ |
-| **è¾“å‡ºèˆ±** | OutputHubPage, ResearchReportPage, TradeReviewPage | æŠ¥å‘Šç”Ÿæˆã€æ•°æ®å¯¼å‡º |
-| **æ€»æ§èˆ±** | CommandHubPage, AgentHubPage, AgentRegistryPage, AgentTasksPage, AgentTriggerPage, AgentFeedbackPage, MCPServerDashboardPage, EngineMonitorPage, ArchitecturePage | æ™ºèƒ½ä½“ç®¡ç†ã€ç³»ç»Ÿç›‘æ§ã€MCP é…ç½® |
+| **ÊäÈë²Õ** | InputHubPage, LocalKnowledgePage, FetcherConfigPage, SevenDimConfigPage, CollectTaskPage | Êı¾İÂ¼Èë¡¢ÅúÁ¿µ¼Èë¡¢ÅäÖÃ¹ÜÀí |
+| **·ÖÎö²Õ** | StockAnalysisPage, IndustryScorePage, IntelligentScorePage, SectorAnalysisPage, BacktestPage, ScoreDocPage, NewsPage, HotSectorPage, ValuePitPage, MultiFactorScreeningPage | ÆÀ·Ö¼ÆËã¡¢Êı¾İ¿ÉÊÓ»¯¡¢²ßÂÔÑ¡¹É |
+| **½»Ò×²Õ** | TradingHubPage, HoldingsPage, StrategySnapshotPage, TradeModal | ³Ö²Ö¹ÜÀí¡¢½»Ò×Ö´ĞĞ¡¢²ßÂÔ¿ìÕÕ |
+| **Êä³ö²Õ** | OutputHubPage, ResearchReportPage, TradeReviewPage | ±¨¸æÉú³É¡¢Êı¾İµ¼³ö |
+| **×Ü¿Ø²Õ** | CommandHubPage, AgentHubPage, AgentRegistryPage, AgentTasksPage, AgentTriggerPage, AgentFeedbackPage, MCPServerDashboardPage, EngineMonitorPage, ArchitecturePage | ÖÇÄÜÌå¹ÜÀí¡¢ÏµÍ³¼à¿Ø¡¢MCP ÅäÖÃ |
 
-### 2. UI ç»„ä»¶æ¸…å•
+### 2. UI ×é¼şÇåµ¥
 
-| ç»„ä»¶ç±»å‹ | æ–‡ä»¶è·¯å¾„ | æµ‹è¯•ç»´åº¦ |
+| ×é¼şÀàĞÍ | ÎÄ¼şÂ·¾¶ | ²âÊÔÎ¬¶È |
 |---------|---------|---------|
-| **åŸºç¡€æ§ä»¶** | Button, Input, Checkbox, Radio, Switch, Slider, Textarea, Select | å“åº”æ€§ã€çŠ¶æ€æ˜¾ç¤ºã€ç„¦ç‚¹ç®¡ç† |
-| **æ•°æ®å±•ç¤º** | Card, Table, Badge, Progress, Skeleton, Tooltip | æ•°æ®å‡†ç¡®æ€§ã€åŠ è½½çŠ¶æ€ã€æ‚¬åœäº¤äº’ |
-| **åé¦ˆç»„ä»¶** | Dialog, Toast, Alert, ErrorState, LoadingState, EmptyState | å¼¹çª—é€»è¾‘ã€é”™è¯¯å¤„ç†ã€ç”¨æˆ·æç¤º |
-| **å¯¼èˆªç»„ä»¶** | Breadcrumb, Tabs, Menu, Pagination, Separator | è·¯ç”±è·³è½¬ã€é¢åŒ…å±‘åŒæ­¥ã€åˆ†é¡µé€»è¾‘ |
-| **å›¾è¡¨ç»„ä»¶** | LineChart, BarChart, AreaChart, CandlestickChart, ScoreRadar, FactorHeatmap | æ•°æ®æ¸²æŸ“ã€äº¤äº’æç¤ºã€å“åº”å¼ |
+| **»ù´¡¿Ø¼ş** | Button, Input, Checkbox, Radio, Switch, Slider, Textarea, Select | ÏìÓ¦ĞÔ¡¢×´Ì¬ÏÔÊ¾¡¢½¹µã¹ÜÀí |
+| **Êı¾İÕ¹Ê¾** | Card, Table, Badge, Progress, Skeleton, Tooltip | Êı¾İ×¼È·ĞÔ¡¢¼ÓÔØ×´Ì¬¡¢ĞüÍ£½»»¥ |
+| **·´À¡×é¼ş** | Dialog, Toast, Alert, ErrorState, LoadingState, EmptyState | µ¯´°Âß¼­¡¢´íÎó´¦Àí¡¢ÓÃ»§ÌáÊ¾ |
+| **µ¼º½×é¼ş** | Breadcrumb, Tabs, Menu, Pagination, Separator | Â·ÓÉÌø×ª¡¢Ãæ°üĞ¼Í¬²½¡¢·ÖÒ³Âß¼­ |
+| **Í¼±í×é¼ş** | LineChart, BarChart, AreaChart, CandlestickChart, ScoreRadar, FactorHeatmap | Êı¾İäÖÈ¾¡¢½»»¥ÌáÊ¾¡¢ÏìÓ¦Ê½ |
 
-### 3. è§†è§‰è§„èŒƒæ£€æŸ¥é¡¹
+### 3. ÊÓ¾õ¹æ·¶¼ì²éÏî
 
-- [ ] é¢œè‰²ç³»ç»Ÿï¼šæ‰€æœ‰é¢œè‰²å€¼å¿…é¡»å¼•ç”¨ `theme.tokens.ts` ä¸­çš„ COLOR_TOKENS
-- [ ] é—´è·ç³»ç»Ÿï¼špadding/margin/gap å¿…é¡»ä½¿ç”¨ SPACING_TOKENS æˆ– Tailwind æ ‡å‡†å€¼
-- [ ] å­—ä½“ç³»ç»Ÿï¼šå­—å·ã€å­—é‡æ˜¯å¦ç¬¦åˆè®¾è®¡è§„èŒƒ
-- [ ] åœ†è§’ç³»ç»Ÿï¼šborder-radius æ˜¯å¦ç»Ÿä¸€ä½¿ç”¨ THEME_TOKENS.radius
-- [ ] é˜´å½±ç³»ç»Ÿï¼šbox-shadow æ˜¯å¦ä¸€è‡´
-- [ ] åŠ¨ç”»ç³»ç»Ÿï¼štransition/animation æ˜¯å¦æµç•…
+- [ ] ÑÕÉ«ÏµÍ³£ºËùÓĞÑÕÉ«Öµ±ØĞëÒıÓÃ `theme.tokens.ts` ÖĞµÄ COLOR_TOKENS
+- [ ] ¼ä¾àÏµÍ³£ºpadding/margin/gap ±ØĞëÊ¹ÓÃ SPACING_TOKENS »ò Tailwind ±ê×¼Öµ
+- [ ] ×ÖÌåÏµÍ³£º×ÖºÅ¡¢×ÖÖØÊÇ·ñ·ûºÏÉè¼Æ¹æ·¶
+- [ ] Ô²½ÇÏµÍ³£ºborder-radius ÊÇ·ñÍ³Ò»Ê¹ÓÃ THEME_TOKENS.radius
+- [ ] ÒõÓ°ÏµÍ³£ºbox-shadow ÊÇ·ñÒ»ÖÂ
+- [ ] ¶¯»­ÏµÍ³£ºtransition/animation ÊÇ·ñÁ÷³©
 
 ---
 
-## æ‰§è¡Œè®¡åˆ’
+## Ö´ĞĞ¼Æ»®
 
-### Phase 1: UI ç»„ä»¶åŸºç¡€æµ‹è¯•ï¼ˆP0 - å…³é”®è·¯å¾„ï¼‰
+### Phase 1: UI ×é¼ş»ù´¡²âÊÔ£¨P0 - ¹Ø¼üÂ·¾¶£©
 
-#### Task 1.1: Button ç»„ä»¶å…¨é¢æµ‹è¯•
+#### Task 1.1: Button ×é¼şÈ«Ãæ²âÊÔ
 
 **Files:**
 - Test: `src/components/atoms/Button.test.tsx`
 - Component: `src/components/atoms/Button.tsx`
 
-- [ ] **Step 1: ç¼–å†™ Button ç»„ä»¶æµ‹è¯•ç”¨ä¾‹**
+- [ ] **Step 1: ±àĞ´ Button ×é¼ş²âÊÔÓÃÀı**
 
 ```typescript
 import { render, screen, fireEvent } from '@testing-library/react'
@@ -75,21 +81,21 @@ import { Button } from './Button'
 
 describe('Button', () => {
   it('renders with primary variant by default', () => {
-    render(<Button>æµ‹è¯•æŒ‰é’®</Button>)
-    const button = screen.getByRole('button', { name: /æµ‹è¯•æŒ‰é’®/i })
+    render(<Button>²âÊÔ°´Å¥</Button>)
+    const button = screen.getByRole('button', { name: /²âÊÔ°´Å¥/i })
     expect(button).toBeInTheDocument()
     expect(button).toHaveClass('bg-primary')
   })
 
   it('handles click events', () => {
     const handleClick = vi.fn()
-    render(<Button onClick={handleClick}>ç‚¹å‡»æˆ‘</Button>)
-    fireEvent.click(screen.getByRole('button', { name: /ç‚¹å‡»æˆ‘/i }))
+    render(<Button onClick={handleClick}>µã»÷ÎÒ</Button>)
+    fireEvent.click(screen.getByRole('button', { name: /µã»÷ÎÒ/i }))
     expect(handleClick).toHaveBeenCalledTimes(1)
   })
 
   it('shows loading state', () => {
-    render(<Button isLoading>åŠ è½½ä¸­</Button>)
+    render(<Button isLoading>¼ÓÔØÖĞ</Button>)
     const button = screen.getByRole('button')
     expect(button).toBeDisabled()
   })
@@ -113,20 +119,20 @@ describe('Button', () => {
   it('supports asChild prop for composition', () => {
     render(
       <Button asChild>
-        <a href="/test">é“¾æ¥æŒ‰é’®</a>
+        <a href="/test">Á´½Ó°´Å¥</a>
       </Button>
     )
-    const link = screen.getByRole('link', { name: /é“¾æ¥æŒ‰é’®/i })
+    const link = screen.getByRole('link', { name: /Á´½Ó°´Å¥/i })
     expect(link).toBeInTheDocument()
   })
 
   it('is disabled when disabled prop is true', () => {
-    render(<Button disabled>ç¦ç”¨æŒ‰é’®</Button>)
+    render(<Button disabled>½ûÓÃ°´Å¥</Button>)
     expect(screen.getByRole('button')).toBeDisabled()
   })
 
   it('has proper focus styles', () => {
-    render(<Button>ç„¦ç‚¹æµ‹è¯•</Button>)
+    render(<Button>½¹µã²âÊÔ</Button>)
     const button = screen.getByRole('button')
     button.focus()
     expect(button).toHaveFocus()
@@ -134,23 +140,23 @@ describe('Button', () => {
 })
 ```
 
-- [ ] **Step 2: è¿è¡Œæµ‹è¯•å¹¶éªŒè¯**
+- [ ] **Step 2: ÔËĞĞ²âÊÔ²¢ÑéÖ¤**
 
 ```bash
 npm test -- src/components/ui/Button.test.tsx
 ```
 
-æœŸæœ›ï¼šæ‰€æœ‰æµ‹è¯•é€šè¿‡
+ÆÚÍû£ºËùÓĞ²âÊÔÍ¨¹ı
 
-- [ ] **Step 3: æ£€æŸ¥ Button ç»„ä»¶çš„è§†è§‰ä¸€è‡´æ€§**
+- [ ] **Step 3: ¼ì²é Button ×é¼şµÄÊÓ¾õÒ»ÖÂĞÔ**
 
-æ‰‹åŠ¨æ£€æŸ¥é¡¹ï¼š
-- æ‰€æœ‰ variant çš„é¢œè‰²æ˜¯å¦å¼•ç”¨äº† theme.tokens.ts
-- hover/active/focus çŠ¶æ€æ˜¯å¦æœ‰æ˜ç¡®çš„è§†è§‰åé¦ˆ
-- disabled çŠ¶æ€çš„é€æ˜åº¦æ˜¯å¦åˆç†ï¼ˆå½“å‰ä¸º 0.5ï¼‰
-- ä¸åŒ size çš„é«˜åº¦æ˜¯å¦ç¬¦åˆ 4px æ …æ ¼ç³»ç»Ÿ
+ÊÖ¶¯¼ì²éÏî£º
+- ËùÓĞ variant µÄÑÕÉ«ÊÇ·ñÒıÓÃÁË theme.tokens.ts
+- hover/active/focus ×´Ì¬ÊÇ·ñÓĞÃ÷È·µÄÊÓ¾õ·´À¡
+- disabled ×´Ì¬µÄÍ¸Ã÷¶ÈÊÇ·ñºÏÀí£¨µ±Ç°Îª 0.5£©
+- ²»Í¬ size µÄ¸ß¶ÈÊÇ·ñ·ûºÏ 4px Õ¤¸ñÏµÍ³
 
-- [ ] **Step 4: æäº¤ä»£ç **
+- [ ] **Step 4: Ìá½»´úÂë**
 
 ```bash
 git add src/components/ui/Button.test.tsx
@@ -159,13 +165,13 @@ git commit -m "test: add comprehensive Button component tests"
 
 ---
 
-#### Task 1.2: Input ç»„ä»¶å…¨é¢æµ‹è¯•
+#### Task 1.2: Input ×é¼şÈ«Ãæ²âÊÔ
 
 **Files:**
 - Test: `src/components/atoms/Input.test.tsx`
 - Component: `src/components/atoms/Input.tsx`
 
-- [ ] **Step 1: ç¼–å†™ Input ç»„ä»¶æµ‹è¯•ç”¨ä¾‹**
+- [ ] **Step 1: ±àĞ´ Input ×é¼ş²âÊÔÓÃÀı**
 
 ```typescript
 import { render, screen, fireEvent } from '@testing-library/react'
@@ -174,15 +180,15 @@ import { Input } from './Input'
 
 describe('Input', () => {
   it('renders correctly', () => {
-    render(<Input placeholder="è¯·è¾“å…¥" />)
-    expect(screen.getByPlaceholderText('è¯·è¾“å…¥')).toBeInTheDocument()
+    render(<Input placeholder="ÇëÊäÈë" />)
+    expect(screen.getByPlaceholderText('ÇëÊäÈë')).toBeInTheDocument()
   })
 
   it('handles value changes', () => {
     const handleChange = vi.fn()
     render(<Input onChange={handleChange} />)
     const input = screen.getByRole('textbox')
-    fireEvent.change(input, { target: { value: 'æµ‹è¯•å€¼' } })
+    fireEvent.change(input, { target: { value: '²âÊÔÖµ' } })
     expect(handleChange).toHaveBeenCalled()
   })
 
@@ -219,21 +225,21 @@ describe('Input', () => {
 })
 ```
 
-- [ ] **Step 2: è¿è¡Œæµ‹è¯•å¹¶éªŒè¯**
+- [ ] **Step 2: ÔËĞĞ²âÊÔ²¢ÑéÖ¤**
 
 ```bash
 npm test -- src/components/ui/Input.test.tsx
 ```
 
-- [ ] **Step 3: æ£€æŸ¥ Input ç»„ä»¶çš„æ•°æ®éªŒè¯æœºåˆ¶**
+- [ ] **Step 3: ¼ì²é Input ×é¼şµÄÊı¾İÑéÖ¤»úÖÆ**
 
-æ£€æŸ¥é¡¹ï¼š
-- æ˜¯å¦æ”¯æŒ required å±æ€§
-- æ˜¯å¦æœ‰ pattern éªŒè¯
-- é”™è¯¯çŠ¶æ€çš„è§†è§‰åé¦ˆï¼ˆçº¢è‰²è¾¹æ¡†ã€é”™è¯¯æç¤ºï¼‰
-- placeholder æ–‡æœ¬æ˜¯å¦æ¸…æ™°
+¼ì²éÏî£º
+- ÊÇ·ñÖ§³Ö required ÊôĞÔ
+- ÊÇ·ñÓĞ pattern ÑéÖ¤
+- ´íÎó×´Ì¬µÄÊÓ¾õ·´À¡£¨ºìÉ«±ß¿ò¡¢´íÎóÌáÊ¾£©
+- placeholder ÎÄ±¾ÊÇ·ñÇåÎú
 
-- [ ] **Step 4: æäº¤ä»£ç **
+- [ ] **Step 4: Ìá½»´úÂë**
 
 ```bash
 git add src/components/ui/Input.test.tsx
@@ -242,13 +248,13 @@ git commit -m "test: add comprehensive Input component tests"
 
 ---
 
-#### Task 1.3: Dialog ç»„ä»¶å…¨é¢æµ‹è¯•
+#### Task 1.3: Dialog ×é¼şÈ«Ãæ²âÊÔ
 
 **Files:**
 - Test: `src/components/molecules/Dialog.test.tsx`
 - Component: `src/components/molecules/Dialog.tsx`
 
-- [ ] **Step 1: ç¼–å†™ Dialog ç»„ä»¶æµ‹è¯•ç”¨ä¾‹**
+- [ ] **Step 1: ±àĞ´ Dialog ×é¼ş²âÊÔÓÃÀı**
 
 ```typescript
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
@@ -261,24 +267,24 @@ describe('Dialog', () => {
       <Dialog open={true}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>æµ‹è¯•æ ‡é¢˜</DialogTitle>
-            <DialogDescription>æµ‹è¯•æè¿°</DialogDescription>
+            <DialogTitle>²âÊÔ±êÌâ</DialogTitle>
+            <DialogDescription>²âÊÔÃèÊö</DialogDescription>
           </DialogHeader>
         </DialogContent>
       </Dialog>
     )
-    expect(screen.getByText('æµ‹è¯•æ ‡é¢˜')).toBeInTheDocument()
+    expect(screen.getByText('²âÊÔ±êÌâ')).toBeInTheDocument()
   })
 
   it('does not render when open is false', () => {
     render(
       <Dialog open={false}>
         <DialogContent>
-          <DialogTitle>éšè—æ ‡é¢˜</DialogTitle>
+          <DialogTitle>Òş²Ø±êÌâ</DialogTitle>
         </DialogContent>
       </Dialog>
     )
-    expect(screen.queryByText('éšè—æ ‡é¢˜')).not.toBeInTheDocument()
+    expect(screen.queryByText('Òş²Ø±êÌâ')).not.toBeInTheDocument()
   })
 
   it('calls onOpenChange when close button is clicked', async () => {
@@ -286,7 +292,7 @@ describe('Dialog', () => {
     render(
       <Dialog open={true} onOpenChange={handleOpenChange}>
         <DialogContent>
-          <DialogTitle>å¯å…³é—­å¯¹è¯æ¡†</DialogTitle>
+          <DialogTitle>¿É¹Ø±Õ¶Ô»°¿ò</DialogTitle>
         </DialogContent>
       </Dialog>
     )
@@ -304,12 +310,12 @@ describe('Dialog', () => {
     render(
       <Dialog open={true} onOpenChange={handleOpenChange}>
         <DialogContent>
-          <DialogTitle>ESC å…³é—­æµ‹è¯•</DialogTitle>
+          <DialogTitle>ESC ¹Ø±Õ²âÊÔ</DialogTitle>
         </DialogContent>
       </Dialog>
     )
     
-    fireEvent.keyDown(screen.getByText('ESC å…³é—­æµ‹è¯•'), { key: 'Escape' })
+    fireEvent.keyDown(screen.getByText('ESC ¹Ø±Õ²âÊÔ'), { key: 'Escape' })
     
     await waitFor(() => {
       expect(handleOpenChange).toHaveBeenCalledWith(false)
@@ -321,24 +327,24 @@ describe('Dialog', () => {
       <Dialog open={true}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>å®Œæ•´å¯¹è¯æ¡†</DialogTitle>
-            <DialogDescription>è¿™æ˜¯æè¿°æ–‡æœ¬</DialogDescription>
+            <DialogTitle>ÍêÕû¶Ô»°¿ò</DialogTitle>
+            <DialogDescription>ÕâÊÇÃèÊöÎÄ±¾</DialogDescription>
           </DialogHeader>
-          <div>å¯¹è¯æ¡†å†…å®¹</div>
+          <div>¶Ô»°¿òÄÚÈİ</div>
         </DialogContent>
       </Dialog>
     )
     
-    expect(screen.getByText('å®Œæ•´å¯¹è¯æ¡†')).toBeInTheDocument()
-    expect(screen.getByText('è¿™æ˜¯æè¿°æ–‡æœ¬')).toBeInTheDocument()
-    expect(screen.getByText('å¯¹è¯æ¡†å†…å®¹')).toBeInTheDocument()
+    expect(screen.getByText('ÍêÕû¶Ô»°¿ò')).toBeInTheDocument()
+    expect(screen.getByText('ÕâÊÇÃèÊöÎÄ±¾')).toBeInTheDocument()
+    expect(screen.getByText('¶Ô»°¿òÄÚÈİ')).toBeInTheDocument()
   })
 
   it('has proper accessibility attributes', () => {
     render(
       <Dialog open={true}>
         <DialogContent>
-          <DialogTitle>æ— éšœç¢æµ‹è¯•</DialogTitle>
+          <DialogTitle>ÎŞÕÏ°­²âÊÔ</DialogTitle>
         </DialogContent>
       </Dialog>
     )
@@ -349,22 +355,22 @@ describe('Dialog', () => {
 })
 ```
 
-- [ ] **Step 2: è¿è¡Œæµ‹è¯•å¹¶éªŒè¯**
+- [ ] **Step 2: ÔËĞĞ²âÊÔ²¢ÑéÖ¤**
 
 ```bash
 npm test -- src/components/ui/Dialog.test.tsx
 ```
 
-- [ ] **Step 3: æ£€æŸ¥ Dialog çš„äº¤äº’é€»è¾‘**
+- [ ] **Step 3: ¼ì²é Dialog µÄ½»»¥Âß¼­**
 
-æ£€æŸ¥é¡¹ï¼š
-- æ¨¡æ€æ¡†æ˜¯å¦æ­£ç¡®å±…ä¸­
-- èƒŒæ™¯é®ç½©æ˜¯å¦é˜»æ­¢ç‚¹å‡»ç©¿é€
-- å…³é—­æŒ‰é’®æ˜¯å¦å¯è§ä¸”å¯ç‚¹å‡»
-- ESC é”®æ˜¯å¦å¯å…³é—­
-- ç„¦ç‚¹æ˜¯å¦æ­£ç¡®ç®¡ç†ï¼ˆæ‰“å¼€æ—¶èšç„¦åˆ°å¯¹è¯æ¡†ï¼Œå…³é—­æ—¶æ¢å¤ï¼‰
+¼ì²éÏî£º
+- Ä£Ì¬¿òÊÇ·ñÕıÈ·¾ÓÖĞ
+- ±³¾°ÕÚÕÖÊÇ·ñ×èÖ¹µã»÷´©Í¸
+- ¹Ø±Õ°´Å¥ÊÇ·ñ¿É¼ûÇÒ¿Éµã»÷
+- ESC ¼üÊÇ·ñ¿É¹Ø±Õ
+- ½¹µãÊÇ·ñÕıÈ·¹ÜÀí£¨´ò¿ªÊ±¾Û½¹µ½¶Ô»°¿ò£¬¹Ø±ÕÊ±»Ö¸´£©
 
-- [ ] **Step 4: æäº¤ä»£ç **
+- [ ] **Step 4: Ìá½»´úÂë**
 
 ```bash
 git add src/components/ui/Dialog.test.tsx
@@ -373,13 +379,13 @@ git commit -m "test: add comprehensive Dialog component tests"
 
 ---
 
-#### Task 1.4: Card ç»„ä»¶å…¨é¢æµ‹è¯•
+#### Task 1.4: Card ×é¼şÈ«Ãæ²âÊÔ
 
 **Files:**
 - Test: `src/components/atoms/Card.test.tsx`
 - Component: `src/components/atoms/Card.tsx`
 
-- [ ] **Step 1: ç¼–å†™ Card ç»„ä»¶æµ‹è¯•ç”¨ä¾‹**
+- [ ] **Step 1: ±àĞ´ Card ×é¼ş²âÊÔÓÃÀı**
 
 ```typescript
 import { render, screen } from '@testing-library/react'
@@ -388,7 +394,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 
 describe('Card', () => {
   it('renders Card correctly', () => {
-    render(<Card data-testid="card">å¡ç‰‡å†…å®¹</Card>)
+    render(<Card data-testid="card">¿¨Æ¬ÄÚÈİ</Card>)
     expect(screen.getByTestId('card')).toBeInTheDocument()
   })
 
@@ -396,82 +402,82 @@ describe('Card', () => {
     render(
       <Card>
         <CardHeader>
-          <CardTitle>å¡ç‰‡æ ‡é¢˜</CardTitle>
-          <CardDescription>å¡ç‰‡æè¿°</CardDescription>
+          <CardTitle>¿¨Æ¬±êÌâ</CardTitle>
+          <CardDescription>¿¨Æ¬ÃèÊö</CardDescription>
         </CardHeader>
       </Card>
     )
     
-    expect(screen.getByText('å¡ç‰‡æ ‡é¢˜')).toBeInTheDocument()
-    expect(screen.getByText('å¡ç‰‡æè¿°')).toBeInTheDocument()
+    expect(screen.getByText('¿¨Æ¬±êÌâ')).toBeInTheDocument()
+    expect(screen.getByText('¿¨Æ¬ÃèÊö')).toBeInTheDocument()
   })
 
   it('renders CardContent correctly', () => {
     render(
       <Card>
-        <CardContent>ä¸»è¦å†…å®¹åŒºåŸŸ</CardContent>
+        <CardContent>Ö÷ÒªÄÚÈİÇøÓò</CardContent>
       </Card>
     )
     
-    expect(screen.getByText('ä¸»è¦å†…å®¹åŒºåŸŸ')).toBeInTheDocument()
+    expect(screen.getByText('Ö÷ÒªÄÚÈİÇøÓò')).toBeInTheDocument()
   })
 
   it('renders CardFooter correctly', () => {
     render(
       <Card>
-        <CardFooter>åº•éƒ¨æ“ä½œåŒº</CardFooter>
+        <CardFooter>µ×²¿²Ù×÷Çø</CardFooter>
       </Card>
     )
     
-    expect(screen.getByText('åº•éƒ¨æ“ä½œåŒº')).toBeInTheDocument()
+    expect(screen.getByText('µ×²¿²Ù×÷Çø')).toBeInTheDocument()
   })
 
   it('applies custom className to all subcomponents', () => {
     render(
       <Card className="custom-card">
         <CardHeader className="custom-header">
-          <CardTitle className="custom-title">æ ‡é¢˜</CardTitle>
+          <CardTitle className="custom-title">±êÌâ</CardTitle>
         </CardHeader>
-        <CardContent className="custom-content">å†…å®¹</CardContent>
-        <CardFooter className="custom-footer">åº•éƒ¨</CardFooter>
+        <CardContent className="custom-content">ÄÚÈİ</CardContent>
+        <CardFooter className="custom-footer">µ×²¿</CardFooter>
       </Card>
     )
     
-    expect(screen.getByText('æ ‡é¢˜').closest('div')).toHaveClass('custom-header')
-    expect(screen.getByText('å†…å®¹')).toHaveClass('custom-content')
-    expect(screen.getByText('åº•éƒ¨').closest('div')).toHaveClass('custom-footer')
+    expect(screen.getByText('±êÌâ').closest('div')).toHaveClass('custom-header')
+    expect(screen.getByText('ÄÚÈİ')).toHaveClass('custom-content')
+    expect(screen.getByText('µ×²¿').closest('div')).toHaveClass('custom-footer')
   })
 
   it('has proper visual hierarchy', () => {
     render(
       <Card>
         <CardHeader>
-          <CardTitle>å±‚çº§æµ‹è¯•</CardTitle>
+          <CardTitle>²ã¼¶²âÊÔ</CardTitle>
         </CardHeader>
       </Card>
     )
     
-    const title = screen.getByText('å±‚çº§æµ‹è¯•')
+    const title = screen.getByText('²ã¼¶²âÊÔ')
     expect(title.tagName).toBe('H3')
   })
 })
 ```
 
-- [ ] **Step 2: è¿è¡Œæµ‹è¯•å¹¶éªŒè¯**
+- [ ] **Step 2: ÔËĞĞ²âÊÔ²¢ÑéÖ¤**
 
 ```bash
 npm test -- src/components/ui/Card.test.tsx
 ```
 
-- [ ] **Step 3: æ£€æŸ¥ Card çš„è§†è§‰ä¸€è‡´æ€§**
+- [ ] **Step 3: ¼ì²é Card µÄÊÓ¾õÒ»ÖÂĞÔ**
 
-æ£€æŸ¥é¡¹ï¼š
-- è¾¹æ¡†é¢œè‰²æ˜¯å¦ä½¿ç”¨ theme.tokens.ts ä¸­çš„ border token
-- èƒŒæ™¯è‰²æ˜¯å¦ä½¿ç”¨ bg-card token
-- é˜´å½±æ˜¯å¦ç»Ÿä¸€
-- å†…è¾¹è·æ˜¯å¦ç¬¦åˆ SPACING_TOKENS
+¼ì²éÏî£º
+- ±ß¿òÑÕÉ«ÊÇ·ñÊ¹ÓÃ theme.tokens.ts ÖĞµÄ border token
+- ±³¾°É«ÊÇ·ñÊ¹ÓÃ bg-card token
+- ÒõÓ°ÊÇ·ñÍ³Ò»
+- ÄÚ±ß¾àÊÇ·ñ·ûºÏ SPACING_TOKENS
 
-- [ ] **Step 4: æäº¤ä»£ç **
+- [ ] **Step 4: Ìá½»´úÂë**
 
 ```bash
 git add src/components/ui/Card.test.tsx
@@ -480,15 +486,15 @@ git commit -m "test: add comprehensive Card component tests"
 
 ---
 
-### Phase 2: é¡µé¢åŠŸèƒ½é›†æˆæµ‹è¯•ï¼ˆP0 - æ ¸å¿ƒæµç¨‹ï¼‰
+### Phase 2: Ò³Ãæ¹¦ÄÜ¼¯³É²âÊÔ£¨P0 - ºËĞÄÁ÷³Ì£©
 
-#### Task 2.1: è¾“å…¥èˆ± Hub é¡µé¢æµ‹è¯•
+#### Task 2.1: ÊäÈë²Õ Hub Ò³Ãæ²âÊÔ
 
 **Files:**
-- Test: `src/pages/input/__tests__/InputHubPage.test.tsx`
+- Test: `src/apps/input/InputApp.tsx`
 - Page: `src/apps/input/InputApp.tsx`
 
-- [ ] **Step 1: ç¼–å†™ InputHubPage æµ‹è¯•ç”¨ä¾‹**
+- [ ] **Step 1: ±àĞ´ InputHubPage ²âÊÔÓÃÀı**
 
 ```typescript
 import { render, screen } from '@testing-library/react'
@@ -507,25 +513,25 @@ const renderWithRouter = (component: React.ReactElement) => {
 describe('InputHubPage', () => {
   it('renders page title and description', () => {
     renderWithRouter(<InputHubPage />)
-    expect(screen.getByText('æ•°æ®é‡‡é›†åŠæ¥å£')).toBeInTheDocument()
-    expect(screen.getByText(/è¾“å…¥èˆ± Â· å€™é€‰æ± å½•å…¥/)).toBeInTheDocument()
+    expect(screen.getByText('Êı¾İ²É¼¯¼°½Ó¿Ú')).toBeInTheDocument()
+    expect(screen.getByText(/ÊäÈë²Õ ¡¤ ºòÑ¡³ØÂ¼Èë/)).toBeInTheDocument()
   })
 
   it('renders breadcrumb navigation', () => {
     renderWithRouter(<InputHubPage />)
-    expect(screen.getByText('é¦–é¡µ')).toBeInTheDocument()
-    expect(screen.getByText('è¾“å…¥èˆ±')).toBeInTheDocument()
+    expect(screen.getByText('Ê×Ò³')).toBeInTheDocument()
+    expect(screen.getByText('ÊäÈë²Õ')).toBeInTheDocument()
   })
 
   it('renders all core modules', () => {
     renderWithRouter(<InputHubPage />)
     
     const expectedModules = [
-      'å½•å…¥çœ‹æ¿',
-      'æ‰¹é‡å¯¼å…¥',
-      'çƒ­é—¨æ¿å—',
-      'é‡‡é›†æµ‹è¯•',
-      'æœ¬åœ°çŸ¥è¯†åº“',
+      'Â¼Èë¿´°å',
+      'ÅúÁ¿µ¼Èë',
+      'ÈÈÃÅ°å¿é',
+      '²É¼¯²âÊÔ',
+      '±¾µØÖªÊ¶¿â',
     ]
     
     expectedModules.forEach((moduleName) => {
@@ -535,18 +541,18 @@ describe('InputHubPage', () => {
 
   it('renders expandable modules section', () => {
     renderWithRouter(<InputHubPage />)
-    expect(screen.getByText('å¯æ‰©å±•èƒ½åŠ›ï¼ˆå‚è€ƒ V6 Proï¼‰')).toBeInTheDocument()
-    expect(screen.getByText('è‚¡ç¥¨æ± ç®¡ç†')).toBeInTheDocument()
-    expect(screen.getByText('ä¸ƒç»´é‡‡é›†')).toBeInTheDocument()
+    expect(screen.getByText('¿ÉÀ©Õ¹ÄÜÁ¦£¨²Î¿¼ V6 Pro£©')).toBeInTheDocument()
+    expect(screen.getByText('¹ÉÆ±³Ø¹ÜÀí')).toBeInTheDocument()
+    expect(screen.getByText('ÆßÎ¬²É¼¯')).toBeInTheDocument()
   })
 
   it('has working navigation links', () => {
     renderWithRouter(<InputHubPage />)
     
-    const dashboardLink = screen.getByRole('link', { name: /å½•å…¥çœ‹æ¿/i })
+    const dashboardLink = screen.getByRole('link', { name: /Â¼Èë¿´°å/i })
     expect(dashboardLink).toHaveAttribute('href', '/input')
     
-    const bulkImportLink = screen.getByRole('link', { name: /æ‰¹é‡å¯¼å…¥/i })
+    const bulkImportLink = screen.getByRole('link', { name: /ÅúÁ¿µ¼Èë/i })
     expect(bulkImportLink).toHaveAttribute('href', '/input/bulk-import')
   })
 
@@ -559,22 +565,22 @@ describe('InputHubPage', () => {
 })
 ```
 
-- [ ] **Step 2: è¿è¡Œæµ‹è¯•å¹¶éªŒè¯**
+- [ ] **Step 2: ÔËĞĞ²âÊÔ²¢ÑéÖ¤**
 
 ```bash
 npm test -- src/pages/input/__tests__/InputHubPage.test.tsx
 ```
 
-- [ ] **Step 3: æ‰‹åŠ¨éªŒè¯é¡µé¢åŠŸèƒ½**
+- [ ] **Step 3: ÊÖ¶¯ÑéÖ¤Ò³Ãæ¹¦ÄÜ**
 
-æ£€æŸ¥é¡¹ï¼š
-- é¢åŒ…å±‘å¯¼èˆªæ˜¯å¦æ­£ç¡®æ˜¾ç¤ºå±‚çº§
-- æ‰€æœ‰æ¨¡å—å¡ç‰‡æ˜¯å¦æ¸²æŸ“
-- ç‚¹å‡»"è¿›å…¥"æŒ‰é’®æ˜¯å¦è·³è½¬åˆ°å¯¹åº”é¡µé¢
-- Badge æ ‡ç­¾æ˜¯å¦æ­£ç¡®æ˜¾ç¤º
-- å“åº”å¼å¸ƒå±€åœ¨ä¸åŒå±å¹•å°ºå¯¸ä¸‹æ˜¯å¦æ­£å¸¸
+¼ì²éÏî£º
+- Ãæ°üĞ¼µ¼º½ÊÇ·ñÕıÈ·ÏÔÊ¾²ã¼¶
+- ËùÓĞÄ£¿é¿¨Æ¬ÊÇ·ñäÖÈ¾
+- µã»÷"½øÈë"°´Å¥ÊÇ·ñÌø×ªµ½¶ÔÓ¦Ò³Ãæ
+- Badge ±êÇ©ÊÇ·ñÕıÈ·ÏÔÊ¾
+- ÏìÓ¦Ê½²¼¾ÖÔÚ²»Í¬ÆÁÄ»³ß´çÏÂÊÇ·ñÕı³£
 
-- [ ] **Step 4: æäº¤ä»£ç **
+- [ ] **Step 4: Ìá½»´úÂë**
 
 ```bash
 git add src/pages/input/__tests__/InputHubPage.test.tsx
@@ -583,13 +589,13 @@ git commit -m "test: add InputHubPage integration tests"
 
 ---
 
-#### Task 2.2: åˆ†æèˆ± Hub é¡µé¢æµ‹è¯•
+#### Task 2.2: ·ÖÎö²Õ Hub Ò³Ãæ²âÊÔ
 
 **Files:**
-- Test: `src/pages/analysis/__tests__/AnalysisHubPage.test.tsx`
+- Test: `src/apps/analysis/AnalysisApp.tsx`
 - Page: `src/apps/analysis/AnalysisApp.tsx`
 
-- [ ] **Step 1: ç¼–å†™ AnalysisHubPage æµ‹è¯•ç”¨ä¾‹**
+- [ ] **Step 1: ±àĞ´ AnalysisHubPage ²âÊÔÓÃÀı**
 
 ```typescript
 import { render, screen } from '@testing-library/react'
@@ -608,22 +614,22 @@ const renderWithRouter = (component: React.ReactElement) => {
 describe('AnalysisHubPage', () => {
   it('renders page title and description', () => {
     renderWithRouter(<AnalysisHubPage />)
-    expect(screen.getByText('è¡Œä¸šä¸ªè‚¡åˆ†æ')).toBeInTheDocument()
+    expect(screen.getByText('ĞĞÒµ¸ö¹É·ÖÎö')).toBeInTheDocument()
   })
 
   it('renders all core analysis modules', () => {
     renderWithRouter(<AnalysisHubPage />)
     
     const expectedModules = [
-      'V4 è¡Œä¸šè¯„åˆ†',
-      'V6 ä¸ªè‚¡è¯„åˆ†',
-      'V6 ä¸ªè‚¡æ™ºèƒ½è¯„åˆ†',
-      'è¡Œä¸šåˆ†æ',
-      'ç­–ç•¥å›æµ‹',
-      'è¯„åˆ†æ–‡æ¡£',
-      'æ™ºèƒ½èµ„è®¯',
-      'çƒ­é—¨æ¿å—ç­–ç•¥',
-      'ä»·å€¼æ´¼åœ°ç­–ç•¥',
+      'V4 ĞĞÒµÆÀ·Ö',
+      'V6 ¸ö¹ÉÆÀ·Ö',
+      'V6 ¸ö¹ÉÖÇÄÜÆÀ·Ö',
+      'ĞĞÒµ·ÖÎö',
+      '²ßÂÔ»Ø²â',
+      'ÆÀ·ÖÎÄµµ',
+      'ÖÇÄÜ×ÊÑ¶',
+      'ÈÈÃÅ°å¿é²ßÂÔ',
+      '¼ÛÖµÍİµØ²ßÂÔ',
     ]
     
     expectedModules.forEach((moduleName) => {
@@ -634,36 +640,36 @@ describe('AnalysisHubPage', () => {
   it('has correct navigation paths', () => {
     renderWithRouter(<AnalysisHubPage />)
     
-    const industryScoreLink = screen.getByRole('link', { name: /V4 è¡Œä¸šè¯„åˆ†/i })
+    const industryScoreLink = screen.getByRole('link', { name: /V4 ĞĞÒµÆÀ·Ö/i })
     expect(industryScoreLink).toHaveAttribute('href', '/analysis/industry-score')
     
-    const stockScoreLink = screen.getByRole('link', { name: /V6 ä¸ªè‚¡è¯„åˆ†/i })
+    const stockScoreLink = screen.getByRole('link', { name: /V6 ¸ö¹ÉÆÀ·Ö/i })
     expect(stockScoreLink).toHaveAttribute('href', '/analysis/stock-score')
   })
 
   it('renders future modules section', () => {
     renderWithRouter(<AnalysisHubPage />)
-    expect(screen.getByText('å¯æ‰©å±•èƒ½åŠ›ï¼ˆå‚è€ƒ V6 Proï¼‰')).toBeInTheDocument()
-    expect(screen.getByText('æ¿å—è½®åŠ¨')).toBeInTheDocument()
+    expect(screen.getByText('¿ÉÀ©Õ¹ÄÜÁ¦£¨²Î¿¼ V6 Pro£©')).toBeInTheDocument()
+    expect(screen.getByText('°å¿éÂÖ¶¯')).toBeInTheDocument()
   })
 })
 ```
 
-- [ ] **Step 2: è¿è¡Œæµ‹è¯•å¹¶éªŒè¯**
+- [ ] **Step 2: ÔËĞĞ²âÊÔ²¢ÑéÖ¤**
 
 ```bash
 npm test -- src/pages/analysis/__tests__/AnalysisHubPage.test.tsx
 ```
 
-- [ ] **Step 3: æ‰‹åŠ¨éªŒè¯é¡µé¢åŠŸèƒ½**
+- [ ] **Step 3: ÊÖ¶¯ÑéÖ¤Ò³Ãæ¹¦ÄÜ**
 
-æ£€æŸ¥é¡¹ï¼š
-- 9 ä¸ªæ ¸å¿ƒæ¨¡å—æ˜¯å¦å…¨éƒ¨æ¸²æŸ“
-- æ¯ä¸ªæ¨¡å—çš„å›¾æ ‡ã€æ ‡é¢˜ã€æè¿°æ˜¯å¦å®Œæ•´
-- è·³è½¬é“¾æ¥æ˜¯å¦æ­£ç¡®
-- "å¾…å®ç°" Badge æ˜¯å¦æ­£ç¡®æ˜¾ç¤º
+¼ì²éÏî£º
+- 9 ¸öºËĞÄÄ£¿éÊÇ·ñÈ«²¿äÖÈ¾
+- Ã¿¸öÄ£¿éµÄÍ¼±ê¡¢±êÌâ¡¢ÃèÊöÊÇ·ñÍêÕû
+- Ìø×ªÁ´½ÓÊÇ·ñÕıÈ·
+- "´ıÊµÏÖ" Badge ÊÇ·ñÕıÈ·ÏÔÊ¾
 
-- [ ] **Step 4: æäº¤ä»£ç **
+- [ ] **Step 4: Ìá½»´úÂë**
 
 ```bash
 git add src/pages/analysis/__tests__/AnalysisHubPage.test.tsx
@@ -672,13 +678,13 @@ git commit -m "test: add AnalysisHubPage integration tests"
 
 ---
 
-#### Task 2.3: äº¤æ˜“èˆ± Hub é¡µé¢æµ‹è¯•
+#### Task 2.3: ½»Ò×²Õ Hub Ò³Ãæ²âÊÔ
 
 **Files:**
-- Test: `src/pages/trading/__tests__/TradingHubPage.test.tsx`
+- Test: `src/apps/trading/TradingApp.tsx`
 - Page: `src/apps/trading/TradingApp.tsx`
 
-- [ ] **Step 1: ç¼–å†™ TradingHubPage æµ‹è¯•ç”¨ä¾‹**
+- [ ] **Step 1: ±àĞ´ TradingHubPage ²âÊÔÓÃÀı**
 
 ```typescript
 import { render, screen } from '@testing-library/react'
@@ -697,43 +703,43 @@ const renderWithRouter = (component: React.ReactElement) => {
 describe('TradingHubPage', () => {
   it('renders page title and description', () => {
     renderWithRouter(<TradingHubPage />)
-    expect(screen.getByText('äº¤æ˜“åŠæŒä»“')).toBeInTheDocument()
+    expect(screen.getByText('½»Ò×¼°³Ö²Ö')).toBeInTheDocument()
   })
 
   it('renders all core trading modules', () => {
     renderWithRouter(<TradingHubPage />)
     
-    expect(screen.getByText('äº¤æ˜“ä¿¡å·')).toBeInTheDocument()
-    expect(screen.getByText('æ¨¡æ‹ŸæŒä»“')).toBeInTheDocument()
-    expect(screen.getByText('ç­–ç•¥å¿«ç…§')).toBeInTheDocument()
+    expect(screen.getByText('½»Ò×ĞÅºÅ')).toBeInTheDocument()
+    expect(screen.getByText('Ä£Äâ³Ö²Ö')).toBeInTheDocument()
+    expect(screen.getByText('²ßÂÔ¿ìÕÕ')).toBeInTheDocument()
   })
 
   it('has correct navigation paths', () => {
     renderWithRouter(<TradingHubPage />)
     
-    const signalsLink = screen.getByRole('link', { name: /äº¤æ˜“ä¿¡å·/i })
+    const signalsLink = screen.getByRole('link', { name: /½»Ò×ĞÅºÅ/i })
     expect(signalsLink).toHaveAttribute('href', '/trading')
     
-    const holdingsLink = screen.getByRole('link', { name: /æ¨¡æ‹ŸæŒä»“/i })
+    const holdingsLink = screen.getByRole('link', { name: /Ä£Äâ³Ö²Ö/i })
     expect(holdingsLink).toHaveAttribute('href', '/trading/holdings')
   })
 
   it('renders future modules with badges', () => {
     renderWithRouter(<TradingHubPage />)
     
-    expect(screen.getByText('ç­–ç•¥ç®¡ç†')).toBeInTheDocument()
-    expect(screen.getByText('æ•°æ®å±‚å¾…å»º')).toBeInTheDocument()
+    expect(screen.getByText('²ßÂÔ¹ÜÀí')).toBeInTheDocument()
+    expect(screen.getByText('Êı¾İ²ã´ı½¨')).toBeInTheDocument()
   })
 })
 ```
 
-- [ ] **Step 2: è¿è¡Œæµ‹è¯•å¹¶éªŒè¯**
+- [ ] **Step 2: ÔËĞĞ²âÊÔ²¢ÑéÖ¤**
 
 ```bash
 npm test -- src/pages/trading/__tests__/TradingHubPage.test.tsx
 ```
 
-- [ ] **Step 3: æäº¤ä»£ç **
+- [ ] **Step 3: Ìá½»´úÂë**
 
 ```bash
 git add src/pages/trading/__tests__/TradingHubPage.test.tsx
@@ -742,13 +748,13 @@ git commit -m "test: add TradingHubPage integration tests"
 
 ---
 
-#### Task 2.4: è¾“å‡ºèˆ± Hub é¡µé¢æµ‹è¯•
+#### Task 2.4: Êä³ö²Õ Hub Ò³Ãæ²âÊÔ
 
 **Files:**
 - Test: `src/pages/output/__tests__/OutputHubPage.test.tsx`
 - Page: `src/pages/output/OutputHubPage.tsx`
 
-- [ ] **Step 1: ç¼–å†™ OutputHubPage æµ‹è¯•ç”¨ä¾‹**
+- [ ] **Step 1: ±àĞ´ OutputHubPage ²âÊÔÓÃÀı**
 
 ```typescript
 import { render, screen } from '@testing-library/react'
@@ -767,40 +773,40 @@ const renderWithRouter = (component: React.ReactElement) => {
 describe('OutputHubPage', () => {
   it('renders page title', () => {
     renderWithRouter(<OutputHubPage />)
-    expect(screen.getByText('è¾“å‡ºèˆ±')).toBeInTheDocument()
+    expect(screen.getByText('Êä³ö²Õ')).toBeInTheDocument()
   })
 
   it('renders all output modules', () => {
     renderWithRouter(<OutputHubPage />)
     
-    expect(screen.getByText('ç ”ç©¶æŠ¥å‘Š')).toBeInTheDocument()
-    expect(screen.getByText('äº¤æ˜“å¤ç›˜')).toBeInTheDocument()
-    expect(screen.getByText('æ•°æ®å¯¼å‡º')).toBeInTheDocument()
+    expect(screen.getByText('ÑĞ¾¿±¨¸æ')).toBeInTheDocument()
+    expect(screen.getByText('½»Ò×¸´ÅÌ')).toBeInTheDocument()
+    expect(screen.getByText('Êı¾İµ¼³ö')).toBeInTheDocument()
   })
 
   it('shows badges for placeholder modules', () => {
     renderWithRouter(<OutputHubPage />)
     
-    const badges = screen.getAllByText('å¾…å®ç°')
+    const badges = screen.getAllByText('´ıÊµÏÖ')
     expect(badges.length).toBeGreaterThan(0)
   })
 
   it('has correct navigation paths', () => {
     renderWithRouter(<OutputHubPage />)
     
-    const researchLink = screen.getByRole('link', { name: /ç ”ç©¶æŠ¥å‘Š/i })
+    const researchLink = screen.getByRole('link', { name: /ÑĞ¾¿±¨¸æ/i })
     expect(researchLink).toHaveAttribute('href', '/output/research')
   })
 })
 ```
 
-- [ ] **Step 2: è¿è¡Œæµ‹è¯•å¹¶éªŒè¯**
+- [ ] **Step 2: ÔËĞĞ²âÊÔ²¢ÑéÖ¤**
 
 ```bash
 npm test -- src/pages/output/__tests__/OutputHubPage.test.tsx
 ```
 
-- [ ] **Step 3: æäº¤ä»£ç **
+- [ ] **Step 3: Ìá½»´úÂë**
 
 ```bash
 git add src/pages/output/__tests__/OutputHubPage.test.tsx
@@ -809,13 +815,13 @@ git commit -m "test: add OutputHubPage integration tests"
 
 ---
 
-#### Task 2.5: æ€»æ§èˆ± Hub é¡µé¢æµ‹è¯•
+#### Task 2.5: ×Ü¿Ø²Õ Hub Ò³Ãæ²âÊÔ
 
 **Files:**
-- Test: `src/pages/command/__tests__/CommandHubPage.test.tsx`
+- Test: `src/apps/command/CommandApp.tsx`
 - Page: `src/apps/command/CommandApp.tsx`
 
-- [ ] **Step 1: ç¼–å†™ CommandHubPage æµ‹è¯•ç”¨ä¾‹**
+- [ ] **Step 1: ±àĞ´ CommandHubPage ²âÊÔÓÃÀı**
 
 ```typescript
 import { render, screen } from '@testing-library/react'
@@ -834,45 +840,45 @@ const renderWithRouter = (component: React.ReactElement) => {
 describe('CommandHubPage', () => {
   it('renders page title', () => {
     renderWithRouter(<CommandHubPage />)
-    expect(screen.getByText('æ€»æ§ä¸­å¿ƒ')).toBeInTheDocument()
+    expect(screen.getByText('×Ü¿ØÖĞĞÄ')).toBeInTheDocument()
   })
 
   it('renders all command modules', () => {
     renderWithRouter(<CommandHubPage />)
     
-    expect(screen.getByText('AI ä½“ä¸­å¿ƒ')).toBeInTheDocument()
-    expect(screen.getByText('MCP Server ç®¡ç†')).toBeInTheDocument()
-    expect(screen.getByText('ç³»ç»Ÿç›‘æ§')).toBeInTheDocument()
-    expect(screen.getByText('é…ç½®ç®¡ç†')).toBeInTheDocument()
+    expect(screen.getByText('AI ÌåÖĞĞÄ')).toBeInTheDocument()
+    expect(screen.getByText('MCP Server ¹ÜÀí')).toBeInTheDocument()
+    expect(screen.getByText('ÏµÍ³¼à¿Ø')).toBeInTheDocument()
+    expect(screen.getByText('ÅäÖÃ¹ÜÀí')).toBeInTheDocument()
   })
 
   it('has correct navigation paths', () => {
     renderWithRouter(<CommandHubPage />)
     
-    const agentLink = screen.getByRole('link', { name: /AI ä½“ä¸­å¿ƒ/i })
+    const agentLink = screen.getByRole('link', { name: /AI ÌåÖĞĞÄ/i })
     expect(agentLink).toHaveAttribute('href', '/command/agents')
     
-    const mcpLink = screen.getByRole('link', { name: /MCP Server ç®¡ç†/i })
+    const mcpLink = screen.getByRole('link', { name: /MCP Server ¹ÜÀí/i })
     expect(mcpLink).toHaveAttribute('href', '/command/mcp-servers')
   })
 
   it('renders future modules section', () => {
     renderWithRouter(<CommandHubPage />)
     
-    expect(screen.getByText('å¯æ‰©å±•èƒ½åŠ›ï¼ˆå‚è€ƒ V6 Proï¼‰')).toBeInTheDocument()
-    expect(screen.getByText('é£æ§ç½‘å…³')).toBeInTheDocument()
-    expect(screen.getByText('æŠ¥å‘Šå¯¼å‡º')).toBeInTheDocument()
+    expect(screen.getByText('¿ÉÀ©Õ¹ÄÜÁ¦£¨²Î¿¼ V6 Pro£©')).toBeInTheDocument()
+    expect(screen.getByText('·ç¿ØÍø¹Ø')).toBeInTheDocument()
+    expect(screen.getByText('±¨¸æµ¼³ö')).toBeInTheDocument()
   })
 })
 ```
 
-- [ ] **Step 2: è¿è¡Œæµ‹è¯•å¹¶éªŒè¯**
+- [ ] **Step 2: ÔËĞĞ²âÊÔ²¢ÑéÖ¤**
 
 ```bash
 npm test -- src/pages/command/__tests__/CommandHubPage.test.tsx
 ```
 
-- [ ] **Step 3: æäº¤ä»£ç **
+- [ ] **Step 3: Ìá½»´úÂë**
 
 ```bash
 git add src/pages/command/__tests__/CommandHubPage.test.tsx
@@ -881,15 +887,15 @@ git commit -m "test: add CommandHubPage integration tests"
 
 ---
 
-### Phase 3: è§†è§‰ä¸€è‡´æ€§å®¡æŸ¥ï¼ˆP1 - é‡è¦ä¼˜åŒ–ï¼‰
+### Phase 3: ÊÓ¾õÒ»ÖÂĞÔÉó²é£¨P1 - ÖØÒªÓÅ»¯£©
 
-#### Task 3.1: é¢œè‰²ç³»ç»Ÿåˆè§„æ€§æ£€æŸ¥
+#### Task 3.1: ÑÕÉ«ÏµÍ³ºÏ¹æĞÔ¼ì²é
 
 **Files:**
 - Audit Script: `scripts/audit-color-tokens.ts`
-- Target: æ‰€æœ‰ `src/**/*.tsx` æ–‡ä»¶
+- Target: ËùÓĞ `src/**/*.tsx` ÎÄ¼ş
 
-- [ ] **Step 1: åˆ›å»ºé¢œè‰²å®¡è®¡è„šæœ¬**
+- [ ] **Step 1: ´´½¨ÑÕÉ«Éó¼Æ½Å±¾**
 
 ```typescript
 // scripts/audit-color-tokens.ts
@@ -920,7 +926,7 @@ async function auditColorTokens(): Promise<void> {
       if (hexMatches) {
         hexMatches.forEach((hex) => {
           if (!VALID_COLORS.has(hex)) {
-            console.error(`âŒ ${file}:${index + 1} - ç¡¬ç¼–ç é¢œè‰²: ${hex}`)
+            console.error(`? ${file}:${index + 1} - Ó²±àÂëÑÕÉ«: ${hex}`)
             violations++
           }
         })
@@ -929,30 +935,30 @@ async function auditColorTokens(): Promise<void> {
   }
   
   if (violations > 0) {
-    console.error(`\nå‘ç° ${violations} å¤„é¢œè‰²è¿è§„`)
+    console.error(`\n·¢ÏÖ ${violations} ´¦ÑÕÉ«Î¥¹æ`)
     process.exit(1)
   } else {
-    console.log('âœ… é¢œè‰²ç³»ç»Ÿåˆè§„æ£€æŸ¥é€šè¿‡')
+    console.log('? ÑÕÉ«ÏµÍ³ºÏ¹æ¼ì²éÍ¨¹ı')
   }
 }
 
 auditColorTokens()
 ```
 
-- [ ] **Step 2: è¿è¡Œé¢œè‰²å®¡è®¡**
+- [ ] **Step 2: ÔËĞĞÑÕÉ«Éó¼Æ**
 
 ```bash
 npx tsx scripts/audit-color-tokens.ts
 ```
 
-- [ ] **Step 3: ä¿®å¤å‘ç°çš„é¢œè‰²è¿è§„**
+- [ ] **Step 3: ĞŞ¸´·¢ÏÖµÄÑÕÉ«Î¥¹æ**
 
-å¯¹äºæ¯ä¸ªè¿è§„é¡¹ï¼š
-1. ç¡®å®šåº”è¯¥ä½¿ç”¨çš„è¯­ä¹‰åŒ– tokenï¼ˆå¦‚ `COLOR_TOKENS.textPrimary`ï¼‰
-2. æ›¿æ¢ç¡¬ç¼–ç é¢œè‰²
-3. é‡æ–°è¿è¡Œå®¡è®¡ç¡®è®¤ä¿®å¤
+¶ÔÓÚÃ¿¸öÎ¥¹æÏî£º
+1. È·¶¨Ó¦¸ÃÊ¹ÓÃµÄÓïÒå»¯ token£¨Èç `COLOR_TOKENS.textPrimary`£©
+2. Ìæ»»Ó²±àÂëÑÕÉ«
+3. ÖØĞÂÔËĞĞÉó¼ÆÈ·ÈÏĞŞ¸´
 
-- [ ] **Step 4: æäº¤ä¿®å¤**
+- [ ] **Step 4: Ìá½»ĞŞ¸´**
 
 ```bash
 git add -A
@@ -961,13 +967,13 @@ git commit -m "fix: replace hardcoded colors with theme tokens"
 
 ---
 
-#### Task 3.2: é—´è·ç³»ç»Ÿåˆè§„æ€§æ£€æŸ¥
+#### Task 3.2: ¼ä¾àÏµÍ³ºÏ¹æĞÔ¼ì²é
 
 **Files:**
 - Audit Script: `scripts/audit-spacing.ts`
-- Target: æ‰€æœ‰ `src/**/*.tsx` æ–‡ä»¶
+- Target: ËùÓĞ `src/**/*.tsx` ÎÄ¼ş
 
-- [ ] **Step 1: åˆ›å»ºé—´è·å®¡è®¡è„šæœ¬**
+- [ ] **Step 1: ´´½¨¼ä¾àÉó¼Æ½Å±¾**
 
 ```typescript
 // scripts/audit-spacing.ts
@@ -997,7 +1003,7 @@ async function auditSpacing(): Promise<void> {
         matches.forEach((match) => {
           const value = match.split(':')[1].trim()
           if (!VALID_SPACING_VALUES.has(value)) {
-            console.error(`âŒ ${file}:${index + 1} - éæ ‡å‡†é—´è·: ${value}`)
+            console.error(`? ${file}:${index + 1} - ·Ç±ê×¼¼ä¾à: ${value}`)
             violations++
           }
         })
@@ -1006,25 +1012,25 @@ async function auditSpacing(): Promise<void> {
   }
   
   if (violations > 0) {
-    console.error(`\nå‘ç° ${violations} å¤„é—´è·è¿è§„`)
+    console.error(`\n·¢ÏÖ ${violations} ´¦¼ä¾àÎ¥¹æ`)
     process.exit(1)
   } else {
-    console.log('âœ… é—´è·ç³»ç»Ÿåˆè§„æ£€æŸ¥é€šè¿‡')
+    console.log('? ¼ä¾àÏµÍ³ºÏ¹æ¼ì²éÍ¨¹ı')
   }
 }
 
 auditSpacing()
 ```
 
-- [ ] **Step 2: è¿è¡Œé—´è·å®¡è®¡**
+- [ ] **Step 2: ÔËĞĞ¼ä¾àÉó¼Æ**
 
 ```bash
 npx tsx scripts/audit-spacing.ts
 ```
 
-- [ ] **Step 3: ä¿®å¤å‘ç°çš„é—´è·è¿è§„**
+- [ ] **Step 3: ĞŞ¸´·¢ÏÖµÄ¼ä¾àÎ¥¹æ**
 
-- [ ] **Step 4: æäº¤ä¿®å¤**
+- [ ] **Step 4: Ìá½»ĞŞ¸´**
 
 ```bash
 git add -A
@@ -1033,58 +1039,58 @@ git commit -m "fix: standardize spacing to 4px grid system"
 
 ---
 
-#### Task 3.3: å­—ä½“ç³»ç»Ÿæ£€æŸ¥
+#### Task 3.3: ×ÖÌåÏµÍ³¼ì²é
 
 **Files:**
 - Manual Review Checklist
 
-- [ ] **Step 1: æ£€æŸ¥å­—ä½“å¤§å°ä¸€è‡´æ€§**
+- [ ] **Step 1: ¼ì²é×ÖÌå´óĞ¡Ò»ÖÂĞÔ**
 
-æ£€æŸ¥é¡¹ï¼š
-- æ ‡é¢˜å­—ä½“å¤§å°æ˜¯å¦ç»Ÿä¸€ï¼ˆh1: 2xl, h2: xl, h3: lgï¼‰
-- æ­£æ–‡å­—ä½“å¤§å°æ˜¯å¦ç»Ÿä¸€ï¼ˆbase, smï¼‰
-- è¾…åŠ©æ–‡æœ¬æ˜¯å¦ä½¿ç”¨ muted-foreground é¢œè‰²
-- å­—ä½“ç²—ç»†æ˜¯å¦åˆç†ï¼ˆbold, semibold, normalï¼‰
+¼ì²éÏî£º
+- ±êÌâ×ÖÌå´óĞ¡ÊÇ·ñÍ³Ò»£¨h1: 2xl, h2: xl, h3: lg£©
+- ÕıÎÄ×ÖÌå´óĞ¡ÊÇ·ñÍ³Ò»£¨base, sm£©
+- ¸¨ÖúÎÄ±¾ÊÇ·ñÊ¹ÓÃ muted-foreground ÑÕÉ«
+- ×ÖÌå´ÖÏ¸ÊÇ·ñºÏÀí£¨bold, semibold, normal£©
 
-- [ ] **Step 2: æ£€æŸ¥è¡Œé«˜å’Œå­—é—´è·**
+- [ ] **Step 2: ¼ì²éĞĞ¸ßºÍ×Ö¼ä¾à**
 
-æ£€æŸ¥é¡¹ï¼š
-- æ ‡é¢˜è¡Œé«˜æ˜¯å¦ç´§å‡‘ï¼ˆleading-none, leading-tightï¼‰
-- æ­£æ–‡è¡Œé«˜æ˜¯å¦èˆ’é€‚ï¼ˆleading-normal, leading-relaxedï¼‰
-- å­—é—´è·æ˜¯å¦åˆç†ï¼ˆtracking-tight, tracking-normalï¼‰
+¼ì²éÏî£º
+- ±êÌâĞĞ¸ßÊÇ·ñ½ô´Õ£¨leading-none, leading-tight£©
+- ÕıÎÄĞĞ¸ßÊÇ·ñÊæÊÊ£¨leading-normal, leading-relaxed£©
+- ×Ö¼ä¾àÊÇ·ñºÏÀí£¨tracking-tight, tracking-normal£©
 
-- [ ] **Step 3: è®°å½•å‘ç°çš„é—®é¢˜å¹¶ä¿®å¤**
+- [ ] **Step 3: ¼ÇÂ¼·¢ÏÖµÄÎÊÌâ²¢ĞŞ¸´**
 
-åˆ›å»ºé—®é¢˜æ¸…å•å¹¶é€é¡¹ä¿®å¤ã€‚
+´´½¨ÎÊÌâÇåµ¥²¢ÖğÏîĞŞ¸´¡£
 
 ---
 
-### Phase 4: äº¤äº’ä½“éªŒä¼˜åŒ–ï¼ˆP1 - é‡è¦ä¼˜åŒ–ï¼‰
+### Phase 4: ½»»¥ÌåÑéÓÅ»¯£¨P1 - ÖØÒªÓÅ»¯£©
 
-#### Task 4.1: åŠ è½½çŠ¶æ€ä¼˜åŒ–
+#### Task 4.1: ¼ÓÔØ×´Ì¬ÓÅ»¯
 
 **Files:**
 - Component: `src/components/organisms/shared/PageSkeleton.tsx`
-- Target: æ‰€æœ‰é¡µé¢ç»„ä»¶
+- Target: ËùÓĞÒ³Ãæ×é¼ş
 
-- [ ] **Step 1: æ£€æŸ¥æ‰€æœ‰é¡µé¢çš„åŠ è½½çŠ¶æ€**
+- [ ] **Step 1: ¼ì²éËùÓĞÒ³ÃæµÄ¼ÓÔØ×´Ì¬**
 
-æ£€æŸ¥é¡¹ï¼š
-- æ˜¯å¦æ‰€æœ‰é¡µé¢éƒ½ä½¿ç”¨äº† Suspense + PageSkeleton
-- PageSkeleton çš„è§†è§‰æ•ˆæœæ˜¯å¦åˆç†
-- åŠ è½½æ—¶é—´æ˜¯å¦è¿‡é•¿ï¼ˆ> 300ms éœ€è¦ä¼˜åŒ–ï¼‰
+¼ì²éÏî£º
+- ÊÇ·ñËùÓĞÒ³Ãæ¶¼Ê¹ÓÃÁË Suspense + PageSkeleton
+- PageSkeleton µÄÊÓ¾õĞ§¹ûÊÇ·ñºÏÀí
+- ¼ÓÔØÊ±¼äÊÇ·ñ¹ı³¤£¨> 300ms ĞèÒªÓÅ»¯£©
 
-- [ ] **Step 2: ä¼˜åŒ– PageSkeleton ç»„ä»¶**
+- [ ] **Step 2: ÓÅ»¯ PageSkeleton ×é¼ş**
 
 ```typescript
-// å¢å¼º PageSkeleton çš„è§†è§‰æ•ˆæœ
+// ÔöÇ¿ PageSkeleton µÄÊÓ¾õĞ§¹û
 export function PageSkeleton(): React.JSX.Element {
   return (
     <div className="space-y-4 p-4" data-testid="page-skeleton">
-      {/* æ ‡é¢˜éª¨æ¶ */}
+      {/* ±êÌâ¹Ç¼Ü */}
       <div className="h-8 w-48 animate-pulse rounded bg-muted" />
       
-      {/* å†…å®¹éª¨æ¶ - å“åº”å¼ç½‘æ ¼ */}
+      {/* ÄÚÈİ¹Ç¼Ü - ÏìÓ¦Ê½Íø¸ñ */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 6 }).map((_, i) => (
           <Card key={i}>
@@ -1105,11 +1111,11 @@ export function PageSkeleton(): React.JSX.Element {
 }
 ```
 
-- [ ] **Step 3: ä¸ºæ‰€æœ‰é¡µé¢æ·»åŠ é”™è¯¯è¾¹ç•Œ**
+- [ ] **Step 3: ÎªËùÓĞÒ³ÃæÌí¼Ó´íÎó±ß½ç**
 
-æ£€æŸ¥æ‰€æœ‰é¡µé¢æ˜¯å¦è¢« ErrorBoundary åŒ…è£¹ã€‚
+¼ì²éËùÓĞÒ³ÃæÊÇ·ñ±» ErrorBoundary °ü¹ü¡£
 
-- [ ] **Step 4: æäº¤ä¼˜åŒ–**
+- [ ] **Step 4: Ìá½»ÓÅ»¯**
 
 ```bash
 git add src/components/PageSkeleton.tsx
@@ -1118,13 +1124,13 @@ git commit -m "feat: enhance PageSkeleton visual feedback"
 
 ---
 
-#### Task 4.2: é”™è¯¯çŠ¶æ€å¤„ç†
+#### Task 4.2: ´íÎó×´Ì¬´¦Àí
 
 **Files:**
 - Component: `src/components/molecules/ErrorState.tsx`
-- Target: æ‰€æœ‰æ•°æ®è·å–é¡µé¢
+- Target: ËùÓĞÊı¾İ»ñÈ¡Ò³Ãæ
 
-- [ ] **Step 1: æ£€æŸ¥ ErrorState ç»„ä»¶**
+- [ ] **Step 1: ¼ì²é ErrorState ×é¼ş**
 
 ```typescript
 import { AlertCircle } from 'lucide-react'
@@ -1137,8 +1143,8 @@ interface ErrorStateProps {
 }
 
 export function ErrorState({ 
-  title = 'å‡ºé”™äº†', 
-  description = 'è¯·ç¨åé‡è¯•', 
+  title = '³ö´íÁË', 
+  description = 'ÇëÉÔºóÖØÊÔ', 
   onRetry 
 }: ErrorStateProps): React.JSX.Element {
   return (
@@ -1148,7 +1154,7 @@ export function ErrorState({
       <p className="text-sm text-muted-foreground mb-4">{description}</p>
       {onRetry && (
         <Button onClick={onRetry} variant="outline">
-          é‡è¯•
+          ÖØÊÔ
         </Button>
       )}
     </div>
@@ -1156,14 +1162,14 @@ export function ErrorState({
 }
 ```
 
-- [ ] **Step 2: ä¸ºæ‰€æœ‰æ•°æ®é¡µé¢æ·»åŠ é”™è¯¯å¤„ç†**
+- [ ] **Step 2: ÎªËùÓĞÊı¾İÒ³ÃæÌí¼Ó´íÎó´¦Àí**
 
-æ£€æŸ¥é¡¹ï¼š
-- æ•°æ®è·å–å¤±è´¥æ—¶æ˜¯å¦æ˜¾ç¤º ErrorState
-- é”™è¯¯ä¿¡æ¯æ˜¯å¦æ¸…æ™°
-- æ˜¯å¦æä¾›é‡è¯•æŒ‰é’®
+¼ì²éÏî£º
+- Êı¾İ»ñÈ¡Ê§°ÜÊ±ÊÇ·ñÏÔÊ¾ ErrorState
+- ´íÎóĞÅÏ¢ÊÇ·ñÇåÎú
+- ÊÇ·ñÌá¹©ÖØÊÔ°´Å¥
 
-- [ ] **Step 3: æäº¤ä¼˜åŒ–**
+- [ ] **Step 3: Ìá½»ÓÅ»¯**
 
 ```bash
 git add src/components/ui/ErrorState.tsx
@@ -1172,13 +1178,13 @@ git commit -m "feat: improve ErrorState component with retry action"
 
 ---
 
-#### Task 4.3: ç©ºçŠ¶æ€å¤„ç†
+#### Task 4.3: ¿Õ×´Ì¬´¦Àí
 
 **Files:**
 - Component: `src/components/molecules/EmptyState.tsx`
-- Target: æ‰€æœ‰åˆ—è¡¨é¡µé¢
+- Target: ËùÓĞÁĞ±íÒ³Ãæ
 
-- [ ] **Step 1: æ£€æŸ¥ EmptyState ç»„ä»¶**
+- [ ] **Step 1: ¼ì²é EmptyState ×é¼ş**
 
 ```typescript
 import { Inbox } from 'lucide-react'
@@ -1196,8 +1202,8 @@ interface EmptyStateProps {
 
 export function EmptyState({
   icon: Icon = Inbox,
-  title = 'æš‚æ— æ•°æ®',
-  description = 'è¯·å…ˆæ·»åŠ ä¸€äº›å†…å®¹',
+  title = 'ÔİÎŞÊı¾İ',
+  description = 'ÇëÏÈÌí¼ÓÒ»Ğ©ÄÚÈİ',
   action,
 }: EmptyStateProps): React.JSX.Element {
   return (
@@ -1217,14 +1223,14 @@ export function EmptyState({
 }
 ```
 
-- [ ] **Step 2: ä¸ºæ‰€æœ‰åˆ—è¡¨é¡µé¢æ·»åŠ ç©ºçŠ¶æ€**
+- [ ] **Step 2: ÎªËùÓĞÁĞ±íÒ³ÃæÌí¼Ó¿Õ×´Ì¬**
 
-æ£€æŸ¥é¡¹ï¼š
-- åˆ—è¡¨ä¸ºç©ºæ—¶æ˜¯å¦æ˜¾ç¤º EmptyState
-- æ˜¯å¦æä¾›å¼•å¯¼æ“ä½œï¼ˆå¦‚"æ·»åŠ ç¬¬ä¸€ä¸ªé¡¹ç›®"ï¼‰
-- ç©ºçŠ¶æ€æ–‡æ¡ˆæ˜¯å¦å‹å¥½
+¼ì²éÏî£º
+- ÁĞ±íÎª¿ÕÊ±ÊÇ·ñÏÔÊ¾ EmptyState
+- ÊÇ·ñÌá¹©Òıµ¼²Ù×÷£¨Èç"Ìí¼ÓµÚÒ»¸öÏîÄ¿"£©
+- ¿Õ×´Ì¬ÎÄ°¸ÊÇ·ñÓÑºÃ
 
-- [ ] **Step 3: æäº¤ä¼˜åŒ–**
+- [ ] **Step 3: Ìá½»ÓÅ»¯**
 
 ```bash
 git add src/components/ui/EmptyState.tsx
@@ -1233,14 +1239,14 @@ git commit -m "feat: enhance EmptyState with action support"
 
 ---
 
-### Phase 5: å“åº”å¼è®¾è®¡éªŒè¯ï¼ˆP2 - ä½“éªŒä¼˜åŒ–ï¼‰
+### Phase 5: ÏìÓ¦Ê½Éè¼ÆÑéÖ¤£¨P2 - ÌåÑéÓÅ»¯£©
 
-#### Task 5.1: ç§»åŠ¨ç«¯é€‚é…æµ‹è¯•
+#### Task 5.1: ÒÆ¶¯¶ËÊÊÅä²âÊÔ
 
 **Files:**
 - Test: `tests/e2e/responsive.spec.ts`
 
-- [ ] **Step 1: åˆ›å»ºå“åº”å¼æµ‹è¯•ç”¨ä¾‹**
+- [ ] **Step 1: ´´½¨ÏìÓ¦Ê½²âÊÔÓÃÀı**
 
 ```typescript
 // tests/e2e/responsive.spec.ts
@@ -1252,60 +1258,60 @@ const VIEWPORTS = {
   desktop: { width: 1920, height: 1080 },
 }
 
-test.describe('å“åº”å¼è®¾è®¡æµ‹è¯•', () => {
-  test('ç§»åŠ¨ç«¯ - å¯¼èˆªæ æŠ˜å ', async ({ page }) => {
+test.describe('ÏìÓ¦Ê½Éè¼Æ²âÊÔ', () => {
+  test('ÒÆ¶¯¶Ë - µ¼º½À¸ÕÛµş', async ({ page }) => {
     await page.setViewportSize(VIEWPORTS.mobile)
     await page.goto('/input/hub')
     
-    // æ£€æŸ¥ä¾§è¾¹æ æ˜¯å¦éšè—
+    // ¼ì²é²à±ßÀ¸ÊÇ·ñÒş²Ø
     const sidebar = page.locator('aside')
     await expect(sidebar).toBeHidden()
     
-    // æ£€æŸ¥æ±‰å ¡èœå•æ˜¯å¦å­˜åœ¨
-    const menuButton = page.getByRole('button', { name: /èœå•/i })
+    // ¼ì²éºº±¤²Ëµ¥ÊÇ·ñ´æÔÚ
+    const menuButton = page.getByRole('button', { name: /²Ëµ¥/i })
     await expect(menuButton).toBeVisible()
   })
 
-  test('å¹³æ¿ç«¯ - ç½‘æ ¼å¸ƒå±€è°ƒæ•´', async ({ page }) => {
+  test('Æ½°å¶Ë - Íø¸ñ²¼¾Öµ÷Õû', async ({ page }) => {
     await page.setViewportSize(VIEWPORTS.tablet)
     await page.goto('/analysis/hub')
     
-    // æ£€æŸ¥å¡ç‰‡ç½‘æ ¼æ˜¯å¦ä¸º 2 åˆ—
+    // ¼ì²é¿¨Æ¬Íø¸ñÊÇ·ñÎª 2 ÁĞ
     const grid = page.locator('.grid')
     await expect(grid).toHaveClass(/md:grid-cols-2/)
   })
 
-  test('æ¡Œé¢ç«¯ - å®Œæ•´å¸ƒå±€', async ({ page }) => {
+  test('×ÀÃæ¶Ë - ÍêÕû²¼¾Ö', async ({ page }) => {
     await page.setViewportSize(VIEWPORTS.desktop)
     await page.goto('/trading/hub')
     
-    // æ£€æŸ¥ä¾§è¾¹æ æ˜¯å¦æ˜¾ç¤º
+    // ¼ì²é²à±ßÀ¸ÊÇ·ñÏÔÊ¾
     const sidebar = page.locator('aside')
     await expect(sidebar).toBeVisible()
     
-    // æ£€æŸ¥å¡ç‰‡ç½‘æ ¼æ˜¯å¦ä¸º 3 åˆ—
+    // ¼ì²é¿¨Æ¬Íø¸ñÊÇ·ñÎª 3 ÁĞ
     const grid = page.locator('.grid')
     await expect(grid).toHaveClass(/lg:grid-cols-3/)
   })
 })
 ```
 
-- [ ] **Step 2: è¿è¡Œå“åº”å¼æµ‹è¯•**
+- [ ] **Step 2: ÔËĞĞÏìÓ¦Ê½²âÊÔ**
 
 ```bash
 npm run test:e2e -- tests/e2e/responsive.spec.ts
 ```
 
-- [ ] **Step 3: ä¿®å¤å“åº”å¼é—®é¢˜**
+- [ ] **Step 3: ĞŞ¸´ÏìÓ¦Ê½ÎÊÌâ**
 
-æ£€æŸ¥é¡¹ï¼š
-- ç§»åŠ¨ç«¯å¯¼èˆªæ˜¯å¦å¯è®¿é—®
-- å¹³æ¿ç«¯å¸ƒå±€æ˜¯å¦åˆç†
-- æ¡Œé¢ç«¯æ˜¯å¦å……åˆ†åˆ©ç”¨ç©ºé—´
-- æ–‡å­—æ˜¯å¦è¿‡å°éš¾ä»¥é˜…è¯»
-- æŒ‰é’®æ˜¯å¦è¿‡å°éš¾ä»¥ç‚¹å‡»
+¼ì²éÏî£º
+- ÒÆ¶¯¶Ëµ¼º½ÊÇ·ñ¿É·ÃÎÊ
+- Æ½°å¶Ë²¼¾ÖÊÇ·ñºÏÀí
+- ×ÀÃæ¶ËÊÇ·ñ³ä·ÖÀûÓÃ¿Õ¼ä
+- ÎÄ×ÖÊÇ·ñ¹ıĞ¡ÄÑÒÔÔÄ¶Á
+- °´Å¥ÊÇ·ñ¹ıĞ¡ÄÑÒÔµã»÷
 
-- [ ] **Step 4: æäº¤ä¿®å¤**
+- [ ] **Step 4: Ìá½»ĞŞ¸´**
 
 ```bash
 git add -A
@@ -1314,116 +1320,116 @@ git commit -m "fix: improve responsive design across all viewports"
 
 ---
 
-### Phase 6: å¯è®¿é—®æ€§æ£€æŸ¥ï¼ˆP2 - ä½“éªŒä¼˜åŒ–ï¼‰
+### Phase 6: ¿É·ÃÎÊĞÔ¼ì²é£¨P2 - ÌåÑéÓÅ»¯£©
 
-#### Task 6.1: ARIA æ ‡ç­¾æ£€æŸ¥
+#### Task 6.1: ARIA ±êÇ©¼ì²é
 
-- [ ] **Step 1: æ£€æŸ¥æ‰€æœ‰äº¤äº’å…ƒç´ **
+- [ ] **Step 1: ¼ì²éËùÓĞ½»»¥ÔªËØ**
 
-æ£€æŸ¥é¡¹ï¼š
-- æ‰€æœ‰æŒ‰é’®æ˜¯å¦æœ‰æ¸…æ™°çš„ aria-label
-- æ‰€æœ‰å›¾æ ‡æŒ‰é’®æ˜¯å¦æœ‰æ–‡æœ¬è¯´æ˜
-- æ‰€æœ‰è¡¨å•è¾“å…¥æ˜¯å¦æœ‰å…³è”çš„ label
-- æ‰€æœ‰å¯¹è¯æ¡†æ˜¯å¦æœ‰ role="dialog"
+¼ì²éÏî£º
+- ËùÓĞ°´Å¥ÊÇ·ñÓĞÇåÎúµÄ aria-label
+- ËùÓĞÍ¼±ê°´Å¥ÊÇ·ñÓĞÎÄ±¾ËµÃ÷
+- ËùÓĞ±íµ¥ÊäÈëÊÇ·ñÓĞ¹ØÁªµÄ label
+- ËùÓĞ¶Ô»°¿òÊÇ·ñÓĞ role="dialog"
 
-- [ ] **Step 2: æ£€æŸ¥é”®ç›˜å¯¼èˆª**
+- [ ] **Step 2: ¼ì²é¼üÅÌµ¼º½**
 
-æ£€æŸ¥é¡¹ï¼š
-- æ˜¯å¦å¯ä»¥ä½¿ç”¨ Tab é”®å¯¼èˆªæ‰€æœ‰äº¤äº’å…ƒç´ 
-- æ˜¯å¦å¯ä»¥ä½¿ç”¨ Enter/Space æ¿€æ´»æŒ‰é’®
-- æ˜¯å¦å¯ä»¥ä½¿ç”¨ ESC å…³é—­å¯¹è¯æ¡†
-- ç„¦ç‚¹é¡ºåºæ˜¯å¦åˆç†
+¼ì²éÏî£º
+- ÊÇ·ñ¿ÉÒÔÊ¹ÓÃ Tab ¼üµ¼º½ËùÓĞ½»»¥ÔªËØ
+- ÊÇ·ñ¿ÉÒÔÊ¹ÓÃ Enter/Space ¼¤»î°´Å¥
+- ÊÇ·ñ¿ÉÒÔÊ¹ÓÃ ESC ¹Ø±Õ¶Ô»°¿ò
+- ½¹µãË³ĞòÊÇ·ñºÏÀí
 
-- [ ] **Step 3: æ£€æŸ¥é¢œè‰²å¯¹æ¯”åº¦**
+- [ ] **Step 3: ¼ì²éÑÕÉ«¶Ô±È¶È**
 
-ä½¿ç”¨å·¥å…·æ£€æŸ¥ï¼š
-- æ–‡æœ¬ä¸èƒŒæ™¯çš„å¯¹æ¯”åº¦æ˜¯å¦ >= 4.5:1
-- å¤§æ–‡æœ¬å¯¹æ¯”åº¦æ˜¯å¦ >= 3:1
-- ç„¦ç‚¹æŒ‡ç¤ºå™¨æ˜¯å¦æ¸…æ™°å¯è§
+Ê¹ÓÃ¹¤¾ß¼ì²é£º
+- ÎÄ±¾Óë±³¾°µÄ¶Ô±È¶ÈÊÇ·ñ >= 4.5:1
+- ´óÎÄ±¾¶Ô±È¶ÈÊÇ·ñ >= 3:1
+- ½¹µãÖ¸Ê¾Æ÷ÊÇ·ñÇåÎú¿É¼û
 
-- [ ] **Step 4: è®°å½•å¹¶ä¿®å¤é—®é¢˜**
+- [ ] **Step 4: ¼ÇÂ¼²¢ĞŞ¸´ÎÊÌâ**
 
-åˆ›å»ºå¯è®¿é—®æ€§é—®é¢˜æ¸…å•å¹¶é€é¡¹ä¿®å¤ã€‚
-
----
-
-## æµ‹è¯•æ‰§è¡Œé¡ºåº
-
-### ç¬¬ä¸€æ‰¹ï¼ˆP0 - é˜»å¡æ€§ï¼‰
-
-1. âœ… Task 1.1: Button ç»„ä»¶æµ‹è¯•
-2. âœ… Task 1.2: Input ç»„ä»¶æµ‹è¯•
-3. âœ… Task 1.3: Dialog ç»„ä»¶æµ‹è¯•
-4. âœ… Task 1.4: Card ç»„ä»¶æµ‹è¯•
-5. âœ… Task 2.1: è¾“å…¥èˆ± Hub é¡µé¢æµ‹è¯•
-6. âœ… Task 2.2: åˆ†æèˆ± Hub é¡µé¢æµ‹è¯•
-7. âœ… Task 2.3: äº¤æ˜“èˆ± Hub é¡µé¢æµ‹è¯•
-8. âœ… Task 2.4: è¾“å‡ºèˆ± Hub é¡µé¢æµ‹è¯•
-9. âœ… Task 2.5: æ€»æ§èˆ± Hub é¡µé¢æµ‹è¯•
-
-**ç­‰å¾…ç”¨æˆ·ç¡®è®¤åç»§ç»­ä¸‹ä¸€æ‰¹**
-
-### ç¬¬äºŒæ‰¹ï¼ˆP1 - é‡è¦ä¼˜åŒ–ï¼‰
-
-10. Task 3.1: é¢œè‰²ç³»ç»Ÿåˆè§„æ€§æ£€æŸ¥
-11. Task 3.2: é—´è·ç³»ç»Ÿåˆè§„æ€§æ£€æŸ¥
-12. Task 3.3: å­—ä½“ç³»ç»Ÿæ£€æŸ¥
-13. Task 4.1: åŠ è½½çŠ¶æ€ä¼˜åŒ–
-14. Task 4.2: é”™è¯¯çŠ¶æ€å¤„ç†
-15. Task 4.3: ç©ºçŠ¶æ€å¤„ç†
-
-**ç­‰å¾…ç”¨æˆ·ç¡®è®¤åç»§ç»­ä¸‹ä¸€æ‰¹**
-
-### ç¬¬ä¸‰æ‰¹ï¼ˆP2 - ä½“éªŒä¼˜åŒ–ï¼‰
-
-16. Task 5.1: ç§»åŠ¨ç«¯é€‚é…æµ‹è¯•
-17. Task 6.1: å¯è®¿é—®æ€§æ£€æŸ¥
+´´½¨¿É·ÃÎÊĞÔÎÊÌâÇåµ¥²¢ÖğÏîĞŞ¸´¡£
 
 ---
 
-## è´¨é‡éªŒæ”¶æ ‡å‡†
+## ²âÊÔÖ´ĞĞË³Ğò
 
-### åŠŸèƒ½å®Œæ•´æ€§
+### µÚÒ»Åú£¨P0 - ×èÈûĞÔ£©
 
-- [ ] æ‰€æœ‰é¡µé¢çš„æ ¸å¿ƒåŠŸèƒ½å¯æ­£å¸¸ä½¿ç”¨
-- [ ] æ‰€æœ‰å¯¼èˆªé“¾æ¥æ­£ç¡®è·³è½¬
-- [ ] æ‰€æœ‰è¡¨å•éªŒè¯æ­£å¸¸å·¥ä½œ
-- [ ] æ‰€æœ‰æ•°æ®å±•ç¤ºå‡†ç¡®æ— è¯¯
+1. ? Task 1.1: Button ×é¼ş²âÊÔ
+2. ? Task 1.2: Input ×é¼ş²âÊÔ
+3. ? Task 1.3: Dialog ×é¼ş²âÊÔ
+4. ? Task 1.4: Card ×é¼ş²âÊÔ
+5. ? Task 2.1: ÊäÈë²Õ Hub Ò³Ãæ²âÊÔ
+6. ? Task 2.2: ·ÖÎö²Õ Hub Ò³Ãæ²âÊÔ
+7. ? Task 2.3: ½»Ò×²Õ Hub Ò³Ãæ²âÊÔ
+8. ? Task 2.4: Êä³ö²Õ Hub Ò³Ãæ²âÊÔ
+9. ? Task 2.5: ×Ü¿Ø²Õ Hub Ò³Ãæ²âÊÔ
 
-### è§†è§‰ä¸€è‡´æ€§
+**µÈ´ıÓÃ»§È·ÈÏºó¼ÌĞøÏÂÒ»Åú**
 
-- [ ] æ‰€æœ‰é¢œè‰²ä½¿ç”¨ theme.tokens.ts
-- [ ] æ‰€æœ‰é—´è·ç¬¦åˆ 4px æ …æ ¼ç³»ç»Ÿ
-- [ ] å­—ä½“å¤§å°ã€ç²—ç»†ç»Ÿä¸€
-- [ ] åœ†è§’ã€é˜´å½±ä¸€è‡´
+### µÚ¶şÅú£¨P1 - ÖØÒªÓÅ»¯£©
 
-### äº¤äº’ä½“éªŒ
+10. Task 3.1: ÑÕÉ«ÏµÍ³ºÏ¹æĞÔ¼ì²é
+11. Task 3.2: ¼ä¾àÏµÍ³ºÏ¹æĞÔ¼ì²é
+12. Task 3.3: ×ÖÌåÏµÍ³¼ì²é
+13. Task 4.1: ¼ÓÔØ×´Ì¬ÓÅ»¯
+14. Task 4.2: ´íÎó×´Ì¬´¦Àí
+15. Task 4.3: ¿Õ×´Ì¬´¦Àí
 
-- [ ] åŠ è½½çŠ¶æ€æ¸…æ™°å¯è§
-- [ ] é”™è¯¯æç¤ºå‹å¥½æ˜ç¡®
-- [ ] ç©ºçŠ¶æ€æœ‰å¼•å¯¼æ“ä½œ
-- [ ] å“åº”å¼å¸ƒå±€åˆç†
+**µÈ´ıÓÃ»§È·ÈÏºó¼ÌĞøÏÂÒ»Åú**
 
-### ä»£ç è´¨é‡
+### µÚÈıÅú£¨P2 - ÌåÑéÓÅ»¯£©
 
-- [ ] å•å…ƒæµ‹è¯•è¦†ç›–ç‡ > 80%
-- [ ] æ—  TypeScript ç±»å‹é”™è¯¯
-- [ ] æ—  ESLint è­¦å‘Š
-- [ ] æ¶æ„å®¡è®¡é€šè¿‡
-
----
-
-## å‚è€ƒèµ„æº
-
-- [shadcn/ui ç»„ä»¶åº“](https://ui.shadcn.com/)
-- [Tailwind CSS æ–‡æ¡£](https://tailwindcss.com/docs)
-- [React æœ€ä½³å®è·µ](https://react.dev/learn)
-- [Web å¯è®¿é—®æ€§æŒ‡å—](https://www.w3.org/WAI/tutorials/)
+16. Task 5.1: ÒÆ¶¯¶ËÊÊÅä²âÊÔ
+17. Task 6.1: ¿É·ÃÎÊĞÔ¼ì²é
 
 ---
 
-## å˜æ›´æ—¥å¿—
+## ÖÊÁ¿ÑéÊÕ±ê×¼
 
-| æ—¥æœŸ | ç‰ˆæœ¬ | å˜æ›´å†…å®¹ |
+### ¹¦ÄÜÍêÕûĞÔ
+
+- [ ] ËùÓĞÒ³ÃæµÄºËĞÄ¹¦ÄÜ¿ÉÕı³£Ê¹ÓÃ
+- [ ] ËùÓĞµ¼º½Á´½ÓÕıÈ·Ìø×ª
+- [ ] ËùÓĞ±íµ¥ÑéÖ¤Õı³£¹¤×÷
+- [ ] ËùÓĞÊı¾İÕ¹Ê¾×¼È·ÎŞÎó
+
+### ÊÓ¾õÒ»ÖÂĞÔ
+
+- [ ] ËùÓĞÑÕÉ«Ê¹ÓÃ theme.tokens.ts
+- [ ] ËùÓĞ¼ä¾à·ûºÏ 4px Õ¤¸ñÏµÍ³
+- [ ] ×ÖÌå´óĞ¡¡¢´ÖÏ¸Í³Ò»
+- [ ] Ô²½Ç¡¢ÒõÓ°Ò»ÖÂ
+
+### ½»»¥ÌåÑé
+
+- [ ] ¼ÓÔØ×´Ì¬ÇåÎú¿É¼û
+- [ ] ´íÎóÌáÊ¾ÓÑºÃÃ÷È·
+- [ ] ¿Õ×´Ì¬ÓĞÒıµ¼²Ù×÷
+- [ ] ÏìÓ¦Ê½²¼¾ÖºÏÀí
+
+### ´úÂëÖÊÁ¿
+
+- [ ] µ¥Ôª²âÊÔ¸²¸ÇÂÊ > 80%
+- [ ] ÎŞ TypeScript ÀàĞÍ´íÎó
+- [ ] ÎŞ ESLint ¾¯¸æ
+- [ ] ¼Ü¹¹Éó¼ÆÍ¨¹ı
+
+---
+
+## ²Î¿¼×ÊÔ´
+
+- [shadcn/ui ×é¼ş¿â](https://ui.shadcn.com/)
+- [Tailwind CSS ÎÄµµ](https://tailwindcss.com/docs)
+- [React ×î¼ÑÊµ¼ù](https://react.dev/learn)
+- [Web ¿É·ÃÎÊĞÔÖ¸ÄÏ](https://www.w3.org/WAI/tutorials/)
+
+---
+
+## ±ä¸üÈÕÖ¾
+
+| ÈÕÆÚ | °æ±¾ | ±ä¸üÄÚÈİ |
 |------|------|---------|
-| 2026-07-04 | v1.0.0 | åˆå§‹ç‰ˆæœ¬ï¼šå®Œæ•´çš„ UI æµ‹è¯•ä¸ä¼˜åŒ–æ–¹æ¡ˆ |
+| 2026-07-04 | v1.0.0 | ³õÊ¼°æ±¾£ºÍêÕûµÄ UI ²âÊÔÓëÓÅ»¯·½°¸ |

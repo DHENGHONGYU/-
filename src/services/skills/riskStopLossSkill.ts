@@ -14,6 +14,9 @@ import type { SkillContext, SkillDefinition, SkillResult } from './skillTypes'
 
 const logger = getLogger()
 
+/**
+ * RiskStopLossInputSchema
+ */
 export const RiskStopLossInputSchema = z.object({
   symbol: z.string(),
   stockName: z.string().optional(),
@@ -36,6 +39,9 @@ export const RiskStopLossInputSchema = z.object({
 
 export type RiskStopLossInput = z.infer<typeof RiskStopLossInputSchema>
 
+/**
+ * RiskStopLossOutputSchema
+ */
 export const RiskStopLossOutputSchema = z.object({
   /** 是否通过风控检查 */
   ok: z.boolean(),
@@ -118,6 +124,9 @@ function buildStopLossSuggestion(input: OrderRiskInput): RiskStopLossOutput['sto
   }
 }
 
+/**
+ * executeRiskStopLossSkill
+ */
 export async function executeRiskStopLossSkill(
   ctx: SkillContext,
 ): Promise<SkillResult<RiskStopLossOutput>> {
@@ -230,6 +239,9 @@ export async function executeRiskStopLossSkill(
   }
 }
 
+/**
+ * riskStopLossSkill
+ */
 export const riskStopLossSkill: SkillDefinition<RiskStopLossOutput> = {
   name: 'risk-stop-loss',
   title: '风控止损',

@@ -1,473 +1,481 @@
 ---
 title: doc-cross-check-report
+type: explanation
+domain: project
+phase: design
 tier: reference
+status: active
+maintainer: V9 Architecture Team
+summary: "¼ì²éÈÕÆÚ: 2026-07-01 ¼ì²é·¶Î§: ÆßÎ¬²É¼¯ÅäÖÃÄ£¿é£¨`/input/seven-dim`£©Ïà¹ØÂ·ÓÉ¡¢ÀàĞÍ¡¢×é¼ş¡¢²âÊÔ¡¢ÎÄµµ°æ±¾ ¼ì²éÈË: ÎÄµµ½»²æ¼ì²é´úÀí ±¨¸æ°æ±¾:..."
+tags: [project, report, plan, architecture, documentation, explanation]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-tier: reference
-code_version: 2.0.0
----
+# ÆßÎ¬²É¼¯ÅäÖÃÄ£¿é ¡ª ÎÄµµ½»²æ¼ì²é±¨¸æ
 
-# ä¸ƒç»´é‡‡é›†é…ç½®æ¨¡å— â€” æ–‡æ¡£äº¤å‰æ£€æŸ¥æŠ¥å‘Š
-
-> **æ£€æŸ¥æ—¥æœŸ**: 2026-07-01
-> **æ£€æŸ¥èŒƒå›´**: ä¸ƒç»´é‡‡é›†é…ç½®æ¨¡å—ï¼ˆ`/input/seven-dim`ï¼‰ç›¸å…³è·¯ç”±ã€ç±»å‹ã€ç»„ä»¶ã€æµ‹è¯•ã€æ–‡æ¡£ç‰ˆæœ¬
-> **æ£€æŸ¥äºº**: æ–‡æ¡£äº¤å‰æ£€æŸ¥ä»£ç†
-> **æŠ¥å‘Šç‰ˆæœ¬**: v1.1ï¼ˆ2026-07-02 æ›´æ–°ï¼šè·¯ç”±æ€»æ•° 32 â†’ 35ï¼‰
-
----
-
-## v1.1 æ›´æ–°è¯´æ˜ï¼ˆ2026-07-02ï¼‰
-
-æœ¬æ¬¡æ›´æ–°æ¶‰åŠä»¥ä¸‹å˜åŒ–ï¼Œå·²åŒæ­¥è‡³æ‰€æœ‰ç›¸å…³æ–‡æ¡£ï¼š
-
-1. **è·¯ç”±æ€»æ•°å˜æ›´**ï¼š32 æ¡ â†’ 35 æ¡
-   - æ–°å¢ `/input/collect-task`ï¼ˆé‡‡é›†ä»»åŠ¡ç›‘æ§é¡µï¼Œç»„ä»¶ `CollectTaskPage`ï¼‰
-   - æ–°å¢ `/input/fetcher`ï¼ˆæŠ“å–å¼•æ“é…ç½®é¡µï¼Œç»„ä»¶ `FetcherConfigPage`ï¼‰
-   - æ–°å¢ `/input/local-knowledge`ï¼ˆæœ¬åœ°çŸ¥è¯†åº“é¡µï¼Œç»„ä»¶ `LocalKnowledgePage`ï¼‰
-   - ä¸‰æ¡è·¯ç”±å‡å·²åŒæ­¥è‡³ `src/config/routes.ts` çš„ `ROUTE_REGISTRY` ä¸ `ROUTE_WHITELIST`
-2. **DB_VERSION å‡çº§**ï¼šv15 â†’ v16
-   - v15 æ–°å¢ `execution_logs`ã€`missing_reports` Store
-   - v16 æ–°å¢ `execution_plans`ã€`portfolios` Store
-3. **Store æ€»æ•°å˜æ›´**ï¼š20 â†’ 24
-4. **ModuleId æšä¸¾æ‰©å±•**ï¼š11 â†’ 16ï¼ˆæ–°å¢ `orderstore`/`backtest`/`execution`/`portfolio`/`dataCollector`ï¼‰
-5. **HotSectorScore å­—æ®µé‡å‘½å**ï¼š`composite` â†’ `marketEnv`ï¼Œ`triggerAction` â†’ `action`
-6. **Stock ç±»å‹å­—æ®µæ›´æ–°**ï¼šåºŸå¼ƒ `sectorCodes`/`lastUpdated`ï¼Œæ–°å¢ `industryCode`/`theme`/`sector`/`ingestedAt`/`updatedAt`ï¼Œ`dataVersion` ç±»å‹ä» `string` æ”¹ä¸º `number`
-
-å—å½±å“æ–‡æ¡£å‡å·²åŒæ­¥ï¼š`v9æ•°æ®å®ªæ³•.md`ã€`v9-indexeddb-store-schema.md`ã€`../03-architecture-standards.md`ã€`06-routing-specs.md`ã€`../10-glossary.md`ã€‚
+> **¼ì²éÈÕÆÚ**: 2026-07-01
+> **¼ì²é·¶Î§**: ÆßÎ¬²É¼¯ÅäÖÃÄ£¿é£¨`/input/seven-dim`£©Ïà¹ØÂ·ÓÉ¡¢ÀàĞÍ¡¢×é¼ş¡¢²âÊÔ¡¢ÎÄµµ°æ±¾
+> **¼ì²éÈË**: ÎÄµµ½»²æ¼ì²é´úÀí
+> **±¨¸æ°æ±¾**: v1.1£¨2026-07-02 ¸üĞÂ£ºÂ·ÓÉ×ÜÊı 32 ¡ú 35£©
 
 ---
 
-## ä¸€ã€æ£€æŸ¥æ¦‚è¦
+## v1.1 ¸üĞÂËµÃ÷£¨2026-07-02£©
 
-| æŒ‡æ ‡ | æ•°é‡ |
+±¾´Î¸üĞÂÉæ¼°ÒÔÏÂ±ä»¯£¬ÒÑÍ¬²½ÖÁËùÓĞÏà¹ØÎÄµµ£º
+
+1. **Â·ÓÉ×ÜÊı±ä¸ü**£º32 Ìõ ¡ú 35 Ìõ
+   - ĞÂÔö `/input/collect-task`£¨²É¼¯ÈÎÎñ¼à¿ØÒ³£¬×é¼ş `CollectTaskPage`£©
+   - ĞÂÔö `/input/fetcher`£¨×¥È¡ÒıÇæÅäÖÃÒ³£¬×é¼ş `FetcherConfigPage`£©
+   - ĞÂÔö `/input/local-knowledge`£¨±¾µØÖªÊ¶¿âÒ³£¬×é¼ş `LocalKnowledgePage`£©
+   - ÈıÌõÂ·ÓÉ¾ùÒÑÍ¬²½ÖÁ `src/config/routes.ts` µÄ `ROUTE_REGISTRY` Óë `ROUTE_WHITELIST`
+2. **DB_VERSION Éı¼¶**£ºv15 ¡ú v16
+   - v15 ĞÂÔö `execution_logs`¡¢`missing_reports` Store
+   - v16 ĞÂÔö `execution_plans`¡¢`portfolios` Store
+3. **Store ×ÜÊı±ä¸ü**£º20 ¡ú 24
+4. **ModuleId Ã¶¾ÙÀ©Õ¹**£º11 ¡ú 16£¨ĞÂÔö `orderstore`/`backtest`/`execution`/`portfolio`/`dataCollector`£©
+5. **HotSectorScore ×Ö¶ÎÖØÃüÃû**£º`composite` ¡ú `marketEnv`£¬`triggerAction` ¡ú `action`
+6. **Stock ÀàĞÍ×Ö¶Î¸üĞÂ**£º·ÏÆú `sectorCodes`/`lastUpdated`£¬ĞÂÔö `industryCode`/`theme`/`sector`/`ingestedAt`/`updatedAt`£¬`dataVersion` ÀàĞÍ´Ó `string` ¸ÄÎª `number`
+
+ÊÜÓ°ÏìÎÄµµ¾ùÒÑÍ¬²½£º`../../reference/V9Êı¾İÏÜ·¨.md`¡¢`v9-indexeddb-store-schema.md`¡¢`../03-architecture-standards.md`¡¢`06-routing-specs.md`¡¢`../10-glossary.md`¡£
+
+---
+
+## Ò»¡¢¼ì²é¸ÅÒª
+
+| Ö¸±ê | ÊıÁ¿ |
 |------|------|
-| æ£€æŸ¥é¡¹æ€»æ•° | 19 |
-| é€šè¿‡ï¼ˆä¸€è‡´ï¼‰ | 6 |
-| éƒ¨åˆ†ä¸€è‡´ | 3 |
-| ä¸ä¸€è‡´ | 10 |
-| é˜»å¡é¡¹ | 0 |
-| é«˜ä¼˜å…ˆçº§ä¿®å¤é¡¹ | 4 |
+| ¼ì²éÏî×ÜÊı | 19 |
+| Í¨¹ı£¨Ò»ÖÂ£© | 6 |
+| ²¿·ÖÒ»ÖÂ | 3 |
+| ²»Ò»ÖÂ | 10 |
+| ×èÈûÏî | 0 |
+| ¸ßÓÅÏÈ¼¶ĞŞ¸´Ïî | 4 |
 
-> **æ€»ä½“ç»“è®º**ï¼šä¸ƒç»´é‡‡é›†é…ç½®æ¨¡å—çš„ä»£ç å®ç°ï¼ˆStore / Page / Config / Testsï¼‰å†…éƒ¨ä¸€è‡´æ€§è‰¯å¥½ï¼Œä½†ä¸é¡¹ç›®çº§çœŸç›¸æºï¼ˆ`ROUTE_REGISTRY`ã€`../../reference/06-routing-specs.md`ã€`../../reference/data-dictionary-index.md`ã€`../../../CHANGELOG.md`ï¼‰å­˜åœ¨å¤šå¤„è„±èŠ‚ã€‚è¯¥é—®é¢˜å·²äº 2026-07-01 ä¿®å¤ï¼Œ`/input/seven-dim` å·²æ³¨å†Œåˆ° `ROUTE_REGISTRY`ï¼ˆåŸ `data-collection-route-ui-audit.md` P0 é¡¹ F-01 å·²é—­ç¯ï¼‰ã€‚
+> **×ÜÌå½áÂÛ**£ºÆßÎ¬²É¼¯ÅäÖÃÄ£¿éµÄ´úÂëÊµÏÖ£¨Store / Page / Config / Tests£©ÄÚ²¿Ò»ÖÂĞÔÁ¼ºÃ£¬µ«ÓëÏîÄ¿¼¶ÕæÏàÔ´£¨`ROUTE_REGISTRY`¡¢`../../reference/06-routing-specs.md`¡¢`../../reference/data-dictionary-index.md`¡¢`../../../CHANGELOG.md`£©´æÔÚ¶à´¦ÍÑ½Ú¡£¸ÃÎÊÌâÒÑÓÚ 2026-07-01 ĞŞ¸´£¬`/input/seven-dim` ÒÑ×¢²áµ½ `ROUTE_REGISTRY`£¨Ô­ `data-collection-route-ui-audit.md` P0 Ïî F-01 ÒÑ±Õ»·£©¡£
 
 ---
 
-## äºŒã€æ£€æŸ¥æ˜ç»†
+## ¶ş¡¢¼ì²éÃ÷Ï¸
 
-### 1. è·¯ç”±ä¸€è‡´æ€§æ£€æŸ¥
+### 1. Â·ÓÉÒ»ÖÂĞÔ¼ì²é
 
-#### 1a) ROUTE_REGISTRY è·¯ç”±æ•° vs è·¯ç”±è§„æ ¼æ–‡æ¡£å£°æ˜ â€” âœ… å·²ä¿®å¤ï¼ˆ2026-07-01ï¼‰
+#### 1a) ROUTE_REGISTRY Â·ÓÉÊı vs Â·ÓÉ¹æ¸ñÎÄµµÉùÃ÷ ¡ª ? ÒÑĞŞ¸´£¨2026-07-01£©
 
-| æ¥æº | è·¯ç”±æ•° |
+| À´Ô´ | Â·ÓÉÊı |
 |------|--------|
 | `src/config/routes.ts` ROUTE_REGISTRY | 32 |
-| `../../reference/06-routing-specs.md` ç¬¬2.1èŠ‚è¡¨æ ¼ï¼ˆç¬¬31-61è¡Œï¼‰ | 32 |
-| `../../reference/06-routing-specs.md` ç¬¬65è¡Œå£°æ˜ | 32 |
-| `../../reference/06-routing-specs.md` ç¬¬288è¡Œï¼ˆç¬¬9èŠ‚ï¼‰å£°æ˜ | 32 |
+| `../../reference/06-routing-specs.md` µÚ2.1½Ú±í¸ñ£¨µÚ31-61ĞĞ£© | 32 |
+| `../../reference/06-routing-specs.md` µÚ65ĞĞÉùÃ÷ | 32 |
+| `../../reference/06-routing-specs.md` µÚ288ĞĞ£¨µÚ9½Ú£©ÉùÃ÷ | 32 |
 
-**ä¸ä¸€è‡´ç‚¹**ï¼š
-- è¯¥é—®é¢˜å·²äº 2026-07-01 ä¿®å¤ï¼š`../../reference/06-routing-specs.md` ç¬¬9èŠ‚è·¯ç”±æ•°å·²ç»Ÿä¸€ä¸º 32 æ¡ï¼Œä¸ `routes.ts` å®é™…æ•°é‡ï¼ˆ32ï¼‰ä¸€è‡´ï¼ŒåŸ 29 vs 31 æ–‡æ¡£å†…éƒ¨çŸ›ç›¾å·²æ¶ˆé™¤ã€‚
+**²»Ò»ÖÂµã**£º
+- ¸ÃÎÊÌâÒÑÓÚ 2026-07-01 ĞŞ¸´£º`../../reference/06-routing-specs.md` µÚ9½ÚÂ·ÓÉÊıÒÑÍ³Ò»Îª 32 Ìõ£¬Óë `routes.ts` Êµ¼ÊÊıÁ¿£¨32£©Ò»ÖÂ£¬Ô­ 29 vs 31 ÎÄµµÄÚ²¿Ã¬¶ÜÒÑÏû³ı¡£
 
-**ä¿®å¤å»ºè®®**ï¼šå·²é—­ç¯ï¼ˆ2026-07-01ï¼‰ã€‚
+**ĞŞ¸´½¨Òé**£ºÒÑ±Õ»·£¨2026-07-01£©¡£
 
-#### 1b) InputHubPage é“¾æ¥è·¯å¾„æ˜¯å¦éƒ½æœ‰å¯¹åº”è·¯ç”±æ³¨å†Œ â€” âœ… å·²ä¿®å¤ï¼ˆ2026-07-01ï¼‰
+#### 1b) InputHubPage Á´½ÓÂ·¾¶ÊÇ·ñ¶¼ÓĞ¶ÔÓ¦Â·ÓÉ×¢²á ¡ª ? ÒÑĞŞ¸´£¨2026-07-01£©
 
-`src/apps/input/InputApp.tsx` ä¸­ `INPUT_MODULES`ï¼ˆç¬¬34-71è¡Œï¼‰é“¾æ¥è·¯å¾„æ£€æŸ¥ï¼š
+`src/apps/input/InputApp.tsx` ÖĞ `INPUT_MODULES`£¨µÚ34-71ĞĞ£©Á´½ÓÂ·¾¶¼ì²é£º
 
-| é“¾æ¥è·¯å¾„ | ROUTE_REGISTRY æ³¨å†Œ | çŠ¶æ€ |
+| Á´½ÓÂ·¾¶ | ROUTE_REGISTRY ×¢²á | ×´Ì¬ |
 |----------|---------------------|------|
-| `/input/dashboard` | âœ… `routes.ts:56` | é€šè¿‡ |
-| `/input/bulk-import` | âœ… `routes.ts:62` | é€šè¿‡ |
-| `/input/hot-sectors` | âœ… `routes.ts:68` | é€šè¿‡ |
-| `/input/data-test` | âœ… `routes.ts:74` | é€šè¿‡ |
-| `/input/local-knowledge` | âœ… `routes.ts:202` | é€šè¿‡ |
-| **`/input/seven-dim`** | âœ… **å·²æ³¨å†Œåˆ° ROUTE_REGISTRY** | **å·²ä¿®å¤** |
+| `/input/dashboard` | ? `routes.ts:56` | Í¨¹ı |
+| `/input/bulk-import` | ? `routes.ts:62` | Í¨¹ı |
+| `/input/hot-sectors` | ? `routes.ts:68` | Í¨¹ı |
+| `/input/data-test` | ? `routes.ts:74` | Í¨¹ı |
+| `/input/local-knowledge` | ? `routes.ts:202` | Í¨¹ı |
+| **`/input/seven-dim`** | ? **ÒÑ×¢²áµ½ ROUTE_REGISTRY** | **ÒÑĞŞ¸´** |
 
-**ä¸ä¸€è‡´ç‚¹**ï¼š
-- è¯¥é—®é¢˜å·²äº 2026-07-01 ä¿®å¤ï¼š`/input/seven-dim` å·²æ³¨å†Œåˆ° `src/config/routes.ts` çš„ `ROUTE_REGISTRY`ï¼Œ`ROUTE_WHITELIST` å·²è¦†ç›–è¯¥è·¯å¾„ï¼Œ`isPathWhitelisted('/input/seven-dim')` ç²¾ç¡®åŒ¹é…é€šè¿‡ã€‚
+**²»Ò»ÖÂµã**£º
+- ¸ÃÎÊÌâÒÑÓÚ 2026-07-01 ĞŞ¸´£º`/input/seven-dim` ÒÑ×¢²áµ½ `src/config/routes.ts` µÄ `ROUTE_REGISTRY`£¬`ROUTE_WHITELIST` ÒÑ¸²¸Ç¸ÃÂ·¾¶£¬`isPathWhitelisted('/input/seven-dim')` ¾«È·Æ¥ÅäÍ¨¹ı¡£
 
-**ä¿®å¤å»ºè®®**ï¼šå·²é—­ç¯ï¼ˆ2026-07-01ï¼‰ã€‚
+**ĞŞ¸´½¨Òé**£ºÒÑ±Õ»·£¨2026-07-01£©¡£
 
-#### 1c) `/input/seven-dim` æ˜¯å¦åœ¨æ‰€æœ‰æ–‡æ¡£ä¸­ä¸€è‡´å‡ºç° â€” âœ… å·²ä¿®å¤ï¼ˆ2026-07-01ï¼‰
+#### 1c) `/input/seven-dim` ÊÇ·ñÔÚËùÓĞÎÄµµÖĞÒ»ÖÂ³öÏÖ ¡ª ? ÒÑĞŞ¸´£¨2026-07-01£©
 
-| æ–‡ä»¶ | æ˜¯å¦åŒ…å« `/input/seven-dim` | è¡Œå· |
+| ÎÄ¼ş | ÊÇ·ñ°üº¬ `/input/seven-dim` | ĞĞºÅ |
 |------|----------------------------|------|
-| `src/config/routes.ts` (ROUTE_REGISTRY) | âœ… å·²æ³¨å†Œ | â€” |
-| `src/apps/input/InputApp.tsx` (å­è·¯ç”±) | âœ… å­˜åœ¨ | 41 |
-| `src/apps/input/InputApp.tsx` (å¡ç‰‡é“¾æ¥) | âœ… å­˜åœ¨ | 68 |
-| `../../reference/06-routing-specs.md` (ç¬¬2.1èŠ‚è·¯ç”±è¡¨) | âœ… å·²è¡¥å…¥ | â€” |
-| `../../reference/06-routing-specs.md` (ç¬¬3.2èŠ‚è¾“å…¥èˆ±å­è·¯ç”±æ˜ å°„) | âœ… å·²è¡¥å…¥ | â€” |
-| `../../reference/06-routing-specs.md` (ç¬¬8èŠ‚è·¯ç”±â†’ç»„ä»¶æ˜ å°„) | âœ… å·²è¡¥å…¥ | â€” |
-| `../../reference/data-collection-route-ui-audit.md` | âœ… å·²è®°å½•å¹¶æ ‡è®°ä¸ºå·²ä¿®å¤ | 16, 30, 142, 155, 226 |
+| `src/config/routes.ts` (ROUTE_REGISTRY) | ? ÒÑ×¢²á | ¡ª |
+| `src/apps/input/InputApp.tsx` (×ÓÂ·ÓÉ) | ? ´æÔÚ | 41 |
+| `src/apps/input/InputApp.tsx` (¿¨Æ¬Á´½Ó) | ? ´æÔÚ | 68 |
+| `../../reference/06-routing-specs.md` (µÚ2.1½ÚÂ·ÓÉ±í) | ? ÒÑ²¹Èë | ¡ª |
+| `../../reference/06-routing-specs.md` (µÚ3.2½ÚÊäÈë²Õ×ÓÂ·ÓÉÓ³Éä) | ? ÒÑ²¹Èë | ¡ª |
+| `../../reference/06-routing-specs.md` (µÚ8½ÚÂ·ÓÉ¡ú×é¼şÓ³Éä) | ? ÒÑ²¹Èë | ¡ª |
+| `../../reference/data-collection-route-ui-audit.md` | ? ÒÑ¼ÇÂ¼²¢±ê¼ÇÎªÒÑĞŞ¸´ | 16, 30, 142, 155, 226 |
 
-**ä¿®å¤å»ºè®®**ï¼šå·²é—­ç¯ï¼ˆ2026-07-01ï¼‰ã€‚è·¯ç”±å·²æ³¨å†Œï¼Œæ–‡æ¡£å·²è¡¥å…¥ï¼Œè·¯ç”±æ€»æ•°å·²æ›´æ–°ä¸º 32 æ¡ã€‚
+**ĞŞ¸´½¨Òé**£ºÒÑ±Õ»·£¨2026-07-01£©¡£Â·ÓÉÒÑ×¢²á£¬ÎÄµµÒÑ²¹Èë£¬Â·ÓÉ×ÜÊıÒÑ¸üĞÂÎª 32 Ìõ¡£
 
-#### 1d) æ–‡æ¡£ä¸­åˆ—å‡ºä½†ä»£ç ä¸­ä¸å­˜åœ¨çš„è·¯ç”± â€” âœ… å·²ä¿®å¤ï¼ˆ2026-07-01ï¼‰
+#### 1d) ÎÄµµÖĞÁĞ³öµ«´úÂëÖĞ²»´æÔÚµÄÂ·ÓÉ ¡ª ? ÒÑĞŞ¸´£¨2026-07-01£©
 
-**ä¸ä¸€è‡´ç‚¹**ï¼š
-- è¯¥é—®é¢˜å·²äº 2026-07-01 ä¿®å¤ï¼š`../../reference/06-routing-specs.md` ç¬¬8èŠ‚å·²åˆ é™¤ `/analysis/news-v6` æ®‹ç•™è¡Œï¼Œä¸ä»£ç ä¿æŒä¸€è‡´ã€‚
-- ç¬¬8èŠ‚åˆ—å‡ºçš„ `/input/hub`ã€`/analysis/hub`ã€`/trading/hub`ã€`/command/hub` å±"å·²æ¥å—åå·®"ï¼ˆHub é¡µç”± PortalShell å†…éƒ¨åˆ†å‘ï¼‰ï¼Œä¸è®¡ä¸ºä¸ä¸€è‡´ã€‚
+**²»Ò»ÖÂµã**£º
+- ¸ÃÎÊÌâÒÑÓÚ 2026-07-01 ĞŞ¸´£º`../../reference/06-routing-specs.md` µÚ8½ÚÒÑÉ¾³ı `/analysis/news-v6` ²ĞÁôĞĞ£¬Óë´úÂë±£³ÖÒ»ÖÂ¡£
+- µÚ8½ÚÁĞ³öµÄ `/input/hub`¡¢`/analysis/hub`¡¢`/trading/hub`¡¢`/command/hub` Êô"ÒÑ½ÓÊÜÆ«²î"£¨Hub Ò³ÓÉ PortalShell ÄÚ²¿·Ö·¢£©£¬²»¼ÆÎª²»Ò»ÖÂ¡£
 
-**ä¿®å¤å»ºè®®**ï¼šå·²é—­ç¯ï¼ˆ2026-07-01ï¼‰ã€‚
+**ĞŞ¸´½¨Òé**£ºÒÑ±Õ»·£¨2026-07-01£©¡£
 
-#### 1e) ä»£ç ä¸­å­˜åœ¨ä½†æ–‡æ¡£ä¸­æœªåˆ—å‡ºçš„è·¯ç”± â€” âœ… å·²ä¿®å¤ï¼ˆ2026-07-01ï¼‰
+#### 1e) ´úÂëÖĞ´æÔÚµ«ÎÄµµÖĞÎ´ÁĞ³öµÄÂ·ÓÉ ¡ª ? ÒÑĞŞ¸´£¨2026-07-01£©
 
-**ä¸ä¸€è‡´ç‚¹**ï¼š
-- è¯¥é—®é¢˜å·²äº 2026-07-01 ä¿®å¤ï¼š`/input/seven-dim` å·²åœ¨ `../../reference/06-routing-specs.md` ç¬¬2.1èŠ‚ã€ç¬¬3.2èŠ‚ã€ç¬¬8èŠ‚ä¸­è¡¥å…¥ã€‚
-- `/input/hub` å±è®¾è®¡é€‰æ‹©ï¼ˆç”± CabinApp å†…éƒ¨ Routes å¤„ç†ï¼‰ï¼Œä¸è®¡ä¸ºä¸ä¸€è‡´ã€‚
+**²»Ò»ÖÂµã**£º
+- ¸ÃÎÊÌâÒÑÓÚ 2026-07-01 ĞŞ¸´£º`/input/seven-dim` ÒÑÔÚ `../../reference/06-routing-specs.md` µÚ2.1½Ú¡¢µÚ3.2½Ú¡¢µÚ8½ÚÖĞ²¹Èë¡£
+- `/input/hub` ÊôÉè¼ÆÑ¡Ôñ£¨ÓÉ CabinApp ÄÚ²¿ Routes ´¦Àí£©£¬²»¼ÆÎª²»Ò»ÖÂ¡£
 
-**ä¿®å¤å»ºè®®**ï¼šå·²é—­ç¯ï¼ˆ2026-07-01ï¼‰ã€‚
+**ĞŞ¸´½¨Òé**£ºÒÑ±Õ»·£¨2026-07-01£©¡£
 
 ---
 
-### 2. ç±»å‹å®šä¹‰ä¸€è‡´æ€§æ£€æŸ¥
+### 2. ÀàĞÍ¶¨ÒåÒ»ÖÂĞÔ¼ì²é
 
-#### 2a) collectConfig.ts å¯¼å‡ºç±»å‹æ˜¯å¦åœ¨æ•°æ®å­—å…¸ä¸­æœ‰å¯¹åº”æ¡ç›® â€” âŒ ä¸ä¸€è‡´
+#### 2a) collectConfig.ts µ¼³öÀàĞÍÊÇ·ñÔÚÊı¾İ×ÖµäÖĞÓĞ¶ÔÓ¦ÌõÄ¿ ¡ª ? ²»Ò»ÖÂ
 
-`src/config/collectConfig.ts` å¯¼å‡ºçš„ç±»å‹ä¸å¸¸é‡ï¼š
+`src/config/collectConfig.ts` µ¼³öµÄÀàĞÍÓë³£Á¿£º
 
-| å¯¼å‡ºé¡¹ | ç±»å‹ | æ•°æ®å­—å…¸æ¡ç›® |
+| µ¼³öÏî | ÀàĞÍ | Êı¾İ×ÖµäÌõÄ¿ |
 |--------|------|--------------|
-| `UpdateFrequency` | type | âŒ æ—  |
-| `DataSourceType` | type | âŒ æ—  |
-| `StorageType` | type | âŒ æ—  |
-| `DimensionImportance` | type | âŒ æ—  |
-| `DimensionConfig` | interface | âŒ æ—  |
-| `StrategyTemplateId` | type | âŒ æ—  |
-| `StrategyTemplate` | interface | âŒ æ—  |
-| `DEFAULT_DIMENSIONS` | const | âŒ æ—  |
-| `STRATEGY_TEMPLATES` | const | âŒ æ—  |
-| `GLOBAL_LIMITS` | const | âŒ æ—  |
+| `UpdateFrequency` | type | ? ÎŞ |
+| `DataSourceType` | type | ? ÎŞ |
+| `StorageType` | type | ? ÎŞ |
+| `DimensionImportance` | type | ? ÎŞ |
+| `DimensionConfig` | interface | ? ÎŞ |
+| `StrategyTemplateId` | type | ? ÎŞ |
+| `StrategyTemplate` | interface | ? ÎŞ |
+| `DEFAULT_DIMENSIONS` | const | ? ÎŞ |
+| `STRATEGY_TEMPLATES` | const | ? ÎŞ |
+| `GLOBAL_LIMITS` | const | ? ÎŞ |
 
-**ä¸ä¸€è‡´ç‚¹**ï¼š
-- `../../reference/data-dictionary-index.md` çš„"æŒ‰æ¨¡å—ç´¢å¼•"è¡¨æ ¼ï¼ˆç¬¬13-20è¡Œï¼‰æœªåŒ…å«ä¸ƒç»´é‡‡é›†é…ç½®æ¨¡å—æ¡ç›®ã€‚
-- "é€šç”¨ç±»å‹ä¸å¸¸é‡"è¡¨æ ¼ï¼ˆç¬¬26-43è¡Œï¼‰æœªåˆ—å‡º `src/config/collectConfig.ts`ã€‚
+**²»Ò»ÖÂµã**£º
+- `../../reference/data-dictionary-index.md` µÄ"°´Ä£¿éË÷Òı"±í¸ñ£¨µÚ13-20ĞĞ£©Î´°üº¬ÆßÎ¬²É¼¯ÅäÖÃÄ£¿éÌõÄ¿¡£
+- "Í¨ÓÃÀàĞÍÓë³£Á¿"±í¸ñ£¨µÚ26-43ĞĞ£©Î´ÁĞ³ö `src/config/collectConfig.ts`¡£
 
-**ä¿®å¤å»ºè®®**ï¼š
-1. åœ¨ `../../reference/data-dictionary-index.md` "æŒ‰æ¨¡å—ç´¢å¼•"è¡¨æ–°å¢ä¸€è¡Œï¼šä¸ƒç»´é‡‡é›†é…ç½®æ¨¡å— â†’ æ–°å»º `docs/data-collection/COLLECT_CONFIG_data-definition.md`ã€‚
-2. åœ¨"é€šç”¨ç±»å‹ä¸å¸¸é‡"è¡¨æ–°å¢ `src/config/collectConfig.ts` æ¡ç›®ã€‚
+**ĞŞ¸´½¨Òé**£º
+1. ÔÚ `../../reference/data-dictionary-index.md` "°´Ä£¿éË÷Òı"±íĞÂÔöÒ»ĞĞ£ºÆßÎ¬²É¼¯ÅäÖÃÄ£¿é ¡ú ĞÂ½¨ `docs/data-collection/COLLECT_CONFIG_data-definition.md`¡£
+2. ÔÚ"Í¨ÓÃÀàĞÍÓë³£Á¿"±íĞÂÔö `src/config/collectConfig.ts` ÌõÄ¿¡£
 
-#### 2b) sevenDimConfigStore.ts çš„ State æ¥å£å­—æ®µæ˜¯å¦ä¸æ•°æ®å­—å…¸ä¸€è‡´ â€” âŒ ä¸ä¸€è‡´
+#### 2b) sevenDimConfigStore.ts µÄ State ½Ó¿Ú×Ö¶ÎÊÇ·ñÓëÊı¾İ×ÖµäÒ»ÖÂ ¡ª ? ²»Ò»ÖÂ
 
-`src/store/sevenDimConfigStore.ts:35-87` å®šä¹‰äº† `SevenDimConfigState` æ¥å£ï¼Œå« 10 ä¸ªçŠ¶æ€å­—æ®µã€4 ä¸ªæ´¾ç”Ÿè®¡ç®—ã€10 ä¸ª action æ–¹æ³•ã€‚
+`src/store/sevenDimConfigStore.ts:35-87` ¶¨ÒåÁË `SevenDimConfigState` ½Ó¿Ú£¬º¬ 10 ¸ö×´Ì¬×Ö¶Î¡¢4 ¸öÅÉÉú¼ÆËã¡¢10 ¸ö action ·½·¨¡£
 
-**ä¸ä¸€è‡´ç‚¹**ï¼š
-- æ•°æ®å­—å…¸ä¸­æ—  `sevenDimConfigStore` æ¡ç›®ï¼Œæ— æ³•è¿›è¡Œå­—æ®µçº§æ¯”å¯¹ã€‚
+**²»Ò»ÖÂµã**£º
+- Êı¾İ×ÖµäÖĞÎŞ `sevenDimConfigStore` ÌõÄ¿£¬ÎŞ·¨½øĞĞ×Ö¶Î¼¶±È¶Ô¡£
 
-**ä¿®å¤å»ºè®®**ï¼šåœ¨æ•°æ®å­—å…¸ä¸­ç™»è®° `SevenDimConfigState` çš„å…¨éƒ¨å­—æ®µã€action ç­¾åä¸åˆå§‹å€¼ã€‚
+**ĞŞ¸´½¨Òé**£ºÔÚÊı¾İ×ÖµäÖĞµÇ¼Ç `SevenDimConfigState` µÄÈ«²¿×Ö¶Î¡¢action Ç©ÃûÓë³õÊ¼Öµ¡£
 
-#### 2c) DimensionConfig çš„ fields æ˜¯å¦ä¸ types.ts ä¸­çš„ç›¸å…³ç±»å‹å…¼å®¹ â€” âœ… å·²ä¿®å¤ï¼ˆ2026-07-01ï¼‰
+#### 2c) DimensionConfig µÄ fields ÊÇ·ñÓë types.ts ÖĞµÄÏà¹ØÀàĞÍ¼æÈİ ¡ª ? ÒÑĞŞ¸´£¨2026-07-01£©
 
-| ç±»å‹ | æ¥æº | ç»´åº¦è¦†ç›– |
+| ÀàĞÍ | À´Ô´ | Î¬¶È¸²¸Ç |
 |------|------|----------|
-| `DimensionConfig.code` | `collectConfig.ts:102` | `string`ï¼Œå®é™…å€¼ `01`~`08` |
-| `DataDimensionType` | `types.ts:694-702` | å·²æ‰©å±•è‡³ 8 ç»´åº¦ï¼ˆ`01_basic`~`08_research`ï¼‰ |
-| `DataDimensionMeta.code` | `types.ts:705` | `DataDimensionType`ï¼ˆ8ä¸ªï¼‰ |
-| `DimensionStatus` | `types.ts:713` | `Record<string, DimensionStatus>` æ³›å‹ |
+| `DimensionConfig.code` | `collectConfig.ts:102` | `string`£¬Êµ¼ÊÖµ `01`~`08` |
+| `DataDimensionType` | `types.ts:694-702` | ÒÑÀ©Õ¹ÖÁ 8 Î¬¶È£¨`01_basic`~`08_research`£© |
+| `DataDimensionMeta.code` | `types.ts:705` | `DataDimensionType`£¨8¸ö£© |
+| `DimensionStatus` | `types.ts:713` | `Record<string, DimensionStatus>` ·ºĞÍ |
 
-**ä¸ä¸€è‡´ç‚¹**ï¼š
-- è¯¥é—®é¢˜å·²äº 2026-07-01 ä¿®å¤ï¼š`src/data/types.ts` çš„ `DataDimensionType` è”åˆç±»å‹å·²æ‰©å±•è‡³ 8 ç»´åº¦ï¼Œæ–°å¢ `'08_research'`ï¼ˆç ”æŠ¥ä¸­å¿ƒï¼‰ï¼Œä¸ `collectConfig.ts` çš„ `DEFAULT_DIMENSIONS` 8 ä¸ªç»´åº¦å®Œå…¨å¯¹é½ã€‚
-- `DimensionConfig.fields` ä¸º `string[]`ï¼Œä¸ `types.ts` ä¸­çš„å­—æ®µæ— å¼ºç±»å‹å…³è”ï¼Œå±å¼±è€¦åˆï¼Œå¯æ¥å—ã€‚
+**²»Ò»ÖÂµã**£º
+- ¸ÃÎÊÌâÒÑÓÚ 2026-07-01 ĞŞ¸´£º`src/data/types.ts` µÄ `DataDimensionType` ÁªºÏÀàĞÍÒÑÀ©Õ¹ÖÁ 8 Î¬¶È£¬ĞÂÔö `'08_research'`£¨ÑĞ±¨ÖĞĞÄ£©£¬Óë `collectConfig.ts` µÄ `DEFAULT_DIMENSIONS` 8 ¸öÎ¬¶ÈÍêÈ«¶ÔÆë¡£
+- `DimensionConfig.fields` Îª `string[]`£¬Óë `types.ts` ÖĞµÄ×Ö¶ÎÎŞÇ¿ÀàĞÍ¹ØÁª£¬ÊôÈõñîºÏ£¬¿É½ÓÊÜ¡£
 
-**ä¿®å¤å»ºè®®**ï¼šå·²é—­ç¯ï¼ˆ2026-07-01ï¼‰ã€‚
+**ĞŞ¸´½¨Òé**£ºÒÑ±Õ»·£¨2026-07-01£©¡£
 
-#### 2d) DEFAULT_DIMENSIONS çš„8ä¸ªç»´åº¦ code æ˜¯å¦ä¸æ–‡æ¡£æè¿°ä¸€è‡´ â€” âœ… é€šè¿‡
+#### 2d) DEFAULT_DIMENSIONS µÄ8¸öÎ¬¶È code ÊÇ·ñÓëÎÄµµÃèÊöÒ»ÖÂ ¡ª ? Í¨¹ı
 
-| ç»´åº¦ code | åç§° | collectConfig.ts | æ–‡æ¡£æè¿° |
+| Î¬¶È code | Ãû³Æ | collectConfig.ts | ÎÄµµÃèÊö |
 |-----------|------|------------------|----------|
-| 01 | åŸºæœ¬ä¿¡æ¯ | âœ… `collectConfig.ts:198` | âœ… ä¸€è‡´ |
-| 02 | Kçº¿æ•°æ® | âœ… `collectConfig.ts:210` | âœ… ä¸€è‡´ |
-| 03 | ç­¹ç åˆ†å¸ƒ | âœ… `collectConfig.ts:222` | âœ… ä¸€è‡´ |
-| 04 | é‡å¤§äº‹é¡¹ | âœ… `collectConfig.ts:234` | âœ… ä¸€è‡´ |
-| 05 | çƒ­ç‚¹æ–°é—» | âœ… `collectConfig.ts:246` | âœ… ä¸€è‡´ |
-| 06 | è¡Œä¸šç«å“ | âœ… `collectConfig.ts:258` | âœ… ä¸€è‡´ |
-| 07 | å…³è”æŒ‡æ•° | âœ… `collectConfig.ts:270` | âœ… ä¸€è‡´ |
-| 08 | ç ”æŠ¥ä¸­å¿ƒ | âœ… `collectConfig.ts:282` | âœ… `data-collection-gap-analysis.md:68` æè¿°"8ç»´åº¦" |
+| 01 | »ù±¾ĞÅÏ¢ | ? `collectConfig.ts:198` | ? Ò»ÖÂ |
+| 02 | KÏßÊı¾İ | ? `collectConfig.ts:210` | ? Ò»ÖÂ |
+| 03 | ³ïÂë·Ö²¼ | ? `collectConfig.ts:222` | ? Ò»ÖÂ |
+| 04 | ÖØ´óÊÂÏî | ? `collectConfig.ts:234` | ? Ò»ÖÂ |
+| 05 | ÈÈµãĞÂÎÅ | ? `collectConfig.ts:246` | ? Ò»ÖÂ |
+| 06 | ĞĞÒµ¾ºÆ· | ? `collectConfig.ts:258` | ? Ò»ÖÂ |
+| 07 | ¹ØÁªÖ¸Êı | ? `collectConfig.ts:270` | ? Ò»ÖÂ |
+| 08 | ÑĞ±¨ÖĞĞÄ | ? `collectConfig.ts:282` | ? `data-collection-gap-analysis.md:68` ÃèÊö"8Î¬¶È" |
 
-**ç»“è®º**ï¼š8 ä¸ªç»´åº¦ code ä¸æ–‡æ¡£"ä¸ƒç»´+ç ”æŠ¥ä¸­å¿ƒ=8ç»´åº¦"æè¿°ä¸€è‡´ã€‚
+**½áÂÛ**£º8 ¸öÎ¬¶È code ÓëÎÄµµ"ÆßÎ¬+ÑĞ±¨ÖĞĞÄ=8Î¬¶È"ÃèÊöÒ»ÖÂ¡£
 
 ---
 
-### 3. ç»„ä»¶ä¾èµ–ä¸€è‡´æ€§æ£€æŸ¥
+### 3. ×é¼şÒÀÀµÒ»ÖÂĞÔ¼ì²é
 
-#### 3a) SevenDimConfigPage å¯¼å…¥çš„ Store æ–¹æ³•æ˜¯å¦éƒ½åœ¨ Store ä¸­å®šä¹‰ â€” âœ… é€šè¿‡
+#### 3a) SevenDimConfigPage µ¼ÈëµÄ Store ·½·¨ÊÇ·ñ¶¼ÔÚ Store ÖĞ¶¨Òå ¡ª ? Í¨¹ı
 
-`src/pages/input/SevenDimConfigPage.tsx` ä½¿ç”¨çš„ Store æ–¹æ³•/æ´¾ç”Ÿè®¡ç®—ï¼š
+`src/pages/input/SevenDimConfigPage.tsx` Ê¹ÓÃµÄ Store ·½·¨/ÅÉÉú¼ÆËã£º
 
-| æ–¹æ³• | Store å®šä¹‰è¡Œå· | çŠ¶æ€ |
+| ·½·¨ | Store ¶¨ÒåĞĞºÅ | ×´Ì¬ |
 |------|----------------|------|
-| `enabledCount()` | `sevenDimConfigStore.ts:58, 121` | âœ… |
-| `monthlyCallEstimate()` | `sevenDimConfigStore.ts:60, 123` | âœ… |
-| `isClickable()` | `sevenDimConfigStore.ts:62, 126` | âœ… |
-| `tooltipText()` | `sevenDimConfigStore.ts:64, 131` | âœ… |
-| `applyTemplate()` | `sevenDimConfigStore.ts:68, 139` | âœ… |
-| `toggleDimension()` | `sevenDimConfigStore.ts:70, 159` | âœ… |
-| `setSymbolCount()` | `sevenDimConfigStore.ts:76, 193` | âœ… |
-| `setHistoryDays()` | `sevenDimConfigStore.ts:78, 199` | âœ… |
-| `reset()` | `sevenDimConfigStore.ts:80, 204` | âœ… |
-| `saveConfig()` | `sevenDimConfigStore.ts:82, 219` | âœ… |
-| `runCollection()` | `sevenDimConfigStore.ts:84, 246` | âœ… |
-| `clearError()` | `sevenDimConfigStore.ts:86, 275` | âœ… |
+| `enabledCount()` | `sevenDimConfigStore.ts:58, 121` | ? |
+| `monthlyCallEstimate()` | `sevenDimConfigStore.ts:60, 123` | ? |
+| `isClickable()` | `sevenDimConfigStore.ts:62, 126` | ? |
+| `tooltipText()` | `sevenDimConfigStore.ts:64, 131` | ? |
+| `applyTemplate()` | `sevenDimConfigStore.ts:68, 139` | ? |
+| `toggleDimension()` | `sevenDimConfigStore.ts:70, 159` | ? |
+| `setSymbolCount()` | `sevenDimConfigStore.ts:76, 193` | ? |
+| `setHistoryDays()` | `sevenDimConfigStore.ts:78, 199` | ? |
+| `reset()` | `sevenDimConfigStore.ts:80, 204` | ? |
+| `saveConfig()` | `sevenDimConfigStore.ts:82, 219` | ? |
+| `runCollection()` | `sevenDimConfigStore.ts:84, 246` | ? |
+| `clearError()` | `sevenDimConfigStore.ts:86, 275` | ? |
 
-**ç»“è®º**ï¼šé¡µé¢è°ƒç”¨çš„æ‰€æœ‰æ–¹æ³•å‡åœ¨ Store ä¸­å®šä¹‰ã€‚
+**½áÂÛ**£ºÒ³Ãæµ÷ÓÃµÄËùÓĞ·½·¨¾ùÔÚ Store ÖĞ¶¨Òå¡£
 
-#### 3b) SevenDimConfigPage å¯¼å…¥çš„é…ç½®å¸¸é‡æ˜¯å¦éƒ½åœ¨ collectConfig ä¸­å¯¼å‡º â€” âœ… é€šè¿‡
+#### 3b) SevenDimConfigPage µ¼ÈëµÄÅäÖÃ³£Á¿ÊÇ·ñ¶¼ÔÚ collectConfig ÖĞµ¼³ö ¡ª ? Í¨¹ı
 
-`SevenDimConfigPage.tsx:43-55` å¯¼å…¥é¡¹æ£€æŸ¥ï¼š
+`SevenDimConfigPage.tsx:43-55` µ¼ÈëÏî¼ì²é£º
 
-| å¯¼å…¥é¡¹ | collectConfig.ts å¯¼å‡º | çŠ¶æ€ |
+| µ¼ÈëÏî | collectConfig.ts µ¼³ö | ×´Ì¬ |
 |--------|----------------------|------|
-| `STRATEGY_TEMPLATES` | `collectConfig.ts:143` | âœ… |
-| `DEFAULT_DIMENSIONS` | `collectConfig.ts:195` | âœ… |
-| `FREQUENCY_LABELS` | `collectConfig.ts:31` | âœ… |
-| `DATA_SOURCE_LABELS` | `collectConfig.ts:63` | âœ… |
-| `STORAGE_TYPE_LABELS` | `collectConfig.ts:78` | âœ… |
-| `IMPORTANCE_LABELS` | `collectConfig.ts:89` | âœ… |
-| `IMPORTANCE_BADGE_VARIANT` | `collectConfig.ts:309` | âœ… |
-| `DIMENSION_COLORS` | `collectConfig.ts:298` | âœ… |
-| `GLOBAL_LIMITS` | `collectConfig.ts:320` | âœ… |
-| `StrategyTemplateId` (type) | `collectConfig.ts:127` | âœ… |
-| `UpdateFrequency` (type) | `collectConfig.ts:19` | âœ… |
+| `STRATEGY_TEMPLATES` | `collectConfig.ts:143` | ? |
+| `DEFAULT_DIMENSIONS` | `collectConfig.ts:195` | ? |
+| `FREQUENCY_LABELS` | `collectConfig.ts:31` | ? |
+| `DATA_SOURCE_LABELS` | `collectConfig.ts:63` | ? |
+| `STORAGE_TYPE_LABELS` | `collectConfig.ts:78` | ? |
+| `IMPORTANCE_LABELS` | `collectConfig.ts:89` | ? |
+| `IMPORTANCE_BADGE_VARIANT` | `collectConfig.ts:309` | ? |
+| `DIMENSION_COLORS` | `collectConfig.ts:298` | ? |
+| `GLOBAL_LIMITS` | `collectConfig.ts:320` | ? |
+| `StrategyTemplateId` (type) | `collectConfig.ts:127` | ? |
+| `UpdateFrequency` (type) | `collectConfig.ts:19` | ? |
 
-**ç»“è®º**ï¼šæ‰€æœ‰å¯¼å…¥é¡¹å‡åœ¨ `collectConfig.ts` ä¸­å¯¼å‡ºã€‚
+**½áÂÛ**£ºËùÓĞµ¼ÈëÏî¾ùÔÚ `collectConfig.ts` ÖĞµ¼³ö¡£
 
-#### 3c) SevenDimConfigPage ä½¿ç”¨çš„UIç»„ä»¶æ˜¯å¦éƒ½åœ¨ç»„ä»¶åº“æŒ‡å—ä¸­æœ‰è®°å½• â€” âŒ ä¸ä¸€è‡´
+#### 3c) SevenDimConfigPage Ê¹ÓÃµÄUI×é¼şÊÇ·ñ¶¼ÔÚ×é¼ş¿âÖ¸ÄÏÖĞÓĞ¼ÇÂ¼ ¡ª ? ²»Ò»ÖÂ
 
-`SevenDimConfigPage.tsx` ä½¿ç”¨çš„UIç»„ä»¶ vs `./component-library-guide.md` è®°å½•ï¼š
+`SevenDimConfigPage.tsx` Ê¹ÓÃµÄUI×é¼ş vs `./component-library-guide.md` ¼ÇÂ¼£º
 
-| UIç»„ä»¶ | ç»„ä»¶åº“æŒ‡å—è®°å½• | çŠ¶æ€ |
+| UI×é¼ş | ×é¼ş¿âÖ¸ÄÏ¼ÇÂ¼ | ×´Ì¬ |
 |--------|----------------|------|
-| `Card` / `CardHeader` / `CardTitle` / `CardDescription` / `CardContent` | âœ… ç¬¬183-185è¡Œ | é€šè¿‡ |
-| `Button` | âœ… ç¬¬42-46è¡Œ | é€šè¿‡ |
-| `Switch` | âœ… ç¬¬92-104è¡Œ | é€šè¿‡ |
-| `Input` | âœ… ç¬¬55-72è¡Œ | é€šè¿‡ |
-| `Separator` | âœ… ç¬¬187-189è¡Œ | é€šè¿‡ |
-| `ErrorBoundary` | âŒ æœªè®°å½• | ä¸ä¸€è‡´ |
-| **`Badge`** | âŒ **æœªè®°å½•** | **ä¸ä¸€è‡´** |
-| **`Label`** | âŒ **æœªè®°å½•** | **ä¸ä¸€è‡´** |
-| **`Progress`** | âŒ **æœªè®°å½•** | **ä¸ä¸€è‡´** |
-| **`Breadcrumb` åŠå­ç»„ä»¶** | âŒ **æœªè®°å½•** | **ä¸ä¸€è‡´** |
+| `Card` / `CardHeader` / `CardTitle` / `CardDescription` / `CardContent` | ? µÚ183-185ĞĞ | Í¨¹ı |
+| `Button` | ? µÚ42-46ĞĞ | Í¨¹ı |
+| `Switch` | ? µÚ92-104ĞĞ | Í¨¹ı |
+| `Input` | ? µÚ55-72ĞĞ | Í¨¹ı |
+| `Separator` | ? µÚ187-189ĞĞ | Í¨¹ı |
+| `ErrorBoundary` | ? Î´¼ÇÂ¼ | ²»Ò»ÖÂ |
+| **`Badge`** | ? **Î´¼ÇÂ¼** | **²»Ò»ÖÂ** |
+| **`Label`** | ? **Î´¼ÇÂ¼** | **²»Ò»ÖÂ** |
+| **`Progress`** | ? **Î´¼ÇÂ¼** | **²»Ò»ÖÂ** |
+| **`Breadcrumb` ¼°×Ó×é¼ş** | ? **Î´¼ÇÂ¼** | **²»Ò»ÖÂ** |
 
-**ä¸ä¸€è‡´ç‚¹**ï¼š
-- `./component-library-guide.md` ç»„ä»¶æ¸…å•ç¼ºå°‘ `Badge`ã€`Label`ã€`Progress`ã€`Breadcrumb` å››ä¸ªç»„ä»¶çš„æ–‡æ¡£æ¡ç›®ï¼Œè€Œè¿™äº›ç»„ä»¶åœ¨ `src/components/ui/` ä¸‹å·²å®ç°ä¸”è¢« SevenDimConfigPage ä½¿ç”¨ã€‚
+**²»Ò»ÖÂµã**£º
+- `./component-library-guide.md` ×é¼şÇåµ¥È±ÉÙ `Badge`¡¢`Label`¡¢`Progress`¡¢`Breadcrumb` ËÄ¸ö×é¼şµÄÎÄµµÌõÄ¿£¬¶øÕâĞ©×é¼şÔÚ `src/components/ui/` ÏÂÒÑÊµÏÖÇÒ±» SevenDimConfigPage Ê¹ÓÃ¡£
 
-**ä¿®å¤å»ºè®®**ï¼šåœ¨ `component-library-guide.md` "åŸºç¡€ç»„ä»¶"æˆ–"åé¦ˆç»„ä»¶"/"å¸ƒå±€ç»„ä»¶"ç« èŠ‚è¡¥å…¥ `Badge`ã€`Label`ã€`Progress`ã€`Breadcrumb` çš„ Propsã€å˜ä½“ã€æ— éšœç¢å±æ€§ä¸ä½¿ç”¨ç¤ºä¾‹ã€‚
+**ĞŞ¸´½¨Òé**£ºÔÚ `component-library-guide.md` "»ù´¡×é¼ş"»ò"·´À¡×é¼ş"/"²¼¾Ö×é¼ş"ÕÂ½Ú²¹Èë `Badge`¡¢`Label`¡¢`Progress`¡¢`Breadcrumb` µÄ Props¡¢±äÌå¡¢ÎŞÕÏ°­ÊôĞÔÓëÊ¹ÓÃÊ¾Àı¡£
 
-#### 3d) Store çš„ action æ–¹æ³•æ˜¯å¦éƒ½åœ¨é¡µé¢ä¸­è¢«è°ƒç”¨ â€” âŒ ä¸ä¸€è‡´
+#### 3d) Store µÄ action ·½·¨ÊÇ·ñ¶¼ÔÚÒ³ÃæÖĞ±»µ÷ÓÃ ¡ª ? ²»Ò»ÖÂ
 
-`sevenDimConfigStore.ts` å®šä¹‰çš„ action æ–¹æ³•åœ¨é¡µé¢ä¸­çš„è°ƒç”¨æƒ…å†µï¼š
+`sevenDimConfigStore.ts` ¶¨ÒåµÄ action ·½·¨ÔÚÒ³ÃæÖĞµÄµ÷ÓÃÇé¿ö£º
 
-| Action | é¡µé¢è°ƒç”¨ | çŠ¶æ€ |
+| Action | Ò³Ãæµ÷ÓÃ | ×´Ì¬ |
 |--------|----------|------|
-| `applyTemplate()` | âœ… `SevenDimConfigPage.tsx:282` | é€šè¿‡ |
-| `toggleDimension()` | âœ… `SevenDimConfigPage.tsx:320` | é€šè¿‡ |
-| `setDimensionFrequency()` | âŒ **æœªè°ƒç”¨** | **ä¸ä¸€è‡´** |
-| `setDimensionSources()` | âŒ **æœªè°ƒç”¨** | **ä¸ä¸€è‡´** |
-| `setSymbolCount()` | âœ… `SevenDimConfigPage.tsx:344` | é€šè¿‡ |
-| `setHistoryDays()` | âœ… `SevenDimConfigPage.tsx:359` | é€šè¿‡ |
-| `reset()` | âœ… `SevenDimConfigPage.tsx:421` | é€šè¿‡ |
-| `saveConfig()` | âœ… `SevenDimConfigPage.tsx:413` | é€šè¿‡ |
-| `runCollection()` | âœ… `SevenDimConfigPage.tsx:405` | é€šè¿‡ |
-| `clearError()` | âœ… `SevenDimConfigPage.tsx:249` | é€šè¿‡ |
+| `applyTemplate()` | ? `SevenDimConfigPage.tsx:282` | Í¨¹ı |
+| `toggleDimension()` | ? `SevenDimConfigPage.tsx:320` | Í¨¹ı |
+| `setDimensionFrequency()` | ? **Î´µ÷ÓÃ** | **²»Ò»ÖÂ** |
+| `setDimensionSources()` | ? **Î´µ÷ÓÃ** | **²»Ò»ÖÂ** |
+| `setSymbolCount()` | ? `SevenDimConfigPage.tsx:344` | Í¨¹ı |
+| `setHistoryDays()` | ? `SevenDimConfigPage.tsx:359` | Í¨¹ı |
+| `reset()` | ? `SevenDimConfigPage.tsx:421` | Í¨¹ı |
+| `saveConfig()` | ? `SevenDimConfigPage.tsx:413` | Í¨¹ı |
+| `runCollection()` | ? `SevenDimConfigPage.tsx:405` | Í¨¹ı |
+| `clearError()` | ? `SevenDimConfigPage.tsx:249` | Í¨¹ı |
 
-**ä¸ä¸€è‡´ç‚¹**ï¼š
-- `setDimensionFrequency` å’Œ `setDimensionSources` ä¸¤ä¸ª action åœ¨ Store ä¸­å®šä¹‰ä¸”æœ‰å•å…ƒæµ‹è¯•è¦†ç›–ï¼Œä½† `SevenDimConfigPage` æœªæä¾›ä¿®æ”¹ç»´åº¦é¢‘ç‡å’Œæ•°æ®æºçš„ UI æ§ä»¶ï¼Œå¯¼è‡´è¿™ä¸¤ä¸ª action åœ¨é¡µé¢å±‚æ— æ³•è¢«ç”¨æˆ·è§¦å‘ã€‚
-- è¿™ä¸ `data-collection-route-ui-audit.md:206-207` è®°å½•çš„"SevenDimConfigPage åŠŸèƒ½ä¸å®Œæ•´ / ç¼ºé‡‡é›†æ–¹æ¡ˆæ•´åˆé¢æ¿"é—®é¢˜å¯¹åº”ã€‚
+**²»Ò»ÖÂµã**£º
+- `setDimensionFrequency` ºÍ `setDimensionSources` Á½¸ö action ÔÚ Store ÖĞ¶¨ÒåÇÒÓĞµ¥Ôª²âÊÔ¸²¸Ç£¬µ« `SevenDimConfigPage` Î´Ìá¹©ĞŞ¸ÄÎ¬¶ÈÆµÂÊºÍÊı¾İÔ´µÄ UI ¿Ø¼ş£¬µ¼ÖÂÕâÁ½¸ö action ÔÚÒ³Ãæ²ãÎŞ·¨±»ÓÃ»§´¥·¢¡£
+- ÕâÓë `data-collection-route-ui-audit.md:206-207` ¼ÇÂ¼µÄ"SevenDimConfigPage ¹¦ÄÜ²»ÍêÕû / È±²É¼¯·½°¸ÕûºÏÃæ°å"ÎÊÌâ¶ÔÓ¦¡£
 
-**ä¿®å¤å»ºè®®**ï¼š
-- æ–¹æ¡ˆAï¼ˆè¡¥å…¨UIï¼‰ï¼šåœ¨ `DimensionRow` ç»„ä»¶ä¸­å¢åŠ é¢‘ç‡ä¸‹æ‹‰é€‰æ‹©å’Œæ•°æ®æºå¤šé€‰æ§ä»¶ï¼Œè°ƒç”¨ `setDimensionFrequency` / `setDimensionSources`ã€‚
-- æ–¹æ¡ˆBï¼ˆæ ‡æ³¨ä¸ºé¢„æœŸï¼‰ï¼šè‹¥å½“å‰ç‰ˆæœ¬åˆ»æ„çœç•¥ï¼Œåœ¨ Store æ³¨é‡Šä¸­è¯´æ˜è¿™ä¸¤ä¸ª action ä¸ºåç»­ç‰ˆæœ¬é¢„ç•™ã€‚
+**ĞŞ¸´½¨Òé**£º
+- ·½°¸A£¨²¹È«UI£©£ºÔÚ `DimensionRow` ×é¼şÖĞÔö¼ÓÆµÂÊÏÂÀ­Ñ¡ÔñºÍÊı¾İÔ´¶àÑ¡¿Ø¼ş£¬µ÷ÓÃ `setDimensionFrequency` / `setDimensionSources`¡£
+- ·½°¸B£¨±ê×¢ÎªÔ¤ÆÚ£©£ºÈôµ±Ç°°æ±¾¿ÌÒâÊ¡ÂÔ£¬ÔÚ Store ×¢ÊÍÖĞËµÃ÷ÕâÁ½¸ö action ÎªºóĞø°æ±¾Ô¤Áô¡£
 
 ---
 
-### 4. æµ‹è¯•è¦†ç›–ä¸€è‡´æ€§æ£€æŸ¥
+### 4. ²âÊÔ¸²¸ÇÒ»ÖÂĞÔ¼ì²é
 
-#### 4a) Store æµ‹è¯•æ˜¯å¦è¦†ç›–äº†æ‰€æœ‰ Store action æ–¹æ³• â€” âœ… é€šè¿‡
+#### 4a) Store ²âÊÔÊÇ·ñ¸²¸ÇÁËËùÓĞ Store action ·½·¨ ¡ª ? Í¨¹ı
 
-`tests/__tests__/sevenDimConfigStore.test.ts` è¦†ç›–æƒ…å†µï¼š
+`tests/__tests__/sevenDimConfigStore.test.ts` ¸²¸ÇÇé¿ö£º
 
-| Action | æµ‹è¯•ç”¨ä¾‹ | è¡Œå· |
+| Action | ²âÊÔÓÃÀı | ĞĞºÅ |
 |--------|----------|------|
-| `applyTemplate` | âœ… 5ä¸ªæ¨¡æ¿ + æ— æ•ˆID + isDirty + historyDays | 60-110 |
-| `toggleDimension` | âœ… ç¦ç”¨/å¯ç”¨/è¿ç»­åˆ‡æ¢/ä¸å­˜åœ¨code/å…¨ç¦ç”¨ | 113-152 |
-| `setDimensionFrequency` | âœ… è®¾ç½®é¢‘ç‡ + isDirty + ä¸å­˜åœ¨ç»´åº¦ | 156-183 |
-| `setDimensionSources` | âœ… è®¾ç½®æ•°æ®æº + isDirty | 167-183 |
-| `setSymbolCount` | âœ… æ­£å¸¸å€¼ + isDirty + ä¸Šä¸‹é™è¾¹ç•Œ | 187-209 |
-| `setHistoryDays` | âœ… æ­£å¸¸å€¼ + ä¸Šä¸‹é™è¾¹ç•Œ | 212-225 |
-| `reset` | âœ… æ¢å¤æ‰€æœ‰å­—æ®µ | 278-313 |
-| `saveConfig` | âœ… æˆåŠŸ + isDirtyæ¢å¤ + é‡å¤è°ƒç”¨æ‹¦æˆª | 316-334 |
-| `runCollection` | âœ… å®Œæˆ + è¿›åº¦100 + é‡å¤è°ƒç”¨æ‹¦æˆª | 337-352 |
-| `clearError` | âœ… æ¸…é™¤é”™è¯¯ | 355-360 |
-| `enabledCount` | âœ… æ´¾ç”Ÿè®¡ç®— | 229-233 |
-| `monthlyCallEstimate` | âœ… >0 + å…¨ç¦ç”¨=0 | 235-246 |
-| `isClickable` | âœ… åˆå§‹ + isSaving + isCollecting | 248-260 |
-| `tooltipText` | âœ… ä¸‰æ€ | 262-275 |
+| `applyTemplate` | ? 5¸öÄ£°å + ÎŞĞ§ID + isDirty + historyDays | 60-110 |
+| `toggleDimension` | ? ½ûÓÃ/ÆôÓÃ/Á¬ĞøÇĞ»»/²»´æÔÚcode/È«½ûÓÃ | 113-152 |
+| `setDimensionFrequency` | ? ÉèÖÃÆµÂÊ + isDirty + ²»´æÔÚÎ¬¶È | 156-183 |
+| `setDimensionSources` | ? ÉèÖÃÊı¾İÔ´ + isDirty | 167-183 |
+| `setSymbolCount` | ? Õı³£Öµ + isDirty + ÉÏÏÂÏŞ±ß½ç | 187-209 |
+| `setHistoryDays` | ? Õı³£Öµ + ÉÏÏÂÏŞ±ß½ç | 212-225 |
+| `reset` | ? »Ö¸´ËùÓĞ×Ö¶Î | 278-313 |
+| `saveConfig` | ? ³É¹¦ + isDirty»Ö¸´ + ÖØ¸´µ÷ÓÃÀ¹½Ø | 316-334 |
+| `runCollection` | ? Íê³É + ½ø¶È100 + ÖØ¸´µ÷ÓÃÀ¹½Ø | 337-352 |
+| `clearError` | ? Çå³ı´íÎó | 355-360 |
+| `enabledCount` | ? ÅÉÉú¼ÆËã | 229-233 |
+| `monthlyCallEstimate` | ? >0 + È«½ûÓÃ=0 | 235-246 |
+| `isClickable` | ? ³õÊ¼ + isSaving + isCollecting | 248-260 |
+| `tooltipText` | ? ÈıÌ¬ | 262-275 |
 
-**ç»“è®º**ï¼šStore æµ‹è¯•è¦†ç›–å…¨éƒ¨ 10 ä¸ª action å’Œ 4 ä¸ªæ´¾ç”Ÿè®¡ç®—ï¼Œè¦†ç›–ç‡ 100%ã€‚
+**½áÂÛ**£ºStore ²âÊÔ¸²¸ÇÈ«²¿ 10 ¸ö action ºÍ 4 ¸öÅÉÉú¼ÆËã£¬¸²¸ÇÂÊ 100%¡£
 
-#### 4b) ç»„ä»¶æµ‹è¯•æ˜¯å¦è¦†ç›–äº†æ‰€æœ‰ä¸»è¦ç”¨æˆ·äº¤äº’ â€” âš ï¸ éƒ¨åˆ†ä¸€è‡´
+#### 4b) ×é¼ş²âÊÔÊÇ·ñ¸²¸ÇÁËËùÓĞÖ÷ÒªÓÃ»§½»»¥ ¡ª ?? ²¿·ÖÒ»ÖÂ
 
-`tests/__tests__/SevenDimConfigPage.test.tsx` è¦†ç›–æƒ…å†µï¼š
+`tests/__tests__/SevenDimConfigPage.test.tsx` ¸²¸ÇÇé¿ö£º
 
-| äº¤äº’åœºæ™¯ | è¦†ç›– | è¡Œå· |
+| ½»»¥³¡¾° | ¸²¸Ç | ĞĞºÅ |
 |----------|------|------|
-| é¡µé¢æ¸²æŸ“ï¼ˆæ ‡é¢˜/é¢åŒ…å±‘/åˆ†åŒºï¼‰ | âœ… | 49-95 |
-| ç­–ç•¥æ¨¡æ¿å¡ç‰‡æ¸²æŸ“ | âœ… | 97-128 |
-| ç»´åº¦å¼€å…³é¢æ¿æ¸²æŸ“ | âœ… | 130-182 |
-| æ¨¡æ¿åˆ‡æ¢äº¤äº’ï¼ˆ5æ¨¡æ¿ï¼‰ | âœ… | 184-229 |
-| ç»´åº¦ Switch åˆ‡æ¢äº¤äº’ | âœ… | 231-263 |
-| å…¨å±€å‚æ•°è¾“å…¥ï¼ˆæ ‡çš„æ•°/å†å²å¤©æ•°ï¼‰ | âœ… | 265-296 |
-| é¢åº¦é¢„ä¼°æ˜¾ç¤º | âœ… | 298-329 |
-| æ“ä½œæŒ‰é’®ï¼ˆé‡‡é›†/ä¿å­˜/é‡ç½®/ç¦ç”¨æ€ï¼‰ | âœ… | 331-368 |
-| è¾¹ç•Œæµ‹è¯•ï¼ˆå…¨ç¦ç”¨/é”™è¯¯/è¿›åº¦æ¡/ä¿å­˜ä¸­ï¼‰ | âœ… | 370-430 |
-| å¯è®¿é—®æ€§ï¼ˆh1/h2/Label/é“¾æ¥ï¼‰ | âœ… | 432-465 |
-| **ç»´åº¦é¢‘ç‡ä¿®æ”¹äº¤äº’** | âŒ | â€” |
-| **ç»´åº¦æ•°æ®æºä¿®æ”¹äº¤äº’** | âŒ | â€” |
+| Ò³ÃæäÖÈ¾£¨±êÌâ/Ãæ°üĞ¼/·ÖÇø£© | ? | 49-95 |
+| ²ßÂÔÄ£°å¿¨Æ¬äÖÈ¾ | ? | 97-128 |
+| Î¬¶È¿ª¹ØÃæ°åäÖÈ¾ | ? | 130-182 |
+| Ä£°åÇĞ»»½»»¥£¨5Ä£°å£© | ? | 184-229 |
+| Î¬¶È Switch ÇĞ»»½»»¥ | ? | 231-263 |
+| È«¾Ö²ÎÊıÊäÈë£¨±êµÄÊı/ÀúÊ·ÌìÊı£© | ? | 265-296 |
+| ¶î¶ÈÔ¤¹ÀÏÔÊ¾ | ? | 298-329 |
+| ²Ù×÷°´Å¥£¨²É¼¯/±£´æ/ÖØÖÃ/½ûÓÃÌ¬£© | ? | 331-368 |
+| ±ß½ç²âÊÔ£¨È«½ûÓÃ/´íÎó/½ø¶ÈÌõ/±£´æÖĞ£© | ? | 370-430 |
+| ¿É·ÃÎÊĞÔ£¨h1/h2/Label/Á´½Ó£© | ? | 432-465 |
+| **Î¬¶ÈÆµÂÊĞŞ¸Ä½»»¥** | ? | ¡ª |
+| **Î¬¶ÈÊı¾İÔ´ĞŞ¸Ä½»»¥** | ? | ¡ª |
 
-**éƒ¨åˆ†ä¸€è‡´ç‚¹**ï¼š
-- ç»´åº¦é¢‘ç‡å’Œæ•°æ®æºä¿®æ”¹äº¤äº’æœªè¦†ç›–ï¼Œæ ¹å› æ˜¯é¡µé¢æœ¬èº«æœªæä¾›å¯¹åº” UIï¼ˆè§ 3dï¼‰ï¼Œå±åŒæºé—®é¢˜ã€‚
-- æµ‹è¯•æœ¬èº«è´¨é‡è‰¯å¥½ï¼Œå·²è¦†ç›–é¡µé¢æä¾›çš„å…¨éƒ¨äº¤äº’ã€‚
+**²¿·ÖÒ»ÖÂµã**£º
+- Î¬¶ÈÆµÂÊºÍÊı¾İÔ´ĞŞ¸Ä½»»¥Î´¸²¸Ç£¬¸ùÒòÊÇÒ³Ãæ±¾ÉíÎ´Ìá¹©¶ÔÓ¦ UI£¨¼û 3d£©£¬ÊôÍ¬Ô´ÎÊÌâ¡£
+- ²âÊÔ±¾ÉíÖÊÁ¿Á¼ºÃ£¬ÒÑ¸²¸ÇÒ³ÃæÌá¹©µÄÈ«²¿½»»¥¡£
 
-#### 4c) æµ‹è¯•ä¸­ä½¿ç”¨çš„ mock æ•°æ®æ˜¯å¦ç¬¦åˆ collectConfig ä¸­çš„ç±»å‹å®šä¹‰ â€” âœ… é€šè¿‡
+#### 4c) ²âÊÔÖĞÊ¹ÓÃµÄ mock Êı¾İÊÇ·ñ·ûºÏ collectConfig ÖĞµÄÀàĞÍ¶¨Òå ¡ª ? Í¨¹ı
 
-**ç»“è®º**ï¼š
-- æµ‹è¯•æœªä½¿ç”¨ç‹¬ç«‹ mock æ•°æ®ï¼Œè€Œæ˜¯ç›´æ¥å¯¼å…¥çœŸå®é…ç½®å¸¸é‡ `STRATEGY_TEMPLATES`ã€`GLOBAL_LIMITS`ã€`DEFAULT_DIMENSIONS`ï¼ˆ`sevenDimConfigStore.test.ts:17`ã€`SevenDimConfigPage.test.tsx:22`ï¼‰ã€‚
-- é€šè¿‡ `useSevenDimConfigStore.getState().reset()` é‡ç½®ä¸ºåŸºäº `DEFAULT_DIMENSIONS` çš„çœŸå®åˆå§‹çŠ¶æ€ã€‚
-- mock ä»…é™ `ErrorBoundary` å’Œ `logger`ï¼ˆ`SevenDimConfigPage.test.tsx:25-32`ï¼‰ï¼Œä¸æ¶‰åŠä¸šåŠ¡æ•°æ®ç±»å‹ã€‚
-- æ•°æ®å½¢æ€å®Œå…¨ç¬¦åˆ `collectConfig.ts` çš„ç±»å‹å®šä¹‰ã€‚
+**½áÂÛ**£º
+- ²âÊÔÎ´Ê¹ÓÃ¶ÀÁ¢ mock Êı¾İ£¬¶øÊÇÖ±½Óµ¼ÈëÕæÊµÅäÖÃ³£Á¿ `STRATEGY_TEMPLATES`¡¢`GLOBAL_LIMITS`¡¢`DEFAULT_DIMENSIONS`£¨`sevenDimConfigStore.test.ts:17`¡¢`SevenDimConfigPage.test.tsx:22`£©¡£
+- Í¨¹ı `useSevenDimConfigStore.getState().reset()` ÖØÖÃÎª»ùÓÚ `DEFAULT_DIMENSIONS` µÄÕæÊµ³õÊ¼×´Ì¬¡£
+- mock ½öÏŞ `ErrorBoundary` ºÍ `logger`£¨`SevenDimConfigPage.test.tsx:25-32`£©£¬²»Éæ¼°ÒµÎñÊı¾İÀàĞÍ¡£
+- Êı¾İĞÎÌ¬ÍêÈ«·ûºÏ `collectConfig.ts` µÄÀàĞÍ¶¨Òå¡£
 
-#### 4d) æµ‹è¯•æ–‡ä»¶å¯¼å…¥çš„æ¨¡å—æ˜¯å¦ä¸æºæ–‡ä»¶å¯¼å‡ºä¸€è‡´ â€” âœ… é€šè¿‡
+#### 4d) ²âÊÔÎÄ¼şµ¼ÈëµÄÄ£¿éÊÇ·ñÓëÔ´ÎÄ¼şµ¼³öÒ»ÖÂ ¡ª ? Í¨¹ı
 
-| æµ‹è¯•æ–‡ä»¶ | å¯¼å…¥é¡¹ | æºæ–‡ä»¶å¯¼å‡º | çŠ¶æ€ |
+| ²âÊÔÎÄ¼ş | µ¼ÈëÏî | Ô´ÎÄ¼şµ¼³ö | ×´Ì¬ |
 |----------|--------|------------|------|
-| `sevenDimConfigStore.test.ts:16` | `useSevenDimConfigStore` | `sevenDimConfigStore.ts:108` | âœ… |
-| `sevenDimConfigStore.test.ts:17` | `STRATEGY_TEMPLATES` | `collectConfig.ts:143` | âœ… |
-| `sevenDimConfigStore.test.ts:17` | `GLOBAL_LIMITS` | `collectConfig.ts:320` | âœ… |
-| `SevenDimConfigPage.test.tsx:20` | `SevenDimConfigPage` (default) | `SevenDimConfigPage.tsx:185` | âœ… |
-| `SevenDimConfigPage.test.tsx:21` | `useSevenDimConfigStore` | `sevenDimConfigStore.ts:108` | âœ… |
-| `SevenDimConfigPage.test.tsx:22` | `STRATEGY_TEMPLATES` | `collectConfig.ts:143` | âœ… |
-| `SevenDimConfigPage.test.tsx:22` | `DEFAULT_DIMENSIONS` | `collectConfig.ts:195` | âœ… |
+| `sevenDimConfigStore.test.ts:16` | `useSevenDimConfigStore` | `sevenDimConfigStore.ts:108` | ? |
+| `sevenDimConfigStore.test.ts:17` | `STRATEGY_TEMPLATES` | `collectConfig.ts:143` | ? |
+| `sevenDimConfigStore.test.ts:17` | `GLOBAL_LIMITS` | `collectConfig.ts:320` | ? |
+| `SevenDimConfigPage.test.tsx:20` | `SevenDimConfigPage` (default) | `SevenDimConfigPage.tsx:185` | ? |
+| `SevenDimConfigPage.test.tsx:21` | `useSevenDimConfigStore` | `sevenDimConfigStore.ts:108` | ? |
+| `SevenDimConfigPage.test.tsx:22` | `STRATEGY_TEMPLATES` | `collectConfig.ts:143` | ? |
+| `SevenDimConfigPage.test.tsx:22` | `DEFAULT_DIMENSIONS` | `collectConfig.ts:195` | ? |
 
-**ç»“è®º**ï¼šå…¨éƒ¨å¯¼å…¥é¡¹ä¸æºæ–‡ä»¶å¯¼å‡ºä¸€è‡´ã€‚
+**½áÂÛ**£ºÈ«²¿µ¼ÈëÏîÓëÔ´ÎÄ¼şµ¼³öÒ»ÖÂ¡£
 
 ---
 
-### 5. æ–‡æ¡£ç‰ˆæœ¬å·ä¸€è‡´æ€§æ£€æŸ¥
+### 5. ÎÄµµ°æ±¾ºÅÒ»ÖÂĞÔ¼ì²é
 
-#### 5a) æ‰€æœ‰æ–‡æ¡£çš„ç‰ˆæœ¬å·æ˜¯å¦ä¸€è‡´æˆ–åˆç†é€’è¿› â€” âŒ ä¸ä¸€è‡´
+#### 5a) ËùÓĞÎÄµµµÄ°æ±¾ºÅÊÇ·ñÒ»ÖÂ»òºÏÀíµİ½ø ¡ª ? ²»Ò»ÖÂ
 
-| æ–‡ä»¶ | ç‰ˆæœ¬å· | æ—¥æœŸ | çŠ¶æ€ |
+| ÎÄ¼ş | °æ±¾ºÅ | ÈÕÆÚ | ×´Ì¬ |
 |------|--------|------|------|
-| `package.json:4` | `0.9.17` | â€” | åŸºå‡† |
-| `README.md:3` | `v0.9.17` | â€” | âœ… ä¸ package.json ä¸€è‡´ |
-| `CHANGELOG.md:8` | `Unreleased` | 2026-07-01 | âš ï¸ è§ä¸‹ |
-| `CHANGELOG.md:409` | æœ€æ–°å‘å¸ƒ `0.9.6` | 2026-06-29 | âŒ è½å |
-| `docs/06-routing-specs.md:4` | `v1.5.0` | 2026-07-01 | âš ï¸ è§ä¸‹ |
-| `docs/06-routing-specs.md:281` | ç¬¬9èŠ‚è‡ªç§° `v1.2.0` | â€” | âŒ å†…éƒ¨çŸ›ç›¾ |
-| `docs/data-dictionary-index.md:4` | `v2.2.0` | 2026-06-30 | æ–‡æ¡£ç‹¬ç«‹ç‰ˆæœ¬å· |
+| `package.json:4` | `0.9.17` | ¡ª | »ù×¼ |
+| `README.md:3` | `v0.9.17` | ¡ª | ? Óë package.json Ò»ÖÂ |
+| `CHANGELOG.md:8` | `Unreleased` | 2026-07-01 | ?? ¼ûÏÂ |
+| `CHANGELOG.md:409` | ×îĞÂ·¢²¼ `0.9.6` | 2026-06-29 | ? Âäºó |
+| `docs/06-routing-specs.md:4` | `v1.5.0` | 2026-07-01 | ?? ¼ûÏÂ |
+| `docs/06-routing-specs.md:281` | µÚ9½Ú×Ô³Æ `v1.2.0` | ¡ª | ? ÄÚ²¿Ã¬¶Ü |
+| `docs/data-dictionary-index.md:4` | `v2.2.0` | 2026-06-30 | ÎÄµµ¶ÀÁ¢°æ±¾ºÅ |
 
-**ä¸ä¸€è‡´ç‚¹**ï¼š
-1. **CHANGELOG è½å**ï¼š`package.json` ä¸º `0.9.17`ï¼Œä½† `../../../CHANGELOG.md` æœ€æ–°å‘å¸ƒç‰ˆæœ¬ä»…åˆ° `0.9.6`ï¼ˆ2026-06-29ï¼‰ï¼Œä¸­é—´ `0.9.7`~`0.9.17` å…± 11 ä¸ªç‰ˆæœ¬æœªåœ¨ CHANGELOG è®°å½•ã€‚`Unreleased` éƒ¨åˆ†æœªæåŠä¸ƒç»´é‡‡é›†é…ç½®æ¨¡å—çš„æ–°å¢ã€‚
-2. **06-routing-specs.md å†…éƒ¨ç‰ˆæœ¬çŸ›ç›¾**ï¼šæ–‡ä»¶å¤´ï¼ˆç¬¬4è¡Œï¼‰å£°æ˜ `Version: v1.5.0`ï¼Œä½†ç¬¬9èŠ‚ï¼ˆç¬¬281è¡Œï¼‰è‡ªç§°"æœ¬æ–‡æ¡£å½“å‰ç‰ˆæœ¬ä¸º `v1.2.0`"ï¼Œä¸”ç¬¬9èŠ‚æè¿°çš„"29 æ¡è·¯ç”±"ä¸ç¬¬2.1èŠ‚çš„"31 æ¡"çŸ›ç›¾ã€‚
-3. **CHANGELOG æœªè®°å½•ä¸ƒç»´é‡‡é›†æ¨¡å—**ï¼š`Unreleased` æ®µè½ï¼ˆç¬¬8-80è¡Œï¼‰æœªåŒ…å« `collectConfig.ts`ã€`sevenDimConfigStore.ts`ã€`SevenDimConfigPage.tsx`ã€`/input/seven-dim` è·¯ç”±ç­‰ç›¸å…³æ–°å¢æ¡ç›®ã€‚
+**²»Ò»ÖÂµã**£º
+1. **CHANGELOG Âäºó**£º`package.json` Îª `0.9.17`£¬µ« `../../../CHANGELOG.md` ×îĞÂ·¢²¼°æ±¾½öµ½ `0.9.6`£¨2026-06-29£©£¬ÖĞ¼ä `0.9.7`~`0.9.17` ¹² 11 ¸ö°æ±¾Î´ÔÚ CHANGELOG ¼ÇÂ¼¡£`Unreleased` ²¿·ÖÎ´Ìá¼°ÆßÎ¬²É¼¯ÅäÖÃÄ£¿éµÄĞÂÔö¡£
+2. **06-routing-specs.md ÄÚ²¿°æ±¾Ã¬¶Ü**£ºÎÄ¼şÍ·£¨µÚ4ĞĞ£©ÉùÃ÷ `Version: v1.5.0`£¬µ«µÚ9½Ú£¨µÚ281ĞĞ£©×Ô³Æ"±¾ÎÄµµµ±Ç°°æ±¾Îª `v1.2.0`"£¬ÇÒµÚ9½ÚÃèÊöµÄ"29 ÌõÂ·ÓÉ"ÓëµÚ2.1½ÚµÄ"31 Ìõ"Ã¬¶Ü¡£
+3. **CHANGELOG Î´¼ÇÂ¼ÆßÎ¬²É¼¯Ä£¿é**£º`Unreleased` ¶ÎÂä£¨µÚ8-80ĞĞ£©Î´°üº¬ `collectConfig.ts`¡¢`sevenDimConfigStore.ts`¡¢`SevenDimConfigPage.tsx`¡¢`/input/seven-dim` Â·ÓÉµÈÏà¹ØĞÂÔöÌõÄ¿¡£
 
-**ä¿®å¤å»ºè®®**ï¼š
-1. åœ¨ `../../../CHANGELOG.md` `Unreleased` æ®µè¡¥å…¥ä¸ƒç»´é‡‡é›†é…ç½®æ¨¡å—çš„ Added æ¡ç›®ï¼ˆcollectConfig / Store / Page / Testsï¼‰ã€‚
-2. ç»Ÿä¸€ `../../reference/06-routing-specs.md` ç‰ˆæœ¬å·ï¼šå°†ç¬¬9èŠ‚çš„ `v1.2.0` æ›´æ–°ä¸º `v1.5.0`ï¼Œå¹¶æ›´æ–°ç‰ˆæœ¬æ¯”å¯¹è¯´æ˜ã€‚
-3. å¾… `/input/seven-dim` è·¯ç”±æ³¨å†Œåï¼Œæ›´æ–°ç¬¬9èŠ‚è·¯ç”±æ•°ä¸º 32ã€‚
+**ĞŞ¸´½¨Òé**£º
+1. ÔÚ `../../../CHANGELOG.md` `Unreleased` ¶Î²¹ÈëÆßÎ¬²É¼¯ÅäÖÃÄ£¿éµÄ Added ÌõÄ¿£¨collectConfig / Store / Page / Tests£©¡£
+2. Í³Ò» `../../reference/06-routing-specs.md` °æ±¾ºÅ£º½«µÚ9½ÚµÄ `v1.2.0` ¸üĞÂÎª `v1.5.0`£¬²¢¸üĞÂ°æ±¾±È¶ÔËµÃ÷¡£
+3. ´ı `/input/seven-dim` Â·ÓÉ×¢²áºó£¬¸üĞÂµÚ9½ÚÂ·ÓÉÊıÎª 32¡£
 
-#### 5b) æ—¥æœŸæ˜¯å¦ç»Ÿä¸€ä¸º 2026-07-01 â€” âš ï¸ éƒ¨åˆ†ä¸€è‡´
+#### 5b) ÈÕÆÚÊÇ·ñÍ³Ò»Îª 2026-07-01 ¡ª ?? ²¿·ÖÒ»ÖÂ
 
-| æ–‡ä»¶ | æ—¥æœŸ | çŠ¶æ€ |
+| ÎÄ¼ş | ÈÕÆÚ | ×´Ì¬ |
 |------|------|------|
-| `docs/06-routing-specs.md:5` | 2026-07-01 | âœ… |
-| `../../../CHANGELOG.md` Unreleased | 2026-07-01 | âœ… |
-| `docs/data-dictionary-index.md:6` | 2026-06-30 | âš ï¸ è½å1å¤© |
-| `docs/data-dictionary-index.md:7` (Scan Time) | 2026-06-30 23:07:32 | âš ï¸ è½å |
+| `docs/06-routing-specs.md:5` | 2026-07-01 | ? |
+| `../../../CHANGELOG.md` Unreleased | 2026-07-01 | ? |
+| `docs/data-dictionary-index.md:6` | 2026-06-30 | ?? Âäºó1Ìì |
+| `docs/data-dictionary-index.md:7` (Scan Time) | 2026-06-30 23:07:32 | ?? Âäºó |
 
-**éƒ¨åˆ†ä¸€è‡´ç‚¹**ï¼š
-- `data-dictionary-index.md` æ—¥æœŸä¸º 2026-06-30ï¼ŒæœªåŒæ­¥è‡³ 2026-07-01ï¼Œä¸”è¯¥æ–‡æ¡£æœªçº³å…¥ä¸ƒç»´é‡‡é›†é…ç½®æ¨¡å—çš„å­—å…¸æ¡ç›®ï¼ˆè§ 2a/2bï¼‰ã€‚
+**²¿·ÖÒ»ÖÂµã**£º
+- `data-dictionary-index.md` ÈÕÆÚÎª 2026-06-30£¬Î´Í¬²½ÖÁ 2026-07-01£¬ÇÒ¸ÃÎÄµµÎ´ÄÉÈëÆßÎ¬²É¼¯ÅäÖÃÄ£¿éµÄ×ÖµäÌõÄ¿£¨¼û 2a/2b£©¡£
 
-**ä¿®å¤å»ºè®®**ï¼šåœ¨è¡¥å…¥ä¸ƒç»´é‡‡é›†é…ç½®æ¨¡å—æ•°æ®å­—å…¸æ¡ç›®åï¼Œå°† `data-dictionary-index.md` çš„ `Last Updated` æ›´æ–°ä¸º 2026-07-01ã€‚
+**ĞŞ¸´½¨Òé**£ºÔÚ²¹ÈëÆßÎ¬²É¼¯ÅäÖÃÄ£¿éÊı¾İ×ÖµäÌõÄ¿ºó£¬½« `data-dictionary-index.md` µÄ `Last Updated` ¸üĞÂÎª 2026-07-01¡£
 
 ---
 
-## ä¸‰ã€ä¸ä¸€è‡´é¡¹æ±‡æ€»ä¸ä¼˜å…ˆçº§
+## Èı¡¢²»Ò»ÖÂÏî»ã×ÜÓëÓÅÏÈ¼¶
 
-| ç¼–å· | ä¼˜å…ˆçº§ | ä¸ä¸€è‡´é¡¹ | æ¶‰åŠæ–‡ä»¶ | è¡Œå· | ä¿®å¤å»ºè®® |
+| ±àºÅ | ÓÅÏÈ¼¶ | ²»Ò»ÖÂÏî | Éæ¼°ÎÄ¼ş | ĞĞºÅ | ĞŞ¸´½¨Òé |
 |------|--------|----------|----------|------|----------|
-| D-01 | ğŸ”´ é«˜ | `/input/seven-dim` æœªåœ¨ ROUTE_REGISTRY æ³¨å†Œ | `src/config/routes.ts` | 202è¡Œå | âœ… å·²ä¿®å¤ï¼ˆ2026-07-01ï¼‰ |
-| D-02 | ğŸ”´ é«˜ | `/input/seven-dim` æœªåœ¨è·¯ç”±è§„æ ¼æ–‡æ¡£åˆ—å‡º | `../../reference/06-routing-specs.md` | 2.1/3.2/8èŠ‚ | âœ… å·²ä¿®å¤ï¼ˆ2026-07-01ï¼‰ |
-| D-03 | ğŸ”´ é«˜ | CHANGELOG æœªè®°å½•ä¸ƒç»´é‡‡é›†æ¨¡å—æ–°å¢ | `../../../CHANGELOG.md` | Unreleasedæ®µ | è¡¥å…¥ Added æ¡ç›® |
-| D-04 | ğŸ”´ é«˜ | æ•°æ®å­—å…¸æœªç™»è®° collectConfig / sevenDimConfigStore | `../../reference/data-dictionary-index.md` | æ¨¡å—ç´¢å¼•è¡¨ | æ–°å¢æ¨¡å—å­—å…¸æ¡ç›® |
-| D-05 | ğŸŸ¡ ä¸­ | types.ts çš„ DataDimensionType ç¼º `08_research` | `src/data/types.ts` | 694-702 | âœ… å·²ä¿®å¤ï¼ˆ2026-07-01ï¼‰ |
-| D-06 | ğŸŸ¡ ä¸­ | 06-routing-specs.md ç¬¬9èŠ‚è·¯ç”±æ•° 29 vs 31 çŸ›ç›¾ | `../../reference/06-routing-specs.md` | 288 | âœ… å·²ä¿®å¤ï¼ˆ2026-07-01ï¼‰ |
-| D-07 | ğŸŸ¡ ä¸­ | 06-routing-specs.md ç‰ˆæœ¬å· v1.5.0 vs v1.2.0 çŸ›ç›¾ | `../../reference/06-routing-specs.md` | 4 vs 281 | âœ… å·²ä¿®å¤ï¼ˆ2026-07-01ï¼‰ |
-| D-08 | ğŸŸ¡ ä¸­ | ç¬¬8èŠ‚æ®‹ç•™ `/analysis/news-v6` å·²åˆ è·¯ç”± | `../../reference/06-routing-specs.md` | 263 | âœ… å·²ä¿®å¤ï¼ˆ2026-07-01ï¼‰ |
-| D-09 | ğŸŸ¡ ä¸­ | ç»„ä»¶åº“æŒ‡å—ç¼º Badge/Label/Progress/Breadcrumb | `./component-library-guide.md` | ç»„ä»¶æ¸…å• | è¡¥å…¥ç»„ä»¶æ–‡æ¡£ |
-| D-10 | ğŸŸ¢ ä½ | Store çš„ setDimensionFrequency/setDimensionSources æœªåœ¨é¡µé¢è°ƒç”¨ | `src/pages/input/SevenDimConfigPage.tsx` | â€” | è¡¥å…¨UIæˆ–æ ‡æ³¨é¢„ç•™ |
-| D-11 | ğŸŸ¢ ä½ | CHANGELOG æœ€æ–°å‘å¸ƒç‰ˆæœ¬ 0.9.6 è½åäº package.json 0.9.17 | `../../../CHANGELOG.md` | 409 | è¡¥é½ä¸­é—´ç‰ˆæœ¬è®°å½• |
-| D-12 | ğŸŸ¢ ä½ | DATA_DICTIONARY_INDEX æ—¥æœŸ 2026-06-30 | `../../reference/data-dictionary-index.md` | 6 | æ›´æ–°ä¸º 2026-07-01 |
+| D-01 | ?? ¸ß | `/input/seven-dim` Î´ÔÚ ROUTE_REGISTRY ×¢²á | `src/config/routes.ts` | 202ĞĞºó | ? ÒÑĞŞ¸´£¨2026-07-01£© |
+| D-02 | ?? ¸ß | `/input/seven-dim` Î´ÔÚÂ·ÓÉ¹æ¸ñÎÄµµÁĞ³ö | `../../reference/06-routing-specs.md` | 2.1/3.2/8½Ú | ? ÒÑĞŞ¸´£¨2026-07-01£© |
+| D-03 | ?? ¸ß | CHANGELOG Î´¼ÇÂ¼ÆßÎ¬²É¼¯Ä£¿éĞÂÔö | `../../../CHANGELOG.md` | Unreleased¶Î | ²¹Èë Added ÌõÄ¿ |
+| D-04 | ?? ¸ß | Êı¾İ×ÖµäÎ´µÇ¼Ç collectConfig / sevenDimConfigStore | `../../reference/data-dictionary-index.md` | Ä£¿éË÷Òı±í | ĞÂÔöÄ£¿é×ÖµäÌõÄ¿ |
+| D-05 | ?? ÖĞ | types.ts µÄ DataDimensionType È± `08_research` | `src/data/types.ts` | 694-702 | ? ÒÑĞŞ¸´£¨2026-07-01£© |
+| D-06 | ?? ÖĞ | 06-routing-specs.md µÚ9½ÚÂ·ÓÉÊı 29 vs 31 Ã¬¶Ü | `../../reference/06-routing-specs.md` | 288 | ? ÒÑĞŞ¸´£¨2026-07-01£© |
+| D-07 | ?? ÖĞ | 06-routing-specs.md °æ±¾ºÅ v1.5.0 vs v1.2.0 Ã¬¶Ü | `../../reference/06-routing-specs.md` | 4 vs 281 | ? ÒÑĞŞ¸´£¨2026-07-01£© |
+| D-08 | ?? ÖĞ | µÚ8½Ú²ĞÁô `/analysis/news-v6` ÒÑÉ¾Â·ÓÉ | `../../reference/06-routing-specs.md` | 263 | ? ÒÑĞŞ¸´£¨2026-07-01£© |
+| D-09 | ?? ÖĞ | ×é¼ş¿âÖ¸ÄÏÈ± Badge/Label/Progress/Breadcrumb | `./component-library-guide.md` | ×é¼şÇåµ¥ | ²¹Èë×é¼şÎÄµµ |
+| D-10 | ?? µÍ | Store µÄ setDimensionFrequency/setDimensionSources Î´ÔÚÒ³Ãæµ÷ÓÃ | `src/pages/input/SevenDimConfigPage.tsx` | ¡ª | ²¹È«UI»ò±ê×¢Ô¤Áô |
+| D-11 | ?? µÍ | CHANGELOG ×îĞÂ·¢²¼°æ±¾ 0.9.6 ÂäºóÓÚ package.json 0.9.17 | `../../../CHANGELOG.md` | 409 | ²¹ÆëÖĞ¼ä°æ±¾¼ÇÂ¼ |
+| D-12 | ?? µÍ | DATA_DICTIONARY_INDEX ÈÕÆÚ 2026-06-30 | `../../reference/data-dictionary-index.md` | 6 | ¸üĞÂÎª 2026-07-01 |
 
 ---
 
-## å››ã€é€šè¿‡é¡¹ç¡®è®¤
+## ËÄ¡¢Í¨¹ıÏîÈ·ÈÏ
 
-| æ£€æŸ¥é¡¹ | ç»“æœ |
+| ¼ì²éÏî | ½á¹û |
 |--------|------|
-| 2d) DEFAULT_DIMENSIONS 8ç»´åº¦codeä¸æ–‡æ¡£ä¸€è‡´ | âœ… |
-| 3a) SevenDimConfigPage å¯¼å…¥çš„ Store æ–¹æ³•å‡å·²å®šä¹‰ | âœ… |
-| 3b) SevenDimConfigPage å¯¼å…¥çš„é…ç½®å¸¸é‡å‡å·²å¯¼å‡º | âœ… |
-| 4a) Store æµ‹è¯•è¦†ç›–å…¨éƒ¨ actionï¼ˆ100%ï¼‰ | âœ… |
-| 4c) æµ‹è¯•æ•°æ®ç¬¦åˆ collectConfig ç±»å‹å®šä¹‰ | âœ… |
-| 4d) æµ‹è¯•å¯¼å…¥ä¸æºæ–‡ä»¶å¯¼å‡ºä¸€è‡´ | âœ… |
+| 2d) DEFAULT_DIMENSIONS 8Î¬¶ÈcodeÓëÎÄµµÒ»ÖÂ | ? |
+| 3a) SevenDimConfigPage µ¼ÈëµÄ Store ·½·¨¾ùÒÑ¶¨Òå | ? |
+| 3b) SevenDimConfigPage µ¼ÈëµÄÅäÖÃ³£Á¿¾ùÒÑµ¼³ö | ? |
+| 4a) Store ²âÊÔ¸²¸ÇÈ«²¿ action£¨100%£© | ? |
+| 4c) ²âÊÔÊı¾İ·ûºÏ collectConfig ÀàĞÍ¶¨Òå | ? |
+| 4d) ²âÊÔµ¼ÈëÓëÔ´ÎÄ¼şµ¼³öÒ»ÖÂ | ? |
 
 ---
 
-## äº”ã€ä¿®å¤ä¼˜å…ˆçº§å»ºè®®
+## Îå¡¢ĞŞ¸´ÓÅÏÈ¼¶½¨Òé
 
-### P0ï¼ˆå³æ—¶ä¿®å¤ï¼‰
-1. **D-01**ï¼šâœ… å·²å®Œæˆï¼ˆ2026-07-01ï¼‰â€” åœ¨ `src/config/routes.ts` æ³¨å†Œ `/input/seven-dim` è·¯ç”±ï¼ˆä¸ `data-collection-route-ui-audit.md` F-01 å¯¹åº”ï¼‰ã€‚
-2. **D-02**ï¼šâœ… å·²å®Œæˆï¼ˆ2026-07-01ï¼‰â€” åœ¨ `../../reference/06-routing-specs.md` è¡¥å…¥ `/input/seven-dim` è·¯ç”±æ¡ç›®ã€‚
-3. **D-03**ï¼šâœ… å·²å®Œæˆï¼ˆ2026-07-01ï¼‰â€” åœ¨ `../../../CHANGELOG.md` Unreleased æ®µè¡¥å…¥ä¸ƒç»´é‡‡é›†é…ç½®æ¨¡å—çš„ Added è®°å½•ã€‚
-4. **D-04**ï¼šåœ¨æ•°æ®å­—å…¸ä¸­ç™»è®° collectConfig ä¸ sevenDimConfigStore çš„ç±»å‹ä¸å­—æ®µã€‚
+### P0£¨¼´Ê±ĞŞ¸´£©
+1. **D-01**£º? ÒÑÍê³É£¨2026-07-01£©¡ª ÔÚ `src/config/routes.ts` ×¢²á `/input/seven-dim` Â·ÓÉ£¨Óë `data-collection-route-ui-audit.md` F-01 ¶ÔÓ¦£©¡£
+2. **D-02**£º? ÒÑÍê³É£¨2026-07-01£©¡ª ÔÚ `../../reference/06-routing-specs.md` ²¹Èë `/input/seven-dim` Â·ÓÉÌõÄ¿¡£
+3. **D-03**£º? ÒÑÍê³É£¨2026-07-01£©¡ª ÔÚ `../../../CHANGELOG.md` Unreleased ¶Î²¹ÈëÆßÎ¬²É¼¯ÅäÖÃÄ£¿éµÄ Added ¼ÇÂ¼¡£
+4. **D-04**£ºÔÚÊı¾İ×ÖµäÖĞµÇ¼Ç collectConfig Óë sevenDimConfigStore µÄÀàĞÍÓë×Ö¶Î¡£
 
-### P1ï¼ˆçŸ­æœŸä¿®å¤ï¼‰
-5. **D-05**ï¼šâœ… å·²å®Œæˆï¼ˆ2026-07-01ï¼‰â€” æ‰©å±• `DataDimensionType` è‡³ 8 ç»´åº¦ã€‚
-6. **D-06/D-07/D-08**ï¼šâœ… å·²å®Œæˆï¼ˆ2026-07-01ï¼‰â€” ç»Ÿä¸€ `06-routing-specs.md` å†…éƒ¨è·¯ç”±æ•°ã€ç‰ˆæœ¬å·ï¼Œæ¸…ç†å·²åˆ è·¯ç”±æ®‹ç•™ã€‚
-7. **D-09**ï¼šâœ… å·²å®Œæˆï¼ˆ2026-07-01ï¼‰â€” è¡¥å…¨ç»„ä»¶åº“æŒ‡å—çš„ç»„ä»¶æ–‡æ¡£ã€‚
+### P1£¨¶ÌÆÚĞŞ¸´£©
+5. **D-05**£º? ÒÑÍê³É£¨2026-07-01£©¡ª À©Õ¹ `DataDimensionType` ÖÁ 8 Î¬¶È¡£
+6. **D-06/D-07/D-08**£º? ÒÑÍê³É£¨2026-07-01£©¡ª Í³Ò» `06-routing-specs.md` ÄÚ²¿Â·ÓÉÊı¡¢°æ±¾ºÅ£¬ÇåÀíÒÑÉ¾Â·ÓÉ²ĞÁô¡£
+7. **D-09**£º? ÒÑÍê³É£¨2026-07-01£©¡ª ²¹È«×é¼ş¿âÖ¸ÄÏµÄ×é¼şÎÄµµ¡£
 
-### P2ï¼ˆåç»­å®Œå–„ï¼‰
-8. **D-10**ï¼šè¡¥å…¨ SevenDimConfigPage çš„ç»´åº¦é¢‘ç‡/æ•°æ®æºä¿®æ”¹ UIã€‚
-9. **D-11/D-12**ï¼šè¡¥é½ CHANGELOG ç‰ˆæœ¬è®°å½•ä¸æ•°æ®å­—å…¸æ—¥æœŸã€‚
+### P2£¨ºóĞøÍêÉÆ£©
+8. **D-10**£º²¹È« SevenDimConfigPage µÄÎ¬¶ÈÆµÂÊ/Êı¾İÔ´ĞŞ¸Ä UI¡£
+9. **D-11/D-12**£º²¹Æë CHANGELOG °æ±¾¼ÇÂ¼ÓëÊı¾İ×ÖµäÈÕÆÚ¡£
 
 ---
 
-## å…­ã€é™„å½•ï¼šæ£€æŸ¥æ–‡ä»¶æ¸…å•
+## Áù¡¢¸½Â¼£º¼ì²éÎÄ¼şÇåµ¥
 
-| æ–‡ä»¶ | ç”¨é€” |
+| ÎÄ¼ş | ÓÃÍ¾ |
 |------|------|
-| `src/config/routes.ts` | ROUTE_REGISTRY è·¯ç”±æ³¨å†Œè¡¨ |
-| `src/apps/input/InputApp.tsx` | è¾“å…¥èˆ±å­è·¯ç”±åˆ†å‘ |
-| `../../reference/06-routing-specs.md` | è·¯ç”±è§„æ ¼æ–‡æ¡£ |
-| `src/apps/input/InputApp.tsx` | Hubé¡µé¢æ¨¡å—å¡ç‰‡ |
-| `src/config/collectConfig.ts` | ä¸ƒç»´é‡‡é›†é…ç½®å¸¸é‡ |
-| `src/store/sevenDimConfigStore.ts` | ä¸ƒç»´é‡‡é›†é…ç½® Store |
-| `src/data/types.ts` | å…¨å±€ç±»å‹å®šä¹‰ |
-| `../../reference/data-dictionary-index.md` | æ•°æ®å­—å…¸ç´¢å¼• |
-| `src/pages/input/SevenDimConfigPage.tsx` | ä¸ƒç»´é‡‡é›†é…ç½®é¡µé¢ |
-| `./component-library-guide.md` | ç»„ä»¶åº“æŒ‡å— |
-| `tests/__tests__/sevenDimConfigStore.test.ts` | Store å•å…ƒæµ‹è¯• |
-| `tests/__tests__/SevenDimConfigPage.test.tsx` | é¡µé¢ç»„ä»¶æµ‹è¯• |
-| `package.json` | é¡¹ç›®ç‰ˆæœ¬ |
-| `../../../CHANGELOG.md` | æ›´æ–°æ—¥å¿— |
-| `../../../README.md` | é¡¹ç›®è¯´æ˜ |
-| `src/components/atoms/Switch.tsx` | Switch ç»„ä»¶æºç ï¼ˆè¾…åŠ©æ ¸å¯¹ï¼‰ |
-| `../../reference/data-collection-route-ui-audit.md` | æ•°æ®é‡‡é›†è·¯ç”±UIå®¡è®¡ï¼ˆå‚è€ƒï¼‰ |
-| `./data-collection-gap-analysis.md` | æ•°æ®é‡‡é›†å·®è·åˆ†æï¼ˆå‚è€ƒï¼‰ |
+| `src/config/routes.ts` | ROUTE_REGISTRY Â·ÓÉ×¢²á±í |
+| `src/apps/input/InputApp.tsx` | ÊäÈë²Õ×ÓÂ·ÓÉ·Ö·¢ |
+| `../../reference/06-routing-specs.md` | Â·ÓÉ¹æ¸ñÎÄµµ |
+| `src/apps/input/InputApp.tsx` | HubÒ³ÃæÄ£¿é¿¨Æ¬ |
+| `src/config/collectConfig.ts` | ÆßÎ¬²É¼¯ÅäÖÃ³£Á¿ |
+| `src/store/sevenDimConfigStore.ts` | ÆßÎ¬²É¼¯ÅäÖÃ Store |
+| `src/data/types.ts` | È«¾ÖÀàĞÍ¶¨Òå |
+| `../../reference/data-dictionary-index.md` | Êı¾İ×ÖµäË÷Òı |
+| `src/pages/input/SevenDimConfigPage.tsx` | ÆßÎ¬²É¼¯ÅäÖÃÒ³Ãæ |
+| `./component-library-guide.md` | ×é¼ş¿âÖ¸ÄÏ |
+| `tests/__tests__/sevenDimConfigStore.test.ts` | Store µ¥Ôª²âÊÔ |
+| `tests/__tests__/SevenDimConfigPage.test.tsx` | Ò³Ãæ×é¼ş²âÊÔ |
+| `package.json` | ÏîÄ¿°æ±¾ |
+| `../../../CHANGELOG.md` | ¸üĞÂÈÕÖ¾ |
+| `../../../README.md` | ÏîÄ¿ËµÃ÷ |
+| `src/components/atoms/Switch.tsx` | Switch ×é¼şÔ´Âë£¨¸¨ÖúºË¶Ô£© |
+| `../../reference/data-collection-route-ui-audit.md` | Êı¾İ²É¼¯Â·ÓÉUIÉó¼Æ£¨²Î¿¼£© |
+| `./data-collection-gap-analysis.md` | Êı¾İ²É¼¯²î¾à·ÖÎö£¨²Î¿¼£© |
 
 ---
 
-*æŠ¥å‘Šç»“æŸ*
+*±¨¸æ½áÊø*

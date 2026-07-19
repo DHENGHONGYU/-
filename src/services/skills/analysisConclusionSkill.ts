@@ -17,6 +17,9 @@ const logger = getLogger()
 
 const RATINGS = ['strong_buy', 'buy', 'hold', 'sell', 'strong_sell'] as const
 
+/**
+ * AnalysisConclusionSchema
+ */
 export const AnalysisConclusionSchema = z.object({
   rating: z.enum(RATINGS),
   summary: z.string().min(1),
@@ -28,6 +31,9 @@ export const AnalysisConclusionSchema = z.object({
 
 export type AnalysisConclusionOutput = z.infer<typeof AnalysisConclusionSchema>
 
+/**
+ * AnalysisConclusionInputSchema
+ */
 export const AnalysisConclusionInputSchema = z.object({
   symbol: z.string(),
   stockName: z.string().optional(),
@@ -75,6 +81,9 @@ function buildMessages(ctx: SkillContext): LlmMessage[] {
   ]
 }
 
+/**
+ * executeAnalysisConclusionSkill
+ */
 export async function executeAnalysisConclusionSkill(
   ctx: SkillContext,
 ): Promise<SkillResult<AnalysisConclusionOutput>> {
@@ -141,6 +150,9 @@ export async function executeAnalysisConclusionSkill(
   }
 }
 
+/**
+ * analysisConclusionSkill
+ */
 export const analysisConclusionSkill: SkillDefinition<AnalysisConclusionOutput> = {
   name: 'analysis-conclusion',
   title: '分析结论生成',

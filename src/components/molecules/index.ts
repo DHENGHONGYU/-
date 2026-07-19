@@ -51,6 +51,22 @@ export type { SearchBarProps } from './SearchBar'
 export { FilterChip } from './FilterChip'
 export type { FilterChipProps } from './FilterChip'
 
+// 行业分析组件（v2.9.5 新增）
+export { SignalBadge } from './SignalBadge'
+export type { SignalBadgeProps } from './SignalBadge'
+
+export { ScoreGauge } from './ScoreGauge'
+export type { ScoreGaugeProps } from './ScoreGauge'
+
+export { TrendArrow } from './TrendArrow'
+export type { TrendArrowProps } from './TrendArrow'
+
+export { RankedCard } from './RankedCard'
+export type { RankedCardProps } from './RankedCard'
+
+export { DataQualityIndicator } from './DataQualityIndicator'
+export type { DataQualityIndicatorProps } from './DataQualityIndicator'
+
 // P3 交互状态组件（ErrorState 与 ./ErrorState 重名，不通过桶导出，需直引 @/components/molecules/states/Error）
 export { Loading, Empty, Skeleton } from './states'
 export type { LoadingProps, EmptyProps, SkeletonProps } from './states'

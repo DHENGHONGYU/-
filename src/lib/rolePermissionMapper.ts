@@ -2,6 +2,11 @@ import type { UserRole, DeveloperRole } from '@/types/role.types'
 import type { McpCallerRole } from '@/types/modules/mcp.types'
 import { ACL_MATRIX, MODULE_ID, DB_OPERATION, type ModuleId, type DbOperation } from '@/config/dbConfig'
 
+/**
+ * mapUserRoleToMcpRole
+ * @param role
+ * @returns McpCallerRole
+ */
 export function mapUserRoleToMcpRole(role: UserRole): McpCallerRole {
   switch (role) {
     case 'admin':
@@ -17,6 +22,11 @@ export function mapUserRoleToMcpRole(role: UserRole): McpCallerRole {
   }
 }
 
+/**
+ * mapDeveloperRoleToMcpRole
+ * @param role
+ * @returns McpCallerRole
+ */
 export function mapDeveloperRoleToMcpRole(role: DeveloperRole): McpCallerRole {
   switch (role) {
     case 'architect':
@@ -36,6 +46,11 @@ export function mapDeveloperRoleToMcpRole(role: DeveloperRole): McpCallerRole {
   }
 }
 
+/**
+ * getUserRoleAllowedModules
+ * @param role
+ * @returns ModuleId[]
+ */
 export function getUserRoleAllowedModules(role: UserRole): ModuleId[] {
   const moduleIds = Object.values(MODULE_ID) as ModuleId[]
   switch (role) {
@@ -57,6 +72,11 @@ export function getUserRoleAllowedModules(role: UserRole): ModuleId[] {
   }
 }
 
+/**
+ * getDeveloperRoleAllowedModules
+ * @param role
+ * @returns ModuleId[]
+ */
 export function getDeveloperRoleAllowedModules(role: DeveloperRole): ModuleId[] {
   const moduleIds = Object.values(MODULE_ID) as ModuleId[]
   switch (role) {
@@ -95,6 +115,9 @@ export function getDeveloperRoleAllowedModules(role: DeveloperRole): ModuleId[] 
   }
 }
 
+/**
+ * checkUserRolePermission
+ */
 export function checkUserRolePermission(
   role: UserRole,
   module: ModuleId,
@@ -114,6 +137,9 @@ export function checkUserRolePermission(
   return true
 }
 
+/**
+ * checkDeveloperRolePermission
+ */
 export function checkDeveloperRolePermission(
   role: DeveloperRole,
   module: ModuleId,
@@ -133,6 +159,9 @@ export function checkDeveloperRolePermission(
   return true
 }
 
+/**
+ * checkUserRoleDbOperation
+ */
 export function checkUserRoleDbOperation(
   role: UserRole,
   module: ModuleId,
@@ -151,6 +180,9 @@ export function checkUserRoleDbOperation(
   return checkUserRolePermission(role, module, operation)
 }
 
+/**
+ * checkDeveloperRoleDbOperation
+ */
 export function checkDeveloperRoleDbOperation(
   role: DeveloperRole,
   module: ModuleId,

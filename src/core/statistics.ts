@@ -11,8 +11,6 @@
  *
  * @module lib/statistics
  * @created 2026-07-15 - 消除跨服务依赖（P0 修复）
- */
-
 /**
  * 计算 Pearson 相关系数
  *

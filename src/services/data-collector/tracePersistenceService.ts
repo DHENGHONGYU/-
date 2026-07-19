@@ -32,12 +32,9 @@ export async function saveTraceRecord(span: CollectionTraceSpan): Promise<void> 
         timestamp: Date.now(),
       },
       payload: {
-        store: STORE_NAME.traceRecords,
-        data: {
-          ...span,
-          persistedAt: Date.now(),
-        } satisfies TraceRecord,
-      },
+        ...span,
+        persistedAt: Date.now(),
+      } satisfies TraceRecord,
     })
     logger.info('[tracePersistenceService] trace 持久化成功', { traceId: span.traceId })
   } catch (err) {

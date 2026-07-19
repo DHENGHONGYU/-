@@ -1,154 +1,162 @@
 ---
-title: complexity-remediation-plan
-tier: reference
+title: Ê£Óà¸´ÔÓ¶ÈÕû¸ÄÈÎÎñÇåµ¥Óë¼Æ»®£¨2026-07-12£©
+type: how-to
+domain: qa
+phase: planning
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "»ù×¼£º`complexity-baseline-current.json`£¨Êµ²â 93 Ïî = 64 Éî¶ÈÇ¶Ì× D4 + 29 ÖØ¸´Ìõ¼ş£¬³¤Á´ÒÑ¹éÁã£© ¿Ú¾¶£ºÉî¶È¡İ4 /..."
+tags: [qa, complexity, remediation]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-tier: reference
-code_version: 2.0.0
----
+# Ê£Óà¸´ÔÓ¶ÈÕû¸ÄÈÎÎñÇåµ¥Óë¼Æ»®£¨2026-07-12£©
 
-# å‰©ä½™å¤æ‚åº¦æ•´æ”¹ä»»åŠ¡æ¸…å•ä¸è®¡åˆ’ï¼ˆ2026-07-12ï¼‰
+> »ù×¼£º`complexity-baseline-current.json`£¨Êµ²â 93 Ïî = 64 Éî¶ÈÇ¶Ì× D4 + 29 ÖØ¸´Ìõ¼ş£¬³¤Á´ÒÑ¹éÁã£©
+> ¿Ú¾¶£ºÉî¶È¡İ4 / ÖØ¸´Ìõ¼ş£¨Í¬º¯ÊıÄÚÖğ×ÖÏàÍ¬²¼¶û±í´ïÊ½£©/ ³¤Á´¡İ4 ·ÖÖ§
+> Õû¸ÄÔ­Ôò£º**Õ®ÎñÖ»½µ²»Éı**£»½ö¶Ô¡¸´¿º¯Êı / ÎŞ×´Ì¬Óë²¢·¢ÒÀÀµ¡¹ÕßÌáÈ¡£»²¢·¢ÓïÒåÏà¹ØÕßÎ¬³ÖÔ­Ñù²¢×¢ÊÍ¡£
 
-> åŸºå‡†ï¼š`complexity-baseline-current.json`ï¼ˆå®æµ‹ 93 é¡¹ = 64 æ·±åº¦åµŒå¥— D4 + 29 é‡å¤æ¡ä»¶ï¼Œé•¿é“¾å·²å½’é›¶ï¼‰
-> å£å¾„ï¼šæ·±åº¦â‰¥4 / é‡å¤æ¡ä»¶ï¼ˆåŒå‡½æ•°å†…é€å­—ç›¸åŒå¸ƒå°”è¡¨è¾¾å¼ï¼‰/ é•¿é“¾â‰¥4 åˆ†æ”¯
-> æ•´æ”¹åŸåˆ™ï¼š**å€ºåŠ¡åªé™ä¸å‡**ï¼›ä»…å¯¹ã€Œçº¯å‡½æ•° / æ— çŠ¶æ€ä¸å¹¶å‘ä¾èµ–ã€è€…æå–ï¼›å¹¶å‘è¯­ä¹‰ç›¸å…³è€…ç»´æŒåŸæ ·å¹¶æ³¨é‡Šã€‚
+## Ò»¡¢»·¾³Õû¸Ä½áÂÛ£¨ÒÑÂäÊµ£©
 
-## ä¸€ã€ç¯å¢ƒæ•´æ”¹ç»“è®ºï¼ˆå·²è½å®ï¼‰
-
-| é—®é¢˜ | æ ¹å› æ ¸å® | æ•´æ”¹ |
+| ÎÊÌâ | ¸ùÒòºËÊµ | Õû¸Ä |
 |---|---|---|
-| `SkillManage` ä¸å¯ç”¨ | æœ¬ä¼šè¯ deferred å·¥å…·æœªæš´éœ²ï¼›æ­£ç¡®å…¥å£æ˜¯ `skill-creator` SKILLï¼ˆç» `Skill` å·¥å…·è°ƒç”¨ï¼‰ | ç”¨ `skill-creator` åˆ›å»º/æ›´æ–°æŠ€èƒ½ |
-| tsx æ®µé”™è¯¯ï¼ˆ0xC0000005ï¼‰ | `node_modules/.cache/tsx`ã€`~/.cache/tsx` ç¼“å­˜æŸåï¼›å½“å‰ä¸¤ç›®å½•å‡å·²ä¸å­˜åœ¨ï¼Œtsx åœ¨ Node 22/24 ä¸‹ `-e` å‡ exit 0ï¼ˆå·²ä¸å¤ç°ï¼‰ | é»˜è®¤ç”¨ç³»ç»Ÿ Node 24 é©±åŠ¨ tsx å®¡è®¡ï¼›å¤å‘å³æ¸…ç¼“å­˜ |
-| vitest `Worker exited unexpectedly` | `vite.config.ts` æ—§ `pool:'forks', maxForks:1, fileParallelism:false` â†’ å• fork ä¸²è¡Œ 317 æ–‡ä»¶ï¼Œå†…å­˜è·¨æ–‡ä»¶ç´¯ç§¯è‡´æ­»ï¼›å´©æºƒç‚¹æ¯è½®ä¸åŒå°è¯ä¸ºç´¯ç§¯å‹ | `maxForks: 1 â†’ 4`ï¼ˆæ–‡ä»¶é—´å›æ”¶ forkï¼Œå†…å­˜é‡Šæ”¾ï¼‰ï¼›ä¿ç•™ `fileParallelism:false` è§„é¿ threads æ± å´©æºƒ |
+| `SkillManage` ²»¿ÉÓÃ | ±¾»á»° deferred ¹¤¾ßÎ´±©Â¶£»ÕıÈ·Èë¿ÚÊÇ `skill-creator` SKILL£¨¾­ `Skill` ¹¤¾ßµ÷ÓÃ£© | ÓÃ `skill-creator` ´´½¨/¸üĞÂ¼¼ÄÜ |
+| tsx ¶Î´íÎó£¨0xC0000005£© | `node_modules/.cache/tsx`¡¢`~/.cache/tsx` »º´æËğ»µ£»µ±Ç°Á½Ä¿Â¼¾ùÒÑ²»´æÔÚ£¬tsx ÔÚ Node 22/24 ÏÂ `-e` ¾ù exit 0£¨ÒÑ²»¸´ÏÖ£© | Ä¬ÈÏÓÃÏµÍ³ Node 24 Çı¶¯ tsx Éó¼Æ£»¸´·¢¼´Çå»º´æ |
+| vitest `Worker exited unexpectedly` | `vite.config.ts` ¾É `pool:'forks', maxForks:1, fileParallelism:false` ¡ú µ¥ fork ´®ĞĞ 317 ÎÄ¼ş£¬ÄÚ´æ¿çÎÄ¼şÀÛ»ıÖÂËÀ£»±ÀÀ£µãÃ¿ÂÖ²»Í¬Ó¡Ö¤ÎªÀÛ»ıĞÍ | `maxForks: 1 ¡ú 4`£¨ÎÄ¼ş¼ä»ØÊÕ fork£¬ÄÚ´æÊÍ·Å£©£»±£Áô `fileParallelism:false` ¹æ±Ü threads ³Ø±ÀÀ£ |
 
-## äºŒã€æ·±åº¦åµŒå¥—ï¼ˆ64 å¤„ï¼Œå…¨éƒ¨ D4ï¼‰æ•´æ”¹æ¸…å•
+## ¶ş¡¢Éî¶ÈÇ¶Ì×£¨64 ´¦£¬È«²¿ D4£©Õû¸ÄÇåµ¥
 
-æŒ‰ã€Œæ ¸å¿ƒåŸºç¡€è®¾æ–½ â†’ æœåŠ¡å±‚ â†’ UI å±‚ã€ä¸ã€Œå•æ–‡ä»¶å¤šè¿è§„ä¼˜å…ˆã€æ’åºã€‚æ¯æ‰¹ç¼–è¾‘åè·‘ `tsc:prod + audit:layers + audit:atomic + å®šå‘æµ‹è¯•`ã€‚
+°´¡¸ºËĞÄ»ù´¡ÉèÊ© ¡ú ·şÎñ²ã ¡ú UI ²ã¡¹Óë¡¸µ¥ÎÄ¼ş¶àÎ¥¹æÓÅÏÈ¡¹ÅÅĞò¡£Ã¿Åú±à¼­ºóÅÜ `tsc:prod + audit:layers + audit:atomic + ¶¨Ïò²âÊÔ`¡£
 
-### Tier 1 â€” æ ¸å¿ƒ / å•æ–‡ä»¶å¤šè¿è§„ï¼ˆé«˜ ROIï¼Œä¼˜å…ˆï¼‰
-| # | æ–‡ä»¶ | å‡½æ•° | D4æ•° | æ‰‹æ³• |
+### Tier 1 ¡ª ºËĞÄ / µ¥ÎÄ¼ş¶àÎ¥¹æ£¨¸ß ROI£¬ÓÅÏÈ£©
+| # | ÎÄ¼ş | º¯Êı | D4Êı | ÊÖ·¨ |
 |---|---|---|---|---|
-| D1 | `src/lib/localStorageManager.ts` | 3 å¤„ | 3 | å«è¯­å¥ + helper æå–ï¼ˆçº¯å‡½æ•°ï¼Œå®‰å…¨ï¼‰ |
-| D2 | `src/services/data-collector/dataSourceOrchestrator.ts` | 3 å¤„ | 3 | æ—©è¿”å› + æå–å­æµç¨‹ |
-| D3 | `src/services/llm/llmClient.ts` | 2 å¤„ + 1 é‡å¤ | 2 | æå–æµå¼å¤„ç† helper |
-| D4 | `src/core/pipelineScheduler.ts` | 2 å¤„ | 2 | æå–è°ƒåº¦åˆ†æ”¯ helper |
-| D5 | `src/data/db.ts` | 2 å¤„ + withTransaction é‡å¤ | 2 | å«è¯­å¥æ‹å¹³ |
-| D6 | `src/components/organisms/input/StockSearch.tsx` | 2 å¤„ + 1 é‡å¤ | 2 | æå–æ¸²æŸ“/æŸ¥è¯¢ helper |
-| D7 | `src/components/organisms/system/MigrationPanel.tsx` | 2 å¤„ + 1 é‡å¤ | 2 | æå–åˆ†æ”¯ |
-| D8 | `src/services/hybrid-proofread/localCollector.ts` | 2 å¤„ | 2 | æ—©è¿”å› |
-| D9 | `src/services/input/batchImportParsers.ts` | 2 å¤„ | 2 | æå–è§£æ helper |
-| D10 | `src/services/input/inputService.ts` | 2 å¤„ | 2 | æå–æ ¡éªŒ helper |
-| D11 | `src/services/news/newsService.ts` | 2 å¤„ | 2 | æ—©è¿”å› |
-| D12 | `src/services/news/sentimentAnalyzer.ts` | 2 å¤„ | 2 | æå–æƒ…æ„Ÿåˆ¤å®š helper |
-| D13 | `src/services/system/localDocService.ts` | 2 å¤„ | 2 | æå– IO helper |
-| D14 | `src/services/system/migration/migrationTransformers.ts` | 2 å¤„ | 2 | æå–è½¬æ¢ helper |
-| D15 | `src/services/trading/tradeErrorDetectors.ts` | 2 å¤„ | 2 | æå–åˆ¤å®š helper |
-| D16 | `src/store/signalQualityStore.derived.ts` | 2 å¤„ | 2 | æå–æ´¾ç”Ÿ helper |
+| D1 | `src/lib/localStorageManager.ts` | 3 ´¦ | 3 | ÎÀÓï¾ä + helper ÌáÈ¡£¨´¿º¯Êı£¬°²È«£© |
+| D2 | `src/services/data-collector/dataSourceOrchestrator.ts` | 3 ´¦ | 3 | Ôç·µ»Ø + ÌáÈ¡×ÓÁ÷³Ì |
+| D3 | `src/services/llm/llmClient.ts` | 2 ´¦ + 1 ÖØ¸´ | 2 | ÌáÈ¡Á÷Ê½´¦Àí helper |
+| D4 | `src/core/pipelineScheduler.ts` | 2 ´¦ | 2 | ÌáÈ¡µ÷¶È·ÖÖ§ helper |
+| D5 | `src/data/db.ts` | 2 ´¦ + withTransaction ÖØ¸´ | 2 | ÎÀÓï¾äÅÄÆ½ |
+| D6 | `src/components/organisms/input/StockSearch.tsx` | 2 ´¦ + 1 ÖØ¸´ | 2 | ÌáÈ¡äÖÈ¾/²éÑ¯ helper |
+| D7 | `src/components/organisms/system/MigrationPanel.tsx` | 2 ´¦ + 1 ÖØ¸´ | 2 | ÌáÈ¡·ÖÖ§ |
+| D8 | `src/services/hybrid-proofread/localCollector.ts` | 2 ´¦ | 2 | Ôç·µ»Ø |
+| D9 | `src/services/input/batchImportParsers.ts` | 2 ´¦ | 2 | ÌáÈ¡½âÎö helper |
+| D10 | `src/services/input/inputService.ts` | 2 ´¦ | 2 | ÌáÈ¡Ğ£Ñé helper |
+| D11 | `src/services/news/newsService.ts` | 2 ´¦ | 2 | Ôç·µ»Ø |
+| D12 | `src/services/news/sentimentAnalyzer.ts` | 2 ´¦ | 2 | ÌáÈ¡Çé¸ĞÅĞ¶¨ helper |
+| D13 | `src/services/system/localDocService.ts` | 2 ´¦ | 2 | ÌáÈ¡ IO helper |
+| D14 | `src/services/system/migration/migrationTransformers.ts` | 2 ´¦ | 2 | ÌáÈ¡×ª»» helper |
+| D15 | `src/services/trading/tradeErrorDetectors.ts` | 2 ´¦ | 2 | ÌáÈ¡ÅĞ¶¨ helper |
+| D16 | `src/store/signalQualityStore.derived.ts` | 2 ´¦ | 2 | ÌáÈ¡ÅÉÉú helper |
 
-### Tier 2 â€” å•æ–‡ä»¶å•è¿è§„ï¼ˆæœåŠ¡/æ ¸å¿ƒå±‚ï¼Œçº¦ 30 å¤„ï¼Œé€æ–‡ä»¶å«è¯­å¥/helperï¼‰
-`src/core/databridge.ts`(query æ®µï¼Œè°¨æ…)ã€`src/lib/store-audit/analyzer.ts`ã€`src/mcp/core/client.ts`ã€`src/mcp/core/mcpAclMonitor.ts`ã€`src/mcp/register.ts`ã€`src/services/backtest/backtestMetrics.ts`ã€`src/services/collection/collectionWizardPersistence.ts`ã€`src/services/data-collector/directDataAPI.ts`ã€`src/services/fetcher/dataSourceRegistry.ts`ã€`src/services/fetcher/directDataAPI.ts`ã€`src/services/fetcher/fetcherInterceptor.ts`ã€`src/services/fetcher/orchestrator/phaseOrchestrator.ts`ã€`src/services/input/batchImportExecutor.ts`ã€`src/services/news/stockLinker.ts`ã€`src/services/rbac/rbacManagementService.ts`ã€`src/services/scoring/v6-engine/calculators/l7_l8.ts`ã€`src/services/scoring/v6-engine/engine.ts`ã€`src/services/scoring/v6-engine/types.ts`ã€`src/services/screening/multiFactorScreeningEngine.ts`ã€`src/services/pool/poolService.ts`ã€`src/services/system/migration/storeMigrators.ts`ã€`src/services/system/v6MigrationService.ts`ã€`src/services/trading/positionComputer.ts`ã€`src/services/trading/scoringAdapter.ts`ã€`src/services/trading/strategySnapshotService.ts`ã€`src/services/trading/tradeErrorClassifier.ts`ã€`src/services/trading/tradeErrorUtils.ts`ã€`src/services/trading/tradeReviewAI.skillDevelopment.ts`ã€`src/services/trading/tradeReviewAI.utils.ts`ã€`src/services/useCase/getUnifiedStockView.useCase.ts`
+### Tier 2 ¡ª µ¥ÎÄ¼şµ¥Î¥¹æ£¨·şÎñ/ºËĞÄ²ã£¬Ô¼ 30 ´¦£¬ÖğÎÄ¼şÎÀÓï¾ä/helper£©
+`src/core/databridge.ts`(query ¶Î£¬½÷É÷)¡¢`src/lib/store-audit/analyzer.ts`¡¢`src/mcp/core/client.ts`¡¢`src/mcp/core/mcpAclMonitor.ts`¡¢`src/mcp/register.ts`¡¢`src/services/backtest/backtestMetrics.ts`¡¢`src/services/collection/collectionWizardPersistence.ts`¡¢`src/services/data-collector/directDataAPI.ts`¡¢`src/services/fetcher/dataSourceRegistry.ts`¡¢`src/services/fetcher/directDataAPI.ts`¡¢`src/services/fetcher/fetcherInterceptor.ts`¡¢`src/services/fetcher/orchestrator/phaseOrchestrator.ts`¡¢`src/services/input/batchImportExecutor.ts`¡¢`src/services/news/stockLinker.ts`¡¢`src/services/rbac/rbacManagementService.ts`¡¢`src/services/scoring/v6-engine/calculators/l7_l8.ts`¡¢`src/services/scoring/v6-engine/engine.ts`¡¢`src/services/scoring/v6-engine/types.ts`¡¢`src/services/screening/multiFactorScreeningEngine.ts`¡¢`src/services/pool/poolService.ts`¡¢`src/services/system/migration/storeMigrators.ts`¡¢`src/services/system/v6MigrationService.ts`¡¢`src/services/trading/positionComputer.ts`¡¢`src/services/trading/scoringAdapter.ts`¡¢`src/services/trading/strategySnapshotService.ts`¡¢`src/services/trading/tradeErrorClassifier.ts`¡¢`src/services/trading/tradeErrorUtils.ts`¡¢`src/services/trading/tradeReviewAI.skillDevelopment.ts`¡¢`src/services/trading/tradeReviewAI.utils.ts`¡¢`src/services/useCase/getUnifiedStockView.useCase.ts`
 
-### Tier 3 â€” å•æ–‡ä»¶å•è¿è§„ï¼ˆUI / é¡µé¢ / ç»„ä»¶ / Hook å±‚ï¼Œçº¦ 18 å¤„ï¼‰
-`src/apps/command/ConfigApp.tsx`ã€`src/apps/input/BulkImportPanel.tsx`ã€`src/apps/trading/components/PhaseStepper.tsx`ã€`src/cockpit/CockpitShell.tsx`ã€`src/components/organisms/input/TraceReplayPanel.tsx`ã€`src/components/organisms/pool/usePoolDataFromStore.ts`ã€`src/components/organisms/system/LogStreamPanel.tsx`ã€`src/components/organisms/system/migration/MigrationUploadTab.tsx`ã€`src/data/repository.ts`(é‡å¤)ã€`src/hooks/cabin/useIndustryScorePage.ts`ã€`src/hooks/useConfirmDialog.tsx`ã€`src/hooks/useFreshData.ts`ã€`src/hooks/usePoolBoard.ts`ã€`src/pages/analysis/IntelligentScorePage.tsx`ã€`src/pages/analysis/ScoreDocPage.tsx`ã€`src/pages/analysis/StockAnalysisPage.tsx`ã€`src/pages/input/CollectTask/index.tsx`ã€`src/pages/trading/components/TradeModal.tsx`ã€`src/pages/trading/HoldingsPage.tsx`ã€`src/pages/trading/TradingFlowPage.tsx`
+### Tier 3 ¡ª µ¥ÎÄ¼şµ¥Î¥¹æ£¨UI / Ò³Ãæ / ×é¼ş / Hook ²ã£¬Ô¼ 18 ´¦£©
+`src/apps/command/ConfigApp.tsx`¡¢`src/apps/input/BulkImportPanel.tsx`¡¢`src/apps/trading/components/PhaseStepper.tsx`¡¢`src/cockpit/CockpitShell.tsx`¡¢`src/components/organisms/input/TraceReplayPanel.tsx`¡¢`src/components/organisms/pool/usePoolDataFromStore.ts`¡¢`src/components/organisms/system/LogStreamPanel.tsx`¡¢`src/components/organisms/system/migration/MigrationUploadTab.tsx`¡¢`src/data/repository.ts`(ÖØ¸´)¡¢`src/hooks/cabin/useIndustryScorePage.ts`¡¢`src/hooks/useConfirmDialog.tsx`¡¢`src/hooks/useFreshData.ts`¡¢`src/hooks/usePoolBoard.ts`¡¢`src/pages/analysis/IntelligentScorePage.tsx`¡¢`src/pages/analysis/ScoreDocPage.tsx`¡¢`src/pages/analysis/StockAnalysisPage.tsx`¡¢`src/pages/input/CollectTask/index.tsx`¡¢`src/pages/trading/components/TradeModal.tsx`¡¢`src/pages/trading/HoldingsPage.tsx`¡¢`src/pages/trading/TradingFlowPage.tsx`
 
-## ä¸‰ã€é‡å¤æ¡ä»¶ï¼ˆ29 å¤„ï¼‰æ•´æ”¹æ¸…å•
+## Èı¡¢ÖØ¸´Ìõ¼ş£¨29 ´¦£©Õû¸ÄÇåµ¥
 
-### å®‰å…¨å¯æå–ï¼ˆçº¯å‡½æ•° / æ— çŠ¶æ€ä¾èµ–ï¼‰â€”â€” æå–å…·åè°“è¯
-| # | æ–‡ä»¶ | å‡½æ•° | è¯´æ˜ |
+### °²È«¿ÉÌáÈ¡£¨´¿º¯Êı / ÎŞ×´Ì¬ÒÀÀµ£©¡ª¡ª ÌáÈ¡¾ßÃûÎ½´Ê
+| # | ÎÄ¼ş | º¯Êı | ËµÃ÷ |
 |---|---|---|---|
-| C1 | `src/apps/input/BulkImportPanel.tsx` | L44 | UI æ¡ä»¶ï¼Œå®‰å…¨ |
-| C2 | `src/apps/trading/components/PhaseStepper.tsx` | L33 | UI é˜¶æ®µåˆ¤å®šï¼Œå®‰å…¨ |
-| C3 | `src/cockpit/CockpitShell.tsx` | `WidgetWrapper` L50 | UI åŒ…è£…ï¼Œå®‰å…¨ |
-| C4 | `src/components/organisms/input/StockSearch.tsx` | L20 | æŸ¥è¯¢æ¡ä»¶ï¼Œå®‰å…¨ |
-| C5 | `src/components/organisms/input/TraceReplayPanel.tsx` | L82 | UIï¼Œå®‰å…¨ |
-| C6 | `src/components/organisms/pool/usePoolDataFromStore.ts` | L39 | Hookï¼Œå®‰å…¨ |
-| C7 | `src/components/organisms/system/LogStreamPanel.tsx` | `LogStreamPanelBase` L125 | UIï¼Œå®‰å…¨ |
-| C8 | `src/components/organisms/system/migration/MigrationUploadTab.tsx` | L15 | UIï¼Œå®‰å…¨ |
-| C9 | `src/components/organisms/system/MigrationPanel.tsx` | L23 | UIï¼Œå®‰å…¨ |
-| C10 | `src/data/db.ts` | `withTransaction` L104 | äº‹åŠ¡åˆ¤å®šï¼Œå®‰å…¨ |
-| C11 | `src/data/repository.ts` | `createRepository` L72 | ä»“åº“åˆ¤å®šï¼Œå®‰å…¨ |
-| C12 | `src/hooks/cabin/useIndustryScorePage.ts` | L103 | Hookï¼Œå®‰å…¨ |
-| C13 | `src/hooks/useConfirmDialog.tsx` | L67 | Hookï¼Œå®‰å…¨ |
-| C14 | `src/hooks/useFreshData.ts` | L111 | Hookï¼Œå®‰å…¨ |
-| C15 | `src/hooks/usePoolBoard.ts` | L28 | Hookï¼Œå®‰å…¨ |
-| C16 | `src/mcp/servers/fetcher/dataFetcherServer.ts` | `getResources` L186 | æœåŠ¡ç«¯åˆ¤å®šï¼Œå®‰å…¨ |
-| C17 | `src/pages/analysis/IntelligentScorePage.tsx` | L175 | é¡µé¢ï¼Œå®‰å…¨ |
-| C18 | `src/pages/analysis/ScoreDocPage.tsx` | L24 | é¡µé¢ï¼Œå®‰å…¨ |
-| C19 | `src/pages/analysis/StockAnalysisPage.tsx` | L17 | é¡µé¢ï¼Œå®‰å…¨ |
-| C20 | `src/pages/trading/components/TradeModal.tsx` | L40 | é¡µé¢ï¼Œå®‰å…¨ |
-| C21 | `src/pages/trading/HoldingsPage.tsx` | L48 | é¡µé¢ï¼Œå®‰å…¨ |
-| C22 | `src/pages/trading/TradingFlowPage.tsx` | L30 | é¡µé¢ï¼Œå®‰å…¨ |
-| C23 | `src/services/llm/llmClient.ts` | `streamingChat` L287 | æµå¼çŠ¶æ€åˆ¤å®šï¼Œå®‰å…¨ |
-| C24 | `src/services/resilience.ts` | `createCircuitBreaker` L180 | ç†”æ–­å™¨åˆå§‹åŒ–ï¼Œå®‰å…¨ |
-| C25 | `src/store/agentStore.ts` | `initAgentSubscriptions` L88 | Store è®¢é˜…ï¼Œå®‰å…¨ |
-| C26 | `src/store/dualStrategyStore.ts` | `initDualStrategyStoreSubscriptions` L503 | Store è®¢é˜…ï¼Œå®‰å…¨ |
-| C27 | `src/store/positionStore.ts` | `initPositionStoreSubscriptions` L223 | Store è®¢é˜…ï¼Œå®‰å…¨ |
-| C28 | `src/store/signalStore.ts` | `initSignalStoreSubscriptions` L186 | Store è®¢é˜…ï¼Œå®‰å…¨ |
+| C1 | `src/apps/input/BulkImportPanel.tsx` | L44 | UI Ìõ¼ş£¬°²È« |
+| C2 | `src/apps/trading/components/PhaseStepper.tsx` | L33 | UI ½×¶ÎÅĞ¶¨£¬°²È« |
+| C3 | `src/cockpit/CockpitShell.tsx` | `WidgetWrapper` L50 | UI °ü×°£¬°²È« |
+| C4 | `src/components/organisms/input/StockSearch.tsx` | L20 | ²éÑ¯Ìõ¼ş£¬°²È« |
+| C5 | `src/components/organisms/input/TraceReplayPanel.tsx` | L82 | UI£¬°²È« |
+| C6 | `src/components/organisms/pool/usePoolDataFromStore.ts` | L39 | Hook£¬°²È« |
+| C7 | `src/components/organisms/system/LogStreamPanel.tsx` | `LogStreamPanelBase` L125 | UI£¬°²È« |
+| C8 | `src/components/organisms/system/migration/MigrationUploadTab.tsx` | L15 | UI£¬°²È« |
+| C9 | `src/components/organisms/system/MigrationPanel.tsx` | L23 | UI£¬°²È« |
+| C10 | `src/data/db.ts` | `withTransaction` L104 | ÊÂÎñÅĞ¶¨£¬°²È« |
+| C11 | `src/data/repository.ts` | `createRepository` L72 | ²Ö¿âÅĞ¶¨£¬°²È« |
+| C12 | `src/hooks/cabin/useIndustryScorePage.ts` | L103 | Hook£¬°²È« |
+| C13 | `src/hooks/useConfirmDialog.tsx` | L67 | Hook£¬°²È« |
+| C14 | `src/hooks/useFreshData.ts` | L111 | Hook£¬°²È« |
+| C15 | `src/hooks/usePoolBoard.ts` | L28 | Hook£¬°²È« |
+| C16 | `src/mcp/servers/fetcher/dataFetcherServer.ts` | `getResources` L186 | ·şÎñ¶ËÅĞ¶¨£¬°²È« |
+| C17 | `src/pages/analysis/IntelligentScorePage.tsx` | L175 | Ò³Ãæ£¬°²È« |
+| C18 | `src/pages/analysis/ScoreDocPage.tsx` | L24 | Ò³Ãæ£¬°²È« |
+| C19 | `src/pages/analysis/StockAnalysisPage.tsx` | L17 | Ò³Ãæ£¬°²È« |
+| C20 | `src/pages/trading/components/TradeModal.tsx` | L40 | Ò³Ãæ£¬°²È« |
+| C21 | `src/pages/trading/HoldingsPage.tsx` | L48 | Ò³Ãæ£¬°²È« |
+| C22 | `src/pages/trading/TradingFlowPage.tsx` | L30 | Ò³Ãæ£¬°²È« |
+| C23 | `src/services/llm/llmClient.ts` | `streamingChat` L287 | Á÷Ê½×´Ì¬ÅĞ¶¨£¬°²È« |
+| C24 | `src/services/resilience.ts` | `createCircuitBreaker` L180 | ÈÛ¶ÏÆ÷³õÊ¼»¯£¬°²È« |
+| C25 | `src/store/agentStore.ts` | `initAgentSubscriptions` L88 | Store ¶©ÔÄ£¬°²È« |
+| C26 | `src/store/dualStrategyStore.ts` | `initDualStrategyStoreSubscriptions` L503 | Store ¶©ÔÄ£¬°²È« |
+| C27 | `src/store/positionStore.ts` | `initPositionStoreSubscriptions` L223 | Store ¶©ÔÄ£¬°²È« |
+| C28 | `src/store/signalStore.ts` | `initSignalStoreSubscriptions` L186 | Store ¶©ÔÄ£¬°²È« |
 
-### âš ï¸ ä¸å¯æå–ï¼ˆå¹¶å‘è¯­ä¹‰ä¾èµ–ï¼Œç»´æŒåŸæ ·å¹¶æ³¨é‡Šï¼‰
-| # | æ–‡ä»¶ | å‡½æ•° | åŸå›  |
+### ?? ²»¿ÉÌáÈ¡£¨²¢·¢ÓïÒåÒÀÀµ£¬Î¬³ÖÔ­Ñù²¢×¢ÊÍ£©
+| # | ÎÄ¼ş | º¯Êı | Ô­Òò |
 |---|---|---|---|
-| C29 | `src/services/resilience.ts` | `guard` L191 | `state === 'half-open'` å‡ºç°åœ¨ `Promise.then` ä¸¤ä¸ªå›è°ƒå†…ï¼ŒçŠ¶æ€åœ¨å¼‚æ­¥æœŸå¯è¢«å¹¶å‘ä¿®æ”¹ï¼Œå¿…é¡»å›è°ƒå†…å³æ—¶æ±‚å€¼ï¼›æå–ä¸ºå‡½æ•°å…¥å£å±€éƒ¨å˜é‡ä¼š**æ”¹å˜å¹¶å‘è¯­ä¹‰** â†’ ä¸æå–ï¼ŒåŠ æ³¨é‡Šè¯´æ˜ |
+| C29 | `src/services/resilience.ts` | `guard` L191 | `state === 'half-open'` ³öÏÖÔÚ `Promise.then` Á½¸ö»Øµ÷ÄÚ£¬×´Ì¬ÔÚÒì²½ÆÚ¿É±»²¢·¢ĞŞ¸Ä£¬±ØĞë»Øµ÷ÄÚ¼´Ê±ÇóÖµ£»ÌáÈ¡Îªº¯ÊıÈë¿Ú¾Ö²¿±äÁ¿»á**¸Ä±ä²¢·¢ÓïÒå** ¡ú ²»ÌáÈ¡£¬¼Ó×¢ÊÍËµÃ÷ |
 
-## å››ã€æ‰§è¡ŒèŠ‚å¥ï¼ˆæ¯æ‰¹å®ˆé—¨ç¦ï¼‰
-1. Tier 1ï¼ˆ16 æ–‡ä»¶ï¼Œçº¦ 35 å¤„ï¼‰â†’ éªŒ `tsc:prod + audit:layers + audit:atomic + å®šå‘æµ‹è¯•`
-2. Tier 2ï¼ˆ~30 æ–‡ä»¶ï¼‰â†’ åŒä¸Š
-3. Tier 3ï¼ˆ~20 æ–‡ä»¶ï¼‰â†’ åŒä¸Š
-4. é‡å¤æ¡ä»¶ C1â€“C28 éšå¯¹åº”æ–‡ä»¶æ‰¹æ¬¡ä¸€å¹¶æå–ï¼›C29 ç»´æŒå¹¶æ³¨é‡Š
-5. æœ«æ‰¹ï¼šå…¨é‡ `complexity` å®æµ‹ + `test:clean`(ç¯å¢ƒæ•´æ”¹å) + æ›´æ–°åŸºçº¿
+## ËÄ¡¢Ö´ĞĞ½Ú×à£¨Ã¿ÅúÊØÃÅ½û£©
+1. Tier 1£¨16 ÎÄ¼ş£¬Ô¼ 35 ´¦£©¡ú Ñé `tsc:prod + audit:layers + audit:atomic + ¶¨Ïò²âÊÔ`
+2. Tier 2£¨~30 ÎÄ¼ş£©¡ú Í¬ÉÏ
+3. Tier 3£¨~20 ÎÄ¼ş£©¡ú Í¬ÉÏ
+4. ÖØ¸´Ìõ¼ş C1¨CC28 Ëæ¶ÔÓ¦ÎÄ¼şÅú´ÎÒ»²¢ÌáÈ¡£»C29 Î¬³Ö²¢×¢ÊÍ
+5. Ä©Åú£ºÈ«Á¿ `complexity` Êµ²â + `test:clean`(»·¾³Õû¸Äºó) + ¸üĞÂ»ùÏß
 
-## äº”ã€æ‰§è¡Œè¿›åº¦ï¼ˆ2026-07-12 å®æ—¶ï¼‰
+## Îå¡¢Ö´ĞĞ½ø¶È£¨2026-07-12 ÊµÊ±£©
 
-> **æœ€ç»ˆç»“è®ºï¼ˆé‡å¤æ¡ä»¶æ•´æ”¹åå®æµ‹ `complexity-scan.ts` + `measure-complexity-now.ts`ï¼‰**ï¼š
-> - æ–‡ä»¶æ‰«æ 905ï¼ˆcomplexity-scanï¼‰/ 707ï¼ˆmeasureï¼‰ï¼›æ€»è¿è§„ **0** = æ·±åº¦åµŒå¥— **0** + é•¿é“¾ **0** + é‡å¤æ¡ä»¶ **0**ã€‚
-> - 38 æ–‡ä»¶é€»è¾‘åµŒå¥—æ¸…å•ï¼ˆD4ï¼‰å·²å…¨éƒ¨å¹³é“ºå½’é›¶ï¼›æ·±åº¦åµŒå¥—ä»åŸºå‡† 64 é™åˆ° **0**ã€‚
-> - é‡å¤æ¡ä»¶ 29 å¤„ï¼ˆC1â€“C28 æå–åˆå¹¶ + C29 ç†”æ–­çŠ¶æ€æœºç»´æŒï¼‰ç°å·²å½’é›¶ï¼šC1â€“C28 é€šè¿‡æŠ½å…·å helper / å«è¯­å¥ä¸€æ­£ä¸€å / De Morgan åè½¬å…¨éƒ¨æ¶ˆé™¤ï¼›C29 `resilience.guard` ä¸¤å¤„ `state === 'half-open'` åˆ†å± `createCircuitBreaker` ä¸å†…éƒ¨ `<arrow>` ä¸¤ä¸ªä¸åŒå‡½æ•°ï¼Œå®˜æ–¹ per-function æ‰«æä¸è®¡ä¸ºé‡å¤ï¼Œç»´æŒåŸæ ·ã€‚
+> **×îÖÕ½áÂÛ£¨ÖØ¸´Ìõ¼şÕû¸ÄºóÊµ²â `complexity-scan.ts` + `measure-complexity-now.ts`£©**£º
+> - ÎÄ¼şÉ¨Ãè 905£¨complexity-scan£©/ 707£¨measure£©£»×ÜÎ¥¹æ **0** = Éî¶ÈÇ¶Ì× **0** + ³¤Á´ **0** + ÖØ¸´Ìõ¼ş **0**¡£
+> - 38 ÎÄ¼şÂß¼­Ç¶Ì×Çåµ¥£¨D4£©ÒÑÈ«²¿Æ½ÆÌ¹éÁã£»Éî¶ÈÇ¶Ì×´Ó»ù×¼ 64 ½µµ½ **0**¡£
+> - ÖØ¸´Ìõ¼ş 29 ´¦£¨C1¨CC28 ÌáÈ¡ºÏ²¢ + C29 ÈÛ¶Ï×´Ì¬»úÎ¬³Ö£©ÏÖÒÑ¹éÁã£ºC1¨CC28 Í¨¹ı³é¾ßÃû helper / ÎÀÓï¾äÒ»ÕıÒ»·´ / De Morgan ·´×ªÈ«²¿Ïû³ı£»C29 `resilience.guard` Á½´¦ `state === 'half-open'` ·ÖÊô `createCircuitBreaker` ÓëÄÚ²¿ `<arrow>` Á½¸ö²»Í¬º¯Êı£¬¹Ù·½ per-function É¨Ãè²»¼ÆÎªÖØ¸´£¬Î¬³ÖÔ­Ñù¡£
 
-### æœ¬è½®æ”¶å°¾ï¼ˆ6 ä¸ªè¢«ä¸­æ–­å­ä»£ç†æ‰¹æ¬¡é—ç•™æ–‡ä»¶ï¼Œé€ä¸€å¹³é“º + å•æ–‡ä»¶ tsc è‡ªæ£€é€šè¿‡ï¼‰
-| æ–‡ä»¶ | å‡½æ•° | æ‰‹æ³• | æ·±åº¦ |
+### ±¾ÂÖÊÕÎ²£¨6 ¸ö±»ÖĞ¶Ï×Ó´úÀíÅú´ÎÒÅÁôÎÄ¼ş£¬ÖğÒ»Æ½ÆÌ + µ¥ÎÄ¼ş tsc ×Ô¼ìÍ¨¹ı£©
+| ÎÄ¼ş | º¯Êı | ÊÖ·¨ | Éî¶È |
 |---|---|---|---|
-| `src/services/data-collector/directDataAPI.ts` | `neteaseHistory` | æå– `parseNeteaseLine`ï¼ˆå«è¯­å¥è¿”å› nullï¼‰+ `parseNeteaseLines`ï¼ˆå¾ªç¯è°ƒç”¨ï¼‰ï¼Œä¿æŒæ­£åºâ†’reverse è¡Œä¸º | D4â†’â‰¤3 |
-| `src/services/fetcher/dataSourceRegistry.ts` | `getActiveProvider` | æå– `checkProviderHealth` è¿”å› `'healthy'\|'unhealthy'\|'error'` æšä¸¾ï¼Œå¾ªç¯ä½“ `forâ†’if` å¹³é“º | D4â†’â‰¤3 |
-| `src/services/fetcher/directDataAPI.ts` | `parseTencentKline` | æå– `resolveStockData`ï¼ˆå«å‰ç¼€å…œåº•ï¼Œä¿ç•™ä¸¤å¤„ warning æ–‡æ¡ˆï¼‰è¿”å› `Record\|null`ï¼Œä¸»å‡½æ•° `tryâ†’if` | D4â†’â‰¤3 |
-| `src/services/input/inputService.ts` | `importPool` | æå– `applyImportOutcome`ï¼ˆå·²å­˜åœ¨â†’failed / å¦åˆ™â†’successï¼‰ï¼Œå¾ªç¯ `forâ†’tryâ†’è°ƒç”¨` | D4â†’â‰¤3 |
-| `src/services/news/newsService.ts` | `saveNewsArticle` | æå– `saveNewsStockMaps`ï¼ˆæ‰¹é‡ä¿å­˜å…³è”æ˜ å°„ï¼Œä»»ä¸€å¤±è´¥å³è¿”å›ï¼‰ï¼Œæ¶ˆé™¤ `forâ†’if` D4 | D4â†’â‰¤3 |
-| `src/services/news/stockLinker.ts` | `matchText` | æå– `selectBestLink`ï¼ˆå€™é€‰æ’åºå–æœ€é«˜ä¸”è¾¾é˜ˆå€¼ï¼Œå¦åˆ™ nullï¼‰ï¼Œå¾ªç¯ `forâ†’è°ƒç”¨â†’if` | D4â†’â‰¤3 |
+| `src/services/data-collector/directDataAPI.ts` | `neteaseHistory` | ÌáÈ¡ `parseNeteaseLine`£¨ÎÀÓï¾ä·µ»Ø null£©+ `parseNeteaseLines`£¨Ñ­»·µ÷ÓÃ£©£¬±£³ÖÕıĞò¡úreverse ĞĞÎª | D4¡ú¡Ü3 |
+| `src/services/fetcher/dataSourceRegistry.ts` | `getActiveProvider` | ÌáÈ¡ `checkProviderHealth` ·µ»Ø `'healthy'\|'unhealthy'\|'error'` Ã¶¾Ù£¬Ñ­»·Ìå `for¡úif` Æ½ÆÌ | D4¡ú¡Ü3 |
+| `src/services/fetcher/directDataAPI.ts` | `parseTencentKline` | ÌáÈ¡ `resolveStockData`£¨º¬Ç°×º¶µµ×£¬±£ÁôÁ½´¦ warning ÎÄ°¸£©·µ»Ø `Record\|null`£¬Ö÷º¯Êı `try¡úif` | D4¡ú¡Ü3 |
+| `src/services/input/inputService.ts` | `importPool` | ÌáÈ¡ `applyImportOutcome`£¨ÒÑ´æÔÚ¡úfailed / ·ñÔò¡úsuccess£©£¬Ñ­»· `for¡útry¡úµ÷ÓÃ` | D4¡ú¡Ü3 |
+| `src/services/news/newsService.ts` | `saveNewsArticle` | ÌáÈ¡ `saveNewsStockMaps`£¨ÅúÁ¿±£´æ¹ØÁªÓ³Éä£¬ÈÎÒ»Ê§°Ü¼´·µ»Ø£©£¬Ïû³ı `for¡úif` D4 | D4¡ú¡Ü3 |
+| `src/services/news/stockLinker.ts` | `matchText` | ÌáÈ¡ `selectBestLink`£¨ºòÑ¡ÅÅĞòÈ¡×î¸ßÇÒ´ïãĞÖµ£¬·ñÔò null£©£¬Ñ­»· `for¡úµ÷ÓÃ¡úif` | D4¡ú¡Ü3 |
 
-### å†å²å·²è½å®ï¼ˆWave A + Wave B + æ ¸å¿ƒ 11 æ–‡ä»¶ï¼Œæ·±åº¦åµŒå¥— 64 â†’ 0 ç´¯è®¡ï¼‰
-- `localStorageManager` / `localCollector` / `signalQualityStore.derived` / `batchImportParsers` / `newsService.getNewsBySymbol` / `localDocService` / `pipelineScheduler` / `inputService.addStock` / `sentimentAnalyzer` ç­‰ Wave A/Bã€‚
-- æ ¸å¿ƒ 11 æ–‡ä»¶ï¼ˆConfigAppã€dbã€clientã€mcpAclMonitorã€registerã€CollectTaskPageÃ—2ã€fetcherInterceptorã€phaseOrchestratorã€batchImportExecutorÃ—2ã€databridgeï¼‰å·²åœ¨æœ¬ä¼šè¯å‰åºæ‰¹æ¬¡å®Œæˆå¹¶ tsc è‡ªæ£€é€šè¿‡ã€‚
-- å¦å«å‰åºæ‰¹æ¬¡ï¼š`dataSourceOrchestrator`ã€`llmClient`ã€`StockSearch`ã€`MigrationPanel`ã€`rbac`ã€`positionComputer`ã€`scoringAdapter`ã€`strategySnapshotService`ã€`tradeErrorClassifier/Utils/DetectorsÃ—2`ã€`skillDevelopment`ã€`tradeReviewAI.utils`ã€`useCase`ã€`backtestMetrics`ã€`collectionWizardPersistence`ã€`multiFactorScreeningEngine`ã€`stockpoolService`ã€`migrationTransformersÃ—2`ã€`storeMigrators`ã€`v6MigrationService`ã€`l7_l8` ç­‰ã€‚
+### ÀúÊ·ÒÑÂäÊµ£¨Wave A + Wave B + ºËĞÄ 11 ÎÄ¼ş£¬Éî¶ÈÇ¶Ì× 64 ¡ú 0 ÀÛ¼Æ£©
+- `localStorageManager` / `localCollector` / `signalQualityStore.derived` / `batchImportParsers` / `newsService.getNewsBySymbol` / `localDocService` / `pipelineScheduler` / `inputService.addStock` / `sentimentAnalyzer` µÈ Wave A/B¡£
+- ºËĞÄ 11 ÎÄ¼ş£¨ConfigApp¡¢db¡¢client¡¢mcpAclMonitor¡¢register¡¢CollectTaskPage¡Á2¡¢fetcherInterceptor¡¢phaseOrchestrator¡¢batchImportExecutor¡Á2¡¢databridge£©ÒÑÔÚ±¾»á»°Ç°ĞòÅú´ÎÍê³É²¢ tsc ×Ô¼ìÍ¨¹ı¡£
+- Áíº¬Ç°ĞòÅú´Î£º`dataSourceOrchestrator`¡¢`llmClient`¡¢`StockSearch`¡¢`MigrationPanel`¡¢`rbac`¡¢`positionComputer`¡¢`scoringAdapter`¡¢`strategySnapshotService`¡¢`tradeErrorClassifier/Utils/Detectors¡Á2`¡¢`skillDevelopment`¡¢`tradeReviewAI.utils`¡¢`useCase`¡¢`backtestMetrics`¡¢`collectionWizardPersistence`¡¢`multiFactorScreeningEngine`¡¢`stockpoolService`¡¢`migrationTransformers¡Á2`¡¢`storeMigrators`¡¢`v6MigrationService`¡¢`l7_l8` µÈ¡£
 
-### ç¯å¢ƒæ•´æ”¹ï¼ˆå·²è½åœ°å¹¶éªŒæ”¶ï¼‰
-- `vite.config.ts`ï¼š`maxForks 1 â†’ 4`ï¼Œæ¶ˆé™¤ vitest worker å†…å­˜ç´¯ç§¯å´©æºƒï¼ˆ317 æ–‡ä»¶ / 4610 ç”¨ä¾‹å…¨è¿‡ï¼‰ã€‚
-- tsx å—ç®¡ Node22 é—´æ­‡æ®µé”™è¯¯ï¼šæ”¹ç”¨ç³»ç»Ÿ Node24 ç›´é©± tsc/tsx ç»•è¿‡ï¼ˆéä»£ç ç¼ºé™·ï¼‰ã€‚
-- SkillManage å…¥å£é”™ï¼ˆéçœŸä¸å¯ç”¨ï¼‰å·²æ ¸å®ã€‚
-- âš ï¸ æ ¹ç›®å½•æ–°å»ºæ–‡ä»¶ç–‘ä¼¼è¢«æ¸…ç†æœºåˆ¶è«ååˆ é™¤ï¼šå·²æ”¹ç”¨å†…è” `grep` / ä¸´æ—¶ `_cx_*.json` + `_cx_filter.cjs` è§„é¿ã€‚
+### »·¾³Õû¸Ä£¨ÒÑÂäµØ²¢ÑéÊÕ£©
+- `vite.config.ts`£º`maxForks 1 ¡ú 4`£¬Ïû³ı vitest worker ÄÚ´æÀÛ»ı±ÀÀ££¨317 ÎÄ¼ş / 4610 ÓÃÀıÈ«¹ı£©¡£
+- tsx ÊÜ¹Ü Node22 ¼äĞª¶Î´íÎó£º¸ÄÓÃÏµÍ³ Node24 Ö±Çı tsc/tsx ÈÆ¹ı£¨·Ç´úÂëÈ±Ïİ£©¡£
+- SkillManage Èë¿Ú´í£¨·ÇÕæ²»¿ÉÓÃ£©ÒÑºËÊµ¡£
+- ?? ¸ùÄ¿Â¼ĞÂ½¨ÎÄ¼şÒÉËÆ±»ÇåÀí»úÖÆÄªÃûÉ¾³ı£ºÒÑ¸ÄÓÃÄÚÁª `grep` / ÁÙÊ± `_cx_*.json` + `_cx_filter.cjs` ¹æ±Ü¡£
 
-### é‡å¤æ¡ä»¶æ•´æ”¹ï¼ˆC1â€“C28 å·²è½å®ï¼Œ2026-07-12 æ”¶å°¾æ‰¹æ¬¡ï¼‰
-- æ‰‹æ³•ç»Ÿä¸€ä¸ºå››ç±»ï¼šâ‘  æŠ½å…·å helper æŠŠ `if` æ”¶è¿›å”¯ä¸€ä¸€å¤„ï¼ˆStockSearch / TraceReplayPanel / usePoolDataFromStore / LogStreamPanel / MigrationUploadTab / MigrationPanel / db / repository / useConfirmDialog / useStockPoolBoard / dataFetcherServer / llmClient / HoldingsPage / TradingFlowPage / agentStore / dualStrategyStore / positionStoreï¼‰ï¼›â‘¡ å«è¯­å¥ä¸€æ­£ä¸€åï¼ˆBulkImportPanel / PhaseStepper / CockpitShell / useIndustryScorePage / useFreshData / StockAnalysisPage / IntelligentScorePage / ScoreDocPage / TradeModalï¼‰ï¼›â‘¢ `if (result.success)` ä¸‰å¤„åˆå¹¶ä¸º `reportOrderOutcome` å›è°ƒ helperï¼ˆTradingFlowPageï¼‰ï¼›â‘£ `signalStore` ä¸¤å¤„åŒä¹‰ source è¿‡æ»¤ç» De Morgan åè½¬åŒºåˆ†ï¼ˆanalyzer `=== || ===` vs signals `!== && !==`ï¼‰ã€‚
-- é—¨ç¦å¤æµ‹ï¼ˆç³»ç»Ÿ Node24 ç›´é©±ï¼‰ï¼š`tsc:prod` 0 é”™ï¼›`audit:layers` 868 æ–‡ä»¶ 0 è¿è§„ï¼›`audit:atomic` 133 æ–‡ä»¶ 0 è¿è§„ï¼›`complexity-scan` é‡å¤ if æ¡ä»¶ **0**ï¼ˆæ·±å±‚åµŒå¥— 0 / é•¿é“¾ 0ï¼‰ã€‚
-- C29 `resilience.guard` ç»´æŒåŸæ ·ï¼ˆç†”æ–­çŠ¶æ€æœºå¹¶å‘è¯­ä¹‰ï¼Œå®˜æ–¹ per-function æ‰«æä¸è®¡é‡å¤ï¼‰ã€‚
+### ÖØ¸´Ìõ¼şÕû¸Ä£¨C1¨CC28 ÒÑÂäÊµ£¬2026-07-12 ÊÕÎ²Åú´Î£©
+- ÊÖ·¨Í³Ò»ÎªËÄÀà£º¢Ù ³é¾ßÃû helper °Ñ `if` ÊÕ½øÎ¨Ò»Ò»´¦£¨StockSearch / TraceReplayPanel / usePoolDataFromStore / LogStreamPanel / MigrationUploadTab / MigrationPanel / db / repository / useConfirmDialog / useStockPoolBoard / dataFetcherServer / llmClient / HoldingsPage / TradingFlowPage / agentStore / dualStrategyStore / positionStore£©£»¢Ú ÎÀÓï¾äÒ»ÕıÒ»·´£¨BulkImportPanel / PhaseStepper / CockpitShell / useIndustryScorePage / useFreshData / StockAnalysisPage / IntelligentScorePage / ScoreDocPage / TradeModal£©£»¢Û `if (result.success)` Èı´¦ºÏ²¢Îª `reportOrderOutcome` »Øµ÷ helper£¨TradingFlowPage£©£»¢Ü `signalStore` Á½´¦Í¬Òå source ¹ıÂË¾­ De Morgan ·´×ªÇø·Ö£¨analyzer `=== || ===` vs signals `!== && !==`£©¡£
+- ÃÅ½û¸´²â£¨ÏµÍ³ Node24 Ö±Çı£©£º`tsc:prod` 0 ´í£»`audit:layers` 868 ÎÄ¼ş 0 Î¥¹æ£»`audit:atomic` 133 ÎÄ¼ş 0 Î¥¹æ£»`complexity-scan` ÖØ¸´ if Ìõ¼ş **0**£¨Éî²ãÇ¶Ì× 0 / ³¤Á´ 0£©¡£
+- C29 `resilience.guard` Î¬³ÖÔ­Ñù£¨ÈÛ¶Ï×´Ì¬»ú²¢·¢ÓïÒå£¬¹Ù·½ per-function É¨Ãè²»¼ÆÖØ¸´£©¡£
 
-### å‰©ä½™ï¼ˆéæœ¬ 38 æ–‡ä»¶æ¸…å•èŒƒå›´ï¼‰
-- é•¿é“¾æ¡ä»¶ï¼š0ã€‚æ·±åº¦åµŒå¥—ï¼š0ã€‚é‡å¤æ¡ä»¶ï¼š0ï¼ˆå·²å…¨éƒ¨å½’é›¶ï¼‰ã€‚
+### Ê£Óà£¨·Ç±¾ 38 ÎÄ¼şÇåµ¥·¶Î§£©
+- ³¤Á´Ìõ¼ş£º0¡£Éî¶ÈÇ¶Ì×£º0¡£ÖØ¸´Ìõ¼ş£º0£¨ÒÑÈ«²¿¹éÁã£©¡£
 
-### æ•´æ”¹è´¨é‡éªŒè¯ï¼ˆæµ‹è¯•è¡¥å…… + è¿è¡Œæ•ˆç‡åŸºå‡†ï¼Œ2026-07-12 å¤æ ¸ï¼‰
-- **å¤æ ¸ç»“è®º**ï¼šé‡å¤æ¡ä»¶ 29 å¤„ç¡®å·²æ¸…é›¶ï¼ˆè‡ªç ” `find-dups.ts` ä¸æƒå¨ `complexity-scan` å£å¾„å¯¹é½ï¼Œä»…ä½™ C29 ç†”æ–­çŠ¶æ€æœºä¸¤å¤„ `state==='half-open'` å± per-function ä¸åŒå‡½æ•°ã€ä¸è®¡é‡å¤ï¼‰ï¼›`tsc:prod` / `audit:layers` / `audit:atomic` / `complexity-scan` å››é“é—¨ç¦å…¨ç»¿ã€‚
-- **æ–°å¢å›å½’æµ‹è¯•**ï¼ˆ`tests/remediation/`ï¼Œé”å®šã€Œä¸å˜é‡ã€é˜²æ­¢é‡å¤æ¡ä»¶è¢«é‡æ–°å†…è”ï¼‰ï¼š
-  - `resilience-guard-c29.test.ts`ï¼ˆ5 ç”¨ä¾‹ï¼‰ï¼šC29 ç†”æ–­çŠ¶æ€æœºã€ŒåŠå¼€â†’æ¢æµ‹â†’é—­åˆ/æ¢å¤ã€çŠ¶æ€è¿ç§»æ­£ç¡®ï¼Œç¡®ä¿è¯¥å¤„æœ‰æ„ä¸æ¶ˆé‡ä¸è¢«è¯¯æ”¹ã€‚
-  - `dualStrategy-dedup-invariant.test.ts`ï¼ˆ4 ç”¨ä¾‹ï¼‰ï¼šæŠ½å–åçš„å•ä¸€å®ˆå« `shouldSkipSelf` åœ¨ 4 ä¸ª analyzer æ´¾ç”Ÿé¢‘é“å…¨éƒ¨ç”Ÿæ•ˆï¼ˆself-source æ‹¦æˆª 0 refreshã€other-source å»æŠ–åˆå¹¶ä¸º 1 æ¬¡ refresh=3 queryã€æ··åˆ source ä»… external è§¦å‘ï¼‰ï¼›å«è¿è¡Œæ•ˆç‡åŸºå‡†ã€‚
-  - `signal-dedup-invariant.test.ts`ï¼ˆ2 ç”¨ä¾‹ï¼‰ï¼šDe Morgan åè½¬åçš„ä¸¤é¢‘é“ source å®ˆå«â€”â€”`trading`/`tradinghub` è·³è¿‡ 0 refreshã€å…¶ä½™æ¥æºå»æŠ–åˆå¹¶ä¸º 1 æ¬¡ refreshã€‚
-- **è¿è¡Œæ•ˆç‡åŸºå‡†**ï¼ˆ`docs/reports/remediation-efficiency.json`ï¼‰ï¼šdualStrategyStore è®¢é˜…çƒ­è·¯å¾„ 5 é¢‘é“æ‰¹é‡æ´¾å‘ 50 ä¸‡æ¬¡ä¿¡å°ï¼Œ**798,311 ops/sec**ï¼ˆ626msï¼‰ã€‚æŠ½å–å®ˆå«åä¸æ•´æ”¹å‰ç»“æ„ç­‰ä»·ï¼Œå®ˆå«å¼€é”€å¾®ç§’çº§ï¼Œ**æ— è¿è¡Œæ—¶å›å½’**ã€‚
-- **å…¨é‡å›å½’**ï¼šæ—¢æœ‰ store å¥—ä»¶ï¼ˆdualStrategyStore 32 + signalStore 16 + positionStore 20 = 68 ç”¨ä¾‹ï¼‰å…¨éƒ¨é€šè¿‡ï¼Œè¯æ˜ 27 ä¸ªæºæ–‡ä»¶æŠ½å–/åè½¬æ”¹æ³•æœªæ”¹å˜æ—¢æœ‰è¡Œä¸ºã€‚
+### Õû¸ÄÖÊÁ¿ÑéÖ¤£¨²âÊÔ²¹³ä + ÔËĞĞĞ§ÂÊ»ù×¼£¬2026-07-12 ¸´ºË£©
+- **¸´ºË½áÂÛ**£ºÖØ¸´Ìõ¼ş 29 ´¦È·ÒÑÇåÁã£¨×ÔÑĞ `find-dups.ts` ÓëÈ¨Íş `complexity-scan` ¿Ú¾¶¶ÔÆë£¬½öÓà C29 ÈÛ¶Ï×´Ì¬»úÁ½´¦ `state==='half-open'` Êô per-function ²»Í¬º¯Êı¡¢²»¼ÆÖØ¸´£©£»`tsc:prod` / `audit:layers` / `audit:atomic` / `complexity-scan` ËÄµÀÃÅ½ûÈ«ÂÌ¡£
+- **ĞÂÔö»Ø¹é²âÊÔ**£¨`tests/remediation/`£¬Ëø¶¨¡¸²»±äÁ¿¡¹·ÀÖ¹ÖØ¸´Ìõ¼ş±»ÖØĞÂÄÚÁª£©£º
+  - `resilience-guard-c29.test.ts`£¨5 ÓÃÀı£©£ºC29 ÈÛ¶Ï×´Ì¬»ú¡¸°ë¿ª¡úÌ½²â¡ú±ÕºÏ/»Ö¸´¡¹×´Ì¬Ç¨ÒÆÕıÈ·£¬È·±£¸Ã´¦ÓĞÒâ²»ÏûÖØ²»±»Îó¸Ä¡£
+  - `dualStrategy-dedup-invariant.test.ts`£¨4 ÓÃÀı£©£º³éÈ¡ºóµÄµ¥Ò»ÊØÎÀ `shouldSkipSelf` ÔÚ 4 ¸ö analyzer ÅÉÉúÆµµÀÈ«²¿ÉúĞ§£¨self-source À¹½Ø 0 refresh¡¢other-source È¥¶¶ºÏ²¢Îª 1 ´Î refresh=3 query¡¢»ìºÏ source ½ö external ´¥·¢£©£»º¬ÔËĞĞĞ§ÂÊ»ù×¼¡£
+  - `signal-dedup-invariant.test.ts`£¨2 ÓÃÀı£©£ºDe Morgan ·´×ªºóµÄÁ½ÆµµÀ source ÊØÎÀ¡ª¡ª`trading`/`tradinghub` Ìø¹ı 0 refresh¡¢ÆäÓàÀ´Ô´È¥¶¶ºÏ²¢Îª 1 ´Î refresh¡£
+- **ÔËĞĞĞ§ÂÊ»ù×¼**£¨`docs/reports/remediation-efficiency.json`£©£ºdualStrategyStore ¶©ÔÄÈÈÂ·¾¶ 5 ÆµµÀÅúÁ¿ÅÉ·¢ 50 Íò´ÎĞÅ·â£¬**798,311 ops/sec**£¨626ms£©¡£³éÈ¡ÊØÎÀºóÓëÕû¸ÄÇ°½á¹¹µÈ¼Û£¬ÊØÎÀ¿ªÏúÎ¢Ãë¼¶£¬**ÎŞÔËĞĞÊ±»Ø¹é**¡£
+- **È«Á¿»Ø¹é**£º¼ÈÓĞ store Ì×¼ş£¨dualStrategyStore 32 + signalStore 16 + positionStore 20 = 68 ÓÃÀı£©È«²¿Í¨¹ı£¬Ö¤Ã÷ 27 ¸öÔ´ÎÄ¼ş³éÈ¡/·´×ª¸Ä·¨Î´¸Ä±ä¼ÈÓĞĞĞÎª¡£
 
-### 38 æ–‡ä»¶é€»è¾‘åµŒå¥—ï¼ˆD4ï¼‰æµ‹è¯•è¡¥å……ï¼ˆ2026-07-12 ç»­ï¼‰
-- **è¦†ç›–èŒƒå›´**ï¼š38 ä¸ª D4 å¹³é“ºæ–‡ä»¶ä¸­ï¼Œæ—¢æœ‰æµ‹è¯•å·²è¦†ç›– 10 ä¸ªï¼ˆlocalStorageManager / llmClient / db / databridge / collectionWizardPersistence / stockLinker / l7_l8 / multiFactorScreeningEngine / tradeReviewAI.skillDevelopment / tradeReviewAI.utilsï¼‰ï¼›å…¶ä½™çº¦ 28 ä¸ªä¸ºæµ‹è¯•ç¼ºå£ã€‚
-- **æ–°å¢è¡Œä¸ºä¸å˜é‡æµ‹è¯•**ï¼ˆ`tests/remediation/d4-purelogic-invariant.test.ts`ï¼Œ15 ç”¨ä¾‹ï¼‰ï¼šé’ˆå¯¹ã€Œæœ€æ˜“å› å¹³é“ºå¼•å…¥è¡Œä¸ºåå·®ã€ä¸”æ— æ—¢æœ‰æµ‹è¯•ã€çš„çº¯é€»è¾‘æ¨¡å—é”å®šè¾“å…¥/è¾“å‡ºè¯­ä¹‰ï¼š
-  - `sentimentAnalyzer.ts`ï¼ˆD12ï¼‰ï¼š`classifySentiment` ä¸‰æ€è¾¹ç•Œ + è‡ªå®šä¹‰é˜ˆå€¼ã€`analyzeText` æ­£/è´Ÿ/ä¸­æ€§æ–¹å‘ã€`analyzeNewsArticle` æ ‡é¢˜/æ­£æ–‡æƒé‡èåˆä¸ç©ºè¾“å…¥ä¸­æ€§ã€`hashContent` ç¨³å®šå¯å¤ç°ã€‚
-  - `batchImportParsers.ts`ï¼ˆD9ï¼‰ï¼š`detectExchange` äº¤æ˜“æ‰€æ¨æ–­ã€`parseBulkInput` å››ç§æ ¼å¼è§£æ + æ— æ•ˆè¡Œæ ‡è®° + ç©ºæ–‡æœ¬ã€`parseCsvText` è¡¨å¤´è‡ªåŠ¨è·³è¿‡ã€‚
-  - `tradeErrorDetectors.ts`ï¼ˆD15ï¼‰ï¼š7 ä¸ªç‹¬ç«‹å‹æ£€æµ‹å™¨ï¼ˆé‡ä»“è±ªèµŒ / è¿åè®¡åˆ’ / é€†åŠ¿åŠ ä»“ / æŠ¥å¤æ€§äº¤æ˜“ / çŠ¹è±«é”™è¿‡ / è¿‡åº¦äº¤æ˜“ / è¿½æ¶¨æ€è·Œï¼‰å‘½ä¸­ä¸è¿”å› null çš„åŒå‘æ–­è¨€ã€‚
-- **å…¨é‡å›å½’**ï¼š`vitest run` å®Œæ•´å¥—ä»¶åœ¨åå°è¿è¡Œï¼ˆéªŒè¯ 38 æ–‡ä»¶å¹³é“ºæ—  broad å›å½’ï¼‰ï¼Œå®Œæˆè‡ªåŠ¨é€šçŸ¥ï¼›æœ¬æ‰¹æ–°å¢æµ‹è¯•å•æ–‡ä»¶ 15 ç”¨ä¾‹å…¨è¿‡ã€‚
+### 38 ÎÄ¼şÂß¼­Ç¶Ì×£¨D4£©²âÊÔ²¹³ä£¨2026-07-12 Ğø£©
+- **¸²¸Ç·¶Î§**£º38 ¸ö D4 Æ½ÆÌÎÄ¼şÖĞ£¬¼ÈÓĞ²âÊÔÒÑ¸²¸Ç 10 ¸ö£¨localStorageManager / llmClient / db / databridge / collectionWizardPersistence / stockLinker / l7_l8 / multiFactorScreeningEngine / tradeReviewAI.skillDevelopment / tradeReviewAI.utils£©£»ÆäÓàÔ¼ 28 ¸öÎª²âÊÔÈ±¿Ú¡£
+- **ĞÂÔöĞĞÎª²»±äÁ¿²âÊÔ**£¨`tests/remediation/d4-purelogic-invariant.test.ts`£¬15 ÓÃÀı£©£ºÕë¶Ô¡¸×îÒ×ÒòÆ½ÆÌÒıÈëĞĞÎªÆ«²î¡¢ÇÒÎŞ¼ÈÓĞ²âÊÔ¡¹µÄ´¿Âß¼­Ä£¿éËø¶¨ÊäÈë/Êä³öÓïÒå£º
+  - `sentimentAnalyzer.ts`£¨D12£©£º`classifySentiment` ÈıÌ¬±ß½ç + ×Ô¶¨ÒåãĞÖµ¡¢`analyzeText` Õı/¸º/ÖĞĞÔ·½Ïò¡¢`analyzeNewsArticle` ±êÌâ/ÕıÎÄÈ¨ÖØÈÚºÏÓë¿ÕÊäÈëÖĞĞÔ¡¢`hashContent` ÎÈ¶¨¿É¸´ÏÖ¡£
+  - `batchImportParsers.ts`£¨D9£©£º`detectExchange` ½»Ò×ËùÍÆ¶Ï¡¢`parseBulkInput` ËÄÖÖ¸ñÊ½½âÎö + ÎŞĞ§ĞĞ±ê¼Ç + ¿ÕÎÄ±¾¡¢`parseCsvText` ±íÍ·×Ô¶¯Ìø¹ı¡£
+  - `tradeErrorDetectors.ts`£¨D15£©£º7 ¸ö¶ÀÁ¢ĞÍ¼ì²âÆ÷£¨ÖØ²ÖºÀ¶Ä / Î¥·´¼Æ»® / ÄæÊÆ¼Ó²Ö / ±¨¸´ĞÔ½»Ò× / ÓÌÔ¥´í¹ı / ¹ı¶È½»Ò× / ×·ÕÇÉ±µø£©ÃüÖĞÓë·µ»Ø null µÄË«Ïò¶ÏÑÔ¡£
+- **È«Á¿»Ø¹é**£º`vitest run` ÍêÕûÌ×¼şÔÚºóÌ¨ÔËĞĞ£¨ÑéÖ¤ 38 ÎÄ¼şÆ½ÆÌÎŞ broad »Ø¹é£©£¬Íê³É×Ô¶¯Í¨Öª£»±¾ÅúĞÂÔö²âÊÔµ¥ÎÄ¼ş 15 ÓÃÀıÈ«¹ı¡£
 

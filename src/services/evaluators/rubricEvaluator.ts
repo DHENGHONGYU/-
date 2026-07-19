@@ -8,6 +8,9 @@ import type { EvaluatorContext, EvaluatorFn, EvaluationResult, RubricCriterion, 
 
 const logger = getLogger()
 
+/**
+ * RUBRIC_EVALUATOR_ID
+ */
 export const RUBRIC_EVALUATOR_ID = 'rubric-evaluator'
 
 function getValueByPath(obj: unknown, path: string): unknown {
@@ -25,6 +28,13 @@ function getValueByPath(obj: unknown, path: string): unknown {
   return current
 }
 
+function getDisplayString(value: unknown): string {
+  if (value === null || value === undefined) return ''
+  if (typeof value === 'string') return value
+  if (typeof value === 'number' || typeof value === 'boolean') return String(value)
+  return JSON.stringify(value)
+}
+
 function evaluateCriterion(actual: unknown, criterion: RubricCriterion): boolean {
   const value = getValueByPath(actual, criterion.path)
 
@@ -33,7 +43,7 @@ function evaluateCriterion(actual: unknown, criterion: RubricCriterion): boolean
       return value !== undefined
     case 'notEmpty':
       return value !== undefined && value !== null
-        && (Array.isArray(value) ? value.length > 0 : String(value).length > 0)
+        && (Array.isArray(value) ? value.length > 0 : getDisplayString(value).length > 0)
     case 'gte':
       return typeof value === 'number' && value >= (criterion.threshold as number)
     case 'lte':
@@ -55,6 +65,9 @@ function evaluateCriterion(actual: unknown, criterion: RubricCriterion): boolean
   }
 }
 
+/**
+ * rubricEvaluator
+ */
 export const rubricEvaluator: EvaluatorFn = (ctx: EvaluatorContext): EvaluationResult => {
   const startedAt = Date.now()
   const params = ctx.params as RubricEvaluatorParams | undefined

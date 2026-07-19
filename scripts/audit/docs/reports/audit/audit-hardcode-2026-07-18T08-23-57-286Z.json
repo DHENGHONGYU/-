@@ -1,0 +1,46 @@
+{
+  "violations": [
+    {
+      "file": "src/components/molecules/DataQualityIndicator.tsx",
+      "line": 51,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 text-emerald-600",
+      "context": "return { label: '样本充足', color: 'text-emerald-600 dark:text-emerald-400' }"
+    },
+    {
+      "file": "src/components/molecules/RankedCard.tsx",
+      "line": 32,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 bg-amber-400",
+      "context": "1: 'bg-amber-400 text-white',"
+    },
+    {
+      "file": "src/components/molecules/RankedCard.tsx",
+      "line": 34,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 bg-amber-600",
+      "context": "3: 'bg-amber-600 text-white',"
+    }
+  ],
+  "summary": {
+    "totalFiles": 1130,
+    "totalViolations": 3,
+    "totalWarnings": 0,
+    "bySeverity": {
+      "Major": 3
+    },
+    "byCategory": {
+      "硬编码 Tailwind 颜色类": 3
+    }
+  },
+  "meta": {
+    "scriptName": "audit-hardcode",
+    "version": "3.0",
+    "timestamp": "2026-07-18T08:23:57.286Z",
+    "durationMs": 447,
+    "rootDir": "G:\\FinSightV9\\scripts\\audit"
+  }
+}

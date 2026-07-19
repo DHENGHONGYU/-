@@ -1,46 +1,46 @@
 ---
-title: pwa-offline-guide
-code_version: 2.0.0
-
+title: V9 PWA ÀëÏß»¯ÊµÊ©Ö¸ÄÏ
+type: how-to
+domain: project
+phase: development
 tier: important
----
-
----
-title: V9 PWA ç¦»çº¿åŒ–å®æ–½æŒ‡å—
-version: v0.9.0-doc-sync-batch2
-last_review: 2026-06-27
 status: draft
-change_log:
-  - date: 2026-06-27
-    author: Documentation Governor
-    desc: é¦–æ¬¡å®šä¹‰ Service Worker æ³¨å†Œç­–ç•¥ã€ç¼“å­˜æ¸…å•ã€æ›´æ–°æœºåˆ¶ä¸ Lighthouse æµ‹è¯•æ ‡å‡†
+maintainer: V9 Architecture Team
+summary: "±¾ÎÄµµ¹æ¶¨ V9 ×÷Îª´¿Ç°¶Ë PWA µÄÀëÏß»¯ÊµÊ©Ï¸½Ú£¬°üÀ¨ Service Worker ×¢²á²ßÂÔ¡¢ºËĞÄ×ÊÔ´»º´æÇåµ¥¡¢Ó¦ÓÃ¸üĞÂÓë°æ±¾¹ÜÀí»úÖÆ£¬ÒÔ¼° Lighthouse ÀëÏß²âÊÔ±ê×¼¡£"
+tags: [project, guide, implementation, component, how-to]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: important
+doc_id: V9-DOC-PROJ-071
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
-# V9 PWA ç¦»çº¿åŒ–å®æ–½æŒ‡å—
+# V9 PWA ÀëÏß»¯ÊµÊ©Ö¸ÄÏ
 
-> **å¯¹åº”è“å›¾**ï¼š`../reference/v9-system-blueprint.md` Â§1 ç³»ç»Ÿå®šä½ï¼ˆç¦»çº¿éœ€æ±‚ï¼‰ã€Â§8 Phase 3ï¼ˆPWA manifest + service workerï¼‰ã€Â§9 è´¨é‡é—¨ç¦ 11ï¼ˆPWA ç¦»çº¿éªŒè¯ï¼‰ã€Â§10 åå·® D18/D19 ç›¸å…³è´¨é‡åŠ å›ºã€‚
-> **ä¾èµ–æ–‡æ¡£**ï¼š`../reference/03-architecture-standards.md` Â§3.10.1ï¼ˆç¦»çº¿ç›®æ ‡ï¼‰ã€`../reference/06-routing-specs.md`ï¼ˆHashRouter ä¸é™æ€æ‰˜ç®¡ï¼‰ã€‚
-
----
-
-## 1. ç›®æ ‡ä¸èŒƒå›´
-
-æœ¬æ–‡æ¡£è§„å®š V9 ä½œä¸ºçº¯å‰ç«¯ PWA çš„ç¦»çº¿åŒ–å®æ–½ç»†èŠ‚ï¼ŒåŒ…æ‹¬ Service Worker æ³¨å†Œç­–ç•¥ã€æ ¸å¿ƒèµ„æºç¼“å­˜æ¸…å•ã€åº”ç”¨æ›´æ–°ä¸ç‰ˆæœ¬ç®¡ç†æœºåˆ¶ï¼Œä»¥åŠ Lighthouse ç¦»çº¿æµ‹è¯•æ ‡å‡†ã€‚ä¸è¦†ç›–å›¾è¡¨æ€§èƒ½ä¸æ“ä½œåé¦ˆé—­ç¯ï¼ˆè§ `../reference/chart-integration.md`ã€`feedback-loop-spec.md`ï¼‰ã€‚
+> **¶ÔÓ¦À¶Í¼**£º`../reference/v9-system-blueprint.md` ¡ì1 ÏµÍ³¶¨Î»£¨ÀëÏßĞèÇó£©¡¢¡ì8 Phase 3£¨PWA manifest + service worker£©¡¢¡ì9 ÖÊÁ¿ÃÅ½û 11£¨PWA ÀëÏßÑéÖ¤£©¡¢¡ì10 Æ«²î D18/D19 Ïà¹ØÖÊÁ¿¼Ó¹Ì¡£
+> **ÒÀÀµÎÄµµ**£º`../reference/03-architecture-standards.md` ¡ì3.10.1£¨ÀëÏßÄ¿±ê£©¡¢`../reference/06-routing-specs.md`£¨HashRouter Óë¾²Ì¬ÍĞ¹Ü£©¡£
 
 ---
 
-## 2. Service Worker æ³¨å†Œç­–ç•¥
+## 1. Ä¿±êÓë·¶Î§
 
-### 2.1 é€‰å‹
+±¾ÎÄµµ¹æ¶¨ V9 ×÷Îª´¿Ç°¶Ë PWA µÄÀëÏß»¯ÊµÊ©Ï¸½Ú£¬°üÀ¨ Service Worker ×¢²á²ßÂÔ¡¢ºËĞÄ×ÊÔ´»º´æÇåµ¥¡¢Ó¦ÓÃ¸üĞÂÓë°æ±¾¹ÜÀí»úÖÆ£¬ÒÔ¼° Lighthouse ÀëÏß²âÊÔ±ê×¼¡£²»¸²¸ÇÍ¼±íĞÔÄÜÓë²Ù×÷·´À¡±Õ»·£¨¼û `../reference/chart-integration.md`¡¢`../reference/feedback-loop-spec.md`£©¡£
 
-| æ–¹æ¡ˆ | å·¥å…· | è¯´æ˜ |
+---
+
+## 2. Service Worker ×¢²á²ßÂÔ
+
+### 2.1 Ñ¡ĞÍ
+
+| ·½°¸ | ¹¤¾ß | ËµÃ÷ |
 |---|---|---|
-| æ¨è | `vite-plugin-pwa` + Workbox | ä¸ Vite é›†æˆï¼Œè‡ªåŠ¨ç”Ÿæˆ manifest ä¸ SWï¼Œæ”¯æŒ precache/runtime cache |
-| å¤‡é€‰ | æ‰‹å†™ `public/service-worker.js` | ä»…ç”¨äºç‰¹æ®Šå®šåˆ¶åœºæ™¯ï¼Œç»´æŠ¤æˆæœ¬é«˜ |
+| ÍÆ¼ö | `vite-plugin-pwa` + Workbox | Óë Vite ¼¯³É£¬×Ô¶¯Éú³É manifest Óë SW£¬Ö§³Ö precache/runtime cache |
+| ±¸Ñ¡ | ÊÖĞ´ `public/service-worker.js` | ½öÓÃÓÚÌØÊâ¶¨ÖÆ³¡¾°£¬Î¬»¤³É±¾¸ß |
 
-### 2.2 æ³¨å†Œå…¥å£
+### 2.2 ×¢²áÈë¿Ú
 
 ```ts
 // src/main.tsx
@@ -49,7 +49,7 @@ import { registerSW } from 'virtual:pwa-register'
 const updateSW = registerSW({
   immediate: true,
   onNeedRefresh() {
-    // è§¦å‘åé¦ˆæœåŠ¡æç¤ºç”¨æˆ·åˆ·æ–°
+    // ´¥·¢·´À¡·şÎñÌáÊ¾ÓÃ»§Ë¢ĞÂ
     eventBus.emit('pwa:update-available')
   },
   onOfflineReady() {
@@ -58,9 +58,9 @@ const updateSW = registerSW({
 })
 ```
 
-### 2.3 æ›´æ–°æç¤º UX
+### 2.3 ¸üĞÂÌáÊ¾ UX
 
-å½“æ£€æµ‹åˆ°æ–°ç‰ˆæ—¶ï¼Œé€šè¿‡ `feedbackService.notify()` æç¤ºç”¨æˆ·åˆ·æ–°ï¼š
+µ±¼ì²âµ½ĞÂ°æÊ±£¬Í¨¹ı `feedbackService.notify()` ÌáÊ¾ÓÃ»§Ë¢ĞÂ£º
 
 ```ts
 import { feedbackService } from '@/services/feedback/feedbackService'
@@ -69,42 +69,42 @@ eventBus.on('pwa:update-available', () => {
   feedbackService.notify({
     scope: 'global',
     variant: 'info',
-    title: 'å‘ç°æ–°ç‰ˆæœ¬',
-    description: 'ç‚¹å‡»åˆ·æ–°ä»¥è·å–æœ€æ–°åŠŸèƒ½ä¸ä¿®å¤ã€‚',
+    title: '·¢ÏÖĞÂ°æ±¾',
+    description: 'µã»÷Ë¢ĞÂÒÔ»ñÈ¡×îĞÂ¹¦ÄÜÓëĞŞ¸´¡£',
     duration: 0,
     action: {
-      label: 'ç«‹å³åˆ·æ–°',
+      label: 'Á¢¼´Ë¢ĞÂ',
       onClick: () => updateSW(true),
     },
   })
 })
 ```
 
-> `feedbackService` è§„èŒƒè§ `../reference/feedback-loop-spec.md` Â§3ã€‚
+> `feedbackService` ¹æ·¶¼û `../reference/feedback-loop-spec.md` ¡ì3¡£
 
 ---
 
-## 3. ç¦»çº¿ç¼“å­˜æ¸…å•
+## 3. ÀëÏß»º´æÇåµ¥
 
-### 3.1 Precacheï¼ˆæ„å»ºæ—¶ç¼“å­˜ï¼‰
+### 3.1 Precache£¨¹¹½¨Ê±»º´æ£©
 
-| èµ„æºç±»å‹ | æ¨¡å¼ | è¯´æ˜ |
+| ×ÊÔ´ÀàĞÍ | Ä£Ê½ | ËµÃ÷ |
 |---|---|---|
-| `index.html` | CacheFirst | åº”ç”¨å…¥å£ |
-| `/*.js`, `/*.css` | CacheFirst | Vite æ„å»ºäº§ç‰© |
-| `/assets/*` | CacheFirst | å­—ä½“ã€å›¾æ ‡ã€å›¾ç‰‡ |
-| `manifest.webmanifest` | CacheFirst | PWA æ¸…å• |
+| `index.html` | CacheFirst | Ó¦ÓÃÈë¿Ú |
+| `/*.js`, `/*.css` | CacheFirst | Vite ¹¹½¨²úÎï |
+| `/assets/*` | CacheFirst | ×ÖÌå¡¢Í¼±ê¡¢Í¼Æ¬ |
+| `manifest.webmanifest` | CacheFirst | PWA Çåµ¥ |
 
-### 3.2 Runtime Cacheï¼ˆè¿è¡Œæ—¶ç¼“å­˜ï¼‰
+### 3.2 Runtime Cache£¨ÔËĞĞÊ±»º´æ£©
 
-| æ•°æ®æº | è·¯ç”±/Store | ç­–ç•¥ | TTL |
+| Êı¾İÔ´ | Â·ÓÉ/Store | ²ßÂÔ | TTL |
 |---|---|---|---|
 | AKShare API | `/api/akshare/*` | NetworkFirst / StaleWhileRevalidate | 5 min |
-| LLM API | `/api/llm/*` | NetworkOnlyï¼ˆç¦»çº¿ä¸å¯ç”¨ï¼‰ | â€” |
-| IndexedDB | `daily_quotes`, `v6_scores`, `news` | å·²ç”± IndexedDB æŒä¹…åŒ– | é•¿æœŸ |
-| æ•°æ®æµ SSE | `/stream/*` | NetworkOnly | â€” |
+| LLM API | `/api/llm/*` | NetworkOnly£¨ÀëÏß²»¿ÉÓÃ£© | ¡ª |
+| IndexedDB | `daily_quotes`, `v6_scores`, `news` | ÒÑÓÉ IndexedDB ³Ö¾Ã»¯ | ³¤ÆÚ |
+| Êı¾İÁ÷ SSE | `/stream/*` | NetworkOnly | ¡ª |
 
-### 3.3 vite-plugin-pwa é…ç½®ç¤ºä¾‹
+### 3.3 vite-plugin-pwa ÅäÖÃÊ¾Àı
 
 ```ts
 // vite.config.ts
@@ -128,8 +128,8 @@ export default {
         ],
       },
       manifest: {
-        name: 'V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ',
-        short_name: 'V9æŠ•ç ”',
+        name: 'V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³',
+        short_name: 'V9Í¶ÑĞ',
         theme_color: '#10b981',
         background_color: '#0f172a',
         display: 'standalone',
@@ -146,90 +146,90 @@ export default {
 
 ---
 
-## 4. æ›´æ–°ç­–ç•¥ä¸ç‰ˆæœ¬ç®¡ç†
+## 4. ¸üĞÂ²ßÂÔÓë°æ±¾¹ÜÀí
 
-### 4.1 ç‰ˆæœ¬å·æ¥æº
+### 4.1 °æ±¾ºÅÀ´Ô´
 
-- åº”ç”¨ç‰ˆæœ¬ï¼š`package.json` ä¸­çš„ `version`ã€‚
-- æ„å»ºç‰ˆæœ¬ï¼šVite æ³¨å…¥ `import.meta.env.VITE_APP_VERSION`ã€‚
-- SW ç‰ˆæœ¬ï¼šç”± `vite-plugin-pwa` æ ¹æ®æ„å»º hash è‡ªåŠ¨ç”Ÿæˆã€‚
+- Ó¦ÓÃ°æ±¾£º`package.json` ÖĞµÄ `version`¡£
+- ¹¹½¨°æ±¾£ºVite ×¢Èë `import.meta.env.VITE_APP_VERSION`¡£
+- SW °æ±¾£ºÓÉ `vite-plugin-pwa` ¸ù¾İ¹¹½¨ hash ×Ô¶¯Éú³É¡£
 
-### 4.2 æ›´æ–°æµç¨‹
+### 4.2 ¸üĞÂÁ÷³Ì
 
 ```mermaid
 sequenceDiagram
-    participant U as ç”¨æˆ·
+    participant U as ÓÃ»§
     participant A as App
     participant S as Service Worker
-    participant N as ç½‘ç»œ
+    participant N as ÍøÂç
 
-    U->>A: æ‰“å¼€åº”ç”¨
-    A->>S: æ£€æŸ¥ SW æ›´æ–°
-    S->>N: è·å–æ–° SW
-    N-->>S: è¿”å›æ–° SW
+    U->>A: ´ò¿ªÓ¦ÓÃ
+    A->>S: ¼ì²é SW ¸üĞÂ
+    S->>N: »ñÈ¡ĞÂ SW
+    N-->>S: ·µ»ØĞÂ SW
     S-->>A: onNeedRefresh
-    A->>U: Toast æç¤ºåˆ·æ–°
-    U->>A: ç‚¹å‡»åˆ·æ–°
-    A->>S: skipWaiting + æ¥ç®¡
-    S-->>A: æ¿€æ´»å®Œæˆ
+    A->>U: Toast ÌáÊ¾Ë¢ĞÂ
+    U->>A: µã»÷Ë¢ĞÂ
+    A->>S: skipWaiting + ½Ó¹Ü
+    S-->>A: ¼¤»îÍê³É
     A->>A: window.location.reload()
 ```
 
-### 4.3 æ•°æ®å…¼å®¹æ€§
+### 4.3 Êı¾İ¼æÈİĞÔ
 
-- IndexedDB ç‰ˆæœ¬å‡çº§ç­–ç•¥ä¸ PWA ç¼“å­˜ç‰ˆæœ¬è§£è€¦ã€‚
-- å½“ `DB_VERSION` å‡çº§æ—¶ï¼ŒSW precache ä¸åº”æ¸…é™¤æ—§ IndexedDB æ•°æ®ã€‚
-- ç¦»çº¿å¯åŠ¨æ—¶ï¼Œè‹¥ IndexedDB ç‰ˆæœ¬ä½äºåº”ç”¨è¦æ±‚ï¼Œåº”æç¤ºç”¨æˆ·è”ç½‘å®Œæˆè¿ç§»ã€‚
+- IndexedDB °æ±¾Éı¼¶²ßÂÔÓë PWA »º´æ°æ±¾½âñî¡£
+- µ± `DB_VERSION` Éı¼¶Ê±£¬SW precache ²»Ó¦Çå³ı¾É IndexedDB Êı¾İ¡£
+- ÀëÏßÆô¶¯Ê±£¬Èô IndexedDB °æ±¾µÍÓÚÓ¦ÓÃÒªÇó£¬Ó¦ÌáÊ¾ÓÃ»§ÁªÍøÍê³ÉÇ¨ÒÆ¡£
 
 ---
 
-## 5. Lighthouse ç¦»çº¿æµ‹è¯•æ ‡å‡†
+## 5. Lighthouse ÀëÏß²âÊÔ±ê×¼
 
-### 5.1 æµ‹è¯•ç¯å¢ƒ
+### 5.1 ²âÊÔ»·¾³
 
-- Chrome DevTools â†’ Lighthouse â†’ PWA / Best Practicesã€‚
-- æˆ–ä½¿ç”¨ `npx playwright test tests/pwa-offline.spec.ts`ï¼ˆPhase 3 å»ºç«‹ï¼‰ã€‚
+- Chrome DevTools ¡ú Lighthouse ¡ú PWA / Best Practices¡£
+- »òÊ¹ÓÃ `npx playwright test tests/pwa-offline.spec.ts`£¨Phase 3 ½¨Á¢£©¡£
 
-### 5.2 é—¨ç¦æŒ‡æ ‡
+### 5.2 ÃÅ½ûÖ¸±ê
 
-| æŒ‡æ ‡ | ç›®æ ‡ | è¯´æ˜ |
+| Ö¸±ê | Ä¿±ê | ËµÃ÷ |
 |---|---|---|
-| PWA å¯å®‰è£…æ€§ | 100 | manifestã€iconsã€service worker æ³¨å†Œå®Œæ•´ |
-| ç¦»çº¿å¯ç”¨æ€§ | é€šè¿‡ | `start_url` åœ¨æ–­ç½‘åå¯åŠ è½½ |
-| å¯åŠ¨æ€§èƒ½ | â‰¥ 80 | FCP â‰¤ 1.8sï¼ŒLCP â‰¤ 2.5sï¼ˆ3G æ…¢ç½‘ï¼‰ |
-| æœ€ä½³å®è·µ | â‰¥ 90 | HTTPSã€ viewportã€æ— è¿‡æ—¶ API |
+| PWA ¿É°²×°ĞÔ | 100 | manifest¡¢icons¡¢service worker ×¢²áÍêÕû |
+| ÀëÏß¿ÉÓÃĞÔ | Í¨¹ı | `start_url` ÔÚ¶ÏÍøºó¿É¼ÓÔØ |
+| Æô¶¯ĞÔÄÜ | ¡İ 80 | FCP ¡Ü 1.8s£¬LCP ¡Ü 2.5s£¨3G ÂıÍø£© |
+| ×î¼ÑÊµ¼ù | ¡İ 90 | HTTPS¡¢ viewport¡¢ÎŞ¹ıÊ± API |
 
-### 5.3 ç¦»çº¿æµ‹è¯•ç”¨ä¾‹
+### 5.3 ÀëÏß²âÊÔÓÃÀı
 
 ```ts
-// tests/pwa-offline.spec.tsï¼ˆè§„åˆ’ï¼‰
+// tests/pwa-offline.spec.ts£¨¹æ»®£©
 import { test, expect } from '@playwright/test'
 
-test('ç¦»çº¿åå¯è¿›å…¥é¦–é¡µä¸é©¾é©¶èˆ±', async ({ page, context }) => {
+test('ÀëÏßºó¿É½øÈëÊ×Ò³Óë¼İÊ»²Õ', async ({ page, context }) => {
   await page.goto('/')
   await context.setOffline(true)
   await page.reload()
-  await expect(page.locator('text=é¦–é¡µ')).toBeVisible()
+  await expect(page.locator('text=Ê×Ò³')).toBeVisible()
   await page.goto('/#/cockpit')
-  await expect(page.locator('text=é©¾é©¶èˆ±')).toBeVisible()
+  await expect(page.locator('text=¼İÊ»²Õ')).toBeVisible()
 })
 ```
 
 ---
 
-## 6. éªŒæ”¶æ ‡å‡†
+## 6. ÑéÊÕ±ê×¼
 
-- [ ] `manifest.webmanifest` ç”Ÿæˆå¹¶åŒ…å«æ‰€æœ‰å¿…å¡«å­—æ®µã€‚
-- [ ] Service Worker æ³¨å†ŒæˆåŠŸï¼Œ`pwa:offline-ready` äº‹ä»¶è§¦å‘ã€‚
-- [ ] æ–­ç½‘åé¦–é¡µ `/` ä¸é©¾é©¶èˆ± `/cockpit` å¯åŠ è½½ã€‚
-- [ ] æ£€æµ‹åˆ°æ–°ç‰ˆæ—¶å¼¹å‡ºåˆ·æ–°æç¤ºã€‚
-- [ ] Lighthouse PWA å®¡è®¡å…¨éƒ¨é€šè¿‡ã€‚
+- [ ] `manifest.webmanifest` Éú³É²¢°üº¬ËùÓĞ±ØÌî×Ö¶Î¡£
+- [ ] Service Worker ×¢²á³É¹¦£¬`pwa:offline-ready` ÊÂ¼ş´¥·¢¡£
+- [ ] ¶ÏÍøºóÊ×Ò³ `/` Óë¼İÊ»²Õ `/cockpit` ¿É¼ÓÔØ¡£
+- [ ] ¼ì²âµ½ĞÂ°æÊ±µ¯³öË¢ĞÂÌáÊ¾¡£
+- [ ] Lighthouse PWA Éó¼ÆÈ«²¿Í¨¹ı¡£
 
 ---
 
-## 7. ç›¸å…³é“¾æ¥
+## 7. Ïà¹ØÁ´½Ó
 
-- `../reference/v9-system-blueprint.md` Â§1ã€Â§8 Phase 3ã€Â§9ã€D18/D19
-- `../reference/03-architecture-standards.md` Â§3.10.1
-- `../reference/06-routing-specs.md` Â§1ï¼ˆHashRouter è¯´æ˜ï¼‰
-- `../reference/feedback-loop-spec.md` Â§5.3ï¼ˆpwa:* äº‹ä»¶é€šè¿‡ EventBus è§¦å‘ Toastï¼‰
+- `../reference/v9-system-blueprint.md` ¡ì1¡¢¡ì8 Phase 3¡¢¡ì9¡¢D18/D19
+- `../reference/03-architecture-standards.md` ¡ì3.10.1
+- `../reference/06-routing-specs.md` ¡ì1£¨HashRouter ËµÃ÷£©
+- `../reference/feedback-loop-spec.md` ¡ì5.3£¨pwa:* ÊÂ¼şÍ¨¹ı EventBus ´¥·¢ Toast£©

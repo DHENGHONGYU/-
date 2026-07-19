@@ -1,8 +1,10 @@
 # AGENTS.md — V9 智能投研复盘系统 AI 行为约束契约
 
-> **版本**: v1.5.0 | **日期**: 2026-07-18
+> **版本**: v1.5.1 | **日期**: 2026-07-19
 > **适用范围**: 所有 AI 辅助开发工具（Claude Code、Cursor、Trae 等）
 > **强制等级**: 所有 AI 生成的代码必须遵守以下约束
+>
+> **v1.5.1 变更**：新增 §二.Store 状态订阅规范（Zustand 响应式铁律 3 条 + 派生函数归类 + Widget 组件数据订阅模板）；归因于 2026-07-19 发现 26 个 Store 派生函数裸用 `getState()` 导致 P0 阻断性不渲染
 >
 > **v1.5.0 变更**：DataBridge 子模块拆分（databridgeAcl.ts Phase 1）；Widget 布局 5 层梯度 L1-L5；Widget 尺寸/分类枚举完成统一；pre-push 门禁重构（gate:quick + widget-registry + complexity-scan）；质量指标分离 Mock 假绿灯（realSuccessRate）；JSDoc 覆盖 37→19；新增 P1-6 directDataAPI 双份已知缺陷
 >
@@ -28,12 +30,12 @@
 
 ```
 src/config/       ← 配置层（零硬编码锚点）
-src/core/         ← 核心工具与类型守卫（DataBridge/databridgeAcl/databridgeHandlers/databridgeRouter/databridgeStrategyRouter/ACL/Envelope/MemoryCache/EventBus/workerPool）
+src/core/         ← 核心工具与类型守卫（DataBridge/databridgeAcl/databridgeHandlers/databridgeRouter/databridgeStrategyRouter/ACL/Envelope/MemoryCache/workerPool）
 src/agents/       ← AI 行为扩展（运行时模块，core 层扩展）
 src/data/         ← 数据层（IndexedDB/dataLayer/queryBuilder/types/gateway）
 src/lib/          ← 库函数（logger/format/errors/utils/localStorageManager）
-src/services/      ← 服务层（20+子域：analysis/scoring/fetcher/news/llm/trading/execution/...）
-src/store/        ← 状态层（49个Zustand Store + helpers/withBroadcast；含 intentionPoolStore.ts / researchPoolStore.ts / positionPoolStore.ts 三分拆）
+src/services/      ← 服务层（30+子域：analysis/scoring/fetcher/news/llm/trading/execution/...）
+src/store/        ← 状态层（63个Zustand Store + helpers/withBroadcast；含 intentionPoolStore.ts / researchPoolStore.ts / positionPoolStore.ts 三分拆）
 src/pages/        ← 页面层（5舱：input/analysis/trading/output/command）
 src/components/   ← 组件层（atoms/molecules/organisms/templates + chart/cabin/cockpit/widgets）
 src/portal/       ← PortalShell 舱室入口层
@@ -86,7 +88,7 @@ npm run audit:layers
 # 期望：0 violations, 0 warnings
 ```
 
-> 文件归位规则、目录映射与文件生命周期管理详见 [FILE-MANAGEMENT-GUIDE.md](docs/01-requirements/FILE-MANAGEMENT-GUIDE.md)。
+> 文件归位规则、目录映射与文件生命周期管理详见 [FILE-MANAGEMENT-GUIDE.md](docs/how-to/FILE-MANAGEMENT-GUIDE.md)。
 
 ### 📌 教训 1：架构契约是文档编写的唯一真相源
 
@@ -187,6 +189,82 @@ grep -E '^\s*(src/|\.agents/|packages/|docs/)' AGENTS.md
 **正例**：
 - ✅ 包含"生命周期管理"章节：创建规则（第1节）、迁移 SOP（第2节）、清理策略（第3节）、定期审计（第4节）
 - ✅ 验证命令完整列出：`tsc`、`lint`、`audit:layers`、`audit:hardcode`、`audit:deadcode`、`audit:docs`、`audit:token`
+
+### Store 状态订阅规范（Zustand 响应式铁律）
+
+> **问题背景（2026-07-19）**：全项目发现 26 个 Store 的派生函数（`topSignals(10)`、`accuracyTrend()` 等）使用 `store.getState()` 获取数据，是一次性快照而非响应式订阅。组件若只订阅 `loading/error/refresh` 而不订阅数据字段，数据更新后 UI 不会重渲染（P0 阻断）。
+
+#### 铁律 1：组件层禁止裸用 `getState()` 派生函数
+
+```tsx
+// ❌ 错误：topSignals() 内部调用 getState()，非响应式
+const { loading, error, refresh } = useSignalStore()
+const signals = topSignals(10)
+
+// ✅ 正确：通过 selector 直接订阅数据字段
+const { loading, error, refresh, signals } = useSignalStore()
+const top10 = signals.slice(0, 10)
+```
+
+#### 铁律 2：派生函数归类
+
+| 类型 | 定义 | 使用场景 |
+|------|------|----------|
+| **Selector Hook** | 以 `use` 前缀命名，内部调用 Zustand selector | React 组件中（响应式） |
+| **纯函数（static）** | 接收 `data` 参数而非调用 `getState()` | useMemo 中作为计算函数 |
+| **非响应式查询** | 使用 `getState()`，JSDoc 标注 `@nonReactive` | Service 层、事件回调、Store action 内部 |
+
+```tsx
+// 类型 A：Selector Hook（响应式）
+export function useTopSignals(limit = 10): Signal[] {
+  return useSignalStore((s) => s.signals.slice(0, limit))
+}
+
+// 类型 B：纯函数（无副作用，可安全在 useMemo 中使用）
+export function computeAccuracyTrend(reviews: SignalReviewRecord[], windowSize: number) {
+  // 仅计算，不访问 store
+}
+
+// 类型 C：非响应式查询（仅在 Service/action 中使用）
+/** @nonReactive 仅在 Service 层使用，组件中请用 useTopSignals() */
+export function topSignals(limit = 10): Signal[] {
+  return useSignalStore.getState().signals.slice(0, limit)
+}
+```
+
+#### 铁律 3：Widget 组件必须订阅数据字段
+
+Widget 的 `useEffect` 空依赖数组仅用于初始数据加载和订阅注册。数据更新依赖 Zustand selector，不是 DataBridge 事件回调：
+
+```tsx
+function MyWidget({ config }: Props) {
+  // ✅ selector 订阅数据字段（响应式）
+  const { data, loading, error, refresh } = useMyStore()
+
+  // ✅ useEffect 仅用于初始加载（空依赖）
+  useEffect(() => {
+    const cleanup = initMyStoreSubscriptions()
+    void refresh()
+    return cleanup
+  }, [])
+
+  // selector 自动在 data 变化时触发重渲染
+  return <WidgetStateShell visualState={...}>...</WidgetStateShell>
+}
+```
+
+#### 存量清理策略
+
+- **P0（本回合修复）**：Widget 组件正在使用 `getState()` 派生函数的，改为直接 selector 订阅数据字段
+- **P1（渐进式）**：新增 Selector Hook（`use` 前缀），存量派生函数保留供 Service 层使用，添加 `@nonReactive` JSDoc 标注
+- **P2（长期）**：全部派生函数改为纯函数形式（接收参数），由调用方决定何时计算
+
+#### 验证命令
+
+```powershell
+# 搜索组件中裸用 getState() 的派生函数（候选整改点）
+grep -rn "topSignals\|accuracyTrend\|winRateTrend\|bestReview\|worstReview\|getDirectionStats\|averageReturn\|averageWin\|averageLoss" src/cockpit/ src/components/ src/pages/
+```
 
 ---
 
@@ -1058,8 +1136,8 @@ git status --short            # 确认工作区状态
 
 ### 12.7 模板文件
 
-- [task-graph-template.md](../docs/03-development/templates/task-graph-template.md) — 任务图模板
-- [regression-suite.md](../docs/03-development/templates/regression-suite.md) — 回归测试套件模板
+- [task-graph-template.md](docs/explanation/task-graph-template.md) — 任务图模板
+- [regression-suite.md](docs/reference/templates/regression-suite.md) — 回归测试套件模板
 
 ### 📌 教训 2：描述文件系统状态的文档必须通过自动化扫描验证
 
@@ -1102,7 +1180,7 @@ git status --short            # 确认工作区状态
 - ❌ 文档引用了 `AGENTS.md`，但 `AGENTS.md` 中没有任何地方引用该文档（单向引用）
 
 **正例**：
-- ✅ 文档头部明确列出"相关文档"段落：`[AGENTS.md](../../AGENTS.md) | [trae-file-management-review.md](../00-meta/trae-file-management-review.md)`
+- ✅ 文档头部明确列出"相关文档"段落：`[AGENTS.md](AGENTS.md) | [trae-file-management-review.md](docs/00-meta/trae-file-management-review.md)`
 - ✅ 文档索引中新增条目：`| 文件管理规范 | FILE-MANAGEMENT-GUIDE.md | 源代码归位、.gitignore 维护、提交前检查 | v1.0.0 |`
 
 ## 十三、模块分拆必要性评估框架

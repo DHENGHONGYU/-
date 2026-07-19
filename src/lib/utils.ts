@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import { nanoid } from 'nanoid'
 
 /**
  * cn
@@ -8,6 +9,31 @@ import { twMerge } from 'tailwind-merge'
  */
 export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs))
+}
+
+/**
+ * generateId
+ * @returns string
+ */
+export function generateId(): string {
+  return nanoid(16)
+}
+
+/**
+ * now
+ * @returns number
+ */
+export function now(): number {
+  return Date.now()
+}
+
+/**
+ * createTraceId
+ * @param prefix
+ * @returns string
+ */
+export function createTraceId(prefix: string): string {
+  return `${prefix}-${nanoid(8)}`
 }
 
 /**

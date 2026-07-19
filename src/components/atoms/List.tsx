@@ -1,101 +1,65 @@
-import { type HTMLAttributes, type ReactNode, forwardRef, memo } from 'react'
-import { cn } from '@/lib/utils'
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- generic default for flexible component typing
-export interface ListProps<T = any> extends Omit<HTMLAttributes<HTMLDivElement>, 'dataSource' | 'renderItem'> {
-  /** 数据源 */
-  dataSource?: T[]
-  /** 渲染函数 */
-  renderItem?: (item: T, index: number) => ReactNode
-  /** 是否加载中 */
-  loading?: boolean
-  /** 错误信息 */
-  error?: ReactNode
-  /** 空状态描述 */
-  empty?: ReactNode
-}
-
-export interface ListItemProps extends HTMLAttributes<HTMLDivElement> {
-  /** 操作列表 */
-  actions?: ReactNode
-  /** 额外内容 */
-  extra?: ReactNode
-}
-
 /**
- * ListItem
+ * List — 列表容器原子
+ *
+ * 提供有序/无序列表、分组、带图标/操作的列表项。
+ * 支持 striped/dense 等变体。
+ *
+ * @module atoms/List
+ * @since 2026-07-18 (P2 规划实现)
  */
-export const ListItem = memo(forwardRef<HTMLDivElement, ListItemProps>(
-  ({ className, actions, extra, children, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn(
-        'flex items-center justify-between py-3 px-4 border-b last:border-b-0',
-        className,
-      )}
-      {...props}
-    >
-      <div className="flex-1">{children}</div>
-      {actions && <div className="flex items-center gap-2 ml-4">{actions}</div>}
-      {extra && <div className="ml-4">{extra}</div>}
-    </div>
-  ),
-))
 
-ListItem.displayName = 'ListItem'
+import { type ReactNode, type HTMLAttributes } from 'react'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- generic type for component cast
-type ListComponent = (<T = any>(props: ListProps<T> & { ref?: React.Ref<HTMLDivElement> }) => ReactNode) & {
-  Item: typeof ListItem
-  displayName: string
+export interface ListItem {
+  key: string
+  content: ReactNode
+  icon?: ReactNode
+  action?: ReactNode
+  description?: ReactNode
+  disabled?: boolean
 }
 
-const ListInner = memo(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- generic component internal cast
-forwardRef<HTMLDivElement, ListProps<any>>(
-    ({ className, dataSource = [], renderItem, loading, error, empty, ...props }, ref) => {
-      if (loading) {
-        return (
-          <div ref={ref} className={cn('py-8 text-center text-muted-foreground', className)} {...props}>
-            加载中...
-          </div>
-        )
-      }
-
-      if (error) {
-        return (
-          <div ref={ref} className={cn('py-8 text-center text-destructive', className)} {...props}>
-            {error}
-          </div>
-        )
-      }
-
-      if (dataSource.length === 0) {
-        return (
-          <div ref={ref} className={cn('py-8 text-center text-muted-foreground', className)} {...props}>
-            {empty}
-          </div>
-        )
-      }
-
-      return (
-        <div ref={ref} className={cn('', className)} {...props}>
-          {dataSource.map((item, index) => (
-            <div key={index}>
-              {renderItem ? renderItem(item, index) : String(item)}
-            </div>
-          ))}
-        </div>
-      )
-    },
-  ),
-)
-
-ListInner.displayName = 'List'
+export interface ListProps extends Omit<HTMLAttributes<HTMLUListElement>, 'children'> {
+  /** 列表项 */
+  items: ListItem[]
+  /** 是否紧凑模式 */
+  dense?: boolean
+  /** 是否斑马纹 */
+  striped?: boolean
+  /** 有序列表 */
+  ordered?: boolean
+}
 
 /**
  * List
  */
-export const List = ListInner as unknown as ListComponent
-List.Item = ListItem
-List.displayName = 'List'
+export function List({
+  items, dense = false, striped = false, ordered = false,
+  className = '', ...rest
+}: ListProps) {
+  const Tag = ordered ? 'ol' : 'ul'
+  return (
+    <Tag className={`divide-y ${className}`} {...rest}>
+      {items.map((item, idx) => (
+        <li
+          key={item.key}
+          className={`
+            flex items-center gap-2
+            ${dense ? 'px-2 py-1' : 'px-3 py-2'}
+            ${striped && idx % 2 === 1 ? 'bg-muted/30' : ''}
+            ${item.disabled ? 'cursor-not-allowed opacity-50' : ''}
+          `}
+        >
+          {item.icon && <span className="flex-shrink-0 text-muted-foreground">{item.icon}</span>}
+          <div className="flex-1 min-w-0">
+            <div className="truncate text-sm">{item.content}</div>
+            {item.description && (
+              <div className="text-xs text-muted-foreground">{item.description}</div>
+            )}
+          </div>
+          {item.action && <span className="flex-shrink-0">{item.action}</span>}
+        </li>
+      ))}
+    </Tag>
+  )
+}

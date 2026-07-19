@@ -1,178 +1,195 @@
 ---
-title: adr-003-databridge-over-direct-datalayer
+title: ADR-003: DataBridge Ìæ´úÖ±½Ó dataLayer Ğ´Èë
+type: reference
+domain: data
+phase: design
+tier: important
+status: active
+maintainer: V9 Architecture Team
+summary: "V9 ×÷Îª´¿Ç°¶ËÖÇÄÜÍ¶ÑĞÏµÍ³£¬ËùÓĞÊı¾İ³Ö¾Ã»¯ÓÚ±¾µØ IndexedDB¡£ÔÚÒıÈë DataBridge Ö®Ç°£¬"
+tags: [data, databridge, adr, reference, data-definition, store]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: core
+doc_id: V9-DOC-DATA-013
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/reference/adr-003-databridge-over-direct-datalayer.md
-code_version: 2.0.0
-tier: core
----
+# ADR-003: DataBridge Ìæ´úÖ±½Ó dataLayer Ğ´Èë
 
----
-title: ADR-003: DataBridge æ›¿ä»£ç›´æ¥ dataLayer å†™å…¥
-status: accepted
-owner: V9 Architecture Team
-decision_date: 2026-06-21
-supersedes: ""
-superseded_by: ""
----
-
-# ADR-003: DataBridge æ›¿ä»£ç›´æ¥ dataLayer å†™å…¥
-
-> **çŠ¶æ€**: Accepted  
-> **å†³ç­–æ—¥æœŸ**: 2026-06-21  
-> **ç‰ˆæœ¬**: v1.0.0ï¼ˆç”±éª¨æ¶ v0.9.0 æ‰©å†™ï¼‰
+> **×´Ì¬**: Accepted  
+> **¾ö²ßÈÕÆÚ**: 2026-06-21  
+> **Version**: v1.1.0£¨2026-07-16 Ôö²¹£ºÏµÍ³¹ÜÀí·½·¨ + Store °ü×°²ãºÏ¹æ + audit Éı¼¶£©
 
 ---
 
-## 1. èƒŒæ™¯ï¼ˆContextï¼‰
+## 1. ±³¾°£¨Context£©
 
-V9 ä½œä¸ºçº¯å‰ç«¯æ™ºèƒ½æŠ•ç ”ç³»ç»Ÿï¼Œæ‰€æœ‰æ•°æ®æŒä¹…åŒ–äºæœ¬åœ° IndexedDBã€‚åœ¨å¼•å…¥ DataBridge ä¹‹å‰ï¼Œå„ Service å­åŸŸç›´æ¥è°ƒç”¨ `dataLayer.save()` æˆ– `db.put()` å†™å…¥æ•°æ®ï¼Œå¯¼è‡´ä»¥ä¸‹é—®é¢˜ï¼š
+V9 ×÷Îª´¿Ç°¶ËÖÇÄÜÍ¶ÑĞÏµÍ³£¬ËùÓĞÊı¾İ³Ö¾Ã»¯ÓÚ±¾µØ IndexedDB¡£ÔÚÒıÈë DataBridge Ö®Ç°£¬¸÷ Service ×ÓÓòÖ±½Óµ÷ÓÃ `dataLayer.save()` »ò `db.put()` Ğ´ÈëÊı¾İ£¬µ¼ÖÂÒÔÏÂÎÊÌâ£º
 
-- **æ¥æºä¸å¯è¿½æº¯**ï¼šæ— æ³•çŸ¥é“å“ªä¸ªæ¨¡å—å†™å…¥äº†å“ªæ¡æ•°æ®ï¼Œè°ƒè¯•å›°éš¾ã€‚
-- **æƒé™åˆ†æ•£**ï¼šæ²¡æœ‰ç»Ÿä¸€çš„æƒé™æ§åˆ¶ç‚¹ï¼Œä»»ä½•æœåŠ¡å¯ä»¥å†™å…¥ä»»ä½• Storeã€‚
-- **å®¡è®¡ç¼ºå¤±**ï¼šæ— æ³•è‡ªåŠ¨ç”Ÿæˆå†™å…¥å®¡è®¡æ—¥å¿—ï¼Œä¸åˆ©äºåˆè§„ä¸å¤ç›˜ã€‚
-- **äº‹ä»¶é€šçŸ¥ç¼ºå¤±**ï¼šå†™å…¥åæ— æ³•è‡ªåŠ¨è§¦å‘è·¨ Tab å¹¿æ’­ï¼ˆ`withBroadcast`ï¼‰ï¼Œå¯¼è‡´å¤š Tab æ•°æ®ä¸åŒæ­¥ã€‚
+- **À´Ô´²»¿É×·Ëİ**£ºÎŞ·¨ÖªµÀÄÄ¸öÄ£¿éĞ´ÈëÁËÄÄÌõÊı¾İ£¬µ÷ÊÔÀ§ÄÑ¡£
+- **È¨ÏŞ·ÖÉ¢**£ºÃ»ÓĞÍ³Ò»µÄÈ¨ÏŞ¿ØÖÆµã£¬ÈÎºÎ·şÎñ¿ÉÒÔĞ´ÈëÈÎºÎ Store¡£
+- **Éó¼ÆÈ±Ê§**£ºÎŞ·¨×Ô¶¯Éú³ÉĞ´ÈëÉó¼ÆÈÕÖ¾£¬²»ÀûÓÚºÏ¹æÓë¸´ÅÌ¡£
+- **ÊÂ¼şÍ¨ÖªÈ±Ê§**£ºĞ´ÈëºóÎŞ·¨×Ô¶¯´¥·¢¿ç Tab ¹ã²¥£¨`withBroadcast`£©£¬µ¼ÖÂ¶à Tab Êı¾İ²»Í¬²½¡£
 
-### è§¦å‘æ¡ä»¶
+### ´¥·¢Ìõ¼ş
 
-- `../explanation/design/mcp-coupling-analysis-report.md` Â§é—®é¢˜ 1 æŒ‡å‡ºï¼šDataBridge å½“å‰ä¸º 30+ case çš„ switchï¼Œä½†è‡³å°‘æœ‰ 5 ä¸ªæœåŠ¡ä»åœ¨ç»•å¼€ DataBridge ç›´å†™ dbã€‚
-- `../../AGENTS.md` Â§ä¸€ï¼ˆåˆ†å±‚è§„åˆ™ï¼‰æ˜ç¡®è¦æ±‚ï¼šservices å±‚ç¦æ­¢ç›´å†™ dbï¼Œé¡»ç» DataBridgeã€‚
+- `../explanation/design/mcp-coupling-analysis-report.md` ¡ìÎÊÌâ 1 Ö¸³ö£ºDataBridge µ±Ç°Îª 30+ case µÄ switch£¬µ«ÖÁÉÙÓĞ 5 ¸ö·şÎñÈÔÔÚÈÆ¿ª DataBridge Ö±Ğ´ db¡£
+- `../../AGENTS.md` ¡ìÒ»£¨·Ö²ã¹æÔò£©Ã÷È·ÒªÇó£ºservices ²ã½ûÖ¹Ö±Ğ´ db£¬Ğë¾­ DataBridge¡£
 
-### ç›¸å…³å‰ç½®å†³ç­–
+### Ïà¹ØÇ°ÖÃ¾ö²ß
 
-- ADR-001ï¼ˆçº¯å‰ç«¯æ¶æ„ï¼‰ï¼šå†³å®šäº†æ•°æ®è‡ªç®¡äºæœ¬åœ° IndexedDBï¼Œéœ€è¦ç»Ÿä¸€çš„æ•°æ®å†™å…¥ç½‘å…³ã€‚
-- ADR-002ï¼ˆIndexedDB æ›¿ä»£ localStorageï¼‰ï¼šç¡®ç«‹äº† IndexedDB ä½œä¸ºå”¯ä¸€æŒä¹…åŒ–æ–¹æ¡ˆï¼Œéœ€è¦è§„èŒƒå†™å…¥æ¥å£ã€‚
-
----
-
-## 2. å†³ç­–ï¼ˆDecisionï¼‰
-
-**é€‰æ‹©æ–¹æ¡ˆ Aï¼šDataBridge + StandardEnvelope ç»Ÿä¸€å†™å…¥ç½‘å…³ã€‚**
-
-æ‰€æœ‰è·¨æ¨¡å—å†™æ“ä½œå¿…é¡»ç» `DataBridge.forward(envelope)`ï¼Œç”± `routeToDB()` æ ¹æ® `action` è·¯ç”±åˆ°å¯¹åº” Storeã€‚ç¦æ­¢ä»»ä½• Service ç›´æ¥è°ƒç”¨ `dataLayer.save()` æˆ– `db.put()`ã€‚
-
-### å†³ç­–ç†ç”±
-
-- **Why not Bï¼ˆç›´æ¥è°ƒç”¨ dataLayerï¼‰**ï¼šè™½ç„¶å‡å°‘äº†æ ·æ¿ä»£ç ï¼Œä½†ç‰ºç‰²äº†æ¥æºè¿½æº¯ã€æƒé™æ§åˆ¶ã€å®¡è®¡æ—¥å¿—å’Œäº‹ä»¶å¹¿æ’­ï¼Œé•¿æœŸç»´æŠ¤æˆæœ¬æ›´é«˜ã€‚
-- **ä¸ AGENTS.md å…¼å®¹æ€§**ï¼šå®Œå…¨ç¬¦åˆ Â§ä¸€ï¼ˆåˆ†å±‚è§„åˆ™ï¼šservices â†’ core/data/libï¼‰å’Œ Â§å…«ï¼ˆæ•°æ®åº“ç‰ˆæœ¬ç®¡ç†ï¼šDB_VERSION/STORE_NAME/ACL_MATRIXï¼‰ã€‚
-- **ä¸å¼•æ“è§„æ ¼å…¼å®¹æ€§**ï¼šL3 çº¯è®¡ç®—å±‚ï¼ˆscoring/signal/riskï¼‰ä¸å—å½±å“ï¼Œå®ƒä»¬åªè¯»æ•°æ®ï¼›L4 åº”ç”¨å±‚ï¼ˆservicesï¼‰è´Ÿè´£å†™å…¥ï¼Œç» DataBridge è·¯ç”±ã€‚
-
-### å…³é”®çº¦æŸ
-
-1. `StandardEnvelope` å¿…é¡»å« `source`ï¼ˆæ¥æºæ¨¡å—ï¼‰ã€`target`ï¼ˆç›®æ ‡ Storeï¼‰ã€`action`ï¼ˆæ“ä½œç±»å‹ï¼‰ã€`traceId`ï¼ˆè¿½è¸ª IDï¼‰ã€`timestamp`ï¼ˆæ—¶é—´æˆ³ï¼‰ã€‚
-2. `ENVELOPE_ACTION` ç™½åå•ï¼šCREATE/UPDATE/DELETE/READ/BATCH/SYNC/MIGRATEã€‚
-3. `ACL_MATRIX` æ ¡éªŒæ¨¡å—-Store-æ“ä½œä¸‰å…ƒç»„ï¼šåªæœ‰ç™½åå•ä¸­çš„æ¨¡å—å¯ä»¥å†™å…¥ç‰¹å®š Storeã€‚
-4. å†™å…¥æˆåŠŸåè‡ªåŠ¨è§¦å‘ `EventBus.publish('store:updated', { store, traceId })`ï¼Œä¾› `withBroadcast` è·¨ Tab å¹¿æ’­ã€‚
-5. è‡ªåŠ¨å†™å…¥ `research_logs` å®¡è®¡æ—¥å¿—ï¼ˆStore çº§åˆ«ï¼‰ã€‚
+- ADR-001£¨´¿Ç°¶Ë¼Ü¹¹£©£º¾ö¶¨ÁËÊı¾İ×Ô¹ÜÓÚ±¾µØ IndexedDB£¬ĞèÒªÍ³Ò»µÄÊı¾İĞ´ÈëÍø¹Ø¡£
+- ADR-002£¨IndexedDB Ìæ´ú localStorage£©£ºÈ·Á¢ÁË IndexedDB ×÷ÎªÎ¨Ò»³Ö¾Ã»¯·½°¸£¬ĞèÒª¹æ·¶Ğ´Èë½Ó¿Ú¡£
 
 ---
 
-## 3. å¤‡é€‰æ–¹æ¡ˆï¼ˆAlternatives Consideredï¼‰
+## 2. ¾ö²ß£¨Decision£©
 
-| æ–¹æ¡ˆ | ä¼˜ç‚¹ | ç¼ºç‚¹ | ç»“è®º |
+**Ñ¡Ôñ·½°¸ A£ºDataBridge + StandardEnvelope Í³Ò»Ğ´ÈëÍø¹Ø¡£**
+
+ËùÓĞ¿çÄ£¿éĞ´²Ù×÷±ØĞë¾­ `DataBridge.forward(envelope)`£¬ÓÉ `routeToDB()` ¸ù¾İ `action` Â·ÓÉµ½¶ÔÓ¦ Store¡£½ûÖ¹ÈÎºÎ Service Ö±½Óµ÷ÓÃ `dataLayer.save()` »ò `db.put()`¡£
+
+### ¾ö²ßÀíÓÉ
+
+- **Why not B£¨Ö±½Óµ÷ÓÃ dataLayer£©**£ºËäÈ»¼õÉÙÁËÑù°å´úÂë£¬µ«ÎşÉüÁËÀ´Ô´×·Ëİ¡¢È¨ÏŞ¿ØÖÆ¡¢Éó¼ÆÈÕÖ¾ºÍÊÂ¼ş¹ã²¥£¬³¤ÆÚÎ¬»¤³É±¾¸ü¸ß¡£
+- **Óë AGENTS.md ¼æÈİĞÔ**£ºÍêÈ«·ûºÏ ¡ìÒ»£¨·Ö²ã¹æÔò£ºservices ¡ú core/data/lib£©ºÍ ¡ì°Ë£¨Êı¾İ¿â°æ±¾¹ÜÀí£ºDB_VERSION/STORE_NAME/ACL_MATRIX£©¡£
+- **ÓëÒıÇæ¹æ¸ñ¼æÈİĞÔ**£ºL3 ´¿¼ÆËã²ã£¨scoring/signal/risk£©²»ÊÜÓ°Ïì£¬ËüÃÇÖ»¶ÁÊı¾İ£»L4 Ó¦ÓÃ²ã£¨services£©¸ºÔğĞ´Èë£¬¾­ DataBridge Â·ÓÉ¡£
+
+### ¹Ø¼üÔ¼Êø
+
+1. `StandardEnvelope` ±ØĞëº¬ `source`£¨À´Ô´Ä£¿é£©¡¢`target`£¨Ä¿±ê Store£©¡¢`action`£¨²Ù×÷ÀàĞÍ£©¡¢`traceId`£¨×·×Ù ID£©¡¢`timestamp`£¨Ê±¼ä´Á£©¡£
+2. `ENVELOPE_ACTION` °×Ãûµ¥£ºCREATE/UPDATE/DELETE/READ/BATCH/SYNC/MIGRATE¡£
+3. `ACL_MATRIX` Ğ£ÑéÄ£¿é-Store-²Ù×÷ÈıÔª×é£ºÖ»ÓĞ°×Ãûµ¥ÖĞµÄÄ£¿é¿ÉÒÔĞ´ÈëÌØ¶¨ Store¡£
+4. Ğ´Èë³É¹¦ºó×Ô¶¯´¥·¢ `EventBus.publish('store:updated', { store, traceId })`£¬¹© `withBroadcast` ¿ç Tab ¹ã²¥¡£
+5. ×Ô¶¯Ğ´Èë `research_logs` Éó¼ÆÈÕÖ¾£¨Store ¼¶±ğ£©¡£
+
+### v1.1 Ôö²¹£ºÏµÍ³¹ÜÀí·½·¨£¨2026-07-16£©
+
+DataBridge ĞÂÔö 4 ¸öÒ»µÈ¹«Ãñ·½·¨£¬¾ù¾­¹ı ACL Ğ£Ñé + Éó¼ÆÈÕÖ¾£º
+
+| ·½·¨ | ÓÃÍ¾ | ACL ÒªÇó |
+|------|------|----------|
+| `init()` | Êı¾İ¿â³õÊ¼»¯£¨ÃİµÈ£© | ÎŞ£¨Æô¶¯½×¶Î£© |
+| `exportAllData(source)` | È«Á¿Êı¾İµ¼³ö | `system` Ä£¿é |
+| `importAllData(data, source)` | È«Á¿Êı¾İµ¼Èë | `system` Ä£¿é |
+| `resetAllData(source)` | È«Á¿Êı¾İÖØÖÃ | `system` Ä£¿é |
+
+**Éè¼ÆÔ­Ôò**£ºÏµÍ³¹ÜÀí²Ù×÷±ØĞëÍ¨¹ı DataBridge Í³Ò»Èë¿Ú£¬½ûÖ¹ services Ö±½Óµ÷ÓÃ `db.export()/db.import()/db.reset()`¡£
+
+---
+
+## 3. ±¸Ñ¡·½°¸£¨Alternatives Considered£©
+
+| ·½°¸ | ÓÅµã | È±µã | ½áÂÛ |
 |------|------|------|------|
-| **A. DataBridge + Envelope**ï¼ˆæœ€ç»ˆé€‰æ‹©ï¼‰ | ç»Ÿä¸€ç½‘å…³ã€ACLã€å®¡è®¡ã€å¹¿æ’­ | å¢åŠ å°‘é‡æ ·æ¿ä»£ç ï¼ˆæ¯ä¸ªå†™å…¥éœ€æ„é€  envelopeï¼‰ | âœ… é‡‡çº³ |
-| **B. ç›´æ¥è°ƒç”¨ dataLayer** | ç®€å•ç›´æ¥ï¼Œæ— é¢å¤–æŠ½è±¡ | æ¥æºéš¾è¿½æº¯ã€æƒé™åˆ†æ•£ã€éš¾ä»¥å®¡è®¡ã€æ— è‡ªåŠ¨å¹¿æ’­ | âŒ å¦å†³ |
-| **C. Repository æ¨¡å¼ï¼ˆæ¯ä¸ª Store ä¸€ä¸ª Repositoryï¼‰** | æ›´ç»†ç²’åº¦çš„æƒé™æ§åˆ¶ | è¿‡åº¦è®¾è®¡ï¼Œ24 ä¸ª Store éœ€è¦ 24 ä¸ª Repositoryï¼Œç»´æŠ¤æˆæœ¬é«˜ | âŒ å¦å†³ |
-| **D. Middleware æ‹¦æˆªï¼ˆåœ¨ dataLayer å±‚æ‹¦æˆªï¼‰** | å¯¹ Service é€æ˜ï¼Œä¸æ”¹è°ƒç”¨æ–¹å¼ | åœ¨åº•å±‚æ‹¦æˆªæ— æ³•è·å–ä¸šåŠ¡ä¸Šä¸‹æ–‡ï¼ˆtraceIdã€source æ¨¡å—åï¼‰ | âŒ å¦å†³ |
+| **A. DataBridge + Envelope**£¨×îÖÕÑ¡Ôñ£© | Í³Ò»Íø¹Ø¡¢ACL¡¢Éó¼Æ¡¢¹ã²¥ | Ôö¼ÓÉÙÁ¿Ñù°å´úÂë£¨Ã¿¸öĞ´ÈëĞè¹¹Ôì envelope£© | ? ²ÉÄÉ |
+| **B. Ö±½Óµ÷ÓÃ dataLayer** | ¼òµ¥Ö±½Ó£¬ÎŞ¶îÍâ³éÏó | À´Ô´ÄÑ×·Ëİ¡¢È¨ÏŞ·ÖÉ¢¡¢ÄÑÒÔÉó¼Æ¡¢ÎŞ×Ô¶¯¹ã²¥ | ? ·ñ¾ö |
+| **C. Repository Ä£Ê½£¨Ã¿¸ö Store Ò»¸ö Repository£©** | ¸üÏ¸Á£¶ÈµÄÈ¨ÏŞ¿ØÖÆ | ¹ı¶ÈÉè¼Æ£¬24 ¸ö Store ĞèÒª 24 ¸ö Repository£¬Î¬»¤³É±¾¸ß | ? ·ñ¾ö |
+| **D. Middleware À¹½Ø£¨ÔÚ dataLayer ²ãÀ¹½Ø£©** | ¶Ô Service Í¸Ã÷£¬²»¸Äµ÷ÓÃ·½Ê½ | ÔÚµ×²ãÀ¹½ØÎŞ·¨»ñÈ¡ÒµÎñÉÏÏÂÎÄ£¨traceId¡¢source Ä£¿éÃû£© | ? ·ñ¾ö |
 
 ---
 
-## 4. åæœï¼ˆConsequencesï¼‰
+## 4. ºó¹û£¨Consequences£©
 
-### æ­£é¢å½±å“
+### ÕıÃæÓ°Ïì
 
-- æ‰€æœ‰å†™å…¥æ“ä½œå¯å®¡è®¡ã€å¯è¿½æº¯ã€å¯å›æ»šã€‚
-- è·¨ Tab æ•°æ®åŒæ­¥ç”± DataBridge ç»Ÿä¸€è§¦å‘ï¼Œæ— éœ€å„ Service æ‰‹åŠ¨å¹¿æ’­ã€‚
-- ACL çŸ©é˜µé›†ä¸­ç®¡ç†ï¼Œæ–°å¢ Store æ—¶åªéœ€æ›´æ–°ä¸€å¤„é…ç½®ã€‚
-- ä¸ AGENTS.md åˆ†å±‚è§„åˆ™ä¸€è‡´ï¼Œaudit:layers é›¶è¿è§„ã€‚
+- ËùÓĞĞ´Èë²Ù×÷¿ÉÉó¼Æ¡¢¿É×·Ëİ¡¢¿É»Ø¹ö¡£
+- ¿ç Tab Êı¾İÍ¬²½ÓÉ DataBridge Í³Ò»´¥·¢£¬ÎŞĞè¸÷ Service ÊÖ¶¯¹ã²¥¡£
+- ACL ¾ØÕó¼¯ÖĞ¹ÜÀí£¬ĞÂÔö Store Ê±Ö»Ğè¸üĞÂÒ»´¦ÅäÖÃ¡£
+- Óë AGENTS.md ·Ö²ã¹æÔòÒ»ÖÂ£¬audit:layers ÁãÎ¥¹æ¡£
 
-### è´Ÿé¢å½±å“ / æŠ€æœ¯å€º
+### ¸ºÃæÓ°Ïì / ¼¼ÊõÕ®
 
-- æ¯ä¸ªå†™å…¥æ“ä½œéœ€æ„é€  `StandardEnvelope`ï¼Œå¢åŠ  ~3 è¡Œæ ·æ¿ä»£ç ã€‚
-- `routeToDB()` å½“å‰ä¸º 30+ case çš„ switchï¼Œéšç€ Store å¢åŠ å¯èƒ½è†¨èƒ€ã€‚
-  - **æŠ€æœ¯å€ºç™»è®°**ï¼š`../explanation/design/tech-debt.md` â€” ã€ŒDataBridge.routeToDB() ç­–ç•¥æ¨¡å¼é‡æ„ã€ï¼ˆå¾… ADR-010ï¼‰ã€‚
-- å·²æœ‰ 5 ä¸ªæœåŠ¡ç»•å¼€ DataBridge ç›´å†™ dbï¼Œéœ€è¦é€æ­¥è¿ç§»ã€‚
-  - **è¿ç§»æ¸…å•**ï¼š`../explanation/design/mcp-coupling-analysis-report.md` Â§é—®é¢˜ 5ã€‚
+- Ã¿¸öĞ´Èë²Ù×÷Ğè¹¹Ôì `StandardEnvelope`£¬Ôö¼Ó ~3 ĞĞÑù°å´úÂë¡£
+- `routeToDB()` µ±Ç°Îª 30+ case µÄ switch£¬Ëæ×Å Store Ôö¼Ó¿ÉÄÜÅòÕÍ¡£
+  - **¼¼ÊõÕ®µÇ¼Ç**£º`../explanation/design/tech-debt.md` ¡ª ¡¸DataBridge.routeToDB() ²ßÂÔÄ£Ê½ÖØ¹¹¡¹£¨´ı ADR-010£©¡£
+- ÒÑÓĞ 5 ¸ö·şÎñÈÆ¿ª DataBridge Ö±Ğ´ db£¬ĞèÒªÖğ²½Ç¨ÒÆ¡£
+  - **Ç¨ÒÆÇåµ¥**£º`../explanation/design/mcp-coupling-analysis-report.md` ¡ìÎÊÌâ 5¡£
 
-### å½±å“èŒƒå›´
+### Ó°Ïì·¶Î§
 
-| æ¨¡å— | å½±å“ | éœ€ä¿®æ”¹ |
+| Ä£¿é | Ó°Ïì | ĞèĞŞ¸Ä |
 |------|------|--------|
-| `src/core/DataBridge.ts` | æ ¸å¿ƒè·¯ç”±ç±»ï¼Œéœ€å®Œå–„ ACL æ ¡éªŒ | âœ… å·²å®Œæˆ |
-| `src/data/db-schema.ts` | æ–°å¢ Store é¡»åŒæ­¥ ACL_MATRIX | âœ… å·²å®Œæˆ |
-| `src/services/*` | æ‰€æœ‰å†™æ“ä½œéœ€æ”¹ä¸º DataBridge.forward() | ğŸŸ¡ éƒ¨åˆ†å®Œæˆï¼ˆ5 ä¸ªæœåŠ¡ä»ç›´å†™ï¼‰ |
-| `src/store/*` | æ— éœ€ä¿®æ”¹ï¼Œåªæ¶ˆè´¹ EventBus äº‹ä»¶ | â€” |
-| `src/pages/*` | æ— éœ€ä¿®æ”¹ï¼Œåªç» Store å–æ•° | â€” |
+| `src/core/DataBridge.ts` | ºËĞÄÂ·ÓÉÀà£¬ĞèÍêÉÆ ACL Ğ£Ñé | ? ÒÑÍê³É |
+| `src/data/db-schema.ts` | ĞÂÔö Store ĞëÍ¬²½ ACL_MATRIX | ? ÒÑÍê³É |
+| `src/services/*` | ËùÓĞĞ´²Ù×÷Ğè¸ÄÎª DataBridge.forward() | ?? ²¿·ÖÍê³É£¨5 ¸ö·şÎñÈÔÖ±Ğ´£© |
+| `src/store/*` | ÎŞĞèĞŞ¸Ä£¬Ö»Ïû·Ñ EventBus ÊÂ¼ş | ¡ª |
+| `src/pages/*` | ÎŞĞèĞŞ¸Ä£¬Ö»¾­ Store È¡Êı | ¡ª |
 
 ---
 
-## 5. å®æ–½ä¸éªŒè¯ï¼ˆImplementation & Validationï¼‰
+## 5. ÊµÊ©ÓëÑéÖ¤£¨Implementation & Validation£©
 
-### 5.1 å®æ–½æ­¥éª¤ checklist
+### 5.1 ÊµÊ©²½Öè checklist
 
-- [x] Step 1ï¼šå®šä¹‰ `StandardEnvelope` Interfaceï¼ˆ`../../src/showcase/types.ts`ï¼‰
-- [x] Step 2ï¼šå®ç° `DataBridge.forward()` è·¯ç”±æ–¹æ³•
-- [x] Step 3ï¼šå®šä¹‰ `ENVELOPE_ACTION` æšä¸¾å’Œ `ACL_MATRIX`
-- [x] Step 4ï¼šåœ¨ `db-schema.ts` ä¸­æ³¨å†Œ `research_logs` å®¡è®¡æ—¥å¿— Store
-- [ ] Step 5ï¼šè¿ç§» 5 ä¸ªç›´å†™æœåŠ¡ï¼ˆè§ `../explanation/design/mcp-coupling-analysis-report.md` Â§é—®é¢˜ 5ï¼‰
-- [ ] Step 6ï¼šå°† `routeToDB()` çš„ switch é‡æ„ä¸ºç­–ç•¥æ¨¡å¼ï¼ˆå¾… ADR-010ï¼‰
-- [ ] Step 7ï¼šè¡¥å…… `DataBridge` é›†æˆæµ‹è¯•ï¼ˆè¦†ç›–ç‡ â‰¥ 80%ï¼‰
+- [x] Step 1£º¶¨Òå `StandardEnvelope` Interface£¨`../../src/showcase/types.ts`£©
+- [x] Step 2£ºÊµÏÖ `DataBridge.forward()` Â·ÓÉ·½·¨
+- [x] Step 3£º¶¨Òå `ENVELOPE_ACTION` Ã¶¾ÙºÍ `ACL_MATRIX`
+- [x] Step 4£ºÔÚ `db-schema.ts` ÖĞ×¢²á `research_logs` Éó¼ÆÈÕÖ¾ Store
+- [x] Step 5£ºÇ¨ÒÆÖ±Ğ´·şÎñ£¨audit:layers v3.4 ºó 0 Î¥¹æ/0 ¾¯¸æ£©
+- [x] Step 5.1£º`dataLayerHelpers` Ç¨ÒÆµ½ `databridgeQueries`£¨re-export ¼æÈİ²ã£©
+- [x] Step 5.2£º`generateId/now` ÉÏÒÆµ½ `src/lib/utils.ts`
+- [x] Step 5.3£ºÏµÍ³¹ÜÀí²Ù×÷£¨export/import/reset£©ÄÉÈë DataBridge
+- [x] Step 5.4£º`bootstrapService` ¸ÄÓÃ `dataBridge.init()`
+- [x] Step 5.5£ºaudit:layers ÖÇÄÜÊ¶±ğºÏ¹æ Store °ü×°²ã
+- [ ] Step 6£º½« `routeToDB()` µÄ switch ÖØ¹¹Îª²ßÂÔÄ£Ê½£¨´ı ADR-010£©
+- [ ] Step 7£º²¹³ä `DataBridge` ¼¯³É²âÊÔ£¨¸²¸ÇÂÊ ¡İ 80%£©
 
-### 5.2 éªŒè¯å‘½ä»¤
+### 5.2 ÑéÖ¤ÃüÁî
 
 ```bash
-# ç±»å‹å®‰å…¨
+# ÀàĞÍ°²È«
 npx tsc --noEmit
 
-# è·¨å±‚è°ƒç”¨åˆè§„ï¼ˆservices ä¸å¾—ç›´å†™ dbï¼‰
+# ¿ç²ãµ÷ÓÃºÏ¹æ£¨services ²»µÃÖ±Ğ´ db£©
 npm run audit:layers
 
-# æ–‡æ¡£åŒæ­¥
+# ÎÄµµÍ¬²½
 npm run audit:docs
 ```
 
-### 5.3 å›æ»šæ¡ä»¶ä¸å›æ»šæ­¥éª¤
+### 5.3 »Ø¹öÌõ¼şÓë»Ø¹ö²½Öè
 
-**å›æ»šæ¡ä»¶**ï¼š
-- DataBridge å¼•å…¥åæ€§èƒ½ä¸‹é™ > 20%ï¼ˆå†™å…¥å»¶è¿Ÿä» < 50ms å¢åŠ åˆ° > 60msï¼‰
-- å‘ç°ä¸¥é‡ ACL ç»•è¿‡æ¼æ´
-- è¶…è¿‡ 10 ä¸ªæœåŠ¡å›  DataBridge å¼•å…¥è€Œäº§ç”Ÿæ— æ³•ä¿®å¤çš„ bug
+**»Ø¹öÌõ¼ş**£º
+- DataBridge ÒıÈëºóĞÔÄÜÏÂ½µ > 20%£¨Ğ´ÈëÑÓ³Ù´Ó < 50ms Ôö¼Óµ½ > 60ms£©
+- ·¢ÏÖÑÏÖØ ACL ÈÆ¹ıÂ©¶´
+- ³¬¹ı 10 ¸ö·şÎñÒò DataBridge ÒıÈë¶ø²úÉúÎŞ·¨ĞŞ¸´µÄ bug
 
-**å›æ»šæ­¥éª¤**ï¼š
-1. åœ¨ `DataBridge.ts` ä¸­å¢åŠ  `bypass` æ¨¡å¼ï¼ˆç¯å¢ƒå˜é‡ `VITE_DATABRIDGE_BYPASS=true`ï¼‰
-2. å„ Service æ¢å¤ç›´æ¥è°ƒç”¨ `dataLayer.save()`
-3. ç§»é™¤ `StandardEnvelope` æ„é€ ï¼Œä½†ä¿ç•™ `traceId` æ‰‹åŠ¨æ³¨å…¥
-4. å›æ»šåè¿è¡Œ `tsc --noEmit` + `audit:layers` éªŒè¯
+**»Ø¹ö²½Öè**£º
+1. ÔÚ `DataBridge.ts` ÖĞÔö¼Ó `bypass` Ä£Ê½£¨»·¾³±äÁ¿ `VITE_DATABRIDGE_BYPASS=true`£©
+2. ¸÷ Service »Ö¸´Ö±½Óµ÷ÓÃ `dataLayer.save()`
+3. ÒÆ³ı `StandardEnvelope` ¹¹Ôì£¬µ«±£Áô `traceId` ÊÖ¶¯×¢Èë
+4. »Ø¹öºóÔËĞĞ `tsc --noEmit` + `audit:layers` ÑéÖ¤
 
 ---
 
-## 6. å…³è”æ–‡æ¡£ï¼ˆRelated Documentsï¼‰
+## 6. ¹ØÁªÎÄµµ£¨Related Documents£©
 
-| æ–‡æ¡£ | è·¯å¾„ | è¯´æ˜ |
+| ÎÄµµ | Â·¾¶ | ËµÃ÷ |
 |------|------|------|
-| å…¨å±€æ¶æ„æ€»è§ˆ | `../explanation/overview.md` | æ•°æ®æµå…¨æ™¯ï¼ˆÂ§4ï¼‰ |
-| å¼•æ“è§„æ ¼ | `./05-engine-specs.md` | L3 çº¯è®¡ç®—å±‚èŒè´£ã€æ•°æ®æµ Â§4 |
-| è·¯ç”±è§„æ ¼ | `../explanation/design/06-routing-specs.md` | ä¸‰çº§åŠ è½½é“¾ |
-| MCP è€¦åˆåˆ†æ | `../explanation/design/mcp-coupling-analysis-report.md` | DataBridge é—®é¢˜ 1-5 |
-| æ•°æ®å±‚æ€»è§ˆ | `../explanation/data-layer-overview.md` | DataBridge è·¯ç”±æœºåˆ¶ã€QueryBuilder |
-| DataBridge ä¸»é¢˜åŒ… | `./project/plans/README.md` | DataBridge ç›¸å…³æ–‡æ¡£èšåˆç´¢å¼• |
-| åŸå§‹ææ¡ˆ | `./project/2026-06-21-databridge-over-direct-datalayer.md` | ADR-003 çš„åŸå§‹æ–‡ä»¶ |
+| È«¾Ö¼Ü¹¹×ÜÀÀ | `../explanation/overview.md` | Êı¾İÁ÷È«¾°£¨¡ì4£© |
+| ÒıÇæ¹æ¸ñ | `./05-engine-specs.md` | L3 ´¿¼ÆËã²ãÖ°Ôğ¡¢Êı¾İÁ÷ ¡ì4 |
+| Â·ÓÉ¹æ¸ñ | `../explanation/design/06-routing-specs.md` | Èı¼¶¼ÓÔØÁ´ |
+| MCP ñîºÏ·ÖÎö | `../explanation/design/mcp-coupling-analysis-report.md` | DataBridge ÎÊÌâ 1-5 |
+| Êı¾İ²ã×ÜÀÀ | `../explanation/data-layer-overview.md` | DataBridge Â·ÓÉ»úÖÆ¡¢QueryBuilder |
+| DataBridge Ö÷Ìâ°ü | `./project/plans/README.md` | DataBridge Ïà¹ØÎÄµµ¾ÛºÏË÷Òı |
+| Ô­Ê¼Ìá°¸ | `./project/2026-06-21-databridge-over-direct-datalayer.md` | ADR-003 µÄÔ­Ê¼ÎÄ¼ş |
 
 ---
 
-## 7. çŠ¶æ€å˜æ›´è®°å½•ï¼ˆStatus Logï¼‰
+## 7. ×´Ì¬±ä¸ü¼ÇÂ¼£¨Status Log£©
 
-| æ—¥æœŸ | çŠ¶æ€ | å˜æ›´äºº | å¤‡æ³¨ |
+| ÈÕÆÚ | ×´Ì¬ | ±ä¸üÈË | ±¸×¢ |
 |------|------|--------|------|
-| 2026-06-21 | proposed | @architect | åˆå§‹ææ¡ˆï¼ŒåŸºäº `databridge-over-direct-datalayer.md` |
-| 2026-06-24 | accepted | æ¶æ„ç»„ | æ¶æ„è¯„å®¡é€šè¿‡ï¼Œä¸ AGENTS.md åˆ†å±‚è§„åˆ™æ— å†²çª |
-| 2026-07-12 | accepted | docs æ²»ç†ç»„ | æ‰©å†™ä¸ºå®Œæ•´ ADRï¼ˆv1.0.0ï¼‰ï¼Œè¡¥å……ä¸ƒèŠ‚å†…å®¹ã€å¤‡é€‰æ–¹æ¡ˆã€æŠ€æœ¯å€ºã€å›æ»šæ­¥éª¤ |
+| 2026-06-21 | proposed | @architect | ³õÊ¼Ìá°¸£¬»ùÓÚ `./databridge-split-plan.md` |
+| 2026-06-24 | accepted | ¼Ü¹¹×é | ¼Ü¹¹ÆÀÉóÍ¨¹ı£¬Óë AGENTS.md ·Ö²ã¹æÔòÎŞ³åÍ» |
+| 2026-07-12 | accepted | docs ÖÎÀí×é | À©Ğ´ÎªÍêÕû ADR£¨v1.0.0£©£¬²¹³äÆß½ÚÄÚÈİ¡¢±¸Ñ¡·½°¸¡¢¼¼ÊõÕ®¡¢»Ø¹ö²½Öè |
+| 2026-07-16 | accepted | ¼Ü¹¹×é | v1.1.0 Ôö²¹£ºÏµÍ³¹ÜÀí·½·¨£¨init/exportAll/importAll/resetAll£©ÄÉÈë DataBridge£»audit:layers v3.4 Éı¼¶£»store °ü×°²ãºÏ¹æÅĞ¶¨£»0 Î¥¹æ/0 ¾¯¸æ´ï³É |
 
 ---
 
-_æœ¬æ–‡æ¡£ç”± ADR éª¨æ¶ï¼ˆv0.9.0ï¼‰æ‰©å†™ä¸ºå®Œæ•´ ADRï¼ˆv1.0.0ï¼‰ï¼Œä½œä¸º ADR æ‰©å†™æ ‡æ†ã€‚_
+_±¾ÎÄµµÓÉ ADR ¹Ç¼Ü£¨v0.9.0£©À©Ğ´ÎªÍêÕû ADR£¨v1.0.0£©£¬×÷Îª ADR À©Ğ´±ê¸Ë¡£_

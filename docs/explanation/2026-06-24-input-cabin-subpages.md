@@ -1,55 +1,54 @@
 ---
-title: 2026-06-24-input-cabin-subpages
-code_version: 2.0.0
-
-tier: reference
----
-
----
-title: ADR-006: è¾“å…¥èˆ±æ‹†åˆ†ä¸ºå››å­é¡µé¢
-version: v0.9.0
-last_updated: 2026-06-24
-maintainer: V9 Architecture Team
+title: ADR-006: ÊäÈë²Õ²ğ·ÖÎªËÄ×ÓÒ³Ãæ
+type: explanation
+domain: frontend
+phase: planning
+tier: standard
 status: active
-change_log:
-  - date: 2026-06-24
-    author: Documentation Governor
-    desc: æ³¨å…¥ Frontmatter å…ƒæ•°æ®ï¼ˆPhase 3 ç‰ˆæœ¬åŒ–ï¼‰
+maintainer: V9 Architecture Team
+summary: "## ±³¾° `InputApp.tsx` Öğ½¥ÅòÕÍ£¬°üº¬Â¼Èë¡¢ÅúÁ¿µ¼Èë¡¢ÈÈÃÅ°å¿é¡¢²É¼¯²âÊÔ¶à¸ö¹¦ÄÜÇø£¬Î¬»¤À§ÄÑ¡£"
+tags: [frontend, input-cabin, adr]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: reference
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
-# ADR-006: è¾“å…¥èˆ±æ‹†åˆ†ä¸ºå››å­é¡µé¢
+
+# ADR-006: ÊäÈë²Õ²ğ·ÖÎªËÄ×ÓÒ³Ãæ
 
 > **Status**: Accepted  
 > **Version**: v0.9.0-docs-review  
 > **Last Updated**: 2026-06-24
 
-- çŠ¶æ€ï¼šå·²æ¥å—
-- æ—¥æœŸï¼š2026-06-24
-- å†³ç­–äººï¼š@frontend-lead
+- ×´Ì¬£ºÒÑ½ÓÊÜ
+- ÈÕÆÚ£º2026-06-24
+- ¾ö²ßÈË£º@frontend-lead
 
-## èƒŒæ™¯
+## ±³¾°
 
-`InputApp.tsx` é€æ¸è†¨èƒ€ï¼ŒåŒ…å«å½•å…¥ã€æ‰¹é‡å¯¼å…¥ã€çƒ­é—¨æ¿å—ã€é‡‡é›†æµ‹è¯•å¤šä¸ªåŠŸèƒ½åŒºï¼Œç»´æŠ¤å›°éš¾ã€‚
+`InputApp.tsx` Öğ½¥ÅòÕÍ£¬°üº¬Â¼Èë¡¢ÅúÁ¿µ¼Èë¡¢ÈÈÃÅ°å¿é¡¢²É¼¯²âÊÔ¶à¸ö¹¦ÄÜÇø£¬Î¬»¤À§ÄÑ¡£
 
-## é€‰é¡¹
+## Ñ¡Ïî
 
-| é€‰é¡¹ | ä¼˜ç‚¹ | ç¼ºç‚¹ |
+| Ñ¡Ïî | ÓÅµã | È±µã |
 |------|------|------|
-| A. æ‹†åˆ†ä¸º `/input`ã€`/input/bulk-import`ã€`/input/hot-sectors`ã€`/input/data-test` | èŒè´£æ¸…æ™°ã€å¯ç‹¬ç«‹è¿­ä»£ã€è·¯ç”±å¯ç›´è¾¾ | éœ€è¦ç»´æŠ¤æ›´å¤šå­è·¯ç”±ä¸ç»„ä»¶ |
-| B. å•é¡µ Tab åˆ‡æ¢ | å®ç°ç®€å• | æ–‡ä»¶è¿‡å¤§ã€çŠ¶æ€è€¦åˆã€éš¾ä»¥ deep-link |
+| A. ²ğ·ÖÎª `/input`¡¢`/input/bulk-import`¡¢`/input/hot-sectors`¡¢`/input/data-test` | Ö°ÔğÇåÎú¡¢¿É¶ÀÁ¢µü´ú¡¢Â·ÓÉ¿ÉÖ±´ï | ĞèÒªÎ¬»¤¸ü¶à×ÓÂ·ÓÉÓë×é¼ş |
+| B. µ¥Ò³ Tab ÇĞ»» | ÊµÏÖ¼òµ¥ | ÎÄ¼ş¹ı´ó¡¢×´Ì¬ñîºÏ¡¢ÄÑÒÔ deep-link |
 
-## å†³ç­–
+## ¾ö²ß
 
-é€‰æ‹© Aã€‚ä¸åˆ†æèˆ± `/analysis/*` å­é¡µæ¨¡å¼å¯¹é½ã€‚
+Ñ¡Ôñ A¡£Óë·ÖÎö²Õ `/analysis/*` ×ÓÒ³Ä£Ê½¶ÔÆë¡£
 
-## åæœ
+## ºó¹û
 
-- `InputApp.tsx` æ”¹ä¸ºå­è·¯ç”±å¸ƒå±€ç»„ä»¶ã€‚
-- æ–°å¢ `InputDashboard`ã€`BulkImportPanel`ã€`HotSectorPanel`ã€`DataTestPanel`ã€‚
-- è·¯ç”±æ³¨å†Œè¡¨åŒæ­¥æ›´æ–°ã€‚
+- `InputApp.tsx` ¸ÄÎª×ÓÂ·ÓÉ²¼¾Ö×é¼ş¡£
+- ĞÂÔö `InputDashboard`¡¢`BulkImportPanel`¡¢`HotSectorPanel`¡¢`DataTestPanel`¡£
+- Â·ÓÉ×¢²á±íÍ¬²½¸üĞÂ¡£
 
-## ç›¸å…³æ–‡æ¡£
+## Ïà¹ØÎÄµµ
 
 - `../reference/06-routing-specs.md`
 - `../reference/input-cabin-spec.md`

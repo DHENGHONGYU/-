@@ -78,7 +78,7 @@ vi.mock('@/config/dbConfig', () => ({
   ENVELOPE_TARGET: { db: 'db' },
 }))
 
-import { initDualStrategyStoreSubscriptions } from '@/store/dualStrategyStore'
+import { initDualStrategyStoreSubscriptions, _resetDualStrategyStoreSubscriptionsForTest } from '@/store/dualStrategyStore'
 
 let cleanup: (() => void) | undefined
 
@@ -102,6 +102,8 @@ beforeEach(() => {
 afterEach(() => {
   cleanup?.()
   cleanup = undefined
+  // 重置模块级订阅状态与 _lastRefreshTime，避免跨用例被 MIN_REFRESH_INTERVAL_MS(2000ms) 拦截
+  _resetDualStrategyStoreSubscriptionsForTest()
   vi.useRealTimers()
 })
 
@@ -132,8 +134,8 @@ describe('dualStrategy 重复条件整改回归 — 单守卫不变量', () => {
       cb(makeEnvelope('external'))
     }
 
-    await new Promise((r) => setTimeout(r, 150))
-    // 5 个频道在同一 tick 内派发 → 去抖合并为单次 refresh → 内部 3 次 query
+    await new Promise((r) => setTimeout(r, 400))
+    // 5 个频道在同一 tick 内派发 → 去抖合并为单次 refresh（DEBOUNCE_MS=300ms）→ 内部 3 次 query
     expect(mockDataBridgeQuery).toHaveBeenCalled()
     expect(mockDataBridgeQuery).toHaveBeenCalledTimes(3)
   })
@@ -147,7 +149,7 @@ describe('dualStrategy 重复条件整改回归 — 单守卫不变量', () => {
       cb(makeEnvelope(ch === 'stocks' ? 'external' : 'strategy'))
     }
 
-    await new Promise((r) => setTimeout(r, 150))
+    await new Promise((r) => setTimeout(r, 400))
     expect(mockDataBridgeQuery).toHaveBeenCalledTimes(3)
   })
 })

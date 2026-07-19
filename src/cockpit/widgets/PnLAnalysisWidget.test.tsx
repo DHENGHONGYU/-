@@ -371,9 +371,9 @@ describe('PnLAnalysisWidget', () => {
   // 颜色常量一致性锚点（防御令牌被意外修改）
   // ----------------------------------------------------------
   it('COLOR_TOKENS / THEME_TOKENS 锚点值应与 PnLAnalysisWidget 源码引用一致', () => {
-    // 源码 总盈亏/胜率 使用 COLOR_TOKENS.success.hex（与 text-green-700 一致）
-    expect(COLOR_TOKENS.success.hex).toBe('#15803d')
-    expect(COLOR_TOKENS.success.tailwind).toBe('text-green-700')
+    // 源码 总盈亏/胜率 使用 COLOR_TOKENS.success.hex（与 text-success 一致）
+    expect(COLOR_TOKENS.success.hex).toBe('#21c45d')
+    expect(COLOR_TOKENS.success.tailwind).toBe('text-success')
     // 源码 亏损分支 使用 COLOR_TOKENS.danger.hex (#ef4444)
     expect(COLOR_TOKENS.danger.hex).toBe('#ef4444')
     // 源码 盈亏比 使用 twText('yellow', 500)

@@ -50,7 +50,13 @@ function lookupPathMap(target: string, ref: Reference): string | null {
   if (!map) return null
 
   const targetMap = ref.type === 'doc-to-code' ? map.codePathMap : map.docPathMap
-  const normalizedTarget = normalizePath(target)
+
+  // 代码位置后缀（行号/行列/行范围，支持逗号分隔多位置）不应影响路径映射查找
+  const locationSuffix = /(\.\w+)?(?::\d+(?:[-/]\d+)?(?:,\d+)*(?::\d+)?)$/
+  let normalizedTarget = normalizePath(target)
+  if (ref.type === 'doc-to-code' && locationSuffix.test(normalizedTarget)) {
+    normalizedTarget = normalizedTarget.replace(locationSuffix, '$1')
+  }
 
   if (targetMap[normalizedTarget]) {
     return targetMap[normalizedTarget]
@@ -120,7 +126,7 @@ function searchRealFiles(target: string, ref: Reference): string[] {
   }
 
   // 补充：项目根目录下的核心文档（如 AGENTS.md / README.md / CHANGELOG.md）
-  const rootCandidates = ['AGENTS.md', 'README.md', 'CHANGELOG.md', 'LICENSE', 'CONTRIBUTING.md']
+  const rootCandidates = ['AGENTS.md', 'docs/explanation/README.md', 'CHANGELOG.md', 'LICENSE', 'CONTRIBUTING.md']
   if (rootCandidates.includes(targetName)) {
     const rootPath = join(PROJECT_ROOT, targetName)
     if (existsSync(rootPath)) {

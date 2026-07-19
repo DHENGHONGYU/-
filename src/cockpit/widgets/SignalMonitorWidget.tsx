@@ -3,9 +3,8 @@ import { Zap, ArrowUpCircle, ArrowDownCircle, MinusCircle } from 'lucide-react'
 import { Badge } from '@/components/atoms/Badge'
 import { Skeleton } from '@/components/molecules/states'
 import type { WidgetConfig } from '@/types/modules/widget.types'
-import { useSignalStore, topSignals, initSignalStoreSubscriptions } from '@/store/signalStore'
-import { THEME_TOKENS, COLOR_TOKENS, twText, twBg, twBorder } from '@/constants/theme.tokens'
-import { STOCK_COLOR_MAPPING } from '@/constants/cockpit.constants'
+import { useSignalStore, initSignalStoreSubscriptions } from '@/store/signalStore'
+import { THEME_TOKENS, COLOR_TOKENS, STOCK_COLOR_TOKENS, twText, twBg, twBorder } from '@/constants/theme.tokens'
 import { getLogger } from '@/lib/logger'
 import { WidgetStateShell } from './components/WidgetStateShell'
 
@@ -16,8 +15,8 @@ interface SignalMonitorWidgetProps {
 }
 
 const SignalMonitorWidget = memo(function SignalMonitorWidget({ config }: SignalMonitorWidgetProps): React.JSX.Element {
-  const { loading, error, refresh } = useSignalStore()
-  const signals = topSignals(10)
+  const { loading, error, refresh, signals: allSignals } = useSignalStore()
+  const signals = allSignals.slice(0, 10)
 
   useEffect(() => {
     let cancelled = false
@@ -124,10 +123,10 @@ const SignalMonitorWidget = memo(function SignalMonitorWidget({ config }: Signal
         {signals.length > 0 && (
           <div className={`flex items-center justify-between text-xs ${twText('gray', 500)} pt-2 border-t`}>
             <span>
-              买入: <span className={`font-medium ${STOCK_COLOR_MAPPING.UP_CLASS}`}>{signals.filter((s) => s.direction === 'buy').length}</span>
+              买入: <span className={`font-medium ${STOCK_COLOR_TOKENS.up.tailwind}`}>{signals.filter((s) => s.direction === 'buy').length}</span>
             </span>
             <span>
-              卖出: <span className={`font-medium ${STOCK_COLOR_MAPPING.DOWN_CLASS}`}>{signals.filter((s) => s.direction === 'sell').length}</span>
+              卖出: <span className={`font-medium ${STOCK_COLOR_TOKENS.down.tailwind}`}>{signals.filter((s) => s.direction === 'sell').length}</span>
             </span>
             <span>
               持有/观望: <span className={`font-medium ${twText('gray', 500)}`}>{signals.filter((s) => s.direction === 'hold' || s.direction === 'watch').length}</span>

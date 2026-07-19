@@ -6,7 +6,7 @@
  * 检查目标：
  * 1. STORE_REGISTRY 中每个条目的 filePath 对应文件是否存在
  * 2. SERVICE_REGISTRY 中每个条目的 filePath 对应文件是否存在
- * 3. COMPONENT_REGISTRY 中每个条目的 importPath 对应文件是否存在
+ * 3. COMPONENT_REGISTRY 中每个条目的 sourcePath/targetPath 对应文件是否存在
  * 4. 反向检查：src/store/ 下所有 *Store.ts 文件是否都在 STORE_REGISTRY 中注册
  * 5. 反向检查：src/services/ 下所有 *Service.ts 文件是否都在 SERVICE_REGISTRY 中注册
  * 6. 反向检查：src/components/ 下所有业务组件文件是否都在 COMPONENT_REGISTRY 中注册
@@ -24,7 +24,7 @@ import { fileURLToPath } from 'node:url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const ROOT = path.resolve(__dirname, '..')
+const ROOT = path.resolve(__dirname, '..', '..')
 const SRC = path.join(ROOT, 'src')
 
 // ============================================================
@@ -84,19 +84,32 @@ function resolveRegistryPath(importPath: string): string {
 }
 
 /**
+ * 将注册表路径统一为 @/ 别名、去扩展名的形式，便于正反检查比对。
+ * 兼容 'src/...' / '@/...' 前缀与 .tsx/.ts/.jsx/.js 扩展名。
+ */
+function normalizeRegistryPath(raw: string): string {
+  let p = raw.trim().replace(/\\/g, '/')
+  if (p.startsWith('@/')) p = 'src/' + p.slice(2)
+  p = p.replace(/\.(tsx|ts|jsx|js)$/i, '')
+  if (p.startsWith('src/')) p = '@/' + p.slice(4)
+  return p
+}
+
+/**
  * 从 TypeScript 注册表文件中解析条目数组
- * 支持 filePath 和 importPath 两种路径字段
+ * 兼容 filePath / importPath / sourcePath / targetPath 多种路径字段，
+ * 兼容 id / name 作为条目标识。
  */
 function parseRegistryEntries(content: string): RegistryEntry[] {
   const entries: RegistryEntry[] = []
 
-  // 匹配 id 字段（支持单引号和双引号）
-  const idRegex = /id:\s*['"]([^'"]+)['"]/g
-  // 匹配 filePath 或 importPath 字段
-  const pathRegex = /(?:filePath|importPath):\s*['"]([^'"]+)['"]/g
-  // 检测路径字段类型
-  const pathKeyMatch = /(?:filePath|importPath)/.exec(content)
-  const pathKey = pathKeyMatch ? pathKeyMatch[0] : 'filePath'
+  // 匹配 id / name 字段（组件注册表用 name；Store/Service 注册表用 id）
+  const idRegex = /(?:id|name):\s*['"]([^'"]+)['"]/g
+  // 匹配 filePath / importPath / sourcePath / targetPath 字段（兼容多注册表 schema）
+  const pathRegex = /(?:filePath|importPath|sourcePath|targetPath):\s*['"]([^'"]+)['"]/g
+  // 检测路径字段类型（用于展示）
+  const pathKeyMatch = /(?:filePath|importPath|sourcePath|targetPath)/.exec(content)
+  const pathKey = pathKeyMatch ? pathKeyMatch[0] : 'sourcePath'
 
   // 收集所有 id 及其位置
   const idMatches: Array<{ value: string; index: number }> = []
@@ -105,10 +118,10 @@ function parseRegistryEntries(content: string): RegistryEntry[] {
     idMatches.push({ value: m[1], index: m.index })
   }
 
-  // 收集所有 path 及其位置
-  const pathMatches: Array<{ value: string; index: number }> = []
+  // 收集所有 path 及其位置（保留命中的字段名，便于回填 pathKey）
+  const pathMatches: Array<{ value: string; key: string; index: number }> = []
   while ((m = pathRegex.exec(content)) !== null) {
-    pathMatches.push({ value: m[1], index: m.index })
+    pathMatches.push({ value: m[1], key: m[0].split(':')[0], index: m.index })
   }
 
   // 按位置配对：每个 id 找最近的后续 path
@@ -127,8 +140,8 @@ function parseRegistryEntries(content: string): RegistryEntry[] {
     if (closestPath) {
       entries.push({
         id: idMatch.value,
-        path: closestPath.value,
-        pathKey,
+        path: normalizeRegistryPath(closestPath.value),
+        pathKey: closestPath.key,
       })
     }
   }

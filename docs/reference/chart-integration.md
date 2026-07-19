@@ -1,81 +1,77 @@
 ---
-title: chart-integration
-code_version: 2.0.0
-
+title: V9 Í¼±í×é¼ş¼¯³É¹æ¸ñ
+type: reference
+domain: frontend
+phase: development
 tier: important
----
-
----
-title: docs/reference/chart-integration.md
-code_version: 2.0.0
-tier: important
----
-
----
-title: V9 å›¾è¡¨ç»„ä»¶é›†æˆè§„æ ¼
-version: v0.9.0-doc-sync-batch2
-last_review: 2026-06-27
 status: draft
+maintainer: V9 Architecture Team
+summary: "±¾ÎÄµµ¹æ¶¨ V9 ·ÖÎö²ÕÓë¼İÊ»²ÕÖĞËùÓĞ½ğÈÚ/Ö¸±êÍ¼±íµÄ¼¼ÊõÑ¡ĞÍ¡¢×é¼ş API¡¢ÓëÊı¾İ²ãµÄ¶Ô½Ó·½Ê½ÒÔ¼°ĞÔÄÜÓÅ»¯²ßÂÔ¡£²»¸²¸ÇÍ¨ÓÃ UI ×é¼ş£¨Button/Card µÈ£©Óë±í¸ñäÖÈ¾¡£"
+tags: [frontend, integration, component, visualization, reference]
+version: v1.0.0
+last_updated: 2026-07-17
+code_version: 2.0.0
+doc_id: V9-DOC-FRONT-009
 change_log:
-  - date: 2026-06-27
-    author: Documentation Governor
-    desc: é¦–æ¬¡èµ·è‰å›¾è¡¨æŠ€æœ¯é€‰å‹ã€ç»„ä»¶ APIã€DataBridge å¯¹æ¥ä¸æ€§èƒ½ä¼˜åŒ–ç­–ç•¥
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
-# V9 å›¾è¡¨ç»„ä»¶é›†æˆè§„æ ¼
+# V9 Í¼±í×é¼ş¼¯³É¹æ¸ñ
 
-> **å¯¹åº”è“å›¾**ï¼š`./v9-system-blueprint.md` Â§2 æŠ€æœ¯æ ˆï¼ˆå›¾è¡¨é€‰å‹ï¼‰ã€Â§7.3 å›¾è¡¨ç»„ä»¶è§„èŒƒã€Â§10 åå·®é¡¹ D16ã€Œç¼ºå°‘å›¾è¡¨ç»„ä»¶åº“ã€ã€‚
-> **ä¾èµ–æ–‡æ¡£**ï¼š`./dataflow-data-definition.md`ï¼ˆæ•°æ®æµå¼•æ“é€šé“å®šä¹‰ï¼‰ã€`./04-ui-ux-specs.md`ï¼ˆå›¾è¡¨äº¤äº’è§„èŒƒï¼‰ã€‚
-
----
-
-## 1. ç›®æ ‡ä¸èŒƒå›´
-
-æœ¬æ–‡æ¡£è§„å®š V9 åˆ†æèˆ±ä¸é©¾é©¶èˆ±ä¸­æ‰€æœ‰é‡‘è/æŒ‡æ ‡å›¾è¡¨çš„æŠ€æœ¯é€‰å‹ã€ç»„ä»¶ APIã€ä¸æ•°æ®å±‚çš„å¯¹æ¥æ–¹å¼ä»¥åŠæ€§èƒ½ä¼˜åŒ–ç­–ç•¥ã€‚ä¸è¦†ç›–é€šç”¨ UI ç»„ä»¶ï¼ˆButton/Card ç­‰ï¼‰ä¸è¡¨æ ¼æ¸²æŸ“ã€‚
+> **¶ÔÓ¦À¶Í¼**£º`./v9-system-blueprint.md` ¡ì2 ¼¼ÊõÕ»£¨Í¼±íÑ¡ĞÍ£©¡¢¡ì7.3 Í¼±í×é¼ş¹æ·¶¡¢¡ì10 Æ«²îÏî D16¡¸È±ÉÙÍ¼±í×é¼ş¿â¡¹¡£
+> **ÒÀÀµÎÄµµ**£º`./dataflow-data-definition.md`£¨Êı¾İÁ÷ÒıÇæÍ¨µÀ¶¨Òå£©¡¢`./04-ui-ux-specs.md`£¨Í¼±í½»»¥¹æ·¶£©¡£
 
 ---
 
-## 2. å›¾è¡¨æŠ€æœ¯é€‰å‹
+## 1. Ä¿±êÓë·¶Î§
 
-### 2.1 é€‰å‹ç»“è®º
+±¾ÎÄµµ¹æ¶¨ V9 ·ÖÎö²ÕÓë¼İÊ»²ÕÖĞËùÓĞ½ğÈÚ/Ö¸±êÍ¼±íµÄ¼¼ÊõÑ¡ĞÍ¡¢×é¼ş API¡¢ÓëÊı¾İ²ãµÄ¶Ô½Ó·½Ê½ÒÔ¼°ĞÔÄÜÓÅ»¯²ßÂÔ¡£²»¸²¸ÇÍ¨ÓÃ UI ×é¼ş£¨Button/Card µÈ£©Óë±í¸ñäÖÈ¾¡£
 
-| åº“ | ç”¨é€” | å®‰è£…å‘½ä»¤ | é€‰å‹ç†ç”± |
+---
+
+## 2. Í¼±í¼¼ÊõÑ¡ĞÍ
+
+### 2.1 Ñ¡ĞÍ½áÂÛ
+
+| ¿â | ÓÃÍ¾ | °²×°ÃüÁî | Ñ¡ĞÍÀíÓÉ |
 |---|---|---|---|
-| `lightweight-charts` | K çº¿å›¾ã€åˆ†æ—¶å›¾ã€æˆäº¤é‡ | `npm i lightweight-charts` | é‡‘èåœºæ™¯ä¸“ç”¨ï¼Œ60 FPS æ¸²æŸ“ï¼Œå†…ç½®æ—¶é—´è½´ã€åå­—å…‰æ ‡ã€ç¼©æ”¾å¹³ç§» |
-| `recharts` | æŠ˜çº¿/æŸ±çŠ¶/é¢ç§¯/é›·è¾¾/çƒ­åŠ›å›¾ | `npm i recharts` | React å£°æ˜å¼ APIï¼Œä¸ç»„ä»¶ç”Ÿå‘½å‘¨æœŸå¤©ç„¶å¥‘åˆ |
+| `lightweight-charts` | K ÏßÍ¼¡¢·ÖÊ±Í¼¡¢³É½»Á¿ | `npm i lightweight-charts` | ½ğÈÚ³¡¾°×¨ÓÃ£¬60 FPS äÖÈ¾£¬ÄÚÖÃÊ±¼äÖá¡¢Ê®×Ö¹â±ê¡¢Ëõ·ÅÆ½ÒÆ |
+| `recharts` | ÕÛÏß/Öù×´/Ãæ»ı/À×´ï/ÈÈÁ¦Í¼ | `npm i recharts` | React ÉùÃ÷Ê½ API£¬Óë×é¼şÉúÃüÖÜÆÚÌìÈ»ÆõºÏ |
 
-> è¯¦ç»† UI è§„èŒƒè§ `./04-ui-ux-specs.md` Â§4.3ã€Œå›¾è¡¨ç»„ä»¶è§„èŒƒã€ã€‚
+> ÏêÏ¸ UI ¹æ·¶¼û `./04-ui-ux-specs.md` ¡ì4.3¡¸Í¼±í×é¼ş¹æ·¶¡¹¡£
 
-### 2.2 åˆ†å±‚å°è£…ç­–ç•¥
+### 2.2 ·Ö²ã·â×°²ßÂÔ
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚  L5 ä¸šåŠ¡ç»„ä»¶ï¼ˆåˆ†æèˆ±/é©¾é©¶èˆ±ï¼‰                  â”‚
-â”‚  StockChart, IndicatorChart, ScoreRadar     â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚  L4 å›¾è¡¨åŒ…è£…å±‚ï¼ˆsrc/components/chart/ï¼‰       â”‚
-â”‚  CandlestickChart, LineChart, BarChart      â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚  L3 æ•°æ®é€‚é…ï¼ˆsrc/services/chart/ï¼‰           â”‚
-â”‚  klineAdapter, indicatorAdapter             â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚  L2 æ•°æ®å±‚ï¼ˆDataBridge / DataFlowEngineï¼‰     â”‚
-â”‚  daily_quotes, strategy:score, market:index â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+©°©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©´
+©¦  L5 ÒµÎñ×é¼ş£¨·ÖÎö²Õ/¼İÊ»²Õ£©                  ©¦
+©¦  StockChart, IndicatorChart, ScoreRadar     ©¦
+©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
+©¦  L4 Í¼±í°ü×°²ã£¨src/components/chart/£©       ©¦
+©¦  CandlestickChart, LineChart, BarChart      ©¦
+©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
+©¦  L3 Êı¾İÊÊÅä£¨src/services/chart/£©           ©¦
+©¦  klineAdapter, indicatorAdapter             ©¦
+©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
+©¦  L2 Êı¾İ²ã£¨DataBridge / DataFlowEngine£©     ©¦
+©¦  daily_quotes, strategy:score, market:index ©¦
+©¸©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼
 ```
 
 ---
 
-## 3. ç»„ä»¶ API å®šä¹‰
+## 3. ×é¼ş API ¶¨Òå
 
-### 3.1 StockChartï¼ˆK çº¿ä¸»å›¾ï¼‰
+### 3.1 StockChart£¨K ÏßÖ÷Í¼£©
 
 ```tsx
 // src/components/chart/StockChart.tsx
 import type { DataPacket } from '@/core/dataflow/dataflowTypes'
 
 export interface KlineData {
-  time: number          // Unix ç§’ï¼ˆlightweight-charts è¦æ±‚ï¼‰
+  time: number          // Unix Ãë£¨lightweight-charts ÒªÇó£©
   open: number
   high: number
   low: number
@@ -95,7 +91,7 @@ export interface StockChartProps {
 export function StockChart(props: StockChartProps): JSX.Element
 ```
 
-### 3.2 IndicatorChartï¼ˆæŒ‡æ ‡å‰¯å›¾ï¼‰
+### 3.2 IndicatorChart£¨Ö¸±ê¸±Í¼£©
 
 ```tsx
 // src/components/chart/IndicatorChart.tsx
@@ -110,30 +106,30 @@ export interface IndicatorChartProps {
   title: string
   series: IndicatorSeries[]
   height?: number
-  syncSymbol?: string          // ä¸ StockChart åŒæ­¥åå­—å…‰æ ‡
+  syncSymbol?: string          // Óë StockChart Í¬²½Ê®×Ö¹â±ê
   emptyText?: string
 }
 
 export function IndicatorChart(props: IndicatorChartProps): JSX.Element
 ```
 
-### 3.3 åŸºç¡€å›¾è¡¨ç»„ä»¶æ¸…å•
+### 3.3 »ù´¡Í¼±í×é¼şÇåµ¥
 
-| ç»„ä»¶ | è·¯å¾„ | åº•å±‚åº“ | è¯´æ˜ |
+| ×é¼ş | Â·¾¶ | µ×²ã¿â | ËµÃ÷ |
 |------|------|--------|------|
-| `CandlestickChart` | `src/components/chart/CandlestickChart.tsx` | lightweight-charts | K çº¿ + æˆäº¤é‡ |
-| `LineChart` | `src/components/chart/LineChart.tsx` | recharts | æŠ˜çº¿/é¢ç§¯ |
-| `BarChart` | `src/components/chart/BarChart.tsx` | recharts | æŸ±çŠ¶ |
-| `ScoreRadar` | `src/components/chart/ScoreRadar.tsx` | recharts | ä¹ç»´è¯„åˆ†é›·è¾¾ |
-| `FactorHeatmap` | `src/components/chart/FactorHeatmap.tsx` | recharts | å› å­çƒ­åŠ› |
+| `CandlestickChart` | `src/components/chart/CandlestickChart.tsx` | lightweight-charts | K Ïß + ³É½»Á¿ |
+| `LineChart` | `src/components/chart/LineChart.tsx` | recharts | ÕÛÏß/Ãæ»ı |
+| `BarChart` | `src/components/chart/BarChart.tsx` | recharts | Öù×´ |
+| `ScoreRadar` | `src/components/chart/ScoreRadar.tsx` | recharts | ¾ÅÎ¬ÆÀ·ÖÀ×´ï |
+| `FactorHeatmap` | `src/components/chart/FactorHeatmap.tsx` | recharts | Òò×ÓÈÈÁ¦ |
 
 ---
 
-## 4. ä¸ DataBridge / DataFlow çš„æ•°æ®å¯¹æ¥
+## 4. Óë DataBridge / DataFlow µÄÊı¾İ¶Ô½Ó
 
-### 4.1 æ•°æ®æµè®¢é˜…æ¨¡å‹
+### 4.1 Êı¾İÁ÷¶©ÔÄÄ£ĞÍ
 
-å›¾è¡¨ä¸ç›´æ¥è¯»å– IndexedDBï¼Œè€Œæ˜¯é€šè¿‡ `DataFlowEngine.subscribe()` è®¢é˜…é€šé“ã€‚å…·ä½“é€šé“å®šä¹‰è§ `./dataflow-data-definition.md` Â§2ã€‚
+Í¼±í²»Ö±½Ó¶ÁÈ¡ IndexedDB£¬¶øÊÇÍ¨¹ı `DataFlowEngine.subscribe()` ¶©ÔÄÍ¨µÀ¡£¾ßÌåÍ¨µÀ¶¨Òå¼û `./dataflow-data-definition.md` ¡ì2¡£
 
 ```ts
 // src/services/chart/klineAdapter.ts
@@ -152,7 +148,7 @@ export function subscribeKline(
 }
 ```
 
-### 4.2 æ•°æ®æ³¨å†Œï¼ˆå¼•æ“å±‚ï¼‰
+### 4.2 Êı¾İ×¢²á£¨ÒıÇæ²ã£©
 
 ```ts
 // src/services/chart/chartDataRegistrar.ts
@@ -169,31 +165,31 @@ export function registerKlineRefresh(symbol: string, intervalMs = 60_000): void 
 }
 ```
 
-### 4.3 ä¸ StandardEnvelope çš„æ˜ å°„
+### 4.3 Óë StandardEnvelope µÄÓ³Éä
 
-| å›¾è¡¨æ•°æ® | æ¥æº Store | Envelope Action | é€šé“å |
+| Í¼±íÊı¾İ | À´Ô´ Store | Envelope Action | Í¨µÀÃû |
 |----------|------------|-----------------|--------|
-| K çº¿ | `daily_quotes` | `SAVE_DAILY_QUOTES` | `stock:kline:${symbol}` |
-| è¯„åˆ†æ—¶é—´åºåˆ— | `v6_scores` | `UPDATE_SCORE` | `strategy:score` |
-| å¤§ç›˜æŒ‡æ•° | `daily_quotes` | `SAVE_DAILY_QUOTES` | `market:index` |
-| æ¿å—è½®åŠ¨ | `rotation_scores` | `UPDATE_ROTATION_SCORE` | `market:sector` |
+| K Ïß | `daily_quotes` | `SAVE_DAILY_QUOTES` | `stock:kline:${symbol}` |
+| ÆÀ·ÖÊ±¼äĞòÁĞ | `v6_scores` | `UPDATE_SCORE` | `strategy:score` |
+| ´óÅÌÖ¸Êı | `daily_quotes` | `SAVE_DAILY_QUOTES` | `market:index` |
+| °å¿éÂÖ¶¯ | `rotation_scores` | `UPDATE_ROTATION_SCORE` | `market:sector` |
 
-> Envelope è§„èŒƒè§ `./v9-system-blueprint.md` Â§5.1ã€‚
+> Envelope ¹æ·¶¼û `./v9-system-blueprint.md` ¡ì5.1¡£
 
 ---
 
-## 5. æ€§èƒ½ä¼˜åŒ–ç­–ç•¥
+## 5. ĞÔÄÜÓÅ»¯²ßÂÔ
 
-### 5.1 æ•°æ®é‡æ§åˆ¶
+### 5.1 Êı¾İÁ¿¿ØÖÆ
 
-| åœºæ™¯ | ç­–ç•¥ | é˜ˆå€¼ |
+| ³¡¾° | ²ßÂÔ | ãĞÖµ |
 |------|------|------|
-| K çº¿åˆå§‹åŠ è½½ | æŒ‰åŒºé—´åˆ†é¡µï¼š1 å¹´/3 å¹´/å…¨éƒ¨ | å•æ¬¡ â‰¤ 500 æ¡ |
-| å®æ—¶è¿½åŠ  | å¢é‡æ›´æ–°ï¼Œä¸é‡ç½®å…¨é‡ | å†…å­˜ç¼“å­˜æœ€è¿‘ 200 æ¡ |
-| ç¼©æ”¾ | å¯è§†åŒºåŠ¨æ€é‡‡æ ·ï¼ˆLTTBï¼‰ | å¯è§†åŒº â‰¤ 150 ç‚¹ |
-| å¤šå›¾åŒå± | å…±äº« DataFlow è®¢é˜…ï¼Œé¿å…é‡å¤ fetch | åŒ symbol ä»… 1 ä¸ªæ³¨å†Œ |
+| K Ïß³õÊ¼¼ÓÔØ | °´Çø¼ä·ÖÒ³£º1 Äê/3 Äê/È«²¿ | µ¥´Î ¡Ü 500 Ìõ |
+| ÊµÊ±×·¼Ó | ÔöÁ¿¸üĞÂ£¬²»ÖØÖÃÈ«Á¿ | ÄÚ´æ»º´æ×î½ü 200 Ìõ |
+| Ëõ·Å | ¿ÉÊÓÇø¶¯Ì¬²ÉÑù£¨LTTB£© | ¿ÉÊÓÇø ¡Ü 150 µã |
+| ¶àÍ¼Í¬ÆÁ | ¹²Ïí DataFlow ¶©ÔÄ£¬±ÜÃâÖØ¸´ fetch | Í¬ symbol ½ö 1 ¸ö×¢²á |
 
-### 5.2 åˆ·æ–°é¢‘ç‡
+### 5.2 Ë¢ĞÂÆµÂÊ
 
 ```ts
 // src/services/chart/chartRefreshPolicy.ts
@@ -205,29 +201,29 @@ export const CHART_REFRESH_POLICY = {
 }
 ```
 
-### 5.3 æ¸²æŸ“ä¼˜åŒ–
+### 5.3 äÖÈ¾ÓÅ»¯
 
-1. **é˜²æŠ– resize**ï¼šå›¾è¡¨å®¹å™¨å°ºå¯¸å˜åŒ–æ—¶ä½¿ç”¨ `ResizeObserver` + `requestAnimationFrame` é˜²æŠ–ã€‚
-2. **ç¦»å±é”€æ¯**ï¼šç»„ä»¶å¸è½½æ—¶è°ƒç”¨ `chart.remove()` é‡Šæ”¾ WebGL/Canvas ä¸Šä¸‹æ–‡ã€‚
-3. **é¢œè‰²å¸¸é‡åŒ–**ï¼šæ‰€æœ‰å›¾è¡¨é¢œè‰²ä» `src/constants/chart.constants.ts` è¯»å–ï¼Œç¦æ­¢ç¡¬ç¼–ç ã€‚
-4. **æ‡’åŠ è½½**ï¼šé¡µé¢çº§å›¾è¡¨ä½¿ç”¨ `React.lazy(() => import('@/components/chart/StockChart'))`ã€‚
-
----
-
-## 6. éªŒæ”¶æ ‡å‡†
-
-- [ ] `npm run tsc` é€šè¿‡ï¼Œæ–°å¢å›¾è¡¨ç±»å‹æ—  `any`ã€‚
-- [ ] `npm run lint` é€šè¿‡ï¼Œå›¾è¡¨é¢œè‰²/é˜ˆå€¼å…¨éƒ¨æ¥è‡ª constantsã€‚
-- [ ] åˆ†æèˆ± `/analysis/stock-score/:symbol` å¯æ¸²æŸ“ K çº¿ä¸è¯„åˆ†é›·è¾¾ã€‚
-- [ ] é©¾é©¶èˆ± `MarketIndicesWidget` ä½¿ç”¨ `IndicatorChart` å±•ç¤ºå¤§ç›˜èµ°åŠ¿ã€‚
-- [ ] Lighthouse Performance â‰¥ 80ï¼ˆ3G æ…¢ç½‘ï¼Œé¦–å±å›¾è¡¨æ¸²æŸ“ â‰¤ 2sï¼‰ã€‚
+1. **·À¶¶ resize**£ºÍ¼±íÈİÆ÷³ß´ç±ä»¯Ê±Ê¹ÓÃ `ResizeObserver` + `requestAnimationFrame` ·À¶¶¡£
+2. **ÀëÆÁÏú»Ù**£º×é¼şĞ¶ÔØÊ±µ÷ÓÃ `chart.remove()` ÊÍ·Å WebGL/Canvas ÉÏÏÂÎÄ¡£
+3. **ÑÕÉ«³£Á¿»¯**£ºËùÓĞÍ¼±íÑÕÉ«´Ó `src/constants/theme.tokens.ts` ¶ÁÈ¡£¬½ûÖ¹Ó²±àÂë¡£
+4. **ÀÁ¼ÓÔØ**£ºÒ³Ãæ¼¶Í¼±íÊ¹ÓÃ `React.lazy(() => import('@/components/chart/StockChart'))`¡£
 
 ---
 
-## 7. ç›¸å…³é“¾æ¥
+## 6. ÑéÊÕ±ê×¼
 
-- `./v9-system-blueprint.md` Â§2ã€Â§7.3ã€D16
-- `./04-ui-ux-specs.md` Â§4.3
+- [ ] `npm run tsc` Í¨¹ı£¬ĞÂÔöÍ¼±íÀàĞÍÎŞ `any`¡£
+- [ ] `npm run lint` Í¨¹ı£¬Í¼±íÑÕÉ«/ãĞÖµÈ«²¿À´×Ô constants¡£
+- [ ] ·ÖÎö²Õ `/analysis/stock-score/:symbol` ¿ÉäÖÈ¾ K ÏßÓëÆÀ·ÖÀ×´ï¡£
+- [ ] ¼İÊ»²Õ `MarketIndicesWidget` Ê¹ÓÃ `IndicatorChart` Õ¹Ê¾´óÅÌ×ßÊÆ¡£
+- [ ] Lighthouse Performance ¡İ 80£¨3G ÂıÍø£¬Ê×ÆÁÍ¼±íäÖÈ¾ ¡Ü 2s£©¡£
+
+---
+
+## 7. Ïà¹ØÁ´½Ó
+
+- `./v9-system-blueprint.md` ¡ì2¡¢¡ì7.3¡¢D16
+- `./04-ui-ux-specs.md` ¡ì4.3
 - `./dataflow-data-definition.md`
-- `./feedback-loop-spec.md`ï¼ˆå›¾è¡¨åŠ è½½å¤±è´¥æ—¶çš„ Toast åé¦ˆï¼‰
-- `./widget-error-handling.md`ï¼ˆå›¾è¡¨ Widget çš„é”™è¯¯è¾¹ç•Œï¼‰
+- `./feedback-loop-spec.md`£¨Í¼±í¼ÓÔØÊ§°ÜÊ±µÄ Toast ·´À¡£©
+- `./widget-error-handling.md`£¨Í¼±í Widget µÄ´íÎó±ß½ç£©

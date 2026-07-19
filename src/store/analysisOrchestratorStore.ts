@@ -1,5 +1,6 @@
 /**
  * @fileoverview AnalysisOrchestrator 运行时 Store（Zustand）
+ * @unused — 已实现但当前无 UI 层消费者，待后续产品规划接入。
  *
  * @module store/analysisOrchestratorStore
  * @created 2026-07-13 B1 阶段
@@ -21,6 +22,9 @@ interface AnalysisOrchestratorState {
   analyze: (symbol: string, options?: Omit<AnalysisRequest, 'symbol'>) => Promise<AnalysisResult | undefined>
 }
 
+/**
+ * useAnalysisOrchestratorStore
+ */
 export const useAnalysisOrchestratorStore = create<AnalysisOrchestratorState>((set) => ({
   results: {},
   loading: false,
@@ -53,6 +57,11 @@ export const useAnalysisOrchestratorStore = create<AnalysisOrchestratorState>((s
   },
 }))
 
+/**
+ * makeAnalysisTraceId
+ * @param symbol
+ * @returns string
+ */
 export function makeAnalysisTraceId(symbol: string): string {
   return `analysis-${symbol}-${Date.now()}`
 }

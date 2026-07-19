@@ -1,62 +1,52 @@
-import { forwardRef, memo, useCallback, useMemo } from 'react'
-import { cn } from '@/lib/utils'
+/**
+ * DatePicker — 日期选择原子
+ *
+ * 原生 input[type="date"] 封装，支持范围选择、最小/最大日期限制。
+ *
+ * @module atoms/DatePicker
+ * @since 2026-07-18 (P2 规划实现)
+ */
 
-function toDateString(value: string | Date | undefined): string {
-  if (!value) return ''
-  if (value instanceof Date) {
-    const year = value.getFullYear()
-    const month = String(value.getMonth() + 1).padStart(2, '0')
-    const day = String(value.getDate()).padStart(2, '0')
-    return `${year}-${month}-${day}`
-  }
-  return value
-}
+import { type InputHTMLAttributes } from 'react'
 
-export interface DatePickerProps {
-  value?: string | Date
+export interface DatePickerProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'value' | 'onChange'> {
+  /** 选中日期（ISO 字符串如 "2026-07-18"） */
+  value?: string
+  /** 默认日期 */
+  defaultValue?: string
+  /** 最小可选日期 */
+  minDate?: string
+  /** 最大可选日期 */
+  maxDate?: string
+  /** 日期变化回调 */
   onChange?: (value: string) => void
-  min?: string | Date
-  max?: string | Date
-  placeholder?: string
-  disabled?: boolean
-  className?: string
+  /** 是否范围选择（待扩展，当前 hint） */
+  range?: boolean
 }
 
 /**
  * DatePicker
  */
-export const DatePicker = memo(forwardRef<HTMLInputElement, DatePickerProps>(
-  ({ value, onChange, min, max, placeholder, disabled, className }, ref) => {
-    const dateValue = useMemo(() => toDateString(value), [value])
-    const minDate = useMemo(() => toDateString(min), [min])
-    const maxDate = useMemo(() => toDateString(max), [max])
-
-    const handleChange = useCallback(
-      (e: React.ChangeEvent<HTMLInputElement>) => {
-        onChange?.(e.target.value)
-      },
-      [onChange],
-    )
-
-    return (
-      <input
-        ref={ref}
-        type="date"
-        value={dateValue}
-        onChange={handleChange}
-        min={minDate || undefined}
-        max={maxDate || undefined}
-        placeholder={placeholder}
-        disabled={disabled}
-        className={cn(
-          'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background',
-          'file:border-0 file:bg-transparent file:text-sm file:font-medium',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-          'disabled:cursor-not-allowed disabled:opacity-50',
-          className,
-        )}
-      />
-    )
-  },
-))
-DatePicker.displayName = 'DatePicker'
+export function DatePicker({
+  value, defaultValue, minDate, maxDate, onChange,
+  className = '', range, ...rest
+}: DatePickerProps) {
+  return (
+    <input
+      type="date"
+      value={value}
+      defaultValue={defaultValue}
+      min={minDate}
+      max={maxDate}
+      onChange={(e) => onChange?.(e.target.value)}
+      className={`
+        flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm
+        ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium
+        placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2
+        focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50
+        ${className}
+      `}
+      {...(rest as InputHTMLAttributes<HTMLInputElement>)}
+    />
+  )
+}

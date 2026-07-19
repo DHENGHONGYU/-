@@ -1,300 +1,309 @@
 ---
-title: deprecated-cockpit-news-doc-correction-plan
-tier: important
+title: Cockpit & News Ä£¿éÎÄµµĞŞÕı·½°¸£¨Phase 2-3£©
+type: explanation
+domain: frontend
+phase: design
+tier: standard
+status: deprecated
+maintainer: V9 Architecture Team
+summary: "## Ò»¡¢ĞŞÕıÎÄ¼şÇåµ¥ ## ¶ş¡¢ĞÂ½¨ÎÄ¼şĞŞÕıÄÚÈİ"
+tags: [frontend, news, cockpit]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+deprecated_by: "Cockpit Doc Refactoring Plan"
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-tier: important
-code_version: 2.0.0
----
-
-# Cockpit & News æ¨¡å—æ–‡æ¡£ä¿®æ­£æ–¹æ¡ˆï¼ˆPhase 2-3ï¼‰
+# Cockpit & News Ä£¿éÎÄµµĞŞÕı·½°¸£¨Phase 2-3£©
 
 > **Status**: Draft  
 > **Version**: v0.9.1-correction-plan  
 > **Last Updated**: 2026-06-26  
-> **å…³è”å·®å¼‚æŠ¥å‘Š**: `./v9-architecture-data-diff-report.md`  
-> **è¦†ç›–å·®å¼‚**: DIFF-001, DIFF-004, DIFF-006, DIFF-007, DIFF-008, DIFF-014, DIFF-019, DIFF-022
+> **¹ØÁª²îÒì±¨¸æ**: `./v9-architecture-data-diff-report.md`  
+> **¸²¸Ç²îÒì**: DIFF-001, DIFF-004, DIFF-006, DIFF-007, DIFF-008, DIFF-014, DIFF-019, DIFF-022
 
 ---
 
-## ä¸€ã€ä¿®æ­£æ–‡ä»¶æ¸…å•
+## Ò»¡¢ĞŞÕıÎÄ¼şÇåµ¥
 
-| åºå· | æ“ä½œ | æ–‡ä»¶è·¯å¾„ | å¯¹åº”å·®å¼‚ID | ä¼˜å…ˆçº§ |
+| ĞòºÅ | ²Ù×÷ | ÎÄ¼şÂ·¾¶ | ¶ÔÓ¦²îÒìID | ÓÅÏÈ¼¶ |
 |------|------|----------|-----------|--------|
-| 1 | æ–°å»º | `../../reference/data-definition.md` | DIFF-007, DIFF-008 | ğŸ”´ P0 |
-| 2 | æ–°å»º | `../../reference/data-definition.md` | DIFF-014 | ğŸ”´ P0 |
-| 3 | ä¿®æ”¹ | `../../reference/03-architecture-standards.md` | DIFF-001, DIFF-004 | ğŸ”´ P0 |
-| 4 | ä¿®æ”¹ | `../../reference/02-functional-specs.md` | DIFF-004 | ğŸ”´ P0 |
-| 5 | ä¿®æ”¹ | `docs/README.md` | DIFF-006 | ğŸ”´ P0 |
-| 6 | ä¿®æ”¹ | `../../reference/10-glossary.md` | DIFF-019, DIFF-022 | ğŸŸ¡ P1 |
+| 1 | ĞÂ½¨ | `../../reference/data-definition.md` | DIFF-007, DIFF-008 | ?? P0 |
+| 2 | ĞÂ½¨ | `../../reference/data-definition.md` | DIFF-014 | ?? P0 |
+| 3 | ĞŞ¸Ä | `../../reference/03-architecture-standards.md` | DIFF-001, DIFF-004 | ?? P0 |
+| 4 | ĞŞ¸Ä | `../../reference/02-functional-specs.md` | DIFF-004 | ?? P0 |
+| 5 | ĞŞ¸Ä | `docs/README.md` | DIFF-006 | ?? P0 |
+| 6 | ĞŞ¸Ä | `../../reference/10-glossary.md` | DIFF-019, DIFF-022 | ?? P1 |
 
 ---
 
-## äºŒã€æ–°å»ºæ–‡ä»¶ä¿®æ­£å†…å®¹
+## ¶ş¡¢ĞÂ½¨ÎÄ¼şĞŞÕıÄÚÈİ
 
-### 2.1 `../../reference/data-definition.md`ï¼ˆæ–°å»ºï¼‰
+### 2.1 `../../reference/data-definition.md`£¨ĞÂ½¨£©
 
-**æ¥æº**: DIFF-007ï¼ˆWidget æ¡†æ¶æ ¸å¿ƒç±»å‹æœªå®šä¹‰ï¼‰ã€DIFF-008ï¼ˆCockpit å¸¸é‡æšä¸¾æœªå®šä¹‰ï¼‰
+**À´Ô´**: DIFF-007£¨Widget ¿ò¼ÜºËĞÄÀàĞÍÎ´¶¨Òå£©¡¢DIFF-008£¨Cockpit ³£Á¿Ã¶¾ÙÎ´¶¨Òå£©
 
-**è¦†ç›–èŒƒå›´**: 
-- æºç æ–‡ä»¶: `src/types/modules/widget.types.ts`ã€`src/constants/cockpit.constants.ts`ã€`src/cockpit/core/widgetRegistry.ts`
-- ç±»å‹å®šä¹‰: 40+ ä¸ªæ¥å£
-- æšä¸¾å¸¸é‡: 23+ ç»„
+**¸²¸Ç·¶Î§**: 
+- Ô´ÂëÎÄ¼ş: `src/types/modules/widget.types.ts`¡¢`src/constants/cockpit.constants.ts`¡¢`src/cockpit/core/widgetRegistry.ts`
+- ÀàĞÍ¶¨Òå: 40+ ¸ö½Ó¿Ú
+- Ã¶¾Ù³£Á¿: 23+ ×é
 
-**æ–‡æ¡£ç»“æ„**:
+**ÎÄµµ½á¹¹**:
 
 ```markdown
-# Cockpit / Widget æ¡†æ¶ â€” æ•°æ®å­—å…¸
+# Cockpit / Widget ¿ò¼Ü ¡ª Êı¾İ×Öµä
 
-> ç”Ÿæˆæ—¥æœŸï¼š2026-06-26
-> æ¨¡å—èŒƒå›´ï¼š`src/types/modules/widget.types.ts` Â· `src/constants/cockpit.constants.ts` Â· `src/cockpit/core/`
-> è§„èŒƒï¼šæ‰€æœ‰æ•°æ®ç»“æ„å¿…é¡»å…ˆå®šä¹‰ TypeScript æ¥å£ï¼›ç»„ä»¶å†…ç¦æ­¢ç¡¬ç¼–ç ï¼Œå¿…é¡»ä»æ­¤å­—å…¸å¯¹åº”çš„ constants æ–‡ä»¶å¼•ç”¨ã€‚
+> Éú³ÉÈÕÆÚ£º2026-06-26
+> Ä£¿é·¶Î§£º`src/types/modules/widget.types.ts` ¡¤ `src/constants/cockpit.constants.ts` ¡¤ `src/cockpit/core/`
+> ¹æ·¶£ºËùÓĞÊı¾İ½á¹¹±ØĞëÏÈ¶¨Òå TypeScript ½Ó¿Ú£»×é¼şÄÚ½ûÖ¹Ó²±àÂë£¬±ØĞë´Ó´Ë×Öµä¶ÔÓ¦µÄ constants ÎÄ¼şÒıÓÃ¡£
 
 ---
 
-## ä¸€ã€TypeScript æ¥å£å®šä¹‰
+## Ò»¡¢TypeScript ½Ó¿Ú¶¨Òå
 
-### 1.1 DataSourceConfig â€” Widget æ•°æ®æºé…ç½®
+### 1.1 DataSourceConfig ¡ª Widget Êı¾İÔ´ÅäÖÃ
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | æšä¸¾/èŒƒå›´ | æè¿° |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | Ã¶¾Ù/·¶Î§ | ÃèÊö |
 |------|------|------|-----------|------|
-| `type` | `DataSourceType` | æ˜¯ | `"mock"` / `"rest"` / `"websocket"` | æ•°æ®æºç±»å‹ |
-| `mode` | `CollectionMode` | æ˜¯ | `"polling"` / `"once"` / `"streaming"` | é‡‡é›†æ¨¡å¼ |
-| `interval` | `number` | æ˜¯ | â‰¥ 1000 | è½®è¯¢é—´éš”ï¼ˆæ¯«ç§’ï¼‰ |
-| `endpoint` | `string` | å¦ | - | API ç«¯ç‚¹ï¼ˆREST æ•°æ®æºæ—¶ä½¿ç”¨ï¼‰ |
-| `params` | `Record<string, unknown>` | å¦ | - | é¢å¤–è¯·æ±‚å‚æ•° |
-| `enabled` | `boolean` | æ˜¯ | `true` / `false` | æ˜¯å¦å¯ç”¨ |
+| `type` | `DataSourceType` | ÊÇ | `"mock"` / `"rest"` / `"websocket"` | Êı¾İÔ´ÀàĞÍ |
+| `mode` | `CollectionMode` | ÊÇ | `"polling"` / `"once"` / `"streaming"` | ²É¼¯Ä£Ê½ |
+| `interval` | `number` | ÊÇ | ¡İ 1000 | ÂÖÑ¯¼ä¸ô£¨ºÁÃë£© |
+| `endpoint` | `string` | ·ñ | - | API ¶Ëµã£¨REST Êı¾İÔ´Ê±Ê¹ÓÃ£© |
+| `params` | `Record<string, unknown>` | ·ñ | - | ¶îÍâÇëÇó²ÎÊı |
+| `enabled` | `boolean` | ÊÇ | `true` / `false` | ÊÇ·ñÆôÓÃ |
 
-### 1.2 RawMarketData â€” åŸå§‹å¸‚åœºæ•°æ®
+### 1.2 RawMarketData ¡ª Ô­Ê¼ÊĞ³¡Êı¾İ
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | æšä¸¾/èŒƒå›´ | æè¿° |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | Ã¶¾Ù/·¶Î§ | ÃèÊö |
 |------|------|------|-----------|------|
-| `timestamp` | `number` | æ˜¯ | æ¯«ç§’æ—¶é—´æˆ³ | æ•°æ®ç”Ÿæˆæ—¶é—´ |
-| `dataType` | `string` | æ˜¯ | `"indices"` / `"sectors"` / `"fundFlow"` / `"sentiment"` / `"watchlist"` / `"portfolio"` / `"tradeReview"` / `"analysisScores"` / `"modelComparison"` / `"stockPool"` / `"chatHistory"` | æ•°æ®ç±»å‹æ ‡è¯† |
-| `payload` | `unknown` | æ˜¯ | - | åŸå§‹ payload |
-| `source` | `string` | æ˜¯ | - | æ•°æ®æ¥æºæ ‡è¯† |
+| `timestamp` | `number` | ÊÇ | ºÁÃëÊ±¼ä´Á | Êı¾İÉú³ÉÊ±¼ä |
+| `dataType` | `string` | ÊÇ | `"indices"` / `"sectors"` / `"fundFlow"` / `"sentiment"` / `"watchlist"` / `"portfolio"` / `"tradeReview"` / `"analysisScores"` / `"modelComparison"` / `"stockPool"` / `"chatHistory"` | Êı¾İÀàĞÍ±êÊ¶ |
+| `payload` | `unknown` | ÊÇ | - | Ô­Ê¼ payload |
+| `source` | `string` | ÊÇ | - | Êı¾İÀ´Ô´±êÊ¶ |
 
-### 1.3 MarketData â€” æ ‡å‡†åŒ–å¸‚åœºæ•°æ®ï¼ˆWidget ç»Ÿä¸€æ¶ˆè´¹æ¥å£ï¼‰
+### 1.3 MarketData ¡ª ±ê×¼»¯ÊĞ³¡Êı¾İ£¨Widget Í³Ò»Ïû·Ñ½Ó¿Ú£©
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | æšä¸¾/èŒƒå›´ | æè¿° |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | Ã¶¾Ù/·¶Î§ | ÃèÊö |
 |------|------|------|-----------|------|
-| `timestamp` | `number` | æ˜¯ | æ¯«ç§’æ—¶é—´æˆ³ | æ•°æ®ç”Ÿæˆæ—¶é—´ |
-| `indices` | `MarketIndexData[]` | æ˜¯ | - | å¤§ç›˜æŒ‡æ•°æ•°æ® |
-| `sectors` | `SectorHeatmapData[]` | æ˜¯ | - | æ¿å—çƒ­åŠ›å›¾æ•°æ® |
-| `fundFlows` | `FundFlowData[]` | æ˜¯ | - | èµ„é‡‘æµå‘æ•°æ® |
-| `sentiment` | `SentimentData` | æ˜¯ | - | å¸‚åœºæƒ…ç»ªæ•°æ® |
-| `watchlist` | `WatchlistData[]` | æ˜¯ | - | è‡ªé€‰è‚¡æ•°æ® |
-| `portfolio` | `PortfolioData` | æ˜¯ | - | æŒä»“æ¦‚è§ˆæ•°æ® |
-| `tradeReview` | `TradeReviewData` | æ˜¯ | - | AI äº¤æ˜“å¤ç›˜æ•°æ® |
-| `analysisScores` | `AnalysisScores` | æ˜¯ | - | æŠ•èµ„ç”»åƒ / åˆ†æè¯„åˆ†æ•°æ® |
-| `modelComparison` | `ModelComparison` | æ˜¯ | - | AI å¤§æ¨¡å‹å¯¹æ¯”æ•°æ® |
-| `stockPool` | `StockPool` | æ˜¯ | - | è‚¡ç¥¨æ± ç®¡ç†ä¸ç›‘æ§æ•°æ® |
-| `chatHistory` | `ChatHistory` | æ˜¯ | - | ä¸ªè‚¡æ·±åº¦åˆ†æ / å¸‚åœºåˆ†æèŠå¤©æ•°æ® |
+| `timestamp` | `number` | ÊÇ | ºÁÃëÊ±¼ä´Á | Êı¾İÉú³ÉÊ±¼ä |
+| `indices` | `MarketIndexData[]` | ÊÇ | - | ´óÅÌÖ¸ÊıÊı¾İ |
+| `sectors` | `SectorHeatmapData[]` | ÊÇ | - | °å¿éÈÈÁ¦Í¼Êı¾İ |
+| `fundFlows` | `FundFlowData[]` | ÊÇ | - | ×Ê½ğÁ÷ÏòÊı¾İ |
+| `sentiment` | `SentimentData` | ÊÇ | - | ÊĞ³¡ÇéĞ÷Êı¾İ |
+| `watchlist` | `WatchlistData[]` | ÊÇ | - | ×ÔÑ¡¹ÉÊı¾İ |
+| `portfolio` | `PortfolioData` | ÊÇ | - | ³Ö²Ö¸ÅÀÀÊı¾İ |
+| `tradeReview` | `TradeReviewData` | ÊÇ | - | AI ½»Ò×¸´ÅÌÊı¾İ |
+| `analysisScores` | `AnalysisScores` | ÊÇ | - | Í¶×Ê»­Ïñ / ·ÖÎöÆÀ·ÖÊı¾İ |
+| `modelComparison` | `ModelComparison` | ÊÇ | - | AI ´óÄ£ĞÍ¶Ô±ÈÊı¾İ |
+| `stockPool` | `StockPool` | ÊÇ | - | ¹ÉÆ±³Ø¹ÜÀíÓë¼à¿ØÊı¾İ |
+| `chatHistory` | `ChatHistory` | ÊÇ | - | ¸ö¹ÉÉî¶È·ÖÎö / ÊĞ³¡·ÖÎöÁÄÌìÊı¾İ |
 
-### 1.4 MarketIndexData â€” å¤§ç›˜æŒ‡æ•°æ•°æ®
+### 1.4 MarketIndexData ¡ª ´óÅÌÖ¸ÊıÊı¾İ
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | æšä¸¾/èŒƒå›´ | æè¿° |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | Ã¶¾Ù/·¶Î§ | ÃèÊö |
 |------|------|------|-----------|------|
-| `code` | `string` | æ˜¯ | `"000001"` / `"399001"` / `"399006"` / `"000688"` | æŒ‡æ•°ä»£ç  |
-| `name` | `string` | æ˜¯ | `"ä¸Šè¯æŒ‡æ•°"` / `"æ·±è¯æˆæŒ‡"` / `"åˆ›ä¸šæ¿æŒ‡"` / `"ç§‘åˆ›50"` | æŒ‡æ•°åç§° |
-| `price` | `number` | æ˜¯ | - | å½“å‰ç‚¹ä½ |
-| `change` | `number` | æ˜¯ | - | æ¶¨è·Œç‚¹æ•° |
-| `changePercent` | `number` | æ˜¯ | - | æ¶¨è·Œå¹…ï¼ˆ%ï¼‰ |
-| `high` | `number` | å¦ | - | æœ€é«˜ |
-| `low` | `number` | å¦ | - | æœ€ä½ |
-| `volume` | `string` | å¦ | - | æˆäº¤é‡ |
+| `code` | `string` | ÊÇ | `"000001"` / `"399001"` / `"399006"` / `"000688"` | Ö¸Êı´úÂë |
+| `name` | `string` | ÊÇ | `"ÉÏÖ¤Ö¸Êı"` / `"ÉîÖ¤³ÉÖ¸"` / `"´´Òµ°åÖ¸"` / `"¿Æ´´50"` | Ö¸ÊıÃû³Æ |
+| `price` | `number` | ÊÇ | - | µ±Ç°µãÎ» |
+| `change` | `number` | ÊÇ | - | ÕÇµøµãÊı |
+| `changePercent` | `number` | ÊÇ | - | ÕÇµø·ù£¨%£© |
+| `high` | `number` | ·ñ | - | ×î¸ß |
+| `low` | `number` | ·ñ | - | ×îµÍ |
+| `volume` | `string` | ·ñ | - | ³É½»Á¿ |
 
-### 1.5 SectorHeatmapData â€” æ¿å—çƒ­åŠ›å›¾æ•°æ®
+### 1.5 SectorHeatmapData ¡ª °å¿éÈÈÁ¦Í¼Êı¾İ
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | æšä¸¾/èŒƒå›´ | æè¿° |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | Ã¶¾Ù/·¶Î§ | ÃèÊö |
 |------|------|------|-----------|------|
-| `name` | `string` | æ˜¯ | - | æ¿å—åç§° |
-| `code` | `string` | æ˜¯ | - | æ¿å—ä»£ç  |
-| `changePercent` | `number` | æ˜¯ | - | æ¶¨è·Œå¹…ï¼ˆ%ï¼‰ |
-| `turnover` | `string` | å¦ | - | æˆäº¤é¢ |
+| `name` | `string` | ÊÇ | - | °å¿éÃû³Æ |
+| `code` | `string` | ÊÇ | - | °å¿é´úÂë |
+| `changePercent` | `number` | ÊÇ | - | ÕÇµø·ù£¨%£© |
+| `turnover` | `string` | ·ñ | - | ³É½»¶î |
 
-### 1.6 FundFlowData â€” èµ„é‡‘æµå‘æ•°æ®
+### 1.6 FundFlowData ¡ª ×Ê½ğÁ÷ÏòÊı¾İ
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | æšä¸¾/èŒƒå›´ | æè¿° |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | Ã¶¾Ù/·¶Î§ | ÃèÊö |
 |------|------|------|-----------|------|
-| `type` | `string` | æ˜¯ | `"main"` / `"retail"` / `"north"` | èµ„é‡‘ç±»å‹ |
-| `name` | `string` | æ˜¯ | `"ä¸»åŠ›å‡€æµå…¥"` / `"æ•£æˆ·å‡€æµå…¥"` / `"åŒ—å‘å‡€æµå…¥"` | èµ„é‡‘åç§° |
-| `value` | `number` | æ˜¯ | - | é‡‘é¢ï¼ˆäº¿å…ƒï¼‰ |
-| `unit` | `string` | æ˜¯ | `"äº¿"` | å•ä½ |
+| `type` | `string` | ÊÇ | `"main"` / `"retail"` / `"north"` | ×Ê½ğÀàĞÍ |
+| `name` | `string` | ÊÇ | `"Ö÷Á¦¾»Á÷Èë"` / `"É¢»§¾»Á÷Èë"` / `"±±Ïò¾»Á÷Èë"` | ×Ê½ğÃû³Æ |
+| `value` | `number` | ÊÇ | - | ½ğ¶î£¨ÒÚÔª£© |
+| `unit` | `string` | ÊÇ | `"ÒÚ"` | µ¥Î» |
 
-### 1.7 SentimentData â€” å¸‚åœºæƒ…ç»ªæ•°æ®
+### 1.7 SentimentData ¡ª ÊĞ³¡ÇéĞ÷Êı¾İ
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | æšä¸¾/èŒƒå›´ | æè¿° |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | Ã¶¾Ù/·¶Î§ | ÃèÊö |
 |------|------|------|-----------|------|
-| `fearGreedIndex` | `number` | æ˜¯ | 0-100 | ææƒ§è´ªå©ªæŒ‡æ•° |
-| `fearGreedLabel` | `string` | æ˜¯ | è§ Â§2.5 SENTIMENT_LEVELS | æƒ…ç»ªæ ‡ç­¾ |
-| `totalStocks` | `number` | æ˜¯ | â‰¥ 0 | æ€»è‚¡ç¥¨æ•° |
-| `up` | `number` | æ˜¯ | â‰¥ 0 | ä¸Šæ¶¨æ•° |
-| `down` | `number` | æ˜¯ | â‰¥ 0 | ä¸‹è·Œæ•° |
-| `flat` | `number` | æ˜¯ | â‰¥ 0 | å¹³ç›˜æ•° |
-| `limitUp` | `number` | æ˜¯ | â‰¥ 0 | æ¶¨åœæ•° |
-| `limitDown` | `number` | æ˜¯ | â‰¥ 0 | è·Œåœæ•° |
+| `fearGreedIndex` | `number` | ÊÇ | 0-100 | ¿Ö¾åÌ°À·Ö¸Êı |
+| `fearGreedLabel` | `string` | ÊÇ | ¼û ¡ì2.5 SENTIMENT_LEVELS | ÇéĞ÷±êÇ© |
+| `totalStocks` | `number` | ÊÇ | ¡İ 0 | ×Ü¹ÉÆ±Êı |
+| `up` | `number` | ÊÇ | ¡İ 0 | ÉÏÕÇÊı |
+| `down` | `number` | ÊÇ | ¡İ 0 | ÏÂµøÊı |
+| `flat` | `number` | ÊÇ | ¡İ 0 | Æ½ÅÌÊı |
+| `limitUp` | `number` | ÊÇ | ¡İ 0 | ÕÇÍ£Êı |
+| `limitDown` | `number` | ÊÇ | ¡İ 0 | µøÍ£Êı |
 
-### 1.8 WatchlistData â€” è‡ªé€‰è‚¡æ•°æ®
+### 1.8 WatchlistData ¡ª ×ÔÑ¡¹ÉÊı¾İ
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | æšä¸¾/èŒƒå›´ | æè¿° |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | Ã¶¾Ù/·¶Î§ | ÃèÊö |
 |------|------|------|-----------|------|
-| `name` | `string` | æ˜¯ | - | è‚¡ç¥¨åç§° |
-| `code` | `string` | æ˜¯ | - | è‚¡ç¥¨ä»£ç  |
-| `price` | `number` | æ˜¯ | - | å½“å‰ä»·æ ¼ |
-| `changePercent` | `number` | æ˜¯ | - | æ¶¨è·Œå¹…ï¼ˆ%ï¼‰ |
+| `name` | `string` | ÊÇ | - | ¹ÉÆ±Ãû³Æ |
+| `code` | `string` | ÊÇ | - | ¹ÉÆ±´úÂë |
+| `price` | `number` | ÊÇ | - | µ±Ç°¼Û¸ñ |
+| `changePercent` | `number` | ÊÇ | - | ÕÇµø·ù£¨%£© |
 
-### 1.9 PortfolioData â€” æŒä»“æ¦‚è§ˆæ•°æ®
+### 1.9 PortfolioData ¡ª ³Ö²Ö¸ÅÀÀÊı¾İ
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | æšä¸¾/èŒƒå›´ | æè¿° |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | Ã¶¾Ù/·¶Î§ | ÃèÊö |
 |------|------|------|-----------|------|
-| `totalAssets` | `string` | æ˜¯ | - | æ€»èµ„äº§ |
-| `availableFunds` | `string` | æ˜¯ | - | å¯ç”¨èµ„é‡‘ |
-| `todayPnL` | `string` | æ˜¯ | - | å½“æ—¥ç›ˆäº |
-| `todayPnLPercent` | `number` | æ˜¯ | - | å½“æ—¥ç›ˆäºç‡ |
-| `totalPnL` | `string` | æ˜¯ | - | ç´¯è®¡ç›ˆäº |
-| `totalPnLPercent` | `number` | æ˜¯ | - | ç´¯è®¡ç›ˆäºç‡ |
-| `holdings` | `number` | æ˜¯ | â‰¥ 0 | æŒä»“å“ç§æ•° |
+| `totalAssets` | `string` | ÊÇ | - | ×Ü×Ê²ú |
+| `availableFunds` | `string` | ÊÇ | - | ¿ÉÓÃ×Ê½ğ |
+| `todayPnL` | `string` | ÊÇ | - | µ±ÈÕÓ¯¿÷ |
+| `todayPnLPercent` | `number` | ÊÇ | - | µ±ÈÕÓ¯¿÷ÂÊ |
+| `totalPnL` | `string` | ÊÇ | - | ÀÛ¼ÆÓ¯¿÷ |
+| `totalPnLPercent` | `number` | ÊÇ | - | ÀÛ¼ÆÓ¯¿÷ÂÊ |
+| `holdings` | `number` | ÊÇ | ¡İ 0 | ³Ö²ÖÆ·ÖÖÊı |
 
-### 1.10 TradeReviewData â€” AI äº¤æ˜“å¤ç›˜æ•°æ®
+### 1.10 TradeReviewData ¡ª AI ½»Ò×¸´ÅÌÊı¾İ
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | æšä¸¾/èŒƒå›´ | æè¿° |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | Ã¶¾Ù/·¶Î§ | ÃèÊö |
 |------|------|------|-----------|------|
-| `totalTrades` | `number` | æ˜¯ | â‰¥ 0 | æ€»äº¤æ˜“æ•° |
-| `profitable` | `number` | æ˜¯ | â‰¥ 0 | ç›ˆåˆ©æ•° |
-| `losing` | `number` | æ˜¯ | â‰¥ 0 | äºæŸæ•° |
-| `winRate` | `number` | æ˜¯ | 0-100 | èƒœç‡ï¼ˆ%ï¼‰ |
-| `profitLossRatio` | `number` | æ˜¯ | â‰¥ 0 | ç›ˆäºæ¯” |
-| `disciplineScore` | `number` | æ˜¯ | 0-100 | çºªå¾‹è¯„åˆ† |
+| `totalTrades` | `number` | ÊÇ | ¡İ 0 | ×Ü½»Ò×Êı |
+| `profitable` | `number` | ÊÇ | ¡İ 0 | Ó¯ÀûÊı |
+| `losing` | `number` | ÊÇ | ¡İ 0 | ¿÷ËğÊı |
+| `winRate` | `number` | ÊÇ | 0-100 | Ê¤ÂÊ£¨%£© |
+| `profitLossRatio` | `number` | ÊÇ | ¡İ 0 | Ó¯¿÷±È |
+| `disciplineScore` | `number` | ÊÇ | 0-100 | ¼ÍÂÉÆÀ·Ö |
 
-### 1.11 AnalysisScores â€” æŠ•èµ„ç”»åƒ / åˆ†æè¯„åˆ†æ•°æ®
+### 1.11 AnalysisScores ¡ª Í¶×Ê»­Ïñ / ·ÖÎöÆÀ·ÖÊı¾İ
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | æšä¸¾/èŒƒå›´ | æè¿° |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | Ã¶¾Ù/·¶Î§ | ÃèÊö |
 |------|------|------|-----------|------|
-| `profile` | `InvestmentProfile` | æ˜¯ | - | ç”¨æˆ·æŠ•èµ„ç”»åƒ |
-| `kai` | `KaiScore` | æ˜¯ | - | KAI é€‰è‚¡ç»¼åˆè¯„åˆ† |
+| `profile` | `InvestmentProfile` | ÊÇ | - | ÓÃ»§Í¶×Ê»­Ïñ |
+| `kai` | `KaiScore` | ÊÇ | - | KAI Ñ¡¹É×ÛºÏÆÀ·Ö |
 
-### 1.12 InvestmentProfile â€” æŠ•èµ„ç”»åƒ
+### 1.12 InvestmentProfile ¡ª Í¶×Ê»­Ïñ
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | æšä¸¾/èŒƒå›´ | æè¿° |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | Ã¶¾Ù/·¶Î§ | ÃèÊö |
 |------|------|------|-----------|------|
-| `tags` | `string[]` | æ˜¯ | - | ç”¨æˆ·æ ‡ç­¾åˆ—è¡¨ |
-| `metrics` | `ProfileMetric[]` | æ˜¯ | - | æ ¸å¿ƒæŒ‡æ ‡å¡ç‰‡ |
+| `tags` | `string[]` | ÊÇ | - | ÓÃ»§±êÇ©ÁĞ±í |
+| `metrics` | `ProfileMetric[]` | ÊÇ | - | ºËĞÄÖ¸±ê¿¨Æ¬ |
 
-### 1.13 ProfileMetric â€” æŠ•èµ„ç”»åƒæŒ‡æ ‡å¡ç‰‡
+### 1.13 ProfileMetric ¡ª Í¶×Ê»­ÏñÖ¸±ê¿¨Æ¬
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | æšä¸¾/èŒƒå›´ | æè¿° |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | Ã¶¾Ù/·¶Î§ | ÃèÊö |
 |------|------|------|-----------|------|
-| `name` | `string` | æ˜¯ | è§ Â§2.10 INVESTMENT_PROFILE_METRICS | æŒ‡æ ‡åç§° |
-| `score` | `number` | æ˜¯ | 0-100 | æŒ‡æ ‡è¯„åˆ† |
-| `description` | `string` | å¦ | - | æŒ‡æ ‡è¯´æ˜ |
-| `icon` | `string` | å¦ | - | å›¾æ ‡æ ‡è¯† |
+| `name` | `string` | ÊÇ | ¼û ¡ì2.10 INVESTMENT_PROFILE_METRICS | Ö¸±êÃû³Æ |
+| `score` | `number` | ÊÇ | 0-100 | Ö¸±êÆÀ·Ö |
+| `description` | `string` | ·ñ | - | Ö¸±êËµÃ÷ |
+| `icon` | `string` | ·ñ | - | Í¼±ê±êÊ¶ |
 
-### 1.14 KaiScore â€” KAI é€‰è‚¡ç»¼åˆè¯„åˆ†
+### 1.14 KaiScore ¡ª KAI Ñ¡¹É×ÛºÏÆÀ·Ö
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | æšä¸¾/èŒƒå›´ | æè¿° |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | Ã¶¾Ù/·¶Î§ | ÃèÊö |
 |------|------|------|-----------|------|
-| `totalScore` | `number` | æ˜¯ | 0-100 | ç»¼åˆè¯„åˆ† |
-| `sentiment` | `number` | æ˜¯ | 0-100 | æƒ…ç»ªå€¼ |
-| `trend` | `number` | æ˜¯ | 0-100 | è¶‹åŠ¿å€¼ |
-| `flow` | `number` | æ˜¯ | 0-100 | æµé‡å€¼ |
-| `dimensions` | `KaiDimension[]` | æ˜¯ | è§ Â§2.9 KAI_DIMENSION_NAMES | å…­å¤§ç±»ç»´åº¦è¯„åˆ† |
-| `detailDistribution` | `KaiDetailItem[]` | æ˜¯ | - | ç»´åº¦ç»†é¡¹åˆ†å¸ƒè¡¨ |
+| `totalScore` | `number` | ÊÇ | 0-100 | ×ÛºÏÆÀ·Ö |
+| `sentiment` | `number` | ÊÇ | 0-100 | ÇéĞ÷Öµ |
+| `trend` | `number` | ÊÇ | 0-100 | Ç÷ÊÆÖµ |
+| `flow` | `number` | ÊÇ | 0-100 | Á÷Á¿Öµ |
+| `dimensions` | `KaiDimension[]` | ÊÇ | ¼û ¡ì2.9 KAI_DIMENSION_NAMES | Áù´óÀàÎ¬¶ÈÆÀ·Ö |
+| `detailDistribution` | `KaiDetailItem[]` | ÊÇ | - | Î¬¶ÈÏ¸Ïî·Ö²¼±í |
 
-### 1.15 KaiDimension â€” KAI è¯„åˆ†ç»´åº¦
+### 1.15 KaiDimension ¡ª KAI ÆÀ·ÖÎ¬¶È
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | æšä¸¾/èŒƒå›´ | æè¿° |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | Ã¶¾Ù/·¶Î§ | ÃèÊö |
 |------|------|------|-----------|------|
-| `name` | `string` | æ˜¯ | è§ Â§2.9 | ç»´åº¦åç§° |
-| `score` | `number` | æ˜¯ | 0-100 | ç»´åº¦å¾—åˆ† |
-| `weight` | `number` | æ˜¯ | 0-1 | æƒé‡ |
-| `status` | `string` | æ˜¯ | - | è¯„åˆ†çŠ¶æ€æ–‡æœ¬ |
-| `color` | `string` | æ˜¯ | Tailwind CSS ç±»å | é¢œè‰²æ ‡ç­¾ |
+| `name` | `string` | ÊÇ | ¼û ¡ì2.9 | Î¬¶ÈÃû³Æ |
+| `score` | `number` | ÊÇ | 0-100 | Î¬¶ÈµÃ·Ö |
+| `weight` | `number` | ÊÇ | 0-1 | È¨ÖØ |
+| `status` | `string` | ÊÇ | - | ÆÀ·Ö×´Ì¬ÎÄ±¾ |
+| `color` | `string` | ÊÇ | Tailwind CSS ÀàÃû | ÑÕÉ«±êÇ© |
 
-### 1.16 KaiDetailItem â€” KAI ç»´åº¦ç»†é¡¹
+### 1.16 KaiDetailItem ¡ª KAI Î¬¶ÈÏ¸Ïî
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | æšä¸¾/èŒƒå›´ | æè¿° |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | Ã¶¾Ù/·¶Î§ | ÃèÊö |
 |------|------|------|-----------|------|
-| `dimensionName` | `string` | æ˜¯ | - | æ‰€å±ç»´åº¦åç§° |
-| `itemName` | `string` | æ˜¯ | - | ç»†é¡¹åç§° |
-| `score` | `number` | æ˜¯ | 0-100 | ç»†é¡¹å¾—åˆ† |
-| `weight` | `number` | æ˜¯ | 0-1 | ç»†é¡¹æƒé‡ |
-| `color` | `string` | æ˜¯ | Tailwind CSS ç±»å | é¢œè‰²æ ‡ç­¾ |
+| `dimensionName` | `string` | ÊÇ | - | ËùÊôÎ¬¶ÈÃû³Æ |
+| `itemName` | `string` | ÊÇ | - | Ï¸ÏîÃû³Æ |
+| `score` | `number` | ÊÇ | 0-100 | Ï¸ÏîµÃ·Ö |
+| `weight` | `number` | ÊÇ | 0-1 | Ï¸ÏîÈ¨ÖØ |
+| `color` | `string` | ÊÇ | Tailwind CSS ÀàÃû | ÑÕÉ«±êÇ© |
 
-### 1.17 ModelComparison â€” æ¨¡å‹å¯¹æ¯”æ•°æ®
+### 1.17 ModelComparison ¡ª Ä£ĞÍ¶Ô±ÈÊı¾İ
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | æšä¸¾/èŒƒå›´ | æè¿° |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | Ã¶¾Ù/·¶Î§ | ÃèÊö |
 |------|------|------|-----------|------|
-| `leftModel` | `ModelInfo` | æ˜¯ | - | å·¦ä¾§æ¨¡å‹ä¿¡æ¯ |
-| `rightModel` | `ModelInfo` | æ˜¯ | - | å³ä¾§æ¨¡å‹ä¿¡æ¯ |
-| `dimensions` | `CompareDimension[]` | æ˜¯ | - | å¯¹æ¯”ç»´åº¦åˆ—è¡¨ |
-| `riskHint` | `string` | æ˜¯ | - | é£é™©æç¤ºæ–‡æœ¬ |
+| `leftModel` | `ModelInfo` | ÊÇ | - | ×ó²àÄ£ĞÍĞÅÏ¢ |
+| `rightModel` | `ModelInfo` | ÊÇ | - | ÓÒ²àÄ£ĞÍĞÅÏ¢ |
+| `dimensions` | `CompareDimension[]` | ÊÇ | - | ¶Ô±ÈÎ¬¶ÈÁĞ±í |
+| `riskHint` | `string` | ÊÇ | - | ·çÏÕÌáÊ¾ÎÄ±¾ |
 
-### 1.18 ModelInfo â€” æ¨¡å‹ä¿¡æ¯
+### 1.18 ModelInfo ¡ª Ä£ĞÍĞÅÏ¢
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | æšä¸¾/èŒƒå›´ | æè¿° |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | Ã¶¾Ù/·¶Î§ | ÃèÊö |
 |------|------|------|-----------|------|
-| `id` | `string` | æ˜¯ | è§ Â§2.11 LLM_MODEL_VERSIONS | æ¨¡å‹ ID |
-| `name` | `string` | æ˜¯ | - | æ¨¡å‹åç§° |
-| `version` | `string` | æ˜¯ | - | æ¨¡å‹ç‰ˆæœ¬å· |
-| `score` | `number` | æ˜¯ | 0-100 | æ¨¡å‹ç»¼åˆå¾—åˆ† |
+| `id` | `string` | ÊÇ | ¼û ¡ì2.11 LLM_MODEL_VERSIONS | Ä£ĞÍ ID |
+| `name` | `string` | ÊÇ | - | Ä£ĞÍÃû³Æ |
+| `version` | `string` | ÊÇ | - | Ä£ĞÍ°æ±¾ºÅ |
+| `score` | `number` | ÊÇ | 0-100 | Ä£ĞÍ×ÛºÏµÃ·Ö |
 
-### 1.19 CompareDimension â€” æ¨¡å‹å¯¹æ¯”ç»´åº¦
+### 1.19 CompareDimension ¡ª Ä£ĞÍ¶Ô±ÈÎ¬¶È
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | æšä¸¾/èŒƒå›´ | æè¿° |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | Ã¶¾Ù/·¶Î§ | ÃèÊö |
 |------|------|------|-----------|------|
-| `name` | `string` | æ˜¯ | - | ç»´åº¦åç§° |
-| `leftScore` | `number` | æ˜¯ | 0-100 | å·¦ä¾§æ¨¡å‹å¾—åˆ† |
-| `rightScore` | `number` | æ˜¯ | 0-100 | å³ä¾§æ¨¡å‹å¾—åˆ† |
-| `weight` | `number` | æ˜¯ | 0-1 | ç»´åº¦æƒé‡ |
+| `name` | `string` | ÊÇ | - | Î¬¶ÈÃû³Æ |
+| `leftScore` | `number` | ÊÇ | 0-100 | ×ó²àÄ£ĞÍµÃ·Ö |
+| `rightScore` | `number` | ÊÇ | 0-100 | ÓÒ²àÄ£ĞÍµÃ·Ö |
+| `weight` | `number` | ÊÇ | 0-1 | Î¬¶ÈÈ¨ÖØ |
 
-### 1.20 StockPool â€” è‚¡ç¥¨æ± æ•°æ®
+### 1.20 StockPool ¡ª ¹ÉÆ±³ØÊı¾İ
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | æšä¸¾/èŒƒå›´ | æè¿° |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | Ã¶¾Ù/·¶Î§ | ÃèÊö |
 |------|------|------|-----------|------|
-| `stocks` | `StockPoolItem[]` | æ˜¯ | - | è‚¡ç¥¨åˆ—è¡¨ |
-| `total` | `number` | æ˜¯ | â‰¥ 0 | æ€»æ¡æ•° |
-| `page` | `number` | æ˜¯ | â‰¥ 1 | å½“å‰é¡µç  |
-| `pageSize` | `number` | æ˜¯ | â‰¥ 1 | æ¯é¡µæ¡æ•° |
+| `stocks` | `StockPoolItem[]` | ÊÇ | - | ¹ÉÆ±ÁĞ±í |
+| `total` | `number` | ÊÇ | ¡İ 0 | ×ÜÌõÊı |
+| `page` | `number` | ÊÇ | ¡İ 1 | µ±Ç°Ò³Âë |
+| `pageSize` | `number` | ÊÇ | ¡İ 1 | Ã¿Ò³ÌõÊı |
 
-### 1.21 StockPoolItem â€” è‚¡ç¥¨æ± æ¡ç›®
+### 1.21 StockPoolItem ¡ª ¹ÉÆ±³ØÌõÄ¿
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | æšä¸¾/èŒƒå›´ | æè¿° |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | Ã¶¾Ù/·¶Î§ | ÃèÊö |
 |------|------|------|-----------|------|
-| `code` | `string` | æ˜¯ | - | è‚¡ç¥¨ä»£ç  |
-| `name` | `string` | æ˜¯ | - | è‚¡ç¥¨åç§° |
-| `price` | `number` | æ˜¯ | - | æœ€æ–°ä»· |
-| `changePercent` | `number` | æ˜¯ | - | æ¶¨è·Œå¹…ï¼ˆ%ï¼‰ |
-| `turnover` | `string` | æ˜¯ | - | æˆäº¤é¢ |
-| `turnoverRate` | `string` | æ˜¯ | - | æ¢æ‰‹ç‡ |
-| `statusColor` | `string` | æ˜¯ | è§ Â§2.8 STOCK_POOL_STATUS_COLORS | çŠ¶æ€é¢œè‰² |
-| `statusLabel` | `string` | æ˜¯ | `"æ´»è·ƒ"` / `"æ¸©çƒ­"` / `"å†·æ¸…"` / `"å†·æ·¡"` | çŠ¶æ€æ ‡ç­¾ |
+| `code` | `string` | ÊÇ | - | ¹ÉÆ±´úÂë |
+| `name` | `string` | ÊÇ | - | ¹ÉÆ±Ãû³Æ |
+| `price` | `number` | ÊÇ | - | ×îĞÂ¼Û |
+| `changePercent` | `number` | ÊÇ | - | ÕÇµø·ù£¨%£© |
+| `turnover` | `string` | ÊÇ | - | ³É½»¶î |
+| `turnoverRate` | `string` | ÊÇ | - | »»ÊÖÂÊ |
+| `statusColor` | `string` | ÊÇ | ¼û ¡ì2.8 STOCK_POOL_STATUS_COLORS | ×´Ì¬ÑÕÉ« |
+| `statusLabel` | `string` | ÊÇ | `"»îÔ¾"` / `"ÎÂÈÈ"` / `"ÀäÇå"` / `"Àäµ­"` | ×´Ì¬±êÇ© |
 
-### 1.22 ChatHistory â€” èŠå¤©å†å²æ•°æ®
+### 1.22 ChatHistory ¡ª ÁÄÌìÀúÊ·Êı¾İ
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | æšä¸¾/èŒƒå›´ | æè¿° |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | Ã¶¾Ù/·¶Î§ | ÃèÊö |
 |------|------|------|-----------|------|
-| `target` | `string` | æ˜¯ | - | å½“å‰é€‰ä¸­çš„æ ‡çš„ä»£ç æˆ–å¸‚åœºæ ‡è¯† |
-| `targetType` | `"stock"` / `"market"` | æ˜¯ | - | æ ‡çš„ç±»å‹ |
-| `messages` | `ChatMessage[]` | æ˜¯ | - | æ¶ˆæ¯åˆ—è¡¨ |
+| `target` | `string` | ÊÇ | - | µ±Ç°Ñ¡ÖĞµÄ±êµÄ´úÂë»òÊĞ³¡±êÊ¶ |
+| `targetType` | `"stock"` / `"market"` | ÊÇ | - | ±êµÄÀàĞÍ |
+| `messages` | `ChatMessage[]` | ÊÇ | - | ÏûÏ¢ÁĞ±í |
 
-### 1.23 ChatMessage â€” èŠå¤©æ¶ˆæ¯
+### 1.23 ChatMessage ¡ª ÁÄÌìÏûÏ¢
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | æšä¸¾/èŒƒå›´ | æè¿° |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | Ã¶¾Ù/·¶Î§ | ÃèÊö |
 |------|------|------|-----------|------|
-| `id` | `string` | æ˜¯ | - | æ¶ˆæ¯å”¯ä¸€æ ‡è¯† |
-| `role` | `"user"` / `"assistant"` | æ˜¯ | - | æ¶ˆæ¯è§’è‰² |
-| `content` | `string` | æ˜¯ | Markdown æ ¼å¼ | æ¶ˆæ¯å†…å®¹ |
-| `timestamp` | `number` | æ˜¯ | æ¯«ç§’æ—¶é—´æˆ³ | æ¶ˆæ¯æ—¶é—´æˆ³ |
+| `id` | `string` | ÊÇ | - | ÏûÏ¢Î¨Ò»±êÊ¶ |
+| `role` | `"user"` / `"assistant"` | ÊÇ | - | ÏûÏ¢½ÇÉ« |
+| `content` | `string` | ÊÇ | Markdown ¸ñÊ½ | ÏûÏ¢ÄÚÈİ |
+| `timestamp` | `number` | ÊÇ | ºÁÃëÊ±¼ä´Á | ÏûÏ¢Ê±¼ä´Á |
 
-### 1.24 CollectionTask â€” é‡‡é›†ä»»åŠ¡å®šä¹‰
+### 1.24 CollectionTask ¡ª ²É¼¯ÈÎÎñ¶¨Òå
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | æšä¸¾/èŒƒå›´ | æè¿° |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | Ã¶¾Ù/·¶Î§ | ÃèÊö |
 |------|------|------|-----------|------|
-| `taskId` | `string` | æ˜¯ | - | ä»»åŠ¡å”¯ä¸€æ ‡è¯† |
-| `widgetId` | `string` | æ˜¯ | - | å…³è”çš„ Widget ID |
-| `instanceId` | `string` | æ˜¯ | - | å…³è”çš„å®ä¾‹ ID |
-| `dataSource` | `DataSourceConfig` | æ˜¯ | - | æ•°æ®æºé…ç½® |
-| `status` | `CollectionTaskStatus` | æ˜¯ | `"pending"`
+| `taskId` | `string` | ÊÇ | - | ÈÎÎñÎ¨Ò»±êÊ¶ |
+| `widgetId` | `string` | ÊÇ | - | ¹ØÁªµÄ Widget ID |
+| `instanceId` | `string` | ÊÇ | - | ¹ØÁªµÄÊµÀı ID |
+| `dataSource` | `DataSourceConfig` | ÊÇ | - | Êı¾İÔ´ÅäÖÃ |
+| `status` | `CollectionTaskStatus` | ÊÇ | `"pending"`

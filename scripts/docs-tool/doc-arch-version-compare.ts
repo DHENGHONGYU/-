@@ -40,7 +40,7 @@ const DOCS: ReadonlyArray<string> = [
   'docs/reference/05-engine-specs.md',
   'docs/explanation/design/ui-design-system.md',
   'docs/explanation/design/component-library-guide.md',
-  '../../docs/reference/03-architecture-standards.md',
+  'docs/reference/03-architecture-standards.md',
 ]
 
 interface Drift {

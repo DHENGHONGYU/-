@@ -15,7 +15,7 @@
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { join, resolve, dirname } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { runAuditPipeline, colorize, type AuditReport } from './_debug/_audit-pipeline.ts'
+import { runAuditPipeline, colorize, type AuditReport } from './_debug/_audit-pipeline'
 
 // ============================================================
 // 类型定义
@@ -60,7 +60,7 @@ const ROOT_DOC_FILES = [
   'architecture.md',
   'CHANGELOG.md',
   'data-definition.md',
-  'README.md',
+  'docs/explanation/README.md',
 ]
 
 const PATH_PREFIXES = [
@@ -106,42 +106,9 @@ const IGNORED_NPM_SCRIPTS = new Set([
   'publish',
 ])
 
+// 排除列表：文档中故意引用的已废弃/占位/通配路径
 const IGNORED_FILE_PATHS = new Set([
-  'src/utils/',
-])
-
-const IGNORED_PATH_PREFIXES = [
-  'docs/templates/',
-  'docs/implementation/',
-  'docs/audit/',
-  'docs/architecture/adr/',
-  'docs/changelogs/',
-  'docs/reports/',
-  'src/services/stockpool/',
-  'src/services/trade/',
-  'src/services/tradeReview/',
-  'src/services/data-collector/',
-  'src/services/fetcher/',
-  'src/services/analysis/',
-  'src/services/ai-center/',
-  'src/store/newsStore/',
-  'src/store/signalStore/',
-  'src/store/themeStore/',
-  'src/pages/news-v6/',
-  'src/components/news/',
-  'src/components/pool/',
-  'src/components/holdings/',
-  'src/components/trading/',
-  'src/components/ui/',
-  'src/components/.../',
-  'src/cockpit/widgets/',
-  'src/blueprints/__tests__/',
-  'src/pages/input/__tests__/',
-  'src/pages/analysis/__tests__/',
-  'src/pages/trading/__tests__/',
-  'src/pages/command/__tests__/',
-  'src/apps/{cabin}/',
-  'src/apps/input/prototype/',
+  'src/utils/', // AGENTS.md 中作为已废弃目录示例引用
 ])
 
 // 历史文档模式：这些文档中的漂移通常不再修复，仅作为警告
@@ -277,8 +244,7 @@ function extractFilePathRefs(content: string): ExtractedRef[] {
     if (isExternalUrl(normalized)) return
     if (normalized.startsWith('node_modules/')) return
     if (IGNORED_FILE_PATHS.has(normalized)) return
-    if (IGNORED_PATH_PREFIXES.some(prefix => normalized.startsWith(prefix))) return
-    if (/^\d+\.\d+\.\d+/.test(normalized)) return
+    if (/^\d+\.\d+\.\d+/.test(normalized)) return // 版本号
 
     // 必须是已知的根前缀或根文件
     const hasKnownPrefix = PATH_PREFIXES.some((prefix) => normalized.startsWith(prefix))
@@ -361,14 +327,14 @@ function pushFinding(
 }
 
 function validateRefs(
-  relativePath: string,
+  filePath: string,
   content: string,
   pkgScripts: Record<string, string>,
 ): { violations: Finding[]; warnings: Finding[]; counts: { npm: number; tsx: number; file: number } } {
   const violations: Finding[] = []
   const warnings: Finding[] = []
   const counts = { npm: 0, tsx: 0, file: 0 }
-  const historical = isHistoricalDoc(relativePath)
+  const historical = isHistoricalDoc(filePath)
 
   const npmRefs = extractNpmRunRefs(content)
   counts.npm = npmRefs.length

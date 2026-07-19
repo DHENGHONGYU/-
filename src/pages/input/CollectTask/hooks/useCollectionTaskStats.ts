@@ -73,6 +73,8 @@ export interface CollectionTaskState {
   selectedTraces: CollectionTraceSpan[]
   // 任务状态统计
   taskStats: TaskStats
+  // 数据新鲜度（最近一次成功采集的时间戳，null = 无成功记录）
+  lastSuccessAt: number | null
   // 维度健康度
   dimHealth: Map<string, DimHealth>
   // 评分统计
@@ -91,6 +93,9 @@ export interface CollectionTaskActions {
   logs: CollectionLog[]
 }
 
+/**
+ * useCollectionTaskStats
+ */
 export function useCollectionTaskStats(): CollectionTaskState & CollectionTaskActions {
   const [activeTab, setActiveTab] = useState('progress')
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null)
@@ -135,6 +140,13 @@ export function useCollectionTaskStats(): CollectionTaskState & CollectionTaskAc
     const failed = tasks.filter((t) => t.status === 'error' || t.status === 'paused').length
     return { runningCount: running, successCount: success, failedCount: failed }
   }, [tasks])
+
+  // 数据新鲜度：最近一次成功采集时间
+  const lastSuccessAt = useMemo(() => {
+    const successSpans = spans.filter((s) => s.result === 'success' && s.completedAt)
+    if (successSpans.length === 0) return null
+    return Math.max(...successSpans.map((s) => s.completedAt!))
+  }, [spans])
 
   // 维度健康度
   const dimHealth: Map<string, DimHealth> = useMemo(() => {
@@ -227,6 +239,7 @@ export function useCollectionTaskStats(): CollectionTaskState & CollectionTaskAc
     spans,
     selectedTraces,
     taskStats,
+    lastSuccessAt,
     dimHealth,
     scoreStats,
     collectionReport,

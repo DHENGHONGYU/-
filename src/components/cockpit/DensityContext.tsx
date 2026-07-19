@@ -11,6 +11,9 @@ export interface DensityConfig {
   padding: string
 }
 
+/**
+ * DENSITY_PRESETS
+ */
 export const DENSITY_PRESETS: Record<DensityLevel, DensityConfig> = {
   compact: {
     level: 'compact',
@@ -46,6 +49,10 @@ const DensityContext = createContext<DensityContextType | null>(null)
 
 const storage = createStorage('density')
 
+/**
+ * DensityProvider
+ * @param defaultDensity
+ */
 export function DensityProvider({ children, defaultDensity = 'normal' }: { children: ReactNode; defaultDensity?: DensityLevel }): React.JSX.Element {
   const [density, setDensityState] = useState<DensityLevel>(() => {
     const saved = storage.get<DensityLevel>('user-preference')
@@ -87,6 +94,10 @@ export function DensityProvider({ children, defaultDensity = 'normal' }: { child
   )
 }
 
+/**
+ * useDensity
+ * @returns DensityContextType
+ */
 export function useDensity(): DensityContextType {
   const context = useContext(DensityContext)
   if (!context) {
@@ -95,10 +106,18 @@ export function useDensity(): DensityContextType {
   return context
 }
 
+/**
+ * useDensityConfig
+ * @returns DensityConfig
+ */
 export function useDensityConfig(): DensityConfig {
   return useDensity().config
 }
 
+/**
+ * useDensityClass
+ * @returns string
+ */
 export function useDensityClass(): string {
   const { density } = useDensity()
   return `density-${density}`

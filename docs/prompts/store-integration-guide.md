@@ -1,139 +1,141 @@
 ---
-title: store-integration-guide
+title: Store ¼¯³É¿ª·¢Ö¸ÄÏ
+type: reference
+domain: data
+phase: development
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "¶¨Î»£º±¾ÎÄµµÊÇ `src/store/` Ä¿Â¼µÄÈ¨Íş¿ª·¢Ö¸ÄÏ£¬Ö¸µ¼¿ª·¢Õß°´Í³Ò»Ä£Ê½´´½¨¡¢×¢²áºÍ²âÊÔĞÂµÄ Zustand Store¡£ËùÓĞĞÂÔö Store ±ØĞë×ñÑ­±¾Ö¸ÄÏ£¬·ñÔò..."
+tags: [data, integration, store]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: important
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: Store é›†æˆå¼€å‘æŒ‡å—
-status: draft
-owner: store-architecture / AI å·¥ç¨‹
-updated: 2026-07-10
-based_on: AGENTS.md v1.4.3
-code_version: 2.0.0
-tier: reference
----
+# Store ¼¯³É¿ª·¢Ö¸ÄÏ
 
-# Store é›†æˆå¼€å‘æŒ‡å—
-
-> **å®šä½**ï¼šæœ¬æ–‡æ¡£æ˜¯ `src/store/` ç›®å½•çš„**æƒå¨å¼€å‘æŒ‡å—**ï¼ŒæŒ‡å¯¼å¼€å‘è€…æŒ‰ç»Ÿä¸€æ¨¡å¼åˆ›å»ºã€æ³¨å†Œå’Œæµ‹è¯•æ–°çš„ Zustand Storeã€‚æ‰€æœ‰æ–°å¢ Store å¿…é¡»éµå¾ªæœ¬æŒ‡å—ï¼Œå¦åˆ™ `audit:layers` / `audit:docs` é—¨ç¦å°†æ‹¦æˆªã€‚
+> **¶¨Î»**£º±¾ÎÄµµÊÇ `src/store/` Ä¿Â¼µÄ**È¨Íş¿ª·¢Ö¸ÄÏ**£¬Ö¸µ¼¿ª·¢Õß°´Í³Ò»Ä£Ê½´´½¨¡¢×¢²áºÍ²âÊÔĞÂµÄ Zustand Store¡£ËùÓĞĞÂÔö Store ±ØĞë×ñÑ­±¾Ö¸ÄÏ£¬·ñÔò `audit:layers` / `audit:docs` ÃÅ½û½«À¹½Ø¡£
 >
-> **æƒå¨å¥‘çº¦**ï¼š`../../AGENTS.md` Â§ä¸€ï¼ˆåˆ†å±‚è§„åˆ™ï¼‰ã€Â§äºŒï¼ˆå››æ­¥é›†æˆï¼‰ã€Â§å››ï¼ˆå‘½åçº¦å®šï¼‰ã€Â§å…«ï¼ˆæ•°æ®åº“ç‰ˆæœ¬ç®¡ç†ï¼‰ã€‚æœ¬æ–‡æ¡£ä¸ `../../AGENTS.md` å†²çªæ—¶ï¼Œä»¥ `../../AGENTS.md` ä¸ºå‡†ã€‚
-> **å›é“¾**ï¼š`docs/README.md` â†’ H ç±» / `../how-to/how-to-add-store.md`(P1)
+> **È¨ÍşÆõÔ¼**£º`../../AGENTS.md` ¡ìÒ»£¨·Ö²ã¹æÔò£©¡¢¡ì¶ş£¨ËÄ²½¼¯³É£©¡¢¡ìËÄ£¨ÃüÃûÔ¼¶¨£©¡¢¡ì°Ë£¨Êı¾İ¿â°æ±¾¹ÜÀí£©¡£±¾ÎÄµµÓë `../../AGENTS.md` ³åÍ»Ê±£¬ÒÔ `../../AGENTS.md` Îª×¼¡£
+> **»ØÁ´**£º`docs/README.md` ¡ú H Àà / `../how-to/how-to-add-store.md`(P1)
 
 ---
 
-## ç›®å½•
+## Ä¿Â¼
 
-1. [Store åˆ†å±‚å®šä½](#1-store-åˆ†å±‚å®šä½)
-2. [å‘½åè§„èŒƒ](#2-å‘½åè§„èŒƒ)
-3. [Zustand Store åˆ›å»ºæ¨¡æ¿](#3-zustand-store-åˆ›å»ºæ¨¡æ¿)
-4. [withBroadcast è·¨ Tab å¹¿æ’­](#4-withbroadcast-è·¨-tab-å¹¿æ’­)
-5. [æ´¾ç”ŸæŸ¥è¯¢ï¼ˆ.derived.tsï¼‰](#5-æ´¾ç”ŸæŸ¥è¯¢derivedts)
-6. [æ–° Store åˆ›å»º Checklistï¼ˆå››æ­¥é›†æˆï¼‰](#6æ–°-store-åˆ›å»º-checklistå››æ­¥é›†æˆ)
-7. [Store æ³¨å†Œä¸æµ‹è¯•è¦æ±‚](#7-store-æ³¨å†Œä¸æµ‹è¯•è¦æ±‚)
-8. [å¸¸è§åæ¨¡å¼](#8-å¸¸è§åæ¨¡å¼)
-9. [éªŒè¯å‘½ä»¤](#9-éªŒè¯å‘½ä»¤)
-10. [å‚è€ƒæ–‡æ¡£](#10-å‚è€ƒæ–‡æ¡£)
+1. [Store ·Ö²ã¶¨Î»](#1-store-·Ö²ã¶¨Î»)
+2. [ÃüÃû¹æ·¶](#2-ÃüÃû¹æ·¶)
+3. [Zustand Store ´´½¨Ä£°å](#3-zustand-store-´´½¨Ä£°å)
+4. [withBroadcast ¿ç Tab ¹ã²¥](#4-withbroadcast-¿ç-tab-¹ã²¥)
+5. [ÅÉÉú²éÑ¯£¨.derived.ts£©](#5-ÅÉÉú²éÑ¯derivedts)
+6. [ĞÂ Store ´´½¨ Checklist£¨ËÄ²½¼¯³É£©](#6ĞÂ-store-´´½¨-checklistËÄ²½¼¯³É)
+7. [Store ×¢²áÓë²âÊÔÒªÇó](#7-store-×¢²áÓë²âÊÔÒªÇó)
+8. [³£¼û·´Ä£Ê½](#8-³£¼û·´Ä£Ê½)
+9. [ÑéÖ¤ÃüÁî](#9-ÑéÖ¤ÃüÁî)
+10. [²Î¿¼ÎÄµµ](#10-²Î¿¼ÎÄµµ)
 
 ---
 
-## 1. Store åˆ†å±‚å®šä½
+## 1. Store ·Ö²ã¶¨Î»
 
-### 1.1 åœ¨å…¨å±€åˆ†å±‚ä¸­çš„ä½ç½®
+### 1.1 ÔÚÈ«¾Ö·Ö²ãÖĞµÄÎ»ÖÃ
 
 ```
-src/config/       â† é…ç½®å±‚ï¼ˆé›¶ç¡¬ç¼–ç é”šç‚¹ï¼‰
-src/core/         â† æ ¸å¿ƒå·¥å…·ï¼ˆDataBridge/ACL/EventBus/MemoryCacheï¼‰
-src/data/         â† æ•°æ®å±‚ï¼ˆIndexedDB/dataLayer/queryBuilder/typesï¼‰
-src/lib/          â† åº“å‡½æ•°ï¼ˆlogger/format/errors/utils/derivedCache/withBroadcastï¼‰
-src/services/     â† æœåŠ¡å±‚ï¼ˆ24 å­åŸŸï¼‰
-src/store/        â† çŠ¶æ€å±‚ â† **ä½ åœ¨è¿™é‡Œ**
-src/components/   â† ç»„ä»¶å±‚
-src/pages/        â† é¡µé¢å±‚
-src/portal/       â† PortalShell èˆ±å®¤å…¥å£
-src/apps/         â† App åˆ†å‘å™¨
+src/config/       ¡û ÅäÖÃ²ã£¨ÁãÓ²±àÂëÃªµã£©
+src/core/         ¡û ºËĞÄ¹¤¾ß£¨DataBridge/ACL/EventBus/MemoryCache£©
+src/data/         ¡û Êı¾İ²ã£¨IndexedDB/dataLayer/queryBuilder/types£©
+src/lib/          ¡û ¿âº¯Êı£¨logger/format/errors/utils/derivedCache/withBroadcast£©
+src/services/     ¡û ·şÎñ²ã£¨24 ×ÓÓò£©
+src/store/        ¡û ×´Ì¬²ã ¡û **ÄãÔÚÕâÀï**
+src/components/   ¡û ×é¼ş²ã
+src/pages/        ¡û Ò³Ãæ²ã
+src/portal/       ¡û PortalShell ²ÕÊÒÈë¿Ú
+src/apps/         ¡û App ·Ö·¢Æ÷
 ```
 
-### 1.2 Store å±‚çš„ä¾èµ–é“å¾‹
+### 1.2 Store ²ãµÄÒÀÀµÌúÂÉ
 
-| è§„åˆ™ | è¯´æ˜ | è¿è§„åæœ |
+| ¹æÔò | ËµÃ÷ | Î¥¹æºó¹û |
 |------|------|----------|
-| **åªèƒ½ä¾èµ– `services/` å’Œ `core/`** | Store é€šè¿‡ Service è·å–æ•°æ®ï¼Œç¦æ­¢ç›´æ¥è°ƒç”¨ `dataLayer` / `db` | `audit:layers` æ‹¦æˆª |
-| **åªèƒ½ä¾èµ– `lib/` ç™½åå•åŸºç¡€è®¾æ–½** | `logger`ã€`eventBus`ã€`withBroadcast`ã€`format`ã€`errors`ã€`utils`ã€`derivedCache`ã€`safeCoerce`ã€`perf` | ç¦æ­¢ä¾èµ– `lib/` ä¸šåŠ¡æ¨¡å— |
-| **ç¦æ­¢è¢« `services/` / `data/` / `core/` ä¾èµ–** | Store å±‚æ˜¯è¢«æ¶ˆè´¹æ–¹ï¼Œä¸èƒ½åå‘æ±¡æŸ“ä¸‹å±‚ | `audit:layers` æ‹¦æˆª |
-| **ç¦æ­¢åœ¨ Store ä¸­å†™ UI é€»è¾‘** | å¦‚ JSXã€DOM æ“ä½œã€è·¯ç”±è·³è½¬ | åˆ†å±‚è¿è§„ |
+| **Ö»ÄÜÒÀÀµ `services/` ºÍ `core/`** | Store Í¨¹ı Service »ñÈ¡Êı¾İ£¬½ûÖ¹Ö±½Óµ÷ÓÃ `dataLayer` / `db` | `audit:layers` À¹½Ø |
+| **Ö»ÄÜÒÀÀµ `lib/` °×Ãûµ¥»ù´¡ÉèÊ©** | `logger`¡¢`eventBus`¡¢`withBroadcast`¡¢`format`¡¢`errors`¡¢`utils`¡¢`derivedCache`¡¢`safeCoerce`¡¢`perf` | ½ûÖ¹ÒÀÀµ `lib/` ÒµÎñÄ£¿é |
+| **½ûÖ¹±» `services/` / `data/` / `core/` ÒÀÀµ** | Store ²ãÊÇ±»Ïû·Ñ·½£¬²»ÄÜ·´ÏòÎÛÈ¾ÏÂ²ã | `audit:layers` À¹½Ø |
+| **½ûÖ¹ÔÚ Store ÖĞĞ´ UI Âß¼­** | Èç JSX¡¢DOM ²Ù×÷¡¢Â·ÓÉÌø×ª | ·Ö²ãÎ¥¹æ |
 
-> **æ•°æ®æµé“å¾‹**ï¼š`å¤–éƒ¨ API â†’ fetcher â†’ DataBridge.forward() â†’ dataLayer â†’ IndexedDB â†’ services â†’ store â†’ components/pages`ã€‚Store åªèƒ½è¯»å– services çš„ç»“æœï¼Œ**ä¸¥ç¦ç›´æ¥æ“ä½œ IndexedDB**ã€‚
+> **Êı¾İÁ÷ÌúÂÉ**£º`Íâ²¿ API ¡ú fetcher ¡ú DataBridge.forward() ¡ú dataLayer ¡ú IndexedDB ¡ú services ¡ú store ¡ú components/pages`¡£Store Ö»ÄÜ¶ÁÈ¡ services µÄ½á¹û£¬**ÑÏ½ûÖ±½Ó²Ù×÷ IndexedDB**¡£
 
 ---
 
-## 2. å‘½åè§„èŒƒ
+## 2. ÃüÃû¹æ·¶
 
-### 2.1 æ–‡ä»¶å
+### 2.1 ÎÄ¼şÃû
 
-| ç±»å‹ | å‘½åè§„åˆ™ | ç¤ºä¾‹ |
+| ÀàĞÍ | ÃüÃû¹æÔò | Ê¾Àı |
 |------|----------|------|
-| **Store ä¸»æ–‡ä»¶** | `kebab-case` + `Store.ts` | `analysisStore.ts` |
-| **æ´¾ç”ŸæŸ¥è¯¢æ–‡ä»¶** | åŒä¸»æ–‡ä»¶ + `.derived.ts` | `analysisStore.derived.ts` |
-| **æµ‹è¯•æ–‡ä»¶** | åŒä¸»æ–‡ä»¶ + `.test.ts` | `analysisStore.test.ts` |
-| **Store å†…æ¨¡å—** | `kebab-case` | `withBroadcast.ts` |
+| **Store Ö÷ÎÄ¼ş** | `kebab-case` + `Store.ts` | `analysisStore.ts` |
+| **ÅÉÉú²éÑ¯ÎÄ¼ş** | Í¬Ö÷ÎÄ¼ş + `.derived.ts` | `analysisStore.derived.ts` |
+| **²âÊÔÎÄ¼ş** | Í¬Ö÷ÎÄ¼ş + `.test.ts` | `analysisStore.test.ts` |
+| **Store ÄÚÄ£¿é** | `kebab-case` | `withBroadcast.ts` |
 
-### 2.2 å¯¼å‡ºå‘½å
+### 2.2 µ¼³öÃüÃû
 
-| ç±»å‹ | å‘½åè§„åˆ™ | ç¤ºä¾‹ |
+| ÀàĞÍ | ÃüÃû¹æÔò | Ê¾Àı |
 |------|----------|------|
 | **Store Hook** | `use` + `PascalCase` + `Store` | `useAnalysisStore` |
 | **State Interface** | `PascalCase` + `State` | `AnalysisState` |
-| **æ´¾ç”Ÿå‡½æ•°** | `camelCase`ï¼ˆæè¿°æ€§ï¼‰ | `scoreBySymbol`, `topStocks` |
-| **Hook å½¢å¼æ´¾ç”Ÿ** | `use` + `camelCase` | `useScoreLevelDistribution` |
+| **ÅÉÉúº¯Êı** | `camelCase`£¨ÃèÊöĞÔ£© | `scoreBySymbol`, `topStocks` |
+| **Hook ĞÎÊ½ÅÉÉú** | `use` + `camelCase` | `useScoreLevelDistribution` |
 
-> å‚è§ `../../AGENTS.md` Â§å››ï¼š"Store: camelCase + `Store` åç¼€ï¼ˆå¦‚ `analysisStore.ts`ï¼‰"
+> ²Î¼û `../../AGENTS.md` ¡ìËÄ£º"Store: camelCase + `Store` ºó×º£¨Èç `analysisStore.ts`£©"
 
 ---
 
-## 3. Zustand Store åˆ›å»ºæ¨¡æ¿
+## 3. Zustand Store ´´½¨Ä£°å
 
-### 3.1 æ ‡å‡†æ¨¡æ¿ï¼ˆå« JSDocã€loggerã€é”™è¯¯å¤„ç†ï¼‰
+### 3.1 ±ê×¼Ä£°å£¨º¬ JSDoc¡¢logger¡¢´íÎó´¦Àí£©
 
 ```typescript
 /**
  * @module {cabinName}Store
- * @description ã€ä¸€å¥è¯æè¿° Store èŒè´£ã€‘
- * @lifecycle ã€@Global / @Session / @Pageã€‘
- * @see @/pages/{cabin}/* - æ¶ˆè´¹æ–¹
- * @see @/services/{domain}/{serviceName} - åº•å±‚æ•°æ®æœåŠ¡
+ * @description ¡¾Ò»¾ä»°ÃèÊö Store Ö°Ôğ¡¿
+ * @lifecycle ¡¾@Global / @Session / @Page¡¿
+ * @see @/pages/{cabin}/* - Ïû·Ñ·½
+ * @see @/services/{domain}/{serviceName} - µ×²ãÊı¾İ·şÎñ
  */
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'
-// import type { SomeType } from '@/data/types'  // æ­¥éª¤1ï¼šç±»å‹å®šä¹‰
-// import { someService } from '@/services/{domain}/{service}'  // æ­¥éª¤3ï¼šService å±‚
+// import type { SomeType } from '@/data/types'  // ²½Öè1£ºÀàĞÍ¶¨Òå
+// import { someService } from '@/services/{domain}/{service}'  // ²½Öè3£ºService ²ã
 
 const logger = getLogger()
 
 // ============================================================
-// Store æ¥å£ï¼ˆState + Actionsï¼‰
+// Store ½Ó¿Ú£¨State + Actions£©
 // ============================================================
 
 interface {Cabin}State {
-  /** æ•°æ®åˆ—è¡¨ */
+  /** Êı¾İÁĞ±í */
   items: SomeType[]
-  /** åŠ è½½çŠ¶æ€ */
+  /** ¼ÓÔØ×´Ì¬ */
   loading: boolean
-  /** é”™è¯¯ä¿¡æ¯ */
+  /** ´íÎóĞÅÏ¢ */
   error: string | null
 
   // Actions
-  /** åŠ è½½æ•°æ® */
+  /** ¼ÓÔØÊı¾İ */
   loadItems: () => Promise<void>
-  /** æ¸…ç©ºé”™è¯¯ */
+  /** Çå¿Õ´íÎó */
   clearError: () => void
 }
 
 // ============================================================
-// åˆå§‹çŠ¶æ€
+// ³õÊ¼×´Ì¬
 // ============================================================
 
 const initialState = {
@@ -143,32 +145,32 @@ const initialState = {
 }
 
 // ============================================================
-// Store åˆ›å»º
+// Store ´´½¨
 // ============================================================
 
 export const use{Cabin}Store = create<{Cabin}State>((set, get) => ({
   ...initialState,
 
   loadItems: async () => {
-    logger.info('[{cabin}Store] loadItems å¼€å§‹')
+    logger.info('[{cabin}Store] loadItems ¿ªÊ¼')
     set({ loading: true, error: null })
 
     try {
-      // TODO(æ­¥éª¤3å®Œæˆåæ¥å…¥): const result = await someService()
+      // TODO(²½Öè3Íê³Éºó½ÓÈë): const result = await someService()
       // if (result.success && result.data) {
       //   set({ items: result.data, loading: false })
-      //   logger.info(`[{cabin}Store] loadItems å®Œæˆ: ${result.data.length} æ¡`)
+      //   logger.info(`[{cabin}Store] loadItems Íê³É: ${result.data.length} Ìõ`)
       // } else {
-      //   const message = result.error ?? 'åŠ è½½å¤±è´¥'
-      //   logger.error(`[{cabin}Store] loadItems å¤±è´¥: ${message}`)
+      //   const message = result.error ?? '¼ÓÔØÊ§°Ü'
+      //   logger.error(`[{cabin}Store] loadItems Ê§°Ü: ${message}`)
       //   set({ loading: false, error: message })
       // }
 
-      // TODO: å ä½å®ç°ï¼Œæ­¥éª¤3å®Œæˆåæ›¿æ¢ä¸ºçœŸå® Service è°ƒç”¨
+      // TODO: Õ¼Î»ÊµÏÖ£¬²½Öè3Íê³ÉºóÌæ»»ÎªÕæÊµ Service µ÷ÓÃ
       set({ loading: false })
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'åŠ è½½å¤±è´¥'
-      logger.error(`[{cabin}Store] loadItems å¼‚å¸¸: ${message}`)
+      const message = err instanceof Error ? err.message : '¼ÓÔØÊ§°Ü'
+      logger.error(`[{cabin}Store] loadItems Òì³£: ${message}`)
       set({ loading: false, error: message })
     }
   },
@@ -179,54 +181,54 @@ export const use{Cabin}Store = create<{Cabin}State>((set, get) => ({
 }))
 
 // ============================================================
-// æ´¾ç”ŸæŸ¥è¯¢å¯¼å‡ºï¼ˆä» .derived.ts ç»Ÿä¸€å¯¼å‡ºï¼‰
-// è®¾è®¡åŸåˆ™ï¼šæ´¾ç”ŸæŸ¥è¯¢ç‹¬ç«‹å‡½æ•°æ¨¡å¼ï¼Œé€šè¿‡ getState() è®¿é—®çŠ¶æ€ï¼Œä¸å­˜å…¥ State
+// ÅÉÉú²éÑ¯µ¼³ö£¨´Ó .derived.ts Í³Ò»µ¼³ö£©
+// Éè¼ÆÔ­Ôò£ºÅÉÉú²éÑ¯¶ÀÁ¢º¯ÊıÄ£Ê½£¬Í¨¹ı getState() ·ÃÎÊ×´Ì¬£¬²»´æÈë State
 // ============================================================
 export * from './{cabin}Store.derived'
 ```
 
-### 3.2 æ¨¡æ¿å…³é”®çº¦å®š
+### 3.2 Ä£°å¹Ø¼üÔ¼¶¨
 
-| çº¦å®š | è¯´æ˜ | å¼ºåˆ¶ |
+| Ô¼¶¨ | ËµÃ÷ | Ç¿ÖÆ |
 |------|------|------|
-| **JSDoc `@module`** | æ¯æ–‡ä»¶é¡¶éƒ¨å¿…é¡»æ ‡æ³¨æ¨¡å—åå’ŒèŒè´£ | âœ… |
-| **JSDoc `@lifecycle`** | æ ‡æ³¨ç”Ÿå‘½å‘¨æœŸï¼š`@Global`ï¼ˆå…¨å±€å•ä¾‹ï¼‰ã€`@Session`ï¼ˆä¼šè¯çº§ï¼‰ã€`@Page`ï¼ˆé¡µé¢çº§ï¼‰ | æ¨è |
-| **`logger.info` å‰ç¼€** | æ ¼å¼ï¼š`[storeName] actionName çŠ¶æ€`ï¼Œå¦‚ `[analysisStore] loadStocks å¼€å§‹` | âœ… |
-| **é”™è¯¯æ—¥å¿—å« context** | `logger.error('æ“ä½œå¤±è´¥', { error: message })` æˆ–å­—ç¬¦ä¸²æ’å€¼ | âœ… |
-| **`try/catch` åŒ…è£¹** | æ‰€æœ‰ async Action å¿…é¡»åŒ…è£¹ï¼Œset åˆ° `error` çŠ¶æ€ | âœ… |
-| **åˆå§‹çŠ¶æ€å¸¸é‡** | æå– `initialState` ä¾¿äºé‡ç½®å’Œæµ‹è¯• | æ¨è |
-| **ç±»å‹æ–­è¨€** | æ•°ç»„åˆå§‹å€¼ç”¨ `as T[]` é¿å…ç±»å‹æ¨æ–­ä¸º `never[]` | âœ… |
+| **JSDoc `@module`** | Ã¿ÎÄ¼ş¶¥²¿±ØĞë±ê×¢Ä£¿éÃûºÍÖ°Ôğ | ? |
+| **JSDoc `@lifecycle`** | ±ê×¢ÉúÃüÖÜÆÚ£º`@Global`£¨È«¾Öµ¥Àı£©¡¢`@Session`£¨»á»°¼¶£©¡¢`@Page`£¨Ò³Ãæ¼¶£© | ÍÆ¼ö |
+| **`logger.info` Ç°×º** | ¸ñÊ½£º`[storeName] actionName ×´Ì¬`£¬Èç `[analysisStore] loadStocks ¿ªÊ¼` | ? |
+| **´íÎóÈÕÖ¾º¬ context** | `logger.error('²Ù×÷Ê§°Ü', { error: message })` »ò×Ö·û´®²åÖµ | ? |
+| **`try/catch` °ü¹ü** | ËùÓĞ async Action ±ØĞë°ü¹ü£¬set µ½ `error` ×´Ì¬ | ? |
+| **³õÊ¼×´Ì¬³£Á¿** | ÌáÈ¡ `initialState` ±ãÓÚÖØÖÃºÍ²âÊÔ | ÍÆ¼ö |
+| **ÀàĞÍ¶ÏÑÔ** | Êı×é³õÊ¼ÖµÓÃ `as T[]` ±ÜÃâÀàĞÍÍÆ¶ÏÎª `never[]` | ? |
 
 ---
 
-## 4. withBroadcast è·¨ Tab å¹¿æ’­
+## 4. withBroadcast ¿ç Tab ¹ã²¥
 
-### 4.1 ä¸ºä»€ä¹ˆéœ€è¦å¹¿æ’­
+### 4.1 ÎªÊ²Ã´ĞèÒª¹ã²¥
 
-V9 æ”¯æŒå¤š Tab åŒæ—¶æ‰“å¼€ã€‚å½“ç”¨æˆ·åœ¨ä¸€ä¸ª Tab ä¸­ä¿®æ”¹æ•°æ®ï¼ˆå¦‚è¯„åˆ†ã€æŒä»“ã€è®¢å•ï¼‰ï¼Œå…¶ä»– Tab éœ€è¦è‡ªåŠ¨åˆ·æ–°ä»¥ä¿æŒä¸€è‡´æ€§ã€‚
+V9 Ö§³Ö¶à Tab Í¬Ê±´ò¿ª¡£µ±ÓÃ»§ÔÚÒ»¸ö Tab ÖĞĞŞ¸ÄÊı¾İ£¨ÈçÆÀ·Ö¡¢³Ö²Ö¡¢¶©µ¥£©£¬ÆäËû Tab ĞèÒª×Ô¶¯Ë¢ĞÂÒÔ±£³ÖÒ»ÖÂĞÔ¡£
 
-### 4.2 å¹¿æ’­æœºåˆ¶
+### 4.2 ¹ã²¥»úÖÆ
 
-- **å®ç°ä½ç½®**ï¼š`@/lib/withBroadcast`ï¼ˆåŸ `@/store/helpers/withBroadcast` å·²åºŸå¼ƒï¼Œæ–°ä»£ç å¿…é¡»ä½¿ç”¨ `@/lib/withBroadcast`ï¼‰
-- **åº•å±‚**ï¼š`eventBus.emit()`ï¼ŒåŸºäº `EventBus` å®ç°ï¼ˆè¯¦è§ `src/lib/eventBus.ts`ï¼‰
-- **äº‹ä»¶å¸¸é‡**ï¼š`@/constants/store-channels.constants` çš„ `EVENT_NAMES`
+- **ÊµÏÖÎ»ÖÃ**£º`@/lib/withBroadcast`£¨Ô­ `@/store/helpers/withBroadcast` ÒÑ·ÏÆú£¬ĞÂ´úÂë±ØĞëÊ¹ÓÃ `@/lib/withBroadcast`£©
+- **µ×²ã**£º`eventBus.emit()`£¬»ùÓÚ `EventBus` ÊµÏÖ£¨Ïê¼û `src/lib/eventBus.ts`£©
+- **ÊÂ¼ş³£Á¿**£º`@/constants/store-channels.constants` µÄ `EVENT_NAMES`
 
-### 4.3 ä½¿ç”¨æ–¹å¼
+### 4.3 Ê¹ÓÃ·½Ê½
 
-#### æ–¹å¼ Aï¼šç›´æ¥å¹¿æ’­ï¼ˆå†™æ“ä½œåè§¦å‘ï¼‰
+#### ·½Ê½ A£ºÖ±½Ó¹ã²¥£¨Ğ´²Ù×÷ºó´¥·¢£©
 
 ```typescript
 import { withBroadcast } from '@/lib/withBroadcast'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 
-// åœ¨ Store çš„ Action ä¸­ï¼Œset å®Œæˆåå¹¿æ’­
+// ÔÚ Store µÄ Action ÖĞ£¬set Íê³Éºó¹ã²¥
 addItem: (item) => {
   set((s) => ({ items: [...s.items, item] }))
   withBroadcast(EVENT_NAMES.STOCK_POOL_CHANGED, { action: 'add', symbol: item.symbol })
 }
 ```
 
-#### æ–¹å¼ Bï¼šcreateBroadcasterï¼ˆå‡å°‘æ ·æ¿ä»£ç ï¼‰
+#### ·½Ê½ B£ºcreateBroadcaster£¨¼õÉÙÑù°å´úÂë£©
 
 ```typescript
 import { createBroadcaster } from '@/lib/withBroadcast'
@@ -240,19 +242,19 @@ addItem: (item) => {
 }
 ```
 
-### 4.4 äº‹ä»¶å‘½åè§„èŒƒ
+### 4.4 ÊÂ¼şÃüÃû¹æ·¶
 
 ```typescript
-// âœ… ä» EVENT_NAMES å¸¸é‡å¼•ç”¨
+// ? ´Ó EVENT_NAMES ³£Á¿ÒıÓÃ
 EVENT_NAMES.STOCKS_CHANGED
 EVENT_NAMES.SCORES_CHANGED
 EVENT_NAMES.HOLDINGS_CHANGED
 
-// âŒ ç¦æ­¢ç¡¬ç¼–ç å­—ç¬¦ä¸²å­—é¢é‡
-'pool:changed'  // ä¸ä¸€è‡´ï¼Œéš¾ä»¥è¿½è¸ª
+// ? ½ûÖ¹Ó²±àÂë×Ö·û´®×ÖÃæÁ¿
+'pool:changed'  // ²»Ò»ÖÂ£¬ÄÑÒÔ×·×Ù
 ```
 
-### 4.5 è®¢é˜…æ–¹ï¼ˆè·¨ Tab æ¥æ”¶å¹¿æ’­ï¼‰
+### 4.5 ¶©ÔÄ·½£¨¿ç Tab ½ÓÊÕ¹ã²¥£©
 
 ```typescript
 import { useEffect } from 'react'
@@ -264,8 +266,8 @@ function useCrossTabSync() {
   useEffect(() => {
     const handleChange = (payload: unknown) => {
       const { action } = payload as { action: string }
-      logger.info('[CrossTab] æ”¶åˆ°å¹¿æ’­äº‹ä»¶', { action })
-      // åˆ·æ–° Store æ•°æ®
+      logger.info('[CrossTab] ÊÕµ½¹ã²¥ÊÂ¼ş', { action })
+      // Ë¢ĞÂ Store Êı¾İ
       useSomeStore.getState().loadItems()
     }
 
@@ -275,22 +277,22 @@ function useCrossTabSync() {
 }
 ```
 
-> **æ¸…ç†é“å¾‹**ï¼šæ‰€æœ‰ `EventBus.subscribe()` å¿…é¡»é…å¯¹ `EventBus.unsubscribe()`ï¼Œåœ¨ `useEffect` cleanup æˆ–ç»„ä»¶å¸è½½æ—¶æ‰§è¡Œã€‚å‚è§ `../../AGENTS.md` Â§ä¸‰ã€Œäº‹ä»¶ç›‘å¬æ¸…ç†ã€æ ‡å‡†æ¨¡æ¿ã€‚
+> **ÇåÀíÌúÂÉ**£ºËùÓĞ `EventBus.subscribe()` ±ØĞëÅä¶Ô `EventBus.unsubscribe()`£¬ÔÚ `useEffect` cleanup »ò×é¼şĞ¶ÔØÊ±Ö´ĞĞ¡£²Î¼û `../../AGENTS.md` ¡ìÈı¡¸ÊÂ¼ş¼àÌıÇåÀí¡¹±ê×¼Ä£°å¡£
 
 ---
 
-## 5. æ´¾ç”ŸæŸ¥è¯¢ï¼ˆ.derived.tsï¼‰
+## 5. ÅÉÉú²éÑ¯£¨.derived.ts£©
 
-### 5.1 è®¾è®¡åŸåˆ™
+### 5.1 Éè¼ÆÔ­Ôò
 
-æ´¾ç”ŸæŸ¥è¯¢ï¼ˆDerived Queriesï¼‰æ˜¯**çº¯å‡½æ•°**ï¼Œä» Store çŠ¶æ€è®¡ç®—æ´¾ç”Ÿå€¼ï¼Œä¸ä¿®æ”¹çŠ¶æ€ã€‚éµå¾ªä»¥ä¸‹åŸåˆ™ï¼š
+ÅÉÉú²éÑ¯£¨Derived Queries£©ÊÇ**´¿º¯Êı**£¬´Ó Store ×´Ì¬¼ÆËãÅÉÉúÖµ£¬²»ĞŞ¸Ä×´Ì¬¡£×ñÑ­ÒÔÏÂÔ­Ôò£º
 
-1. **çº¯å‡½æ•°**ï¼šé€šè¿‡ `useStore.getState()` è®¿é—®çŠ¶æ€ï¼Œä¸è°ƒç”¨ `set()`
-2. **æ€§èƒ½ä¼˜åŒ–**ï¼šä½¿ç”¨ `memoizeByRef` ç¼“å­˜æ— å‚æ•°æ´¾ç”Ÿï¼Œä½¿ç”¨ `buildIndex` ä¼˜åŒ– O(n) æŸ¥æ‰¾
-3. **ç©ºçŠ¶æ€å®‰å…¨**ï¼šç©ºæ•°æ®æ—¶è¿”å›åˆç†é»˜è®¤å€¼ï¼ˆå¦‚ `[]`ã€`0`ã€`null`ï¼‰
-4. **ä¸å¼•å…¥å¾ªç¯ä¾èµ–**ï¼šä»…ä¾èµ–ç›®æ ‡ Store å’Œ `lib/derivedCache`
+1. **´¿º¯Êı**£ºÍ¨¹ı `useStore.getState()` ·ÃÎÊ×´Ì¬£¬²»µ÷ÓÃ `set()`
+2. **ĞÔÄÜÓÅ»¯**£ºÊ¹ÓÃ `memoizeByRef` »º´æÎŞ²ÎÊıÅÉÉú£¬Ê¹ÓÃ `buildIndex` ÓÅ»¯ O(n) ²éÕÒ
+3. **¿Õ×´Ì¬°²È«**£º¿ÕÊı¾İÊ±·µ»ØºÏÀíÄ¬ÈÏÖµ£¨Èç `[]`¡¢`0`¡¢`null`£©
+4. **²»ÒıÈëÑ­»·ÒÀÀµ**£º½öÒÀÀµÄ¿±ê Store ºÍ `lib/derivedCache`
 
-### 5.2 æ–‡ä»¶ç»“æ„
+### 5.2 ÎÄ¼ş½á¹¹
 
 ```typescript
 // {storeName}.derived.ts
@@ -299,12 +301,12 @@ import { use{Store} } from '@/store/{storeName}'
 import { memoizeByRef, buildIndex, safeLength } from '@/lib/derivedCache'
 
 // ============================================================
-// ç±»å‹å®šä¹‰
+// ÀàĞÍ¶¨Òå
 // ============================================================
 export interface SomeDistribution { /* ... */ }
 
 // ============================================================
-// åŸºç¡€èšåˆï¼ˆæ— å‚æ•°ï¼Œä½¿ç”¨ memoizeByRefï¼‰
+// »ù´¡¾ÛºÏ£¨ÎŞ²ÎÊı£¬Ê¹ÓÃ memoizeByRef£©
 // ============================================================
 export function isItemsEmpty(): boolean {
   return use{Store}.getState().items.length === 0
@@ -315,17 +317,17 @@ export function itemsCount(): number {
 }
 
 // ============================================================
-// ç­›é€‰ä¸æŸ¥æ‰¾ï¼ˆbuildIndex ä¼˜åŒ–ï¼‰
+// É¸Ñ¡Óë²éÕÒ£¨buildIndex ÓÅ»¯£©
 // ============================================================
 export function itemById(id: string): SomeType | undefined {
   return use{Store}.getState().items.find(i => i.id === id)
 }
 
 // ============================================================
-// èšåˆç»Ÿè®¡ï¼ˆmemoizeByRef ç¼“å­˜ï¼‰
+// ¾ÛºÏÍ³¼Æ£¨memoizeByRef »º´æ£©
 // ============================================================
 export const someDistribution = memoizeByRef((items: readonly SomeType[]): SomeDistribution => {
-  // è®¡ç®—é€»è¾‘
+  // ¼ÆËãÂß¼­
 }, 'someDistribution')
 
 export function getSomeDistribution(): SomeDistribution {
@@ -333,7 +335,7 @@ export function getSomeDistribution(): SomeDistribution {
 }
 
 // ============================================================
-// React Hook å½¢å¼ï¼ˆç»„ä»¶è®¢é˜…è‡ªåŠ¨åˆ·æ–°ï¼‰
+// React Hook ĞÎÊ½£¨×é¼ş¶©ÔÄ×Ô¶¯Ë¢ĞÂ£©
 // ============================================================
 export function useSomeDistribution(): SomeDistribution {
   const items = use{Store}(state => state.items)
@@ -341,261 +343,261 @@ export function useSomeDistribution(): SomeDistribution {
 }
 ```
 
-### 5.3 ç»Ÿä¸€å¯¼å‡º
+### 5.3 Í³Ò»µ¼³ö
 
-æ‰€æœ‰æ´¾ç”ŸæŸ¥è¯¢åœ¨ `src/store/derived.index.ts` ä¸­ç»Ÿä¸€å¯¼å‡ºï¼ŒUI ç»„ä»¶æŒ‰éœ€è¦å¯¼å…¥ï¼š
+ËùÓĞÅÉÉú²éÑ¯ÔÚ `src/store/derived.index.ts` ÖĞÍ³Ò»µ¼³ö£¬UI ×é¼ş°´ĞèÒªµ¼Èë£º
 
 ```typescript
 // src/store/derived.index.ts
 export { useSomeDistribution, itemById } from '@/store/{storeName}.derived'
 ```
 
-> **TODO**ï¼šæ–°å¢ Store æ´¾ç”Ÿåï¼Œå¿…é¡»åŒæ­¥æ›´æ–° `derived.index.ts` å¯¼å‡ºã€‚è¯¦è§ `src/store/derived.index.ts` ç°æœ‰æ¨¡å¼ã€‚
+> **TODO**£ºĞÂÔö Store ÅÉÉúºó£¬±ØĞëÍ¬²½¸üĞÂ `derived.index.ts` µ¼³ö¡£Ïê¼û `src/store/derived.index.ts` ÏÖÓĞÄ£Ê½¡£
 
 ---
 
-## 6. æ–° Store åˆ›å»º Checklistï¼ˆå››æ­¥é›†æˆï¼‰
+## 6. ĞÂ Store ´´½¨ Checklist£¨ËÄ²½¼¯³É£©
 
-æ–° Store å¿…é¡»æŒ‰ä»¥ä¸‹å››æ­¥é¡ºåºåˆ›å»ºï¼Œæ¯æ­¥å¯ç‹¬ç«‹å›æ»šã€‚å‚è§ `../../AGENTS.md` Â§äºŒã€‚
+ĞÂ Store ±ØĞë°´ÒÔÏÂËÄ²½Ë³Ğò´´½¨£¬Ã¿²½¿É¶ÀÁ¢»Ø¹ö¡£²Î¼û `../../AGENTS.md` ¡ì¶ş¡£
 
-### æ­¥éª¤ 1ï¼šç±»å‹å®šä¹‰ï¼ˆ`src/types/` æˆ– `src/data/types.ts`ï¼‰
+### ²½Öè 1£ºÀàĞÍ¶¨Òå£¨`src/types/` »ò `src/data/types.ts`£©
 
-- [ ] å®šä¹‰ Store ç®¡ç†çš„**æ•°æ®ç»“æ„ Interface**ï¼ˆå¦‚ `SomeData`ã€`SomeDataState`ï¼‰
-- [ ] å®šä¹‰ Action çš„**å‚æ•°ç±»å‹**ï¼ˆå¦‚ `LoadOptions`ã€`FilterParams`ï¼‰
-- [ ] å¦‚æœæ¶‰åŠ Service è¿”å›ç»“æœï¼Œå®šä¹‰ `Result<T>` ç±»å‹æˆ–å¤ç”¨ç°æœ‰ `ServiceResult<T>`
-- [ ] è¿è¡Œ `npx tsc --noEmit` éªŒè¯ç±»å‹å®‰å…¨
+- [ ] ¶¨Òå Store ¹ÜÀíµÄ**Êı¾İ½á¹¹ Interface**£¨Èç `SomeData`¡¢`SomeDataState`£©
+- [ ] ¶¨Òå Action µÄ**²ÎÊıÀàĞÍ**£¨Èç `LoadOptions`¡¢`FilterParams`£©
+- [ ] Èç¹ûÉæ¼° Service ·µ»Ø½á¹û£¬¶¨Òå `Result<T>` ÀàĞÍ»ò¸´ÓÃÏÖÓĞ `ServiceResult<T>`
+- [ ] ÔËĞĞ `npx tsc --noEmit` ÑéÖ¤ÀàĞÍ°²È«
 
-### æ­¥éª¤ 2ï¼šStore/çŠ¶æ€ï¼ˆ`src/store/{storeName}.ts`ï¼‰
+### ²½Öè 2£ºStore/×´Ì¬£¨`src/store/{storeName}.ts`£©
 
-- [ ] ä½¿ç”¨ Â§3 æ ‡å‡†æ¨¡æ¿åˆ›å»º Store
-- [ ] å‘½åè§„èŒƒï¼š`use{PascalCase}Store`
-- [ ] åˆå§‹çŠ¶æ€æå–ä¸º `initialState` å¸¸é‡
-- [ ] æ‰€æœ‰ Action åŒ…è£¹ `try/catch`ï¼Œé”™è¯¯å†™å…¥ `error` çŠ¶æ€
-- [ ] æ ¸å¿ƒåˆ†æ”¯ï¼ˆæ•°æ®åŠ è½½ã€çŠ¶æ€å˜æ›´ï¼‰æ‰“å° `logger.info`
-- [ ] å†™æ“ä½œåè°ƒç”¨ `withBroadcast` å¹¿æ’­å˜æ›´äº‹ä»¶ï¼ˆå¦‚éœ€è¦è·¨ Tab åŒæ­¥ï¼‰
-- [ ] åˆ›å»ºå¯¹åº”çš„ `{storeName}.derived.ts` æ´¾ç”ŸæŸ¥è¯¢æ–‡ä»¶ï¼ˆÂ§5ï¼‰
-- [ ] åœ¨ `derived.index.ts` ä¸­æ³¨å†Œå¯¼å‡º
-- [ ] è¿è¡Œ `npx tsc --noEmit` éªŒè¯ç±»å‹å®‰å…¨
+- [ ] Ê¹ÓÃ ¡ì3 ±ê×¼Ä£°å´´½¨ Store
+- [ ] ÃüÃû¹æ·¶£º`use{PascalCase}Store`
+- [ ] ³õÊ¼×´Ì¬ÌáÈ¡Îª `initialState` ³£Á¿
+- [ ] ËùÓĞ Action °ü¹ü `try/catch`£¬´íÎóĞ´Èë `error` ×´Ì¬
+- [ ] ºËĞÄ·ÖÖ§£¨Êı¾İ¼ÓÔØ¡¢×´Ì¬±ä¸ü£©´òÓ¡ `logger.info`
+- [ ] Ğ´²Ù×÷ºóµ÷ÓÃ `withBroadcast` ¹ã²¥±ä¸üÊÂ¼ş£¨ÈçĞèÒª¿ç Tab Í¬²½£©
+- [ ] ´´½¨¶ÔÓ¦µÄ `{storeName}.derived.ts` ÅÉÉú²éÑ¯ÎÄ¼ş£¨¡ì5£©
+- [ ] ÔÚ `derived.index.ts` ÖĞ×¢²áµ¼³ö
+- [ ] ÔËĞĞ `npx tsc --noEmit` ÑéÖ¤ÀàĞÍ°²È«
 
-### æ­¥éª¤ 3ï¼šService/é€‚é…å±‚ï¼ˆ`src/services/{domain}/`ï¼‰
+### ²½Öè 3£ºService/ÊÊÅä²ã£¨`src/services/{domain}/`£©
 
-- [ ] åˆ›å»ºæˆ–å¤ç”¨ Service è·å–æ•°æ®
-- [ ] Service é€šè¿‡ `DataBridge.forward()` æˆ– `dataBridge.query()` ä¸æ•°æ®å±‚äº¤äº’
-- [ ] **ç¦æ­¢ Service ç›´æ¥å†™ `db` / `dataLayer`**ï¼ˆå¿…é¡»é€šè¿‡ `DataBridge`ï¼‰
-- [ ] Service è¿”å›æ ‡å‡† `Result<T>` ç»“æ„ï¼ˆå« `success`/`data`/`error`ï¼‰
-- [ ] è¿è¡Œ `npx tsc --noEmit` éªŒè¯ç±»å‹å®‰å…¨
+- [ ] ´´½¨»ò¸´ÓÃ Service »ñÈ¡Êı¾İ
+- [ ] Service Í¨¹ı `DataBridge.forward()` »ò `dataBridge.query()` ÓëÊı¾İ²ã½»»¥
+- [ ] **½ûÖ¹ Service Ö±½ÓĞ´ `db` / `dataLayer`**£¨±ØĞëÍ¨¹ı `DataBridge`£©
+- [ ] Service ·µ»Ø±ê×¼ `Result<T>` ½á¹¹£¨º¬ `success`/`data`/`error`£©
+- [ ] ÔËĞĞ `npx tsc --noEmit` ÑéÖ¤ÀàĞÍ°²È«
 
-### æ­¥éª¤ 4ï¼šæ ¸å¿ƒé›†æˆï¼ˆ`src/pages/` æˆ– `src/components/`ï¼‰
+### ²½Öè 4£ººËĞÄ¼¯³É£¨`src/pages/` »ò `src/components/`£©
 
-- [ ] UI ç»„ä»¶**ä»…é€šè¿‡ `use{Store}()` å’Œ `derived.index.ts` è·å–æ•°æ®**
-- [ ] ç¦æ­¢ç›´æ¥è°ƒç”¨ `dataLayer` / `db` / `DataBridge`
-- [ ] ç¦æ­¢ç›´æ¥è°ƒç”¨ Serviceï¼ˆå¿…é¡»é€šè¿‡ Store Actionï¼‰
-- [ ] ç»„ä»¶å¸è½½æ—¶æ¸…ç† EventBus è®¢é˜…ï¼ˆå¦‚ä½¿ç”¨ `eventBus.subscribe`ï¼‰
-- [ ] è¿è¡Œ `npx tsc --noEmit` éªŒè¯ç±»å‹å®‰å…¨
+- [ ] UI ×é¼ş**½öÍ¨¹ı `use{Store}()` ºÍ `derived.index.ts` »ñÈ¡Êı¾İ**
+- [ ] ½ûÖ¹Ö±½Óµ÷ÓÃ `dataLayer` / `db` / `DataBridge`
+- [ ] ½ûÖ¹Ö±½Óµ÷ÓÃ Service£¨±ØĞëÍ¨¹ı Store Action£©
+- [ ] ×é¼şĞ¶ÔØÊ±ÇåÀí EventBus ¶©ÔÄ£¨ÈçÊ¹ÓÃ `eventBus.subscribe`£©
+- [ ] ÔËĞĞ `npx tsc --noEmit` ÑéÖ¤ÀàĞÍ°²È«
 
-### å››æ­¥å®ŒæˆåéªŒè¯
+### ËÄ²½Íê³ÉºóÑéÖ¤
 
 ```powershell
-# ç±»å‹æ£€æŸ¥
+# ÀàĞÍ¼ì²é
 npx tsc --noEmit
 
-# åˆ†å±‚è°ƒç”¨å®¡è®¡
+# ·Ö²ãµ÷ÓÃÉó¼Æ
 npm run audit:layers
-# æœŸæœ›ï¼š0 violations, 0 warnings
+# ÆÚÍû£º0 violations, 0 warnings
 
-# é¢œè‰²ç¡¬ç¼–ç å®¡è®¡
+# ÑÕÉ«Ó²±àÂëÉó¼Æ
 npm run audit:hardcode
-# æœŸæœ›ï¼š0 hardcoded colors
+# ÆÚÍû£º0 hardcoded colors
 ```
 
 ---
 
-## 7. Store æ³¨å†Œä¸æµ‹è¯•è¦æ±‚
+## 7. Store ×¢²áÓë²âÊÔÒªÇó
 
-### 7.1 Store æ³¨å†Œï¼ˆæ— éœ€æ˜¾å¼æ³¨å†Œè¡¨ï¼‰
+### 7.1 Store ×¢²á£¨ÎŞĞèÏÔÊ½×¢²á±í£©
 
-V9 çš„ Store é‡‡ç”¨**æŒ‰éœ€å¯¼å…¥**æ¨¡å¼ï¼Œæ— éœ€åœ¨å…¨å±€æ³¨å†Œè¡¨ä¸­æ³¨å†Œã€‚ä½†æ–°å¢ Store å¿…é¡»æ»¡è¶³ï¼š
+V9 µÄ Store ²ÉÓÃ**°´Ğèµ¼Èë**Ä£Ê½£¬ÎŞĞèÔÚÈ«¾Ö×¢²á±íÖĞ×¢²á¡£µ«ĞÂÔö Store ±ØĞëÂú×ã£º
 
-| æ£€æŸ¥é¡¹ | è¦æ±‚ | éªŒè¯æ–¹å¼ |
+| ¼ì²éÏî | ÒªÇó | ÑéÖ¤·½Ê½ |
 |--------|------|----------|
-| **æ–‡ä»¶ä½ç½®** | `src/store/` æ ¹ç›®å½• | ç›®å½•æ‰«æ |
-| **å‘½ååˆè§„** | `kebab-case` + `Store.ts` | `audit:layers` å‘½åæ£€æŸ¥ |
-| **å¯¼å‡ºå‘½å** | `usePascalCaseStore` | ä»£ç è¯„å®¡ |
-| **derived æ–‡ä»¶** | åŒç›®å½• `.derived.ts` | æ–‡ä»¶å­˜åœ¨æ€§æ£€æŸ¥ |
-| **æµ‹è¯•æ–‡ä»¶** | åŒç›®å½• `.test.ts` | æ–‡ä»¶å­˜åœ¨æ€§æ£€æŸ¥ |
-| **derived.index.ts å¯¼å‡º** | åœ¨ `derived.index.ts` ä¸­ç»Ÿä¸€å¯¼å‡º | ä»£ç è¯„å®¡ |
-| **äº‹ä»¶å¸¸é‡** | æ–°å¢å¹¿æ’­äº‹ä»¶éœ€åŠ å…¥ `EVENT_NAMES` | å¸¸é‡æ–‡ä»¶æ£€æŸ¥ |
+| **ÎÄ¼şÎ»ÖÃ** | `src/store/` ¸ùÄ¿Â¼ | Ä¿Â¼É¨Ãè |
+| **ÃüÃûºÏ¹æ** | `kebab-case` + `Store.ts` | `audit:layers` ÃüÃû¼ì²é |
+| **µ¼³öÃüÃû** | `usePascalCaseStore` | ´úÂëÆÀÉó |
+| **derived ÎÄ¼ş** | Í¬Ä¿Â¼ `.derived.ts` | ÎÄ¼ş´æÔÚĞÔ¼ì²é |
+| **²âÊÔÎÄ¼ş** | Í¬Ä¿Â¼ `.test.ts` | ÎÄ¼ş´æÔÚĞÔ¼ì²é |
+| **derived.index.ts µ¼³ö** | ÔÚ `derived.index.ts` ÖĞÍ³Ò»µ¼³ö | ´úÂëÆÀÉó |
+| **ÊÂ¼ş³£Á¿** | ĞÂÔö¹ã²¥ÊÂ¼şĞè¼ÓÈë `EVENT_NAMES` | ³£Á¿ÎÄ¼ş¼ì²é |
 
-### 7.2 æµ‹è¯•è¦æ±‚
+### 7.2 ²âÊÔÒªÇó
 
-æ¯ä¸ª Store å¿…é¡»åŒ…å« `.test.ts` å•å…ƒæµ‹è¯•ï¼Œè¦†ç›–ä»¥ä¸‹åœºæ™¯ï¼š
+Ã¿¸ö Store ±ØĞë°üº¬ `.test.ts` µ¥Ôª²âÊÔ£¬¸²¸ÇÒÔÏÂ³¡¾°£º
 
-| æµ‹è¯•åœºæ™¯ | è¯´æ˜ | ç¤ºä¾‹ |
+| ²âÊÔ³¡¾° | ËµÃ÷ | Ê¾Àı |
 |----------|------|------|
-| **åˆå§‹çŠ¶æ€** | éªŒè¯ `initialState` æ­£ç¡® | `expect(store.loading).toBe(false)` |
-| **Action æˆåŠŸ** | æ¨¡æ‹Ÿ Service æˆåŠŸå“åº” | éªŒè¯çŠ¶æ€æ›´æ–°æ­£ç¡® |
-| **Action å¤±è´¥** | æ¨¡æ‹Ÿ Service å¤±è´¥/å¼‚å¸¸ | éªŒè¯ `error` çŠ¶æ€è¢«è®¾ç½® |
-| **åŠ è½½çŠ¶æ€æµè½¬** | `loading: true â†’ false` | éªŒè¯ä¸­é—´çŠ¶æ€ |
-| **æ´¾ç”ŸæŸ¥è¯¢** | éªŒè¯ `.derived.ts` å‡½æ•° | ç©ºæ•°æ®ã€å•æ¡ã€å¤šæ¡åœºæ™¯ |
-| **å¹¶å‘é”** | å¦‚ä½¿ç”¨ `isRefreshing` é˜²é‡å…¥ | éªŒè¯é‡å¤è°ƒç”¨è¢«è·³è¿‡ |
-| **å¿«ç…§å›æ»š** | å¦‚å¤±è´¥æ¢å¤æ—§æ•°æ® | éªŒè¯æ•°æ®æœªè¢«æ±¡æŸ“ |
+| **³õÊ¼×´Ì¬** | ÑéÖ¤ `initialState` ÕıÈ· | `expect(store.loading).toBe(false)` |
+| **Action ³É¹¦** | Ä£Äâ Service ³É¹¦ÏìÓ¦ | ÑéÖ¤×´Ì¬¸üĞÂÕıÈ· |
+| **Action Ê§°Ü** | Ä£Äâ Service Ê§°Ü/Òì³£ | ÑéÖ¤ `error` ×´Ì¬±»ÉèÖÃ |
+| **¼ÓÔØ×´Ì¬Á÷×ª** | `loading: true ¡ú false` | ÑéÖ¤ÖĞ¼ä×´Ì¬ |
+| **ÅÉÉú²éÑ¯** | ÑéÖ¤ `.derived.ts` º¯Êı | ¿ÕÊı¾İ¡¢µ¥Ìõ¡¢¶àÌõ³¡¾° |
+| **²¢·¢Ëø** | ÈçÊ¹ÓÃ `isRefreshing` ·ÀÖØÈë | ÑéÖ¤ÖØ¸´µ÷ÓÃ±»Ìø¹ı |
+| **¿ìÕÕ»Ø¹ö** | ÈçÊ§°Ü»Ö¸´¾ÉÊı¾İ | ÑéÖ¤Êı¾İÎ´±»ÎÛÈ¾ |
 
-### 7.3 æµ‹è¯•æ¨¡æ¿
+### 7.3 ²âÊÔÄ£°å
 
 ```typescript
 // {storeName}.test.ts
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { use{Store} } from './{storeName}'
 
-// éš”ç¦» Store çŠ¶æ€ï¼šæ¯ä¸ªæµ‹è¯•å‰é‡ç½®
+// ¸ôÀë Store ×´Ì¬£ºÃ¿¸ö²âÊÔÇ°ÖØÖÃ
 beforeEach(() => {
-  use{Store}.setState(use{Store}.getState(), true) // æˆ–è°ƒç”¨ reset æ–¹æ³•
+  use{Store}.setState(use{Store}.getState(), true) // »òµ÷ÓÃ reset ·½·¨
 })
 
 describe('{storeName}', () => {
-  it('åˆå§‹çŠ¶æ€æ­£ç¡®', () => {
+  it('³õÊ¼×´Ì¬ÕıÈ·', () => {
     const state = use{Store}.getState()
     expect(state.items).toEqual([])
     expect(state.loading).toBe(false)
     expect(state.error).toBeNull()
   })
 
-  it('loadItems æˆåŠŸæ›´æ–°çŠ¶æ€', async () => {
-    // TODO: mock Service è°ƒç”¨
+  it('loadItems ³É¹¦¸üĞÂ×´Ì¬', async () => {
+    // TODO: mock Service µ÷ÓÃ
   })
 
-  it('loadItems å¤±è´¥è®¾ç½® error', async () => {
-    // TODO: mock Service å¤±è´¥
+  it('loadItems Ê§°ÜÉèÖÃ error', async () => {
+    // TODO: mock Service Ê§°Ü
   })
 })
 ```
 
-> **TODO**ï¼šå¾…æµ‹è¯•ç»„è¡¥å……å®Œæ•´çš„ mock Service ç¤ºä¾‹å’Œ `derivedCache` æµ‹è¯•æŒ‡å—ã€‚
+> **TODO**£º´ı²âÊÔ×é²¹³äÍêÕûµÄ mock Service Ê¾ÀıºÍ `derivedCache` ²âÊÔÖ¸ÄÏ¡£
 
 ---
 
-## 8. å¸¸è§åæ¨¡å¼
+## 8. ³£¼û·´Ä£Ê½
 
-### 8.1 åˆ†å±‚è¿è§„ï¼ˆCriticalï¼‰
+### 8.1 ·Ö²ãÎ¥¹æ£¨Critical£©
 
-| åæ¨¡å¼ | é”™è¯¯ä»£ç  | æ­£ç¡®åšæ³• |
+| ·´Ä£Ê½ | ´íÎó´úÂë | ÕıÈ·×ö·¨ |
 |--------|----------|----------|
-| **Store ç›´æ¥å†™ db** | `import { db } from '@/data/db'; db.put(...)` | é€šè¿‡ Service â†’ `DataBridge.forward()` |
-| **Store ä¾èµ– dataLayer** | `import { queryBuilder } from '@/data/queryBuilder'` | é€šè¿‡ Service å°è£…æŸ¥è¯¢é€»è¾‘ |
-| **Store ä¾èµ– UI å±‚** | `import { SomePage } from '@/pages/...'` | Store é›¶ UI ä¾èµ– |
-| **Store å¼•å…¥ JSX** | åœ¨ Store ä¸­æ¸²æŸ“ `<Component />` | çº¯çŠ¶æ€é€»è¾‘ï¼Œæ—  JSX |
-| **ç»„ä»¶ç›´æ¥è°ƒç”¨ DataBridge** | `useEffect(() => dataBridge.query(...), [])` | ç»„ä»¶ â†’ Store Action â†’ Service â†’ DataBridge |
+| **Store Ö±½ÓĞ´ db** | `import { db } from '@/data/db'; db.put(...)` | Í¨¹ı Service ¡ú `DataBridge.forward()` |
+| **Store ÒÀÀµ dataLayer** | `import { queryBuilder } from '@/data/queryBuilder'` | Í¨¹ı Service ·â×°²éÑ¯Âß¼­ |
+| **Store ÒÀÀµ UI ²ã** | `import { SomePage } from '@/pages/...'` | Store Áã UI ÒÀÀµ |
+| **Store ÒıÈë JSX** | ÔÚ Store ÖĞäÖÈ¾ `<Component />` | ´¿×´Ì¬Âß¼­£¬ÎŞ JSX |
+| **×é¼şÖ±½Óµ÷ÓÃ DataBridge** | `useEffect(() => dataBridge.query(...), [])` | ×é¼ş ¡ú Store Action ¡ú Service ¡ú DataBridge |
 
-### 8.2 çŠ¶æ€ç®¡ç†è¿è§„ï¼ˆMajorï¼‰
+### 8.2 ×´Ì¬¹ÜÀíÎ¥¹æ£¨Major£©
 
-| åæ¨¡å¼ | é”™è¯¯ä»£ç  | æ­£ç¡®åšæ³• |
+| ·´Ä£Ê½ | ´íÎó´úÂë | ÕıÈ·×ö·¨ |
 |--------|----------|----------|
-| **æ´¾ç”ŸçŠ¶æ€å­˜å…¥ State** | `set({ derivedCount: items.length })` | ä½¿ç”¨ `.derived.ts` çº¯å‡½æ•°è®¡ç®— |
-| **State ä¸­å­˜å‡½æ•°** | `set({ computed: () => ... })` | æ´¾ç”Ÿå‡½æ•°åœ¨ `.derived.ts` ä¸­å®šä¹‰ |
-| **ä¸é‡ç½®åˆå§‹çŠ¶æ€** | æµ‹è¯•é—´çŠ¶æ€æ³„æ¼ | æ¯ä¸ªæµ‹è¯•å‰ `setState(initialState)` |
-| **æ— é”™è¯¯çŠ¶æ€** | `catch` ä¸­åª `console.log` | è®¾ç½® `error: string \| null` çŠ¶æ€ |
-| **æ— åŠ è½½çŠ¶æ€** | async æ“ä½œä¸æš´éœ² `loading` | æä¾› `loading` + `set({ loading: true/false })` |
+| **ÅÉÉú×´Ì¬´æÈë State** | `set({ derivedCount: items.length })` | Ê¹ÓÃ `.derived.ts` ´¿º¯Êı¼ÆËã |
+| **State ÖĞ´æº¯Êı** | `set({ computed: () => ... })` | ÅÉÉúº¯ÊıÔÚ `.derived.ts` ÖĞ¶¨Òå |
+| **²»ÖØÖÃ³õÊ¼×´Ì¬** | ²âÊÔ¼ä×´Ì¬Ğ¹Â© | Ã¿¸ö²âÊÔÇ° `setState(initialState)` |
+| **ÎŞ´íÎó×´Ì¬** | `catch` ÖĞÖ» `console.log` | ÉèÖÃ `error: string \| null` ×´Ì¬ |
+| **ÎŞ¼ÓÔØ×´Ì¬** | async ²Ù×÷²»±©Â¶ `loading` | Ìá¹© `loading` + `set({ loading: true/false })` |
 
-### 8.3 å¹¿æ’­ä¸äº‹ä»¶è¿è§„ï¼ˆMajorï¼‰
+### 8.3 ¹ã²¥ÓëÊÂ¼şÎ¥¹æ£¨Major£©
 
-| åæ¨¡å¼ | é”™è¯¯ä»£ç  | æ­£ç¡®åšæ³• |
+| ·´Ä£Ê½ | ´íÎó´úÂë | ÕıÈ·×ö·¨ |
 |--------|----------|----------|
-| **ç¡¬ç¼–ç äº‹ä»¶å** | `withBroadcast('myEvent', ...)` | `withBroadcast(EVENT_NAMES.SOME_CHANGED, ...)` |
-| **å¹¿æ’­å¤±è´¥é˜»æ–­å†™æ“ä½œ** | `withBroadcast` æŠ›å¼‚å¸¸å¯¼è‡´æ•°æ®æœªå†™å…¥ | è§ `withBroadcast` å®ç°ï¼šcatch å¹¶ logï¼Œä¸é˜»æ–­ |
-| **è®¢é˜…ä¸æ¸…ç†** | `eventBus.subscribe(...)` æ—  `unsubscribe` | `useEffect` cleanup æˆ–ç»„ä»¶å¸è½½æ—¶æ¸…ç† |
-| **è‡ªæ¿€å¾ªç¯** | Store è®¢é˜…è‡ªå·±å‘å‡ºçš„äº‹ä»¶å†æ¬¡è§¦å‘ Action | è®¢é˜…æ—¶è¿‡æ»¤ `source`ï¼ˆè§ `signalStore.ts` ç¤ºä¾‹ï¼‰ |
+| **Ó²±àÂëÊÂ¼şÃû** | `withBroadcast('myEvent', ...)` | `withBroadcast(EVENT_NAMES.SOME_CHANGED, ...)` |
+| **¹ã²¥Ê§°Ü×è¶ÏĞ´²Ù×÷** | `withBroadcast` Å×Òì³£µ¼ÖÂÊı¾İÎ´Ğ´Èë | ¼û `withBroadcast` ÊµÏÖ£ºcatch ²¢ log£¬²»×è¶Ï |
+| **¶©ÔÄ²»ÇåÀí** | `eventBus.subscribe(...)` ÎŞ `unsubscribe` | `useEffect` cleanup »ò×é¼şĞ¶ÔØÊ±ÇåÀí |
+| **×Ô¼¤Ñ­»·** | Store ¶©ÔÄ×Ô¼º·¢³öµÄÊÂ¼şÔÙ´Î´¥·¢ Action | ¶©ÔÄÊ±¹ıÂË `source`£¨¼û `signalStore.ts` Ê¾Àı£© |
 
-### 8.4 æ—¥å¿—ä¸é”™è¯¯è§„èŒƒï¼ˆMinorï¼‰
+### 8.4 ÈÕÖ¾Óë´íÎó¹æ·¶£¨Minor£©
 
-| åæ¨¡å¼ | é”™è¯¯ä»£ç  | æ­£ç¡®åšæ³• |
+| ·´Ä£Ê½ | ´íÎó´úÂë | ÕıÈ·×ö·¨ |
 |--------|----------|----------|
-| **æ—¥å¿—å‰ç¼€ä¸ç»Ÿä¸€** | `console.log('loaded')` | `logger.info('[storeName] actionName çŠ¶æ€')` |
-| **é”™è¯¯ä¸å« context** | `logger.error('å¤±è´¥')` | `logger.error('å¤±è´¥', { error: message })` |
-| **ä½¿ç”¨ `console.log`** | `console.log(...)` | `import { getLogger } from '@/lib/logger'` |
+| **ÈÕÖ¾Ç°×º²»Í³Ò»** | `console.log('loaded')` | `logger.info('[storeName] actionName ×´Ì¬')` |
+| **´íÎó²»º¬ context** | `logger.error('Ê§°Ü')` | `logger.error('Ê§°Ü', { error: message })` |
+| **Ê¹ÓÃ `console.log`** | `console.log(...)` | `import { getLogger } from '@/lib/logger'` |
 
 ---
 
-## 9. éªŒè¯å‘½ä»¤
+## 9. ÑéÖ¤ÃüÁî
 
-æ–°å¢æˆ–ä¿®æ”¹ Store åï¼Œå¿…é¡»æ‰§è¡Œä»¥ä¸‹éªŒè¯ï¼š
+ĞÂÔö»òĞŞ¸Ä Store ºó£¬±ØĞëÖ´ĞĞÒÔÏÂÑéÖ¤£º
 
 ```powershell
-# 1. ç±»å‹æ£€æŸ¥
+# 1. ÀàĞÍ¼ì²é
 npx tsc --noEmit
 
-# 2. åˆ†å±‚è°ƒç”¨å®¡è®¡ï¼ˆé‡ç‚¹ï¼šStore æ˜¯å¦è¿è§„ä¾èµ– dataLayer / pages / componentsï¼‰
+# 2. ·Ö²ãµ÷ÓÃÉó¼Æ£¨ÖØµã£ºStore ÊÇ·ñÎ¥¹æÒÀÀµ dataLayer / pages / components£©
 npm run audit:layers
-# æœŸæœ›ï¼š0 violations, 0 warnings
+# ÆÚÍû£º0 violations, 0 warnings
 
-# 3. å•å…ƒæµ‹è¯•ï¼ˆStore çº§ï¼‰
+# 3. µ¥Ôª²âÊÔ£¨Store ¼¶£©
 npm test -- --run src/store/{storeName}.test.ts
-# æœŸæœ›ï¼šå…¨éƒ¨é€šè¿‡
+# ÆÚÍû£ºÈ«²¿Í¨¹ı
 
-# 4. å…¨é‡æµ‹è¯•ï¼ˆé˜¶æ®µæ€§æäº¤å‰ï¼‰
+# 4. È«Á¿²âÊÔ£¨½×¶ÎĞÔÌá½»Ç°£©
 npm test -- --run
-# æœŸæœ›ï¼šå…¨éƒ¨é€šè¿‡
+# ÆÚÍû£ºÈ«²¿Í¨¹ı
 
-# 5. ç”Ÿäº§æ„å»ºï¼ˆæœ€ç»ˆéªŒè¯ï¼‰
+# 5. Éú²ú¹¹½¨£¨×îÖÕÑéÖ¤£©
 npm run build
-# æœŸæœ›ï¼š0 errors
+# ÆÚÍû£º0 errors
 ```
 
 ---
 
-## 10. å‚è€ƒæ–‡æ¡£
+## 10. ²Î¿¼ÎÄµµ
 
-| æ–‡æ¡£ | è·¯å¾„ | è¯´æ˜ |
+| ÎÄµµ | Â·¾¶ | ËµÃ÷ |
 |------|------|------|
-| **AGENTS.md** | `../../AGENTS.md` | å·¥ç¨‹åˆ†å±‚å¥‘çº¦ï¼ˆÂ§ä¸€ã€Â§äºŒã€Â§å››ã€Â§å…«ï¼‰ |
-| **å…¨å±€æ¶æ„æ€»è§ˆ** | `../explanation/overview.md` | åˆ†å±‚æ¶æ„ä¸æ•°æ®æµ |
-| **èˆ±å®¤æ€»è§ˆ** | `../explanation/cabins-overview.md` | 5 å¤§èˆ±é¡µé¢æ¸…å• |
-| **æœåŠ¡ç›®å½•** | `../reference/services-catalog.md` | 24 æœåŠ¡å­åŸŸç›®å½• |
-| **å¼•æ“è§„æ ¼** | `../reference/05-engine-specs.md` | L0-L8 å¼•æ“åˆ†å±‚ |
-| **è·¯ç”±è§„æ ¼** | `../reference/06-routing-specs.md` | è·¯ç”±æ³¨å†Œè§„åˆ™ |
-| **ç¼–ç è§„èŒƒ** | `../reference/coding-conventions.md` | ä»£ç é£æ ¼ |
-| **JSDoc è§„èŒƒ** | `../reference/jsdoc-convention.md` | JSDoc æ³¨é‡Šæ ‡å‡† |
-| **å¤æ‚åº¦æ²»ç†** | `../reference/complexity-governance.md` | å‡½æ•°é•¿åº¦/åµŒå¥—æ·±åº¦ |
-| **how-to-add-store** | `../how-to/how-to-add-store.md` (P1) | é¢å‘æ–°æ‰‹çš„ç®€åŒ–ç‰ˆæŒ‡å— |
-| **withBroadcast å®ç°** | `../../src/lib/withBroadcast.ts` | å¹¿æ’­å·¥å…·æºç  |
-| **EVENT_NAMES å¸¸é‡** | `../../src/constants/store-channels.constants.ts` | å¹¿æ’­äº‹ä»¶å¸¸é‡ |
-| **derived.index.ts** | `../../src/store/derived.index.ts` | æ´¾ç”ŸæŸ¥è¯¢ç»Ÿä¸€å¯¼å‡º |
-| **analysisStore ç¤ºä¾‹** | `../../src/store/analysisStore.ts` | å®Œæ•´ Store ç¤ºä¾‹ |
-| **signalStore ç¤ºä¾‹** | `../../src/store/signalStore.ts` | å« DataBridge è®¢é˜…ç¤ºä¾‹ |
-| **analysisStore.derived** | `../../src/store/analysisStore.derived.ts` | æ´¾ç”ŸæŸ¥è¯¢å®Œæ•´ç¤ºä¾‹ |
+| **AGENTS.md** | `../../AGENTS.md` | ¹¤³Ì·Ö²ãÆõÔ¼£¨¡ìÒ»¡¢¡ì¶ş¡¢¡ìËÄ¡¢¡ì°Ë£© |
+| **È«¾Ö¼Ü¹¹×ÜÀÀ** | `../explanation/overview.md` | ·Ö²ã¼Ü¹¹ÓëÊı¾İÁ÷ |
+| **²ÕÊÒ×ÜÀÀ** | `../explanation/cabins-overview.md` | 5 ´ó²ÕÒ³ÃæÇåµ¥ |
+| **·şÎñÄ¿Â¼** | `../reference/services-catalog.md` | 24 ·şÎñ×ÓÓòÄ¿Â¼ |
+| **ÒıÇæ¹æ¸ñ** | `../reference/05-engine-specs.md` | L0-L8 ÒıÇæ·Ö²ã |
+| **Â·ÓÉ¹æ¸ñ** | `../reference/06-routing-specs.md` | Â·ÓÉ×¢²á¹æÔò |
+| **±àÂë¹æ·¶** | `../reference/coding-conventions.md` | ´úÂë·ç¸ñ |
+| **JSDoc ¹æ·¶** | `../reference/jsdoc-convention.md` | JSDoc ×¢ÊÍ±ê×¼ |
+| **¸´ÔÓ¶ÈÖÎÀí** | `../reference/complexity-governance.md` | º¯Êı³¤¶È/Ç¶Ì×Éî¶È |
+| **how-to-add-store** | `../how-to/how-to-add-store.md` (P1) | ÃæÏòĞÂÊÖµÄ¼ò»¯°æÖ¸ÄÏ |
+| **withBroadcast ÊµÏÖ** | `../../src/lib/withBroadcast.ts` | ¹ã²¥¹¤¾ßÔ´Âë |
+| **EVENT_NAMES ³£Á¿** | `../../src/constants/store-channels.constants.ts` | ¹ã²¥ÊÂ¼ş³£Á¿ |
+| **derived.index.ts** | `../../src/store/derived.index.ts` | ÅÉÉú²éÑ¯Í³Ò»µ¼³ö |
+| **analysisStore Ê¾Àı** | `../../src/store/analysisStore.ts` | ÍêÕû Store Ê¾Àı |
+| **signalStore Ê¾Àı** | `../../src/store/signalStore.ts` | º¬ DataBridge ¶©ÔÄÊ¾Àı |
+| **analysisStore.derived** | `../../src/store/analysisStore.derived.ts` | ÅÉÉú²éÑ¯ÍêÕûÊ¾Àı |
 
 ---
 
-## é™„å½• Aï¼šStore ç”Ÿå‘½å‘¨æœŸæ ‡æ³¨
+## ¸½Â¼ A£ºStore ÉúÃüÖÜÆÚ±ê×¢
 
-| æ ‡æ³¨ | è¯´æ˜ | ç¤ºä¾‹ Store |
+| ±ê×¢ | ËµÃ÷ | Ê¾Àı Store |
 |------|------|-----------|
-| `@Global` | å…¨å±€å•ä¾‹ï¼Œåº”ç”¨ç”Ÿå‘½å‘¨æœŸå†…å­˜åœ¨ | `analysisStore`ã€`signalStore` |
-| `@Session` | ä¼šè¯çº§ï¼Œç™»å½•/é€€å‡ºæ—¶é‡ç½® | `portfolioStore`ã€`holdingsStore` |
-| `@Page` | é¡µé¢çº§ï¼Œè·¯ç”±åˆ‡æ¢æ—¶æ¸…ç† | `collectionWizardStore` |
+| `@Global` | È«¾Öµ¥Àı£¬Ó¦ÓÃÉúÃüÖÜÆÚÄÚ´æÔÚ | `analysisStore`¡¢`signalStore` |
+| `@Session` | »á»°¼¶£¬µÇÂ¼/ÍË³öÊ±ÖØÖÃ | `portfolioStore`¡¢`holdingsStore` |
+| `@Page` | Ò³Ãæ¼¶£¬Â·ÓÉÇĞ»»Ê±ÇåÀí | `collectionWizardStore` |
 
-> **TODO**ï¼šå¾…æ¶æ„ç»„æ‰©å†™ç”Ÿå‘½å‘¨æœŸç®¡ç†ä¸è‡ªåŠ¨æ¸…ç†ç­–ç•¥ï¼ˆå¦‚ `@Page` Store çš„è·¯ç”±ç¦»å¼€é‡ç½®æœºåˆ¶ï¼‰ã€‚
+> **TODO**£º´ı¼Ü¹¹×éÀ©Ğ´ÉúÃüÖÜÆÚ¹ÜÀíÓë×Ô¶¯ÇåÀí²ßÂÔ£¨Èç `@Page` Store µÄÂ·ÓÉÀë¿ªÖØÖÃ»úÖÆ£©¡£
 
-## é™„å½• Bï¼šStore ä¸ IndexedDB çš„é—´æ¥å…³ç³»
+## ¸½Â¼ B£ºStore Óë IndexedDB µÄ¼ä½Ó¹ØÏµ
 
-Store **ä¸ç›´æ¥**æ“ä½œ IndexedDBï¼Œè€Œæ˜¯é€šè¿‡ä»¥ä¸‹é“¾è·¯é—´æ¥äº¤äº’ï¼š
+Store **²»Ö±½Ó**²Ù×÷ IndexedDB£¬¶øÊÇÍ¨¹ıÒÔÏÂÁ´Â·¼ä½Ó½»»¥£º
 
 ```
 Store Action
-  â†’ Serviceï¼ˆå¦‚ analysisService.tsï¼‰
-    â†’ DataBridge.forward() / dataBridge.query()
-      â†’ dataLayer / queryBuilder
-        â†’ IndexedDB
+  ¡ú Service£¨Èç analysisService.ts£©
+    ¡ú DataBridge.forward() / dataBridge.query()
+      ¡ú dataLayer / queryBuilder
+        ¡ú IndexedDB
 ```
 
-æ–°å¢ Store å¦‚éœ€æŒä¹…åŒ–æ•°æ®ï¼Œéœ€åŒæ­¥æ£€æŸ¥ï¼š
+ĞÂÔö Store ÈçĞè³Ö¾Ã»¯Êı¾İ£¬ĞèÍ¬²½¼ì²é£º
 
-- [ ] `src/config/dbConfig.ts` ä¸­ `STORE_NAME` æ˜¯å¦åŒ…å«å¯¹åº” store åç§°
-- [ ] `src/config/dbConfig.ts` ä¸­ `ACL_MATRIX` æ˜¯å¦é…ç½® read/write ç™½åå•
-- [ ] `src/data/db-schema.ts` ä¸­ `createSchema` æ˜¯å¦åˆ›å»ºè¯¥ storeï¼ˆåŸºçº¿ï¼‰æˆ– Migration ä¸­åˆ›å»ºï¼ˆå¢é‡ï¼‰
-- [ ] `DB_VERSION` æ˜¯å¦å·²é€’å¢ï¼ˆå¦‚ä¸ºå¢é‡ storeï¼‰
+- [ ] `src/config/dbConfig.ts` ÖĞ `STORE_NAME` ÊÇ·ñ°üº¬¶ÔÓ¦ store Ãû³Æ
+- [ ] `src/config/dbConfig.ts` ÖĞ `ACL_MATRIX` ÊÇ·ñÅäÖÃ read/write °×Ãûµ¥
+- [ ] `src/data/db-schema.ts` ÖĞ `createSchema` ÊÇ·ñ´´½¨¸Ã store£¨»ùÏß£©»ò Migration ÖĞ´´½¨£¨ÔöÁ¿£©
+- [ ] `DB_VERSION` ÊÇ·ñÒÑµİÔö£¨ÈçÎªÔöÁ¿ store£©
 
-> å‚è§ `../../AGENTS.md` Â§å…«ï¼ˆæ•°æ®åº“ç‰ˆæœ¬ç®¡ç†ï¼‰ã€‚
+> ²Î¼û `../../AGENTS.md` ¡ì°Ë£¨Êı¾İ¿â°æ±¾¹ÜÀí£©¡£
 
 ---
 
-_æœ¬æ–‡æ¡£åŸºäº `../../AGENTS.md` v1.4.3 ç¼–å†™ã€‚å½“ `../../AGENTS.md` ç‰ˆæœ¬å‡çº§æ—¶ï¼Œéœ€åŒæ­¥ä¿®è®¢æœ¬æ–‡æ¡£ã€‚_
+_±¾ÎÄµµ»ùÓÚ `../../AGENTS.md` v1.4.3 ±àĞ´¡£µ± `../../AGENTS.md` °æ±¾Éı¼¶Ê±£¬ĞèÍ¬²½ĞŞ¶©±¾ÎÄµµ¡£_

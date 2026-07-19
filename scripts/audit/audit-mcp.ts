@@ -41,7 +41,7 @@ interface Report {
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-const ROOT = path.resolve(__dirname, '..')
+const ROOT = path.resolve(__dirname, '..', '..')
 const SRC = path.join(ROOT, 'src')
 const MCP_DIR = path.join(SRC, 'mcp', 'servers')
 
@@ -313,13 +313,13 @@ function checkAgentServerBindings(): { violations: Finding[]; warnings: Finding[
   }
 
   // 4b. UI 组件注册表（agentComponentRegistry.ts）
-  const uiPath = path.join(SRC, 'agents', 'agentComponentRegistry.ts')
+  const uiPath = path.join(SRC, 'components', 'organisms', 'agent', 'agentComponentRegistry.ts')
   if (fs.existsSync(uiPath)) {
     const uiContent = fs.readFileSync(uiPath, 'utf-8')
     for (const { name, line } of extractMcpServerNamesWithLine(uiContent)) {
       if (!registered.has(name)) {
         violations.push({
-          file: 'src/agents/agentComponentRegistry.ts',
+          file: 'src/components/organisms/agent/agentComponentRegistry.ts',
           line, column: 1,
           type: 'dangling-agent-ui',
           message: `UI 组件注册表引用的 MCP Server "${name}" 未注册（UI 触发将找不到 Server）`,

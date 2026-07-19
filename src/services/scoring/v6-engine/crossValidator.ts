@@ -75,6 +75,9 @@ export interface CrossValidatorConfig {
 // 默认配置
 // ============================================================
 
+/**
+ * DEFAULT_CROSS_VALIDATOR_CONFIG
+ */
 export const DEFAULT_CROSS_VALIDATOR_CONFIG: CrossValidatorConfig = {
   financialGoodValuationHigh: { l3fMin: 4.0, l3vMax: 2.5 },
   growthGoodFinancialBad: { l7Min: 4.0, l3fMax: 2.5 },

@@ -1,100 +1,109 @@
 ---
-title: docs/00-meta/deprecated-docs/old-versions/regression-suite-v1.0.0.md
+title: »Ø¹é²âÊÔÌ×¼şÄ£°å
+type: meta
+domain: project
+phase: testing
+tier: standard
+status: deprecated
+maintainer: V9 Architecture Team
+summary: "±¾Ä£°å²ÎÕÕ AGENTS.md ¡ì12.4 Èı¼¶»Ø¹é²âÊÔÌ×¼ş¡£ Ìæ´ú\"ÊÖ¶¯¾ö¶¨ÔËĞĞÊ²Ã´\"µÄÄ£Ê½£¬Ã¿¸ö phase Íê³Éºó±ØĞëÔËĞĞ¶ÔÓ¦¼¶±ğµÄ»Ø¹éÌ×¼ş¡£"
+tags: [project, test, qa]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+deprecated_by: "Regression Test Suite v2.0"
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/00-meta/deprecated-docs/old-versions/regression-suite-v1.0.0.md
-code_version: 2.0.0
-tier: reference
----
+# »Ø¹é²âÊÔÌ×¼şÄ£°å
 
-# å›å½’æµ‹è¯•å¥—ä»¶æ¨¡æ¿
-
-> æœ¬æ¨¡æ¿å‚ç…§ AGENTS.md Â§12.4 ä¸‰çº§å›å½’æµ‹è¯•å¥—ä»¶ã€‚
-> æ›¿ä»£"æ‰‹åŠ¨å†³å®šè¿è¡Œä»€ä¹ˆ"çš„æ¨¡å¼ï¼Œæ¯ä¸ª phase å®Œæˆåå¿…é¡»è¿è¡Œå¯¹åº”çº§åˆ«çš„å›å½’å¥—ä»¶ã€‚
+> ±¾Ä£°å²ÎÕÕ AGENTS.md ¡ì12.4 Èı¼¶»Ø¹é²âÊÔÌ×¼ş¡£
+> Ìæ´ú"ÊÖ¶¯¾ö¶¨ÔËĞĞÊ²Ã´"µÄÄ£Ê½£¬Ã¿¸ö phase Íê³Éºó±ØĞëÔËĞĞ¶ÔÓ¦¼¶±ğµÄ»Ø¹éÌ×¼ş¡£
 
 ---
 
-## ä¸‰çº§å›å½’æµ‹è¯•å¥—ä»¶
+## Èı¼¶»Ø¹é²âÊÔÌ×¼ş
 
-| çº§åˆ« | è§¦å‘åœºæ™¯ | åŒ…å«å‘½ä»¤ | é¢„æœŸè€—æ—¶ |
+| ¼¶±ğ | ´¥·¢³¡¾° | °üº¬ÃüÁî | Ô¤ÆÚºÄÊ± |
 |:-----|:---------|:---------|:---------|
-| **L1 è½»é‡** | å•æ–‡ä»¶ä¿®æ”¹ã€ç±»å‹ä¿®å¤ | `tsc --noEmit` + ç›¸å…³æµ‹è¯• | ~30s |
-| **L2 æ ‡å‡†** | æ¨¡å—æ‹†åˆ†ã€è·¨æ–‡ä»¶é‡æ„ | L1 + `eslint` + `audit:layers` + `audit:deadcode` | ~2min |
-| **L3 å®Œæ•´** | é˜¶æ®µæ€§æäº¤ã€PR åˆå¹¶å‰ | L2 + `npm test -- --run` + `npm run build` | ~5min |
+| **L1 ÇáÁ¿** | µ¥ÎÄ¼şĞŞ¸Ä¡¢ÀàĞÍĞŞ¸´ | `tsc --noEmit` + Ïà¹Ø²âÊÔ | ~30s |
+| **L2 ±ê×¼** | Ä£¿é²ğ·Ö¡¢¿çÎÄ¼şÖØ¹¹ | L1 + `eslint` + `audit:layers` + `audit:deadcode` | ~2min |
+| **L3 ÍêÕû** | ½×¶ÎĞÔÌá½»¡¢PR ºÏ²¢Ç° | L2 + `npm test -- --run` + `npm run build` | ~5min |
 
 ---
 
-## L1 è½»é‡å¥—ä»¶
+## L1 ÇáÁ¿Ì×¼ş
 
 ```bash
-# ç±»å‹æ£€æŸ¥
+# ÀàĞÍ¼ì²é
 tsc -p tsconfig.json --noEmit
 
-# ç›¸å…³æµ‹è¯•ï¼ˆä»…è¿è¡Œå—å½±å“çš„æµ‹è¯•æ–‡ä»¶ï¼‰
+# Ïà¹Ø²âÊÔ£¨½öÔËĞĞÊÜÓ°ÏìµÄ²âÊÔÎÄ¼ş£©
 vitest run <affected-test-files> --no-coverage
 ```
 
-**é€‚ç”¨åœºæ™¯**ï¼š
-- ä¿®å¤å•ä¸ªç±»å‹é”™è¯¯
-- ä¿®æ”¹å•ä¸ªç»„ä»¶å†…éƒ¨é€»è¾‘
-- æ·»åŠ /ä¿®æ”¹å•ä¸ªæµ‹è¯•ç”¨ä¾‹
+**ÊÊÓÃ³¡¾°**£º
+- ĞŞ¸´µ¥¸öÀàĞÍ´íÎó
+- ĞŞ¸Äµ¥¸ö×é¼şÄÚ²¿Âß¼­
+- Ìí¼Ó/ĞŞ¸Äµ¥¸ö²âÊÔÓÃÀı
 
-## L2 æ ‡å‡†å¥—ä»¶
+## L2 ±ê×¼Ì×¼ş
 
 ```bash
-# L1 å…¨éƒ¨å‘½ä»¤
+# L1 È«²¿ÃüÁî
 tsc -p tsconfig.json --noEmit
 vitest run <affected-test-files> --no-coverage
 
-# + ESLint æ£€æŸ¥
+# + ESLint ¼ì²é
 eslint src/ --ext .ts,.tsx --max-warnings 2000
 
-# + è·¨å±‚è°ƒç”¨å®¡è®¡
+# + ¿ç²ãµ÷ÓÃÉó¼Æ
 npm run audit:layers
 
-# + æ­»ä»£ç å®¡è®¡
+# + ËÀ´úÂëÉó¼Æ
 npm run audit:deadcode
 ```
 
-**é€‚ç”¨åœºæ™¯**ï¼š
-- æ¨¡å—æ‹†åˆ†/åˆå¹¶
-- è·¨æ–‡ä»¶é‡æ„ï¼ˆå¦‚ Store æ‹†åˆ†ã€Service æå–ï¼‰
-- æ–°å¢æ¨¡å—/é¡µé¢
-- ä¿®æ”¹ import è·¯å¾„
+**ÊÊÓÃ³¡¾°**£º
+- Ä£¿é²ğ·Ö/ºÏ²¢
+- ¿çÎÄ¼şÖØ¹¹£¨Èç Store ²ğ·Ö¡¢Service ÌáÈ¡£©
+- ĞÂÔöÄ£¿é/Ò³Ãæ
+- ĞŞ¸Ä import Â·¾¶
 
-## L3 å®Œæ•´å¥—ä»¶
+## L3 ÍêÕûÌ×¼ş
 
 ```bash
-# L2 å…¨éƒ¨å‘½ä»¤
+# L2 È«²¿ÃüÁî
 tsc -p tsconfig.json --noEmit
 vitest run <affected-test-files> --no-coverage
 eslint src/ --ext .ts,.tsx --max-warnings 2000
 npm run audit:layers
 npm run audit:deadcode
 
-# + å…¨é‡æµ‹è¯•
+# + È«Á¿²âÊÔ
 npm test -- --run
 
-# + æ„å»º
+# + ¹¹½¨
 npm run build
 
-# + å®Œæ•´å®¡è®¡é“¾
+# + ÍêÕûÉó¼ÆÁ´
 npm run audit
 ```
 
-**é€‚ç”¨åœºæ™¯**ï¼š
-- é˜¶æ®µæ€§æäº¤ï¼ˆå¤šä¸ª phase å®Œæˆåï¼‰
-- PR åˆå¹¶å‰
-- å‘å¸ƒå‰å›å½’
-- æ ¸å¿ƒæ•°æ®å±‚/æ¶æ„å±‚å˜æ›´
+**ÊÊÓÃ³¡¾°**£º
+- ½×¶ÎĞÔÌá½»£¨¶à¸ö phase Íê³Éºó£©
+- PR ºÏ²¢Ç°
+- ·¢²¼Ç°»Ø¹é
+- ºËĞÄÊı¾İ²ã/¼Ü¹¹²ã±ä¸ü
 
 ---
 
-## è§„åˆ™
+## ¹æÔò
 
-1. **æ¯ä¸ª phase å®Œæˆåå¿…é¡»è¿è¡Œå¯¹åº”çº§åˆ«çš„å›å½’å¥—ä»¶**ï¼Œç»“æœä½œä¸º exitCriteria çš„ä¸€éƒ¨åˆ†
-2. **å›å½’å¥—ä»¶æœªé€šè¿‡æ—¶ä¸å¾—è¿›å…¥ä¸‹ä¸€ phase**ï¼ˆé™¤éç”¨æˆ·æ˜ç¡®æˆæƒè·³è¿‡ï¼‰
-3. **å›å½’ç»“æœè®°å…¥ä»»åŠ¡å›¾**çš„ phase.exitCriteria å­—æ®µ
-4. **L3 å¥—ä»¶ä¸­ `npm run audit` åŒ…å«å…¨é“¾å®¡è®¡**ï¼šlayers â†’ hardcode â†’ deadcode â†’ docs â†’ routes â†’ mcp â†’ token â†’ tests â†’ reserved-stores â†’ tokens
+1. **Ã¿¸ö phase Íê³Éºó±ØĞëÔËĞĞ¶ÔÓ¦¼¶±ğµÄ»Ø¹éÌ×¼ş**£¬½á¹û×÷Îª exitCriteria µÄÒ»²¿·Ö
+2. **»Ø¹éÌ×¼şÎ´Í¨¹ıÊ±²»µÃ½øÈëÏÂÒ» phase**£¨³ı·ÇÓÃ»§Ã÷È·ÊÚÈ¨Ìø¹ı£©
+3. **»Ø¹é½á¹û¼ÇÈëÈÎÎñÍ¼**µÄ phase.exitCriteria ×Ö¶Î
+4. **L3 Ì×¼şÖĞ `npm run audit` °üº¬È«Á´Éó¼Æ**£ºlayers ¡ú hardcode ¡ú deadcode ¡ú docs ¡ú routes ¡ú mcp ¡ú token ¡ú tests ¡ú reserved-stores ¡ú tokens

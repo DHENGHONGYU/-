@@ -22,6 +22,9 @@ const DATE_FORMAT_OPTIONS: Intl.DateTimeFormatOptions = {
   minute: '2-digit',
 }
 
+/**
+ * ScoreProgress
+ */
 export function ScoreProgress({ scoreStats }: { scoreStats: ScoreStats }): React.JSX.Element {
   const { total, avgIntervalHours, lastScoredAt, nextEstimateAt } = scoreStats
 

@@ -1,165 +1,172 @@
 ---
 title: adr-mcp-server-lifecycle
-code_version: 2.0.0
-
+type: reference
+domain: ai
+phase: design
 tier: important
----
-
----
-title: docs/reference/adr-mcp-server-lifecycle.md
+status: active
+maintainer: V9 Architecture Team
+summary: "V9 ÏîÄ¿ MCP ²ã¾­ÀúÁË´Ó 18 ¸ö Server µ½ 13 ¸ö Server µÄÖÎÀí¹ı³Ì¡£ÔÚ´Ë¹ı³ÌÖĞ±©Â¶ÒÔÏÂÎÊÌâ£º"
+tags: [ai, adr, mcp, reference, documentation]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: important
+doc_id: V9-DOC-AI-005
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
-# ADR-013: MCP Server ç”Ÿå‘½å‘¨æœŸç®¡ç† SOP
+# ADR-013: MCP Server ÉúÃüÖÜÆÚ¹ÜÀí SOP
 
-| é¡¹ç›® | å†…å®¹ |
+| ÏîÄ¿ | ÄÚÈİ |
 |------|------|
-| **çŠ¶æ€** | âœ… å·²é‡‡çº³ (Adopted) |
-| **å†³ç­–æ—¥æœŸ** | 2026-07-13 |
-| **ä½œè€…** | V9 æ¶æ„æ²»ç†å°ç»„ |
-| **ç›¸å…³æ¨¡å—** | `src/config/mcpServerRegistry.ts`, `src/config/mcpAclMatrix.ts`, `src/agents/`, `src/mcp/bridge/mcpBridge.ts` |
-| **å½±å“èŒƒå›´** | MCP æ¨¡å—æ³¨å†Œè¡¨ã€Agent ç¼–æ’å±‚ã€ACL æƒé™çŸ©é˜µã€Tool è°ƒç”¨ç›‘æ§ |
+| **×´Ì¬** | ? ÒÑ²ÉÄÉ (Adopted) |
+| **¾ö²ßÈÕÆÚ** | 2026-07-13 |
+| **×÷Õß** | V9 ¼Ü¹¹ÖÎÀíĞ¡×é |
+| **Ïà¹ØÄ£¿é** | `src/config/mcpServerRegistry.ts`, `src/config/mcpAclMatrix.ts`, `src/agents/`, `src/mcp/bridge/mcpBridge.ts` |
+| **Ó°Ïì·¶Î§** | MCP Ä£¿é×¢²á±í¡¢Agent ±àÅÅ²ã¡¢ACL È¨ÏŞ¾ØÕó¡¢Tool µ÷ÓÃ¼à¿Ø |
 
 ---
 
-## 1. èƒŒæ™¯ä¸é—®é¢˜
+## 1. ±³¾°ÓëÎÊÌâ
 
-V9 é¡¹ç›® MCP å±‚ç»å†äº†ä» 18 ä¸ª Server åˆ° 13 ä¸ª Server çš„æ²»ç†è¿‡ç¨‹ã€‚åœ¨æ­¤è¿‡ç¨‹ä¸­æš´éœ²ä»¥ä¸‹é—®é¢˜ï¼š
+V9 ÏîÄ¿ MCP ²ã¾­ÀúÁË´Ó 18 ¸ö Server µ½ 13 ¸ö Server µÄÖÎÀí¹ı³Ì¡£ÔÚ´Ë¹ı³ÌÖĞ±©Â¶ÒÔÏÂÎÊÌâ£º
 
-1. **åŠŸèƒ½é‡å **ï¼š`trade` ä¸ `trading:main`ã€`input` ä¸ `fetcher:data` å­˜åœ¨åŠŸèƒ½è¾¹ç•Œä¸æ¸…ï¼Œå¯¼è‡´åŒè½¨å¹¶è¡Œã€‚
-2. **è·¯å¾„ç»•è¿‡**ï¼š`screening` / `stockpool` è¢« UI ç›´æ¥è°ƒç”¨ï¼ŒMCP å±‚æˆä¸ºæ— äººä½¿ç”¨çš„"è–„åŒ…è£…"ã€‚
-3. **é˜»å¡æ€§ä¾èµ–**ï¼š`export` å›  `backtestStore.getBacktestById()` æœªå®ç°ï¼Œä»æœªçœŸæ­£å¯ç”¨ã€‚
-4. **å†³ç­–ç¼ºä¹è®°å½•**ï¼šåˆå¹¶/é™çº§/ä¿ç•™çš„å†³ç­–æ•£è½åœ¨èŠå¤©è®°å½•ä¸­ï¼Œæ— æ–‡æ¡£åŒ– SOPï¼Œå¯¼è‡´ d4200a7 åˆå¹¶ååˆè¢« revertã€‚
+1. **¹¦ÄÜÖØµş**£º`trade` Óë `trading:main`¡¢`input` Óë `fetcher:data` ´æÔÚ¹¦ÄÜ±ß½ç²»Çå£¬µ¼ÖÂË«¹ì²¢ĞĞ¡£
+2. **Â·¾¶ÈÆ¹ı**£º`screening` / `stockpool` ±» UI Ö±½Óµ÷ÓÃ£¬MCP ²ã³ÉÎªÎŞÈËÊ¹ÓÃµÄ"±¡°ü×°"¡£
+3. **×èÈûĞÔÒÀÀµ**£º`export` Òò `backtestStore.getBacktestById()` Î´ÊµÏÖ£¬´ÓÎ´ÕæÕı¿ÉÓÃ¡£
+4. **¾ö²ßÈ±·¦¼ÇÂ¼**£ººÏ²¢/½µ¼¶/±£ÁôµÄ¾ö²ßÉ¢ÂäÔÚÁÄÌì¼ÇÂ¼ÖĞ£¬ÎŞÎÄµµ»¯ SOP£¬µ¼ÖÂ d4200a7 ºÏ²¢ºóÓÖ±» revert¡£
 
-å› æ­¤éœ€è¦ä¸€å¥—**å¯å¤ç”¨çš„ MCP Server ç”Ÿå‘½å‘¨æœŸç®¡ç† SOP**ï¼Œè¦†ç›–ä»è¯„ä¼°ã€å†³ç­–ã€æ‰§è¡Œåˆ°éªŒè¯çš„å®Œæ•´æµç¨‹ã€‚
+Òò´ËĞèÒªÒ»Ì×**¿É¸´ÓÃµÄ MCP Server ÉúÃüÖÜÆÚ¹ÜÀí SOP**£¬¸²¸Ç´ÓÆÀ¹À¡¢¾ö²ß¡¢Ö´ĞĞµ½ÑéÖ¤µÄÍêÕûÁ÷³Ì¡£
 
 ---
 
-## 2. å†³ç­–
+## 2. ¾ö²ß
 
-### 2.1 ç”Ÿå‘½å‘¨æœŸçŠ¶æ€æœº
+### 2.1 ÉúÃüÖÜÆÚ×´Ì¬»ú
 
 ```
-[Active] â”€â”€(è¯„ä¼°)â”€â”€> [Under Review] â”€â”€(å†³ç­–)â”€â”€> [Merged] / [Downgraded] / [Disabled] / [Archived]
-                                                            â”‚
-                                                            â””â”€â”€â”€â”€(æ¢å¤æ¡ä»¶è¾¾æˆ)â”€â”€> [Active]
+[Active] ©¤©¤(ÆÀ¹À)©¤©¤> [Under Review] ©¤©¤(¾ö²ß)©¤©¤> [Merged] / [Downgraded] / [Disabled] / [Archived]
+                                                            ©¦
+                                                            ©¸©¤©¤©¤©¤(»Ö¸´Ìõ¼ş´ï³É)©¤©¤> [Active]
 ```
 
-| çŠ¶æ€ | å«ä¹‰ | ä»£ç è¡¨ç° |
+| ×´Ì¬ | º¬Òå | ´úÂë±íÏÖ |
 |------|------|---------|
-| **Active** | æ­£å¸¸è¿è¡Œï¼Œå¯è¢«æ³¨å†Œå’Œè°ƒç”¨ | `enabled: true`ï¼Œåœ¨ Registry ä¸­æ³¨å†Œ |
-| **Under Review** | è¿›å…¥è¯„ä¼°æœŸï¼Œæ ‡è®°ä¸ºå¾…è§‚å¯Ÿ | `enabled: true`ï¼Œä½†æ·»åŠ  `@deprecated` æ³¨é‡Š |
-| **Merged** | åŠŸèƒ½åˆå¹¶è‡³å…¶ä»– Serverï¼Œè‡ªèº«åºŸå¼ƒ | `enabled: false`ï¼Œä»£ç ä¿ç•™è‡³ä¸‹ä¸€ä¸»ç‰ˆæœ¬ |
-| **Downgraded** | ä» Server é™çº§ä¸º Service å‡½æ•° | `enabled: false`ï¼Œä»£ç è¿ç§»è‡³ `src/services/` |
-| **Disabled** | æš‚æ—¶ç¦ç”¨ï¼ˆä¿ç•™æ¢å¤å¯èƒ½ï¼‰ | `enabled: false`ï¼Œæ³¨é‡Šæ³¨æ˜æ¢å¤æ¡ä»¶ |
-| **Archived** | å½»åº•ç§»é™¤ï¼ˆä»£ç åˆ é™¤ï¼‰ | ä»£ç ä» `src/mcp/` åˆ é™¤ï¼Œä»…å†å²æ–‡æ¡£ä¿ç•™ |
+| **Active** | Õı³£ÔËĞĞ£¬¿É±»×¢²áºÍµ÷ÓÃ | `enabled: true`£¬ÔÚ Registry ÖĞ×¢²á |
+| **Under Review** | ½øÈëÆÀ¹ÀÆÚ£¬±ê¼ÇÎª´ı¹Û²ì | `enabled: true`£¬µ«Ìí¼Ó `@deprecated` ×¢ÊÍ |
+| **Merged** | ¹¦ÄÜºÏ²¢ÖÁÆäËû Server£¬×ÔÉí·ÏÆú | `enabled: false`£¬´úÂë±£ÁôÖÁÏÂÒ»Ö÷°æ±¾ |
+| **Downgraded** | ´Ó Server ½µ¼¶Îª Service º¯Êı | `enabled: false`£¬´úÂëÇ¨ÒÆÖÁ `src/services/` |
+| **Disabled** | ÔİÊ±½ûÓÃ£¨±£Áô»Ö¸´¿ÉÄÜ£© | `enabled: false`£¬×¢ÊÍ×¢Ã÷»Ö¸´Ìõ¼ş |
+| **Archived** | ³¹µ×ÒÆ³ı£¨´úÂëÉ¾³ı£© | ´úÂë´Ó `src/mcp/` É¾³ı£¬½öÀúÊ·ÎÄµµ±£Áô |
 
-### 2.2 çŠ¶æ€è½¬æ¢è§¦å‘æ¡ä»¶
+### 2.2 ×´Ì¬×ª»»´¥·¢Ìõ¼ş
 
-| è½¬æ¢ | è§¦å‘æ¡ä»¶ | å®¡æ‰¹è¦æ±‚ |
+| ×ª»» | ´¥·¢Ìõ¼ş | ÉóÅúÒªÇó |
 |------|---------|---------|
-| Active â†’ Under Review | è¿ç»­ 30 å¤©é›¶è°ƒç”¨ï¼ˆç”± `audit-mcp-tool-usage.ts` è¯†åˆ«ï¼‰ | æŠ€æœ¯è´Ÿè´£äººç¡®è®¤ |
-| Under Review â†’ Merged | ä¸å…¶ä»– Server åŠŸèƒ½é‡å  â‰¥ 80%ï¼Œä¸”ç›®æ ‡ Server å·²è¦†ç›– | æ¶æ„è¯„å®¡ä¼šè®®ï¼ˆâ‰¥2 äººï¼‰ |
-| Under Review â†’ Downgraded | å‚æ•°ä¸é€‚åˆ MCP Schema è¡¨è¾¾ï¼Œä½†å¼•æ“é€»è¾‘æ˜¯æ ¸å¿ƒèµ„äº§ | æ¶æ„è¯„å®¡ä¼šè®® + äº§å“ç¡®è®¤ |
-| Under Review â†’ Disabled | æœ‰ UI è·¯å¾„ç»•è¿‡ï¼ŒMCP å±‚æ— äººä½¿ç”¨ï¼Œä½†ä¿ç•™ Agent ç¼–æ’å¯èƒ½ | æŠ€æœ¯è´Ÿè´£äºº + äº§å“ç»ç†ç¡®è®¤ |
-| Disabled â†’ Active | æ¢å¤æ¡ä»¶è¾¾æˆï¼ˆå¦‚ Agent ç¼–æ’ä¸Šçº¿ã€Store API è¡¥é½ï¼‰ | é‡æ–°èµ° RFC æµç¨‹ |
-| Merged/Downgraded â†’ Archived | ä»£ç ä¿ç•™æ»¡ä¸€ä¸ªä¸»ç‰ˆæœ¬å‘¨æœŸï¼ˆå¦‚ v2.0 â†’ v3.0ï¼‰ | æ¶æ„è¯„å®¡ä¼šè®® |
+| Active ¡ú Under Review | Á¬Ğø 30 ÌìÁãµ÷ÓÃ£¨ÓÉ `audit-mcp-tool-usage.ts` Ê¶±ğ£© | ¼¼Êõ¸ºÔğÈËÈ·ÈÏ |
+| Under Review ¡ú Merged | ÓëÆäËû Server ¹¦ÄÜÖØµş ¡İ 80%£¬ÇÒÄ¿±ê Server ÒÑ¸²¸Ç | ¼Ü¹¹ÆÀÉó»áÒé£¨¡İ2 ÈË£© |
+| Under Review ¡ú Downgraded | ²ÎÊı²»ÊÊºÏ MCP Schema ±í´ï£¬µ«ÒıÇæÂß¼­ÊÇºËĞÄ×Ê²ú | ¼Ü¹¹ÆÀÉó»áÒé + ²úÆ·È·ÈÏ |
+| Under Review ¡ú Disabled | ÓĞ UI Â·¾¶ÈÆ¹ı£¬MCP ²ãÎŞÈËÊ¹ÓÃ£¬µ«±£Áô Agent ±àÅÅ¿ÉÄÜ | ¼¼Êõ¸ºÔğÈË + ²úÆ·¾­ÀíÈ·ÈÏ |
+| Disabled ¡ú Active | »Ö¸´Ìõ¼ş´ï³É£¨Èç Agent ±àÅÅÉÏÏß¡¢Store API ²¹Æë£© | ÖØĞÂ×ß RFC Á÷³Ì |
+| Merged/Downgraded ¡ú Archived | ´úÂë±£ÁôÂúÒ»¸öÖ÷°æ±¾ÖÜÆÚ£¨Èç v2.0 ¡ú v3.0£© | ¼Ü¹¹ÆÀÉó»áÒé |
 
-### 2.3 æ‰§è¡Œæ¸…å•ï¼ˆChecklistï¼‰
+### 2.3 Ö´ĞĞÇåµ¥£¨Checklist£©
 
-ä»»ä½•çŠ¶æ€å˜æ›´å¿…é¡»å®Œæˆä»¥ä¸‹æ£€æŸ¥é¡¹ï¼š
+ÈÎºÎ×´Ì¬±ä¸ü±ØĞëÍê³ÉÒÔÏÂ¼ì²éÏî£º
 
-- [ ] **Registry æ›´æ–°**ï¼šåœ¨ `src/config/mcpServerRegistry.ts` ä¸­æ›´æ–° `enabled` å­—æ®µå’Œæ³¨é‡Š
-- [ ] **ACL æ¸…ç†**ï¼šåœ¨ `src/config/mcpAclMatrix.ts` ä¸­æ¸…ç†å¯¹åº” `allowedServers` å’Œ `allowedTools`
-- [ ] **Agent æ³¨å†Œ**ï¼šåœ¨ `src/agents/` ä¸­æ–°å¢/ç§»é™¤å¯¹åº” Agent é…ç½®ï¼ˆä¿ç•™çš„ Server å¿…é¡»æ³¨å†Œ Agentï¼‰
-- [ ] **ç±»å‹æ¸…ç†**ï¼šç§»é™¤ `src/types/modules/` ä¸­é›¶å¼•ç”¨çš„ç±»å‹å®šä¹‰
-- [ ] **tsc éªŒè¯**ï¼šè¿è¡Œ `npx tsc --noEmit` ç¡®è®¤æ— ç±»å‹é”™è¯¯
-- [ ] **audit:layers éªŒè¯**ï¼šè¿è¡Œ `npm run audit:layers` ç¡®è®¤æ— è·¨å±‚è¿è§„
-- [ ] **æ–‡æ¡£æ›´æ–°**ï¼šåœ¨ `docs/02-design/ADR/` ä¸­æ–°å¢æˆ–æ›´æ–° ADRï¼Œè®°å½•å†³ç­–åŸå› å’Œæ¢å¤æ¡ä»¶
-- [ ] **CHANGELOG è®°å½•**ï¼šåœ¨ `CHANGELOG.md` ä¸­è®°å½•å˜æ›´
+- [ ] **Registry ¸üĞÂ**£ºÔÚ `src/config/mcpServerRegistry.ts` ÖĞ¸üĞÂ `enabled` ×Ö¶ÎºÍ×¢ÊÍ
+- [ ] **ACL ÇåÀí**£ºÔÚ `src/config/mcpAclMatrix.ts` ÖĞÇåÀí¶ÔÓ¦ `allowedServers` ºÍ `allowedTools`
+- [ ] **Agent ×¢²á**£ºÔÚ `src/agents/` ÖĞĞÂÔö/ÒÆ³ı¶ÔÓ¦ Agent ÅäÖÃ£¨±£ÁôµÄ Server ±ØĞë×¢²á Agent£©
+- [ ] **ÀàĞÍÇåÀí**£ºÒÆ³ı `src/types/modules/` ÖĞÁãÒıÓÃµÄÀàĞÍ¶¨Òå
+- [ ] **tsc ÑéÖ¤**£ºÔËĞĞ `npx tsc --noEmit` È·ÈÏÎŞÀàĞÍ´íÎó
+- [ ] **audit:layers ÑéÖ¤**£ºÔËĞĞ `npm run audit:layers` È·ÈÏÎŞ¿ç²ãÎ¥¹æ
+- [ ] **ÎÄµµ¸üĞÂ**£ºÔÚ `docs/02-design/ADR/` ÖĞĞÂÔö»ò¸üĞÂ ADR£¬¼ÇÂ¼¾ö²ßÔ­ÒòºÍ»Ö¸´Ìõ¼ş
+- [ ] **CHANGELOG ¼ÇÂ¼**£ºÔÚ `CHANGELOG.md` ÖĞ¼ÇÂ¼±ä¸ü
 
 ---
 
-## 3. å·²æ‰§è¡Œå†³ç­–è®°å½•
+## 3. ÒÑÖ´ĞĞ¾ö²ß¼ÇÂ¼
 
-### 3.1 æœ¬æ¬¡æ²»ç†ï¼ˆ2026-07-13ï¼‰
+### 3.1 ±¾´ÎÖÎÀí£¨2026-07-13£©
 
-| Server | åŸçŠ¶æ€ | æ–°çŠ¶æ€ | åŸå›  | æ¢å¤æ¡ä»¶ |
-|--------|--------|--------|------|---------|
-| `analysis` | Active | **Disabled** | é›¶è°ƒç”¨ï¼Œæ—  Agent é…ç½® | Agent åˆ†æç¼–æ’éœ€æ±‚æ˜ç¡®æ—¶ |
-| `portfolio` | Active | **Disabled** | é›¶è°ƒç”¨ï¼Œæ—  Agent é…ç½® | ç»„åˆç®¡ç† Agent ä¸Šçº¿æ—¶ |
-| `knowledge` | Active | **Disabled** | é›¶è°ƒç”¨ï¼Œæ—  Agent é…ç½® | çŸ¥è¯†åº“é—®ç­” Agent ä¸Šçº¿æ—¶ |
-| `execution` | Active | **Disabled** | é›¶è°ƒç”¨ï¼Œæ—  Agent é…ç½® | è‡ªåŠ¨æ‰§è¡Œ Agent ä¸Šçº¿æ—¶ |
-| `workflow` | Active | **Disabled** | é›¶è°ƒç”¨ï¼Œæ—  Agent é…ç½® | å·¥ä½œæµç¼–æ’ Agent ä¸Šçº¿æ—¶ |
-| `screening` | Active | **Active** | ä¿ç•™ï¼Œä½†éœ€ Agent ç¼–æ’é©±åŠ¨ | å·²æ³¨å†Œ `screening-agent` |
-| `stockpool` | Active | **Active** | ä¿ç•™ï¼Œä½†éœ€ Agent å†…çœé©±åŠ¨ | å·²æ³¨å†Œ `stockpool-agent` |
-| `backtest` | Active | **Active** | å‚æ•°å¤æ‚ä¸é€‚åˆ MCPï¼Œä½†å¼•æ“æ˜¯æ ¸å¿ƒèµ„äº§ | å‚æ•°ç®€åŒ–æˆ–æµæ°´çº¿ Agent ä¸Šçº¿æ—¶ |
-| `trade` | Active | **Merged** â†’ Disabled | ä¸ `trading:main` åŠŸèƒ½é‡å ï¼Œd4200a7 åˆå¹¶æ­£ç¡® | ä¸æ¢å¤ï¼ŒåŠŸèƒ½ç”± `trading:main` è¦†ç›– |
-| `input` | Active | **Merged** â†’ Disabled | ä¸ `fetcher:data` å¤©ç„¶é…åˆï¼Œåº”åˆå¹¶ | ä¸æ¢å¤ï¼ŒåŠŸèƒ½ç”± `fetcher:data` è¦†ç›– |
-| `export` | Active | **Downgraded** â†’ Disabled | `backtestStore` API ç¼ºå¤±ï¼Œä»æœªå¯ç”¨ | `backtestStore.getBacktestById()` å®ç°åæ¢å¤ |
+| Server | Ô­×´Ì¬ | ĞÂ×´Ì¬ | Ô­Òò | »Ö¸´Ìõ¼ş | »Ö¸´ÉóÅú | »Ö¸´¼ì²éÏî |
+|--------|--------|--------|------|---------|---------|----------|
+| `analysis` | Active | **Disabled** | Áãµ÷ÓÃ£¬ÎŞ Agent ÅäÖÃ | Agent ·ÖÎö±àÅÅĞèÇóÃ÷È·Ê±£¨Èç¶àÎ¬¶È½»²æ·ÖÎö Agent£© | ¼Ü¹¹ÆÀÉó»áÒé | tsc, audit:layers, Agent ×¢²á, ACL ¸üĞÂ, ADR ¸üĞÂ |
+| `portfolio` | Active | **Disabled** | Áãµ÷ÓÃ£¬ÎŞ Agent ÅäÖÃ | ×éºÏ¹ÜÀí Agent ÉÏÏßÊ±£¨ÈçÍ¶×Ê×éºÏÔÙÆ½ºâ Agent£© | ¼Ü¹¹ÆÀÉó»áÒé | tsc, audit:layers, Agent ×¢²á, ACL ¸üĞÂ, ADR ¸üĞÂ |
+| `knowledge` | Active | **Disabled** | Áãµ÷ÓÃ£¬ÎŞ Agent ÅäÖÃ | ÖªÊ¶¿âÎÊ´ğ Agent ÉÏÏßÊ±£¨Èç±¾µØÑĞ±¨¼ìË÷ Agent£© | ¼Ü¹¹ÆÀÉó»áÒé | tsc, audit:layers, Agent ×¢²á, ACL ¸üĞÂ, ADR ¸üĞÂ |
+| `execution` | Active | **Disabled** | Áãµ÷ÓÃ£¬ÎŞ Agent ÅäÖÃ | ×Ô¶¯Ö´ĞĞ Agent ÉÏÏßÊ±£¨ÈçÖ´ĞĞ¼Æ»®×Ô¶¯µ÷¶È Agent£© | ¼Ü¹¹ÆÀÉó»áÒé | tsc, audit:layers, Agent ×¢²á, ACL ¸üĞÂ, ADR ¸üĞÂ |
+| `workflow` | Active | **Disabled** | Áãµ÷ÓÃ£¬ÎŞ Agent ÅäÖÃ | ¹¤×÷Á÷±àÅÅ Agent ÉÏÏßÊ±£¨Èç¶à²½Öè¹¤×÷Á÷µ÷¶È Agent£© | ¼Ü¹¹ÆÀÉó»áÒé | tsc, audit:layers, Agent ×¢²á, ACL ¸üĞÂ, ADR ¸üĞÂ |
+| `screening` | Active | **Active** | ±£Áô£¬µ«Ğè Agent ±àÅÅÇı¶¯ | ÒÑ×¢²á `screening-agent` |
+| `stockpool` | Active | **Active** | ±£Áô£¬µ«Ğè Agent ÄÚÊ¡Çı¶¯ | ÒÑ×¢²á `stockpool-agent` |
+| `backtest` | Active | **Active** | ²ÎÊı¸´ÔÓ²»ÊÊºÏ MCP£¬µ«ÒıÇæÊÇºËĞÄ×Ê²ú | ²ÎÊı¼ò»¯»òÁ÷Ë®Ïß Agent ÉÏÏßÊ± |
+| `trade` | Active | **Merged** ¡ú Disabled | Óë `trading:main` ¹¦ÄÜÖØµş£¬d4200a7 ºÏ²¢ÕıÈ· | ²»»Ö¸´£¬¹¦ÄÜÓÉ `trading:main` ¸²¸Ç |
+| `input` | Active | **Merged** ¡ú Disabled | Óë `fetcher:data` ÌìÈ»ÅäºÏ£¬Ó¦ºÏ²¢ | ²»»Ö¸´£¬¹¦ÄÜÓÉ `fetcher:data` ¸²¸Ç |
+| `export` | Active | **Downgraded** ¡ú Disabled | `backtestStore` API È±Ê§£¬´ÓÎ´¿ÉÓÃ | `backtestStore.getBacktestById()` ÊµÏÖºó»Ö¸´ |
 
-### 3.2 æœ€ç»ˆ Registry é…ç½®
+### 3.2 ×îÖÕ Registry ÅäÖÃ£¨2026-07-16 ¸üĞÂ£©
 
 ```typescript
-// Enabledï¼ˆ12ï¼‰
-fetcher:data, scoring:v6, trading:main, analysis:main, news:main, llm:main,
-portfolio:main, knowledge:local, system:main, data-collector:main,
-execution:main, workflow:main
+// Enabled£¨10£©
+fetcher:data, scoring:v6, trading:main, news:main, llm:main,
+screening:main, backtest:main, pool:main, system:main, data-collector:main
 
-// Disabledï¼ˆ6ï¼‰
-screening:main, stockpool:main, backtest:main, export:main,
-input:main, trade:main
+// Disabled£¨5£©- Ïê¼û 3.1 »Ö¸´Ìõ¼ş
+analysis:main, portfolio:main, knowledge:local, execution:main, workflow:main
 ```
 
-**ç›®æ ‡ Server æ•°ï¼š18 â†’ 13ï¼ˆ-2 åˆå¹¶ï¼Œ-1 é™çº§ï¼Œ+0 ä¿ç•™ï¼‰**
+**µ±Ç°×´Ì¬£º15 ¸ö Registry ÌõÄ¿£¨10 enabled / 5 disabled£©**
+
+**ÒÑÒÆ³ı£¨3£©**£ºexport£¨½µ¼¶´¿ Service£©¡¢trade£¨ºÏ²¢Èë trading:main£©¡¢input£¨MCP ²ãÒÆ³ı£©
 
 ---
 
-## 4. æ¢å¤æ¡ä»¶æ¨¡æ¿
+## 4. »Ö¸´Ìõ¼şÄ£°å
 
-å¯¹äº Disabled çŠ¶æ€çš„ Serverï¼Œå¿…é¡»åœ¨ Registry æ³¨é‡Šä¸­æŒ‰ä»¥ä¸‹æ¨¡æ¿è®°å½•æ¢å¤æ¡ä»¶ï¼š
+¶ÔÓÚ Disabled ×´Ì¬µÄ Server£¬±ØĞëÔÚ Registry ×¢ÊÍÖĞ°´ÒÔÏÂÄ£°å¼ÇÂ¼»Ö¸´Ìõ¼ş£º
 
 ```typescript
 {
   name: 'export:main',
   enabled: false,
-  // æ¢å¤æ¡ä»¶ï¼šbacktestStore.getBacktestById() å®ç°
-  // æ¢å¤å®¡æ‰¹ï¼šæ¶æ„è¯„å®¡ä¼šè®®
-  // æ¢å¤æ£€æŸ¥é¡¹ï¼štsc, audit:layers, Agent æ³¨å†Œ, ACL æ›´æ–°, ADR æ›´æ–°
+  // »Ö¸´Ìõ¼ş£ºbacktestStore.getBacktestById() ÊµÏÖ
+  // »Ö¸´ÉóÅú£º¼Ü¹¹ÆÀÉó»áÒé
+  // »Ö¸´¼ì²éÏî£ºtsc, audit:layers, Agent ×¢²á, ACL ¸üĞÂ, ADR ¸üĞÂ
 }
 ```
 
 ---
 
-## 5. ç›‘æ§æœºåˆ¶
+## 5. ¼à¿Ø»úÖÆ
 
-1. **æœˆåº¦å®¡è®¡**ï¼š`scripts/audit-mcp-tool-usage.ts` æ¯æœˆè¿è¡Œä¸€æ¬¡ï¼Œè¾“å‡ºï¼š
-   - æ¯ä¸ª Server çš„ Tool è°ƒç”¨æ¬¡æ•°
-   - é›¶è°ƒç”¨ Server åˆ—è¡¨ï¼ˆè¿ç»­ 30 å¤©ï¼‰
-   - å»ºè®®å˜æ›´çŠ¶æ€ï¼ˆUnder Review æ¨èï¼‰
+1. **ÔÂ¶ÈÉó¼Æ**£º`scripts/audit-mcp-tool-usage.ts` Ã¿ÔÂÔËĞĞÒ»´Î£¬Êä³ö£º
+   - Ã¿¸ö Server µÄ Tool µ÷ÓÃ´ÎÊı
+   - Áãµ÷ÓÃ Server ÁĞ±í£¨Á¬Ğø 30 Ìì£©
+   - ½¨Òé±ä¸ü×´Ì¬£¨Under Review ÍÆ¼ö£©
 
-2. **å®æ—¶è®¡æ•°**ï¼š`mcpBridge.callTool()` ä¸­å†…ç½® `toolCallStats` è®¡æ•°å™¨ï¼Œè¿è¡Œæ—¶å¯é€šè¿‡ `mcpBridge.getToolUsageStats()` è·å–ã€‚
+2. **ÊµÊ±¼ÆÊı**£º`mcpBridge.callTool()` ÖĞÄÚÖÃ `toolCallStats` ¼ÆÊıÆ÷£¬ÔËĞĞÊ±¿ÉÍ¨¹ı `mcpBridge.getToolUsageStats()` »ñÈ¡¡£
 
-3. **CI é—¨ç¦**ï¼š`audit:layers` å’Œ `tsc` ä½œä¸ºæ¯æ¬¡æäº¤çš„å¼ºåˆ¶æ£€æŸ¥ã€‚
+3. **CI ÃÅ½û**£º`audit:layers` ºÍ `tsc` ×÷ÎªÃ¿´ÎÌá½»µÄÇ¿ÖÆ¼ì²é¡£
 
 ---
 
-## 6. æ•™è®­ä¸æ²‰æ·€
+## 6. ½ÌÑµÓë³Áµí
 
-| æ•™è®­ | æ¥æº | é¢„é˜²æªæ–½ |
+| ½ÌÑµ | À´Ô´ | Ô¤·À´ëÊ© |
 |------|------|---------|
-| åˆå¹¶åæ— æ–‡æ¡£è®°å½•ï¼Œå¯¼è‡´ revert | d4200a7 åˆå¹¶ trade åæ—  ADR | åˆå¹¶å¿…é¡»é…å¥— ADR |
-| ç¦ç”¨ Server å ACL æœªæ¸…ç† | input/trade/export æ®‹ç•™åœ¨ ACL | ç¦ç”¨å¿…é¡»æ‰§è¡Œ Checklist |
-| é›¶å¼•ç”¨ç±»å‹æœªæ¸…ç† | TradeActionRequest / TradeActionResponse | ç±»å‹æ¸…ç†çº³å…¥ Checklist |
-| UI ç»•è¿‡ MCP å¯¼è‡´ Server é—²ç½® | screening / stockpool | æ–°å¢ UI æ—¶å¿…é¡»è¯„ä¼° MCP è·¯å¾„ |
+| ºÏ²¢ºóÎŞÎÄµµ¼ÇÂ¼£¬µ¼ÖÂ revert | d4200a7 ºÏ²¢ trade ºóÎŞ ADR | ºÏ²¢±ØĞëÅäÌ× ADR |
+| ½ûÓÃ Server ºó ACL Î´ÇåÀí | input/trade/export ²ĞÁôÔÚ ACL | ½ûÓÃ±ØĞëÖ´ĞĞ Checklist |
+| ÁãÒıÓÃÀàĞÍÎ´ÇåÀí | TradeActionRequest / TradeActionResponse | ÀàĞÍÇåÀíÄÉÈë Checklist |
+| UI ÈÆ¹ı MCP µ¼ÖÂ Server ÏĞÖÃ | screening / stockpool | ĞÂÔö UI Ê±±ØĞëÆÀ¹À MCP Â·¾¶ |
 
 ---
 
-## 7. å‚è€ƒ
+## 7. ²Î¿¼
 
-- `../reports/retrospectives/mcp-module-status.md` â€” æ¨¡å—å†å²å˜æ›´è®°å½•
-- `src/config/mcpServerRegistry.ts` â€” Registry é…ç½®
-- `src/config/mcpAclMatrix.ts` â€” ACL æƒé™çŸ©é˜µ
-- `src/mcp/bridge/mcpBridge.ts` â€” Tool è°ƒç”¨è®¡æ•°å™¨
-- `scripts/audit-mcp-tool-usage.ts` â€” æœˆåº¦å®¡è®¡è„šæœ¬
+- `../reports/retrospectives/mcp-module-status.md` ¡ª Ä£¿éÀúÊ·±ä¸ü¼ÇÂ¼
+- `src/config/mcpServerRegistry.ts` ¡ª Registry ÅäÖÃ
+- `src/config/mcpAclMatrix.ts` ¡ª ACL È¨ÏŞ¾ØÕó
+- `src/mcp/bridge/mcpBridge.ts` ¡ª Tool µ÷ÓÃ¼ÆÊıÆ÷
+- `scripts/audit-mcp-tool-usage.ts` ¡ª ÔÂ¶ÈÉó¼Æ½Å±¾

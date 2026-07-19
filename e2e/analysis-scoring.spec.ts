@@ -28,7 +28,7 @@ test.describe('分析舱功能测试', () => {
     test('侧边栏应显示分析模块导航', async ({ page }) => {
       await expect(page.getByRole('button', { name: 'V4 行业评分' })).toBeVisible()
       await expect(page.getByRole('button', { name: 'V6 个股评分' })).toBeVisible()
-      await expect(page.getByRole('button', { name: 'V6 个股智能评分' })).toBeVisible()
+      await expect(page.getByRole('button', { name: 'V6 智能评分' })).toBeVisible()
       await expect(page.getByRole('button', { name: '行业分析' })).toBeVisible()
       await expect(page.getByRole('button', { name: '策略回测' })).toBeVisible()
       await expect(page.getByRole('button', { name: '评分文档' })).toBeVisible()
@@ -39,11 +39,12 @@ test.describe('分析舱功能测试', () => {
   test.describe('V6 个股智能评分页面', () => {
     test.beforeEach(async ({ page }) => {
       await page.goto('/#/analysis/intelligent-score')
-      await expect(page.getByRole('heading', { name: 'V6 个股智能评分 · 多源资料综合评估' })).toBeVisible({ timeout: 10000 })
+      await expect(page.getByRole('heading', { name: 'V6 个股智能评分' })).toBeVisible({ timeout: 10000 })
     })
 
     test('应显示V6智能评分标题', async ({ page }) => {
-      await expect(page.getByRole('heading', { name: 'V6 个股智能评分 · 多源资料综合评估' })).toBeVisible()
+      await expect(page.getByRole('heading', { name: 'V6 个股智能评分' })).toBeVisible()
+      await expect(page.getByText('多源资料综合评估')).toBeVisible()
     })
 
     test('应显示尚未评分状态', async ({ page }) => {
@@ -87,8 +88,9 @@ test.describe('分析舱功能测试', () => {
       await expect(page.getByRole('heading', { name: '评分进度' })).toBeVisible()
     })
 
-    test('评分进度应显示六个步骤', async ({ page }) => {
+    test('评分进度应显示七个步骤', async ({ page }) => {
       await expect(page.locator('text=读取基础数据')).toBeVisible()
+      await expect(page.locator('text=V6 引擎计算')).toBeVisible()
       await expect(page.locator('text=解析补充文件')).toBeVisible()
       await expect(page.locator('text=整理行业报告')).toBeVisible()
       await expect(page.locator('text=大模型分析')).toBeVisible()
@@ -157,11 +159,11 @@ test.describe('分析舱功能测试', () => {
   test.describe('V6 个股评分页面', () => {
     test.beforeEach(async ({ page }) => {
       await page.goto('/#/analysis/stock-score')
-      await expect(page.getByRole('heading', { name: '个股分析', level: 3 })).toBeVisible({ timeout: 10000 })
+      await expect(page.getByRole('heading', { name: '个股分析', level: 1 })).toBeVisible({ timeout: 10000 })
     })
 
     test('应显示个股分析标题', async ({ page }) => {
-      await expect(page.getByRole('heading', { name: '个股分析', level: 3 })).toBeVisible()
+      await expect(page.getByRole('heading', { name: '个股分析', level: 1 })).toBeVisible()
     })
 
     test('应显示请指定股票代码提示', async ({ page }) => {

@@ -18,7 +18,8 @@ const logger = getLogger()
 /**
  * Mock 数据采集器
  * @description 生成随机模拟数据，支持模拟延迟和随机波动
- * @remarks 当环境变量 VITE_DATA_SOURCE_TYPE=mock 时启用
+ * @remarks 当环境变量 VITE_DATA_SOURCE_TYPE=mock 时启用。仅 DEV 环境。
+ * @convergence 从 @/cockpit/data/mockDataProvider 导入属 mock-to-mock 依赖，Phase 2 迁移到 fixtures/。
  */
 export class MockCollector extends BaseCollector {
   constructor() {

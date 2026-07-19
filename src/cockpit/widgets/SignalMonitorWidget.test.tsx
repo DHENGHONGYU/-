@@ -8,7 +8,7 @@
  * - 信号方向（buy/sell/hold/watch）的图标与 Badge 文案
  * - 置信度四档色阶（高/中/低/极低）+ 边界值 0/100
  * - 加载骨架 / 错误态（使用 COLOR_TOKENS.danger）
- * - 信号统计颜色令牌（买入=红、卖出=绿，遵循 STOCK_COLOR_MAPPING / COLOR_TOKENS）
+ * - 信号统计颜色令牌（买入=红、卖出=绿，遵循 STOCK_COLOR_TOKENS）
  * - useEffect 中 initSignalStoreSubscriptions 返回的 cleanup 在卸载时被调用
  *
  * 颜色断言遵循 AGENTS.md §3.5.5：使用令牌引用而非硬编码字符串。
@@ -17,8 +17,7 @@ import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import type { WidgetConfig } from '@/types/modules/widget.types'
 import type { Signal } from '@/data/types'
-import { COLOR_TOKENS, THEME_TOKENS } from '@/constants/theme.tokens'
-import { STOCK_COLOR_MAPPING } from '@/constants/cockpit.constants'
+import { COLOR_TOKENS, THEME_TOKENS, STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
 import { buildSignal, buildWidgetConfig } from '../../../tests/fixtures'
 
 // ============================================================
@@ -188,7 +187,7 @@ describe('SignalMonitorWidget', () => {
 
     const confidenceSpan = container.querySelector('.text-xs.font-bold')
     expect(confidenceSpan).not.toBeNull()
-    // 源码使用 COLOR_TOKENS.success.tailwind（text-green-700）
+    // 源码使用 COLOR_TOKENS.success.tailwind（text-success）
     expect(confidenceSpan?.className).toContain(COLOR_TOKENS.success.tailwind)
   })
 
@@ -229,7 +228,7 @@ describe('SignalMonitorWidget', () => {
 
     const { container } = render(<SignalMonitorWidget config={buildConfig()} />)
 
-    // 0 → text-gray-400（neutral），100 → text-green-700（success）
+    // 0 → text-gray-400（neutral），100 → text-success（success）
     const confidenceSpans = container.querySelectorAll('.text-xs.font-bold')
     expect(confidenceSpans.length).toBe(2)
     const classNames = Array.from(confidenceSpans).map((s) => s.className)
@@ -275,7 +274,7 @@ describe('SignalMonitorWidget', () => {
     const buyCountSpans = screen.getAllByText('2')
     const buyCountSpan = buyCountSpans.find((el) => el.tagName === 'SPAN' && el.className.includes('font-medium'))
     expect(buyCountSpan).toBeDefined()
-    expect(buyCountSpan?.className).toContain(STOCK_COLOR_MAPPING.UP_CLASS)
+    expect(buyCountSpan?.className).toContain(STOCK_COLOR_TOKENS.up.tailwind)
     expect(buyCountSpan?.className).toContain(COLOR_TOKENS.up.tailwind)
   })
 
@@ -290,7 +289,7 @@ describe('SignalMonitorWidget', () => {
     const sellCountSpans = screen.getAllByText('3')
     const sellCountSpan = sellCountSpans.find((el) => el.tagName === 'SPAN' && el.className.includes('font-medium'))
     expect(sellCountSpan).toBeDefined()
-    expect(sellCountSpan?.className).toContain(STOCK_COLOR_MAPPING.DOWN_CLASS)
+    expect(sellCountSpan?.className).toContain(STOCK_COLOR_TOKENS.down.tailwind)
     expect(sellCountSpan?.className).toContain(COLOR_TOKENS.down.tailwind)
   })
 

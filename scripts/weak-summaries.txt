@@ -1,0 +1,18 @@
+﻿[TITLE_ONLY] 00-meta/23-core-docs-v2-final-report.md || 23 个核心文档二次校对的最终报告，确认各文档版本一致性与内容完整性。
+[TITLE_ONLY] 00-meta/23个核心文档重新检索报告.md || 对 23 个核心文档重新检索定位的结果报告，确认文档实际路径与索引一致性。
+[TITLE_ONLY] 00-meta/directory-audit-todo.md || 目录结构文档诊断阶段的 TODO 清单（交付物 2/2），记录待办整改项。
+[TITLE_ONLY] 00-meta/FILE-MANAGEMENT-GUIDE-cleanup-decisions.md || FILE-MANAGEMENT-GUIDE 相关代码清理决策报告，记录各文件的保留/删除/合并判定。
+[CODE_HEAVY] 00-meta/FILE-MANAGEMENT-GUIDE-file-wandering-report.md || 文件漂移排查报告：识别同名/重复文件散落多目录的问题（如 toolkit 与 src/lib 重复的 safeCoerce.ts）。
+[CODE_HEAVY] explanation/design/06-routing-specs.md || V9 路由规范：路由定义、命名与导航规则（事实源 src/config/routes.ts）。
+[CODE_HEAVY] explanation/design/data-definition.md || Widget 数据定义说明（类型源自 widget.types.ts），含各组件数据结构。
+[TITLE_ONLY] explanation/design/news-data-definition.md || NewsPage 智能资讯中心数据字典：资讯实体的字段、类型与来源定义。
+[TITLE_ONLY] explanation/design/pending-items-backlog-20260704.md || V9 待处理事项清单（2026-07-04 快照）：未完成的缺陷、优化与文档项。
+[TITLE_ONLY] explanation/design/ui改善部分检索报告.md || UI 改善专项检索报告：定位 V9 界面改善相关的文档与代码锚点。
+[TITLE_ONLY] explanation/design/v9现有数据资产清单.md || V9 现有数据资产清单：盘点已接入的数据源、实体与存储结构。
+[TITLE_ONLY] explanation/dual-strategy-gap-analysis.md || V9 双策略规格与现有实现的差异分析报告，识别缺口与对齐路径。
+[TITLE_ONLY] explanation/news-data-definition.md || 已废弃：NewsPage 数据字典旧版，请改用 explanation/design/ 下新版文档。
+[TITLE_ONLY] explanation/pending-items-backlog-20260704.md || V9 待处理事项清单（2026-07-04 快照）：未完成的缺陷、优化与文档项。
+[CODE_HEAVY] reference/06-routing-specs.md || V9 路由规范（事实源 src/config/routes.ts）：路由清单与导航规则。
+[TITLE_ONLY] reference/deprecated-ui-module-alignment.md || V6 Pro UI 模块与 V9 新旧比对及吸收报告（已废弃，仅存档）。
+[TITLE_ONLY] reference/news-data-definition.md || NewsPage 智能资讯中心数据字典：资讯实体字段、类型与来源定义。
+[TITLE_ONLY] reference/文件整理清单.md || V9 项目文件整理清单：各目录文件的归类、保留与处置记录。

@@ -330,38 +330,51 @@ export class WidgetRegistry {
 
   private createDefaultInstances(): void {
     const defaultLayout = [
-      { widgetId: 'marketIndices', position: { x: 0, y: 0 } },
-      { widgetId: 'sectorHeatmap', position: { x: 0, y: 2 } },
-      { widgetId: 'industryChain', position: { x: 2, y: 2 } },
-      { widgetId: 'fundFlow', position: { x: 0, y: 4 } },
-      { widgetId: 'marketSentiment', position: { x: 2, y: 4 } },
-      { widgetId: 'watchlist', position: { x: 0, y: 6 } },
-      { widgetId: 'watchlistMovers', position: { x: 0, y: 7 } },
-      { widgetId: 'portfolioOverview', position: { x: 0, y: 8 } },
-      { widgetId: 'aiTradeReview', position: { x: 0, y: 10 } },
       // ============================================================
-      // 新增金融业务 Widget 默认布局
+      // L1: 研究全景 — "我在研究什么？"（首屏可见）
       // ============================================================
-      { widgetId: 'investmentProfile', position: { x: 0, y: 13 } },
-      { widgetId: 'poolBoard', position: { x: 0, y: 15 } },
-      { widgetId: 'researchPoolBoard', position: { x: 0, y: 16 } },
-      { widgetId: 'kaiScore', position: { x: 0, y: 17 } },
-      { widgetId: 'modelCompare', position: { x: 0, y: 20 } },
-      { widgetId: 'stockChat', position: { x: 0, y: 23 } },
-      { widgetId: 'hotSector', position: { x: 0, y: 27 } },
-      { widgetId: 'valuePit', position: { x: 0, y: 29 } },
-      { widgetId: 'signalQuality', position: { x: 0, y: 31 } },
+      { widgetId: 'kaiScore',          position: { x: 0, y: 0 } },   // KAI选股综合评分
+      { widgetId: 'poolBoard',         position: { x: 0, y: 3 } },   // 股票池看板
+      { widgetId: 'investmentProfile', position: { x: 0, y: 5 } },   // 投资画像/分析中心
+
       // ============================================================
-      // 系统监控与高级分析 Widget 默认布局
+      // L2: 深度分析 — "怎么分析？"（核心工作区）
       // ============================================================
-      { widgetId: 'agentPerformance', position: { x: 0, y: 33 } },
-      { widgetId: 'engineStatus', position: { x: 2, y: 33 } },
-      { widgetId: 'systemArchitecture', position: { x: 0, y: 35 } },
-      { widgetId: 'pnlAnalysis', position: { x: 0, y: 37 } },
-      { widgetId: 'positionControl', position: { x: 0, y: 39 } },
-      { widgetId: 'riskMonitor', position: { x: 0, y: 41 } },
-      { widgetId: 'signalMonitor', position: { x: 2, y: 41 } },
-      { widgetId: 'mechanismHealth', position: { x: 0, y: 43 } },
+      { widgetId: 'modelCompare',      position: { x: 0, y: 7 } },   // AI大模型智能对比
+      { widgetId: 'aiTradeReview',     position: { x: 0, y: 10 } },  // AI交易复盘
+      { widgetId: 'researchPoolBoard', position: { x: 0, y: 13 } },  // 股票池管理与监控
+      { widgetId: 'hotSector',         position: { x: 0, y: 15 } },  // 热门板块策略
+      { widgetId: 'valuePit',          position: { x: 0, y: 17 } },  // 价值洼地策略
+
+      // ============================================================
+      // L3: 市场背景 + 信号验证 — "大环境如何？信号可信度？"
+      // ============================================================
+      { widgetId: 'marketIndices',     position: { x: 0, y: 20 } },  // 大盘指数（市场背景）
+      { widgetId: 'sectorHeatmap',     position: { x: 0, y: 22 } },  // 板块热力图
+      { widgetId: 'fundFlow',          position: { x: 2, y: 22 } },  // 资金流向
+      { widgetId: 'marketSentiment',   position: { x: 0, y: 24 } },  // 市场情绪
+      { widgetId: 'industryChain',     position: { x: 2, y: 24 } },  // 产业链图谱
+      { widgetId: 'signalQuality',     position: { x: 0, y: 26 } },  // 信号质量复盘
+      { widgetId: 'stockChat',         position: { x: 0, y: 29 } },  // 个股/市场深度分析助手
+
+      // ============================================================
+      // L4: 持仓观察 — 仅跟踪，非交易 ⚠️ [仅供研究跟踪，非交易建议]
+      // ============================================================
+      { widgetId: 'portfolioOverview', position: { x: 0, y: 33 } },  // 持仓概览（FULL_WIDTH）
+      { widgetId: 'pnlAnalysis',       position: { x: 0, y: 35 } },  // 盈亏分析
+      { widgetId: 'watchlist',         position: { x: 0, y: 37 } },  // 自选股
+      { widgetId: 'watchlistMovers',   position: { x: 0, y: 39 } },  // 自选股异动
+
+      // ============================================================
+      // L5: 系统运维 — 默认折叠
+      // ============================================================
+      { widgetId: 'engineStatus',      position: { x: 0, y: 41 } },
+      { widgetId: 'signalMonitor',     position: { x: 1, y: 41 } },
+      { widgetId: 'positionControl',   position: { x: 2, y: 41 } },
+      { widgetId: 'riskMonitor',       position: { x: 0, y: 43 } },
+      { widgetId: 'agentPerformance',  position: { x: 2, y: 43 } },
+      { widgetId: 'systemArchitecture',position: { x: 0, y: 45 } },
+      { widgetId: 'mechanismHealth',   position: { x: 2, y: 45 } },
     ]
 
     defaultLayout.forEach((item) => {

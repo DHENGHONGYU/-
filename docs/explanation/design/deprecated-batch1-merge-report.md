@@ -1,99 +1,108 @@
 ---
-title: deprecated-batch1-merge-report
-tier: reference
+title: Batch-1 ½×¶ÎĞÔºÏ²¢±¨¸æ
+type: explanation
+domain: project
+phase: design
+tier: standard
+status: deprecated
+maintainer: V9 Architecture Team
+summary: "Éú³ÉÊ±¼ä£º2026-06-25 µ÷¶È¹Ù£ºAgent Orchestrator Ö´ĞĞÖÇÄÜÌå£ºDoc-Sync Agent ¡Á 3¡¢Refactor-Agent ¡Á 1"
+tags: [project, batch, report, plan, deprecated]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+deprecated_by: "Doc Restructure - Metadata Governance"
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-tier: reference
-code_version: 2.0.0
----
+# Batch-1 ½×¶ÎĞÔºÏ²¢±¨¸æ
 
-# Batch-1 é˜¶æ®µæ€§åˆå¹¶æŠ¥å‘Š
-
-> ç”Ÿæˆæ—¶é—´ï¼š2026-06-25  
-> è°ƒåº¦å®˜ï¼šAgent Orchestrator  
-> æ‰§è¡Œæ™ºèƒ½ä½“ï¼šDoc-Sync Agent Ã— 3ã€Refactor-Agent Ã— 1
+> Éú³ÉÊ±¼ä£º2026-06-25  
+> µ÷¶È¹Ù£ºAgent Orchestrator  
+> Ö´ĞĞÖÇÄÜÌå£ºDoc-Sync Agent ¡Á 3¡¢Refactor-Agent ¡Á 1
 
 ---
 
-## å·²å®Œæˆæ–‡ä»¶æ¸…å•
+## ÒÑÍê³ÉÎÄ¼şÇåµ¥
 
-| æ–‡ä»¶è·¯å¾„ | ä¿®æ”¹ç±»å‹ | æ‰§è¡Œ Agent | çŠ¶æ€ | éªŒè¯ç»“æœ |
+| ÎÄ¼şÂ·¾¶ | ĞŞ¸ÄÀàĞÍ | Ö´ĞĞ Agent | ×´Ì¬ | ÑéÖ¤½á¹û |
 |----------|----------|------------|------|----------|
-| `../../reference/03-architecture-standards.md` | ä¿®æ”¹ | Doc-Sync | âœ… å·²å®Œæˆ | lint âœ… / build âœ… |
-| `../../reference/06-routing-specs.md` | ä¿®æ”¹ | Doc-Sync | âœ… å·²å®Œæˆ | lint âœ… / build âœ… |
-| `../../reference/08-implementation-plan.md` | ä¿®æ”¹ | Doc-Sync | âœ… å·²å®Œæˆ | lint âœ… / build âœ… |
-| `../../reference/09-quality-gates.md` | ä¿®æ”¹ | Doc-Sync | âœ… å·²å®Œæˆ | lint âœ… / build âœ… |
-| `../../reference/10-glossary.md` | ä¿®æ”¹ | Doc-Sync | âœ… å·²å®Œæˆ | lint âœ… / build âœ… |
-| `../../../README.md` | ä¿®æ”¹ | Doc-Sync | âœ… å·²å®Œæˆ | lint âœ… / build âœ… |
-| `docs/README.md` | ä¿®æ”¹ | Doc-Sync | âœ… å·²å®Œæˆ | lint âœ… / build âœ… |
-| `./implementation-governance.md` | ä¿®æ”¹ | Doc-Sync | âœ… å·²å®Œæˆ | lint âœ… / build âœ… |
-| `../../reference/v9-system-blueprint.md` | ä¿®æ”¹ | Doc-Sync | âœ… å·²å®Œæˆ | lint âœ… / build âœ… |
-| `../../reference/input-cabin-spec.md` | ä¿®æ”¹ | Doc-Sync | âœ… å·²å®Œæˆ | lint âœ… / build âœ… |
-| `.nvmrc` | æ–°å¢ | Refactor-Agent | âœ… å·²å®Œæˆ | lint âœ… / build âœ… / test âœ… |
-| `vite.config.ts` | ä¿®æ”¹ | Refactor-Agent | âœ… å·²å®Œæˆ | lint âœ… / build âœ… / test âœ… |
-| `package.json` | ä¿®æ”¹ï¼ˆå®‰è£… `@vitest/coverage-v8@^2.1.0`ï¼‰ | Refactor-Agent | âœ… å·²å®Œæˆ | lint âœ… / build âœ… / test âœ… |
-| `package-lock.json` | ä¿®æ”¹ | Refactor-Agent | âœ… å·²å®Œæˆ | lint âœ… / build âœ… / test âœ… |
+| `../../reference/03-architecture-standards.md` | ĞŞ¸Ä | Doc-Sync | ? ÒÑÍê³É | lint ? / build ? |
+| `../../reference/06-routing-specs.md` | ĞŞ¸Ä | Doc-Sync | ? ÒÑÍê³É | lint ? / build ? |
+| `../../reference/08-implementation-plan.md` | ĞŞ¸Ä | Doc-Sync | ? ÒÑÍê³É | lint ? / build ? |
+| `../../reference/09-quality-gates.md` | ĞŞ¸Ä | Doc-Sync | ? ÒÑÍê³É | lint ? / build ? |
+| `../../reference/10-glossary.md` | ĞŞ¸Ä | Doc-Sync | ? ÒÑÍê³É | lint ? / build ? |
+| `../../../README.md` | ĞŞ¸Ä | Doc-Sync | ? ÒÑÍê³É | lint ? / build ? |
+| `docs/README.md` | ĞŞ¸Ä | Doc-Sync | ? ÒÑÍê³É | lint ? / build ? |
+| `./implementation-governance.md` | ĞŞ¸Ä | Doc-Sync | ? ÒÑÍê³É | lint ? / build ? |
+| `../../reference/v9-system-blueprint.md` | ĞŞ¸Ä | Doc-Sync | ? ÒÑÍê³É | lint ? / build ? |
+| `../../reference/input-cabin-spec.md` | ĞŞ¸Ä | Doc-Sync | ? ÒÑÍê³É | lint ? / build ? |
+| `.nvmrc` | ĞÂÔö | Refactor-Agent | ? ÒÑÍê³É | lint ? / build ? / test ? |
+| `vite.config.ts` | ĞŞ¸Ä | Refactor-Agent | ? ÒÑÍê³É | lint ? / build ? / test ? |
+| `package.json` | ĞŞ¸Ä£¨°²×° `@vitest/coverage-v8@^2.1.0`£© | Refactor-Agent | ? ÒÑÍê³É | lint ? / build ? / test ? |
+| `package-lock.json` | ĞŞ¸Ä | Refactor-Agent | ? ÒÑÍê³É | lint ? / build ? / test ? |
 
 ---
 
-## å…³é”®ä¿®æ”¹æ‘˜è¦
+## ¹Ø¼üĞŞ¸ÄÕªÒª
 
-### æ–‡æ¡£åŒæ­¥
+### ÎÄµµÍ¬²½
 
 1. **`../03-architecture-standards.md`**
-   - DB ç‰ˆæœ¬ `4` â†’ `6`ï¼ŒStore æ¸…å•ä» 8 ä¸ªè¡¥å…¨è‡³ 16 ä¸ªã€‚
-   - `agents/`ã€`dataflow`ã€Widgetã€Agentã€ErrorBoundary ç­‰çŠ¶æ€ä» ğŸ”´ æœªå®ç°æ›´æ–°ä¸º ğŸŸ¡ å·²å®ç°/å¾…å®Œå–„ã€‚
-   - åå·®æ¸…å• D01/D07/D12/D14/D17/D19 åŒæ­¥ä¸ºä»£ç çœŸå®çŠ¶æ€ã€‚
-   - ä¿®å¤ `eventBus.subscribe()` ç¤ºä¾‹é”™è¯¯ï¼Œç« èŠ‚ç¼–å· 3.14 é‡å¤é—®é¢˜ã€‚
+   - DB °æ±¾ `4` ¡ú `6`£¬Store Çåµ¥´Ó 8 ¸ö²¹È«ÖÁ 16 ¸ö¡£
+   - `agents/`¡¢`dataflow`¡¢Widget¡¢Agent¡¢ErrorBoundary µÈ×´Ì¬´Ó ?? Î´ÊµÏÖ¸üĞÂÎª ?? ÒÑÊµÏÖ/´ıÍêÉÆ¡£
+   - Æ«²îÇåµ¥ D01/D07/D12/D14/D17/D19 Í¬²½Îª´úÂëÕæÊµ×´Ì¬¡£
+   - ĞŞ¸´ `eventBus.subscribe()` Ê¾Àı´íÎó£¬ÕÂ½Ú±àºÅ 3.14 ÖØ¸´ÎÊÌâ¡£
 
 2. **`06-routing-specs.md`**
-   - è¡¥å…¨ 5 æ¡é—æ¼è·¯ç”±ï¼š`/input/prototype`ã€`/input/local-knowledge`ã€`/analysis/score-docs`ã€`/analysis/news`ã€`/trading/strategy-snapshots`ã€‚
-   - ä¿®æ­£ç¬¬ 8 èŠ‚å…¥å£è·¯ç”±ç»„ä»¶æ˜ å°„ä¸º `PortalShell`ã€‚
-   - å¢åŠ  HubPage è®¾è®¡è¯´æ˜ä¸ `/input/prototype` å½’æ¡£è®¡åˆ’ã€‚
+   - ²¹È« 5 ÌõÒÅÂ©Â·ÓÉ£º`/input/prototype`¡¢`/input/local-knowledge`¡¢`/analysis/score-docs`¡¢`/analysis/news`¡¢`/trading/strategy-snapshots`¡£
+   - ĞŞÕıµÚ 8 ½ÚÈë¿ÚÂ·ÓÉ×é¼şÓ³ÉäÎª `PortalShell`¡£
+   - Ôö¼Ó HubPage Éè¼ÆËµÃ÷Óë `/input/prototype` ¹éµµ¼Æ»®¡£
 
 3. **`08-implementation-plan.md`**
-   - ç»Ÿä¸€æµ‹è¯•åŸºçº¿ä¸º 44 files / 291 testsã€‚
-   - æ•°æ®æµå¼•æ“ã€æ¿å—è½®åŠ¨ã€Widget æ¡†æ¶ã€Agent è¿è¡Œæ—¶ã€ErrorBoundary ç­‰ä»»åŠ¡çŠ¶æ€æ›´æ–°ã€‚
+   - Í³Ò»²âÊÔ»ùÏßÎª 44 files / 291 tests¡£
+   - Êı¾İÁ÷ÒıÇæ¡¢°å¿éÂÖ¶¯¡¢Widget ¿ò¼Ü¡¢Agent ÔËĞĞÊ±¡¢ErrorBoundary µÈÈÎÎñ×´Ì¬¸üĞÂ¡£
 
 4. **`09-quality-gates.md`**
-   - è·¨å±‚è°ƒç”¨ï¼š0 è¿è§„ / 2 è­¦å‘Šã€‚
-   - ç¡¬ç¼–ç ï¼š389 å¤„ï¼ˆ283 + 29 + 77ï¼‰ã€‚
-   - æ­»ä»£ç ï¼š11 å¤„ï¼ˆ6 + 5ï¼‰ã€‚
-   - `.nvmrc` ä¸è¦†ç›–ç‡é˜ˆå€¼çŠ¶æ€åŒæ­¥ã€‚
+   - ¿ç²ãµ÷ÓÃ£º0 Î¥¹æ / 2 ¾¯¸æ¡£
+   - Ó²±àÂë£º389 ´¦£¨283 + 29 + 77£©¡£
+   - ËÀ´úÂë£º11 ´¦£¨6 + 5£©¡£
+   - `.nvmrc` Óë¸²¸ÇÂÊãĞÖµ×´Ì¬Í¬²½¡£
 
 5. **`../10-glossary.md`**
-   - è¡¥å…… `rotation`ã€`sector` æ¨¡å— IDï¼Œ`group` å­—æ®µï¼Œ`watchlists` storeï¼ŒV6 è¿ç§»æœ¯è¯­ã€‚
+   - ²¹³ä `rotation`¡¢`sector` Ä£¿é ID£¬`group` ×Ö¶Î£¬`watchlists` store£¬V6 Ç¨ÒÆÊõÓï¡£
 
-6. **README ä¸ implementation æ–‡æ¡£**
-   - æ ¹ç›®å½• `../../../README.md` å¢åŠ ç‰ˆæœ¬æ ‡è¯†å¹¶æ›´æ–°å¾…å®ç°åˆ—è¡¨ã€‚
-   - `docs/README.md` ç»Ÿä¸€ç‰ˆæœ¬è¯´æ˜ä¸æ–‡æ¡£æ€§è´¨æ ‡æ³¨ã€‚
-   - `implementation-governance.md` ä¿®æ­£ ADR æ•°é‡ä¸º 8 ä¸ªå¹¶å¢åŠ å¯¹ç…§è¡¨ã€‚
-   - `../../reference/v9-system-blueprint.md` åŒæ­¥ store æ•°é‡ã€è´¨é‡åŸºçº¿ã€åå·®æ¸…å•ã€ADR åˆ—è¡¨ã€‚
-   - `input-cabin-spec.md` æ›´æ–° `inputConfig.ts` çŠ¶æ€å¹¶è¡¥å……å­é¡µé¢ã€‚
+6. **README Óë implementation ÎÄµµ**
+   - ¸ùÄ¿Â¼ `../../../README.md` Ôö¼Ó°æ±¾±êÊ¶²¢¸üĞÂ´ıÊµÏÖÁĞ±í¡£
+   - `docs/README.md` Í³Ò»°æ±¾ËµÃ÷ÓëÎÄµµĞÔÖÊ±ê×¢¡£
+   - `implementation-governance.md` ĞŞÕı ADR ÊıÁ¿Îª 8 ¸ö²¢Ôö¼Ó¶ÔÕÕ±í¡£
+   - `../../reference/v9-system-blueprint.md` Í¬²½ store ÊıÁ¿¡¢ÖÊÁ¿»ùÏß¡¢Æ«²îÇåµ¥¡¢ADR ÁĞ±í¡£
+   - `input-cabin-spec.md` ¸üĞÂ `inputConfig.ts` ×´Ì¬²¢²¹³ä×ÓÒ³Ãæ¡£
 
-### é…ç½®ä¸ä¾èµ–
+### ÅäÖÃÓëÒÀÀµ
 
-1. **`.nvmrc`**ï¼šæ–°å¢ï¼ŒæŒ‡å®š Node ç‰ˆæœ¬ `22`ã€‚
-2. **`vite.config.ts`**ï¼šæ–°å¢ coverage é˜ˆå€¼é…ç½®ï¼ˆ`src/core/**`ã€`src/data/**`ã€`src/lib/**` â‰¥85%ï¼›`src/services/**` â‰¥70%ï¼‰ã€‚
-3. **`package.json` / `package-lock.json`**ï¼šå®‰è£… `@vitest/coverage-v8@^2.1.0`ã€‚
+1. **`.nvmrc`**£ºĞÂÔö£¬Ö¸¶¨ Node °æ±¾ `22`¡£
+2. **`vite.config.ts`**£ºĞÂÔö coverage ãĞÖµÅäÖÃ£¨`src/core/**`¡¢`src/data/**`¡¢`src/lib/**` ¡İ85%£»`src/services/**` ¡İ70%£©¡£
+3. **`package.json` / `package-lock.json`**£º°²×° `@vitest/coverage-v8@^2.1.0`¡£
 
 ---
 
-## éªŒè¯ç»“æœ
+## ÑéÖ¤½á¹û
 
-| é—¨ç¦é¡¹ | ç»“æœ | è¯´æ˜ |
+| ÃÅ½ûÏî | ½á¹û | ËµÃ÷ |
 |--------|------|------|
-| `npm run lint` | âœ… é€šè¿‡ | 0 warnings / 0 errors |
-| `npm run build` | âœ… é€šè¿‡ | `dist/` ç”ŸæˆæˆåŠŸ |
-| `npm test -- --run` | âœ… é€šè¿‡ | 44 files / 291 tests |
-| `npm run coverage` | âš ï¸ é˜ˆå€¼å‘Šè­¦ | å½“å‰è¦†ç›–ç‡æœªè¾¾è®¾å®šé˜ˆå€¼ï¼Œè¯¦è§ Refactor-Agent æŠ¥å‘Š |
+| `npm run lint` | ? Í¨¹ı | 0 warnings / 0 errors |
+| `npm run build` | ? Í¨¹ı | `dist/` Éú³É³É¹¦ |
+| `npm test -- --run` | ? Í¨¹ı | 44 files / 291 tests |
+| `npm run coverage` | ?? ãĞÖµ¸æ¾¯ | µ±Ç°¸²¸ÇÂÊÎ´´ïÉè¶¨ãĞÖµ£¬Ïê¼û Refactor-Agent ±¨¸æ |
 
 ---
 
-## éœ€äººå·¥ä»‹å…¥/ä¸‹ä¸€æ­¥äº‹é¡¹
+## ĞèÈË¹¤½éÈë/ÏÂÒ»²½ÊÂÏî
 
-1. **è¦†ç›–ç‡ç¼ºå£**ï¼š`src/core/**`ã€`src/data/**`ã€`src/lib/**` å½“å‰è¦†ç›–ç‡çº¦ 37-42%ï¼Œè¿œä½äº 85% ç›®æ ‡ã€‚å»ºè®®åœ¨åç»­è¿­ä»£ä¸­è¡¥å……æµ‹è¯•æˆ–è°ƒæ•´é˜ˆå€¼ã€‚
-2. **Node ç‰ˆæœ¬åˆ‡æ¢**ï¼šå½“å‰å¼€å‘æœºä¸º v24.15.0ï¼Œ`.nvmrc` æŒ‡å®š v22ï¼Œå›¢é˜Ÿæˆå‘˜éœ€æ‰‹åŠ¨ `nvm use` åˆ‡æ¢ã€‚
-3. **Batch-2 å¾…æ‰§è¡Œ**ï¼šæ–‡æ¡£å®¡æŸ¥ä¸æ–°å¢è¡¥å……æ–‡æ¡£ã€‚
+1. **¸²¸ÇÂÊÈ±¿Ú**£º`src/core/**`¡¢`src/data/**`¡¢`src/lib/**` µ±Ç°¸²¸ÇÂÊÔ¼ 37-42%£¬Ô¶µÍÓÚ 85% Ä¿±ê¡£½¨ÒéÔÚºóĞøµü´úÖĞ²¹³ä²âÊÔ»òµ÷ÕûãĞÖµ¡£
+2. **Node °æ±¾ÇĞ»»**£ºµ±Ç°¿ª·¢»úÎª v24.15.0£¬`.nvmrc` Ö¸¶¨ v22£¬ÍÅ¶Ó³ÉÔ±ĞèÊÖ¶¯ `nvm use` ÇĞ»»¡£
+3. **Batch-2 ´ıÖ´ĞĞ**£ºÎÄµµÉó²éÓëĞÂÔö²¹³äÎÄµµ¡£

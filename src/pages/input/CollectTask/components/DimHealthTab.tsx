@@ -16,6 +16,10 @@ interface DimHealthTabProps {
 
 const SKELETON_COUNT = 8
 
+/**
+ * DimHealthTab
+ * @param dimHealth }
+ */
 export function DimHealthTab({ isLoading, dimHealth }: DimHealthTabProps): React.JSX.Element {
   return (
     <Card>

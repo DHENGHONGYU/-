@@ -1,14 +1,20 @@
 ---
-title: 2026-07-05-exception-handling-test-report
+title: 评分引擎异常处理优化测试报告
+type: explanation
+domain: qa
+phase: planning
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "测试日期: 2026-07-05 测试范围: V6 评分引擎异常处理逻辑优化 测试执行: `npm test -- --run`"
+tags: [qa, test, testing, scoring, report]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: reference
----
-
----
-title: docs/explanation/2026-07-05-exception-handling-test-report.md
-code_version: 2.0.0
-tier: reference
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
 # 评分引擎异常处理优化测试报告
@@ -19,55 +25,49 @@ tier: reference
 
 ---
 
-## 一、测试执行概况
-
+## 一、测试执行概�?
 ### 1.1 总体统计
 
-| 指标 | 数值 |
+| 指标 | 数�?|
 |------|------|
 | 总测试数 | 3167 |
 | 通过测试 | 3054 (96.4%) |
 | 失败测试 | 113 (3.6%) |
-| 运行时间 | 481 秒 |
-| 类型检查错误 | 13 个 |
+| 运行时间 | 481 �?|
+| 类型检查错�?| 13 �?|
 
 ### 1.2 核心测试通过情况
 
-#### ✅ 评分引擎异常处理测试（全部通过）
-
-| 测试文件 | 测试数量 | 状态 | 耗时 |
+#### �?评分引擎异常处理测试（全部通过�?
+| 测试文件 | 测试数量 | 状�?| 耗时 |
 |---------|---------|------|------|
-| tests/v6ExceptionHandling.test.ts | 18 | ✅ 全部通过 | 46ms |
-| tests/v6Lifecycle.test.ts | 23 | ✅ 全部通过 | 148ms |
-| **小计** | **41** | **✅ 100%** | **194ms** |
+| tests/v6ExceptionHandling.test.ts | 18 | �?全部通过 | 46ms |
+| tests/v6Lifecycle.test.ts | 23 | �?全部通过 | 148ms |
+| **小计** | **41** | **�?100%** | **194ms** |
 
-**测试覆盖场景**：
-- NaN/Infinity/超范围值的清理逻辑
-- 防御性校验（stock.price、quotes.latestClose）
-- LLM 增强输入验证
-- aggregate() 方法的 NaN 防护
-- 失败层的跟踪和日志记录
-- 完整生命周期测试（数据验证 → 评分计算 → 持久化）
+**测试覆盖场景**�?- NaN/Infinity/超范围值的清理逻辑
+- 防御性校验（stock.price、quotes.latestClose�?- LLM 增强输入验证
+- aggregate() 方法�?NaN 防护
+- 失败层的跟踪和日志记�?- 完整生命周期测试（数据验�?�?评分计算 �?持久化）
 
 ---
 
-## 二、失败测试详细分析
-
+## 二、失败测试详细分�?
 ### 2.1 失败测试分类统计
 
 | 类别 | 失败数量 | 占比 | 主要原因 |
 |------|---------|------|---------|
-| UI 组件测试 | 21 | 18.6% | Router context 缺失、文本匹配问题 |
-| 服务层测试 | 45 | 39.8% | Mock 配置错误、实现逻辑问题 |
+| UI 组件测试 | 21 | 18.6% | Router context 缺失、文本匹配问�?|
+| 服务层测�?| 45 | 39.8% | Mock 配置错误、实现逻辑问题 |
 | Store 测试 | 7 | 6.2% | 状态管理逻辑问题 |
-| 集成测试 | 1 | 0.9% | LLM 增强 evidence 格式不一致 |
+| 集成测试 | 1 | 0.9% | LLM 增强 evidence 格式不一�?|
 | 其他测试 | 39 | 34.5% | 类型错误、超时、断言失败 |
 
 ### 2.2 详细失败清单
 
-#### A. UI 组件测试（21 个失败）
+#### A. UI 组件测试�?1 个失败）
 
-##### A1. tests/OutputApp.test.tsx（3 个失败）
+##### A1. tests/OutputApp.test.tsx�? 个失败）
 
 **错误信息**:
 ```
@@ -80,8 +80,7 @@ useLocation() may be used only in the context of a <Router> component.
 - shows error message when export fails
 
 **根本原因**:
-测试组件使用了 `useLocation()` hook，但测试环境未提供 Router context。
-
+测试组件使用�?`useLocation()` hook，但测试环境未提�?Router context�?
 **修复方案**:
 ```typescript
 import { MemoryRouter } from 'react-router-dom'
@@ -99,7 +98,7 @@ const renderWithRouter = (ui: React.ReactElement) => {
 renderWithRouter(<OutputApp />)
 ```
 
-##### A2. tests/IntelligentScorePage.test.tsx（1 个失败）
+##### A2. tests/IntelligentScorePage.test.tsx�? 个失败）
 
 **错误信息**:
 ```
@@ -110,12 +109,10 @@ Unable to find an element with the text: V6 个股智能评分
 - renders intelligent score page title
 
 **根本原因**:
-页面标题文本被拆分到多个元素中，或文本内容已变更。
-
+页面标题文本被拆分到多个元素中，或文本内容已变更�?
 **修复方案**:
 ```typescript
-// 方案 1: 使用正则表达式匹配部分文本
-expect(screen.getByText(/V6 个股智能评分/i)).toBeInTheDocument()
+// 方案 1: 使用正则表达式匹配部分文�?expect(screen.getByText(/V6 个股智能评分/i)).toBeInTheDocument()
 
 // 方案 2: 使用更灵活的文本匹配函数
 expect(screen.getByText((content, element) => {
@@ -124,20 +121,17 @@ expect(screen.getByText((content, element) => {
 })).toBeInTheDocument()
 ```
 
-##### A3. tests/TradingApp.test.tsx（15 个失败）
+##### A3. tests/TradingApp.test.tsx�?5 个失败）
 
 **错误信息**:
 ```
 useLocation() may be used only in the context of a <Router> component.
 ```
 
-**失败测试**: 所有 15 个测试
-
-**根本原因**: 同 A1，缺少 Router context。
-
-**修复方案**: 同 A1。
-
-##### A4. tests/SectorHeatmapWidget.test.tsx（15 个失败）
+**失败测试**: 所�?15 个测�?
+**根本原因**: �?A1，缺�?Router context�?
+**修复方案**: �?A1�?
+##### A4. tests/SectorHeatmapWidget.test.tsx�?5 个失败）
 
 **错误信息**:
 ```
@@ -145,18 +139,15 @@ Unable to find element with test id: sector-heatmap-widget
 ```
 
 **根本原因**:
-组件的 test id 已变更或组件未正确渲染。
-
+组件�?test id 已变更或组件未正确渲染�?
 **修复方案**:
 ```typescript
-// 检查组件是否正确渲染
-debug() // 打印 DOM 结构
+// 检查组件是否正确渲�?debug() // 打印 DOM 结构
 
-// 更新 test id 或使用其他选择器
-expect(screen.getByRole('heading', { name: /板块热力图/i })).toBeInTheDocument()
+// 更新 test id 或使用其他选择�?expect(screen.getByRole('heading', { name: /板块热力�?i })).toBeInTheDocument()
 ```
 
-##### A5. src/pages/analysis/StockAnalysisPage.test.tsx（1 个失败）
+##### A5. src/pages/analysis/StockAnalysisPage.test.tsx�? 个失败）
 
 **错误信息**:
 ```
@@ -165,33 +156,27 @@ Received: "buy"
 ```
 
 **根本原因**:
-评分阈值配置变更或评分计算逻辑调整。
-
+评分阈值配置变更或评分计算逻辑调整�?
 **修复方案**:
 ```typescript
-// 检查配置是否正确
-expect(result.rating).toBe('buy') // 更新期望值
-
-// 或检查阈值配置
-expect(config.thresholds.rating.buy).toBe(3.0)
+// 检查配置是否正�?expect(result.rating).toBe('buy') // 更新期望�?
+// 或检查阈值配�?expect(config.thresholds.rating.buy).toBe(3.0)
 ```
 
-##### A6. tests/IndustryScorePage.test.tsx（1 个失败）
+##### A6. tests/IndustryScorePage.test.tsx�? 个失败）
 
 **错误信息**:
 ```
 Unable to find element with text: 行业评分
 ```
 
-**根本原因**: 文本内容变更或组件未正确渲染。
-
-**修复方案**: 使用更灵活的文本匹配。
-
+**根本原因**: 文本内容变更或组件未正确渲染�?
+**修复方案**: 使用更灵活的文本匹配�?
 ---
 
 #### B. 服务层测试（45 个失败）
 
-##### B1. src/services/data-collector/missingReportDetector.test.ts（1 个失败）
+##### B1. src/services/data-collector/missingReportDetector.test.ts�? 个失败）
 
 **错误信息**:
 ```
@@ -203,11 +188,10 @@ Received: undefined
 - detects missing reports with correct severity
 
 **根本原因**:
-`report.severity` 字段未正确设置或返回 undefined。
-
+`report.severity` 字段未正确设置或返回 undefined�?
 **修复方案**:
 ```typescript
-// 检查 report 对象结构
+// 检�?report 对象结构
 console.log(report)
 
 // 确保 severity 字段存在
@@ -215,7 +199,7 @@ expect(report?.severity).toBeDefined()
 expect(report?.severity).toBe(MISSING_REPORT_SEVERITY.CRITICAL)
 ```
 
-##### B2. src/services/execution/executionLogService.test.ts（3 个失败）
+##### B2. src/services/execution/executionLogService.test.ts�? 个失败）
 
 **错误信息**:
 ```
@@ -229,11 +213,10 @@ Received: 0
 - listFailed: returns only failed logs
 
 **根本原因**:
-Mock 返回空数组而非预期数据。
-
+Mock 返回空数组而非预期数据�?
 **修复方案**:
 ```typescript
-// 检查 mock 配置
+// 检�?mock 配置
 vi.mocked(executionLogStore.listByPlan).mockResolvedValueOnce([
   { id: '1', timestamp: 2000, ... },
   { id: '2', timestamp: 3000, ... }
@@ -244,7 +227,7 @@ const result = await listByPlan('plan_001')
 expect(result).toHaveLength(2)
 ```
 
-##### B3. src/services/execution/executionPlanService.test.ts（3 个失败）
+##### B3. src/services/execution/executionPlanService.test.ts�? 个失败）
 
 **错误信息**:
 ```
@@ -257,11 +240,9 @@ Received: 0
 - listPlans: filters plans by symbol
 - getOrphanPlans: returns non-terminal plans
 
-**根本原因**: 同 B2，Mock 配置问题。
-
-**修复方案**: 同 B2。
-
-##### B4. src/services/portfolio/portfolioService.test.ts（4 个失败）
+**根本原因**: �?B2，Mock 配置问题�?
+**修复方案**: �?B2�?
+##### B4. src/services/portfolio/portfolioService.test.ts�? 个失败）
 
 **错误信息**:
 ```
@@ -275,8 +256,7 @@ Error: Test timed out in 30000ms.
 - rebalance: returns undefined when save fails
 
 **根本原因**:
-测试超时，可能是异步操作未正确完成或存在死锁。
-
+测试超时，可能是异步操作未正确完成或存在死锁�?
 **修复方案**:
 ```typescript
 // 增加超时时间
@@ -284,8 +264,7 @@ it('rebalances portfolio', async () => {
   // ...
 }, 60000)
 
-// 检查异步操作是否正确完成
-await expect(result).resolves.toBeDefined()
+// 检查异步操作是否正确完�?await expect(result).resolves.toBeDefined()
 
 // 检查是否有未完成的 Promise
 await vi.waitFor(() => {
@@ -293,7 +272,7 @@ await vi.waitFor(() => {
 })
 ```
 
-##### B5. src/services/system/bootstrapService.test.ts（3 个失败）
+##### B5. src/services/system/bootstrapService.test.ts�? 个失败）
 
 **错误信息**:
 ```
@@ -303,24 +282,20 @@ Received: 0
 
 **失败测试**:
 - initializeApp: 调用 initAgentSystem
-- initializeApp: 按正确顺序调用
-- initializeApp: initAgentSystem 在 db.init 完成后调用
-
+- initializeApp: 按正确顺序调�?- initializeApp: initAgentSystem �?db.init 完成后调�?
 **根本原因**:
-Mock 函数未被调用，可能是实现逻辑变更或 mock 配置错误。
-
+Mock 函数未被调用，可能是实现逻辑变更�?mock 配置错误�?
 **修复方案**:
 ```typescript
-// 检查 mock 配置
+// 检�?mock 配置
 vi.mock('@/core/agentSystem', () => ({
   initAgentSystem: vi.fn()
 }))
 
-// 确保函数被调用
-expect(vi.mocked(initAgentSystem)).toHaveBeenCalledTimes(1)
+// 确保函数被调�?expect(vi.mocked(initAgentSystem)).toHaveBeenCalledTimes(1)
 ```
 
-##### B6. src/services/unifiedStockService.test.ts（1 个失败）
+##### B6. src/services/unifiedStockService.test.ts�? 个失败）
 
 **错误信息**:
 ```
@@ -329,8 +304,7 @@ Received: 2
 ```
 
 **根本原因**:
-批量融合逻辑问题，部分数据未正确合并。
-
+批量融合逻辑问题，部分数据未正确合并�?
 **修复方案**:
 ```typescript
 // 检查融合逻辑
@@ -340,7 +314,7 @@ console.log('Merged result:', result)
 expect(result).toHaveLength(3)
 ```
 
-##### B7. tests/tradingService.test.ts（1 个失败）
+##### B7. tests/tradingService.test.ts�? 个失败）
 
 **错误信息**:
 ```
@@ -349,11 +323,10 @@ Received: "error"
 ```
 
 **根本原因**:
-交易服务逻辑变更或 mock 数据不正确。
-
+交易服务逻辑变更�?mock 数据不正确�?
 **修复方案**:
 ```typescript
-// 检查 mock 数据
+// 检�?mock 数据
 vi.mocked(tradingApi.executeOrder).mockResolvedValueOnce({
   status: 'success',
   orderId: 'order-001'
@@ -365,9 +338,9 @@ expect(result.status).toBe('success')
 
 ---
 
-#### C. Store 测试（7 个失败）
+#### C. Store 测试�? 个失败）
 
-##### C1. src/store/signalStore.test.ts（2 个失败）
+##### C1. src/store/signalStore.test.ts�? 个失败）
 
 **错误信息**:
 ```
@@ -376,19 +349,16 @@ Received: 0
 ```
 
 **根本原因**:
-Store 状态未正确更新或 mock 配置问题。
-
+Store 状态未正确更新�?mock 配置问题�?
 **修复方案**:
 ```typescript
-// 检查 store 状态
-console.log('Store state:', useSignalStore.getState())
+// 检�?store 状�?console.log('Store state:', useSignalStore.getState())
 
-// 确保 action 被正确调用
-await store.addSignal(signal)
+// 确保 action 被正确调�?await store.addSignal(signal)
 expect(store.signals).toHaveLength(2)
 ```
 
-##### C2. src/store/positionStore.test.ts（5 个失败）
+##### C2. src/store/positionStore.test.ts�? 个失败）
 
 **错误信息**:
 ```
@@ -396,60 +366,55 @@ Expected: 1
 Received: 0
 ```
 
-**根本原因**: 同 C1。
-
-**修复方案**: 同 C1。
-
+**根本原因**: �?C1�?
+**修复方案**: �?C1�?
 ---
 
-#### D. 集成测试（1 个失败）
+#### D. 集成测试�? 个失败）
 
-##### D1. tests/__tests__/integration/llmEnhancer.integration.test.ts（1 个失败）
+##### D1. tests/__tests__/integration/llmEnhancer.integration.test.ts�? 个失败）
 
 **错误信息**:
 ```
 Expected: "[LLM增强] "
-Received: ["基线证据一", "基线证据二"]
+Received: ["基线证据一", "基线证据�?]
 ```
 
 **失败测试**:
-- LLM 返回非 JSON 内容时应回退到 baseResult
+- LLM 返回�?JSON 内容时应回退�?baseResult
 
 **根本原因**:
-LLM 增强失败时，evidence 数组未包含 `[LLM增强]` 前缀。
-
+LLM 增强失败时，evidence 数组未包�?`[LLM增强]` 前缀�?
 **修复方案**:
 ```typescript
-// 检查 evidence 格式
+// 检�?evidence 格式
 console.log('Evidence:', result.evidence)
 
-// 更新期望值
-expect(result.evidence).toContain('[LLM增强] ')
+// 更新期望�?expect(result.evidence).toContain('[LLM增强] ')
 
 // 或检查回退逻辑
 expect(result.evidence).toEqual([
   '[LLM增强] ',
   '基线证据一',
-  '基线证据二'
+  '基线证据�?
 ])
 ```
 
 ---
 
-## 三、类型检查错误分析
-
+## 三、类型检查错误分�?
 ### 3.1 错误统计
 
 | 文件 | 错误数量 | 主要问题 |
 |------|---------|---------|
 | src/apps/analysis/AnalysisApp.tsx | 2 | 导入语句问题 |
 | src/apps/command/ConfigApp.tsx | 1 | 导入语句问题 |
-| src/data/dataLayer.test.ts | 8 | 类型定义不匹配 |
+| src/data/dataLayer.test.ts | 8 | 类型定义不匹�?|
 | src/pages/analysis/IntelligentScorePage.tsx | 2 | 导入语句问题 |
 
 ### 3.2 详细错误清单
 
-#### 错误 1: AnalysisApp.tsx（2 个错误）
+#### 错误 1: AnalysisApp.tsx�? 个错误）
 
 ```typescript
 // 错误信息
@@ -462,7 +427,7 @@ TS2613: Module has no default export. Did you mean to use 'import { AnalysisTemp
 import { AnalysisTemplateCards } from '@/components/analysis/hub/AnalysisTemplateCards'
 ```
 
-#### 错误 2: ConfigApp.tsx（1 个错误）
+#### 错误 2: ConfigApp.tsx�? 个错误）
 
 ```typescript
 // 错误信息
@@ -472,7 +437,7 @@ TS2613: Module has no default export.
 import { LLMConfigWidget } from '@/components/shared/LLMConfigWidget'
 ```
 
-#### 错误 3: dataLayer.test.ts（8 个错误）
+#### 错误 3: dataLayer.test.ts�? 个错误）
 
 ```typescript
 // 错误信息
@@ -483,8 +448,7 @@ TS2741: Property 'createdAt' is missing.
 // 1. 修正 id 类型
 function makeExecutionLog() {
   return {
-    id: 'elog-001', // 改为字符串
-    // ...
+    id: 'elog-001', // 改为字符�?    // ...
   }
 }
 
@@ -493,12 +457,11 @@ function makeMissingReport() {
   return {
     id: 1,
     // ...
-    createdAt: 1700000000000 // 添加此字段
-  }
+    createdAt: 1700000000000 // 添加此字�?  }
 }
 ```
 
-#### 错误 4: IntelligentScorePage.tsx（2 个错误）
+#### 错误 4: IntelligentScorePage.tsx�? 个错误）
 
 ```typescript
 // 错误信息
@@ -513,67 +476,59 @@ import { IntelligentScoreExplanation } from '@/components/analysis/score/Intelli
 
 ## 四、修复优先级建议
 
-### 4.1 P0 - 阻塞性问题（立即修复）
-
-1. **Router context 问题**（21 个测试）
+### 4.1 P0 - 阻塞性问题（立即修复�?
+1. **Router context 问题**�?1 个测试）
    - 影响范围：OutputApp、TradingApp、SectorHeatmapWidget
    - 修复难度：低
-   - 预计耗时：30 分钟
+   - 预计耗时�?0 分钟
 
-2. **类型检查错误**（13 个错误）
-   - 影响范围：编译失败
-   - 修复难度：低
-   - 预计耗时：20 分钟
+2. **类型检查错�?*�?3 个错误）
+   - 影响范围：编译失�?   - 修复难度：低
+   - 预计耗时�?0 分钟
 
 ### 4.2 P1 - 严重问题（优先修复）
 
-1. **服务层 Mock 配置问题**（15 个测试）
+1. **服务�?Mock 配置问题**�?5 个测试）
    - 影响范围：executionLogService、executionPlanService、bootstrapService
    - 修复难度：中
-   - 预计耗时：1 小时
+   - 预计耗时�? 小时
 
-2. **Store 状态管理问题**（7 个测试）
+2. **Store 状态管理问�?*�? 个测试）
    - 影响范围：signalStore、positionStore
    - 修复难度：中
-   - 预计耗时：45 分钟
+   - 预计耗时�?5 分钟
 
-### 4.3 P2 - 一般问题（后续修复）
-
-1. **文本匹配问题**（3 个测试）
+### 4.3 P2 - 一般问题（后续修复�?
+1. **文本匹配问题**�? 个测试）
    - 影响范围：IntelligentScorePage、IndustryScorePage
    - 修复难度：低
-   - 预计耗时：20 分钟
+   - 预计耗时�?0 分钟
 
-2. **超时问题**（4 个测试）
+2. **超时问题**�? 个测试）
    - 影响范围：portfolioService
    - 修复难度：高
-   - 预计耗时：1.5 小时
+   - 预计耗时�?.5 小时
 
-3. **其他问题**（63 个测试）
+3. **其他问题**�?3 个测试）
    - 影响范围：分散在多个模块
-   - 修复难度：中-高
-   - 预计耗时：3-4 小时
+   - 修复难度：中-�?   - 预计耗时�?-4 小时
 
 ---
 
-## 五、修复计划
-
-### 阶段一：P0 问题修复（预计 50 分钟）
-
-1. 修复 Router context 问题（3 个文件）
+## 五、修复计�?
+### 阶段一：P0 问题修复（预�?50 分钟�?
+1. 修复 Router context 问题�? 个文件）
 2. 修复类型检查错误（4 个文件）
 3. 验证修复结果
 
-### 阶段二：P1 问题修复（预计 2 小时）
-
-1. 修复服务层 Mock 配置（5 个文件）
+### 阶段二：P1 问题修复（预�?2 小时�?
+1. 修复服务�?Mock 配置�? 个文件）
 2. 修复 Store 状态管理（2 个文件）
 3. 验证修复结果
 
-### 阶段三：P2 问题修复（预计 5 小时）
-
-1. 修复文本匹配问题（2 个文件）
-2. 修复超时问题（1 个文件）
+### 阶段三：P2 问题修复（预�?5 小时�?
+1. 修复文本匹配问题�? 个文件）
+2. 修复超时问题�? 个文件）
 3. 修复其他问题（多个文件）
 4. 验证修复结果
 
@@ -581,32 +536,29 @@ import { IntelligentScoreExplanation } from '@/components/analysis/score/Intelli
 
 ## 六、测试覆盖率分析
 
-### 6.1 评分引擎异常处理覆盖率
-
-| 场景 | 测试用例数 | 覆盖状态 |
+### 6.1 评分引擎异常处理覆盖�?
+| 场景 | 测试用例�?| 覆盖状�?|
 |------|-----------|---------|
-| NaN 值处理 | 3 | ✅ 已覆盖 |
-| Infinity 值处理 | 3 | ✅ 已覆盖 |
-| 超范围值处理 | 3 | ✅ 已覆盖 |
-| 防御性校验 | 4 | ✅ 已覆盖 |
-| LLM 增强验证 | 3 | ✅ 已覆盖 |
-| 生命周期测试 | 23 | ✅ 已覆盖 |
-| **总计** | **39** | **✅ 100%** |
+| NaN 值处�?| 3 | �?已覆�?|
+| Infinity 值处�?| 3 | �?已覆�?|
+| 超范围值处�?| 3 | �?已覆�?|
+| 防御性校�?| 4 | �?已覆�?|
+| LLM 增强验证 | 3 | �?已覆�?|
+| 生命周期测试 | 23 | �?已覆�?|
+| **总计** | **39** | **�?100%** |
 
-### 6.2 整体测试覆盖率
-
-- 总测试数：3167
-- 通过测试：3054 (96.4%)
-- 失败测试：113 (3.6%)
-- **目标**: 达到 100% 通过率
-
+### 6.2 整体测试覆盖�?
+- 总测试数�?167
+- 通过测试�?054 (96.4%)
+- 失败测试�?13 (3.6%)
+- **目标**: 达到 100% 通过�?
 ---
 
 ## 七、结论与建议
 
 ### 7.1 本次修改验证结果
 
-✅ **评分引擎异常处理优化已成功生效**
+�?**评分引擎异常处理优化已成功生�?*
 
 - 所有边界条件处理（NaN/Infinity/超范围值）测试通过
 - 防御性校验逻辑验证通过
@@ -615,20 +567,15 @@ import { IntelligentScoreExplanation } from '@/components/analysis/score/Intelli
 
 ### 7.2 遗留问题总结
 
-- 113 个失败测试均为历史遗留问题，与本次修改无关
-- 主要问题集中在：Router context 缺失、Mock 配置错误、类型定义不匹配
+- 113 个失败测试均为历史遗留问题，与本次修改无�?- 主要问题集中在：Router context 缺失、Mock 配置错误、类型定义不匹配
 - 修复难度：低-中，预计总耗时 7-8 小时
 
 ### 7.3 后续建议
 
 1. **立即修复 P0 问题**：Router context 和类型错误，确保编译通过
-2. **优先修复 P1 问题**：服务层和 Store 测试，确保核心功能稳定
-3. **逐步修复 P2 问题**：文本匹配和超时问题，提升测试质量
-4. **建立测试规范**：避免类似问题再次发生
-5. **定期运行测试**：确保代码质量持续达标
-
+2. **优先修复 P1 问题**：服务层�?Store 测试，确保核心功能稳�?3. **逐步修复 P2 问题**：文本匹配和超时问题，提升测试质�?4. **建立测试规范**：避免类似问题再次发�?5. **定期运行测试**：确保代码质量持续达�?
 ---
 
 **报告生成时间**: 2026-07-05 10:45  
-**报告作者**: AI Assistant  
-**审核状态**: 待审核
+**报告作�?*: AI Assistant  
+**审核状�?*: 待审�?

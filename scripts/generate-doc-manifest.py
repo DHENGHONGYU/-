@@ -38,7 +38,7 @@ for dp, dn, fn in os.walk(os.path.join(ROOT, "docs")):
         pl = rel.lower()
         cats = [
             (["governance","directory-structure","doc-trigger","registry-index","cleanup","migration-plan","file-management"], "GOV"),
-            (["architecture","system-arch","v10-arch","v6-v9-arch","v9-arch","v9-strategy","v9-rectif","v9-current","architecture.md"], "ARC"),
+            (["architecture","system-arch","v10-arch","v6-v9-arch","v9-arch","v9-strategy","v9-rectif","v9-current"], "ARC"),
             (["data-dictionary","data-definition","data-asset","data-relationship","data-timeline","data-blueprint","data-blood","dataflow","data-layer","data-collection","data-interaction"], "DAT"),
             (["api-contract","contract","interface","endpoint","databridge","functional-module"], "API"),
             (["guide","how-to","tutorial","workflow","sop","runbook","checklist"], "GUIDE"),
@@ -77,10 +77,10 @@ for rel, d in docs.items():
         d["tier"] = "reference"
 
 # 3. 分配编号
-tier_order = {"core": 0, "important": 1, "reference": 2}
+tier_order = {"core": 0, "important": 1, "reference": 2, "archive": 3}
 items = sorted(docs.values(), key=lambda d: (tier_order.get(d["tier"], 9), d["category"], d["title"].lower()))
-prefix_map = {"core": "C", "important": "I", "reference": "R"}
-counters = {"core": 0, "important": 0, "reference": 0}
+prefix_map = {"core": "C", "important": "I", "reference": "R", "archive": "A"}
+counters = {"core": 0, "important": 0, "reference": 0, "archive": 0}
 for d in items:
     t = d["tier"]
     counters[t] += 1

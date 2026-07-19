@@ -83,7 +83,15 @@ export class WidgetEngine {
     eventBus.emit('WIDGET_MOUNT_START', { instanceId, widgetId: config.widgetId })
 
     try {
-      await this.loadComponent(config.widgetId)
+      const component = await this.loadComponent(config.widgetId)
+      if (!component) {
+        const errorMsg = `Widget "${config.widgetId}" component not found in registry`
+        const fallbackState = defaultWidgetBuilder.buildFallbackRuntimeState(instanceId, config.widgetId, errorMsg)
+        widgetRegistry.updateRuntimeState(instanceId, fallbackState)
+        logger.error(`[WidgetEngine] Failed to mount instance: instanceId="${instanceId}", error="${errorMsg}"`)
+        eventBus.emit('WIDGET_MOUNT_ERROR', { instanceId, widgetId: config.widgetId, error: errorMsg })
+        return false
+      }
       widgetRegistry.updateRuntimeState(instanceId, { status: 'ready', lastRefresh: Date.now() })
 
       const duration = Date.now() - startTs
@@ -126,7 +134,14 @@ export class WidgetEngine {
     eventBus.emit('WIDGET_REFRESH_START', { instanceId, widgetId: config.widgetId })
 
     try {
-      await this.loadComponent(config.widgetId)
+      const component = await this.loadComponent(config.widgetId)
+      if (!component) {
+        const errorMsg = `Widget "${config.widgetId}" component not found in registry`
+        widgetRegistry.updateRuntimeState(instanceId, { status: 'error', error: errorMsg })
+        logger.error(`[WidgetEngine] Failed to refresh instance: instanceId="${instanceId}", error="${errorMsg}"`)
+        eventBus.emit('WIDGET_REFRESH_ERROR', { instanceId, widgetId: config.widgetId, error: errorMsg })
+        return false
+      }
       widgetRegistry.updateRuntimeState(instanceId, { status: 'ready', lastRefresh: Date.now() })
 
       const duration = Date.now() - startTs
@@ -153,6 +168,37 @@ export class WidgetEngine {
     this.loadComponent(widgetId).catch((err) => {
       logger.warn(`[WidgetEngine] Preload failed: widgetId="${widgetId}"`, { error: err })
     })
+  }
+
+  preloadComponents(widgetIds: string[], concurrent: number = 3): void {
+    const pending = widgetIds.filter((id) => !componentCache.has(id))
+    if (pending.length === 0) {
+      logger.debug('[WidgetEngine] preloadComponents() skipped: all widgets already cached')
+      return
+    }
+
+    logger.info(`[WidgetEngine] Preloading ${pending.length} components (concurrent=${concurrent})`)
+
+    let index = 0
+    const loadNext = () => {
+      if (index >= pending.length) return
+
+      const batch = pending.slice(index, index + concurrent)
+      index += concurrent
+
+      Promise.all(
+        batch.map((widgetId) =>
+          this.loadComponent(widgetId).catch((err) => {
+            logger.warn(`[WidgetEngine] Preload batch failed: widgetId="${widgetId}"`, { error: err })
+            return null
+          }),
+        ),
+      ).then(() => {
+        loadNext()
+      })
+    }
+
+    loadNext()
   }
 
   clearCache(widgetId?: string): void {

@@ -14,7 +14,7 @@ import {
 import { PageContainer, PageHeader } from '@/components/templates'
 import { PageSkeleton } from '@/components/organisms/shared/PageSkeleton'
 import { getLogger } from '@/lib/logger'
-import { getAgentDetailComponent, hasAgentComponent } from '@/agents/agentComponentRegistry'
+import { getAgentDetailComponent, hasAgentComponent } from '@/components/organisms/agent/agentComponentRegistry'
 import { useAgentStore } from '@/store/agentStore'
 
 const logger = getLogger()

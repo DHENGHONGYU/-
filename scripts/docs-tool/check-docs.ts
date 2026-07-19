@@ -25,7 +25,7 @@ interface Finding {
 }
 
 const REQUIRED_ROOT_DOCS = [
-  'README.md',
+  'docs/explanation/README.md',
   'AGENTS.md',
   'architecture.md',
   'CHANGELOG.md',

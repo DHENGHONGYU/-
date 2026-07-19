@@ -1,41 +1,40 @@
 ---
-title: widget-error-handling
+title: V9 Widget ´íÎó¸ôÀëÓë½µ¼¶¹æ¸ñ
+type: reference
+domain: frontend
+phase: design
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "¶ÔÓ¦À¶Í¼£º`./v9-system-blueprint.md` ¡ì7.1 PortalShell/Widget ²¼¾Ö¡¢¡ì9 ÖÊÁ¿ÃÅ½û£¨E2E / PWA / ËÀ´úÂë£©¡¢¡ì10 Æ«²îÏî..."
+tags: [frontend, widget, reference]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: important
----
-
----
-title: V9 Widget é”™è¯¯éš”ç¦»ä¸é™çº§è§„æ ¼
-version: v0.9.0-doc-sync-batch2
-last_review: 2026-06-27
-status: draft
 change_log:
-  - date: 2026-06-27
-    author: Documentation Governor
-    desc: é¦–æ¬¡å®šä¹‰ Widget ErrorBoundaryã€éš”ç¦»ç­–ç•¥ã€é™çº§ UI ä¸é”™è¯¯ä¸ŠæŠ¥æœºåˆ¶
-code_version: 2.0.0
-tier: important
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
-# V9 Widget é”™è¯¯éš”ç¦»ä¸é™çº§è§„æ ¼
+# V9 Widget ´íÎó¸ôÀëÓë½µ¼¶¹æ¸ñ
 
-> **å¯¹åº”è“å›¾**ï¼š`./v9-system-blueprint.md` Â§7.1 PortalShell/Widget å¸ƒå±€ã€Â§9 è´¨é‡é—¨ç¦ï¼ˆE2E / PWA / æ­»ä»£ç ï¼‰ã€Â§10 åå·®é¡¹ D19ã€ŒWidget çº§ ErrorBoundary å¾…ä¸“é¡¹æ¥å…¥ã€ã€‚
-> **ä¾èµ–æ–‡æ¡£**ï¼š`./feedback-loop-spec.md`ï¼ˆé”™è¯¯çŠ¶æ€çš„ç”¨æˆ·åé¦ˆï¼‰ã€`./chart-integration.md`ï¼ˆå›¾è¡¨ Widget çš„æ¸²æŸ“é”™è¯¯å¤„ç†ï¼‰ã€‚
-
----
-
-## 1. ç›®æ ‡ä¸èŒƒå›´
-
-æœ¬æ–‡æ¡£è§„å®š V9 é©¾é©¶èˆ± Widget çš„é”™è¯¯éš”ç¦»æœºåˆ¶ï¼šæ¯ä¸ª Widget å¿…é¡»è¢«ç‹¬ç«‹çš„ `ErrorBoundary` åŒ…è£¹ï¼Œé¿å…å•ä¸ª Widget å´©æºƒå¯¼è‡´æ•´ä¸ªé©¾é©¶èˆ±æˆ–é¡µé¢ä¸å¯ç”¨ã€‚åŒæ—¶å®šä¹‰é™çº§ UI è§„èŒƒã€é”™è¯¯ä¸ŠæŠ¥ä¸æ—¥å¿—è®°å½•ç­–ç•¥ã€‚
+> **¶ÔÓ¦À¶Í¼**£º`./v9-system-blueprint.md` ¡ì7.1 PortalShell/Widget ²¼¾Ö¡¢¡ì9 ÖÊÁ¿ÃÅ½û£¨E2E / PWA / ËÀ´úÂë£©¡¢¡ì10 Æ«²îÏî D19¡¸Widget ¼¶ ErrorBoundary ´ı×¨Ïî½ÓÈë¡¹¡£
+> **ÒÀÀµÎÄµµ**£º`./feedback-loop-spec.md`£¨´íÎó×´Ì¬µÄÓÃ»§·´À¡£©¡¢`./chart-integration.md`£¨Í¼±í Widget µÄäÖÈ¾´íÎó´¦Àí£©¡£
 
 ---
 
-## 2. Widget ErrorBoundary è®¾è®¡
+## 1. Ä¿±êÓë·¶Î§
 
-### 2.1 å¤ç”¨å…¨å±€ ErrorBoundary
+±¾ÎÄµµ¹æ¶¨ V9 ¼İÊ»²Õ Widget µÄ´íÎó¸ôÀë»úÖÆ£ºÃ¿¸ö Widget ±ØĞë±»¶ÀÁ¢µÄ `ErrorBoundary` °ü¹ü£¬±ÜÃâµ¥¸ö Widget ±ÀÀ£µ¼ÖÂÕû¸ö¼İÊ»²Õ»òÒ³Ãæ²»¿ÉÓÃ¡£Í¬Ê±¶¨Òå½µ¼¶ UI ¹æ·¶¡¢´íÎóÉÏ±¨ÓëÈÕÖ¾¼ÇÂ¼²ßÂÔ¡£
 
-å½“å‰å…¨å±€é”™è¯¯è¾¹ç•Œå·²å®ç°äº `src/components/organisms/shared/ErrorBoundary.tsx`ï¼ŒWidget çº§å¤ç”¨è¯¥ç»„ä»¶å¹¶ä¼ å…¥è‡ªå®šä¹‰ `fallback`ã€‚
+---
+
+## 2. Widget ErrorBoundary Éè¼Æ
+
+### 2.1 ¸´ÓÃÈ«¾Ö ErrorBoundary
+
+µ±Ç°È«¾Ö´íÎó±ß½çÒÑÊµÏÖÓÚ `src/components/organisms/shared/ErrorBoundary.tsx`£¬Widget ¼¶¸´ÓÃ¸Ã×é¼ş²¢´«Èë×Ô¶¨Òå `fallback`¡£
 
 ```tsx
 // src/cockpit/components/WidgetErrorBoundary.tsx
@@ -56,7 +55,7 @@ export function WidgetErrorBoundary({ widgetId, children }: WidgetErrorBoundaryP
 }
 ```
 
-### 2.2 WidgetErrorFallback é™çº§ UI
+### 2.2 WidgetErrorFallback ½µ¼¶ UI
 
 ```tsx
 // src/cockpit/components/WidgetErrorFallback.tsx
@@ -74,12 +73,12 @@ export function WidgetErrorFallback({ widgetId }: Props) {
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-sm text-red-600">
           <AlertTriangle className="h-4 w-4" />
-          Widget åŠ è½½å¤±è´¥
+          Widget ¼ÓÔØÊ§°Ü
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-1 space-y-3">
         <p className="text-xs text-muted-foreground">
-          ç»„ä»¶ <code>{widgetId}</code> æ¸²æŸ“æ—¶å‘ç”Ÿé”™è¯¯ï¼Œå·²è‡ªåŠ¨éš”ç¦»ã€‚
+          ×é¼ş <code>{widgetId}</code> äÖÈ¾Ê±·¢Éú´íÎó£¬ÒÑ×Ô¶¯¸ôÀë¡£
         </p>
         <Button
           variant="outline"
@@ -88,7 +87,7 @@ export function WidgetErrorFallback({ widgetId }: Props) {
           onClick={() => window.location.reload()}
         >
           <RefreshCw className="mr-2 h-3 w-3" />
-          åˆ·æ–°è¯¥ Widget
+          Ë¢ĞÂ¸Ã Widget
         </Button>
       </CardContent>
     </Card>
@@ -98,12 +97,12 @@ export function WidgetErrorFallback({ widgetId }: Props) {
 
 ---
 
-## 3. Widget çº§é”™è¯¯éš”ç¦»ç­–ç•¥
+## 3. Widget ¼¶´íÎó¸ôÀë²ßÂÔ
 
-### 3.1 åŒ…è£¹ä½ç½®
+### 3.1 °ü¹üÎ»ÖÃ
 
 ```tsx
-// src/cockpit/CockpitShell.tsxï¼ˆç¤ºæ„ï¼‰
+// src/cockpit/CockpitShell.tsx£¨Ê¾Òâ£©
 <GridLayout>
   {instances.map((instance) => (
     <div key={instance.id}>
@@ -115,24 +114,24 @@ export function WidgetErrorFallback({ widgetId }: Props) {
 </GridLayout>
 ```
 
-### 3.2 éš”ç¦»åŸåˆ™
+### 3.2 ¸ôÀëÔ­Ôò
 
-| å±‚çº§ | è¾¹ç•ŒèŒƒå›´ | å½±å“èŒƒå›´ | æ˜¯å¦å…è®¸é™çº§ |
+| ²ã¼¶ | ±ß½ç·¶Î§ | Ó°Ïì·¶Î§ | ÊÇ·ñÔÊĞí½µ¼¶ |
 |---|---|---|---|
-| å…¨å±€ `ErrorBoundary` | `App.tsx` æ ¹è·¯ç”± | æ•´ä¸ªåº”ç”¨ | æ˜¯ï¼Œæ•´é¡µé™çº§ |
-| é¡µé¢ `ErrorBoundary` | æ¯ä¸ª lazy è·¯ç”±é¡µé¢ | å•ä¸ªé¡µé¢ | æ˜¯ï¼Œé¡µé¢çº§é™çº§ |
-| Widget `ErrorBoundary` | æ¯ä¸ª Widget å®ä¾‹ | å•ä¸ª Widget | æ˜¯ï¼Œå ä½å¡ç‰‡ |
-| å­ç»„ä»¶ try/catch | æ•°æ®è½¬æ¢ã€äº‹ä»¶å›è°ƒ | ä»…å½“å‰è°ƒç”¨ | å¦ï¼Œè®°å½•æ—¥å¿— |
+| È«¾Ö `ErrorBoundary` | `App.tsx` ¸ùÂ·ÓÉ | Õû¸öÓ¦ÓÃ | ÊÇ£¬ÕûÒ³½µ¼¶ |
+| Ò³Ãæ `ErrorBoundary` | Ã¿¸ö lazy Â·ÓÉÒ³Ãæ | µ¥¸öÒ³Ãæ | ÊÇ£¬Ò³Ãæ¼¶½µ¼¶ |
+| Widget `ErrorBoundary` | Ã¿¸ö Widget ÊµÀı | µ¥¸ö Widget | ÊÇ£¬Õ¼Î»¿¨Æ¬ |
+| ×Ó×é¼ş try/catch | Êı¾İ×ª»»¡¢ÊÂ¼ş»Øµ÷ | ½öµ±Ç°µ÷ÓÃ | ·ñ£¬¼ÇÂ¼ÈÕÖ¾ |
 
-### 3.3 é”™è¯¯åˆ†ç±»å¤„ç†
+### 3.3 ´íÎó·ÖÀà´¦Àí
 
 ```ts
 // src/constants/widget-error.constants.ts
 export enum WidgetErrorType {
-  RENDER = 'render',           // React æ¸²æŸ“å¼‚å¸¸
-  DATA_FETCH = 'data_fetch',   // é‡‡é›†/ç½‘ç»œå¤±è´¥
-  DATA_ADAPTER = 'data_adapter', // æ•°æ®é€‚é…å¼‚å¸¸
-  CONFIG = 'config',           // Widget é…ç½®ç¼ºå¤±/éæ³•
+  RENDER = 'render',           // React äÖÈ¾Òì³£
+  DATA_FETCH = 'data_fetch',   // ²É¼¯/ÍøÂçÊ§°Ü
+  DATA_ADAPTER = 'data_adapter', // Êı¾İÊÊÅäÒì³£
+  CONFIG = 'config',           // Widget ÅäÖÃÈ±Ê§/·Ç·¨
   UNKNOWN = 'unknown',
 }
 
@@ -148,25 +147,25 @@ export interface WidgetErrorReport {
 
 ---
 
-## 4. é™çº§ UI å±•ç¤ºè§„èŒƒ
+## 4. ½µ¼¶ UI Õ¹Ê¾¹æ·¶
 
-### 4.1 é™çº§å†…å®¹
+### 4.1 ½µ¼¶ÄÚÈİ
 
-1. **å›¾æ ‡**ï¼š`AlertTriangle`ï¼ˆLucideï¼‰ã€‚
-2. **æ ‡é¢˜**ï¼š`Widget åŠ è½½å¤±è´¥`ã€‚
-3. **è¯´æ˜**ï¼šæ˜¾ç¤º `widgetId` æˆ– `instanceId`ï¼Œå¸®åŠ©å®šä½ã€‚
-4. **æ“ä½œ**ï¼šæä¾›ã€Œåˆ·æ–°è¯¥ Widgetã€æŒ‰é’®ï¼›è‹¥æ”¯æŒé‡è¯•åˆ™æ˜¾ç¤ºã€Œé‡è¯•ã€ã€‚
-5. **æ ·å¼**ï¼šçº¢è‰²è™šçº¿è¾¹æ¡†ï¼ŒèƒŒæ™¯ä½¿ç”¨ `bg-background`ï¼Œä¿æŒä¸ç½‘æ ¼ä¸€è‡´ã€‚
+1. **Í¼±ê**£º`AlertTriangle`£¨Lucide£©¡£
+2. **±êÌâ**£º`Widget ¼ÓÔØÊ§°Ü`¡£
+3. **ËµÃ÷**£ºÏÔÊ¾ `widgetId` »ò `instanceId`£¬°ïÖú¶¨Î»¡£
+4. **²Ù×÷**£ºÌá¹©¡¸Ë¢ĞÂ¸Ã Widget¡¹°´Å¥£»ÈôÖ§³ÖÖØÊÔÔòÏÔÊ¾¡¸ÖØÊÔ¡¹¡£
+5. **ÑùÊ½**£ººìÉ«ĞéÏß±ß¿ò£¬±³¾°Ê¹ÓÃ `bg-background`£¬±£³ÖÓëÍø¸ñÒ»ÖÂ¡£
 
-### 4.2 æ•°æ®è·å–å¤±è´¥çš„é¢å¤–å¤„ç†
+### 4.2 Êı¾İ»ñÈ¡Ê§°ÜµÄ¶îÍâ´¦Àí
 
-å¯¹äºéæ¸²æŸ“ç±»é”™è¯¯ï¼ˆå¦‚æ•°æ®è·å–å¤±è´¥ï¼‰ï¼ŒWidget å†…éƒ¨åº”å…ˆè¿›å…¥ `error` çŠ¶æ€å¹¶å±•ç¤ºè½»é‡æç¤ºï¼Œä¸è§¦å‘ ErrorBoundaryã€‚ä»…å½“æ¸²æŸ“é˜¶æ®µæŠ›é”™æ—¶æ‰è¿›å…¥ ErrorBoundary é™çº§ã€‚
+¶ÔÓÚ·ÇäÖÈ¾Àà´íÎó£¨ÈçÊı¾İ»ñÈ¡Ê§°Ü£©£¬Widget ÄÚ²¿Ó¦ÏÈ½øÈë `error` ×´Ì¬²¢Õ¹Ê¾ÇáÁ¿ÌáÊ¾£¬²»´¥·¢ ErrorBoundary¡£½öµ±äÖÈ¾½×¶ÎÅ×´íÊ±²Å½øÈë ErrorBoundary ½µ¼¶¡£
 
 ---
 
-## 5. é”™è¯¯ä¸ŠæŠ¥ä¸æ—¥å¿—è®°å½•
+## 5. ´íÎóÉÏ±¨ÓëÈÕÖ¾¼ÇÂ¼
 
-### 5.1 ä¸ŠæŠ¥è·¯å¾„
+### 5.1 ÉÏ±¨Â·¾¶
 
 ```ts
 // src/services/widget/widgetErrorReporter.ts
@@ -179,16 +178,16 @@ const logger = getLogger()
 export function reportWidgetError(report: WidgetErrorReport): void {
   logger.error('[WidgetError] captured', report)
   eventBus.emit('widget:error', report)
-  // Phase 3 å¯æ‰©å±•ï¼šå†™å…¥ IndexedDB å®¡è®¡æ—¥å¿—è¡¨ research_logs
+  // Phase 3 ¿ÉÀ©Õ¹£ºĞ´Èë IndexedDB Éó¼ÆÈÕÖ¾±í research_logs
 }
 ```
 
-### 5.2 ä¸åé¦ˆæœåŠ¡çš„åä½œ
+### 5.2 Óë·´À¡·şÎñµÄĞ­×÷
 
-ErrorBoundary æ•è·åï¼Œé™¤æ¸²æŸ“é™çº§ UI å¤–ï¼Œåº”é€šè¿‡ `feedbackService.notify()` å‘ç”¨æˆ·æç¤ºä¸¥é‡é”™è¯¯ã€‚è¯¦è§ `./feedback-loop-spec.md` Â§6ã€‚
+ErrorBoundary ²¶»ñºó£¬³ıäÖÈ¾½µ¼¶ UI Íâ£¬Ó¦Í¨¹ı `feedbackService.notify()` ÏòÓÃ»§ÌáÊ¾ÑÏÖØ´íÎó¡£Ïê¼û `./feedback-loop-spec.md` ¡ì6¡£
 
 ```ts
-// åœ¨ ErrorBoundary componentDidCatch ä¸­æ‰©å±•
+// ÔÚ ErrorBoundary componentDidCatch ÖĞÀ©Õ¹
 import { feedbackService } from '@/services/feedback/feedbackService'
 
 componentDidCatch(error: Error, info: ErrorInfo) {
@@ -204,8 +203,8 @@ componentDidCatch(error: Error, info: ErrorInfo) {
   feedbackService.notify({
     scope: 'widget',
     variant: 'error',
-    title: 'é©¾é©¶èˆ±ç»„ä»¶å¼‚å¸¸',
-    description: `${this.props.widgetId} å·²éš”ç¦»ï¼Œè¯·å°è¯•åˆ·æ–°ã€‚`,
+    title: '¼İÊ»²Õ×é¼şÒì³£',
+    description: `${this.props.widgetId} ÒÑ¸ôÀë£¬Çë³¢ÊÔË¢ĞÂ¡£`,
     duration: 8000,
   })
 }
@@ -213,19 +212,19 @@ componentDidCatch(error: Error, info: ErrorInfo) {
 
 ---
 
-## 6. éªŒæ”¶æ ‡å‡†
+## 6. ÑéÊÕ±ê×¼
 
-- [ ] æ¯ä¸ª Widget å®ä¾‹éƒ½è¢« `WidgetErrorBoundary` åŒ…è£¹ã€‚
-- [ ] å•ä¸ª Widget æŠ›å‡ºé”™è¯¯ä¸å½±å“å…¶ä»– Widget æ¸²æŸ“ã€‚
-- [ ] é™çº§ UI ç¬¦åˆ Â§4.1 è§„èŒƒã€‚
-- [ ] `widget:error` äº‹ä»¶è¢« `eventBus` æ­£ç¡®å‘å°„ã€‚
-- [ ] æ–°å¢å•å…ƒæµ‹è¯•ï¼šæ¨¡æ‹Ÿ Widget æŠ›é”™ï¼ŒéªŒè¯é™çº§ UI ä¸äº‹ä»¶ä¸ŠæŠ¥ã€‚
+- [ ] Ã¿¸ö Widget ÊµÀı¶¼±» `WidgetErrorBoundary` °ü¹ü¡£
+- [ ] µ¥¸ö Widget Å×³ö´íÎó²»Ó°ÏìÆäËû Widget äÖÈ¾¡£
+- [ ] ½µ¼¶ UI ·ûºÏ ¡ì4.1 ¹æ·¶¡£
+- [ ] `widget:error` ÊÂ¼ş±» `eventBus` ÕıÈ··¢Éä¡£
+- [ ] ĞÂÔöµ¥Ôª²âÊÔ£ºÄ£Äâ Widget Å×´í£¬ÑéÖ¤½µ¼¶ UI ÓëÊÂ¼şÉÏ±¨¡£
 
 ---
 
-## 7. ç›¸å…³é“¾æ¥
+## 7. Ïà¹ØÁ´½Ó
 
-- `./v9-system-blueprint.md` Â§7.1ã€Â§9ã€D19
-- `./04-ui-ux-specs.md` Â§4.5ï¼ˆErrorBoundary ç»„ä»¶æ¸…å•ï¼‰
-- `./feedback-loop-spec.md` Â§6
-- `./chart-integration.md` Â§5.3ï¼ˆå›¾è¡¨æ¸²æŸ“é”™è¯¯å¤„ç†ï¼‰
+- `./v9-system-blueprint.md` ¡ì7.1¡¢¡ì9¡¢D19
+- `./04-ui-ux-specs.md` ¡ì4.5£¨ErrorBoundary ×é¼şÇåµ¥£©
+- `./feedback-loop-spec.md` ¡ì6
+- `./chart-integration.md` ¡ì5.3£¨Í¼±íäÖÈ¾´íÎó´¦Àí£©

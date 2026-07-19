@@ -1,118 +1,120 @@
 ---
 title: testing-strategy
-code_version: 2.0.0
-
+type: reference
+domain: qa
+phase: testing
 tier: important
----
-
----
-title: docs/reference/testing-strategy.md
+status: active
+maintainer: V9 Architecture Team
+summary: "src/data/ ãĞÖµ½ÏµÍ£¨35%£©£¬Òò IndexedDB Ç¨ÒÆÓë Schema ´´½¨Âß¼­¶àÎªÉùÃ÷Ê½£¬²âÊÔ ROI µÍ£»src/core/ ²àÖØ·ÖÖ§¸²¸Ç£¨75%£©£¬Òò ACL¡¢Envelope¡¢"
+tags: [qa, strategy, test, testing, reference]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: important
+doc_id: V9-DOC-QA-010
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/reference/testing-strategy.md
-code_version: 2.0.0
----
+# V9 Èı²ã²âÊÔ²ßÂÔ
 
-# V9 ä¸‰å±‚æµ‹è¯•ç­–ç•¥
-
-> **ç‰ˆæœ¬**: v2.0.0 | **æ—¥æœŸ**: 2026-07-12
-> **é€‚ç”¨èŒƒå›´**: V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿæ‰€æœ‰æ–°å¢æ¨¡å—
-> **é…å¥—æ–‡æ¡£**: [æµ‹è¯•èµ„äº§ç›®å½•ä¸æ¸…å•](test-catalog.md) â€” å…¨é‡æµ‹è¯•æ–‡ä»¶ç´¢å¼•ä¸å·²çŸ¥é—®é¢˜è¿½è¸ª
+> **Version**: v2.0.0 | **ÈÕÆÚ**: 2026-07-12
+> **ÊÊÓÃ·¶Î§**: V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ËùÓĞĞÂÔöÄ£¿é
+> **ÅäÌ×ÎÄµµ**: [²âÊÔ×Ê²úÄ¿Â¼ÓëÇåµ¥](test-catalog.md) ¡ª È«Á¿²âÊÔÎÄ¼şË÷ÒıÓëÒÑÖªÎÊÌâ×·×Ù
 
 ---
 
-## ä¸€ã€æµ‹è¯•å“²å­¦ä¸åˆ†å±‚æ¨¡å‹
+## Ò»¡¢²âÊÔÕÜÑ§Óë·Ö²ãÄ£ĞÍ
 
-V9 é‡‡ç”¨**å››å±‚æµ‹è¯•é‡‘å­—å¡”**ï¼Œä»ä¸‹åˆ°ä¸Šæˆæœ¬é€’å¢ã€ç²’åº¦é€’å‡ï¼š
+V9 ²ÉÓÃ**ËÄ²ã²âÊÔ½ğ×ÖËş**£¬´ÓÏÂµ½ÉÏ³É±¾µİÔö¡¢Á£¶Èµİ¼õ£º
 
 ```
-        â–²
-       / \    è§†è§‰å›å½’ (Playwright Snapshot)
-      /   \   èŒè´£ï¼šå…³é”®é¡µé¢åƒç´ çº§å¯¹æ¯”ï¼Œé˜²æ­¢ UI æ¼‚ç§»
-     /â”€â”€â”€â”€â”€\  è§„æ¨¡ï¼š~5 ä¸ªåœºæ™¯ï¼Œç›®æ ‡ 20 ä¸ª
+        ¡ø
+       / \    ÊÓ¾õ»Ø¹é (Playwright Snapshot)
+      /   \   Ö°Ôğ£º¹Ø¼üÒ³ÃæÏñËØ¼¶¶Ô±È£¬·ÀÖ¹ UI Æ¯ÒÆ
+     /©¤©¤©¤©¤©¤\  ¹æÄ££º~5 ¸ö³¡¾°£¬Ä¿±ê 20 ¸ö
     /       \
-   /â”€â”€â”€â”€â”€â”€â”€â”€â”€\  E2E (Playwright)
-  /           \ èŒè´£ï¼šæ ¸å¿ƒç”¨æˆ·è·¯å¾„ç«¯åˆ°ç«¯éªŒè¯
- /             \è§„æ¨¡ï¼š~17 ä¸ª specï¼Œè¦†ç›– 5 èˆ±å…³é”®æµç¨‹
-/â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\
-/                 \ é›†æˆæµ‹è¯• (Vitest + fake-indexeddb)
-/                   \èŒè´£ï¼šè·¨æ¨¡å—å¥‘çº¦ã€DataBridgeã€ACLã€Widget æ³¨å†ŒåŒæ­¥
-/â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\è§„æ¨¡ï¼š~15 ä¸ªæ–‡ä»¶ï¼Œå«å¥‘çº¦æµ‹è¯• suite
+   /©¤©¤©¤©¤©¤©¤©¤©¤©¤\  E2E (Playwright)
+  /           \ Ö°Ôğ£ººËĞÄÓÃ»§Â·¾¶¶Ëµ½¶ËÑéÖ¤
+ /             \¹æÄ££º~17 ¸ö spec£¬¸²¸Ç 5 ²Õ¹Ø¼üÁ÷³Ì
+/©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤\
+/                 \ ¼¯³É²âÊÔ (Vitest + fake-indexeddb)
+/                   \Ö°Ôğ£º¿çÄ£¿éÆõÔ¼¡¢DataBridge¡¢ACL¡¢Widget ×¢²áÍ¬²½
+/©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤\¹æÄ££º~15 ¸öÎÄ¼ş£¬º¬ÆõÔ¼²âÊÔ suite
 /                       \
-/â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\ å•å…ƒæµ‹è¯• (Vitest + jsdom)
-/                           \èŒè´£ï¼šå‡½æ•°ã€Storeã€Serviceã€ç»„ä»¶ã€ç±»å‹å®ˆå«
-/                             \è§„æ¨¡ï¼š~200 ä¸ªæ–‡ä»¶ï¼Œæµ‹è¯•èµ„äº§ä¸»ä½“
-â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+/©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤\ µ¥Ôª²âÊÔ (Vitest + jsdom)
+/                           \Ö°Ôğ£ºº¯Êı¡¢Store¡¢Service¡¢×é¼ş¡¢ÀàĞÍÊØÎÀ
+/                             \¹æÄ££º~200 ¸öÎÄ¼ş£¬²âÊÔ×Ê²úÖ÷Ìå
+©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤
 ```
 
-| å±‚çº§ | èŒƒå›´ | å·¥å…·/ç¯å¢ƒ | ç›®æ ‡ | é—¨ç¦ä½ç½® |
+| ²ã¼¶ | ·¶Î§ | ¹¤¾ß/»·¾³ | Ä¿±ê | ÃÅ½ûÎ»ÖÃ |
 |------|------|-----------|------|----------|
-| **å•å…ƒæµ‹è¯•** | å‡½æ•°ã€Storeã€Serviceã€å·¥å…·ç±»ã€åŸå­/åˆ†å­ç»„ä»¶ | Vitest + jsdom | æ ¸å¿ƒæ¨¡å—è¦†ç›–ç‡ â‰¥ 70%ï¼Œå…¨å±€åŸºçº¿ 80% | pre-commit / CI |
-| **é›†æˆæµ‹è¯•** | DataBridgeã€EventBusã€ACLã€Widget æ³¨å†Œä¸‰å¤„åŒæ­¥ã€Store è·¨ Tab å¹¿æ’­ | Vitest + fake-indexeddb | æ¨¡å—é—´å¥‘çº¦é›¶è¿è§„ | CI |
-| **E2E æµ‹è¯•** | å…³é”®ç”¨æˆ·è·¯å¾„ã€è·¯ç”±è·³è½¬ã€é©¾é©¶èˆ±æ¸²æŸ“ã€è¡¨å•æäº¤ | Playwright (Chromium) | æ ¸å¿ƒæµç¨‹å…¨é€šè¿‡ | å‘å¸ƒå‰ |
-| **è§†è§‰å›å½’** | é©¾é©¶èˆ±ã€è‚¡ç¥¨æ± çœ‹æ¿ã€è¯„åˆ†é¡µå…³é”®æˆªå›¾ | Playwright `toHaveScreenshot` | åƒç´ å·®å¼‚ â‰¤ 2% | å‘å¸ƒå‰ |
+| **µ¥Ôª²âÊÔ** | º¯Êı¡¢Store¡¢Service¡¢¹¤¾ßÀà¡¢Ô­×Ó/·Ö×Ó×é¼ş | Vitest + jsdom | ºËĞÄÄ£¿é¸²¸ÇÂÊ ¡İ 70%£¬È«¾Ö»ùÏß 80% | pre-commit / CI |
+| **¼¯³É²âÊÔ** | DataBridge¡¢EventBus¡¢ACL¡¢Widget ×¢²áÈı´¦Í¬²½¡¢Store ¿ç Tab ¹ã²¥ | Vitest + fake-indexeddb | Ä£¿é¼äÆõÔ¼ÁãÎ¥¹æ | CI |
+| **E2E ²âÊÔ** | ¹Ø¼üÓÃ»§Â·¾¶¡¢Â·ÓÉÌø×ª¡¢¼İÊ»²ÕäÖÈ¾¡¢±íµ¥Ìá½» | Playwright (Chromium) | ºËĞÄÁ÷³ÌÈ«Í¨¹ı | ·¢²¼Ç° |
+| **ÊÓ¾õ»Ø¹é** | ¼İÊ»²Õ¡¢¹ÉÆ±³Ø¿´°å¡¢ÆÀ·ÖÒ³¹Ø¼ü½ØÍ¼ | Playwright `toHaveScreenshot` | ÏñËØ²îÒì ¡Ü 2% | ·¢²¼Ç° |
 
-> **æ ¸å¿ƒåŸåˆ™**ï¼š
-> 1. **å•å…ƒæµ‹è¯•ä¼˜å…ˆ**ï¼šæ–°å¢ä»£ç å¿…é¡»æœ‰å•å…ƒæµ‹è¯•è¦†ç›–ï¼›E2E ä»…è¦†ç›–ç”¨æˆ·è·¯å¾„ï¼Œä¸æ›¿ä»£å•å…ƒæ–­è¨€ã€‚
-> 2. **å¥‘çº¦å³æ–‡æ¡£**ï¼šé›†æˆæµ‹è¯•æ–­è¨€æ¨¡å—é—´æ¥å£å¥‘çº¦ï¼Œå¥‘çº¦å˜æ›´å¿…é¡»åŒæ­¥æ›´æ–°æµ‹è¯•ã€‚
-> 3. **å¤±è´¥å³é˜»æ–­**ï¼šå•å…ƒ/é›†æˆæµ‹è¯•å¤±è´¥é˜»æ–­ CI åˆå¹¶ï¼›E2E/è§†è§‰å›å½’å¤±è´¥é˜»æ–­å‘å¸ƒã€‚
-> 4. **æ¸…ç†å³ä¹‰åŠ¡**ï¼šæ‰€æœ‰ `vi.useFakeTimers()` / `EventBus.subscribe()` / `window.addEventListener()` å¿…é¡»åœ¨ cleanup ä¸­ç§»é™¤ï¼ˆAGENTS.md Â§ä¸‰ï¼‰ã€‚
+> **ºËĞÄÔ­Ôò**£º
+> 1. **µ¥Ôª²âÊÔÓÅÏÈ**£ºĞÂÔö´úÂë±ØĞëÓĞµ¥Ôª²âÊÔ¸²¸Ç£»E2E ½ö¸²¸ÇÓÃ»§Â·¾¶£¬²»Ìæ´úµ¥Ôª¶ÏÑÔ¡£
+> 2. **ÆõÔ¼¼´ÎÄµµ**£º¼¯³É²âÊÔ¶ÏÑÔÄ£¿é¼ä½Ó¿ÚÆõÔ¼£¬ÆõÔ¼±ä¸ü±ØĞëÍ¬²½¸üĞÂ²âÊÔ¡£
+> 3. **Ê§°Ü¼´×è¶Ï**£ºµ¥Ôª/¼¯³É²âÊÔÊ§°Ü×è¶Ï CI ºÏ²¢£»E2E/ÊÓ¾õ»Ø¹éÊ§°Ü×è¶Ï·¢²¼¡£
+> 4. **ÇåÀí¼´ÒåÎñ**£ºËùÓĞ `vi.useFakeTimers()` / `EventBus.subscribe()` / `window.addEventListener()` ±ØĞëÔÚ cleanup ÖĞÒÆ³ı£¨AGENTS.md ¡ìÈı£©¡£
 
 ---
 
-## äºŒã€æµ‹è¯•ç›®å½•ä¸æ”¾ç½®ç­–ç•¥
+## ¶ş¡¢²âÊÔÄ¿Â¼Óë·ÅÖÃ²ßÂÔ
 
-### 2.1 ç›®å½•ç»“æ„
+### 2.1 Ä¿Â¼½á¹¹
 
 ```
-â”œâ”€â”€ e2e/                          â† E2E & è§†è§‰å›å½’ (Playwright)
-â”‚   â”œâ”€â”€ *.spec.ts                 â† ç«¯åˆ°ç«¯æµ‹è¯•ç”¨ä¾‹ (~17 ä¸ª)
-â”‚   â”œâ”€â”€ visual-regression.spec.ts â† è§†è§‰å›å½’ä¸»å…¥å£
-â”‚   â””â”€â”€ visual-regression.spec.ts-snapshots/ â† åŸºçº¿æˆªå›¾ï¼ˆç‰ˆæœ¬æ§åˆ¶ï¼‰
-â”‚
-â”œâ”€â”€ tests/                        â† é›†ä¸­å¼å•å…ƒ & é›†æˆæµ‹è¯•
-â”‚   â”œâ”€â”€ setup.ts                  â† å…¨å±€å‰ç½®ï¼ˆfake-indexeddb + jsdom mock + cleanupï¼‰
-â”‚   â”œâ”€â”€ contracts/                â† å¥‘çº¦æµ‹è¯•å¥—ä»¶ï¼ˆDataBridge / Envelope / Store / Strategyï¼‰
-â”‚   â”œâ”€â”€ __tests__/                â† è¡¥å……æµ‹è¯•ï¼ˆç±»å‹ / é›†æˆ / å›å½’ / å¿«ç…§ï¼‰
-â”‚   â”œâ”€â”€ __mocks__/                â† å…¨å±€ mock
-â”‚   â”œâ”€â”€ fixtures/                 â† é™æ€æµ‹è¯•æ•°æ®é›†
-â”‚   â””â”€â”€ helpers/                  â† æµ‹è¯•è¾…åŠ©å‡½æ•°
-â”‚
-â””â”€â”€ src/                          â† æºç å…±ç½®æµ‹è¯•ï¼ˆæ¨èï¼‰
-    â”œâ”€â”€ **/*.test.ts              â† ä¸æºç åŒç›®å½•çš„å•å…ƒæµ‹è¯•
-    â””â”€â”€ **/*.test.tsx             â† ç»„ä»¶æµ‹è¯•
+©À©¤©¤ e2e/                          ¡û E2E & ÊÓ¾õ»Ø¹é (Playwright)
+©¦   ©À©¤©¤ *.spec.ts                 ¡û ¶Ëµ½¶Ë²âÊÔÓÃÀı (~17 ¸ö)
+©¦   ©À©¤©¤ visual-regression.spec.ts ¡û ÊÓ¾õ»Ø¹éÖ÷Èë¿Ú
+©¦   ©¸©¤©¤ visual-regression.spec.ts-snapshots/ ¡û »ùÏß½ØÍ¼£¨°æ±¾¿ØÖÆ£©
+©¦
+©À©¤©¤ tests/                        ¡û ¼¯ÖĞÊ½µ¥Ôª & ¼¯³É²âÊÔ
+©¦   ©À©¤©¤ setup.ts                  ¡û È«¾ÖÇ°ÖÃ£¨fake-indexeddb + jsdom mock + cleanup£©
+©¦   ©À©¤©¤ contracts/                ¡û ÆõÔ¼²âÊÔÌ×¼ş£¨DataBridge / Envelope / Store / Strategy£©
+©¦   ©À©¤©¤ __tests__/                ¡û ²¹³ä²âÊÔ£¨ÀàĞÍ / ¼¯³É / »Ø¹é / ¿ìÕÕ£©
+©¦   ©À©¤©¤ __mocks__/                ¡û È«¾Ö mock
+©¦   ©À©¤©¤ fixtures/                 ¡û ¾²Ì¬²âÊÔÊı¾İ¼¯
+©¦   ©¸©¤©¤ helpers/                  ¡û ²âÊÔ¸¨Öúº¯Êı
+©¦
+©¸©¤©¤ src/                          ¡û Ô´Âë¹²ÖÃ²âÊÔ£¨ÍÆ¼ö£©
+    ©À©¤©¤ **/*.test.ts              ¡û ÓëÔ´ÂëÍ¬Ä¿Â¼µÄµ¥Ôª²âÊÔ
+    ©¸©¤©¤ **/*.test.tsx             ¡û ×é¼ş²âÊÔ
 ```
 
-### 2.2 å…±ç½® vs é›†ä¸­å†³ç­–æ ‘
+### 2.2 ¹²ÖÃ vs ¼¯ÖĞ¾ö²ßÊ÷
 
-| ç­–ç•¥ | ä½ç½® | é€‚ç”¨åœºæ™¯ |
+| ²ßÂÔ | Î»ÖÃ | ÊÊÓÃ³¡¾° |
 |------|------|---------|
-| **å…±ç½®ï¼ˆæ¨èï¼‰** | `src/{layer}/ModuleName.test.ts` | æ–°å¢ Storeã€Serviceã€ç»„ä»¶ã€æ ¸å¿ƒå·¥å…·ã€‚ä¸æºç åŒç›®å½•ï¼Œé‡æ„æ—¶åŒæ­¥æ›´æ–°ã€‚ |
-| **é›†ä¸­** | `tests/` æ ¹æˆ–å­ç›®å½• | è·¨æ¨¡å—é›†æˆæµ‹è¯•ã€E2Eã€å¥‘çº¦æµ‹è¯•ã€æ€§èƒ½æµ‹è¯•ã€fixtures ä¸ helpersã€‚ |
+| **¹²ÖÃ£¨ÍÆ¼ö£©** | `src/{layer}/ModuleName.test.ts` | ĞÂÔö Store¡¢Service¡¢×é¼ş¡¢ºËĞÄ¹¤¾ß¡£ÓëÔ´ÂëÍ¬Ä¿Â¼£¬ÖØ¹¹Ê±Í¬²½¸üĞÂ¡£ |
+| **¼¯ÖĞ** | `tests/` ¸ù»ò×ÓÄ¿Â¼ | ¿çÄ£¿é¼¯³É²âÊÔ¡¢E2E¡¢ÆõÔ¼²âÊÔ¡¢ĞÔÄÜ²âÊÔ¡¢fixtures Óë helpers¡£ |
 
-**å†³ç­–è§„åˆ™**ï¼šå•æ¨¡å—å†…èšæµ‹è¯• â†’ å…±ç½®ï¼›è·¨æ¨¡å—å¥‘çº¦/ç«¯åˆ°ç«¯/æ€§èƒ½ â†’ é›†ä¸­ã€‚
+**¾ö²ß¹æÔò**£ºµ¥Ä£¿éÄÚ¾Û²âÊÔ ¡ú ¹²ÖÃ£»¿çÄ£¿éÆõÔ¼/¶Ëµ½¶Ë/ĞÔÄÜ ¡ú ¼¯ÖĞ¡£
 
 ---
 
-## ä¸‰ã€å•å…ƒæµ‹è¯•ç­–ç•¥ï¼ˆLayer 1ï¼‰
+## Èı¡¢µ¥Ôª²âÊÔ²ßÂÔ£¨Layer 1£©
 
-### 3.1 è¦†ç›–ä¹‰åŠ¡
+### 3.1 ¸²¸ÇÒåÎñ
 
-| ä»£ç ç±»å‹ | æµ‹è¯•ä¹‰åŠ¡ | æœ€ä½è¦æ±‚ |
+| ´úÂëÀàĞÍ | ²âÊÔÒåÎñ | ×îµÍÒªÇó |
 |---------|---------|---------|
-| Zustand Store | çŠ¶æ€å˜åŒ–ã€é€‰æ‹©å™¨ã€å¼‚æ­¥ actionã€é”™è¯¯åˆ†æ”¯ | æ¯ä¸ª action è‡³å°‘ 1 ä¸ª success + 1 ä¸ª error åˆ†æ”¯ |
-| Service | æˆåŠŸ/å¤±è´¥/é‡è¯•/è¾¹ç•Œè¾“å…¥/ACL æ‹’ç» | å¤–éƒ¨ä¾èµ–å¿…é¡» mock |
-| ç»„ä»¶ (Atoms/Molecules) | æ¸²æŸ“ã€äº¤äº’ã€ç©ºçŠ¶æ€ã€é”™è¯¯çŠ¶æ€ | `@testing-library/react` + `userEvent` |
-| å·¥å…·å‡½æ•° | è¾¹ç•Œå€¼ã€å¼‚å¸¸è¾“å…¥ã€ç±»å‹å®ˆå« | ç­‰ä»·ç±»åˆ’åˆ† |
-| ç±»å‹å®ˆå« | æ­£ä¾‹ + åä¾‹ | `Expect<Equals>` ç±»å‹æµ‹è¯•ï¼ˆå¤æ‚æ³›å‹ï¼‰ |
+| Zustand Store | ×´Ì¬±ä»¯¡¢Ñ¡ÔñÆ÷¡¢Òì²½ action¡¢´íÎó·ÖÖ§ | Ã¿¸ö action ÖÁÉÙ 1 ¸ö success + 1 ¸ö error ·ÖÖ§ |
+| Service | ³É¹¦/Ê§°Ü/ÖØÊÔ/±ß½çÊäÈë/ACL ¾Ü¾ø | Íâ²¿ÒÀÀµ±ØĞë mock |
+| ×é¼ş (Atoms/Molecules) | äÖÈ¾¡¢½»»¥¡¢¿Õ×´Ì¬¡¢´íÎó×´Ì¬ | `@testing-library/react` + `userEvent` |
+| ¹¤¾ßº¯Êı | ±ß½çÖµ¡¢Òì³£ÊäÈë¡¢ÀàĞÍÊØÎÀ | µÈ¼ÛÀà»®·Ö |
+| ÀàĞÍÊØÎÀ | ÕıÀı + ·´Àı | `Expect<Equals>` ÀàĞÍ²âÊÔ£¨¸´ÔÓ·ºĞÍ£© |
 
-### 3.2 Store æµ‹è¯•æ¨¡æ¿
+### 3.2 Store ²âÊÔÄ£°å
 
 ```typescript
-// âœ… æ ‡å‡†æ¨¡æ¿ï¼šZustand Store å•å…ƒæµ‹è¯•
+// ? ±ê×¼Ä£°å£ºZustand Store µ¥Ôª²âÊÔ
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
 import { act } from '@testing-library/react'
 import { useAnalysisStore } from '@/store/analysisStore'
@@ -127,7 +129,7 @@ describe('analysisStore', () => {
   })
 
   afterEach(() => {
-    vi.useRealTimers() // â† AGENTS.md Â§ä¸‰ å¼ºåˆ¶è¦æ±‚
+    vi.useRealTimers() // ¡û AGENTS.md ¡ìÈı Ç¿ÖÆÒªÇó
   })
 
   it('should update score on fetch success', async () => {
@@ -156,25 +158,25 @@ describe('analysisStore', () => {
 })
 ```
 
-### 3.3 ç»„ä»¶æµ‹è¯•æ¨¡æ¿
+### 3.3 ×é¼ş²âÊÔÄ£°å
 
 ```typescript
-// âœ… æ ‡å‡†æ¨¡æ¿ï¼šReact ç»„ä»¶æµ‹è¯•
+// ? ±ê×¼Ä£°å£ºReact ×é¼ş²âÊÔ
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { Badge } from '@/components/atoms/Badge'
 
 describe('Badge', () => {
   it('renders label and applies variant class', () => {
-    render(<Badge label="æµ‹è¯•" variant="success" />)
-    expect(screen.getByText('æµ‹è¯•')).toBeVisible()
-    expect(screen.getByText('æµ‹è¯•')).toHaveClass('bg-green-500')
+    render(<Badge label="²âÊÔ" variant="success" />)
+    expect(screen.getByText('²âÊÔ')).toBeVisible()
+    expect(screen.getByText('²âÊÔ')).toHaveClass('bg-green-500')
   })
 
   it('handles click event', () => {
     const onClick = vi.fn()
-    render(<Badge label="ç‚¹å‡»" onClick={onClick} />)
-    fireEvent.click(screen.getByText('ç‚¹å‡»'))
+    render(<Badge label="µã»÷" onClick={onClick} />)
+    fireEvent.click(screen.getByText('µã»÷'))
     expect(onClick).toHaveBeenCalledOnce()
   })
 })
@@ -182,30 +184,30 @@ describe('Badge', () => {
 
 ---
 
-## å››ã€é›†æˆæµ‹è¯•ç­–ç•¥ï¼ˆLayer 2ï¼‰
+## ËÄ¡¢¼¯³É²âÊÔ²ßÂÔ£¨Layer 2£©
 
-### 4.1 å¥‘çº¦æµ‹è¯•
+### 4.1 ÆõÔ¼²âÊÔ
 
-é›†æˆæµ‹è¯•èšç„¦**æ¨¡å—é—´å¥‘çº¦**ï¼Œè€Œéå†…éƒ¨å®ç°ã€‚æ ¸å¿ƒå¥‘çº¦æ¸…å•ï¼š
+¼¯³É²âÊÔ¾Û½¹**Ä£¿é¼äÆõÔ¼**£¬¶ø·ÇÄÚ²¿ÊµÏÖ¡£ºËĞÄÆõÔ¼Çåµ¥£º
 
-| å¥‘çº¦ | æµ‹è¯•æ–‡ä»¶ | æ–­è¨€è¦ç‚¹ |
+| ÆõÔ¼ | ²âÊÔÎÄ¼ş | ¶ÏÑÔÒªµã |
 |------|---------|---------|
-| **DataBridge è½¬å‘** | `tests/contracts/databridge.contract.ts` | æœªçŸ¥ action â†’ `EnvelopeError`ï¼›Query å¿…é¡»å¸¦ `payload.store`ï¼›å†™æ“ä½œè§¦å‘ç¼“å­˜å¤±æ•ˆ + å®¡è®¡æ—¥å¿— |
-| **Envelope éªŒè¯** | `tests/contracts/envelope.contract.ts` | éæ³• target â†’ rejectï¼›ç¼ºå¤± traceId â†’ rejectï¼›timestamp â‰¤ 0 â†’ reject |
-| **Store è·¨ Tab å¹¿æ’­** | `tests/contracts/store.contract.ts` | `withBroadcast` å†™åè§¦å‘ `eventBus.emit`ï¼›å¹¿æ’­å¤±è´¥ä¸é˜»å¡å†™ï¼›æ¸…ç†å‡½æ•°æ­£ç¡®ç§»é™¤ç›‘å¬ |
-| **Widget æ³¨å†Œä¸‰å¤„åŒæ­¥** | `tests/contracts/strategy.contract.ts` | æ‰€æœ‰ `widgetRegistry` ä¸­çš„ widgetId åœ¨ `DEFAULT_WIDGET_CONFIG` å’Œ `WIDGET_DEFAULT_DATA_SOURCE` ä¸­å‡å­˜åœ¨ |
-| **ACL æƒé™çŸ©é˜µ** | `tests/__tests__/integration/stockpool-acl.integration.test.ts` | å„æ¨¡å—ä»…å¯è¯»å†™ ACL_MATRIX æˆæƒçš„å­˜å‚¨è¡¨ |
-| **MCP Server å…¨é“¾è·¯** | `tests/__tests__/integration/mcp-servers.integration.test.ts` | 16 ä¸ª Server çš„å·¥å…·åˆ—è¡¨ä¸æƒé™çŸ©é˜µä¸€è‡´ |
+| **DataBridge ×ª·¢** | `tests/contracts/databridge.contract.ts` | Î´Öª action ¡ú `EnvelopeError`£»Query ±ØĞë´ø `payload.store`£»Ğ´²Ù×÷´¥·¢»º´æÊ§Ğ§ + Éó¼ÆÈÕÖ¾ |
+| **Envelope ÑéÖ¤** | `tests/contracts/envelope.contract.ts` | ·Ç·¨ target ¡ú reject£»È±Ê§ traceId ¡ú reject£»timestamp ¡Ü 0 ¡ú reject |
+| **Store ¿ç Tab ¹ã²¥** | `tests/contracts/store.contract.ts` | `withBroadcast` Ğ´ºó´¥·¢ `eventBus.emit`£»¹ã²¥Ê§°Ü²»×èÈûĞ´£»ÇåÀíº¯ÊıÕıÈ·ÒÆ³ı¼àÌı |
+| **Widget ×¢²áÈı´¦Í¬²½** | `tests/contracts/strategy.contract.ts` | ËùÓĞ `widgetRegistry` ÖĞµÄ widgetId ÔÚ `DEFAULT_WIDGET_CONFIG` ºÍ `WIDGET_DEFAULT_DATA_SOURCE` ÖĞ¾ù´æÔÚ |
+| **ACL È¨ÏŞ¾ØÕó** | `tests/__tests__/integration/stockpool-acl.integration.test.ts` | ¸÷Ä£¿é½ö¿É¶ÁĞ´ ACL_MATRIX ÊÚÈ¨µÄ´æ´¢±í |
+| **MCP Server È«Á´Â·** | `tests/__tests__/integration/mcp-servers.integration.test.ts` | 16 ¸ö Server µÄ¹¤¾ßÁĞ±íÓëÈ¨ÏŞ¾ØÕóÒ»ÖÂ |
 
-### 4.2 é›†æˆæµ‹è¯•æ¨¡æ¿
+### 4.2 ¼¯³É²âÊÔÄ£°å
 
 ```typescript
-// âœ… æ ‡å‡†æ¨¡æ¿ï¼šè·¨æ¨¡å—é›†æˆæµ‹è¯•
+// ? ±ê×¼Ä£°å£º¿çÄ£¿é¼¯³É²âÊÔ
 import { describe, it, expect } from 'vitest'
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
 
-describe('DataBridge â†’ DB å†™å…¥é“¾è·¯', () => {
+describe('DataBridge ¡ú DB Ğ´ÈëÁ´Â·', () => {
   it('should route saveScores to v6_scores store and invalidate cache', async () => {
     const envelope = EnvelopeFactory.create(
       { source: 'analyzer', target: 'db', action: 'SAVE_SCORES', traceId: 'test-1' },
@@ -214,301 +216,301 @@ describe('DataBridge â†’ DB å†™å…¥é“¾è·¯', () => {
 
     await dataBridge.forward(envelope)
 
-    // æ–­è¨€ï¼šæ•°æ®å·²å†™å…¥ DB
+    // ¶ÏÑÔ£ºÊı¾İÒÑĞ´Èë DB
     const saved = await db.get('v6_scores', '600519')
     expect(saved?.score).toBe(4.5)
 
-    // æ–­è¨€ï¼šç¼“å­˜å·²å¤±æ•ˆï¼ˆåç»­ query åº”èµ° DBï¼‰
-    // å…·ä½“å®ç°ä¾èµ– MemoryCache å†…éƒ¨çŠ¶æ€ï¼Œå»ºè®® spyOn invalidateCache
+    // ¶ÏÑÔ£º»º´æÒÑÊ§Ğ§£¨ºóĞø query Ó¦×ß DB£©
+    // ¾ßÌåÊµÏÖÒÀÀµ MemoryCache ÄÚ²¿×´Ì¬£¬½¨Òé spyOn invalidateCache
   })
 })
 ```
 
 ---
 
-## äº”ã€E2E æµ‹è¯•ç­–ç•¥ï¼ˆLayer 3ï¼‰
+## Îå¡¢E2E ²âÊÔ²ßÂÔ£¨Layer 3£©
 
-### 5.1 è¦†ç›–èŒƒå›´
+### 5.1 ¸²¸Ç·¶Î§
 
-E2E æµ‹è¯•ä»…è¦†ç›–**å…³é”®ç”¨æˆ·è·¯å¾„**ï¼Œä¸è¿½æ±‚å…¨é‡ï¼š
+E2E ²âÊÔ½ö¸²¸Ç**¹Ø¼üÓÃ»§Â·¾¶**£¬²»×·ÇóÈ«Á¿£º
 
-| èˆ±å®¤ | å…³é”®è·¯å¾„ | spec æ–‡ä»¶ |
+| ²ÕÊÒ | ¹Ø¼üÂ·¾¶ | spec ÎÄ¼ş |
 |------|---------|----------|
-| **è¾“å…¥èˆ±** | é‡‡é›†å‘å¯¼å®Œæ•´æµç¨‹ã€æ‰¹é‡å¯¼å…¥ã€è‚¡ç¥¨æœç´¢ | `e2e/input-data-collection.spec.ts` / `input-stock-pool.spec.ts` / `bulk-import-full.spec.ts` |
-| **åˆ†æèˆ±** | æ™ºèƒ½è¯„åˆ†é¡µã€è‚¡ç¥¨è¯¦æƒ…é¡µã€æ¿å—åˆ†æ | `e2e/analysis-scoring.spec.ts` / `analysis-extended.spec.ts` / `stock-score.spec.ts` |
-| **äº¤æ˜“èˆ±** | æŒä»“çœ‹æ¿ã€è¡¥ä»“/å¹³ä»“ã€äº¤æ˜“å¤ç›˜ | `e2e/trading.spec.ts` / `trade-review.spec.ts` / `pool-group.spec.ts` |
-| **è¾“å‡ºèˆ±** | æŠ¥å‘Šä¸­å¿ƒã€å‘½ä»¤æ‰§è¡Œ | `e2e/output-cabin.spec.ts` / `output-command.spec.ts` |
-| **æŒ‡ä»¤èˆ±** | MCP éªŒè¯ã€æ•°æ®è¿ç§» | `e2e/mcp-verify.spec.ts` / `data-migration.spec.ts` |
-| **å…¨å±€** | å“åº”å¼å¸ƒå±€ã€æ— éšœç¢ | `e2e/responsive.spec.ts` / `accessibility.spec.ts` |
+| **ÊäÈë²Õ** | ²É¼¯Ïòµ¼ÍêÕûÁ÷³Ì¡¢ÅúÁ¿µ¼Èë¡¢¹ÉÆ±ËÑË÷ | `e2e/input-data-collection.spec.ts` / `input-stock-pool.spec.ts` / `bulk-import-full.spec.ts` |
+| **·ÖÎö²Õ** | ÖÇÄÜÆÀ·ÖÒ³¡¢¹ÉÆ±ÏêÇéÒ³¡¢°å¿é·ÖÎö | `e2e/analysis-scoring.spec.ts` / `analysis-extended.spec.ts` / `stock-score.spec.ts` |
+| **½»Ò×²Õ** | ³Ö²Ö¿´°å¡¢²¹²Ö/Æ½²Ö¡¢½»Ò×¸´ÅÌ | `e2e/trading.spec.ts` / `trade-review.spec.ts` / `pool-group.spec.ts` |
+| **Êä³ö²Õ** | ±¨¸æÖĞĞÄ¡¢ÃüÁîÖ´ĞĞ | `e2e/output-cabin.spec.ts` / `output-command.spec.ts` |
+| **Ö¸Áî²Õ** | MCP ÑéÖ¤¡¢Êı¾İÇ¨ÒÆ | `e2e/mcp-verify.spec.ts` / `data-migration.spec.ts` |
+| **È«¾Ö** | ÏìÓ¦Ê½²¼¾Ö¡¢ÎŞÕÏ°­ | `e2e/responsive.spec.ts` / `accessibility.spec.ts` |
 
-### 5.2 E2E æµ‹è¯•åŸåˆ™
+### 5.2 E2E ²âÊÔÔ­Ôò
 
-1. **ä¸æµ‹è¯•è§†è§‰ç»†èŠ‚**ï¼šè§†è§‰ç»†èŠ‚ç”±è§†è§‰å›å½’æµ‹è¯•è¦†ç›–
-2. **ä¸æµ‹è¯•æ•°æ®å‡†ç¡®æ€§**ï¼šæ•°æ®å‡†ç¡®æ€§ç”±å•å…ƒ/é›†æˆæµ‹è¯•è¦†ç›–
-3. **èšç„¦ç”¨æˆ·è¡Œä¸º**ï¼šç‚¹å‡»ã€è¾“å…¥ã€å¯¼èˆªã€è¡¨å•æäº¤ã€é¡µé¢è·³è½¬
-4. **ç‹¬ç«‹ç¯å¢ƒ**ï¼šæ¯ä¸ª spec æ–‡ä»¶ç‹¬ç«‹è¿è¡Œï¼Œä¸å…±äº«çŠ¶æ€
+1. **²»²âÊÔÊÓ¾õÏ¸½Ú**£ºÊÓ¾õÏ¸½ÚÓÉÊÓ¾õ»Ø¹é²âÊÔ¸²¸Ç
+2. **²»²âÊÔÊı¾İ×¼È·ĞÔ**£ºÊı¾İ×¼È·ĞÔÓÉµ¥Ôª/¼¯³É²âÊÔ¸²¸Ç
+3. **¾Û½¹ÓÃ»§ĞĞÎª**£ºµã»÷¡¢ÊäÈë¡¢µ¼º½¡¢±íµ¥Ìá½»¡¢Ò³ÃæÌø×ª
+4. **¶ÀÁ¢»·¾³**£ºÃ¿¸ö spec ÎÄ¼ş¶ÀÁ¢ÔËĞĞ£¬²»¹²Ïí×´Ì¬
 
 ---
 
-## å…­ã€è§†è§‰å›å½’æµ‹è¯•ç­–ç•¥ï¼ˆLayer 4ï¼‰
+## Áù¡¢ÊÓ¾õ»Ø¹é²âÊÔ²ßÂÔ£¨Layer 4£©
 
-### 6.1 é…ç½®åŸºçº¿
+### 6.1 ÅäÖÃ»ùÏß
 
-| é…ç½®é¡¹ | å€¼ | è¯´æ˜ |
+| ÅäÖÃÏî | Öµ | ËµÃ÷ |
 |--------|-----|------|
-| å·¥å…· | Playwright `toHaveScreenshot` | åƒç´ çº§å¯¹æ¯” |
-| å®¹å·® | `maxDiffPixelRatio: 0.02` | å…è®¸ 2% åƒç´ å·®å¼‚ |
-| é˜ˆå€¼ | `threshold: 0.2` | å•åƒç´ è‰²å·®é˜ˆå€¼ |
-| æµè§ˆå™¨ | Desktop Chrome | å•ä¸€æµè§ˆå™¨å‡å°‘åŸºçº¿æ•°é‡ |
-| åŸºçº¿ç›®å½• | `e2e/visual-regression.spec.ts-snapshots/` | å·²çº³å…¥ç‰ˆæœ¬æ§åˆ¶ |
+| ¹¤¾ß | Playwright `toHaveScreenshot` | ÏñËØ¼¶¶Ô±È |
+| Èİ²î | `maxDiffPixelRatio: 0.02` | ÔÊĞí 2% ÏñËØ²îÒì |
+| ãĞÖµ | `threshold: 0.2` | µ¥ÏñËØÉ«²îãĞÖµ |
+| ä¯ÀÀÆ÷ | Desktop Chrome | µ¥Ò»ä¯ÀÀÆ÷¼õÉÙ»ùÏßÊıÁ¿ |
+| »ùÏßÄ¿Â¼ | `e2e/visual-regression.spec.ts-snapshots/` | ÒÑÄÉÈë°æ±¾¿ØÖÆ |
 
-### 6.2 åœºæ™¯æ¸…å•ï¼ˆå½“å‰ â†’ ç›®æ ‡ï¼‰
+### 6.2 ³¡¾°Çåµ¥£¨µ±Ç° ¡ú Ä¿±ê£©
 
-| # | åœºæ™¯ | çŠ¶æ€ |
+| # | ³¡¾° | ×´Ì¬ |
 |---|------|------|
-| 1 | é©¾é©¶èˆ±å…¨å±æ¸²æŸ“ | âœ… |
-| 2 | åˆ†æèˆ±è¯„åˆ†é¡µ | âœ… |
-| 3 | è¾“å…¥èˆ±é‡‡é›†å‘å¯¼ | âœ… |
-| 4 | äº¤æ˜“èˆ±æŒä»“çœ‹æ¿ | âœ… |
-| 5 | æš—è‰²æ¨¡å¼åˆ‡æ¢ | âœ… |
-| 6-20 | å…¶ä½™èˆ±å®¤é¦–å±ä¸å…³é”®äº¤äº’æ€ | ğŸ”´ å¾…è¡¥é½ï¼ˆP3ï¼‰ |
+| 1 | ¼İÊ»²ÕÈ«ÆÁäÖÈ¾ | ? |
+| 2 | ·ÖÎö²ÕÆÀ·ÖÒ³ | ? |
+| 3 | ÊäÈë²Õ²É¼¯Ïòµ¼ | ? |
+| 4 | ½»Ò×²Õ³Ö²Ö¿´°å | ? |
+| 5 | °µÉ«Ä£Ê½ÇĞ»» | ? |
+| 6-20 | ÆäÓà²ÕÊÒÊ×ÆÁÓë¹Ø¼ü½»»¥Ì¬ | ?? ´ı²¹Æë£¨P3£© |
 
-### 6.3 è¿è¡Œå‘½ä»¤
+### 6.3 ÔËĞĞÃüÁî
 
 ```powershell
-# è¿è¡Œè§†è§‰å›å½’ï¼ˆä¸åŸºçº¿å¯¹æ¯”ï¼‰
+# ÔËĞĞÊÓ¾õ»Ø¹é£¨Óë»ùÏß¶Ô±È£©
 npm run test:e2e:visual
 
-# æ›´æ–°åŸºçº¿ï¼ˆUI å˜æ›´å·²ç¡®è®¤åï¼‰
+# ¸üĞÂ»ùÏß£¨UI ±ä¸üÒÑÈ·ÈÏºó£©
 npm run test:e2e:visual:update
 ```
 
 ---
 
-## ä¸ƒã€è¦†ç›–ç‡åŸºçº¿ä¸é—¨ç¦
+## Æß¡¢¸²¸ÇÂÊ»ùÏßÓëÃÅ½û
 
-### 7.1 å…¨å±€ç›®æ ‡
+### 7.1 È«¾ÖÄ¿±ê
 
-| æŒ‡æ ‡ | ç›®æ ‡å€¼ | å½“å‰çŠ¶æ€ | è¯´æ˜ |
+| Ö¸±ê | Ä¿±êÖµ | µ±Ç°×´Ì¬ | ËµÃ÷ |
 |------|--------|----------|------|
-| **Statements** | â‰¥ 80% | ğŸŸ¡ å¾…æµ‹é‡ | å…¨å±€åŸºçº¿ |
-| **Branches** | â‰¥ 75% | ğŸŸ¡ å¾…æµ‹é‡ | æ¡ä»¶åˆ†æ”¯è¦†ç›– |
-| **Functions** | â‰¥ 80% | ğŸŸ¡ å¾…æµ‹é‡ | å‡½æ•°å…¥å£è¦†ç›– |
-| **Lines** | â‰¥ 80% | ğŸŸ¡ å¾…æµ‹é‡ | è¡Œè¦†ç›– |
+| **Statements** | ¡İ 80% | ?? ´ı²âÁ¿ | È«¾Ö»ùÏß |
+| **Branches** | ¡İ 75% | ?? ´ı²âÁ¿ | Ìõ¼ş·ÖÖ§¸²¸Ç |
+| **Functions** | ¡İ 80% | ?? ´ı²âÁ¿ | º¯ÊıÈë¿Ú¸²¸Ç |
+| **Lines** | ¡İ 80% | ?? ´ı²âÁ¿ | ĞĞ¸²¸Ç |
 
-### 7.2 åˆ†å±‚ç¡¬æ€§é˜ˆå€¼ï¼ˆvite.config.tsï¼‰
+### 7.2 ·Ö²ãÓ²ĞÔãĞÖµ£¨vite.config.ts£©
 
-ä»¥ä¸‹é˜ˆå€¼å†™å…¥ Vitest `coverage.thresholds`ï¼Œæœªè¾¾æ ‡å³ CI å¤±è´¥ï¼š
+ÒÔÏÂãĞÖµĞ´Èë Vitest `coverage.thresholds`£¬Î´´ï±ê¼´ CI Ê§°Ü£º
 
-| ç›®å½• | Statements | Branches | Functions | Lines |
+| Ä¿Â¼ | Statements | Branches | Functions | Lines |
 |------|------------|----------|-----------|-------|
 | `src/core/**` | 55 | 75 | 60 | 55 |
 | `src/data/**` | 35 | 35 | 35 | 35 |
 | `src/lib/**` | 70 | 65 | 80 | 70 |
 | `src/services/**` | 70 | 65 | 70 | 70 |
 
-> **è¯´æ˜**ï¼š`src/data/**` é˜ˆå€¼è¾ƒä½ï¼ˆ35%ï¼‰ï¼Œå›  IndexedDB è¿ç§»ä¸ Schema åˆ›å»ºé€»è¾‘å¤šä¸ºå£°æ˜å¼ï¼Œæµ‹è¯• ROI ä½ï¼›`src/core/**` ä¾§é‡åˆ†æ”¯è¦†ç›–ï¼ˆ75%ï¼‰ï¼Œå›  ACLã€Envelopeã€RouteGuard çš„æ¡ä»¶åˆ†æ”¯ç›´æ¥å½±å“å®‰å…¨ã€‚
+> **ËµÃ÷**£º`src/data/**` ãĞÖµ½ÏµÍ£¨35%£©£¬Òò IndexedDB Ç¨ÒÆÓë Schema ´´½¨Âß¼­¶àÎªÉùÃ÷Ê½£¬²âÊÔ ROI µÍ£»`src/core/**` ²àÖØ·ÖÖ§¸²¸Ç£¨75%£©£¬Òò ACL¡¢Envelope¡¢RouteGuard µÄÌõ¼ş·ÖÖ§Ö±½ÓÓ°Ïì°²È«¡£
 
 ---
 
-## å…«ã€Mock ä¸æµ‹è¯•æ•°æ®ç­–ç•¥
+## °Ë¡¢Mock Óë²âÊÔÊı¾İ²ßÂÔ
 
-### 8.1 Mock åˆ†å±‚
+### 8.1 Mock ·Ö²ã
 
-| å±‚çº§ | å·¥å…·/ä½ç½® | ç”¨é€” |
+| ²ã¼¶ | ¹¤¾ß/Î»ÖÃ | ÓÃÍ¾ |
 |------|-----------|------|
-| **å…¨å±€ Mock** | `tests/__mocks__/` | ç¬¬ä¸‰æ–¹åº“å…¨å±€æ›¿æ¢ï¼ˆ`nanoid`ã€`dayjs`ï¼‰ |
-| **Fixtures** | `tests/fixtures/` | é¢†åŸŸå¯¹è±¡é™æ€æ•°æ®é›†ï¼ˆordersã€portfoliosã€signalsï¼‰ |
-| **Factories** | `tests/unit/mockFactories.ts` | åŠ¨æ€ç”Ÿæˆå‡æ•°æ®çš„å·¥å‚å‡½æ•° |
-| **Helpers** | `tests/helpers/` | LLM Mock Fetchã€Widget æµ‹è¯•å·¥å…· |
-| **å±€éƒ¨ Mock** | æµ‹è¯•æ–‡ä»¶å†… `vi.mock()` | æ¨¡å—çº§ç²¾ç»†æ§åˆ¶ |
+| **È«¾Ö Mock** | `tests/__mocks__/` | µÚÈı·½¿âÈ«¾ÖÌæ»»£¨`nanoid`¡¢`dayjs`£© |
+| **Fixtures** | `tests/fixtures/` | ÁìÓò¶ÔÏó¾²Ì¬Êı¾İ¼¯£¨orders¡¢portfolios¡¢signals£© |
+| **Factories** | `tests/unit/mockFactories.ts` | ¶¯Ì¬Éú³É¼ÙÊı¾İµÄ¹¤³§º¯Êı |
+| **Helpers** | `tests/helpers/` | LLM Mock Fetch¡¢Widget ²âÊÔ¹¤¾ß |
+| **¾Ö²¿ Mock** | ²âÊÔÎÄ¼şÄÚ `vi.mock()` | Ä£¿é¼¶¾«Ï¸¿ØÖÆ |
 
-### 8.2 å…³é”® Mock ç­–ç•¥
+### 8.2 ¹Ø¼ü Mock ²ßÂÔ
 
-| å¤–éƒ¨ä¾èµ– | Mock ç­–ç•¥ | ä½ç½® |
+| Íâ²¿ÒÀÀµ | Mock ²ßÂÔ | Î»ÖÃ |
 |---------|----------|------|
-| **IndexedDB** | `fake-indexeddb` å…¨å±€æ›¿ä»£ | `tests/setup.ts` |
-| **LLM API** | `tests/helpers/llmMockFetch.ts` æ‹¦æˆª fetch | é›†æˆæµ‹è¯• |
-| **è¡Œæƒ…æ•°æ®** | `tests/mockStockData.ts` é™æ€æ•°æ® | å•å…ƒæµ‹è¯• |
+| **IndexedDB** | `fake-indexeddb` È«¾ÖÌæ´ú | `tests/setup.ts` |
+| **LLM API** | `tests/helpers/llmMockFetch.ts` À¹½Ø fetch | ¼¯³É²âÊÔ |
+| **ĞĞÇéÊı¾İ** | `tests/mockStockData.ts` ¾²Ì¬Êı¾İ | µ¥Ôª²âÊÔ |
 | **Browser API** | `matchMedia` / `IntersectionObserver` / `ResizeObserver` no-op mock | `tests/setup.ts` |
 
 ---
 
-## ä¹ã€æµ‹è¯•æ¸…ç†ä¹‰åŠ¡ï¼ˆAGENTS.md Â§ä¸‰ å¼ºåˆ¶ï¼‰
+## ¾Å¡¢²âÊÔÇåÀíÒåÎñ£¨AGENTS.md ¡ìÈı Ç¿ÖÆ£©
 
-### 9.1 å®šæ—¶å™¨æ¸…ç†
+### 9.1 ¶¨Ê±Æ÷ÇåÀí
 
 ```typescript
-// âœ… å¼ºåˆ¶æ¨¡æ¿
+// ? Ç¿ÖÆÄ£°å
 beforeEach(() => { vi.useFakeTimers() })
 afterEach(() => { vi.useRealTimers() })
 ```
 
-### 9.2 äº‹ä»¶ç›‘å¬æ¸…ç†
+### 9.2 ÊÂ¼ş¼àÌıÇåÀí
 
 ```typescript
-// âœ… å¼ºåˆ¶æ¨¡æ¿
+// ? Ç¿ÖÆÄ£°å
 const unsubscribe = EventBus.subscribe('event', handler)
-// ... æµ‹è¯•æ–­è¨€ ...
-unsubscribe() // â† æµ‹è¯•å†…æ˜¾å¼æ¸…ç†
+// ... ²âÊÔ¶ÏÑÔ ...
+unsubscribe() // ¡û ²âÊÔÄÚÏÔÊ½ÇåÀí
 ```
 
-### 9.3 DOM æ¸…ç†
+### 9.3 DOM ÇåÀí
 
 ```typescript
-// âœ… å·²å…¨å±€é…ç½®äº tests/setup.tsï¼Œæ— éœ€æ¯æ–‡ä»¶é‡å¤
+// ? ÒÑÈ«¾ÖÅäÖÃÓÚ tests/setup.ts£¬ÎŞĞèÃ¿ÎÄ¼şÖØ¸´
 // afterEach(() => cleanup())
 ```
 
 ---
 
-## åã€å·²çŸ¥é—®é¢˜ä¸ CI åŸºçº¿
+## Ê®¡¢ÒÑÖªÎÊÌâÓë CI »ùÏß
 
-### 10.1 æ’é™¤æ¸…å•ï¼ˆ`test:clean`ï¼‰
+### 10.1 ÅÅ³ıÇåµ¥£¨`test:clean`£©
 
-ä»¥ä¸‹ 8 ä¸ªæµ‹è¯•æ–‡ä»¶å› å¤–éƒ¨ä¾èµ–ä¸ç¨³å®šæˆ–é—ç•™å€ºåŠ¡è¢« CI æ’é™¤ï¼š
+ÒÔÏÂ 8 ¸ö²âÊÔÎÄ¼şÒòÍâ²¿ÒÀÀµ²»ÎÈ¶¨»òÒÅÁôÕ®Îñ±» CI ÅÅ³ı£º
 
-| # | æ–‡ä»¶è·¯å¾„ | æ’é™¤åŸå›  | ä¼˜å…ˆçº§ |
+| # | ÎÄ¼şÂ·¾¶ | ÅÅ³ıÔ­Òò | ÓÅÏÈ¼¶ |
 |---|----------|----------|--------|
-| 1 | `src/store/agentStore.test.ts` | LLM å¤šæ¨¡å‹åˆ‡æ¢ Mock æœªå®Œå…¨éš”ç¦» | P1 |
-| 2 | `src/services/fetcher/fetcherClient.test.ts` | æ•°æ®æºé€‚é…å™¨ç½‘ç»œ I/O ç«æ€ | P1 |
-| 3 | `src/services/llm/llmClient.multimodel.test.ts` | å¤šæ¨¡å‹ Provider ä¾èµ–ç¯å¢ƒå˜é‡ | P1 |
-| 4 | `tests/fetcher/dataSourceProvider.test.ts` | ç¬¬ä¸‰æ–¹æ¥å£å˜æ›´é¢‘ç¹ | P2 |
-| 5 | `tests/ui-components.test.tsx` | æ—§ç‰ˆç»„ä»¶é‡å¤æ–­è¨€ | P2 |
-| 6 | `tests/agentModule.integration.test.tsx` | Agent æ¨¡å—é‡æ„ä¸­é›†æˆç‚¹å¾…ç¨³å®š | P2 |
-| 7 | `tests/engine.test.ts` | å¼•æ“å…¨é“¾è·¯æµ‹è¯•è¿‡é‡ï¼Œå¾…æ‹†åˆ† | P1 |
-| 8 | `tests/sectorScoreService.test.ts` | Mock æ•°æ®ä¸çœŸå®ç»“æ„æ¼‚ç§» | P2 |
+| 1 | `src/store/agentStore.test.ts` | LLM ¶àÄ£ĞÍÇĞ»» Mock Î´ÍêÈ«¸ôÀë | P1 |
+| 2 | `src/services/fetcher/fetcherClient.test.ts` | Êı¾İÔ´ÊÊÅäÆ÷ÍøÂç I/O ¾ºÌ¬ | P1 |
+| 3 | `src/services/llm/llmClient.multimodel.test.ts` | ¶àÄ£ĞÍ Provider ÒÀÀµ»·¾³±äÁ¿ | P1 |
+| 4 | `tests/fetcher/dataSourceProvider.test.ts` | µÚÈı·½½Ó¿Ú±ä¸üÆµ·± | P2 |
+| 5 | `tests/ui-components.test.tsx` | ¾É°æ×é¼şÖØ¸´¶ÏÑÔ | P2 |
+| 6 | `tests/agentModule.integration.test.tsx` | Agent Ä£¿éÖØ¹¹ÖĞ¼¯³Éµã´ıÎÈ¶¨ | P2 |
+| 7 | `tests/engine.test.ts` | ÒıÇæÈ«Á´Â·²âÊÔ¹ıÖØ£¬´ı²ğ·Ö | P1 |
+| 8 | `tests/sectorScoreService.test.ts` | Mock Êı¾İÓëÕæÊµ½á¹¹Æ¯ÒÆ | P2 |
 
-### 10.2 CI è¿è¡Œå‘½ä»¤å¯¹ç…§
+### 10.2 CI ÔËĞĞÃüÁî¶ÔÕÕ
 
 ```powershell
-# CI ç»¿è‰²åŸºçº¿ï¼ˆæ’é™¤ä¸Šè¿° 8 ä¸ªï¼‰
+# CI ÂÌÉ«»ùÏß£¨ÅÅ³ıÉÏÊö 8 ¸ö£©
 npm run test:clean
 
-# å•ç‹¬è¿è¡Œå·²çŸ¥é—®é¢˜æ–‡ä»¶ï¼ˆè°ƒè¯•ç”¨ï¼‰
+# µ¥¶ÀÔËĞĞÒÑÖªÎÊÌâÎÄ¼ş£¨µ÷ÊÔÓÃ£©
 npm run test:known
 
-# å…¨é‡è¿è¡Œï¼ˆå«å·²çŸ¥é—®é¢˜ï¼Œå¯èƒ½å¤±è´¥ï¼‰
+# È«Á¿ÔËĞĞ£¨º¬ÒÑÖªÎÊÌâ£¬¿ÉÄÜÊ§°Ü£©
 npm test -- --run
 ```
 
-> **å®¡è®¡**ï¼š`audit:tests` ä¼šè‡ªåŠ¨æ ¡éªŒ `test:clean` ä¸ `test:known` çš„åŒå‘ä¸€è‡´æ€§ã€‚
+> **Éó¼Æ**£º`audit:tests` »á×Ô¶¯Ğ£Ñé `test:clean` Óë `test:known` µÄË«ÏòÒ»ÖÂĞÔ¡£
 
 ---
 
-## åä¸€ã€å›æ»šéªŒè¯æµç¨‹
+## Ê®Ò»¡¢»Ø¹öÑéÖ¤Á÷³Ì
 
-æ‰§è¡Œ AGENTS.md Â§äºŒã€Œå››æ­¥é›†æˆã€å›æ»šæ—¶ï¼Œå¿…é¡»æŒ‰ä»¥ä¸‹é¡ºåºéªŒè¯ï¼š
+Ö´ĞĞ AGENTS.md ¡ì¶ş¡¸ËÄ²½¼¯³É¡¹»Ø¹öÊ±£¬±ØĞë°´ÒÔÏÂË³ĞòÑéÖ¤£º
 
 ```powershell
-# 1. ç±»å‹å®‰å…¨
+# 1. ÀàĞÍ°²È«
 npx tsc --noEmit
 
-# 2. æ–‡æ¡£åŒæ­¥
+# 2. ÎÄµµÍ¬²½
 npm run audit:docs
 
-# 3. æ¶æ„åˆè§„
+# 3. ¼Ü¹¹ºÏ¹æ
 npm run audit:layers
 
-# 4. å•å…ƒæµ‹è¯•é€šè¿‡ï¼ˆclean åŸºçº¿ï¼‰
+# 4. µ¥Ôª²âÊÔÍ¨¹ı£¨clean »ùÏß£©
 npm run test:clean
 
-# 5. å¯é€‰ï¼šE2E å›å½’ï¼ˆé‡å¤§å›æ»šæ—¶ï¼‰
+# 5. ¿ÉÑ¡£ºE2E »Ø¹é£¨ÖØ´ó»Ø¹öÊ±£©
 npm run test:e2e
 ```
 
 ---
 
-## åäºŒã€è¿è¡Œå‘½ä»¤é€ŸæŸ¥
+## Ê®¶ş¡¢ÔËĞĞÃüÁîËÙ²é
 
 ```powershell
-# â”€â”€ å•å…ƒæµ‹è¯• â”€â”€
-npm run test              # å…¨é‡è¿è¡Œï¼ˆVitest runï¼‰
-npm run test:watch        # ç›‘å¬æ¨¡å¼
-npm run test:ci           # CI æ¨¡å¼ + è¦†ç›–ç‡
-npm run test:staged       # ä»…ä¸ git staged æ–‡ä»¶ç›¸å…³çš„æµ‹è¯•
-npm run test:clean        # æ’é™¤å·²çŸ¥é—®é¢˜æ–‡ä»¶çš„ç»¿è‰²åŸºçº¿
-npm run test:known        # ä»…è¿è¡Œå·²çŸ¥é—®é¢˜æ–‡ä»¶ï¼ˆè°ƒè¯•ï¼‰
+# ©¤©¤ µ¥Ôª²âÊÔ ©¤©¤
+npm run test              # È«Á¿ÔËĞĞ£¨Vitest run£©
+npm run test:watch        # ¼àÌıÄ£Ê½
+npm run test:ci           # CI Ä£Ê½ + ¸²¸ÇÂÊ
+npm run test:staged       # ½öÓë git staged ÎÄ¼şÏà¹ØµÄ²âÊÔ
+npm run test:clean        # ÅÅ³ıÒÑÖªÎÊÌâÎÄ¼şµÄÂÌÉ«»ùÏß
+npm run test:known        # ½öÔËĞĞÒÑÖªÎÊÌâÎÄ¼ş£¨µ÷ÊÔ£©
 
-# â”€â”€ E2E & è§†è§‰å›å½’ â”€â”€
-npm run test:e2e          # Playwright å…¨é‡ E2E
-npm run test:e2e:ui       # Playwright UI æ¨¡å¼
-npm run test:e2e:visual   # è§†è§‰å›å½’æµ‹è¯•
-npm run test:e2e:visual:update  # æ›´æ–°è§†è§‰åŸºçº¿
+# ©¤©¤ E2E & ÊÓ¾õ»Ø¹é ©¤©¤
+npm run test:e2e          # Playwright È«Á¿ E2E
+npm run test:e2e:ui       # Playwright UI Ä£Ê½
+npm run test:e2e:visual   # ÊÓ¾õ»Ø¹é²âÊÔ
+npm run test:e2e:visual:update  # ¸üĞÂÊÓ¾õ»ùÏß
 
-# â”€â”€ è¦†ç›–ç‡ â”€â”€
-npm run coverage          # ç”Ÿæˆè¦†ç›–ç‡æŠ¥å‘Š
+# ©¤©¤ ¸²¸ÇÂÊ ©¤©¤
+npm run coverage          # Éú³É¸²¸ÇÂÊ±¨¸æ
 
-# â”€â”€ æµ‹è¯•å®¡è®¡ â”€â”€
-npm run audit:tests       # æµ‹è¯•æ–‡ä»¶åˆè§„æ€§æ‰«æ
+# ©¤©¤ ²âÊÔÉó¼Æ ©¤©¤
+npm run audit:tests       # ²âÊÔÎÄ¼şºÏ¹æĞÔÉ¨Ãè
 ```
 
 ---
 
-## åä¸‰ã€æ”¹è¿›è·¯çº¿
+## Ê®Èı¡¢¸Ä½øÂ·Ïß
 
-| é˜¶æ®µ | ç›®æ ‡ | æ—¶é—´çº¿ |
+| ½×¶Î | Ä¿±ê | Ê±¼äÏß |
 |------|------|--------|
-| **çŸ­æœŸï¼ˆP1ï¼‰** | ä¿®å¤ 8 ä¸ªæ’é™¤æµ‹è¯•æ–‡ä»¶ï¼›è¡¥é½ `src/core/**` åˆ†æ”¯è¦†ç›–ç‡è‡³ 75% | 2 å‘¨ |
-| **ä¸­æœŸï¼ˆP2ï¼‰** | è¡¥é½ ~23 ä¸ªç¼ºå°‘æµ‹è¯•çš„ Storeï¼›organisms å±‚çº§ç»„ä»¶æµ‹è¯•è¦†ç›– | 1 ä¸ªæœˆ |
-| **é•¿æœŸï¼ˆP3ï¼‰** | è§†è§‰å›å½’åœºæ™¯æ‰©å±•è‡³ 20 ä¸ªï¼›E2E è¦†ç›– Safari/Firefoxï¼›æ•°æ®å±‚è¦†ç›–ç‡è¯„ä¼°æå‡ | 2 ä¸ªæœˆ |
+| **¶ÌÆÚ£¨P1£©** | ĞŞ¸´ 8 ¸öÅÅ³ı²âÊÔÎÄ¼ş£»²¹Æë `src/core/**` ·ÖÖ§¸²¸ÇÂÊÖÁ 75% | 2 ÖÜ |
+| **ÖĞÆÚ£¨P2£©** | ²¹Æë ~23 ¸öÈ±ÉÙ²âÊÔµÄ Store£»organisms ²ã¼¶×é¼ş²âÊÔ¸²¸Ç | 1 ¸öÔÂ |
+| **³¤ÆÚ£¨P3£©** | ÊÓ¾õ»Ø¹é³¡¾°À©Õ¹ÖÁ 20 ¸ö£»E2E ¸²¸Ç Safari/Firefox£»Êı¾İ²ã¸²¸ÇÂÊÆÀ¹ÀÌáÉı | 2 ¸öÔÂ |
 
 ---
 
-## åå››ã€ç›¸å…³æ–‡æ¡£ç´¢å¼•
+## Ê®ËÄ¡¢Ïà¹ØÎÄµµË÷Òı
 
-| æ–‡æ¡£ | è·¯å¾„ | å†…å®¹ |
+| ÎÄµµ | Â·¾¶ | ÄÚÈİ |
 |------|------|------|
-| æµ‹è¯•èµ„äº§ç›®å½• | `./test-catalog.md` | å…¨é‡æµ‹è¯•æ–‡ä»¶ç´¢å¼•ã€æŒ‰èˆ±å®¤/æœåŠ¡/Store åˆ†ç±»æ¸…å• |
-| ../../AGENTS.md æµ‹è¯•çº¦æŸ | `../../AGENTS.md` Â§äºŒ/ä¸‰/ä¸ƒ | å››æ­¥é›†æˆå›æ»šéªŒè¯ã€äº‹ä»¶ç›‘å¬æ¸…ç†æ¨¡æ¿ã€éªŒè¯å‘½ä»¤ |
-| ç¼–ç è§„èŒƒ | `./coding-conventions.md` | æµ‹è¯•å‘½åä¸ç›®å½•çº¦å®š |
-| è¿ç»´åŸºçº¿ | `../explanation/runbook.md` | CI/CD æµæ°´çº¿é…ç½® |
-| Vite æµ‹è¯•é…ç½® | `vite.config.ts` | æµ‹è¯•ç¯å¢ƒã€è¦†ç›–ç‡é˜ˆå€¼ã€pool é…ç½® |
-| å…¨å±€ setup | `tests/setup.ts` | fake-indexeddbã€Browser API mockã€cleanup |
+| ²âÊÔ×Ê²úÄ¿Â¼ | `./test-catalog.md` | È«Á¿²âÊÔÎÄ¼şË÷Òı¡¢°´²ÕÊÒ/·şÎñ/Store ·ÖÀàÇåµ¥ |
+| ../../AGENTS.md ²âÊÔÔ¼Êø | `../../AGENTS.md` ¡ì¶ş/Èı/Æß | ËÄ²½¼¯³É»Ø¹öÑéÖ¤¡¢ÊÂ¼ş¼àÌıÇåÀíÄ£°å¡¢ÑéÖ¤ÃüÁî |
+| ±àÂë¹æ·¶ | `./coding-conventions.md` | ²âÊÔÃüÃûÓëÄ¿Â¼Ô¼¶¨ |
+| ÔËÎ¬»ùÏß | `../explanation/runbook.md` | CI/CD Á÷Ë®ÏßÅäÖÃ |
+| Vite ²âÊÔÅäÖÃ | `vite.config.ts` | ²âÊÔ»·¾³¡¢¸²¸ÇÂÊãĞÖµ¡¢pool ÅäÖÃ |
+| È«¾Ö setup | `tests/setup.ts` | fake-indexeddb¡¢Browser API mock¡¢cleanup |
 
 
-<!-- merge-source: docs/how-to/testing/testing-strategy.md (2026-07-14 å†…å®¹èåˆï¼Œé¿å…å»é‡ä¸¢å¤±æœ‰æ•ˆä¿¡æ¯) -->
-## è¡¥å……å†…å®¹ï¼ˆåˆå¹¶è‡ª `docs/how-to/testing/testing-strategy.md`ï¼‰
+<!-- merge-source: docs/how-to/testing/testing-strategy.md (2026-07-14 ÄÚÈİÈÚºÏ£¬±ÜÃâÈ¥ÖØ¶ªÊ§ÓĞĞ§ĞÅÏ¢) -->
+## ²¹³äÄÚÈİ£¨ºÏ²¢×Ô `docs/how-to/testing/testing-strategy.md`£©
 
-| å±‚çº§ | èŒƒå›´ | å·¥å…· | ç›®æ ‡ | é—¨ç¦ä½ç½® |
-| å•å…ƒæµ‹è¯• | å‡½æ•°ã€Storeã€Serviceã€å·¥å…·ç±» | Vitest + jsdom | è¦†ç›–ç‡ â‰¥ 70%ï¼Œæ ¸å¿ƒæ¨¡å— â‰¥ 85% | pre-commit / CI |
-| é›†æˆæµ‹è¯• | è·¨æ¨¡å—è°ƒç”¨ã€DataBridgeã€EventBusã€Widget æ³¨å†Œ | Vitest + fake-indexeddb | éªŒè¯æ¨¡å—é—´å¥‘çº¦ä¸è¾¹ç•Œåœºæ™¯ | CI |
-| E2E æµ‹è¯• | å…³é”®ç”¨æˆ·è·¯å¾„ã€è·¯ç”±ã€é©¾é©¶èˆ±æ¸²æŸ“ | Playwright | è¦†ç›–æ ¸å¿ƒæµç¨‹ï¼Œè§†è§‰å›å½’å¯é€‰ | å‘å¸ƒå‰ |
-## 2. å…³é”®è¾¹ç•Œåœºæ™¯æ¸…å•
-### 2.1 Widget æ³¨å†Œä¸‰å¤„åŒæ­¥
-æ–°å¢ Widget æ—¶å¿…é¡»åŒæ­¥ï¼š
-1. `src/cockpit/core/widgetRegistry.ts` æ³¨å†Œæ¨¡æ¿
-2. `src/constants/cockpit.constants.ts` çš„ `DEFAULT_WIDGET_CONFIG` æ³¨å†Œé»˜è®¤é…ç½®
-3. åŒæ–‡ä»¶çš„ `WIDGET_DEFAULT_DATA_SOURCE` æ³¨å†Œæ•°æ®æº
-é›†æˆæµ‹è¯•åº”æ–­è¨€ï¼šæ‰€æœ‰æ³¨å†Œåœ¨ `widgetRegistry` ä¸­çš„ widgetIdï¼Œå‡åœ¨åä¸¤è€…ä¸­å­˜åœ¨å¯¹åº”é…ç½®ã€‚
-### 2.2 DataBridge è½¬å‘
-- æœªçŸ¥ action åº”æŠ›å‡º `EnvelopeError`
-- Query è·¯å¾„å¿…é¡»æºå¸¦ `payload.store`
-- å†™æ“ä½œæˆåŠŸååº”è§¦å‘ç¼“å­˜å¤±æ•ˆä¸å®¡è®¡æ—¥å¿—
-- è·¨æ¨¡å— ACL æ ¡éªŒå¤±è´¥åº”è¿”å› `success: false`
-### 2.3 Store è·¨ Tab å¹¿æ’­
-- `withBroadcast` åœ¨å†™æ“ä½œååº”è§¦å‘ `eventBus.emit`
-- å¹¿æ’­å¤±è´¥ä¸åº”é˜»å¡å†™æ“ä½œ
-- å¤šä¸ª Store è®¢é˜…åŒä¸€äº‹ä»¶æ—¶ï¼Œæ¸…ç†å‡½æ•°åº”æ­£ç¡®ç§»é™¤ç›‘å¬
-## 3. æ–°å¢æ¨¡å—æµ‹è¯•ä¹‰åŠ¡
-æ–°å¢æ¨¡å—æŒ‰ã€Œç±»å‹â†’Storeâ†’Serviceâ†’UIã€å››æ­¥é›†æˆæ—¶ï¼Œæ¯æ­¥å¿…é¡»ï¼š
-1. ç±»å‹ï¼šæ·»åŠ  `tests/__tests__/types/` ä¸‹çš„ç±»å‹æ–­è¨€ï¼ˆå¤æ‚æ³›å‹ï¼‰
-2. Storeï¼šè¦†ç›–çŠ¶æ€å˜åŒ–ã€é€‰æ‹©å™¨ã€å¼‚æ­¥ actionã€é”™è¯¯åˆ†æ”¯
-3. Serviceï¼šè¦†ç›–æˆåŠŸ/å¤±è´¥/é‡è¯•/è¾¹ç•Œè¾“å…¥
-4. UIï¼šè¦†ç›–æ¸²æŸ“ã€äº¤äº’ã€ç©ºçŠ¶æ€ã€é”™è¯¯çŠ¶æ€ã€äº‹ä»¶ç›‘å¬æ¸…ç†
-## 4. æµ‹è¯•å‘½åä¸ç›®å½•çº¦å®š
-- å•å…ƒæµ‹è¯•ï¼š`src/xxx/ModuleName.test.ts` æˆ– `__tests__/ModuleName.test.ts`
-- é›†æˆæµ‹è¯•ï¼š`tests/integration/xxx.integration.test.ts`
-- E2E æµ‹è¯•ï¼š`e2e/xxx.spec.ts`
-- ç±»å‹æµ‹è¯•ï¼š`tests/__tests__/types/xxx.spec.ts`
+| ²ã¼¶ | ·¶Î§ | ¹¤¾ß | Ä¿±ê | ÃÅ½ûÎ»ÖÃ |
+| µ¥Ôª²âÊÔ | º¯Êı¡¢Store¡¢Service¡¢¹¤¾ßÀà | Vitest + jsdom | ¸²¸ÇÂÊ ¡İ 70%£¬ºËĞÄÄ£¿é ¡İ 85% | pre-commit / CI |
+| ¼¯³É²âÊÔ | ¿çÄ£¿éµ÷ÓÃ¡¢DataBridge¡¢EventBus¡¢Widget ×¢²á | Vitest + fake-indexeddb | ÑéÖ¤Ä£¿é¼äÆõÔ¼Óë±ß½ç³¡¾° | CI |
+| E2E ²âÊÔ | ¹Ø¼üÓÃ»§Â·¾¶¡¢Â·ÓÉ¡¢¼İÊ»²ÕäÖÈ¾ | Playwright | ¸²¸ÇºËĞÄÁ÷³Ì£¬ÊÓ¾õ»Ø¹é¿ÉÑ¡ | ·¢²¼Ç° |
+## 2. ¹Ø¼ü±ß½ç³¡¾°Çåµ¥
+### 2.1 Widget ×¢²áÈı´¦Í¬²½
+ĞÂÔö Widget Ê±±ØĞëÍ¬²½£º
+1. `src/cockpit/core/widgetRegistry.ts` ×¢²áÄ£°å
+2. `src/constants/cockpit.constants.ts` µÄ `DEFAULT_WIDGET_CONFIG` ×¢²áÄ¬ÈÏÅäÖÃ
+3. Í¬ÎÄ¼şµÄ `WIDGET_DEFAULT_DATA_SOURCE` ×¢²áÊı¾İÔ´
+¼¯³É²âÊÔÓ¦¶ÏÑÔ£ºËùÓĞ×¢²áÔÚ `widgetRegistry` ÖĞµÄ widgetId£¬¾ùÔÚºóÁ½ÕßÖĞ´æÔÚ¶ÔÓ¦ÅäÖÃ¡£
+### 2.2 DataBridge ×ª·¢
+- Î´Öª action Ó¦Å×³ö `EnvelopeError`
+- Query Â·¾¶±ØĞëĞ¯´ø `payload.store`
+- Ğ´²Ù×÷³É¹¦ºóÓ¦´¥·¢»º´æÊ§Ğ§ÓëÉó¼ÆÈÕÖ¾
+- ¿çÄ£¿é ACL Ğ£ÑéÊ§°ÜÓ¦·µ»Ø `success: false`
+### 2.3 Store ¿ç Tab ¹ã²¥
+- `withBroadcast` ÔÚĞ´²Ù×÷ºóÓ¦´¥·¢ `eventBus.emit`
+- ¹ã²¥Ê§°Ü²»Ó¦×èÈûĞ´²Ù×÷
+- ¶à¸ö Store ¶©ÔÄÍ¬Ò»ÊÂ¼şÊ±£¬ÇåÀíº¯ÊıÓ¦ÕıÈ·ÒÆ³ı¼àÌı
+## 3. ĞÂÔöÄ£¿é²âÊÔÒåÎñ
+ĞÂÔöÄ£¿é°´¡¸ÀàĞÍ¡úStore¡úService¡úUI¡¹ËÄ²½¼¯³ÉÊ±£¬Ã¿²½±ØĞë£º
+1. ÀàĞÍ£ºÌí¼Ó `tests/__tests__/types/` ÏÂµÄÀàĞÍ¶ÏÑÔ£¨¸´ÔÓ·ºĞÍ£©
+2. Store£º¸²¸Ç×´Ì¬±ä»¯¡¢Ñ¡ÔñÆ÷¡¢Òì²½ action¡¢´íÎó·ÖÖ§
+3. Service£º¸²¸Ç³É¹¦/Ê§°Ü/ÖØÊÔ/±ß½çÊäÈë
+4. UI£º¸²¸ÇäÖÈ¾¡¢½»»¥¡¢¿Õ×´Ì¬¡¢´íÎó×´Ì¬¡¢ÊÂ¼ş¼àÌıÇåÀí
+## 4. ²âÊÔÃüÃûÓëÄ¿Â¼Ô¼¶¨
+- µ¥Ôª²âÊÔ£º`src/lib/validation.test.ts` »ò `__tests__/ModuleName.test.ts`
+- ¼¯³É²âÊÔ£º`tests/integration/xxx.integration.test.ts`
+- E2E ²âÊÔ£º`e2e/xxx.spec.ts`
+- ÀàĞÍ²âÊÔ£º`tests/__tests__/types/xxx.spec.ts`
 npm run test
-# ä»…è¿è¡Œä¸æœ¬æ¬¡æ”¹åŠ¨ç›¸å…³çš„æµ‹è¯•ï¼ˆlint-staged ä½¿ç”¨ï¼‰
+# ½öÔËĞĞÓë±¾´Î¸Ä¶¯Ïà¹ØµÄ²âÊÔ£¨lint-staged Ê¹ÓÃ£©
 npm run test:staged
 npm run test -- tests/integration
 npm run test:ci
-- å•å…ƒæµ‹è¯•å¤±è´¥ç›´æ¥é˜»æ–­æœ¬åœ°æäº¤ï¼ˆHusky pre-commitï¼‰
-- é›†æˆæµ‹è¯•å¤±è´¥é˜»æ–­ PR åˆå¹¶
-- E2E å¤±è´¥é˜»æ–­å‘å¸ƒï¼Œä½†å…è®¸åœ¨ç´§æ€¥ä¿®å¤ä¸­è·³è¿‡å¹¶è®°å½•
-- çŸ­æœŸï¼šè¡¥é½ DataBridgeã€withBroadcastã€Widget æ³¨å†Œä¸‰å¤„åŒæ­¥æµ‹è¯•
-- ä¸­æœŸï¼šå¼•å…¥é›†æˆæµ‹è¯•å¥—ä»¶ï¼Œè¦†ç›–é‡‡é›†â†’å­˜å‚¨â†’UI åé¦ˆé“¾è·¯
-- é•¿æœŸï¼šå»ºç«‹è§†è§‰å›å½’åŸºçº¿ï¼Œè¦†ç›–é©¾é©¶èˆ±ä¸è‚¡ç¥¨æ± çœ‹æ¿
+- µ¥Ôª²âÊÔÊ§°ÜÖ±½Ó×è¶Ï±¾µØÌá½»£¨Husky pre-commit£©
+- ¼¯³É²âÊÔÊ§°Ü×è¶Ï PR ºÏ²¢
+- E2E Ê§°Ü×è¶Ï·¢²¼£¬µ«ÔÊĞíÔÚ½ô¼±ĞŞ¸´ÖĞÌø¹ı²¢¼ÇÂ¼
+- ¶ÌÆÚ£º²¹Æë DataBridge¡¢withBroadcast¡¢Widget ×¢²áÈı´¦Í¬²½²âÊÔ
+- ÖĞÆÚ£ºÒıÈë¼¯³É²âÊÔÌ×¼ş£¬¸²¸Ç²É¼¯¡ú´æ´¢¡úUI ·´À¡Á´Â·
+- ³¤ÆÚ£º½¨Á¢ÊÓ¾õ»Ø¹é»ùÏß£¬¸²¸Ç¼İÊ»²ÕÓë¹ÉÆ±³Ø¿´°å

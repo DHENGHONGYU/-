@@ -1,113 +1,119 @@
 ---
-title: audit-b4-2-test-quality
+title: V9 Ç°¶ËÓ¦ÓÃ²âÊÔÖÊÁ¿Éó¼Æ±¨¸æ
+type: explanation
+domain: qa
+phase: planning
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "Éó¼ÆÈÕÆÚ£º2026-06-29 Éó¼Æ·¶Î§£ºËùÓÐ `*.test.ts` / `*.test.tsx` ÎÄ¼þ Éó¼ÆÎ¬¶È£º²âÊÔ¸²¸Ç¶ÈÆÀ¹À¡¢±ß½çÌõ¼þ²âÊÔ¡¢¼¯³É²âÊÔ Éó¼Æ·½Ê½£º¾²Ì¬´úÂë·ÖÎö + Vitest..."
+tags: [qa, quality, audit, test]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: reference
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/explanation/audit-b4-2-test-quality.md
-code_version: 2.0.0
-tier: reference
----
+# V9 Ç°¶ËÓ¦ÓÃ²âÊÔÖÊÁ¿Éó¼Æ±¨¸æ
 
-# V9 å‰ç«¯åº”ç”¨æµ‹è¯•è´¨é‡å®¡è®¡æŠ¥å‘Š
-
-> å®¡è®¡æ—¥æœŸï¼š2026-06-29  
-> å®¡è®¡èŒƒå›´ï¼šæ‰€æœ‰ `*.test.ts` / `*.test.tsx` æ–‡ä»¶  
-> å®¡è®¡ç»´åº¦ï¼šæµ‹è¯•è¦†ç›–åº¦è¯„ä¼°ã€è¾¹ç•Œæ¡ä»¶æµ‹è¯•ã€é›†æˆæµ‹è¯•  
-> å®¡è®¡æ–¹å¼ï¼šé™æ€ä»£ç åˆ†æž + Vitest è¿è¡Œé‡‡æ · + Playwright é…ç½®æ£€æŸ¥
+> Éó¼ÆÈÕÆÚ£º2026-06-29  
+> Éó¼Æ·¶Î§£ºËùÓÐ `*.test.ts` / `*.test.tsx` ÎÄ¼þ  
+> Éó¼ÆÎ¬¶È£º²âÊÔ¸²¸Ç¶ÈÆÀ¹À¡¢±ß½çÌõ¼þ²âÊÔ¡¢¼¯³É²âÊÔ  
+> Éó¼Æ·½Ê½£º¾²Ì¬´úÂë·ÖÎö + Vitest ÔËÐÐ²ÉÑù + Playwright ÅäÖÃ¼ì²é
 
 ---
 
-## ä¸€ã€æµ‹è¯•è¦†ç›–åº¦è¯„ä¼°
+## Ò»¡¢²âÊÔ¸²¸Ç¶ÈÆÀ¹À
 
-### 1.1 æ€»ä½“ç»Ÿè®¡
+### 1.1 ×ÜÌåÍ³¼Æ
 
-| æŒ‡æ ‡ | æ•°é‡ | å¤‡æ³¨ |
+| Ö¸±ê | ÊýÁ¿ | ±¸×¢ |
 |------|------|------|
-| æµ‹è¯•æ–‡ä»¶æ€»æ•° | **100** | å« `src/` å†…è” + `tests/` ç›®å½• |
-| describe æµ‹è¯•å¥—ä»¶æ•° | **242** | å¹³å‡æ¯ä¸ªæ–‡ä»¶ 2.4 ä¸ªå¥—ä»¶ |
-| æµ‹è¯•ç”¨ä¾‹æ€»æ•° (it/test) | **1,422** | å¹³å‡æ¯ä¸ªæ–‡ä»¶ 14.2 ä¸ªç”¨ä¾‹ |
-| æ¯ä¸ª describe å¹³å‡ç”¨ä¾‹æ•° | 5.9 | å¥—ä»¶ç²’åº¦è¾ƒç»† |
+| ²âÊÔÎÄ¼þ×ÜÊý | **100** | º¬ `src/` ÄÚÁª + `tests/` Ä¿Â¼ |
+| describe ²âÊÔÌ×¼þÊý | **242** | Æ½¾ùÃ¿¸öÎÄ¼þ 2.4 ¸öÌ×¼þ |
+| ²âÊÔÓÃÀý×ÜÊý (it/test) | **1,422** | Æ½¾ùÃ¿¸öÎÄ¼þ 14.2 ¸öÓÃÀý |
+| Ã¿¸ö describe Æ½¾ùÓÃÀýÊý | 5.9 | Ì×¼þÁ£¶È½ÏÏ¸ |
 
-### 1.2 æµ‹è¯•æ–‡ä»¶åˆ†å¸ƒ
+### 1.2 ²âÊÔÎÄ¼þ·Ö²¼
 
-#### æŒ‰ç›®å½•åˆ†å¸ƒ
+#### °´Ä¿Â¼·Ö²¼
 
-| ç›®å½• | æµ‹è¯•æ–‡ä»¶æ•° | å æ¯” | ä»£è¡¨æ¨¡å— |
+| Ä¿Â¼ | ²âÊÔÎÄ¼þÊý | Õ¼±È | ´ú±íÄ£¿é |
 |------|-----------|------|---------|
-| `src/store/` | 24 | 24% | çŠ¶æ€ç®¡ç†å±‚ï¼ˆZustand Storesï¼‰ |
-| `src/services/` | 27 | 27% | ä¸šåŠ¡æœåŠ¡å±‚ |
-| `tests/` | ~29 | 29% | é¡¶å±‚é›†æˆ/é¡µé¢æµ‹è¯• |
-| `src/core/` | 4 | 4% | æ ¸å¿ƒåŸºç¡€è®¾æ–½ |
+| `src/store/` | 24 | 24% | ×´Ì¬¹ÜÀí²ã£¨Zustand Stores£© |
+| `src/services/` | 27 | 27% | ÒµÎñ·þÎñ²ã |
+| `tests/` | ~29 | 29% | ¶¥²ã¼¯³É/Ò³Ãæ²âÊÔ |
+| `src/core/` | 4 | 4% | ºËÐÄ»ù´¡ÉèÊ© |
 | `src/hooks/` | 3 | 3% | React Hooks |
-| `src/pages/` | 4 | 4% | é¡µé¢ç»„ä»¶ |
-| å…¶ä»–ï¼ˆconfig/lib ç­‰ï¼‰ | 9 | 9% | é…ç½®ã€å·¥å…·åº“ç­‰ |
+| `src/pages/` | 4 | 4% | Ò³Ãæ×é¼þ |
+| ÆäËû£¨config/lib µÈ£© | 9 | 9% | ÅäÖÃ¡¢¹¤¾ß¿âµÈ |
 
-#### Store å±‚è¦†ç›–è¯¦æƒ…ï¼ˆ24/24 â‰ˆ 100% å·²è¦†ç›–ï¼‰
+#### Store ²ã¸²¸ÇÏêÇé£¨24/24 ¡Ö 100% ÒÑ¸²¸Ç£©
 
-| Store æ–‡ä»¶ | æ˜¯å¦æœ‰æµ‹è¯• | ä¸»è¦æµ‹è¯•ç‚¹ |
+| Store ÎÄ¼þ | ÊÇ·ñÓÐ²âÊÔ | Ö÷Òª²âÊÔµã |
 |-----------|-----------|-----------|
-| poolStore | âœ… | å¢žåˆ æ”¹æŸ¥ã€çŠ¶æ€æµè½¬ã€è®¢é˜…æœºåˆ¶ |
-| orderStore | âœ… | è®¢å• CRUDã€çŠ¶æ€å˜æ›´ã€æŒä¹…åŒ– |
-| positionStore | âœ… | æŒä»“è®¡ç®—ã€åˆå¹¶é€»è¾‘ |
-| signalStore | âœ… | ä¿¡å·ç”Ÿæˆã€æŽ’åºã€å¼‚å¸¸å¤„ç† |
-| dualStrategyStore | âœ… | åŒç­–ç•¥å¼•æ“Žã€æ´¾ç”Ÿå‡½æ•°ã€è®¢é˜… |
-| disciplineStore | âœ… | çºªå¾‹è¯„åˆ†ã€å›žæ»šæœºåˆ¶ |
-| holdingsStore | âœ… | æŒä»“ç®¡ç† |
-| backtestStore | âœ… | å›žæµ‹çŠ¶æ€ç®¡ç† |
-| marketDataStore | âœ… | è¡Œæƒ…æ•°æ®ç¼“å­˜ã€è®¢é˜… |
-| stockAnalysisStore | âœ… | ä¸ªè‚¡åˆ†æžçŠ¶æ€æœº |
-| sectorAnalysisStore | âœ… | æ¿å—åˆ†æžçŠ¶æ€ |
-| strategySnapshotStore | âœ… | ç­–ç•¥å¿«ç…§ç®¡ç† |
-| localKnowledgeStore | âœ… | æœ¬åœ°çŸ¥è¯†åº“ CRUD |
-| industryScoreStore | âœ… | è¡Œä¸šè¯„åˆ†æµç¨‹ |
-| intelligentScoreStore | âœ… | æ™ºèƒ½è¯„åˆ†æµç¨‹ |
-| scoreDocStore | âœ… | è¯„åˆ†æ–‡æ¡£ç®¡ç† |
-| commandStore | âœ… | å‘½ä»¤é¢æ¿çŠ¶æ€ |
-| workflowStore | âœ… | å·¥ä½œæµçŠ¶æ€ |
-| dataflowStore | âœ… | æ•°æ®æµçŠ¶æ€ |
-| agentStore | âœ… | Agent è¿è¡Œæ—¶çŠ¶æ€ |
-| widgetStore | âœ… | ç»„ä»¶é¢æ¿ç®¡ç† |
-| pageStore | âœ… | é¡µé¢çŠ¶æ€ç®¡ç† |
-| hotSectorStore | âœ… | çƒ­é—¨æ¿å—çŠ¶æ€ |
-| analysisNewsStore | âœ… | åˆ†æžèµ„è®¯çŠ¶æ€ |
+| poolStore | ? | ÔöÉ¾¸Ä²é¡¢×´Ì¬Á÷×ª¡¢¶©ÔÄ»úÖÆ |
+| orderStore | ? | ¶©µ¥ CRUD¡¢×´Ì¬±ä¸ü¡¢³Ö¾Ã»¯ |
+| positionStore | ? | ³Ö²Ö¼ÆËã¡¢ºÏ²¢Âß¼­ |
+| signalStore | ? | ÐÅºÅÉú³É¡¢ÅÅÐò¡¢Òì³£´¦Àí |
+| dualStrategyStore | ? | Ë«²ßÂÔÒýÇæ¡¢ÅÉÉúº¯Êý¡¢¶©ÔÄ |
+| disciplineStore | ? | ¼ÍÂÉÆÀ·Ö¡¢»Ø¹ö»úÖÆ |
+| holdingsStore | ? | ³Ö²Ö¹ÜÀí |
+| backtestStore | ? | »Ø²â×´Ì¬¹ÜÀí |
+| marketDataStore | ? | ÐÐÇéÊý¾Ý»º´æ¡¢¶©ÔÄ |
+| stockAnalysisStore | ? | ¸ö¹É·ÖÎö×´Ì¬»ú |
+| sectorAnalysisStore | ? | °å¿é·ÖÎö×´Ì¬ |
+| strategySnapshotStore | ? | ²ßÂÔ¿ìÕÕ¹ÜÀí |
+| localKnowledgeStore | ? | ±¾µØÖªÊ¶¿â CRUD |
+| industryScoreStore | ? | ÐÐÒµÆÀ·ÖÁ÷³Ì |
+| intelligentScoreStore | ? | ÖÇÄÜÆÀ·ÖÁ÷³Ì |
+| scoreDocStore | ? | ÆÀ·ÖÎÄµµ¹ÜÀí |
+| commandStore | ? | ÃüÁîÃæ°å×´Ì¬ |
+| workflowStore | ? | ¹¤×÷Á÷×´Ì¬ |
+| dataflowStore | ? | Êý¾ÝÁ÷×´Ì¬ |
+| agentStore | ? | Agent ÔËÐÐÊ±×´Ì¬ |
+| widgetStore | ? | ×é¼þÃæ°å¹ÜÀí |
+| pageStore | ? | Ò³Ãæ×´Ì¬¹ÜÀí |
+| hotSectorStore | ? | ÈÈÃÅ°å¿é×´Ì¬ |
+| analysisNewsStore | ? | ·ÖÎö×ÊÑ¶×´Ì¬ |
 
-> **ç»“è®º**ï¼šStore å±‚è¦†ç›–çŽ‡è¾¾åˆ° **100%**ï¼ˆ24/24 ä¸ª Store å‡æœ‰å¯¹åº”æµ‹è¯•æ–‡ä»¶ï¼‰ï¼Œæ˜¯é¡¹ç›®ä¸­æµ‹è¯•æœ€å®Œå–„çš„å±‚çº§ã€‚
+> **½áÂÛ**£ºStore ²ã¸²¸ÇÂÊ´ïµ½ **100%**£¨24/24 ¸ö Store ¾ùÓÐ¶ÔÓ¦²âÊÔÎÄ¼þ£©£¬ÊÇÏîÄ¿ÖÐ²âÊÔ×îÍêÉÆµÄ²ã¼¶¡£
 
-#### Service å±‚è¦†ç›–è¯¦æƒ…ï¼ˆ27 ä¸ªæœåŠ¡æœ‰æµ‹è¯•ï¼‰
+#### Service ²ã¸²¸ÇÏêÇé£¨27 ¸ö·þÎñÓÐ²âÊÔ£©
 
-| æœåŠ¡ç±»åˆ« | å·²æµ‹è¯•æœåŠ¡æ•° | ä»£è¡¨æœåŠ¡ |
+| ·þÎñÀà±ð | ÒÑ²âÊÔ·þÎñÊý | ´ú±í·þÎñ |
 |---------|-------------|---------|
-| è¯„åˆ†å¼•æ“Ž | 9 | v6ScoreServiceã€l0_l1_l2ã€l3ã€l4_l5_l6ã€l7_l8ã€lMinus1ã€valuePitAnalyzerã€hotSectorAnalyzerã€rotationSignalDetector |
-| æ•°æ®èŽ·å– | 4 | fetcherClientã€fetcherAdapterã€fetcherInterceptorã€strategyDataAdapter |
-| ç³»ç»ŸæœåŠ¡ | 3 | systemServiceã€bootstrapServiceã€localDocService |
-| åˆ†æžæœåŠ¡ | 3 | analysisServiceã€dataFreshnessGuardã€dataFusionEngine |
-| LLM æœåŠ¡ | 2 | llmClientã€llmClient.multimodel |
-| äº¤æ˜“æœåŠ¡ | 1 | tradeReviewAI |
-| æ–°é—»æœåŠ¡ | 1 | stockLinker |
-| ç»Ÿä¸€æœåŠ¡ | 1 | unifiedStockService |
-| æ•°æ®é‡‡é›† | 1 | TaskScheduler |
-| Skill æç¤ºè¯ | 2 | intelligentScoreSkillã€industryScoreSkill |
+| ÆÀ·ÖÒýÇæ | 9 | v6ScoreService¡¢l0_l1_l2¡¢l3¡¢l4_l5_l6¡¢l7_l8¡¢lMinus1¡¢valuePitAnalyzer¡¢hotSectorAnalyzer¡¢rotationSignalDetector |
+| Êý¾Ý»ñÈ¡ | 4 | fetcherClient¡¢fetcherAdapter¡¢fetcherInterceptor¡¢strategyDataAdapter |
+| ÏµÍ³·þÎñ | 3 | systemService¡¢bootstrapService¡¢localDocService |
+| ·ÖÎö·þÎñ | 3 | analysisService¡¢dataFreshnessGuard¡¢dataFusionEngine |
+| LLM ·þÎñ | 2 | llmClient¡¢llmClient.multimodel |
+| ½»Ò×·þÎñ | 1 | tradeReviewAI |
+| ÐÂÎÅ·þÎñ | 1 | stockLinker |
+| Í³Ò»·þÎñ | 1 | unifiedStockService |
+| Êý¾Ý²É¼¯ | 1 | TaskScheduler |
+| Skill ÌáÊ¾´Ê | 2 | intelligentScoreSkill¡¢industryScoreSkill |
 
-### 1.3 æœªè¦†ç›–æ ¸å¿ƒæ¨¡å—è¯†åˆ«
+### 1.3 Î´¸²¸ÇºËÐÄÄ£¿éÊ¶±ð
 
-é€šè¿‡é™æ€æ‰«æï¼Œä»¥ä¸‹æ ¸å¿ƒæ¨¡å—**å°šæœªå‘çŽ°**ç‹¬ç«‹æµ‹è¯•æ–‡ä»¶ï¼š
+Í¨¹ý¾²Ì¬É¨Ãè£¬ÒÔÏÂºËÐÄÄ£¿é**ÉÐÎ´·¢ÏÖ**¶ÀÁ¢²âÊÔÎÄ¼þ£º
 
-| æ¨¡å—ç±»åˆ« | æœªè¦†ç›–æ¨¡å— | é£Žé™©ç­‰çº§ | è¯´æ˜Ž |
+| Ä£¿éÀà±ð | Î´¸²¸ÇÄ£¿é | ·çÏÕµÈ¼¶ | ËµÃ÷ |
 |---------|-----------|---------|------|
-| **æ•°æ®å±‚** | `src/data/db.ts` (IndexedDB å°è£…) | âš ï¸ ä¸­é«˜ | æ ¸å¿ƒæ•°æ®æŒä¹…åŒ–å±‚ï¼Œè™½é€šè¿‡ service é—´æŽ¥æµ‹è¯•ï¼Œä½†ç¼ºå°‘ç›´æŽ¥å•å…ƒæµ‹è¯• |
-| **æ•°æ®å±‚** | `src/core/databridge.ts` | âš ï¸ ä¸­é«˜ | æ•°æ®æ€»çº¿æ ¸å¿ƒï¼Œé€šè¿‡é›†æˆæµ‹è¯•é—´æŽ¥è¦†ç›– |
-| **ç»„ä»¶å±‚** | `src/components/` (UI ç»„ä»¶åº“) | âš ï¸ ä¸­ | å¤§é‡é€šç”¨ UI ç»„ä»¶ç¼ºå°‘å•å…ƒæµ‹è¯•ï¼ˆä¾èµ–é¡µé¢çº§æµ‹è¯•é—´æŽ¥è¦†ç›–ï¼‰ |
-| **ç»„ä»¶å±‚** | `src/cockpit/widgets/` (ä»ªè¡¨ç›˜ç»„ä»¶) | âš ï¸ ä¸­ | ä»ªè¡¨ç›˜ Widget ç»„ä»¶ç¼ºå°‘ç‹¬ç«‹æµ‹è¯• |
-| **å¼•æ“Žå±‚** | `src/showcase/index.ts` (ä¸»å¼•æ“Ž) | âš ï¸ ä¸­ | æ ¸å¿ƒå¼•æ“Žå…¥å£ï¼Œç¼ºå°‘ç‹¬ç«‹æµ‹è¯• |
-| **å¼•æ“Žå±‚** | `src/agents/agentRuntime.ts` | âš ï¸ ä¸­ | Agent è¿è¡Œæ—¶ï¼Œç¼ºå°‘ç‹¬ç«‹æµ‹è¯• |
-| **æ ¸å¿ƒå±‚** | `src/core/dataflow/dataflowEngine.ts` | âš ï¸ ä¸­ | æ•°æ®æµå¼•æ“Žï¼Œé€šè¿‡ store é—´æŽ¥æµ‹è¯• |
-| **å·¥å…·åº“** | `src/lib/logger.ts` | ðŸŸ¡ ä½Ž | æ—¥å¿—å·¥å…·ï¼ˆæ³¨ï¼štests/logger.test.ts å­˜åœ¨ï¼Œå·²è¦†ç›–ï¼‰ |
-| **é…ç½®å±‚** | `src/config/routes.ts` | ðŸŸ¡ ä½Ž | è·¯ç”±é…ç½®ï¼Œç¼ºå°‘è·¯ç”±å®Œæ•´æ€§æµ‹è¯• |
+| **Êý¾Ý²ã** | `src/data/db.ts` (IndexedDB ·â×°) | ?? ÖÐ¸ß | ºËÐÄÊý¾Ý³Ö¾Ã»¯²ã£¬ËäÍ¨¹ý service ¼ä½Ó²âÊÔ£¬µ«È±ÉÙÖ±½Óµ¥Ôª²âÊÔ |
+| **Êý¾Ý²ã** | `src/core/databridge.ts` | ?? ÖÐ¸ß | Êý¾Ý×ÜÏßºËÐÄ£¬Í¨¹ý¼¯³É²âÊÔ¼ä½Ó¸²¸Ç |
+| **×é¼þ²ã** | `src/components/` (UI ×é¼þ¿â) | ?? ÖÐ | ´óÁ¿Í¨ÓÃ UI ×é¼þÈ±ÉÙµ¥Ôª²âÊÔ£¨ÒÀÀµÒ³Ãæ¼¶²âÊÔ¼ä½Ó¸²¸Ç£© |
+| **×é¼þ²ã** | `src/cockpit/widgets/` (ÒÇ±íÅÌ×é¼þ) | ?? ÖÐ | ÒÇ±íÅÌ Widget ×é¼þÈ±ÉÙ¶ÀÁ¢²âÊÔ |
+| **ÒýÇæ²ã** | `src/showcase/index.ts` (Ö÷ÒýÇæ) | ?? ÖÐ | ºËÐÄÒýÇæÈë¿Ú£¬È±ÉÙ¶ÀÁ¢²âÊÔ |
+| **ÒýÇæ²ã** | `src/agents/agentRuntime.ts` | ?? ÖÐ | Agent ÔËÐÐÊ±£¬È±ÉÙ¶ÀÁ¢²âÊÔ |
+| **ºËÐÄ²ã** | `src/core/dataflow/dataflowEngine.ts` | ?? ÖÐ | Êý¾ÝÁ÷ÒýÇæ£¬Í¨¹ý store ¼ä½Ó²âÊÔ |
+| **¹¤¾ß¿â** | `src/lib/logger.ts` | ?? µÍ | ÈÕÖ¾¹¤¾ß£¨×¢£ºtests/logger.test.ts ´æÔÚ£¬ÒÑ¸²¸Ç£© |
+| **ÅäÖÃ²ã** | `src/config/routes.ts` | ?? µÍ | Â·ÓÉÅäÖÃ£¬È±ÉÙÂ·ÓÉÍêÕûÐÔ²âÊÔ |
 
-### 1.4 è¦†ç›–çŽ‡é˜ˆå€¼é…ç½®ï¼ˆæ¥è‡ª vite.config.tsï¼‰
+### 1.4 ¸²¸ÇÂÊãÐÖµÅäÖÃ£¨À´×Ô vite.config.ts£©
 
 ```typescript
 thresholds: {
@@ -118,301 +124,301 @@ thresholds: {
 }
 ```
 
-> é…ç½®äº†åˆ†çº§è¦†ç›–çŽ‡é˜ˆå€¼ï¼Œcore/services è¦æ±‚è¾ƒé«˜ï¼ˆ70% è¯­å¥è¦†ç›–çŽ‡ï¼‰ï¼Œdata å±‚è¦æ±‚è¾ƒä½Žï¼ˆ35%ï¼‰ã€‚
+> ÅäÖÃÁË·Ö¼¶¸²¸ÇÂÊãÐÖµ£¬core/services ÒªÇó½Ï¸ß£¨70% Óï¾ä¸²¸ÇÂÊ£©£¬data ²ãÒªÇó½ÏµÍ£¨35%£©¡£
 
 ---
 
-## äºŒã€è¾¹ç•Œæ¡ä»¶æµ‹è¯•åˆ†æž
+## ¶þ¡¢±ß½çÌõ¼þ²âÊÔ·ÖÎö
 
-### 2.1 æ€»ä½“è¯„ä¼°
+### 2.1 ×ÜÌåÆÀ¹À
 
-| è¾¹ç•Œæ¡ä»¶ç±»åˆ« | å‡ºçŽ°é¢‘æ¬¡ï¼ˆåŒ¹é…è¡Œæ•°ï¼‰ | è¦†ç›–å……åˆ†åº¦ |
+| ±ß½çÌõ¼þÀà±ð | ³öÏÖÆµ´Î£¨Æ¥ÅäÐÐÊý£© | ¸²¸Ç³ä·Ö¶È |
 |-------------|---------------------|-----------|
-| ç©ºæ•°æ® / null / undefined | ~2,176 | â­â­â­â­ å……åˆ† |
-| å¼‚å¸¸è¾“å…¥ / é”™è¯¯è·¯å¾„ | é«˜ | â­â­â­â­ å……åˆ† |
-| è¾¹ç•Œå€¼æµ‹è¯• | ä¸­é«˜ | â­â­â­ è¾ƒå……åˆ† |
-| å¹¶å‘ / ç«žæ€æ¡ä»¶ | ä¸­ | â­â­â­ è¾ƒå……åˆ† |
+| ¿ÕÊý¾Ý / null / undefined | ~2,176 | ???? ³ä·Ö |
+| Òì³£ÊäÈë / ´íÎóÂ·¾¶ | ¸ß | ???? ³ä·Ö |
+| ±ß½çÖµ²âÊÔ | ÖÐ¸ß | ??? ½Ï³ä·Ö |
+| ²¢·¢ / ¾ºÌ¬Ìõ¼þ | ÖÐ | ??? ½Ï³ä·Ö |
 
-> æ³¨ï¼šé€šè¿‡æ­£åˆ™åŒ¹é… `ç©º|null|undefined|empty|è¾¹ç•Œ|å¼‚å¸¸|é”™è¯¯|å¤±è´¥|invalid|error|throw|reject` ç­‰å…³é”®è¯ï¼Œåœ¨æµ‹è¯•æ–‡ä»¶ä¸­åŒ¹é…åˆ° **2,176 è¡Œ**ç›¸å…³ä»£ç ï¼Œå¹³å‡æ¯ä¸ªæµ‹è¯•æ–‡ä»¶çº¦ 22 è¡Œè¾¹ç•Œ/å¼‚å¸¸æµ‹è¯•ä»£ç ã€‚
+> ×¢£ºÍ¨¹ýÕýÔòÆ¥Åä `¿Õ|null|undefined|empty|±ß½ç|Òì³£|´íÎó|Ê§°Ü|invalid|error|throw|reject` µÈ¹Ø¼ü´Ê£¬ÔÚ²âÊÔÎÄ¼þÖÐÆ¥Åäµ½ **2,176 ÐÐ**Ïà¹Ø´úÂë£¬Æ½¾ùÃ¿¸ö²âÊÔÎÄ¼þÔ¼ 22 ÐÐ±ß½ç/Òì³£²âÊÔ´úÂë¡£
 
-### 2.2 è¾¹ç•Œæ¡ä»¶æµ‹è¯•äº®ç‚¹
+### 2.2 ±ß½çÌõ¼þ²âÊÔÁÁµã
 
-#### 2.2.1 Store å±‚å¼‚å¸¸å¤„ç†æ¨¡å¼
+#### 2.2.1 Store ²ãÒì³£´¦ÀíÄ£Ê½
 
-å‡ ä¹Žæ‰€æœ‰ Store æµ‹è¯•å‡è¦†ç›–ä»¥ä¸‹å¼‚å¸¸åœºæ™¯ï¼š
+¼¸ºõËùÓÐ Store ²âÊÔ¾ù¸²¸ÇÒÔÏÂÒì³£³¡¾°£º
 
 ```typescript
-// å…¸åž‹æ¨¡å¼ï¼ˆä»¥ localKnowledgeStore ä¸ºä¾‹ï¼‰
-it('loadDocs: å¤±è´¥åº”è®¾ç½® error', async () => {
-  mockListLocalDocs.mockResolvedValue({ success: false, error: 'åŠ è½½å¤±è´¥' })
+// µäÐÍÄ£Ê½£¨ÒÔ localKnowledgeStore ÎªÀý£©
+it('loadDocs: Ê§°ÜÓ¦ÉèÖÃ error', async () => {
+  mockListLocalDocs.mockResolvedValue({ success: false, error: '¼ÓÔØÊ§°Ü' })
   await useLocalKnowledgeStore.getState().loadDocs()
-  expect(useLocalKnowledgeStore.getState().error).toBe('åŠ è½½å¤±è´¥')
+  expect(useLocalKnowledgeStore.getState().error).toBe('¼ÓÔØÊ§°Ü')
 })
 
-it('loadDocs: å¼‚å¸¸åº”è®¾ç½® error å¹¶ä¿æŒ loading=false', async () => {
+it('loadDocs: Òì³£Ó¦ÉèÖÃ error ²¢±£³Ö loading=false', async () => {
   mockListLocalDocs.mockRejectedValue(new Error('Network error'))
   await useLocalKnowledgeStore.getState().loadDocs()
   expect(useLocalKnowledgeStore.getState().error).toBe('Network error')
   expect(useLocalKnowledgeStore.getState().loading).toBe(false)
 })
 
-it('loadDocs: éž Error å¼‚å¸¸åº”ä½¿ç”¨é»˜è®¤é”™è¯¯æ¶ˆæ¯', async () => {
-  mockListLocalDocs.mockRejectedValue('timeout') // å­—ç¬¦ä¸²å¼‚å¸¸
+it('loadDocs: ·Ç Error Òì³£Ó¦Ê¹ÓÃÄ¬ÈÏ´íÎóÏûÏ¢', async () => {
+  mockListLocalDocs.mockRejectedValue('timeout') // ×Ö·û´®Òì³£
   await useLocalKnowledgeStore.getState().loadDocs()
-  expect(useLocalKnowledgeStore.getState().error).toBe('æ— æ³•åŠ è½½æœ¬åœ°æ–‡æ¡£')
+  expect(useLocalKnowledgeStore.getState().error).toBe('ÎÞ·¨¼ÓÔØ±¾µØÎÄµµ')
 })
 ```
 
-**è¦†ç›–çš„é”™è¯¯ç±»åž‹**ï¼š
-- âœ… Service è¿”å›ž `{ success: false }` ä¸šåŠ¡å¤±è´¥
-- âœ… Service æŠ›å‡º `Error` å¯¹è±¡å¼‚å¸¸
-- âœ… Service æŠ›å‡ºéž Error ç±»åž‹å¼‚å¸¸ï¼ˆå­—ç¬¦ä¸²ç­‰ï¼‰
-- âœ… ç½‘ç»œè¶…æ—¶ / è¿žæŽ¥å¤±è´¥
-- âœ… ç©ºæ•°æ®è¾“å…¥ï¼ˆç©ºæ•°ç»„ã€ç©ºå­—ç¬¦ä¸²ã€nullï¼‰
+**¸²¸ÇµÄ´íÎóÀàÐÍ**£º
+- ? Service ·µ»Ø `{ success: false }` ÒµÎñÊ§°Ü
+- ? Service Å×³ö `Error` ¶ÔÏóÒì³£
+- ? Service Å×³ö·Ç Error ÀàÐÍÒì³££¨×Ö·û´®µÈ£©
+- ? ÍøÂç³¬Ê± / Á¬½ÓÊ§°Ü
+- ? ¿ÕÊý¾ÝÊäÈë£¨¿ÕÊý×é¡¢¿Õ×Ö·û´®¡¢null£©
 
-#### 2.2.2 å¹¶å‘é”æµ‹è¯•
+#### 2.2.2 ²¢·¢Ëø²âÊÔ
 
-å¤šä¸ª Store æµ‹è¯•éªŒè¯äº†å¹¶å‘é”æœºåˆ¶ï¼š
+¶à¸ö Store ²âÊÔÑéÖ¤ÁË²¢·¢Ëø»úÖÆ£º
 
-| Store | æµ‹è¯•ç‚¹ |
+| Store | ²âÊÔµã |
 |-------|-------|
-| poolStore | `refresh å¹¶å‘é”ï¼ˆisRefreshing=true æ—¶è·³è¿‡ï¼‰` |
-| dualStrategyStore | `fetchScores å¹¶å‘é”ï¼ˆisRefreshing=true è·³è¿‡ï¼‰` |
-| disciplineStore | `recalculate å¹¶å‘é”`ã€`æ— æŠ¥å‘Šæ—¶å¯åŠ¨ isRefreshing å¹¶åœ¨å®ŒæˆåŽé‡Šæ”¾` |
-| signalStore | `è®¾ç½® loading / isRefreshing çŠ¶æ€` |
+| poolStore | `refresh ²¢·¢Ëø£¨isRefreshing=true Ê±Ìø¹ý£©` |
+| dualStrategyStore | `fetchScores ²¢·¢Ëø£¨isRefreshing=true Ìø¹ý£©` |
+| disciplineStore | `recalculate ²¢·¢Ëø`¡¢`ÎÞ±¨¸æÊ±Æô¶¯ isRefreshing ²¢ÔÚÍê³ÉºóÊÍ·Å` |
+| signalStore | `ÉèÖÃ loading / isRefreshing ×´Ì¬` |
 
-#### 2.2.3 è¯„åˆ†å¼•æ“Žè¾¹ç•Œå€¼æµ‹è¯•
+#### 2.2.3 ÆÀ·ÖÒýÇæ±ß½çÖµ²âÊÔ
 
-V6 è¯„åˆ†å¼•æ“Žçš„è®¡ç®—å™¨æµ‹è¯•åŒ…å«å¤§é‡è¾¹ç•Œå€¼éªŒè¯ï¼š
+V6 ÆÀ·ÖÒýÇæµÄ¼ÆËãÆ÷²âÊÔ°üº¬´óÁ¿±ß½çÖµÑéÖ¤£º
 
-**ä¼°å€¼åˆ¤å®šè¾¹ç•Œ**ï¼ˆl0_l1_l2.test.tsï¼‰ï¼š
-- ä½Žä¼°ï¼šPEä½Ž + é«˜å¢žé•¿
-- åˆç†ï¼šä¸­ç­‰ PE
-- é«˜ä¼°ï¼šè¾ƒé«˜ PE
-- æžé«˜ï¼šæžé«˜ PE
-- äºæŸï¼šPE < 0
-- æ— PEï¼šPE undefined
-- èŠ¯ç‰‡è¡Œä¸šç‰¹æ®Šé˜ˆå€¼
+**¹ÀÖµÅÐ¶¨±ß½ç**£¨l0_l1_l2.test.ts£©£º
+- µÍ¹À£ºPEµÍ + ¸ßÔö³¤
+- ºÏÀí£ºÖÐµÈ PE
+- ¸ß¹À£º½Ï¸ß PE
+- ¼«¸ß£º¼«¸ß PE
+- ¿÷Ëð£ºPE < 0
+- ÎÞPE£ºPE undefined
+- Ð¾Æ¬ÐÐÒµÌØÊâãÐÖµ
 
-**ä¿¡å·å¼ºåº¦è¾¹ç•Œ**ï¼ˆdualStrategyStore.test.tsï¼‰ï¼š
-- `confidence >= 0.7 â†’ strong`
-- `confidence >= 0.4 â†’ medium`
-- å¦åˆ™ `weak`
+**ÐÅºÅÇ¿¶È±ß½ç**£¨dualStrategyStore.test.ts£©£º
+- `confidence >= 0.7 ¡ú strong`
+- `confidence >= 0.4 ¡ú medium`
+- ·ñÔò `weak`
 
-#### 2.2.4 ç©ºæ•°æ®ä¸Žè¾¹ç•Œè¾“å…¥
+#### 2.2.4 ¿ÕÊý¾ÝÓë±ß½çÊäÈë
 
-| æµ‹è¯•åœºæ™¯ | ç¤ºä¾‹æ–‡ä»¶ | æµ‹è¯•ç‚¹ |
+| ²âÊÔ³¡¾° | Ê¾ÀýÎÄ¼þ | ²âÊÔµã |
 |---------|---------|-------|
-| ç©ºè‚¡ç¥¨æ±  | signalStore.test.ts | `è‚¡ç¥¨æ± ä¸ºç©º â†’ signals ä¸ºç©º` |
-| ç©º symbol | intelligentScoreStore.test.ts | `symbol ä¸ºç©ºæ—¶æ¸…ç©ºåŽ†å²` |
-| ç©º code | industryScoreStore.test.ts | `code ä¸ºç©ºæ—¶æ¸…ç©ºåŽ†å²` |
-| éžæ³•è‚¡ç¥¨ä»£ç  | poolStore.test.ts | `è‚¡ç¥¨ä¸å­˜åœ¨è¿”å›ž false` |
-| ç©ºåˆ†ç»„å | poolStore.test.ts | `ç©ºåˆ†ç»„åè¿”å›ž false` |
-| LLM æœªé…ç½® | intelligentScoreStore.test.ts | `LLM æœªé…ç½®æ—¶è®¾ç½®é”™è¯¯å¹¶å±•å¼€é…ç½®` |
-| è¾¹ç•Œ limit å€¼ | signalStore.test.ts | `topSignals: limit å¤§äºŽæ€»æ•°`ã€`signals ä¸ºç©º` |
+| ¿Õ¹ÉÆ±³Ø | signalStore.test.ts | `¹ÉÆ±³ØÎª¿Õ ¡ú signals Îª¿Õ` |
+| ¿Õ symbol | intelligentScoreStore.test.ts | `symbol Îª¿ÕÊ±Çå¿ÕÀúÊ·` |
+| ¿Õ code | industryScoreStore.test.ts | `code Îª¿ÕÊ±Çå¿ÕÀúÊ·` |
+| ·Ç·¨¹ÉÆ±´úÂë | poolStore.test.ts | `¹ÉÆ±²»´æÔÚ·µ»Ø false` |
+| ¿Õ·Ö×éÃû | poolStore.test.ts | `¿Õ·Ö×éÃû·µ»Ø false` |
+| LLM Î´ÅäÖÃ | intelligentScoreStore.test.ts | `LLM Î´ÅäÖÃÊ±ÉèÖÃ´íÎó²¢Õ¹¿ªÅäÖÃ` |
+| ±ß½ç limit Öµ | signalStore.test.ts | `topSignals: limit ´óÓÚ×ÜÊý`¡¢`signals Îª¿Õ` |
 
-### 2.3 è¾¹ç•Œæ¡ä»¶æµ‹è¯•ä¸è¶³ç‚¹
+### 2.3 ±ß½çÌõ¼þ²âÊÔ²»×ãµã
 
-| ç±»åˆ« | ä¸è¶³ç‚¹ | é£Žé™©ç­‰çº§ | å»ºè®® |
+| Àà±ð | ²»×ãµã | ·çÏÕµÈ¼¶ | ½¨Òé |
 |------|-------|---------|------|
-| æ•°å€¼è¾¹ç•Œ | æžç«¯å¤§å€¼/æžå°å€¼æµ‹è¯•è¾ƒå°‘ | ðŸŸ¡ ä¸­ | å¢žåŠ æ•°å€¼æº¢å‡ºã€ç²¾åº¦ä¸¢å¤±åœºæ™¯æµ‹è¯• |
-| æ—¶é—´è¾¹ç•Œ | æ—¶åŒºã€å¤ä»¤æ—¶ã€é—°æ—¥æµ‹è¯•ç¼ºå¤± | ðŸŸ¡ ä¸­ | å¢žåŠ æ—¶é—´ç›¸å…³è¾¹ç•Œæµ‹è¯• |
-| å¹¶å‘æ·±åº¦ | ä»…æµ‹è¯•å•æ¬¡å¹¶å‘é”ï¼Œç¼ºå°‘é«˜å¹¶å‘åœºæ™¯ | ðŸŸ¡ ä¸­ | å¢žåŠ å¹¶å‘åŽ‹åŠ›æµ‹è¯•ï¼ˆå¦‚ 100 æ¬¡å¹¶å‘è°ƒç”¨ï¼‰ |
-| å†…å­˜è¾¹ç•Œ | å¤§æ•°æ®é‡ä¸‹çš„å†…å­˜/æ€§èƒ½æµ‹è¯•ç¼ºå¤± | âš ï¸ ä¸­é«˜ | å¢žåŠ å¤§æ•°æ®é‡ï¼ˆ1000+ è‚¡ç¥¨ï¼‰åœºæ™¯æµ‹è¯• |
-| ç»„ä»¶è¾¹ç•Œ | UI ç»„ä»¶çš„è¾¹ç•Œ props æµ‹è¯•ä¸è¶³ | âš ï¸ ä¸­é«˜ | ä¸ºæ ¸å¿ƒ UI ç»„ä»¶è¡¥å……è¾¹ç•Œ props æµ‹è¯• |
+| ÊýÖµ±ß½ç | ¼«¶Ë´óÖµ/¼«Ð¡Öµ²âÊÔ½ÏÉÙ | ?? ÖÐ | Ôö¼ÓÊýÖµÒç³ö¡¢¾«¶È¶ªÊ§³¡¾°²âÊÔ |
+| Ê±¼ä±ß½ç | Ê±Çø¡¢ÏÄÁîÊ±¡¢ÈòÈÕ²âÊÔÈ±Ê§ | ?? ÖÐ | Ôö¼ÓÊ±¼äÏà¹Ø±ß½ç²âÊÔ |
+| ²¢·¢Éî¶È | ½ö²âÊÔµ¥´Î²¢·¢Ëø£¬È±ÉÙ¸ß²¢·¢³¡¾° | ?? ÖÐ | Ôö¼Ó²¢·¢Ñ¹Á¦²âÊÔ£¨Èç 100 ´Î²¢·¢µ÷ÓÃ£© |
+| ÄÚ´æ±ß½ç | ´óÊý¾ÝÁ¿ÏÂµÄÄÚ´æ/ÐÔÄÜ²âÊÔÈ±Ê§ | ?? ÖÐ¸ß | Ôö¼Ó´óÊý¾ÝÁ¿£¨1000+ ¹ÉÆ±£©³¡¾°²âÊÔ |
+| ×é¼þ±ß½ç | UI ×é¼þµÄ±ß½ç props ²âÊÔ²»×ã | ?? ÖÐ¸ß | ÎªºËÐÄ UI ×é¼þ²¹³ä±ß½ç props ²âÊÔ |
 
 ---
 
-## ä¸‰ã€é›†æˆæµ‹è¯•ä¸Ž E2E æµ‹è¯•åˆ†æž
+## Èý¡¢¼¯³É²âÊÔÓë E2E ²âÊÔ·ÖÎö
 
-### 3.1 E2E æµ‹è¯•ï¼ˆPlaywrightï¼‰
+### 3.1 E2E ²âÊÔ£¨Playwright£©
 
-#### é…ç½®æ¦‚è§ˆ
+#### ÅäÖÃ¸ÅÀÀ
 
-- **æµ‹è¯•æ¡†æž¶**ï¼šPlaywright (`@playwright/test v1.61.1`)
-- **æµ‹è¯•ç›®å½•**ï¼š`e2e/`
-- **åŸºç¡€ URL**ï¼š`http://localhost:4173`ï¼ˆä½¿ç”¨ `vite preview` å¯åŠ¨ï¼‰
-- **æµè§ˆå™¨**ï¼šChromium (Desktop Chrome)
-- **é‡è¯•æœºåˆ¶**ï¼šCI çŽ¯å¢ƒä¸‹é‡è¯• 2 æ¬¡
-- **è¿½è¸ª**ï¼šé¦–æ¬¡å¤±è´¥æ—¶å½•åˆ¶ trace
-- **æˆªå›¾**ï¼šä»…å¤±è´¥æ—¶æˆªå›¾
+- **²âÊÔ¿ò¼Ü**£ºPlaywright (`@playwright/test v1.61.1`)
+- **²âÊÔÄ¿Â¼**£º`e2e/`
+- **»ù´¡ URL**£º`http://localhost:4173`£¨Ê¹ÓÃ `vite preview` Æô¶¯£©
+- **ä¯ÀÀÆ÷**£ºChromium (Desktop Chrome)
+- **ÖØÊÔ»úÖÆ**£ºCI »·¾³ÏÂÖØÊÔ 2 ´Î
+- **×·×Ù**£ºÊ×´ÎÊ§°ÜÊ±Â¼ÖÆ trace
+- **½ØÍ¼**£º½öÊ§°ÜÊ±½ØÍ¼
 
-#### çŽ°æœ‰ E2E æµ‹è¯•ç”¨ä¾‹
+#### ÏÖÓÐ E2E ²âÊÔÓÃÀý
 
-| æµ‹è¯•æ–‡ä»¶ | æµ‹è¯•å¥—ä»¶ | ç”¨ä¾‹æ•° | è¦†ç›–ä¸šåŠ¡æµç¨‹ |
+| ²âÊÔÎÄ¼þ | ²âÊÔÌ×¼þ | ÓÃÀýÊý | ¸²¸ÇÒµÎñÁ÷³Ì |
 |---------|---------|-------|-------------|
-| `e2e/pool-group.spec.ts` | è‚¡ç¥¨æ± åˆ†ç»„ | 5 | åˆ†ç»„ UI æŽ§ä»¶å±•ç¤ºã€æ–°å»ºåˆ†ç»„ã€å½•å…¥è‚¡ç¥¨åˆ°æ–°åˆ†ç»„ã€åˆ†ç»„ç­›é€‰ã€åˆ†ç»„åˆ é™¤ï¼ˆå¾…ç¡®è®¤ï¼‰ |
+| `e2e/pool-group.spec.ts` | ¹ÉÆ±³Ø·Ö×é | 5 | ·Ö×é UI ¿Ø¼þÕ¹Ê¾¡¢ÐÂ½¨·Ö×é¡¢Â¼Èë¹ÉÆ±µ½ÐÂ·Ö×é¡¢·Ö×éÉ¸Ñ¡¡¢·Ö×éÉ¾³ý£¨´ýÈ·ÈÏ£© |
 
-> **E2E æµ‹è¯•è¦†ç›–çŽ‡ï¼šçº¦ 1 ä¸ªæµ‹è¯•æ–‡ä»¶ï¼Œ5 ä¸ªæµ‹è¯•ç”¨ä¾‹**  
-> ä¸Žå®‰è£…æŒ‡å—ä¸­æåˆ°çš„ "5 æ¡ E2E æ ¸å¿ƒé“¾è·¯" å­˜åœ¨å·®å¼‚ï¼Œéœ€ç¡®è®¤å…¶ä»– E2E æµ‹è¯•æ–‡ä»¶ä½ç½®æˆ–çŠ¶æ€ã€‚
+> **E2E ²âÊÔ¸²¸ÇÂÊ£ºÔ¼ 1 ¸ö²âÊÔÎÄ¼þ£¬5 ¸ö²âÊÔÓÃÀý**  
+> Óë°²×°Ö¸ÄÏÖÐÌáµ½µÄ "5 Ìõ E2E ºËÐÄÁ´Â·" ´æÔÚ²îÒì£¬ÐèÈ·ÈÏÆäËû E2E ²âÊÔÎÄ¼þÎ»ÖÃ»ò×´Ì¬¡£
 
-#### E2E è¦†ç›–ç¼ºå£
+#### E2E ¸²¸ÇÈ±¿Ú
 
-æ ¹æ® V9 ç³»ç»Ÿæ ¸å¿ƒä¸šåŠ¡æ¨¡å—ï¼Œä»¥ä¸‹å…³é”®æµç¨‹**ç¼ºå°‘** E2E æµ‹è¯•ï¼š
+¸ù¾Ý V9 ÏµÍ³ºËÐÄÒµÎñÄ£¿é£¬ÒÔÏÂ¹Ø¼üÁ÷³Ì**È±ÉÙ** E2E ²âÊÔ£º
 
-| æ ¸å¿ƒä¸šåŠ¡æµç¨‹ | ä¼˜å…ˆçº§ | è¯´æ˜Ž |
+| ºËÐÄÒµÎñÁ÷³Ì | ÓÅÏÈ¼¶ | ËµÃ÷ |
 |-------------|-------|------|
-| è‚¡ç¥¨å½•å…¥ä¸Žæ± ç®¡ç† | P0 | éƒ¨åˆ†è¦†ç›–ï¼ˆpool-group.spec.tsï¼‰ |
-| ä¸ªè‚¡è¯„åˆ†æµç¨‹ | P0 | V6 è¯„åˆ†ã€æ™ºèƒ½è¯„åˆ†ç«¯åˆ°ç«¯æµç¨‹æœªè¦†ç›– |
-| æ¿å—åˆ†æžæµç¨‹ | P1 | çƒ­é—¨æ¿å—ã€ä»·å€¼æ´¼åœ°ã€è½®åŠ¨ä¿¡å· |
-| äº¤æ˜“å¤ç›˜æµç¨‹ | P1 | è®¢å•å½•å…¥ã€çºªå¾‹è¯„åˆ†ã€äº¤æ˜“å›žé¡¾ |
-| æ•°æ®å¯¼å…¥å¯¼å‡º | P1 | V6 è¿ç§»ã€JSON å¯¼å…¥å¯¼å‡º |
-| æœ¬åœ°çŸ¥è¯†åº“ | P2 | æ–‡æ¡£å¯¼å…¥ã€æœç´¢ã€åˆ†ç±» |
-| ä»ªè¡¨ç›˜é©¾é©¶èˆ± | P2 | Widget å¸ƒå±€ã€è‡ªå®šä¹‰çœ‹æ¿ |
-| PWA ç¦»çº¿èƒ½åŠ› | P2 | ç¦»çº¿è®¿é—®ã€ç¼“å­˜ç­–ç•¥ |
+| ¹ÉÆ±Â¼ÈëÓë³Ø¹ÜÀí | P0 | ²¿·Ö¸²¸Ç£¨pool-group.spec.ts£© |
+| ¸ö¹ÉÆÀ·ÖÁ÷³Ì | P0 | V6 ÆÀ·Ö¡¢ÖÇÄÜÆÀ·Ö¶Ëµ½¶ËÁ÷³ÌÎ´¸²¸Ç |
+| °å¿é·ÖÎöÁ÷³Ì | P1 | ÈÈÃÅ°å¿é¡¢¼ÛÖµÍÝµØ¡¢ÂÖ¶¯ÐÅºÅ |
+| ½»Ò×¸´ÅÌÁ÷³Ì | P1 | ¶©µ¥Â¼Èë¡¢¼ÍÂÉÆÀ·Ö¡¢½»Ò×»Ø¹Ë |
+| Êý¾Ýµ¼Èëµ¼³ö | P1 | V6 Ç¨ÒÆ¡¢JSON µ¼Èëµ¼³ö |
+| ±¾µØÖªÊ¶¿â | P2 | ÎÄµµµ¼Èë¡¢ËÑË÷¡¢·ÖÀà |
+| ÒÇ±íÅÌ¼ÝÊ»²Õ | P2 | Widget ²¼¾Ö¡¢×Ô¶¨Òå¿´°å |
+| PWA ÀëÏßÄÜÁ¦ | P2 | ÀëÏß·ÃÎÊ¡¢»º´æ²ßÂÔ |
 
-### 3.2 ç»„ä»¶é›†æˆæµ‹è¯•
+### 3.2 ×é¼þ¼¯³É²âÊÔ
 
-#### é¡µé¢çº§æµ‹è¯•ï¼ˆReact Testing Libraryï¼‰
+#### Ò³Ãæ¼¶²âÊÔ£¨React Testing Library£©
 
-| æµ‹è¯•æ–‡ä»¶ | ä½ç½® | ç”¨ä¾‹æ•° | è¦†ç›–é¡µé¢ |
+| ²âÊÔÎÄ¼þ | Î»ÖÃ | ÓÃÀýÊý | ¸²¸ÇÒ³Ãæ |
 |---------|------|-------|---------|
-| AnalysisApp.test.tsx | tests/ | ~8 | åˆ†æžåº”ç”¨ä¸»é¡µé¢ |
-| InputApp.test.tsx | tests/ | ~8+ | å½•å…¥åº”ç”¨ä¸»é¡µé¢ |
-| OutputApp.test.tsx | tests/ | 3 | å¯¼å‡ºåº”ç”¨ä¸»é¡µé¢ |
-| TradingApp.test.tsx | tests/ | ~15 | äº¤æ˜“åº”ç”¨ä¸»é¡µé¢ |
-| CommandApp.test.tsx | tests/ | ~4 | å‘½ä»¤é¢æ¿ |
-| NewsPage.test.tsx | tests/ | ~4 | èµ„è®¯é¡µé¢ |
-| ScoreDocPage.test.tsx | tests/ | ~4 | è¯„åˆ†æ–‡æ¡£é¡µé¢ |
-| StrategySnapshotPage.test.tsx | tests/ | ~4 | ç­–ç•¥å¿«ç…§é¡µé¢ |
-| StrategySnapshotPage.lifecycle.test.tsx | tests/ | ~7 | ç­–ç•¥å¿«ç…§ç”Ÿå‘½å‘¨æœŸ |
-| LocalKnowledgePage.test.tsx | tests/ | ~7 | æœ¬åœ°çŸ¥è¯†åº“é¡µé¢ |
-| IntelligentScorePage.test.tsx | tests/ | ~6 | æ™ºèƒ½è¯„åˆ†é¡µé¢ |
-| IndustryScorePage.test.tsx | tests/ | ~6 | è¡Œä¸šè¯„åˆ†é¡µé¢ |
-| StockAnalysisPage.test.tsx | src/pages/analysis/ | 5 | ä¸ªè‚¡åˆ†æžé¡µé¢ |
-| SectorAnalysisPage.test.tsx | src/pages/analysis/ | 5 | æ¿å—åˆ†æžé¡µé¢ |
-| HotSectorPage.test.tsx | src/pages/analysis/ | 5 | çƒ­é—¨æ¿å—é¡µé¢ |
-| ValuePitPage.test.tsx | src/pages/analysis/ | 5 | ä»·å€¼æ´¼åœ°é¡µé¢ |
-| CoreResourcePanel.test.tsx | tests/ | ~5 | æ ¸å¿ƒèµ„æºé¢æ¿ |
-| HotSectorWidget.test.tsx | tests/ | ~4 | çƒ­é—¨æ¿å—ç»„ä»¶ |
-| ValuePitWidget.test.tsx | tests/ | ~4 | ä»·å€¼æ´¼åœ°ç»„ä»¶ |
-| MigrationPanel.test.tsx | tests/ | ~4+ | è¿ç§»é¢æ¿ç»„ä»¶ |
-| NewsFeed.test.tsx | tests/news-v6/ | ~8 | èµ„è®¯æµç»„ä»¶ |
+| AnalysisApp.test.tsx | tests/ | ~8 | ·ÖÎöÓ¦ÓÃÖ÷Ò³Ãæ |
+| InputApp.test.tsx | tests/ | ~8+ | Â¼ÈëÓ¦ÓÃÖ÷Ò³Ãæ |
+| OutputApp.test.tsx | tests/ | 3 | µ¼³öÓ¦ÓÃÖ÷Ò³Ãæ |
+| TradingApp.test.tsx | tests/ | ~15 | ½»Ò×Ó¦ÓÃÖ÷Ò³Ãæ |
+| CommandApp.test.tsx | tests/ | ~4 | ÃüÁîÃæ°å |
+| NewsPage.test.tsx | tests/ | ~4 | ×ÊÑ¶Ò³Ãæ |
+| ScoreDocPage.test.tsx | tests/ | ~4 | ÆÀ·ÖÎÄµµÒ³Ãæ |
+| StrategySnapshotPage.test.tsx | tests/ | ~4 | ²ßÂÔ¿ìÕÕÒ³Ãæ |
+| StrategySnapshotPage.lifecycle.test.tsx | tests/ | ~7 | ²ßÂÔ¿ìÕÕÉúÃüÖÜÆÚ |
+| LocalKnowledgePage.test.tsx | tests/ | ~7 | ±¾µØÖªÊ¶¿âÒ³Ãæ |
+| IntelligentScorePage.test.tsx | tests/ | ~6 | ÖÇÄÜÆÀ·ÖÒ³Ãæ |
+| IndustryScorePage.test.tsx | tests/ | ~6 | ÐÐÒµÆÀ·ÖÒ³Ãæ |
+| StockAnalysisPage.test.tsx | src/pages/analysis/ | 5 | ¸ö¹É·ÖÎöÒ³Ãæ |
+| SectorAnalysisPage.test.tsx | src/pages/analysis/ | 5 | °å¿é·ÖÎöÒ³Ãæ |
+| HotSectorPage.test.tsx | src/pages/analysis/ | 5 | ÈÈÃÅ°å¿éÒ³Ãæ |
+| ValuePitPage.test.tsx | src/pages/analysis/ | 5 | ¼ÛÖµÍÝµØÒ³Ãæ |
+| CoreResourcePanel.test.tsx | tests/ | ~5 | ºËÐÄ×ÊÔ´Ãæ°å |
+| HotSectorWidget.test.tsx | tests/ | ~4 | ÈÈÃÅ°å¿é×é¼þ |
+| ValuePitWidget.test.tsx | tests/ | ~4 | ¼ÛÖµÍÝµØ×é¼þ |
+| MigrationPanel.test.tsx | tests/ | ~4+ | Ç¨ÒÆÃæ°å×é¼þ |
+| NewsFeed.test.tsx | tests/news-v6/ | ~8 | ×ÊÑ¶Á÷×é¼þ |
 
-> **ç»„ä»¶/é¡µé¢é›†æˆæµ‹è¯•æ€»è®¡**ï¼šçº¦ 20+ ä¸ªæµ‹è¯•æ–‡ä»¶ï¼Œ130+ ä¸ªç”¨ä¾‹ã€‚
+> **×é¼þ/Ò³Ãæ¼¯³É²âÊÔ×Ü¼Æ**£ºÔ¼ 20+ ¸ö²âÊÔÎÄ¼þ£¬130+ ¸öÓÃÀý¡£
 
-#### é›†æˆæµ‹è¯•ç‰¹ç‚¹
+#### ¼¯³É²âÊÔÌØµã
 
-1. **Mock ç­–ç•¥å®Œå–„**ï¼šå¹¿æ³›ä½¿ç”¨ `vi.spyOn` å’Œ `vi.mock` æ¨¡æ‹Ÿ service å±‚
-2. **ç”¨æˆ·äº¤äº’æ¨¡æ‹Ÿ**ï¼šä½¿ç”¨ `@testing-library/user-event` æ¨¡æ‹ŸçœŸå®žç”¨æˆ·æ“ä½œ
-3. **å¼‚æ­¥ç­‰å¾…**ï¼šä½¿ç”¨ `waitFor` å’Œ `findBy*` å¤„ç†å¼‚æ­¥æ¸²æŸ“
-4. **é”™è¯¯è·¯å¾„æµ‹è¯•**ï¼šè¦†ç›–æœåŠ¡å¤±è´¥ã€ç½‘ç»œå¼‚å¸¸ç­‰åœºæ™¯ï¼ˆå¦‚ OutputApp å¯¼å‡ºå¤±è´¥ï¼‰
+1. **Mock ²ßÂÔÍêÉÆ**£º¹ã·ºÊ¹ÓÃ `vi.spyOn` ºÍ `vi.mock` Ä£Äâ service ²ã
+2. **ÓÃ»§½»»¥Ä£Äâ**£ºÊ¹ÓÃ `@testing-library/user-event` Ä£ÄâÕæÊµÓÃ»§²Ù×÷
+3. **Òì²½µÈ´ý**£ºÊ¹ÓÃ `waitFor` ºÍ `findBy*` ´¦ÀíÒì²½äÖÈ¾
+4. **´íÎóÂ·¾¶²âÊÔ**£º¸²¸Ç·þÎñÊ§°Ü¡¢ÍøÂçÒì³£µÈ³¡¾°£¨Èç OutputApp µ¼³öÊ§°Ü£©
 
-### 3.3 æœåŠ¡å±‚é›†æˆæµ‹è¯•
+### 3.3 ·þÎñ²ã¼¯³É²âÊÔ
 
-ä»¥ä¸‹æµ‹è¯•æ¶‰åŠå¤šæ¨¡å—åä½œï¼Œå±žäºŽé›†æˆæµ‹è¯•èŒƒç•´ï¼š
+ÒÔÏÂ²âÊÔÉæ¼°¶àÄ£¿éÐ­×÷£¬ÊôÓÚ¼¯³É²âÊÔ·¶³ë£º
 
-| æµ‹è¯•æ–‡ä»¶ | é›†æˆèŒƒå›´ |
+| ²âÊÔÎÄ¼þ | ¼¯³É·¶Î§ |
 |---------|---------|
-| unifiedStockService.test.ts | å¤šæ•°æ®æºèžåˆï¼ˆstock + quotes + v6Score + rotation + ...ï¼‰ |
-| dataFusionEngine.test.ts | æ•°æ®èžåˆå¼•æ“Žå¤šé€šé“é›†æˆ |
-| dualStrategyEngine.test.ts | åŒç­–ç•¥å¼•æ“Žç«¯åˆ°ç«¯ |
-| strategyEngine.test.ts | ç­–ç•¥å¼•æ“Žæ•´ä½“æµç¨‹ |
-| localDocService.test.ts | æ–‡æ¡£æœåŠ¡ + IndexedDB é›†æˆ |
-| fetcher/dataSourceProvider.test.ts | å¤šæ•°æ®æºæä¾›è€…é›†æˆ |
-| engine.test.ts | ä¸»å¼•æ“Žé›†æˆ |
+| unifiedStockService.test.ts | ¶àÊý¾ÝÔ´ÈÚºÏ£¨stock + quotes + v6Score + rotation + ...£© |
+| dataFusionEngine.test.ts | Êý¾ÝÈÚºÏÒýÇæ¶àÍ¨µÀ¼¯³É |
+| dualStrategyEngine.test.ts | Ë«²ßÂÔÒýÇæ¶Ëµ½¶Ë |
+| strategyEngine.test.ts | ²ßÂÔÒýÇæÕûÌåÁ÷³Ì |
+| localDocService.test.ts | ÎÄµµ·þÎñ + IndexedDB ¼¯³É |
+| fetcher/dataSourceProvider.test.ts | ¶àÊý¾ÝÔ´Ìá¹©Õß¼¯³É |
+| engine.test.ts | Ö÷ÒýÇæ¼¯³É |
 
 ---
 
-## å››ã€æµ‹è¯•è´¨é‡ç»¼åˆè¯„åˆ†
+## ËÄ¡¢²âÊÔÖÊÁ¿×ÛºÏÆÀ·Ö
 
-### 4.1 è¯„åˆ†çŸ©é˜µ
+### 4.1 ÆÀ·Ö¾ØÕó
 
-| ç»´åº¦ | æƒé‡ | å¾—åˆ† | è¯´æ˜Ž |
+| Î¬¶È | È¨ÖØ | µÃ·Ö | ËµÃ÷ |
 |------|------|------|------|
-| **æµ‹è¯•è¦†ç›–åº¦** | 40% | **85/100** | Store å±‚ 100% è¦†ç›–ï¼ŒService å±‚è¦†ç›–è¾ƒå…¨ï¼Œç»„ä»¶å±‚è¦†ç›–ä¸è¶³ |
-| **è¾¹ç•Œæ¡ä»¶æµ‹è¯•** | 30% | **82/100** | å¼‚å¸¸è·¯å¾„è¦†ç›–å……åˆ†ï¼Œæ•°å€¼/æ—¶é—´/å¹¶å‘æ·±åº¦è¾¹ç•Œå¯åŠ å¼º |
-| **é›†æˆæµ‹è¯•** | 30% | **65/100** | é¡µé¢çº§é›†æˆæµ‹è¯•è¾ƒå¥½ï¼ŒE2E æµ‹è¯•ä¸¥é‡ä¸è¶³ï¼ˆä»… 1 ä¸ªæ–‡ä»¶ï¼‰ |
-| **ç»¼åˆå¾—åˆ†** | 100% | **78.4/100** | B çº§ï¼ˆè‰¯å¥½ï¼‰ |
+| **²âÊÔ¸²¸Ç¶È** | 40% | **85/100** | Store ²ã 100% ¸²¸Ç£¬Service ²ã¸²¸Ç½ÏÈ«£¬×é¼þ²ã¸²¸Ç²»×ã |
+| **±ß½çÌõ¼þ²âÊÔ** | 30% | **82/100** | Òì³£Â·¾¶¸²¸Ç³ä·Ö£¬ÊýÖµ/Ê±¼ä/²¢·¢Éî¶È±ß½ç¿É¼ÓÇ¿ |
+| **¼¯³É²âÊÔ** | 30% | **65/100** | Ò³Ãæ¼¶¼¯³É²âÊÔ½ÏºÃ£¬E2E ²âÊÔÑÏÖØ²»×ã£¨½ö 1 ¸öÎÄ¼þ£© |
+| **×ÛºÏµÃ·Ö** | 100% | **78.4/100** | B ¼¶£¨Á¼ºÃ£© |
 
-### 4.2 ç­‰çº§è¯„å®š
+### 4.2 µÈ¼¶ÆÀ¶¨
 
 ```
-ç»¼åˆè¯„åˆ†ï¼š78.4 / 100 â†’ ç­‰çº§ï¼šB (è‰¯å¥½)
+×ÛºÏÆÀ·Ö£º78.4 / 100 ¡ú µÈ¼¶£ºB (Á¼ºÃ)
 
-S (95+): å“è¶Š
-A (85-94): ä¼˜ç§€
-B (70-84): è‰¯å¥½  â† å½“å‰
-C (55-69): åˆæ ¼
-D (<55): å¾…æ”¹è¿›
+S (95+): ×¿Ô½
+A (85-94): ÓÅÐã
+B (70-84): Á¼ºÃ  ¡û µ±Ç°
+C (55-69): ºÏ¸ñ
+D (<55): ´ý¸Ä½ø
 ```
 
 ---
 
-## äº”ã€æ”¹è¿›å»ºè®®
+## Îå¡¢¸Ä½ø½¨Òé
 
-### P0 - é«˜ä¼˜å…ˆçº§ï¼ˆå»ºè®®ç«‹å³å¤„ç†ï¼‰
+### P0 - ¸ßÓÅÏÈ¼¶£¨½¨ÒéÁ¢¼´´¦Àí£©
 
-1. **è¡¥å…… E2E æ ¸å¿ƒé“¾è·¯æµ‹è¯•**
-   - ç›®æ ‡ï¼šè‡³å°‘è¦†ç›– 5 æ¡æ ¸å¿ƒä¸šåŠ¡æµç¨‹ï¼ˆä¸Žå®‰è£…æŒ‡å—æè¿°ä¸€è‡´ï¼‰
-   - å»ºè®®å¢žåŠ ï¼šä¸ªè‚¡è¯„åˆ† E2Eã€äº¤æ˜“å¤ç›˜ E2Eã€æ•°æ®è¿ç§» E2E
-   - é¢„æœŸæ”¶ç›Šï¼šæ˜¾è‘—æå‡é›†æˆæµ‹è¯•å¾—åˆ†ï¼ˆ+15 åˆ†ï¼‰
+1. **²¹³ä E2E ºËÐÄÁ´Â·²âÊÔ**
+   - Ä¿±ê£ºÖÁÉÙ¸²¸Ç 5 ÌõºËÐÄÒµÎñÁ÷³Ì£¨Óë°²×°Ö¸ÄÏÃèÊöÒ»ÖÂ£©
+   - ½¨ÒéÔö¼Ó£º¸ö¹ÉÆÀ·Ö E2E¡¢½»Ò×¸´ÅÌ E2E¡¢Êý¾ÝÇ¨ÒÆ E2E
+   - Ô¤ÆÚÊÕÒæ£ºÏÔÖøÌáÉý¼¯³É²âÊÔµÃ·Ö£¨+15 ·Ö£©
 
-2. **è¡¥å……æ ¸å¿ƒæ•°æ®å±‚ç›´æŽ¥æµ‹è¯•**
-   - ç›®æ ‡ï¼šä¸º `src/data/db.ts` å’Œ `src/core/databridge.ts` å¢žåŠ ç‹¬ç«‹å•å…ƒæµ‹è¯•
-   - å»ºè®®è¦†ç›–ï¼šDB åˆå§‹åŒ–ã€äº‹åŠ¡ã€é”™è¯¯æ¢å¤ã€æ•°æ®è¿ç§»
-   - é¢„æœŸæ”¶ç›Šï¼šé™ä½Žæ•°æ®å±‚é£Žé™©ï¼Œæå‡åº•å±‚å¯é æ€§
+2. **²¹³äºËÐÄÊý¾Ý²ãÖ±½Ó²âÊÔ**
+   - Ä¿±ê£ºÎª `src/data/db.ts` ºÍ `src/core/databridge.ts` Ôö¼Ó¶ÀÁ¢µ¥Ôª²âÊÔ
+   - ½¨Òé¸²¸Ç£ºDB ³õÊ¼»¯¡¢ÊÂÎñ¡¢´íÎó»Ö¸´¡¢Êý¾ÝÇ¨ÒÆ
+   - Ô¤ÆÚÊÕÒæ£º½µµÍÊý¾Ý²ã·çÏÕ£¬ÌáÉýµ×²ã¿É¿¿ÐÔ
 
-### P1 - ä¸­ä¼˜å…ˆçº§ï¼ˆå»ºè®®ä¸‹ä¸ªè¿­ä»£å¤„ç†ï¼‰
+### P1 - ÖÐÓÅÏÈ¼¶£¨½¨ÒéÏÂ¸öµü´ú´¦Àí£©
 
-3. **åŠ å¼º UI ç»„ä»¶å•å…ƒæµ‹è¯•**
-   - ç›®æ ‡ï¼šä¸º `src/components/ui/` ä¸‹çš„æ ¸å¿ƒé€šç”¨ç»„ä»¶è¡¥å……æµ‹è¯•
-   - å»ºè®®ä»Žé«˜é¢‘ä½¿ç”¨ç»„ä»¶å¼€å§‹ï¼šButtonã€Inputã€Tableã€Modalã€Card ç­‰
-   - é¢„æœŸæ”¶ç›Šï¼šæå‡ç»„ä»¶å±‚è´¨é‡ï¼Œå‡å°‘å›žå½’ bug
+3. **¼ÓÇ¿ UI ×é¼þµ¥Ôª²âÊÔ**
+   - Ä¿±ê£ºÎª `src/components/ui/` ÏÂµÄºËÐÄÍ¨ÓÃ×é¼þ²¹³ä²âÊÔ
+   - ½¨Òé´Ó¸ßÆµÊ¹ÓÃ×é¼þ¿ªÊ¼£ºButton¡¢Input¡¢Table¡¢Modal¡¢Card µÈ
+   - Ô¤ÆÚÊÕÒæ£ºÌáÉý×é¼þ²ãÖÊÁ¿£¬¼õÉÙ»Ø¹é bug
 
-4. **å¢žåŠ è¾¹ç•Œå€¼æ·±åº¦æµ‹è¯•**
-   - ç›®æ ‡ï¼šè¡¥å……æžç«¯æ•°å€¼ã€å¤§æ•°æ®é‡ã€é«˜å¹¶å‘åœºæ™¯æµ‹è¯•
-   - å…·ä½“ï¼š1000+ è‚¡ç¥¨æ± æ€§èƒ½ã€æ•°å€¼ç²¾åº¦è¾¹ç•Œã€å¹¶å‘åŽ‹åŠ›æµ‹è¯•
-   - é¢„æœŸæ”¶ç›Šï¼šæå‡ç³»ç»Ÿé²æ£’æ€§
+4. **Ôö¼Ó±ß½çÖµÉî¶È²âÊÔ**
+   - Ä¿±ê£º²¹³ä¼«¶ËÊýÖµ¡¢´óÊý¾ÝÁ¿¡¢¸ß²¢·¢³¡¾°²âÊÔ
+   - ¾ßÌå£º1000+ ¹ÉÆ±³ØÐÔÄÜ¡¢ÊýÖµ¾«¶È±ß½ç¡¢²¢·¢Ñ¹Á¦²âÊÔ
+   - Ô¤ÆÚÊÕÒæ£ºÌáÉýÏµÍ³Â³°ôÐÔ
 
-5. **è¡¥å…… Widget ç»„ä»¶æµ‹è¯•**
-   - ç›®æ ‡ï¼šä¸º `src/cockpit/widgets/` ä¸‹çš„ä»ªè¡¨ç›˜ç»„ä»¶è¡¥å……æµ‹è¯•
-   - é¢„æœŸæ”¶ç›Šï¼šä¿éšœé©¾é©¶èˆ±åŠŸèƒ½ç¨³å®šæ€§
+5. **²¹³ä Widget ×é¼þ²âÊÔ**
+   - Ä¿±ê£ºÎª `src/cockpit/widgets/` ÏÂµÄÒÇ±íÅÌ×é¼þ²¹³ä²âÊÔ
+   - Ô¤ÆÚÊÕÒæ£º±£ÕÏ¼ÝÊ»²Õ¹¦ÄÜÎÈ¶¨ÐÔ
 
-### P2 - ä½Žä¼˜å…ˆçº§ï¼ˆé•¿æœŸä¼˜åŒ–ï¼‰
+### P2 - µÍÓÅÏÈ¼¶£¨³¤ÆÚÓÅ»¯£©
 
-6. **å¯è§†åŒ–è¦†ç›–çŽ‡é—¨ç¦**
-   - é…ç½® CI ä¸­çš„è¦†ç›–çŽ‡æŠ¥å‘Šä¸Šä¼ ä¸Žè¶‹åŠ¿è¿½è¸ª
-   - é€æ­¥æå‡å„å±‚çº§è¦†ç›–çŽ‡é˜ˆå€¼
+6. **¿ÉÊÓ»¯¸²¸ÇÂÊÃÅ½û**
+   - ÅäÖÃ CI ÖÐµÄ¸²¸ÇÂÊ±¨¸æÉÏ´«ÓëÇ÷ÊÆ×·×Ù
+   - Öð²½ÌáÉý¸÷²ã¼¶¸²¸ÇÂÊãÐÖµ
 
-7. **æµ‹è¯•ç±»åž‹åˆ†å±‚æ ‡è®°**
-   - ä½¿ç”¨ `@vitest/browser` æˆ–æ ‡ç­¾ç³»ç»Ÿæ˜Žç¡®åŒºåˆ†ï¼šå•å…ƒæµ‹è¯• / é›†æˆæµ‹è¯• / ç»„ä»¶æµ‹è¯•
+7. **²âÊÔÀàÐÍ·Ö²ã±ê¼Ç**
+   - Ê¹ÓÃ `@vitest/browser` »ò±êÇ©ÏµÍ³Ã÷È·Çø·Ö£ºµ¥Ôª²âÊÔ / ¼¯³É²âÊÔ / ×é¼þ²âÊÔ
 
-8. **å±žæ€§æµ‹è¯•ï¼ˆProperty-based Testingï¼‰**
-   - å¯¹è¯„åˆ†å¼•æ“Žç­‰çº¯å‡½æ•°æ¨¡å—å¼•å…¥ fast-check ç­‰å±žæ€§æµ‹è¯•æ¡†æž¶
+8. **ÊôÐÔ²âÊÔ£¨Property-based Testing£©**
+   - ¶ÔÆÀ·ÖÒýÇæµÈ´¿º¯ÊýÄ£¿éÒýÈë fast-check µÈÊôÐÔ²âÊÔ¿ò¼Ü
 
 ---
 
-## å…­ã€é™„å½•ï¼šæµ‹è¯•æ–‡ä»¶å®Œæ•´æ¸…å•
+## Áù¡¢¸½Â¼£º²âÊÔÎÄ¼þÍêÕûÇåµ¥
 
-### src/store/ (24 ä¸ªæ–‡ä»¶)
+### src/store/ (24 ¸öÎÄ¼þ)
 
-1. `poolStore.test.ts` - è‚¡ç¥¨æ± çŠ¶æ€ç®¡ç†
-2. `orderStore.test.ts` - è®¢å•çŠ¶æ€ç®¡ç†
-3. `positionStore.test.ts` - æŒä»“çŠ¶æ€ç®¡ç†
-4. `signalStore.test.ts` - ä¿¡å·çŠ¶æ€ç®¡ç†
-5. `dualStrategyStore.test.ts` - åŒç­–ç•¥çŠ¶æ€
-6. `disciplineStore.test.ts` - çºªå¾‹è¯„åˆ†çŠ¶æ€
-7. `holdingsStore.test.ts` - æŒä»“ç®¡ç†çŠ¶æ€
-8. `backtestStore.test.ts` - å›žæµ‹çŠ¶æ€
-9. `marketDataStore.test.ts` - è¡Œæƒ…æ•°æ®çŠ¶æ€
-10. `stockAnalysisStore.test.ts` - ä¸ªè‚¡åˆ†æžçŠ¶æ€
-11. `sectorAnalysisStore.test.ts` - æ¿å—åˆ†æžçŠ¶æ€
-12. `strategySnapshotStore.test.ts` - ç­–ç•¥å¿«ç…§çŠ¶æ€
-13. `localKnowledgeStore.test.ts` - æœ¬åœ°çŸ¥è¯†åº“çŠ¶æ€
-14. `industryScoreStore.test.ts` - è¡Œä¸šè¯„åˆ†çŠ¶æ€
-15. `intelligentScoreStore.test.ts` - æ™ºèƒ½è¯„åˆ†çŠ¶æ€
-16. `scoreDocStore.test.ts` - è¯„åˆ†æ–‡æ¡£çŠ¶æ€
-17. `commandStore.test.ts` - å‘½ä»¤é¢æ¿çŠ¶æ€
-18. `workflowStore.test.ts` - å·¥ä½œæµçŠ¶æ€
-19. `dataflowStore.test.ts` - æ•°æ®æµçŠ¶æ€
-20. `agentStore.test.ts` - Agent çŠ¶æ€
-21. `widgetStore.test.ts` - ç»„ä»¶é¢æ¿çŠ¶æ€
-22. `pageStore.test.ts` - é¡µé¢çŠ¶æ€
-23. `hotSectorStore.test.ts` - çƒ­é—¨æ¿å—çŠ¶æ€
-24. `analysisNewsStore.test.ts` - åˆ†æžèµ„è®¯çŠ¶æ€
+1. `poolStore.test.ts` - ¹ÉÆ±³Ø×´Ì¬¹ÜÀí
+2. `orderStore.test.ts` - ¶©µ¥×´Ì¬¹ÜÀí
+3. `positionStore.test.ts` - ³Ö²Ö×´Ì¬¹ÜÀí
+4. `signalStore.test.ts` - ÐÅºÅ×´Ì¬¹ÜÀí
+5. `dualStrategyStore.test.ts` - Ë«²ßÂÔ×´Ì¬
+6. `disciplineStore.test.ts` - ¼ÍÂÉÆÀ·Ö×´Ì¬
+7. `holdingsStore.test.ts` - ³Ö²Ö¹ÜÀí×´Ì¬
+8. `backtestStore.test.ts` - »Ø²â×´Ì¬
+9. `marketDataStore.test.ts` - ÐÐÇéÊý¾Ý×´Ì¬
+10. `stockAnalysisStore.test.ts` - ¸ö¹É·ÖÎö×´Ì¬
+11. `sectorAnalysisStore.test.ts` - °å¿é·ÖÎö×´Ì¬
+12. `strategySnapshotStore.test.ts` - ²ßÂÔ¿ìÕÕ×´Ì¬
+13. `localKnowledgeStore.test.ts` - ±¾µØÖªÊ¶¿â×´Ì¬
+14. `industryScoreStore.test.ts` - ÐÐÒµÆÀ·Ö×´Ì¬
+15. `intelligentScoreStore.test.ts` - ÖÇÄÜÆÀ·Ö×´Ì¬
+16. `scoreDocStore.test.ts` - ÆÀ·ÖÎÄµµ×´Ì¬
+17. `commandStore.test.ts` - ÃüÁîÃæ°å×´Ì¬
+18. `workflowStore.test.ts` - ¹¤×÷Á÷×´Ì¬
+19. `dataflowStore.test.ts` - Êý¾ÝÁ÷×´Ì¬
+20. `agentStore.test.ts` - Agent ×´Ì¬
+21. `widgetStore.test.ts` - ×é¼þÃæ°å×´Ì¬
+22. `pageStore.test.ts` - Ò³Ãæ×´Ì¬
+23. `hotSectorStore.test.ts` - ÈÈÃÅ°å¿é×´Ì¬
+24. `analysisNewsStore.test.ts` - ·ÖÎö×ÊÑ¶×´Ì¬
 
-### src/services/ (27 ä¸ªæ–‡ä»¶)
+### src/services/ (27 ¸öÎÄ¼þ)
 
 1. `scoring/v6-engine/calculators/l0_l1_l2.test.ts`
 2. `scoring/v6-engine/calculators/l3.test.ts`
@@ -442,26 +448,26 @@ D (<55): å¾…æ”¹è¿›
 26. `unifiedStockService.test.ts`
 27. `data-collector/TaskScheduler.test.ts`
 
-### tests/ ç›®å½• (çº¦ 29+ ä¸ªæ–‡ä»¶)
+### tests/ Ä¿Â¼ (Ô¼ 29+ ¸öÎÄ¼þ)
 
-- é¡µé¢çº§æµ‹è¯•ï¼šAnalysisAppã€InputAppã€OutputAppã€TradingAppã€CommandApp
-- åŠŸèƒ½é¡µé¢ï¼šNewsPageã€ScoreDocPageã€StrategySnapshotPageã€LocalKnowledgePageã€IntelligentScorePageã€IndustryScorePage
-- ç»„ä»¶æµ‹è¯•ï¼šCoreResourcePanelã€HotSectorWidgetã€ValuePitWidgetã€MigrationPanelã€ui-components
-- æœåŠ¡æµ‹è¯•ï¼šlocalDocServiceã€dualStrategyEngineã€strategyEngineã€databridgePriorityã€outputStore
-- åŸºç¡€è®¾æ–½ï¼špwaã€loggerã€eventBusã€engineã€queryBuilderã€useDebounce
-- æ–°é—»æ¨¡å—ï¼šnewsStore.subscriptionsã€newsStore.bookmarksã€news-v6/NewsPageã€news-v6/NewsFeed
-- Fetcher æµ‹è¯•ï¼šfetcher/dataSourceProvider
-- æ•°æ®é‡‡é›†ï¼šservices/MarketDataAdapterã€services/MockCollector
-- Agent ç›¸å…³ï¼šagentRegistryã€agentHealthMonitorã€agentConfigManager
-- æ•°æ®æ¡¥æŽ¥ï¼šdatabridgeStoreã€databridgeAdapter
-- å¼•æ“Žç›¸å…³ï¼šengineStoreã€engine
+- Ò³Ãæ¼¶²âÊÔ£ºAnalysisApp¡¢InputApp¡¢OutputApp¡¢TradingApp¡¢CommandApp
+- ¹¦ÄÜÒ³Ãæ£ºNewsPage¡¢ScoreDocPage¡¢StrategySnapshotPage¡¢LocalKnowledgePage¡¢IntelligentScorePage¡¢IndustryScorePage
+- ×é¼þ²âÊÔ£ºCoreResourcePanel¡¢HotSectorWidget¡¢ValuePitWidget¡¢MigrationPanel¡¢ui-components
+- ·þÎñ²âÊÔ£ºlocalDocService¡¢dualStrategyEngine¡¢strategyEngine¡¢databridgePriority¡¢outputStore
+- »ù´¡ÉèÊ©£ºpwa¡¢logger¡¢eventBus¡¢engine¡¢queryBuilder¡¢useDebounce
+- ÐÂÎÅÄ£¿é£ºnewsStore.subscriptions¡¢newsStore.bookmarks¡¢news-v6/NewsPage¡¢news-v6/NewsFeed
+- Fetcher ²âÊÔ£ºfetcher/dataSourceProvider
+- Êý¾Ý²É¼¯£ºservices/MarketDataAdapter¡¢services/MockCollector
+- Agent Ïà¹Ø£ºagentRegistry¡¢agentHealthMonitor¡¢agentConfigManager
+- Êý¾ÝÇÅ½Ó£ºdatabridgeStore¡¢databridgeAdapter
+- ÒýÇæÏà¹Ø£ºengineStore¡¢engine
 
-### e2e/ ç›®å½• (1 ä¸ªæ–‡ä»¶)
+### e2e/ Ä¿Â¼ (1 ¸öÎÄ¼þ)
 
-1. `pool-group.spec.ts` - è‚¡ç¥¨æ± åˆ†ç»„ E2E æµ‹è¯•
+1. `pool-group.spec.ts` - ¹ÉÆ±³Ø·Ö×é E2E ²âÊÔ
 
 ---
 
-> **å®¡è®¡ç»“è®º**ï¼šV9 å‰ç«¯åº”ç”¨çš„æµ‹è¯•ä½“ç³»æ•´ä½“å¤„äºŽ**è‰¯å¥½æ°´å¹³**ã€‚Store å±‚æµ‹è¯•è¦†ç›–çŽ‡è¾¾åˆ° 100%ï¼Œè¾¹ç•Œæ¡ä»¶æµ‹è¯•è¾ƒä¸ºå……åˆ†ï¼Œä½“çŽ°äº†è‰¯å¥½çš„å•å…ƒæµ‹è¯•å®žè·µã€‚ä¸»è¦çŸ­æ¿åœ¨äºŽ E2E æµ‹è¯•æ•°é‡ä¸è¶³ï¼ˆä¸Žæ–‡æ¡£æè¿°å­˜åœ¨å·®è·ï¼‰ä»¥åŠ UI ç»„ä»¶å±‚çš„å•å…ƒæµ‹è¯•è¦†ç›–åº¦è¾ƒä½Žã€‚å»ºè®®ä¼˜å…ˆè¡¥å……æ ¸å¿ƒä¸šåŠ¡é“¾è·¯çš„ E2E æµ‹è¯•ï¼Œä»¥æå‡æ•´ä½“æµ‹è¯•è´¨é‡ç­‰çº§ã€‚
+> **Éó¼Æ½áÂÛ**£ºV9 Ç°¶ËÓ¦ÓÃµÄ²âÊÔÌåÏµÕûÌå´¦ÓÚ**Á¼ºÃË®Æ½**¡£Store ²ã²âÊÔ¸²¸ÇÂÊ´ïµ½ 100%£¬±ß½çÌõ¼þ²âÊÔ½ÏÎª³ä·Ö£¬ÌåÏÖÁËÁ¼ºÃµÄµ¥Ôª²âÊÔÊµ¼ù¡£Ö÷Òª¶Ì°åÔÚÓÚ E2E ²âÊÔÊýÁ¿²»×ã£¨ÓëÎÄµµÃèÊö´æÔÚ²î¾à£©ÒÔ¼° UI ×é¼þ²ãµÄµ¥Ôª²âÊÔ¸²¸Ç¶È½ÏµÍ¡£½¨ÒéÓÅÏÈ²¹³äºËÐÄÒµÎñÁ´Â·µÄ E2E ²âÊÔ£¬ÒÔÌáÉýÕûÌå²âÊÔÖÊÁ¿µÈ¼¶¡£
 
-â€” å®¡è®¡ç»“æŸ â€”
+¡ª Éó¼Æ½áÊø ¡ª

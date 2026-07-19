@@ -52,7 +52,7 @@ const {
   }
 })
 
-vi.mock('@/agents/agentComponentRegistry', () => ({
+vi.mock('@/components/organisms/agent/agentComponentRegistry', () => ({
   getAllAgentComponents: () => mockAgents,
   agentComponentRegistry: {
     get: () => undefined,

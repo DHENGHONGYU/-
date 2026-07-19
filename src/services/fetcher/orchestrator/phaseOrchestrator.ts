@@ -101,7 +101,7 @@ async function writeCollectedItem(item: CollectedItem, deps: CollectDeps): Promi
       return true
     }
     return false
-  } catch {
+  } catch (err) { console.warn('[phaseOrchestrator.ts]', err);
     return false
   }
 }

@@ -4,6 +4,7 @@ import {
   type ComponentPropsWithoutRef,
 } from 'react'
 import { CHART_PALETTE } from '@/constants/theme.tokens'
+import { EmptyState } from '@/components/molecules'
 
 export interface FactorHeatmapData {
   name: string
@@ -16,17 +17,32 @@ export interface FactorHeatmapProps extends ComponentPropsWithoutRef<'div'> {
   minValue?: number
   maxValue?: number
   height?: number
+  /** 空状态文案（可选，默认"暂无因子数据"） */
+  emptyText?: string
 }
 
 const FactorHeatmap = forwardRef<HTMLDivElement, FactorHeatmapProps>(
-  ({ data, minValue = -1, maxValue = 1, height = 200, ...divProps }, ref) => {
+  ({ data, minValue = -1, maxValue = 1, height = 200, emptyText, ...divProps }, ref) => {
+    // 空数据守卫：避免 colCount=0 导致静默空白渲染
+    if (data.length === 0) {
+      return (
+        <div ref={ref} {...divProps}>
+          <EmptyState title={emptyText ?? '暂无因子数据'} />
+        </div>
+      )
+    }
+
     // 计算列数（根据数据量动态调整）
     const colCount = Math.min(Math.ceil(Math.sqrt(data.length)), 6)
 
     // 将值映射到颜色渐变：低(-1) -> 中(0) -> 高(1)
     // 颜色端点全部来自 CHART_PALETTE，禁止硬编码
+    const range = maxValue - minValue
+    const hasRange = Math.abs(range) > 1e-10
+
     const valueToColor = (value: number): string => {
-      const normalized = (value - minValue) / (maxValue - minValue)
+      // 守卫：minValue ≈ maxValue 时，避免除零产生 NaN，返回中点色
+      const normalized = hasRange ? (value - minValue) / range : 0.5
 
       const parseRgb = (hex: string): [number, number, number] => {
         const n = Number.parseInt(hex.replace('#', ''), 16)

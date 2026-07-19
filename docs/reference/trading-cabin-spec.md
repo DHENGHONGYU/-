@@ -1,54 +1,61 @@
 ---
-title: trading-cabin-spec
-code_version: 2.0.0
-
+title: Trading ²Õ¹æ¸ñ£¨trading-cabin-spec£©
+type: reference
+domain: backend
+phase: design
 tier: important
----
-
----
-title: docs/reference/trading-cabin-spec.md
+status: active
+maintainer: V9 Architecture Team
+summary: "trading ²Õ£¨½»Ò×Óë³Ö²Ö£©µÄÖ°Ôğ±ß½ç¡¢Ò³Ãæ¡¢Â·ÓÉ¡¢Êı¾İÁ÷¡£²¹¡¸4 ²ÕÈ± spec¡¹È±¿Ú¡£"
+tags: [backend, trading, input-cabin, spec, reference]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: important
+doc_id: V9-DOC-BACK-013
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
-# Trading èˆ±è§„æ ¼ï¼ˆtrading-cabin-specï¼‰
+# Trading ²Õ¹æ¸ñ£¨trading-cabin-spec£©
 
-> **å®šä½**ï¼štrading èˆ±ï¼ˆäº¤æ˜“ä¸æŒä»“ï¼‰çš„èŒè´£è¾¹ç•Œã€é¡µé¢ã€è·¯ç”±ã€æ•°æ®æµã€‚è¡¥ã€Œ4 èˆ±ç¼º specã€ç¼ºå£ã€‚
-> **æƒå¨å¥‘çº¦**ï¼š`../../AGENTS.md`ï¼›è·¯ç”±è§ `./06-routing-specs.md`ï¼›æ€»è§ˆè§ `../explanation/cabins-overview.md`ã€‚
-> **çŠ¶æ€**ï¼šâœ… P0 æ–°å¢ï¼ˆéª¨æ¶ç‰ˆï¼‰
+> **¶¨Î»**£ºtrading ²Õ£¨½»Ò×Óë³Ö²Ö£©µÄÖ°Ôğ±ß½ç¡¢Ò³Ãæ¡¢Â·ÓÉ¡¢Êı¾İÁ÷¡£²¹¡¸4 ²ÕÈ± spec¡¹È±¿Ú¡£
+> **È¨ÍşÆõÔ¼**£º`../../AGENTS.md`£»Â·ÓÉ¼û `./06-routing-specs.md`£»×ÜÀÀ¼û `../explanation/cabins-overview.md`¡£
+> **×´Ì¬**£º? P0 ĞÂÔö£¨¹Ç¼Ü°æ£©
 
 ---
 
-## 1. èŒè´£è¾¹ç•Œ
+## 1. Ö°Ôğ±ß½ç
 
-äº¤æ˜“ä¸æŒä»“ç®¡ç†ï¼šç»„åˆã€æŒä»“ã€é£æ§ã€ç­–ç•¥å¿«ç…§ã€äº¤æ˜“æµç¼–æ’ã€‚åŸºäº analysis çš„åˆ†æç»“è®ºæ‰§è¡Œäº¤æ˜“åŸŸé€»è¾‘ï¼ˆ**æœ¬ç³»ç»Ÿä¸ºç ”ç©¶è¾…åŠ©ï¼ŒéçœŸå®ä¸‹å•é€šé“**ï¼›äº¤æ˜“æµä¸ºæ¨¡æ‹Ÿ/å¤ç›˜æ€§è´¨ï¼‰ã€‚
+½»Ò×Óë³Ö²Ö¹ÜÀí£º×éºÏ¡¢³Ö²Ö¡¢·ç¿Ø¡¢²ßÂÔ¿ìÕÕ¡¢½»Ò×Á÷±àÅÅ¡£»ùÓÚ analysis µÄ·ÖÎö½áÂÛÖ´ĞĞ½»Ò×ÓòÂß¼­£¨**±¾ÏµÍ³ÎªÑĞ¾¿¸¨Öú£¬·ÇÕæÊµÏÂµ¥Í¨µÀ**£»½»Ò×Á÷ÎªÄ£Äâ/¸´ÅÌĞÔÖÊ£©¡£
 
-## 2. é¡µé¢æ¸…å•ï¼ˆ5 ä¸ªï¼Œæ–‡ä»¶ä½äº `src/pages/trading/`ï¼‰
+## 2. Ò³ÃæÇåµ¥£¨5 ¸ö£¬ÎÄ¼şÎ»ÓÚ `src/pages/trading/`£©
 
-| é¡µé¢æ–‡ä»¶ | è·¯ç”± | èŒè´£ |
+| Ò³ÃæÎÄ¼ş | Â·ÓÉ | Ö°Ôğ |
 |----------|------|------|
-| PortfolioPage | `/trading`(é»˜è®¤) | ç»„åˆæ€»è§ˆ |
-| HoldingsPage | `/trading/holdings` | æŒä»“æ˜ç»† |
-| RiskControlPage | `/trading/risk` | é£æ§é¢æ¿ |
-| StrategySnapshotPage | `/trading/strategy` | ç­–ç•¥å¿«ç…§ |
-| TradingFlowPage | `/trading/flow` | äº¤æ˜“æµ |
+| PortfolioPage | `/trading`(Ä¬ÈÏ) | ×éºÏ×ÜÀÀ |
+| HoldingsPage | `/trading/holdings` | ³Ö²ÖÃ÷Ï¸ |
+| RiskControlPage | `/trading/risk` | ·ç¿ØÃæ°å |
+| StrategySnapshotPage | `/trading/strategy` | ²ßÂÔ¿ìÕÕ |
+| TradingFlowPage | `/trading/flow` | ½»Ò×Á÷ |
 
-## 3. è·¯ç”±ä¸åˆ†å‘
+## 3. Â·ÓÉÓë·Ö·¢
 
-å…¥å£ `/trading` â†’ `src/apps/trading/TradingApp.tsx` åˆ†å‘ â†’ ä¸Šè¿° `*Page`ã€‚
+Èë¿Ú `/trading` ¡ú `src/apps/trading/TradingApp.tsx` ·Ö·¢ ¡ú ÉÏÊö `*Page`¡£
 
-## 4. æ•°æ®æµ
+## 4. Êı¾İÁ÷
 
-`store/portfolio` + `store/trade` â† `services/trading` + `services/trade` + `services/portfolio` + `riskControlService`ï¼›é£æ§ç»“æœç» `store` å›æµé¡µé¢ã€‚
+`store/portfolio` + `store/trade` ¡û `services/trading` + `services/trade` + `services/portfolio` + `riskControlService`£»·ç¿Ø½á¹û¾­ `store` »ØÁ÷Ò³Ãæ¡£
 
-## 5. è·¨èˆ±ä¾èµ–
+## 5. ¿ç²ÕÒÀÀµ
 
-- ä¸Šæ¸¸ï¼š`analysis`ï¼ˆå†³ç­–ä¾æ®ï¼‰ã€`output`ï¼ˆäº¤æ˜“å¤ç›˜ `TradeReview`ï¼‰
-- ä¸‹æ¸¸ï¼š`command`ï¼ˆå¥åº·ç›‘æ§ï¼‰ã€`output`ï¼ˆ`TradeReviewPage`ï¼‰
-- å…±äº«ï¼š`cockpit` Widgetï¼ˆPortfolioOverview / PositionControl / PnLAnalysis / RiskControlï¼‰
+- ÉÏÓÎ£º`analysis`£¨¾ö²ßÒÀ¾İ£©¡¢`output`£¨½»Ò×¸´ÅÌ `TradeReview`£©
+- ÏÂÓÎ£º`command`£¨½¡¿µ¼à¿Ø£©¡¢`output`£¨`TradeReviewPage`£©
+- ¹²Ïí£º`cockpit` Widget£¨PortfolioOverview / PositionControl / PnLAnalysis / RiskControl£©
 
-## 6. æ–‡æ¡£é”šç‚¹
+## 6. ÎÄµµÃªµã
 
-- æ€»è§ˆï¼š`../explanation/cabins-overview.md`
-- è·¯ç”±ï¼š`./06-routing-specs.md`
-- æœåŠ¡ï¼š`./services-catalog.md`ï¼ˆtrading / trade / portfolioï¼‰
+- ×ÜÀÀ£º`../explanation/cabins-overview.md`
+- Â·ÓÉ£º`./06-routing-specs.md`
+- ·şÎñ£º`./services-catalog.md`£¨trading / trade / portfolio£©

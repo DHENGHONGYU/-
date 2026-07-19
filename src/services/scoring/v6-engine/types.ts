@@ -454,11 +454,27 @@ export function quotesToQuoteData(quotes: DailyQuotes): QuoteData {
     }
   }
 
+  // 20 日均换手率（仅当有 turnoverRate 数据时计算）
+  let avgTurnover20d: number | undefined
+  if (history.length >= 20) {
+    const turnovers: number[] = []
+    for (let i = history.length - 20; i < history.length; i++) {
+      const t = history[i]?.turnoverRate
+      if (typeof t === 'number' && Number.isFinite(t)) {
+        turnovers.push(t)
+      }
+    }
+    if (turnovers.length >= 10) {
+      avgTurnover20d = turnovers.reduce((a, b) => a + b, 0) / turnovers.length
+    }
+  }
+
   return {
     latestClose,
     return20d,
     return60d,
     volatility20d,
+    avgTurnover20d,
     history: history.map((bar) => bar.close),
     volumeHistory: history.map((bar) => bar.volume),
   }

@@ -1,176 +1,182 @@
 ---
-title: kimi-webbridge
+title: Kimi WebBridge ²å¼ş
+type: explanation
+domain: frontend
+phase: planning
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "¹¦ÄÜÓò: ä¯ÀÀÆ÷×Ô¶¯»¯¿ØÖÆ£¨µ¼º½¡¢µã»÷¡¢ÊäÈë¡¢½ØÍ¼¡¢PDF ±£´æ£© °æ±¾: 1.9.21 Ô­Ê¼Â·¾¶:..."
+tags: [frontend, plan, explanation]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: important
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/explanation/kimi-webbridge.md
-code_version: 2.0.0
-tier: important
----
+# Kimi WebBridge ²å¼ş
 
-# Kimi WebBridge æ’ä»¶
-
-> **åŠŸèƒ½åŸŸ**: æµè§ˆå™¨è‡ªåŠ¨åŒ–æ§åˆ¶ï¼ˆå¯¼èˆªã€ç‚¹å‡»ã€è¾“å…¥ã€æˆªå›¾ã€PDF ä¿å­˜ï¼‰  
-> **ç‰ˆæœ¬**: 1.9.21  
-> **åŸå§‹è·¯å¾„**: [`plugins/kimi-webbridge/SKILL.md`](../../plugins/kimi-webbridge/SKILL.md)ï¼ˆæ‰å¹³åŒ–ï¼‰ / [`plugins/kimi-webbridge/skills/kimi-webbridge/SKILL.md`](../../plugins/kimi-webbridge/skills/kimi-webbridge/SKILL.md)ï¼ˆåµŒå¥—ï¼‰  
-> **åŒæ­¥æ—¥æœŸ**: 2025-07-12
+> **¹¦ÄÜÓò**: ä¯ÀÀÆ÷×Ô¶¯»¯¿ØÖÆ£¨µ¼º½¡¢µã»÷¡¢ÊäÈë¡¢½ØÍ¼¡¢PDF ±£´æ£©  
+> **°æ±¾**: 1.9.21  
+> **Ô­Ê¼Â·¾¶**: [`plugins/kimi-webbridge/SKILL.md`](../../plugins/kimi-webbridge/SKILL.md)£¨±âÆ½»¯£© / [`plugins/kimi-webbridge/skills/kimi-webbridge/SKILL.md`](../../plugins/kimi-webbridge/skills/kimi-webbridge/SKILL.md)£¨Ç¶Ì×£©  
+> **Í¬²½ÈÕÆÚ**: 2025-07-12
 
 ---
 
-## ç®€ä»‹
+## ¼ò½é
 
-Kimi WebBridge è®© AI é€šè¿‡æœ¬åœ°å®ˆæŠ¤è¿›ç¨‹æ§åˆ¶ç”¨æˆ·çš„çœŸå®æµè§ˆå™¨ï¼Œåˆ©ç”¨ç”¨æˆ·çš„å®é™…ç™»å½•ä¼šè¯ä¸ç½‘ç«™äº¤äº’ã€‚æ”¯æŒå¯¼èˆªã€ç‚¹å‡»ã€è¾“å…¥ã€è¯»å–ã€æˆªå›¾ã€PDF ä¿å­˜ç­‰æ“ä½œã€‚
+Kimi WebBridge ÈÃ AI Í¨¹ı±¾µØÊØ»¤½ø³Ì¿ØÖÆÓÃ»§µÄÕæÊµä¯ÀÀÆ÷£¬ÀûÓÃÓÃ»§µÄÊµ¼ÊµÇÂ¼»á»°ÓëÍøÕ¾½»»¥¡£Ö§³Öµ¼º½¡¢µã»÷¡¢ÊäÈë¡¢¶ÁÈ¡¡¢½ØÍ¼¡¢PDF ±£´æµÈ²Ù×÷¡£
 
-å®ˆæŠ¤è¿›ç¨‹åœ°å€ï¼š`http://127.0.0.1:10086`
+ÊØ»¤½ø³ÌµØÖ·£º`http://127.0.0.1:10086`
 
-## å·¥å…·æ¸…å•
+## ¹¤¾ßÇåµ¥
 
-| å·¥å…· | å‚æ•° | è¿”å›å€¼ | è¯´æ˜ |
+| ¹¤¾ß | ²ÎÊı | ·µ»ØÖµ | ËµÃ÷ |
 |------|------|--------|------|
-| `navigate` | `url`, `newTab`(bool), `group_title` | `{success, url, tabId}` | æ‰“å¼€é¡µé¢ï¼Œé¦–æ¬¡è°ƒç”¨ä¼šåˆ›å»ºæ ‡ç­¾é¡µ |
-| `find_tab` | `url`, `active`(bool) | `{success, url, tabId}` | é€‰æ‹©å·²æ‰“å¼€çš„æ ‡ç­¾é¡µä½œä¸ºå½“å‰é¡µ |
-| `snapshot` | â€” | `{url, title, tree}` + `@e` refs | å¯è®¿é—®æ€§æ ‘ï¼ˆæ–‡æœ¬ï¼‰ï¼Œç”¨äºè¯»å–é¡µé¢å†…å®¹å’Œå®šä½å…ƒç´  |
-| `click` | `selector` (@e ref æˆ– CSS) | `{success, tag, text}` | åˆæˆç‚¹å‡»äº‹ä»¶ |
-| `fill` | `selector`, `value` | `{success, tag, mode}` | æ”¯æŒ `<input>`/`<textarea>` å’Œ `[contenteditable]` å¯Œæ–‡æœ¬ç¼–è¾‘å™¨ |
-| `evaluate` | `code` (æ”¯æŒ async/await) | `{type, value}` | åœ¨é¡µé¢ä¸­æ‰§è¡Œ JS |
-| `cdp` | `method`, `params` | åŸå§‹ CDP å“åº” | Chrome DevTools Protocol é€ä¼ ï¼Œåº•å±‚é€ƒé€¸æ–¹æ¡ˆ |
-| `screenshot` | `format`(png\|jpeg), `quality`(0-100), `selector`, `path` | `{format, path, sizeBytes, mimeType}` | æˆªå›¾ä¿å­˜åˆ°æ–‡ä»¶è·¯å¾„ |
-| `network` | `cmd`(start\|stop\|list\|detail), `filter`, `requestId` | è¯·æ±‚/å“åº”æ•°æ® | ç½‘ç»œè¯·æ±‚ç›‘æ§ |
-| `upload` | `selector`, `files`(string[]) | `{success, fileCount}` | æ–‡ä»¶ä¸Šä¼  |
-| `save_as_pdf` | `paper_format`, `landscape`, `scale`, `print_background`, `path` | `{path, sizeBytes, mimeType, pageTitle}` | å°†å½“å‰é¡µé¢æ¸²æŸ“ä¸º PDF |
-| `list_tabs` | â€” | `{success, tabs:[]}` | æŸ¥çœ‹å½“å‰ä¼šè¯ä¸­çš„æ ‡ç­¾é¡µ |
-| `close_tab` | â€” | `{success, closed}` | å…³é—­å½“å‰æ ‡ç­¾é¡µ |
-| `close_session` | â€” | `{success, closed}` | å…³é—­ä¼šè¯ä¸­çš„æ‰€æœ‰æ ‡ç­¾é¡µ |
+| `navigate` | `url`, `newTab`(bool), `group_title` | `{success, url, tabId}` | ´ò¿ªÒ³Ãæ£¬Ê×´Îµ÷ÓÃ»á´´½¨±êÇ©Ò³ |
+| `find_tab` | `url`, `active`(bool) | `{success, url, tabId}` | Ñ¡ÔñÒÑ´ò¿ªµÄ±êÇ©Ò³×÷Îªµ±Ç°Ò³ |
+| `snapshot` | ¡ª | `{url, title, tree}` + `@e` refs | ¿É·ÃÎÊĞÔÊ÷£¨ÎÄ±¾£©£¬ÓÃÓÚ¶ÁÈ¡Ò³ÃæÄÚÈİºÍ¶¨Î»ÔªËØ |
+| `click` | `selector` (@e ref »ò CSS) | `{success, tag, text}` | ºÏ³Éµã»÷ÊÂ¼ş |
+| `fill` | `selector`, `value` | `{success, tag, mode}` | Ö§³Ö `<input>`/`<textarea>` ºÍ `[contenteditable]` ¸»ÎÄ±¾±à¼­Æ÷ |
+| `evaluate` | `code` (Ö§³Ö async/await) | `{type, value}` | ÔÚÒ³ÃæÖĞÖ´ĞĞ JS |
+| `cdp` | `method`, `params` | Ô­Ê¼ CDP ÏìÓ¦ | Chrome DevTools Protocol Í¸´«£¬µ×²ãÌÓÒİ·½°¸ |
+| `screenshot` | `format`(png\|jpeg), `quality`(0-100), `selector`, `path` | `{format, path, sizeBytes, mimeType}` | ½ØÍ¼±£´æµ½ÎÄ¼şÂ·¾¶ |
+| `network` | `cmd`(start\|stop\|list\|detail), `filter`, `requestId` | ÇëÇó/ÏìÓ¦Êı¾İ | ÍøÂçÇëÇó¼à¿Ø |
+| `upload` | `selector`, `files`(string[]) | `{success, fileCount}` | ÎÄ¼şÉÏ´« |
+| `save_as_pdf` | `paper_format`, `landscape`, `scale`, `print_background`, `path` | `{path, sizeBytes, mimeType, pageTitle}` | ½«µ±Ç°Ò³ÃæäÖÈ¾Îª PDF |
+| `list_tabs` | ¡ª | `{success, tabs:[]}` | ²é¿´µ±Ç°»á»°ÖĞµÄ±êÇ©Ò³ |
+| `close_tab` | ¡ª | `{success, closed}` | ¹Ø±Õµ±Ç°±êÇ©Ò³ |
+| `close_session` | ¡ª | `{success, closed}` | ¹Ø±Õ»á»°ÖĞµÄËùÓĞ±êÇ©Ò³ |
 
-## æ ‡ç­¾é¡µä¸ä¼šè¯ç®¡ç†
+## ±êÇ©Ò³Óë»á»°¹ÜÀí
 
-### å½“å‰æ ‡ç­¾é¡µ
+### µ±Ç°±êÇ©Ò³
 
-å•æ ‡ç­¾é¡µå·¥å…·ï¼ˆ`snapshot`, `click`, `fill`, `screenshot`, `save_as_pdf`ï¼‰ä½œç”¨äº**å½“å‰æ ‡ç­¾é¡µ**â€”â€”å³æœ€è¿‘ä¸€æ¬¡é€šè¿‡ `navigate` æ‰“å¼€æˆ– `find_tab` é€‰ä¸­çš„æ ‡ç­¾é¡µã€‚
+µ¥±êÇ©Ò³¹¤¾ß£¨`snapshot`, `click`, `fill`, `screenshot`, `save_as_pdf`£©×÷ÓÃÓÚ**µ±Ç°±êÇ©Ò³**¡ª¡ª¼´×î½üÒ»´ÎÍ¨¹ı `navigate` ´ò¿ª»ò `find_tab` Ñ¡ÖĞµÄ±êÇ©Ò³¡£
 
-- **æ‰“å¼€é¡µé¢**ï¼šéœ€è¦é¡µé¢å…±å­˜æ—¶ï¼ˆå¯¹æ¯”ã€äº¤å‰å¼•ç”¨ï¼‰ä½¿ç”¨ `newTab:true`ï¼›å¦åˆ™çœç•¥
-- **è¿”å› earlier tab**ï¼šä½¿ç”¨ `find_tab`ï¼Œä¼ å…¥æ ‡ç­¾é¡µçš„**å®Œæ•´ URL**
-- å¦‚æœ `find_tab` è¿”å› "no open tab found"ï¼Œä½¿ç”¨ `navigate` + `newTab:true` é‡æ–°æ‰“å¼€
+- **´ò¿ªÒ³Ãæ**£ºĞèÒªÒ³Ãæ¹²´æÊ±£¨¶Ô±È¡¢½»²æÒıÓÃ£©Ê¹ÓÃ `newTab:true`£»·ñÔòÊ¡ÂÔ
+- **·µ»Ø earlier tab**£ºÊ¹ÓÃ `find_tab`£¬´«Èë±êÇ©Ò³µÄ**ÍêÕû URL**
+- Èç¹û `find_tab` ·µ»Ø "no open tab found"£¬Ê¹ÓÃ `navigate` + `newTab:true` ÖØĞÂ´ò¿ª
 
-### ä¼šè¯ï¼ˆSessionï¼‰
+### »á»°£¨Session£©
 
-**ä¸€ä¸ªä»»åŠ¡ = ä¸€ä¸ªä¼šè¯ = ä¸€ä¸ªæ ‡ç­¾é¡µç»„ã€‚** ä¼šè¯å°†æ‰€æœ‰æ ‡ç­¾é¡µæ”¶é›†åˆ°ä¸€ä¸ªæ ‡ç­¾é¡µç»„ä¸­ï¼Œæ–¹ä¾¿ç”¨æˆ·æŸ¥çœ‹ã€‚
+**Ò»¸öÈÎÎñ = Ò»¸ö»á»° = Ò»¸ö±êÇ©Ò³×é¡£** »á»°½«ËùÓĞ±êÇ©Ò³ÊÕ¼¯µ½Ò»¸ö±êÇ©Ò³×éÖĞ£¬·½±ãÓÃ»§²é¿´¡£
 
-- ä»»åŠ¡å¼€å§‹æ—¶é€‰ä¸€ä¸ªä¼šè¯åç§°ï¼Œä¹‹åçš„æ‰€æœ‰å‘½ä»¤éƒ½ä½¿ç”¨åŒä¸€ä¼šè¯å
-- ä¼šè¯ååº”åŸºäº**ä»»åŠ¡**è€Œéç½‘ç«™ï¼ˆå¦‚ `camping-research`, `phone-compare`ï¼‰
-- `group_title` æ˜¯äººæ€§åŒ–çš„ç»„æ ‡ç­¾ï¼Œç”¨**ç”¨æˆ·çš„è¯­è¨€**ï¼Œåœ¨ç¬¬ä¸€æ¬¡ `navigate` æ—¶è®¾ç½®
+- ÈÎÎñ¿ªÊ¼Ê±Ñ¡Ò»¸ö»á»°Ãû³Æ£¬Ö®ºóµÄËùÓĞÃüÁî¶¼Ê¹ÓÃÍ¬Ò»»á»°Ãû
+- »á»°ÃûÓ¦»ùÓÚ**ÈÎÎñ**¶ø·ÇÍøÕ¾£¨Èç `camping-research`, `phone-compare`£©
+- `group_title` ÊÇÈËĞÔ»¯µÄ×é±êÇ©£¬ÓÃ**ÓÃ»§µÄÓïÑÔ**£¬ÔÚµÚÒ»´Î `navigate` Ê±ÉèÖÃ
 
 ```bash
-# ç¬¬ä¸€ä¸ªæ ‡ç­¾é¡µï¼šè®¾ç½®ä¼šè¯ + ç»„æ ‡ç­¾
+# µÚÒ»¸ö±êÇ©Ò³£ºÉèÖÃ»á»° + ×é±êÇ©
 curl -s -X POST http://127.0.0.1:10086/command \
-  -d '{"action":"navigate","args":{"url":"https://example.com","newTab":true,"group_title":"ä»»åŠ¡åç§°"},"session":"task-name"}'
+  -d '{"action":"navigate","args":{"url":"https://example.com","newTab":true,"group_title":"ÈÎÎñÃû³Æ"},"session":"task-name"}'
 
-# åŒä¸€ä¼šè¯çš„å¦ä¸€ä¸ªç½‘ç«™ â†’ è‡ªåŠ¨åŠ å…¥åŒä¸€ç»„
+# Í¬Ò»»á»°µÄÁíÒ»¸öÍøÕ¾ ¡ú ×Ô¶¯¼ÓÈëÍ¬Ò»×é
 curl -s -X POST http://127.0.0.1:10086/command \
   -d '{"action":"navigate","args":{"url":"https://another.com","newTab":true},"session":"task-name"}'
 ```
 
-ä»»åŠ¡å®Œæˆåï¼Œç”¨æˆ·ä¸å†éœ€è¦é¡µé¢æ—¶è°ƒç”¨ `close_session` æ¸…é™¤ç»„ã€‚
+ÈÎÎñÍê³Éºó£¬ÓÃ»§²»ÔÙĞèÒªÒ³ÃæÊ±µ÷ÓÃ `close_session` Çå³ı×é¡£
 
-## è°ƒç”¨æ ¼å¼
+## µ÷ÓÃ¸ñÊ½
 
 ### macOS / Linux
 
 ```bash
 curl -s -X POST http://127.0.0.1:10086/command \
   -H 'Content-Type: application/json' \
-  -d '{"action":"navigate","args":{"url":"https://example.com","newTab":true,"group_title":"ä»»åŠ¡"},"session":"task"}'
+  -d '{"action":"navigate","args":{"url":"https://example.com","newTab":true,"group_title":"ÈÎÎñ"},"session":"task"}'
 ```
 
 ### Windows (PowerShell / cmd)
 
-Windows shell ä¼šç ´åé ASCII å­—ç¬¦ï¼Œ**å¿…é¡»é€šè¿‡æ–‡ä»¶ä½“å‘é€è¯·æ±‚**ï¼š
+Windows shell »áÆÆ»µ·Ç ASCII ×Ö·û£¬**±ØĞëÍ¨¹ıÎÄ¼şÌå·¢ËÍÇëÇó**£º
 
-1. å°† JSON å†™å…¥å”¯ä¸€å‘½åçš„ä¸´æ—¶æ–‡ä»¶ï¼ˆä¸è¦ç”¨ `echo`/`heredoc`ï¼‰
-2. ä½¿ç”¨ `curl.exe`ï¼ˆä¸æ˜¯ `curl`ï¼ŒPowerShell ä¼šå°†å…¶åˆ«åä¸º `Invoke-WebRequest`ï¼‰
-3. è¯·æ±‚å®Œæˆååˆ é™¤ä¸´æ—¶æ–‡ä»¶
+1. ½« JSON Ğ´ÈëÎ¨Ò»ÃüÃûµÄÁÙÊ±ÎÄ¼ş£¨²»ÒªÓÃ `echo`/`heredoc`£©
+2. Ê¹ÓÃ `curl.exe`£¨²»ÊÇ `curl`£¬PowerShell »á½«Æä±ğÃûÎª `Invoke-WebRequest`£©
+3. ÇëÇóÍê³ÉºóÉ¾³ıÁÙÊ±ÎÄ¼ş
 
 ```powershell
 curl.exe -s -X POST http://127.0.0.1:10086/command -H "Content-Type: application/json" --data-binary "@$env:TEMP\webbridge-req-<random>.json"
 ```
 
-## æ ¸å¿ƒä½¿ç”¨å»ºè®®
+## ºËĞÄÊ¹ÓÃ½¨Òé
 
-### 1. ä¼˜å…ˆä½¿ç”¨ snapshot è€Œé CSS/JS é€‰æ‹©å™¨
+### 1. ÓÅÏÈÊ¹ÓÃ snapshot ¶ø·Ç CSS/JS Ñ¡ÔñÆ÷
 
-`snapshot` è¿”å›åŸºäºè¯­ä¹‰è§’è‰²/åç§°çš„ `@e` å¼•ç”¨ï¼Œç›´æ¥ä½¿ç”¨ click/fill å³å¯ã€‚è¿™äº›å¼•ç”¨åœ¨ CSS ç±»å“ˆå¸Œå˜åŒ–æ—¶ä¾ç„¶æœ‰æ•ˆã€‚
+`snapshot` ·µ»Ø»ùÓÚÓïÒå½ÇÉ«/Ãû³ÆµÄ `@e` ÒıÓÃ£¬Ö±½ÓÊ¹ÓÃ click/fill ¼´¿É¡£ÕâĞ©ÒıÓÃÔÚ CSS Àà¹şÏ£±ä»¯Ê±ÒÀÈ»ÓĞĞ§¡£
 
-ä»…åœ¨ä»¥ä¸‹æƒ…å†µå›é€€åˆ° `evaluate` (JS)ï¼š
-- ç›®æ ‡åœ¨ snapshot ä¸­æ²¡æœ‰ `@e` å¼•ç”¨
-- éœ€è¦ snapshot ä¸­æ²¡æœ‰çš„å±æ€§ï¼ˆå¦‚ `href`ï¼‰
-- éœ€è¦å¤æ‚çš„äº‹ä»¶åºåˆ—æˆ–æ»šåŠ¨
+½öÔÚÒÔÏÂÇé¿ö»ØÍËµ½ `evaluate` (JS)£º
+- Ä¿±êÔÚ snapshot ÖĞÃ»ÓĞ `@e` ÒıÓÃ
+- ĞèÒª snapshot ÖĞÃ»ÓĞµÄÊôĞÔ£¨Èç `href`£©
+- ĞèÒª¸´ÔÓµÄÊÂ¼şĞòÁĞ»ò¹ö¶¯
 
-### 2. Evaluate æŠ€å·§
+### 2. Evaluate ¼¼ÇÉ
 
-- ä½¿ç”¨ç´§å‡‘çš„ `JSON.stringify(data)`ï¼Œä¸è¦åŠ  `null, 2` æ ¼å¼åŒ–
-- å¤šæ¬¡è°ƒç”¨å…±äº«é¡µé¢çš„ JS ä½œç”¨åŸŸï¼Œé‡å¤å£°æ˜ `const`/`let` ä¼šæŠ›å‡º `SyntaxError`ã€‚ç”¨ IIFE éš”ç¦»ä½œç”¨åŸŸï¼š
+- Ê¹ÓÃ½ô´ÕµÄ `JSON.stringify(data)`£¬²»Òª¼Ó `null, 2` ¸ñÊ½»¯
+- ¶à´Îµ÷ÓÃ¹²ÏíÒ³ÃæµÄ JS ×÷ÓÃÓò£¬ÖØ¸´ÉùÃ÷ `const`/`let` »áÅ×³ö `SyntaxError`¡£ÓÃ IIFE ¸ôÀë×÷ÓÃÓò£º
   ```javascript
   (() => { const x = ...; return x; })()
   ```
 
-### 3. æ–‡æœ¬è¾“å…¥ä½¿ç”¨ fill
+### 3. ÎÄ±¾ÊäÈëÊ¹ÓÃ fill
 
-`fill` æ”¯æŒï¼š
-- `<input>` / `<textarea>` â†’ è¿”å› `mode: "value"`
-- `[contenteditable]` å¯Œæ–‡æœ¬ç¼–è¾‘å™¨ï¼ˆProseMirror, TipTap, Lexical, Slate, Quill ç­‰ï¼‰â†’ è¿”å› `mode: "contenteditable"`
+`fill` Ö§³Ö£º
+- `<input>` / `<textarea>` ¡ú ·µ»Ø `mode: "value"`
+- `[contenteditable]` ¸»ÎÄ±¾±à¼­Æ÷£¨ProseMirror, TipTap, Lexical, Slate, Quill µÈ£©¡ú ·µ»Ø `mode: "contenteditable"`
 
-`fill` æ˜¯**æ¸…é™¤å¹¶æ’å…¥**ï¼šç°æœ‰å†…å®¹ä¼šè¢«æ›¿æ¢ã€‚å¦‚éœ€è¿½åŠ ï¼Œå…ˆé€šè¿‡ `evaluate` è¯»å–å½“å‰å€¼ï¼Œæ‹¼æ¥åå† `fill`ã€‚
+`fill` ÊÇ**Çå³ı²¢²åÈë**£ºÏÖÓĞÄÚÈİ»á±»Ìæ»»¡£ÈçĞè×·¼Ó£¬ÏÈÍ¨¹ı `evaluate` ¶ÁÈ¡µ±Ç°Öµ£¬Æ´½ÓºóÔÙ `fill`¡£
 
-### 4. è¡¨å•æäº¤ / ç‰¹æ®ŠæŒ‰é”®
+### 4. ±íµ¥Ìá½» / ÌØÊâ°´¼ü
 
-æ²¡æœ‰å•ç‹¬çš„ "æŒ‰ Enter" å·¥å…·ã€‚æäº¤è¡¨å•æ—¶ç›´æ¥ç‚¹å‡»æäº¤æŒ‰é’®ã€‚å¦‚éœ€æ´¾å‘æŒ‰é”®äº‹ä»¶ï¼ˆå¦‚ Escape å…³é—­å¼¹çª—ï¼‰ï¼š
+Ã»ÓĞµ¥¶ÀµÄ "°´ Enter" ¹¤¾ß¡£Ìá½»±íµ¥Ê±Ö±½Óµã»÷Ìá½»°´Å¥¡£ÈçĞèÅÉ·¢°´¼üÊÂ¼ş£¨Èç Escape ¹Ø±Õµ¯´°£©£º
 
 ```bash
 {"action":"evaluate","args":{"code":"document.activeElement.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}))"}}
 ```
 
-### 5. æˆªå›¾
+### 5. ½ØÍ¼
 
 ```bash
-# é»˜è®¤ï¼šPNG å¯è§†åŒºåŸŸï¼Œå®ˆæŠ¤è¿›ç¨‹é€‰æ‹©ä¸´æ—¶è·¯å¾„
+# Ä¬ÈÏ£ºPNG ¿ÉÊÓÇøÓò£¬ÊØ»¤½ø³ÌÑ¡ÔñÁÙÊ±Â·¾¶
 curl ... -d '{"action":"screenshot","args":{}}'
 
-# å¯é€‰ï¼šJPEG è´¨é‡ã€ä»…å…ƒç´ ã€è‡ªå®šä¹‰è¾“å‡ºè·¯å¾„
+# ¿ÉÑ¡£ºJPEG ÖÊÁ¿¡¢½öÔªËØ¡¢×Ô¶¨ÒåÊä³öÂ·¾¶
 curl ... -d '{"action":"screenshot","args":{"format":"jpeg","quality":60}}'
 curl ... -d '{"action":"screenshot","args":{"selector":"@e123"}}'
 ```
 
-è‡ªå®šä¹‰ `path` ä¼šè¢«ç›´æ¥å†™å…¥ï¼ˆè‡ªåŠ¨åˆ›å»ºçˆ¶ç›®å½•ï¼Œè¦†ç›–å·²æœ‰æ–‡ä»¶ï¼‰ã€‚
+×Ô¶¨Òå `path` »á±»Ö±½ÓĞ´Èë£¨×Ô¶¯´´½¨¸¸Ä¿Â¼£¬¸²¸ÇÒÑÓĞÎÄ¼ş£©¡£
 
-### 6. ä¿å­˜ä¸º PDF
+### 6. ±£´æÎª PDF
 
 ```bash
 curl ... -d '{"action":"save_as_pdf","args":{"paper_format":"a4","landscape":false,"scale":1.0,"print_background":true,"path":"output.pdf"}}'
 ```
 
-å‚æ•°ï¼š
-- `paper_format`: `letter`ï¼ˆé»˜è®¤ï¼‰\| `a4` \| `legal` \| `a3` \| `tabloid`
-- `landscape`: `false`ï¼ˆé»˜è®¤ï¼‰
-- `scale`: `1.0`ï¼ˆé»˜è®¤ï¼‰ï¼ŒèŒƒå›´ `[0.1, 2.0]`
-- `print_background`: `true`ï¼ˆé»˜è®¤ï¼‰â€” ä¿ç•™èƒŒæ™¯è‰²
-- `path`: è‡ªå®šä¹‰è¾“å‡ºè·¯å¾„ï¼›çœç•¥æ—¶å®ˆæŠ¤è¿›ç¨‹ä½¿ç”¨ OS ä¸´æ—¶ç›®å½•
+²ÎÊı£º
+- `paper_format`: `letter`£¨Ä¬ÈÏ£©\| `a4` \| `legal` \| `a3` \| `tabloid`
+- `landscape`: `false`£¨Ä¬ÈÏ£©
+- `scale`: `1.0`£¨Ä¬ÈÏ£©£¬·¶Î§ `[0.1, 2.0]`
+- `print_background`: `true`£¨Ä¬ÈÏ£©¡ª ±£Áô±³¾°É«
+- `path`: ×Ô¶¨ÒåÊä³öÂ·¾¶£»Ê¡ÂÔÊ±ÊØ»¤½ø³ÌÊ¹ÓÃ OS ÁÙÊ±Ä¿Â¼
 
-PDF å¤§å°ä¸Šé™ 100 MBï¼Œè¶…è¿‡åˆ™æ‹’ç»ã€‚
+PDF ´óĞ¡ÉÏÏŞ 100 MB£¬³¬¹ıÔò¾Ü¾ø¡£
 
-## å·²çŸ¥é™åˆ¶
+## ÒÑÖªÏŞÖÆ
 
-1. **ä¸¥æ ¼æ£€æŸ¥ `event.isTrusted` çš„ç½‘ç«™**ï¼šéƒ¨åˆ†é“¶è¡Œé—¨æˆ·ã€éªŒè¯ç ä¼šå¿½ç•¥ `click`/`fill`ï¼ˆå› ä¸ºè§¦å‘äº† DOM çº§åˆ«åˆæˆäº‹ä»¶ï¼Œ`isTrusted=false`ï¼‰ã€‚å‘ŠçŸ¥ç”¨æˆ·éœ€è¦æ‰‹åŠ¨äº¤äº’ã€‚ï¼ˆé€šè¿‡ `cdp` åè®®çº§å¯å®ç°å¯ä¿¡è¾“å…¥ï¼Œä½†å±äºé«˜çº§ç”¨æ³•ï¼‰
+1. **ÑÏ¸ñ¼ì²é `event.isTrusted` µÄÍøÕ¾**£º²¿·ÖÒøĞĞÃÅ»§¡¢ÑéÖ¤Âë»áºöÂÔ `click`/`fill`£¨ÒòÎª´¥·¢ÁË DOM ¼¶±ğºÏ³ÉÊÂ¼ş£¬`isTrusted=false`£©¡£¸æÖªÓÃ»§ĞèÒªÊÖ¶¯½»»¥¡££¨Í¨¹ı `cdp` Ğ­Òé¼¶¿ÉÊµÏÖ¿ÉĞÅÊäÈë£¬µ«ÊôÓÚ¸ß¼¶ÓÃ·¨£©
 
-2. **è·¨åŸŸ iframe**ï¼š`fill`, `click`, `evaluate`, `snapshot` ä½œç”¨äºé¡¶å±‚æ¡†æ¶ã€‚å¦‚æœç›®æ ‡å…ƒç´ åœ¨è·¨åŸŸ iframe ä¸­ï¼Œç›´æ¥å¯¼èˆªåˆ° iframe çš„ URLã€‚
+2. **¿çÓò iframe**£º`fill`, `click`, `evaluate`, `snapshot` ×÷ÓÃÓÚ¶¥²ã¿ò¼Ü¡£Èç¹ûÄ¿±êÔªËØÔÚ¿çÓò iframe ÖĞ£¬Ö±½Óµ¼º½µ½ iframe µÄ URL¡£
 
-## æ•…éšœæ’é™¤
+## ¹ÊÕÏÅÅ³ı
 
-### å·¥å…·è°ƒç”¨å¤±è´¥ï¼ˆå®ˆæŠ¤è¿›ç¨‹æˆ–æ‰©å±•æœªå°±ç»ªï¼‰
+### ¹¤¾ßµ÷ÓÃÊ§°Ü£¨ÊØ»¤½ø³Ì»òÀ©Õ¹Î´¾ÍĞ÷£©
 
-**å¦‚æœæ— æ³•è¿æ¥å®ˆæŠ¤è¿›ç¨‹ï¼Œè‡ªè¡Œå¯åŠ¨â€”â€”ä¸è¦è¯¢é—®ç”¨æˆ·ã€‚** å®ˆæŠ¤è¿›ç¨‹å·²è¿è¡Œæ—¶æ­¤æ“ä½œæ— å®³ã€‚
+**Èç¹ûÎŞ·¨Á¬½ÓÊØ»¤½ø³Ì£¬×ÔĞĞÆô¶¯¡ª¡ª²»ÒªÑ¯ÎÊÓÃ»§¡£** ÊØ»¤½ø³ÌÒÑÔËĞĞÊ±´Ë²Ù×÷ÎŞº¦¡£
 
 **macOS / Linux:**
 ```bash
@@ -182,18 +188,18 @@ PDF å¤§å°ä¸Šé™ 100 MBï¼Œè¶…è¿‡åˆ™æ‹’ç»ã€‚
 & "$env:USERPROFILE\.kimi-webbridge\bin\kimi-webbridge.exe" start
 ```
 
-ç„¶åé‡è¯•å·¥å…·è°ƒç”¨ã€‚å¦‚æœä»ç„¶å¤±è´¥â€”â€”æˆ–æµè§ˆå™¨æ‰©å±•æ— æ³•è¿æ¥â€”â€”è¯·ç”¨æˆ·è®¿é—®å¸®åŠ©é¡µé¢ï¼š
-- è‹±æ–‡ï¼šhttps://www.kimi.com/features/webbridge
-- ä¸­æ–‡ï¼šhttps://www.kimi.com/zh-cn/features/webbridge
+È»ºóÖØÊÔ¹¤¾ßµ÷ÓÃ¡£Èç¹ûÈÔÈ»Ê§°Ü¡ª¡ª»òä¯ÀÀÆ÷À©Õ¹ÎŞ·¨Á¬½Ó¡ª¡ªÇëÓÃ»§·ÃÎÊ°ïÖúÒ³Ãæ£º
+- Ó¢ÎÄ£ºhttps://www.kimi.com/features/webbridge
+- ÖĞÎÄ£ºhttps://www.kimi.com/zh-cn/features/webbridge
 
-**ä¸è¦è‡ªåŠ¨è¿è¡Œ `stop` / `restart` / `uninstall`** â€”â€” è¿™äº›ä¼šæ€æ­»æ­£åœ¨è¿è¡Œçš„å®ˆæŠ¤è¿›ç¨‹ã€‚
+**²»Òª×Ô¶¯ÔËĞĞ `stop` / `restart` / `uninstall`** ¡ª¡ª ÕâĞ©»áÉ±ËÀÕıÔÚÔËĞĞµÄÊØ»¤½ø³Ì¡£
 
-### ç‰ˆæœ¬ä¸åŒ¹é…
+### °æ±¾²»Æ¥Åä
 
-å¦‚æœå·¥å…·è¿”å› **"Please update the Kimi WebBridge extension"**ï¼Œå‘ŠçŸ¥ç”¨æˆ·æ›´æ–°æµè§ˆå™¨æ‰©å±•å¹¶é‡è¯•ï¼š
-- è‹±æ–‡ï¼šhttps://www.kimi.com/features/webbridge
-- ä¸­æ–‡ï¼šhttps://www.kimi.com/zh-cn/features/webbridge
+Èç¹û¹¤¾ß·µ»Ø **"Please update the Kimi WebBridge extension"**£¬¸æÖªÓÃ»§¸üĞÂä¯ÀÀÆ÷À©Õ¹²¢ÖØÊÔ£º
+- Ó¢ÎÄ£ºhttps://www.kimi.com/features/webbridge
+- ÖĞÎÄ£ºhttps://www.kimi.com/zh-cn/features/webbridge
 
 ---
 
-*æœ¬æ–‡æ¡£ä¸ [`plugins/kimi-webbridge/SKILL.md`](../../plugins/kimi-webbridge/SKILL.md) åŒæ­¥ï¼Œæ›´æ–°æ—¶è¯·åŒæ—¶ä¿®æ”¹ä¸¤è€…ã€‚*
+*±¾ÎÄµµÓë [`plugins/kimi-webbridge/SKILL.md`](../../plugins/kimi-webbridge/SKILL.md) Í¬²½£¬¸üĞÂÊ±ÇëÍ¬Ê±ĞŞ¸ÄÁ½Õß¡£*

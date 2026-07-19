@@ -28,11 +28,16 @@ import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'
 import { taskScheduler } from '@/services/data-collector/TaskScheduler'
 import { marketDataAdapter } from '@/services/data-collector/MarketDataAdapter'
-import type { DataSourceConfig, RawMarketData, MarketData } from '@/types/modules/widget.types'
+import type { DataSourceConfig, RawMarketData, MarketData, ChatMessage } from '@/types/modules/widget.types'
 import { dataBridge } from '@/core/databridge'
 import { STORE_NAME } from '@/config/dbConfig'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { withBroadcast } from '@/store/helpers/withBroadcast'
+import { MockStockAnalysisProvider } from '@/services/stock-analysis/mockStockAnalysisProvider'
+import { streamingChat } from '@/services/llm/llmGateway'
+import type { LlmStreamCallback } from '@/services/llm/llmTypes'
+import { nanoid } from 'nanoid'
+import { ACTIVE_DATA_SOURCE, DATA_SOURCE_TYPE } from '@/constants/cockpit.constants'
 
 const logger = getLogger()
 
@@ -150,6 +155,19 @@ export interface MarketDataState {
    * 获取任务统计（兼容 MarketDataProvider.getTaskStats）
    */
   getTaskStats: () => { total: number; running: number; error: number }
+
+  /**
+   * 合并来自 MarketDataProvider 桥接的已适配数据
+   * @convergence Phase 1: Widget 数据桥接到 Store，消除双通道数据不一致
+   */
+  mergeAdaptedData: (adapted: Partial<MarketData>) => void
+
+  /**
+   * 发送个股/市场分析聊天消息
+   * @remarks Mock 模式直接调用 MockStockAnalysisProvider；REST 模式使用 SSE 流式 LLM 推理接口
+   * @convergence Phase 2: 从 MarketDataProvider 迁移至 Store，使 Widget 可不依赖 Provider 使用
+   */
+  sendChatMessage: (target: string, question: string) => Promise<ChatMessage>
 }
 
 // ============================================================
@@ -361,6 +379,60 @@ const actions = {
       error: tasks.filter((t) => t.status === 'error').length,
     }
   },
+
+  /**
+   * 合并来自 MarketDataProvider 桥接的已适配数据。
+   * 使 Page 也能读取 Widget 采集的数据，消除双通道数据不一致。
+   */
+  mergeAdaptedData: (adapted: Partial<MarketData>) => {
+    useMarketDataStore.setState((s) => ({
+      mergedData: marketDataAdapter.merge(s.mergedData, adapted),
+    }))
+  },
+
+  /**
+   * 发送个股/市场分析聊天消息。
+   * Mock 模式直接调用 MockStockAnalysisProvider；REST 模式使用 SSE 流式 LLM 推理接口。
+   * 用户主动触发的对话行为，不走轮询 TaskScheduler。
+   */
+  sendChatMessage: async (target: string, question: string): Promise<ChatMessage> => {
+    const logger = getLogger()
+    logger.info(`[marketDataStore] 发送聊天消息: target=${target}`)
+
+    if (ACTIVE_DATA_SOURCE === DATA_SOURCE_TYPE.MOCK) {
+      return MockStockAnalysisProvider.sendChatMessage(target, question)
+    }
+
+    const messages = [
+      { role: 'system' as const, content: `你是一位专业的股票分析助手，正在分析标的：${target}。请提供详细、专业的分析。` },
+      { role: 'user' as const, content: question },
+    ]
+
+    let fullContent = ''
+    const startTime = Date.now()
+
+    const chunkCallback: LlmStreamCallback = (chunk) => {
+      if (!chunk.isDone) {
+        fullContent += chunk.content
+        logger.debug('[marketDataStore] LLM stream chunk received', { length: chunk.content.length, total: fullContent.length })
+      }
+    }
+
+    try {
+      await streamingChat(messages, chunkCallback)
+      logger.info('[marketDataStore] LLM streaming chat completed', { contentLength: fullContent.length, duration: Date.now() - startTime })
+    } catch (err) {
+      logger.error('[marketDataStore] LLM streaming chat failed', { error: err instanceof Error ? err.message : String(err) })
+      throw err
+    }
+
+    return {
+      id: `assistant_${nanoid(8)}`,
+      role: 'assistant',
+      content: fullContent,
+      timestamp: Date.now(),
+    }
+  },
 }
 
 // ============================================================
@@ -465,43 +537,46 @@ function handleCollectionResult(
 }
 
 // ============================================================
-// TaskScheduler 订阅管理
+// 订阅生命周期管理
 // ============================================================
 
+let _unsubscribeDataBridge: (() => void) | null = null
 let _unsubscribeTaskScheduler: (() => void) | null = null
+let _globalSubscriptionsInitialized = false
 
 /**
- * 初始化 TaskScheduler 订阅
- * @remarks 应在应用启动时调用一次，返回 cleanup 函数
+ * 初始化 TaskScheduler 订阅（兼容旧API）
+ * @deprecated 建议使用 initMarketDataStoreGlobalSubscriptions() 进行全局初始化，
+ * 或使用 initMarketDataStoreSubscriptions() 进行组件级初始化。
  */
 export function initMarketDataStoreTaskSubscription(): () => void {
   if (_unsubscribeTaskScheduler) {
     logger.warn('[marketDataStore] TaskScheduler subscription already initialized')
-    return () => destroyMarketDataStoreTaskSubscription()
+    return () => {
+      if (!_globalSubscriptionsInitialized) {
+        _unsubscribeTaskScheduler?.()
+        _unsubscribeTaskScheduler = null
+        logger.info('[marketDataStore] TaskScheduler subscription destroyed')
+      }
+    }
   }
 
   _unsubscribeTaskScheduler = taskScheduler.subscribe(handleCollectionResult)
   logger.info('[marketDataStore] TaskScheduler subscription initialized')
 
-  return () => destroyMarketDataStoreTaskSubscription()
+  return () => {
+    if (!_globalSubscriptionsInitialized) {
+      _unsubscribeTaskScheduler?.()
+      _unsubscribeTaskScheduler = null
+      logger.info('[marketDataStore] TaskScheduler subscription destroyed')
+    }
+  }
 }
-
-function destroyMarketDataStoreTaskSubscription(): void {
-  _unsubscribeTaskScheduler?.()
-  _unsubscribeTaskScheduler = null
-  logger.info('[marketDataStore] TaskScheduler subscription destroyed')
-}
-
-// ============================================================
-// DataBridge 订阅生命周期
-// ============================================================
-
-let _unsubscribeDataBridge: (() => void) | null = null
 
 /**
- * 初始化 DataBridge 频道订阅
+ * 初始化 DataBridge 频道订阅（组件级）。
  * @remarks 当其他模块更新了会影响市场数据的内容（如交易订单、持仓变更）时，
- * 自动触发对应数据源刷新
+ * 自动触发对应数据源刷新。组件卸载时会自动销毁。
  */
 export function initMarketDataStoreSubscriptions(): () => void {
   if (_unsubscribeDataBridge) {
@@ -509,6 +584,64 @@ export function initMarketDataStoreSubscriptions(): () => void {
     return () => destroyMarketDataStoreSubscriptions()
   }
 
+  setupDataBridgeSubscriptions()
+
+  logger.info('[marketDataStore] DataBridge subscriptions initialized')
+
+  return () => destroyMarketDataStoreSubscriptions()
+}
+
+/**
+ * 全局初始化市场数据订阅（应用启动时调用）。
+ * 与组件级 initMarketDataStoreSubscriptions 不同，全局初始化的订阅
+ * 不会随组件卸载而销毁，确保市场数据在懒加载widget挂载前就已就绪。
+ */
+export function initMarketDataStoreGlobalSubscriptions(): void {
+  if (_globalSubscriptionsInitialized) {
+    logger.debug('[marketDataStore] Global subscriptions already initialized')
+    return
+  }
+
+  // 初始化TaskScheduler订阅
+  if (!_unsubscribeTaskScheduler) {
+    _unsubscribeTaskScheduler = taskScheduler.subscribe(handleCollectionResult)
+    logger.info('[marketDataStore] TaskScheduler subscription initialized globally')
+  }
+
+  // 初始化DataBridge订阅
+  if (!_unsubscribeDataBridge) {
+    setupDataBridgeSubscriptions()
+  }
+
+  _globalSubscriptionsInitialized = true
+  logger.info('[marketDataStore] Global subscriptions initialized')
+}
+
+/**
+ * 测试用：重置所有订阅状态（仅在测试环境使用）
+ */
+export function _resetMarketDataStoreSubscriptionsForTest(): void {
+  if (_refreshDebounceTimer) {
+    clearTimeout(_refreshDebounceTimer)
+    _refreshDebounceTimer = null
+  }
+  _unsubscribeDataBridge?.()
+  _unsubscribeTaskScheduler?.()
+  _unsubscribeDataBridge = null
+  _unsubscribeTaskScheduler = null
+  _globalSubscriptionsInitialized = false
+  useMarketDataStore.setState(initialState)
+  periodicTimers.forEach((timer) => clearInterval(timer))
+  periodicTimers.clear()
+  Object.values(useMarketDataStore.getState().taskMap).forEach((taskId) => {
+    taskScheduler.unregisterTask(taskId)
+  })
+  logger.info('[marketDataStore] Subscriptions reset for test')
+}
+
+let _refreshDebounceTimer: ReturnType<typeof setTimeout> | null = null
+
+function setupDataBridgeSubscriptions(): void {
   // 订单频道：交易操作可能影响持仓概览、盈亏分析等
   _unsubscribeDataBridge = dataBridge.subscribe(
     STORE_NAME.orders,
@@ -518,23 +651,34 @@ export function initMarketDataStoreSubscriptions(): () => void {
         traceId: envelope.meta.traceId,
       })
 
-      // 订单变更触发持仓概览刷新
-      const state = useMarketDataStore.getState()
-      if (state.dataSources.portfolioOverview && !state.dataSources.portfolioOverview.loading) {
-        logger.info('[marketDataStore] DataBridge event triggering portfolioOverview refresh')
-        state.refreshDataSource('portfolioOverview')
+      // 订单变更触发持仓概览刷新（防抖避免频繁刷新）
+      if (_refreshDebounceTimer) {
+        clearTimeout(_refreshDebounceTimer)
       }
+      _refreshDebounceTimer = setTimeout(() => {
+        const state = useMarketDataStore.getState()
+        if (state.dataSources.portfolioOverview && !state.dataSources.portfolioOverview.loading) {
+          logger.info('[marketDataStore] DataBridge event triggering portfolioOverview refresh')
+          state.refreshDataSource('portfolioOverview')
+        }
+      }, 300)
     },
   )
-
-  logger.info('[marketDataStore] DataBridge subscriptions initialized')
-
-  return () => destroyMarketDataStoreSubscriptions()
 }
 
 function destroyMarketDataStoreSubscriptions(): void {
+  if (_globalSubscriptionsInitialized) {
+    logger.debug('[marketDataStore] Global subscriptions, skip destroy from component')
+    return
+  }
+  if (_refreshDebounceTimer) {
+    clearTimeout(_refreshDebounceTimer)
+    _refreshDebounceTimer = null
+  }
   _unsubscribeDataBridge?.()
   _unsubscribeDataBridge = null
+  _unsubscribeTaskScheduler?.()
+  _unsubscribeTaskScheduler = null
   logger.info('[marketDataStore] DataBridge subscriptions destroyed')
 }
 

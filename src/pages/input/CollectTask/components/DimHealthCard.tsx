@@ -22,6 +22,12 @@ interface DimHealthCardProps {
 const RATE_WARNING_THRESHOLD = 85
 const RATE_CRITICAL_THRESHOLD = 60
 
+/**
+ * DimHealthCard
+ * @param name
+ * @param total
+ * @param success }
+ */
 export function DimHealthCard({ code, name, total, success }: DimHealthCardProps): React.JSX.Element {
   const rate = total > 0 ? (success / total) * 100 : 0
   let status: 'healthy' | 'warning' | 'critical' = 'healthy'

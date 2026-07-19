@@ -357,7 +357,8 @@ export const DEFAULT_TIMEOUT_POLICY: TimeoutPolicy = {
 
 export const DEFAULT_FALLBACK_POLICY: FallbackPolicy = {
   allowFallback: true,
-  allowMockFallback: true,
+  // 生产环境禁止 Mock 数据回退，避免 API 失败时静默切换到假数据
+  allowMockFallback: !import.meta.env.PROD,
   alertFailureRate: 80,
 }
 

@@ -10,8 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/molecules
 import { Download, RotateCcw, Play, BarChart3, TrendingUp, AlertCircle, Info, History } from 'lucide-react'
 import { PageContainer, PageHeader } from '@/components/templates'
 import { useBacktestStore, type BacktestStrategy } from '@/store/backtestStore'
-import { STOCK_COLOR_MAPPING } from '@/constants/cockpit.constants'
-import { COLOR_TOKENS, CHART_PALETTE, THEME_TOKENS } from '@/constants/theme.tokens'
+import { COLOR_TOKENS, CHART_PALETTE, THEME_TOKENS, STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
 
 /**
  * BacktestPage
@@ -40,23 +39,19 @@ export default function BacktestPage(): React.JSX.Element {
     if (!results) return
     try {
       await exportReport(results, config, { format: 'pdf' })
-    } catch {
-      // 导出失败由 store 处理日志
-    }
+    } catch { console.warn('[BacktestPage.tsx] 导出失败由 store 处理日志, using fallback') }
   }
 
   const handleExportById = async (id: string) => {
     try {
       await exportReportById(id, { format: 'pdf' })
-    } catch {
-      // 导出失败由 store 处理日志
-    }
+    } catch { console.warn('[BacktestPage.tsx] 导出失败由 store 处理日志, using fallback') }
   }
 
   const metrics = results
     ? [
-        { label: '总收益率', value: `${results.totalReturn.toFixed(2)}%`, color: results.totalReturn >= 0 ? STOCK_COLOR_MAPPING.UP_CLASS : STOCK_COLOR_MAPPING.DOWN_CLASS },
-        { label: '年化收益率', value: `${results.annualizedReturn.toFixed(2)}%`, color: results.annualizedReturn >= 0 ? STOCK_COLOR_MAPPING.UP_CLASS : STOCK_COLOR_MAPPING.DOWN_CLASS },
+        { label: '总收益率', value: `${results.totalReturn.toFixed(2)}%`, color: results.totalReturn >= 0 ? STOCK_COLOR_TOKENS.up.tailwind : STOCK_COLOR_TOKENS.down.tailwind },
+        { label: '年化收益率', value: `${results.annualizedReturn.toFixed(2)}%`, color: results.annualizedReturn >= 0 ? STOCK_COLOR_TOKENS.up.tailwind : STOCK_COLOR_TOKENS.down.tailwind },
         { label: '最大回撤', value: `${results.maxDrawdown.toFixed(2)}%`, color: 'text-destructive' },
         { label: '夏普比率', value: results.sharpeRatio.toFixed(2), color: results.sharpeRatio >= 1 ? 'text-success' : results.sharpeRatio >= 0 ? 'text-warning' : 'text-destructive' },
         { label: '胜率', value: `${results.winRate.toFixed(2)}%`, color: results.winRate >= 50 ? 'text-success' : 'text-destructive' },
@@ -269,10 +264,10 @@ export default function BacktestPage(): React.JSX.Element {
                         </TableCell>
                         <TableCell>{trade.price.toFixed(2)}</TableCell>
                         <TableCell>{trade.quantity}</TableCell>
-                        <TableCell className={trade.pnl >= 0 ? STOCK_COLOR_MAPPING.UP_CLASS : STOCK_COLOR_MAPPING.DOWN_CLASS}>
+                        <TableCell className={trade.pnl >= 0 ? STOCK_COLOR_TOKENS.up.tailwind : STOCK_COLOR_TOKENS.down.tailwind}>
                           {trade.pnl >= 0 ? '+' : ''}{trade.pnl.toFixed(2)}
                         </TableCell>
-                        <TableCell className={trade.pnlPct >= 0 ? STOCK_COLOR_MAPPING.UP_CLASS : STOCK_COLOR_MAPPING.DOWN_CLASS}>
+                        <TableCell className={trade.pnlPct >= 0 ? STOCK_COLOR_TOKENS.up.tailwind : STOCK_COLOR_TOKENS.down.tailwind}>
                           {trade.pnlPct >= 0 ? '+' : ''}{trade.pnlPct.toFixed(2)}%
                         </TableCell>
                         <TableCell className="text-muted-foreground text-sm">{trade.reason}</TableCell>
@@ -307,7 +302,7 @@ export default function BacktestPage(): React.JSX.Element {
                           <TableCell>{pos.avgCost.toFixed(2)}</TableCell>
                           <TableCell>{pos.currentPrice.toFixed(2)}</TableCell>
                           <TableCell>{pos.marketValue.toFixed(2)}</TableCell>
-                          <TableCell className={pos.unrealizedPnL >= 0 ? STOCK_COLOR_MAPPING.UP_CLASS : STOCK_COLOR_MAPPING.DOWN_CLASS}>
+                          <TableCell className={pos.unrealizedPnL >= 0 ? STOCK_COLOR_TOKENS.up.tailwind : STOCK_COLOR_TOKENS.down.tailwind}>
                             {pos.unrealizedPnL >= 0 ? '+' : ''}{pos.unrealizedPnL.toFixed(2)}
                           </TableCell>
                         </TableRow>
@@ -374,8 +369,8 @@ export default function BacktestPage(): React.JSX.Element {
                     <TableCell
                       className={
                         record.result.totalReturn >= 0
-                          ? STOCK_COLOR_MAPPING.UP_CLASS
-                          : STOCK_COLOR_MAPPING.DOWN_CLASS
+                          ? STOCK_COLOR_TOKENS.up.tailwind
+                          : STOCK_COLOR_TOKENS.down.tailwind
                       }
                     >
                       {record.result.totalReturn >= 0 ? '+' : ''}

@@ -1,5 +1,8 @@
 /**
  * @module executionPlanService
+ * @note P1-12（已确认合规）：dataLayer store 内部通过 sendWriteEnvelope() → DataBridge 写入，
+ *   queryList/queryGet 走 DataBridge 查询，是 DataBridge 的类型安全包装层。
+ *   符合 services → data 分层规则（AGENTS.md §一），无需迁移。
  * @description 执行计划服务：基于交易信号创建执行计划，管理阶段流转与取消。
  *
  * 职责：
@@ -9,10 +12,14 @@
  *   - cancelPlan(planId): 取消执行计划
  *
  * 依赖：dataLayer.executionPlans / dataLayer.executionLogs / dataFreshnessGuard
+ *
+ * @convergence DataBridge 迁移（Phase 2）：当前直接 import executionPlanStore，
+ *   绕过 DataBridge ACL/审计。计划写入改为 DataBridge.forward(envelope)，
+ *   读取改为 DataBridge.query()。
  */
 
 import { getLogger } from '@/lib/logger'
-import { executionPlanStore } from '@/data/dataLayer'
+import { executionPlanStore } from '@/data/dataLayerTradingStores'
 import type { ExecutionPlan, Signal } from '@/data/types'
 import {
   EXECUTION_PHASE,

@@ -149,6 +149,11 @@ vi.mock('@/core/databridge', () => ({
 
 vi.mock('@/config/dbConfig', () => ({
   STORE_NAME: { orders: 'orders' },
+  MODULE_ID: { fetcher: 'fetcher' },
+  ENVELOPE_ACTION: { saveNews: 'saveNews' },
+  ENVELOPE_TARGET: { data: 'data' },
+  DB_VERSION: 1,
+  DATA_SOURCE: { manual: 'manual', auto: 'auto' },
 }))
 
 
@@ -161,6 +166,7 @@ import {
   useDataSourceData,
   initMarketDataStoreTaskSubscription,
   initMarketDataStoreSubscriptions,
+  _resetMarketDataStoreSubscriptionsForTest,
 } from './marketDataStore'
 import { marketDataAdapter } from '@/services/data-collector/MarketDataAdapter'
 import { assertContract } from '../../tests/contracts'
@@ -188,21 +194,8 @@ function createMockDataSourceConfig(overrides: Record<string, unknown> = {}) {
 }
 
 beforeEach(() => {
-  // 清理模块级订阅状态
-  initMarketDataStoreTaskSubscription()()
-  initMarketDataStoreSubscriptions()()
-
   vi.clearAllMocks()
-
-  useMarketDataStore.setState({
-    status: 'idle',
-    dataSources: {},
-    mergedData: marketDataAdapter.merge(),
-    loadingMap: {},
-    errorMap: {},
-    taskMap: {},
-    globalError: null,
-  })
+  _resetMarketDataStoreSubscriptionsForTest()
 })
 
 describe('marketDataStore', () => {
@@ -538,7 +531,7 @@ describe('initMarketDataStoreSubscriptions', () => {
     expect(unsubscribeDataBridgeFn).toHaveBeenCalledTimes(1)
   })
 
-  it('订单事件触发 portfolioOverview 刷新', () => {
+  it('订单事件触发 portfolioOverview 刷新', async () => {
     useMarketDataStore.setState({
       dataSources: {
         portfolioOverview: { data: undefined, loading: false, error: null, lastUpdated: 0 },
@@ -553,11 +546,14 @@ describe('initMarketDataStoreSubscriptions', () => {
       payload: {},
     })
 
+    // 等待防抖完成
+    await new Promise((r) => setTimeout(r, 400))
+
     expect(mockStopTask).toHaveBeenCalledWith('task_po_1')
     expect(mockStartTask).toHaveBeenCalledWith('task_po_1')
   })
 
-  it('portfolioOverview 加载中时跳过刷新', () => {
+  it('portfolioOverview 加载中时跳过刷新', async () => {
     useMarketDataStore.setState({
       dataSources: {
         portfolioOverview: { data: undefined, loading: true, error: null, lastUpdated: 0 },
@@ -571,6 +567,9 @@ describe('initMarketDataStoreSubscriptions', () => {
       meta: { source: 'trading', target: 'db', action: 'INSERT_ORDER', traceId: 't1', timestamp: Date.now() },
       payload: {},
     })
+
+    // 等待防抖
+    await new Promise((r) => setTimeout(r, 400))
 
     expect(mockStopTask).not.toHaveBeenCalled()
     expect(mockStartTask).not.toHaveBeenCalled()

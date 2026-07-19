@@ -1,0 +1,34 @@
+---
+title: TODO-ADD-TITLE
+type: explanation
+domain: project
+phase: design
+tier: reference
+status: active
+maintainer: V9 Architecture Team
+summary: "design directory document index and navigation entry"
+tags: [project, design, plan, checklist, architecture]
+version: v1.0.0
+last_updated: 2026-07-17
+code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
+---
+
+# design �?设计文档（兼容重定向�?
+> **状�?*：⚠�?兼容重定向目录，内容已迁�?> **权威入口**：设计文档请查看 [../explanation/design/](../explanation/design/) �?[../reference/](../reference/)
+
+本目录为旧文档体系的设计文档入口，当前仅保留轻量重定向页以兼容历史链接�?
+## 重定向映�?
+| 旧路�?| 新路�?|
+|--------|--------|
+| `design/a11y-i18n.md` | [../reference/04-ui-ux-specs.md](../reference/04-ui-ux-specs.md) |
+| `design/song-aesthetics.md` | [../reference/design-tokens.md](../reference/design-tokens.md) |
+
+## 说明
+
+- 所有设计系统、UI规范、设计Token内容已迁移至 `reference/` �?`explanation/design/`
+- 本目录保留仅为兼容外部引用和历史书签
+- 新文档请直接写入 `explanation/design/` �?`reference/` 对应位置

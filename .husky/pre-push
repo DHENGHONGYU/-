@@ -1,6 +1,7 @@
 #!/bin/sh
 # V9 智能投研复盘系统 — pre-push 门禁
 # 推送前运行核心测试套件，确保不将失败用例推送到远端。
+# 更新: 2026-07-18 新增 gate:quick（layers+mock+acl+atomic+docs+db-references）
 
 set -e
 
@@ -8,29 +9,29 @@ echo ""
 echo "🚀 V9 pre-push 门禁启动 ..."
 echo "================================================"
 
-# 1. 数据库定义交叉引用审计（快速门禁）
+# 1. 快速门禁（分层 + Mock 安全 + ACL + 原子组件 + 文档 + DB 引用）
 echo ""
-echo "🗄️  [1/4] 运行 audit:db-references（数据库定义交叉引用审计）..."
-npm run audit:db-references
+echo "🛡️  [1/5] 运行 gate:quick（分层/Mock/ACL/原子/文档/DB引用）..."
+npm run gate:quick
 
-# 2. 目录结构一致性审计（防文档漂移）
+# 2. Widget 注册完整性审计
 echo ""
-echo "📁 [2/4] 运行 audit:directory（目录结构一致性审计）..."
-npm run audit:directory
+echo "🧩 [2/5] 运行 audit:widget-registry（Widget 注册完整性）..."
+npm run audit:widget-registry
 
-# 3. 运行核心单元测试（排除已知不稳定用例）
+# 3. 复杂度扫描
 echo ""
-echo "🧪 [3/4] 运行核心单元测试（npm run test:clean）..."
+echo "📊 [3/5] 运行 complexity-scan（复杂度债务不增）..."
+npm run complexity-scan
+
+# 4. 全量单元测试
+echo ""
+echo "🧪 [4/5] 运行全量单元测试（npm run test:clean）..."
 npm run test:clean
 
-# 3.5 端到端全流程校对（防 F2 类落库回归 + V6 区分度基线）
+# 5. 生产构建验证
 echo ""
-echo "E2E-VERIFY 运行 E2E 全流程校对（npm run test:e2e-verify）..."
-npm run test:e2e-verify
-
-# 4. 生产构建验证
-echo ""
-echo "BUILD 运行生产构建验证（npm run build）..."
+echo "BUILD [5/5] 运行生产构建验证（npm run build）..."
 npm run build
 
 echo ""

@@ -18,6 +18,10 @@ const DEFAULT_MAX_TOKENS = 4096
 const DEFAULT_TEMPERATURE = 0.7
 const DEFAULT_TIMEOUT = 30000
 
+/**
+ * LlmAdvancedTab
+ * @param onConfigChange }
+ */
 export function LlmAdvancedTab({ config, onConfigChange }: LlmAdvancedTabProps): React.JSX.Element {
   return (
     <Card>

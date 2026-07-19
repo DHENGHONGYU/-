@@ -6,7 +6,7 @@
  
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-vi.mock('@/data/dataLayer', () => ({
+vi.mock('@/data/dataLayerContentStores', () => ({
   missingReportStore: {
     list: vi.fn(),
     listBySymbol: vi.fn(),
@@ -20,7 +20,7 @@ vi.mock('@/services/analysis/dataFreshnessGuard', () => ({
   checkMissingReportFreshness: vi.fn(() => ({ valid: true })),
 }))
 
-import { missingReportStore } from '@/data/dataLayer'
+import { missingReportStore } from '@/data/dataLayerContentStores'
 import {
   detect,
   listBySymbol,

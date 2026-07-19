@@ -25,7 +25,7 @@ import { fileURLToPath } from 'url'
 const LINE_THRESHOLD = 300
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-const SRC_ROOT = path.resolve(__dirname, '..')
+const SRC_ROOT = path.resolve(__dirname, '..', '..')
 const EXCLUDE_PATTERNS = [
   /__tests__/,
   /node_modules/,

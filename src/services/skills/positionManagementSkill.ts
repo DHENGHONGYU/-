@@ -13,6 +13,9 @@ import type { SkillContext, SkillDefinition, SkillResult } from './skillTypes'
 
 const logger = getLogger()
 
+/**
+ * PositionManagementInputSchema
+ */
 export const PositionManagementInputSchema = z.object({
   symbol: z.string(),
   stockName: z.string().optional(),
@@ -39,6 +42,9 @@ export const PositionManagementInputSchema = z.object({
 
 export type PositionManagementInput = z.infer<typeof PositionManagementInputSchema>
 
+/**
+ * PositionManagementOutputSchema
+ */
 export const PositionManagementOutputSchema = z.object({
   action: z.enum(['buy', 'sell', 'hold']),
   targetShares: z.number().int().min(0),
@@ -84,6 +90,9 @@ function buildRationale(output: PositionSizingResult, symbol: string): string {
   return parts.join('，')
 }
 
+/**
+ * executePositionManagementSkill
+ */
 export async function executePositionManagementSkill(
   ctx: SkillContext,
 ): Promise<SkillResult<PositionManagementOutput>> {
@@ -156,6 +165,9 @@ export async function executePositionManagementSkill(
   }
 }
 
+/**
+ * positionManagementSkill
+ */
 export const positionManagementSkill: SkillDefinition<PositionManagementOutput> = {
   name: 'position-management',
   title: '仓位管理',

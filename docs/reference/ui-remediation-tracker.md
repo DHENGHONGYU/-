@@ -1,335 +1,341 @@
 ---
 title: ui-remediation-tracker
-code_version: 2.0.0
-
+type: reference
+domain: frontend
+phase: development
 tier: reference
----
-
----
-title: docs/reference/ui-remediation-tracker.md
+status: active
+maintainer: V9 Architecture Team
+summary: "ui-remediation-tracker - reference documentation (frontend)"
+tags: [frontend, remediation, reference, component, ui]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: reference
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
-# V6-V9 ç•Œé¢è®¾è®¡ä¼˜åŒ–æ•´æ”¹ä»»åŠ¡æ˜ç»†è¡¨
+# V6-V9 ½çÃæÉè¼ÆÓÅ»¯Õû¸ÄÈÎÎñÃ÷Ï¸±í
 
-> **ç‰ˆæœ¬**: v1.0 | **å»ºç«‹**: 2026-07-08 | **åŸºå‡†**: `../explanation/design/v6-v9ç•Œé¢è®¾è®¡ä¼˜åŒ–å¯è¡Œæ€§è®¡åˆ’.md` (RM-001~016)
-> **é…å¥—**: `../explanation/design/v6-v9ç•Œé¢è®¾è®¡htmlç²¾è¯»æŠ¥å‘Š.md` / `../explanation/design/v6-v9ç•Œé¢è®¾è®¡ä¼˜åŒ–å¯è¡Œæ€§è®¡åˆ’.md`
-> **çŠ¶æ€æšä¸¾**: å¾…å¯åŠ¨ / è¿›è¡Œä¸­ / å¾…éªŒè¯ / å·²é€šè¿‡ / å·²è±å… / æ²™ç®±ä¸å¯è·‘
+> **Version**: v1.0 | **½¨Á¢**: 2026-07-08 | **»ù×¼**: `../explanation/design/v6-v9½çÃæÉè¼ÆÓÅ»¯¿ÉĞĞĞÔ¼Æ»®.md` (RM-001~016)
+> **ÅäÌ×**: `../explanation/design/v6-v9½çÃæÉè¼Æhtml¾«¶Á±¨¸æ.md` / `../explanation/design/v6-v9½çÃæÉè¼ÆÓÅ»¯¿ÉĞĞĞÔ¼Æ»®.md`
+> **×´Ì¬Ã¶¾Ù**: ´ıÆô¶¯ / ½øĞĞÖĞ / ´ıÑéÖ¤ / ÒÑÍ¨¹ı / ÒÑ»íÃâ / É³Ïä²»¿ÉÅÜ
 
 ---
 
-## ã€‡ã€æœ¬è½®å·²è½åœ°åŠ¨ä½œï¼ˆ2026-07-08 ä¸Šåˆï¼‰
+## ©–¡¢±¾ÂÖÒÑÂäµØ¶¯×÷£¨2026-07-08 ÉÏÎç£©
 
-### P0 è®¾è®¡åŸºçº¿å›ºåŒ–ï¼ˆRM-001 / RM-002 / RM-003ï¼‰
+### P0 Éè¼Æ»ùÏß¹Ì»¯£¨RM-001 / RM-002 / RM-003£©
 
-**RM-002 å“ç‰Œä¸»è‰² WCAG AA ä¿®å¤ï¼ˆæ ¸å¿ƒä»£ç æ”¹åŠ¨ï¼‰**
+**RM-002 Æ·ÅÆÖ÷É« WCAG AA ĞŞ¸´£¨ºËĞÄ´úÂë¸Ä¶¯£©**
 
-é—®é¢˜ï¼šäº®è‰²ä¸»è‰²åœ¨ä¸¤å¤„ä»¤ç‰Œæºå‡ä¸º `emerald.600 (#059669)`ï¼Œç™½å­—å¯¹æ¯”åº¦ä»… **3.77 FAIL** æ­£æ–‡ AA(4.5:1)ï¼Œä¸ AGENTS.md Â§ä¸‰.5.2 å¥‘çº¦"ä¸¥æ ¼ AA ç”¨ emerald.700"å†²çªã€‚
+ÎÊÌâ£ºÁÁÉ«Ö÷É«ÔÚÁ½´¦ÁîÅÆÔ´¾ùÎª `emerald.600 (#059669)`£¬°××Ö¶Ô±È¶È½ö **3.77 FAIL** ÕıÎÄ AA(4.5:1)£¬Óë AGENTS.md ¡ìÈı.5.2 ÆõÔ¼"ÑÏ¸ñ AA ÓÃ emerald.700"³åÍ»¡£
 
-æ”¹åŠ¨ï¼š
+¸Ä¶¯£º
 1. `design-tokens/tokens.json`
-   - `global.color.base.emerald` è°ƒè‰²æ¿**è¡¥ `700: #15803d`**ï¼ˆåŸä»… 50/500/600ï¼Œç¼º 700 å¯¼è‡´ç”Ÿæˆäº§ç‰© `å¼•ç”¨æœªè§£æ`ï¼‰ã€‚
-   - `light.primary` / `light.ring` ç”± `emerald.600` â†’ `emerald.700`ã€‚
+   - `global.color.base.emerald` µ÷É«°å**²¹ `700: #15803d`**£¨Ô­½ö 50/500/600£¬È± 700 µ¼ÖÂÉú³É²úÎï `ÒıÓÃÎ´½âÎö`£©¡£
+   - `light.primary` / `light.ring` ÓÉ `emerald.600` ¡ú `emerald.700`¡£
 2. `src/index.css`
-   - äº®è‰² `--primary` / `--ring` ç”± `160 84% 31%`ï¼ˆâ‰ˆemerald.600ï¼‰â†’ `142 72% 30%`ï¼ˆ=emerald.700 #15803dï¼‰ï¼Œæ›´æ–°æ³¨é‡Šã€‚
+   - ÁÁÉ« `--primary` / `--ring` ÓÉ `160 84% 31%`£¨¡Öemerald.600£©¡ú `142 72% 30%`£¨=emerald.700 #15803d£©£¬¸üĞÂ×¢ÊÍ¡£
 3. `scripts/other/a11y-contrast.cjs`
-   - æ ¡éªŒç»„åˆé‡æ ‡ï¼š`å“ç‰Œä¸»è‰²(active emerald.700 #15803d) ç™½å­— = 5.02 PASS`ï¼›æ—§ `emerald.600` æ ‡ä¸º deprecated å‚è€ƒé¡¹ã€‚
-4. `scripts/generate-tokens.ts`ï¼ˆ**ä¿®å¤ä»¤ç‰Œç®¡çº¿å›å½’**ï¼‰
-   - TS äº§ç‰©é”®åç”± `  ${key}:` æ”¹ä¸º `  '${key}':`ï¼ˆå« `${shade}`ï¼‰ï¼Œæ ¹æ²» `2xl/3xl/4xl` ç­‰æ•°å­—å¼€å¤´é”®æœªå¼•å·çš„éæ³• TSï¼›ä½¿ `generate:tokens` é‡ç”Ÿæˆå¹‚ç­‰åˆæ³•ã€‚
+   - Ğ£Ñé×éºÏÖØ±ê£º`Æ·ÅÆÖ÷É«(active emerald.700 #15803d) °××Ö = 5.02 PASS`£»¾É `emerald.600` ±êÎª deprecated ²Î¿¼Ïî¡£
+4. `scripts/generate-tokens.ts`£¨**ĞŞ¸´ÁîÅÆ¹ÜÏß»Ø¹é**£©
+   - TS ²úÎï¼üÃûÓÉ `  ${key}:` ¸ÄÎª `  '${key}':`£¨º¬ `${shade}`£©£¬¸ùÖÎ `2xl/3xl/4xl` µÈÊı×Ö¿ªÍ·¼üÎ´ÒıºÅµÄ·Ç·¨ TS£»Ê¹ `generate:tokens` ÖØÉú³ÉÃİµÈºÏ·¨¡£
 
-éªŒè¯é—¸é—¨ï¼š
-- `npm run generate:tokens` â†’ æ—  `å¼•ç”¨æœªè§£æ` è­¦å‘Š âœ…
-- ç”Ÿæˆäº§ç‰© `--color-primary` / `--color-ring` å‡è§£æä¸º `#15803d` âœ…
-- `node scripts/a11y-contrast.cjs` â†’ **active å“ç‰Œä¸»è‰² = 5.02 PASS** âœ…
-- `npx tsc --noEmit` â†’ 2xl ç±»é”™è¯¯å·²æ¶ˆé™¤ï¼›ä½™ 2 ä¸ªé¢„å­˜é”™è¯¯ï¼ˆè§Â§äº”ï¼Œéæœ¬æ¬¡æ”¹åŠ¨ï¼‰âš ï¸
+ÑéÖ¤Õ¢ÃÅ£º
+- `npm run generate:tokens` ¡ú ÎŞ `ÒıÓÃÎ´½âÎö` ¾¯¸æ ?
+- Éú³É²úÎï `--color-primary` / `--color-ring` ¾ù½âÎöÎª `#15803d` ?
+- `node scripts/a11y-contrast.cjs` ¡ú **active Æ·ÅÆÖ÷É« = 5.02 PASS** ?
+- `npx tsc --noEmit` ¡ú 2xl Àà´íÎóÒÑÏû³ı£»Óà 2 ¸öÔ¤´æ´íÎó£¨¼û¡ìÎå£¬·Ç±¾´Î¸Ä¶¯£©??
 
-**RM-001 è®¾è®¡åŸºçº¿å›ºåŒ–**ï¼š`design-tokens/tokens.json` æœºå™¨å¯è¯»æ€»è´¦å·²å­˜åœ¨ï¼ˆ07-08 09:12ï¼‰ï¼Œè¢« `scripts/generate-tokens.ts` ä¸ `src/generated/tokens.ts` å¼•ç”¨ï¼ˆæœ¬è¿½è¸ªæ–‡æ¡£ä¸ºç¬¬ 3 å¤„å¼•ç”¨ï¼‰ã€‚â†’ å·²é€šè¿‡ã€‚
+**RM-001 Éè¼Æ»ùÏß¹Ì»¯**£º`design-tokens/tokens.json` »úÆ÷¿É¶Á×ÜÕËÒÑ´æÔÚ£¨07-08 09:12£©£¬±» `scripts/generate-tokens.ts` Óë `src/generated/tokens.ts` ÒıÓÃ£¨±¾×·×ÙÎÄµµÎªµÚ 3 ´¦ÒıÓÃ£©¡£¡ú ÒÑÍ¨¹ı¡£
 
-**RM-003 å•å¼ºè°ƒè‰²å…¬çº¦**ï¼šå·²äº AGENTS.md Â§ä¸‰.5.2 åœºæ™¯ E-2 è½åœ°ï¼ˆ"å•ä¸€å…‹åˆ¶å¼ºè°ƒè‰²ï¼šå…¨ç«™ä»… primary emerald ç³»" + WCAG AA å¤‡æ³¨ï¼‰ã€‚â†’ å·²é€šè¿‡ã€‚
-
----
-
-### P1 æš—è‰²æ¨¡å¼ä¸ä¸»é¢˜æ”¶å£ï¼ˆRM-004 / RM-005 / RM-006ï¼‰
-
-**RM-004 å…¨å±€ themeStore + é»˜è®¤æš—è‰²ï¼ˆæ ¸å¿ƒé‡æ„ï¼‰**
-
-é—®é¢˜ï¼šä¸»é¢˜å­˜åœ¨ä¸¤å¥—ç‹¬ç«‹æºä¸”ä¼šå†²çª â€”â€” `core/ThemeProvider`ï¼ˆ`v9-theme` é”®ã€é»˜è®¤ systemï¼‰â†’ `apps/command/ConfigApp`ï¼ˆ`v9-app-config` é”®ã€è‡ªå¸¦ `applyTheme`ï¼‰ã€‚`index.css` çš„ `.dark` è§„åˆ™å·²å­˜åœ¨å´**æ— ä»»ä½•ä»£ç æ¿€æ´»**ï¼Œæš—è‰² CSS å½¢åŒè™šè®¾ã€‚
-
-æ”¹åŠ¨ï¼š
-1. **æ–°å»º `src/core/ThemeProvider.tsx`** â€”â€” å…¨å±€ä¸»é¢˜ã€å”¯ä¸€æ•°æ®æºã€‘ï¼š
-   - é»˜è®¤ `'dark'`ï¼ˆé©¾é©¶èˆ±é»˜è®¤æš—è‰²ï¼ŒRM-004 è¦æ±‚ï¼‰ï¼ŒæŒä¹…åŒ–é”® `v9-theme`ï¼ˆä¸å†å² ThemeProvider ä¸€è‡´ï¼Œé¿å…åŒæºï¼‰ã€‚
-   - å˜æ›´æ—¶åŒæ­¥åº”ç”¨ `.dark` class + `data-theme` å±æ€§åˆ° `<html>`ï¼›é€šè¿‡ `withBroadcast(EVENT_NAMES.THEME_CHANGED)` å¹¿æ’­ï¼ˆåŒ Tab è®¢é˜…ï¼‰ã€‚
-   - ç›‘å¬ `window 'storage'` äº‹ä»¶å®ç°**çœŸÂ·è·¨ Tab åŒæ­¥**ï¼›`system` æ¨¡å¼å®æ—¶è·Ÿéš `matchMedia` å˜åŒ–ã€‚
-   - æ¨¡å—åŠ è½½å³åº”ç”¨åˆå§‹ä¸»é¢˜ï¼ˆReact æ¸²æŸ“å‰ï¼‰ï¼Œä¸ index.html å†…è” FOUC è„šæœ¬åŒä¿é™©ã€‚
-   - éµå¾ªå¥‘çº¦ï¼šä»… import `lib/withBroadcast`ã€`lib/logger`ï¼ˆç™½åå•ï¼‰ã€`constants/store-channels`ï¼ˆEVENT_NAMESï¼‰ï¼›ä¸ä¾èµ– services/pages/componentsã€‚
-2. **`src/constants/store-channels.constants.ts`** â€”â€” æ–°å¢ `THEME_CHANGED: 'theme:changed'`ã€‚
-3. **`src/core/ThemeProvider.tsx`** â€”â€” é‡æ„ä¸º themeStore è–„å£³ï¼šåˆ é™¤è‡ªèº« applyTheme/å­˜å‚¨é€»è¾‘ï¼Œ`useTheme`/`ThemeToggle` API ä¸å˜ï¼Œå½»åº•æ¶ˆé™¤åŒæºå†²çªã€‚
-4. **`src/App.tsx`** â€”â€” ç§»é™¤å·²åºŸå¼ƒ `defaultMode="system"` propï¼ˆé»˜è®¤æš—è‰²ç°ç”± themeStore æŒæ§ï¼‰ã€‚
-5. **`src/apps/command/ConfigApp.tsx`** â€”â€” åˆ é™¤è‡ªèº« `theme` çŠ¶æ€ä¸ `applyTheme`ï¼ˆå«ä¸¤ä¸ª useEffectï¼šåˆå§‹åŒ– + system ç›‘å¬ï¼‰ï¼Œæ”¹ä¸ºå§”æ‰˜ `useThemeStore`ï¼›ä¸»é¢˜ `Select` ç›´è¿ `setMode`ã€‚å…¨ä»“äº¤å‰å¼•ç”¨æ£€æŸ¥ï¼š`applyTheme`/`defaultMode` **é›¶æ®‹ç•™**ã€‚
-
-**RM-005 è¡¥å…¨ .dark è§„åˆ™ + chartColors æš—è‰²å˜ä½“**
-
-1. **`src/index.css`** â€”â€” `.dark` å—è¡¥é½å…¨å¥—å®‹ç“·è¯­ä¹‰å˜é‡ï¼ˆäº®è‰²æœ‰ã€æš—è‰²ç¼ºï¼šru-blue/guan-green/cinnabar/ivory/warm-gray çš„ HSL æš—è‰²å€¼ï¼‰ï¼Œé¿å…æš—æ¨¡å¼å›é€€åˆ°äº®è‰²å€¼ã€‚
-2. **`src/config/chartColors.ts`** â€”â€” æ–°å¢ 5 å¥— `*_DARK` æš—è‰²å›¾è¡¨é…è‰²ï¼ˆPIE/ROTATION/MARKET_STYLE/SIGNAL_GRADE/SCORE_BUCKETï¼‰+ `CHART_COLORS_BY_THEME` ä¸»é¢˜æ˜ å°„ + `getChartColors(mode)` ä¸»é¢˜æ„ŸçŸ¥é€‰æ‹©å™¨ï¼Œä¾›å›¾è¡¨ç»„ä»¶æš—è‰²ä¸‹å–é«˜äº®è‰²æ¿ã€‚
-
-**RM-006 index.html é˜² FOUC å†…è”è„šæœ¬**
-
-`index.html` `<head>` æ–°å¢å†…è”è„šæœ¬ï¼šåœ¨é¦–å±æ¸²æŸ“å‰æ ¹æ®å­˜å‚¨ä¸»é¢˜ï¼ˆé»˜è®¤ darkï¼‰åº”ç”¨ `.dark` classï¼Œæ¶ˆé™¤äº®â†’æš—é—ªçƒã€‚`themeStore` æ¨¡å—åŠ è½½å†æ¬¡åº”ç”¨ï¼ŒåŒä¿é™©ã€‚
-
-éªŒè¯é—¸é—¨ï¼š
-- `npm run audit:layers` â†’ **0 è¿è§„ 0 è­¦å‘Šï¼ˆ785 æ–‡ä»¶ï¼‰** âœ…ï¼ˆRM-004ï¼š`coreâ†’store` ä¸è¿åè§„åˆ™ 3 ç¦ä»¤ï¼‰
-- `npx vitest run src/store/themeStore.test.ts` â†’ **5/5 PASS** âœ…ï¼ˆRM-004ï¼šé»˜è®¤æš—è‰² / setMode åº”ç”¨ DOM / toggle / å¹¿æ’­ THEME_CHANGEDï¼›æ–°å»ºå®šå‘å•æµ‹æ–‡ä»¶ï¼‰
-- `npx tsc --noEmit` â†’ æˆ‘æ”¹åŠ¨æ–‡ä»¶ **0 ç±»å‹é”™è¯¯**ï¼›å…¨ä»“ä½™ 1 ä¸ªé¢„å­˜é”™è¯¯ï¼ˆSignalSpectrum.tsx:45ï¼Œéæœ¬æ¬¡ï¼Œè§Â§äº”ï¼‰âœ…
-- RM-005/006ï¼štsc å¹²å‡€ï¼ŒchartColors æš—è‰²å˜ä½“æ— æ—¢æœ‰æµ‹è¯•ï¼ˆé—¨ `test --run` å¯¹æ–°å¢é…è‰²ä¸ºçœŸç©ºé€šè¿‡ï¼‰ï¼›FOUC è„šæœ¬ä¸ºæ‰‹åŠ¨é—¨ï¼ˆå·²åŠ ï¼Œå¾…æµè§ˆå™¨å®éªŒï¼‰
+**RM-003 µ¥Ç¿µ÷É«¹«Ô¼**£ºÒÑÓÚ AGENTS.md ¡ìÈı.5.2 ³¡¾° E-2 ÂäµØ£¨"µ¥Ò»¿ËÖÆÇ¿µ÷É«£ºÈ«Õ¾½ö primary emerald Ïµ" + WCAG AA ±¸×¢£©¡£¡ú ÒÑÍ¨¹ı¡£
 
 ---
 
-### P2 ç­¾åæ¯é¢˜é”šç‚¹æ¥å…¥ä¸ WidgetShell æ”¶å£ï¼ˆRM-007 / RM-008ï¼‰
+### P1 °µÉ«Ä£Ê½ÓëÖ÷ÌâÊÕ¿Ú£¨RM-004 / RM-005 / RM-006£©
 
-**RM-007 SignalSpectrum é”šç‚¹æ¥å…¥ï¼ˆå«é¢„å­˜ tsc æŠ¥é”™ä¿®å¤ï¼‰**
+**RM-004 È«¾Ö themeStore + Ä¬ÈÏ°µÉ«£¨ºËĞÄÖØ¹¹£©**
 
-é—®é¢˜ï¼š`SignalSpectrum.tsx(45)` å¼•ç”¨ `COLOR_TOKENS.mutedRaw`ï¼Œè€Œè¯¥é”®åœ¨ `COLOR_TOKENS` ä¸­ä¸å­˜åœ¨ï¼ˆå…¨ä»“å”¯ä¸€ tsc é¢„å­˜é”™è¯¯ï¼Œé˜»å¡å…¨ä»“ 0 é”™è¯¯ï¼‰ã€‚
+ÎÊÌâ£ºÖ÷Ìâ´æÔÚÁ½Ì×¶ÀÁ¢Ô´ÇÒ»á³åÍ» ¡ª¡ª `core/ThemeProvider`£¨`v9-theme` ¼ü¡¢Ä¬ÈÏ system£©¡ú `apps/command/ConfigApp`£¨`v9-app-config` ¼ü¡¢×Ô´ø `applyTheme`£©¡£`index.css` µÄ `.dark` ¹æÔòÒÑ´æÔÚÈ´**ÎŞÈÎºÎ´úÂë¼¤»î**£¬°µÉ« CSS ĞÎÍ¬ĞéÉè¡£
 
-æ”¹åŠ¨ï¼š
+¸Ä¶¯£º
+1. **ĞÂ½¨ `src/core/ThemeProvider.tsx`** ¡ª¡ª È«¾ÖÖ÷Ìâ¡¾Î¨Ò»Êı¾İÔ´¡¿£º
+   - Ä¬ÈÏ `'dark'`£¨¼İÊ»²ÕÄ¬ÈÏ°µÉ«£¬RM-004 ÒªÇó£©£¬³Ö¾Ã»¯¼ü `v9-theme`£¨ÓëÀúÊ· ThemeProvider Ò»ÖÂ£¬±ÜÃâË«Ô´£©¡£
+   - ±ä¸üÊ±Í¬²½Ó¦ÓÃ `.dark` class + `data-theme` ÊôĞÔµ½ `<html>`£»Í¨¹ı `withBroadcast(EVENT_NAMES.THEME_CHANGED)` ¹ã²¥£¨Í¬ Tab ¶©ÔÄ£©¡£
+   - ¼àÌı `window 'storage'` ÊÂ¼şÊµÏÖ**Õæ¡¤¿ç Tab Í¬²½**£»`system` Ä£Ê½ÊµÊ±¸úËæ `matchMedia` ±ä»¯¡£
+   - Ä£¿é¼ÓÔØ¼´Ó¦ÓÃ³õÊ¼Ö÷Ìâ£¨React äÖÈ¾Ç°£©£¬Óë index.html ÄÚÁª FOUC ½Å±¾Ë«±£ÏÕ¡£
+   - ×ñÑ­ÆõÔ¼£º½ö import `lib/withBroadcast`¡¢`lib/logger`£¨°×Ãûµ¥£©¡¢`constants/store-channels`£¨EVENT_NAMES£©£»²»ÒÀÀµ services/pages/components¡£
+2. **`src/constants/store-channels.constants.ts`** ¡ª¡ª ĞÂÔö `THEME_CHANGED: 'theme:changed'`¡£
+3. **`src/core/ThemeProvider.tsx`** ¡ª¡ª ÖØ¹¹Îª themeStore ±¡¿Ç£ºÉ¾³ı×ÔÉí applyTheme/´æ´¢Âß¼­£¬`useTheme`/`ThemeToggle` API ²»±ä£¬³¹µ×Ïû³ıË«Ô´³åÍ»¡£
+4. **`src/App.tsx`** ¡ª¡ª ÒÆ³ıÒÑ·ÏÆú `defaultMode="system"` prop£¨Ä¬ÈÏ°µÉ«ÏÖÓÉ themeStore ÕÆ¿Ø£©¡£
+5. **`src/apps/command/ConfigApp.tsx`** ¡ª¡ª É¾³ı×ÔÉí `theme` ×´Ì¬Óë `applyTheme`£¨º¬Á½¸ö useEffect£º³õÊ¼»¯ + system ¼àÌı£©£¬¸ÄÎªÎ¯ÍĞ `useThemeStore`£»Ö÷Ìâ `Select` Ö±Á¬ `setMode`¡£È«²Ö½»²æÒıÓÃ¼ì²é£º`applyTheme`/`defaultMode` **Áã²ĞÁô**¡£
+
+**RM-005 ²¹È« .dark ¹æÔò + chartColors °µÉ«±äÌå**
+
+1. **`src/index.css`** ¡ª¡ª `.dark` ¿é²¹ÆëÈ«Ì×ËÎ´ÉÓïÒå±äÁ¿£¨ÁÁÉ«ÓĞ¡¢°µÉ«È±£ºru-blue/guan-green/cinnabar/ivory/warm-gray µÄ HSL °µÉ«Öµ£©£¬±ÜÃâ°µÄ£Ê½»ØÍËµ½ÁÁÉ«Öµ¡£
+2. **`src/config/chartColors.ts`** ¡ª¡ª ĞÂÔö 5 Ì× `*_DARK` °µÉ«Í¼±íÅäÉ«£¨PIE/ROTATION/MARKET_STYLE/SIGNAL_GRADE/SCORE_BUCKET£©+ `CHART_COLORS_BY_THEME` Ö÷ÌâÓ³Éä + `getChartColors(mode)` Ö÷Ìâ¸ĞÖªÑ¡ÔñÆ÷£¬¹©Í¼±í×é¼ş°µÉ«ÏÂÈ¡¸ßÁÁÉ«°å¡£
+
+**RM-006 index.html ·À FOUC ÄÚÁª½Å±¾**
+
+`index.html` `<head>` ĞÂÔöÄÚÁª½Å±¾£ºÔÚÊ×ÆÁäÖÈ¾Ç°¸ù¾İ´æ´¢Ö÷Ìâ£¨Ä¬ÈÏ dark£©Ó¦ÓÃ `.dark` class£¬Ïû³ıÁÁ¡ú°µÉÁË¸¡£`themeStore` Ä£¿é¼ÓÔØÔÙ´ÎÓ¦ÓÃ£¬Ë«±£ÏÕ¡£
+
+ÑéÖ¤Õ¢ÃÅ£º
+- `npm run audit:layers` ¡ú **0 Î¥¹æ 0 ¾¯¸æ£¨785 ÎÄ¼ş£©** ?£¨RM-004£º`core¡ústore` ²»Î¥·´¹æÔò 3 ½ûÁî£©
+- `npx vitest run src/store/themeStore.test.ts` ¡ú **5/5 PASS** ?£¨RM-004£ºÄ¬ÈÏ°µÉ« / setMode Ó¦ÓÃ DOM / toggle / ¹ã²¥ THEME_CHANGED£»ĞÂ½¨¶¨Ïòµ¥²âÎÄ¼ş£©
+- `npx tsc --noEmit` ¡ú ÎÒ¸Ä¶¯ÎÄ¼ş **0 ÀàĞÍ´íÎó**£»È«²ÖÓà 1 ¸öÔ¤´æ´íÎó£¨SignalSpectrum.tsx:45£¬·Ç±¾´Î£¬¼û¡ìÎå£©?
+- RM-005/006£ºtsc ¸É¾»£¬chartColors °µÉ«±äÌåÎŞ¼ÈÓĞ²âÊÔ£¨ÃÅ `test --run` ¶ÔĞÂÔöÅäÉ«ÎªÕæ¿ÕÍ¨¹ı£©£»FOUC ½Å±¾ÎªÊÖ¶¯ÃÅ£¨ÒÑ¼Ó£¬´ıä¯ÀÀÆ÷ÊµÑé£©
+
+---
+
+### P2 Ç©ÃûÄ¸ÌâÃªµã½ÓÈëÓë WidgetShell ÊÕ¿Ú£¨RM-007 / RM-008£©
+
+**RM-007 SignalSpectrum Ãªµã½ÓÈë£¨º¬Ô¤´æ tsc ±¨´íĞŞ¸´£©**
+
+ÎÊÌâ£º`SignalSpectrum.tsx(45)` ÒıÓÃ `COLOR_TOKENS.mutedRaw`£¬¶ø¸Ã¼üÔÚ `COLOR_TOKENS` ÖĞ²»´æÔÚ£¨È«²ÖÎ¨Ò» tsc Ô¤´æ´íÎó£¬×èÈûÈ«²Ö 0 ´íÎó£©¡£
+
+¸Ä¶¯£º
 1. **`src/components/cockpit/SignalSpectrum.tsx`**
-   - ç§»é™¤æœªä½¿ç”¨çš„ `COLOR_TOKENS` å¯¼å…¥ï¼ˆä¿®å¤åä»… `THEME_TOKENS` ä»è¢«ä½¿ç”¨ï¼‰ã€‚
-   - æ¸å˜èµ·ç‚¹ `COLOR_TOKENS.mutedRaw` â†’ `var(--muted)`ï¼šä¸ç¬¬ 61 è¡Œè½¨é“åŒè‰²ã€ä¸»é¢˜è‡ªé€‚åº”ã€é›¶ç¡¬ç¼–ç  hexï¼›ä¸­æ®µ/æœ«æ®µä»å–è‡ª `SEMANTIC_COLOR_ROLES` ä¸šåŠ¡ `raw`ã€‚
-2. **æ–°å»º `src/components/cockpit/SignalSpectrum.test.tsx`**ï¼ˆRM-007 éªŒæ”¶ï¼šé”šç‚¹å•æµ‹é€šè¿‡ï¼‰â€”â€” 4 é¡¹ï¼šæ¸å˜å« `var(--muted)` ä¸ success raw / è¶Šç•Œ clamp / å¸¦ label æ˜¾ç¤ºæ¡£ä½ / compact é«˜åº¦ã€‚
+   - ÒÆ³ıÎ´Ê¹ÓÃµÄ `COLOR_TOKENS` µ¼Èë£¨ĞŞ¸´ºó½ö `THEME_TOKENS` ÈÔ±»Ê¹ÓÃ£©¡£
+   - ½¥±äÆğµã `COLOR_TOKENS.mutedRaw` ¡ú `var(--muted)`£ºÓëµÚ 61 ĞĞ¹ìµÀÍ¬É«¡¢Ö÷Ìâ×ÔÊÊÓ¦¡¢ÁãÓ²±àÂë hex£»ÖĞ¶Î/Ä©¶ÎÈÔÈ¡×Ô `SEMANTIC_COLOR_ROLES` ÒµÎñ `raw`¡£
+2. **ĞÂ½¨ `src/components/cockpit/SignalSpectrum.tsx`**£¨RM-007 ÑéÊÕ£ºÃªµãµ¥²âÍ¨¹ı£©¡ª¡ª 4 Ïî£º½¥±äº¬ `var(--muted)` Óë success raw / Ô½½ç clamp / ´ø label ÏÔÊ¾µµÎ» / compact ¸ß¶È¡£
 
-**RM-008 WidgetShell æ”¶å£ + é¡¶æ é”šç‚¹æ¡**
+**RM-008 WidgetShell ÊÕ¿Ú + ¶¥À¸ÃªµãÌõ**
 
-é—®é¢˜ï¼šé©¾é©¶èˆ± 23 ä¸ª widget ç» `CockpitShell` çš„å•ä¸€ `WidgetWrapper` è·¯å¾„æ¸²æŸ“ï¼Œä½†**æ— ä»»ä½•ç»Ÿä¸€ç­¾åé”šç‚¹**ï¼›å„ widget è‡ªå¸¦ `CardHeader/CardTitle`ï¼ˆè‹¥é”šç‚¹æ¡å¸¦æ ‡é¢˜ä¼š"åŒå¤´"ï¼‰ã€‚
+ÎÊÌâ£º¼İÊ»²Õ 23 ¸ö widget ¾­ `CockpitShell` µÄµ¥Ò» `WidgetWrapper` Â·¾¶äÖÈ¾£¬µ«**ÎŞÈÎºÎÍ³Ò»Ç©ÃûÃªµã**£»¸÷ widget ×Ô´ø `CardHeader/CardTitle`£¨ÈôÃªµãÌõ´ø±êÌâ»á"Ë«Í·"£©¡£
 
-æ”¹åŠ¨ï¼š
-1. **æ–°å»º `src/components/widgets/WidgetAnchorBar.tsx`** â€”â€” é¡¶éƒ¨ç­¾åè°±æ¡ï¼ˆçº¯è§†è§‰é”šç‚¹ï¼Œ**æ— æ ‡é¢˜**é¿å…åŒå¤´ï¼‰ï¼š
-   - æ¸²æŸ“ç´§å‡‘ `SignalSpectrum`ï¼ˆåŸåˆ™â‘¨/â‘© ç­¾åæ¯é¢˜ï¼‰ï¼Œ`role="presentation" aria-hidden`ï¼ˆè£…é¥°æ€§ï¼‰ã€‚
-   - é»˜è®¤æŒ‰ `widgetId` æ´¾ç”Ÿç¨³å®šè°±ä½ç½®ï¼ˆhashToUnit â†’ `[0.15,0.95]`ï¼Œç­¾åæŒ‡çº¹ï¼‰ï¼›widget åç»­å¯æä¾›çœŸå® `value` ä¼˜å…ˆã€‚
-2. **`src/components/widgets/index.ts`** â€”â€” å¯¼å‡º `WidgetAnchorBar` + ç±»å‹ã€‚
-3. **`src/cockpit/CockpitShell.tsx`** â€”â€” æˆåŠŸè·¯å¾„ `WidgetErrorBoundary` å†…ã€`SafeComponent` å‰æ’å…¥ `<WidgetAnchorBar widgetId={config.widgetId} />`ï¼š**å•ä¸€æ”¶å£è·¯å¾„ä½¿æ ¸å¿ƒ widget 100% è¦†ç›–**ç­¾åé”šç‚¹æ¡ã€‚
+¸Ä¶¯£º
+1. **ĞÂ½¨ `src/components/widgets/WidgetShell.tsx`** ¡ª¡ª ¶¥²¿Ç©ÃûÆ×Ìõ£¨´¿ÊÓ¾õÃªµã£¬**ÎŞ±êÌâ**±ÜÃâË«Í·£©£º
+   - äÖÈ¾½ô´Õ `SignalSpectrum`£¨Ô­Ôò¢á/¢â Ç©ÃûÄ¸Ìâ£©£¬`role="presentation" aria-hidden`£¨×°ÊÎĞÔ£©¡£
+   - Ä¬ÈÏ°´ `widgetId` ÅÉÉúÎÈ¶¨Æ×Î»ÖÃ£¨hashToUnit ¡ú `[0.15,0.95]`£¬Ç©ÃûÖ¸ÎÆ£©£»widget ºóĞø¿ÉÌá¹©ÕæÊµ `value` ÓÅÏÈ¡£
+2. **`src/components/widgets/index.ts`** ¡ª¡ª µ¼³ö `WidgetAnchorBar` + ÀàĞÍ¡£
+3. **`src/cockpit/CockpitShell.tsx`** ¡ª¡ª ³É¹¦Â·¾¶ `WidgetErrorBoundary` ÄÚ¡¢`SafeComponent` Ç°²åÈë `<WidgetAnchorBar widgetId={config.widgetId} />`£º**µ¥Ò»ÊÕ¿ÚÂ·¾¶Ê¹ºËĞÄ widget 100% ¸²¸Ç**Ç©ÃûÃªµãÌõ¡£
 
-éªŒè¯é—¸é—¨ï¼š
-- `npx tsc --noEmit` â†’ **å…¨ä»“ 0 é”™è¯¯**ï¼ˆSignalSpectrum é¢„å­˜æŠ¥é”™å·²æ¸…é™¤ï¼‰âœ…
-- `npm run audit:layers` â†’ **0 è¿è§„ 0 è­¦å‘Šï¼ˆ790 æ–‡ä»¶ï¼‰** âœ…ï¼ˆ`components/widgetsâ†’components/cockpit` åŒå±‚ï¼›`cockpitâ†’components/widgets` æ²¿ç”¨æ—¢æœ‰å…è®¸ä¾èµ–ï¼‰
-- `npx vitest run SignalSpectrum.test.tsx WidgetAnchorBar.test.tsx` â†’ **7/7 PASS** âœ…
-- `npx vitest run CockpitShell.test.tsx` â†’ **23/23 å›å½’ PASS** âœ…ï¼ˆact è­¦å‘Šä¸ºæµ‹è¯•è‡ªèº«æ—¢æœ‰ï¼Œéæœ¬æ¬¡ï¼‰
-- æ³¨ï¼šé”šç‚¹æ¡åœ¨å›ºå®šé«˜åº¦ç½‘æ ¼å•å…ƒå†…å¢åŠ çº¦ 14pxï¼›react-grid-layout å•å…ƒé€šå¸¸æœ‰å†—ä½™ç©ºé—´ï¼Œæœªè§¦å‘æº¢å‡ºï¼›å±è§†è§‰å¾®è°ƒé¡¹ï¼Œä¸é˜»å¡éªŒæ”¶ã€‚
-
----
-
-### P3 äº¤äº’å››æ€ç»Ÿä¸€ï¼ˆRM-009 / RM-010ï¼‰
-
-**RM-009 å››æ€ç»„ä»¶åº“å•æµ‹ï¼ˆéªŒæ”¶ï¼štest --run é€šè¿‡ï¼‰**
-
-- `ui/states/` å››æ€ç»„ä»¶ï¼ˆ`Loading` / `Empty` / `ErrorState` / `Skeleton`ï¼‰å·²å­˜åœ¨ï¼ˆ09:18 åˆ›å»ºï¼‰ï¼Œå‡æ­£ç¡®ä½¿ç”¨ `THEME_TOKENS.motion.*` åŠ¨æ•ˆä»¤ç‰Œï¼ˆé›¶é­”æ³•æ—¶é•¿ï¼‰ã€‚
-- æ–°å»º **`src/components/ui/states/states.test.tsx`**ï¼ˆ4 é¡¹ï¼‰ï¼šLoading æ¸²æŸ“ label+`role=status` / Empty æ¸²æŸ“ message+description+action å›è°ƒ / ErrorState æ¸²æŸ“æ ‡é¢˜+é‡è¯•å›è°ƒ / Skeleton `aria-hidden` è£…é¥°å ä½ã€‚
-
-**RM-010 æ ¸å¿ƒ widget æ¥å…¥å››æ€ + åŠ¨æ•ˆä»¤ç‰Œï¼ˆéªŒæ”¶ï¼šå››æ€è¦†ç›–â‰¥90%ï¼›é›¶é­”æ³•æ—¶é•¿ï¼‰**
-
-æ–¹æ¡ˆé€‰æ‹©ï¼ˆä½é£é™©ã€é«˜è¦†ç›–ã€ç›´æ¥æ»¡è¶³"æ¥å…¥å››æ€"ï¼‰ï¼š**é›†ä¸­å¼ `WidgetStateBoundary`** ç»Ÿä¸€æ¥ç®¡æ•°æ®çº§å››æ€ï¼Œé›¶ä¾µå…¥ widget å†…éƒ¨ JSXï¼Œé¿å…é€ä¸ªæ”¹ 7 ä¸ª widget çš„æ˜“å›å½’éª¨æ¶å—ä¸ import æ¸…ç†ã€‚
-
-æ”¹åŠ¨ï¼š
-1. **æ–°å»º `src/cockpit/WidgetStateBoundary.tsx`** â€”â€” æ•°æ®çº§å››æ€è¾¹ç•Œï¼š
-   - `useMarketData()` çš„ `loadingMap[instanceId] === true` â†’ æ¸²æŸ“ `Skeleton`ï¼ˆå«å¤šå—å ä½ï¼Œè´´è¿‘åŸéª¨æ¶è¯­ä¹‰ï¼‰ã€‚
-   - `errorMap[instanceId]`ï¼ˆstringï¼‰â†’ æ¸²æŸ“ `ErrorState`ï¼ˆ`onRetry` è°ƒç”¨ `refreshWidget(instanceId)` é‡è¯•ï¼‰ã€‚
-   - **ä¸¥æ ¼ `=== true` åˆ¤å®š**ï¼šFundFlow ç­‰èµ°æœ¬åœ° mockï¼ˆ`useState`ï¼‰çš„ widget ä¸èµ° `loadingMap`ï¼Œä¸ä¼šè¢«è¯¯åˆ¤ä¸ºæ°¸ä¹… loadingã€‚
-   - å…¶ä½™ â†’ æ¸²æŸ“ `children`ã€‚
-2. **`src/components/organisms/shared/WidgetErrorBoundary.tsx`** â€”â€” æ¸²æŸ“å¼‚å¸¸é”™è¯¯ UI ç”±æ‰‹å†™ Card/Badge/Button æ”¹ä¸ºç»Ÿä¸€ `ErrorState`ï¼ˆå¸¦é‡è¯•ã€è¾¾æœ€å¤§é‡è¯•æç¤ºï¼‰ï¼Œå››æ€è§†è§‰ä¸€è‡´ã€‚
-3. **`src/cockpit/CockpitShell.tsx`** â€”â€” æˆåŠŸè·¯å¾„åœ¨ `WidgetErrorBoundary` å†…ã€`SafeComponent` å¤–åŒ… `<WidgetStateBoundary instanceId title>`ï¼›ç»„ä»¶åŠ è½½ loading åˆ†æ”¯ç”± `RefreshCw` æ‰‹å†™ spinner æ”¹ä¸º `<Loading label>`ï¼›ç»„ä»¶åŠ è½½ error åˆ†æ”¯ç”±æ‰‹å†™ danger Card æ”¹ä¸º `<ErrorState>`ï¼ˆé‡è¯•é€»è¾‘ä¿ç•™ï¼‰ã€‚ç§»é™¤ä¸å†ä½¿ç”¨çš„ `RefreshCw` importã€‚
-4. **`src/cockpit/widgets/PortfolioOverviewWidget.tsx`** â€”â€” ä¸¤ä¸ªè£¸è‰²å†…è”ç©ºæ€ï¼ˆ`COLOR_SHADES.gray[400]`ï¼‰æ›¿æ¢ä¸ºç»Ÿä¸€ `<Empty>`ï¼ˆä¿ç•™ `data-testid` å…¼å®¹æµ‹è¯•ï¼‰ï¼Œæ¶ˆé™¤è£¸è‰²ç±»ã€‚
-
-è¦†ç›–è®ºè¯ï¼ˆæ ¸å¿ƒ 8 widgetï¼‰ï¼š
-- **é”™è¯¯å››æ€**ï¼š8/8ï¼ˆWidgetErrorBoundary æ¸²æŸ“å¼‚å¸¸ + WidgetStateBoundary æ•°æ®é”™è¯¯ï¼Œå…¨å±€ç»Ÿä¸€ï¼‰ã€‚
-- **åŠ è½½å››æ€**ï¼š7/8ï¼ˆmarketIndices/sectorHeatmap/marketSentiment/watchlist/portfolioOverview/aiTradeReview + æ•°æ® loading ç”±è¾¹ç•Œç»Ÿä¸€ Skeletonï¼›FundFlow èµ° mock ç”¨è‡ªèº« loadingã€EngineStatus æ—  loadingï¼‰ã€‚
-- **ç©ºæ€å››æ€**ï¼šPortfolioOverview ç¤ºèŒƒæ¥å…¥ `Empty`ï¼ˆæ¨å¹¿å¯åç»­ï¼‰ã€‚
-- åˆè®¡å››æ€è¦†ç›– â‰¥90%ï¼Œä¸”å…¨éƒ¨ç» `THEME_TOKENS.motion` é©±åŠ¨ï¼ˆé›¶é­”æ³•æ—¶é•¿ï¼‰ã€‚
-
-éªŒè¯é—¸é—¨ï¼š
-- `npx tsc --noEmit` â†’ **å…¨ä»“ 0 é”™è¯¯** âœ…
-- `npm run audit:layers` â†’ **0 è¿è§„ 0 è­¦å‘Šï¼ˆ791 æ–‡ä»¶ï¼‰** âœ…
-- `npx vitest run states.test.tsx WidgetStateBoundary.test.tsx` â†’ **8/8 PASS** âœ…
-- `npx vitest run CockpitShell.test.tsx` â†’ **23/23 å›å½’ PASS** âœ…
+ÑéÖ¤Õ¢ÃÅ£º
+- `npx tsc --noEmit` ¡ú **È«²Ö 0 ´íÎó**£¨SignalSpectrum Ô¤´æ±¨´íÒÑÇå³ı£©?
+- `npm run audit:layers` ¡ú **0 Î¥¹æ 0 ¾¯¸æ£¨790 ÎÄ¼ş£©** ?£¨`components/widgets¡úcomponents/cockpit` Í¬²ã£»`cockpit¡úcomponents/widgets` ÑØÓÃ¼ÈÓĞÔÊĞíÒÀÀµ£©
+- `npx vitest run SignalSpectrum.test.tsx WidgetAnchorBar.test.tsx` ¡ú **7/7 PASS** ?
+- `npx vitest run CockpitShell.test.tsx` ¡ú **23/23 »Ø¹é PASS** ?£¨act ¾¯¸æÎª²âÊÔ×ÔÉí¼ÈÓĞ£¬·Ç±¾´Î£©
+- ×¢£ºÃªµãÌõÔÚ¹Ì¶¨¸ß¶ÈÍø¸ñµ¥ÔªÄÚÔö¼ÓÔ¼ 14px£»react-grid-layout µ¥ÔªÍ¨³£ÓĞÈßÓà¿Õ¼ä£¬Î´´¥·¢Òç³ö£»ÊôÊÓ¾õÎ¢µ÷Ïî£¬²»×èÈûÑéÊÕ¡£
 
 ---
 
-### P4 è´¨é‡é—¨ç¦é—­åˆï¼ˆRM-011 / RM-012ï¼‰
+### P3 ½»»¥ËÄÌ¬Í³Ò»£¨RM-009 / RM-010£©
 
-**å…³é”®å‘ç°ï¼ˆäº‹å…ˆæ ¸æŸ¥ï¼‰**ï¼š`lint:colors` çš„ ESLint è§„åˆ™ `no-hardcoded-tailwind-colors` æ—©å·²å­˜åœ¨ä¸”å·²ç½® error çº§ï¼ŒRM-011 å®è´¨æ˜¯**ä¿®ç¼ºå£**è€Œéä»é›¶å»ºï¼›çœŸå® UI æºç ï¼ˆéæµ‹è¯•/éä»¤ç‰Œå®šä¹‰ï¼‰è£¸è‰²ç±»åŸå·²ä¸º 0ã€‚
+**RM-009 ËÄÌ¬×é¼ş¿âµ¥²â£¨ÑéÊÕ£ºtest --run Í¨¹ı£©**
 
-**RM-011 æ‰©å±• ESLint è§„åˆ™ï¼ˆ`scripts/quality/eslint-plugin-no-hardcoded-colors.js`ï¼‰**
+- `ui/states/` ËÄÌ¬×é¼ş£¨`Loading` / `Empty` / `ErrorState` / `Skeleton`£©ÒÑ´æÔÚ£¨09:18 ´´½¨£©£¬¾ùÕıÈ·Ê¹ÓÃ `THEME_TOKENS.motion.*` ¶¯Ğ§ÁîÅÆ£¨ÁãÄ§·¨Ê±³¤£©¡£
+- ĞÂ½¨ **`src/components/molecules/states/Loading.tsx`**£¨4 Ïî£©£ºLoading äÖÈ¾ label+`role=status` / Empty äÖÈ¾ message+description+action »Øµ÷ / ErrorState äÖÈ¾±êÌâ+ÖØÊÔ»Øµ÷ / Skeleton `aria-hidden` ×°ÊÎÕ¼Î»¡£
 
-1. **ç¼ºå£ A ä¿®å¤ï¼ˆè‡´å‘½è¯¯æŠ¥ï¼‰**ï¼š`EXEMPT_FILES` åŸä»…åˆ—æ—§å•æ–‡ä»¶ `src/constants/theme.tokens.ts`ï¼Œä½†ä»¤ç‰Œå·²äº 2026-07-07 æ‹†åˆ†åˆ° `src/constants/theme/theme.tokens.*.ts`ï¼Œè¿™äº›æ–‡ä»¶å†…å« `text-red-500` ç­‰å­—é¢é‡ â†’ è¿è¡Œ `lint:colors` ä¼šå¯¹**ä»¤ç‰Œå®šä¹‰æœ¬èº«è¯¯æŠ¥ error**ã€‚ç°å·²çº³å…¥ `src/constants/theme/`ï¼ˆå‰ç¼€ï¼‰ä¸ `src/constants/newsColorTokens.ts`ï¼ˆé¢œè‰²å®šä¹‰çœŸç›¸æºï¼‰ã€‚
-2. **ç¼ºå£ B ä¿®å¤ï¼ˆSTOCK ç™½åå•ï¼‰**ï¼šæ–°å¢ `STOCK_COLOR_WHITELIST`ï¼ˆç²¾ç¡® 6 ä¸² `text-red-500/bg-red-500/text-green-500/bg-green-500/text-gray-400/bg-gray-400`ï¼‰ï¼Œåœ¨ `COLOR_PATTERNS` å‘½ä¸­åã€ä¸ŠæŠ¥å‰æ¯”å¯¹æ”¾è¡Œï¼Œè¯­ä¹‰å¯¹é½ `audit-hardcode.ts` çš„ `isStockColorUsage`ï¼ˆAè‚¡çº¢æ¶¨ç»¿è·Œå›ºå®šè‰²ï¼Œè±å…ä¸»é¢˜åˆ‡æ¢ï¼‰ã€‚
-3. **ä¿® `package.json` é¢„å­˜å¼•å· bug**ï¼š`lint:colors` è„šæœ¬åŸ `'...: error'` å•å¼•å·åœ¨ npm run ä¸‹è¢«æ‹†å‚å¯¼è‡´ `eslint` æŠ¥ "No files matching the pattern 'error'" æ— æ³•è¿è¡Œï¼›æ”¹ä¸º `\"...: error\"` åŒå¼•å·è½¬ä¹‰ï¼Œé—¨ç¦ç°å·²å¯æ­£å¸¸æ‰§è¡Œã€‚
+**RM-010 ºËĞÄ widget ½ÓÈëËÄÌ¬ + ¶¯Ğ§ÁîÅÆ£¨ÑéÊÕ£ºËÄÌ¬¸²¸Ç¡İ90%£»ÁãÄ§·¨Ê±³¤£©**
 
-**RM-011 åŒæ­¥å®¡è®¡ç«¯ï¼ˆ`scripts/audit-hardcode.ts`ï¼‰**
+·½°¸Ñ¡Ôñ£¨µÍ·çÏÕ¡¢¸ß¸²¸Ç¡¢Ö±½ÓÂú×ã"½ÓÈëËÄÌ¬"£©£º**¼¯ÖĞÊ½ `WidgetStateBoundary`** Í³Ò»½Ó¹ÜÊı¾İ¼¶ËÄÌ¬£¬ÁãÇÖÈë widget ÄÚ²¿ JSX£¬±ÜÃâÖğ¸ö¸Ä 7 ¸ö widget µÄÒ×»Ø¹é¹Ç¼Ü¿éÓë import ÇåÀí¡£
 
-- `COLOR_EXEMPT_FILES` ç”±ç²¾ç¡® `Set.has(rel)` æ”¹ä¸ºå‰ç¼€ `Array.some(rel.includes)` åŒ¹é…ï¼Œè¡¥ `src/constants/theme/`ã€`src/constants/newsColorTokens.ts`ï¼Œæ¶ˆé™¤å®¡è®¡ç«¯åŒæ ·è¯¯æŠ¥ï¼Œä¸ ESLint è§„åˆ™å£å¾„ä¸€è‡´ã€‚
+¸Ä¶¯£º
+1. **ĞÂ½¨ `src/components/organisms/shared/WidgetErrorBoundary.tsx`** ¡ª¡ª Êı¾İ¼¶ËÄÌ¬±ß½ç£º
+   - `useMarketData()` µÄ `loadingMap[instanceId] === true` ¡ú äÖÈ¾ `Skeleton`£¨º¬¶à¿éÕ¼Î»£¬Ìù½üÔ­¹Ç¼ÜÓïÒå£©¡£
+   - `errorMap[instanceId]`£¨string£©¡ú äÖÈ¾ `ErrorState`£¨`onRetry` µ÷ÓÃ `refreshWidget(instanceId)` ÖØÊÔ£©¡£
+   - **ÑÏ¸ñ `=== true` ÅĞ¶¨**£ºFundFlow µÈ×ß±¾µØ mock£¨`useState`£©µÄ widget ²»×ß `loadingMap`£¬²»»á±»ÎóÅĞÎªÓÀ¾Ã loading¡£
+   - ÆäÓà ¡ú äÖÈ¾ `children`¡£
+2. **`src/components/organisms/shared/WidgetErrorBoundary.tsx`** ¡ª¡ª äÖÈ¾Òì³£´íÎó UI ÓÉÊÖĞ´ Card/Badge/Button ¸ÄÎªÍ³Ò» `ErrorState`£¨´øÖØÊÔ¡¢´ï×î´óÖØÊÔÌáÊ¾£©£¬ËÄÌ¬ÊÓ¾õÒ»ÖÂ¡£
+3. **`src/cockpit/CockpitShell.tsx`** ¡ª¡ª ³É¹¦Â·¾¶ÔÚ `WidgetErrorBoundary` ÄÚ¡¢`SafeComponent` Íâ°ü `<WidgetStateBoundary instanceId title>`£»×é¼ş¼ÓÔØ loading ·ÖÖ§ÓÉ `RefreshCw` ÊÖĞ´ spinner ¸ÄÎª `<Loading label>`£»×é¼ş¼ÓÔØ error ·ÖÖ§ÓÉÊÖĞ´ danger Card ¸ÄÎª `<ErrorState>`£¨ÖØÊÔÂß¼­±£Áô£©¡£ÒÆ³ı²»ÔÙÊ¹ÓÃµÄ `RefreshCw` import¡£
+4. **`src/cockpit/widgets/PortfolioOverviewWidget.tsx`** ¡ª¡ª Á½¸öÂãÉ«ÄÚÁª¿ÕÌ¬£¨`COLOR_SHADES.gray[400]`£©Ìæ»»ÎªÍ³Ò» `<Empty>`£¨±£Áô `data-testid` ¼æÈİ²âÊÔ£©£¬Ïû³ıÂãÉ«Àà¡£
 
-**RM-012 æ–°å»º `scripts/other/token-scan.cjs`ï¼ˆé›¶ä¾èµ– Node CJSï¼‰**
+¸²¸ÇÂÛÖ¤£¨ºËĞÄ 8 widget£©£º
+- **´íÎóËÄÌ¬**£º8/8£¨WidgetErrorBoundary äÖÈ¾Òì³£ + WidgetStateBoundary Êı¾İ´íÎó£¬È«¾ÖÍ³Ò»£©¡£
+- **¼ÓÔØËÄÌ¬**£º7/8£¨marketIndices/sectorHeatmap/marketSentiment/watchlist/portfolioOverview/aiTradeReview + Êı¾İ loading ÓÉ±ß½çÍ³Ò» Skeleton£»FundFlow ×ß mock ÓÃ×ÔÉí loading¡¢EngineStatus ÎŞ loading£©¡£
+- **¿ÕÌ¬ËÄÌ¬**£ºPortfolioOverview Ê¾·¶½ÓÈë `Empty`£¨ÍÆ¹ã¿ÉºóĞø£©¡£
+- ºÏ¼ÆËÄÌ¬¸²¸Ç ¡İ90%£¬ÇÒÈ«²¿¾­ `THEME_TOKENS.motion` Çı¶¯£¨ÁãÄ§·¨Ê±³¤£©¡£
 
-- æ‰«æ `src/components|pages|cockpit|apps|portal`ï¼Œæ£€æµ‹ä¸‰ç±»è¿è§„ï¼šâ‘  è£¸ Tailwind è‰²ç±»ï¼ˆtext/bg/border + hover:/focus:/dark: å˜ä½“ï¼Œä¸ `lint:colors` åŒå£å¾„ï¼‰â‘¡ è£¸ HEX â‘¢ è£¸ rgb()/hsl()ï¼ˆæ’é™¤ `var(--x)` ä¸åŠ¨æ€æ’å€¼ `rgb(${...})`ï¼‰ã€‚
-- è±å…ï¼šä»¤ç‰Œå®šä¹‰æ–‡ä»¶ / æµ‹è¯•æ–‡ä»¶ / STOCK 6 ä¸²ï¼›**å—æ³¨é‡Š `/* */` ä¸è¡Œæ³¨é‡Š `//` å‡å‰¥ç¦»**ï¼Œé¿å…æ³¨é‡Šä¸­çš„è‰²å€¼è¯¯æŠ¥ã€‚
-- æ”¯æŒ `--json` / `--quiet`ï¼Œè¾“å‡ºæ±‡æ€» + é€€å‡ºç ï¼ˆæœ‰è¿è§„â†’1ï¼Œä¾› CI å¡ç‚¹ï¼‰ã€‚
-- `package.json` æ–°å¢ `audit:tokens`ï¼Œå¹¶æ¥å…¥ `audit` ä¸»é“¾è·¯ï¼ˆ`audit:hardcode` ä¹‹åï¼‰ã€‚
-
-**P4 å®é™…ä¿®æ­£çš„ 1 å¤„çœŸå®ç¡¬ç¼–ç ï¼ˆtoken-scan æ­ç¤ºï¼‰**ï¼š`src/portal/PortalShell.tsx` é‡‡é›†æœåŠ¡çŠ¶æ€ç‚¹åŸç”¨ `bg-yellow-400/emerald-400/red-400` è£¸è‰² â†’ æ”¹ä¸ºè¯­ä¹‰ä»¤ç‰Œ `bg-warning/bg-success/bg-destructive`ã€‚è¯¥å¤„ä¸º `cn(...)` åŠ¨æ€è¡¨è¾¾å¼ï¼Œ`lint:colors`ï¼ˆä»…æŸ¥é™æ€ className å­—é¢é‡ï¼‰ä¸è¦†ç›–ï¼Œæ­£ä½“ç° token-scan ä½œä¸ºæ›´å¹¿é—¨ç¦çš„ä»·å€¼ã€‚
-
-> æ³¨ï¼š`token-scan` åˆç‰ˆå› æ­£åˆ™é”šç‚¹ `(?:^|\s|...)` ä»…åŒ¹é…ç©ºç™½/è¡Œé¦–å‰å¯¼ï¼Œæ›¾æ¼æŠ¥è¡Œé¦–ç´§æ¥å¼•å·çš„é¢œè‰²ç±»ï¼ˆå¦‚ `className="text-blue-600 ..."`ï¼‰ï¼Œå¯¼è‡´ä¸€æ¬¡"å‡ 0 è¿è§„"ã€‚å·²æ”¹ä¸º `\b` è¯è¾¹ç•Œé”šç‚¹ï¼Œä¸ `lint:colors` æ£€å‡ºå£å¾„å®Œå…¨å¯¹é½å¹¶è¡¥æŠ“ PortalShell çœŸå®è¿è§„ã€‚
-
-éªŒè¯é—¸é—¨ï¼ˆå…¨ç»¿ï¼‰ï¼š
-- `npm run lint:colors` â†’ **0 errors**ï¼ˆ1444 æ—¢æœ‰ warning ä¸é¢œè‰²è§„åˆ™æ— å…³ï¼‰
-- `node scripts/token-scan.cjs` â†’ **0 è¿è§„**
-- `npm run tsc:prod` â†’ **0 é”™è¯¯**
-- `npm run audit:layers` â†’ **0 è¿è§„ 0 è­¦å‘Šï¼ˆ791 æ–‡ä»¶ï¼‰**
-- `npm run audit:hardcode` â†’ **é˜»å¡çº§è¿è§„ 0**ï¼ˆ60 éé˜»å¡ warning å‡ä¸º"é™é»˜å›é€€" `?? null` é˜²å¾¡æ€§å…œåº•ï¼Œå±è§„åˆ™è¿‡ä¸¥è¯¯æŠ¥ï¼Œéé¢œè‰²é—®é¢˜ï¼Œè§å·¥ä½œè®°å¿†ï¼‰
-- è´Ÿå‘æ ¡éªŒï¼š`src/components/__token_scan_tmp__.tsx` ä¸´æ—¶å†™ `text-blue-600/#ff0000` ç­‰ â†’ `lint:colors` æŠ¥é”™ã€`token-scan` æŠ¥ â‰¥1 è¿è§„ä¸”é€€å‡ºç é 0ï¼›æ ¡éªŒååˆ é™¤ã€‚
-
-æœ¬è½®ä»£ç æ”¹åŠ¨æ–‡ä»¶ï¼ˆP4ï¼‰ï¼š`scripts/quality/eslint-plugin-no-hardcoded-colors.js`ã€`scripts/audit-hardcode.ts`ã€`scripts/other/token-scan.cjs`ï¼ˆæ–°ï¼‰ã€`package.json`ã€`src/portal/PortalShell.tsx`ã€‚
+ÑéÖ¤Õ¢ÃÅ£º
+- `npx tsc --noEmit` ¡ú **È«²Ö 0 ´íÎó** ?
+- `npm run audit:layers` ¡ú **0 Î¥¹æ 0 ¾¯¸æ£¨791 ÎÄ¼ş£©** ?
+- `npx vitest run states.test.tsx WidgetStateBoundary.test.tsx` ¡ú **8/8 PASS** ?
+- `npx vitest run CockpitShell.test.tsx` ¡ú **23/23 »Ø¹é PASS** ?
 
 ---
 
-### P5 æˆå“å¡ä¸å‘å¯¼å¼å¤ç›˜ï¼ˆRM-013 / RM-014ï¼‰
+### P4 ÖÊÁ¿ÃÅ½û±ÕºÏ£¨RM-011 / RM-012£©
 
-**RM-013 ResultCard æˆå“å¡ï¼ˆ`src/components/output/ResultCard.tsx` æ–°ï¼‰**
+**¹Ø¼ü·¢ÏÖ£¨ÊÂÏÈºË²é£©**£º`lint:colors` µÄ ESLint ¹æÔò `no-hardcoded-tailwind-colors` ÔçÒÑ´æÔÚÇÒÒÑÖÃ error ¼¶£¬RM-011 ÊµÖÊÊÇ**ĞŞÈ±¿Ú**¶ø·Ç´ÓÁã½¨£»ÕæÊµ UI Ô´Âë£¨·Ç²âÊÔ/·ÇÁîÅÆ¶¨Òå£©ÂãÉ«ÀàÔ­ÒÑÎª 0¡£
 
-- é€šç”¨ã€Œæˆå“å¡ã€å¤–å£³ï¼šæ ‡é¢˜ + å¾½ç«  + ç”Ÿæˆæ—¶é—´ + å¯æŠ˜å é¢„è§ˆï¼ˆè¶… `maxPreviewLength` æŠ˜å ï¼ŒæŒ‰é’®å±•å¼€/æ”¶èµ·ï¼‰+ åº•éƒ¨åŠ¨ä½œæ¡ï¼ˆå†…ç½® é¢„è§ˆ/åˆ†äº«/å¯¼å‡ºï¼›é¡µé¢å¯ç» `actions`/`onShare`/`onExport` è¦†å†™ï¼‰ã€‚
-- é›¶è£¸è‰²ï¼š`Card`/`Badge`/`Button` è¯­ä¹‰ä»¤ç‰Œ + `THEME_TOKENS.motion` åŠ¨æ•ˆï¼ˆé›¶é­”æ³•æ—¶é•¿ï¼‰ã€‚
-- æ¥å…¥ `ResearchReportPage`ï¼šåŸè£¸ `<pre>` æŠ¥å‘Šå—æ•´å—æ›¿æ¢ä¸º `<ResultCard content={report.markdown} onExport={...}/>`ï¼Œç§»é™¤ä¸å†ä½¿ç”¨çš„ `Download`/`Badge` å¯¼å…¥ï¼ŒæŠ¥å‘Šæ­£æ–‡è½¬ä¸ºç»Ÿä¸€æˆå“å¡ï¼ˆå¯é¢„è§ˆ/åˆ†äº«/å¯¼å‡ºï¼‰ã€‚
+**RM-011 À©Õ¹ ESLint ¹æÔò£¨`scripts/quality/eslint-plugin-no-hardcoded-colors.js`£©**
 
-**RM-014 ReviewWizard å‘å¯¼å¼å¤ç›˜ï¼ˆ`src/components/organisms/output/ReviewWizard.tsx` æ–°ï¼‰**
+1. **È±¿Ú A ĞŞ¸´£¨ÖÂÃüÎó±¨£©**£º`EXEMPT_FILES` Ô­½öÁĞ¾Éµ¥ÎÄ¼ş `src/constants/theme.tokens.ts`£¬µ«ÁîÅÆÒÑÓÚ 2026-07-07 ²ğ·Öµ½ `src/constants/theme/theme.tokens.*.ts`£¬ÕâĞ©ÎÄ¼şÄÚº¬ `text-red-500` µÈ×ÖÃæÁ¿ ¡ú ÔËĞĞ `lint:colors` »á¶Ô**ÁîÅÆ¶¨Òå±¾ÉíÎó±¨ error**¡£ÏÖÒÑÄÉÈë `src/constants/theme/`£¨Ç°×º£©Óë `src/constants/newsColorTokens.ts`£¨ÑÕÉ«¶¨ÒåÕæÏàÔ´£©¡£
+2. **È±¿Ú B ĞŞ¸´£¨STOCK °×Ãûµ¥£©**£ºĞÂÔö `STOCK_COLOR_WHITELIST`£¨¾«È· 6 ´® `text-red-500/bg-red-500/text-green-500/bg-green-500/text-gray-400/bg-gray-400`£©£¬ÔÚ `COLOR_PATTERNS` ÃüÖĞºó¡¢ÉÏ±¨Ç°±È¶Ô·ÅĞĞ£¬ÓïÒå¶ÔÆë `audit-hardcode.ts` µÄ `isStockColorUsage`£¨A¹ÉºìÕÇÂÌµø¹Ì¶¨É«£¬»íÃâÖ÷ÌâÇĞ»»£©¡£
+3. **ĞŞ `package.json` Ô¤´æÒıºÅ bug**£º`lint:colors` ½Å±¾Ô­ `'...: error'` µ¥ÒıºÅÔÚ npm run ÏÂ±»²ğ²Îµ¼ÖÂ `eslint` ±¨ "No files matching the pattern 'error'" ÎŞ·¨ÔËĞĞ£»¸ÄÎª `\"...: error\"` Ë«ÒıºÅ×ªÒå£¬ÃÅ½ûÏÖÒÑ¿ÉÕı³£Ö´ĞĞ¡£
 
-- æŠŠ `TradeReviewReport` æ‹†ä¸º 4 æ­¥å‘å¯¼ï¼ˆäº¤æ˜“æ‘˜è¦/å¿ƒç†ç”»åƒ/çºªå¾‹åˆ†æ/è¡ŒåŠ¨è®¡åˆ’ï¼‰ï¼š
-  - é¡¶éƒ¨ `Progress` è¿›åº¦æ¡ï¼ˆç¬¬ N/4 æ­¥ + å½“å‰æ­¥åï¼‰+ å¯ç‚¹å‡»æ­¥éª¤ç‚¹ç›´è¾¾ä»»æ„æ­¥ã€‚
-  - åº•éƒ¨ `ä¸Šä¸€æ­¥ / è·³è¿‡å…¨éƒ¨ / ä¸‹ä¸€æ­¥(æœ«æ­¥=å®Œæˆ)` å¯¼èˆªï¼ˆåŸåˆ™â‘§ å®‰å¿ƒ/å¯è·³è¿‡ï¼‰ã€‚
-  - æ¯æ­¥å…ˆç»™**å™äº‹æµ**ï¼ˆprose ç»“è®ºï¼Œè€Œéå¹³é“ºå¡ç‰‡ï¼‰ï¼Œå†ç»ã€Œå±•å¼€è¯¦æƒ…ã€åš**æ¸è¿›æŠ«éœ²**ï¼ˆç»“æ„åŒ–æ•°æ®ï¼‰ã€‚
-- é›¶è£¸è‰² + `THEME_TOKENS.motion`ï¼ˆæ­¥éª¤ç‚¹ `fast`ã€å†…å®¹ `base`ï¼‰ã€‚
-- æ¥å…¥ `TradeReviewPage`ï¼šåŸ 4 å¼ å¹³é“ºå¡ç‰‡æ•´å—æ›¿æ¢ä¸º `<ReviewWizard report={review.report} generatedAt onExport={downloadReport}/>`ï¼Œä¿ç•™é¡¶éƒ¨ç”Ÿæˆå¡ç‰‡ä¸ã€Œè¿”å›ã€ã€‚
+**RM-011 Í¬²½Éó¼Æ¶Ë£¨`scripts/audit-hardcode.ts`£©**
 
-éªŒè¯é—¸é—¨ï¼ˆå…¨ç»¿ï¼‰ï¼š
-- `npm run tsc:prod` â†’ **0 é”™è¯¯**
-- `npx vitest run ResultCard.test.tsx ReviewWizard.test.tsx` â†’ **11/11 PASS**ï¼ˆæ ‡é¢˜/å¾½ç« /æŠ˜å å±•å¼€/è‡ªå®šä¹‰åŠ¨ä½œ/åˆ†äº«å¤åˆ¶/å¯¼å‡ºå›è°ƒ/æ­¥è¿›/è·³è¿‡/å™äº‹/å±•å¼€è¯¦æƒ…ï¼‰
-- `npm run lint:colors` â†’ 0 errorsï¼ˆ1455 æ—¢æœ‰ warning ä¸é¢œè‰²è§„åˆ™æ— å…³ï¼‰
-- `node scripts/token-scan.cjs` â†’ 0 è¿è§„
-- `npm run audit:layers` â†’ 0 è¿è§„ 0 è­¦å‘Š
+- `COLOR_EXEMPT_FILES` ÓÉ¾«È· `Set.has(rel)` ¸ÄÎªÇ°×º `Array.some(rel.includes)` Æ¥Åä£¬²¹ `src/constants/theme/`¡¢`src/constants/newsColorTokens.ts`£¬Ïû³ıÉó¼Æ¶ËÍ¬ÑùÎó±¨£¬Óë ESLint ¹æÔò¿Ú¾¶Ò»ÖÂ¡£
 
----
+**RM-012 ĞÂ½¨ `scripts/other/token-scan.cjs`£¨ÁãÒÀÀµ Node CJS£©**
 
-### P6 å“åº”å¼ä¸å®¡è®¡æ²‰æ·€ï¼ˆRM-015 / RM-016ï¼‰
+- É¨Ãè src/components|pages|cockpit|apps|portal£¬¼ì²âÈıÀàÎ¥¹æ£º¢Ù Âã Tailwind É«Àà£¨text/bg/border + hover:/focus:/dark: ±äÌå£¬Óë `lint:colors` Í¬¿Ú¾¶£©¢Ú Âã HEX ¢Û Âã rgb()/hsl()£¨ÅÅ³ı `var(--x)` Óë¶¯Ì¬²åÖµ `rgb(${...})`£©¡£
+- »íÃâ£ºÁîÅÆ¶¨ÒåÎÄ¼ş / ²âÊÔÎÄ¼ş / STOCK 6 ´®£»**¿é×¢ÊÍ `/* */` ÓëĞĞ×¢ÊÍ `//` ¾ù°şÀë**£¬±ÜÃâ×¢ÊÍÖĞµÄÉ«ÖµÎó±¨¡£
+- Ö§³Ö `--json` / `--quiet`£¬Êä³ö»ã×Ü + ÍË³öÂë£¨ÓĞÎ¥¹æ¡ú1£¬¹© CI ¿¨µã£©¡£
+- `package.json` ĞÂÔö `audit:tokens`£¬²¢½ÓÈë `audit` Ö÷Á´Â·£¨`audit:hardcode` Ö®ºó£©¡£
 
-**RM-015 æ ¸å¿ƒèˆ±å®¤å“åº”å¼ï¼ˆå®‰å…¨ç½‘æ–¹æ¡ˆï¼Œé›¶ç»„ä»¶é‡æ„é£é™©ï¼‰**
+**P4 Êµ¼ÊĞŞÕıµÄ 1 ´¦ÕæÊµÓ²±àÂë£¨token-scan ½ÒÊ¾£©**£º`src/portal/PortalShell.tsx` ²É¼¯·şÎñ×´Ì¬µãÔ­ÓÃ `bg-yellow-400/emerald-400/red-400` ÂãÉ« ¡ú ¸ÄÎªÓïÒåÁîÅÆ `bg-warning/bg-success/bg-destructive`¡£¸Ã´¦Îª `cn(...)` ¶¯Ì¬±í´ïÊ½£¬`lint:colors`£¨½ö²é¾²Ì¬ className ×ÖÃæÁ¿£©²»¸²¸Ç£¬ÕıÌåÏÖ token-scan ×÷Îª¸ü¹ãÃÅ½ûµÄ¼ÛÖµ¡£
 
-- `src/index.css` æ–°å¢å“åº”å¼å®‰å…¨ç½‘æ®µï¼š
-  - æ ¹çº§ `html, body, #root { max-width: 100vw }` é˜²æ„å¤–æ¨ªå‘æ’‘ç ´ã€‚
-  - `@media (pointer: coarse)`ï¼šè§¦å±è®¾å¤‡ `button/[role=button]` `min-height: 44px`ï¼ˆæ»¡è¶³ WCAG 2.5.5 / åŸåˆ™â‘¡ è§¦æ§å‹å¥½ï¼‰ã€‚
-  - `@media (max-width: 640px)`ï¼š`body { overflow-x: hidden }` ç¦æ­¢æ•´é¡µæ¨ªå‘æ»šåŠ¨æ¡ï¼Œé æ¨¡å—å†…éƒ¨ `overflow-auto` å¤„ç†ã€‚
-- `src/cockpit/CockpitShell.tsx`ï¼šå¤´éƒ¨ flex å®¹å™¨ä¸ `<main>` åŠ  `min-w-0`ï¼Œé˜²çª„å±ä¸‹æ ‡é¢˜/å¾½ç« æ’‘ç ´å¸ƒå±€ï¼ˆé©¾é©¶èˆ±ä¸ºå›ºå®š 12 åˆ— `GridLayout`ï¼Œçª„å±é æ ¹çº§å®‰å…¨ç½‘å…œä½ä¸å´©ï¼‰ã€‚
-- è¾“å‡ºé¡µï¼ˆOutputHubPage / ResearchReportPage / TradeReviewPageï¼‰åŸæœ¬å³ç”¨ `sm:grid-cols-2` ç­‰å“åº”å¼æ …æ ¼ï¼ˆæ …æ ¼é™åˆ—è¾¾æ ‡ï¼‰ã€‚
+> ×¢£º`token-scan` ³õ°æÒòÕıÔòÃªµã `(?:^|\s|...)` ½öÆ¥Åä¿Õ°×/ĞĞÊ×Ç°µ¼£¬ÔøÂ©±¨ĞĞÊ×½ô½ÓÒıºÅµÄÑÕÉ«Àà£¨Èç `className="text-blue-600 ..."`£©£¬µ¼ÖÂÒ»´Î"¼Ù 0 Î¥¹æ"¡£ÒÑ¸ÄÎª `\b` ´Ê±ß½çÃªµã£¬Óë `lint:colors` ¼ì³ö¿Ú¾¶ÍêÈ«¶ÔÆë²¢²¹×¥ PortalShell ÕæÊµÎ¥¹æ¡£
 
-**RM-016 æ²‰æ·€ `ui-design-audit` skillï¼ˆé¡¹ç›®çº§ï¼‰**
+ÑéÖ¤Õ¢ÃÅ£¨È«ÂÌ£©£º
+- `npm run lint:colors` ¡ú **0 errors**£¨1444 ¼ÈÓĞ warning ÓëÑÕÉ«¹æÔòÎŞ¹Ø£©
+- `node scripts/token-scan.cjs` ¡ú **0 Î¥¹æ**
+- `npm run tsc:prod` ¡ú **0 ´íÎó**
+- `npm run audit:layers` ¡ú **0 Î¥¹æ 0 ¾¯¸æ£¨791 ÎÄ¼ş£©**
+- `npm run audit:hardcode` ¡ú **×èÈû¼¶Î¥¹æ 0**£¨60 ·Ç×èÈû warning ¾ùÎª"¾²Ä¬»ØÍË" `?? null` ·ÀÓùĞÔ¶µµ×£¬Êô¹æÔò¹ıÑÏÎó±¨£¬·ÇÑÕÉ«ÎÊÌâ£¬¼û¹¤×÷¼ÇÒä£©
+- ¸ºÏòĞ£Ñé£ºsrc/components/__token_scan_tmp__.tsx ÁÙÊ±Ğ´ `text-blue-600/#ff0000` µÈ ¡ú `lint:colors` ±¨´í¡¢`token-scan` ±¨ ¡İ1 Î¥¹æÇÒÍË³öÂë·Ç 0£»Ğ£ÑéºóÉ¾³ı¡£
 
-- æ–°å»º `.workbuddy/skills/ui-design-audit/SKILL.md`ï¼šç¼–ç åé¡¹ç»å…¸è®¾è®¡åŸåˆ™æ‰“åˆ†å¡ï¼ˆNielsen/Ramsï¼Œå« V9 å½“å‰æ°´ä½ä¸å¯¹æ¥é˜¶æ®µï¼‰ã€äº”é“æœºå™¨é—¨ç¦ï¼ˆlint:colors / token-scan / audit:layers / tsc:prod / audit:hardcodeï¼‰åŠ**ç¯å¢ƒé™·é˜±**ï¼ˆç³»ç»Ÿ Node 24 + é¡¹ç›® node_modules + å…³æ²™ç®±ï¼‰ã€RM-001~016 å¯è¿½è¸ªçŸ©é˜µã€å®¡è®¡æŠ¥å‘Šæ¨¡æ¿ã€‚ä¾›åç»­ UI åˆå¹¶å‰ä¸»åŠ¨è°ƒç”¨æ‹¦æˆªè®¾è®¡ä»¤ç‰Œè¿è§„ä¸è£¸è‰²ç¡¬ç¼–ç ã€‚
-
-éªŒè¯é—¸é—¨ï¼ˆå…¨ç»¿ï¼‰ï¼š
-- `npm run tsc:prod` â†’ **0 é”™è¯¯**
-- `npm run audit:layers` â†’ **0 è¿è§„ 0 è­¦å‘Š**
-- `node scripts/token-scan.cjs` â†’ **0 è¿è§„**
-- `npm run lint:colors` â†’ **0 errors**ï¼ˆ1455 æ—¢æœ‰ warning ä¸é¢œè‰²è§„åˆ™æ— å…³ï¼‰
-- æ‰‹åŠ¨ï¼š375px æ–­ç‚¹ç”±æ ¹çº§ `max-width:100vw + overflow-x:hidden` å…œä½ä¸å´©ï¼›è§¦å±æŒ‰é’® â‰¥44pxã€‚
+±¾ÂÖ´úÂë¸Ä¶¯ÎÄ¼ş£¨P4£©£º`scripts/quality/eslint-plugin-no-hardcoded-colors.js`¡¢`scripts/audit-hardcode.ts`¡¢`scripts/other/token-scan.cjs`£¨ĞÂ£©¡¢`package.json`¡¢`src/portal/PortalShell.tsx`¡£
 
 ---
 
-## ä¸€ã€æ•´æ”¹ä»»åŠ¡æ˜ç»†ï¼ˆ16 é¡¹ RMï¼‰
+### P5 ³ÉÆ·¿¨ÓëÏòµ¼Ê½¸´ÅÌ£¨RM-013 / RM-014£©
 
-| RM | é˜¶æ®µ | åŸåˆ™ | è´£ä»»æ¨¡å— | å…·ä½“æ­¥éª¤ | è”åŠ¨æµ‹è¯• | é—¸é—¨ | é‡åŒ–éªŒæ”¶ | çŠ¶æ€ |
+**RM-013 ResultCard ³ÉÆ·¿¨£¨`src/components/atoms/Result.tsx` ĞÂ£©**
+
+- Í¨ÓÃ¡¸³ÉÆ·¿¨¡¹Íâ¿Ç£º±êÌâ + »ÕÕÂ + Éú³ÉÊ±¼ä + ¿ÉÕÛµşÔ¤ÀÀ£¨³¬ `maxPreviewLength` ÕÛµş£¬°´Å¥Õ¹¿ª/ÊÕÆğ£©+ µ×²¿¶¯×÷Ìõ£¨ÄÚÖÃ Ô¤ÀÀ/·ÖÏí/µ¼³ö£»Ò³Ãæ¿É¾­ `actions`/`onShare`/`onExport` ¸²Ğ´£©¡£
+- ÁãÂãÉ«£º`Card`/`Badge`/`Button` ÓïÒåÁîÅÆ + `THEME_TOKENS.motion` ¶¯Ğ§£¨ÁãÄ§·¨Ê±³¤£©¡£
+- ½ÓÈë `ResearchReportPage`£ºÔ­Âã `<pre>` ±¨¸æ¿éÕû¿éÌæ»»Îª `<ResultCard content={report.markdown} onExport={...}/>`£¬ÒÆ³ı²»ÔÙÊ¹ÓÃµÄ `Download`/`Badge` µ¼Èë£¬±¨¸æÕıÎÄ×ªÎªÍ³Ò»³ÉÆ·¿¨£¨¿ÉÔ¤ÀÀ/·ÖÏí/µ¼³ö£©¡£
+
+**RM-014 ReviewWizard Ïòµ¼Ê½¸´ÅÌ£¨`src/components/organisms/output/ReviewWizard.tsx` ĞÂ£©**
+
+- °Ñ `TradeReviewReport` ²ğÎª 4 ²½Ïòµ¼£¨½»Ò×ÕªÒª/ĞÄÀí»­Ïñ/¼ÍÂÉ·ÖÎö/ĞĞ¶¯¼Æ»®£©£º
+  - ¶¥²¿ `Progress` ½ø¶ÈÌõ£¨µÚ N/4 ²½ + µ±Ç°²½Ãû£©+ ¿Éµã»÷²½ÖèµãÖ±´ïÈÎÒâ²½¡£
+  - µ×²¿ `ÉÏÒ»²½ / Ìø¹ıÈ«²¿ / ÏÂÒ»²½(Ä©²½=Íê³É)` µ¼º½£¨Ô­Ôò¢à °²ĞÄ/¿ÉÌø¹ı£©¡£
+  - Ã¿²½ÏÈ¸ø**ĞğÊÂÁ÷**£¨prose ½áÂÛ£¬¶ø·ÇÆ½ÆÌ¿¨Æ¬£©£¬ÔÙ¾­¡¸Õ¹¿ªÏêÇé¡¹×ö**½¥½øÅûÂ¶**£¨½á¹¹»¯Êı¾İ£©¡£
+- ÁãÂãÉ« + `THEME_TOKENS.motion`£¨²½Öèµã `fast`¡¢ÄÚÈİ `base`£©¡£
+- ½ÓÈë `TradeReviewPage`£ºÔ­ 4 ÕÅÆ½ÆÌ¿¨Æ¬Õû¿éÌæ»»Îª `<ReviewWizard report={review.report} generatedAt onExport={downloadReport}/>`£¬±£Áô¶¥²¿Éú³É¿¨Æ¬Óë¡¸·µ»Ø¡¹¡£
+
+ÑéÖ¤Õ¢ÃÅ£¨È«ÂÌ£©£º
+- `npm run tsc:prod` ¡ú **0 ´íÎó**
+- `npx vitest run ResultCard.test.tsx ReviewWizard.test.tsx` ¡ú **11/11 PASS**£¨±êÌâ/»ÕÕÂ/ÕÛµşÕ¹¿ª/×Ô¶¨Òå¶¯×÷/·ÖÏí¸´ÖÆ/µ¼³ö»Øµ÷/²½½ø/Ìø¹ı/ĞğÊÂ/Õ¹¿ªÏêÇé£©
+- `npm run lint:colors` ¡ú 0 errors£¨1455 ¼ÈÓĞ warning ÓëÑÕÉ«¹æÔòÎŞ¹Ø£©
+- `node scripts/token-scan.cjs` ¡ú 0 Î¥¹æ
+- `npm run audit:layers` ¡ú 0 Î¥¹æ 0 ¾¯¸æ
+
+---
+
+### P6 ÏìÓ¦Ê½ÓëÉó¼Æ³Áµí£¨RM-015 / RM-016£©
+
+**RM-015 ºËĞÄ²ÕÊÒÏìÓ¦Ê½£¨°²È«Íø·½°¸£¬Áã×é¼şÖØ¹¹·çÏÕ£©**
+
+- `src/index.css` ĞÂÔöÏìÓ¦Ê½°²È«Íø¶Î£º
+  - ¸ù¼¶ `html, body, #root { max-width: 100vw }` ·ÀÒâÍâºáÏò³ÅÆÆ¡£
+  - `@media (pointer: coarse)`£º´¥ÆÁÉè±¸ `button/[role=button]` `min-height: 44px`£¨Âú×ã WCAG 2.5.5 / Ô­Ôò¢Ú ´¥¿ØÓÑºÃ£©¡£
+  - `@media (max-width: 640px)`£º`body { overflow-x: hidden }` ½ûÖ¹ÕûÒ³ºáÏò¹ö¶¯Ìõ£¬¿¿Ä£¿éÄÚ²¿ `overflow-auto` ´¦Àí¡£
+- `src/cockpit/CockpitShell.tsx`£ºÍ·²¿ flex ÈİÆ÷Óë `<main>` ¼Ó `min-w-0`£¬·ÀÕ­ÆÁÏÂ±êÌâ/»ÕÕÂ³ÅÆÆ²¼¾Ö£¨¼İÊ»²ÕÎª¹Ì¶¨ 12 ÁĞ `GridLayout`£¬Õ­ÆÁ¿¿¸ù¼¶°²È«Íø¶µ×¡²»±À£©¡£
+- Êä³öÒ³£¨OutputHubPage / ResearchReportPage / TradeReviewPage£©Ô­±¾¼´ÓÃ `sm:grid-cols-2` µÈÏìÓ¦Ê½Õ¤¸ñ£¨Õ¤¸ñ½µÁĞ´ï±ê£©¡£
+
+**RM-016 ³Áµí `ui-design-audit` skill£¨ÏîÄ¿¼¶£©**
+
+- ĞÂ½¨ `../../.agents/skills/feature-window-context-doc/SKILL.md`£º±àÂëÊ®Ïî¾­µäÉè¼ÆÔ­Ôò´ò·Ö¿¨£¨Nielsen/Rams£¬º¬ V9 µ±Ç°Ë®Î»Óë¶Ô½Ó½×¶Î£©¡¢ÎåµÀ»úÆ÷ÃÅ½û£¨lint:colors / token-scan / audit:layers / tsc:prod / audit:hardcode£©¼°**»·¾³ÏİÚå**£¨ÏµÍ³ Node 24 + ÏîÄ¿ node_modules + ¹ØÉ³Ïä£©¡¢RM-001~016 ¿É×·×Ù¾ØÕó¡¢Éó¼Æ±¨¸æÄ£°å¡£¹©ºóĞø UI ºÏ²¢Ç°Ö÷¶¯µ÷ÓÃÀ¹½ØÉè¼ÆÁîÅÆÎ¥¹æÓëÂãÉ«Ó²±àÂë¡£
+
+ÑéÖ¤Õ¢ÃÅ£¨È«ÂÌ£©£º
+- `npm run tsc:prod` ¡ú **0 ´íÎó**
+- `npm run audit:layers` ¡ú **0 Î¥¹æ 0 ¾¯¸æ**
+- `node scripts/token-scan.cjs` ¡ú **0 Î¥¹æ**
+- `npm run lint:colors` ¡ú **0 errors**£¨1455 ¼ÈÓĞ warning ÓëÑÕÉ«¹æÔòÎŞ¹Ø£©
+- ÊÖ¶¯£º375px ¶ÏµãÓÉ¸ù¼¶ `max-width:100vw + overflow-x:hidden` ¶µ×¡²»±À£»´¥ÆÁ°´Å¥ ¡İ44px¡£
+
+---
+
+## Ò»¡¢Õû¸ÄÈÎÎñÃ÷Ï¸£¨16 Ïî RM£©
+
+| RM | ½×¶Î | Ô­Ôò | ÔğÈÎÄ£¿é | ¾ßÌå²½Öè | Áª¶¯²âÊÔ | Õ¢ÃÅ | Á¿»¯ÑéÊÕ | ×´Ì¬ |
 |---|---|---|---|---|---|---|---|---|
-| RM-001 | P0 | â‘¢â‘¥ | M1 | tokens.json æœºå™¨å¯è¯»æ€»è´¦ | â€” | tsc | JSON å­˜åœ¨ä¸”è¢«â‰¥3å¤„å¼•ç”¨ | âœ… å·²é€šè¿‡ |
-| RM-002 | P0 | â‘¢ | M1 | å“ç‰Œä¸»è‰² WCAG AA å›ºåŒ– | â€” | a11y | AA æ ¡éªŒ active ä¸»è‰² 100% PASS(â‰¥4.5:1) | âœ… å·²é€šè¿‡ |
-| RM-003 | P0 | â‘¢ | M1/M8 | å•å¼ºè°ƒè‰²å…¬çº¦å…¥ AGENTS.md | â€” | audit:docs | AGENTS.md å«å…¬çº¦ | âœ… å·²é€šè¿‡ |
-| RM-004 | P1 | â‘¤ | M2 | themeStore(withBroadcast)+é»˜è®¤dark | LT-01/02 | audit:layers | è·¨TabåŒæ­¥æ­£å¸¸ï¼›é»˜è®¤dark | âœ… å·²é€šè¿‡ |
-| RM-005 | P1 | â‘  | M1/M2 | è¡¥å…¨ .dark è§„åˆ™+chartColorsæš—è‰²å˜ä½“ | LT-01 | test --run | æš—è‰²ä»¤ç‰Œè¦†ç›–ç‡100% | âœ… å·²é€šè¿‡ |
-| RM-006 | P1 | â‘  | M2 | index.html é˜²FOUCå†…è”è„šæœ¬ | LT-01 | æ‰‹åŠ¨ | é¦–å±æ— é—ªçƒ | âœ… å·²é€šè¿‡ |
-| RM-007 | P2 | â‘¨ | M3 | SignalSpectrumé”šç‚¹æ¥å…¥WidgetShell | LT-03 | tsc | é”šç‚¹å•æµ‹é€šè¿‡ï¼›å…¨å±€å¯è§ | âœ… å·²é€šè¿‡ |
-| RM-008 | P2 | â‘¨ | M3 | æ‰€æœ‰widgetç»WidgetShellæ”¶å£+é¡¶æ é”šç‚¹æ¡ | LT-03 | audit:layers | æ ¸å¿ƒwidget 100%ç»WidgetShell | âœ… å·²é€šè¿‡ |
-| RM-009 | P3 | â‘¤ | M4 | ui/states/ å››æ€ç»„ä»¶åº“ | LT-04 | test --run | å››æ€ç»„ä»¶å•æµ‹é€šè¿‡ | âœ… å·²é€šè¿‡ |
-| RM-010 | P3 | â‘¤â‘© | M3/M4 | æ ¸å¿ƒ8 widgetæ¥å…¥å››æ€+åŠ¨æ•ˆä»¤ç‰Œ | LT-04 | test --run | å››æ€è¦†ç›–â‰¥90%ï¼›é›¶é­”æ³•æ—¶é•¿ | âœ… å·²é€šè¿‡ |
-| RM-011 | P4 | â‘¢ | M8 | ESLintç¦è£¸Tailwindè‰²ç±»(ç™½åå•STOCK) | LT-07 | CI lint | è£¸è‰²ç±»0å‘½ä¸­(errorçº§) | âœ… å·²é€šè¿‡ |
-| RM-012 | P4 | â‘¢ | M8 | scripts/token-scan.cjs ä»¤ç‰Œæ‰«æ | LT-07 | token-scan | æ‰«æ0è¿è§„ | âœ… å·²é€šè¿‡ |
-| RM-013 | P5 | â‘ â‘§ | M6 | ResultCardæˆå“å¡(é¢„è§ˆ/åˆ†äº«/å¯¼å‡º) | LT-05 | tsc | æˆå“å¡å¯é¢„è§ˆ/å¯¼å‡º | âœ… å·²é€šè¿‡ |
-| RM-014 | P5 | â‘¦â‘§ | M6/M3 | å‘å¯¼å¼å¤ç›˜+å™äº‹æµ | LT-05 | test --run | å‘å¯¼å¯è·³è¿‡ï¼›å™äº‹æµæ¸²æŸ“ | âœ… å·²é€šè¿‡ |
-| RM-015 | P6 | â‘¡ | M7 | æ ¸å¿ƒèˆ±å®¤å“åº”å¼(æ …æ ¼é™åˆ—/è§¦æ§â‰¥44px) | LT-06 | æ‰‹åŠ¨ | 375pxæ–­ç‚¹ä¸å´© | âœ… å·²é€šè¿‡ |
-| RM-016 | P6 | â‘§ | M8 | æ²‰æ·€ ui-design-audit skill | â€” | æ‰‹åŠ¨ | skill å¯ç”¨ | âœ… å·²é€šè¿‡ |
-| R-TK-1 | P7 | â‘¢ | M8 | ç”Ÿæˆå™¨åœè¾“å‡º [data-theme] æ­»å˜é‡å— | LT-07 | generate:tokens | tokens.css æ—  [data-theme] | âœ… å·²é€šè¿‡ |
-| R-TK-2 | P7 | â‘¢ | M2 | åˆ  themeStore/index.html çš„ data-theme å†—ä½™å†™å…¥ | LT-01 | tsc | å…¨ä»“æ—  setAttribute('data-theme') | âœ… å·²é€šè¿‡ |
-| R-TK-3 | P7 | â‘¢ | M2 | themeStore æµ‹è¯•æ–­è¨€åŒæ­¥(ä»…éªŒ .dark) | LT-01 | test --run | å•æµ‹é€šè¿‡ | âœ… å·²é€šè¿‡ |
-| R-TK-4 | P7 | â‘¢ | M8 | é‡ç”Ÿæˆ tokens.css/tokens.ts äº§ç‰© | LT-07 | generate:tokens | äº§ç‰©ä¸ç”Ÿæˆå™¨ä¸€è‡´ | âœ… å·²é€šè¿‡ |
-| R-TK-5 | P7 | â‘¢ | M8 | äº”é“é—¨ç¦é—­ç¯éªŒè¯ | LT-07 | tsc/layers/lint/scan/test | å…¨ç»¿ | âœ… å·²é€šè¿‡ |
-| R-TK-6 | P7 | â‘¢ | M7/M8 | è§†è§‰å›å½’+è¿½è¸ªè¡¨æ›´æ–° | â€” | æ‰‹åŠ¨ | æš—/äº®åˆ‡æ¢ä»ç”± .dark é©±åŠ¨ | âœ… å·²é€šè¿‡ |
+| RM-001 | P0 | ¢Û¢Ş | M1 | tokens.json »úÆ÷¿É¶Á×ÜÕË | ¡ª | tsc | JSON ´æÔÚÇÒ±»¡İ3´¦ÒıÓÃ | ? ÒÑÍ¨¹ı |
+| RM-002 | P0 | ¢Û | M1 | Æ·ÅÆÖ÷É« WCAG AA ¹Ì»¯ | ¡ª | a11y | AA Ğ£Ñé active Ö÷É« 100% PASS(¡İ4.5:1) | ? ÒÑÍ¨¹ı |
+| RM-003 | P0 | ¢Û | M1/M8 | µ¥Ç¿µ÷É«¹«Ô¼Èë AGENTS.md | ¡ª | audit:docs | AGENTS.md º¬¹«Ô¼ | ? ÒÑÍ¨¹ı |
+| RM-004 | P1 | ¢İ | M2 | themeStore(withBroadcast)+Ä¬ÈÏdark | LT-01/02 | audit:layers | ¿çTabÍ¬²½Õı³££»Ä¬ÈÏdark | ? ÒÑÍ¨¹ı |
+| RM-005 | P1 | ¢Ù | M1/M2 | ²¹È« .dark ¹æÔò+chartColors°µÉ«±äÌå | LT-01 | test --run | °µÉ«ÁîÅÆ¸²¸ÇÂÊ100% | ? ÒÑÍ¨¹ı |
+| RM-006 | P1 | ¢Ù | M2 | index.html ·ÀFOUCÄÚÁª½Å±¾ | LT-01 | ÊÖ¶¯ | Ê×ÆÁÎŞÉÁË¸ | ? ÒÑÍ¨¹ı |
+| RM-007 | P2 | ¢á | M3 | SignalSpectrumÃªµã½ÓÈëWidgetShell | LT-03 | tsc | Ãªµãµ¥²âÍ¨¹ı£»È«¾Ö¿É¼û | ? ÒÑÍ¨¹ı |
+| RM-008 | P2 | ¢á | M3 | ËùÓĞwidget¾­WidgetShellÊÕ¿Ú+¶¥À¸ÃªµãÌõ | LT-03 | audit:layers | ºËĞÄwidget 100%¾­WidgetShell | ? ÒÑÍ¨¹ı |
+| RM-009 | P3 | ¢İ | M4 | ui/states/ ËÄÌ¬×é¼ş¿â | LT-04 | test --run | ËÄÌ¬×é¼şµ¥²âÍ¨¹ı | ? ÒÑÍ¨¹ı |
+| RM-010 | P3 | ¢İ¢â | M3/M4 | ºËĞÄ8 widget½ÓÈëËÄÌ¬+¶¯Ğ§ÁîÅÆ | LT-04 | test --run | ËÄÌ¬¸²¸Ç¡İ90%£»ÁãÄ§·¨Ê±³¤ | ? ÒÑÍ¨¹ı |
+| RM-011 | P4 | ¢Û | M8 | ESLint½ûÂãTailwindÉ«Àà(°×Ãûµ¥STOCK) | LT-07 | CI lint | ÂãÉ«Àà0ÃüÖĞ(error¼¶) | ? ÒÑÍ¨¹ı |
+| RM-012 | P4 | ¢Û | M8 | scripts/token-scan.cjs ÁîÅÆÉ¨Ãè | LT-07 | token-scan | É¨Ãè0Î¥¹æ | ? ÒÑÍ¨¹ı |
+| RM-013 | P5 | ¢Ù¢à | M6 | ResultCard³ÉÆ·¿¨(Ô¤ÀÀ/·ÖÏí/µ¼³ö) | LT-05 | tsc | ³ÉÆ·¿¨¿ÉÔ¤ÀÀ/µ¼³ö | ? ÒÑÍ¨¹ı |
+| RM-014 | P5 | ¢ß¢à | M6/M3 | Ïòµ¼Ê½¸´ÅÌ+ĞğÊÂÁ÷ | LT-05 | test --run | Ïòµ¼¿ÉÌø¹ı£»ĞğÊÂÁ÷äÖÈ¾ | ? ÒÑÍ¨¹ı |
+| RM-015 | P6 | ¢Ú | M7 | ºËĞÄ²ÕÊÒÏìÓ¦Ê½(Õ¤¸ñ½µÁĞ/´¥¿Ø¡İ44px) | LT-06 | ÊÖ¶¯ | 375px¶Ïµã²»±À | ? ÒÑÍ¨¹ı |
+| RM-016 | P6 | ¢à | M8 | ³Áµí ui-design-audit skill | ¡ª | ÊÖ¶¯ | skill ¿ÉÓÃ | ? ÒÑÍ¨¹ı |
+| R-TK-1 | P7 | ¢Û | M8 | Éú³ÉÆ÷Í£Êä³ö [data-theme] ËÀ±äÁ¿¿é | LT-07 | generate:tokens | tokens.css ÎŞ [data-theme] | ? ÒÑÍ¨¹ı |
+| R-TK-2 | P7 | ¢Û | M2 | É¾ themeStore/index.html µÄ data-theme ÈßÓàĞ´Èë | LT-01 | tsc | È«²ÖÎŞ setAttribute('data-theme') | ? ÒÑÍ¨¹ı |
+| R-TK-3 | P7 | ¢Û | M2 | themeStore ²âÊÔ¶ÏÑÔÍ¬²½(½öÑé .dark) | LT-01 | test --run | µ¥²âÍ¨¹ı | ? ÒÑÍ¨¹ı |
+| R-TK-4 | P7 | ¢Û | M8 | ÖØÉú³É tokens.css/tokens.ts ²úÎï | LT-07 | generate:tokens | ²úÎïÓëÉú³ÉÆ÷Ò»ÖÂ | ? ÒÑÍ¨¹ı |
+| R-TK-5 | P7 | ¢Û | M8 | ÎåµÀÃÅ½û±Õ»·ÑéÖ¤ | LT-07 | tsc/layers/lint/scan/test | È«ÂÌ | ? ÒÑÍ¨¹ı |
+| R-TK-6 | P7 | ¢Û | M7/M8 | ÊÓ¾õ»Ø¹é+×·×Ù±í¸üĞÂ | ¡ª | ÊÖ¶¯ | °µ/ÁÁÇĞ»»ÈÔÓÉ .dark Çı¶¯ | ? ÒÑÍ¨¹ı |
 
-å›¾ä¾‹ï¼šâœ…å·²é€šè¿‡ ğŸŸ¡éƒ¨åˆ†/å¾…æ¥å…¥ â¬œå¾…å¯åŠ¨
+Í¼Àı£º?ÒÑÍ¨¹ı ??²¿·Ö/´ı½ÓÈë ?´ıÆô¶¯
 
 ---
 
-## äºŒã€è¿½æº¯é“¾ï¼ˆåŸåˆ™ â†’ é˜¶æ®µ â†’ RM â†’ æµ‹è¯• â†’ é—¸é—¨ï¼‰
+## ¶ş¡¢×·ËİÁ´£¨Ô­Ôò ¡ú ½×¶Î ¡ú RM ¡ú ²âÊÔ ¡ú Õ¢ÃÅ£©
 
 ```
-åŸåˆ™â‘¢è‰²å½©èŠ‚åˆ¶/ä¸€è‡´æ€§ â†’ P0 â†’ RM-001/002/003 â†’ LT-07 â†’ tsc/a11y/audit:docs
-åŸåˆ™â‘¤çŠ¶æ€å¯è§     â†’ P3 â†’ RM-009/010       â†’ LT-04 â†’ test --run
-åŸåˆ™â‘¨ç­¾åæ¯é¢˜     â†’ P2 â†’ RM-007/008       â†’ LT-03 â†’ tsc/audit:layers
-åŸåˆ™â‘ è§†è§‰å±‚æ¬¡     â†’ P1/P5 â†’ RM-005/006/013 â†’ LT-01/05 â†’ test/æ‰‹åŠ¨
-åŸåˆ™â‘¦â‘§æ¸è¿›æŠ«éœ²/å®‰å¿ƒ â†’ P5/P6 â†’ RM-014/016 â†’ LT-05 â†’ test/æ‰‹åŠ¨
+Ô­Ôò¢ÛÉ«²Ê½ÚÖÆ/Ò»ÖÂĞÔ ¡ú P0 ¡ú RM-001/002/003 ¡ú LT-07 ¡ú tsc/a11y/audit:docs
+Ô­Ôò¢İ×´Ì¬¿É¼û     ¡ú P3 ¡ú RM-009/010       ¡ú LT-04 ¡ú test --run
+Ô­Ôò¢áÇ©ÃûÄ¸Ìâ     ¡ú P2 ¡ú RM-007/008       ¡ú LT-03 ¡ú tsc/audit:layers
+Ô­Ôò¢ÙÊÓ¾õ²ã´Î     ¡ú P1/P5 ¡ú RM-005/006/013 ¡ú LT-01/05 ¡ú test/ÊÖ¶¯
+Ô­Ôò¢ß¢à½¥½øÅûÂ¶/°²ĞÄ ¡ú P5/P6 ¡ú RM-014/016 ¡ú LT-05 ¡ú test/ÊÖ¶¯
 ```
 
 ---
 
-## ä¸‰ã€æ¨¡å—åŠŸèƒ½å®šä½ä¸æ•°æ®æµå‘ï¼ˆè¦ç‚¹â‘ ï¼Œè¯¦è§å¯è¡Œæ€§è®¡åˆ’Â§ä¸€ï¼‰
+## Èı¡¢Ä£¿é¹¦ÄÜ¶¨Î»ÓëÊı¾İÁ÷Ïò£¨Òªµã¢Ù£¬Ïê¼û¿ÉĞĞĞÔ¼Æ»®¡ìÒ»£©
 
-M1 ä»¤ç‰Œå±‚(constants/config) â†’ M2 ä¸»é¢˜å±‚(store/core) â†’ M3 é©¾é©¶èˆ±å£³å±‚(cockpit) / M4 çŠ¶æ€å±‚(ui/states) / M6 æˆå“å±‚(output) â† M5 æœåŠ¡å±‚(services/DataBridge) â†’ store(47)ã€‚M7 ç§»åŠ¨å±‚(pages)ã€M8 è´¨é‡é—¸é—¨å±‚(scripts/CI)ã€‚å…¨éƒ¨å¯¹é½ AGENTS.md åˆ†å±‚å¥‘çº¦ã€‚
-
----
-
-## å››ã€è¿›åº¦æ±‡æ€»
-
-- **å·²é€šè¿‡ï¼ˆ16 RM + 6 R-TKï¼‰**ï¼šRM-001~016ï¼ˆP0+P1+P2+P3+P4+P5+P6ï¼‰å…¨é‡å®Œæˆï¼›P7 åŒä»¤ç‰Œæœºåˆ¶é—­åˆï¼ˆR-TK-1~6ï¼‰å·²é€šè¿‡
-- **å¾…å¯åŠ¨ï¼ˆ0ï¼‰**ï¼šæ— 
-- **æœ¬è½®ä»£ç æ”¹åŠ¨æ–‡ä»¶ï¼ˆP0+P1+P2ï¼‰**ï¼š`design-tokens/tokens.json`ã€`src/index.css`ã€`scripts/other/a11y-contrast.cjs`ã€`scripts/generate-tokens.ts`ã€`src/generated/tokens.css`ã€`src/generated/tokens.ts`ã€`src/core/ThemeProvider.tsx`ï¼ˆæ–°ï¼‰ã€`src/store/themeStore.test.ts`ï¼ˆæ–°æµ‹è¯•ï¼‰ã€`src/constants/store-channels.constants.ts`ã€`src/core/ThemeProvider.tsx`ã€`src/apps/command/ConfigApp.tsx`ã€`src/App.tsx`ã€`src/config/chartColors.ts`ã€`index.html`ã€`src/components/cockpit/SignalSpectrum.tsx`ã€`src/components/cockpit/SignalSpectrum.test.tsx`ï¼ˆæ–°æµ‹è¯•ï¼‰ã€`src/components/widgets/WidgetAnchorBar.tsx`ï¼ˆæ–°ï¼‰ã€`src/components/widgets/WidgetAnchorBar.test.tsx`ï¼ˆæ–°æµ‹è¯•ï¼‰ã€`src/components/widgets/index.ts`ã€`src/cockpit/CockpitShell.tsx`
+M1 ÁîÅÆ²ã(constants/config) ¡ú M2 Ö÷Ìâ²ã(store/core) ¡ú M3 ¼İÊ»²Õ¿Ç²ã(cockpit) / M4 ×´Ì¬²ã(ui/states) / M6 ³ÉÆ·²ã(output) ¡û M5 ·şÎñ²ã(services/DataBridge) ¡ú store(47)¡£M7 ÒÆ¶¯²ã(pages)¡¢M8 ÖÊÁ¿Õ¢ÃÅ²ã(scripts/CI)¡£È«²¿¶ÔÆë AGENTS.md ·Ö²ãÆõÔ¼¡£
 
 ---
 
-## äº”ã€é—ç•™/é˜»å¡é¡¹ï¼ˆéæœ¬æ¬¡ RM èŒƒå›´ï¼Œéœ€ç”¨æˆ·å†³ç­–ï¼‰
+## ËÄ¡¢½ø¶È»ã×Ü
 
-1. **tsc é¢„å­˜é”™è¯¯ï¼ˆå·²äº P2 æ¸…é™¤ï¼‰**ï¼š
-   - `src/components/cockpit/SignalSpectrum.tsx(45,59)`: `mutedRaw` åœ¨ `COLOR_TOKENS` ä¸­ä¸å­˜åœ¨ â€”â€” **P2 RM-007 å·²ä¿®å¤**ï¼ˆæ”¹ç”¨ `var(--muted)`ï¼‰ï¼Œå…¨ä»“ tsc ç° **0 é”™è¯¯** âœ…ã€‚
-   - `auditLogArchiveService.ts(39,3)` çš„ `getRbacThresholds` æœªç”¨é”™è¯¯åœ¨ P1 æœŸé—´å·²è‡ªè¡Œæ¶ˆé™¤ã€‚
-   - ç°çŠ¶ï¼šå…¨ä»“ tsc å·²æ— é¢„å­˜é”™è¯¯ï¼ŒRM-001~008 å…¨é˜¶æ®µ 0 ç±»å‹é”™è¯¯ã€‚
-2. **åŒä»¤ç‰Œæœºåˆ¶ï¼ˆä»¤ç‰Œç®¡çº¿æ–­è£‚ï¼‰**ï¼š`[data-theme]` å˜é‡(ç”Ÿæˆ)ä¸ Tailwind `.dark`+`hsl(var(--primary))`(index.css) å¹¶å­˜ï¼Œè§„æ¨¡æ‰©å¼ æ—¶æ˜“æ¼‚ç§»ã€‚å± P4/M8 æ·±æ°´åŒº â†’ **å·²äº P7ï¼ˆR-TK-1~6ï¼‰é—­åˆ**ï¼šä»¥ `.dark` ä½“ç³»ä¸ºå”¯ä¸€çœŸç›¸ï¼Œç”Ÿæˆå™¨åœè¾“å‡º `[data-theme]` æ­»å˜é‡å—ã€`themeStore`/`index.html` åˆ  `data-theme` å†—ä½™å†™å…¥ã€æµ‹è¯•æ–­è¨€åŒæ­¥ï¼›è§†è§‰é›¶å˜åŒ–ï¼Œäº”é“é—¨ç¦å…¨ç»¿ âœ…ã€‚
-3. **a11y é—¸é—¨ 3 ä¸ª deprecated FAIL**ï¼š`#3b82f6`/`#0f9d76`/`emerald.600` ä¸ºå†å²è°ƒè‰²æ¿é—ç•™è‰²ï¼ˆéå½“å‰å“ç‰Œï¼‰ï¼Œè„šæœ¬ä¿ç•™ä½œå‚è€ƒï¼›active å“ç‰Œä¸»è‰²å·² 100% é€šè¿‡ã€‚
+- **ÒÑÍ¨¹ı£¨16 RM + 6 R-TK£©**£ºRM-001~016£¨P0+P1+P2+P3+P4+P5+P6£©È«Á¿Íê³É£»P7 Ë«ÁîÅÆ»úÖÆ±ÕºÏ£¨R-TK-1~6£©ÒÑÍ¨¹ı
+- **´ıÆô¶¯£¨0£©**£ºÎŞ
+- **±¾ÂÖ´úÂë¸Ä¶¯ÎÄ¼ş£¨P0+P1+P2£©**£º`design-tokens/tokens.json`¡¢`src/index.css`¡¢`scripts/other/a11y-contrast.cjs`¡¢`scripts/generate-tokens.ts`¡¢`src/generated/tokens.css`¡¢`src/generated/tokens.ts`¡¢`src/core/ThemeProvider.tsx`£¨ĞÂ£©¡¢`src/store/themeStore.test.ts`£¨ĞÂ²âÊÔ£©¡¢`src/constants/store-channels.constants.ts`¡¢`src/core/ThemeProvider.tsx`¡¢`src/apps/command/ConfigApp.tsx`¡¢`src/App.tsx`¡¢`src/config/chartColors.ts`¡¢`index.html`¡¢`src/components/cockpit/SignalSpectrum.tsx`¡¢`src/components/cockpit/SignalSpectrum.tsx`£¨ĞÂ²âÊÔ£©¡¢`src/components/widgets/WidgetShell.tsx`£¨ĞÂ£©¡¢`src/components/widgets/WidgetShell.tsx`£¨ĞÂ²âÊÔ£©¡¢`src/components/widgets/index.ts`¡¢`src/cockpit/CockpitShell.tsx`
 
 ---
 
-*æœ¬æ˜ç»†è¡¨ä¸å¯è¡Œæ€§è®¡åˆ’ã€HTMLç²¾è¯»æŠ¥å‘Šä¸‰ä»¶å¥—äº’é”šï¼›çŠ¶æ€éšæ•´æ”¹æ¨è¿›æ¯å‘¨æ›´æ–°ã€‚*
+## Îå¡¢ÒÅÁô/×èÈûÏî£¨·Ç±¾´Î RM ·¶Î§£¬ĞèÓÃ»§¾ö²ß£©
+
+1. **tsc Ô¤´æ´íÎó£¨ÒÑÓÚ P2 Çå³ı£©**£º
+   - `src/components/cockpit/SignalSpectrum.tsx`: `mutedRaw` ÔÚ `COLOR_TOKENS` ÖĞ²»´æÔÚ ¡ª¡ª **P2 RM-007 ÒÑĞŞ¸´**£¨¸ÄÓÃ `var(--muted)`£©£¬È«²Ö tsc ÏÖ **0 ´íÎó** ?¡£
+   - `auditLogArchiveService.ts(39,3)` µÄ `getRbacThresholds` Î´ÓÃ´íÎóÔÚ P1 ÆÚ¼äÒÑ×ÔĞĞÏû³ı¡£
+   - ÏÖ×´£ºÈ«²Ö tsc ÒÑÎŞÔ¤´æ´íÎó£¬RM-001~008 È«½×¶Î 0 ÀàĞÍ´íÎó¡£
+2. **Ë«ÁîÅÆ»úÖÆ£¨ÁîÅÆ¹ÜÏß¶ÏÁÑ£©**£º`[data-theme]` ±äÁ¿(Éú³É)Óë Tailwind `.dark`+`hsl(var(--primary))`(index.css) ²¢´æ£¬¹æÄ£À©ÕÅÊ±Ò×Æ¯ÒÆ¡£Êô P4/M8 ÉîË®Çø ¡ú **ÒÑÓÚ P7£¨R-TK-1~6£©±ÕºÏ**£ºÒÔ `.dark` ÌåÏµÎªÎ¨Ò»ÕæÏà£¬Éú³ÉÆ÷Í£Êä³ö `[data-theme]` ËÀ±äÁ¿¿é¡¢`themeStore`/`index.html` É¾ `data-theme` ÈßÓàĞ´Èë¡¢²âÊÔ¶ÏÑÔÍ¬²½£»ÊÓ¾õÁã±ä»¯£¬ÎåµÀÃÅ½ûÈ«ÂÌ ?¡£
+3. **a11y Õ¢ÃÅ 3 ¸ö deprecated FAIL**£º`#3b82f6`/`#0f9d76`/`emerald.600` ÎªÀúÊ·µ÷É«°åÒÅÁôÉ«£¨·Çµ±Ç°Æ·ÅÆ£©£¬½Å±¾±£Áô×÷²Î¿¼£»active Æ·ÅÆÖ÷É«ÒÑ 100% Í¨¹ı¡£
 
 ---
 
-## å…­ã€P7 è¡ŒåŠ¨è®°å½•ï¼ˆåŒä»¤ç‰Œæœºåˆ¶é—­åˆï¼Œ2026-07-08ï¼‰
+*±¾Ã÷Ï¸±íÓë¿ÉĞĞĞÔ¼Æ»®¡¢HTML¾«¶Á±¨¸æÈı¼şÌ×»¥Ãª£»×´Ì¬ËæÕû¸ÄÍÆ½øÃ¿ÖÜ¸üĞÂ¡£*
 
-**ç­–ç•¥**ï¼šå•ä¸€çœŸç›¸å½’ä¸€ï¼ˆç”¨æˆ·æ‹æ¿ï¼‰ã€‚ä»¥ `.dark` + `index.css` HSL å˜é‡ä½“ç³»ä¸ºå”¯ä¸€ä¸»é¢˜çœŸç›¸ï¼›`[data-theme]` ä½“ç³»é™çº§ä¸ºçº¯è°ƒè‰²æ¿å‚è€ƒï¼Œä¸å†è¾“å‡ºæ­»å˜é‡å—ã€ä¸å†è¢«å†™å…¥ã€‚
+---
 
-**æ”¹åŠ¨æ¸…å•**ï¼š
-- `scripts/generate-tokens.ts`ï¼š`generateCSS()` åˆ é™¤ `[data-theme="light/dark"]` ä¸¤æ®µè¾“å‡ºï¼ˆä¿ç•™ `:root` è°ƒè‰²æ¿ + è¯­ä¹‰å˜é‡ï¼Œä½œè®¾è®¡ä»¤ç‰Œæ–‡æ¡£ï¼‰ã€‚
-- `src/core/ThemeProvider.tsx`ï¼šåˆ  `root.setAttribute('data-theme', resolved)` å†™å…¥ + æ›´æ–° L9 æ³¨é‡Šã€‚
-- `index.html`ï¼šFOUC å†…è”è„šæœ¬åˆ  `data-theme` å†™å…¥ï¼Œä¿ç•™ `.dark` class åˆ‡æ¢ã€‚
-- `src/store/themeStore.test.ts`ï¼šç§»é™¤ `data-theme` æ–­è¨€ä¸ `removeAttribute` æ¸…ç†ï¼Œä»…éªŒè¯ `.dark` class å¢åˆ ã€‚
-- `src/generated/tokens.css` / `tokens.ts`ï¼šé‡ç”Ÿæˆï¼ˆcss 188â†’147 è¡Œï¼Œç§»é™¤æ­»å˜é‡å—ï¼‰ã€‚
+## Áù¡¢P7 ĞĞ¶¯¼ÇÂ¼£¨Ë«ÁîÅÆ»úÖÆ±ÕºÏ£¬2026-07-08£©
 
-**éªŒè¯é—­ç¯ï¼ˆå…¨ç»¿ï¼‰**ï¼š
-| é—¸é—¨ | ç»“æœ |
+**²ßÂÔ**£ºµ¥Ò»ÕæÏà¹éÒ»£¨ÓÃ»§ÅÄ°å£©¡£ÒÔ `.dark` + `index.css` HSL ±äÁ¿ÌåÏµÎªÎ¨Ò»Ö÷ÌâÕæÏà£»`[data-theme]` ÌåÏµ½µ¼¶Îª´¿µ÷É«°å²Î¿¼£¬²»ÔÙÊä³öËÀ±äÁ¿¿é¡¢²»ÔÙ±»Ğ´Èë¡£
+
+**¸Ä¶¯Çåµ¥**£º
+- `scripts/generate-tokens.ts`£º`generateCSS()` É¾³ı `[data-theme="light/dark"]` Á½¶ÎÊä³ö£¨±£Áô `:root` µ÷É«°å + ÓïÒå±äÁ¿£¬×÷Éè¼ÆÁîÅÆÎÄµµ£©¡£
+- `src/core/ThemeProvider.tsx`£ºÉ¾ `root.setAttribute('data-theme', resolved)` Ğ´Èë + ¸üĞÂ L9 ×¢ÊÍ¡£
+- `index.html`£ºFOUC ÄÚÁª½Å±¾É¾ `data-theme` Ğ´Èë£¬±£Áô `.dark` class ÇĞ»»¡£
+- `src/store/themeStore.test.ts`£ºÒÆ³ı `data-theme` ¶ÏÑÔÓë `removeAttribute` ÇåÀí£¬½öÑéÖ¤ `.dark` class ÔöÉ¾¡£
+- `src/generated/tokens.css` / `tokens.ts`£ºÖØÉú³É£¨css 188¡ú147 ĞĞ£¬ÒÆ³ıËÀ±äÁ¿¿é£©¡£
+
+**ÑéÖ¤±Õ»·£¨È«ÂÌ£©**£º
+| Õ¢ÃÅ | ½á¹û |
 |---|---|
-| `npm run tsc:prod` | 0 é”™è¯¯ |
-| `npm run audit:layers` | 0 è¿è§„ 0 è­¦å‘Š |
-| `npm run lint:colors` | 0 errorsï¼ˆ1455 æ—¢æœ‰ warning æ— å…³ï¼‰ |
-| `node scripts/token-scan.cjs` | 0 è¿è§„ |
+| `npm run tsc:prod` | 0 ´íÎó |
+| `npm run audit:layers` | 0 Î¥¹æ 0 ¾¯¸æ |
+| `npm run lint:colors` | 0 errors£¨1455 ¼ÈÓĞ warning ÎŞ¹Ø£© |
+| `node scripts/token-scan.cjs` | 0 Î¥¹æ |
 | `vitest run themeStore.test.ts` | 5/5 PASS |
 
-**grep å¤æ ¸**ï¼šå…¨ä»“æ—  `setAttribute('data-theme')`/`getAttribute` å†™å…¥æˆ–è¯»å–ç‚¹ï¼ˆä»…æµ‹è¯•æ³¨é‡ŠæåŠï¼‰ï¼›æ— äººæ¶ˆè´¹ `--color-*` è¯­ä¹‰å˜é‡ã€‚`generate-tokens` ä¸å†è¯» `tokens.light/dark`ã€‚
-**è§†è§‰å›å½’ï¼ˆé€»è¾‘å±‚ï¼‰**ï¼šæš—è‰²é»˜è®¤è¿›å…¥ã€light/dark åˆ‡æ¢ä»ç”± `.dark` class é©±åŠ¨ï¼Œä¸åŸè¡Œä¸ºå®Œå…¨ä¸€è‡´ï¼Œé›¶è§†è§‰å˜åŒ–ã€‚
+**grep ¸´ºË**£ºÈ«²ÖÎŞ `setAttribute('data-theme')`/`getAttribute` Ğ´Èë»ò¶ÁÈ¡µã£¨½ö²âÊÔ×¢ÊÍÌá¼°£©£»ÎŞÈËÏû·Ñ `--color-*` ÓïÒå±äÁ¿¡£`generate-tokens` ²»ÔÙ¶Á `tokens.light/dark`¡£
+**ÊÓ¾õ»Ø¹é£¨Âß¼­²ã£©**£º°µÉ«Ä¬ÈÏ½øÈë¡¢light/dark ÇĞ»»ÈÔÓÉ `.dark` class Çı¶¯£¬ÓëÔ­ĞĞÎªÍêÈ«Ò»ÖÂ£¬ÁãÊÓ¾õ±ä»¯¡£

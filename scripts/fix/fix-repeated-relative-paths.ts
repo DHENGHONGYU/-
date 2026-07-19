@@ -2,8 +2,8 @@
  * fix-repeated-relative-paths.ts
  *
  * 修复 fix-doc-to-doc-basename.ts 等脚本重复运行导致的相对路径重复 bug。
- * 例如：`../../prompts/../../prompts/../../prompts/system-prompt-template.md`
- * 应修复为：`../../prompts/system-prompt-template.md`
+ * 例如："prompts/system-prompt-template.md"
+ * 应修复为："prompts/system-prompt-template.md"
  *
  * 策略：
  * 1. 扫描所有 .md 文件

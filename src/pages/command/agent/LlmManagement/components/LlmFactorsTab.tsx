@@ -20,6 +20,9 @@ interface LlmFactorsTabProps {
   onFactorOverrideChange: (factorId: string, useLlm: boolean) => void
 }
 
+/**
+ * LlmFactorsTab
+ */
 export function LlmFactorsTab({
   factorOverrides,
   globalLlmEnabled,

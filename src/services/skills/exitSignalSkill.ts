@@ -26,6 +26,9 @@ const SignalSchema = z.object({
   createdAt: z.number(),
 })
 
+/**
+ * ExitSignalInputSchema
+ */
 export const ExitSignalInputSchema = z.object({
   symbol: z.string(),
   stockName: z.string().optional(),
@@ -42,6 +45,9 @@ export const ExitSignalInputSchema = z.object({
 
 export type ExitSignalInput = z.infer<typeof ExitSignalInputSchema>
 
+/**
+ * ExitSignalOutputSchema
+ */
 export const ExitSignalOutputSchema = z.object({
   /** 最强卖出信号 */
   strongestSignal: SignalSchema,
@@ -148,6 +154,9 @@ function calculateStopLossSuggestion(
   }
 }
 
+/**
+ * executeExitSignalSkill
+ */
 export async function executeExitSignalSkill(
   ctx: SkillContext,
 ): Promise<SkillResult<ExitSignalOutput>> {
@@ -277,6 +286,9 @@ export async function executeExitSignalSkill(
   }
 }
 
+/**
+ * exitSignalSkill
+ */
 export const exitSignalSkill: SkillDefinition<ExitSignalOutput> = {
   name: 'exit-signal',
   title: '出场信号',

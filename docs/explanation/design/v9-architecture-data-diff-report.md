@@ -1,282 +1,283 @@
 ---
-title: v9-architecture-data-diff-report
-tier: reference
+title: V9 ¼Ü¹¹×Ê²ú²îÒì·ÖÎö±¨¸æ£¨Phase 5 Éî²ãÉó¼Æ£©
+type: explanation
+domain: architecture
+phase: design
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "## Ò»¡¢É¨ÃèÍ³¼Æ×ÜÀÀ ## ¶ş¡¢ÎÄµµ¸²¸Ç¾ØÕó"
+tags: [architecture, report, plan]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: V9 æ¶æ„èµ„äº§å·®å¼‚åˆ†ææŠ¥å‘Šï¼ˆPhase 5 æ·±å±‚å®¡è®¡ï¼‰
-version: v0.9.1
-last_updated: 2026-06-26
-maintainer: V9 Architecture Team
-status: active
-change_log:
-  - date: 2026-06-26
-    author: Documentation Governor
-    desc: æ³¨å…¥ Frontmatter å…ƒæ•°æ®ï¼ˆPhase 3 ç‰ˆæœ¬åŒ–ï¼‰
-tier: reference
----
-# V9 æ¶æ„èµ„äº§å·®å¼‚åˆ†ææŠ¥å‘Šï¼ˆPhase 5 æ·±å±‚å®¡è®¡ï¼‰
+# V9 ¼Ü¹¹×Ê²ú²îÒì·ÖÎö±¨¸æ£¨Phase 5 Éî²ãÉó¼Æ£©
 
 > **Status**: Active  
 > **Version**: v1.1.0  
 > **Last Updated**: 2026-06-26  
-> **å®¡è®¡å·¥å…·**: `audit-doc-sync.ts`  
-> **æ‰«æèŒƒå›´**: å…¨é‡ `src/types/modules/` (8æ–‡ä»¶)ã€`src/constants/` (4æ–‡ä»¶)ã€`src/services/` (54æ–‡ä»¶)ã€`src/pages/` (25æ–‡ä»¶)ã€`src/data/types.ts`ã€`docs/` (55æ–‡ä»¶)  
-> **æ ¸å¿ƒåŸåˆ™**: æ–‡æ¡£å³ä»£ç  | å˜æ›´å³è®°å½• | å·®å¼‚å³å€ºåŠ¡  
-> **æ²»ç†ç»“è®º**: Phase 1-4 æ²»ç†å·²æ¶ˆé™¤ 28/28 é¡¹å·®å¼‚ï¼ˆP0 16 + P1 7 + P2 5 â†’ å…¨éƒ¨æ¸…é›¶ï¼‰ï¼›Phase 5 æ·±å±‚å®¡è®¡å‘ç°æ–°çš„ P1 55 é¡¹ + P2 6 é¡¹ï¼Œåˆè®¡ 61 é¡¹å¾…ä¿®å¤
+> **Éó¼Æ¹¤¾ß**: `audit-doc-sync.ts`  
+> **É¨Ãè·¶Î§**: È«Á¿ `src/types/modules/` (8ÎÄ¼ş)¡¢`src/constants/` (4ÎÄ¼ş)¡¢`src/services/` (54ÎÄ¼ş)¡¢`src/pages/` (25ÎÄ¼ş)¡¢`src/data/types.ts`¡¢`docs/` (55ÎÄ¼ş)  
+> **ºËĞÄÔ­Ôò**: ÎÄµµ¼´´úÂë | ±ä¸ü¼´¼ÇÂ¼ | ²îÒì¼´Õ®Îñ  
+> **ÖÎÀí½áÂÛ**: Phase 1-4 ÖÎÀíÒÑÏû³ı 28/28 Ïî²îÒì£¨P0 16 + P1 7 + P2 5 ¡ú È«²¿ÇåÁã£©£»Phase 5 Éî²ãÉó¼Æ·¢ÏÖĞÂµÄ P1 55 Ïî + P2 6 Ïî£¬ºÏ¼Æ 61 Ïî´ıĞŞ¸´
 
 ---
 
-## ä¸€ã€æ‰«æç»Ÿè®¡æ€»è§ˆ
+## Ò»¡¢É¨ÃèÍ³¼Æ×ÜÀÀ
 
-| ç»´åº¦ | æ•°é‡ |
+| Î¬¶È | ÊıÁ¿ |
 |------|------|
-| ç±»å‹å®šä¹‰æ–‡ä»¶ (`src/types/modules/`) | 8 |
-| å¸¸é‡å®šä¹‰æ–‡ä»¶ (`src/constants/`) | 4 |
-| TypeScript æ¥å£/ç±»å‹å£°æ˜ (å« `src/data/types.ts`) | 150+ |
-| æšä¸¾å¸¸é‡ç»„ | 23+ |
-| æœåŠ¡å±‚æ¨¡å—ç›®å½• | 14 |
-| é¡µé¢ç»„ä»¶ | 25 |
-| ç°æœ‰æ–‡æ¡£æ–‡ä»¶ (`docs/`) | 55 |
-| å·²æœ‰æ•°æ®å­—å…¸æ–‡æ¡£ | 5 (`ai-center-data-definition.md`, `../../reference/data-definition.md`, `../../reference/data-definition.md`, `../../reference/data-definition.md`, `../../reference/api-contract.md`) |
-| æ¶æ„æ ‡å‡†æ–‡æ¡£ | 1 (`../../reference/03-architecture-standards.md`) |
+| ÀàĞÍ¶¨ÒåÎÄ¼ş (`src/types/modules/`) | 8 |
+| ³£Á¿¶¨ÒåÎÄ¼ş (`src/constants/`) | 4 |
+| TypeScript ½Ó¿Ú/ÀàĞÍÉùÃ÷ (º¬ `src/data/types.ts`) | 150+ |
+| Ã¶¾Ù³£Á¿×é | 23+ |
+| ·şÎñ²ãÄ£¿éÄ¿Â¼ | 14 |
+| Ò³Ãæ×é¼ş | 25 |
+| ÏÖÓĞÎÄµµÎÄ¼ş (`docs/`) | 55 |
+| ÒÑÓĞÊı¾İ×ÖµäÎÄµµ | 5 (`ai-center-data-definition.md`, `../../reference/data-definition.md`, `../../reference/data-definition.md`, `../../reference/data-definition.md`, `../../reference/api-contract.md`) |
+| ¼Ü¹¹±ê×¼ÎÄµµ | 1 (`../../reference/03-architecture-standards.md`) |
 
 ---
 
-## äºŒã€æ–‡æ¡£è¦†ç›–çŸ©é˜µ
+## ¶ş¡¢ÎÄµµ¸²¸Ç¾ØÕó
 
-### 2.1 ç±»å‹æ¨¡å— â†’ æ–‡æ¡£æ˜ å°„
+### 2.1 ÀàĞÍÄ£¿é ¡ú ÎÄµµÓ³Éä
 
-| ä»£ç æ¨¡å— | ç±»å‹æ–‡ä»¶ | å¯¹åº”æ–‡æ¡£ | è¦†ç›–çŠ¶æ€ |
+| ´úÂëÄ£¿é | ÀàĞÍÎÄ¼ş | ¶ÔÓ¦ÎÄµµ | ¸²¸Ç×´Ì¬ |
 |---------|---------|---------|---------|
-| **AI Center** | `ai-center.types.ts` | `../../reference/ai-center-data-definition.md` | âœ… å·²è¦†ç›– |
-| **Trade / Holdings** | `trade.types.ts` | `../../reference/api-contract.md` | ğŸŸ¡ éƒ¨åˆ†ï¼ˆ`TradeSignal` æœªè®°å½•ï¼‰ |
-| **Cockpit / Widget** | `widget.types.ts` | `../../reference/data-definition.md` | âœ… å·²è¦†ç›– |
-| **Engine** | `engine.types.ts` | `../../reference/03-architecture-standards.md` Â§3.1.6 | âœ… å·²è¦†ç›– |
-| **DataBridge** | `databridge.types.ts` | `../../reference/03-architecture-standards.md` Â§3.8 | ğŸŸ¡ éƒ¨åˆ†ï¼ˆ5 ä¸ªç±»å‹æœªè®°å½•ï¼‰ |
-| **Agent Runtime** | `agent.types.ts` | `../../reference/03-architecture-standards.md` Â§3.1.5.1 | âœ… å·²è¦†ç›– |
-| **Page Lifecycle** | `page.types.ts` | æ—  | ğŸ”´ ç¼ºå¤±ï¼ˆ3 ä¸ªç±»å‹æœªè®°å½•ï¼‰ |
-| **DataFlow** | `dataflow.types.ts` | `../../reference/03-architecture-standards.md` Â§3.1.2 | ğŸŸ¡ éƒ¨åˆ†ï¼ˆ4 ä¸ªç±»å‹æœªè®°å½•ï¼‰ |
+| **AI Center** | `ai-center.types.ts` | `../../reference/ai-center-data-definition.md` | ? ÒÑ¸²¸Ç |
+| **Trade / Holdings** | `trade.types.ts` | `../../reference/api-contract.md` | ?? ²¿·Ö£¨`TradeSignal` Î´¼ÇÂ¼£© |
+| **Cockpit / Widget** | `widget.types.ts` | `../../reference/data-definition.md` | ? ÒÑ¸²¸Ç |
+| **Engine** | `engine.types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.1.6 | ? ÒÑ¸²¸Ç |
+| **DataBridge** | `databridge.types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.8 | ?? ²¿·Ö£¨5 ¸öÀàĞÍÎ´¼ÇÂ¼£© |
+| **Agent Runtime** | `agent.types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.1.5.1 | ? ÒÑ¸²¸Ç |
+| **Page Lifecycle** | `page.types.ts` | ÎŞ | ?? È±Ê§£¨3 ¸öÀàĞÍÎ´¼ÇÂ¼£© |
+| **DataFlow** | `dataflow.types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.1.2 | ?? ²¿·Ö£¨4 ¸öÀàĞÍÎ´¼ÇÂ¼£© |
 
-### 2.2 æœåŠ¡æ¨¡å— â†’ æ–‡æ¡£æ˜ å°„
+### 2.2 ·şÎñÄ£¿é ¡ú ÎÄµµÓ³Éä
 
-| æœåŠ¡ç›®å½• | å¯¹åº”æ–‡æ¡£ | è¦†ç›–çŠ¶æ€ |
+| ·şÎñÄ¿Â¼ | ¶ÔÓ¦ÎÄµµ | ¸²¸Ç×´Ì¬ |
 |---------|---------|---------|
-| `src/services/ai-center/` | `../../reference/ai-center-data-definition.md` | âœ… å·²è¦†ç›– |
-| `src/services/data-collector/` | `../../reference/data-definition.md` | âœ… å·²è¦†ç›– |
-| `src/services/news/` | `../../reference/data-definition.md` | âœ… å·²è¦†ç›– |
-| `src/services/trading/` | `../../reference/api-contract.md` | âœ… å·²è¦†ç›– |
-| `src/services/trading/` | `../../reference/api-contract.md` | âœ… å·²è¦†ç›– |
-| `src/services/analysis/` | æ—  | ğŸ”´ ç¼ºå¤± |
-| `src/services/fetcher/` | æ—  | ğŸ”´ ç¼ºå¤± |
-| `src/services/input/` | æ—  | ğŸ”´ ç¼ºå¤± |
-| `src/services/llm/` | æ—  | ğŸ”´ ç¼ºå¤± |
-| `src/services/scoring/` | æ—  | ğŸ”´ ç¼ºå¤± |
-| `src/services/stock-analysis/` | æ—  | ğŸ”´ ç¼ºå¤± |
-| `src/services/stockpool/` | æ—  | ğŸ”´ ç¼ºå¤± |
-| `src/services/system/` | æ—  | ğŸ”´ ç¼ºå¤± |
+| `src/services/ai-center/` | `../../reference/ai-center-data-definition.md` | ? ÒÑ¸²¸Ç |
+| `src/services/data-collector/` | `../../reference/data-definition.md` | ? ÒÑ¸²¸Ç |
+| `src/services/news/` | `../../reference/data-definition.md` | ? ÒÑ¸²¸Ç |
+| `src/services/trading/` | `../../reference/api-contract.md` | ? ÒÑ¸²¸Ç |
+| `src/services/trading/` | `../../reference/api-contract.md` | ? ÒÑ¸²¸Ç |
+| `src/services/analysis/` | ÎŞ | ?? È±Ê§ |
+| `src/services/fetcher/` | ÎŞ | ?? È±Ê§ |
+| `src/services/input/` | ÎŞ | ?? È±Ê§ |
+| `src/services/llm/` | ÎŞ | ?? È±Ê§ |
+| `src/services/scoring/` | ÎŞ | ?? È±Ê§ |
+| `src/services/stock-analysis/` | ÎŞ | ?? È±Ê§ |
+| `src/services/stockpool/` | ÎŞ | ?? È±Ê§ |
+| `src/services/system/` | ÎŞ | ?? È±Ê§ |
 
-### 2.3 æ•°æ®æ¨¡å‹ â†’ æ–‡æ¡£æ˜ å°„
+### 2.3 Êı¾İÄ£ĞÍ ¡ú ÎÄµµÓ³Éä
 
-| æ•°æ®æº | å¯¹åº”æ–‡æ¡£ä½ç½® | è¦†ç›–çŠ¶æ€ |
+| Êı¾İÔ´ | ¶ÔÓ¦ÎÄµµÎ»ÖÃ | ¸²¸Ç×´Ì¬ |
 |--------|------------|---------|
-| `src/data/types.ts` (å…¨éƒ¨å¯¼å‡ºç±»å‹) | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ éƒ¨åˆ†ï¼ˆ34 ä¸ªç±»å‹æœªå¼•ç”¨ï¼‰ |
+| `src/data/types.ts` (È«²¿µ¼³öÀàĞÍ) | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? ²¿·Ö£¨34 ¸öÀàĞÍÎ´ÒıÓÃ£© |
 
 ---
 
-## ä¸‰ã€å·®å¼‚æ˜ç»†æ¸…å•
+## Èı¡¢²îÒìÃ÷Ï¸Çåµ¥
 
-### 3.1 ğŸ”´ P0 çº§å·®å¼‚ â€” 0 é¡¹
+### 3.1 ?? P0 ¼¶²îÒì ¡ª 0 Ïî
 
-> Phase 1-4 æ²»ç†å·²å…¨éƒ¨æ¶ˆé™¤ã€‚æœ¬æ¬¡æ·±å±‚å®¡è®¡æœªå‘ç°æ–°çš„ P0 çº§å·®å¼‚ã€‚
-
----
-
-### 3.2 ğŸŸ¡ P1 çº§å·®å¼‚ â€” 55 é¡¹
-
-#### 3.2.1 A ç±»ï¼šç±»å‹å®šä¹‰ç¼ºå¤±ï¼ˆ13 é¡¹ï¼‰
-
-ä»£ç ä¸­çš„ç±»å‹å·²åœ¨ TypeScript ä¸­å®šä¹‰ï¼Œä½†æœªåœ¨å¯¹åº”æ–‡æ¡£ä¸­è®°å½•ã€‚
-
-| å·®å¼‚ID | å·®å¼‚ç±»å‹ | æè¿° | æ¥æºæ–‡ä»¶ | æœŸæœ›æ–‡æ¡£ä½ç½® | ç­‰çº§ |
-|--------|---------|------|---------|-------------|------|
-| **DIFF-101** | ç±»å‹å®šä¹‰ç¼ºå¤± | `TradeSignal` æ¥å£æœªåœ¨ API å¥‘çº¦ä¸­è®°å½• | `src/types/modules/trade.types.ts` | `../../reference/api-contract.md` | ğŸŸ¡ P1 |
-| **DIFF-102** | ç±»å‹å®šä¹‰ç¼ºå¤± | `DataBridgeAdapterConfig` æ¥å£æœªåœ¨æ¶æ„æ–‡æ¡£ä¸­è®°å½• | `src/types/modules/databridge.types.ts` | `../../reference/03-architecture-standards.md` Â§3.8 | ğŸŸ¡ P1 |
-| **DIFF-103** | ç±»å‹å®šä¹‰ç¼ºå¤± | `DataAction` æšä¸¾ï¼ˆ14 ä¸ªæšä¸¾å€¼ï¼‰æœªåœ¨æ¶æ„æ–‡æ¡£ä¸­è®°å½• | `src/types/modules/databridge.types.ts` | `../../reference/03-architecture-standards.md` Â§3.8 | ğŸŸ¡ P1 |
-| **DIFF-104** | ç±»å‹å®šä¹‰ç¼ºå¤± | `BridgeQueryOptions` æ¥å£æœªåœ¨æ¶æ„æ–‡æ¡£ä¸­è®°å½• | `src/types/modules/databridge.types.ts` | `../../reference/03-architecture-standards.md` Â§3.8 | ğŸŸ¡ P1 |
-| **DIFF-105** | ç±»å‹å®šä¹‰ç¼ºå¤± | `BridgeQueryResult` æ¥å£æœªåœ¨æ¶æ„æ–‡æ¡£ä¸­è®°å½• | `src/types/modules/databridge.types.ts` | `../../reference/03-architecture-standards.md` Â§3.8 | ğŸŸ¡ P1 |
-| **DIFF-106** | ç±»å‹å®šä¹‰ç¼ºå¤± | `DataBridgeAdapterStats` æ¥å£æœªåœ¨æ¶æ„æ–‡æ¡£ä¸­è®°å½• | `src/types/modules/databridge.types.ts` | `../../reference/03-architecture-standards.md` Â§3.8 | ğŸŸ¡ P1 |
-| **DIFF-107** | ç±»å‹å®šä¹‰ç¼ºå¤± | `DataFlowModuleInput` æ¥å£æœªåœ¨æ¶æ„æ–‡æ¡£ä¸­è®°å½• | `src/types/modules/dataflow.types.ts` | `../../reference/03-architecture-standards.md` Â§3.1.2 | ğŸŸ¡ P1 |
-| **DIFF-108** | ç±»å‹å®šä¹‰ç¼ºå¤± | `DataFlowModuleOutput` æ¥å£æœªåœ¨æ¶æ„æ–‡æ¡£ä¸­è®°å½• | `src/types/modules/dataflow.types.ts` | `../../reference/03-architecture-standards.md` Â§3.1.2 | ğŸŸ¡ P1 |
-| **DIFF-109** | ç±»å‹å®šä¹‰ç¼ºå¤± | `DataPacket` æ¥å£æœªåœ¨æ¶æ„æ–‡æ¡£ä¸­è®°å½• | `src/types/modules/dataflow.types.ts` | `../../reference/03-architecture-standards.md` Â§3.1.2 | ğŸŸ¡ P1 |
-| **DIFF-110** | ç±»å‹å®šä¹‰ç¼ºå¤± | `ChannelMeta` æ¥å£æœªåœ¨æ¶æ„æ–‡æ¡£ä¸­è®°å½• | `src/types/modules/dataflow.types.ts` | `../../reference/03-architecture-standards.md` Â§3.1.2 | ğŸŸ¡ P1 |
-| **DIFF-111** | ç±»å‹å®šä¹‰ç¼ºå¤± | `PageModuleInput` æ¥å£æœªåœ¨æ¶æ„æ–‡æ¡£ä¸­è®°å½• | `src/types/modules/page.types.ts` | `../../reference/03-architecture-standards.md` | ğŸŸ¡ P1 |
-| **DIFF-112** | ç±»å‹å®šä¹‰ç¼ºå¤± | `PageModuleOutput` æ¥å£æœªåœ¨æ¶æ„æ–‡æ¡£ä¸­è®°å½• | `src/types/modules/page.types.ts` | `../../reference/03-architecture-standards.md` | ğŸŸ¡ P1 |
-| **DIFF-113** | ç±»å‹å®šä¹‰ç¼ºå¤± | `PageGuard` æ¥å£æœªåœ¨æ¶æ„æ–‡æ¡£ä¸­è®°å½• | `src/types/modules/page.types.ts` | `../../reference/03-architecture-standards.md` | ğŸŸ¡ P1 |
-
-#### 3.2.2 B ç±»ï¼šæœåŠ¡æ¨¡å—æœªæ˜ å°„ï¼ˆ8 é¡¹ï¼‰
-
-ä»¥ä¸‹æœåŠ¡ç›®å½•å­˜åœ¨ä»£ç å®ç°ï¼Œä½†æ— å¯¹åº”çš„æ–‡æ¡£ï¼ˆæ•°æ®å­—å…¸æˆ–æ¶æ„æ–‡æ¡£ï¼‰æ˜ å°„ã€‚
-
-| å·®å¼‚ID | å·®å¼‚ç±»å‹ | æè¿° | æ¥æºç›®å½• | å»ºè®®æ–‡æ¡£ä½ç½® | ç­‰çº§ |
-|--------|---------|------|---------|-------------|------|
-| **DIFF-114** | æœåŠ¡æ¨¡å—æœªæ˜ å°„ | `src/services/analysis/` ç›®å½•ï¼ˆ6 ä¸ªæœåŠ¡æ–‡ä»¶ï¼šanalysisServiceã€rotationCalculatorã€rotationSignalGraderã€rotationScoreServiceã€scoreDocServiceã€scorePageServiceã€screeningEngineã€sectorScoreServiceï¼‰æ— æ–‡æ¡£æ˜ å°„ | `src/services/analysis/` | `../../reference/data-definition.md`ï¼ˆå¾…å»ºï¼‰ | ğŸŸ¡ P1 |
-| **DIFF-115** | æœåŠ¡æ¨¡å—æœªæ˜ å°„ | `src/services/fetcher/` ç›®å½•ï¼ˆ5 ä¸ªæ–‡ä»¶ï¼šfetcherAdapterã€fetcherClientã€fetcherSchedulerã€fetcherServiceã€fetcherTypesï¼‰æ— æ–‡æ¡£æ˜ å°„ | `src/services/fetcher/` | `../../reference/data-definition.md`ï¼ˆå¾…å»ºï¼‰æˆ– `../../reference/03-architecture-standards.md` | ğŸŸ¡ P1 |
-| **DIFF-116** | æœåŠ¡æ¨¡å—æœªæ˜ å°„ | `src/services/input/` ç›®å½•ï¼ˆ4 ä¸ªæ–‡ä»¶ï¼šbatchImportServiceã€hotSectorServiceã€inputServiceã€mockStockLibraryï¼‰æ— æ–‡æ¡£æ˜ å°„ | `src/services/input/` | `../../reference/data-definition.md`ï¼ˆå¾…å»ºï¼‰æˆ– `../../reference/03-architecture-standards.md` | ğŸŸ¡ P1 |
-| **DIFF-117** | æœåŠ¡æ¨¡å—æœªæ˜ å°„ | `src/services/llm/` ç›®å½•ï¼ˆ2 ä¸ªæ–‡ä»¶ï¼šllmClientã€llmTypesï¼‰æ— æ–‡æ¡£æ˜ å°„ | `src/services/llm/` | `../../reference/data-definition.md`ï¼ˆå¾…å»ºï¼‰æˆ– `../../reference/03-architecture-standards.md` | ğŸŸ¡ P1 |
-| **DIFF-118** | æœåŠ¡æ¨¡å—æœªæ˜ å°„ | `src/services/scoring/` ç›®å½•ï¼ˆ7 ä¸ªæ–‡ä»¶ï¼šindustryScorePromptã€industryScoreServiceã€industryScoreSkillã€intelligentScorePromptã€intelligentScoreServiceã€intelligentScoreSkillã€v6ScoreServiceï¼‰æ— æ–‡æ¡£æ˜ å°„ | `src/services/scoring/` | `../../reference/data-definition.md`ï¼ˆå¾…å»ºï¼‰ | ğŸŸ¡ P1 |
-| **DIFF-119** | æœåŠ¡æ¨¡å—æœªæ˜ å°„ | `src/services/stock-analysis/` ç›®å½•ï¼ˆ1 ä¸ªæ–‡ä»¶ï¼šmockStockAnalysisProviderï¼‰æ— æ–‡æ¡£æ˜ å°„ | `src/services/stock-analysis/` | `../../reference/data-definition.md`ï¼ˆå¾…å»ºï¼‰æˆ– `../../reference/03-architecture-standards.md` | ğŸŸ¡ P1 |
-| **DIFF-120** | æœåŠ¡æ¨¡å—æœªæ˜ å°„ | `src/services/stockpool/` ç›®å½•ï¼ˆ1 ä¸ªæ–‡ä»¶ï¼šstockpoolServiceï¼‰æ— æ–‡æ¡£æ˜ å°„ | `src/services/stockpool/` | `../../reference/data-definition.md`ï¼ˆå¾…å»ºï¼‰æˆ– `../../reference/03-architecture-standards.md` | ğŸŸ¡ P1 |
-| **DIFF-121** | æœåŠ¡æ¨¡å—æœªæ˜ å°„ | `src/services/system/` ç›®å½•ï¼ˆ9 ä¸ªæ–‡ä»¶ï¼šbootstrapServiceã€localDocServiceã€systemServiceã€v6MigrationService + migration/ å­ç›®å½• 4 ä¸ªæ–‡ä»¶ï¼‰æ— æ–‡æ¡£æ˜ å°„ | `src/services/system/` | `../../reference/data-definition.md`ï¼ˆå¾…å»ºï¼‰ | ğŸŸ¡ P1 |
-
-#### 3.2.3 C ç±»ï¼šæ•°æ®æ¨¡å‹æœªåœ¨æ¶æ„æ–‡æ¡£ä¸­å¼•ç”¨ï¼ˆ34 é¡¹ï¼‰
-
-`src/data/types.ts` ä¸­å¯¼å‡ºçš„ç±»å‹æœªåœ¨ `../../reference/03-architecture-standards.md` Â§3.7 Schema è¡¨æ ¼ä¸­å¼•ç”¨ã€‚
-
-| å·®å¼‚ID | å·®å¼‚ç±»å‹ | æè¿° | æ¥æºæ–‡ä»¶ | æœŸæœ›æ–‡æ¡£ä½ç½® | ç­‰çº§ |
-|--------|---------|------|---------|-------------|------|
-| **DIFF-122** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `DimensionScore` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-123** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `IndustryDimensionScore` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-124** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `IndustryScore` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-125** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `PortfolioHolding` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-126** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `RebalanceAction` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-127** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `StrategyClassification` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-128** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `StrategyCandidate` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-129** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `StrategyResult` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-130** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `SignalSnapshot` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-131** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `ResearchLog` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-132** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `KlineBar` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-133** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `SectorScoreDimensions` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-134** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `SectorUsChinaData` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-135** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `SectorDefinition` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-136** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `SectorStockMapping` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-137** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `SectorScoreRecord` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-138** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `MarketStyle` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-139** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `RotationSubFactor` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-140** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `RotationFactor` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-141** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `RotationSignalGrade` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-142** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `RotationScoreBucket` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-143** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `RotationAlertLevel` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-144** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `DeclineNature` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-145** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `RotationSectorScore` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-146** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `V6LayerScore` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-147** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `ScoreDocVersion` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-148** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `StrategyGroupSnapshot` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-149** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `StrategySnapshot` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-150** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `LocalDoc` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-151** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `NewsArticle` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-152** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `NewsStockMap` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-153** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `SentimentCache` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-154** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `DataDimensionType` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
-| **DIFF-155** | æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | `DimensionStatus` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` Â§3.7 | ğŸŸ¡ P1 |
+> Phase 1-4 ÖÎÀíÒÑÈ«²¿Ïû³ı¡£±¾´ÎÉî²ãÉó¼ÆÎ´·¢ÏÖĞÂµÄ P0 ¼¶²îÒì¡£
 
 ---
 
-### 3.3 ğŸŸ¢ P2 çº§å·®å¼‚ â€” 6 é¡¹
+### 3.2 ?? P1 ¼¶²îÒì ¡ª 55 Ïî
 
-æ–‡æ¡£å…ƒæ•°æ®æ ¼å¼ä¸ä¸€è‡´æˆ–ç¼ºå¤±ã€‚
+#### 3.2.1 A Àà£ºÀàĞÍ¶¨ÒåÈ±Ê§£¨13 Ïî£©
 
-| å·®å¼‚ID | å·®å¼‚ç±»å‹ | æè¿° | æ¶‰åŠæ–‡ä»¶ | å»ºè®®ä¿®å¤æ–¹æ¡ˆ | ç­‰çº§ |
+´úÂëÖĞµÄÀàĞÍÒÑÔÚ TypeScript ÖĞ¶¨Òå£¬µ«Î´ÔÚ¶ÔÓ¦ÎÄµµÖĞ¼ÇÂ¼¡£
+
+| ²îÒìID | ²îÒìÀàĞÍ | ÃèÊö | À´Ô´ÎÄ¼ş | ÆÚÍûÎÄµµÎ»ÖÃ | µÈ¼¶ |
 |--------|---------|------|---------|-------------|------|
-| **DIFF-201** | æ–‡æ¡£å…ƒæ•°æ®ç¼ºå¤± | `../../reference/data-definition.md` ç¼ºå°‘æ ‡å‡†åŒ–çš„ `Version: x.y.z` å’Œ `Last Updated: yyyy-mm-dd` å­—æ®µï¼ˆä»…æœ‰"ç”Ÿæˆæ—¥æœŸ"ï¼‰ | `../../reference/data-definition.md` | åœ¨æ–‡ä»¶å¤´éƒ¨æ·»åŠ  `> **Version**` å’Œ `> **Last Updated**` å…ƒæ•°æ®å— | ğŸŸ¢ P2 |
-| **DIFF-202** | æ–‡æ¡£å…ƒæ•°æ®ç¼ºå¤± | `../../reference/ai-center-data-definition.md` ç¼ºå°‘æ ‡å‡†åŒ–çš„ç‰ˆæœ¬å·å’Œæ›´æ–°æ—¥æœŸå­—æ®µï¼ˆä»…æœ‰"ç”Ÿæˆæ—¥æœŸ"ï¼‰ | `../../reference/ai-center-data-definition.md` | åœ¨æ–‡ä»¶å¤´éƒ¨æ·»åŠ  `> **Version**` å’Œ `> **Last Updated**` å…ƒæ•°æ®å— | ğŸŸ¢ P2 |
-| **DIFF-203** | æ–‡æ¡£å…ƒæ•°æ®ç¼ºå¤± | `../../reference/api-contract.md` ç¼ºå°‘æ ‡å‡†åŒ–çš„ç‰ˆæœ¬å·å’Œæ›´æ–°æ—¥æœŸå­—æ®µ | `../../reference/api-contract.md` | åœ¨æ–‡ä»¶å¤´éƒ¨æ·»åŠ  `> **Version**` å’Œ `> **Last Updated**` å…ƒæ•°æ®å— | ğŸŸ¢ P2 |
-| **DIFF-204** | æ–‡æ¡£å…ƒæ•°æ®ç¼ºå¤± | `../../reference/data-definition.md` ç¼ºå°‘æ ‡å‡†åŒ–çš„ç‰ˆæœ¬å·å’Œæ›´æ–°æ—¥æœŸå­—æ®µï¼ˆä»…æœ‰"ç”Ÿæˆæ—¥æœŸ"ï¼‰ | `../../reference/data-definition.md` | åœ¨æ–‡ä»¶å¤´éƒ¨æ·»åŠ  `> **Version**` å’Œ `> **Last Updated**` å…ƒæ•°æ®å— | ğŸŸ¢ P2 |
-| **DIFF-205** | æ–‡æ¡£å…ƒæ•°æ®ç¼ºå¤± | `../../reference/data-definition.md` ç¼ºå°‘æ ‡å‡†åŒ–çš„ç‰ˆæœ¬å·å’Œæ›´æ–°æ—¥æœŸå­—æ®µï¼ˆä»…æœ‰"ç”Ÿæˆæ—¥æœŸ"ï¼‰ | `../../reference/data-definition.md` | åœ¨æ–‡ä»¶å¤´éƒ¨æ·»åŠ  `> **Version**` å’Œ `> **Last Updated**` å…ƒæ•°æ®å— | ğŸŸ¢ P2 |
-| **DIFF-206** | å®¡è®¡å·¥å…·è¯¯æŠ¥ | `../../reference/03-architecture-standards.md` å®é™…å·²åŒ…å« `Version: v1.0.0-governance-complete` å’Œ `Last Updated: 2026-06-26`ï¼Œå®¡è®¡å·¥å…·æ­£åˆ™æœªèƒ½åŒ¹é…éæ ‡å‡†æ ¼å¼ã€‚éœ€ä¿®å¤å®¡è®¡å·¥å…·çš„æ­£åˆ™è¡¨è¾¾å¼ä»¥å…¼å®¹ `> **Version**: ...` æ ¼å¼ | `../../reference/03-architecture-standards.md` | ä¿®å¤ `audit-doc-sync.ts` ä¸­çš„ç‰ˆæœ¬å·æ­£åˆ™ï¼Œæ”¯æŒ `> **Key**: value` çš„ YAML frontmatter é£æ ¼å…ƒæ•°æ® | ğŸŸ¢ P2 |
+| **DIFF-101** | ÀàĞÍ¶¨ÒåÈ±Ê§ | `TradeSignal` ½Ó¿ÚÎ´ÔÚ API ÆõÔ¼ÖĞ¼ÇÂ¼ | `src/types/modules/trade.types.ts` | `../../reference/api-contract.md` | ?? P1 |
+| **DIFF-102** | ÀàĞÍ¶¨ÒåÈ±Ê§ | `DataBridgeAdapterConfig` ½Ó¿ÚÎ´ÔÚ¼Ü¹¹ÎÄµµÖĞ¼ÇÂ¼ | `src/types/modules/databridge.types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.8 | ?? P1 |
+| **DIFF-103** | ÀàĞÍ¶¨ÒåÈ±Ê§ | `DataAction` Ã¶¾Ù£¨14 ¸öÃ¶¾ÙÖµ£©Î´ÔÚ¼Ü¹¹ÎÄµµÖĞ¼ÇÂ¼ | `src/types/modules/databridge.types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.8 | ?? P1 |
+| **DIFF-104** | ÀàĞÍ¶¨ÒåÈ±Ê§ | `BridgeQueryOptions` ½Ó¿ÚÎ´ÔÚ¼Ü¹¹ÎÄµµÖĞ¼ÇÂ¼ | `src/types/modules/databridge.types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.8 | ?? P1 |
+| **DIFF-105** | ÀàĞÍ¶¨ÒåÈ±Ê§ | `BridgeQueryResult` ½Ó¿ÚÎ´ÔÚ¼Ü¹¹ÎÄµµÖĞ¼ÇÂ¼ | `src/types/modules/databridge.types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.8 | ?? P1 |
+| **DIFF-106** | ÀàĞÍ¶¨ÒåÈ±Ê§ | `DataBridgeAdapterStats` ½Ó¿ÚÎ´ÔÚ¼Ü¹¹ÎÄµµÖĞ¼ÇÂ¼ | `src/types/modules/databridge.types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.8 | ?? P1 |
+| **DIFF-107** | ÀàĞÍ¶¨ÒåÈ±Ê§ | `DataFlowModuleInput` ½Ó¿ÚÎ´ÔÚ¼Ü¹¹ÎÄµµÖĞ¼ÇÂ¼ | `src/types/modules/dataflow.types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.1.2 | ?? P1 |
+| **DIFF-108** | ÀàĞÍ¶¨ÒåÈ±Ê§ | `DataFlowModuleOutput` ½Ó¿ÚÎ´ÔÚ¼Ü¹¹ÎÄµµÖĞ¼ÇÂ¼ | `src/types/modules/dataflow.types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.1.2 | ?? P1 |
+| **DIFF-109** | ÀàĞÍ¶¨ÒåÈ±Ê§ | `DataPacket` ½Ó¿ÚÎ´ÔÚ¼Ü¹¹ÎÄµµÖĞ¼ÇÂ¼ | `src/types/modules/dataflow.types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.1.2 | ?? P1 |
+| **DIFF-110** | ÀàĞÍ¶¨ÒåÈ±Ê§ | `ChannelMeta` ½Ó¿ÚÎ´ÔÚ¼Ü¹¹ÎÄµµÖĞ¼ÇÂ¼ | `src/types/modules/dataflow.types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.1.2 | ?? P1 |
+| **DIFF-111** | ÀàĞÍ¶¨ÒåÈ±Ê§ | `PageModuleInput` ½Ó¿ÚÎ´ÔÚ¼Ü¹¹ÎÄµµÖĞ¼ÇÂ¼ | `src/types/modules/page.types.ts` | `../../reference/03-architecture-standards.md` | ?? P1 |
+| **DIFF-112** | ÀàĞÍ¶¨ÒåÈ±Ê§ | `PageModuleOutput` ½Ó¿ÚÎ´ÔÚ¼Ü¹¹ÎÄµµÖĞ¼ÇÂ¼ | `src/types/modules/page.types.ts` | `../../reference/03-architecture-standards.md` | ?? P1 |
+| **DIFF-113** | ÀàĞÍ¶¨ÒåÈ±Ê§ | `PageGuard` ½Ó¿ÚÎ´ÔÚ¼Ü¹¹ÎÄµµÖĞ¼ÇÂ¼ | `src/types/modules/page.types.ts` | `../../reference/03-architecture-standards.md` | ?? P1 |
+
+#### 3.2.2 B Àà£º·şÎñÄ£¿éÎ´Ó³Éä£¨8 Ïî£©
+
+ÒÔÏÂ·şÎñÄ¿Â¼´æÔÚ´úÂëÊµÏÖ£¬µ«ÎŞ¶ÔÓ¦µÄÎÄµµ£¨Êı¾İ×Öµä»ò¼Ü¹¹ÎÄµµ£©Ó³Éä¡£
+
+| ²îÒìID | ²îÒìÀàĞÍ | ÃèÊö | À´Ô´Ä¿Â¼ | ½¨ÒéÎÄµµÎ»ÖÃ | µÈ¼¶ |
+|--------|---------|------|---------|-------------|------|
+| **DIFF-114** | ·şÎñÄ£¿éÎ´Ó³Éä | `src/services/analysis/` Ä¿Â¼£¨6 ¸ö·şÎñÎÄ¼ş£ºanalysisService¡¢rotationCalculator¡¢rotationSignalGrader¡¢rotationScoreService¡¢scoreDocService¡¢scorePageService¡¢screeningEngine¡¢sectorScoreService£©ÎŞÎÄµµÓ³Éä | `src/services/analysis/` | `../../reference/data-definition.md`£¨´ı½¨£© | ?? P1 |
+| **DIFF-115** | ·şÎñÄ£¿éÎ´Ó³Éä | `src/services/fetcher/` Ä¿Â¼£¨5 ¸öÎÄ¼ş£ºfetcherAdapter¡¢fetcherClient¡¢fetcherScheduler¡¢fetcherService¡¢fetcherTypes£©ÎŞÎÄµµÓ³Éä | `src/services/fetcher/` | `../../reference/data-definition.md`£¨´ı½¨£©»ò `../../reference/03-architecture-standards.md` | ?? P1 |
+| **DIFF-116** | ·şÎñÄ£¿éÎ´Ó³Éä | `src/services/input/` Ä¿Â¼£¨4 ¸öÎÄ¼ş£ºbatchImportService¡¢hotSectorService¡¢inputService¡¢mockStockLibrary£©ÎŞÎÄµµÓ³Éä | `src/services/input/` | `../../reference/data-definition.md`£¨´ı½¨£©»ò `../../reference/03-architecture-standards.md` | ?? P1 |
+| **DIFF-117** | ·şÎñÄ£¿éÎ´Ó³Éä | `src/services/llm/` Ä¿Â¼£¨2 ¸öÎÄ¼ş£ºllmClient¡¢llmTypes£©ÎŞÎÄµµÓ³Éä | `src/services/llm/` | `../../reference/data-definition.md`£¨´ı½¨£©»ò `../../reference/03-architecture-standards.md` | ?? P1 |
+| **DIFF-118** | ·şÎñÄ£¿éÎ´Ó³Éä | `src/services/scoring/` Ä¿Â¼£¨7 ¸öÎÄ¼ş£ºindustryScorePrompt¡¢industryScoreService¡¢industryScoreSkill¡¢intelligentScorePrompt¡¢intelligentScoreService¡¢intelligentScoreSkill¡¢v6ScoreService£©ÎŞÎÄµµÓ³Éä | `src/services/scoring/` | `../../reference/data-definition.md`£¨´ı½¨£© | ?? P1 |
+| **DIFF-119** | ·şÎñÄ£¿éÎ´Ó³Éä | `src/services/stock-analysis/` Ä¿Â¼£¨1 ¸öÎÄ¼ş£ºmockStockAnalysisProvider£©ÎŞÎÄµµÓ³Éä | `src/services/stock-analysis/` | `../../reference/data-definition.md`£¨´ı½¨£©»ò `../../reference/03-architecture-standards.md` | ?? P1 |
+| **DIFF-120** | ·şÎñÄ£¿éÎ´Ó³Éä | `src/services/stockpool/` Ä¿Â¼£¨1 ¸öÎÄ¼ş£ºstockpoolService£©ÎŞÎÄµµÓ³Éä | `src/services/stockpool/` | `../../reference/data-definition.md`£¨´ı½¨£©»ò `../../reference/03-architecture-standards.md` | ?? P1 |
+| **DIFF-121** | ·şÎñÄ£¿éÎ´Ó³Éä | `src/services/system/` Ä¿Â¼£¨9 ¸öÎÄ¼ş£ºbootstrapService¡¢localDocService¡¢systemService¡¢v6MigrationService + migration/ ×ÓÄ¿Â¼ 4 ¸öÎÄ¼ş£©ÎŞÎÄµµÓ³Éä | `src/services/system/` | `../../reference/data-definition.md`£¨´ı½¨£© | ?? P1 |
+
+#### 3.2.3 C Àà£ºÊı¾İÄ£ĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµÖĞÒıÓÃ£¨34 Ïî£©
+
+`src/data/types.ts` ÖĞµ¼³öµÄÀàĞÍÎ´ÔÚ `../../reference/03-architecture-standards.md` ¡ì3.7 Schema ±í¸ñÖĞÒıÓÃ¡£
+
+| ²îÒìID | ²îÒìÀàĞÍ | ÃèÊö | À´Ô´ÎÄ¼ş | ÆÚÍûÎÄµµÎ»ÖÃ | µÈ¼¶ |
+|--------|---------|------|---------|-------------|------|
+| **DIFF-122** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `DimensionScore` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-123** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `IndustryDimensionScore` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-124** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `IndustryScore` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-125** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `PortfolioHolding` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-126** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `RebalanceAction` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-127** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `StrategyClassification` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-128** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `StrategyCandidate` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-129** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `StrategyResult` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-130** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `SignalSnapshot` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-131** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `ResearchLog` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-132** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `KlineBar` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-133** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `SectorScoreDimensions` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-134** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `SectorUsChinaData` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-135** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `SectorDefinition` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-136** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `SectorStockMapping` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-137** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `SectorScoreRecord` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-138** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `MarketStyle` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-139** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `RotationSubFactor` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-140** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `RotationFactor` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-141** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `RotationSignalGrade` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-142** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `RotationScoreBucket` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-143** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `RotationAlertLevel` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-144** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `DeclineNature` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-145** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `RotationSectorScore` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-146** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `V6LayerScore` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-147** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `ScoreDocVersion` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-148** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `StrategyGroupSnapshot` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-149** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `StrategySnapshot` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-150** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `LocalDoc` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-151** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `NewsArticle` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-152** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `NewsStockMap` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-153** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `SentimentCache` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-154** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `DataDimensionType` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
+| **DIFF-155** | Êı¾İÄ£ĞÍÎ´ÒıÓÃ | `DimensionStatus` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ | `src/data/types.ts` | `../../reference/03-architecture-standards.md` ¡ì3.7 | ?? P1 |
 
 ---
 
-## å››ã€å·®å¼‚ç»Ÿè®¡æ±‡æ€»
+### 3.3 ?? P2 ¼¶²îÒì ¡ª 6 Ïî
 
-### 4.1 æŒ‰ç­‰çº§ç»Ÿè®¡
+ÎÄµµÔªÊı¾İ¸ñÊ½²»Ò»ÖÂ»òÈ±Ê§¡£
 
-| ç­‰çº§ | æ•°é‡ | æ¶‰åŠæ¨¡å—/æ–‡ä»¶ |
+| ²îÒìID | ²îÒìÀàĞÍ | ÃèÊö | Éæ¼°ÎÄ¼ş | ½¨ÒéĞŞ¸´·½°¸ | µÈ¼¶ |
+|--------|---------|------|---------|-------------|------|
+| **DIFF-201** | ÎÄµµÔªÊı¾İÈ±Ê§ | `../../reference/data-definition.md` È±ÉÙ±ê×¼»¯µÄ `Version: x.y.z` ºÍ `Last Updated: yyyy-mm-dd` ×Ö¶Î£¨½öÓĞ"Éú³ÉÈÕÆÚ"£© | `../../reference/data-definition.md` | ÔÚÎÄ¼şÍ·²¿Ìí¼Ó `> **Version**` ºÍ `> **Last Updated**` ÔªÊı¾İ¿é | ?? P2 |
+| **DIFF-202** | ÎÄµµÔªÊı¾İÈ±Ê§ | `../../reference/ai-center-data-definition.md` È±ÉÙ±ê×¼»¯µÄ°æ±¾ºÅºÍ¸üĞÂÈÕÆÚ×Ö¶Î£¨½öÓĞ"Éú³ÉÈÕÆÚ"£© | `../../reference/ai-center-data-definition.md` | ÔÚÎÄ¼şÍ·²¿Ìí¼Ó `> **Version**` ºÍ `> **Last Updated**` ÔªÊı¾İ¿é | ?? P2 |
+| **DIFF-203** | ÎÄµµÔªÊı¾İÈ±Ê§ | `../../reference/api-contract.md` È±ÉÙ±ê×¼»¯µÄ°æ±¾ºÅºÍ¸üĞÂÈÕÆÚ×Ö¶Î | `../../reference/api-contract.md` | ÔÚÎÄ¼şÍ·²¿Ìí¼Ó `> **Version**` ºÍ `> **Last Updated**` ÔªÊı¾İ¿é | ?? P2 |
+| **DIFF-204** | ÎÄµµÔªÊı¾İÈ±Ê§ | `../../reference/data-definition.md` È±ÉÙ±ê×¼»¯µÄ°æ±¾ºÅºÍ¸üĞÂÈÕÆÚ×Ö¶Î£¨½öÓĞ"Éú³ÉÈÕÆÚ"£© | `../../reference/data-definition.md` | ÔÚÎÄ¼şÍ·²¿Ìí¼Ó `> **Version**` ºÍ `> **Last Updated**` ÔªÊı¾İ¿é | ?? P2 |
+| **DIFF-205** | ÎÄµµÔªÊı¾İÈ±Ê§ | `../../reference/data-definition.md` È±ÉÙ±ê×¼»¯µÄ°æ±¾ºÅºÍ¸üĞÂÈÕÆÚ×Ö¶Î£¨½öÓĞ"Éú³ÉÈÕÆÚ"£© | `../../reference/data-definition.md` | ÔÚÎÄ¼şÍ·²¿Ìí¼Ó `> **Version**` ºÍ `> **Last Updated**` ÔªÊı¾İ¿é | ?? P2 |
+| **DIFF-206** | Éó¼Æ¹¤¾ßÎó±¨ | `../../reference/03-architecture-standards.md` Êµ¼ÊÒÑ°üº¬ `Version: v1.0.0-governance-complete` ºÍ `Last Updated: 2026-06-26`£¬Éó¼Æ¹¤¾ßÕıÔòÎ´ÄÜÆ¥Åä·Ç±ê×¼¸ñÊ½¡£ĞèĞŞ¸´Éó¼Æ¹¤¾ßµÄÕıÔò±í´ïÊ½ÒÔ¼æÈİ `> **Version**: ...` ¸ñÊ½ | `../../reference/03-architecture-standards.md` | ĞŞ¸´ `audit-doc-sync.ts` ÖĞµÄ°æ±¾ºÅÕıÔò£¬Ö§³Ö `> **Key**: value` µÄ YAML frontmatter ·ç¸ñÔªÊı¾İ | ?? P2 |
+
+---
+
+## ËÄ¡¢²îÒìÍ³¼Æ»ã×Ü
+
+### 4.1 °´µÈ¼¶Í³¼Æ
+
+| µÈ¼¶ | ÊıÁ¿ | Éæ¼°Ä£¿é/ÎÄ¼ş |
 |------|------|-------------|
-| ğŸ”´ P0 | 0 | â€” |
-| ğŸŸ¡ P1 | 55 | DataBridge (5), DataFlow (4), Page (3), Trade (1), Analysis (1), Fetcher (1), Input (1), LLM (1), Scoring (1), StockAnalysis (1), StockPool (1), System (1), `src/data/types.ts` â†’ Â§3.7 (34) |
-| ğŸŸ¢ P2 | 6 | 5 ä¸ªæ•°æ®å­—å…¸æ–‡æ¡£ + 1 ä¸ªå®¡è®¡å·¥å…· |
-| **åˆè®¡** | **61** | 12 ä¸ªæ¨¡å— + 1 ä¸ªå®¡è®¡å·¥å…· |
+| ?? P0 | 0 | ¡ª |
+| ?? P1 | 55 | DataBridge (5), DataFlow (4), Page (3), Trade (1), Analysis (1), Fetcher (1), Input (1), LLM (1), Scoring (1), StockAnalysis (1), StockPool (1), System (1), `src/data/types.ts` ¡ú ¡ì3.7 (34) |
+| ?? P2 | 6 | 5 ¸öÊı¾İ×ÖµäÎÄµµ + 1 ¸öÉó¼Æ¹¤¾ß |
+| **ºÏ¼Æ** | **61** | 12 ¸öÄ£¿é + 1 ¸öÉó¼Æ¹¤¾ß |
 
-### 4.2 æŒ‰ç±»åˆ«ç»Ÿè®¡
+### 4.2 °´Àà±ğÍ³¼Æ
 
-| ç±»åˆ« | æ•°é‡ | å­ç±»åˆ«è¯´æ˜ |
+| Àà±ğ | ÊıÁ¿ | ×ÓÀà±ğËµÃ÷ |
 |------|------|-----------|
-| A. ç±»å‹å®šä¹‰ç¼ºå¤± | 13 | Trade (1), DataBridge (5), DataFlow (4), Page (3) |
-| B. æœåŠ¡æ¨¡å—æœªæ˜ å°„ | 8 | analysis, fetcher, input, llm, scoring, stock-analysis, stockpool, system |
-| C. æ•°æ®æ¨¡å‹æœªå¼•ç”¨ | 34 | `src/data/types.ts` ç±»å‹æœªåœ¨æ¶æ„æ–‡æ¡£ Â§3.7 ä¸­å¼•ç”¨ |
-| D. æ–‡æ¡£å…ƒæ•°æ®ç¼ºå¤± | 5 | 5 ä¸ªæ•°æ®å­—å…¸æ–‡æ¡£ç¼ºå°‘æ ‡å‡†åŒ–ç‰ˆæœ¬å· |
-| E. å®¡è®¡å·¥å…·è¯¯æŠ¥ | 1 | æ­£åˆ™å…¼å®¹æ€§é—®é¢˜ |
-| **åˆè®¡** | **61** | |
+| A. ÀàĞÍ¶¨ÒåÈ±Ê§ | 13 | Trade (1), DataBridge (5), DataFlow (4), Page (3) |
+| B. ·şÎñÄ£¿éÎ´Ó³Éä | 8 | analysis, fetcher, input, llm, scoring, stock-analysis, stockpool, system |
+| C. Êı¾İÄ£ĞÍÎ´ÒıÓÃ | 34 | `src/data/types.ts` ÀàĞÍÎ´ÔÚ¼Ü¹¹ÎÄµµ ¡ì3.7 ÖĞÒıÓÃ |
+| D. ÎÄµµÔªÊı¾İÈ±Ê§ | 5 | 5 ¸öÊı¾İ×ÖµäÎÄµµÈ±ÉÙ±ê×¼»¯°æ±¾ºÅ |
+| E. Éó¼Æ¹¤¾ßÎó±¨ | 1 | ÕıÔò¼æÈİĞÔÎÊÌâ |
+| **ºÏ¼Æ** | **61** | |
 
 ---
 
-## äº”ã€æ¨¡å—ç°çŠ¶çŸ©é˜µ
+## Îå¡¢Ä£¿éÏÖ×´¾ØÕó
 
-| é¢†åŸŸ | ç±»å‹å®šä¹‰ | æœåŠ¡å±‚ | æ•°æ®å­—å…¸ | æ¶æ„æ–‡æ¡£ | ç»¼åˆè¯„çº§ |
+| ÁìÓò | ÀàĞÍ¶¨Òå | ·şÎñ²ã | Êı¾İ×Öµä | ¼Ü¹¹ÎÄµµ | ×ÛºÏÆÀ¼¶ |
 |------|---------|--------|---------|---------|---------|
-| **Cockpit / Widget** | âœ… å®Œå–„ | âœ… å·²å®ç° | âœ… å·²è¦†ç›– | âœ… å·²è¦†ç›– | ğŸŸ¢ æ— å€ºåŠ¡ |
-| **AI Center** | âœ… å®Œå–„ | âœ… å·²å®ç° | âœ… å·²è¦†ç›– | âœ… å·²è¦†ç›– | ğŸŸ¢ æ— å€ºåŠ¡ |
-| **Trade / Holdings** | ğŸŸ¡ ç¼º TradeSignal | âœ… å·²å®ç° | âœ… å·²è¦†ç›– | âœ… å·²è¦†ç›– | ğŸŸ¡ 1 é¡¹ P1 |
-| **DataBridge** | ğŸŸ¡ ç¼º 5 ç±»å‹ | âœ… å·²å®ç° | â€” | ğŸŸ¡ éƒ¨åˆ† (Â§3.8) | ğŸŸ¡ 5 é¡¹ P1 |
-| **DataFlow** | ğŸŸ¡ ç¼º 4 ç±»å‹ | âœ… å·²å®ç° | â€” | ğŸŸ¡ éƒ¨åˆ† (Â§3.1.2) | ğŸŸ¡ 4 é¡¹ P1 |
-| **Page Lifecycle** | ğŸ”´ ç¼º 3 ç±»å‹ | â€” | â€” | ğŸ”´ ç¼ºå¤± | ğŸŸ¡ 3 é¡¹ P1 |
-| **Engine** | âœ… å®Œå–„ | âœ… å·²å®ç° | âœ… å·²è¦†ç›– | âœ… å·²è¦†ç›– | ğŸŸ¢ æ— å€ºåŠ¡ |
-| **Agent Runtime** | âœ… å®Œå–„ | âœ… å·²å®ç° | âœ… å·²è¦†ç›– | âœ… å·²è¦†ç›– | ğŸŸ¢ æ— å€ºåŠ¡ |
-| **Data Collection** | âœ… å†…è” | âœ… å·²å®ç° | âœ… å·²è¦†ç›– | âœ… å·²è¦†ç›– | ğŸŸ¢ æ— å€ºåŠ¡ |
-| **News** | âœ… å†…è” | âœ… å·²å®ç° | âœ… å·²è¦†ç›– | âœ… å·²è¦†ç›– | ğŸŸ¢ æ— å€ºåŠ¡ |
-| **Analysis** | ğŸ”´ æ— ç±»å‹æ–‡ä»¶ | âœ… å·²å®ç° | ğŸ”´ ç¼ºå¤± | ğŸ”´ ç¼ºå¤± | ğŸŸ¡ 1 é¡¹ P1 |
-| **Fetcher** | ğŸ”´ æ— ç±»å‹æ–‡ä»¶ | âœ… å·²å®ç° | ğŸ”´ ç¼ºå¤± | ğŸ”´ ç¼ºå¤± | ğŸŸ¡ 1 é¡¹ P1 |
-| **Input** | ğŸ”´ æ— ç±»å‹æ–‡ä»¶ | âœ… å·²å®ç° | ğŸ”´ ç¼ºå¤± | ğŸ”´ ç¼ºå¤± | ğŸŸ¡ 1 é¡¹ P1 |
-| **LLM** | ğŸ”´ æ— ç±»å‹æ–‡ä»¶ | âœ… å·²å®ç° | ğŸ”´ ç¼ºå¤± | ğŸ”´ ç¼ºå¤± | ğŸŸ¡ 1 é¡¹ P1 |
-| **Scoring** | ğŸ”´ æ— ç±»å‹æ–‡ä»¶ | âœ… å·²å®ç° | ğŸ”´ ç¼ºå¤± | ğŸ”´ ç¼ºå¤± | ğŸŸ¡ 1 é¡¹ P1 |
-| **Stock Analysis** | ğŸ”´ æ— ç±»å‹æ–‡ä»¶ | âœ… å·²å®ç° | ğŸ”´ ç¼ºå¤± | ğŸ”´ ç¼ºå¤± | ğŸŸ¡ 1 é¡¹ P1 |
-| **StockPool** | ğŸ”´ æ— ç±»å‹æ–‡ä»¶ | âœ… å·²å®ç° | ğŸ”´ ç¼ºå¤± | ğŸ”´ ç¼ºå¤± | ğŸŸ¡ 1 é¡¹ P1 |
-| **System** | ğŸ”´ æ— ç±»å‹æ–‡ä»¶ | âœ… å·²å®ç° | ğŸ”´ ç¼ºå¤± | ğŸ”´ ç¼ºå¤± | ğŸŸ¡ 1 é¡¹ P1 |
-| **Trading Services** | âœ… å†…è” | âœ… å·²å®ç° | âœ… å·²è¦†ç›– | âœ… å·²è¦†ç›– | ğŸŸ¢ æ— å€ºåŠ¡ |
-| **æ•°æ®æ¨¡å‹å±‚** | âœ… å®Œå–„ | â€” | â€” | ğŸŸ¡ ç¼ºå¤± 34 ç±»å‹ | ğŸŸ¡ 34 é¡¹ P1 |
-| **æ–‡æ¡£å…ƒæ•°æ®** | â€” | â€” | ğŸŸ¡ 5 æ–‡æ¡£ç¼ºç‰ˆæœ¬å· | â€” | ğŸŸ¢ 5 é¡¹ P2 |
+| **Cockpit / Widget** | ? ÍêÉÆ | ? ÒÑÊµÏÖ | ? ÒÑ¸²¸Ç | ? ÒÑ¸²¸Ç | ?? ÎŞÕ®Îñ |
+| **AI Center** | ? ÍêÉÆ | ? ÒÑÊµÏÖ | ? ÒÑ¸²¸Ç | ? ÒÑ¸²¸Ç | ?? ÎŞÕ®Îñ |
+| **Trade / Holdings** | ?? È± TradeSignal | ? ÒÑÊµÏÖ | ? ÒÑ¸²¸Ç | ? ÒÑ¸²¸Ç | ?? 1 Ïî P1 |
+| **DataBridge** | ?? È± 5 ÀàĞÍ | ? ÒÑÊµÏÖ | ¡ª | ?? ²¿·Ö (¡ì3.8) | ?? 5 Ïî P1 |
+| **DataFlow** | ?? È± 4 ÀàĞÍ | ? ÒÑÊµÏÖ | ¡ª | ?? ²¿·Ö (¡ì3.1.2) | ?? 4 Ïî P1 |
+| **Page Lifecycle** | ?? È± 3 ÀàĞÍ | ¡ª | ¡ª | ?? È±Ê§ | ?? 3 Ïî P1 |
+| **Engine** | ? ÍêÉÆ | ? ÒÑÊµÏÖ | ? ÒÑ¸²¸Ç | ? ÒÑ¸²¸Ç | ?? ÎŞÕ®Îñ |
+| **Agent Runtime** | ? ÍêÉÆ | ? ÒÑÊµÏÖ | ? ÒÑ¸²¸Ç | ? ÒÑ¸²¸Ç | ?? ÎŞÕ®Îñ |
+| **Data Collection** | ? ÄÚÁª | ? ÒÑÊµÏÖ | ? ÒÑ¸²¸Ç | ? ÒÑ¸²¸Ç | ?? ÎŞÕ®Îñ |
+| **News** | ? ÄÚÁª | ? ÒÑÊµÏÖ | ? ÒÑ¸²¸Ç | ? ÒÑ¸²¸Ç | ?? ÎŞÕ®Îñ |
+| **Analysis** | ?? ÎŞÀàĞÍÎÄ¼ş | ? ÒÑÊµÏÖ | ?? È±Ê§ | ?? È±Ê§ | ?? 1 Ïî P1 |
+| **Fetcher** | ?? ÎŞÀàĞÍÎÄ¼ş | ? ÒÑÊµÏÖ | ?? È±Ê§ | ?? È±Ê§ | ?? 1 Ïî P1 |
+| **Input** | ?? ÎŞÀàĞÍÎÄ¼ş | ? ÒÑÊµÏÖ | ?? È±Ê§ | ?? È±Ê§ | ?? 1 Ïî P1 |
+| **LLM** | ?? ÎŞÀàĞÍÎÄ¼ş | ? ÒÑÊµÏÖ | ?? È±Ê§ | ?? È±Ê§ | ?? 1 Ïî P1 |
+| **Scoring** | ?? ÎŞÀàĞÍÎÄ¼ş | ? ÒÑÊµÏÖ | ?? È±Ê§ | ?? È±Ê§ | ?? 1 Ïî P1 |
+| **Stock Analysis** | ?? ÎŞÀàĞÍÎÄ¼ş | ? ÒÑÊµÏÖ | ?? È±Ê§ | ?? È±Ê§ | ?? 1 Ïî P1 |
+| **StockPool** | ?? ÎŞÀàĞÍÎÄ¼ş | ? ÒÑÊµÏÖ | ?? È±Ê§ | ?? È±Ê§ | ?? 1 Ïî P1 |
+| **System** | ?? ÎŞÀàĞÍÎÄ¼ş | ? ÒÑÊµÏÖ | ?? È±Ê§ | ?? È±Ê§ | ?? 1 Ïî P1 |
+| **Trading Services** | ? ÄÚÁª | ? ÒÑÊµÏÖ | ? ÒÑ¸²¸Ç | ? ÒÑ¸²¸Ç | ?? ÎŞÕ®Îñ |
+| **Êı¾İÄ£ĞÍ²ã** | ? ÍêÉÆ | ¡ª | ¡ª | ?? È±Ê§ 34 ÀàĞÍ | ?? 34 Ïî P1 |
+| **ÎÄµµÔªÊı¾İ** | ¡ª | ¡ª | ?? 5 ÎÄµµÈ±°æ±¾ºÅ | ¡ª | ?? 5 Ïî P2 |
 
 ---
 
-## å…­ã€Phase 5 ä¿®å¤ä¼˜å…ˆçº§å»ºè®®
+## Áù¡¢Phase 5 ĞŞ¸´ÓÅÏÈ¼¶½¨Òé
 
-### 6.1 ä¿®å¤åˆ†çº§ç­–ç•¥
+### 6.1 ĞŞ¸´·Ö¼¶²ßÂÔ
 
-| ä¼˜å…ˆçº§ | èŒƒå›´ | å·®å¼‚æ•° | å»ºè®®æ—¶é—´ | ç­–ç•¥ |
+| ÓÅÏÈ¼¶ | ·¶Î§ | ²îÒìÊı | ½¨ÒéÊ±¼ä | ²ßÂÔ |
 |--------|------|--------|---------|------|
-| **P1-High** | C ç±»ï¼šæ•°æ®æ¨¡å‹æœªå¼•ç”¨ (Â§3.7) | 34 | 1 ä¸ªå·¥ä½œæ—¥ | åœ¨ `../../reference/03-architecture-standards.md` Â§3.7 ä¸­è¡¥å…¨ 34 ä¸ªç±»å‹çš„ Schema å¼•ç”¨è¡¨ |
-| **P1-Medium** | A ç±»ï¼šç±»å‹å®šä¹‰ç¼ºå¤± | 13 | 1 ä¸ªå·¥ä½œæ—¥ | åœ¨ç›¸åº”æ–‡æ¡£ä¸­è¡¥å…… 13 ä¸ªç±»å‹çš„å®šä¹‰ï¼ˆDataBridge Â§3.8 è¡¥å…… 5 ä¸ªã€DataFlow Â§3.1.2 è¡¥å…… 4 ä¸ªã€Page è¡¥å…… 3 ä¸ªã€Trade API å¥‘çº¦è¡¥å…… 1 ä¸ªï¼‰ |
-| **P1-Medium** | B ç±»ï¼šæœåŠ¡æ¨¡å—æœªæ˜ å°„ | 8 | 2 ä¸ªå·¥ä½œæ—¥ | ä¸º 8 ä¸ªæœåŠ¡æ¨¡å—åˆ›å»ºæ•°æ®å­—å…¸æˆ–æ¶æ„æ–‡æ¡£æ˜ å°„ï¼ˆanalysisã€fetcherã€inputã€llmã€scoringã€stock-analysisã€stockpoolã€systemï¼‰ |
-| **P2-Low** | D ç±»ï¼šæ–‡æ¡£å…ƒæ•°æ®ç¼ºå¤± | 5 | 0.5 å°æ—¶ | ä¸º 5 ä¸ªæ•°æ®å­—å…¸æ–‡æ¡£æ·»åŠ æ ‡å‡†åŒ–å…ƒæ•°æ®å— |
-| **P2-Low** | E ç±»ï¼šå®¡è®¡å·¥å…·è¯¯æŠ¥ | 1 | 0.5 å°æ—¶ | ä¿®å¤ `audit-doc-sync.ts` æ­£åˆ™è¡¨è¾¾å¼ |
+| **P1-High** | C Àà£ºÊı¾İÄ£ĞÍÎ´ÒıÓÃ (¡ì3.7) | 34 | 1 ¸ö¹¤×÷ÈÕ | ÔÚ `../../reference/03-architecture-standards.md` ¡ì3.7 ÖĞ²¹È« 34 ¸öÀàĞÍµÄ Schema ÒıÓÃ±í |
+| **P1-Medium** | A Àà£ºÀàĞÍ¶¨ÒåÈ±Ê§ | 13 | 1 ¸ö¹¤×÷ÈÕ | ÔÚÏàÓ¦ÎÄµµÖĞ²¹³ä 13 ¸öÀàĞÍµÄ¶¨Òå£¨DataBridge ¡ì3.8 ²¹³ä 5 ¸ö¡¢DataFlow ¡ì3.1.2 ²¹³ä 4 ¸ö¡¢Page ²¹³ä 3 ¸ö¡¢Trade API ÆõÔ¼²¹³ä 1 ¸ö£© |
+| **P1-Medium** | B Àà£º·şÎñÄ£¿éÎ´Ó³Éä | 8 | 2 ¸ö¹¤×÷ÈÕ | Îª 8 ¸ö·şÎñÄ£¿é´´½¨Êı¾İ×Öµä»ò¼Ü¹¹ÎÄµµÓ³Éä£¨analysis¡¢fetcher¡¢input¡¢llm¡¢scoring¡¢stock-analysis¡¢stockpool¡¢system£© |
+| **P2-Low** | D Àà£ºÎÄµµÔªÊı¾İÈ±Ê§ | 5 | 0.5 Ğ¡Ê± | Îª 5 ¸öÊı¾İ×ÖµäÎÄµµÌí¼Ó±ê×¼»¯ÔªÊı¾İ¿é |
+| **P2-Low** | E Àà£ºÉó¼Æ¹¤¾ßÎó±¨ | 1 | 0.5 Ğ¡Ê± | ĞŞ¸´ `audit-doc-sync.ts` ÕıÔò±í´ïÊ½ |
 
-### 6.2 å»ºè®®æ‰§è¡Œé¡ºåº
+### 6.2 ½¨ÒéÖ´ĞĞË³Ğò
 
 ```
-Phase 5.1 (P1-High): æ¶æ„æ–‡æ¡£ Â§3.7 è¡¥å…¨ â†’ 34 é¡¹
-Phase 5.2 (P1-Medium): ç±»å‹å®šä¹‰æ–‡æ¡£è¡¥å…¨ â†’ 13 é¡¹
-Phase 5.3 (P1-Medium): æœåŠ¡æ¨¡å—æ–‡æ¡£åˆ›å»º â†’ 8 é¡¹
-Phase 5.4 (P2-Low): æ–‡æ¡£å…ƒæ•°æ®æ ‡å‡†åŒ– â†’ 5 é¡¹
-Phase 5.5 (P2-Low): å®¡è®¡å·¥å…·æ­£åˆ™ä¿®å¤ â†’ 1 é¡¹
-Phase 5.6 (éªŒè¯): tsc + vitest + audit:layers å…¨é‡éªŒè¯
+Phase 5.1 (P1-High): ¼Ü¹¹ÎÄµµ ¡ì3.7 ²¹È« ¡ú 34 Ïî
+Phase 5.2 (P1-Medium): ÀàĞÍ¶¨ÒåÎÄµµ²¹È« ¡ú 13 Ïî
+Phase 5.3 (P1-Medium): ·şÎñÄ£¿éÎÄµµ´´½¨ ¡ú 8 Ïî
+Phase 5.4 (P2-Low): ÎÄµµÔªÊı¾İ±ê×¼»¯ ¡ú 5 Ïî
+Phase 5.5 (P2-Low): Éó¼Æ¹¤¾ßÕıÔòĞŞ¸´ ¡ú 1 Ïî
+Phase 5.6 (ÑéÖ¤): tsc + vitest + audit:layers È«Á¿ÑéÖ¤
 ```
 
-### 6.3 é¢„æœŸæ²»ç†åçŠ¶æ€
+### 6.3 Ô¤ÆÚÖÎÀíºó×´Ì¬
 
-æ²»ç†å®Œæˆåï¼Œé¢„æœŸå·®å¼‚æ¸…é›¶ï¼š
-- P0: 0 â†’ 0
-- P1: 55 â†’ 0
-- P2: 6 â†’ 0
-- **åˆè®¡: 61 â†’ 0**
+ÖÎÀíÍê³Éºó£¬Ô¤ÆÚ²îÒìÇåÁã£º
+- P0: 0 ¡ú 0
+- P1: 55 ¡ú 0
+- P2: 6 ¡ú 0
+- **ºÏ¼Æ: 61 ¡ú 0**
 
 ---
 
-## ä¸ƒã€å˜æ›´æ—¥å¿—
+## Æß¡¢±ä¸üÈÕÖ¾
 
-| æ—¥æœŸ | ç‰ˆæœ¬ | å˜æ›´å†…å®¹ | å˜æ›´äºº |
+| ÈÕÆÚ | °æ±¾ | ±ä¸üÄÚÈİ | ±ä¸üÈË |
 |------|------|----------|--------|
-| 2026-06-26 | v0.9.0-diff-scan-1 | Phase 1 å…¨é‡æ‰«æå®Œæˆï¼Œç”Ÿæˆåˆå§‹å·®å¼‚æŠ¥å‘Šï¼Œè¯†åˆ« 28 ä¸ªå·®å¼‚é¡¹ | Architecture Asset Governor |
-| 2026-06-26 | v1.0.0-governance-complete | Phase 2-4 æ²»ç†å®Œæˆï¼Œ28/28 å·®å¼‚å…¨éƒ¨æ¶ˆé™¤ï¼›tsc + vitest å…¨é‡é€šè¿‡ | Architecture Asset Governor |
-| 2026-06-26 | v1.1.0 | Phase 5 æ·±å±‚å®¡è®¡å®Œæˆï¼Œå‘ç° 61 é¡¹æ–°å·®å¼‚ï¼ˆP1 55 + P2 6ï¼‰ï¼›å…¨éƒ¨ä¸ºæ–‡æ¡£åŒæ­¥/å…ƒæ•°æ®ç±»å·®å¼‚ï¼Œæ— æ¶æ„çº§é£é™© | Architecture Asset Governor |
+| 2026-06-26 | v0.9.0-diff-scan-1 | Phase 1 È«Á¿É¨ÃèÍê³É£¬Éú³É³õÊ¼²îÒì±¨¸æ£¬Ê¶±ğ 28 ¸ö²îÒìÏî | Architecture Asset Governor |
+| 2026-06-26 | v1.0.0-governance-complete | Phase 2-4 ÖÎÀíÍê³É£¬28/28 ²îÒìÈ«²¿Ïû³ı£»tsc + vitest È«Á¿Í¨¹ı | Architecture Asset Governor |
+| 2026-06-26 | v1.1.0 | Phase 5 Éî²ãÉó¼ÆÍê³É£¬·¢ÏÖ 61 ÏîĞÂ²îÒì£¨P1 55 + P2 6£©£»È«²¿ÎªÎÄµµÍ¬²½/ÔªÊı¾İÀà²îÒì£¬ÎŞ¼Ü¹¹¼¶·çÏÕ | Architecture Asset Governor |

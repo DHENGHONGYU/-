@@ -45,8 +45,12 @@ const buttonPermissionRegistry: Record<string, Set<string>> = {}
 
 /**
  * 注册按钮级权限规则
+/**
+ * registerButtonPermission
+ * @param module
+ * @param actions
+ * @returns void
  */
-// eslint-disable-next-line react-refresh/only-export-components
 export function registerButtonPermission(module: string, actions: string[]): void {
   buttonPermissionRegistry[module] = new Set(actions)
   logger.debug(`[routeGuard] 注册按钮权限: module=${module}, actions=${actions.join(',')}`)
@@ -69,8 +73,9 @@ const ALLOWED_ROUTE_CATEGORIES: ReadonlyArray<string> = [
 
 /**
  * 检查是否拥有指定权限
+/**
+ * hasPermission
  */
-// eslint-disable-next-line react-refresh/only-export-components
 export const hasPermission: PermissionChecker = (ctx): boolean => {
   // Route 级：检查模块是否在路由白名单中，同时验证路径合法性
   if (ctx.level === 'route') {
@@ -90,7 +95,7 @@ export const hasPermission: PermissionChecker = (ctx): boolean => {
   // Button 级：检查 action 是否在模块白名单中
   if (ctx.level === 'button' && ctx.action) {
     const actions = buttonPermissionRegistry[ctx.module]
-    if (!actions) return true // 未注册的模块默认允许（渐进式启用）
+    if (!actions) return false // 未注册的模块默认拒绝（安全优先）
     return actions.has(ctx.action)
   }
 
@@ -108,8 +113,9 @@ export const hasPermission: PermissionChecker = (ctx): boolean => {
  * @example
  * const canExport = usePermission('trading', 'button', 'export')
  * if (!canExport) return <Button disabled>导出（无权限）</Button>
+/**
+ * usePermission
  */
-// eslint-disable-next-line react-refresh/only-export-components
 export function usePermission(
   module: string,
   level: PermissionLevel = 'button',

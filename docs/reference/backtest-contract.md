@@ -1,101 +1,104 @@
 ---
-title: backtest-contract
+title: backtest-contract.md ¡ª »Ø²âÒıÇæ½Ó¿ÚÆõÔ¼
+type: reference
+domain: qa
+phase: testing
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "¶¨Î»£º¶¨Òå `backtest` ×ÓÓòµÄ½Ó¿ÚÆõÔ¼¡¢Ö°Ôğ±ß½ç¡¢Êı¾İÁ÷ÓëÒÀÀµ¹ØÏµ¡£ ¹ØÁª£º`./services-catalog.md`£¨24 ×ÓÓò×ÜÀÀ£©¡¢`../../AGENTS.md`..."
+tags: [qa, contract, test]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: important
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: backtest-contract.md â€” å›æµ‹å¼•æ“æ¥å£å¥‘çº¦
-status: draft
-owner: æ¶æ„ç»„
-updated: 2026-07-12
-code_version: 2.0.0
-tier: important
----
+# backtest-contract.md ¡ª »Ø²âÒıÇæ½Ó¿ÚÆõÔ¼
 
-# backtest-contract.md â€” å›æµ‹å¼•æ“æ¥å£å¥‘çº¦
-
-> **å®šä½**ï¼šå®šä¹‰ `backtest` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ç³»ã€‚  
-> **å…³è”**ï¼š`./services-catalog.md`ï¼ˆ24 å­åŸŸæ€»è§ˆï¼‰ã€`../../AGENTS.md` Â§ä¸€ï¼ˆåˆ†å±‚è§„åˆ™ï¼‰ã€‚
+> **¶¨Î»**£º¶¨Òå `backtest` ×ÓÓòµÄ½Ó¿ÚÆõÔ¼¡¢Ö°Ôğ±ß½ç¡¢Êı¾İÁ÷ÓëÒÀÀµ¹ØÏµ¡£  
+> **¹ØÁª**£º`./services-catalog.md`£¨24 ×ÓÓò×ÜÀÀ£©¡¢`../../AGENTS.md` ¡ìÒ»£¨·Ö²ã¹æÔò£©¡£
 
 ---
 
-## 1. èŒè´£è¾¹ç•Œ
+## 1. Ö°Ôğ±ß½ç
 
-### 1.1 æ ¸å¿ƒèŒè´£
+### 1.1 ºËĞÄÖ°Ôğ
 
-1. **ç­–ç•¥å›æµ‹ç¼–æ’**ï¼šæ¥æ”¶å›æµ‹é…ç½®ï¼ˆç­–ç•¥ç±»å‹ã€æ—¥æœŸèŒƒå›´ã€åˆå§‹èµ„é‡‘ã€æ‰‹ç»­è´¹ç‡ã€æ»‘ç‚¹ã€ä»“ä½ä¸Šé™ï¼‰ï¼Œåœ¨æ—¥æœŸèŒƒå›´å†…é€æ—¥æ‰§è¡Œè™šæ‹Ÿäº¤æ˜“ï¼Œæ¨¡æ‹ŸçœŸå®å¸‚åœºç¯å¢ƒä¸‹çš„ç­–ç•¥è¡¨ç°ã€‚
-2. **ä¿¡å·/è®¢å•äº‹ä»¶åŠ è½½**ï¼šä» `dataLayer` è¯»å– `signals` ä¸ `orders` æ•°æ®ï¼ŒæŒ‰ç­–ç•¥ç±»å‹è¿‡æ»¤ã€æŒ‰æ—¥æœŸèŒƒå›´ç­›é€‰ï¼Œä¿¡å·ä¸è¶³æ—¶è‡ªåŠ¨é™çº§åˆå¹¶è®¢å•äº‹ä»¶ä½œä¸ºè¡¥å……ã€‚
-3. **è™šæ‹Ÿäº¤æ˜“æ‰§è¡Œ**ï¼šæ¨¡æ‹Ÿä¹°å…¥/å–å‡ºæ“ä½œï¼Œè®¡ç®—æ»‘ç‚¹åæˆäº¤ä»·ä¸æ‰‹ç»­è´¹ï¼Œè·Ÿè¸ªæŒä»“å˜åŒ–ï¼ˆåŠ ä»“å¹³å‡æˆæœ¬æ³•ã€å‡ä»“æ¸…ä»“ï¼‰ï¼Œæ‰§è¡Œä»“ä½ä¸Šé™ä¸ç°é‡‘çº¦æŸæ£€æŸ¥ã€‚
-4. **ç»©æ•ˆæŒ‡æ ‡è®¡ç®—**ï¼šåŸºäºæ¯æ—¥å‡€å€¼æ›²çº¿è®¡ç®—æ€»æ”¶ç›Šç‡ã€å¹´åŒ–æ”¶ç›Šç‡ã€æœ€å¤§å›æ’¤ã€å¤æ™®æ¯”ç‡ã€èƒœç‡ã€ç›ˆäºäº¤æ˜“ç»Ÿè®¡ï¼Œå¹¶è¾“å‡ºæ ‡å‡†åŒ– `BacktestResult`ã€‚
+1. **²ßÂÔ»Ø²â±àÅÅ**£º½ÓÊÕ»Ø²âÅäÖÃ£¨²ßÂÔÀàĞÍ¡¢ÈÕÆÚ·¶Î§¡¢³õÊ¼×Ê½ğ¡¢ÊÖĞø·ÑÂÊ¡¢»¬µã¡¢²ÖÎ»ÉÏÏŞ£©£¬ÔÚÈÕÆÚ·¶Î§ÄÚÖğÈÕÖ´ĞĞĞéÄâ½»Ò×£¬Ä£ÄâÕæÊµÊĞ³¡»·¾³ÏÂµÄ²ßÂÔ±íÏÖ¡£
+2. **ĞÅºÅ/¶©µ¥ÊÂ¼ş¼ÓÔØ**£º´Ó `dataLayer` ¶ÁÈ¡ `signals` Óë `orders` Êı¾İ£¬°´²ßÂÔÀàĞÍ¹ıÂË¡¢°´ÈÕÆÚ·¶Î§É¸Ñ¡£¬ĞÅºÅ²»×ãÊ±×Ô¶¯½µ¼¶ºÏ²¢¶©µ¥ÊÂ¼ş×÷Îª²¹³ä¡£
+3. **ĞéÄâ½»Ò×Ö´ĞĞ**£ºÄ£ÄâÂòÈë/Âô³ö²Ù×÷£¬¼ÆËã»¬µãºó³É½»¼ÛÓëÊÖĞø·Ñ£¬¸ú×Ù³Ö²Ö±ä»¯£¨¼Ó²ÖÆ½¾ù³É±¾·¨¡¢¼õ²ÖÇå²Ö£©£¬Ö´ĞĞ²ÖÎ»ÉÏÏŞÓëÏÖ½ğÔ¼Êø¼ì²é¡£
+4. **¼¨Ğ§Ö¸±ê¼ÆËã**£º»ùÓÚÃ¿ÈÕ¾»ÖµÇúÏß¼ÆËã×ÜÊÕÒæÂÊ¡¢Äê»¯ÊÕÒæÂÊ¡¢×î´ó»Ø³·¡¢ÏÄÆÕ±ÈÂÊ¡¢Ê¤ÂÊ¡¢Ó¯¿÷½»Ò×Í³¼Æ£¬²¢Êä³ö±ê×¼»¯ `BacktestResult`¡£
 
-### 1.2 åˆ†å±‚å®šä½
+### 1.2 ·Ö²ã¶¨Î»
 
-| ç»´åº¦ | è¯´æ˜ |
+| Î¬¶È | ËµÃ÷ |
 |------|------|
-| æ‰€å±å±‚ | `src/services/`ï¼ˆæœåŠ¡å±‚ï¼‰ |
-| ä¾èµ–æ–¹å‘ | åªèƒ½ä¾èµ– `core/`ã€`data/`ã€`lib/`ï¼ˆç™½åå•ï¼‰ |
-| ç¦æ­¢äº‹é¡¹ | ç¦æ­¢ç›´å†™ IndexedDBï¼ˆé¡»ç» `DataBridge.forward()`ï¼‰ï¼›æœ¬åŸŸç›´æ¥è¯»å– dataLayer å±ä¾‹å¤–å†å²è·¯å¾„ |
-| è¢«ä¾èµ–æ–¹ | `store/`ï¼ˆ`backtestStore` ç®¡ç†ç»“æœä¸çŠ¶æ€ï¼‰ã€`pages/`ï¼ˆå›æµ‹ç»“æœå±•ç¤ºé¡µï¼‰å¯æ¶ˆè´¹æœ¬æœåŠ¡è¾“å‡º |
+| ËùÊô²ã | `src/services/`£¨·şÎñ²ã£© |
+| ÒÀÀµ·½Ïò | Ö»ÄÜÒÀÀµ `core/`¡¢`data/`¡¢`lib/`£¨°×Ãûµ¥£© |
+| ½ûÖ¹ÊÂÏî | ½ûÖ¹Ö±Ğ´ IndexedDB£¨Ğë¾­ `DataBridge.forward()`£©£»±¾ÓòÖ±½Ó¶ÁÈ¡ dataLayer ÊôÀıÍâÀúÊ·Â·¾¶ |
+| ±»ÒÀÀµ·½ | `store/`£¨`backtestStore` ¹ÜÀí½á¹ûÓë×´Ì¬£©¡¢`pages/`£¨»Ø²â½á¹ûÕ¹Ê¾Ò³£©¿ÉÏû·Ñ±¾·şÎñÊä³ö |
 
-### 1.3 ä¸ç›¸é‚»å­åŸŸçš„å…³ç³»
+### 1.3 ÓëÏàÁÚ×ÓÓòµÄ¹ØÏµ
 
-| ç›¸é‚»å­åŸŸ | å…³ç³» | æ•°æ®æµ |
+| ÏàÁÚ×ÓÓò | ¹ØÏµ | Êı¾İÁ÷ |
 |----------|------|--------|
-| `dataLayer` (`src/data/dataLayer`) | ä¸Šæ¸¸æ•°æ®æº | `signals.list()` / `orders.list()` / `dailyQuotes.get()` â†’ æœ¬æœåŠ¡ |
-| `trading/positionSizer` | åŒå±‚ä¾èµ–ï¼šä»“ä½è®¡ç®— | `calculatePosition()` è¾“å…¥ portfolioValue / currentHolding â†’ è¿”å› targetShares |
-| `types/modules/backtest.types` | ç±»å‹å¥‘çº¦ | å…±äº« `BacktestStrategy` / `BacktestResult` / `BacktestTrade` å®šä¹‰ |
-| `store/backtestStore` | ä¸‹æ¸¸æ¶ˆè´¹ | æœ¬æœåŠ¡ `BacktestEngineResult` â†’ Store æŒä¹…åŒ–ä¸çŠ¶æ€ç®¡ç† |
+| `dataLayer` (`src/data/dataLayer`) | ÉÏÓÎÊı¾İÔ´ | `signals.list()` / `orders.list()` / `dailyQuotes.get()` ¡ú ±¾·şÎñ |
+| `trading/positionSizer` | Í¬²ãÒÀÀµ£º²ÖÎ»¼ÆËã | `calculatePosition()` ÊäÈë portfolioValue / currentHolding ¡ú ·µ»Ø targetShares |
+| `types/modules/backtest.types` | ÀàĞÍÆõÔ¼ | ¹²Ïí `BacktestStrategy` / `BacktestResult` / `BacktestTrade` ¶¨Òå |
+| `store/backtestStore` | ÏÂÓÎÏû·Ñ | ±¾·şÎñ `BacktestEngineResult` ¡ú Store ³Ö¾Ã»¯Óë×´Ì¬¹ÜÀí |
 
 ---
 
-## 2. å…¬å…±æ¥å£
+## 2. ¹«¹²½Ó¿Ú
 
-### 2.1 ç±»å‹å®šä¹‰ï¼ˆTypeScript Interfaceï¼‰
+### 2.1 ÀàĞÍ¶¨Òå£¨TypeScript Interface£©
 
 ```typescript
-// æ–‡ä»¶ï¼šsrc/services/backtest/BacktestEngine.ts
+// ÎÄ¼ş£ºsrc/services/backtest/BacktestEngine.ts
 
 export interface BacktestEngineConfig {
   strategy: BacktestStrategy          // 'hot_sector' | 'value_pit' | 'composite'
-  startDate: string                   // ISO æ—¥æœŸï¼ˆå¦‚ '2024-01-01'ï¼‰
+  startDate: string                   // ISO ÈÕÆÚ£¨Èç '2024-01-01'£©
   endDate: string
-  initialCapital: number              // åˆå§‹èµ„é‡‘
-  commissionRate: number              // æ‰‹ç»­è´¹ç‡ï¼ˆå¦‚ 0.0003 = 0.03%ï¼‰
-  slippage: number                    // æ»‘ç‚¹æ¯”ç‡ï¼ˆå¦‚ 0.001 = 0.1%ï¼‰
-  maxPositionPct: number              // å•ç¥¨æœ€å¤§ä»“ä½å æ¯”ï¼ˆå¦‚ 0.2 = 20%ï¼‰
+  initialCapital: number              // ³õÊ¼×Ê½ğ
+  commissionRate: number              // ÊÖĞø·ÑÂÊ£¨Èç 0.0003 = 0.03%£©
+  slippage: number                    // »¬µã±ÈÂÊ£¨Èç 0.001 = 0.1%£©
+  maxPositionPct: number              // µ¥Æ±×î´ó²ÖÎ»Õ¼±È£¨Èç 0.2 = 20%£©
 }
 
 export interface VirtualOrder {
   id: string
   symbol: string
   direction: 'buy' | 'sell'
-  price: number                       // å«æ»‘ç‚¹åçš„å®é™…æˆäº¤ä»·
+  price: number                       // º¬»¬µãºóµÄÊµ¼Ê³É½»¼Û
   quantity: number
   date: string
-  commission: number                  // è¯¥ç¬”äº¤æ˜“æ‰‹ç»­è´¹
+  commission: number                  // ¸Ã±Ê½»Ò×ÊÖĞø·Ñ
 }
 
 export interface VirtualPosition {
   symbol: string
   quantity: number
-  avgCost: number                     // åŠ æƒå¹³å‡æˆæœ¬
-  currentPrice: number                // å›æµ‹ç»“æŸæ—¥æ”¶ç›˜ä»·
+  avgCost: number                     // ¼ÓÈ¨Æ½¾ù³É±¾
+  currentPrice: number                // »Ø²â½áÊøÈÕÊÕÅÌ¼Û
   marketValue: number
-  unrealizedPnL: number               // æœªå®ç°ç›ˆäº
+  unrealizedPnL: number               // Î´ÊµÏÖÓ¯¿÷
 }
 
 export interface BacktestEngineResult {
   trades: VirtualOrder[]
   positions: VirtualPosition[]
   dailyValues: { date: string; totalValue: number; cash: number }[]
-  metrics: BacktestResult             // æ¥è‡ª @/types/modules/backtest.types
+  metrics: BacktestResult             // À´×Ô @/types/modules/backtest.types
 }
 ```
 
 ```typescript
-// æ–‡ä»¶ï¼šsrc/services/backtest/backtestEventLoader.ts
+// ÎÄ¼ş£ºsrc/services/backtest/backtestEventLoader.ts
 
 export interface BacktestEvent {
   symbol: string
@@ -109,7 +112,7 @@ export interface BacktestEvent {
 ```
 
 ```typescript
-// æ–‡ä»¶ï¼šsrc/services/backtest/backtestMetrics.ts
+// ÎÄ¼ş£ºsrc/services/backtest/backtestMetrics.ts
 
 export interface InternalPosition {
   quantity: number
@@ -117,101 +120,101 @@ export interface InternalPosition {
 }
 ```
 
-### 2.2 ä¸»å…¥å£å‡½æ•°
+### 2.2 Ö÷Èë¿Úº¯Êı
 
-| å‡½æ•° | ç­¾å | èŒè´£ | é”™è¯¯å¤„ç† |
+| º¯Êı | Ç©Ãû | Ö°Ôğ | ´íÎó´¦Àí |
 |------|------|------|----------|
-| `BacktestEngine.run()` | `(config: BacktestEngineConfig) => Promise<BacktestEngineResult>` | æ‰§è¡Œå®Œæ•´å›æµ‹æµç¨‹ï¼ˆåŠ è½½äº‹ä»¶ â†’ é¢„åŠ è½½è¡Œæƒ… â†’ é€æ—¥æ‰§è¡Œ â†’ è®¡ç®—æŒ‡æ ‡ï¼‰ | `logger.warn` é™çº§ï¼ˆå¦‚ signals/orders è¯»å–å¤±è´¥è¿”å›ç©ºç»“æœï¼‰ |
-| `loadBacktestEvents()` | `(config: BacktestEngineConfig) => Promise<BacktestEvent[]>` | åŠ è½½å¹¶åˆå¹¶ä¿¡å·/è®¢å•äº‹ä»¶ï¼ŒæŒ‰æ—¥æœŸæ’åº | è¯»å–å¤±è´¥æ—¶è¿”å›ç©ºæ•°ç»„ï¼ˆä¼˜é›…é™çº§ï¼‰ |
-| `calculateBacktestMetrics()` | `(dailyValues, trades, config) => BacktestResult` | è®¡ç®—æ€»æ”¶ç›Šã€å¹´åŒ–ã€å›æ’¤ã€å¤æ™®ã€èƒœç‡ç­‰ç»©æ•ˆæŒ‡æ ‡ | çº¯è®¡ç®—ï¼Œæ— å‰¯ä½œç”¨ï¼›ç©ºè¾“å…¥æ—¶è¿”å› `createEmptyMetrics` |
-| `buildVirtualPositions()` | `(positions, endDate, quotesCache) => VirtualPosition[]` | å°†å†…éƒ¨æŒä»“æ˜ å°„ä¸ºæœ€ç»ˆå¿«ç…§ | æ— è¡Œæƒ…æ—¶å›é€€åˆ° avgCost |
-| `createEmptyResult()` | `(config: BacktestEngineConfig) => BacktestEngineResult` | ç©ºäº‹ä»¶æ—¶çš„é»˜è®¤ç»“æœå·¥å‚ | è¡Œä¸ºå¥‘çº¦ï¼š`pnlCurve = [1.0]` |
+| `BacktestEngine.run()` | `(config: BacktestEngineConfig) => Promise<BacktestEngineResult>` | Ö´ĞĞÍêÕû»Ø²âÁ÷³Ì£¨¼ÓÔØÊÂ¼ş ¡ú Ô¤¼ÓÔØĞĞÇé ¡ú ÖğÈÕÖ´ĞĞ ¡ú ¼ÆËãÖ¸±ê£© | `logger.warn` ½µ¼¶£¨Èç signals/orders ¶ÁÈ¡Ê§°Ü·µ»Ø¿Õ½á¹û£© |
+| `loadBacktestEvents()` | `(config: BacktestEngineConfig) => Promise<BacktestEvent[]>` | ¼ÓÔØ²¢ºÏ²¢ĞÅºÅ/¶©µ¥ÊÂ¼ş£¬°´ÈÕÆÚÅÅĞò | ¶ÁÈ¡Ê§°ÜÊ±·µ»Ø¿ÕÊı×é£¨ÓÅÑÅ½µ¼¶£© |
+| `calculateBacktestMetrics()` | `(dailyValues, trades, config) => BacktestResult` | ¼ÆËã×ÜÊÕÒæ¡¢Äê»¯¡¢»Ø³·¡¢ÏÄÆÕ¡¢Ê¤ÂÊµÈ¼¨Ğ§Ö¸±ê | ´¿¼ÆËã£¬ÎŞ¸±×÷ÓÃ£»¿ÕÊäÈëÊ±·µ»Ø `createEmptyMetrics` |
+| `buildVirtualPositions()` | `(positions, endDate, quotesCache) => VirtualPosition[]` | ½«ÄÚ²¿³Ö²ÖÓ³ÉäÎª×îÖÕ¿ìÕÕ | ÎŞĞĞÇéÊ±»ØÍËµ½ avgCost |
+| `createEmptyResult()` | `(config: BacktestEngineConfig) => BacktestEngineResult` | ¿ÕÊÂ¼şÊ±µÄÄ¬ÈÏ½á¹û¹¤³§ | ĞĞÎªÆõÔ¼£º`pnlCurve = [1.0]` |
 
-### 2.3 äº‹ä»¶æ¥å£
+### 2.3 ÊÂ¼ş½Ó¿Ú
 
-> æœ¬å­åŸŸå½“å‰æœªä½¿ç”¨ `EventBus` è¿›è¡Œäº‹ä»¶å‘å¸ƒã€‚ç»“æœé€šè¿‡ `BacktestEngine.run()` çš„è¿”å›å€¼ç›´æ¥ä¼ é€’ï¼Œç”±è°ƒç”¨æ–¹ï¼ˆå¦‚ `backtestStore`ï¼‰æ¶ˆè´¹ã€‚
+> ±¾×ÓÓòµ±Ç°Î´Ê¹ÓÃ `EventBus` ½øĞĞÊÂ¼ş·¢²¼¡£½á¹ûÍ¨¹ı `BacktestEngine.run()` µÄ·µ»ØÖµÖ±½Ó´«µİ£¬ÓÉµ÷ÓÃ·½£¨Èç `backtestStore`£©Ïû·Ñ¡£
 
-| äº‹ä»¶å | å‘å¸ƒæ–¹ | è®¢é˜…æ–¹ | è¯´æ˜ |
+| ÊÂ¼şÃû | ·¢²¼·½ | ¶©ÔÄ·½ | ËµÃ÷ |
 |--------|--------|--------|------|
-| â€” | â€” | â€” | å½“å‰æœªå®šä¹‰ç‹¬ç«‹äº‹ä»¶æ¥å£ |
+| ¡ª | ¡ª | ¡ª | µ±Ç°Î´¶¨Òå¶ÀÁ¢ÊÂ¼ş½Ó¿Ú |
 
 ---
 
-## 3. æ•°æ®æµ
+## 3. Êı¾İÁ÷
 
 ```
-[å¤–éƒ¨è¾“å…¥ï¼šå›æµ‹é…ç½®]
-    â†“
+[Íâ²¿ÊäÈë£º»Ø²âÅäÖÃ]
+    ¡ı
 BacktestEngine.run(config)
-    â”œâ”€â†’ backtestEventLoader.loadBacktestEvents()  â†’  dataLayer.signals.list() / orders.list()
-    â”œâ”€â†’ backtestEventLoader.preloadQuotes()        â†’  dataLayer.dailyQuotes.get()
-    â”œâ”€â†’ é€æ—¥æ‰§è¡Œï¼š_processSellEvents() / _processBuyEvents()
-    â”‚       â†“ å¤ç”¨ trading/positionSizer.calculatePosition()
-    â”œâ”€â†’ backtestMetrics.calculateBacktestMetrics()
-    â””â”€â†’ backtestMetrics.buildVirtualPositions()
-            â†“
-    BacktestEngineResultï¼ˆçº¯è¿”å›å€¼ï¼Œä¸è‡ªåŠ¨å†™å…¥ IndexedDBï¼‰
-            â†“
-    è°ƒç”¨æ–¹ï¼ˆå¦‚ backtestStoreï¼‰é€šè¿‡ DataBridge.forward() æŒä¹…åŒ–
-            â†“
+    ©À©¤¡ú backtestEventLoader.loadBacktestEvents()  ¡ú  dataLayer.signals.list() / orders.list()
+    ©À©¤¡ú backtestEventLoader.preloadQuotes()        ¡ú  dataLayer.dailyQuotes.get()
+    ©À©¤¡ú ÖğÈÕÖ´ĞĞ£º_processSellEvents() / _processBuyEvents()
+    ©¦       ¡ı ¸´ÓÃ trading/positionSizer.calculatePosition()
+    ©À©¤¡ú backtestMetrics.calculateBacktestMetrics()
+    ©¸©¤¡ú backtestMetrics.buildVirtualPositions()
+            ¡ı
+    BacktestEngineResult£¨´¿·µ»ØÖµ£¬²»×Ô¶¯Ğ´Èë IndexedDB£©
+            ¡ı
+    µ÷ÓÃ·½£¨Èç backtestStore£©Í¨¹ı DataBridge.forward() ³Ö¾Ã»¯
+            ¡ı
     backtestStore (Zustand + withBroadcast)
-            â†“
-    components/pagesï¼ˆä»…ç» Store å–æ•°ï¼‰
+            ¡ı
+    components/pages£¨½ö¾­ Store È¡Êı£©
 ```
 
-**è¯´æ˜**ï¼š
-- å›æµ‹å¼•æ“æœ¬èº«**ä¸ç›´æ¥å†™å…¥ IndexedDB**ï¼Œç»“æœä»¥çº¯è¿”å›å€¼å½¢å¼è¾“å‡ºã€‚
-- æ•°æ®æŒä¹…åŒ–ç”±è°ƒç”¨æ–¹ï¼ˆ`backtestStore` æˆ–å…¶ä»–ç¼–æ’å±‚ï¼‰é€šè¿‡ `DataBridge.forward()` å®Œæˆã€‚
-- è¡Œæƒ…æ•°æ®é€šè¿‡ `dataLayer.dailyQuotes.get()` è¯»å–ï¼ˆé DataBridge è·¯ç”±ï¼‰ï¼Œå±å†å²è·¯å¾„ï¼Œæœªæ¥å¦‚éœ€ç»Ÿä¸€å¯è¿ç§»ã€‚
+**ËµÃ÷**£º
+- »Ø²âÒıÇæ±¾Éí**²»Ö±½ÓĞ´Èë IndexedDB**£¬½á¹ûÒÔ´¿·µ»ØÖµĞÎÊ½Êä³ö¡£
+- Êı¾İ³Ö¾Ã»¯ÓÉµ÷ÓÃ·½£¨`backtestStore` »òÆäËû±àÅÅ²ã£©Í¨¹ı `DataBridge.forward()` Íê³É¡£
+- ĞĞÇéÊı¾İÍ¨¹ı `dataLayer.dailyQuotes.get()` ¶ÁÈ¡£¨·Ç DataBridge Â·ÓÉ£©£¬ÊôÀúÊ·Â·¾¶£¬Î´À´ÈçĞèÍ³Ò»¿ÉÇ¨ÒÆ¡£
 
 ---
 
-## 4. é…ç½®ä¸ä¾èµ–
+## 4. ÅäÖÃÓëÒÀÀµ
 
-### 4.1 ä¾èµ–ç™½åå•ï¼ˆlib/ åŠåˆè§„ä¾èµ–ï¼‰
+### 4.1 ÒÀÀµ°×Ãûµ¥£¨lib/ ¼°ºÏ¹æÒÀÀµ£©
 
-| ä¾èµ– | è·¯å¾„ | ç”¨é€” |
+| ÒÀÀµ | Â·¾¶ | ÓÃÍ¾ |
 |------|------|------|
-| logger | `@/lib/logger` | æ—¥å¿—è¾“å‡ºï¼ˆ`[BacktestEngine] å¼€å§‹å›æµ‹ / å›æµ‹å®Œæˆ`ï¼‰ |
-| dataLayer | `@/data/dataLayer` | è¯»å– signalsã€ordersã€dailyQuotes |
-| data/db | `@/data/db` | `generateId()` ç”Ÿæˆè™šæ‹Ÿè®¢å• ID |
-| data/types | `@/data/types` | `DailyQuotes`ã€`Signal`ã€`Order` ç±»å‹ |
-| types/modules/backtest.types | `@/types/modules/backtest.types` | `BacktestStrategy`ã€`BacktestResult`ã€`BacktestTrade` |
-| trading/positionSizer | `@/services/trading/positionSizer` | åŒå±‚æœåŠ¡ï¼šè®¡ç®—ç›®æ ‡ä¹°å…¥è‚¡æ•° |
-| config/mathConstants | `@/config/mathConstants` | `TRADING_DAYS_PER_YEAR`ï¼ˆâš ï¸ è·¨å±‚ä¾èµ–ï¼š`services/` åº”ä»…ä¾èµ– `core/`ã€`data/`ã€`lib/`ï¼‰ |
+| logger | `@/lib/logger` | ÈÕÖ¾Êä³ö£¨`[BacktestEngine] ¿ªÊ¼»Ø²â / »Ø²âÍê³É`£© |
+| dataLayer | `@/data/dataLayer` | ¶ÁÈ¡ signals¡¢orders¡¢dailyQuotes |
+| data/db | `@/data/db` | `generateId()` Éú³ÉĞéÄâ¶©µ¥ ID |
+| data/types | `@/data/types` | `DailyQuotes`¡¢`Signal`¡¢`Order` ÀàĞÍ |
+| types/modules/backtest.types | `@/types/modules/backtest.types` | `BacktestStrategy`¡¢`BacktestResult`¡¢`BacktestTrade` |
+| trading/positionSizer | `@/services/trading/positionSizer` | Í¬²ã·şÎñ£º¼ÆËãÄ¿±êÂòÈë¹ÉÊı |
+| config/mathConstants | `@/config/mathConstants` | `TRADING_DAYS_PER_YEAR`£¨?? ¿ç²ãÒÀÀµ£º`services/` Ó¦½öÒÀÀµ `core/`¡¢`data/`¡¢`lib/`£© |
 
-### 4.2 é…ç½®é¡¹
+### 4.2 ÅäÖÃÏî
 
-| é…ç½®å | é»˜è®¤å€¼ | è¯´æ˜ | æ¥æº |
+| ÅäÖÃÃû | Ä¬ÈÏÖµ | ËµÃ÷ | À´Ô´ |
 |--------|--------|------|------|
-| `MIN_SIGNAL_EVENTS_FOR_COMBINE` | `5` | ä¿¡å·äº‹ä»¶ä¸è¶³æ­¤æ•°é‡æ—¶ï¼Œç”¨è®¢å•äº‹ä»¶è¡¥å……åˆå¹¶ | æ¨¡å—å†…å¸¸é‡ï¼ˆ`backtestEventLoader.ts`ï¼‰ |
-| `MS_END_OF_DAY` | `999` | æ¯«ç§’ç²¾åº¦ï¼šä¸€å¤©ç»“æŸæ—¶åˆ»çš„æ¯«ç§’éƒ¨åˆ† | æ¨¡å—å†…å¸¸é‡ï¼ˆ`backtestEventLoader.ts`ï¼‰ |
-| `TRADING_DAYS_PER_YEAR` | â€” | å¹´åŒ–è®¡ç®—ç”¨äº¤æ˜“æ—¥æ•° | `@/config/mathConstants` |
-| `RISK_FREE_RATE` | `0.03` | æ— é£é™©åˆ©ç‡ï¼ˆç”¨äºå¤æ™®æ¯”ç‡è®¡ç®—ï¼‰ | æ¨¡å—å†…å¸¸é‡ï¼ˆ`backtestMetrics.ts`ï¼‰ |
+| `MIN_SIGNAL_EVENTS_FOR_COMBINE` | `5` | ĞÅºÅÊÂ¼ş²»×ã´ËÊıÁ¿Ê±£¬ÓÃ¶©µ¥ÊÂ¼ş²¹³äºÏ²¢ | Ä£¿éÄÚ³£Á¿£¨`backtestEventLoader.ts`£© |
+| `MS_END_OF_DAY` | `999` | ºÁÃë¾«¶È£ºÒ»Ìì½áÊøÊ±¿ÌµÄºÁÃë²¿·Ö | Ä£¿éÄÚ³£Á¿£¨`backtestEventLoader.ts`£© |
+| `TRADING_DAYS_PER_YEAR` | ¡ª | Äê»¯¼ÆËãÓÃ½»Ò×ÈÕÊı | `@/config/mathConstants` |
+| `RISK_FREE_RATE` | `0.03` | ÎŞ·çÏÕÀûÂÊ£¨ÓÃÓÚÏÄÆÕ±ÈÂÊ¼ÆËã£© | Ä£¿éÄÚ³£Á¿£¨`backtestMetrics.ts`£© |
 
 ---
 
-## 5. æµ‹è¯•ç­–ç•¥
+## 5. ²âÊÔ²ßÂÔ
 
-| æµ‹è¯•ç±»å‹ | æ–‡ä»¶ | è¯´æ˜ |
+| ²âÊÔÀàĞÍ | ÎÄ¼ş | ËµÃ÷ |
 |----------|------|------|
-| å•å…ƒæµ‹è¯• | `src/services/backtest/BacktestEngine.test.ts` | å…± 28+ ç”¨ä¾‹ï¼Œè¦†ç›–ï¼šç©ºäº‹ä»¶é™çº§ã€ç»©æ•ˆæŒ‡æ ‡ï¼ˆæ”¶ç›Š/å›æ’¤/å¤æ™®/èƒœç‡ï¼‰ã€äº¤æ˜“æ‰§è¡Œï¼ˆæ»‘ç‚¹/æ‰‹ç»­è´¹/ç°é‡‘ä¸è¶³è·³è¿‡ï¼‰ã€æŒä»“ç®¡ç†ï¼ˆå¹³å‡æˆæœ¬/æ¸…ä»“ï¼‰ã€ç­–ç•¥è¿‡æ»¤ï¼ˆhot_sector / value_pit / compositeï¼‰ã€æ—¥æœŸèŒƒå›´è¿‡æ»¤ä¸å‘¨æœ«è·³è¿‡ |
-| è¡Œä¸ºå¥‘çº¦æµ‹è¯• | `BacktestEngine.test.ts`ï¼ˆ`run() è¡Œä¸ºå¥‘çº¦`å¥—ä»¶ï¼‰ | 6 ä¸ªå¥‘çº¦æµ‹è¯•ï¼šâ‘  ç»“æœç»“æ„å®Œæ•´æ€§ â‘¡ buyâ†’sell å®Œæ•´è·¯å¾„ â‘¢ ç©ºäº‹ä»¶é›¶å€¼ â‘£ æ»‘ç‚¹æ–¹å‘æ­£ç¡® â‘¤ dailyValues å‡åº+è·³è¿‡å‘¨æœ« â‘¥ positions/dailyValues æ³¨å…¥ metrics |
-| Mock ç­–ç•¥ | åŒæ–‡ä»¶å†… `vi.mock` | Mock `dataLayer`ã€`logger`ã€`generateId`ã€`calculatePosition`ï¼Œéš”ç¦»å¤–éƒ¨ä¾èµ– |
+| µ¥Ôª²âÊÔ | `src/services/backtest/BacktestEngine.test.ts` | ¹² 28+ ÓÃÀı£¬¸²¸Ç£º¿ÕÊÂ¼ş½µ¼¶¡¢¼¨Ğ§Ö¸±ê£¨ÊÕÒæ/»Ø³·/ÏÄÆÕ/Ê¤ÂÊ£©¡¢½»Ò×Ö´ĞĞ£¨»¬µã/ÊÖĞø·Ñ/ÏÖ½ğ²»×ãÌø¹ı£©¡¢³Ö²Ö¹ÜÀí£¨Æ½¾ù³É±¾/Çå²Ö£©¡¢²ßÂÔ¹ıÂË£¨hot_sector / value_pit / composite£©¡¢ÈÕÆÚ·¶Î§¹ıÂËÓëÖÜÄ©Ìø¹ı |
+| ĞĞÎªÆõÔ¼²âÊÔ | `BacktestEngine.test.ts`£¨`run() ĞĞÎªÆõÔ¼`Ì×¼ş£© | 6 ¸öÆõÔ¼²âÊÔ£º¢Ù ½á¹û½á¹¹ÍêÕûĞÔ ¢Ú buy¡úsell ÍêÕûÂ·¾¶ ¢Û ¿ÕÊÂ¼şÁãÖµ ¢Ü »¬µã·½ÏòÕıÈ· ¢İ dailyValues ÉıĞò+Ìø¹ıÖÜÄ© ¢Ş positions/dailyValues ×¢Èë metrics |
+| Mock ²ßÂÔ | Í¬ÎÄ¼şÄÚ `vi.mock` | Mock `dataLayer`¡¢`logger`¡¢`generateId`¡¢`calculatePosition`£¬¸ôÀëÍâ²¿ÒÀÀµ |
 
-> æ³¨ï¼šæµ‹è¯•æ–‡ä»¶ä¸æºç åŒç›®å½•ï¼Œæœªä½¿ç”¨ `__tests__/` å­ç›®å½•ã€‚å½“å‰æ— ç‹¬ç«‹é›†æˆæµ‹è¯•æ–‡ä»¶ã€‚
+> ×¢£º²âÊÔÎÄ¼şÓëÔ´ÂëÍ¬Ä¿Â¼£¬Î´Ê¹ÓÃ `__tests__/` ×ÓÄ¿Â¼¡£µ±Ç°ÎŞ¶ÀÁ¢¼¯³É²âÊÔÎÄ¼ş¡£
 
 ---
 
-## 6. å˜æ›´æ—¥å¿—
+## 6. ±ä¸üÈÕÖ¾
 
-| æ—¥æœŸ | ç‰ˆæœ¬ | å˜æ›´ | ä½œè€… |
+| ÈÕÆÚ | °æ±¾ | ±ä¸ü | ×÷Õß |
 |------|------|------|------|
-| 2026-07-12 | v0.1.0 | å¥‘çº¦åˆç¨¿ | æ¶æ„ç»„ |
+| 2026-07-12 | v0.1.0 | ÆõÔ¼³õ¸å | ¼Ü¹¹×é |
 
 ---
 
-> **TODO[å­åŸŸ owner]**ï¼š
-> 1. è¯„ä¼° `@/config/mathConstants` ä¾èµ–æ˜¯å¦éœ€è¿ç§»è‡³ `src/constants/` æˆ– `src/core/`ï¼Œä»¥æ¶ˆé™¤ servicesâ†’config è·¨å±‚è¿è§„ã€‚
-> 2. è‹¥æœªæ¥å¼•å…¥ EventBus å‘å¸ƒå›æµ‹å®Œæˆäº‹ä»¶ï¼Œéœ€åœ¨ Â§2.3 è¡¥å……äº‹ä»¶æ¥å£è¡¨æ ¼ã€‚
-> 3. å®Œæˆåè¿è¡Œ `tsc --noEmit` + `audit:layers` éªŒè¯ã€‚
+> **TODO[×ÓÓò owner]**£º
+> 1. ÆÀ¹À `@/config/mathConstants` ÒÀÀµÊÇ·ñĞèÇ¨ÒÆÖÁ `src/constants/` »ò `src/core/`£¬ÒÔÏû³ı services¡úconfig ¿ç²ãÎ¥¹æ¡£
+> 2. ÈôÎ´À´ÒıÈë EventBus ·¢²¼»Ø²âÍê³ÉÊÂ¼ş£¬ĞèÔÚ ¡ì2.3 ²¹³äÊÂ¼ş½Ó¿Ú±í¸ñ¡£
+> 3. Íê³ÉºóÔËĞĞ `tsc --noEmit` + `audit:layers` ÑéÖ¤¡£

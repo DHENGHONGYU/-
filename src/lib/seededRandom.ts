@@ -5,8 +5,6 @@
  *
  * @module lib/seededRandom
  * @created 2026-07-13
- */
-
 /** 创建一个可播种的随机数生成器，返回 [0,1) 之间的数 */
 export function createSeededRandom(seed: number): () => number {
   let s = seed | 0

@@ -275,7 +275,23 @@ function buildIndexEntries(docsDir: string): IndexEntry[] {
 }
 
 function renderIndex(entries: readonly IndexEntry[]): string {
+  const today = new Date().toISOString().slice(0, 10)
   const lines: string[] = [
+    '---',
+    'title: 文档索引',
+    'type: meta',
+    'domain: project',
+    'phase: development',
+    'tier: important',
+    'status: active',
+    'version: v1.0.0',
+    `last_updated: ${today}`,
+    'code_version: 2.0.0',
+    'maintainer: V9 Architecture Team',
+    'summary: "V9 全量文档索引，按类别聚合，由每日文档验证流程自动生成。"',
+    'tags: [project, registry]',
+    '---',
+    '',
     '# 文档索引',
     '',
     '> 本文件由每日文档验证流程自动生成，请勿手动修改。',

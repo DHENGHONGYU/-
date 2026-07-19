@@ -10,46 +10,21 @@
  *
  * 设计原则：
  * - 不新建错误类，复用 `src/lib/errors` 的 `V9Error` 体系，避免重复。
- * - `Result` 为纯类型，可被 services / core / store 各层引用。
- * - 服务层（services）依赖 lib/errors 符合 AGENTS.md §一 分层白名单。
+ * - `Result` 及其构造器为纯类型工具，已下沉至 `@/core/result`（core 层），
+ *   可被 data / services / store 各层安全引用；本模块 re-export 以保持
+ *   既有 `import { ok, fail, type Result } from '@/services/contracts'` 兼容。
+ * - services 专属能力（tryResult / IService / BaseService，依赖 errorBus）
+ *   仍保留在本模块。
  */
 
-import { V9Error, toV9Error } from '@/lib/errors'
+import { toV9Error } from '@/lib/errors'
 import { captureError, type ErrorContext } from '@/services/errorBus'
+import { ok, fail, isOk, isFail, mapResult, type Result } from '@/core/result'
 
-/**
- * 统一服务结果类型。
- * - 成功分支：`{ ok: true, value }`
- * - 失败分支：`{ ok: false, error }`，error 必为 V9Error 子类
- */
-export type Result<T> =
-  | { readonly ok: true; readonly value: T }
-  | { readonly ok: false; readonly error: V9Error }
-
-/** 构造成功结果 */
-export function ok<T>(value: T): Result<T> {
-  return { ok: true, value }
-}
-
-/** 构造失败结果 */
-export function fail<T = never>(error: V9Error): Result<T> {
-  return { ok: false, error }
-}
-
-/** 类型守卫：是否为成功结果 */
-export function isOk<T>(r: Result<T>): r is { readonly ok: true; readonly value: T } {
-  return r.ok
-}
-
-/** 类型守卫：是否为失败结果 */
-export function isFail<T>(r: Result<T>): r is { readonly ok: false; readonly error: V9Error } {
-  return !r.ok
-}
-
-/** 对成功分支的值做映射，失败分支原样透传 */
-export function mapResult<T, U>(r: Result<T>, fn: (value: T) => U): Result<U> {
-  return r.ok ? ok(fn(r.value)) : r
-}
+// 纯类型 Result 工具从 core/result 统一导出（破除 data↔services 循环依赖，2026-07-16 P0）
+// isOk/isFail/mapResult 在此仅作向后兼容 re-export；ok/fail 另供本模块 tryResult 使用
+export { ok, fail, isOk, isFail, mapResult }
+export type { Result }
 
 /**
  * 将可能抛错的异步（或同步）调用安全执行为 Result<T>。

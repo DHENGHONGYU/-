@@ -1,968 +1,974 @@
 ---
-title: v9-indexeddb-store-schema
+title: V9 IndexedDB Store Schema ÎÄµµ
+type: reference
+domain: data
+phase: design
+tier: reference
+status: active
+maintainer: V9 Architecture Team
+summary: "°æ±¾£ºv21 Éú³ÉÈÕÆÚ£º2026-07-05 Ô´ÎÄ¼ş£º`src/config/dbConfig.ts`¡¢`src/data/db.ts`¡¢`src/data/types.ts`"
+tags: [data, registry, store, reference, data-definition]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: important
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/reference/v9-indexeddb-store-schema.md
-code_version: 2.0.0
-tier: important
----
+# V9 IndexedDB Store Schema ÎÄµµ
 
-# V9 IndexedDB Store Schema æ–‡æ¡£
-
-> **ç‰ˆæœ¬**ï¼šv21  
-> **ç”Ÿæˆæ—¥æœŸ**ï¼š2026-07-05  
-> **æºæ–‡ä»¶**ï¼š`src/config/dbConfig.ts`ã€`src/data/db.ts`ã€`src/data/types.ts`
+> **°æ±¾**£ºv21  
+> **Éú³ÉÈÕÆÚ**£º2026-07-05  
+> **Ô´ÎÄ¼ş**£º`src/config/dbConfig.ts`¡¢`src/data/db.ts`¡¢`src/data/types.ts`
 
 ---
 
-## 1. æ€»è§ˆ
+## 1. ×ÜÀÀ
 
-### 1.1 åŸºæœ¬ä¿¡æ¯
+### 1.1 »ù±¾ĞÅÏ¢
 
-| é¡¹ç›® | å€¼ |
+| ÏîÄ¿ | Öµ |
 |------|-----|
-| æ•°æ®åº“åç§° | `V6ProDB` |
-| å½“å‰ç‰ˆæœ¬å· | **30** |
-| Store æ€»æ•° | **41** |
-| å­˜å‚¨å¼•æ“ | IndexedDBï¼ˆæµè§ˆå™¨æœ¬åœ°å­˜å‚¨ï¼‰ |
-| å°è£…ç±» | `V6Database`ï¼ˆ`src/data/db.ts`ï¼‰ |
+| Êı¾İ¿âÃû³Æ | `V6ProDB` |
+| µ±Ç°°æ±¾ºÅ | **30** |
+| Store ×ÜÊı | **41** |
+| ´æ´¢ÒıÇæ | IndexedDB£¨ä¯ÀÀÆ÷±¾µØ´æ´¢£© |
+| ·â×°Àà | `V6Database`£¨`src/data/db.ts`£© |
 
-### 1.2 ç‰ˆæœ¬å†å²
+### 1.2 °æ±¾ÀúÊ·
 
-| ç‰ˆæœ¬åŒºé—´ | ä¸»è¦å˜æ›´ |
+| °æ±¾Çø¼ä | Ö÷Òª±ä¸ü |
 |----------|----------|
-| v3 â†’ v4 | æ–°å¢ `daily_quotes` å­˜å‚¨ï¼Œç”¨äºä¿å­˜ Kçº¿/è¡Œæƒ…æ•°æ®ã€‚ |
-| v4 â†’ v5 | `stocks` å­˜å‚¨æ–°å¢ `group` å­—æ®µä¸ `by-group` ç´¢å¼•ï¼Œå†å²æ•°æ®å›é€€ä¸ºé»˜è®¤åˆ†ç»„ã€‚ |
-| v5 â†’ v6 | æ–°å¢ `rotation_scores`ã€`sector_scores`ã€`score_docs`ã€`strategy_snapshots`ã€`local_docs`ã€`news`ã€`news_stock_map`ã€`sentiment_cache` å­˜å‚¨ï¼Œæ”¯æ’‘ V6 Pro è¿ç§»èƒ½åŠ›ã€‚ |
-| v6 â†’ v12 | V9 æ¶æ„å‡çº§ï¼Œç»Ÿä¸€æ•°æ®æ¨¡å‹ä¸ç±»å‹ç³»ç»Ÿï¼Œä¼˜åŒ–ç´¢å¼•ç»“æ„ã€‚ |
-| v12 â†’ v13 | æ–°å¢ `news_bookmarks` å­˜å‚¨ï¼Œç”¨äºæŒä¹…åŒ–èµ„è®¯æ”¶è—çŠ¶æ€ã€‚ |
-| v13 â†’ v14 | æ–°å¢ `hot_sector_scores`ã€`value_pit_scores` å­˜å‚¨ï¼Œæ”¯æ’‘åŒç­–ç•¥ä½“ç³»ã€‚ |
-| v14 â†’ v15 | `hot_sector_scores` ç»´åº¦å­—æ®µ `composite` é‡å‘½åä¸º `marketEnv`ï¼›`value_pit_scores` ç§»é™¤ `composite` å­—æ®µï¼›æ–°å¢ `execution_logs`ã€`missing_reports` Storeã€‚ |
-| v15 â†’ v16 | æ•°æ®å±‚è¡¥å…¨ï¼šæ–°å¢ `execution_plans`ï¼ˆæ‰§è¡Œè®¡åˆ’ï¼‰ã€`portfolios`ï¼ˆæŠ•èµ„ç»„åˆï¼‰Storeã€‚ |
-| v16 â†’ v17 | æ™ºèƒ½ä½“è°ƒåº¦å±‚ï¼šæ–°å¢ `agent_tasks`ã€`agent_health_logs` Storeã€‚ |
-| v17 â†’ v18 | å‘½ä»¤æ¨¡å—ï¼šæ–°å¢ `command_audit_logs` Storeã€‚ |
-| v18 â†’ v19 | è¾“å‡ºèˆ±ä¸æ‰§è¡Œæ¨¡å—ï¼šæ–°å¢ `export_tasks`ã€`execution_strategies` Storeã€‚ |
-| v19 â†’ v20 | äº¤æ˜“å¤ç›˜ï¼šæ–°å¢ `trade_reviews` Storeã€‚ |
-| v20 â†’ v21 | æ•°æ®å­—å…¸è¡¥å…¨ï¼šå®Œå–„ ACL çŸ©é˜µï¼Œæ–°å¢ `datalayer` æ¨¡å—çš„ read/write æƒé™ã€‚ |
+| v3 ¡ú v4 | ĞÂÔö `daily_quotes` ´æ´¢£¬ÓÃÓÚ±£´æ KÏß/ĞĞÇéÊı¾İ¡£ |
+| v4 ¡ú v5 | `stocks` ´æ´¢ĞÂÔö `group` ×Ö¶ÎÓë `by-group` Ë÷Òı£¬ÀúÊ·Êı¾İ»ØÍËÎªÄ¬ÈÏ·Ö×é¡£ |
+| v5 ¡ú v6 | ĞÂÔö `rotation_scores`¡¢`sector_scores`¡¢`score_docs`¡¢`strategy_snapshots`¡¢`local_docs`¡¢`news`¡¢`news_stock_map`¡¢`sentiment_cache` ´æ´¢£¬Ö§³Å V6 Pro Ç¨ÒÆÄÜÁ¦¡£ |
+| v6 ¡ú v12 | V9 ¼Ü¹¹Éı¼¶£¬Í³Ò»Êı¾İÄ£ĞÍÓëÀàĞÍÏµÍ³£¬ÓÅ»¯Ë÷Òı½á¹¹¡£ |
+| v12 ¡ú v13 | ĞÂÔö `news_bookmarks` ´æ´¢£¬ÓÃÓÚ³Ö¾Ã»¯×ÊÑ¶ÊÕ²Ø×´Ì¬¡£ |
+| v13 ¡ú v14 | ĞÂÔö `hot_sector_scores`¡¢`value_pit_scores` ´æ´¢£¬Ö§³ÅË«²ßÂÔÌåÏµ¡£ |
+| v14 ¡ú v15 | `hot_sector_scores` Î¬¶È×Ö¶Î `composite` ÖØÃüÃûÎª `marketEnv`£»`value_pit_scores` ÒÆ³ı `composite` ×Ö¶Î£»ĞÂÔö `execution_logs`¡¢`missing_reports` Store¡£ |
+| v15 ¡ú v16 | Êı¾İ²ã²¹È«£ºĞÂÔö `execution_plans`£¨Ö´ĞĞ¼Æ»®£©¡¢`portfolios`£¨Í¶×Ê×éºÏ£©Store¡£ |
+| v16 ¡ú v17 | ÖÇÄÜÌåµ÷¶È²ã£ºĞÂÔö `agent_tasks`¡¢`agent_health_logs` Store¡£ |
+| v17 ¡ú v18 | ÃüÁîÄ£¿é£ºĞÂÔö `command_audit_logs` Store¡£ |
+| v18 ¡ú v19 | Êä³ö²ÕÓëÖ´ĞĞÄ£¿é£ºĞÂÔö `export_tasks`¡¢`execution_strategies` Store¡£ |
+| v19 ¡ú v20 | ½»Ò×¸´ÅÌ£ºĞÂÔö `trade_reviews` Store¡£ |
+| v20 ¡ú v21 | Êı¾İ×Öµä²¹È«£ºÍêÉÆ ACL ¾ØÕó£¬ĞÂÔö `datalayer` Ä£¿éµÄ read/write È¨ÏŞ¡£ |
 
-### 1.3 Store ä¸€è§ˆ
+### 1.3 Store Ò»ÀÀ
 
-| åºå· | Store åç§° | ä¸»é”® | è‡ªå¢ | ç´¢å¼•æ•° | ä¸»è¦æ•°æ®å®ä½“ |
+| ĞòºÅ | Store Ãû³Æ | Ö÷¼ü | ×ÔÔö | Ë÷ÒıÊı | Ö÷ÒªÊı¾İÊµÌå |
 |------|-----------|------|------|--------|-------------|
-| 1 | `stocks` | `symbol` | å¦ | 2 | `Stock` |
-| 2 | `v6_scores` | `symbol` | å¦ | 0 | `V6Score` |
-| 3 | `intelligent_scores` | `id` | æ˜¯ | 1 | `IntelligentScore` |
-| 4 | `industry_scores` | `id` | æ˜¯ | 1 | `IndustryScore` |
-| 5 | `orders` | `id` | å¦ | 0 | `Order` |
-| 6 | `watchlists` | `id` | å¦ | 0 | `Watchlist` |
-| 7 | `signals` | `id` | å¦ | 0 | `Signal` |
-| 8 | `research_logs` | `id` | æ˜¯ | 0 | `ResearchLog` |
-| 9 | `daily_quotes` | `symbol` | å¦ | 0 | `DailyQuotes` |
-| 10 | `rotation_scores` | `id` | å¦ | 4 | `RotationSectorScore` |
-| 11 | `sector_scores` | `id` | å¦ | 3 | `SectorScoreRecord` |
-| 12 | `score_docs` | `docId` | å¦ | 3 | `ScoreDocVersion` |
-| 13 | `strategy_snapshots` | `id` | å¦ | 3 | `StrategySnapshot` |
-| 14 | `local_docs` | `id` | å¦ | 3 | `LocalDoc` |
-| 15 | `news` | `id` | å¦ | 4 | `NewsArticle` |
-| 16 | `news_stock_map` | `id` | å¦ | 2 | `NewsStockMap` |
-| 17 | `sentiment_cache` | `id` | å¦ | 2 | `SentimentCache` |
-| 18 | `news_bookmarks` | `id` | å¦ | 1 | èµ„è®¯æ”¶è—è®°å½• |
-| 19 | `hot_sector_scores` | `symbol` | å¦ | 1 | `HotSectorScore` |
-| 20 | `value_pit_scores` | `symbol` | å¦ | 1 | `ValuePitScore` |
-| 21 | `execution_logs` | `id` | æ˜¯ | 3 | `ExecutionLog`ï¼ˆv15 æ–°å¢ï¼‰ |
-| 22 | `missing_reports` | `id` | æ˜¯ | 3 | `MissingReport`ï¼ˆv15 æ–°å¢ï¼‰ |
-| 23 | `execution_plans` | `id` | å¦ | 4 | `ExecutionPlan`ï¼ˆv16 æ–°å¢ï¼‰ |
-| 24 | `portfolios` | `id` | å¦ | 2 | `Portfolio`ï¼ˆv16 æ–°å¢ï¼‰ |
-| 25 | `trade_reviews` | `id` | å¦ | 1 | `TradeReviewRecord`ï¼ˆv20 æ–°å¢ï¼‰ |
+| 1 | `stocks` | `symbol` | ·ñ | 2 | `Stock` |
+| 2 | `v6_scores` | `symbol` | ·ñ | 0 | `V6Score` |
+| 3 | `intelligent_scores` | `id` | ÊÇ | 1 | `IntelligentScore` |
+| 4 | `industry_scores` | `id` | ÊÇ | 1 | `IndustryScore` |
+| 5 | `orders` | `id` | ·ñ | 0 | `Order` |
+| 6 | `watchlists` | `id` | ·ñ | 0 | `Watchlist` |
+| 7 | `signals` | `id` | ·ñ | 0 | `Signal` |
+| 8 | `research_logs` | `id` | ÊÇ | 0 | `ResearchLog` |
+| 9 | `daily_quotes` | `symbol` | ·ñ | 0 | `DailyQuotes` |
+| 10 | `rotation_scores` | `id` | ·ñ | 4 | `RotationSectorScore` |
+| 11 | `sector_scores` | `id` | ·ñ | 3 | `SectorScoreRecord` |
+| 12 | `score_docs` | `docId` | ·ñ | 3 | `ScoreDocVersion` |
+| 13 | `strategy_snapshots` | `id` | ·ñ | 3 | `StrategySnapshot` |
+| 14 | `local_docs` | `id` | ·ñ | 3 | `LocalDoc` |
+| 15 | `news` | `id` | ·ñ | 4 | `NewsArticle` |
+| 16 | `news_stock_map` | `id` | ·ñ | 2 | `NewsStockMap` |
+| 17 | `sentiment_cache` | `id` | ·ñ | 2 | `SentimentCache` |
+| 18 | `news_bookmarks` | `id` | ·ñ | 1 | ×ÊÑ¶ÊÕ²Ø¼ÇÂ¼ |
+| 19 | `hot_sector_scores` | `symbol` | ·ñ | 1 | `HotSectorScore` |
+| 20 | `value_pit_scores` | `symbol` | ·ñ | 1 | `ValuePitScore` |
+| 21 | `execution_logs` | `id` | ÊÇ | 3 | `ExecutionLog`£¨v15 ĞÂÔö£© |
+| 22 | `missing_reports` | `id` | ÊÇ | 3 | `MissingReport`£¨v15 ĞÂÔö£© |
+| 23 | `execution_plans` | `id` | ·ñ | 4 | `ExecutionPlan`£¨v16 ĞÂÔö£© |
+| 24 | `portfolios` | `id` | ·ñ | 2 | `Portfolio`£¨v16 ĞÂÔö£© |
+| 25 | `trade_reviews` | `id` | ·ñ | 1 | `TradeReviewRecord`£¨v20 ĞÂÔö£© |
 
 ---
 
-## 2. Store è¯¦ç»†è¯´æ˜
+## 2. Store ÏêÏ¸ËµÃ÷
 
-### 2.1 stocks â€” è‚¡ç¥¨æ± åŸºç¡€æ•°æ®
+### 2.1 stocks ¡ª ¹ÉÆ±³Ø»ù´¡Êı¾İ
 
-| å±æ€§ | å€¼ |
+| ÊôĞÔ | Öµ |
 |------|-----|
-| Store åç§° | `stocks` |
-| ä¸»é”® (keyPath) | `symbol` |
-| è‡ªå¢ | å¦ |
-| æ•°æ®å®ä½“ç±»å‹ | `Stock` |
-| æ•°æ®æ¥æºæ¨¡å— | `fetcher`ï¼ˆå†™å…¥ï¼‰ã€`stockpool`ï¼ˆè¯»å†™ï¼‰ã€`analyzer`ï¼ˆè¯»ï¼‰ |
+| Store Ãû³Æ | `stocks` |
+| Ö÷¼ü (keyPath) | `symbol` |
+| ×ÔÔö | ·ñ |
+| Êı¾İÊµÌåÀàĞÍ | `Stock` |
+| Êı¾İÀ´Ô´Ä£¿é | `fetcher`£¨Ğ´Èë£©¡¢`stockpool`£¨¶ÁĞ´£©¡¢`analyzer`£¨¶Á£© |
 
-**ç´¢å¼•åˆ—è¡¨ï¼š**
+**Ë÷ÒıÁĞ±í£º**
 
-| ç´¢å¼•å | å­—æ®µ | å”¯ä¸€ | ç”¨é€” |
+| Ë÷ÒıÃû | ×Ö¶Î | Î¨Ò» | ÓÃÍ¾ |
 |--------|------|------|------|
-| `by-status` | `researchStatus` | å¦ | æŒ‰ç ”ç©¶çŠ¶æ€ç­›é€‰è‚¡ç¥¨ |
-| `by-group` | `group` | å¦ | æŒ‰ç”¨æˆ·è‡ªå®šä¹‰åˆ†ç»„ç­›é€‰ |
+| `by-status` | `researchStatus` | ·ñ | °´ÑĞ¾¿×´Ì¬É¸Ñ¡¹ÉÆ± |
+| `by-group` | `group` | ·ñ | °´ÓÃ»§×Ô¶¨Òå·Ö×éÉ¸Ñ¡ |
 
-**ä¸»è¦å­—æ®µè¯´æ˜ï¼š**
+**Ö÷Òª×Ö¶ÎËµÃ÷£º**
 
-| å­—æ®µå | ç±»å‹ | å¿…å¡« | è¯´æ˜ |
+| ×Ö¶ÎÃû | ÀàĞÍ | ±ØÌî | ËµÃ÷ |
 |--------|------|------|------|
-| `symbol` | `string` | æ˜¯ | è‚¡ç¥¨ä»£ç ï¼Œä¸»é”® |
-| `name` | `string` | æ˜¯ | è‚¡ç¥¨åç§° |
-| `price` | `number` | å¦ | å½“å‰ä»·æ ¼ |
-| `pe` | `number` | å¦ | å¸‚ç›ˆç‡ |
-| `pb` | `number` | å¦ | å¸‚å‡€ç‡ |
-| `roe` | `number` | å¦ | å‡€èµ„äº§æ”¶ç›Šç‡ |
-| `marketCap` | `number` | å¦ | å¸‚å€¼ |
-| `researchStatus` | `ResearchStatus` | æ˜¯ | ç ”ç©¶çŠ¶æ€ï¼ˆcandidate/screened/deepDive/watching/archivedï¼‰ |
-| `source` | `DataSource` | æ˜¯ | æ•°æ®æ¥æºï¼ˆmanual/import/akshareï¼‰ |
-| `dataVersion` | `number` | æ˜¯ | æ•°æ®ç‰ˆæœ¬å· |
-| `dataQuality` | `StockDataQuality` | å¦ | æ•°æ®è´¨é‡æ ‡è®° |
-| `industryCode` | `string` | å¦ | è¡Œä¸šä»£ç  |
-| `theme` | `string[]` | å¦ | ä¸»é¢˜æ ‡ç­¾ |
-| `sector` | `string` | å¦ | æ¿å—åç§° |
-| `group` | `string` | å¦ | è‚¡ç¥¨æ± åˆ†ç»„åç§°ï¼Œé»˜è®¤"é»˜è®¤åˆ†ç»„" |
-| `ingestedAt` | `number` | å¦ | å…¥åº“æ—¶é—´æˆ³ |
-| `updatedAt` | `number` | å¦ | æ›´æ–°æ—¶é—´æˆ³ |
+| `symbol` | `string` | ÊÇ | ¹ÉÆ±´úÂë£¬Ö÷¼ü |
+| `name` | `string` | ÊÇ | ¹ÉÆ±Ãû³Æ |
+| `price` | `number` | ·ñ | µ±Ç°¼Û¸ñ |
+| `pe` | `number` | ·ñ | ÊĞÓ¯ÂÊ |
+| `pb` | `number` | ·ñ | ÊĞ¾»ÂÊ |
+| `roe` | `number` | ·ñ | ¾»×Ê²úÊÕÒæÂÊ |
+| `marketCap` | `number` | ·ñ | ÊĞÖµ |
+| `researchStatus` | `ResearchStatus` | ÊÇ | ÑĞ¾¿×´Ì¬£¨candidate/screened/deepDive/watching/archived£© |
+| `source` | `DataSource` | ÊÇ | Êı¾İÀ´Ô´£¨manual/import/akshare£© |
+| `dataVersion` | `number` | ÊÇ | Êı¾İ°æ±¾ºÅ |
+| `dataQuality` | `StockDataQuality` | ·ñ | Êı¾İÖÊÁ¿±ê¼Ç |
+| `industryCode` | `string` | ·ñ | ĞĞÒµ´úÂë |
+| `theme` | `string[]` | ·ñ | Ö÷Ìâ±êÇ© |
+| `sector` | `string` | ·ñ | °å¿éÃû³Æ |
+| `group` | `string` | ·ñ | ¹ÉÆ±³Ø·Ö×éÃû³Æ£¬Ä¬ÈÏ"Ä¬ÈÏ·Ö×é" |
+| `ingestedAt` | `number` | ·ñ | Èë¿âÊ±¼ä´Á |
+| `updatedAt` | `number` | ·ñ | ¸üĞÂÊ±¼ä´Á |
 
 ---
 
-### 2.2 v6_scores â€” V6 ç»¼åˆè¯„åˆ†
+### 2.2 v6_scores ¡ª V6 ×ÛºÏÆÀ·Ö
 
-| å±æ€§ | å€¼ |
+| ÊôĞÔ | Öµ |
 |------|-----|
-| Store åç§° | `v6_scores` |
-| ä¸»é”® (keyPath) | `symbol` |
-| è‡ªå¢ | å¦ |
-| æ•°æ®å®ä½“ç±»å‹ | `V6Score` |
-| æ•°æ®æ¥æºæ¨¡å— | `analyzer`ï¼ˆè¯»å†™ï¼‰ã€`stockpool`ï¼ˆè¯»ï¼‰ |
+| Store Ãû³Æ | `v6_scores` |
+| Ö÷¼ü (keyPath) | `symbol` |
+| ×ÔÔö | ·ñ |
+| Êı¾İÊµÌåÀàĞÍ | `V6Score` |
+| Êı¾İÀ´Ô´Ä£¿é | `analyzer`£¨¶ÁĞ´£©¡¢`stockpool`£¨¶Á£© |
 
-**ç´¢å¼•åˆ—è¡¨ï¼š** æ— 
+**Ë÷ÒıÁĞ±í£º** ÎŞ
 
-**ä¸»è¦å­—æ®µè¯´æ˜ï¼š**
+**Ö÷Òª×Ö¶ÎËµÃ÷£º**
 
-| å­—æ®µå | ç±»å‹ | å¿…å¡« | è¯´æ˜ |
+| ×Ö¶ÎÃû | ÀàĞÍ | ±ØÌî | ËµÃ÷ |
 |--------|------|------|------|
-| `symbol` | `string` | æ˜¯ | è‚¡ç¥¨ä»£ç ï¼Œä¸»é”® |
-| `score` | `number` | æ˜¯ | ç»¼åˆè¯„åˆ† |
-| `factors` | `Record<string, number>` | æ˜¯ | å„å› å­å¾—åˆ†æ˜ç»† |
-| `algorithmVersion` | `string` | æ˜¯ | ç®—æ³•ç‰ˆæœ¬å· |
-| `calculatedAt` | `number` | æ˜¯ | è®¡ç®—æ—¶é—´æˆ³ |
-| `dataVersion` | `number` | æ˜¯ | æ•°æ®ç‰ˆæœ¬å· |
-| `qualityWarning` | `string` | å¦ | è¯„åˆ†è´¨é‡è­¦å‘Šï¼ˆæ•°æ®å®Œæ•´åº¦ä½äº100%æ—¶å¡«å……ï¼‰ |
+| `symbol` | `string` | ÊÇ | ¹ÉÆ±´úÂë£¬Ö÷¼ü |
+| `score` | `number` | ÊÇ | ×ÛºÏÆÀ·Ö |
+| `factors` | `Record<string, number>` | ÊÇ | ¸÷Òò×ÓµÃ·ÖÃ÷Ï¸ |
+| `algorithmVersion` | `string` | ÊÇ | Ëã·¨°æ±¾ºÅ |
+| `calculatedAt` | `number` | ÊÇ | ¼ÆËãÊ±¼ä´Á |
+| `dataVersion` | `number` | ÊÇ | Êı¾İ°æ±¾ºÅ |
+| `qualityWarning` | `string` | ·ñ | ÆÀ·ÖÖÊÁ¿¾¯¸æ£¨Êı¾İÍêÕû¶ÈµÍÓÚ100%Ê±Ìî³ä£© |
 
 ---
 
-### 2.3 intelligent_scores â€” æ™ºèƒ½è¯„åˆ†ï¼ˆAI å¤šç»´ï¼‰
+### 2.3 intelligent_scores ¡ª ÖÇÄÜÆÀ·Ö£¨AI ¶àÎ¬£©
 
-| å±æ€§ | å€¼ |
+| ÊôĞÔ | Öµ |
 |------|-----|
-| Store åç§° | `intelligent_scores` |
-| ä¸»é”® (keyPath) | `id` |
-| è‡ªå¢ | **æ˜¯** |
-| æ•°æ®å®ä½“ç±»å‹ | `IntelligentScore` |
-| æ•°æ®æ¥æºæ¨¡å— | `analyzer`ï¼ˆè¯»å†™ï¼‰ |
+| Store Ãû³Æ | `intelligent_scores` |
+| Ö÷¼ü (keyPath) | `id` |
+| ×ÔÔö | **ÊÇ** |
+| Êı¾İÊµÌåÀàĞÍ | `IntelligentScore` |
+| Êı¾İÀ´Ô´Ä£¿é | `analyzer`£¨¶ÁĞ´£© |
 
-**ç´¢å¼•åˆ—è¡¨ï¼š**
+**Ë÷ÒıÁĞ±í£º**
 
-| ç´¢å¼•å | å­—æ®µ | å”¯ä¸€ | ç”¨é€” |
+| Ë÷ÒıÃû | ×Ö¶Î | Î¨Ò» | ÓÃÍ¾ |
 |--------|------|------|------|
-| `by-symbol` | `symbol` | å¦ | æŒ‰è‚¡ç¥¨ä»£ç æŸ¥è¯¢å†å²è¯„åˆ† |
+| `by-symbol` | `symbol` | ·ñ | °´¹ÉÆ±´úÂë²éÑ¯ÀúÊ·ÆÀ·Ö |
 
-**ä¸»è¦å­—æ®µè¯´æ˜ï¼š**
+**Ö÷Òª×Ö¶ÎËµÃ÷£º**
 
-| å­—æ®µå | ç±»å‹ | å¿…å¡« | è¯´æ˜ |
+| ×Ö¶ÎÃû | ÀàĞÍ | ±ØÌî | ËµÃ÷ |
 |--------|------|------|------|
-| `id` | `number` | å¦ | è‡ªå¢ä¸»é”® |
-| `symbol` | `string` | æ˜¯ | è‚¡ç¥¨ä»£ç  |
-| `overallScore` | `number \| null` | æ˜¯ | æ€»ä½“è¯„åˆ† |
-| `dimensionScores` | `DimensionScore[]` | æ˜¯ | å„ç»´åº¦è¯„åˆ†è¯¦æƒ… |
-| `summary` | `string` | æ˜¯ | è¯„åˆ†æ€»ç»“ |
-| `basis` | `string` | æ˜¯ | è¯„åˆ†ä¾æ® |
-| `missingFields` | `string[]` | æ˜¯ | ç¼ºå¤±å­—æ®µåˆ—è¡¨ |
-| `sourceSnapshot` | `object` | æ˜¯ | è¯„åˆ†æ—¶çš„æºæ•°æ®å¿«ç…§ï¼ˆè‚¡ç¥¨ä¿¡æ¯ã€æ–‡ä»¶åã€æŠ¥å‘Šé•¿åº¦ï¼‰ |
-| `configSnapshot` | `object` | æ˜¯ | æ¨¡å‹é…ç½®å¿«ç…§ï¼ˆmodelã€baseURLï¼‰ |
-| `modelResponse` | `string` | æ˜¯ | æ¨¡å‹åŸå§‹å“åº” |
-| `dataVersion` | `number` | æ˜¯ | æ•°æ®ç‰ˆæœ¬å· |
-| `scoredAt` | `number` | æ˜¯ | è¯„åˆ†æ—¶é—´æˆ³ |
+| `id` | `number` | ·ñ | ×ÔÔöÖ÷¼ü |
+| `symbol` | `string` | ÊÇ | ¹ÉÆ±´úÂë |
+| `overallScore` | `number \| null` | ÊÇ | ×ÜÌåÆÀ·Ö |
+| `dimensionScores` | `DimensionScore[]` | ÊÇ | ¸÷Î¬¶ÈÆÀ·ÖÏêÇé |
+| `summary` | `string` | ÊÇ | ÆÀ·Ö×Ü½á |
+| `basis` | `string` | ÊÇ | ÆÀ·ÖÒÀ¾İ |
+| `missingFields` | `string[]` | ÊÇ | È±Ê§×Ö¶ÎÁĞ±í |
+| `sourceSnapshot` | `object` | ÊÇ | ÆÀ·ÖÊ±µÄÔ´Êı¾İ¿ìÕÕ£¨¹ÉÆ±ĞÅÏ¢¡¢ÎÄ¼şÃû¡¢±¨¸æ³¤¶È£© |
+| `configSnapshot` | `object` | ÊÇ | Ä£ĞÍÅäÖÃ¿ìÕÕ£¨model¡¢baseURL£© |
+| `modelResponse` | `string` | ÊÇ | Ä£ĞÍÔ­Ê¼ÏìÓ¦ |
+| `dataVersion` | `number` | ÊÇ | Êı¾İ°æ±¾ºÅ |
+| `scoredAt` | `number` | ÊÇ | ÆÀ·ÖÊ±¼ä´Á |
 
 ---
 
-### 2.4 industry_scores â€” è¡Œä¸šè¯„åˆ†
+### 2.4 industry_scores ¡ª ĞĞÒµÆÀ·Ö
 
-| å±æ€§ | å€¼ |
+| ÊôĞÔ | Öµ |
 |------|-----|
-| Store åç§° | `industry_scores` |
-| ä¸»é”® (keyPath) | `id` |
-| è‡ªå¢ | **æ˜¯** |
-| æ•°æ®å®ä½“ç±»å‹ | `IndustryScore` |
-| æ•°æ®æ¥æºæ¨¡å— | `analyzer`ï¼ˆè¯»å†™ï¼‰ |
+| Store Ãû³Æ | `industry_scores` |
+| Ö÷¼ü (keyPath) | `id` |
+| ×ÔÔö | **ÊÇ** |
+| Êı¾İÊµÌåÀàĞÍ | `IndustryScore` |
+| Êı¾İÀ´Ô´Ä£¿é | `analyzer`£¨¶ÁĞ´£© |
 
-**ç´¢å¼•åˆ—è¡¨ï¼š**
+**Ë÷ÒıÁĞ±í£º**
 
-| ç´¢å¼•å | å­—æ®µ | å”¯ä¸€ | ç”¨é€” |
+| Ë÷ÒıÃû | ×Ö¶Î | Î¨Ò» | ÓÃÍ¾ |
 |--------|------|------|------|
-| `by-code` | `code` | å¦ | æŒ‰è¡Œä¸šä»£ç æŸ¥è¯¢å†å²è¯„åˆ† |
+| `by-code` | `code` | ·ñ | °´ĞĞÒµ´úÂë²éÑ¯ÀúÊ·ÆÀ·Ö |
 
-**ä¸»è¦å­—æ®µè¯´æ˜ï¼š**
+**Ö÷Òª×Ö¶ÎËµÃ÷£º**
 
-| å­—æ®µå | ç±»å‹ | å¿…å¡« | è¯´æ˜ |
+| ×Ö¶ÎÃû | ÀàĞÍ | ±ØÌî | ËµÃ÷ |
 |--------|------|------|------|
-| `id` | `number` | å¦ | è‡ªå¢ä¸»é”® |
-| `code` | `string` | æ˜¯ | è¡Œä¸šä»£ç  |
-| `name` | `string` | æ˜¯ | è¡Œä¸šåç§° |
-| `overallScore` | `number \| null` | æ˜¯ | æ€»ä½“è¯„åˆ† |
-| `dimensionScores` | `IndustryDimensionScore[]` | æ˜¯ | å„ç»´åº¦è¯„åˆ†è¯¦æƒ… |
-| `summary` | `string` | æ˜¯ | è¯„åˆ†æ€»ç»“ |
-| `basis` | `string` | æ˜¯ | è¯„åˆ†ä¾æ® |
-| `missingFields` | `string[]` | æ˜¯ | ç¼ºå¤±å­—æ®µåˆ—è¡¨ |
-| `sectorSnapshot` | `object` | æ˜¯ | æ¿å—å¿«ç…§ï¼ˆcompositeã€recommendationã€positionPctã€subTracksï¼‰ |
-| `configSnapshot` | `object` | æ˜¯ | æ¨¡å‹é…ç½®å¿«ç…§ |
-| `modelResponse` | `string` | æ˜¯ | æ¨¡å‹åŸå§‹å“åº” |
-| `scoredAt` | `number` | æ˜¯ | è¯„åˆ†æ—¶é—´æˆ³ |
+| `id` | `number` | ·ñ | ×ÔÔöÖ÷¼ü |
+| `code` | `string` | ÊÇ | ĞĞÒµ´úÂë |
+| `name` | `string` | ÊÇ | ĞĞÒµÃû³Æ |
+| `overallScore` | `number \| null` | ÊÇ | ×ÜÌåÆÀ·Ö |
+| `dimensionScores` | `IndustryDimensionScore[]` | ÊÇ | ¸÷Î¬¶ÈÆÀ·ÖÏêÇé |
+| `summary` | `string` | ÊÇ | ÆÀ·Ö×Ü½á |
+| `basis` | `string` | ÊÇ | ÆÀ·ÖÒÀ¾İ |
+| `missingFields` | `string[]` | ÊÇ | È±Ê§×Ö¶ÎÁĞ±í |
+| `sectorSnapshot` | `object` | ÊÇ | °å¿é¿ìÕÕ£¨composite¡¢recommendation¡¢positionPct¡¢subTracks£© |
+| `configSnapshot` | `object` | ÊÇ | Ä£ĞÍÅäÖÃ¿ìÕÕ |
+| `modelResponse` | `string` | ÊÇ | Ä£ĞÍÔ­Ê¼ÏìÓ¦ |
+| `scoredAt` | `number` | ÊÇ | ÆÀ·ÖÊ±¼ä´Á |
 
 ---
 
-### 2.5 orders â€” äº¤æ˜“è®¢å•
+### 2.5 orders ¡ª ½»Ò×¶©µ¥
 
-| å±æ€§ | å€¼ |
+| ÊôĞÔ | Öµ |
 |------|-----|
-| Store åç§° | `orders` |
-| ä¸»é”® (keyPath) | `id` |
-| è‡ªå¢ | å¦ |
-| æ•°æ®å®ä½“ç±»å‹ | `Order` |
-| æ•°æ®æ¥æºæ¨¡å— | `trading`ï¼ˆè¯»å†™ï¼‰ã€`tradinghub`ï¼ˆå†™ï¼‰ |
+| Store Ãû³Æ | `orders` |
+| Ö÷¼ü (keyPath) | `id` |
+| ×ÔÔö | ·ñ |
+| Êı¾İÊµÌåÀàĞÍ | `Order` |
+| Êı¾İÀ´Ô´Ä£¿é | `trading`£¨¶ÁĞ´£©¡¢`tradinghub`£¨Ğ´£© |
 
-**ç´¢å¼•åˆ—è¡¨ï¼š** æ— 
+**Ë÷ÒıÁĞ±í£º** ÎŞ
 
-**ä¸»è¦å­—æ®µè¯´æ˜ï¼š**
+**Ö÷Òª×Ö¶ÎËµÃ÷£º**
 
-| å­—æ®µå | ç±»å‹ | å¿…å¡« | è¯´æ˜ |
+| ×Ö¶ÎÃû | ÀàĞÍ | ±ØÌî | ËµÃ÷ |
 |--------|------|------|------|
-| `id` | `string` | æ˜¯ | è®¢å• IDï¼Œä¸»é”® |
-| `symbol` | `string` | æ˜¯ | è‚¡ç¥¨ä»£ç  |
-| `direction` | `OrderDirection` | æ˜¯ | ä¹°å–æ–¹å‘ï¼ˆbuy/sellï¼‰ |
-| `quantity` | `number` | æ˜¯ | æ•°é‡ |
-| `price` | `number` | æ˜¯ | ä»·æ ¼ |
-| `amount` | `number` | æ˜¯ | é‡‘é¢ |
-| `status` | `OrderStatus` | æ˜¯ | è®¢å•çŠ¶æ€ï¼ˆpending/filled/cancelledï¼‰ |
-| `accountType` | `AccountType` | æ˜¯ | è´¦æˆ·ç±»å‹ï¼ˆpaper/realï¼‰ |
-| `createdAt` | `number` | æ˜¯ | åˆ›å»ºæ—¶é—´æˆ³ |
-| `planStopLoss` | `number` | å¦ | è®¡åˆ’æ­¢æŸä»· |
-| `planTakeProfit` | `number` | å¦ | è®¡åˆ’æ­¢ç›ˆä»· |
-| `planPositionPct` | `number` | å¦ | è®¡åˆ’ä»“ä½å æ¯”ï¼ˆ0-1ï¼‰ |
-| `planFollowed` | `boolean` | å¦ | æ˜¯å¦æŒ‰è®¡åˆ’æ‰§è¡Œ |
-| `maxDrawdown` | `number` | å¦ | æœ€å¤§å›æ’¤é‡‘é¢ |
-| `maxFloatingProfit` | `number` | å¦ | æœ€å¤§æµ®åŠ¨ç›ˆåˆ© |
-| `profitCaptureRate` | `number` | å¦ | ç›ˆåˆ©æ•è·ç‡ï¼ˆ0-1ï¼‰ |
-| `errors` | `string[]` | å¦ | å¤ç›˜é”™è¯¯åˆ—è¡¨ |
-| `reviewNoteId` | `string` | å¦ | å…³è”å¤ç›˜ç¬”è®° ID |
+| `id` | `string` | ÊÇ | ¶©µ¥ ID£¬Ö÷¼ü |
+| `symbol` | `string` | ÊÇ | ¹ÉÆ±´úÂë |
+| `direction` | `OrderDirection` | ÊÇ | ÂòÂô·½Ïò£¨buy/sell£© |
+| `quantity` | `number` | ÊÇ | ÊıÁ¿ |
+| `price` | `number` | ÊÇ | ¼Û¸ñ |
+| `amount` | `number` | ÊÇ | ½ğ¶î |
+| `status` | `OrderStatus` | ÊÇ | ¶©µ¥×´Ì¬£¨pending/filled/cancelled£© |
+| `accountType` | `AccountType` | ÊÇ | ÕË»§ÀàĞÍ£¨paper/real£© |
+| `createdAt` | `number` | ÊÇ | ´´½¨Ê±¼ä´Á |
+| `planStopLoss` | `number` | ·ñ | ¼Æ»®Ö¹Ëğ¼Û |
+| `planTakeProfit` | `number` | ·ñ | ¼Æ»®Ö¹Ó¯¼Û |
+| `planPositionPct` | `number` | ·ñ | ¼Æ»®²ÖÎ»Õ¼±È£¨0-1£© |
+| `planFollowed` | `boolean` | ·ñ | ÊÇ·ñ°´¼Æ»®Ö´ĞĞ |
+| `maxDrawdown` | `number` | ·ñ | ×î´ó»Ø³·½ğ¶î |
+| `maxFloatingProfit` | `number` | ·ñ | ×î´ó¸¡¶¯Ó¯Àû |
+| `profitCaptureRate` | `number` | ·ñ | Ó¯Àû²¶»ñÂÊ£¨0-1£© |
+| `errors` | `string[]` | ·ñ | ¸´ÅÌ´íÎóÁĞ±í |
+| `reviewNoteId` | `string` | ·ñ | ¹ØÁª¸´ÅÌ±Ê¼Ç ID |
 
 ---
 
-### 2.6 watchlists â€” è‡ªé€‰è‚¡/è§‚å¯Ÿåˆ—è¡¨
+### 2.6 watchlists ¡ª ×ÔÑ¡¹É/¹Û²ìÁĞ±í
 
-| å±æ€§ | å€¼ |
+| ÊôĞÔ | Öµ |
 |------|-----|
-| Store åç§° | `watchlists` |
-| ä¸»é”® (keyPath) | `id` |
-| è‡ªå¢ | å¦ |
-| æ•°æ®å®ä½“ç±»å‹ | `Watchlist` |
-| æ•°æ®æ¥æºæ¨¡å— | `user`ï¼ˆç”¨æˆ·ç®¡ç†ï¼‰ |
+| Store Ãû³Æ | `watchlists` |
+| Ö÷¼ü (keyPath) | `id` |
+| ×ÔÔö | ·ñ |
+| Êı¾İÊµÌåÀàĞÍ | `Watchlist` |
+| Êı¾İÀ´Ô´Ä£¿é | `user`£¨ÓÃ»§¹ÜÀí£© |
 
-**ç´¢å¼•åˆ—è¡¨ï¼š** æ— 
+**Ë÷ÒıÁĞ±í£º** ÎŞ
 
-**ä¸»è¦å­—æ®µè¯´æ˜ï¼š**
+**Ö÷Òª×Ö¶ÎËµÃ÷£º**
 
-| å­—æ®µå | ç±»å‹ | å¿…å¡« | è¯´æ˜ |
+| ×Ö¶ÎÃû | ÀàĞÍ | ±ØÌî | ËµÃ÷ |
 |--------|------|------|------|
-| `id` | `string` | æ˜¯ | åˆ—è¡¨ IDï¼Œä¸»é”® |
-| `name` | `string` | æ˜¯ | åˆ—è¡¨åç§° |
-| `items` | `string[]` | æ˜¯ | è‚¡ç¥¨ä»£ç åˆ—è¡¨ |
-| `createdAt` | `number` | æ˜¯ | åˆ›å»ºæ—¶é—´æˆ³ |
-| `updatedAt` | `number` | æ˜¯ | æ›´æ–°æ—¶é—´æˆ³ |
+| `id` | `string` | ÊÇ | ÁĞ±í ID£¬Ö÷¼ü |
+| `name` | `string` | ÊÇ | ÁĞ±íÃû³Æ |
+| `items` | `string[]` | ÊÇ | ¹ÉÆ±´úÂëÁĞ±í |
+| `createdAt` | `number` | ÊÇ | ´´½¨Ê±¼ä´Á |
+| `updatedAt` | `number` | ÊÇ | ¸üĞÂÊ±¼ä´Á |
 
 ---
 
-### 2.7 signals â€” äº¤æ˜“ä¿¡å·
+### 2.7 signals ¡ª ½»Ò×ĞÅºÅ
 
-| å±æ€§ | å€¼ |
+| ÊôĞÔ | Öµ |
 |------|-----|
-| Store åç§° | `signals` |
-| ä¸»é”® (keyPath) | `id` |
-| è‡ªå¢ | å¦ |
-| æ•°æ®å®ä½“ç±»å‹ | `Signal` |
-| æ•°æ®æ¥æºæ¨¡å— | `trading`ï¼ˆè¯»å†™ï¼‰ã€`tradinghub`ï¼ˆå†™ï¼‰ã€`strategy`ï¼ˆè¯»ï¼‰ |
+| Store Ãû³Æ | `signals` |
+| Ö÷¼ü (keyPath) | `id` |
+| ×ÔÔö | ·ñ |
+| Êı¾İÊµÌåÀàĞÍ | `Signal` |
+| Êı¾İÀ´Ô´Ä£¿é | `trading`£¨¶ÁĞ´£©¡¢`tradinghub`£¨Ğ´£©¡¢`strategy`£¨¶Á£© |
 
-**ç´¢å¼•åˆ—è¡¨ï¼š** æ— 
+**Ë÷ÒıÁĞ±í£º** ÎŞ
 
-**ä¸»è¦å­—æ®µè¯´æ˜ï¼š**
+**Ö÷Òª×Ö¶ÎËµÃ÷£º**
 
-| å­—æ®µå | ç±»å‹ | å¿…å¡« | è¯´æ˜ |
+| ×Ö¶ÎÃû | ÀàĞÍ | ±ØÌî | ËµÃ÷ |
 |--------|------|------|------|
-| `id` | `string` | æ˜¯ | ä¿¡å· IDï¼Œä¸»é”® |
-| `symbol` | `string` | æ˜¯ | è‚¡ç¥¨ä»£ç  |
-| `direction` | `string` | æ˜¯ | ä¿¡å·æ–¹å‘ï¼ˆbuy/sell/hold/watchï¼‰ |
-| `type` | `string` | æ˜¯ | ä¿¡å·ç±»å‹ |
-| `confidence` | `number` | æ˜¯ | ç½®ä¿¡åº¦ |
-| `rationale` | `string` | æ˜¯ | ä¿¡å·ç†ç”± |
-| `snapshot` | `SignalSnapshot` | æ˜¯ | è§¦å‘æ—¶çš„æŠ€æœ¯é¢å¿«ç…§ |
-| `createdAt` | `number` | æ˜¯ | åˆ›å»ºæ—¶é—´æˆ³ |
-| `strategy` | `string` | å¦ | ç­–ç•¥æ¥æºï¼ˆhot-sector/value-pit/core-scarceï¼‰ |
+| `id` | `string` | ÊÇ | ĞÅºÅ ID£¬Ö÷¼ü |
+| `symbol` | `string` | ÊÇ | ¹ÉÆ±´úÂë |
+| `direction` | `string` | ÊÇ | ĞÅºÅ·½Ïò£¨buy/sell/hold/watch£© |
+| `type` | `string` | ÊÇ | ĞÅºÅÀàĞÍ |
+| `confidence` | `number` | ÊÇ | ÖÃĞÅ¶È |
+| `rationale` | `string` | ÊÇ | ĞÅºÅÀíÓÉ |
+| `snapshot` | `SignalSnapshot` | ÊÇ | ´¥·¢Ê±µÄ¼¼ÊõÃæ¿ìÕÕ |
+| `createdAt` | `number` | ÊÇ | ´´½¨Ê±¼ä´Á |
+| `strategy` | `string` | ·ñ | ²ßÂÔÀ´Ô´£¨hot-sector/value-pit/core-scarce£© |
 
 ---
 
-### 2.8 research_logs â€” ç ”ç©¶æ“ä½œæ—¥å¿—
+### 2.8 research_logs ¡ª ÑĞ¾¿²Ù×÷ÈÕÖ¾
 
-| å±æ€§ | å€¼ |
+| ÊôĞÔ | Öµ |
 |------|-----|
-| Store åç§° | `research_logs` |
-| ä¸»é”® (keyPath) | `id` |
-| è‡ªå¢ | **æ˜¯** |
-| æ•°æ®å®ä½“ç±»å‹ | `ResearchLog` |
-| æ•°æ®æ¥æºæ¨¡å— | ç³»ç»Ÿå®¡è®¡æ—¥å¿— |
+| Store Ãû³Æ | `research_logs` |
+| Ö÷¼ü (keyPath) | `id` |
+| ×ÔÔö | **ÊÇ** |
+| Êı¾İÊµÌåÀàĞÍ | `ResearchLog` |
+| Êı¾İÀ´Ô´Ä£¿é | ÏµÍ³Éó¼ÆÈÕÖ¾ |
 
-**ç´¢å¼•åˆ—è¡¨ï¼š** æ— 
+**Ë÷ÒıÁĞ±í£º** ÎŞ
 
-**ä¸»è¦å­—æ®µè¯´æ˜ï¼š**
+**Ö÷Òª×Ö¶ÎËµÃ÷£º**
 
-| å­—æ®µå | ç±»å‹ | å¿…å¡« | è¯´æ˜ |
+| ×Ö¶ÎÃû | ÀàĞÍ | ±ØÌî | ËµÃ÷ |
 |--------|------|------|------|
-| `id` | `number` | å¦ | è‡ªå¢ä¸»é”® |
-| `traceId` | `string` | æ˜¯ | è¿½è¸ª ID |
-| `timestamp` | `number` | æ˜¯ | æ—¶é—´æˆ³ |
-| `actor` | `string` | æ˜¯ | æ“ä½œè€… |
-| `action` | `string` | æ˜¯ | åŠ¨ä½œç±»å‹ |
-| `targetType` | `string` | æ˜¯ | ç›®æ ‡ç±»å‹ |
-| `targetCode` | `string` | æ˜¯ | ç›®æ ‡ä»£ç  |
-| `payload` | `string` | å¦ | æ“ä½œè½½è·ï¼ˆJSON å­—ç¬¦ä¸²ï¼‰ |
+| `id` | `number` | ·ñ | ×ÔÔöÖ÷¼ü |
+| `traceId` | `string` | ÊÇ | ×·×Ù ID |
+| `timestamp` | `number` | ÊÇ | Ê±¼ä´Á |
+| `actor` | `string` | ÊÇ | ²Ù×÷Õß |
+| `action` | `string` | ÊÇ | ¶¯×÷ÀàĞÍ |
+| `targetType` | `string` | ÊÇ | Ä¿±êÀàĞÍ |
+| `targetCode` | `string` | ÊÇ | Ä¿±ê´úÂë |
+| `payload` | `string` | ·ñ | ²Ù×÷ÔØºÉ£¨JSON ×Ö·û´®£© |
 
 ---
 
-### 2.9 daily_quotes â€” æ—¥çº¿è¡Œæƒ… / Kçº¿æ•°æ®
+### 2.9 daily_quotes ¡ª ÈÕÏßĞĞÇé / KÏßÊı¾İ
 
-| å±æ€§ | å€¼ |
+| ÊôĞÔ | Öµ |
 |------|-----|
-| Store åç§° | `daily_quotes` |
-| ä¸»é”® (keyPath) | `symbol` |
-| è‡ªå¢ | å¦ |
-| æ•°æ®å®ä½“ç±»å‹ | `DailyQuotes` |
-| æ•°æ®æ¥æºæ¨¡å— | `fetcher`ï¼ˆå†™ï¼‰ã€`rotation`ï¼ˆè¯»ï¼‰ã€`strategy`ï¼ˆè¯»ï¼‰ |
+| Store Ãû³Æ | `daily_quotes` |
+| Ö÷¼ü (keyPath) | `symbol` |
+| ×ÔÔö | ·ñ |
+| Êı¾İÊµÌåÀàĞÍ | `DailyQuotes` |
+| Êı¾İÀ´Ô´Ä£¿é | `fetcher`£¨Ğ´£©¡¢`rotation`£¨¶Á£©¡¢`strategy`£¨¶Á£© |
 
-**ç´¢å¼•åˆ—è¡¨ï¼š** æ— 
+**Ë÷ÒıÁĞ±í£º** ÎŞ
 
-**ä¸»è¦å­—æ®µè¯´æ˜ï¼š**
+**Ö÷Òª×Ö¶ÎËµÃ÷£º**
 
-| å­—æ®µå | ç±»å‹ | å¿…å¡« | è¯´æ˜ |
+| ×Ö¶ÎÃû | ÀàĞÍ | ±ØÌî | ËµÃ÷ |
 |--------|------|------|------|
-| `symbol` | `string` | æ˜¯ | è‚¡ç¥¨ä»£ç ï¼Œä¸»é”® |
-| `latest` | `KlineBar` | æ˜¯ | æœ€æ–°ä¸€æ ¹Kçº¿ |
-| `history` | `KlineBar[]` | æ˜¯ | å†å²Kçº¿æ•°ç»„ |
-| `period` | `string` | æ˜¯ | å‘¨æœŸï¼ˆå¦‚ dailyï¼‰ |
-| `adjust` | `string` | æ˜¯ | å¤æƒæ–¹å¼ï¼ˆå¦‚ qfqï¼‰ |
-| `updatedAt` | `number` | æ˜¯ | æ›´æ–°æ—¶é—´æˆ³ |
+| `symbol` | `string` | ÊÇ | ¹ÉÆ±´úÂë£¬Ö÷¼ü |
+| `latest` | `KlineBar` | ÊÇ | ×îĞÂÒ»¸ùKÏß |
+| `history` | `KlineBar[]` | ÊÇ | ÀúÊ·KÏßÊı×é |
+| `period` | `string` | ÊÇ | ÖÜÆÚ£¨Èç daily£© |
+| `adjust` | `string` | ÊÇ | ¸´È¨·½Ê½£¨Èç qfq£© |
+| `updatedAt` | `number` | ÊÇ | ¸üĞÂÊ±¼ä´Á |
 
-**KlineBar ç»“æ„ï¼š**
+**KlineBar ½á¹¹£º**
 
-| å­—æ®µå | ç±»å‹ | è¯´æ˜ |
+| ×Ö¶ÎÃû | ÀàĞÍ | ËµÃ÷ |
 |--------|------|------|
-| `date` | `string` | æ—¥æœŸ |
-| `open` | `number` | å¼€ç›˜ä»· |
-| `high` | `number` | æœ€é«˜ä»· |
-| `low` | `number` | æœ€ä½ä»· |
-| `close` | `number` | æ”¶ç›˜ä»· |
-| `volume` | `number` | æˆäº¤é‡ |
-| `amount` | `number` | æˆäº¤é¢ |
+| `date` | `string` | ÈÕÆÚ |
+| `open` | `number` | ¿ªÅÌ¼Û |
+| `high` | `number` | ×î¸ß¼Û |
+| `low` | `number` | ×îµÍ¼Û |
+| `close` | `number` | ÊÕÅÌ¼Û |
+| `volume` | `number` | ³É½»Á¿ |
+| `amount` | `number` | ³É½»¶î |
 
 ---
 
-### 2.10 rotation_scores â€” æ¿å—è½®åŠ¨è¯„åˆ†
+### 2.10 rotation_scores ¡ª °å¿éÂÖ¶¯ÆÀ·Ö
 
-| å±æ€§ | å€¼ |
+| ÊôĞÔ | Öµ |
 |------|-----|
-| Store åç§° | `rotation_scores` |
-| ä¸»é”® (keyPath) | `id` |
-| è‡ªå¢ | å¦ |
-| æ•°æ®å®ä½“ç±»å‹ | `RotationSectorScore` |
-| æ•°æ®æ¥æºæ¨¡å— | `rotation`ï¼ˆè¯»å†™ï¼‰ |
+| Store Ãû³Æ | `rotation_scores` |
+| Ö÷¼ü (keyPath) | `id` |
+| ×ÔÔö | ·ñ |
+| Êı¾İÊµÌåÀàĞÍ | `RotationSectorScore` |
+| Êı¾İÀ´Ô´Ä£¿é | `rotation`£¨¶ÁĞ´£© |
 
-**ç´¢å¼•åˆ—è¡¨ï¼š**
+**Ë÷ÒıÁĞ±í£º**
 
-| ç´¢å¼•å | å­—æ®µ | å”¯ä¸€ | ç”¨é€” |
+| Ë÷ÒıÃû | ×Ö¶Î | Î¨Ò» | ÓÃÍ¾ |
 |--------|------|------|------|
-| `by-sector-date` | `[sectorCode, scoreDate]` | **æ˜¯** | æŒ‰æ¿å—+æ—¥æœŸå”¯ä¸€æŸ¥è¯¢ |
-| `by-sector` | `sectorCode` | å¦ | æŒ‰æ¿å—ç­›é€‰ |
-| `by-total` | `total` | å¦ | æŒ‰æ€»åˆ†æ’åº |
-| `by-resonance` | `resonance` | å¦ | æŒ‰å…±æŒ¯å¼ºåº¦æ’åº |
+| `by-sector-date` | `[sectorCode, scoreDate]` | **ÊÇ** | °´°å¿é+ÈÕÆÚÎ¨Ò»²éÑ¯ |
+| `by-sector` | `sectorCode` | ·ñ | °´°å¿éÉ¸Ñ¡ |
+| `by-total` | `total` | ·ñ | °´×Ü·ÖÅÅĞò |
+| `by-resonance` | `resonance` | ·ñ | °´¹²ÕñÇ¿¶ÈÅÅĞò |
 
-**ä¸»è¦å­—æ®µè¯´æ˜ï¼š**
+**Ö÷Òª×Ö¶ÎËµÃ÷£º**
 
-| å­—æ®µå | ç±»å‹ | å¿…å¡« | è¯´æ˜ |
+| ×Ö¶ÎÃû | ÀàĞÍ | ±ØÌî | ËµÃ÷ |
 |--------|------|------|------|
-| `id` | `string` | æ˜¯ | IDï¼ˆæ ¼å¼ï¼šsectorCode__dateï¼‰ï¼Œä¸»é”® |
-| `sectorCode` | `string` | æ˜¯ | æ¿å—ä»£ç  |
-| `sectorName` | `string` | æ˜¯ | æ¿å—åç§° |
-| `swLevel1/2/3` | `string` | å¦ | ç”³ä¸‡è¡Œä¸šåˆ†çº§ |
-| `scoreDate` | `string` | æ˜¯ | è¯„åˆ†æ—¥æœŸ |
-| `f1Jingqi` | `number` | æ˜¯ | æ™¯æ°”å› å­å¾—åˆ† |
-| `f2Zijin` | `number` | æ˜¯ | èµ„é‡‘å› å­å¾—åˆ† |
-| `f3Guzhi` | `number` | æ˜¯ | ä¼°å€¼å› å­å¾—åˆ† |
-| `f4Beta` | `number` | æ˜¯ | Î²+ç›¸å…³ç³»æ•°å¾—åˆ† |
-| `f5Nengliang` | `number` | æ˜¯ | é‡èƒ½å› å­å¾—åˆ† |
-| `total` | `number` | æ˜¯ | ç»¼åˆæ€»åˆ†ï¼ˆ0-100ï¼‰ |
-| `resonance` | `number` | æ˜¯ | å…±æŒ¯å¼ºåº¦ï¼ˆ0-10ï¼‰ |
-| `signal` | `string` | æ˜¯ | ä¿¡å·æ ‡ç­¾ |
-| `alertLevel` | `string` | æ˜¯ | é¢„è­¦ç­‰çº§ |
-| `declineType` | `string` | æ˜¯ | ä¸‹è·Œæ€§è´¨ |
-| `poolStocks` | `array` | æ˜¯ | ç›¸å…³è‚¡ç¥¨æ± æ ‡çš„ |
-| `analysisReport` | `string` | å¦ | åˆ†ææŠ¥å‘Š |
-| `modelUsed` | `string` | æ˜¯ | ä½¿ç”¨æ¨¡å‹ |
-| `createdAt` | `string` | æ˜¯ | åˆ›å»ºæ—¶é—´ |
+| `id` | `string` | ÊÇ | ID£¨¸ñÊ½£ºsectorCode__date£©£¬Ö÷¼ü |
+| `sectorCode` | `string` | ÊÇ | °å¿é´úÂë |
+| `sectorName` | `string` | ÊÇ | °å¿éÃû³Æ |
+| `swLevel1/2/3` | `string` | ·ñ | ÉêÍòĞĞÒµ·Ö¼¶ |
+| `scoreDate` | `string` | ÊÇ | ÆÀ·ÖÈÕÆÚ |
+| `f1Jingqi` | `number` | ÊÇ | ¾°ÆøÒò×ÓµÃ·Ö |
+| `f2Zijin` | `number` | ÊÇ | ×Ê½ğÒò×ÓµÃ·Ö |
+| `f3Guzhi` | `number` | ÊÇ | ¹ÀÖµÒò×ÓµÃ·Ö |
+| `f4Beta` | `number` | ÊÇ | ¦Â+Ïà¹ØÏµÊıµÃ·Ö |
+| `f5Nengliang` | `number` | ÊÇ | Á¿ÄÜÒò×ÓµÃ·Ö |
+| `total` | `number` | ÊÇ | ×ÛºÏ×Ü·Ö£¨0-100£© |
+| `resonance` | `number` | ÊÇ | ¹²ÕñÇ¿¶È£¨0-10£© |
+| `signal` | `string` | ÊÇ | ĞÅºÅ±êÇ© |
+| `alertLevel` | `string` | ÊÇ | Ô¤¾¯µÈ¼¶ |
+| `declineType` | `string` | ÊÇ | ÏÂµøĞÔÖÊ |
+| `poolStocks` | `array` | ÊÇ | Ïà¹Ø¹ÉÆ±³Ø±êµÄ |
+| `analysisReport` | `string` | ·ñ | ·ÖÎö±¨¸æ |
+| `modelUsed` | `string` | ÊÇ | Ê¹ÓÃÄ£ĞÍ |
+| `createdAt` | `string` | ÊÇ | ´´½¨Ê±¼ä |
 
 ---
 
-### 2.11 sector_scores â€” åäº”äº”æ¿å—è¯„åˆ†
+### 2.11 sector_scores ¡ª Ê®ÎåÎå°å¿éÆÀ·Ö
 
-| å±æ€§ | å€¼ |
+| ÊôĞÔ | Öµ |
 |------|-----|
-| Store åç§° | `sector_scores` |
-| ä¸»é”® (keyPath) | `id` |
-| è‡ªå¢ | å¦ |
-| æ•°æ®å®ä½“ç±»å‹ | `SectorScoreRecord` |
-| æ•°æ®æ¥æºæ¨¡å— | `sector`ï¼ˆè¯»å†™ï¼‰ |
+| Store Ãû³Æ | `sector_scores` |
+| Ö÷¼ü (keyPath) | `id` |
+| ×ÔÔö | ·ñ |
+| Êı¾İÊµÌåÀàĞÍ | `SectorScoreRecord` |
+| Êı¾İÀ´Ô´Ä£¿é | `sector`£¨¶ÁĞ´£© |
 
-**ç´¢å¼•åˆ—è¡¨ï¼š**
+**Ë÷ÒıÁĞ±í£º**
 
-| ç´¢å¼•å | å­—æ®µ | å”¯ä¸€ | ç”¨é€” |
+| Ë÷ÒıÃû | ×Ö¶Î | Î¨Ò» | ÓÃÍ¾ |
 |--------|------|------|------|
-| `by-sector` | `sectorCode` | å¦ | æŒ‰æ¿å—ç­›é€‰ |
-| `by-composite` | `composite` | å¦ | æŒ‰ç»¼åˆåˆ†æ’åº |
-| `by-is-core` | `isCore` | å¦ | æŒ‰æ ¸å¿ƒæ¿å—ç­›é€‰ |
+| `by-sector` | `sectorCode` | ·ñ | °´°å¿éÉ¸Ñ¡ |
+| `by-composite` | `composite` | ·ñ | °´×ÛºÏ·ÖÅÅĞò |
+| `by-is-core` | `isCore` | ·ñ | °´ºËĞÄ°å¿éÉ¸Ñ¡ |
 
-**ä¸»è¦å­—æ®µè¯´æ˜ï¼š**
+**Ö÷Òª×Ö¶ÎËµÃ÷£º**
 
-| å­—æ®µå | ç±»å‹ | å¿…å¡« | è¯´æ˜ |
+| ×Ö¶ÎÃû | ÀàĞÍ | ±ØÌî | ËµÃ÷ |
 |--------|------|------|------|
-| `id` | `string` | æ˜¯ | IDï¼ˆæ ¼å¼ï¼šsectorCode__dateï¼‰ï¼Œä¸»é”® |
-| `sectorCode` | `string` | æ˜¯ | æ¿å—ä»£ç  |
-| `scoreDate` | `string` | æ˜¯ | è¯„åˆ†æ—¥æœŸ |
-| `dimensions` | `SectorScoreDimensions` | æ˜¯ | ä¸‰ç»´åº¦è¯„åˆ†ï¼ˆplanAlignment/policySupport/usChinaParityï¼‰ |
-| `composite` | `number` | æ˜¯ | ç»¼åˆè¯„åˆ† |
-| `isCore` | `boolean` | æ˜¯ | æ˜¯å¦æ ¸å¿ƒæ¿å— |
-| `modelUsed` | `string` | æ˜¯ | ä½¿ç”¨æ¨¡å‹ |
-| `createdAt` | `string` | æ˜¯ | åˆ›å»ºæ—¶é—´ |
+| `id` | `string` | ÊÇ | ID£¨¸ñÊ½£ºsectorCode__date£©£¬Ö÷¼ü |
+| `sectorCode` | `string` | ÊÇ | °å¿é´úÂë |
+| `scoreDate` | `string` | ÊÇ | ÆÀ·ÖÈÕÆÚ |
+| `dimensions` | `SectorScoreDimensions` | ÊÇ | ÈıÎ¬¶ÈÆÀ·Ö£¨planAlignment/policySupport/usChinaParity£© |
+| `composite` | `number` | ÊÇ | ×ÛºÏÆÀ·Ö |
+| `isCore` | `boolean` | ÊÇ | ÊÇ·ñºËĞÄ°å¿é |
+| `modelUsed` | `string` | ÊÇ | Ê¹ÓÃÄ£ĞÍ |
+| `createdAt` | `string` | ÊÇ | ´´½¨Ê±¼ä |
 
 ---
 
-### 2.12 score_docs â€” è¯„åˆ†æ–‡æ¡£ç‰ˆæœ¬åº“
+### 2.12 score_docs ¡ª ÆÀ·ÖÎÄµµ°æ±¾¿â
 
-| å±æ€§ | å€¼ |
+| ÊôĞÔ | Öµ |
 |------|-----|
-| Store åç§° | `score_docs` |
-| ä¸»é”® (keyPath) | `docId` |
-| è‡ªå¢ | å¦ |
-| æ•°æ®å®ä½“ç±»å‹ | `ScoreDocVersion` |
-| æ•°æ®æ¥æºæ¨¡å— | `analyzer`ï¼ˆè¯»å†™ï¼‰ |
+| Store Ãû³Æ | `score_docs` |
+| Ö÷¼ü (keyPath) | `docId` |
+| ×ÔÔö | ·ñ |
+| Êı¾İÊµÌåÀàĞÍ | `ScoreDocVersion` |
+| Êı¾İÀ´Ô´Ä£¿é | `analyzer`£¨¶ÁĞ´£© |
 
-**ç´¢å¼•åˆ—è¡¨ï¼š**
+**Ë÷ÒıÁĞ±í£º**
 
-| ç´¢å¼•å | å­—æ®µ | å”¯ä¸€ | ç”¨é€” |
+| Ë÷ÒıÃû | ×Ö¶Î | Î¨Ò» | ÓÃÍ¾ |
 |--------|------|------|------|
-| `by-symbol` | `symbol` | å¦ | æŒ‰è‚¡ç¥¨æŸ¥è¯¢æ‰€æœ‰ç‰ˆæœ¬ |
-| `by-symbol-version` | `[symbol, version]` | **æ˜¯** | æŒ‰è‚¡ç¥¨+ç‰ˆæœ¬å”¯ä¸€æŸ¥è¯¢ |
-| `by-composite` | `composite` | å¦ | æŒ‰ç»¼åˆåˆ†æ’åº |
+| `by-symbol` | `symbol` | ·ñ | °´¹ÉÆ±²éÑ¯ËùÓĞ°æ±¾ |
+| `by-symbol-version` | `[symbol, version]` | **ÊÇ** | °´¹ÉÆ±+°æ±¾Î¨Ò»²éÑ¯ |
+| `by-composite` | `composite` | ·ñ | °´×ÛºÏ·ÖÅÅĞò |
 
-**ä¸»è¦å­—æ®µè¯´æ˜ï¼š**
+**Ö÷Òª×Ö¶ÎËµÃ÷£º**
 
-| å­—æ®µå | ç±»å‹ | å¿…å¡« | è¯´æ˜ |
+| ×Ö¶ÎÃû | ÀàĞÍ | ±ØÌî | ËµÃ÷ |
 |--------|------|------|------|
-| `docId` | `string` | æ˜¯ | æ–‡æ¡£IDï¼ˆæ ¼å¼ï¼šsymbol__version__timestampï¼‰ï¼Œä¸»é”® |
-| `symbol` | `string` | æ˜¯ | è‚¡ç¥¨ä»£ç  |
-| `stockName` | `string` | æ˜¯ | è‚¡ç¥¨åç§° |
-| `version` | `number` | æ˜¯ | ç‰ˆæœ¬å· |
-| `scoreDate` | `string` | æ˜¯ | è¯„åˆ†æ—¥æœŸ |
-| `composite` | `number` | æ˜¯ | ç»¼åˆè¯„åˆ† |
-| `l3v` | `number` | æ˜¯ | L3V è¯„åˆ† |
-| `layers` | `Record<string, V6LayerScore>` | æ˜¯ | å„å±‚çº§è¯„åˆ† |
-| `recommendation` | `object` | æ˜¯ | æŠ•èµ„å»ºè®®ï¼ˆkey/label/colorï¼‰ |
-| `targetPrice` | `object` | æ˜¯ | ç›®æ ‡ä»·ï¼ˆbull/base/bearï¼‰ |
-| `keyRisks` | `string[]` | æ˜¯ | å…³é”®é£é™© |
-| `keyCatalysts` | `string[]` | æ˜¯ | å…³é”®å‚¬åŒ–å‰‚ |
-| `reportMd` | `string` | æ˜¯ | å®Œæ•´æŠ¥å‘Š Markdown |
-| `modelUsed` | `string` | æ˜¯ | ä½¿ç”¨æ¨¡å‹ |
-| `market` | `string` | æ˜¯ | å¸‚åœº |
-| `industry` | `string` | å¦ | è¡Œä¸š |
-| `changeFromPrev` | `object` | å¦ | è¾ƒä¸Šä¸€ç‰ˆæœ¬å˜åŒ– |
-| `createdAt` | `string` | æ˜¯ | åˆ›å»ºæ—¶é—´ |
+| `docId` | `string` | ÊÇ | ÎÄµµID£¨¸ñÊ½£ºsymbol__version__timestamp£©£¬Ö÷¼ü |
+| `symbol` | `string` | ÊÇ | ¹ÉÆ±´úÂë |
+| `stockName` | `string` | ÊÇ | ¹ÉÆ±Ãû³Æ |
+| `version` | `number` | ÊÇ | °æ±¾ºÅ |
+| `scoreDate` | `string` | ÊÇ | ÆÀ·ÖÈÕÆÚ |
+| `composite` | `number` | ÊÇ | ×ÛºÏÆÀ·Ö |
+| `l3v` | `number` | ÊÇ | L3V ÆÀ·Ö |
+| `layers` | `Record<string, V6LayerScore>` | ÊÇ | ¸÷²ã¼¶ÆÀ·Ö |
+| `recommendation` | `object` | ÊÇ | Í¶×Ê½¨Òé£¨key/label/color£© |
+| `targetPrice` | `object` | ÊÇ | Ä¿±ê¼Û£¨bull/base/bear£© |
+| `keyRisks` | `string[]` | ÊÇ | ¹Ø¼ü·çÏÕ |
+| `keyCatalysts` | `string[]` | ÊÇ | ¹Ø¼ü´ß»¯¼Á |
+| `reportMd` | `string` | ÊÇ | ÍêÕû±¨¸æ Markdown |
+| `modelUsed` | `string` | ÊÇ | Ê¹ÓÃÄ£ĞÍ |
+| `market` | `string` | ÊÇ | ÊĞ³¡ |
+| `industry` | `string` | ·ñ | ĞĞÒµ |
+| `changeFromPrev` | `object` | ·ñ | ½ÏÉÏÒ»°æ±¾±ä»¯ |
+| `createdAt` | `string` | ÊÇ | ´´½¨Ê±¼ä |
 
 ---
 
-### 2.13 strategy_snapshots â€” ç­–ç•¥å¿«ç…§
+### 2.13 strategy_snapshots ¡ª ²ßÂÔ¿ìÕÕ
 
-| å±æ€§ | å€¼ |
+| ÊôĞÔ | Öµ |
 |------|-----|
-| Store åç§° | `strategy_snapshots` |
-| ä¸»é”® (keyPath) | `id` |
-| è‡ªå¢ | å¦ |
-| æ•°æ®å®ä½“ç±»å‹ | `StrategySnapshot` |
-| æ•°æ®æ¥æºæ¨¡å— | `tradinghub`ï¼ˆå†™ï¼‰ã€`trading`ï¼ˆè¯»ï¼‰ |
+| Store Ãû³Æ | `strategy_snapshots` |
+| Ö÷¼ü (keyPath) | `id` |
+| ×ÔÔö | ·ñ |
+| Êı¾İÊµÌåÀàĞÍ | `StrategySnapshot` |
+| Êı¾İÀ´Ô´Ä£¿é | `tradinghub`£¨Ğ´£©¡¢`trading`£¨¶Á£© |
 
-**ç´¢å¼•åˆ—è¡¨ï¼š**
+**Ë÷ÒıÁĞ±í£º**
 
-| ç´¢å¼•å | å­—æ®µ | å”¯ä¸€ | ç”¨é€” |
+| Ë÷ÒıÃû | ×Ö¶Î | Î¨Ò» | ÓÃÍ¾ |
 |--------|------|------|------|
-| `by-version` | `version` | **æ˜¯** | æŒ‰ç‰ˆæœ¬å·å”¯ä¸€æŸ¥è¯¢ |
-| `by-date` | `date` | å¦ | æŒ‰æ—¥æœŸç­›é€‰ |
-| `by-timestamp` | `timestamp` | å¦ | æŒ‰æ—¶é—´æˆ³æ’åº |
+| `by-version` | `version` | **ÊÇ** | °´°æ±¾ºÅÎ¨Ò»²éÑ¯ |
+| `by-date` | `date` | ·ñ | °´ÈÕÆÚÉ¸Ñ¡ |
+| `by-timestamp` | `timestamp` | ·ñ | °´Ê±¼ä´ÁÅÅĞò |
 
-**ä¸»è¦å­—æ®µè¯´æ˜ï¼š**
+**Ö÷Òª×Ö¶ÎËµÃ÷£º**
 
-| å­—æ®µå | ç±»å‹ | å¿…å¡« | è¯´æ˜ |
+| ×Ö¶ÎÃû | ÀàĞÍ | ±ØÌî | ËµÃ÷ |
 |--------|------|------|------|
-| `id` | `string` | æ˜¯ | å¿«ç…§ IDï¼Œä¸»é”® |
-| `version` | `number` | æ˜¯ | ç‰ˆæœ¬å· |
-| `timestamp` | `number` | æ˜¯ | æ—¶é—´æˆ³ |
-| `date` | `string` | æ˜¯ | æ—¥æœŸ |
-| `time` | `string` | æ˜¯ | æ—¶é—´ |
-| `stockCount` | `number` | æ˜¯ | è‚¡ç¥¨æ€»æ•° |
-| `scoreCount` | `number` | æ˜¯ | å·²è¯„åˆ†æ•°é‡ |
-| `rotationCount` | `number` | æ˜¯ | è½®åŠ¨ä¿¡å·æ•°é‡ |
-| `core` | `StrategyGroupSnapshot` | æ˜¯ | æ ¸å¿ƒç¨€ç¼ºç»„å¿«ç…§ |
-| `hot` | `StrategyGroupSnapshot` | æ˜¯ | çƒ­é—¨è¿½æ¶¨ç»„å¿«ç…§ |
-| `value` | `StrategyGroupSnapshot` | æ˜¯ | ä»·å€¼æ´¼åœ°ç»„å¿«ç…§ |
-| `changeFromPrev` | `object` | å¦ | è¾ƒä¸Šä¸€ç‰ˆæœ¬å˜åŒ– |
-| `trigger` | `string` | æ˜¯ | è§¦å‘åŸå›  |
+| `id` | `string` | ÊÇ | ¿ìÕÕ ID£¬Ö÷¼ü |
+| `version` | `number` | ÊÇ | °æ±¾ºÅ |
+| `timestamp` | `number` | ÊÇ | Ê±¼ä´Á |
+| `date` | `string` | ÊÇ | ÈÕÆÚ |
+| `time` | `string` | ÊÇ | Ê±¼ä |
+| `stockCount` | `number` | ÊÇ | ¹ÉÆ±×ÜÊı |
+| `scoreCount` | `number` | ÊÇ | ÒÑÆÀ·ÖÊıÁ¿ |
+| `rotationCount` | `number` | ÊÇ | ÂÖ¶¯ĞÅºÅÊıÁ¿ |
+| `core` | `StrategyGroupSnapshot` | ÊÇ | ºËĞÄÏ¡È±×é¿ìÕÕ |
+| `hot` | `StrategyGroupSnapshot` | ÊÇ | ÈÈÃÅ×·ÕÇ×é¿ìÕÕ |
+| `value` | `StrategyGroupSnapshot` | ÊÇ | ¼ÛÖµÍİµØ×é¿ìÕÕ |
+| `changeFromPrev` | `object` | ·ñ | ½ÏÉÏÒ»°æ±¾±ä»¯ |
+| `trigger` | `string` | ÊÇ | ´¥·¢Ô­Òò |
 
 ---
 
-### 2.14 local_docs â€” æœ¬åœ°çŸ¥è¯†åº“æ–‡æ¡£
+### 2.14 local_docs ¡ª ±¾µØÖªÊ¶¿âÎÄµµ
 
-| å±æ€§ | å€¼ |
+| ÊôĞÔ | Öµ |
 |------|-----|
-| Store åç§° | `local_docs` |
-| ä¸»é”® (keyPath) | `id` |
-| è‡ªå¢ | å¦ |
-| æ•°æ®å®ä½“ç±»å‹ | `LocalDoc` |
-| æ•°æ®æ¥æºæ¨¡å— | `analyzer`ï¼ˆå…³è”ï¼‰ã€ç”¨æˆ·ä¸Šä¼  |
+| Store Ãû³Æ | `local_docs` |
+| Ö÷¼ü (keyPath) | `id` |
+| ×ÔÔö | ·ñ |
+| Êı¾İÊµÌåÀàĞÍ | `LocalDoc` |
+| Êı¾İÀ´Ô´Ä£¿é | `analyzer`£¨¹ØÁª£©¡¢ÓÃ»§ÉÏ´« |
 
-**ç´¢å¼•åˆ—è¡¨ï¼š**
+**Ë÷ÒıÁĞ±í£º**
 
-| ç´¢å¼•å | å­—æ®µ | å”¯ä¸€ | ç”¨é€” |
+| Ë÷ÒıÃû | ×Ö¶Î | Î¨Ò» | ÓÃÍ¾ |
 |--------|------|------|------|
-| `by-symbol` | `symbol` | å¦ | æŒ‰è‚¡ç¥¨ä»£ç ç­›é€‰ |
-| `by-category` | `category` | å¦ | æŒ‰åˆ†ç±»ç­›é€‰ |
-| `by-added-at` | `addedAt` | å¦ | æŒ‰æ·»åŠ æ—¶é—´æ’åº |
+| `by-symbol` | `symbol` | ·ñ | °´¹ÉÆ±´úÂëÉ¸Ñ¡ |
+| `by-category` | `category` | ·ñ | °´·ÖÀàÉ¸Ñ¡ |
+| `by-added-at` | `addedAt` | ·ñ | °´Ìí¼ÓÊ±¼äÅÅĞò |
 
-**ä¸»è¦å­—æ®µè¯´æ˜ï¼š**
+**Ö÷Òª×Ö¶ÎËµÃ÷£º**
 
-| å­—æ®µå | ç±»å‹ | å¿…å¡« | è¯´æ˜ |
+| ×Ö¶ÎÃû | ÀàĞÍ | ±ØÌî | ËµÃ÷ |
 |--------|------|------|------|
-| `id` | `string` | æ˜¯ | æ–‡æ¡£ IDï¼Œä¸»é”® |
-| `symbol` | `string` | æ˜¯ | å…³è”è‚¡ç¥¨ä»£ç  |
-| `name` | `string` | æ˜¯ | æ–‡æ¡£åç§° |
-| `content` | `string` | æ˜¯ | æ–‡æ¡£å†…å®¹ |
-| `category` | `string` | æ˜¯ | åˆ†ç±»ï¼ˆç ”æŠ¥/è´¢æŠ¥/è¡Œä¸šåˆ†æ/æ–°é—»/ç­–ç•¥ç¬”è®°/å…¶ä»–ï¼‰ |
-| `tags` | `string[]` | æ˜¯ | æ ‡ç­¾åˆ—è¡¨ |
-| `sourcePath` | `string` | æ˜¯ | æºæ–‡ä»¶è·¯å¾„ |
-| `size` | `number` | æ˜¯ | æ–‡ä»¶å¤§å° |
-| `addedAt` | `number` | æ˜¯ | æ·»åŠ æ—¶é—´æˆ³ |
+| `id` | `string` | ÊÇ | ÎÄµµ ID£¬Ö÷¼ü |
+| `symbol` | `string` | ÊÇ | ¹ØÁª¹ÉÆ±´úÂë |
+| `name` | `string` | ÊÇ | ÎÄµµÃû³Æ |
+| `content` | `string` | ÊÇ | ÎÄµµÄÚÈİ |
+| `category` | `string` | ÊÇ | ·ÖÀà£¨ÑĞ±¨/²Æ±¨/ĞĞÒµ·ÖÎö/ĞÂÎÅ/²ßÂÔ±Ê¼Ç/ÆäËû£© |
+| `tags` | `string[]` | ÊÇ | ±êÇ©ÁĞ±í |
+| `sourcePath` | `string` | ÊÇ | Ô´ÎÄ¼şÂ·¾¶ |
+| `size` | `number` | ÊÇ | ÎÄ¼ş´óĞ¡ |
+| `addedAt` | `number` | ÊÇ | Ìí¼ÓÊ±¼ä´Á |
 
 ---
 
-### 2.15 news â€” èµ„è®¯æ–‡ç« 
+### 2.15 news ¡ª ×ÊÑ¶ÎÄÕÂ
 
-| å±æ€§ | å€¼ |
+| ÊôĞÔ | Öµ |
 |------|-----|
-| Store åç§° | `news` |
-| ä¸»é”® (keyPath) | `id` |
-| è‡ªå¢ | å¦ |
-| æ•°æ®å®ä½“ç±»å‹ | `NewsArticle` |
-| æ•°æ®æ¥æºæ¨¡å— | `news`ï¼ˆè¯»å†™ï¼‰ |
+| Store Ãû³Æ | `news` |
+| Ö÷¼ü (keyPath) | `id` |
+| ×ÔÔö | ·ñ |
+| Êı¾İÊµÌåÀàĞÍ | `NewsArticle` |
+| Êı¾İÀ´Ô´Ä£¿é | `news`£¨¶ÁĞ´£© |
 
-**ç´¢å¼•åˆ—è¡¨ï¼š**
+**Ë÷ÒıÁĞ±í£º**
 
-| ç´¢å¼•å | å­—æ®µ | å”¯ä¸€ | ç”¨é€” |
+| Ë÷ÒıÃû | ×Ö¶Î | Î¨Ò» | ÓÃÍ¾ |
 |--------|------|------|------|
-| `by-source` | `source` | å¦ | æŒ‰æ¥æºç­›é€‰ |
-| `by-category` | `category` | å¦ | æŒ‰åˆ†ç±»ç­›é€‰ |
-| `by-publish-time` | `publishTime` | å¦ | æŒ‰å‘å¸ƒæ—¶é—´æ’åº |
-| `by-hash` | `hash` | **æ˜¯** | æŒ‰å†…å®¹å“ˆå¸Œå»é‡ |
+| `by-source` | `source` | ·ñ | °´À´Ô´É¸Ñ¡ |
+| `by-category` | `category` | ·ñ | °´·ÖÀàÉ¸Ñ¡ |
+| `by-publish-time` | `publishTime` | ·ñ | °´·¢²¼Ê±¼äÅÅĞò |
+| `by-hash` | `hash` | **ÊÇ** | °´ÄÚÈİ¹şÏ£È¥ÖØ |
 
-**ä¸»è¦å­—æ®µè¯´æ˜ï¼š**
+**Ö÷Òª×Ö¶ÎËµÃ÷£º**
 
-| å­—æ®µå | ç±»å‹ | å¿…å¡« | è¯´æ˜ |
+| ×Ö¶ÎÃû | ÀàĞÍ | ±ØÌî | ËµÃ÷ |
 |--------|------|------|------|
-| `id` | `string` | æ˜¯ | æ–‡ç«  IDï¼Œä¸»é”® |
-| `title` | `string` | æ˜¯ | æ ‡é¢˜ |
-| `content` | `string` | æ˜¯ | å†…å®¹æ­£æ–‡ |
-| `url` | `string` | æ˜¯ | åŸæ–‡é“¾æ¥ |
-| `source` | `string` | æ˜¯ | æ¥æº |
-| `category` | `string` | æ˜¯ | åˆ†ç±» |
-| `publishTime` | `string` | æ˜¯ | å‘å¸ƒæ—¶é—´ |
-| `fetchTime` | `string` | æ˜¯ | æŠ“å–æ—¶é—´ |
-| `sentiment` | `string` | æ˜¯ | æƒ…æ„Ÿå€¾å‘ï¼ˆpositive/negative/neutralï¼‰ |
-| `sentimentConfidence` | `number` | æ˜¯ | æƒ…æ„Ÿç½®ä¿¡åº¦ |
-| `relatedStocks` | `string[]` | æ˜¯ | å…³è”è‚¡ç¥¨ä»£ç åˆ—è¡¨ |
-| `keywords` | `string[]` | æ˜¯ | å…³é”®è¯åˆ—è¡¨ |
-| `hash` | `string` | æ˜¯ | å†…å®¹å“ˆå¸Œï¼ˆç”¨äºå»é‡ï¼‰ |
+| `id` | `string` | ÊÇ | ÎÄÕÂ ID£¬Ö÷¼ü |
+| `title` | `string` | ÊÇ | ±êÌâ |
+| `content` | `string` | ÊÇ | ÄÚÈİÕıÎÄ |
+| `url` | `string` | ÊÇ | Ô­ÎÄÁ´½Ó |
+| `source` | `string` | ÊÇ | À´Ô´ |
+| `category` | `string` | ÊÇ | ·ÖÀà |
+| `publishTime` | `string` | ÊÇ | ·¢²¼Ê±¼ä |
+| `fetchTime` | `string` | ÊÇ | ×¥È¡Ê±¼ä |
+| `sentiment` | `string` | ÊÇ | Çé¸ĞÇãÏò£¨positive/negative/neutral£© |
+| `sentimentConfidence` | `number` | ÊÇ | Çé¸ĞÖÃĞÅ¶È |
+| `relatedStocks` | `string[]` | ÊÇ | ¹ØÁª¹ÉÆ±´úÂëÁĞ±í |
+| `keywords` | `string[]` | ÊÇ | ¹Ø¼ü´ÊÁĞ±í |
+| `hash` | `string` | ÊÇ | ÄÚÈİ¹şÏ££¨ÓÃÓÚÈ¥ÖØ£© |
 
 ---
 
-### 2.16 news_stock_map â€” è‚¡ç¥¨-èµ„è®¯å…³è”æ˜ å°„
+### 2.16 news_stock_map ¡ª ¹ÉÆ±-×ÊÑ¶¹ØÁªÓ³Éä
 
-| å±æ€§ | å€¼ |
+| ÊôĞÔ | Öµ |
 |------|-----|
-| Store åç§° | `news_stock_map` |
-| ä¸»é”® (keyPath) | `id` |
-| è‡ªå¢ | å¦ |
-| æ•°æ®å®ä½“ç±»å‹ | `NewsStockMap` |
-| æ•°æ®æ¥æºæ¨¡å— | `news`ï¼ˆè¯»å†™ï¼‰ |
+| Store Ãû³Æ | `news_stock_map` |
+| Ö÷¼ü (keyPath) | `id` |
+| ×ÔÔö | ·ñ |
+| Êı¾İÊµÌåÀàĞÍ | `NewsStockMap` |
+| Êı¾İÀ´Ô´Ä£¿é | `news`£¨¶ÁĞ´£© |
 
-**ç´¢å¼•åˆ—è¡¨ï¼š**
+**Ë÷ÒıÁĞ±í£º**
 
-| ç´¢å¼•å | å­—æ®µ | å”¯ä¸€ | ç”¨é€” |
+| Ë÷ÒıÃû | ×Ö¶Î | Î¨Ò» | ÓÃÍ¾ |
 |--------|------|------|------|
-| `by-symbol` | `symbol` | å¦ | æŒ‰è‚¡ç¥¨æŸ¥è¯¢å…³è”èµ„è®¯ |
-| `by-news` | `newsId` | å¦ | æŒ‰èµ„è®¯æŸ¥è¯¢å…³è”è‚¡ç¥¨ |
+| `by-symbol` | `symbol` | ·ñ | °´¹ÉÆ±²éÑ¯¹ØÁª×ÊÑ¶ |
+| `by-news` | `newsId` | ·ñ | °´×ÊÑ¶²éÑ¯¹ØÁª¹ÉÆ± |
 
-**ä¸»è¦å­—æ®µè¯´æ˜ï¼š**
+**Ö÷Òª×Ö¶ÎËµÃ÷£º**
 
-| å­—æ®µå | ç±»å‹ | å¿…å¡« | è¯´æ˜ |
+| ×Ö¶ÎÃû | ÀàĞÍ | ±ØÌî | ËµÃ÷ |
 |--------|------|------|------|
-| `id` | `string` | æ˜¯ | å…³è”IDï¼ˆæ ¼å¼ï¼š{symbol}_{newsId}ï¼‰ï¼Œä¸»é”® |
-| `symbol` | `string` | æ˜¯ | è‚¡ç¥¨ä»£ç  |
-| `newsId` | `string` | æ˜¯ | èµ„è®¯ ID |
-| `relevanceScore` | `number` | æ˜¯ | ç›¸å…³æ€§è¯„åˆ† |
-| `isTitleMatch` | `boolean` | æ˜¯ | æ˜¯å¦æ ‡é¢˜åŒ¹é… |
-| `isContentMatch` | `boolean` | æ˜¯ | æ˜¯å¦æ­£æ–‡åŒ¹é… |
-| `industryMatch` | `boolean` | æ˜¯ | æ˜¯å¦è¡Œä¸šåŒ¹é… |
+| `id` | `string` | ÊÇ | ¹ØÁªID£¨¸ñÊ½£º{symbol}_{newsId}£©£¬Ö÷¼ü |
+| `symbol` | `string` | ÊÇ | ¹ÉÆ±´úÂë |
+| `newsId` | `string` | ÊÇ | ×ÊÑ¶ ID |
+| `relevanceScore` | `number` | ÊÇ | Ïà¹ØĞÔÆÀ·Ö |
+| `isTitleMatch` | `boolean` | ÊÇ | ÊÇ·ñ±êÌâÆ¥Åä |
+| `isContentMatch` | `boolean` | ÊÇ | ÊÇ·ñÕıÎÄÆ¥Åä |
+| `industryMatch` | `boolean` | ÊÇ | ÊÇ·ñĞĞÒµÆ¥Åä |
 
 ---
 
-### 2.17 sentiment_cache â€” æƒ…æ„Ÿåˆ†æç¼“å­˜
+### 2.17 sentiment_cache ¡ª Çé¸Ğ·ÖÎö»º´æ
 
-| å±æ€§ | å€¼ |
+| ÊôĞÔ | Öµ |
 |------|-----|
-| Store åç§° | `sentiment_cache` |
-| ä¸»é”® (keyPath) | `id` |
-| è‡ªå¢ | å¦ |
-| æ•°æ®å®ä½“ç±»å‹ | `SentimentCache` |
-| æ•°æ®æ¥æºæ¨¡å— | `news`ï¼ˆè¯»å†™ï¼‰ |
+| Store Ãû³Æ | `sentiment_cache` |
+| Ö÷¼ü (keyPath) | `id` |
+| ×ÔÔö | ·ñ |
+| Êı¾İÊµÌåÀàĞÍ | `SentimentCache` |
+| Êı¾İÀ´Ô´Ä£¿é | `news`£¨¶ÁĞ´£© |
 
-**ç´¢å¼•åˆ—è¡¨ï¼š**
+**Ë÷ÒıÁĞ±í£º**
 
-| ç´¢å¼•å | å­—æ®µ | å”¯ä¸€ | ç”¨é€” |
+| Ë÷ÒıÃû | ×Ö¶Î | Î¨Ò» | ÓÃÍ¾ |
 |--------|------|------|------|
-| `by-content-hash` | `contentHash` | **æ˜¯** | æŒ‰å†…å®¹å“ˆå¸Œå¿«é€ŸæŸ¥è¯¢ç¼“å­˜ |
-| `by-analyzed-at` | `analyzedAt` | å¦ | æŒ‰åˆ†ææ—¶é—´æ’åº/æ¸…ç† |
+| `by-content-hash` | `contentHash` | **ÊÇ** | °´ÄÚÈİ¹şÏ£¿ìËÙ²éÑ¯»º´æ |
+| `by-analyzed-at` | `analyzedAt` | ·ñ | °´·ÖÎöÊ±¼äÅÅĞò/ÇåÀí |
 
-**ä¸»è¦å­—æ®µè¯´æ˜ï¼š**
+**Ö÷Òª×Ö¶ÎËµÃ÷£º**
 
-| å­—æ®µå | ç±»å‹ | å¿…å¡« | è¯´æ˜ |
+| ×Ö¶ÎÃû | ÀàĞÍ | ±ØÌî | ËµÃ÷ |
 |--------|------|------|------|
-| `id` | `string` | æ˜¯ | ç¼“å­˜IDï¼ˆæ ¼å¼ï¼šsent_{contentHash}ï¼‰ï¼Œä¸»é”® |
-| `contentHash` | `string` | æ˜¯ | å†…å®¹å“ˆå¸Œ |
-| `sentiment` | `string` | æ˜¯ | æƒ…æ„Ÿå€¾å‘ï¼ˆpositive/negative/neutralï¼‰ |
-| `confidence` | `number` | æ˜¯ | ç½®ä¿¡åº¦ |
-| `method` | `string` | æ˜¯ | åˆ†ææ–¹æ³•ï¼ˆrule/llm/hybridï¼‰ |
-| `analyzedAt` | `number` | æ˜¯ | åˆ†ææ—¶é—´æˆ³ |
-| `llmModel` | `string` | å¦ | ä½¿ç”¨çš„ LLM æ¨¡å‹åç§° |
+| `id` | `string` | ÊÇ | »º´æID£¨¸ñÊ½£ºsent_{contentHash}£©£¬Ö÷¼ü |
+| `contentHash` | `string` | ÊÇ | ÄÚÈİ¹şÏ£ |
+| `sentiment` | `string` | ÊÇ | Çé¸ĞÇãÏò£¨positive/negative/neutral£© |
+| `confidence` | `number` | ÊÇ | ÖÃĞÅ¶È |
+| `method` | `string` | ÊÇ | ·ÖÎö·½·¨£¨rule/llm/hybrid£© |
+| `analyzedAt` | `number` | ÊÇ | ·ÖÎöÊ±¼ä´Á |
+| `llmModel` | `string` | ·ñ | Ê¹ÓÃµÄ LLM Ä£ĞÍÃû³Æ |
 
 ---
 
-### 2.18 news_bookmarks â€” èµ„è®¯æ”¶è—
+### 2.18 news_bookmarks ¡ª ×ÊÑ¶ÊÕ²Ø
 
-| å±æ€§ | å€¼ |
+| ÊôĞÔ | Öµ |
 |------|-----|
-| Store åç§° | `news_bookmarks` |
-| ä¸»é”® (keyPath) | `id` |
-| è‡ªå¢ | å¦ |
-| æ•°æ®å®ä½“ç±»å‹ | èµ„è®¯æ”¶è—è®°å½•ï¼ˆä¸ `NewsArticle` ç»“æ„ä¸€è‡´ï¼‰ |
-| æ•°æ®æ¥æºæ¨¡å— | `news`ï¼ˆè¯»å†™ï¼‰ |
-| å¼•å…¥ç‰ˆæœ¬ | v13 |
+| Store Ãû³Æ | `news_bookmarks` |
+| Ö÷¼ü (keyPath) | `id` |
+| ×ÔÔö | ·ñ |
+| Êı¾İÊµÌåÀàĞÍ | ×ÊÑ¶ÊÕ²Ø¼ÇÂ¼£¨Óë `NewsArticle` ½á¹¹Ò»ÖÂ£© |
+| Êı¾İÀ´Ô´Ä£¿é | `news`£¨¶ÁĞ´£© |
+| ÒıÈë°æ±¾ | v13 |
 
-**ç´¢å¼•åˆ—è¡¨ï¼š**
+**Ë÷ÒıÁĞ±í£º**
 
-| ç´¢å¼•å | å­—æ®µ | å”¯ä¸€ | ç”¨é€” |
+| Ë÷ÒıÃû | ×Ö¶Î | Î¨Ò» | ÓÃÍ¾ |
 |--------|------|------|------|
-| `by-bookmarked-at` | `bookmarkedAt` | å¦ | æŒ‰æ”¶è—æ—¶é—´æ’åº |
+| `by-bookmarked-at` | `bookmarkedAt` | ·ñ | °´ÊÕ²ØÊ±¼äÅÅĞò |
 
-**ä¸»è¦å­—æ®µè¯´æ˜ï¼š**
+**Ö÷Òª×Ö¶ÎËµÃ÷£º**
 
-è¯¥ Store å­˜å‚¨ç”¨æˆ·æ”¶è—çš„èµ„è®¯æ–‡ç« ï¼Œç»“æ„ä¸ `NewsArticle` ç±»ä¼¼ï¼Œé¢å¤–åŒ…å«æ”¶è—æ—¶é—´æˆ³ `bookmarkedAt`ã€‚ç”¨äºæŒä¹…åŒ–ç”¨æˆ·çš„èµ„è®¯æ”¶è—çŠ¶æ€ï¼Œæ”¯æŒç¦»çº¿æŸ¥çœ‹ã€‚
+¸Ã Store ´æ´¢ÓÃ»§ÊÕ²ØµÄ×ÊÑ¶ÎÄÕÂ£¬½á¹¹Óë `NewsArticle` ÀàËÆ£¬¶îÍâ°üº¬ÊÕ²ØÊ±¼ä´Á `bookmarkedAt`¡£ÓÃÓÚ³Ö¾Ã»¯ÓÃ»§µÄ×ÊÑ¶ÊÕ²Ø×´Ì¬£¬Ö§³ÖÀëÏß²é¿´¡£
 
 ---
 
-### 2.19 hot_sector_scores â€” çƒ­é—¨æ¿å—ç­–ç•¥è¯„åˆ†
+### 2.19 hot_sector_scores ¡ª ÈÈÃÅ°å¿é²ßÂÔÆÀ·Ö
 
-| å±æ€§ | å€¼ |
+| ÊôĞÔ | Öµ |
 |------|-----|
-| Store åç§° | `hot_sector_scores` |
-| ä¸»é”® (keyPath) | `symbol` |
-| è‡ªå¢ | å¦ |
-| æ•°æ®å®ä½“ç±»å‹ | `HotSectorScore` |
-| æ•°æ®æ¥æºæ¨¡å— | `analyzer`ï¼ˆè¯»å†™ï¼‰ã€`tradinghub`ï¼ˆè¯»å†™ï¼‰ã€`strategy`ï¼ˆè¯»å†™ï¼‰ |
-| å¼•å…¥ç‰ˆæœ¬ | v14 |
+| Store Ãû³Æ | `hot_sector_scores` |
+| Ö÷¼ü (keyPath) | `symbol` |
+| ×ÔÔö | ·ñ |
+| Êı¾İÊµÌåÀàĞÍ | `HotSectorScore` |
+| Êı¾İÀ´Ô´Ä£¿é | `analyzer`£¨¶ÁĞ´£©¡¢`tradinghub`£¨¶ÁĞ´£©¡¢`strategy`£¨¶ÁĞ´£© |
+| ÒıÈë°æ±¾ | v14 |
 
-**ç´¢å¼•åˆ—è¡¨ï¼š**
+**Ë÷ÒıÁĞ±í£º**
 
-| ç´¢å¼•å | å­—æ®µ | å”¯ä¸€ | ç”¨é€” |
+| Ë÷ÒıÃû | ×Ö¶Î | Î¨Ò» | ÓÃÍ¾ |
 |--------|------|------|------|
-| `by-calculated-at` | `calculatedAt` | å¦ | æŒ‰è®¡ç®—æ—¶é—´æ’åº |
+| `by-calculated-at` | `calculatedAt` | ·ñ | °´¼ÆËãÊ±¼äÅÅĞò |
 
-**ä¸»è¦å­—æ®µè¯´æ˜ï¼š**
+**Ö÷Òª×Ö¶ÎËµÃ÷£º**
 
-| å­—æ®µå | ç±»å‹ | å¿…å¡« | è¯´æ˜ |
+| ×Ö¶ÎÃû | ÀàĞÍ | ±ØÌî | ËµÃ÷ |
 |--------|------|------|------|
-| `symbol` | `string` | æ˜¯ | è‚¡ç¥¨/æ¿å—ä»£ç ï¼Œä¸»é”® |
-| `name` | `string` | æ˜¯ | æ¿å—/æ ‡çš„åç§° |
-| `score` | `number` | æ˜¯ | æ€»è¯„åˆ† |
-| `dimensions` | `HotSectorDimensionScores` | æ˜¯ | äº”ç»´åº¦è¯„åˆ†ï¼ˆmomentum/sentiment/technical/valuation/marketEnvï¼‰ |
-| `action` | `string` | æ˜¯ | æ“ä½œå»ºè®®ï¼ˆimmediate/probe/ignoreï¼‰ |
-| `calculatedAt` | `number` | æ˜¯ | è®¡ç®—æ—¶é—´æˆ³ |
-| `dataVersion` | `number` | æ˜¯ | æ•°æ®ç‰ˆæœ¬å· |
-| `qualityWarning` | `string` | å¦ | è´¨é‡è­¦å‘Š |
+| `symbol` | `string` | ÊÇ | ¹ÉÆ±/°å¿é´úÂë£¬Ö÷¼ü |
+| `name` | `string` | ÊÇ | °å¿é/±êµÄÃû³Æ |
+| `score` | `number` | ÊÇ | ×ÜÆÀ·Ö |
+| `dimensions` | `HotSectorDimensionScores` | ÊÇ | ÎåÎ¬¶ÈÆÀ·Ö£¨momentum/sentiment/technical/valuation/marketEnv£© |
+| `action` | `string` | ÊÇ | ²Ù×÷½¨Òé£¨immediate/probe/ignore£© |
+| `calculatedAt` | `number` | ÊÇ | ¼ÆËãÊ±¼ä´Á |
+| `dataVersion` | `number` | ÊÇ | Êı¾İ°æ±¾ºÅ |
+| `qualityWarning` | `string` | ·ñ | ÖÊÁ¿¾¯¸æ |
 
-> **v15 å˜æ›´**ï¼šç»´åº¦å­—æ®µ `composite` é‡å‘½åä¸º `marketEnv`ï¼ˆå¤§ç›˜ç¯å¢ƒç»´åº¦ï¼‰ã€‚
+> **v15 ±ä¸ü**£ºÎ¬¶È×Ö¶Î `composite` ÖØÃüÃûÎª `marketEnv`£¨´óÅÌ»·¾³Î¬¶È£©¡£
 
 ---
 
-### 2.20 value_pit_scores â€” ä»·å€¼æ´¼åœ°ç­–ç•¥è¯„åˆ†
+### 2.20 value_pit_scores ¡ª ¼ÛÖµÍİµØ²ßÂÔÆÀ·Ö
 
-| å±æ€§ | å€¼ |
+| ÊôĞÔ | Öµ |
 |------|-----|
-| Store åç§° | `value_pit_scores` |
-| ä¸»é”® (keyPath) | `symbol` |
-| è‡ªå¢ | å¦ |
-| æ•°æ®å®ä½“ç±»å‹ | `ValuePitScore` |
-| æ•°æ®æ¥æºæ¨¡å— | `analyzer`ï¼ˆè¯»å†™ï¼‰ã€`tradinghub`ï¼ˆè¯»å†™ï¼‰ã€`strategy`ï¼ˆè¯»å†™ï¼‰ |
-| å¼•å…¥ç‰ˆæœ¬ | v14 |
+| Store Ãû³Æ | `value_pit_scores` |
+| Ö÷¼ü (keyPath) | `symbol` |
+| ×ÔÔö | ·ñ |
+| Êı¾İÊµÌåÀàĞÍ | `ValuePitScore` |
+| Êı¾İÀ´Ô´Ä£¿é | `analyzer`£¨¶ÁĞ´£©¡¢`tradinghub`£¨¶ÁĞ´£©¡¢`strategy`£¨¶ÁĞ´£© |
+| ÒıÈë°æ±¾ | v14 |
 
-**ç´¢å¼•åˆ—è¡¨ï¼š**
+**Ë÷ÒıÁĞ±í£º**
 
-| ç´¢å¼•å | å­—æ®µ | å”¯ä¸€ | ç”¨é€” |
+| Ë÷ÒıÃû | ×Ö¶Î | Î¨Ò» | ÓÃÍ¾ |
 |--------|------|------|------|
-| `by-calculated-at` | `calculatedAt` | å¦ | æŒ‰è®¡ç®—æ—¶é—´æ’åº |
+| `by-calculated-at` | `calculatedAt` | ·ñ | °´¼ÆËãÊ±¼äÅÅĞò |
 
-**ä¸»è¦å­—æ®µè¯´æ˜ï¼š**
+**Ö÷Òª×Ö¶ÎËµÃ÷£º**
 
-| å­—æ®µå | ç±»å‹ | å¿…å¡« | è¯´æ˜ |
+| ×Ö¶ÎÃû | ÀàĞÍ | ±ØÌî | ËµÃ÷ |
 |--------|------|------|------|
-| `symbol` | `string` | æ˜¯ | è‚¡ç¥¨/æ¿å—ä»£ç ï¼Œä¸»é”® |
-| `name` | `string` | æ˜¯ | æ¿å—/æ ‡çš„åç§° |
-| `score` | `number` | æ˜¯ | æ€»è¯„åˆ† |
-| `dimensions` | `ValuePitDimensionScores` | æ˜¯ | äº”ç»´åº¦è¯„åˆ†ï¼ˆcatalyst/valuation/chip/rotation/liquidityï¼‰ |
-| `rotationSignal` | `boolean` | æ˜¯ | æ˜¯å¦è§¦å‘è½®åŠ¨ä¿¡å· |
-| `action` | `string` | æ˜¯ | æ“ä½œå»ºè®®ï¼ˆimmediate/probe/wait/ignoreï¼‰ |
-| `calculatedAt` | `number` | æ˜¯ | è®¡ç®—æ—¶é—´æˆ³ |
-| `dataVersion` | `number` | æ˜¯ | æ•°æ®ç‰ˆæœ¬å· |
-| `qualityWarning` | `string` | å¦ | è´¨é‡è­¦å‘Š |
+| `symbol` | `string` | ÊÇ | ¹ÉÆ±/°å¿é´úÂë£¬Ö÷¼ü |
+| `name` | `string` | ÊÇ | °å¿é/±êµÄÃû³Æ |
+| `score` | `number` | ÊÇ | ×ÜÆÀ·Ö |
+| `dimensions` | `ValuePitDimensionScores` | ÊÇ | ÎåÎ¬¶ÈÆÀ·Ö£¨catalyst/valuation/chip/rotation/liquidity£© |
+| `rotationSignal` | `boolean` | ÊÇ | ÊÇ·ñ´¥·¢ÂÖ¶¯ĞÅºÅ |
+| `action` | `string` | ÊÇ | ²Ù×÷½¨Òé£¨immediate/probe/wait/ignore£© |
+| `calculatedAt` | `number` | ÊÇ | ¼ÆËãÊ±¼ä´Á |
+| `dataVersion` | `number` | ÊÇ | Êı¾İ°æ±¾ºÅ |
+| `qualityWarning` | `string` | ·ñ | ÖÊÁ¿¾¯¸æ |
 
-> **v15 å˜æ›´**ï¼šç§»é™¤ `dimensions.composite` å­—æ®µã€‚
+> **v15 ±ä¸ü**£ºÒÆ³ı `dimensions.composite` ×Ö¶Î¡£
 
 ---
 
-### 2.21 execution_logs â€” æ‰§è¡Œæ—¥å¿—
+### 2.21 execution_logs ¡ª Ö´ĞĞÈÕÖ¾
 
-| å±æ€§ | å€¼ |
+| ÊôĞÔ | Öµ |
 |------|-----|
-| Store åç§° | `execution_logs` |
-| ä¸»é”® (keyPath) | `id` |
-| è‡ªå¢ | **æ˜¯** |
-| æ•°æ®å®ä½“ç±»å‹ | `ExecutionLog` |
-| æ•°æ®æ¥æºæ¨¡å— | `execution`ï¼ˆè¯»å†™ï¼‰ã€`trading`ï¼ˆè¯»ï¼‰ |
-| å¼•å…¥ç‰ˆæœ¬ | v15 |
+| Store Ãû³Æ | `execution_logs` |
+| Ö÷¼ü (keyPath) | `id` |
+| ×ÔÔö | **ÊÇ** |
+| Êı¾İÊµÌåÀàĞÍ | `ExecutionLog` |
+| Êı¾İÀ´Ô´Ä£¿é | `execution`£¨¶ÁĞ´£©¡¢`trading`£¨¶Á£© |
+| ÒıÈë°æ±¾ | v15 |
 
-**ç´¢å¼•åˆ—è¡¨ï¼š**
+**Ë÷ÒıÁĞ±í£º**
 
-| ç´¢å¼•å | å­—æ®µ | å”¯ä¸€ | ç”¨é€” |
+| Ë÷ÒıÃû | ×Ö¶Î | Î¨Ò» | ÓÃÍ¾ |
 |--------|------|------|------|
-| `by-plan` | `planId` | å¦ | æŒ‰æ‰§è¡Œè®¡åˆ’æŸ¥è¯¢æ—¥å¿— |
-| `by-symbol` | `symbol` | å¦ | æŒ‰è‚¡ç¥¨ä»£ç ç­›é€‰ |
-| `by-timestamp` | `timestamp` | å¦ | æŒ‰æ—¶é—´æ’åº |
+| `by-plan` | `planId` | ·ñ | °´Ö´ĞĞ¼Æ»®²éÑ¯ÈÕÖ¾ |
+| `by-symbol` | `symbol` | ·ñ | °´¹ÉÆ±´úÂëÉ¸Ñ¡ |
+| `by-timestamp` | `timestamp` | ·ñ | °´Ê±¼äÅÅĞò |
 
-**ä¸»è¦å­—æ®µè¯´æ˜ï¼š**
+**Ö÷Òª×Ö¶ÎËµÃ÷£º**
 
-| å­—æ®µå | ç±»å‹ | å¿…å¡« | è¯´æ˜ |
+| ×Ö¶ÎÃû | ÀàĞÍ | ±ØÌî | ËµÃ÷ |
 |--------|------|------|------|
-| `id` | `number` | å¦ | è‡ªå¢ä¸»é”® |
-| `planId` | `string` | æ˜¯ | å…³è”çš„æ‰§è¡Œè®¡åˆ’ ID |
-| `symbol` | `string` | æ˜¯ | è‚¡ç¥¨ä»£ç  |
-| `action` | `string` | æ˜¯ | æ‰§è¡ŒåŠ¨ä½œï¼ˆå¦‚ buy/sell/cancelï¼‰ |
-| `actor` | `string` | å¦ | æ‰§è¡Œè€…ï¼ˆuser/agent/systemï¼‰ |
-| `phase` | `ExecutionPhase` | æ˜¯ | æ‰§è¡Œé˜¶æ®µï¼ˆplan/confirmed/pending/executed/cancelled/reviewedï¼‰ |
-| `timestamp` | `number` | æ˜¯ | æ‰§è¡Œæ—¶é—´æˆ³ |
-| `detail` | `string` | å¦ | æ‰§è¡Œè¯¦æƒ…æè¿° |
-| `success` | `boolean` | å¦ | æ˜¯å¦æ‰§è¡ŒæˆåŠŸ |
-| `errorMessage` | `string` | å¦ | é”™è¯¯ä¿¡æ¯ï¼ˆå¤±è´¥æ—¶å¡«å……ï¼‰ |
-| `createdAt` | `number` | æ˜¯ | è®°å½•åˆ›å»ºæ—¶é—´æˆ³ |
+| `id` | `number` | ·ñ | ×ÔÔöÖ÷¼ü |
+| `planId` | `string` | ÊÇ | ¹ØÁªµÄÖ´ĞĞ¼Æ»® ID |
+| `symbol` | `string` | ÊÇ | ¹ÉÆ±´úÂë |
+| `action` | `string` | ÊÇ | Ö´ĞĞ¶¯×÷£¨Èç buy/sell/cancel£© |
+| `actor` | `string` | ·ñ | Ö´ĞĞÕß£¨user/agent/system£© |
+| `phase` | `ExecutionPhase` | ÊÇ | Ö´ĞĞ½×¶Î£¨plan/confirmed/pending/executed/cancelled/reviewed£© |
+| `timestamp` | `number` | ÊÇ | Ö´ĞĞÊ±¼ä´Á |
+| `detail` | `string` | ·ñ | Ö´ĞĞÏêÇéÃèÊö |
+| `success` | `boolean` | ·ñ | ÊÇ·ñÖ´ĞĞ³É¹¦ |
+| `errorMessage` | `string` | ·ñ | ´íÎóĞÅÏ¢£¨Ê§°ÜÊ±Ìî³ä£© |
+| `createdAt` | `number` | ÊÇ | ¼ÇÂ¼´´½¨Ê±¼ä´Á |
 
 ---
 
-### 2.22 missing_reports â€” ç¼ºå¤±æŠ¥å‘Šç™»è®°
+### 2.22 missing_reports ¡ª È±Ê§±¨¸æµÇ¼Ç
 
-| å±æ€§ | å€¼ |
+| ÊôĞÔ | Öµ |
 |------|-----|
-| Store åç§° | `missing_reports` |
-| ä¸»é”® (keyPath) | `id` |
-| è‡ªå¢ | **æ˜¯** |
-| æ•°æ®å®ä½“ç±»å‹ | `MissingReport` |
-| æ•°æ®æ¥æºæ¨¡å— | `execution`ï¼ˆè¯»å†™ï¼‰ã€`trading`ï¼ˆè¯»ï¼‰ |
-| å¼•å…¥ç‰ˆæœ¬ | v15 |
+| Store Ãû³Æ | `missing_reports` |
+| Ö÷¼ü (keyPath) | `id` |
+| ×ÔÔö | **ÊÇ** |
+| Êı¾İÊµÌåÀàĞÍ | `MissingReport` |
+| Êı¾İÀ´Ô´Ä£¿é | `execution`£¨¶ÁĞ´£©¡¢`trading`£¨¶Á£© |
+| ÒıÈë°æ±¾ | v15 |
 
-**ç´¢å¼•åˆ—è¡¨ï¼š**
+**Ë÷ÒıÁĞ±í£º**
 
-| ç´¢å¼•å | å­—æ®µ | å”¯ä¸€ | ç”¨é€” |
+| Ë÷ÒıÃû | ×Ö¶Î | Î¨Ò» | ÓÃÍ¾ |
 |--------|------|------|------|
-| `by-symbol` | `symbol` | å¦ | æŒ‰è‚¡ç¥¨ä»£ç æŸ¥è¯¢ç¼ºå¤±æŠ¥å‘Š |
-| `by-severity` | `severity` | å¦ | æŒ‰ä¸¥é‡ç¨‹åº¦ç­›é€‰ |
-| `by-detected-at` | `detectedAt` | å¦ | æŒ‰æ£€æµ‹æ—¶é—´æ’åº |
+| `by-symbol` | `symbol` | ·ñ | °´¹ÉÆ±´úÂë²éÑ¯È±Ê§±¨¸æ |
+| `by-severity` | `severity` | ·ñ | °´ÑÏÖØ³Ì¶ÈÉ¸Ñ¡ |
+| `by-detected-at` | `detectedAt` | ·ñ | °´¼ì²âÊ±¼äÅÅĞò |
 
-**ä¸»è¦å­—æ®µè¯´æ˜ï¼š**
+**Ö÷Òª×Ö¶ÎËµÃ÷£º**
 
-| å­—æ®µå | ç±»å‹ | å¿…å¡« | è¯´æ˜ |
+| ×Ö¶ÎÃû | ÀàĞÍ | ±ØÌî | ËµÃ÷ |
 |--------|------|------|------|
-| `id` | `number` | å¦ | è‡ªå¢ä¸»é”® |
-| `symbol` | `string` | æ˜¯ | è‚¡ç¥¨ä»£ç  |
-| `reportType` | `string` | æ˜¯ | æŠ¥å‘Šç±»å‹ |
-| `severity` | `string` | æ˜¯ | ä¸¥é‡ç¨‹åº¦ï¼ˆlow/medium/high/criticalï¼‰ |
-| `reason` | `string` | æ˜¯ | ç¼ºå¤±åŸå›  |
-| `detectedAt` | `number` | æ˜¯ | æ£€æµ‹æ—¶é—´æˆ³ |
-| `retryCount` | `number` | æ˜¯ | é‡è¯•æ¬¡æ•° |
-| `resolvedAt` | `number` | å¦ | è§£å†³æ—¶é—´æˆ³ï¼ˆæœªè§£å†³æ—¶ä¸º undefinedï¼‰ |
-| `createdAt` | `number` | æ˜¯ | è®°å½•åˆ›å»ºæ—¶é—´æˆ³ |
+| `id` | `number` | ·ñ | ×ÔÔöÖ÷¼ü |
+| `symbol` | `string` | ÊÇ | ¹ÉÆ±´úÂë |
+| `reportType` | `string` | ÊÇ | ±¨¸æÀàĞÍ |
+| `severity` | `string` | ÊÇ | ÑÏÖØ³Ì¶È£¨low/medium/high/critical£© |
+| `reason` | `string` | ÊÇ | È±Ê§Ô­Òò |
+| `detectedAt` | `number` | ÊÇ | ¼ì²âÊ±¼ä´Á |
+| `retryCount` | `number` | ÊÇ | ÖØÊÔ´ÎÊı |
+| `resolvedAt` | `number` | ·ñ | ½â¾öÊ±¼ä´Á£¨Î´½â¾öÊ±Îª undefined£© |
+| `createdAt` | `number` | ÊÇ | ¼ÇÂ¼´´½¨Ê±¼ä´Á |
 
 ---
 
-### 2.23 execution_plans â€” æ‰§è¡Œè®¡åˆ’
+### 2.23 execution_plans ¡ª Ö´ĞĞ¼Æ»®
 
-| å±æ€§ | å€¼ |
+| ÊôĞÔ | Öµ |
 |------|-----|
-| Store åç§° | `execution_plans` |
-| ä¸»é”® (keyPath) | `id` |
-| è‡ªå¢ | å¦ |
-| æ•°æ®å®ä½“ç±»å‹ | `ExecutionPlan` |
-| æ•°æ®æ¥æºæ¨¡å— | `execution`ï¼ˆè¯»å†™ï¼‰ã€`trading`ï¼ˆè¯»å†™ï¼‰ |
-| å¼•å…¥ç‰ˆæœ¬ | v16 |
+| Store Ãû³Æ | `execution_plans` |
+| Ö÷¼ü (keyPath) | `id` |
+| ×ÔÔö | ·ñ |
+| Êı¾İÊµÌåÀàĞÍ | `ExecutionPlan` |
+| Êı¾İÀ´Ô´Ä£¿é | `execution`£¨¶ÁĞ´£©¡¢`trading`£¨¶ÁĞ´£© |
+| ÒıÈë°æ±¾ | v16 |
 
-**ç´¢å¼•åˆ—è¡¨ï¼š**
+**Ë÷ÒıÁĞ±í£º**
 
-| ç´¢å¼•å | å­—æ®µ | å”¯ä¸€ | ç”¨é€” |
+| Ë÷ÒıÃû | ×Ö¶Î | Î¨Ò» | ÓÃÍ¾ |
 |--------|------|------|------|
-| `by-signal` | `signalId` | å¦ | æŒ‰å…³è”ä¿¡å·æŸ¥è¯¢ |
-| `by-symbol` | `symbol` | å¦ | æŒ‰è‚¡ç¥¨ä»£ç ç­›é€‰ |
-| `by-phase` | `phase` | å¦ | æŒ‰æ‰§è¡Œé˜¶æ®µç­›é€‰ |
-| `by-created-at` | `createdAt` | å¦ | æŒ‰åˆ›å»ºæ—¶é—´æ’åº |
+| `by-signal` | `signalId` | ·ñ | °´¹ØÁªĞÅºÅ²éÑ¯ |
+| `by-symbol` | `symbol` | ·ñ | °´¹ÉÆ±´úÂëÉ¸Ñ¡ |
+| `by-phase` | `phase` | ·ñ | °´Ö´ĞĞ½×¶ÎÉ¸Ñ¡ |
+| `by-created-at` | `createdAt` | ·ñ | °´´´½¨Ê±¼äÅÅĞò |
 
-**ä¸»è¦å­—æ®µè¯´æ˜ï¼š**
+**Ö÷Òª×Ö¶ÎËµÃ÷£º**
 
-| å­—æ®µå | ç±»å‹ | å¿…å¡« | è¯´æ˜ |
+| ×Ö¶ÎÃû | ÀàĞÍ | ±ØÌî | ËµÃ÷ |
 |--------|------|------|------|
-| `id` | `string` | æ˜¯ | æ‰§è¡Œè®¡åˆ’ IDï¼Œä¸»é”® |
-| `signalId` | `string` | å¦ | å…³è”çš„äº¤æ˜“ä¿¡å· ID |
-| `symbol` | `string` | æ˜¯ | è‚¡ç¥¨ä»£ç  |
-| `name` | `string` | æ˜¯ | è®¡åˆ’åç§° |
-| `phase` | `ExecutionPhase` | æ˜¯ | å½“å‰æ‰§è¡Œé˜¶æ®µ |
-| `direction` | `'buy' \| 'sell'` | æ˜¯ | ä¹°å–æ–¹å‘ |
-| `quantity` | `number` | æ˜¯ | è®¡åˆ’æ•°é‡ |
-| `targetPrice` | `number` | æ˜¯ | ç›®æ ‡ä»·æ ¼ |
-| `currentPrice` | `number` | å¦ | å½“å‰å¸‚åœºä»·æ ¼ |
-| `rationale` | `string` | æ˜¯ | æ‰§è¡Œç†ç”± |
-| `confidence` | `number` | æ˜¯ | ç½®ä¿¡åº¦ï¼ˆ0-1ï¼‰ |
-| `riskChecks` | `RiskCheckItem[]` | æ˜¯ | é£æ§æ£€æŸ¥é¡¹åˆ—è¡¨ |
-| `risk` | `object` | å¦ | é£æ§ç»“æœï¼ˆpassed/preCheck/postCheck/issueCount/checks/warningsï¼‰ |
-| `sizing` | `object` | å¦ | ä»“ä½è®¡ç®—ï¼ˆquantity/positionPct/reasonï¼‰ |
-| `result` | `'success' \| 'failed' \| 'partial'` | å¦ | æ‰§è¡Œç»“æœ |
-| `orderId` | `string` | å¦ | å…³è”è®¢å• ID |
-| `errorMessage` | `string` | å¦ | é”™è¯¯ä¿¡æ¯ |
-| `accountType` | `AccountType` | å¦ | è´¦æˆ·ç±»å‹ï¼ˆpaper/realï¼‰ |
-| `confirmedAt` | `number` | å¦ | ç¡®è®¤æ—¶é—´æˆ³ |
-| `executedAt` | `number` | å¦ | æ‰§è¡Œæ—¶é—´æˆ³ |
-| `reviewedAt` | `number` | å¦ | å¤ç›˜æ—¶é—´æˆ³ |
-| `createdAt` | `number` | æ˜¯ | åˆ›å»ºæ—¶é—´æˆ³ |
-| `updatedAt` | `number` | å¦ | æ›´æ–°æ—¶é—´æˆ³ |
+| `id` | `string` | ÊÇ | Ö´ĞĞ¼Æ»® ID£¬Ö÷¼ü |
+| `signalId` | `string` | ·ñ | ¹ØÁªµÄ½»Ò×ĞÅºÅ ID |
+| `symbol` | `string` | ÊÇ | ¹ÉÆ±´úÂë |
+| `name` | `string` | ÊÇ | ¼Æ»®Ãû³Æ |
+| `phase` | `ExecutionPhase` | ÊÇ | µ±Ç°Ö´ĞĞ½×¶Î |
+| `direction` | `'buy' \| 'sell'` | ÊÇ | ÂòÂô·½Ïò |
+| `quantity` | `number` | ÊÇ | ¼Æ»®ÊıÁ¿ |
+| `targetPrice` | `number` | ÊÇ | Ä¿±ê¼Û¸ñ |
+| `currentPrice` | `number` | ·ñ | µ±Ç°ÊĞ³¡¼Û¸ñ |
+| `rationale` | `string` | ÊÇ | Ö´ĞĞÀíÓÉ |
+| `confidence` | `number` | ÊÇ | ÖÃĞÅ¶È£¨0-1£© |
+| `riskChecks` | `RiskCheckItem[]` | ÊÇ | ·ç¿Ø¼ì²éÏîÁĞ±í |
+| `risk` | `object` | ·ñ | ·ç¿Ø½á¹û£¨passed/preCheck/postCheck/issueCount/checks/warnings£© |
+| `sizing` | `object` | ·ñ | ²ÖÎ»¼ÆËã£¨quantity/positionPct/reason£© |
+| `result` | `'success' \| 'failed' \| 'partial'` | ·ñ | Ö´ĞĞ½á¹û |
+| `orderId` | `string` | ·ñ | ¹ØÁª¶©µ¥ ID |
+| `errorMessage` | `string` | ·ñ | ´íÎóĞÅÏ¢ |
+| `accountType` | `AccountType` | ·ñ | ÕË»§ÀàĞÍ£¨paper/real£© |
+| `confirmedAt` | `number` | ·ñ | È·ÈÏÊ±¼ä´Á |
+| `executedAt` | `number` | ·ñ | Ö´ĞĞÊ±¼ä´Á |
+| `reviewedAt` | `number` | ·ñ | ¸´ÅÌÊ±¼ä´Á |
+| `createdAt` | `number` | ÊÇ | ´´½¨Ê±¼ä´Á |
+| `updatedAt` | `number` | ·ñ | ¸üĞÂÊ±¼ä´Á |
 
 ---
 
-### 2.24 portfolios â€” æŠ•èµ„ç»„åˆ
+### 2.24 portfolios ¡ª Í¶×Ê×éºÏ
 
-| å±æ€§ | å€¼ |
+| ÊôĞÔ | Öµ |
 |------|-----|
-| Store åç§° | `portfolios` |
-| ä¸»é”® (keyPath) | `id` |
-| è‡ªå¢ | å¦ |
-| æ•°æ®å®ä½“ç±»å‹ | `Portfolio` |
-| æ•°æ®æ¥æºæ¨¡å— | `strategy`ï¼ˆè¯»å†™ï¼‰ã€`tradinghub`ï¼ˆè¯»ï¼‰ |
-| å¼•å…¥ç‰ˆæœ¬ | v16 |
+| Store Ãû³Æ | `portfolios` |
+| Ö÷¼ü (keyPath) | `id` |
+| ×ÔÔö | ·ñ |
+| Êı¾İÊµÌåÀàĞÍ | `Portfolio` |
+| Êı¾İÀ´Ô´Ä£¿é | `strategy`£¨¶ÁĞ´£©¡¢`tradinghub`£¨¶Á£© |
+| ÒıÈë°æ±¾ | v16 |
 
-**ç´¢å¼•åˆ—è¡¨ï¼š**
+**Ë÷ÒıÁĞ±í£º**
 
-| ç´¢å¼•å | å­—æ®µ | å”¯ä¸€ | ç”¨é€” |
+| Ë÷ÒıÃû | ×Ö¶Î | Î¨Ò» | ÓÃÍ¾ |
 |--------|------|------|------|
-| `by-theme` | `theme` | å¦ | æŒ‰æŠ•èµ„ä¸»é¢˜ç­›é€‰ |
-| `by-updated-at` | `updatedAt` | å¦ | æŒ‰æ›´æ–°æ—¶é—´æ’åº |
+| `by-theme` | `theme` | ·ñ | °´Í¶×ÊÖ÷ÌâÉ¸Ñ¡ |
+| `by-updated-at` | `updatedAt` | ·ñ | °´¸üĞÂÊ±¼äÅÅĞò |
 
-**ä¸»è¦å­—æ®µè¯´æ˜ï¼š**
+**Ö÷Òª×Ö¶ÎËµÃ÷£º**
 
-| å­—æ®µå | ç±»å‹ | å¿…å¡« | è¯´æ˜ |
+| ×Ö¶ÎÃû | ÀàĞÍ | ±ØÌî | ËµÃ÷ |
 |--------|------|------|------|
-| `id` | `string` | æ˜¯ | ç»„åˆ IDï¼Œä¸»é”® |
-| `name` | `string` | æ˜¯ | ç»„åˆåç§° |
-| `theme` | `string` | æ˜¯ | æŠ•èµ„ä¸»é¢˜ |
-| `totalValue` | `number` | æ˜¯ | ç»„åˆæ€»ä»·å€¼ |
-| `cashReserve` | `number` | æ˜¯ | ç°é‡‘å‚¨å¤‡ |
-| `holdings` | `PortfolioHolding[]` | æ˜¯ | æŒä»“åˆ—è¡¨ï¼ˆsymbol/name/currentShares/currentWeight/targetWeight/targetShares/price/marketValue/score/rationaleï¼‰ |
-| `rebalancePlan` | `RebalanceAction[]` | æ˜¯ | å†å¹³è¡¡è®¡åˆ’ï¼ˆsymbol/action/shares/reasonï¼‰ |
-| `createdAt` | `number` | æ˜¯ | åˆ›å»ºæ—¶é—´æˆ³ |
-| `updatedAt` | `number` | æ˜¯ | æ›´æ–°æ—¶é—´æˆ³ |
+| `id` | `string` | ÊÇ | ×éºÏ ID£¬Ö÷¼ü |
+| `name` | `string` | ÊÇ | ×éºÏÃû³Æ |
+| `theme` | `string` | ÊÇ | Í¶×ÊÖ÷Ìâ |
+| `totalValue` | `number` | ÊÇ | ×éºÏ×Ü¼ÛÖµ |
+| `cashReserve` | `number` | ÊÇ | ÏÖ½ğ´¢±¸ |
+| `holdings` | `PortfolioHolding[]` | ÊÇ | ³Ö²ÖÁĞ±í£¨symbol/name/currentShares/currentWeight/targetWeight/targetShares/price/marketValue/score/rationale£© |
+| `rebalancePlan` | `RebalanceAction[]` | ÊÇ | ÔÙÆ½ºâ¼Æ»®£¨symbol/action/shares/reason£© |
+| `createdAt` | `number` | ÊÇ | ´´½¨Ê±¼ä´Á |
+| `updatedAt` | `number` | ÊÇ | ¸üĞÂÊ±¼ä´Á |
 
 ---
 
-### 2.25 trade_reviews â€” äº¤æ˜“çºªå¾‹å¤ç›˜
+### 2.25 trade_reviews ¡ª ½»Ò×¼ÍÂÉ¸´ÅÌ
 
-| å±æ€§ | å€¼ |
+| ÊôĞÔ | Öµ |
 |------|-----|
-| Store åç§° | `trade_reviews` |
-| ä¸»é”® (keyPath) | `id` |
-| è‡ªå¢ | å¦ |
-| æ•°æ®å®ä½“ç±»å‹ | `TradeReviewRecord` |
-| æ•°æ®æ¥æºæ¨¡å— | `trading`ï¼ˆè¯»å†™ï¼‰ã€`output`ï¼ˆè¯»ï¼‰ |
-| å¼•å…¥ç‰ˆæœ¬ | v20 |
-| ç±»å‹å®šä¹‰ä½ç½® | `src/services/trading/tradeReviewAI.types.ts` |
+| Store Ãû³Æ | `trade_reviews` |
+| Ö÷¼ü (keyPath) | `id` |
+| ×ÔÔö | ·ñ |
+| Êı¾İÊµÌåÀàĞÍ | `TradeReviewRecord` |
+| Êı¾İÀ´Ô´Ä£¿é | `trading`£¨¶ÁĞ´£©¡¢`output`£¨¶Á£© |
+| ÒıÈë°æ±¾ | v20 |
+| ÀàĞÍ¶¨ÒåÎ»ÖÃ | `src/services/trading/tradeReviewAI.types.ts` |
 
-**ç´¢å¼•åˆ—è¡¨ï¼š**
+**Ë÷ÒıÁĞ±í£º**
 
-| ç´¢å¼•å | å­—æ®µ | å”¯ä¸€ | ç”¨é€” |
+| Ë÷ÒıÃû | ×Ö¶Î | Î¨Ò» | ÓÃÍ¾ |
 |--------|------|------|------|
-| `by-generated-at` | `generatedAt` | å¦ | æŒ‰ç”Ÿæˆæ—¶é—´æ’åº |
+| `by-generated-at` | `generatedAt` | ·ñ | °´Éú³ÉÊ±¼äÅÅĞò |
 
-**ä¸»è¦å­—æ®µè¯´æ˜ï¼š**
+**Ö÷Òª×Ö¶ÎËµÃ÷£º**
 
-| å­—æ®µå | ç±»å‹ | å¿…å¡« | è¯´æ˜ |
+| ×Ö¶ÎÃû | ÀàĞÍ | ±ØÌî | ËµÃ÷ |
 |--------|------|------|------|
-| `id` | `string` | æ˜¯ | å¤ç›˜è®°å½• IDï¼Œä¸»é”® |
-| `generatedAt` | `number` | æ˜¯ | ç”Ÿæˆæ—¶é—´æˆ³ |
-| `report` | `TradeReviewReport` | æ˜¯ | å…­ç»´å¤ç›˜æŠ¥å‘Šä¸»ä½“ï¼ˆsummary/errorAnalysis/disciplineAnalysis/skillDevelopment/actionPlan/aiInsightï¼‰ |
-| `tradeErrors` | `DetectedError[]` | æ˜¯ | æ£€æµ‹åˆ°çš„äº¤æ˜“é”™è¯¯åˆ—è¡¨ |
-| `disciplineScore` | `number` | æ˜¯ | çºªå¾‹è¯„åˆ†ï¼ˆ0-100ï¼‰ |
-| `skillRoadmap` | `string[]` | æ˜¯ | æŠ€èƒ½å‘å±•è·¯çº¿å›¾ |
-| `psychologicalProfile` | `PsychologicalProfile \| null` | æ˜¯ | å¿ƒç†ç”»åƒï¼ˆå¯ä¸º nullï¼‰ |
+| `id` | `string` | ÊÇ | ¸´ÅÌ¼ÇÂ¼ ID£¬Ö÷¼ü |
+| `generatedAt` | `number` | ÊÇ | Éú³ÉÊ±¼ä´Á |
+| `report` | `TradeReviewReport` | ÊÇ | ÁùÎ¬¸´ÅÌ±¨¸æÖ÷Ìå£¨summary/errorAnalysis/disciplineAnalysis/skillDevelopment/actionPlan/aiInsight£© |
+| `tradeErrors` | `DetectedError[]` | ÊÇ | ¼ì²âµ½µÄ½»Ò×´íÎóÁĞ±í |
+| `disciplineScore` | `number` | ÊÇ | ¼ÍÂÉÆÀ·Ö£¨0-100£© |
+| `skillRoadmap` | `string[]` | ÊÇ | ¼¼ÄÜ·¢Õ¹Â·ÏßÍ¼ |
+| `psychologicalProfile` | `PsychologicalProfile \| null` | ÊÇ | ĞÄÀí»­Ïñ£¨¿ÉÎª null£© |
 
-> **æ³¨æ„**ï¼š`TradeReviewRecord` æ˜¯ 41 ä¸ª Store ä¸­å”¯ä¸€ä¸åœ¨ `src/data/types.ts` ä¸­å®šä¹‰çš„ç±»å‹ï¼Œå…¶ç±»å‹å®šä¹‰ä½äº `src/services/trading/tradeReviewAI.types.ts`ã€‚
+> **×¢Òâ**£º`TradeReviewRecord` ÊÇ 41 ¸ö Store ÖĞÎ¨Ò»²»ÔÚ `src/data/types.ts` ÖĞ¶¨ÒåµÄÀàĞÍ£¬ÆäÀàĞÍ¶¨ÒåÎ»ÓÚ `src/services/trading/tradeReviewAI.types.ts`¡£
 
 ---
 
-## 3. é™„å½•
+## 3. ¸½Â¼
 
-### 3.1 Store ä¸æ•°æ®å®ä½“æ˜ å°„å…³ç³»è¡¨
+### 3.1 Store ÓëÊı¾İÊµÌåÓ³Éä¹ØÏµ±í
 
-| Store åç§° | TypeScript ç±»å‹ | ç±»å‹å®šä¹‰æ–‡ä»¶ | ä¸»é”®å­—æ®µ |
+| Store Ãû³Æ | TypeScript ÀàĞÍ | ÀàĞÍ¶¨ÒåÎÄ¼ş | Ö÷¼ü×Ö¶Î |
 |-----------|----------------|-------------|----------|
 | `stocks` | `Stock` | `src/data/types.ts` | `symbol` |
 | `v6_scores` | `V6Score` | `src/data/types.ts` | `symbol` |
-| `intelligent_scores` | `IntelligentScore` | `src/data/types.ts` | `id`ï¼ˆè‡ªå¢ï¼‰ |
-| `industry_scores` | `IndustryScore` | `src/data/types.ts` | `id`ï¼ˆè‡ªå¢ï¼‰ |
+| `intelligent_scores` | `IntelligentScore` | `src/data/types.ts` | `id`£¨×ÔÔö£© |
+| `industry_scores` | `IndustryScore` | `src/data/types.ts` | `id`£¨×ÔÔö£© |
 | `orders` | `Order` | `src/data/types.ts` | `id` |
 | `watchlists` | `Watchlist` | `src/data/types.ts` | `id` |
 | `signals` | `Signal` | `src/data/types.ts` | `id` |
-| `research_logs` | `ResearchLog` | `src/data/types.ts` | `id`ï¼ˆè‡ªå¢ï¼‰ |
+| `research_logs` | `ResearchLog` | `src/data/types.ts` | `id`£¨×ÔÔö£© |
 | `daily_quotes` | `DailyQuotes` | `src/data/types.ts` | `symbol` |
 | `rotation_scores` | `RotationSectorScore` | `src/data/types.ts` | `id` |
 | `sector_scores` | `SectorScoreRecord` | `src/data/types.ts` | `id` |
@@ -972,34 +978,34 @@ tier: important
 | `news` | `NewsArticle` | `src/data/types.ts` | `id` |
 | `news_stock_map` | `NewsStockMap` | `src/data/types.ts` | `id` |
 | `sentiment_cache` | `SentimentCache` | `src/data/types.ts` | `id` |
-| `news_bookmarks` | èµ„è®¯æ”¶è—è®°å½•ï¼ˆNewsArticle æ‰©å±•ï¼‰ | â€” | `id` |
+| `news_bookmarks` | ×ÊÑ¶ÊÕ²Ø¼ÇÂ¼£¨NewsArticle À©Õ¹£© | ¡ª | `id` |
 | `hot_sector_scores` | `HotSectorScore` | `src/data/types.ts` | `symbol` |
 | `value_pit_scores` | `ValuePitScore` | `src/data/types.ts` | `symbol` |
-| `execution_logs` | `ExecutionLog` | `src/data/types.ts` | `id`ï¼ˆè‡ªå¢ï¼‰ |
-| `missing_reports` | `MissingReport` | `src/data/types.ts` | `id`ï¼ˆè‡ªå¢ï¼‰ |
+| `execution_logs` | `ExecutionLog` | `src/data/types.ts` | `id`£¨×ÔÔö£© |
+| `missing_reports` | `MissingReport` | `src/data/types.ts` | `id`£¨×ÔÔö£© |
 | `execution_plans` | `ExecutionPlan` | `src/data/types.ts` | `id` |
 | `portfolios` | `Portfolio` | `src/data/types.ts` | `id` |
 | `trade_reviews` | `TradeReviewRecord` | `src/services/trading/tradeReviewAI.types.ts` | `id` |
 
-### 3.2 æ¨¡å—ä¸ Store æƒé™çŸ©é˜µï¼ˆACLï¼‰
+### 3.2 Ä£¿éÓë Store È¨ÏŞ¾ØÕó£¨ACL£©
 
-| æ¨¡å— | å¯è¯» Store | å¯å†™ Store |
+| Ä£¿é | ¿É¶Á Store | ¿ÉĞ´ Store |
 |------|-----------|-----------|
-| `fetcher` | â€” | `stocks`ã€`daily_quotes` |
-| `stockpool` | `stocks`ã€`v6_scores` | `stocks` |
-| `analyzer` | `stocks`ã€`v6_scores`ã€`intelligent_scores`ã€`industry_scores`ã€`score_docs`ã€`hot_sector_scores`ã€`value_pit_scores` | `v6_scores`ã€`intelligent_scores`ã€`industry_scores`ã€`score_docs`ã€`hot_sector_scores`ã€`value_pit_scores` |
-| `rotation` | `stocks`ã€`rotation_scores`ã€`daily_quotes` | `rotation_scores` |
-| `sector` | `stocks`ã€`sector_scores` | `sector_scores` |
-| `news` | `stocks`ã€`news`ã€`news_stock_map`ã€`sentiment_cache`ã€`news_bookmarks` | `news`ã€`news_stock_map`ã€`sentiment_cache`ã€`news_bookmarks` |
-| `tradinghub` | `stocks`ã€`v6_scores`ã€`orders`ã€`signals`ã€`strategy_snapshots`ã€`hot_sector_scores`ã€`value_pit_scores` | `orders`ã€`signals`ã€`strategy_snapshots`ã€`hot_sector_scores`ã€`value_pit_scores` |
-| `trading` | `stocks`ã€`orders`ã€`signals`ã€`strategy_snapshots` | `orders`ã€`signals` |
-| `strategy` | `stocks`ã€`v6_scores`ã€`daily_quotes`ã€`hot_sector_scores`ã€`value_pit_scores`ã€`rotation_scores`ã€`signals` | `hot_sector_scores`ã€`value_pit_scores` |
-| `user` | `stocks`ã€`v6_scores`ã€`orders` | `stocks`ã€`orders` |
-| `system` | å…¨éƒ¨ | å…¨éƒ¨ |
+| `fetcher` | ¡ª | `stocks`¡¢`daily_quotes` |
+| `stockpool` | `stocks`¡¢`v6_scores` | `stocks` |
+| `analyzer` | `stocks`¡¢`v6_scores`¡¢`intelligent_scores`¡¢`industry_scores`¡¢`score_docs`¡¢`hot_sector_scores`¡¢`value_pit_scores` | `v6_scores`¡¢`intelligent_scores`¡¢`industry_scores`¡¢`score_docs`¡¢`hot_sector_scores`¡¢`value_pit_scores` |
+| `rotation` | `stocks`¡¢`rotation_scores`¡¢`daily_quotes` | `rotation_scores` |
+| `sector` | `stocks`¡¢`sector_scores` | `sector_scores` |
+| `news` | `stocks`¡¢`news`¡¢`news_stock_map`¡¢`sentiment_cache`¡¢`news_bookmarks` | `news`¡¢`news_stock_map`¡¢`sentiment_cache`¡¢`news_bookmarks` |
+| `tradinghub` | `stocks`¡¢`v6_scores`¡¢`orders`¡¢`signals`¡¢`strategy_snapshots`¡¢`hot_sector_scores`¡¢`value_pit_scores` | `orders`¡¢`signals`¡¢`strategy_snapshots`¡¢`hot_sector_scores`¡¢`value_pit_scores` |
+| `trading` | `stocks`¡¢`orders`¡¢`signals`¡¢`strategy_snapshots` | `orders`¡¢`signals` |
+| `strategy` | `stocks`¡¢`v6_scores`¡¢`daily_quotes`¡¢`hot_sector_scores`¡¢`value_pit_scores`¡¢`rotation_scores`¡¢`signals` | `hot_sector_scores`¡¢`value_pit_scores` |
+| `user` | `stocks`¡¢`v6_scores`¡¢`orders` | `stocks`¡¢`orders` |
+| `system` | È«²¿ | È«²¿ |
 
-### 3.3 å”¯ä¸€ç´¢å¼•æ±‡æ€»
+### 3.3 Î¨Ò»Ë÷Òı»ã×Ü
 
-| Store | å”¯ä¸€ç´¢å¼• | å­—æ®µ |
+| Store | Î¨Ò»Ë÷Òı | ×Ö¶Î |
 |-------|---------|------|
 | `rotation_scores` | `by-sector-date` | `[sectorCode, scoreDate]` |
 | `score_docs` | `by-symbol-version` | `[symbol, version]` |
@@ -1007,16 +1013,16 @@ tier: important
 | `news` | `by-hash` | `hash` |
 | `sentiment_cache` | `by-content-hash` | `contentHash` |
 
-### 3.4 è‡ªå¢ä¸»é”® Store æ±‡æ€»
+### 3.4 ×ÔÔöÖ÷¼ü Store »ã×Ü
 
-| Store | ä¸»é”®å­—æ®µ | è¯´æ˜ |
+| Store | Ö÷¼ü×Ö¶Î | ËµÃ÷ |
 |-------|---------|------|
-| `intelligent_scores` | `id` | AI æ™ºèƒ½è¯„åˆ†å†å²ï¼Œæ¯æ¡è®°å½•ç‹¬ç«‹è‡ªå¢ |
-| `industry_scores` | `id` | è¡Œä¸šè¯„åˆ†å†å²ï¼Œæ¯æ¡è®°å½•ç‹¬ç«‹è‡ªå¢ |
-| `research_logs` | `id` | æ“ä½œå®¡è®¡æ—¥å¿—ï¼ŒæŒ‰é¡ºåºè‡ªå¢ |
-| `execution_logs` | `id` | æ‰§è¡Œæ—¥å¿—ï¼ŒæŒ‰é¡ºåºè‡ªå¢ï¼ˆv15 æ–°å¢ï¼‰ |
-| `missing_reports` | `id` | ç¼ºå¤±æŠ¥å‘Šç™»è®°ï¼ŒæŒ‰é¡ºåºè‡ªå¢ï¼ˆv15 æ–°å¢ï¼‰ |
+| `intelligent_scores` | `id` | AI ÖÇÄÜÆÀ·ÖÀúÊ·£¬Ã¿Ìõ¼ÇÂ¼¶ÀÁ¢×ÔÔö |
+| `industry_scores` | `id` | ĞĞÒµÆÀ·ÖÀúÊ·£¬Ã¿Ìõ¼ÇÂ¼¶ÀÁ¢×ÔÔö |
+| `research_logs` | `id` | ²Ù×÷Éó¼ÆÈÕÖ¾£¬°´Ë³Ğò×ÔÔö |
+| `execution_logs` | `id` | Ö´ĞĞÈÕÖ¾£¬°´Ë³Ğò×ÔÔö£¨v15 ĞÂÔö£© |
+| `missing_reports` | `id` | È±Ê§±¨¸æµÇ¼Ç£¬°´Ë³Ğò×ÔÔö£¨v15 ĞÂÔö£© |
 
 ---
 
-> **æ–‡æ¡£è¯´æ˜**ï¼šæœ¬æ–‡æ¡£åŸºäº `DB_VERSION = 21` çš„ä»£ç å®ç°è‡ªåŠ¨æ•´ç†ï¼Œæ‰€æœ‰ Schema å®šä¹‰æ¥æºäº `src/data/db.ts` çš„ `onupgradeneeded` å›è°ƒï¼Œç±»å‹å®šä¹‰æ¥æºäº `src/data/types.ts`ã€‚å½“æ•°æ®åº“ç‰ˆæœ¬å‡çº§æ—¶ï¼Œè¯·åŒæ­¥æ›´æ–°æœ¬æ–‡æ¡£ã€‚
+> **ÎÄµµËµÃ÷**£º±¾ÎÄµµ»ùÓÚ `DB_VERSION = 21` µÄ´úÂëÊµÏÖ×Ô¶¯ÕûÀí£¬ËùÓĞ Schema ¶¨ÒåÀ´Ô´ÓÚ `src/data/db.ts` µÄ `onupgradeneeded` »Øµ÷£¬ÀàĞÍ¶¨ÒåÀ´Ô´ÓÚ `src/data/types.ts`¡£µ±Êı¾İ¿â°æ±¾Éı¼¶Ê±£¬ÇëÍ¬²½¸üĞÂ±¾ÎÄµµ¡£

@@ -1,6 +1,6 @@
 import { type ButtonHTMLAttributes, cloneElement, forwardRef, isValidElement } from 'react'
 import { cn } from '@/lib/utils'
-import { THEME_TOKENS, COLOR_TOKENS } from '@/constants/theme.tokens'
+import { THEME_TOKENS } from '@/constants/theme.tokens'
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'success' | 'default'
@@ -17,9 +17,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const classes = cn(
       'inline-flex items-center justify-center font-medium transition-colors',
       THEME_TOKENS.radius.md,
+      // 焦点环必须带 focus-visible: 前缀，否则 ring-2/ring-blue-500 会常驻显示（原缺陷：所有按钮恒显蓝色环）
+      // 对齐 Input.tsx 的规范写法
       'focus-visible:outline-none',
-      THEME_TOKENS.focusVisible.ringWidth,
-      THEME_TOKENS.focusVisible.ringColor,
+      `focus-visible:${THEME_TOKENS.focusVisible.ringWidth}`,
+      `focus-visible:${THEME_TOKENS.focusVisible.ringColor}`,
       'disabled:pointer-events-none disabled:opacity-50',
       {
         'bg-primary text-primary-foreground hover:bg-primary/90':
@@ -29,9 +31,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         'border border-input bg-background hover:bg-accent hover:text-accent-foreground':
           variant === 'outline',
         'hover:bg-accent hover:text-accent-foreground': variant === 'ghost',
-        [`${COLOR_TOKENS.danger.bgClass} text-white hover:opacity-90`]:
+        // default：中性实心按钮，基于 surface-2 语义令牌，明暗模式一致
+        'bg-surface-2 text-foreground hover:bg-surface-2/80':
+          variant === 'default',
+        // danger / success 改用语义令牌（bg-destructive / bg-success），明暗一致；
+        // 原为硬编码 Tailwind 调色板裸类（bg-red-500 / bg-green-700），非主题感知
+        'bg-destructive text-destructive-foreground hover:bg-destructive/90':
           variant === 'danger',
-        [`${COLOR_TOKENS.success.bgClass} text-white hover:opacity-90`]:
+        'bg-success text-success-foreground hover:bg-success/90':
           variant === 'success',
       },
       {

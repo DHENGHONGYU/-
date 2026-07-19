@@ -5,8 +5,6 @@
  *
  * 注意：v6CompositeToDimensionScores 是 intelligentScoreService 内部函数，
  * 非导出。M3 的映射逻辑通过 tsc 编译 + 代码审查 验证。
- */
-
 /**
  * @file verify-m2-m3.ts
  * @description 验收 M2（三道校验关）与 M3（v6 真实因子映射）核心逻辑

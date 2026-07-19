@@ -218,6 +218,14 @@ function SystemArchitectureDiagram(): React.JSX.Element {
     )
   }
 
+  // 反馈连接（反向依赖）：from 层序号 > to 层序号 的反向边，主分层区不渲染，单独列出
+  const layerIndexById = new Map(snapshot.layers.map((l, i) => [l.id, i] as const))
+  const feedbackConnections = snapshot.connections.filter((c) => {
+    const fromIdx = layerIndexById.get(c.from)
+    const toIdx = layerIndexById.get(c.to)
+    return fromIdx != null && toIdx != null && fromIdx > toIdx
+  })
+
   return (
     <Card>
       <CardHeader className="flex-row items-center justify-between space-y-0">
@@ -313,6 +321,33 @@ function SystemArchitectureDiagram(): React.JSX.Element {
             })}
           </div>
         </div>
+
+        {/* ==================================================== */}
+        {/* 反馈连接（反向依赖） */}
+        {/* ==================================================== */}
+        {feedbackConnections.length > 0 ? (
+          <div>
+            <p className="mb-2 text-xs font-medium text-muted-foreground">反馈连接（反向依赖）</p>
+            <div className="space-y-1">
+              {feedbackConnections.map((conn) => {
+                const fromName = snapshot.layers[layerIndexById.get(conn.from)!]?.name ?? conn.from
+                const toName = snapshot.layers[layerIndexById.get(conn.to)!]?.name ?? conn.to
+                return (
+                  <div
+                    key={`${conn.from}-${conn.to}`}
+                    className="flex items-center gap-2 rounded-lg border border-dashed p-2"
+                    style={{ borderColor: COLOR_TOKENS.border.hex }}
+                  >
+                    <span className="text-base text-muted-foreground">↑</span>
+                    <span className="text-xs text-muted-foreground">
+                      {fromName} → {toName}：{conn.label}
+                    </span>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        ) : null}
 
         {/* ==================================================== */}
         {/* V6 评分引擎层 */}

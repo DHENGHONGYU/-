@@ -34,6 +34,9 @@ interface PerfMetricsState {
   setRunning: (running: boolean) => void
 }
 
+/**
+ * usePerfMetricsStore
+ */
 export const usePerfMetricsStore = create<PerfMetricsState>((set) => ({
   results: [],
   lastRunId: undefined,
@@ -63,4 +66,7 @@ export const usePerfMetricsStore = create<PerfMetricsState>((set) => ({
   },
 }))
 
+/**
+ * PERF_METRICS_STORE_VERSION
+ */
 export const PERF_METRICS_STORE_VERSION = 1

@@ -1,19 +1,23 @@
 /**
  * @module executionLogService
+ * @note P1-12（已确认合规）：dataLayer store 内部通过 sendWriteEnvelope() → DataBridge 写入，
+ *   queryList/queryGet 走 DataBridge 查询，是 DataBridge 的类型安全包装层。
+ *   符合 services → data 分层规则（AGENTS.md §一），无需迁移。
  * @description 执行日志服务：记录执行计划每个阶段的实际行为与系统事件。
  *
  * 职责：
  *   - writeLog(plan, action, options): 写入一条执行日志
  *   - listByPlan(planId): 查询某计划的全部日志
- *   - listBySymbol(symbol): 查询某股票的全部日志
+ * @convergence DataBridge 迁移（Phase 2）：当前直接 import executionLogStore，
+ *   写入和查询应改为 DataBridge.forward()/query()。
  */
 
 import { getLogger } from '@/lib/logger'
-import { executionLogStore } from '@/data/dataLayer'
+import { executionLogStore } from '@/data/dataLayerTradingStores'
 import type { ExecutionPlan, ExecutionLog } from '@/data/types'
 import { EXECUTION_LOG_ACTION, type ExecutionLogAction } from '@/constants/execution.constants'
 import { checkExecutionLogFreshness } from '@/core/freshnessGuard'
-import { generateId } from '@/data/db'
+import { generateId } from '@/lib/utils'
 
 const logger = getLogger()
 

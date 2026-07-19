@@ -1,81 +1,87 @@
 ---
-title: scholar
+title: Scholar ²å¼þ
+type: reference
+domain: project
+phase: development
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "Êý¾ÝÓò: Ñ§ÊõÎÄÏ×¼ìË÷£¨Google Scholar ·ç¸ñ£© Ô­Ê¼Â·¾¶:..."
+tags: [data-source, research, reference, project]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: important
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/reference/scholar.md
-code_version: 2.0.0
-tier: important
----
+# Scholar ²å¼þ
 
-# Scholar æ’ä»¶
-
-> **æ•°æ®åŸŸ**: å­¦æœ¯æ–‡çŒ®æ£€ç´¢ï¼ˆGoogle Scholar é£Žæ ¼ï¼‰  
-> **åŽŸå§‹è·¯å¾„**: [`plugins/scholar/SKILL.md`](../../plugins/scholar/SKILL.md)ï¼ˆæ‰å¹³åŒ–ï¼‰ / [`plugins/scholar/skills/scholar/SKILL.md`](../../plugins/scholar/skills/scholar/SKILL.md)ï¼ˆåµŒå¥—ï¼‰  
-> **åŒæ­¥æ—¥æœŸ**: 2025-07-12
+> **Êý¾ÝÓò**: Ñ§ÊõÎÄÏ×¼ìË÷£¨Google Scholar ·ç¸ñ£©  
+> **Ô­Ê¼Â·¾¶**: [`plugins/scholar/SKILL.md`](../../plugins/scholar/SKILL.md)£¨±âÆ½»¯£© / [`plugins/scholar/skills/scholar/SKILL.md`](../../plugins/scholar/skills/scholar/SKILL.md)£¨Ç¶Ì×£©  
+> **Í¬²½ÈÕÆÚ**: 2025-07-12
 
 ---
 
-## ç®€ä»‹
+## ¼ò½é
 
-Scholar æ˜¯ä¸€ä¸ªå…è´¹å¯è®¿é—®çš„å­¦æœ¯æ–‡çŒ®æœç´¢å¼•æ“Žï¼Œç´¢å¼•å…¨æ–‡æˆ–å…ƒæ•°æ®ï¼Œè¦†ç›–å¤šç§å‡ºç‰ˆæ ¼å¼å’Œå­¦ç§‘é¢†åŸŸã€‚æä¾›å…¨é¢çš„å­¦æœ¯ç ”ç©¶èƒ½åŠ›ï¼ŒåŒ…æ‹¬åŸºäºŽå…³é”®è¯çš„è®ºæ–‡æœç´¢ï¼ˆè¿”å›žæ ‡é¢˜ã€ä½œè€…ã€æ‘˜è¦ã€å¼•ç”¨æ•°ã€å‡ºç‰ˆå¹´ä»½å’Œè®¿é—®é“¾æŽ¥ï¼‰ã€é«˜çº§æœç´¢ï¼ˆæ”¯æŒä½œè€…åå’Œå‡ºç‰ˆå¹´ä»½èŒƒå›´è¿‡æ»¤ï¼‰ï¼Œä»¥åŠè¯¦ç»†çš„ä½œè€…ç”»åƒæŸ¥è¯¢ï¼ˆå«å­¦æœ¯æŒ‡æ ‡ h-indexã€i10-indexã€æ€»å¼•ç”¨æ•°ã€ç ”ç©¶å…´è¶£å’Œä¸»è¦å‡ºç‰ˆç‰©ï¼‰ã€‚
+Scholar ÊÇÒ»¸öÃâ·Ñ¿É·ÃÎÊµÄÑ§ÊõÎÄÏ×ËÑË÷ÒýÇæ£¬Ë÷ÒýÈ«ÎÄ»òÔªÊý¾Ý£¬¸²¸Ç¶àÖÖ³ö°æ¸ñÊ½ºÍÑ§¿ÆÁìÓò¡£Ìá¹©È«ÃæµÄÑ§ÊõÑÐ¾¿ÄÜÁ¦£¬°üÀ¨»ùÓÚ¹Ø¼ü´ÊµÄÂÛÎÄËÑË÷£¨·µ»Ø±êÌâ¡¢×÷Õß¡¢ÕªÒª¡¢ÒýÓÃÊý¡¢³ö°æÄê·ÝºÍ·ÃÎÊÁ´½Ó£©¡¢¸ß¼¶ËÑË÷£¨Ö§³Ö×÷ÕßÃûºÍ³ö°æÄê·Ý·¶Î§¹ýÂË£©£¬ÒÔ¼°ÏêÏ¸µÄ×÷Õß»­Ïñ²éÑ¯£¨º¬Ñ§ÊõÖ¸±ê h-index¡¢i10-index¡¢×ÜÒýÓÃÊý¡¢ÑÐ¾¿ÐËÈ¤ºÍÖ÷Òª³ö°æÎï£©¡£
 
-é€‚ç”¨äºŽå­¦æœ¯ç ”ç©¶ã€æ–‡çŒ®ç»¼è¿°ã€å¼•æ–‡åˆ†æžå’Œè¶‹åŠ¿ç ”ç©¶ã€‚
+ÊÊÓÃÓÚÑ§ÊõÑÐ¾¿¡¢ÎÄÏ××ÛÊö¡¢ÒýÎÄ·ÖÎöºÍÇ÷ÊÆÑÐ¾¿¡£
 
-## ä½¿ç”¨åœºæ™¯
+## Ê¹ÓÃ³¡¾°
 
-- å­¦æœ¯è®ºæ–‡æœç´¢ä¸Žå…³é”®è¯æ£€ç´¢
-- å¼•æ–‡æ•°æ®åˆ†æž
-- ä½œè€…ç”»åƒæŸ¥è¯¢ï¼ˆh-indexã€i10-indexã€æ€»å¼•ç”¨æ•°ï¼‰
-- å­¦æœ¯è¶‹åŠ¿ç ”ç©¶
-- æ–‡çŒ®ç»¼è¿°æ”¯æŒ
+- Ñ§ÊõÂÛÎÄËÑË÷Óë¹Ø¼ü´Ê¼ìË÷
+- ÒýÎÄÊý¾Ý·ÖÎö
+- ×÷Õß»­Ïñ²éÑ¯£¨h-index¡¢i10-index¡¢×ÜÒýÓÃÊý£©
+- Ñ§ÊõÇ÷ÊÆÑÐ¾¿
+- ÎÄÏ××ÛÊöÖ§³Ö
 
-## çŽ¯å¢ƒå‡†å¤‡
+## »·¾³×¼±¸
 
 ```bash
-# æ£€æŸ¥å¹¶å®‰è£… agent-gw Python SDK
+# ¼ì²é²¢°²×° agent-gw Python SDK
 python3 -c "import agent_gw" || python3 -m pip install "$(curl -s https://cdn.kimi.com/agentgw/pysdk/manifest.json | python3 -c "import json,sys; print(json.load(sys.stdin)['latest']['url'])")"
 ```
 
-API Key æ¥æºï¼š
-1. å‘½ä»¤è¡Œå‚æ•° `api_key=...`
-2. çŽ¯å¢ƒå˜é‡ `KIMI_API_KEY`
-3. é…ç½®æ–‡ä»¶ `~/.kimi/agent-gw.json`
+API Key À´Ô´£º
+1. ÃüÁîÐÐ²ÎÊý `api_key=...`
+2. »·¾³±äÁ¿ `KIMI_API_KEY`
+3. ÅäÖÃÎÄ¼þ `~/.kimi/agent-gw.json`
 
-## å·¥ä½œæµ
+## ¹¤×÷Á÷
 
-1. è¿è¡Œ `python3 scripts/scholar_tool.py describe` èŽ·å–æ•°æ®æºæè¿°æ–‡æ¡£
-2. ä»”ç»†é˜…è¯»è¿”å›žçš„ Markdownï¼Œäº†è§£æ•°æ®æºè§„åˆ™ã€å­¦æœ¯æœç´¢æ ¼å¼ã€å…¨å±€çº¦æŸåŠå„ API çš„å‚æ•°è¦æ±‚
-3. é€‰æ‹©æœ€åŒ¹é…ç”¨æˆ·é—®é¢˜çš„ APIï¼ˆè®ºæ–‡æœç´¢ã€é«˜çº§è®ºæ–‡æœç´¢ã€ä½œè€…ç”»åƒæŸ¥è¯¢ï¼‰
-4. ä¸¥æ ¼æŒ‰ç…§ Markdown è¦æ±‚æž„å»º `params`ï¼Œä»…ä½¿ç”¨ API æ”¯æŒçš„å…³é”®è¯ã€ä½œè€…ã€å‡ºç‰ˆå¹´ä»½ã€åˆ†é¡µã€ç”»åƒã€å¼•ç”¨æˆ–è®¿é—®é“¾æŽ¥å­—æ®µ
-5. ä½¿ç”¨ `python3 scripts/scholar_tool.py call` è°ƒç”¨å…·ä½“ API
-6. è°ƒç”¨å¤±è´¥æ—¶ï¼Œä»Žå“åº”ä¸­è§£é‡Šå¤±è´¥åŽŸå› 
-7. è°ƒç”¨æˆåŠŸæ—¶ï¼Œå…ˆä¿å­˜è¿”å›žçš„æ–‡ä»¶ï¼Œç„¶åŽä½¿ç”¨ `resp.result.assistant` å›žç­”ï¼›ä»…åœ¨éœ€è¦å±•ç¤ºå†…å®¹æ—¶å‚è€ƒ `resp.result.user`
+1. ÔËÐÐ `python3 scripts/scholar_tool.py describe` »ñÈ¡Êý¾ÝÔ´ÃèÊöÎÄµµ
+2. ×ÐÏ¸ÔÄ¶Á·µ»ØµÄ Markdown£¬ÁË½âÊý¾ÝÔ´¹æÔò¡¢Ñ§ÊõËÑË÷¸ñÊ½¡¢È«¾ÖÔ¼Êø¼°¸÷ API µÄ²ÎÊýÒªÇó
+3. Ñ¡Ôñ×îÆ¥ÅäÓÃ»§ÎÊÌâµÄ API£¨ÂÛÎÄËÑË÷¡¢¸ß¼¶ÂÛÎÄËÑË÷¡¢×÷Õß»­Ïñ²éÑ¯£©
+4. ÑÏ¸ñ°´ÕÕ Markdown ÒªÇó¹¹½¨ `params`£¬½öÊ¹ÓÃ API Ö§³ÖµÄ¹Ø¼ü´Ê¡¢×÷Õß¡¢³ö°æÄê·Ý¡¢·ÖÒ³¡¢»­Ïñ¡¢ÒýÓÃ»ò·ÃÎÊÁ´½Ó×Ö¶Î
+5. Ê¹ÓÃ `python3 scripts/scholar_tool.py call` µ÷ÓÃ¾ßÌå API
+6. µ÷ÓÃÊ§°ÜÊ±£¬´ÓÏìÓ¦ÖÐ½âÊÍÊ§°ÜÔ­Òò
+7. µ÷ÓÃ³É¹¦Ê±£¬ÏÈ±£´æ·µ»ØµÄÎÄ¼þ£¬È»ºóÊ¹ÓÃ `resp.result.assistant` »Ø´ð£»½öÔÚÐèÒªÕ¹Ê¾ÄÚÈÝÊ±²Î¿¼ `resp.result.user`
 
-## è„šæœ¬ä½¿ç”¨
+## ½Å±¾Ê¹ÓÃ
 
 ```bash
-# æŸ¥çœ‹æ•°æ®èƒ½åŠ›
+# ²é¿´Êý¾ÝÄÜÁ¦
 cd plugins/scholar
 python3 scripts/scholar_tool.py describe
 
-# è°ƒç”¨å…·ä½“ API
+# µ÷ÓÃ¾ßÌå API
 python3 scripts/scholar_tool.py call \
   --api-name "<api name from markdown>" \
   --params-json '{"required_param":"value"}'
 ```
 
-å‚æ•°è¾ƒå¤šæ—¶ï¼Œå¯å†™å…¥ JSON æ–‡ä»¶ï¼š
+²ÎÊý½Ï¶àÊ±£¬¿ÉÐ´Èë JSON ÎÄ¼þ£º
 ```bash
 python3 scripts/scholar_tool.py call \
   --api-name "<api name>" \
   --params-file path/to/params.json
 ```
 
-## å“åº”æ ¼å¼
+## ÏìÓ¦¸ñÊ½
 
 ```python
 {
@@ -86,9 +92,9 @@ python3 scripts/scholar_tool.py call \
 }
 ```
 
-- æˆåŠŸæ—¶ï¼Œä¼˜å…ˆä½¿ç”¨ `result.assistant` å†…å®¹
-- æœ‰æ–‡ä»¶è¿”å›žæ—¶ï¼ŒæŒ‰ `files[].name` ä¿å­˜æ–‡ä»¶
+- ³É¹¦Ê±£¬ÓÅÏÈÊ¹ÓÃ `result.assistant` ÄÚÈÝ
+- ÓÐÎÄ¼þ·µ»ØÊ±£¬°´ `files[].name` ±£´æÎÄ¼þ
 
 ---
 
-*æœ¬æ–‡æ¡£ä¸Ž [`plugins/scholar/SKILL.md`](../../plugins/scholar/SKILL.md) åŒæ­¥ï¼Œæ›´æ–°æ—¶è¯·åŒæ—¶ä¿®æ”¹ä¸¤è€…ã€‚*
+*±¾ÎÄµµÓë [`plugins/scholar/SKILL.md`](../../plugins/scholar/SKILL.md) Í¬²½£¬¸üÐÂÊ±ÇëÍ¬Ê±ÐÞ¸ÄÁ½Õß¡£*

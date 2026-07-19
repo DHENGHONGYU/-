@@ -734,7 +734,7 @@ export class WorkflowServer extends MCPServerBase {
           let payload: { defs?: WorkflowDef[]; schedules?: ScheduleDef[]; triggers?: TriggerDef[] }
           try {
             payload = JSON.parse(args.data as string)
-          } catch {
+          } catch (err) { console.warn('[workflowServer.ts]', err);
             return this.err('data 不是有效的 JSON 字符串')
           }
           const stats = { imported: 0, skipped: 0, errors: 0 }
@@ -882,7 +882,55 @@ export class WorkflowServer extends MCPServerBase {
    * 容错设计（A1）：顶层 try-catch 兜底，确保任何未捕获异常都将 run 标记为 failed，
    * 防止僵尸 run（status='running' 永不到终态）。
    * 监控设计（A4）：用 recordPerf 记录执行耗时，支持 P50/P95/max 聚合统计。
+  /**
+   * 统一判断 run 是否已取消（消除 executeRun 中 3 处重复条件）。
    */
+  private isCancelled(run: WorkflowRun): boolean {
+    return !!run.cancelled
+  }
+
+  /**
+   * 判定 run 的最终状态，消除 executeRun 中的深层 if-else 链。
+   */
+  private resolveRunStatus(run: WorkflowRun, aborted: boolean): RunStatus {
+    if (this.isCancelled(run)) return 'cancelled'
+    if (aborted) return 'failed'
+    const anyFailed = run.stepResults.some((r) => r.status === 'failed')
+    if (!anyFailed) return 'success'
+    return run.stepResults.every((r) => r.status === 'failed') ? 'failed' : 'partial'
+  }
+
+  /**
+   * 处理单个 target 的所有 step，返回 true 表示执行被中止（取消/失败）。
+   * 提取自 executeRun 内层循环，将嵌套层级从 9 层降至 4 层（audit:complexity L3）。
+   */
+  private async processTargetSteps(
+    run: WorkflowRun,
+    def: WorkflowDef,
+    target: string,
+  ): Promise<boolean> {
+    const prevOutputs: Record<string, unknown> = {}
+
+    for (const step of def.steps) {
+      if (this.isCancelled(run)) return true
+
+      const result = await this.executeStep(step, target, prevOutputs)
+      run.stepResults.push(result)
+      // D1: checkpoint — 每步完成时异步写 IndexedDB（fire-and-forget，不阻塞执行）
+      this.persistRunCheckpoint(run)
+
+      if (result.status === 'success' && result.output !== undefined) {
+        prevOutputs[step.id] = result.output
+      }
+
+      if (result.status === 'failed') {
+        if (step.onError !== 'continue') return true
+        logger.warn('[WorkflowServer] step failed but continue', { stepId: step.id, runId: run.runId })
+      }
+    }
+    return false
+  }
+
   private async executeRun(run: WorkflowRun): Promise<void> {
     const runStartTime = performance.now()
     try {
@@ -900,46 +948,15 @@ export class WorkflowServer extends MCPServerBase {
       let aborted = false
 
       for (const target of targetList) {
-        if (run.cancelled) {
+        if (this.isCancelled(run)) break
+        run.currentTargetIndex++
+        if (await this.processTargetSteps(run, def, target)) {
           aborted = true
           break
         }
-        run.currentTargetIndex++
-        const prevOutputs: Record<string, unknown> = {}
-
-        for (const step of def.steps) {
-          if (run.cancelled) {
-            aborted = true
-            break
-          }
-          const result = await this.executeStep(step, target, prevOutputs)
-          run.stepResults.push(result)
-          // D1: checkpoint — 每步完成时异步写 IndexedDB（fire-and-forget，不阻塞执行）
-          this.persistRunCheckpoint(run)
-          if (result.status === 'success' && result.output !== undefined) {
-            prevOutputs[step.id] = result.output
-          }
-          if (result.status === 'failed') {
-            if (step.onError === 'continue') {
-              logger.warn('[WorkflowServer] step failed but continue', { stepId: step.id, runId: run.runId })
-            } else {
-              aborted = true
-              break
-            }
-          }
-        }
-        if (aborted) break
       }
 
-      if (run.cancelled) {
-        run.status = 'cancelled'
-      } else if (aborted) {
-        run.status = 'failed'
-      } else if (run.stepResults.some((r) => r.status === 'failed')) {
-        run.status = run.stepResults.every((r) => r.status === 'failed') ? 'failed' : 'partial'
-      } else {
-        run.status = 'success'
-      }
+      run.status = this.resolveRunStatus(run, aborted)
       run.finishedAt = Date.now()
       logger.info('[WorkflowServer] executeRun done', { runId: run.runId, status: run.status })
     } catch (err) {
@@ -1018,6 +1035,9 @@ export class WorkflowServer extends MCPServerBase {
    *
    * 用 Promise.race 将实际调用与超时 Promise 竞速，
    * 超时后返回 failed 结果而非无限等待。
+   *
+   * 重构（audit:complexity）：原 for→try→catch→if 嵌套达 depth=4。
+   * 抽出 attemptMcpStep helper 收 try-catch，主循环仅剩 for→if (depth=2)。
    */
   private async executeMcpToolWithTimeout(
     step: WorkflowStep,
@@ -1029,34 +1049,49 @@ export class WorkflowServer extends MCPServerBase {
     let lastErr: string | undefined
 
     for (let attempt = 0; attempt <= retry; attempt++) {
-      try {
-        const server = this.resolveServer(step.server ?? '')
-        if (!server) throw new Error(`server not found: ${step.server}`)
-        const resolvedArgs = this.resolveArgs(step.args ?? {}, target, prevOutputs)
-        const ctx: McpCallerContext = { caller: 'system' }
-
-        // A2: Promise.race 超时保护
-        const timeoutPromise = new Promise<never>((_, reject) => {
-          setTimeout(
-            () => reject(new Error(`step "${step.id}" timed out after ${STEP_TIMEOUT_MS}ms`)),
-            STEP_TIMEOUT_MS,
-          )
-        })
-        const res = await Promise.race([
-          server.callTool(step.tool ?? '', resolvedArgs, ctx),
-          timeoutPromise,
-        ])
-        if (res.isError) throw new Error(this.extractText(res))
-        return { ...base, status: 'success', output: this.parseResult(res), finishedAt: Date.now() }
-      } catch (err) {
-        lastErr = err instanceof Error ? err.message : String(err)
-        if (attempt < retry) {
-          logger.warn('[WorkflowServer] step retry', { stepId: step.id, attempt, error: lastErr })
-          continue
-        }
+      const outcome = await this.attemptMcpStep(step, target, prevOutputs, base)
+      if (outcome.ok) return outcome.result
+      lastErr = outcome.error
+      if (attempt < retry) {
+        logger.warn('[WorkflowServer] step retry', { stepId: step.id, attempt, error: lastErr })
+        continue
       }
     }
     return { ...base, status: 'failed', error: lastErr, finishedAt: Date.now() }
+  }
+
+  /**
+   * 单次 mcp_tool 步骤尝试：解析 server → 替换变量 → Promise.race 超时 → 解析结果。
+   * 抽出后 try-catch 内的 if 最高仅 depth=2，避免触发 deeplyNestedBlocks 闸门。
+   */
+  private async attemptMcpStep(
+    step: WorkflowStep,
+    target: string,
+    prevOutputs: Record<string, unknown>,
+    base: { stepId: string; stepName?: string; target: string; startedAt: number; finishedAt: number },
+  ): Promise<{ ok: true; result: StepRunResult } | { ok: false; error: string }> {
+    try {
+      const server = this.resolveServer(step.server ?? '')
+      if (!server) throw new Error(`server not found: ${step.server}`)
+      const resolvedArgs = this.resolveArgs(step.args ?? {}, target, prevOutputs)
+      const ctx: McpCallerContext = { caller: 'system' }
+
+      // A2: Promise.race 超时保护
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(
+          () => reject(new Error(`step "${step.id}" timed out after ${STEP_TIMEOUT_MS}ms`)),
+          STEP_TIMEOUT_MS,
+        )
+      })
+      const res = await Promise.race([
+        server.callTool(step.tool ?? '', resolvedArgs, ctx),
+        timeoutPromise,
+      ])
+      if (res.isError) throw new Error(this.extractText(res))
+      return { ok: true, result: { ...base, status: 'success', output: this.parseResult(res), finishedAt: Date.now() } }
+    } catch (err) {
+      return { ok: false, error: err instanceof Error ? err.message : String(err) }
+    }
   }
 
   /**
@@ -1216,7 +1251,7 @@ export class WorkflowServer extends MCPServerBase {
     const joined = this.extractText(res)
     try {
       return JSON.parse(joined)
-    } catch {
+    } catch (err) { console.warn('[workflowServer.ts]', err);
       return joined
     }
   }

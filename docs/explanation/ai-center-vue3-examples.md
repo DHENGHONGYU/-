@@ -1,31 +1,38 @@
 ---
 title: ai-center-vue3-examples
-code_version: 2.0.0
-
+type: explanation
+domain: ai
+phase: planning
 tier: important
----
-
----
-title: docs/explanation/ai-center-vue3-examples.md
+status: active
+maintainer: V9 Architecture Team
+summary: "�����ֱ���������ͼ�ֻ꣬���ݳ������ icon �ֶ���ӳ�䡣"
+tags: [ai, plan, explanation, mcp, strategy]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: important
+doc_id: V9-DOC-AI-008
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
-# AI 中心 Vue3 组件示例
+# AI ���� Vue3 ���ʾ��
 
-> **注意**：`src/services/ai-center/mockAICenterProvider.ts` 已于 2026-07-05 作为零引用死代码删除。本文档中的代码示例仍保留 `MockAICenterProvider` 引用作为模式参考，实际开发中应替换为真实 Provider 或统一 Mock 开关。
+> **ע��**��`src/services/ai-center/aiCenterProvider.ts` ���� 2026-07-05 ��Ϊ������������ɾ�������ĵ��еĴ���ʾ���Ա��� `MockAICenterProvider` ������Ϊģʽ�ο���ʵ�ʿ�����Ӧ�滻Ϊ��ʵ Provider ��ͳһ Mock ���ء�
 >
-> 配套文件：
+> �����ļ���
 > - `src/constants/ai-center.constants.ts`
 > - `src/constants/health.constants.ts`
 > - `src/types/modules/ai-center.types.ts`
 > - `../reference/ai-center-data-definition.md`
 >
-> 规范：**组件内禁止出现任何硬编码状态、颜色、标签、轮询间隔**。所有 UI 元信息必须从 constants 文件读取。
+> �淶��**����ڽ�ֹ�����κ�Ӳ����״̬����ɫ����ǩ����ѯ���**������ UI Ԫ��Ϣ����� constants �ļ���ȡ��
 
 ---
 
-## 一、目录约定（推荐）
+## һ��Ŀ¼Լ�����Ƽ���
 
 ```
 src/
@@ -34,20 +41,20 @@ src/
       AgentDispatchPanel.vue
       HealthMonitorPanel.vue
       DiagnosticAnalysisPanel.vue
-      IconRenderer.vue          # 图标名称 → 图标组件
+      IconRenderer.vue          # ͼ������ �� ͼ�����
     composables/
-      useAICenter.ts            # 数据获取与自动刷新
+      useAICenter.ts            # ���ݻ�ȡ���Զ�ˢ��
     stores/
-      aiCenterStore.ts          # Pinia 状态管理
+      aiCenterStore.ts          # Pinia ״̬����
     services/
-      aiCenterService.ts        # REST/Mock 数据封装
+      aiCenterService.ts        # REST/Mock ���ݷ�װ
 ```
 
 ---
 
-## 二、图标渲染器（配置驱动）
+## ����ͼ����Ⱦ��������������
 
-组件不直接引入具体图标，只根据常量里的 `icon` 字段做映射。
+�����ֱ���������ͼ�ֻ꣬���ݳ������ `icon` �ֶ���ӳ�䡣
 
 ```vue
 <!-- src/ai-center/components/IconRenderer.vue -->
@@ -105,7 +112,7 @@ const IconComponent = computed(() => iconMap[props.name])
 
 ---
 
-## 三、Pinia Store
+## ����Pinia Store
 
 ```ts
 // src/ai-center/stores/aiCenterStore.ts
@@ -139,7 +146,7 @@ export const useAICenterStore = defineStore('aiCenter', () => {
     try {
       agents.value = await MockAICenterProvider.getAgentList()
     } catch (e) {
-      error.value.agents = e instanceof Error ? e.message : '加载失败'
+      error.value.agents = e instanceof Error ? e.message : '����ʧ��'
     } finally {
       loading.value.agents = false
     }
@@ -151,7 +158,7 @@ export const useAICenterStore = defineStore('aiCenter', () => {
     try {
       healthMetrics.value = await MockAICenterProvider.getHealthMetrics()
     } catch (e) {
-      error.value.health = e instanceof Error ? e.message : '加载失败'
+      error.value.health = e instanceof Error ? e.message : '����ʧ��'
     } finally {
       loading.value.health = false
     }
@@ -163,7 +170,7 @@ export const useAICenterStore = defineStore('aiCenter', () => {
     try {
       diagnosticReports.value = await MockAICenterProvider.getDiagnosticReports()
     } catch (e) {
-      error.value.diagnostics = e instanceof Error ? e.message : '加载失败'
+      error.value.diagnostics = e instanceof Error ? e.message : '����ʧ��'
     } finally {
       loading.value.diagnostics = false
     }
@@ -205,7 +212,7 @@ export const useAICenterStore = defineStore('aiCenter', () => {
 
 ---
 
-## 四、AI 智能体调度中心 Panel
+## �ġ�AI ������������� Panel
 
 ```vue
 <!-- src/ai-center/components/AgentDispatchPanel.vue -->
@@ -235,9 +242,9 @@ onUnmounted(() => {
 
 <template>
   <div class="space-y-4 p-4">
-    <h2 class="text-lg font-semibold">AI 智能体调度中心</h2>
+    <h2 class="text-lg font-semibold">AI �������������</h2>
 
-    <!-- 总览卡片 -->
+    <!-- ������Ƭ -->
     <div class="grid grid-cols-4 gap-3">
       <div
         v-for="card in AGENT_OVERVIEW_CARDS"
@@ -254,14 +261,14 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <!-- Agent 列表 -->
+    <!-- Agent �б� -->
     <div class="rounded-lg border">
       <div class="grid grid-cols-12 gap-2 border-b bg-gray-50 p-3 text-sm font-medium">
-        <div class="col-span-3">智能体</div>
-        <div class="col-span-2">类型</div>
-        <div class="col-span-3">标签</div>
-        <div class="col-span-2">状态</div>
-        <div class="col-span-2">调用次数</div>
+        <div class="col-span-3">������</div>
+        <div class="col-span-2">����</div>
+        <div class="col-span-3">��ǩ</div>
+        <div class="col-span-2">״̬</div>
+        <div class="col-span-2">���ô���</div>
       </div>
 
       <div
@@ -304,7 +311,7 @@ onUnmounted(() => {
         <div class="col-span-2">{{ agent.callCount.toLocaleString() }}</div>
       </div>
 
-      <div v-if="loading.agents" class="p-4 text-center text-sm text-gray-400">加载中...</div>
+      <div v-if="loading.agents" class="p-4 text-center text-sm text-gray-400">������...</div>
     </div>
   </div>
 </template>
@@ -312,7 +319,7 @@ onUnmounted(() => {
 
 ---
 
-## 五、系统健康监控 Panel
+## �塢ϵͳ������� Panel
 
 ```vue
 <!-- src/ai-center/components/HealthMonitorPanel.vue -->
@@ -333,7 +340,7 @@ const { healthMetrics, loading } = storeToRefs(store)
 
 const selectedCategory = ref<string>('ALL')
 const categories = computed(() => [
-  { key: 'ALL', label: '全部' },
+  { key: 'ALL', label: 'ȫ��' },
   ...Object.values(HEALTH_MODULE_CATEGORY).map((k) => ({
     key: k,
     label: HEALTH_MODULE_CATEGORY_MAP[k],
@@ -359,18 +366,18 @@ onUnmounted(() => {
 <template>
   <div class="space-y-4 p-4">
     <div class="flex items-center justify-between">
-      <h2 class="text-lg font-semibold">系统健康监控</h2>
+      <h2 class="text-lg font-semibold">ϵͳ�������</h2>
       <div
         v-if="healthMetrics"
         class="flex items-center gap-2 rounded-full px-3 py-1 text-sm text-white"
         :class="HEALTH_STATUS_MAP[healthMetrics.overallStatus].bgClass"
       >
         <IconRenderer :name="HEALTH_STATUS_MAP[healthMetrics.overallStatus].icon" class="h-4 w-4" />
-        综合健康分 {{ healthMetrics.overallScore }}
+        �ۺϽ����� {{ healthMetrics.overallScore }}
       </div>
     </div>
 
-    <!-- 分类筛选 -->
+    <!-- ����ɸѡ -->
     <div class="flex gap-2">
       <button
         v-for="c in categories"
@@ -383,7 +390,7 @@ onUnmounted(() => {
       </button>
     </div>
 
-    <!-- 指标卡片 -->
+    <!-- ָ�꿨Ƭ -->
     <div class="grid grid-cols-3 gap-3">
       <div
         v-for="metric in filteredMetrics"
@@ -408,14 +415,14 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <div v-if="loading.health" class="text-center text-sm text-gray-400">加载中...</div>
+    <div v-if="loading.health" class="text-center text-sm text-gray-400">������...</div>
   </div>
 </template>
 ```
 
 ---
 
-## 六、诊断分析 Panel
+## ������Ϸ��� Panel
 
 ```vue
 <!-- src/ai-center/components/DiagnosticAnalysisPanel.vue -->
@@ -441,24 +448,24 @@ onUnmounted(() => {
 <template>
   <div class="space-y-4 p-4">
     <div class="flex items-center justify-between">
-      <h2 class="text-lg font-semibold">诊断分析</h2>
+      <h2 class="text-lg font-semibold">��Ϸ���</h2>
       <div
         v-if="diagnosticReports"
         class="rounded px-3 py-1 text-sm text-white"
         :class="DIAGNOSTIC_LEVEL_MAP[diagnosticReports.overallLevel].bgClass"
       >
-        整体等级：{{ DIAGNOSTIC_LEVEL_MAP[diagnosticReports.overallLevel].label }}
+        ����ȼ���{{ DIAGNOSTIC_LEVEL_MAP[diagnosticReports.overallLevel].label }}
       </div>
     </div>
 
     <div class="rounded-lg border">
       <div class="grid grid-cols-12 gap-2 border-b bg-gray-50 p-3 text-sm font-medium">
-        <div class="col-span-2">诊断项</div>
-        <div class="col-span-2">模块</div>
-        <div class="col-span-2">健康分</div>
-        <div class="col-span-2">成功率</div>
-        <div class="col-span-2">稳定性</div>
-        <div class="col-span-2">等级</div>
+        <div class="col-span-2">�����</div>
+        <div class="col-span-2">ģ��</div>
+        <div class="col-span-2">������</div>
+        <div class="col-span-2">�ɹ���</div>
+        <div class="col-span-2">�ȶ���</div>
+        <div class="col-span-2">�ȼ�</div>
       </div>
 
       <div
@@ -487,7 +494,7 @@ onUnmounted(() => {
 
 ---
 
-## 七、数据服务封装（可选）
+## �ߡ����ݷ����װ����ѡ��
 
 ```ts
 // src/ai-center/services/aiCenterService.ts
@@ -515,24 +522,24 @@ export class AICenterService {
 
 ---
 
-## 八、硬编码检查清单
+## �ˡ�Ӳ�������嵥
 
-在提交前，请确保 Panel 组件中未出现以下硬编码：
+���ύǰ����ȷ�� Panel �����δ��������Ӳ���룺
 
-- [ ] `'正常'` / `'异常'` / `'预警'` / `'已暂停'` / `'未知'`
-- [ ] `'LLM模型'` / `'知识库'` / `'工具链'` / `'策略'`
-- [ ] `'优秀'` / `'良好'` / `'一般'` / `'较差'`
-- [ ] 任何十六进制颜色，如 `#22c55e`、`#ef4444`
-- [ ] 任何 Tailwind 颜色类，如 `bg-green-500`、`text-red-500`
-- [ ] 图标组件直接 import 并硬编码使用
-- [ ] 轮询间隔数字，如 `5000`、`10000`
+- [ ] `'����'` / `'�쳣'` / `'Ԥ��'` / `'����ͣ'` / `'δ֪'`
+- [ ] `'LLMģ��'` / `'֪ʶ��'` / `'������'` / `'����'`
+- [ ] `'����'` / `'����'` / `'һ��'` / `'�ϲ�'`
+- [ ] �κ�ʮ��������ɫ���� `#22c55e`��`#ef4444`
+- [ ] �κ� Tailwind ��ɫ�࣬�� `bg-green-500`��`text-red-500`
+- [ ] ͼ�����ֱ�� import ��Ӳ����ʹ��
+- [ ] ��ѯ������֣��� `5000`��`10000`
 
 ---
 
-## 九、与 React 项目的关系
+## �š��� React ��Ŀ�Ĺ�ϵ
 
-当前主项目为 React 18/19 + TypeScript。本 Vue3 示例用于：
+��ǰ����ĿΪ React 18/19 + TypeScript���� Vue3 ʾ�����ڣ�
 
-1. 后续若引入 Vue3 子应用（微前端）或独立管理后台，可直接复用常量与类型。
-2. 作为跨技术栈团队共享的规范参考：状态、颜色、标签、数据源配置完全复用同一套 constants/types。
-3. Mock 数据生成器 `MockAICenterProvider` 在 Vue3 与 React 中均可直接 import 使用。
+1. ���������� Vue3 ��Ӧ�ã�΢ǰ�ˣ������������̨����ֱ�Ӹ��ó��������͡�
+2. ��Ϊ�缼��ջ�Ŷӹ����Ĺ淶�ο���״̬����ɫ����ǩ������Դ������ȫ����ͬһ�� constants/types��
+3. Mock ���������� `MockAICenterProvider` �� Vue3 �� React �о���ֱ�� import ʹ�á�

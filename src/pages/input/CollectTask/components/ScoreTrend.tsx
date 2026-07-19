@@ -16,6 +16,9 @@ const SCORE_HIGH_THRESHOLD = 4.0
 const SCORE_MEDIUM_THRESHOLD = 2.5
 const MAX_SCORE_FOR_VISUAL = 5
 
+/**
+ * ScoreTrend
+ */
 export function ScoreTrend({ scoreStats }: { scoreStats: ScoreStats }): React.JSX.Element {
   const { recentTrend } = scoreStats
 

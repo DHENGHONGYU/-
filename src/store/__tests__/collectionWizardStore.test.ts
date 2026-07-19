@@ -126,7 +126,7 @@ describe('collectionWizardStore 核心', () => {
     expect(state.isOpen).toBe(false)
     expect(state.selectedDimensions).toEqual([])
     expect(state.taskStatus).toBe('idle')
-    expect(state.savedConfigs).toHaveLength(3) // MOCK_CONFIGS
+    expect(state.savedConfigs).toHaveLength(0) // 初始为空，从 DB 加载
     expect(state.isSavingConfig).toBe(false)
   })
 
@@ -174,7 +174,7 @@ describe('collectionWizardStore 核心', () => {
     const s = useCollectionWizardStore.getState()
     expect(s.selectedDimensions).toEqual([])
     expect(s.taskName).toBe('')
-    expect(s.savedConfigs).toHaveLength(3) // 保留
+    expect(s.savedConfigs).toHaveLength(0) // 初始为空，reset 后仍然为空
   })
 })
 

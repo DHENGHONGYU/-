@@ -113,7 +113,7 @@ describe('PositionControlWidget', () => {
     setupPositionStore({ positionRatio: 30, holdings: [] })
     render(<PositionControlWidget config={buildConfig()} />)
     const badge = screen.getByText('30%')
-    expect(badge.className).toContain(COLOR_TOKENS.success.tailwind) // text-green-700
+    expect(badge.className).toContain(COLOR_TOKENS.success.tailwind) // text-success
     expect(badge.className).toContain('border-green-300')
   })
 

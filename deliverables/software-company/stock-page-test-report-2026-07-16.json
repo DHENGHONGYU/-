@@ -1,0 +1,709 @@
+{
+  "meta": {
+    "system": "FinSightV9 智能投研复盘系统",
+    "testType": "Playwright 页面功能测试",
+    "date": "2026-07-16",
+    "stockCount": 50,
+    "author": "QA 工程师 Edward"
+  },
+  "summary": {
+    "totalChecks": 25,
+    "passed": 23,
+    "failed": 2,
+    "passRate": "92.0%",
+    "searchCoverage": "12.0%",
+    "searchHits": 6,
+    "searchMisses": 44,
+    "importMs": 1738,
+    "avgDetailMs": 36,
+    "maxDetailMs": 345,
+    "detailFound": 50,
+    "detailRendered": 50,
+    "consoleErrors": 20,
+    "pageErrors": 0
+  },
+  "dimensionPassRate": {
+    "setup": "1/1",
+    "A": "8/8",
+    "B": "2/2",
+    "C": "5/5",
+    "D": "7/9"
+  },
+  "issues": [
+    {
+      "level": "P3",
+      "dimension": "D",
+      "name": "响应式 375px · 输入舱无横向溢出",
+      "detail": "横向溢出=61px；关键元素可见=true；溢出元素(样例): DIV.ml-auto flex items-center gap-3 text-xs text-muted w=50 right=436 | BUTTON.flex h-8 items-center gap-1.5 rounded-md px-2 tran w=30 right=416 | svg.[object SVGAnimatedString] w=14 right=408 | rect.[object SVGAnimatedString] w=12 right=406",
+      "verified": "已验证"
+    },
+    {
+      "level": "P3",
+      "dimension": "D",
+      "name": "响应式 375px · 详情页无横向溢出",
+      "detail": "横向溢出=61px；关键元素可见=true；溢出元素(样例): DIV.ml-auto flex items-center gap-3 text-xs text-muted w=50 right=436 | BUTTON.flex h-8 items-center gap-1.5 rounded-md px-2 tran w=30 right=416 | svg.[object SVGAnimatedString] w=14 right=408 | rect.[object SVGAnimatedString] w=12 right=406",
+      "verified": "已验证"
+    },
+    {
+      "level": "P2",
+      "dimension": "B",
+      "name": "搜索覆盖率缺口（mock 库仅 15 只）",
+      "detail": "44/50 只 CSV 股票不在 MOCK_STOCK_LIBRARY，StockSearch 检索不到，属于已知覆盖缺口，需接入真实 AKShare 搜索接口。",
+      "verified": "已验证"
+    },
+    {
+      "level": "P3",
+      "dimension": "C",
+      "name": "实时行情连接器断开（环境限制）",
+      "detail": "本环境所有行情数据源已断开，详情页价格/K线多为\"—\"或回退\"未找到\"。数值类断言已降级为结构软断言，未硬性失败。",
+      "verified": "已验证"
+    }
+  ],
+  "searchCoverage": {
+    "coverage": "12.0%",
+    "hits": [
+      "600276.SH",
+      "300059.SZ",
+      "600036.SH",
+      "601318.SH",
+      "600900.SH",
+      "600519.SH"
+    ],
+    "misses": [
+      "601138.SH",
+      "601689.SH",
+      "603986.SH",
+      "688036.SH",
+      "601127.SH",
+      "002747.SZ",
+      "300661.SZ",
+      "000801.SZ",
+      "300760.SZ",
+      "688041.SH",
+      "600760.SH",
+      "001696.SZ",
+      "688256.SH",
+      "300274.SZ",
+      "300124.SZ",
+      "688111.SH",
+      "603501.SH",
+      "688981.SH",
+      "300308.SZ",
+      "600893.SH",
+      "300014.SZ",
+      "002179.SZ",
+      "002456.SZ",
+      "300033.SZ",
+      "002085.SZ",
+      "002241.SZ",
+      "002472.SZ",
+      "002850.SZ",
+      "000002.SZ",
+      "601985.SH",
+      "601288.SH",
+      "600028.SH",
+      "600887.SH",
+      "601919.SH",
+      "601988.SH",
+      "600025.SH",
+      "600048.SH",
+      "603288.SH",
+      "601398.SH",
+      "002142.SZ",
+      "601088.SH",
+      "601225.SH",
+      "000651.SZ",
+      "601899.SH"
+    ]
+  },
+  "performance": {
+    "importMs": 1738,
+    "avgDetailMs": 36,
+    "maxDetailMs": 345,
+    "detailRecords": [
+      {
+        "symbol": "601138.SH",
+        "navMs": 345,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "601689.SH",
+        "navMs": 35,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "603986.SH",
+        "navMs": 35,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "688036.SH",
+        "navMs": 42,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "601127.SH",
+        "navMs": 40,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "600276.SH",
+        "navMs": 34,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "002747.SZ",
+        "navMs": 32,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "300661.SZ",
+        "navMs": 32,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "000801.SZ",
+        "navMs": 32,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "300760.SZ",
+        "navMs": 30,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "688041.SH",
+        "navMs": 35,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "600760.SH",
+        "navMs": 35,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "300059.SZ",
+        "navMs": 30,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "001696.SZ",
+        "navMs": 33,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "688256.SH",
+        "navMs": 35,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "300274.SZ",
+        "navMs": 38,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "300124.SZ",
+        "navMs": 37,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "688111.SH",
+        "navMs": 31,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "603501.SH",
+        "navMs": 27,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "688981.SH",
+        "navMs": 28,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "300308.SZ",
+        "navMs": 26,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "600893.SH",
+        "navMs": 22,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "300014.SZ",
+        "navMs": 28,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "002179.SZ",
+        "navMs": 26,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "002456.SZ",
+        "navMs": 24,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "300033.SZ",
+        "navMs": 25,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "002085.SZ",
+        "navMs": 24,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "002241.SZ",
+        "navMs": 26,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "002472.SZ",
+        "navMs": 27,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "002850.SZ",
+        "navMs": 21,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "600036.SH",
+        "navMs": 23,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "601318.SH",
+        "navMs": 21,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "000002.SZ",
+        "navMs": 40,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "600900.SH",
+        "navMs": 33,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "601985.SH",
+        "navMs": 35,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "601288.SH",
+        "navMs": 41,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "600028.SH",
+        "navMs": 40,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "600887.SH",
+        "navMs": 41,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "600519.SH",
+        "navMs": 33,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "601919.SH",
+        "navMs": 31,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "601988.SH",
+        "navMs": 33,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "600025.SH",
+        "navMs": 28,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "600048.SH",
+        "navMs": 25,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "603288.SH",
+        "navMs": 30,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "601398.SH",
+        "navMs": 22,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "002142.SZ",
+        "navMs": 19,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "601088.SH",
+        "navMs": 20,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "601225.SH",
+        "navMs": 15,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "000651.SZ",
+        "navMs": 16,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      },
+      {
+        "symbol": "601899.SH",
+        "navMs": 28,
+        "rendered": true,
+        "found": true,
+        "pageError": false
+      }
+    ]
+  },
+  "consoleErrors": [
+    "[2026-07-16T14:55:33.310Z] Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "[2026-07-16T14:55:33.311Z] [ERROR] [PERF] data-fetch:request 失败 {durationMs: 2351.4, error: 数据采集服务未启动或无法连接，请检查 Python 服务是否运行, path: /health, maxRetries: 0}",
+    "[2026-07-16T14:55:33.326Z] Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "[2026-07-16T14:55:33.326Z] [ERROR] [PERF] data-fetch:request 失败 {durationMs: 2365.4, error: 数据采集服务未启动或无法连接，请检查 Python 服务是否运行, path: /health, maxRetries: 0}",
+    "[2026-07-16T14:55:33.574Z] Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "[2026-07-16T14:55:33.574Z] [ERROR] [PERF] data-fetch:request 失败 {durationMs: 236.2, error: 数据采集服务未启动或无法连接，请检查 Python 服务是否运行, path: /health, maxRetries: 0}",
+    "[2026-07-16T14:55:35.690Z] Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "[2026-07-16T14:55:35.691Z] [ERROR] [PERF] data-fetch:request 失败 {durationMs: 2104.9, error: 数据采集服务未启动或无法连接，请检查 Python 服务是否运行, path: /health, maxRetries: 0}",
+    "[2026-07-16T14:55:35.957Z] Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "[2026-07-16T14:55:35.957Z] [ERROR] [PERF] data-fetch:request 失败 {durationMs: 2369.2, error: 数据采集服务未启动或无法连接，请检查 Python 服务是否运行, path: /health, maxRetries: 0}",
+    "[2026-07-16T14:55:35.957Z] Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "[2026-07-16T14:55:35.958Z] [ERROR] [PERF] data-fetch:request 失败 {durationMs: 2283.2, error: 数据采集服务未启动或无法连接，请检查 Python 服务是否运行, path: /health, maxRetries: 0}",
+    "[2026-07-16T14:56:09.640Z] Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "[2026-07-16T14:56:09.641Z] [ERROR] [PERF] data-fetch:request 失败 {durationMs: 2335.5, error: 数据采集服务未启动或无法连接，请检查 Python 服务是否运行, path: /health, maxRetries: 0}",
+    "[2026-07-16T14:56:09.655Z] Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "[2026-07-16T14:56:09.655Z] [ERROR] [PERF] data-fetch:request 失败 {durationMs: 2347.1, error: 数据采集服务未启动或无法连接，请检查 Python 服务是否运行, path: /health, maxRetries: 0}",
+    "[2026-07-16T14:56:09.921Z] Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "[2026-07-16T14:56:09.922Z] [ERROR] [PERF] data-fetch:request 失败 {durationMs: 805.2, error: 数据采集服务未启动或无法连接，请检查 Python 服务是否运行, path: /health, maxRetries: 0}",
+    "[2026-07-16T14:56:11.471Z] Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "[2026-07-16T14:56:11.471Z] [ERROR] [PERF] data-fetch:request 失败 {durationMs: 1902.4, error: 数据采集服务未启动或无法连接，请检查 Python 服务是否运行, path: /health, maxRetries: 0}"
+  ],
+  "pageErrors": [],
+  "improvements": [
+    "接入真实 AKShare 搜索接口替代 15 只 MOCK_STOCK_LIBRARY，消除搜索覆盖缺口（当前仅 12%）。",
+    "为批量导入的 50 只提供独立的\"意向候选池列表/看板\"视图，便于逐只核对 symbol+name（当前仅 InputDashboard 显示聚合计数）。",
+    "研究池看板(PoolBoard)与意向候选池应为不同 store，建议在 UI 明确区分，避免用户误以为导入后应在研究池看板看到。",
+    "实时行情连接器断开时应给出明确的降级提示（Mock/未连接），而非静默显示\"—\"，提升可诊断性。",
+    "为详情页增加加载态骨架与超时兜底，避免\"未找到\"与真实缺失混淆。"
+  ],
+  "tldr": "TL;DR：对 50 只 A 股完成页面功能测试，断言通过 23/25，失败 2；批量导入 50 只全量成功并正确渲染；搜索覆盖率仅 12.0%（6/50 命中 mock 库，其余为已知覆盖缺口）；50 只详情页均成功渲染（平均导航 36ms）；环境限制：实时行情断开导致价格多为占位/未找到，已用结构软断言替代硬失败。",
+  "fullResults": [
+    {
+      "dimension": "setup",
+      "name": "CSV 解析出 50 只股票",
+      "passed": true,
+      "severity": "P0",
+      "detail": "解析得到 50 只",
+      "verified": "已验证"
+    },
+    {
+      "dimension": "A",
+      "name": "批量导入预览表格渲染 50 行",
+      "passed": true,
+      "severity": "P0",
+      "detail": "预览行数=50",
+      "verified": "已验证"
+    },
+    {
+      "dimension": "A",
+      "name": "预览表格包含全部 50 只 symbol+name",
+      "passed": true,
+      "severity": "P0",
+      "detail": "全部 50 只均正确渲染",
+      "verified": "已验证"
+    },
+    {
+      "dimension": "A",
+      "name": "预览统计\"共 50 条\"",
+      "passed": true,
+      "severity": "P1",
+      "detail": "包含=true",
+      "verified": "已验证"
+    },
+    {
+      "dimension": "A",
+      "name": "预览统计\"有效 50\"",
+      "passed": true,
+      "severity": "P1",
+      "detail": "包含=true",
+      "verified": "已验证"
+    },
+    {
+      "dimension": "A",
+      "name": "批量导入执行成功（成功 50 条）",
+      "passed": true,
+      "severity": "P0",
+      "detail": "导入完成提示出现",
+      "verified": "已验证"
+    },
+    {
+      "dimension": "A",
+      "name": "导入过程无未捕获异常(pageerror)",
+      "passed": true,
+      "severity": "P0",
+      "detail": "新增 pageerror=0",
+      "verified": "已验证"
+    },
+    {
+      "dimension": "A",
+      "name": "意向候选池计数徽章 == 50",
+      "passed": true,
+      "severity": "P1",
+      "detail": "显示计数=50（要求 == 50）",
+      "verified": "已验证"
+    },
+    {
+      "dimension": "A",
+      "name": "研究池看板计数（说明 store 分离）",
+      "passed": true,
+      "severity": "P3",
+      "detail": "研究池看板显示 0 只标的；批量导入写入的是\"意向候选池\"，与研究池(ResearchPoolStore)为不同 store，故 50 只不在此处出现",
+      "verified": "已验证"
+    },
+    {
+      "dimension": "B",
+      "name": "搜索覆盖率统计 = 6/50 (12.0%)",
+      "passed": true,
+      "severity": "P1",
+      "detail": "命中(mock库重叠)=6；未命中(覆盖缺口)=44",
+      "verified": "已验证"
+    },
+    {
+      "dimension": "B",
+      "name": "搜索覆盖缺口已记录（mock 库仅 15 只）",
+      "passed": true,
+      "severity": "P2",
+      "detail": "有 44 只 CSV 股票不在 MOCK_STOCK_LIBRARY，StockSearch 无法检索到（已知覆盖缺口）",
+      "verified": "已验证"
+    },
+    {
+      "dimension": "C",
+      "name": "全部 50 只详情页均成功渲染（显示代码或\"未找到\"）",
+      "passed": true,
+      "severity": "P0",
+      "detail": "渲染成功=50/50",
+      "verified": "已验证"
+    },
+    {
+      "dimension": "C",
+      "name": "已加载标的的详情页均含 价格/PE/PB 结构元素(软断言)",
+      "passed": true,
+      "severity": "P2",
+      "detail": "已找到 50 只中结构完整 50 只（实时行情断开，数值多为\"—\"，仅校验结构存在）",
+      "verified": "已验证"
+    },
+    {
+      "dimension": "C",
+      "name": "详情页\"未找到\"标的清单（已导入但详情页未命中）",
+      "passed": true,
+      "severity": "P2",
+      "detail": "50 只全部命中",
+      "verified": "已验证"
+    },
+    {
+      "dimension": "C",
+      "name": "详情页导航无未捕获异常",
+      "passed": true,
+      "severity": "P0",
+      "detail": "出现异常导航=0",
+      "verified": "已验证"
+    },
+    {
+      "dimension": "C",
+      "name": "详情页数据可达性（找到标的 vs 未找到）",
+      "passed": true,
+      "severity": "P3",
+      "detail": "找到标的=50/50；未找到=0/50（环境限制：实时数据源断开，部分标的回退\"未找到\"或 Mock）",
+      "verified": "已验证"
+    },
+    {
+      "dimension": "D",
+      "name": "批量导入耗时（50 只）",
+      "passed": true,
+      "severity": "P2",
+      "detail": "导入+解析总耗时 ≈ 1738 ms（含文本粘贴与确认导入）",
+      "verified": "已验证"
+    },
+    {
+      "dimension": "D",
+      "name": "详情页平均/最大导航耗时",
+      "passed": true,
+      "severity": "P2",
+      "detail": "平均 ≈ 36 ms；最大 ≈ 345 ms（50 只逐只导航）",
+      "verified": "已验证"
+    },
+    {
+      "dimension": "D",
+      "name": "响应式 375px · 输入舱无横向溢出",
+      "passed": false,
+      "severity": "P3",
+      "detail": "横向溢出=61px；关键元素可见=true；溢出元素(样例): DIV.ml-auto flex items-center gap-3 text-xs text-muted w=50 right=436 | BUTTON.flex h-8 items-center gap-1.5 rounded-md px-2 tran w=30 right=416 | svg.[object SVGAnimatedString] w=14 right=408 | rect.[object SVGAnimatedString] w=12 right=406",
+      "verified": "已验证"
+    },
+    {
+      "dimension": "D",
+      "name": "响应式 375px · 详情页无横向溢出",
+      "passed": false,
+      "severity": "P3",
+      "detail": "横向溢出=61px；关键元素可见=true；溢出元素(样例): DIV.ml-auto flex items-center gap-3 text-xs text-muted w=50 right=436 | BUTTON.flex h-8 items-center gap-1.5 rounded-md px-2 tran w=30 right=416 | svg.[object SVGAnimatedString] w=14 right=408 | rect.[object SVGAnimatedString] w=12 right=406",
+      "verified": "已验证"
+    },
+    {
+      "dimension": "D",
+      "name": "响应式 768px · 输入舱无横向溢出",
+      "passed": true,
+      "severity": "P3",
+      "detail": "横向溢出=0px；关键元素可见=true",
+      "verified": "已验证"
+    },
+    {
+      "dimension": "D",
+      "name": "响应式 768px · 详情页无横向溢出",
+      "passed": true,
+      "severity": "P3",
+      "detail": "横向溢出=0px；关键元素可见=true",
+      "verified": "已验证"
+    },
+    {
+      "dimension": "D",
+      "name": "响应式 1280px · 输入舱无横向溢出",
+      "passed": true,
+      "severity": "P3",
+      "detail": "横向溢出=0px；关键元素可见=true",
+      "verified": "已验证"
+    },
+    {
+      "dimension": "D",
+      "name": "响应式 1280px · 详情页无横向溢出",
+      "passed": true,
+      "severity": "P3",
+      "detail": "横向溢出=0px；关键元素可见=true",
+      "verified": "已验证"
+    },
+    {
+      "dimension": "D",
+      "name": "全程控制台错误 / 未捕获异常汇总",
+      "passed": true,
+      "severity": "P3",
+      "detail": "console.error=20；pageerror=0（环境限制：实时行情连接器断开，预期存在数据拉取类错误）",
+      "verified": "已验证"
+    }
+  ]
+}

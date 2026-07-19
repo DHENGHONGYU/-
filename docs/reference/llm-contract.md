@@ -1,63 +1,66 @@
 ---
-title: llm-contract
+title: llm-contract.md ¡ª ´óÄ£ĞÍ·şÎñ½Ó¿ÚÆõÔ¼
+type: reference
+domain: ai
+phase: design
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "¶¨Î»£º¶¨Òå `llm` ×ÓÓòµÄ½Ó¿ÚÆõÔ¼¡¢Ö°Ôğ±ß½ç¡¢Êı¾İÁ÷ÓëÒÀÀµ¹ØÏµ¡£ ¹ØÁª£º`./services-catalog.md`£¨24 ×ÓÓò×ÜÀÀ£©¡¢`../../AGENTS.md` ¡ìÒ»£¨·Ö²ã¹æÔò£©¡£"
+tags: [ai, contract, reference]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: important
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: LLM å­åŸŸæ¥å£å¥‘çº¦
-draft
-owner: æ¶æ„ç»„
-updated: 2026-07-12
-code_version: 2.0.0
-tier: important
----
+# llm-contract.md ¡ª ´óÄ£ĞÍ·şÎñ½Ó¿ÚÆõÔ¼
 
-# llm-contract.md â€” å¤§æ¨¡å‹æœåŠ¡æ¥å£å¥‘çº¦
-
-> **å®šä½**ï¼šå®šä¹‰ `llm` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ç³»ã€‚  
-> **å…³è”**ï¼š`./services-catalog.md`ï¼ˆ24 å­åŸŸæ€»è§ˆï¼‰ã€`../../AGENTS.md` Â§ä¸€ï¼ˆåˆ†å±‚è§„åˆ™ï¼‰ã€‚
+> **¶¨Î»**£º¶¨Òå `llm` ×ÓÓòµÄ½Ó¿ÚÆõÔ¼¡¢Ö°Ôğ±ß½ç¡¢Êı¾İÁ÷ÓëÒÀÀµ¹ØÏµ¡£  
+> **¹ØÁª**£º`./services-catalog.md`£¨24 ×ÓÓò×ÜÀÀ£©¡¢`../../AGENTS.md` ¡ìÒ»£¨·Ö²ã¹æÔò£©¡£
 
 ---
 
-## 1. èŒè´£è¾¹ç•Œ
+## 1. Ö°Ôğ±ß½ç
 
-### 1.1 æ ¸å¿ƒèŒè´£
+### 1.1 ºËĞÄÖ°Ôğ
 
-- **ç»Ÿä¸€ LLM HTTP å®¢æˆ·ç«¯**ï¼šå°è£… OpenAI-compatible `/v1/chat/completions` æ¥å£ï¼Œæä¾›éæµå¼ `chat()` ä¸æµå¼ `streamingChat()` ä¸¤ç§è°ƒç”¨æ¨¡å¼ï¼Œæ”¯æŒ AbortController è¶…æ—¶æ§åˆ¶ã€SSE é€è¡Œè§£æã€ç©ºé—²è¶…æ—¶ä¿æŠ¤ã€‚
-- **å¤šæ¨¡å‹ä¾›åº”å•†é€‚é…**ï¼šå†…ç½® DeepSeekã€Kimiã€é€šä¹‰åƒé—®ã€ç¡…åŸºæµåŠ¨ 4 å®¶ä¾›åº”å•†é¢„è®¾é…ç½®ï¼ˆ`LLM_MODEL_PRESETS`ï¼‰ï¼Œæ”¯æŒé€šè¿‡ `baseURL` è‡ªåŠ¨æ¨æ–­ä¾›åº”å•†ï¼Œå¹¶ç®¡ç† API Key çš„åŠ å¯†å­˜å‚¨ä¸è¯»å–ã€‚
-- **Gateway é˜²è…å±‚**ï¼š`llmGateway` å°†åº•å±‚ `llmClient` å°è£…ä¸ºå¸¦è°ƒç”¨å®¡è®¡ï¼ˆtraceId / è€—æ—¶ / Token ç»Ÿè®¡ï¼‰ã€é”™è¯¯é™çº§ï¼ˆ`allowFallback`ï¼‰ã€æ—¥å¿—è®°å½•çš„ç½‘å…³ï¼Œä½¿ `scoring`/`analysis`/`trading` ç­‰ L4 åº”ç”¨å±‚ä¸å†ç›´æ¥ä¾èµ– L6 å¤–éƒ¨å®¢æˆ·ç«¯ã€‚
-- **Prompt æ„å»ºåä½œ**ï¼šä¸ `scoring` å­åŸŸåä½œï¼Œä¸º V6 è¯„åˆ†å¼•æ“æä¾› `buildV6ScorePrompt()` æ‰€éœ€çš„ LLM æ¶ˆæ¯æ ¼å¼è¾“å…¥ï¼ˆ`LlmMessage[]`ï¼‰ã€‚
+- **Í³Ò» LLM HTTP ¿Í»§¶Ë**£º·â×° OpenAI-compatible `/v1/chat/completions` ½Ó¿Ú£¬Ìá¹©·ÇÁ÷Ê½ `chat()` ÓëÁ÷Ê½ `streamingChat()` Á½ÖÖµ÷ÓÃÄ£Ê½£¬Ö§³Ö AbortController ³¬Ê±¿ØÖÆ¡¢SSE ÖğĞĞ½âÎö¡¢¿ÕÏĞ³¬Ê±±£»¤¡£
+- **¶àÄ£ĞÍ¹©Ó¦ÉÌÊÊÅä**£ºÄÚÖÃ DeepSeek¡¢Kimi¡¢Í¨ÒåÇ§ÎÊ¡¢¹è»ùÁ÷¶¯ 4 ¼Ò¹©Ó¦ÉÌÔ¤ÉèÅäÖÃ£¨`LLM_MODEL_PRESETS`£©£¬Ö§³ÖÍ¨¹ı `baseURL` ×Ô¶¯ÍÆ¶Ï¹©Ó¦ÉÌ£¬²¢¹ÜÀí API Key µÄ¼ÓÃÜ´æ´¢Óë¶ÁÈ¡¡£
+- **Gateway ·À¸¯²ã**£º`llmGateway` ½«µ×²ã `llmClient` ·â×°Îª´øµ÷ÓÃÉó¼Æ£¨traceId / ºÄÊ± / Token Í³¼Æ£©¡¢´íÎó½µ¼¶£¨`allowFallback`£©¡¢ÈÕÖ¾¼ÇÂ¼µÄÍø¹Ø£¬Ê¹ `scoring`/`analysis`/`trading` µÈ L4 Ó¦ÓÃ²ã²»ÔÙÖ±½ÓÒÀÀµ L6 Íâ²¿¿Í»§¶Ë¡£
+- **Prompt ¹¹½¨Ğ­×÷**£ºÓë `scoring` ×ÓÓòĞ­×÷£¬Îª V6 ÆÀ·ÖÒıÇæÌá¹© `buildV6ScorePrompt()` ËùĞèµÄ LLM ÏûÏ¢¸ñÊ½ÊäÈë£¨`LlmMessage[]`£©¡£
 
-### 1.2 åˆ†å±‚å®šä½
+### 1.2 ·Ö²ã¶¨Î»
 
-| ç»´åº¦ | è¯´æ˜ |
+| Î¬¶È | ËµÃ÷ |
 |------|------|
-| æ‰€å±å±‚ | `src/services/`ï¼ˆæœåŠ¡å±‚ï¼‰ |
-| ä¾èµ–æ–¹å‘ | åªèƒ½ä¾èµ– `core/`ã€`data/`ã€`lib/`ï¼ˆç™½åå•ï¼‰ |
-| ç¦æ­¢äº‹é¡¹ | ç¦æ­¢ç›´å†™ IndexedDBï¼ˆæœ¬æœåŠ¡ä¸ç›´æ¥å†™åº“ï¼Œè¾“å‡ºæ–‡æœ¬ç»™ä¸Šå±‚æœåŠ¡æ¶ˆè´¹ï¼‰ |
-| è¢«ä¾èµ–æ–¹ | `store/`ï¼ˆçŠ¶æ€å±‚ï¼‰ã€`pages/`ï¼ˆé¡µé¢å±‚ï¼‰ã€`services/scoring/`ï¼ˆè¯„åˆ†å¼•æ“ï¼‰å¯æ¶ˆè´¹æœ¬æœåŠ¡è¾“å‡º |
+| ËùÊô²ã | `src/services/`£¨·şÎñ²ã£© |
+| ÒÀÀµ·½Ïò | Ö»ÄÜÒÀÀµ `core/`¡¢`data/`¡¢`lib/`£¨°×Ãûµ¥£© |
+| ½ûÖ¹ÊÂÏî | ½ûÖ¹Ö±Ğ´ IndexedDB£¨±¾·şÎñ²»Ö±½ÓĞ´¿â£¬Êä³öÎÄ±¾¸øÉÏ²ã·şÎñÏû·Ñ£© |
+| ±»ÒÀÀµ·½ | `store/`£¨×´Ì¬²ã£©¡¢`pages/`£¨Ò³Ãæ²ã£©¡¢`services/scoring/`£¨ÆÀ·ÖÒıÇæ£©¿ÉÏû·Ñ±¾·şÎñÊä³ö |
 
-### 1.3 ä¸ç›¸é‚»å­åŸŸçš„å…³ç³»
+### 1.3 ÓëÏàÁÚ×ÓÓòµÄ¹ØÏµ
 
-| ç›¸é‚»å­åŸŸ | å…³ç³» | æ•°æ®æµ |
+| ÏàÁÚ×ÓÓò | ¹ØÏµ | Êı¾İÁ÷ |
 |----------|------|--------|
-| `config/llmConfig` | ä¸Šæ¸¸ï¼šé…ç½®æ³¨å…¥ | `llmConfig` â†’ `llmClient` / `llmGateway`ï¼ˆæä¾› baseURLã€apiKeyã€model ç­‰ï¼‰ |
-| `lib/logger` | ä¸Šæ¸¸ï¼šæ—¥å¿—åŸºç¡€è®¾æ–½ | `logger` â†’ `llmClient` / `llmGateway`ï¼ˆè°ƒç”¨/é”™è¯¯/æ€§èƒ½æ—¥å¿—ï¼‰ |
-| `lib/validation` | ä¸Šæ¸¸ï¼šURL æ ¡éªŒ | `isValidLlmBaseURL` â†’ `llmClient`ï¼ˆXSS-003 åè®®ç™½åå•æ ¡éªŒï¼‰ |
-| `services/scoring` | ä¸‹æ¸¸ï¼šæ¶ˆè´¹è¾“å‡º | `llm` â†’ `v6ScorePrompt`ï¼ˆæä¾› `LlmMessage[]` æ ¼å¼æ¶ˆæ¯ï¼‰ |
-| `services/analysis` | ä¸‹æ¸¸ï¼šæ¶ˆè´¹è¾“å‡º | `llmGateway` â†’ `analysisService`ï¼ˆæ–‡æœ¬åˆ†æç»“æœï¼‰ |
-| `services/trading` | ä¸‹æ¸¸ï¼šæ¶ˆè´¹è¾“å‡º | `llmGateway` â†’ `tradingService`ï¼ˆäº¤æ˜“å†³ç­–å¢å¼ºï¼‰ |
+| `config/llmConfig` | ÉÏÓÎ£ºÅäÖÃ×¢Èë | `llmConfig` ¡ú `llmClient` / `llmGateway`£¨Ìá¹© baseURL¡¢apiKey¡¢model µÈ£© |
+| `lib/logger` | ÉÏÓÎ£ºÈÕÖ¾»ù´¡ÉèÊ© | `logger` ¡ú `llmClient` / `llmGateway`£¨µ÷ÓÃ/´íÎó/ĞÔÄÜÈÕÖ¾£© |
+| `lib/validation` | ÉÏÓÎ£ºURL Ğ£Ñé | `isValidLlmBaseURL` ¡ú `llmClient`£¨XSS-003 Ğ­Òé°×Ãûµ¥Ğ£Ñé£© |
+| `services/scoring` | ÏÂÓÎ£ºÏû·ÑÊä³ö | `llm` ¡ú `v6ScorePrompt`£¨Ìá¹© `LlmMessage[]` ¸ñÊ½ÏûÏ¢£© |
+| `services/analysis` | ÏÂÓÎ£ºÏû·ÑÊä³ö | `llmGateway` ¡ú `analysisService`£¨ÎÄ±¾·ÖÎö½á¹û£© |
+| `services/trading` | ÏÂÓÎ£ºÏû·ÑÊä³ö | `llmGateway` ¡ú `tradingService`£¨½»Ò×¾ö²ßÔöÇ¿£© |
 
 ---
 
-## 2. å…¬å…±æ¥å£
+## 2. ¹«¹²½Ó¿Ú
 
-### 2.1 ç±»å‹å®šä¹‰ï¼ˆTypeScript Interfaceï¼‰
+### 2.1 ÀàĞÍ¶¨Òå£¨TypeScript Interface£©
 
 ```typescript
-// æ–‡ä»¶ï¼šsrc/services/llm/llmTypes.ts
+// ÎÄ¼ş£ºsrc/services/llm/llmTypes.ts
 
 export interface LlmMessage {
   role: 'system' | 'user' | 'assistant'
@@ -86,136 +89,136 @@ export type LlmStreamCallback = (chunk: LlmStreamChunk) => void
 ```
 
 ```typescript
-// æ–‡ä»¶ï¼šsrc/services/llm/llmGateway.ts
+// ÎÄ¼ş£ºsrc/services/llm/llmGateway.ts
 
 export interface LlmGatewayOptions extends Partial<LlmConfig> {
-  /** ä¸šåŠ¡è°ƒç”¨æ–¹æ ‡è¯†ï¼Œç”¨äºå®¡è®¡æ—¥å¿— */
+  /** ÒµÎñµ÷ÓÃ·½±êÊ¶£¬ÓÃÓÚÉó¼ÆÈÕÖ¾ */
   caller?: string
-  /** æ˜¯å¦å…è®¸å¤±è´¥æ—¶é™é»˜é™çº§ï¼ˆè¿”å›ç©ºå†…å®¹è€ŒéæŠ›é”™ï¼‰ */
+  /** ÊÇ·ñÔÊĞíÊ§°ÜÊ±¾²Ä¬½µ¼¶£¨·µ»Ø¿ÕÄÚÈİ¶ø·ÇÅ×´í£© */
   allowFallback?: boolean
 }
 
 export interface LlmGatewayResult {
-  /** æœ¬æ¬¡è°ƒç”¨ traceId */
+  /** ±¾´Îµ÷ÓÃ traceId */
   traceId: string
-  /** è°ƒç”¨ç»“æœ */
+  /** µ÷ÓÃ½á¹û */
   response: LlmResponse
-  /** æ˜¯å¦ç»è¿‡ LLMï¼ˆfalse è¡¨ç¤ºé™çº§ï¼‰ */
+  /** ÊÇ·ñ¾­¹ı LLM£¨false ±íÊ¾½µ¼¶£© */
   usedLlm: boolean
 }
 ```
 
-### 2.2 ä¸»å…¥å£å‡½æ•°
+### 2.2 Ö÷Èë¿Úº¯Êı
 
-| å‡½æ•° | ç­¾å | èŒè´£ | é”™è¯¯å¤„ç† |
+| º¯Êı | Ç©Ãû | Ö°Ôğ | ´íÎó´¦Àí |
 |------|------|------|----------|
-| `chat()` | `(messages: LlmMessage[], override?: Partial<LlmConfig>) => Promise<LlmResponse>` | éæµå¼ LLM èŠå¤©è°ƒç”¨ | é…ç½®ç¼ºå¤±æŠ› `LlmConfigError`ï¼›API å¼‚å¸¸æŠ› `LlmApiError`ï¼ˆå« HTTP statusCodeï¼‰ |
-| `streamingChat()` | `(messages: LlmMessage[], callback: LlmStreamCallback, override?: Partial<LlmConfig>) => Promise<void>` | æµå¼ LLM èŠå¤©è°ƒç”¨ï¼ˆSSE è§£æï¼‰ | æ€»è¶…æ—¶/ç©ºé—²è¶…æ—¶æŠ› `LlmApiError`ï¼›æµè§£æå¼‚å¸¸è®°å½• warn æ—¥å¿— |
-| `llmGateway.chat()` | `(messages: LlmMessage[], options?: LlmGatewayOptions) => Promise<LlmResponse>` | å¸¦å®¡è®¡ã€é™çº§ã€Token ç»Ÿè®¡çš„éæµå¼ç½‘å…³ | é”™è¯¯é™çº§è¿”å›ç©ºå†…å®¹ï¼›å¦åˆ™æŠ› `LlmApiError` |
-| `llmGateway.streamingChat()` | `(messages: LlmMessage[], callback: LlmStreamCallback, options?: LlmGatewayOptions) => Promise<void>` | å¸¦å®¡è®¡ã€é™çº§çš„æµå¼ç½‘å…³ | é™çº§æ—¶å›è°ƒ `isDone: true` ç©ºå†…å®¹ï¼›å¦åˆ™æŠ› `LlmApiError` |
+| `chat()` | `(messages: LlmMessage[], override?: Partial<LlmConfig>) => Promise<LlmResponse>` | ·ÇÁ÷Ê½ LLM ÁÄÌìµ÷ÓÃ | ÅäÖÃÈ±Ê§Å× `LlmConfigError`£»API Òì³£Å× `LlmApiError`£¨º¬ HTTP statusCode£© |
+| `streamingChat()` | `(messages: LlmMessage[], callback: LlmStreamCallback, override?: Partial<LlmConfig>) => Promise<void>` | Á÷Ê½ LLM ÁÄÌìµ÷ÓÃ£¨SSE ½âÎö£© | ×Ü³¬Ê±/¿ÕÏĞ³¬Ê±Å× `LlmApiError`£»Á÷½âÎöÒì³£¼ÇÂ¼ warn ÈÕÖ¾ |
+| `llmGateway.chat()` | `(messages: LlmMessage[], options?: LlmGatewayOptions) => Promise<LlmResponse>` | ´øÉó¼Æ¡¢½µ¼¶¡¢Token Í³¼ÆµÄ·ÇÁ÷Ê½Íø¹Ø | ´íÎó½µ¼¶·µ»Ø¿ÕÄÚÈİ£»·ñÔòÅ× `LlmApiError` |
+| `llmGateway.streamingChat()` | `(messages: LlmMessage[], callback: LlmStreamCallback, options?: LlmGatewayOptions) => Promise<void>` | ´øÉó¼Æ¡¢½µ¼¶µÄÁ÷Ê½Íø¹Ø | ½µ¼¶Ê±»Øµ÷ `isDone: true` ¿ÕÄÚÈİ£»·ñÔòÅ× `LlmApiError` |
 
-### 2.3 é”™è¯¯ç±»å‹
+### 2.3 ´íÎóÀàĞÍ
 
-| ç±»å | è¯´æ˜ | å­—æ®µ |
+| ÀàÃû | ËµÃ÷ | ×Ö¶Î |
 |------|------|------|
-| `LlmConfigError` | é…ç½®ç¼ºå¤±/éæ³•ï¼ˆbaseURLã€apiKeyã€modelï¼‰ | â€” |
-| `LlmApiError` | API è°ƒç”¨å¤±è´¥ï¼ˆHTTP é”™è¯¯ã€è¶…æ—¶ã€ç©ºå“åº”ï¼‰ | `statusCode?: number` |
+| `LlmConfigError` | ÅäÖÃÈ±Ê§/·Ç·¨£¨baseURL¡¢apiKey¡¢model£© | ¡ª |
+| `LlmApiError` | API µ÷ÓÃÊ§°Ü£¨HTTP ´íÎó¡¢³¬Ê±¡¢¿ÕÏìÓ¦£© | `statusCode?: number` |
 
-### 2.4 äº‹ä»¶æ¥å£
+### 2.4 ÊÂ¼ş½Ó¿Ú
 
-> æœ¬å­åŸŸ**æœªç›´æ¥ä½¿ç”¨ EventBus** å‘å¸ƒ/è®¢é˜…äº‹ä»¶ã€‚è°ƒç”¨ç»“æœé€šè¿‡ `Promise` å’Œ `LlmStreamCallback` ç›´æ¥è¿”å›ç»™è°ƒç”¨æ–¹ã€‚ä¸Šå±‚æœåŠ¡ï¼ˆå¦‚ `scoring`/`analysis`ï¼‰å¯é€‰æ‹©è‡ªè¡Œé€šè¿‡ EventBus è½¬å‘ç»“æœã€‚
+> ±¾×ÓÓò**Î´Ö±½ÓÊ¹ÓÃ EventBus** ·¢²¼/¶©ÔÄÊÂ¼ş¡£µ÷ÓÃ½á¹ûÍ¨¹ı `Promise` ºÍ `LlmStreamCallback` Ö±½Ó·µ»Ø¸øµ÷ÓÃ·½¡£ÉÏ²ã·şÎñ£¨Èç `scoring`/`analysis`£©¿ÉÑ¡Ôñ×ÔĞĞÍ¨¹ı EventBus ×ª·¢½á¹û¡£
 
 ---
 
-## 3. æ•°æ®æµ
+## 3. Êı¾İÁ÷
 
-LLM å­åŸŸå±äº**å¤–éƒ¨ä¾èµ–è°ƒç”¨å±‚ï¼ˆL6 å®¢æˆ·ç«¯çš„å°è£…ï¼‰**ï¼Œå…¶æ•°æ®æµä¸å…¶ä»–æŒä¹…åŒ–æœåŠ¡ä¸åŒâ€”â€”ä¸ç›´æ¥å†™å…¥ IndexedDBï¼Œè€Œæ˜¯å°† LLM æ–‡æœ¬è¾“å‡ºè¿”å›ç»™ä¸Šå±‚ L4 åº”ç”¨æœåŠ¡ï¼š
+LLM ×ÓÓòÊôÓÚ**Íâ²¿ÒÀÀµµ÷ÓÃ²ã£¨L6 ¿Í»§¶ËµÄ·â×°£©**£¬ÆäÊı¾İÁ÷ÓëÆäËû³Ö¾Ã»¯·şÎñ²»Í¬¡ª¡ª²»Ö±½ÓĞ´Èë IndexedDB£¬¶øÊÇ½« LLM ÎÄ±¾Êä³ö·µ»Ø¸øÉÏ²ã L4 Ó¦ÓÃ·şÎñ£º
 
 ```
-[å¤–éƒ¨ LLM API: DeepSeek / Kimi / Qwen / SiliconFlow]
-    â†‘â†“ HTTP/SSE
+[Íâ²¿ LLM API: DeepSeek / Kimi / Qwen / SiliconFlow]
+    ¡ü¡ı HTTP/SSE
 llmClient.chat() / streamingChat()
-    â†“
-llmGateway.chat() / streamingChat()  â† å®¡è®¡/é™çº§/Tokenç»Ÿè®¡
-    â†“
-services/scoring/ï¼ˆv6ScorePrompt â†’ è¯„åˆ†å› å­ LLM å¢å¼ºï¼‰
-services/analysis/ï¼ˆæ–‡æœ¬åˆ†æã€ç ”æŠ¥ç”Ÿæˆï¼‰
-services/trading/ï¼ˆäº¤æ˜“å†³ç­–å¢å¼ºï¼‰
-    â†“ï¼ˆç”±ä¸Šå±‚æœåŠ¡å†³å®šï¼‰
-DataBridge.forward() â†’ dataLayer â†’ IndexedDB
-    â†“ï¼ˆEventBusï¼‰
+    ¡ı
+llmGateway.chat() / streamingChat()  ¡û Éó¼Æ/½µ¼¶/TokenÍ³¼Æ
+    ¡ı
+services/scoring/£¨v6ScorePrompt ¡ú ÆÀ·ÖÒò×Ó LLM ÔöÇ¿£©
+services/analysis/£¨ÎÄ±¾·ÖÎö¡¢ÑĞ±¨Éú³É£©
+services/trading/£¨½»Ò×¾ö²ßÔöÇ¿£©
+    ¡ı£¨ÓÉÉÏ²ã·şÎñ¾ö¶¨£©
+DataBridge.forward() ¡ú dataLayer ¡ú IndexedDB
+    ¡ı£¨EventBus£©
 xxxStore (Zustand + withBroadcast)
-    â†“
-components/pages (ä»…ç» Store å–æ•°)
+    ¡ı
+components/pages (½ö¾­ Store È¡Êı)
 ```
 
-**è¯´æ˜**ï¼š
-- `llmClient` ç›´æ¥é¢å‘å¤–éƒ¨ HTTP APIï¼Œæ˜¯æœ€åº•å±‚è°ƒç”¨ç‚¹ã€‚
-- `llmGateway` ä½œä¸ºé˜²è…å±‚ï¼ŒL4 åº”ç”¨å±‚åº”ä¼˜å…ˆé€šè¿‡ Gateway è°ƒç”¨ï¼Œç¦æ­¢ç›´æ¥ä¾èµ– `llmClient`ã€‚
-- LLM è¿”å›çš„æ–‡æœ¬å†…å®¹æœ¬èº«**ä¸æŒä¹…åŒ–**ï¼›æ˜¯å¦å†™å…¥ Store/DB ç”±æ¶ˆè´¹æ–¹ï¼ˆå¦‚ scoringã€analysisï¼‰è‡ªè¡Œå†³å®šã€‚
+**ËµÃ÷**£º
+- `llmClient` Ö±½ÓÃæÏòÍâ²¿ HTTP API£¬ÊÇ×îµ×²ãµ÷ÓÃµã¡£
+- `llmGateway` ×÷Îª·À¸¯²ã£¬L4 Ó¦ÓÃ²ãÓ¦ÓÅÏÈÍ¨¹ı Gateway µ÷ÓÃ£¬½ûÖ¹Ö±½ÓÒÀÀµ `llmClient`¡£
+- LLM ·µ»ØµÄÎÄ±¾ÄÚÈİ±¾Éí**²»³Ö¾Ã»¯**£»ÊÇ·ñĞ´Èë Store/DB ÓÉÏû·Ñ·½£¨Èç scoring¡¢analysis£©×ÔĞĞ¾ö¶¨¡£
 
 ---
 
-## 4. é…ç½®ä¸ä¾èµ–
+## 4. ÅäÖÃÓëÒÀÀµ
 
-### 4.1 ä¾èµ–ç™½åå•ï¼ˆlib/ / data/ / config/ï¼‰
+### 4.1 ÒÀÀµ°×Ãûµ¥£¨lib/ / data/ / config/£©
 
-| ä¾èµ– | è·¯å¾„ | ç”¨é€” |
+| ÒÀÀµ | Â·¾¶ | ÓÃÍ¾ |
 |------|------|------|
-| logger | `@/lib/logger` | è°ƒç”¨æ—¥å¿—ã€é”™è¯¯æ—¥å¿—ã€æ€§èƒ½æ—¥å¿— |
-| validation | `@/lib/validation` | `isValidLlmBaseURL` åè®®ç™½åå•æ ¡éªŒï¼ˆXSS-003ï¼‰ |
-| safeCoerce | `@/lib/safeCoerce` | `getSafeString`ï¼Œç”¨äºå®‰å…¨è¯»å– API Keyï¼ˆé—´æ¥ï¼Œé€šè¿‡ `llmConfig`ï¼‰ |
-| localStorageManager | `@/lib/localStorageManager` | åŠ å¯†å­˜å‚¨/è¯»å– LLM API Keyï¼ˆé—´æ¥ï¼Œé€šè¿‡ `llmConfig`ï¼‰ |
-| db (generateId) | `@/data/db` | `llmGateway` ç”Ÿæˆ traceId |
-| llmConfig | `@/config/llmConfig` | é»˜è®¤é…ç½®ã€æ¨¡å‹é¢„è®¾ã€é€æ˜åº¦é…ç½® |
-| nanoid | `nanoid` | `llmGateway` ç”Ÿæˆ traceId åç¼€ |
+| logger | `@/lib/logger` | µ÷ÓÃÈÕÖ¾¡¢´íÎóÈÕÖ¾¡¢ĞÔÄÜÈÕÖ¾ |
+| validation | `@/lib/validation` | `isValidLlmBaseURL` Ğ­Òé°×Ãûµ¥Ğ£Ñé£¨XSS-003£© |
+| safeCoerce | `@/lib/safeCoerce` | `getSafeString`£¬ÓÃÓÚ°²È«¶ÁÈ¡ API Key£¨¼ä½Ó£¬Í¨¹ı `llmConfig`£© |
+| localStorageManager | `@/lib/localStorageManager` | ¼ÓÃÜ´æ´¢/¶ÁÈ¡ LLM API Key£¨¼ä½Ó£¬Í¨¹ı `llmConfig`£© |
+| db (generateId) | `@/data/db` | `llmGateway` Éú³É traceId |
+| llmConfig | `@/config/llmConfig` | Ä¬ÈÏÅäÖÃ¡¢Ä£ĞÍÔ¤Éè¡¢Í¸Ã÷¶ÈÅäÖÃ |
+| nanoid | `nanoid` | `llmGateway` Éú³É traceId ºó×º |
 
-### 4.2 é…ç½®é¡¹
+### 4.2 ÅäÖÃÏî
 
-| é…ç½®å | é»˜è®¤å€¼ | è¯´æ˜ | æ¥æº |
+| ÅäÖÃÃû | Ä¬ÈÏÖµ | ËµÃ÷ | À´Ô´ |
 |--------|--------|------|------|
-| `VITE_LLM_BASE_URL` | `https://api.deepseek.com` | LLM API åŸºç¡€åœ°å€ | `.env` / `src/config/llmConfig.ts` |
-| `VITE_LLM_MODEL` | `deepseek-v4-flash` | é»˜è®¤æ¨¡å‹å | `.env` / `src/config/llmConfig.ts` |
-| `apiKey` | `''`ï¼ˆä»åŠ å¯† localStorage è¯»å–ï¼‰ | API è®¤è¯å¯†é’¥ | `localStorageManager.setEncrypted` |
-| `temperature` | `0.2` | é‡‡æ ·æ¸©åº¦ | è°ƒç”¨æ—¶ `override` / `LlmConfig` |
-| `maxTokens` | `undefined` | æœ€å¤§è¾“å‡º token æ•° | è°ƒç”¨æ—¶ `override` / `LlmConfig` |
-| `timeout` | `undefined` | è¯·æ±‚æ€»è¶…æ—¶ï¼ˆæ¯«ç§’ï¼‰ | è°ƒç”¨æ—¶ `override` / `LlmConfig` |
-| `STREAM_IDLE_TIMEOUT_MS` | `30000` | æµå¼ç©ºé—²è¶…æ—¶ï¼ˆå†…éƒ¨å¸¸é‡ï¼‰ | `src/services/llm/llmClient.ts` |
+| `VITE_LLM_BASE_URL` | `https://api.deepseek.com` | LLM API »ù´¡µØÖ· | `.env` / `src/config/llmConfig.ts` |
+| `VITE_LLM_MODEL` | `deepseek-v4-flash` | Ä¬ÈÏÄ£ĞÍÃû | `.env` / `src/config/llmConfig.ts` |
+| `apiKey` | `''`£¨´Ó¼ÓÃÜ localStorage ¶ÁÈ¡£© | API ÈÏÖ¤ÃÜÔ¿ | `localStorageManager.setEncrypted` |
+| `temperature` | `0.2` | ²ÉÑùÎÂ¶È | µ÷ÓÃÊ± `override` / `LlmConfig` |
+| `maxTokens` | `undefined` | ×î´óÊä³ö token Êı | µ÷ÓÃÊ± `override` / `LlmConfig` |
+| `timeout` | `undefined` | ÇëÇó×Ü³¬Ê±£¨ºÁÃë£© | µ÷ÓÃÊ± `override` / `LlmConfig` |
+| `STREAM_IDLE_TIMEOUT_MS` | `30000` | Á÷Ê½¿ÕÏĞ³¬Ê±£¨ÄÚ²¿³£Á¿£© | `src/services/llm/llmClient.ts` |
 
-### 4.3 æ¨¡å‹é¢„è®¾æ¸…å•
+### 4.3 Ä£ĞÍÔ¤ÉèÇåµ¥
 
-| preset id | ä¾›åº”å•† | é»˜è®¤æ¨¡å‹ | baseURL |
+| preset id | ¹©Ó¦ÉÌ | Ä¬ÈÏÄ£ĞÍ | baseURL |
 |-----------|--------|----------|---------|
 | `deepseek` | DeepSeek | `deepseek-v4-flash` | `https://api.deepseek.com` |
 | `kimi` | Moonshot | `kimi-k2.7-code` | `https://api.moonshot.cn` |
 | `qwen` | Alibaba | `qwen3.6-flash` | `https://dashscope.aliyuncs.com/compatible-mode` |
 | `siliconflow` | SiliconFlow | `Qwen/Qwen2.5-7B-Instruct` | `https://api.siliconflow.cn` |
-| `custom` | è‡ªå®šä¹‰ | `''` | `''` |
+| `custom` | ×Ô¶¨Òå | `''` | `''` |
 
 ---
 
-## 5. æµ‹è¯•ç­–ç•¥
+## 5. ²âÊÔ²ßÂÔ
 
-| æµ‹è¯•ç±»å‹ | æ–‡ä»¶ | è¯´æ˜ |
+| ²âÊÔÀàĞÍ | ÎÄ¼ş | ËµÃ÷ |
 |----------|------|------|
-| å•å…ƒæµ‹è¯• | `src/services/llm/llmClient.test.ts` | `streamingChat` æµå¼è§£æï¼šæ­£å¸¸åˆ†ç‰‡ã€ç©ºå†…å®¹åˆ†ç‰‡ã€HTTP å¤±è´¥ã€body ä¸ºç©ºã€ç•¸å½¢ JSONã€finish_reason stopã€æ—  `[DONE]` ç»“å°¾ |
-| å•å…ƒæµ‹è¯• | `src/services/llm/llmClient.multimodel.test.ts` | `chat()` åŒæ­¥è°ƒç”¨ã€è¶…æ—¶/é…ç½®æ ¡éªŒï¼›å¤šæ¨¡å‹é¢„è®¾é…ç½®éªŒè¯ï¼ˆDeepSeek/Kimi/Qwen/SiliconFlow/Customï¼‰ï¼›`v6ScorePrompt` æ„å»ºå™¨ï¼›å¤šä¾›åº”å•† endpoint å…¼å®¹æ€§ |
-| Mock ç­–ç•¥ | å…¨å±€ `vi.fn()` mock `global.fetch` + `ReadableStreamDefaultReader` | éš”ç¦»å¤–éƒ¨ HTTP ä¾èµ–ï¼Œæ— éœ€çœŸå® API Key |
-| å·²çŸ¥å¤±è´¥ | `llmClient.multimodel.test.ts` ä¸­å¤šä¸ª describe æ ‡è®°ä¸º `@status known-failing` | é€šè¿‡ `vitest --exclude` æˆ– `.skip` è·³è¿‡ï¼Œä¿®å¤åç§»é™¤ |
+| µ¥Ôª²âÊÔ | `src/services/llm/llmClient.test.ts` | `streamingChat` Á÷Ê½½âÎö£ºÕı³£·ÖÆ¬¡¢¿ÕÄÚÈİ·ÖÆ¬¡¢HTTP Ê§°Ü¡¢body Îª¿Õ¡¢»ûĞÎ JSON¡¢finish_reason stop¡¢ÎŞ `[DONE]` ½áÎ² |
+| µ¥Ôª²âÊÔ | `src/services/llm/llmClient.multimodel.test.ts` | `chat()` Í¬²½µ÷ÓÃ¡¢³¬Ê±/ÅäÖÃĞ£Ñé£»¶àÄ£ĞÍÔ¤ÉèÅäÖÃÑéÖ¤£¨DeepSeek/Kimi/Qwen/SiliconFlow/Custom£©£»`v6ScorePrompt` ¹¹½¨Æ÷£»¶à¹©Ó¦ÉÌ endpoint ¼æÈİĞÔ |
+| Mock ²ßÂÔ | È«¾Ö `vi.fn()` mock `global.fetch` + `ReadableStreamDefaultReader` | ¸ôÀëÍâ²¿ HTTP ÒÀÀµ£¬ÎŞĞèÕæÊµ API Key |
+| ÒÑÖªÊ§°Ü | `llmClient.multimodel.test.ts` ÖĞ¶à¸ö describe ±ê¼ÇÎª `@status known-failing` | Í¨¹ı `vitest --exclude` »ò `.skip` Ìø¹ı£¬ĞŞ¸´ºóÒÆ³ı |
 
-> æœ¬ç›®å½•**æ—  `__tests__/` å­ç›®å½•**ï¼Œæµ‹è¯•æ–‡ä»¶ä¸æºç å¹³çº§æ”¾ç½®ï¼ˆ`*.test.ts`ï¼‰ã€‚
+> ±¾Ä¿Â¼**ÎŞ `__tests__/` ×ÓÄ¿Â¼**£¬²âÊÔÎÄ¼şÓëÔ´ÂëÆ½¼¶·ÅÖÃ£¨`*.test.ts`£©¡£
 
 ---
 
-## 6. å˜æ›´æ—¥å¿—
+## 6. ±ä¸üÈÕÖ¾
 
-| æ—¥æœŸ | ç‰ˆæœ¬ | å˜æ›´ | ä½œè€… |
+| ÈÕÆÚ | °æ±¾ | ±ä¸ü | ×÷Õß |
 |------|------|------|------|
-| 2026-07-12 | v0.1.0 | å¥‘çº¦åˆç¨¿ï¼šåŸºäº `llmClient.ts`ã€`llmGateway.ts`ã€`llmTypes.ts` åŠæµ‹è¯•æ–‡ä»¶ç”Ÿæˆ | æ¶æ„ç»„ |
+| 2026-07-12 | v0.1.0 | ÆõÔ¼³õ¸å£º»ùÓÚ `llmClient.ts`¡¢`llmGateway.ts`¡¢`llmTypes.ts` ¼°²âÊÔÎÄ¼şÉú³É | ¼Ü¹¹×é |
 
 ---
 
-> **TODO[å­åŸŸ owner]**ï¼š
-> 1. è‹¥æ–°å¢ LLM ä¾›åº”å•†é¢„è®¾ï¼ŒåŒæ­¥æ›´æ–° `src/config/llmConfig.ts` ä¸­çš„ `LLM_MODEL_PRESETS` åŠæœ¬å¥‘çº¦ Â§4.3ã€‚
-> 2. è‹¥æ–°å¢æµå¼/éæµå¼ API å˜ä½“ï¼ŒåŒæ­¥æ›´æ–° Â§2.2 ä¸»å…¥å£å‡½æ•°è¡¨ã€‚
-> 3. å®Œæˆåè¿è¡Œ `tsc --noEmit` + `audit:layers` éªŒè¯ã€‚
+> **TODO[×ÓÓò owner]**£º
+> 1. ÈôĞÂÔö LLM ¹©Ó¦ÉÌÔ¤Éè£¬Í¬²½¸üĞÂ `src/config/llmConfig.ts` ÖĞµÄ `LLM_MODEL_PRESETS` ¼°±¾ÆõÔ¼ ¡ì4.3¡£
+> 2. ÈôĞÂÔöÁ÷Ê½/·ÇÁ÷Ê½ API ±äÌå£¬Í¬²½¸üĞÂ ¡ì2.2 Ö÷Èë¿Úº¯Êı±í¡£
+> 3. Íê³ÉºóÔËĞĞ `tsc --noEmit` + `audit:layers` ÑéÖ¤¡£

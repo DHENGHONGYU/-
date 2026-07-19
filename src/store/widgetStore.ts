@@ -1,3 +1,4 @@
+/** @unused — 已实现但当前无 UI 层消费者，待后续产品规划接入。 */
 import { create } from 'zustand'
 import { widgetRegistry } from '@/cockpit/core/widgetRegistry'
 import { eventBus } from '@/lib/eventBus'
@@ -7,11 +8,13 @@ interface WidgetState {
   instances: Map<string, WidgetConfig>
   runtimeStates: Map<string, WidgetRuntimeState>
   stats: ReturnType<typeof widgetRegistry.getStats>
+  dataHashes: Map<string, string>
   addInstance: (config: WidgetConfig) => void
   removeInstance: (instanceId: string) => void
   updateInstance: (instanceId: string, updates: Partial<WidgetConfig>) => void
   updateRuntimeState: (instanceId: string, state: Partial<WidgetRuntimeState>) => void
   refreshStats: () => void
+  refreshInstance: (instanceId: string, newData?: unknown) => boolean
 }
 
 /**
@@ -21,6 +24,7 @@ export const useWidgetStore = create<WidgetState>((set) => ({
   instances: new Map(),
   runtimeStates: new Map(),
   stats: widgetRegistry.getStats(),
+  dataHashes: new Map(),
   addInstance: (config) => set((state) => {
     const instances = new Map(state.instances)
     instances.set(config.instanceId, config)
@@ -29,9 +33,11 @@ export const useWidgetStore = create<WidgetState>((set) => ({
   removeInstance: (instanceId) => set((state) => {
     const instances = new Map(state.instances)
     const runtimeStates = new Map(state.runtimeStates)
+    const dataHashes = new Map(state.dataHashes)
     instances.delete(instanceId)
     runtimeStates.delete(instanceId)
-    return { instances, runtimeStates }
+    dataHashes.delete(instanceId)
+    return { instances, runtimeStates, dataHashes }
   }),
   updateInstance: (instanceId, updates) => set((state) => {
     const instances = new Map(state.instances)
@@ -48,6 +54,34 @@ export const useWidgetStore = create<WidgetState>((set) => ({
     return { runtimeStates }
   }),
   refreshStats: () => set({ stats: widgetRegistry.getStats() }),
+  refreshInstance: (instanceId, newData) => {
+    const state = useWidgetStore.getState()
+    const prevHash = state.dataHashes.get(instanceId)
+    
+    const newHash = newData !== undefined 
+      ? JSON.stringify(newData)
+      : Date.now().toString()
+
+    if (prevHash === newHash) {
+      return false
+    }
+
+    set((prev) => {
+      const dataHashes = new Map(prev.dataHashes)
+      dataHashes.set(instanceId, newHash)
+      const runtimeStates = new Map(prev.runtimeStates)
+      const existing = runtimeStates.get(instanceId)
+      runtimeStates.set(instanceId, { 
+        ...existing, 
+        status: 'ready', 
+        lastRefresh: Date.now() 
+      } as WidgetRuntimeState)
+      return { dataHashes, runtimeStates }
+    })
+
+    eventBus.emit('WIDGET_REFRESH_SUCCESS', { instanceId })
+    return true
+  },
 }))
 
 const widgetSubscriptions: Array<() => void> = []

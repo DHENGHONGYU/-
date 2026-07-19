@@ -106,7 +106,7 @@ function jsonToCsv(jsonStr: string): string {
     }
     // Fallback: single-line string representation
     return jsonStr
-  } catch {
+  } catch (err) { console.warn('[OutputApp.tsx]', err);
     return jsonStr
   }
 }

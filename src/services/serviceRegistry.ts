@@ -1,0 +1,74 @@
+/**
+ * Service 注册表（自动生成 — 单一事实源）
+ *
+ * @description
+ * 本文件为 audit:registry 的 Service 层数据源，与 componentRegistry 同为注册表门禁的单一事实源。
+ * 原 storeRegistry 因数据损坏被移除，本文档依 docs/reference/03-architecture-standards.md 标注"待重建"重新生成。
+ *
+ * 生成方式：node scripts/gen-store-service-registries.mjs
+ * 维护约定：新增 / 移除 Service 后重新运行上述脚本同步本文件；
+ *           audit:registry 正向校验条目指向文件存在、反向校验磁盘文件均已登记。
+ * ⚠️ 同名 id 冲突 1 条（不同目录下同名文件，保留多条 id 相同条目；audit 反向检查按文件名匹配，不影响校验）：
+ *   - PortfolioService: src/services/portfolio/portfolioService vs src/services/trading/portfolioService
+ * 生成时间：2026-07-16 15:28:55
+ */
+
+export interface ServiceRegistryEntry {
+  /** 条目标识（PascalCase，与文件名 camelCase 对应） */
+  id: string
+  /** 相对 src 的路径（不含扩展名，供 resolveRegistryPath 解析） */
+  filePath: string
+  /** 状态（默认 active） */
+  status: 'active'
+}
+
+/**
+ * SERVICE_REGISTRY
+ */
+export const SERVICE_REGISTRY: ReadonlyArray<ServiceRegistryEntry> = [
+  { id: 'AiMemoryService', filePath: 'src/services/system/aiMemoryService', status: 'active' },
+  { id: 'AnalysisService', filePath: 'src/services/analysis/analysisService', status: 'active' },
+  { id: 'ArchitectureService', filePath: 'src/services/system/architectureService', status: 'active' },
+  { id: 'BacktestExportService', filePath: 'src/services/export/backtestExportService', status: 'active' },
+  { id: 'BatchImportService', filePath: 'src/services/input/batchImportService', status: 'active' },
+  { id: 'BootstrapService', filePath: 'src/services/system/bootstrapService', status: 'active' },
+  { id: 'CollectionReportService', filePath: 'src/services/data-collector/collectionReportService', status: 'active' },
+  { id: 'ConfigExportService', filePath: 'src/services/collection/configExportService', status: 'active' },
+  { id: 'CustomAgentService', filePath: 'src/services/system/customAgentService', status: 'active' },
+  { id: 'ExecutionLogService', filePath: 'src/services/execution/executionLogService', status: 'active' },
+  { id: 'ExecutionPlanService', filePath: 'src/services/execution/executionPlanService', status: 'active' },
+  { id: 'FeedbackService', filePath: 'src/services/feedbackService', status: 'active' },
+  { id: 'FetcherService', filePath: 'src/services/fetcher/fetcherService', status: 'active' },
+  { id: 'HashService', filePath: 'src/services/hybrid-proofread/hashService', status: 'active' },
+  { id: 'HealthDashboardService', filePath: 'src/services/system/healthDashboardService', status: 'active' },
+  { id: 'HotSectorService', filePath: 'src/services/input/hotSectorService', status: 'active' },
+  { id: 'IndustryAnalysisService', filePath: 'src/services/analysis/industryAnalysisService', status: 'active' },
+  { id: 'IndustryScoreService', filePath: 'src/services/scoring/industryScoreService', status: 'active' },
+  { id: 'InputService', filePath: 'src/services/input/inputService', status: 'active' },
+  { id: 'IntelligentScoreService', filePath: 'src/services/scoring/intelligentScoreService', status: 'active' },
+  { id: 'LocalDocService', filePath: 'src/services/system/localDocService', status: 'active' },
+  { id: 'LocalEmbeddingService', filePath: 'src/services/system/localEmbeddingService', status: 'active' },
+  { id: 'MechanismMonitorService', filePath: 'src/services/system/mechanismMonitorService', status: 'active' },
+  { id: 'MonitorLogService', filePath: 'src/services/system/monitorLogService', status: 'active' },
+  { id: 'NewsService', filePath: 'src/services/news/newsService', status: 'active' },
+  { id: 'PermissionRevocationService', filePath: 'src/services/rbac/permissionRevocationService', status: 'active' },
+  { id: 'PoolService', filePath: 'src/services/pool/poolService', status: 'active' },
+  { id: 'PortfolioService', filePath: 'src/services/portfolio/portfolioService', status: 'active' },
+  { id: 'PortfolioService', filePath: 'src/services/trading/portfolioService', status: 'active' },
+  { id: 'RbacManagementService', filePath: 'src/services/rbac/rbacManagementService', status: 'active' },
+  { id: 'RiskControlService', filePath: 'src/services/riskControlService', status: 'active' },
+  { id: 'RotationScoreService', filePath: 'src/services/analysis/rotationScoreService', status: 'active' },
+  { id: 'ScoreDocService', filePath: 'src/services/analysis/scoreDocService', status: 'active' },
+  { id: 'ScorePageService', filePath: 'src/services/analysis/scorePageService', status: 'active' },
+  { id: 'ScoreTrendService', filePath: 'src/services/analysis/scoreTrendService', status: 'active' },
+  { id: 'StrategySnapshotService', filePath: 'src/services/trading/strategySnapshotService', status: 'active' },
+  { id: 'StressTestService', filePath: 'src/services/perf/stressTestService', status: 'active' },
+  { id: 'SystemMonitorService', filePath: 'src/services/system/systemMonitorService', status: 'active' },
+  { id: 'SystemService', filePath: 'src/services/system/systemService', status: 'active' },
+  { id: 'TracePersistenceService', filePath: 'src/services/data-collector/tracePersistenceService', status: 'active' },
+  { id: 'TradingService', filePath: 'src/services/trading/tradingService', status: 'active' },
+  { id: 'UnifiedStockService', filePath: 'src/services/unifiedStockService', status: 'active' },
+  { id: 'V6MigrationService', filePath: 'src/services/system/v6MigrationService', status: 'active' },
+  { id: 'V6ScoreService', filePath: 'src/services/scoring/v6ScoreService', status: 'active' },
+  { id: 'WatchlistMoversService', filePath: 'src/services/trading/watchlistMoversService', status: 'active' },
+]

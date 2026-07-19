@@ -6,7 +6,7 @@
  * 2.  fetchScores: 传入 stocks，调用 runDualStrategy，更新 3 个 scores
  * 3.  fetchScores: 无传入 stocks，从 poolStore 获取
  * 4.  fetchScores: poolStore 为空，从 dataLayer.stocks.list 获取
- * 5.  fetchScores: 股票池为空，使用默认样本数据
+ * 5.  fetchScores: 股票池为空，返回空结果（不 fallback 到 Mock 数据）
  * 6.  fetchScores: 并发锁（isRefreshing=true 跳过）
  * 7.  fetchScores: runDualStrategy 失败，快照回滚
  * 8.  fetchScores: 持久化到 DataBridge（调用 save）
@@ -131,6 +131,7 @@ import {
   getSnapshot,
   shouldSkipSelf,
   initDualStrategyStoreSubscriptions,
+  _resetDualStrategyStoreSubscriptionsForTest,
 } from './dualStrategyStore'
 
 // ============================================================
@@ -317,22 +318,18 @@ describe('useDualStrategyStore', () => {
     expect(useDualStrategyStore.getState().hotSectorScores).toHaveLength(1)
   })
 
-  it('fetchScores: 股票池为空，使用默认样本数据', async () => {
+  it('fetchScores: 股票池为空，返回空结果（不 fallback 到 Mock 数据）', async () => {
     mockQueryByStore([])
-
-    mockHotSectorAnalyze.mockReturnValue(createMockHotSectorScore('AI_算力', 4.5))
-    mockValuePitAnalyze.mockReturnValue(createMockValuePitScore('银行', 3.8))
-    mockRotationDetect.mockReturnValue(createMockRotationSignal('银行', true, 'strong'))
 
     await useDualStrategyStore.getState().fetchScores()
 
     expect(mockRunDualStrategy).not.toHaveBeenCalled()
-    expect(mockHotSectorAnalyze).toHaveBeenCalled()
-    expect(mockValuePitAnalyze).toHaveBeenCalled()
-    expect(mockRotationDetect).toHaveBeenCalled()
-    expect(useDualStrategyStore.getState().hotSectorScores.length).toBeGreaterThan(0)
-    expect(useDualStrategyStore.getState().valuePitScores.length).toBeGreaterThan(0)
-    expect(useDualStrategyStore.getState().rotationSignals.length).toBeGreaterThan(0)
+    expect(mockHotSectorAnalyze).not.toHaveBeenCalled()
+    expect(mockValuePitAnalyze).not.toHaveBeenCalled()
+    expect(mockRotationDetect).not.toHaveBeenCalled()
+    expect(useDualStrategyStore.getState().hotSectorScores).toHaveLength(0)
+    expect(useDualStrategyStore.getState().valuePitScores).toHaveLength(0)
+    expect(useDualStrategyStore.getState().rotationSignals).toHaveLength(0)
   })
 
   it('fetchScores: 并发锁（isRefreshing=true 跳过）', async () => {
@@ -705,7 +702,7 @@ describe('initDualStrategyStoreSubscriptions', () => {
     vi.clearAllMocks()
     capturedCallbacks.clear()
     unsubscribes.length = 0
-    resetStoreState()
+    _resetDualStrategyStoreSubscriptionsForTest()
   })
 
   it('订阅 5 个频道', () => {
@@ -732,7 +729,7 @@ describe('initDualStrategyStoreSubscriptions', () => {
       payload: {},
     })
 
-    await new Promise((r) => setTimeout(r, 150))
+    await new Promise((r) => setTimeout(r, 400))
     expect(mockDataBridgeQuery).not.toHaveBeenCalled()
 
     // 合法的 source 应该触发 refresh
@@ -741,11 +738,11 @@ describe('initDualStrategyStoreSubscriptions', () => {
       payload: {},
     })
 
-    await new Promise((r) => setTimeout(r, 150))
+    await new Promise((r) => setTimeout(r, 400))
     expect(mockDataBridgeQuery).toHaveBeenCalled()
   })
 
-  it('去抖 100ms', async () => {
+  it('去抖 300ms', async () => {
     mockQueryByStore()
 
     initDualStrategyStoreSubscriptions()
@@ -756,12 +753,12 @@ describe('initDualStrategyStoreSubscriptions', () => {
     hotCb({ meta: { source: 'system', target: 'db', action: 'SAVE_SCORES', traceId: 't2', timestamp: Date.now() }, payload: {} })
     hotCb({ meta: { source: 'system', target: 'db', action: 'SAVE_SCORES', traceId: 't3', timestamp: Date.now() }, payload: {} })
 
-    // 50ms 内不应触发
-    await new Promise((r) => setTimeout(r, 50))
+    // 100ms 内不应触发
+    await new Promise((r) => setTimeout(r, 100))
     expect(mockDataBridgeQuery).not.toHaveBeenCalled()
 
-    // 150ms 后应只触发一次
-    await new Promise((r) => setTimeout(r, 150))
+    // 400ms 后应只触发一次（防抖合并）
+    await new Promise((r) => setTimeout(r, 400))
     expect(mockDataBridgeQuery).toHaveBeenCalledTimes(3) // refresh 内部 3 个 query
   })
 
@@ -801,7 +798,7 @@ describe('initDualStrategyStoreSubscriptions', () => {
     cleanup()
 
     // 等待超过去抖时间，验证没有触发 refresh
-    await new Promise((r) => setTimeout(r, 150))
+    await new Promise((r) => setTimeout(r, 400))
     expect(mockDataBridgeQuery).not.toHaveBeenCalled()
 
     // 验证所有 unsubscribe 被调用

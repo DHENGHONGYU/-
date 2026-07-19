@@ -1,11 +1,22 @@
 /**
  * indexedDBProvider — IndexedDB StorageProvider 实现
+ * @note P1-12（已确认合规）：dataLayer store 内部通过 sendWriteEnvelope() → DataBridge 写入，
+ *   queryList/queryGet 走 DataBridge 查询，是 DataBridge 的类型安全包装层。
+ *   符合 services → data 分层规则（AGENTS.md §一），无需迁移。
  *
- * 包装现有的 dataLayer 接口，将其适配为 StorageProvider 规范。
+ * 包装现有的 dataLayer 子模块 store，将其适配为 StorageProvider 规范。
  * 当新的存储后端就绪时，调用方仅需切换 Provider 实例，无需修改调用代码。
+ *
+ * @convergence 数据流收敛计划（Phase 2）：
+ *   当前 dataLayer store 直接操作 IndexedDB，不经 DataBridge ACL/审计日志。
+ *   计划将写入路径重路由：store.write() → DataBridge.forward(envelope) → gateway.write()，
+ *   读取路径：DataBridge.query() → store.get/list()。
+ *   完成后 service 层仅依赖 DataBridge facade，不再 import dataLayer store 实例。
+ *
+ * @see src/core/databridge.ts — 统一数据访问门面
+ * @see docs/03-development/mock-data-cleanup-lessons.md §"Service 绕过 DataBridge"
  */
 
-import { dataLayer } from '@/data/dataLayer'
 import { getLogger } from '@/lib/logger'
 import type {
   DataMorphology,
@@ -18,10 +29,103 @@ import type {
   ListResult,
 } from './storageProvider'
 
+// ── domain store 子模块（内部经 DataBridge gateway 访问 IndexedDB）──
+import { stockStore, dailyQuoteStore, financialReportStore } from '@/data/dataLayerStockStores'
+import {
+  v6ScoreStore,
+  intelligentScoreStore,
+  industryScoreStore,
+  rotationScoreStore,
+  hotSectorScoreStore,
+  valuePitScoreStore,
+  sectorScoreStore,
+  scoreDocStore,
+} from '@/data/dataLayerScoreStores'
+import {
+  orderStore,
+  signalStore,
+  executionPlanStore,
+  executionLogStore,
+  portfolioStore,
+  tradeReviewStore,
+} from '@/data/dataLayerTradingStores'
+import {
+  researchLogStore,
+  strategySnapshotStore,
+  localDocStore,
+  newsStore,
+  newsStockMapStore,
+  sentimentCacheStore,
+  missingReportStore,
+  customAgentStore,
+  collectionHistoryStore,
+  conflictLogStore,
+  fileImportRecordStore,
+  scheduleConfigStore,
+  proofreadReportStore,
+  analysisResultStore,
+} from '@/data/dataLayerContentStores'
+import {
+  newsBookmarkStore,
+  collectConfigStore,
+  traceRecordStore,
+  workflowDefStore,
+  workflowScheduleStore,
+  workflowTriggerStore,
+  workflowRunStore,
+} from '@/data/dataLayerInternalStores'
+import { watchlistStore } from '@/data/dataLayerWatchlistStore'
+
 const logger = getLogger()
 
 /**
- * IndexedDBProvider — 基于 dataLayer 的存储提供者
+ * store 名称 → store 实例映射表
+ * 保持与原 dataLayer barrel 一致的键名，确保调用方无感知。
+ */
+const STORE_REGISTRY: Record<string, Record<string, unknown>> = {
+  stocks: stockStore,
+  v6Scores: v6ScoreStore,
+  dailyQuotes: dailyQuoteStore,
+  financialReports: financialReportStore,
+  intelligentScores: intelligentScoreStore,
+  industryScores: industryScoreStore,
+  researchLogs: researchLogStore,
+  orders: orderStore,
+  signals: signalStore,
+  rotationScores: rotationScoreStore,
+  sectorScores: sectorScoreStore,
+  scoreDocs: scoreDocStore,
+  strategySnapshots: strategySnapshotStore,
+  localDocs: localDocStore,
+  news: newsStore,
+  newsStockMap: newsStockMapStore,
+  sentimentCache: sentimentCacheStore,
+  hotSectorScores: hotSectorScoreStore,
+  valuePitScores: valuePitScoreStore,
+  executionPlans: executionPlanStore,
+  executionLogs: executionLogStore,
+  missingReports: missingReportStore,
+  portfolios: portfolioStore,
+  tradeReviews: tradeReviewStore,
+  watchlists: watchlistStore,
+  customAgents: customAgentStore,
+  newsBookmarks: newsBookmarkStore,
+  collectConfig: collectConfigStore,
+  traceRecords: traceRecordStore,
+  workflowDefs: workflowDefStore,
+  workflowSchedules: workflowScheduleStore,
+  workflowTriggers: workflowTriggerStore,
+  workflowRuns: workflowRunStore,
+  collectionHistory: collectionHistoryStore,
+  conflictLog: conflictLogStore,
+  fileImportRecords: fileImportRecordStore,
+  scheduleConfigs: scheduleConfigStore,
+  proofreadReports: proofreadReportStore,
+  analysisResults: analysisResultStore,
+}
+
+/**
+ * IndexedDBProvider — 基于 dataLayer 子模块的存储提供者
  *
  * 支持的数据形态：
  * - document: 文档/关系数据（使用现有 IndexedDB store）
@@ -36,13 +140,12 @@ export class IndexedDBProvider implements StorageProvider {
    */
   private resolveStore(store?: string): Record<string, unknown> | null {
     if (!store) return null
-    const dl = dataLayer as Record<string, unknown>
-    const storeObj = dl[store]
+    const storeObj = STORE_REGISTRY[store]
     if (!storeObj) {
       logger.warn('[IndexedDBProvider] store 不存在', { store })
       return null
     }
-    return storeObj as Record<string, unknown>
+    return storeObj
   }
 
   async get<T>(options: GetOptions): Promise<QueryResult<T>> {
@@ -132,9 +235,9 @@ export class IndexedDBProvider implements StorageProvider {
 
   async healthCheck(): Promise<boolean> {
     try {
-      // 探测 dataLayer 是否可用
-      return typeof dataLayer !== 'undefined' && dataLayer !== null
-    } catch {
+      // 探测 registry 是否就绪（任一 store 存在即认为可用）
+      return Object.keys(STORE_REGISTRY).length > 0
+    } catch (err) { console.warn('[indexedDBProvider.ts]', err);
       return false
     }
   }

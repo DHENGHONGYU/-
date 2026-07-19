@@ -28,7 +28,7 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { runAuditPipeline, colorize, type AuditReport } from './_debug/_audit-pipeline.ts'
+import { runAuditPipeline, colorize, type AuditReport } from './_debug/_audit-pipeline'
 
 /** Token 消耗违规/警告项 */
 export interface Finding {
@@ -54,7 +54,7 @@ export interface Report extends AuditReport {
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-const ROOT = path.resolve(__dirname, '..')
+const ROOT = path.resolve(__dirname, '..', '..')
 
 /** 安全读取文件内容（边界条件处理：文件存在但读取失败时返回 null） */
 function safeReadFile(filePath: string): string | null {
@@ -67,15 +67,15 @@ function safeReadFile(filePath: string): string | null {
 
 function checkExtractCodeGraphIncremental(): Finding[] {
   const findings: Finding[] = []
-  const scriptPath = path.join(ROOT, 'scripts', 'extract-code-graph.ts')
+  const scriptPath = path.join(ROOT, 'scripts', 'other', 'extract-code-graph.ts')
 
   if (!fs.existsSync(scriptPath)) {
     findings.push({
-      file: 'scripts/extract-code-graph.ts',
+      file: 'scripts/other/extract-code-graph.ts',
       line: 0,
       type: '缺失文件',
       message: '知识图谱生成脚本不存在',
-      suggestion: '创建 scripts/extract-code-graph.ts 并实现增量更新逻辑',
+      suggestion: '创建 scripts/other/extract-code-graph.ts 并实现增量更新逻辑',
     })
     return findings
   }
@@ -83,7 +83,7 @@ function checkExtractCodeGraphIncremental(): Finding[] {
   const content = safeReadFile(scriptPath)
   if (content === null) {
     findings.push({
-      file: 'scripts/extract-code-graph.ts',
+      file: 'scripts/other/extract-code-graph.ts',
       line: 0,
       type: '读取失败',
       message: '知识图谱生成脚本读取失败（权限或编码问题）',
@@ -95,7 +95,7 @@ function checkExtractCodeGraphIncremental(): Finding[] {
   // 检查是否支持增量更新（基于 mtime）
   if (!content.includes('mtime') && !content.includes('lastModified')) {
     findings.push({
-      file: 'scripts/extract-code-graph.ts',
+      file: 'scripts/other/extract-code-graph.ts',
       line: 1,
       type: '缺少增量更新',
       message: '知识图谱生成脚本未支持增量更新（基于文件 mtime）',
@@ -106,7 +106,7 @@ function checkExtractCodeGraphIncremental(): Finding[] {
   // 检查是否缓存已解析的文件
   if (!content.includes('cache') && !content.includes('Cache')) {
     findings.push({
-      file: 'scripts/extract-code-graph.ts',
+      file: 'scripts/other/extract-code-graph.ts',
       line: 1,
       type: '缺少缓存机制',
       message: '知识图谱生成脚本未缓存已解析的文件 AST',
@@ -221,11 +221,11 @@ function checkTokenBudgetDocumentation(): Finding[] {
 
 function checkTokenOptimizationDocs(): Finding[] {
   const findings: Finding[] = []
-  const docsPath = path.join(ROOT, 'docs', 'reports', 'token-optimization-best-practices.md')
+  const docsPath = path.join(ROOT, 'docs', 'reports', 'lessons-learned', 'docs/reports/lessons-learned/token-optimization-best-practices.md')
 
   if (!fs.existsSync(docsPath)) {
     findings.push({
-      file: 'docs/reports/token-optimization-best-practices.md',
+      file: 'docs/reports/lessons-learned/token-optimization-best-practices.md',
       line: 0,
       type: '缺失优化指南',
       message: 'Token 优化最佳实践文档不存在',
@@ -237,7 +237,7 @@ function checkTokenOptimizationDocs(): Finding[] {
   const content = safeReadFile(docsPath)
   if (content === null) {
     findings.push({
-      file: 'docs/reports/token-optimization-best-practices.md',
+      file: 'docs/reports/lessons-learned/token-optimization-best-practices.md',
       line: 0,
       type: '读取失败',
       message: 'Token 优化文档读取失败（权限或编码问题）',
@@ -258,7 +258,7 @@ function checkTokenOptimizationDocs(): Finding[] {
   for (const section of requiredSections) {
     if (!content.includes(section)) {
       findings.push({
-        file: 'docs/reports/token-optimization-best-practices.md',
+        file: 'docs/reports/lessons-learned/token-optimization-best-practices.md',
         line: 1,
         type: '缺少章节',
         message: `Token 优化文档缺少 "${section}" 章节`,

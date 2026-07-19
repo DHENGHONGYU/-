@@ -1,122 +1,130 @@
 ---
 title: architecture-compliance-report
+type: explanation
+domain: architecture
+phase: design
 tier: reference
+status: active
+maintainer: V9 Architecture Team
+summary: "Éó¼Æ½ÇÉ«: A8 ¡¤ ¼Ü¹¹ºÏ¹æ AGENT ÈÎÎñ±àºÅ: T-11 ·Ö²ãÒÀÀµÓëÎÄµµÍ¬²½Éó¼Æ Éó¼ÆÈÕÆÚ: 2026-07-10 AGENTS.md °æ±¾: v1.4.0 µ±Ç° Commit:..."
+tags: [architecture, report, plan, explanation, design, strategy]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-tier: reference
-code_version: 2.0.0
----
+# V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª ¼Ü¹¹ºÏ¹æÉó¼Æ±¨¸æ£¨T-11 µÚÒ»ÂÖ£©
 
-# V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” æ¶æ„åˆè§„å®¡è®¡æŠ¥å‘Šï¼ˆT-11 ç¬¬ä¸€è½®ï¼‰
-
-> **å®¡è®¡è§’è‰²**: A8 Â· æ¶æ„åˆè§„ AGENT  
-> **ä»»åŠ¡ç¼–å·**: T-11 åˆ†å±‚ä¾èµ–ä¸æ–‡æ¡£åŒæ­¥å®¡è®¡  
-> **å®¡è®¡æ—¥æœŸ**: 2026-07-10  
-> **AGENTS.md ç‰ˆæœ¬**: v1.4.0  
-> **å½“å‰ Commit**: `c483894`ï¼ˆ`feat: ä»¤ç‰Œå€ºæ¸…é›¶ + DIVIDEè¾…åŠ©å¯¹è±¡ + ThemeProviderä¿®å¤ + åŸºçº¿åˆ·æ–°`ï¼‰  
-> **å®¡è®¡è½®æ¬¡**: ç¬¬ä¸€è½®ï¼›å…¶ä»– AGENT ä»»åŠ¡å®Œæˆåéœ€è¿›è¡Œç¬¬äºŒè½®ã€‚
+> **Éó¼Æ½ÇÉ«**: A8 ¡¤ ¼Ü¹¹ºÏ¹æ AGENT  
+> **ÈÎÎñ±àºÅ**: T-11 ·Ö²ãÒÀÀµÓëÎÄµµÍ¬²½Éó¼Æ  
+> **Éó¼ÆÈÕÆÚ**: 2026-07-10  
+> **AGENTS.md °æ±¾**: v1.4.0  
+> **µ±Ç° Commit**: `c483894`£¨`feat: ÁîÅÆÕ®ÇåÁã + DIVIDE¸¨Öú¶ÔÏó + ThemeProviderĞŞ¸´ + »ùÏßË¢ĞÂ`£©  
+> **Éó¼ÆÂÖ´Î**: µÚÒ»ÂÖ£»ÆäËû AGENT ÈÎÎñÍê³ÉºóĞè½øĞĞµÚ¶şÂÖ¡£
 
 ---
 
-## ä¸€ã€åˆ†å±‚è§„åˆ™ä¸å››æ­¥é›†æˆå¥‘çº¦æ‘˜è¦
+## Ò»¡¢·Ö²ã¹æÔòÓëËÄ²½¼¯³ÉÆõÔ¼ÕªÒª
 
-### 1.1 åˆ†å±‚ä¾èµ–è§„åˆ™ï¼ˆAGENTS.md Â§ä¸€ï¼‰
+### 1.1 ·Ö²ãÒÀÀµ¹æÔò£¨AGENTS.md ¡ìÒ»£©
 
 ```
-pages/ã€components/  â†’ store/ã€services/
-store/               â†’ services/ã€core/
-services/            â†’ core/ã€data/ã€lib/ï¼ˆä»…åŸºç¡€è®¾æ–½ç™½åå•ï¼‰
-lib/                 â†’ core/ã€config/
-core/                â†’ ç¦æ­¢ä¾èµ– pages/ã€components/ã€apps/ã€lib/
-config/              â†’ ç¦æ­¢ä¾èµ– services/ã€pages/ã€components/ã€lib/
-constants/           â†’ é›¶è¿è¡Œæ—¶ä¾èµ–ï¼Œå¯è¢«æ‰€æœ‰å±‚å¼•ç”¨
-types/               â†’ é›¶ä¾èµ–ï¼Œå¯è¢«æ‰€æœ‰å±‚å¼•ç”¨
+pages/¡¢components/  ¡ú store/¡¢services/
+store/               ¡ú services/¡¢core/
+services/            ¡ú core/¡¢data/¡¢lib/£¨½ö»ù´¡ÉèÊ©°×Ãûµ¥£©
+lib/                 ¡ú core/¡¢config/
+core/                ¡ú ½ûÖ¹ÒÀÀµ pages/¡¢components/¡¢apps/¡¢lib/
+config/              ¡ú ½ûÖ¹ÒÀÀµ services/¡¢pages/¡¢components/¡¢lib/
+constants/           ¡ú ÁãÔËĞĞÊ±ÒÀÀµ£¬¿É±»ËùÓĞ²ãÒıÓÃ
+types/               ¡ú ÁãÒÀÀµ£¬¿É±»ËùÓĞ²ãÒıÓÃ
 ```
 
-### 1.2 å››æ­¥é›†æˆç¼–ç å¥‘çº¦ï¼ˆAGENTS.md Â§äºŒï¼‰
+### 1.2 ËÄ²½¼¯³É±àÂëÆõÔ¼£¨AGENTS.md ¡ì¶ş£©
 
-æ–°å¢æ¨¡å—å¿…é¡»æŒ‰ä»¥ä¸‹é¡ºåºé›†æˆï¼Œä¸¥ç¦åœ¨ `/pages` æˆ– `/components` ä¸‹å­¤ç«‹æ–°å»º UI æ–‡ä»¶ï¼š
+ĞÂÔöÄ£¿é±ØĞë°´ÒÔÏÂË³Ğò¼¯³É£¬ÑÏ½ûÔÚ `/pages` »ò `/components` ÏÂ¹ÂÁ¢ĞÂ½¨ UI ÎÄ¼ş£º
 
-1. **ç±»å‹å®šä¹‰** â†’ `src/types/modules/*.types.ts` æˆ– `src/data/types.ts`
-2. **Store/çŠ¶æ€** â†’ `src/store/*Store.ts`ï¼ˆZustand + `withBroadcast`ï¼‰
-3. **Builder/é€‚é…å±‚** â†’ `src/services/*`ï¼ˆé€šè¿‡ `DataBridge` å†™å…¥æ•°æ®ï¼‰
-4. **æ ¸å¿ƒé›†æˆ** â†’ `src/pages/` æˆ– `src/components/`ï¼ˆä»…é€šè¿‡ Store è·å–æ•°æ®ï¼‰
+1. **ÀàĞÍ¶¨Òå** ¡ú `src/types/modules/*.types.ts` »ò `src/data/types.ts`
+2. **Store/×´Ì¬** ¡ú `src/store/*Store.ts`£¨Zustand + `withBroadcast`£©
+3. **Builder/ÊÊÅä²ã** ¡ú `src/services/*`£¨Í¨¹ı `DataBridge` Ğ´ÈëÊı¾İ£©
+4. **ºËĞÄ¼¯³É** ¡ú `src/pages/` »ò `src/components/`£¨½öÍ¨¹ı Store »ñÈ¡Êı¾İ£©
 
 ---
 
-## äºŒã€å®¡è®¡å‘½ä»¤æ‰§è¡Œç»“æœ
+## ¶ş¡¢Éó¼ÆÃüÁîÖ´ĞĞ½á¹û
 
-| å‘½ä»¤ | çŠ¶æ€ | å…³é”®ç»“æœ |
+| ÃüÁî | ×´Ì¬ | ¹Ø¼ü½á¹û |
 |------|------|----------|
-| `npm run audit:layers` | âœ… é€šè¿‡ | æ‰«æ 825 æ–‡ä»¶ï¼Œ**0 è¿è§„ã€0 è­¦å‘Š** |
-| `npm run audit:docs` | âœ… é€šè¿‡ | æ‰«æ 4 ä¸ªå˜æ›´æ–‡ä»¶ï¼Œ**0 å¤„æ–‡æ¡£ä¸åŒæ­¥** |
-| `npx tsc --noEmit` | âŒ å¤±è´¥ | **7 å¤„ç±»å‹é”™è¯¯** |
-| `npm run audit:tokens` | âŒ å¤±è´¥ | **æ–°å¢ 16 å¤„ HEX å­—é¢é‡ + 2 å¤„è£¸ Tailwind è‰²ç±»**ï¼Œè¶…è¿‡åŸºçº¿ |
-| `npm run test -- --run` | âŒ å¤±è´¥ | `dataLayer.test.ts` æœŸæœ› 26 ä¸ªå±æ€§ã€å®é™… 27 ä¸ªï¼›æµ‹è¯• worker å¼‚å¸¸é€€å‡º |
+| `npm run audit:layers` | ? Í¨¹ı | É¨Ãè 825 ÎÄ¼ş£¬**0 Î¥¹æ¡¢0 ¾¯¸æ** |
+| `npm run audit:docs` | ? Í¨¹ı | É¨Ãè 4 ¸ö±ä¸üÎÄ¼ş£¬**0 ´¦ÎÄµµ²»Í¬²½** |
+| `npx tsc --noEmit` | ? Ê§°Ü | **7 ´¦ÀàĞÍ´íÎó** |
+| `npm run audit:tokens` | ? Ê§°Ü | **ĞÂÔö 16 ´¦ HEX ×ÖÃæÁ¿ + 2 ´¦Âã Tailwind É«Àà**£¬³¬¹ı»ùÏß |
+| `npm run test -- --run` | ? Ê§°Ü | `dataLayer.test.ts` ÆÚÍû 26 ¸öÊôĞÔ¡¢Êµ¼Ê 27 ¸ö£»²âÊÔ worker Òì³£ÍË³ö |
 
-> è¯´æ˜ï¼šå·¥ä½œåŒºå­˜åœ¨å¤§é‡æœªæäº¤ä¿®æ”¹ï¼ˆ`git status` æ˜¾ç¤º 100+ å·²ä¿®æ”¹æ–‡ä»¶å’Œ 50+ æœªè·Ÿè¸ªæ–‡ä»¶ï¼‰ï¼Œä½†å®¡è®¡å‘½ä»¤ç›´æ¥ä½œç”¨äºå½“å‰å·¥ä½œåŒºï¼Œç»“æœå·²å¦‚å®è®°å½•ã€‚
+> ËµÃ÷£º¹¤×÷Çø´æÔÚ´óÁ¿Î´Ìá½»ĞŞ¸Ä£¨`git status` ÏÔÊ¾ 100+ ÒÑĞŞ¸ÄÎÄ¼şºÍ 50+ Î´¸ú×ÙÎÄ¼ş£©£¬µ«Éó¼ÆÃüÁîÖ±½Ó×÷ÓÃÓÚµ±Ç°¹¤×÷Çø£¬½á¹ûÒÑÈçÊµ¼ÇÂ¼¡£
 
 ---
 
-## ä¸‰ã€å››æ­¥é›†æˆå¥‘çº¦ä¸“é¡¹æ£€æŸ¥
+## Èı¡¢ËÄ²½¼¯³ÉÆõÔ¼×¨Ïî¼ì²é
 
-### 3.1 æ–°å¢æ–‡ä»¶æ¸…å•ï¼ˆ`git status` ä¸­ `??` çŠ¶æ€ï¼‰
+### 3.1 ĞÂÔöÎÄ¼şÇåµ¥£¨`git status` ÖĞ `??` ×´Ì¬£©
 
-æœ¬æ¬¡å·¥ä½œåŒºæ–°å¢ä¸»è¦æ–‡ä»¶ï¼š
+±¾´Î¹¤×÷ÇøĞÂÔöÖ÷ÒªÎÄ¼ş£º
 
-- **ç±»å‹å±‚**ï¼š`src/types/modules/collection.types.ts`ã€`src/data/types/types.customAgent.ts`ã€`src/data/types/types.hybridProofread.ts`
-- **çŠ¶æ€å±‚**ï¼š`src/store/collectionRuntimeStore.ts`ã€`src/store/customAgentStore.ts`ã€`src/store/hybridProofreadStore.ts`ã€`src/store/runtimeTradingConfigStore.ts`
-- **æœåŠ¡å±‚**ï¼š`src/services/data-collector/collectionPipeline.ts`ã€`src/services/data-collector/collectionReportService.ts`ã€`src/services/data-collector/tracePersistenceService.ts`ã€`src/services/hybrid-proofread/*`ã€`src/services/trading/watchlistMoversService.ts`ã€`src/services/trading/mockDataGenerator.ts`
-- **UI å±‚**ï¼š`src/pages/trading/*Page.tsx`ã€`src/pages/analysis/ScoreComparisonPage.tsx`ã€`src/pages/analysis/PoolBoardPage.tsx`ã€`src/pages/output/*Page.tsx`ã€`src/components/input/*`ã€`src/components/trading/*`ã€`src/components/collection/*`ã€`src/components/cockpit/*`ã€`src/components/output/*`
+- **ÀàĞÍ²ã**£º`src/types/modules/collection.types.ts`¡¢`src/data/types/types.customAgent.ts`¡¢`src/data/types/types.hybridProofread.ts`
+- **×´Ì¬²ã**£º`src/store/collectionRuntimeStore.ts`¡¢`src/store/customAgentStore.ts`¡¢`src/store/hybridProofreadStore.ts`¡¢`src/store/runtimeTradingConfigStore.ts`
+- **·şÎñ²ã**£º`src/services/data-collector/collectionPipeline.ts`¡¢`src/services/data-collector/collectionReportService.ts`¡¢`src/services/data-collector/tracePersistenceService.ts`¡¢`src/services/hybrid-proofread/*`¡¢`src/services/trading/watchlistMoversService.ts`¡¢`src/services/trading/mockDataGenerator.ts`
+- **UI ²ã**£º`src/pages/trading/*Page.tsx`¡¢`src/pages/analysis/ScoreComparisonPage.tsx`¡¢`src/pages/analysis/PoolBoardPage.tsx`¡¢`src/pages/output/*Page.tsx`¡¢`src/components/input/*`¡¢`src/components/trading/*`¡¢`src/components/collection/*`¡¢`src/components/cockpit/*`¡¢`src/components/output/*`
 
-### 3.2 å‘ç°çš„å››æ­¥é›†æˆè¿è§„
+### 3.2 ·¢ÏÖµÄËÄ²½¼¯³ÉÎ¥¹æ
 
-#### è¿è§„ Aï¼šæ¨¡æ‹Ÿäº¤æ˜“æ•°æ®ç”Ÿæˆå™¨å°†ç±»å‹å®šä¹‰å†…è”ï¼Œæœªä¸‹æ²‰åˆ° `src/types/modules/`
+#### Î¥¹æ A£ºÄ£Äâ½»Ò×Êı¾İÉú³ÉÆ÷½«ÀàĞÍ¶¨ÒåÄÚÁª£¬Î´ÏÂ³Áµ½ `src/types/modules/`
 
-- **æ–‡ä»¶**ï¼š`src/services/trading/mockDataGenerator.ts`
-- **é—®é¢˜**ï¼š
-  - ç¬¬ 209-220 è¡Œå†…è”å®šä¹‰ `MockPosition`
-  - ç¬¬ 268-290 è¡Œå†…è”å®šä¹‰ `MockRiskMetrics`ã€`MockRiskAlert`
-  - ç¬¬ 354-365 è¡Œå†…è”å®šä¹‰ `MockTradingData`
-  - è¿™äº›ç±»å‹å‡æœªæŒ‰å¥‘çº¦è¦æ±‚æ”¾ç½®äº `src/types/modules/` æˆ– `src/data/types.ts`ï¼Œå¯¼è‡´ `TradingFlowPage` æ— æ³•ç›´æ¥å¤ç”¨ç±»å‹ï¼Œå¹¶é—´æ¥å¼•å‘ç±»å‹ä¸ä¸€è‡´ã€‚
-- **è¿åæ­¥éª¤**ï¼šç¬¬ 1 æ­¥ï¼ˆç±»å‹å®šä¹‰å±‚ï¼‰
-- **ä¿®å¤å»ºè®®**ï¼šå°† `MockPosition`ã€`MockRiskMetrics`ã€`MockRiskAlert`ã€`MockTradingData` è¿ç§»åˆ° `src/types/modules/trading.types.ts` æˆ– `src/data/types.ts`ï¼Œå¹¶åœ¨ `mockDataGenerator.ts` ä¸­ä»…åšç±»å‹å¯¼å…¥ã€‚
+- **ÎÄ¼ş**£º`src/services/trading/mockDataGenerator.ts`
+- **ÎÊÌâ**£º
+  - µÚ 209-220 ĞĞÄÚÁª¶¨Òå `MockPosition`
+  - µÚ 268-290 ĞĞÄÚÁª¶¨Òå `MockRiskMetrics`¡¢`MockRiskAlert`
+  - µÚ 354-365 ĞĞÄÚÁª¶¨Òå `MockTradingData`
+  - ÕâĞ©ÀàĞÍ¾ùÎ´°´ÆõÔ¼ÒªÇó·ÅÖÃÓÚ `src/types/modules/` »ò `src/data/types.ts`£¬µ¼ÖÂ `TradingFlowPage` ÎŞ·¨Ö±½Ó¸´ÓÃÀàĞÍ£¬²¢¼ä½ÓÒı·¢ÀàĞÍ²»Ò»ÖÂ¡£
+- **Î¥·´²½Öè**£ºµÚ 1 ²½£¨ÀàĞÍ¶¨Òå²ã£©
+- **ĞŞ¸´½¨Òé**£º½« `MockPosition`¡¢`MockRiskMetrics`¡¢`MockRiskAlert`¡¢`MockTradingData` Ç¨ÒÆµ½ `src/types/modules/trade.types.ts` »ò `src/data/types.ts`£¬²¢ÔÚ `mockDataGenerator.ts` ÖĞ½ö×öÀàĞÍµ¼Èë¡£
 
-#### è¿è§„ Bï¼šäº¤æ˜“ä¿¡å·ç±»å‹ä¸ UI æ¶ˆè´¹ä¸ä¸€è‡´ï¼Œå¯¼è‡´ TypeScript æŠ¥é”™
+#### Î¥¹æ B£º½»Ò×ĞÅºÅÀàĞÍÓë UI Ïû·Ñ²»Ò»ÖÂ£¬µ¼ÖÂ TypeScript ±¨´í
 
-- **æ–‡ä»¶**ï¼š`src/services/trading/signalGenerator.ts`ï¼ˆç±»å‹æºå¤´ï¼‰  
-  `src/services/trading/mockDataGenerator.ts`ï¼ˆæ‰©å±•ä½¿ç”¨ï¼‰  
-  `src/pages/trading/TradingFlowPage.tsx`ï¼ˆUI æ¶ˆè´¹ï¼‰
-- **é—®é¢˜**ï¼š
-  - `mockDataGenerator.ts:85` å‘ `TradingSignal` å¯¹è±¡å†™å…¥ `name` å­—æ®µï¼›`mockDataGenerator.ts:99` å†™å…¥ `timestamp` å­—æ®µã€‚
-  - ä½† `signalGenerator.ts` å¯¼å‡ºçš„ `TradingSignal` æ¥å£ä¸åŒ…å« `name` å’Œ `timestamp`ã€‚
-  - `TradingFlowPage.tsx:368` åœ¨æ˜ å°„ `displaySignals` æ—¶è¯»å– `s.name`ï¼Œè§¦å‘ `TS2339: Property 'name' does not exist on type 'Signal'`ã€‚
-- **è¿åæ­¥éª¤**ï¼šç¬¬ 1 æ­¥ï¼ˆç±»å‹å®šä¹‰æœªåŒæ­¥ï¼‰
-- **ä¿®å¤å»ºè®®**ï¼š
-  1. åœ¨ `src/types/modules/trading.types.ts` ä¸­ç»Ÿä¸€å®šä¹‰ `TradingSignal` æ¥å£ï¼ŒåŒ…å« `id`ã€`symbol`ã€`name`ã€`direction`ã€`confidence`ã€`rationale`ã€`createdAt`ã€`timestamp` ç­‰å­—æ®µã€‚
-  2. åŒæ­¥ä¿®æ­£ `signalGenerator.ts`ã€`mockDataGenerator.ts`ã€`TradingFlowPage.tsx` çš„ç±»å‹å¼•ç”¨ã€‚
+- **ÎÄ¼ş**£º`src/services/trading/signalGenerator.ts`£¨ÀàĞÍÔ´Í·£©  
+  `src/services/trading/mockDataGenerator.ts`£¨À©Õ¹Ê¹ÓÃ£©  
+  `src/pages/trading/TradingFlowPage.tsx`£¨UI Ïû·Ñ£©
+- **ÎÊÌâ**£º
+  - `mockDataGenerator.ts:85` Ïò `TradingSignal` ¶ÔÏóĞ´Èë `name` ×Ö¶Î£»`mockDataGenerator.ts:99` Ğ´Èë `timestamp` ×Ö¶Î¡£
+  - µ« `signalGenerator.ts` µ¼³öµÄ `TradingSignal` ½Ó¿Ú²»°üº¬ `name` ºÍ `timestamp`¡£
+  - `TradingFlowPage.tsx:368` ÔÚÓ³Éä `displaySignals` Ê±¶ÁÈ¡ `s.name`£¬´¥·¢ `TS2339: Property 'name' does not exist on type 'Signal'`¡£
+- **Î¥·´²½Öè**£ºµÚ 1 ²½£¨ÀàĞÍ¶¨ÒåÎ´Í¬²½£©
+- **ĞŞ¸´½¨Òé**£º
+  1. ÔÚ `src/types/modules/trade.types.ts` ÖĞÍ³Ò»¶¨Òå `TradingSignal` ½Ó¿Ú£¬°üº¬ `id`¡¢`symbol`¡¢`name`¡¢`direction`¡¢`confidence`¡¢`rationale`¡¢`createdAt`¡¢`timestamp` µÈ×Ö¶Î¡£
+  2. Í¬²½ĞŞÕı `signalGenerator.ts`¡¢`mockDataGenerator.ts`¡¢`TradingFlowPage.tsx` µÄÀàĞÍÒıÓÃ¡£
 
-#### è¿è§„ Cï¼šäº¤æ˜“æµç¨‹é¡µé¢ç›´æ¥å¼•ç”¨ `src/services/trading/mockDataGenerator.ts`
+#### Î¥¹æ C£º½»Ò×Á÷³ÌÒ³ÃæÖ±½ÓÒıÓÃ `src/services/trading/mockDataGenerator.ts`
 
-- **æ–‡ä»¶**ï¼š`src/pages/trading/TradingFlowPage.tsx:14`
-- **é—®é¢˜**ï¼šé¡µé¢å±‚ç›´æ¥å¯¼å…¥ `generateMockTradingData` æœåŠ¡ï¼Œç”¨äºç”Ÿæˆå¼€å‘ç¯å¢ƒæ¨¡æ‹Ÿæ•°æ®ã€‚è™½ç„¶ mock æ•°æ®ç”Ÿæˆå±äºæœåŠ¡å±‚ï¼Œä½†é¡µé¢é€šè¿‡ `USE_MOCK_DATA` åˆ†æ”¯ç›´æ¥æ¶ˆè´¹è¯¥æœåŠ¡ï¼Œæœªç»è¿‡ Store å±‚ã€‚æ ¹æ®å››æ­¥å¥‘çº¦ï¼ŒUI åº”ä»…é€šè¿‡ Store è·å–æ•°æ®ï¼Œæ¨¡æ‹Ÿæ•°æ®æ³¨å…¥ä¹Ÿåº”ç”± Store æˆ– Service é—¨é¢ç»Ÿä¸€æä¾›ã€‚
-- **è¿åæ­¥éª¤**ï¼šç¬¬ 4 æ­¥ï¼ˆUI åº”ä»…é€šè¿‡ Store è·å–æ•°æ®ï¼‰
-- **ä¿®å¤å»ºè®®**ï¼šåœ¨ `tradingStore`ï¼ˆæˆ–æ–°å»º `tradingRuntimeStore`ï¼‰ä¸­æä¾› `useMockData` å¼€å…³å’Œæ¨¡æ‹Ÿæ•°æ®åŠ è½½ actionï¼Œé¡µé¢ä»…è®¢é˜… Store çŠ¶æ€ã€‚
+- **ÎÄ¼ş**£º`src/pages/trading/TradingFlowPage.tsx:14`
+- **ÎÊÌâ**£ºÒ³Ãæ²ãÖ±½Óµ¼Èë `generateMockTradingData` ·şÎñ£¬ÓÃÓÚÉú³É¿ª·¢»·¾³Ä£ÄâÊı¾İ¡£ËäÈ» mock Êı¾İÉú³ÉÊôÓÚ·şÎñ²ã£¬µ«Ò³ÃæÍ¨¹ı `USE_MOCK_DATA` ·ÖÖ§Ö±½ÓÏû·Ñ¸Ã·şÎñ£¬Î´¾­¹ı Store ²ã¡£¸ù¾İËÄ²½ÆõÔ¼£¬UI Ó¦½öÍ¨¹ı Store »ñÈ¡Êı¾İ£¬Ä£ÄâÊı¾İ×¢ÈëÒ²Ó¦ÓÉ Store »ò Service ÃÅÃæÍ³Ò»Ìá¹©¡£
+- **Î¥·´²½Öè**£ºµÚ 4 ²½£¨UI Ó¦½öÍ¨¹ı Store »ñÈ¡Êı¾İ£©
+- **ĞŞ¸´½¨Òé**£ºÔÚ `tradingStore`£¨»òĞÂ½¨ `tradingRuntimeStore`£©ÖĞÌá¹© `useMockData` ¿ª¹ØºÍÄ£ÄâÊı¾İ¼ÓÔØ action£¬Ò³Ãæ½ö¶©ÔÄ Store ×´Ì¬¡£
 
-#### è¿è§„ Dï¼šUI ç»„ä»¶ä½¿ç”¨ç¡¬ç¼–ç æ¶¨è·Œè‰²ï¼Œæœªä½¿ç”¨ `STOCK_COLOR_TOKENS`
+#### Î¥¹æ D£ºUI ×é¼şÊ¹ÓÃÓ²±àÂëÕÇµøÉ«£¬Î´Ê¹ÓÃ `STOCK_COLOR_TOKENS`
 
-- **æ–‡ä»¶**ï¼š`src/components/trading/OrderExecutionPanel.tsx:180`
-- **ä»£ç **ï¼š`className={order.side === 'buy' ? 'text-red-500' : 'text-green-500'}`
-- **é—®é¢˜**ï¼šè™½ç„¶ä¹°å…¥/å–å‡ºåœ¨è‚¡ç¥¨è¯­ä¹‰ä¸­å¯¹åº”çº¢ä¹°ç»¿å–ï¼Œä½†æ­¤å¤„æ˜¯**è®¢å•æ–¹å‘**ï¼ˆbuy/sellï¼‰ï¼Œå¹¶é `changePercent`/`priceChange`/`æ¶¨è·Œå¹…` åœºæ™¯ã€‚AGENTS.md Â§3.5.6 çš„è±å…æ˜ç¡®é’ˆå¯¹â€œè‚¡ç¥¨æ¶¨è·Œâ€ç›¸å…³å­—æ®µï¼Œè®¢å•æ–¹å‘ä¸åœ¨è±å…èŒƒå›´å†…ï¼Œåº”ä½¿ç”¨ `STOCK_COLOR_TOKENS` æˆ–è¯­ä¹‰ä»¤ç‰Œã€‚
-- **è¿åè§„èŒƒ**ï¼šé¢œè‰²ä»¤ç‰Œè§„èŒƒï¼ˆAGENTS.md Â§3.5ï¼‰
-- **ä¿®å¤å»ºè®®**ï¼šæ”¹ä¸º `order.side === 'buy' ? STOCK_COLOR_TOKENS.up.tailwind : STOCK_COLOR_TOKENS.down.tailwind`ã€‚
+- **ÎÄ¼ş**£º`src/components/trading/OrderExecutionPanel.tsx:180`
+- **´úÂë**£º`className={order.side === 'buy' ? 'text-red-500' : 'text-green-500'}`
+- **ÎÊÌâ**£ºËäÈ»ÂòÈë/Âô³öÔÚ¹ÉÆ±ÓïÒåÖĞ¶ÔÓ¦ºìÂòÂÌÂô£¬µ«´Ë´¦ÊÇ**¶©µ¥·½Ïò**£¨buy/sell£©£¬²¢·Ç `changePercent`/`priceChange`/`ÕÇµø·ù` ³¡¾°¡£AGENTS.md ¡ì3.5.6 µÄ»íÃâÃ÷È·Õë¶Ô¡°¹ÉÆ±ÕÇµø¡±Ïà¹Ø×Ö¶Î£¬¶©µ¥·½Ïò²»ÔÚ»íÃâ·¶Î§ÄÚ£¬Ó¦Ê¹ÓÃ `STOCK_COLOR_TOKENS` »òÓïÒåÁîÅÆ¡£
+- **Î¥·´¹æ·¶**£ºÑÕÉ«ÁîÅÆ¹æ·¶£¨AGENTS.md ¡ì3.5£©
+- **ĞŞ¸´½¨Òé**£º¸ÄÎª `order.side === 'buy' ? STOCK_COLOR_TOKENS.up.tailwind : STOCK_COLOR_TOKENS.down.tailwind`¡£
 
-#### è¿è§„ Eï¼šæœåŠ¡å±‚ç”Ÿæˆ HTML æŠ¥å‘Šæ—¶ç¡¬ç¼–ç  HEX è‰²å€¼
+#### Î¥¹æ E£º·şÎñ²ãÉú³É HTML ±¨¸æÊ±Ó²±àÂë HEX É«Öµ
 
-- **æ–‡ä»¶**ï¼š`src/services/hybrid-proofread/reportGenerator.ts:286-291`
-- **ä»£ç **ï¼š
+- **ÎÄ¼ş**£º`src/services/hybrid-proofread/reportGenerator.ts:286-291`
+- **´úÂë**£º
   ```ts
   const severityColors: Record<string, string> = {
     critical: '#dc2626',
@@ -127,74 +135,74 @@ types/               â†’ é›¶ä¾èµ–ï¼Œå¯è¢«æ‰€æœ‰å±‚å¼•ç”¨
     info: '#64748b',
   }
   ```
-- **é—®é¢˜**ï¼šæœåŠ¡å±‚è™½é UI å±‚ï¼Œä½†ç”Ÿæˆçš„æ˜¯æœ€ç»ˆé¢å‘ç”¨æˆ·çš„ HTML æŠ¥å‘Šå†…å®¹ã€‚AGENTS.md Â§3.5.8 çš„è±å…æ¸…å•æœªåŒ…å« `services/` ç›®å½•ï¼Œä¸” Â§3.5.2 è¦æ±‚æŠ¥å‘Šæ–‡æœ¬ä¸­çš„é¢œè‰²é€šè¿‡ä»¤ç‰Œç³»ç»Ÿå¼•ç”¨ã€‚æœåŠ¡å±‚è¾“å‡ºç¡¬ç¼–ç  HEX ä¼šå¯¼è‡´ä»¤ç‰Œç®¡çº¿æ–­è£‚ã€æš—è‰²æ¨¡å¼/å“ç‰Œè‰²åˆ‡æ¢å¤±æ•ˆã€‚
-- **ä¿®å¤å»ºè®®**ï¼šå°† `severityColors` æ˜ å°„è¿ç§»åˆ° `src/config/chartColors.ts` æˆ– `src/constants/theme.tokens.ts` çš„è¯­ä¹‰ä»¤ç‰Œï¼ŒæœåŠ¡å±‚ä»…å¼•ç”¨ä»¤ç‰Œã€‚
+- **ÎÊÌâ**£º·şÎñ²ãËä·Ç UI ²ã£¬µ«Éú³ÉµÄÊÇ×îÖÕÃæÏòÓÃ»§µÄ HTML ±¨¸æÄÚÈİ¡£AGENTS.md ¡ì3.5.8 µÄ»íÃâÇåµ¥Î´°üº¬ `services/` Ä¿Â¼£¬ÇÒ ¡ì3.5.2 ÒªÇó±¨¸æÎÄ±¾ÖĞµÄÑÕÉ«Í¨¹ıÁîÅÆÏµÍ³ÒıÓÃ¡£·şÎñ²ãÊä³öÓ²±àÂë HEX »áµ¼ÖÂÁîÅÆ¹ÜÏß¶ÏÁÑ¡¢°µÉ«Ä£Ê½/Æ·ÅÆÉ«ÇĞ»»Ê§Ğ§¡£
+- **ĞŞ¸´½¨Òé**£º½« `severityColors` Ó³ÉäÇ¨ÒÆµ½ `src/config/chartColors.ts` »ò `src/constants/theme.tokens.ts` µÄÓïÒåÁîÅÆ£¬·şÎñ²ã½öÒıÓÃÁîÅÆ¡£
 
 ---
 
-## å››ã€å…¶ä»–å‘½ä»¤ç»“æœè¯¦ç»†è®°å½•
+## ËÄ¡¢ÆäËûÃüÁî½á¹ûÏêÏ¸¼ÇÂ¼
 
-### 4.1 `npx tsc --noEmit` ç±»å‹é”™è¯¯ï¼ˆ7 é¡¹ï¼‰
+### 4.1 `npx tsc --noEmit` ÀàĞÍ´íÎó£¨7 Ïî£©
 
-| # | æ–‡ä»¶ | è¡Œ/åˆ— | é”™è¯¯ç  | æè¿° |
+| # | ÎÄ¼ş | ĞĞ/ÁĞ | ´íÎóÂë | ÃèÊö |
 |---|------|-------|--------|------|
-| 1 | `src/pages/trading/TradingFlowPage.tsx` | 352:20 | TS2552 | ä½¿ç”¨äº†æœªå®šä¹‰çš„ `riskRules`ï¼ˆä»…å£°æ˜ `setRiskRules`ï¼‰ |
-| 2 | `src/pages/trading/TradingFlowPage.tsx` | 369:17 | TS2339 | `Signal` ç±»å‹æ—  `name` å±æ€§ |
-| 3 | `src/services/trading/mockDataGenerator.ts` | 46:3 | TS2322 | `randomChoice<T>` è¿”å› `T \| undefined` èµ‹å€¼ç»™ `T` |
-| 4 | `src/services/trading/mockDataGenerator.ts` | 85:7 | TS2353 | å¯¹è±¡å­—é¢é‡åŒ…å« `name`ï¼Œä½† `Signal` ç±»å‹æ— æ­¤å±æ€§ |
-| 5 | `src/services/trading/mockDataGenerator.ts` | 99:35 | TS2339 | `Signal` ç±»å‹æ—  `timestamp` å±æ€§ |
-| 6 | `src/services/trading/mockDataGenerator.ts` | 99:49 | TS2339 | `Signal` ç±»å‹æ—  `timestamp` å±æ€§ |
-| 7 | `src/services/trading/mockDataGenerator.ts` | 174:3 | TS2322 | `string` ä¸å¯èµ‹å€¼ç»™ `OrderStatus` |
+| 1 | `src/pages/trading/TradingFlowPage.tsx` | 352:20 | TS2552 | Ê¹ÓÃÁËÎ´¶¨ÒåµÄ `riskRules`£¨½öÉùÃ÷ `setRiskRules`£© |
+| 2 | `src/pages/trading/TradingFlowPage.tsx` | 369:17 | TS2339 | `Signal` ÀàĞÍÎŞ `name` ÊôĞÔ |
+| 3 | `src/services/trading/mockDataGenerator.ts` | 46:3 | TS2322 | `randomChoice<T>` ·µ»Ø `T \| undefined` ¸³Öµ¸ø `T` |
+| 4 | `src/services/trading/mockDataGenerator.ts` | 85:7 | TS2353 | ¶ÔÏó×ÖÃæÁ¿°üº¬ `name`£¬µ« `Signal` ÀàĞÍÎŞ´ËÊôĞÔ |
+| 5 | `src/services/trading/mockDataGenerator.ts` | 99:35 | TS2339 | `Signal` ÀàĞÍÎŞ `timestamp` ÊôĞÔ |
+| 6 | `src/services/trading/mockDataGenerator.ts` | 99:49 | TS2339 | `Signal` ÀàĞÍÎŞ `timestamp` ÊôĞÔ |
+| 7 | `src/services/trading/mockDataGenerator.ts` | 174:3 | TS2322 | `string` ²»¿É¸³Öµ¸ø `OrderStatus` |
 
-### 4.2 `npm run audit:tokens` ä»¤ç‰Œè¿è§„
+### 4.2 `npm run audit:tokens` ÁîÅÆÎ¥¹æ
 
-- **HEX å­—é¢é‡**ï¼šå½“å‰ 40 å¤„ï¼ŒåŸºçº¿ 24 å¤„ï¼Œæ–°å¢ **16 å¤„**ï¼›ä¸»è¦é›†ä¸­åœ¨ `src/services/hybrid-proofread/reportGenerator.ts`ï¼ˆseverity é¢œè‰²æ˜ å°„ï¼‰ã€‚
-- **è£¸ Tailwind è‰²ç±»**ï¼šå½“å‰ 2 å¤„ï¼ŒåŸºçº¿ 0 å¤„ï¼Œæ–°å¢ **2 å¤„**ï¼›ä½äº `src/components/trading/OrderExecutionPanel.tsx:180`ï¼ˆ`text-red-500`ã€`text-green-500`ï¼‰ã€‚
-- **ç»“è®º**ï¼šä»¤ç‰Œå›å½’é—¸è§¦å‘ï¼ŒCI åº”æ‹¦æˆªã€‚
+- **HEX ×ÖÃæÁ¿**£ºµ±Ç° 40 ´¦£¬»ùÏß 24 ´¦£¬ĞÂÔö **16 ´¦**£»Ö÷Òª¼¯ÖĞÔÚ `src/services/hybrid-proofread/reportGenerator.ts`£¨severity ÑÕÉ«Ó³Éä£©¡£
+- **Âã Tailwind É«Àà**£ºµ±Ç° 2 ´¦£¬»ùÏß 0 ´¦£¬ĞÂÔö **2 ´¦**£»Î»ÓÚ `src/components/trading/OrderExecutionPanel.tsx:180`£¨`text-red-500`¡¢`text-green-500`£©¡£
+- **½áÂÛ**£ºÁîÅÆ»Ø¹éÕ¢´¥·¢£¬CI Ó¦À¹½Ø¡£
 
-### 4.3 `npm run test -- --run` å•å…ƒæµ‹è¯•ç»“æœ
+### 4.3 `npm run test -- --run` µ¥Ôª²âÊÔ½á¹û
 
-- **å¤±è´¥å¥—ä»¶**ï¼š`src/data/dataLayer.test.ts`ï¼ˆ135 ç”¨ä¾‹ | 1 å¤±è´¥ï¼‰
-- **å¤±è´¥ç”¨ä¾‹**ï¼š`dataLayer > dataLayer aggregator > å…±è®¡ 25 ä¸ªå±æ€§`
-- **é”™è¯¯ä¿¡æ¯**ï¼š`expected ['stocks', 'v6Scores', â€¦(25) ] to have a length of 26 but got 27`
-- **æ ¹å› **ï¼š`dataLayer` èšåˆå™¨å¯¼å‡ºçš„å±æ€§æ•°é‡ä» 26 å¢åŠ åˆ° 27ï¼Œä½†æµ‹è¯•æ–­è¨€ä»ä¸º 26ï¼›åŒæ—¶æµ‹è¯•æ³¨é‡Šå†™â€œå…±è®¡ 25 ä¸ªå±æ€§â€ï¼Œæœ¬èº«å­˜åœ¨æ–‡æ¡£/æ–­è¨€ä¸ä¸€è‡´ã€‚
-- **é™„åŠ é—®é¢˜**ï¼šæµ‹è¯• worker å¼‚å¸¸é€€å‡ºï¼ˆ`Worker exited unexpectedly`ï¼‰ï¼Œéœ€è¿›ä¸€æ­¥æ’æŸ¥æ˜¯å¦ç”±æœª caught çš„ Promise æ‹’ç»æˆ–å…¨å±€äº‹ä»¶ç›‘å¬å¯¼è‡´ã€‚
+- **Ê§°ÜÌ×¼ş**£º`src/data/dataLayer.test.ts`£¨135 ÓÃÀı | 1 Ê§°Ü£©
+- **Ê§°ÜÓÃÀı**£º`dataLayer > dataLayer aggregator > ¹²¼Æ 25 ¸öÊôĞÔ`
+- **´íÎóĞÅÏ¢**£º`expected ['stocks', 'v6Scores', ¡­(25) ] to have a length of 26 but got 27`
+- **¸ùÒò**£º`dataLayer` ¾ÛºÏÆ÷µ¼³öµÄÊôĞÔÊıÁ¿´Ó 26 Ôö¼Óµ½ 27£¬µ«²âÊÔ¶ÏÑÔÈÔÎª 26£»Í¬Ê±²âÊÔ×¢ÊÍĞ´¡°¹²¼Æ 25 ¸öÊôĞÔ¡±£¬±¾Éí´æÔÚÎÄµµ/¶ÏÑÔ²»Ò»ÖÂ¡£
+- **¸½¼ÓÎÊÌâ**£º²âÊÔ worker Òì³£ÍË³ö£¨`Worker exited unexpectedly`£©£¬Ğè½øÒ»²½ÅÅ²éÊÇ·ñÓÉÎ´ caught µÄ Promise ¾Ü¾ø»òÈ«¾ÖÊÂ¼ş¼àÌıµ¼ÖÂ¡£
 
 ---
 
-## äº”ã€ä¿®å¤å»ºè®®æ±‡æ€»ï¼ˆæŒ‰ä¼˜å…ˆçº§ï¼‰
+## Îå¡¢ĞŞ¸´½¨Òé»ã×Ü£¨°´ÓÅÏÈ¼¶£©
 
-| ä¼˜å…ˆçº§ | é—®é¢˜ | å»ºè®®ä¿®å¤äºº | ä¼°è®¡å½±å“èŒƒå›´ |
+| ÓÅÏÈ¼¶ | ÎÊÌâ | ½¨ÒéĞŞ¸´ÈË | ¹À¼ÆÓ°Ïì·¶Î§ |
 |--------|------|------------|--------------|
-| P0 | TypeScript 7 å¤„é”™è¯¯é˜»å¡ç¼–è¯‘ | Trading æ¨¡å—ä½œè€… | `TradingFlowPage.tsx`ã€`mockDataGenerator.ts`ã€ç›¸å…³ Signal ç±»å‹ |
-| P0 | ä»¤ç‰Œè¿è§„å¯¼è‡´ CI æ‹¦æˆª | UI/Token æ¨¡å—ä½œè€… | `OrderExecutionPanel.tsx`ã€`reportGenerator.ts` |
-| P1 | `dataLayer.test.ts` å±æ€§è®¡æ•°æ–­è¨€è¿‡æœŸ | Data å±‚ä½œè€… | æµ‹è¯•æ–‡ä»¶ `src/data/dataLayer.test.ts:1530` |
-| P1 | æ¨¡æ‹Ÿæ•°æ®ç±»å‹æœªä¸‹æ²‰åˆ° `types/` | Trading æ¨¡å—ä½œè€… | æ–°å»º/è¿ç§» `trading.types.ts` |
-| P1 | é¡µé¢ç›´æ¥æ¶ˆè´¹ `mockDataGenerator` | Trading æ¨¡å—ä½œè€… | å°† mock æ•°æ®å…¥å£è¿ç§»åˆ° `tradingStore` |
-| P2 | æµ‹è¯• worker å¼‚å¸¸é€€å‡º | æµ‹è¯•åŸºç¡€è®¾æ–½ä½œè€… | æ’æŸ¥ `dataLayer.test.ts` çš„å…¨å±€å‰¯ä½œç”¨ / æœªæ•è·å¼‚å¸¸ |
+| P0 | TypeScript 7 ´¦´íÎó×èÈû±àÒë | Trading Ä£¿é×÷Õß | `TradingFlowPage.tsx`¡¢`mockDataGenerator.ts`¡¢Ïà¹Ø Signal ÀàĞÍ |
+| P0 | ÁîÅÆÎ¥¹æµ¼ÖÂ CI À¹½Ø | UI/Token Ä£¿é×÷Õß | `OrderExecutionPanel.tsx`¡¢`reportGenerator.ts` |
+| P1 | `dataLayer.test.ts` ÊôĞÔ¼ÆÊı¶ÏÑÔ¹ıÆÚ | Data ²ã×÷Õß | ²âÊÔÎÄ¼ş `src/data/dataLayer.test.ts:1530` |
+| P1 | Ä£ÄâÊı¾İÀàĞÍÎ´ÏÂ³Áµ½ `types/` | Trading Ä£¿é×÷Õß | ĞÂ½¨/Ç¨ÒÆ `trading.types.ts` |
+| P1 | Ò³ÃæÖ±½ÓÏû·Ñ `mockDataGenerator` | Trading Ä£¿é×÷Õß | ½« mock Êı¾İÈë¿ÚÇ¨ÒÆµ½ `tradingStore` |
+| P2 | ²âÊÔ worker Òì³£ÍË³ö | ²âÊÔ»ù´¡ÉèÊ©×÷Õß | ÅÅ²é `dataLayer.test.ts` µÄÈ«¾Ö¸±×÷ÓÃ / Î´²¶»ñÒì³£ |
 
 ---
 
-## å…­ã€åˆè§„åˆ¤å®š
+## Áù¡¢ºÏ¹æÅĞ¶¨
 
-- **åˆ†å±‚ä¾èµ–**ï¼šâœ… é€šè¿‡ï¼ˆ`audit:layers` 0 è¿è§„ï¼‰
-- **æ–‡æ¡£åŒæ­¥**ï¼šâœ… é€šè¿‡ï¼ˆ`audit:docs` 0 è¿è§„ï¼‰
-- **å››æ­¥é›†æˆå¥‘çº¦**ï¼šâš ï¸ éƒ¨åˆ†è¿è§„ï¼ˆç±»å‹æœªä¸‹æ²‰ã€UI ç›´æ¥å¼•ç”¨æœåŠ¡ã€ç±»å‹ä¸æ¶ˆè´¹ä¸ä¸€è‡´ï¼‰
-- **ç±»å‹å®‰å…¨**ï¼šâŒ æœªé€šè¿‡ï¼ˆ`npx tsc --noEmit` 7 é”™è¯¯ï¼‰
-- **ä»¤ç‰Œåˆè§„**ï¼šâŒ æœªé€šè¿‡ï¼ˆæ–°å¢ 18 å¤„è¿è§„ï¼‰
-- **å•å…ƒæµ‹è¯•**ï¼šâŒ æœªé€šè¿‡ï¼ˆ1 å¤„æ–­è¨€å¤±è´¥ + worker å¼‚å¸¸ï¼‰
-
----
-
-## ä¸ƒã€åç»­è¡ŒåŠ¨
-
-1. ç”±ç›¸å…³æ¨¡å—ä½œè€…ä¼˜å…ˆä¿®å¤ P0 ç±»å‹é”™è¯¯å’Œä»¤ç‰Œè¿è§„ã€‚
-2. ä¿®å¤åé‡æ–°æ‰§è¡Œ T-11 å…¨éƒ¨å‘½ä»¤ï¼Œç¡®è®¤ä»¥ä¸‹ç›®æ ‡ï¼š
-   - `npx tsc --noEmit` é€€å‡ºç  0
-   - `npm run audit:tokens` é€€å‡ºç  0ï¼ˆæˆ–ä»…ä¿ç•™å·²è±å…é¡¹ï¼‰
-   - `npm run test -- --run` å…¨éƒ¨é€šè¿‡
-3. ç¬¬äºŒè½®å®¡è®¡åœ¨å…¶å®ƒ AGENT ä»»åŠ¡å®Œæˆåè¿›è¡Œï¼Œé‡ç‚¹å¤æŸ¥æœ¬æ¬¡æŠ¥å‘Šä¸­çš„ P1/P2 é¡¹æ˜¯å¦å·²é—­ç¯ã€‚
+- **·Ö²ãÒÀÀµ**£º? Í¨¹ı£¨`audit:layers` 0 Î¥¹æ£©
+- **ÎÄµµÍ¬²½**£º? Í¨¹ı£¨`audit:docs` 0 Î¥¹æ£©
+- **ËÄ²½¼¯³ÉÆõÔ¼**£º?? ²¿·ÖÎ¥¹æ£¨ÀàĞÍÎ´ÏÂ³Á¡¢UI Ö±½ÓÒıÓÃ·şÎñ¡¢ÀàĞÍÓëÏû·Ñ²»Ò»ÖÂ£©
+- **ÀàĞÍ°²È«**£º? Î´Í¨¹ı£¨`npx tsc --noEmit` 7 ´íÎó£©
+- **ÁîÅÆºÏ¹æ**£º? Î´Í¨¹ı£¨ĞÂÔö 18 ´¦Î¥¹æ£©
+- **µ¥Ôª²âÊÔ**£º? Î´Í¨¹ı£¨1 ´¦¶ÏÑÔÊ§°Ü + worker Òì³££©
 
 ---
 
-*æŠ¥å‘Šç”± A8 Â· æ¶æ„åˆè§„ AGENT è‡ªåŠ¨ç”Ÿæˆï¼Œä¿å­˜äº `./architecture-compliance-report.md`ã€‚*
+## Æß¡¢ºóĞøĞĞ¶¯
+
+1. ÓÉÏà¹ØÄ£¿é×÷ÕßÓÅÏÈĞŞ¸´ P0 ÀàĞÍ´íÎóºÍÁîÅÆÎ¥¹æ¡£
+2. ĞŞ¸´ºóÖØĞÂÖ´ĞĞ T-11 È«²¿ÃüÁî£¬È·ÈÏÒÔÏÂÄ¿±ê£º
+   - `npx tsc --noEmit` ÍË³öÂë 0
+   - `npm run audit:tokens` ÍË³öÂë 0£¨»ò½ö±£ÁôÒÑ»íÃâÏî£©
+   - `npm run test -- --run` È«²¿Í¨¹ı
+3. µÚ¶şÂÖÉó¼ÆÔÚÆäËü AGENT ÈÎÎñÍê³Éºó½øĞĞ£¬ÖØµã¸´²é±¾´Î±¨¸æÖĞµÄ P1/P2 ÏîÊÇ·ñÒÑ±Õ»·¡£
+
+---
+
+*±¨¸æÓÉ A8 ¡¤ ¼Ü¹¹ºÏ¹æ AGENT ×Ô¶¯Éú³É£¬±£´æÓÚ `./architecture-compliance-report.md`¡£*

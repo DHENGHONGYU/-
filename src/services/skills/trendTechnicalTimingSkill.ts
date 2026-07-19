@@ -12,6 +12,9 @@ import type { SkillContext, SkillDefinition, SkillResult } from './skillTypes'
 
 const logger = getLogger()
 
+/**
+ * TrendTechnicalTimingInputSchema
+ */
 export const TrendTechnicalTimingInputSchema = z.object({
   symbol: z.string(),
   stockName: z.string().optional(),
@@ -32,6 +35,9 @@ export type TrendTechnicalTimingInput = z.infer<typeof TrendTechnicalTimingInput
 
 const TimingSignal = z.enum(['strong_buy', 'buy', 'hold', 'sell', 'strong_sell'])
 
+/**
+ * TrendTechnicalTimingOutputSchema
+ */
 export const TrendTechnicalTimingOutputSchema = z.object({
   trendStrength: z.number().min(0).max(100),
   trendDirection: z.enum(['up', 'down', 'sideways']),
@@ -216,6 +222,9 @@ function determineSignal(
   return { signal, confidence, rationale }
 }
 
+/**
+ * executeTrendTechnicalTimingSkill
+ */
 export async function executeTrendTechnicalTimingSkill(
   ctx: SkillContext,
 ): Promise<SkillResult<TrendTechnicalTimingOutput>> {
@@ -323,6 +332,9 @@ export async function executeTrendTechnicalTimingSkill(
   }
 }
 
+/**
+ * trendTechnicalTimingSkill
+ */
 export const trendTechnicalTimingSkill: SkillDefinition<TrendTechnicalTimingOutput> = {
   name: 'trend-technical-timing',
   title: '趋势股技术分析择时',

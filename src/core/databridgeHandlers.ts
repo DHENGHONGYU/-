@@ -84,7 +84,7 @@ class PutHandler implements EnvelopeHandler {
  * - CASCADE 策略先删除关联数据，再删除主实体
  *
  * @see src/core/cascadeExecutor.ts
- * @see src/config/cascadeConfig.ts
+ * @see src/core/cascadeExecutor.ts
  */
 class DeleteHandler implements EnvelopeHandler {
   private readonly actions: string[]
@@ -524,7 +524,21 @@ export function createHandlerRegistry(): HandlerRegistry {
   )
 
   // 3. DELETE 操作处理器
-  registry.register(new DeleteHandler([ENVELOPE_ACTION.deleteExecutionPlan, ENVELOPE_ACTION.deleteCustomAgent]))
+  registry.register(
+    new DeleteHandler([
+      ENVELOPE_ACTION.deleteExecutionPlan,
+      ENVELOPE_ACTION.deleteCustomAgent,
+      // v32: 补全未注册的 DELETE action（原 fallback 裸 put，无级联校验）
+      ENVELOPE_ACTION.deleteOrder,
+      ENVELOPE_ACTION.deleteCollectConfig,
+      ENVELOPE_ACTION.deleteRbacAuditLog,
+      ENVELOPE_ACTION.deleteWorkflowDef,
+      ENVELOPE_ACTION.deleteWorkflowSchedule,
+      ENVELOPE_ACTION.deleteWorkflowTrigger,
+      ENVELOPE_ACTION.deleteCollectionHistory,
+      ENVELOPE_ACTION.deleteScheduleConfig,
+    ])
+  )
 
   // 3.5 自定义智能体保存处理器（补齐时间戳）
   registry.register(new CustomAgentSaveHandler())
@@ -562,6 +576,27 @@ export function createHandlerRegistry(): HandlerRegistry {
       ENVELOPE_ACTION.newsArticleBookmarked,
       ENVELOPE_ACTION.saveWatchlist,
       ENVELOPE_ACTION.saveCollectConfig,
+      ENVELOPE_ACTION.saveTraceRecord,
+      // v32: 补全未注册的 PUT action（原 fallback 裸 put，无 handler 校验）
+      // RBAC 6 表写入
+      ENVELOPE_ACTION.saveRbacUser,
+      ENVELOPE_ACTION.saveRbacRole,
+      ENVELOPE_ACTION.saveRbacPermission,
+      ENVELOPE_ACTION.saveRbacUserRole,
+      ENVELOPE_ACTION.saveRbacRolePermission,
+      ENVELOPE_ACTION.saveRbacAuditLog,
+      // Workflow 存储写入
+      ENVELOPE_ACTION.saveWorkflowDef,
+      ENVELOPE_ACTION.saveWorkflowSchedule,
+      ENVELOPE_ACTION.saveWorkflowTrigger,
+      ENVELOPE_ACTION.saveWorkflowRun,
+      // 数据网关补全映射
+      ENVELOPE_ACTION.saveCollectionHistory,
+      ENVELOPE_ACTION.saveConflictLog,
+      ENVELOPE_ACTION.saveFileImportRecord,
+      ENVELOPE_ACTION.saveScheduleConfig,
+      ENVELOPE_ACTION.saveProofreadReport,
+      ENVELOPE_ACTION.saveAnalysisResult,
     ])
   )
 

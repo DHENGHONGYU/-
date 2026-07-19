@@ -35,6 +35,11 @@ interface TaskListTabProps {
   onViewTask: (taskId: string) => void
 }
 
+/**
+ * TaskListTab
+ * @param isLoading
+ * @param onViewTask }
+ */
 export function TaskListTab({ tasks, isLoading, onViewTask }: TaskListTabProps): React.JSX.Element {
   const dimensions = useSevenDimConfigStore((s) => s.dimensions)
 

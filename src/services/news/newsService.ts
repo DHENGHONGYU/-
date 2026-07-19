@@ -1,4 +1,4 @@
-import { generateId } from '@/data/db'
+import { generateId } from '@/lib/utils'
 import type { DataLayerResult, NewsArticle, NewsStockMap, Stock } from '@/data/types'
 import { getLogger } from '@/lib/logger'
 import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID, STORE_NAME } from '@/config/dbConfig'

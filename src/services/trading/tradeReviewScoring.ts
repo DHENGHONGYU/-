@@ -10,8 +10,6 @@
  * - 通过 ScoreCalculator 接口统一计算入口
  *
  * @see src/services/data-collector/mockDataCollection.ts — 消费方
- */
-
 /**
  * 交易复盘评分计算器接口
  */

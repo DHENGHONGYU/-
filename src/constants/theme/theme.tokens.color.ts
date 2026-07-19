@@ -19,8 +19,8 @@ export const COLOR_TOKENS = {
   // ============================================================
   /** 信息提示色（蓝） */
   info: { hex: '#3b82f6', tailwind: 'text-blue-500', bgClass: 'bg-blue-500', rgb: '59, 130, 246' },
-  /** 成功色（绿）—— bgClass 使用 green-700 以确保与白色文字对比度 ≥ 4.5:1（WCAG AA） */
-  success: { hex: '#15803d', tailwind: 'text-green-700', bgClass: 'bg-green-700', rgb: '21, 128, 61' },
+  /** 成功色（绿）—— 与语义令牌 text-success / #21C45D 对齐；bgClass 保留 green-700 确保白字徽章对比度 ≥ 4.5:1（WCAG AA） */
+  success: { hex: '#21c45d', tailwind: 'text-success', bgClass: 'bg-green-700', rgb: '33, 196, 93' },
   /** 警告色（琥珀） */
   warning: { hex: '#f59e0b', tailwind: 'text-amber-500', bgClass: 'bg-amber-500', rgb: '245, 158, 11' },
   /** 危险色（红） */

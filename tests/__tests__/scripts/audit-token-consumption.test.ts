@@ -102,7 +102,7 @@ query-top-imported
 ## 知识图谱优先
 理解代码关系时，必须先查询 docs/reports/code-graph.json
 `,
-        'docs/reports/token-optimization-best-practices.md': `
+        'docs/reports/lessons-learned/token-optimization-best-practices.md': `
 # Token 优化最佳实践
 ## 代码关系理解优化
 ## 重复搜索消除
@@ -135,7 +135,7 @@ export function extract() {
 `,
         'scripts/quick-query.sh': `query-store-deps\nquery-cross-layer-violations\nquery-largest-files\nquery-top-imported`,
         'AGENTS.md': `Token 预算\n知识图谱优先`,
-        'docs/reports/token-optimization-best-practices.md': `代码关系理解优化\n重复搜索消除\n架构合规性检查优化\n硬编码元素管理\n事件监听清理`,
+        'docs/reports/lessons-learned/token-optimization-best-practices.md': `代码关系理解优化\n重复搜索消除\n架构合规性检查优化\n硬编码元素管理\n事件监听清理`,
       })
 
       const { scan } = await importScan()
@@ -152,7 +152,7 @@ export function extract() {
       setupFS({
         'scripts/quick-query.sh': `query-store-deps\nquery-cross-layer-violations\nquery-largest-files\nquery-top-imported`,
         'AGENTS.md': `Token 预算\n知识图谱优先`,
-        'docs/reports/token-optimization-best-practices.md': `代码关系理解优化\n重复搜索消除\n架构合规性检查优化\n硬编码元素管理\n事件监听清理`,
+        'docs/reports/lessons-learned/token-optimization-best-practices.md': `代码关系理解优化\n重复搜索消除\n架构合规性检查优化\n硬编码元素管理\n事件监听清理`,
       })
 
       const { scan } = await importScan()
@@ -170,7 +170,7 @@ export function extract() {
       setupFS({
         'scripts/extract-code-graph.ts': `mtime\ncache`,
         'AGENTS.md': `Token 预算\n知识图谱优先`,
-        'docs/reports/token-optimization-best-practices.md': `代码关系理解优化\n重复搜索消除\n架构合规性检查优化\n硬编码元素管理\n事件监听清理`,
+        'docs/reports/lessons-learned/token-optimization-best-practices.md': `代码关系理解优化\n重复搜索消除\n架构合规性检查优化\n硬编码元素管理\n事件监听清理`,
       })
 
       const { scan } = await importScan()
@@ -192,7 +192,7 @@ query-cross-layer-violations
 # 缺少后两项查询模板
 `,
         'AGENTS.md': `Token 预算\n知识图谱优先`,
-        'docs/reports/token-optimization-best-practices.md': `代码关系理解优化\n重复搜索消除\n架构合规性检查优化\n硬编码元素管理\n事件监听清理`,
+        'docs/reports/lessons-learned/token-optimization-best-practices.md': `代码关系理解优化\n重复搜索消除\n架构合规性检查优化\n硬编码元素管理\n事件监听清理`,
       })
 
       const { scan } = await importScan()
@@ -209,7 +209,7 @@ query-cross-layer-violations
         'scripts/extract-code-graph.ts': `mtime\ncache`,
         'scripts/quick-query.sh': `query-store-deps\nquery-cross-layer-violations\nquery-largest-files\nquery-top-imported`,
         'AGENTS.md': `知识图谱优先`,  // 缺少 Token 预算
-        'docs/reports/token-optimization-best-practices.md': `代码关系理解优化\n重复搜索消除\n架构合规性检查优化\n硬编码元素管理\n事件监听清理`,
+        'docs/reports/lessons-learned/token-optimization-best-practices.md': `代码关系理解优化\n重复搜索消除\n架构合规性检查优化\n硬编码元素管理\n事件监听清理`,
       })
 
       const { scan } = await importScan()
@@ -227,7 +227,7 @@ query-cross-layer-violations
         'scripts/extract-code-graph.ts': `mtime\ncache`,
         'scripts/quick-query.sh': `query-store-deps\nquery-cross-layer-violations\nquery-largest-files\nquery-top-imported`,
         'AGENTS.md': `Token 预算`,  // 缺少知识图谱优先
-        'docs/reports/token-optimization-best-practices.md': `代码关系理解优化\n重复搜索消除\n架构合规性检查优化\n硬编码元素管理\n事件监听清理`,
+        'docs/reports/lessons-learned/token-optimization-best-practices.md': `代码关系理解优化\n重复搜索消除\n架构合规性检查优化\n硬编码元素管理\n事件监听清理`,
       })
 
       const { scan } = await importScan()
@@ -245,7 +245,7 @@ query-cross-layer-violations
         'scripts/extract-code-graph.ts': `mtime\ncache`,
         'scripts/quick-query.sh': `query-store-deps\nquery-cross-layer-violations\nquery-largest-files\nquery-top-imported`,
         'AGENTS.md': `Token 预算\n知识图谱优先`,
-        'docs/reports/token-optimization-best-practices.md': `
+        'docs/reports/lessons-learned/token-optimization-best-practices.md': `
 # 缺少多个必要章节
 ## 代码关系理解优化
 ## 重复搜索消除
@@ -290,7 +290,7 @@ query-top-imported
 ## 知识图谱优先
 理解代码关系时，必须先查询 docs/reports/code-graph.json
 `,
-        'docs/reports/token-optimization-best-practices.md': `
+        'docs/reports/lessons-learned/token-optimization-best-practices.md': `
 # Token 优化最佳实践
 ## 代码关系理解优化
 ## 重复搜索消除
@@ -318,7 +318,7 @@ query-top-imported
         'scripts/extract-code-graph.ts': `mtime\ncache`,
         'scripts/quick-query.sh': `query-store-deps\nquery-cross-layer-violations\nquery-largest-files\nquery-top-imported`,
         'AGENTS.md': `Token 预算\n知识图谱优先`,
-        'docs/reports/token-optimization-best-practices.md': `代码关系理解优化\n重复搜索消除\n架构合规性检查优化\n硬编码元素管理\n事件监听清理`,
+        'docs/reports/lessons-learned/token-optimization-best-practices.md': `代码关系理解优化\n重复搜索消除\n架构合规性检查优化\n硬编码元素管理\n事件监听清理`,
       })
 
       const { scan } = await importScan()
@@ -342,7 +342,7 @@ query-top-imported
         'scripts/extract-code-graph.ts': `mtime\ncache`,
         'scripts/quick-query.sh': `query-store-deps\nquery-cross-layer-violations\nquery-largest-files\nquery-top-imported`,
         'AGENTS.md': `Token 预算\n知识图谱优先`,
-        'docs/reports/token-optimization-best-practices.md': `代码关系理解优化\n重复搜索消除\n架构合规性检查优化\n硬编码元素管理\n事件监听清理`,
+        'docs/reports/lessons-learned/token-optimization-best-practices.md': `代码关系理解优化\n重复搜索消除\n架构合规性检查优化\n硬编码元素管理\n事件监听清理`,
       })
 
       const { scan } = await importScan()

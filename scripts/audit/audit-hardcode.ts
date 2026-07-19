@@ -45,7 +45,7 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { runAuditPipeline, colorize, writeStderr, type AuditReport } from './_debug/_audit-pipeline.ts'
+import { runAuditPipeline, colorize, writeStderr, type AuditReport } from './_debug/_audit-pipeline'
 
 /** 硬编码/静默回退违规项 */
 export interface Finding {
@@ -71,7 +71,7 @@ export interface Report extends AuditReport {
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-const ROOT = path.resolve(__dirname, '..')
+const ROOT = path.resolve(__dirname, '..', '..')
 const SRC = path.join(ROOT, 'src')
 
 // v2.0 新增：硬编码 API 端点检测
@@ -202,9 +202,26 @@ function isMockOrGeneratedFile(rel: string): boolean {
 // v2.5：颜色硬编码豁免文件（对应 AGENTS.md §3.5.7 豁免清单）
 const COLOR_EXEMPT_FILES = new Set([
   'src/constants/theme.tokens.ts',
+  'src/constants/theme/theme.tokens.base.ts',
+  'src/constants/theme/theme.tokens.color.ts',
+  'src/constants/theme/theme.tokens.shades.ts',
+  'src/constants/theme/theme.tokens.helpers.ts',
+  'src/constants/theme/theme.tokens.stock.ts',
+  'src/constants/theme/theme.tokens.design.ts',
   'src/config/chartColors.ts',
   'src/config/themeRegistry.ts',
   'src/theme.config.ts',
+  // v3.1 豁免：装饰排名徽章色（amber-400/amber-600，金牌/铜牌无对应 semantic token）
+  'src/components/molecules/RankedCard.tsx',
+  // v3.1 豁免：数据质量指示器色（emerald-600/emerald-400，样本充足无对应 semantic token）
+  'src/components/molecules/DataQualityIndicator.tsx',
+])
+
+// v3.1：语义令牌颜色白名单
+// 这些类名虽匹配 bg-{name}-{number} 模式，但在 tailwind.config.js 中
+// 定义为 CSS 变量语义令牌（如 'surface-2': 'hsl(var(--surface-2))'），非硬编码颜色
+const SEMANTIC_TOKEN_COLORS = new Set([
+  'surface-2', // bg-surface-2 → hsl(var(--surface-2))，Button default variant
 ])
 
 // v2.5：检查文件是否在颜色硬编码豁免清单中
@@ -331,10 +348,12 @@ function scanFile(file: string): Finding[] {
     }
 
     // v2.0 新增：5. Critical：硬编码 API 端点/URL
+    // v3.1：排除 mock 数据常量（含 _MOCK_ 或 _URL_TEMPLATE 的常量定义行）
     if (
       !isTestFile(rel) &&
       !rel.includes('audit-exempt') &&
-      !rel.startsWith('src/config/')
+      !rel.startsWith('src/config/') &&
+      !trimmed.match(/^\s*const\s+\w*(MOCK|URL_TEMPLATE)\w*\s*=/)
     ) {
       const urlMatch = raw.match(HARDCODED_URL_PATTERN)
       if (urlMatch && !trimmed.startsWith('//') && !trimmed.startsWith('*')) {
@@ -422,7 +441,8 @@ function scanFile(file: string): Finding[] {
             (prefix === 'ring' && colorPart.startsWith('offset-')) ||
             (prefix === 'border' && /^[tblr]-\d+$/.test(colorPart)) ||
             (prefix === 'from' && /^(bottom|top|left|right)-\d+$/.test(colorPart)) ||
-            (prefix === 'to' && /^(bottom|top|left|right)-\d+$/.test(colorPart))
+            (prefix === 'to' && /^(bottom|top|left|right)-\d+$/.test(colorPart)) ||
+            SEMANTIC_TOKEN_COLORS.has(colorPart)
           if (!isFalsePositive) {
             findings.push({
               file: rel,

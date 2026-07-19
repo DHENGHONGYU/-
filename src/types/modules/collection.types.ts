@@ -8,10 +8,10 @@
 // ============================================================
 
 /** 直连行情数据源标识（用于 dataSourceOrchestrator 的降级链） */
-export type QuoteDataSourceId = 'tencent' | 'sina' | 'netease' | 'akshare' | 'mock'
+export type QuoteDataSourceId = 'tencent' | 'sina' | 'netease' | 'akshare' | 'tushare' | 'mock'
 
 /** 业务数据源类型（用于七维配置中的维度数据源） */
-export type DataSourceType = 'akshare' | 'ifind' | 'yahoo' | 'tianyancha' | 'scholar' | 'cache'
+export type DataSourceType = 'akshare' | 'ifind' | 'tushare' | 'yahoo' | 'tianyancha' | 'scholar' | 'cache'
 
 /** 采集频率 */
 export type UpdateFrequency =
@@ -250,6 +250,8 @@ export interface CollectionLifecycleEvent {
 export interface CollectionTraceSpan {
   traceId: string
   taskId?: string
+  /** 批次级父任务 ID（一个采集批次共享） */
+  parentTaskId?: string
   dimensionCode: string
   symbol: string
   /** 各阶段记录 */

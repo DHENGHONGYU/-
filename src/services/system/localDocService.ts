@@ -1,5 +1,5 @@
 import { STORE_NAME } from '@/config/dbConfig'
-import { generateId } from '@/data/db'
+import { generateId } from '@/lib/utils'
 import type { DataLayerResult, LocalDoc } from '@/data/types'
 import { queryList, queryByIndex } from '@/data/dataLayerHelpers'
 import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID } from '@/config/dbConfig'
@@ -318,9 +318,7 @@ export async function createLocalDoc(
         fullDoc.embedding = embeddingResult.vector
       }
     }
-  } catch {
-    // 嵌入生成失败不阻断文档创建
-  }
+  } catch { console.warn('[localDocService.ts] 嵌入生成失败不阻断文档创建, using fallback') }
 
   const result = await saveLocalDocViaBridge(fullDoc)
   if (!result.success) {

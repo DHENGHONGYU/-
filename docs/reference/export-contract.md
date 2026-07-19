@@ -1,60 +1,63 @@
 ---
-title: export-contract
+title: export-contract.md ¡ª µ¼³ö·şÎñ½Ó¿ÚÆõÔ¼
+type: reference
+domain: project
+phase: design
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "¶¨Î»£º¶¨Òå `export` ×ÓÓòµÄ½Ó¿ÚÆõÔ¼¡¢Ö°Ôğ±ß½ç¡¢Êı¾İÁ÷ÓëÒÀÀµ¹ØÏµ¡£ ¹ØÁª£º`./services-catalog.md`£¨24 ×ÓÓò×ÜÀÀ£©¡¢`../../AGENTS.md`..."
+tags: [project, contract, reference]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: important
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: export-contract.md
-status: draft
-owner: æ¶æ„ç»„
-updated: 2026-07-12
-code_version: 2.0.0
-tier: important
----
+# export-contract.md ¡ª µ¼³ö·şÎñ½Ó¿ÚÆõÔ¼
 
-# export-contract.md â€” å¯¼å‡ºæœåŠ¡æ¥å£å¥‘çº¦
-
-> **å®šä½**ï¼šå®šä¹‰ `export` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ç³»ã€‚  
-> **å…³è”**ï¼š`./services-catalog.md`ï¼ˆ24 å­åŸŸæ€»è§ˆï¼‰ã€`../../AGENTS.md` Â§ä¸€ï¼ˆåˆ†å±‚è§„åˆ™ï¼‰ã€‚
+> **¶¨Î»**£º¶¨Òå `export` ×ÓÓòµÄ½Ó¿ÚÆõÔ¼¡¢Ö°Ôğ±ß½ç¡¢Êı¾İÁ÷ÓëÒÀÀµ¹ØÏµ¡£  
+> **¹ØÁª**£º`./services-catalog.md`£¨24 ×ÓÓò×ÜÀÀ£©¡¢`../../AGENTS.md` ¡ìÒ»£¨·Ö²ã¹æÔò£©¡£
 
 ---
 
-## 1. èŒè´£è¾¹ç•Œ
+## 1. Ö°Ôğ±ß½ç
 
-### 1.1 æ ¸å¿ƒèŒè´£
+### 1.1 ºËĞÄÖ°Ôğ
 
-- **å›æµ‹æŠ¥å‘Šæ•°æ®æ ¼å¼åŒ–**ï¼šå°† `BacktestResult` ä¸ `BacktestConfig` è½¬æ¢ä¸ºç»“æ„åŒ–çš„ Excel å¤š Sheet æ•°æ®ï¼ˆ`BacktestExcelSheets`ï¼‰å’ŒæŠ¥å‘Šå…ƒæ•°æ®ï¼ˆ`BacktestReportMeta`ï¼‰ã€‚
-- **Excel æ–‡ä»¶å¯¼å‡º**ï¼šåŸºäº `xlsx` åº“åŠ¨æ€æ„å»ºå«ã€Œæ‘˜è¦ / æŒä»“ / äº¤æ˜“ / å‡€å€¼ã€å››ä¸ª Sheet çš„ `.xlsx` æ–‡ä»¶ï¼Œé€šè¿‡æµè§ˆå™¨ä¸‹è½½äº¤ä»˜ã€‚
-- **PDF æ–‡ä»¶å¯¼å‡º**ï¼šåŸºäº `jspdf` + `jspdf-autotable` åŠ¨æ€ç”Ÿæˆå«æ ‡é¢˜ã€æ‘˜è¦ã€æŒä»“è¡¨ã€äº¤æ˜“æ˜ç»†è¡¨å’Œå‡€å€¼åºåˆ—è¡¨çš„ `.pdf` æ–‡ä»¶ã€‚
-- **ç¬¬ä¸‰æ–¹åº“æŒ‰éœ€åŠ è½½**ï¼š`xlsx` / `jspdf` / `jspdf-autotable` å‡é‡‡ç”¨ `import()` åŠ¨æ€å¯¼å…¥ï¼Œä»…åœ¨å¯¼å‡ºè§¦å‘æ—¶åŠ è½½ï¼Œé™ä½ä¸»åŒ…ä½“ç§¯ã€‚
+- **»Ø²â±¨¸æÊı¾İ¸ñÊ½»¯**£º½« `BacktestResult` Óë `BacktestConfig` ×ª»»Îª½á¹¹»¯µÄ Excel ¶à Sheet Êı¾İ£¨`BacktestExcelSheets`£©ºÍ±¨¸æÔªÊı¾İ£¨`BacktestReportMeta`£©¡£
+- **Excel ÎÄ¼şµ¼³ö**£º»ùÓÚ `xlsx` ¿â¶¯Ì¬¹¹½¨º¬¡¸ÕªÒª / ³Ö²Ö / ½»Ò× / ¾»Öµ¡¹ËÄ¸ö Sheet µÄ `.xlsx` ÎÄ¼ş£¬Í¨¹ıä¯ÀÀÆ÷ÏÂÔØ½»¸¶¡£
+- **PDF ÎÄ¼şµ¼³ö**£º»ùÓÚ `jspdf` + `jspdf-autotable` ¶¯Ì¬Éú³Éº¬±êÌâ¡¢ÕªÒª¡¢³Ö²Ö±í¡¢½»Ò×Ã÷Ï¸±íºÍ¾»ÖµĞòÁĞ±íµÄ `.pdf` ÎÄ¼ş¡£
+- **µÚÈı·½¿â°´Ğè¼ÓÔØ**£º`xlsx` / `jspdf` / `jspdf-autotable` ¾ù²ÉÓÃ `import()` ¶¯Ì¬µ¼Èë£¬½öÔÚµ¼³ö´¥·¢Ê±¼ÓÔØ£¬½µµÍÖ÷°üÌå»ı¡£
 
-### 1.2 åˆ†å±‚å®šä½
+### 1.2 ·Ö²ã¶¨Î»
 
-| ç»´åº¦ | è¯´æ˜ |
+| Î¬¶È | ËµÃ÷ |
 |------|------|
-| æ‰€å±å±‚ | `src/services/`ï¼ˆæœåŠ¡å±‚ï¼‰ |
-| ä¾èµ–æ–¹å‘ | åªèƒ½ä¾èµ– `core/`ã€`data/`ã€`lib/`ï¼ˆç™½åå•ï¼‰ |
-| ç¦æ­¢äº‹é¡¹ | ç¦æ­¢ç›´å†™ IndexedDBï¼ˆé¡»ç» `DataBridge.forward()`ï¼‰ï¼›æœ¬æœåŠ¡ä¸ºçº¯æ–‡ä»¶ç”Ÿæˆï¼Œä¸å†™å…¥æ•°æ®åº“ |
-| è¢«ä¾èµ–æ–¹ | `store/`ï¼ˆçŠ¶æ€å±‚ï¼‰ã€`pages/`ï¼ˆé¡µé¢å±‚ï¼‰å¯æ¶ˆè´¹æœ¬æœåŠ¡è¾“å‡º |
+| ËùÊô²ã | `src/services/`£¨·şÎñ²ã£© |
+| ÒÀÀµ·½Ïò | Ö»ÄÜÒÀÀµ `core/`¡¢`data/`¡¢`lib/`£¨°×Ãûµ¥£© |
+| ½ûÖ¹ÊÂÏî | ½ûÖ¹Ö±Ğ´ IndexedDB£¨Ğë¾­ `DataBridge.forward()`£©£»±¾·şÎñÎª´¿ÎÄ¼şÉú³É£¬²»Ğ´ÈëÊı¾İ¿â |
+| ±»ÒÀÀµ·½ | `store/`£¨×´Ì¬²ã£©¡¢`pages/`£¨Ò³Ãæ²ã£©¿ÉÏû·Ñ±¾·şÎñÊä³ö |
 
-### 1.3 ä¸ç›¸é‚»å­åŸŸçš„å…³ç³»
+### 1.3 ÓëÏàÁÚ×ÓÓòµÄ¹ØÏµ
 
-| ç›¸é‚»å­åŸŸ | å…³ç³» | æ•°æ®æµ |
+| ÏàÁÚ×ÓÓò | ¹ØÏµ | Êı¾İÁ÷ |
 |----------|------|--------|
-| `backtest` | ä¸Šæ¸¸ï¼šæä¾›è¾“å…¥ | `BacktestResult` + `BacktestConfig` â†’ `export/backtestExportService` |
-| `backtestStore` | ä¸Šæ¸¸ï¼šæä¾›åŸå§‹æ•°æ® | é¡µé¢å±‚é€šè¿‡ `backtestStore` è·å–å›æµ‹ç»“æœåä¼ å…¥æœ¬æœåŠ¡ |
-| `pages/output` | ä¸‹æ¸¸ï¼šæ¶ˆè´¹è¾“å‡º | æœ¬æœåŠ¡è¿”å› `Blob` + `filename`ï¼Œç”±é¡µé¢å±‚è§¦å‘æµè§ˆå™¨ä¸‹è½½ |
+| `backtest` | ÉÏÓÎ£ºÌá¹©ÊäÈë | `BacktestResult` + `BacktestConfig` ¡ú `export/backtestExportService` |
+| `backtestStore` | ÉÏÓÎ£ºÌá¹©Ô­Ê¼Êı¾İ | Ò³Ãæ²ãÍ¨¹ı `backtestStore` »ñÈ¡»Ø²â½á¹ûºó´«Èë±¾·şÎñ |
+| `pages/output` | ÏÂÓÎ£ºÏû·ÑÊä³ö | ±¾·şÎñ·µ»Ø `Blob` + `filename`£¬ÓÉÒ³Ãæ²ã´¥·¢ä¯ÀÀÆ÷ÏÂÔØ |
 
 ---
 
-## 2. å…¬å…±æ¥å£
+## 2. ¹«¹²½Ó¿Ú
 
-### 2.1 ç±»å‹å®šä¹‰ï¼ˆTypeScript Interfaceï¼‰
+### 2.1 ÀàĞÍ¶¨Òå£¨TypeScript Interface£©
 
 ```typescript
-// æ–‡ä»¶ï¼šsrc/types/modules/backtest.types.ts
+// ÎÄ¼ş£ºsrc/types/modules/backtest.types.ts
 
 export type BacktestStrategy = 'hot_sector' | 'value_pit' | 'composite'
 
@@ -138,89 +141,89 @@ export interface BacktestConfig {
 }
 ```
 
-### 2.2 ä¸»å…¥å£å‡½æ•°
+### 2.2 Ö÷Èë¿Úº¯Êı
 
-| å‡½æ•° | ç­¾å | èŒè´£ | é”™è¯¯å¤„ç† |
+| º¯Êı | Ç©Ãû | Ö°Ôğ | ´íÎó´¦Àí |
 |------|------|------|----------|
-| `buildReportMeta()` | `(config: BacktestConfig) => BacktestReportMeta` | æ ¹æ®å›æµ‹é…ç½®æ„å»ºæŠ¥å‘Šå…ƒæ•°æ®ï¼ˆç­–ç•¥æ ‡ç­¾ã€æ—¶é—´åŒºé—´ã€èµ„é‡‘ã€ç”Ÿæˆæ—¶é—´ï¼‰ | çº¯è®¡ç®—ï¼Œæ— å‰¯ä½œç”¨ |
-| `buildExcelSheets()` | `(result: BacktestResult, meta: BacktestReportMeta) => BacktestExcelSheets` | å°†å›æµ‹ç»“æœè½¬æ¢ä¸ºå››ä¸ª Sheet çš„æ•°æ®ç»“æ„ | çº¯è®¡ç®—ï¼Œå¯¹ç¼ºå¤±å­—æ®µåšç©ºæ•°ç»„å…œåº• |
-| `exportBacktestReport()` | `(result: BacktestResult, config: BacktestConfig, options: BacktestExportConfig) => Promise<BacktestExportResult>` | ç»Ÿä¸€å¯¼å‡ºå…¥å£ï¼Œæ ¹æ® `options.format` è·¯ç”±åˆ° Excel æˆ– PDF å¯¼å‡º | æ•è·å¼‚å¸¸ï¼Œè¿”å› `{ success: false, error: msg }`ï¼›logger è®°å½•é”™è¯¯ |
+| `buildReportMeta()` | `(config: BacktestConfig) => BacktestReportMeta` | ¸ù¾İ»Ø²âÅäÖÃ¹¹½¨±¨¸æÔªÊı¾İ£¨²ßÂÔ±êÇ©¡¢Ê±¼äÇø¼ä¡¢×Ê½ğ¡¢Éú³ÉÊ±¼ä£© | ´¿¼ÆËã£¬ÎŞ¸±×÷ÓÃ |
+| `buildExcelSheets()` | `(result: BacktestResult, meta: BacktestReportMeta) => BacktestExcelSheets` | ½«»Ø²â½á¹û×ª»»ÎªËÄ¸ö Sheet µÄÊı¾İ½á¹¹ | ´¿¼ÆËã£¬¶ÔÈ±Ê§×Ö¶Î×ö¿ÕÊı×é¶µµ× |
+| `exportBacktestReport()` | `(result: BacktestResult, config: BacktestConfig, options: BacktestExportConfig) => Promise<BacktestExportResult>` | Í³Ò»µ¼³öÈë¿Ú£¬¸ù¾İ `options.format` Â·ÓÉµ½ Excel »ò PDF µ¼³ö | ²¶»ñÒì³££¬·µ»Ø `{ success: false, error: msg }`£»logger ¼ÇÂ¼´íÎó |
 
-### 2.3 äº‹ä»¶æ¥å£
+### 2.3 ÊÂ¼ş½Ó¿Ú
 
-> æœ¬æœåŠ¡ä¸ºçº¯æ–‡ä»¶ç”ŸæˆæœåŠ¡ï¼Œä¸å‘å¸ƒ/è®¢é˜… EventBus äº‹ä»¶ã€‚é”™è¯¯é€šè¿‡ `logger.error` è®°å½•ï¼Œå¹¶éšè¿”å›ç»“æœä¼ é€’ã€‚
+> ±¾·şÎñÎª´¿ÎÄ¼şÉú³É·şÎñ£¬²»·¢²¼/¶©ÔÄ EventBus ÊÂ¼ş¡£´íÎóÍ¨¹ı `logger.error` ¼ÇÂ¼£¬²¢Ëæ·µ»Ø½á¹û´«µİ¡£
 
 ---
 
-## 3. æ•°æ®æµ
+## 3. Êı¾İÁ÷
 
 ```
 [backtestStore / backtestService]
-    â†“ æä¾› BacktestResult + BacktestConfig
+    ¡ı Ìá¹© BacktestResult + BacktestConfig
 exportBacktestReport(result, config, options)
-    â†“ å†…éƒ¨è·¯ç”±
-buildReportMeta() â†’ buildExcelSheets()
-    â†“
-exportExcel() æˆ– exportPdf()
-    â†“ åŠ¨æ€ import('xlsx') / import('jspdf')
-ç”Ÿæˆ Blob æ–‡ä»¶
-    â†“ è¿”å› BacktestExportResult
-pages/outputï¼ˆé¡µé¢å±‚è§¦å‘æµè§ˆå™¨ä¸‹è½½ï¼‰
+    ¡ı ÄÚ²¿Â·ÓÉ
+buildReportMeta() ¡ú buildExcelSheets()
+    ¡ı
+exportExcel() »ò exportPdf()
+    ¡ı ¶¯Ì¬ import('xlsx') / import('jspdf')
+Éú³É Blob ÎÄ¼ş
+    ¡ı ·µ»Ø BacktestExportResult
+pages/output£¨Ò³Ãæ²ã´¥·¢ä¯ÀÀÆ÷ÏÂÔØ£©
 ```
 
-> **è¯´æ˜**ï¼šæœ¬æœåŠ¡ä¸ºæ–‡ä»¶ç”Ÿæˆå‹æœåŠ¡ï¼Œæ•°æ®æµä¸æ¶‰åŠ `DataBridge` æˆ– `IndexedDB` å†™å…¥ã€‚è¾“å…¥ä¸ºå›æµ‹ç»“æœå¯¹è±¡ï¼Œè¾“å‡ºä¸ºå¯ç›´æ¥ä¸‹è½½çš„ `Blob` æ–‡ä»¶ã€‚
+> **ËµÃ÷**£º±¾·şÎñÎªÎÄ¼şÉú³ÉĞÍ·şÎñ£¬Êı¾İÁ÷²»Éæ¼° `DataBridge` »ò `IndexedDB` Ğ´Èë¡£ÊäÈëÎª»Ø²â½á¹û¶ÔÏó£¬Êä³öÎª¿ÉÖ±½ÓÏÂÔØµÄ `Blob` ÎÄ¼ş¡£
 
 ---
 
-## 4. é…ç½®ä¸ä¾èµ–
+## 4. ÅäÖÃÓëÒÀÀµ
 
-### 4.1 ä¾èµ–ç™½åå•ï¼ˆlib/ï¼‰
+### 4.1 ÒÀÀµ°×Ãûµ¥£¨lib/£©
 
-| ä¾èµ– | è·¯å¾„ | ç”¨é€” |
+| ÒÀÀµ | Â·¾¶ | ÓÃÍ¾ |
 |------|------|------|
-| logger | `@/lib/logger` | æ—¥å¿—è¾“å‡ºï¼ˆå¯¼å‡ºæˆåŠŸ/å¤±è´¥è®°å½•ï¼‰ |
+| logger | `@/lib/logger` | ÈÕÖ¾Êä³ö£¨µ¼³ö³É¹¦/Ê§°Ü¼ÇÂ¼£© |
 
-### 4.2 å…¶ä»–ä¾èµ–
+### 4.2 ÆäËûÒÀÀµ
 
-| ä¾èµ– | è·¯å¾„ | è¯´æ˜ |
+| ÒÀÀµ | Â·¾¶ | ËµÃ÷ |
 |------|------|------|
-| types | `@/types/modules/backtest.types` | å›æµ‹ç›¸å…³ç±»å‹å®šä¹‰ï¼ˆé›¶ä¾èµ–ç±»å‹å±‚ï¼‰ |
-| constants | `@/constants/backtest.constants` | å›æµ‹å¸¸é‡ï¼ˆç­–ç•¥æ ‡ç­¾ã€Sheet åã€PDF æ’ç‰ˆå‚æ•°ç­‰ï¼‰ |
-| xlsx | åŠ¨æ€ `import('xlsx')` | Excel ç”Ÿæˆç¬¬ä¸‰æ–¹åº“ï¼Œä»…åœ¨å¯¼å‡ºæ—¶åŠ è½½ |
-| jspdf | åŠ¨æ€ `import('jspdf')` | PDF ç”Ÿæˆç¬¬ä¸‰æ–¹åº“ï¼Œä»…åœ¨å¯¼å‡ºæ—¶åŠ è½½ |
-| jspdf-autotable | åŠ¨æ€ `import('jspdf-autotable')` | PDF è¡¨æ ¼æ¸²æŸ“ç¬¬ä¸‰æ–¹åº“ï¼Œä»…åœ¨å¯¼å‡ºæ—¶åŠ è½½ |
+| types | `@/types/modules/backtest.types` | »Ø²âÏà¹ØÀàĞÍ¶¨Òå£¨ÁãÒÀÀµÀàĞÍ²ã£© |
+| constants | `@/constants/backtest.constants` | »Ø²â³£Á¿£¨²ßÂÔ±êÇ©¡¢Sheet Ãû¡¢PDF ÅÅ°æ²ÎÊıµÈ£© |
+| xlsx | ¶¯Ì¬ `import('xlsx')` | Excel Éú³ÉµÚÈı·½¿â£¬½öÔÚµ¼³öÊ±¼ÓÔØ |
+| jspdf | ¶¯Ì¬ `import('jspdf')` | PDF Éú³ÉµÚÈı·½¿â£¬½öÔÚµ¼³öÊ±¼ÓÔØ |
+| jspdf-autotable | ¶¯Ì¬ `import('jspdf-autotable')` | PDF ±í¸ñäÖÈ¾µÚÈı·½¿â£¬½öÔÚµ¼³öÊ±¼ÓÔØ |
 
-### 4.3 é…ç½®é¡¹
+### 4.3 ÅäÖÃÏî
 
-| é…ç½®å | é»˜è®¤å€¼ | è¯´æ˜ | æ¥æº |
+| ÅäÖÃÃû | Ä¬ÈÏÖµ | ËµÃ÷ | À´Ô´ |
 |--------|--------|------|------|
-| `BACKTEST_EXPORT_FILENAME` | `'BacktestReport'` | å¯¼å‡ºæ–‡ä»¶åå‰ç¼€ | `src/constants/backtest.constants` |
-| `PDF_TITLE_FONT_SIZE` | `20` | PDF æ ‡é¢˜å­—å· | `src/constants/backtest.constants` |
-| `PDF_SUMMARY_FONT_SIZE` | `12` | PDF æ‘˜è¦å­—å· | `src/constants/backtest.constants` |
-| `PDF_SECTION_FONT_SIZE` | `14` | PDF ç« èŠ‚æ ‡é¢˜å­—å· | `src/constants/backtest.constants` |
-| `PDF_TABLE_FONT_SIZE` | `10` | PDF è¡¨æ ¼å­—å· | `src/constants/backtest.constants` |
-| `PDF_TABLE_HEADER_COLOR` | `[52, 73, 94]` | PDF è¡¨å¤´èƒŒæ™¯è‰²ï¼ˆRGBï¼‰ | `src/constants/backtest.constants` |
-| `PDF_MAX_TRADE_ROWS` | `50` | äº¤æ˜“æ˜ç»†è¡¨æœ€å¤§è¡Œæ•°ï¼ˆé˜²æ­¢ PDF æº¢å‡ºï¼‰ | `src/constants/backtest.constants` |
-| `PERCENT_BASE` | `100` | ç™¾åˆ†æ¯”è½¬æ¢åŸºæ•° | æ¨¡å—å†…å¸¸é‡ |
-| `PERCENT_DECIMAL_PLACES` | `2` | ç™¾åˆ†æ¯”æ˜¾ç¤ºå°æ•°ä½ | æ¨¡å—å†…å¸¸é‡ |
+| `BACKTEST_EXPORT_FILENAME` | `'BacktestReport'` | µ¼³öÎÄ¼şÃûÇ°×º | `src/constants/backtest.constants` |
+| `PDF_TITLE_FONT_SIZE` | `20` | PDF ±êÌâ×ÖºÅ | `src/constants/backtest.constants` |
+| `PDF_SUMMARY_FONT_SIZE` | `12` | PDF ÕªÒª×ÖºÅ | `src/constants/backtest.constants` |
+| `PDF_SECTION_FONT_SIZE` | `14` | PDF ÕÂ½Ú±êÌâ×ÖºÅ | `src/constants/backtest.constants` |
+| `PDF_TABLE_FONT_SIZE` | `10` | PDF ±í¸ñ×ÖºÅ | `src/constants/backtest.constants` |
+| `PDF_TABLE_HEADER_COLOR` | `[52, 73, 94]` | PDF ±íÍ·±³¾°É«£¨RGB£© | `src/constants/backtest.constants` |
+| `PDF_MAX_TRADE_ROWS` | `50` | ½»Ò×Ã÷Ï¸±í×î´óĞĞÊı£¨·ÀÖ¹ PDF Òç³ö£© | `src/constants/backtest.constants` |
+| `PERCENT_BASE` | `100` | °Ù·Ö±È×ª»»»ùÊı | Ä£¿éÄÚ³£Á¿ |
+| `PERCENT_DECIMAL_PLACES` | `2` | °Ù·Ö±ÈÏÔÊ¾Ğ¡ÊıÎ» | Ä£¿éÄÚ³£Á¿ |
 
 ---
 
-## 5. æµ‹è¯•ç­–ç•¥
+## 5. ²âÊÔ²ßÂÔ
 
-| æµ‹è¯•ç±»å‹ | æ–‡ä»¶ | è¯´æ˜ |
+| ²âÊÔÀàĞÍ | ÎÄ¼ş | ËµÃ÷ |
 |----------|------|------|
-| å•å…ƒæµ‹è¯• | `src/services/export/__tests__/backtestExportService.test.ts` | è¦†ç›– `buildReportMeta`ã€`buildExcelSheets`ã€`exportBacktestReport`ï¼›å« 6 ä¸ªç”¨ä¾‹ï¼ˆå…ƒæ•°æ®ç”Ÿæˆã€Excel å›› Sheetã€ç¼ºå¤±å­—æ®µå…œåº•ã€Excel å¯¼å‡ºã€PDF å¯¼å‡ºã€é”™è¯¯å¤„ç†ï¼‰ |
-| Mock ç­–ç•¥ | `vi.mock('xlsx')`ã€`vi.mock('jspdf')`ã€`vi.mock('jspdf-autotable')` | éš”ç¦»ç¬¬ä¸‰æ–¹åº“ï¼Œç¡®ä¿æµ‹è¯•ä¸ä¾èµ–å¤–éƒ¨åŒ… |
+| µ¥Ôª²âÊÔ | `src/services/export/__tests__/backtestExportService.test.ts` | ¸²¸Ç `buildReportMeta`¡¢`buildExcelSheets`¡¢`exportBacktestReport`£»º¬ 6 ¸öÓÃÀı£¨ÔªÊı¾İÉú³É¡¢Excel ËÄ Sheet¡¢È±Ê§×Ö¶Î¶µµ×¡¢Excel µ¼³ö¡¢PDF µ¼³ö¡¢´íÎó´¦Àí£© |
+| Mock ²ßÂÔ | `vi.mock('xlsx')`¡¢`vi.mock('jspdf')`¡¢`vi.mock('jspdf-autotable')` | ¸ôÀëµÚÈı·½¿â£¬È·±£²âÊÔ²»ÒÀÀµÍâ²¿°ü |
 
 ---
 
-## 6. å˜æ›´æ—¥å¿—
+## 6. ±ä¸üÈÕÖ¾
 
-| æ—¥æœŸ | ç‰ˆæœ¬ | å˜æ›´ | ä½œè€… |
+| ÈÕÆÚ | °æ±¾ | ±ä¸ü | ×÷Õß |
 |------|------|------|------|
-| 2026-07-12 | v0.1.0 | å¥‘çº¦åˆç¨¿ | æ¶æ„ç»„ |
+| 2026-07-12 | v0.1.0 | ÆõÔ¼³õ¸å | ¼Ü¹¹×é |
 
 ---
 
-> **TODO[å­åŸŸ owner]**ï¼šè¯·æŒ‰æœ¬æ¨¡æ¿å¡«å…… Â§1-Â§5ï¼Œç¡®ä¿ä¸ `services-catalog.md` çš„æ‘˜è¦ä¸€è‡´ã€‚å®Œæˆåè¿è¡Œ `tsc --noEmit` + `audit:layers` éªŒè¯ã€‚
+> **TODO[×ÓÓò owner]**£ºÇë°´±¾Ä£°åÌî³ä ¡ì1-¡ì5£¬È·±£Óë `services-catalog.md` µÄÕªÒªÒ»ÖÂ¡£Íê³ÉºóÔËĞĞ `tsc --noEmit` + `audit:layers` ÑéÖ¤¡£

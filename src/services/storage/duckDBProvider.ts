@@ -166,7 +166,7 @@ export class DuckDBProviderImpl implements TimeSeriesProvider {
     try {
       await this.conn!.query('SELECT 1')
       return true
-    } catch {
+    } catch (err) { console.warn('[duckDBProvider.ts]', err);
       return false
     }
   }

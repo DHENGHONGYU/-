@@ -1,234 +1,228 @@
 ---
 title: quality-audit-plan
+type: explanation
+domain: qa
+phase: testing
 tier: reference
-code_version: 2.0.0
----
-
----
-title: V9 模块完成度逆向校验 — 执行计划
+status: active
+maintainer: Quality Auditor
+summary: "quality-audit-plan detailed explanation"
+tags: [qa, quality, audit, plan, architecture, explanation]
 version: v1.1.0
 last_updated: 2026-07-05
-maintainer: Quality Auditor
-status: completed
-change_log:
-  - date: 2026-07-05
-    author: Quality Auditor
-    desc: 全量五批次审计完成；入口数 25→48；新增功能入口 23 个（输入舱+3、分析舱+3、总控舱+11、输出舱+1、Widget+9、其他+2）；批次状态全部标记为已完成
-  - date: 2026-06-27
-    author: Quality Auditor
-    desc: 初始创建：审计执行计划
-tier: reference
+code_version: 2.0.0
+change_log: 
 ---
 
-# V9 模块完成度逆向校验 — 执行计划
+# V9 ģ����ɶ�����У�� �� ִ�мƻ�
 
-## 一、项目概况
+## һ����Ŀ�ſ�
 
-| 项目 | 信息 |
+| ��Ŀ | ��Ϣ |
 |:---|:---|
-| 项目名称 | 智能投研复盘系统 V9 |
-| 技术栈 | React 18 + TypeScript + Vite + Zustand + Tailwind |
-| 核心架构 | DataBridge（数据层）→ Store（状态层）→ Engine（逻辑层）→ UI（展示层） |
-| 已注册路由 | **48 条**（覆盖 5 舱 + 门户 + 其他） |
-| 已注册 Store | **47 个**（analysisStore / tradingStore / agentStore / widgetStore / databridgeStore 等） |
-| 已注册 Widget | **21 个**（Cockpit 驾驶舱） |
-| 五舱架构 | 输入舱 / 分析舱 / 交易舱 / 输出舱 / 总控舱 |
-| 审计入口总数 | **48 个**（含门户、五舱、Agent 子系统、系统监控、Mock 测试页） |
+| ��Ŀ���� | ����Ͷ�и���ϵͳ V9 |
+| ����ջ | React 18 + TypeScript + Vite + Zustand + Tailwind |
+| ���ļܹ� | DataBridge�����ݲ㣩�� Store��״̬�㣩�� Engine���߼��㣩�� UI��չʾ�㣩 |
+| ��ע��·�� | **48 ��**������ 5 �� + �Ż� + ������ |
+| ��ע�� Store | **47 ��**��analysisStore / tradingStore / agentStore / widgetStore / databridgeStore �ȣ� |
+| ��ע�� Widget | **21 ��**��Cockpit ��ʻ�գ� |
+| ��ռܹ� | ����� / ������ / ���ײ� / ����� / �ܿز� |
+| ���������� | **48 ��**�����Ż�����ա�Agent ��ϵͳ��ϵͳ��ء�Mock ����ҳ�� |
 
 ---
 
-## 二、功能入口清单（用户视角，自顶向下）
+## ������������嵥���û��ӽǣ��Զ����£�
 
-### 批次 A：门户与驾驶舱（2 个入口 + 21 Widget）
+### ���� A���Ż����ʻ�գ�2 ����� + 21 Widget��
 
-| 编号 | 功能入口 | 路由 | 对应组件 | 用户感知 |
+| ��� | ������� | ·�� | ��Ӧ��� | �û���֪ |
 |:---|:---|:---|:---|:---|
-| A1 | 首页 | `/` | `src/pages/HomePage` | 系统入口页 |
-| A2 | 驾驶舱 | `/cockpit` | `src/cockpit/CockpitShell` + 21 Widgets | 多 Widget 仪表盘 |
+| A1 | ��ҳ | `/` | `src/pages/HomePage` | ϵͳ���ҳ |
+| A2 | ��ʻ�� | `/cockpit` | `src/cockpit/CockpitShell` + 21 Widgets | �� Widget �Ǳ��� |
 
-**驾驶舱 Widget 清单（21 个）**：MarketIndicesWidget、HotSectorWidget、AgentPerformanceWidget、PnLAnalysisWidget、NewsSummaryWidget、WatchlistWidget、PositionOverviewWidget、StrategyStatusWidget、RiskAlertWidget、TradingSignalsWidget、MarketBreadthWidget、RotationMapWidget、FactorHeatmapWidget、EarningsCalendarWidget、MacroIndicatorWidget、SentimentGaugeWidget、FlowTrackerWidget、DividendTrackerWidget、RepoMonitorWidget、CalendarWidget、NotesWidget
+**��ʻ�� Widget �嵥��21 ����**��MarketIndicesWidget��HotSectorWidget��AgentPerformanceWidget��PnLAnalysisWidget��NewsSummaryWidget��WatchlistWidget��PositionOverviewWidget��StrategyStatusWidget��RiskAlertWidget��TradingSignalsWidget��MarketBreadthWidget��RotationMapWidget��FactorHeatmapWidget��EarningsCalendarWidget��MacroIndicatorWidget��SentimentGaugeWidget��FlowTrackerWidget��DividendTrackerWidget��RepoMonitorWidget��CalendarWidget��NotesWidget
 
-### 批次 B：输入舱（8 个子页面 + 1 个 Hub = 9 入口）
+### ���� B������գ�8 ����ҳ�� + 1 �� Hub = 9 ��ڣ�
 
-| 编号 | 功能入口 | 路由 | 对应组件 |
+| ��� | ������� | ·�� | ��Ӧ��� |
 |:---|:---|:---|:---|
-| B1 | 输入舱 Hub | `/input/hub` | `src/pages/input/InputHubPage` |
-| B2 | 录入看板 | `/input` | `src/apps/input/InputApp` |
-| B3 | 批量导入 | `/input/bulk-import` | `src/apps/input/InputApp`（子路由） |
-| B4 | 热门板块 | `/input/hot-sectors` | `src/apps/input/InputApp`（子路由） |
-| B5 | 本地知识库 | `/input/local-knowledge` | `src/pages/input/LocalKnowledgePage` |
-| B6 | 采集测试 | `/input/data-test` | `src/apps/input/InputApp`（子路由） |
-| B7 | 七维分析 | `/input/seven-dim` | `src/apps/input/InputApp`（子路由） |
-| B8 | 采集器配置 | `/input/collector-config` | `src/apps/input/InputApp`（子路由） |
-| B9 | 采集任务 | `/input/collection-tasks` | `src/apps/input/InputApp`（子路由） |
+| B1 | ����� Hub | `/input/hub` | `src/apps/input/InputApp.tsx` |
+| B2 | ¼�뿴�� | `/input` | `src/apps/input/InputApp` |
+| B3 | �������� | `/input/bulk-import` | `src/apps/input/InputApp`����·�ɣ� |
+| B4 | ���Ű�� | `/input/hot-sectors` | `src/apps/input/InputApp`����·�ɣ� |
+| B5 | ����֪ʶ�� | `/input/local-knowledge` | `src/pages/input/LocalKnowledgePage` |
+| B6 | �ɼ����� | `/input/data-test` | `src/apps/input/InputApp`����·�ɣ� |
+| B7 | ��ά���� | `/input/seven-dim` | `src/apps/input/InputApp`����·�ɣ� |
+| B8 | �ɼ������� | `/input/collector-config` | `src/apps/input/InputApp`����·�ɣ� |
+| B9 | �ɼ����� | `/input/collection-tasks` | `src/apps/input/InputApp`����·�ɣ� |
 
-### 批次 C：分析舱（10 个子页面 + 1 个 Hub + 1 个根路由 = 12 入口）
+### ���� C�������գ�10 ����ҳ�� + 1 �� Hub + 1 ����·�� = 12 ��ڣ�
 
-| 编号 | 功能入口 | 路由 | 对应组件 |
+| ��� | ������� | ·�� | ��Ӧ��� |
 |:---|:---|:---|:---|
-| C1 | 分析舱 Hub | `/analysis/hub` | `src/pages/analysis/AnalysisHubPage` |
-| C2 | V4 行业评分 | `/analysis/industry-score` | `src/pages/analysis/IndustryScorePage` |
-| C3 | V6 个股九维评分 | `/analysis/stock-score` | `src/pages/analysis/StockAnalysisPage` |
-| C3b | 个股评分（带代码） | `/analysis/stock-score/:code` | `src/pages/analysis/StockAnalysisPage`（参数化路由） |
-| C4 | V6 智能评分 | `/analysis/intelligent-score` | `src/pages/analysis/IntelligentScorePage` |
-| C5 | 板块轮动分析 | `/analysis/sector` | `src/pages/analysis/SectorAnalysisPage` |
-| C6 | 策略回测 | `/analysis/backtest` | `src/pages/analysis/BacktestPage` |
-| C7 | 评分文档版本库 | `/analysis/score-docs` | `src/pages/analysis/ScoreDocPage` |
-| C8 | 智能资讯 | `/analysis/news` | `src/pages/analysis/NewsPage` |
-| C9 | 热门板块策略 | `/analysis/hot-sector-strategy` | `src/pages/analysis/HotSectorStrategyPage` |
-| C10 | 价值洼地策略 | `/analysis/value-pit` | `src/pages/analysis/ValuePitPage` |
-| C11 | 分析舱根路由 | `/analysis` | `src/apps/analysis/AnalysisApp`（根路由分发） |
+| C1 | ������ Hub | `/analysis/hub` | `src/apps/analysis/AnalysisApp.tsx` |
+| C2 | V4 ��ҵ���� | `/analysis/industry-score` | `src/pages/analysis/IndustryScorePage` |
+| C3 | V6 ���ɾ�ά���� | `/analysis/stock-score` | `src/pages/analysis/StockAnalysisPage` |
+| C3b | �������֣������룩 | `/analysis/stock-score/:code` | `src/pages/analysis/StockAnalysisPage`��������·�ɣ� |
+| C4 | V6 �������� | `/analysis/intelligent-score` | `src/pages/analysis/IntelligentScorePage` |
+| C5 | ����ֶ����� | `/analysis/sector` | `src/pages/analysis/SectorAnalysisPage` |
+| C6 | ���Իز� | `/analysis/backtest` | `src/pages/analysis/BacktestPage` |
+| C7 | �����ĵ��汾�� | `/analysis/score-docs` | `src/pages/analysis/ScoreDocPage` |
+| C8 | ������Ѷ | `/analysis/news` | `src/pages/analysis/NewsPage` |
+| C9 | ���Ű����� | `/analysis/hot-sector-strategy` | `src/pages/analysis/HotSectorPage.tsx` |
+| C10 | ��ֵ�ݵز��� | `/analysis/value-pit` | `src/pages/analysis/ValuePitPage` |
+| C11 | �����ո�·�� | `/analysis` | `src/apps/analysis/AnalysisApp`����·�ɷַ��� |
 
-### 批次 D：交易舱（3 个子页面 + 1 个 Hub = 4 入口）
+### ���� D�����ײգ�3 ����ҳ�� + 1 �� Hub = 4 ��ڣ�
 
-| 编号 | 功能入口 | 路由 | 对应组件 |
+| ��� | ������� | ·�� | ��Ӧ��� |
 |:---|:---|:---|:---|
-| D1 | 交易舱 Hub | `/trading/hub` | `src/pages/trading/TradingHubPage` |
-| D2 | 交易信号看板 | `/trading` | `src/apps/trading/TradingApp` |
-| D3 | 策略快照 | `/trading/strategy-snapshots` | `src/pages/trading/StrategySnapshotPage` |
-| D4 | 持仓管理 | `/trading/holdings` | `src/pages/trading/HoldingsPage` |
+| D1 | ���ײ� Hub | `/trading/hub` | `src/apps/trading/TradingApp.tsx` |
+| D2 | �����źſ��� | `/trading` | `src/apps/trading/TradingApp` |
+| D3 | ���Կ��� | `/trading/strategy-snapshots` | `src/pages/trading/StrategySnapshotPage` |
+| D4 | �ֲֹ��� | `/trading/holdings` | `src/pages/trading/HoldingsPage` |
 
-### 批次 E：输出舱 + 总控舱 + 其他（21 个入口）
+### ���� E������� + �ܿز� + ������21 ����ڣ�
 
-#### E.1 输出舱（5 个入口）
+#### E.1 ����գ�5 ����ڣ�
 
-| 编号 | 功能入口 | 路由 | 对应组件 |
+| ��� | ������� | ·�� | ��Ӧ��� |
 |:---|:---|:---|:---|
-| E1a | 输出舱 Hub | `/output` | `src/apps/output/OutputApp` |
-| E1b | 报告生成 | `/output/generate` | `src/apps/output/OutputApp`（子路由） |
-| E1c | 报告列表 | `/output/reports` | `src/apps/output/OutputApp`（子路由） |
-| E1d | 导出配置 | `/output/export-config` | `src/apps/output/OutputApp`（子路由） |
-| E1e | 模板管理 | `/output/templates` | `src/apps/output/OutputApp`（子路由） |
+| E1a | ����� Hub | `/output` | `src/apps/output/OutputApp` |
+| E1b | �������� | `/output/generate` | `src/apps/output/OutputApp`����·�ɣ� |
+| E1c | �����б� | `/output/reports` | `src/apps/output/OutputApp`����·�ɣ� |
+| E1d | �������� | `/output/export-config` | `src/apps/output/OutputApp`����·�ɣ� |
+| E1e | ģ����� | `/output/templates` | `src/apps/output/OutputApp`����·�ɣ� |
 
-#### E.2 总控舱 Hub + 根路由（2 个入口）
+#### E.2 �ܿز� Hub + ��·�ɣ�2 ����ڣ�
 
-| 编号 | 功能入口 | 路由 | 对应组件 |
+| ��� | ������� | ·�� | ��Ӧ��� |
 |:---|:---|:---|:---|
-| E2 | 总控舱 Hub | `/command/hub` | `src/pages/command/CommandHubPage` |
-| E3 | 总控舱根路由 | `/command` | `src/apps/command/CommandApp` |
+| E2 | �ܿز� Hub | `/command/hub` | `src/apps/command/CommandApp.tsx` |
+| E3 | �ܿزո�·�� | `/command` | `src/apps/command/CommandApp` |
 
-#### E.3 Agent 管理子系统（10 个入口）
+#### E.3 Agent ������ϵͳ��10 ����ڣ�
 
-| 编号 | 功能入口 | 路由 | 对应组件 |
+| ��� | ������� | ·�� | ��Ӧ��� |
 |:---|:---|:---|:---|
-| E3a | Agent 列表 | `/command/agents` | `src/apps/command/CommandApp`（子路由） |
-| E3b | Agent 详情 | `/command/agents/:id` | `src/apps/command/CommandApp`（子路由） |
-| E3c | Agent 注册 | `/command/agents/register` | `src/apps/command/CommandApp`（子路由） |
-| E3d | 能力图谱 | `/command/agents/capability` | `src/apps/command/CommandApp`（子路由） |
-| E3e | DAG 调度器 | `/command/agents/dag` | `src/apps/command/CommandApp`（子路由） |
-| E3f | 触发器管理 | `/command/agents/triggers` | `src/apps/command/CommandApp`（子路由） |
-| E3g | 反馈管理 | `/command/agents/feedback` | `src/apps/command/CommandApp`（子路由） |
-| E3h | 任务管理 | `/command/agents/tasks` | `src/apps/command/CommandApp`（子路由） |
-| E3i | LLM 配置 | `/command/agents/llm-config` | `src/apps/command/CommandApp`（子路由） |
-| E3j | 自定义 Agent | `/command/agents/custom` | `src/apps/command/CommandApp`（子路由） |
+| E3a | Agent �б� | `/command/agents` | `src/apps/command/CommandApp`����·�ɣ� |
+| E3b | Agent ���� | `/command/agents/:id` | `src/apps/command/CommandApp`����·�ɣ� |
+| E3c | Agent ע�� | `/command/agents/register` | `src/apps/command/CommandApp`����·�ɣ� |
+| E3d | ����ͼ�� | `/command/agents/capability` | `src/apps/command/CommandApp`����·�ɣ� |
+| E3e | DAG ������ | `/command/agents/dag` | `src/apps/command/CommandApp`����·�ɣ� |
+| E3f | ���������� | `/command/agents/triggers` | `src/apps/command/CommandApp`����·�ɣ� |
+| E3g | �������� | `/command/agents/feedback` | `src/apps/command/CommandApp`����·�ɣ� |
+| E3h | ������� | `/command/agents/tasks` | `src/apps/command/CommandApp`����·�ɣ� |
+| E3i | LLM ���� | `/command/agents/llm-config` | `src/apps/command/CommandApp`����·�ɣ� |
+| E3j | �Զ��� Agent | `/command/agents/custom` | `src/apps/command/CommandApp`����·�ɣ� |
 
-#### E.4 系统监控子系统（3 个入口）
+#### E.4 ϵͳ�����ϵͳ��3 ����ڣ�
 
-| 编号 | 功能入口 | 路由 | 对应组件 |
+| ��� | ������� | ·�� | ��Ӧ��� |
 |:---|:---|:---|:---|
-| E4a | 监控仪表盘 | `/command/monitor` | `src/apps/command/CommandApp`（子路由） |
-| E4b | 日志查看器 | `/command/logs` | `src/apps/command/CommandApp`（子路由） |
-| E4c | 性能指标 | `/command/performance` | `src/apps/command/CommandApp`（子路由） |
+| E4a | ����Ǳ��� | `/command/monitor` | `src/apps/command/CommandApp`����·�ɣ� |
+| E4b | ��־�鿴�� | `/command/logs` | `src/apps/command/CommandApp`����·�ɣ� |
+| E4c | ����ָ�� | `/command/performance` | `src/apps/command/CommandApp`����·�ɣ� |
 
-#### E.5 其他（1 个入口）
+#### E.5 ������1 ����ڣ�
 
-| 编号 | 功能入口 | 路由 | 对应组件 |
+| ��� | ������� | ·�� | ��Ӧ��� |
 |:---|:---|:---|:---|
-| E5 | Mock 测试页 | `/mock-test` | `src/pages/MockTestPage` |
+| E5 | Mock ����ҳ | `/mock-test` | `src/pages/MockTestPage` |
 
-> **批次 E 合计**：5（输出舱）+ 2（总控舱 Hub+根）+ 10（Agent子系统）+ 3（系统监控）+ 1（Mock测试）= **21 个入口**
+> **���� E �ϼ�**��5������գ�+ 2���ܿز� Hub+����+ 10��Agent��ϵͳ��+ 3��ϵͳ��أ�+ 1��Mock���ԣ�= **21 �����**
 
 ---
 
-## 三、审计流程
+## �����������
 
-### 3.1 五层追溯标准
+### 3.1 ���׷�ݱ�׼
 
-| 层级 | 校验内容 | 判定标准 |
+| �㼶 | У������ | �ж���׼ |
 |:---|:---|:---|
-| **L1 用户界面层** | 页面能否正常打开？UI 是否完整？有无 loading/error/empty 三种状态？ | ✅ 完整 / 🟡 部分 / ❌ 缺失 |
-| **L2 状态管理层** | 对应的 Store 是否存在？state/getters/actions 是否完整？ | ✅ 完整 / 🟡 部分 / ❌ 缺失 |
-| **L3 数据接入层** | DataBridge 端点是否存在？数据能否正常流入 Store？ | ✅ 完整 / 🟡 部分 / ❌ 缺失 |
-| **L4 业务逻辑层** | 核心计算/校验/转换逻辑是否正确实现？ | ✅ 完整 / 🟡 部分 / ❌ 缺失 |
-| **L5 注册集成层** | 路由是否注册？是否被其他模块正确引用？Widget/Agent 是否注册？ | ✅ 完整 / 🟡 部分 / ❌ 缺失 |
+| **L1 �û������** | ҳ���ܷ������򿪣�UI �Ƿ����������� loading/error/empty ����״̬�� | ? ���� / ?? ���� / ? ȱʧ |
+| **L2 ״̬������** | ��Ӧ�� Store �Ƿ���ڣ�state/getters/actions �Ƿ������� | ? ���� / ?? ���� / ? ȱʧ |
+| **L3 ���ݽ����** | DataBridge �˵��Ƿ���ڣ������ܷ��������� Store�� | ? ���� / ?? ���� / ? ȱʧ |
+| **L4 ҵ���߼���** | ���ļ���/У��/ת���߼��Ƿ���ȷʵ�֣� | ? ���� / ?? ���� / ? ȱʧ |
+| **L5 ע�Ἧ�ɲ�** | ·���Ƿ�ע�᣿�Ƿ�����ģ����ȷ���ã�Widget/Agent �Ƿ�ע�᣿ | ? ���� / ?? ���� / ? ȱʧ |
 
-### 3.2 审计方法
+### 3.2 ��Ʒ���
 
 ```text
-对于每个功能入口：
-  1. L1: 读取 UI 组件源码 → 检查 JSX 结构、状态覆盖（loading/error/empty）、交互逻辑
-  2. L2: 从 UI 组件追踪 useXxxStore() 调用 → 检查对应 Store 的 state/actions 定义
-  3. L3: 从 Store 追踪 DataBridge.subscribe() / forward() 调用 → 检查端点是否存在
-  4. L4: 追踪业务逻辑函数（Services/Engines/Utils）→ 检查实现完整性
-  5. L5: 检查路由注册表 (routes.ts) → 检查 Widget 注册表 (widgetRegistry.ts) → 检查跨模块引用
+����ÿ��������ڣ�
+  1. L1: ��ȡ UI ���Դ�� �� ��� JSX �ṹ��״̬���ǣ�loading/error/empty���������߼�
+  2. L2: �� UI ���׷�� useXxxStore() ���� �� ����Ӧ Store �� state/actions ����
+  3. L3: �� Store ׷�� DataBridge.subscribe() / forward() ���� �� ���˵��Ƿ����
+  4. L4: ׷��ҵ���߼�������Services/Engines/Utils���� ���ʵ��������
+  5. L5: ���·��ע��� (routes.ts) �� ��� Widget ע��� (widgetRegistry.ts) �� ����ģ������
 ```
 
-### 3.3 完成度剖面图格式
+### 3.3 ��ɶ�����ͼ��ʽ
 
 ```text
-## 功能入口：XXX
-| 层级 | 内容 | 状态 | 发现 |
+## ������ڣ�XXX
+| �㼶 | ���� | ״̬ | ���� |
 |:---|:---|:---|:---|
-| L1 界面 | 组件文件 | ✅/🟡/❌ | 具体发现 |
-| L2 状态 | Store 名称 | ✅/🟡/❌ | 具体发现 |
-| L3 数据 | DataBridge 端点 | ✅/🟡/❌ | 具体发现 |
-| L4 逻辑 | 业务逻辑 | ✅/🟡/❌ | 具体发现 |
-| L5 集成 | 路由/注册 | ✅/🟡/❌ | 具体发现 |
+| L1 ���� | ����ļ� | ?/??/? | ���巢�� |
+| L2 ״̬ | Store ���� | ?/??/? | ���巢�� |
+| L3 ���� | DataBridge �˵� | ?/??/? | ���巢�� |
+| L4 �߼� | ҵ���߼� | ?/??/? | ���巢�� |
+| L5 ���� | ·��/ע�� | ?/??/? | ���巢�� |
 ```
 
 ---
 
-## 四、批次划分
+## �ġ����λ���
 
-| 批次 | 入口数 | 功能入口 | 预计工作量 |
+| ���� | ����� | ������� | Ԥ�ƹ����� |
 |:---|:---|:---|:---|
-| **批次 A** | 2 | 首页 + 驾驶舱（21 Widgets） | 最大（驾驶舱含 21 个子模块） |
-| **批次 B** | 9 | 输入舱全部子页面 | 最大 |
-| **批次 C** | 12 | 分析舱全部子页面 | 最大 |
-| **批次 D** | 4 | 交易舱全部子页面 | 中等 |
-| **批次 E** | 21 | 输出舱 + 总控舱（含 Agent 子系统 + 系统监控）+ Mock 测试页 | 最大 |
+| **���� A** | 2 | ��ҳ + ��ʻ�գ�21 Widgets�� | ��󣨼�ʻ�պ� 21 ����ģ�飩 |
+| **���� B** | 9 | �����ȫ����ҳ�� | ��� |
+| **���� C** | 12 | ������ȫ����ҳ�� | ��� |
+| **���� D** | 4 | ���ײ�ȫ����ҳ�� | �е� |
+| **���� E** | 21 | ����� + �ܿزգ��� Agent ��ϵͳ + ϵͳ��أ�+ Mock ����ҳ | ��� |
 
 ---
 
-## 五、输出物
+## �塢�����
 
-| 序号 | 交付物 | 路径 | 说明 |
+| ��� | ������ | ·�� | ˵�� |
 |:---|:---|:---|:---|
-| 1 | 执行计划 | `../../reports/audit/quality-audit-plan.md` | 本文档 |
-| 2 | 完成度剖面图 | `../../reference/completeness-profile.md` | 所有模块的五层剖面图汇总 |
-| 3 | 修复行动清单 | `../../reference/action-list.md` | 按 P0/P1/P2 排序的修复建议 |
+| 1 | ִ�мƻ� | `../../reports/audit/quality-audit-plan.md` | ���ĵ� |
+| 2 | ��ɶ�����ͼ | `../../reference/completeness-profile.md` | ����ģ����������ͼ���� |
+| 3 | �޸��ж��嵥 | `../../reference/action-list.md` | �� P0/P1/P2 ������޸����� |
 
 ---
 
-## 六、当前状态
+## ������ǰ״̬
 
-| 阶段 | 状态 | 完成日期 |
+| �׶� | ״̬ | ������� |
 |:---|:---|:---|
-| 执行计划 | ✅ 已生成 | 2026-06-27 |
-| 用户确认 | ✅ 已确认 | 2026-06-27 |
-| 批次 A 审计 | ✅ 已完成 | 2026-07-05 |
-| 批次 B 审计 | ✅ 已完成 | 2026-07-05 |
-| 批次 C 审计 | ✅ 已完成 | 2026-07-05 |
-| 批次 D 审计 | ✅ 已完成 | 2026-07-05 |
-| 批次 E 审计 | ✅ 已完成 | 2026-07-05 |
-| 完成度剖面图 | ✅ 已生成 | 2026-07-05 |
-| 修复行动清单 | ✅ 已生成 | 2026-07-05 |
+| ִ�мƻ� | ? ������ | 2026-06-27 |
+| �û�ȷ�� | ? ��ȷ�� | 2026-06-27 |
+| ���� A ��� | ? ����� | 2026-07-05 |
+| ���� B ��� | ? ����� | 2026-07-05 |
+| ���� C ��� | ? ����� | 2026-07-05 |
+| ���� D ��� | ? ����� | 2026-07-05 |
+| ���� E ��� | ? ����� | 2026-07-05 |
+| ��ɶ�����ͼ | ? ������ | 2026-07-05 |
+| �޸��ж��嵥 | ? ������ | 2026-07-05 |
 
-**审计结果摘要**：
-- 审计入口：48 个（批次 A 2 + 批次 B 9 + 批次 C 12 + 批次 D 4 + 批次 E 21）
-- 问题总数：35 项（P0=7 / P1=13 / P2=15）
-- 整体健康率：39.6%（五层全通入口占比）
-- 最薄弱层：L3 数据接入层（60.4%）
-- 最佳批次：批次 E（健康率 61.9%）
-- 最差批次：批次 D（健康率 0%）、批次 B（健康率 11.1%）
+**��ƽ��ժҪ**��
+- �����ڣ�48 �������� A 2 + ���� B 9 + ���� C 12 + ���� D 4 + ���� E 21��
+- ����������35 �P0=7 / P1=13 / P2=15��
+- ���彡���ʣ�39.6%�����ȫͨ���ռ�ȣ�
+- ����㣺L3 ���ݽ���㣨60.4%��
+- ������Σ����� E�������� 61.9%��
+- ������Σ����� D�������� 0%�������� B�������� 11.1%��
 
-> 详细结果见 `completeness-profile.md`（完成度剖面图）和 `action-list.md`（修复行动清单）
+> ��ϸ����� `../../reference/completeness-profile.md`����ɶ�����ͼ���� `../../reference/action-list.md`���޸��ж��嵥��
 
 ---
 
-## 七、变更日志
+## �ߡ������־
 
-| 日期 | 版本 | 变更内容 | 变更人 |
+| ���� | �汾 | ������� | ����� |
 |:---|:---|:---|:---|
-| 2026-07-05 | v1.1.0 | 全量五批次审计完成；功能入口 25→48（输入舱+3、分析舱+3、交易舱+0、总控舱+11、输出舱+1、其他+2）；Widget 12→21；所有批次状态标记为已完成；新增审计结果摘要；生成配套完成度剖面图与修复行动清单 | Quality Auditor |
-| 2026-06-27 | v1.0.0 | 初始创建：审计执行计划，覆盖 25 个功能入口，5 个批次 | Quality Auditor |
+| 2026-07-05 | v1.1.0 | ȫ�������������ɣ�������� 25��48�������+3��������+3�����ײ�+0���ܿز�+11�������+1������+2����Widget 12��21����������״̬���Ϊ����ɣ�������ƽ��ժҪ������������ɶ�����ͼ���޸��ж��嵥 | Quality Auditor |
+| 2026-06-27 | v1.0.0 | ��ʼ���������ִ�мƻ������� 25 ��������ڣ�5 ������ | Quality Auditor |

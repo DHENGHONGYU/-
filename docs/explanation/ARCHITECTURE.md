@@ -1,93 +1,100 @@
 ---
 title: architecture
-code_version: 2.0.0
-
+type: explanation
+domain: architecture
+phase: design
 tier: important
----
-
----
-title: docs/explanation/architecture.md
+status: active
+maintainer: V9 Architecture Team
+summary: "±¾ÎÄµµÃæÏòºóÐø½ÓÈëµÄ AI ÖÇÄÜÌåÓëÑÐ·¢ÈËÔ±£¬ËµÃ÷¼ÝÊ»²Õ£¨Cockpit£©Widget »¯¿ò¼ÜµÄÕûÌå¼Ü¹¹¡¢ºËÐÄÊý¾ÝÁ÷×ª¡¢Ã¶¾ÙÓ³ÉäÒÔ¼°ÐÂÔö Widget µÄ±ê×¼×÷Òµ³ÌÐò£¨SOP£©¡£ ÔÄ¶Á±¾ÎÄµµºó£¬..."
+tags: [architecture, plan, explanation, design, strategy]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: important
+doc_id: V9-DOC-ARCH-002
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
-# æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ V9 â€” é©¾é©¶èˆ± Widget æž¶æž„è¯´æ˜Ž
+# ÖÇÄÜÍ¶ÑÐ¸´ÅÌÏµÍ³ V9 ¡ª ¼ÝÊ»²Õ Widget ¼Ü¹¹ËµÃ÷
 
-> æœ¬æ–‡æ¡£é¢å‘åŽç»­æŽ¥å…¥çš„ AI æ™ºèƒ½ä½“ä¸Žç ”å‘äººå‘˜ï¼Œè¯´æ˜Žé©¾é©¶èˆ±ï¼ˆCockpitï¼‰Widget åŒ–æ¡†æž¶çš„æ•´ä½“æž¶æž„ã€æ ¸å¿ƒæ•°æ®æµè½¬ã€æžšä¸¾æ˜ å°„ä»¥åŠæ–°å¢ž Widget çš„æ ‡å‡†ä½œä¸šç¨‹åºï¼ˆSOPï¼‰ã€‚
-> é˜…è¯»æœ¬æ–‡æ¡£åŽï¼Œåº”èƒ½åœ¨ä¸æ·±å…¥ä¸šåŠ¡ä»£ç ç»†èŠ‚çš„å‰æä¸‹ï¼Œç†è§£å¦‚ä½•æ‰©å±•æ–°çš„é‡‘èžç»´åº¦ Widgetã€‚
+> ±¾ÎÄµµÃæÏòºóÐø½ÓÈëµÄ AI ÖÇÄÜÌåÓëÑÐ·¢ÈËÔ±£¬ËµÃ÷¼ÝÊ»²Õ£¨Cockpit£©Widget »¯¿ò¼ÜµÄÕûÌå¼Ü¹¹¡¢ºËÐÄÊý¾ÝÁ÷×ª¡¢Ã¶¾ÙÓ³ÉäÒÔ¼°ÐÂÔö Widget µÄ±ê×¼×÷Òµ³ÌÐò£¨SOP£©¡£
+> ÔÄ¶Á±¾ÎÄµµºó£¬Ó¦ÄÜÔÚ²»ÉîÈëÒµÎñ´úÂëÏ¸½ÚµÄÇ°ÌáÏÂ£¬Àí½âÈçºÎÀ©Õ¹ÐÂµÄ½ðÈÚÎ¬¶È Widget¡£
 
 ---
 
-## 1. æž¶æž„æ€»è§ˆ
+## 1. ¼Ü¹¹×ÜÀÀ
 
-ç³»ç»Ÿé‡‡ç”¨ **React 19 + TypeScript + Vite** æž„å»ºï¼Œé©¾é©¶èˆ±æ¨¡å—åŸºäºŽ **React-Grid-Layout** å®žçŽ°å¯æ‹–æ‹½ã€å¯ç¼©æ”¾çš„ Widget åŒ–å¸ƒå±€ã€‚æ‰€æœ‰é‡‘èžä¸šåŠ¡æ•°æ®ç»Ÿä¸€æ”¶æ•›åˆ° `MarketData` æŽ¥å£ï¼Œé€šè¿‡ `MarketDataProvider` æ³¨å…¥è§†å›¾å±‚ï¼›åº•å±‚é‡‡é›†é€»è¾‘ç”± `TaskScheduler` + `Collector` è´Ÿè´£ï¼Œæ”¯æŒ Mock / REST / WebSocket ä¸‰ç§æ•°æ®æºæ— ç¼åˆ‡æ¢ã€‚
+ÏµÍ³²ÉÓÃ **React 19 + TypeScript + Vite** ¹¹½¨£¬¼ÝÊ»²ÕÄ£¿é»ùÓÚ **React-Grid-Layout** ÊµÏÖ¿ÉÍÏ×§¡¢¿ÉËõ·ÅµÄ Widget »¯²¼¾Ö¡£ËùÓÐ½ðÈÚÒµÎñÊý¾ÝÍ³Ò»ÊÕÁ²µ½ `MarketData` ½Ó¿Ú£¬Í¨¹ý `MarketDataProvider` ×¢ÈëÊÓÍ¼²ã£»µ×²ã²É¼¯Âß¼­ÓÉ `TaskScheduler` + `Collector` ¸ºÔð£¬Ö§³Ö Mock / REST / WebSocket ÈýÖÖÊý¾ÝÔ´ÎÞ·ìÇÐ»»¡£
 
-### 1.1 æ ¸å¿ƒè®¾è®¡åŽŸåˆ™
+### 1.1 ºËÐÄÉè¼ÆÔ­Ôò
 
-| åŽŸåˆ™ | è¯´æ˜Ž |
+| Ô­Ôò | ËµÃ÷ |
 |------|------|
-| **æ— ç¡¬ç¼–ç ** | æ‰€æœ‰æ•°å€¼ã€é¢œè‰²ã€ç»´åº¦åç§°ã€æ¨¡åž‹ç‰ˆæœ¬å·å‡å®šä¹‰åœ¨ `src/constants/cockpit.constants.ts` |
-| **æ³¨å†Œä¸­å¿ƒ** | Widget çš„å…ƒæ•°æ®ã€é»˜è®¤å°ºå¯¸ã€æ•°æ®æºç­–ç•¥é›†ä¸­åœ¨ `src/cockpit/core/widgetRegistry.ts` |
-| **ç»Ÿä¸€æ•°æ®æŽ¥å£** | è§†å›¾ç»„ä»¶åªæ¶ˆè´¹ `MarketData`ï¼Œä¸ç›´æŽ¥è°ƒç”¨åŽç«¯ API |
-| **æ•°æ®æºéš”ç¦»** | é€šè¿‡çŽ¯å¢ƒå˜é‡ `VITE_DATA_SOURCE_TYPE` åˆ‡æ¢ Mock / REST / WebSocketï¼Œè§†å›¾å±‚é›¶ä¾µå…¥ |
-| **æ•°æ®é€‚é…å™¨** | `MarketDataAdapter` å°†ä¸åŒæ¥æºçš„åŽŸå§‹ JSON æ˜ å°„ä¸ºæ ‡å‡† `MarketData` ç»“æž„ |
+| **ÎÞÓ²±àÂë** | ËùÓÐÊýÖµ¡¢ÑÕÉ«¡¢Î¬¶ÈÃû³Æ¡¢Ä£ÐÍ°æ±¾ºÅ¾ù¶¨ÒåÔÚ `src/constants/cockpit.constants.ts` |
+| **×¢²áÖÐÐÄ** | Widget µÄÔªÊý¾Ý¡¢Ä¬ÈÏ³ß´ç¡¢Êý¾ÝÔ´²ßÂÔ¼¯ÖÐÔÚ `src/cockpit/core/widgetRegistry.ts` |
+| **Í³Ò»Êý¾Ý½Ó¿Ú** | ÊÓÍ¼×é¼þÖ»Ïû·Ñ `MarketData`£¬²»Ö±½Óµ÷ÓÃºó¶Ë API |
+| **Êý¾ÝÔ´¸ôÀë** | Í¨¹ý»·¾³±äÁ¿ `VITE_DATA_SOURCE_TYPE` ÇÐ»» Mock / REST / WebSocket£¬ÊÓÍ¼²ãÁãÇÖÈë |
+| **Êý¾ÝÊÊÅäÆ÷** | `MarketDataAdapter` ½«²»Í¬À´Ô´µÄÔ­Ê¼ JSON Ó³ÉäÎª±ê×¼ `MarketData` ½á¹¹ |
 
-### 1.2 æž¶æž„å›¾
+### 1.2 ¼Ü¹¹Í¼
 
 ```mermaid
 flowchart TB
-    subgraph View["è§†å›¾å±‚ View Layer"]
+    subgraph View["ÊÓÍ¼²ã View Layer"]
         Shell["CockpitShell.tsx"]
         Wrapper["WidgetWrapper"]
-        W_A["A. æŠ•èµ„ç”»åƒ/åˆ†æžä¸­å¿ƒ"]
-        W_B["B. è‚¡ç¥¨æ± ç®¡ç†ä¸Žç›‘æŽ§"]
-        W_C["C. KAI é€‰è‚¡ç»¼åˆè¯„åˆ†"]
-        W_D["D. AI å¤§æ¨¡åž‹æ™ºèƒ½å¯¹æ¯”"]
-        W_E["E. ä¸ªè‚¡/å¸‚åœºæ·±åº¦åˆ†æžèŠå¤©"]
+        W_A["A. Í¶×Ê»­Ïñ/·ÖÎöÖÐÐÄ"]
+        W_B["B. ¹ÉÆ±³Ø¹ÜÀíÓë¼à¿Ø"]
+        W_C["C. KAI Ñ¡¹É×ÛºÏÆÀ·Ö"]
+        W_D["D. AI ´óÄ£ÐÍÖÇÄÜ¶Ô±È"]
+        W_E["E. ¸ö¹É/ÊÐ³¡Éî¶È·ÖÎöÁÄÌì"]
     end
 
-    subgraph Provider["æ•°æ®æ³¨å…¥å±‚ Provider Layer"]
+    subgraph Provider["Êý¾Ý×¢Èë²ã Provider Layer"]
         MDP["MarketDataProvider"]
         UMD["useMarketData() Hook"]
     end
 
-    subgraph Engine["è°ƒåº¦ä¸Žæ³¨å†Œå±‚ Engine Layer"]
+    subgraph Engine["µ÷¶ÈÓë×¢²á²ã Engine Layer"]
         WR["widgetRegistry.ts"]
         WE["widgetEngine.ts"]
         TS["TaskScheduler"]
     end
 
-    subgraph Collector["æ•°æ®é‡‡é›†å±‚ Collector Layer"]
+    subgraph Collector["Êý¾Ý²É¼¯²ã Collector Layer"]
         MC["MockCollector"]
         RC["RestCollector"]
         WSC["WebSocketCollector"]
     end
 
-    subgraph Adapter["æ•°æ®é€‚é…å±‚ Adapter Layer"]
+    subgraph Adapter["Êý¾ÝÊÊÅä²ã Adapter Layer"]
         MDA["MarketDataAdapter"]
     end
 
-    subgraph Data["æ•°æ®æ¥æº Data Sources"]
+    subgraph Data["Êý¾ÝÀ´Ô´ Data Sources"]
         Mock["MockStockAnalysisProvider"]
-        API["è¯åˆ¸è¡Œæƒ… API / å¤§æ¨¡åž‹ API"]
+        API["Ö¤È¯ÐÐÇé API / ´óÄ£ÐÍ API"]
     end
 
-    Shell -->|åŒ…è£¹| MDP
-    MDP -->|æä¾› data / sendChatMessage| UMD
-    UMD -->|æ¶ˆè´¹| W_A & W_B & W_C & W_D & W_E
-    Shell -->|æ¸²æŸ“| Wrapper
-    Wrapper -->|åŠ è½½| WE
-    WE -->|æŸ¥è¯¢/æ³¨å†Œ| WR
-    WR -->|é…ç½® dataSource| TS
-    TS -->|æ ¹æ® type å®žä¾‹åŒ–| MC & RC & WSC
-    MC -->|endpoint è·¯ç”±| Mock
+    Shell -->|°ü¹ü| MDP
+    MDP -->|Ìá¹© data / sendChatMessage| UMD
+    UMD -->|Ïû·Ñ| W_A & W_B & W_C & W_D & W_E
+    Shell -->|äÖÈ¾| Wrapper
+    Wrapper -->|¼ÓÔØ| WE
+    WE -->|²éÑ¯/×¢²á| WR
+    WR -->|ÅäÖÃ dataSource| TS
+    TS -->|¸ù¾Ý type ÊµÀý»¯| MC & RC & WSC
+    MC -->|endpoint Â·ÓÉ| Mock
     RC -->|HTTP/REST| API
     WSC -->|WebSocket| API
     MC & RC & WSC -->|RawMarketData| MDA
     MDA -->|Partial&lt;MarketData&gt;| MDP
 ```
 
-### 1.3 æ•°æ®æµè½¬æ—¶åº
+### 1.3 Êý¾ÝÁ÷×ªÊ±Ðò
 
 ```mermaid
 sequenceDiagram
@@ -100,175 +107,175 @@ sequenceDiagram
     participant MDA as MarketDataAdapter
     participant W as Widget
 
-    Shell->>MDP: æŒ‚è½½ï¼Œå¯åŠ¨æ•°æ®é‡‡é›†
+    Shell->>MDP: ¹ÒÔØ£¬Æô¶¯Êý¾Ý²É¼¯
     MDP->>WR: getAllInstances()
     WR-->>MDP: List<WidgetConfig>
-    loop æ¯ä¸ª Widget å®žä¾‹
+    loop Ã¿¸ö Widget ÊµÀý
         MDP->>TS: registerTask(widgetId, instanceId, dataSource)
         MDP->>TS: startTask(taskId)
         TS->>Col: collectWithRetry(dataSource)
         Col-->>TS: RawMarketData
         TS->>MDA: adapt(rawData)
         MDA-->>TS: Partial<MarketData>
-        TS->>MDP: è§¦å‘ setData()
+        TS->>MDP: ´¥·¢ setData()
     end
-    MDP-->>W: data æ›´æ–°ï¼Œé‡æ¸²æŸ“
+    MDP-->>W: data ¸üÐÂ£¬ÖØäÖÈ¾
     W->>MDP: useMarketData() / props.data
 ```
 
 ---
 
-## 2. æ ¸å¿ƒæŠ½è±¡ä¸Žæžšä¸¾æ˜ å°„
+## 2. ºËÐÄ³éÏóÓëÃ¶¾ÙÓ³Éä
 
-### 2.1 æ•°æ®ç±»åž‹æžšä¸¾ `RawMarketData.dataType`
+### 2.1 Êý¾ÝÀàÐÍÃ¶¾Ù `RawMarketData.dataType`
 
-| æžšä¸¾å€¼ | å«ä¹‰ | å¯¹åº” MarketData å­—æ®µ | å…¸åž‹ç«¯ç‚¹ |
+| Ã¶¾ÙÖµ | º¬Òå | ¶ÔÓ¦ MarketData ×Ö¶Î | µäÐÍ¶Ëµã |
 |--------|------|----------------------|----------|
-| `indices` | å¤§ç›˜æŒ‡æ•° | `MarketData.indices` | `/market/indices` |
-| `sectors` | æ¿å—çƒ­åŠ›å›¾ | `MarketData.sectors` | `/market/sectors` |
-| `fundFlow` | èµ„é‡‘æµå‘ | `MarketData.fundFlows` | `/market/fund-flow` |
-| `sentiment` | å¸‚åœºæƒ…ç»ª | `MarketData.sentiment` | `/market/sentiment` |
-| `watchlist` | è‡ªé€‰è‚¡ | `MarketData.watchlist` | `/user/watchlist` |
-| `portfolio` | æŒä»“æ¦‚è§ˆ | `MarketData.portfolio` | `/user/portfolio` |
-| `tradeReview` | AI äº¤æ˜“å¤ç›˜ | `MarketData.tradeReview` | `/ai/trade-review` |
-| `analysisScores` | æŠ•èµ„ç”»åƒ / KAI è¯„åˆ† | `MarketData.analysisScores` | `/stock-analysis/profile` `/stock-analysis/kai` |
-| `modelComparison` | AI å¤§æ¨¡åž‹å¯¹æ¯” | `MarketData.modelComparison` | `/stock-analysis/compare` |
-| `stockPool` | è‚¡ç¥¨æ± åˆ—è¡¨ | `MarketData.stockPool` | `/stock-analysis/pool` |
-| `chatHistory` | èŠå¤©åŽ†å² | `MarketData.chatHistory` | `/stock-analysis/chat` |
+| `indices` | ´óÅÌÖ¸Êý | `MarketData.indices` | `/market/indices` |
+| `sectors` | °å¿éÈÈÁ¦Í¼ | `MarketData.sectors` | `/market/sectors` |
+| `fundFlow` | ×Ê½ðÁ÷Ïò | `MarketData.fundFlows` | `/market/fund-flow` |
+| `sentiment` | ÊÐ³¡ÇéÐ÷ | `MarketData.sentiment` | `/market/sentiment` |
+| `watchlist` | ×ÔÑ¡¹É | `MarketData.watchlist` | `/user/watchlist` |
+| `portfolio` | ³Ö²Ö¸ÅÀÀ | `MarketData.portfolio` | `/user/portfolio` |
+| `tradeReview` | AI ½»Ò×¸´ÅÌ | `MarketData.tradeReview` | `/ai/trade-review` |
+| `analysisScores` | Í¶×Ê»­Ïñ / KAI ÆÀ·Ö | `MarketData.analysisScores` | `/stock-analysis/profile` `/stock-analysis/kai` |
+| `modelComparison` | AI ´óÄ£ÐÍ¶Ô±È | `MarketData.modelComparison` | `/stock-analysis/compare` |
+| `stockPool` | ¹ÉÆ±³ØÁÐ±í | `MarketData.stockPool` | `/stock-analysis/pool` |
+| `chatHistory` | ÁÄÌìÀúÊ· | `MarketData.chatHistory` | `/stock-analysis/chat` |
 
-### 2.2 æ•°æ®æºç±»åž‹ `DataSourceType`
+### 2.2 Êý¾ÝÔ´ÀàÐÍ `DataSourceType`
 
-| æžšä¸¾å€¼ | è¯´æ˜Ž | ä½¿ç”¨åœºæ™¯ |
+| Ã¶¾ÙÖµ | ËµÃ÷ | Ê¹ÓÃ³¡¾° |
 |--------|------|----------|
-| `mock` | æœ¬åœ°éšæœºæ¨¡æ‹Ÿæ•°æ® | å¼€å‘çŽ¯å¢ƒã€å•å…ƒæµ‹è¯• |
-| `rest` | HTTP/REST è¯·æ±‚ | ç”Ÿäº§çŽ¯å¢ƒè°ƒç”¨è¯åˆ¸è¡Œæƒ… API |
-| `websocket` | WebSocket é•¿è¿žæŽ¥ | ç”Ÿäº§çŽ¯å¢ƒå®žæ—¶æŽ¨é€ |
+| `mock` | ±¾µØËæ»úÄ£ÄâÊý¾Ý | ¿ª·¢»·¾³¡¢µ¥Ôª²âÊÔ |
+| `rest` | HTTP/REST ÇëÇó | Éú²ú»·¾³µ÷ÓÃÖ¤È¯ÐÐÇé API |
+| `websocket` | WebSocket ³¤Á¬½Ó | Éú²ú»·¾³ÊµÊ±ÍÆËÍ |
 
-### 2.3 é‡‡é›†æ¨¡å¼ `CollectionMode`
+### 2.3 ²É¼¯Ä£Ê½ `CollectionMode`
 
-| æžšä¸¾å€¼ | è¯´æ˜Ž | å…¸åž‹ Widget |
+| Ã¶¾ÙÖµ | ËµÃ÷ | µäÐÍ Widget |
 |--------|------|-------------|
-| `polling` | å®šæ—¶è½®è¯¢ | è¡Œæƒ…ç±» Widgetï¼ˆè‚¡ç¥¨æ± ã€KAI è¯„åˆ†ï¼‰ |
-| `once` | åªé‡‡é›†ä¸€æ¬¡ | é…ç½®ç±»/å¤ç›˜ç±» Widgetï¼ˆAI äº¤æ˜“å¤ç›˜ã€èŠå¤©åˆå§‹åŒ–ï¼‰ |
-| `streaming` | æµå¼æŽ¨é€ | WebSocket å®žæ—¶è¡Œæƒ…ï¼ˆé¢„ç•™ï¼‰ |
+| `polling` | ¶¨Ê±ÂÖÑ¯ | ÐÐÇéÀà Widget£¨¹ÉÆ±³Ø¡¢KAI ÆÀ·Ö£© |
+| `once` | Ö»²É¼¯Ò»´Î | ÅäÖÃÀà/¸´ÅÌÀà Widget£¨AI ½»Ò×¸´ÅÌ¡¢ÁÄÌì³õÊ¼»¯£© |
+| `streaming` | Á÷Ê½ÍÆËÍ | WebSocket ÊµÊ±ÐÐÇé£¨Ô¤Áô£© |
 
-### 2.4 æ–°å¢žä¸šåŠ¡é¢œè‰²ä¸Žç»´åº¦å¸¸é‡
+### 2.4 ÐÂÔöÒµÎñÑÕÉ«ÓëÎ¬¶È³£Á¿
 
-| å¸¸é‡å | ç”¨é€” | å…³é”®é”® |
+| ³£Á¿Ãû | ÓÃÍ¾ | ¹Ø¼ü¼ü |
 |--------|------|--------|
-| `STOCK_COLOR_MAPPING` | A è‚¡çº¢æ¶¨ç»¿è·Œé¢œè‰² | `UP` / `DOWN` / `UP_CLASS` / `DOWN_CLASS` |
-| `SCORE_LEVELS` | è¯„åˆ†ç­‰çº§ï¼ˆä¼˜ç§€/è‰¯å¥½/ä¸€èˆ¬/è¾ƒå¼±/å·®ï¼‰ | `EXCELLENT` / `GOOD` / `AVERAGE` / `POOR` / `BAD` |
-| `KAI_DIMENSION_NAMES` | KAI å…­å¤§ç»´åº¦åç§° | `COMPETITIVENESS` / `TECHNICAL` / `FUNDAMENTAL` ç­‰ |
-| `LLM_MODEL_VERSIONS` | å¤§æ¨¡åž‹ç‰ˆæœ¬ä¸‹æ‹‰é€‰é¡¹ | `KAILLM_V2_1` / `BASELINE_V1_5` ç­‰ |
-| `INVESTMENT_PROFILE_METRICS` | æŠ•èµ„ç”»åƒæŒ‡æ ‡åç§° | `ABILITY` / `STYLE` / `RISK_CONTROL` ç­‰ |
-| `STOCK_POOL_STATUS_COLORS` | è‚¡ç¥¨æ± èµ„é‡‘/ç­¹ç æ´»è·ƒåº¦ | `ACTIVE` / `WARM` / `COOL` / `COLD` |
+| `STOCK_COLOR_TOKENS` | A ¹ÉºìÕÇÂÌµøÑÕÉ« | `UP` / `DOWN` / `UP_CLASS` / `DOWN_CLASS` |
+| `SCORE_LEVELS` | ÆÀ·ÖµÈ¼¶£¨ÓÅÐã/Á¼ºÃ/Ò»°ã/½ÏÈõ/²î£© | `EXCELLENT` / `GOOD` / `AVERAGE` / `POOR` / `BAD` |
+| `KAI_DIMENSION_NAMES` | KAI Áù´óÎ¬¶ÈÃû³Æ | `COMPETITIVENESS` / `TECHNICAL` / `FUNDAMENTAL` µÈ |
+| `LLM_MODEL_VERSIONS` | ´óÄ£ÐÍ°æ±¾ÏÂÀ­Ñ¡Ïî | `KAILLM_V2_1` / `BASELINE_V1_5` µÈ |
+| `INVESTMENT_PROFILE_METRICS` | Í¶×Ê»­ÏñÖ¸±êÃû³Æ | `ABILITY` / `STYLE` / `RISK_CONTROL` µÈ |
+| `STOCK_POOL_STATUS_COLORS` | ¹ÉÆ±³Ø×Ê½ð/³ïÂë»îÔ¾¶È | `ACTIVE` / `WARM` / `COOL` / `COLD` |
 
 ---
 
-## 3. ç›®å½•ç»“æž„
+## 3. Ä¿Â¼½á¹¹
 
 ```text
 src/
-â”œâ”€â”€ cockpit/                          # é©¾é©¶èˆ±æ ¸å¿ƒ
-â”‚   â”œâ”€â”€ CockpitShell.tsx              # é©¾é©¶èˆ±å¤–å£³ï¼Œæ•´åˆ MarketDataProvider ä¸Ž GridLayout
-â”‚   â”œâ”€â”€ core/
-â”‚   â”‚   â”œâ”€â”€ widgetEngine.ts           # Widget ç»„ä»¶åŠ¨æ€åŠ è½½ä¸Žç¼“å­˜
-â”‚   â”‚   â””â”€â”€ widgetRegistry.ts         # Widget æ³¨å†Œä¸­å¿ƒä¸Žé»˜è®¤å®žä¾‹
-â”‚   â”œâ”€â”€ data/
-â”‚   â”‚   â””â”€â”€ mockDataProvider.ts       # åŽŸæœ‰å¸‚åœº Mock æ•°æ®
-â”‚   â”œâ”€â”€ providers/
-â”‚   â”‚   â””â”€â”€ MarketDataProvider.tsx    # ç»Ÿä¸€æ•°æ®ä¸Šä¸‹æ–‡ä¸Žé‡‡é›†ä»»åŠ¡è°ƒåº¦
-â”‚   â””â”€â”€ widgets/                      # Widget ç»„ä»¶åº“
-â”‚       â”œâ”€â”€ InvestmentProfileWidget.tsx   # A. æŠ•èµ„ç”»åƒ/åˆ†æžä¸­å¿ƒ
-â”‚       â”œâ”€â”€ StockPoolWidget.tsx           # B. è‚¡ç¥¨æ± ç®¡ç†ä¸Žç›‘æŽ§
-â”‚       â”œâ”€â”€ KaiScoreWidget.tsx            # C. KAI é€‰è‚¡ç»¼åˆè¯„åˆ†
-â”‚       â”œâ”€â”€ ModelCompareWidget.tsx        # D. AI å¤§æ¨¡åž‹æ™ºèƒ½å¯¹æ¯”
-â”‚       â”œâ”€â”€ StockChatWidget.tsx           # E. ä¸ªè‚¡/å¸‚åœºæ·±åº¦åˆ†æžèŠå¤©
-â”‚       â””â”€â”€ ...                           # å…¶ä»–å·²æœ‰ Widget
-â”œâ”€â”€ components/ui/                    # é€šç”¨ UI ç»„ä»¶ï¼ˆButton/Card/Table/Select ç­‰ï¼‰
-â”œâ”€â”€ constants/
-â”‚   â””â”€â”€ cockpit.constants.ts          # é©¾é©¶èˆ±å…¨éƒ¨å¸¸é‡ï¼ˆé¢œè‰²ã€ç»´åº¦ã€æ¨¡åž‹ç‰ˆæœ¬ã€æ•°æ®æºé…ç½®ï¼‰
-â”œâ”€â”€ services/
-â”‚   â”œâ”€â”€ data-collector/
-â”‚   â”‚   â”œâ”€â”€ MarketDataAdapter.ts      # åŽŸå§‹æ•°æ®æ ‡å‡†åŒ–é€‚é…å™¨
-â”‚   â”‚   â”œâ”€â”€ TaskScheduler.ts          # é‡‡é›†ä»»åŠ¡æ³¨å†Œã€å¯åŠ¨ã€åœæ­¢ã€è½®è¯¢
-â”‚   â”‚   â””â”€â”€ collectors/
-â”‚   â”‚       â”œâ”€â”€ BaseCollector.ts      # é‡‡é›†å™¨åŸºç±»ï¼ˆè¶…æ—¶/é‡è¯•/å–æ¶ˆï¼‰
-â”‚   â”‚       â”œâ”€â”€ MockCollector.ts      # Mock æ•°æ®é‡‡é›†å™¨
-â”‚   â”‚       â”œâ”€â”€ RestCollector.ts      # REST é‡‡é›†å™¨
-â”‚   â”‚       â””â”€â”€ WebSocketCollector.ts # WebSocket é‡‡é›†å™¨
-â”‚   â””â”€â”€ stock-analysis/
-â”‚       â””â”€â”€ mockStockAnalysisProvider.ts  # æ–°å¢žé‡‘èžä¸šåŠ¡ Mock æ•°æ®ç”Ÿæˆ
-â”œâ”€â”€ types/
-â”‚   â””â”€â”€ modules/
-â”‚       â””â”€â”€ widget.types.ts           # Widget æ¡†æž¶ä¸Žé‡‘èžä¸šåŠ¡æ•°æ®ç±»åž‹
-â””â”€â”€ lib/
-    â”œâ”€â”€ logger.ts                     # æ—¥å¿—å·¥å…·
-    â”œâ”€â”€ eventBus.ts                   # äº‹ä»¶æ€»çº¿
-    â””â”€â”€ utils.ts                      # å·¥å…·å‡½æ•°ï¼ˆcn ç­‰ï¼‰
+©À©¤©¤ cockpit/                          # ¼ÝÊ»²ÕºËÐÄ
+©¦   ©À©¤©¤ CockpitShell.tsx              # ¼ÝÊ»²ÕÍâ¿Ç£¬ÕûºÏ MarketDataProvider Óë GridLayout
+©¦   ©À©¤©¤ core/
+©¦   ©¦   ©À©¤©¤ widgetEngine.ts           # Widget ×é¼þ¶¯Ì¬¼ÓÔØÓë»º´æ
+©¦   ©¦   ©¸©¤©¤ widgetRegistry.ts         # Widget ×¢²áÖÐÐÄÓëÄ¬ÈÏÊµÀý
+©¦   ©À©¤©¤ data/
+©¦   ©¦   ©¸©¤©¤ mockDataProvider.ts       # Ô­ÓÐÊÐ³¡ Mock Êý¾Ý
+©¦   ©À©¤©¤ providers/
+©¦   ©¦   ©¸©¤©¤ MarketDataProvider.tsx    # Í³Ò»Êý¾ÝÉÏÏÂÎÄÓë²É¼¯ÈÎÎñµ÷¶È
+©¦   ©¸©¤©¤ widgets/                      # Widget ×é¼þ¿â
+©¦       ©À©¤©¤ InvestmentProfileWidget.tsx   # A. Í¶×Ê»­Ïñ/·ÖÎöÖÐÐÄ
+©¦       ©À©¤©¤ StockPoolWidget.tsx           # B. ¹ÉÆ±³Ø¹ÜÀíÓë¼à¿Ø
+©¦       ©À©¤©¤ KaiScoreWidget.tsx            # C. KAI Ñ¡¹É×ÛºÏÆÀ·Ö
+©¦       ©À©¤©¤ ModelCompareWidget.tsx        # D. AI ´óÄ£ÐÍÖÇÄÜ¶Ô±È
+©¦       ©À©¤©¤ StockChatWidget.tsx           # E. ¸ö¹É/ÊÐ³¡Éî¶È·ÖÎöÁÄÌì
+©¦       ©¸©¤©¤ ...                           # ÆäËûÒÑÓÐ Widget
+©À©¤©¤ components/ui/                    # Í¨ÓÃ UI ×é¼þ£¨Button/Card/Table/Select µÈ£©
+©À©¤©¤ constants/
+©¦   ©¸©¤©¤ cockpit.constants.ts          # ¼ÝÊ»²ÕÈ«²¿³£Á¿£¨ÑÕÉ«¡¢Î¬¶È¡¢Ä£ÐÍ°æ±¾¡¢Êý¾ÝÔ´ÅäÖÃ£©
+©À©¤©¤ services/
+©¦   ©À©¤©¤ data-collector/
+©¦   ©¦   ©À©¤©¤ MarketDataAdapter.ts      # Ô­Ê¼Êý¾Ý±ê×¼»¯ÊÊÅäÆ÷
+©¦   ©¦   ©À©¤©¤ TaskScheduler.ts          # ²É¼¯ÈÎÎñ×¢²á¡¢Æô¶¯¡¢Í£Ö¹¡¢ÂÖÑ¯
+©¦   ©¦   ©¸©¤©¤ collectors/
+©¦   ©¦       ©À©¤©¤ BaseCollector.ts      # ²É¼¯Æ÷»ùÀà£¨³¬Ê±/ÖØÊÔ/È¡Ïû£©
+©¦   ©¦       ©À©¤©¤ MockCollector.ts      # Mock Êý¾Ý²É¼¯Æ÷
+©¦   ©¦       ©À©¤©¤ RestCollector.ts      # REST ²É¼¯Æ÷
+©¦   ©¦       ©¸©¤©¤ WebSocketCollector.ts # WebSocket ²É¼¯Æ÷
+©¦   ©¸©¤©¤ stock-analysis/
+©¦       ©¸©¤©¤ mockStockAnalysisProvider.ts  # ÐÂÔö½ðÈÚÒµÎñ Mock Êý¾ÝÉú³É
+©À©¤©¤ types/
+©¦   ©¸©¤©¤ modules/
+©¦       ©¸©¤©¤ widget.types.ts           # Widget ¿ò¼ÜÓë½ðÈÚÒµÎñÊý¾ÝÀàÐÍ
+©¸©¤©¤ lib/
+    ©À©¤©¤ logger.ts                     # ÈÕÖ¾¹¤¾ß
+    ©À©¤©¤ eventBus.ts                   # ÊÂ¼þ×ÜÏß
+    ©¸©¤©¤ utils.ts                      # ¹¤¾ßº¯Êý£¨cn µÈ£©
 
-tests/                                # å•å…ƒæµ‹è¯•ç›®å½•
-â”œâ”€â”€ setup.ts                          # Vitest å…¨å±€é…ç½®
-â”œâ”€â”€ services/
-â”‚   â”œâ”€â”€ MockCollector.test.ts         # MockCollector éšæœºæ•°æ®ç”Ÿæˆæµ‹è¯•
-â”‚   â””â”€â”€ MarketDataAdapter.test.ts     # Adapter å­—æ®µæ˜ å°„æµ‹è¯•
-â””â”€â”€ ...                               # å…¶ä»–æµ‹è¯•
+tests/                                # µ¥Ôª²âÊÔÄ¿Â¼
+©À©¤©¤ setup.ts                          # Vitest È«¾ÖÅäÖÃ
+©À©¤©¤ services/
+©¦   ©À©¤©¤ MockCollector.test.ts         # MockCollector Ëæ»úÊý¾ÝÉú³É²âÊÔ
+©¦   ©¸©¤©¤ MarketDataAdapter.test.ts     # Adapter ×Ö¶ÎÓ³Éä²âÊÔ
+©¸©¤©¤ ...                               # ÆäËû²âÊÔ
 ```
 
 ---
 
-## 4. æ·»åŠ æ–°é‡‘èžç»´åº¦ Widget çš„ SOP
+## 4. Ìí¼ÓÐÂ½ðÈÚÎ¬¶È Widget µÄ SOP
 
-### 4.1 æ­¥éª¤æ¦‚è§ˆ
+### 4.1 ²½Öè¸ÅÀÀ
 
 ```mermaid
 flowchart LR
-    A["1. å®šä¹‰ç±»åž‹"] --> B["2. æ³¨å†Œå¸¸é‡"]
-    B --> C["3. ç”Ÿæˆ Mock æ•°æ®"]
-    C --> D["4. æ‰©å±• Adapter"]
-    D --> E["5. æ‰©å±• Collector"]
-    E --> F["6. ç¼–å†™ Widget"]
-    F --> G["7. æ³¨å†Œ Widget"]
-    G --> H["8. è¡¥å……æµ‹è¯•"]
-    H --> I["9. éªŒè¯æž„å»º"]
+    A["1. ¶¨ÒåÀàÐÍ"] --> B["2. ×¢²á³£Á¿"]
+    B --> C["3. Éú³É Mock Êý¾Ý"]
+    C --> D["4. À©Õ¹ Adapter"]
+    D --> E["5. À©Õ¹ Collector"]
+    E --> F["6. ±àÐ´ Widget"]
+    F --> G["7. ×¢²á Widget"]
+    G --> H["8. ²¹³ä²âÊÔ"]
+    H --> I["9. ÑéÖ¤¹¹½¨"]
 ```
 
-### 4.2 è¯¦ç»†æ­¥éª¤
+### 4.2 ÏêÏ¸²½Öè
 
-#### Step 1 â€” åœ¨ `src/types/modules/widget.types.ts` ä¸­å®šä¹‰ç±»åž‹
+#### Step 1 ¡ª ÔÚ `src/types/modules/widget.types.ts` ÖÐ¶¨ÒåÀàÐÍ
 
-1. æ‰©å±• `RawMarketData.dataType` è”åˆç±»åž‹ï¼Œæ–°å¢žä¸šåŠ¡æ ‡è¯†ï¼Œä¾‹å¦‚ `'myDimension'`ã€‚
-2. æ‰©å±• `MarketData` æŽ¥å£ï¼Œæ–°å¢žå­—æ®µï¼Œä¾‹å¦‚ `myDimension: MyDimensionData`ã€‚
-3. æ–°å¢ž `MyDimensionData` åŠå…¶å­ç±»åž‹ã€‚
+1. À©Õ¹ `RawMarketData.dataType` ÁªºÏÀàÐÍ£¬ÐÂÔöÒµÎñ±êÊ¶£¬ÀýÈç `'myDimension'`¡£
+2. À©Õ¹ `MarketData` ½Ó¿Ú£¬ÐÂÔö×Ö¶Î£¬ÀýÈç `myDimension: MyDimensionData`¡£
+3. ÐÂÔö `MyDimensionData` ¼°Æä×ÓÀàÐÍ¡£
 
-> ç¦æ­¢åœ¨è§†å›¾ç»„ä»¶ä¸­å†…è”å®šä¹‰ä¸šåŠ¡ç±»åž‹ï¼›æ‰€æœ‰ç±»åž‹å¿…é¡»æ¥è‡ªæ­¤æ–‡ä»¶ã€‚
+> ½ûÖ¹ÔÚÊÓÍ¼×é¼þÖÐÄÚÁª¶¨ÒåÒµÎñÀàÐÍ£»ËùÓÐÀàÐÍ±ØÐëÀ´×Ô´ËÎÄ¼þ¡£
 
-#### Step 2 â€” åœ¨ `src/constants/cockpit.constants.ts` ä¸­æ³¨å†Œå¸¸é‡
+#### Step 2 ¡ª ÔÚ `src/constants/cockpit.constants.ts` ÖÐ×¢²á³£Á¿
 
-1. å¦‚æ–°å¢žç»´åº¦/é¢œè‰²/æ¨¡åž‹ç‰ˆæœ¬ï¼Œåœ¨æ–‡ä»¶é¡¶éƒ¨è¿½åŠ æ˜ å°„å¸¸é‡ã€‚
-2. åœ¨ `WIDGET_DEFAULT_DATA_SOURCE` ä¸­ä¸ºæ–° Widget æ³¨å†Œæ•°æ®æºï¼š
+1. ÈçÐÂÔöÎ¬¶È/ÑÕÉ«/Ä£ÐÍ°æ±¾£¬ÔÚÎÄ¼þ¶¥²¿×·¼ÓÓ³Éä³£Á¿¡£
+2. ÔÚ `WIDGET_DEFAULT_DATA_SOURCE` ÖÐÎªÐÂ Widget ×¢²áÊý¾ÝÔ´£º
    - `type: ACTIVE_DATA_SOURCE`
    - `mode: 'polling' | 'once' | 'streaming'`
    - `endpoint: '/my-service/my-dimension'`
    - `interval: COLLECTOR_DEFAULT_CONFIG.DEFAULT_POLLING_INTERVAL`
-3. åœ¨ `DEFAULT_WIDGET_CONFIG` ä¸­æ³¨å†Œé»˜è®¤å°ºå¯¸ä¸Žæ ‡é¢˜ã€‚
+3. ÔÚ `DEFAULT_WIDGET_CONFIG` ÖÐ×¢²áÄ¬ÈÏ³ß´çÓë±êÌâ¡£
 
-#### Step 3 â€” åœ¨ `src/services/stock-analysis/mockStockAnalysisProvider.ts` ç”Ÿæˆ Mock æ•°æ®
+#### Step 3 ¡ª ÔÚ `src/services/stock-analysis/mockStockAnalysisProvider.ts` Éú³É Mock Êý¾Ý
 
-1. æ·»åŠ æ•°æ®ç”Ÿæˆå‡½æ•°ï¼ˆå¦‚ `generateMyDimension()`ï¼‰ã€‚
-2. åœ¨ `MockStockAnalysisProvider` ä¸Šæš´éœ²é™æ€æ–¹æ³•ï¼ˆå¦‚ `getMyDimension()`ï¼‰ã€‚
-3. æ·»åŠ æ¸…æ™°æ³¨é‡Šè¯´æ˜Žæœªæ¥æ›¿æ¢ä¸ºçœŸå®ž API çš„ç«¯ç‚¹ã€‚
+1. Ìí¼ÓÊý¾ÝÉú³Éº¯Êý£¨Èç `generateMyDimension()`£©¡£
+2. ÔÚ `MockStockAnalysisProvider` ÉÏ±©Â¶¾²Ì¬·½·¨£¨Èç `getMyDimension()`£©¡£
+3. Ìí¼ÓÇåÎú×¢ÊÍËµÃ÷Î´À´Ìæ»»ÎªÕæÊµ API µÄ¶Ëµã¡£
 
-#### Step 4 â€” æ‰©å±• `src/services/data-collector/MarketDataAdapter.ts`
+#### Step 4 ¡ª À©Õ¹ `src/services/data-collector/MarketDataAdapter.ts`
 
-1. åœ¨ `adapt()` çš„ `switch` ä¸­æ–°å¢ž `case 'myDimension':`ã€‚
-2. å®žçŽ°ç§æœ‰ `adaptMyDimension(payload: unknown): MyDimensionData` æ–¹æ³•ã€‚
-3. æ”¯æŒå­—æ®µåˆ«åæ˜ å°„ï¼Œä¾¿äºŽæŽ¥å…¥ä¸åŒåŽç«¯è¿”å›žçš„ JSON ç»“æž„ã€‚
-4. åœ¨ `merge()` ä¸­æä¾› `getDefaultMyDimension()` é»˜è®¤å€¼ã€‚
+1. ÔÚ `adapt()` µÄ `switch` ÖÐÐÂÔö `case 'myDimension':`¡£
+2. ÊµÏÖË½ÓÐ `adaptMyDimension(payload: unknown): MyDimensionData` ·½·¨¡£
+3. Ö§³Ö×Ö¶Î±ðÃûÓ³Éä£¬±ãÓÚ½ÓÈë²»Í¬ºó¶Ë·µ»ØµÄ JSON ½á¹¹¡£
+4. ÔÚ `merge()` ÖÐÌá¹© `getDefaultMyDimension()` Ä¬ÈÏÖµ¡£
 
-#### Step 5 â€” æ‰©å±• `src/services/data-collector/collectors/MockCollector.ts`
+#### Step 5 ¡ª À©Õ¹ `src/services/data-collector/collectors/MockCollector.ts`
 
-1. åœ¨ `collect()` çš„ endpoint è·¯ç”±ä¸­æ–°å¢žåˆ†æ”¯ï¼š
+1. ÔÚ `collect()` µÄ endpoint Â·ÓÉÖÐÐÂÔö·ÖÖ§£º
    ```ts
    if (endpoint.includes('my-dimension')) {
      const data = await MockStockAnalysisProvider.getMyDimension()
@@ -276,23 +283,23 @@ flowchart LR
    }
    ```
 
-#### Step 6 â€” ç¼–å†™ Widget ç»„ä»¶
+#### Step 6 ¡ª ±àÐ´ Widget ×é¼þ
 
-1. åœ¨ `src/cockpit/widgets/` æ–°å»º `MyDimensionWidget.tsx`ã€‚
-2. ç»„ä»¶ Props ç±»åž‹ï¼š
+1. ÔÚ `src/cockpit/widgets/` ÐÂ½¨ `MyDimensionWidget.tsx`¡£
+2. ×é¼þ Props ÀàÐÍ£º
    ```ts
    interface MyDimensionWidgetProps {
      config: WidgetConfig
      data?: MarketData
    }
    ```
-3. ä½¿ç”¨ `const marketData = useMarketData()`ï¼Œå¹¶ç”¨ `data ?? marketData.data` èŽ·å–æ•°æ®ã€‚
-4. æ‰€æœ‰é¢œè‰²ã€ç»´åº¦åç§°ã€æ•°å€¼å‡ä»Ž `cockpit.constants.ts` è¯»å–ã€‚
-5. åœ¨æ³¨é‡Šä¸­æ ‡æ³¨å“ªäº›æ•°æ®å¾…æ›¿æ¢ä¸ºçœŸå®žè¯åˆ¸/é‡åŒ– APIã€‚
+3. Ê¹ÓÃ `const marketData = useMarketData()`£¬²¢ÓÃ `data ?? marketData.data` »ñÈ¡Êý¾Ý¡£
+4. ËùÓÐÑÕÉ«¡¢Î¬¶ÈÃû³Æ¡¢ÊýÖµ¾ù´Ó `cockpit.constants.ts` ¶ÁÈ¡¡£
+5. ÔÚ×¢ÊÍÖÐ±ê×¢ÄÄÐ©Êý¾Ý´ýÌæ»»ÎªÕæÊµÖ¤È¯/Á¿»¯ API¡£
 
-#### Step 7 â€” åœ¨ `src/cockpit/core/widgetRegistry.ts` ä¸­æ³¨å†Œ Widget
+#### Step 7 ¡ª ÔÚ `src/cockpit/core/widgetRegistry.ts` ÖÐ×¢²á Widget
 
-1. åœ¨ `registerDefaultWidgets()` æ•°ç»„ä¸­æ–°å¢ž `WidgetTemplate`ï¼š
+1. ÔÚ `registerDefaultWidgets()` Êý×éÖÐÐÂÔö `WidgetTemplate`£º
    ```ts
    {
      meta: {
@@ -306,14 +313,14 @@ flowchart LR
      component: () => import('@/cockpit/widgets/MyDimensionWidget'),
    }
    ```
-2. åœ¨ `createDefaultInstances()` ä¸­è¿½åŠ é»˜è®¤å¸ƒå±€ä½ç½®ã€‚
+2. ÔÚ `createDefaultInstances()` ÖÐ×·¼ÓÄ¬ÈÏ²¼¾ÖÎ»ÖÃ¡£
 
-#### Step 8 â€” è¡¥å……å•å…ƒæµ‹è¯•
+#### Step 8 ¡ª ²¹³äµ¥Ôª²âÊÔ
 
-1. åœ¨ `tests/services/MockCollector.test.ts` ä¸­æ–°å¢žæµ‹è¯•ï¼šéªŒè¯æ–° endpoint è¿”å›žçš„ `RawMarketData` ç»“æž„ã€‚
-2. åœ¨ `tests/services/MarketDataAdapter.test.ts` ä¸­æ–°å¢žæµ‹è¯•ï¼šéªŒè¯åŽŸå§‹ payload èƒ½æ­£ç¡®æ˜ å°„ä¸ºæ ‡å‡†åŒ–ç±»åž‹ã€‚
+1. ÔÚ `tests/services/MockCollector.test.ts` ÖÐÐÂÔö²âÊÔ£ºÑéÖ¤ÐÂ endpoint ·µ»ØµÄ `RawMarketData` ½á¹¹¡£
+2. ÔÚ `tests/services/MarketDataAdapter.test.ts` ÖÐÐÂÔö²âÊÔ£ºÑéÖ¤Ô­Ê¼ payload ÄÜÕýÈ·Ó³ÉäÎª±ê×¼»¯ÀàÐÍ¡£
 
-#### Step 9 â€” éªŒè¯æž„å»º
+#### Step 9 ¡ª ÑéÖ¤¹¹½¨
 
 ```bash
 npm run tsc:prod
@@ -323,62 +330,62 @@ npm run build
 
 ---
 
-## 5. è´¨é‡ä¿éšœä½“ç³»
+## 5. ÖÊÁ¿±£ÕÏÌåÏµ
 
-### 5.1 æµ‹è¯•åˆ†å±‚
+### 5.1 ²âÊÔ·Ö²ã
 
 ```mermaid
 flowchart TB
-    subgraph Unit["å•å…ƒæµ‹è¯•å±‚"]
-        U1["Collector æ•°æ®ç”Ÿæˆæµ‹è¯•"]
-        U2["Adapter å­—æ®µæ˜ å°„æµ‹è¯•"]
-        U3["Widget æ¸²æŸ“å¿«ç…§/äº¤äº’æµ‹è¯•"]
+    subgraph Unit["µ¥Ôª²âÊÔ²ã"]
+        U1["Collector Êý¾ÝÉú³É²âÊÔ"]
+        U2["Adapter ×Ö¶ÎÓ³Éä²âÊÔ"]
+        U3["Widget äÖÈ¾¿ìÕÕ/½»»¥²âÊÔ"]
     end
-    subgraph Integration["é›†æˆæµ‹è¯•å±‚"]
-        I1["MarketDataProvider + TaskScheduler é›†æˆ"]
-        I2["WidgetRegistry + WidgetEngine é›†æˆ"]
+    subgraph Integration["¼¯³É²âÊÔ²ã"]
+        I1["MarketDataProvider + TaskScheduler ¼¯³É"]
+        I2["WidgetRegistry + WidgetEngine ¼¯³É"]
     end
-    subgraph E2E["ç«¯åˆ°ç«¯æµ‹è¯•å±‚"]
-        E1["é©¾é©¶èˆ±é¡µé¢åŠ è½½ä¸Žæ‹–æ‹½å¸ƒå±€"]
-        E2["æ•°æ®æºåˆ‡æ¢ Mock/REST å†’çƒŸæµ‹è¯•"]
+    subgraph E2E["¶Ëµ½¶Ë²âÊÔ²ã"]
+        E1["¼ÝÊ»²ÕÒ³Ãæ¼ÓÔØÓëÍÏ×§²¼¾Ö"]
+        E2["Êý¾ÝÔ´ÇÐ»» Mock/REST Ã°ÑÌ²âÊÔ"]
     end
     Unit --> Integration --> E2E
 ```
 
-### 5.2 å…³é”®æµ‹è¯•å…³æ³¨ç‚¹
+### 5.2 ¹Ø¼ü²âÊÔ¹Ø×¢µã
 
-| å±‚çº§ | å…³æ³¨ç‚¹ | å·¥å…· |
+| ²ã¼¶ | ¹Ø×¢µã | ¹¤¾ß |
 |------|--------|------|
-| å•å…ƒæµ‹è¯• | Mock æ•°æ®ç”ŸæˆèŒƒå›´ã€Adapter å­—æ®µæ˜ å°„ã€å¸¸é‡å¼•ç”¨ | Vitest |
-| é›†æˆæµ‹è¯• | Provider æ•°æ®æ³¨å…¥ã€TaskScheduler ç”Ÿå‘½å‘¨æœŸ | Vitest + @testing-library/react |
-| E2E æµ‹è¯• | é¡µé¢æ¸²æŸ“ã€Widget æ‹–æ‹½ã€ç½‘ç»œè¯·æ±‚ Mock | Playwright |
+| µ¥Ôª²âÊÔ | Mock Êý¾ÝÉú³É·¶Î§¡¢Adapter ×Ö¶ÎÓ³Éä¡¢³£Á¿ÒýÓÃ | Vitest |
+| ¼¯³É²âÊÔ | Provider Êý¾Ý×¢Èë¡¢TaskScheduler ÉúÃüÖÜÆÚ | Vitest + @testing-library/react |
+| E2E ²âÊÔ | Ò³ÃæäÖÈ¾¡¢Widget ÍÏ×§¡¢ÍøÂçÇëÇó Mock | Playwright |
 
-### 5.3 ä»£ç è´¨é‡é—¨ç¦
+### 5.3 ´úÂëÖÊÁ¿ÃÅ½û
 
-- `npm run lint`ï¼šESLint é€šè¿‡ã€‚
-- `npm run tsc:prod`ï¼šTypeScript ç±»åž‹æ£€æŸ¥é€šè¿‡ã€‚
-- `npm run test`ï¼šå•å…ƒæµ‹è¯•é€šè¿‡çŽ‡ 100%ã€‚
-- `npm run build`ï¼šç”Ÿäº§æž„å»ºæˆåŠŸã€‚
+- `npm run lint`£ºESLint Í¨¹ý¡£
+- `npm run tsc:prod`£ºTypeScript ÀàÐÍ¼ì²éÍ¨¹ý¡£
+- `npm run test`£ºµ¥Ôª²âÊÔÍ¨¹ýÂÊ 100%¡£
+- `npm run build`£ºÉú²ú¹¹½¨³É¹¦¡£
 
 ---
 
-## 6. çŽ¯å¢ƒå˜é‡è¯´æ˜Ž
+## 6. »·¾³±äÁ¿ËµÃ÷
 
-| å˜é‡å | è¯´æ˜Ž | é»˜è®¤å€¼ | å…¸åž‹å€¼ |
+| ±äÁ¿Ãû | ËµÃ÷ | Ä¬ÈÏÖµ | µäÐÍÖµ |
 |--------|------|--------|--------|
-| `VITE_DATA_SOURCE_TYPE` | æ•°æ®æºç±»åž‹ | `mock` | `mock` / `rest` / `websocket` |
-| `VITE_API_BASE_URL` | REST API åŸºç¡€åœ°å€ | `/api` | `https://api.example.com` |
-| `VITE_WS_URL` | WebSocket åœ°å€ | `ws://localhost:8080/ws` | `wss://ws.example.com` |
-| `VITE_LLM_BASE_URL` | å¤§æ¨¡åž‹ API åœ°å€ | â€” | `https://api.deepseek.com/v1` |
-| `VITE_LLM_API_KEY` | å¤§æ¨¡åž‹ API å¯†é’¥ | â€” | `sk-...` |
-| `VITE_LLM_MODEL` | å¤§æ¨¡åž‹æ¨¡åž‹å | â€” | `deepseek-chat` |
+| `VITE_DATA_SOURCE_TYPE` | Êý¾ÝÔ´ÀàÐÍ | `mock` | `mock` / `rest` / `websocket` |
+| `VITE_API_BASE_URL` | REST API »ù´¡µØÖ· | `/api` | `https://api.example.com` |
+| `VITE_WS_URL` | WebSocket µØÖ· | `ws://localhost:8080/ws` | `wss://ws.example.com` |
+| `VITE_LLM_BASE_URL` | ´óÄ£ÐÍ API µØÖ· | ¡ª | `https://api.deepseek.com/v1` |
+| `VITE_LLM_API_KEY` | ´óÄ£ÐÍ API ÃÜÔ¿ | ¡ª | `sk-...` |
+| `VITE_LLM_MODEL` | ´óÄ£ÐÍÄ£ÐÍÃû | ¡ª | `deepseek-chat` |
 
 ---
 
-## 7. å…³é”®çº¦å®š
+## 7. ¹Ø¼üÔ¼¶¨
 
-1. **è§†å›¾å±‚ä¸ç›´æŽ¥è°ƒç”¨åŽç«¯**ï¼šæ‰€æœ‰æ•°æ®é€šè¿‡ `useMarketData()` æˆ– `data` props èŽ·å–ã€‚
-2. **å¸¸é‡é›†ä¸­ç®¡ç†**ï¼šç¦æ­¢åœ¨ç»„ä»¶ä¸­ç¡¬ç¼–ç é¢œè‰²ã€ç»´åº¦åã€æ¨¡åž‹ç‰ˆæœ¬ã€ç«¯ç‚¹è·¯å¾„ã€‚
-3. **Adapter å…œåº•**ï¼šä»»ä½•å­—æ®µç¼ºå¤±æ—¶ï¼ŒAdapter å¿…é¡»è¿”å›žåˆæ³•é»˜è®¤å€¼ï¼Œé¿å…ç»„ä»¶å´©æºƒã€‚
-4. **æ³¨é‡Šæ ‡æ³¨æ›¿æ¢ç‚¹**ï¼šæ‰€æœ‰ Mock æ•°æ®ç”Ÿæˆå™¨å’Œä¸´æ—¶ç«¯ç‚¹å¿…é¡»åŒ…å« â€œæœªæ¥æ›¿æ¢ä¸ºçœŸå®ž APIâ€ çš„æ³¨é‡Šã€‚
-5. **æ–°å¢ž Widget éµå¾ª SOP**ï¼šå¿…é¡»åŒæ­¥æ›´æ–°ç±»åž‹ã€å¸¸é‡ã€Mockã€Adapterã€Collectorã€æ³¨å†Œä¸­å¿ƒå’Œæµ‹è¯•ã€‚
+1. **ÊÓÍ¼²ã²»Ö±½Óµ÷ÓÃºó¶Ë**£ºËùÓÐÊý¾ÝÍ¨¹ý `useMarketData()` »ò `data` props »ñÈ¡¡£
+2. **³£Á¿¼¯ÖÐ¹ÜÀí**£º½ûÖ¹ÔÚ×é¼þÖÐÓ²±àÂëÑÕÉ«¡¢Î¬¶ÈÃû¡¢Ä£ÐÍ°æ±¾¡¢¶ËµãÂ·¾¶¡£
+3. **Adapter ¶µµ×**£ºÈÎºÎ×Ö¶ÎÈ±Ê§Ê±£¬Adapter ±ØÐë·µ»ØºÏ·¨Ä¬ÈÏÖµ£¬±ÜÃâ×é¼þ±ÀÀ£¡£
+4. **×¢ÊÍ±ê×¢Ìæ»»µã**£ºËùÓÐ Mock Êý¾ÝÉú³ÉÆ÷ºÍÁÙÊ±¶Ëµã±ØÐë°üº¬ ¡°Î´À´Ìæ»»ÎªÕæÊµ API¡± µÄ×¢ÊÍ¡£
+5. **ÐÂÔö Widget ×ñÑ­ SOP**£º±ØÐëÍ¬²½¸üÐÂÀàÐÍ¡¢³£Á¿¡¢Mock¡¢Adapter¡¢Collector¡¢×¢²áÖÐÐÄºÍ²âÊÔ¡£

@@ -52,7 +52,7 @@ npm run preview   # 预览生产构建
 
 ## 构建优化（PR-5）
 
-本项目采用 Vite v6.4.3 构建，已实施以下优化（详见 [docs/changelogs/2026-07/pr-5-build-optimization-summary.md](docs/changelogs/2026-07/pr-5-build-optimization-summary.md)）：
+本项目采用 Vite v6.4.3 构建，已实施以下优化（详见 [docs/reference/changelogs/2026-07/pr-5-build-optimization-summary.md](docs/reference/changelogs/2026-07/pr-5-build-optimization-summary.md)）：
 
 ### ManualChunks 配置
 

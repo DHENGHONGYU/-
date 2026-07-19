@@ -8,7 +8,7 @@
  */
 
 import { getLogger } from '@/lib/logger'
-import { generateId } from '@/data/db'
+import { generateId } from '@/lib/utils'
 import { chat as rawChat, streamingChat as rawStreamingChat, LlmApiError } from '@/services/llm/llmClient'
 import type { LlmConfig } from '@/config/llmConfig'
 import type { LlmMessage, LlmResponse, LlmStreamCallback, LlmStructuredOptions } from '@/services/llm/llmTypes'

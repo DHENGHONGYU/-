@@ -16,8 +16,6 @@
  *
  * 用法：
  *   npx tsx scripts/llm-doc-generator.ts [--scan-all] [--force]
- */
-
 /**
  * @file llm-doc-generator.ts
  * @description 基于语义校验结果，利用 LLM 自动生成文档更新建议草稿

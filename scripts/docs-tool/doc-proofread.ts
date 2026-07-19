@@ -24,6 +24,7 @@ import {
   getCheckPolicy,
   type DocTier,
 } from './doc-proofreading-strategy'
+import { runStyleChecks } from './style-lint'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(__dirname, '..', '..')
@@ -88,6 +89,11 @@ function main(): void {
     }
   }
 
+  // 扩展 style 维度（doc-style-standard.md §9，当前 warning 级，不阻断）
+  const styleReport = runStyleChecks(ROOT)
+  const styleTotal = styleReport.total
+  const styleByRule = styleReport.summary
+
   const wouldBlock = types.some(
     (t) => getCheckPolicy(t).blocking && scopeStats[t].broken > 0,
   )
@@ -100,6 +106,7 @@ function main(): void {
       timestamp: new Date().toISOString(),
     },
     scopeStats,
+    style: { total: styleTotal, byRule: styleByRule },
     wouldBlock,
     fullSummary: result.summary,
   }
@@ -121,6 +128,10 @@ function main(): void {
       )
     }
     console.log('─'.repeat(60))
+    console.log(
+      '  ⚠️  [style] 文档风格合规: %d 项（warning，不阻断）',
+      styleTotal,
+    )
     const totalBroken = types.reduce((s, t) => s + scopeStats[t].broken, 0)
     if (totalBroken === 0) {
       console.log('✅ 核心/重要文档范围内无断裂交叉引用')

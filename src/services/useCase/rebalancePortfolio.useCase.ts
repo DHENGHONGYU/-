@@ -1,5 +1,8 @@
 /**
  * @module services/useCase/rebalancePortfolio.useCase
+ * @note P1-12（已确认合规）：dataLayer store 内部通过 sendWriteEnvelope() → DataBridge 写入，
+ *   queryList/queryGet 走 DataBridge 查询，是 DataBridge 的类型安全包装层。
+ *   符合 services → data 分层规则（AGENTS.md §一），无需迁移。
  * @description 投资组合再平衡用例
  *
  * 将原先 portfolioService 中的 rebalance 业务逻辑抽取为独立 UseCase，
@@ -7,7 +10,7 @@
  */
 
 import { getLogger } from '@/lib/logger'
-import { portfolioStore } from '@/data/dataLayer'
+import { portfolioStore } from '@/data/dataLayerTradingStores'
 import { runInTransaction } from '@/core/transaction'
 import { STORE_NAME } from '@/config/dbConfig'
 import type { Portfolio, Order } from '@/data/types'

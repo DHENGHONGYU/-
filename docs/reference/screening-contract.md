@@ -1,62 +1,65 @@
 ---
-title: screening-contract
+title: screening-contract.md ¡ª Ñ¡¹É/É¸Ñ¡×ÓÓò½Ó¿ÚÆõÔ¼
+type: reference
+domain: backend
+phase: design
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "¶¨Î»£º¶¨Òå `screening` ×ÓÓòµÄ½Ó¿ÚÆõÔ¼¡¢Ö°Ôğ±ß½ç¡¢Êı¾İÁ÷ÓëÒÀÀµ¹ØÏµ¡£ ¹ØÁª£º`./services-catalog.md`£¨24 ×ÓÓò×ÜÀÀ£©¡¢`../../AGENTS.md`..."
+tags: [backend, screening, contract]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: important
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: screening-contract.md â€” é€‰è‚¡/ç­›é€‰å­åŸŸæ¥å£å¥‘çº¦
-status: draft
-owner: æ¶æ„ç»„
-updated: 2026-07-12
-code_version: 2.0.0
-tier: important
----
+# screening-contract.md ¡ª Ñ¡¹É/É¸Ñ¡×ÓÓò½Ó¿ÚÆõÔ¼
 
-# screening-contract.md â€” é€‰è‚¡/ç­›é€‰å­åŸŸæ¥å£å¥‘çº¦
-
-> **å®šä½**ï¼šå®šä¹‰ `screening` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ç³»ã€‚  
-> **å…³è”**ï¼š`./services-catalog.md`ï¼ˆ24 å­åŸŸæ€»è§ˆï¼‰ã€`../../AGENTS.md` Â§ä¸€ï¼ˆåˆ†å±‚è§„åˆ™ï¼‰ã€‚
+> **¶¨Î»**£º¶¨Òå `screening` ×ÓÓòµÄ½Ó¿ÚÆõÔ¼¡¢Ö°Ôğ±ß½ç¡¢Êı¾İÁ÷ÓëÒÀÀµ¹ØÏµ¡£  
+> **¹ØÁª**£º`./services-catalog.md`£¨24 ×ÓÓò×ÜÀÀ£©¡¢`../../AGENTS.md` ¡ìÒ»£¨·Ö²ã¹æÔò£©¡£
 
 ---
 
-## 1. èŒè´£è¾¹ç•Œ
+## 1. Ö°Ôğ±ß½ç
 
-### 1.1 æ ¸å¿ƒèŒè´£
+### 1.1 ºËĞÄÖ°Ôğ
 
-- **å¤šå› å­æ¡ä»¶ç­›é€‰**ï¼šæŒ‰æ¡ä»¶ç»„ï¼ˆ`ScreeningConditionGroup`ï¼‰å¯¹è‚¡ç¥¨æ± æ‰§è¡Œ PE/PB/ROE/å¸‚å€¼/è¥æ”¶å¢é€Ÿ/å‡€åˆ©æ¶¦å¢é€Ÿç­‰å› å­ç­›é€‰ï¼Œæ”¯æŒç»„å†… `and`/`or` é€»è¾‘åŠ `gt`/`lt`/`gte`/`lte`/`eq`/`between` æ“ä½œç¬¦ã€‚
-- **ç­›é€‰æ¨¡æ¿ç”Ÿæˆ**ï¼šæ ¹æ®å½“å‰æ¡ä»¶ç»„ç”Ÿæˆå¯æŒä¹…åŒ–çš„ç­›é€‰æ¨¡æ¿ï¼ˆ`createTemplateFromGroups`ï¼‰ï¼Œå«éšæœºåç¼€é˜² ID ç¢°æ’ã€‚
-- **ç»“æœå¯¼å‡º**ï¼šå°†ç­›é€‰ç»“æœç”Ÿæˆå¸¦ BOM çš„ UTF-8 CSVï¼ˆ`generateScreeningCsv`ï¼‰ï¼Œå¹¶è§¦å‘æµè§ˆå™¨æ–‡ä»¶ä¸‹è½½ï¼ˆ`exportScreeningResults`ï¼‰ã€‚
-- **è‚¡ç¥¨æ± åŠ è½½**ï¼šä» `dataLayer.stocks` ä¸ `unifiedStockService` èšåˆåŠ è½½å¯ç­›é€‰è‚¡ç¥¨è§†å›¾ï¼Œç»Ÿä¸€å­—æ®µæ˜ å°„å¹¶å¡«å……ç¼ºå¤±å€¼å ä½ã€‚
+- **¶àÒò×ÓÌõ¼şÉ¸Ñ¡**£º°´Ìõ¼ş×é£¨`ScreeningConditionGroup`£©¶Ô¹ÉÆ±³ØÖ´ĞĞ PE/PB/ROE/ÊĞÖµ/ÓªÊÕÔöËÙ/¾»ÀûÈóÔöËÙµÈÒò×ÓÉ¸Ñ¡£¬Ö§³Ö×éÄÚ `and`/`or` Âß¼­¼° `gt`/`lt`/`gte`/`lte`/`eq`/`between` ²Ù×÷·û¡£
+- **É¸Ñ¡Ä£°åÉú³É**£º¸ù¾İµ±Ç°Ìõ¼ş×éÉú³É¿É³Ö¾Ã»¯µÄÉ¸Ñ¡Ä£°å£¨`createTemplateFromGroups`£©£¬º¬Ëæ»úºó×º·À ID Åö×²¡£
+- **½á¹ûµ¼³ö**£º½«É¸Ñ¡½á¹ûÉú³É´ø BOM µÄ UTF-8 CSV£¨`generateScreeningCsv`£©£¬²¢´¥·¢ä¯ÀÀÆ÷ÎÄ¼şÏÂÔØ£¨`exportScreeningResults`£©¡£
+- **¹ÉÆ±³Ø¼ÓÔØ**£º´Ó `dataLayer.stocks` Óë `unifiedStockService` ¾ÛºÏ¼ÓÔØ¿ÉÉ¸Ñ¡¹ÉÆ±ÊÓÍ¼£¬Í³Ò»×Ö¶ÎÓ³Éä²¢Ìî³äÈ±Ê§ÖµÕ¼Î»¡£
 
-### 1.2 åˆ†å±‚å®šä½
+### 1.2 ·Ö²ã¶¨Î»
 
-| ç»´åº¦ | è¯´æ˜ |
+| Î¬¶È | ËµÃ÷ |
 |------|------|
-| æ‰€å±å±‚ | `src/services/`ï¼ˆæœåŠ¡å±‚ï¼‰ |
-| ä¾èµ–æ–¹å‘ | åªèƒ½ä¾èµ– `core/`ã€`data/`ã€`lib/`ï¼ˆç™½åå•ï¼‰ |
-| ç¦æ­¢äº‹é¡¹ | ç¦æ­¢ç›´å†™ IndexedDBï¼ˆé¡»ç» `DataBridge.forward()`ï¼‰ï¼›æœ¬æœåŠ¡ä¸ç›´æ¥å†™ DBï¼Œç»“æœç»è¿”å›å€¼äº¤ç»™ Store å¤„ç† |
-| è¢«ä¾èµ–æ–¹ | `store/`ï¼ˆçŠ¶æ€å±‚ï¼‰ã€`pages/`ï¼ˆé¡µé¢å±‚ï¼‰å¯æ¶ˆè´¹æœ¬æœåŠ¡è¾“å‡º |
+| ËùÊô²ã | `src/services/`£¨·şÎñ²ã£© |
+| ÒÀÀµ·½Ïò | Ö»ÄÜÒÀÀµ `core/`¡¢`data/`¡¢`lib/`£¨°×Ãûµ¥£© |
+| ½ûÖ¹ÊÂÏî | ½ûÖ¹Ö±Ğ´ IndexedDB£¨Ğë¾­ `DataBridge.forward()`£©£»±¾·şÎñ²»Ö±½ÓĞ´ DB£¬½á¹û¾­·µ»ØÖµ½»¸ø Store ´¦Àí |
+| ±»ÒÀÀµ·½ | `store/`£¨×´Ì¬²ã£©¡¢`pages/`£¨Ò³Ãæ²ã£©¿ÉÏû·Ñ±¾·şÎñÊä³ö |
 
-### 1.3 ä¸ç›¸é‚»å­åŸŸçš„å…³ç³»
+### 1.3 ÓëÏàÁÚ×ÓÓòµÄ¹ØÏµ
 
-| ç›¸é‚»å­åŸŸ | å…³ç³» | æ•°æ®æµ |
+| ÏàÁÚ×ÓÓò | ¹ØÏµ | Êı¾İÁ÷ |
 |----------|------|--------|
-| `dataLayer` | ä¸Šæ¸¸ï¼šæä¾›è‚¡ç¥¨åˆ—è¡¨ | `dataLayer.stocks.list()` â†’ `loadScreenableStocks()` |
-| `unifiedStockService` | ä¸Šæ¸¸ï¼šæä¾›ç»Ÿä¸€è‚¡ç¥¨è§†å›¾ | `getUnifiedStockViews()` â†’ `loadScreenableStocks()` |
-| `multiFactorScreeningStore` | ä¸‹æ¸¸ï¼šæ¶ˆè´¹ç­›é€‰ç»“æœ | `runMultiFactorScreening()` â†’ `multiFactorScreeningStore` |
-| `analysis/screeningEngine` | ç›¸å…³ï¼šåˆ†æå­åŸŸå†…è´Ÿè´£ candidateâ†’screenedâ†’deepDive æ™‹å‡æµè½¬ | ä¸æœ¬ç›®å½• `multiFactorScreeningEngine` å¹¶åˆ—ï¼Œä½†èŒè´£ä¸åŒï¼ˆåè€…ä¸ºäº¤äº’å¼å¤šå› å­æ¡ä»¶å¼•æ“ï¼‰ |
-| `mcp/servers/screening` | ä¸‹æ¸¸ï¼šMCP Server å°è£… `analysis/screeningEngine` | `analysis/screeningEngine` â†’ `ScreeningServer`ï¼ˆéæœ¬ç›®å½• engineï¼‰ |
+| `dataLayer` | ÉÏÓÎ£ºÌá¹©¹ÉÆ±ÁĞ±í | `dataLayer.stocks.list()` ¡ú `loadScreenableStocks()` |
+| `unifiedStockService` | ÉÏÓÎ£ºÌá¹©Í³Ò»¹ÉÆ±ÊÓÍ¼ | `getUnifiedStockViews()` ¡ú `loadScreenableStocks()` |
+| `multiFactorScreeningStore` | ÏÂÓÎ£ºÏû·ÑÉ¸Ñ¡½á¹û | `runMultiFactorScreening()` ¡ú `multiFactorScreeningStore` |
+| `analysis/screeningEngine` | Ïà¹Ø£º·ÖÎö×ÓÓòÄÚ¸ºÔğ candidate¡úscreened¡údeepDive ½úÉıÁ÷×ª | Óë±¾Ä¿Â¼ `multiFactorScreeningEngine` ²¢ÁĞ£¬µ«Ö°Ôğ²»Í¬£¨ºóÕßÎª½»»¥Ê½¶àÒò×ÓÌõ¼şÒıÇæ£© |
+| `mcp/servers/screening` | ÏÂÓÎ£ºMCP Server ·â×° `analysis/screeningEngine` | `analysis/screeningEngine` ¡ú `ScreeningServer`£¨·Ç±¾Ä¿Â¼ engine£© |
 
 ---
 
-## 2. å…¬å…±æ¥å£
+## 2. ¹«¹²½Ó¿Ú
 
-### 2.1 ç±»å‹å®šä¹‰ï¼ˆTypeScript Interfaceï¼‰
+### 2.1 ÀàĞÍ¶¨Òå£¨TypeScript Interface£©
 
 ```typescript
-// æ–‡ä»¶ï¼šsrc/types/modules/screening.types.ts
+// ÎÄ¼ş£ºsrc/types/modules/screening.types.ts
 
 export type ScreeningFactor =
   | 'pe' | 'pb' | 'roe' | 'marketCap' | 'revenueGrowth' | 'profitGrowth'
@@ -119,101 +122,101 @@ export interface ScreeningFactorMeta {
 }
 ```
 
-### 2.2 ä¸»å…¥å£å‡½æ•°
+### 2.2 Ö÷Èë¿Úº¯Êı
 
-| å‡½æ•° | ç­¾å | èŒè´£ | é”™è¯¯å¤„ç† |
+| º¯Êı | Ç©Ãû | Ö°Ôğ | ´íÎó´¦Àí |
 |------|------|------|----------|
-| `loadScreenableStocks()` | `() => Promise<ScreenableStockData[]>` | ä» dataLayer + unifiedStockService åŠ è½½å¯ç­›é€‰è‚¡ç¥¨æ±  | `logger.info` è®°å½•ç©ºæ± /å®Œæˆï¼›å¼‚å¸¸å‘ä¸ŠæŠ› |
-| `runMultiFactorScreening()` | `(stocks: ScreenableStockData[], groups: ScreeningConditionGroup[]) => ScreeningRunResult` | æ‰§è¡Œå¤šæ¡ä»¶ç»„ç­›é€‰ï¼ˆç»„é—´ä¸º ANDï¼‰ | çº¯è®¡ç®—ï¼Œæ— å‰¯ä½œç”¨ï¼›`logger.info` è®°å½•å…¥é€‰/æ‹’ç»æ ·æœ¬ä¸è€—æ—¶ |
-| `generateScreeningCsv()` | `(items: ScreeningResultItem[]) => string` | ç”Ÿæˆå¸¦ BOM çš„ CSV å­—ç¬¦ä¸² | çº¯å­—ç¬¦ä¸²å¤„ç†ï¼Œæ— å‰¯ä½œç”¨ |
-| `exportScreeningResults()` | `(items: ScreeningResultItem[], filenamePrefix: string) => void` | è§¦å‘æµè§ˆå™¨ä¸‹è½½ CSV | ç©ºæ•°ç»„ç›´æ¥è¿”å›ï¼›DOM æ“ä½œåˆ›å»ºä¸´æ—¶ Blob/URL |
-| `createTemplateFromGroups()` | `(name: string, groups: ScreeningConditionGroup[], description?: string) => ScreeningTemplate` | æ ¹æ®æ¡ä»¶ç»„ç”Ÿæˆæ¨¡æ¿å¯¹è±¡ | çº¯æ„é€ ï¼Œæ— å‰¯ä½œç”¨ï¼›ID å«æ—¶é—´æˆ³+éšæœºåç¼€é˜²ç¢°æ’ |
+| `loadScreenableStocks()` | `() => Promise<ScreenableStockData[]>` | ´Ó dataLayer + unifiedStockService ¼ÓÔØ¿ÉÉ¸Ñ¡¹ÉÆ±³Ø | `logger.info` ¼ÇÂ¼¿Õ³Ø/Íê³É£»Òì³£ÏòÉÏÅ× |
+| `runMultiFactorScreening()` | `(stocks: ScreenableStockData[], groups: ScreeningConditionGroup[]) => ScreeningRunResult` | Ö´ĞĞ¶àÌõ¼ş×éÉ¸Ñ¡£¨×é¼äÎª AND£© | ´¿¼ÆËã£¬ÎŞ¸±×÷ÓÃ£»`logger.info` ¼ÇÂ¼ÈëÑ¡/¾Ü¾øÑù±¾ÓëºÄÊ± |
+| `generateScreeningCsv()` | `(items: ScreeningResultItem[]) => string` | Éú³É´ø BOM µÄ CSV ×Ö·û´® | ´¿×Ö·û´®´¦Àí£¬ÎŞ¸±×÷ÓÃ |
+| `exportScreeningResults()` | `(items: ScreeningResultItem[], filenamePrefix: string) => void` | ´¥·¢ä¯ÀÀÆ÷ÏÂÔØ CSV | ¿ÕÊı×éÖ±½Ó·µ»Ø£»DOM ²Ù×÷´´½¨ÁÙÊ± Blob/URL |
+| `createTemplateFromGroups()` | `(name: string, groups: ScreeningConditionGroup[], description?: string) => ScreeningTemplate` | ¸ù¾İÌõ¼ş×éÉú³ÉÄ£°å¶ÔÏó | ´¿¹¹Ôì£¬ÎŞ¸±×÷ÓÃ£»ID º¬Ê±¼ä´Á+Ëæ»úºó×º·ÀÅö×² |
 
-### 2.3 äº‹ä»¶æ¥å£
+### 2.3 ÊÂ¼ş½Ó¿Ú
 
-æœ¬å­åŸŸå½“å‰**æœªä½¿ç”¨ EventBus** å‘å¸ƒ/è®¢é˜…äº‹ä»¶ï¼Œæ‰€æœ‰çŠ¶æ€æµè½¬é€šè¿‡å‡½æ•°è¿”å›å€¼ç›´æ¥ä¼ é€’ã€‚Store å±‚ï¼ˆ`multiFactorScreeningStore`ï¼‰é€šè¿‡ `logger` è®°å½•é”™è¯¯ã€‚
+±¾×ÓÓòµ±Ç°**Î´Ê¹ÓÃ EventBus** ·¢²¼/¶©ÔÄÊÂ¼ş£¬ËùÓĞ×´Ì¬Á÷×ªÍ¨¹ıº¯Êı·µ»ØÖµÖ±½Ó´«µİ¡£Store ²ã£¨`multiFactorScreeningStore`£©Í¨¹ı `logger` ¼ÇÂ¼´íÎó¡£
 
-| äº‹ä»¶å | å‘å¸ƒæ–¹ | è®¢é˜…æ–¹ | è¯´æ˜ |
+| ÊÂ¼şÃû | ·¢²¼·½ | ¶©ÔÄ·½ | ËµÃ÷ |
 |--------|--------|--------|------|
-| â€” | â€” | â€” | æœ¬å­åŸŸæ—  EventBus äº‹ä»¶ï¼›çŠ¶æ€ç»è¿”å›å€¼åŒæ­¥ä¼ é€’ |
+| ¡ª | ¡ª | ¡ª | ±¾×ÓÓòÎŞ EventBus ÊÂ¼ş£»×´Ì¬¾­·µ»ØÖµÍ¬²½´«µİ |
 
 ---
 
-## 3. æ•°æ®æµ
+## 3. Êı¾İÁ÷
 
-### 3.1 å¤šå› å­ç­›é€‰ä¸»é“¾è·¯
-
-```
-[dataLayer.stocks.list()] â”€â”€â†’ [getUnifiedStockViews()] â”€â”€â†’ [loadScreenableStocks()]
-                                                                     â†“
-[MultiFactorFilterPanel] â†â”€â”€ [multiFactorScreeningStore] â†â”€â”€ [runMultiFactorScreening()]
-       â†‘                              â†“
-   ç”¨æˆ·æ“ä½œ                  conditionGroups / results / templates
-                              ï¼ˆæ¨¡æ¿æŒä¹…åŒ–ç» localStorageManagerï¼‰
-```
-
-### 3.2 ç»“æœå¯¼å‡ºé“¾è·¯
+### 3.1 ¶àÒò×ÓÉ¸Ñ¡Ö÷Á´Â·
 
 ```
-[multiFactorScreeningStore.results] â”€â”€â†’ [exportScreeningResults()]
-                                              â†“
-                                    [generateScreeningCsv()] â†’ Blob â†’ æµè§ˆå™¨ä¸‹è½½
+[dataLayer.stocks.list()] ©¤©¤¡ú [getUnifiedStockViews()] ©¤©¤¡ú [loadScreenableStocks()]
+                                                                     ¡ı
+[MultiFactorFilterPanel] ¡û©¤©¤ [multiFactorScreeningStore] ¡û©¤©¤ [runMultiFactorScreening()]
+       ¡ü                              ¡ı
+   ÓÃ»§²Ù×÷                  conditionGroups / results / templates
+                              £¨Ä£°å³Ö¾Ã»¯¾­ localStorageManager£©
 ```
 
-### 3.3 è¯´æ˜
+### 3.2 ½á¹ûµ¼³öÁ´Â·
 
-- æœ¬æœåŠ¡**ä¸ç›´æ¥å†™å…¥ IndexedDB**ï¼Œç­›é€‰ç»“æœé€šè¿‡è¿”å›å€¼äº¤ç”± `multiFactorScreeningStore` ç®¡ç†ã€‚
-- ç­›é€‰æ¨¡æ¿çš„æŒä¹…åŒ–ç”± Store å±‚é€šè¿‡ `localStorageManager` å®Œæˆï¼Œä¸ç» `DataBridge`ã€‚
-- `exportScreeningResults` å†…éƒ¨ä½¿ç”¨ DOM APIï¼ˆ`document.createElement('a')`ï¼‰è§¦å‘ä¸‹è½½ï¼Œå±äºæœåŠ¡å±‚å¯¹æµè§ˆå™¨ API çš„è¾¹ç•Œè°ƒç”¨ï¼Œå½“å‰ç”± UI å±‚é€šè¿‡ Store é—´æ¥è°ƒç”¨ã€‚
+```
+[multiFactorScreeningStore.results] ©¤©¤¡ú [exportScreeningResults()]
+                                              ¡ı
+                                    [generateScreeningCsv()] ¡ú Blob ¡ú ä¯ÀÀÆ÷ÏÂÔØ
+```
+
+### 3.3 ËµÃ÷
+
+- ±¾·şÎñ**²»Ö±½ÓĞ´Èë IndexedDB**£¬É¸Ñ¡½á¹ûÍ¨¹ı·µ»ØÖµ½»ÓÉ `multiFactorScreeningStore` ¹ÜÀí¡£
+- É¸Ñ¡Ä£°åµÄ³Ö¾Ã»¯ÓÉ Store ²ãÍ¨¹ı `localStorageManager` Íê³É£¬²»¾­ `DataBridge`¡£
+- `exportScreeningResults` ÄÚ²¿Ê¹ÓÃ DOM API£¨`document.createElement('a')`£©´¥·¢ÏÂÔØ£¬ÊôÓÚ·şÎñ²ã¶Ôä¯ÀÀÆ÷ API µÄ±ß½çµ÷ÓÃ£¬µ±Ç°ÓÉ UI ²ãÍ¨¹ı Store ¼ä½Óµ÷ÓÃ¡£
 
 ---
 
-## 4. é…ç½®ä¸ä¾èµ–
+## 4. ÅäÖÃÓëÒÀÀµ
 
-### 4.1 ä¾èµ–ç™½åå•ï¼ˆlib/ï¼‰
+### 4.1 ÒÀÀµ°×Ãûµ¥£¨lib/£©
 
-| ä¾èµ– | è·¯å¾„ | ç”¨é€” |
+| ÒÀÀµ | Â·¾¶ | ÓÃÍ¾ |
 |------|------|------|
-| logger | `@/lib/logger` | æ—¥å¿—è¾“å‡ºï¼ˆåŠ è½½è¿›åº¦ã€ç­›é€‰å®Œæˆã€å…¥é€‰/æ‹’ç»æ˜ç»†ï¼‰ |
-| dataLayer | `@/data/dataLayer` | åŠ è½½è‚¡ç¥¨åˆ—è¡¨ï¼ˆ`dataLayer.stocks.list()`ï¼‰ |
-| unifiedStockService | `@/services/unifiedStockService` | è·å–ç»Ÿä¸€è‚¡ç¥¨è§†å›¾ï¼ˆ`getUnifiedStockViews()`ï¼‰ |
-| types | `@/types/modules/screening.types` | ç±»å‹å®šä¹‰ï¼ˆé›¶ä¾èµ–ï¼Œçº¯ç±»å‹ï¼‰ |
+| logger | `@/lib/logger` | ÈÕÖ¾Êä³ö£¨¼ÓÔØ½ø¶È¡¢É¸Ñ¡Íê³É¡¢ÈëÑ¡/¾Ü¾øÃ÷Ï¸£© |
+| dataLayer | `@/data/dataLayer` | ¼ÓÔØ¹ÉÆ±ÁĞ±í£¨`dataLayer.stocks.list()`£© |
+| unifiedStockService | `@/services/unifiedStockService` | »ñÈ¡Í³Ò»¹ÉÆ±ÊÓÍ¼£¨`getUnifiedStockViews()`£© |
+| types | `@/types/modules/screening.types` | ÀàĞÍ¶¨Òå£¨ÁãÒÀÀµ£¬´¿ÀàĞÍ£© |
 
-> æ³¨ï¼šæœ¬å­åŸŸæœªä½¿ç”¨ `eventBus`ã€`format`ã€`errors` ç­‰ lib æ¨¡å—ã€‚
+> ×¢£º±¾×ÓÓòÎ´Ê¹ÓÃ `eventBus`¡¢`format`¡¢`errors` µÈ lib Ä£¿é¡£
 
-### 4.2 é…ç½®é¡¹
+### 4.2 ÅäÖÃÏî
 
-| é…ç½®å | é»˜è®¤å€¼ | è¯´æ˜ | æ¥æº |
+| ÅäÖÃÃû | Ä¬ÈÏÖµ | ËµÃ÷ | À´Ô´ |
 |--------|--------|------|------|
-| `MULTI_FACTOR_SCREENING_FACTORS` | 6 ä¸ªå› å­ï¼ˆPE/PB/ROE/å¸‚å€¼/è¥æ”¶å¢é€Ÿ/å‡€åˆ©æ¶¦å¢é€Ÿï¼‰ | å¯ç­›é€‰å› å­å…ƒæ•°æ® | `src/config/multiFactorScreeningConfig.ts` |
-| `MULTI_FACTOR_SCREENING_OPERATORS` | 6 ä¸ªæ“ä½œç¬¦ï¼ˆ`>`/`â‰¥`/`<`/`â‰¤`/`=`/`åŒºé—´`ï¼‰ | æ“ä½œç¬¦é€‰é¡¹ | `src/config/multiFactorScreeningConfig.ts` |
-| `MULTI_FACTOR_SCREENING_LOGICS` | `and`/`or` | æ¡ä»¶ç»„å†…é€»è¾‘é€‰é¡¹ | `src/config/multiFactorScreeningConfig.ts` |
-| `MULTI_FACTOR_SCREENING_STORAGE_KEY` | `'templates'` | æ¨¡æ¿ localStorage å­˜å‚¨ key | `src/config/multiFactorScreeningConfig.ts` |
-| `MULTI_FACTOR_SCREENING_TEMPLATE_NAME_MAX_LENGTH` | `50` | æ¨¡æ¿åç§°é•¿åº¦é™åˆ¶ | `src/config/multiFactorScreeningConfig.ts` |
-| `MULTI_FACTOR_SCREENING_CSV_FILENAME_PREFIX` | `'multi_factor_screening'` | CSV æ–‡ä»¶åå‰ç¼€ | `src/config/multiFactorScreeningConfig.ts` |
+| `MULTI_FACTOR_SCREENING_FACTORS` | 6 ¸öÒò×Ó£¨PE/PB/ROE/ÊĞÖµ/ÓªÊÕÔöËÙ/¾»ÀûÈóÔöËÙ£© | ¿ÉÉ¸Ñ¡Òò×ÓÔªÊı¾İ | `src/config/multiFactorScreeningConfig.ts` |
+| `MULTI_FACTOR_SCREENING_OPERATORS` | 6 ¸ö²Ù×÷·û£¨`>`/`¡İ`/`<`/`¡Ü`/`=`/`Çø¼ä`£© | ²Ù×÷·ûÑ¡Ïî | `src/config/multiFactorScreeningConfig.ts` |
+| `MULTI_FACTOR_SCREENING_LOGICS` | `and`/`or` | Ìõ¼ş×éÄÚÂß¼­Ñ¡Ïî | `src/config/multiFactorScreeningConfig.ts` |
+| `MULTI_FACTOR_SCREENING_STORAGE_KEY` | `'templates'` | Ä£°å localStorage ´æ´¢ key | `src/config/multiFactorScreeningConfig.ts` |
+| `MULTI_FACTOR_SCREENING_TEMPLATE_NAME_MAX_LENGTH` | `50` | Ä£°åÃû³Æ³¤¶ÈÏŞÖÆ | `src/config/multiFactorScreeningConfig.ts` |
+| `MULTI_FACTOR_SCREENING_CSV_FILENAME_PREFIX` | `'multi_factor_screening'` | CSV ÎÄ¼şÃûÇ°×º | `src/config/multiFactorScreeningConfig.ts` |
 
-> æ™‹å‡é˜ˆå€¼é…ç½®ï¼ˆcandidateâ†’screenedâ†’deepDiveï¼‰ä½äº `src/config/screeningConfig.ts`ï¼Œç”± `analysis/screeningEngine.ts` æ¶ˆè´¹ï¼Œä¸åœ¨æœ¬å­åŸŸå†…ã€‚
+> ½úÉıãĞÖµÅäÖÃ£¨candidate¡úscreened¡údeepDive£©Î»ÓÚ `src/config/screeningConfig.ts`£¬ÓÉ `analysis/screeningEngine.ts` Ïû·Ñ£¬²»ÔÚ±¾×ÓÓòÄÚ¡£
 
 ---
 
-## 5. æµ‹è¯•ç­–ç•¥
+## 5. ²âÊÔ²ßÂÔ
 
-| æµ‹è¯•ç±»å‹ | æ–‡ä»¶ | è¯´æ˜ |
+| ²âÊÔÀàĞÍ | ÎÄ¼ş | ËµÃ÷ |
 |----------|------|------|
-| å•å…ƒæµ‹è¯• | `src/services/screening/multiFactorScreeningEngine.test.ts` | çº¯å‡½æ•°ã€è®¡ç®—é€»è¾‘ï¼›è¦†ç›–å•æ¡ä»¶ç»„ ANDã€æ¡ä»¶ç»„ ORã€between æ“ä½œç¬¦ã€ç¼ºå¤±å› å­å€¼è§†ä¸ºä¸åŒ¹é…ã€å¤šæ¡ä»¶ç»„å…¨éƒ¨å‘½ä¸­ã€CSV ç”Ÿæˆã€æ¨¡æ¿åˆ›å»ºã€è‚¡ç¥¨æ± åŠ è½½ |
-| é›†æˆæµ‹è¯• | â€” | å½“å‰æ— ç‹¬ç«‹é›†æˆæµ‹è¯•ï¼›è‚¡ç¥¨æ± åŠ è½½é€»è¾‘é€šè¿‡ `vi.mock` æ¨¡æ‹Ÿ `dataLayer` ä¸ `unifiedStockService` |
-| Mock ç­–ç•¥ | åŒæ–‡ä»¶å†…è” `vi.mock` | `dataLayer.stocks.list` ä¸ `getUnifiedStockViews` å‡è¢« mock |
+| µ¥Ôª²âÊÔ | `src/services/screening/multiFactorScreeningEngine.test.ts` | ´¿º¯Êı¡¢¼ÆËãÂß¼­£»¸²¸Çµ¥Ìõ¼ş×é AND¡¢Ìõ¼ş×é OR¡¢between ²Ù×÷·û¡¢È±Ê§Òò×ÓÖµÊÓÎª²»Æ¥Åä¡¢¶àÌõ¼ş×éÈ«²¿ÃüÖĞ¡¢CSV Éú³É¡¢Ä£°å´´½¨¡¢¹ÉÆ±³Ø¼ÓÔØ |
+| ¼¯³É²âÊÔ | ¡ª | µ±Ç°ÎŞ¶ÀÁ¢¼¯³É²âÊÔ£»¹ÉÆ±³Ø¼ÓÔØÂß¼­Í¨¹ı `vi.mock` Ä£Äâ `dataLayer` Óë `unifiedStockService` |
+| Mock ²ßÂÔ | Í¬ÎÄ¼şÄÚÁª `vi.mock` | `dataLayer.stocks.list` Óë `getUnifiedStockViews` ¾ù±» mock |
 
-> æµ‹è¯•ç”¨ä¾‹æ•°ï¼š8 ä¸ªï¼ˆæ¶µç›– `runMultiFactorScreening`ã€`generateScreeningCsv`ã€`createTemplateFromGroups`ã€`loadScreenableStocks`ï¼‰ã€‚
+> ²âÊÔÓÃÀıÊı£º8 ¸ö£¨º­¸Ç `runMultiFactorScreening`¡¢`generateScreeningCsv`¡¢`createTemplateFromGroups`¡¢`loadScreenableStocks`£©¡£
 
 ---
 
-## 6. å˜æ›´æ—¥å¿—
+## 6. ±ä¸üÈÕÖ¾
 
-| æ—¥æœŸ | ç‰ˆæœ¬ | å˜æ›´ | ä½œè€… |
+| ÈÕÆÚ | °æ±¾ | ±ä¸ü | ×÷Õß |
 |------|------|------|------|
-| 2026-07-12 | v0.1.0 | å¥‘çº¦åˆç¨¿ | æ¶æ„ç»„ |
+| 2026-07-12 | v0.1.0 | ÆõÔ¼³õ¸å | ¼Ü¹¹×é |
 
 ---
 
-> **TODO[å­åŸŸ owner]**ï¼šè¯·æŒ‰æœ¬æ¨¡æ¿å¡«å…… Â§1-Â§5ï¼Œç¡®ä¿ä¸ `services-catalog.md` çš„æ‘˜è¦ä¸€è‡´ã€‚å®Œæˆåè¿è¡Œ `tsc --noEmit` + `audit:layers` éªŒè¯ã€‚
+> **TODO[×ÓÓò owner]**£ºÇë°´±¾Ä£°åÌî³ä ¡ì1-¡ì5£¬È·±£Óë `services-catalog.md` µÄÕªÒªÒ»ÖÂ¡£Íê³ÉºóÔËĞĞ `tsc --noEmit` + `audit:layers` ÑéÖ¤¡£

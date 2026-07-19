@@ -20,10 +20,16 @@ export interface QualityMetrics {
   since: number
   /** 采集总次数 */
   totalCollects: number
-  /** 采集成功次数 */
+  /** 采集成功次数（含 mock） */
   successCollects: number
-  /** 采集成功率 */
+  /** mock 采集次数 */
+  mockCollects: number
+  /** mock 采集成功次数 */
+  mockSuccesses: number
+  /** 漏采集成功率（含 mock） */
   successRate: number
+  /** 真实数据源采集成功率（排除 mock） */
+  realSuccessRate: number
   /** 数据完整率（非空字段数/总字段数） */
   completeness: number
   /** 各数据源使用次数 */
@@ -36,6 +42,8 @@ export interface QualityMetrics {
   writeTotal: number
   /** 写入成功率 */
   writeRate: number
+  /** mock 写入次数 */
+  mockWrites: number
   /** 平均延迟 (ms) */
   avgLatency: number
   /** 总延迟 (ms) */
@@ -62,12 +70,16 @@ class QualityMetricsCollector {
       totalCollects: 0,
       successCollects: 0,
       successRate: 0,
+      realSuccessRate: 0,
+      mockCollects: 0,
+      mockSuccesses: 0,
       completeness: 0,
-      sourceCounts: { tencent: 0, sina: 0, netease: 0, akshare: 0, mock: 0 },
+      sourceCounts: { tushare: 0, tencent: 0, sina: 0, netease: 0, akshare: 0, mock: 0 },
       fallbackCount: 0,
       writeSuccess: 0,
       writeTotal: 0,
       writeRate: 0,
+      mockWrites: 0,
       avgLatency: 0,
       totalLatency: 0,
     }
@@ -75,15 +87,26 @@ class QualityMetricsCollector {
 
   /** 记录一次采集 */
   recordCollect(success: boolean, source: DataSource, latency: number, fallbackChain: DataSource[]): void {
+    const isMock = source === 'mock'
     this.metrics.totalCollects++
-    if (success) {
-      this.metrics.successCollects++
+    const successInc = success ? 1 : 0
+    this.metrics.successCollects += successInc
+    if (isMock) {
+      this.metrics.mockCollects++
+      this.metrics.mockSuccesses += successInc
     }
     this.metrics.sourceCounts[source] = (this.metrics.sourceCounts[source] || 0) + 1
     this.metrics.fallbackCount += fallbackChain.length - 1
     this.metrics.totalLatency += latency
     this.metrics.avgLatency = Math.round(this.metrics.totalLatency / this.metrics.totalCollects)
+    // 含 mock 的整体成功率
     this.metrics.successRate = Math.round((this.metrics.successCollects / this.metrics.totalCollects) * 100)
+    // 真实数据源成功率：排除 mock，避免假绿灯
+    const realTotal = this.metrics.totalCollects - this.metrics.mockCollects
+    if (realTotal > 0) {
+      const realSuccesses = this.metrics.successCollects - this.metrics.mockSuccesses
+      this.metrics.realSuccessRate = Math.round((realSuccesses / realTotal) * 100)
+    }
   }
 
   /** 记录字段完整性 */

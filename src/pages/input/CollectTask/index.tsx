@@ -49,10 +49,15 @@ import { CollectTaskStatsCards } from './components/CollectTaskStatsCards'
 import { TaskListTab } from './components/TaskListTab'
 import { ScoreAnalysisTab } from './components/ScoreAnalysisTab'
 import { DimHealthTab } from './components/DimHealthTab'
+import { DataQualityTab } from './components/DataQualityTab'
 
+/**
+ * CollectTaskPage
+ */
 export default function CollectTaskPage(): React.JSX.Element {
   const {
     taskStats,
+    lastSuccessAt,
     dimHealth,
     scoreStats,
     collectionReport,
@@ -87,6 +92,7 @@ export default function CollectTaskPage(): React.JSX.Element {
           avgLatency={stats.avgLatency}
           fallbackCount={stats.fallbackCount}
           writeRate={stats.writeRate}
+          lastSuccessAt={lastSuccessAt}
         />
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -123,6 +129,10 @@ export default function CollectTaskPage(): React.JSX.Element {
               <Repeat className="h-4 w-4" />
               回放
             </TabsTrigger>
+            <TabsTrigger value="quality" className="gap-1.5">
+              <Activity className="h-4 w-4" />
+              数据质量
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="progress">
@@ -145,7 +155,14 @@ export default function CollectTaskPage(): React.JSX.Element {
           </TabsContent>
 
           <TabsContent value="score-analysis">
-            <ScoreAnalysisTab scoreStats={scoreStats} />
+            <ScoreAnalysisTab
+              scoreStats={scoreStats}
+              collectSuccessRate={stats.successRate}
+              writeRate={stats.writeRate}
+              avgLatency={stats.avgLatency}
+              taskTotal={taskStats.runningCount + taskStats.successCount + taskStats.failedCount}
+              lastSuccessAt={lastSuccessAt}
+            />
           </TabsContent>
 
           <TabsContent value="health">
@@ -195,6 +212,18 @@ export default function CollectTaskPage(): React.JSX.Element {
 
           <TabsContent value="replay">
             <TraceReplayPanel spans={selectedTraces} />
+          </TabsContent>
+
+          <TabsContent value="quality">
+            <DataQualityTab
+              successRate={stats.successRate}
+              writeRate={stats.writeRate}
+              fallbackCount={stats.fallbackCount}
+              totalCollects={stats.totalCollects}
+              dimHealth={dimHealth}
+              lastSuccessAt={lastSuccessAt}
+              scoreStats={scoreStats}
+            />
           </TabsContent>
         </Tabs>
       </PageContainer>
