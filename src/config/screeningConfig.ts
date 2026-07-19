@@ -2,7 +2,8 @@
  * 筛选引擎配置
  *
  * 集中管理 candidate → screened → deepDive 的晋升阈值，禁止在引擎内部硬编码。
- */
+  * @doc [V9-DOC-BACK-004, V9-DOC-DATA-009, V9-DOC-DATA-022, V9-DOC-DATA-011, V9-DOC-ARCH-007]
+*/
 
 export interface ScreeningThresholds {
   /**

@@ -3,7 +3,8 @@
  *
  * 从 `public/ai-memory-index.json` 加载索引，提供关键词检索能力，
  * 帮助 AI 辅助开发工具快速定位项目规范、检查清单与最佳实践。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 export interface MemoryChunk {
   id: string

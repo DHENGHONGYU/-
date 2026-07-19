@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-QA-066]
+ */
 import { LucideIcon } from 'lucide-react'
 
 export interface ShowcaseItem {

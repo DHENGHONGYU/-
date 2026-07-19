@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-BACK-012, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-QA-066, V9-DOC-BACK-023]
+ */
 import type { V6Score, DataLayerResult } from '@/data/types'
 
 export interface V6ScoreQuality {

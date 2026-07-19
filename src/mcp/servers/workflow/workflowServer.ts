@@ -13,7 +13,8 @@
  *     仍受外部 caller（agent/ui/ci）的 ACL 约束 —— 纵深防御。
  *
  * @created 2026-07-13 - AI 工作流自动化服务器
- */
+  * @doc [V9-DOC-AI-005, V9-DOC-AI-007, V9-DOC-AI-013, V9-DOC-AI-021, V9-DOC-AI-022]
+*/
 
 import { MCPServerBase } from '@/mcp/core/server'
 import type {

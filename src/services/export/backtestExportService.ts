@@ -3,7 +3,8 @@
  * @description DA-006 回测报告导出服务。
  * 数据仅读取 backtestStore（BacktestResult + BacktestConfig），禁止重复计算回测结果。
  * PDF / Excel 第三方库采用动态导入（import()），仅在导出触发时加载，减少主包体积。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import type {
   BacktestConfig,

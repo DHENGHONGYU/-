@@ -2,7 +2,8 @@
  * @module mcpServerStore
  * @description MCP Server 管理 Store — Server 列表、启用/禁用、统计数据
  * @created 2026-07-04
- */
+  * @doc [V9-DOC-AI-007, V9-DOC-AI-005, V9-DOC-DATA-031, V9-DOC-AI-013, V9-DOC-DATA-032]
+*/
 
 import { create } from 'zustand'
 import { mcpRegistry } from '@/mcp/core/registry'

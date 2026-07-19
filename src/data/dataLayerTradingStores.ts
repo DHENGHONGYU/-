@@ -8,7 +8,8 @@
  * - executionLogStore: 执行日志 save/getByPlanId/listByPlan/getBySymbol/listBySymbol/list/getAll
  * - portfolioStore: 持仓 save/saveWithTx/get/getWithTx/list
  * - tradeReviewStore: 交易复盘 save/getLatest
- */
+  * @doc [V9-DOC-BACK-008, V9-DOC-BACK-013, V9-DOC-ARCH-008, V9-DOC-BACK-005, V9-DOC-DATA-031]
+*/
 import { STORE_NAME } from '@/config/dbConfig'
 import { generateId, now } from './db'
 import type {

@@ -10,7 +10,8 @@
  * 物理存储仍使用 IndexedDB `stocks` store，通过 `pool` 字段区分。
  *
  * @version v1.0.0
- */
+  * @doc [V9-DOC-PROJ-108, V9-DOC-BACK-011, V9-DOC-DATA-024, V9-DOC-BACK-015, V9-DOC-QA-066]
+*/
 
 import type { DataSource } from '@/config/dbConfig'
 import type { StockDataQuality } from '@/data/types/types.stock'

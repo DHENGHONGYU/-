@@ -4,7 +4,8 @@
  *
  * 增强技术分析维度：ADX 趋势强度、多周期动量、均线排列、量能确认，
  * 输出趋势股择时信号与风险提示。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import { z } from 'zod'
 import { getLogger } from '@/lib/logger'

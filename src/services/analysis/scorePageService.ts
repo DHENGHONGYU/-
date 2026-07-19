@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-BACK-010, V9-DOC-BACK-012, V9-DOC-PROJ-113, V9-DOC-PROJ-066, V9-DOC-BACK-006]
+ */
 import { dataBridge } from '@/core/databridge'
 import { ENVELOPE_ACTION, STORE_NAME } from '@/config/dbConfig'
 import type { DailyQuotes, IndustryScore, IntelligentScore, ResearchLog, Stock, V6Score } from '@/data/types'

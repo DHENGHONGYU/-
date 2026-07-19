@@ -12,7 +12,8 @@
  * 1. MCP 连接器 (westock-mcp / westock-data) — 最丰富，建议优先
  * 2. 公开 API 代理 (/api/proxy/*) — 次优，延迟略高
  * 3. Mock 回退 — 仅开发/演示使用
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-PROJ-092, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021]
+*/
 
 import { getLogger } from '@/lib/logger'
 import { TENCENT_API_BASE, SINA_FINANCE_API_BASE, TENCENT_FINANCE_API_BASE } from '@/config/marketDataEndpoints'

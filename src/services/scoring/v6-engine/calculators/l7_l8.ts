@@ -6,7 +6,8 @@
  * - L8：八级筹码量化体系 SCD→PCH→AII→MATRIX→RSI→CCS→DIV→CSR（权重 4%）
  *
  * 类型：L7 为 LLM 可增强层，L8 为确定性层（K线量价直算）
- */
+  * @doc [V9-DOC-ARCH-008, V9-DOC-PROJ-053, V9-DOC-PROJ-113, V9-DOC-PROJ-066, V9-DOC-FRONT-012]
+*/
 
 import { getLogger } from '@/lib/logger'
 import type { LayerInput, LayerScore, LayerCalculator, ChipResult } from '../types'

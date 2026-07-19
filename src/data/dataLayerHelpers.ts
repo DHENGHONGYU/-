@@ -6,7 +6,8 @@
  *
  * 历史：从 dataLayer.ts 拆分而来，提供 createTraceId / sendWriteEnvelope / queryGet / queryList / queryByIndex
  * 现仅为 re-export，保持调用方零修改兼容
- */
+  * @doc []
+*/
 export { createTraceId } from '@/lib/utils'
 export {
   sendWriteEnvelope,

@@ -2,7 +2,8 @@
  * @module AgentRegistry
  * @lifecycle @Global
  * @description Agent 注册表模块，集中管理 Agent 定义、实例化与生命周期
- */
+  * @doc [V9-DOC-AI-006, V9-DOC-AI-003, V9-DOC-AI-002, V9-DOC-AI-014, V9-DOC-QA-077]
+*/
 
 import { getLogger } from '@/lib/logger'
 import { eventBus } from '@/lib/eventBus'

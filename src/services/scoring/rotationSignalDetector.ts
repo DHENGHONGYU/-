@@ -10,7 +10,8 @@
  *
  * @module services/scoring/rotationSignalDetector
  * @created 2026-06-27 - 基于双策略体系修正
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-ARCH-007, V9-DOC-BACK-015, V9-DOC-BACK-023, V9-DOC-BACK-033]
+*/
 
 import { getDefaultDualStrategyRuleConfig, type DualStrategyRuleConfig } from '@/config/dualStrategyRules'
 import { dataBridge } from '@/core/databridge'

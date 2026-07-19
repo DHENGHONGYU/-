@@ -5,7 +5,8 @@
  *
  * @module constants/uiText/uiText.trading
  * @created 2026-07-07 - 从 uiText.ts 拆分
- */
+  * @doc [V9-DOC-BACK-008, V9-DOC-BACK-013, V9-DOC-ARCH-008, V9-DOC-BACK-005, V9-DOC-BACK-025]
+*/
 
 export const trading = {
   holdings: {

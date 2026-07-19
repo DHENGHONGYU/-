@@ -4,7 +4,8 @@
  *
  * 将 AnalysisOrchestrator 中对 LLM 的调用封装为 SkillRegistry 可调用的 SKILL，
  * 使用结构化输出强制返回 JSON，并做 Zod Schema 校验。
- */
+  * @doc [V9-DOC-PROJ-124, V9-DOC-BACK-004, V9-DOC-BACK-012, V9-DOC-PROJ-113, V9-DOC-PROD-001]
+*/
 
 import { z } from 'zod'
 import { getLogger } from '@/lib/logger'

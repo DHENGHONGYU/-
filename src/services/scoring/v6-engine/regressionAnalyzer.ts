@@ -11,7 +11,8 @@
  *
  * @module services/scoring/v6-engine/regressionAnalyzer
  * @created 2026-07-14 - 统计因子体系构建
- */
+  * @doc [V9-DOC-ARCH-008, V9-DOC-PROJ-053, V9-DOC-PROJ-113, V9-DOC-PROJ-066, V9-DOC-FRONT-012]
+*/
 
 import { getLogger } from '@/lib/logger'
 

@@ -9,7 +9,8 @@
  * @created 2026-06-30 - G1 批次低风险优化（重复字面量提取）
 /**
  * EventBus 事件命名常量
- */
+  * @doc [V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-076, V9-DOC-DATA-075, V9-DOC-DATA-073]
+*/
 export const EVENT_NAMES = {
   STOCKS_CHANGED: 'stocks:changed',
   ORDERS_CHANGED: 'orders:changed',

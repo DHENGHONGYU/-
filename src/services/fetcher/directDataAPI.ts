@@ -20,7 +20,8 @@
  *   调用方应捕获异常并按降级链切换到下一个源。
  * - 所有网络请求均使用 AbortController(30s) 超时控制。
  * - 严格遵守项目硬约束：核心分支均打印 logger.info，全部 try-catch。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-PROJ-092, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021]
+*/
 
 import { getLogger } from '@/lib/logger'
 import {

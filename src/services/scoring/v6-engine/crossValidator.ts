@@ -13,7 +13,8 @@
  * 5. 行业评分与个股评分严重背离（L-1 与综合分差 > 2.0）→ 背离
  *
  * @see src/services/scoring/v6-engine/engine.ts - aggregate() 中调用
- */
+  * @doc [V9-DOC-ARCH-008, V9-DOC-PROJ-053, V9-DOC-PROJ-113, V9-DOC-PROJ-066, V9-DOC-FRONT-012]
+*/
 
 import type { CompositeScore, LayerId } from './types'
 import { getLogger } from '@/lib/logger'

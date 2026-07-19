@@ -8,7 +8,8 @@
  * - 策略计算结果临时缓存
  * - API 响应去重缓存
  * - 跨组件共享的临时状态
- */
+  * @doc [V9-DOC-BACK-005, V9-DOC-BACK-012, V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-ARCH-008]
+*/
 
 import { getLogger } from '@/lib/logger'
 

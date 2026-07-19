@@ -19,7 +19,8 @@
  * ## 配套
  * - `src/config/tradingConfig.ts` → `setTradingConfigOverride` / `getEffectiveTradingConfig` / `resetTradingConfigOverride`
  * - `src/apps/command/ConfigApp.tsx` → 提交时调 `useRuntimeTradingConfigStore.getState().applyOverride(...)`
- */
+  * @doc [V9-DOC-BACK-008, V9-DOC-BACK-013, V9-DOC-ARCH-008, V9-DOC-BACK-005, V9-DOC-DATA-032]
+*/
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'
 import {

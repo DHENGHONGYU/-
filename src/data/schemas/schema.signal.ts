@@ -5,7 +5,8 @@
  *
  * @module data/schemas/schema.signal
  * @updated 2026-07-07 - PR-2：新增 Zod schema
- */
+  * @doc [V9-DOC-ARCH-007, V9-DOC-BACK-015]
+*/
 
 import { z } from 'zod'
 

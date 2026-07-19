@@ -4,7 +4,8 @@
  *
  * 将原先 unifiedStockService 中跨 dataLayer 多源读取的长流程逻辑抽取为 UseCase，
  * 使 Service 层保持薄入口，复杂编排下沉到 UseCase。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import { STORE_NAME } from '@/config/dbConfig'
 import { queryGet, queryList, queryByIndex } from '@/data/dataLayerHelpers'

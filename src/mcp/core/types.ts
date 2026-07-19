@@ -7,7 +7,8 @@
  *
  * @module mcp/core/types
  * @created 2026-07-04 - Phase 0 MCP 基础设施层建设
- */
+  * @doc [V9-DOC-BACK-005, V9-DOC-BACK-008, V9-DOC-AI-007, V9-DOC-ARCH-008, V9-DOC-BACK-012]
+*/
 
 export type {
   JSONSchema,

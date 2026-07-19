@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-DATA-047, V9-DOC-FRONT-020, V9-DOC-DATA-068]
+ */
 import React, { type ComponentType, type LazyExoticComponent } from 'react'
 
 export type RouteCategory =

@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-BACK-005, V9-DOC-BACK-012, V9-DOC-ARCH-008, V9-DOC-PROJ-003, V9-DOC-BACK-010]
+ */
 import { useEffect, useMemo, useState } from 'react'
 import type { IntelligentScore, ResearchLog, Stock } from '@/data/types'
 import { getDefaultLlmConfig, getLlmApiKeyAsync, setLlmApiKey, type LlmConfig } from '@/config/llmConfig'

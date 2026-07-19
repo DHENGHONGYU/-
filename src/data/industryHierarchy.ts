@@ -11,7 +11,8 @@
  *
  * @module data/industryHierarchy
  * @created 2026-07-16
- */
+  * @doc []
+*/
 
 import type { IndustryDefinition } from '@/data/types/types.sector'
 

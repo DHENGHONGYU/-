@@ -2,7 +2,8 @@
  * @module multiFactorScreeningEngine
  * @description 多因子选股筛选引擎（DA-007 四步集成合约：第 3 步 Builder）。
  * 负责从 dataLayer + unifiedStockService 加载股票、执行条件组筛选、生成 CSV。
- */
+  * @doc [V9-DOC-DATA-011, V9-DOC-DATA-009, V9-DOC-BACK-012, V9-DOC-BACK-004, V9-DOC-DATA-022]
+*/
 
 import { dataBridge } from '@/core/databridge'
 import { ENVELOPE_ACTION, MODULE_ID, STORE_NAME } from '@/config/dbConfig'

@@ -4,7 +4,8 @@
  *
  * 支持单接口链路测试、批量采集测试，并与 `collectionPipeline` 集成，
  * 实现采集触发 → 数据源尝试 → 降级 → 写入 → 结果反馈的可视化。
- */
+  * @doc [V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-076, V9-DOC-DATA-075, V9-DOC-DATA-073]
+*/
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'

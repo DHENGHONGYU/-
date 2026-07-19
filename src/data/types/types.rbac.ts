@@ -3,7 +3,8 @@
  *
  * 类型真相源位于 src/types/modules/rbac.types.ts，
  * 本文件为 validator 与 dataLayer 提供完整字段的 interface 定义。
- */
+  * @doc [V9-DOC-QA-066]
+*/
 
 // ── 审计动作类型 ──
 export type AuditAction = 'grant' | 'revoke' | 'modify' | 'archive' | 'delete'

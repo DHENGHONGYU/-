@@ -21,7 +21,8 @@
  *   - 脚本负责文件系统访问（collectStoreMetas/buildStoreDependencyGraph/findStoreConsumers）
  *   - 本模块负责纯算法计算（BFS/Facade 标记/分类统计）
  *   - 脚本通过 import 从本模块获取算法实现，避免代码重复
- */
+  * @doc [V9-DOC-DATA-032, V9-DOC-DATA-031, V9-DOC-DATA-075, V9-DOC-FRONT-037, V9-DOC-DATA-073]
+*/
 
 import type { StoreMeta, ConsumerRef, BfsDiagnostics } from './types'
 

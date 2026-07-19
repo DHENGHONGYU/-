@@ -45,7 +45,8 @@
  *   - 文件系统访问（collectStoreMetas/buildStoreDependencyGraph/findStoreConsumers）
  *     由调用方实现，本模块通过参数接收已构建的数据结构
  *   - 这种分离使算法可在任何环境运行（Node/浏览器/Worker），便于复用和测试
- */
+  * @doc [V9-DOC-DATA-032, V9-DOC-DATA-031, V9-DOC-DATA-075, V9-DOC-FRONT-037, V9-DOC-DATA-073]
+*/
 
 // 类型导出
 export type {

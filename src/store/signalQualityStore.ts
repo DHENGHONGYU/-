@@ -17,7 +17,8 @@
  * 删除前需确认未来无信号准确率复盘可视化需求。
  *
  * @see 补充验证报告（2026-07-06）：见上方 JSDoc 注释 1-5 条
- */
+  * @doc [V9-DOC-ARCH-007, V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-BACK-015, V9-DOC-DATA-076]
+*/
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'

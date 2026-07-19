@@ -5,7 +5,8 @@
  * 为 V6 中可被 LLM 增强的层（L0/L1/L2/L4/L5/L6/L7）提供统一实现模板，
  * 每个层只需配置名称、层ID 与专属 systemPrompt，即可产出符合
  * SkillRegistry 调用的 SkillDefinition。
- */
+  * @doc [V9-DOC-PROJ-124, V9-DOC-BACK-004, V9-DOC-BACK-012, V9-DOC-PROJ-113, V9-DOC-PROD-001]
+*/
 
 import { z } from 'zod'
 import { getLogger } from '@/lib/logger'

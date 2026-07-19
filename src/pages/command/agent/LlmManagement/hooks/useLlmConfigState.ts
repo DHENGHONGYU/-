@@ -9,7 +9,8 @@
  * - 模型筛选条件与推荐场景
  *
  * @module LlmManagement/hooks/useLlmConfigState
- */
+  * @doc [V9-DOC-AI-003, V9-DOC-AI-006, V9-DOC-AI-002, V9-DOC-AI-014, V9-DOC-FRONT-020]
+*/
 
 import { useState } from 'react'
 import type { LlmConfig, LlmFactorOverride } from '@/config/llmConfig'

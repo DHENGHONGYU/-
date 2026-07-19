@@ -30,7 +30,8 @@
  *
  * @compliance AGENTS.md §一 分层规则：store 层仅依赖 services 和 core
  * @since v2.0.0
- */
+  * @doc [V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-076, V9-DOC-DATA-075, V9-DOC-DATA-073]
+*/
 
 import { getLogger } from '@/lib/logger'
 import {

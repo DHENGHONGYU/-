@@ -7,7 +7,8 @@
  *
  * @compliance AGENTS.md §一：services 层仅依赖 core / data / lib，
  * 不直接依赖 store / pages / components。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-021, V9-DOC-BACK-033, V9-DOC-BACK-027]
+*/
 
 import { dataBridge } from '@/core/databridge'
 import { ENVELOPE_ACTION, MODULE_ID, STORE_NAME } from '@/config/dbConfig'

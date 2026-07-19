@@ -2,7 +2,8 @@
  * @module mcp/servers/news
  * @description 新闻分析 MCP Server — 新闻获取、情绪分析、股票关联
  * @created 2026-07-04
- */
+  * @doc [V9-DOC-AI-005, V9-DOC-AI-007, V9-DOC-AI-013, V9-DOC-AI-021, V9-DOC-AI-022]
+*/
 
 import { MCPServerBase } from '@/mcp/core/server'
 import type { ServerInfo, ToolDescriptor, ResourceTemplate, PromptTemplate } from '@/mcp/core/types'

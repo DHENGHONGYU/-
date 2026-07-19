@@ -8,7 +8,8 @@
  * 3. 保留 `MCPServerDashboardPage` 特殊分发（总控舱的 MCP 管理页面）。
  *
  * @module apps/cabinDispatcher
- */
+  * @doc []
+*/
 
 import React from 'react'
 import type { CabinType } from '@/store/workflowStore'

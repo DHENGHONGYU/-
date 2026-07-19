@@ -7,7 +7,8 @@
  *
  * 将原先 portfolioService 中的 rebalance 业务逻辑抽取为独立 UseCase，
  * 包含完整的业务流程编排：参数校验→数据获取→业务逻辑→结果返回。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-021, V9-DOC-BACK-033, V9-DOC-BACK-027]
+*/
 
 import { getLogger } from '@/lib/logger'
 import { portfolioStore } from '@/data/dataLayerTradingStores'

@@ -5,7 +5,8 @@
  *
  * @module constants/uiText/uiText.input
  * @created 2026-07-07 - 从 uiText.ts 拆分
- */
+  * @doc []
+*/
 
 export const input = {
   dashboard: {

@@ -4,7 +4,8 @@
  *
  * 基于 riskEngine 的纯函数 checkOrderRiskPure 进行订单级风控检查，
  * 输出是否可执行、警告/阻断项、风险等级与止损建议。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-021, V9-DOC-BACK-033, V9-DOC-BACK-027]
+*/
 
 import { z } from 'zod'
 import { getLogger } from '@/lib/logger'

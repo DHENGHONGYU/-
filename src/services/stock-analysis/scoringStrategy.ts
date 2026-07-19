@@ -18,7 +18,8 @@
  *
  * @see src/services/stock-analysis/mockStockAnalysisProvider.ts — 策略消费方
  * @see src/services/data-collector/collectors/MockCollector.ts — 不再直接生成评分
- */
+  * @doc [V9-DOC-ARCH-009, V9-DOC-QA-010, V9-DOC-PROJ-124, V9-DOC-BACK-003, V9-DOC-PROD-001]
+*/
 
 import { nanoid } from 'nanoid'
 import { getLogger } from '@/lib/logger'

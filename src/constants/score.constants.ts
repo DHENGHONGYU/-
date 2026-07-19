@@ -2,7 +2,8 @@
  * 评分模块通用常量
  *
  * 所有 UI 标签、配置阈值集中管理，避免组件层硬编码。
- */
+  * @doc [V9-DOC-BACK-005, V9-DOC-BACK-012, V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-ARCH-008]
+*/
 
 import type { ScoreTrendPeriod } from '@/types/modules/score.types'
 

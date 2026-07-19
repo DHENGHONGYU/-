@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-076, V9-DOC-DATA-075, V9-DOC-DATA-073]
+ */
 // @module hotSectorStore
 // @lifecycle @Analysis
 // 分析舱-热门板块策略页面的全局状态管理（Zustand）。

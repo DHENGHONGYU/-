@@ -3,7 +3,8 @@
  * @lifecycle @Global
  * @description 交易信号状态管理。管理由 signalGenerator 生成的交易信号列表，
  * 提供 refresh 重新生成、topSignals 派生查询，以及 DataBridge analyzer/scoring 频道订阅。
- */
+  * @doc [V9-DOC-ARCH-007, V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-BACK-015, V9-DOC-DATA-076]
+*/
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'

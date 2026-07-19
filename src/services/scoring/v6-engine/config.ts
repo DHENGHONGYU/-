@@ -3,7 +3,8 @@
  *
  * 所有阈值、权重、公式参数均从此模块注入引擎。
  * 可通过 V6ScoreConfigOverride 运行时覆盖，支持 Backtestable 接口。
- */
+  * @doc [V9-DOC-ARCH-008, V9-DOC-PROJ-054, V9-DOC-PROJ-113, V9-DOC-PROJ-066, V9-DOC-PROJ-053]
+*/
 
 import type {
   V6ScoreWeightsConfig,

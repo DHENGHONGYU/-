@@ -2,7 +2,8 @@
  * @module DataBridgeAdapter
  * @lifecycle @Global
  * @description DataBridge 扩展适配层，提供面向模块的便捷数据访问接口
- */
+  * @doc [V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-ARCH-008, V9-DOC-BACK-012, V9-DOC-PROJ-002]
+*/
 
 import { dataBridge } from './databridge'
 import { EnvelopeFactory } from './envelope'

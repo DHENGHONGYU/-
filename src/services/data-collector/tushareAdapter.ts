@@ -5,7 +5,8 @@
  * - 将 Tushare 返回的 snake_case 原始记录转换为项目业务类型
  * - 字段命名统一转换为 camelCase
  * - 缺失字段填充安全默认值
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import type { RealtimeQuote } from './directDataAPI'
 import type { KlineBar } from '@/data/types/types.marketData'

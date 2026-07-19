@@ -7,7 +7,8 @@
  * 此文件为 extracted canonical，两个文件应通过此模块获取代码转换函数。
  *
  * @created 2026-07-19 — P1-6 directDataAPI 双副本统一阶段 1（共享工具抽取）
- */
+  * @doc [V9-DOC-BACK-005, V9-DOC-BACK-012, V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-ARCH-008]
+*/
 
 /**
  * 将 6 位代码转换为腾讯格式（sh/sz/bj 前缀）

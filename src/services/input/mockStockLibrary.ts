@@ -3,7 +3,8 @@
  *
  * 用于 `StockSearch` 在离线/无 AKShare 搜索接口时的降级数据源。
  * 该库仅包含常见 A 股标的，不应作为真实股票池使用。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-FRONT-037, V9-DOC-BACK-023]
+*/
 
 export interface MockStock {
   symbol: string

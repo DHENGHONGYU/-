@@ -8,7 +8,8 @@
  *
  * 注意：Tushare Token 不直接暴露到前端 bundle，优先通过后端/Vite proxy 持有。
  * 开发环境可在 .env 中配置 VITE_TUSHARE_TOKEN 进行本地测试。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import { getLogger } from '@/lib/logger'
 import { TUSHARE_API_BASE } from '@/config/marketDataEndpoints'

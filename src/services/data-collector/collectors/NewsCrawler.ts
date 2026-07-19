@@ -8,7 +8,8 @@
  * - 支持多种新闻源：财经头条、证券时报、东方财富等
  *
  * @remarks 2026-07-18 新增，作为 P1-2 智能资讯爬虫功能的核心交付
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import { getLogger } from '@/lib/logger'
 import { BaseCollector } from './BaseCollector'

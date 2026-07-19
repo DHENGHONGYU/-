@@ -2,7 +2,8 @@
  * @fileoverview 采集配置持久化类型
  *
  * 对应 IndexedDB `collect_config` store，保存数据采集向导的配置模板。
-/** API 配置 */
+/** API 配置  * @doc [V9-DOC-QA-066, V9-DOC-DATA-047, V9-DOC-FRONT-020, V9-DOC-DATA-068]
+*/
 export interface ApiConfig {
   baseUrl: string
   apiKey?: string

@@ -2,7 +2,8 @@
  * @module multiFactorScreeningStore
  * @description 多因子筛选器 Zustand Store（DA-007 四步集成合约：第 2 步 Store）。
  * 负责状态管理、模板持久化、调用 Engine 执行筛选。
- */
+  * @doc [V9-DOC-BACK-004, V9-DOC-DATA-011, V9-DOC-DATA-022, V9-DOC-DATA-009, V9-DOC-ARCH-007]
+*/
 
 import { create } from 'zustand'
 import { createStorage } from '@/lib/localStorageManager'

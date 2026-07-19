@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-FRONT-046]
+ */
 import type { V6ExportShape, V9ImportShape } from '@/services/system/v6MigrationService'
 
 export interface PreviewItem {

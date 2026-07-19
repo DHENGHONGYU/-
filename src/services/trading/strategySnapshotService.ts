@@ -3,7 +3,8 @@
  *
  * 将股票按核心稀缺 / 热点动量 / 价值 bargain 三策略分组，
  * 生成策略快照并持久化到 IndexedDB 的 strategy_snapshots 存储。
- */
+  * @doc [V9-DOC-ARCH-009, V9-DOC-QA-010, V9-DOC-BACK-006, V9-DOC-BACK-010, V9-DOC-BACK-003]
+*/
 
 import { STORE_NAME } from '@/config/dbConfig'
 import { queryList, sendWriteEnvelope } from '@/data/dataLayerHelpers'

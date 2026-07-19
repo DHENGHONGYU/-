@@ -2,7 +2,8 @@
  * @module mcp/servers/execution
  * @description 执行计划 MCP Server — 执行计划创建、查询、阶段更新、取消
  * @created 2026-07-05
- */
+  * @doc [V9-DOC-AI-005, V9-DOC-AI-007, V9-DOC-AI-013, V9-DOC-AI-021, V9-DOC-AI-022]
+*/
 
 import { MCPServerBase } from '@/mcp/core/server'
 import type { ServerInfo, ToolDescriptor } from '@/types/modules/mcp.types'

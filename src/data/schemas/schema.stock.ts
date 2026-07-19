@@ -5,7 +5,8 @@
  *
  * @module data/schemas/schema.stock
  * @updated 2026-07-07 - PR-2：新增 Zod schema
- */
+  * @doc []
+*/
 
 import { z } from 'zod'
 

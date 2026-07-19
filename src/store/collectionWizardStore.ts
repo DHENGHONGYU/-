@@ -19,7 +19,8 @@
  * - 阶段标识（stage），标记采集生命周期阶段
  * - 耗时记录（durationMs），记录每个阶段的执行时间
  * - 配置持久化集成（saveAsTemplate 时自动保存到 IndexedDB）
- */
+  * @doc [V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-076, V9-DOC-DATA-075, V9-DOC-DATA-073]
+*/
 
 import { create } from 'zustand'
 import { withBroadcast } from '@/lib/withBroadcast'

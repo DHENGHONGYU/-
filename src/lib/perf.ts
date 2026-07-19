@@ -11,7 +11,8 @@
  *   usePerfTrace('LineChart', { points: data.length })
  *
  * 实时聚合：getPerfStats() 返回各标签的 count / avg / p50 / p95 / max。
- */
+  * @doc [V9-DOC-FRONT-037]
+*/
 
 import { getLogger } from './logger'
 

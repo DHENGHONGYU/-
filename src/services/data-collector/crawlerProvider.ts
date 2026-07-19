@@ -8,7 +8,8 @@
  *
  * 2026-07-19 重写：移除所有 /api/proxy/* 代理路径，
  * 改为直连 emweb.securities.eastmoney.com / np-anotice-stock.eastmoney.com 等真实端点。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import { getLogger } from '@/lib/logger'
 import {

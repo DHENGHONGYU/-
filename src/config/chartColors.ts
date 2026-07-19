@@ -9,7 +9,8 @@
  * - 当颜色语义与 THEME_TOKENS 重合时（如上涨/下跌），优先引用 THEME_TOKENS.color.*Raw
  * - 此文件仅存放图表/轮动等业务特有配色
  * - 内部颜色值统一引用 COLOR_TOKENS.hex
- */
+  * @doc [V9-DOC-DATA-047, V9-DOC-FRONT-020, V9-DOC-DATA-068]
+*/
 
 import { THEME_TOKENS, COLOR_TOKENS } from '@/constants/theme.tokens'
 

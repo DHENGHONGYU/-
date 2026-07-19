@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-AI-006, V9-DOC-AI-003, V9-DOC-AI-002, V9-DOC-AI-014, V9-DOC-FRONT-046]
+ */
 import React from 'react'
 import { Bot, Activity, Newspaper, Sparkles, Wifi, Filter, Database, History, type LucideIcon } from 'lucide-react'
 import V6ScoringAgentDetail from './V6ScoringAgentDetail'

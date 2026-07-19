@@ -12,7 +12,8 @@
  * @see src/services/data-collector/mockDataCollection.ts — 消费方
 /**
  * 交易复盘评分计算器接口
- */
+  * @doc [V9-DOC-BACK-008, V9-DOC-BACK-012, V9-DOC-BACK-005, V9-DOC-BACK-013, V9-DOC-ARCH-008]
+*/
 export interface TradeReviewScoreCalculator {
   /** 计算交易纪律分（0-100） */
   calculateDisciplineScore(): number

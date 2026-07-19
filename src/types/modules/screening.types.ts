@@ -1,7 +1,8 @@
 /**
  * @module screening.types
  * @description 多因子选股筛选器类型定义（DA-007 四步集成合约：第 1 步）。
-/** 可筛选因子 */
+/** 可筛选因子  * @doc [V9-DOC-DATA-022, V9-DOC-DATA-011, V9-DOC-DATA-009, V9-DOC-BACK-004, V9-DOC-ARCH-007]
+*/
 export type ScreeningFactor =
   | 'pe'
   | 'pb'

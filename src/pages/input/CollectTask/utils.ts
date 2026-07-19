@@ -7,7 +7,8 @@
  * - normalizeStatus: 标准化任务状态为显示状态
  *
  * @module CollectTask/utils
- */
+  * @doc []
+*/
 
 import { getLogger } from '@/lib/logger'
 import { mcpBridge } from '@/mcp/bridge/mcpBridge'

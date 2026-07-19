@@ -9,7 +9,8 @@
  *   - 降级链 (resilienceChain.ts) 以装饰器包裹 IMarketDataFetcher，对编排透明
  *   - 日志 (loggingAspect.ts) 以高阶函数包裹 IWorkflowStep，对编排透明
  *   - Mock 仅存在于 mockProvider.ts，生产代码通过 DI 注入真实实现
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-PROJ-092, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021]
+*/
 
 import type { StockQuote, KlineItem } from '../directDataAPI'
 

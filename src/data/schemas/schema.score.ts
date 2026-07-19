@@ -5,7 +5,8 @@
  *
  * @module data/schemas/schema.score
  * @updated 2026-07-07 - PR-2：新增 Zod schema
- */
+  * @doc [V9-DOC-BACK-005, V9-DOC-BACK-012, V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-ARCH-008]
+*/
 
 import { z } from 'zod'
 

@@ -7,7 +7,8 @@
  * - 纪律分析生成
  * - 行动计划生成
  * - AI 深度洞察生成（规则引擎版）
- */
+  * @doc [V9-DOC-BACK-013, V9-DOC-BACK-012, V9-DOC-BACK-008, V9-DOC-ARCH-008, V9-DOC-BACK-005]
+*/
 
 import type { Order } from '@/data/types'
 import {

@@ -12,7 +12,8 @@
  * 1. analysisOrchestrator.persistResult() 每次保存后触发轻量检查
  * 2. 系统启动时由 bootstrap 执行一次完整扫描
  * 3. 手动触发：用户可在设置页执行"清理旧数据"
- */
+  * @doc [V9-DOC-PROJ-124, V9-DOC-BACK-004, V9-DOC-BACK-012, V9-DOC-PROJ-113, V9-DOC-PROD-001]
+*/
 
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'

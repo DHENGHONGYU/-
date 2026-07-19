@@ -12,7 +12,8 @@
  *
  * 通过 spread mixin 方式合并到主 Store 中，保持 actions 的统一调用方式
  * `useCollectionWizardStore.getState().xxx()`。
- */
+  * @doc [V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-076, V9-DOC-DATA-075, V9-DOC-DATA-073]
+*/
 
 import type { StateCreator } from 'zustand'
 import { getLogger } from '@/lib/logger'

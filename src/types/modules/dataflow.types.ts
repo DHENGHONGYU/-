@@ -2,7 +2,8 @@
  * @module DataFlowEngine
  * @lifecycle @Global
  * @description 数据流引擎模块，提供实时数据订阅、缓存、分发能力
- */
+  * @doc [V9-DOC-DATA-018, V9-DOC-DATA-002, V9-DOC-DATA-021, V9-DOC-DATA-008, V9-DOC-DATA-006]
+*/
 
 export interface DataFlowModuleInput {
   channel: string

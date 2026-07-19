@@ -1,7 +1,8 @@
 /**
  * @module services/evaluators/evaluatorTypes
  * @description Batch C 评估体系统一类型定义
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-QA-066, V9-DOC-BACK-023]
+*/
 
 import type { ZodSchema } from 'zod'
 import type { SkillResult } from '@/services/skills'

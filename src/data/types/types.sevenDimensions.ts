@@ -8,7 +8,8 @@
  *
  * @module data/types/types.sevenDimensions
  * @updated 2026-07-07 - PR-2：DataDimensionType/DataDimensionMeta 改为从 config re-export
- */
+  * @doc [V9-DOC-QA-066]
+*/
 
 // DataDimensionType 和 DataDimensionMeta 权威源在 config 层
 export type { DataDimensionType, DataDimensionMeta } from '@/config/dataDimensions'

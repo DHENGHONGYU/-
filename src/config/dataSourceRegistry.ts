@@ -4,7 +4,8 @@
  *
  * 集中管理腾讯/新浪/网易/AKShare/Mock 等端点元数据，
  * 作为 `dataSourceOrchestrator`、`FetcherConfigPage` 与 `collectionPipeline` 的统一数据来源。
- */
+  * @doc [V9-DOC-DATA-047, V9-DOC-FRONT-020, V9-DOC-DATA-068]
+*/
 
 import {
   TENCENT_API_BASE,

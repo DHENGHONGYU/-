@@ -7,7 +7,8 @@
  * - 管理当前策略模板与全局参数
  * - 提供配置序列化 / 反序列化能力
  * - 通过 DataBridge.forward() 持久化到 IndexedDB
- */
+  * @doc [V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-073, V9-DOC-DATA-068, V9-DOC-FRONT-020]
+*/
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'

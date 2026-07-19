@@ -2,7 +2,8 @@
  * @module multiFactorScreeningConfig
  * @description 多因子筛选器业务配置：因子定义、操作符、存储 key、UI 常量。
  * @remarks 所有数值/文案均来自本配置，组件中禁止硬编码。
- */
+  * @doc [V9-DOC-BACK-004, V9-DOC-DATA-009, V9-DOC-DATA-022, V9-DOC-DATA-011, V9-DOC-ARCH-007]
+*/
 
 import type {
   ScreeningFactorMeta,

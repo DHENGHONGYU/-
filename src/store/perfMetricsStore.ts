@@ -5,7 +5,8 @@
  *
  * @module store/perfMetricsStore
  * @created 2026-07-13 P2-6
- */
+  * @doc [V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-076, V9-DOC-DATA-075, V9-DOC-DATA-073]
+*/
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'

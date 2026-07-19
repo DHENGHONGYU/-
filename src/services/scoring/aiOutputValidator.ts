@@ -7,7 +7,8 @@
  * 3. 时间一致性：评分时间戳是否与基础数据版本一致
  *
  * 使用方式：`validateScoreBeforeSave(score, { v6EngineScore })`
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-021, V9-DOC-BACK-033, V9-DOC-BACK-027]
+*/
 
 import { getLogger } from '@/lib/logger'
 import type { IntelligentScore } from '@/data/types'

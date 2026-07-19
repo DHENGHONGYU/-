@@ -12,7 +12,8 @@
  * - 所有适配器必须包含数据格式转换的单元测试
  * - 禁止绕过 DataBridge 直接调用数据源
  * - 遵循现有 TypeScript 类型安全约束
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-003, V9-DOC-ARCH-008, V9-DOC-BACK-010, V9-DOC-PROJ-092]
+*/
 
 import type { HotSectorAnalyzerInput, MomentumInput, SentimentInput, BreakoutInput, ValuationRiskInput, MarketEnvInput } from '@/services/scoring/hotSectorAnalyzer'
 import type { RotationSignalInput } from '@/services/scoring/rotationSignalDetector'

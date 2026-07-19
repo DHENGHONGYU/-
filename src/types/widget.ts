@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-QA-066]
+ */
 // Widget 定义接口（V6 规范）
 export type WidgetCategory = 'market' | 'portfolio' | 'strategy' | 'agent'
 

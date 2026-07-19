@@ -14,7 +14,8 @@
  * @module mcp/bridge/mcpBridge
  * @created 2026-07-04 - Phase 1 MCP 适配层建设
  * @updated 2026-07-13 - P2 添加 Tool 调用计数器
- */
+  * @doc [V9-DOC-AI-005, V9-DOC-AI-007, V9-DOC-AI-013, V9-DOC-AI-021, V9-DOC-AI-022]
+*/
 
 import { getLogger } from '@/lib/logger'
 import { MCPClientImpl } from '@/mcp/core/client'

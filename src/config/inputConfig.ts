@@ -2,7 +2,8 @@
  * 输入舱全局配置
  *
  * 集中管理导入、搜索、数据质量等常量，禁止在 UI/服务层硬编码。
- */
+  * @doc [V9-DOC-DATA-047, V9-DOC-FRONT-020, V9-DOC-DATA-068]
+*/
 
 export const INPUT_CONFIG = {
   bulkImport: {

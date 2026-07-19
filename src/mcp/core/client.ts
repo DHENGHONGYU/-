@@ -12,7 +12,8 @@
  * @module mcp/core/client
  * @created 2026-07-04 - Phase 0 MCP 基础设施层建设
  * @updated 2026-07-08 - P0 集成 ACL 拦截器
- */
+  * @doc [V9-DOC-ARCH-008, V9-DOC-PROJ-002, V9-DOC-AI-007, V9-DOC-AI-005, V9-DOC-PROJ-003]
+*/
 
 import { getLogger } from '@/lib/logger'
 import { safeRegex } from '@/lib/safeRegex'

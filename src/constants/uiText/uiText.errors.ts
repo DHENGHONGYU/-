@@ -5,7 +5,8 @@
  *
  * @module constants/uiText/uiText.errors
  * @created 2026-07-07 - 从 uiText.ts 拆分
- */
+  * @doc []
+*/
 
 export const errors = {
   networkError: '网络连接失败，请检查网络',

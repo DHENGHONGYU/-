@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-BACK-005, V9-DOC-PROJ-003, V9-DOC-BACK-010, V9-DOC-ARCH-008, V9-DOC-PROJ-002]
+ */
 import type { LlmMessage } from '@/services/llm/llmTypes'
 import type { SectorSkillAnalysis } from '@/data/sectorSkillData'
 import { INDUSTRY_SCORE_SKILL } from './industryScoreSkill'

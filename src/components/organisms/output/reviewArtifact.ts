@@ -8,7 +8,8 @@
  * - 用户内容经 HTML 转义，避免标签注入破坏文档结构。
  *
  * @module components/output/reviewArtifact
- */
+  * @doc [V9-DOC-FRONT-046]
+*/
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import type { TradeReviewReport } from '@/services/trading/tradeReviewAI'
 

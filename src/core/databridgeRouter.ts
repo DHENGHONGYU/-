@@ -10,7 +10,8 @@
  *
  * @module core/databridgeRouter
  * @since 2026-07-18 (P1-16 Phase 1)
- */
+  * @doc [V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-ARCH-008, V9-DOC-BACK-012, V9-DOC-PROJ-002]
+*/
 
 import type { StandardEnvelope } from './envelope'
 import { ENVELOPE_ACTION, type StoreName } from '@/config/dbConfig'

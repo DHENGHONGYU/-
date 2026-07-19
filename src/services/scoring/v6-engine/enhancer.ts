@@ -7,7 +7,8 @@
  *
  * 架构：Enhancer 不替代计算器，而是在计算器结果之上做增强。
  * 离线模式或 LLM 不可用时，Enhancer 透传原始结果。
- */
+  * @doc [V9-DOC-ARCH-008, V9-DOC-PROJ-053, V9-DOC-PROJ-113, V9-DOC-PROJ-066, V9-DOC-FRONT-012]
+*/
 
 import { getLogger } from '@/lib/logger'
 import type { LayerInput, LayerScore, LayerCalculator, LayerId, AuditEntry } from './types'

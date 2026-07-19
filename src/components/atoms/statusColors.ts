@@ -8,7 +8,8 @@
  * 用法：
  *   const { badge, label } = PRIORITY_BADGE[priority] ?? FALLBACK
  *   <span className={`rounded px-2 py-1 text-xs font-medium ${badge}`}>{label}</span>
- */
+  * @doc [V9-DOC-FRONT-046]
+*/
 export interface BadgeStyle {
   /** Tailwind 徽章容器类（背景 + 文字色） */
   badge: string

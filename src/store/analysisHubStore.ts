@@ -1,4 +1,5 @@
-/** @unused — 已实现但当前无 UI 层消费者，待后续产品规划接入。 */
+/** @unused — 已实现但当前无 UI 层消费者，待后续产品规划接入。  * @doc [V9-DOC-PROJ-053, V9-DOC-BACK-006, V9-DOC-PROJ-124, V9-DOC-PROJ-107, V9-DOC-PROD-001]
+*/
 /**
  * @module analysisHubStore
  * @lifecycle @Global

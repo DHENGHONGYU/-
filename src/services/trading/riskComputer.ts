@@ -7,7 +7,8 @@
  * - 生成风险告警
  *
  * 所有函数均为纯函数，便于测试和复用。
- */
+  * @doc [V9-DOC-BACK-013, V9-DOC-BACK-012, V9-DOC-BACK-008, V9-DOC-ARCH-008, V9-DOC-BACK-005]
+*/
 
 import type { SymbolTradePair, PositionItem } from './positionComputer'
 import type { PnLSummary } from './pnlComputer'

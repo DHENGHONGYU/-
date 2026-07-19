@@ -6,7 +6,8 @@
  *
  * Vite 模块 Worker 用法：
  *   new Worker(new URL('./v6ScoreWorker.ts', import.meta.url), { type: 'module' })
- */
+  * @doc [V9-DOC-BACK-005, V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-PROJ-113, V9-DOC-PROJ-054]
+*/
 
 /// <reference lib="webworker" />
 

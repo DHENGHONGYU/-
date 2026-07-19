@@ -2,7 +2,8 @@
  * @module strategySnapshotStore
  * @description 策略快照页面状态管理层（L2）。
  * 管理当前策略与历史快照的状态，封装股票池、V6 评分、轮动评分的加载与快照保存逻辑。
- */
+  * @doc [V9-DOC-DATA-021, V9-DOC-BACK-010, V9-DOC-ARCH-008, V9-DOC-BACK-003, V9-DOC-QA-010]
+*/
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'

@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-BACK-005, V9-DOC-PROJ-003, V9-DOC-BACK-010, V9-DOC-ARCH-008, V9-DOC-PROJ-002]
+ */
 import { calculateWeightedScore, getEnabledStockFactorNames } from '@/config/scoreFactors'
 import { dataBridge } from '@/core/databridge'
 import { ENVELOPE_ACTION, STORE_NAME } from '@/config/dbConfig'

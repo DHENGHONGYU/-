@@ -10,7 +10,8 @@
  *   - 编排核心只看到 IMarketDataFetcher 接口，不知道降级的存在
  *   - 每个源超时/异常后自动切换到下一个源
  *   - 降级链耗尽时返回 Mock 数据并标记 source='mock'
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-PROJ-092, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021]
+*/
 
 import { getLogger } from '@/lib/logger'
 import { mockKline, mockQuote } from '../mockProvider'

@@ -6,7 +6,8 @@
  * 镜像 systemMonitorStore 的结构：持有最新快照 + 历史趋势（自更新记录），
  * 通过定时器实现"时刻监控"，并在告警事件触发时记录告警时间。
  * UI 层（MechanismHealthWidget）只从本 Store 读数据，不直接跑扫描。
- */
+  * @doc [V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-076, V9-DOC-DATA-075, V9-DOC-DATA-073]
+*/
 
 import { create } from 'zustand'
 import { eventBus } from '@/lib/eventBus'

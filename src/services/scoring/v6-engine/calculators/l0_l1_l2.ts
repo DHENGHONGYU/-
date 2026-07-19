@@ -2,7 +2,8 @@
  * L0 STEEP 宏观扫描 + L1 护城河 + L2 竞品 计算器
  *
  * 按 SKILL v4.3 评分 rubric 实现。
- */
+  * @doc [V9-DOC-ARCH-008, V9-DOC-PROJ-053, V9-DOC-PROJ-113, V9-DOC-PROJ-066, V9-DOC-FRONT-012]
+*/
 
 import { getLogger } from '@/lib/logger'
 import type { LayerInput, LayerScore, LayerCalculator } from '../types'

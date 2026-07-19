@@ -4,7 +4,8 @@
  *
  * 同时生成看多与看空两个角色的结构化论证，并给出辩论裁决，
  * 用于暴露单一方向分析的盲区，提升结论稳健性。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import { z } from 'zod'
 import { getLogger } from '@/lib/logger'

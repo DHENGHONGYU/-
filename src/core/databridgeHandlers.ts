@@ -8,7 +8,8 @@
  *
  * 设计原则：每个 Handler 仅依赖 db / logger / envelope，不依赖 DataBridge 主类内部状态，
  * 因此可独立测试与扩展。
- */
+  * @doc [V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-ARCH-008, V9-DOC-BACK-012, V9-DOC-PROJ-002]
+*/
 import { ENVELOPE_ACTION, STORE_NAME, type StoreName } from '@/config/dbConfig'
 import { db, now } from '@/data/db'
 import type { CustomAgent, Stock } from '@/data/types'

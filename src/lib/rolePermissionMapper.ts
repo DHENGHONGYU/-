@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-FRONT-037]
+ */
 import type { UserRole, DeveloperRole } from '@/types/role.types'
 import type { McpCallerRole } from '@/types/modules/mcp.types'
 import { ACL_MATRIX, MODULE_ID, DB_OPERATION, type ModuleId, type DbOperation } from '@/config/dbConfig'

@@ -7,7 +7,8 @@
  * @status 当前无 UI 消费方，但含完整 LLM 流式对话实现（streamingChat）。
  * 保留以备 cockpit 侧边栏 AI 助手功能启用时使用。
  * 删除前需确认未来无 LLM 对话界面需求。
- */
+  * @doc [V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-076, V9-DOC-DATA-075, V9-DOC-DATA-073]
+*/
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'

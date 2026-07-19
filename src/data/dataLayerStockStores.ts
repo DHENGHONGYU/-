@@ -5,7 +5,8 @@
  * - stockStore: 股票池 CRUD（add/get/list/listByStatus/listByGroups/updateStatus/updateGroup/remove）
  * - dailyQuoteStore: 日行情 save/get
  * - financialReportStore: 财报 save/get/list（含详细日志）
- */
+  * @doc [V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-076, V9-DOC-DATA-075, V9-DOC-DATA-073]
+*/
 import { DATA_SOURCE, STORE_NAME } from '@/config/dbConfig'
 import {
   DEFAULT_POOL_GROUP,

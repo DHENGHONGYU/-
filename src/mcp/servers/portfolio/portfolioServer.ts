@@ -2,7 +2,8 @@
  * @module mcp/servers/portfolio
  * @description 投资组合 MCP Server — 组合管理、持仓调整、主题筛选
  * @created 2026-07-04
- */
+  * @doc [V9-DOC-AI-005, V9-DOC-AI-007, V9-DOC-AI-013, V9-DOC-AI-022, V9-DOC-ARCH-022]
+*/
 
 import { MCPServerBase } from '@/mcp/core/server'
 import type { ServerInfo, ToolDescriptor, ResourceTemplate, PromptTemplate } from '@/mcp/core/types'

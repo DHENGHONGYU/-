@@ -2,7 +2,8 @@
  * @module mcp/servers/llm
  * @description LLM 调用 MCP Server — 暴露模型选择、对话补全、分析增强等工具
  * @created 2026-07-04
- */
+  * @doc [V9-DOC-AI-005, V9-DOC-AI-007, V9-DOC-AI-013, V9-DOC-AI-022, V9-DOC-ARCH-022]
+*/
 
 import { MCPServerBase } from '@/mcp/core/server'
 import type { ServerInfo, ToolDescriptor, ResourceTemplate, PromptTemplate } from '@/mcp/core/types'

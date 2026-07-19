@@ -15,7 +15,8 @@
  * @since v2.2.0
  * @updated v2.3.0 添加 VERBOSE 日志埋点
  * @compliance AGENTS.md §一 lib 层依赖规则：仅依赖 core/ 和 config/
- */
+  * @doc [V9-DOC-FRONT-037]
+*/
 
 // ═══════════════════════════════════════════════════════════════
 // VERBOSE 模式开关

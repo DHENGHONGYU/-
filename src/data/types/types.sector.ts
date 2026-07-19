@@ -9,7 +9,8 @@
  * @updated 2026-07-07 - PR-1：从 data/types.ts 拆分
  * @updated 2026-07-16 - v2.9.0：新增三级行业分类 + V4 维度分析
  * @updated 2026-07-16 - v2.9.5：V4子指标细化 + 趋势分析 + 估值分析
-/** 板块评分三维度 */
+/** 板块评分三维度  * @doc [V9-DOC-QA-066]
+*/
 export interface SectorScoreDimensions {
   /** 十五五规划契合度 0-5 */
   planAlignment: number

@@ -6,7 +6,8 @@
  * - 链路追踪 ID 生成
  * - 耗时格式化
  * - 配置 ID 生成
-/** 生成链路追踪 ID */
+/** 生成链路追踪 ID  * @doc [V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-076, V9-DOC-DATA-075, V9-DOC-DATA-073]
+*/
 export function generateTraceId(): string {
   return `trace_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`
 }

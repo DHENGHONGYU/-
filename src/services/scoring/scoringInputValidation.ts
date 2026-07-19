@@ -12,7 +12,8 @@
  * - 与 services/scoring 同层，可直接引用 v6-engine 类型
  *
  * @module services/scoring/scoringInputValidation
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-021, V9-DOC-BACK-033, V9-DOC-BACK-027]
+*/
 
 import type { FinancialData, StockBasicData, QuoteData } from './v6-engine'
 import { getLogger } from '@/lib/logger'

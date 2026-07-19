@@ -1,7 +1,8 @@
 /**
  * @module ExecutionConstants
  * @description 执行链路模块常量定义。所有枚举值、阈值、配置数值必须从此文件引用，禁止在组件/Service 中硬编码。
- */
+  * @doc []
+*/
 
 import type { ExecutionPhase } from '@/data/types'
 

@@ -10,7 +10,8 @@
  *           audit:registry 正向校验条目指向文件存在、反向校验磁盘文件均已登记。
  *
  * 生成时间：2026-07-16 15:28:55
- */
+  * @doc [V9-DOC-ARCH-004, V9-DOC-DATA-032, V9-DOC-DATA-031, V9-DOC-DATA-076, V9-DOC-DATA-075]
+*/
 
 export interface StoreRegistryEntry {
   /** 条目标识（PascalCase，与文件名 camelCase 对应） */

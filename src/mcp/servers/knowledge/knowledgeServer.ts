@@ -2,7 +2,8 @@
  * @module mcp/servers/knowledge
  * @description 本地知识库 MCP Server — 语义检索与知识问答
  * @created 2026-07-13
- */
+  * @doc [V9-DOC-AI-005, V9-DOC-AI-007, V9-DOC-AI-013, V9-DOC-AI-021, V9-DOC-AI-022]
+*/
 
 import { MCPServerBase } from '@/mcp/core/server'
 import type { ServerInfo, ToolDescriptor } from '@/types/modules/mcp.types'

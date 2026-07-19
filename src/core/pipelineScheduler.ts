@@ -12,7 +12,8 @@
  * - 支持暂停/恢复/重置操作
  * - 完整的状态机管理（IDLE/RUNNING/PAUSED/SUCCESS/RETRY/FAILED）
  * - 内置健康检查与数据完整性保障
- */
+  * @doc [V9-DOC-BACK-005, V9-DOC-BACK-012, V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-ARCH-008]
+*/
 
 import { getLogger } from '@/lib/logger'
 import { dataBridge } from './databridge'

@@ -12,7 +12,8 @@
  *   "meta": { "exportVersion": "1.0", "exportedAt": 1234567890, "sourceName": "高频行情监控" },
  *   "config": { ...PersistedWizardConfig }
  * }
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-DATA-047, V9-DOC-BACK-021, V9-DOC-DATA-068, V9-DOC-FRONT-020]
+*/
 
 import { getLogger } from '@/lib/logger'
 import type { PersistedWizardConfig, ExportedConfigFile, ConfigExportMeta } from '@/types/modules/collection.types'

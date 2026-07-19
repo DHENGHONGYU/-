@@ -28,7 +28,8 @@
  * @see src/data/types.ts — Signal / Order / DailyQuotes 类型定义
  * @see docs/reference/功能模块数据契约.md#14-策略回测引擎backtestengine — 模块契约
  * @see docs/reference/v9核心数据字典与类型定义(整合版).md — BacktestEngineConfig / VirtualOrder / VirtualPosition / BacktestEngineResult
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import { generateId } from '@/lib/utils'
 import type { DailyQuotes } from '@/data/types'

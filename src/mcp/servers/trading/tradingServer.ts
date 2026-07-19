@@ -7,7 +7,8 @@
  *
  * @module mcp/servers/trading/tradingServer
  * @created 2026-07-04 - Phase 1 MCP 核心业务 Server 迁移
- */
+  * @doc [V9-DOC-BACK-013, V9-DOC-AI-005, V9-DOC-AI-007, V9-DOC-ARCH-008, V9-DOC-BACK-005]
+*/
 
 import { MCPServerBase } from '@/mcp/core/server'
 import type { ServerInfo, ToolDescriptor, ResourceTemplate, PromptTemplate } from '@/mcp/core/types'

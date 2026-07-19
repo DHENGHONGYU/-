@@ -12,7 +12,8 @@
  * - 访问控制 5 大致命问题: 32% 离职员工账号未及时禁用 → 僵尸账号检测间隔应 <= 7 天
 /**
  * RBAC 阈值配置接口
- */
+  * @doc [V9-DOC-DATA-047, V9-DOC-FRONT-020, V9-DOC-DATA-068]
+*/
 export interface RbacThresholds {
   /** 权限默认有效期（ms），默认 90 天，防止"一授终身" */
   readonly defaultPermissionTtlMs: number

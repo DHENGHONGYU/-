@@ -4,7 +4,8 @@
  *
  * 仅在开发阶段 / IndexedDB 不可用时使用，作为初始数据源。
  * 一旦 IndexedDB 中存在真实数据，应优先使用持久化数据。
- */
+  * @doc [V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-076, V9-DOC-DATA-075, V9-DOC-DATA-073]
+*/
 
 import { MOCK_WIZARD_API_BASE_URL } from '@/config/dataSourceUrls'
 import type { PersistedWizardConfig } from '@/types/modules/collection.types'

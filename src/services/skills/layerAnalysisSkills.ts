@@ -5,7 +5,8 @@
  * 覆盖 V6 中被 LLMScoreEnhancer 标记为可增强的 7 个层：
  * L0 STEEP 宏观扫描、L1 护城河、L2 竞品格局、L4 情景推演、
  * L5 T-M 矩阵、L6 Hype 周期、L7 第二曲线。
- */
+  * @doc [V9-DOC-PROJ-124, V9-DOC-BACK-004, V9-DOC-BACK-012, V9-DOC-PROJ-113, V9-DOC-PROD-001]
+*/
 
 import { createLayerAnalysisSkill } from './layerAnalysisSkillFactory'
 

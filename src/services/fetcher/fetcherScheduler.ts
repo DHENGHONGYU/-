@@ -2,7 +2,8 @@
  * 数据采集调度器（简化版）
  *
  * 当前实现仅提供手动触发与事件触发能力；定时调度与时间分层在 P2 阶段逐步补齐。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-PROJ-092, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021]
+*/
 
 import { getDefaultFetcherConfig, type FetcherFrequency } from '@/config/fetcherConfig'
 import { getLogger } from '@/lib/logger'

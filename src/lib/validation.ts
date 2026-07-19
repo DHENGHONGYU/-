@@ -8,7 +8,8 @@
  * - 新增股票代码严格校验（A股/港股/美股）（VAL-003）
  * - 新增 URL 协议白名单校验（XSS-003）
  * - 新增 API Key 脱敏函数（LEAK-004）
- */
+  * @doc [V9-DOC-FRONT-037]
+*/
 
 import { safeRegex } from './safeRegex'
 

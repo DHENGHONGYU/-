@@ -5,7 +5,8 @@
  *
  * @module constants/theme/helpers
  * @created 2026-07-07 - 从 theme.tokens.ts 拆分
- */
+  * @doc []
+*/
 
 // ============================================================
 // 暗色模式 / 悬停态 / 渐变 辅助类（Dark / Hover / Gradient Helpers）

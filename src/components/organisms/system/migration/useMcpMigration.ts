@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-AI-005, V9-DOC-AI-007, V9-DOC-AI-013, V9-DOC-AI-022, V9-DOC-ARCH-022]
+ */
 import { mcpBridge } from '@/mcp/bridge/mcpBridge'
 import { getLogger } from '@/lib/logger'
 import type { MigrationReport, V6ExportShape, V9ImportShape } from '@/services/system/v6MigrationService'

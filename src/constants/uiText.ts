@@ -18,7 +18,8 @@
  *
  * @module constants/uiText
  * @updated 2026-07-07 - 拆分为多模块，保持原 API 兼容
- */
+  * @doc []
+*/
 
 import { common } from './uiText/uiText.common'
 import { analysis } from './uiText/uiText.analysis'

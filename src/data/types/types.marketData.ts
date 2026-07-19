@@ -5,7 +5,8 @@
  *
  * @module data/types/types.marketData
  * @updated 2026-07-07 - PR-1：从 data/types.ts 拆分
-/** 单根 K 线 */
+/** 单根 K 线  * @doc [V9-DOC-QA-066]
+*/
 export interface KlineBar {
   date: string
   open: number

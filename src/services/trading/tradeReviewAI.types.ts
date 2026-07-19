@@ -4,7 +4,8 @@
  * 本文件现为兼容入口：所有持久化与跨层类型已归位至
  * src/types/modules/tradeReviewAI.types.ts，此处仅 re-export 以保持现有调用方零修改。
  * 服务层专属选项类型（TradeReviewOptions / SyncReviewOptions）仍保留在本文件。
- */
+  * @doc [V9-DOC-BACK-013, V9-DOC-BACK-012, V9-DOC-BACK-008, V9-DOC-ARCH-008, V9-DOC-BACK-005]
+*/
 
 export type {
   DetectedError,

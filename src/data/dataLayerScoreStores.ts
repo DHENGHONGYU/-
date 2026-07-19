@@ -10,7 +10,8 @@
  * - valuePitScoreStore: 价值洼地评分 save/get/list
  * - sectorScoreStore: 板块评分 save/get/list/listBySector/getLatestBySector
  * - scoreDocStore: 评分文档 save/get/list/listBySymbol/getLatestBySymbol
- */
+  * @doc [V9-DOC-BACK-010, V9-DOC-BACK-012, V9-DOC-PROJ-002, V9-DOC-PROJ-003, V9-DOC-ARCH-008]
+*/
 import { STORE_NAME } from '@/config/dbConfig'
 import type {
   DataLayerResult,

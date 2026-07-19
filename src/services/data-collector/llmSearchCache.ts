@@ -5,7 +5,8 @@
  * 缓存结构：{ key, data, cachedAt, ttlHours }
  * 缓存目录：G:/FinSightV9/cache/llm-search/
  * 缓存键：{symbol}_{dimension}_{YYYY-MM}.json
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-027, V9-DOC-BACK-023, V9-DOC-BACK-021, V9-DOC-BACK-033]
+*/
 
 import fs from 'node:fs'
 import path from 'node:path'

@@ -7,7 +7,8 @@
  * - 订单流水：orders 表全量查询
  *
  * 与 TradingFlowPage 的持仓数据一致：当前持仓股数均从同一 orders 表流水计算。
- */
+  * @doc [V9-DOC-BACK-013, V9-DOC-BACK-012, V9-DOC-BACK-008, V9-DOC-ARCH-008, V9-DOC-BACK-005]
+*/
 import { dataBridge } from '@/core/databridge'
 import { ENVELOPE_ACTION, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
 import { RESEARCH_STATUS } from '@/constants/pool.constants'

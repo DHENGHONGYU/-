@@ -1,3 +1,6 @@
+/**
+ * @doc []
+ */
 import { z } from 'zod'
 import { ok, fail, type Result } from '@/core/result'
 import { ValidationError } from '@/lib/errors'

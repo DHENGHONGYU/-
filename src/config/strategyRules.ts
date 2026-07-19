@@ -7,7 +7,8 @@
  * - 热门追涨判定
  *
  * 本文件位于 L2 config，禁止依赖 services/apps/pages/components/core。
- */
+  * @doc [V9-DOC-BACK-003, V9-DOC-BACK-010, V9-DOC-ARCH-008, V9-DOC-DATA-021, V9-DOC-QA-010]
+*/
 
 export interface StrategyRuleConfig {
   /** R1：综合分最低门槛（默认 3.6） */

@@ -5,7 +5,8 @@
  *
  * @module constants/uiText/uiText.cockpit
  * @created 2026-07-07 - 从 uiText.ts 拆分
- */
+  * @doc []
+*/
 
 export const cockpit = {
   home: '首页',

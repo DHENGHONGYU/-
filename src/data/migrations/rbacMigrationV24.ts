@@ -9,7 +9,8 @@
  * 参考：OWASP Broken Access Control、WorkOS RBAC 最佳实践
  *
  * @compliance AGENTS.md §八：增量 store 在对应版本 Migration.up() 中创建
- */
+  * @doc []
+*/
 import type { Migration } from '@/data/db-migrations'
 import { STORE_NAME } from '@/config/dbConfig'
 

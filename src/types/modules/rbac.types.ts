@@ -3,7 +3,8 @@
  *
  * 5 表模式：users / roles / permissions / user_roles / role_permissions + permission_audit_logs
  * 参考：OWASP Broken Access Control、WorkOS RBAC 最佳实践
- */
+  * @doc [V9-DOC-QA-066]
+*/
 
 // ── 审计动作类型 ──
 export type AuditAction = 'grant' | 'revoke' | 'modify' | 'archive' | 'delete'

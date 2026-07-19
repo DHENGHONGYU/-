@@ -15,7 +15,8 @@
  *   - 服务层仅依赖 lib/（logger/eventBus）与 types/，不直接调用 dataLayer 或 db
  *   - 核心分支含 logger.info 与 try-catch
  *   - 禁止使用 any
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import { getLogger } from '@/lib/logger'
 import { eventBus } from '@/lib/eventBus'

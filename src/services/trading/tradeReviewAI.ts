@@ -6,7 +6,8 @@
  * 本文件保留为兼容入口，新代码请直接从 UseCase 导入。
  *
  * @deprecated 请优先使用 services/useCase/generateTradeReview.useCase
- */
+  * @doc [V9-DOC-BACK-013, V9-DOC-BACK-012, V9-DOC-BACK-008, V9-DOC-ARCH-008, V9-DOC-BACK-005]
+*/
 
 export { generateTradeReviewUseCase as generateReview } from '@/services/useCase/generateTradeReview.useCase'
 export { generateTradeReviewAsyncUseCase as generateReviewAsync } from '@/services/useCase/generateTradeReview.useCase'

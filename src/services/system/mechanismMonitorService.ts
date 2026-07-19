@@ -13,7 +13,8 @@
  *   `mechanism:alert`，由 Widget 订阅后触发全局 Toast（跨切面提醒）。
  *
  * @module services/system/mechanismMonitorService
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import { eventBus } from '@/lib/eventBus'
 import { getLogger } from '@/lib/logger'
