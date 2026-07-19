@@ -12,7 +12,17 @@ export interface SliderProps extends Omit<InputHTMLAttributes<HTMLInputElement>,
 }
 
 /**
- * Slider
+ * Slider — 范围选择器（原子组件，包装原生 input[type=range]）
+ *
+ * @param props 组件 props
+ * @param props.min 最小值，默认 0
+ * @param props.max 最大值，默认 100
+ * @param props.step 步进，默认 1
+ * @param props.value 受控值
+ * @param props.defaultValue 非受控初值
+ * @param props.onValueChange 值变化回调
+ * @param props.showTooltip 是否在拖拽时显示值提示（拖到容器外自动清理）
+ * @param props.disabled 是否禁用
  */
 export const Slider = forwardRef<HTMLInputElement, SliderProps>(
   (
@@ -54,6 +64,7 @@ export const Slider = forwardRef<HTMLInputElement, SliderProps>(
           onChange={handleChange}
           onMouseDown={() => setIsDragging(true)}
           onMouseUp={() => setIsDragging(false)}
+          onMouseLeave={() => setIsDragging(false)}
           onTouchStart={() => setIsDragging(true)}
           onTouchEnd={() => setIsDragging(false)}
           disabled={disabled}

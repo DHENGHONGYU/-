@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-028
  * @fileoverview 文件导入模块单元测试
  *
  * 覆盖 P0-1~P0-4 的核心功能：
@@ -12,7 +13,8 @@
  *
  * @module tests/file-import.test
  * @created 2026-07-14 - 双通道整改 P0 测试
- */
+  * @covers_docs []
+*/
 
 import { describe, it, expect, beforeEach } from 'vitest'
 import { validateFile } from '@/services/file-import/unifiedFileValidator'

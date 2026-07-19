@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-050
  * @module sanitizeLlmOutput.test
  * @description sanitizeLlmOutput 消毒逻辑单元测试
  *
@@ -10,7 +11,8 @@
  *
  * 关联契约：AGENTS.md §6「LLM 输出必须经 sanitizeLlmOutput 消毒后渲染，防止 XSS」
  * 关联文档：docs/implementation/walkthrough-agent-llm-report-20260704.md 第五节问题 3
- */
+  * @covers_docs [V9-DOC-AI-017, V9-DOC-AI-033]
+*/
 
 import { describe, it, expect } from 'vitest'
 import {

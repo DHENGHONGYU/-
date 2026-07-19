@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-079
  * signalStore 重复条件整改回归
  *
  * 整改手法：原两处同义 source 过滤
@@ -9,7 +10,8 @@
  *
  * 本测试锁定：trading / tradinghub 来源必须被跳过（0 次 refresh），
  * 其余来源必须触发 refresh（去抖合并为 1 次）。
- */
+  * @covers_docs [V9-DOC-ARCH-007, V9-DOC-BACK-015]
+*/
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { StandardEnvelope } from '@/core/envelope'

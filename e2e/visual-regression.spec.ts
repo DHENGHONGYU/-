@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-E2E-020
  * @module e2e/visual-regression
  * @description 视觉回归测试：为各舱核心页面建立截图基线并做 diff。
  *
@@ -35,7 +36,8 @@
  * - 截图前等待网络空闲与关键元素可见，降低动画/数据加载导致的抖动。
  * - 若界面有意的 redesign 导致 diff，使用 `--update-snapshots` 重新冻结基线。
  * - 提交基线前优先运行 Docker 版本，确保 CI 回归通过。
- */
+  * @covers_docs []
+*/
 
 import { test, expect } from '@playwright/test'
 

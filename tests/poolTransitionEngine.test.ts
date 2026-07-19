@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-UT-042
+ * @covers_docs [V9-DOC-DATA-024, V9-DOC-PROJ-108, V9-DOC-BACK-011]
+ */
 import { describe, expect, it } from 'vitest'
 import {
   getPoolLabel,

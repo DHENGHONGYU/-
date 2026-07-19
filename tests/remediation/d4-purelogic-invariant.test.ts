@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-076
  * D4 深度嵌套平铺整改 — 纯逻辑行为不变量回归测试
  *
  * 覆盖范围（38 文件逻辑嵌套清单中无既有测试、且平铺最易引入行为偏差的纯逻辑模块）：
@@ -8,7 +9,8 @@
  *
  * 目的：锁定「深层嵌套 → 卫语句/helper 平铺」后，导出纯函数的输入/输出语义不变。
  * 这些函数无 DB / 无副作用，断言确定性、可复现。
- */
+  * @covers_docs [V9-DOC-BACK-008, V9-DOC-BACK-013, V9-DOC-ARCH-008, V9-DOC-BACK-005, V9-DOC-BACK-025]
+*/
 import { describe, it, expect } from 'vitest'
 import type { Order } from '@/data/types'
 import {

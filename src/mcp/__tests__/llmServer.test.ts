@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-041
+ * @covers_docs [V9-DOC-AI-005, V9-DOC-AI-007, V9-DOC-AI-013, V9-DOC-AI-021, V9-DOC-AI-022]
+ */
 import { describe, it, expect } from 'vitest'
 import { LLMServer } from '@/mcp/servers/llm/llmServer'
 

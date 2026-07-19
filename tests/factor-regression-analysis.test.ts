@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-024
  * @fileoverview 统计因子体系与回归分析 — 5大板块完整验证
  *
  * 板块1: 基本面评分（L1/L3f/L3v/L7 + 8衍生因子 = 12因子）
@@ -12,7 +13,8 @@
  *
  * @module tests/factor-regression-analysis.test
  * @created 2026-07-14 - 统计因子体系构建
- */
+  * @covers_docs [V9-DOC-PROJ-114, V9-DOC-PROJ-054, V9-DOC-PROJ-113, V9-DOC-PROJ-066]
+*/
 
 import { describe, it, expect } from 'vitest'
 import { olsRegression, formatRegressionTable } from '@/services/scoring/v6-engine/regressionAnalyzer'

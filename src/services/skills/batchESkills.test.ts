@@ -1,9 +1,11 @@
 /**
+ * @test_id V9-TEST-ST-110
  * @module services/skills/batchESkills.test
  * @description Batch E 交易集成 SKILL 单元测试
  *
  * 覆盖 S-02 仓位管理、S-13 入场信号、S-14 出场信号、S-15 风控止损。
- */
+  * @covers_docs []
+*/
 
 import { describe, it, expect } from 'vitest'
 import { SkillRegistry } from './skillRegistry'

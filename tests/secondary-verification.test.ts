@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-054
  * @fileoverview 二次数据校对验证测试
  *
  * 执行完整的二次校对流程：
@@ -12,7 +13,8 @@
  *
  * @module tests/secondary-verification.test
  * @created 2026-07-14 - 二次校对整改
- */
+  * @covers_docs [V9-DOC-PROJ-114, V9-DOC-PROJ-054, V9-DOC-PROJ-113, V9-DOC-PROJ-066]
+*/
 
 import { describe, it, expect } from 'vitest'
 import { analyzeCorrelations, pearsonCorrelation } from '@/services/scoring/v6-engine/correlationAnalyzer'

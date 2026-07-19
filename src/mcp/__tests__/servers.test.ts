@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-052
  * MCP Server 集成测试
  *
  * 测试范围：
@@ -10,7 +11,8 @@
  *
  * @module mcp/__tests__/servers.test.ts
  * @created 2026-07-04 - Phase 1 MCP Server 集成测试
- */
+  * @covers_docs [V9-DOC-PROJ-113, V9-DOC-BACK-005, V9-DOC-BACK-008, V9-DOC-PROJ-066]
+*/
 
 import { describe, it, expect, beforeEach } from 'vitest'
 import { V6ScoringServer } from '../servers/scoring/v6ScoringServer'

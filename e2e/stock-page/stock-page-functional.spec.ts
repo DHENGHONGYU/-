@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-E2E-036
  * FinSightV9 股票页面功能测试（全维度）
  *
  * 维度 A · 信息展示正确性：批量导入 50 只 CSV 股票，验证每只代码/名称在预览表格中渲染，
@@ -11,7 +12,8 @@
  * 报告：G:/FinSightV9/deliverables/software-company/stock-page-test-report-2026-07-16.{html,json}
  *
  * 注意：本套件只新增测试与报告，不修改任何 src 源码。
- */
+  * @covers_docs []
+*/
 
 import { test } from '@playwright/test'
 import { readFileSync, writeFileSync, mkdirSync } from 'fs'

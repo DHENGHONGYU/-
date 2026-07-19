@@ -1,9 +1,11 @@
 /**
+ * @test_id V9-TEST-UT-038
  * @fileoverview P2-2 多源检索引擎测试
  *
  * @module tests/p2-2-search.test
  * @created 2026-07-14 - 双通道整改 P2-2
- */
+  * @covers_docs []
+*/
 
 import { describe, it, expect } from 'vitest'
 import { search, quickSearch } from '@/services/data-sync-search/searchEngine'

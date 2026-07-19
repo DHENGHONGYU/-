@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-136
  * executionStore 单元测试
  *
  * 覆盖场景：
@@ -22,7 +23,8 @@
  * - beforeEach 使用 setState(..., false) 重置状态（防止 isRefreshing 锁跨测试持久化）
  * - 异步 action 测试 loading/isProcessing 状态变化
  * - try-catch 错误处理覆盖
- */
+  * @covers_docs [V9-DOC-ARCH-007, V9-DOC-BACK-015]
+*/
 
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 import type { Signal, ExecutionPlan, Stock, Order } from '@/data/types'

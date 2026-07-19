@@ -1,11 +1,13 @@
 /**
+ * @test_id V9-TEST-ST-067
  * scoreTrendService 单元测试
  *
  * 覆盖：周期标签格式化、周期聚合、行业/个股趋势加载、空数据与 null 分数处理
  *
  * P4 重构后，行业/个股评分趋势查询统一走 DataBridge.queryByIndex，
  * 本测试改为 mock @/core/databridge。
- */
+  * @covers_docs []
+*/
 
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 import {

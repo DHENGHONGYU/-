@@ -1,9 +1,11 @@
 /**
+ * @test_id V9-TEST-ST-070
  * @module collectionReportService.test
  * @description collectionReportService 单元测试
  *
  * 验证从 traceSpans / taskStatuses 聚合为进度与汇报数据的正确性。
- */
+  * @covers_docs []
+*/
 
 import { describe, it, expect, vi } from 'vitest'
 import {

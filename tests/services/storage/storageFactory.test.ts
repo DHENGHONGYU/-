@@ -1,7 +1,9 @@
 /**
+ * @test_id V9-TEST-UT-082
  * @fileoverview 存储抽象层单元测试（适配异步 getStorageFor）
  * @module tests/services/storage/storageFactory.test
- */
+  * @covers_docs []
+*/
 
 import { describe, expect, it, beforeEach, vi } from 'vitest'
 import {

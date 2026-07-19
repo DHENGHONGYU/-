@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-060
+ * @covers_docs []
+ */
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import {
   captureError,

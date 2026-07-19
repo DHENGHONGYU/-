@@ -1,9 +1,11 @@
 /**
+ * @test_id V9-TEST-ST-107
  * @module multiFactorScreeningEngine.test
  * @description 多因子筛选引擎单元测试。
  *
  * P4 重构后 loadScreenableStocks 走 DataBridge.query，本测试改为 mock @/core/databridge。
- */
+  * @covers_docs [V9-DOC-DATA-022, V9-DOC-DATA-011, V9-DOC-DATA-009, V9-DOC-BACK-004, V9-DOC-ARCH-007]
+*/
 
 import { describe, it, expect, vi } from 'vitest'
 import {

@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-E2E-004
+ * @covers_docs [V9-DOC-BACK-020]
+ */
 import { test, expect } from '@playwright/test'
 
 test.describe('分析舱功能测试', () => {

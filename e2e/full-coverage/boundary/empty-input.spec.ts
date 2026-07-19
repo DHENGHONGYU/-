@@ -1,7 +1,9 @@
 /**
+ * @test_id V9-TEST-E2E-021
  * E2E 边界测试 — 空输入
  * 覆盖：空代码提交、空批量导入、无标的提示、所有维度禁用按钮状态
- */
+  * @covers_docs []
+*/
 
 import { test, expect } from '@playwright/test'
 import { navigateTo, ROUTES } from '../utils/helpers'

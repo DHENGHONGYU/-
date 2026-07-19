@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-069
  * @fileoverview collectionWizardPersistence 单元测试
  *
  * 测试数据采集向导配置持久化服务的 CRUD 功能：
@@ -7,7 +8,8 @@
  * - 读取所有配置（loadAllWizardConfigs）
  * - 更新配置（updateWizardConfig）
  * - 删除配置（deleteWizardConfig）
- */
+  * @covers_docs [V9-DOC-DATA-013, V9-DOC-BACK-027, V9-DOC-DATA-052, V9-DOC-DATA-042, V9-DOC-DATA-051]
+*/
 
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
 import {

@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-077
+ * @covers_docs [V9-DOC-DATA-021, V9-DOC-BACK-010, V9-DOC-ARCH-008, V9-DOC-QA-010, V9-DOC-BACK-006]
+ */
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 import type { BacktestConfig, BacktestResult } from '@/store/backtestStore'
 import {

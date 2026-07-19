@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-UT-071
+ * @covers_docs []
+ */
 import { describe, it, expect } from 'vitest'
 // 注意：本文件【不】mock theme.tokens，验证文件 A 的 mock 是否泄漏到本文件
 import { COLOR_TOKENS } from '@/constants/theme.tokens'

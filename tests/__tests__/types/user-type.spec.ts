@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-118
  * UserType 类型级（Type-level）单元测试
  *
  * @description
@@ -18,7 +19,8 @@
  *
  * @module tests/__tests__/types/user-type.spec
  * @created 2026-07-02 - 类型安全硬约束示例
- */
+  * @covers_docs []
+*/
 
 import { describe, it } from 'vitest'
 import { expectType } from 'ts-expect'

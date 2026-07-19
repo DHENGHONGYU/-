@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-143
  * marketDataStore 单元测试
  *
  * 覆盖场景：
@@ -23,7 +24,8 @@
  * 21. initMarketDataStoreSubscriptions: 重复调用跳过
  * 22. handleCollectionResult: 通过 taskScheduler 回调更新数据
  * 23. handleCollectionResult: 错误回调更新 error 状态
- */
+  * @covers_docs []
+*/
 
 const {
   mockRegisterTask,

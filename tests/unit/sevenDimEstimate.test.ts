@@ -1,6 +1,8 @@
 /**
+ * @test_id V9-TEST-UT-084
  * @fileoverview 七维采集额度预估计算逻辑测试
- */
+  * @covers_docs []
+*/
 
 import { describe, it, expect } from 'vitest'
 import type { DimensionConfig, DataSourceType } from '@/types/modules/collection.types'

@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-UT-115
+ * @covers_docs [V9-DOC-AI-017, V9-DOC-AI-033, V9-DOC-ARCH-007, V9-DOC-BACK-015, V9-DOC-BACK-012]
+ */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import {
   rotationSignalStoreNormalState,

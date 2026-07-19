@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-UT-061
+ * @covers_docs []
+ */
 import { describe, expect, it } from 'vitest'
 import {
   CORE_RESOURCE_THEME,

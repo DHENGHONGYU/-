@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-UT-072
+ * @covers_docs [V9-DOC-ARCH-008, V9-DOC-PROJ-054, V9-DOC-PROJ-113, V9-DOC-PROJ-066, V9-DOC-PROJ-053]
+ */
 import { describe, it, expect } from 'vitest'
 import { STORE_NAME } from '@/config/dbConfig'
 import type { DailyQuotes, Order, Signal, Stock, V6Score } from '@/data/types'

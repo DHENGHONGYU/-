@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-E2E-013
+ * @covers_docs [V9-DOC-DATA-024, V9-DOC-PROJ-108, V9-DOC-BACK-011]
+ */
 import { test, expect } from '@playwright/test'
 
 test.describe('股票池分组', () => {

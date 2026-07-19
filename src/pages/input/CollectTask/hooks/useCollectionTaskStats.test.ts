@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-058
  * @fileoverview useCollectionTaskStats Hook 单元测试
  *
  * 验证拆分后的状态聚合逻辑：
@@ -7,7 +8,8 @@
  * - taskStats: 按 status 分类计数
  * - dimHealth: 按 dimensionCode 聚合
  * - scoreStats: 评分统计（avg/max/min/distribution/trend）
- */
+  * @covers_docs []
+*/
 
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { renderHook, act } from '@testing-library/react'

@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-066
  * V6 评分引擎异常处理单元测试
  * 
  * 覆盖边界条件：
@@ -8,7 +9,8 @@
  * - aggregate 中 NaN 防护
  * - LLM 增强器防御性校验
  * - 输入数据校验
- */
+  * @covers_docs [V9-DOC-PROJ-053, V9-DOC-ARCH-008, V9-DOC-PROJ-114, V9-DOC-FRONT-012]
+*/
 
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { V6ScoreEngine } from '@/services/scoring/v6-engine/engine'

@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-075
  * TD-001 性能基准测试：评分引擎性能验证
  * 
  * 测试目标：
@@ -22,7 +23,8 @@
  * - 5,000 条数据 < 2,500ms
  * - 10,000 条数据 < 5,000ms
  * - 时间复杂度应为 O(n)，而非 O(n²)
- */
+  * @covers_docs [V9-DOC-PROJ-114, V9-DOC-PROJ-054, V9-DOC-PROJ-113, V9-DOC-PROJ-066]
+*/
 
 import { describe, it, expect, beforeAll } from 'vitest'
 import { V6ScoreEngine } from '@/services/scoring/v6-engine/engine'

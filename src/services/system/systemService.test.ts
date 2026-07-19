@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-118
+ * @covers_docs []
+ */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { loadSystemStats, resetAll, exportAll } from './systemService'
 

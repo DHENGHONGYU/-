@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-UT-110
+ * @covers_docs []
+ */
 import { describe, it, expect } from 'vitest'
 
 describe('API 响应快照测试', () => {

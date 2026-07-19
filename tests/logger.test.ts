@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-UT-035
+ * @covers_docs []
+ */
 import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest'
 import { getLogger, setLogLevel } from '@/lib/logger'
 

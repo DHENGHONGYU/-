@@ -1,7 +1,9 @@
 /**
+ * @test_id V9-TEST-ST-127
  * @module services/useCase/createExecutionPlan.useCase.test
  * @description 创建执行计划用例单元测试 — 验证风控阻断场景
- */
+  * @covers_docs [V9-DOC-BACK-013, V9-DOC-ARCH-007, V9-DOC-BACK-008, V9-DOC-ARCH-008, V9-DOC-BACK-005]
+*/
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { createExecutionPlanUseCase } from './createExecutionPlan.useCase'

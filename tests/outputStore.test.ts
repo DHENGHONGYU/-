@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-037
  * 验证 outputStore 数据导出状态管理
  *
  * 覆盖场景：
@@ -9,7 +10,8 @@
  * 5. setMessage/clearMessage 消息管理
  * 6. setIsExporting 导出状态控制
  * 7. 选择器订阅测试
- */
+  * @covers_docs []
+*/
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { useOutputStore, selectExportData, selectMessage, selectIsExporting } from '@/store/outputStore'
 import { exportAll } from '@/services/system/systemService'

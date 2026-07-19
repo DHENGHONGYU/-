@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-024
  * LocalStorageManager 压力测试
  *
  * 测试场景：
@@ -8,7 +9,8 @@
  * 4. JSON 序列化/反序列化
  * 5. 批量操作（getAll/clearNamespace）
  * 6. 静态方法（listNamespaces/clearAll）
- */
+  * @covers_docs []
+*/
 import { describe, expect, it, beforeEach } from 'vitest'
 import { LocalStorageManager } from '@/lib/localStorageManager'
 

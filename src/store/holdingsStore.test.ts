@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-137
  * holdingsStore 单元测试
  *
  * 覆盖场景：
@@ -14,7 +15,8 @@
  * 10. buildHoldingsParams: 从当前状态构建查询参数
  * 11. initHoldingsStoreSubscriptions: 订阅 trading 通道
  * 12. initHoldingsStoreSubscriptions: 返回 cleanup 函数
- */
+  * @covers_docs []
+*/
 
 import { vi } from 'vitest'
 import type { HoldingItem } from '@/types/modules/trade.types'

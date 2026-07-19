@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-140
+ * @covers_docs []
+ */
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { useInputHubStore } from './inputHubStore'
 

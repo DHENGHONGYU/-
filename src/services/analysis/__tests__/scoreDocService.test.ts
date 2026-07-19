@@ -1,8 +1,10 @@
 /**
+ * @test_id V9-TEST-ST-066
  * scoreDocService diff 功能单元测试
  *
  * 覆盖：版本差异计算、新增/删除维度、评分等级变化
- */
+  * @covers_docs [V9-DOC-BACK-044, V9-DOC-BACK-018, V9-DOC-BACK-037, V9-DOC-BACK-042]
+*/
 
 import { describe, test, expect } from 'vitest'
 import { buildScoreDocDiff } from '../scoreDocService'

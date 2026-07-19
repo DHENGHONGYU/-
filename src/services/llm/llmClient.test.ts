@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-087
+ * @covers_docs [V9-DOC-AI-017, V9-DOC-AI-033]
+ */
 import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest'
 import { streamingChat, LlmApiError } from './llmClient'
 import type { LlmStreamChunk } from './llmTypes'

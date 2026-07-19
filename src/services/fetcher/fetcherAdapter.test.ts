@@ -1,9 +1,11 @@
 /**
+ * @test_id V9-TEST-ST-078
  * fetcherAdapter 单元测试
  *
  * 覆盖：adaptBasicDataToStock, adaptKlineDataToDailyQuotes,
  *       hasRealBasicData, hasEnoughHistory
- */
+  * @covers_docs [V9-DOC-PROJ-092]
+*/
 
 import { describe, test, expect } from 'vitest'
 import {

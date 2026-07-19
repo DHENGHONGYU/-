@@ -1,7 +1,9 @@
 /**
+ * @test_id V9-TEST-E2E-027
  * E2E 功能测试 — 按钮交互
  * 覆盖：驾驶舱按钮、输入舱按钮、重置默认、保存配置状态、主题切换、采集完成按钮
- */
+  * @covers_docs []
+*/
 
 import { test, expect } from '@playwright/test'
 import { navigateTo, waitForAppReady, ROUTES, SAMPLE_STOCKS } from '../utils/helpers'

@@ -1,7 +1,9 @@
 /**
+ * @test_id V9-TEST-ST-144
  * @module multiFactorScreeningStore.test
  * @description 多因子筛选 Store 单元测试。
- */
+  * @covers_docs [V9-DOC-DATA-022, V9-DOC-DATA-011, V9-DOC-DATA-009, V9-DOC-BACK-004, V9-DOC-ARCH-007]
+*/
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useMultiFactorScreeningStore } from './multiFactorScreeningStore'

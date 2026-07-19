@@ -1,5 +1,6 @@
 import { forwardRef, memo, type ComponentPropsWithoutRef, useMemo } from 'react'
 import { CHART_PALETTE } from '@/constants/theme.tokens'
+import { THEME_TOKENS } from '@/constants/theme/theme.tokens.base'
 import { usePerfTrace } from '@/hooks/usePerfTrace'
 
 export interface IndustryHeatmapDataItem {
@@ -147,7 +148,19 @@ const IndustryHeatmap = forwardRef<HTMLDivElement, IndustryHeatmapProps>(
                   return (
                     <div
                       key={item.code}
+                      role={onCellClick ? 'button' : undefined}
+                      tabIndex={onCellClick ? 0 : undefined}
                       onClick={() => onCellClick?.(item)}
+                      onKeyDown={(e) => {
+                        if (!onCellClick) return
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault()
+                          onCellClick(item)
+                        }
+                      }}
+                      className={onCellClick
+                        ? `focus-visible:outline-none focus-visible:${THEME_TOKENS.focusVisible.ringWidth} focus-visible:${THEME_TOKENS.focusVisible.ringColor} focus-visible:${THEME_TOKENS.focusVisible.ringOffset}`
+                        : undefined}
                       style={{
                         backgroundColor: bg,
                         color: text,

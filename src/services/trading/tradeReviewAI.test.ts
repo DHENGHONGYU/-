@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-124
+ * @covers_docs [V9-DOC-BACK-008, V9-DOC-BACK-013, V9-DOC-ARCH-008, V9-DOC-BACK-005, V9-DOC-QA-080]
+ */
 import { describe, it, expect } from 'vitest'
 import { generateReview, SKILL_DIMENSIONS } from './tradeReviewAI'
 import type { Order } from '@/data/types'

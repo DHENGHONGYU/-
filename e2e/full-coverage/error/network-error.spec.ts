@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-E2E-025
+ * @covers_docs []
+ */
 import { test, expect } from '@playwright/test'
 import { navigateTo, waitForAppReady, ROUTES, simulateOffline, restoreNetwork } from '../utils/helpers'
 

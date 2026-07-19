@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-005
  * defaultWidgetBuilder 单元测试
  *
  * 覆盖场景：
@@ -7,7 +8,8 @@
  * 3. buildDefaultRuntimeState - idle 状态
  * 4. buildFallbackRuntimeState - error 状态
  * 5. defaultWidgetBuilder 单例
- */
+  * @covers_docs []
+*/
 
 import { describe, expect, it, beforeEach } from 'vitest'
 import {

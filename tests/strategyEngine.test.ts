@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-UT-059
+ * @covers_docs [V9-DOC-DATA-021, V9-DOC-BACK-005, V9-DOC-BACK-008, V9-DOC-BACK-003, V9-DOC-BACK-010]
+ */
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { runStrategy } from '@/services/trading/strategyEngine'
 import * as scoringAdapter from '@/services/trading/scoringAdapter'

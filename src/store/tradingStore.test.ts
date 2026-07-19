@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-161
  * @fileoverview tradingStore 单元测试
  *
  * tradingStore 是向后兼容的 Facade，委托给子 Store：
@@ -18,7 +19,8 @@
  * 8. getHoldingShares 计算净持仓
  * 9. setMessage
  * 10. reset 重置状态 + 调用子 Store reset
- */
+  * @covers_docs [V9-DOC-BACK-008, V9-DOC-BACK-005, V9-DOC-ARCH-008, V9-DOC-BACK-010, V9-DOC-BACK-003]
+*/
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { Stock, Order, Portfolio, StrategyResult } from '@/data/types'

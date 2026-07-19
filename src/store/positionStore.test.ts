@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-150
+ * @covers_docs []
+ */
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import type { Order } from '@/data/types'
 import { usePositionStore, initPositionStoreSubscriptions } from './positionStore'

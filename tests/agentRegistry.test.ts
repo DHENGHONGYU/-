@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-UT-003
+ * @covers_docs [V9-DOC-AI-006, V9-DOC-AI-003, V9-DOC-AI-002, V9-DOC-AI-014]
+ */
 import { describe, expect, it, beforeEach, afterEach } from 'vitest'
 import {
   createAgentRegistry,

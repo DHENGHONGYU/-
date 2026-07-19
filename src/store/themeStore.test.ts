@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-159
+ * @covers_docs []
+ */
 import { describe, expect, it, beforeEach, vi } from 'vitest'
 import { useThemeStore, initSystemThemeListener } from './themeStore'
 

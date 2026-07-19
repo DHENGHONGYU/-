@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-071
  * MarketDataAdapter 单元测试 — 字段兜底（F04 体检项）
  *
  * 目标：验证"任意字段缺失 / 类型错误 / 极端脏数据"时，适配器始终返回
@@ -6,7 +7,8 @@
  *
  * 这与 safeCoerce（永不抛异常、脏数据返回默认值）及 merge() 的 getDefault*()
  * 兜底共同构成本项体检的"绝不崩溃"保证。
- */
+  * @covers_docs []
+*/
 import { describe, it, expect } from 'vitest'
 import { MarketDataAdapter } from '@/services/data-collector/MarketDataAdapter'
 import type { RawMarketData } from '@/types/modules/widget.types'

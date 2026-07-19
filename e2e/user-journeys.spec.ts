@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-E2E-019
+ * @covers_docs []
+ */
 import { test, expect } from '@playwright/test'
 
 test.describe('用户旅程 J1：新用户首次使用', () => {

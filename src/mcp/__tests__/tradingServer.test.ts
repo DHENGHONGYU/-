@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-054
+ * @covers_docs [V9-DOC-BACK-013, V9-DOC-AI-005, V9-DOC-AI-007, V9-DOC-ARCH-008, V9-DOC-BACK-005]
+ */
 import { describe, it, expect } from 'vitest'
 import { TradingServer } from '@/mcp/servers/trading/tradingServer'
 

@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-090
  * @fileoverview MCP Server 全链路集成测试
  *
  * @description
@@ -13,7 +14,8 @@
  *   套件5: 工具调用幂等性（2 用例）
  *
  * @module tests/__tests__/integration/mcp-servers.integration.test
- */
+  * @covers_docs [V9-DOC-DATA-024, V9-DOC-BACK-011, V9-DOC-PROJ-108, V9-DOC-DATA-013]
+*/
 
 import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest'
 import { db, close } from '@/data/db'

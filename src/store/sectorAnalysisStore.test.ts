@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-154
+ * @covers_docs [V9-DOC-BACK-012]
+ */
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 import type { RotationSectorScore, IndustryScore } from '@/data/types'
 

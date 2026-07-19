@@ -1,10 +1,12 @@
 /**
+ * @test_id V9-TEST-ST-080
  * fetcherInterceptor 单元测试
  *
  * 覆盖：calculateBackoff, setInterceptorConfig / getInterceptorConfig,
  *       interceptedFetch（成功响应、5xx 重试、429 重试、401/403 回调、
  *       404 不重试、网络错误、AbortError → TIMEOUT、最终 HttpError、maxRetries=0）
- */
+  * @covers_docs [V9-DOC-PROJ-092]
+*/
 
 import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest'
 import {
