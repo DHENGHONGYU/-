@@ -11,6 +11,7 @@ tags: [project, plan, system, review, governance, documentation, strategy, expla
 version: v1.0.0
 last_updated: 2026-07-17
 code_version: 2.0.0
+doc_id: V9-DOC-PROJ-173
 change_log:
   - version: v1.0.0
 changes: Initial version established

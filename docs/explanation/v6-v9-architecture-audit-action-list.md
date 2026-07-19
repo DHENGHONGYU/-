@@ -10,6 +10,7 @@ summary: "审计结论：V6 架构思想�?V9 中“有实现、未主导”。�
 tags: [architecture, audit, checklist, list, design, strategy, explanation]
 version: v2.0.0
 last_updated: 2026-07-04
+doc_id: V9-DOC-ARCH-016
 change_log:
   - version: v2.0.0
 audit_source: 
