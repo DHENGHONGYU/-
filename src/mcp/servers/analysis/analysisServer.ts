@@ -2,7 +2,8 @@
  * @module mcp/servers/analysis
  * @description 分析引擎 MCP Server — 暴露个股分析、板块分析、筛选等工具
  * @created 2026-07-04
- */
+  * @doc [V9-DOC-AI-005, V9-DOC-BACK-006, V9-DOC-BACK-004, V9-DOC-PROJ-066, V9-DOC-PROJ-079]
+*/
 
 import { MCPServerBase } from '@/mcp/core/server'
 import type { ServerInfo, ToolDescriptor, ResourceTemplate, PromptTemplate } from '@/mcp/core/types'

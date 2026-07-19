@@ -11,7 +11,8 @@
  * 共用同一条错误总线，形成端到端异常闭环。
  *
  * 仅依赖 services/errorBus（→ lib 基础设施），符合 AGENTS.md 分层白名单。
- */
+  * @doc [V9-DOC-FRONT-046]
+*/
 
 import { captureError } from '@/services/errorBus'
 

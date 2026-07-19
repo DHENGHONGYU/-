@@ -22,7 +22,8 @@
  *
  * @example
  * pearsonCorrelation([1,2,3], [2,4,6]) // → 1 (完全正相关)
- */
+  * @doc [V9-DOC-BACK-005, V9-DOC-BACK-012, V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-ARCH-008]
+*/
 export function pearsonCorrelation(x: readonly number[], y: readonly number[]): number {
   const n = Math.min(x.length, y.length)
   if (n < 2) return 0

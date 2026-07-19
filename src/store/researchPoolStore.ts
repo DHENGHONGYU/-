@@ -3,7 +3,8 @@
  * @description 研究精选池 Zustand Store。
  *
  * 物理数据仍存储于 IndexedDB `stocks` store，通过 `pool === 'research'` 过滤。
- */
+  * @doc [V9-DOC-PROJ-108, V9-DOC-BACK-011, V9-DOC-DATA-024, V9-DOC-DATA-032, V9-DOC-DATA-031]
+*/
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'

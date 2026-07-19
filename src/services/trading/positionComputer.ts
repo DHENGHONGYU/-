@@ -8,7 +8,8 @@
  * - 计算已实现盈亏
  * 
  * 所有函数均为纯函数，便于测试和复用。
- */
+  * @doc [V9-DOC-BACK-013, V9-DOC-BACK-012, V9-DOC-BACK-008, V9-DOC-ARCH-008, V9-DOC-BACK-005]
+*/
 
 import type { Order } from '@/data/types'
 import type { TradePair } from '@/services/trading/tradeReviewAI.types'

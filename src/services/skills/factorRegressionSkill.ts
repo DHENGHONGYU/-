@@ -5,7 +5,8 @@
  * 借鉴 Alphalens 因子分析框架与 Fama-French/Barra 多因子模型，
  * 对 V6 各层因子得分与股票未来收益（或综合评分）做多元线性回归，
  * 输出系数显著性、VIF、权重校准建议，用于验证因子有效性与校准聚合权重。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import { z } from 'zod'
 import { getLogger } from '@/lib/logger'

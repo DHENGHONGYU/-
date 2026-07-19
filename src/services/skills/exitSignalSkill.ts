@@ -3,7 +3,8 @@
  * @description S-14 出场信号 SKILL（Batch E 交易集成）
  *
  * 基于 signalGenerator 的纯函数生成卖出/出场信号，并附加固定止损与移动止损建议。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-ARCH-007, V9-DOC-BACK-015, V9-DOC-BACK-023, V9-DOC-BACK-033]
+*/
 
 import { z } from 'zod'
 import { getLogger } from '@/lib/logger'

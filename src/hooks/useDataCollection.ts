@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-PROJ-239]
+ */
 import { useCallback } from 'react'
 import { useMarketData } from '@/cockpit/providers/MarketDataProvider'
 

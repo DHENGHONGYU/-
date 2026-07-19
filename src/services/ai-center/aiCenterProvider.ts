@@ -14,7 +14,8 @@
  * - 生产环境应在应用启动时注入 RealAIHealthScoringStrategy 或后端 API 适配策略
  *
  * @see src/services/ai-center/healthScoringStrategy.ts — 策略接口与实现
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import type { AICenterData } from '@/types/modules/ai-center.types'
 import { getLogger } from '@/lib/logger'

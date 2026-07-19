@@ -12,7 +12,8 @@
  *
  * 业务层、UI 层应当捕获此基类的子类，并通过 `error.category` / `error.code` 路由到
  * 不同的提示与上报通道。
- */
+  * @doc [V9-DOC-PROJ-313, V9-DOC-FRONT-037]
+*/
 export class V9Error extends Error {
   /** 错误分类，用于日志与 UI 区分 */
   public readonly category: 'data' | 'network' | 'validation' | 'permission' | 'business' | 'system'

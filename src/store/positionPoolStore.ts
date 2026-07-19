@@ -1,4 +1,5 @@
-/** @unused — 已实现但当前无 UI 层消费者，待后续产品规划接入。 */
+/** @unused — 已实现但当前无 UI 层消费者，待后续产品规划接入。  * @doc [V9-DOC-PROJ-108, V9-DOC-BACK-011, V9-DOC-DATA-024, V9-DOC-DATA-032, V9-DOC-DATA-031]
+*/
 /**
  * @module positionPoolStore
  * @description 持仓池 Zustand Store。

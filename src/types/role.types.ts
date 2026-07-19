@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-QA-066]
+ */
 export type UserRole = 'analyst' | 'trader' | 'admin' | 'viewer'
 
 export interface RoleConfig {

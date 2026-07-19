@@ -2,7 +2,8 @@
  * @module mcp/core/cancellation
  * @description MCP Cancellation 管理器 — 任务取消与资源清理
  * @created 2026-07-04
- */
+  * @doc [V9-DOC-ARCH-008, V9-DOC-PROJ-002, V9-DOC-AI-007, V9-DOC-AI-005, V9-DOC-PROJ-003]
+*/
 
 import { notificationManager } from './notification'
 import { getLogger } from '@/lib/logger'

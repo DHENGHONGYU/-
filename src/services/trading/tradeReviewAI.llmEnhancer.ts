@@ -5,7 +5,8 @@
  * - 构建 AI 深度洞察的 LLM Prompt
  * - 解析 LLM 返回的 JSON 结果
  * - 降级处理（LLM 失败时回退到规则引擎）
- */
+  * @doc [V9-DOC-BACK-013, V9-DOC-BACK-012, V9-DOC-BACK-008, V9-DOC-ARCH-008, V9-DOC-BACK-005]
+*/
 
 import { getLogger } from '@/lib/logger'
 import type { LlmMessage } from '@/services/llm/llmTypes'

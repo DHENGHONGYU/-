@@ -11,7 +11,8 @@
  * - tradingConfig.ts：交易风控配置（止盈止损 / 仓位管理）
  *
  * 三梯队：core-scarce(第一梯队) > hot-momentum + value-bargain(第二梯队) > watchlist(第三梯队)
- */
+  * @doc [V9-DOC-BACK-003, V9-DOC-BACK-010, V9-DOC-ARCH-008, V9-DOC-DATA-021, V9-DOC-QA-010]
+*/
 
 // Re-export 四分类阈值
 export {

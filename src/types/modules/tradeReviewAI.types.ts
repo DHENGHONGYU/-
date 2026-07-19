@@ -7,7 +7,8 @@
  *
  * @see src/services/trading/tradeReviewAI.types.ts — 服务层兼容入口（re-export）
  * @see src/data/types/types.tradeReview.ts — 持久化实体 re-export
- */
+  * @doc [V9-DOC-QA-080, V9-DOC-QA-066]
+*/
 
 // ============================================================
 // 交易错误实例（与 services/trading/tradeErrorDefinitions.ts 结构对齐）

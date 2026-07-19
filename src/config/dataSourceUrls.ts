@@ -6,7 +6,8 @@
  * 禁止在 services 层硬编码外部 URL。
  *
  * @module config/dataSourceUrls
-/** 腾讯财经实时行情 API */
+/** 腾讯财经实时行情 API  * @doc [V9-DOC-DATA-047, V9-DOC-FRONT-020, V9-DOC-DATA-068]
+*/
 export const TENCENT_QUOTE_API = 'https://qt.gtimg.cn/q'
 
 /** 腾讯财经 K 线 API */

@@ -5,7 +5,8 @@
  * 原类型定义位于 `src/mcp/servers/workflow/workflowServer.ts`，
  * 为符合 AGENTS.md 分层规则（types/ 零依赖且可被所有层引用），
  * 将纯类型抽取到本文件。
-/** 工作流步骤类型 */
+/** 工作流步骤类型  * @doc [V9-DOC-QA-066]
+*/
 export type WorkflowStepType = 'mcp_tool' | 'delay' | 'note'
 
 /** 步骤执行出错时的处理策略 */

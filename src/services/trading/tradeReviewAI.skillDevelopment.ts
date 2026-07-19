@@ -2,7 +2,8 @@
  * 技能发展路径生成器
  *
  * 根据错误分类结果计算技能维度评分，生成技能发展建议
- */
+  * @doc [V9-DOC-BACK-013, V9-DOC-BACK-012, V9-DOC-BACK-008, V9-DOC-ARCH-008, V9-DOC-BACK-005]
+*/
 
 import { getLogger } from '@/lib/logger'
 import type { Order } from '@/data/types'

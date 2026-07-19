@@ -4,7 +4,8 @@
  *
  * 将原先 trading/dualStrategyEngine 中的跨域编排逻辑抽取为独立 UseCase，
  * 使其可合法调用 scoring 域的 analyzer/detector，避免 Service 之间的直接耦合。
- */
+  * @doc [V9-DOC-BACK-003, V9-DOC-BACK-006, V9-DOC-ARCH-008, V9-DOC-BACK-010, V9-DOC-DATA-021]
+*/
 
 import {
   getDefaultDualStrategyRuleConfig,

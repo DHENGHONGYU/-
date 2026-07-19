@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-BACK-013, V9-DOC-BACK-012, V9-DOC-BACK-008, V9-DOC-ARCH-008, V9-DOC-BACK-005]
+ */
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
 import { MODULE_ID, ENVELOPE_TARGET, ENVELOPE_ACTION, ORDER_DIRECTION, ORDER_STATUS, STORE_NAME } from '@/config/dbConfig'

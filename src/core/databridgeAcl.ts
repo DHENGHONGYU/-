@@ -5,7 +5,8 @@
  * 属于 Phase 1 提取，与 @todo 计划的 Phase 2/3 一致。
  *
  * @module core/databridgeAcl
- */
+  * @doc [V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-ARCH-008, V9-DOC-BACK-012, V9-DOC-PROJ-002]
+*/
 
 import { ENVELOPE_ACTION, type DbOperation, type ModuleId, type StoreName } from '@/config/dbConfig'
 import { getLogger } from '@/lib/logger'

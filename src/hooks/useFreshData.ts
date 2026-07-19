@@ -11,7 +11,8 @@
  *
  * @see src/core/refreshCoordinator.ts -- 跨 Store 刷新协调
  * @see docs/reports/retrospectives/freshness-alerts.md -- 数据新鲜度告警策略
- */
+  * @doc [V9-DOC-PROJ-177, V9-DOC-PROJ-239]
+*/
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { getLogger } from '@/lib/logger'

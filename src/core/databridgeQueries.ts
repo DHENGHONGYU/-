@@ -13,7 +13,8 @@
  * - 纯工具函数，零状态，可被任意层安全引入
  * - 所有操作 100% 经由 DataBridge ACL + 审计，保证可追溯
  * - 系统管理操作（export/import/reset）先经 forward 校验，再执行实际操作
- */
+  * @doc [V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-ARCH-008, V9-DOC-BACK-012, V9-DOC-PROJ-002]
+*/
 import {
   ENVELOPE_ACTION,
   ENVELOPE_TARGET,

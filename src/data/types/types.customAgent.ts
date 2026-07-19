@@ -4,7 +4,8 @@
  *
  * IDB 存储结构（keyPath: 'id'，索引 by-type / by-updated-at）。
  * 与 CustomAgentPage 现有 CustomAgentConfig 兼容：增加 id / isActive / apiConfig 必填字段。
- */
+  * @doc [V9-DOC-AI-006, V9-DOC-AI-003, V9-DOC-AI-002, V9-DOC-AI-014, V9-DOC-QA-066]
+*/
 import type { ModuleId } from '@/config/dbConfig'
 
 export type CustomAgentType = 'analysis' | 'trading' | 'risk' | 'data' | 'custom'

@@ -6,7 +6,8 @@
  *
  * @module types/modules/analysisOrchestrator
  * @created 2026-07-13 B1 阶段
- */
+  * @doc [V9-DOC-BACK-006, V9-DOC-PROJ-124, V9-DOC-PROJ-079, V9-DOC-PROJ-066, V9-DOC-PROJ-113]
+*/
 
 export const ANALYSIS_RESULT_VERSION = 1 as const
 

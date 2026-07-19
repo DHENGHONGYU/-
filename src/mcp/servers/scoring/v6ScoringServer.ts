@@ -7,7 +7,8 @@
  *
  * @module mcp/servers/scoring/v6ScoringServer
  * @created 2026-07-04 - Phase 1 MCP 核心业务 Server 迁移
- */
+  * @doc [V9-DOC-ARCH-008, V9-DOC-PROJ-114, V9-DOC-PROJ-054, V9-DOC-PROJ-113, V9-DOC-PROJ-066]
+*/
 
 import { MCPServerBase } from '@/mcp/core/server'
 import type { ServerInfo, ToolDescriptor, ResourceTemplate, PromptTemplate } from '@/mcp/core/types'

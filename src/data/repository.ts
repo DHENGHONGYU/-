@@ -11,7 +11,8 @@
  * - D-03（消除直连 IndexedDB 旁路）将把 13 个旁路组件迁移到本契约
  *
  * @compliance AGENTS.md §一：data/ 仅依赖 core/、config/、lib/、types/
- */
+  * @doc []
+*/
 
 import {
   ENVELOPE_ACTION,

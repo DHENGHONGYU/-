@@ -22,7 +22,8 @@
  *
  * 注意：浏览器环境可能遇到 CORS 限制，生产环境需配置代理。
  * 所有函数在失败时返回 null，由 dataSourceOrchestrator 负责降级。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import { getLogger } from '@/lib/logger'
 import { checkMarketDataContract } from '@/lib/validation/marketDataContract'

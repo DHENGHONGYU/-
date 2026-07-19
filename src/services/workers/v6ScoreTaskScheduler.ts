@@ -7,7 +7,8 @@
  * - Worker 池大小上限 4（避免过度抢占浏览器资源）
  * - 支持优雅降级：Worker 不可用或初始化失败时回退到主线程 Promise.all
  * - 任务级超时保护，防止单股计算卡住整个批次
- */
+  * @doc [V9-DOC-BACK-005, V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-PROJ-113, V9-DOC-PROJ-054]
+*/
 
 import type {
   V6ScoreInput,

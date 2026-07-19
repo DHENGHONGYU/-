@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-BACK-005, V9-DOC-BACK-012, V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-ARCH-008]
+ */
 // 跨 Widget 通信事件总线
 // V6 规范：事件名格式 `widget:{widgetId}:{event}`
 // 支持数据同步与状态同步

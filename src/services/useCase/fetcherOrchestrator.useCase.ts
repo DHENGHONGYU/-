@@ -4,7 +4,8 @@
  *
  * 封装对 fetcher 域的跨域调用，使 input 域可通过 UseCase 合法获取
  * 股票基础数据和 K 线数据，避免 Service 之间的直接耦合。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-PROJ-092, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021]
+*/
 
 import { getLogger } from '@/lib/logger'
 import { fetchStockBasic, fetchStockKline, type FetchKlineOptions } from '@/services/fetcher/fetcherService'

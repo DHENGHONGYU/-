@@ -6,7 +6,8 @@
  * 禁止在 constants / services / components 层硬编码 API 路径字符串。
  *
  * @module config/apiPaths
- */
+  * @doc [V9-DOC-DATA-047, V9-DOC-FRONT-020, V9-DOC-DATA-068]
+*/
 
 // ============================================================
 // 系统监控 API 路径

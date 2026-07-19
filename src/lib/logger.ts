@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-FRONT-037]
+ */
 export interface LogContext {
   [key: string]: unknown
 }

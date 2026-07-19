@@ -2,7 +2,8 @@
  * @module TradeTypes
  * @lifecycle @Route
  * @description 交易持仓管理模块类型定义。所有接口必须在此声明，组件中禁止内联定义数据结构。
- */
+  * @doc [V9-DOC-QA-066]
+*/
 
 import type { HoldingAction, StrategyType, TradeDirection } from '@/constants/trade.constants'
 

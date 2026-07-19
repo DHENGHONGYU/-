@@ -1,4 +1,5 @@
-/** @unused — 已实现但当前无 UI 层消费者，待后续产品规划接入。 */
+/** @unused — 已实现但当前无 UI 层消费者，待后续产品规划接入。  * @doc [V9-DOC-DATA-018, V9-DOC-DATA-002, V9-DOC-DATA-021, V9-DOC-DATA-008, V9-DOC-DATA-006]
+*/
 import { create } from 'zustand'
 import { dataFlowEngine } from '@/core/dataflow/dataflowEngine'
 import { eventBus } from '@/lib/eventBus'

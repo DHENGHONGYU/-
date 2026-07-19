@@ -12,7 +12,8 @@
  * 用法：`COLOR_SHADES.red[600]` → `'text-red-600'`
  *       `COLOR_SHADES.red[50]` → `'bg-red-50'`
  *       `style={{ color: COLOR_SHADES.red[600] }}`
- */
+  * @doc []
+*/
 export const COLOR_SHADES = {
   red: {
     50: 'bg-red-50',

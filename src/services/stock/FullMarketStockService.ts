@@ -9,7 +9,8 @@
  * 匹配优先级：精确匹配 > 代码前缀匹配 > 名称前缀匹配 > 名称模糊包含
  *
  * @module services/stock/FullMarketStockService
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-027, V9-DOC-BACK-023, V9-DOC-BACK-021, V9-DOC-BACK-033]
+*/
 
 import STOCK_DICT, { type StockDictItem } from './stockDictionary'
 import { searchViaSmartbox } from './stockSearchClient'

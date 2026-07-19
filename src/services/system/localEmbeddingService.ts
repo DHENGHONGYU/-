@@ -7,7 +7,8 @@
  * 模型：Xenova/all-MiniLM-L6-v2（~23MB，首次运行自动下载）
  * 维度：384
  * 位置：浏览器 IndexedDB 缓存模型文件
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import { getLogger } from '@/lib/logger'
 

@@ -2,7 +2,8 @@
  * @module WidgetFramework
  * @lifecycle @Route
  * @description Widget 框架模块，提供组件注册、实例管理、生命周期控制能力
- */
+  * @doc [V9-DOC-QA-066]
+*/
 
 // ============================================================
 // 数据源配置类型

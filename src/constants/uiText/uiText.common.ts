@@ -5,7 +5,8 @@
  *
  * @module constants/uiText/uiText.common
  * @created 2026-07-07 - 从 uiText.ts 拆分
- */
+  * @doc []
+*/
 
 export const common = {
   loading: '加载中...',

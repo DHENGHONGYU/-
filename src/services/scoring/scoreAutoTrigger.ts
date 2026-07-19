@@ -12,7 +12,8 @@
  * - 去抖延迟：默认 5000ms，同一股票多次触发合并为一次
  * - 白名单维度：仅对评分相关维度触发重评
  * - 异步非阻塞：触发后不等待评分完成，避免阻塞采集链路
- */
+  * @doc [V9-DOC-BACK-005, V9-DOC-PROJ-003, V9-DOC-BACK-010, V9-DOC-ARCH-008, V9-DOC-PROJ-002]
+*/
 
 import { getLogger } from '@/lib/logger'
 import { eventBus } from '@/lib/eventBus'

@@ -24,7 +24,8 @@
  * - 使用 isRefreshing 锁与失败快照回滚
  * - 订阅采用去抖合并，source 过滤防止自激
  * - 遵循现有 Zustand Store 风格
- */
+  * @doc [V9-DOC-BACK-003, V9-DOC-BACK-010, V9-DOC-ARCH-008, V9-DOC-BACK-006, V9-DOC-DATA-021]
+*/
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'

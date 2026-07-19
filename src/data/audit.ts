@@ -10,7 +10,8 @@
  *
  * 分层合规：data/ 仅依赖 lib 基础设施（logger），与 D-02 的 repository/queryBuilder 同模式，
  * 符合 AGENTS.md §一 分层白名单。
- */
+  * @doc []
+*/
 
 import { getLogger } from '@/lib/logger'
 

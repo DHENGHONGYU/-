@@ -2,7 +2,8 @@
  * @module factorContributions
  * @description 基于 V6ScoreEngine.audit() 输出计算各因子对综合评分的贡献明细。
  * 所有权重、阈值均来自引擎配置，禁止硬编码。
- */
+  * @doc [V9-DOC-ARCH-008, V9-DOC-PROJ-053, V9-DOC-PROJ-113, V9-DOC-PROJ-066, V9-DOC-FRONT-012]
+*/
 
 import type { ScoreAuditTrail, FactorContribution } from './types'
 import { ALL_LAYER_IDS, LAYER_LABELS } from './types'

@@ -3,7 +3,8 @@
  * @description 股票池看板页面逻辑 Hook（三分拆后）。
  *
  * 供分析舱独立页面 `PoolBoardPage` 复用，操作研究池（research）。
- */
+  * @doc [V9-DOC-PROJ-108, V9-DOC-BACK-011, V9-DOC-DATA-024, V9-DOC-BACK-015, V9-DOC-PROJ-239]
+*/
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'

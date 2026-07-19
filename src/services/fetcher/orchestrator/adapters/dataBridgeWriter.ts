@@ -9,7 +9,8 @@
  * - 同时携带 `dataSource: 'tencent' | 'sina' | 'akshare' | 'mock' | 'unknown'` 源标识
  * - 字段存于 payload 顶层，不会破坏 stock 主表结构；
  *   UI 侧（StockAnalysisPage / 股票池列表）可读 `stock.dataProvenance` 显示降级徽章。
- */
+  * @doc [V9-DOC-DATA-013, V9-DOC-BACK-012, V9-DOC-PROJ-092, V9-DOC-BACK-026, V9-DOC-BACK-021]
+*/
 
 import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID } from '@/config/dbConfig'
 import { dataBridge } from '@/core/databridge'

@@ -3,7 +3,8 @@
  * 源文件: design-tokens/tokens.json
  * 生成时间: 2026-07-17T16:49:02.816Z
  * 请勿手动编辑此文件
- */
+  * @doc []
+*/
 
 export const BASE_COLORS = {
   red: {

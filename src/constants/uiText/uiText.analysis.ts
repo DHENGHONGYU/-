@@ -5,7 +5,8 @@
  *
  * @module constants/uiText/uiText.analysis
  * @created 2026-07-07 - 从 uiText.ts 拆分
- */
+  * @doc [V9-DOC-PROJ-066, V9-DOC-PROD-001, V9-DOC-PROJ-079, V9-DOC-PROJ-113, V9-DOC-PROJ-053]
+*/
 
 export const analysis = {
   backtest: {

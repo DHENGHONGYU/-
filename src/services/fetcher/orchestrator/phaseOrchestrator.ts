@@ -11,7 +11,8 @@
  *
  * 依赖倒置：本文件只 import ports.ts 的接口，绝不 import 基础设施。
  * 唯一例外：eventBus（轻量级事件通知，非数据存储基础设施）。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-PROJ-092, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021]
+*/
 
 import { eventBus } from '@/lib/eventBus'
 import type { KlineItem, StockQuote } from '../directDataAPI'

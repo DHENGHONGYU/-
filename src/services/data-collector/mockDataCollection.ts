@@ -9,7 +9,8 @@
  * 覆盖接口：DataSourceConfig, CollectionTask, RawMarketData, CollectorConfig,
  *          BaseCollector 行为, TaskScheduler 行为, MarketDataAdapter 行为,
  *          MockCollector / RestCollector / WebSocketCollector 实现
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import { DATA_COLLECTION_TIMEOUT_MS } from '@/config/timeouts'
 import { MockStockAnalysisScoringStrategy } from '@/services/stock-analysis/scoringStrategy'

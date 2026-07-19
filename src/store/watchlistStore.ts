@@ -14,7 +14,8 @@
  *
  * @see docs/reference/功能模块数据契约.md — 交易信号 Store 模块契约（第 15 节）
  * @see src/services/trading/tradingService.ts — 交易服务层（数据读取）
- */
+  * @doc [V9-DOC-PROJ-118, V9-DOC-DATA-032, V9-DOC-DATA-031, V9-DOC-DATA-076, V9-DOC-DATA-075]
+*/
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'

@@ -8,7 +8,8 @@
  * - rbacUsers / rbacRoles / rbacPermissions
  * - rbacUserRoles / rbacRolePermissions
  * - rbacPermissionAuditLogs（审计日志，由 permissionRevocationService 与 grant/revoke 共用）
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import { nanoid } from 'nanoid'
 import { dataBridge } from '@/core/databridge'

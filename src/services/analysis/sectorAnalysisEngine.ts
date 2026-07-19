@@ -6,7 +6,8 @@
  *
  * @module services/analysis/sectorAnalysisEngine
  * @created 2026-06-30 - 基于检索功能与引擎映射整改
- */
+  * @doc [V9-DOC-PROJ-124, V9-DOC-BACK-004, V9-DOC-BACK-012, V9-DOC-PROJ-113, V9-DOC-PROD-001]
+*/
 
 import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
 import { dataBridge } from '@/core/databridge'

@@ -1,7 +1,8 @@
 /**
  * @fileoverview P3 交互状态组件统一出口
  * @module components/molecules/states
- */
+  * @doc [V9-DOC-FRONT-046]
+*/
 export { Loading } from './Loading'
 export { Empty } from './Empty'
 export { ErrorState } from './Error'

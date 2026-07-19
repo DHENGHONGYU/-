@@ -13,7 +13,8 @@
  * 设计原则：
  * - 仅依赖本目录类型（StockQuote / KlineItem）与 fetcherTypes（CollectFinancialData），不引入运行时依赖
  * - 纯函数、无副作用、不抛异常；调用方自行决定 warn / 抛错 / 落库
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-PROJ-092, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021]
+*/
 
 import type { StockQuote, KlineItem } from './directDataAPI'
 import type { CollectFinancialData } from './fetcherTypes'

@@ -2,7 +2,8 @@
  * @module mcp/servers/backtest
  * @description 回测引擎 MCP Server — 策略回测、绩效分析
  * @created 2026-07-04
- */
+  * @doc [V9-DOC-AI-005, V9-DOC-AI-007, V9-DOC-AI-013, V9-DOC-AI-021, V9-DOC-AI-022]
+*/
 
 import { MCPServerBase } from '@/mcp/core/server'
 import type { ServerInfo, ToolDescriptor, ResourceTemplate } from '@/mcp/core/types'

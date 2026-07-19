@@ -5,7 +5,8 @@
  *
  * @module data/types/types.strategy
  * @updated 2026-07-07 - PR-1：从 data/types.ts 拆分
- */
+  * @doc [V9-DOC-BACK-003, V9-DOC-BACK-010, V9-DOC-ARCH-008, V9-DOC-BACK-006, V9-DOC-DATA-021]
+*/
 
 import type { Signal } from './types.signal'
 

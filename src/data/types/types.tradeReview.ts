@@ -3,7 +3,8 @@
  *
  * 从服务层归位至 data/types/，供 dataLayerTradingStores 与 DataBridge 使用。
  * 完整类型定义见 src/types/modules/tradeReviewAI.types.ts。
- */
+  * @doc [V9-DOC-QA-080, V9-DOC-QA-066]
+*/
 
 import type {
   TradeReviewReport,

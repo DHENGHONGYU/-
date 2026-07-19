@@ -5,7 +5,8 @@
  * 结合 Self-Refine、Reflexion、CRITIC 与 DSPy 思想，对任意上游 SKILL 的
  * 结构化输出进行批判性审查与迭代优化，输出问题清单、修正后的结构化结果
  * 与置信度。默认单轮自净，支持最多 3 轮迭代。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import { z } from 'zod'
 import { getLogger } from '@/lib/logger'

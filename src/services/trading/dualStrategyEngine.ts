@@ -6,7 +6,8 @@
  * 本文件保留为兼容入口，重新导出 UseCase 函数，避免上游调用方立即变更。
  *
  * @deprecated 请优先使用 services/useCase/runDualStrategy.useCase
- */
+  * @doc [V9-DOC-ARCH-009, V9-DOC-QA-010, V9-DOC-BACK-006, V9-DOC-BACK-010, V9-DOC-BACK-003]
+*/
 
 import {
   runDualStrategyUseCase,

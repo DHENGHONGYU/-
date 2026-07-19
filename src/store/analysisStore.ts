@@ -8,7 +8,8 @@
  * @see @/apps/analysis/AnalysisApp.tsx - 消费方
  * @see @/services/analysis/analysisService.ts - 底层数据服务
  * @see @/services/scoring/v6ScoreService.ts - V6 评分计算服务
- */
+  * @doc [V9-DOC-PROJ-053, V9-DOC-BACK-006, V9-DOC-PROJ-124, V9-DOC-PROJ-107, V9-DOC-PROD-001]
+*/
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'

@@ -3,7 +3,8 @@
  *
  * 统一导出所有计算器、引擎、类型、配置。
  * 外部模块只需 `import { V6ScoreEngine, ... } from '@/services/scoring/v6-engine'`
- */
+  * @doc [V9-DOC-ARCH-008, V9-DOC-PROJ-053, V9-DOC-PROJ-113, V9-DOC-PROJ-066, V9-DOC-FRONT-012]
+*/
 
 // 配置
 export {

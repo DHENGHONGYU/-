@@ -16,7 +16,8 @@
  * - dataLayerContentStores.ts: researchLogStore / strategySnapshotStore / localDocStore /
  *   newsStore / newsStockMapStore / sentimentCacheStore / missingReportStore
  * - dataLayerWatchlistStore.ts: watchlistStore（观察列表快照，修复 C4 孤立表）
- */
+  * @doc []
+*/
 import { db } from './db'
 
 // re-export 子模块的 store，保持原导入路径兼容

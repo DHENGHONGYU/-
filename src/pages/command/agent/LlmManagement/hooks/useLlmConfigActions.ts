@@ -5,7 +5,8 @@
  * 不渲染任何 UI；纯函数式业务编排。
  *
  * @module LlmManagement/hooks/useLlmConfigActions
- */
+  * @doc [V9-DOC-AI-003, V9-DOC-AI-006, V9-DOC-AI-002, V9-DOC-AI-014, V9-DOC-FRONT-020]
+*/
 
 import { useCallback, useEffect } from 'react'
 import { getLogger } from '@/lib/logger'

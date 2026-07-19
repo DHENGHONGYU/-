@@ -11,7 +11,8 @@
  *
  * PR-6 阶段 2：提取 ensureStore() 辅助函数，将 26 个重复的
  * "if/else createObjectStore" 模式收敛为单次调用，CC 从 28 降至约 6。
- */
+  * @doc []
+*/
 import { STORE_NAME } from '@/config/dbConfig'
 import { DEFAULT_POOL_GROUP, POOL_TYPE } from '@/constants/pool.constants'
 import type { LogContext } from '@/lib/logger'

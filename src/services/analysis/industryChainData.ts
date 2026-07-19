@@ -3,7 +3,8 @@
  *
  * 基于现有 SECTOR_DEFINITIONS 推导行业上下游关系，
  * 供 IndustryChainWidget 可视化使用。
- */
+  * @doc [V9-DOC-PROJ-124, V9-DOC-BACK-004, V9-DOC-BACK-012, V9-DOC-PROJ-113, V9-DOC-PROD-001]
+*/
 
 export interface IndustryNode {
   id: string

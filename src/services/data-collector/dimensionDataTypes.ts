@@ -4,7 +4,8 @@
  * 将原本内联于 multiSourceFetcher.ts 的类型提取为独立模块，
  * 供 tushareAdapter.ts、crawlerProvider.ts 与 multiSourceFetcher.ts 共同引用，
  * 避免循环依赖。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-QA-066, V9-DOC-BACK-023]
+*/
 
 /** 筹码数据（维度 03） */
 export interface ChipData {

@@ -4,7 +4,8 @@
  *
  * 订阅 `COLLECTION_EVENTS` 生命周期事件，维护链路追踪、实时日志、
  * 任务进度和质量指标快照，供可视化组件消费。
- */
+  * @doc [V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-076, V9-DOC-DATA-075, V9-DOC-DATA-073]
+*/
 
 import { create } from 'zustand'
 import { eventBus } from '@/lib/eventBus'

@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-QA-066]
+ */
 export type FileType = 'gradle_dep' | 'keystore' | 'env_file' | 'source_code' | 'config_file' | 'binary' | 'other'
 
 export type RiskLevel = 0 | 1 | 2 | 3 | 4 | 5

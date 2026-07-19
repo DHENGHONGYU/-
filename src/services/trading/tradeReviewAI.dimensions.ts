@@ -11,7 +11,8 @@
  * 1. 每个维度必须能从交易规则错误中量化推导（或从纪律评分间接推导）
  * 2. 覆盖"风险-计划-情绪-入场-出场-频率-复盘-选样"完整交易闭环
  * 3. 维度数量控制在 8-10 个，避免认知过载
- */
+  * @doc [V9-DOC-BACK-013, V9-DOC-BACK-012, V9-DOC-BACK-008, V9-DOC-ARCH-008, V9-DOC-BACK-005]
+*/
 
 import { TradeErrorType } from './tradeErrorClassifier'
 import type { SkillDimensionDefinition, SkillLevel } from './tradeReviewAI.types'

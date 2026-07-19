@@ -11,7 +11,8 @@
  * ⚠️ 同名 id 冲突 1 条（不同目录下同名文件，保留多条 id 相同条目；audit 反向检查按文件名匹配，不影响校验）：
  *   - PortfolioService: src/services/portfolio/portfolioService vs src/services/trading/portfolioService
  * 生成时间：2026-07-16 15:28:55
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-ARCH-004, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021]
+*/
 
 export interface ServiceRegistryEntry {
   /** 条目标识（PascalCase，与文件名 camelCase 对应） */

@@ -2,7 +2,8 @@
  * @module sectorHeatmapConfig
  * @description 板块轮动热力图配置：时间窗口、着色指标、布局与颜色强度参数。
  * @remarks 所有数值均来自常量，组件中禁止硬编码。
- */
+  * @doc [V9-DOC-DATA-047, V9-DOC-FRONT-020, V9-DOC-DATA-068]
+*/
 
 import { STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
 

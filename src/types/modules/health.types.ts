@@ -1,7 +1,8 @@
 /**
  * @module health.types
  * @description 架构健康度仪表盘相关类型定义
- */
+  * @doc [V9-DOC-QA-066]
+*/
 
 export type HealthMetricStatus = 'healthy' | 'warning' | 'critical' | 'info'
 

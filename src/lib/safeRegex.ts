@@ -6,7 +6,8 @@
  *
  * @module lib/safeRegex
  * @since 2026-07-18 — P1 正则注入收口
-/** 正则模式最大字符数，防止超长 ReDoS 攻击 */
+/** 正则模式最大字符数，防止超长 ReDoS 攻击  * @doc [V9-DOC-FRONT-037]
+*/
 const MAX_PATTERN_LENGTH = 256
 
 /**

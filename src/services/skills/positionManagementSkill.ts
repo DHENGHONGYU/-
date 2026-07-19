@@ -4,7 +4,8 @@
  *
  * 基于 Kelly 公式与风控约束计算目标仓位，将底层 positionSizer 包装为
  * SkillRegistry 可复用的 SKILL。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import { z } from 'zod'
 import { getLogger } from '@/lib/logger'

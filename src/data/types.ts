@@ -26,7 +26,8 @@
  *
  * @module data/types
  * @updated 2026-07-07 - PR-1：拆分为 13 个子模块，保持原 API 兼容
- */
+  * @doc [V9-DOC-QA-066]
+*/
 
 // ============================================================
 // L0 基础层（dbConfig re-export + DataLayerResult）

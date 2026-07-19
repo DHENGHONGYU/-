@@ -4,7 +4,8 @@
  *
  * 基于外部采集的新闻标题/摘要，对单只股票进行情绪评分、多空倾向与热度判断，
  * 输出结构化结论及可追溯引用，供 orchestrator 组装上下文。
- */
+  * @doc [V9-DOC-PROJ-124, V9-DOC-BACK-004, V9-DOC-BACK-012, V9-DOC-PROJ-113, V9-DOC-PROD-001]
+*/
 
 import { z } from 'zod'
 import { getLogger } from '@/lib/logger'

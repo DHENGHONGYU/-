@@ -7,7 +7,8 @@
  * 变更记录：
  * - v1.0.0 (2026-06-27): 初始版本，整合 screeningConfig 和 tradingConfig 阈值
  * - v1.1.0 (2026-06-29): 接入 valuePitThresholds 到统一阈值配置
- */
+  * @doc [V9-DOC-DATA-047, V9-DOC-FRONT-020, V9-DOC-DATA-068]
+*/
 
 import { getDefaultScreeningConfig, type ScreeningThresholds } from './screeningConfig'
 import { getEffectiveTradingConfig, type SignalThresholds, type KellyConfig, type RiskConfig } from './tradingConfig'

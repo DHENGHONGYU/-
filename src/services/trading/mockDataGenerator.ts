@@ -1,7 +1,8 @@
 /**
  * 交易流程模拟数据生成器
  * 用于本地开发环境，生成各种交易状态和场景的测试数据
- */
+  * @doc [V9-DOC-BACK-013, V9-DOC-BACK-012, V9-DOC-BACK-008, V9-DOC-ARCH-008, V9-DOC-BACK-005]
+*/
 
 import type { TradingSignal } from './signalGenerator'
 import type { Order, OrderStatus } from '@/data/types'

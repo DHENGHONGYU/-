@@ -6,7 +6,8 @@
  *
  * @module types/modules/perf.types
  * @created 2026-07-13
-/** 单次任务性能度量 */
+/** 单次任务性能度量  * @doc [V9-DOC-QA-066]
+*/
 export interface PerfMetric {
   /** 任务名称（如 v6Score / dualStrategy / rotationDetection） */
   taskName: string

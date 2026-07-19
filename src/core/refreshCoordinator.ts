@@ -18,7 +18,8 @@
  * @see src/store/disciplineStore.ts -- recalculate() 中 waitFor('orderStore')
  * @see src/store/executionStore.ts -- executePlan() 中 waitFor('orderStore')
  * @see src/store/positionStore.ts -- refresh() 中 waitFor('orderStore')
- */
+  * @doc [V9-DOC-BACK-005, V9-DOC-BACK-012, V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-ARCH-008]
+*/
 
 // ============================================================
 // 实现（必须在单例实例之前声明，避免 TS2449）

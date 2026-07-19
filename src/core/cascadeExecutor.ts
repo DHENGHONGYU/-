@@ -13,7 +13,8 @@
  * 不阻止删除、不产生级联目标，直接允许主实体删除。
  * 后续接入 src/config/cascadeConfig.ts 后，可在此读取 store 策略并返回对应
  * targets / 抛出 CascadeError（RESTRICT 阻止删除）。
- */
+  * @doc [V9-DOC-BACK-005, V9-DOC-BACK-012, V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-ARCH-008]
+*/
 import type { StoreName } from '@/config/dbConfig'
 import type { CascadeResult } from '@/types/modules/cascade.types'
 

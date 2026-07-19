@@ -6,7 +6,8 @@
  * - Backtestable：注入历史行情数据 → 输出历史评分
  * - OfflineMode：完全脱离网络运行（规则引擎层）
  * - AuditTrail：每层评分的完整审计链路
- */
+  * @doc [V9-DOC-ARCH-008, V9-DOC-PROJ-053, V9-DOC-PROJ-113, V9-DOC-PROJ-066, V9-DOC-FRONT-012]
+*/
 
 import { getLogger } from '@/lib/logger'
 import { measureAsync, PERF } from '@/lib/perf'

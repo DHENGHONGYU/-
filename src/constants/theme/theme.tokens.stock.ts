@@ -33,7 +33,8 @@
  * // ❌ 错误用法（使用 COLOR_TOKENS，可能被主题切换影响）
  * import { COLOR_TOKENS } from '@/constants/theme.tokens'
  * const color = change >= 0 ? COLOR_TOKENS.up.hex : COLOR_TOKENS.down.hex
- */
+  * @doc []
+*/
 export const STOCK_COLOR_TOKENS = {
   /** 上涨颜色（红色，中国A股标准） */
   up: {

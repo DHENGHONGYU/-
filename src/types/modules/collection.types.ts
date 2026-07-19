@@ -1,7 +1,8 @@
 /**
  * @module collection.types
  * @description 数据采集模块核心类型定义（零依赖，可被 config/services/store 各层引用）。
- */
+  * @doc [V9-DOC-QA-066]
+*/
 
 // ============================================================
 // 基础枚举

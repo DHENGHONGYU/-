@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-BACK-013, V9-DOC-BACK-012, V9-DOC-BACK-008, V9-DOC-ARCH-008, V9-DOC-BACK-005]
+ */
 import { CORE_RESOURCE_THEME, matchesTheme, type ThemeConfig } from '@/config/themeRegistry'
 import { getEffectiveTradingConfig } from '@/config/tradingConfig'
 import type { Portfolio, PortfolioHolding, RebalanceAction, Stock } from '@/data/types'

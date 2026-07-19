@@ -2,7 +2,8 @@
  * @module mcp/core/elicitation
  * @description MCP Elicitation 管理器 — Server 向用户请求交互式输入
  * @created 2026-07-04
- */
+  * @doc [V9-DOC-ARCH-008, V9-DOC-PROJ-002, V9-DOC-AI-007, V9-DOC-AI-005, V9-DOC-PROJ-003]
+*/
 
 import type { ElicitationRequest, ElicitationResponse } from '@/types/modules/mcp.types'
 import { getLogger } from '@/lib/logger'

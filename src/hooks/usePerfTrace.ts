@@ -8,7 +8,8 @@
  *   usePerfTrace('LineChart', { points: data.length, series: lines.length })
  *
  * 采样结果可通过 getPerfStats() 实时聚合查看。
- */
+  * @doc [V9-DOC-PROJ-239]
+*/
 
 import { useLayoutEffect, useRef } from 'react'
 import { recordPerf } from '@/lib/perf'

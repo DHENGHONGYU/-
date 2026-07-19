@@ -12,7 +12,8 @@
  * - 复用 `src/services/errorBus` 的 `captureError` 与既有 `V9Error` 体系。
  * - sleep / 时钟可注入，保证单测确定性（无需真实等待）。
  * - 仅依赖 lib 基础设施与 services 内部模块，符合 AGENTS.md 分层约束。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import { V9Error } from '@/lib/errors'
 import { getLogger } from '@/lib/logger'

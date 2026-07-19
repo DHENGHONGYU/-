@@ -11,7 +11,8 @@
  * - ConfigApp 提交时调用 `updateThresholds()`，下游服务消费 `getEffectiveTradingConfig()` 即生效。
  * - 测试代码可继续 `vi.mock('@/config/tradingConfig', () => ({ getDefaultTradingConfig: ... }))`，
  *   新增的 `getEffectiveTradingConfig` 同样可以 mock，且 mock 优先级最高（覆盖层之上）。
- */
+  * @doc [V9-DOC-BACK-008, V9-DOC-BACK-013, V9-DOC-ARCH-008, V9-DOC-BACK-005, V9-DOC-FRONT-020]
+*/
 
 export type SignalDirection = 'buy' | 'sell' | 'hold' | 'watch'
 

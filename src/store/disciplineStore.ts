@@ -16,7 +16,8 @@
  * - 失败时快照回滚，保留旧复盘数据不被清空
  * - 写操作通过 dataBridge.forward() 走信封协议
  * - 订阅 STORE_NAME.orders 频道，source 过滤防自激，100ms 去抖合并
- */
+  * @doc [V9-DOC-ARCH-010, V9-DOC-PROJ-118, V9-DOC-DATA-032, V9-DOC-DATA-031, V9-DOC-DATA-076]
+*/
 
 import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'

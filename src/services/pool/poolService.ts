@@ -3,7 +3,8 @@
  * @description 股票池三分拆 Service：intention / research / position 三池 CRUD 与流转。
  *
  * 物理存储仍使用 IndexedDB `stocks` store，通过 `pool` 字段区分三池。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-DATA-024, V9-DOC-PROJ-108, V9-DOC-BACK-011, V9-DOC-BACK-015]
+*/
 
 import {
   DEFAULT_POOL_GROUP,

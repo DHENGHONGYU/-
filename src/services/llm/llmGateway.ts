@@ -5,7 +5,8 @@
  * 将直接执行外部 HTTP 的 llmClient 封装为更高层网关，
  * 使 trading/scoring/analysis 等 L4 应用层不再直接依赖 L6 外部客户端。
  * 网关负责：配置校验、调用审计、错误降级、Token 统计。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-027, V9-DOC-BACK-023, V9-DOC-BACK-021, V9-DOC-BACK-033]
+*/
 
 import { getLogger } from '@/lib/logger'
 import { generateId } from '@/lib/utils'

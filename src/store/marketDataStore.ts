@@ -21,7 +21,8 @@
  * @see docs/reference/databridge端点与数据映射清单.md — MarketDataStore 订阅频道（orders → portfolioOverview 刷新）
  * @see docs/reference/V9现有数据资产清单.md — marketDataStore 资产登记
  * @see ../../docs/reports/changelogs/CHANGELOG.md — Phase 2 变更记录（version 0.9.9）
- */
+  * @doc [V9-DOC-ARCH-010, V9-DOC-PROJ-118, V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-076]
+*/
 
 import { getSafeString } from '@/lib/safeCoerce'
 import { create } from 'zustand'

@@ -14,7 +14,8 @@
  * @module services/analysis/industryDataAggregator
  * @created 2026-07-16 - v2.9.0
  * @updated 2026-07-16 - v2.9.5：增强版聚合（CR5/CR10、周转率、分位数等）
- */
+  * @doc [V9-DOC-PROJ-124, V9-DOC-BACK-004, V9-DOC-BACK-012, V9-DOC-PROJ-113, V9-DOC-PROD-001]
+*/
 
 import type { FinancialData, QuoteData } from '@/services/scoring/v6-engine/types'
 import type {

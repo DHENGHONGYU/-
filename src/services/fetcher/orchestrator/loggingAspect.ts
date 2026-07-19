@@ -9,7 +9,8 @@
  *   - 日志是横切关注点，绝不能侵入主业务代码
  *   - 使用高阶函数（而非装饰器语法），兼容性更好
  *   - 异常不吞：记录后向上抛出，由编排核心决定降级策略
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-PROJ-092, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021]
+*/
 
 import { getLogger } from '@/lib/logger'
 import type { IWorkflowStep, OrchestratorContext } from './ports'

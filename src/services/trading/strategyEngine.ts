@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-ARCH-009, V9-DOC-QA-010, V9-DOC-BACK-006, V9-DOC-BACK-010, V9-DOC-BACK-003]
+ */
 import type { ThemeConfig } from '@/config/themeRegistry'
 import {
   getDefaultStrategyRuleConfig,

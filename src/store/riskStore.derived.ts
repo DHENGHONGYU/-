@@ -30,7 +30,8 @@
  * - half-open（半开）：放行探测请求，open 状态超过 resetTimeoutMs 后进入
  *
  * @compliance AGENTS.md §一 分层规则：store 层仅依赖 services 和 core（lib 属于基础设施白名单）
- */
+  * @doc [V9-DOC-DATA-032, V9-DOC-DATA-031, V9-DOC-DATA-076, V9-DOC-DATA-075, V9-DOC-DATA-073]
+*/
 
 import { useRiskStore } from '@/store/riskStore'
 import type { RiskVerdict, RiskTriState } from '@/store/riskStore'

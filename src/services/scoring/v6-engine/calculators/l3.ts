@@ -15,7 +15,8 @@
  * - utils.ts: 34 行 ✅
  * - helpers.ts: 70 行 ✅
  * - 原 l3.ts: 536 行 → 拆分后约 20 行 ✅
- */
+  * @doc [V9-DOC-ARCH-008, V9-DOC-PROJ-053, V9-DOC-PROJ-113, V9-DOC-PROJ-066, V9-DOC-FRONT-012]
+*/
 
 // 重新导出所有计算器和工具函数
 // 注意：必须明确指定 ./l3/index，避免与当前文件（l3.ts）产生循环引用

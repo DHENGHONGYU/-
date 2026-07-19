@@ -7,7 +7,8 @@
  * @module data/types/types.dataLayer
  * @updated 2026-07-07 - PR-1：从 data/types.ts 拆分
  * @updated 2026-07-13 三分拆：ResearchStatus → PoolStatus/PoolType
- */
+  * @doc [V9-DOC-QA-066]
+*/
 
 import type { AccountType, DataSource, OrderDirection, OrderStatus } from '@/config/dbConfig'
 import type { PoolStatus, PoolType } from '@/types/modules/pool.types'

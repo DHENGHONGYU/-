@@ -3,7 +3,8 @@
  * @lifecycle @Global
  * @description 输入舱 Hub 页面状态管理。
  * 包含股票搜索与录入功能的状态管理，代理 inputService 的搜索/录入操作。
- */
+  * @doc [V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-076, V9-DOC-DATA-075, V9-DOC-DATA-073]
+*/
 
 import { create } from 'zustand'
 import {

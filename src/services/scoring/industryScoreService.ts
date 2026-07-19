@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-BACK-005, V9-DOC-PROJ-003, V9-DOC-BACK-010, V9-DOC-ARCH-008, V9-DOC-PROJ-002]
+ */
 import { calculateWeightedScore, getEnabledIndustryFactorNames } from '@/config/scoreFactors'
 import { sendWriteEnvelope } from '@/core/databridgeQueries'
 import type { IndustryDimensionScore, IndustryScore } from '@/data/types'

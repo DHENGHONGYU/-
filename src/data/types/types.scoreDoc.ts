@@ -5,7 +5,8 @@
  *
  * @module data/types/types.scoreDoc
  * @updated 2026-07-07 - PR-1：从 data/types.ts 拆分
-/** V6 评分单维度 */
+/** V6 评分单维度  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-008, V9-DOC-BACK-005, V9-DOC-BACK-010, V9-DOC-PROJ-003]
+*/
 export interface V6LayerScore {
   score: number
   reason: string

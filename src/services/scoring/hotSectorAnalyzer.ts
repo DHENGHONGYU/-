@@ -25,7 +25,8 @@
  * @module services/scoring/hotSectorAnalyzer
  * @created 2026-06-27 - 基于双策略体系修正
  * @updated 2026-07-07 - 拆分为多模块，编排逻辑迁移至 orchestrator，保持原 API 兼容
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-021, V9-DOC-BACK-033, V9-DOC-BACK-027]
+*/
 
 // ============================================================
 // Barrel re-export：保持原导入路径 API 兼容

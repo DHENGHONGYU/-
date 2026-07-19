@@ -4,7 +4,8 @@
  *
  * 作为 core 层与 data 层之间的薄适配器，将 IndexedDB 事务能力暴露给 services/useCase
  * 等上层模块，避免业务用例直接依赖 data/db 内部实现。
- */
+  * @doc [V9-DOC-BACK-005, V9-DOC-BACK-012, V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-ARCH-008]
+*/
 
 import type { StoreName } from '@/config/dbConfig'
 import { db } from '@/data/db'

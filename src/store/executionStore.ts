@@ -16,7 +16,8 @@
  * @see docs/reference/v9-system-blueprint.md
  * @see docs/reference/databridge端点与数据映射清单.md
  * @see docs/explanation/v9-架构缺陷与整改行动清单.md
- */
+  * @doc [V9-DOC-PROJ-068, V9-DOC-ARCH-010, V9-DOC-PROJ-118, V9-DOC-DATA-031, V9-DOC-DATA-032]
+*/
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'

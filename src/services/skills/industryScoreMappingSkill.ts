@@ -4,7 +4,8 @@
  *
  * 从 V6 sectorSkillData 中提取行业 SKILL-C / SKILL-N 评分，
  * 按个股代码/业务关键词匹配所属行业，计算关联度与 L-1 注入得分。
- */
+  * @doc [V9-DOC-BACK-005, V9-DOC-ARCH-008, V9-DOC-PROJ-002, V9-DOC-PROJ-003, V9-DOC-BACK-010]
+*/
 
 import { z } from 'zod'
 import { getLogger } from '@/lib/logger'

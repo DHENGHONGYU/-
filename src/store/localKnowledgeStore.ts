@@ -3,7 +3,8 @@
  * @lifecycle @Global
  * @description 本地知识库状态管理层（L2）。
  * 统一管理本地文档的浏览、搜索、统计、文件夹扫描与示例导入状态。
- */
+  * @doc [V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-076, V9-DOC-DATA-075, V9-DOC-DATA-073]
+*/
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'

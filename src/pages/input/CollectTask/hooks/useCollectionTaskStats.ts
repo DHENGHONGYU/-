@@ -9,7 +9,8 @@
  * - 评分统计（avg/max/min/distribution/trend/progress）
  *
  * @module CollectTask/hooks/useCollectionTaskStats
- */
+  * @doc [V9-DOC-PROJ-239]
+*/
 
 import { useMemo, useState, useEffect } from 'react'
 import { mcpBridge } from '@/mcp/bridge/mcpBridge'

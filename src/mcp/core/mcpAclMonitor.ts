@@ -26,7 +26,8 @@
  *
  * @module mcp/core/mcpAclMonitor
  * @created 2026-07-08 - P0 MCP 权限控制修复
- */
+  * @doc [V9-DOC-ARCH-008, V9-DOC-PROJ-002, V9-DOC-AI-007, V9-DOC-AI-005, V9-DOC-PROJ-003]
+*/
 
 import { getLogger } from '@/lib/logger'
 import { safeRegex } from '@/lib/safeRegex'

@@ -11,7 +11,8 @@
  * @see AGENTS.md 第二章 "类型安全" 章节
  *
  * @updated 2026-07-07 - PR-1：OrderDirection 改为从 dbConfig re-export，消除重复定义
- */
+  * @doc [V9-DOC-BACK-005, V9-DOC-BACK-012, V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-ARCH-008]
+*/
 
 import type { Order, V6Score, Stock } from '@/data/types'
 

@@ -17,7 +17,8 @@
  *
  * @module config/mcpAclMonitoring
  * @created 2026-07-08 - P0 MCP 权限控制修复
- */
+  * @doc [V9-DOC-AI-007, V9-DOC-AI-005, V9-DOC-AI-013, V9-DOC-AI-021, V9-DOC-AI-022]
+*/
 
 import type { McpCallerRole } from '@/types/modules/mcp.types'
 

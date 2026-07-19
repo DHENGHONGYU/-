@@ -16,7 +16,8 @@
  *   Phase 2: 提取 broadcast/subscribe/auditLog 到独立类（~150 行）
  *   Phase 3: 提取 cache 逻辑到独立类（~100 行）
  *   目标：主文件 < 400 行，CC < 30
- */
+  * @doc [V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-ARCH-008, V9-DOC-BACK-012, V9-DOC-PROJ-002]
+*/
 
 import { ENVELOPE_ACTION, ENVELOPE_TARGET, STORE_NAME, type ModuleId, type StoreName } from '@/config/dbConfig'
 import { db } from '@/data/db'

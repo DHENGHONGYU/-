@@ -2,7 +2,8 @@
  * 原子组件统一导出入口
  *
  * 原子 = 不可再分的最小 UI 单元，禁止依赖 Store/Service/业务逻辑
- */
+  * @doc [V9-DOC-FRONT-046]
+*/
 
 export { Button } from './Button'
 export type { ButtonProps } from './Button'

@@ -11,7 +11,8 @@
  *
  * @module services/input/batchImportService
  * @updated 2026-07-07 - 拆分为多模块，保持原 API 兼容
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 // 解析层：类型 + 常量 + 工具函数 + 文本/文件解析
 export type {

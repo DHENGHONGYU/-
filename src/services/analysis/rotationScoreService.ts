@@ -4,7 +4,8 @@
  * 本文件仅保留编排逻辑：
  * - 配置与计算逻辑已下沉至 rotationConfig / rotationCalculator / rotationSignalGrader
  * - 写操作统一经 DataBridge.forward() 转发，确保 ACL 校验与审计日志
- */
+  * @doc [V9-DOC-BACK-010, V9-DOC-ARCH-008, V9-DOC-PROJ-066, V9-DOC-PROJ-079, V9-DOC-PROJ-113]
+*/
 
 import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
 import { DEFAULT_SECTORS, ROTATION_FACTORS } from '@/config/rotationConfig'

@@ -15,7 +15,8 @@
  *   既有 `import { ok, fail, type Result } from '@/services/contracts'` 兼容。
  * - services 专属能力（tryResult / IService / BaseService，依赖 errorBus）
  *   仍保留在本模块。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import { toV9Error } from '@/lib/errors'
 import { captureError, type ErrorContext } from '@/services/errorBus'

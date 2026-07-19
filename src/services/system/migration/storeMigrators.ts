@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-BACK-012, V9-DOC-DATA-032, V9-DOC-DATA-031, V9-DOC-BACK-045, V9-DOC-BACK-026]
+ */
 import { STORE_NAME } from '@/config/dbConfig'
 import { sendWriteEnvelope, queryGet, queryByIndex } from '@/data/dataLayerHelpers'
 import { generateId } from '@/lib/utils'

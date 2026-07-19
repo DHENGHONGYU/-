@@ -3,7 +3,8 @@
  * @description S-13 入场信号 SKILL（Batch E 交易集成）
  *
  * 基于 signalGenerator 的纯函数生成买入/入场信号，并挑选最强信号。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-ARCH-007, V9-DOC-BACK-015, V9-DOC-BACK-023, V9-DOC-BACK-033]
+*/
 
 import { z } from 'zod'
 import { getLogger } from '@/lib/logger'
