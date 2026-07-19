@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-085
  * LLM 客户端补充测试
  *
  * 覆盖：
@@ -7,7 +8,8 @@
  * - temperature / maxTokens / timeout 参数透传
  * - v6ScorePrompt 构建器
  * - tradeReviewAI 异步 LLM 增强模式
- */
+  * @covers_docs [V9-DOC-PROJ-054, V9-DOC-PROJ-053, V9-DOC-PROJ-113, V9-DOC-ARCH-008, V9-DOC-FRONT-012]
+*/
 
  
 import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest'

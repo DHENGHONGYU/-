@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-020
  * 25 只股票全流程端到端校对测试（三舱+总舱架构）
  *
  * 目标：从宇宙随机抽取 25 只股票，沿真实服务层（src/services/*）跑通
@@ -11,7 +12,8 @@
  *
  * 如发现实现缺陷（如采集管线 daily_quotes 落库信封结构错误），
  * 会以 findings 形式记录并计入总评分，而非让测试静默通过。
- */
+  * @covers_docs [V9-DOC-ARCH-008, V9-DOC-PROJ-053, V9-DOC-PROJ-114, V9-DOC-BACK-008]
+*/
 
 import { it, expect } from 'vitest'
 import { writeFileSync } from 'node:fs'

@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-155
  * signalQualityStore 单元测试
  *
  * 覆盖场景：
@@ -9,7 +10,8 @@
  * 5. topSignalTypes 准确率排名
  * 6. loadReviews 异常处理
  * 7. 指标计算边界情况（无已实现信号）
- */
+  * @covers_docs [V9-DOC-ARCH-007, V9-DOC-BACK-015]
+*/
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 

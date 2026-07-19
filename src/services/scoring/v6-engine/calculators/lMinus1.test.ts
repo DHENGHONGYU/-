@@ -1,8 +1,10 @@
 /**
+ * @test_id V9-TEST-ST-104
  * L-1 行业评分估值 —— 单元测试
  *
  * 覆盖：matchIndustry、calcSkillNBonus、LMinus1Calculator.calculate
- */
+  * @covers_docs [V9-DOC-PROJ-114, V9-DOC-PROJ-054, V9-DOC-PROJ-113, V9-DOC-PROJ-066]
+*/
 
 import { describe, test, expect, vi } from 'vitest'
 import { matchIndustry, calcSkillNBonus, LMinus1Calculator } from './lMinus1'

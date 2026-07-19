@@ -1,9 +1,11 @@
 /**
+ * @test_id V9-TEST-ST-088
  * stockLinker 单元测试
  *
  * 覆盖：buildStockMap, linkArticleToStocks,
  *       DEFAULT_LINKER_CONFIG, DEFAULT_INDUSTRY_KEYWORDS, DEFAULT_STOCK_LIBRARY
- */
+  * @covers_docs []
+*/
 
 import { describe, test, expect, vi } from 'vitest'
 import {

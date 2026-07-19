@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-008
+ * @covers_docs []
+ */
 import { describe, it, expect } from 'vitest'
 import { widgetRegistry } from '@/cockpit/core/widgetRegistry'
 import { DEFAULT_WIDGET_CONFIG, WIDGET_DEFAULT_DATA_SOURCE } from '@/constants/cockpit.constants'

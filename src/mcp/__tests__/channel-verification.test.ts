@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-033
  * MCP 通道端到端验证测试 —— 20 只随机 A 股
  *
  * 验证目标：
@@ -15,7 +16,8 @@
  *
  * @module mcp/__tests__/channel-verification.test.ts
  * @created 2026-07-13
- */
+  * @covers_docs [V9-DOC-AI-005, V9-DOC-AI-007, V9-DOC-AI-013, V9-DOC-AI-023, V9-DOC-AI-021]
+*/
 
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { WorkflowServer } from '../servers/workflow/workflowServer'

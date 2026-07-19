@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-128
  * agentStore 单元测试
  *
  * 覆盖场景：
@@ -11,7 +12,8 @@
  * 7. initAgentSubscriptions 任务不存在时不更新 task
  * 8. destroyAgentSubscriptions 清理所有订阅
  * 9. 重复 initAgentSubscriptions 先清理旧订阅
- */
+  * @covers_docs [V9-DOC-AI-006, V9-DOC-AI-003, V9-DOC-AI-002, V9-DOC-AI-014]
+*/
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 

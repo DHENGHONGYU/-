@@ -1,11 +1,13 @@
 /**
+ * @test_id V9-TEST-ST-057
  * @fileoverview CollectTask utils 单元测试
  *
  * 覆盖 CollectTaskPage 拆分后暴露的工具函数：
  * - normalizeStatus: 运行时状态 → 显示状态映射
  * - computeAvgIntervalHours: 评分历史平均间隔
  * - STATUS_BADGE: 状态徽章配置
- */
+  * @covers_docs []
+*/
 
 import { describe, it, expect } from 'vitest'
 import {

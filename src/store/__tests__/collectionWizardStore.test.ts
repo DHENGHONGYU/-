@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-166
  * @fileoverview collectionWizardStore 拆分后单元测试
  *
  * 验证拆分后的 4 个子模块（core / persistence / mock / utils）协同工作：
@@ -6,7 +7,8 @@
  * 2. mock：MOCK_CONFIGS 默认值
  * 3. persistence：loadSavedConfigs、loadConfigToWizard、deleteSavedConfig、renameSavedConfig
  * 4. core：通过 spread 合并 persistence actions 后，所有 action 仍可通过 store 调用
- */
+  * @covers_docs []
+*/
 
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 

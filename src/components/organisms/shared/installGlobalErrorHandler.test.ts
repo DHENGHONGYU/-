@@ -1,9 +1,11 @@
 /**
+ * @test_id V9-TEST-ST-010
  * installGlobalErrorHandler 单元测试
  *
  * 验证两类逃逸出 React 错误边界的运行时异常经 captureError 上报到错误总线，
  * 且返回的清理函数能正确移除监听。
- */
+  * @covers_docs []
+*/
 
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 

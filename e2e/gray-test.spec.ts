@@ -1,9 +1,11 @@
 /**
+ * @test_id V9-TEST-E2E-007
  * 灰度测试 E2E 脚本（用于 CloudStudio 部署后验证）
  * 
  * 用法：启动本地 dev server 或部署到 CloudStudio 后，
  * 设置 DEPLOY_URL 环境变量指向部署地址运行此脚本。
- */
+  * @covers_docs []
+*/
 import { test, expect } from '@playwright/test'
 
 const BASE = process.env.DEPLOY_URL || 'http://localhost:3005'

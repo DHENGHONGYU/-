@@ -1,7 +1,9 @@
 /**
+ * @test_id V9-TEST-E2E-014
  * 响应式设计测试
  * 验证系统在不同视口尺寸下的布局表现
- */
+  * @covers_docs []
+*/
 
 import { test, expect } from '@playwright/test'
 

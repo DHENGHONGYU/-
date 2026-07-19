@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-046
+ * @covers_docs [V9-DOC-AI-005, V9-DOC-AI-007, V9-DOC-AI-013, V9-DOC-AI-022, V9-DOC-ARCH-022]
+ */
 import { describe, it, expect } from 'vitest'
 import { PortfolioServer } from '@/mcp/servers/portfolio/portfolioServer'
 

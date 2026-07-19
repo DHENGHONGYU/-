@@ -1,7 +1,9 @@
 /**
+ * @test_id V9-TEST-E2E-022
  * E2E 边界测试 — 非法数据
  * 覆盖：特殊字符、纯空白、XSS payload、负数标的数量
- */
+  * @covers_docs []
+*/
 
 import { test, expect } from '@playwright/test'
 import { navigateTo, ROUTES, INVALID_INPUTS } from '../utils/helpers'

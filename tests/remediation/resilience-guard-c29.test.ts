@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-078
  * C29 resilience guard — 熔断状态机回归测试
  *
  * 背景：复杂度整改中，29 处重复条件已清零。其中 C29
@@ -9,7 +10,8 @@
  *
  * 本测试锁定该状态机语义：若将来有人误将两处守卫「合并去重」，
  * 状态机将崩坏，以下用例会失败。
- */
+  * @covers_docs []
+*/
 
 import { describe, it, expect, vi } from 'vitest'
 

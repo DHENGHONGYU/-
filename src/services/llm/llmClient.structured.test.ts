@@ -1,7 +1,9 @@
 /**
+ * @test_id V9-TEST-ST-086
  * @module services/llm/llmClient.structured.test
  * @description llmClient 结构化输出单元测试
- */
+  * @covers_docs [V9-DOC-AI-017, V9-DOC-AI-033]
+*/
 
 import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest'
 import { z } from 'zod'

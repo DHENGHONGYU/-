@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-E2E-010
+ * @covers_docs [V9-DOC-AI-005, V9-DOC-AI-007, V9-DOC-AI-013, V9-DOC-AI-023, V9-DOC-AI-021]
+ */
 import { test, expect } from '@playwright/test'
 import path from 'node:path'
 

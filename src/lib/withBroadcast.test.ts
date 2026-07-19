@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-027
+ * @covers_docs []
+ */
 import { describe, it, expect, vi } from 'vitest'
 import { eventBus } from '@/lib/eventBus'
 import { withBroadcast, createBroadcaster } from '@/lib/withBroadcast'

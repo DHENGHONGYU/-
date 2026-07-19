@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-039
+ * @covers_docs [V9-DOC-PROJ-092, V9-DOC-AI-005, V9-DOC-AI-007, V9-DOC-AI-013, V9-DOC-AI-022]
+ */
 import { describe, it, expect } from 'vitest'
 import { DataFetcherServer } from '@/mcp/servers/fetcher/dataFetcherServer'
 

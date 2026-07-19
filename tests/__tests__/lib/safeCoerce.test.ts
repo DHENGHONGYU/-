@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-093
  * safeCoerce 单元测试
  *
  * 覆盖 toSafeNumber / toSafeBoolean / toSafeEnum / toSafeString / toSafeArray 等
@@ -6,7 +7,8 @@
  *
  * 特别关注 toSafeBoolean 的字符串数字 '1'/'0' 识别范围验证，
  * 用于决策是否应该扩展识别范围。
- */
+  * @covers_docs []
+*/
 import { describe, it, expect } from 'vitest'
 import {
   toSafeNumber,

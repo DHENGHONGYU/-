@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-065
  * V6 评分区分度集成基线（P2 改进项）
  *
  * 目标：防止「引擎在信息贫乏/单一输入下机械地给出中性分」类隐性退化。
@@ -7,7 +8,8 @@
  *
  * 环境：Vitest + jsdom + fake-indexeddb（tests/setup.ts 已注入）
  * 纯计算，不触达外部数据源。
- */
+  * @covers_docs [V9-DOC-PROJ-114, V9-DOC-PROJ-054, V9-DOC-PROJ-113, V9-DOC-PROJ-066]
+*/
 
 import { it, expect } from 'vitest'
 import { db } from '@/data/db'

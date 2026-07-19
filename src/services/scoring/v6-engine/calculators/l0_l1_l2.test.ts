@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-100
  * L0/L1/L2 计算器 — 单元测试
  *
  * 覆盖：
@@ -6,7 +7,8 @@
  * - buildScoreBoard / scoreScoreBoard
  * - judgeValuation / scoreValuation
  * - L0MacroCalculator / L1MoatCalculator / L2PeerCalculator
- */
+  * @covers_docs [V9-DOC-PROJ-114, V9-DOC-PROJ-054, V9-DOC-PROJ-113, V9-DOC-PROJ-066]
+*/
 
 import {
   judgeLongTermTrend,

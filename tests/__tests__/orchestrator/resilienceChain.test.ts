@@ -1,4 +1,5 @@
-﻿/**
+/**
+ * @test_id V9-TEST-UT-095
  * 降级链装饰器单元测试
  *
  * 覆盖目标：resilienceChain.ts 100% 行/分支覆盖率
@@ -9,7 +10,8 @@
  *   3. isAbortError — AbortError / 普通Error / 非Error
  *
  * 策略：使用 vi.spyOn mock MarketDataFetcher.fetchQuoteBySource / fetchKlineBySource
- */
+  * @covers_docs [V9-DOC-PROJ-092]
+*/
 
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 

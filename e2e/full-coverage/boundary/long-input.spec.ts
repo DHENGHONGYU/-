@@ -1,7 +1,9 @@
 /**
+ * @test_id V9-TEST-E2E-023
  * E2E 边界测试 — 超长字符
  * 覆盖：批量导入超长文本、标的数量超限值、历史天数超限值
- */
+  * @covers_docs []
+*/
 
 import { test, expect } from '@playwright/test'
 import { navigateTo, ROUTES, LONG_INPUT } from '../utils/helpers'

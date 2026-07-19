@@ -1,11 +1,13 @@
 /**
+ * @test_id V9-TEST-UT-033
  * intentionPoolStore 单元测试
  *
  * 覆盖场景：
  * 1. deleteItems 空列表 → 返回 0 且不触发写入
  * 2. deleteItems 批量删除 → 按去重后数量调用 deleteStock 并返回正确计数
  * 3. deleteItems 归一化（大写/去空格）并去重
- */
+  * @covers_docs [V9-DOC-DATA-013, V9-DOC-PROJ-108, V9-DOC-BACK-011]
+*/
 
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { useIntentionPoolStore } from '@/store/intentionPoolStore'

@@ -1,7 +1,9 @@
 /**
+ * @test_id V9-TEST-ST-114
  * @module services/skills/skillRegistry.test
  * @description SkillRegistry 单元测试
- */
+  * @covers_docs []
+*/
 
 import { describe, it, expect } from 'vitest'
 import { z } from 'zod'

@@ -1,9 +1,11 @@
 /**
+ * @test_id V9-TEST-ST-103
  * L7 第二曲线 + L8 技术筹码 —— 单元测试
  *
  * 覆盖：diagnoseLifeStage、scoreSecondCurve、evaluateChip、
  *       L7SecondCurveCalculator.calculate、L8ChipCalculator.calculate
- */
+  * @covers_docs [V9-DOC-PROJ-114, V9-DOC-PROJ-054, V9-DOC-PROJ-113, V9-DOC-PROJ-066]
+*/
 
 import { describe, test, expect, vi } from 'vitest'
 import { diagnoseLifeStage, scoreSecondCurve, evaluateChip, L7SecondCurveCalculator, L8ChipCalculator } from './l7_l8'

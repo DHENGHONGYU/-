@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-087
  * 采集链路数据完整性集成测试 (S2)
  *
  * 验证目标：
@@ -13,7 +14,8 @@
  *      验证调度参数的正确性。
  *   2. 意向池需种子化（0 只股票会导致提前 return）。
  *   3. mock 状态在 beforeEach 中重置，防止交叉污染。
- */
+  * @covers_docs [V9-DOC-DATA-024, V9-DOC-PROJ-108, V9-DOC-BACK-011]
+*/
 
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'

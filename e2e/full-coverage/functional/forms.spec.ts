@@ -1,7 +1,9 @@
 /**
+ * @test_id V9-TEST-E2E-029
  * E2E 功能测试 — 表单交互
  * 覆盖：股票搜索、批量导入文本、七维配置模板切换、全局参数、V6ScoreCard
- */
+  * @covers_docs []
+*/
 
 import { test, expect } from '@playwright/test'
 import { navigateTo, waitForAppReady, ROUTES, SAMPLE_STOCKS } from '../utils/helpers'

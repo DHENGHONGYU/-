@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-141
  * intelligentScoreStore 单元测试
  *
  * 覆盖场景：
@@ -12,7 +13,8 @@
  * 8. loadLogs 成功与失败
  * 9. loadStocks 成功与失败
  * 10. resetResult
- */
+  * @covers_docs [V9-DOC-BACK-020]
+*/
 
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { useIntelligentScoreStore, selectConfigReady } from './intelligentScoreStore'

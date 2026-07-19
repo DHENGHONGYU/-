@@ -1,7 +1,9 @@
 /**
+ * @test_id V9-TEST-ST-109
  * @module services/skills/batchDSkills.test
  * @description Batch D LLM 层 SKILL 单元测试
- */
+  * @covers_docs [V9-DOC-AI-017, V9-DOC-AI-033]
+*/
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 

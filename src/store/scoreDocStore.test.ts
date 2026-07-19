@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-153
  * scoreDocStore 单元测试
  *
  * 覆盖场景：
@@ -8,7 +9,8 @@
  * 4. loadVersions 失败（service 返回 error）
  * 5. loadVersions 异常（抛出错误）
  * 6. clear
- */
+  * @covers_docs [V9-DOC-PROJ-108, V9-DOC-BACK-011, V9-DOC-DATA-024]
+*/
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { useScoreDocStore } from './scoreDocStore'
 import { getRecentVersions } from '@/services/analysis/scoreDocService'

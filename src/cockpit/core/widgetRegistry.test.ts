@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-007
  * WidgetRegistry 单元测试
  *
  * 覆盖场景：
@@ -10,7 +11,8 @@
  * 6. updateRuntimeState 更新状态（保留 ID/未知实例）
  * 7. subscribe 事件订阅与取消订阅
  * 8. getStats 统计信息
- */
+  * @covers_docs []
+*/
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type React from 'react'

@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-096
  * P1 修复回归测试 —— 防止已修复的 E2E 测试问题再次出现
  *
  * 覆盖修复点：
@@ -8,7 +9,8 @@
  * 4. 总控舱标题是否为"总控舱"（非"总控中心"）
  * 5. 各舱室关键路由是否可访问
  * 6. 侧边栏导航路径与路由注册的一致性
- */
+  * @covers_docs [V9-DOC-PROJ-092]
+*/
 
 import { describe, expect, it } from 'vitest'
 import { ROUTE_REGISTRY, type RouteConfig } from '@/config/routes'

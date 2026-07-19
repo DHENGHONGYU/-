@@ -1,7 +1,9 @@
 /**
+ * @test_id V9-TEST-E2E-028
  * E2E 功能测试 — 数据流
  * 覆盖：股票导入→意向池更新、首页状态卡片、采集监控KPI、跨舱室数据一致性
- */
+  * @covers_docs [V9-DOC-DATA-007, V9-DOC-DATA-030, V9-DOC-DATA-019]
+*/
 
 import { test, expect } from '@playwright/test'
 import { navigateTo, waitForAppReady, ROUTES, SAMPLE_STOCKS } from '../utils/helpers'

@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-077
  * dualStrategyStore 重复条件整改回归 + 运行效率基准
  *
  * 覆盖整改后的两个关键不变量：
@@ -9,7 +10,8 @@
  *     `complexity-scan` 会再次报警，本测试也锁定行为不变。
  *  2. 运行效率：在订阅回调热路径上批量派发大量信封，测量吞吐，
  *     证明抽取守卫后无运行时回归（与整改前结构等价，仅单一守卫生效）。
- */
+  * @covers_docs [V9-DOC-DATA-021, V9-DOC-BACK-010, V9-DOC-ARCH-008, V9-DOC-QA-010, V9-DOC-BACK-006]
+*/
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import * as fs from 'fs'

@@ -1,11 +1,13 @@
 /**
+ * @test_id V9-TEST-ST-020
  * dataLayer.ts 单元测试
  *
  * 覆盖全部 33 个 store 及 dataManager 的读写操作，
  * 包含成功路径、失败路径、边界条件共 26+ 个测试场景。
  *
  * @vitest
- */
+  * @covers_docs [V9-DOC-BACK-008, V9-DOC-BACK-013, V9-DOC-ARCH-008, V9-DOC-BACK-005, V9-DOC-QA-080]
+*/
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 // ── Mock 依赖（使用 vi.hoisted 确保 vi.mock 工厂可访问）──

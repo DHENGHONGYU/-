@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-062
  * unifiedStockService 测试
  *
  * 覆盖：
@@ -14,7 +15,8 @@
  * - getTradingView 交易专用视图
  *
  * P4 重构后，生产代码统一走 DataBridge，本测试改为 mock @/core/databridge。
- */
+  * @covers_docs []
+*/
 
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 import {

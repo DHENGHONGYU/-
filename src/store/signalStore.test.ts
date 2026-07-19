@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-156
  * signalStore 单元测试
  *
  * 覆盖场景：
@@ -18,7 +19,8 @@
  * 14. initSignalStoreSubscriptions: action 过滤（只响应特定 action）
  * 15. initSignalStoreSubscriptions: 去抖 100ms + 并发锁
  * 16. initSignalStoreSubscriptions: 返回 cleanup 函数
- */
+  * @covers_docs [V9-DOC-BACK-013, V9-DOC-ARCH-007, V9-DOC-BACK-008, V9-DOC-ARCH-008, V9-DOC-BACK-005]
+*/
 
 import { vi } from 'vitest'
 import type { Signal, Stock } from '@/data/types'

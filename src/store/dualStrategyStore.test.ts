@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-134
  * dualStrategyStore 单元测试
  *
  * 覆盖场景：
@@ -34,7 +35,8 @@
  * 30. initDualStrategyStoreSubscriptions: 重复调用不重复订阅
  * 31. initDualStrategyStoreSubscriptions: 返回 cleanup
  * 32. destroyDualStrategyStoreSubscriptions: 清除所有订阅和定时器
- */
+  * @covers_docs [V9-DOC-BACK-003, V9-DOC-BACK-012, V9-DOC-ARCH-008, V9-DOC-BACK-010, V9-DOC-BACK-006]
+*/
 
 import { vi } from 'vitest'
 import type { HotSectorScore, ValuePitScore, Signal, Stock } from '@/data/types'

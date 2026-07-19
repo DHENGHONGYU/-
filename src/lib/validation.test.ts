@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-026
  * dataValidation 单元测试
  *
  * 覆盖场景：
@@ -8,7 +9,8 @@
  * 4. safeValue / safeParseNumber
  * 5. LLM 配置校验：isValidLlmBaseURL / isValidLlmApiKey / isValidLlmModel
  * 6. 敏感信息脱敏：maskApiKey / maskToken / isSensitiveField / sanitizeObject
- */
+  * @covers_docs []
+*/
 import { describe, it, expect } from 'vitest'
 import {
   isValidStockCode,

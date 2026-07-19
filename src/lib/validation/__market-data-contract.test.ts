@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-029
  * 行情数据契约校验测试。
  *
  * 验证目标：
@@ -8,7 +9,8 @@
  * 4. K 线日期必须单调递增；财务字段区间合理。
  *
  * @module lib/validation/__market-data-contract.test
- */
+  * @covers_docs []
+*/
 
 import { describe, it, expect } from 'vitest'
 import {

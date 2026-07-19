@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-089
+ * @covers_docs []
+ */
 import { describe, it, expect } from 'vitest'
 import type { NewsArticle } from '@/data/types'
 import {

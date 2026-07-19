@@ -1,7 +1,9 @@
 /**
+ * @test_id V9-TEST-E2E-001
  * 主题切换测试脚本
  * 验证 Button 和 Card 组件在深色/浅色主题下的样式响应
- */
+  * @covers_docs []
+*/
 
 import { test, expect } from '@playwright/test'
 

@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-149
  * @fileoverview portfolioStore 单元测试
  *
  * 覆盖场景：
@@ -14,7 +15,8 @@
  * 10. buildPortfolio 成功后 error 字段被清空
  * 11. reset 重置所有状态到初始值
  * 12. reset 触发 withBroadcast 通知
- */
+  * @covers_docs [V9-DOC-DATA-021, V9-DOC-BACK-010, V9-DOC-ARCH-008, V9-DOC-BACK-003, V9-DOC-BACK-006]
+*/
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { Stock, Order, Portfolio, StrategyResult } from '@/data/types'

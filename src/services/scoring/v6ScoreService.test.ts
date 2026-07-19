@@ -1,9 +1,11 @@
 /**
+ * @test_id V9-TEST-ST-095
  * v6ScoreService 单元测试
  *
  * F4 整改后：runV6Score 调用 v6-engine L-1~L8 分层引擎。
  * 覆盖：getAllV6Scores, runV6Score, getV6ScoreQuality
- */
+  * @covers_docs [V9-DOC-PROJ-114, V9-DOC-PROJ-054, V9-DOC-PROJ-113, V9-DOC-PROJ-066]
+*/
 
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 import {

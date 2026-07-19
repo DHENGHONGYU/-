@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-094
  * 纯编排核心单元测试
  *
  * 覆盖目标：phaseOrchestrator.ts 100% 行/分支覆盖率
@@ -8,7 +9,8 @@
  *   2. collectDimension() — 全部维度路由 + 并行/串行 + 采集异常 + 写入异常 + stale 标记
  *   3. Phase1Step / Phase2Step / Phase3Step / Phase4Step — 各 Phase 步骤逻辑
  *   4. createDefaultSteps() — 工厂函数
- */
+  * @covers_docs [V9-DOC-PROJ-092]
+*/
 
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 

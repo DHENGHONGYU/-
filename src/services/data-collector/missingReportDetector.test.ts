@@ -1,7 +1,9 @@
 /**
+ * @test_id V9-TEST-ST-072
  * @module missingReportDetector.test
  * @description 缺失报告检测器单元测试（E-2-6）
- */
+  * @covers_docs []
+*/
 
  
 import { describe, it, expect, vi, beforeEach } from 'vitest'

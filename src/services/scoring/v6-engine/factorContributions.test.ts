@@ -1,8 +1,10 @@
 /**
+ * @test_id V9-TEST-ST-098
  * 因子贡献计算 — 单元测试
  *
  * 覆盖：权重归一化、正负向贡献、边界条件、与引擎 audit 集成
- */
+  * @covers_docs [V9-DOC-PROJ-114, V9-DOC-PROJ-054, V9-DOC-PROJ-113, V9-DOC-PROJ-066]
+*/
 
 import { describe, test, expect } from 'vitest'
 import { buildFactorContributions } from './factorContributions'

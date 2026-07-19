@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-073
+ * @covers_docs []
+ */
 import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest'
 import { TaskScheduler } from './TaskScheduler'
 import type { DataSourceConfig, CollectionResultCallback } from '@/types/modules/widget.types'

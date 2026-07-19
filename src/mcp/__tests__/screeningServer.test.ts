@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-051
+ * @covers_docs [V9-DOC-BACK-004, V9-DOC-ARCH-007, V9-DOC-AI-007, V9-DOC-DATA-011, V9-DOC-AI-005]
+ */
 import { describe, it, expect } from 'vitest'
 import { ScreeningServer } from '@/mcp/servers/screening/screeningServer'
 

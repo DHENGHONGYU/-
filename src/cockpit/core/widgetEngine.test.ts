@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-006
  * WidgetEngine 单元测试
  *
  * 覆盖场景：
@@ -17,7 +18,8 @@
  * - @/cockpit/defaultWidgetBuilder：mock buildFallbackRuntimeState
  *
  * 注意：componentCache 是 module-level Map，必须通过 engine.clearCache() 在 beforeEach/afterEach 中清理
- */
+  * @covers_docs []
+*/
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import type React from 'react'

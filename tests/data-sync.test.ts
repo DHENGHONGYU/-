@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-008
  * @fileoverview 数据同步模块单元测试
  *
  * 覆盖 P1-1~P1-4 的核心功能：
@@ -10,7 +11,8 @@
  *
  * @module tests/data-sync.test
  * @created 2026-07-14 - 双通道整改 P1 测试
- */
+  * @covers_docs [V9-DOC-BACK-008, V9-DOC-BACK-013, V9-DOC-ARCH-008, V9-DOC-BACK-005, V9-DOC-BACK-025]
+*/
 
 import { describe, it, expect } from 'vitest'
 import { globalScheduler, isWithinTradingHours } from '@/services/data-sync/globalScheduler'

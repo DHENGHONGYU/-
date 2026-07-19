@@ -1,8 +1,10 @@
 /**
+ * @test_id V9-TEST-UT-007
  * E-2: 数据采集服务单元测试
  *
  * 验证 directDataAPI 类型转换 + dataSourceOrchestrator 降级逻辑
- */
+  * @covers_docs []
+*/
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 // ── Global mocks ──

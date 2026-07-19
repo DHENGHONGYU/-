@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-UT-080
+ * @covers_docs []
+ */
 import { describe, expect, it } from 'vitest'
 import { marketDataAdapter } from '@/services/data-collector/MarketDataAdapter'
 import type { RawMarketData } from '@/types/modules/widget.types'

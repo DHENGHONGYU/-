@@ -1,9 +1,11 @@
 /**
+ * @test_id V9-TEST-ST-048
  * syncWithConfig 专项测试（F2/F3 整改验证）
  *
  * 验证：热更新按 modulePath（配置稳定身份）比对，而非 Server.info.name，
  * 避免配置 name（如 llm:main）与实例 info.name（如 llm）不一致导致误注销全部 Server。
- */
+  * @covers_docs [V9-DOC-AI-005, V9-DOC-AI-007, V9-DOC-AI-013, V9-DOC-AI-023, V9-DOC-AI-021]
+*/
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { mcpRegistry } from '@/mcp/core/registry'
 import { MCP_SERVER_REGISTRY } from '@/config/mcpServerRegistry'

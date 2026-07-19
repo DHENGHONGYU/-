@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-163
  * widgetStore 单元测试
  *
  * 覆盖场景：
@@ -15,7 +16,8 @@
  * 11. initWidgetSubscriptions 响应 WIDGET_MOUNT_ERROR
  * 12. initWidgetSubscriptions 实例不存在时不添加
  * 13. destroyWidgetSubscriptions 清理所有订阅
- */
+  * @covers_docs []
+*/
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 

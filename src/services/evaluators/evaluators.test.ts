@@ -1,7 +1,9 @@
 /**
+ * @test_id V9-TEST-ST-074
  * @module services/evaluators/evaluators.test
  * @description Batch C 评估体系单元测试
- */
+  * @covers_docs []
+*/
 
 import { describe, it, expect } from 'vitest'
 import { z } from 'zod'

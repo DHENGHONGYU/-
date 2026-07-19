@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-E2E-024
+ * @covers_docs []
+ */
 import { test, expect } from '@playwright/test'
 import { navigateTo, waitForAppReady, ROUTES } from '../utils/helpers'
 

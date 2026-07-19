@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-086
  * sevenDimConfigStore 单元测试
  *
  * 覆盖场景：
@@ -10,7 +11,8 @@
  * 6. 派生计算（enabledCount / monthlyCallEstimate / isClickable）
  * 7. 异步操作（saveConfig / runCollection）
  * 8. reset / clearError
- */
+  * @covers_docs [V9-DOC-BACK-006, V9-DOC-ARCH-009, V9-DOC-BACK-010, V9-DOC-BACK-003]
+*/
 
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'

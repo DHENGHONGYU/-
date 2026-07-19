@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-039
  * @fileoverview P2-1 + P3-1 测试
  *
  * P2-1: IndexedDB store 扩展 + dataSyncStore + fileImportStore
@@ -6,7 +7,8 @@
  *
  * @module tests/p2-p3.test
  * @created 2026-07-14 - 双通道整改 P2-1 + P3-1
- */
+  * @covers_docs []
+*/
 
 import { describe, it, expect, beforeEach } from 'vitest'
 import { STORE_NAME } from '@/config/dbConfig'

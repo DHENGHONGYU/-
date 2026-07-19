@@ -1,9 +1,11 @@
 /**
+ * @test_id V9-TEST-ST-063
  * @fileoverview AnalysisOrchestrator 单元测试
  *
  * @module services/analysis/analysisOrchestrator.test
  * @created 2026-07-13 B1/B2 阶段
- */
+  * @covers_docs [V9-DOC-DATA-013, V9-DOC-DATA-051, V9-DOC-BACK-027, V9-DOC-AI-033, V9-DOC-AI-017]
+*/
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 

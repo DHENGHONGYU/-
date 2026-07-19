@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-097
  * LLMScoreEnhancer — M2 依据追溯闸单元测试
  *
  * 覆盖场景：
@@ -7,7 +8,8 @@
  * 3. 评分未变：citations 可选，正常合并摘要/理由
  * 4. 不可增强层（L3a/L3v/L-1/L8）：透传原始结果
  * 5. LLM 错误：优雅降级回退到原始结果
- */
+  * @covers_docs [V9-DOC-PROJ-054, V9-DOC-PROJ-053, V9-DOC-PROJ-113, V9-DOC-ARCH-008, V9-DOC-FRONT-012]
+*/
 
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 

@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-165
+ * @covers_docs [V9-DOC-AI-006, V9-DOC-AI-003, V9-DOC-AI-002, V9-DOC-AI-014]
+ */
 import { describe, it, expect, beforeEach } from 'vitest'
 import { useAgentFeedbackStore } from '@/store/agentFeedbackStore'
 import type { AgentFeedback } from '@/types/modules/agent.types'

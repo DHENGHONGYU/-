@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-067
  * V6 评分引擎全生命周期测试
  *
  * 测试覆盖：
@@ -10,7 +11,8 @@
  * 关联文档：
  * - AGENTS.md §6 LLM 调用透明度
  * - docs/implementation/walkthrough-agent-llm-report-20260704.md
- */
+  * @covers_docs [V9-DOC-PROJ-114, V9-DOC-DATA-021, V9-DOC-PROJ-054, V9-DOC-ARCH-008]
+*/
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { dataLayer } from '@/data/dataLayer'

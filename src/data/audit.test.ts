@@ -1,7 +1,9 @@
 /**
+ * @test_id V9-TEST-ST-019
  * D-04 审计字段与数据留存策略 — 单元测试
  * 覆盖 stampAuditFields（创建/更新/不可变）、applyRetention（冷热分层/过期）、queryAuditTrail（过滤）。
- */
+  * @covers_docs []
+*/
 
 import { describe, expect, it } from 'vitest'
 import {
