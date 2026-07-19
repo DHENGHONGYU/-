@@ -1,4 +1,5 @@
 ---
+skill_id: V9-SKILL-COLLECTION
 title: "采集链路测试与修复标准工作流"
 summary: "FinSightV9 数据采集链路（sevenDimConfigStore + collectionPipeline 及其依赖）改动后的标准化测试、修复与门禁验证流程。基于 ①-⑦ 修复全流程的 16 条教训提炼。"
 trigger:
@@ -7,6 +8,17 @@ trigger:
   - 修改 src/types/modules/collection.types.ts 中的接口
   - 新增/修改采集维度实现
   - 测试文件 tests/__tests__/sevenDimConfigStore.test.ts 出现失败
+covers_docs: [V9-DOC-DATA-054, V9-DOC-QA-046, V9-DOC-DATA-036, V9-DOC-DATA-064]
+---9-SKILL-COLLECTION
+title: "采集链路测试与修复标准工作流"
+summary: "FinSightV9 数据采集链路（sevenDimConfigStore + collectionPipeline 及其依赖）改动后的标准化测试、修复与门禁验证流程。基于 ①-⑦ 修复全流程的 16 条教训提炼。"
+trigger:
+  - 修改 src/store/sevenDimConfigStore.ts 或其依赖链上的文件
+  - 修改 src/services/data-collector/collectionPipeline.ts 或其导出
+  - 修改 src/types/modules/collection.types.ts 中的接口
+  - 新增/修改采集维度实现
+  - 测试文件 tests/__tests__/sevenDimConfigStore.test.ts 出现失败
+covers_docs: [V9-DOC-DATA-054, V9-DOC-QA-046, V9-DOC-DATA-036, docs/archive/reference-historical/data-collection-route-ui-audit.md, V9-DOC-DATA-064]
 ---
 
 # 采集链路测试与修复标准工作流
