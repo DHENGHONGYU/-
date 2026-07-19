@@ -1,61 +1,70 @@
 ---
 title: deprecated-batch2-merge-report
+type: explanation
+domain: project
+phase: planning
 tier: reference
+status: deprecated
+maintainer: V9 Architecture Team
+summary: "Date£º2026-06-25 µ÷¶È¹Ù£ºAgent Orchestrator Ö´ĞĞÖÇÄÜÌå£ºCode-Reviewer Agent ¡Á 3¡¢Doc-Sync Agent ¡Á 2"
+tags: [project, batch, report, plan, deprecated]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+deprecated_by: "Doc Restructure - Metadata Governance"
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-tier: reference
-code_version: 2.0.0
----
+# Batch-2 ½×¶ÎĞÔºÏ²¢±¨¸æ
 
-# Batch-2 é˜¶æ®µæ€§åˆå¹¶æŠ¥å‘Š
-
-> ç”Ÿæˆæ—¶é—´ï¼š2026-06-25  
-> è°ƒåº¦å®˜ï¼šAgent Orchestrator  
-> æ‰§è¡Œæ™ºèƒ½ä½“ï¼šCode-Reviewer Agent Ã— 3ã€Doc-Sync Agent Ã— 2
+> **Date**£º2026-06-25  
+> µ÷¶È¹Ù£ºAgent Orchestrator  
+> Ö´ĞĞÖÇÄÜÌå£ºCode-Reviewer Agent ¡Á 3¡¢Doc-Sync Agent ¡Á 2
 
 ---
 
-## å·²å®Œæˆæ–‡ä»¶æ¸…å•
+## ÒÑÍê³ÉÎÄ¼şÇåµ¥
 
-### æ–°å¢æ–‡æ¡£
+### ĞÂÔöÎÄµµ
 
-| æ–‡ä»¶è·¯å¾„ | æ‰§è¡Œ Agent | çŠ¶æ€ | éªŒè¯ç»“æœ |
+| ÎÄ¼şÂ·¾¶ | Ö´ĞĞ Agent | ×´Ì¬ | ÑéÖ¤½á¹û |
 |----------|------------|------|----------|
-| `../reference/dataflow-engine-spec.md` | Doc-Sync | âœ… å·²å®Œæˆ | lint âœ… / build âœ… |
-| `../reference/agent-runtime-spec.md` | Doc-Sync | âœ… å·²å®Œæˆ | lint âœ… / build âœ… |
-| `../reference/rotation-score-spec.md` | Doc-Sync | âœ… å·²å®Œæˆ | lint âœ… / build âœ… |
-| `./db-migration-v4-to-v6.md` | Doc-Sync | âœ… å·²å®Œæˆ | lint âœ… / build âœ… |
-| `./quality-gates-baseline.md` | Doc-Sync | âœ… å·²å®Œæˆ | lint âœ… / build âœ… |
-| `./2026-06-25-v6-migration.md` | Doc-Sync | âœ… å·²å®Œæˆ | lint âœ… / build âœ… |
+| `../reference/dataflow-engine-spec.md` | Doc-Sync | ? ÒÑÍê³É | lint ? / build ? |
+| `../reference/agent-runtime-spec.md` | Doc-Sync | ? ÒÑÍê³É | lint ? / build ? |
+| `../reference/rotation-score-spec.md` | Doc-Sync | ? ÒÑÍê³É | lint ? / build ? |
+| `./db-migration-v4-to-v6.md` | Doc-Sync | ? ÒÑÍê³É | lint ? / build ? |
+| `./quality-gates-baseline.md` | Doc-Sync | ? ÒÑÍê³É | lint ? / build ? |
+| `./2026-06-25-v6-migration.md` | Doc-Sync | ? ÒÑÍê³É | lint ? / build ? |
 
-### å®¡æŸ¥æŠ¥å‘Š
+### Éó²é±¨¸æ
 
-| æ–‡ä»¶è·¯å¾„ | æ‰§è¡Œ Agent | å®¡æŸ¥ç»“è®º | å…³é”®é—®é¢˜ |
+| ÎÄ¼şÂ·¾¶ | Ö´ĞĞ Agent | Éó²é½áÂÛ | ¹Ø¼üÎÊÌâ |
 |----------|------------|----------|----------|
-| `../reference/03-architecture-standards.md` | Code-Reviewer | COMMENT | DataFlow TTL/å®¹é‡/ä¼˜å…ˆçº§å®ç°ç»†èŠ‚å¾…æ ‡è®°ï¼›Widget å­ç›®å½•æœªè½åœ°ï¼›æ–‡æ¡£ç‰ˆæœ¬å·ä¸ç»Ÿä¸€ |
-| `../reference/06-routing-specs.md` | Code-Reviewer | COMMENT | HubPage ç»Ÿç§°ä¸å®é™…æ–‡ä»¶åä¸ä¸€è‡´ï¼›ç¬¬ 8 èŠ‚ç»„ä»¶æ˜ å°„æœªç»Ÿä¸€ä¸º PortalShellï¼›å­é¡µé¢æè¿°é—æ¼ï¼›ç‰ˆæœ¬å·ä¸ç»Ÿä¸€ |
-| `../reference/08-implementation-plan.md` | Code-Reviewer | REQUEST_CHANGES | ç« èŠ‚ç¼–å·é”™ä¹±ï¼ˆ10 åæ¥ 9ï¼‰ï¼›æµ‹è¯•â€œå…¨éƒ¨é€šè¿‡â€å¶å‘è¶…æ—¶é£é™© |
-| `../reference/09-quality-gates.md` | Code-Reviewer | REQUEST_CHANGES | `.nvmrc` ä¸è¦†ç›–ç‡é˜ˆå€¼çŠ¶æ€å·²è¿‡æ—¶ï¼ˆä¸äº‹å®ç›¸åï¼‰ |
-| `../reference/10-glossary.md` | Code-Reviewer | APPROVE | æ— ä¸¥é‡é—®é¢˜ |
-| `README.md` | Code-Reviewer | COMMENT | ç‰ˆæœ¬æ ‡è¯†ä¸ç»Ÿä¸€ã€L3 æè¿°æ»å |
-| `docs/README.md` | Code-Reviewer | COMMENT | ç‰ˆæœ¬æ ‡è¯†ä¸ç»Ÿä¸€ã€è¡¨æ ¼åˆ—å†—ä½™ |
-| `./design/implementation-governance.md` | Code-Reviewer | APPROVE | ADR æ—¥æœŸå­—æ®µå«ä¹‰å¾…è¯´æ˜ |
-| `../reference/v9-system-blueprint.md` | Code-Reviewer | REQUEST_CHANGES | store æ•°é‡é”™è¯¯ã€E2E/æ­»ä»£ç åŸºçº¿é”™è¯¯ã€åå·®æ¸…å•ä¸ 03 ä¸ä¸€è‡´ |
-| `../reference/input-cabin-spec.md` | Code-Reviewer | COMMENT | è·¯ç”±ç»„ä»¶æ˜ å°„æœªåæ˜  PortalShell + /input/hub |
+| `../reference/03-architecture-standards.md` | Code-Reviewer | COMMENT | DataFlow TTL/ÈİÁ¿/ÓÅÏÈ¼¶ÊµÏÖÏ¸½Ú´ı±ê¼Ç£»Widget ×ÓÄ¿Â¼Î´ÂäµØ£»ÎÄµµ°æ±¾ºÅ²»Í³Ò» |
+| `../reference/06-routing-specs.md` | Code-Reviewer | COMMENT | HubPage Í³³ÆÓëÊµ¼ÊÎÄ¼şÃû²»Ò»ÖÂ£»µÚ 8 ½Ú×é¼şÓ³ÉäÎ´Í³Ò»Îª PortalShell£»×ÓÒ³ÃæÃèÊöÒÅÂ©£»°æ±¾ºÅ²»Í³Ò» |
+| `../reference/08-implementation-plan.md` | Code-Reviewer | REQUEST_CHANGES | ÕÂ½Ú±àºÅ´íÂÒ£¨10 ºó½Ó 9£©£»²âÊÔ¡°È«²¿Í¨¹ı¡±Å¼·¢³¬Ê±·çÏÕ |
+| `../reference/09-quality-gates.md` | Code-Reviewer | REQUEST_CHANGES | `.nvmrc` Óë¸²¸ÇÂÊãĞÖµ×´Ì¬ÒÑ¹ıÊ±£¨ÓëÊÂÊµÏà·´£© |
+| `../reference/10-glossary.md` | Code-Reviewer | APPROVE | ÎŞÑÏÖØÎÊÌâ |
+| `README.md` | Code-Reviewer | COMMENT | °æ±¾±êÊ¶²»Í³Ò»¡¢L3 ÃèÊöÖÍºó |
+| `docs/README.md` | Code-Reviewer | COMMENT | °æ±¾±êÊ¶²»Í³Ò»¡¢±í¸ñÁĞÈßÓà |
+| `./design/implementation-governance.md` | Code-Reviewer | APPROVE | ADR ÈÕÆÚ×Ö¶Îº¬Òå´ıËµÃ÷ |
+| `../reference/v9-system-blueprint.md` | Code-Reviewer | REQUEST_CHANGES | store ÊıÁ¿´íÎó¡¢E2E/ËÀ´úÂë»ùÏß´íÎó¡¢Æ«²îÇåµ¥Óë 03 ²»Ò»ÖÂ |
+| `../reference/input-cabin-spec.md` | Code-Reviewer | COMMENT | Â·ÓÉ×é¼şÓ³ÉäÎ´·´Ó³ PortalShell + /input/hub |
 
 ---
 
-## å®¡æŸ¥å‘ç°çš„å…±æ€§é—®é¢˜
+## Éó²é·¢ÏÖµÄ¹²ĞÔÎÊÌâ
 
-1. **ç‰ˆæœ¬æ ‡è¯†ä¸ç»Ÿä¸€**ï¼šå…¨ä»“åº“æ–‡æ¡£ä½¿ç”¨ `v0.9.0-migration-implemented`ã€`v0.9.0-docs-review`ã€`v0.9.0-docs-v6pro-assessment` ä¸‰ç§åç¼€ï¼Œéœ€ç»Ÿä¸€ã€‚
-2. **åŸºçº¿æ•°æ®é”™è¯¯**ï¼š`../reference/v9-system-blueprint.md` ä¸­ E2E å†™ä¸º 11/11ã€æ­»ä»£ç å†™ä¸º 4ï¼Œä¸ `09-quality-gates.md` åŠå®æµ‹ä¸ç¬¦ã€‚
-3. **æ¨¡å—å®ç°çŠ¶æ€æè¿°ä¸ç²¾ç¡®**ï¼šDataFlow ç¼“å­˜ TTL/å®¹é‡/ä¼˜å…ˆçº§ã€Widget å­ç›®å½•ã€CockpitShell åŠ¨æ€æ€§ç­‰éœ€è¦æ›´å‡†ç¡®çš„è¡¨è¿°ã€‚
-4. **ç« èŠ‚ç¼–å·é”™ä¹±**ï¼š`08-implementation-plan.md` å‡ºç° 10 åæ¥ 9 çš„æƒ…å†µã€‚
+1. **°æ±¾±êÊ¶²»Í³Ò»**£ºÈ«²Ö¿âÎÄµµÊ¹ÓÃ `v0.9.0-migration-implemented`¡¢`v0.9.0-docs-review`¡¢`v0.9.0-docs-v6pro-assessment` ÈıÖÖºó×º£¬ĞèÍ³Ò»¡£
+2. **»ùÏßÊı¾İ´íÎó**£º`../reference/v9-system-blueprint.md` ÖĞ E2E Ğ´Îª 11/11¡¢ËÀ´úÂëĞ´Îª 4£¬Óë `../reference/09-quality-gates.md` ¼°Êµ²â²»·û¡£
+3. **Ä£¿éÊµÏÖ×´Ì¬ÃèÊö²»¾«È·**£ºDataFlow »º´æ TTL/ÈİÁ¿/ÓÅÏÈ¼¶¡¢Widget ×ÓÄ¿Â¼¡¢CockpitShell ¶¯Ì¬ĞÔµÈĞèÒª¸ü×¼È·µÄ±íÊö¡£
+4. **ÕÂ½Ú±àºÅ´íÂÒ**£º`./design/08-implementation-plan.md` ³öÏÖ 10 ºó½Ó 9 µÄÇé¿ö¡£
 
 ---
 
-## ä¸‹ä¸€æ­¥ï¼šBatch-2.5 ä¿®å¤
+## ÏÂÒ»²½£ºBatch-2.5 ĞŞ¸´
 
-éœ€å¯åŠ¨ Doc-Sync Agent å¯¹ REQUEST_CHANGES / COMMENT æ–‡ä»¶è¿›è¡Œä¿®å¤ï¼Œç„¶åè¿›å…¥ Batch-3 å…¨é‡å›å½’æµ‹è¯•ã€‚
+ĞèÆô¶¯ Doc-Sync Agent ¶Ô REQUEST_CHANGES / COMMENT ÎÄ¼ş½øĞĞĞŞ¸´£¬È»ºó½øÈë Batch-3 È«Á¿»Ø¹é²âÊÔ¡£

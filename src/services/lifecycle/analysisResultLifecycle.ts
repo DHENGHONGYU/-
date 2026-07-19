@@ -24,6 +24,9 @@ const logger = getLogger()
 
 /** 默认生命周期阈值（天） */
 export const TTL_SOFT_DAYS = 90
+/**
+ * TTL_HARD_DAYS
+ */
 export const TTL_HARD_DAYS = 180
 
 /** 生命周期操作统计 */
@@ -54,7 +57,7 @@ export interface StorageStats {
 function estimateSize(result: AnalysisResult): number {
   try {
     return new Blob([JSON.stringify(result)]).size
-  } catch {
+  } catch (err) { console.warn('[analysisResultLifecycle.ts]', err);
     return 0
   }
 }

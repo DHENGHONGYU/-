@@ -1,77 +1,84 @@
 ---
 title: getting-started
-code_version: 2.0.0
-
+type: tutorials
+domain: project
+phase: development
 tier: important
----
-
----
-title: docs/tutorials/getting-started.md
+status: active
+maintainer: V9 Architecture Team
+summary: "Version£ºv1.0.0 Date£º2026-07-12 Ä¿±ê¶ÁÕß£ºÐÂ¼ÓÈëµÄ¿ª·¢Õß¡¢AI Agent£¨ onboarding µÚÒ»Õ¾£© ÔÄ¶ÁÊ±³¤£º30 ·ÖÖÓ£¨º¬ 5 ·ÖÖÓÊµ²Ù£©"
+tags: [project, guide, tutorials, tutorial, governance, documentation]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: important
+doc_id: V9-DOC-PROJ-122
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
-# V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” æ–°æˆå‘˜ 30 åˆ†é’Ÿä¸Šæ‰‹æŒ‡å—
+# V9 ÖÇÄÜÍ¶ÑÐ¸´ÅÌÏµÍ³ ¡ª ÐÂ³ÉÔ± 30 ·ÖÖÓÉÏÊÖÖ¸ÄÏ
 
-> **ç‰ˆæœ¬**ï¼šv1.0.0  
-> **æ—¥æœŸ**ï¼š2026-07-12  
-> **ç›®æ ‡è¯»è€…**ï¼šæ–°åŠ å…¥çš„å¼€å‘è€…ã€AI Agentï¼ˆ onboarding ç¬¬ä¸€ç«™ï¼‰  
-> **é˜…è¯»æ—¶é•¿**ï¼š30 åˆ†é’Ÿï¼ˆå« 5 åˆ†é’Ÿå®žæ“ï¼‰
+> **Version**£ºv1.0.0  
+> **Date**£º2026-07-12  
+> **Ä¿±ê¶ÁÕß**£ºÐÂ¼ÓÈëµÄ¿ª·¢Õß¡¢AI Agent£¨ onboarding µÚÒ»Õ¾£©  
+> **ÔÄ¶ÁÊ±³¤**£º30 ·ÖÖÓ£¨º¬ 5 ·ÖÖÓÊµ²Ù£©
 
 ---
 
-## å¿«é€Ÿå®šä½ï¼ˆ1 åˆ†é’Ÿï¼‰
+## ¿ìËÙ¶¨Î»£¨1 ·ÖÖÓ£©
 
-æœ¬ç³»ç»Ÿé‡‡ç”¨ **äº”èˆ± + é©¾é©¶èˆ±** æž¶æž„ï¼š
+±¾ÏµÍ³²ÉÓÃ **Îå²Õ + ¼ÝÊ»²Õ** ¼Ü¹¹£º
 
-| èˆ±å®¤ | è·¯å¾„ | åŠŸèƒ½ | ä»£è¡¨é¡µé¢ |
+| ²ÕÊÒ | Â·¾¶ | ¹¦ÄÜ | ´ú±íÒ³Ãæ |
 |------|------|------|----------|
-| **è¾“å…¥èˆ±** | `/input/*` | æ•°æ®é‡‡é›†ã€ä¸ƒç»´é…ç½®ã€æœ¬åœ°çŸ¥è¯† | `CollectTaskPage`ã€`SevenDimConfigPage` |
-| **åˆ†æžèˆ±** | `/analysis/*` | è¯„åˆ†ã€ç­›é€‰ã€å›žæµ‹ã€æ¿å— | `StockAnalysisPage`ã€`BacktestPage` |
-| **äº¤æ˜“èˆ±** | `/trading/*` | æŒä»“ã€ç»„åˆã€é£ŽæŽ§ã€ç­–ç•¥å¿«ç…§ | `HoldingsPage`ã€`PortfolioPage` |
-| **è¾“å‡ºèˆ±** | `/output/*` | ç ”æŠ¥ã€å¤ç›˜ã€Dashboard | `ResearchReportPage`ã€`TradeReviewPage` |
-| **æŒ‡ä»¤èˆ±** | `/command/*` | MCP Serverã€ç³»ç»Ÿç®¡ç† | `MCPServerDashboardPage` |
-| **é©¾é©¶èˆ±** | `/cockpit` | å…¨å±€ Dashboard | `CockpitShell` |
+| **ÊäÈë²Õ** | `/input/*` | Êý¾Ý²É¼¯¡¢ÆßÎ¬ÅäÖÃ¡¢±¾µØÖªÊ¶ | `CollectTaskPage`¡¢`SevenDimConfigPage` |
+| **·ÖÎö²Õ** | `/analysis/*` | ÆÀ·Ö¡¢É¸Ñ¡¡¢»Ø²â¡¢°å¿é | `StockAnalysisPage`¡¢`BacktestPage` |
+| **½»Ò×²Õ** | `/trading/*` | ³Ö²Ö¡¢×éºÏ¡¢·ç¿Ø¡¢²ßÂÔ¿ìÕÕ | `HoldingsPage`¡¢`PortfolioPage` |
+| **Êä³ö²Õ** | `/output/*` | ÑÐ±¨¡¢¸´ÅÌ¡¢Dashboard | `ResearchReportPage`¡¢`TradeReviewPage` |
+| **Ö¸Áî²Õ** | `/command/*` | MCP Server¡¢ÏµÍ³¹ÜÀí | `MCPServerDashboardPage` |
+| **¼ÝÊ»²Õ** | `/cockpit` | È«¾Ö Dashboard | `CockpitShell` |
 
 ---
 
-## ç¬¬ä¸€æ­¥ï¼šç†è§£é¡¹ç›®åˆ†å±‚ï¼ˆ5 åˆ†é’Ÿï¼‰
+## µÚÒ»²½£ºÀí½âÏîÄ¿·Ö²ã£¨5 ·ÖÖÓ£©
 
 ```
-src/config/       â† é…ç½®å±‚ï¼ˆé›¶ç¡¬ç¼–ç é”šç‚¹ï¼‰
-src/core/         â† æ ¸å¿ƒå·¥å…·ï¼ˆDataBridge/ACL/Envelope/MemoryCache/EventBusï¼‰
-src/data/         â† æ•°æ®å±‚ï¼ˆIndexedDB/dataLayer/queryBuilderï¼‰
-src/lib/          â† åº“å‡½æ•°ï¼ˆlogger/format/errors/utilsï¼‰
-src/services/     â† æœåŠ¡å±‚ï¼ˆ23 ä¸ªå­åŸŸï¼Œé€šè¿‡ DataBridge å†™æ•°æ®ï¼‰
-src/store/        â† çŠ¶æ€å±‚ï¼ˆZustand + withBroadcast è·¨ Tab å¹¿æ’­ï¼‰
-src/pages/        â† é¡µé¢å±‚ï¼ˆ5 èˆ± + é©¾é©¶èˆ±ï¼‰
-src/components/   â† ç»„ä»¶å±‚ï¼ˆatoms/molecules/organisms/widgetsï¼‰
-src/portal/       â† PortalShell èˆ±å®¤å…¥å£
-src/constants/    â† å¸¸é‡å±‚ï¼ˆé›¶ç¡¬ç¼–ç é”šç‚¹ï¼‰
-src/types/        â† ç±»åž‹å±‚ï¼ˆé›¶ä¾èµ–ï¼‰
+src/config/       ¡û ÅäÖÃ²ã£¨ÁãÓ²±àÂëÃªµã£©
+src/core/         ¡û ºËÐÄ¹¤¾ß£¨DataBridge/ACL/Envelope/MemoryCache/EventBus£©
+src/data/         ¡û Êý¾Ý²ã£¨IndexedDB/dataLayer/queryBuilder£©
+src/lib/          ¡û ¿âº¯Êý£¨logger/format/errors/utils£©
+src/services/     ¡û ·þÎñ²ã£¨23 ¸ö×ÓÓò£¬Í¨¹ý DataBridge Ð´Êý¾Ý£©
+src/store/        ¡û ×´Ì¬²ã£¨Zustand + withBroadcast ¿ç Tab ¹ã²¥£©
+src/pages/        ¡û Ò³Ãæ²ã£¨5 ²Õ + ¼ÝÊ»²Õ£©
+src/components/   ¡û ×é¼þ²ã£¨atoms/molecules/organisms/widgets£©
+src/portal/       ¡û PortalShell ²ÕÊÒÈë¿Ú
+src/constants/    ¡û ³£Á¿²ã£¨ÁãÓ²±àÂëÃªµã£©
+src/types/        ¡û ÀàÐÍ²ã£¨ÁãÒÀÀµ£©
 ```
 
-### æ ¸å¿ƒä¾èµ–è§„åˆ™ï¼ˆç¦æ­¢è·¨å±‚ï¼‰
+### ºËÐÄÒÀÀµ¹æÔò£¨½ûÖ¹¿ç²ã£©
 
-- `pages/` â†’ åªèƒ½ä¾èµ– `store/` å’Œ `services/`
-- `store/` â†’ åªèƒ½ä¾èµ– `services/` å’Œ `core/`
-- `services/` â†’ åªèƒ½ä¾èµ– `core/`ã€`data/` å’Œ `lib/`ï¼ˆç™½åå•ï¼šloggerã€withBroadcastã€eventBusã€formatã€errorsã€utilsï¼‰
-- `lib/` â†’ åªèƒ½ä¾èµ– `core/` å’Œ `config/`
+- `pages/` ¡ú Ö»ÄÜÒÀÀµ `store/` ºÍ `services/`
+- `store/` ¡ú Ö»ÄÜÒÀÀµ `services/` ºÍ `core/`
+- `services/` ¡ú Ö»ÄÜÒÀÀµ `core/`¡¢`data/` ºÍ `lib/`£¨°×Ãûµ¥£ºlogger¡¢withBroadcast¡¢eventBus¡¢format¡¢errors¡¢utils£©
+- `lib/` ¡ú Ö»ÄÜÒÀÀµ `core/` ºÍ `config/`
 
-> éªŒè¯å‘½ä»¤ï¼š`npm run audit:layers`ï¼ˆæœŸæœ› 0 violationsï¼‰
+> ÑéÖ¤ÃüÁî£º`npm run audit:layers`£¨ÆÚÍû 0 violations£©
 
 ---
 
-## ç¬¬äºŒæ­¥ï¼šå››æ­¥é›†æˆç¼–ç å¥‘çº¦ï¼ˆ10 åˆ†é’Ÿï¼‰
+## µÚ¶þ²½£ºËÄ²½¼¯³É±àÂëÆõÔ¼£¨10 ·ÖÖÓ£©
 
-æ–°å¢žä»»ä½•æ¨¡å—ï¼ˆStore / Service / Page / Widgetï¼‰**ä¸¥ç¦**ç›´æŽ¥åœ¨ `/views` æˆ– `/pages` ä¸‹å­¤ç«‹æ–°å»ºæ–‡ä»¶ï¼Œå¿…é¡»æŒ‰ä»¥ä¸‹å››æ­¥é¡ºåºé›†æˆï¼š
+ÐÂÔöÈÎºÎÄ£¿é£¨Store / Service / Page / Widget£©**ÑÏ½û**Ö±½ÓÔÚ `/views` »ò `/pages` ÏÂ¹ÂÁ¢ÐÂ½¨ÎÄ¼þ£¬±ØÐë°´ÒÔÏÂËÄ²½Ë³Ðò¼¯³É£º
 
-### æ­¥éª¤ 1ï¼šç±»åž‹å®šä¹‰
+### ²½Öè 1£ºÀàÐÍ¶¨Òå
 
-åœ¨ `src/types/modules/` æˆ– `src/data/types.ts` ä¸­å®šä¹‰ Interfaceã€‚
+ÔÚ `src/types/modules/` »ò `src/data/types.ts` ÖÐ¶¨Òå Interface¡£
 
 ```typescript
-// ç¤ºä¾‹ï¼šæ–°å¢ž Widget ç±»åž‹
+// Ê¾Àý£ºÐÂÔö Widget ÀàÐÍ
 export interface WidgetConfig {
   id: string
   widgetId: string
@@ -81,9 +88,9 @@ export interface WidgetConfig {
 }
 ```
 
-### æ­¥éª¤ 2ï¼šStore/çŠ¶æ€
+### ²½Öè 2£ºStore/×´Ì¬
 
-åœ¨ `src/store/` ä¸­åˆ›å»º Zustand Storeï¼Œé€šè¿‡ `withBroadcast` å®žçŽ°è·¨ Tab å¹¿æ’­ã€‚
+ÔÚ `src/store/` ÖÐ´´½¨ Zustand Store£¬Í¨¹ý `withBroadcast` ÊµÏÖ¿ç Tab ¹ã²¥¡£
 
 ```typescript
 import { create } from 'zustand'
@@ -101,16 +108,16 @@ export const useMyStore = create<MyStoreState>((set, get) => ({
   loading: false,
   loadData: async () => {
     set({ loading: true })
-    // ... è°ƒç”¨ Service
+    // ... µ÷ÓÃ Service
     set({ data: result, loading: false })
     withBroadcast(EVENT_NAMES.STOCKS_CHANGED, { action: 'load' })
   },
 }))
 ```
 
-### æ­¥éª¤ 3ï¼šBuilder/é€‚é…å±‚
+### ²½Öè 3£ºBuilder/ÊÊÅä²ã
 
-åœ¨ `src/services/` ä¸­åˆ›å»º Serviceï¼Œé€šè¿‡ DataBridge å†™å…¥æ•°æ®ã€‚
+ÔÚ `src/services/` ÖÐ´´½¨ Service£¬Í¨¹ý DataBridge Ð´ÈëÊý¾Ý¡£
 
 ```typescript
 import { dataBridge } from '@/core/databridge'
@@ -131,45 +138,45 @@ export async function saveMyData(data: MyData) {
 }
 ```
 
-### æ­¥éª¤ 4ï¼šæ ¸å¿ƒé›†æˆ
+### ²½Öè 4£ººËÐÄ¼¯³É
 
-åœ¨ `src/pages/` æˆ– `src/components/` ä¸­åˆ›å»º UIï¼Œ**ä»…é€šè¿‡ Store èŽ·å–æ•°æ®**ã€‚
+ÔÚ `src/pages/` »ò `src/components/` ÖÐ´´½¨ UI£¬**½öÍ¨¹ý Store »ñÈ¡Êý¾Ý**¡£
 
 ```typescript
 import { useMyStore } from '@/store/myStore'
 
 export function MyPage() {
   const { data, loading, loadData } = useMyStore()
-  // UI æ¸²æŸ“...
+  // UI äÖÈ¾...
 }
 ```
 
-> **æ¯æ­¥å¯ç‹¬ç«‹å›žæ»š**ï¼Œå®ŒæˆåŽè¿è¡Œ `npx tsc --noEmit` éªŒè¯ç±»åž‹å®‰å…¨ã€‚
+> **Ã¿²½¿É¶ÀÁ¢»Ø¹ö**£¬Íê³ÉºóÔËÐÐ `npx tsc --noEmit` ÑéÖ¤ÀàÐÍ°²È«¡£
 
 ---
 
-## ç¬¬ä¸‰æ­¥ï¼šå¼€å‘è§„èŒƒé€ŸæŸ¥ï¼ˆ10 åˆ†é’Ÿï¼‰
+## µÚÈý²½£º¿ª·¢¹æ·¶ËÙ²é£¨10 ·ÖÖÓ£©
 
-### ç±»åž‹å®‰å…¨
+### ÀàÐÍ°²È«
 
-- âŒ ç¦æ­¢ `any`ï¼ˆESLint `@typescript-eslint/no-explicit-any: error`ï¼‰
-- âŒ ç¦æ­¢ `@ts-ignore`ï¼ˆä½¿ç”¨ `@ts-expect-error` å¹¶é™„å¸¦æ³¨é‡Šï¼‰
-- âœ… æ‰€æœ‰æ•°æ®ç»“æž„å…ˆå®šä¹‰ TypeScript Interface
+- ? ½ûÖ¹ `any`£¨ESLint `@typescript-eslint/no-explicit-any: error`£©
+- ? ½ûÖ¹ `@ts-ignore`£¨Ê¹ÓÃ `@ts-expect-error` ²¢¸½´ø×¢ÊÍ£©
+- ? ËùÓÐÊý¾Ý½á¹¹ÏÈ¶¨Òå TypeScript Interface
 
-### é¢œè‰²ä»¤ç‰Œï¼ˆçº¢æ¶¨ç»¿è·Œï¼‰
+### ÑÕÉ«ÁîÅÆ£¨ºìÕÇÂÌµø£©
 
 ```typescript
-// âœ… æ­£ç¡®ï¼šä½¿ç”¨ STOCK_COLOR_TOKENSï¼ˆè‡ªåŠ¨è±å…ä¸»é¢˜åˆ‡æ¢ï¼‰
+// ? ÕýÈ·£ºÊ¹ÓÃ STOCK_COLOR_TOKENS£¨×Ô¶¯»íÃâÖ÷ÌâÇÐ»»£©
 import { getStockColorClass } from '@/constants/theme.tokens'
 <span className={getStockColorClass(stock.changePercent)}>
   {stock.changePercent.toFixed(2)}%
 </span>
 
-// âŒ ç¦æ­¢ï¼šç¡¬ç¼–ç é¢œè‰²
+// ? ½ûÖ¹£ºÓ²±àÂëÑÕÉ«
 <span className="text-red-500">+3.2%</span>
 ```
 
-### æ—¥å¿—è§„èŒƒ
+### ÈÕÖ¾¹æ·¶
 
 ```typescript
 import { getLogger } from '@/lib/logger'
@@ -179,17 +186,17 @@ logger.info('[MyStore] loadData() completed', { count: data.length })
 logger.error('[MyStore] loadData() failed', { error: message })
 ```
 
-### useEffect æ¸…ç†æ¨¡æ¿
+### useEffect ÇåÀíÄ£°å
 
 ```typescript
-// âœ… EventBus è®¢é˜…æ¸…ç†
+// ? EventBus ¶©ÔÄÇåÀí
 useEffect(() => {
   const handler = (data: unknown) => { /* ... */ }
   EventBus.subscribe('eventName', handler)
   return () => EventBus.unsubscribe('eventName', handler)
 }, [])
 
-// âœ… å®šæ—¶å™¨æ¸…ç†
+// ? ¶¨Ê±Æ÷ÇåÀí
 useEffect(() => {
   const timerId = setInterval(() => { /* ... */ }, 1000)
   return () => clearInterval(timerId)
@@ -198,183 +205,183 @@ useEffect(() => {
 
 ---
 
-## ç¬¬å››æ­¥ï¼šå¸¸ç”¨å‘½ä»¤ï¼ˆ5 åˆ†é’Ÿï¼‰
+## µÚËÄ²½£º³£ÓÃÃüÁî£¨5 ·ÖÖÓ£©
 
 ```bash
-# ç±»åž‹æ£€æŸ¥
+# ÀàÐÍ¼ì²é
 npx tsc --noEmit
 
-# æž¶æž„å®¡è®¡
-npm run audit:layers      # è·¨å±‚è°ƒç”¨
-npm run audit:hardcode    # é¢œè‰²ç¡¬ç¼–ç 
-npm run audit:deadcode    # æ­»ä»£ç 
-npm run audit:docs        # æ–‡æ¡£åŒæ­¥
-npm run audit:token       # Token æ¶ˆè€—
+# ¼Ü¹¹Éó¼Æ
+npm run audit:layers      # ¿ç²ãµ÷ÓÃ
+npm run audit:hardcode    # ÑÕÉ«Ó²±àÂë
+npm run audit:deadcode    # ËÀ´úÂë
+npm run audit:docs        # ÎÄµµÍ¬²½
+npm run audit:token       # Token ÏûºÄ
 
-# å•å…ƒæµ‹è¯•
+# µ¥Ôª²âÊÔ
 npm test -- --run
 
-# ç”Ÿäº§æž„å»º
+# Éú²ú¹¹½¨
 npm run build
 ```
 
 ---
 
-## ç¬¬äº”æ­¥ï¼šæ–‡æ¡£åœ°å›¾ï¼ˆæŒ‰éœ€æ·±å…¥ï¼‰
+## µÚÎå²½£ºÎÄµµµØÍ¼£¨°´ÐèÉîÈë£©
 
-| æˆ‘æƒ³äº†è§£... | é˜…è¯»æ–‡æ¡£ | è·¯å¾„ |
+| ÎÒÏëÁË½â... | ÔÄ¶ÁÎÄµµ | Â·¾¶ |
 |-------------|----------|------|
-| å…¨å±€æž¶æž„ | architecture/overview.md | `../explanation/overview.md` |
-| èˆ±å®¤è¯¦æƒ… | cabins-overview.md | `../explanation/cabins-overview.md` |
-| æœåŠ¡å­åŸŸ | services-catalog.md | `../reference/services-catalog.md` |
-| æ•°æ®å®šä¹‰ | data-dictionary-index.md | `../reference/data-dictionary-index.md` |
-| ç¼–ç è§„èŒƒ | ../../AGENTS.md | `../../AGENTS.md` |
-| é¢œè‰²ä»¤ç‰Œ | design-token-mapping.md | `../reference/design-token-mapping.md` |
-| å¦‚ä½•æ–°å¢ž Store | ../how-to/../how-to/how-to-add-store.md | `../how-to/../how-to/../how-to/how-to-add-store.md` |
-| å¦‚ä½•æ–°å¢ž Service | ../how-to/../how-to/how-to-add-service.md | `../how-to/../how-to/../how-to/how-to-add-service.md` |
-| å¦‚ä½•æ–°å¢ž Widget | ../how-to/../how-to/how-to-add-widget.md | `../how-to/../how-to/../how-to/how-to-add-widget.md` |
+| È«¾Ö¼Ü¹¹ | overview | [../explanation/overview.md](../explanation/overview.md) |
+| ²ÕÊÒÏêÇé | cabins-overview | [../explanation/cabins-overview.md](../explanation/cabins-overview.md) |
+| ·þÎñ×ÓÓò | services-catalog | [../reference/services-catalog.md](../reference/services-catalog.md) |
+| Êý¾Ý×Öµä | data-dictionary-index | [../reference/data-dictionary-index.md](../reference/data-dictionary-index.md) |
+| ±àÂë¹æ·¶ | AGENTS ÆõÔ¼ | [../../AGENTS.md](../../AGENTS.md) |
+| ÑÕÉ«ÁîÅÆ | design-token-mapping | [../reference/design-token-mapping.md](../reference/design-token-mapping.md) |
+| ÈçºÎÐÂÔö Store | how-to-add-store | [../how-to/how-to-add-store.md](../how-to/how-to-add-store.md) |
+| ÈçºÎÐÂÔö Service | how-to-add-service | [../how-to/how-to-add-service.md](../how-to/how-to-add-service.md) |
+| ÈçºÎÐÂÔö Widget | how-to-add-widget | [../how-to/how-to-add-widget.md](../how-to/how-to-add-widget.md) |
 
 ---
 
-## å¸¸è§é—®é¢˜ï¼ˆFAQï¼‰
+## ³£¼ûÎÊÌâ£¨FAQ£©
 
-**Q1ï¼šStore æ•°æ®å¦‚ä½•åœ¨å¤šä¸ª Tab é—´åŒæ­¥ï¼Ÿ**  
-Aï¼šä½¿ç”¨ `withBroadcast()` å¹¿æ’­å˜æ›´äº‹ä»¶ã€‚å…¶ä»– Tab çš„ Store è®¢é˜…ç›¸åŒäº‹ä»¶åå³å¯è‡ªåŠ¨åˆ·æ–°ã€‚
+**Q1£ºStore Êý¾ÝÈçºÎÔÚ¶à¸ö Tab ¼äÍ¬²½£¿**  
+A£ºÊ¹ÓÃ `withBroadcast()` ¹ã²¥±ä¸üÊÂ¼þ¡£ÆäËû Tab µÄ Store ¶©ÔÄÏàÍ¬ÊÂ¼þÃû¼´¿É×Ô¶¯Ë¢ÐÂ¡£
 
-**Q2ï¼šService èƒ½ç›´æŽ¥è°ƒç”¨ dataLayer å—ï¼Ÿ**  
-Aï¼šä¸èƒ½ã€‚å¿…é¡»é€šè¿‡ `DataBridge.forward()` å‘é€ Envelopeï¼Œç”± ACL æ ¡éªŒåŽè·¯ç”±åˆ° DBã€‚
+**Q2£ºService ÄÜÖ±½Óµ÷ÓÃ dataLayer Âð£¿**  
+A£º²»ÄÜ¡£±ØÐëÍ¨¹ý `DataBridge.forward()` ·¢ËÍ Envelope£¬ÓÉ ACL Ð£ÑéºóÂ·ÓÉµ½ DB¡£
 
-**Q3ï¼šæ–°å¢žé¡µé¢éœ€è¦æ³¨å†Œè·¯ç”±å—ï¼Ÿ**  
-Aï¼šå¿…é¡»ã€‚åœ¨ `src/config/routes.ts` çš„ `ROUTE_REGISTRY` ä¸­æ³¨å†Œï¼Œå¹¶åŒæ­¥æ›´æ–° `../reference/06-routing-specs.md`ã€‚
+**Q3£ºÐÂÔöÒ³ÃæÐèÒª×¢²áÂ·ÓÉÂð£¿**  
+A£º±ØÐë¡£ÔÚ `src/config/routes.ts` µÄ `ROUTE_REGISTRY` ÖÐ×¢²á£¬²¢Í¬²½¸üÐÂ `../reference/06-routing-specs.md`¡£
 
-**Q4ï¼šå¦‚ä½•è°ƒè¯• IndexedDB æ•°æ®ï¼Ÿ**  
-Aï¼šæµè§ˆå™¨ DevTools â†’ Application â†’ IndexedDB â†’ `v9-database` â†’ æŸ¥çœ‹å„ storeã€‚
+**Q4£ºÈçºÎµ÷ÊÔ IndexedDB Êý¾Ý£¿**  
+A£ºä¯ÀÀÆ÷ DevTools ¡ú Application ¡ú IndexedDB ¡ú `v9-database` ¡ú ²é¿´¸÷ store¡£
 
 ---
 
-> **ä¸‹ä¸€æ­¥**ï¼šæ ¹æ®ä½ çš„ä»»åŠ¡é€‰æ‹©å¯¹åº”çš„ How-to æŒ‡å— â†’ `../how-to/../how-to/how-to-add-store.md` / `../how-to/../how-to/how-to-add-service.md` / `../how-to/../how-to/how-to-add-widget.md`
+> **ÏÂÒ»²½**£º¸ù¾ÝÄãµÄÈÎÎñÑ¡Ôñ¶ÔÓ¦µÄ How-to Ö¸ÄÏ ¡ú [../how-to/how-to-add-store.md](../how-to/how-to-add-store.md) / [../how-to/how-to-add-service.md](../how-to/how-to-add-service.md) / [../how-to/how-to-add-widget.md](../how-to/how-to-add-widget.md)
 ---
 
-## å¼€å‘çŽ¯å¢ƒé…ç½®æ³¨æ„è¦ç‚¹ï¼ˆæ¯æ¬¡å®‰è£…/å…‹éš†åŽå¿…åšï¼‰
+## ¿ª·¢»·¾³ÅäÖÃ×¢ÒâÒªµã£¨Ã¿´Î°²×°/¿ËÂ¡ºó±Ø×ö£©
 
-> **æœ¬ç« èŠ‚ä¸ºè§£å†³"åŠŸèƒ½çª—å£ä¸Šä¸‹æ–‡æ–‡æ¡£æ— æ³•æ‰“å¼€"é—®é¢˜çš„å…³é”®é…ç½®ã€‚æ¯æ¬¡æ–°çŽ¯å¢ƒå®‰è£…åŽå¿…é¡»é€é¡¹æ‰§è¡Œã€‚**
+> **±¾ÕÂ½ÚÎª½â¾ö"¹¦ÄÜ´°¿ÚÉÏÏÂÎÄÎÄµµÎÞ·¨´ò¿ª"ÎÊÌâµÄ¹Ø¼üÅäÖÃ¡£Ã¿´ÎÐÂ»·¾³°²×°ºó±ØÐëÖðÏîÖ´ÐÐ¡£**
 
-### 1. Node ä¸Ž npm ç‰ˆæœ¬é”å®š
+### 1. Node Óë npm °æ±¾Ëø¶¨
 
 ```bash
-# æ£€æŸ¥ç‰ˆæœ¬ï¼ˆå¿…é¡»ä¸Ž .nvmrc ä¸€è‡´ï¼‰
+# ¼ì²é°æ±¾£¨±ØÐëÓë .nvmrc Ò»ÖÂ£©
 node -v
 cat .nvmrc
 
-# è‹¥ä¸ä¸€è‡´ï¼Œä½¿ç”¨ nvm åˆ‡æ¢
+# Èô²»Ò»ÖÂ£¬Ê¹ÓÃ nvm ÇÐ»»
 nvm use
-# æˆ– nvm install $(cat .nvmrc)
+# »ò nvm install $(cat .nvmrc)
 ```
 
-### 2. ä¾èµ–å®‰è£…ï¼ˆå¼ºåˆ¶ä½¿ç”¨ `npm ci`ï¼‰
+### 2. ÒÀÀµ°²×°£¨Ç¿ÖÆÊ¹ÓÃ `npm ci`£©
 
 ```bash
-# âš ï¸ ç¦æ­¢ä½¿ç”¨ npm install â€”â€” å¯èƒ½å¯¼è‡´ä¾èµ–æ¼‚ç§»ï¼ŒåŠŸèƒ½ç»„ä»¶ç‰ˆæœ¬ä¸å…¼å®¹
+# ?? ½ûÖ¹Ê¹ÓÃ npm install ¡ª¡ª ¿ÉÄÜµ¼ÖÂÒÀÀµÆ¯ÒÆ£¬¹¦ÄÜ×é¼þ°æ±¾²»¼æÈÝ
 npm ci
 
-# éªŒè¯å®‰è£…æˆåŠŸ
+# ÑéÖ¤°²×°³É¹¦
 npm run tsc:prod
 ```
 
-### 3. IDE æ‰©å±•å®‰è£…ï¼ˆåŠŸèƒ½çª—å£æ­£å¸¸å·¥ä½œçš„å‰æï¼‰
+### 3. IDE À©Õ¹°²×°£¨¹¦ÄÜ´°¿ÚÕý³£¹¤×÷µÄÇ°Ìá£©
 
-| IDE | æ“ä½œ | å¿…é¡»é¡¹ |
+| IDE | ²Ù×÷ | ±ØÐëÏî |
 |-----|------|--------|
-| **VSCode** | å·¦ä¾§æ‰©å±•æ  â†’ â‹® â†’ Install Recommended Extensions | ESLintã€Prettierã€TypeScriptã€Tailwind CSS |
-| **Cursor** | è®¾ç½® â†’ Extensions â†’ å®‰è£…æŽ¨èæ‰©å±• | åŒä¸Š + Cursor å†…ç½® AI æ‰©å±• |
-| **Trae** | æ£€æŸ¥ AI åŠ©æ‰‹æ’ä»¶å·²å¯ç”¨ | Trae AI + MCP é…ç½® |
-| **CodeBuddy** | æ£€æŸ¥ `.codebuddy/settings.local.json` å­˜åœ¨ | é…ç½®è‡ªåŠ¨åŠ è½½ |
+| **VSCode** | ×ó²àÀ©Õ¹À¸ ¡ú ? ¡ú Install Recommended Extensions | ESLint¡¢Prettier¡¢TypeScript¡¢Tailwind CSS |
+| **Cursor** | ÉèÖÃ ¡ú Extensions ¡ú °²×°ÍÆ¼öÀ©Õ¹ | Í¬ÉÏ + Cursor ÄÚÖÃ AI À©Õ¹ |
+| **Trae** | ¼ì²é AI ÖúÊÖ²å¼þÒÑÆôÓÃ | Trae AI + MCP ÅäÖÃ |
+| **CodeBuddy** | ¼ì²é `.codebuddy/settings.local.json` ´æÔÚ | ÅäÖÃ×Ô¶¯¼ÓÔØ |
 
-> **å…³é”®æç¤º**ï¼šè‹¥ç¼ºå°‘æ‰©å±•ï¼ŒIDE åŠŸèƒ½é¢æ¿ï¼ˆAI ä¸Šä¸‹æ–‡çª—å£ã€æ–‡æ¡£é¢„è§ˆã€ç±»åž‹æç¤ºï¼‰å¯èƒ½ç©ºç™½æˆ–æŠ¥é”™ã€‚
+> **¹Ø¼üÌáÊ¾**£ºÈôÈ±ÉÙÀ©Õ¹£¬IDE ¹¦ÄÜÃæ°å£¨AI ÉÏÏÂÎÄ´°¿Ú¡¢ÎÄµµÔ¤ÀÀ¡¢ÀàÐÍÌáÊ¾£©¿ÉÄÜ¿Õ°×»ò±¨´í¡£
 
-### 4. å·¥ä½œåŒºä¿¡ä»»è®¾ç½®ï¼ˆVSCode/Cursorï¼‰
+### 4. ¹¤×÷ÇøÐÅÈÎÉèÖÃ£¨VSCode/Cursor£©
 
-- æ‰“å¼€é¡¹ç›®åŽï¼Œè‹¥æç¤º"æ˜¯å¦ä¿¡ä»»æ­¤å·¥ä½œåŒºï¼Ÿ"ï¼Œå¿…é¡»é€‰æ‹© **"ä¿¡ä»»"**ã€‚
-- ä¸å—ä¿¡ä»»æ—¶ï¼ŒIDE ä¼šç¦ç”¨éƒ¨åˆ†åŠŸèƒ½ï¼ˆå¦‚æ‰©å±•åŠ è½½ã€ä»»åŠ¡è¿è¡Œã€è°ƒè¯•ç­‰ï¼‰ã€‚
-- æ£€æŸ¥ï¼šå‘½ä»¤é¢æ¿ (`Ctrl+Shift+P`) â†’ `Workspaces: Manage Workspace Trust` â†’ ç¡®è®¤å½“å‰æ–‡ä»¶å¤¹ä¸º"Trusted"ã€‚
+- ´ò¿ªÏîÄ¿ºó£¬ÈôÌáÊ¾"ÊÇ·ñÐÅÈÎ´Ë¹¤×÷Çø£¿"£¬±ØÐëÑ¡Ôñ **"ÐÅÈÎ"**¡£
+- ²»ÊÜÐÅÈÎÊ±£¬IDE »á½ûÓÃ²¿·Ö¹¦ÄÜ£¨ÈçÀ©Õ¹¼ÓÔØ¡¢ÈÎÎñÔËÐÐ¡¢µ÷ÊÔµÈ£©¡£
+- ¼ì²é£ºÃüÁîÃæ°å (`Ctrl+Shift+P`) ¡ú `Workspaces: Manage Workspace Trust` ¡ú È·ÈÏµ±Ç°ÎÄ¼þ¼ÐÎª"Trusted"¡£
 
-### 5. æµè§ˆå™¨è¿è¡Œæ—¶æƒé™ï¼ˆè¿è¡Œæ—¶åŠŸèƒ½çª—å£ï¼‰
+### 5. ä¯ÀÀÆ÷ÔËÐÐÊ±È¨ÏÞ£¨ÔËÐÐÊ±¹¦ÄÜ´°¿Ú£©
 
-è‹¥åº”ç”¨è¿è¡ŒåŽåŠŸèƒ½çª—å£/æ–‡æ¡£å¼¹çª—æ— æ³•æ‰“å¼€ï¼š
+ÈôÓ¦ÓÃÔËÐÐºó¹¦ÄÜ´°¿Ú/ÎÄµµµ¯´°ÎÞ·¨´ò¿ª£º
 
-| æ£€æŸ¥é¡¹ | éªŒè¯æ–¹æ³• | ä¿®å¤ |
+| ¼ì²éÏî | ÑéÖ¤·½·¨ | ÐÞ¸´ |
 |--------|----------|------|
-| å¼¹çª—æ‹¦æˆª | åœ°å€æ æ˜¯å¦æœ‰ ðŸš« å›¾æ ‡ | æ·»åŠ  `localhost:5173` åˆ°ç™½åå• |
-| HTTPS/æœ¬åœ°æ–‡ä»¶ API | æŽ§åˆ¶å°æœç´¢ `showDirectoryPicker` | ä»… HTTPS æˆ– localhost å¯ç”¨ |
-| IndexedDB é…é¢ | DevTools â†’ Application â†’ Storage | æ¸…ç†æ—§æ•°æ®æˆ–æ‰©å®¹ |
-| CSP ç­–ç•¥ | æŽ§åˆ¶å°æœç´¢ `Content-Security-Policy` | æ£€æŸ¥ `vite.config.ts` CSP é…ç½® |
+| µ¯´°À¹½Ø | µØÖ·À¸ÊÇ·ñÓÐ ?? Í¼±ê | Ìí¼Ó `localhost:5173` µ½°×Ãûµ¥ |
+| HTTPS/±¾µØÎÄ¼þ API | ¿ØÖÆÌ¨ËÑË÷ `showDirectoryPicker` | ½ö HTTPS »ò localhost ¿ÉÓÃ |
+| IndexedDB Åä¶î | DevTools ¡ú Application ¡ú Storage | ÇåÀí¾ÉÊý¾Ý»òÀ©ÈÝ |
+| CSP ²ßÂÔ | ¿ØÖÆÌ¨ËÑË÷ `Content-Security-Policy` | ¼ì²é `vite.config.ts` CSP ÅäÖÃ |
 
-### 6. Kimi å·¥å…·é“¾é…ç½®ï¼ˆAI è¾…åŠ©å¼€å‘å¿…å¤‡ï¼‰
+### 6. Kimi ¹¤¾ßÁ´ÅäÖÃ£¨AI ¸¨Öú¿ª·¢±Ø±¸£©
 
-#### 6.1 Kimi WebBridgeï¼ˆæµè§ˆå™¨è‡ªåŠ¨åŒ–ï¼‰
+#### 6.1 Kimi WebBridge£¨ä¯ÀÀÆ÷×Ô¶¯»¯£©
 
 ```bash
 # Windows PowerShell
 & "$env:USERPROFILE\.kimi-webbridge\bin\kimi-webbridge.exe" status
-# è‹¥æœªè¿è¡Œï¼š
+# ÈôÎ´ÔËÐÐ£º
 & "$env:USERPROFILE\.kimi-webbridge\bin\kimi-webbridge.exe" start
 ```
 
-- ç¡®è®¤æµè§ˆå™¨æ‰©å±•å·²å®‰è£…ä¸”ç‰ˆæœ¬åŒ¹é…ã€‚
-- è‹¥æç¤º "Please update the Kimi WebBridge extension"ï¼Œè¯·è®¿é—® [Kimi WebBridge å¸®åŠ©é¡µ](https://www.kimi.com/zh-cn/features/webbridge) æ›´æ–°ã€‚
+- È·ÈÏä¯ÀÀÆ÷À©Õ¹ÒÑ°²×°ÇÒ°æ±¾Æ¥Åä¡£
+- ÈôÌáÊ¾ "Please update the Kimi WebBridge extension"£¬Çë·ÃÎÊ [Kimi WebBridge °ïÖúÒ³](https://www.kimi.com/zh-cn/features/webbridge) ¸üÐÂ¡£
 
-#### 6.2 Kimi æ¡Œé¢å®¢æˆ·ç«¯ä¸Šä¸‹æ–‡é¢æ¿ï¼ˆâ­ æ¯æ¬¡å®¢æˆ·ç«¯æ›´æ–°åŽå¿…æ£€ï¼‰
+#### 6.2 Kimi ×ÀÃæ¿Í»§¶ËÉÏÏÂÎÄÃæ°å£¨? Ã¿´Î¿Í»§¶Ë¸üÐÂºó±Ø¼ì£©
 
-> **å…³é”®æç¤º**ï¼šKimi æ¡Œé¢å®¢æˆ·ç«¯å³ä¾§"ä¸Šä¸‹æ–‡"é¢æ¿æ˜¯ AI è¾…åŠ©å¼€å‘çš„æ ¸å¿ƒå…¥å£ï¼Œ**æ¯æ¬¡å®‰è£…æˆ–æ›´æ–° Kimi å®¢æˆ·ç«¯åŽå¿…é¡»éªŒè¯å¯ç”¨æ€§**ã€‚
+> **¹Ø¼üÌáÊ¾**£ºKimi ×ÀÃæ¿Í»§¶ËÓÒ²à"ÉÏÏÂÎÄ"Ãæ°åÊÇ AI ¸¨Öú¿ª·¢µÄºËÐÄÈë¿Ú£¬**Ã¿´Î°²×°»ò¸üÐÂ Kimi ¿Í»§¶Ëºó±ØÐëÑéÖ¤¿ÉÓÃÐÔ**¡£
 
-**éªŒè¯æ­¥éª¤**ï¼š
-1. æ‰“å¼€ Kimi æ¡Œé¢å®¢æˆ·ç«¯ï¼Œç¡®è®¤å·²ç™»å½•ã€‚
-2. å°† 2-3 ä¸ªé¡¹ç›®æ–‡ä»¶ï¼ˆå¦‚ `../../README.md`ã€`../../AGENTS.md`ï¼‰æ·»åŠ åˆ°ä¸Šä¸‹æ–‡é¢æ¿ã€‚
-3. ç‚¹å‡»æ¯ä¸ªæ–‡ä»¶ï¼Œç¡®è®¤èƒ½**æ‰“å¼€é¢„è§ˆå†…å®¹**ã€‚
-4. è‹¥ç‚¹å‡»æ— ååº” â†’ **å®Œå…¨é€€å‡ºå®¢æˆ·ç«¯**ï¼ˆä»»åŠ¡æ æ‰˜ç›˜å³é”®é€€å‡ºï¼‰â†’ é‡æ–°æ‰“å¼€ â†’ é‡è¯•ã€‚
-5. è‹¥ä»æ— æ³•æ‰“å¼€ â†’ **æ¸…é™¤å®¢æˆ·ç«¯ç¼“å­˜**ï¼ˆè®¾ç½® â†’ é«˜çº§ â†’ æ¸…é™¤ç¼“å­˜ï¼‰â†’ é‡æ–°ç™»å½•ã€‚
+**ÑéÖ¤²½Öè**£º
+1. ´ò¿ª Kimi ×ÀÃæ¿Í»§¶Ë£¬È·ÈÏÒÑµÇÂ¼¡£
+2. ½« 2-3 ¸öÏîÄ¿ÎÄ¼þ£¨Èç `../../README.md`¡¢`../../AGENTS.md`£©Ìí¼Óµ½ÉÏÏÂÎÄÃæ°å¡£
+3. µã»÷Ã¿¸öÎÄ¼þ£¬È·ÈÏÄÜ**´ò¿ªÔ¤ÀÀÄÚÈÝ**¡£
+4. Èôµã»÷ÎÞ·´Ó¦ ¡ú **ÍêÈ«ÍË³ö¿Í»§¶Ë**£¨ÈÎÎñÀ¸ÍÐÅÌÓÒ¼üÍË³ö£©¡ú ÖØÐÂ´ò¿ª ¡ú ÖØÊÔ¡£
+5. ÈôÈÔÎÞ·¨´ò¿ª ¡ú **Çå³ý¿Í»§¶Ë»º´æ**£¨ÉèÖÃ ¡ú ¸ß¼¶ ¡ú Çå³ý»º´æ£©¡ú ÖØÐÂµÇÂ¼¡£
 
-**å¸¸è§æ ¹å› **ï¼š
+**³£¼û¸ùÒò**£º
 
-| æ ¹å›  | ç—‡çŠ¶ | ä¿®å¤ |
+| ¸ùÒò | Ö¢×´ | ÐÞ¸´ |
 |------|------|------|
-| å®¢æˆ·ç«¯ç¼“å­˜æŸå | ç‚¹å‡»æ–‡ä»¶æ— ååº” | å®Œå…¨é€€å‡º â†’ é‡æ–°æ‰“å¼€ï¼Œæˆ–æ¸…é™¤ç¼“å­˜ |
-| æ–‡ä»¶è·¯å¾„å«ç‰¹æ®Šå­—ç¬¦ | æ–‡ä»¶æ— æ³•é¢„è§ˆ | é‡å‘½åä¸ºè‹±æ–‡è·¯å¾„åŽé‡æ–°æ·»åŠ  |
-| æ–‡ä»¶è¿‡å¤§ | å®¢æˆ·ç«¯å¡é¡¿æˆ–é¢„è§ˆå¤±è´¥ | æ‹†åˆ†ä¸º < 500KB çš„å°æ–‡ä»¶ |
-| å®¢æˆ·ç«¯ç‰ˆæœ¬ Bug | é¢æ¿ç©ºç™½æˆ–ä¸æ›´æ–° | æ›´æ–°åˆ°æœ€æ–°ç‰ˆæˆ–å›žé€€ç¨³å®šç‰ˆ |
-| ç™»å½•æ€å¤±æ•ˆ | ä¸Šä¸‹æ–‡åŒæ­¥å¼‚å¸¸ | é‡æ–°ç™»å½• |
+| ¿Í»§¶Ë»º´æËð»µ | µã»÷ÎÄ¼þÎÞ·´Ó¦ | ÍêÈ«ÍË³ö ¡ú ÖØÐÂ´ò¿ª£¬»òÇå³ý»º´æ |
+| ÎÄ¼þÂ·¾¶º¬ÌØÊâ×Ö·û | ÎÄ¼þÎÞ·¨Ô¤ÀÀ | ÖØÃüÃûÎªÓ¢ÎÄÂ·¾¶ºóÖØÐÂÌí¼Ó |
+| ÎÄ¼þ¹ý´ó | ¿Í»§¶Ë¿¨¶Ù»òÔ¤ÀÀÊ§°Ü | ²ð·ÖÎª < 500KB µÄÐ¡ÎÄ¼þ |
+| ¿Í»§¶Ë°æ±¾ Bug | Ãæ°å¿Õ°×»ò²»¸üÐÂ | ¸üÐÂµ½×îÐÂ°æ»ò»ØÍËÎÈ¶¨°æ |
+| µÇÂ¼Ì¬Ê§Ð§ | ÉÏÏÂÎÄÍ¬²½Òì³£ | ÖØÐÂµÇÂ¼ |
 
-**æ›¿ä»£æ–¹æ¡ˆ**ï¼ˆå½“é¢æ¿å®Œå…¨æ— æ³•ä½¿ç”¨æ—¶ï¼‰ï¼š
-- ç›´æŽ¥å¤åˆ¶æ–‡ä»¶å†…å®¹ç²˜è´´åˆ°å¯¹è¯è¾“å…¥æ¡†ã€‚
-- ä½¿ç”¨ `@` æåŠåŠŸèƒ½é€‰æ‹©æ–‡ä»¶ï¼ˆè‹¥å®¢æˆ·ç«¯æ”¯æŒï¼‰ã€‚
-- é€šè¿‡ `npx tsx scripts/query-ai-memory.ts "<å…³é”®è¯>" --top 5` æå–å†…å®¹åŽæ‰‹åŠ¨å‘é€ã€‚
+**Ìæ´ú·½°¸**£¨µ±Ãæ°åÍêÈ«ÎÞ·¨Ê¹ÓÃÊ±£©£º
+- Ö±½Ó¸´ÖÆÎÄ¼þÄÚÈÝÕ³Ìùµ½¶Ô»°ÊäÈë¿ò¡£
+- Ê¹ÓÃ `@` Ìá¼°¹¦ÄÜÑ¡ÔñÎÄ¼þ£¨Èô¿Í»§¶ËÖ§³Ö£©¡£
+- Í¨¹ý `npx tsx scripts/query-ai-memory.ts "<¹Ø¼ü´Ê>" --top 5` ÌáÈ¡ÄÚÈÝºóÊÖ¶¯·¢ËÍ¡£
 
-### 7. éªŒè¯æ¸…å•ï¼ˆå®‰è£…åŽ 2 åˆ†é’Ÿè‡ªæ£€ï¼‰
+### 7. ÑéÖ¤Çåµ¥£¨°²×°ºó 2 ·ÖÖÓ×Ô¼ì£©
 
 ```bash
-# çŽ¯å¢ƒåŸºçº¿
+# »·¾³»ùÏß
 node -v && npm -v && git config --list | grep -E "user\.(name|email)"
 
-# é¡¹ç›®å¥åº·
+# ÏîÄ¿½¡¿µ
 npm run tsc:prod
 npm run audit:layers
 
-# åŠŸèƒ½çª—å£éªŒè¯ï¼ˆæ‰‹åŠ¨ï¼‰
+# ¹¦ÄÜ´°¿ÚÑéÖ¤£¨ÊÖ¶¯£©
 # 1. npm run dev
-# 2. æ‰“å¼€ http://localhost:5173
-# 3. ç‚¹å‡»å„èˆ±å®¤çš„ "?" å¸®åŠ©æŒ‰é’®æˆ–æ–‡æ¡£é“¾æŽ¥
-# 4. ç¡®è®¤å¼¹çª—/æŠ½å±‰/æ–°çª—å£æ­£å¸¸åŠ è½½ï¼Œæ— ç©ºç™½/æŠ¥é”™
+# 2. ´ò¿ª http://localhost:5173
+# 3. µã»÷¸÷²ÕÊÒµÄ "?" °ïÖú°´Å¥»òÎÄµµÁ´½Ó
+# 4. È·ÈÏµ¯´°/³éÌë/ÐÂ´°¿ÚÕý³£¼ÓÔØ£¬ÎÞ¿Õ°×/±¨´í
 
-# AI å®¢æˆ·ç«¯ä¸Šä¸‹æ–‡é¢æ¿éªŒè¯ï¼ˆæ¯æ¬¡ Kimi æ›´æ–°åŽï¼‰
-# 1. æ‰“å¼€ Kimi æ¡Œé¢å®¢æˆ·ç«¯
-# 2. æ·»åŠ  2-3 ä¸ªæ–‡ä»¶åˆ°ä¸Šä¸‹æ–‡é¢æ¿
-# 3. ç‚¹å‡»æ¯ä¸ªæ–‡ä»¶ï¼Œç¡®è®¤èƒ½æ‰“å¼€é¢„è§ˆ
-# 4. è‹¥æ— æ³•æ‰“å¼€ â†’ å®Œå…¨é€€å‡ºå®¢æˆ·ç«¯ â†’ é‡æ–°æ‰“å¼€ â†’ é‡è¯•
-# 5. è‹¥ä»æ— æ³•æ‰“å¼€ â†’ æ¸…é™¤å®¢æˆ·ç«¯ç¼“å­˜ â†’ é‡æ–°ç™»å½•
+# AI ¿Í»§¶ËÉÏÏÂÎÄÃæ°åÑéÖ¤£¨Ã¿´Î Kimi ¸üÐÂºó£©
+# 1. ´ò¿ª Kimi ×ÀÃæ¿Í»§¶Ë
+# 2. Ìí¼Ó 2-3 ¸öÎÄ¼þµ½ÉÏÏÂÎÄÃæ°å
+# 3. µã»÷Ã¿¸öÎÄ¼þ£¬È·ÈÏÄÜ´ò¿ªÔ¤ÀÀ
+# 4. ÈôÎÞ·¨´ò¿ª ¡ú ÍêÈ«ÍË³ö¿Í»§¶Ë ¡ú ÖØÐÂ´ò¿ª ¡ú ÖØÊÔ
+# 5. ÈôÈÔÎÞ·¨´ò¿ª ¡ú Çå³ý¿Í»§¶Ë»º´æ ¡ú ÖØÐÂµÇÂ¼
 ```
 
-> **è‹¥ä»æ— æ³•æ‰“å¼€**ï¼šæ¿€æ´» `.agents/skills/feature-window-context-doc/SKILL.md` è¿›è¡Œæ·±åº¦è¯Šæ–­ã€‚
+> **ÈôÈÔÎÞ·¨´ò¿ª**£º¼¤»î `../../.agents/skills/feature-window-context-doc/SKILL.md` ½øÐÐÉî¶ÈÕï¶Ï¡£
 
 ---
 
-> **ä¸‹ä¸€æ­¥**ï¼šæ ¹æ®ä½ çš„ä»»åŠ¡é€‰æ‹©å¯¹åº”çš„ How-to æŒ‡å— â†’ `../how-to/../how-to/how-to-add-store.md` / `../how-to/../how-to/how-to-add-service.md` / `../how-to/../how-to/how-to-add-widget.md`
+> **ÏÂÒ»²½**£º¸ù¾ÝÄãµÄÈÎÎñÑ¡Ôñ¶ÔÓ¦µÄ How-to Ö¸ÄÏ ¡ú `../how-to/../how-to/how-to-add-store.md` / `../how-to/../how-to/how-to-add-service.md` / `../how-to/../how-to/how-to-add-widget.md`

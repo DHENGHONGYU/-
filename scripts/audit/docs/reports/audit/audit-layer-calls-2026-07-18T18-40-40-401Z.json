@@ -1,0 +1,29 @@
+{
+  "violations": [
+    {
+      "file": "src/services/data-collector/directDataAPI.ts",
+      "line": 40,
+      "column": 53,
+      "type": "services 依赖 lib 业务模块",
+      "message": "引擎层仅可依赖 lib 中的基础设施（logger/withBroadcast/eventBus/format/errors/utils/localStorageManager/safeCoerce/perf/precision/validation/safeRegex）",
+      "context": "import { toTencentCode, toSinaCode, toNeteaseCode } from '@/lib/stockCodeUtils'"
+    }
+  ],
+  "warnings": [],
+  "summary": {
+    "totalFiles": 1086,
+    "totalViolations": 1,
+    "totalWarnings": 0,
+    "byViolationType": {
+      "services 依赖 lib 业务模块": 1
+    },
+    "byWarningType": {}
+  },
+  "meta": {
+    "scriptName": "audit-layer-calls",
+    "version": "3.0",
+    "timestamp": "2026-07-18T18:40:40.401Z",
+    "durationMs": 219,
+    "rootDir": "G:\\FinSightV9\\scripts\\audit"
+  }
+}

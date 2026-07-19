@@ -118,7 +118,7 @@ lines.append("")
 lines.append(f"- 待删文件：{len(logs)} 个日志 + {len(others)} 个其他 = {len(logs)+len(others)} 个")
 lines.append(f"- 待删目录：{len(cov_dirs)} 个测试/覆盖率目录 + {len(build_dirs)} 个临时构建目录 = {len(cov_dirs)+len(build_dirs)} 个")
 
-report_path = os.path.join(ROOT, "docs", "reports", "test-artifacts-cleanup-list.md")
+report_path = os.path.join(ROOT, "docs", "reports", "docs/reports/retrospectives/test-artifacts-cleanup-list.md")
 os.makedirs(os.path.dirname(report_path), exist_ok=True)
 with open(report_path, "w", encoding="utf-8") as f:
     f.write("\n".join(lines) + "\n")

@@ -5,7 +5,7 @@ import { cruise, ICruiseOptions } from 'dependency-cruiser'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-const ROOT_DIR = path.resolve(__dirname, '..')
+const ROOT_DIR = path.resolve(__dirname, '..', '..')
 const OUTPUT_DIR = path.join(ROOT_DIR, 'docs', 'reports')
 
 const cruiseOptions: ICruiseOptions = {
@@ -196,7 +196,7 @@ function writeReport(report: DependencyReport): void {
   console.log(`\n📝 报告已写入: ${reportPath}`)
 
   const mdReport = generateMarkdownReport(report)
-  const mdPath = path.join(OUTPUT_DIR, 'dependency-analysis.md')
+  const mdPath = path.join(OUTPUT_DIR, 'docs/reports/retrospectives/dependency-analysis.md')
   fs.writeFileSync(mdPath, mdReport)
   console.log(`📝 Markdown 报告已写入: ${mdPath}`)
 }

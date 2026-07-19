@@ -14,6 +14,9 @@ interface SecurityInfo {
   encryptionType: string
 }
 
+/**
+ * SecurityStatus
+ */
 export function SecurityStatus({ className = '' }: SecurityStatusProps): React.JSX.Element {
   const [status, setStatus] = useState<SecurityInfo>({
     encryptedStorage: false,
@@ -79,6 +82,9 @@ export interface SecurityBadgeProps {
   variant?: 'icon' | 'compact' | 'full'
 }
 
+/**
+ * SecurityBadge
+ */
 export function SecurityBadge({ variant = 'icon' }: SecurityBadgeProps): React.JSX.Element {
   const [info, setInfo] = useState<SecurityInfo>({
     encryptedStorage: false,

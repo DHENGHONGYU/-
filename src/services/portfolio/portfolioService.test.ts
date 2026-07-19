@@ -6,15 +6,19 @@
  
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-vi.mock('@/data/dataLayer', () => ({
-  portfolioStore: {
-    list: vi.fn(),
-    get: vi.fn(),
-    save: vi.fn(),
-    getWithTx: vi.fn(),
-    saveWithTx: vi.fn(),
-  },
-}))
+vi.mock('@/data/dataLayerTradingStores', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/data/dataLayerTradingStores')>()
+  return {
+    ...actual,
+    portfolioStore: {
+      list: vi.fn(),
+      get: vi.fn(),
+      save: vi.fn(),
+      getWithTx: vi.fn(),
+      saveWithTx: vi.fn(),
+    },
+  }
+})
 
 vi.mock('@/data/db', () => ({
   db: { init: vi.fn().mockResolvedValue(undefined), getDatabase: vi.fn() },
@@ -32,7 +36,7 @@ vi.mock('@/services/analysis/dataFreshnessGuard', () => ({
   checkPortfolioRebalanceFreshness: vi.fn(() => ({ valid: true })),
 }))
 
-import { portfolioStore } from '@/data/dataLayer'
+import { portfolioStore } from '@/data/dataLayerTradingStores'
 import { rebalance, addHolding, removeHolding, listByTheme } from '@/services/portfolio/portfolioService'
 import type { Portfolio, PortfolioHolding, Order } from '@/data/types'
 

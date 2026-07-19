@@ -1,5 +1,6 @@
 /**
  * @fileoverview 数据同步状态 Store
+ * @unused — 已实现但当前无 UI 层消费者，待后续产品规划接入。
  *
  * 管理双通道数据同步的全局状态，包括：
  * - 同步状态机（idle/checking/collecting/importing/...）

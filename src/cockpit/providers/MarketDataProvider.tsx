@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useRef, useState, useCallback } from 'react'
+import React, { createContext, useEffect, useRef, useState, useCallback } from 'react'
 import { getLogger } from '@/lib/logger'
 import type { MarketData, CollectionResultCallback, ChatMessage } from '@/types/modules/widget.types'
 import { taskScheduler } from '@/services/data-collector/TaskScheduler'
@@ -12,6 +12,7 @@ import {
   ACTIVE_DATA_SOURCE,
   DATA_SOURCE_TYPE,
 } from '@/constants/cockpit.constants'
+import { useMarketDataStore } from '@/store/marketDataStore'
 
 const logger = getLogger()
 
@@ -35,6 +36,12 @@ interface MarketDataProviderProps {
 
 /**
  * MarketDataProvider
+ *
+ * @convergence 数据流桥接（Phase 1）：
+ *   当前 Widget 通过 Context 消费数据，Page 通过 marketDataStore 消费数据。
+ *   两条路径独立订阅 taskScheduler，各自维护合并状态。
+ *   桥接方案：Provider 适配后同步写入 marketDataStore.mergedData，
+ *   使 Page 也能读取 Widget 采集的数据。后续 Phase 2 将 Widget 改为直接从 Store 读取。
  */
 export function MarketDataProvider({ children }: MarketDataProviderProps): React.JSX.Element {
   const [data, setData] = useState<MarketData>(() => marketDataAdapter.merge())
@@ -66,6 +73,8 @@ export function MarketDataProvider({ children }: MarketDataProviderProps): React
 
       const adapted = marketDataAdapter.adapt(rawData)
       setData((prev) => marketDataAdapter.merge(prev, adapted))
+      // Phase 1 桥接: 同步写入 Store，使 Page 也能读取 Widget 采集的数据
+      useMarketDataStore.getState().mergeAdaptedData(adapted)
     }
   }, [updateInstanceStatus])
 
@@ -197,23 +206,47 @@ export function MarketDataProvider({ children }: MarketDataProviderProps): React
  
 /**
  * useMarketData
+ * @convergence Phase 2: 内部切换为从 marketDataStore 读取，不再依赖 MarketDataProvider Context。
+ *   Widget 无需修改 import 路径即可获取 Store 数据。
  * @returns MarketDataContextValue
  */
-// eslint-disable-next-line react-refresh/only-export-components
 export function useMarketData(): MarketDataContextValue {
-  const context = useContext(MarketDataContext)
-  if (!context) {
-    throw new Error('useMarketData 必须在 MarketDataProvider 内部使用')
+  const mergedData = useMarketDataStore((s) => s.mergedData)
+  const loadingMap = useMarketDataStore((s) => s.loadingMap)
+  const errorMap = useMarketDataStore((s) => s.errorMap)
+  const refreshWidget = useMarketDataStore((s) => s.refreshWidget)
+  const getTaskStats = useMarketDataStore((s) => s.getTaskStats)
+  const sendChatMessage = useMarketDataStore((s) => s.sendChatMessage)
+
+  return {
+    data: mergedData,
+    loadingMap,
+    errorMap,
+    refreshWidget,
+    getTaskStats,
+    sendChatMessage,
   }
-  return context
 }
 
- 
 /**
  * useOptionalMarketData
+ * @convergence Phase 2: 内部切换为从 marketDataStore 读取。
  * @returns MarketDataContextValue | undefined
  */
-// eslint-disable-next-line react-refresh/only-export-components
 export function useOptionalMarketData(): MarketDataContextValue | undefined {
-  return useContext(MarketDataContext) ?? undefined
+  const mergedData = useMarketDataStore((s) => s.mergedData)
+  const loadingMap = useMarketDataStore((s) => s.loadingMap)
+  const errorMap = useMarketDataStore((s) => s.errorMap)
+  const refreshWidget = useMarketDataStore((s) => s.refreshWidget)
+  const getTaskStats = useMarketDataStore((s) => s.getTaskStats)
+  const sendChatMessage = useMarketDataStore((s) => s.sendChatMessage)
+
+  return {
+    data: mergedData,
+    loadingMap,
+    errorMap,
+    refreshWidget,
+    getTaskStats,
+    sendChatMessage,
+  }
 }

@@ -1,56 +1,65 @@
 ---
-title: deprecated-batch3-merge-report
-tier: reference
+title: Batch-3 È«Á¿»Ø¹é²âÊÔ±¨¸æ
+type: explanation
+domain: project
+phase: design
+tier: standard
+status: deprecated
+maintainer: V9 Architecture Team
+summary: "Éú³ÉÊ±¼ä£º2026-06-25 µ÷¶È¹Ù£ºAgent Orchestrator Ö´ĞĞÖÇÄÜÌå£ºTest-Generator Agent£¨»Ø¹é²âÊÔ£© / Refactor-Agent£¨²¢·¢½Å±¾ÅäÖÃ£©"
+tags: [project, batch, report, plan, deprecated]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+deprecated_by: "Doc Restructure - Metadata Governance"
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-tier: reference
-code_version: 2.0.0
----
+# Batch-3 È«Á¿»Ø¹é²âÊÔ±¨¸æ
 
-# Batch-3 å…¨é‡å›å½’æµ‹è¯•æŠ¥å‘Š
-
-> ç”Ÿæˆæ—¶é—´ï¼š2026-06-25  
-> è°ƒåº¦å®˜ï¼šAgent Orchestrator  
-> æ‰§è¡Œæ™ºèƒ½ä½“ï¼šTest-Generator Agentï¼ˆå›å½’æµ‹è¯•ï¼‰ / Refactor-Agentï¼ˆå¹¶å‘è„šæœ¬é…ç½®ï¼‰
+> Éú³ÉÊ±¼ä£º2026-06-25  
+> µ÷¶È¹Ù£ºAgent Orchestrator  
+> Ö´ĞĞÖÇÄÜÌå£ºTest-Generator Agent£¨»Ø¹é²âÊÔ£© / Refactor-Agent£¨²¢·¢½Å±¾ÅäÖÃ£©
 
 ---
 
-## å›å½’æµ‹è¯•é¡¹ä¸ç»“æœ
+## »Ø¹é²âÊÔÏîÓë½á¹û
 
-| é—¨ç¦é¡¹ | å‘½ä»¤ | ç»“æœ | è¯´æ˜ |
+| ÃÅ½ûÏî | ÃüÁî | ½á¹û | ËµÃ÷ |
 |--------|------|------|------|
-| TypeScript ç±»å‹æ£€æŸ¥ | `tsc --noEmit`ï¼ˆç”± `prebuild` è§¦å‘ï¼‰ | âœ… é€šè¿‡ | 0 errors |
-| ESLint | `npm run lint` | âœ… é€šè¿‡ | 0 warnings / 0 errors |
-| å•å…ƒæµ‹è¯• | `npm test -- --run` | âœ… é€šè¿‡ | 44 files / 291 tests |
-| è·¨å±‚è°ƒç”¨å®¡è®¡ | `npm run audit:layers` | âœ… åŸºçº¿å†… | 0 è¿è§„ / 2 è­¦å‘Šï¼ˆè¿‡æ¸¡æœŸè¯» dataLayerï¼‰ |
-| ç¡¬ç¼–ç å®¡è®¡ | `npm run audit:hardcode` | âœ… åŸºçº¿å†… | 389 å¤„ï¼ˆå·²è®°å½•åŸºçº¿ï¼‰ |
-| æ­»ä»£ç å®¡è®¡ | `npm run audit:deadcode` | âœ… åŸºçº¿å†… | 11 å¤„ï¼ˆå·²è®°å½•åŸºçº¿ï¼‰ |
-| ç”Ÿäº§æ„å»º | `npm run build` | âœ… é€šè¿‡ | `dist/` ç”ŸæˆæˆåŠŸ |
-| E2E å†’çƒŸæµ‹è¯• | `npm run test:e2e` | âœ… é€šè¿‡ | 5/5 passed |
+| TypeScript ÀàĞÍ¼ì²é | `tsc --noEmit`£¨ÓÉ `prebuild` ´¥·¢£© | ? Í¨¹ı | 0 errors |
+| ESLint | `npm run lint` | ? Í¨¹ı | 0 warnings / 0 errors |
+| µ¥Ôª²âÊÔ | `npm test -- --run` | ? Í¨¹ı | 44 files / 291 tests |
+| ¿ç²ãµ÷ÓÃÉó¼Æ | `npm run audit:layers` | ? »ùÏßÄÚ | 0 Î¥¹æ / 2 ¾¯¸æ£¨¹ı¶ÉÆÚ¶Á dataLayer£© |
+| Ó²±àÂëÉó¼Æ | `npm run audit:hardcode` | ? »ùÏßÄÚ | 389 ´¦£¨ÒÑ¼ÇÂ¼»ùÏß£© |
+| ËÀ´úÂëÉó¼Æ | `npm run audit:deadcode` | ? »ùÏßÄÚ | 11 ´¦£¨ÒÑ¼ÇÂ¼»ùÏß£© |
+| Éú²ú¹¹½¨ | `npm run build` | ? Í¨¹ı | `dist/` Éú³É³É¹¦ |
+| E2E Ã°ÑÌ²âÊÔ | `npm run test:e2e` | ? Í¨¹ı | 5/5 passed |
 
 ---
 
-## å…³é”®è°ƒæ•´
+## ¹Ø¼üµ÷Õû
 
-1. **å¹¶å‘å›å½’è„šæœ¬**ï¼šåœ¨ `package.json` ä¸­æ–°å¢ `regression` è„šæœ¬ï¼Œä½¿ç”¨ `concurrently` å¹¶è¡Œæ‰§è¡Œ lint / test / auditï¼Œç„¶åä¸²è¡Œæ‰§è¡Œ build ä¸ e2eã€‚
-2. **æµ‹è¯•è¶…æ—¶è°ƒæ•´**ï¼š`vite.config.ts` ä¸­ `testTimeout` ä» 10000ms è°ƒæ•´ä¸º 15000msï¼Œä»¥ç¼“è§£ `NewsPage.test.tsx` åœ¨å¹¶å‘èµ„æºç´§å¼ æ—¶çš„å¶å‘è¶…æ—¶ã€‚
-3. **`.nvmrc`**ï¼šå·²åˆ›å»ºï¼ŒæŒ‡å®š Node 22ã€‚
-4. **è¦†ç›–ç‡é˜ˆå€¼**ï¼šå·²åœ¨ `vite.config.ts` é…ç½®ï¼Œä½†å½“å‰å®æµ‹è¦†ç›–ç‡æœªè¾¾æ ‡ï¼Œä½œä¸ºå·²çŸ¥é—®é¢˜è®°å½•åœ¨ `../quality-gates-baseline.md`ã€‚
+1. **²¢·¢»Ø¹é½Å±¾**£ºÔÚ `package.json` ÖĞĞÂÔö `regression` ½Å±¾£¬Ê¹ÓÃ `concurrently` ²¢ĞĞÖ´ĞĞ lint / test / audit£¬È»ºó´®ĞĞÖ´ĞĞ build Óë e2e¡£
+2. **²âÊÔ³¬Ê±µ÷Õû**£º`vite.config.ts` ÖĞ `testTimeout` ´Ó 10000ms µ÷ÕûÎª 15000ms£¬ÒÔ»º½â `NewsPage.test.tsx` ÔÚ²¢·¢×ÊÔ´½ôÕÅÊ±µÄÅ¼·¢³¬Ê±¡£
+3. **`.nvmrc`**£ºÒÑ´´½¨£¬Ö¸¶¨ Node 22¡£
+4. **¸²¸ÇÂÊãĞÖµ**£ºÒÑÔÚ `vite.config.ts` ÅäÖÃ£¬µ«µ±Ç°Êµ²â¸²¸ÇÂÊÎ´´ï±ê£¬×÷ÎªÒÑÖªÎÊÌâ¼ÇÂ¼ÔÚ `../quality-gates-baseline.md`¡£
 
 ---
 
-## é—ç•™é—®é¢˜
+## ÒÅÁôÎÊÌâ
 
-| é—®é¢˜ | çŠ¶æ€ | è®¡åˆ’ |
+| ÎÊÌâ | ×´Ì¬ | ¼Æ»® |
 |------|------|------|
-| è¦†ç›–ç‡æœªè¾¾é˜ˆå€¼ | ğŸŸ¡ å·²çŸ¥ | Phase 2/3 è¡¥å……æµ‹è¯•æˆ–è°ƒæ•´é˜ˆå€¼ |
-| `audit:hardcode` 389 å¤„ | ğŸŸ¡ å·²çŸ¥ | Phase 2 é€æ­¥æ”¶æ•› |
-| `audit:deadcode` 11 å¤„ | ğŸŸ¡ å·²çŸ¥ | HubPage è®¾è®¡é€‰æ‹©ï¼ŒdefaultPageBuilder ä¸ºå·¥å…·æ–‡ä»¶ï¼Œåç»­åŠ å…¥ç™½åå• |
+| ¸²¸ÇÂÊÎ´´ïãĞÖµ | ?? ÒÑÖª | Phase 2/3 ²¹³ä²âÊÔ»òµ÷ÕûãĞÖµ |
+| `audit:hardcode` 389 ´¦ | ?? ÒÑÖª | Phase 2 Öğ²½ÊÕÁ² |
+| `audit:deadcode` 11 ´¦ | ?? ÒÑÖª | HubPage Éè¼ÆÑ¡Ôñ£¬defaultPageBuilder Îª¹¤¾ßÎÄ¼ş£¬ºóĞø¼ÓÈë°×Ãûµ¥ |
 
 ---
 
-## ç»“è®º
+## ½áÂÛ
 
-Batch-3 å…¨é‡å›å½’æµ‹è¯•é€šè¿‡ã€‚æ–‡æ¡£åŒæ­¥ä¸æ–°å¢å·¥ä½œæœªç ´åä»£ç æ„å»ºä¸å·²æœ‰åŠŸèƒ½ã€‚é¡¹ç›®å½“å‰å¤„äº `v0.9.0-migration-implemented` å¯äº¤ä»˜çŠ¶æ€ã€‚
+Batch-3 È«Á¿»Ø¹é²âÊÔÍ¨¹ı¡£ÎÄµµÍ¬²½ÓëĞÂÔö¹¤×÷Î´ÆÆ»µ´úÂë¹¹½¨ÓëÒÑÓĞ¹¦ÄÜ¡£ÏîÄ¿µ±Ç°´¦ÓÚ `v0.9.0-migration-implemented` ¿É½»¸¶×´Ì¬¡£

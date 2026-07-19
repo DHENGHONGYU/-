@@ -14,7 +14,7 @@ import { CHART_PALETTE } from '@/constants/theme.tokens'
 import { usePerfTrace } from '@/hooks/usePerfTrace'
 
 interface BarChartProps {
-  data: Array<Record<string, unknown>>
+  data?: Array<Record<string, unknown>>
   xKey: string
   bars: Array<{ dataKey: string; name?: string; color?: string; stackId?: string }>
   height?: number
@@ -22,6 +22,10 @@ interface BarChartProps {
   showGrid?: boolean
   showTooltip?: boolean
   className?: string
+  /** 加载状态（显示骨架屏），默认 false */
+  loading?: boolean
+  /** 空数据占位文案，默认「暂无数据」 */
+  emptyText?: string
 }
 
 const DEFAULT_COLORS = [
@@ -48,18 +52,40 @@ export const BarChart = memo(
         showGrid = true,
         showTooltip = true,
         className,
+        loading = false,
+        emptyText,
       },
       ref,
     ) => {
-      const isHorizontal = layout === 'vertical'
+      const safeData = data ?? []
+      const pointCount = safeData.length
+      usePerfTrace('BarChart', { points: pointCount, series: bars.length })
 
-      usePerfTrace('BarChart', { points: data.length, series: bars.length })
+      // 加载状态骨架屏
+      if (loading) {
+        return (
+          <div ref={ref} className={cn('w-full animate-pulse', className)}>
+            <div className="rounded-lg bg-gray-100" style={{ height }} />
+          </div>
+        )
+      }
+
+      // 空数据占位
+      if (pointCount === 0) {
+        return (
+          <div ref={ref} className={cn('w-full flex items-center justify-center text-muted-foreground text-sm', className)} style={{ height }}>
+            {emptyText ?? '暂无数据'}
+          </div>
+        )
+      }
+
+      const isHorizontal = layout === 'vertical'
 
       return (
         <div ref={ref} className={cn('w-full', className)}>
           <ResponsiveContainer width="100%" height={height}>
             <RechartsBar
-              data={data}
+              data={safeData}
               layout={isHorizontal ? 'vertical' : 'horizontal'}
               margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
             >

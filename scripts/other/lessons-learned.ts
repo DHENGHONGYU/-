@@ -277,7 +277,7 @@ function persistReport(report: LessonsReport): string | null {
     }
     const dateStr = report.meta.generatedAt.split('T')[0]
     const mdPath = join(REPORT_DIR, `lessons-learned-${dateStr}.md`)
-    const latestMdPath = join(REPORT_DIR, 'latest.md')
+    const latestMdPath = join(REPORT_DIR, 'docs/reports/lessons-learned/latest.md')
     const jsonPath = join(REPORT_DIR, `lessons-learned-${dateStr}.json`)
 
     const markdownContent = renderMarkdownReport(report)

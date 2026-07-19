@@ -1,94 +1,96 @@
 ---
 title: gateway-write-permission-spec
-code_version: 2.0.0
-
+type: reference
+domain: project
+phase: design
 tier: important
----
-
----
-title: docs/reference/gateway-write-permission-spec.md
+status: active
+maintainer: V9 Architecture Team
+summary: "½«Ö±½Ó²Ù×÷ dataLayer µÄÌØÈ¨ÊÕÁ²µ½ Gateway µ¥Ò»Èë¿Ú£¬DataBridge Í¨¹ı Gateway ¼ä½ÓĞ´Èë"
+tags: [project, spec, reference, governance, documentation]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: important
+doc_id: V9-DOC-PROJ-095
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/reference/gateway-write-permission-spec.md
-code_version: 2.0.0
----
+# Gateway ²ãĞ´ÈëÈ¨ÏŞ¹æ·¶
 
-# Gateway å±‚å†™å…¥æƒé™è§„èŒƒ
-
-> **ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-13
-> **åŸºäº**: V9 AGENTS.md Â§ä¸€ åˆ†å±‚è§„åˆ™
-> **ç›®æ ‡**: å°†ç›´æ¥æ“ä½œ `dataLayer` çš„ç‰¹æƒæ”¶æ•›åˆ° Gateway å•ä¸€å…¥å£ï¼ŒDataBridge é€šè¿‡ Gateway é—´æ¥å†™å…¥
+> **Version**: v1.0.0 | **ÈÕÆÚ**: 2026-07-13
+> **»ùÓÚ**: V9 AGENTS.md ¡ìÒ» ·Ö²ã¹æÔò
+> **Ä¿±ê**: ½«Ö±½Ó²Ù×÷ `dataLayer` µÄÌØÈ¨ÊÕÁ²µ½ Gateway µ¥Ò»Èë¿Ú£¬DataBridge Í¨¹ı Gateway ¼ä½ÓĞ´Èë
 
 ---
 
-## 1. è®¾è®¡ç›®æ ‡
+## 1. Éè¼ÆÄ¿±ê
 
-| ç›®æ ‡ | è¯´æ˜ |
+| Ä¿±ê | ËµÃ÷ |
 |---|---|
-| **å†™å…¥æ”¶å£** | åªæœ‰ `Gateway` èƒ½ç›´æ¥è°ƒç”¨ `dataLayer.*.save/delete/update`ï¼›`DataBridge` ä¸å†ç›´æ¥ `import { db } from '@/data/db'`ã€‚ |
-| **DataBridge é—´æ¥å†™å…¥** | `DataBridge.forward()` å°† `StandardEnvelope` è·¯ç”±åˆ° `Gateway.execute()`ï¼Œç”± Gateway å®Œæˆæœ€ç»ˆæŒä¹…åŒ–ã€‚ |
-| **ç»Ÿä¸€æ¥å£** | æ‰€æœ‰å†™å…¥è¯·æ±‚å¿…é¡»å°è£…ä¸º `StandardEnvelope`ï¼Œå« `meta`ï¼ˆæ¥æº/ç›®æ ‡/åŠ¨ä½œ/è¿½è¸ªï¼‰+ `payload`ã€‚ |
-| **ACL ä¸‹æ²‰** | Gateway å†…éƒ¨å¤ç”¨ `ACL_MATRIX`ï¼Œåœ¨"æœ€åä¸€å…¬é‡Œ"å†åšä¸€æ¬¡å†™æƒé™æ ¡éªŒï¼ˆæ·±åº¦é˜²å¾¡ï¼‰ã€‚ |
-| **å¯æµ‹è¯•** | Gateway å¯ mockï¼ŒDataBridge å•å…ƒæµ‹è¯•æ— éœ€åˆå§‹åŒ– IndexedDBã€‚ |
+| **Ğ´ÈëÊÕ¿Ú** | Ö»ÓĞ `Gateway` ÄÜÖ±½Óµ÷ÓÃ `dataLayer.*.save/delete/update`£»`DataBridge` ²»ÔÙÖ±½Ó `import { db } from '@/data/db'`¡£ |
+| **DataBridge ¼ä½ÓĞ´Èë** | `DataBridge.forward()` ½« `StandardEnvelope` Â·ÓÉµ½ `Gateway.execute()`£¬ÓÉ Gateway Íê³É×îÖÕ³Ö¾Ã»¯¡£ |
+| **Í³Ò»½Ó¿Ú** | ËùÓĞĞ´ÈëÇëÇó±ØĞë·â×°Îª `StandardEnvelope`£¬º¬ `meta`£¨À´Ô´/Ä¿±ê/¶¯×÷/×·×Ù£©+ `payload`¡£ |
+| **ACL ÏÂ³Á** | Gateway ÄÚ²¿¸´ÓÃ `ACL_MATRIX`£¬ÔÚ"×îºóÒ»¹«Àï"ÔÙ×öÒ»´ÎĞ´È¨ÏŞĞ£Ñé£¨Éî¶È·ÀÓù£©¡£ |
+| **¿É²âÊÔ** | Gateway ¿É mock£¬DataBridge µ¥Ôª²âÊÔÎŞĞè³õÊ¼»¯ IndexedDB¡£ |
 
 ---
 
-## 2. æ¶æ„ä½ç½®ä¸åˆ†å±‚è§„åˆ™
+## 2. ¼Ü¹¹Î»ÖÃÓë·Ö²ã¹æÔò
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚  pages / components / UI                â”‚  â† ç¦æ­¢ç›´æ¥å†™ dataLayer
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚  store / services                       â”‚  â† å†™æ“ä½œå¿…é¡»èµ° dataBridge.forward(envelope)
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚  core / DataBridge                      â”‚  â† åªè´Ÿè´£è·¯ç”±ã€ç¼“å­˜ã€å¹¿æ’­ã€å®¡è®¡
-â”‚                                         â”‚    ç¦æ­¢ç›´æ¥ import db / dataLayer store
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚  data / gateway / DataGateway.ts        â”‚  â† å”¯ä¸€å…è®¸ç›´æ¥æ“ä½œ dataLayer çš„å±‚
-â”‚  data / dataLayer / *Stores.ts          â”‚  â† å„ domain store å®ç°
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+©°©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©´
+©¦  pages / components / UI                ©¦  ¡û ½ûÖ¹Ö±½ÓĞ´ dataLayer
+©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
+©¦  store / services                       ©¦  ¡û Ğ´²Ù×÷±ØĞë×ß dataBridge.forward(envelope)
+©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
+©¦  core / DataBridge                      ©¦  ¡û Ö»¸ºÔğÂ·ÓÉ¡¢»º´æ¡¢¹ã²¥¡¢Éó¼Æ
+©¦                                         ©¦    ½ûÖ¹Ö±½Ó import db / dataLayer store
+©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
+©¦  data / gateway / DataGateway.ts        ©¦  ¡û Î¨Ò»ÔÊĞíÖ±½Ó²Ù×÷ dataLayer µÄ²ã
+©¦  data / dataLayer / *Stores.ts          ©¦  ¡û ¸÷ domain store ÊµÏÖ
+©¸©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼
 ```
 
-### 2.1 å¼ºåˆ¶è§„åˆ™
+### 2.1 Ç¿ÖÆ¹æÔò
 
-- `core/databridge.ts` ä¸­åˆ é™¤ `import { db } from '@/data/db'`ï¼Œæ”¹ä¸º `import { dataGateway } from '@/data/gateway/dataGateway'`ã€‚
-- `core/databridgeHandlers.ts` ä¸­çš„ Handler ä¸å†ç›´æ¥ `db.put/store.save`ï¼Œè€Œæ˜¯æ„é€  `StandardEnvelope` å¹¶è°ƒç”¨ `dataGateway.execute(envelope)`ã€‚
-- `data/gateway/` åªå‘å¤–æš´éœ² `execute(envelope)` ä¸åªè¯»å…ƒæ•°æ®æ¥å£ï¼ˆå¦‚ `getSupportedActions()`ï¼‰ã€‚
-- `store/`ã€`services/`ã€`components/` ç¦æ­¢ `import { dataLayer } from '@/data/dataLayer'` æ‰§è¡Œå†™æ“ä½œã€‚
+- `core/databridge.ts` ÖĞÉ¾³ı `import { db } from '@/data/db'`£¬¸ÄÎª `import { dataGateway } from '@/data/gateway/dataGateway'`¡£
+- `core/databridgeHandlers.ts` ÖĞµÄ Handler ²»ÔÙÖ±½Ó `db.put/store.save`£¬¶øÊÇ¹¹Ôì `StandardEnvelope` ²¢µ÷ÓÃ `dataGateway.execute(envelope)`¡£
+- `data/gateway/` Ö»ÏòÍâ±©Â¶ `execute(envelope)` ÓëÖ»¶ÁÔªÊı¾İ½Ó¿Ú£¨Èç `getSupportedActions()`£©¡£
+- `store/`¡¢`services/`¡¢`components/` ½ûÖ¹ `import { dataLayer } from '@/data/dataLayer'` Ö´ĞĞĞ´²Ù×÷¡£
 
-### 2.2 å†™å…¥æƒé™çŸ©é˜µ
+### 2.2 Ğ´ÈëÈ¨ÏŞ¾ØÕó
 
-| å±‚çº§ | èƒ½å¦ç›´æ¥å†™ dataLayer | å¿…é¡»ä½¿ç”¨çš„å…¥å£ |
+| ²ã¼¶ | ÄÜ·ñÖ±½ÓĞ´ dataLayer | ±ØĞëÊ¹ÓÃµÄÈë¿Ú |
 |---|---|---|
-| `components/` / `pages/` | âŒ ç¦æ­¢ | é€šè¿‡ Store â†’ Service â†’ DataBridge.forward |
-| `store/` | âŒ ç¦æ­¢ | é€šè¿‡ Service â†’ DataBridge.forward |
-| `services/` | âŒ ç¦æ­¢ | `dataBridge.forward(StandardEnvelope)` |
-| `core/DataBridge` | âŒ ç¦æ­¢ | å°† `StandardEnvelope` è½¬äº¤ç»™ `DataGateway.execute()` |
-| `data/gateway/` | âœ… å”¯ä¸€å…è®¸ | `dataLayer[storeName].save/delete/saveMany` |
+| `components/` / `pages/` | ? ½ûÖ¹ | Í¨¹ı Store ¡ú Service ¡ú DataBridge.forward |
+| `store/` | ? ½ûÖ¹ | Í¨¹ı Service ¡ú DataBridge.forward |
+| `services/` | ? ½ûÖ¹ | `dataBridge.forward(StandardEnvelope)` |
+| `core/DataBridge` | ? ½ûÖ¹ | ½« `StandardEnvelope` ×ª½»¸ø `DataGateway.execute()` |
+| `data/gateway/` | ? Î¨Ò»ÔÊĞí | `dataLayer[storeName].save/delete/saveMany` |
 
 ---
 
-## 3. StandardEnvelope ç»Ÿä¸€æ•°æ®æ ¼å¼
+## 3. StandardEnvelope Í³Ò»Êı¾İ¸ñÊ½
 
-å¤ç”¨å¹¶ç»†åŒ–ç°æœ‰ `StandardEnvelope`ï¼Œä¿æŒä¸å½“å‰ `src/core/envelope.ts` å…¼å®¹ã€‚
+¸´ÓÃ²¢Ï¸»¯ÏÖÓĞ `StandardEnvelope`£¬±£³ÖÓëµ±Ç° `src/core/envelope.ts` ¼æÈİ¡£
 
 ```typescript
 // src/types/modules/envelope.types.ts
 import type { EnvelopeAction, EnvelopeTarget, ModuleId } from '@/config/dbConfig'
 
 export interface EnvelopeMeta {
-  /** è°ƒç”¨æ–¹æ¨¡å— IDï¼Œç”¨äº ACL */
+  /** µ÷ÓÃ·½Ä£¿é ID£¬ÓÃÓÚ ACL */
   source: ModuleId
-  /** ç›®æ ‡è·¯ç”±ï¼Œå¦‚ 'db' | 'event' | 'strategy:hotSector' */
+  /** Ä¿±êÂ·ÓÉ£¬Èç 'db' | 'event' | 'strategy:hotSector' */
   target: EnvelopeTarget
-  /** å…·ä½“åŠ¨ä½œï¼Œå¦‚ 'SAVE_STOCK' | 'DELETE_ORDER' */
+  /** ¾ßÌå¶¯×÷£¬Èç 'SAVE_STOCK' | 'DELETE_ORDER' */
   action: EnvelopeAction
-  /** å…¨å±€å”¯ä¸€è¿½è¸ª IDï¼Œç”¨äºé“¾è·¯è¿½è¸ªä¸å®¡è®¡ */
+  /** È«¾ÖÎ¨Ò»×·×Ù ID£¬ÓÃÓÚÁ´Â·×·×ÙÓëÉó¼Æ */
   traceId: string
-  /** ä¿¡å°åˆ›å»ºæ—¶é—´æˆ³ï¼ˆæ¯«ç§’ï¼‰ */
+  /** ĞÅ·â´´½¨Ê±¼ä´Á£¨ºÁÃë£© */
   timestamp: number
 }
 
@@ -97,12 +99,12 @@ export interface StandardEnvelope<TPayload = unknown> {
   payload: TPayload
 }
 
-/** å†™è¯·æ±‚ç»“æœï¼ˆGateway è¿”å›ï¼‰ */
+/** Ğ´ÇëÇó½á¹û£¨Gateway ·µ»Ø£© */
 export interface GatewayWriteResult {
   success: boolean
-  /** å†™å…¥åçš„ä¸»é”®/æ ‡è¯† */
+  /** Ğ´ÈëºóµÄÖ÷¼ü/±êÊ¶ */
   key?: string
-  /** å½±å“è¡Œæ•°/è®°å½•æ•° */
+  /** Ó°ÏìĞĞÊı/¼ÇÂ¼Êı */
   affectedCount?: number
   error?: string
 }
@@ -110,7 +112,7 @@ export interface GatewayWriteResult {
 
 ---
 
-## 4. Gateway å±‚ TypeScript æ¥å£å®šä¹‰
+## 4. Gateway ²ã TypeScript ½Ó¿Ú¶¨Òå
 
 ```typescript
 // src/data/gateway/dataGateway.ts
@@ -122,7 +124,7 @@ import { EnvelopeFactory, type StandardEnvelope, type GatewayWriteResult } from 
 
 const logger = getLogger()
 
-/** action â†’ dataLayer store çš„æ˜¾å¼æ˜ å°„ï¼ˆé›†ä¸­ç®¡ç†ï¼Œé¿å…åˆ†æ•£æ¨æ–­ï¼‰ */
+/** action ¡ú dataLayer store µÄÏÔÊ½Ó³Éä£¨¼¯ÖĞ¹ÜÀí£¬±ÜÃâ·ÖÉ¢ÍÆ¶Ï£© */
 const ACTION_TO_DATALAYER_STORE: Record<string, keyof typeof dataLayer> = {
   [ENVELOPE_ACTION.insertStock]: 'stockStore',
   [ENVELOPE_ACTION.updateStock]: 'stockStore',
@@ -157,33 +159,33 @@ const ACTION_TO_DATALAYER_STORE: Record<string, keyof typeof dataLayer> = {
   [ENVELOPE_ACTION.saveWatchlist]: 'watchlistStore',
   [ENVELOPE_ACTION.saveCustomAgent]: 'customAgentStore',
   [ENVELOPE_ACTION.saveCollectConfig]: 'collectConfigStore',
-  // ... å…¶ä»– action æŒ‰ store å½’ç±»è¡¥å……
+  // ... ÆäËû action °´ store ¹éÀà²¹³ä
 }
 
 export class DataGateway {
   /**
-   * Gateway å”¯ä¸€å…¬å¼€å†™å…¥å£
-   * 1. æ ¡éªŒ StandardEnvelope
-   * 2. ACL äºŒæ¬¡æ ¡éªŒ
-   * 3. è·¯ç”±åˆ° dataLayer å¯¹åº” store
+   * Gateway Î¨Ò»¹«¿ªĞ´Èë¿Ú
+   * 1. Ğ£Ñé StandardEnvelope
+   * 2. ACL ¶ş´ÎĞ£Ñé
+   * 3. Â·ÓÉµ½ dataLayer ¶ÔÓ¦ store
    */
   async execute(envelope: StandardEnvelope): Promise<GatewayWriteResult> {
     const { meta } = envelope
 
-    // 1. ä¿¡å°æ ¼å¼æ ¡éªŒ
+    // 1. ĞÅ·â¸ñÊ½Ğ£Ñé
     const validation = EnvelopeFactory.validate(envelope)
     if (!validation.valid) {
       logger.error(`[DataGateway] Envelope invalid: ${validation.error}`, { meta })
       return { success: false, error: validation.error }
     }
 
-    // 2. è·¯ç”±è§£æ
+    // 2. Â·ÓÉ½âÎö
     const storeName = ACTION_TO_DATALAYER_STORE[meta.action]
     if (!storeName) {
       return { success: false, error: `Unsupported action: ${meta.action}` }
     }
 
-    // 3. ACL æ ¡éªŒï¼ˆå†™æ“ä½œï¼‰
+    // 3. ACL Ğ£Ñé£¨Ğ´²Ù×÷£©
     const operation = inferOperation(meta.action)
     try {
       aclEngine.assert({ module: meta.source, store: storeName as unknown as StoreName, operation })
@@ -193,7 +195,7 @@ export class DataGateway {
       return { success: false, error: reason }
     }
 
-    // 4. æ‰§è¡Œå†™å…¥
+    // 4. Ö´ĞĞĞ´Èë
     try {
       const result = await this.routeToStore(envelope, storeName)
       logger.info(`[DataGateway] Write succeeded: action=${meta.action}, store=${storeName}, traceId=${meta.traceId}`)
@@ -205,7 +207,7 @@ export class DataGateway {
     }
   }
 
-  /** è¿”å› Gateway æ”¯æŒçš„æ‰€æœ‰ action æ¸…å•ï¼Œä¾› DataBridge è·¯ç”±å†³ç­– */
+  /** ·µ»Ø Gateway Ö§³ÖµÄËùÓĞ action Çåµ¥£¬¹© DataBridge Â·ÓÉ¾ö²ß */
   getSupportedActions(): readonly EnvelopeAction[] {
     return Object.keys(ACTION_TO_DATALAYER_STORE) as EnvelopeAction[]
   }
@@ -221,8 +223,8 @@ export class DataGateway {
 
     const { meta, payload } = envelope
 
-    // ç»Ÿä¸€è°ƒç”¨ dataLayer store çš„ save / delete è¯­ä¹‰
-    // çº¦å®šï¼šæ‰€æœ‰ store éƒ½å®ç° { save(item), delete(id), saveMany(items) }
+    // Í³Ò»µ÷ÓÃ dataLayer store µÄ save / delete ÓïÒå
+    // Ô¼¶¨£ºËùÓĞ store ¶¼ÊµÏÖ { save(item), delete(id), saveMany(items) }
     if (meta.action.includes('DELETE')) {
       const id = (payload as { id: string }).id
       await store.delete(id)
@@ -235,7 +237,7 @@ export class DataGateway {
       return { affectedCount: items.length }
     }
 
-    // é»˜è®¤ save
+    // Ä¬ÈÏ save
     const key = await store.save(payload)
     return { key: key as string }
   }
@@ -246,16 +248,16 @@ export const dataGateway = new DataGateway()
 
 ---
 
-## 5. DataBridge æ”¹é€ ç¤ºä¾‹
+## 5. DataBridge ¸ÄÔìÊ¾Àı
 
-`DataBridge.routeToDB()` ä¸å†ç›´æ¥ `db.put`ï¼Œè€Œæ˜¯å§”æ‰˜ç»™ `dataGateway.execute()`ã€‚
+`DataBridge.routeToDB()` ²»ÔÙÖ±½Ó `db.put`£¬¶øÊÇÎ¯ÍĞ¸ø `dataGateway.execute()`¡£
 
 ```typescript
 // src/core/databridge.ts
 import { dataGateway } from '@/data/gateway/dataGateway'
 
 export class DataBridge {
-  // ... query / subscribe / broadcast ä¿æŒä¸å˜ ...
+  // ... query / subscribe / broadcast ±£³Ö²»±ä ...
 
   private async routeToDB(envelope: StandardEnvelope, store: StoreName): Promise<void> {
     const { meta } = envelope
@@ -271,7 +273,7 @@ export class DataBridge {
 
 ---
 
-## 6. æœåŠ¡å±‚ä½¿ç”¨ç¤ºä¾‹
+## 6. ·şÎñ²ãÊ¹ÓÃÊ¾Àı
 
 ```typescript
 // src/services/system/customAgentService.ts
@@ -297,34 +299,34 @@ export async function saveCustomAgent(agent: CustomAgent): Promise<void> {
 
 ---
 
-## 7. è¿ç§»è·¯å¾„ï¼ˆå»ºè®®åˆ† 3 æ­¥ï¼‰
+## 7. Ç¨ÒÆÂ·¾¶£¨½¨Òé·Ö 3 ²½£©
 
-1. **æ–°å¢ Gateway**ï¼šåˆ›å»º `src/data/gateway/dataGateway.ts`ï¼ŒæŠŠ `ACTION_TO_STORE_MAP` ä» `databridge.ts` è¿ç§»è¿‡æ¥ï¼Œå¹¶å¯¹æ¥ `dataLayer`ã€‚
-2. **æ”¹é€  DataBridge**ï¼š`routeToDB` ä¸ `databridgeHandlers.ts` æ”¹ä¸ºè°ƒç”¨ `dataGateway.execute()`ï¼Œåˆ é™¤ `import { db }`ã€‚
-3. **æ¸…ç†ä¸Šå±‚**ï¼šä½¿ç”¨ `Grep` æ‰«æ `src/store`ã€`src/services`ã€`src/components` ä¸­ç›´æ¥ `import { dataLayer }` çš„å†™æ“ä½œï¼Œé€ä¸ªæ”¹ä¸º `dataBridge.forward`ã€‚
+1. **ĞÂÔö Gateway**£º´´½¨ `src/core/databridge.ts`£¬°Ñ `ACTION_TO_STORE_MAP` ´Ó `databridge.ts` Ç¨ÒÆ¹ıÀ´£¬²¢¶Ô½Ó `dataLayer`¡£
+2. **¸ÄÔì DataBridge**£º`routeToDB` Óë `databridgeHandlers.ts` ¸ÄÎªµ÷ÓÃ `dataGateway.execute()`£¬É¾³ı `import { db }`¡£
+3. **ÇåÀíÉÏ²ã**£ºÊ¹ÓÃ `Grep` É¨Ãè `src/store`¡¢`src/services`¡¢`src/components` ÖĞÖ±½Ó `import { dataLayer }` µÄĞ´²Ù×÷£¬Öğ¸ö¸ÄÎª `dataBridge.forward`¡£
 
 ---
 
-## 8. éªŒè¯æ–¹å¼
+## 8. ÑéÖ¤·½Ê½
 
 ```powershell
-# 1. ç¡®è®¤ DataBridge ä¸å†ç›´æ¥ä¾èµ– db
+# 1. È·ÈÏ DataBridge ²»ÔÙÖ±½ÓÒÀÀµ db
 rg "import\s+\{\s*db\s*\}\s+from\s+['\"]@/data/db['\"]" src/core
 
-# 2. ç¡®è®¤åªæœ‰ data/gateway ç›´æ¥ import dataLayer
+# 2. È·ÈÏÖ»ÓĞ data/gateway Ö±½Ó import dataLayer
 rg "from\s+['\"]@/data/dataLayer['\"]" src --count
 
-# 3. æ¶æ„å®¡è®¡
+# 3. ¼Ü¹¹Éó¼Æ
 npm run audit:layers
 
-# 4. ç±»å‹æ£€æŸ¥
+# 4. ÀàĞÍ¼ì²é
 npx tsc --noEmit
 ```
 
 ---
 
-## 9. ç›¸å…³æ–‡æ¡£
+## 9. Ïà¹ØÎÄµµ
 
-- [V9 AGENTS.md](../../AGENTS.md) â€” åˆ†å±‚è§„åˆ™ä¸ä¾èµ–æ–¹å‘
-- [file-management-guide.md](../how-to/file-management-guide.md) â€” æ–‡ä»¶å…¥-ç§»-å‡ºå…¨ç”Ÿå‘½å‘¨æœŸ
-- [æ ¸å¿ƒæ•°æ®ç­–ç•¥æŠ¥å‘Š](../explanation/core-data-strategy-report.md) â€” æ•°æ®æ¶æ„ã€æ•°æ®åº“å®šä¹‰ã€ä¼ é€’åè®®ä¸è“å›¾æ ¡å¯¹
+- [V9 AGENTS.md](../../AGENTS.md) ¡ª ·Ö²ã¹æÔòÓëÒÀÀµ·½Ïò
+- [file-management-guide.md](../how-to/file-management-guide.md) ¡ª ÎÄ¼şÈë-ÒÆ-³öÈ«ÉúÃüÖÜÆÚ
+- [ºËĞÄÊı¾İ²ßÂÔ±¨¸æ](../explanation/core-data-strategy-report.md) ¡ª Êı¾İ¼Ü¹¹¡¢Êı¾İ¿â¶¨Òå¡¢´«µİĞ­ÒéÓëÀ¶Í¼Ğ£¶Ô

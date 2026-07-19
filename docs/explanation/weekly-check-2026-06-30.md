@@ -1,149 +1,158 @@
 ---
 title: weekly-check-2026-06-30
+type: explanation
+domain: project
+phase: planning
 tier: important
+status: active
+maintainer: V9 Architecture Team
+summary: "Ã¿ÖÜÊı¾İÀ¶Í¼Ò»ÖÂĞÔ¼ì²é£¨2026-06-30£©£º34/34 ÏîÍ¨¹ıµÄÖ´ĞĞ¼ÇÂ¼¡£"
+tags: [project, plan, explanation, governance, documentation, strategy]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+doc_id: V9-DOC-PROJ-069
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-tier: important
-code_version: 2.0.0
----
+# Ã¿ÖÜÊı¾İÀ¶Í¼Ò»ÖÂĞÔ¼ì²é ¡ª 2026-06-30
 
-# æ¯å‘¨æ•°æ®è“å›¾ä¸€è‡´æ€§æ£€æŸ¥ â€” 2026-06-30
-
-> æŒ‰ `../reports/retrospectives/v9-data-blueprint-task-tracking.md` ç¬¬ 8 ç« ã€Œæ¯å‘¨ç»´æŠ¤æ£€æŸ¥å•ã€æ‰§è¡Œã€‚
+> °´ `../reports/retrospectives/v9-data-blueprint-task-tracking.md` µÚ 8 ÕÂ¡¸Ã¿ÖÜÎ¬»¤¼ì²éµ¥¡¹Ö´ĞĞ¡£
 
 ---
 
-## 1. æ‰§è¡Œä¿¡æ¯
+## 1. Ö´ĞĞĞÅÏ¢
 
-| é¡¹ | å†…å®¹ |
+| Ïî | ÄÚÈİ |
 |----|------|
-| æ£€æŸ¥æ—¥æœŸ | 2026-06-30 |
-| æ‰§è¡Œäºº | V9 Architecture Team |
-| ç‰ˆæœ¬ | v1.2.0ï¼ˆæ¯å‘¨æ£€æŸ¥ï¼‰ |
-| èŒƒå›´ | Freshness è¿è¡Œæ—¶æ ¡éªŒè¡¥å…¨ï¼ˆè®¢å• / å¤ç›˜ / èµ„è®¯ï¼‰ + v15/v16 æ–°å¢ Store è“å›¾è¡¥å…¨ |
+| ¼ì²éÈÕÆÚ | 2026-06-30 |
+| Ö´ĞĞÈË | V9 Architecture Team |
+| °æ±¾ | v1.2.0£¨Ã¿ÖÜ¼ì²é£© |
+| ·¶Î§ | Freshness ÔËĞĞÊ±Ğ£Ñé²¹È«£¨¶©µ¥ / ¸´ÅÌ / ×ÊÑ¶£© + v15/v16 ĞÂÔö Store À¶Í¼²¹È« |
 
 ---
 
-## 2. ä¸€è‡´æ€§æ‰«æ
+## 2. Ò»ÖÂĞÔÉ¨Ãè
 
-### 2.1 è“å›¾æ ¡éªŒè„šæœ¬
+### 2.1 À¶Í¼Ğ£Ñé½Å±¾
 
 ```bash
 npm run validate:blueprint
 ```
 
-**ç»“æœ**ï¼šâœ… é€šè¿‡  
-- Stores: 24ï¼ˆv15/v16 æ–°å¢ 4 ä¸ªï¼šexecution_logs / missing_reports / executionPlans / portfoliosï¼‰  
+**½á¹û**£º? Í¨¹ı  
+- Stores: 24£¨v15/v16 ĞÂÔö 4 ¸ö£ºexecution_logs / missing_reports / executionPlans / portfolios£©  
 - Interfaces: 57
 
-### 2.2 ç›¸å…³å•å…ƒæµ‹è¯•
+### 2.2 Ïà¹Øµ¥Ôª²âÊÔ
 
 ```bash
 npx vitest run tests/sentimentAnalyzer.test.ts tests/newsService.test.ts src/services/trading/tradeReviewAI.test.ts src/blueprints/__tests__/dataRelationship.test.ts
 ```
 
-**ç»“æœ**ï¼šâœ… 34 / 34 é€šè¿‡  
-- `tests/sentimentAnalyzer.test.ts`ï¼š9 / 9 é€šè¿‡  
-- `tests/newsService.test.ts`ï¼š11 / 11 é€šè¿‡  
-- `src/services/trading/tradeReviewAI.test.ts`ï¼š8 / 8 é€šè¿‡  
-- `src/blueprints/`ï¼š6 / 6 é€šè¿‡
+**½á¹û**£º? 34 / 34 Í¨¹ı  
+- `tests/sentimentAnalyzer.test.ts`£º9 / 9 Í¨¹ı  
+- `tests/newsService.test.ts`£º11 / 11 Í¨¹ı  
+- `src/services/trading/tradeReviewAI.test.ts`£º8 / 8 Í¨¹ı  
+- `src/blueprints/`£º6 / 6 Í¨¹ı
 
-### 2.3 ä¿®æ”¹æ–‡ä»¶ ESLint
+### 2.3 ĞŞ¸ÄÎÄ¼ş ESLint
 
 ```bash
 npx eslint scripts/validate-data-blueprint.ts docs/blueprints/ src/data/types.ts --ext .ts,.md --max-warnings 0
 ```
 
-**ç»“æœ**ï¼šâœ… 0 errors / 0 warningsï¼ˆä¿®æ”¹èŒƒå›´å†…æ— æ–°å¢å‘Šè­¦ï¼‰
+**½á¹û**£º? 0 errors / 0 warnings£¨ĞŞ¸Ä·¶Î§ÄÚÎŞĞÂÔö¸æ¾¯£©
 
-### 2.4 ç±»å‹æ£€æŸ¥
+### 2.4 ÀàĞÍ¼ì²é
 
 ```bash
 npx tsc --noEmit
 ```
 
-**ç»“æœ**ï¼šæœ¬æ¬¡æ”¹åŠ¨æ–‡ä»¶æ— æ–°å¢ç±»å‹é”™è¯¯ï¼›å‰©ä½™æ—¢æœ‰æµ‹è¯•æ–‡ä»¶ / cockpit widget ç±»å‹é”™è¯¯ä¸æœ¬æ¬¡æ”¹åŠ¨æ— å…³ã€‚
+**½á¹û**£º±¾´Î¸Ä¶¯ÎÄ¼şÎŞĞÂÔöÀàĞÍ´íÎó£»Ê£Óà¼ÈÓĞ²âÊÔÎÄ¼ş / cockpit widget ÀàĞÍ´íÎóÓë±¾´Î¸Ä¶¯ÎŞ¹Ø¡£
 
 ---
 
-## 3. æºç å˜æ›´æ£€æŸ¥
+## 3. Ô´Âë±ä¸ü¼ì²é
 
-| æ–‡ä»¶ | å˜æ›´è¯´æ˜ |
+| ÎÄ¼ş | ±ä¸üËµÃ÷ |
 |------|---------|
-| `scripts/other/validate-data-blueprint.ts` | Store æ•°é‡é¢„æœŸä» 20 å‡çº§åˆ° 24ï¼ˆä¸ v15/v16 åŒæ­¥ï¼‰ |
-| `./v9-data-relationship-er.md` | è¡¥é½ 4 ä¸ªæ–° Store æ¸…å• / å®ä½“å…³ç³» / ER å›¾è¾¹ï¼›DB_VERSION 14â†’16ï¼›ç‰ˆæœ¬ v1.0.0â†’v1.1.0 |
-| `../reference/v9-data-timeline.md` | è¿½åŠ  P12-P15 å››ä¸ªç®¡çº¿é˜¶æ®µï¼›åˆ·æ–°é¢‘ç‡è¡¨è¡¥ 4 è¡Œï¼›Status/Version åŒæ­¥ |
-| `../reports/retrospectives/v9-data-blueprint-task-tracking.md` | å‡çº§ç‰ˆæœ¬åˆ° v1.2.0ï¼›æ–°å¢æ‰¹æ¬¡ Eï¼ˆv15/v16 è“å›¾è¡¥å…¨ï¼‰ï¼›æ‰§è¡Œçœ‹æ¿è¡¥ E-1/E-2/E-3 çŠ¶æ€ |
-| `docs/blueprints/v9-pipeline-sequence.mmd` | è¿½åŠ  P12-P15 æ—¶åºå›¾ï¼ˆDC â†’ EP â†’ PF â†’ ELï¼‰ |
-| `../reference/v9-æ•°æ®è¡€ç¼˜è¿½è¸ª.md` | DB_VERSION 14â†’16ï¼›Store æ•°é‡ 20â†’24ï¼›æ–‡æ¡£ç‰ˆæœ¬ v1.0â†’v1.1 |
-| `../reports/changelogs/CHANGELOG.md` | è¿½åŠ  v1.2.0 ç»´æŠ¤æ¡ç›®ï¼ˆå¾…è¡¥ï¼‰ |
+| `scripts/other/validate-data-blueprint.ts` | Store ÊıÁ¿Ô¤ÆÚ´Ó 20 Éı¼¶µ½ 24£¨Óë v15/v16 Í¬²½£© |
+| `./v9-data-relationship-er.md` | ²¹Æë 4 ¸öĞÂ Store Çåµ¥ / ÊµÌå¹ØÏµ / ER Í¼±ß£»DB_VERSION 14¡ú16£»°æ±¾ v1.0.0¡úv1.1.0 |
+| `../reference/v9-data-timeline.md` | ×·¼Ó P12-P15 ËÄ¸ö¹ÜÏß½×¶Î£»Ë¢ĞÂÆµÂÊ±í²¹ 4 ĞĞ£»Status/Version Í¬²½ |
+| `../reports/retrospectives/v9-data-blueprint-task-tracking.md` | Éı¼¶°æ±¾µ½ v1.2.0£»ĞÂÔöÅú´Î E£¨v15/v16 À¶Í¼²¹È«£©£»Ö´ĞĞ¿´°å²¹ E-1/E-2/E-3 ×´Ì¬ |
+| `docs/blueprints/v9-pipeline-sequence.mmd` | ×·¼Ó P12-P15 Ê±ĞòÍ¼£¨DC ¡ú EP ¡ú PF ¡ú EL£© |
+| `../reference/v9-Êı¾İÑªÔµ×·×Ù.md` | DB_VERSION 14¡ú16£»Store ÊıÁ¿ 20¡ú24£»ÎÄµµ°æ±¾ v1.0¡úv1.1 |
+| `../reports/changelogs/CHANGELOG.md` | ×·¼Ó v1.2.0 Î¬»¤ÌõÄ¿£¨´ı²¹£© |
 
 ---
 
-## 4. Freshness æ ¡éªŒçŠ¶æ€
+## 4. Freshness Ğ£Ñé×´Ì¬
 
-| # | è§„åˆ™ | æ—¶é—´çº¦æŸ | è¿è¡Œæ—¶æ ¡éªŒ |
+| # | ¹æÔò | Ê±¼äÔ¼Êø | ÔËĞĞÊ±Ğ£Ñé |
 |---|------|---------|-----------|
-| 1 | V6 è¯„åˆ†å¿…é¡»åŸºäºæœ€æ–°è¡Œæƒ… | `v6_scores.calculatedAt >= daily_quotes.updatedAt` | âœ… `v6ScoreService.runV6Score` |
-| 2 | ç­–ç•¥è¯„åˆ†å¿…é¡»åŸºäºæœ€æ–° V6 è¯„åˆ† | `hot_sector_scores.calculatedAt >= v6_scores.calculatedAt` | âœ… `hotSectorAnalyzer.analyzeBySymbol` |
-| 2 | ç­–ç•¥è¯„åˆ†å¿…é¡»åŸºäºæœ€æ–° V6 è¯„åˆ† | `value_pit_scores.calculatedAt >= v6_scores.calculatedAt` | âœ… `valuePitAnalyzer.analyzeBySymbol` |
-| 3 | äº¤æ˜“ä¿¡å·å¿…é¡»åŸºäºæœ€æ–°è¡Œæƒ… | `signals.createdAt >= daily_quotes.updatedAt` | âœ… `signalGenerator.generateSignalsForSymbol` |
-| 4 | è®¢å•ä»·æ ¼åº”æ¥è‡ªæœ€æ–° `stock.price` | `orders.createdAt >= stock.updatedAt` | âœ… `tradingService.createOrderWithRiskCheck` |
-| 5 | å¤ç›˜å¿…é¡»è¦†ç›–åˆ°æœ€æ–°è®¢å• | `tradeReviewReport.generatedAt >= max(orders.createdAt)` | âœ… `tradeReviewAI.generateReview` / `generateReviewAsync` |
-| 6 | èµ„è®¯æƒ…ç»ªç¼“å­˜åˆ†ææ—¶é—´å¿…é¡»æ™šäºæ–‡ç« å‘å¸ƒ | `sentiment_cache.analyzedAt >= news.publishTime` | âœ… `newsService.saveNewsArticle` |
+| 1 | V6 ÆÀ·Ö±ØĞë»ùÓÚ×îĞÂĞĞÇé | `v6_scores.calculatedAt >= daily_quotes.updatedAt` | ? `v6ScoreService.runV6Score` |
+| 2 | ²ßÂÔÆÀ·Ö±ØĞë»ùÓÚ×îĞÂ V6 ÆÀ·Ö | `hot_sector_scores.calculatedAt >= v6_scores.calculatedAt` | ? `hotSectorAnalyzer.analyzeBySymbol` |
+| 2 | ²ßÂÔÆÀ·Ö±ØĞë»ùÓÚ×îĞÂ V6 ÆÀ·Ö | `value_pit_scores.calculatedAt >= v6_scores.calculatedAt` | ? `valuePitAnalyzer.analyzeBySymbol` |
+| 3 | ½»Ò×ĞÅºÅ±ØĞë»ùÓÚ×îĞÂĞĞÇé | `signals.createdAt >= daily_quotes.updatedAt` | ? `signalGenerator.generateSignalsForSymbol` |
+| 4 | ¶©µ¥¼Û¸ñÓ¦À´×Ô×îĞÂ `stock.price` | `orders.createdAt >= stock.updatedAt` | ? `tradingService.createOrderWithRiskCheck` |
+| 5 | ¸´ÅÌ±ØĞë¸²¸Çµ½×îĞÂ¶©µ¥ | `tradeReviewReport.generatedAt >= max(orders.createdAt)` | ? `tradeReviewAI.generateReview` / `generateReviewAsync` |
+| 6 | ×ÊÑ¶ÇéĞ÷»º´æ·ÖÎöÊ±¼ä±ØĞëÍíÓÚÎÄÕÂ·¢²¼ | `sentiment_cache.analyzedAt >= news.publishTime` | ? `newsService.saveNewsArticle` |
 
-> **P12-P15 æ ¡éªŒçŠ¶æ€**ï¼š4 ä¸ªæ–° Store çš„ Freshness æ ¡éªŒå‡½æ•°ï¼ˆE-3ï¼‰å·²å…¨éƒ¨å®ç°å¹¶æ¥å…¥ Service å…¥å£ã€‚è¯¦ç»†è§„åˆ™è§ `v9-data-blueprint-task-tracking.md` æ‰¹æ¬¡ E-3 ç« èŠ‚ã€‚
-
----
-
-## 5. è´¨é‡é—¨ä¸é—®é¢˜
-
-- è“å›¾æ ¡éªŒã€ç›®æ ‡å•å…ƒæµ‹è¯•ã€ESLint å‡é€šè¿‡ã€‚
-- å…¨é‡ `npm test` å­˜åœ¨ 4 å¤„å¤±è´¥ï¼ˆ`hotSectorStore.test.ts`ï¼‰ï¼Œä¸æœ¬æ¬¡ Freshness/Store è¡¥å…¨æ— å…³ï¼Œå±é¢„å­˜é—®é¢˜ã€‚
+> **P12-P15 Ğ£Ñé×´Ì¬**£º4 ¸öĞÂ Store µÄ Freshness Ğ£Ñéº¯Êı£¨E-3£©ÒÑÈ«²¿ÊµÏÖ²¢½ÓÈë Service Èë¿Ú¡£ÏêÏ¸¹æÔò¼û `../reports/retrospectives/v9-data-blueprint-task-tracking.md` Åú´Î E-3 ÕÂ½Ú¡£
 
 ---
 
-## 6. ä¸‹å‘¨è¡ŒåŠ¨é¡¹
+## 5. ÖÊÁ¿ÃÅÓëÎÊÌâ
 
-- [x] **E-2**ï¼šè¡¥å…¨ 4 ä¸ªæ–° Store çš„å†™å…¥æ¨¡å—ï¼ˆexecutionPlanService/executionLogService/portfolioService/missingReportDetectorï¼‰ã€‚
-- [x] **E-3**ï¼šåœ¨ `dataFreshnessGuard.ts` ä¸­å¢åŠ  4 ä¸ªæ–° Store çš„ `check*` å‡½æ•°ï¼ŒService å…¥å£æ¥å…¥ã€‚
-- [ ] æŒç»­è§‚å¯Ÿå…¨é‡æµ‹è¯•ä¸­æ—¢æœ‰å¤±è´¥æ˜¯å¦å½±å“æ—¥å¸¸å¼€å‘ï¼›è‹¥å½±å“ï¼Œå•ç‹¬æ’æœŸä¿®å¤ã€‚
-- [x] æŒ‰ D-2 å†³ç­–æ˜¯å¦å¯ç”¨ TRAE Schedule è‡ªåŠ¨æ‰§è¡Œæ¯å‘¨æ£€æŸ¥ã€‚ï¼ˆå·²å¯ç”¨ï¼Œæ¯å‘¨ä¸€ 09:00 åŒ—äº¬æ—¶é—´ï¼ŒID: f6152f1dï¼‰
-- [ ] ä¸‹æ¬¡ç‰ˆæœ¬å˜æ›´æ—¶å†æ¬¡è¿è¡Œ `npm run validate:blueprint` ä¸ç›®æ ‡æµ‹è¯•ã€‚
+- À¶Í¼Ğ£Ñé¡¢Ä¿±êµ¥Ôª²âÊÔ¡¢ESLint ¾ùÍ¨¹ı¡£
+- È«Á¿ `npm test` ´æÔÚ 4 ´¦Ê§°Ü£¨`hotSectorStore.test.ts`£©£¬Óë±¾´Î Freshness/Store ²¹È«ÎŞ¹Ø£¬ÊôÔ¤´æÎÊÌâ¡£
 
 ---
 
-## 7. è¡¥å……è®°å½•ï¼šE-2/E-3 å®ç°å®Œæˆï¼ˆ2026-06-30ï¼‰
+## 6. ÏÂÖÜĞĞ¶¯Ïî
 
-### æ–°å¢æ–‡ä»¶
+- [x] **E-2**£º²¹È« 4 ¸öĞÂ Store µÄĞ´ÈëÄ£¿é£¨executionPlanService/executionLogService/portfolioService/missingReportDetector£©¡£
+- [x] **E-3**£ºÔÚ `dataFreshnessGuard.ts` ÖĞÔö¼Ó 4 ¸öĞÂ Store µÄ `check*` º¯Êı£¬Service Èë¿Ú½ÓÈë¡£
+- [ ] ³ÖĞø¹Û²ìÈ«Á¿²âÊÔÖĞ¼ÈÓĞÊ§°ÜÊÇ·ñÓ°ÏìÈÕ³£¿ª·¢£»ÈôÓ°Ïì£¬µ¥¶ÀÅÅÆÚĞŞ¸´¡£
+- [x] °´ D-2 ¾ö²ßÊÇ·ñÆôÓÃ TRAE Schedule ×Ô¶¯Ö´ĞĞÃ¿ÖÜ¼ì²é¡££¨ÒÑÆôÓÃ£¬Ã¿ÖÜÒ» 09:00 ±±¾©Ê±¼ä£¬ID: f6152f1d£©
+- [ ] ÏÂ´Î°æ±¾±ä¸üÊ±ÔÙ´ÎÔËĞĞ `npm run validate:blueprint` ÓëÄ¿±ê²âÊÔ¡£
 
-| æ–‡ä»¶ | è¯´æ˜ |
+---
+
+## 7. ²¹³ä¼ÇÂ¼£ºE-2/E-3 ÊµÏÖÍê³É£¨2026-06-30£©
+
+### ĞÂÔöÎÄ¼ş
+
+| ÎÄ¼ş | ËµÃ÷ |
 |------|------|
-| `src/constants/execution.constants.ts` | æ‰§è¡Œé“¾è·¯å¸¸é‡ï¼ˆé˜¶æ®µæšä¸¾/çŠ¶æ€æœº/é˜ˆå€¼/ç¼ºå¤±æŠ¥å‘Šé…ç½®ï¼‰ |
-| `src/services/execution/executionPlanService.ts` | æ‰§è¡Œè®¡åˆ’æœåŠ¡ï¼ˆcreatePlan/listPlans/updatePhase/cancelPlan/getOrphanPlansï¼‰ |
-| `src/services/execution/executionLogService.ts` | æ‰§è¡Œæ—¥å¿—æœåŠ¡ï¼ˆwriteLog/listByPlan/listBySymbol/listFailedï¼‰ |
-| `src/services/portfolio/portfolioService.ts` | æŠ•èµ„ç»„åˆæœåŠ¡ï¼ˆrebalance/addHolding/removeHolding/listByThemeï¼‰ |
-| `src/services/data-collector/missingReportDetector.ts` | ç¼ºå¤±æŠ¥å‘Šæ£€æµ‹å™¨ï¼ˆdetect/listBySymbol/listBySeverity/listUnresolved/incrementRetry/clearï¼‰ |
-| `src/services/execution/executionPlanService.test.ts` | æ‰§è¡Œè®¡åˆ’æœåŠ¡æµ‹è¯•ï¼ˆ12 ç”¨ä¾‹ï¼‰ |
-| `src/services/execution/executionLogService.test.ts` | æ‰§è¡Œæ—¥å¿—æœåŠ¡æµ‹è¯•ï¼ˆ7 ç”¨ä¾‹ï¼‰ |
-| `src/services/portfolio/portfolioService.test.ts` | æŠ•èµ„ç»„åˆæœåŠ¡æµ‹è¯•ï¼ˆ11 ç”¨ä¾‹ï¼‰ |
-| `src/services/data-collector/missingReportDetector.test.ts` | ç¼ºå¤±æŠ¥å‘Šæ£€æµ‹å™¨æµ‹è¯•ï¼ˆ17 ç”¨ä¾‹ï¼‰ |
+| `src/constants/execution.constants.ts` | Ö´ĞĞÁ´Â·³£Á¿£¨½×¶ÎÃ¶¾Ù/×´Ì¬»ú/ãĞÖµ/È±Ê§±¨¸æÅäÖÃ£© |
+| `src/services/execution/executionPlanService.ts` | Ö´ĞĞ¼Æ»®·şÎñ£¨createPlan/listPlans/updatePhase/cancelPlan/getOrphanPlans£© |
+| `src/services/execution/executionLogService.ts` | Ö´ĞĞÈÕÖ¾·şÎñ£¨writeLog/listByPlan/listBySymbol/listFailed£© |
+| `src/services/portfolio/portfolioService.ts` | Í¶×Ê×éºÏ·şÎñ£¨rebalance/addHolding/removeHolding/listByTheme£© |
+| `src/services/data-collector/missingReportDetector.ts` | È±Ê§±¨¸æ¼ì²âÆ÷£¨detect/listBySymbol/listBySeverity/listUnresolved/incrementRetry/clear£© |
+| `src/services/execution/executionPlanService.test.ts` | Ö´ĞĞ¼Æ»®·şÎñ²âÊÔ£¨12 ÓÃÀı£© |
+| `src/services/execution/executionLogService.test.ts` | Ö´ĞĞÈÕÖ¾·şÎñ²âÊÔ£¨7 ÓÃÀı£© |
+| `src/services/portfolio/portfolioService.test.ts` | Í¶×Ê×éºÏ·şÎñ²âÊÔ£¨11 ÓÃÀı£© |
+| `src/services/data-collector/missingReportDetector.test.ts` | È±Ê§±¨¸æ¼ì²âÆ÷²âÊÔ£¨17 ÓÃÀı£© |
 
-### ä¿®æ”¹æ–‡ä»¶
+### ĞŞ¸ÄÎÄ¼ş
 
-| æ–‡ä»¶ | å˜æ›´è¯´æ˜ |
+| ÎÄ¼ş | ±ä¸üËµÃ÷ |
 |------|---------|
-| `src/config/dbConfig.ts` | æ–°å¢ `execution`/`portfolio`/`dataCollector` ä¸‰ä¸ª MODULE_ID åŠ ACL æƒé™çŸ©é˜µ |
-| `src/services/analysis/dataFreshnessGuard.ts` | æ–°å¢ 4 ä¸ª check å‡½æ•°ï¼ˆcheckExecutionPlanFreshness/checkExecutionLogFreshness/checkPortfolioRebalanceFreshness/checkMissingReportFreshnessï¼‰ |
-| `src/services/analysis/__tests__/dataFreshnessGuard.test.ts` | æ–°å¢ 8 ä¸ª Freshness æµ‹è¯•ç”¨ä¾‹ |
+| `src/config/dbConfig.ts` | ĞÂÔö `execution`/`portfolio`/`dataCollector` Èı¸ö MODULE_ID ¼° ACL È¨ÏŞ¾ØÕó |
+| `src/services/analysis/dataFreshnessGuard.ts` | ĞÂÔö 4 ¸ö check º¯Êı£¨checkExecutionPlanFreshness/checkExecutionLogFreshness/checkPortfolioRebalanceFreshness/checkMissingReportFreshness£© |
+| `src/services/analysis/__tests__/dataFreshnessGuard.test.ts` | ĞÂÔö 8 ¸ö Freshness ²âÊÔÓÃÀı |
 
-### éªŒè¯ç»“æœ
+### ÑéÖ¤½á¹û
 
-| éªŒè¯é¡¹ | ç»“æœ |
+| ÑéÖ¤Ïî | ½á¹û |
 |--------|------|
-| `npm run validate:blueprint` | âœ… 24 Stores / 57 Interfaces |
-| `npx tsc --noEmit` | âœ… 0 æ–°å¢é”™è¯¯ï¼ˆ6 ä¸ªé¢„å…ˆå­˜åœ¨é”™è¯¯ä¸æœ¬æ¬¡æ— å…³ï¼‰ |
-| ESLintï¼ˆæ–°å¢æ–‡ä»¶ï¼‰ | âœ… 0 errors / 6 warningsï¼ˆno-magic-numbersï¼‰ |
-| å•å…ƒæµ‹è¯• | âœ… 67/67 é€šè¿‡ï¼ˆ5 ä¸ªæµ‹è¯•æ–‡ä»¶ï¼‰ |
+| `npm run validate:blueprint` | ? 24 Stores / 57 Interfaces |
+| `npx tsc --noEmit` | ? 0 ĞÂÔö´íÎó£¨6 ¸öÔ¤ÏÈ´æÔÚ´íÎóÓë±¾´ÎÎŞ¹Ø£© |
+| ESLint£¨ĞÂÔöÎÄ¼ş£© | ? 0 errors / 6 warnings£¨no-magic-numbers£© |
+| µ¥Ôª²âÊÔ | ? 67/67 Í¨¹ı£¨5 ¸ö²âÊÔÎÄ¼ş£© |

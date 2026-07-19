@@ -1,90 +1,100 @@
 ---
 title: deprecated-doc-sync-gap-list
+type: explanation
+domain: project
+phase: design
 tier: important
+status: deprecated
+maintainer: V9 Architecture Team
+summary: "Ê¹ÓÃËµÃ÷£ºÃ¿´ÎÉ¨ÃèºóÔÚ´ËÇåµ¥ÖĞ¼ÇÂ¼ĞÂÔö/ĞŞ¸ÄÎÄ¼şÓëÈ±Ê§ÎÄµµµÄ¶ÔÓ¦¹ØÏµ£¬°´ÓÅÏÈ¼¶ÖğÌõ±Õ»·¡£"
+tags: [project, plan, deprecated, architecture, documentation, explanation]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+doc_id: V9-DOC-PROJ-044
+change_log:
+  - version: v1.0.0
+deprecated_by: "Doc Sync Automation System"
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-tier: important
-code_version: 2.0.0
----
-
-# ä»£ç -æ–‡æ¡£åŒæ­¥å·®å¼‚æ¸…å•
+# ´úÂë-ÎÄµµÍ¬²½²îÒìÇåµ¥
 
 > **Status**: Current  
 > **Version**: v0.9.0-doc-sync-gap-001  
 > **Last Updated**: 2026-06-26  
-> ä½¿ç”¨è¯´æ˜ï¼šæ¯æ¬¡æ‰«æååœ¨æ­¤æ¸…å•ä¸­è®°å½•æ–°å¢/ä¿®æ”¹æ–‡ä»¶ä¸ç¼ºå¤±æ–‡æ¡£çš„å¯¹åº”å…³ç³»ï¼ŒæŒ‰ä¼˜å…ˆçº§é€æ¡é—­ç¯ã€‚
+> Ê¹ÓÃËµÃ÷£ºÃ¿´ÎÉ¨ÃèºóÔÚ´ËÇåµ¥ÖĞ¼ÇÂ¼ĞÂÔö/ĞŞ¸ÄÎÄ¼şÓëÈ±Ê§ÎÄµµµÄ¶ÔÓ¦¹ØÏµ£¬°´ÓÅÏÈ¼¶ÖğÌõ±Õ»·¡£
 
 ---
 
-## æ‰«æå…ƒä¿¡æ¯
+## É¨ÃèÔªĞÅÏ¢
 
-| é¡¹ç›® | å†…å®¹ |
+| ÏîÄ¿ | ÄÚÈİ |
 |------|------|
-| æ‰«ææ—¥æœŸ | 2026-06-26 |
-| æ‰«æèŒƒå›´ | `src/` æ–°å¢/ä¿®æ”¹æ–‡ä»¶ï¼›`docs/explanation/v9-issue-resolution-schedule.md` å¾…æ‰§è¡Œé¡¹ |
-| æ‰«æä¾æ® | `../../reports/retrospectives/doc-sync-execution-plan.md` |
-| æ‰«æè´£ä»»äºº | Doc-Sync Agent |
+| É¨ÃèÈÕÆÚ | 2026-06-26 |
+| É¨Ãè·¶Î§ | `src/` ĞÂÔö/ĞŞ¸ÄÎÄ¼ş£»`../deprecated-v9-issue-resolution-schedule.md` ´ıÖ´ĞĞÏî |
+| É¨ÃèÒÀ¾İ | `../../reports/retrospectives/doc-sync-execution-plan.md` |
+| É¨ÃèÔğÈÎÈË | Doc-Sync Agent |
 
 ---
 
-## å·®å¼‚é¡¹æ¸…å•
+## ²îÒìÏîÇåµ¥
 
-### å·²é—­ç¯ï¼ˆæœ¬æ¬¡æ‰«æå‰å·²å¤„ç†ï¼‰
+### ÒÑ±Õ»·£¨±¾´ÎÉ¨ÃèÇ°ÒÑ´¦Àí£©
 
-| æ¨¡å— | ä»£ç æ–‡ä»¶ | åŒæ­¥æ–‡æ¡£ | é—­ç¯æ—¥æœŸ | éªŒè¯ç»“æœ |
+| Ä£¿é | ´úÂëÎÄ¼ş | Í¬²½ÎÄµµ | ±Õ»·ÈÕÆÚ | ÑéÖ¤½á¹û |
 |------|----------|----------|----------|----------|
-| é‡‘èä¸šåŠ¡ Widget | `src/cockpit/widgets/*`ã€`src/services/stock-analysis/*`ã€`src/services/data-collector/*` | `../03-architecture-standards.md`ã€`data-definition.md` | 2026-06-26 | tsc/lint/test/build é€šè¿‡ |
-| AI ä¸­å¿ƒæ¿å— | `src/constants/ai-center.constants.ts`ã€`src/constants/health.constants.ts`ã€`src/types/modules/ai-center.types.ts`ã€`src/services/ai-center/*` | `../../reference/ai-center-data-definition.md`ã€`../ai-center-vue3-examples.md` | 2026-06-26 | tsc/lint é€šè¿‡ |
-| NewsPage PoC | `src/pages/news-v6/*`ã€`src/services/news/newsService.ts` | `../../reference/news-contract.md` | 2026-06-26 | tsc/lint é€šè¿‡ |
-| ä»£ç -æ–‡æ¡£åŒæ­¥æœºåˆ¶ | `../../reports/retrospectives/doc-sync-execution-plan.md` | `../../reference/08-implementation-plan.md`ã€`../../../CHANGELOG.md` | 2026-06-26 | tsc/lint é€šè¿‡ |
+| ½ğÈÚÒµÎñ Widget | `src/cockpit/widgets/*`¡¢`src/services/stock-analysis/*`¡¢`src/services/data-collector/*` | `../03-architecture-standards.md`¡¢`data-definition.md` | 2026-06-26 | tsc/lint/test/build Í¨¹ı |
+| AI ÖĞĞÄ°å¿é | `src/constants/ai-center.constants.ts`¡¢`src/constants/health.constants.ts`¡¢`src/types/modules/ai-center.types.ts`¡¢`src/services/ai-center/*` | `../../reference/ai-center-data-definition.md`¡¢`../ai-center-vue3-examples.md` | 2026-06-26 | tsc/lint Í¨¹ı |
+| NewsPage PoC | `src/pages/news-v6/*`¡¢`src/services/news/newsService.ts` | `../../reference/news-contract.md` | 2026-06-26 | tsc/lint Í¨¹ı |
+| ´úÂë-ÎÄµµÍ¬²½»úÖÆ | `../../reports/retrospectives/doc-sync-execution-plan.md` | `../../reference/08-implementation-plan.md`¡¢`../../../CHANGELOG.md` | 2026-06-26 | tsc/lint Í¨¹ı |
 
 ---
 
-### å¾…å¤„ç†
+### ´ı´¦Àí
 
-#### é«˜ä¼˜å…ˆçº§ï¼ˆP0/P1ï¼‰
+#### ¸ßÓÅÏÈ¼¶£¨P0/P1£©
 
-| ID | æ¨¡å— | æ¶‰åŠæ–‡ä»¶ | ç¼ºå¤±æ–‡æ¡£ç±»å‹ | é—®é¢˜æè¿° | ä¼˜å…ˆçº§ | å»ºè®®è´£ä»»äºº | çŠ¶æ€ |
+| ID | Ä£¿é | Éæ¼°ÎÄ¼ş | È±Ê§ÎÄµµÀàĞÍ | ÎÊÌâÃèÊö | ÓÅÏÈ¼¶ | ½¨ÒéÔğÈÎÈË | ×´Ì¬ |
 |----|------|----------|--------------|----------|--------|------------|------|
-| ~~GAP-001~~ | ~~V9 é—®é¢˜æ•´æ”¹é—­ç¯~~ | ~~`src/vite-env.d.ts`ã€`.env.example`~~ | ~~æ•°æ®å­—å…¸/ç±»å‹å£°æ˜~~ | ~~DOC-001ï¼šå·²ç¡®è®¤ `VITE_AKSHARE_BASE_URL` åœ¨ `src/vite-env.d.ts` ä¸­å­˜åœ¨å£°æ˜~~ | ~~P1~~ | ~~Doc-Sync-Fix~~ | ~~å·²é—­ç¯ 2026-06-26~~ |
-| ~~GAP-002~~ | ~~æ•°æ®æµå¼•æ“~~ | ~~`src/core/dataflow/*`~~ | ~~æ¶æ„è¯´æ˜/æ•°æ®å­—å…¸~~ | ~~å·²æ–°å¢ `../../reference/dataflow-data-definition.md`ï¼›`../../reference/05-engine-specs.md` å·²å¼•ç”¨è¯¥å­—å…¸å¹¶ä¿æŒâ€œéƒ¨åˆ†å®ç°â€çŠ¶æ€~~ | ~~P1~~ | ~~Architecture-Fix~~ | ~~å·²é—­ç¯ 2026-06-26~~ |
-| GAP-003 | æ•°æ®èåˆå¼•æ“ | `src/services/unifiedStockService.ts` | æ¶æ„è¯´æ˜/æ•°æ®å­—å…¸ | 2.1.9 æ•°æ®èåˆå¼•æ“æœªå®ç°æˆ–ç¼ºå°‘æ–‡æ¡£åŒ–è¯´æ˜ | P1 | Architecture-Fix | å¾…æ‰§è¡Œ |
-| ~~GAP-004~~ | ~~è·¯ç”±è§„æ ¼åŒæ­¥~~ | ~~`src/config/routes.ts`~~ | ~~è·¯ç”±è§„æ ¼~~ | ~~DOC-007ï¼šå·²æ›´æ–° `../../reference/06-routing-specs.md` ç¬¬ 8 èŠ‚ï¼Œè¡¥å…¨ `/analysis/news-v6`ã€`/trading/holdings`ã€`/mock-test` ç­‰è·¯ç”±~~ | ~~P1~~ | ~~Doc-Sync-Fix~~ | ~~å·²é—­ç¯ 2026-06-26~~ |
-| ~~GAP-005~~ | ~~è´¨é‡é—¨ç¦åŸºçº¿~~ | ~~`../../reference/09-quality-gates.md`~~ | ~~è´¨é‡é—¨ç¦~~ | ~~DOC-006ï¼šå·²æ›´æ–° E2E çŠ¶æ€ã€ç¡¬ç¼–ç åŸºçº¿ï¼ˆ749ï¼‰ã€æ­»ä»£ç åŸºçº¿ï¼ˆ0/0/16ï¼‰ï¼›è·¨å±‚è°ƒç”¨åŸºçº¿ä¿®æ­£ä¸º 0/0~~ | ~~P1~~ | ~~Doc-Sync-Fix~~ | ~~å·²é—­ç¯ 2026-06-26~~ |
-| GAP-006 | æ–‡æ¡£ç‰ˆæœ¬å·ç»Ÿä¸€ | `docs/01~10`ã€`docs/implementation/*` | frontmatter | DOC-005ï¼šæ ¸å¿ƒ/å®æ–½æ–‡æ¡£ `Version` frontmatter æœªå…¨éƒ¨ç»Ÿä¸€ä¸º `v0.9.0-doc-sync-plan`ï¼›éœ€æ‰¹é‡æ‰«ææ›´æ–° | P1 | Doc-Sync-Fix | éƒ¨åˆ†é—­ç¯ |
-| GAP-007 | è¯„åˆ†æŠ¥å‘Šç”Ÿæˆ | `src/services/analysis/*`ï¼ˆå¾…å®ç°ï¼‰ | æ¶æ„è¯´æ˜/æ•°æ®å­—å…¸ | 2.2.1 è¯„åˆ†æŠ¥å‘Šç”Ÿæˆå°šæœªè½åœ°ï¼Œæ–‡æ¡£ä¸å®é™…ä»£ç å­˜åœ¨åå·® | P1 | TBD | å¾…è§„åˆ’ |
-| GAP-008 | æ¿å—è½®åŠ¨è¯„åˆ†å¼•æ“æ¥å…¥ | `src/services/analysis/rotationScoreService.ts` | æ¶æ„è¯´æ˜ | 2.4.1 å¼•æ“ä»£ç å·²å­˜åœ¨ï¼Œä½† `SectorAnalysisPage` æ¥å…¥çŠ¶æ€ä¸æ–‡æ¡£éœ€åŒæ­¥ | P1 | TBD | å¾…æ‰§è¡Œ |
+| ~~GAP-001~~ | ~~V9 ÎÊÌâÕû¸Ä±Õ»·~~ | ~~`src/vite-env.d.ts`¡¢`.env.example`~~ | ~~Êı¾İ×Öµä/ÀàĞÍÉùÃ÷~~ | ~~DOC-001£ºÒÑÈ·ÈÏ `VITE_AKSHARE_BASE_URL` ÔÚ `src/vite-env.d.ts` ÖĞ´æÔÚÉùÃ÷~~ | ~~P1~~ | ~~Doc-Sync-Fix~~ | ~~ÒÑ±Õ»· 2026-06-26~~ |
+| ~~GAP-002~~ | ~~Êı¾İÁ÷ÒıÇæ~~ | ~~`src/core/dataflow/*`~~ | ~~¼Ü¹¹ËµÃ÷/Êı¾İ×Öµä~~ | ~~ÒÑĞÂÔö `../../reference/dataflow-data-definition.md`£»`../../reference/05-engine-specs.md` ÒÑÒıÓÃ¸Ã×Öµä²¢±£³Ö¡°²¿·ÖÊµÏÖ¡±×´Ì¬~~ | ~~P1~~ | ~~Architecture-Fix~~ | ~~ÒÑ±Õ»· 2026-06-26~~ |
+| GAP-003 | Êı¾İÈÚºÏÒıÇæ | `src/services/unifiedStockService.ts` | ¼Ü¹¹ËµÃ÷/Êı¾İ×Öµä | 2.1.9 Êı¾İÈÚºÏÒıÇæÎ´ÊµÏÖ»òÈ±ÉÙÎÄµµ»¯ËµÃ÷ | P1 | Architecture-Fix | ´ıÖ´ĞĞ |
+| ~~GAP-004~~ | ~~Â·ÓÉ¹æ¸ñÍ¬²½~~ | ~~`src/config/routes.ts`~~ | ~~Â·ÓÉ¹æ¸ñ~~ | ~~DOC-007£ºÒÑ¸üĞÂ `../../reference/06-routing-specs.md` µÚ 8 ½Ú£¬²¹È« `/analysis/news-v6`¡¢`/trading/holdings`¡¢`/mock-test` µÈÂ·ÓÉ~~ | ~~P1~~ | ~~Doc-Sync-Fix~~ | ~~ÒÑ±Õ»· 2026-06-26~~ |
+| ~~GAP-005~~ | ~~ÖÊÁ¿ÃÅ½û»ùÏß~~ | ~~`../../reference/09-quality-gates.md`~~ | ~~ÖÊÁ¿ÃÅ½û~~ | ~~DOC-006£ºÒÑ¸üĞÂ E2E ×´Ì¬¡¢Ó²±àÂë»ùÏß£¨749£©¡¢ËÀ´úÂë»ùÏß£¨0/0/16£©£»¿ç²ãµ÷ÓÃ»ùÏßĞŞÕıÎª 0/0~~ | ~~P1~~ | ~~Doc-Sync-Fix~~ | ~~ÒÑ±Õ»· 2026-06-26~~ |
+| GAP-006 | ÎÄµµ°æ±¾ºÅÍ³Ò» | `docs/01~10`¡¢`docs/implementation/*` | frontmatter | DOC-005£ººËĞÄ/ÊµÊ©ÎÄµµ `Version` frontmatter Î´È«²¿Í³Ò»Îª `v0.9.0-doc-sync-plan`£»ĞèÅúÁ¿É¨Ãè¸üĞÂ | P1 | Doc-Sync-Fix | ²¿·Ö±Õ»· |
+| GAP-007 | ÆÀ·Ö±¨¸æÉú³É | `src/services/analysis/*`£¨´ıÊµÏÖ£© | ¼Ü¹¹ËµÃ÷/Êı¾İ×Öµä | 2.2.1 ÆÀ·Ö±¨¸æÉú³ÉÉĞÎ´ÂäµØ£¬ÎÄµµÓëÊµ¼Ê´úÂë´æÔÚÆ«²î | P1 | TBD | ´ı¹æ»® |
+| GAP-008 | °å¿éÂÖ¶¯ÆÀ·ÖÒıÇæ½ÓÈë | `src/services/analysis/rotationScoreService.ts` | ¼Ü¹¹ËµÃ÷ | 2.4.1 ÒıÇæ´úÂëÒÑ´æÔÚ£¬µ« `SectorAnalysisPage` ½ÓÈë×´Ì¬ÓëÎÄµµĞèÍ¬²½ | P1 | TBD | ´ıÖ´ĞĞ |
 
-#### ä¸­ä¼˜å…ˆçº§ï¼ˆP2ï¼‰
+#### ÖĞÓÅÏÈ¼¶£¨P2£©
 
-| ID | æ¨¡å— | æ¶‰åŠæ–‡ä»¶ | ç¼ºå¤±æ–‡æ¡£ç±»å‹ | é—®é¢˜æè¿° | ä¼˜å…ˆçº§ | å»ºè®®è´£ä»»äºº | çŠ¶æ€ |
+| ID | Ä£¿é | Éæ¼°ÎÄ¼ş | È±Ê§ÎÄµµÀàĞÍ | ÎÊÌâÃèÊö | ÓÅÏÈ¼¶ | ½¨ÒéÔğÈÎÈË | ×´Ì¬ |
 |----|------|----------|--------------|----------|--------|------------|------|
-| GAP-009 | æ•°æ®å­—å…¸ç´¢å¼• | `docs/*DATA_DEFINITION*.md` | ç´¢å¼•é¡µ | ç¼ºå°‘ `../../reference/data-dictionary-index.md` æ±‡æ€»æ‰€æœ‰æ¨¡å—æ•°æ®å­—å…¸å…¥å£ | P2 | Doc-Sync Agent | å¾…æ‰§è¡Œ |
-| ~~GAP-010~~ | ~~è‡ªåŠ¨åŒ–æ‰«æè„šæœ¬~~ | ~~`scripts/audit-doc-sync.ts`~~ | ~~å·¥å…·è„šæœ¬~~ | ~~å·²å®ç° `scripts/audit-doc-sync.ts`ï¼Œæ”¯æŒ git diff ä¸å…¨é‡ src æ‰«æï¼›`npm run audit:docs` é€šè¿‡ï¼Œ0 ä¸ªæœªå¼•ç”¨æ–‡ä»¶~~ | ~~P2~~ | ~~Doc-Sync Agent~~ | ~~å·²é—­ç¯ 2026-06-26~~ |
-| GAP-011 | Agent è¿è¡Œæ—¶æ¡†æ¶ | `src/agents/*` | æ¶æ„è¯´æ˜ | 2.17 Agent è¿è¡Œæ—¶æ¡†æ¶ä»£ç å·²å­˜åœ¨ï¼Œä½†æ¶æ„è¯´æ˜ä¸ç›‘æ§æ–‡æ¡£å¾…è¡¥é½ | P2 | Architecture-Fix | å¾…æ‰§è¡Œ |
-| GAP-012 | æ“ä½œåé¦ˆé—­ç¯ | `src/components/ui/`ã€å„ App | UI/UX è§„æ ¼ | 2.20 æ“ä½œåé¦ˆé—­ç¯å¢å¼ºå°šæœªè½åœ°ï¼Œæ–‡æ¡£ä¸å®é™…å­˜åœ¨åå·® | P2 | Interaction-Fix | å¾…è§„åˆ’ |
+| GAP-009 | Êı¾İ×ÖµäË÷Òı | `docs/*DATA_DEFINITION*.md` | Ë÷ÒıÒ³ | È±ÉÙ `../../reference/data-dictionary-index.md` »ã×ÜËùÓĞÄ£¿éÊı¾İ×ÖµäÈë¿Ú | P2 | Doc-Sync Agent | ´ıÖ´ĞĞ |
+| ~~GAP-010~~ | ~~×Ô¶¯»¯É¨Ãè½Å±¾~~ | ~~`scripts/audit-doc-sync.ts`~~ | ~~¹¤¾ß½Å±¾~~ | ~~ÒÑÊµÏÖ `scripts/audit-doc-sync.ts`£¬Ö§³Ö git diff ÓëÈ«Á¿ src É¨Ãè£»`npm run audit:docs` Í¨¹ı£¬0 ¸öÎ´ÒıÓÃÎÄ¼ş~~ | ~~P2~~ | ~~Doc-Sync Agent~~ | ~~ÒÑ±Õ»· 2026-06-26~~ |
+| GAP-011 | Agent ÔËĞĞÊ±¿ò¼Ü | `src/agents/*` | ¼Ü¹¹ËµÃ÷ | 2.17 Agent ÔËĞĞÊ±¿ò¼Ü´úÂëÒÑ´æÔÚ£¬µ«¼Ü¹¹ËµÃ÷Óë¼à¿ØÎÄµµ´ı²¹Æë | P2 | Architecture-Fix | ´ıÖ´ĞĞ |
+| GAP-012 | ²Ù×÷·´À¡±Õ»· | `src/components/ui/`¡¢¸÷ App | UI/UX ¹æ¸ñ | 2.20 ²Ù×÷·´À¡±Õ»·ÔöÇ¿ÉĞÎ´ÂäµØ£¬ÎÄµµÓëÊµ¼Ê´æÔÚÆ«²î | P2 | Interaction-Fix | ´ı¹æ»® |
 
 ---
 
-## é—­ç¯æ£€æŸ¥æ¸…å•
+## ±Õ»·¼ì²éÇåµ¥
 
-æ¯å¤„ç†å®Œä¸€æ¡å·®å¼‚é¡¹ï¼Œè¯·å‹¾é€‰å¹¶è¡¥å……ä¿¡æ¯ï¼š
+Ã¿´¦ÀíÍêÒ»Ìõ²îÒìÏî£¬Çë¹´Ñ¡²¢²¹³äĞÅÏ¢£º
 
-- [ ] ä»£ç å˜æ›´å·²æäº¤
-- [ ] å¯¹åº”æ–‡æ¡£å·²æ›´æ–°
-- [ ] `../../../CHANGELOG.md` å·²è¿½åŠ æ¡ç›®
-- [ ] `npm run tsc` é€šè¿‡
-- [ ] `npm run lint` é€šè¿‡
-- [ ] ç›¸å…³æµ‹è¯•é€šè¿‡
-- [ ] `npm run build` é€šè¿‡
-- [ ] æœ¬æ¸…å•çŠ¶æ€å·²æ›´æ–°ä¸ºâ€œå·²é—­ç¯â€
+- [ ] ´úÂë±ä¸üÒÑÌá½»
+- [ ] ¶ÔÓ¦ÎÄµµÒÑ¸üĞÂ
+- [ ] `../../../CHANGELOG.md` ÒÑ×·¼ÓÌõÄ¿
+- [ ] `npm run tsc` Í¨¹ı
+- [ ] `npm run lint` Í¨¹ı
+- [ ] Ïà¹Ø²âÊÔÍ¨¹ı
+- [ ] `npm run build` Í¨¹ı
+- [ ] ±¾Çåµ¥×´Ì¬ÒÑ¸üĞÂÎª¡°ÒÑ±Õ»·¡±
 
 ---
 
-## å†å²è®°å½•
+## ÀúÊ·¼ÇÂ¼
 
-| ç‰ˆæœ¬ | æ—¥æœŸ | å˜æ›´å†…å®¹ |
+| °æ±¾ | ÈÕÆÚ | ±ä¸üÄÚÈİ |
 |------|------|----------|
-| v0.9.0-doc-sync-gap-001 | 2026-06-26 | é¦–æ¬¡æ‰«æï¼Œè®°å½•å·²é—­ç¯ 4 é¡¹ã€å¾…å¤„ç† 12 é¡¹ |
+| v0.9.0-doc-sync-gap-001 | 2026-06-26 | Ê×´ÎÉ¨Ãè£¬¼ÇÂ¼ÒÑ±Õ»· 4 Ïî¡¢´ı´¦Àí 12 Ïî |

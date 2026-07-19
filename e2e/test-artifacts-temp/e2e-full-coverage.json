@@ -1,0 +1,2780 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Users\\DELL\\.workbuddy\\binaries\\node\\versions\\22.22.2\\node.exe",
+      "G:\\FinSightV9\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config=playwright.config.ts",
+      "--project=chromium",
+      "functional/"
+    ],
+    "configFile": "G:\\FinSightV9\\e2e\\full-coverage\\playwright.config.ts",
+    "rootDir": "G:/FinSightV9/e2e/full-coverage",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 4
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "G:/FinSightV9/e2e/test-artifacts-temp/results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 4
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "G:/FinSightV9/e2e/full-coverage",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "G:/FinSightV9/e2e/test-artifacts-temp/results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 4
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "G:/FinSightV9/e2e/full-coverage",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "G:/FinSightV9/e2e/test-artifacts-temp/results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 4
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "G:/FinSightV9/e2e/full-coverage",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "../test-artifacts-temp/report",
+          "open": "never"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "../test-artifacts-temp/e2e-full-coverage.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.61.1",
+    "workers": 4,
+    "webServer": {
+      "command": "npx vite --port 3005",
+      "url": "http://localhost:3005",
+      "reuseExistingServer": true,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "functional\\buttons.spec.ts",
+      "file": "functional/buttons.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "按钮交互测试",
+          "file": "functional/buttons.spec.ts",
+          "line": 9,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "首页\"打开驾驶舱\"按钮",
+              "file": "functional/buttons.spec.ts",
+              "line": 14,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "首页\"打开驾驶舱\"按钮应存在且可见",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 14531,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '打开驾驶舱' })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '打开驾驶舱' })\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '打开驾驶舱' })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '打开驾驶舱' })\u001b[22m\n\n    at G:\\FinSightV9\\e2e\\full-coverage\\functional\\buttons.spec.ts:21:65",
+                            "location": {
+                              "file": "G:\\FinSightV9\\e2e\\full-coverage\\functional\\buttons.spec.ts",
+                              "column": 65,
+                              "line": 21
+                            },
+                            "snippet": "\u001b[0m \u001b[90m 19 |\u001b[39m\n \u001b[90m 20 |\u001b[39m     test(\u001b[32m'首页\"打开驾驶舱\"按钮应存在且可见'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 21 |\u001b[39m       \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'打开驾驶舱'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m    |\u001b[39m                                                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 22 |\u001b[39m     })\n \u001b[90m 23 |\u001b[39m\n \u001b[90m 24 |\u001b[39m     test(\u001b[32m'点击\"打开驾驶舱\"按钮应跳转到驾驶舱'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "G:\\FinSightV9\\e2e\\full-coverage\\functional\\buttons.spec.ts",
+                                "column": 65,
+                                "line": 21
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '打开驾驶舱' })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '打开驾驶舱' })\u001b[22m\n\n\n  19 |\n  20 |     test('首页\"打开驾驶舱\"按钮应存在且可见', async ({ page }) => {\n> 21 |       await expect(page.getByRole('button', { name: '打开驾驶舱' })).toBeVisible({ timeout: 10000 })\n     |                                                                 ^\n  22 |     })\n  23 |\n  24 |     test('点击\"打开驾驶舱\"按钮应跳转到驾驶舱', async ({ page }) => {\n    at G:\\FinSightV9\\e2e\\full-coverage\\functional\\buttons.spec.ts:21:65"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:09:42.481Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-buttons-按钮交互测试-首页-打开驾驶舱-按钮-首页-打开驾驶舱-按钮应存在且可见-chromium\\test-failed-1.png"
+                            },
+                            {
+                              "name": "video",
+                              "contentType": "video/webm",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-buttons-按钮交互测试-首页-打开驾驶舱-按钮-首页-打开驾驶舱-按钮应存在且可见-chromium\\video.webm"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-buttons-按钮交互测试-首页-打开驾驶舱-按钮-首页-打开驾驶舱-按钮应存在且可见-chromium\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "G:\\FinSightV9\\e2e\\full-coverage\\functional\\buttons.spec.ts",
+                            "column": 65,
+                            "line": 21
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "756d958746613f007c22-1859b7dfc93d5ecc950e",
+                  "file": "functional/buttons.spec.ts",
+                  "line": 20,
+                  "column": 5
+                },
+                {
+                  "title": "点击\"打开驾驶舱\"按钮应跳转到驾驶舱",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 1,
+                          "parallelIndex": 1,
+                          "status": "timedOut",
+                          "duration": 32564,
+                          "error": {
+                            "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                            "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                          },
+                          "errors": [
+                            {
+                              "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                            },
+                            {
+                              "location": {
+                                "file": "G:\\FinSightV9\\e2e\\full-coverage\\functional\\buttons.spec.ts",
+                                "column": 57,
+                                "line": 25
+                              },
+                              "message": "Error: locator.click: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '打开驾驶舱' })\u001b[22m\n\n\n  23 |\n  24 |     test('点击\"打开驾驶舱\"按钮应跳转到驾驶舱', async ({ page }) => {\n> 25 |       await page.getByRole('button', { name: '打开驾驶舱' }).click()\n     |                                                         ^\n  26 |       await page.waitForLoadState('networkidle')\n  27 |       await page.waitForTimeout(1000)\n  28 |       // 验证 URL 跳转到 cockpit\n    at G:\\FinSightV9\\e2e\\full-coverage\\functional\\buttons.spec.ts:25:57"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:09:42.465Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-buttons-按钮交互测试-首页-打开驾驶舱-按钮-点击-打开驾驶舱-按钮应跳转到驾驶舱-chromium\\test-failed-1.png"
+                            },
+                            {
+                              "name": "video",
+                              "contentType": "video/webm",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-buttons-按钮交互测试-首页-打开驾驶舱-按钮-点击-打开驾驶舱-按钮应跳转到驾驶舱-chromium\\video.webm"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-buttons-按钮交互测试-首页-打开驾驶舱-按钮-点击-打开驾驶舱-按钮应跳转到驾驶舱-chromium\\error-context.md"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "756d958746613f007c22-be9651e540919453e21e",
+                  "file": "functional/buttons.spec.ts",
+                  "line": 24,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "首页\"进入输入舱\"按钮",
+              "file": "functional/buttons.spec.ts",
+              "line": 37,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "首页\"进入输入舱\"按钮应存在",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 2,
+                          "status": "failed",
+                          "duration": 14522,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '进入输入舱' })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '进入输入舱' })\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '进入输入舱' })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '进入输入舱' })\u001b[22m\n\n    at G:\\FinSightV9\\e2e\\full-coverage\\functional\\buttons.spec.ts:44:65",
+                            "location": {
+                              "file": "G:\\FinSightV9\\e2e\\full-coverage\\functional\\buttons.spec.ts",
+                              "column": 65,
+                              "line": 44
+                            },
+                            "snippet": "\u001b[0m \u001b[90m 42 |\u001b[39m\n \u001b[90m 43 |\u001b[39m     test(\u001b[32m'首页\"进入输入舱\"按钮应存在'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 44 |\u001b[39m       \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'进入输入舱'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m    |\u001b[39m                                                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 45 |\u001b[39m     })\n \u001b[90m 46 |\u001b[39m\n \u001b[90m 47 |\u001b[39m     test(\u001b[32m'点击\"进入输入舱\"按钮应跳转到输入舱'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "G:\\FinSightV9\\e2e\\full-coverage\\functional\\buttons.spec.ts",
+                                "column": 65,
+                                "line": 44
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '进入输入舱' })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '进入输入舱' })\u001b[22m\n\n\n  42 |\n  43 |     test('首页\"进入输入舱\"按钮应存在', async ({ page }) => {\n> 44 |       await expect(page.getByRole('button', { name: '进入输入舱' })).toBeVisible({ timeout: 10000 })\n     |                                                                 ^\n  45 |     })\n  46 |\n  47 |     test('点击\"进入输入舱\"按钮应跳转到输入舱', async ({ page }) => {\n    at G:\\FinSightV9\\e2e\\full-coverage\\functional\\buttons.spec.ts:44:65"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:09:42.464Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-buttons-按钮交互测试-首页-进入输入舱-按钮-首页-进入输入舱-按钮应存在-chromium\\test-failed-1.png"
+                            },
+                            {
+                              "name": "video",
+                              "contentType": "video/webm",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-buttons-按钮交互测试-首页-进入输入舱-按钮-首页-进入输入舱-按钮应存在-chromium\\video.webm"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-buttons-按钮交互测试-首页-进入输入舱-按钮-首页-进入输入舱-按钮应存在-chromium\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "G:\\FinSightV9\\e2e\\full-coverage\\functional\\buttons.spec.ts",
+                            "column": 65,
+                            "line": 44
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "756d958746613f007c22-b1aa1a34310dc37e5c55",
+                  "file": "functional/buttons.spec.ts",
+                  "line": 43,
+                  "column": 5
+                },
+                {
+                  "title": "点击\"进入输入舱\"按钮应跳转到输入舱",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 3,
+                          "parallelIndex": 3,
+                          "status": "timedOut",
+                          "duration": 32550,
+                          "error": {
+                            "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                            "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                          },
+                          "errors": [
+                            {
+                              "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                            },
+                            {
+                              "location": {
+                                "file": "G:\\FinSightV9\\e2e\\full-coverage\\functional\\buttons.spec.ts",
+                                "column": 57,
+                                "line": 48
+                              },
+                              "message": "Error: locator.click: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '进入输入舱' })\u001b[22m\n\n\n  46 |\n  47 |     test('点击\"进入输入舱\"按钮应跳转到输入舱', async ({ page }) => {\n> 48 |       await page.getByRole('button', { name: '进入输入舱' }).click()\n     |                                                         ^\n  49 |       await page.waitForLoadState('networkidle')\n  50 |       await page.waitForTimeout(1000)\n  51 |       expect(page.url()).toContain('/input')\n    at G:\\FinSightV9\\e2e\\full-coverage\\functional\\buttons.spec.ts:48:57"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:09:42.464Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-buttons-按钮交互测试-首页-进入输入舱-按钮-点击-进入输入舱-按钮应跳转到输入舱-chromium\\test-failed-1.png"
+                            },
+                            {
+                              "name": "video",
+                              "contentType": "video/webm",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-buttons-按钮交互测试-首页-进入输入舱-按钮-点击-进入输入舱-按钮应跳转到输入舱-chromium\\video.webm"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-buttons-按钮交互测试-首页-进入输入舱-按钮-点击-进入输入舱-按钮应跳转到输入舱-chromium\\error-context.md"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "756d958746613f007c22-b8ddb81174a6fa563479",
+                  "file": "functional/buttons.spec.ts",
+                  "line": 47,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "\"重置为默认\"按钮",
+              "file": "functional/buttons.spec.ts",
+              "line": 59,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "\"重置为默认\"按钮应存在且可见",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 4,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 2204,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:09:58.757Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "756d958746613f007c22-57866db87e9e9c6ea6ad",
+                  "file": "functional/buttons.spec.ts",
+                  "line": 65,
+                  "column": 5
+                },
+                {
+                  "title": "点击\"重置为默认\"按钮后配置应恢复默认状态",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 5,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 2389,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:09:58.854Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "756d958746613f007c22-3b3f091fb75949e15654",
+                  "file": "functional/buttons.spec.ts",
+                  "line": 69,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "\"保存配置\"按钮 disabled/enabled 状态",
+              "file": "functional/buttons.spec.ts",
+              "line": 84,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "\"开始采集\"按钮应可点击（配置已就绪）",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 4,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 2180,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:01.199Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "756d958746613f007c22-3fb4cc9240e59ab5574b",
+                  "file": "functional/buttons.spec.ts",
+                  "line": 90,
+                  "column": 5
+                },
+                {
+                  "title": "\"开始采集\"按钮点击后应有响应",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 5,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 4020,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:01.423Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "756d958746613f007c22-846c1e0592af36245d2b",
+                  "file": "functional/buttons.spec.ts",
+                  "line": 97,
+                  "column": 5
+                },
+                {
+                  "title": "重置后\"开始采集\"按钮仍应可用",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 4,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 2201,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:03.389Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "756d958746613f007c22-1cf30455fd034589067b",
+                  "file": "functional/buttons.spec.ts",
+                  "line": 105,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "主题切换按钮",
+              "file": "functional/buttons.spec.ts",
+              "line": 115,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "主题切换控件应存在",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 5,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 3214,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:05.452Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "756d958746613f007c22-4a5572748c68303bbae8",
+                  "file": "functional/buttons.spec.ts",
+                  "line": 121,
+                  "column": 5
+                },
+                {
+                  "title": "页面在默认主题下应正常渲染",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 4,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 3204,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:05.598Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "756d958746613f007c22-43f04967756e59fde9a8",
+                  "file": "functional/buttons.spec.ts",
+                  "line": 129,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "采集完成后\"继续导入\"和\"前往采集配置\"按钮",
+              "file": "functional/buttons.spec.ts",
+              "line": 141,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "采集任务监控页应显示任务列表和操作按钮",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 5,
+                          "parallelIndex": 2,
+                          "status": "failed",
+                          "duration": 12214,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '刷新' })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '刷新' })\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '刷新' })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '刷新' })\u001b[22m\n\n    at G:\\FinSightV9\\e2e\\full-coverage\\functional\\buttons.spec.ts:146:62",
+                            "location": {
+                              "file": "G:\\FinSightV9\\e2e\\full-coverage\\functional\\buttons.spec.ts",
+                              "column": 62,
+                              "line": 146
+                            },
+                            "snippet": "\u001b[0m \u001b[90m 144 |\u001b[39m       \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'heading'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'采集任务监控'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m10000\u001b[39m })\n \u001b[90m 145 |\u001b[39m       \u001b[90m// 应该存在操作按钮\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 146 |\u001b[39m       \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'button'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'刷新'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m     |\u001b[39m                                                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 147 |\u001b[39m     })\n \u001b[90m 148 |\u001b[39m\n \u001b[90m 149 |\u001b[39m     test(\u001b[32m'采集测试页应包含开始批量采集按钮'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "G:\\FinSightV9\\e2e\\full-coverage\\functional\\buttons.spec.ts",
+                                "column": 62,
+                                "line": 146
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: '刷新' })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: '刷新' })\u001b[22m\n\n\n  144 |       await expect(page.getByRole('heading', { name: '采集任务监控' })).toBeVisible({ timeout: 10000 })\n  145 |       // 应该存在操作按钮\n> 146 |       await expect(page.getByRole('button', { name: '刷新' })).toBeVisible()\n      |                                                              ^\n  147 |     })\n  148 |\n  149 |     test('采集测试页应包含开始批量采集按钮', async ({ page }) => {\n    at G:\\FinSightV9\\e2e\\full-coverage\\functional\\buttons.spec.ts:146:62"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:08.681Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-buttons-按钮交互测试--7d104-采集配置-按钮-采集任务监控页应显示任务列表和操作按钮-chromium\\test-failed-1.png"
+                            },
+                            {
+                              "name": "video",
+                              "contentType": "video/webm",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-buttons-按钮交互测试--7d104-采集配置-按钮-采集任务监控页应显示任务列表和操作按钮-chromium\\video.webm"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-buttons-按钮交互测试--7d104-采集配置-按钮-采集任务监控页应显示任务列表和操作按钮-chromium\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "G:\\FinSightV9\\e2e\\full-coverage\\functional\\buttons.spec.ts",
+                            "column": 62,
+                            "line": 146
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "756d958746613f007c22-f9fec3551a30c45fba89",
+                  "file": "functional/buttons.spec.ts",
+                  "line": 142,
+                  "column": 5
+                },
+                {
+                  "title": "采集测试页应包含开始批量采集按钮",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 4,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 2184,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:08.812Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "756d958746613f007c22-47a1a5683a4ca97bc988",
+                  "file": "functional/buttons.spec.ts",
+                  "line": 149,
+                  "column": 5
+                },
+                {
+                  "title": "采集测试页空输入时批量采集按钮应禁用",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 4,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 2052,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:11.012Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "756d958746613f007c22-b048103f0f12cf0e40bb",
+                  "file": "functional/buttons.spec.ts",
+                  "line": 155,
+                  "column": 5
+                },
+                {
+                  "title": "输入测试代码后批量采集按钮应启用",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 4,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 2524,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:13.077Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "756d958746613f007c22-3ad2295766cbbbcb7b23",
+                  "file": "functional/buttons.spec.ts",
+                  "line": 163,
+                  "column": 5
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "functional\\data-flow.spec.ts",
+      "file": "functional/data-flow.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "数据流测试",
+          "file": "functional/data-flow.spec.ts",
+          "line": 9,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "股票导入 → 意向池更新",
+              "file": "functional/data-flow.spec.ts",
+              "line": 14,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "输入 000001 平安银行后应出现在意向候选池中",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 4,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 12365,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=平安银行').first()\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=平安银行').first()\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=平安银行').first()\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=平安银行').first()\u001b[22m\n\n    at G:\\FinSightV9\\e2e\\full-coverage\\functional\\data-flow.spec.ts:30:55",
+                            "location": {
+                              "file": "G:\\FinSightV9\\e2e\\full-coverage\\functional\\data-flow.spec.ts",
+                              "column": 55,
+                              "line": 30
+                            },
+                            "snippet": "\u001b[0m \u001b[90m 28 |\u001b[39m\n \u001b[90m 29 |\u001b[39m       \u001b[90m// 验证股票出现在意向候选池中\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 30 |\u001b[39m       \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=平安银行'\u001b[39m)\u001b[33m.\u001b[39mfirst())\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m    |\u001b[39m                                                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 31 |\u001b[39m       \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=000001'\u001b[39m)\u001b[33m.\u001b[39mfirst())\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m 32 |\u001b[39m     })\n \u001b[90m 33 |\u001b[39m\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "G:\\FinSightV9\\e2e\\full-coverage\\functional\\data-flow.spec.ts",
+                                "column": 55,
+                                "line": 30
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=平安银行').first()\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=平安银行').first()\u001b[22m\n\n\n  28 |\n  29 |       // 验证股票出现在意向候选池中\n> 30 |       await expect(page.locator('text=平安银行').first()).toBeVisible()\n     |                                                       ^\n  31 |       await expect(page.locator('text=000001').first()).toBeVisible()\n  32 |     })\n  33 |\n    at G:\\FinSightV9\\e2e\\full-coverage\\functional\\data-flow.spec.ts:30:55"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:15.647Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-data-flow-数据流测试-d36c1-新-输入-000001-平安银行后应出现在意向候选池中-chromium\\test-failed-1.png"
+                            },
+                            {
+                              "name": "video",
+                              "contentType": "video/webm",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-data-flow-数据流测试-d36c1-新-输入-000001-平安银行后应出现在意向候选池中-chromium\\video.webm"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-data-flow-数据流测试-d36c1-新-输入-000001-平安银行后应出现在意向候选池中-chromium\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "G:\\FinSightV9\\e2e\\full-coverage\\functional\\data-flow.spec.ts",
+                            "column": 55,
+                            "line": 30
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "28757d50f4e25860d8e7-3ffb985146fa1dbe5d8d",
+                  "file": "functional/data-flow.spec.ts",
+                  "line": 20,
+                  "column": 5
+                },
+                {
+                  "title": "输入多只股票后意向池应正确计数",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 6,
+                          "parallelIndex": 3,
+                          "status": "failed",
+                          "duration": 12362,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=平安银行')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=平安银行')\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=平安银行')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=平安银行')\u001b[22m\n\n    at G:\\FinSightV9\\e2e\\full-coverage\\functional\\data-flow.spec.ts:45:47",
+                            "location": {
+                              "file": "G:\\FinSightV9\\e2e\\full-coverage\\functional\\data-flow.spec.ts",
+                              "column": 47,
+                              "line": 45
+                            },
+                            "snippet": "\u001b[0m \u001b[90m 43 |\u001b[39m\n \u001b[90m 44 |\u001b[39m       \u001b[90m// 验证所有股票均可见\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 45 |\u001b[39m       \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=平安银行'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m    |\u001b[39m                                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 46 |\u001b[39m       \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=贵州茅台'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m 47 |\u001b[39m       \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=五粮液'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m 48 |\u001b[39m     })\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "G:\\FinSightV9\\e2e\\full-coverage\\functional\\data-flow.spec.ts",
+                                "column": 47,
+                                "line": 45
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=平安银行')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=平安银行')\u001b[22m\n\n\n  43 |\n  44 |       // 验证所有股票均可见\n> 45 |       await expect(page.locator('text=平安银行')).toBeVisible()\n     |                                               ^\n  46 |       await expect(page.locator('text=贵州茅台')).toBeVisible()\n  47 |       await expect(page.locator('text=五粮液')).toBeVisible()\n  48 |     })\n    at G:\\FinSightV9\\e2e\\full-coverage\\functional\\data-flow.spec.ts:45:47"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:16.656Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-data-flow-数据流测试-股票导入-→-意向池更新-输入多只股票后意向池应正确计数-chromium\\test-failed-1.png"
+                            },
+                            {
+                              "name": "video",
+                              "contentType": "video/webm",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-data-flow-数据流测试-股票导入-→-意向池更新-输入多只股票后意向池应正确计数-chromium\\video.webm"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-data-flow-数据流测试-股票导入-→-意向池更新-输入多只股票后意向池应正确计数-chromium\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "G:\\FinSightV9\\e2e\\full-coverage\\functional\\data-flow.spec.ts",
+                            "column": 47,
+                            "line": 45
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "28757d50f4e25860d8e7-023d5bae88cdffdd86de",
+                  "file": "functional/data-flow.spec.ts",
+                  "line": 34,
+                  "column": 5
+                },
+                {
+                  "title": "重复添加同一股票应有反馈",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 7,
+                          "parallelIndex": 1,
+                          "status": "passed",
+                          "duration": 2222,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:16.831Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "28757d50f4e25860d8e7-b628b1b4011b259b0c21",
+                  "file": "functional/data-flow.spec.ts",
+                  "line": 50,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "首页状态卡片显示",
+              "file": "functional/data-flow.spec.ts",
+              "line": 70,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "首页应显示数据统计区域",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 7,
+                          "parallelIndex": 1,
+                          "status": "passed",
+                          "duration": 3026,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:19.270Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "28757d50f4e25860d8e7-58abd72027ffab613d8e",
+                  "file": "functional/data-flow.spec.ts",
+                  "line": 71,
+                  "column": 5
+                },
+                {
+                  "title": "导入股票后首页状态应更新",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 8,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 3681,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:21.947Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "28757d50f4e25860d8e7-f2757b0e305018c9fa0a",
+                  "file": "functional/data-flow.spec.ts",
+                  "line": 85,
+                  "column": 5
+                },
+                {
+                  "title": "首页应显示核心功能入口卡片",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 7,
+                          "parallelIndex": 1,
+                          "status": "passed",
+                          "duration": 3289,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:22.303Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "28757d50f4e25860d8e7-7b2b7d4b1dc9d5e7b527",
+                  "file": "functional/data-flow.spec.ts",
+                  "line": 104,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "采集监控页 KPI 卡片渲染",
+              "file": "functional/data-flow.spec.ts",
+              "line": 117,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "应显示四个 KPI 统计卡片",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 7,
+                          "parallelIndex": 1,
+                          "status": "passed",
+                          "duration": 2149,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:25.605Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "28757d50f4e25860d8e7-fff44c4d3b5ad2949da9",
+                  "file": "functional/data-flow.spec.ts",
+                  "line": 123,
+                  "column": 5
+                },
+                {
+                  "title": "KPI 卡片数值应为数字格式",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 8,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 1998,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:25.823Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "28757d50f4e25860d8e7-00e75a461bdba4fa62b3",
+                  "file": "functional/data-flow.spec.ts",
+                  "line": 134,
+                  "column": 5
+                },
+                {
+                  "title": "应显示任务列表表格",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 7,
+                          "parallelIndex": 1,
+                          "status": "failed",
+                          "duration": 12258,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('table')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('table')\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('table')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('table')\u001b[22m\n\n    at G:\\FinSightV9\\e2e\\full-coverage\\functional\\data-flow.spec.ts:141:43",
+                            "location": {
+                              "file": "G:\\FinSightV9\\e2e\\full-coverage\\functional\\data-flow.spec.ts",
+                              "column": 43,
+                              "line": 141
+                            },
+                            "snippet": "\u001b[0m \u001b[90m 139 |\u001b[39m\n \u001b[90m 140 |\u001b[39m     test(\u001b[32m'应显示任务列表表格'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 141 |\u001b[39m       \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'table'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m     |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 142 |\u001b[39m       \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'columnheader'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'任务ID'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m 143 |\u001b[39m       \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'columnheader'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'维度'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m 144 |\u001b[39m       \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'columnheader'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m'状态'\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "G:\\FinSightV9\\e2e\\full-coverage\\functional\\data-flow.spec.ts",
+                                "column": 43,
+                                "line": 141
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('table')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('table')\u001b[22m\n\n\n  139 |\n  140 |     test('应显示任务列表表格', async ({ page }) => {\n> 141 |       await expect(page.locator('table')).toBeVisible()\n      |                                           ^\n  142 |       await expect(page.getByRole('columnheader', { name: '任务ID' })).toBeVisible()\n  143 |       await expect(page.getByRole('columnheader', { name: '维度' })).toBeVisible()\n  144 |       await expect(page.getByRole('columnheader', { name: '状态' })).toBeVisible()\n    at G:\\FinSightV9\\e2e\\full-coverage\\functional\\data-flow.spec.ts:141:43"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:27.772Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-data-flow-数据流测试-采集监控页-KPI-卡片渲染-应显示任务列表表格-chromium\\test-failed-1.png"
+                            },
+                            {
+                              "name": "video",
+                              "contentType": "video/webm",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-data-flow-数据流测试-采集监控页-KPI-卡片渲染-应显示任务列表表格-chromium\\video.webm"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-data-flow-数据流测试-采集监控页-KPI-卡片渲染-应显示任务列表表格-chromium\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "G:\\FinSightV9\\e2e\\full-coverage\\functional\\data-flow.spec.ts",
+                            "column": 43,
+                            "line": 141
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "28757d50f4e25860d8e7-2fc849fb24fd291a8c39",
+                  "file": "functional/data-flow.spec.ts",
+                  "line": 140,
+                  "column": 5
+                },
+                {
+                  "title": "应显示 Mock 任务数据",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 8,
+                          "parallelIndex": 2,
+                          "status": "failed",
+                          "duration": 12263,
+                          "error": {
+                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=TASK-20260701-001')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=TASK-20260701-001')\u001b[22m\n",
+                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=TASK-20260701-001')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=TASK-20260701-001')\u001b[22m\n\n    at G:\\FinSightV9\\e2e\\full-coverage\\functional\\data-flow.spec.ts:150:60",
+                            "location": {
+                              "file": "G:\\FinSightV9\\e2e\\full-coverage\\functional\\data-flow.spec.ts",
+                              "column": 60,
+                              "line": 150
+                            },
+                            "snippet": "\u001b[0m \u001b[90m 148 |\u001b[39m     test(\u001b[32m'应显示 Mock 任务数据'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 149 |\u001b[39m       \u001b[90m// 验证预置任务数据渲染\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 150 |\u001b[39m       \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=TASK-20260701-001'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m     |\u001b[39m                                                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 151 |\u001b[39m       \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=TASK-20260701-002'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\n \u001b[90m 152 |\u001b[39m     })\n \u001b[90m 153 |\u001b[39m\u001b[0m"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "G:\\FinSightV9\\e2e\\full-coverage\\functional\\data-flow.spec.ts",
+                                "column": 60,
+                                "line": 150
+                              },
+                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=TASK-20260701-001')\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=TASK-20260701-001')\u001b[22m\n\n\n  148 |     test('应显示 Mock 任务数据', async ({ page }) => {\n  149 |       // 验证预置任务数据渲染\n> 150 |       await expect(page.locator('text=TASK-20260701-001')).toBeVisible()\n      |                                                            ^\n  151 |       await expect(page.locator('text=TASK-20260701-002')).toBeVisible()\n  152 |     })\n  153 |\n    at G:\\FinSightV9\\e2e\\full-coverage\\functional\\data-flow.spec.ts:150:60"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:27.830Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-data-flow-数据流测试-采集监控页-KPI-卡片渲染-应显示-Mock-任务数据-chromium\\test-failed-1.png"
+                            },
+                            {
+                              "name": "video",
+                              "contentType": "video/webm",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-data-flow-数据流测试-采集监控页-KPI-卡片渲染-应显示-Mock-任务数据-chromium\\video.webm"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-data-flow-数据流测试-采集监控页-KPI-卡片渲染-应显示-Mock-任务数据-chromium\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "G:\\FinSightV9\\e2e\\full-coverage\\functional\\data-flow.spec.ts",
+                            "column": 60,
+                            "line": 150
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "28757d50f4e25860d8e7-28fec48be0e415d76d1c",
+                  "file": "functional/data-flow.spec.ts",
+                  "line": 148,
+                  "column": 5
+                },
+                {
+                  "title": "Tab 切换应正常工作",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 9,
+                          "parallelIndex": 0,
+                          "status": "timedOut",
+                          "duration": 30283,
+                          "error": {
+                            "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                            "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                          },
+                          "errors": [
+                            {
+                              "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                            },
+                            {
+                              "location": {
+                                "file": "G:\\FinSightV9\\e2e\\full-coverage\\functional\\data-flow.spec.ts",
+                                "column": 53,
+                                "line": 156
+                              },
+                              "message": "Error: locator.click: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('tab', { name: '评分卡片' })\u001b[22m\n\n\n  154 |     test('Tab 切换应正常工作', async ({ page }) => {\n  155 |       // 切换到评分卡片 Tab\n> 156 |       await page.getByRole('tab', { name: '评分卡片' }).click()\n      |                                                     ^\n  157 |       await expect(page.locator('text=评分卡片')).toBeVisible()\n  158 |       // 切换到采集日志 Tab\n  159 |       await page.getByRole('tab', { name: '采集日志' }).click()\n    at G:\\FinSightV9\\e2e\\full-coverage\\functional\\data-flow.spec.ts:156:53"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:29.264Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "screenshot",
+                              "contentType": "image/png",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-data-flow-数据流测试-采集监控页-KPI-卡片渲染-Tab-切换应正常工作-chromium\\test-failed-1.png"
+                            },
+                            {
+                              "name": "video",
+                              "contentType": "video/webm",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-data-flow-数据流测试-采集监控页-KPI-卡片渲染-Tab-切换应正常工作-chromium\\video.webm"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "G:\\FinSightV9\\e2e\\test-artifacts-temp\\results\\functional-data-flow-数据流测试-采集监控页-KPI-卡片渲染-Tab-切换应正常工作-chromium\\error-context.md"
+                            }
+                          ]
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "28757d50f4e25860d8e7-d7398bcd8c0e8343e3f5",
+                  "file": "functional/data-flow.spec.ts",
+                  "line": 154,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "跨舱室数据一致性",
+              "file": "functional/data-flow.spec.ts",
+              "line": 170,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "输入舱导入股票后分析舱应可查看",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 10,
+                          "parallelIndex": 3,
+                          "status": "passed",
+                          "duration": 2694,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:30.185Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "28757d50f4e25860d8e7-cd54e813e7c5817b90e0",
+                  "file": "functional/data-flow.spec.ts",
+                  "line": 183,
+                  "column": 5
+                },
+                {
+                  "title": "输入舱导入股票后交易舱应可加载观察池",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 10,
+                          "parallelIndex": 3,
+                          "status": "passed",
+                          "duration": 2593,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:33.080Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "28757d50f4e25860d8e7-87fa913844d0b245a561",
+                  "file": "functional/data-flow.spec.ts",
+                  "line": 192,
+                  "column": 5
+                },
+                {
+                  "title": "输入舱导入股票后总控舱应展示更新后的统计",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 10,
+                          "parallelIndex": 3,
+                          "status": "passed",
+                          "duration": 2765,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:35.682Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "28757d50f4e25860d8e7-4b91edf65c560db38844",
+                  "file": "functional/data-flow.spec.ts",
+                  "line": 201,
+                  "column": 5
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "functional\\forms.spec.ts",
+      "file": "functional/forms.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "表单交互测试",
+          "file": "functional/forms.spec.ts",
+          "line": 9,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "输入舱股票搜索框",
+              "file": "functional/forms.spec.ts",
+              "line": 14,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "输入 000001 并搜索 — 输入框应接受输入",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 10,
+                          "parallelIndex": 3,
+                          "status": "passed",
+                          "duration": 2155,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:38.466Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "3c01deedb57f4516ab5d-281fe6677c4f3907d39b",
+                  "file": "functional/forms.spec.ts",
+                  "line": 20,
+                  "column": 5
+                },
+                {
+                  "title": "输入 000001 并填入名称后点击仅录入",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 11,
+                          "parallelIndex": 1,
+                          "status": "passed",
+                          "duration": 2202,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:41.186Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "3c01deedb57f4516ab5d-7a15f1f48eda717aa072",
+                  "file": "functional/forms.spec.ts",
+                  "line": 26,
+                  "column": 5
+                },
+                {
+                  "title": "空代码直接搜索应有验证提示",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 12,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 2043,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:41.278Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "3c01deedb57f4516ab5d-30f823c206937b4a398f",
+                  "file": "functional/forms.spec.ts",
+                  "line": 36,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "批量导入文本输入",
+              "file": "functional/forms.spec.ts",
+              "line": 48,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "粘贴 SAMPLE_STOCKS 列表文本后应正确解析",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 10,
+                          "parallelIndex": 3,
+                          "status": "passed",
+                          "duration": 2261,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:40.731Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "3c01deedb57f4516ab5d-810ac243b08b5e42ec1a",
+                  "file": "functional/forms.spec.ts",
+                  "line": 54,
+                  "column": 5
+                },
+                {
+                  "title": "文本解析应展示标准化代码预览",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 10,
+                          "parallelIndex": 3,
+                          "status": "passed",
+                          "duration": 2514,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:43.006Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "3c01deedb57f4516ab5d-f5a56601d19116274b17",
+                  "file": "functional/forms.spec.ts",
+                  "line": 66,
+                  "column": 5
+                },
+                {
+                  "title": "可切换粘贴文本/上传文件模式",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 11,
+                          "parallelIndex": 1,
+                          "status": "passed",
+                          "duration": 2071,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:43.597Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "3c01deedb57f4516ab5d-250bbc9f1709249acf21",
+                  "file": "functional/forms.spec.ts",
+                  "line": 75,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "七维配置模板切换",
+              "file": "functional/forms.spec.ts",
+              "line": 85,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "点击\"价值投资\"模板后维度显示应变化",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 12,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 2098,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:43.675Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "3c01deedb57f4516ab5d-493c024cc0a7f7a84f62",
+                  "file": "functional/forms.spec.ts",
+                  "line": 91,
+                  "column": 5
+                },
+                {
+                  "title": "点击\"成长投资\"模板后维度配置应切换",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 10,
+                          "parallelIndex": 3,
+                          "status": "passed",
+                          "duration": 2405,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:45.536Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "3c01deedb57f4516ab5d-61aa645c5bb82071c5c0",
+                  "file": "functional/forms.spec.ts",
+                  "line": 104,
+                  "column": 5
+                },
+                {
+                  "title": "模板切换后八个采集维度仍应全部可见",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 11,
+                          "parallelIndex": 1,
+                          "status": "passed",
+                          "duration": 2258,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:45.677Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "3c01deedb57f4516ab5d-b7bd310963ed2f045e74",
+                  "file": "functional/forms.spec.ts",
+                  "line": 112,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "全局参数输入",
+              "file": "functional/forms.spec.ts",
+              "line": 129,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "全局参数区域应显示标的数量和历史天数相关控件",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 12,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 2053,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:45.783Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "3c01deedb57f4516ab5d-5e269ef1dc90420aa7ab",
+                  "file": "functional/forms.spec.ts",
+                  "line": 135,
+                  "column": 5
+                },
+                {
+                  "title": "应显示额度预估区域",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 12,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 2448,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:47.845Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "3c01deedb57f4516ab5d-3c8dd0f31d41b2385f45",
+                  "file": "functional/forms.spec.ts",
+                  "line": 141,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "分析舱 V6ScoreCard 加载标的",
+              "file": "functional/forms.spec.ts",
+              "line": 151,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "加载标的按钮应存在且可见",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 11,
+                          "parallelIndex": 1,
+                          "status": "passed",
+                          "duration": 2335,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:47.945Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "3c01deedb57f4516ab5d-2061c9b8ef8f56743610",
+                  "file": "functional/forms.spec.ts",
+                  "line": 157,
+                  "column": 5
+                },
+                {
+                  "title": "V6 九维评分区域应展示",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 10,
+                          "parallelIndex": 3,
+                          "status": "passed",
+                          "duration": 2356,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:47.962Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "3c01deedb57f4516ab5d-b6f2fdf2fefd9a46556b",
+                  "file": "functional/forms.spec.ts",
+                  "line": 161,
+                  "column": 5
+                },
+                {
+                  "title": "三个快捷入口卡片应展示",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 12,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 2393,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:50.313Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "3c01deedb57f4516ab5d-5a69b6dfec10f186c3b3",
+                  "file": "functional/forms.spec.ts",
+                  "line": 165,
+                  "column": 5
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "functional\\navigation.spec.ts",
+      "file": "functional/navigation.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "导航跳转测试",
+          "file": "functional/navigation.spec.ts",
+          "line": 9,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "首页导航到五个舱室",
+              "file": "functional/navigation.spec.ts",
+              "line": 14,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "从首页导航到输入舱",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 11,
+                          "parallelIndex": 1,
+                          "status": "passed",
+                          "duration": 3869,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:50.358Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "1a093989f8c70c152dd0-f8b1b281928fb4436f7d",
+                  "file": "functional/navigation.spec.ts",
+                  "line": 20,
+                  "column": 5
+                },
+                {
+                  "title": "从首页导航到分析舱",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 10,
+                          "parallelIndex": 3,
+                          "status": "passed",
+                          "duration": 3868,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:50.374Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "1a093989f8c70c152dd0-03792dbf984b459e56bd",
+                  "file": "functional/navigation.spec.ts",
+                  "line": 26,
+                  "column": 5
+                },
+                {
+                  "title": "从首页导航到交易舱",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 12,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 3627,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:52.767Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "1a093989f8c70c152dd0-8de8c5b2a2930198cc08",
+                  "file": "functional/navigation.spec.ts",
+                  "line": 31,
+                  "column": 5
+                },
+                {
+                  "title": "从首页导航到输出舱",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 11,
+                          "parallelIndex": 1,
+                          "status": "passed",
+                          "duration": 3900,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:54.250Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "1a093989f8c70c152dd0-c459702120235a7c358f",
+                  "file": "functional/navigation.spec.ts",
+                  "line": 36,
+                  "column": 5
+                },
+                {
+                  "title": "从首页导航到总控舱",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 10,
+                          "parallelIndex": 3,
+                          "status": "passed",
+                          "duration": 3889,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:54.263Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "1a093989f8c70c152dd0-87a8cc0c6c4f4523b1c0",
+                  "file": "functional/navigation.spec.ts",
+                  "line": 41,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "输入舱侧边栏面板导航",
+              "file": "functional/navigation.spec.ts",
+              "line": 50,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "侧边栏\"批量导入\"按钮导航到批量导入页",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 12,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 2295,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:56.407Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "1a093989f8c70c152dd0-0aa2577d92bc7e3c7dbe",
+                  "file": "functional/navigation.spec.ts",
+                  "line": 56,
+                  "column": 5
+                },
+                {
+                  "title": "侧边栏\"采集测试\"按钮导航到数据采集测试页",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 11,
+                          "parallelIndex": 1,
+                          "status": "passed",
+                          "duration": 2604,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:58.165Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "1a093989f8c70c152dd0-c007cc3194bf4755b567",
+                  "file": "functional/navigation.spec.ts",
+                  "line": 62,
+                  "column": 5
+                },
+                {
+                  "title": "侧边栏\"采集任务监控\"按钮导航到采集任务监控页",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 10,
+                          "parallelIndex": 3,
+                          "status": "passed",
+                          "duration": 2757,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:58.167Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "1a093989f8c70c152dd0-a23453b3c11cef904dfc",
+                  "file": "functional/navigation.spec.ts",
+                  "line": 68,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "顶栏舱室切换按钮",
+              "file": "functional/navigation.spec.ts",
+              "line": 78,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "顶栏存在五个舱室的导航入口",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 12,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 3790,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:10:58.720Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "1a093989f8c70c152dd0-17edb00a28acfe81ed91",
+                  "file": "functional/navigation.spec.ts",
+                  "line": 84,
+                  "column": 5
+                },
+                {
+                  "title": "通过顶栏从输入舱切换到分析舱",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 13,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 3767,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:11:00.952Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "1a093989f8c70c152dd0-23d59860e891815350c0",
+                  "file": "functional/navigation.spec.ts",
+                  "line": 99,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "驾驶舱入口",
+              "file": "functional/navigation.spec.ts",
+              "line": 114,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "驾驶舱页面可正常访问",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 11,
+                          "parallelIndex": 1,
+                          "status": "passed",
+                          "duration": 4038,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:11:00.788Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "1a093989f8c70c152dd0-d2cb391166926e51df37",
+                  "file": "functional/navigation.spec.ts",
+                  "line": 115,
+                  "column": 5
+                },
+                {
+                  "title": "从首页进入驾驶舱并验证页面渲染",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 10,
+                          "parallelIndex": 3,
+                          "status": "passed",
+                          "duration": 4465,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:11:00.941Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "1a093989f8c70c152dd0-eb634ad00f9ebf5591af",
+                  "file": "functional/navigation.spec.ts",
+                  "line": 124,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "404 页面处理",
+              "file": "functional/navigation.spec.ts",
+              "line": 136,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "访问不存在的路由应显示 404 或未找到提示",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 12,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 507,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:11:02.527Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "1a093989f8c70c152dd0-9b48bb8cbef882b4aee2",
+                  "file": "functional/navigation.spec.ts",
+                  "line": 137,
+                  "column": 5
+                },
+                {
+                  "title": "访问不存在的子路径也应正确处理",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 12,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 687,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:11:03.050Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "1a093989f8c70c152dd0-be712b571cb425a746c3",
+                  "file": "functional/navigation.spec.ts",
+                  "line": 146,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "面包屑导航存在性",
+              "file": "functional/navigation.spec.ts",
+              "line": 156,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "输出舱页面应存在面包屑导航",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 12,
+                          "parallelIndex": 2,
+                          "status": "passed",
+                          "duration": 2074,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:11:03.750Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "1a093989f8c70c152dd0-5ed0bfb953fcf5fb0a9e",
+                  "file": "functional/navigation.spec.ts",
+                  "line": 157,
+                  "column": 5
+                },
+                {
+                  "title": "输出舱页面包屑应包含\"首页 > 输出舱\"",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 11,
+                          "parallelIndex": 1,
+                          "status": "passed",
+                          "duration": 2416,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:11:04.845Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "1a093989f8c70c152dd0-657b58c5b2d7c12c7801",
+                  "file": "functional/navigation.spec.ts",
+                  "line": 164,
+                  "column": 5
+                },
+                {
+                  "title": "采集任务监控页面包屑应包含完整路径",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [
+                        {
+                          "workerIndex": 13,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 2259,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-07-18T05:11:05.033Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "1a093989f8c70c152dd0-d0d0ed014010fbd23c2f",
+                  "file": "functional/navigation.spec.ts",
+                  "line": 172,
+                  "column": 5
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-07-18T05:09:41.897Z",
+    "duration": 85998.48,
+    "expected": 50,
+    "skipped": 0,
+    "unexpected": 10,
+    "flaky": 0
+  }
+}

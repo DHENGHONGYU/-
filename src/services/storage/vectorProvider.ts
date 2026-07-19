@@ -126,7 +126,7 @@ export class VectorProviderImpl implements StorageProvider {
     try {
       await queryList<LocalDoc>(STORE_NAME.localDocs)
       return true
-    } catch {
+    } catch (err) { console.warn('[vectorProvider.ts]', err);
       return false
     }
   }

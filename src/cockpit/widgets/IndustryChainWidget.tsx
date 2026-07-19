@@ -78,7 +78,6 @@ function computeLayout() {
 /**
  * 产业链图谱可视化组件
  * @returns JSX 元素
- */
 /**
  * 产业链图谱可视化组件
  * @returns 产业链 SVG 关系图

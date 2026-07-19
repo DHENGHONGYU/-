@@ -3,7 +3,7 @@ import type { SignalDirection } from '@/config/tradingConfig'
 import { dataBridge } from '@/core/databridge'
 import { ENVELOPE_ACTION, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
 import type { DailyQuotes, KlineBar, Signal, SignalSnapshot, Stock } from '@/data/types'
-import { generateId } from '@/data/db'
+import { generateId } from '@/lib/utils'
 import { SIGNAL_GENERATOR_THRESHOLDS } from '@/config/thresholds'
 
 export type TradingSignal = Signal
@@ -54,6 +54,12 @@ function computeMACDDirection(closes: number[]): 'red' | 'green' | 'neutral' {
   return diff > 0 ? 'red' : diff < 0 ? 'green' : 'neutral'
 }
 
+/**
+ * buildSnapshot
+ * @param stock
+ * @param quotes
+ * @returns SignalSnapshot
+ */
 export function buildSnapshot(stock: Stock, quotes: DailyQuotes): SignalSnapshot {
   const closes = quotes.history.map((bar) => bar.close)
   const ma20 = computeMA(closes, 20)
@@ -73,6 +79,11 @@ export function buildSnapshot(stock: Stock, quotes: DailyQuotes): SignalSnapshot
   }
 }
 
+/**
+ * generateBuySignals
+ * @param snapshot
+ * @returns TradingSignal[]
+ */
 export function generateBuySignals(snapshot: SignalSnapshot): TradingSignal[] {
   const signals: TradingSignal[] = []
   const config = getEffectiveTradingConfig().signalThresholds
@@ -143,6 +154,9 @@ export function generateBuySignals(snapshot: SignalSnapshot): TradingSignal[] {
   return signals
 }
 
+/**
+ * generateSellSignals
+ */
 export function generateSellSignals(
   snapshot: SignalSnapshot,
   history: KlineBar[],

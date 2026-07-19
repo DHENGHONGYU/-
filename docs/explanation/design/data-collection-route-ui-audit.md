@@ -1,320 +1,328 @@
 ---
 title: data-collection-route-ui-audit
+type: explanation
+domain: data
+phase: design
 tier: reference
+status: active
+maintainer: V9 Architecture Team
+summary: "V9·עUI嵥FV6ĵάУ Versionv1.0 | ڣ2026-07-01"
+tags: [data, collection, audit, plan, architecture, component, explanation, routing]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-tier: reference
-code_version: 2.0.0
----
+# ݲɼģ·UIУԷ
 
-# 数据采集模块路由与UI校对分析报告
-
-> 基于V9路由注册表、UI组件清单、F盘V6设计文档的三维交叉校对
+> V9·עUI嵥FV6ĵάУ
 > 
-> 版本：v1.0 | 日期：2026-07-01
+> **Version**v1.0 | ڣ2026-07-01
 
 ---
 
-## 一、路由映射校对
+## һ·ӳУ
 
-### 1.1 V9路由注册表 vs V6路由架构
+### 1.1 V9·ע vs V6·ɼܹ
 
-| V6路由 | V6页面名称 | V9对应路由 | V9页面组件 | 校对结果 |
+| V6· | V6ҳ | V9Ӧ· | V9ҳ | УԽ |
 |:---|:---|:---|:---|:---:|
-| `/data-hub` | 数据工场（4 Tab） | `/input` | `InputDashboard` | ⚠️ 降级 |
-| `/seven-dim` | 七维采集 | `/input/seven-dim` | `SevenDimConfigPage` | ✅ 已新建 |
-| `/fetcher` | 抓取引擎 | — | — | ❌ 缺失 |
-| `/collect-task` | 采集任务 | — | — | ❌ 缺失 |
-| `/news` | 智能资讯 | `/analysis/news` | `NewsPage` | ⚠️ 位置迁移 |
-| `/data` | 数据管理 | — | — | ❌ 缺失 |
-| — | — | `/input/bulk-import` | `BulkImportPanel` | ✅ V9新增 |
-| — | — | `/input/hot-sectors` | `HotSectorPanel` | ✅ V9新增 |
-| — | — | `/input/data-test` | `DataTestPanel` | ✅ V9新增 |
-| — | — | `/input/local-knowledge` | `LocalKnowledgePage` | ✅ V9新增 |
+| `/data-hub` | ݹ4 Tab | `/input` | `InputDashboard` | ??  |
+| `/seven-dim` | άɼ | `/input/seven-dim` | `SevenDimConfigPage` | ? ½ |
+| `/fetcher` | ץȡ |  |  | ? ȱʧ |
+| `/collect-task` | ɼ |  |  | ? ȱʧ |
+| `/news` | Ѷ | `/analysis/news` | `NewsPage` | ?? λǨ |
+| `/data` | ݹ |  |  | ? ȱʧ |
+|  |  | `/input/bulk-import` | `BulkImportPanel` | ? V9 |
+|  |  | `/input/hot-sectors` | `HotSectorPanel` | ? V9 |
+|  |  | `/input/data-test` | `DataTestPanel` | ? V9 |
+|  |  | `/input/local-knowledge` | `LocalKnowledgePage` | ? V9 |
 
-### 1.2 路由注册合规性问题
+### 1.2 ·עϹ
 
-| 优先级 | 问题 | 影响 | 建议操作 |
+| ȼ |  | Ӱ |  |
 |:---:|:---|:---|:---|
-| **高** | `/input/seven-dim` 未在 `ROUTE_REGISTRY` 注册 | 脱离中央路由表管控，违反"所有业务路由必须在此注册"规则 | ✅ 已修复（2026-07-01） |
-| **高** | `ResearchReportPage.tsx` / `TradeReviewPage.tsx` 为完全孤儿 | 已实现的页面无法访问 | ✅ 已修复（2026-07-01） |
-| **中** | `../../reference/06-routing-specs.md` 第8节残留 `/hub` 和 `/analysis/news-v6` | 文档与代码不一致 | 同步文档映射表 |
-| **中** | 文档版本号矛盾（v1.5.0 vs v1.2.0 / 29条 vs 31条） | 文档可信度降低 | 修正版本号与路由计数 |
-| **中** | 文档第7节"ErrorBoundary仅包裹根路由"描述滞后 | `RouteErrorBoundary` 已实现但文档未更新 | 更新文档标注已闭环 |
-| **低** | `OutputApp` 未显式包 `<React.Suspense>` | Suspense边界不明确 | 显式包裹 |
+| **** | `/input/seven-dim` δ `ROUTE_REGISTRY` ע | ·ɱܿأΥ"ҵ·ɱڴע" | ? ޸2026-07-01 |
+| **** | `ResearchReportPage.tsx` / `TradeReviewPage.tsx` Ϊȫ¶ | ʵֵҳ޷ | ? ޸2026-07-01 |
+| **** | `../../reference/06-routing-specs.md` 8ڲ `/hub`  `/analysis/news-v6` | ĵ벻һ | ͬĵӳ |
+| **** | ĵ汾ìܣv1.5.0 vs v1.2.0 / 29 vs 31 | ĵŶȽ | 汾·ɼ |
+| **** | ĵ7"ErrorBoundary·"ͺ | `RouteErrorBoundary` ʵֵĵδ | ĵעѱջ |
+| **** | `OutputApp` δʽ `<React.Suspense>` | Suspense߽粻ȷ | ʽ |
 
-### 1.3 V6数据工场4 Tab → V9迁移状态
+### 1.3 V6ݹ4 Tab  V9Ǩ״̬
 
-V6数据工场 `/data-hub` 含4个Tab，V9的迁移情况：
+V6ݹ `/data-hub` 4TabV9Ǩ
 
-| V6 Tab | 功能 | V9对应 | 迁移状态 |
+| V6 Tab |  | V9Ӧ | Ǩ״̬ |
 |:---|:---|:---|:---:|
-| 模块总览 | 6大子模块入口卡片 | `InputHubPage`（6卡片） | ✅ 已迁移 |
-| 数据看板 | 8维度数据卡片 | — | ❌ 缺失 |
-| 七维状态 | 实时采集状态监控 | — | ❌ 缺失 |
-| 数据导出 | JSON/CSV导出 | `/output/export` | ⚠️ 迁移至输出舱 |
+| ģ | 6ģڿƬ | `InputHubPage`6Ƭ | ? Ǩ |
+| ݿ | 8άݿƬ |  | ? ȱʧ |
+| ά״̬ | ʵʱɼ״̬ |  | ? ȱʧ |
+| ݵ | JSON/CSV | `/output/export` | ?? Ǩ |
 
 ---
 
-## 二、UI组件校对
+## UIУ
 
-### 2.1 V6采集模块UI组件 → V9对照
+### 2.1 V6ɼģUI  V9
 
-| V6组件 | V6功能 | V9对应组件 | 校对结果 |
+| V6 | V6 | V9Ӧ | УԽ |
 |:---|:---|:---|:---:|
-| `SevenDimCollectPage` | 七维采集页（~400行） | `SevenDimConfigPage` | ✅ 已新建（框架） |
-| `CollectParamPanel` | 采集参数调整面板 | SevenDimConfigPage内嵌面板 | ⚠️ 简化版 |
-| `CollectMonitor` | 采集监控界面（7维度状态卡） | — | ❌ 缺失 |
-| `CollectTaskPage` | 采集任务页（3Tab：任务/评分/日志） | — | ❌ 缺失 |
-| `FetcherPage` | 抓取引擎页（数据源列表/日志） | — | ❌ 缺失 |
-| `DataHubPage` | 数据工场4Tab架构 | `InputHubPage` + `InputDashboard` | ⚠️ 拆分迁移 |
-| `NewsPage`(V6) | 智能资讯页 | `NewsPage`(V9, `/analysis/news`) | ⚠️ 位置迁移 |
-| `DirectDataAPI` | 前端直连腾讯/新浪/网易 | `fetcherClient` | ⚠️ 仅AKShare |
-| 接口测试弹窗 | 5接口一键测试 | `DataTestPanel` | ✅ 已实现（简化版） |
+| `SevenDimCollectPage` | άɼҳ~400У | `SevenDimConfigPage` | ? ½ܣ |
+| `CollectParamPanel` | ɼ | SevenDimConfigPageǶ | ?? 򻯰 |
+| `CollectMonitor` | ɼؽ棨7ά״̬ |  | ? ȱʧ |
+| `CollectTaskPage` | ɼҳ3Tab//־ |  | ? ȱʧ |
+| `FetcherPage` | ץȡҳԴб/־ |  | ? ȱʧ |
+| `DataHubPage` | ݹ4Tabܹ | `InputHubPage` + `InputDashboard` | ?? Ǩ |
+| `NewsPage`(V6) | Ѷҳ | `NewsPage`(V9, `/analysis/news`) | ?? λǨ |
+| `DirectDataAPI` | ǰֱѶ// | `fetcherClient` | ?? AKShare |
+| ӿڲԵ | 5ӿһ | `DataTestPanel` | ? ʵ֣򻯰棩 |
 
-### 2.2 V9现有采集UI组件清单与合规性
+### 2.2 V9вɼUI嵥Ϲ
 
-| 组件 | 文件 | ErrorBoundary | 四步契约 | 加载/错误/空态 | 综合评价 |
+|  | ļ | ErrorBoundary | ĲԼ | //̬ | ۺ |
 |:---|:---|:---:|:---:|:---:|:---:|
-| `InputHubPage` | [InputHubPage.tsx](file:///C:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/pages/input/InputHubPage.tsx) | ✅ | 部分 | 无（静态页） | 🟢 良好 |
-| `SevenDimConfigPage` | [SevenDimConfigPage.tsx](../../src/pages/input/SevenDimConfigPage.tsx) | ✅ | 良好 | 全覆盖 | 🟢 良好 |
-| `LocalKnowledgePage` | [LocalKnowledgePage.tsx](../../src/pages/input/LocalKnowledgePage.tsx) | ❌ | 良好 | 全覆盖 | 🟡 需补EB |
-| `InputDashboard` | [InputDashboard.tsx](../../src/apps/input/InputDashboard.tsx) | ❌ | **违规** | 有加载/错误 | 🔴 DF-002 |
-| `DataTestPanel` | [DataTestPanel.tsx](../../src/apps/input/DataTestPanel.tsx) | ❌ | 良好 | 全覆盖 | 🟡 需补EB |
-| `HotSectorPanel` | [HotSectorPanel.tsx](../../src/apps/input/HotSectorPanel.tsx) | ❌ | **违规** | 有加载/错误 | 🔴 DF-002 |
-| `BulkImportPanel` | [BulkImportPanel.tsx](../../src/apps/input/BulkImportPanel.tsx) | ❌ | **违规** | 有加载/错误 | 🔴 DF-002 |
-| `StockSearch` | [StockSearch.tsx](../../src/components/organisms/input/StockSearch.tsx) | ❌ | **违规** | 有加载/空态 | 🔴 DF-002 |
+| `InputHubPage` | [InputHubPage.tsx](file:///C:/Users/huawei/Documents/kimi/Workspaces/ͶиϵͳV9/src/pages/input/InputHubPage.tsx) | ? |  | ޣ̬ҳ | ??  |
+| `SevenDimConfigPage` | [SevenDimConfigPage.tsx](../../../src/pages/input/SevenDimConfigPage.tsx) | ? |  | ȫ | ??  |
+| `LocalKnowledgePage` | [LocalKnowledgePage.tsx](../../../src/pages/input/LocalKnowledgePage.tsx) | ? |  | ȫ | ?? 貹EB |
+| `InputDashboard` | [InputDashboard.tsx](../../../src/apps/input/InputDashboard.tsx) | ? | **Υ** | м/ | ?? DF-002 |
+| `DataTestPanel` | [DataTestPanel.tsx](../../../src/apps/input/DataTestPanel.tsx) | ? |  | ȫ | ?? 貹EB |
+| `HotSectorPanel` | [HotSectorPanel.tsx](../../../src/apps/input/HotSectorPanel.tsx) | ? | **Υ** | м/ | ?? DF-002 |
+| `BulkImportPanel` | [BulkImportPanel.tsx](../../../src/apps/input/BulkImportPanel.tsx) | ? | **Υ** | м/ | ?? DF-002 |
+| `StockSearch` | [StockSearch.tsx](../../../src/components/organisms/input/StockSearch.tsx) | ? | **Υ** | м/̬ | ?? DF-002 |
 
-### 2.3 缺失的UI组件（需新建）
+### 2.3 ȱʧUI½
 
-| 优先级 | 组件 | V6参考 | 功能描述 | 建议路由 |
+| ȼ |  | V6ο |  | · |
 |:---:|:---|:---|:---|:---|
-| P0 | `CollectTaskPage` | V6 CollectTaskPage | 采集任务列表/评分卡片/采集日志 3Tab | `/input/collect-task` |
-| P0 | `CollectMonitor` | V6 CollectMonitor | 7维度状态卡+统计面板+变动率监控+实时日志 | `/input/collect-monitor` |
-| P1 | `FetcherConfigPage` | V6 FetcherPage | 数据源列表+适配器配置+采集日志+自动清洗 | `/input/fetcher` |
-| P1 | `DataDashboard` | V6 数据看板Tab | 8维度数据卡片+数据质量报告 | `/input/dashboard`增强 |
-| P2 | `CollectParamPanel` | V6 CollectParamPanel | 额度预估仪表盘+Kimi套餐+8维度频率表 | 嵌入SevenDimConfigPage |
+| P0 | `CollectTaskPage` | V6 CollectTaskPage | ɼб/ֿƬ/ɼ־ 3Tab | `/input/collect-task` |
+| P0 | `CollectMonitor` | V6 CollectMonitor | 7ά״̬+ͳ+䶯ʼ+ʵʱ־ | `/input/collect-monitor` |
+| P1 | `FetcherConfigPage` | V6 FetcherPage | Դб++ɼ־+Զϴ | `/input/fetcher` |
+| P1 | `DataDashboard` | V6 ݿTab | 8άݿƬ+ | `/input/dashboard`ǿ |
+| P2 | `CollectParamPanel` | V6 CollectParamPanel | ԤǱ+Kimiײ+8άƵʱ | ǶSevenDimConfigPage |
 
 ---
 
-## 三、SevenDimConfigPage V6→V9 UI对照
+## SevenDimConfigPage V6V9 UI
 
-### 3.1 页面布局对比
+### 3.1 ҳ沼ֶԱ
 
-| UI区域 | V6设计 | V9实现 | 差距 |
+| UI | V6 | V9ʵ |  |
 |:---|:---|:---|:---|
-| 页面头部 | 返回链接+h1标题+副标题+查看任务链接 | 面包屑+h1+副标题+V9徽章 | ⚠️ 缺"查看采集任务"链接 |
-| 策略模板卡片 | 5卡片（蓝/绿/橙/紫/红） | 5卡片（无边框色） | ⚠️ 缺颜色标识 |
-| 左侧维度选择 | 7维度开关（全量/轻量化标签） | 8维度开关（含色块+Badge+字段标签） | ✅ V9更丰富 |
-| 右侧参数配置 | 目标股票+历史天数+数据源+预估+开始采集 | 标的数+历史天数（简化版） | ⚠️ 缺目标股票输入、预估数据量 |
-| 采集参数面板 | 月调用3卡片+额度进度条+Kimi套餐+频率表+限流 | 额度预估卡片（月调用+日限+AKShare+使用率） | ⚠️ 缺Kimi套餐、频率表、限流配置 |
-| 采集方案整合面板 | 四层架构图+维度接口映射+频率表+接口测试+开始采集 | — | ❌ 完全缺失 |
-| 接口测试弹窗 | 5接口一键测试+多源对比+降级测试 | — | ❌ 完全缺失 |
+| ҳͷ | +h1++鿴 | м+h1++V9 | ?? ȱ"鿴ɼ" |
+| ģ忨Ƭ | 5Ƭ////죩 | 5Ƭޱ߿ɫ | ?? ȱɫʶ |
+| άѡ | 7άȿأȫ/ǩ | 8άȿأɫ+Badge+ֶαǩ | ? V9ḻ |
+| Ҳ | ĿƱ+ʷ+Դ+Ԥ+ʼɼ | +ʷ򻯰棩 | ?? ȱĿƱ롢Ԥ |
+| ɼ | µ3Ƭ+Ƚ+Kimiײ+Ƶʱ+ | ԤƬµ++AKShare+ʹʣ | ?? ȱKimiײ͡Ƶʱ |
+| ɼ | Ĳܹͼ+άȽӿӳ+Ƶʱ+ӿڲ+ʼɼ |  | ? ȫȱʧ |
+| ӿڲԵ | 5ӿһ+ԴԱ+ |  | ? ȫȱʧ |
 
-### 3.2 功能完整性评分
+### 3.2 
 
-| 功能模块 | V6完整度 | V9实现度 | 差距 |
+| ģ | V6 | V9ʵֶ |  |
 |:---|:---:|:---:|:---:|
-| 策略模板选择 | 100% | 90% | 10% |
-| 维度开关 | 100% | 95% | 5% |
-| 参数配置 | 100% | 40% | 60% |
-| 额度预估 | 100% | 50% | 50% |
-| 采集方案整合 | 100% | 0% | 100% |
-| 接口测试 | 100% | 0% | 100% |
-| 四层降级展示 | 100% | 0% | 100% |
-| **加权平均** | **100%** | **~40%** | **~60%** |
+| ģѡ | 100% | 90% | 10% |
+| άȿ | 100% | 95% | 5% |
+|  | 100% | 40% | 60% |
+| Ԥ | 100% | 50% | 50% |
+| ɼ | 100% | 0% | 100% |
+| ӿڲ | 100% | 0% | 100% |
+| Ĳ㽵չʾ | 100% | 0% | 100% |
+| **Ȩƽ** | **100%** | **~40%** | **~60%** |
 
 ---
 
-## 四、功能模块校对
+## ġģУ
 
-### 4.1 V6→V9功能迁移完整度
+### 4.1 V6V9Ǩ
 
-| V6功能模块 | V9迁移状态 | 说明 |
+| V6ģ | V9Ǩ״̬ | ˵ |
 |:---|:---:|:---|
-| 股票池管理（4分组/32只/导入导出） | 🟡 60% | 有PoolBoard+StockSearch，缺分组管理增强 |
-| 七维采集（5模板/7维度/参数配置） | 🟡 40% | 有SevenDimConfigPage框架，缺采集方案整合面板 |
-| 采集任务（进度监控/评分卡片/日志） | 🔴 0% | 完全缺失 |
-| 智能资讯（新闻索引/研报/情感分析） | 🟡 20% | newsService仅保存，无爬虫 |
-| 抓取引擎（多源/适配器/清洗） | 🟡 30% | fetcherService+fetcherClient，缺UI面板 |
-| 本地存储（7维JSON/数据看板/导出） | 🟡 40% | IndexedDB已实现，缺数据看板 |
-| 数据流水线可视化（7节点） | 🔴 0% | 完全缺失 |
-| 数据导出（JSON/CSV/按维度筛选） | 🟡 50% | OutputApp有导出面板 |
-| 接口测试（5接口一键测试） | 🟡 30% | DataTestPanel简化版 |
-| 四层数据源降级（腾讯→AKShare→Kimi→Mock） | 🔴 10% | 仅AKShare+Mock两Provider |
+| Ʊع4/32ֻ/뵼 | ?? 60% | PoolBoard+StockSearchȱǿ |
+| άɼ5ģ/7ά/ã | ?? 40% | SevenDimConfigPageܣȱɼ |
+| ɼ񣨽ȼ/ֿƬ/־ | ?? 0% | ȫȱʧ |
+| Ѷ/б/з | ?? 20% | newsService棬 |
+| ץȡ棨Դ//ϴ | ?? 30% | fetcherService+fetcherClientȱUI |
+| ش洢7άJSON/ݿ/ | ?? 40% | IndexedDBʵ֣ȱݿ |
+| ˮ߿ӻ7ڵ㣩 | ?? 0% | ȫȱʧ |
+| ݵJSON/CSV/άɸѡ | ?? 50% | OutputAppе |
+| ӿڲԣ5ӿһԣ | ?? 30% | DataTestPanel򻯰 |
+| ĲԴѶAKShareKimiMock | ?? 10% | AKShare+MockProvider |
 
-### 4.2 V6数据工场6大子模块 → V9映射
+### 4.2 V6ݹ6ģ  V9ӳ
 
-| V6子模块 | V6入口 | V9入口 | V9组件 | 映射状态 |
+| V6ģ | V6 | V9 | V9 | ӳ״̬ |
 |:---|:---|:---|:---|:---:|
-| 股票池管理 | `/data-hub`→模块总览 | `/input` | `InputDashboard` | ✅ 已映射 |
-| 七维采集 | `/seven-dim` | `/input/seven-dim` | `SevenDimConfigPage` | ✅ 已映射 |
-| 采集任务 | `/collect-task` | — | — | ❌ 缺失 |
-| 智能资讯 | `/news` | `/analysis/news` | `NewsPage` | ⚠️ 迁移至分析舱 |
-| 抓取引擎 | `/fetcher` | — | — | ❌ 缺失 |
-| 本地存储 | `/data-hub`→数据看板 | — | — | ❌ 缺失 |
+| Ʊع | `/data-hub`ģ | `/input` | `InputDashboard` | ? ӳ |
+| άɼ | `/seven-dim` | `/input/seven-dim` | `SevenDimConfigPage` | ? ӳ |
+| ɼ | `/collect-task` |  |  | ? ȱʧ |
+| Ѷ | `/news` | `/analysis/news` | `NewsPage` | ?? Ǩ |
+| ץȡ | `/fetcher` |  |  | ? ȱʧ |
+| ش洢 | `/data-hub`ݿ |  |  | ? ȱʧ |
 
 ---
 
-## 五、架构问题汇总
+## 塢ܹ
 
-### 5.1 路由层问题
-
-```
-问题1：/input/seven-dim 未在 ROUTE_REGISTRY 注册 ✅ 已修复（2026-07-01）
-  ├─ 影响：脱离中央路由表管控，isPathWhitelisted() 不包含此路径
-  ├─ 风险：外部跳转校验可能拒绝此URL
-  └─ 修复：routes.ts 添加 { path: '/input/seven-dim', component: PortalShell, ... } — 已完成
-
-问题2：ResearchReportPage.tsx / TradeReviewPage.tsx 完全孤儿 ✅ 已修复（2026-07-01）
-  ├─ 影响：已实现的页面无法通过路由访问
-  ├─ 现状：OutputApp 用 PlaceholderPanel 占位
-  └─ 修复：替换 PlaceholderPanel → lazy import 实际页面 — 已完成
-
-问题3：docs/06-routing-specs.md 与代码不一致
-  ├─ 第8节残留 /hub 路径（已移除）
-  ├─ 第8节残留 /analysis/news-v6（已删除）
-  ├─ 第8节缺失14条已注册路由
-  ├─ 第9节版本号矛盾（v1.5.0 vs v1.2.0）
-  └─ 第7节 ErrorBoundary 描述滞后（已实现 RouteErrorBoundary）
-```
-
-### 5.2 UI组件层问题
+### 5.1 ·ɲ
 
 ```
-问题4：4个组件违反四步契约（DF-002 数据流违规）
-  ├─ InputDashboard：直接调 inputService/stockpoolService
-  ├─ HotSectorPanel：直接调 hotSectorService
-  ├─ BulkImportPanel：直接调 batchImportService
-  └─ StockSearch：直接调 inputService
-  → 整改方向：操作封装到 Store action
+1/input/seven-dim δ ROUTE_REGISTRY ע ? ޸2026-07-01
+   Ӱ죺·ɱܿأisPathWhitelisted() ·
+   գⲿתУܾܾURL
+   ޸routes.ts  { path: '/input/seven-dim', component: PortalShell, ... }  
 
-问题5：5个组件缺ErrorBoundary
-  ├─ LocalKnowledgePage
-  ├─ InputDashboard
-  ├─ DataTestPanel
-  ├─ HotSectorPanel
-  └─ BulkImportPanel
-  → 整改方向：参照 InputApp 模式补 ErrorBoundary
+2ResearchReportPage.tsx / TradeReviewPage.tsx ȫ¶ ? ޸2026-07-01
+   Ӱ죺ʵֵҳ޷ͨ·ɷ
+   ״OutputApp  PlaceholderPanel ռλ
+   ޸滻 PlaceholderPanel  lazy import ʵҳ  
 
-问题6：AnalysisApp/TradingApp/OutputApp/CommandApp 内部无独立 ErrorBoundary
-  ├─ 仅 InputApp 有 <ErrorBoundary> 包裹子路由
-  └─ 其他4舱依赖外层 RouteErrorBoundary 兜底
-  → 整改方向：统一补 ErrorBoundary
+3docs/06-routing-specs.md 벻һ
+   8ڲ /hub ·Ƴ
+   8ڲ /analysis/news-v6ɾ
+   8ȱʧ14ע·
+   9ڰ汾ìܣv1.5.0 vs v1.2.0
+   7 ErrorBoundary ͺʵ RouteErrorBoundary
 ```
 
-### 5.3 功能缺失问题
+### 5.2 UI
 
 ```
-问题7：4个核心UI组件完全缺失
-  ├─ CollectTaskPage（采集任务监控）
-  ├─ CollectMonitor（采集实时监控）
-  ├─ FetcherConfigPage（抓取引擎配置）
-  └─ DataDashboard（8维度数据看板）
+44ΥĲԼDF-002 Υ棩
+   InputDashboardֱӵ inputService/stockpoolService
+   HotSectorPanelֱӵ hotSectorService
+   BulkImportPanelֱӵ batchImportService
+   StockSearchֱӵ inputService
+   ķ򣺲װ Store action
 
-问题8：SevenDimConfigPage 功能不完整
-  ├─ 缺采集方案整合面板（四层架构图/维度接口映射/频率表）
-  ├─ 缺接口测试弹窗
-  ├─ 缺Kimi Work套餐选择
-  ├─ 缺8维度频率表
-  ├─ 缺限流配置展示
-  └─ 缺目标股票输入框
+55ȱErrorBoundary
+   LocalKnowledgePage
+   InputDashboard
+   DataTestPanel
+   HotSectorPanel
+   BulkImportPanel
+   ķ򣺲 InputApp ģʽ ErrorBoundary
 
-问题9：数据流水线可视化完全缺失
-  └─ V6有完整7节点流水线+动画+状态指示，V9未开始
+6AnalysisApp/TradingApp/OutputApp/CommandApp ڲ޶ ErrorBoundary
+    InputApp  <ErrorBoundary> ·
+   4 RouteErrorBoundary 
+   ķͳһ ErrorBoundary
+```
+
+### 5.3 ȱʧ
+
+```
+74UIȫȱʧ
+   CollectTaskPageɼأ
+   CollectMonitorɼʵʱأ
+   FetcherConfigPageץȡã
+   DataDashboard8άݿ壩
+
+8SevenDimConfigPage ܲ
+   ȱɼ壨Ĳܹͼ/άȽӿӳ/Ƶʱ
+   ȱӿڲԵ
+   ȱKimi Workײѡ
+   ȱ8άƵʱ
+   ȱչʾ
+   ȱĿƱ
+
+9ˮ߿ӻȫȱʧ
+   V67ڵˮ++״ָ̬ʾV9δʼ
 ```
 
 ---
 
-## 六、优化建议
+## Ż
 
-### 6.1 即时修复（P0 - 路由合规）
+### 6.1 ʱ޸P0 - ·ɺϹ棩
 
-| 编号 | 操作 | 文件 | 复杂度 |
+|  |  | ļ | Ӷ |
 |:---:|:---|:---|:---:|
-| F-01 | `/input/seven-dim` 注册到 `ROUTE_REGISTRY` | [routes.ts](file:///C:/Users/huawei/Documents/kimi/Workspaces/智能投研复盘系统V9/src/config/routes.ts) | ✅ 已完成 |
-| F-02 | 替换 OutputApp 的 PlaceholderPanel → 实际页面 | [OutputApp.tsx](../../src/apps/output/OutputApp.tsx) | ✅ 已完成 |
-| F-03 | 同步 docs/06-routing-specs.md 路由表 | [06-routing-specs.md](06-routing-specs.md) | 中 |
+| F-01 | `/input/seven-dim` עᵽ `ROUTE_REGISTRY` | [routes.ts](../../../src/config/routes.ts) | ?  |
+| F-02 | 滻 OutputApp  PlaceholderPanel  ʵҳ | [OutputApp.tsx](../../../src/apps/output/OutputApp.tsx) | ?  |
+| F-03 | ͬ docs/06-routing-specs.md ·ɱ | [06-routing-specs.md](06-routing-specs.md) |  |
 
-### 6.2 短期优化（P1 - UI组件合规）
+### 6.2 ŻP1 - UIϹ棩
 
-| 编号 | 操作 | 影响文件 | 复杂度 |
+|  |  | Ӱļ | Ӷ |
 |:---:|:---|:---|:---:|
-| F-04 | 4个组件补 ErrorBoundary | LocalKnowledgePage/DataTestPanel/HotSectorPanel/BulkImportPanel | 低 |
-| F-05 | 4个CabinApp补内部ErrorBoundary | AnalysisApp/TradingApp/OutputApp/CommandApp | 低 |
-| F-06 | DF-002整改：InputDashboard操作封装到Store | InputDashboard.tsx + inputHubStore.ts | 中 |
-| F-07 | DF-002整改：HotSectorPanel操作封装到Store | HotSectorPanel.tsx + poolStore.ts | 中 |
-| F-08 | DF-002整改：BulkImportPanel操作封装到Store | BulkImportPanel.tsx + poolStore.ts | 中 |
+| F-04 | 4 ErrorBoundary | LocalKnowledgePage/DataTestPanel/HotSectorPanel/BulkImportPanel |  |
+| F-05 | 4CabinAppڲErrorBoundary | AnalysisApp/TradingApp/OutputApp/CommandApp |  |
+| F-06 | DF-002ģInputDashboardװStore | InputDashboard.tsx + inputHubStore.ts |  |
+| F-07 | DF-002ģHotSectorPanelװStore | HotSectorPanel.tsx + poolStore.ts |  |
+| F-08 | DF-002ģBulkImportPanelװStore | BulkImportPanel.tsx + poolStore.ts |  |
 
-### 6.3 中期建设（P2 - 缺失组件）
+### 6.3 ڽ裨P2 - ȱʧ
 
-| 编号 | 操作 | 新建文件 | 复杂度 |
+|  |  | ½ļ | Ӷ |
 |:---:|:---|:---|:---:|
-| F-09 | 新建 CollectTaskPage（采集任务监控3Tab） | `src/pages/input/CollectTask/index.tsx` | 高 |
-| F-10 | 新建 CollectMonitor（实时采集监控） | `src/pages/input/CollectMonitor.tsx` | 高 |
-| F-11 | 新建 FetcherConfigPage（抓取引擎配置） | `src/pages/input/FetcherConfigPage.tsx` | 中 |
-| F-12 | SevenDimConfigPage 补全采集方案整合面板 | SevenDimConfigPage.tsx | 中 |
-| F-13 | 新建 DataDashboard（8维度数据看板） | `src/pages/input/DataDashboard.tsx` | 高 |
-| F-14 | 新建数据流水线可视化组件 | `src/components/pipeline/DataPipeline.tsx` | 高 |
+| F-09 | ½ CollectTaskPageɼ3Tab | `src/pages/input/CollectTask/index.tsx` |  |
+| F-10 | ½ CollectMonitorʵʱɼأ | `src/pages/input/CollectTask/index.tsx` |  |
+| F-11 | ½ FetcherConfigPageץȡã | `src/pages/input/FetcherConfigPage.tsx` |  |
+| F-12 | SevenDimConfigPage ȫɼ | SevenDimConfigPage.tsx |  |
+| F-13 | ½ DataDashboard8άݿ壩 | `src/apps/input/InputDashboard.tsx` |  |
+| F-14 | ½ˮ߿ӻ | `src/core/pipelineScheduler.ts` |  |
 
-### 6.4 长期演进（P3 - V6对齐）
+### 6.4 ݽP3 - V6룩
 
-| 编号 | 操作 | 说明 |
+|  |  | ˵ |
 |:---:|:---|:---|
-| F-15 | 四层数据源降级编排 | 腾讯→AKShare→Kimi→Mock 自动降级 |
-| F-16 | 接口测试弹窗（5接口一键测试） | 参照V6 DirectDataAPI |
-| F-17 | Kimi Work套餐选择UI | Andante/Allegretto/Presto三档 |
-| F-18 | 8维度调用频率表 | 8维度×频率×数据源交叉表 |
-| F-19 | 限流配置面板 | 分钟/小时/日限流参数可配置 |
+| F-15 | ĲԴ | ѶAKShareKimiMock Զ |
+| F-16 | ӿڲԵ5ӿһԣ | V6 DirectDataAPI |
+| F-17 | Kimi WorkײѡUI | Andante/Allegretto/Presto |
+| F-18 | 8άȵƵʱ | 8άȡƵʡԴ |
+| F-19 |  | /Сʱ/ |
 
 ---
 
-## 七、校对结论
+## ߡУԽ
 
-### 7.1 整体健康度
+### 7.1 彡
 
-| 维度 | 评分 | 说明 |
+| ά |  | ˵ |
 |:---|:---:|:---|
-| 路由注册合规性 | 70% | 已全部修复（2026-07-01） |
-| UI组件合规性 | 55% | 4个DF-002违规 + 5个缺ErrorBoundary |
-| V6功能迁移完整度 | 35% | 6大子模块仅2个完整迁移，4个缺失 |
-| SevenDimConfigPage完整度 | 40% | 框架已建，采集方案整合面板缺失 |
-| 采集能力实质完整度 | 12% | 8维度仅2个有框架，0个真实接入 |
+| ·עϹ | 70% | ȫ޸2026-07-01 |
+| UIϹ | 55% | 4DF-002Υ + 5ȱErrorBoundary |
+| V6Ǩ | 35% | 6ģ2Ǩƣ4ȱʧ |
+| SevenDimConfigPage | 40% | ѽɼȱʧ |
+| ɼʵ | 12% | 8άȽ2пܣ0ʵ |
 
-### 7.2 需要进一步优化的核心领域
+### 7.2 ҪһŻĺ
 
-> **三个最需要优化的领域**：
+> **ҪŻ**
 
-1. **路由注册合规化**（P0即时）
-   - `/input/seven-dim` 注册到 `ROUTE_REGISTRY`
-   - 孤儿页面 `ResearchReportPage` / `TradeReviewPage` 接入路由 ✅ 已完成
-   - 路由文档同步更新
+1. **·עϹ滯**P0ʱ
+   - `/input/seven-dim` עᵽ `ROUTE_REGISTRY`
+   - ¶ҳ `ResearchReportPage` / `TradeReviewPage` · ? 
+   - ·ĵͬ
 
-2. **缺失UI组件建设**（P2中期）
-   - 新建 `CollectTaskPage`（采集任务监控）
-   - 新建 `CollectMonitor`（实时采集监控）
-   - 补全 `SevenDimConfigPage` 的采集方案整合面板
+2. **ȱʧUI**P2ڣ
+   - ½ `CollectTaskPage`ɼأ
+   - ½ `CollectMonitor`ʵʱɼأ
+   - ȫ `SevenDimConfigPage` Ĳɼ
 
-3. **四步契约合规化**（P1短期）
-   - 4个DF-002违规组件整改（操作封装到Store action）
-   - 5个组件补ErrorBoundary
-   - 4个CabinApp补内部ErrorBoundary
+3. **ĲԼϹ滯**P1ڣ
+   - 4DF-002ΥģװStore action
+   - 5ErrorBoundary
+   - 4CabinAppڲErrorBoundary
 
-### 7.3 V6→V9架构迁移成熟度
+### 7.3 V6V9ܹǨƳ
 
 ```
-V6数据采集层完整架构
-  ├── 数据工场入口 ──────────── ✅ 已迁移（InputHubPage）
-  ├── 七维采集配置 ──────────── 🟡 框架已建（40%）
-  ├── 采集任务监控 ──────────── ❌ 完全缺失
-  ├── 抓取引擎配置 ──────────── ❌ 完全缺失
-  ├── 智能资讯 ──────────────── 🟡 迁移至分析舱（20%）
-  ├── 数据看板 ──────────────── ❌ 完全缺失
-  ├── 数据流水线 ────────────── ❌ 完全缺失
-  ├── 四层数据源降级 ────────── 🔴 仅1/4层（10%）
-  └── 接口测试 ──────────────── 🟡 简化版（30%）
+V6ݲɼܹ
+   ݹ  ? ǨƣInputHubPage
+   άɼ  ?? ѽ40%
+   ɼ  ? ȫȱʧ
+   ץȡ  ? ȫȱʧ
+   Ѷ  ?? Ǩգ20%
+   ݿ  ? ȫȱʧ
+   ˮ  ? ȫȱʧ
+   ĲԴ  ?? 1/4㣨10%
+   ӿڲ  ?? 򻯰棨30%
 
-整体迁移成熟度：约 30%
+ǨƳȣԼ 30%
 ```

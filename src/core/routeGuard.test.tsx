@@ -64,8 +64,8 @@ describe('routeGuard - hasPermission（button 级）', () => {
     expect(hasPermission({ module: 'analysis', level: 'button', action: 'unknownAction' })).toBe(false)
   })
 
-  it('未注册模块默认放行（渐进式启用）', () => {
-    expect(hasPermission({ module: 'ghostModule', level: 'button', action: 'anything' })).toBe(true)
+  it('未注册模块默认拒绝（安全优先）', () => {
+    expect(hasPermission({ module: 'ghostModule', level: 'button', action: 'anything' })).toBe(false)
   })
 })
 

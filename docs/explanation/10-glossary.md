@@ -1,290 +1,292 @@
 ---
-title: 10-glossary
-tier: important
+title: 10. ÁìÓò´Ê»ã±í
+type: explanation
+domain: project
+phase: planning
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "Ô­Ôò£ºËùÓĞ¸ÅÄîÔÚ´úÂë¡¢UI¡¢ÎÄµµÖĞ±ØĞëÊ¹ÓÃ±¾±í¹æ·¶ÃüÃû¡£¾ÉÃüÃûÖğ²½Ç¨ÒÆÇåÁã¡£"
+tags: [project, plan, reference]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/explanation/10-glossary.md
-code_version: 2.0.0
----
-
----
-title: docs/explanation/10-glossary.md
-code_version: 2.0.0
-tier: important
----
-
-# 10. é¢†åŸŸè¯æ±‡è¡¨
+# 10. ÁìÓò´Ê»ã±í
 
 > **Status**: Current  
 > **Version**: v2.7.0  
 > **Last Updated**: 2026-07-15
 >
-> **åŸåˆ™**ï¼šæ‰€æœ‰æ¦‚å¿µåœ¨ä»£ç ã€UIã€æ–‡æ¡£ä¸­å¿…é¡»ä½¿ç”¨æœ¬è¡¨è§„èŒƒå‘½åã€‚æ—§å‘½åé€æ­¥è¿ç§»æ¸…é›¶ã€‚
+> **Ô­Ôò**£ºËùÓĞ¸ÅÄîÔÚ´úÂë¡¢UI¡¢ÎÄµµÖĞ±ØĞëÊ¹ÓÃ±¾±í¹æ·¶ÃüÃû¡£¾ÉÃüÃûÖğ²½Ç¨ÒÆÇåÁã¡£
 
-## 10.1 è‚¡ç¥¨æ± ä½“ç³»ï¼ˆæ ¸å¿ƒå®šä¹‰ï¼‰
+## 10.1 ¹ÉÆ±³ØÌåÏµ£¨ºËĞÄ¶¨Òå£©
 
-V9 é‡‡ç”¨**å•è¡¨å¤šçŠ¶æ€**æ¨¡å‹ï¼šæ‰€æœ‰æ ‡çš„ç»Ÿä¸€å­˜å‚¨åœ¨ `stocks` Storeï¼Œé€šè¿‡ `researchStatus` å­—æ®µåŒºåˆ†æ‰€å¤„é˜¶æ®µã€‚
+V9 ²ÉÓÃ**µ¥±í¶à×´Ì¬**Ä£ĞÍ£ºËùÓĞ±êµÄÍ³Ò»´æ´¢ÔÚ `stocks` Store£¬Í¨¹ı `researchStatus` ×Ö¶ÎÇø·ÖËù´¦½×¶Î¡£
 
-ç ”ç©¶æ± é“¾è·¯ä¸ºä¸¥æ ¼çš„äº”æ€å•å‘æµï¼š
+ÑĞ¾¿³ØÁ´Â·ÎªÑÏ¸ñµÄÎåÌ¬µ¥ÏòÁ÷£º
 
 ```
-æ„å‘å€™é€‰æ±  â†’ ç ”ç©¶ç²¾é€‰æ±  â†’ æ·±åº¦ç ”ç©¶æ±  â†’ è§‚å¯Ÿæ±  â†’ å½’æ¡£æ± 
+ÒâÏòºòÑ¡³Ø ¡ú ÑĞ¾¿¾«Ñ¡³Ø ¡ú Éî¶ÈÑĞ¾¿³Ø ¡ú ¹Û²ì³Ø ¡ú ¹éµµ³Ø
 ```
 
-| ä¸­æ–‡å | è‹±æ–‡å | `researchStatus` | å®šä¹‰ | è¿›å…¥æ¡ä»¶ | æµå‡ºåŠ¨ä½œ |
+| ÖĞÎÄÃû | Ó¢ÎÄÃû | `researchStatus` | ¶¨Òå | ½øÈëÌõ¼ş | Á÷³ö¶¯×÷ |
 |--------|--------|------------------|------|----------|----------|
-| **æ„å‘å€™é€‰æ± ** | Intention Pool / Candidate Pool | `candidate` | åˆæ­¥æ„Ÿå…´è¶£çš„æ ‡çš„ï¼Œåˆšå½•å…¥æˆ–é‡‡é›† | æ‰‹åŠ¨å½•å…¥ã€CSV å¯¼å…¥ã€AKShare é‡‡é›† | å®ŒæˆåŸºç¡€ç­›é€‰ â†’ ç ”ç©¶ç²¾é€‰æ±  |
-| **ç ”ç©¶ç²¾é€‰æ± ** | Research Picks / Screened Pool | `screened` | é€šè¿‡åˆæ­¥ç­›é€‰ï¼Œè¿›å…¥æ­£å¼ç ”ç©¶çš„æ ‡çš„ | ä»å€™é€‰æ± ç­›é€‰åæ¨é€ | å®Œæˆæ·±åº¦ç ”ç©¶ â†’ æ·±åº¦ç ”ç©¶æ±  |
-| **æ·±åº¦ç ”ç©¶æ± ** | Deep Dive Pool | `deepDive` | å·²å®Œæˆæ·±åº¦åˆ†æï¼Œç­‰å¾…å†³ç­–çš„æ ‡çš„ | ä»ç ”ç©¶ç²¾é€‰æ± æ¨é€ | å†³å®šè·Ÿè¸ª â†’ è§‚å¯Ÿæ± ï¼›ä¸ç¬¦åˆ â†’ å½’æ¡£æ±  |
-| **è§‚å¯Ÿæ± ** | Watchlist / Watching Pool | `watching` | å·²å†³å®šè·Ÿè¸ªï¼Œç­‰å¾…ä¹°ç‚¹æˆ–æŒç»­è§‚å¯Ÿ | ä»æ·±åº¦ç ”ç©¶æ± æ¨é€ | ä¸å†è·Ÿè¸ª â†’ å½’æ¡£æ±  |
-| **å½’æ¡£æ± ** | Archive Pool | `archived` | å·²æ·˜æ±°ã€å·²å–å‡ºæˆ–ä¸å†å…³æ³¨çš„æ ‡çš„ | ä»ä»»æ„ç ”ç©¶æ± ä¸»åŠ¨å½’æ¡£ | é‡æ–°æ¿€æ´» â†’ æ„å‘å€™é€‰æ±  |
+| **ÒâÏòºòÑ¡³Ø** | Intention Pool / Candidate Pool | `candidate` | ³õ²½¸ĞĞËÈ¤µÄ±êµÄ£¬¸ÕÂ¼Èë»ò²É¼¯ | ÊÖ¶¯Â¼Èë¡¢CSV µ¼Èë¡¢AKShare ²É¼¯ | Íê³É»ù´¡É¸Ñ¡ ¡ú ÑĞ¾¿¾«Ñ¡³Ø |
+| **ÑĞ¾¿¾«Ñ¡³Ø** | Research Picks / Screened Pool | `screened` | Í¨¹ı³õ²½É¸Ñ¡£¬½øÈëÕıÊ½ÑĞ¾¿µÄ±êµÄ | ´ÓºòÑ¡³ØÉ¸Ñ¡ºóÍÆËÍ | Íê³ÉÉî¶ÈÑĞ¾¿ ¡ú Éî¶ÈÑĞ¾¿³Ø |
+| **Éî¶ÈÑĞ¾¿³Ø** | Deep Dive Pool | `deepDive` | ÒÑÍê³ÉÉî¶È·ÖÎö£¬µÈ´ı¾ö²ßµÄ±êµÄ | ´ÓÑĞ¾¿¾«Ñ¡³ØÍÆËÍ | ¾ö¶¨¸ú×Ù ¡ú ¹Û²ì³Ø£»²»·ûºÏ ¡ú ¹éµµ³Ø |
+| **¹Û²ì³Ø** | Watchlist / Watching Pool | `watching` | ÒÑ¾ö¶¨¸ú×Ù£¬µÈ´ıÂòµã»ò³ÖĞø¹Û²ì | ´ÓÉî¶ÈÑĞ¾¿³ØÍÆËÍ | ²»ÔÙ¸ú×Ù ¡ú ¹éµµ³Ø |
+| **¹éµµ³Ø** | Archive Pool | `archived` | ÒÑÌÔÌ­¡¢ÒÑÂô³ö»ò²»ÔÙ¹Ø×¢µÄ±êµÄ | ´ÓÈÎÒâÑĞ¾¿³ØÖ÷¶¯¹éµµ | ÖØĞÂ¼¤»î ¡ú ÒâÏòºòÑ¡³Ø |
 
-### æ± é—´æµè½¬è§„åˆ™
+### ³Ø¼äÁ÷×ª¹æÔò
 
 ```
-                    â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-         â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”‚  æ„å‘å€™é€‰æ±   â”‚â†â”€â”€â”€â”€â”€â”€â”€â”€ å½•å…¥/é‡‡é›†
-         â”‚         â”‚  candidate  â”‚
-         â”‚         â””â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”˜
-         â”‚                â”‚ åŸºç¡€ç­›é€‰
-         â”‚         â”Œâ”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”
-         â”‚         â”‚  ç ”ç©¶ç²¾é€‰æ±   â”‚
-         â”‚         â”‚  screened   â”‚
-         â”‚         â””â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”˜
-         â”‚                â”‚ æ·±åº¦ç ”ç©¶
-         â”‚         â”Œâ”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”
-         â”‚         â”‚  æ·±åº¦ç ”ç©¶æ±   â”‚
-         â”‚         â”‚  deepDive   â”‚
-         â”‚         â””â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”˜
-         â”‚                â”‚ å†³å®šè·Ÿè¸ª
-   é‡æ–°æ¿€æ´» â”‚         â”Œâ”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”
-   (ä»»æ„æ± ) â”‚         â”‚    è§‚å¯Ÿæ±     â”‚â”€â”€â”€â”€â”€â”€ ä¸å†è·Ÿè¸ª â”€â”€â”€â”€â”
-            â”‚         â”‚   watching  â”‚                     â”‚
-            â”‚         â””â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”˜                     â”‚
-            â”‚                â”‚                            â”‚
-            â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                             â”‚
-                      â”Œâ”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”
-                      â”‚    å½’æ¡£æ±     â”‚
-                      â”‚   archived  â”‚
-                      â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                    ©°©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©´
+         ©°©¤©¤©¤©¤©¤©¤©¤©¤©¤©¦  ÒâÏòºòÑ¡³Ø  ©¦¡û©¤©¤©¤©¤©¤©¤©¤©¤ Â¼Èë/²É¼¯
+         ©¦         ©¦  candidate  ©¦
+         ©¦         ©¸©¤©¤©¤©¤©¤©¤©Ğ©¤©¤©¤©¤©¤©¤©¼
+         ©¦                ©¦ »ù´¡É¸Ñ¡
+         ©¦         ©°©¤©¤©¤©¤©¤©¤¨‹©¤©¤©¤©¤©¤©¤©´
+         ©¦         ©¦  ÑĞ¾¿¾«Ñ¡³Ø  ©¦
+         ©¦         ©¦  screened   ©¦
+         ©¦         ©¸©¤©¤©¤©¤©¤©¤©Ğ©¤©¤©¤©¤©¤©¤©¼
+         ©¦                ©¦ Éî¶ÈÑĞ¾¿
+         ©¦         ©°©¤©¤©¤©¤©¤©¤¨‹©¤©¤©¤©¤©¤©¤©´
+         ©¦         ©¦  Éî¶ÈÑĞ¾¿³Ø  ©¦
+         ©¦         ©¦  deepDive   ©¦
+         ©¦         ©¸©¤©¤©¤©¤©¤©¤©Ğ©¤©¤©¤©¤©¤©¤©¼
+         ©¦                ©¦ ¾ö¶¨¸ú×Ù
+   ÖØĞÂ¼¤»î ©¦         ©°©¤©¤©¤©¤©¤©¤¨‹©¤©¤©¤©¤©¤©¤©´
+   (ÈÎÒâ³Ø) ©¦         ©¦    ¹Û²ì³Ø    ©¦©¤©¤©¤©¤©¤©¤ ²»ÔÙ¸ú×Ù ©¤©¤©¤©¤©´
+            ©¦         ©¦   watching  ©¦                     ©¦
+            ©¦         ©¸©¤©¤©¤©¤©¤©¤©Ğ©¤©¤©¤©¤©¤©¤©¼                     ©¦
+            ©¦                ©¦                            ©¦
+            ©¸©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©Ø©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼
+                             ©¦
+                      ©°©¤©¤©¤©¤©¤©¤¨‹©¤©¤©¤©¤©¤©¤©´
+                      ©¦    ¹éµµ³Ø    ©¦
+                      ©¦   archived  ©¦
+                      ©¸©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼
 ```
 
-### é‡è¦æ¾„æ¸…
+### ÖØÒª³ÎÇå
 
-- **ç ”ç©¶æ± åªæœ‰äº”æ€**ï¼Œå¯¹åº” `ResearchStatus`ï¼š`candidate â†’ screened â†’ deepDive â†’ watching â†’ archived`ã€‚
-- **äº¤æ˜“æŒä»“ä¸å±äºç ”ç©¶æ± **ï¼Œä¹Ÿä¸å†™å…¥ `stocks.researchStatus`ï¼Œå®ƒç”±ç‹¬ç«‹çš„ `orders` / `positions` Store ç®¡ç†ï¼ˆè§ 10.1.2ï¼‰ã€‚
-- **ä¸å†æœ‰ç‹¬ç«‹çš„ `intention_pool` / `screener_pool` / `watchlist` è¡¨æˆ– localStorage key**ã€‚
-- æ‰€æœ‰ç ”ç©¶æ± çš„æŸ¥è¯¢ç»Ÿä¸€ä¸ºï¼š`db.getAllByIndex('stocks', 'by-status', status)`ã€‚
-- UI å±‚é€šè¿‡ `StockPoolBoardPage`ï¼ˆ`/analysis/stock-pool`ï¼‰æ‰¿è½½ `PoolBoard` / `PoolColumn`ï¼ŒæŒ‰ `researchStatus` æ¸²æŸ“ä¸åŒç ”ç©¶æ± ã€‚è¾“å…¥èˆ±ä¾§æ ä¿ç•™è·³è½¬å…¥å£ã€‚
+- **ÑĞ¾¿³ØÖ»ÓĞÎåÌ¬**£¬¶ÔÓ¦ `ResearchStatus`£º`candidate ¡ú screened ¡ú deepDive ¡ú watching ¡ú archived`¡£
+- **½»Ò×³Ö²Ö²»ÊôÓÚÑĞ¾¿³Ø**£¬Ò²²»Ğ´Èë `stocks.researchStatus`£¬ËüÓÉ¶ÀÁ¢µÄ `orders` / `positions` Store ¹ÜÀí£¨¼û 10.1.2£©¡£
+- **²»ÔÙÓĞ¶ÀÁ¢µÄ `intention_pool` / `screener_pool` / `watchlist` ±í»ò localStorage key**¡£
+- ËùÓĞÑĞ¾¿³ØµÄ²éÑ¯Í³Ò»Îª£º`db.getAllByIndex('stocks', 'by-status', status)`¡£
+- UI ²ãÍ¨¹ı `StockPoolBoardPage`£¨`/analysis/stock-pool`£©³ĞÔØ `PoolBoard` / `PoolColumn`£¬°´ `researchStatus` äÖÈ¾²»Í¬ÑĞ¾¿³Ø¡£ÊäÈë²Õ²àÀ¸±£ÁôÌø×ªÈë¿Ú¡£
 
-## 10.1.2 äº¤æ˜“æŒä»“ï¼ˆç‹¬ç«‹ç®¡ç†ï¼‰
+## 10.1.2 ½»Ò×³Ö²Ö£¨¶ÀÁ¢¹ÜÀí£©
 
-| ä¸­æ–‡å | è‹±æ–‡å | å­˜å‚¨ä½ç½® | å®šä¹‰ | ä¸è§‚å¯Ÿæ± çš„å…³ç³» |
+| ÖĞÎÄÃû | Ó¢ÎÄÃû | ´æ´¢Î»ÖÃ | ¶¨Òå | Óë¹Û²ì³ØµÄ¹ØÏµ |
 |--------|--------|----------|------|----------------|
-| **äº¤æ˜“æŒä»“æ± ** | Trade Holdings | `orders` Store | å·²æ‰§è¡Œæ¨¡æ‹Ÿ/çœŸå®äº¤æ˜“çš„æŒä»“è®°å½• | ç”±è§‚å¯Ÿæ± è§¦å‘ä¹°å…¥åç”Ÿæˆï¼Œå–å‡ºåå¯é€‰æ‹©å½’æ¡£ç ”ç©¶æ± æˆ–ä¿æŒè§‚å¯Ÿ |
+| **½»Ò×³Ö²Ö³Ø** | Trade Holdings | `orders` Store | ÒÑÖ´ĞĞÄ£Äâ/ÕæÊµ½»Ò×µÄ³Ö²Ö¼ÇÂ¼ | ÓÉ¹Û²ì³Ø´¥·¢ÂòÈëºóÉú³É£¬Âô³öºó¿ÉÑ¡Ôñ¹éµµÑĞ¾¿³Ø»ò±£³Ö¹Û²ì |
 
-- äº¤æ˜“èˆ±ï¼ˆ`TradingApp`ï¼‰è´Ÿè´£ä¿¡å·ç”Ÿæˆã€ä¸‹å•ã€æŒä»“ç®¡ç†ã€‚
-- äº¤æ˜“æŒä»“çš„å¢åˆ æ”¹æŸ¥ä¸èµ°è‚¡ç¥¨æ± æµè½¬å¼•æ“ï¼Œè€Œèµ°äº¤æ˜“æœåŠ¡ï¼ˆ`src/services/trading/*`ï¼‰ã€‚
+- ½»Ò×²Õ£¨`TradingApp`£©¸ºÔğĞÅºÅÉú³É¡¢ÏÂµ¥¡¢³Ö²Ö¹ÜÀí¡£
+- ½»Ò×³Ö²ÖµÄÔöÉ¾¸Ä²é²»×ß¹ÉÆ±³ØÁ÷×ªÒıÇæ£¬¶ø×ß½»Ò×·şÎñ£¨`src/services/trading/*`£©¡£
 
-## 10.2 æ ¸å¿ƒæ¦‚å¿µ
+## 10.2 ºËĞÄ¸ÅÄî
 
-| ä¸­æ–‡ | è‹±æ–‡ | è¯´æ˜ |
+| ÖĞÎÄ | Ó¢ÎÄ | ËµÃ÷ |
 |------|------|------|
-| æ ‡çš„ | Stock / Symbol | è‚¡ç¥¨åŸºç¡€å®ä½“ï¼Œä»¥ `symbol` ä¸ºä¸»é”® |
-| V6 ä¹ç»´è¯„åˆ† | V6 Score | `v6_scores` Storeï¼Œç»¼åˆè¯„åˆ† 0-5 |
-| æ¿å—è½®åŠ¨ | Sector Rotation | `industry_scores` Storeï¼ˆå½“å‰ï¼‰ï¼›`rotation_scores` Storeï¼ˆè§„åˆ’ä¸­ï¼ŒP2ï¼‰ |
-| æ¨¡æ‹Ÿç›˜ | Paper Trading | `accountType: "paper"` |
-| çœŸå®äº¤æ˜“ | Real Trading | `accountType: "real"`ï¼ˆå ä½ï¼‰ |
-| äº”èˆ± | Five Cabins | input / analysis / trading / output / command |
-| é©¾é©¶èˆ± | Cockpit | ç³»ç»Ÿç›‘æ§ Widget  Dashboard |
-| èµ„é‡‘é…ç½® | Capital Allocation | æ ¸å¿ƒé•¿æœŸ/çƒ­ç‚¹çŸ­çº¿/æ¨èä¸ªè‚¡/ç°é‡‘æ¯”ä¾‹ |
+| ±êµÄ | Stock / Symbol | ¹ÉÆ±»ù´¡ÊµÌå£¬ÒÔ `symbol` ÎªÖ÷¼ü |
+| V6 ¾ÅÎ¬ÆÀ·Ö | V6 Score | `v6_scores` Store£¬×ÛºÏÆÀ·Ö 0-5 |
+| °å¿éÂÖ¶¯ | Sector Rotation | `industry_scores` Store£¨µ±Ç°£©£»`rotation_scores` Store£¨¹æ»®ÖĞ£¬P2£© |
+| Ä£ÄâÅÌ | Paper Trading | `accountType: "paper"` |
+| ÕæÊµ½»Ò× | Real Trading | `accountType: "real"`£¨Õ¼Î»£© |
+| Îå²Õ | Five Cabins | input / analysis / trading / output / command |
+| ¼İÊ»²Õ | Cockpit | ÏµÍ³¼à¿Ø Widget  Dashboard |
+| ×Ê½ğÅäÖÃ | Capital Allocation | ºËĞÄ³¤ÆÚ/ÈÈµã¶ÌÏß/ÍÆ¼ö¸ö¹É/ÏÖ½ğ±ÈÀı |
 
-## 10.3 è·¯ç”±è¯æ±‡
+## 10.3 Â·ÓÉ´Ê»ã
 
-| è·¯å¾„ | ä¸­æ–‡ |
+| Â·¾¶ | ÖĞÎÄ |
 |------|------|
-| `/` | é¦–é¡µ |
-| `/input` | è¾“å…¥èˆ± |
-| `/analysis` | åˆ†æèˆ± |
-| `/trading` | äº¤æ˜“èˆ± |
-| `/output` | è¾“å‡ºèˆ± |
-| `/command` | æ€»æ§èˆ± |
-| `/cockpit` | é©¾é©¶èˆ± |
-| `/analysis/stock-score` | ä¸ªè‚¡è¯„åˆ† |
-| `/analysis/sector` | è¡Œä¸šåˆ†æ |
-| `/analysis/backtest` | ç­–ç•¥å›æµ‹ |
+| `/` | Ê×Ò³ |
+| `/input` | ÊäÈë²Õ |
+| `/analysis` | ·ÖÎö²Õ |
+| `/trading` | ½»Ò×²Õ |
+| `/output` | Êä³ö²Õ |
+| `/command` | ×Ü¿Ø²Õ |
+| `/cockpit` | ¼İÊ»²Õ |
+| `/analysis/stock-score` | ¸ö¹ÉÆÀ·Ö |
+| `/analysis/sector` | ĞĞÒµ·ÖÎö |
+| `/analysis/backtest` | ²ßÂÔ»Ø²â |
 
-## 10.4 äº¤æ˜“ä¸å¤ç›˜æœ¯è¯­
+## 10.4 ½»Ò×Óë¸´ÅÌÊõÓï
 
-| ä¸­æ–‡ | è‹±æ–‡ | è¯´æ˜ |
+| ÖĞÎÄ | Ó¢ÎÄ | ËµÃ÷ |
 |------|------|------|
-| æ‹©æ—¶ä¿¡å· | Timing Signal | SignalGenerator è¾“å‡ºçš„ buy/sell/hold/watch ä¿¡å· |
-| å®‰å…¨è¾¹é™…ä¹°å…¥ | buy_safety_margin | PE<25%åˆ†ä½ ä¸” PB<20%åˆ†ä½æ—¶è§¦å‘ |
-| å›è°ƒä¹°å…¥ | buy_dip | ä»·æ ¼<MA20 8% ä¸” RSI<30 æ—¶è§¦å‘ |
-| çªç ´ä¹°å…¥ | buy_pivot | çªç ´é˜»åŠ›+æ”¾é‡+MACDçº¢æŸ±æ—¶è§¦å‘ |
-| äº‹ä»¶é©±åŠ¨ä¹°å…¥ | buy_breakout | ä¸šç»©è¶…é¢„æœŸ>20%æ—¶è§¦å‘ |
-| å›ºå®šæ­¢æŸ | sell_stop_loss | è·Œç ´è®¡åˆ’æ­¢æŸçº¿ 7% æ—¶è§¦å‘ |
-| ç§»åŠ¨æ­¢æŸ | sell_trailing_stop | ä»æœ€é«˜ç‚¹å›æ’¤ 10% æ—¶è§¦å‘ |
-| æ­¢ç›ˆä¿¡å· | sell_profit_taking | ä»·æ ¼>MA20 15% ä¸” RSI>70 æ—¶è§¦å‘ |
-| Kelly å…¬å¼ | Kelly Criterion | $f^* = (bp - q) / b$ï¼Œé»˜è®¤ 1/4 Kelly |
-| é‡‘å­—å¡”åŠ ä»“ | Pyramid Positioning | æ­£é‡‘å­—å¡”/å€’é‡‘å­—å¡”åˆ†æ‰¹å»ºä»“ç­–ç•¥ |
-| èµ«èŠ¬è¾¾å°”æŒ‡æ•° | HHI | ç»„åˆé›†ä¸­åº¦æŒ‡æ ‡ï¼Œ>20% é¢„è­¦ |
-| MAE | Maximum Adverse Excursion | æœ€å¤§ä¸åˆ©åç§»ï¼Œè¯„ä¼°å…¥åœºè´¨é‡ |
-| åˆ©æ¶¦æ•æ‰ç‡ | Profit Capture Rate | å®é™…ç›ˆåˆ© / æœ€å¤§æµ®ç›ˆ |
-| è®¡åˆ’éµå®ˆç‡ | Plan Adherence Rate | éµå®ˆäº¤æ˜“è®¡åˆ’çš„è®¢å•å æ¯” |
-| æ­¢æŸæ‰§è¡Œç‡ | Stop Loss Execution Rate | å®é™…æ‰§è¡Œæ­¢æŸçš„è®¢å•å æ¯” |
-| çºªå¾‹è¯„åˆ† | Discipline Score | 100 - criticalÃ—15 - majorÃ—8 - minorÃ—3 |
-| å¿ƒç†ç”»åƒ | Trader Profile | åŸºäºä¸»å¯¼é”™è¯¯ç”Ÿæˆçš„äº¤æ˜“è€…ç±»å‹æ ‡ç­¾ |
-| æ•°æ®æ–°é²œåº¦ | Data Freshness | æ•°æ®æ—¶é—´æˆ³åˆ°å½“å‰æ—¶é—´çš„å·®å€¼ï¼Œ>48h æ ‡è®° stale |
-| ä¸»é¢˜æŠ•èµ„ç»„åˆ | Theme Portfolio | æŒ‰ç‰¹å®šä¸»é¢˜ï¼ˆå¦‚â€œç¬¬å››æ¬¡å·¥ä¸šé©å‘½ç¨€ç¼ºæ ¸å¿ƒèµ„æºâ€ï¼‰ç­›é€‰å¹¶åŠ æƒæ„å»ºçš„æŒä»“ç»„åˆ |
-| æ ¸å¿ƒç¨€ç¼ºèµ„æº | Core Scarce Resource | ç¬¬å››æ¬¡å·¥ä¸šé©å‘½ä¸­çš„å…³é”®ç¨€ç¼ºè¦ç´ ï¼šAI ç®—åŠ›ã€åŠå¯¼ä½“ã€æ•°æ®èµ„äº§ã€é€šä¿¡ç½‘ç»œã€æœºå™¨è§†è§‰ç­‰ |
-| ç»¼åˆè¯„åˆ†è§†å›¾ | Composite Score View | scoringAdapter èšåˆ V6/æ™ºèƒ½/è¡Œä¸šè¯„åˆ†åçš„ç»Ÿä¸€è§†å›¾ |
-| å†å¹³è¡¡è®¡åˆ’ | Rebalance Plan | å¯¹æ¯”ç›®æ ‡æƒé‡ä¸å½“å‰æŒä»“åç”Ÿæˆçš„ä¹°å…¥/å–å‡º/æŒæœ‰åŠ¨ä½œåˆ—è¡¨ |
-| ä¸»é¢˜æ³¨å†Œè¡¨ | Theme Registry | `src/config/themeRegistry.ts`ï¼Œé›†ä¸­ç®¡ç†ä¸»é¢˜å®šä¹‰ä¸è‚¡ç¥¨æ˜ å°„è§„åˆ™ |
+| ÔñÊ±ĞÅºÅ | Timing Signal | SignalGenerator Êä³öµÄ buy/sell/hold/watch ĞÅºÅ |
+| °²È«±ß¼ÊÂòÈë | buy_safety_margin | PE<25%·ÖÎ» ÇÒ PB<20%·ÖÎ»Ê±´¥·¢ |
+| »Øµ÷ÂòÈë | buy_dip | ¼Û¸ñ<MA20 8% ÇÒ RSI<30 Ê±´¥·¢ |
+| Í»ÆÆÂòÈë | buy_pivot | Í»ÆÆ×èÁ¦+·ÅÁ¿+MACDºìÖùÊ±´¥·¢ |
+| ÊÂ¼şÇı¶¯ÂòÈë | buy_breakout | Òµ¼¨³¬Ô¤ÆÚ>20%Ê±´¥·¢ |
+| ¹Ì¶¨Ö¹Ëğ | sell_stop_loss | µøÆÆ¼Æ»®Ö¹ËğÏß 7% Ê±´¥·¢ |
+| ÒÆ¶¯Ö¹Ëğ | sell_trailing_stop | ´Ó×î¸ßµã»Ø³· 10% Ê±´¥·¢ |
+| Ö¹Ó¯ĞÅºÅ | sell_profit_taking | ¼Û¸ñ>MA20 15% ÇÒ RSI>70 Ê±´¥·¢ |
+| Kelly ¹«Ê½ | Kelly Criterion | $f^* = (bp - q) / b$£¬Ä¬ÈÏ 1/4 Kelly |
+| ½ğ×ÖËş¼Ó²Ö | Pyramid Positioning | Õı½ğ×ÖËş/µ¹½ğ×ÖËş·ÖÅú½¨²Ö²ßÂÔ |
+| ºÕ·Ò´ï¶ûÖ¸Êı | HHI | ×éºÏ¼¯ÖĞ¶ÈÖ¸±ê£¬>20% Ô¤¾¯ |
+| MAE | Maximum Adverse Excursion | ×î´ó²»ÀûÆ«ÒÆ£¬ÆÀ¹ÀÈë³¡ÖÊÁ¿ |
+| ÀûÈó²¶×½ÂÊ | Profit Capture Rate | Êµ¼ÊÓ¯Àû / ×î´ó¸¡Ó¯ |
+| ¼Æ»®×ñÊØÂÊ | Plan Adherence Rate | ×ñÊØ½»Ò×¼Æ»®µÄ¶©µ¥Õ¼±È |
+| Ö¹ËğÖ´ĞĞÂÊ | Stop Loss Execution Rate | Êµ¼ÊÖ´ĞĞÖ¹ËğµÄ¶©µ¥Õ¼±È |
+| ¼ÍÂÉÆÀ·Ö | Discipline Score | 100 - critical¡Á15 - major¡Á8 - minor¡Á3 |
+| ĞÄÀí»­Ïñ | Trader Profile | »ùÓÚÖ÷µ¼´íÎóÉú³ÉµÄ½»Ò×ÕßÀàĞÍ±êÇ© |
+| Êı¾İĞÂÏÊ¶È | Data Freshness | Êı¾İÊ±¼ä´Áµ½µ±Ç°Ê±¼äµÄ²îÖµ£¬>48h ±ê¼Ç stale |
+| Ö÷ÌâÍ¶×Ê×éºÏ | Theme Portfolio | °´ÌØ¶¨Ö÷Ìâ£¨Èç¡°µÚËÄ´Î¹¤Òµ¸ïÃüÏ¡È±ºËĞÄ×ÊÔ´¡±£©É¸Ñ¡²¢¼ÓÈ¨¹¹½¨µÄ³Ö²Ö×éºÏ |
+| ºËĞÄÏ¡È±×ÊÔ´ | Core Scarce Resource | µÚËÄ´Î¹¤Òµ¸ïÃüÖĞµÄ¹Ø¼üÏ¡È±ÒªËØ£ºAI ËãÁ¦¡¢°ëµ¼Ìå¡¢Êı¾İ×Ê²ú¡¢Í¨ĞÅÍøÂç¡¢»úÆ÷ÊÓ¾õµÈ |
+| ×ÛºÏÆÀ·ÖÊÓÍ¼ | Composite Score View | scoringAdapter ¾ÛºÏ V6/ÖÇÄÜ/ĞĞÒµÆÀ·ÖºóµÄÍ³Ò»ÊÓÍ¼ |
+| ÔÙÆ½ºâ¼Æ»® | Rebalance Plan | ¶Ô±ÈÄ¿±êÈ¨ÖØÓëµ±Ç°³Ö²ÖºóÉú³ÉµÄÂòÈë/Âô³ö/³ÖÓĞ¶¯×÷ÁĞ±í |
+| Ö÷Ìâ×¢²á±í | Theme Registry | `src/config/themeRegistry.ts`£¬¼¯ÖĞ¹ÜÀíÖ÷Ìâ¶¨ÒåÓë¹ÉÆ±Ó³Éä¹æÔò |
 
-## 10.5 æ•°æ®å­—æ®µ
+## 10.5 Êı¾İ×Ö¶Î
 
 ### Stock
 
-| å­—æ®µ | ç±»å‹ | è¯´æ˜ |
+| ×Ö¶Î | ÀàĞÍ | ËµÃ÷ |
 |------|------|------|
-| `symbol` | `string` | ä¸»é”®ï¼Œå¦‚ `600519.SH` |
-| `name` | `string` | è‚¡ç¥¨åç§° |
-| `price` | `number?` | å½“å‰ä»·æ ¼ |
-| `researchStatus` | `ResearchStatus` | æ‰€å¤„ç ”ç©¶é˜¶æ®µ |
-| `source` | `DataSource` | æ•°æ®æ¥æº |
-| `dataVersion` | `number` | æ•°æ®ç‰ˆæœ¬ |
-| `dataQuality` | `object` | æ•°æ®è´¨é‡ `{ basic, kline, finance, lastChecked? }`ï¼Œè¯¦è§ `03-architecture-standards.md` Â§3.7.2 |
-| `industryCode` | `string?` | è¡Œä¸šä»£ç ï¼Œç”¨äºä¸»é¢˜æ˜ å°„ä¸ç»„åˆé›†ä¸­åº¦æ§åˆ¶ |
-| `theme` | `string[]?` | ä¸»é¢˜æ ‡ç­¾ï¼Œä¸€åªè‚¡ç¥¨å¯åŒæ—¶å±äºå¤šä¸ªä¸»é¢˜ |
-| `sector` | `string?` | æ¿å—/Sector åç§°ï¼Œç”¨äºå±•ç¤ºä¸è¡Œä¸šè¯„åˆ†åŒ¹é… |
-| `group` | `string?` | è‚¡ç¥¨æ± é»˜è®¤åˆ†ç»„ï¼Œç”¨äº `by-group` ç´¢å¼•ä¸åˆ†ç»„å±•ç¤ºï¼›æœªæŒ‡å®šæ—¶å½’ä¸º `default` |
-| `ingestedAt` | `number` | å…¥åº“æ—¶é—´ |
-| `updatedAt` | `number` | æ›´æ–°æ—¶é—´ |
+| `symbol` | `string` | Ö÷¼ü£¬Èç `600519.SH` |
+| `name` | `string` | ¹ÉÆ±Ãû³Æ |
+| `price` | `number?` | µ±Ç°¼Û¸ñ |
+| `researchStatus` | `ResearchStatus` | Ëù´¦ÑĞ¾¿½×¶Î |
+| `source` | `DataSource` | Êı¾İÀ´Ô´ |
+| `dataVersion` | `number` | Êı¾İ°æ±¾ |
+| `dataQuality` | `object` | Êı¾İÖÊÁ¿ `{ basic, kline, finance, lastChecked? }`£¬Ïê¼û `03-architecture-standards.md` ¡ì3.7.2 |
+| `industryCode` | `string?` | ĞĞÒµ´úÂë£¬ÓÃÓÚÖ÷ÌâÓ³ÉäÓë×éºÏ¼¯ÖĞ¶È¿ØÖÆ |
+| `theme` | `string[]?` | Ö÷Ìâ±êÇ©£¬Ò»Ö»¹ÉÆ±¿ÉÍ¬Ê±ÊôÓÚ¶à¸öÖ÷Ìâ |
+| `sector` | `string?` | °å¿é/Sector Ãû³Æ£¬ÓÃÓÚÕ¹Ê¾ÓëĞĞÒµÆÀ·ÖÆ¥Åä |
+| `group` | `string?` | ¹ÉÆ±³ØÄ¬ÈÏ·Ö×é£¬ÓÃÓÚ `by-group` Ë÷ÒıÓë·Ö×éÕ¹Ê¾£»Î´Ö¸¶¨Ê±¹éÎª `default` |
+| `ingestedAt` | `number` | Èë¿âÊ±¼ä |
+| `updatedAt` | `number` | ¸üĞÂÊ±¼ä |
 
 ### V6Score
 
-| å­—æ®µ | ç±»å‹ | è¯´æ˜ |
+| ×Ö¶Î | ÀàĞÍ | ËµÃ÷ |
 |------|------|------|
-| `symbol` | `string` | ä¸»é”® |
-| `score` | `number` | ç»¼åˆè¯„åˆ† |
-| `factors` | `Record<string, number>` | ä¹ç»´å› å­å¾—åˆ† |
-| `calculatedAt` | `number` | è®¡ç®—æ—¶é—´ |
-| `dataVersion` | `number` | å…³è” stocks.dataVersion |
+| `symbol` | `string` | Ö÷¼ü |
+| `score` | `number` | ×ÛºÏÆÀ·Ö |
+| `factors` | `Record<string, number>` | ¾ÅÎ¬Òò×ÓµÃ·Ö |
+| `calculatedAt` | `number` | ¼ÆËãÊ±¼ä |
+| `dataVersion` | `number` | ¹ØÁª stocks.dataVersion |
 
 ### Watchlists
 
-| å­—æ®µ | ç±»å‹ | è¯´æ˜ |
+| ×Ö¶Î | ÀàĞÍ | ËµÃ÷ |
 |------|------|------|
-| `id` | `string` | ä¸»é”® |
-| `name` | `string` | è§‚å¯Ÿåˆ—è¡¨åç§° |
-| `symbols` | `string[]` | æ ‡çš„ symbol åˆ—è¡¨ |
-| `createdAt` / `updatedAt` | `number` | åˆ›å»º/æ›´æ–°æ—¶é—´ |
+| `id` | `string` | Ö÷¼ü |
+| `name` | `string` | ¹Û²ìÁĞ±íÃû³Æ |
+| `symbols` | `string[]` | ±êµÄ symbol ÁĞ±í |
+| `createdAt` / `updatedAt` | `number` | ´´½¨/¸üĞÂÊ±¼ä |
 
-> `watchlists` Store ç”¨äºä¿å­˜ç”¨æˆ·è‡ªå®šä¹‰è§‚å¯Ÿåˆ—è¡¨ï¼Œä¸ `stocks` çš„ `watching` ç ”ç©¶çŠ¶æ€è§£è€¦ã€‚
+> `watchlists` Store ÓÃÓÚ±£´æÓÃ»§×Ô¶¨Òå¹Û²ìÁĞ±í£¬Óë `stocks` µÄ `watching` ÑĞ¾¿×´Ì¬½âñî¡£
 
 ### Order
 
-| å­—æ®µ | ç±»å‹ | è¯´æ˜ |
+| ×Ö¶Î | ÀàĞÍ | ËµÃ÷ |
 |------|------|------|
-| `id` | `string` | ä¸»é”® |
-| `symbol` | `string` | æ ‡çš„ |
+| `id` | `string` | Ö÷¼ü |
+| `symbol` | `string` | ±êµÄ |
 | `direction` | `OrderDirection` | buy / sell |
-| `quantity` | `number` | æ•°é‡ |
-| `price` | `number` | ä»·æ ¼ |
-| `amount` | `number` | æˆäº¤é‡‘é¢ |
+| `quantity` | `number` | ÊıÁ¿ |
+| `price` | `number` | ¼Û¸ñ |
+| `amount` | `number` | ³É½»½ğ¶î |
 | `status` | `OrderStatus` | pending / filled / cancelled |
 | `accountType` | `AccountType` | paper / real |
-| `createdAt` | `number` | åˆ›å»ºæ—¶é—´æˆ³ |
-| `planStopLoss` | `number?` | è®¡åˆ’æ­¢æŸä»· |
-| `planTakeProfit` | `number?` | è®¡åˆ’æ­¢ç›ˆä»· |
-| `planPositionPct` | `number?` | è®¡åˆ’ä»“ä½å æ¯” |
-| `planFollowed` | `boolean?` | æ˜¯å¦éµå®ˆè®¡åˆ’ |
-| `maxDrawdown` | `number?` | æœ€å¤§å›æ’¤ |
-| `maxFloatingProfit` | `number?` | æœ€å¤§æµ®ç›ˆ |
-| `profitCaptureRate` | `number?` | åˆ©æ¶¦æ•æ‰ç‡ |
-| `errors` | `string[]?` | é”™è¯¯æ ‡ç­¾åˆ—è¡¨ |
-| `reviewNoteId` | `string?` | å…³è”å¤ç›˜ç¬”è®° ID |
+| `createdAt` | `number` | ´´½¨Ê±¼ä´Á |
+| `planStopLoss` | `number?` | ¼Æ»®Ö¹Ëğ¼Û |
+| `planTakeProfit` | `number?` | ¼Æ»®Ö¹Ó¯¼Û |
+| `planPositionPct` | `number?` | ¼Æ»®²ÖÎ»Õ¼±È |
+| `planFollowed` | `boolean?` | ÊÇ·ñ×ñÊØ¼Æ»® |
+| `maxDrawdown` | `number?` | ×î´ó»Ø³· |
+| `maxFloatingProfit` | `number?` | ×î´ó¸¡Ó¯ |
+| `profitCaptureRate` | `number?` | ÀûÈó²¶×½ÂÊ |
+| `errors` | `string[]?` | ´íÎó±êÇ©ÁĞ±í |
+| `reviewNoteId` | `string?` | ¹ØÁª¸´ÅÌ±Ê¼Ç ID |
 
-## 10.6 æ¨¡å— ID
+## 10.6 Ä£¿é ID
 
-| ID | ä¸­æ–‡ |
+| ID | ÖĞÎÄ |
 |----|------|
-| `fetcher` | é‡‡é›†å™¨ |
-| `stockpool` | è‚¡ç¥¨æ±  |
-| `analyzer` | åˆ†æå™¨ |
-| `tradinghub` | äº¤æ˜“ä¸­å¿ƒ |
-| `news` | æ–°é—» |
-| `rotation` | æ¿å—è½®åŠ¨ |
-| `sector` | è¡Œä¸š/æ¿å— |
-| `system` | ç³»ç»Ÿ |
-| `user` | ç”¨æˆ· |
-| `ai-center` | AI æ™ºèƒ½ä½“ä¸­å¿ƒ |
-| `data-collector` | æ•°æ®é‡‡é›† |
-| `cockpit` | é©¾é©¶èˆ± |
-| `health` | å¥åº·ç›‘æ§ |
+| `fetcher` | ²É¼¯Æ÷ |
+| `stockpool` | ¹ÉÆ±³Ø |
+| `analyzer` | ·ÖÎöÆ÷ |
+| `tradinghub` | ½»Ò×ÖĞĞÄ |
+| `news` | ĞÂÎÅ |
+| `rotation` | °å¿éÂÖ¶¯ |
+| `sector` | ĞĞÒµ/°å¿é |
+| `system` | ÏµÍ³ |
+| `user` | ÓÃ»§ |
+| `ai-center` | AI ÖÇÄÜÌåÖĞĞÄ |
+| `data-collector` | Êı¾İ²É¼¯ |
+| `cockpit` | ¼İÊ»²Õ |
+| `health` | ½¡¿µ¼à¿Ø |
 
-## 10.7 åºŸå¼ƒå‘½å
+## 10.7 ·ÏÆúÃüÃû
 
-| æ—§å‘½å | æ–°å‘½å | è¯´æ˜ |
+| ¾ÉÃüÃû | ĞÂÃüÃû | ËµÃ÷ |
 |--------|--------|------|
-| `intention_pool`ï¼ˆlocalStorage/ç‹¬ç«‹è¡¨ï¼‰ | `stocks` + `candidate` | ç»Ÿä¸€å…¥ stocks |
-| `screener_pool`ï¼ˆlocalStorage/ç‹¬ç«‹è¡¨ï¼‰ | `stocks` + `screened` | ç»Ÿä¸€å…¥ stocks |
-| `watchlist`ï¼ˆlocalStorageï¼‰ | `stocks` + `watching` æˆ– `watchlists` Store | è§‚å¯Ÿåˆ—è¡¨å…¥ IndexedDB |
-| `v6_paper_trading`ï¼ˆlocalStorageï¼‰ | `orders` Store | æ¨¡æ‹Ÿäº¤æ˜“å…¥ IndexedDB |
-| `code` / `stockCode` | `symbol` | è‚¡ç¥¨ä»£ç ç»Ÿä¸€å‘½å |
+| `intention_pool`£¨localStorage/¶ÀÁ¢±í£© | `stocks` + `candidate` | Í³Ò»Èë stocks |
+| `screener_pool`£¨localStorage/¶ÀÁ¢±í£© | `stocks` + `screened` | Í³Ò»Èë stocks |
+| `watchlist`£¨localStorage£© | `stocks` + `watching` »ò `watchlists` Store | ¹Û²ìÁĞ±íÈë IndexedDB |
+| `v6_paper_trading`£¨localStorage£© | `orders` Store | Ä£Äâ½»Ò×Èë IndexedDB |
+| `code` / `stockCode` | `symbol` | ¹ÉÆ±´úÂëÍ³Ò»ÃüÃû |
 
-## 10.8 V6 è¿ç§»æœ¯è¯­
+## 10.8 V6 Ç¨ÒÆÊõÓï
 
-| ä¸­æ–‡ | è‹±æ–‡ | è¯´æ˜ |
+| ÖĞÎÄ | Ó¢ÎÄ | ËµÃ÷ |
 |------|------|------|
-| V6 å¯¼å‡ºå½¢æ€ | `V6ExportShape` | V6 Pro å…¨é‡å¯¼å‡º JSON çš„é¡¶å±‚ç»“æ„ï¼ŒåŒ…å« `metadata`ã€`stocks`ã€`scores`ã€`trades` ç­‰ |
-| V6 è¿ç§»æœåŠ¡ | `v6MigrationService` | è§£æ `V6ExportShape`ï¼ŒæŒ‰ V9 è§„èŒƒè½¬æ¢ 12 ä¸ª store å¹¶å†™å…¥ IndexedDB |
-| è¿ç§»é¢æ¿ | `MigrationPanel` | è¾“å…¥èˆ±/æ€»æ§èˆ± UIï¼Œæ”¯æŒä¸Šä¼  V6 JSONã€é¢„è§ˆæ˜ å°„ã€è¦†ç›–/è·³è¿‡ç­–ç•¥ |
-| è¿ç§»è¦†ç›–ç­–ç•¥ | overwrite / skip | é»˜è®¤è·³è¿‡å·²å­˜åœ¨ symbolï¼›å‹¾é€‰è¦†ç›–åæ›´æ–°å¯¹åº” store |
-|- è¿ç§»æ ¡éªŒ | migration validation | æ£€æŸ¥å¿…å¡«å­—æ®µã€æœªçŸ¥çŠ¶æ€ã€é‡å¤ symbolï¼Œè¾“å‡ºé”™è¯¯æŠ¥å‘Š
+| V6 µ¼³öĞÎÌ¬ | `V6ExportShape` | V6 Pro È«Á¿µ¼³ö JSON µÄ¶¥²ã½á¹¹£¬°üº¬ `metadata`¡¢`stocks`¡¢`scores`¡¢`trades` µÈ |
+| V6 Ç¨ÒÆ·şÎñ | `v6MigrationService` | ½âÎö `V6ExportShape`£¬°´ V9 ¹æ·¶×ª»» 12 ¸ö store ²¢Ğ´Èë IndexedDB |
+| Ç¨ÒÆÃæ°å | `MigrationPanel` | ÊäÈë²Õ/×Ü¿Ø²Õ UI£¬Ö§³ÖÉÏ´« V6 JSON¡¢Ô¤ÀÀÓ³Éä¡¢¸²¸Ç/Ìø¹ı²ßÂÔ |
+| Ç¨ÒÆ¸²¸Ç²ßÂÔ | overwrite / skip | Ä¬ÈÏÌø¹ıÒÑ´æÔÚ symbol£»¹´Ñ¡¸²¸Çºó¸üĞÂ¶ÔÓ¦ store |
+|- Ç¨ÒÆĞ£Ñé | migration validation | ¼ì²é±ØÌî×Ö¶Î¡¢Î´Öª×´Ì¬¡¢ÖØ¸´ symbol£¬Êä³ö´íÎó±¨¸æ
 
-## 10.9 2026-06-26 æ–°å¢æ¦‚å¿µ
+## 10.9 2026-06-26 ĞÂÔö¸ÅÄî
 
-| æœ¯è¯­ | è‹±æ–‡ | å®šä¹‰ | æ‰€å±æ¨¡å— |
+| ÊõÓï | Ó¢ÎÄ | ¶¨Òå | ËùÊôÄ£¿é |
 |------|------|------|---------|
-| **Widget** | Widget | é©¾é©¶èˆ±ä¸­å¯æ’æ‹”çš„ç‹¬ç«‹æ•°æ®å±•ç¤ºç»„ä»¶ï¼Œç”± WidgetRegistry ç»Ÿä¸€ç®¡ç†ç”Ÿå‘½å‘¨æœŸ | Cockpit |
-| **é‡‡é›†ä»»åŠ¡** | CollectionTask | TaskScheduler è°ƒåº¦çš„å•æ¬¡æ•°æ®é‡‡é›†ä»»åŠ¡ï¼ŒåŒ…å«çŠ¶æ€ã€é‡è¯•ã€æ‰§è¡Œç»Ÿè®¡ | Data Collection |
-| **KAI è¯„åˆ†** | KaiScore | å…­ç»´åº¦ï¼ˆç«äº‰åŠ›/æŠ€æœ¯é¢/åŸºæœ¬é¢/æƒ…ç»ªé¢/èµ„é‡‘é¢/è¡Œä¸šé¢ï¼‰ç»¼åˆé€‰è‚¡è¯„åˆ†ï¼Œ0-100 åˆ† | Cockpit |
-| **MarketData** | MarketData | æ ‡å‡†åŒ–å¸‚åœºæ•°æ®ç»“æ„ï¼Œæ‰€æœ‰ Widget ç»Ÿä¸€æ¶ˆè´¹çš„æ•°æ®æ¥å£ | Cockpit / Data Collection |
-| **æ•°æ®é‡‡é›†å™¨** | DataCollector | é‡‡é›†å±‚ä¸‰å±‚æ¶æ„çš„é‡‡é›†æ‰§è¡Œå•å…ƒï¼Œæ”¯æŒ Mock/Rest/WebSocket ä¸‰ç§å®ç° | Data Collection |
-| **ä»»åŠ¡è°ƒåº¦å™¨** | TaskScheduler | ç®¡ç† Widget æ•°æ®é‡‡é›†ä»»åŠ¡çš„æ³¨å†Œã€å¯åŠ¨ã€åœæ­¢ã€é”™è¯¯æ¢å¤ | Data Collection |
-| **æ¨¡å‹å¯¹æ¯”** | ModelComparison | AI å¤§æ¨¡å‹ï¼ˆLLMï¼‰æ™ºèƒ½å¯¹æ¯”ï¼Œæ¯”è¾ƒä¸åŒæ¨¡å‹ç‰ˆæœ¬åœ¨é€‰è‚¡ä»»åŠ¡ä¸Šçš„è¡¨ç° | Cockpit |
-| **å¥åº·æŒ‡æ ‡** | HealthMetric | Agent/æ¨¡å—çš„è¿è¡Œå¥åº·çŠ¶æ€æŒ‡æ ‡ï¼ŒåŒ…å« CPUã€å†…å­˜ã€å»¶è¿Ÿã€é”™è¯¯ç‡ | AI Center |
-| **è¯Šæ–­æŠ¥å‘Š** | DiagnosticReport | ç³»ç»Ÿå¼‚å¸¸æ—¶çš„è‡ªåŠ¨è¯Šæ–­åˆ†ææŠ¥å‘Šï¼ŒåŒ…å«æ ¹å› åˆ†æå’Œä¿®å¤å»ºè®® | AI Center |
-| **æƒ…æ„Ÿåˆ†æ** | SentimentAnalysis | åŸºäºè§„åˆ™å¼•æ“çš„æ–°é—»æ–‡æœ¬æƒ…æ„Ÿåˆ†ç±»ï¼ˆæ­£é¢/è´Ÿé¢/ä¸­æ€§ï¼‰ï¼Œä½¿ç”¨ä¸­æ–‡è´¢ç»æƒ…æ„Ÿè¯å…¸ | News |
-| **è‚¡ç¥¨å…³è”** | StockLinking | å°†æ–°é—»èµ„è®¯è‡ªåŠ¨åŒ¹é…åˆ°ç›¸å…³è‚¡ç¥¨ï¼Œæ”¯æŒä»£ç ç²¾ç¡®åŒ¹é…ã€åç§°æ¨¡ç³ŠåŒ¹é…ã€è¡Œä¸šåŒ¹é… | News |
+| **Widget** | Widget | ¼İÊ»²ÕÖĞ¿É²å°ÎµÄ¶ÀÁ¢Êı¾İÕ¹Ê¾×é¼ş£¬ÓÉ WidgetRegistry Í³Ò»¹ÜÀíÉúÃüÖÜÆÚ | Cockpit |
+| **²É¼¯ÈÎÎñ** | CollectionTask | TaskScheduler µ÷¶ÈµÄµ¥´ÎÊı¾İ²É¼¯ÈÎÎñ£¬°üº¬×´Ì¬¡¢ÖØÊÔ¡¢Ö´ĞĞÍ³¼Æ | Data Collection |
+| **KAI ÆÀ·Ö** | KaiScore | ÁùÎ¬¶È£¨¾ºÕùÁ¦/¼¼ÊõÃæ/»ù±¾Ãæ/ÇéĞ÷Ãæ/×Ê½ğÃæ/ĞĞÒµÃæ£©×ÛºÏÑ¡¹ÉÆÀ·Ö£¬0-100 ·Ö | Cockpit |
+| **MarketData** | MarketData | ±ê×¼»¯ÊĞ³¡Êı¾İ½á¹¹£¬ËùÓĞ Widget Í³Ò»Ïû·ÑµÄÊı¾İ½Ó¿Ú | Cockpit / Data Collection |
+| **Êı¾İ²É¼¯Æ÷** | DataCollector | ²É¼¯²ãÈı²ã¼Ü¹¹µÄ²É¼¯Ö´ĞĞµ¥Ôª£¬Ö§³Ö Mock/Rest/WebSocket ÈıÖÖÊµÏÖ | Data Collection |
+| **ÈÎÎñµ÷¶ÈÆ÷** | TaskScheduler | ¹ÜÀí Widget Êı¾İ²É¼¯ÈÎÎñµÄ×¢²á¡¢Æô¶¯¡¢Í£Ö¹¡¢´íÎó»Ö¸´ | Data Collection |
+| **Ä£ĞÍ¶Ô±È** | ModelComparison | AI ´óÄ£ĞÍ£¨LLM£©ÖÇÄÜ¶Ô±È£¬±È½Ï²»Í¬Ä£ĞÍ°æ±¾ÔÚÑ¡¹ÉÈÎÎñÉÏµÄ±íÏÖ | Cockpit |
+| **½¡¿µÖ¸±ê** | HealthMetric | Agent/Ä£¿éµÄÔËĞĞ½¡¿µ×´Ì¬Ö¸±ê£¬°üº¬ CPU¡¢ÄÚ´æ¡¢ÑÓ³Ù¡¢´íÎóÂÊ | AI Center |
+| **Õï¶Ï±¨¸æ** | DiagnosticReport | ÏµÍ³Òì³£Ê±µÄ×Ô¶¯Õï¶Ï·ÖÎö±¨¸æ£¬°üº¬¸ùÒò·ÖÎöºÍĞŞ¸´½¨Òé | AI Center |
+| **Çé¸Ğ·ÖÎö** | SentimentAnalysis | »ùÓÚ¹æÔòÒıÇæµÄĞÂÎÅÎÄ±¾Çé¸Ğ·ÖÀà£¨ÕıÃæ/¸ºÃæ/ÖĞĞÔ£©£¬Ê¹ÓÃÖĞÎÄ²Æ¾­Çé¸Ğ´Êµä | News |
+| **¹ÉÆ±¹ØÁª** | StockLinking | ½«ĞÂÎÅ×ÊÑ¶×Ô¶¯Æ¥Åäµ½Ïà¹Ø¹ÉÆ±£¬Ö§³Ö´úÂë¾«È·Æ¥Åä¡¢Ãû³ÆÄ£ºıÆ¥Åä¡¢ĞĞÒµÆ¥Åä | News |
 
-## 10.10 2026-06-27 æ–°å¢æ¦‚å¿µï¼ˆåŒç­–ç•¥ä½“ç³»ï¼‰
+## 10.10 2026-06-27 ĞÂÔö¸ÅÄî£¨Ë«²ßÂÔÌåÏµ£©
 
-| æœ¯è¯­ | è‹±æ–‡ | å®šä¹‰ | æ‰€å±æ¨¡å— |
+| ÊõÓï | Ó¢ÎÄ | ¶¨Òå | ËùÊôÄ£¿é |
 |------|------|------|---------|
-| **çƒ­é—¨æ¿å—ç­–ç•¥** | Hot Sector Strategy | æ¿å—å·²åœ¨åŠ¨æ—¶è·Ÿéšè¶‹åŠ¿ï¼ŒæŒæœ‰æœŸ 3â€“15 å¤©ï¼Œ-8% ç¡¬æ€§æ­¢æŸã€+15% å– 50% çš„å¿«è¿›å¿«å‡ºç­–ç•¥ | Trading |
-| **ä»·å€¼æ´¼åœ°ç­–ç•¥** | Value Pit Strategy | ç­‰æ¿å—å¼€å§‹è½®åŠ¨åå†è¿›å…¥ï¼ŒæŒæœ‰æœŸ 6â€“12 ä¸ªæœˆï¼Œ-15% åˆ†æ­¥å»ºä»“ã€+20% å– 30% çš„ç­‰è½®åŠ¨ç­–ç•¥ | Trading |
-| **çƒ­é—¨æ¿å—è¯„åˆ†** | HotSectorScore | å•åªè‚¡ç¥¨çš„çƒ­é—¨ç­–ç•¥äº”ç»´è¯„åˆ†ï¼ˆåŠ¨é‡/æƒ…ç»ª/æŠ€æœ¯/ä¼°å€¼/ç»¼åˆï¼‰ï¼Œ0â€“5 åˆ†ï¼ŒæŒä¹…åŒ–äº `hot_sector_scores` Store | Trading |
-| **ä»·å€¼æ´¼åœ°è¯„åˆ†** | ValuePitScore | å•åªè‚¡ç¥¨çš„ä»·å€¼ç­–ç•¥äº”ç»´è¯„åˆ†ï¼ˆå‚¬åŒ–/ä¼°å€¼/ç­¹ç /è½®åŠ¨/æµåŠ¨æ€§ï¼‰ï¼Œ0â€“5 åˆ†ï¼ŒæŒä¹…åŒ–äº `value_pit_scores` Store | Trading |
-| **è½®åŠ¨ä¿¡å·æ£€æµ‹å¼•æ“** | Rotation Signal Detector | å¯¹ä»·å€¼æ´¼åœ°å€™é€‰æ£€æµ‹æˆäº¤é‡æ”¾å¤§ + èµ„é‡‘å‡€æµå…¥ + æŠ€æœ¯é‡‘å‰ï¼Œå†³å®šç«‹å³å»ºä»“æˆ–åŠ å…¥è§‚å¯Ÿæ±  | Trading |
-| **åŒç­–ç•¥ç¼–æ’å¼•æ“** | Dual Strategy Engine | åè°ƒ HotSectorAnalyzerã€ValuePitAnalyzerã€RotationSignalDetectorï¼Œè¾“å‡º `DualStrategyResult` | Trading |
-| **çƒ­é—¨æ¿å— Widget** | HotSectorWidget | é©¾é©¶èˆ±ä¸­å±•ç¤ºçƒ­é—¨æ¿å—è¯„åˆ†ä¸ç›¸å…³æ ‡çš„çš„ Widget | Cockpit |
-| **ä»·å€¼æ´¼åœ° Widget** | ValuePitWidget | é©¾é©¶èˆ±ä¸­å±•ç¤ºä»·å€¼æ´¼åœ°å€™é€‰ã€äº”ç»´è¯„åˆ†ä¸è½®åŠ¨ä¿¡å·çŠ¶æ€çš„ Widget | Cockpit |
+| **ÈÈÃÅ°å¿é²ßÂÔ** | Hot Sector Strategy | °å¿éÒÑÔÚ¶¯Ê±¸úËæÇ÷ÊÆ£¬³ÖÓĞÆÚ 3¨C15 Ìì£¬-8% Ó²ĞÔÖ¹Ëğ¡¢+15% Âô 50% µÄ¿ì½ø¿ì³ö²ßÂÔ | Trading |
+| **¼ÛÖµÍİµØ²ßÂÔ** | Value Pit Strategy | µÈ°å¿é¿ªÊ¼ÂÖ¶¯ºóÔÙ½øÈë£¬³ÖÓĞÆÚ 6¨C12 ¸öÔÂ£¬-15% ·Ö²½½¨²Ö¡¢+20% Âô 30% µÄµÈÂÖ¶¯²ßÂÔ | Trading |
+| **ÈÈÃÅ°å¿éÆÀ·Ö** | HotSectorScore | µ¥Ö»¹ÉÆ±µÄÈÈÃÅ²ßÂÔÎåÎ¬ÆÀ·Ö£¨¶¯Á¿/ÇéĞ÷/¼¼Êõ/¹ÀÖµ/×ÛºÏ£©£¬0¨C5 ·Ö£¬³Ö¾Ã»¯ÓÚ `hot_sector_scores` Store | Trading |
+| **¼ÛÖµÍİµØÆÀ·Ö** | ValuePitScore | µ¥Ö»¹ÉÆ±µÄ¼ÛÖµ²ßÂÔÎåÎ¬ÆÀ·Ö£¨´ß»¯/¹ÀÖµ/³ïÂë/ÂÖ¶¯/Á÷¶¯ĞÔ£©£¬0¨C5 ·Ö£¬³Ö¾Ã»¯ÓÚ `value_pit_scores` Store | Trading |
+| **ÂÖ¶¯ĞÅºÅ¼ì²âÒıÇæ** | Rotation Signal Detector | ¶Ô¼ÛÖµÍİµØºòÑ¡¼ì²â³É½»Á¿·Å´ó + ×Ê½ğ¾»Á÷Èë + ¼¼Êõ½ğ²æ£¬¾ö¶¨Á¢¼´½¨²Ö»ò¼ÓÈë¹Û²ì³Ø | Trading |
+| **Ë«²ßÂÔ±àÅÅÒıÇæ** | Dual Strategy Engine | Ğ­µ÷ HotSectorAnalyzer¡¢ValuePitAnalyzer¡¢RotationSignalDetector£¬Êä³ö `DualStrategyResult` | Trading |
+| **ÈÈÃÅ°å¿é Widget** | HotSectorWidget | ¼İÊ»²ÕÖĞÕ¹Ê¾ÈÈÃÅ°å¿éÆÀ·ÖÓëÏà¹Ø±êµÄµÄ Widget | Cockpit |
+| **¼ÛÖµÍİµØ Widget** | ValuePitWidget | ¼İÊ»²ÕÖĞÕ¹Ê¾¼ÛÖµÍİµØºòÑ¡¡¢ÎåÎ¬ÆÀ·ÖÓëÂÖ¶¯ĞÅºÅ×´Ì¬µÄ Widget | Cockpit |
 
-## 10.11 2026-07-05 æ–°å¢æ¦‚å¿µï¼ˆå››å±‚æ³¨å†Œä½“ç³»ï¼‰
+## 10.11 2026-07-05 ĞÂÔö¸ÅÄî£¨ËÄ²ã×¢²áÌåÏµ£©
 
-| æœ¯è¯­ | è‹±æ–‡ | å®šä¹‰ | æ‰€å±æ¨¡å— |
+| ÊõÓï | Ó¢ÎÄ | ¶¨Òå | ËùÊôÄ£¿é |
 |------|------|------|---------|
-| **Store æ³¨å†Œè¡¨** | Store Registry | ~~`src/store/derived.index.ts`~~ï¼ˆæ–‡ä»¶å·²åˆ é™¤ï¼Œå¾…é‡å»ºï¼‰ï¼Œé¡¹ç›®å½“å‰å…± 47 ä¸ª Zustand Store é€šè¿‡ç‹¬ç«‹æ–‡ä»¶ç›´æ¥å¯¼å‡º | Store |
-| **Service æ³¨å†Œè¡¨** | Service Registry | ~~`src/services/contracts.ts`~~ï¼ˆæ–‡ä»¶å·²åˆ é™¤ï¼‰ï¼ŒåŸé›†ä¸­ç®¡ç† 52 ä¸ª Service çš„å…ƒæ•°æ®æ¸…å•ï¼Œè¦†ç›– 21 ä¸ªåŸŸåˆ†ç±» | Services |
-| **Component æ³¨å†Œè¡¨** | Component Registry | `src/components/componentRegistry.ts`ï¼Œé›†ä¸­ç®¡ç† 10+ ä¸ªä¸šåŠ¡ç»„ä»¶çš„æ³¨å†Œä¿¡æ¯ä¸å»ºè®®é›†æˆç›®æ ‡ | Components |
-| **Widget æ³¨å†Œè¡¨** | Widget Registry | `src/cockpit/core/widgetRegistry.ts`ï¼ŒClass å•ä¾‹æ¨¡å¼ç®¡ç† 19 ä¸ª Widget æ¨¡æ¿æ³¨å†Œã€é»˜è®¤å¸ƒå±€ä¸è¿è¡Œæ—¶çŠ¶æ€ | Cockpit |
-| **æ³¨å†Œæ¡ç›®çŠ¶æ€** | Registry Entry Status | æ³¨å†Œè¡¨æ¡ç›®çš„ç”Ÿå‘½å‘¨æœŸçŠ¶æ€ï¼š`available`ï¼ˆå¯ç”¨æœªé›†æˆï¼‰â†’ `active`ï¼ˆå·²é›†æˆï¼‰â†’ `deprecated`ï¼ˆå·²åºŸå¼ƒï¼‰ | Registry |
-| **Store åŸŸ** | Store Domain | Store çš„ä¸šåŠ¡åŸŸåˆ†ç±»ï¼š`market`/`analysis`/`trading`/`portfolio`/`system`/`cockpit`/`input`/`signal`/`widget` | Registry |
-| **Widget é”™è¯¯è¾¹ç•Œ** | Widget Error Boundary | `WidgetErrorBoundary` ç»„ä»¶ï¼Œåœ¨ `CockpitShell` ä¸­åŒ…è£¹æ¯ä¸ª Widget æ¸²æŸ“ï¼Œå®ç° Widget çº§é”™è¯¯éš”ç¦» | Cockpit |
-| **æ¨¡å—æ³¨å†Œä½“ç³»** | Module Registry System | å››å±‚æ³¨å†Œè¡¨ï¼ˆStore/Service/Component/Widgetï¼‰çš„ç»Ÿä¸€æ²»ç†æ¶æ„ï¼Œè§£å†³æ¨¡å—åˆ›å»ºåé—å¿˜å¯¼è‡´çš„æ­»ä»£ç é—®é¢˜ | Architecture |
+| **Store ×¢²á±í** | Store Registry | ~~`src/store/derived.index.ts`~~£¨ÎÄ¼şÒÑÉ¾³ı£¬´ıÖØ½¨£©£¬ÏîÄ¿µ±Ç°¹² 47 ¸ö Zustand Store Í¨¹ı¶ÀÁ¢ÎÄ¼şÖ±½Óµ¼³ö | Store |
+| **Service ×¢²á±í** | Service Registry | ~~`src/services/contracts.ts`~~£¨ÎÄ¼şÒÑÉ¾³ı£©£¬Ô­¼¯ÖĞ¹ÜÀí 52 ¸ö Service µÄÔªÊı¾İÇåµ¥£¬¸²¸Ç 21 ¸öÓò·ÖÀà | Services |
+| **Component ×¢²á±í** | Component Registry | `src/components/componentRegistry.ts`£¬¼¯ÖĞ¹ÜÀí 10+ ¸öÒµÎñ×é¼şµÄ×¢²áĞÅÏ¢Óë½¨Òé¼¯³ÉÄ¿±ê | Components |
+| **Widget ×¢²á±í** | Widget Registry | `src/cockpit/core/widgetRegistry.ts`£¬Class µ¥ÀıÄ£Ê½¹ÜÀí 19 ¸ö Widget Ä£°å×¢²á¡¢Ä¬ÈÏ²¼¾ÖÓëÔËĞĞÊ±×´Ì¬ | Cockpit |
+| **×¢²áÌõÄ¿×´Ì¬** | Registry Entry Status | ×¢²á±íÌõÄ¿µÄÉúÃüÖÜÆÚ×´Ì¬£º`available`£¨¿ÉÓÃÎ´¼¯³É£©¡ú `active`£¨ÒÑ¼¯³É£©¡ú `deprecated`£¨ÒÑ·ÏÆú£© | Registry |
+| **Store Óò** | Store Domain | Store µÄÒµÎñÓò·ÖÀà£º`market`/`analysis`/`trading`/`portfolio`/`system`/`cockpit`/`input`/`signal`/`widget` | Registry |
+| **Widget ´íÎó±ß½ç** | Widget Error Boundary | `WidgetErrorBoundary` ×é¼ş£¬ÔÚ `CockpitShell` ÖĞ°ü¹üÃ¿¸ö Widget äÖÈ¾£¬ÊµÏÖ Widget ¼¶´íÎó¸ôÀë | Cockpit |
+| **Ä£¿é×¢²áÌåÏµ** | Module Registry System | ËÄ²ã×¢²á±í£¨Store/Service/Component/Widget£©µÄÍ³Ò»ÖÎÀí¼Ü¹¹£¬½â¾öÄ£¿é´´½¨ºóÒÅÍüµ¼ÖÂµÄËÀ´úÂëÎÊÌâ | Architecture |

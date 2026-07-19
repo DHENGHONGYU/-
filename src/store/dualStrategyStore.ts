@@ -20,6 +20,7 @@
  *
  * @compliance
  * - 所有展示数据来自 scoring / trading 服务，禁止硬编码
+ * - 股票池为空时返回空数组，不 fallback 到任何 Mock 数据
  * - 使用 isRefreshing 锁与失败快照回滚
  * - 订阅采用去抖合并，source 过滤防止自激
  * - 遵循现有 Zustand Store 风格
@@ -32,17 +33,9 @@ import type { RotationSignal } from '@/services/scoring/rotationSignalDetector'
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
 import { runDualStrategy } from '@/services/trading/dualStrategyEngine'
-import { analyze as analyzeHotSector } from '@/services/scoring/hotSectorAnalyzer'
-import { analyze as analyzeValuePit } from '@/services/scoring/valuePitAnalyzer'
-import { detect as detectRotation } from '@/services/scoring/rotationSignalDetector'
 import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { withBroadcast } from '@/lib/withBroadcast'
-import {
-  HOT_SECTOR_DEFAULT_SAMPLES,
-  ROTATION_DEFAULT_SAMPLES,
-  VALUE_PIT_DEFAULT_SAMPLES,
-} from '@/fixtures/dualStrategyMockData'
 
 const logger = getLogger()
 
@@ -226,11 +219,12 @@ export const useDualStrategyStore = create<DualStrategyState>((set, get) => ({
           .filter((s) => s.type === 'buy_rotation')
           .map((s) => signalToRotationSignal(s))
       } else {
-        logger.info('[dualStrategyStore] 股票池为空，使用默认样本数据')
-        hotSectorScores = HOT_SECTOR_DEFAULT_SAMPLES.map((input) => analyzeHotSector(input))
-        valuePitScores = VALUE_PIT_DEFAULT_SAMPLES.map((input) => analyzeValuePit(input))
-        rotationSignals = ROTATION_DEFAULT_SAMPLES.map((input) => detectRotation(input))
-        signals = rotationSignals.map((rot) => rotationSignalToSignal(rot))
+        logger.info('[dualStrategyStore] 股票池为空，返回空结果')
+        // 不使用任何 Mock 数据作为回退；调用方需自行处理空结果状态
+        hotSectorScores = []
+        valuePitScores = []
+        rotationSignals = []
+        signals = []
       }
 
       // 排序
@@ -371,10 +365,22 @@ export const useDualStrategyStore = create<DualStrategyState>((set, get) => ({
       logger.info(
         `[dualStrategyStore] refresh 完成: hot=${hotSectorScores.length}, value=${valuePitScores.length}, rotation=${rotationSignals.length}`
       )
+
+      // 检查排队的刷新请求
+      if (_pendingRefresh) {
+        _pendingRefresh = false
+        logger.info('[dualStrategyStore] 排队刷新触发')
+        debouncedRefresh()
+      }
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
       logger.error(`[dualStrategyStore] refresh 失败: ${message}`, { error: message })
       set({ error: message, loading: false, isRefreshing: false })
+
+      // 失败时清除排队标记
+      if (_pendingRefresh) {
+        _pendingRefresh = false
+      }
     }
   },
 
@@ -463,7 +469,16 @@ let _unsubscribeRotation: (() => void) | null = null
 let _unsubscribeSignals: (() => void) | null = null
 let _unsubscribeStocks: (() => void) | null = null
 let _debounceTimer: ReturnType<typeof setTimeout> | null = null
-const DEBOUNCE_MS = 100
+let _lastRefreshTime = 0
+let _globalSubscriptionsInitialized = false
+
+/** 首次数据事件标记（跳过最小刷新间隔） */
+let _isFirstDataEvent = true
+/** 待刷新标记（refresh 进行中时有新事件到达则排队） */
+let _pendingRefresh = false
+
+const DEBOUNCE_MS = 300
+const MIN_REFRESH_INTERVAL_MS = 2000
 
 const SELF_SOURCES = new Set<string>([
   MODULE_ID.analyzer,
@@ -472,14 +487,28 @@ const SELF_SOURCES = new Set<string>([
 ])
 
 function debouncedRefresh(): void {
+  const now = Date.now()
+  // 首次数据事件跳过最小间隔检查
+  if (!(_isFirstDataEvent && _lastRefreshTime === 0)) {
+    if (now - _lastRefreshTime < MIN_REFRESH_INTERVAL_MS) {
+      logger.debug(`[dualStrategyStore] 刷新间隔过短（${now - _lastRefreshTime}ms < ${MIN_REFRESH_INTERVAL_MS}ms），跳过`)
+      return
+    }
+  } else {
+    logger.info('[dualStrategyStore] 首次数据事件，跳过最小刷新间隔检查')
+  }
+
   if (_debounceTimer) {
     clearTimeout(_debounceTimer)
   }
   _debounceTimer = setTimeout(() => {
     _debounceTimer = null
+    _lastRefreshTime = Date.now()
+    _isFirstDataEvent = false
     const state = useDualStrategyStore.getState()
     if (state.isRefreshing) {
-      logger.debug('[dualStrategyStore] refresh 进行中，跳过本次触发')
+      logger.debug('[dualStrategyStore] refresh 进行中，标记 _pendingRefresh 排队')
+      _pendingRefresh = true
       return
     }
     logger.info('[dualStrategyStore] DataBridge 事件触发自动 refresh')
@@ -499,13 +528,66 @@ export function shouldSkipSelf(envelope: { meta: { source: string; action: strin
   return false
 }
 
-/** 初始化 DataBridge 订阅，返回 cleanup 函数 */
+/**
+ * 初始化 DataBridge 订阅（组件级），返回 cleanup 函数。
+ *
+ * 幂等设计（与 signalStore 一致）：
+ * - 全局已初始化时返回 no-op cleanup（全局订阅不由组件生命周期管理）
+ * - 组件级首次初始化时注册订阅，返回正确的销毁函数
+ */
 export function initDualStrategyStoreSubscriptions(): () => void {
-  if (_unsubscribeHot || _unsubscribeValue || _unsubscribeRotation || _unsubscribeSignals || _unsubscribeStocks) {
-    logger.warn('[dualStrategyStore] Subscriptions already initialized, skipping')
-    return () => destroyDualStrategyStoreSubscriptions()
+  // 全局已初始化 → 复用全局订阅，返回 no-op cleanup
+  if (_globalSubscriptionsInitialized) {
+    logger.debug('[dualStrategyStore] 全局订阅已就绪，组件复用全局 DataBridge 通道')
+    return () => {
+      // 全局订阅不随组件卸载
+    }
   }
 
+  if (_unsubscribeHot || _unsubscribeValue || _unsubscribeRotation || _unsubscribeSignals || _unsubscribeStocks) {
+    logger.warn('[dualStrategyStore] Subscriptions already initialized, skipping')
+    return destroyDualStrategyStoreSubscriptions
+  }
+
+  setupSubscriptions()
+
+  return () => destroyDualStrategyStoreSubscriptions()
+}
+
+/**
+ * 全局初始化双策略订阅（应用启动时调用）。
+ * 与组件级 initDualStrategyStoreSubscriptions 不同，全局初始化的订阅
+ * 不会随组件卸载而销毁，确保双策略数据在懒加载widget挂载前就已就绪。
+ */
+export function initDualStrategyStoreGlobalSubscriptions(): void {
+  if (_globalSubscriptionsInitialized) {
+    logger.debug('[dualStrategyStore] Global subscriptions already initialized')
+    return
+  }
+
+  setupSubscriptions()
+  _globalSubscriptionsInitialized = true
+  logger.info('[dualStrategyStore] Global subscriptions initialized')
+}
+
+/**
+ * 测试用：重置所有订阅状态（仅在测试环境使用）
+ */
+export function _resetDualStrategyStoreSubscriptionsForTest(): void {
+  if (_debounceTimer) {
+    clearTimeout(_debounceTimer)
+    _debounceTimer = null
+  }
+  destroyDualStrategyStoreSubscriptions()
+  _lastRefreshTime = 0
+  _isFirstDataEvent = true
+  _pendingRefresh = false
+  _globalSubscriptionsInitialized = false
+  useDualStrategyStore.setState(initialState)
+  logger.info('[dualStrategyStore] Subscriptions reset for test')
+}
+
+function setupSubscriptions(): void {
   logger.info('[dualStrategyStore] 初始化 DataBridge 订阅')
 
   const handleEnvelope = (
@@ -561,11 +643,13 @@ export function initDualStrategyStoreSubscriptions(): () => void {
       debouncedRefresh()
     },
   )
-
-  return () => destroyDualStrategyStoreSubscriptions()
 }
 
 function destroyDualStrategyStoreSubscriptions(): void {
+  if (_globalSubscriptionsInitialized) {
+    logger.debug('[dualStrategyStore] Global subscriptions, skip destroy from component')
+    return
+  }
   if (_debounceTimer) {
     clearTimeout(_debounceTimer)
     _debounceTimer = null

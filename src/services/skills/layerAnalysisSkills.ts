@@ -22,6 +22,9 @@ const commonFormatInstructions = [
   '}',
 ].join('\n')
 
+/**
+ * macroScanSkill
+ */
 export const macroScanSkill = createLayerAnalysisSkill({
   name: 'macro-scan',
   title: 'L0 STEEP 宏观扫描',
@@ -34,6 +37,9 @@ export const macroScanSkill = createLayerAnalysisSkill({
   ].join('\n'),
 })
 
+/**
+ * moatAnalysisSkill
+ */
 export const moatAnalysisSkill = createLayerAnalysisSkill({
   name: 'moat-analysis',
   title: 'L1 护城河分析',
@@ -46,6 +52,9 @@ export const moatAnalysisSkill = createLayerAnalysisSkill({
   ].join('\n'),
 })
 
+/**
+ * peerCompetitionSkill
+ */
 export const peerCompetitionSkill = createLayerAnalysisSkill({
   name: 'peer-competition',
   title: 'L2 竞品格局分析',
@@ -58,6 +67,9 @@ export const peerCompetitionSkill = createLayerAnalysisSkill({
   ].join('\n'),
 })
 
+/**
+ * scenarioForecastingSkill
+ */
 export const scenarioForecastingSkill = createLayerAnalysisSkill({
   name: 'scenario-forecasting',
   title: 'L4 情景推演',
@@ -70,6 +82,9 @@ export const scenarioForecastingSkill = createLayerAnalysisSkill({
   ].join('\n'),
 })
 
+/**
+ * techMarketMatrixSkill
+ */
 export const techMarketMatrixSkill = createLayerAnalysisSkill({
   name: 'tech-market-matrix',
   title: 'L5 T-M 矩阵',
@@ -82,6 +97,9 @@ export const techMarketMatrixSkill = createLayerAnalysisSkill({
   ].join('\n'),
 })
 
+/**
+ * hypeCycleSkill
+ */
 export const hypeCycleSkill = createLayerAnalysisSkill({
   name: 'hype-cycle',
   title: 'L6 Hype 周期定位',
@@ -94,6 +112,9 @@ export const hypeCycleSkill = createLayerAnalysisSkill({
   ].join('\n'),
 })
 
+/**
+ * secondCurveSkill
+ */
 export const secondCurveSkill = createLayerAnalysisSkill({
   name: 'second-curve',
   title: 'L7 第二曲线分析',

@@ -37,7 +37,7 @@ export function useMcpMigration(): McpMigrationApi {
     try {
       const text = result.content[0]?.text ?? '{}'
       return JSON.parse(text) as T
-    } catch {
+    } catch (err) { console.warn('[useMcpMigration.ts]', err);
       return result.content[0]?.text as unknown as T
     }
   }

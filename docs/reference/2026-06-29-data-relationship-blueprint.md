@@ -1,53 +1,59 @@
 ---
-title: 2026-06-29-data-relationship-blueprint
+title: V9 Êı¾İ¿âÊı¾İ¹ØÏµÓëÊ±¼ä¹ØÏµÀ¶Í¼¼Æ»®
+type: reference
+domain: data
+phase: design
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "For agentic workers: REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended)..."
+tags: [data, plan, reference]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: reference
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/reference/2026-06-29-data-relationship-blueprint.md
-code_version: 2.0.0
-tier: reference
----
-
-# V9 æ•°æ®åº“æ•°æ®å…³ç³»ä¸æ—¶é—´å…³ç³»è“å›¾è®¡åˆ’
+# V9 Êı¾İ¿âÊı¾İ¹ØÏµÓëÊ±¼ä¹ØÏµÀ¶Í¼¼Æ»®
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** è§£æ V9 IndexedDB æ•°æ®åº“å†…åœ¨çš„æ•°æ®å…³ç³»ä¸æ—¶é—´å…³ç³»ï¼Œè¦†ç›–æ•°æ®é‡‡é›†ã€æ•°æ®åˆ†æã€ä¸ªè‚¡å®šæ€§ã€äº¤æ˜“ç­¹ç åˆ†å¸ƒä¸æ³¢åŠ¨å¤ç›˜ï¼Œå½¢æˆå¯æ‰§è¡Œçš„å¼€å‘è“å›¾ä¸æŒç»­æ¯”å¯¹åŸºçº¿ã€‚
+**Goal:** ½âÎö V9 IndexedDB Êı¾İ¿âÄÚÔÚµÄÊı¾İ¹ØÏµÓëÊ±¼ä¹ØÏµ£¬¸²¸ÇÊı¾İ²É¼¯¡¢Êı¾İ·ÖÎö¡¢¸ö¹É¶¨ĞÔ¡¢½»Ò×³ïÂë·Ö²¼Óë²¨¶¯¸´ÅÌ£¬ĞÎ³É¿ÉÖ´ĞĞµÄ¿ª·¢À¶Í¼Óë³ÖĞø±È¶Ô»ùÏß¡£
 
-**Architecture:** ä»¥ `src/data/types.ts` ä¸­çš„å®ä½“ç±»å‹ä¸ºé”šç‚¹ï¼Œ`src/data/db.ts` çš„ 20 ä¸ª ObjectStore ä¸ºæŒä¹…åŒ–è½½ä½“ï¼Œ`src/data/dataLayer.ts` çš„ store æ¥å£ä¸ºè¯»å†™è¾¹ç•Œï¼Œ`src/core/databridge.ts` ä¸ `src/core/dataflow/dataflowEngine.ts` ä¸ºè·¨æ¨¡å—é€šä¿¡å±‚ï¼›é€šè¿‡ ER å…³ç³»è¡¨ã€æ—¶åºå›¾ã€ä¾èµ–çŸ©é˜µå°†é™æ€æ•°æ®ç»“æ„ä¸åŠ¨æ€è®¡ç®—ç®¡çº¿æ˜¾æ€§åŒ–ã€‚
+**Architecture:** ÒÔ `src/data/types.ts` ÖĞµÄÊµÌåÀàĞÍÎªÃªµã£¬`src/data/db.ts` µÄ 20 ¸ö ObjectStore Îª³Ö¾Ã»¯ÔØÌå£¬`src/data/dataLayer.ts` µÄ store ½Ó¿ÚÎª¶ÁĞ´±ß½ç£¬`src/core/databridge.ts` Óë `src/core/dataflow/dataflowEngine.ts` Îª¿çÄ£¿éÍ¨ĞÅ²ã£»Í¨¹ı ER ¹ØÏµ±í¡¢Ê±ĞòÍ¼¡¢ÒÀÀµ¾ØÕó½«¾²Ì¬Êı¾İ½á¹¹Óë¶¯Ì¬¼ÆËã¹ÜÏßÏÔĞÔ»¯¡£
 
 **Tech Stack:** TypeScript, IndexedDB, DataBridge, DataFlowEngine, Vitest, Mermaid
 
 ---
 
-## æ–‡ä»¶ç»“æ„
+## ÎÄ¼ş½á¹¹
 
-| æ–‡ä»¶ | ç±»å‹ | èŒè´£ |
+| ÎÄ¼ş | ÀàĞÍ | Ö°Ôğ |
 |------|------|------|
-| `./2026-06-29-data-relationship-blueprint.md` | è®¡åˆ’ä¸»æ–‡æ¡£ | å®šä¹‰ä»»åŠ¡ã€å…³ç³»è¡¨ã€æ—¶åºã€éªŒè¯æ–¹æ³• |
-| `../explanation/v9-data-relationship-er.md` | åˆ›å»º | 20 ä¸ª Store çš„å®ä½“å…³ç³»å›¾ä¸å­—æ®µè¯´æ˜ |
-| `./v9-data-timeline.md` | åˆ›å»º | æ•°æ®äº§ç”Ÿã€åˆ·æ–°ã€æ¶ˆè´¹çš„æ—¶åºä¸ç”Ÿå‘½å‘¨æœŸ |
-| `docs/blueprints/v9-pipeline-sequence.mmd` | åˆ›å»º | æ ¸å¿ƒç®¡çº¿ Mermaid åºåˆ—å›¾ |
-| `src/blueprints/` | åˆ›å»º | å…³ç³»ä¸æ—¶é—´è¡¨çš„å¯æ‰§è¡Œæ ¡éªŒæµ‹è¯• |
-| `scripts/other/validate-data-blueprint.ts` | åˆ›å»º | æ‰«æç±»å‹ä¸ Store å®šä¹‰ï¼Œè‡ªåŠ¨æ¯”å¯¹è“å›¾ä¸€è‡´æ€§ |
+| `./2026-06-29-data-relationship-blueprint.md` | ¼Æ»®Ö÷ÎÄµµ | ¶¨ÒåÈÎÎñ¡¢¹ØÏµ±í¡¢Ê±Ğò¡¢ÑéÖ¤·½·¨ |
+| `../explanation/v9-data-relationship-er.md` | ´´½¨ | 20 ¸ö Store µÄÊµÌå¹ØÏµÍ¼Óë×Ö¶ÎËµÃ÷ |
+| `./v9-data-timeline.md` | ´´½¨ | Êı¾İ²úÉú¡¢Ë¢ĞÂ¡¢Ïû·ÑµÄÊ±ĞòÓëÉúÃüÖÜÆÚ |
+| `docs/blueprints/v9-pipeline-sequence.mmd` | ´´½¨ | ºËĞÄ¹ÜÏß Mermaid ĞòÁĞÍ¼ |
+| `src/blueprints/` | ´´½¨ | ¹ØÏµÓëÊ±¼ä±íµÄ¿ÉÖ´ĞĞĞ£Ñé²âÊÔ |
+| `scripts/other/validate-data-blueprint.ts` | ´´½¨ | É¨ÃèÀàĞÍÓë Store ¶¨Òå£¬×Ô¶¯±È¶ÔÀ¶Í¼Ò»ÖÂĞÔ |
 
 ---
 
-### Task 1: å»ºç«‹ V9 æ•°æ®åº“å®ä½“å…³ç³»è“å›¾ (ER)
+### Task 1: ½¨Á¢ V9 Êı¾İ¿âÊµÌå¹ØÏµÀ¶Í¼ (ER)
 
 **Files:**
 - Create: `../explanation/v9-data-relationship-er.md`
-- Reference: `src/data/types.ts`, `src/data/db.ts`, `./v9-indexeddb-store-schema.md`, `./v9-æ•°æ®è¡€ç¼˜è¿½è¸ª.md`
+- Reference: `src/data/types.ts`, `src/data/db.ts`, `./v9-indexeddb-store-schema.md`, `./v9-Êı¾İÑªÔµ×·×Ù.md`
 
-- [ ] **Step 1: åˆ—å‡ºå…¨éƒ¨ 20 ä¸ª Store åŠå…¶ä¸»é”®/ç´¢å¼•**
+- [ ] **Step 1: ÁĞ³öÈ«²¿ 20 ¸ö Store ¼°ÆäÖ÷¼ü/Ë÷Òı**
 
 ```markdown
-## Store æ¸…å•
+## Store Çåµ¥
 
-| Store | ä¸»é”® | ç´¢å¼• | æ ¸å¿ƒå®ä½“ |
+| Store | Ö÷¼ü | Ë÷Òı | ºËĞÄÊµÌå |
 |-------|------|------|---------|
 | stocks | symbol | by-status, by-group | Stock |
 | daily_quotes | symbol | - | DailyQuotes |
@@ -71,30 +77,30 @@ tier: reference
 | research_logs | id(auto) | - | ResearchLog |
 ```
 
-- [ ] **Step 2: å®šä¹‰å®ä½“é—´ 1:1 / 1:N / N:M å…³ç³»**
+- [ ] **Step 2: ¶¨ÒåÊµÌå¼ä 1:1 / 1:N / N:M ¹ØÏµ**
 
 ```markdown
-## å®ä½“å…³ç³»
+## ÊµÌå¹ØÏµ
 
-| ä¸»ä½“å®ä½“ | å…³ç³» | å®¢ä½“å®ä½“ | å…³è”å­—æ®µ | è¯´æ˜ |
+| Ö÷ÌåÊµÌå | ¹ØÏµ | ¿ÍÌåÊµÌå | ¹ØÁª×Ö¶Î | ËµÃ÷ |
 |---------|------|---------|---------|------|
-| Stock (symbol) | 1:1 | DailyQuotes (symbol) | symbol | ä¸€åªè‚¡ç¥¨å¯¹åº”ä¸€æ¡æœ€æ–° K çº¿è®°å½• |
-| Stock (symbol) | 1:1 | V6Score (symbol) | symbol | ä¸€åªè‚¡ç¥¨å¯¹åº”ä¸€æ¡æœ€æ–°ç»¼åˆè¯„åˆ† |
-| Stock (symbol) | 1:N | IntelligentScore (symbol) | symbol | ä¸€åªè‚¡ç¥¨å¯æœ‰å¤šæ¡å†å²æ™ºèƒ½è¯„åˆ† |
-| Stock (symbol) | 1:N | IndustryScore (code) | industryCode | ä¸€ä¸ªè¡Œä¸šåŒ…å«å¤šåªè‚¡ç¥¨ |
-| Stock (symbol) | 1:1 | HotSectorScore (symbol) | symbol | åŒç­–ç•¥çƒ­é—¨è¯„åˆ† |
-| Stock (symbol) | 1:1 | ValuePitScore (symbol) | symbol | åŒç­–ç•¥æ´¼åœ°è¯„åˆ† |
-| NewsArticle (id) | N:M | Stock (symbol) | news_stock_map.newsId / .symbol | æ–‡ç« ä¸è‚¡ç¥¨çš„å…³è”æ˜ å°„ |
-| NewsArticle (id) | 1:1 | SentimentCache (contentHash) | hash / contentHash | æ–‡ç« æƒ…ç»ªç¼“å­˜ |
-| Order (symbol) | N:M | Stock (symbol) | symbol | è®¢å•å¼•ç”¨è‚¡ç¥¨ |
-| Signal (symbol) | N:M | Stock (symbol) | symbol | ä¿¡å·å¼•ç”¨è‚¡ç¥¨ |
-| SectorScoreRecord (sectorCode) | 1:N | RotationSectorScore (sectorCode) | sectorCode | æ¿å—è¯„åˆ†ä¸è½®åŠ¨è¯„åˆ†å¯äº’è¡¥ |
-| LocalDoc (symbol) | 1:N | Stock (symbol) | symbol | ä¸€åªè‚¡ç¥¨å¯æœ‰å¤šä»½æœ¬åœ°æ–‡æ¡£ |
-| ScoreDocVersion (symbol) | 1:N | Stock (symbol) | symbol | ä¸€åªè‚¡ç¥¨å¯æœ‰å¤šä»½è¯„åˆ†æ–‡æ¡£ç‰ˆæœ¬ |
-| StrategySnapshot | N:M | Stock/Score/Signal | holdings.scores.symbols | å¿«ç…§èšåˆå¤šå®ä½“ |
+| Stock (symbol) | 1:1 | DailyQuotes (symbol) | symbol | Ò»Ö»¹ÉÆ±¶ÔÓ¦Ò»Ìõ×îĞÂ K Ïß¼ÇÂ¼ |
+| Stock (symbol) | 1:1 | V6Score (symbol) | symbol | Ò»Ö»¹ÉÆ±¶ÔÓ¦Ò»Ìõ×îĞÂ×ÛºÏÆÀ·Ö |
+| Stock (symbol) | 1:N | IntelligentScore (symbol) | symbol | Ò»Ö»¹ÉÆ±¿ÉÓĞ¶àÌõÀúÊ·ÖÇÄÜÆÀ·Ö |
+| Stock (symbol) | 1:N | IndustryScore (code) | industryCode | Ò»¸öĞĞÒµ°üº¬¶àÖ»¹ÉÆ± |
+| Stock (symbol) | 1:1 | HotSectorScore (symbol) | symbol | Ë«²ßÂÔÈÈÃÅÆÀ·Ö |
+| Stock (symbol) | 1:1 | ValuePitScore (symbol) | symbol | Ë«²ßÂÔÍİµØÆÀ·Ö |
+| NewsArticle (id) | N:M | Stock (symbol) | news_stock_map.newsId / .symbol | ÎÄÕÂÓë¹ÉÆ±µÄ¹ØÁªÓ³Éä |
+| NewsArticle (id) | 1:1 | SentimentCache (contentHash) | hash / contentHash | ÎÄÕÂÇéĞ÷»º´æ |
+| Order (symbol) | N:M | Stock (symbol) | symbol | ¶©µ¥ÒıÓÃ¹ÉÆ± |
+| Signal (symbol) | N:M | Stock (symbol) | symbol | ĞÅºÅÒıÓÃ¹ÉÆ± |
+| SectorScoreRecord (sectorCode) | 1:N | RotationSectorScore (sectorCode) | sectorCode | °å¿éÆÀ·ÖÓëÂÖ¶¯ÆÀ·Ö¿É»¥²¹ |
+| LocalDoc (symbol) | 1:N | Stock (symbol) | symbol | Ò»Ö»¹ÉÆ±¿ÉÓĞ¶à·İ±¾µØÎÄµµ |
+| ScoreDocVersion (symbol) | 1:N | Stock (symbol) | symbol | Ò»Ö»¹ÉÆ±¿ÉÓĞ¶à·İÆÀ·ÖÎÄµµ°æ±¾ |
+| StrategySnapshot | N:M | Stock/Score/Signal | holdings.scores.symbols | ¿ìÕÕ¾ÛºÏ¶àÊµÌå |
 ```
 
-- [ ] **Step 3: å†™å…¥ ER Mermaid å›¾**
+- [ ] **Step 3: Ğ´Èë ER Mermaid Í¼**
 
 ```markdown
 ```mermaid
@@ -125,62 +131,62 @@ git commit -m "docs(blueprint): add V9 data relationship ER diagram"
 
 ---
 
-### Task 2: å»ºç«‹æ•°æ®æ—¶é—´å…³ç³»ä¸ç”Ÿå‘½å‘¨æœŸè“å›¾
+### Task 2: ½¨Á¢Êı¾İÊ±¼ä¹ØÏµÓëÉúÃüÖÜÆÚÀ¶Í¼
 
 **Files:**
 - Create: `./v9-data-timeline.md`
 - Reference: `src/services/scoring/v6ScoreService.ts`, `src/services/trading/dualStrategyEngine.ts`, `src/services/trading/signalGenerator.ts`, `src/services/data-collector/TaskScheduler.ts`, `src/core/dataflow/dataflowEngine.ts`
 
-- [ ] **Step 1: å®šä¹‰æ•°æ®äº§ç”Ÿæ—¶åºï¼ˆç®¡çº¿é˜¶æ®µï¼‰**
+- [ ] **Step 1: ¶¨ÒåÊı¾İ²úÉúÊ±Ğò£¨¹ÜÏß½×¶Î£©**
 
 ```markdown
-## æ•°æ®ç®¡çº¿ä¸»æ—¶åº
+## Êı¾İ¹ÜÏßÖ÷Ê±Ğò
 
-| é˜¶æ®µ | è§¦å‘æ¡ä»¶ | è¾“å…¥ | è¾“å‡º | å…³é”®æ—¶é—´å­—æ®µ | è´Ÿè´£æ¨¡å— |
+| ½×¶Î | ´¥·¢Ìõ¼ş | ÊäÈë | Êä³ö | ¹Ø¼üÊ±¼ä×Ö¶Î | ¸ºÔğÄ£¿é |
 |------|---------|------|------|-------------|---------|
-| P1 é‡‡é›† | æ‰‹åŠ¨/å®šæ—¶/äº‹ä»¶ | å¤–éƒ¨ API / ç”¨æˆ·è¾“å…¥ | stocks, daily_quotes | ingestedAt, updatedAt | fetcherService, TaskScheduler |
-| P2 æ¸…æ´— | é‡‡é›†å®Œæˆå | RawMarketData | MarketData (æ ‡å‡†åŒ–) | - | MarketDataAdapter |
-| P3 è¯„åˆ† | æ•°æ®å°±ç»ª/ç”¨æˆ·è§¦å‘ | stocks + daily_quotes | v6_scores | calculatedAt | v6ScoreService |
-| P4 ç­–ç•¥ | è¯„åˆ†å®Œæˆå | v6_scores + daily_quotes | hot_sector_scores, value_pit_scores | calculatedAt | hotSectorAnalyzer, valuePitAnalyzer |
-| P5 è½®åŠ¨ | ç­–ç•¥è¯„åˆ†å/å®šæ—¶ | value_pit_scores + sector æ•°æ® | rotation_scores | scoreDate, createdAt | rotationScoreService |
-| P6 ä¿¡å· | ç­–ç•¥è¯„åˆ†å | stocks + daily_quotes + scores | signals | createdAt | signalGenerator |
-| P7 äº¤æ˜“ | ä¿¡å·/ç”¨æˆ·å†³ç­– | stocks + signals | orders | createdAt | tradingService |
-| P8 å¤ç›˜ | æ”¶ç›˜å/æ‰‹åŠ¨ | orders + daily_quotes | trade review report | generatedAt | tradeReviewAI |
-| P9 èµ„è®¯ | å®šæ—¶/äº‹ä»¶ | å¤–éƒ¨èµ„è®¯æº | news + sentiment_cache + news_stock_map | publishTime, fetchTime, analyzedAt | newsService |
-| P10 æ™ºèƒ½è¯„åˆ† | ç”¨æˆ·è§¦å‘ | stocks + local_docs | intelligent_scores | scoredAt | intelligentScoreService |
-| P11 è¡Œä¸šè¯„åˆ† | ç”¨æˆ·è§¦å‘ | sector æ•°æ® | industry_scores | scoredAt | industryScoreService |
+| P1 ²É¼¯ | ÊÖ¶¯/¶¨Ê±/ÊÂ¼ş | Íâ²¿ API / ÓÃ»§ÊäÈë | stocks, daily_quotes | ingestedAt, updatedAt | fetcherService, TaskScheduler |
+| P2 ÇåÏ´ | ²É¼¯Íê³Éºó | RawMarketData | MarketData (±ê×¼»¯) | - | MarketDataAdapter |
+| P3 ÆÀ·Ö | Êı¾İ¾ÍĞ÷/ÓÃ»§´¥·¢ | stocks + daily_quotes | v6_scores | calculatedAt | v6ScoreService |
+| P4 ²ßÂÔ | ÆÀ·ÖÍê³Éºó | v6_scores + daily_quotes | hot_sector_scores, value_pit_scores | calculatedAt | hotSectorAnalyzer, valuePitAnalyzer |
+| P5 ÂÖ¶¯ | ²ßÂÔÆÀ·Öºó/¶¨Ê± | value_pit_scores + sector Êı¾İ | rotation_scores | scoreDate, createdAt | rotationScoreService |
+| P6 ĞÅºÅ | ²ßÂÔÆÀ·Öºó | stocks + daily_quotes + scores | signals | createdAt | signalGenerator |
+| P7 ½»Ò× | ĞÅºÅ/ÓÃ»§¾ö²ß | stocks + signals | orders | createdAt | tradingService |
+| P8 ¸´ÅÌ | ÊÕÅÌºó/ÊÖ¶¯ | orders + daily_quotes | trade review report | generatedAt | tradeReviewAI |
+| P9 ×ÊÑ¶ | ¶¨Ê±/ÊÂ¼ş | Íâ²¿×ÊÑ¶Ô´ | news + sentiment_cache + news_stock_map | publishTime, fetchTime, analyzedAt | newsService |
+| P10 ÖÇÄÜÆÀ·Ö | ÓÃ»§´¥·¢ | stocks + local_docs | intelligent_scores | scoredAt | intelligentScoreService |
+| P11 ĞĞÒµÆÀ·Ö | ÓÃ»§´¥·¢ | sector Êı¾İ | industry_scores | scoredAt | industryScoreService |
 ```
 
-- [ ] **Step 2: å®šä¹‰æ•°æ®åˆ·æ–°é¢‘ç‡ä¸ä¾èµ– freshness**
+- [ ] **Step 2: ¶¨ÒåÊı¾İË¢ĞÂÆµÂÊÓëÒÀÀµ freshness**
 
 ```markdown
-## æ•°æ®åˆ·æ–°é¢‘ç‡
+## Êı¾İË¢ĞÂÆµÂÊ
 
-| Store | æ•°æ®æº | ç†æƒ³é¢‘ç‡ | å¯æ¥å—æœ€å¤§æ»å | ä¸‹æ¸¸å½±å“ |
+| Store | Êı¾İÔ´ | ÀíÏëÆµÂÊ | ¿É½ÓÊÜ×î´óÖÍºó | ÏÂÓÎÓ°Ïì |
 |-------|--------|---------|---------------|---------|
-| stocks | fetcher / æ‰‹åŠ¨ | æ—¥ç»ˆ 1 æ¬¡ | 1 äº¤æ˜“æ—¥ | æ‰€æœ‰è¯„åˆ†ã€äº¤æ˜“ã€ä¿¡å· |
-| daily_quotes | fetcher | æ—¥ç»ˆ 1 æ¬¡ / å®æ—¶ 15min | 1 äº¤æ˜“æ—¥ | v6_scores, signals, ç­–ç•¥è¯„åˆ† |
-| v6_scores | è§„åˆ™å¼•æ“ | daily_quotes æ›´æ–°å | ä¸ daily_quotes åŒæ­¥ | hot_sector_scores, value_pit_scores |
-| hot_sector_scores | ç­–ç•¥å¼•æ“ | v6_scores æ›´æ–°å | ä¸ v6_scores åŒæ­¥ | dualStrategyEngine, signals |
-| value_pit_scores | ç­–ç•¥å¼•æ“ | v6_scores æ›´æ–°å | ä¸ v6_scores åŒæ­¥ | dualStrategyEngine, signals |
-| rotation_scores | è½®åŠ¨å¼•æ“ | æ—¥ç»ˆ 1 æ¬¡ | 1 äº¤æ˜“æ—¥ | ç­–ç•¥ä¿¡å· |
-| signals | ä¿¡å·å¼•æ“ | æ•°æ®å˜åŒ– / 5min | 5 åˆ†é’Ÿ | tradingService, UI |
-| orders | ç”¨æˆ· | å®æ—¶ | å®æ—¶ | æŒä»“ã€å¤ç›˜ |
-| news | èµ„è®¯æº | 15min / äº‹ä»¶ | 30min | æƒ…ç»ªã€ä¸ªè‚¡å…³è” |
-| sentiment_cache | æƒ…ç»ªåˆ†æå™¨ | é¦–æ¬¡åˆ†æåç¼“å­˜ | æ— è¿‡æœŸï¼ˆéœ€æ‰‹åŠ¨åˆ·æ–°ï¼‰ | news |
+| stocks | fetcher / ÊÖ¶¯ | ÈÕÖÕ 1 ´Î | 1 ½»Ò×ÈÕ | ËùÓĞÆÀ·Ö¡¢½»Ò×¡¢ĞÅºÅ |
+| daily_quotes | fetcher | ÈÕÖÕ 1 ´Î / ÊµÊ± 15min | 1 ½»Ò×ÈÕ | v6_scores, signals, ²ßÂÔÆÀ·Ö |
+| v6_scores | ¹æÔòÒıÇæ | daily_quotes ¸üĞÂºó | Óë daily_quotes Í¬²½ | hot_sector_scores, value_pit_scores |
+| hot_sector_scores | ²ßÂÔÒıÇæ | v6_scores ¸üĞÂºó | Óë v6_scores Í¬²½ | dualStrategyEngine, signals |
+| value_pit_scores | ²ßÂÔÒıÇæ | v6_scores ¸üĞÂºó | Óë v6_scores Í¬²½ | dualStrategyEngine, signals |
+| rotation_scores | ÂÖ¶¯ÒıÇæ | ÈÕÖÕ 1 ´Î | 1 ½»Ò×ÈÕ | ²ßÂÔĞÅºÅ |
+| signals | ĞÅºÅÒıÇæ | Êı¾İ±ä»¯ / 5min | 5 ·ÖÖÓ | tradingService, UI |
+| orders | ÓÃ»§ | ÊµÊ± | ÊµÊ± | ³Ö²Ö¡¢¸´ÅÌ |
+| news | ×ÊÑ¶Ô´ | 15min / ÊÂ¼ş | 30min | ÇéĞ÷¡¢¸ö¹É¹ØÁª |
+| sentiment_cache | ÇéĞ÷·ÖÎöÆ÷ | Ê×´Î·ÖÎöºó»º´æ | ÎŞ¹ıÆÚ£¨ĞèÊÖ¶¯Ë¢ĞÂ£© | news |
 ```
 
-- [ ] **Step 3: å®šä¹‰æ—¶é—´ä¸€è‡´æ€§è§„åˆ™**
+- [ ] **Step 3: ¶¨ÒåÊ±¼äÒ»ÖÂĞÔ¹æÔò**
 
 ```markdown
-## æ—¶é—´ä¸€è‡´æ€§è§„åˆ™
+## Ê±¼äÒ»ÖÂĞÔ¹æÔò
 
-1. **è¯„åˆ†å¿…é¡»åŸºäºæœ€æ–°è¡Œæƒ…**ï¼š`v6_scores.calculatedAt >= daily_quotes.updatedAt`
-2. **ç­–ç•¥è¯„åˆ†å¿…é¡»åŸºäºæœ€æ–° V6 è¯„åˆ†**ï¼š`hot_sector_scores.calculatedAt >= v6_scores.calculatedAt`
-3. **äº¤æ˜“ä¿¡å·å¿…é¡»åŸºäºæœ€æ–°è¡Œæƒ…**ï¼š`signals.createdAt >= daily_quotes.updatedAt`
-4. **è®¢å•ä»·æ ¼å¿…é¡»æ¥è‡ªæœ€æ–° stock.price**ï¼š`orders.createdAt >= stock.updatedAt`ï¼ˆä»·æ ¼æ‹‰å–åï¼‰
-5. **å¤ç›˜å¿…é¡»è¦†ç›–åˆ°æœ€æ–°è®¢å•**ï¼š`tradeReviewReport.generatedAt >= max(orders.createdAt)`
-6. **èµ„è®¯æƒ…ç»ªç¼“å­˜å‘½ä¸­å¿…é¡»æ—©äºæ–‡ç« å‘å¸ƒ**ï¼š`sentiment_cache.analyzedAt >= news.publishTime`
+1. **ÆÀ·Ö±ØĞë»ùÓÚ×îĞÂĞĞÇé**£º`v6_scores.calculatedAt >= daily_quotes.updatedAt`
+2. **²ßÂÔÆÀ·Ö±ØĞë»ùÓÚ×îĞÂ V6 ÆÀ·Ö**£º`hot_sector_scores.calculatedAt >= v6_scores.calculatedAt`
+3. **½»Ò×ĞÅºÅ±ØĞë»ùÓÚ×îĞÂĞĞÇé**£º`signals.createdAt >= daily_quotes.updatedAt`
+4. **¶©µ¥¼Û¸ñ±ØĞëÀ´×Ô×îĞÂ stock.price**£º`orders.createdAt >= stock.updatedAt`£¨¼Û¸ñÀ­È¡ºó£©
+5. **¸´ÅÌ±ØĞë¸²¸Çµ½×îĞÂ¶©µ¥**£º`tradeReviewReport.generatedAt >= max(orders.createdAt)`
+6. **×ÊÑ¶ÇéĞ÷»º´æÃüÖĞ±ØĞëÔçÓÚÎÄÕÂ·¢²¼**£º`sentiment_cache.analyzedAt >= news.publishTime`
 ```
 
 - [ ] **Step 4: Commit**
@@ -192,18 +198,18 @@ git commit -m "docs(blueprint): add V9 data timeline and freshness rules"
 
 ---
 
-### Task 3: ç»˜åˆ¶æ ¸å¿ƒç®¡çº¿åºåˆ—å›¾
+### Task 3: »æÖÆºËĞÄ¹ÜÏßĞòÁĞÍ¼
 
 **Files:**
 - Create: `docs/blueprints/v9-pipeline-sequence.mmd`
-- Reference: `./v9-æ•°æ®è¡€ç¼˜è¿½è¸ª.md` ç¬¬ 3 ç« 
+- Reference: `./v9-Êı¾İÑªÔµ×·×Ù.md` µÚ 3 ÕÂ
 
-- [ ] **Step 1: ç»˜åˆ¶æ•°æ®é‡‡é›† â†’ è¯„åˆ† â†’ ç­–ç•¥ â†’ ä¿¡å· â†’ äº¤æ˜“ â†’ å¤ç›˜å…¨é“¾è·¯åºåˆ—å›¾**
+- [ ] **Step 1: »æÖÆÊı¾İ²É¼¯ ¡ú ÆÀ·Ö ¡ú ²ßÂÔ ¡ú ĞÅºÅ ¡ú ½»Ò× ¡ú ¸´ÅÌÈ«Á´Â·ĞòÁĞÍ¼**
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor U as ç”¨æˆ·/å®šæ—¶å™¨
+    actor U as ÓÃ»§/¶¨Ê±Æ÷
     participant FS as fetcherService
     participant IDB as IndexedDB
     participant VS as v6ScoreService
@@ -214,7 +220,7 @@ sequenceDiagram
     participant TS as tradingService
     participant TR as tradeReviewAI
 
-    U->>FS: è§¦å‘é‡‡é›† (symbol)
+    U->>FS: ´¥·¢²É¼¯ (symbol)
     FS->>IDB: put stocks, daily_quotes
     IDB-->>FS: ok
 
@@ -265,14 +271,14 @@ git commit -m "docs(blueprint): add V9 pipeline sequence diagram"
 
 ---
 
-### Task 4: ç¼–å†™æ•°æ®å…³ç³»å¯æ‰§è¡Œæ ¡éªŒæµ‹è¯•
+### Task 4: ±àĞ´Êı¾İ¹ØÏµ¿ÉÖ´ĞĞĞ£Ñé²âÊÔ
 
 **Files:**
 - Create: `src/blueprints/`
-- Modify: `package.json` æ·»åŠ æµ‹è¯•å‘½ä»¤ï¼ˆè‹¥ä¸å­˜åœ¨ï¼‰
+- Modify: `package.json` Ìí¼Ó²âÊÔÃüÁî£¨Èô²»´æÔÚ£©
 - Reference: `src/data/types.ts`, `src/data/db.ts`
 
-- [ ] **Step 1: ç¼–å†™ Store ä¸ç±»å‹æ˜ å°„æµ‹è¯•**
+- [ ] **Step 1: ±àĞ´ Store ÓëÀàĞÍÓ³Éä²âÊÔ**
 
 ```typescript
 import { describe, it, expect } from 'vitest'
@@ -331,7 +337,7 @@ describe('V9 data relationship blueprint', () => {
 })
 ```
 
-- [ ] **Step 2: ç¼–å†™æ—¶é—´å…³ç³»æ ¡éªŒæµ‹è¯•**
+- [ ] **Step 2: ±àĞ´Ê±¼ä¹ØÏµĞ£Ñé²âÊÔ**
 
 ```typescript
 import { describe, it, expect } from 'vitest'
@@ -339,7 +345,7 @@ import type { DailyQuotes, Order, Signal, Stock, V6Score } from '@/data/types'
 
 describe('V9 data timeline rules', () => {
   it('v6 score must not be older than its daily quotes input', () => {
-    const stock: Stock = { symbol: '600519', name: 'èŒ…å°', dataVersion: 1, researchStatus: 'candidate', source: 'manual' }
+    const stock: Stock = { symbol: '600519', name: 'Ã©Ì¨', dataVersion: 1, researchStatus: 'candidate', source: 'manual' }
     const quotes: DailyQuotes = {
       symbol: '600519',
       latest: { date: '2026-06-29', open: 1600, high: 1620, low: 1590, close: 1610, volume: 1000, amount: 1_600_000 },
@@ -391,7 +397,7 @@ describe('V9 data timeline rules', () => {
 })
 ```
 
-- [ ] **Step 3: è¿è¡Œæµ‹è¯•ç¡®è®¤é€šè¿‡**
+- [ ] **Step 3: ÔËĞĞ²âÊÔÈ·ÈÏÍ¨¹ı**
 
 ```bash
 npx vitest run src/blueprints/__tests__/dataRelationship.test.ts
@@ -408,19 +414,19 @@ git commit -m "test(blueprint): add data relationship and timeline validation te
 
 ---
 
-### Task 5: ç¼–å†™è“å›¾ä¸€è‡´æ€§æ‰«æè„šæœ¬
+### Task 5: ±àĞ´À¶Í¼Ò»ÖÂĞÔÉ¨Ãè½Å±¾
 
 **Files:**
 - Create: `scripts/other/validate-data-blueprint.ts`
 - Reference: `src/config/dbConfig.ts`, `src/data/types.ts`
 
-- [ ] **Step 1: å®ç° TS æ‰«æè„šæœ¬**
+- [ ] **Step 1: ÊµÏÖ TS É¨Ãè½Å±¾**
 
 ```typescript
 #!/usr/bin/env tsx
 /**
- * æ‰«æ src/config/dbConfig.ts ä¸ src/data/types.tsï¼Œ
- * æ ¡éªŒ Store æ•°é‡ã€å‘½åä¸€è‡´æ€§ã€æ ¸å¿ƒå®ä½“æ˜ å°„æ˜¯å¦åç¦»è“å›¾ã€‚
+ * É¨Ãè src/config/dbConfig.ts Óë src/data/types.ts£¬
+ * Ğ£Ñé Store ÊıÁ¿¡¢ÃüÃûÒ»ÖÂĞÔ¡¢ºËĞÄÊµÌåÓ³ÉäÊÇ·ñÆ«ÀëÀ¶Í¼¡£
  */
 import * as fs from 'node:fs'
 import * as path from 'node:path'
@@ -480,7 +486,7 @@ function main() {
     throw new Error(`Missing required interfaces: ${missing.join(', ')}`)
   }
 
-  console.log('[validate-data-blueprint] âœ… Blueprint consistency check passed')
+  console.log('[validate-data-blueprint] ? Blueprint consistency check passed')
   console.log(`  Stores: ${storeNames.length}`)
   console.log(`  Interfaces: ${interfaces.length}`)
 }
@@ -488,7 +494,7 @@ function main() {
 main()
 ```
 
-- [ ] **Step 2: åœ¨ package.json æ·»åŠ è„šæœ¬**
+- [ ] **Step 2: ÔÚ package.json Ìí¼Ó½Å±¾**
 
 Modify `package.json`:
 
@@ -500,7 +506,7 @@ Modify `package.json`:
 }
 ```
 
-- [ ] **Step 3: è¿è¡Œè„šæœ¬**
+- [ ] **Step 3: ÔËĞĞ½Å±¾**
 
 ```bash
 npm run validate:blueprint
@@ -509,7 +515,7 @@ npm run validate:blueprint
 Expected output:
 
 ```
-[validate-data-blueprint] âœ… Blueprint consistency check passed
+[validate-data-blueprint] ? Blueprint consistency check passed
   Stores: 20
   Interfaces: 54
 ```
@@ -523,38 +529,38 @@ git commit -m "feat(blueprint): add automated blueprint consistency scanner"
 
 ---
 
-### Task 6: å°†è“å›¾é›†æˆåˆ°å¼€å‘å·¥ä½œæµ
+### Task 6: ½«À¶Í¼¼¯³Éµ½¿ª·¢¹¤×÷Á÷
 
 **Files:**
-- Modify: `.github/workflows/ci.yml` æˆ–ç­‰æ•ˆ CI é…ç½®ï¼ˆè‹¥å­˜åœ¨ï¼›å½“å‰é¡¹ç›®æ— æ­¤æ–‡ä»¶åˆ™è·³è¿‡ Step 1ï¼‰
+- Modify: `.github/workflows/ci.yml` »òµÈĞ§ CI ÅäÖÃ£¨Èô´æÔÚ£»µ±Ç°ÏîÄ¿ÎŞ´ËÎÄ¼şÔòÌø¹ı Step 1£©
 - Modify: `./08-implementation-plan.md`
 
-- [ ] **Step 1: åœ¨ CI ä¸­å¢åŠ è“å›¾æ ¡éªŒæ­¥éª¤ï¼ˆå¦‚ CI å­˜åœ¨ï¼‰**
+- [ ] **Step 1: ÔÚ CI ÖĞÔö¼ÓÀ¶Í¼Ğ£Ñé²½Öè£¨Èç CI ´æÔÚ£©**
 
 ```yaml
 - name: Validate data blueprint
   run: npm run validate:blueprint
 ```
 
-- [ ] **Step 2: åœ¨å®ç°è®¡åˆ’æ–‡æ¡£ä¸­å¼•ç”¨è“å›¾**
+- [ ] **Step 2: ÔÚÊµÏÖ¼Æ»®ÎÄµµÖĞÒıÓÃÀ¶Í¼**
 
-åœ¨ `./08-implementation-plan.md` é¡¶éƒ¨è¿½åŠ ï¼š
+ÔÚ `./08-implementation-plan.md` ¶¥²¿×·¼Ó£º
 
 ```markdown
-## æ•°æ®å…³ç³»ä¸æ—¶é—´å…³ç³»è“å›¾
+## Êı¾İ¹ØÏµÓëÊ±¼ä¹ØÏµÀ¶Í¼
 
-- å®ä½“å…³ç³»å›¾ï¼š`../explanation/v9-data-relationship-er.md`
-- æ•°æ®ç”Ÿå‘½å‘¨æœŸï¼š`./v9-data-timeline.md`
-- æ ¸å¿ƒç®¡çº¿åºåˆ—å›¾ï¼š`docs/blueprints/v9-pipeline-sequence.mmd`
-- è‡ªåŠ¨åŒ–æ ¡éªŒï¼š`npm run validate:blueprint`
-- æµ‹è¯•è¦†ç›–ï¼š`npx vitest run src/blueprints/__tests__/dataRelationship.test.ts`
+- ÊµÌå¹ØÏµÍ¼£º`../explanation/v9-data-relationship-er.md`
+- Êı¾İÉúÃüÖÜÆÚ£º`./v9-data-timeline.md`
+- ºËĞÄ¹ÜÏßĞòÁĞÍ¼£º`docs/blueprints/v9-pipeline-sequence.mmd`
+- ×Ô¶¯»¯Ğ£Ñé£º`npm run validate:blueprint`
+- ²âÊÔ¸²¸Ç£º`npx vitest run src/blueprints/__tests__/dataRelationship.test.ts`
 ```
 
 - [ ] **Step 3: Commit**
 
 ```bash
 git add docs/08-implementation-plan.md
-git add .github/workflows/ci.yml  # ä»…å½“å­˜åœ¨ CI é…ç½®æ—¶
+git add .github/workflows/ci.yml  # ½öµ±´æÔÚ CI ÅäÖÃÊ±
 git commit -m "docs(blueprint): integrate blueprint into dev workflow and CI"
 ```
 
@@ -563,27 +569,27 @@ git commit -m "docs(blueprint): integrate blueprint into dev workflow and CI"
 ## Self-Review
 
 **1. Spec coverage:**
-- æ•°æ®é‡‡é›†ï¼ˆå¤–éƒ¨/å†…éƒ¨ï¼‰â†’ Task 2 æ—¶é—´çº¿ P1/P9/P10/P11 è¦†ç›–
-- æ•°æ®åˆ†æï¼ˆçƒ­é—¨æ¿å—ã€è¡Œä¸šã€ä¸ªè‚¡ï¼‰â†’ Task 1 ER å…³ç³» + Task 2 é˜¶æ®µ P3/P4/P10/P11 è¦†ç›–
-- æ•°æ®ç­›é€‰ â†’ Task 2 é˜¶æ®µ P4/P5/P6 è¦†ç›–
-- ä¸ªè‚¡å®šæ€§ï¼ˆæ ¸å¿ƒèµ›é“ã€ä»·å€¼æ´¼åœ°ã€çƒ­é—¨æ¿å—ï¼‰â†’ Task 1 å…³ç³»è¡¨ + Task 2 é˜¶æ®µ P4 è¦†ç›–
-- äº¤æ˜“ç­¹ç åˆ†å¸ƒ â†’ Task 2 é˜¶æ®µ P3ï¼ˆL8 ç­¹ç è¯„åˆ†ï¼‰è¦†ç›–
-- äº¤æ˜“ç­¹ç æ³¢åŠ¨å¤ç›˜ â†’ Task 2 é˜¶æ®µ P8 è¦†ç›–
+- Êı¾İ²É¼¯£¨Íâ²¿/ÄÚ²¿£©¡ú Task 2 Ê±¼äÏß P1/P9/P10/P11 ¸²¸Ç
+- Êı¾İ·ÖÎö£¨ÈÈÃÅ°å¿é¡¢ĞĞÒµ¡¢¸ö¹É£©¡ú Task 1 ER ¹ØÏµ + Task 2 ½×¶Î P3/P4/P10/P11 ¸²¸Ç
+- Êı¾İÉ¸Ñ¡ ¡ú Task 2 ½×¶Î P4/P5/P6 ¸²¸Ç
+- ¸ö¹É¶¨ĞÔ£¨ºËĞÄÈüµÀ¡¢¼ÛÖµÍİµØ¡¢ÈÈÃÅ°å¿é£©¡ú Task 1 ¹ØÏµ±í + Task 2 ½×¶Î P4 ¸²¸Ç
+- ½»Ò×³ïÂë·Ö²¼ ¡ú Task 2 ½×¶Î P3£¨L8 ³ïÂëÆÀ·Ö£©¸²¸Ç
+- ½»Ò×³ïÂë²¨¶¯¸´ÅÌ ¡ú Task 2 ½×¶Î P8 ¸²¸Ç
 
 **2. Placeholder scan:**
-- æ—  "TBD"/"TODO"
-- æ—  "add appropriate error handling" ç­‰æ¨¡ç³Šæè¿°
-- æ‰€æœ‰ä»£ç å—å®Œæ•´
+- ÎŞ "TBD"/"TODO"
+- ÎŞ "add appropriate error handling" µÈÄ£ºıÃèÊö
+- ËùÓĞ´úÂë¿éÍêÕû
 
 **3. Type consistency:**
-- `STORE_NAME` å¼•ç”¨ä¸ `src/config/dbConfig.ts` ä¸€è‡´
-- æ¥å£åç§°ä¸ `src/data/types.ts` ä¸€è‡´
-- æ—¶é—´å­—æ®µ `calculatedAt`, `updatedAt`, `createdAt`, `scoredAt`, `generatedAt` ä¸æºç ä¸€è‡´
+- `STORE_NAME` ÒıÓÃÓë `src/config/dbConfig.ts` Ò»ÖÂ
+- ½Ó¿ÚÃû³ÆÓë `src/data/types.ts` Ò»ÖÂ
+- Ê±¼ä×Ö¶Î `calculatedAt`, `updatedAt`, `createdAt`, `scoredAt`, `generatedAt` ÓëÔ´ÂëÒ»ÖÂ
 
 **4. Known gaps discovered during planning (resolved in execution):**
-- ~~`news_bookmarks` Store å·²åœ¨ `STORE_NAME` ä¸­å®šä¹‰ï¼Œä½† `src/data/types.ts` ä¸­ç¼ºå°‘å¯¹åº”çš„ `NewsBookmark` TypeScript æ¥å£~~ â†’ å·²è¿ç§» `src/store/analysisNewsStore.ts` çš„ `NewsBookmarkRecord` åˆ° `src/data/types.ts` çš„ `NewsBookmark`ã€‚
-- ~~`./v9-æ•°æ®è¡€ç¼˜è¿½è¸ª.md` æ ‡æ³¨ `DB_VERSION = 15`ï¼Œè€Œ `src/config/dbConfig.ts` å®é™…å¯¼å‡º `DB_VERSION = 14`~~ â†’ å·²ä¿®æ­£æ–‡æ¡£ä¸º DB_VERSION = 14ã€‚
-- é¡¹ç›®å½“å‰æ—  `.github/workflows/ci.yml`ï¼ŒTask 6 çš„ CI æ­¥éª¤ä¸ºæ¡ä»¶æ€§ï¼Œä»…å½“ CI é…ç½®å­˜åœ¨æ—¶è¿½åŠ ï¼›å¦åˆ™ä»…æ›´æ–° `./08-implementation-plan.md`ã€‚
+- ~~`news_bookmarks` Store ÒÑÔÚ `STORE_NAME` ÖĞ¶¨Òå£¬µ« `src/data/types.ts` ÖĞÈ±ÉÙ¶ÔÓ¦µÄ `NewsBookmark` TypeScript ½Ó¿Ú~~ ¡ú ÒÑÇ¨ÒÆ `src/store/analysisNewsStore.ts` µÄ `NewsBookmarkRecord` µ½ `src/data/types.ts` µÄ `NewsBookmark`¡£
+- ~~`./v9-Êı¾İÑªÔµ×·×Ù.md` ±ê×¢ `DB_VERSION = 15`£¬¶ø `src/config/dbConfig.ts` Êµ¼Êµ¼³ö `DB_VERSION = 14`~~ ¡ú ÒÑĞŞÕıÎÄµµÎª DB_VERSION = 14¡£
+- ÏîÄ¿µ±Ç°ÎŞ `.github/workflows/ci.yml`£¬Task 6 µÄ CI ²½ÖèÎªÌõ¼şĞÔ£¬½öµ± CI ÅäÖÃ´æÔÚÊ±×·¼Ó£»·ñÔò½ö¸üĞÂ `./08-implementation-plan.md`¡£
 
 ---
 

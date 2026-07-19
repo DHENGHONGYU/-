@@ -11,7 +11,7 @@ import {
   type DualStrategyRuleConfig,
 } from '@/config/dualStrategyRules'
 import type { DataLayerResult, DualStrategyResult, Signal, Stock } from '@/data/types'
-import { generateId } from '@/data/db'
+import { generateId } from '@/lib/utils'
 import { getLogger } from '@/lib/logger'
 import { analyzeHotSectors } from '@/services/scoring/hotSectorAnalyzer'
 import { analyzeValuePits } from '@/services/scoring/valuePitAnalyzer'

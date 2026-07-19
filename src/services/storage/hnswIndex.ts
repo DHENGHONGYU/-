@@ -150,6 +150,9 @@ class MinHeap {
 
 // ─── HNSW 索引 ───────────────────────────────────────────────
 
+/**
+ * HNSWIndex
+ */
 export class HNSWIndex {
   private space: HNSWSpace
   dim: number

@@ -1,130 +1,131 @@
 ---
-title: investment-pipeline-stage-analysis
-tier: important
+title: Í¶×ÊÁ÷³Ì½×¶Î»¯·ÖÎö£º²ÖÎ»¡¢ÒıÇæ¡¢Êı¾İ¼Ü¹¹ÓëÊı¾İ½»»¥
+type: explanation
+domain: backend
+phase: design
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "±¾ÎÄµµ°Ñ V9 Í¶×ÊÑĞ¾¿Á÷³Ì²ğ·ÖÎª 13 ¸ö½×¶Î£¬ÖğÏîËµÃ÷£ºÒµÎñ¶¯×÷¡¢ÑĞ¾¿³Ø²ÖÎ»¡¢Êµ¼Ê½»Ò×²ÖÎ»¡¢¸ºÔğÒıÇæ¡¢Êı¾İ¼Ü¹¹¡¢Êı¾İ½»»¥·½Ê½¡¢µ±Ç°ÊµÏÖ×´Ì¬ÒÔ¼°ÓëÏÂ½×¶ÎµÄÏÎ½Ó¡£"
+tags: [backend, research, plan]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: æŠ•èµ„æµç¨‹é˜¶æ®µåŒ–åˆ†æï¼šä»“ä½ã€å¼•æ“ã€æ•°æ®æ¶æ„ä¸æ•°æ®äº¤äº’
-version: v0.9.0
-last_updated: 2026-06-24
-maintainer: V9 Architecture Team
-status: active
-change_log:
-  - date: 2026-06-24
-    author: Documentation Governor
-    desc: æ³¨å…¥ Frontmatter å…ƒæ•°æ®ï¼ˆPhase 3 ç‰ˆæœ¬åŒ–ï¼‰
-tier: important
----
-# æŠ•èµ„æµç¨‹é˜¶æ®µåŒ–åˆ†æï¼šä»“ä½ã€å¼•æ“ã€æ•°æ®æ¶æ„ä¸æ•°æ®äº¤äº’
+# Í¶×ÊÁ÷³Ì½×¶Î»¯·ÖÎö£º²ÖÎ»¡¢ÒıÇæ¡¢Êı¾İ¼Ü¹¹ÓëÊı¾İ½»»¥
 
 > **Status**: Current  
 > **Version**: v0.9.0-docs-review  
 > **Last Updated**: 2026-06-24
 >
-> æœ¬æ–‡æ¡£æŠŠ V9 æŠ•èµ„ç ”ç©¶æµç¨‹æ‹†åˆ†ä¸º 13 ä¸ªé˜¶æ®µï¼Œé€é¡¹è¯´æ˜ï¼šä¸šåŠ¡åŠ¨ä½œã€ç ”ç©¶æ± ä»“ä½ã€å®é™…äº¤æ˜“ä»“ä½ã€è´Ÿè´£å¼•æ“ã€æ•°æ®æ¶æ„ã€æ•°æ®äº¤äº’æ–¹å¼ã€å½“å‰å®ç°çŠ¶æ€ä»¥åŠä¸ä¸‹é˜¶æ®µçš„è¡”æ¥ã€‚
+> ±¾ÎÄµµ°Ñ V9 Í¶×ÊÑĞ¾¿Á÷³Ì²ğ·ÖÎª 13 ¸ö½×¶Î£¬ÖğÏîËµÃ÷£ºÒµÎñ¶¯×÷¡¢ÑĞ¾¿³Ø²ÖÎ»¡¢Êµ¼Ê½»Ò×²ÖÎ»¡¢¸ºÔğÒıÇæ¡¢Êı¾İ¼Ü¹¹¡¢Êı¾İ½»»¥·½Ê½¡¢µ±Ç°ÊµÏÖ×´Ì¬ÒÔ¼°ÓëÏÂ½×¶ÎµÄÏÎ½Ó¡£
 
-## 1. é˜¶æ®µæ€»è§ˆ
+## 1. ½×¶Î×ÜÀÀ
 
 ```
-é‡‡é›† â†’ å½•å…¥/å¯¼å…¥ â†’ åŸºç¡€æ•°æ®è½åœ° â†’ åˆ†æè¯„åˆ† â†’ ç­›é€‰/æ™‹å‡ â†’ æ·±åº¦ç ”ç©¶ â†’ è§‚å¯Ÿ/å†³ç­–
-                                                            â†“
-å¹³ä»“/å–å‡º â† æŒä»“ç®¡ç† â† å»ºä»“ â† ä¿¡å·ç”Ÿæˆ â† è§‚å¯Ÿæ± 
-   â†“
-å½’æ¡£ â†’ æ£€æŸ¥/å¤ç›˜
+²É¼¯ ¡ú Â¼Èë/µ¼Èë ¡ú »ù´¡Êı¾İÂäµØ ¡ú ·ÖÎöÆÀ·Ö ¡ú É¸Ñ¡/½úÉı ¡ú Éî¶ÈÑĞ¾¿ ¡ú ¹Û²ì/¾ö²ß
+                                                            ¡ı
+Æ½²Ö/Âô³ö ¡û ³Ö²Ö¹ÜÀí ¡û ½¨²Ö ¡û ĞÅºÅÉú³É ¡û ¹Û²ì³Ø
+   ¡ı
+¹éµµ ¡ú ¼ì²é/¸´ÅÌ
 ```
 
-## 2. é€é¡¹é˜¶æ®µåˆ†æ
+## 2. ÖğÏî½×¶Î·ÖÎö
 
-| é˜¶æ®µ | ä¸šåŠ¡åŠ¨ä½œ | ç ”ç©¶æ± ä»“ä½ | å®é™…äº¤æ˜“ä»“ä½ | è´Ÿè´£å¼•æ“ / æœåŠ¡ | æ•°æ®æ¶æ„ï¼ˆStore / å­—æ®µï¼‰ | æ•°æ®äº¤äº’ï¼ˆè¾“å…¥ / è¾“å‡º / DataBridge Actionï¼‰ | å½“å‰çŠ¶æ€ | ä¸ä¸‹é˜¶æ®µè¡”æ¥ |
+| ½×¶Î | ÒµÎñ¶¯×÷ | ÑĞ¾¿³Ø²ÖÎ» | Êµ¼Ê½»Ò×²ÖÎ» | ¸ºÔğÒıÇæ / ·şÎñ | Êı¾İ¼Ü¹¹£¨Store / ×Ö¶Î£© | Êı¾İ½»»¥£¨ÊäÈë / Êä³ö / DataBridge Action£© | µ±Ç°×´Ì¬ | ÓëÏÂ½×¶ÎÏÎ½Ó |
 |------|----------|------------|--------------|-----------------|-------------------------|--------------------------------------------|----------|--------------|
-| **1. é‡‡é›†** | ä» AKShare/Python æœåŠ¡æŠ“å–åŸºç¡€æ•°æ®ã€Kçº¿æ•°æ® | æ— ï¼ˆæ•°æ®å‡†å¤‡ï¼‰ | æ—  | **FetcherEngine**<br>`fetcherClient.ts`<br>`fetcherAdapter.ts` | `stocks`ï¼ˆå¾…æ›´æ–°ï¼‰<br>`daily_quotes`ï¼ˆå¾…å†™å…¥ï¼‰ | HTTP â†’ Python æœåŠ¡ â†’ `collectBasic` / `collectKline` â†’ è§£æåå‡†å¤‡å†™å…¥ | å·²å®ç° | ä¸ºå½•å…¥åçš„æ ‡çš„è¡¥å……æ•°æ®è´¨é‡ |
-| **2. å½•å…¥/å¯¼å…¥** | æ‰‹åŠ¨å½•å…¥ã€CSV æ‰¹é‡å¯¼å…¥ã€çƒ­é—¨æ¿å—åŠ å…¥ | `candidate` | æ—  | **InputEngine**<br>`inputService.addStock`<br>`batchImportService.importStocks`<br>`hotSectorService.addHotSectorStock/s` | `stocks`ï¼ˆæ–°å¢ï¼‰<br>å­—æ®µï¼š`symbol, name, researchStatus=candidate, source, dataVersion, ingestedAt` | UI â†’ service â†’ `DataBridge.forward(INSERT_STOCK)` â†’ `stocks` | å·²å®ç° | äº§ç”Ÿå€™é€‰æ± åŸæ–™ |
-| **3. åŸºç¡€æ•°æ®è½åœ°** | å½•å…¥åæ‹‰å–åŸºç¡€/Kçº¿ï¼Œæ ‡è®°æ•°æ®è´¨é‡ | `candidate` | æ—  | **FetcherEngine + DataQualityEngine**ï¼ˆå†…åµŒåœ¨ `fetcherService`ï¼‰ | `stocks.dataQuality`<br>`{ basic, kline, finance, lastChecked }`<br>`daily_quotes` | `fetchStockBasic/Kline` â†’ `DataBridge.forward(UPDATE_STOCK / SAVE_DAILY_QUOTES)` | å·²å®ç° | æ•°æ®è´¨é‡æ»¡è¶³åæ‰é€‚åˆè¿›å…¥åˆ†æ |
-| **4. åˆ†æè¯„åˆ†** | V6 ä¹ç»´è¯„åˆ†ã€LLM æ™ºèƒ½è¯„åˆ†ã€V4 è¡Œä¸šè¯„åˆ† | `candidate` / `screened` / `deepDive` | æ—  | **ScoringEngine**<br>`v6ScoreService`<br>`intelligentScoreService`<br>`industryScoreService` | `v6_scores`<br>`intelligent_scores`<br>`industry_scores` | è¯» `stocks` + `daily_quotes` â†’ è®¡ç®— â†’ `DataBridge.forward(SAVE_SCORES / SAVE_INTELLIGENT_SCORES / SAVE_INDUSTRY_SCORES)` | V6/LLM/V4 å·²å®ç°ï¼›V6 å½“å‰å¤§é‡ mock åˆ† | è¯„åˆ†ä¸ºç­›é€‰æä¾›é‡åŒ–ä¾æ® |
-| **5. ç­›é€‰/æ™‹å‡** | åŸºäºè¯„åˆ†ä¸æ•°æ®è´¨é‡æŠŠ candidate â†’ screenedï¼Œscreened â†’ deepDive | `candidate â†’ screened`<br>`screened â†’ deepDive` | æ—  | **ScreeningEngine**ï¼ˆ**ç¼ºå¤±**ï¼‰<br>ç›®å‰ç”± `stockpoolService.transitionStock` æ‰‹åŠ¨è§¦å‘ | `stocks.researchStatus` | è§„åˆ™å¼•æ“è¾“å‡º â†’ `stockpoolService.transitionStock` â†’ `DataBridge.forward(UPDATE_STOCK)` | **æœªå®ç°è‡ªåŠ¨ç­›é€‰**ï¼Œä»…æœ‰è¾“å…¥èˆ±çœ‹æ¿æ‰‹åŠ¨æŒ‰é’® | ç­›é€‰äº§å‡ºå€¼å¾—æ·±åº¦ç ”ç©¶çš„æ ‡çš„ |
-| **6. æ·±åº¦ç ”ç©¶** | ç ”ç©¶å‘˜å¯¹ deepDive æ ‡çš„åšæ·±åº¦åˆ¤æ–­ | `deepDive` | æ—  | **ResearchEngine** / **IntelligentScoreEngine**ï¼ˆLLMï¼‰ | `stocks`<br>`intelligent_scores`<br>`research_logs`ï¼ˆè§„åˆ’ä¸­ï¼‰ | è¯»å–è¯„åˆ† + è¡¥å……ææ–™ â†’ LLM ç”ŸæˆæŠ¥å‘Š â†’ æ‰‹åŠ¨/è‡ªåŠ¨å†³å®šæ™‹å‡ | LLM æ·±åº¦è¯„åˆ†å·²å®ç°ï¼›è‡ªåŠ¨å†³ç­–æœªå®ç° | å†³å®šè¿›å…¥è§‚å¯Ÿæ± æˆ–å½’æ¡£ |
-| **7. è§‚å¯Ÿ/å†³ç­–** | å†³å®šè·Ÿè¸ªï¼Œç­‰å¾…ä¹°ç‚¹ | `deepDive â†’ watching` | æ—  | **PortfolioDecisionEngine**ï¼ˆ**ç¼ºå¤±**ï¼Œç›®å‰æ‰‹åŠ¨ï¼‰ | `stocks.researchStatus=watching` | æ‰‹åŠ¨ç‚¹å‡»â€œåŠ å…¥è§‚å¯Ÿâ€ â†’ `stockpoolService.transitionStock` â†’ `UPDATE_STOCK` | æ‰‹åŠ¨å·²å®ç° | ä¸ºäº¤æ˜“èˆ±ä¿¡å·ç”Ÿæˆæä¾›æ ‡çš„æ±  |
-| **8. ä¿¡å·ç”Ÿæˆ** | å¯¹ watching æ ‡çš„ç”Ÿæˆä¹°å–ä¿¡å· | `watching` | æ—  | **SignalEngine**<br>`signalGenerator.ts` | `signals`ï¼ˆStore å­˜åœ¨ä½†å½“å‰æœªæŒä¹…åŒ–ï¼Œä»…åœ¨å†…å­˜ä½¿ç”¨ï¼‰ | è¯» `stocks` + `daily_quotes` â†’ ç”Ÿæˆ `TradingSignal[]` â†’ è¿”å›äº¤æ˜“èˆ± | å·²å®ç°ç”Ÿæˆé€»è¾‘ï¼›ä¿¡å·æœªæŒä¹…åŒ– | ä¸ºå»ºä»“æä¾›è§¦å‘æ¡ä»¶ |
-| **9. å»ºä»“** | æ¨¡æ‹Ÿä¹°å…¥ï¼Œç”Ÿæˆè®¢å• | `watching`ï¼ˆä¿æŒä¸å˜ï¼‰ | äº§ç”ŸæŒä»“ï¼ˆ`accountType: paper`ï¼‰ | **TradingEngine / PaperTrading**<br>`tradingService.createBuyOrder`<br>`positionSizer`<br>`riskEngine` | `orders` Store<br>å­—æ®µï¼š`id, symbol, direction, quantity, price, amount, status, accountType, createdAt` | è¯» watching + signal â†’ è®¡ç®—ä»“ä½/é£æ§ â†’ `DataBridge.forward(INSERT_ORDER)` | å·²å®ç°ï¼ˆæ¨¡æ‹Ÿç›˜ï¼‰ | å½¢æˆå¯è·Ÿè¸ªçš„äº¤æ˜“æŒä»“ |
-| **10. æŒä»“ç®¡ç†** | è·Ÿè¸ªæŒä»“ï¼Œè§¦å‘åŠ ä»“ã€æ­¢æŸã€æ­¢ç›ˆ | `watching` | `orders` ä¸­ `status=open` | **PositionEngine / RiskEngine**ï¼ˆéƒ¨åˆ†åœ¨ `tradingService`ï¼‰ | `orders`<br>`stocks.price`<br>`daily_quotes` | `fetcherService` æ›´æ–°ä»·æ ¼ â†’ äº¤æ˜“èˆ±è¯»å– `orders` + `daily_quotes` â†’ ç”Ÿæˆå†å¹³è¡¡ä¿¡å· | åŸºç¡€å·²å®ç°ï¼›æ— è‡ªåŠ¨åŠ ä»“/å†å¹³è¡¡ | è§¦å‘å¹³ä»“æˆ–ç»§ç»­æŒä»“ |
-| **11. å¹³ä»“/å–å‡º** | å–å‡ºæŒä»“ï¼Œè®¢å•çŠ¶æ€å˜æ›´ | `watching`ï¼ˆå¯ä¿ç•™æˆ–å½’æ¡£ï¼‰ | `orders` æ–°å¢ sell orderï¼ŒæŒä»“å½’é›¶ | **TradingEngine**<br>`tradingService.createSellOrder` | `orders` Store | ç”¨æˆ·/ä¿¡å·è§¦å‘ â†’ `DataBridge.forward(INSERT_ORDER)` | å·²å®ç° | äº¤æ˜“ç»“æœè¿›å…¥å¤ç›˜æ•°æ® |
-| **12. å½’æ¡£** | æŠŠä¸å†è·Ÿè¸ªçš„æ ‡çš„ç§»å…¥å½’æ¡£æ±  | `archived` | æ—  | **PortfolioArchiveEngine**ï¼ˆç›®å‰æ‰‹åŠ¨ï¼‰ | `stocks.researchStatus=archived` | `stockpoolService.transitionStock` â†’ `UPDATE_STOCK` | æ‰‹åŠ¨å·²å®ç° | æ·˜æ±°è®°å½•è¿›å…¥å¤ç›˜ |
-| **13. æ£€æŸ¥/å¤ç›˜** | åˆ†æè¯„åˆ†å‡†ç¡®æ€§ã€äº¤æ˜“ç›ˆäºã€æ·˜æ±°åŸå›  | `archived` | å·²å¹³ä»“/æŒä»“è®¢å• | **ReviewEngine / ReportingEngine**ï¼ˆ**ç¼ºå¤±**ï¼‰ | `orders`<br>`stocks`<br>`v6_scores`<br>`intelligent_scores`<br>`research_logs`ï¼ˆè§„åˆ’ä¸­ï¼‰ | èšåˆè¯»å–å…¨éƒ¨ç›¸å…³ Store â†’ ç”Ÿæˆå¤ç›˜æŠ¥å‘Š/æŒ‡æ ‡ | **æœªå®ç°ä¸“é—¨å¤ç›˜é¡µ**ï¼Œä»…æœ‰ `OutputApp` å…¨é‡å¯¼å‡º | åé¦ˆä¼˜åŒ–ä¸‹ä¸€è½®é‡‡é›†/ç­›é€‰ç­–ç•¥ |
+| **1. ²É¼¯** | ´Ó AKShare/Python ·şÎñ×¥È¡»ù´¡Êı¾İ¡¢KÏßÊı¾İ | ÎŞ£¨Êı¾İ×¼±¸£© | ÎŞ | **FetcherEngine**<br>`fetcherClient.ts`<br>`fetcherAdapter.ts` | `stocks`£¨´ı¸üĞÂ£©<br>`daily_quotes`£¨´ıĞ´Èë£© | HTTP ¡ú Python ·şÎñ ¡ú `collectBasic` / `collectKline` ¡ú ½âÎöºó×¼±¸Ğ´Èë | ÒÑÊµÏÖ | ÎªÂ¼ÈëºóµÄ±êµÄ²¹³äÊı¾İÖÊÁ¿ |
+| **2. Â¼Èë/µ¼Èë** | ÊÖ¶¯Â¼Èë¡¢CSV ÅúÁ¿µ¼Èë¡¢ÈÈÃÅ°å¿é¼ÓÈë | `candidate` | ÎŞ | **InputEngine**<br>`inputService.addStock`<br>`batchImportService.importStocks`<br>`hotSectorService.addHotSectorStock/s` | `stocks`£¨ĞÂÔö£©<br>×Ö¶Î£º`symbol, name, researchStatus=candidate, source, dataVersion, ingestedAt` | UI ¡ú service ¡ú `DataBridge.forward(INSERT_STOCK)` ¡ú `stocks` | ÒÑÊµÏÖ | ²úÉúºòÑ¡³ØÔ­ÁÏ |
+| **3. »ù´¡Êı¾İÂäµØ** | Â¼ÈëºóÀ­È¡»ù´¡/KÏß£¬±ê¼ÇÊı¾İÖÊÁ¿ | `candidate` | ÎŞ | **FetcherEngine + DataQualityEngine**£¨ÄÚÇ¶ÔÚ `fetcherService`£© | `stocks.dataQuality`<br>`{ basic, kline, finance, lastChecked }`<br>`daily_quotes` | `fetchStockBasic/Kline` ¡ú `DataBridge.forward(UPDATE_STOCK / SAVE_DAILY_QUOTES)` | ÒÑÊµÏÖ | Êı¾İÖÊÁ¿Âú×ãºó²ÅÊÊºÏ½øÈë·ÖÎö |
+| **4. ·ÖÎöÆÀ·Ö** | V6 ¾ÅÎ¬ÆÀ·Ö¡¢LLM ÖÇÄÜÆÀ·Ö¡¢V4 ĞĞÒµÆÀ·Ö | `candidate` / `screened` / `deepDive` | ÎŞ | **ScoringEngine**<br>`v6ScoreService`<br>`intelligentScoreService`<br>`industryScoreService` | `v6_scores`<br>`intelligent_scores`<br>`industry_scores` | ¶Á `stocks` + `daily_quotes` ¡ú ¼ÆËã ¡ú `DataBridge.forward(SAVE_SCORES / SAVE_INTELLIGENT_SCORES / SAVE_INDUSTRY_SCORES)` | V6/LLM/V4 ÒÑÊµÏÖ£»V6 µ±Ç°´óÁ¿ mock ·Ö | ÆÀ·ÖÎªÉ¸Ñ¡Ìá¹©Á¿»¯ÒÀ¾İ |
+| **5. É¸Ñ¡/½úÉı** | »ùÓÚÆÀ·ÖÓëÊı¾İÖÊÁ¿°Ñ candidate ¡ú screened£¬screened ¡ú deepDive | `candidate ¡ú screened`<br>`screened ¡ú deepDive` | ÎŞ | **ScreeningEngine**£¨**È±Ê§**£©<br>Ä¿Ç°ÓÉ `stockpoolService.transitionStock` ÊÖ¶¯´¥·¢ | `stocks.researchStatus` | ¹æÔòÒıÇæÊä³ö ¡ú `stockpoolService.transitionStock` ¡ú `DataBridge.forward(UPDATE_STOCK)` | **Î´ÊµÏÖ×Ô¶¯É¸Ñ¡**£¬½öÓĞÊäÈë²Õ¿´°åÊÖ¶¯°´Å¥ | É¸Ñ¡²ú³öÖµµÃÉî¶ÈÑĞ¾¿µÄ±êµÄ |
+| **6. Éî¶ÈÑĞ¾¿** | ÑĞ¾¿Ô±¶Ô deepDive ±êµÄ×öÉî¶ÈÅĞ¶Ï | `deepDive` | ÎŞ | **ResearchEngine** / **IntelligentScoreEngine**£¨LLM£© | `stocks`<br>`intelligent_scores`<br>`research_logs`£¨¹æ»®ÖĞ£© | ¶ÁÈ¡ÆÀ·Ö + ²¹³ä²ÄÁÏ ¡ú LLM Éú³É±¨¸æ ¡ú ÊÖ¶¯/×Ô¶¯¾ö¶¨½úÉı | LLM Éî¶ÈÆÀ·ÖÒÑÊµÏÖ£»×Ô¶¯¾ö²ßÎ´ÊµÏÖ | ¾ö¶¨½øÈë¹Û²ì³Ø»ò¹éµµ |
+| **7. ¹Û²ì/¾ö²ß** | ¾ö¶¨¸ú×Ù£¬µÈ´ıÂòµã | `deepDive ¡ú watching` | ÎŞ | **PortfolioDecisionEngine**£¨**È±Ê§**£¬Ä¿Ç°ÊÖ¶¯£© | `stocks.researchStatus=watching` | ÊÖ¶¯µã»÷¡°¼ÓÈë¹Û²ì¡± ¡ú `stockpoolService.transitionStock` ¡ú `UPDATE_STOCK` | ÊÖ¶¯ÒÑÊµÏÖ | Îª½»Ò×²ÕĞÅºÅÉú³ÉÌá¹©±êµÄ³Ø |
+| **8. ĞÅºÅÉú³É** | ¶Ô watching ±êµÄÉú³ÉÂòÂôĞÅºÅ | `watching` | ÎŞ | **SignalEngine**<br>`signalGenerator.ts` | `signals`£¨Store ´æÔÚµ«µ±Ç°Î´³Ö¾Ã»¯£¬½öÔÚÄÚ´æÊ¹ÓÃ£© | ¶Á `stocks` + `daily_quotes` ¡ú Éú³É `TradingSignal[]` ¡ú ·µ»Ø½»Ò×²Õ | ÒÑÊµÏÖÉú³ÉÂß¼­£»ĞÅºÅÎ´³Ö¾Ã»¯ | Îª½¨²ÖÌá¹©´¥·¢Ìõ¼ş |
+| **9. ½¨²Ö** | Ä£ÄâÂòÈë£¬Éú³É¶©µ¥ | `watching`£¨±£³Ö²»±ä£© | ²úÉú³Ö²Ö£¨`accountType: paper`£© | **TradingEngine / PaperTrading**<br>`tradingService.createBuyOrder`<br>`positionSizer`<br>`riskEngine` | `orders` Store<br>×Ö¶Î£º`id, symbol, direction, quantity, price, amount, status, accountType, createdAt` | ¶Á watching + signal ¡ú ¼ÆËã²ÖÎ»/·ç¿Ø ¡ú `DataBridge.forward(INSERT_ORDER)` | ÒÑÊµÏÖ£¨Ä£ÄâÅÌ£© | ĞÎ³É¿É¸ú×ÙµÄ½»Ò×³Ö²Ö |
+| **10. ³Ö²Ö¹ÜÀí** | ¸ú×Ù³Ö²Ö£¬´¥·¢¼Ó²Ö¡¢Ö¹Ëğ¡¢Ö¹Ó¯ | `watching` | `orders` ÖĞ `status=open` | **PositionEngine / RiskEngine**£¨²¿·ÖÔÚ `tradingService`£© | `orders`<br>`stocks.price`<br>`daily_quotes` | `fetcherService` ¸üĞÂ¼Û¸ñ ¡ú ½»Ò×²Õ¶ÁÈ¡ `orders` + `daily_quotes` ¡ú Éú³ÉÔÙÆ½ºâĞÅºÅ | »ù´¡ÒÑÊµÏÖ£»ÎŞ×Ô¶¯¼Ó²Ö/ÔÙÆ½ºâ | ´¥·¢Æ½²Ö»ò¼ÌĞø³Ö²Ö |
+| **11. Æ½²Ö/Âô³ö** | Âô³ö³Ö²Ö£¬¶©µ¥×´Ì¬±ä¸ü | `watching`£¨¿É±£Áô»ò¹éµµ£© | `orders` ĞÂÔö sell order£¬³Ö²Ö¹éÁã | **TradingEngine**<br>`tradingService.createSellOrder` | `orders` Store | ÓÃ»§/ĞÅºÅ´¥·¢ ¡ú `DataBridge.forward(INSERT_ORDER)` | ÒÑÊµÏÖ | ½»Ò×½á¹û½øÈë¸´ÅÌÊı¾İ |
+| **12. ¹éµµ** | °Ñ²»ÔÙ¸ú×ÙµÄ±êµÄÒÆÈë¹éµµ³Ø | `archived` | ÎŞ | **PortfolioArchiveEngine**£¨Ä¿Ç°ÊÖ¶¯£© | `stocks.researchStatus=archived` | `stockpoolService.transitionStock` ¡ú `UPDATE_STOCK` | ÊÖ¶¯ÒÑÊµÏÖ | ÌÔÌ­¼ÇÂ¼½øÈë¸´ÅÌ |
+| **13. ¼ì²é/¸´ÅÌ** | ·ÖÎöÆÀ·Ö×¼È·ĞÔ¡¢½»Ò×Ó¯¿÷¡¢ÌÔÌ­Ô­Òò | `archived` | ÒÑÆ½²Ö/³Ö²Ö¶©µ¥ | **ReviewEngine / ReportingEngine**£¨**È±Ê§**£© | `orders`<br>`stocks`<br>`v6_scores`<br>`intelligent_scores`<br>`research_logs`£¨¹æ»®ÖĞ£© | ¾ÛºÏ¶ÁÈ¡È«²¿Ïà¹Ø Store ¡ú Éú³É¸´ÅÌ±¨¸æ/Ö¸±ê | **Î´ÊµÏÖ×¨ÃÅ¸´ÅÌÒ³**£¬½öÓĞ `OutputApp` È«Á¿µ¼³ö | ·´À¡ÓÅ»¯ÏÂÒ»ÂÖ²É¼¯/É¸Ñ¡²ßÂÔ |
 
-## 3. æ•°æ®æ¶æ„å…¨æ™¯
+## 3. Êı¾İ¼Ü¹¹È«¾°
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                        IndexedDB: V6ProDB                   â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚ stocks       â”‚ symbol(PK), researchStatus, source,          â”‚
-â”‚              â”‚ dataQuality, price, pe, pb, ...              â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚ daily_quotes â”‚ symbol(PK), latest, history, updatedAt       â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚ v6_scores    â”‚ id(PK), symbol, score, factors, ...          â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚ intelligent_scores â”‚ id(PK), symbol, overallScore, ...      â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚ industry_scores    â”‚ id(PK), code, name, overallScore, ...  â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚ orders       â”‚ id(PK), symbol, direction, quantity, price,  â”‚
-â”‚              â”‚ amount, status, accountType, createdAt       â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚ signals      â”‚ id(PK), symbol, direction, reason, ...       â”‚
-â”‚              â”‚ ï¼ˆå½“å‰æœªæŒä¹…åŒ–å†™å…¥ï¼‰                           â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚ research_logsâ”‚ id(PK), traceId, actor, action, target, ...  â”‚
-â”‚              â”‚ ï¼ˆéƒ¨åˆ†å†™å…¥ï¼Œç”¨äºå®¡è®¡ï¼‰                         â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+©°©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©´
+©¦                        IndexedDB: V6ProDB                   ©¦
+©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©Ğ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
+©¦ stocks       ©¦ symbol(PK), researchStatus, source,          ©¦
+©¦              ©¦ dataQuality, price, pe, pb, ...              ©¦
+©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©à©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
+©¦ daily_quotes ©¦ symbol(PK), latest, history, updatedAt       ©¦
+©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©à©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
+©¦ v6_scores    ©¦ id(PK), symbol, score, factors, ...          ©¦
+©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©à©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
+©¦ intelligent_scores ©¦ id(PK), symbol, overallScore, ...      ©¦
+©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©à©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
+©¦ industry_scores    ©¦ id(PK), code, name, overallScore, ...  ©¦
+©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©à©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
+©¦ orders       ©¦ id(PK), symbol, direction, quantity, price,  ©¦
+©¦              ©¦ amount, status, accountType, createdAt       ©¦
+©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©à©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
+©¦ signals      ©¦ id(PK), symbol, direction, reason, ...       ©¦
+©¦              ©¦ £¨µ±Ç°Î´³Ö¾Ã»¯Ğ´Èë£©                           ©¦
+©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©à©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
+©¦ research_logs©¦ id(PK), traceId, actor, action, target, ...  ©¦
+©¦              ©¦ £¨²¿·ÖĞ´Èë£¬ÓÃÓÚÉó¼Æ£©                         ©¦
+©¸©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©Ø©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼
 ```
 
-## 4. æ•°æ®äº¤äº’æ¨¡å¼
+## 4. Êı¾İ½»»¥Ä£Ê½
 
-### 4.1 å†™å…¥ç»Ÿä¸€èµ° DataBridge
+### 4.1 Ğ´ÈëÍ³Ò»×ß DataBridge
 
-æ‰€æœ‰ä¼šæ”¹å˜ IndexedDB çŠ¶æ€çš„å†™æ“ä½œï¼Œéƒ½å¿…é¡»é€šè¿‡ `DataBridge.forward(StandardEnvelope)`ï¼š
+ËùÓĞ»á¸Ä±ä IndexedDB ×´Ì¬µÄĞ´²Ù×÷£¬¶¼±ØĞëÍ¨¹ı `DataBridge.forward(StandardEnvelope)`£º
 
-| DataBridge Action | ç›®æ ‡ Store | è§¦å‘åœºæ™¯ |
+| DataBridge Action | Ä¿±ê Store | ´¥·¢³¡¾° |
 |-------------------|-----------|----------|
-| `INSERT_STOCK` | `stocks` | å½•å…¥/å¯¼å…¥/çƒ­é—¨æ¿å—åŠ å…¥ |
-| `UPDATE_STOCK` | `stocks` | åŸºç¡€æ•°æ®æ›´æ–°ã€çŠ¶æ€æµè½¬ |
-| `SAVE_DAILY_QUOTES` | `daily_quotes` | Kçº¿é‡‡é›† |
-| `SAVE_SCORES` | `v6_scores` | V6 è¯„åˆ† |
-| `SAVE_INTELLIGENT_SCORES` | `intelligent_scores` | LLM æ™ºèƒ½è¯„åˆ† |
-| `SAVE_INDUSTRY_SCORES` | `industry_scores` | è¡Œä¸šè¯„åˆ† |
-| `INSERT_ORDER` | `orders` | ä¹°å…¥/å–å‡º |
-| `EXPORT_ALL` / `RESET_ALL` | å…¨éƒ¨ | å¯¼å‡º/é‡ç½® |
+| `INSERT_STOCK` | `stocks` | Â¼Èë/µ¼Èë/ÈÈÃÅ°å¿é¼ÓÈë |
+| `UPDATE_STOCK` | `stocks` | »ù´¡Êı¾İ¸üĞÂ¡¢×´Ì¬Á÷×ª |
+| `SAVE_DAILY_QUOTES` | `daily_quotes` | KÏß²É¼¯ |
+| `SAVE_SCORES` | `v6_scores` | V6 ÆÀ·Ö |
+| `SAVE_INTELLIGENT_SCORES` | `intelligent_scores` | LLM ÖÇÄÜÆÀ·Ö |
+| `SAVE_INDUSTRY_SCORES` | `industry_scores` | ĞĞÒµÆÀ·Ö |
+| `INSERT_ORDER` | `orders` | ÂòÈë/Âô³ö |
+| `EXPORT_ALL` / `RESET_ALL` | È«²¿ | µ¼³ö/ÖØÖÃ |
 
-### 4.2 è¯»å–æŒ‰èˆ±å¤ç”¨ dataLayer
+### 4.2 ¶ÁÈ¡°´²Õ¸´ÓÃ dataLayer
 
-å„èˆ± service å¯ä»¥è¯»å–ä»»æ„ storeï¼ˆå— ACL çº¦æŸï¼‰ï¼Œä¾‹å¦‚ï¼š
+¸÷²Õ service ¿ÉÒÔ¶ÁÈ¡ÈÎÒâ store£¨ÊÜ ACL Ô¼Êø£©£¬ÀıÈç£º
 
-- **äº¤æ˜“èˆ±**è¯»å– `v6_scores` å’Œ `daily_quotes` æ¥ç”Ÿæˆä¿¡å·ã€‚
-- **åˆ†æèˆ±**è¯»å– `stocks` å’Œ `daily_quotes` æ¥è®¡ç®—è¯„åˆ†ã€‚
-- **è¾“å‡ºèˆ±**è¯»å–å…¨éƒ¨ store åšå¯¼å‡ºã€‚
+- **½»Ò×²Õ**¶ÁÈ¡ `v6_scores` ºÍ `daily_quotes` À´Éú³ÉĞÅºÅ¡£
+- **·ÖÎö²Õ**¶ÁÈ¡ `stocks` ºÍ `daily_quotes` À´¼ÆËãÆÀ·Ö¡£
+- **Êä³ö²Õ**¶ÁÈ¡È«²¿ store ×öµ¼³ö¡£
 
-### 4.3 äº‹ä»¶é€šçŸ¥
+### 4.3 ÊÂ¼şÍ¨Öª
 
-`databridge` å†™å…¥æˆåŠŸåä¼šé€šè¿‡ `eventBus.broadcast('db:changed')`ï¼Œä¾¿äº UI å±‚åˆ·æ–°è‚¡ç¥¨æ± çœ‹æ¿ç­‰ç»„ä»¶ã€‚
+`databridge` Ğ´Èë³É¹¦ºó»áÍ¨¹ı `eventBus.broadcast('db:changed')`£¬±ãÓÚ UI ²ãË¢ĞÂ¹ÉÆ±³Ø¿´°åµÈ×é¼ş¡£
 
-## 5. å…³é”®ç¼ºå£ä¸å»ºè®®
+## 5. ¹Ø¼üÈ±¿ÚÓë½¨Òé
 
-| ç¼ºå£ | å½±å“ | å»ºè®®è½åœ°ä½ç½® |
+| È±¿Ú | Ó°Ïì | ½¨ÒéÂäµØÎ»ÖÃ |
 |------|------|--------------|
-| **è‡ªåŠ¨ç­›é€‰å¼•æ“ç¼ºå¤±** | è¯„åˆ†æ— æ³•è‡ªåŠ¨é©±åŠ¨ candidate â†’ screened â†’ deepDive | åˆ†æèˆ±æ–°å¢ `ScreeningEngine`ï¼Œè°ƒç”¨ `stockpoolService.transitionStock` |
-| **ä¿¡å·æœªæŒä¹…åŒ–** | æ— æ³•å¤ç›˜ä¿¡å·å†å²ã€æ— æ³•åšä¿¡å·å‡†ç¡®ç‡ç»Ÿè®¡ | äº¤æ˜“èˆ±åœ¨ `scanWatchingSignals` åå†™å…¥ `signals` Store |
-| **å¤ç›˜å¼•æ“ç¼ºå¤±** | æ— æ³•é—­ç¯éªŒè¯â€œè¯„åˆ† â†’ äº¤æ˜“ â†’ ç›ˆäºâ€ | è¾“å‡ºèˆ±æ–°å¢ `ReviewEngine`ï¼Œèšåˆ `orders + scores + stocks` |
-| **æŒä»“ç®¡ç†ä¸è§‚å¯Ÿæ± çŠ¶æ€æœªè¡”æ¥** | ä¹°å…¥å watching æ ‡çš„æ˜¯å¦å½’æ¡£é äººå·¥åˆ¤æ–­ | åœ¨äº¤æ˜“èˆ±ä¸‹å•æ—¶æä¾›é€‰é¡¹ï¼šä¿ç•™è§‚å¯Ÿ / è‡ªåŠ¨å½’æ¡£ |
-| **ç ”ç©¶æ—¥å¿—ä¸å®Œæ•´** | ç¼ºå°‘çŠ¶æ€æµè½¬ã€è¯„åˆ†ã€äº¤æ˜“çš„å®Œæ•´å®¡è®¡é“¾ | åœ¨å„é˜¶æ®µå…³é”®å†™æ“ä½œåè¡¥å…… `INSERT_RESEARCH_LOG` |
+| **×Ô¶¯É¸Ñ¡ÒıÇæÈ±Ê§** | ÆÀ·ÖÎŞ·¨×Ô¶¯Çı¶¯ candidate ¡ú screened ¡ú deepDive | ·ÖÎö²ÕĞÂÔö `ScreeningEngine`£¬µ÷ÓÃ `stockpoolService.transitionStock` |
+| **ĞÅºÅÎ´³Ö¾Ã»¯** | ÎŞ·¨¸´ÅÌĞÅºÅÀúÊ·¡¢ÎŞ·¨×öĞÅºÅ×¼È·ÂÊÍ³¼Æ | ½»Ò×²ÕÔÚ `scanWatchingSignals` ºóĞ´Èë `signals` Store |
+| **¸´ÅÌÒıÇæÈ±Ê§** | ÎŞ·¨±Õ»·ÑéÖ¤¡°ÆÀ·Ö ¡ú ½»Ò× ¡ú Ó¯¿÷¡± | Êä³ö²ÕĞÂÔö `ReviewEngine`£¬¾ÛºÏ `orders + scores + stocks` |
+| **³Ö²Ö¹ÜÀíÓë¹Û²ì³Ø×´Ì¬Î´ÏÎ½Ó** | ÂòÈëºó watching ±êµÄÊÇ·ñ¹éµµ¿¿ÈË¹¤ÅĞ¶Ï | ÔÚ½»Ò×²ÕÏÂµ¥Ê±Ìá¹©Ñ¡Ïî£º±£Áô¹Û²ì / ×Ô¶¯¹éµµ |
+| **ÑĞ¾¿ÈÕÖ¾²»ÍêÕû** | È±ÉÙ×´Ì¬Á÷×ª¡¢ÆÀ·Ö¡¢½»Ò×µÄÍêÕûÉó¼ÆÁ´ | ÔÚ¸÷½×¶Î¹Ø¼üĞ´²Ù×÷ºó²¹³ä `INSERT_RESEARCH_LOG` |
 
-## 6. ä¸ç ”ç©¶æ± äº”æ€ã€åº”ç”¨å±‚äº”èˆ±çš„å¯¹åº”å…³ç³»
+## 6. ÓëÑĞ¾¿³ØÎåÌ¬¡¢Ó¦ÓÃ²ãÎå²ÕµÄ¶ÔÓ¦¹ØÏµ
 
-| åº”ç”¨å±‚äº”èˆ± | ä¸»è¦å¤„ç†çš„ç ”ç©¶æ± çŠ¶æ€ | ä¸»è¦å¤„ç†çš„äº¤æ˜“ä»“ä½ | æ ¸å¿ƒäº§å‡º |
+| Ó¦ÓÃ²ãÎå²Õ | Ö÷Òª´¦ÀíµÄÑĞ¾¿³Ø×´Ì¬ | Ö÷Òª´¦ÀíµÄ½»Ò×²ÖÎ» | ºËĞÄ²ú³ö |
 |------------|----------------------|--------------------|----------|
-| **è¾“å…¥èˆ± Input** | `candidate` | æ—  | æ–°å¢æ ‡çš„ã€æ•°æ®è´¨é‡æ›´æ–° |
-| **åˆ†æèˆ± Analysis** | `candidate â†’ screened â†’ deepDive` | æ—  | è¯„åˆ†ã€ç­›é€‰ã€æ™‹å‡ |
-| **äº¤æ˜“èˆ± Trading** | `watching` | `orders`ï¼ˆå»ºä»“/å¹³ä»“ï¼‰ | ä¿¡å·ã€è®¢å• |
-| **è¾“å‡ºèˆ± Output** | `archived` | å·²å¹³ä»“è®¢å• | æŠ¥å‘Šã€å¤ç›˜ |
-| **æ€»æ§èˆ± Command** | å…¨éƒ¨ | å…¨éƒ¨ | ç»Ÿè®¡ã€é…ç½®ã€é‡ç½® |
+| **ÊäÈë²Õ Input** | `candidate` | ÎŞ | ĞÂÔö±êµÄ¡¢Êı¾İÖÊÁ¿¸üĞÂ |
+| **·ÖÎö²Õ Analysis** | `candidate ¡ú screened ¡ú deepDive` | ÎŞ | ÆÀ·Ö¡¢É¸Ñ¡¡¢½úÉı |
+| **½»Ò×²Õ Trading** | `watching` | `orders`£¨½¨²Ö/Æ½²Ö£© | ĞÅºÅ¡¢¶©µ¥ |
+| **Êä³ö²Õ Output** | `archived` | ÒÑÆ½²Ö¶©µ¥ | ±¨¸æ¡¢¸´ÅÌ |
+| **×Ü¿Ø²Õ Command** | È«²¿ | È«²¿ | Í³¼Æ¡¢ÅäÖÃ¡¢ÖØÖÃ |

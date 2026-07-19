@@ -3,8 +3,6 @@
  *
  * 运行：npx tsx scripts/verify-m1.ts
  * 预期：全部测试通过，退出码 0
- */
-
 /**
  * @file verify-m1.ts
  * @description 验收 M1（RAG 向量检索）核心逻辑：嵌入服务、MCP knowledgeServer、语义搜索

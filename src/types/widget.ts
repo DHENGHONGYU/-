@@ -13,6 +13,8 @@ export interface WidgetDefinition {
 }
 
 // Widget 配置接口
+// @deprecated 请使用 @/types/modules/widget.types.ts 中的 WidgetConfig（字段更完整：instanceId/widgetId/size/position/title/settings/visible/collapsed/dataSource）
+// Phase 2 计划将消费者迁移到新定义后删除此定义
 export interface WidgetConfig {
   id: string
   widgetId: string

@@ -34,10 +34,10 @@ import type {
   DimensionProgress,
   WizardLogEntry,
   CollectionWizardState,
+  PersistedWizardConfig,
 } from '@/types/modules/collection.types'
 import { saveWizardConfig } from '@/services/collection/collectionWizardPersistence'
 import { generateTraceId, formatDuration } from './collectionWizardStore.utils'
-import { MOCK_CONFIGS } from './collectionWizardStore.mock'
 import { createPersistenceActions } from './collectionWizardStore.persistence'
 
 const logger = getLogger()
@@ -70,7 +70,8 @@ const INITIAL_STATE = {
   /** 当前任务的链路追踪 ID */
   traceId: null as string | null,
   /** 已保存的配置模板列表（开发阶段使用 mock 数据） */
-  savedConfigs: MOCK_CONFIGS,
+  // 初始为空数组；首次访问时从 DB 加载真实配置（见 loadSavedConfigs action）
+  savedConfigs: [] as PersistedWizardConfig[],
   /** 是否正在保存配置 */
   isSavingConfig: false,
 }

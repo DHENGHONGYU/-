@@ -94,8 +94,12 @@ export default {
         h2: ['1.25rem', { lineHeight: '1.3', fontWeight: '600' }],
         /** 三级标题 */
         h3: ['1.125rem', { lineHeight: '1.4', fontWeight: '600' }],
-        /** 四级标题 */
+        /** 四级标题（16px/600，与 body-lg 同字号但字重更高，靠 weight 区分） */
         h4: ['1rem', { lineHeight: '1.4', fontWeight: '600' }],
+        /** 五级标题（15px/500，介于 h4 与 body 之间的次级小标题） */
+        h5: ['0.9375rem', { lineHeight: '1.4', fontWeight: '500' }],
+        /** 六级标题（13px/600，最小标题层级，与 body-sm 同字号靠 weight 区分） */
+        h6: ['0.8125rem', { lineHeight: '1.4', fontWeight: '600' }],
         /** 正文（大） */
         'body-lg': ['1rem', { lineHeight: '1.6', fontWeight: '400' }],
         /** 正文（默认） */

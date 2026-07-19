@@ -1,61 +1,64 @@
 ---
-title: pwa-contract
+title: pwa-contract.md ¡ª PWA Service Worker ½Ó¿ÚÆõÔ¼
+type: reference
+domain: backend
+phase: design
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "¶¨Î»£º¶¨Òå `pwa` ×ÓÓòµÄ½Ó¿ÚÆõÔ¼¡¢Ö°Ôğ±ß½ç¡¢Êı¾İÁ÷ÓëÒÀÀµ¹ØÏµ¡£ ¹ØÁª£º`./services-catalog.md`£¨24 ×ÓÓò×ÜÀÀ£©¡¢`../../AGENTS.md` ¡ìÒ»£¨·Ö²ã¹æÔò£©¡£"
+tags: [backend, contract, reference]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: important
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: PWA Service Worker å­åŸŸæ¥å£å¥‘çº¦
-status: draft
-owner: æ¶æ„ç»„
-updated: 2026-07-12
-code_version: 2.0.0
-tier: important
----
+# pwa-contract.md ¡ª PWA Service Worker ½Ó¿ÚÆõÔ¼
 
-# pwa-contract.md â€” PWA Service Worker æ¥å£å¥‘çº¦
-
-> **å®šä½**ï¼šå®šä¹‰ `pwa` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ç³»ã€‚  
-> **å…³è”**ï¼š`./services-catalog.md`ï¼ˆ24 å­åŸŸæ€»è§ˆï¼‰ã€`../../AGENTS.md` Â§ä¸€ï¼ˆåˆ†å±‚è§„åˆ™ï¼‰ã€‚
+> **¶¨Î»**£º¶¨Òå `pwa` ×ÓÓòµÄ½Ó¿ÚÆõÔ¼¡¢Ö°Ôğ±ß½ç¡¢Êı¾İÁ÷ÓëÒÀÀµ¹ØÏµ¡£  
+> **¹ØÁª**£º`./services-catalog.md`£¨24 ×ÓÓò×ÜÀÀ£©¡¢`../../AGENTS.md` ¡ìÒ»£¨·Ö²ã¹æÔò£©¡£
 
 ---
 
-## 1. èŒè´£è¾¹ç•Œ
+## 1. Ö°Ôğ±ß½ç
 
-### 1.1 æ ¸å¿ƒèŒè´£
+### 1.1 ºËĞÄÖ°Ôğ
 
-- **Service Worker ç”Ÿå‘½å‘¨æœŸç®¡ç†**ï¼šæ£€æµ‹æµè§ˆå™¨ SW æ”¯æŒæ€§ï¼Œæ‰§è¡Œæ³¨å†Œ/æ³¨é”€ï¼Œç›‘æ§çŠ¶æ€å˜åŒ–ï¼ˆæ³¨å†Œä¸­ã€å·²æ¿€æ´»ã€ç­‰å¾…æ›´æ–°ï¼‰ã€‚
-- **ç‰ˆæœ¬æ›´æ–°æ£€æµ‹ä¸æç¤º**ï¼šç›‘å¬ `updatefound` / `controllerchange` äº‹ä»¶ï¼Œæ£€æµ‹æ–° SW å®‰è£…å®Œæˆï¼Œå‘å¤–æš´éœ²æ›´æ–°çŠ¶æ€ã€‚
-- **å¼€å‘ç¯å¢ƒæ®‹ç•™æ¸…ç†**ï¼šå¼€å‘ç¯å¢ƒä¸‹è‡ªåŠ¨æ£€æµ‹å¹¶æ³¨é”€æ—§ç‰ˆæ®‹ç•™ Service Workerï¼Œé˜²æ­¢å·²ç§»é™¤çš„ `sw.js` ç»§ç»­æ‹¦æˆªç½‘ç»œè¯·æ±‚ã€‚
-- **çŠ¶æ€æš´éœ²ä¸æŸ¥è¯¢**ï¼šé€šè¿‡å…¨å±€çŠ¶æ€å˜é‡å¯¼å‡ºå½“å‰ SW æ³¨å†ŒçŠ¶æ€ï¼ˆ`SWRegistrationStatus`ï¼‰å’Œæ³¨å†Œå®ä¾‹ï¼Œä¾›å¤–éƒ¨æŸ¥è¯¢ä¸æµ‹è¯•ã€‚
+- **Service Worker ÉúÃüÖÜÆÚ¹ÜÀí**£º¼ì²âä¯ÀÀÆ÷ SW Ö§³ÖĞÔ£¬Ö´ĞĞ×¢²á/×¢Ïú£¬¼à¿Ø×´Ì¬±ä»¯£¨×¢²áÖĞ¡¢ÒÑ¼¤»î¡¢µÈ´ı¸üĞÂ£©¡£
+- **°æ±¾¸üĞÂ¼ì²âÓëÌáÊ¾**£º¼àÌı `updatefound` / `controllerchange` ÊÂ¼ş£¬¼ì²âĞÂ SW °²×°Íê³É£¬ÏòÍâ±©Â¶¸üĞÂ×´Ì¬¡£
+- **¿ª·¢»·¾³²ĞÁôÇåÀí**£º¿ª·¢»·¾³ÏÂ×Ô¶¯¼ì²â²¢×¢Ïú¾É°æ²ĞÁô Service Worker£¬·ÀÖ¹ÒÑÒÆ³ıµÄ `sw.js` ¼ÌĞøÀ¹½ØÍøÂçÇëÇó¡£
+- **×´Ì¬±©Â¶Óë²éÑ¯**£ºÍ¨¹ıÈ«¾Ö×´Ì¬±äÁ¿µ¼³öµ±Ç° SW ×¢²á×´Ì¬£¨`SWRegistrationStatus`£©ºÍ×¢²áÊµÀı£¬¹©Íâ²¿²éÑ¯Óë²âÊÔ¡£
 
-### 1.2 åˆ†å±‚å®šä½
+### 1.2 ·Ö²ã¶¨Î»
 
-| ç»´åº¦ | è¯´æ˜ |
+| Î¬¶È | ËµÃ÷ |
 |------|------|
-| æ‰€å±å±‚ | `src/services/`ï¼ˆæœåŠ¡å±‚ï¼‰ |
-| ä¾èµ–æ–¹å‘ | åªèƒ½ä¾èµ– `core/`ã€`data/`ã€`lib/`ï¼ˆç™½åå•ï¼‰ |
-| ç¦æ­¢äº‹é¡¹ | ç¦æ­¢ç›´å†™ IndexedDBï¼ˆé¡»ç» `DataBridge.forward()`ï¼‰ï¼›ç¦æ­¢ç›´æ¥ä¾èµ– `store/` / `pages/` / `components/` |
-| è¢«ä¾èµ–æ–¹ | `services/system/`ï¼ˆ`bootstrapService` åœ¨åˆå§‹åŒ–æ—¶è°ƒç”¨ `initPWA()`ï¼‰ |
+| ËùÊô²ã | `src/services/`£¨·şÎñ²ã£© |
+| ÒÀÀµ·½Ïò | Ö»ÄÜÒÀÀµ `core/`¡¢`data/`¡¢`lib/`£¨°×Ãûµ¥£© |
+| ½ûÖ¹ÊÂÏî | ½ûÖ¹Ö±Ğ´ IndexedDB£¨Ğë¾­ `DataBridge.forward()`£©£»½ûÖ¹Ö±½ÓÒÀÀµ `store/` / `pages/` / `components/` |
+| ±»ÒÀÀµ·½ | `services/system/`£¨`bootstrapService` ÔÚ³õÊ¼»¯Ê±µ÷ÓÃ `initPWA()`£© |
 
-> **è¯´æ˜**ï¼šæœ¬æ¨¡å—ä¸ä¾èµ– `lib/` ç™½åå•ä¸­çš„ä»»ä½•æ¨¡å—ï¼ˆ`logger`ã€`EventBus` ç­‰ï¼‰ï¼Œä»…ä½¿ç”¨æµè§ˆå™¨åŸç”Ÿ APIï¼ˆ`navigator.serviceWorker`ã€`console`ã€`fetch`ï¼‰å’Œ `import.meta.env.PROD`ã€‚`console` æ—¥å¿—ç”¨äºæµè§ˆå™¨ç«¯ SW çŠ¶æ€çš„å¯è§†åŒ–è¿½è¸ªï¼Œä¸æ¥å…¥é›†ä¸­å¼æ—¥å¿—ç³»ç»Ÿã€‚
+> **ËµÃ÷**£º±¾Ä£¿é²»ÒÀÀµ `lib/` °×Ãûµ¥ÖĞµÄÈÎºÎÄ£¿é£¨`logger`¡¢`EventBus` µÈ£©£¬½öÊ¹ÓÃä¯ÀÀÆ÷Ô­Éú API£¨`navigator.serviceWorker`¡¢`console`¡¢`fetch`£©ºÍ `import.meta.env.PROD`¡£`console` ÈÕÖ¾ÓÃÓÚä¯ÀÀÆ÷¶Ë SW ×´Ì¬µÄ¿ÉÊÓ»¯×·×Ù£¬²»½ÓÈë¼¯ÖĞÊ½ÈÕÖ¾ÏµÍ³¡£
 
-### 1.3 ä¸ç›¸é‚»å­åŸŸçš„å…³ç³»
+### 1.3 ÓëÏàÁÚ×ÓÓòµÄ¹ØÏµ
 
-| ç›¸é‚»å­åŸŸ | å…³ç³» | æ•°æ®æµ |
+| ÏàÁÚ×ÓÓò | ¹ØÏµ | Êı¾İÁ÷ |
 |----------|------|--------|
-| `services/system/bootstrapService` | ä¸‹æ¸¸ï¼šæ¶ˆè´¹è¾“å‡º | `initPWA()` â†’ `bootstrapService.initializeApp()` ä¸­è°ƒç”¨ |
-| `public/manifest.json` | å¤–éƒ¨é…ç½®ï¼šPWA åŸºç¡€é…ç½® | `manifest.json` æä¾›åº”ç”¨å…ƒæ•°æ®ï¼Œä¸æœ¬æ¨¡å—å…±åŒæ„æˆ PWA ç¦»çº¿èƒ½åŠ› |
+| `services/system/bootstrapService` | ÏÂÓÎ£ºÏû·ÑÊä³ö | `initPWA()` ¡ú `bootstrapService.initializeApp()` ÖĞµ÷ÓÃ |
+| `public/manifest.json` | Íâ²¿ÅäÖÃ£ºPWA »ù´¡ÅäÖÃ | `manifest.json` Ìá¹©Ó¦ÓÃÔªÊı¾İ£¬Óë±¾Ä£¿é¹²Í¬¹¹³É PWA ÀëÏßÄÜÁ¦ |
 
 ---
 
-## 2. å…¬å…±æ¥å£
+## 2. ¹«¹²½Ó¿Ú
 
-### 2.1 ç±»å‹å®šä¹‰ï¼ˆTypeScript Interfaceï¼‰
+### 2.1 ÀàĞÍ¶¨Òå£¨TypeScript Interface£©
 
 ```typescript
-// æ–‡ä»¶ï¼šsrc/services/pwa/registerServiceWorker.ts
+// ÎÄ¼ş£ºsrc/services/pwa/registerServiceWorker.ts
 
 export type SWRegistrationStatus =
   | 'unsupported'
@@ -65,84 +68,84 @@ export type SWRegistrationStatus =
   | 'error'
 ```
 
-### 2.2 ä¸»å…¥å£å‡½æ•°
+### 2.2 Ö÷Èë¿Úº¯Êı
 
-| å‡½æ•° | ç­¾å | èŒè´£ | é”™è¯¯å¤„ç† |
+| º¯Êı | Ç©Ãû | Ö°Ôğ | ´íÎó´¦Àí |
 |------|------|------|----------|
-| `initPWA()` | `() => void` | åº”ç”¨åˆå§‹åŒ–æ—¶è°ƒç”¨ã€‚ç”Ÿäº§ç¯å¢ƒè‡ªåŠ¨æ³¨å†Œ SWï¼›å¼€å‘ç¯å¢ƒè·³è¿‡æ³¨å†Œå¹¶æ¸…ç†æ—§ç‰ˆæ®‹ç•™ SW | å¼‚å¸¸æ•è·å `console.error` / `console.warn` è¾“å‡º |
-| `registerServiceWorker()` | `(swUrl?: string) => Promise<ServiceWorkerRegistration \| null>` | æ³¨å†ŒæŒ‡å®šè·¯å¾„çš„ Service Workerï¼Œç›‘å¬ `updatefound` / `controllerchange` äº‹ä»¶ï¼Œæ›´æ–°å…¨å±€çŠ¶æ€ | æ³¨å†Œå¤±è´¥æ—¶è¿”å› `null`ï¼ŒçŠ¶æ€ç½®ä¸º `'error'`ï¼Œ`console.error` è¾“å‡º |
-| `getSWStatus()` | `() => SWRegistrationStatus` | è·å–å½“å‰ SW æ³¨å†ŒçŠ¶æ€ï¼ˆåªè¯»ï¼‰ | çº¯æŸ¥è¯¢ï¼Œæ— å‰¯ä½œç”¨ |
-| `getSWRegistration()` | `() => ServiceWorkerRegistration \| null` | è·å–å½“å‰ SW æ³¨å†Œå®ä¾‹ï¼ˆå¦‚æœæœ‰ï¼‰ | çº¯æŸ¥è¯¢ï¼Œæ— å‰¯ä½œç”¨ |
+| `initPWA()` | `() => void` | Ó¦ÓÃ³õÊ¼»¯Ê±µ÷ÓÃ¡£Éú²ú»·¾³×Ô¶¯×¢²á SW£»¿ª·¢»·¾³Ìø¹ı×¢²á²¢ÇåÀí¾É°æ²ĞÁô SW | Òì³£²¶»ñºó `console.error` / `console.warn` Êä³ö |
+| `registerServiceWorker()` | `(swUrl?: string) => Promise<ServiceWorkerRegistration \| null>` | ×¢²áÖ¸¶¨Â·¾¶µÄ Service Worker£¬¼àÌı `updatefound` / `controllerchange` ÊÂ¼ş£¬¸üĞÂÈ«¾Ö×´Ì¬ | ×¢²áÊ§°ÜÊ±·µ»Ø `null`£¬×´Ì¬ÖÃÎª `'error'`£¬`console.error` Êä³ö |
+| `getSWStatus()` | `() => SWRegistrationStatus` | »ñÈ¡µ±Ç° SW ×¢²á×´Ì¬£¨Ö»¶Á£© | ´¿²éÑ¯£¬ÎŞ¸±×÷ÓÃ |
+| `getSWRegistration()` | `() => ServiceWorkerRegistration \| null` | »ñÈ¡µ±Ç° SW ×¢²áÊµÀı£¨Èç¹ûÓĞ£© | ´¿²éÑ¯£¬ÎŞ¸±×÷ÓÃ |
 
-### 2.3 äº‹ä»¶æ¥å£
+### 2.3 ÊÂ¼ş½Ó¿Ú
 
-æœ¬æ¨¡å—ä¸ä½¿ç”¨ `EventBus`ã€‚çŠ¶æ€æ›´æ–°é€šè¿‡é—­åŒ…å†…çš„å…¨å±€å˜é‡ï¼ˆ`currentStatus`ã€`registration`ï¼‰å’ŒæŸ¥è¯¢å‡½æ•°æš´éœ²ï¼Œå¤–éƒ¨é€šè¿‡è½®è¯¢æˆ–è°ƒç”¨ `getSWStatus()` è·å–æœ€æ–°çŠ¶æ€ã€‚
+±¾Ä£¿é²»Ê¹ÓÃ `EventBus`¡£×´Ì¬¸üĞÂÍ¨¹ı±Õ°üÄÚµÄÈ«¾Ö±äÁ¿£¨`currentStatus`¡¢`registration`£©ºÍ²éÑ¯º¯Êı±©Â¶£¬Íâ²¿Í¨¹ıÂÖÑ¯»òµ÷ÓÃ `getSWStatus()` »ñÈ¡×îĞÂ×´Ì¬¡£
 
-| çŠ¶æ€å | è§¦å‘æ¡ä»¶ |
+| ×´Ì¬Ãû | ´¥·¢Ìõ¼ş |
 |--------|----------|
-| `'unsupported'` | æµè§ˆå™¨ä¸æ”¯æŒ SWï¼Œæˆ–å¼€å‘ç¯å¢ƒè·³è¿‡æ³¨å†Œ |
-| `'registering'` | å¼€å§‹è°ƒç”¨ `navigator.serviceWorker.register()` |
-| `'registered'` | SW å·²æ¿€æ´»å¹¶è¿è¡Œï¼ˆ`reg.active` å­˜åœ¨ï¼‰ |
-| `'updated'` | æ–° SW å®‰è£…å®Œæˆç­‰å¾…æ¿€æ´»ï¼ˆ`reg.waiting` å­˜åœ¨ï¼‰ï¼Œæˆ– `updatefound` åæ–° worker çŠ¶æ€å˜ä¸º `installed` |
-| `'error'` | `register()` æŠ›å‡ºå¼‚å¸¸ |
+| `'unsupported'` | ä¯ÀÀÆ÷²»Ö§³Ö SW£¬»ò¿ª·¢»·¾³Ìø¹ı×¢²á |
+| `'registering'` | ¿ªÊ¼µ÷ÓÃ `navigator.serviceWorker.register()` |
+| `'registered'` | SW ÒÑ¼¤»î²¢ÔËĞĞ£¨`reg.active` ´æÔÚ£© |
+| `'updated'` | ĞÂ SW °²×°Íê³ÉµÈ´ı¼¤»î£¨`reg.waiting` ´æÔÚ£©£¬»ò `updatefound` ºóĞÂ worker ×´Ì¬±äÎª `installed` |
+| `'error'` | `register()` Å×³öÒì³£ |
 
 ---
 
-## 3. æ•°æ®æµ
+## 3. Êı¾İÁ÷
 
 ```
-[æµè§ˆå™¨ç¯å¢ƒ]
-    â†“ (navigator.serviceWorker API)
+[ä¯ÀÀÆ÷»·¾³]
+    ¡ı (navigator.serviceWorker API)
 registerServiceWorker() / initPWA()
-    â†“ (å†…å­˜çŠ¶æ€æ›´æ–°)
+    ¡ı (ÄÚ´æ×´Ì¬¸üĞÂ)
 SWRegistrationStatus (currentStatus)
-    â†“ (æŸ¥è¯¢å‡½æ•°)
+    ¡ı (²éÑ¯º¯Êı)
 getSWStatus() / getSWRegistration()
-    â†“
-services/system/bootstrapServiceï¼ˆè°ƒç”¨æ–¹ï¼‰
-    â†“ï¼ˆé—´æ¥ï¼‰
-components/pagesï¼ˆé€šè¿‡ UI çŠ¶æ€å±•ç¤º SW çŠ¶æ€ï¼Œå¦‚æ›´æ–°æç¤ºå¼¹çª—ï¼‰
+    ¡ı
+services/system/bootstrapService£¨µ÷ÓÃ·½£©
+    ¡ı£¨¼ä½Ó£©
+components/pages£¨Í¨¹ı UI ×´Ì¬Õ¹Ê¾ SW ×´Ì¬£¬Èç¸üĞÂÌáÊ¾µ¯´°£©
 ```
 
-> **è¯´æ˜**ï¼šæœ¬æ¨¡å—ä¸æ¶‰åŠ IndexedDB å†™å…¥ï¼Œä¸é€šè¿‡ `DataBridge` è·¯ç”±æ•°æ®ã€‚SW çŠ¶æ€ä¸ºå†…å­˜çº§å…¨å±€çŠ¶æ€ï¼Œä¸æŒä¹…åŒ–ã€‚å¦‚æœªæ¥éœ€è¦æŒä¹…åŒ– SW æ›´æ–°æç¤ºçš„"å·²å¿½ç•¥ç‰ˆæœ¬"ç­‰çŠ¶æ€ï¼Œåº”å¼•å…¥ `DataBridge.forward()` å†™å…¥ `IndexedDB`ã€‚
+> **ËµÃ÷**£º±¾Ä£¿é²»Éæ¼° IndexedDB Ğ´Èë£¬²»Í¨¹ı `DataBridge` Â·ÓÉÊı¾İ¡£SW ×´Ì¬ÎªÄÚ´æ¼¶È«¾Ö×´Ì¬£¬²»³Ö¾Ã»¯¡£ÈçÎ´À´ĞèÒª³Ö¾Ã»¯ SW ¸üĞÂÌáÊ¾µÄ"ÒÑºöÂÔ°æ±¾"µÈ×´Ì¬£¬Ó¦ÒıÈë `DataBridge.forward()` Ğ´Èë `IndexedDB`¡£
 
 ---
 
-## 4. é…ç½®ä¸ä¾èµ–
+## 4. ÅäÖÃÓëÒÀÀµ
 
-### 4.1 ä¾èµ–ç™½åå•ï¼ˆlib/ï¼‰
+### 4.1 ÒÀÀµ°×Ãûµ¥£¨lib/£©
 
-| ä¾èµ– | è·¯å¾„ | ç”¨é€” |
+| ÒÀÀµ | Â·¾¶ | ÓÃÍ¾ |
 |------|------|------|
-| â€” | â€” | æœ¬æ¨¡å—æ—  `lib/` ä¾èµ–ï¼Œä»…ä½¿ç”¨æµè§ˆå™¨åŸç”Ÿ API å’Œ `import.meta.env` |
+| ¡ª | ¡ª | ±¾Ä£¿éÎŞ `lib/` ÒÀÀµ£¬½öÊ¹ÓÃä¯ÀÀÆ÷Ô­Éú API ºÍ `import.meta.env` |
 
-> **è¯´æ˜**ï¼šæœ¬æ¨¡å—ä½¿ç”¨ `console.info` / `console.warn` / `console.error` ç›´æ¥è¾“å‡ºæ—¥å¿—ï¼Œè€Œé `@/lib/logger`ã€‚è¿™æ˜¯æœ‰æ„è®¾è®¡ï¼Œå› ä¸º SW æ³¨å†Œå‘ç”Ÿåœ¨åº”ç”¨åˆå§‹åŒ–ææ—©æœŸï¼Œæ­¤æ—¶æ—¥å¿—ç³»ç»Ÿå¯èƒ½å°šæœªå°±ç»ªï¼Œä¸”æµè§ˆå™¨ `console` æ˜¯è°ƒè¯• SW é—®é¢˜çš„æœ€ç›´æ¥æ‰‹æ®µã€‚
+> **ËµÃ÷**£º±¾Ä£¿éÊ¹ÓÃ `console.info` / `console.warn` / `console.error` Ö±½ÓÊä³öÈÕÖ¾£¬¶ø·Ç `@/lib/logger`¡£ÕâÊÇÓĞÒâÉè¼Æ£¬ÒòÎª SW ×¢²á·¢ÉúÔÚÓ¦ÓÃ³õÊ¼»¯¼«ÔçÆÚ£¬´ËÊ±ÈÕÖ¾ÏµÍ³¿ÉÄÜÉĞÎ´¾ÍĞ÷£¬ÇÒä¯ÀÀÆ÷ `console` ÊÇµ÷ÊÔ SW ÎÊÌâµÄ×îÖ±½ÓÊÖ¶Î¡£
 
-### 4.2 é…ç½®é¡¹
+### 4.2 ÅäÖÃÏî
 
-| é…ç½®å | é»˜è®¤å€¼ | è¯´æ˜ | æ¥æº |
+| ÅäÖÃÃû | Ä¬ÈÏÖµ | ËµÃ÷ | À´Ô´ |
 |--------|--------|------|------|
-| `swUrl` | `'/sw.js'` | Service Worker è„šæœ¬è·¯å¾„ | å‡½æ•°å‚æ•°ï¼ˆ`registerServiceWorker(swUrl)`ï¼‰ |
-| `import.meta.env.PROD` | â€” | ç¯å¢ƒæ ‡è¯†ï¼šä»…ç”Ÿäº§ç¯å¢ƒæ‰§è¡Œæ³¨å†Œ | Vite æ„å»ºæ³¨å…¥ |
+| `swUrl` | `'/sw.js'` | Service Worker ½Å±¾Â·¾¶ | º¯Êı²ÎÊı£¨`registerServiceWorker(swUrl)`£© |
+| `import.meta.env.PROD` | ¡ª | »·¾³±êÊ¶£º½öÉú²ú»·¾³Ö´ĞĞ×¢²á | Vite ¹¹½¨×¢Èë |
 
 ---
 
-## 5. æµ‹è¯•ç­–ç•¥
+## 5. ²âÊÔ²ßÂÔ
 
-| æµ‹è¯•ç±»å‹ | æ–‡ä»¶ | è¯´æ˜ |
+| ²âÊÔÀàĞÍ | ÎÄ¼ş | ËµÃ÷ |
 |----------|------|------|
-| å•å…ƒæµ‹è¯• | `tests/pwa.test.ts` | è¦†ç›– manifest.json å­˜åœ¨æ€§ä¸å­—æ®µåˆè§„ã€æ¨¡å—å¯¼å‡ºå‡½æ•°ç­¾åã€å¼€å‘/ç”Ÿäº§ç¯å¢ƒåˆ†æ”¯ã€SW æ³¨å†ŒæˆåŠŸ/å¤±è´¥çŠ¶æ€æµè½¬ã€ä¸æ”¯æŒ SW æµè§ˆå™¨é™çº§ |
-| é›†æˆæµ‹è¯• | `tests/pwa.test.ts`ï¼ˆbootstrapService é›†æˆèŠ‚ï¼‰ | éªŒè¯ `bootstrapService.ts` æ­£ç¡®å¯¼å…¥å¹¶è°ƒç”¨ `initPWA()` |
-| Mock ç­–ç•¥ | æµ‹è¯•å†…è” mock | å…¨å±€ `navigator.serviceWorker` å¯¹è±¡ï¼Œ`vi.stubEnv('PROD', true/false)` æ§åˆ¶ç¯å¢ƒåˆ†æ”¯ï¼Œ`vi.resetModules()` é‡ç½®æ¨¡å—ç¼“å­˜ä»¥é‡æ–°è§¦å‘çŠ¶æ€ |
+| µ¥Ôª²âÊÔ | `tests/pwa.test.ts` | ¸²¸Ç manifest.json ´æÔÚĞÔÓë×Ö¶ÎºÏ¹æ¡¢Ä£¿éµ¼³öº¯ÊıÇ©Ãû¡¢¿ª·¢/Éú²ú»·¾³·ÖÖ§¡¢SW ×¢²á³É¹¦/Ê§°Ü×´Ì¬Á÷×ª¡¢²»Ö§³Ö SW ä¯ÀÀÆ÷½µ¼¶ |
+| ¼¯³É²âÊÔ | `tests/pwa.test.ts`£¨bootstrapService ¼¯³É½Ú£© | ÑéÖ¤ `bootstrapService.ts` ÕıÈ·µ¼Èë²¢µ÷ÓÃ `initPWA()` |
+| Mock ²ßÂÔ | ²âÊÔÄÚÁª mock | È«¾Ö `navigator.serviceWorker` ¶ÔÏó£¬`vi.stubEnv('PROD', true/false)` ¿ØÖÆ»·¾³·ÖÖ§£¬`vi.resetModules()` ÖØÖÃÄ£¿é»º´æÒÔÖØĞÂ´¥·¢×´Ì¬ |
 
 ---
 
-## 6. å˜æ›´æ—¥å¿—
+## 6. ±ä¸üÈÕÖ¾
 
-| æ—¥æœŸ | ç‰ˆæœ¬ | å˜æ›´ | ä½œè€… |
+| ÈÕÆÚ | °æ±¾ | ±ä¸ü | ×÷Õß |
 |------|------|------|------|
-| 2026-07-12 | v0.1.0 | å¥‘çº¦åˆç¨¿ | æ¶æ„ç»„ |
+| 2026-07-12 | v0.1.0 | ÆõÔ¼³õ¸å | ¼Ü¹¹×é |
 
 ---
 
-> **TODO[å­åŸŸ owner]**ï¼šè¯·æŒ‰æœ¬æ¨¡æ¿å¡«å…… Â§1-Â§5ï¼Œç¡®ä¿ä¸ `services-catalog.md` çš„æ‘˜è¦ä¸€è‡´ã€‚å®Œæˆåè¿è¡Œ `tsc --noEmit` + `audit:layers` éªŒè¯ã€‚
+> **TODO[×ÓÓò owner]**£ºÇë°´±¾Ä£°åÌî³ä ¡ì1-¡ì5£¬È·±£Óë `services-catalog.md` µÄÕªÒªÒ»ÖÂ¡£Íê³ÉºóÔËĞĞ `tsc --noEmit` + `audit:layers` ÑéÖ¤¡£

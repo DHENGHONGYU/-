@@ -3,7 +3,7 @@ import * as path from 'path';
 
 const __filename = new URL(import.meta.url).pathname;
 const __dirname = path.dirname(__filename).replace(/^\/([A-Z]:)/, '$1');
-const PACKAGE_JSON = path.join(__dirname, '..', 'package.json');
+const PACKAGE_JSON = path.join(__dirname, '..', '..', 'package.json');
 
 interface ScriptUpdate {
   oldPath: string;

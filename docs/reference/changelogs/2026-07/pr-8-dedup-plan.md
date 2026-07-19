@@ -1,347 +1,356 @@
 ---
 title: pr-8-dedup-plan
+type: reference
+domain: project
+phase: planning
 tier: important
+status: active
+maintainer: V9 Architecture Team
+summary: "Ïû³ı audit:split-quality ¼ì²âµ½µÄ 8 ´¦ AP-007 ÖØ¸´º¯ÊıÎ¥¹æ£¬Í¨¹ı£º"
+tags: [project, changelog, plan, reference, governance, documentation, strategy]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+doc_id: V9-DOC-PROJ-085
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-tier: important
-code_version: 2.0.0
----
+# PR-8 ÖØ¸´º¯ÊıÈ¥ÖØÖØ¹¹·½°¸
 
-# PR-8 é‡å¤å‡½æ•°å»é‡é‡æ„æ–¹æ¡ˆ
-
-> **ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-08
-> **æ–¹æ¡ˆçŠ¶æ€**: âœ… æ–¹æ¡ˆåˆ¶å®šå®Œæˆï¼Œå¾…å®¡æ‰¹å®æ–½
-> **å‰ç½®ä¾èµ–**: PR-7ï¼ˆtradeErrorClassifier æ‹†åˆ†ï¼‰å·²å®Œæˆ
-> **å…³è”å®¡è®¡æŠ¥å‘Š**: [pr-8-dedup-audit-report.md](./pr-8-dedup-audit-report.md)
-> **æ¶æ„åŸåˆ™**: AP-007 é‡å¤ä»£ç æ£€æµ‹ï¼ˆç­–ç•¥ Aï¼šä¿å®ˆåˆå¹¶ï¼‰
+> **Version**: v1.0.0 | **ÈÕÆÚ**: 2026-07-08
+> **·½°¸×´Ì¬**: ? ·½°¸ÖÆ¶¨Íê³É£¬´ıÉóÅúÊµÊ©
+> **Ç°ÖÃÒÀÀµ**: PR-7£¨tradeErrorClassifier ²ğ·Ö£©ÒÑÍê³É
+> **¹ØÁªÉó¼Æ±¨¸æ**: [pr-8-dedup-audit-report.md](./pr-8-dedup-audit-report.md)
+> **¼Ü¹¹Ô­Ôò**: AP-007 ÖØ¸´´úÂë¼ì²â£¨²ßÂÔ A£º±£ÊØºÏ²¢£©
 
 ---
 
-## ä¸€ã€æ–¹æ¡ˆæ¦‚è§ˆ
+## Ò»¡¢·½°¸¸ÅÀÀ
 
-### 1.1 ç›®æ ‡
+### 1.1 Ä¿±ê
 
-æ¶ˆé™¤ audit:split-quality æ£€æµ‹åˆ°çš„ 8 å¤„ AP-007 é‡å¤å‡½æ•°è¿è§„ï¼Œé€šè¿‡ï¼š
-- **A ç±»ï¼ˆ5 å¯¹ï¼‰**ï¼šåˆå¹¶é€»è¾‘å®Œå…¨ä¸€è‡´çš„å‡½æ•°ä¸ºå•ä¸€æ¥æº
-- **B ç±»ï¼ˆ2 å¯¹ï¼‰**ï¼šé‡å‘½ååŒåä¸åŒè¯­ä¹‰çš„å‡½æ•°ä»¥æ¶ˆé™¤æ­§ä¹‰
-- **C ç±»ï¼ˆ1 å¯¹ï¼‰**ï¼šæå–é€šç”¨è¯„åˆ†æ¡†æ¶æ¶ˆé™¤ç»“æ„ç›¸ä¼¼ä»£ç 
+Ïû³ı audit:split-quality ¼ì²âµ½µÄ 8 ´¦ AP-007 ÖØ¸´º¯ÊıÎ¥¹æ£¬Í¨¹ı£º
+- **A Àà£¨5 ¶Ô£©**£ººÏ²¢Âß¼­ÍêÈ«Ò»ÖÂµÄº¯ÊıÎªµ¥Ò»À´Ô´
+- **B Àà£¨2 ¶Ô£©**£ºÖØÃüÃûÍ¬Ãû²»Í¬ÓïÒåµÄº¯ÊıÒÔÏû³ıÆçÒå
+- **C Àà£¨1 ¶Ô£©**£ºÌáÈ¡Í¨ÓÃÆÀ·Ö¿ò¼ÜÏû³ı½á¹¹ÏàËÆ´úÂë
 
-### 1.2 é¢„æœŸæˆæœ
+### 1.2 Ô¤ÆÚ³É¹û
 
-| æŒ‡æ ‡ | å½“å‰ | ç›®æ ‡ | æ”¹å–„ |
+| Ö¸±ê | µ±Ç° | Ä¿±ê | ¸ÄÉÆ |
 |------|------|------|------|
-| AP-007 è¿è§„æ•° | 8 | 0 | -100% |
-| é‡å¤ä»£ç è¡Œæ•° | ~80 è¡Œ | 0 | -100% |
-| æ–°å¢å…¬å…±å‡½æ•° | - | 3 ä¸ª | +3 |
-| æ¶‰åŠæ–‡ä»¶æ•° | 11 | 11 | 0 |
-| æµ‹è¯•ç”¨ä¾‹æ–°å¢ | - | ~15 | +15 |
+| AP-007 Î¥¹æÊı | 8 | 0 | -100% |
+| ÖØ¸´´úÂëĞĞÊı | ~80 ĞĞ | 0 | -100% |
+| ĞÂÔö¹«¹²º¯Êı | - | 3 ¸ö | +3 |
+| Éæ¼°ÎÄ¼şÊı | 11 | 11 | 0 |
+| ²âÊÔÓÃÀıĞÂÔö | - | ~15 | +15 |
 
-### 1.3 å®æ–½åŸåˆ™
+### 1.3 ÊµÊ©Ô­Ôò
 
-1. **ä¿å®ˆåˆå¹¶**ï¼ˆAP-007 ç­–ç•¥ Aï¼‰ï¼šä»…åˆå¹¶é€»è¾‘å®Œå…¨ä¸€è‡´çš„å‡½æ•°ï¼Œç›¸ä¼¼ä½†æœ‰å·®å¼‚çš„ä¿æŒç‹¬ç«‹
-2. **re-export å…¼å®¹**ï¼šåˆå¹¶åä¸»æ–‡ä»¶ä¿ç•™ re-exportï¼Œç¡®ä¿è°ƒç”¨ç‚¹é›¶ä¿®æ”¹
-3. **åˆ†æ‰¹æ‰§è¡Œ**ï¼šæŒ‰é£é™©ç­‰çº§åˆ† 3 æ‰¹ï¼ˆP0â†’P1â†’P2ï¼‰ï¼Œæ¯æ‰¹å®ŒæˆåéªŒè¯
-4. **å¯å›æ»š**ï¼šæ¯æ‰¹ç‹¬ç«‹å¯å›æ»šï¼Œå›æ»šåé‡æ–°è¿è¡Œå®¡è®¡ç¡®è®¤
+1. **±£ÊØºÏ²¢**£¨AP-007 ²ßÂÔ A£©£º½öºÏ²¢Âß¼­ÍêÈ«Ò»ÖÂµÄº¯Êı£¬ÏàËÆµ«ÓĞ²îÒìµÄ±£³Ö¶ÀÁ¢
+2. **re-export ¼æÈİ**£ººÏ²¢ºóÖ÷ÎÄ¼ş±£Áô re-export£¬È·±£µ÷ÓÃµãÁãĞŞ¸Ä
+3. **·ÖÅúÖ´ĞĞ**£º°´·çÏÕµÈ¼¶·Ö 3 Åú£¨P0¡úP1¡úP2£©£¬Ã¿ÅúÍê³ÉºóÑéÖ¤
+4. **¿É»Ø¹ö**£ºÃ¿Åú¶ÀÁ¢¿É»Ø¹ö£¬»Ø¹öºóÖØĞÂÔËĞĞÉó¼ÆÈ·ÈÏ
 
 ---
 
-## äºŒã€åˆ†æ‰¹æ‰§è¡Œè®¡åˆ’
+## ¶ş¡¢·ÖÅúÖ´ĞĞ¼Æ»®
 
-### æ‰¹æ¬¡ Aï¼šP0 â€” é€»è¾‘å®Œå…¨ä¸€è‡´å‡½æ•°åˆå¹¶ï¼ˆä½é£é™©ï¼‰
+### Åú´Î A£ºP0 ¡ª Âß¼­ÍêÈ«Ò»ÖÂº¯ÊıºÏ²¢£¨µÍ·çÏÕ£©
 
-**æ‰§è¡Œé¡ºåº**: A1 â†’ A2 â†’ A3
-**é¢„è®¡å½±å“**: 5 å¯¹å‡½æ•°åˆå¹¶ï¼ŒAP-007 è¿è§„å‡å°‘ 5 å¤„
+**Ö´ĞĞË³Ğò**: A1 ¡ú A2 ¡ú A3
+**Ô¤¼ÆÓ°Ïì**: 5 ¶Ôº¯ÊıºÏ²¢£¬AP-007 Î¥¹æ¼õÉÙ 5 ´¦
 
-#### A1: `now()` åˆå¹¶
+#### A1: `now()` ºÏ²¢
 
-| é¡¹ç›® | å†…å®¹ |
+| ÏîÄ¿ | ÄÚÈİ |
 |------|------|
-| **ä¼˜å…ˆçº§** | P0 |
-| **é£é™©** | ğŸŸ¢ ä½ |
-| **å½±å“æ–‡ä»¶** | 2 æ–‡ä»¶ï¼ˆtimeUtils.ts + db-utils.tsï¼‰ |
-| **è°ƒç”¨ç‚¹** | 3 å¤„ï¼ˆdataLayer é€šè¿‡ db.ts re-exportï¼‰ |
-| **å›æ»šæ–¹å¼** | git checkout timeUtils.ts |
+| **ÓÅÏÈ¼¶** | P0 |
+| **·çÏÕ** | ?? µÍ |
+| **Ó°ÏìÎÄ¼ş** | 2 ÎÄ¼ş£¨timeUtils.ts + db-utils.ts£© |
+| **µ÷ÓÃµã** | 3 ´¦£¨dataLayer Í¨¹ı db.ts re-export£© |
+| **»Ø¹ö·½Ê½** | git checkout timeUtils.ts |
 
-**æ“ä½œæ¸…å•**:
-1. ä¿®æ”¹ `src/lib/timeUtils.ts:31-33`
-   - åˆ é™¤ `export function now()` å®šä¹‰
-   - æ·»åŠ  `export { now } from '@/data/db-utils'`ï¼ˆre-export ä¿æŒå…¼å®¹ï¼‰
-2. è¿è¡Œ `npx tsc --noEmit` éªŒè¯ç±»å‹
-3. è¿è¡Œ `npm test -- --run` éªŒè¯æµ‹è¯•
-4. è¿è¡Œ `npm run audit:split-quality` ç¡®è®¤ AP-007 å‡å°‘ 1
+**²Ù×÷Çåµ¥**:
+1. ĞŞ¸Ä `src/lib/format.ts`
+   - É¾³ı `export function now()` ¶¨Òå
+   - Ìí¼Ó `export { now } from '@/data/db-utils'`£¨re-export ±£³Ö¼æÈİ£©
+2. ÔËĞĞ `npx tsc --noEmit` ÑéÖ¤ÀàĞÍ
+3. ÔËĞĞ `npm test -- --run` ÑéÖ¤²âÊÔ
+4. ÔËĞĞ `npm run audit:split-quality` È·ÈÏ AP-007 ¼õÉÙ 1
 
-**éªŒè¯æ ‡å‡†**:
-- tsc 0 é”™è¯¯
-- æ‰€æœ‰æµ‹è¯•é€šè¿‡
-- AP-007 è¿è§„ä» 8 é™è‡³ 7
+**ÑéÖ¤±ê×¼**:
+- tsc 0 ´íÎó
+- ËùÓĞ²âÊÔÍ¨¹ı
+- AP-007 Î¥¹æ´Ó 8 ½µÖÁ 7
 
 ---
 
-#### A2: `formatIndustryDelta` + `formatIntelligentDelta` åˆå¹¶
+#### A2: `formatIndustryDelta` + `formatIntelligentDelta` ºÏ²¢
 
-| é¡¹ç›® | å†…å®¹ |
+| ÏîÄ¿ | ÄÚÈİ |
 |------|------|
-| **ä¼˜å…ˆçº§** | P0 |
-| **é£é™©** | ğŸŸ¢ ä½ |
-| **å½±å“æ–‡ä»¶** | 5 æ–‡ä»¶ï¼ˆ1 æ–°å¢ lib/format.ts + 4 ä¿®æ”¹ï¼‰ |
-| **è°ƒç”¨ç‚¹** | 0 å¤„è·¨æ–‡ä»¶ importï¼ˆä»…å†…éƒ¨ä½¿ç”¨ï¼‰ |
-| **å›æ»šæ–¹å¼** | git checkout lib/format.ts + 4 æ–‡ä»¶ |
+| **ÓÅÏÈ¼¶** | P0 |
+| **·çÏÕ** | ?? µÍ |
+| **Ó°ÏìÎÄ¼ş** | 5 ÎÄ¼ş£¨1 ĞÂÔö lib/format.ts + 4 ĞŞ¸Ä£© |
+| **µ÷ÓÃµã** | 0 ´¦¿çÎÄ¼ş import£¨½öÄÚ²¿Ê¹ÓÃ£© |
+| **»Ø¹ö·½Ê½** | git checkout lib/format.ts + 4 ÎÄ¼ş |
 
-**æ“ä½œæ¸…å•**:
-1. æ–°å¢ `src/lib/format.ts`
-   - åˆ›å»º `formatScoreDelta(current, previous): string` å‡½æ•°
-2. ä¿®æ”¹ `src/hooks/cabin/useIndustryScorePage.ts:37-43`
-   - åˆ é™¤æœ¬åœ° `formatIndustryDelta` å®šä¹‰
-   - æ·»åŠ  `import { formatScoreDelta } from '@/lib/format'`
-   - å†…éƒ¨è°ƒç”¨ç‚¹æ”¹ç”¨ `formatScoreDelta`
-3. ä¿®æ”¹ `src/store/industryScoreStore.ts:64-70`
-   - åˆ é™¤æœ¬åœ° `formatIndustryDelta` å®šä¹‰
-   - æ·»åŠ  `import { formatScoreDelta } from '@/lib/format'`
-   - æ·»åŠ  `export { formatScoreDelta as formatIndustryDelta } from '@/lib/format'`ï¼ˆå‘åå…¼å®¹ï¼‰
-4. ä¿®æ”¹ `src/hooks/cabin/useIntelligentScorePage.ts:38-44`
-   - åˆ é™¤æœ¬åœ° `formatIntelligentDelta` å®šä¹‰
-   - æ·»åŠ  `import { formatScoreDelta } from '@/lib/format'`
-5. ä¿®æ”¹ `src/store/intelligentScoreStore.ts:68-74`
-   - åˆ é™¤æœ¬åœ° `formatIntelligentDelta` å®šä¹‰
-   - æ·»åŠ  `import { formatScoreDelta } from '@/lib/format'`
-   - æ·»åŠ  `export { formatScoreDelta as formatIntelligentDelta } from '@/lib/format'`ï¼ˆå‘åå…¼å®¹ï¼‰
-6. è¿è¡Œ `npx tsc --noEmit` éªŒè¯ç±»å‹
-7. è¿è¡Œ `npm test -- --run` éªŒè¯æµ‹è¯•
-8. è¿è¡Œ `npm run audit:split-quality` ç¡®è®¤ AP-007 å‡å°‘ 2
+**²Ù×÷Çåµ¥**:
+1. ĞÂÔö `src/lib/format.ts`
+   - ´´½¨ `formatScoreDelta(current, previous): string` º¯Êı
+2. ĞŞ¸Ä `src/hooks/cabin/useIndustryScorePage.ts:37-43`
+   - É¾³ı±¾µØ `formatIndustryDelta` ¶¨Òå
+   - Ìí¼Ó `import { formatScoreDelta } from '@/lib/format'`
+   - ÄÚ²¿µ÷ÓÃµã¸ÄÓÃ `formatScoreDelta`
+3. ĞŞ¸Ä `src/store/industryScoreStore.ts:64-70`
+   - É¾³ı±¾µØ `formatIndustryDelta` ¶¨Òå
+   - Ìí¼Ó `import { formatScoreDelta } from '@/lib/format'`
+   - Ìí¼Ó `export { formatScoreDelta as formatIndustryDelta } from '@/lib/format'`£¨Ïòºó¼æÈİ£©
+4. ĞŞ¸Ä `src/hooks/cabin/useIntelligentScorePage.ts:38-44`
+   - É¾³ı±¾µØ `formatIntelligentDelta` ¶¨Òå
+   - Ìí¼Ó `import { formatScoreDelta } from '@/lib/format'`
+5. ĞŞ¸Ä `src/store/intelligentScoreStore.ts:68-74`
+   - É¾³ı±¾µØ `formatIntelligentDelta` ¶¨Òå
+   - Ìí¼Ó `import { formatScoreDelta } from '@/lib/format'`
+   - Ìí¼Ó `export { formatScoreDelta as formatIntelligentDelta } from '@/lib/format'`£¨Ïòºó¼æÈİ£©
+6. ÔËĞĞ `npx tsc --noEmit` ÑéÖ¤ÀàĞÍ
+7. ÔËĞĞ `npm test -- --run` ÑéÖ¤²âÊÔ
+8. ÔËĞĞ `npm run audit:split-quality` È·ÈÏ AP-007 ¼õÉÙ 2
 
-**éªŒè¯æ ‡å‡†**:
-- tsc 0 é”™è¯¯
-- æ‰€æœ‰æµ‹è¯•é€šè¿‡
-- AP-007 è¿è§„ä» 7 é™è‡³ 5
+**ÑéÖ¤±ê×¼**:
+- tsc 0 ´íÎó
+- ËùÓĞ²âÊÔÍ¨¹ı
+- AP-007 Î¥¹æ´Ó 7 ½µÖÁ 5
 
 ---
 
-#### A3: `toSafeNumber` + `toSafeBoolean` åˆå¹¶
+#### A3: `toSafeNumber` + `toSafeBoolean` ºÏ²¢
 
-| é¡¹ç›® | å†…å®¹ |
+| ÏîÄ¿ | ÄÚÈİ |
 |------|------|
-| **ä¼˜å…ˆçº§** | P0 |
-| **é£é™©** | ğŸŸ¢ ä½ |
-| **å½±å“æ–‡ä»¶** | 2 æ–‡ä»¶ï¼ˆsafeCoerce.ts + strategyDataAdapter.tsï¼‰ |
-| **è°ƒç”¨ç‚¹** | strategyDataAdapter å†…éƒ¨ 13 å¤„ + safeCoerce è¢« 3 æ–‡ä»¶ import |
-| **å›æ»šæ–¹å¼** | git checkout strategyDataAdapter.ts |
+| **ÓÅÏÈ¼¶** | P0 |
+| **·çÏÕ** | ?? µÍ |
+| **Ó°ÏìÎÄ¼ş** | 2 ÎÄ¼ş£¨safeCoerce.ts + strategyDataAdapter.ts£© |
+| **µ÷ÓÃµã** | strategyDataAdapter ÄÚ²¿ 13 ´¦ + safeCoerce ±» 3 ÎÄ¼ş import |
+| **»Ø¹ö·½Ê½** | git checkout strategyDataAdapter.ts |
 
-**æ“ä½œæ¸…å•**:
-1. ä¿®å¤ `src/lib/safeCoerce.ts:108-113` çš„ `toSafeBoolean` bug
-   - å°† `value === 1 || value === 'true' || value === 1` æ”¹ä¸º `value === 1 || value === 'true'`
-   - å°† `value === 0 || value === 'false' || value === 0` æ”¹ä¸º `value === 0 || value === 'false'`
-2. ä¿®æ”¹ `src/services/fetcher/strategyDataAdapter.ts`
-   - åˆ é™¤æœ¬åœ° `toSafeNumber` å®šä¹‰ï¼ˆè¡Œ 76-80ï¼‰
-   - åˆ é™¤æœ¬åœ° `toSafeBoolean` å®šä¹‰ï¼ˆè¡Œ 97-102ï¼‰
-   - åœ¨å¯¼å…¥åŒºæ·»åŠ  `import { toSafeNumber, toSafeBoolean } from '@/lib/safeCoerce'`
-3. è¿è¡Œ `npx tsc --noEmit` éªŒè¯ç±»å‹
-4. è¿è¡Œ `npm test -- --run` éªŒè¯æµ‹è¯•ï¼ˆé‡ç‚¹ï¼šstrategyDataAdapter ç›¸å…³æµ‹è¯•ï¼‰
-5. è¿è¡Œ `npm run audit:split-quality` ç¡®è®¤ AP-007 å‡å°‘ 2
+**²Ù×÷Çåµ¥**:
+1. ĞŞ¸´ `src/lib/safeCoerce.ts:108-113` µÄ `toSafeBoolean` bug
+   - ½« `value === 1 || value === 'true' || value === 1` ¸ÄÎª `value === 1 || value === 'true'`
+   - ½« `value === 0 || value === 'false' || value === 0` ¸ÄÎª `value === 0 || value === 'false'`
+2. ĞŞ¸Ä `src/services/fetcher/strategyDataAdapter.ts`
+   - É¾³ı±¾µØ `toSafeNumber` ¶¨Òå£¨ĞĞ 76-80£©
+   - É¾³ı±¾µØ `toSafeBoolean` ¶¨Òå£¨ĞĞ 97-102£©
+   - ÔÚµ¼ÈëÇøÌí¼Ó `import { toSafeNumber, toSafeBoolean } from '@/lib/safeCoerce'`
+3. ÔËĞĞ `npx tsc --noEmit` ÑéÖ¤ÀàĞÍ
+4. ÔËĞĞ `npm test -- --run` ÑéÖ¤²âÊÔ£¨ÖØµã£ºstrategyDataAdapter Ïà¹Ø²âÊÔ£©
+5. ÔËĞĞ `npm run audit:split-quality` È·ÈÏ AP-007 ¼õÉÙ 2
 
-**éªŒè¯æ ‡å‡†**:
-- tsc 0 é”™è¯¯
-- æ‰€æœ‰æµ‹è¯•é€šè¿‡ï¼ˆç‰¹åˆ«æ˜¯ toSafeBoolean è¡Œä¸ºæµ‹è¯•ï¼‰
-- AP-007 è¿è§„ä» 5 é™è‡³ 3
+**ÑéÖ¤±ê×¼**:
+- tsc 0 ´íÎó
+- ËùÓĞ²âÊÔÍ¨¹ı£¨ÌØ±ğÊÇ toSafeBoolean ĞĞÎª²âÊÔ£©
+- AP-007 Î¥¹æ´Ó 5 ½µÖÁ 3
 
 ---
 
-### æ‰¹æ¬¡ Bï¼šP1 â€” åŒåä¸åŒè¯­ä¹‰å‡½æ•°é‡å‘½åï¼ˆä¸­é£é™©ï¼‰
+### Åú´Î B£ºP1 ¡ª Í¬Ãû²»Í¬ÓïÒåº¯ÊıÖØÃüÃû£¨ÖĞ·çÏÕ£©
 
-**æ‰§è¡Œé¡ºåº**: B1 â†’ B2
-**é¢„è®¡å½±å“**: 2 å¯¹å‡½æ•°é‡å‘½åï¼ŒAP-007 è¿è§„å‡å°‘ 2 å¤„
+**Ö´ĞĞË³Ğò**: B1 ¡ú B2
+**Ô¤¼ÆÓ°Ïì**: 2 ¶Ôº¯ÊıÖØÃüÃû£¬AP-007 Î¥¹æ¼õÉÙ 2 ´¦
 
-#### B1: `generateId` é‡å‘½åï¼ˆa11y.tsï¼‰
+#### B1: `generateId` ÖØÃüÃû£¨a11y.ts£©
 
-| é¡¹ç›® | å†…å®¹ |
+| ÏîÄ¿ | ÄÚÈİ |
 |------|------|
-| **ä¼˜å…ˆçº§** | P1 |
-| **é£é™©** | ğŸŸ¡ ä¸­ |
-| **å½±å“æ–‡ä»¶** | 1 æ–‡ä»¶ï¼ˆa11y.tsï¼Œå­¤å„¿æ¨¡å—ï¼‰ |
-| **è°ƒç”¨ç‚¹** | 0 å¤„ï¼ˆa11y.ts æœªè¢«ä»»ä½•æ–‡ä»¶ importï¼‰ |
-| **å›æ»šæ–¹å¼** | git checkout a11y.ts |
+| **ÓÅÏÈ¼¶** | P1 |
+| **·çÏÕ** | ?? ÖĞ |
+| **Ó°ÏìÎÄ¼ş** | 1 ÎÄ¼ş£¨a11y.ts£¬¹Â¶ùÄ£¿é£© |
+| **µ÷ÓÃµã** | 0 ´¦£¨a11y.ts Î´±»ÈÎºÎÎÄ¼ş import£© |
+| **»Ø¹ö·½Ê½** | git checkout a11y.ts |
 
-**æ“ä½œæ¸…å•**:
-1. ä¿®æ”¹ `src/lib/a11y.ts:11-13`
-   - å°† `export function generateId(prefix = 'a11y')` é‡å‘½åä¸º `export function generateA11yId(prefix = 'a11y')`
-   - æ›´æ–° JSDoc æ³¨é‡Š
-2. è¿è¡Œ `npx tsc --noEmit` éªŒè¯ç±»å‹
-3. è¿è¡Œ `npm test -- --run` éªŒè¯æµ‹è¯•
-4. è¿è¡Œ `npm run audit:split-quality` ç¡®è®¤ AP-007 å‡å°‘ 1
+**²Ù×÷Çåµ¥**:
+1. ĞŞ¸Ä `src/lib/validation.ts`
+   - ½« `export function generateId(prefix = 'a11y')` ÖØÃüÃûÎª `export function generateA11yId(prefix = 'a11y')`
+   - ¸üĞÂ JSDoc ×¢ÊÍ
+2. ÔËĞĞ `npx tsc --noEmit` ÑéÖ¤ÀàĞÍ
+3. ÔËĞĞ `npm test -- --run` ÑéÖ¤²âÊÔ
+4. ÔËĞĞ `npm run audit:split-quality` È·ÈÏ AP-007 ¼õÉÙ 1
 
-**éªŒè¯æ ‡å‡†**:
-- tsc 0 é”™è¯¯
-- æ‰€æœ‰æµ‹è¯•é€šè¿‡
-- AP-007 è¿è§„ä» 3 é™è‡³ 2
+**ÑéÖ¤±ê×¼**:
+- tsc 0 ´íÎó
+- ËùÓĞ²âÊÔÍ¨¹ı
+- AP-007 Î¥¹æ´Ó 3 ½µÖÁ 2
 
 ---
 
-#### B2: `bySector` é‡å‘½åï¼ˆhotSectorStore.tsï¼‰
+#### B2: `bySector` ÖØÃüÃû£¨hotSectorStore.ts£©
 
-| é¡¹ç›® | å†…å®¹ |
+| ÏîÄ¿ | ÄÚÈİ |
 |------|------|
-| **ä¼˜å…ˆçº§** | P1 |
-| **é£é™©** | ğŸŸ¡ ä¸­ |
-| **å½±å“æ–‡ä»¶** | 2 æ–‡ä»¶ï¼ˆhotSectorStore.ts + hotSectorStore.test.tsï¼‰ |
-| **è°ƒç”¨ç‚¹** | 1 å¤„æµ‹è¯•æ–‡ä»¶ import |
-| **å›æ»šæ–¹å¼** | git checkout hotSectorStore.ts hotSectorStore.test.ts |
+| **ÓÅÏÈ¼¶** | P1 |
+| **·çÏÕ** | ?? ÖĞ |
+| **Ó°ÏìÎÄ¼ş** | 2 ÎÄ¼ş£¨hotSectorStore.ts + hotSectorStore.test.ts£© |
+| **µ÷ÓÃµã** | 1 ´¦²âÊÔÎÄ¼ş import |
+| **»Ø¹ö·½Ê½** | git checkout hotSectorStore.ts hotSectorStore.test.ts |
 
-**æ“ä½œæ¸…å•**:
-1. ä¿®æ”¹ `src/store/hotSectorStore.ts:221-223`
-   - å°† `export function bySector(symbol)` é‡å‘½åä¸º `export function bySymbol(symbol)`
-   - æ›´æ–°æ³¨é‡Šä¸ºã€ŒæŒ‰ symbol æŸ¥æ‰¾è¯„åˆ†ã€
-2. ä¿®æ”¹ `src/store/hotSectorStore.test.ts:2`
-   - å°† import ä¸­çš„ `bySector` æ”¹ä¸º `bySymbol`
-   - æ›´æ–°æµ‹è¯•ç”¨ä¾‹ä¸­çš„å‡½æ•°è°ƒç”¨
-3. è¿è¡Œ `npx tsc --noEmit` éªŒè¯ç±»å‹
-4. è¿è¡Œ `npm test -- --run` éªŒè¯æµ‹è¯•ï¼ˆé‡ç‚¹ï¼šhotSectorStore æµ‹è¯•ï¼‰
-5. è¿è¡Œ `npm run audit:split-quality` ç¡®è®¤ AP-007 å‡å°‘ 1
+**²Ù×÷Çåµ¥**:
+1. ĞŞ¸Ä `src/store/hotSectorStore.ts:221-223`
+   - ½« `export function bySector(symbol)` ÖØÃüÃûÎª `export function bySymbol(symbol)`
+   - ¸üĞÂ×¢ÊÍÎª¡¸°´ symbol ²éÕÒÆÀ·Ö¡¹
+2. ĞŞ¸Ä `src/store/hotSectorStore.test.ts:2`
+   - ½« import ÖĞµÄ `bySector` ¸ÄÎª `bySymbol`
+   - ¸üĞÂ²âÊÔÓÃÀıÖĞµÄº¯Êıµ÷ÓÃ
+3. ÔËĞĞ `npx tsc --noEmit` ÑéÖ¤ÀàĞÍ
+4. ÔËĞĞ `npm test -- --run` ÑéÖ¤²âÊÔ£¨ÖØµã£ºhotSectorStore ²âÊÔ£©
+5. ÔËĞĞ `npm run audit:split-quality` È·ÈÏ AP-007 ¼õÉÙ 1
 
-**éªŒè¯æ ‡å‡†**:
-- tsc 0 é”™è¯¯
-- æ‰€æœ‰æµ‹è¯•é€šè¿‡
-- AP-007 è¿è§„ä» 2 é™è‡³ 1
+**ÑéÖ¤±ê×¼**:
+- tsc 0 ´íÎó
+- ËùÓĞ²âÊÔÍ¨¹ı
+- AP-007 Î¥¹æ´Ó 2 ½µÖÁ 1
 
 ---
 
-### æ‰¹æ¬¡ Cï¼šP2 â€” æå–é€šç”¨è¯„åˆ†æ¡†æ¶ï¼ˆé«˜é£é™©ï¼‰
+### Åú´Î C£ºP2 ¡ª ÌáÈ¡Í¨ÓÃÆÀ·Ö¿ò¼Ü£¨¸ß·çÏÕ£©
 
-**æ‰§è¡Œé¡ºåº**: C1
-**é¢„è®¡å½±å“**: 1 å¯¹å‡½æ•°é‡æ„ï¼ŒAP-007 è¿è§„å‡å°‘ 1 å¤„
+**Ö´ĞĞË³Ğò**: C1
+**Ô¤¼ÆÓ°Ïì**: 1 ¶Ôº¯ÊıÖØ¹¹£¬AP-007 Î¥¹æ¼õÉÙ 1 ´¦
 
-#### C1: `analyze` æå–é€šç”¨æ¡†æ¶
+#### C1: `analyze` ÌáÈ¡Í¨ÓÃ¿ò¼Ü
 
-| é¡¹ç›® | å†…å®¹ |
+| ÏîÄ¿ | ÄÚÈİ |
 |------|------|
-| **ä¼˜å…ˆçº§** | P2 |
-| **é£é™©** | ğŸŸ  é«˜ |
-| **å½±å“æ–‡ä»¶** | 3 æ–‡ä»¶ï¼ˆ1 æ–°å¢ _shared/weightedScore.ts + 2 ä¿®æ”¹ï¼‰ |
-| **è°ƒç”¨ç‚¹** | 0 å¤„è·¨æ–‡ä»¶ importï¼ˆå„è‡ªæ¨¡å—å…¥å£ï¼‰ |
-| **å›æ»šæ–¹å¼** | git checkout hotSectorDimensions.ts valuePitAnalyzer.ts + åˆ é™¤ _shared/ |
+| **ÓÅÏÈ¼¶** | P2 |
+| **·çÏÕ** | ?? ¸ß |
+| **Ó°ÏìÎÄ¼ş** | 3 ÎÄ¼ş£¨1 ĞÂÔö _shared/weightedScore.ts + 2 ĞŞ¸Ä£© |
+| **µ÷ÓÃµã** | 0 ´¦¿çÎÄ¼ş import£¨¸÷×ÔÄ£¿éÈë¿Ú£© |
+| **»Ø¹ö·½Ê½** | git checkout hotSectorDimensions.ts valuePitAnalyzer.ts + É¾³ı _shared/ |
 
-**æ“ä½œæ¸…å•**:
-1. æ–°å¢ `src/services/scoring/_shared/weightedScore.ts`
-   - åˆ›å»º `calculateWeightedScore(dimensions, weights, config)` å‡½æ•°
-   - åˆ›å»º `classifyAction(score, thresholds, defaultAction)` å‡½æ•°
-   - åˆ›å»º `WeightedScoreConfig` æ¥å£
-2. ä¿®æ”¹ `src/services/scoring/hotSectorDimensions.ts:365-418`
-   - å¯¼å…¥ `calculateWeightedScore, classifyAction`
-   - é‡æ„ `analyze` å‡½æ•°ä½¿ç”¨é€šç”¨æ¡†æ¶
-   - ä¿æŒè¿”å›ç±»å‹ `HotSectorScore` ä¸å˜
-3. ä¿®æ”¹ `src/services/scoring/valuePitAnalyzer.ts:328-372`
-   - å¯¼å…¥ `calculateWeightedScore, classifyAction`
-   - æ–°å¢ `VALUE_PIT_THRESHOLDS` å¸¸é‡ï¼ˆæ›¿ä»£ç¡¬ç¼–ç  100/4.0/3.5/3.0ï¼‰
-   - é‡æ„ `analyze` å‡½æ•°ä½¿ç”¨é€šç”¨æ¡†æ¶
-   - ä¿æŒè¿”å›ç±»å‹ `ValuePitScore` ä¸å˜
-4. æ–°å¢æµ‹è¯• `tests/__tests__/services/scoring/weightedScore.test.ts`
-   - æµ‹è¯• `calculateWeightedScore` æ­£ç¡®æ€§
-   - æµ‹è¯• `classifyAction` é˜ˆå€¼åˆ†çº§
-5. è¿è¡Œ `npx tsc --noEmit` éªŒè¯ç±»å‹
-6. è¿è¡Œ `npm test -- --run` éªŒè¯æµ‹è¯•ï¼ˆé‡ç‚¹ï¼šhotSector å’Œ valuePit æµ‹è¯•ï¼‰
-7. è¿è¡Œ `npm run audit:split-quality` ç¡®è®¤ AP-007 å‡å°‘ 1
-8. è¿è¡Œ `npm run audit:hardcode` ç¡®è®¤æ— æ–°å¢ç¡¬ç¼–ç 
+**²Ù×÷Çåµ¥**:
+1. ĞÂÔö `src/services/scoring/v6-engine/engine.ts`
+   - ´´½¨ `calculateWeightedScore(dimensions, weights, config)` º¯Êı
+   - ´´½¨ `classifyAction(score, thresholds, defaultAction)` º¯Êı
+   - ´´½¨ `WeightedScoreConfig` ½Ó¿Ú
+2. ĞŞ¸Ä `src/services/scoring/hotSectorDimensions.ts:365-418`
+   - µ¼Èë `calculateWeightedScore, classifyAction`
+   - ÖØ¹¹ `analyze` º¯ÊıÊ¹ÓÃÍ¨ÓÃ¿ò¼Ü
+   - ±£³Ö·µ»ØÀàĞÍ `HotSectorScore` ²»±ä
+3. ĞŞ¸Ä `src/services/scoring/valuePitAnalyzer.ts:328-372`
+   - µ¼Èë `calculateWeightedScore, classifyAction`
+   - ĞÂÔö `VALUE_PIT_THRESHOLDS` ³£Á¿£¨Ìæ´úÓ²±àÂë 100/4.0/3.5/3.0£©
+   - ÖØ¹¹ `analyze` º¯ÊıÊ¹ÓÃÍ¨ÓÃ¿ò¼Ü
+   - ±£³Ö·µ»ØÀàĞÍ `ValuePitScore` ²»±ä
+4. ĞÂÔö²âÊÔ `tests/__tests__/services/scoring/weightedScore.test.ts`
+   - ²âÊÔ `calculateWeightedScore` ÕıÈ·ĞÔ
+   - ²âÊÔ `classifyAction` ãĞÖµ·Ö¼¶
+5. ÔËĞĞ `npx tsc --noEmit` ÑéÖ¤ÀàĞÍ
+6. ÔËĞĞ `npm test -- --run` ÑéÖ¤²âÊÔ£¨ÖØµã£ºhotSector ºÍ valuePit ²âÊÔ£©
+7. ÔËĞĞ `npm run audit:split-quality` È·ÈÏ AP-007 ¼õÉÙ 1
+8. ÔËĞĞ `npm run audit:hardcode` È·ÈÏÎŞĞÂÔöÓ²±àÂë
 
-**éªŒè¯æ ‡å‡†**:
-- tsc 0 é”™è¯¯
-- æ‰€æœ‰æµ‹è¯•é€šè¿‡
-- AP-007 è¿è§„ä» 1 é™è‡³ 0
-- AP-002 åœˆå¤æ‚åº¦ä¸å¢åŠ 
-- æ— æ–°å¢ç¡¬ç¼–ç è¿è§„
+**ÑéÖ¤±ê×¼**:
+- tsc 0 ´íÎó
+- ËùÓĞ²âÊÔÍ¨¹ı
+- AP-007 Î¥¹æ´Ó 1 ½µÖÁ 0
+- AP-002 È¦¸´ÔÓ¶È²»Ôö¼Ó
+- ÎŞĞÂÔöÓ²±àÂëÎ¥¹æ
 
 ---
 
-## ä¸‰ã€å®¡æ‰¹è®°å½•è¡¨
+## Èı¡¢ÉóÅú¼ÇÂ¼±í
 
-| æ‰¹æ¬¡ | çŠ¶æ€ | å®¡æ‰¹äºº | å®¡æ‰¹æ—¥æœŸ | å¤‡æ³¨ |
+| Åú´Î | ×´Ì¬ | ÉóÅúÈË | ÉóÅúÈÕÆÚ | ±¸×¢ |
 |------|------|--------|----------|------|
-| æ‰¹æ¬¡ Aï¼ˆP0ï¼‰ | â³ å¾…å®¡æ‰¹ | - | - | 5 å¯¹å®Œå…¨ä¸€è‡´å‡½æ•°åˆå¹¶ |
-| æ‰¹æ¬¡ Bï¼ˆP1ï¼‰ | â³ å¾…å®¡æ‰¹ | - | - | 2 å¯¹åŒåå‡½æ•°é‡å‘½å |
-| æ‰¹æ¬¡ Cï¼ˆP2ï¼‰ | â³ å¾…å®¡æ‰¹ | - | - | 1 å¯¹æå–é€šç”¨æ¡†æ¶ |
+| Åú´Î A£¨P0£© | ? ´ıÉóÅú | - | - | 5 ¶ÔÍêÈ«Ò»ÖÂº¯ÊıºÏ²¢ |
+| Åú´Î B£¨P1£© | ? ´ıÉóÅú | - | - | 2 ¶ÔÍ¬Ãûº¯ÊıÖØÃüÃû |
+| Åú´Î C£¨P2£© | ? ´ıÉóÅú | - | - | 1 ¶ÔÌáÈ¡Í¨ÓÃ¿ò¼Ü |
 
 ---
 
-## å››ã€å›æ»šéªŒè¯æµç¨‹
+## ËÄ¡¢»Ø¹öÑéÖ¤Á÷³Ì
 
-æ¯ä¸ªæ‰¹æ¬¡å®Œæˆåï¼ˆæˆ–å›æ»šåï¼‰å¿…é¡»æ‰§è¡Œä»¥ä¸‹éªŒè¯ï¼š
+Ã¿¸öÅú´ÎÍê³Éºó£¨»ò»Ø¹öºó£©±ØĞëÖ´ĞĞÒÔÏÂÑéÖ¤£º
 
 ```powershell
-# 1. ç±»å‹æ£€æŸ¥
+# 1. ÀàĞÍ¼ì²é
 npx tsc --noEmit
 
-# 2. å•å…ƒæµ‹è¯•
+# 2. µ¥Ôª²âÊÔ
 npm test -- --run
 
-# 3. æ¶æ„å®¡è®¡
+# 3. ¼Ü¹¹Éó¼Æ
 npm run audit:layers
 
-# 4. æ‹†åˆ†è´¨é‡å®¡è®¡
+# 4. ²ğ·ÖÖÊÁ¿Éó¼Æ
 npm run audit:split-quality
 
-# 5. ç¡¬ç¼–ç å®¡è®¡ï¼ˆæ‰¹æ¬¡ C å¿…éœ€ï¼‰
+# 5. Ó²±àÂëÉó¼Æ£¨Åú´Î C ±ØĞè£©
 npm run audit:hardcode
 
-# 6. æ–‡æ¡£åŒæ­¥å®¡è®¡
+# 6. ÎÄµµÍ¬²½Éó¼Æ
 npm run audit:docs
 ```
 
-**å›æ»šæ¡ä»¶**ï¼ˆä»»ä¸€è§¦å‘å³å›æ»šï¼‰ï¼š
-- tsc å‡ºç°é”™è¯¯
-- æµ‹è¯•å¤±è´¥
-- audit:layers å‡ºç°æ–°å¢è¿è§„
-- audit:split-quality è¿è§„æ•°æœªå‡å°‘
+**»Ø¹öÌõ¼ş**£¨ÈÎÒ»´¥·¢¼´»Ø¹ö£©£º
+- tsc ³öÏÖ´íÎó
+- ²âÊÔÊ§°Ü
+- audit:layers ³öÏÖĞÂÔöÎ¥¹æ
+- audit:split-quality Î¥¹æÊıÎ´¼õÉÙ
 
 ---
 
-## äº”ã€é£é™©è¯„ä¼°
+## Îå¡¢·çÏÕÆÀ¹À
 
-### 5.1 é«˜é£é™©ç‚¹
+### 5.1 ¸ß·çÏÕµã
 
-| é£é™©ç‚¹ | å½±å“ | ç¼“è§£æªæ–½ |
+| ·çÏÕµã | Ó°Ïì | »º½â´ëÊ© |
 |--------|------|----------|
-| A3: `toSafeBoolean` bug ä¿®å¤ | å¯èƒ½æ”¹å˜ç°æœ‰è¡Œä¸º | å…ˆè¿è¡Œç°æœ‰æµ‹è¯•ç¡®è®¤åŸºçº¿ï¼Œä¿®å¤åå¯¹æ¯”æµ‹è¯•ç»“æœ |
-| C1: `analyze` é‡æ„ | è¯„åˆ†ç»“æœå¯èƒ½å˜åŒ– | é‡æ„å‰åå¯¹æ¯”è¯„åˆ†è¾“å‡ºï¼Œç¡®ä¿æ•°å€¼ä¸€è‡´ |
-| C1: æ–°å¢ `_shared/` ç›®å½• | å¯èƒ½è¿ååˆ†å±‚è§„åˆ™ | æ–°å¢åè¿è¡Œ audit:layers ç¡®è®¤åˆè§„ |
+| A3: `toSafeBoolean` bug ĞŞ¸´ | ¿ÉÄÜ¸Ä±äÏÖÓĞĞĞÎª | ÏÈÔËĞĞÏÖÓĞ²âÊÔÈ·ÈÏ»ùÏß£¬ĞŞ¸´ºó¶Ô±È²âÊÔ½á¹û |
+| C1: `analyze` ÖØ¹¹ | ÆÀ·Ö½á¹û¿ÉÄÜ±ä»¯ | ÖØ¹¹Ç°ºó¶Ô±ÈÆÀ·ÖÊä³ö£¬È·±£ÊıÖµÒ»ÖÂ |
+| C1: ĞÂÔö `_shared/` Ä¿Â¼ | ¿ÉÄÜÎ¥·´·Ö²ã¹æÔò | ĞÂÔöºóÔËĞĞ audit:layers È·ÈÏºÏ¹æ |
 
-### 5.2 å›æ»šé¢„æ¡ˆ
+### 5.2 »Ø¹öÔ¤°¸
 
 ```powershell
-# æ‰¹æ¬¡ A å›æ»š
+# Åú´Î A »Ø¹ö
 git checkout src/utils/timeUtils.ts
 git checkout src/hooks/cabin/useIndustryScorePage.ts src/store/industryScoreStore.ts
 git checkout src/hooks/cabin/useIntelligentScorePage.ts src/store/intelligentScoreStore.ts
 git checkout src/services/fetcher/strategyDataAdapter.ts src/lib/safeCoerce.ts
 Remove-Item src/lib/format.ts -ErrorAction SilentlyContinue
 
-# æ‰¹æ¬¡ B å›æ»š
+# Åú´Î B »Ø¹ö
 git checkout src/utils/a11y.ts
 git checkout src/store/hotSectorStore.ts src/store/hotSectorStore.test.ts
 
-# æ‰¹æ¬¡ C å›æ»š
+# Åú´Î C »Ø¹ö
 git checkout src/services/scoring/hotSectorDimensions.ts src/services/scoring/valuePitAnalyzer.ts
 Remove-Item src/services/scoring/_shared -Recurse -ErrorAction SilentlyContinue
 ```
 
 ---
 
-## å…­ã€è¿›åº¦è·Ÿè¸ª
+## Áù¡¢½ø¶È¸ú×Ù
 
-| æ­¥éª¤ | çŠ¶æ€ | å®Œæˆæ—¶é—´ | éªŒè¯ç»“æœ |
+| ²½Öè | ×´Ì¬ | Íê³ÉÊ±¼ä | ÑéÖ¤½á¹û |
 |------|------|----------|----------|
-| æ–¹æ¡ˆåˆ¶å®š | âœ… å®Œæˆ | 2026-07-08 | - |
-| å®¡æ‰¹ | â³ å¾…å®¡æ‰¹ | - | - |
-| æ‰¹æ¬¡ A å®æ–½ | â³ å¾…æ‰§è¡Œ | - | - |
-| æ‰¹æ¬¡ B å®æ–½ | â³ å¾…æ‰§è¡Œ | - | - |
-| æ‰¹æ¬¡ C å®æ–½ | â³ å¾…æ‰§è¡Œ | - | - |
-| æœ€ç»ˆéªŒè¯ | â³ å¾…æ‰§è¡Œ | - | - |
-| å˜æ›´æ—¥å¿— | â³ å¾…ç”Ÿæˆ | - | - |
+| ·½°¸ÖÆ¶¨ | ? Íê³É | 2026-07-08 | - |
+| ÉóÅú | ? ´ıÉóÅú | - | - |
+| Åú´Î A ÊµÊ© | ? ´ıÖ´ĞĞ | - | - |
+| Åú´Î B ÊµÊ© | ? ´ıÖ´ĞĞ | - | - |
+| Åú´Î C ÊµÊ© | ? ´ıÖ´ĞĞ | - | - |
+| ×îÖÕÑéÖ¤ | ? ´ıÖ´ĞĞ | - | - |
+| ±ä¸üÈÕÖ¾ | ? ´ıÉú³É | - | - |
 
 ---
 
-## ä¸ƒã€å‚è€ƒæ–‡æ¡£
+## Æß¡¢²Î¿¼ÎÄµµ
 
-- [PR-8 å®¡è®¡æŠ¥å‘Š](./pr-8-dedup-audit-report.md)
-- [PR-7 å˜æ›´æ—¥å¿—](../../CHANGELOG.md)
-- è¾¹ç•Œå®šä¹‰åŒæ­¥æ–‡æ¡£
-- [æ¶æ„æ ‡å‡† Â§3.16 æ¨¡å—æ‹†åˆ†æ¶æ„åŸåˆ™](../../../explanation/03-architecture-standards.md)
-- [AP-007 é‡å¤ä»£ç æ£€æµ‹ç­–ç•¥ Aï¼ˆä¿å®ˆåˆå¹¶ï¼‰](../../../explanation/03-architecture-standards.md)
+- [PR-8 Éó¼Æ±¨¸æ](./pr-8-dedup-audit-report.md)
+- [PR-7 ±ä¸üÈÕÖ¾](../../CHANGELOG.md)
+- ±ß½ç¶¨ÒåÍ¬²½ÎÄµµ
+- [¼Ü¹¹±ê×¼ ¡ì3.16 Ä£¿é²ğ·Ö¼Ü¹¹Ô­Ôò](../../03-architecture-standards.md)
+- [AP-007 ÖØ¸´´úÂë¼ì²â²ßÂÔ A£¨±£ÊØºÏ²¢£©](../../03-architecture-standards.md)

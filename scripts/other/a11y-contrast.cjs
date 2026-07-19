@@ -16,7 +16,7 @@ const path = require('path')
 
 const ROOT = process.cwd()
 const TOKENS_PATH = path.join(ROOT, 'design-tokens', 'tokens.json')
-const REPORT_PATH = path.join(ROOT, 'docs', 'a11y-contrast-report.md')
+const REPORT_PATH = path.join(ROOT, 'docs', 'docs/explanation/a11y-contrast-report.md')
 
 /** hex -> [r,g,b] */
 function hexToRgb(hex) {

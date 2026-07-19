@@ -8,6 +8,9 @@ import type { EvaluatorContext, EvaluatorFn, EvaluationResult, RegressionEvaluat
 
 const logger = getLogger()
 
+/**
+ * REGRESSION_EVALUATOR_ID
+ */
 export const REGRESSION_EVALUATOR_ID = 'regression-evaluator'
 
 type FlatMap = Map<string, string>
@@ -25,7 +28,7 @@ function flatten(obj: unknown, prefix = '', result: FlatMap = new Map()): FlatMa
   }
 
   if (typeof obj === 'object') {
-    const keys = Object.keys(obj as Record<string, unknown>)
+    const keys = Object.keys(obj)
     if (keys.length === 0) {
       result.set(prefix, '{}')
     } else {
@@ -37,7 +40,11 @@ function flatten(obj: unknown, prefix = '', result: FlatMap = new Map()): FlatMa
     return result
   }
 
-  result.set(prefix, String(obj))
+  const normalizedValue = typeof obj === 'string' || typeof obj === 'number' || typeof obj === 'boolean'
+    ? String(obj)
+    : JSON.stringify(obj)
+
+  result.set(prefix, normalizedValue)
   return result
 }
 
@@ -45,6 +52,9 @@ function isIgnored(path: string, ignorePaths: string[]): boolean {
   return ignorePaths.some((p) => path === p || path.startsWith(`${p}.`))
 }
 
+/**
+ * regressionEvaluator
+ */
 export const regressionEvaluator: EvaluatorFn = (ctx: EvaluatorContext): EvaluationResult => {
   const startedAt = Date.now()
   const params = ctx.params as RegressionEvaluatorParams | undefined

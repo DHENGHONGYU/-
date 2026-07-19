@@ -1,64 +1,68 @@
 ---
 title: rbac-contract
-code_version: 2.0.0
-
+type: reference
+domain: project
+phase: design
 tier: important
----
-
----
-title: rbac-contract.md
 status: draft
-owner: æ¶æ„ç»„
-updated: 2026-07-12
+maintainer: ¼Ü¹¹×é
+summary: "¶¨Òå rbac ×ÓÓòµÄ½Ó¿ÚÆõÔ¼¡¢Ö°Ôğ±ß½ç¡¢Êı¾İÁ÷ÓëÒÀÀµ¹ØÏµ¡£"
+tags: [project, contract, reference, governance, documentation]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: important
+doc_id: V9-DOC-PROJ-101
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
-# rbac-contract.md â€” RBAC æƒé™ç®¡ç†å­åŸŸæ¥å£å¥‘çº¦
+# rbac-contract.md ¡ª RBAC È¨ÏŞ¹ÜÀí×ÓÓò½Ó¿ÚÆõÔ¼
 
-> **å®šä½**ï¼šå®šä¹‰ `rbac` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ç³»ã€‚  
-> **å…³è”**ï¼š`./services-catalog.md`ï¼ˆ24 å­åŸŸæ€»è§ˆï¼‰ã€`../../AGENTS.md` Â§ä¸€ï¼ˆåˆ†å±‚è§„åˆ™ï¼‰ã€‚
+> **¶¨Î»**£º¶¨Òå `rbac` ×ÓÓòµÄ½Ó¿ÚÆõÔ¼¡¢Ö°Ôğ±ß½ç¡¢Êı¾İÁ÷ÓëÒÀÀµ¹ØÏµ¡£  
+> **Source**£º`./services-catalog.md`£¨24 ×ÓÓò×ÜÀÀ£©¡¢`../../AGENTS.md` ¡ìÒ»£¨·Ö²ã¹æÔò£©¡£
 
 ---
 
-## 1. èŒè´£è¾¹ç•Œ
+## 1. Ö°Ôğ±ß½ç
 
-### 1.1 æ ¸å¿ƒèŒè´£
+### 1.1 ºËĞÄÖ°Ôğ
 
-1. **å®ä½“ CRUD ç®¡ç†**ï¼šè´Ÿè´£ç”¨æˆ·ï¼ˆ`UserEntity`ï¼‰ã€è§’è‰²ï¼ˆ`RoleEntity`ï¼‰ã€æƒé™ï¼ˆ`PermissionEntity`ï¼‰ä¸‰å¤§å®ä½“çš„åˆ›å»ºã€æ›´æ–°ã€è½¯åˆ é™¤ä¸æŸ¥è¯¢ã€‚æ‰€æœ‰å†™æ“ä½œé€šè¿‡ `DataBridge.forward()` è·¯ç”±ï¼Œç¦æ­¢ç›´æ¥æ“ä½œ IndexedDBã€‚
-2. **è§’è‰²æˆäºˆä¸æ’¤é”€**ï¼šç®¡ç†ç”¨æˆ·-è§’è‰²æ˜ å°„ï¼ˆ`UserRoleMapping`ï¼‰å’Œè§’è‰²-æƒé™æ˜ å°„ï¼ˆ`RolePermissionMapping`ï¼‰ï¼Œæ”¯æŒå¸¦æœ‰æ•ˆæœŸï¼ˆTTLï¼‰çš„è§’è‰²æˆäºˆã€æ‰‹åŠ¨æ’¤é”€ï¼Œä»¥åŠè½¯åˆ é™¤çŠ¶æ€çš„ç»´æŠ¤ã€‚
-3. **ç”¨æˆ·æœ‰æ•ˆæƒé™ç»„åˆæŸ¥è¯¢**ï¼šé€šè¿‡ `getUserEffectivePermissions()` èšåˆç”¨æˆ·æ‰€æœ‰æ´»è·ƒè§’è‰²çš„æƒé™å¹¶é›†ï¼Œä¸ºä¸Šå±‚æä¾›ç»Ÿä¸€çš„æƒé™æ ¡éªŒèƒ½åŠ›ã€‚
-4. **æƒé™è‡ªåŠ¨å›æ”¶ä¸åƒµå°¸è´¦å·æ£€æµ‹**ï¼šé€šè¿‡ `PermissionRevocationService` å®šæ—¶æ‰«æè¿‡æœŸè§’è‰²æ˜ å°„ï¼ˆ`effectiveEnd`ï¼‰å’Œé•¿æœŸæœªæ´»è·ƒç”¨æˆ·ï¼ˆ`lastActiveAt`ï¼‰ï¼Œè‡ªåŠ¨å›æ”¶æƒé™å¹¶æ›´æ–°å®¡è®¡æ—¥å¿—ï¼Œè§£å†³"æƒé™è†¨èƒ€"ä¸"åƒµå°¸è´¦å·"é£é™©ã€‚
+1. **ÊµÌå CRUD ¹ÜÀí**£º¸ºÔğÓÃ»§£¨`UserEntity`£©¡¢½ÇÉ«£¨`RoleEntity`£©¡¢È¨ÏŞ£¨`PermissionEntity`£©Èı´óÊµÌåµÄ´´½¨¡¢¸üĞÂ¡¢ÈíÉ¾³ıÓë²éÑ¯¡£ËùÓĞĞ´²Ù×÷Í¨¹ı `DataBridge.forward()` Â·ÓÉ£¬½ûÖ¹Ö±½Ó²Ù×÷ IndexedDB¡£
+2. **½ÇÉ«ÊÚÓèÓë³·Ïú**£º¹ÜÀíÓÃ»§-½ÇÉ«Ó³Éä£¨`UserRoleMapping`£©ºÍ½ÇÉ«-È¨ÏŞÓ³Éä£¨`RolePermissionMapping`£©£¬Ö§³Ö´øÓĞĞ§ÆÚ£¨TTL£©µÄ½ÇÉ«ÊÚÓè¡¢ÊÖ¶¯³·Ïú£¬ÒÔ¼°ÈíÉ¾³ı×´Ì¬µÄÎ¬»¤¡£
+3. **ÓÃ»§ÓĞĞ§È¨ÏŞ×éºÏ²éÑ¯**£ºÍ¨¹ı `getUserEffectivePermissions()` ¾ÛºÏÓÃ»§ËùÓĞ»îÔ¾½ÇÉ«µÄÈ¨ÏŞ²¢¼¯£¬ÎªÉÏ²ãÌá¹©Í³Ò»µÄÈ¨ÏŞĞ£ÑéÄÜÁ¦¡£
+4. **È¨ÏŞ×Ô¶¯»ØÊÕÓë½©Ê¬ÕËºÅ¼ì²â**£ºÍ¨¹ı `PermissionRevocationService` ¶¨Ê±É¨Ãè¹ıÆÚ½ÇÉ«Ó³Éä£¨`effectiveEnd`£©ºÍ³¤ÆÚÎ´»îÔ¾ÓÃ»§£¨`lastActiveAt`£©£¬×Ô¶¯»ØÊÕÈ¨ÏŞ²¢¸üĞÂÉó¼ÆÈÕÖ¾£¬½â¾ö"È¨ÏŞÅòÕÍ"Óë"½©Ê¬ÕËºÅ"·çÏÕ¡£
 
-### 1.2 åˆ†å±‚å®šä½
+### 1.2 ·Ö²ã¶¨Î»
 
-| ç»´åº¦ | è¯´æ˜ |
+| Î¬¶È | ËµÃ÷ |
 |------|------|
-| æ‰€å±å±‚ | `src/services/`ï¼ˆæœåŠ¡å±‚ï¼‰ |
-| ä¾èµ–æ–¹å‘ | åªèƒ½ä¾èµ– `core/`ã€`data/`ã€`lib/`ï¼ˆç™½åå•ï¼‰ |
-| ç¦æ­¢äº‹é¡¹ | ç¦æ­¢ç›´å†™ IndexedDBï¼ˆé¡»ç» `DataBridge.forward()`ï¼‰ |
-| è¢«ä¾èµ–æ–¹ | `store/`ï¼ˆçŠ¶æ€å±‚ï¼‰ã€`pages/`ï¼ˆé¡µé¢å±‚ï¼‰å¯æ¶ˆè´¹æœ¬æœåŠ¡è¾“å‡º |
+| ËùÊô²ã | `src/services/`£¨·şÎñ²ã£© |
+| ÒÀÀµ·½Ïò | Ö»ÄÜÒÀÀµ `core/`¡¢`data/`¡¢`lib/`£¨°×Ãûµ¥£© |
+| ½ûÖ¹ÊÂÏî | ½ûÖ¹Ö±Ğ´ IndexedDB£¨Ğë¾­ `DataBridge.forward()`£© |
+| ±»ÒÀÀµ·½ | `store/`£¨×´Ì¬²ã£©¡¢`pages/`£¨Ò³Ãæ²ã£©¿ÉÏû·Ñ±¾·şÎñÊä³ö |
 
-### 1.3 ä¸ç›¸é‚»å­åŸŸçš„å…³ç³»
+### 1.3 ÓëÏàÁÚ×ÓÓòµÄ¹ØÏµ
 
-| ç›¸é‚»å­åŸŸ | å…³ç³» | æ•°æ®æµ |
+| ÏàÁÚ×ÓÓò | ¹ØÏµ | Êı¾İÁ÷ |
 |----------|------|--------|
-| `core/databridge` | æ ¸å¿ƒåŸºç¡€è®¾æ–½ï¼šæ•°æ®å†™å…¥ä¸æŸ¥è¯¢è·¯ç”± | `rbac` â†’ `DataBridge.forward()` â†’ `IndexedDB` |
-| `core/envelope` | æ ¸å¿ƒåŸºç¡€è®¾æ–½ï¼šä¿¡å°å°è£… | `rbac` â†’ `EnvelopeFactory.create()` â†’ `DataBridge` |
-| `config/dbConfig` | é…ç½®å±‚ï¼šä¿¡å°åŠ¨ä½œã€ç›®æ ‡ã€Store åæ³¨å†Œ | `config` â†’ `rbac`ï¼ˆåªè¯»å¼•ç”¨å¸¸é‡ï¼‰ |
-| `config/rbacThresholds` | é…ç½®å±‚ï¼šRBAC é˜ˆå€¼ä¸å†…ç½®è§’è‰²å¸¸é‡ | `config` â†’ `rbac`ï¼ˆåªè¯»å¼•ç”¨é…ç½®ï¼‰ |
-| `types/modules/rbac.types` | ç±»å‹å±‚ï¼šé›¶ä¾èµ–ç±»å‹å®šä¹‰ | `types` â†’ `rbac`ï¼ˆç±»å‹å¯¼å…¥ï¼‰ |
-| `store/` | ä¸‹æ¸¸ï¼šæ¶ˆè´¹äº‹ä»¶ä¸æ•°æ® | `rbac` â†’ `eventBus` â†’ `store/`ï¼ˆçŠ¶æ€åŒæ­¥ï¼‰ |
-| `pages/` | ä¸‹æ¸¸ï¼šUI è°ƒç”¨æœåŠ¡æ¥å£ | `pages/` â†’ `rbac`ï¼ˆç» Store æˆ–ç›´æ¥è°ƒç”¨ï¼‰ |
+| `core/databridge` | ºËĞÄ»ù´¡ÉèÊ©£ºÊı¾İĞ´ÈëÓë²éÑ¯Â·ÓÉ | `rbac` ¡ú `DataBridge.forward()` ¡ú `IndexedDB` |
+| `core/envelope` | ºËĞÄ»ù´¡ÉèÊ©£ºĞÅ·â·â×° | `rbac` ¡ú `EnvelopeFactory.create()` ¡ú `DataBridge` |
+| `config/dbConfig` | ÅäÖÃ²ã£ºĞÅ·â¶¯×÷¡¢Ä¿±ê¡¢Store Ãû×¢²á | `config` ¡ú `rbac`£¨Ö»¶ÁÒıÓÃ³£Á¿£© |
+| `config/rbacThresholds` | ÅäÖÃ²ã£ºRBAC ãĞÖµÓëÄÚÖÃ½ÇÉ«³£Á¿ | `config` ¡ú `rbac`£¨Ö»¶ÁÒıÓÃÅäÖÃ£© |
+| `types/modules/rbac.types` | ÀàĞÍ²ã£ºÁãÒÀÀµÀàĞÍ¶¨Òå | `types` ¡ú `rbac`£¨ÀàĞÍµ¼Èë£© |
+| `store/` | ÏÂÓÎ£ºÏû·ÑÊÂ¼şÓëÊı¾İ | `rbac` ¡ú `eventBus` ¡ú `store/`£¨×´Ì¬Í¬²½£© |
+| `pages/` | ÏÂÓÎ£ºUI µ÷ÓÃ·şÎñ½Ó¿Ú | `pages/` ¡ú `rbac`£¨¾­ Store »òÖ±½Óµ÷ÓÃ£© |
 
 ---
 
-## 2. å…¬å…±æ¥å£
+## 2. ¹«¹²½Ó¿Ú
 
-### 2.1 ç±»å‹å®šä¹‰ï¼ˆTypeScript Interfaceï¼‰
+### 2.1 ÀàĞÍ¶¨Òå£¨TypeScript Interface£©
 
 ```typescript
-// æ–‡ä»¶ï¼šsrc/types/modules/rbac.types.ts
+// ÎÄ¼ş£ºsrc/types/modules/rbac.types.ts
 
 export type AuditAction = 'grant' | 'revoke' | 'modify' | 'archive' | 'delete'
 export type RevocationReason = 'expired' | 'inactive_user' | 'policy_violation' | 'manual_revoke'
@@ -175,7 +179,7 @@ export interface ZombieAccountDetectionResult {
 ```
 
 ```typescript
-// æ–‡ä»¶ï¼šsrc/services/rbac/rbacManagementService.tsï¼ˆè¾“å…¥/è¾“å‡º DTOï¼‰
+// ÎÄ¼ş£ºsrc/services/rbac/rbacManagementService.ts£¨ÊäÈë/Êä³ö DTO£©
 
 export interface CreateUserInput {
   username: string
@@ -211,7 +215,7 @@ export interface GrantUserRoleInput {
   roleId: string
   grantedBy: string
   grantReason: string
-  ttlMs?: number // é»˜è®¤ 90 å¤©
+  ttlMs?: number // Ä¬ÈÏ 90 Ìì
 }
 
 export interface GrantRolePermissionInput {
@@ -234,151 +238,151 @@ export interface QueryResult<T> {
 }
 ```
 
-### 2.2 ä¸»å…¥å£å‡½æ•°
+### 2.2 Ö÷Èë¿Úº¯Êı
 
-#### `rbacManagementService.ts` å¯¼å‡ºå‡½æ•°
+#### `rbacManagementService.ts` µ¼³öº¯Êı
 
-| å‡½æ•° | ç­¾å | èŒè´£ | é”™è¯¯å¤„ç† |
+| º¯Êı | Ç©Ãû | Ö°Ôğ | ´íÎó´¦Àí |
 |------|------|------|----------|
-| `createUser()` | `(input: CreateUserInput, operatorId: string, parentTraceId?: string) => Promise<CrudResult>` | åˆ›å»ºç”¨æˆ·å¹¶è®°å½•å®¡è®¡æ—¥å¿— | `DataBridge.forward()` é”™è¯¯åŒ…è£… + logger.error + è¿”å› CrudResult |
-| `updateUser()` | `(input: UpdateUserInput, operatorId: string) => Promise<CrudResult>` | æ›´æ–°ç”¨æˆ·å­—æ®µå¹¶è®°å½•å®¡è®¡æ—¥å¿— | åŒä¸Š |
-| `deleteUser()` | `(userId: string, operatorId: string) => Promise<CrudResult>` | è½¯åˆ é™¤ç”¨æˆ·ï¼ˆstatus='deleted'ï¼‰å¹¶è®°å½•å®¡è®¡ | åŒä¸Š |
-| `getUser()` | `(userId: string) => Promise<QueryResult<UserEntity \| null>>` | æŒ‰ ID æŸ¥è¯¢å•ä¸ªç”¨æˆ· | `dataBridge.query()` catch åŒ…è£… |
-| `listUsers()` | `(onlyActive = true) => Promise<QueryResult<UserEntity[]>>` | æŒ‰çŠ¶æ€ç´¢å¼•æŸ¥è¯¢ç”¨æˆ·åˆ—è¡¨ | åŒä¸Š |
-| `createRole()` | `(input: CreateRoleInput, operatorId: string) => Promise<CrudResult>` | åˆ›å»ºè§’è‰² | åŒä¸Š |
-| `updateRole()` | `(role: RoleEntity) => Promise<CrudResult>` | æ›´æ–°è§’è‰² | åŒä¸Š |
-| `deleteRole()` | `(roleId: string) => Promise<CrudResult>` | è½¯åˆ é™¤è§’è‰² | åŒä¸Š |
-| `getRole()` | `(roleId: string) => Promise<QueryResult<RoleEntity \| null>>` | æŒ‰ ID æŸ¥è¯¢è§’è‰² | åŒä¸Š |
-| `listRoles()` | `(onlyActive = true) => Promise<QueryResult<RoleEntity[]>>` | æŒ‰çŠ¶æ€ç´¢å¼•æŸ¥è¯¢è§’è‰²åˆ—è¡¨ | åŒä¸Š |
-| `createPermission()` | `(input: CreatePermissionInput) => Promise<CrudResult>` | åˆ›å»ºæƒé™ | åŒä¸Š |
-| `updatePermission()` | `(perm: PermissionEntity) => Promise<CrudResult>` | æ›´æ–°æƒé™ | åŒä¸Š |
-| `listPermissions()` | `(onlyActive = true) => Promise<QueryResult<PermissionEntity[]>>` | æŒ‰çŠ¶æ€ç´¢å¼•æŸ¥è¯¢æƒé™åˆ—è¡¨ | åŒä¸Š |
-| `grantUserRole()` | `(input: GrantUserRoleInput, parentTraceId?: string) => Promise<CrudResult>` | æˆäºˆç”¨æˆ·è§’è‰²ï¼ˆå«æœ‰æ•ˆæœŸ TTLï¼‰ | åŒä¸Š + å®¡è®¡æ—¥å¿— |
-| `revokeUserRole()` | `(mappingId: string, operatorId: string, reason: string) => Promise<CrudResult>` | æ’¤é”€ç”¨æˆ·è§’è‰²æ˜ å°„ | åŒä¸Š + å®¡è®¡æ—¥å¿— |
-| `getUserRoles()` | `(userId: string) => Promise<QueryResult<UserRoleMapping[]>>` | æŸ¥è¯¢ç”¨æˆ·çš„æ‰€æœ‰è§’è‰²æ˜ å°„ | åŒä¸Š |
-| `grantRolePermission()` | `(input: GrantRolePermissionInput) => Promise<CrudResult>` | æˆäºˆè§’è‰²æƒé™ | åŒä¸Š + å®¡è®¡æ—¥å¿— |
-| `revokeRolePermission()` | `(mappingId: string, operatorId: string) => Promise<CrudResult>` | æ’¤é”€è§’è‰²æƒé™æ˜ å°„ | åŒä¸Š |
-| `getRolePermissions()` | `(roleId: string) => Promise<QueryResult<RolePermissionMapping[]>>` | æŸ¥è¯¢è§’è‰²çš„æ‰€æœ‰æƒé™æ˜ å°„ | åŒä¸Š |
-| `getUserEffectivePermissions()` | `(userId: string) => Promise<QueryResult<PermissionEntity[]>>` | èšåˆç”¨æˆ·æ‰€æœ‰æ´»è·ƒè§’è‰²çš„æƒé™å¹¶é›† | åŒä¸Š |
+| `createUser()` | `(input: CreateUserInput, operatorId: string, parentTraceId?: string) => Promise<CrudResult>` | ´´½¨ÓÃ»§²¢¼ÇÂ¼Éó¼ÆÈÕÖ¾ | `DataBridge.forward()` ´íÎó°ü×° + logger.error + ·µ»Ø CrudResult |
+| `updateUser()` | `(input: UpdateUserInput, operatorId: string) => Promise<CrudResult>` | ¸üĞÂÓÃ»§×Ö¶Î²¢¼ÇÂ¼Éó¼ÆÈÕÖ¾ | Í¬ÉÏ |
+| `deleteUser()` | `(userId: string, operatorId: string) => Promise<CrudResult>` | ÈíÉ¾³ıÓÃ»§£¨status='deleted'£©²¢¼ÇÂ¼Éó¼Æ | Í¬ÉÏ |
+| `getUser()` | `(userId: string) => Promise<QueryResult<UserEntity \| null>>` | °´ ID ²éÑ¯µ¥¸öÓÃ»§ | `dataBridge.query()` catch °ü×° |
+| `listUsers()` | `(onlyActive = true) => Promise<QueryResult<UserEntity[]>>` | °´×´Ì¬Ë÷Òı²éÑ¯ÓÃ»§ÁĞ±í | Í¬ÉÏ |
+| `createRole()` | `(input: CreateRoleInput, operatorId: string) => Promise<CrudResult>` | ´´½¨½ÇÉ« | Í¬ÉÏ |
+| `updateRole()` | `(role: RoleEntity) => Promise<CrudResult>` | ¸üĞÂ½ÇÉ« | Í¬ÉÏ |
+| `deleteRole()` | `(roleId: string) => Promise<CrudResult>` | ÈíÉ¾³ı½ÇÉ« | Í¬ÉÏ |
+| `getRole()` | `(roleId: string) => Promise<QueryResult<RoleEntity \| null>>` | °´ ID ²éÑ¯½ÇÉ« | Í¬ÉÏ |
+| `listRoles()` | `(onlyActive = true) => Promise<QueryResult<RoleEntity[]>>` | °´×´Ì¬Ë÷Òı²éÑ¯½ÇÉ«ÁĞ±í | Í¬ÉÏ |
+| `createPermission()` | `(input: CreatePermissionInput) => Promise<CrudResult>` | ´´½¨È¨ÏŞ | Í¬ÉÏ |
+| `updatePermission()` | `(perm: PermissionEntity) => Promise<CrudResult>` | ¸üĞÂÈ¨ÏŞ | Í¬ÉÏ |
+| `listPermissions()` | `(onlyActive = true) => Promise<QueryResult<PermissionEntity[]>>` | °´×´Ì¬Ë÷Òı²éÑ¯È¨ÏŞÁĞ±í | Í¬ÉÏ |
+| `grantUserRole()` | `(input: GrantUserRoleInput, parentTraceId?: string) => Promise<CrudResult>` | ÊÚÓèÓÃ»§½ÇÉ«£¨º¬ÓĞĞ§ÆÚ TTL£© | Í¬ÉÏ + Éó¼ÆÈÕÖ¾ |
+| `revokeUserRole()` | `(mappingId: string, operatorId: string, reason: string) => Promise<CrudResult>` | ³·ÏúÓÃ»§½ÇÉ«Ó³Éä | Í¬ÉÏ + Éó¼ÆÈÕÖ¾ |
+| `getUserRoles()` | `(userId: string) => Promise<QueryResult<UserRoleMapping[]>>` | ²éÑ¯ÓÃ»§µÄËùÓĞ½ÇÉ«Ó³Éä | Í¬ÉÏ |
+| `grantRolePermission()` | `(input: GrantRolePermissionInput) => Promise<CrudResult>` | ÊÚÓè½ÇÉ«È¨ÏŞ | Í¬ÉÏ + Éó¼ÆÈÕÖ¾ |
+| `revokeRolePermission()` | `(mappingId: string, operatorId: string) => Promise<CrudResult>` | ³·Ïú½ÇÉ«È¨ÏŞÓ³Éä | Í¬ÉÏ |
+| `getRolePermissions()` | `(roleId: string) => Promise<QueryResult<RolePermissionMapping[]>>` | ²éÑ¯½ÇÉ«µÄËùÓĞÈ¨ÏŞÓ³Éä | Í¬ÉÏ |
+| `getUserEffectivePermissions()` | `(userId: string) => Promise<QueryResult<PermissionEntity[]>>` | ¾ÛºÏÓÃ»§ËùÓĞ»îÔ¾½ÇÉ«µÄÈ¨ÏŞ²¢¼¯ | Í¬ÉÏ |
 
-#### `permissionRevocationService.ts` å¯¼å‡º
+#### `permissionRevocationService.ts` µ¼³ö
 
-| ç¬¦å· | ç±»å‹ | è¯´æ˜ |
+| ·ûºÅ | ÀàĞÍ | ËµÃ÷ |
 |------|------|------|
-| `PermissionRevocationService` | Class | æƒé™è‡ªåŠ¨å›æ”¶æœåŠ¡ç±»ï¼Œå«å®šæ—¶ä»»åŠ¡ç®¡ç† |
-| `permissionRevocationService` | Instance | å…¨å±€å•ä¾‹å®ä¾‹ |
+| `PermissionRevocationService` | Class | È¨ÏŞ×Ô¶¯»ØÊÕ·şÎñÀà£¬º¬¶¨Ê±ÈÎÎñ¹ÜÀí |
+| `permissionRevocationService` | Instance | È«¾Öµ¥ÀıÊµÀı |
 
-| æ–¹æ³• | ç­¾å | èŒè´£ |
+| ·½·¨ | Ç©Ãû | Ö°Ôğ |
 |------|------|------|
-| `start()` | `(expiryIntervalMs?, zombieIntervalMs?) => void` | å¯åŠ¨è¿‡æœŸå›æ”¶ä¸åƒµå°¸æ£€æµ‹åŒå®šæ—¶ä»»åŠ¡ |
-| `stop()` | `() => void` | åœæ­¢æ‰€æœ‰å®šæ—¶ä»»åŠ¡ |
-| `runOnce()` | `() => Promise<RevocationTaskResult>` | æ‰‹åŠ¨è§¦å‘ä¸€æ¬¡å®Œæ•´å›æ”¶ï¼ˆè¿‡æœŸ + åƒµå°¸ï¼‰ |
-| `getLastExpiryResult()` | `() => RevocationTaskResult \| null` | è·å–æœ€è¿‘ä¸€æ¬¡è¿‡æœŸå›æ”¶ç»“æœ |
-| `getLastZombieResult()` | `() => ZombieAccountDetectionResult \| null` | è·å–æœ€è¿‘ä¸€æ¬¡åƒµå°¸æ£€æµ‹ç»“æœ |
-| `isRunning()` | `() => boolean` | æ£€æŸ¥å®šæ—¶ä»»åŠ¡æ˜¯å¦è¿è¡Œä¸­ |
+| `start()` | `(expiryIntervalMs?, zombieIntervalMs?) => void` | Æô¶¯¹ıÆÚ»ØÊÕÓë½©Ê¬¼ì²âË«¶¨Ê±ÈÎÎñ |
+| `stop()` | `() => void` | Í£Ö¹ËùÓĞ¶¨Ê±ÈÎÎñ |
+| `runOnce()` | `() => Promise<RevocationTaskResult>` | ÊÖ¶¯´¥·¢Ò»´ÎÍêÕû»ØÊÕ£¨¹ıÆÚ + ½©Ê¬£© |
+| `getLastExpiryResult()` | `() => RevocationTaskResult \| null` | »ñÈ¡×î½üÒ»´Î¹ıÆÚ»ØÊÕ½á¹û |
+| `getLastZombieResult()` | `() => ZombieAccountDetectionResult \| null` | »ñÈ¡×î½üÒ»´Î½©Ê¬¼ì²â½á¹û |
+| `isRunning()` | `() => boolean` | ¼ì²é¶¨Ê±ÈÎÎñÊÇ·ñÔËĞĞÖĞ |
 
-### 2.3 äº‹ä»¶æ¥å£
+### 2.3 ÊÂ¼ş½Ó¿Ú
 
-| äº‹ä»¶å | å‘å¸ƒæ–¹ | è®¢é˜…æ–¹ | è¯´æ˜ |
+| ÊÂ¼şÃû | ·¢²¼·½ | ¶©ÔÄ·½ | ËµÃ÷ |
 |--------|--------|--------|------|
-| `rbac:user-created` | `rbacManagementService` | `store/rbacStore` / ç›‘å¬æ–¹ | ç”¨æˆ·åˆ›å»ºæˆåŠŸ |
-| `rbac:user-updated` | `rbacManagementService` | `store/rbacStore` / ç›‘å¬æ–¹ | ç”¨æˆ·æ›´æ–°æˆåŠŸ |
-| `rbac:user-deleted` | `rbacManagementService` | `store/rbacStore` / ç›‘å¬æ–¹ | ç”¨æˆ·è½¯åˆ é™¤æˆåŠŸ |
-| `rbac:role-granted` | `rbacManagementService` | `store/rbacStore` / ç›‘å¬æ–¹ | è§’è‰²æˆäºˆæˆåŠŸ |
-| `rbac:role-revoked` | `rbacManagementService` | `store/rbacStore` / ç›‘å¬æ–¹ | è§’è‰²æ’¤é”€æˆåŠŸ |
-| `rbac:permission-revoked` | `PermissionRevocationService` | `store/rbacStore` / ç›‘å¬æ–¹ | æƒé™è‡ªåŠ¨å›æ”¶å®Œæˆ |
-| `rbac:user-status-changed` | `PermissionRevocationService` | `store/rbacStore` / ç›‘å¬æ–¹ | ç”¨æˆ·çŠ¶æ€å˜æ›´ï¼ˆå¦‚åƒµå°¸æ ‡è®°ä¸º inactiveï¼‰ |
+| `rbac:user-created` | `rbacManagementService` | `store/rbacStore` / ¼àÌı·½ | ÓÃ»§´´½¨³É¹¦ |
+| `rbac:user-updated` | `rbacManagementService` | `store/rbacStore` / ¼àÌı·½ | ÓÃ»§¸üĞÂ³É¹¦ |
+| `rbac:user-deleted` | `rbacManagementService` | `store/rbacStore` / ¼àÌı·½ | ÓÃ»§ÈíÉ¾³ı³É¹¦ |
+| `rbac:role-granted` | `rbacManagementService` | `store/rbacStore` / ¼àÌı·½ | ½ÇÉ«ÊÚÓè³É¹¦ |
+| `rbac:role-revoked` | `rbacManagementService` | `store/rbacStore` / ¼àÌı·½ | ½ÇÉ«³·Ïú³É¹¦ |
+| `rbac:permission-revoked` | `PermissionRevocationService` | `store/rbacStore` / ¼àÌı·½ | È¨ÏŞ×Ô¶¯»ØÊÕÍê³É |
+| `rbac:user-status-changed` | `PermissionRevocationService` | `store/rbacStore` / ¼àÌı·½ | ÓÃ»§×´Ì¬±ä¸ü£¨Èç½©Ê¬±ê¼ÇÎª inactive£© |
 
 ---
 
-## 3. æ•°æ®æµ
+## 3. Êı¾İÁ÷
 
-### 3.1 ç®¡ç†æ“ä½œæ•°æ®æµ
+### 3.1 ¹ÜÀí²Ù×÷Êı¾İÁ÷
 
 ```
-[UI è°ƒç”¨ / ç³»ç»Ÿè°ƒç”¨]
-    â†“
+[UI µ÷ÓÃ / ÏµÍ³µ÷ÓÃ]
+    ¡ı
 rbacManagementService.{createUser|updateUser|grantUserRole|...}()
-    â†“ (DataBridge.forward())
-EnvelopeFactory.create() â†’ dataBridge.forward() â†’ routeToDB()
-    â†“
+    ¡ı (DataBridge.forward())
+EnvelopeFactory.create() ¡ú dataBridge.forward() ¡ú routeToDB()
+    ¡ı
 IndexedDB (rbacUsers / rbacRoles / rbacPermissions / rbacUserRoles / rbacRolePermissions)
-    â†“ (EventBus)
-rbacStore (Zustand + withBroadcast) â† è®¢é˜… rbac:* äº‹ä»¶
-    â†“
-components/pages (ä»…ç» Store å–æ•°)
+    ¡ı (EventBus)
+rbacStore (Zustand + withBroadcast) ¡û ¶©ÔÄ rbac:* ÊÂ¼ş
+    ¡ı
+components/pages (½ö¾­ Store È¡Êı)
 ```
 
-### 3.2 è‡ªåŠ¨å›æ”¶æ•°æ®æµ
+### 3.2 ×Ô¶¯»ØÊÕÊı¾İÁ÷
 
 ```
-[å®šæ—¶å™¨è§¦å‘ / runOnce() æ‰‹åŠ¨è§¦å‘]
-    â†“
+[¶¨Ê±Æ÷´¥·¢ / runOnce() ÊÖ¶¯´¥·¢]
+    ¡ı
 PermissionRevocationService
-    â”œâ”€â”€ runExpiryRevocation() â”€â”€â†’ æŸ¥è¯¢ rbacUserRoles (active) â†’ è¿‡æ»¤ expired â†’ æ‰¹é‡æ’¤é”€ â†’ å†™å®¡è®¡æ—¥å¿—
-    â””â”€â”€ runZombieDetection() â”€â”€â†’ æŸ¥è¯¢ rbacUsers (active) â†’ è¿‡æ»¤ inactive â†’ æ’¤é”€è§’è‰² â†’ æ›´æ–°ç”¨æˆ·çŠ¶æ€ â†’ å†™å®¡è®¡æ—¥å¿—
-    â†“
-dataBridge.forward() â†’ IndexedDB (rbacUserRoles / rbacUsers / rbacPermissionAuditLogs)
-    â†“ (EventBus)
+    ©À©¤©¤ runExpiryRevocation() ©¤©¤¡ú ²éÑ¯ rbacUserRoles (active) ¡ú ¹ıÂË expired ¡ú ÅúÁ¿³·Ïú ¡ú Ğ´Éó¼ÆÈÕÖ¾
+    ©¸©¤©¤ runZombieDetection() ©¤©¤¡ú ²éÑ¯ rbacUsers (active) ¡ú ¹ıÂË inactive ¡ú ³·Ïú½ÇÉ« ¡ú ¸üĞÂÓÃ»§×´Ì¬ ¡ú Ğ´Éó¼ÆÈÕÖ¾
+    ¡ı
+dataBridge.forward() ¡ú IndexedDB (rbacUserRoles / rbacUsers / rbacPermissionAuditLogs)
+    ¡ı (EventBus)
 rbac:permission-revoked / rbac:user-status-changed
-    â†“
-rbacStore â†’ UI ç»„ä»¶
+    ¡ı
+rbacStore ¡ú UI ×é¼ş
 ```
 
 ---
 
-## 4. é…ç½®ä¸ä¾èµ–
+## 4. ÅäÖÃÓëÒÀÀµ
 
-### 4.1 ä¾èµ–ç™½åå•ï¼ˆlib/ï¼‰
+### 4.1 ÒÀÀµ°×Ãûµ¥£¨lib/£©
 
-| ä¾èµ– | è·¯å¾„ | ç”¨é€” |
+| ÒÀÀµ | Â·¾¶ | ÓÃÍ¾ |
 |------|------|------|
-| logger | `@/lib/logger` | æ—¥å¿—è¾“å‡ºï¼ˆinfo/debug/error/warnï¼‰ |
-| eventBus | `@/lib/eventBus` | äº‹ä»¶å‘å¸ƒ/è®¢é˜…ï¼ˆrbac:* äº‹ä»¶ï¼‰ |
+| logger | `@/lib/logger` | ÈÕÖ¾Êä³ö£¨info/debug/error/warn£© |
+| eventBus | `@/lib/eventBus` | ÊÂ¼ş·¢²¼/¶©ÔÄ£¨rbac:* ÊÂ¼ş£© |
 
-### 4.2 æ ¸å¿ƒä¸é…ç½®ä¾èµ–
+### 4.2 ºËĞÄÓëÅäÖÃÒÀÀµ
 
-| ä¾èµ– | è·¯å¾„ | ç”¨é€” |
+| ÒÀÀµ | Â·¾¶ | ÓÃÍ¾ |
 |------|------|------|
-| dataBridge | `@/core/databridge` | æ•°æ®è·¯ç”±è½¬å‘ï¼ˆç¦æ­¢ç›´å†™ DBï¼‰ |
-| EnvelopeFactory | `@/core/envelope` | ä¿¡å°å°è£…ï¼ˆsource/target/action/traceIdï¼‰ |
-| ENVELOPE_ACTION / ENVELOPE_TARGET / STORE_NAME | `@/config/dbConfig` | ä¿¡å°åŠ¨ä½œæšä¸¾ã€Store åç§°å¸¸é‡ |
-| DEFAULT_RBAC_THRESHOLDS / getRbacThresholds | `@/config/rbacThresholds` | æƒé™å›æ”¶é˜ˆå€¼ã€å†…ç½®è§’è‰²å¸¸é‡ |
+| dataBridge | `@/core/databridge` | Êı¾İÂ·ÓÉ×ª·¢£¨½ûÖ¹Ö±Ğ´ DB£© |
+| EnvelopeFactory | `@/core/envelope` | ĞÅ·â·â×°£¨source/target/action/traceId£© |
+| ENVELOPE_ACTION / ENVELOPE_TARGET / STORE_NAME | `@/config/dbConfig` | ĞÅ·â¶¯×÷Ã¶¾Ù¡¢Store Ãû³Æ³£Á¿ |
+| DEFAULT_RBAC_THRESHOLDS / getRbacThresholds | `@/config/rbacThresholds` | È¨ÏŞ»ØÊÕãĞÖµ¡¢ÄÚÖÃ½ÇÉ«³£Á¿ |
 
-### 4.3 é…ç½®é¡¹
+### 4.3 ÅäÖÃÏî
 
-| é…ç½®å | é»˜è®¤å€¼ | è¯´æ˜ | æ¥æº |
+| ÅäÖÃÃû | Ä¬ÈÏÖµ | ËµÃ÷ | À´Ô´ |
 |--------|--------|------|------|
-| `defaultPermissionTtlMs` | 90 å¤© | è§’è‰²é»˜è®¤æœ‰æ•ˆæœŸ | `src/config/rbacThresholds.ts` |
-| `maxPermissionTtlMs` | 365 å¤© | è§’è‰²æœ€å¤§æœ‰æ•ˆæœŸç¡¬ä¸Šé™ | `src/config/rbacThresholds.ts` |
-| `inactivityThresholdDays` | 30 å¤© | åƒµå°¸è´¦å·æ£€æµ‹é˜ˆå€¼ï¼ˆæœªæ´»è·ƒå¤©æ•°ï¼‰ | `src/config/rbacThresholds.ts` |
-| `zombieDetectionIntervalMs` | 24 å°æ—¶ | åƒµå°¸æ£€æµ‹å®šæ—¶ä»»åŠ¡é—´éš” | `src/config/rbacThresholds.ts` |
-| `expiryRevocationIntervalMs` | 1 å°æ—¶ | è¿‡æœŸæƒé™å›æ”¶å®šæ—¶ä»»åŠ¡é—´éš” | `src/config/rbacThresholds.ts` |
-| `revocationBatchSize` | 100 | å•æ¬¡å›æ”¶ä»»åŠ¡æœ€å¤§å¤„ç†è®°å½•æ•° | `src/config/rbacThresholds.ts` |
-| `maxRoleInheritanceDepth` | 3 | è§’è‰²ç»§æ‰¿æœ€å¤§æ·±åº¦ï¼ˆé˜²æƒé™è”“å»¶ï¼‰ | `src/config/rbacThresholds.ts` |
+| `defaultPermissionTtlMs` | 90 Ìì | ½ÇÉ«Ä¬ÈÏÓĞĞ§ÆÚ | `src/config/rbacThresholds.ts` |
+| `maxPermissionTtlMs` | 365 Ìì | ½ÇÉ«×î´óÓĞĞ§ÆÚÓ²ÉÏÏŞ | `src/config/rbacThresholds.ts` |
+| `inactivityThresholdDays` | 30 Ìì | ½©Ê¬ÕËºÅ¼ì²âãĞÖµ£¨Î´»îÔ¾ÌìÊı£© | `src/config/rbacThresholds.ts` |
+| `zombieDetectionIntervalMs` | 24 Ğ¡Ê± | ½©Ê¬¼ì²â¶¨Ê±ÈÎÎñ¼ä¸ô | `src/config/rbacThresholds.ts` |
+| `expiryRevocationIntervalMs` | 1 Ğ¡Ê± | ¹ıÆÚÈ¨ÏŞ»ØÊÕ¶¨Ê±ÈÎÎñ¼ä¸ô | `src/config/rbacThresholds.ts` |
+| `revocationBatchSize` | 100 | µ¥´Î»ØÊÕÈÎÎñ×î´ó´¦Àí¼ÇÂ¼Êı | `src/config/rbacThresholds.ts` |
+| `maxRoleInheritanceDepth` | 3 | ½ÇÉ«¼Ì³Ğ×î´óÉî¶È£¨·ÀÈ¨ÏŞÂûÑÓ£© | `src/config/rbacThresholds.ts` |
 
 ---
 
-## 5. æµ‹è¯•ç­–ç•¥
+## 5. ²âÊÔ²ßÂÔ
 
-| æµ‹è¯•ç±»å‹ | æ–‡ä»¶ | è¯´æ˜ |
+| ²âÊÔÀàĞÍ | ÎÄ¼ş | ËµÃ÷ |
 |----------|------|------|
-| å•å…ƒæµ‹è¯• | `src/services/rbac/` | **å¾…å®ç°**ï¼šçº¯å‡½æ•°ï¼ˆå¦‚ `_filterExpiredMappings`ã€`_filterZombieUsers`ï¼‰çš„ç‹¬ç«‹æµ‹è¯• |
-| é›†æˆæµ‹è¯• | `tests/services/rbac.integration.test.ts` | **å¾…å®ç°**ï¼šDataBridge äº¤äº’ã€Store è”åŠ¨ã€äº‹ä»¶å‘å¸ƒéªŒè¯ |
-| Mock ç­–ç•¥ | `__mocks__/rbacService.ts` | **å¾…å®ç°**ï¼šéš”ç¦» `dataBridge` ä¸ `eventBus` å¤–éƒ¨ä¾èµ– |
-| å®šæ—¶ä»»åŠ¡æµ‹è¯• | `src/services/rbac/permissionRevocationService.test.ts` | **å¾…å®ç°**ï¼š`start/stop/runOnce` ç”Ÿå‘½å‘¨æœŸã€æ‰¹é‡å›æ”¶é€»è¾‘ã€è¾¹ç•Œæ¡ä»¶ï¼ˆç©ºæ•°æ®ã€è¶…æ—¶ï¼‰ |
+| µ¥Ôª²âÊÔ | `src/services/rbac/` | **´ıÊµÏÖ**£º´¿º¯Êı£¨Èç `_filterExpiredMappings`¡¢`_filterZombieUsers`£©µÄ¶ÀÁ¢²âÊÔ |
+| ¼¯³É²âÊÔ | `tests/services/rbac.integration.test.ts` | **´ıÊµÏÖ**£ºDataBridge ½»»¥¡¢Store Áª¶¯¡¢ÊÂ¼ş·¢²¼ÑéÖ¤ |
+| Mock ²ßÂÔ | `__mocks__/rbacService.ts` | **´ıÊµÏÖ**£º¸ôÀë `dataBridge` Óë `eventBus` Íâ²¿ÒÀÀµ |
+| ¶¨Ê±ÈÎÎñ²âÊÔ | `src/services/rbac/permissionRevocationService.ts` | **´ıÊµÏÖ**£º`start/stop/runOnce` ÉúÃüÖÜÆÚ¡¢ÅúÁ¿»ØÊÕÂß¼­¡¢±ß½çÌõ¼ş£¨¿ÕÊı¾İ¡¢³¬Ê±£© |
 
 ---
 
-## 6. å˜æ›´æ—¥å¿—
+## 6. ±ä¸üÈÕÖ¾
 
-| æ—¥æœŸ | ç‰ˆæœ¬ | å˜æ›´ | ä½œè€… |
+| ÈÕÆÚ | °æ±¾ | ±ä¸ü | ×÷Õß |
 |------|------|------|------|
-| 2026-07-12 | v0.1.0 | å¥‘çº¦åˆç¨¿ | æ¶æ„ç»„ |
+| 2026-07-12 | v0.1.0 | ÆõÔ¼³õ¸å | ¼Ü¹¹×é |
 
 ---
 
-> **TODO[å­åŸŸ owner]**ï¼š
-> 1. è¡¥å…… `src/services/rbac/` ç›®å½•åŠå•å…ƒæµ‹è¯•ï¼ˆè¦†ç›– CRUD ä¸å›æ”¶é€»è¾‘ï¼‰ã€‚
-> 2. ç¡®è®¤ `rbacStore` å·²è®¢é˜…æ‰€æœ‰ `rbac:*` äº‹ä»¶å¹¶æ­£ç¡®åŒæ­¥çŠ¶æ€ã€‚
-> 3. å®Œæˆåè¿è¡Œ `tsc --noEmit` + `audit:layers` éªŒè¯ã€‚
+> **TODO[×ÓÓò owner]**£º
+> 1. ²¹³ä `src/services/rbac/` Ä¿Â¼¼°µ¥Ôª²âÊÔ£¨¸²¸Ç CRUD Óë»ØÊÕÂß¼­£©¡£
+> 2. È·ÈÏ `rbacStore` ÒÑ¶©ÔÄËùÓĞ `rbac:*` ÊÂ¼ş²¢ÕıÈ·Í¬²½×´Ì¬¡£
+> 3. Íê³ÉºóÔËĞĞ `tsc --noEmit` + `audit:layers` ÑéÖ¤¡£

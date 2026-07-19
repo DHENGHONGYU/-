@@ -21,7 +21,7 @@ import { PageContainer, PageHeader } from '@/components/templates'
 
 const logger = getLogger()
 
-/** 是否使用模拟数据（开发环境） */
+/** DEV 环境使用 Mock 交易数据（生产构建时 tree-shaken 移除）。真实数据通过 MCP trading tools 接入。 */
 const USE_MOCK_DATA = import.meta.env.DEV
 
 /**

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FinSightV9 股票页面功能测试报告</title>
+<style>
+body{font-family:-apple-system,'Segoe UI',Roboto,'PingFang SC','Microsoft YaHei',sans-serif;margin:0;background:#f5f6f8;color:#1f2933;}
+.wrap{max-width:1100px;margin:0 auto;padding:24px;}
+.banner{background:linear-gradient(135deg,#0f766e,#0e7490);color:#fff;padding:20px 24px;border-radius:12px;}
+.banner h1{margin:0 0 8px;font-size:20px;}
+.banner p{margin:0;font-size:13px;line-height:1.6;opacity:.95;}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:18px 0;}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:14px;}
+.card .n{font-size:24px;font-weight:700;color:#0f766e;}
+.card .l{font-size:12px;color:#6b7280;margin-top:2px;}
+section{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:16px 18px;margin:14px 0;}
+section h2{margin:0 0 12px;font-size:16px;color:#111827;border-left:4px solid #0f766e;padding-left:10px;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th,td{border:1px solid #e5e7eb;padding:7px 9px;text-align:left;}
+th{background:#f0fdfa;color:#0f766e;}
+.lvl{padding:1px 7px;border-radius:6px;font-size:11px;font-weight:700;color:#fff;}
+.lvl-P0{background:#dc2626;} .lvl-P1{background:#ea580c;} .lvl-P2{background:#ca8a04;} .lvl-P3{background:#0891b2;}
+.pass{color:#059669;font-weight:700;} .fail{color:#dc2626;font-weight:700;}
+ul{margin:6px 0;padding-left:20px;font-size:12px;color:#374151;}
+code{background:#f1f5f9;padding:1px 5px;border-radius:4px;}
+</style></head>
+<body><div class="wrap">
+<div class="banner"><h1>FinSightV9 股票页面功能测试报告</h1><p>TL;DR：对 50 只 A 股完成页面功能测试，断言通过 23/25，失败 2；批量导入 50 只全量成功并正确渲染；搜索覆盖率仅 12.0%（6/50 命中 mock 库，其余为已知覆盖缺口）；50 只详情页均成功渲染（平均导航 36ms）；环境限制：实时行情断开导致价格多为占位/未找到，已用结构软断言替代硬失败。</p></div>
+<div class="cards">
+<div class="card"><div class="n">50</div><div class="l">股票数</div></div>
+<div class="card"><div class="n">23/25</div><div class="l">断言通过 / 总数</div></div>
+<div class="card"><div class="n">2</div><div class="l">失败数</div></div>
+<div class="card"><div class="n">12.0%</div><div class="l">搜索覆盖率</div></div>
+<div class="card"><div class="n">1738</div><div class="l">导入耗时(ms)</div></div>
+<div class="card"><div class="n">36</div><div class="l">详情页均耗(ms)</div></div>
+<div class="card"><div class="n">20</div><div class="l">console error</div></div>
+</div>
+
+<section><h2>各维度通过率</h2><table><thead><tr><th>维度</th><th>通过/总数</th><th>通过率</th></tr></thead><tbody><tr><td>setup</td><td>1/1</td><td>100%</td></tr><tr><td>A</td><td>8/8</td><td>100%</td></tr><tr><td>B</td><td>2/2</td><td>100%</td></tr><tr><td>C</td><td>5/5</td><td>100%</td></tr><tr><td>D</td><td>7/9</td><td>78%</td></tr></tbody></table></section>
+
+<section><h2>问题清单（P0/P1/P2/P3 · 已验证/推断）</h2>
+<table><thead><tr><th>等级</th><th>维度</th><th>问题</th><th>说明</th><th>状态</th></tr></thead><tbody><tr><td><span class="lvl lvl-P3">P3</span></td><td>D</td><td>响应式 375px · 输入舱无横向溢出</td><td>横向溢出=61px；关键元素可见=true；溢出元素(样例): DIV.ml-auto flex items-center gap-3 text-xs text-muted w=50 right=436 | BUTTON.flex h-8 items-center gap-1.5 rounded-md px-2 tran w=30 right=416 | svg.[object SVGAnimatedString] w=14 right=408 | rect.[object SVGAnimatedString] w=12 right=406</td><td>已验证</td></tr><tr><td><span class="lvl lvl-P3">P3</span></td><td>D</td><td>响应式 375px · 详情页无横向溢出</td><td>横向溢出=61px；关键元素可见=true；溢出元素(样例): DIV.ml-auto flex items-center gap-3 text-xs text-muted w=50 right=436 | BUTTON.flex h-8 items-center gap-1.5 rounded-md px-2 tran w=30 right=416 | svg.[object SVGAnimatedString] w=14 right=408 | rect.[object SVGAnimatedString] w=12 right=406</td><td>已验证</td></tr><tr><td><span class="lvl lvl-P2">P2</span></td><td>B</td><td>搜索覆盖率缺口（mock 库仅 15 只）</td><td>44/50 只 CSV 股票不在 MOCK_STOCK_LIBRARY，StockSearch 检索不到，属于已知覆盖缺口，需接入真实 AKShare 搜索接口。</td><td>已验证</td></tr><tr><td><span class="lvl lvl-P3">P3</span></td><td>C</td><td>实时行情连接器断开（环境限制）</td><td>本环境所有行情数据源已断开，详情页价格/K线多为&quot;—&quot;或回退&quot;未找到&quot;。数值类断言已降级为结构软断言，未硬性失败。</td><td>已验证</td></tr></tbody></table></section>
+
+<section><h2>搜索覆盖率统计</h2>
+<p>命中(mock库重叠)=<b>6</b>；未命中(覆盖缺口)=<b>44</b>；覆盖率=<b>12.0%</b>。</p>
+<p>命中：<code>600276.SH, 300059.SZ, 600036.SH, 601318.SH, 600900.SH, 600519.SH</code></p>
+<p>未命中(节选)：<code>601138.SH, 601689.SH, 603986.SH, 688036.SH, 601127.SH, 002747.SZ, 300661.SZ, 000801.SZ, 300760.SZ, 688041.SH, 600760.SH, 001696.SZ …（共 44 只）</code></p>
+</section>
+
+<section><h2>性能计时表（详情页逐只导航）</h2>
+<table><thead><tr><th>symbol</th><th>导航耗时(ms)</th><th>渲染</th><th>找到标的</th><th>无异常</th></tr></thead><tbody><tr><td>601138.SH</td><td>345</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>601689.SH</td><td>35</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>603986.SH</td><td>35</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>688036.SH</td><td>42</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>601127.SH</td><td>40</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>600276.SH</td><td>34</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>002747.SZ</td><td>32</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>300661.SZ</td><td>32</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>000801.SZ</td><td>32</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>300760.SZ</td><td>30</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>688041.SH</td><td>35</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>600760.SH</td><td>35</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>300059.SZ</td><td>30</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>001696.SZ</td><td>33</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>688256.SH</td><td>35</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>300274.SZ</td><td>38</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>300124.SZ</td><td>37</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>688111.SH</td><td>31</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>603501.SH</td><td>27</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>688981.SH</td><td>28</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>300308.SZ</td><td>26</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>600893.SH</td><td>22</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>300014.SZ</td><td>28</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>002179.SZ</td><td>26</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>002456.SZ</td><td>24</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>300033.SZ</td><td>25</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>002085.SZ</td><td>24</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>002241.SZ</td><td>26</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>002472.SZ</td><td>27</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>002850.SZ</td><td>21</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>600036.SH</td><td>23</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>601318.SH</td><td>21</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>000002.SZ</td><td>40</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>600900.SH</td><td>33</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>601985.SH</td><td>35</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>601288.SH</td><td>41</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>600028.SH</td><td>40</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>600887.SH</td><td>41</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>600519.SH</td><td>33</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>601919.SH</td><td>31</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>601988.SH</td><td>33</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>600025.SH</td><td>28</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>600048.SH</td><td>25</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>603288.SH</td><td>30</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>601398.SH</td><td>22</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>002142.SZ</td><td>19</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>601088.SH</td><td>20</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>601225.SH</td><td>15</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>000651.SZ</td><td>16</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td>601899.SH</td><td>28</td><td>✓</td><td>✓</td><td>✓</td></tr></tbody></table>
+<p>导入耗时≈<b>1738ms</b>；详情页平均≈<b>36ms</b>；最大≈<b>345ms</b>。</p>
+</section>
+
+<section><h2>控制台错误 / 未捕获异常汇总</h2>
+<p>console.error 共 <b>20</b> 条；pageerror 共 <b>0</b> 条。（环境限制：实时行情连接器断开，预期存在数据拉取类错误）</p>
+<ul><li>[2026-07-16T14:55:33.310Z] Failed to load resource: net::ERR_CONNECTION_REFUSED</li><li>[2026-07-16T14:55:33.311Z] [ERROR] [PERF] data-fetch:request 失败 {durationMs: 2351.4, error: 数据采集服务未启动或无法连接，请检查 Python 服务是否运行, path: /health, maxRetries: 0}</li><li>[2026-07-16T14:55:33.326Z] Failed to load resource: net::ERR_CONNECTION_REFUSED</li><li>[2026-07-16T14:55:33.326Z] [ERROR] [PERF] data-fetch:request 失败 {durationMs: 2365.4, error: 数据采集服务未启动或无法连接，请检查 Python 服务是否运行, path: /health, maxRetries: 0}</li><li>[2026-07-16T14:55:33.574Z] Failed to load resource: net::ERR_CONNECTION_REFUSED</li><li>[2026-07-16T14:55:33.574Z] [ERROR] [PERF] data-fetch:request 失败 {durationMs: 236.2, error: 数据采集服务未启动或无法连接，请检查 Python 服务是否运行, path: /health, maxRetries: 0}</li><li>[2026-07-16T14:55:35.690Z] Failed to load resource: net::ERR_CONNECTION_REFUSED</li><li>[2026-07-16T14:55:35.691Z] [ERROR] [PERF] data-fetch:request 失败 {durationMs: 2104.9, error: 数据采集服务未启动或无法连接，请检查 Python 服务是否运行, path: /health, maxRetries: 0}</li><li>[2026-07-16T14:55:35.957Z] Failed to load resource: net::ERR_CONNECTION_REFUSED</li><li>[2026-07-16T14:55:35.957Z] [ERROR] [PERF] data-fetch:request 失败 {durationMs: 2369.2, error: 数据采集服务未启动或无法连接，请检查 Python 服务是否运行, path: /health, maxRetries: 0}</li><li>[2026-07-16T14:55:35.957Z] Failed to load resource: net::ERR_CONNECTION_REFUSED</li><li>[2026-07-16T14:55:35.958Z] [ERROR] [PERF] data-fetch:request 失败 {durationMs: 2283.2, error: 数据采集服务未启动或无法连接，请检查 Python 服务是否运行, path: /health, maxRetries: 0}</li><li>[2026-07-16T14:56:09.640Z] Failed to load resource: net::ERR_CONNECTION_REFUSED</li><li>[2026-07-16T14:56:09.641Z] [ERROR] [PERF] data-fetch:request 失败 {durationMs: 2335.5, error: 数据采集服务未启动或无法连接，请检查 Python 服务是否运行, path: /health, maxRetries: 0}</li><li>[2026-07-16T14:56:09.655Z] Failed to load resource: net::ERR_CONNECTION_REFUSED</li><li>[2026-07-16T14:56:09.655Z] [ERROR] [PERF] data-fetch:request 失败 {durationMs: 2347.1, error: 数据采集服务未启动或无法连接，请检查 Python 服务是否运行, path: /health, maxRetries: 0}</li><li>[2026-07-16T14:56:09.921Z] Failed to load resource: net::ERR_CONNECTION_REFUSED</li><li>[2026-07-16T14:56:09.922Z] [ERROR] [PERF] data-fetch:request 失败 {durationMs: 805.2, error: 数据采集服务未启动或无法连接，请检查 Python 服务是否运行, path: /health, maxRetries: 0}</li><li>[2026-07-16T14:56:11.471Z] Failed to load resource: net::ERR_CONNECTION_REFUSED</li><li>[2026-07-16T14:56:11.471Z] [ERROR] [PERF] data-fetch:request 失败 {durationMs: 1902.4, error: 数据采集服务未启动或无法连接，请检查 Python 服务是否运行, path: /health, maxRetries: 0}</li></ul>
+</section>
+
+<section><h2>改进建议</h2><ul><li>接入真实 AKShare 搜索接口替代 15 只 MOCK_STOCK_LIBRARY，消除搜索覆盖缺口（当前仅 12%）。</li><li>为批量导入的 50 只提供独立的&quot;意向候选池列表/看板&quot;视图，便于逐只核对 symbol+name（当前仅 InputDashboard 显示聚合计数）。</li><li>研究池看板(PoolBoard)与意向候选池应为不同 store，建议在 UI 明确区分，避免用户误以为导入后应在研究池看板看到。</li><li>实时行情连接器断开时应给出明确的降级提示（Mock/未连接），而非静默显示&quot;—&quot;，提升可诊断性。</li><li>为详情页增加加载态骨架与超时兜底，避免&quot;未找到&quot;与真实缺失混淆。</li></ul></section>
+
+</div></body></html>

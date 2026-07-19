@@ -14,6 +14,8 @@ export interface KlineBar {
   close: number
   volume: number
   amount: number
+  /** 换手率（%），可选，仅部分数据源提供 */
+  turnoverRate?: number
 }
 
 /** 日线行情（含历史） */

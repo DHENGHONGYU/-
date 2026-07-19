@@ -46,7 +46,7 @@ function searchRealFiles(target: string, type: Reference['type']): string[] {
       found.push(...globSync(normalize(resolve(root, '**', baseNoExt + '*')), { nodir: false, absolute: true }).filter(p => /\.(ts|tsx|md|js|jsx)$/.test(p)))
     }
   }
-  const rootCandidates = ['AGENTS.md', 'README.md', 'CHANGELOG.md', 'LICENSE', 'CONTRIBUTING.md']
+  const rootCandidates = ['AGENTS.md', 'docs/explanation/README.md', 'CHANGELOG.md', 'LICENSE', 'CONTRIBUTING.md']
   if (rootCandidates.includes(name)) {
     const rp = resolve(PROJECT_ROOT, name)
     if (existsSync(rp)) found.push(rp)

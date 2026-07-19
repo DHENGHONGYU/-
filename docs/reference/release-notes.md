@@ -1,148 +1,155 @@
 ---
 title: release-notes
-code_version: 2.0.0
-
+type: reference
+domain: project
+phase: deployment
 tier: important
----
-
----
-title: docs/reference/release-notes.md
+status: active
+maintainer: V9 Architecture Team
+summary: "release-notes - reference documentation (project)"
+tags: [project, release, reference, changelog, deployment]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: important
+doc_id: V9-DOC-PROJ-104
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
-# å‘å¸ƒè¯´æ˜
+# ·¢²¼ËµÃ÷
 
-> æœ¬æ–‡ä»¶é¢å‘ç”¨æˆ·ä¸å¼€å‘è€…ï¼Œæ±‡æ€»æ¯ä¸ªå·²å‘å¸ƒç‰ˆæœ¬çš„æ ¸å¿ƒå˜æ›´ã€è´¨é‡æŒ‡æ ‡ä¸å‡çº§é¡»çŸ¥ã€‚
+> ±¾ÎÄ¼şÃæÏòÓÃ»§Óë¿ª·¢Õß£¬»ã×ÜÃ¿¸öÒÑ·¢²¼°æ±¾µÄºËĞÄ±ä¸ü¡¢ÖÊÁ¿Ö¸±êÓëÉı¼¶ĞëÖª¡£
 
 ---
 
-## v0.9.5 â€” P0 è´¨é‡æ”¹è¿›ï¼šL2 çŠ¶æ€å±‚è¡¥é½ + åŠ¨æ€è´¨é‡åˆ†æå¼•æ“
+## v0.9.5 ¡ª P0 ÖÊÁ¿¸Ä½ø£ºL2 ×´Ì¬²ã²¹Æë + ¶¯Ì¬ÖÊÁ¿·ÖÎöÒıÇæ
 
-**å‘å¸ƒæ—¥æœŸ**ï¼š2026-06-29
+**·¢²¼ÈÕÆÚ**£º2026-06-29
 
-### æ¦‚è¦
+### ¸ÅÒª
 
-æœ¬æ¬¡ç‰ˆæœ¬èšç„¦ **P0 è´¨é‡æ”¹è¿›**ï¼Œæ ¸å¿ƒç›®æ ‡æ˜¯å°† L2 çŠ¶æ€å±‚ï¼ˆStoreï¼‰è¦†ç›–ç‡ä» 52.6% æå‡è‡³ 90.0%ï¼Œå¹¶é€šè¿‡è‡ªç ”åŠ¨æ€è´¨é‡åˆ†æå¼•æ“å®ç°ä»£ç åº“è´¨é‡çš„é‡åŒ–è¿½è¸ªã€‚åŒæ­¥è¡¥é½ 4 ä¸ªåˆ†æèˆ±é¡µé¢çš„ Store è¿ç§»ï¼Œæ–°å¢ 66 ä¸ªå•å…ƒæµ‹è¯•ï¼Œç»¼åˆè¯„åˆ†ä» D çº§æå‡è‡³ B çº§ã€‚
+±¾´Î°æ±¾¾Û½¹ **P0 ÖÊÁ¿¸Ä½ø**£¬ºËĞÄÄ¿±êÊÇ½« L2 ×´Ì¬²ã£¨Store£©¸²¸ÇÂÊ´Ó 52.6% ÌáÉıÖÁ 90.0%£¬²¢Í¨¹ı×ÔÑĞ¶¯Ì¬ÖÊÁ¿·ÖÎöÒıÇæÊµÏÖ´úÂë¿âÖÊÁ¿µÄÁ¿»¯×·×Ù¡£Í¬²½²¹Æë 4 ¸ö·ÖÎö²ÕÒ³ÃæµÄ Store Ç¨ÒÆ£¬ĞÂÔö 66 ¸öµ¥Ôª²âÊÔ£¬×ÛºÏÆÀ·Ö´Ó D ¼¶ÌáÉıÖÁ B ¼¶¡£
 
-### æ ¸å¿ƒå˜æ›´
+### ºËĞÄ±ä¸ü
 
-#### 1. P0-1 Store è¡¥é½ï¼ˆ4 ä¸ª Store è¿ç§»ï¼‰
+#### 1. P0-1 Store ²¹Æë£¨4 ¸ö Store Ç¨ÒÆ£©
 
-| é¡µé¢ | Store | æµ‹è¯•ç”¨ä¾‹ | è¯´æ˜ |
+| Ò³Ãæ | Store | ²âÊÔÓÃÀı | ËµÃ÷ |
 |------|-------|----------|------|
-| `analysis/NewsPage.tsx` | `newsStore.ts`ï¼ˆæ‰©å±•ï¼‰ | â€” | æ–°å¢ V9 track + `loadWithFilter` action |
-| `ScoreDocPage.tsx` | `scoreDocStore.ts`ï¼ˆæ–°å»ºï¼‰ | 9 ä¸ª | å®Œæ•´çŠ¶æ€ç®¡ç† + æµ‹è¯• |
-| `IntelligentScorePage.tsx` | `intelligentScoreStore.ts`ï¼ˆæ–°å»ºï¼‰ | 28 ä¸ª | Hook é‡æ„ä¸ºçº¯å¸¸é‡å¯¼å‡º |
-| `IndustryScorePage.tsx` | `industryScoreStore.ts`ï¼ˆæ–°å»ºï¼‰ | 29 ä¸ª | Hook é‡æ„ï¼ŒçŠ¶æ€ä¸‹æ²‰ |
+| `analysis/NewsPage.tsx` | `newsStore.ts`£¨À©Õ¹£© | ¡ª | ĞÂÔö V9 track + `loadWithFilter` action |
+| `ScoreDocPage.tsx` | `scoreDocStore.ts`£¨ĞÂ½¨£© | 9 ¸ö | ÍêÕû×´Ì¬¹ÜÀí + ²âÊÔ |
+| `IntelligentScorePage.tsx` | `intelligentScoreStore.ts`£¨ĞÂ½¨£© | 28 ¸ö | Hook ÖØ¹¹Îª´¿³£Á¿µ¼³ö |
+| `IndustryScorePage.tsx` | `industryScoreStore.ts`£¨ĞÂ½¨£© | 29 ¸ö | Hook ÖØ¹¹£¬×´Ì¬ÏÂ³Á |
 
-- æ–°å¢æµ‹è¯•æ€»è®¡ **66 ä¸ª**ï¼Œé¡¹ç›®ç´¯è®¡ **345 ä¸ª**
-- æ‰€æœ‰ Store éµå¾ªç»Ÿä¸€æ¨¡å¼ï¼šç±»å‹å®šä¹‰ â†’ Store åˆ›å»º â†’ Action å®ç° â†’ å•å…ƒæµ‹è¯•è¦†ç›–
+- ĞÂÔö²âÊÔ×Ü¼Æ **66 ¸ö**£¬ÏîÄ¿ÀÛ¼Æ **345 ¸ö**
+- ËùÓĞ Store ×ñÑ­Í³Ò»Ä£Ê½£ºÀàĞÍ¶¨Òå ¡ú Store ´´½¨ ¡ú Action ÊµÏÖ ¡ú µ¥Ôª²âÊÔ¸²¸Ç
 
-#### 2. åŠ¨æ€è´¨é‡åˆ†æå¼•æ“
+#### 2. ¶¯Ì¬ÖÊÁ¿·ÖÎöÒıÇæ
 
-- æ–°å»º `scripts/v9_dynamic_quality_engine.py`ï¼Œä»ä»£ç åº“å®æ—¶æ‰«æé‡‡é›†è´¨é‡æŒ‡æ ‡
-- ç”Ÿæˆ 7 å¼ åŠ¨æ€åˆ†æå›¾è¡¨ï¼ˆè¦†ç›–ç‡è¶‹åŠ¿ã€æ¨¡å—çƒ­åŠ›å›¾ã€æµ‹è¯•åˆ†å¸ƒã€ç¡¬ç¼–ç æ‰«æã€æ­»ä»£ç åˆ†å¸ƒã€Store è¿ç§»è¿›åº¦ã€ç»¼åˆè¯„åˆ†é›·è¾¾ï¼‰
-- å¯¼å‡ºç»“æ„åŒ– JSON æŠ¥å‘Šï¼Œæ”¯æŒ CI é›†æˆä¸å†å²è¶‹åŠ¿å¯¹æ¯”
+- ĞÂ½¨ `scripts/quality/quality-config.ts`£¬´Ó´úÂë¿âÊµÊ±É¨Ãè²É¼¯ÖÊÁ¿Ö¸±ê
+- Éú³É 7 ÕÅ¶¯Ì¬·ÖÎöÍ¼±í£¨¸²¸ÇÂÊÇ÷ÊÆ¡¢Ä£¿éÈÈÁ¦Í¼¡¢²âÊÔ·Ö²¼¡¢Ó²±àÂëÉ¨Ãè¡¢ËÀ´úÂë·Ö²¼¡¢Store Ç¨ÒÆ½ø¶È¡¢×ÛºÏÆÀ·ÖÀ×´ï£©
+- µ¼³ö½á¹¹»¯ JSON ±¨¸æ£¬Ö§³Ö CI ¼¯³ÉÓëÀúÊ·Ç÷ÊÆ¶Ô±È
 
-### è´¨é‡æŒ‡æ ‡
+### ÖÊÁ¿Ö¸±ê
 
-| æŒ‡æ ‡ | æ”¹è¿›å‰ | æ”¹è¿›å | å˜åŒ– |
+| Ö¸±ê | ¸Ä½øÇ° | ¸Ä½øºó | ±ä»¯ |
 |------|--------|--------|------|
-| Store è¦†ç›–ç‡ | 52.6% | 90.0% | +37.4pp |
-| ç»¼åˆè¯„åˆ† | 55.1 (D) | 81.4 (B) | +26.3 |
-| æµ‹è¯•ç”¨ä¾‹æ€»æ•° | 279 | 345 | +66 |
-| TypeScript ç¼–è¯‘ | 0 errors | 0 errors | â€” |
+| Store ¸²¸ÇÂÊ | 52.6% | 90.0% | +37.4pp |
+| ×ÛºÏÆÀ·Ö | 55.1 (D) | 81.4 (B) | +26.3 |
+| ²âÊÔÓÃÀı×ÜÊı | 279 | 345 | +66 |
+| TypeScript ±àÒë | 0 errors | 0 errors | ¡ª |
 
-### æ–°å¢æ–‡ä»¶
+### ĞÂÔöÎÄ¼ş
 
-| æ–‡ä»¶ | è¯´æ˜ |
+| ÎÄ¼ş | ËµÃ÷ |
 |------|------|
-| `src/store/scoreDocStore.ts` | ScoreDocPage ä¸“ç”¨ Store |
-| `src/store/intelligentScoreStore.ts` | IntelligentScorePage ä¸“ç”¨ Store |
-| `src/store/industryScoreStore.ts` | IndustryScorePage ä¸“ç”¨ Store |
-| `tests/stores/scoreDocStore.test.ts` | scoreDocStore å•å…ƒæµ‹è¯•ï¼ˆ9 ç”¨ä¾‹ï¼‰ |
-| `tests/stores/intelligentScoreStore.test.ts` | intelligentScoreStore å•å…ƒæµ‹è¯•ï¼ˆ28 ç”¨ä¾‹ï¼‰ |
-| `tests/stores/industryScoreStore.test.ts` | industryScoreStore å•å…ƒæµ‹è¯•ï¼ˆ29 ç”¨ä¾‹ï¼‰ |
-| `scripts/v9_dynamic_quality_engine.py` | åŠ¨æ€è´¨é‡åˆ†æå¼•æ“ |
-| `scripts/reports/chart_dynamic_01.png` ~ `chart_dynamic_07.png` | 7 å¼ åŠ¨æ€åˆ†æå›¾è¡¨ |
-| `scripts/reports/dynamic_analysis_report.json` | ç»“æ„åŒ–è´¨é‡å¿«ç…§ |
+| `src/store/scoreDocStore.ts` | ScoreDocPage ×¨ÓÃ Store |
+| `src/store/intelligentScoreStore.ts` | IntelligentScorePage ×¨ÓÃ Store |
+| `src/store/industryScoreStore.ts` | IndustryScorePage ×¨ÓÃ Store |
+| `tests/stores/scoreDocStore.test.ts` | scoreDocStore µ¥Ôª²âÊÔ£¨9 ÓÃÀı£© |
+| `tests/stores/intelligentScoreStore.test.ts` | intelligentScoreStore µ¥Ôª²âÊÔ£¨28 ÓÃÀı£© |
+| `tests/stores/industryScoreStore.test.ts` | industryScoreStore µ¥Ôª²âÊÔ£¨29 ÓÃÀı£© |
+| `scripts/quality/quality-config.ts` | ¶¯Ì¬ÖÊÁ¿·ÖÎöÒıÇæ |
+| `scripts/reports/chart_dynamic_01.png` ~ `chart_dynamic_07.png` | 7 ÕÅ¶¯Ì¬·ÖÎöÍ¼±í |
+| `scripts/reports/dynamic_analysis_report.json` | ½á¹¹»¯ÖÊÁ¿¿ìÕÕ |
 
-### ä¿®æ”¹æ–‡ä»¶
+### ĞŞ¸ÄÎÄ¼ş
 
-| æ–‡ä»¶ | å˜æ›´è¯´æ˜ |
+| ÎÄ¼ş | ±ä¸üËµÃ÷ |
 |------|----------|
-| `src/store/analysisNewsStore.ts` | æ–°å¢ V9 track ä¸ `loadWithFilter` action |
-| `src/pages/analysis/NewsPage.tsx` | è¿ç§»è‡³æ‰©å±• newsStore |
-| `src/pages/analysis/ScoreDocPage.tsx` | è¿ç§»è‡³ scoreDocStore |
-| `src/pages/analysis/IntelligentScorePage.tsx` | è¿ç§»è‡³ intelligentScoreStore |
-| `src/pages/analysis/IndustryScorePage.tsx` | è¿ç§»è‡³ industryScoreStore |
-| `src/hooks/cabin/useIntelligentScorePage.ts` | é‡æ„ä¸ºçº¯å¸¸é‡å¯¼å‡º |
-| `src/hooks/cabin/useIndustryScorePage.ts` | é‡æ„ä¸ºçº¯å¸¸é‡å¯¼å‡º |
+| `src/store/analysisNewsStore.ts` | ĞÂÔö V9 track Óë `loadWithFilter` action |
+| `src/pages/analysis/NewsPage.tsx` | Ç¨ÒÆÖÁÀ©Õ¹ newsStore |
+| `src/pages/analysis/ScoreDocPage.tsx` | Ç¨ÒÆÖÁ scoreDocStore |
+| `src/pages/analysis/IntelligentScorePage.tsx` | Ç¨ÒÆÖÁ intelligentScoreStore |
+| `src/pages/analysis/IndustryScorePage.tsx` | Ç¨ÒÆÖÁ industryScoreStore |
+| `src/hooks/cabin/useIntelligentScorePage.ts` | ÖØ¹¹Îª´¿³£Á¿µ¼³ö |
+| `src/hooks/cabin/useIndustryScorePage.ts` | ÖØ¹¹Îª´¿³£Á¿µ¼³ö |
 
-### å‡çº§é¡»çŸ¥
+### Éı¼¶ĞëÖª
 
-- æ— ç ´åæ€§å˜æ›´ã€‚æ‰€æœ‰é¡µé¢è¡Œä¸ºä¿æŒä¸å˜ï¼Œä»…çŠ¶æ€ç®¡ç†å±‚ä»é¡µé¢å†…å±€éƒ¨çŠ¶æ€ä¸‹æ²‰è‡³å…¨å±€ Storeã€‚
-- `useIntelligentScorePage` ä¸ `useIndustryScorePage` ä¸¤ä¸ª Hook çš„å…¬å…± API ä¸å˜ï¼Œå†…éƒ¨å®ç°æ”¹ä¸ºä» Store è¯»å–ã€‚
+- ÎŞÆÆ»µĞÔ±ä¸ü¡£ËùÓĞÒ³ÃæĞĞÎª±£³Ö²»±ä£¬½ö×´Ì¬¹ÜÀí²ã´ÓÒ³ÃæÄÚ¾Ö²¿×´Ì¬ÏÂ³ÁÖÁÈ«¾Ö Store¡£
+- `useIntelligentScorePage` Óë `useIndustryScorePage` Á½¸ö Hook µÄ¹«¹² API ²»±ä£¬ÄÚ²¿ÊµÏÖ¸ÄÎª´Ó Store ¶ÁÈ¡¡£
 
 ---
 
-## v0.9.6 â€” æ–‡æ¡£ä½“ç³»æ¸…ç†
+## v0.9.6 ¡ª ÎÄµµÌåÏµÇåÀí
 
-**å‘å¸ƒæ—¥æœŸ**ï¼š2026-06-29
+**·¢²¼ÈÕÆÚ**£º2026-06-29
 
-### æ¦‚è¦
+### ¸ÅÒª
 
-æœ¬æ¬¡ç‰ˆæœ¬èšç„¦**æ–‡æ¡£ä½“ç³»æ•´ç†ä¸å¥åº·åº¦ç»´æŠ¤**ï¼Œåˆ é™¤çº¦ 212 ä¸ªæ–‡ä»¶/ç›®å½•ï¼Œä¿®å¤ 44 å¤„æ–‡æ¡£æ–­è£‚é“¾æ¥ï¼Œæ›´æ–° .gitignore è§„åˆ™ã€‚æ¸…ç†èŒƒå›´æ¶µç›–ä¸´æ—¶è°ƒè¯•äº§ç‰©ã€å·²å®Œæˆçš„è¿ç§»æ–‡æ¡£ã€å·²åºŸå¼ƒçš„æ—§æ–‡æ¡£ã€è¿‡ç¨‹æ€§å®¡è®¡æŠ¥å‘Šï¼Œä¿ç•™æ ¸å¿ƒæ¶æ„è§„èŒƒä¸å®æ–½æ–‡æ¡£ã€‚
+±¾´Î°æ±¾¾Û½¹**ÎÄµµÌåÏµÕûÀíÓë½¡¿µ¶ÈÎ¬»¤**£¬É¾³ıÔ¼ 212 ¸öÎÄ¼ş/Ä¿Â¼£¬ĞŞ¸´ 44 ´¦ÎÄµµ¶ÏÁÑÁ´½Ó£¬¸üĞÂ .gitignore ¹æÔò¡£ÇåÀí·¶Î§º­¸ÇÁÙÊ±µ÷ÊÔ²úÎï¡¢ÒÑÍê³ÉµÄÇ¨ÒÆÎÄµµ¡¢ÒÑ·ÏÆúµÄ¾ÉÎÄµµ¡¢¹ı³ÌĞÔÉó¼Æ±¨¸æ£¬±£ÁôºËĞÄ¼Ü¹¹¹æ·¶ÓëÊµÊ©ÎÄµµ¡£
 
-### æ¸…ç†å†…å®¹
+### ÇåÀíÄÚÈİ
 
-#### 1. ä¸´æ—¶äº§ç‰©æ¸…ç†
+#### 1. ÁÙÊ±²úÎïÇåÀí
 
-| ç±»å‹ | åˆ é™¤å†…å®¹ | æ–‡ä»¶æ•° |
+| ÀàĞÍ | É¾³ıÄÚÈİ | ÎÄ¼şÊı |
 |------|---------|--------|
-| Playwright MCP è°ƒè¯•å¿«ç…§ | `.playwright-mcp/` | 49 |
-| è¿ç§»éªŒè¯æˆªå›¾ | `screenshots/` | 16 |
-| å®¡è®¡äº§ç‰© | `component-audit-data.json`ã€`component-audit-report.txt` | 2 |
-| Python ç¼“å­˜ | `docs/audit/assets/__pycache__/` | â€” |
-| Python è™šæ‹Ÿç¯å¢ƒ | `.venv/` | ~90 |
+| Playwright MCP µ÷ÊÔ¿ìÕÕ | `.playwright-mcp/` | 49 |
+| Ç¨ÒÆÑéÖ¤½ØÍ¼ | `screenshots/` | 16 |
+| Éó¼Æ²úÎï | `component-audit-data.json`¡¢`component-audit-report.txt` | 2 |
+| Python »º´æ | `docs/audit/assets/__pycache__/` | ¡ª |
+| Python ĞéÄâ»·¾³ | `.venv/` | ~90 |
 
-#### 2. è¿ç§»è¿‡ç¨‹æ–‡æ¡£æ¸…ç†
+#### 2. Ç¨ÒÆ¹ı³ÌÎÄµµÇåÀí
 
-| æ–‡ä»¶ | ç†ç”± |
+| ÎÄ¼ş | ÀíÓÉ |
 |------|------|
-| `NewsPage-PoCéªŒè¯æŠ¥å‘Š.md` | ä¸€æ¬¡æ€§ PoC éªŒè¯ï¼Œå·²å®Œæˆ |
-| `NewsPage-è¿ç§»éªŒæ”¶ç¡®è®¤ä¹¦.md` | ä¸€æ¬¡æ€§éªŒæ”¶ç¡®è®¤ï¼Œå·²å®Œæˆ |
-| `V6-V9è¿ç§»æœ€ä½³å®è·µæŒ‡å—.md` | è¿ç§»å·²å®Œæˆï¼Œå‚è€ƒä»·å€¼ä½ |
-| `migration-fix-report.md` | ä¸€æ¬¡æ€§ä¿®å¤æŠ¥å‘Š |
-| `scripts/migration-auto-fix.cjs` | ä¸€æ¬¡æ€§è¿ç§»è„šæœ¬ |
+| `../explanation/v6pro-to-v9-migration-analysis.md` | Ò»´ÎĞÔ PoC ÑéÖ¤£¬ÒÑÍê³É |
+| `../explanation/v6pro-to-v9-migration-analysis.md` | Ò»´ÎĞÔÑéÊÕÈ·ÈÏ£¬ÒÑÍê³É |
+| `./v6-to-v9-migration-spec.md` | Ç¨ÒÆÒÑÍê³É£¬²Î¿¼¼ÛÖµµÍ |
+| `../00-meta/development-log.md` | Ò»´ÎĞÔĞŞ¸´±¨¸æ |
+| `scripts/fix/apply-multi-match-fixes.ts` | Ò»´ÎĞÔÇ¨ÒÆ½Å±¾ |
 
-#### 3. å·²åºŸå¼ƒæ–‡æ¡£æ¸…ç†
+#### 3. ÒÑ·ÏÆúÎÄµµÇåÀí
 
-- `docs/implementation/deprecated/` ç›®å½• 9 ä¸ªæ–‡ä»¶å…¨éƒ¨åˆ é™¤ï¼ˆå·²è¢«æ›¿ä»£æ–‡æ¡£è¦†ç›–ï¼‰
-- 13 ä»½æ—§ç‰ˆ/é‡å¤æ–‡æ¡£ï¼ˆæ•°æ®å­—å…¸ v1.0ã€æ•°æ®èµ„äº§æ¸…å• v1.0.1ã€æ¶æ„ç¼ºé™·æ¸…å•ã€docs/release-notes.md ç­‰ï¼‰
+- `docs/implementation/deprecated/` Ä¿Â¼ 9 ¸öÎÄ¼şÈ«²¿É¾³ı£¨ÒÑ±»Ìæ´úÎÄµµ¸²¸Ç£©
+- 13 ·İ¾É°æ/ÖØ¸´ÎÄµµ£¨Êı¾İ×Öµä v1.0¡¢Êı¾İ×Ê²úÇåµ¥ v1.0.1¡¢¼Ü¹¹È±ÏİÇåµ¥¡¢docs/release-notes.md µÈ£©
 
-#### 4. è¿‡ç¨‹æ€§å®¡è®¡æŠ¥å‘Šæ¸…ç†
+#### 4. ¹ı³ÌĞÔÉó¼Æ±¨¸æÇåÀí
 
-- 27 ä»½è¿‡ç¨‹æ€§æ–‡æ¡£ï¼ˆreport-1~12 å¿«ç…§ã€completeness-profile-batch1~5ã€fix plan ç­‰ï¼‰
+- 27 ·İ¹ı³ÌĞÔÎÄµµ£¨report-1~12 ¿ìÕÕ¡¢completeness-profile-batch1~5¡¢fix plan µÈ£©
 
-### æ–‡æ¡£é“¾æ¥ä¿®å¤
+### ÎÄµµÁ´½ÓĞŞ¸´
 
-ä¿®å¤ 11 ä¸ªæ–‡æ¡£ä¸­çš„ 44 å¤„æ–­è£‚ Markdown é“¾æ¥ï¼Œç¡®ä¿æ–‡æ¡£äº¤å‰å¼•ç”¨å®Œæ•´æ€§ã€‚
+ĞŞ¸´ 11 ¸öÎÄµµÖĞµÄ 44 ´¦¶ÏÁÑ Markdown Á´½Ó£¬È·±£ÎÄµµ½»²æÒıÓÃÍêÕûĞÔ¡£
 
-### .gitignore æ›´æ–°
+### .gitignore ¸üĞÂ
 
-| å˜æ›´ | è¯´æ˜ |
+| ±ä¸ü | ËµÃ÷ |
 |------|------|
-| æ–°å¢ `.venv/`ã€`venv/`ã€`__pycache__/`ã€`*.pyc` | é˜²æ­¢ Python è™šæ‹Ÿç¯å¢ƒè¢«æäº¤ |
-| `/*.md` â†’ `*.report.md` ç­‰ç²¾ç¡®æ¨¡å¼ | é¿å…è¯¯å¿½ç•¥ README ç­‰é‡è¦æ–‡ä»¶ |
-| åˆ é™¤ `temp/backup/` | å·²è¢« `temp/` è¦†ç›– |
+| ĞÂÔö `.venv/`¡¢`venv/`¡¢`__pycache__/`¡¢`*.pyc` | ·ÀÖ¹ Python ĞéÄâ»·¾³±»Ìá½» |
+| `/*.md` ¡ú `*.report.md` µÈ¾«È·Ä£Ê½ | ±ÜÃâÎóºöÂÔ README µÈÖØÒªÎÄ¼ş |
+| É¾³ı `temp/backup/` | ÒÑ±» `temp/` ¸²¸Ç |
 
-### å‡çº§é¡»çŸ¥
+### Éı¼¶ĞëÖª
 
-- æ— ä»£ç å˜æ›´ï¼Œä¸å½±å“ç¼–è¯‘å’Œè¿è¡Œ
-- `.venv/` å¦‚éœ€é‡å»ºï¼š`python -m venv .venv && pip install -r python/data_service/requirements.txt`
+- ÎŞ´úÂë±ä¸ü£¬²»Ó°Ïì±àÒëºÍÔËĞĞ
+- `.venv/` ÈçĞèÖØ½¨£º`python -m venv .venv && pip install -r python/data_service/requirements.txt`
 
-- åŠ¨æ€è´¨é‡åˆ†æå¼•æ“ä¸ºç‹¬ç«‹ Python è„šæœ¬ï¼Œä¸å½±å“å‰ç«¯æ„å»ºæµç¨‹ã€‚
+- ¶¯Ì¬ÖÊÁ¿·ÖÎöÒıÇæÎª¶ÀÁ¢ Python ½Å±¾£¬²»Ó°ÏìÇ°¶Ë¹¹½¨Á÷³Ì¡£
 
 ---

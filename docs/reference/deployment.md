@@ -1,114 +1,108 @@
 ---
-title: deployment
+title: V9 ²¿ÊğÔËÎ¬»ùÏß
+type: reference
+domain: project
+phase: deployment
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "ÎÄµµÌåÏµ°æ±¾: v2.0.0 | ±¾ÎÄµµĞŞ¶©: rev.1 | ¼æÈİ AGENTS.md: v1.4.3+ ¶¨Î»: ¶¨Òå V9 ´¿Ç°¶ËÓ¦ÓÃµÄ¹¹½¨²úÎï¡¢²¿ÊğÅäÖÃ¡¢Êı¾İ¿âÉı¼¶¡¢»·¾³±äÁ¿¡¢CI/CD..."
+tags: [devops, deployment, reference, project]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: important
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/reference/deployment.md
-code_version: 2.0.0
-tier: important
----
+# V9 ²¿ÊğÔËÎ¬»ùÏß
 
----
-title: docs/reference/deployment.md
-code_version: 2.0.0
----
-
----
-title: V9 éƒ¨ç½²è¿ç»´åŸºçº¿
-status: draft
-owner: å·¥ç¨‹æ•ˆèƒ½ / æ¶æ„ç»„
-updated: 2026-07-20
----
-
-# V9 éƒ¨ç½²è¿ç»´åŸºçº¿
-
-> **æ–‡æ¡£ä½“ç³»ç‰ˆæœ¬**: v2.0.0 | **æœ¬æ–‡æ¡£ä¿®è®¢**: rev.1 | **å…¼å®¹ AGENTS.md**: v1.4.3+
-> **å®šä½**: å®šä¹‰ V9 çº¯å‰ç«¯åº”ç”¨çš„æ„å»ºäº§ç‰©ã€éƒ¨ç½²é…ç½®ã€æ•°æ®åº“å‡çº§ã€ç¯å¢ƒå˜é‡ã€CI/CD é—¨ç¦åŠå›æ»šæ–¹æ¡ˆï¼Œè¡¥ H ç±»ã€Œéƒ¨ç½²ã€ç¼ºå£ã€‚
-> **ç›¸å…³æ–‡æ¡£**: [AGENTS.md](../../AGENTS.md) Â§å…«ï¼ˆæ•°æ®åº“ç‰ˆæœ¬ç®¡ç†ï¼‰ã€[runbook.md](../explanation/runbook.md)ï¼ˆæ—¥å¸¸è¿ç»´ï¼‰ã€[architecture/overview.md](../explanation/overview.md)ï¼ˆå…¨å±€æ¶æ„ï¼‰
+> **ÎÄµµÌåÏµ°æ±¾**: v2.0.0 | **±¾ÎÄµµĞŞ¶©**: rev.1 | **¼æÈİ AGENTS.md**: v1.4.3+
+> **¶¨Î»**: ¶¨Òå V9 ´¿Ç°¶ËÓ¦ÓÃµÄ¹¹½¨²úÎï¡¢²¿ÊğÅäÖÃ¡¢Êı¾İ¿âÉı¼¶¡¢»·¾³±äÁ¿¡¢CI/CD ÃÅ½û¼°»Ø¹ö·½°¸£¬²¹ H Àà¡¸²¿Êğ¡¹È±¿Ú¡£
+> **Ïà¹ØÎÄµµ**: [AGENTS.md](../../AGENTS.md) ¡ì°Ë£¨Êı¾İ¿â°æ±¾¹ÜÀí£©¡¢[runbook.md](../explanation/runbook.md)£¨ÈÕ³£ÔËÎ¬£©¡¢[architecture/overview.md](../explanation/overview.md)£¨È«¾Ö¼Ü¹¹£©
 
 ---
 
-## 1. Vite æ„å»ºäº§ç‰©è¯´æ˜
+## 1. Vite ¹¹½¨²úÎïËµÃ÷
 
-V9 ä½¿ç”¨ Vite æ„å»ºç³»ç»Ÿï¼ˆ`vite.config.ts`ï¼‰ï¼Œç›®æ ‡ `es2022`ï¼Œè¾“å‡ºè‡³ `dist/` ç›®å½•ã€‚
+V9 Ê¹ÓÃ Vite ¹¹½¨ÏµÍ³£¨`vite.config.ts`£©£¬Ä¿±ê `es2022`£¬Êä³öÖÁ `dist/` Ä¿Â¼¡£
 
-### 1.1 æ„å»ºé…ç½®è¦ç‚¹
+### 1.1 ¹¹½¨ÅäÖÃÒªµã
 
-| é…ç½®é¡¹ | å€¼ | è¯´æ˜ |
+| ÅäÖÃÏî | Öµ | ËµÃ÷ |
 |--------|-----|------|
-| `target` | `es2022` | æµè§ˆå™¨è¿è¡Œæ—¶ç›®æ ‡ï¼Œæ”¯æŒç°ä»£ ES ç‰¹æ€§ |
-| `outDir` | `dist` | æ„å»ºäº§ç‰©è¾“å‡ºç›®å½•ï¼Œçº³å…¥ `.gitignore` |
-| `sourcemap` | `false` | ç”Ÿäº§ç¯å¢ƒå…³é—­ sourcemapï¼ˆè°ƒè¯•æ—¶æ”¹ä¸º `'hidden'`ï¼‰ |
-| `base` | ï¼ˆé»˜è®¤ `/`ï¼‰ | éƒ¨ç½²è‡³å­è·¯å¾„æ—¶é¡»æ˜¾å¼é…ç½® `base: '/subpath/'` |
+| `target` | `es2022` | ä¯ÀÀÆ÷ÔËĞĞÊ±Ä¿±ê£¬Ö§³ÖÏÖ´ú ES ÌØĞÔ |
+| `outDir` | `dist` | ¹¹½¨²úÎïÊä³öÄ¿Â¼£¬ÄÉÈë `.gitignore` |
+| `sourcemap` | `false` | Éú²ú»·¾³¹Ø±Õ sourcemap£¨µ÷ÊÔÊ±¸ÄÎª `'hidden'`£© |
+| `base` | £¨Ä¬ÈÏ `/`£© | ²¿ÊğÖÁ×ÓÂ·¾¶Ê±ĞëÏÔÊ½ÅäÖÃ `base: '/subpath/'` |
 
-### 1.2 ä»£ç åˆ†å‰²ï¼ˆmanualChunksï¼‰
+### 1.2 ´úÂë·Ö¸î£¨manualChunks£©
 
-äº§ç‰©æŒ‰åŠŸèƒ½åˆ† 5 ä¸ª chunkï¼Œå‡å°‘é¦–å±åŠ è½½ï¼š
+²úÎï°´¹¦ÄÜ·Ö 5 ¸ö chunk£¬¼õÉÙÊ×ÆÁ¼ÓÔØ£º
 
-| Chunk | åŒ…å«ä¾èµ– | ç”¨é€” |
+| Chunk | °üº¬ÒÀÀµ | ÓÃÍ¾ |
 |-------|----------|------|
-| `vendor` | react, react-dom, react-router, zustand, dayjs | æ ¸å¿ƒæ¡†æ¶ï¼ˆç¼“å­˜å‘½ä¸­æœ€é«˜ï¼‰ |
-| `ui` | lucide-react, clsx, tailwind-merge, @heroicons/react | UI ç»„ä»¶ä¸å·¥å…· |
-| `charts` | recharts, lightweight-charts | å›¾è¡¨åº“ï¼ˆ~662 kB ç‹¬ç«‹ chunkï¼‰ |
-| `pdf` | jspdf, jspdf-autotable | PDF å¯¼å‡ºï¼ˆæ‡’åŠ è½½ï¼‰ |
-| `excel` | xlsx | Excel å¤„ç†ï¼ˆæ‡’åŠ è½½ï¼‰ |
+| `vendor` | react, react-dom, react-router, zustand, dayjs | ºËĞÄ¿ò¼Ü£¨»º´æÃüÖĞ×î¸ß£© |
+| `ui` | lucide-react, clsx, tailwind-merge, @heroicons/react | UI ×é¼şÓë¹¤¾ß |
+| `charts` | recharts, lightweight-charts | Í¼±í¿â£¨~662 kB ¶ÀÁ¢ chunk£© |
+| `pdf` | jspdf, jspdf-autotable | PDF µ¼³ö£¨ÀÁ¼ÓÔØ£© |
+| `excel` | xlsx | Excel ´¦Àí£¨ÀÁ¼ÓÔØ£© |
 
-### 1.3 äº§ç‰©ç›®å½•ç»“æ„
+### 1.3 ²úÎïÄ¿Â¼½á¹¹
 
 ```
 dist/
-â”œâ”€â”€ index.html              # å…¥å£ HTMLï¼ˆå«æ³¨å…¥çš„ script/link æ ‡ç­¾ï¼‰
-â”œâ”€â”€ assets/
-â”‚   â”œâ”€â”€ index-*.js          # ä¸»å…¥å£ chunkï¼ˆå« App.tsx ä¸šåŠ¡ä»£ç ï¼‰
-â”‚   â”œâ”€â”€ vendor-*.js         # æ¡†æ¶ chunk
-â”‚   â”œâ”€â”€ ui-*.js             # UI ç»„ä»¶ chunk
-â”‚   â”œâ”€â”€ charts-*.js         # å›¾è¡¨ chunk
-â”‚   â”œâ”€â”€ pdf-*.js            # PDF å¯¼å‡º chunk
-â”‚   â”œâ”€â”€ excel-*.js          # Excel å¤„ç† chunk
-â”‚   â”œâ”€â”€ index-*.css         # Tailwind + å…¨å±€æ ·å¼ï¼ˆå« CSS å˜é‡ï¼‰
-â”‚   â””â”€â”€ ...ï¼ˆå„é¡µé¢/ç»„ä»¶æ‡’åŠ è½½ chunkï¼‰
-â”œâ”€â”€ icons/                  # PWA å›¾æ ‡ï¼ˆæºè‡ª public/iconsï¼‰
-â”œâ”€â”€ manifest.json           # PWA é…ç½®
-â””â”€â”€ health-report.json      # æ¶æ„å¥åº·æŠ¥å‘Šï¼ˆ`build:health` ç”Ÿæˆï¼‰
+©À©¤©¤ index.html              # Èë¿Ú HTML£¨º¬×¢ÈëµÄ script/link ±êÇ©£©
+©À©¤©¤ assets/
+©¦   ©À©¤©¤ index-*.js          # Ö÷Èë¿Ú chunk£¨º¬ App.tsx ÒµÎñ´úÂë£©
+©¦   ©À©¤©¤ vendor-*.js         # ¿ò¼Ü chunk
+©¦   ©À©¤©¤ ui-*.js             # UI ×é¼ş chunk
+©¦   ©À©¤©¤ charts-*.js         # Í¼±í chunk
+©¦   ©À©¤©¤ pdf-*.js            # PDF µ¼³ö chunk
+©¦   ©À©¤©¤ excel-*.js          # Excel ´¦Àí chunk
+©¦   ©À©¤©¤ index-*.css         # Tailwind + È«¾ÖÑùÊ½£¨º¬ CSS ±äÁ¿£©
+©¦   ©¸©¤©¤ ...£¨¸÷Ò³Ãæ/×é¼şÀÁ¼ÓÔØ chunk£©
+©À©¤©¤ icons/                  # PWA Í¼±ê£¨Ô´×Ô public/icons£©
+©À©¤©¤ manifest.json           # PWA ÅäÖÃ
+©¸©¤©¤ health-report.json      # ¼Ü¹¹½¡¿µ±¨¸æ£¨`build:health` Éú³É£©
 ```
 
-### 1.4 æ„å»ºäº§ç‰©éªŒè¯
+### 1.4 ¹¹½¨²úÎïÑéÖ¤
 
-æ„å»ºå®Œæˆåå¿…é¡»æ£€æŸ¥ï¼š
+¹¹½¨Íê³Éºó±ØĞë¼ì²é£º
 
 ```bash
-# 1. ç¡®è®¤äº§ç‰©å­˜åœ¨
+# 1. È·ÈÏ²úÎï´æÔÚ
 ls -la dist/index.html dist/assets/index-*.js dist/assets/index-*.css
 
-# 2. ç¡®è®¤æ—  sourcemapï¼ˆsourcemap: false æ—¶ï¼‰
-find dist/assets -name '*.js.map' | wc -l  # æœŸæœ›ï¼š0
+# 2. È·ÈÏÎŞ sourcemap£¨sourcemap: false Ê±£©
+find dist/assets -name '*.js.map' | wc -l  # ÆÚÍû£º0
 
-# 3. ç¡®è®¤ chunk å®Œæ•´æ€§ï¼ˆ5 ä¸ª manualChunks å‡å­˜åœ¨ï¼‰
+# 3. È·ÈÏ chunk ÍêÕûĞÔ£¨5 ¸ö manualChunks ¾ù´æÔÚ£©
 ls dist/assets/vendor-*.js dist/assets/ui-*.js dist/assets/charts-*.js \
    dist/assets/pdf-*.js dist/assets/excel-*.js
 
-# 4. äº§ç‰©å¤§å°åŸºçº¿ï¼ˆTODOï¼šæ¶æ„ç»„å®šä¹‰å„ chunk é˜ˆå€¼ï¼‰
+# 4. ²úÎï´óĞ¡»ùÏß£¨TODO£º¼Ü¹¹×é¶¨Òå¸÷ chunk ãĞÖµ£©
 # du -sh dist/assets/*-*.js | sort -rh
 ```
 
-> **TODO**: æ¶æ„ç»„è¡¥å……å„ chunk å¤§å°é˜ˆå€¼ï¼ˆåŸºçº¿ ratchetï¼‰ï¼Œè¶…å‡ºé˜ˆå€¼è§¦å‘ CI å‘Šè­¦ã€‚
+> **TODO**: ¼Ü¹¹×é²¹³ä¸÷ chunk ´óĞ¡ãĞÖµ£¨»ùÏß ratchet£©£¬³¬³öãĞÖµ´¥·¢ CI ¸æ¾¯¡£
 
 ---
 
-## 2. é™æ€æ‰˜ç®¡é…ç½®ï¼ˆHashRouter é€‚é…ï¼‰
+## 2. ¾²Ì¬ÍĞ¹ÜÅäÖÃ£¨HashRouter ÊÊÅä£©
 
-### 2.1 ä¸ºä»€ä¹ˆä½¿ç”¨ HashRouter
+### 2.1 ÎªÊ²Ã´Ê¹ÓÃ HashRouter
 
-V9 é‡‡ç”¨ `HashRouter`ï¼ˆ`src/App.tsx`ï¼‰ï¼Œè€Œé `BrowserRouter`ï¼š
+V9 ²ÉÓÃ `HashRouter`£¨`src/App.tsx`£©£¬¶ø·Ç `BrowserRouter`£º
 
-- **çº¯å‰ç«¯éƒ¨ç½²**ï¼šæ— æœåŠ¡ç«¯è·¯ç”±æ”¯æŒï¼Œéƒ¨ç½²è‡³ä»»æ„é™æ€æ‰˜ç®¡ï¼ˆCDN / Nginx / GitHub Pages / Vercelï¼‰
-- **è·¯å¾„å…¼å®¹æ€§**ï¼š`/#/trading/holdings` å½¢å¼çš„è·¯å¾„ä¸ä¼šè§¦å‘æœåŠ¡å™¨ 404
-- **IndexedDB å®‰å…¨**ï¼šå• origin ä¸‹é¿å…è·¯å¾„å˜æ›´å¯¼è‡´æ•°æ®éš”ç¦»é—®é¢˜
+- **´¿Ç°¶Ë²¿Êğ**£ºÎŞ·şÎñ¶ËÂ·ÓÉÖ§³Ö£¬²¿ÊğÖÁÈÎÒâ¾²Ì¬ÍĞ¹Ü£¨CDN / Nginx / GitHub Pages / Vercel£©
+- **Â·¾¶¼æÈİĞÔ**£º`/#/trading/holdings` ĞÎÊ½µÄÂ·¾¶²»»á´¥·¢·şÎñÆ÷ 404
+- **IndexedDB °²È«**£ºµ¥ origin ÏÂ±ÜÃâÂ·¾¶±ä¸üµ¼ÖÂÊı¾İ¸ôÀëÎÊÌâ
 
-### 2.2 å¸¸è§æ‰˜ç®¡å¹³å°é…ç½®
+### 2.2 ³£¼ûÍĞ¹ÜÆ½Ì¨ÅäÖÃ
 
 #### 2.2.1 Nginx
 
@@ -119,18 +113,18 @@ server {
     root /var/www/v9/dist;
     index index.html;
 
-    # æ‰€æœ‰è·¯å¾„fallbackåˆ°index.htmlï¼ˆHashRouter ä¸‹å®é™…ä¸Šä¸éœ€è¦ï¼Œä½†é˜²å¾¡æ€§é…ç½®ï¼‰
+    # ËùÓĞÂ·¾¶fallbackµ½index.html£¨HashRouter ÏÂÊµ¼ÊÉÏ²»ĞèÒª£¬µ«·ÀÓùĞÔÅäÖÃ£©
     location / {
         try_files $uri $uri/ /index.html;
     }
 
-    # é™æ€èµ„æºç¼“å­˜ï¼ˆå¸¦ hash çš„æ–‡ä»¶å¯é•¿æœŸç¼“å­˜ï¼‰
+    # ¾²Ì¬×ÊÔ´»º´æ£¨´ø hash µÄÎÄ¼ş¿É³¤ÆÚ»º´æ£©
     location ~* \.(js|css|png|svg|woff|woff2)$ {
         expires 1y;
         add_header Cache-Control "public, immutable";
     }
 
-    # index.html ä¸ç¼“å­˜ï¼ˆç¡®ä¿åº”ç”¨æ›´æ–°å³æ—¶ç”Ÿæ•ˆï¼‰
+    # index.html ²»»º´æ£¨È·±£Ó¦ÓÃ¸üĞÂ¼´Ê±ÉúĞ§£©
     location = /index.html {
         add_header Cache-Control "no-cache, no-store, must-revalidate";
     }
@@ -154,313 +148,313 @@ server {
   status = 200
 ```
 
-> **HashRouter åœºæ™¯ä¸‹ rewrite å®é™…ä¸Šä¸è§¦å‘**ï¼Œå› ä¸ºè·¯å¾„ä»¥ `#` å¼€å¤´ã€‚ä½†ä¿ç•™é…ç½®ä»¥å…¼å®¹æœªæ¥åˆ‡æ¢è‡³ BrowserRouter çš„æ‰©å±•è·¯å¾„ã€‚
+> **HashRouter ³¡¾°ÏÂ rewrite Êµ¼ÊÉÏ²»´¥·¢**£¬ÒòÎªÂ·¾¶ÒÔ `#` ¿ªÍ·¡£µ«±£ÁôÅäÖÃÒÔ¼æÈİÎ´À´ÇĞ»»ÖÁ BrowserRouter µÄÀ©Õ¹Â·¾¶¡£
 
 #### 2.2.3 GitHub Pages
 
-GitHub Pages å¤©ç„¶æ”¯æŒå•é¡µåº”ç”¨ï¼ˆæ‰€æœ‰è·¯å¾„è‡ªåŠ¨ fallback åˆ° `index.html`ï¼‰ï¼Œæ— éœ€é¢å¤–é…ç½®ã€‚
+GitHub Pages ÌìÈ»Ö§³Öµ¥Ò³Ó¦ÓÃ£¨ËùÓĞÂ·¾¶×Ô¶¯ fallback µ½ `index.html`£©£¬ÎŞĞè¶îÍâÅäÖÃ¡£
 
-### 2.3 éƒ¨ç½²å­è·¯å¾„ï¼ˆéæ ¹åŸŸï¼‰
+### 2.3 ²¿Êğ×ÓÂ·¾¶£¨·Ç¸ùÓò£©
 
-å¦‚éœ€éƒ¨ç½²è‡³ `https://example.com/v9/`ï¼š
+ÈçĞè²¿ÊğÖÁ `https://example.com/v9/`£º
 
-1. ä¿®æ”¹ `vite.config.ts`ï¼š`base: '/v9/'`
-2. é‡æ–°æ„å»ºï¼š`npm run build`
-3. å°† `dist/` å†…å®¹ä¸Šä¼ è‡³æœåŠ¡å™¨çš„ `/v9/` ç›®å½•
+1. ĞŞ¸Ä `vite.config.ts`£º`base: '/v9/'`
+2. ÖØĞÂ¹¹½¨£º`npm run build`
+3. ½« `dist/` ÄÚÈİÉÏ´«ÖÁ·şÎñÆ÷µÄ `/v9/` Ä¿Â¼
 
-> **è­¦å‘Š**ï¼š`base` å˜æ›´åå¿…é¡»å…¨é‡å›å½’æµ‹è¯•ï¼ˆè·¯ç”±ã€å›¾æ ‡è·¯å¾„ã€PWA manifest å‡å—å½±å“ï¼‰ã€‚
+> **¾¯¸æ**£º`base` ±ä¸üºó±ØĞëÈ«Á¿»Ø¹é²âÊÔ£¨Â·ÓÉ¡¢Í¼±êÂ·¾¶¡¢PWA manifest ¾ùÊÜÓ°Ïì£©¡£
 
 ---
 
-## 3. IndexedDB Schema å‡çº§æµç¨‹
+## 3. IndexedDB Schema Éı¼¶Á÷³Ì
 
-V9 ä½¿ç”¨æµè§ˆå™¨åŸç”Ÿ IndexedDB è‡ªç®¡æ•°æ®ï¼ŒSchema ç‰ˆæœ¬ç”± `src/config/dbConfig.ts` ä¸­çš„ `DB_VERSION` æ§åˆ¶ã€‚**å½“å‰ç‰ˆæœ¬ï¼š`27`**ã€‚
+V9 Ê¹ÓÃä¯ÀÀÆ÷Ô­Éú IndexedDB ×Ô¹ÜÊı¾İ£¬Schema °æ±¾ÓÉ `src/config/dbConfig.ts` ÖĞµÄ `DB_VERSION` ¿ØÖÆ¡£**µ±Ç°°æ±¾£º`27`**¡£
 
-### 3.1 DB_VERSION é€’å¢è§„åˆ™ï¼ˆAGENTS.md Â§å…«ï¼‰
+### 3.1 DB_VERSION µİÔö¹æÔò£¨AGENTS.md ¡ì°Ë£©
 
-| è§¦å‘æ¡ä»¶ | åŠ¨ä½œ | åŒæ­¥æ“ä½œ |
+| ´¥·¢Ìõ¼ş | ¶¯×÷ | Í¬²½²Ù×÷ |
 |----------|------|----------|
-| æ–°å¢ storeï¼ˆåŸºçº¿ï¼‰ | é€’å¢ `DB_VERSION` | åœ¨ `createSchema`ï¼ˆ`src/data/db-schema.ts`ï¼‰ä¸­æ·»åŠ  |
-| æ–°å¢ storeï¼ˆå¢é‡ï¼‰ | é€’å¢ `DB_VERSION` | åœ¨å¯¹åº”ç‰ˆæœ¬ `Migration.up()`ï¼ˆ`src/data/db-migrations.ts`ï¼‰ä¸­æ·»åŠ  |
-| ä¿®æ”¹ store ç´¢å¼• | é€’å¢ `DB_VERSION` | åœ¨ Migration ä¸­æ‰§è¡Œ `deleteObjectStore` + `createObjectStore` |
-| æ–°å¢ ENVELOPE_ACTION | é€’å¢ `DB_VERSION` | åœ¨ `DataBridge.routeToDB()` ä¸­æ·»åŠ å¯¹åº” case |
+| ĞÂÔö store£¨»ùÏß£© | µİÔö `DB_VERSION` | ÔÚ `createSchema`£¨`src/data/db-schema.ts`£©ÖĞÌí¼Ó |
+| ĞÂÔö store£¨ÔöÁ¿£© | µİÔö `DB_VERSION` | ÔÚ¶ÔÓ¦°æ±¾ `Migration.up()`£¨`src/data/db-migrations.ts`£©ÖĞÌí¼Ó |
+| ĞŞ¸Ä store Ë÷Òı | µİÔö `DB_VERSION` | ÔÚ Migration ÖĞÖ´ĞĞ `deleteObjectStore` + `createObjectStore` |
+| ĞÂÔö ENVELOPE_ACTION | µİÔö `DB_VERSION` | ÔÚ `DataBridge.routeToDB()` ÖĞÌí¼Ó¶ÔÓ¦ case |
 
-**é“å¾‹**ï¼š
-- `DB_VERSION` å¿…é¡»å•è°ƒé€’å¢ï¼Œ**ç¦æ­¢å›é€€**ï¼ˆæµè§ˆå™¨ä¼šæ‹’ç»é™çº§æ‰“å¼€ï¼‰ã€‚
-- ç¦æ­¢åœ¨ `createSchema` å’Œ `Migration.up()` ä¸­åŒæ—¶æ·»åŠ åŒä¸€ storeï¼ˆè¿å DRYï¼‰ã€‚
-- æ–°å¢ store å¿…é¡»åœ¨ `STORE_NAME` ä¸­æ³¨å†Œï¼Œå¹¶åœ¨ `ACL_MATRIX` ä¸­æ·»åŠ  read/write ç™½åå•ã€‚
+**ÌúÂÉ**£º
+- `DB_VERSION` ±ØĞëµ¥µ÷µİÔö£¬**½ûÖ¹»ØÍË**£¨ä¯ÀÀÆ÷»á¾Ü¾ø½µ¼¶´ò¿ª£©¡£
+- ½ûÖ¹ÔÚ `createSchema` ºÍ `Migration.up()` ÖĞÍ¬Ê±Ìí¼ÓÍ¬Ò» store£¨Î¥·´ DRY£©¡£
+- ĞÂÔö store ±ØĞëÔÚ `STORE_NAME` ÖĞ×¢²á£¬²¢ÔÚ `ACL_MATRIX` ÖĞÌí¼Ó read/write °×Ãûµ¥¡£
 
-### 3.2 åŸºçº¿ store ä¸å¢é‡ store åŒºåˆ†
+### 3.2 »ùÏß store ÓëÔöÁ¿ store Çø·Ö
 
-| ç±»å‹ | åˆ›å»ºä½ç½® | å½“å‰æ¸…å•ï¼ˆç¤ºä¾‹ï¼‰ |
+| ÀàĞÍ | ´´½¨Î»ÖÃ | µ±Ç°Çåµ¥£¨Ê¾Àı£© |
 |------|----------|----------------|
-| **åŸºçº¿ store**ï¼ˆé¦–æ¬¡å®‰è£…å³éœ€ï¼‰ | `src/data/db-schema.ts` `createSchema` | stocks, v6Scores, orders, watchlists, signals, dailyQuotes, portfolios, customAgents ç­‰ï¼ˆå…± 29 ä¸ªï¼‰ |
-| **å¢é‡ store**ï¼ˆç‰ˆæœ¬å‡çº§æ–°å¢ï¼‰ | `src/data/db-migrations.ts` `Migration.up()` | rbac_users, rbac_roles, rbac_permissions, rbac_user_roles, rbac_role_permissions, rbac_permission_audit_logsï¼ˆV24 æ–°å¢ï¼‰ |
+| **»ùÏß store**£¨Ê×´Î°²×°¼´Ğè£© | `src/data/db-schema.ts` `createSchema` | stocks, v6Scores, orders, watchlists, signals, dailyQuotes, portfolios, customAgents µÈ£¨¹² 29 ¸ö£© |
+| **ÔöÁ¿ store**£¨°æ±¾Éı¼¶ĞÂÔö£© | `src/data/db-migrations.ts` `Migration.up()` | rbac_users, rbac_roles, rbac_permissions, rbac_user_roles, rbac_role_permissions, rbac_permission_audit_logs£¨V24 ĞÂÔö£© |
 
-### 3.3 Schema å‡çº§ SOP
+### 3.3 Schema Éı¼¶ SOP
 
 ```
-1. è¯„ä¼°å˜æ›´ç±»å‹ï¼ˆæ–°å¢ store / ä¿®æ”¹ç´¢å¼• / æ–°å¢ actionï¼‰
-2. åœ¨ dbConfig.ts ä¸­é€’å¢ DB_VERSION
-3. æ–°å¢ store â†’ åˆ¤æ–­åŸºçº¿/å¢é‡ï¼Œé€‰æ‹© createSchema æˆ– Migration ä½ç½®
-4. åœ¨ STORE_NAME ä¸­æ³¨å†Œæ–° store
-5. åœ¨ ACL_MATRIX ä¸­æ·»åŠ  read/write ç™½åå•
-6. æ–°å¢ ENVELOPE_ACTION â†’ åœ¨ DataBridge.routeToDB() æ·»åŠ  case
-7. æœ¬åœ°æµ‹è¯•ï¼šChrome DevTools â†’ Application â†’ IndexedDB â†’ ç¡®è®¤ç‰ˆæœ¬ä¸ store åˆ—è¡¨
-8. è¿è¡Œ npm run audit:layers ç¡®è®¤æ— è·¨å±‚è¿è§„
-9. æäº¤å‰è¿è¡Œ pre-commit å…¨é—¨ç¦
+1. ÆÀ¹À±ä¸üÀàĞÍ£¨ĞÂÔö store / ĞŞ¸ÄË÷Òı / ĞÂÔö action£©
+2. ÔÚ dbConfig.ts ÖĞµİÔö DB_VERSION
+3. ĞÂÔö store ¡ú ÅĞ¶Ï»ùÏß/ÔöÁ¿£¬Ñ¡Ôñ createSchema »ò Migration Î»ÖÃ
+4. ÔÚ STORE_NAME ÖĞ×¢²áĞÂ store
+5. ÔÚ ACL_MATRIX ÖĞÌí¼Ó read/write °×Ãûµ¥
+6. ĞÂÔö ENVELOPE_ACTION ¡ú ÔÚ DataBridge.routeToDB() Ìí¼Ó case
+7. ±¾µØ²âÊÔ£ºChrome DevTools ¡ú Application ¡ú IndexedDB ¡ú È·ÈÏ°æ±¾Óë store ÁĞ±í
+8. ÔËĞĞ npm run audit:layers È·ÈÏÎŞ¿ç²ãÎ¥¹æ
+9. Ìá½»Ç°ÔËĞĞ pre-commit È«ÃÅ½û
 ```
 
-### 3.4 ç”¨æˆ·ä¾§æ•°æ®è¿ç§»
+### 3.4 ÓÃ»§²àÊı¾İÇ¨ÒÆ
 
-IndexedDB å‡çº§ç”±æµè§ˆå™¨è‡ªåŠ¨è§¦å‘ `onupgradeneeded`ï¼š
+IndexedDB Éı¼¶ÓÉä¯ÀÀÆ÷×Ô¶¯´¥·¢ `onupgradeneeded`£º
 
-- **æ—§æ•°æ®ä¿ç•™**ï¼šå‡çº§é€»è¾‘å¿…é¡»æ˜¾å¼è¿ç§»æ—§æ•°æ®ï¼Œç¦æ­¢ç›´æ¥ `deleteObjectStore` ä¸¢å¼ƒã€‚
-- **é™çº§å›æ»š**ï¼šè‹¥çº¿ä¸Šå‘ç°é—®é¢˜ï¼Œ**ä¸å¯ç›´æ¥å›é€€ DB_VERSION**ã€‚å¿…é¡»é€šè¿‡æ–° Migration å°† Schema æ”¹å›æ—§ç»“æ„ï¼Œå¹¶é€’å¢ DB_VERSIONã€‚
+- **¾ÉÊı¾İ±£Áô**£ºÉı¼¶Âß¼­±ØĞëÏÔÊ½Ç¨ÒÆ¾ÉÊı¾İ£¬½ûÖ¹Ö±½Ó `deleteObjectStore` ¶ªÆú¡£
+- **½µ¼¶»Ø¹ö**£ºÈôÏßÉÏ·¢ÏÖÎÊÌâ£¬**²»¿ÉÖ±½Ó»ØÍË DB_VERSION**¡£±ØĞëÍ¨¹ıĞÂ Migration ½« Schema ¸Ä»Ø¾É½á¹¹£¬²¢µİÔö DB_VERSION¡£
 
-> **TODO**: æ¶æ„ç»„è¡¥å…… `db-migrations.ts` ä¸­æ•°æ®è¿ç§»çš„æ¨¡æ¿ä»£ç ï¼ˆè¯»å–æ—§ store â†’ è½¬æ¢ â†’ å†™å…¥æ–° storeï¼‰ã€‚
+> **TODO**: ¼Ü¹¹×é²¹³ä `db-migrations.ts` ÖĞÊı¾İÇ¨ÒÆµÄÄ£°å´úÂë£¨¶ÁÈ¡¾É store ¡ú ×ª»» ¡ú Ğ´ÈëĞÂ store£©¡£
 
 ---
 
-## 4. ç¯å¢ƒå˜é‡ç®¡ç†
+## 4. »·¾³±äÁ¿¹ÜÀí
 
-### 4.1 ç¯å¢ƒå˜é‡è§„åˆ™
+### 4.1 »·¾³±äÁ¿¹æÔò
 
-V9 ä½¿ç”¨ Vite ç¯å¢ƒå˜é‡ç³»ç»Ÿï¼Œ**æ‰€æœ‰å‰ç«¯å¯è§å˜é‡å¿…é¡»ä»¥ `VITE_` å‰ç¼€å£°æ˜**ï¼ˆVite ä»…æš´éœ² `VITE_` å‰ç¼€å˜é‡åˆ°å®¢æˆ·ç«¯ï¼‰ã€‚
+V9 Ê¹ÓÃ Vite »·¾³±äÁ¿ÏµÍ³£¬**ËùÓĞÇ°¶Ë¿É¼û±äÁ¿±ØĞëÒÔ `VITE_` Ç°×ºÉùÃ÷**£¨Vite ½ö±©Â¶ `VITE_` Ç°×º±äÁ¿µ½¿Í»§¶Ë£©¡£
 
-### 4.2 å½“å‰ç¯å¢ƒå˜é‡æ¸…å•ï¼ˆ`.env.example`ï¼‰
+### 4.2 µ±Ç°»·¾³±äÁ¿Çåµ¥£¨`.env.example`£©
 
-| å˜é‡ | å¼€å‘å€¼ | ç”Ÿäº§å€¼ | è¯´æ˜ |
+| ±äÁ¿ | ¿ª·¢Öµ | Éú²úÖµ | ËµÃ÷ |
 |------|--------|--------|------|
-| `VITE_DATA_SOURCE_TYPE` | `mock` | `rest` / `websocket` | æ•°æ®æºç±»å‹ |
-| `VITE_API_BASE_URL` | `/api` | `https://api.example.com` | REST API åŸºç¡€åœ°å€ |
-| `VITE_WS_URL` | `ws://localhost:8080/ws` | `wss://api.example.com/ws` | WebSocket åœ°å€ |
-| `VITE_LLM_BASE_URL` | `https://api.deepseek.com` | ï¼ˆç”¨æˆ·è‡ªé…ï¼‰ | LLM æ¥å£åœ°å€ |
-| `VITE_LLM_MODEL` | `deepseek-chat` | ï¼ˆç”¨æˆ·è‡ªé…ï¼‰ | é»˜è®¤ LLM æ¨¡å‹ |
-| `VITE_AKSHARE_BASE_URL` | `http://localhost:8000` | ï¼ˆç”¨æˆ·è‡ªé…ï¼‰ | æœ¬åœ° Python é‡‡é›†æœåŠ¡ |
+| `VITE_DATA_SOURCE_TYPE` | `mock` | `rest` / `websocket` | Êı¾İÔ´ÀàĞÍ |
+| `VITE_API_BASE_URL` | `/api` | `https://api.example.com` | REST API »ù´¡µØÖ· |
+| `VITE_WS_URL` | `ws://localhost:8080/ws` | `wss://api.example.com/ws` | WebSocket µØÖ· |
+| `VITE_LLM_BASE_URL` | `https://api.deepseek.com` | £¨ÓÃ»§×ÔÅä£© | LLM ½Ó¿ÚµØÖ· |
+| `VITE_LLM_MODEL` | `deepseek-chat` | £¨ÓÃ»§×ÔÅä£© | Ä¬ÈÏ LLM Ä£ĞÍ |
+| `VITE_AKSHARE_BASE_URL` | `http://localhost:8000` | £¨ÓÃ»§×ÔÅä£© | ±¾µØ Python ²É¼¯·şÎñ |
 
-### 4.3 å®‰å…¨è§„åˆ™
+### 4.3 °²È«¹æÔò
 
-- **ç¦æ­¢åœ¨ `.env` ä¸­å­˜æ”¾çœŸå® API Key**ï¼šLLM API Key é€šè¿‡ UI é…ç½®é¡µåŠ å¯†å­˜å‚¨äº `localStorage`ï¼ˆ`localStorageManager.setEncrypted/getEncrypted`ï¼‰ã€‚
-- **`VITE_` å‰ç¼€å˜é‡ä¼šæš´éœ²åˆ°å‰ç«¯ bundle**ï¼šä»»ä½•å« `VITE_` å‰ç¼€çš„å˜é‡åœ¨æ„å»ºåå‡å¯é€šè¿‡æµè§ˆå™¨ DevTools æŸ¥çœ‹ï¼Œ**ç¦æ­¢å­˜æ”¾æ•æ„Ÿå‡­è¯**ã€‚
-- **ç¯å¢ƒå˜é‡æ–‡ä»¶çº³å…¥ `.gitignore`**ï¼š`.env`ã€`.env.local`ã€`.env.*.local` å·²é…ç½®å¿½ç•¥ã€‚
+- **½ûÖ¹ÔÚ `.env` ÖĞ´æ·ÅÕæÊµ API Key**£ºLLM API Key Í¨¹ı UI ÅäÖÃÒ³¼ÓÃÜ´æ´¢ÓÚ `localStorage`£¨`localStorageManager.setEncrypted/getEncrypted`£©¡£
+- **`VITE_` Ç°×º±äÁ¿»á±©Â¶µ½Ç°¶Ë bundle**£ºÈÎºÎº¬ `VITE_` Ç°×ºµÄ±äÁ¿ÔÚ¹¹½¨ºó¾ù¿ÉÍ¨¹ıä¯ÀÀÆ÷ DevTools ²é¿´£¬**½ûÖ¹´æ·ÅÃô¸ĞÆ¾Ö¤**¡£
+- **»·¾³±äÁ¿ÎÄ¼şÄÉÈë `.gitignore`**£º`.env`¡¢`.env.local`¡¢`.env.*.local` ÒÑÅäÖÃºöÂÔ¡£
 
-### 4.4 æ„å»ºç¯å¢ƒåˆ‡æ¢
+### 4.4 ¹¹½¨»·¾³ÇĞ»»
 
 ```bash
-# å¼€å‘ç¯å¢ƒï¼ˆé»˜è®¤ä½¿ç”¨ .envï¼‰
+# ¿ª·¢»·¾³£¨Ä¬ÈÏÊ¹ÓÃ .env£©
 npm run dev
 
-# ç”Ÿäº§æ„å»ºï¼ˆä½¿ç”¨ .env.production æˆ– CI æ³¨å…¥ï¼‰
+# Éú²ú¹¹½¨£¨Ê¹ÓÃ .env.production »ò CI ×¢Èë£©
 # VITE_DATA_SOURCE_TYPE=rest npm run build
 ```
 
-> **TODO**: å·¥ç¨‹æ•ˆèƒ½ç»„è¡¥å…… CI/CD ç¯å¢ƒå˜é‡æ³¨å…¥æ–¹æ¡ˆï¼ˆGitHub Actions / Vercel ç¯å¢ƒå˜é‡é¢æ¿ï¼‰ã€‚
+> **TODO**: ¹¤³ÌĞ§ÄÜ×é²¹³ä CI/CD »·¾³±äÁ¿×¢Èë·½°¸£¨GitHub Actions / Vercel »·¾³±äÁ¿Ãæ°å£©¡£
 
 ---
 
-## 5. CI/CD é—¨ç¦ï¼ˆHusky pre-commit / pre-pushï¼‰
+## 5. CI/CD ÃÅ½û£¨Husky pre-commit / pre-push£©
 
-V9 ä½¿ç”¨ Husky v9 ç®¡ç† Git é’©å­ï¼Œ**æ‰€æœ‰ä»£ç æäº¤å’Œæ¨é€å¿…é¡»é€šè¿‡ 12 é“é—¨ç¦**ï¼ˆpre-commit 10 é“ + pre-push 2 é“ï¼‰ã€‚ç¦æ­¢ `--no-verify` ç»•è¿‡ã€‚
+V9 Ê¹ÓÃ Husky v9 ¹ÜÀí Git ¹³×Ó£¬**ËùÓĞ´úÂëÌá½»ºÍÍÆËÍ±ØĞëÍ¨¹ı 12 µÀÃÅ½û**£¨pre-commit 10 µÀ + pre-push 2 µÀ£©¡£½ûÖ¹ `--no-verify` ÈÆ¹ı¡£
 
-### 5.1 pre-commit é—¨ç¦ï¼ˆ10 é“ï¼‰
+### 5.1 pre-commit ÃÅ½û£¨10 µÀ£©
 
-| åºå· | é—¨ç¦ | å‘½ä»¤ | å¤±è´¥å¤„ç½® |
+| ĞòºÅ | ÃÅ½û | ÃüÁî | Ê§°Ü´¦ÖÃ |
 |------|------|------|----------|
-| 1 | lint-staged | `npx lint-staged` | è‡ªåŠ¨ä¿®å¤ ESLint é—®é¢˜ï¼Œä¸å¯è‡ªåŠ¨ä¿®å¤çš„éœ€æ‰‹åŠ¨ä¿®å¤ |
-| 2 | é¢œè‰²ç¡¬ç¼–ç æ£€æŸ¥ | `npm run lint:colors` | å‘ç° UI å±‚ HEX/Tailwind é¢œè‰²ç¡¬ç¼–ç  â†’ æ”¹ä¸ºä»¤ç‰Œå¼•ç”¨ |
-| 3 | ç”Ÿäº§ç±»å‹æ£€æŸ¥ | `npm run tsc:prod` | TypeScript é”™è¯¯ â†’ ä¿®å¤ç±»å‹ |
-| 4 | åˆ†å±‚è°ƒç”¨å®¡è®¡ | `npm run audit:layers` | è·¨å±‚è°ƒç”¨è¿è§„ â†’ è°ƒæ•´ import è·¯å¾„ |
-| 5 | åŸå­ç»„ä»¶è¾¹ç•Œå®¡è®¡ | `npm run audit:atomic` | åŸå­å±‚çº§è¶Šç•Œ â†’ è°ƒæ•´ç»„ä»¶ä½ç½® |
-| 6 | æ–‡ä»¶è§„èŒƒæ£€æŸ¥ | `npm run file:check` | æ–‡ä»¶å‘½å/ç›®å½•è¿è§„ â†’ é‡å‘½åæˆ–è¿ç§» |
-| 7 | æ–‡æ¡£åŒæ­¥å®¡è®¡ | `npm run audit:docs` | æ–‡æ¡£ä¸ä»£ç ä¸åŒæ­¥ â†’ è¡¥æ–‡æ¡£æˆ–å›é“¾ README |
-| 8 | è®¾è®¡ä»¤ç‰Œæ˜ å°„æ ¡éªŒ | `npm run verify:tokens` | ä»¤ç‰Œæ˜ å°„å¼‚å¸¸ â†’ åŒæ­¥ design-tokens/tokens.json |
-| 9 | ä»¤ç‰Œæ¶ˆè´¹å®¡è®¡ | `npm run audit:tokens` | æ–°å¢ä»¤ç‰Œè¿è§„ â†’ ä½¿ç”¨ä»¤ç‰Œæ›¿ä»£ç¡¬ç¼–ç  |
-| 10 | JSDoc è¦†ç›–æ£€æŸ¥ | `npm run audit:jsdoc` | æ–°å¢å…¬å…±å‡½æ•°ç¼º JSDoc â†’ è¡¥å……æ³¨é‡Šï¼ˆåŸºçº¿é‡‡é›†ï¼Œå½“å‰ä¸é˜»æ–­ï¼‰ |
-| 11 | ä»£ç å¤æ‚åº¦æ£€æŸ¥ | `npm run audit:complexity` | æ·±å±‚åµŒå¥—/é•¿é“¾/é‡å¤æ¡ä»¶ â†’ é‡æ„ï¼ˆåŸºçº¿é‡‡é›†ï¼Œå½“å‰ä¸é˜»æ–­ï¼‰ |
+| 1 | lint-staged | `npx lint-staged` | ×Ô¶¯ĞŞ¸´ ESLint ÎÊÌâ£¬²»¿É×Ô¶¯ĞŞ¸´µÄĞèÊÖ¶¯ĞŞ¸´ |
+| 2 | ÑÕÉ«Ó²±àÂë¼ì²é | `npm run lint:colors` | ·¢ÏÖ UI ²ã HEX/Tailwind ÑÕÉ«Ó²±àÂë ¡ú ¸ÄÎªÁîÅÆÒıÓÃ |
+| 3 | Éú²úÀàĞÍ¼ì²é | `npm run tsc:prod` | TypeScript ´íÎó ¡ú ĞŞ¸´ÀàĞÍ |
+| 4 | ·Ö²ãµ÷ÓÃÉó¼Æ | `npm run audit:layers` | ¿ç²ãµ÷ÓÃÎ¥¹æ ¡ú µ÷Õû import Â·¾¶ |
+| 5 | Ô­×Ó×é¼ş±ß½çÉó¼Æ | `npm run audit:atomic` | Ô­×Ó²ã¼¶Ô½½ç ¡ú µ÷Õû×é¼şÎ»ÖÃ |
+| 6 | ÎÄ¼ş¹æ·¶¼ì²é | `npm run file:check` | ÎÄ¼şÃüÃû/Ä¿Â¼Î¥¹æ ¡ú ÖØÃüÃû»òÇ¨ÒÆ |
+| 7 | ÎÄµµÍ¬²½Éó¼Æ | `npm run audit:docs` | ÎÄµµÓë´úÂë²»Í¬²½ ¡ú ²¹ÎÄµµ»ò»ØÁ´ README |
+| 8 | Éè¼ÆÁîÅÆÓ³ÉäĞ£Ñé | `npm run verify:tokens` | ÁîÅÆÓ³ÉäÒì³£ ¡ú Í¬²½ design-tokens/tokens.json |
+| 9 | ÁîÅÆÏû·ÑÉó¼Æ | `npm run audit:tokens` | ĞÂÔöÁîÅÆÎ¥¹æ ¡ú Ê¹ÓÃÁîÅÆÌæ´úÓ²±àÂë |
+| 10 | JSDoc ¸²¸Ç¼ì²é | `npm run audit:jsdoc` | ĞÂÔö¹«¹²º¯ÊıÈ± JSDoc ¡ú ²¹³ä×¢ÊÍ£¨»ùÏß²É¼¯£¬µ±Ç°²»×è¶Ï£© |
+| 11 | ´úÂë¸´ÔÓ¶È¼ì²é | `npm run audit:complexity` | Éî²ãÇ¶Ì×/³¤Á´/ÖØ¸´Ìõ¼ş ¡ú ÖØ¹¹£¨»ùÏß²É¼¯£¬µ±Ç°²»×è¶Ï£© |
 
-> **æ³¨**ï¼šç¬¬ 10-11 é“å½“å‰ä¸ºã€ŒåŸºçº¿é‡‡é›†ã€æ¨¡å¼ï¼Œä¸é˜»æ–­æäº¤ï¼Œä½†ä¼šåœ¨ `command/health` ä»ªè¡¨ç›˜å±•ç¤ºè¶‹åŠ¿ã€‚
+> **×¢**£ºµÚ 10-11 µÀµ±Ç°Îª¡¸»ùÏß²É¼¯¡¹Ä£Ê½£¬²»×è¶ÏÌá½»£¬µ«»áÔÚ `command/health` ÒÇ±íÅÌÕ¹Ê¾Ç÷ÊÆ¡£
 
-### 5.2 pre-push é—¨ç¦ï¼ˆ2 é“ï¼‰
+### 5.2 pre-push ÃÅ½û£¨2 µÀ£©
 
-| åºå· | é—¨ç¦ | å‘½ä»¤ | è¯´æ˜ |
+| ĞòºÅ | ÃÅ½û | ÃüÁî | ËµÃ÷ |
 |------|------|------|------|
-| 1 | æ ¸å¿ƒå•å…ƒæµ‹è¯• | `npm run test:clean` | æ’é™¤å·²çŸ¥ä¸ç¨³å®šç”¨ä¾‹ï¼Œç¡®ä¿æ ¸å¿ƒåŠŸèƒ½é€šè¿‡ |
-| 2 | ç”Ÿäº§æ„å»ºéªŒè¯ | `npm run build` | éªŒè¯æ„å»ºäº§ç‰©å¯æˆåŠŸç”Ÿæˆ |
+| 1 | ºËĞÄµ¥Ôª²âÊÔ | `npm run test:clean` | ÅÅ³ıÒÑÖª²»ÎÈ¶¨ÓÃÀı£¬È·±£ºËĞÄ¹¦ÄÜÍ¨¹ı |
+| 2 | Éú²ú¹¹½¨ÑéÖ¤ | `npm run build` | ÑéÖ¤¹¹½¨²úÎï¿É³É¹¦Éú³É |
 
-> `test:clean` æ’é™¤åˆ—è¡¨ï¼ˆ`package.json` ä¸­å®šä¹‰ï¼‰ï¼š`agentStore.test.ts`ã€`fetcherClient.test.ts`ã€`llmClient.multimodel.test.ts`ã€`dataSourceProvider.test.ts`ã€`ui-components.test.tsx`ã€`agentModule.integration.test.tsx`ã€`engine.test.ts`ã€`sectorScoreService.test.ts`ã€‚è¿™äº›ç”¨ä¾‹åœ¨ `test:known` ä¸­å•ç‹¬è¿è¡Œã€‚
+> `test:clean` ÅÅ³ıÁĞ±í£¨`package.json` ÖĞ¶¨Òå£©£º`agentStore.test.ts`¡¢`fetcherClient.test.ts`¡¢`llmClient.multimodel.test.ts`¡¢`dataSourceProvider.test.ts`¡¢`ui-components.test.tsx`¡¢`agentModule.integration.test.tsx`¡¢`engine.test.ts`¡¢`sectorScoreService.test.ts`¡£ÕâĞ©ÓÃÀıÔÚ `test:known` ÖĞµ¥¶ÀÔËĞĞ¡£
 
-### 5.3 é—¨ç¦é…ç½®ä½ç½®
+### 5.3 ÃÅ½ûÅäÖÃÎ»ÖÃ
 
-- `.husky/pre-commit` â€” é¢„æäº¤è„šæœ¬ï¼ˆ10 é“é—¨ç¦ï¼‰
-- `.husky/pre-push` â€” é¢„æ¨é€è„šæœ¬ï¼ˆ2 é“é—¨ç¦ï¼‰
-- `.lintstagedrc` / `package.json` `lint-staged` â€” æš‚å­˜åŒºæ–‡ä»¶ ESLint é…ç½®
+- `.husky/pre-commit` ¡ª Ô¤Ìá½»½Å±¾£¨10 µÀÃÅ½û£©
+- `.husky/pre-push` ¡ª Ô¤ÍÆËÍ½Å±¾£¨2 µÀÃÅ½û£©
+- `.lintstagedrc` / `package.json` `lint-staged` ¡ª Ôİ´æÇøÎÄ¼ş ESLint ÅäÖÃ
 
-### 5.4 è‡ªå®šä¹‰ Hook æ·»åŠ  SOP
+### 5.4 ×Ô¶¨Òå Hook Ìí¼Ó SOP
 
-æ–°å¢ Git é’©å­é¡»éµå¾ªï¼š
+ĞÂÔö Git ¹³×ÓĞë×ñÑ­£º
 
-1. åœ¨ `.husky/` ç›®å½•ä¸‹åˆ›å»ºè„šæœ¬ï¼ˆå¦‚ `commit-msg`ï¼‰ï¼Œç¡®ä¿ `set -e` ä»¥é”™è¯¯é˜»æ–­æäº¤
-2. è„šæœ¬é¡»è¾“å‡ºæ¸…æ™°çš„ `[åºå·/æ€»æ•°] æ­¥éª¤åç§°` æç¤º
-3. åœ¨æœ¬æ–‡æ¡£ã€Œé—¨ç¦åˆ—è¡¨ã€è¡¨ä¸­ç™»è®°æ–°å¢é—¨ç¦
-4. æ›´æ–° `../explanation/overview.md` Â§7 é—¨ç¦æ•°é‡
-5. é€šçŸ¥å…¨å›¢é˜Ÿé¿å… `git commit --no-verify` ç»•è¿‡
-
----
-
-## 6. ç”Ÿäº§æ„å»º Checklist
-
-æ¯æ¬¡å‘å¸ƒç”Ÿäº§ç‰ˆæœ¬å‰ï¼Œç”±å‘å¸ƒè´£ä»»äººé€é¡¹å‹¾é€‰ï¼š
-
-### 6.1 ä»£ç ä¸é—¨ç¦
-
-- [ ] **12 é“é—¨ç¦å…¨ç»¿**ï¼špre-commit 10 é“ + pre-push 2 é“å…¨éƒ¨é€šè¿‡
-- [ ] **ç±»å‹æ£€æŸ¥é›¶é”™è¯¯**ï¼š`npx tsc --noEmit` é€šè¿‡
-- [ ] **åˆ†å±‚å®¡è®¡é›¶è¿è§„**ï¼š`npm run audit:layers` è¾“å‡º `0 violations, 0 warnings`
-- [ ] **é¢œè‰²ç¡¬ç¼–ç é›¶è¿è§„**ï¼š`npm run lint:colors` è¾“å‡º `0 hardcoded colors`
-- [ ] **æ–‡æ¡£åŒæ­¥é›¶æ¼‚ç§»**ï¼š`npm run audit:docs` é€šè¿‡
-
-### 6.2 æ¶æ„å¥åº·
-
-- [ ] **å¥åº·åº¦è¾¾æ ‡**ï¼š`/command/health` ç»¼åˆè¯„åˆ† â‰¥ åŸºçº¿ 93
-- [ ] **7 é¡¹æŒ‡æ ‡å‡è¾¾æ ‡**ï¼šè·¨å±‚è°ƒç”¨ 0ã€é¢œè‰²ç¡¬ç¼–ç  0ã€æ·±å±‚åµŒå¥— 0ã€é•¿é“¾ 0ã€é‡å¤æ¡ä»¶ 0ã€JSDoc ç¼ºå¤± 0ã€æ–‡æ¡£åŒæ­¥ 0
-- [ ] **å¥åº·æŠ¥å‘Šç”Ÿæˆ**ï¼š`npm run build:health` â†’ `public/health-report.json` å·²æ›´æ–°
-
-### 6.3 æ„å»ºäº§ç‰©
-
-- [ ] **`npm run build` æˆåŠŸ**ï¼šæ—  Rollup/Vite æ„å»ºé”™è¯¯
-- [ ] **äº§ç‰©å®Œæ•´æ€§**ï¼š`dist/index.html` + `dist/assets/` å­˜åœ¨ï¼Œ5 ä¸ª manualChunks å‡ç”Ÿæˆ
-- [ ] **äº§ç‰©å¤§å°å®¡è®¡**ï¼šå„ chunk å¤§å°æœªè¶…åŸºçº¿é˜ˆå€¼ï¼ˆTODOï¼šæ¶æ„ç»„å®šä¹‰é˜ˆå€¼ï¼‰
-- [ ] **sourcemap å…³é—­**ï¼šç”Ÿäº§æ„å»ºæ—  `.js.map` æ–‡ä»¶
-
-### 6.4 æ•°æ®ä¸é…ç½®
-
-- [ ] **DB_VERSION æ£€æŸ¥**ï¼šè‹¥æœ¬æ¬¡å‘å¸ƒæ¶‰åŠ Schema å˜æ›´ï¼Œç¡®è®¤ `DB_VERSION` å·²é€’å¢ä¸” Migration é€»è¾‘æ­£ç¡®
-- [ ] **ç¯å¢ƒå˜é‡æ£€æŸ¥**ï¼šç”Ÿäº§ç¯å¢ƒå˜é‡ï¼ˆ`.env.production`ï¼‰å·²é…ç½®ï¼Œæ—  `VITE_` å‰ç¼€æ•æ„Ÿå‡­è¯æ³„éœ²
-- [ ] **è·¯ç”±æ³¨å†Œæ£€æŸ¥**ï¼šæ–°å¢é¡µé¢å·²åœ¨ `routes.ts` å’Œ `./06-routing-specs.md` åŒæ­¥
-- [ ] **PWA é…ç½®æ£€æŸ¥**ï¼š`manifest.json` å’Œå›¾æ ‡æ–‡ä»¶åœ¨ `public/` ä¸­ä¸”è¢«æ­£ç¡®å¤åˆ¶åˆ° `dist/`
-
-### 6.5 æ–‡æ¡£ä¸æ²Ÿé€š
-
-- [ ] **CHANGELOG æ›´æ–°**ï¼šæ ¹ `CHANGELOG.md` å·²è®°å½•æœ¬æ¬¡å‘å¸ƒæ‘˜è¦
-- [ ] **æ–‡æ¡£ç´¢å¼•åŒæ­¥**ï¼š`docs/README.md` å·²æ›´æ–°ï¼ˆå¦‚æœ‰æ–°å¢æ–‡æ¡£ï¼‰
-- [ ] **README å›é“¾**ï¼šæœ¬æ–‡æ¡£å·²å›é“¾è‡³ `docs/README.md` H ç±»ã€Œè¿ç»´ã€é”šç‚¹
+1. ÔÚ `.husky/` Ä¿Â¼ÏÂ´´½¨½Å±¾£¨Èç `commit-msg`£©£¬È·±£ `set -e` ÒÔ´íÎó×è¶ÏÌá½»
+2. ½Å±¾ĞëÊä³öÇåÎúµÄ `[ĞòºÅ/×ÜÊı] ²½ÖèÃû³Æ` ÌáÊ¾
+3. ÔÚ±¾ÎÄµµ¡¸ÃÅ½ûÁĞ±í¡¹±íÖĞµÇ¼ÇĞÂÔöÃÅ½û
+4. ¸üĞÂ `../explanation/overview.md` ¡ì7 ÃÅ½ûÊıÁ¿
+5. Í¨ÖªÈ«ÍÅ¶Ó±ÜÃâ `git commit --no-verify` ÈÆ¹ı
 
 ---
 
-## 7. `npm run build` äº§ç‰©éªŒè¯
+## 6. Éú²ú¹¹½¨ Checklist
 
-### 7.1 éªŒè¯å‘½ä»¤è„šæœ¬
+Ã¿´Î·¢²¼Éú²ú°æ±¾Ç°£¬ÓÉ·¢²¼ÔğÈÎÈËÖğÏî¹´Ñ¡£º
+
+### 6.1 ´úÂëÓëÃÅ½û
+
+- [ ] **12 µÀÃÅ½ûÈ«ÂÌ**£ºpre-commit 10 µÀ + pre-push 2 µÀÈ«²¿Í¨¹ı
+- [ ] **ÀàĞÍ¼ì²éÁã´íÎó**£º`npx tsc --noEmit` Í¨¹ı
+- [ ] **·Ö²ãÉó¼ÆÁãÎ¥¹æ**£º`npm run audit:layers` Êä³ö `0 violations, 0 warnings`
+- [ ] **ÑÕÉ«Ó²±àÂëÁãÎ¥¹æ**£º`npm run lint:colors` Êä³ö `0 hardcoded colors`
+- [ ] **ÎÄµµÍ¬²½ÁãÆ¯ÒÆ**£º`npm run audit:docs` Í¨¹ı
+
+### 6.2 ¼Ü¹¹½¡¿µ
+
+- [ ] **½¡¿µ¶È´ï±ê**£º`/command/health` ×ÛºÏÆÀ·Ö ¡İ »ùÏß 93
+- [ ] **7 ÏîÖ¸±ê¾ù´ï±ê**£º¿ç²ãµ÷ÓÃ 0¡¢ÑÕÉ«Ó²±àÂë 0¡¢Éî²ãÇ¶Ì× 0¡¢³¤Á´ 0¡¢ÖØ¸´Ìõ¼ş 0¡¢JSDoc È±Ê§ 0¡¢ÎÄµµÍ¬²½ 0
+- [ ] **½¡¿µ±¨¸æÉú³É**£º`npm run build:health` ¡ú `public/health-report.json` ÒÑ¸üĞÂ
+
+### 6.3 ¹¹½¨²úÎï
+
+- [ ] **`npm run build` ³É¹¦**£ºÎŞ Rollup/Vite ¹¹½¨´íÎó
+- [ ] **²úÎïÍêÕûĞÔ**£º`dist/index.html` + `dist/assets/` ´æÔÚ£¬5 ¸ö manualChunks ¾ùÉú³É
+- [ ] **²úÎï´óĞ¡Éó¼Æ**£º¸÷ chunk ´óĞ¡Î´³¬»ùÏßãĞÖµ£¨TODO£º¼Ü¹¹×é¶¨ÒåãĞÖµ£©
+- [ ] **sourcemap ¹Ø±Õ**£ºÉú²ú¹¹½¨ÎŞ `.js.map` ÎÄ¼ş
+
+### 6.4 Êı¾İÓëÅäÖÃ
+
+- [ ] **DB_VERSION ¼ì²é**£ºÈô±¾´Î·¢²¼Éæ¼° Schema ±ä¸ü£¬È·ÈÏ `DB_VERSION` ÒÑµİÔöÇÒ Migration Âß¼­ÕıÈ·
+- [ ] **»·¾³±äÁ¿¼ì²é**£ºÉú²ú»·¾³±äÁ¿£¨`.env.production`£©ÒÑÅäÖÃ£¬ÎŞ `VITE_` Ç°×ºÃô¸ĞÆ¾Ö¤Ğ¹Â¶
+- [ ] **Â·ÓÉ×¢²á¼ì²é**£ºĞÂÔöÒ³ÃæÒÑÔÚ `routes.ts` ºÍ `./06-routing-specs.md` Í¬²½
+- [ ] **PWA ÅäÖÃ¼ì²é**£º`manifest.json` ºÍÍ¼±êÎÄ¼şÔÚ `public/` ÖĞÇÒ±»ÕıÈ·¸´ÖÆµ½ `dist/`
+
+### 6.5 ÎÄµµÓë¹µÍ¨
+
+- [ ] **CHANGELOG ¸üĞÂ**£º¸ù `CHANGELOG.md` ÒÑ¼ÇÂ¼±¾´Î·¢²¼ÕªÒª
+- [ ] **ÎÄµµË÷ÒıÍ¬²½**£º`docs/README.md` ÒÑ¸üĞÂ£¨ÈçÓĞĞÂÔöÎÄµµ£©
+- [ ] **README »ØÁ´**£º±¾ÎÄµµÒÑ»ØÁ´ÖÁ `docs/README.md` H Àà¡¸ÔËÎ¬¡¹Ãªµã
+
+---
+
+## 7. `npm run build` ²úÎïÑéÖ¤
+
+### 7.1 ÑéÖ¤ÃüÁî½Å±¾
 
 ```bash
 #!/bin/bash
-# scripts/verify-build.sh â€” æ„å»ºäº§ç‰©éªŒè¯ï¼ˆTODOï¼šå·¥ç¨‹æ•ˆèƒ½ç»„å®ç°ï¼‰
+# scripts/verify-build.sh ¡ª ¹¹½¨²úÎïÑéÖ¤£¨TODO£º¹¤³ÌĞ§ÄÜ×éÊµÏÖ£©
 
 set -e
 
-echo "ğŸ” éªŒè¯æ„å»ºäº§ç‰©..."
+echo "?? ÑéÖ¤¹¹½¨²úÎï..."
 
-# 1. å…¥å£æ–‡ä»¶
-[ -f "dist/index.html" ] || { echo "âŒ ç¼ºå°‘ dist/index.html"; exit 1; }
+# 1. Èë¿ÚÎÄ¼ş
+[ -f "dist/index.html" ] || { echo "? È±ÉÙ dist/index.html"; exit 1; }
 
-# 2. ä¸» chunk
-[ -f "dist/assets/index-"*.js ] || { echo "âŒ ç¼ºå°‘ä¸» JS chunk"; exit 1; }
-[ -f "dist/assets/index-"*.css ] || { echo "âŒ ç¼ºå°‘ä¸» CSS chunk"; exit 1; }
+# 2. Ö÷ chunk
+[ -f "dist/assets/index-"*.js ] || { echo "? È±ÉÙÖ÷ JS chunk"; exit 1; }
+[ -f "dist/assets/index-"*.css ] || { echo "? È±ÉÙÖ÷ CSS chunk"; exit 1; }
 
-# 3. manualChunks å®Œæ•´æ€§
+# 3. manualChunks ÍêÕûĞÔ
 for chunk in vendor ui charts pdf excel; do
-  [ -f "dist/assets/$chunk-"*.js ] || { echo "âŒ ç¼ºå°‘ $chunk chunk"; exit 1; }
+  [ -f "dist/assets/$chunk-"*.js ] || { echo "? È±ÉÙ $chunk chunk"; exit 1; }
 done
 
-# 4. sourcemap æ£€æŸ¥
+# 4. sourcemap ¼ì²é
 if [ "$(find dist/assets -name '*.js.map' | wc -l)" -ne 0 ]; then
-  echo "âš ï¸ å‘ç° sourcemap æ–‡ä»¶ï¼ˆç”Ÿäº§åº”å…³é—­ï¼‰"
+  echo "?? ·¢ÏÖ sourcemap ÎÄ¼ş£¨Éú²úÓ¦¹Ø±Õ£©"
 fi
 
-# 5. PWA èµ„æº
-[ -f "dist/manifest.json" ] || echo "âš ï¸ ç¼ºå°‘ manifest.json"
-[ -d "dist/icons" ] || echo "âš ï¸ ç¼ºå°‘ icons/ ç›®å½•"
+# 5. PWA ×ÊÔ´
+[ -f "dist/manifest.json" ] || echo "?? È±ÉÙ manifest.json"
+[ -d "dist/icons" ] || echo "?? È±ÉÙ icons/ Ä¿Â¼"
 
-echo "âœ… æ„å»ºäº§ç‰©éªŒè¯é€šè¿‡"
+echo "? ¹¹½¨²úÎïÑéÖ¤Í¨¹ı"
 ```
 
-### 7.2 äº§ç‰©å¤§å°åŸºçº¿ï¼ˆTODOï¼‰
+### 7.2 ²úÎï´óĞ¡»ùÏß£¨TODO£©
 
-> **TODO**: æ¶æ„ç»„å®šä¹‰å„ chunk å¤§å°é˜ˆå€¼åŸºçº¿ï¼ˆå¦‚ `vendor < 500KB`ã€`index < 300KB`ï¼‰ï¼Œå­˜å…¥ `.build-baseline.json`ï¼Œé…åˆ CI è‡ªåŠ¨åŒ–æ¯”å¯¹ã€‚
+> **TODO**: ¼Ü¹¹×é¶¨Òå¸÷ chunk ´óĞ¡ãĞÖµ»ùÏß£¨Èç `vendor < 500KB`¡¢`index < 300KB`£©£¬´æÈë `.build-baseline.json`£¬ÅäºÏ CI ×Ô¶¯»¯±È¶Ô¡£
 
-### 7.3 æ‰‹åŠ¨éªŒè¯æ­¥éª¤
+### 7.3 ÊÖ¶¯ÑéÖ¤²½Öè
 
-æ„å»ºå®Œæˆåï¼Œæ‰§è¡Œä»¥ä¸‹æ‰‹åŠ¨éªŒè¯ï¼š
+¹¹½¨Íê³Éºó£¬Ö´ĞĞÒÔÏÂÊÖ¶¯ÑéÖ¤£º
 
-1. `npm run preview` å¯åŠ¨é¢„è§ˆæœåŠ¡å™¨ï¼Œè®¿é—® `http://localhost:4173/`
-2. ç¡®è®¤é¦–é¡µåŠ è½½æ­£å¸¸ï¼ˆNetwork é¢æ¿æ—  404ï¼‰
-3. ç¡®è®¤è·¯ç”±è·³è½¬æ­£å¸¸ï¼ˆå¦‚ `/trading/holdings`ã€`/analysis`ï¼‰
-4. ç¡®è®¤ IndexedDB åˆå§‹åŒ–æ­£å¸¸ï¼ˆDevTools â†’ Application â†’ IndexedDB â†’ ç‰ˆæœ¬ä¸ store åˆ—è¡¨æ­£ç¡®ï¼‰
-5. ç¡®è®¤ PWA manifest å¯è®¿é—®ï¼ˆ`http://localhost:4173/manifest.json`ï¼‰
+1. `npm run preview` Æô¶¯Ô¤ÀÀ·şÎñÆ÷£¬·ÃÎÊ `http://localhost:4173/`
+2. È·ÈÏÊ×Ò³¼ÓÔØÕı³££¨Network Ãæ°åÎŞ 404£©
+3. È·ÈÏÂ·ÓÉÌø×ªÕı³££¨Èç `/trading/holdings`¡¢`/analysis`£©
+4. È·ÈÏ IndexedDB ³õÊ¼»¯Õı³££¨DevTools ¡ú Application ¡ú IndexedDB ¡ú °æ±¾Óë store ÁĞ±íÕıÈ·£©
+5. È·ÈÏ PWA manifest ¿É·ÃÎÊ£¨`http://localhost:4173/manifest.json`£©
 
 ---
 
-## 8. å›æ»šæ–¹æ¡ˆ
+## 8. »Ø¹ö·½°¸
 
-### 8.1 ä»£ç å›æ»šï¼ˆGit å±‚é¢ï¼‰
+### 8.1 ´úÂë»Ø¹ö£¨Git ²ãÃæ£©
 
-| åœºæ™¯ | æ“ä½œ | éªŒè¯ |
+| ³¡¾° | ²Ù×÷ | ÑéÖ¤ |
 |------|------|------|
-| æœ€æ–°æäº¤æœª push | `git reset --hard HEAD~1` | é‡è·‘ pre-commit é—¨ç¦ |
-| å·² push åˆ°è¿œç«¯ | `git revert <commit>` ç”Ÿæˆåå‘æäº¤ | é‡è·‘ pre-push é—¨ç¦ï¼ˆ`test:clean` + `build`ï¼‰ |
-| ç´§æ€¥å›æ»šï¼ˆå¤šæäº¤ï¼‰ | `git revert <oldest>^..<newest>` | å…¨é‡å›å½’æµ‹è¯•ï¼ˆL3 å¥—ä»¶ï¼‰ |
+| ×îĞÂÌá½»Î´ push | `git reset --hard HEAD~1` | ÖØÅÜ pre-commit ÃÅ½û |
+| ÒÑ push µ½Ô¶¶Ë | `git revert <commit>` Éú³É·´ÏòÌá½» | ÖØÅÜ pre-push ÃÅ½û£¨`test:clean` + `build`£© |
+| ½ô¼±»Ø¹ö£¨¶àÌá½»£© | `git revert <oldest>^..<newest>` | È«Á¿»Ø¹é²âÊÔ£¨L3 Ì×¼ş£© |
 
-å›æ»šåå¿…é¡»æ‰§è¡Œï¼ˆAGENTS.md Â§äºŒï¼‰ï¼š
+»Ø¹öºó±ØĞëÖ´ĞĞ£¨AGENTS.md ¡ì¶ş£©£º
 
 ```bash
-npx tsc --noEmit              # ç±»å‹å®‰å…¨
-npm run audit:docs            # æ–‡æ¡£åŒæ­¥
-npm run audit:layers          # è·¨å±‚è¿è§„
-npm run test -- --run         # å•å…ƒæµ‹è¯•
+npx tsc --noEmit              # ÀàĞÍ°²È«
+npm run audit:docs            # ÎÄµµÍ¬²½
+npm run audit:layers          # ¿ç²ãÎ¥¹æ
+npm run test -- --run         # µ¥Ôª²âÊÔ
 ```
 
-### 8.2 æ„å»ºäº§ç‰©å›æ»šï¼ˆéƒ¨ç½²å±‚é¢ï¼‰
+### 8.2 ¹¹½¨²úÎï»Ø¹ö£¨²¿Êğ²ãÃæ£©
 
 ```bash
-# 1. å›é€€åˆ°ä¸Šä¸€ä¸ªç¨³å®šç‰ˆæœ¬çš„ Git æ ‡ç­¾
+# 1. »ØÍËµ½ÉÏÒ»¸öÎÈ¶¨°æ±¾µÄ Git ±êÇ©
 git checkout <last-stable-tag>
 
-# 2. é‡æ–°æ„å»º
+# 2. ÖØĞÂ¹¹½¨
 npm ci && npm run build
 
-# 3. æ›¿æ¢æœåŠ¡å™¨ dist/ ç›®å½•ï¼ˆrsync/scpï¼‰
+# 3. Ìæ»»·şÎñÆ÷ dist/ Ä¿Â¼£¨rsync/scp£©
 rsync -avz --delete dist/ user@server:/var/www/v9/
 
-# 4. éªŒè¯ï¼šè®¿é—®é¦–é¡µ â†’ ç¡®è®¤ç‰ˆæœ¬å·ï¼ˆå¦‚æœ‰ï¼‰
+# 4. ÑéÖ¤£º·ÃÎÊÊ×Ò³ ¡ú È·ÈÏ°æ±¾ºÅ£¨ÈçÓĞ£©
 ```
 
-### 8.3 IndexedDB æ•°æ®å›æ»šï¼ˆâš ï¸ é«˜é£é™©ï¼‰
+### 8.3 IndexedDB Êı¾İ»Ø¹ö£¨?? ¸ß·çÏÕ£©
 
-IndexedDB **ä¸æ”¯æŒç›´æ¥å›æ»šç‰ˆæœ¬**ã€‚è‹¥ Schema å‡çº§å¯¼è‡´æ•°æ®æŸåï¼š
+IndexedDB **²»Ö§³ÖÖ±½Ó»Ø¹ö°æ±¾**¡£Èô Schema Éı¼¶µ¼ÖÂÊı¾İËğ»µ£º
 
-1. **ä¸é™çº§ DB_VERSION**ï¼ˆæµè§ˆå™¨æ‹’ç»æ‰“å¼€ä½ç‰ˆæœ¬æ•°æ®åº“ï¼‰
-2. **ç¼–å†™ä¿®å¤ Migration**ï¼šåœ¨ `db-migrations.ts` ä¸­æ–°å¢é«˜ç‰ˆæœ¬ Migrationï¼Œå°†å¼‚å¸¸æ•°æ®ä¿®å¤æˆ–è¿ç§»å›æ—§ç»“æ„
-3. **æç«¯æƒ…å†µ**ï¼šå¼•å¯¼ç”¨æˆ·ã€Œæ¸…é™¤æµè§ˆå™¨æ•°æ® â†’ é‡æ–°åˆå§‹åŒ–ã€ï¼ˆæ•°æ®ä¸¢å¤±ï¼Œä»…ä½œæœ€åæ‰‹æ®µï¼‰
+1. **²»½µ¼¶ DB_VERSION**£¨ä¯ÀÀÆ÷¾Ü¾ø´ò¿ªµÍ°æ±¾Êı¾İ¿â£©
+2. **±àĞ´ĞŞ¸´ Migration**£ºÔÚ `db-migrations.ts` ÖĞĞÂÔö¸ß°æ±¾ Migration£¬½«Òì³£Êı¾İĞŞ¸´»òÇ¨ÒÆ»Ø¾É½á¹¹
+3. **¼«¶ËÇé¿ö**£ºÒıµ¼ÓÃ»§¡¸Çå³ıä¯ÀÀÆ÷Êı¾İ ¡ú ÖØĞÂ³õÊ¼»¯¡¹£¨Êı¾İ¶ªÊ§£¬½ö×÷×îºóÊÖ¶Î£©
 
-> **TODO**: æ¶æ„ç»„åˆ¶å®š IndexedDB æ•°æ®å¤‡ä»½/æ¢å¤ç­–ç•¥ï¼ˆå¦‚å¯¼å‡º JSON å¤‡ä»½ã€å®šæœŸå¿«ç…§ï¼‰ã€‚
+> **TODO**: ¼Ü¹¹×éÖÆ¶¨ IndexedDB Êı¾İ±¸·İ/»Ö¸´²ßÂÔ£¨Èçµ¼³ö JSON ±¸·İ¡¢¶¨ÆÚ¿ìÕÕ£©¡£
 
-### 8.4 æ–‡æ¡£å›æ»š
+### 8.4 ÎÄµµ»Ø¹ö
 
-- æ–‡æ¡£å›æ»šä¸å½’æ­¤æ–¹æ¡ˆç®¡è¾–ï¼Œå‚è§ `../00-meta/governance.md` Â§3ã€Œæ–‡æ¡£ç”Ÿå‘½å‘¨æœŸã€ï¼šæ ‡è®° `DEPRECATED_` â†’ è¿å…¥ `docs/07-archive/` â†’ ä¿ç•™æœŸ 6 æœˆã€‚
+- ÎÄµµ»Ø¹ö²»¹é´Ë·½°¸¹ÜÏ½£¬²Î¼û `../00-meta/governance.md` ¡ì3¡¸ÎÄµµÉúÃüÖÜÆÚ¡¹£º±ê¼Ç `DEPRECATED_` ¡ú Ç¨Èë `docs/07-archive/` ¡ú ±£ÁôÆÚ 6 ÔÂ¡£
 
 ---
 
-## 9. ç›¸å…³æ–‡æ¡£ä¸å¼•ç”¨
+## 9. Ïà¹ØÎÄµµÓëÒıÓÃ
 
-| æ–‡æ¡£ | è·¯å¾„ | è¯´æ˜ |
+| ÎÄµµ | Â·¾¶ | ËµÃ÷ |
 |------|------|------|
-| AGENTS.md | `../../AGENTS.md` | å·¥ç¨‹åˆ†å±‚å¥‘çº¦ã€æ•°æ®åº“ç‰ˆæœ¬ç®¡ç† Â§å…«ã€å›æ»šéªŒè¯æµç¨‹ Â§äºŒ |
-| è¿ç»´æ‰‹å†Œ | [runbook.md](../explanation/runbook.md) | æ—¥å¸¸è¿ç»´ã€æ•…éšœå¤„ç½®ã€å¥åº·ç›‘æ§ |
-| å…¨å±€æ¶æ„ | [architecture/overview.md](../explanation/overview.md) | åˆ†å±‚æ¶æ„ã€æ•°æ®æµã€ä¸‰çº§åŠ è½½é“¾ |
-| æ–‡æ¡£æ²»ç† | [governance.md](../00-meta/governance.md) | æ–‡æ¡£ç”Ÿå‘½å‘¨æœŸã€ä¿é²œè§„åˆ™ã€DoD |
-| è·¯ç”±è§„æ ¼ | [02-design/06-routing-specs.md](../explanation/design/06-routing-specs.md) | è·¯ç”±æ³¨å†Œã€ä¸‰çº§åŠ è½½é“¾è¯¦ç»†è§„æ ¼ |
-| å¼•æ“è§„æ ¼ | [02-design/05-engine-specs.md](05-engine-specs.md) | L0-L8 å¼•æ“åˆ†å±‚ã€ç¡®å®šæ€§å±‚å®šä¹‰ |
+| AGENTS.md | `../../AGENTS.md` | ¹¤³Ì·Ö²ãÆõÔ¼¡¢Êı¾İ¿â°æ±¾¹ÜÀí ¡ì°Ë¡¢»Ø¹öÑéÖ¤Á÷³Ì ¡ì¶ş |
+| ÔËÎ¬ÊÖ²á | [runbook.md](../explanation/runbook.md) | ÈÕ³£ÔËÎ¬¡¢¹ÊÕÏ´¦ÖÃ¡¢½¡¿µ¼à¿Ø |
+| È«¾Ö¼Ü¹¹ | [architecture/overview.md](../explanation/overview.md) | ·Ö²ã¼Ü¹¹¡¢Êı¾İÁ÷¡¢Èı¼¶¼ÓÔØÁ´ |
+| ÎÄµµÖÎÀí | [governance.md](../00-meta/governance.md) | ÎÄµµÉúÃüÖÜÆÚ¡¢±£ÏÊ¹æÔò¡¢DoD |
+| Â·ÓÉ¹æ¸ñ | [02-design/06-routing-specs.md](../explanation/design/06-routing-specs.md) | Â·ÓÉ×¢²á¡¢Èı¼¶¼ÓÔØÁ´ÏêÏ¸¹æ¸ñ |
+| ÒıÇæ¹æ¸ñ | [02-design/05-engine-specs.md](05-engine-specs.md) | L0-L8 ÒıÇæ·Ö²ã¡¢È·¶¨ĞÔ²ã¶¨Òå |
 
 ---
 
-_æœ¬æ–‡æ¡£ç”±æ–‡æ¡£æ²»ç†æ•´æ”¹ï¼ˆP1ï¼‰åˆ›å»ºï¼ŒåŸºäº AGENTS.md v1.4.3 ä¸é¡¹ç›®å®é™…æ„å»ºé…ç½®ç¼–å†™ã€‚å¾… TODO é¡¹ç”±æ¶æ„ç»„/å·¥ç¨‹æ•ˆèƒ½ç»„é€æ­¥è¡¥å…¨åï¼Œç”± docs æ²»ç†ç»„å®¡æ ¸å¹¶æ ‡è®° status: readyã€‚_
+_±¾ÎÄµµÓÉÎÄµµÖÎÀíÕû¸Ä£¨P1£©´´½¨£¬»ùÓÚ AGENTS.md v1.4.3 ÓëÏîÄ¿Êµ¼Ê¹¹½¨ÅäÖÃ±àĞ´¡£´ı TODO ÏîÓÉ¼Ü¹¹×é/¹¤³ÌĞ§ÄÜ×éÖğ²½²¹È«ºó£¬ÓÉ docs ÖÎÀí×éÉóºË²¢±ê¼Ç status: ready¡£_

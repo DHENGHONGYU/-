@@ -11,7 +11,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
 } from '@/components/atoms/Breadcrumb'
-import type { AgentDetailComponentProps } from '@/agents/agentComponentRegistry'
+import type { AgentDetailComponentProps } from '@/components/organisms/agent/agentComponentRegistry'
 import { COLOR_TOKENS, COLOR_SHADES, twBg, twText } from '@/constants/theme.tokens'
 
 const V6_SCORE_ROUTE = '/analysis/stock-score'

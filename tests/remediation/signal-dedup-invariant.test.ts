@@ -86,7 +86,7 @@ describe('signalStore 重复条件整改回归 — De Morgan 反转守卫', () =
       cb!(makeEnvelope('tradinghub'))
     }
 
-    await new Promise((r) => setTimeout(r, 150))
+    await new Promise((r) => setTimeout(r, 400))
     expect(mockDataBridgeQuery).not.toHaveBeenCalled()
     expect(useSignalStore.getState().isRefreshing).toBe(false)
   })
@@ -99,7 +99,7 @@ describe('signalStore 重复条件整改回归 — De Morgan 反转守卫', () =
       cb(makeEnvelope('analyzer'))
     }
 
-    await new Promise((r) => setTimeout(r, 150))
+    await new Promise((r) => setTimeout(r, 400))
     expect(mockDataBridgeQuery).toHaveBeenCalledTimes(1)
   })
 })

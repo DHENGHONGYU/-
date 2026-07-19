@@ -13,7 +13,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { Badge } from '@/components/atoms/Badge'
-import { THEME_TOKENS, COLOR_TOKENS } from '@/constants/theme.tokens'
+import { THEME_TOKENS } from '@/constants/theme.tokens'
 
 // Mock logger
 vi.mock('@/lib/logger', () => ({
@@ -116,30 +116,34 @@ describe('Badge 组件', () => {
     it('outline 变体应用正确的 Token', () => {
       render(<Badge variant="outline">轮廓</Badge>)
       const badge = screen.getByText('轮廓')
-      expect(badge.className).toContain(COLOR_TOKENS.textPrimary.tailwind)
+      // 语义令牌化后 outline 使用 border-border + text-foreground（主题感知）
+      expect(badge.className).toContain('text-foreground')
     })
 
     it('destructive 变体应用正确的 Token', () => {
       render(<Badge variant="destructive">危险</Badge>)
       const badge = screen.getByText('危险')
-      expect(badge.className).toContain(COLOR_TOKENS.danger.bgClass)
-      expect(badge.className).toContain('text-white')
+      // 语义令牌：bg-destructive / text-destructive-foreground（原 COLOR_TOKENS.danger.bgClass=bg-red-500 已迁移）
+      expect(badge.className).toContain('bg-destructive')
+      expect(badge.className).toContain('text-destructive-foreground')
       expect(badge.className).toContain('border-transparent')
     })
 
     it('success 变体应用正确的 Token', () => {
       render(<Badge variant="success">成功</Badge>)
       const badge = screen.getByText('成功')
-      expect(badge.className).toContain(COLOR_TOKENS.success.bgClass)
-      expect(badge.className).toContain('text-white')
+      // 语义令牌：bg-success / text-success-foreground（与 #21C45D 规范成功色对齐）
+      expect(badge.className).toContain('bg-success')
+      expect(badge.className).toContain('text-success-foreground')
       expect(badge.className).toContain('border-transparent')
     })
 
     it('warning 变体应用正确的 Token', () => {
       render(<Badge variant="warning">警告</Badge>)
       const badge = screen.getByText('警告')
-      expect(badge.className).toContain(COLOR_TOKENS.warning.bgClass)
-      expect(badge.className).toContain('text-white')
+      // 语义令牌：bg-warning / text-warning-foreground（原 COLOR_TOKENS.warning.bgClass=bg-amber-500 已迁移）
+      expect(badge.className).toContain('bg-warning')
+      expect(badge.className).toContain('text-warning-foreground')
       expect(badge.className).toContain('border-transparent')
     })
   })
@@ -201,14 +205,14 @@ describe('Badge 组件', () => {
       document.documentElement.classList.remove('dark')
       render(<Badge variant="success">成功</Badge>)
       const badge = screen.getByText('成功')
-      expect(badge.className).toContain(COLOR_TOKENS.success.bgClass)
+      expect(badge.className).toContain('bg-success')
     })
 
     it('深色主题下应用正确的 Token', () => {
       document.documentElement.classList.add('dark')
       render(<Badge variant="success">成功</Badge>)
       const badge = screen.getByText('成功')
-      expect(badge.className).toContain(COLOR_TOKENS.success.bgClass)
+      expect(badge.className).toContain('bg-success')
     })
 
     it('主题切换时 Token 类名保持一致', () => {
@@ -225,16 +229,16 @@ describe('Badge 组件', () => {
       expect(classList1).toBe(classList2)
     })
 
-    it('outline 变体在主题切换时使用 textPrimary Token', () => {
+    it('outline 变体在主题切换时使用主题感知前景色', () => {
       document.documentElement.classList.remove('dark')
       const { rerender } = render(<Badge variant="outline">轮廓</Badge>)
       const badge1 = screen.getByText('轮廓')
-      expect(badge1.className).toContain(COLOR_TOKENS.textPrimary.tailwind)
+      expect(badge1.className).toContain('text-foreground')
 
       document.documentElement.classList.add('dark')
       rerender(<Badge variant="outline">轮廓</Badge>)
       const badge2 = screen.getByText('轮廓')
-      expect(badge2.className).toContain(COLOR_TOKENS.textPrimary.tailwind)
+      expect(badge2.className).toContain('text-foreground')
     })
   })
 
@@ -252,19 +256,19 @@ describe('Badge 组件', () => {
     it('destructive 变体包含 hover 样式', () => {
       render(<Badge variant="destructive">危险</Badge>)
       const badge = screen.getByText('危险')
-      expect(badge.className).toContain('hover:bg-red-600')
+      expect(badge.className).toContain('hover:bg-destructive/80')
     })
 
     it('success 变体包含 hover 样式', () => {
       render(<Badge variant="success">成功</Badge>)
       const badge = screen.getByText('成功')
-      expect(badge.className).toContain('hover:bg-green-800')
+      expect(badge.className).toContain('hover:bg-success/80')
     })
 
     it('warning 变体包含 hover 样式', () => {
       render(<Badge variant="warning">警告</Badge>)
       const badge = screen.getByText('警告')
-      expect(badge.className).toContain('hover:bg-amber-800')
+      expect(badge.className).toContain('hover:bg-warning/80')
     })
   })
 })

@@ -1,34 +1,43 @@
 ---
-title: 04-ui-ux-specs
+title: 04. UI/UX ¹æ·¶
+type: explanation
+domain: frontend
+phase: design
 tier: important
+status: active
+maintainer: V9 Architecture Team
+summary: "Éè¼Æ²Î¿¼£ºhttps://hslqownhhwaig.ok.kimi.link/ Éè¼ÆÌØÕ÷£ºPWA ÒÆ¶¯¶ËÓÅÏÈ¡¢shadcn/ui ×é¼şÌåÏµ¡¢HSL CSS ±äÁ¿Ö÷Ìâ¡¢widget..."
+tags: [frontend, spec, plan, architecture, component, explanation]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+doc_id: V9-DOC-FRONT-003
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-tier: important
-code_version: 2.0.0
----
-
-# 04. UI/UX è§„èŒƒ
+# 04. UI/UX ¹æ·¶
 
 > **Status**: Current  
 > **Version**: v2.5.0  
 > **Last Updated**: 2026-07-05
 >
-> **è®¾è®¡å‚è€ƒ**ï¼šhttps://hslqownhhwaig.ok.kimi.link/  
-> **è®¾è®¡ç‰¹å¾**ï¼šPWA ç§»åŠ¨ç«¯ä¼˜å…ˆã€shadcn/ui ç»„ä»¶ä½“ç³»ã€HSL CSS å˜é‡ä¸»é¢˜ã€widget åŒ–é©¾é©¶èˆ±ã€ç¿¡ç¿ ç»¿å¼ºè°ƒè‰²ã€‚
+> **Éè¼Æ²Î¿¼**£ºhttps://hslqownhhwaig.ok.kimi.link/  
+> **Éè¼ÆÌØÕ÷**£ºPWA ÒÆ¶¯¶ËÓÅÏÈ¡¢shadcn/ui ×é¼şÌåÏµ¡¢HSL CSS ±äÁ¿Ö÷Ìâ¡¢widget »¯¼İÊ»²Õ¡¢ôä´äÂÌÇ¿µ÷É«¡£
 
-## 4.1 è®¾è®¡åŸåˆ™
+## 4.1 Éè¼ÆÔ­Ôò
 
-1. **ç§»åŠ¨ç«¯ä¼˜å…ˆ**ï¼šä¸»è¦ä½¿ç”¨åœºæ™¯ä¸ºå¹³æ¿/æ¡Œé¢ç ”ç©¶ï¼Œä½†éœ€é€‚é…ç§»åŠ¨ç«¯æµè§ˆã€‚
-2. **PWA ä½“éªŒ**ï¼šå¯å®‰è£…ã€ç¦»çº¿å¯ç”¨ã€ä¸»é¢˜è‰² `#10b981`ï¼ˆç¿¡ç¿ ç»¿ï¼‰ã€‚
-3. **Widget åŒ–**ï¼šé©¾é©¶èˆ±ç”±å¯é…ç½® Widget ç½‘æ ¼ç»„æˆã€‚
-4. **äº”èˆ±å·¥ä½œæµ**ï¼šè¾“å…¥ â†’ åˆ†æ â†’ äº¤æ˜“ â†’ è¾“å‡º â†’ æ€»æ§ï¼Œä¸åˆ‡å±ã€‚
-5. **å®‹ç“·ç¾å­¦ + ç°ä»£æç®€**ï¼šä»¥è±¡ç‰™ç™½/æš–ç°ä¸ºåº•ï¼Œç¿¡ç¿ ç»¿ä¸ºè¡ŒåŠ¨è‰²ï¼Œæœ±ç ‚çº¢ä¸ºè­¦ç¤ºè‰²ã€‚
+1. **ÒÆ¶¯¶ËÓÅÏÈ**£ºÖ÷ÒªÊ¹ÓÃ³¡¾°ÎªÆ½°å/×ÀÃæÑĞ¾¿£¬µ«ĞèÊÊÅäÒÆ¶¯¶Ëä¯ÀÀ¡£
+2. **PWA ÌåÑé**£º¿É°²×°¡¢ÀëÏß¿ÉÓÃ¡¢Ö÷ÌâÉ« `#0D9165`£¨ôä´äÂÌ£©¡£
+3. **Widget »¯**£º¼İÊ»²ÕÓÉ¿ÉÅäÖÃ Widget Íø¸ñ×é³É¡£
+4. **Îå²Õ¹¤×÷Á÷**£ºÊäÈë ¡ú ·ÖÎö ¡ú ½»Ò× ¡ú Êä³ö ¡ú ×Ü¿Ø£¬²»ÇĞÆÁ¡£
+5. **ËÎ´ÉÃÀÑ§ + ÏÖ´ú¼«¼ò**£ºÒÔÏóÑÀ°×/Å¯»ÒÎªµ×£¬ôä´äÂÌÎªĞĞ¶¯É«¡£¹¦ÄÜĞÔ**¾¯Ê¾É«Îªçúçê£¨amber£¬`--warning: 38 92% 50%`£©**¡ª¡ª±ÜÃâÓë´íÎóÉ«£¨`--destructive` ºì£©¼° A ¹É¡¸ºìÕÇ¡¹ÓïÒå×²É«£»**ÖìÉ°ºì£¨`--cinnabar`£©ÎªÎÄ»¯Ç¿µ÷/×°ÊÎÉ«**£¬ÓÃÓÚµã×º¶ø·Ç¹¦ÄÜ×´Ì¬¡£
 
-## 4.2 ä¸»é¢˜ç³»ç»Ÿ
+## 4.2 Ö÷ÌâÏµÍ³
 
-### CSS å˜é‡ï¼ˆshadcn/ui æ ‡å‡†ï¼‰
+### CSS ±äÁ¿£¨shadcn/ui ±ê×¼£©
 
 ```css
 :root {
@@ -38,7 +47,7 @@ code_version: 2.0.0
   --card-foreground: 240 10% 3.9%;
   --popover: 0 0% 100%;
   --popover-foreground: 240 10% 3.9%;
-  --primary: 160 84% 39%;        /* ç¿¡ç¿ ç»¿ #10b981 */
+  --primary: 160 84% 31%;        /* ôä´äÂÌ #0D9165 */
   --primary-foreground: 0 0% 100%;
   --secondary: 240 4.8% 95.9%;
   --secondary-foreground: 240 5.9% 10%;
@@ -50,96 +59,96 @@ code_version: 2.0.0
   --destructive-foreground: 0 0% 98%;
   --border: 240 5.9% 90%;
   --input: 240 5.9% 90%;
-  --ring: 160 84% 39%;
+  --ring: 160 84% 31%;
   --radius: 0.625rem;
 }
 ```
 
-### è¯­ä¹‰è‰²æ‰©å±•
+### ÓïÒåÉ«À©Õ¹
 
 ```css
 :root {
-  --ru-blue: 205 35% 70%;       /* æ±çª‘å¤©é’ */
-  --guan-green: 145 15% 65%;    /* å®˜çª‘ç²‰é’ */
-  --cinnabar: 5 65% 52%;        /* æœ±ç ‚çº¢ */
-  --ivory: 40 33% 94%;          /* è±¡ç‰™ç™½ */
-  --warm-gray: 30 12% 90%;      /* æš–ç° */
+  --ru-blue: 205 35% 70%;       /* ÈêÒ¤ÌìÇà */
+  --guan-green: 145 15% 65%;    /* ¹ÙÒ¤·ÛÇà */
+  --cinnabar: 5 65% 52%;        /* ÖìÉ°ºì */
+  --ivory: 40 33% 94%;          /* ÏóÑÀ°× */
+  --warm-gray: 30 12% 90%;      /* Å¯»Ò */
 }
 ```
 
-### ä½¿ç”¨è§„èŒƒ
+### Ê¹ÓÃ¹æ·¶
 
-- èƒŒæ™¯ï¼š`bg-background`
-- ä¸»æ–‡å­—ï¼š`text-foreground`
-- æ¬¡è¦æ–‡å­—ï¼š`text-muted-foreground`
-- ä¸»æŒ‰é’®ï¼š`bg-primary text-primary-foreground`
-- å±é™©æ“ä½œï¼š`bg-destructive text-destructive-foreground`
-- è¾¹æ¡†ï¼š`border-border`
-- èšç„¦ç¯ï¼š`ring-ring`
+- ±³¾°£º`bg-background`
+- Ö÷ÎÄ×Ö£º`text-foreground`
+- ´ÎÒªÎÄ×Ö£º`text-muted-foreground`
+- Ö÷°´Å¥£º`bg-primary text-primary-foreground`
+- Î£ÏÕ²Ù×÷£º`bg-destructive text-destructive-foreground`
+- ±ß¿ò£º`border-border`
+- ¾Û½¹»·£º`ring-ring`
 
-## 4.3 å¸ƒå±€ç³»ç»Ÿ
+## 4.3 ²¼¾ÖÏµÍ³
 
-### äº”èˆ±å¸ƒå±€ï¼ˆPortalShellï¼‰
+### Îå²Õ²¼¾Ö£¨PortalShell£©
 
-å½“å‰å®ç°é‡‡ç”¨ **Kimi ç»å…¸æ·±è‰²å¸ƒå±€**ï¼š
-
-```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚  56px é¡¶éƒ¨çŠ¶æ€æ ï¼šLogo å¾½ç«  | äº”èˆ± Tab | é‡‡é›†å¥åº· | è¿è¡Œæ—¶é•¿ | ç‰ˆæœ¬  â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                     â”‚                                       â”‚
-â”‚  260px å·¦ä¾§åˆ†ç»„      â”‚    å³ä¾§ä¸»å†…å®¹åŒº                        â”‚
-â”‚  åŠŸèƒ½ä¾§è¾¹æ           â”‚    ï¼ˆå­é¡µé¢ / Tab åˆ‡æ¢ï¼‰                â”‚
-â”‚  ï¼ˆæŒ‰èˆ±åˆ†ç»„æ ‡é¢˜ï¼‰     â”‚                                       â”‚
-â”‚                     â”‚                                       â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-```
-
-è®¾è®¡è¦ç‚¹ï¼š
-
-- æ ¹å®¹å™¨å§‹ç»ˆæ·»åŠ  `dark` ç±»ï¼Œä½¿ç”¨ `theme.colors.background` ç­‰ HSL å˜é‡ã€‚
-- é¦–é¡µï¼ˆ`/`ï¼‰ä¸é©¾é©¶èˆ±ï¼ˆ`/cockpit`ï¼‰ä¿æŒæµ…è‰²ä¸»é¢˜ï¼Œå…¶ä½™èˆ±å®¤åœ¨æ·±è‰²å£³å†…æ¸²æŸ“ã€‚
-- å·¦ä¾§è¾¹æ æŒ‰ã€Œå¸¸ç”¨ / é‡‡é›† / å·¥å…·ã€åˆ†ç»„å±•ç¤ºå­å¯¼èˆªï¼Œç»„æ ‡é¢˜ä»…è§†è§‰åˆ†ç»„ï¼Œä¸è§¦å‘è·³è½¬ã€‚
-- ä¸»å†…å®¹åŒºç»Ÿä¸€ `p-6` å†…è¾¹è·ï¼Œ`overflow-auto` å¯æ»šåŠ¨ã€‚
-
-### äº”èˆ±å¸ƒå±€ï¼ˆæ—©æœŸè§„åˆ’ï¼‰
+µ±Ç°ÊµÏÖ²ÉÓÃ **Kimi ¾­µäÉîÉ«²¼¾Ö**£º
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚  é¡¶éƒ¨å¯¼èˆªæ ï¼šé¦–é¡µ | è¾“å…¥ | åˆ†æ | äº¤æ˜“ | è¾“å‡º | æ€»æ§ | é©¾é©¶èˆ±  â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚          â”‚                          â”‚
-â”‚ å·¦ä¾§é¢æ¿ â”‚    å³ä¾§æ‰§è¡Œç•Œé¢           â”‚
-â”‚ ï¼ˆä¸€çº§   â”‚    ï¼ˆTab/å­é¡µé¢åˆ‡æ¢ï¼‰      â”‚
-â”‚  åŠŸèƒ½ï¼‰  â”‚                          â”‚
-â”‚          â”‚                          â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚  åº•éƒ¨çŠ¶æ€æ                           â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+©°©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©´
+©¦  56px ¶¥²¿×´Ì¬À¸£ºLogo »ÕÕÂ | Îå²Õ Tab | ²É¼¯½¡¿µ | ÔËĞĞÊ±³¤ | °æ±¾  ©¦
+©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©Ğ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
+©¦                     ©¦                                       ©¦
+©¦  260px ×ó²à·Ö×é      ©¦    ÓÒ²àÖ÷ÄÚÈİÇø                        ©¦
+©¦  ¹¦ÄÜ²à±ßÀ¸          ©¦    £¨×ÓÒ³Ãæ / Tab ÇĞ»»£©                ©¦
+©¦  £¨°´²Õ·Ö×é±êÌâ£©     ©¦                                       ©¦
+©¦                     ©¦                                       ©¦
+©¸©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©Ø©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼
 ```
 
-### é©¾é©¶èˆ±å¸ƒå±€ï¼ˆCockpitShellï¼‰
+Éè¼ÆÒªµã£º
+
+- ¸ùÈİÆ÷Ê¼ÖÕÌí¼Ó `dark` Àà£¬Ê¹ÓÃ `theme.colors.background` µÈ HSL ±äÁ¿¡£
+- Ê×Ò³£¨`/`£©Óë¼İÊ»²Õ£¨`/cockpit`£©±£³ÖÇ³É«Ö÷Ìâ£¬ÆäÓà²ÕÊÒÔÚÉîÉ«¿ÇÄÚäÖÈ¾¡£
+- ×ó²à±ßÀ¸°´¡¸³£ÓÃ / ²É¼¯ / ¹¤¾ß¡¹·Ö×éÕ¹Ê¾×Óµ¼º½£¬×é±êÌâ½öÊÓ¾õ·Ö×é£¬²»´¥·¢Ìø×ª¡£
+- Ö÷ÄÚÈİÇøÍ³Ò» `p-6` ÄÚ±ß¾à£¬`overflow-auto` ¿É¹ö¶¯¡£
+
+### Îå²Õ²¼¾Ö£¨ÔçÆÚ¹æ»®£©
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚  é¡¶éƒ¨æ ï¼šæ ‡é¢˜ | æ—¶é—´ | åˆ·æ–° | è®¾ç½®   â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚  â”Œâ”€â”€â”€â”€â” â”Œâ”€â”€â”€â”€â” â”Œâ”€â”€â”€â”€â” â”Œâ”€â”€â”€â”€â”      â”‚
-â”‚  â”‚ W1 â”‚ â”‚ W2 â”‚ â”‚ W3 â”‚ â”‚ W4 â”‚      â”‚
-â”‚  â””â”€â”€â”€â”€â”˜ â””â”€â”€â”€â”€â”˜ â””â”€â”€â”€â”€â”˜ â””â”€â”€â”€â”€â”˜      â”‚
-â”‚  â”Œâ”€â”€â”€â”€â” â”Œâ”€â”€â”€â”€â” â”Œâ”€â”€â”€â”€â”              â”‚
-â”‚  â”‚ W5 â”‚ â”‚ W6 â”‚ â”‚ W7 â”‚              â”‚
-â”‚  â””â”€â”€â”€â”€â”˜ â””â”€â”€â”€â”€â”˜ â””â”€â”€â”€â”€â”˜              â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚  åº•éƒ¨çŠ¶æ€æ                           â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+©°©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©´
+©¦  ¶¥²¿µ¼º½À¸£ºÊ×Ò³ | ÊäÈë | ·ÖÎö | ½»Ò× | Êä³ö | ×Ü¿Ø | ¼İÊ»²Õ  ©¦
+©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©Ğ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
+©¦          ©¦                          ©¦
+©¦ ×ó²àÃæ°å ©¦    ÓÒ²àÖ´ĞĞ½çÃæ           ©¦
+©¦ £¨Ò»¼¶   ©¦    £¨Tab/×ÓÒ³ÃæÇĞ»»£©      ©¦
+©¦  ¹¦ÄÜ£©  ©¦                          ©¦
+©¦          ©¦                          ©¦
+©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©Ø©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
+©¦  µ×²¿×´Ì¬À¸                          ©¦
+©¸©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼
 ```
 
-### é©¾é©¶èˆ± Widget æ¶æ„è§„èŒƒ
+### ¼İÊ»²Õ²¼¾Ö£¨CockpitShell£©
 
-é©¾é©¶èˆ±é‡‡ç”¨å¯æ’æ‹” Widget æ¶æ„ï¼Œæ”¯æŒç”¨æˆ·è‡ªå®šä¹‰å¸ƒå±€ä¸å†…å®¹ã€‚
+```
+©°©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©´
+©¦  ¶¥²¿À¸£º±êÌâ | Ê±¼ä | Ë¢ĞÂ | ÉèÖÃ   ©¦
+©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
+©¦  ©°©¤©¤©¤©¤©´ ©°©¤©¤©¤©¤©´ ©°©¤©¤©¤©¤©´ ©°©¤©¤©¤©¤©´      ©¦
+©¦  ©¦ W1 ©¦ ©¦ W2 ©¦ ©¦ W3 ©¦ ©¦ W4 ©¦      ©¦
+©¦  ©¸©¤©¤©¤©¤©¼ ©¸©¤©¤©¤©¤©¼ ©¸©¤©¤©¤©¤©¼ ©¸©¤©¤©¤©¤©¼      ©¦
+©¦  ©°©¤©¤©¤©¤©´ ©°©¤©¤©¤©¤©´ ©°©¤©¤©¤©¤©´              ©¦
+©¦  ©¦ W5 ©¦ ©¦ W6 ©¦ ©¦ W7 ©¦              ©¦
+©¦  ©¸©¤©¤©¤©¤©¼ ©¸©¤©¤©¤©¤©¼ ©¸©¤©¤©¤©¤©¼              ©¦
+©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
+©¦  µ×²¿×´Ì¬À¸                          ©¦
+©¸©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼
+```
 
-**Widget å®šä¹‰è§„èŒƒ**ï¼š
+### ¼İÊ»²Õ Widget ¼Ü¹¹¹æ·¶
+
+¼İÊ»²Õ²ÉÓÃ¿É²å°Î Widget ¼Ü¹¹£¬Ö§³ÖÓÃ»§×Ô¶¨Òå²¼¾ÖÓëÄÚÈİ¡£
+
+**Widget ¶¨Òå¹æ·¶**£º
 ```ts
 interface WidgetDefinition {
   id: string;
@@ -149,243 +158,243 @@ interface WidgetDefinition {
   defaultSize: { cols: number; rows: number };
   defaultPosition: { x: number; y: number };
   component: React.ComponentType<WidgetProps>;
-  dataChannels: string[];      // è®¢é˜…çš„æ•°æ®é€šé“
-  dependencies: string[];      // ä¾èµ–çš„ Widget
+  dataChannels: string[];      // ¶©ÔÄµÄÊı¾İÍ¨µÀ
+  dependencies: string[];      // ÒÀÀµµÄ Widget
 }
 ```
 
-**Widget ç”Ÿå‘½å‘¨æœŸ**ï¼š
+**Widget ÉúÃüÖÜÆÚ**£º
 ```
-mount â†’ initData â†’ subscribeChannels â†’ render â†’ updateData â†’ unsubscribeChannels â†’ unmount
+mount ¡ú initData ¡ú subscribeChannels ¡ú render ¡ú updateData ¡ú unsubscribeChannels ¡ú unmount
 ```
 
-**Widget åˆ†ç±»ä¸æ¸…å•**ï¼š
+**Widget ·ÖÀàÓëÇåµ¥**£º
 
-| åˆ†ç±» | Widget ID | åç§° | é»˜è®¤å°ºå¯¸ | è¯´æ˜ |
+| ·ÖÀà | Widget ID | Ãû³Æ | Ä¬ÈÏ³ß´ç | ËµÃ÷ |
 |------|-----------|------|----------|------|
-| **å¸‚åœºç±»** | `market-overview` | å¸‚åœºæ¦‚è§ˆ | 4x2 | å¤§ç›˜æŒ‡æ•°ã€æ¶¨è·Œå®¶æ•°ã€çƒ­ç‚¹æ¿å— |
-| **å¸‚åœºç±»** | `market-index` | æŒ‡æ•°è¡Œæƒ… | 4x3 | ä¸»è¦æŒ‡æ•° K çº¿å›¾ |
-| **å¸‚åœºç±»** | `market-news` | è´¢ç»æ–°é—» | 4x2 | å®æ—¶è´¢ç»æ–°é—»æµ |
-| **æŒä»“ç±»** | `portfolio-summary` | ç»„åˆæ¦‚è§ˆ | 6x2 | æ€»èµ„äº§ã€ç›ˆäºã€ä»“ä½åˆ†å¸ƒ |
-| **æŒä»“ç±»** | `portfolio-holdings` | æŒä»“æ˜ç»† | 6x3 | æŒä»“è‚¡ç¥¨åˆ—è¡¨ä¸ç›ˆäº |
-| **ç­–ç•¥ç±»** | `strategy-signals` | äº¤æ˜“ä¿¡å· | 6x2 | è§‚å¯Ÿæ± ä¿¡å·æ±‡æ€» |
-| **ç­–ç•¥ç±»** | `strategy-rotation` | æ¿å—è½®åŠ¨ | 6x2 | è¡Œä¸šè½®åŠ¨è¯„åˆ†ä¸å»ºè®® |
-| **ç­–ç•¥ç±»** | `strategy-score` | è¯„åˆ†ç›‘æ§ | 4x2 | é«˜åˆ†è‚¡ç¥¨å®æ—¶ç›‘æ§ |
-| **Agentç±»** | `agent-status` | AgentçŠ¶æ€ | 4x2 | Agentè¿è¡ŒçŠ¶æ€ä¸å¥åº·åº¦ |
-| **Agentç±»** | `agent-tasks` | ä»»åŠ¡é˜Ÿåˆ— | 4x3 | å½“å‰ä»»åŠ¡ä¸è¿›åº¦ |
-| **Agentç±»** | `agent-logs` | æ—¥å¿—æµ | 4x3 | Agentæ‰§è¡Œæ—¥å¿— |
+| **ÊĞ³¡Àà** | `market-overview` | ÊĞ³¡¸ÅÀÀ | 4x2 | ´óÅÌÖ¸Êı¡¢ÕÇµø¼ÒÊı¡¢ÈÈµã°å¿é |
+| **ÊĞ³¡Àà** | `market-index` | Ö¸ÊıĞĞÇé | 4x3 | Ö÷ÒªÖ¸Êı K ÏßÍ¼ |
+| **ÊĞ³¡Àà** | `market-news` | ²Æ¾­ĞÂÎÅ | 4x2 | ÊµÊ±²Æ¾­ĞÂÎÅÁ÷ |
+| **³Ö²ÖÀà** | `portfolio-summary` | ×éºÏ¸ÅÀÀ | 6x2 | ×Ü×Ê²ú¡¢Ó¯¿÷¡¢²ÖÎ»·Ö²¼ |
+| **³Ö²ÖÀà** | `portfolio-holdings` | ³Ö²ÖÃ÷Ï¸ | 6x3 | ³Ö²Ö¹ÉÆ±ÁĞ±íÓëÓ¯¿÷ |
+| **²ßÂÔÀà** | `strategy-signals` | ½»Ò×ĞÅºÅ | 6x2 | ¹Û²ì³ØĞÅºÅ»ã×Ü |
+| **²ßÂÔÀà** | `strategy-rotation` | °å¿éÂÖ¶¯ | 6x2 | ĞĞÒµÂÖ¶¯ÆÀ·ÖÓë½¨Òé |
+| **²ßÂÔÀà** | `strategy-score` | ÆÀ·Ö¼à¿Ø | 4x2 | ¸ß·Ö¹ÉÆ±ÊµÊ±¼à¿Ø |
+| **AgentÀà** | `agent-status` | Agent×´Ì¬ | 4x2 | AgentÔËĞĞ×´Ì¬Óë½¡¿µ¶È |
+| **AgentÀà** | `agent-tasks` | ÈÎÎñ¶ÓÁĞ | 4x3 | µ±Ç°ÈÎÎñÓë½ø¶È |
+| **AgentÀà** | `agent-logs` | ÈÕÖ¾Á÷ | 4x3 | AgentÖ´ĞĞÈÕÖ¾ |
 
-**Widget äº‹ä»¶è”åŠ¨**ï¼š
-- ä½¿ç”¨ `WidgetEventBus` è¿›è¡Œè·¨ Widget é€šä¿¡
-- äº‹ä»¶åæ ¼å¼ï¼š`widget:{widgetId}:{event}`
-- æ”¯æŒæ•°æ®åŒæ­¥ä¸çŠ¶æ€åŒæ­¥
+**Widget ÊÂ¼şÁª¶¯**£º
+- Ê¹ÓÃ `WidgetEventBus` ½øĞĞ¿ç Widget Í¨ĞÅ
+- ÊÂ¼şÃû¸ñÊ½£º`widget:{widgetId}:{event}`
+- Ö§³ÖÊı¾İÍ¬²½Óë×´Ì¬Í¬²½
 
-**å½“å‰çŠ¶æ€**ï¼šğŸ”´ `CockpitShell.tsx` ä¸ºé™æ€é¡µé¢ï¼Œç¼ºå°‘ Widget æ¡†æ¶ã€‚
+**µ±Ç°×´Ì¬**£º?? `CockpitShell.tsx` Îª¾²Ì¬Ò³Ãæ£¬È±ÉÙ Widget ¿ò¼Ü¡£
 
-### å›¾è¡¨ç»„ä»¶è§„èŒƒ
+### Í¼±í×é¼ş¹æ·¶
 
-æ•°æ®å¯è§†åŒ–æ˜¯é©¾é©¶èˆ±ä¸åˆ†æèˆ±çš„æ ¸å¿ƒèƒ½åŠ›ï¼Œéœ€å¼•å…¥ä¸“ä¸šå›¾è¡¨åº“ã€‚
+Êı¾İ¿ÉÊÓ»¯ÊÇ¼İÊ»²ÕÓë·ÖÎö²ÕµÄºËĞÄÄÜÁ¦£¬ĞèÒıÈë×¨ÒµÍ¼±í¿â¡£
 
-**å›¾è¡¨åº“é€‰å‹**ï¼š
-- **è½»é‡çº§ K çº¿å›¾**ï¼š`lightweight-charts`ï¼ˆé«˜æ€§èƒ½ã€ä¸“æ³¨é‡‘èå›¾è¡¨ï¼‰
-- **é€šç”¨å›¾è¡¨**ï¼š`recharts`ï¼ˆReact å‹å¥½ã€åŠŸèƒ½ä¸°å¯Œï¼‰
+**Í¼±í¿âÑ¡ĞÍ**£º
+- **ÇáÁ¿¼¶ K ÏßÍ¼**£º`lightweight-charts`£¨¸ßĞÔÄÜ¡¢×¨×¢½ğÈÚÍ¼±í£©
+- **Í¨ÓÃÍ¼±í**£º`recharts`£¨React ÓÑºÃ¡¢¹¦ÄÜ·á¸»£©
 
-**å›¾è¡¨ç»„ä»¶æ¸…å•**ï¼š
+**Í¼±í×é¼şÇåµ¥**£º
 
-| ç»„ä»¶ | è·¯å¾„ | è¯´æ˜ |
+| ×é¼ş | Â·¾¶ | ËµÃ÷ |
 |------|------|------|
-| LineChart | `src/components/chart/LineChart.tsx` | æŠ˜çº¿å›¾ |
-| BarChart | `src/components/chart/BarChart.tsx` | æŸ±çŠ¶å›¾ |
-| CandlestickChart | `src/components/chart/CandlestickChart.tsx` | K çº¿å›¾ |
-| AreaChart | `src/components/chart/AreaChart.tsx` | é¢ç§¯å›¾ |
-| ScoreRadar | `src/components/chart/ScoreRadar.tsx` | è¯„åˆ†é›·è¾¾å›¾ |
-| FactorHeatmap | `src/components/chart/FactorHeatmap.tsx` | å› å­çƒ­åŠ›å›¾ |
+| LineChart | `src/components/chart/LineChart.tsx` | ÕÛÏßÍ¼ |
+| BarChart | `src/components/chart/BarChart.tsx` | Öù×´Í¼ |
+| CandlestickChart | `src/components/chart/CandlestickChart.tsx` | K ÏßÍ¼ |
+| AreaChart | `src/components/chart/AreaChart.tsx` | Ãæ»ıÍ¼ |
+| ScoreRadar | `src/components/chart/ScoreRadar.tsx` | ÆÀ·ÖÀ×´ïÍ¼ |
+| FactorHeatmap | `src/components/chart/FactorHeatmap.tsx` | Òò×ÓÈÈÁ¦Í¼ |
 
-**å›¾è¡¨äº¤äº’è§„èŒƒ**ï¼š
-- æ”¯æŒæ‚¬åœ tooltip æ˜¾ç¤ºè¯¦ç»†æ•°æ®
-- æ”¯æŒç¼©æ”¾ä¸å¹³ç§»
-- æ”¯æŒæ—¶é—´èŒƒå›´é€‰æ‹©
-- æ”¯æŒæ•°æ®å¯¼å‡º
+**Í¼±í½»»¥¹æ·¶**£º
+- Ö§³ÖĞüÍ£ tooltip ÏÔÊ¾ÏêÏ¸Êı¾İ
+- Ö§³ÖËõ·ÅÓëÆ½ÒÆ
+- Ö§³ÖÊ±¼ä·¶Î§Ñ¡Ôñ
+- Ö§³ÖÊı¾İµ¼³ö
 
-**å½“å‰çŠ¶æ€**ï¼šğŸ”´ æœªå®ç°ã€‚ç¼ºå°‘å›¾è¡¨ç»„ä»¶ã€‚
+**µ±Ç°×´Ì¬**£º?? Î´ÊµÏÖ¡£È±ÉÙÍ¼±í×é¼ş¡£
 
-## 4.4 è‚¡ç¥¨æ±  UI è§„èŒƒ
+## 4.4 ¹ÉÆ±³Ø UI ¹æ·¶
 
-### æ± è§†å›¾ï¼ˆPoolViewï¼‰
+### ³ØÊÓÍ¼£¨PoolView£©
 
-æ¯ä¸ªè‚¡ç¥¨æ± ç»Ÿä¸€ä½¿ç”¨ `PoolView` ç»„ä»¶å±•ç¤ºï¼š
+Ã¿¸ö¹ÉÆ±³ØÍ³Ò»Ê¹ÓÃ `PoolView` ×é¼şÕ¹Ê¾£º
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚  [å›¾æ ‡] æ± åç§°              [åˆ·æ–°]  â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚  â”Œâ”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”         â”‚
-â”‚  â”‚è‚¡ç¥¨1â”‚è‚¡ç¥¨2â”‚è‚¡ç¥¨3â”‚è‚¡ç¥¨4â”‚         â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”˜         â”‚
-â”‚  â”Œâ”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”               â”‚
-â”‚  â”‚è‚¡ç¥¨5â”‚è‚¡ç¥¨6â”‚è‚¡ç¥¨7â”‚               â”‚
-â”‚  â””â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”˜               â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚  ç©ºçŠ¶æ€ï¼šå‰å¾€è¾“å…¥èˆ±æ·»åŠ å€™é€‰è‚¡ç¥¨      â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+©°©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©´
+©¦  [Í¼±ê] ³ØÃû³Æ              [Ë¢ĞÂ]  ©¦
+©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
+©¦  ©°©¤©¤©¤©¤©¤©Ğ©¤©¤©¤©¤©¤©Ğ©¤©¤©¤©¤©¤©Ğ©¤©¤©¤©¤©¤©´         ©¦
+©¦  ©¦¹ÉÆ±1©¦¹ÉÆ±2©¦¹ÉÆ±3©¦¹ÉÆ±4©¦         ©¦
+©¦  ©¸©¤©¤©¤©¤©¤©Ø©¤©¤©¤©¤©¤©Ø©¤©¤©¤©¤©¤©Ø©¤©¤©¤©¤©¤©¼         ©¦
+©¦  ©°©¤©¤©¤©¤©¤©Ğ©¤©¤©¤©¤©¤©Ğ©¤©¤©¤©¤©¤©´               ©¦
+©¦  ©¦¹ÉÆ±5©¦¹ÉÆ±6©¦¹ÉÆ±7©¦               ©¦
+©¦  ©¸©¤©¤©¤©¤©¤©Ø©¤©¤©¤©¤©¤©Ø©¤©¤©¤©¤©¤©¼               ©¦
+©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
+©¦  ¿Õ×´Ì¬£ºÇ°ÍùÊäÈë²ÕÌí¼ÓºòÑ¡¹ÉÆ±      ©¦
+©¸©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼
 ```
 
-### è‚¡ç¥¨å¡ç‰‡ï¼ˆPoolCardï¼‰
+### ¹ÉÆ±¿¨Æ¬£¨PoolCard£©
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚  600519.SH          â”‚
-â”‚  è´µå·èŒ…å°            â”‚
-â”‚  ä»·æ ¼: Â¥1688.00     â”‚
-â”‚  åˆ†ç»„: [æ ¸å¿ƒæŒä»“]   â”‚
-â”‚  V6: 4.2 / 5.0      â”‚
-â”‚  [æ¨é€åˆ°è§‚å¯Ÿæ± ]      â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+©°©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©´
+©¦  600519.SH          ©¦
+©¦  ¹óÖİÃ©Ì¨            ©¦
+©¦  ¼Û¸ñ: £¤1688.00     ©¦
+©¦  ·Ö×é: [ºËĞÄ³Ö²Ö]   ©¦
+©¦  V6: 4.2 / 5.0      ©¦
+©¦  [ÍÆËÍµ½¹Û²ì³Ø]      ©¦
+©¸©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼
 ```
 
-- å¡ç‰‡å±•ç¤ºå½“å‰æ‰€å±åˆ†ç»„ï¼ˆæœªæŒ‡å®šæ—¶æ˜¾ç¤ºã€Œé»˜è®¤åˆ†ç»„ã€ï¼‰ã€‚
-- æä¾›ã€Œç§»å…¥åˆ†ç»„ã€ä¸‹æ‹‰ï¼Œå¿«é€Ÿå°†æ ‡çš„åˆ‡æ¢åˆ°å…¶ä»–åˆ†ç»„ï¼›åˆ†ç»„åˆ‡æ¢ä¸å½±å“ç ”ç©¶çŠ¶æ€æµè½¬ã€‚
+- ¿¨Æ¬Õ¹Ê¾µ±Ç°ËùÊô·Ö×é£¨Î´Ö¸¶¨Ê±ÏÔÊ¾¡¸Ä¬ÈÏ·Ö×é¡¹£©¡£
+- Ìá¹©¡¸ÒÆÈë·Ö×é¡¹ÏÂÀ­£¬¿ìËÙ½«±êµÄÇĞ»»µ½ÆäËû·Ö×é£»·Ö×éÇĞ»»²»Ó°ÏìÑĞ¾¿×´Ì¬Á÷×ª¡£
 
-### è‚¡ç¥¨æ± åˆ†ç»„ï¼ˆPoolGroupï¼‰
+### ¹ÉÆ±³Ø·Ö×é£¨PoolGroup£©
 
-åˆ†ç»„æ˜¯ç”¨æˆ·è‡ªå®šä¹‰çš„å±•ç¤º/ç­›é€‰ç»´åº¦ï¼Œä¸ `researchStatus` äº”æ€æµè½¬è§£è€¦ï¼š
+·Ö×éÊÇÓÃ»§×Ô¶¨ÒåµÄÕ¹Ê¾/É¸Ñ¡Î¬¶È£¬Óë `researchStatus` ÎåÌ¬Á÷×ª½âñî£º
 
-- **åˆ†ç»„ç­›é€‰å™¨**ï¼šä½äº `StockPoolBoardPage` è‚¡ç¥¨æ± çœ‹æ¿å·¥å…·æ ï¼ˆåŸ `InputDashboard` çœ‹æ¿å·²è¿ç§»è‡³åˆ†æèˆ±ï¼‰ï¼Œé€‰é¡¹åŒ…å«ã€Œå…¨éƒ¨ç»„ã€åŠæ‰€æœ‰å·²å­˜åœ¨çš„åˆ†ç»„ã€‚
-- **æ–°å»ºåˆ†ç»„**ï¼šé€šè¿‡å·¥å…·æ ã€Œæ–°å»ºåˆ†ç»„ã€æŒ‰é’®æ‰“å¼€å¼¹çª—è¾“å…¥åˆ†ç»„åç§°ï¼Œåˆ›å»ºåè‡ªåŠ¨é€‰ä¸­å¹¶å¯ç”¨äºåç»­å½•å…¥ã€‚
-- **å½•å…¥æ—¶æŒ‡å®šåˆ†ç»„**ï¼šå•æ¡å½•å…¥ã€æ‰¹é‡å¯¼å…¥ã€çƒ­é—¨æ¿å—åŠ æ± å‡æ”¯æŒé€‰æ‹©ç›®æ ‡åˆ†ç»„ï¼Œæœªé€‰æ‹©æ—¶ä½¿ç”¨é»˜è®¤åˆ†ç»„ã€‚
-- **æ‰¹é‡ç§»å…¥åˆ†ç»„**ï¼šé€‰ä¸­å¤šä¸ªæ ‡çš„åï¼Œå¯é€šè¿‡ã€Œæ‰¹é‡ç§»å…¥åˆ†ç»„ã€ä¸‹æ‹‰å°†æ ‡çš„ç»Ÿä¸€ç§»åŠ¨åˆ°ç›®æ ‡åˆ†ç»„ã€‚
-- **åˆ—è¡¨è§†å›¾**ï¼š`PoolList` è¡¨å¤´åŒ…å«ã€Œåˆ†ç»„ã€åˆ—ï¼Œè¡Œå†…å¯ç›´æ¥ä¸‹æ‹‰åˆ‡æ¢åˆ†ç»„ã€‚
+- **·Ö×éÉ¸Ñ¡Æ÷**£ºÎ»ÓÚ `StockPoolBoardPage` ¹ÉÆ±³Ø¿´°å¹¤¾ßÀ¸£¨Ô­ `InputDashboard` ¿´°åÒÑÇ¨ÒÆÖÁ·ÖÎö²Õ£©£¬Ñ¡Ïî°üº¬¡¸È«²¿×é¡¹¼°ËùÓĞÒÑ´æÔÚµÄ·Ö×é¡£
+- **ĞÂ½¨·Ö×é**£ºÍ¨¹ı¹¤¾ßÀ¸¡¸ĞÂ½¨·Ö×é¡¹°´Å¥´ò¿ªµ¯´°ÊäÈë·Ö×éÃû³Æ£¬´´½¨ºó×Ô¶¯Ñ¡ÖĞ²¢¿ÉÓÃÓÚºóĞøÂ¼Èë¡£
+- **Â¼ÈëÊ±Ö¸¶¨·Ö×é**£ºµ¥ÌõÂ¼Èë¡¢ÅúÁ¿µ¼Èë¡¢ÈÈÃÅ°å¿é¼Ó³Ø¾ùÖ§³ÖÑ¡ÔñÄ¿±ê·Ö×é£¬Î´Ñ¡ÔñÊ±Ê¹ÓÃÄ¬ÈÏ·Ö×é¡£
+- **ÅúÁ¿ÒÆÈë·Ö×é**£ºÑ¡ÖĞ¶à¸ö±êµÄºó£¬¿ÉÍ¨¹ı¡¸ÅúÁ¿ÒÆÈë·Ö×é¡¹ÏÂÀ­½«±êµÄÍ³Ò»ÒÆ¶¯µ½Ä¿±ê·Ö×é¡£
+- **ÁĞ±íÊÓÍ¼**£º`PoolList` ±íÍ·°üº¬¡¸·Ö×é¡¹ÁĞ£¬ĞĞÄÚ¿ÉÖ±½ÓÏÂÀ­ÇĞ»»·Ö×é¡£
 
-## 4.5 ç»„ä»¶åº“æ¸…å•
+## 4.5 ×é¼ş¿âÇåµ¥
 
-> **v2.1.0 å˜æ›´**ï¼šç»„ä»¶åº“æŒ‰åŸå­è®¾è®¡ï¼ˆAtomic Designï¼‰åˆ†å±‚ï¼Œåˆ†ä¸º `atoms`ã€`molecules`ã€`organisms`ã€`templates` å››çº§ã€‚
-> è¯¦è§ `../../reference/atomic-component-system.md` ä¸ `src/components/componentRegistry.ts`ã€‚
-> è¿‡æ¸¡æœŸå†… `src/components/ui/` ä»ä¿ç•™å…¼å®¹ shimï¼Œä½†æ–°å¢ç»„ä»¶é¡»æŒ‰åŸå­å±‚çº§æ”¾ç½®ã€‚
+> **v2.1.0 ±ä¸ü**£º×é¼ş¿â°´Ô­×ÓÉè¼Æ£¨Atomic Design£©·Ö²ã£¬·ÖÎª `atoms`¡¢`molecules`¡¢`organisms`¡¢`templates` ËÄ¼¶¡£
+> Ïê¼û `../../reference/atomic-component-system.md` Óë `src/components/componentRegistry.ts`¡£
+> ¹ı¶ÉÆÚÄÚ `src/components/ui/` ÈÔ±£Áô¼æÈİ shim£¬µ«ĞÂÔö×é¼şĞë°´Ô­×Ó²ã¼¶·ÅÖÃ¡£
 
-### åŸå­ç»„ä»¶ï¼ˆAtomsï¼‰
+### Ô­×Ó×é¼ş£¨Atoms£©
 
-| ç»„ä»¶ | è·¯å¾„ | è¯´æ˜ |
+| ×é¼ş | Â·¾¶ | ËµÃ÷ |
 |------|------|------|
-| Button | `src/components/atoms/Button.tsx`ï¼ˆshim: `src/components/atoms/Button.tsx`ï¼‰ | ä¸»/æ¬¡/å±é™©/å¹½çµæŒ‰é’® |
-| Card | `src/components/atoms/Card.tsx` | å¡ç‰‡å®¹å™¨ |
-| Input | `src/components/atoms/Input.tsx` | æ–‡æœ¬è¾“å…¥ |
-| Badge | `src/components/atoms/Badge.tsx` | çŠ¶æ€å¾½ç«  |
-| Progress | `src/components/atoms/Progress.tsx` | è¿›åº¦æ¡ |
-| Skeleton | `src/components/atoms/Skeleton.tsx` | åŠ è½½éª¨æ¶ |
-| Checkbox | `src/components/atoms/Checkbox.tsx` | å¤é€‰æ¡† |
-| Textarea | `src/components/atoms/Textarea.tsx` | å¤šè¡Œæ–‡æœ¬è¾“å…¥ |
-| Select | `src/components/atoms/Select.tsx` | é€‰æ‹©å™¨ |
-| Radio | `src/components/atoms/Radio.tsx` | å•é€‰ |
-| Switch | `src/components/atoms/Switch.tsx` | å¼€å…³ |
-| Slider | `src/components/atoms/Slider.tsx` | æ»‘å— |
-| Toggle | `src/components/atoms/Toggle.tsx` | åˆ‡æ¢ |
-| Tooltip | `src/components/atoms/Tooltip.tsx` | å·¥å…·æç¤º |
-| Popover | `src/components/atoms/Popover.tsx` | æ°”æ³¡å¡ç‰‡ |
-| Sheet | `src/components/atoms/Sheet.tsx` | æŠ½å±‰ |
-| Toast | `src/components/atoms/Toast.tsx` | è½»æç¤º |
-| Menu | `src/components/atoms/Menu.tsx` | èœå• |
-| Pagination | `src/components/atoms/Pagination.tsx` | åˆ†é¡µ |
-| Breadcrumb | `src/components/atoms/Breadcrumb.tsx` | é¢åŒ…å±‘ |
-| Result | `src/components/atoms/Result.tsx` | ç»“æœå±•ç¤º |
-| List | `src/components/atoms/List.tsx` | åˆ—è¡¨ |
-| Grid | `src/components/atoms/Grid.tsx` | æ …æ ¼ |
-| Table | `src/components/atoms/Table.tsx` | è¡¨æ ¼ |
-| DatePicker | `src/components/atoms/DatePicker.tsx` | æ—¥æœŸé€‰æ‹© |
-| StockPriceChange | `src/components/atoms/StockPriceChange.tsx` | è‚¡ä»·å˜åŒ– |
+| Button | `src/components/atoms/Button.tsx`£¨shim: `src/components/atoms/Button.tsx`£© | Ö÷/´Î/Î£ÏÕ/ÓÄÁé°´Å¥ |
+| Card | `src/components/atoms/Card.tsx` | ¿¨Æ¬ÈİÆ÷ |
+| Input | `src/components/atoms/Input.tsx` | ÎÄ±¾ÊäÈë |
+| Badge | `src/components/atoms/Badge.tsx` | ×´Ì¬»ÕÕÂ |
+| Progress | `src/components/atoms/Progress.tsx` | ½ø¶ÈÌõ |
+| Skeleton | `src/components/atoms/Skeleton.tsx` | ¼ÓÔØ¹Ç¼Ü |
+| Checkbox | `src/components/atoms/Checkbox.tsx` | ¸´Ñ¡¿ò |
+| Textarea | `src/components/atoms/Textarea.tsx` | ¶àĞĞÎÄ±¾ÊäÈë |
+| Select | `src/components/atoms/Select.tsx` | Ñ¡ÔñÆ÷ |
+| Radio | `src/components/atoms/Radio.tsx` | µ¥Ñ¡ |
+| Switch | `src/components/atoms/Switch.tsx` | ¿ª¹Ø |
+| Slider | `src/components/atoms/Slider.tsx` | »¬¿é |
+| Toggle | `src/components/atoms/Toggle.tsx` | ÇĞ»» |
+| Tooltip | `src/components/atoms/Tooltip.tsx` | ¹¤¾ßÌáÊ¾ |
+| Popover | `src/components/atoms/Popover.tsx` | ÆøÅİ¿¨Æ¬ |
+| Sheet | `src/components/atoms/Sheet.tsx` | ³éÌë |
+| Toast | `src/components/atoms/Toast.tsx` | ÇáÌáÊ¾ |
+| Menu | `src/components/atoms/Menu.tsx` | ²Ëµ¥ |
+| Pagination | `src/components/atoms/Pagination.tsx` | ·ÖÒ³ |
+| Breadcrumb | `src/components/atoms/Breadcrumb.tsx` | Ãæ°üĞ¼ |
+| Result | `src/components/atoms/Result.tsx` | ½á¹ûÕ¹Ê¾ |
+| List | `src/components/atoms/List.tsx` | ÁĞ±í |
+| Grid | `src/components/atoms/Grid.tsx` | Õ¤¸ñ |
+| Table | `src/components/atoms/Table.tsx` | ±í¸ñ |
+| DatePicker | `src/components/atoms/DatePicker.tsx` | ÈÕÆÚÑ¡Ôñ |
+| StockPriceChange | `src/components/atoms/StockPriceChange.tsx` | ¹É¼Û±ä»¯ |
 
-### åˆ†å­ç»„ä»¶ï¼ˆMoleculesï¼‰
+### ·Ö×Ó×é¼ş£¨Molecules£©
 
-| ç»„ä»¶ | è·¯å¾„ | è¯´æ˜ |
+| ×é¼ş | Â·¾¶ | ËµÃ÷ |
 |------|------|------|
-| Dialog | `src/components/molecules/Dialog.tsx` | æ¨¡æ€å¯¹è¯æ¡† |
-| Tabs | `src/components/molecules/Tabs.tsx` | æ ‡ç­¾é¡µ |
-| Alert | `src/components/molecules/Alert.tsx` | è­¦å‘Šæç¤º |
-| DataState | `src/components/molecules/DataState.tsx` | åŠ è½½/ç©º/é”™è¯¯çŠ¶æ€ |
-| ErrorState | `src/components/molecules/ErrorState.tsx` | é”™è¯¯çŠ¶æ€ |
-| EmptyState | `src/components/molecules/EmptyState.tsx` | ç©ºçŠ¶æ€ |
-| LoadingState | `src/components/molecules/LoadingState.tsx` | åŠ è½½çŠ¶æ€ |
-| PageHeader | `src/components/templates/PageHeader.tsx` | é¡µé¢æ ‡é¢˜ + æ“ä½œåŒº |
-| FormField | `src/components/molecules/FormField.tsx` | è¡¨å•å­—æ®µï¼ˆLabel + æ§ä»¶ + é”™è¯¯ï¼‰ |
-| MetricCard | `src/components/molecules/MetricCard.tsx` | æŒ‡æ ‡å¡ï¼ˆæ ‡é¢˜ + æ•°å€¼ + è¶‹åŠ¿ï¼‰ |
-| SearchBar | `src/components/molecules/SearchBar.tsx` | æœç´¢æ  |
-| FilterChip | `src/components/molecules/FilterChip.tsx` | å¯å…³é—­ç­›é€‰æ ‡ç­¾ |
+| Dialog | `src/components/molecules/Dialog.tsx` | Ä£Ì¬¶Ô»°¿ò |
+| Tabs | `src/components/molecules/Tabs.tsx` | ±êÇ©Ò³ |
+| Alert | `src/components/molecules/Alert.tsx` | ¾¯¸æÌáÊ¾ |
+| DataState | `src/components/molecules/DataState.tsx` | ¼ÓÔØ/¿Õ/´íÎó×´Ì¬ |
+| ErrorState | `src/components/molecules/ErrorState.tsx` | ´íÎó×´Ì¬ |
+| EmptyState | `src/components/molecules/EmptyState.tsx` | ¿Õ×´Ì¬ |
+| LoadingState | `src/components/molecules/LoadingState.tsx` | ¼ÓÔØ×´Ì¬ |
+| PageHeader | `src/components/templates/PageHeader.tsx` | Ò³Ãæ±êÌâ + ²Ù×÷Çø |
+| FormField | `src/components/molecules/FormField.tsx` | ±íµ¥×Ö¶Î£¨Label + ¿Ø¼ş + ´íÎó£© |
+| MetricCard | `src/components/molecules/MetricCard.tsx` | Ö¸±ê¿¨£¨±êÌâ + ÊıÖµ + Ç÷ÊÆ£© |
+| SearchBar | `src/components/molecules/SearchBar.tsx` | ËÑË÷À¸ |
+| FilterChip | `src/components/molecules/FilterChip.tsx` | ¿É¹Ø±ÕÉ¸Ñ¡±êÇ© |
 
-### æœ‰æœºä½“ç»„ä»¶ï¼ˆOrganismsï¼‰
+### ÓĞ»úÌå×é¼ş£¨Organisms£©
 
-| ç»„ä»¶ | è·¯å¾„ | è¯´æ˜ |
+| ×é¼ş | Â·¾¶ | ËµÃ÷ |
 |------|------|------|
-| StockSearch | `src/components/organisms/input/StockSearch.tsx` | è‚¡ç¥¨æœç´¢ç»„ä»¶ |
-| QualityIndicator | `src/components/organisms/input/QualityIndicator.tsx` | æ•°æ®è´¨é‡æŒ‡ç¤º |
-| PoolBoard | `src/components/organisms/pool/PoolBoard.tsx` | è‚¡ç¥¨æ± çœ‹æ¿ |
-| PoolCard | `src/components/organisms/pool/PoolCard.tsx` | è‚¡ç¥¨å¡ç‰‡ |
-| PoolList | `src/components/organisms/pool/PoolList.tsx` | è‚¡ç¥¨åˆ—è¡¨è§†å›¾ |
-| CollectionProgressPanel | `src/components/organisms/collection/CollectionProgressPanel.tsx` | é‡‡é›†è¿›åº¦é¢æ¿ |
-| CollectionReportPanel | `src/components/organisms/collection/CollectionReportPanel.tsx` | é‡‡é›†æ±‡æŠ¥é¢æ¿ |
-| ScoreFactorDeltaPanel | `src/components/organisms/shared/ScoreFactorDeltaPanel.tsx` | è¯„åˆ†å› å­å˜åŒ–é¢æ¿ |
-| ScoreUpdateAlert | `src/components/organisms/shared/ScoreUpdateAlert.tsx` | è¯„åˆ†æ›´æ–°æé†’ |
-| ErrorBoundary | `src/components/organisms/shared/ErrorBoundary.tsx` | é”™è¯¯è¾¹ç•Œç»„ä»¶ |
+| StockSearch | `src/components/organisms/input/StockSearch.tsx` | ¹ÉÆ±ËÑË÷×é¼ş |
+| QualityIndicator | `src/components/organisms/input/QualityIndicator.tsx` | Êı¾İÖÊÁ¿Ö¸Ê¾ |
+| PoolBoard | `src/components/organisms/pool/PoolBoard.tsx` | ¹ÉÆ±³Ø¿´°å |
+| PoolCard | `src/components/organisms/pool/PoolCard.tsx` | ¹ÉÆ±¿¨Æ¬ |
+| PoolList | `src/components/organisms/pool/PoolList.tsx` | ¹ÉÆ±ÁĞ±íÊÓÍ¼ |
+| CollectionProgressPanel | `src/components/organisms/collection/CollectionProgressPanel.tsx` | ²É¼¯½ø¶ÈÃæ°å |
+| CollectionReportPanel | `src/components/organisms/collection/CollectionReportPanel.tsx` | ²É¼¯»ã±¨Ãæ°å |
+| ScoreFactorDeltaPanel | `src/components/organisms/shared/ScoreFactorDeltaPanel.tsx` | ÆÀ·ÖÒò×Ó±ä»¯Ãæ°å |
+| ScoreUpdateAlert | `src/components/organisms/shared/ScoreUpdateAlert.tsx` | ÆÀ·Ö¸üĞÂÌáĞÑ |
+| ErrorBoundary | `src/components/organisms/shared/ErrorBoundary.tsx` | ´íÎó±ß½ç×é¼ş |
 
-### å›¾è¡¨ç»„ä»¶
+### Í¼±í×é¼ş
 
-| ç»„ä»¶ | è·¯å¾„ | è¯´æ˜ |
+| ×é¼ş | Â·¾¶ | ËµÃ÷ |
 |------|------|------|
-| LineChart | `src/components/chart/LineChart.tsx` | æŠ˜çº¿å›¾ |
-| BarChart | `src/components/chart/BarChart.tsx` | æŸ±çŠ¶å›¾ |
-| CandlestickChart | `src/components/chart/CandlestickChart.tsx` | K çº¿å›¾ |
-| AreaChart | `src/components/chart/AreaChart.tsx` | é¢ç§¯å›¾ |
-| ScoreRadar | `src/components/chart/ScoreRadar.tsx` | è¯„åˆ†é›·è¾¾å›¾ |
-| FactorHeatmap | `src/components/chart/FactorHeatmap.tsx` | å› å­çƒ­åŠ›å›¾ |
+| LineChart | `src/components/chart/LineChart.tsx` | ÕÛÏßÍ¼ |
+| BarChart | `src/components/chart/BarChart.tsx` | Öù×´Í¼ |
+| CandlestickChart | `src/components/chart/CandlestickChart.tsx` | K ÏßÍ¼ |
+| AreaChart | `src/components/chart/AreaChart.tsx` | Ãæ»ıÍ¼ |
+| ScoreRadar | `src/components/chart/ScoreRadar.tsx` | ÆÀ·ÖÀ×´ïÍ¼ |
+| FactorHeatmap | `src/components/chart/FactorHeatmap.tsx` | Òò×ÓÈÈÁ¦Í¼ |
 
-### æ¨¡æ¿ç»„ä»¶ï¼ˆTemplatesï¼‰
+### Ä£°å×é¼ş£¨Templates£©
 
-| ç»„ä»¶ | è·¯å¾„ | è¯´æ˜ |
+| ×é¼ş | Â·¾¶ | ËµÃ÷ |
 |------|------|------|
-| PageContainer | `src/components/templates/PageContainer.tsx` | é¡µé¢å†…å®¹å®¹å™¨ |
-| DashboardLayout | `src/components/templates/DashboardLayout.tsx` | ä»ªè¡¨ç›˜å¸ƒå±€ |
-| SidebarLayout | `src/components/templates/SidebarLayout.tsx` | ä¾§è¾¹æ å¸ƒå±€ |
-| CockpitLayout | `src/components/templates/CockpitLayout.tsx` | é©¾é©¶èˆ±å¸ƒå±€ |
+| PageContainer | `src/components/templates/PageContainer.tsx` | Ò³ÃæÄÚÈİÈİÆ÷ |
+| DashboardLayout | `src/components/templates/DashboardLayout.tsx` | ÒÇ±íÅÌ²¼¾Ö |
+| SidebarLayout | `src/components/templates/SidebarLayout.tsx` | ²à±ßÀ¸²¼¾Ö |
+| CockpitLayout | `src/components/templates/CockpitLayout.tsx` | ¼İÊ»²Õ²¼¾Ö |
 
-## 4.6 å“åº”å¼æ–­ç‚¹
+## 4.6 ÏìÓ¦Ê½¶Ïµã
 
-| æ–­ç‚¹ | å®½åº¦ | å¸ƒå±€ |
+| ¶Ïµã | ¿í¶È | ²¼¾Ö |
 |------|------|------|
-| `sm` | â‰¥ 640px | æ‰‹æœºæ¨ªå± |
-| `md` | â‰¥ 768px | å¹³æ¿ |
-| `lg` | â‰¥ 1024px | å°æ¡Œé¢ |
-| `xl` | â‰¥ 1280px | å¤§æ¡Œé¢ |
+| `sm` | ¡İ 640px | ÊÖ»úºáÆÁ |
+| `md` | ¡İ 768px | Æ½°å |
+| `lg` | ¡İ 1024px | Ğ¡×ÀÃæ |
+| `xl` | ¡İ 1280px | ´ó×ÀÃæ |
 
-### äº”èˆ±å“åº”å¼è§„åˆ™
+### Îå²ÕÏìÓ¦Ê½¹æÔò
 
-- `< md`ï¼šå·¦ä¾§åŠŸèƒ½é¢æ¿å¯æŠ˜å ï¼Œé»˜è®¤éšè—
-- `â‰¥ md`ï¼šå·¦ä¾§åŠŸèƒ½é¢æ¿å›ºå®šæ˜¾ç¤º
-- `â‰¥ lg`ï¼šå³ä¾§æ‰§è¡Œç•Œé¢å¯å¹¶æ’æ˜¾ç¤ºå¤šä¸ªé¢æ¿
+- `< md`£º×ó²à¹¦ÄÜÃæ°å¿ÉÕÛµş£¬Ä¬ÈÏÒş²Ø
+- `¡İ md`£º×ó²à¹¦ÄÜÃæ°å¹Ì¶¨ÏÔÊ¾
+- `¡İ lg`£ºÓÒ²àÖ´ĞĞ½çÃæ¿É²¢ÅÅÏÔÊ¾¶à¸öÃæ°å
 
-## 4.7 åŠ¨ç”»ä¸äº¤äº’
+## 4.7 ¶¯»­Óë½»»¥
 
-- é¡µé¢åˆ‡æ¢ï¼š`fade + slide`ï¼Œ200ms
-- æ•°æ®åŠ è½½ï¼šéª¨æ¶å±ï¼Œç¦æ­¢ spinner é•¿æ—¶é—´ç©ºè½¬
-- æ“ä½œåé¦ˆï¼šToast æç¤ºï¼ŒæˆåŠŸ/å¤±è´¥æ˜ç¡®åŒºåˆ†
-- æŒ‰é’®ç‚¹å‡»ï¼šscale 0.98 å¾®åŠ¨æ•ˆ
-- å¡ç‰‡æ‚¬åœï¼šshadow æå‡
+- Ò³ÃæÇĞ»»£º`fade + slide`£¬200ms
+- Êı¾İ¼ÓÔØ£º¹Ç¼ÜÆÁ£¬½ûÖ¹ spinner ³¤Ê±¼ä¿Õ×ª
+- ²Ù×÷·´À¡£ºToast ÌáÊ¾£¬³É¹¦/Ê§°ÜÃ÷È·Çø·Ö
+- °´Å¥µã»÷£ºscale 0.98 Î¢¶¯Ğ§
+- ¿¨Æ¬ĞüÍ££ºshadow ÌáÉı
 
-## 4.8 å­—ä½“ä¸æ’ç‰ˆ
+## 4.8 ×ÖÌåÓëÅÅ°æ
 
-- å­—ä½“ï¼šç³»ç»Ÿé»˜è®¤æ— è¡¬çº¿å­—ä½“æ ˆ
-- æ ‡é¢˜ï¼š`text-xl font-semibold`
-- æ­£æ–‡ï¼š`text-sm text-foreground`
-- è¾…åŠ©ï¼š`text-xs text-muted-foreground`
-- æ•°å€¼ï¼šç­‰å®½æ•°å­—å­—ä½“ï¼ˆ`font-variant-numeric: tabular-nums`ï¼‰
+- ×ÖÌå£ºÏµÍ³Ä¬ÈÏÎŞ³ÄÏß×ÖÌåÕ»
+- ±êÌâ£º`text-xl font-semibold`
+- ÕıÎÄ£º`text-sm text-foreground`
+- ¸¨Öú£º`text-xs text-muted-foreground`
+- ÊıÖµ£ºµÈ¿íÊı×Ö×ÖÌå£¨`font-variant-numeric: tabular-nums`£©
 
 ---
 
-## 4.9 ç‰ˆæœ¬æ¯”å¯¹
+## 4.9 °æ±¾±È¶Ô
 
-æœ¬æ–‡æ¡£å½“å‰ç‰ˆæœ¬ä¸º `v0.9.0-docs-review`ï¼Œä¸è§„åˆ’åŸºçº¿ `v0.9.0-docs-base` çš„å·®å¼‚è§ï¼š
+±¾ÎÄµµµ±Ç°°æ±¾Îª `v0.9.0-docs-review`£¬Óë¹æ»®»ùÏß `v0.9.0-docs-base` µÄ²îÒì¼û£º
 
 - `../../reference/architecture-version-comparison.md`
 
-ä¸»è¦å˜åŒ–ï¼š
+Ö÷Òª±ä»¯£º
 
-1. PortalShell å¸ƒå±€æ›´æ–°ä¸º Kimi ç»å…¸æ·±è‰²å¸ƒå±€ï¼š56px é¡¶éƒ¨æ  + 260px åˆ†ç»„ä¾§è¾¹æ ã€‚
-2. æ˜ç¡®é¦–é¡µ/é©¾é©¶èˆ±ä¿æŒæµ…è‰²ï¼Œå…¶ä½™èˆ±å®¤åœ¨æ·±è‰²å£³å†…æ¸²æŸ“ã€‚
-3. å¢åŠ è¾“å…¥èˆ±å­é¡µé¢å¸ƒå±€è¯´æ˜ã€‚
+1. PortalShell ²¼¾Ö¸üĞÂÎª Kimi ¾­µäÉîÉ«²¼¾Ö£º56px ¶¥²¿À¸ + 260px ·Ö×é²à±ßÀ¸¡£
+2. Ã÷È·Ê×Ò³/¼İÊ»²Õ±£³ÖÇ³É«£¬ÆäÓà²ÕÊÒÔÚÉîÉ«¿ÇÄÚäÖÈ¾¡£
+3. Ôö¼ÓÊäÈë²Õ×ÓÒ³Ãæ²¼¾ÖËµÃ÷¡£

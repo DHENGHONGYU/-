@@ -35,7 +35,7 @@ interface Violation {
 }
 
 const VALID_TIERS = new Set(['core', 'important', 'reference'])
-const WHITELIST = new Set(['README.md', 'CHANGELOG.md', 'AGENTS.md'])
+const WHITELIST = new Set(['docs/explanation/README.md', 'CHANGELOG.md', 'AGENTS.md'])
 
 function readPkgVersion(): string {
   try {

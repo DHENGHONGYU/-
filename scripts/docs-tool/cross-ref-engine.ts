@@ -40,6 +40,7 @@ export interface AuditResult {
   totalReferences: number
   brokenReferences: Reference[]
   validReferences: Reference[]
+  brokenRate: number
   summary: {
     docToCode: { total: number; broken: number }
     codeToDoc: { total: number; broken: number }
@@ -250,14 +251,24 @@ export function scanCodeReferences(filePath: string): Reference[] {
 export function validateReference(ref: Reference, rootDir: string): boolean {
   const rootPrefix = rootDir.replace(/[\\/]$/, '') + (process.platform === 'win32' ? '\\' : '/')
 
+  // 代码位置后缀（行号/行列/行范围，支持 : 或 / 分隔，以及逗号分隔的多位置如 :52,134）和 Markdown 锚点不应影响文件存在性判断
+  const locationSuffix = /(\.\w+)?(?::\d+(?:[-/]\d+)?(?:,\d+)*(?::\d+)?)$/
+  let baseTarget = ref.target
+  if (ref.type === 'doc-to-code' && locationSuffix.test(baseTarget)) {
+    baseTarget = baseTarget.replace(locationSuffix, '$1')
+  }
+  if (baseTarget.includes('#')) {
+    baseTarget = baseTarget.split('#')[0]
+  }
+
   let fullPath: string
-  if (ref.target.startsWith('src/') || ref.target.startsWith('scripts/')) {
-    fullPath = resolve(rootDir, ref.target)
-  } else if (ref.target.startsWith('docs/')) {
-    fullPath = resolve(rootDir, ref.target)
+  if (baseTarget.startsWith('src/') || baseTarget.startsWith('scripts/')) {
+    fullPath = resolve(rootDir, baseTarget)
+  } else if (baseTarget.startsWith('docs/')) {
+    fullPath = resolve(rootDir, baseTarget)
   } else {
     const sourceDir = resolve(rootDir, dirname(ref.source))
-    fullPath = resolve(sourceDir, ref.target)
+    fullPath = resolve(sourceDir, baseTarget)
   }
 
   const exists = (p: string): boolean =>
@@ -266,8 +277,8 @@ export function validateReference(ref: Reference, rootDir: string): boolean {
   if (exists(fullPath)) return true
 
   // 兜底 A：根级裸名引用（无斜杠）
-  if (!ref.target.includes('/') && !ref.target.includes('\\')) {
-    if (exists(resolve(rootDir, ref.target))) return true
+  if (!baseTarget.includes('/') && !baseTarget.includes('\\')) {
+    if (exists(resolve(rootDir, baseTarget))) return true
   }
 
   // 兜底 B：.. 越界路径（主解析爬出仓库根）
@@ -384,10 +395,15 @@ export function runFullAudit(rootDir: string): AuditResult {
     bySource[ref.source].push(ref)
   }
 
+  const totalReferences = allReferences.length
+  const brokenCount = brokenReferences.length
+  const brokenRate = totalReferences > 0 ? brokenCount / totalReferences : 0
+
   return {
-    totalReferences: allReferences.length,
+    totalReferences,
     brokenReferences,
     validReferences,
+    brokenRate,
     summary: {
       docToCode: {
         total: allReferences.filter((r) => r.type === 'doc-to-code').length,

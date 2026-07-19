@@ -14,6 +14,9 @@ const DENSITY_LABELS: Record<DensityLevel, string> = {
   expanded: '宽松',
 }
 
+/**
+ * DensityToggle
+ */
 export function DensityToggle(): React.JSX.Element {
   const { density, setDensity } = useDensity()
 

@@ -1,96 +1,105 @@
 ---
-title: 2026-07-05-p0-5-and-legacy-bugs-jira-tickets
-tier: reference
+title: Jira ÈÎÎñµ¥¹éµµ:P0-5 È±Ïİ + 6 ¸öÀúÊ· Bug ĞŞ¸´
+type: reference
+domain: project
+phase: retrospective
+tier: standard
+status: deprecated
+maintainer: V9 Architecture Team
+summary: "¹éµµÈÕÆÚ: 2026-07-05 ÈÎÎñµ¥ÊıÁ¿: 7(1 ¸ö P0 + 6 ¸öÀúÊ· Bug) ĞŞ¸´¸ºÔğÈË: AI Agent ¼¯Èº(4 ¸ö²¢ĞĞ subagent) ¹ØÁªÎÄµµ:..."
+tags: [project, changelog, fix, log]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+deprecated_by: "Jira Ticket System Migration"
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-tier: reference
-code_version: 2.0.0
----
+# Jira ÈÎÎñµ¥¹éµµ:P0-5 È±Ïİ + 6 ¸öÀúÊ· Bug ĞŞ¸´
 
-# Jira ä»»åŠ¡å•å½’æ¡£:P0-5 ç¼ºé™· + 6 ä¸ªå†å² Bug ä¿®å¤
-
-> **å½’æ¡£æ—¥æœŸ**: 2026-07-05
-> **ä»»åŠ¡å•æ•°é‡**: 7(1 ä¸ª P0 + 6 ä¸ªå†å² Bug)
-> **ä¿®å¤è´Ÿè´£äºº**: AI Agent é›†ç¾¤(4 ä¸ªå¹¶è¡Œ subagent)
-> **å…³è”æ–‡æ¡£**: `./2026-07-05-comprehensive-audit-and-remediation.md`
-> **çŠ¶æ€**: å…¨éƒ¨ Done / Resolved
+> **¹éµµÈÕÆÚ**: 2026-07-05
+> **ÈÎÎñµ¥ÊıÁ¿**: 7(1 ¸ö P0 + 6 ¸öÀúÊ· Bug)
+> **ĞŞ¸´¸ºÔğÈË**: AI Agent ¼¯Èº(4 ¸ö²¢ĞĞ subagent)
+> **¹ØÁªÎÄµµ**: `./2026-07-05-comprehensive-audit-and-remediation.md`
+> **×´Ì¬**: È«²¿ Done / Resolved
 
 ---
 
-## ä»»åŠ¡å•æ€»è§ˆ
+## ÈÎÎñµ¥×ÜÀÀ
 
-| Ticket ID | ç±»å‹ | ä¸¥é‡çº§åˆ« | å½±å“æ–‡ä»¶ | çŠ¶æ€ | ä¿®å¤äºº |
+| Ticket ID | ÀàĞÍ | ÑÏÖØ¼¶±ğ | Ó°ÏìÎÄ¼ş | ×´Ì¬ | ĞŞ¸´ÈË |
 |-----------|------|---------|---------|------|--------|
-| **V9-P0-5** | ç¼ºé™·ä¿®å¤ | P0 Blocker | `src/apps/command/ConfigApp.tsx` | âœ… Done | Agent C |
-| V9-BUG-001 | å†å²æµ‹è¯• Bug | Minor | `src/pages/command/agent/__tests__/AgentTasksPage.test.tsx` | âœ… Done | Agent D |
-| V9-BUG-002 | å†å²æµ‹è¯• Bug | Minor | `src/pages/command/agent/__tests__/AgentTasksPage.test.tsx` | âœ… Done | Agent D |
-| V9-BUG-003 | å†å²æµ‹è¯• Bug | Minor | `src/pages/command/agent/__tests__/AgentTasksPage.test.tsx` | âœ… Done | Agent D |
-| V9-BUG-004 | å†å²æµ‹è¯• Bug | Minor | `src/pages/command/agent/__tests__/AgentTriggerPage.test.tsx` | âœ… Done | Agent D |
-| V9-BUG-005 | å†å²æµ‹è¯• Bug | Minor | `src/pages/command/agent/__tests__/AgentTriggerPage.test.tsx` | âœ… Done | Agent D |
-| V9-BUG-006 | å†å²æµ‹è¯• Bug | Major | `src/pages/command/agent/__tests__/AgentTriggerPage.test.tsx` | âœ… Done | Agent D |
+| **V9-P0-5** | È±ÏİĞŞ¸´ | P0 Blocker | `src/apps/command/ConfigApp.tsx` | ? Done | Agent C |
+| V9-BUG-001 | ÀúÊ·²âÊÔ Bug | Minor | `src/pages/command/agent/__tests__/AgentTasksPage.test.tsx` | ? Done | Agent D |
+| V9-BUG-002 | ÀúÊ·²âÊÔ Bug | Minor | `src/pages/command/agent/__tests__/AgentTasksPage.test.tsx` | ? Done | Agent D |
+| V9-BUG-003 | ÀúÊ·²âÊÔ Bug | Minor | `src/pages/command/agent/__tests__/AgentTasksPage.test.tsx` | ? Done | Agent D |
+| V9-BUG-004 | ÀúÊ·²âÊÔ Bug | Minor | `src/pages/command/agent/__tests__/AgentTriggerPage.test.tsx` | ? Done | Agent D |
+| V9-BUG-005 | ÀúÊ·²âÊÔ Bug | Minor | `src/pages/command/agent/__tests__/AgentTriggerPage.test.tsx` | ? Done | Agent D |
+| V9-BUG-006 | ÀúÊ·²âÊÔ Bug | Major | `src/pages/command/agent/__tests__/AgentTriggerPage.test.tsx` | ? Done | Agent D |
 
 ---
 
-## Ticket V9-P0-5:ConfigApp updateField NaN/Infinity å®ˆå«ç¼ºå¤±
+## Ticket V9-P0-5:ConfigApp updateField NaN/Infinity ÊØÎÀÈ±Ê§
 
-### å…ƒæ•°æ®
+### ÔªÊı¾İ
 
-| å­—æ®µ | å€¼ |
+| ×Ö¶Î | Öµ |
 |------|---|
-| **Project** | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ |
+| **Project** | V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ |
 | **Issue Type** | Bug |
 | **Priority** | P0 Blocker |
 | **Status** | Done |
 | **Resolution** | Fixed |
 | **Assignee** | Agent C(general_purpose_task subagent) |
-| **Reporter** | ç»¼åˆå®¡è®¡æŠ¥å‘Š(Â§4.3) |
+| **Reporter** | ×ÛºÏÉó¼Æ±¨¸æ(¡ì4.3) |
 | **Sprint** | 2026-07-W1 |
-| **Components** | æ€»æ§èˆ± - ConfigApp |
+| **Components** | ×Ü¿Ø²Õ - ConfigApp |
 | **Labels** | p0, regression, data-integrity, localStorage |
 | **Fix Version** | v1.3.2 |
 | **Created** | 2026-07-05 16:00 |
 | **Resolved** | 2026-07-05 18:42 |
 | **Time to Resolve** | 2h 42min |
 
-### æè¿°
+### ÃèÊö
 
-`ConfigApp.updateField` ä½¿ç”¨ `Number(e.target.value)` è½¬æ¢è¾“å…¥å€¼,**æœªå¯¹ NaN / Infinity åšå®ˆå«**ã€‚
+`ConfigApp.updateField` Ê¹ÓÃ `Number(e.target.value)` ×ª»»ÊäÈëÖµ,**Î´¶Ô NaN / Infinity ×öÊØÎÀ**¡£
 
-**é—®é¢˜è·¯å¾„**:
-1. ç”¨æˆ·åœ¨ `ç»„åˆæ€»èµ„é‡‘` è¾“å…¥æ¡†è¾“å…¥ `abc` â†’ `Number('abc') === NaN`
-2. ç”¨æˆ·è¾“å…¥ `1e309` â†’ `Number('1e309') === Infinity`
-3. `updateField` è°ƒç”¨ `saveConfig({ ...prev, portfolioValue: NaN })`
-4. `JSON.stringify(NaN)` åºåˆ—åŒ–ä¸º `'null'`
-5. å†™å…¥ localStorage å,é…ç½®æ•°æ®è¢«æ±¡æŸ“ä¸º `null`
-6. ä¸‹æ¬¡è¯»å–æ—¶ `loadConfig()` è¿”å› `null`,ç ´å `AppConfig` ç±»å‹å¥‘çº¦
+**ÎÊÌâÂ·¾¶**:
+1. ÓÃ»§ÔÚ `×éºÏ×Ü×Ê½ğ` ÊäÈë¿òÊäÈë `abc` ¡ú `Number('abc') === NaN`
+2. ÓÃ»§ÊäÈë `1e309` ¡ú `Number('1e309') === Infinity`
+3. `updateField` µ÷ÓÃ `saveConfig({ ...prev, portfolioValue: NaN })`
+4. `JSON.stringify(NaN)` ĞòÁĞ»¯Îª `'null'`
+5. Ğ´Èë localStorage ºó,ÅäÖÃÊı¾İ±»ÎÛÈ¾Îª `null`
+6. ÏÂ´Î¶ÁÈ¡Ê± `loadConfig()` ·µ»Ø `null`,ÆÆ»µ `AppConfig` ÀàĞÍÆõÔ¼
 
-### æ ¹å› åˆ†æ
+### ¸ùÒò·ÖÎö
 
-`Number()` è½¬æ¢æ¥å—ä»»æ„è¾“å…¥,**ä¸æŠ›å‡ºå¼‚å¸¸**,åªè¿”å› `NaN` / `Infinity`ã€‚ä»£ç æœªå¯¹è¿”å›å€¼åšæœ‰é™æ€§æ ¡éªŒ,ç›´æ¥å†™å…¥ state å¹¶æŒä¹…åŒ–ã€‚
+`Number()` ×ª»»½ÓÊÜÈÎÒâÊäÈë,**²»Å×³öÒì³£**,Ö»·µ»Ø `NaN` / `Infinity`¡£´úÂëÎ´¶Ô·µ»ØÖµ×öÓĞÏŞĞÔĞ£Ñé,Ö±½ÓĞ´Èë state ²¢³Ö¾Ã»¯¡£
 
-### å—å½±å“èŒƒå›´
+### ÊÜÓ°Ïì·¶Î§
 
-- **ç›´æ¥å—å½±å“**:`src/apps/command/ConfigApp.tsx` ä¸­çš„ `updateField` å‡½æ•°
-- **é—´æ¥å—å½±å“**:æ‰€æœ‰ä» localStorage è¯»å– `AppConfig` çš„ä»£ç è·¯å¾„
-- **æ•°æ®å®Œæ•´æ€§é£é™©**:é…ç½®æ•°æ®æ±¡æŸ“å,äº¤æ˜“é…ç½®(ç»„åˆæ€»èµ„é‡‘/æ­¢æŸé˜ˆå€¼ç­‰)å¯èƒ½ä¸º `null`,å½±å“ä¸‹æ¸¸ä¸šåŠ¡é€»è¾‘
+- **Ö±½ÓÊÜÓ°Ïì**:`src/apps/command/ConfigApp.tsx` ÖĞµÄ `updateField` º¯Êı
+- **¼ä½ÓÊÜÓ°Ïì**:ËùÓĞ´Ó localStorage ¶ÁÈ¡ `AppConfig` µÄ´úÂëÂ·¾¶
+- **Êı¾İÍêÕûĞÔ·çÏÕ**:ÅäÖÃÊı¾İÎÛÈ¾ºó,½»Ò×ÅäÖÃ(×éºÏ×Ü×Ê½ğ/Ö¹ËğãĞÖµµÈ)¿ÉÄÜÎª `null`,Ó°ÏìÏÂÓÎÒµÎñÂß¼­
 
-### ä¿®å¤æ–¹æ¡ˆ
+### ĞŞ¸´·½°¸
 
-åœ¨ `updateField` å†…éƒ¨å¯¹ `typeof value === 'number'` çš„å­—æ®µè°ƒç”¨ `Number.isFinite(value)` å®ˆå«:
+ÔÚ `updateField` ÄÚ²¿¶Ô `typeof value === 'number'` µÄ×Ö¶Îµ÷ÓÃ `Number.isFinite(value)` ÊØÎÀ:
 
 ```typescript
 const updateField = useCallback(<K extends keyof AppConfig>(key: K, value: AppConfig[K]) => {
   setConfig((prev) => {
-    // P0-5 ä¿®å¤:number ç±»å‹å­—æ®µä½¿ç”¨ Number.isFinite å®ˆå«
-    // æ‹’ç» NaN(ç”± 'abc' ç­‰éæ•°å­—æ–‡æœ¬è§¦å‘)å’Œ Infinity(ç”± '1e309' ç­‰æº¢å‡ºå€¼è§¦å‘)
-    // é¿å…è¢« JSON.stringify åºåˆ—åŒ–ä¸º 'null' åæ±¡æŸ“ localStorage
-    // ç©ºå­—ç¬¦ä¸² Number('') === 0 æ˜¯åˆæ³•æœ‰é™å€¼,ä¼šè¢«å†™å…¥(è‹¥éœ€æ‹’ç»ç©ºè¾“å…¥,éœ€åœ¨ onChange ä¸Šæ¸¸å®ˆå«)
+    // P0-5 ĞŞ¸´:number ÀàĞÍ×Ö¶ÎÊ¹ÓÃ Number.isFinite ÊØÎÀ
+    // ¾Ü¾ø NaN(ÓÉ 'abc' µÈ·ÇÊı×ÖÎÄ±¾´¥·¢)ºÍ Infinity(ÓÉ '1e309' µÈÒç³öÖµ´¥·¢)
+    // ±ÜÃâ±» JSON.stringify ĞòÁĞ»¯Îª 'null' ºóÎÛÈ¾ localStorage
+    // ¿Õ×Ö·û´® Number('') === 0 ÊÇºÏ·¨ÓĞÏŞÖµ,»á±»Ğ´Èë(ÈôĞè¾Ü¾ø¿ÕÊäÈë,ĞèÔÚ onChange ÉÏÓÎÊØÎÀ)
     if (typeof value === 'number' && !Number.isFinite(value)) {
-      // æ— æ•ˆå€¼ä¸å†™å…¥,ä¿ç•™ prev çŠ¶æ€
-      // React ä¼šç”¨ controlled input çš„ value å¼ºåˆ¶å°† input é‡ç½®ä¸º prev çš„å€¼
-      logger.info('[ConfigApp] updateField/æ‹’ç»æ— æ•ˆæ•°å€¼', {
+      // ÎŞĞ§Öµ²»Ğ´Èë,±£Áô prev ×´Ì¬
+      // React »áÓÃ controlled input µÄ value Ç¿ÖÆ½« input ÖØÖÃÎª prev µÄÖµ
+      logger.info('[ConfigApp] updateField/¾Ü¾øÎŞĞ§ÊıÖµ', {
         field: String(key),
         rawValue: value,
         reason: !Number.isNaN(value) ? 'Infinity' : 'NaN',
@@ -112,415 +121,415 @@ const updateField = useCallback(<K extends keyof AppConfig>(key: K, value: AppCo
 }, [])
 ```
 
-### ä¿®æ”¹æ–‡ä»¶æ¸…å•
+### ĞŞ¸ÄÎÄ¼şÇåµ¥
 
-| æ–‡ä»¶ | ä¿®æ”¹è¡Œå· | ä¿®æ”¹ç±»å‹ |
+| ÎÄ¼ş | ĞŞ¸ÄĞĞºÅ | ĞŞ¸ÄÀàĞÍ |
 |------|---------|---------|
-| `src/apps/command/ConfigApp.tsx` | L31-33 | æ–°å¢ `import { getLogger }` å’Œ `const logger = getLogger()` |
-| `src/apps/command/ConfigApp.tsx` | L174-189 | `updateField` å†…åŠ  `Number.isFinite` å®ˆå« |
-| `tests/ConfigApp.test.tsx` | å…¨æ–‡ | 6 ä¸ªè¾¹ç•Œå€¼ç”¨ä¾‹æ–­è¨€æ›´æ–°(ä»"è®°å½•ç°çŠ¶"æ”¹ä¸º"æœŸæœ›è¡Œä¸º") |
+| `src/apps/command/ConfigApp.tsx` | L31-33 | ĞÂÔö `import { getLogger }` ºÍ `const logger = getLogger()` |
+| `src/apps/command/ConfigApp.tsx` | L174-189 | `updateField` ÄÚ¼Ó `Number.isFinite` ÊØÎÀ |
+| `tests/ConfigApp.test.tsx` | È«ÎÄ | 6 ¸ö±ß½çÖµÓÃÀı¶ÏÑÔ¸üĞÂ(´Ó"¼ÇÂ¼ÏÖ×´"¸ÄÎª"ÆÚÍûĞĞÎª") |
 
-### éªŒè¯ç”¨ä¾‹
+### ÑéÖ¤ÓÃÀı
 
-| # | è¾“å…¥ | æœŸæœ›è¡Œä¸º | å®ˆå«ä½ç½® |
+| # | ÊäÈë | ÆÚÍûĞĞÎª | ÊØÎÀÎ»ÖÃ |
 |---|------|---------|---------|
-| 1 | `''` | å†™å…¥ 0(`Number('') === 0`,isFinite é€šè¿‡) | onChange ä¸Šæ¸¸ |
-| 2 | `'abc'` | **æ‹’ç»**,state ä¿æŒä¸Šä¸€ä¸ªå€¼ | `updateField` å®ˆå« |
-| 3 | `'1e309'` | **æ‹’ç»**,state ä¿æŒä¸Šä¸€ä¸ªå€¼ | `updateField` å®ˆå« |
-| 4 | `'-1'` | å†™å…¥ -1(isFinite ä¸æ‹¦æˆª,éœ€ `min={0}` ä¸Šæ¸¸çº¦æŸ) | onChange ä¸Šæ¸¸ |
-| 5 | `'0'` | å†™å…¥ 0 | â€” |
-| 6 | `'1e3'` | å†™å…¥ 1000 | â€” |
+| 1 | `''` | Ğ´Èë 0(`Number('') === 0`,isFinite Í¨¹ı) | onChange ÉÏÓÎ |
+| 2 | `'abc'` | **¾Ü¾ø**,state ±£³ÖÉÏÒ»¸öÖµ | `updateField` ÊØÎÀ |
+| 3 | `'1e309'` | **¾Ü¾ø**,state ±£³ÖÉÏÒ»¸öÖµ | `updateField` ÊØÎÀ |
+| 4 | `'-1'` | Ğ´Èë -1(isFinite ²»À¹½Ø,Ğè `min={0}` ÉÏÓÎÔ¼Êø) | onChange ÉÏÓÎ |
+| 5 | `'0'` | Ğ´Èë 0 | ¡ª |
+| 6 | `'1e3'` | Ğ´Èë 1000 | ¡ª |
 
-### éªŒè¯å‘½ä»¤
+### ÑéÖ¤ÃüÁî
 
 ```powershell
-# å•å…ƒæµ‹è¯•
+# µ¥Ôª²âÊÔ
 npx vitest run tests/ConfigApp.test.tsx --coverage
 
-# ç±»å‹æ£€æŸ¥
+# ÀàĞÍ¼ì²é
 npx tsc --noEmit
 ```
 
-### éªŒè¯ç»“æœ
+### ÑéÖ¤½á¹û
 
-- âœ… 18/18 ç”¨ä¾‹é€šè¿‡(åŸ 7 + æ–°å¢ 11)
-- âœ… ConfigApp.tsx è¦†ç›–ç‡:**Lines 91.44% â†’ 100%,Branches 70% â†’ 100%,Functions 33.33% â†’ 100%**
-- âœ… tsc 0 errors
-- âœ… localStorage ä¸å†è¢« NaN/Infinity æ±¡æŸ“
+- ? 18/18 ÓÃÀıÍ¨¹ı(Ô­ 7 + ĞÂÔö 11)
+- ? ConfigApp.tsx ¸²¸ÇÂÊ:**Lines 91.44% ¡ú 100%,Branches 70% ¡ú 100%,Functions 33.33% ¡ú 100%**
+- ? tsc 0 errors
+- ? localStorage ²»ÔÙ±» NaN/Infinity ÎÛÈ¾
 
-### å…³è”é—®é¢˜
+### ¹ØÁªÎÊÌâ
 
-- é˜²å¾¡æ€§ç¼–ç¨‹:`min={0}` ä¸Šæ¸¸çº¦æŸ(è´Ÿæ•°åœºæ™¯)éœ€åœ¨ UI å±‚è¡¥å……
-- `loadConfig()` çš„ try-catch åˆ†æ”¯å·²åœ¨ç”¨ä¾‹ 14 ä¸­è¦†ç›–
-- `JSON.parse` åœ¨å†å²é—ç•™ localStorage æ•°æ®ä¸Šçš„å®¹é”™å¤„ç†å·²éªŒè¯
+- ·ÀÓùĞÔ±à³Ì:`min={0}` ÉÏÓÎÔ¼Êø(¸ºÊı³¡¾°)ĞèÔÚ UI ²ã²¹³ä
+- `loadConfig()` µÄ try-catch ·ÖÖ§ÒÑÔÚÓÃÀı 14 ÖĞ¸²¸Ç
+- `JSON.parse` ÔÚÀúÊ·ÒÅÁô localStorage Êı¾İÉÏµÄÈİ´í´¦ÀíÒÑÑéÖ¤
 
 ---
 
-## Ticket V9-BUG-001:AgentTasksPage ä»»åŠ¡ ID æˆªå–å­—ç¬¦æ•°é”™è¯¯
+## Ticket V9-BUG-001:AgentTasksPage ÈÎÎñ ID ½ØÈ¡×Ö·ûÊı´íÎó
 
-### å…ƒæ•°æ®
+### ÔªÊı¾İ
 
-| å­—æ®µ | å€¼ |
+| ×Ö¶Î | Öµ |
 |------|---|
-| **Project** | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ |
+| **Project** | V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ |
 | **Issue Type** | Test Bug |
 | **Priority** | Minor |
 | **Status** | Done |
 | **Resolution** | Fixed |
 | **Assignee** | Agent D(general_purpose_task subagent) |
 | **Sprint** | 2026-07-W1 |
-| **Components** | æ€»æ§èˆ± - AgentTasksPage æµ‹è¯• |
+| **Components** | ×Ü¿Ø²Õ - AgentTasksPage ²âÊÔ |
 | **Labels** | test, bug, assertion-error |
-| **Created** | 2026-07-05(ç”± Agent D åœ¨è¦†ç›–ç‡æå‡ä»»åŠ¡ä¸­å‘ç°) |
+| **Created** | 2026-07-05(ÓÉ Agent D ÔÚ¸²¸ÇÂÊÌáÉıÈÎÎñÖĞ·¢ÏÖ) |
 | **Resolved** | 2026-07-05 19:15 |
 
-### æè¿°
+### ÃèÊö
 
-`AgentTasksPage` æºç ä¸­ `task.id.slice(0, 12)` æˆªå–ä»»åŠ¡ ID å‰ 12 ä¸ªå­—ç¬¦,ä½†æµ‹è¯•ç”¨ä¾‹ 2 æ–­è¨€ `task-aaaabb...` ä»…å« 6 ä¸ªå­—ç¬¦çš„ ID å‰ç¼€,ç¼ºå°‘ä¸€ä¸ª `b`ã€‚
+`AgentTasksPage` Ô´ÂëÖĞ `task.id.slice(0, 12)` ½ØÈ¡ÈÎÎñ ID Ç° 12 ¸ö×Ö·û,µ«²âÊÔÓÃÀı 2 ¶ÏÑÔ `task-aaaabb...` ½öº¬ 6 ¸ö×Ö·ûµÄ ID Ç°×º,È±ÉÙÒ»¸ö `b`¡£
 
-### æ ¹å› åˆ†æ
+### ¸ùÒò·ÖÎö
 
-æºç :
+Ô´Âë:
 ```typescript
 {task.id.slice(0, 12) + '...'}
 ```
 
-æµ‹è¯•:
+²âÊÔ:
 ```typescript
-expect(screen.getByText('task-aaaabb...')).toBeInTheDocument()  // âŒ å°‘ä¸€ä¸ª b
+expect(screen.getByText('task-aaaabb...')).toBeInTheDocument()  // ? ÉÙÒ»¸ö b
 ```
 
-å®é™…æ˜¾ç¤º:`task-aaaabbb...`(å…± 12 å­—ç¬¦)
+Êµ¼ÊÏÔÊ¾:`task-aaaabbb...`(¹² 12 ×Ö·û)
 
-### ä¿®å¤
+### ĞŞ¸´
 
-å°†æµ‹è¯•æ–­è¨€æ”¹ä¸ºæ­£ç¡®çš„ 12 å­—ç¬¦ ID å‰ç¼€:
+½«²âÊÔ¶ÏÑÔ¸ÄÎªÕıÈ·µÄ 12 ×Ö·û ID Ç°×º:
 ```typescript
-expect(screen.getByText('task-aaaabbb...')).toBeInTheDocument()  // âœ… 12 å­—ç¬¦
+expect(screen.getByText('task-aaaabbb...')).toBeInTheDocument()  // ? 12 ×Ö·û
 ```
 
-### å½±å“æ–‡ä»¶
+### Ó°ÏìÎÄ¼ş
 
-| æ–‡ä»¶ | ä¿®æ”¹è¡Œ |
+| ÎÄ¼ş | ĞŞ¸ÄĞĞ |
 |------|--------|
-| `src/pages/command/agent/__tests__/AgentTasksPage.test.tsx` | ç”¨ä¾‹ 2 |
+| `src/pages/command/agent/__tests__/AgentTasksPage.test.tsx` | ÓÃÀı 2 |
 
-### éªŒè¯
+### ÑéÖ¤
 
-- âœ… ç”¨ä¾‹ 2 é€šè¿‡
-- âœ… AgentTasksPage è¦†ç›–ç‡æå‡åˆ° 100% lines
+- ? ÓÃÀı 2 Í¨¹ı
+- ? AgentTasksPage ¸²¸ÇÂÊÌáÉıµ½ 100% lines
 
 ---
 
-## Ticket V9-BUG-002:AgentTasksPage çŠ¶æ€æ ‡ç­¾æ–‡æœ¬åŒ¹é…å†²çª
+## Ticket V9-BUG-002:AgentTasksPage ×´Ì¬±êÇ©ÎÄ±¾Æ¥Åä³åÍ»
 
-### å…ƒæ•°æ®
+### ÔªÊı¾İ
 
-| å­—æ®µ | å€¼ |
+| ×Ö¶Î | Öµ |
 |------|---|
-| **Project** | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ |
+| **Project** | V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ |
 | **Issue Type** | Test Bug |
 | **Priority** | Minor |
 | **Status** | Done |
 | **Resolution** | Fixed |
 | **Assignee** | Agent D |
-| **Components** | æ€»æ§èˆ± - AgentTasksPage æµ‹è¯• |
+| **Components** | ×Ü¿Ø²Õ - AgentTasksPage ²âÊÔ |
 | **Labels** | test, bug, strict-mode-violation |
 
-### æè¿°
+### ÃèÊö
 
-`getByText('æ‰§è¡Œä¸­')` åœ¨é¡µé¢ä¸ŠåŒæ—¶åŒ¹é…ä¸¤ä¸ªå…ƒç´ :
-1. çŠ¶æ€è¿‡æ»¤æ ‡ç­¾æŒ‰é’®(é¡¶éƒ¨å·¥å…·æ çš„"æ‰§è¡Œä¸­"ç­›é€‰æŒ‰é’®)
-2. ä»»åŠ¡è¡Œä¸­çš„çŠ¶æ€å¾½ç« 
+`getByText('Ö´ĞĞÖĞ')` ÔÚÒ³ÃæÉÏÍ¬Ê±Æ¥ÅäÁ½¸öÔªËØ:
+1. ×´Ì¬¹ıÂË±êÇ©°´Å¥(¶¥²¿¹¤¾ßÀ¸µÄ"Ö´ĞĞÖĞ"É¸Ñ¡°´Å¥)
+2. ÈÎÎñĞĞÖĞµÄ×´Ì¬»ÕÕÂ
 
-è¿å `@testing-library` strict mode,æŠ›å‡º"multiple elements found"é”™è¯¯ã€‚
+Î¥·´ `@testing-library` strict mode,Å×³ö"multiple elements found"´íÎó¡£
 
-### æ ¹å› åˆ†æ
+### ¸ùÒò·ÖÎö
 
-é¡µé¢åŒæ—¶æ¸²æŸ“çŠ¶æ€è¿‡æ»¤æŒ‰é’®å’Œä»»åŠ¡çŠ¶æ€å¾½ç« ,ä¸¤è€…ä½¿ç”¨ç›¸åŒæ–‡æœ¬ `æ‰§è¡Œä¸­`,å¯¼è‡´ `getByText` å•å…ƒç´ æ–­è¨€å¤±è´¥ã€‚
+Ò³ÃæÍ¬Ê±äÖÈ¾×´Ì¬¹ıÂË°´Å¥ºÍÈÎÎñ×´Ì¬»ÕÕÂ,Á½ÕßÊ¹ÓÃÏàÍ¬ÎÄ±¾ `Ö´ĞĞÖĞ`,µ¼ÖÂ `getByText` µ¥ÔªËØ¶ÏÑÔÊ§°Ü¡£
 
-### ä¿®å¤
+### ĞŞ¸´
 
-æ”¹ç”¨ `getAllByText` æ¥å—å¤šå…ƒç´ åŒ¹é…:
+¸ÄÓÃ `getAllByText` ½ÓÊÜ¶àÔªËØÆ¥Åä:
 ```typescript
-expect(screen.getAllByText('æ‰§è¡Œä¸­').length).toBeGreaterThan(0)
+expect(screen.getAllByText('Ö´ĞĞÖĞ').length).toBeGreaterThan(0)
 ```
 
-### å½±å“æ–‡ä»¶
+### Ó°ÏìÎÄ¼ş
 
-| æ–‡ä»¶ | ä¿®æ”¹è¡Œ |
+| ÎÄ¼ş | ĞŞ¸ÄĞĞ |
 |------|--------|
-| `src/pages/command/agent/__tests__/AgentTasksPage.test.tsx` | ç”¨ä¾‹ 7 |
+| `src/pages/command/agent/__tests__/AgentTasksPage.test.tsx` | ÓÃÀı 7 |
 
-### éªŒè¯
+### ÑéÖ¤
 
-- âœ… ç”¨ä¾‹ 7 é€šè¿‡
+- ? ÓÃÀı 7 Í¨¹ı
 
 ---
 
-## Ticket V9-BUG-003:AgentTasksPage é¢åŒ…å±‘æ–‡æœ¬åŒ¹é…å†²çª
+## Ticket V9-BUG-003:AgentTasksPage Ãæ°üĞ¼ÎÄ±¾Æ¥Åä³åÍ»
 
-### å…ƒæ•°æ®
+### ÔªÊı¾İ
 
-| å­—æ®µ | å€¼ |
+| ×Ö¶Î | Öµ |
 |------|---|
-| **Project** | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ |
+| **Project** | V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ |
 | **Issue Type** | Test Bug |
 | **Priority** | Minor |
 | **Status** | Done |
 | **Resolution** | Fixed |
 | **Assignee** | Agent D |
-| **Components** | æ€»æ§èˆ± - AgentTasksPage æµ‹è¯• |
+| **Components** | ×Ü¿Ø²Õ - AgentTasksPage ²âÊÔ |
 | **Labels** | test, bug, strict-mode-violation |
 
-### æè¿°
+### ÃèÊö
 
-`getByText('ä»»åŠ¡åˆ—è¡¨')` åŒæ—¶åŒ¹é…ä¸¤ä¸ªå…ƒç´ :
-1. `<h1>` æ ‡é¢˜
-2. é¢åŒ…å±‘ä¸­çš„ `<BreadcrumbPage>` å…ƒç´ 
+`getByText('ÈÎÎñÁĞ±í')` Í¬Ê±Æ¥ÅäÁ½¸öÔªËØ:
+1. `<h1>` ±êÌâ
+2. Ãæ°üĞ¼ÖĞµÄ `<BreadcrumbPage>` ÔªËØ
 
-### ä¿®å¤
+### ĞŞ¸´
 
-æ”¹ç”¨ `getAllByText`:
+¸ÄÓÃ `getAllByText`:
 ```typescript
-expect(screen.getAllByText('ä»»åŠ¡åˆ—è¡¨').length).toBeGreaterThan(0)
+expect(screen.getAllByText('ÈÎÎñÁĞ±í').length).toBeGreaterThan(0)
 ```
 
-### å½±å“æ–‡ä»¶
+### Ó°ÏìÎÄ¼ş
 
-| æ–‡ä»¶ | ä¿®æ”¹è¡Œ |
+| ÎÄ¼ş | ĞŞ¸ÄĞĞ |
 |------|--------|
-| `src/pages/command/agent/__tests__/AgentTasksPage.test.tsx` | ç”¨ä¾‹ 21 |
+| `src/pages/command/agent/__tests__/AgentTasksPage.test.tsx` | ÓÃÀı 21 |
 
-### éªŒè¯
+### ÑéÖ¤
 
-- âœ… ç”¨ä¾‹ 21 é€šè¿‡
+- ? ÓÃÀı 21 Í¨¹ı
 
 ---
 
-## Ticket V9-BUG-004:AgentTriggerPage é¡µé¢æ ‡é¢˜æ–‡æœ¬åŒ¹é…å†²çª
+## Ticket V9-BUG-004:AgentTriggerPage Ò³Ãæ±êÌâÎÄ±¾Æ¥Åä³åÍ»
 
-### å…ƒæ•°æ®
+### ÔªÊı¾İ
 
-| å­—æ®µ | å€¼ |
+| ×Ö¶Î | Öµ |
 |------|---|
-| **Project** | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ |
+| **Project** | V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ |
 | **Issue Type** | Test Bug |
 | **Priority** | Minor |
 | **Status** | Done |
 | **Resolution** | Fixed |
 | **Assignee** | Agent D |
-| **Components** | æ€»æ§èˆ± - AgentTriggerPage æµ‹è¯• |
+| **Components** | ×Ü¿Ø²Õ - AgentTriggerPage ²âÊÔ |
 | **Labels** | test, bug, strict-mode-violation |
 
-### æè¿°
+### ÃèÊö
 
-`getByText('ä»»åŠ¡è§¦å‘')` åŒæ—¶åŒ¹é… `<h1>` æ ‡é¢˜å’Œé¢åŒ…å±‘ `<BreadcrumbPage>` å…ƒç´ ã€‚
+`getByText('ÈÎÎñ´¥·¢')` Í¬Ê±Æ¥Åä `<h1>` ±êÌâºÍÃæ°üĞ¼ `<BreadcrumbPage>` ÔªËØ¡£
 
-### ä¿®å¤
+### ĞŞ¸´
 
-æ”¹ç”¨ `getAllByText`:
+¸ÄÓÃ `getAllByText`:
 ```typescript
-expect(screen.getAllByText('ä»»åŠ¡è§¦å‘').length).toBeGreaterThan(0)
+expect(screen.getAllByText('ÈÎÎñ´¥·¢').length).toBeGreaterThan(0)
 ```
 
-### å½±å“æ–‡ä»¶
+### Ó°ÏìÎÄ¼ş
 
-| æ–‡ä»¶ | ä¿®æ”¹è¡Œ |
+| ÎÄ¼ş | ĞŞ¸ÄĞĞ |
 |------|--------|
-| `src/pages/command/agent/__tests__/AgentTriggerPage.test.tsx` | ç”¨ä¾‹ 1 |
+| `src/pages/command/agent/__tests__/AgentTriggerPage.test.tsx` | ÓÃÀı 1 |
 
-### éªŒè¯
+### ÑéÖ¤
 
-- âœ… ç”¨ä¾‹ 1 é€šè¿‡
+- ? ÓÃÀı 1 Í¨¹ı
 
 ---
 
-## Ticket V9-BUG-005:AgentTriggerPage é¢åŒ…å±‘é“¾æ¥æ–‡æœ¬åŒ¹é…å†²çª
+## Ticket V9-BUG-005:AgentTriggerPage Ãæ°üĞ¼Á´½ÓÎÄ±¾Æ¥Åä³åÍ»
 
-### å…ƒæ•°æ®
+### ÔªÊı¾İ
 
-| å­—æ®µ | å€¼ |
+| ×Ö¶Î | Öµ |
 |------|---|
-| **Project** | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ |
+| **Project** | V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ |
 | **Issue Type** | Test Bug |
 | **Priority** | Minor |
 | **Status** | Done |
 | **Resolution** | Fixed |
 | **Assignee** | Agent D |
-| **Components** | æ€»æ§èˆ± - AgentTriggerPage æµ‹è¯• |
+| **Components** | ×Ü¿Ø²Õ - AgentTriggerPage ²âÊÔ |
 | **Labels** | test, bug, strict-mode-violation |
 
-### æè¿°
+### ÃèÊö
 
-`getByText('æ™ºèƒ½ä½“')` åŒæ—¶åŒ¹é…é¢åŒ…å±‘é“¾æ¥ `<BreadcrumbLink>` å’Œ `<select>` æ ‡ç­¾çš„ labelã€‚
+`getByText('ÖÇÄÜÌå')` Í¬Ê±Æ¥ÅäÃæ°üĞ¼Á´½Ó `<BreadcrumbLink>` ºÍ `<select>` ±êÇ©µÄ label¡£
 
-### ä¿®å¤
+### ĞŞ¸´
 
-æ”¹ç”¨ `getAllByText`:
+¸ÄÓÃ `getAllByText`:
 ```typescript
-expect(screen.getAllByText('æ™ºèƒ½ä½“').length).toBeGreaterThan(0)
+expect(screen.getAllByText('ÖÇÄÜÌå').length).toBeGreaterThan(0)
 ```
 
-### å½±å“æ–‡ä»¶
+### Ó°ÏìÎÄ¼ş
 
-| æ–‡ä»¶ | ä¿®æ”¹è¡Œ |
+| ÎÄ¼ş | ĞŞ¸ÄĞĞ |
 |------|--------|
-| `src/pages/command/agent/__tests__/AgentTriggerPage.test.tsx` | ç”¨ä¾‹ 2 |
+| `src/pages/command/agent/__tests__/AgentTriggerPage.test.tsx` | ÓÃÀı 2 |
 
-### éªŒè¯
+### ÑéÖ¤
 
-- âœ… ç”¨ä¾‹ 2 é€šè¿‡
+- ? ÓÃÀı 2 Í¨¹ı
 
 ---
 
-## Ticket V9-BUG-006:AgentTriggerPage MCP Server æ¸…ç©ºåæ¡ä»¶æ¸²æŸ“ select æ¶ˆå¤±å¯¼è‡´ undefined è®¿é—®
+## Ticket V9-BUG-006:AgentTriggerPage MCP Server Çå¿ÕºóÌõ¼şäÖÈ¾ select ÏûÊ§µ¼ÖÂ undefined ·ÃÎÊ
 
-### å…ƒæ•°æ®
+### ÔªÊı¾İ
 
-| å­—æ®µ | å€¼ |
+| ×Ö¶Î | Öµ |
 |------|---|
-| **Project** | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ |
+| **Project** | V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ |
 | **Issue Type** | Test Bug |
 | **Priority** | Major |
 | **Status** | Done |
 | **Resolution** | Fixed |
 | **Assignee** | Agent D |
-| **Components** | æ€»æ§èˆ± - AgentTriggerPage æµ‹è¯• |
+| **Components** | ×Ü¿Ø²Õ - AgentTriggerPage ²âÊÔ |
 | **Labels** | test, bug, runtime-error, undefined-access |
 
-### æè¿°
+### ÃèÊö
 
-ç”¨ä¾‹ 7 æµ‹è¯• MCP Server çš„ onChange è¡Œä¸º,æ¸…ç©º server åé¡µé¢ä¼šç§»é™¤ Tool select(æ¡ä»¶æ¸²æŸ“),ä½†æµ‹è¯•ä»£ç ç»§ç»­è®¿é—® `querySelectorAll('select')[2]`,å¯¼è‡´ undefined è®¿é—®ã€‚
+ÓÃÀı 7 ²âÊÔ MCP Server µÄ onChange ĞĞÎª,Çå¿Õ server ºóÒ³Ãæ»áÒÆ³ı Tool select(Ìõ¼şäÖÈ¾),µ«²âÊÔ´úÂë¼ÌĞø·ÃÎÊ `querySelectorAll('select')[2]`,µ¼ÖÂ undefined ·ÃÎÊ¡£
 
-### æ ¹å› åˆ†æ
+### ¸ùÒò·ÖÎö
 
-æºç :
+Ô´Âë:
 ```tsx
 <Select value={agent.mcpServerName} onChange={...}>
-  {/* server é€‰é¡¹ */}
+  {/* server Ñ¡Ïî */}
 </Select>
 
 {agent.mcpServerName && (
   <Select value={agent.defaultToolName} onChange={...}>
-    {/* tool é€‰é¡¹,ä»…åœ¨ server é€‰ä¸­æ—¶æ¸²æŸ“ */}
+    {/* tool Ñ¡Ïî,½öÔÚ server Ñ¡ÖĞÊ±äÖÈ¾ */}
   </Select>
 )}
 ```
 
-æµ‹è¯•:
+²âÊÔ:
 ```typescript
-fireEvent.change(selects[1], { target: { value: '' } })  // æ¸…ç©º server
-const toolSelect = document.querySelectorAll('select')[2]  // âŒ å·²è¢«ç§»é™¤,è¿”å› undefined
-fireEvent.change(toolSelect, ...)  // âŒ TypeError: Cannot read property of undefined
+fireEvent.change(selects[1], { target: { value: '' } })  // Çå¿Õ server
+const toolSelect = document.querySelectorAll('select')[2]  // ? ÒÑ±»ÒÆ³ı,·µ»Ø undefined
+fireEvent.change(toolSelect, ...)  // ? TypeError: Cannot read property of undefined
 ```
 
-### ä¿®å¤
+### ĞŞ¸´
 
-æ”¹ä¸ºå…ˆéªŒè¯ select æ¶ˆå¤±,å†é‡æ–°é€‰æ‹© server éªŒè¯ tool é‡ç½®:
+¸ÄÎªÏÈÑéÖ¤ select ÏûÊ§,ÔÙÖØĞÂÑ¡Ôñ server ÑéÖ¤ tool ÖØÖÃ:
 ```typescript
 fireEvent.change(selects[1], { target: { value: '' } })
-// éªŒè¯ tool select å·²è¢«ç§»é™¤
+// ÑéÖ¤ tool select ÒÑ±»ÒÆ³ı
 expect(document.querySelectorAll('select').length).toBe(2)
-// é‡æ–°é€‰æ‹© server
+// ÖØĞÂÑ¡Ôñ server
 fireEvent.change(selects[1], { target: { value: 'mock-server' } })
-// éªŒè¯ tool select é‡æ–°å‡ºç°ä¸” tool å·²é‡ç½®
+// ÑéÖ¤ tool select ÖØĞÂ³öÏÖÇÒ tool ÒÑÖØÖÃ
 const newToolSelect = document.querySelectorAll('select')[2] as HTMLSelectElement
 expect(newToolSelect.value).toBe('')
 ```
 
-### å½±å“æ–‡ä»¶
+### Ó°ÏìÎÄ¼ş
 
-| æ–‡ä»¶ | ä¿®æ”¹è¡Œ |
+| ÎÄ¼ş | ĞŞ¸ÄĞĞ |
 |------|--------|
-| `src/pages/command/agent/__tests__/AgentTriggerPage.test.tsx` | ç”¨ä¾‹ 7 |
+| `src/pages/command/agent/__tests__/AgentTriggerPage.test.tsx` | ÓÃÀı 7 |
 
-### éªŒè¯
+### ÑéÖ¤
 
-- âœ… ç”¨ä¾‹ 7 é€šè¿‡
-- âœ… AgentTriggerPage è¦†ç›–ç‡æå‡åˆ° 100% lines / 100% branches / 100% functions
+- ? ÓÃÀı 7 Í¨¹ı
+- ? AgentTriggerPage ¸²¸ÇÂÊÌáÉıµ½ 100% lines / 100% branches / 100% functions
 
 ---
 
-## é›†ç¾¤åä½œäº®ç‚¹
+## ¼¯ÈºĞ­×÷ÁÁµã
 
-| ç»´åº¦ | æ•°æ® |
+| Î¬¶È | Êı¾İ |
 |------|------|
-| å¹¶è¡Œ subagent æ•° | 4 |
-| æ€»æ‰§è¡Œæ—¶é—´ | ~3 åˆ†é’Ÿ(å¹¶è¡Œ) |
-| æ–°å¢æµ‹è¯•ç”¨ä¾‹ | 71 ä¸ª(31 â†’ 102) |
-| ä¿®å¤ Bug æ€»æ•° | 7(1 P0 + 6 å†å²) |
-| è¦†ç›–ç‡æå‡æ–‡ä»¶ | 5 ä¸ª,å…¨éƒ¨è¾¾åˆ° 100%(MigrationPanel 99.10% lines / 87.10% branches å›  FileReader.onerror ä¸å¯è¾¾åˆ†æ”¯) |
-| tsc é”™è¯¯ | 0 |
-| AGENTS.md åˆè§„ | âœ…(æœªä¿®æ”¹æºç ,æœªåˆ›å»ºæ–°æ–‡ä»¶,æœªä½¿ç”¨ any,fake timers æ¸…ç†) |
+| ²¢ĞĞ subagent Êı | 4 |
+| ×ÜÖ´ĞĞÊ±¼ä | ~3 ·ÖÖÓ(²¢ĞĞ) |
+| ĞÂÔö²âÊÔÓÃÀı | 71 ¸ö(31 ¡ú 102) |
+| ĞŞ¸´ Bug ×ÜÊı | 7(1 P0 + 6 ÀúÊ·) |
+| ¸²¸ÇÂÊÌáÉıÎÄ¼ş | 5 ¸ö,È«²¿´ïµ½ 100%(MigrationPanel 99.10% lines / 87.10% branches Òò FileReader.onerror ²»¿É´ï·ÖÖ§) |
+| tsc ´íÎó | 0 |
+| AGENTS.md ºÏ¹æ | ?(Î´ĞŞ¸ÄÔ´Âë,Î´´´½¨ĞÂÎÄ¼ş,Î´Ê¹ÓÃ any,fake timers ÇåÀí) |
 
 ---
 
-## éªŒè¯æ±‡æ€»
+## ÑéÖ¤»ã×Ü
 
 ```powershell
-# å•å…ƒæµ‹è¯•
+# µ¥Ôª²âÊÔ
 npx vitest run tests/CommandApp.test.tsx tests/ConfigApp.test.tsx tests/MigrationPanel.test.tsx `
   src/pages/command/agent/__tests__/AgentTasksPage.test.tsx `
   src/pages/command/agent/__tests__/AgentTriggerPage.test.tsx --coverage
 
-# è¾“å‡º:
+# Êä³ö:
 # Test Files  5 passed (5)
 #      Tests  102 passed (102)
 #   Duration  18.29s
 
-# ç±»å‹æ£€æŸ¥
+# ÀàĞÍ¼ì²é
 npx tsc --noEmit
-# è¾“å‡º:0 errors
+# Êä³ö:0 errors
 ```
 
 ---
 
-## å˜æ›´å½±å“æ¸…å•
+## ±ä¸üÓ°ÏìÇåµ¥
 
-### ä¿®æ”¹çš„æºç æ–‡ä»¶(ä»… 1 ä¸ª)
+### ĞŞ¸ÄµÄÔ´ÂëÎÄ¼ş(½ö 1 ¸ö)
 
-| æ–‡ä»¶ | ä¿®æ”¹ç±»å‹ | è¡Œæ•° |
+| ÎÄ¼ş | ĞŞ¸ÄÀàĞÍ | ĞĞÊı |
 |------|---------|------|
-| `src/apps/command/ConfigApp.tsx` | P0-5 ä¿®å¤ | L31-33, L174-189 |
+| `src/apps/command/ConfigApp.tsx` | P0-5 ĞŞ¸´ | L31-33, L174-189 |
 
-### ä¿®æ”¹çš„æµ‹è¯•æ–‡ä»¶(å…± 5 ä¸ª)
+### ĞŞ¸ÄµÄ²âÊÔÎÄ¼ş(¹² 5 ¸ö)
 
-| æ–‡ä»¶ | ä¿®æ”¹ç±»å‹ | ç”¨ä¾‹æ•°å˜åŒ– |
+| ÎÄ¼ş | ĞŞ¸ÄÀàĞÍ | ÓÃÀıÊı±ä»¯ |
 |------|---------|----------|
-| `tests/CommandApp.test.tsx` | æ‰©å±•ç”¨ä¾‹ | 5 â†’ 12(+7) |
-| `tests/ConfigApp.test.tsx` | æ–­è¨€æ›´æ–° + æ‰©å±• | 7 â†’ 18(+11) |
-| `tests/MigrationPanel.test.tsx` | æ‰©å±•ç”¨ä¾‹ | 14 â†’ 20(+6) |
-| `src/pages/command/agent/__tests__/AgentTasksPage.test.tsx` | Bug ä¿®å¤ + æ‰©å±• | 3 â†’ 26(+23) |
-| `src/pages/command/agent/__tests__/AgentTriggerPage.test.tsx` | Bug ä¿®å¤ + æ‰©å±• | 2 â†’ 26(+24) |
+| `tests/CommandApp.test.tsx` | À©Õ¹ÓÃÀı | 5 ¡ú 12(+7) |
+| `tests/ConfigApp.test.tsx` | ¶ÏÑÔ¸üĞÂ + À©Õ¹ | 7 ¡ú 18(+11) |
+| `tests/MigrationPanel.test.tsx` | À©Õ¹ÓÃÀı | 14 ¡ú 20(+6) |
+| `src/pages/command/agent/__tests__/AgentTasksPage.test.tsx` | Bug ĞŞ¸´ + À©Õ¹ | 3 ¡ú 26(+23) |
+| `src/pages/command/agent/__tests__/AgentTriggerPage.test.tsx` | Bug ĞŞ¸´ + À©Õ¹ | 2 ¡ú 26(+24) |
 
 ---
 
-## å…³è”æŸ¥è¯¢
+## ¹ØÁª²éÑ¯
 
 ```powershell
-# æŸ¥è¯¢æœ¬æœˆå˜æ›´æ—¥å¿—
+# ²éÑ¯±¾ÔÂ±ä¸üÈÕÖ¾
 npm run changelog:summary
 
-# æŒ‰æ—¥æœŸæŸ¥è¯¢
+# °´ÈÕÆÚ²éÑ¯
 npm run changelog:query -- --date=2026-07-05
 ```
 
 ---
 
-## åç»­è¡ŒåŠ¨é¡¹
+## ºóĞøĞĞ¶¯Ïî
 
-| # | è¡ŒåŠ¨é¡¹ | è´Ÿè´£äºº | æˆªæ­¢æ—¥æœŸ | çŠ¶æ€ |
+| # | ĞĞ¶¯Ïî | ¸ºÔğÈË | ½ØÖ¹ÈÕÆÚ | ×´Ì¬ |
 |---|--------|--------|---------|------|
-| 1 | éƒ¨ç½²åˆ°ç”Ÿäº§ç¯å¢ƒå‰,è¿è¡Œå®Œæ•´å›å½’æµ‹è¯•å¥—ä»¶ | DevOps | 2026-07-06 | Pending |
-| 2 | åœ¨ CHANGELOG.md ä¸­è¡¥å…… P0-5 ç¼ºé™·ä¿®å¤æ¡ç›® | Maintainer | 2026-07-06 | Pending |
-| 3 | è¯„ä¼°æ˜¯å¦éœ€è¦åœ¨ `updateField` ä¸Šæ¸¸è¡¥å…… `min={0}` å®ˆå«(è´Ÿæ•°åœºæ™¯) | Backend | 2026-07-10 | Pending |
-| 4 | è€ƒè™‘å°† `Number.isFinite` å®ˆå«æ¨¡å¼æå–ä¸º `lib/` å±‚å·¥å…·å‡½æ•°,ä¾›å…¶ä»–è¡¨å•å¤ç”¨ | Architecture | 2026-07-15 | Pending |
+| 1 | ²¿Êğµ½Éú²ú»·¾³Ç°,ÔËĞĞÍêÕû»Ø¹é²âÊÔÌ×¼ş | DevOps | 2026-07-06 | Pending |
+| 2 | ÔÚ CHANGELOG.md ÖĞ²¹³ä P0-5 È±ÏİĞŞ¸´ÌõÄ¿ | Maintainer | 2026-07-06 | Pending |
+| 3 | ÆÀ¹ÀÊÇ·ñĞèÒªÔÚ `updateField` ÉÏÓÎ²¹³ä `min={0}` ÊØÎÀ(¸ºÊı³¡¾°) | Backend | 2026-07-10 | Pending |
+| 4 | ¿¼ÂÇ½« `Number.isFinite` ÊØÎÀÄ£Ê½ÌáÈ¡Îª `lib/` ²ã¹¤¾ßº¯Êı,¹©ÆäËû±íµ¥¸´ÓÃ | Architecture | 2026-07-15 | Pending |
 
 ---
 
-## å˜æ›´æ—¥å¿—
+## ±ä¸üÈÕÖ¾
 
-| ç‰ˆæœ¬ | æ—¥æœŸ | å˜æ›´ |
+| °æ±¾ | ÈÕÆÚ | ±ä¸ü |
 |------|------|------|
-| v1.0 | 2026-07-05 19:30 | åˆå§‹å½’æ¡£:7 ä¸ªä»»åŠ¡å•å…¨éƒ¨ Done |
+| v1.0 | 2026-07-05 19:30 | ³õÊ¼¹éµµ:7 ¸öÈÎÎñµ¥È«²¿ Done |

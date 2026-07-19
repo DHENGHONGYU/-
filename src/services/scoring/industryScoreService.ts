@@ -1,5 +1,5 @@
 import { calculateWeightedScore, getEnabledIndustryFactorNames } from '@/config/scoreFactors'
-import { sendWriteEnvelope } from '@/data/dataLayerHelpers'
+import { sendWriteEnvelope } from '@/core/databridgeQueries'
 import type { IndustryDimensionScore, IndustryScore } from '@/data/types'
 import { getSectorSkillMap } from '@/data/sectorSkillData'
 import type { LlmConfig } from '@/config/llmConfig'

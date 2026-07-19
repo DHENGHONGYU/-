@@ -1,4 +1,5 @@
 import { getLogger } from '@/lib/logger'
+import { safeRegex } from '@/lib/safeRegex'
 import type { FileHash, FileType, LocalScanResult } from '@/data/types'
 import { HYBRID_PROOFREAD_CONFIG } from '@/config/hybridProofreadConfig'
 
@@ -15,7 +16,7 @@ function getFileType(filePath: string): FileType {
 }
 
 function matchesPattern(filePath: string, pattern: string): boolean {
-  const regex = new RegExp(pattern.replace(/\*\*/g, '.*').replace(/\*/g, '[^/]*'))
+  const regex = safeRegex(pattern.replace(/\*\*/g, '.*').replace(/\*/g, '[^/]*'))
   return regex.test(filePath)
 }
 

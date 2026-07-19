@@ -1,133 +1,142 @@
 ---
-title: 06-routing-specs
+title: 06. Â·ÓÉ¹æ¸ñ
+type: explanation
+domain: frontend
+phase: design
 tier: important
+status: active
+maintainer: V9 Architecture Team
+summary: "V9 Â·ÓÉ¹æ·¶£ºÂ·ÓÉ¶¨Òå¡¢ÃüÃûÓëµ¼º½¹æÔò£¨ÊÂÊµÔ´ src/config/routes.ts£©¡£"
+tags: [frontend, routing, spec, plan, component, ui, strategy, architecture, explanation]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+doc_id: V9-DOC-FRONT-004
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-tier: important
-code_version: 2.0.0
----
-
-# 06. è·¯ç”±è§„æ ¼
+# 06. Â·ÓÉ¹æ¸ñ
 
 > **Status**: Current  
 > **Version**: v3.1.0  
 > **Last Updated**: 2026-07-05
 >
-> æœ¬æ–‡æ¡£å®šä¹‰ V9 çš„è·¯ç”±æ³¨å†Œè¡¨ã€èˆ±å®¤æ˜ å°„ã€æ‡’åŠ è½½ç­–ç•¥ä¸å¯¼èˆªè§„èŒƒã€‚  
-> ç›®æ ‡è¯»è€…ï¼šå‰ç«¯å¼€å‘è€…ã€UI/UX è®¾è®¡å¸ˆã€æµ‹è¯•å·¥ç¨‹å¸ˆã€‚
+> ±¾ÎÄµµ¶¨Òå V9 µÄÂ·ÓÉ×¢²á±í¡¢²ÕÊÒÓ³Éä¡¢ÀÁ¼ÓÔØ²ßÂÔÓëµ¼º½¹æ·¶¡£  
+> Ä¿±ê¶ÁÕß£ºÇ°¶Ë¿ª·¢Õß¡¢UI/UX Éè¼ÆÊ¦¡¢²âÊÔ¹¤³ÌÊ¦¡£
 
 ---
 
-## 1. è·¯ç”±è®¾è®¡åŸåˆ™
+## 1. Â·ÓÉÉè¼ÆÔ­Ôò
 
-1. **HashRouter ä¼˜å…ˆ**ï¼šçº¯å‰ç«¯ PWA éƒ¨ç½²åˆ° GitHub Pages ç­‰é™æ€æ‰˜ç®¡æ—¶ï¼ŒHashRouter å¯é¿å…åˆ·æ–° 404ã€‚
-2. **é…ç½®é©±åŠ¨**ï¼šæ‰€æœ‰ä¸šåŠ¡è·¯ç”±é›†ä¸­æ³¨å†Œåœ¨ `src/config/routes.ts`ï¼Œç¦æ­¢é¡µé¢ç»„ä»¶å†…ç¡¬ç¼–ç è·¯å¾„ã€‚
-3. **æ‡’åŠ è½½**ï¼šé¡µé¢çº§ç»„ä»¶ä½¿ç”¨ `React.lazy()`ï¼Œå‡å°‘é¦–å± bundleã€‚
-4. **èˆ±å®¤ä¸€è‡´æ€§**ï¼šURL è·¯å¾„å‰ç¼€ä¸äº”èˆ±æ¦‚å¿µå¯¹é½ï¼Œä¾¿äºç”¨æˆ·é€šè¿‡åœ°å€æ è¯†åˆ«å½“å‰å·¥ä½œèˆ±ã€‚
-5. **ä¸åˆ‡å±åŸåˆ™**ï¼šåŒä¸€èˆ±å®¤å†…çš„åŠŸèƒ½é€šè¿‡ Tab/é¢æ¿åˆ‡æ¢ï¼Œè·¨èˆ±å®¤åˆ‡æ¢é€šè¿‡ PortalShell å¯¼èˆªå®Œæˆã€‚
+1. **HashRouter ÓÅÏÈ**£º´¿Ç°¶Ë PWA ²¿Êğµ½ GitHub Pages µÈ¾²Ì¬ÍĞ¹ÜÊ±£¬HashRouter ¿É±ÜÃâË¢ĞÂ 404¡£
+2. **ÅäÖÃÇı¶¯**£ºËùÓĞÒµÎñÂ·ÓÉ¼¯ÖĞ×¢²áÔÚ `src/config/routes.ts`£¬½ûÖ¹Ò³Ãæ×é¼şÄÚÓ²±àÂëÂ·¾¶¡£
+3. **ÀÁ¼ÓÔØ**£ºÒ³Ãæ¼¶×é¼şÊ¹ÓÃ `React.lazy()`£¬¼õÉÙÊ×ÆÁ bundle¡£
+4. **²ÕÊÒÒ»ÖÂĞÔ**£ºURL Â·¾¶Ç°×ºÓëÎå²Õ¸ÅÄî¶ÔÆë£¬±ãÓÚÓÃ»§Í¨¹ıµØÖ·À¸Ê¶±ğµ±Ç°¹¤×÷²Õ¡£
+5. **²»ÇĞÆÁÔ­Ôò**£ºÍ¬Ò»²ÕÊÒÄÚµÄ¹¦ÄÜÍ¨¹ı Tab/Ãæ°åÇĞ»»£¬¿ç²ÕÊÒÇĞ»»Í¨¹ı PortalShell µ¼º½Íê³É¡£
 
 ---
 
-## 2. è·¯ç”±æ³¨å†Œè¡¨
+## 2. Â·ÓÉ×¢²á±í
 
-### 2.1 å½“å‰æ³¨å†Œè·¯ç”±
+### 2.1 µ±Ç°×¢²áÂ·ÓÉ
 
-å®šä¹‰äº `src/config/routes.ts`ï¼š
+¶¨ÒåÓÚ `src/config/routes.ts`£º
 
-| # | è·¯å¾„ | ç»„ä»¶ | åˆ†ç±» | è¯´æ˜ |
+| # | Â·¾¶ | ×é¼ş | ·ÖÀà | ËµÃ÷ |
 |:-:|------|------|------|------|
-| 1 | `/` | `HomePage` | portal | é¦–é¡µ |
-| 2 | `/cockpit` | `CockpitShell` | portal | é©¾é©¶èˆ± Dashboard |
-| 3 | `/input/hub` | `PortalShell` | input | è¾“å…¥èˆ± - æ¨¡å—é¦–é¡µ |
-| 4 | `/input` | `PortalShell` | input | è¾“å…¥èˆ± |
-| 5 | `/input/bulk-import` | `PortalShell` | input | è¾“å…¥èˆ± - æ‰¹é‡å¯¼å…¥ |
-| 6 | `/input/hot-sectors` | `PortalShell` | input | è¾“å…¥èˆ± - çƒ­é—¨æ¿å— |
-| 7 | `/input/data-test` | `PortalShell` | input | è¾“å…¥èˆ± - é‡‡é›†æµ‹è¯• |
-| 8 | `/input/local-knowledge` | `PortalShell` | input | è¾“å…¥èˆ± - æœ¬åœ°çŸ¥è¯†åº“ |
-| 9 | `/input/seven-dim` | `PortalShell` | input | è¾“å…¥èˆ± - ä¸ƒç»´é‡‡é›†ç­–ç•¥é…ç½® |
-| 10 | `/input/fetcher-config` | `PortalShell` | input | è¾“å…¥èˆ± - æŠ“å–å¼•æ“é…ç½® |
-| 11 | `/input/collect-tasks` | `PortalShell` | input | è¾“å…¥èˆ± - é‡‡é›†ä»»åŠ¡ç›‘æ§ |
-| 12 | `/analysis/hub` | `PortalShell` | analysis | åˆ†æèˆ± - æ¨¡å—é¦–é¡µ |
-| 13 | `/analysis` | `PortalShell` | analysis | åˆ†æèˆ± |
-| 14 | `/analysis/stock-score` | `PortalShell` | analysis | ä¸ªè‚¡ä¹ç»´è¯„åˆ†åˆ†æ |
-| 15 | `/analysis/stock-score/:symbol` | `PortalShell` | analysis | ä¸ªè‚¡ä¹ç»´è¯„åˆ†åˆ†æï¼ˆå¸¦ä»£ç ï¼‰ |
-| 16 | `/analysis/sector` | `PortalShell` | analysis | è¡Œä¸šä¸æ¿å—åˆ†æ |
-| 17 | `/analysis/backtest` | `PortalShell` | analysis | ç­–ç•¥å›æµ‹ |
-| 18 | `/analysis/industry-score` | `PortalShell` | analysis | V4 è¡Œä¸šè¯„åˆ† |
-| 19 | `/analysis/intelligent-score` | `PortalShell` | analysis | V6 ä¸ªè‚¡æ™ºèƒ½è¯„åˆ† |
-| 20 | `/analysis/score-docs` | `PortalShell` | analysis | è¯„åˆ†æ–‡æ¡£ç‰ˆæœ¬åº“ |
-| 21 | `/analysis/news` | `PortalShell` | analysis | æ™ºèƒ½èµ„è®¯ |
-| 22 | `/analysis/score-comparison` | `PortalShell` | analysis | å†å²è¯„åˆ†æ¯”å¯¹çœ‹æ¿ |
-| 23 | `/analysis/hot-sector` | `PortalShell` | analysis | çƒ­é—¨æ¿å—ç­–ç•¥é€‰è‚¡ |
-| 24 | `/analysis/value-pit` | `PortalShell` | analysis | ä»·å€¼æ´¼åœ°ç­–ç•¥é€‰è‚¡ |
-| 25 | `/analysis/multi-factor` | `PortalShell` | analysis | å¤šå› å­ç­›é€‰ |
-| 26 | `/analysis/stock-pool` | `PortalShell` | analysis | è‚¡ç¥¨æ± çœ‹æ¿ |
-| 27 | `/trading` | `PortalShell` | trading | äº¤æ˜“èˆ± |
-| 28 | `/trading/flow` | `PortalShell` | trading | äº¤æ˜“èˆ± - äº¤æ˜“æµç¨‹ |
-| 29 | `/trading/strategy-snapshots` | `PortalShell` | trading | ç­–ç•¥å¿«ç…§ |
-| 30 | `/trading/holdings` | `PortalShell` | trading | äº¤æ˜“æŒä»“ç®¡ç† |
-| 31 | `/trading/execution-plans` | `PortalShell` | trading | æ‰§è¡Œè®¡åˆ’ç®¡ç† |
-| 32 | `/trading/execution` | `PortalShell` | trading | æ‰§è¡Œç®¡ç† |
-| 33 | `/trading/portfolio` | `PortalShell` | trading | æŠ•èµ„ç»„åˆç®¡ç† |
-| 34 | `/trading/risk` | `PortalShell` | trading | é£é™©æ§åˆ¶ç®¡ç† |
-| 35 | `/output` | `PortalShell` | output | è¾“å‡ºèˆ± |
-| 36 | `/output/hub` | `PortalShell` | output | è¾“å‡ºèˆ± - æ¨¡å—é¦–é¡µ |
-| 37 | `/output/research` | `PortalShell` | output | è¾“å‡ºèˆ± - ç ”ç©¶æŠ¥å‘Š |
-| 38 | `/output/review` | `PortalShell` | output | è¾“å‡ºèˆ± - äº¤æ˜“å¤ç›˜ |
-| 39 | `/output/export` | `PortalShell` | output | è¾“å‡ºèˆ± - æ•°æ®å¯¼å‡º |
-| 40 | `/output/dashboard` | `PortalShell` | output | è¾“å‡ºèˆ± - ä»ªè¡¨ç›˜ |
-| 41 | `/command/hub` | `PortalShell` | command | æ€»æ§èˆ± - æ¨¡å—é¦–é¡µ |
-| 42 | `/command` | `PortalShell` | command | æ€»æ§èˆ± |
-| 43 | `/command/agents` | `PortalShell` | command | æ™ºèƒ½ä½“æ€»æ§å° |
-| 44 | `/command/agents/registry` | `PortalShell` | command | æ™ºèƒ½ä½“æ³¨å†Œè¡¨ |
-| 45 | `/command/agents/registry/:agentId` | `PortalShell` | command | æ™ºèƒ½ä½“è¯¦æƒ… |
-| 46 | `/command/agents/trigger` | `PortalShell` | command | æ™ºèƒ½ä½“ä»»åŠ¡è§¦å‘ |
-| 47 | `/command/agents/tasks` | `PortalShell` | command | æ™ºèƒ½ä½“ä»»åŠ¡åˆ—è¡¨ |
-| 48 | `/command/agents/custom` | `PortalShell` | command | è‡ªå®šä¹‰æ™ºèƒ½ä½“ |
-| 49 | `/command/agents/llm` | `PortalShell` | command | LLM ç®¡ç† |
-| 50 | `/command/agents/capability-graph` | `PortalShell` | command | èƒ½åŠ›å›¾è°± |
-| 51 | `/command/agents/dag-scheduler` | `PortalShell` | command | DAG è°ƒåº¦å™¨ |
-| 52 | `/command/agents/feedback` | `PortalShell` | command | åé¦ˆæ§åˆ¶å° |
-| 53 | `/command/agents/model-upgrade` | `PortalShell` | command | æ¨¡å‹å‡çº§ |
-| 54 | `/command/agents/data-labels` | `PortalShell` | command | æ•°æ®æ ‡ç­¾ç®¡ç† |
-| 55 | `/command/agents/api-config` | `PortalShell` | command | API é…ç½® |
-| 56 | `/command/agents/skill-audit` | `PortalShell` | command | Skill æ ¸æŸ¥ |
-| 57 | `/command/agents/optimization` | `PortalShell` | command | ä¼˜åŒ–å»ºè®® |
-| 58 | `/command/agents/changelog` | `PortalShell` | command | æ›´æ–°æ—¥å¿— |
-| 59 | `/command/mcp-servers` | `PortalShell` | command | MCP Server ç®¡ç† |
-| 60 | `/command/monitor` | `PortalShell` | command | ç³»ç»Ÿç›‘æ§ |
-| 61 | `/command/config` | `PortalShell` | command | é…ç½®ç®¡ç† |
-| 62 | `/mock-test` | `MockTestPage` | other | V9 æ¨¡å— Mock éªŒè¯é¡µ |
+| 1 | `/` | `HomePage` | portal | Ê×Ò³ |
+| 2 | `/cockpit` | `CockpitShell` | portal | ¼İÊ»²Õ Dashboard |
+| 3 | `/input/hub` | `PortalShell` | input | ÊäÈë²Õ - Ä£¿éÊ×Ò³ |
+| 4 | `/input` | `PortalShell` | input | ÊäÈë²Õ |
+| 5 | `/input/bulk-import` | `PortalShell` | input | ÊäÈë²Õ - ÅúÁ¿µ¼Èë |
+| 6 | `/input/hot-sectors` | `PortalShell` | input | ÊäÈë²Õ - ÈÈÃÅ°å¿é |
+| 7 | `/input/data-test` | `PortalShell` | input | ÊäÈë²Õ - ²É¼¯²âÊÔ |
+| 8 | `/input/local-knowledge` | `PortalShell` | input | ÊäÈë²Õ - ±¾µØÖªÊ¶¿â |
+| 9 | `/input/seven-dim` | `PortalShell` | input | ÊäÈë²Õ - ÆßÎ¬²É¼¯²ßÂÔÅäÖÃ |
+| 10 | `/input/fetcher-config` | `PortalShell` | input | ÊäÈë²Õ - ×¥È¡ÒıÇæÅäÖÃ |
+| 11 | `/input/collect-tasks` | `PortalShell` | input | ÊäÈë²Õ - ²É¼¯ÈÎÎñ¼à¿Ø |
+| 12 | `/analysis/hub` | `PortalShell` | analysis | ·ÖÎö²Õ - Ä£¿éÊ×Ò³ |
+| 13 | `/analysis` | `PortalShell` | analysis | ·ÖÎö²Õ |
+| 14 | `/analysis/stock-score` | `PortalShell` | analysis | ¸ö¹É¾ÅÎ¬ÆÀ·Ö·ÖÎö |
+| 15 | `/analysis/stock-score/:symbol` | `PortalShell` | analysis | ¸ö¹É¾ÅÎ¬ÆÀ·Ö·ÖÎö£¨´ø´úÂë£© |
+| 16 | `/analysis/sector` | `PortalShell` | analysis | ĞĞÒµÓë°å¿é·ÖÎö |
+| 17 | `/analysis/backtest` | `PortalShell` | analysis | ²ßÂÔ»Ø²â |
+| 18 | `/analysis/industry-score` | `PortalShell` | analysis | V4 ĞĞÒµÆÀ·Ö |
+| 19 | `/analysis/intelligent-score` | `PortalShell` | analysis | V6 ¸ö¹ÉÖÇÄÜÆÀ·Ö |
+| 20 | `/analysis/score-docs` | `PortalShell` | analysis | ÆÀ·ÖÎÄµµ°æ±¾¿â |
+| 21 | `/analysis/news` | `PortalShell` | analysis | ÖÇÄÜ×ÊÑ¶ |
+| 22 | `/analysis/score-comparison` | `PortalShell` | analysis | ÀúÊ·ÆÀ·Ö±È¶Ô¿´°å |
+| 23 | `/analysis/hot-sector` | `PortalShell` | analysis | ÈÈÃÅ°å¿é²ßÂÔÑ¡¹É |
+| 24 | `/analysis/value-pit` | `PortalShell` | analysis | ¼ÛÖµÍİµØ²ßÂÔÑ¡¹É |
+| 25 | `/analysis/multi-factor` | `PortalShell` | analysis | ¶àÒò×ÓÉ¸Ñ¡ |
+| 26 | `/analysis/stock-pool` | `PortalShell` | analysis | ¹ÉÆ±³Ø¿´°å |
+| 27 | `/trading` | `PortalShell` | trading | ½»Ò×²Õ |
+| 28 | `/trading/flow` | `PortalShell` | trading | ½»Ò×²Õ - ½»Ò×Á÷³Ì |
+| 29 | `/trading/strategy-snapshots` | `PortalShell` | trading | ²ßÂÔ¿ìÕÕ |
+| 30 | `/trading/holdings` | `PortalShell` | trading | ½»Ò×³Ö²Ö¹ÜÀí |
+| 31 | `/trading/execution-plans` | `PortalShell` | trading | Ö´ĞĞ¼Æ»®¹ÜÀí |
+| 32 | `/trading/execution` | `PortalShell` | trading | Ö´ĞĞ¹ÜÀí |
+| 33 | `/trading/portfolio` | `PortalShell` | trading | Í¶×Ê×éºÏ¹ÜÀí |
+| 34 | `/trading/risk` | `PortalShell` | trading | ·çÏÕ¿ØÖÆ¹ÜÀí |
+| 35 | `/output` | `PortalShell` | output | Êä³ö²Õ |
+| 36 | `/output/hub` | `PortalShell` | output | Êä³ö²Õ - Ä£¿éÊ×Ò³ |
+| 37 | `/output/research` | `PortalShell` | output | Êä³ö²Õ - ÑĞ¾¿±¨¸æ |
+| 38 | `/output/review` | `PortalShell` | output | Êä³ö²Õ - ½»Ò×¸´ÅÌ |
+| 39 | `/output/export` | `PortalShell` | output | Êä³ö²Õ - Êı¾İµ¼³ö |
+| 40 | `/output/dashboard` | `PortalShell` | output | Êä³ö²Õ - ÒÇ±íÅÌ |
+| 41 | `/command/hub` | `PortalShell` | command | ×Ü¿Ø²Õ - Ä£¿éÊ×Ò³ |
+| 42 | `/command` | `PortalShell` | command | ×Ü¿Ø²Õ |
+| 43 | `/command/agents` | `PortalShell` | command | ÖÇÄÜÌå×Ü¿ØÌ¨ |
+| 44 | `/command/agents/registry` | `PortalShell` | command | ÖÇÄÜÌå×¢²á±í |
+| 45 | `/command/agents/registry/:agentId` | `PortalShell` | command | ÖÇÄÜÌåÏêÇé |
+| 46 | `/command/agents/trigger` | `PortalShell` | command | ÖÇÄÜÌåÈÎÎñ´¥·¢ |
+| 47 | `/command/agents/tasks` | `PortalShell` | command | ÖÇÄÜÌåÈÎÎñÁĞ±í |
+| 48 | `/command/agents/custom` | `PortalShell` | command | ×Ô¶¨ÒåÖÇÄÜÌå |
+| 49 | `/command/agents/llm` | `PortalShell` | command | LLM ¹ÜÀí |
+| 50 | `/command/agents/capability-graph` | `PortalShell` | command | ÄÜÁ¦Í¼Æ× |
+| 51 | `/command/agents/dag-scheduler` | `PortalShell` | command | DAG µ÷¶ÈÆ÷ |
+| 52 | `/command/agents/feedback` | `PortalShell` | command | ·´À¡¿ØÖÆÌ¨ |
+| 53 | `/command/agents/model-upgrade` | `PortalShell` | command | Ä£ĞÍÉı¼¶ |
+| 54 | `/command/agents/data-labels` | `PortalShell` | command | Êı¾İ±êÇ©¹ÜÀí |
+| 55 | `/command/agents/api-config` | `PortalShell` | command | API ÅäÖÃ |
+| 56 | `/command/agents/skill-audit` | `PortalShell` | command | Skill ºË²é |
+| 57 | `/command/agents/optimization` | `PortalShell` | command | ÓÅ»¯½¨Òé |
+| 58 | `/command/agents/changelog` | `PortalShell` | command | ¸üĞÂÈÕÖ¾ |
+| 59 | `/command/mcp-servers` | `PortalShell` | command | MCP Server ¹ÜÀí |
+| 60 | `/command/monitor` | `PortalShell` | command | ÏµÍ³¼à¿Ø |
+| 61 | `/command/config` | `PortalShell` | command | ÅäÖÃ¹ÜÀí |
+| 62 | `/mock-test` | `MockTestPage` | other | V9 Ä£¿é Mock ÑéÖ¤Ò³ |
 
-> **v3.0.0 å˜æ›´**ï¼šè·¯ç”±æ•°ä» 31 æ¡å¢è‡³ 47 æ¡ã€‚æ–°å¢ 16 æ¡è·¯ç”±ï¼ˆè¾“å…¥èˆ± 3 æ¡ã€åˆ†æèˆ± 2 æ¡ã€æ€»æ§èˆ±æ™ºèƒ½ä½“å­æ¨¡å— 10 æ¡ã€æ€»æ§èˆ±æ‰©å±• 1 æ¡ï¼‰ï¼Œç§»é™¤å·²åºŸå¼ƒçš„ `/analysis/news-v6`ã€‚æ‰€æœ‰äº”èˆ±è·¯ç”±çš„ `component` ç»Ÿä¸€ä¸º `PortalShell`ï¼Œå®é™…é¡µé¢ç»„ä»¶ç”±ä¸‰çº§åŠ è½½é“¾çš„ç¬¬ä¸‰çº§ï¼ˆApp åˆ†å‘å™¨ï¼‰æ¸²æŸ“ã€‚
+> **v3.0.0 ±ä¸ü**£ºÂ·ÓÉÊı´Ó 31 ÌõÔöÖÁ 47 Ìõ¡£ĞÂÔö 16 ÌõÂ·ÓÉ£¨ÊäÈë²Õ 3 Ìõ¡¢·ÖÎö²Õ 2 Ìõ¡¢×Ü¿Ø²ÕÖÇÄÜÌå×ÓÄ£¿é 10 Ìõ¡¢×Ü¿Ø²ÕÀ©Õ¹ 1 Ìõ£©£¬ÒÆ³ıÒÑ·ÏÆúµÄ `/analysis/news-v6`¡£ËùÓĞÎå²ÕÂ·ÓÉµÄ `component` Í³Ò»Îª `PortalShell`£¬Êµ¼ÊÒ³Ãæ×é¼şÓÉÈı¼¶¼ÓÔØÁ´µÄµÚÈı¼¶£¨App ·Ö·¢Æ÷£©äÖÈ¾¡£
 >
-> **v3.1.0 ä¿®æ­£**ï¼šäº¤å‰ä¸€è‡´æ€§æ£€æŸ¥å‘ç°æ•°é‡åå·®ï¼Œè·¯ç”±æ€»æ•°ä¿®æ­£ä¸º **48 æ¡**ï¼ˆè¡¥ç®— `/mock-test` è·¯ç”±ç¼–å·ï¼‰ï¼›åˆ†æèˆ±è·¯ç”±æ•°ç”± 11 ä¿®æ­£ä¸º 12ï¼ˆå«ä»·å€¼æ´¼åœ°ç­–ç•¥è·¯ç”±ï¼‰ã€‚
+> **v3.1.0 ĞŞÕı**£º½»²æÒ»ÖÂĞÔ¼ì²é·¢ÏÖÊıÁ¿Æ«²î£¬Â·ÓÉ×ÜÊıĞŞÕıÎª **48 Ìõ**£¨²¹Ëã `/mock-test` Â·ÓÉ±àºÅ£©£»·ÖÎö²ÕÂ·ÓÉÊıÓÉ 11 ĞŞÕıÎª 12£¨º¬¼ÛÖµÍİµØ²ßÂÔÂ·ÓÉ£©¡£
 >
-> **v3.2.0 å˜æ›´**ï¼šæ–°å¢ `/analysis/stock-pool` è‚¡ç¥¨æ± çœ‹æ¿è·¯ç”±ï¼›åˆ†æèˆ±è·¯ç”±æ•°ç”± 12 ä¿®æ­£ä¸º 13ï¼›è·¯ç”±æ€»æ•°ç”± 48 ä¿®æ­£ä¸º **49 æ¡**ã€‚è‚¡ç¥¨æ± çœ‹æ¿ä»è¾“å…¥èˆ±è¿ç§»è‡³åˆ†æèˆ±ï¼Œå¹¶åœ¨è¾“å…¥èˆ±ä¾§æ ä¿ç•™è·³è½¬å…¥å£ã€‚
+> **v3.2.0 ±ä¸ü**£ºĞÂÔö `/analysis/stock-pool` ¹ÉÆ±³Ø¿´°åÂ·ÓÉ£»·ÖÎö²ÕÂ·ÓÉÊıÓÉ 12 ĞŞÕıÎª 13£»Â·ÓÉ×ÜÊıÓÉ 48 ĞŞÕıÎª **49 Ìõ**¡£¹ÉÆ±³Ø¿´°å´ÓÊäÈë²ÕÇ¨ÒÆÖÁ·ÖÎö²Õ£¬²¢ÔÚÊäÈë²Õ²àÀ¸±£ÁôÌø×ªÈë¿Ú¡£
 >
-> **v3.3.0 æ²»ç†**ï¼šæ¸…ç† `ROUTE_REGISTRY` ä¸­é‡å¤çš„ `/trading/risk`ï¼›ç§»é™¤ `EXPECTED_PATHS` ä¸­è¿‡æœŸçš„ `/trading/hub` ä¸ `/analysis/news-v6`ï¼›è¡¥å…¨äº¤æ˜“èˆ±ã€è¾“å‡ºèˆ±ã€æ€»æ§èˆ±æ™ºèƒ½ä½“å­æ¨¡å—ç­‰ 29 æ¡çœŸå®è·¯ç”±åˆ°é¢„æœŸåˆ—è¡¨ã€‚è·¯ç”±æ€»æ•°ç”± 49 ä¿®æ­£ä¸º **62 æ¡**ï¼Œè¦†ç›–ç‡è¾¾åˆ° 100%ã€‚
+> **v3.3.0 ÖÎÀí**£ºÇåÀí `ROUTE_REGISTRY` ÖĞÖØ¸´µÄ `/trading/risk`£»ÒÆ³ı `EXPECTED_PATHS` ÖĞ¹ıÆÚµÄ `/trading/hub` Óë `/analysis/news-v6`£»²¹È«½»Ò×²Õ¡¢Êä³ö²Õ¡¢×Ü¿Ø²ÕÖÇÄÜÌå×ÓÄ£¿éµÈ 29 ÌõÕæÊµÂ·ÓÉµ½Ô¤ÆÚÁĞ±í¡£Â·ÓÉ×ÜÊıÓÉ 49 ĞŞÕıÎª **62 Ìõ**£¬¸²¸ÇÂÊ´ïµ½ 100%¡£
 >
-> æ‰€æœ‰ä¸šåŠ¡è·¯ç”±å‡å·²é›†ä¸­æ³¨å†Œï¼›`App.tsx` é€šè¿‡éå† `ROUTE_REGISTRY` æ¸²æŸ“ï¼Œä¸å†ç¡¬ç¼–ç è·¯å¾„ã€‚
+> ËùÓĞÒµÎñÂ·ÓÉ¾ùÒÑ¼¯ÖĞ×¢²á£»`App.tsx` Í¨¹ı±éÀú `ROUTE_REGISTRY` äÖÈ¾£¬²»ÔÙÓ²±àÂëÂ·¾¶¡£
 >
-> è·¯ç”±â†’ç»„ä»¶â†’æœåŠ¡æ˜ å°„è§ç¬¬ 8 èŠ‚ã€‚ä¸‰çº§åŠ è½½é“¾æ¶æ„è§ç¬¬ 2.5 èŠ‚ã€‚
+> Â·ÓÉ¡ú×é¼ş¡ú·şÎñÓ³Éä¼ûµÚ 8 ½Ú¡£Èı¼¶¼ÓÔØÁ´¼Ü¹¹¼ûµÚ 2.5 ½Ú¡£
 
-### 2.2 è·¯ç”±åˆ†ç±»
+### 2.2 Â·ÓÉ·ÖÀà
 
 ```ts
 export type RouteCategory =
-  | 'portal'      // é—¨æˆ·/é©¾é©¶èˆ±
-  | 'input'       // è¾“å…¥èˆ±
-  | 'analysis'    // åˆ†æèˆ±
-  | 'trading'     // äº¤æ˜“èˆ±
-  | 'output'      // è¾“å‡ºèˆ±
-  | 'command'     // æ€»æ§èˆ±
-  | 'system'      // ç³»ç»Ÿè®¾ç½®
-  | 'other'       // å…¶ä»–
+  | 'portal'      // ÃÅ»§/¼İÊ»²Õ
+  | 'input'       // ÊäÈë²Õ
+  | 'analysis'    // ·ÖÎö²Õ
+  | 'trading'     // ½»Ò×²Õ
+  | 'output'      // Êä³ö²Õ
+  | 'command'     // ×Ü¿Ø²Õ
+  | 'system'      // ÏµÍ³ÉèÖÃ
+  | 'other'       // ÆäËû
 ```
 
-### 2.3 è·¯ç”±æ¥å£
+### 2.3 Â·ÓÉ½Ó¿Ú
 
 ```ts
 export interface RouteConfig {
@@ -138,109 +147,109 @@ export interface RouteConfig {
 }
 ```
 
-### 2.4 è¾…åŠ©å‡½æ•°
+### 2.4 ¸¨Öúº¯Êı
 
-| å‡½æ•° | ä½ç½® | ç”¨é€” |
+| º¯Êı | Î»ÖÃ | ÓÃÍ¾ |
 |------|------|------|
-| `getAllPaths()` | `src/config/routes.ts` | è¿”å›æ‰€æœ‰å·²æ³¨å†Œè·¯å¾„ï¼Œç”¨äºè·¯ç”±ä¸€è‡´æ€§æ ¡éªŒ |
-| `hasRoute(path)` | `src/config/routes.ts` | åˆ¤æ–­è·¯å¾„æ˜¯å¦å·²æ³¨å†Œ |
-| `getRoutesByCategory(category)` | `src/config/routes.ts` | æŒ‰èˆ±å®¤åˆ†ç±»è·å–è·¯ç”± |
-| `getCabinPaths()` | `src/config/routes.ts` | è·å–äº”èˆ±å…¥å£è·¯å¾„æ˜ å°„ |
+| `getAllPaths()` | `src/config/routes.ts` | ·µ»ØËùÓĞÒÑ×¢²áÂ·¾¶£¬ÓÃÓÚÂ·ÓÉÒ»ÖÂĞÔĞ£Ñé |
+| `hasRoute(path)` | `src/config/routes.ts` | ÅĞ¶ÏÂ·¾¶ÊÇ·ñÒÑ×¢²á |
+| `getRoutesByCategory(category)` | `src/config/routes.ts` | °´²ÕÊÒ·ÖÀà»ñÈ¡Â·ÓÉ |
+| `getCabinPaths()` | `src/config/routes.ts` | »ñÈ¡Îå²ÕÈë¿ÚÂ·¾¶Ó³Éä |
 
-### 2.5 ä¸‰çº§åŠ è½½é“¾æ¶æ„ï¼ˆv3.0.0 æ–°å¢ï¼‰
+### 2.5 Èı¼¶¼ÓÔØÁ´¼Ü¹¹£¨v3.0.0 ĞÂÔö£©
 
-V9 é‡‡ç”¨ä¸‰çº§é—´æ¥åŠ è½½æ¶æ„ï¼Œ`ROUTE_REGISTRY` ä¸­çš„ `component` å­—æ®µä»…æŒ‡å‘ç¬¬ä¸€çº§ï¼ˆ`PortalShell`ï¼‰ï¼Œå®é™…é¡µé¢ç»„ä»¶ç”±ç¬¬ä¸‰çº§ App åˆ†å‘å™¨æ¸²æŸ“ï¼š
+V9 ²ÉÓÃÈı¼¶¼ä½Ó¼ÓÔØ¼Ü¹¹£¬`ROUTE_REGISTRY` ÖĞµÄ `component` ×Ö¶Î½öÖ¸ÏòµÚÒ»¼¶£¨`PortalShell`£©£¬Êµ¼ÊÒ³Ãæ×é¼şÓÉµÚÈı¼¶ App ·Ö·¢Æ÷äÖÈ¾£º
 
 ```
-Level 1: routes.tsï¼ˆ62 æ¡è·¯ç”±ï¼‰
-  â†“ component ç»Ÿä¸€æŒ‡å‘ PortalShellï¼ˆ3 ä¸ªä¾‹å¤–ï¼šHomePage / CockpitShell / MockTestPageï¼‰
-Level 2: PortalShellï¼ˆsrc/portal/PortalShell.tsxï¼‰
-  â†“ æ ¹æ® URL è·¯å¾„å‰ç¼€åˆ†å‘åˆ°å¯¹åº” App åˆ†å‘å™¨
-Level 3: App åˆ†å‘å™¨ï¼ˆsrc/apps/{cabin}/*App.tsxï¼‰
-  â†“ æ ¹æ® location.pathname æ¡ä»¶æ¸²æŸ“å…·ä½“é¡µé¢ç»„ä»¶ï¼ˆReact.lazy æˆ–é™æ€ importï¼‰
+Level 1: routes.ts£¨62 ÌõÂ·ÓÉ£©
+  ¡ı component Í³Ò»Ö¸Ïò PortalShell£¨3 ¸öÀıÍâ£ºHomePage / CockpitShell / MockTestPage£©
+Level 2: PortalShell£¨src/portal/PortalShell.tsx£©
+  ¡ı ¸ù¾İ URL Â·¾¶Ç°×º·Ö·¢µ½¶ÔÓ¦ App ·Ö·¢Æ÷
+Level 3: App ·Ö·¢Æ÷£¨src/apps/{cabin}/*App.tsx£©
+  ¡ı ¸ù¾İ location.pathname Ìõ¼şäÖÈ¾¾ßÌåÒ³Ãæ×é¼ş£¨React.lazy »ò¾²Ì¬ import£©
 ```
 
-**è®¾è®¡å†³ç­–**ï¼šæ‰€æœ‰ App åˆ†å‘å™¨å‡ä½¿ç”¨ `useLocation() + æ¡ä»¶æ¸²æŸ“` æ›¿ä»£åµŒå¥— `<Routes>`ï¼ŒåŸå› æ˜¯ React Router v7 åœ¨ descendant `<Routes>` åœºæ™¯ä¸‹ç»å¯¹è·¯å¾„åŒ¹é…è¡Œä¸ºä¸ v6 ä¸ä¸€è‡´ã€‚
+**Éè¼Æ¾ö²ß**£ºËùÓĞ App ·Ö·¢Æ÷¾ùÊ¹ÓÃ `useLocation() + Ìõ¼şäÖÈ¾` Ìæ´úÇ¶Ì× `<Routes>`£¬Ô­ÒòÊÇ React Router v7 ÔÚ descendant `<Routes>` ³¡¾°ÏÂ¾ø¶ÔÂ·¾¶Æ¥ÅäĞĞÎªÓë v6 ²»Ò»ÖÂ¡£
 
-#### å„åˆ†å‘å™¨å­è·¯ç”±æ˜ç»†
+#### ¸÷·Ö·¢Æ÷×ÓÂ·ÓÉÃ÷Ï¸
 
-| åˆ†å‘å™¨ | æ–‡ä»¶è·¯å¾„ | å­è·¯ç”±æ•° | åˆ†å‘æ–¹å¼ |
+| ·Ö·¢Æ÷ | ÎÄ¼şÂ·¾¶ | ×ÓÂ·ÓÉÊı | ·Ö·¢·½Ê½ |
 |--------|---------|:--------:|---------|
-| **InputApp** | `src/apps/input/InputApp.tsx` | 8 | else-if é“¾ + React.lazy |
-| **AnalysisApp** | `src/apps/analysis/AnalysisApp.tsx` | 12 | if-return é“¾ + React.lazy |
-| **TradingApp** | `src/apps/trading/TradingApp.tsx` | 3 | else-if é“¾ + React.lazy |
-| **OutputApp** | `src/apps/output/OutputApp.tsx` | 5 | else-if é“¾ + React.lazy + ErrorBoundary |
-| **CommandApp** | `src/apps/command/CommandApp.tsx` | 4 | else-if é“¾ + React.lazy |
-| **AgentApp** | `src/apps/command/AgentApp.tsx` | 10 | `AGENT_ROUTE_MAP` æŸ¥è¡¨ + React.lazy |
+| **InputApp** | `src/apps/input/InputApp.tsx` | 8 | else-if Á´ + React.lazy |
+| **AnalysisApp** | `src/apps/analysis/AnalysisApp.tsx` | 12 | if-return Á´ + React.lazy |
+| **TradingApp** | `src/apps/trading/TradingApp.tsx` | 3 | else-if Á´ + React.lazy |
+| **OutputApp** | `src/apps/output/OutputApp.tsx` | 5 | else-if Á´ + React.lazy + ErrorBoundary |
+| **CommandApp** | `src/apps/command/CommandApp.tsx` | 4 | else-if Á´ + React.lazy |
+| **AgentApp** | `src/apps/command/AgentApp.tsx` | 10 | `AGENT_ROUTE_MAP` ²é±í + React.lazy |
 
-> **AgentApp** æ˜¯å”¯ä¸€çš„æŸ¥è¡¨å¼åˆ†å‘å™¨ï¼ˆé€šè¿‡ `AGENT_ROUTE_MAP` å¸¸é‡æ˜ å°„è·¯å¾„â†’ç»„ä»¶ï¼‰ï¼Œå…¶ä½™åˆ†å‘å™¨å‡ä½¿ç”¨ if-else é“¾ã€‚PortalShell é€šè¿‡ `isAgentPath` åˆ¤æ–­å°† `/command/agents*` è·¯å¾„å•ç‹¬è·¯ç”±è‡³ `AgentApp`ï¼ˆè€Œé `CommandApp`ï¼‰ã€‚
+> **AgentApp** ÊÇÎ¨Ò»µÄ²é±íÊ½·Ö·¢Æ÷£¨Í¨¹ı `AGENT_ROUTE_MAP` ³£Á¿Ó³ÉäÂ·¾¶¡ú×é¼ş£©£¬ÆäÓà·Ö·¢Æ÷¾ùÊ¹ÓÃ if-else Á´¡£PortalShell Í¨¹ı `isAgentPath` ÅĞ¶Ï½« `/command/agents*` Â·¾¶µ¥¶ÀÂ·ÓÉÖÁ `AgentApp`£¨¶ø·Ç `CommandApp`£©¡£
 
 ---
 
-## 3. èˆ±å®¤ä¸è·¯ç”±æ˜ å°„
+## 3. ²ÕÊÒÓëÂ·ÓÉÓ³Éä
 
-### 3.1 äº”èˆ±ä¸é©¾é©¶èˆ±æ˜ å°„
+### 3.1 Îå²ÕÓë¼İÊ»²ÕÓ³Éä
 
-| èˆ±å®¤ | è·¯å¾„å‰ç¼€ | è·¯ç”±æ•° | ä¸»è¦é¡µé¢ | å½“å‰çŠ¶æ€ |
+| ²ÕÊÒ | Â·¾¶Ç°×º | Â·ÓÉÊı | Ö÷ÒªÒ³Ãæ | µ±Ç°×´Ì¬ |
 |------|----------|:------:|----------|----------|
-| è¾“å…¥èˆ± | `/input` | 9 | å½•å…¥çœ‹æ¿ã€æ‰¹é‡å¯¼å…¥ã€çƒ­é—¨æ¿å—ã€é‡‡é›†æµ‹è¯•ã€æœ¬åœ°çŸ¥è¯†åº“ã€ä¸ƒç»´é…ç½®ã€æŠ“å–é…ç½®ã€é‡‡é›†ç›‘æ§ | âœ… å·²æ³¨å†Œï¼›8 å­é¡µé¢ç”± InputApp åˆ†å‘ |
-| åˆ†æèˆ± | `/analysis/*` | 13 | è‚¡ç¥¨æ± çœ‹æ¿ã€ä¸ªè‚¡è¯„åˆ†ã€è¡Œä¸šè¯„åˆ†ã€æ¿å—åˆ†æã€å›æµ‹ã€æ™ºèƒ½è¯„åˆ†ã€èµ„è®¯ã€çƒ­é—¨æ¿å—ã€ä»·å€¼æ´¼åœ° | âœ… å·²æ³¨å†Œï¼›12 å­é¡µé¢ç”± AnalysisApp åˆ†å‘ |
-| äº¤æ˜“èˆ± | `/trading` | 4 | äº¤æ˜“çœ‹æ¿ã€ç­–ç•¥å¿«ç…§ã€æŒä»“ç®¡ç† | âœ… å·²æ³¨å†Œï¼›3 å­é¡µé¢ç”± TradingApp åˆ†å‘ |
-| è¾“å‡ºèˆ± | `/output` | 5 | ç ”ç©¶æŠ¥å‘Šã€äº¤æ˜“å¤ç›˜ã€æ•°æ®å¯¼å‡º | âœ… å·²æ³¨å†Œï¼›5 å­é¡µé¢ç”± OutputApp åˆ†å‘ |
-| æ€»æ§èˆ± | `/command` | 15 | ç³»ç»Ÿç›‘æ§ã€é…ç½®ç®¡ç†ã€æ™ºèƒ½ä½“å­æ¨¡å—ï¼ˆ10 é¡µï¼‰ã€MCP ç®¡ç† | âœ… å·²æ³¨å†Œï¼›CommandApp(4) + AgentApp(10) åˆ†å‘ |
-| é©¾é©¶èˆ± | `/cockpit` | 1 | ç»¼åˆ Dashboard | âœ… å·²æ³¨å†Œ |
+| ÊäÈë²Õ | `/input` | 9 | Â¼Èë¿´°å¡¢ÅúÁ¿µ¼Èë¡¢ÈÈÃÅ°å¿é¡¢²É¼¯²âÊÔ¡¢±¾µØÖªÊ¶¿â¡¢ÆßÎ¬ÅäÖÃ¡¢×¥È¡ÅäÖÃ¡¢²É¼¯¼à¿Ø | ? ÒÑ×¢²á£»8 ×ÓÒ³ÃæÓÉ InputApp ·Ö·¢ |
+| ·ÖÎö²Õ | `/analysis/*` | 13 | ¹ÉÆ±³Ø¿´°å¡¢¸ö¹ÉÆÀ·Ö¡¢ĞĞÒµÆÀ·Ö¡¢°å¿é·ÖÎö¡¢»Ø²â¡¢ÖÇÄÜÆÀ·Ö¡¢×ÊÑ¶¡¢ÈÈÃÅ°å¿é¡¢¼ÛÖµÍİµØ | ? ÒÑ×¢²á£»12 ×ÓÒ³ÃæÓÉ AnalysisApp ·Ö·¢ |
+| ½»Ò×²Õ | `/trading` | 4 | ½»Ò×¿´°å¡¢²ßÂÔ¿ìÕÕ¡¢³Ö²Ö¹ÜÀí | ? ÒÑ×¢²á£»3 ×ÓÒ³ÃæÓÉ TradingApp ·Ö·¢ |
+| Êä³ö²Õ | `/output` | 5 | ÑĞ¾¿±¨¸æ¡¢½»Ò×¸´ÅÌ¡¢Êı¾İµ¼³ö | ? ÒÑ×¢²á£»5 ×ÓÒ³ÃæÓÉ OutputApp ·Ö·¢ |
+| ×Ü¿Ø²Õ | `/command` | 15 | ÏµÍ³¼à¿Ø¡¢ÅäÖÃ¹ÜÀí¡¢ÖÇÄÜÌå×ÓÄ£¿é£¨10 Ò³£©¡¢MCP ¹ÜÀí | ? ÒÑ×¢²á£»CommandApp(4) + AgentApp(10) ·Ö·¢ |
+| ¼İÊ»²Õ | `/cockpit` | 1 | ×ÛºÏ Dashboard | ? ÒÑ×¢²á |
 
-> **v3.0.0 å˜æ›´**ï¼šæ€»æ§èˆ±ä» 2 æ¡è·¯ç”±æ‰©å±•è‡³ 15 æ¡ï¼ˆæ–°å¢æ™ºèƒ½ä½“å­æ¨¡å— 10 æ¡ + MCP/ç›‘æ§/é…ç½® 3 æ¡ï¼‰ã€‚è¾“å…¥èˆ±æ–°å¢ 3 æ¡ï¼ˆä¸ƒç»´é…ç½®ã€æŠ“å–é…ç½®ã€é‡‡é›†ç›‘æ§ï¼‰ã€‚åˆ†æèˆ±æ–°å¢ 2 æ¡ï¼ˆçƒ­é—¨æ¿å—ã€ä»·å€¼æ´¼åœ°ï¼‰ã€‚äº¤æ˜“/æ€»æ§èˆ±å·²å®Œæˆå­é¡µé¢æ‹†åˆ†ã€‚
+> **v3.0.0 ±ä¸ü**£º×Ü¿Ø²Õ´Ó 2 ÌõÂ·ÓÉÀ©Õ¹ÖÁ 15 Ìõ£¨ĞÂÔöÖÇÄÜÌå×ÓÄ£¿é 10 Ìõ + MCP/¼à¿Ø/ÅäÖÃ 3 Ìõ£©¡£ÊäÈë²ÕĞÂÔö 3 Ìõ£¨ÆßÎ¬ÅäÖÃ¡¢×¥È¡ÅäÖÃ¡¢²É¼¯¼à¿Ø£©¡£·ÖÎö²ÕĞÂÔö 2 Ìõ£¨ÈÈÃÅ°å¿é¡¢¼ÛÖµÍİµØ£©¡£½»Ò×/×Ü¿Ø²ÕÒÑÍê³É×ÓÒ³Ãæ²ğ·Ö¡£
 >
-> **Hub é¡µè¯´æ˜**ï¼šHub é¡µæ˜¯ä¸€ç±»ç»„ä»¶çš„ç»Ÿç§°ï¼Œå®é™…æ–‡ä»¶åä¸º `InputHubPage`/`AnalysisHubPage`/`TradingHubPage`/`OutputHubPage`/`CommandHubPage`ï¼Œç”± `PortalShell` å†…éƒ¨åˆ†å‘ã€‚
+> **Hub Ò³ËµÃ÷**£ºHub Ò³ÊÇÒ»Àà×é¼şµÄÍ³³Æ£¬Êµ¼ÊÎÄ¼şÃûÎª `InputHubPage`/`AnalysisHubPage`/`TradingHubPage`/`OutputHubPage`/`CommandHubPage`£¬ÓÉ `PortalShell` ÄÚ²¿·Ö·¢¡£
 
-### 3.2 è¾“å…¥èˆ±å­è·¯ç”±æ˜ å°„
+### 3.2 ÊäÈë²Õ×ÓÂ·ÓÉÓ³Éä
 
-| è·¯å¾„ | ç»„ä»¶ | æœåŠ¡ | è¯´æ˜ |
+| Â·¾¶ | ×é¼ş | ·şÎñ | ËµÃ÷ |
 |------|------|------|------|
-| `/input` | `InputDashboard.tsx` | `inputService` | å½•å…¥çœ‹æ¿ã€å•æ¡å½•å…¥ï¼›è‚¡ç¥¨æ± çœ‹æ¿å·²è¿ç§»è‡³ `/analysis/stock-pool` |
-| `/input/bulk-import` | `BulkImportPanel.tsx` | `batchImportService`, `inputService` | æ‰¹é‡æ–‡æœ¬å¯¼å…¥ã€è§£æé¢„è§ˆã€å¯¼å…¥ç»“æœ |
-| `/input/hot-sectors` | `HotSectorPanel.tsx` | `hotSectorService`, `inputService` | çƒ­é—¨æ¿å—å¡ç‰‡ã€å…³è”è‚¡ç¥¨ã€åŠ å…¥å€™é€‰æ±  |
-| `/input/data-test` | `DataTestPanel.tsx` | `fetcherService` | æœåŠ¡å¥åº·ã€å•/æ‰¹é‡æ¥å£æµ‹è¯• |
-| `/input/local-knowledge` | `LocalKnowledgePage` | `localKnowledgeService` | æœ¬åœ°çŸ¥è¯†åº“æµè§ˆä¸ç®¡ç† |
-| `/input/seven-dim` | `SevenDimConfigPage` | `sevenDimService` | ä¸ƒç»´é‡‡é›†ç­–ç•¥é…ç½® |
-| `/input/fetcher-config` | `FetcherConfigPage` | `fetcherConfigService` | æŠ“å–å¼•æ“é…ç½® |
-| `/input/collect-tasks` | `CollectTaskPage` | `collectTaskService`, `collectionReportService` | é‡‡é›†ä»»åŠ¡ç›‘æ§ã€ç»´åº¦è¿›åº¦ä¸æ±‡æŠ¥ |
-| `/input/hub` | `InputHubPage` | `inputService`, `stockpoolService` | è¾“å…¥èˆ±æ¨¡å—é¦–é¡µ |
+| `/input` | `InputDashboard.tsx` | `inputService` | Â¼Èë¿´°å¡¢µ¥ÌõÂ¼Èë£»¹ÉÆ±³Ø¿´°åÒÑÇ¨ÒÆÖÁ `/analysis/stock-pool` |
+| `/input/bulk-import` | `BulkImportPanel.tsx` | `batchImportService`, `inputService` | ÅúÁ¿ÎÄ±¾µ¼Èë¡¢½âÎöÔ¤ÀÀ¡¢µ¼Èë½á¹û |
+| `/input/hot-sectors` | `HotSectorPanel.tsx` | `hotSectorService`, `inputService` | ÈÈÃÅ°å¿é¿¨Æ¬¡¢¹ØÁª¹ÉÆ±¡¢¼ÓÈëºòÑ¡³Ø |
+| `/input/data-test` | `DataTestPanel.tsx` | `fetcherService` | ·şÎñ½¡¿µ¡¢µ¥/ÅúÁ¿½Ó¿Ú²âÊÔ |
+| `/input/local-knowledge` | `LocalKnowledgePage` | `localKnowledgeService` | ±¾µØÖªÊ¶¿âä¯ÀÀÓë¹ÜÀí |
+| `/input/seven-dim` | `SevenDimConfigPage` | `sevenDimService` | ÆßÎ¬²É¼¯²ßÂÔÅäÖÃ |
+| `/input/fetcher-config` | `FetcherConfigPage` | `fetcherConfigService` | ×¥È¡ÒıÇæÅäÖÃ |
+| `/input/collect-tasks` | `CollectTaskPage` | `collectTaskService`, `collectionReportService` | ²É¼¯ÈÎÎñ¼à¿Ø¡¢Î¬¶È½ø¶ÈÓë»ã±¨ |
+| `/input/hub` | `InputHubPage` | `inputService`, `stockpoolService` | ÊäÈë²ÕÄ£¿éÊ×Ò³ |
 
-### 3.3 è·¯å¾„å‘½åè§„èŒƒ
+### 3.3 Â·¾¶ÃüÃû¹æ·¶
 
-- ä½¿ç”¨ kebab-caseï¼š`/analysis/stock-score`ï¼Œé `/analysis/stockScore`ã€‚
-- åŠ¨æ€å‚æ•°ä½¿ç”¨ `:symbol`ï¼Œå¦‚ `/analysis/stock-score/600519.SH`ã€‚
-- åŒä¸€åŠŸèƒ½ä¸åŒè§†å›¾ä½¿ç”¨æŸ¥è¯¢å‚æ•°æˆ–å­è·¯å¾„ï¼Œé¿å…è·¯å¾„çˆ†ç‚¸ã€‚
+- Ê¹ÓÃ kebab-case£º`/analysis/stock-score`£¬·Ç `/analysis/stockScore`¡£
+- ¶¯Ì¬²ÎÊıÊ¹ÓÃ `:symbol`£¬Èç `/analysis/stock-score/600519.SH`¡£
+- Í¬Ò»¹¦ÄÜ²»Í¬ÊÓÍ¼Ê¹ÓÃ²éÑ¯²ÎÊı»ò×ÓÂ·¾¶£¬±ÜÃâÂ·¾¶±¬Õ¨¡£
 
 ---
 
-## 4. æ‡’åŠ è½½ç­–ç•¥
+## 4. ÀÁ¼ÓÔØ²ßÂÔ
 
-### 4.1 é¡µé¢çº§æ‡’åŠ è½½
+### 4.1 Ò³Ãæ¼¶ÀÁ¼ÓÔØ
 
-æ‰€æœ‰ `pages/` ä¸‹çš„é¡µé¢ç»„ä»¶é€šè¿‡ `React.lazy()` åŠ¨æ€å¯¼å…¥ï¼š
+ËùÓĞ `pages/` ÏÂµÄÒ³Ãæ×é¼şÍ¨¹ı `React.lazy()` ¶¯Ì¬µ¼Èë£º
 
 ```ts
 {
   path: '/analysis/stock-score',
   component: React.lazy(() => import('@/pages/analysis/StockAnalysisPage')),
   category: 'analysis',
-  description: 'ä¸ªè‚¡ä¹ç»´è¯„åˆ†åˆ†æ',
+  description: '¸ö¹É¾ÅÎ¬ÆÀ·Ö·ÖÎö',
 }
 ```
 
-### 4.2 ä»£ç åˆ†å‰²
+### 4.2 ´úÂë·Ö¸î
 
-`vite.config.ts` å·²é…ç½® `manualChunks`ï¼š
+`vite.config.ts` ÒÑÅäÖÃ `manualChunks`£º
 
-| Chunk | åŒ…å«ä¾èµ– |
+| Chunk | °üº¬ÒÀÀµ |
 |-------|----------|
 | `vendor` | react, react-dom, react-router, zustand |
 | `ui` | lucide-react, clsx, tailwind-merge |
 
-æœªæ¥å¯æŒ‰èˆ±å®¤è¿›ä¸€æ­¥æ‹†åˆ†ï¼š
+Î´À´¿É°´²ÕÊÒ½øÒ»²½²ğ·Ö£º
 
 ```ts
 manualChunks: {
@@ -249,134 +258,134 @@ manualChunks: {
 }
 ```
 
-### 4.3 åŠ è½½çŠ¶æ€
+### 4.3 ¼ÓÔØ×´Ì¬
 
-- æ‡’åŠ è½½è¿‡ç¨‹ä¸­æ˜¾ç¤º `Suspense` fallbackï¼Œfallback ä½¿ç”¨éª¨æ¶å±ï¼ˆSkeletonï¼‰ï¼Œç¦æ­¢ç™½å±ã€‚
-- åŠ è½½å¤±è´¥æ—¶æ•è·é”™è¯¯å¹¶æç¤ºç”¨æˆ·åˆ·æ–°æˆ–è¿”å›é¦–é¡µã€‚
-
----
-
-## 5. å¯¼èˆªè§„èŒƒ
-
-### 5.1 PortalShell èŒè´£
-
-`src/portal/PortalShell.tsx` ä½œä¸ºäº”èˆ±å¯¼èˆªå®¹å™¨ï¼Œè´Ÿè´£ï¼š
-
-- æ¸²æŸ“èˆ±å®¤åˆ‡æ¢ Tab/ä¾§è¾¹æ ã€‚
-- é«˜äº®å½“å‰èˆ±å®¤ã€‚
-- ä¸ç›´æ¥å‚ä¸ä¸šåŠ¡è·¯ç”±ï¼Œä»…é€šè¿‡ `<Outlet />` æˆ–å†…éƒ¨çŠ¶æ€æ¸²æŸ“å½“å‰èˆ±å®¤åº”ç”¨ã€‚
-
-### 5.2 èˆ±å†…å¯¼èˆª
-
-- åˆ†æèˆ±å†…ä½¿ç”¨äºŒçº§ Tab åˆ‡æ¢ã€Œä¸ªè‚¡è¯„åˆ† / è¡Œä¸šè¯„åˆ† / æ¿å—åˆ†æ / å›æµ‹ã€ã€‚
-- é€‰ä¸­è‚¡ç¥¨åè¿›å…¥ `/analysis/stock-score/:symbol` è¯¦æƒ…é¡µã€‚
-- è¿”å›ä¸Šä¸€çº§æ—¶ä¿ç•™ç­›é€‰æ¡ä»¶ï¼ˆé€šè¿‡ URL æŸ¥è¯¢å‚æ•°æˆ–å±€éƒ¨çŠ¶æ€ï¼‰ã€‚
-
-### 5.3 è·¯ç”±å®ˆå«
-
-v1.0.0 è®¡åˆ’å®ç°ï¼š
-
-- **æ•°æ®å­˜åœ¨æ€§å®ˆå«**ï¼šè®¿é—® `/analysis/stock-score/:symbol` æ—¶ï¼Œè‹¥ `symbol` ä¸åœ¨ stocks store ä¸­ï¼Œé‡å®šå‘åˆ°å€™é€‰æ± ã€‚
-- **ç¦»çº¿å®ˆå«**ï¼šè®¿é—®éœ€è¦ LLM çš„åŠŸèƒ½æ—¶ï¼Œè‹¥ç¦»çº¿åˆ™æç¤ºå¹¶é˜»æ­¢è¿›å…¥æˆ–æä¾›é™çº§å…¥å£ã€‚
+- ÀÁ¼ÓÔØ¹ı³ÌÖĞÏÔÊ¾ `Suspense` fallback£¬fallback Ê¹ÓÃ¹Ç¼ÜÆÁ£¨Skeleton£©£¬½ûÖ¹°×ÆÁ¡£
+- ¼ÓÔØÊ§°ÜÊ±²¶»ñ´íÎó²¢ÌáÊ¾ÓÃ»§Ë¢ĞÂ»ò·µ»ØÊ×Ò³¡£
 
 ---
 
-## 6. ä¸ v6-pro-cockpit çš„å¯¹é½ç‚¹
+## 5. µ¼º½¹æ·¶
 
-v6 é¡¹ç›®å¼ºè°ƒã€Œè·¯ç”±è¡¨å³ UI æ˜ å°„ truth sourceã€ï¼Œå…¶åšæ³•å€¼å¾— V9 å€Ÿé‰´ï¼š
+### 5.1 PortalShell Ö°Ôğ
 
-1. **å…¨é‡è·¯ç”±æ³¨å†Œ**ï¼šæ‰€æœ‰é¡µé¢ï¼ˆå« Portal/Cockpit/äº”èˆ±ï¼‰å‡è¿›å…¥ `ROUTE_REGISTRY`ã€‚
-2. **è·¯ç”±-ç»„ä»¶ä¸€è‡´æ€§å®¡è®¡**ï¼šå®šæœŸæ£€æŸ¥ `ROUTE_REGISTRY` ä¸­çš„è·¯å¾„ä¸ `src/pages/` å®é™…æ–‡ä»¶æ˜¯å¦ä¸€ä¸€å¯¹åº”ã€‚
-3. **è·¯ç”±åˆ†ç±»ä¸æƒé™**ï¼šæŒ‰èˆ±å®¤åˆ†ç±»ï¼Œæœªæ¥å¯æ‰©å±•åŸºäºç”¨æˆ·è§’è‰²çš„è·¯ç”±å¯è§æ€§ã€‚
-4. **æ‡’åŠ è½½ fallback è§„èŒƒ**ï¼šç»Ÿä¸€ Skeleton ç»„ä»¶ï¼Œé¿å…å„é¡µé¢è‡ªè¡Œå®ç°ã€‚
+`src/portal/PortalShell.tsx` ×÷ÎªÎå²Õµ¼º½ÈİÆ÷£¬¸ºÔğ£º
+
+- äÖÈ¾²ÕÊÒÇĞ»» Tab/²à±ßÀ¸¡£
+- ¸ßÁÁµ±Ç°²ÕÊÒ¡£
+- ²»Ö±½Ó²ÎÓëÒµÎñÂ·ÓÉ£¬½öÍ¨¹ı `<Outlet />` »òÄÚ²¿×´Ì¬äÖÈ¾µ±Ç°²ÕÊÒÓ¦ÓÃ¡£
+
+### 5.2 ²ÕÄÚµ¼º½
+
+- ·ÖÎö²ÕÄÚÊ¹ÓÃ¶ş¼¶ Tab ÇĞ»»¡¸¸ö¹ÉÆÀ·Ö / ĞĞÒµÆÀ·Ö / °å¿é·ÖÎö / »Ø²â¡¹¡£
+- Ñ¡ÖĞ¹ÉÆ±ºó½øÈë `/analysis/stock-score/:symbol` ÏêÇéÒ³¡£
+- ·µ»ØÉÏÒ»¼¶Ê±±£ÁôÉ¸Ñ¡Ìõ¼ş£¨Í¨¹ı URL ²éÑ¯²ÎÊı»ò¾Ö²¿×´Ì¬£©¡£
+
+### 5.3 Â·ÓÉÊØÎÀ
+
+v1.0.0 ¼Æ»®ÊµÏÖ£º
+
+- **Êı¾İ´æÔÚĞÔÊØÎÀ**£º·ÃÎÊ `/analysis/stock-score/:symbol` Ê±£¬Èô `symbol` ²»ÔÚ stocks store ÖĞ£¬ÖØ¶¨Ïòµ½ºòÑ¡³Ø¡£
+- **ÀëÏßÊØÎÀ**£º·ÃÎÊĞèÒª LLM µÄ¹¦ÄÜÊ±£¬ÈôÀëÏßÔòÌáÊ¾²¢×èÖ¹½øÈë»òÌá¹©½µ¼¶Èë¿Ú¡£
 
 ---
 
-## 7. å½“å‰åå·®ä¸ä¸‹ä¸€æ­¥
+## 6. Óë v6-pro-cockpit µÄ¶ÔÆëµã
 
-| åå·® | å½±å“ | çŠ¶æ€ | è®¡åˆ’ |
+v6 ÏîÄ¿Ç¿µ÷¡¸Â·ÓÉ±í¼´ UI Ó³Éä truth source¡¹£¬Æä×ö·¨ÖµµÃ V9 ½è¼ø£º
+
+1. **È«Á¿Â·ÓÉ×¢²á**£ºËùÓĞÒ³Ãæ£¨º¬ Portal/Cockpit/Îå²Õ£©¾ù½øÈë `ROUTE_REGISTRY`¡£
+2. **Â·ÓÉ-×é¼şÒ»ÖÂĞÔÉó¼Æ**£º¶¨ÆÚ¼ì²é `ROUTE_REGISTRY` ÖĞµÄÂ·¾¶Óë `src/pages/` Êµ¼ÊÎÄ¼şÊÇ·ñÒ»Ò»¶ÔÓ¦¡£
+3. **Â·ÓÉ·ÖÀàÓëÈ¨ÏŞ**£º°´²ÕÊÒ·ÖÀà£¬Î´À´¿ÉÀ©Õ¹»ùÓÚÓÃ»§½ÇÉ«µÄÂ·ÓÉ¿É¼ûĞÔ¡£
+4. **ÀÁ¼ÓÔØ fallback ¹æ·¶**£ºÍ³Ò» Skeleton ×é¼ş£¬±ÜÃâ¸÷Ò³Ãæ×ÔĞĞÊµÏÖ¡£
+
+---
+
+## 7. µ±Ç°Æ«²îÓëÏÂÒ»²½
+
+| Æ«²î | Ó°Ïì | ×´Ì¬ | ¼Æ»® |
 |------|------|------|------|
-| Hub é¡µæœªè¿›å…¥ `ROUTE_REGISTRY` | å¤–éƒ¨è·¯ç”±è¡¨ä¸æ„ŸçŸ¥ Hub ç»„ä»¶ | âœ… è®¾è®¡é€‰æ‹© | Hub é¡µç”± App åˆ†å‘å™¨å†…éƒ¨åˆ†å‘ï¼Œä¸ç‹¬ç«‹æ³¨å†Œ |
-| æ— è·¯ç”±å®ˆå« | è®¿é—®ä¸å­˜åœ¨çš„ symbol ä¼šè¿›å…¥ç©ºç™½è¯¦æƒ…é¡µ | â³ å¾…å®ç° | Phase 2 å¢åŠ æ•°æ®å­˜åœ¨æ€§æ ¡éªŒ |
-| ErrorBoundary ä»…åŒ…è£¹æ ¹è·¯ç”± | å•ä¸ªé¡µé¢å´©æºƒå¯èƒ½å½±å“æ•´ä¸ªåº”ç”¨ | â³ å¾…å®ç° | Phase 2 ä¸ºæ¯ä¸ª Route å¢åŠ ç‹¬ç«‹è¾¹ç•Œï¼ˆOutputApp å·²å®ç°ï¼‰ |
-| ä»£ç åˆ†å‰²æœªæŒ‰èˆ±å®¤ | é¦–å±ä»åŠ è½½å…¨éƒ¨é¡µé¢ç»„ä»¶ | â³ å¾…å®ç° | Phase 3 æŒ‰èˆ±å®¤æ‹†åˆ† chunk |
+| Hub Ò³Î´½øÈë `ROUTE_REGISTRY` | Íâ²¿Â·ÓÉ±í²»¸ĞÖª Hub ×é¼ş | ? Éè¼ÆÑ¡Ôñ | Hub Ò³ÓÉ App ·Ö·¢Æ÷ÄÚ²¿·Ö·¢£¬²»¶ÀÁ¢×¢²á |
+| ÎŞÂ·ÓÉÊØÎÀ | ·ÃÎÊ²»´æÔÚµÄ symbol »á½øÈë¿Õ°×ÏêÇéÒ³ | ? ´ıÊµÏÖ | Phase 2 Ôö¼ÓÊı¾İ´æÔÚĞÔĞ£Ñé |
+| ErrorBoundary ½ö°ü¹ü¸ùÂ·ÓÉ | µ¥¸öÒ³Ãæ±ÀÀ£¿ÉÄÜÓ°ÏìÕû¸öÓ¦ÓÃ | ? ´ıÊµÏÖ | Phase 2 ÎªÃ¿¸ö Route Ôö¼Ó¶ÀÁ¢±ß½ç£¨OutputApp ÒÑÊµÏÖ£© |
+| ´úÂë·Ö¸îÎ´°´²ÕÊÒ | Ê×ÆÁÈÔ¼ÓÔØÈ«²¿Ò³Ãæ×é¼ş | ? ´ıÊµÏÖ | Phase 3 °´²ÕÊÒ²ğ·Ö chunk |
 
-> **v3.0.0 å·²è§£å†³åå·®**ï¼šäº”èˆ±å­é¡µé¢å·²å…¨éƒ¨æ‹†åˆ†ï¼ˆ48 æ¡è·¯ç”±ï¼‰ï¼›`/input/prototype` å·²ç§»é™¤ï¼›æ€»æ§èˆ±æ™ºèƒ½ä½“å­æ¨¡å— 10 æ¡è·¯ç”±å·²æ³¨å†Œã€‚
+> **v3.0.0 ÒÑ½â¾öÆ«²î**£ºÎå²Õ×ÓÒ³ÃæÒÑÈ«²¿²ğ·Ö£¨48 ÌõÂ·ÓÉ£©£»`/input/prototype` ÒÑÒÆ³ı£»×Ü¿Ø²ÕÖÇÄÜÌå×ÓÄ£¿é 10 ÌõÂ·ÓÉÒÑ×¢²á¡£
 >
-> **v3.1.0 ä¿®æ­£**ï¼šè·¯ç”±æ€»æ•°ç»Ÿè®¡ç”± 47 ä¿®æ­£ä¸º 48ï¼›åˆ†æèˆ±è·¯ç”±æ•°ç”± 11 ä¿®æ­£ä¸º 12ã€‚
+> **v3.1.0 ĞŞÕı**£ºÂ·ÓÉ×ÜÊıÍ³¼ÆÓÉ 47 ĞŞÕıÎª 48£»·ÖÎö²ÕÂ·ÓÉÊıÓÉ 11 ĞŞÕıÎª 12¡£
 >
-> **v3.3.0 æ²»ç†**ï¼šè·¯ç”±æ€»æ•°ç”± 49 ä¿®æ­£ä¸º **62**ï¼›åˆ é™¤é‡å¤ `/trading/risk`ï¼›ç§»é™¤è¿‡æœŸ `/trading/hub`ã€`/analysis/news-v6`ï¼›è¡¥å…¨æ‰€æœ‰çœŸå®è·¯ç”±åˆ°é¢„æœŸåˆ—è¡¨ï¼Œè¦†ç›–ç‡ 100%ã€‚
+> **v3.3.0 ÖÎÀí**£ºÂ·ÓÉ×ÜÊıÓÉ 49 ĞŞÕıÎª **62**£»É¾³ıÖØ¸´ `/trading/risk`£»ÒÆ³ı¹ıÆÚ `/trading/hub`¡¢`/analysis/news-v6`£»²¹È«ËùÓĞÕæÊµÂ·ÓÉµ½Ô¤ÆÚÁĞ±í£¬¸²¸ÇÂÊ 100%¡£
 
 ---
 
-## 8. è·¯ç”± â†’ ç»„ä»¶ â†’ æœåŠ¡æ˜ å°„
+## 8. Â·ÓÉ ¡ú ×é¼ş ¡ú ·şÎñÓ³Éä
 
-| è·¯å¾„ | å®é™…é¡µé¢ç»„ä»¶ï¼ˆApp åˆ†å‘å™¨æ¸²æŸ“ï¼‰ | æœåŠ¡ | åˆ†ç±» |
+| Â·¾¶ | Êµ¼ÊÒ³Ãæ×é¼ş£¨App ·Ö·¢Æ÷äÖÈ¾£© | ·şÎñ | ·ÖÀà |
 |------|------|------|------|
 | `/` | `HomePage` | - | portal |
 | `/cockpit` | `CockpitShell` | - | portal |
-| `/input/hub` | â†’ `InputApp` â†’ `InputHubPage` | `inputService`, `stockpoolService` | input |
-| `/input` | â†’ `InputApp` â†’ `InputDashboard` | `inputService`, `stockpoolService` | input |
-| `/input/bulk-import` | â†’ `InputApp` â†’ `BulkImportPanel` | `batchImportService` | input |
-| `/input/hot-sectors` | â†’ `InputApp` â†’ `HotSectorPanel` | `hotSectorService` | input |
-| `/input/data-test` | â†’ `InputApp` â†’ `DataTestPanel` | `fetcherService` | input |
-| `/input/local-knowledge` | â†’ `InputApp` â†’ `LocalKnowledgePage` | `localKnowledgeService` | input |
-| `/input/seven-dim` | â†’ `InputApp` â†’ `SevenDimConfigPage` | `sevenDimService` | input |
-| `/input/fetcher-config` | â†’ `InputApp` â†’ `FetcherConfigPage` | `fetcherConfigService` | input |
-| `/input/collect-tasks` | â†’ `InputApp` â†’ `CollectTaskPage` | `collectTaskService` | input |
-| `/analysis/hub` | â†’ `AnalysisApp` â†’ `AnalysisHubPage` | - | analysis |
-| `/analysis` | â†’ `AnalysisApp` â†’ `AnalysisTemplateCards` | - | analysis |
-| `/analysis/stock-score` | â†’ `AnalysisApp` â†’ `StockAnalysisPage` | `v6ScoreService`, `intelligentScoreService` | analysis |
-| `/analysis/stock-score/:symbol` | â†’ `AnalysisApp` â†’ `StockAnalysisPage` | `v6ScoreService`, `intelligentScoreService` | analysis |
-| `/analysis/sector` | â†’ `AnalysisApp` â†’ `SectorAnalysisPage` | `industryScoreService` | analysis |
-| `/analysis/backtest` | â†’ `AnalysisApp` â†’ `BacktestPage` | - | analysis |
-| `/analysis/industry-score` | â†’ `AnalysisApp` â†’ `IndustryScorePage` | `industryScoreService` | analysis |
-| `/analysis/intelligent-score` | â†’ `AnalysisApp` â†’ `IntelligentScorePage` | `intelligentScoreService` | analysis |
-| `/analysis/score-docs` | â†’ `AnalysisApp` â†’ `ScoreDocPage` | `scoreDocService` | analysis |
-| `/analysis/news` | â†’ `AnalysisApp` â†’ `NewsPage` | `newsService` | analysis |
-| `/analysis/hot-sector` | â†’ `AnalysisApp` â†’ `HotSectorPage` | `hotSectorService` | analysis |
-| `/analysis/value-pit` | â†’ `AnalysisApp` â†’ `ValuePitPage` | `valuePitService` | analysis |
-| `/analysis/stock-pool` | â†’ `AnalysisApp` â†’ `StockPoolBoardPage` | `poolStore` | analysis |
-| `/trading/hub` | â†’ `TradingApp` â†’ `TradingHubPage` | `tradingService`, `signalGenerator`, `riskEngine` | trading |
-| `/trading` | â†’ `TradingApp` â†’ äº¤æ˜“çœ‹æ¿ | `tradingService`, `signalGenerator`, `riskEngine` | trading |
-| `/trading/strategy-snapshots` | â†’ `TradingApp` â†’ `StrategySnapshotPage` | `strategySnapshotService` | trading |
-| `/trading/holdings` | â†’ `TradingApp` â†’ `HoldingsPage` | `holdingsService` | trading |
-| `/output` | â†’ `OutputApp` â†’ `OutputHubPage` | `outputStore` | output |
-| `/output/hub` | â†’ `OutputApp` â†’ `OutputHubPage` | `outputStore` | output |
-| `/output/research` | â†’ `OutputApp` â†’ `ResearchReportPage` | `scoreDocStore` | output |
-| `/output/review` | â†’ `OutputApp` â†’ `TradeReviewPage` | `disciplineStore` | output |
-| `/output/export` | â†’ `OutputApp` â†’ `DataExportPanel` | `systemService` | output |
-| `/command/hub` | â†’ `CommandApp` â†’ `CommandHubPage` | - | command |
-| `/command` | â†’ `CommandApp` â†’ `SystemMonitor` | `systemMonitorStore` | command |
-| `/command/agents` | â†’ `AgentApp` â†’ `AgentHubPage` | `agentStore` | command |
-| `/command/agents/registry` | â†’ `AgentApp` â†’ `AgentRegistryPage` | `agentStore` | command |
-| `/command/agents/registry/:agentId` | â†’ `AgentApp` â†’ `AgentDetailPage` | `agentStore` | command |
-| `/command/agents/trigger` | â†’ `AgentApp` â†’ `AgentTaskTriggerPage` | `agentStore` | command |
-| `/command/agents/tasks` | â†’ `AgentApp` â†’ `AgentTasksPage` | `agentStore` | command |
-| `/command/agents/custom` | â†’ `AgentApp` â†’ `AgentPlaceholderPage` | `agentStore` | command |
-| `/command/agents/llm` | â†’ `AgentApp` â†’ `AgentPlaceholderPage` | `llmConfigService` | command |
-| `/command/agents/capability-graph` | â†’ `AgentApp` â†’ `AgentPlaceholderPage` | `agentStore` | command |
-| `/command/agents/dag-scheduler` | â†’ `AgentApp` â†’ `AgentPlaceholderPage` | `agentStore` | command |
-| `/command/agents/feedback` | â†’ `AgentApp` â†’ `AgentFeedbackPage` | `agentFeedbackStore` | command |
-| `/command/mcp-servers` | â†’ `CommandApp` â†’ `MCPServerDashboardPage` | `mcpService` | command |
-| `/command/monitor` | â†’ `CommandApp` â†’ `SystemMonitor` | `systemMonitorStore` | command |
-| `/command/config` | â†’ `CommandApp` â†’ `ConfigApp` | `configService` | command |
+| `/input/hub` | ¡ú `InputApp` ¡ú `InputHubPage` | `inputService`, `stockpoolService` | input |
+| `/input` | ¡ú `InputApp` ¡ú `InputDashboard` | `inputService`, `stockpoolService` | input |
+| `/input/bulk-import` | ¡ú `InputApp` ¡ú `BulkImportPanel` | `batchImportService` | input |
+| `/input/hot-sectors` | ¡ú `InputApp` ¡ú `HotSectorPanel` | `hotSectorService` | input |
+| `/input/data-test` | ¡ú `InputApp` ¡ú `DataTestPanel` | `fetcherService` | input |
+| `/input/local-knowledge` | ¡ú `InputApp` ¡ú `LocalKnowledgePage` | `localKnowledgeService` | input |
+| `/input/seven-dim` | ¡ú `InputApp` ¡ú `SevenDimConfigPage` | `sevenDimService` | input |
+| `/input/fetcher-config` | ¡ú `InputApp` ¡ú `FetcherConfigPage` | `fetcherConfigService` | input |
+| `/input/collect-tasks` | ¡ú `InputApp` ¡ú `CollectTaskPage` | `collectTaskService` | input |
+| `/analysis/hub` | ¡ú `AnalysisApp` ¡ú `AnalysisHubPage` | - | analysis |
+| `/analysis` | ¡ú `AnalysisApp` ¡ú `AnalysisTemplateCards` | - | analysis |
+| `/analysis/stock-score` | ¡ú `AnalysisApp` ¡ú `StockAnalysisPage` | `v6ScoreService`, `intelligentScoreService` | analysis |
+| `/analysis/stock-score/:symbol` | ¡ú `AnalysisApp` ¡ú `StockAnalysisPage` | `v6ScoreService`, `intelligentScoreService` | analysis |
+| `/analysis/sector` | ¡ú `AnalysisApp` ¡ú `SectorAnalysisPage` | `industryScoreService` | analysis |
+| `/analysis/backtest` | ¡ú `AnalysisApp` ¡ú `BacktestPage` | - | analysis |
+| `/analysis/industry-score` | ¡ú `AnalysisApp` ¡ú `IndustryScorePage` | `industryScoreService` | analysis |
+| `/analysis/intelligent-score` | ¡ú `AnalysisApp` ¡ú `IntelligentScorePage` | `intelligentScoreService` | analysis |
+| `/analysis/score-docs` | ¡ú `AnalysisApp` ¡ú `ScoreDocPage` | `scoreDocService` | analysis |
+| `/analysis/news` | ¡ú `AnalysisApp` ¡ú `NewsPage` | `newsService` | analysis |
+| `/analysis/hot-sector` | ¡ú `AnalysisApp` ¡ú `HotSectorPage` | `hotSectorService` | analysis |
+| `/analysis/value-pit` | ¡ú `AnalysisApp` ¡ú `ValuePitPage` | `valuePitService` | analysis |
+| `/analysis/stock-pool` | ¡ú `AnalysisApp` ¡ú `StockPoolBoardPage` | `poolStore` | analysis |
+| `/trading/hub` | ¡ú `TradingApp` ¡ú `TradingHubPage` | `tradingService`, `signalGenerator`, `riskEngine` | trading |
+| `/trading` | ¡ú `TradingApp` ¡ú ½»Ò×¿´°å | `tradingService`, `signalGenerator`, `riskEngine` | trading |
+| `/trading/strategy-snapshots` | ¡ú `TradingApp` ¡ú `StrategySnapshotPage` | `strategySnapshotService` | trading |
+| `/trading/holdings` | ¡ú `TradingApp` ¡ú `HoldingsPage` | `holdingsService` | trading |
+| `/output` | ¡ú `OutputApp` ¡ú `OutputHubPage` | `outputStore` | output |
+| `/output/hub` | ¡ú `OutputApp` ¡ú `OutputHubPage` | `outputStore` | output |
+| `/output/research` | ¡ú `OutputApp` ¡ú `ResearchReportPage` | `scoreDocStore` | output |
+| `/output/review` | ¡ú `OutputApp` ¡ú `TradeReviewPage` | `disciplineStore` | output |
+| `/output/export` | ¡ú `OutputApp` ¡ú `DataExportPanel` | `systemService` | output |
+| `/command/hub` | ¡ú `CommandApp` ¡ú `CommandHubPage` | - | command |
+| `/command` | ¡ú `CommandApp` ¡ú `SystemMonitor` | `systemMonitorStore` | command |
+| `/command/agents` | ¡ú `AgentApp` ¡ú `AgentHubPage` | `agentStore` | command |
+| `/command/agents/registry` | ¡ú `AgentApp` ¡ú `AgentRegistryPage` | `agentStore` | command |
+| `/command/agents/registry/:agentId` | ¡ú `AgentApp` ¡ú `AgentDetailPage` | `agentStore` | command |
+| `/command/agents/trigger` | ¡ú `AgentApp` ¡ú `AgentTaskTriggerPage` | `agentStore` | command |
+| `/command/agents/tasks` | ¡ú `AgentApp` ¡ú `AgentTasksPage` | `agentStore` | command |
+| `/command/agents/custom` | ¡ú `AgentApp` ¡ú `AgentPlaceholderPage` | `agentStore` | command |
+| `/command/agents/llm` | ¡ú `AgentApp` ¡ú `AgentPlaceholderPage` | `llmConfigService` | command |
+| `/command/agents/capability-graph` | ¡ú `AgentApp` ¡ú `AgentPlaceholderPage` | `agentStore` | command |
+| `/command/agents/dag-scheduler` | ¡ú `AgentApp` ¡ú `AgentPlaceholderPage` | `agentStore` | command |
+| `/command/agents/feedback` | ¡ú `AgentApp` ¡ú `AgentFeedbackPage` | `agentFeedbackStore` | command |
+| `/command/mcp-servers` | ¡ú `CommandApp` ¡ú `MCPServerDashboardPage` | `mcpService` | command |
+| `/command/monitor` | ¡ú `CommandApp` ¡ú `SystemMonitor` | `systemMonitorStore` | command |
+| `/command/config` | ¡ú `CommandApp` ¡ú `ConfigApp` | `configService` | command |
 | `/mock-test` | `MockTestPage` | - | other |
 
-> **v3.0.0 å˜æ›´**ï¼šç»„ä»¶åˆ—ä» `ROUTE_REGISTRY` çš„ `PortalShell` æ”¹ä¸ºå®é™…æ¸²æŸ“é¡µé¢ç»„ä»¶ï¼ˆç”± App åˆ†å‘å™¨å†…éƒ¨æ¸²æŸ“ï¼‰ã€‚æ–°å¢ 16 æ¡è·¯ç”±æ˜ å°„ï¼Œç§»é™¤å·²åºŸå¼ƒçš„ `/analysis/news-v6` å’Œ `/input/prototype`ã€‚
+> **v3.0.0 ±ä¸ü**£º×é¼şÁĞ´Ó `ROUTE_REGISTRY` µÄ `PortalShell` ¸ÄÎªÊµ¼ÊäÖÈ¾Ò³Ãæ×é¼ş£¨ÓÉ App ·Ö·¢Æ÷ÄÚ²¿äÖÈ¾£©¡£ĞÂÔö 16 ÌõÂ·ÓÉÓ³Éä£¬ÒÆ³ıÒÑ·ÏÆúµÄ `/analysis/news-v6` ºÍ `/input/prototype`¡£
 >
-> å®Œæ•´è·¯ç”±æºæ–‡ä»¶è§ `src/config/routes.ts`ã€‚`getAllPaths()` è¿”å›æ‰€æœ‰å·²æ³¨å†Œè·¯å¾„ï¼Œå¯ç”¨äºè·¯ç”±ä¸€è‡´æ€§æ ¡éªŒã€‚
+> ÍêÕûÂ·ÓÉÔ´ÎÄ¼ş¼û `src/config/routes.ts`¡£`getAllPaths()` ·µ»ØËùÓĞÒÑ×¢²áÂ·¾¶£¬¿ÉÓÃÓÚÂ·ÓÉÒ»ÖÂĞÔĞ£Ñé¡£
 
 ---
 
-## 9. ç‰ˆæœ¬æ¯”å¯¹
+## 9. °æ±¾±È¶Ô
 
-æœ¬æ–‡æ¡£å½“å‰ç‰ˆæœ¬ä¸º `v0.9.0-migration-implemented`ï¼Œä¸è§„åˆ’åŸºçº¿ `v0.9.0-docs-base` çš„å·®å¼‚è§ï¼š
+±¾ÎÄµµµ±Ç°°æ±¾Îª `v0.9.0-migration-implemented`£¬Óë¹æ»®»ùÏß `v0.9.0-docs-base` µÄ²îÒì¼û£º
 
 - `../../reference/architecture-version-comparison.md`
 
-ä¸»è¦å˜åŒ–ï¼š
+Ö÷Òª±ä»¯£º
 
-1. å¢åŠ ç¬¬ 8 èŠ‚ã€Œè·¯ç”± â†’ ç»„ä»¶ â†’ æœåŠ¡æ˜ å°„ã€ï¼Œä½œä¸º UI/æœåŠ¡åŒå‘è¿½è¸ªè¡¨ã€‚
-2. ç¬¬ 3.2 èŠ‚å¢åŠ è¾“å…¥èˆ±å­è·¯ç”±æ˜ å°„ã€‚
-3. åå·®æ¸…å•å¢åŠ  `/input/prototype` ä¸´æ—¶è·¯ç”±å¤„ç†è®¡åˆ’ã€‚
+1. Ôö¼ÓµÚ 8 ½Ú¡¸Â·ÓÉ ¡ú ×é¼ş ¡ú ·şÎñÓ³Éä¡¹£¬×÷Îª UI/·şÎñË«Ïò×·×Ù±í¡£
+2. µÚ 3.2 ½ÚÔö¼ÓÊäÈë²Õ×ÓÂ·ÓÉÓ³Éä¡£
+3. Æ«²îÇåµ¥Ôö¼Ó `/input/prototype` ÁÙÊ±Â·ÓÉ´¦Àí¼Æ»®¡£

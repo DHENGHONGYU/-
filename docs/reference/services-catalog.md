@@ -1,74 +1,80 @@
 ---
-title: services-catalog
+title: V9 ·şÎñ×ÓÓòÄ¿Â¼£¨Services Catalog£©
+type: reference
+domain: backend
+phase: development
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "¶¨Î»£ºÎª 24 ¸ö·şÎñ×ÓÓòÌá¹©Í³Ò»ÎÄµµÃªµã£¬Ïû³ı¡¸24 ×ÓÓòÔËĞĞÖĞµ«È±×ÜÀÀÎÄµµ¡¹µÄË«ÏòÒ»ÖÂĞÔÂä²î¡£ Êµ²âÀ´Ô´£º`src/services/` 24 ¸ö×ÓÓòÄ¿Â¼£¨2026-07-12 ºË¶Ô£©¡£ ×´Ì¬£º?..."
+tags: [backend, log, reference]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: important
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/reference/services-catalog.md
-code_version: 2.0.0
-tier: important
----
+# V9 ·şÎñ×ÓÓòÄ¿Â¼£¨Services Catalog£©
 
-# V9 æœåŠ¡å­åŸŸç›®å½•ï¼ˆServices Catalogï¼‰
-
-> **å®šä½**ï¼šä¸º 24 ä¸ªæœåŠ¡å­åŸŸæä¾›ç»Ÿä¸€æ–‡æ¡£é”šç‚¹ï¼Œæ¶ˆé™¤ã€Œ24 å­åŸŸè¿è¡Œä¸­ä½†ç¼ºæ€»è§ˆæ–‡æ¡£ã€çš„åŒå‘ä¸€è‡´æ€§è½å·®ã€‚
-> **å®æµ‹æ¥æº**ï¼š`src/services/` 24 ä¸ªå­åŸŸç›®å½•ï¼ˆ2026-07-12 æ ¸å¯¹ï¼‰ã€‚
-> **çŠ¶æ€**ï¼šâœ… P0 æ–°å¢ï¼ˆç›®å½•éª¨æ¶ç‰ˆï¼‰ã€‚æ¯ä¸ªå­åŸŸçš„**æ¥å£å¥‘çº¦ + èŒè´£ + æ•°æ®æµ**é¡»ç”±å„å­åŸŸ owner åœ¨ P0-6 åç»­è¿­ä»£æ‰©å†™ä¸ºç‹¬ç«‹ `*_contract.md`ï¼ˆæ­¤å¤„å…ˆç»™é”šç‚¹ä¸èŒè´£æ‘˜è¦ï¼Œæ ‡è®° `[TODO æ‰©å†™å¥‘çº¦]`ï¼‰ã€‚
+> **¶¨Î»**£ºÎª 24 ¸ö·şÎñ×ÓÓòÌá¹©Í³Ò»ÎÄµµÃªµã£¬Ïû³ı¡¸24 ×ÓÓòÔËĞĞÖĞµ«È±×ÜÀÀÎÄµµ¡¹µÄË«ÏòÒ»ÖÂĞÔÂä²î¡£
+> **Êµ²âÀ´Ô´**£º`src/services/` 24 ¸ö×ÓÓòÄ¿Â¼£¨2026-07-12 ºË¶Ô£©¡£
+> **×´Ì¬**£º? P0 ĞÂÔö£¨Ä¿Â¼¹Ç¼Ü°æ£©¡£Ã¿¸ö×ÓÓòµÄ**½Ó¿ÚÆõÔ¼ + Ö°Ôğ + Êı¾İÁ÷**ĞëÓÉ¸÷×ÓÓò owner ÔÚ P0-6 ºóĞøµü´úÀ©Ğ´Îª¶ÀÁ¢ `*_contract.md`£¨´Ë´¦ÏÈ¸øÃªµãÓëÖ°ÔğÕªÒª£¬±ê¼Ç `[TODO À©Ğ´ÆõÔ¼]`£©¡£
 
 ---
 
-## ä½¿ç”¨çº¦å®š
+## Ê¹ÓÃÔ¼¶¨
 
-- æœ¬ç›®å½•æ˜¯ 24 å­åŸŸçš„**å”¯ä¸€ç´¢å¼•**ï¼›å„å­åŸŸè¯¦ç»†å¥‘çº¦æ–‡æ¡£å‘½å `{subdomain}-contract.md`ï¼Œç½®äº `docs/architecture/services/`ã€‚
-- æ‰€æœ‰å­åŸŸé¡»éµå®ˆ `../../AGENTS.md` åˆ†å±‚ï¼š`services â†’ core/data/lib(ç™½åå•)`ï¼Œç¦ç›´å†™ dbï¼ˆç» `DataBridge`ï¼‰ã€‚
+- ±¾Ä¿Â¼ÊÇ 24 ×ÓÓòµÄ**Î¨Ò»Ë÷Òı**£»¸÷×ÓÓòÏêÏ¸ÆõÔ¼ÎÄµµÃüÃû `{subdomain}-contract.md`£¬ÖÃÓÚ `docs/architecture/services/`¡£
+- ËùÓĞ×ÓÓòĞë×ñÊØ `../../AGENTS.md` ·Ö²ã£º`services ¡ú core/data/lib(°×Ãûµ¥)`£¬½ûÖ±Ğ´ db£¨¾­ `DataBridge`£©¡£
 
 ---
 
-## å­åŸŸæ¸…å•ï¼ˆ24 + é¡¶å±‚æ–‡ä»¶ï¼‰
+## ×ÓÓòÇåµ¥£¨24 + ¶¥²ãÎÄ¼ş£©
 
-| # | å­åŸŸ | ç›®å½• | èŒè´£æ‘˜è¦ | å¥‘çº¦çŠ¶æ€ |
+| # | ×ÓÓò | Ä¿Â¼ | Ö°ÔğÕªÒª | ÆõÔ¼×´Ì¬ |
 |---|------|------|----------|----------|
-| 1 | ai-center | `src/services/ai-center/` | AI ä¸­å¿ƒï¼šå¤§æ¨¡å‹è°ƒç”¨ç¼–æ’ã€æ™ºèƒ½å¯¹æ¯” | âœ… `ai-center-contract.md` |
-| 2 | analysis | `src/services/analysis/` | æŠ•ç ”åˆ†ææ ¸å¿ƒï¼šæŒ‡æ ‡è®¡ç®—ã€è´¢æŠ¥è§£æ | âœ… `analysis-contract.md` |
-| 3 | backtest | `src/services/backtest/` | å›æµ‹å¼•æ“ï¼šç­–ç•¥å›æµ‹ä¸ç»©æ•ˆ | âœ… `backtest-contract.md` |
-| 4 | collection | `src/services/collection/` | æ•°æ®é‡‡é›†ç¼–æ’ï¼ˆorchestrator/pipeline/qualityï¼‰ | âœ… `collection-contract.md` |
-| 5 | data-collector | `src/services/data-collector/` | æ•°æ®æ”¶é›†å™¨ï¼šå¯¹æ¥å¤–éƒ¨æºã€å†™ IndexedDB | âœ… `data-collector-contract.md` |
-| 6 | execution | `src/services/execution/` | äº¤æ˜“æ‰§è¡Œï¼šä¸‹å•/æ’¤å•æµç¨‹ | âœ… `execution-contract.md` |
-| 7 | export | `src/services/export/` | å¯¼å‡ºï¼šæŠ¥å‘Š/æ•°æ®å¯¼å‡º | âœ… `export-contract.md` |
-| 8 | fetcher | `src/services/fetcher/` | è¡Œæƒ…/èµ„è®¯æŠ“å–ï¼šAPI é€‚é… | âœ… `fetcher-contract.md` |
-| 9 | hybrid-proofread | `src/services/hybrid-proofread/` | æ··åˆæ ¡å¯¹ï¼šäººæœºååŒæ ¡éªŒ | âœ… `hybrid-proofread-contract.md` |
-| 10 | input | `src/services/input/` | è¾“å…¥å¤„ç†ï¼šç”¨æˆ·å½•å…¥/é…ç½®è§£æ | âœ… `input-contract.md` |
-| 11 | llm | `src/services/llm/` | å¤§æ¨¡å‹æœåŠ¡ï¼šprompt/å¯¹è¯ç®¡ç† | âœ… `llm-contract.md` |
-| 12 | news | `src/services/news/` | æ–°é—»èµ„è®¯ï¼šé‡‡é›†/æ¸…æ´—/æ ‡ç­¾ | âœ… `news-contract.md` |
-| 13 | portfolio | `src/services/portfolio/` | ç»„åˆç®¡ç†ï¼šæŒä»“/æƒé‡ | âœ… `portfolio-contract.md` |
-| 14 | pwa | `src/services/pwa/` | PWAï¼šç¦»çº¿/æ¨é€/å®‰è£… | âœ… `pwa-contract.md` |
-| 15 | rbac | `src/services/rbac/` | æƒé™ï¼šè§’è‰²ä¸è®¿é—®æ§åˆ¶ | âœ… `rbac-contract.md` |
-| 16 | scoring | `src/services/scoring/` | è¯„åˆ†å¼•æ“ï¼šv6 äº”å› å­ï¼ˆåˆæˆç§å­ï¼ŒUI æ ‡ç¤ºä¾‹ï¼‰ | âœ… `scoring-contract.md` |
-| 17 | screening | `src/services/screening/` | é€‰è‚¡/ç­›é€‰ï¼šæ¡ä»¶å¼•æ“ | âœ… `screening-contract.md` |
-| 18 | stock-analysis | `src/services/stock-analysis/` | ä¸ªè‚¡åˆ†æï¼šæ·±åº¦åˆ†æ | âœ… `stock-analysis-contract.md` |
-| 19 | stockpool | `src/services/stockpool/` | è‚¡ç¥¨æ± ï¼šæ± ç®¡ç†/ç›‘æ§ | âœ… `stockpool-contract.md` |
-| 20 | system | `src/services/system/` | ç³»ç»Ÿçº§ï¼šé…ç½®/å¥åº·/å¯åŠ¨ | âœ… `system-contract.md` |
-| 21 | trade | `src/services/trading/` | äº¤æ˜“åŸŸï¼šäº¤æ˜“å®ä½“/çŠ¶æ€ | âœ… `trade-contract.md` |
-| 22 | trading | `src/services/trading/` | äº¤æ˜“ä¸šåŠ¡ï¼šç»„åˆ/ç­–ç•¥/é£æ§ç¼–æ’ | âœ… `trading-contract.md` |
-| 23 | useCase | `src/services/useCase/` | ç”¨ä¾‹å±‚ï¼šä¸šåŠ¡ç”¨ä¾‹ç¼–æ’ | âœ… `usecase-contract.md` |
+| 1 | ai-center | `src/services/ai-center/` | AI ÖĞĞÄ£º´óÄ£ĞÍµ÷ÓÃ±àÅÅ¡¢ÖÇÄÜ¶Ô±È | ? `ai-center-contract.md` |
+| 2 | analysis | `src/services/analysis/` | Í¶ÑĞ·ÖÎöºËĞÄ£ºÖ¸±ê¼ÆËã¡¢²Æ±¨½âÎö | ? `analysis-contract.md` |
+| 3 | backtest | `src/services/backtest/` | »Ø²âÒıÇæ£º²ßÂÔ»Ø²âÓë¼¨Ğ§ | ? `backtest-contract.md` |
+| 4 | collection | `src/services/collection/` | Êı¾İ²É¼¯±àÅÅ£¨orchestrator/pipeline/quality£© | ? `collection-contract.md` |
+| 5 | data-collector | `src/services/data-collector/` | Êı¾İÊÕ¼¯Æ÷£º¶Ô½ÓÍâ²¿Ô´¡¢Ğ´ IndexedDB | ? `data-collector-contract.md` |
+| 6 | execution | `src/services/execution/` | ½»Ò×Ö´ĞĞ£ºÏÂµ¥/³·µ¥Á÷³Ì | ? `execution-contract.md` |
+| 7 | export | `src/services/export/` | µ¼³ö£º±¨¸æ/Êı¾İµ¼³ö | ? `export-contract.md` |
+| 8 | fetcher | `src/services/fetcher/` | ĞĞÇé/×ÊÑ¶×¥È¡£ºAPI ÊÊÅä | ? `fetcher-contract.md` |
+| 9 | hybrid-proofread | `src/services/hybrid-proofread/` | »ìºÏĞ£¶Ô£ºÈË»úĞ­Í¬Ğ£Ñé | ? `hybrid-proofread-contract.md` |
+| 10 | input | `src/services/input/` | ÊäÈë´¦Àí£ºÓÃ»§Â¼Èë/ÅäÖÃ½âÎö | ? `input-contract.md` |
+| 11 | llm | `src/services/llm/` | ´óÄ£ĞÍ·şÎñ£ºprompt/¶Ô»°¹ÜÀí | ? `llm-contract.md` |
+| 12 | news | `src/services/news/` | ĞÂÎÅ×ÊÑ¶£º²É¼¯/ÇåÏ´/±êÇ© | ? `news-contract.md` |
+| 13 | portfolio | `src/services/portfolio/` | ×éºÏ¹ÜÀí£º³Ö²Ö/È¨ÖØ | ? `portfolio-contract.md` |
+| 14 | pwa | `src/services/pwa/` | PWA£ºÀëÏß/ÍÆËÍ/°²×° | ? `pwa-contract.md` |
+| 15 | rbac | `src/services/rbac/` | È¨ÏŞ£º½ÇÉ«Óë·ÃÎÊ¿ØÖÆ | ? `rbac-contract.md` |
+| 16 | scoring | `src/services/scoring/` | ÆÀ·ÖÒıÇæ£ºv6 ÎåÒò×Ó£¨ºÏ³ÉÖÖ×Ó£¬UI ±êÊ¾Àı£© | ? `scoring-contract.md` |
+| 17 | screening | `src/services/screening/` | Ñ¡¹É/É¸Ñ¡£ºÌõ¼şÒıÇæ | ? `screening-contract.md` |
+| 18 | stock-analysis | `src/services/stock-analysis/` | ¸ö¹É·ÖÎö£ºÉî¶È·ÖÎö | ? `stock-analysis-contract.md` |
+| 19 | stockpool | `src/services/stockpool/` | ¹ÉÆ±³Ø£º³Ø¹ÜÀí/¼à¿Ø | ? `stockpool-contract.md` |
+| 20 | system | `src/services/system/` | ÏµÍ³¼¶£ºÅäÖÃ/½¡¿µ/Æô¶¯ | ? `system-contract.md` |
+| 21 | trade | `src/services/trading/` | ½»Ò×Óò£º½»Ò×ÊµÌå/×´Ì¬ | ? `trade-contract.md` |
+| 22 | trading | `src/services/trading/` | ½»Ò×ÒµÎñ£º×éºÏ/²ßÂÔ/·ç¿Ø±àÅÅ | ? `trading-contract.md` |
+| 23 | useCase | `src/services/useCase/` | ÓÃÀı²ã£ºÒµÎñÓÃÀı±àÅÅ | ? `usecase-contract.md` |
 
-### é¡¶å±‚æœåŠ¡æ–‡ä»¶ï¼ˆéå­åŸŸç›®å½•ï¼‰
+### ¶¥²ã·şÎñÎÄ¼ş£¨·Ç×ÓÓòÄ¿Â¼£©
 
-| æ–‡ä»¶ | èŒè´£ |
+| ÎÄ¼ş | Ö°Ôğ |
 |------|------|
-| `contracts/` | æœåŠ¡é—´å¥‘çº¦ç±»å‹ |
-| `errorBus/` | é”™è¯¯æ€»çº¿ |
-| `resilience/` | å¼¹æ€§/é‡è¯•/ç†”æ–­ |
-| `riskControlService` | é£æ§æœåŠ¡ï¼ˆä¸ trading åä½œï¼‰ |
-| `unifiedStockService` | ç»Ÿä¸€è‚¡ç¥¨æ•°æ®æœåŠ¡ï¼ˆäº§å‡º `UnifiedStockData`ï¼‰ |
-| `feedbackService` | ç”¨æˆ·åé¦ˆæœåŠ¡ |
+| `contracts/` | ·şÎñ¼äÆõÔ¼ÀàĞÍ |
+| `errorBus/` | ´íÎó×ÜÏß |
+| `resilience/` | µ¯ĞÔ/ÖØÊÔ/ÈÛ¶Ï |
+| `riskControlService` | ·ç¿Ø·şÎñ£¨Óë trading Ğ­×÷£© |
+| `unifiedStockService` | Í³Ò»¹ÉÆ±Êı¾İ·şÎñ£¨²ú³ö `UnifiedStockData`£© |
+| `feedbackService` | ÓÃ»§·´À¡·şÎñ |
 
 ---
 
-## éªŒæ”¶
+## ÑéÊÕ
 
-- âœ… 24 å­åŸŸ 100% åœ¨æ­¤æœ‰é”šç‚¹ï¼ˆæœ¬æ–‡ä»¶ï¼‰ã€‚
-- âœ… å„å­åŸŸç‹¬ç«‹å¥‘çº¦æ–‡æ¡£ï¼š24/24 å®Œæˆï¼ˆP3-3 å·²å®Œæˆï¼‰ã€‚
-- ç´¢å¼•æ¥å…¥ï¼šæœ¬æ–‡ä»¶å·²è¢« `docs/README.md` B ç±»å¼•ç”¨ã€‚
+- ? 24 ×ÓÓò 100% ÔÚ´ËÓĞÃªµã£¨±¾ÎÄ¼ş£©¡£
+- ? ¸÷×ÓÓò¶ÀÁ¢ÆõÔ¼ÎÄµµ£º24/24 Íê³É£¨P3-3 ÒÑÍê³É£©¡£
+- Ë÷Òı½ÓÈë£º±¾ÎÄ¼şÒÑ±» `docs/README.md` B ÀàÒıÓÃ¡£

@@ -41,7 +41,7 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { runAuditPipeline, colorize, type AuditReport } from './_debug/_audit-pipeline.ts'
+import { runAuditPipeline, colorize, type AuditReport } from './_debug/_audit-pipeline'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -163,7 +163,7 @@ export interface Report extends AuditReport {
 // 配置
 // ============================================================
 
-const ROOT = path.resolve(__dirname, '..')
+const ROOT = path.resolve(__dirname, '..', '..')
 const SRC = path.join(ROOT, 'src')
 const STORE_DIR = path.join(SRC, 'store')
 

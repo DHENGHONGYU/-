@@ -18,7 +18,8 @@ import {
   quotesToQuoteData,
   ALL_LAYER_IDS,
 } from '@/services/scoring/v6-engine'
-import type { CompositeScore, FinancialData, V6ScoreInput } from '@/services/scoring/v6-engine'
+import type { CompositeScore, FinancialData, QuoteData, V6ScoreInput } from '@/services/scoring/v6-engine'
+import { validateScoringInput } from '@/services/scoring/scoringInputValidation'
 import { nanoid } from 'nanoid'
 import {
   V6ScoreTaskScheduler,
@@ -119,6 +120,21 @@ async function buildEngineInput(stock: Stock, quotes: DailyQuotes | null): Promi
   if (!Number.isFinite(quotesData.latestClose)) {
     logger.warn(`[v6ScoreService] buildEngineInput: quotesData.latestClose 无效，使用 stock.price`)
     quotesData.latestClose = Number.isFinite(stock.price) ? stock.price : 0
+  }
+
+  // P0-3：评分输入数据契约校验（warn-only，不阻断评分）
+  const validation = validateScoringInput({
+    stock: stockData,
+    financials,
+    quotes: quotesData,
+  })
+  if (!validation.allOk) {
+    logger.warn(`[v6ScoreService] buildEngineInput: 输入数据校验发现 ${validation.totalIssues} 个问题`, {
+      symbol: stock.symbol,
+      stockIssues: validation.stock.issues.length,
+      financialIssues: validation.financials.issues.length,
+      quoteIssues: validation.quotes.issues.length,
+    })
   }
 
   return {
@@ -410,6 +426,9 @@ export interface BatchScoreResult {
   errors: { symbol: string; error: string }[]
 }
 
+/**
+ * runV6ScoreBatch
+ */
 export async function runV6ScoreBatch(
   symbols: string[],
   options: BatchScoreOptions = {},
@@ -576,5 +595,96 @@ export function getV6ScoreQuality(
     hasQuotes: true,
     hasBasicData: validCount >= 3,
     missingLayers,
+  }
+}
+
+// ============================================================
+// 行业分析服务注入（v2.9.0 新增）
+// ============================================================
+
+/** 行业分析服务接口 */
+export interface IndustryAnalysisServices {
+  getStockIndustryV4Analysis?: typeof import('@/services/analysis/industryAnalysisService').getStockIndustryV4Analysis
+  runFullIndustryAnalysis?: typeof import('@/services/analysis/industryAnalysisService').runFullIndustryAnalysis
+  invalidateIndustryCache?: typeof import('@/services/analysis/industryAnalysisService').invalidateIndustryCache
+  v4ToIndustryScoreData?: typeof import('@/services/analysis/industryAnalysisService').v4ToIndustryScoreData
+  // v2.9.5 增强版
+  runFullIndustryAnalysisEnhanced?: typeof import('@/services/analysis/industryAnalysisService').runFullIndustryAnalysisEnhanced
+  getStockIndustryV4AnalysisEnhanced?: typeof import('@/services/analysis/industryAnalysisService').getStockIndustryV4AnalysisEnhanced
+}
+
+let industryServices: IndustryAnalysisServices = {}
+
+/**
+ * 注入行业分析服务
+ *
+ * 沿用 setXxxServices 模式，避免循环依赖。
+ * 在 main.tsx 启动时注入具体实现。
+ */
+export function setIndustryAnalysisServices(services: IndustryAnalysisServices): void {
+  industryServices = { ...industryServices, ...services }
+  logger.info('[v6ScoreService] 行业分析服务已注入', {
+    hasV4Analysis: typeof services.getStockIndustryV4Analysis === 'function',
+    hasFullAnalysis: typeof services.runFullIndustryAnalysis === 'function',
+  })
+}
+
+/**
+ * 获取行业分析服务（安全访问）
+ */
+export function getIndustryAnalysisServices(): IndustryAnalysisServices {
+  return industryServices
+}
+
+/**
+ * 在批量评分时预计算行业 V4 分析结果
+ *
+ * 在批量评分前调用，将行业分析结果缓存，
+ * 供每只股票评分时使用。
+ */
+export async function precomputeIndustryAnalysisForBatch(
+  stocks: Array<{ stock: Stock; financials: FinancialData; quotes: QuoteData }>,
+): Promise<void> {
+  if (!industryServices.runFullIndustryAnalysis) return
+
+  try {
+    await industryServices.runFullIndustryAnalysis(stocks, { forceRefresh: true })
+    logger.info('[v6ScoreService] 批量行业V4分析预计算完成')
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    logger.warn(`[v6ScoreService] 批量行业V4分析预计算失败: ${msg}`)
+  }
+}
+
+/**
+ * 为单只股票注入行业 V4 分析结果到评分输入
+ */
+export function injectIndustryV4ToInput(
+  stock: Stock,
+  input: V6ScoreInput,
+  allV4Analyses: Array<import('@/data/types/types.sector').IndustryV4Analysis>,
+): V6ScoreInput {
+  if (!industryServices.getStockIndustryV4Analysis || !industryServices.v4ToIndustryScoreData) {
+    return input
+  }
+
+  try {
+    const { bestMatch } = industryServices.getStockIndustryV4Analysis(stock, allV4Analyses)
+    if (!bestMatch || bestMatch.v4Composite === null) {
+      return input
+    }
+
+    const scoreData = industryServices.v4ToIndustryScoreData(bestMatch)
+    const v4Input: V6ScoreInput & { industryV4Analysis?: typeof bestMatch } = {
+      ...input,
+      industryScore: scoreData,
+      industryV4Analysis: bestMatch,
+    }
+
+    return v4Input
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    logger.warn(`[v6ScoreService] 注入行业V4分析失败: ${msg}`, { symbol: stock.symbol })
+    return input
   }
 }

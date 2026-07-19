@@ -1,90 +1,98 @@
 ---
-title: tradereviewai-skill-testing
-tier: reference
+title: TradeReviewAI SkillDevelopment ²âÊÔËµÃ÷
+type: explanation
+domain: qa
+phase: design
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "## 1. ²âÊÔÄ¿±ê ÑéÖ¤ `TradeReviewAI` Ä£¿éÖĞ»ùÓÚ½»Ò×¹æÔò´íÎóÌáÁ¶ `Skill` µÄÄÜÁ¦£¬È·±££º"
+tags: [qa, trading, test]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-tier: reference
-code_version: 2.0.0
----
+# TradeReviewAI SkillDevelopment ²âÊÔËµÃ÷
 
-# TradeReviewAI SkillDevelopment æµ‹è¯•è¯´æ˜
+## 1. ²âÊÔÄ¿±ê
 
-## 1. æµ‹è¯•ç›®æ ‡
+ÑéÖ¤ `TradeReviewAI` Ä£¿éÖĞ»ùÓÚ½»Ò×¹æÔò´íÎóÌáÁ¶ `Skill` µÄÄÜÁ¦£¬È·±££º
 
-éªŒè¯ `TradeReviewAI` æ¨¡å—ä¸­åŸºäºäº¤æ˜“è§„åˆ™é”™è¯¯æç‚¼ `Skill` çš„èƒ½åŠ›ï¼Œç¡®ä¿ï¼š
+1. `generateReview()` Éú³ÉµÄ `SkillDevelopment` ½á¹¹Óë `tradeReview.types.ts` Éè¼Æ¶¨ÒåÒ»ÖÂ¡£
+2. 12 Àà½»Ò×´íÎóÈ«²¿±»Ó³Éäµ½ÖÁÉÙÒ»¸ö¼¼ÄÜÎ¬¶È¡£
+3. ¼¼ÄÜÎ¬¶ÈÆÀ·Ö¡¢µÈ¼¶¡¢Ä¿±êµÈ¼¶¡¢Gap ¼ÆËãÂß¼­ÕıÈ·¡£
+4. Àï³Ì±®£¨Milestones£©ºÍÑ§Ï°Â·¾¶£¨LearningPath£©°´Ô¤ÆÚÉú³ÉÇÒ¹ØÁªµ½ÕıÈ·Î¬¶È¡£
+5. UI ²à `AITradeReviewWidget` ¿ÉÕıÈ·äÖÈ¾ĞÂ½á¹¹¶ø²»±¨´í¡£
 
-1. `generateReview()` ç”Ÿæˆçš„ `SkillDevelopment` ç»“æ„ä¸ `tradeReview.types.ts` è®¾è®¡å®šä¹‰ä¸€è‡´ã€‚
-2. 12 ç±»äº¤æ˜“é”™è¯¯å…¨éƒ¨è¢«æ˜ å°„åˆ°è‡³å°‘ä¸€ä¸ªæŠ€èƒ½ç»´åº¦ã€‚
-3. æŠ€èƒ½ç»´åº¦è¯„åˆ†ã€ç­‰çº§ã€ç›®æ ‡ç­‰çº§ã€Gap è®¡ç®—é€»è¾‘æ­£ç¡®ã€‚
-4. é‡Œç¨‹ç¢‘ï¼ˆMilestonesï¼‰å’Œå­¦ä¹ è·¯å¾„ï¼ˆLearningPathï¼‰æŒ‰é¢„æœŸç”Ÿæˆä¸”å…³è”åˆ°æ­£ç¡®ç»´åº¦ã€‚
-5. UI ä¾§ `AITradeReviewWidget` å¯æ­£ç¡®æ¸²æŸ“æ–°ç»“æ„è€Œä¸æŠ¥é”™ã€‚
+## 2. ²âÊÔ·¶Î§
 
-## 2. æµ‹è¯•èŒƒå›´
-
-| èŒƒå›´ | è¯´æ˜ |
+| ·¶Î§ | ËµÃ÷ |
 |------|------|
-| **è¢«æµ‹æ¨¡å—** | `src/services/trading/tradeReviewAI.ts` |
-| **ä¾èµ–æ¨¡å—** | `src/services/trading/tradeErrorClassifier.ts`ã€`src/data/types.ts`ã€`src/types/modules/tradeReview.types.ts` |
-| **UI å½±å“é¢** | `src/cockpit/widgets/AITradeReviewWidget.tsx` çš„ Skills Tab |
-| **ä¸æµ‹è¯•** | LLM å¢å¼ºç‰ˆ `generateReviewAsync`ã€DataBridge æ•°æ®æ¥å…¥ã€æµè§ˆå™¨ç«¯ IndexedDB |
+| **±»²âÄ£¿é** | `src/services/trading/tradeReviewAI.ts` |
+| **ÒÀÀµÄ£¿é** | `src/services/trading/tradeErrorClassifier.ts`¡¢`src/data/types.ts`¡¢`src/types/modules/tradeReview.types.ts` |
+| **UI Ó°ÏìÃæ** | `src/cockpit/widgets/AITradeReviewWidget.tsx` µÄ Skills Tab |
+| **²»²âÊÔ** | LLM ÔöÇ¿°æ `generateReviewAsync`¡¢DataBridge Êı¾İ½ÓÈë¡¢ä¯ÀÀÆ÷¶Ë IndexedDB |
 
-## 3. æµ‹è¯•ç¯å¢ƒ
+## 3. ²âÊÔ»·¾³
 
-- æ¡†æ¶ï¼šVitest 2.x
-- æ–­è¨€åº“ï¼šVitest å†…ç½® `expect`
-- è¿è¡Œå‘½ä»¤ï¼š
+- ¿ò¼Ü£ºVitest 2.x
+- ¶ÏÑÔ¿â£ºVitest ÄÚÖÃ `expect`
+- ÔËĞĞÃüÁî£º
 
 ```bash
-# ä»…è¿è¡Œæœ¬æ¨¡å—æµ‹è¯•
+# ½öÔËĞĞ±¾Ä£¿é²âÊÔ
 npx vitest run src/services/trading/tradeReviewAI.test.ts
 
-# è¿è¡Œå…¨éƒ¨æµ‹è¯•
+# ÔËĞĞÈ«²¿²âÊÔ
 npm run test
 
-# TypeScript ç¼–è¯‘æ£€æŸ¥
+# TypeScript ±àÒë¼ì²é
 npm run tsc
 ```
 
-## 4. æµ‹è¯•æ–‡ä»¶ä½ç½®
+## 4. ²âÊÔÎÄ¼şÎ»ÖÃ
 
 ```
 src/services/trading/tradeReviewAI.test.ts
 ```
 
-## 5. æµ‹è¯•ç”¨ä¾‹æ¸…å•
+## 5. ²âÊÔÓÃÀıÇåµ¥
 
-### 5.1 SkillDevelopment ç»“æ„å¯¹é½
+### 5.1 SkillDevelopment ½á¹¹¶ÔÆë
 
-| ç”¨ä¾‹ | è¾“å…¥ | é¢„æœŸç»“æœ |
+| ÓÃÀı | ÊäÈë | Ô¤ÆÚ½á¹û |
 |------|------|---------|
-| ç”Ÿæˆå®Œæ•´ SkillDevelopment | 2 ç¬”æµ‹è¯•è®¢å•ï¼ˆå«è®¡åˆ’è¿è§„ã€é‡ä»“ã€æ­¢æŸé—®é¢˜ï¼‰ | `userId`ã€`overallLevel`ã€`updatedAt`ã€`dimensions`ã€`milestones`ã€`learningPath`ã€`prioritySkills`ã€`recommendedResources` å‡å­˜åœ¨ä¸”æœ‰æ•ˆ |
-| æ¯ä¸ªç»´åº¦å­—æ®µæœ‰æ•ˆ | 1 ç¬”æ™®é€šè®¢å• | æ‰€æœ‰ç»´åº¦ `code/name/description/currentLevel/targetLevel/score/gap` å­—æ®µåˆæ³•ï¼Œç­‰çº§ä¸º 5 çº§æšä¸¾ä¹‹ä¸€ï¼Œåˆ†æ•°åœ¨ 0-100 ä¹‹é—´ |
+| Éú³ÉÍêÕû SkillDevelopment | 2 ±Ê²âÊÔ¶©µ¥£¨º¬¼Æ»®Î¥¹æ¡¢ÖØ²Ö¡¢Ö¹ËğÎÊÌâ£© | `userId`¡¢`overallLevel`¡¢`updatedAt`¡¢`dimensions`¡¢`milestones`¡¢`learningPath`¡¢`prioritySkills`¡¢`recommendedResources` ¾ù´æÔÚÇÒÓĞĞ§ |
+| Ã¿¸öÎ¬¶È×Ö¶ÎÓĞĞ§ | 1 ±ÊÆÕÍ¨¶©µ¥ | ËùÓĞÎ¬¶È `code/name/description/currentLevel/targetLevel/score/gap` ×Ö¶ÎºÏ·¨£¬µÈ¼¶Îª 5 ¼¶Ã¶¾ÙÖ®Ò»£¬·ÖÊıÔÚ 0-100 Ö®¼ä |
 
-### 5.2 é”™è¯¯åˆ° Skill çš„æ˜ å°„è¦†ç›–
+### 5.2 ´íÎóµ½ Skill µÄÓ³Éä¸²¸Ç
 
-| ç”¨ä¾‹ | è¾“å…¥ | é¢„æœŸç»“æœ |
+| ÓÃÀı | ÊäÈë | Ô¤ÆÚ½á¹û |
 |------|------|---------|
-| 12 ç±»é”™è¯¯å…¨è¦†ç›– | éå† `TradeErrorType` æšä¸¾ | æ¯ç§é”™è¯¯ç±»å‹è‡³å°‘å‡ºç°åœ¨ä¸€ä¸ª `SKILL_DIMENSIONS` ç»´åº¦çš„ `relatedErrors` ä¸­ |
-| æ­¢æŸé”™è¯¯é™ä½ `stop_loss` è¯„åˆ† | 1 ç¬” maxDrawdown å¾ˆå¤§ä¸”è§¦å‘æ­¢æŸé—®é¢˜çš„è®¢å• | `stop_loss` ç»´åº¦è¯„åˆ† < 85 |
-| é‡ä»“é™ä½ `position_management` è¯„åˆ† | `planPositionPct: 0.6` çš„è®¢å• | `position_management` ç»´åº¦è¯„åˆ† < 85 |
+| 12 Àà´íÎóÈ«¸²¸Ç | ±éÀú `TradeErrorType` Ã¶¾Ù | Ã¿ÖÖ´íÎóÀàĞÍÖÁÉÙ³öÏÖÔÚÒ»¸ö `SKILL_DIMENSIONS` Î¬¶ÈµÄ `relatedErrors` ÖĞ |
+| Ö¹Ëğ´íÎó½µµÍ `stop_loss` ÆÀ·Ö | 1 ±Ê maxDrawdown ºÜ´óÇÒ´¥·¢Ö¹ËğÎÊÌâµÄ¶©µ¥ | `stop_loss` Î¬¶ÈÆÀ·Ö < 85 |
+| ÖØ²Ö½µµÍ `position_management` ÆÀ·Ö | `planPositionPct: 0.6` µÄ¶©µ¥ | `position_management` Î¬¶ÈÆÀ·Ö < 85 |
 
-### 5.3 æŠ€èƒ½ç­‰çº§è®¡ç®—
+### 5.3 ¼¼ÄÜµÈ¼¶¼ÆËã
 
-| ç”¨ä¾‹ | è¾“å…¥ | é¢„æœŸç»“æœ |
+| ÓÃÀı | ÊäÈë | Ô¤ÆÚ½á¹û |
 |------|------|---------|
-| æ— é”™è¯¯é»˜è®¤ 85 åˆ† | è®¡åˆ’éµå¾ªã€å›æ’¤å°ã€ä»“ä½è½»çš„è®¢å• | æ‰€æœ‰ç»´åº¦è¯„åˆ† = 85ï¼Œ`overallLevel = expert` |
-| ä¸¥é‡é”™è¯¯é™ä½ç­‰çº§ | `planPositionPct: 0.8` çš„è®¢å• | `position_management.currentLevel = beginner`ï¼Œ`targetLevel = intermediate` |
+| ÎŞ´íÎóÄ¬ÈÏ 85 ·Ö | ¼Æ»®×ñÑ­¡¢»Ø³·Ğ¡¡¢²ÖÎ»ÇáµÄ¶©µ¥ | ËùÓĞÎ¬¶ÈÆÀ·Ö = 85£¬`overallLevel = expert` |
+| ÑÏÖØ´íÎó½µµÍµÈ¼¶ | `planPositionPct: 0.8` µÄ¶©µ¥ | `position_management.currentLevel = beginner`£¬`targetLevel = intermediate` |
 
-### 5.4 é‡Œç¨‹ç¢‘ä¸å­¦ä¹ è·¯å¾„
+### 5.4 Àï³Ì±®ÓëÑ§Ï°Â·¾¶
 
-| ç”¨ä¾‹ | è¾“å…¥ | é¢„æœŸç»“æœ |
+| ÓÃÀı | ÊäÈë | Ô¤ÆÚ½á¹û |
 |------|------|---------|
-| é‡Œç¨‹ç¢‘å…³è”ç»´åº¦ | 1 ç¬”æ™®é€šè®¢å• | æ¯ä¸ª `milestone.skillDimension` éƒ½å­˜åœ¨äº `dimensions` ä¸­ï¼Œ`targetLevel` åˆæ³•ï¼Œ`criteria` éç©º |
-| å­¦ä¹ è·¯å¾„é¡ºåº | 1 ç¬”æ™®é€šè®¢å• | `learningPath` æŒ‰ `order` å‡åºæ’åˆ—ï¼Œæ¯ä¸ªèŠ‚ç‚¹åŒ…å«èµ„æºã€ç»ƒä¹ ã€é¢„è®¡è€—æ—¶ |
+| Àï³Ì±®¹ØÁªÎ¬¶È | 1 ±ÊÆÕÍ¨¶©µ¥ | Ã¿¸ö `milestone.skillDimension` ¶¼´æÔÚÓÚ `dimensions` ÖĞ£¬`targetLevel` ºÏ·¨£¬`criteria` ·Ç¿Õ |
+| Ñ§Ï°Â·¾¶Ë³Ğò | 1 ±ÊÆÕÍ¨¶©µ¥ | `learningPath` °´ `order` ÉıĞòÅÅÁĞ£¬Ã¿¸ö½Úµã°üº¬×ÊÔ´¡¢Á·Ï°¡¢Ô¤¼ÆºÄÊ± |
 
-## 6. å…³é”®æ–­è¨€ç¤ºä¾‹
+## 6. ¹Ø¼ü¶ÏÑÔÊ¾Àı
 
 ```typescript
 expect(skillDevelopment.overallLevel).toMatch(/^(beginner|intermediate|advanced|expert|master)$/)
@@ -92,30 +100,30 @@ expect(skillDevelopment.dimensions).toHaveLength(SKILL_DIMENSIONS.length)
 expect(stopLossDim!.score).toBeLessThan(85)
 ```
 
-## 7. å›å½’æµ‹è¯•å»ºè®®
+## 7. »Ø¹é²âÊÔ½¨Òé
 
-åœ¨æ¯æ¬¡ä¿®æ”¹ä»¥ä¸‹æ–‡ä»¶åï¼Œå¿…é¡»è¿è¡Œæœ¬æµ‹è¯•ï¼š
+ÔÚÃ¿´ÎĞŞ¸ÄÒÔÏÂÎÄ¼şºó£¬±ØĞëÔËĞĞ±¾²âÊÔ£º
 
 - `src/services/trading/tradeReviewAI.ts`
 - `src/services/trading/tradeErrorClassifier.ts`
 - `src/types/modules/tradeReview.types.ts`
 - `src/cockpit/widgets/AITradeReviewWidget.tsx`
 
-åŒæ—¶å»ºè®®è¿è¡Œï¼š
+Í¬Ê±½¨ÒéÔËĞĞ£º
 
 ```bash
-npm run tsc      # ç¡®ä¿ç±»å‹å¥‘çº¦æœªè¢«ç ´å
-npm run lint     # ç¡®ä¿ä»£ç é£æ ¼åˆè§„
+npm run tsc      # È·±£ÀàĞÍÆõÔ¼Î´±»ÆÆ»µ
+npm run lint     # È·±£´úÂë·ç¸ñºÏ¹æ
 ```
 
-## 8. å·²çŸ¥é™åˆ¶
+## 8. ÒÑÖªÏŞÖÆ
 
-1. `SkillDevelopment.dimensions` è¿è¡Œæ—¶æ¥å£å¢åŠ äº† `description` å­—æ®µï¼ˆè®¾è®¡æ–‡æ¡£ `SkillDimension` æœªåŒ…å«ï¼‰ï¼Œç”¨äºé‡Œç¨‹ç¢‘å±•ç¤ºã€‚è¯¥å­—æ®µä¸ºè¿è¡Œæ—¶è§†å›¾æ‰©å±•ï¼Œä¸æ”¹å˜ç±»å‹å®šä¹‰å¥‘çº¦ã€‚
-2. æµ‹è¯•ä»…è¦†ç›–åŒæ­¥ç‰ˆ `generateReview()`ï¼ŒLLM å¢å¼ºç‰ˆ `generateReviewAsync()` å› ä¾èµ–å¤–éƒ¨ APIï¼Œéœ€å•ç‹¬è¿›è¡Œé›†æˆæµ‹è¯•ã€‚
-3. æµ‹è¯•ä½¿ç”¨æ¨¡æ‹Ÿè®¢å•æ•°æ®ï¼Œæœªè¦†ç›–çœŸå®ç”Ÿäº§æ•°æ®æµå…¥è·¯å¾„ã€‚
+1. `SkillDevelopment.dimensions` ÔËĞĞÊ±½Ó¿ÚÔö¼ÓÁË `description` ×Ö¶Î£¨Éè¼ÆÎÄµµ `SkillDimension` Î´°üº¬£©£¬ÓÃÓÚÀï³Ì±®Õ¹Ê¾¡£¸Ã×Ö¶ÎÎªÔËĞĞÊ±ÊÓÍ¼À©Õ¹£¬²»¸Ä±äÀàĞÍ¶¨ÒåÆõÔ¼¡£
+2. ²âÊÔ½ö¸²¸ÇÍ¬²½°æ `generateReview()`£¬LLM ÔöÇ¿°æ `generateReviewAsync()` ÒòÒÀÀµÍâ²¿ API£¬Ğèµ¥¶À½øĞĞ¼¯³É²âÊÔ¡£
+3. ²âÊÔÊ¹ÓÃÄ£Äâ¶©µ¥Êı¾İ£¬Î´¸²¸ÇÕæÊµÉú²úÊı¾İÁ÷ÈëÂ·¾¶¡£
 
-## 9. æµ‹è¯•å†å²
+## 9. ²âÊÔÀúÊ·
 
-| æ—¥æœŸ | æ‰§è¡Œäºº | ç»“æœ |
+| ÈÕÆÚ | Ö´ĞĞÈË | ½á¹û |
 |------|--------|------|
-| 2026-06-28 | TRAE | å…¨éƒ¨ç”¨ä¾‹é€šè¿‡ï¼Œ`tsc` é€šè¿‡ï¼ˆé™¤é¢„å…ˆå­˜åœ¨çš„ `hotSectorStore.test.ts` è¯­æ³•é”™è¯¯å¤–ï¼‰ |
+| 2026-06-28 | TRAE | È«²¿ÓÃÀıÍ¨¹ı£¬`tsc` Í¨¹ı£¨³ıÔ¤ÏÈ´æÔÚµÄ `hotSectorStore.test.ts` Óï·¨´íÎóÍâ£© |

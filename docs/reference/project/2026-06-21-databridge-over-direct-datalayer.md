@@ -1,53 +1,54 @@
 ---
-title: 2026-06-21-databridge-over-direct-datalayer
-tier: core
+title: ADR-003: DataBridge Ìæ´úÖ±½Ó dataLayer Ğ´Èë
+type: reference
+domain: data
+phase: design
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "## ±³¾° ¿çÄ£¿éĞ´²Ù×÷ĞèÒªÀ´Ô´×·Ëİ¡¢È¨ÏŞ¿ØÖÆ¡¢Éó¼ÆÈÕÖ¾ÓëÊÂ¼şÍ¨Öª¡£"
+tags: [data, databridge, adr]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: ADR-003: DataBridge æ›¿ä»£ç›´æ¥ dataLayer å†™å…¥
-version: v0.9.0
-last_updated: 2026-06-24
-maintainer: V9 Architecture Team
-status: active
-change_log:
-  - date: 2026-06-24
-    author: Documentation Governor
-    desc: æ³¨å…¥ Frontmatter å…ƒæ•°æ®ï¼ˆPhase 3 ç‰ˆæœ¬åŒ–ï¼‰
-tier: core
----
-# ADR-003: DataBridge æ›¿ä»£ç›´æ¥ dataLayer å†™å…¥
+# ADR-003: DataBridge Ìæ´úÖ±½Ó dataLayer Ğ´Èë
 
 > **Status**: Accepted  
 > **Version**: v0.9.0-docs-review  
 > **Last Updated**: 2026-06-24
 
-- çŠ¶æ€ï¼šå·²æ¥å—
-- æ—¥æœŸï¼š2026-06-21
-- å†³ç­–äººï¼š@architect
+- ×´Ì¬£ºÒÑ½ÓÊÜ
+- ÈÕÆÚ£º2026-06-21
+- ¾ö²ßÈË£º@architect
 
-## èƒŒæ™¯
+## ±³¾°
 
-è·¨æ¨¡å—å†™æ“ä½œéœ€è¦æ¥æºè¿½æº¯ã€æƒé™æ§åˆ¶ã€å®¡è®¡æ—¥å¿—ä¸äº‹ä»¶é€šçŸ¥ã€‚
+¿çÄ£¿éĞ´²Ù×÷ĞèÒªÀ´Ô´×·Ëİ¡¢È¨ÏŞ¿ØÖÆ¡¢Éó¼ÆÈÕÖ¾ÓëÊÂ¼şÍ¨Öª¡£
 
-## é€‰é¡¹
+## Ñ¡Ïî
 
-| é€‰é¡¹ | ä¼˜ç‚¹ | ç¼ºç‚¹ |
+| Ñ¡Ïî | ÓÅµã | È±µã |
 |------|------|------|
-| A. DataBridge + Envelope | æ˜ç¡®è¾¹ç•Œã€ACLã€å®¡è®¡ã€å¹¿æ’­ | å¢åŠ å°‘é‡æ ·æ¿ä»£ç  |
-| B. ç›´æ¥è°ƒç”¨ dataLayer | ç®€å•ç›´æ¥ | æ¥æºéš¾è¿½æº¯ã€æƒé™åˆ†æ•£ã€éš¾ä»¥å®¡è®¡ |
+| A. DataBridge + Envelope | Ã÷È·±ß½ç¡¢ACL¡¢Éó¼Æ¡¢¹ã²¥ | Ôö¼ÓÉÙÁ¿Ñù°å´úÂë |
+| B. Ö±½Óµ÷ÓÃ dataLayer | ¼òµ¥Ö±½Ó | À´Ô´ÄÑ×·Ëİ¡¢È¨ÏŞ·ÖÉ¢¡¢ÄÑÒÔÉó¼Æ |
 
-## å†³ç­–
+## ¾ö²ß
 
-é€‰æ‹© Aã€‚æ‰€æœ‰è·¨æ¨¡å—å†™æ“ä½œå¿…é¡»ç» `DataBridge.forward()`ã€‚
+Ñ¡Ôñ A¡£ËùÓĞ¿çÄ£¿éĞ´²Ù×÷±ØĞë¾­ `DataBridge.forward()`¡£
 
-## åæœ
+## ºó¹û
 
-- L5/L4 ç¦æ­¢ç›´æ¥å†™ dataLayerã€‚
-- æ¯ä¸ª envelope æºå¸¦ source/target/action/traceId/timestampã€‚
-- è‡ªåŠ¨å†™å…¥ `research_logs` å®¡è®¡æ—¥å¿—ã€‚
+- L5/L4 ½ûÖ¹Ö±½ÓĞ´ dataLayer¡£
+- Ã¿¸ö envelope Ğ¯´ø source/target/action/traceId/timestamp¡£
+- ×Ô¶¯Ğ´Èë `research_logs` Éó¼ÆÈÕÖ¾¡£
 
-## ç›¸å…³æ–‡æ¡£
+## Ïà¹ØÎÄµµ
 
 - `../05-engine-specs.md`
 - `../data-interaction-protocols.md`

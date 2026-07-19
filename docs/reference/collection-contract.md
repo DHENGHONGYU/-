@@ -1,61 +1,85 @@
 ---
-title: collection-contract
+title: collection-contract.md ¡ª Êı¾İ²É¼¯×ÓÓò½Ó¿ÚÆõÔ¼
+type: reference
+domain: data
+phase: design
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "¶¨Î»£º¶¨Òå `collection` ×ÓÓòµÄ½Ó¿ÚÆõÔ¼¡¢Ö°Ôğ±ß½ç¡¢Êı¾İÁ÷ÓëÒÀÀµ¹ØÏµ¡£ ¹ØÁª£º`./services-catalog.md`£¨24 ×ÓÓò×ÜÀÀ£©¡¢`../../AGENTS.md`..."
+tags: [data, collection, contract]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: important
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: collection-contract.md â€” æ•°æ®é‡‡é›†å­åŸŸæ¥å£å¥‘çº¦
-status: draft
-owner: æ¶æ„ç»„
-updated: 2026-07-12
-code_version: 2.0.0
-tier: important
----
+# collection-contract.md ¡ª Êı¾İ²É¼¯×ÓÓò½Ó¿ÚÆõÔ¼
 
-# collection-contract.md â€” æ•°æ®é‡‡é›†å­åŸŸæ¥å£å¥‘çº¦
-
-> **å®šä½**ï¼šå®šä¹‰ `collection` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ç³»ã€‚  
-> **å…³è”**ï¼š`./services-catalog.md`ï¼ˆ24 å­åŸŸæ€»è§ˆï¼‰ã€`../../AGENTS.md` Â§ä¸€ï¼ˆåˆ†å±‚è§„åˆ™ï¼‰ã€‚
+> **¶¨Î»**£º¶¨Òå `collection` ×ÓÓòµÄ½Ó¿ÚÆõÔ¼¡¢Ö°Ôğ±ß½ç¡¢Êı¾İÁ÷ÓëÒÀÀµ¹ØÏµ¡£  
+> **¹ØÁª**£º`./services-catalog.md`£¨24 ×ÓÓò×ÜÀÀ£©¡¢`../../AGENTS.md` ¡ìÒ»£¨·Ö²ã¹æÔò£©¡£
 
 ---
 
-## 1. èŒè´£è¾¹ç•Œ
+## 1. Ö°Ôğ±ß½ç
 
-### 1.1 æ ¸å¿ƒèŒè´£
+### 1.1 ºËĞÄÖ°Ôğ
 
-- **æ•°æ®é‡‡é›†å‘å¯¼é…ç½®æŒä¹…åŒ–**ï¼šé€šè¿‡ `DataBridge` å¯¹ `collectConfig` store è¿›è¡Œå®Œæ•´çš„ CRUD æ“ä½œï¼ŒåŒ…æ‹¬ä¿å­˜ï¼ˆ`saveWizardConfig`ï¼‰ã€æ›´æ–°ï¼ˆ`updateWizardConfig`ï¼‰ã€è¯»å–ï¼ˆ`loadWizardConfig` / `loadAllWizardConfigs`ï¼‰å’Œåˆ é™¤ï¼ˆ`deleteWizardConfig`ï¼‰é…ç½®æ¨¡æ¿ã€‚
-- **é…ç½®æ¨¡æ¿å¯¼å‡º/å¯¼å…¥**ï¼šæä¾› `configExportService` æ”¯æŒé…ç½®æ¨¡æ¿çš„ JSON æ ¼å¼å¯¼å‡ºä¸å¯¼å…¥åŠŸèƒ½ï¼ŒåŒ…å«å¯¼å‡ºå…ƒæ•°æ®ç‰ˆæœ¬ç®¡ç†ã€æ ¼å¼æ ¡éªŒã€é‡åæ£€æµ‹åŠæµè§ˆå™¨ç«¯æ–‡ä»¶ä¸‹è½½ã€‚
-- **å¤šç»´åº¦æ•°æ®æºé…ç½®ç®¡ç†**ï¼šç®¡ç†é‡‡é›†å‘å¯¼ä¸­å¤šç»´åº¦ï¼ˆquoteã€klineã€financial ç­‰ï¼‰æ•°æ®æºçš„ API é…ç½®ã€é‡‡é›†é¢‘ç‡ã€ä¼˜å…ˆçº§ã€ç¼“å­˜ç­–ç•¥ç­‰å‚æ•°ï¼Œæ”¯æ’‘æ•°æ®é‡‡é›† pipeline çš„ç¼–æ’åŸºç¡€ã€‚
+- **Êı¾İ²É¼¯Ïòµ¼ÅäÖÃ³Ö¾Ã»¯**£ºÍ¨¹ı `DataBridge` ¶Ô `collectConfig` store ½øĞĞÍêÕûµÄ CRUD ²Ù×÷£¬°üÀ¨±£´æ£¨`saveWizardConfig`£©¡¢¸üĞÂ£¨`updateWizardConfig`£©¡¢¶ÁÈ¡£¨`loadWizardConfig` / `loadAllWizardConfigs`£©ºÍÉ¾³ı£¨`deleteWizardConfig`£©ÅäÖÃÄ£°å¡£
+- **ÅäÖÃÄ£°åµ¼³ö/µ¼Èë**£ºÌá¹© `configExportService` Ö§³ÖÅäÖÃÄ£°åµÄ JSON ¸ñÊ½µ¼³öÓëµ¼Èë¹¦ÄÜ£¬°üº¬µ¼³öÔªÊı¾İ°æ±¾¹ÜÀí¡¢¸ñÊ½Ğ£Ñé¡¢ÖØÃû¼ì²â¼°ä¯ÀÀÆ÷¶ËÎÄ¼şÏÂÔØ¡£
+- **¶àÎ¬¶ÈÊı¾İÔ´ÅäÖÃ¹ÜÀí**£º¹ÜÀí²É¼¯Ïòµ¼ÖĞ¶àÎ¬¶È£¨quote¡¢kline¡¢financial µÈ£©Êı¾İÔ´µÄ API ÅäÖÃ¡¢²É¼¯ÆµÂÊ¡¢ÓÅÏÈ¼¶¡¢»º´æ²ßÂÔµÈ²ÎÊı£¬Ö§³ÅÊı¾İ²É¼¯ pipeline µÄ±àÅÅ»ù´¡¡£
 
-### 1.2 åˆ†å±‚å®šä½
+### 1.2 ·Ö²ã¶¨Î»
 
-| ç»´åº¦ | è¯´æ˜ |
+| Î¬¶È | ËµÃ÷ |
 |------|------|
-| æ‰€å±å±‚ | `src/services/`ï¼ˆæœåŠ¡å±‚ï¼‰ |
-| ä¾èµ–æ–¹å‘ | åªèƒ½ä¾èµ– `core/`ã€`data/`ã€`lib/`ï¼ˆç™½åå•ï¼‰ |
-| ç¦æ­¢äº‹é¡¹ | ç¦æ­¢ç›´å†™ IndexedDBï¼ˆé¡»ç» `DataBridge.forward()`ï¼‰ |
-| è¢«ä¾èµ–æ–¹ | `store/`ï¼ˆçŠ¶æ€å±‚ï¼‰ã€`pages/`ï¼ˆé¡µé¢å±‚ï¼‰å¯æ¶ˆè´¹æœ¬æœåŠ¡è¾“å‡º |
+| ËùÊô²ã | `src/services/`£¨·şÎñ²ã£© |
+| ÒÀÀµ·½Ïò | Ö»ÄÜÒÀÀµ `core/`¡¢`data/`¡¢`lib/`£¨°×Ãûµ¥£© |
+| ½ûÖ¹ÊÂÏî | ½ûÖ¹Ö±Ğ´ IndexedDB£¨Ğë¾­ `DataBridge.forward()`£© |
+| ±»ÒÀÀµ·½ | `store/`£¨×´Ì¬²ã£©¡¢`pages/`£¨Ò³Ãæ²ã£©¿ÉÏû·Ñ±¾·şÎñÊä³ö |
 
-### 1.3 ä¸ç›¸é‚»å­åŸŸçš„å…³ç³»
+### 1.3 ÓëÏàÁÚ×ÓÓòµÄ¹ØÏµ
 
-| ç›¸é‚»å­åŸŸ | å…³ç³» | æ•°æ®æµ |
+| ÏàÁÚ×ÓÓò | ¹ØÏµ | Êı¾İÁ÷ |
 |----------|------|--------|
-| `data-collector` | ä¸‹æ¸¸ï¼šæ¶ˆè´¹è¾“å‡º | `collection` ä¿å­˜çš„é‡‡é›†é…ç½® â†’ `data-collector` æ‰§è¡Œå®é™…æ•°æ®é‡‡é›†ä»»åŠ¡ |
-| `fetcher` | å¹³è¡Œåä½œï¼šå…±äº«æ•°æ®æºå®šä¹‰ | `fetcher` æä¾›æ•°æ®æºç«¯ç‚¹å…ƒæ•°æ®ï¼Œ`collection` ç®¡ç†ç”¨æˆ·ä¾§é‡‡é›†ç»´åº¦é…ç½® |
-| `types/modules/collection` | ä¸Šæ¸¸ï¼šç±»å‹å®šä¹‰ | ç±»å‹å±‚é›¶ä¾èµ–ï¼Œæœ¬æœåŠ¡æ¶ˆè´¹å…¶å®šä¹‰çš„ `PersistedWizardConfig` ç­‰æ¥å£ |
+| `data-collector` | ÏÂÓÎ£ºÏû·ÑÊä³ö | `collection` ±£´æµÄ²É¼¯ÅäÖÃ ¡ú `data-collector` Ö´ĞĞÊµ¼ÊÊı¾İ²É¼¯ÈÎÎñ |
+| `fetcher` | Æ½ĞĞĞ­×÷£º¹²ÏíÊı¾İÔ´¶¨Òå | `fetcher` Ìá¹©Êı¾İÔ´¶ËµãÔªÊı¾İ£¬`collection` ¹ÜÀíÓÃ»§²à²É¼¯Î¬¶ÈÅäÖÃ |
+| `types/modules/collection` | ÉÏÓÎ£ºÀàĞÍ¶¨Òå | ÀàĞÍ²ãÁãÒÀÀµ£¬±¾·şÎñÏû·ÑÆä¶¨ÒåµÄ `PersistedWizardConfig` µÈ½Ó¿Ú |
+| `qualityMetricsCollector` | ÄÚ²¿£ºÖÊÁ¿¼à¿Ø | `collection` ²É¼¯¹ı³ÌÖĞµ÷ÓÃ `recordCollect()`/`recordWrite()` ¡ú `collectRuntimeStore.refreshStats()` ¡ú UI 9 Tab ¼à¿Ø |
+
+### 1.4 8 Î¬¶È²É¼¯ÅäÖÃ£¨2026-07-18 À©Õ¹£©
+
+| Î¬¶È | ±àÂë | ²É¼¯Ä£Ê½ | Êı¾İÔ´ | Ä¿±ê store |
+|------|------|----------|--------|------------|
+| »ù±¾ĞÅÏ¢£¨01£© | quote | ÊµÊ± | akshare/ifind | `stocks` |
+| KÏßÊı¾İ£¨02£© | kline | Ã¿ÈÕ | akshare | `dailyQuotes` |
+| ³ïÂë·Ö²¼£¨03£© | chip | Ã¿3Ìì | akshare/ifind | `news`£¨mock£© |
+| ÖØ´óÊÂÏî£¨04£© | news | Ã¿ÈÕ | akshare/ifind | `news`£¨mock£© |
+| ÈÈµãĞÂÎÅ£¨05£© | news | Ã¿ÈÕ | akshare/yahoo | `news`£¨mock£© |
+| ĞĞÒµ¾ºÆ·£¨06£© | competitor | Ã¿ÖÜ | akshare/ifind | `sectorScores`£¨mock£© |
+| ¹ØÁªÖ¸Êı£¨07£© | index | Ã¿ÖÜ | akshare/ifind/yahoo | `sectorScores`£¨mock£© |
+| ÑĞ±¨ÖĞĞÄ£¨08£© | research | Ã¿ÈÕ | ifind | `researchLogs`£¨mock£© |
+
+### 1.5 Êı¾İÖÊÁ¿ÃÅ½û£¨2026-07-18 ĞÂÔö£©
+
+²É¼¯¹ÜÏßÄÚÖÃÈıÖØÖÊÁ¿ÃÅ½û£º
+1. **`auditRecord()`** ¡ª Ğ´Èëºó¶ÏÑÔ£¬Ğ£Ñé¹Ø¼ü×Ö¶Î·Ç¿Õ£¨stocks¡úsymbol¡¢dailyQuotes¡úsymbol¡¢news¡úid µÈ£©
+2. **`recordCollect()/recordWrite()`** ¡ª ²É¼¯Í³¼Æ£¬6 ¸ö return µã¶Ô³Æµ÷ÓÃ
+3. **`refreshStats()`** ¡ª Í³¼ÆÍ¬²½Ë¢ĞÂµ½ collectionRuntimeStore.stats£¬¼à¿ØÒ³ KPI ÊµÊ±·´Ó³
 
 ---
 
-## 2. å…¬å…±æ¥å£
+## 2. ¹«¹²½Ó¿Ú
 
-### 2.1 ç±»å‹å®šä¹‰ï¼ˆTypeScript Interfaceï¼‰
+### 2.1 ÀàĞÍ¶¨Òå£¨TypeScript Interface£©
 
-ä»¥ä¸‹ç±»å‹å®šä¹‰ä½äº `src/types/modules/collection.types.ts`ï¼Œä¸ºæœ¬å­åŸŸæ ¸å¿ƒæ¶ˆè´¹ç±»å‹ï¼š
+ÒÔÏÂÀàĞÍ¶¨ÒåÎ»ÓÚ `src/types/modules/collection.types.ts`£¬Îª±¾×ÓÓòºËĞÄÏû·ÑÀàĞÍ£º
 
 ```typescript
-// æœ¬æœåŠ¡ç›´æ¥æ¶ˆè´¹çš„æ ¸å¿ƒç±»å‹
+// ±¾·şÎñÖ±½ÓÏû·ÑµÄºËĞÄÀàĞÍ
 
 export interface PersistedWizardConfig {
   id: string
@@ -95,120 +119,120 @@ export type CollectionPriority = 'high' | 'medium' | 'low'
 export type CollectionCacheStrategy = 'stale-while-revalidate' | 'cache-first' | 'network-first'
 ```
 
-### 2.2 ä¸»å…¥å£å‡½æ•°
+### 2.2 Ö÷Èë¿Úº¯Êı
 
 #### collectionWizardPersistence.ts
 
-| å‡½æ•° | ç­¾å | èŒè´£ | é”™è¯¯å¤„ç† |
+| º¯Êı | Ç©Ãû | Ö°Ôğ | ´íÎó´¦Àí |
 |------|------|------|----------|
-| `saveWizardConfig` | `(config: Omit<PersistedWizardConfig, 'id' \| 'createdAt' \| 'updatedAt'>) => Promise<PersistedWizardConfig>` | ç”Ÿæˆå”¯ä¸€ ID å¹¶ä¿å­˜å‘å¯¼é…ç½®åˆ° IndexedDBï¼ˆcollectConfig storeï¼‰ | `logger.error` è®°å½• + æŠ›å‡ºåŸå§‹é”™è¯¯ |
-| `updateWizardConfig` | `(configId: string, updates: Partial<...>) => Promise<PersistedWizardConfig \| null>` | åŠ è½½ç°æœ‰é…ç½®ã€åˆå¹¶æ›´æ–°å­—æ®µåå›å†™ | é…ç½®ä¸å­˜åœ¨è¿”å› `null`ï¼Œå¤±è´¥æŠ›å‡ºé”™è¯¯ |
-| `loadWizardConfig` | `(configId: string) => Promise<PersistedWizardConfig \| null>` | é€šè¿‡ DataBridge.query æŒ‰ key æŸ¥è¯¢å•ä¸ªé…ç½® | æŸ¥è¯¢å¤±è´¥æˆ–ä¸å­˜åœ¨è¿”å› `null` |
-| `loadAllWizardConfigs` | `() => Promise<PersistedWizardConfig[]>` | æŸ¥è¯¢æ‰€æœ‰ collectConfig å¹¶æŒ‰ updatedAt é™åºæ’åº | å¤±è´¥è¿”å›ç©ºæ•°ç»„ `[]` |
-| `deleteWizardConfig` | `(configId: string) => Promise<boolean>` | é€šè¿‡ DataBridge.forward å‘é€åˆ é™¤ä¿¡å° | å¤±è´¥è¿”å› `false` |
+| `saveWizardConfig` | `(config: Omit<PersistedWizardConfig, 'id' \| 'createdAt' \| 'updatedAt'>) => Promise<PersistedWizardConfig>` | Éú³ÉÎ¨Ò» ID ²¢±£´æÏòµ¼ÅäÖÃµ½ IndexedDB£¨collectConfig store£© | `logger.error` ¼ÇÂ¼ + Å×³öÔ­Ê¼´íÎó |
+| `updateWizardConfig` | `(configId: string, updates: Partial<...>) => Promise<PersistedWizardConfig \| null>` | ¼ÓÔØÏÖÓĞÅäÖÃ¡¢ºÏ²¢¸üĞÂ×Ö¶Îºó»ØĞ´ | ÅäÖÃ²»´æÔÚ·µ»Ø `null`£¬Ê§°ÜÅ×³ö´íÎó |
+| `loadWizardConfig` | `(configId: string) => Promise<PersistedWizardConfig \| null>` | Í¨¹ı DataBridge.query °´ key ²éÑ¯µ¥¸öÅäÖÃ | ²éÑ¯Ê§°Ü»ò²»´æÔÚ·µ»Ø `null` |
+| `loadAllWizardConfigs` | `() => Promise<PersistedWizardConfig[]>` | ²éÑ¯ËùÓĞ collectConfig ²¢°´ updatedAt ½µĞòÅÅĞò | Ê§°Ü·µ»Ø¿ÕÊı×é `[]` |
+| `deleteWizardConfig` | `(configId: string) => Promise<boolean>` | Í¨¹ı DataBridge.forward ·¢ËÍÉ¾³ıĞÅ·â | Ê§°Ü·µ»Ø `false` |
 
 #### configExportService.ts
 
-| å‡½æ•° | ç­¾å | èŒè´£ | é”™è¯¯å¤„ç† |
+| º¯Êı | Ç©Ãû | Ö°Ôğ | ´íÎó´¦Àí |
 |------|------|------|----------|
-| `buildExportFile` | `(config: PersistedWizardConfig) => ExportedConfigFile` | æ„é€ åŒ…å« meta + config çš„å¯¼å‡ºæ–‡ä»¶ç»“æ„ | çº¯è®¡ç®—ï¼Œæ— å‰¯ä½œç”¨ |
-| `exportConfigToJSON` | `(config: PersistedWizardConfig) => Blob` | å°†é…ç½®åºåˆ—åŒ–ä¸º JSON Blob | çº¯è®¡ç®—ï¼Œæ— å‰¯ä½œç”¨ |
-| `importConfigFromJSON` | `(file: File) => Promise<ExportedConfigFile>` | ä» File è§£æ JSON å¹¶æ ¡éªŒæ ¼å¼ç‰ˆæœ¬ | æ ¼å¼é”™è¯¯æŠ›å‡ºå¼‚å¸¸ï¼Œ`logger` è®°å½• |
-| `generateExportFilename` | `(config: PersistedWizardConfig) => string` | ç”Ÿæˆç¬¦åˆæ–‡ä»¶ç³»ç»Ÿå®‰å…¨çš„å¯¼å‡ºæ–‡ä»¶å | çº¯è®¡ç®—ï¼Œæ— å‰¯ä½œç”¨ |
-| `downloadBlob` | `(blob: Blob, filename: string) => void` | è§¦å‘æµè§ˆå™¨æ–‡ä»¶ä¸‹è½½ | æ—  |
-| `exportAndDownloadConfig` | `(config: PersistedWizardConfig) => void` | ç»„åˆå¯¼å‡º + ä¸‹è½½çš„ä¾¿æ·å‡½æ•° | `logger.info` è®°å½• |
-| `validateImportedConfig` | `(config: PersistedWizardConfig, existingNames: string[]) => { ok: true } \| { ok: false; error: string }` | æ ¡éªŒå¯¼å…¥é…ç½®çš„åç§°åˆæ³•æ€§å’Œé‡å | çº¯è®¡ç®—ï¼Œè¿”å›ç»“æœå¯¹è±¡ |
+| `buildExportFile` | `(config: PersistedWizardConfig) => ExportedConfigFile` | ¹¹Ôì°üº¬ meta + config µÄµ¼³öÎÄ¼ş½á¹¹ | ´¿¼ÆËã£¬ÎŞ¸±×÷ÓÃ |
+| `exportConfigToJSON` | `(config: PersistedWizardConfig) => Blob` | ½«ÅäÖÃĞòÁĞ»¯Îª JSON Blob | ´¿¼ÆËã£¬ÎŞ¸±×÷ÓÃ |
+| `importConfigFromJSON` | `(file: File) => Promise<ExportedConfigFile>` | ´Ó File ½âÎö JSON ²¢Ğ£Ñé¸ñÊ½°æ±¾ | ¸ñÊ½´íÎóÅ×³öÒì³££¬`logger` ¼ÇÂ¼ |
+| `generateExportFilename` | `(config: PersistedWizardConfig) => string` | Éú³É·ûºÏÎÄ¼şÏµÍ³°²È«µÄµ¼³öÎÄ¼şÃû | ´¿¼ÆËã£¬ÎŞ¸±×÷ÓÃ |
+| `downloadBlob` | `(blob: Blob, filename: string) => void` | ´¥·¢ä¯ÀÀÆ÷ÎÄ¼şÏÂÔØ | ÎŞ |
+| `exportAndDownloadConfig` | `(config: PersistedWizardConfig) => void` | ×éºÏµ¼³ö + ÏÂÔØµÄ±ã½İº¯Êı | `logger.info` ¼ÇÂ¼ |
+| `validateImportedConfig` | `(config: PersistedWizardConfig, existingNames: string[]) => { ok: true } \| { ok: false; error: string }` | Ğ£Ñéµ¼ÈëÅäÖÃµÄÃû³ÆºÏ·¨ĞÔºÍÖØÃû | ´¿¼ÆËã£¬·µ»Ø½á¹û¶ÔÏó |
 
-### 2.3 äº‹ä»¶æ¥å£
+### 2.3 ÊÂ¼ş½Ó¿Ú
 
-æœ¬å­åŸŸ**æœªç›´æ¥å‘å¸ƒ/è®¢é˜… EventBus äº‹ä»¶**ã€‚æ•°æ®å˜æ›´é€šçŸ¥é€šè¿‡ `DataBridge.forward()` å®Œæˆï¼Œç”± `dataLayer` å†™å…¥ `collectConfig` store åï¼Œç”±æ¶ˆè´¹çš„ `store/` å±‚è‡ªè¡ŒåŒæ­¥ã€‚`COLLECTION_EVENTS` å¸¸é‡å®šä¹‰äº `src/types/modules/collection.types.ts`ï¼Œä¾›é‡‡é›† pipeline è¿è¡Œæ—¶äº‹ä»¶ä½¿ç”¨ï¼ˆéæœ¬æœåŠ¡ç›´æ¥æ¶ˆè´¹ï¼‰ã€‚
+±¾×ÓÓò**Î´Ö±½Ó·¢²¼/¶©ÔÄ EventBus ÊÂ¼ş**¡£Êı¾İ±ä¸üÍ¨ÖªÍ¨¹ı `DataBridge.forward()` Íê³É£¬ÓÉ `dataLayer` Ğ´Èë `collectConfig` store ºó£¬ÓÉÏû·ÑµÄ `store/` ²ã×ÔĞĞÍ¬²½¡£`COLLECTION_EVENTS` ³£Á¿¶¨ÒåÓÚ `src/types/modules/collection.types.ts`£¬¹©²É¼¯ pipeline ÔËĞĞÊ±ÊÂ¼şÊ¹ÓÃ£¨·Ç±¾·şÎñÖ±½ÓÏû·Ñ£©¡£
 
 ---
 
-## 3. æ•°æ®æµ
+## 3. Êı¾İÁ÷
 
-### 3.1 é…ç½®æŒä¹…åŒ–æ•°æ®æµ
+### 3.1 ÅäÖÃ³Ö¾Ã»¯Êı¾İÁ÷
 
 ```
-[å¤–éƒ¨è¾“å…¥ï¼šç”¨æˆ·åœ¨é‡‡é›†å‘å¯¼ä¸­å¡«å†™é…ç½®]
-    â†“
+[Íâ²¿ÊäÈë£ºÓÃ»§ÔÚ²É¼¯Ïòµ¼ÖĞÌîĞ´ÅäÖÃ]
+    ¡ı
 collectionWizardPersistence.{save/update/load/delete}WizardConfig()
-    â†“ (DataBridge.forward() / DataBridge.query())
-DataBridge â†’ routeToDB() â†’ dataLayer â†’ IndexedDB (collectConfig store)
-    â†“
-collectionStore (Zustand + withBroadcast) â† é€šè¿‡è®¢é˜…æˆ–é‡æ–°æŸ¥è¯¢è·å–æ›´æ–°
-    â†“
-components/pages (ä»…ç» Store å–æ•°)
+    ¡ı (DataBridge.forward() / DataBridge.query())
+DataBridge ¡ú routeToDB() ¡ú dataLayer ¡ú IndexedDB (collectConfig store)
+    ¡ı
+collectionStore (Zustand + withBroadcast) ¡û Í¨¹ı¶©ÔÄ»òÖØĞÂ²éÑ¯»ñÈ¡¸üĞÂ
+    ¡ı
+components/pages (½ö¾­ Store È¡Êı)
 ```
 
-### 3.2 é…ç½®å¯¼å‡º/å¯¼å…¥æ•°æ®æµ
+### 3.2 ÅäÖÃµ¼³ö/µ¼ÈëÊı¾İÁ÷
 
 ```
-å¯¼å‡ºæµï¼š
+µ¼³öÁ÷£º
 PersistedWizardConfig
-    â†“
-configExportService.buildExportFile() â†’ ExportedConfigFile
-    â†“
-JSON.stringify() â†’ Blob
-    â†“
-æµè§ˆå™¨ä¸‹è½½ï¼ˆdownloadBlobï¼‰
+    ¡ı
+configExportService.buildExportFile() ¡ú ExportedConfigFile
+    ¡ı
+JSON.stringify() ¡ú Blob
+    ¡ı
+ä¯ÀÀÆ÷ÏÂÔØ£¨downloadBlob£©
 
-å¯¼å…¥æµï¼š
-File (ç”¨æˆ·é€‰æ‹©)
-    â†“
-configExportService.importConfigFromJSON() â†’ ExportedConfigFile
-    â†“
-validateImportedConfig() æ ¡éªŒåç§°/é‡å
-    â†“
-collectionWizardPersistence.saveWizardConfig() â†’ IndexedDB
+µ¼ÈëÁ÷£º
+File (ÓÃ»§Ñ¡Ôñ)
+    ¡ı
+configExportService.importConfigFromJSON() ¡ú ExportedConfigFile
+    ¡ı
+validateImportedConfig() Ğ£ÑéÃû³Æ/ÖØÃû
+    ¡ı
+collectionWizardPersistence.saveWizardConfig() ¡ú IndexedDB
 ```
 
 ---
 
-## 4. é…ç½®ä¸ä¾èµ–
+## 4. ÅäÖÃÓëÒÀÀµ
 
-### 4.1 ä¾èµ–ç™½åå•ï¼ˆlib/ + core/ + config/ï¼‰
+### 4.1 ÒÀÀµ°×Ãûµ¥£¨lib/ + core/ + config/£©
 
-| ä¾èµ– | è·¯å¾„ | ç”¨é€” |
+| ÒÀÀµ | Â·¾¶ | ÓÃÍ¾ |
 |------|------|------|
-| dataBridge | `@/core/databridge` | æ•°æ®è·¯ç”±ï¼ˆå†™å…¥/æŸ¥è¯¢ IndexedDBï¼‰ |
-| EnvelopeFactory | `@/core/envelope` | æ„é€  DataBridge ä¿¡å° |
-| ENVELOPE_ACTION / ENVELOPE_TARGET / MODULE_ID / STORE_NAME | `@/config/dbConfig` | DB æ“ä½œå¸¸é‡ä¸é…ç½® |
-| logger | `@/lib/logger` | ç»“æ„åŒ–æ—¥å¿—è¾“å‡ºï¼ˆinfo/debug/warn/errorï¼‰ |
-| validation | `@/lib/validation` | é…ç½®åç§°æ ¡éªŒï¼ˆ`validateConfigName`ï¼‰ |
+| dataBridge | `@/core/databridge` | Êı¾İÂ·ÓÉ£¨Ğ´Èë/²éÑ¯ IndexedDB£© |
+| EnvelopeFactory | `@/core/envelope` | ¹¹Ôì DataBridge ĞÅ·â |
+| ENVELOPE_ACTION / ENVELOPE_TARGET / MODULE_ID / STORE_NAME | `@/config/dbConfig` | DB ²Ù×÷³£Á¿ÓëÅäÖÃ |
+| logger | `@/lib/logger` | ½á¹¹»¯ÈÕÖ¾Êä³ö£¨info/debug/warn/error£© |
+| validation | `@/lib/validation` | ÅäÖÃÃû³ÆĞ£Ñé£¨`validateConfigName`£© |
 
-### 4.2 é…ç½®é¡¹
+### 4.2 ÅäÖÃÏî
 
-| é…ç½®å | é»˜è®¤å€¼ | è¯´æ˜ | æ¥æº |
+| ÅäÖÃÃû | Ä¬ÈÏÖµ | ËµÃ÷ | À´Ô´ |
 |--------|--------|------|------|
-| `CONFIG_ID_PREFIX` | `wizard_config_` | å‘å¯¼é…ç½®æ¨¡æ¿ ID å‰ç¼€ï¼ˆå†…éƒ¨å¸¸é‡ï¼‰ | æœ¬æ¨¡å— |
-| `EXPORT_VERSION` | `'1.0'` | é…ç½®å¯¼å‡ºæ–‡ä»¶ç‰ˆæœ¬å· | `configExportService.ts` |
-| `ENVELOPE_ACTION.saveCollectConfig` | â€” | collectConfig store å†™å…¥åŠ¨ä½œ | `@/config/dbConfig` |
-| `ENVELOPE_ACTION.deleteCollectConfig` | â€” | collectConfig store åˆ é™¤åŠ¨ä½œ | `@/config/dbConfig` |
-| `ENVELOPE_ACTION.queryGet` / `queryList` | â€” | å•æ¡/åˆ—è¡¨æŸ¥è¯¢åŠ¨ä½œ | `@/config/dbConfig` |
+| `CONFIG_ID_PREFIX` | `wizard_config_` | Ïòµ¼ÅäÖÃÄ£°å ID Ç°×º£¨ÄÚ²¿³£Á¿£© | ±¾Ä£¿é |
+| `EXPORT_VERSION` | `'1.0'` | ÅäÖÃµ¼³öÎÄ¼ş°æ±¾ºÅ | `configExportService.ts` |
+| `ENVELOPE_ACTION.saveCollectConfig` | ¡ª | collectConfig store Ğ´Èë¶¯×÷ | `@/config/dbConfig` |
+| `ENVELOPE_ACTION.deleteCollectConfig` | ¡ª | collectConfig store É¾³ı¶¯×÷ | `@/config/dbConfig` |
+| `ENVELOPE_ACTION.queryGet` / `queryList` | ¡ª | µ¥Ìõ/ÁĞ±í²éÑ¯¶¯×÷ | `@/config/dbConfig` |
 
 ---
 
-## 5. æµ‹è¯•ç­–ç•¥
+## 5. ²âÊÔ²ßÂÔ
 
-| æµ‹è¯•ç±»å‹ | æ–‡ä»¶ | è¯´æ˜ |
+| ²âÊÔÀàĞÍ | ÎÄ¼ş | ËµÃ÷ |
 |----------|------|------|
-| å•å…ƒæµ‹è¯• | `src/services/collection/collectionWizardPersistence.test.ts` | CRUD å…¨ç”Ÿå‘½å‘¨æœŸæµ‹è¯•ï¼ˆåˆ›å»º/è¯»å–/æ›´æ–°/åˆ é™¤/åˆ—è¡¨/è¿‡æ»¤/æ’åºï¼‰ï¼ŒåŒ…å« 14+ ä¸ªæµ‹è¯•ç”¨ä¾‹ï¼Œè¦†ç›–æˆåŠŸè·¯å¾„ä¸å¼‚å¸¸è·¯å¾„ |
-| Mock ç­–ç•¥ | å†…è” `vi.mock` | `dataBridge` ä¸ `getLogger` å‡é€šè¿‡ Vitest `vi.mock` éš”ç¦»ï¼Œç¡®ä¿æµ‹è¯•çº¯æœåŠ¡é€»è¾‘ |
+| µ¥Ôª²âÊÔ | `src/services/collection/collectionWizardPersistence.test.ts` | CRUD È«ÉúÃüÖÜÆÚ²âÊÔ£¨´´½¨/¶ÁÈ¡/¸üĞÂ/É¾³ı/ÁĞ±í/¹ıÂË/ÅÅĞò£©£¬°üº¬ 14+ ¸ö²âÊÔÓÃÀı£¬¸²¸Ç³É¹¦Â·¾¶ÓëÒì³£Â·¾¶ |
+| Mock ²ßÂÔ | ÄÚÁª `vi.mock` | `dataBridge` Óë `getLogger` ¾ùÍ¨¹ı Vitest `vi.mock` ¸ôÀë£¬È·±£²âÊÔ´¿·şÎñÂß¼­ |
 
-> **æ³¨**ï¼š`configExportService.ts` å½“å‰æš‚æ— ç‹¬ç«‹æµ‹è¯•æ–‡ä»¶ï¼Œå»ºè®®è¡¥å……çº¯å‡½æ•°å•å…ƒæµ‹è¯•ï¼ˆå¯¼å‡º/å¯¼å…¥/æ–‡ä»¶åç”Ÿæˆ/æ ¡éªŒé€»è¾‘ï¼‰ã€‚
+> **×¢**£º`configExportService.ts` µ±Ç°ÔİÎŞ¶ÀÁ¢²âÊÔÎÄ¼ş£¬½¨Òé²¹³ä´¿º¯Êıµ¥Ôª²âÊÔ£¨µ¼³ö/µ¼Èë/ÎÄ¼şÃûÉú³É/Ğ£ÑéÂß¼­£©¡£
 
 ---
 
-## 6. å˜æ›´æ—¥å¿—
+## 6. ±ä¸üÈÕÖ¾
 
-| æ—¥æœŸ | ç‰ˆæœ¬ | å˜æ›´ | ä½œè€… |
+| ÈÕÆÚ | °æ±¾ | ±ä¸ü | ×÷Õß |
 |------|------|------|------|
-| 2026-07-12 | v0.1.0 | å¥‘çº¦åˆç¨¿ï¼šåŸºäº `collectionWizardPersistence.ts` + `configExportService.ts` å®ŒæˆèŒè´£ã€æ¥å£ã€æ•°æ®æµä¸ä¾èµ–æ¢³ç† | æ¶æ„ç»„ |
+| 2026-07-12 | v0.1.0 | ÆõÔ¼³õ¸å£º»ùÓÚ `collectionWizardPersistence.ts` + `configExportService.ts` Íê³ÉÖ°Ôğ¡¢½Ó¿Ú¡¢Êı¾İÁ÷ÓëÒÀÀµÊáÀí | ¼Ü¹¹×é |
 
 ---
 
-> **TODO[å­åŸŸ owner]**ï¼š
-> 1. è¡¥å…… `configExportService.ts` çš„ç‹¬ç«‹å•å…ƒæµ‹è¯•ï¼›
-> 2. è‹¥é‡‡é›† pipeline è¿è¡Œæ—¶äº‹ä»¶å‘å¸ƒé€»è¾‘è¿ç§»è‡³æœ¬å­åŸŸï¼Œéœ€åœ¨ Â§2.3 è¡¥å…… EventBus äº‹ä»¶æ¥å£ï¼›
-> 3. å®Œæˆåè¿è¡Œ `tsc --noEmit` + `audit:layers` éªŒè¯ã€‚
+> **TODO[×ÓÓò owner]**£º
+> 1. ²¹³ä `configExportService.ts` µÄ¶ÀÁ¢µ¥Ôª²âÊÔ£»
+> 2. Èô²É¼¯ pipeline ÔËĞĞÊ±ÊÂ¼ş·¢²¼Âß¼­Ç¨ÒÆÖÁ±¾×ÓÓò£¬ĞèÔÚ ¡ì2.3 ²¹³ä EventBus ÊÂ¼ş½Ó¿Ú£»
+> 3. Íê³ÉºóÔËĞĞ `tsc --noEmit` + `audit:layers` ÑéÖ¤¡£

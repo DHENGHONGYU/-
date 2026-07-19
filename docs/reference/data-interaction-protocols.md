@@ -1,54 +1,51 @@
 ---
-title: data-interaction-protocols
-code_version: 2.0.0
-
+title: Êı¾İ½»»¥Ğ­Òé
+type: reference
+domain: data
+phase: design
 tier: important
----
-
----
-title: æ•°æ®äº¤äº’åè®®
+status: active
+maintainer: V9 Architecture Team
+summary: "research_logs store ×Ô¶¯¼ÇÂ¼Ã¿¸ö DataBridge Ğ´²Ù×÷£º"
+tags: [contract, api, reference, data, data-definition, store]
 version: v0.9.0
 last_updated: 2026-06-25
-maintainer: V9 Architecture Team
-status: active
-change_log:
-  - date: 2026-06-25
-    author: Documentation Governor
-    desc: æ³¨å…¥ Frontmatter å…ƒæ•°æ®ï¼ˆPhase 3 ç‰ˆæœ¬åŒ–ï¼‰
 code_version: 2.0.0
-tier: important
+doc_id: V9-DOC-DATA-020
+change_log: 
 ---
-# æ•°æ®äº¤äº’åè®®
+
+# Êı¾İ½»»¥Ğ­Òé
 
 > **Status**: Current  
 > **Version**: v0.9.0-migration-implemented  
 > **Last Updated**: 2026-06-25
 >
-> æœ¬æ–‡æ¡£å®šä¹‰ V9 æ¨¡å—é—´æ•°æ®äº¤äº’çš„ç»Ÿä¸€åè®®ï¼ŒåŒ…æ‹¬ä¿¡å°ç»“æ„ã€è°ƒç”¨æ–¹å‘ã€äº‹ä»¶æ€»çº¿ã€æ•°æ®è¡€ç¼˜ä¸è¾“å…¥èˆ±ä¸“ç”¨å¥‘çº¦ã€‚  
-> ç›®æ ‡è¯»è€…ï¼šå‰ç«¯å¼€å‘è€…ã€æ¶æ„å¸ˆã€‚
+> ±¾ÎÄµµ¶¨Òå V9 Ä£¿é¼äÊı¾İ½»»¥µÄÍ³Ò»Ğ­Òé£¬°üÀ¨ĞÅ·â½á¹¹¡¢µ÷ÓÃ·½Ïò¡¢ÊÂ¼ş×ÜÏß¡¢Êı¾İÑªÔµÓëÊäÈë²Õ×¨ÓÃÆõÔ¼¡£  
+> Ä¿±ê¶ÁÕß£ºÇ°¶Ë¿ª·¢Õß¡¢¼Ü¹¹Ê¦¡£
 
 ---
 
-## 1. æ€»åˆ™
+## 1. ×ÜÔò
 
-- æ‰€æœ‰è·¨æ¨¡å—å†™æ“ä½œå¿…é¡»é€šè¿‡ `DataBridge.forward(StandardEnvelope)`ã€‚
-- L5/L4 ç¦æ­¢ç›´æ¥è°ƒç”¨ `dataLayer` å†™æ–¹æ³•ï¼›è¯»æ“ä½œä¼˜å…ˆé€šè¿‡ Serviceï¼Œé€æ­¥æ”¶æ•›ã€‚
-- æ¯ä¸ªå†™æ“ä½œå¿…é¡»æºå¸¦æ¥æºã€ç›®æ ‡ã€åŠ¨ä½œã€traceIdã€æ—¶é—´æˆ³ã€æ•°æ®ç‰ˆæœ¬ã€‚
-- äº‹ä»¶æ€»çº¿ç”¨äºå¹¿æ’­çŠ¶æ€å˜æ›´ï¼Œè®¢é˜…æ–¹ä¸å¾—åå‘ä¿®æ”¹äº‹ä»¶æºæ•°æ®ã€‚
+- ËùÓĞ¿çÄ£¿éĞ´²Ù×÷±ØĞëÍ¨¹ı `DataBridge.forward(StandardEnvelope)`¡£
+- L5/L4 ½ûÖ¹Ö±½Óµ÷ÓÃ `dataLayer` Ğ´·½·¨£»¶Á²Ù×÷ÓÅÏÈÍ¨¹ı Service£¬Öğ²½ÊÕÁ²¡£
+- Ã¿¸öĞ´²Ù×÷±ØĞëĞ¯´øÀ´Ô´¡¢Ä¿±ê¡¢¶¯×÷¡¢traceId¡¢Ê±¼ä´Á¡¢Êı¾İ°æ±¾¡£
+- ÊÂ¼ş×ÜÏßÓÃÓÚ¹ã²¥×´Ì¬±ä¸ü£¬¶©ÔÄ·½²»µÃ·´ÏòĞŞ¸ÄÊÂ¼şÔ´Êı¾İ¡£
 
 ---
 
-## 2. æ ‡å‡†ä¿¡å°
+## 2. ±ê×¼ĞÅ·â
 
 ```ts
 interface StandardEnvelope {
   meta: {
-    source: ModuleId;        // æ¥æºæ¨¡å—/èˆ±å®¤ï¼Œå¦‚ 'input-cabin'
+    source: ModuleId;        // À´Ô´Ä£¿é/²ÕÊÒ£¬Èç 'input-cabin'
     target: EnvelopeTarget;  // 'indexeddb' / 'event-bus' / 'engine'
-    action: EnvelopeAction;  // è¯¦è§ dbConfig.ts
-    traceId: string;         // å•æ¬¡æ“ä½œå”¯ä¸€ IDï¼Œä¾¿äºå¤ç›˜
-    timestamp: number;       // æ“ä½œæ—¶é—´æˆ³
-    dataVersion: number;     // æ•°æ®ç‰ˆæœ¬ï¼Œç”¨äºè¡€ç¼˜è¿½è¸ª
+    action: EnvelopeAction;  // Ïê¼û dbConfig.ts
+    traceId: string;         // µ¥´Î²Ù×÷Î¨Ò» ID£¬±ãÓÚ¸´ÅÌ
+    timestamp: number;       // ²Ù×÷Ê±¼ä´Á
+    dataVersion: number;     // Êı¾İ°æ±¾£¬ÓÃÓÚÑªÔµ×·×Ù
   };
   payload: unknown;
 }
@@ -56,57 +53,57 @@ interface StandardEnvelope {
 
 ---
 
-## 3. è°ƒç”¨æ–¹å‘çŸ©é˜µ
+## 3. µ÷ÓÃ·½Ïò¾ØÕó
 
-| è°ƒç”¨æ–¹ â†“ / è¢«è°ƒç”¨æ–¹ â†’ | L5 å±•ç¤º | L4 åº”ç”¨ | L3 å¼•æ“ | L2 æ•°æ® | L1 åŸºç¡€è®¾æ–½ |
+| µ÷ÓÃ·½ ¡ı / ±»µ÷ÓÃ·½ ¡ú | L5 Õ¹Ê¾ | L4 Ó¦ÓÃ | L3 ÒıÇæ | L2 Êı¾İ | L1 »ù´¡ÉèÊ© |
 |------------------------|---------|---------|---------|---------|-------------|
-| L5 å±•ç¤º | âœ… åŒå±‚ | âœ… | âœ… | âŒ ç¦æ­¢ç›´æ¥ | âœ…ï¼ˆlib/config/core ç¨³å®šéƒ¨åˆ†ï¼‰ |
-| L4 åº”ç”¨ | âŒ | âœ… åŒå±‚ | âœ… | âŒ ç¦æ­¢ç›´æ¥å†™ | âœ… |
-| L3 å¼•æ“ | âŒ | âŒ | âœ… åŒå±‚ | âœ… è¯» dataLayer / å†™ DataBridge | âœ… |
-| L2 æ•°æ® | âŒ | âŒ | âŒ | âœ… åŒå±‚ | âœ…ï¼ˆconfig/dbConfig ç±»å‹ï¼‰ |
-| L1 åŸºç¡€è®¾æ–½ | âŒ | âŒ | âŒ | âŒ | âœ… åŒå±‚ |
+| L5 Õ¹Ê¾ | ? Í¬²ã | ? | ? | ? ½ûÖ¹Ö±½Ó | ?£¨lib/config/core ÎÈ¶¨²¿·Ö£© |
+| L4 Ó¦ÓÃ | ? | ? Í¬²ã | ? | ? ½ûÖ¹Ö±½ÓĞ´ | ? |
+| L3 ÒıÇæ | ? | ? | ? Í¬²ã | ? ¶Á dataLayer / Ğ´ DataBridge | ? |
+| L2 Êı¾İ | ? | ? | ? | ? Í¬²ã | ?£¨config/dbConfig ÀàĞÍ£© |
+| L1 »ù´¡ÉèÊ© | ? | ? | ? | ? | ? Í¬²ã |
 
 ---
 
-## 4. æ•°æ®è®¿é—®è·¯å¾„
+## 4. Êı¾İ·ÃÎÊÂ·¾¶
 
 ```
-L5/L4 å†™ â”€â”€â†’ DataBridge.forward() â”€â”€â†’ ACL â”€â”€â†’ IndexedDB
-L5/L4 è¯» â”€â”€â†’ Service / dataLayer â”€â”€â†’ IndexedDBï¼ˆè¯»é€æ­¥è¿ç§»åˆ° Serviceï¼‰
-L3 å¼•æ“è¯» â”€â”€â†’ dataLayer
-L3 å¼•æ“å†™ â”€â”€â†’ DataBridge.forward()
-L2 æ•°æ® â”€â”€â†’ db.tsï¼ˆå”¯ä¸€åŸç”Ÿ IndexedDB æ“ä½œï¼‰
+L5/L4 Ğ´ ©¤©¤¡ú DataBridge.forward() ©¤©¤¡ú ACL ©¤©¤¡ú IndexedDB
+L5/L4 ¶Á ©¤©¤¡ú Service / dataLayer ©¤©¤¡ú IndexedDB£¨¶ÁÖğ²½Ç¨ÒÆµ½ Service£©
+L3 ÒıÇæ¶Á ©¤©¤¡ú dataLayer
+L3 ÒıÇæĞ´ ©¤©¤¡ú DataBridge.forward()
+L2 Êı¾İ ©¤©¤¡ú db.ts£¨Î¨Ò»Ô­Éú IndexedDB ²Ù×÷£©
 ```
 
 ---
 
-## 5. äº‹ä»¶æ€»çº¿è§„èŒƒ
+## 5. ÊÂ¼ş×ÜÏß¹æ·¶
 
-### 5.1 äº‹ä»¶å‘½å
+### 5.1 ÊÂ¼şÃüÃû
 
-- å…¨å±€äº‹ä»¶ï¼š`{domain}:{event}`ï¼Œå¦‚ `stocks:changed`, `scores:changed`, `orders:changed`ã€‚
-- èˆ±å®¤å†…éƒ¨äº‹ä»¶ï¼š`{cabin}:{event}`ï¼Œå¦‚ `input:poolChanged`, `input:importProgress`ã€‚
-- ç¦æ­¢äº‹ä»¶åç¡¬ç¼–ç åœ¨ UI å±‚ï¼Œåº”æ¥è‡ª `src/lib/eventNames.ts`ã€‚
+- È«¾ÖÊÂ¼ş£º`{domain}:{event}`£¬Èç `stocks:changed`, `scores:changed`, `orders:changed`¡£
+- ²ÕÊÒÄÚ²¿ÊÂ¼ş£º`{cabin}:{event}`£¬Èç `input:poolChanged`, `input:importProgress`¡£
+- ½ûÖ¹ÊÂ¼şÃûÓ²±àÂëÔÚ UI ²ã£¬Ó¦À´×Ô `src/lib/eventBus.ts`¡£
 
-### 5.2 äº‹ä»¶è®¢é˜…åŸåˆ™
+### 5.2 ÊÂ¼ş¶©ÔÄÔ­Ôò
 
-- è®¢é˜…æ–¹åªåšè¯»å–ä¸é‡æ¸²æŸ“ï¼Œç¦æ­¢åœ¨å›è°ƒä¸­ç›´æ¥å†™æ•°æ®ã€‚
-- éœ€è¦è§¦å‘å†™æ“ä½œæ—¶ï¼Œè°ƒç”¨ Service æˆ– DataBridgeã€‚
+- ¶©ÔÄ·½Ö»×ö¶ÁÈ¡ÓëÖØäÖÈ¾£¬½ûÖ¹ÔÚ»Øµ÷ÖĞÖ±½ÓĞ´Êı¾İ¡£
+- ĞèÒª´¥·¢Ğ´²Ù×÷Ê±£¬µ÷ÓÃ Service »ò DataBridge¡£
 
 ---
 
-## 6. æ•°æ®è¡€ç¼˜
+## 6. Êı¾İÑªÔµ
 
-### 6.1 å­—æ®µçº§è¡€ç¼˜
+### 6.1 ×Ö¶Î¼¶ÑªÔµ
 
-- `stocks.dataVersion`ï¼šæ¯æ¬¡å†™å…¥é€’å¢ã€‚
-- `v6_scores.algorithmVersion`ï¼šç”Ÿæˆè¯„åˆ†çš„ç®—æ³•ç‰ˆæœ¬ã€‚
-- `v6_scores.calculatedAt`ï¼šè¯„åˆ†è®¡ç®—æ—¶é—´æˆ³ã€‚
-- `orders.signalId`ï¼ˆè§„åˆ’ä¸­ï¼‰ï¼šè®¢å•æ¥æºä¿¡å· IDï¼Œç”¨äºå°†è®¢å•è¿½æº¯åˆ°è§¦å‘ä¿¡å·ä¸è¯„åˆ†ç‰ˆæœ¬ã€‚å½“å‰ `Order` ç±»å‹å°šæœªåŒ…å«è¯¥å­—æ®µï¼Œå°†åœ¨å¤ç›˜å¼•æ“/äº¤æ˜“å¤ç›˜ç¬”è®°é˜¶æ®µè¡¥é½ã€‚
+- `stocks.dataVersion`£ºÃ¿´ÎĞ´ÈëµİÔö¡£
+- `v6_scores.algorithmVersion`£ºÉú³ÉÆÀ·ÖµÄËã·¨°æ±¾¡£
+- `v6_scores.calculatedAt`£ºÆÀ·Ö¼ÆËãÊ±¼ä´Á¡£
+- `orders.signalId`£¨¹æ»®ÖĞ£©£º¶©µ¥À´Ô´ĞÅºÅ ID£¬ÓÃÓÚ½«¶©µ¥×·Ëİµ½´¥·¢ĞÅºÅÓëÆÀ·Ö°æ±¾¡£µ±Ç° `Order` ÀàĞÍÉĞÎ´°üº¬¸Ã×Ö¶Î£¬½«ÔÚ¸´ÅÌÒıÇæ/½»Ò×¸´ÅÌ±Ê¼Ç½×¶Î²¹Æë¡£
 
-### 6.2 å®¡è®¡æ—¥å¿—
+### 6.2 Éó¼ÆÈÕÖ¾
 
-`research_logs` store è‡ªåŠ¨è®°å½•æ¯ä¸ª DataBridge å†™æ“ä½œï¼š
+`research_logs` store ×Ô¶¯¼ÇÂ¼Ã¿¸ö DataBridge Ğ´²Ù×÷£º
 
 ```ts
 interface ResearchLog {
@@ -121,26 +118,26 @@ interface ResearchLog {
 
 ---
 
-## 7. è¾“å…¥èˆ±æ•°æ®å¥‘çº¦
+## 7. ÊäÈë²ÕÊı¾İÆõÔ¼
 
-### 7.1 å…è®¸å†™å…¥çš„ action
+### 7.1 ÔÊĞíĞ´ÈëµÄ action
 
-- `INSERT_STOCK`ï¼šå½•å…¥å•åªè‚¡ç¥¨ã€‚
-- `BULK_IMPORT`ï¼šæ‰¹é‡å¯¼å…¥ï¼ˆå†…éƒ¨æ‹†åˆ†ä¸ºå¤šæ¡ `INSERT_STOCK`ï¼‰ã€‚
-- `UPDATE_STOCK`ï¼šæ›´æ–°è‚¡ç¥¨çŠ¶æ€ã€æ•°æ®è´¨é‡ã€æ¥æºç­‰ã€‚
-- `SAVE_DAILY_QUOTES`ï¼šä¿å­˜è¡Œæƒ…/Kçº¿æ•°æ®ã€‚
+- `INSERT_STOCK`£ºÂ¼Èëµ¥Ö»¹ÉÆ±¡£
+- `BULK_IMPORT`£ºÅúÁ¿µ¼Èë£¨ÄÚ²¿²ğ·ÖÎª¶àÌõ `INSERT_STOCK`£©¡£
+- `UPDATE_STOCK`£º¸üĞÂ¹ÉÆ±×´Ì¬¡¢Êı¾İÖÊÁ¿¡¢À´Ô´µÈ¡£
+- `SAVE_DAILY_QUOTES`£º±£´æĞĞÇé/KÏßÊı¾İ¡£
 
-### 7.2 è¾“å…¥èˆ±äº‹ä»¶
+### 7.2 ÊäÈë²ÕÊÂ¼ş
 
-| äº‹ä»¶ | è§¦å‘ | è®¢é˜…æ–¹ |
+| ÊÂ¼ş | ´¥·¢ | ¶©ÔÄ·½ |
 |------|------|--------|
-| `input:poolChanged` | stocks è¡¨å˜æ›´ | `InputDashboard`, `PoolBoard` |
-| `input:fetcherStatusChanged` | é‡‡é›†æœåŠ¡å¥åº·å˜åŒ– | `DataTestPanel`, é¡¶éƒ¨çŠ¶æ€æ  |
-| `input:importProgress` | æ‰¹é‡å¯¼å…¥è¿›åº¦æ›´æ–° | `BulkImportPanel` |
+| `input:poolChanged` | stocks ±í±ä¸ü | `InputDashboard`, `PoolBoard` |
+| `input:fetcherStatusChanged` | ²É¼¯·şÎñ½¡¿µ±ä»¯ | `DataTestPanel`, ¶¥²¿×´Ì¬À¸ |
+| `input:importProgress` | ÅúÁ¿µ¼Èë½ø¶È¸üĞÂ | `BulkImportPanel` |
 
-### 7.3 æ•°æ®è´¨é‡å¥‘çº¦
+### 7.3 Êı¾İÖÊÁ¿ÆõÔ¼
 
-è¾“å…¥èˆ±åœ¨é‡‡é›†/å¯¼å…¥åæ›´æ–° `Stock.dataQuality`ï¼š
+ÊäÈë²ÕÔÚ²É¼¯/µ¼Èëºó¸üĞÂ `Stock.dataQuality`£º
 
 ```ts
 interface StockDataQuality {
@@ -153,17 +150,17 @@ interface StockDataQuality {
 
 ---
 
-## 8. ç¦»çº¿é™çº§
+## 8. ÀëÏß½µ¼¶
 
-- æ–­ç½‘æ—¶ï¼Œå†™æ“ä½œæ­£å¸¸æŒä¹…åŒ–åˆ° IndexedDBã€‚
-- éœ€è¦ LLM/å¤–éƒ¨æ¥å£çš„åŠŸèƒ½æ˜¾ç¤ºç¦»çº¿å¾½ç« å¹¶ç¦ç”¨æˆ–é™çº§ã€‚
-- AKShare æ‹‰å–å¤±è´¥æ—¶ä¿ç•™æœ¬åœ°æ•°æ®ï¼Œå¹¶æç¤ºç”¨æˆ·æ£€æŸ¥æœåŠ¡ã€‚
+- ¶ÏÍøÊ±£¬Ğ´²Ù×÷Õı³£³Ö¾Ã»¯µ½ IndexedDB¡£
+- ĞèÒª LLM/Íâ²¿½Ó¿ÚµÄ¹¦ÄÜÏÔÊ¾ÀëÏß»ÕÕÂ²¢½ûÓÃ»ò½µ¼¶¡£
+- AKShare À­È¡Ê§°ÜÊ±±£Áô±¾µØÊı¾İ£¬²¢ÌáÊ¾ÓÃ»§¼ì²é·şÎñ¡£
 
 ---
 
-## 9. ç‰ˆæœ¬æ¯”å¯¹
+## 9. °æ±¾±È¶Ô
 
-| ç‰ˆæœ¬ | æ—¶é—´ | å˜åŒ– |
+| °æ±¾ | Ê±¼ä | ±ä»¯ |
 |------|------|------|
-| v0.9.0-docs-base | 2026-06-24 å‰ | ä¿¡å°ç»“æ„åœ¨ `03-architecture-standards.md` ä¸­é€šç”¨æè¿°ï¼Œç¼ºå°‘è¾“å…¥èˆ±ä¸“ç”¨å¥‘çº¦ |
-| v0.9.0-docs-review | 2026-06-24 | æ–°å¢æœ¬æ–‡æ¡£ï¼Œæ˜ç¡®è°ƒç”¨çŸ©é˜µã€äº‹ä»¶å‘½åã€æ•°æ®è¡€ç¼˜ã€è¾“å…¥èˆ± action/äº‹ä»¶/æ•°æ®è´¨é‡å¥‘çº¦ |
+| v0.9.0-docs-base | 2026-06-24 Ç° | ĞÅ·â½á¹¹ÔÚ `03-architecture-standards.md` ÖĞÍ¨ÓÃÃèÊö£¬È±ÉÙÊäÈë²Õ×¨ÓÃÆõÔ¼ |
+| v0.9.0-docs-review | 2026-06-24 | ĞÂÔö±¾ÎÄµµ£¬Ã÷È·µ÷ÓÃ¾ØÕó¡¢ÊÂ¼şÃüÃû¡¢Êı¾İÑªÔµ¡¢ÊäÈë²Õ action/ÊÂ¼ş/Êı¾İÖÊÁ¿ÆõÔ¼ |

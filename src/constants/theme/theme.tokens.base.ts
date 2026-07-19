@@ -32,11 +32,20 @@ export const THEME_TOKENS = {
     successBg: 'bg-green-500',
     /** 成功色原始值（用于 style/图表） */
     successRaw: '#22c55e',
-    /** 危险/错误文本色 */
+    /**
+     * 危险/错误文本色 —— 规范语义名 `danger`（与 SEMANTIC_COLOR_ROLES.danger / COLOR_TOKENS.danger 命名一致）
+     * @remarks C5 命名收敛：`danger` 为唯一规范语义名；下方 `destructive*` 保留为 shadcn tailwind 角色兼容别名（值等价），勿在新代码扩散。
+     */
+    danger: 'text-red-500',
+    /** 危险/错误背景色（规范名 danger） */
+    dangerBg: 'bg-red-500',
+    /** 危险色原始值（规范名 danger，用于 style/图表） */
+    dangerRaw: '#ef4444',
+    /** @deprecated 危险/错误文本色 —— 请用 `danger`（值等价，保留兼容 shadcn `destructive` 语境） */
     destructive: 'text-red-500',
-    /** 危险/错误背景色 */
+    /** @deprecated 危险/错误背景色 —— 请用 `dangerBg` */
     destructiveBg: 'bg-red-500',
-    /** 危险色原始值（用于 style/图表） */
+    /** @deprecated 危险色原始值 —— 请用 `dangerRaw` */
     destructiveRaw: '#ef4444',
     /** 弱化/次要文本色 */
     muted: 'text-gray-500',
@@ -136,7 +145,11 @@ export const THEME_TOKENS = {
    * @description 字体大小、字重、行高、字间距等排版相关令牌
    */
   typography: {
-    /** 字体大小 */
+    /**
+     * 字体大小（Tailwind 风尺寸别名）
+     * @deprecated C8 字体体系收敛：新代码请统一使用角色化阶梯 `TYPOGRAPHY_SCALE` + `text-{display|h1..h6|body*|caption|overline}` 工具类；
+     *   本组（xs/sm/base/lg/xl/2xl/3xl/4xl）为历史遗留（现存 ~53 处引用），仅存量兼容，勿在新代码扩散。
+     */
     fontSize: {
       xs: 'text-xs',
       sm: 'text-sm',

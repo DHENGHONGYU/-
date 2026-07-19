@@ -19,6 +19,9 @@ interface ScoreBucket {
   color: string
 }
 
+/**
+ * ScoreDistribution
+ */
 export function ScoreDistribution({ scoreStats }: { scoreStats: ScoreStats }): React.JSX.Element {
   const { total, scoreDistribution } = scoreStats
 

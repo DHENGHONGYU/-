@@ -48,7 +48,7 @@ const config: ReportConfig = {
   sonarqubeUrl: process.env.SONARQUBE_URL || 'http://localhost:9000',
   sonarqubeProject: process.env.SONARQUBE_PROJECT || 'v9-project',
   outputDir: join(process.cwd(), 'docs', 'reports'),
-  techDebtFile: join(process.cwd(), 'docs', 'tech-debt.md'),
+  techDebtFile: join(process.cwd(), 'docs', 'docs/explanation/design/tech-debt.md'),
 }
 
 // ============================================================

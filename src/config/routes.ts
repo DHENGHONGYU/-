@@ -88,6 +88,12 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     description: '分析舱',
   },
   {
+    path: '/analysis/industry-dashboard',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'analysis',
+    description: '分析舱 - 行业全景仪表盘',
+  },
+  {
     path: '/trading/flow',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'trading',
@@ -383,12 +389,6 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     description: '多因子筛选（条件组增删 / 因子编辑 / 模板持久化）',
   },
   {
-    path: '/analysis/pool-board',
-    component: React.lazy(() => import('@/portal/PortalShell')),
-    category: 'analysis',
-    description: '股票池看板',
-  },
-  {
     path: '/trading/strategy-snapshots',
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'trading',
@@ -447,6 +447,12 @@ export const ROUTE_REGISTRY: RouteConfig[] = [
     component: React.lazy(() => import('@/portal/PortalShell')),
     category: 'input',
     description: '采集任务监控',
+  },
+  {
+    path: '/input/pool-board',
+    component: React.lazy(() => import('@/portal/PortalShell')),
+    category: 'input',
+    description: '股票池看板（候选池管理）',
   },
 
   // Mock 测试页

@@ -1,57 +1,61 @@
 ---
-title: data-collector-contract
-code_version: 2.0.0
-
+title: data-collector ·şÎñÆõÔ¼
+type: reference
+domain: data
+phase: design
 tier: important
----
-
----
-title: data-collector æœåŠ¡å¥‘çº¦
 status: active
-owner: data-collector å­åŸŸ / æ¶æ„ç»„
-updated: 2026-07-12
+maintainer: data-collector ×ÓÓò / ¼Ü¹¹×é
+summary: "Ğ­µ÷ fetcher ·şÎñÖ´ĞĞÊı¾İ²É¼¯ÈÎÎñ£¬¹ÜÀí²É¼¯¹ÜµÀ¡¢ÖÊÁ¿¼ì²â¡¢È±Ê§±¨¸æ²¹È«¡£"
+tags: [data, collection, contract, reference, data-definition, store]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: important
+doc_id: V9-DOC-DATA-015
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
-# data-collector-contract.md â€” æ•°æ®é‡‡é›†ç¼–æ’æœåŠ¡
+# data-collector-contract.md ¡ª Êı¾İ²É¼¯±àÅÅ·şÎñ
 
-> **å®šä½**ï¼šåè°ƒ fetcher æœåŠ¡æ‰§è¡Œæ•°æ®é‡‡é›†ä»»åŠ¡ï¼Œç®¡ç†é‡‡é›†ç®¡é“ã€è´¨é‡æ£€æµ‹ã€ç¼ºå¤±æŠ¥å‘Šè¡¥å…¨ã€‚  
-> **å…³è”**ï¼š`./services-catalog.md`ï¼ˆå­åŸŸ #5ï¼‰ã€`../../AGENTS.md` Â§ä¸€ã€‚
+> **¶¨Î»**£ºĞ­µ÷ fetcher ·şÎñÖ´ĞĞÊı¾İ²É¼¯ÈÎÎñ£¬¹ÜÀí²É¼¯¹ÜµÀ¡¢ÖÊÁ¿¼ì²â¡¢È±Ê§±¨¸æ²¹È«¡£  
+> **Source**£º`./services-catalog.md`£¨×ÓÓò #5£©¡¢`../../AGENTS.md` ¡ìÒ»¡£
 
 ---
 
-## 1. èŒè´£è¾¹ç•Œ
+## 1. Ö°Ôğ±ß½ç
 
-### 1.1 æ ¸å¿ƒèŒè´£
+### 1.1 ºËĞÄÖ°Ôğ
 
-1. **é‡‡é›†ä»»åŠ¡ç¼–æ’**ï¼šå°†ç”¨æˆ·çš„é‡‡é›†éœ€æ±‚ï¼ˆå¦‚ã€Œé‡‡é›†æ‰€æœ‰ A è‚¡æ—¥ Kã€ï¼‰æ‹†åˆ†ä¸ºå¯æ‰§è¡Œçš„ fetcher ä»»åŠ¡é˜Ÿåˆ—ã€‚
-2. **è´¨é‡æ£€æµ‹**ï¼šé‡‡é›†å®Œæˆåæ ¡éªŒæ•°æ®å®Œæ•´æ€§ï¼ˆç¼ºå¤±å­—æ®µã€å¼‚å¸¸å€¼ã€æ—¶é—´æ–­æ¡£ï¼‰ã€‚
-3. **ç¼ºå¤±æŠ¥å‘Šè¡¥å…¨**ï¼šæ£€æµ‹ç¼ºå¤±æ•°æ®ï¼Œç”Ÿæˆè¡¥é‡‡ä»»åŠ¡å¹¶è‡ªåŠ¨è°ƒåº¦ã€‚
-4. **é‡‡é›†ç›‘æ§**ï¼šå®æ—¶å±•ç¤ºé‡‡é›†è¿›åº¦ã€æˆåŠŸç‡ã€å¤±è´¥é‡è¯•æ¬¡æ•°ã€‚
+1. **²É¼¯ÈÎÎñ±àÅÅ**£º½«ÓÃ»§µÄ²É¼¯ĞèÇó£¨Èç¡¸²É¼¯ËùÓĞ A ¹ÉÈÕ K¡¹£©²ğ·ÖÎª¿ÉÖ´ĞĞµÄ fetcher ÈÎÎñ¶ÓÁĞ¡£
+2. **ÖÊÁ¿¼ì²â**£º²É¼¯Íê³ÉºóĞ£ÑéÊı¾İÍêÕûĞÔ£¨È±Ê§×Ö¶Î¡¢Òì³£Öµ¡¢Ê±¼ä¶Ïµµ£©¡£
+3. **È±Ê§±¨¸æ²¹È«**£º¼ì²âÈ±Ê§Êı¾İ£¬Éú³É²¹²ÉÈÎÎñ²¢×Ô¶¯µ÷¶È¡£
+4. **²É¼¯¼à¿Ø**£ºÊµÊ±Õ¹Ê¾²É¼¯½ø¶È¡¢³É¹¦ÂÊ¡¢Ê§°ÜÖØÊÔ´ÎÊı¡£
 
-### 1.2 åˆ†å±‚å®šä½
+### 1.2 ·Ö²ã¶¨Î»
 
-| ç»´åº¦ | è¯´æ˜ |
+| Î¬¶È | ËµÃ÷ |
 |------|------|
-| æ‰€å±å±‚ | `src/services/data-collector/`ï¼ˆæœåŠ¡å±‚ #5ï¼‰ |
-| ä¾èµ–æ–¹å‘ | `services/fetcher/`ï¼ˆä¸Šæ¸¸æ•°æ®æºï¼‰ã€`core/`ï¼ˆDataBridgeï¼‰ã€`lib/`ï¼ˆloggerï¼‰ |
-| ç¦æ­¢äº‹é¡¹ | ç¦æ­¢ç›´å†™ IndexedDBï¼ˆé¡»ç» DataBridge.forward()ï¼‰ |
-| è¢«ä¾èµ–æ–¹ | `store/collectionStore`ã€`pages/input/`ï¼ˆé‡‡é›†é…ç½®é¡µé¢ï¼‰ |
+| ËùÊô²ã | `src/services/data-collector/`£¨·şÎñ²ã #5£© |
+| ÒÀÀµ·½Ïò | `services/fetcher/`£¨ÉÏÓÎÊı¾İÔ´£©¡¢`core/`£¨DataBridge£©¡¢`lib/`£¨logger£© |
+| ½ûÖ¹ÊÂÏî | ½ûÖ¹Ö±Ğ´ IndexedDB£¨Ğë¾­ DataBridge.forward()£© |
+| ±»ÒÀÀµ·½ | `store/collectionStore`¡¢`pages/input/`£¨²É¼¯ÅäÖÃÒ³Ãæ£© |
 
-### 1.3 ä¸ç›¸é‚»å­åŸŸçš„å…³ç³»
+### 1.3 ÓëÏàÁÚ×ÓÓòµÄ¹ØÏµ
 
-| ç›¸é‚»å­åŸŸ | å…³ç³» | æ•°æ®æµ |
+| ÏàÁÚ×ÓÓò | ¹ØÏµ | Êı¾İÁ÷ |
 |----------|------|--------|
-| `fetcher` | ä¸‹æ¸¸è°ƒç”¨ | `data-collector` â†’ `fetcher`ï¼ˆè§¦å‘é‡‡é›†ï¼‰ |
-| `collection` | ä¸Šæ¸¸è°ƒç”¨æ–¹ | `collection` â†’ `data-collector`ï¼ˆç¼–æ’æŒ‡ä»¤ï¼‰ |
-| `input` | ä¸‹æ¸¸æ¶ˆè´¹æ–¹ | `data-collector` â†’ `input`ï¼ˆé‡‡é›†è¿›åº¦åé¦ˆï¼‰ |
+| `fetcher` | ÏÂÓÎµ÷ÓÃ | `data-collector` ¡ú `fetcher`£¨´¥·¢²É¼¯£© |
+| `collection` | ÉÏÓÎµ÷ÓÃ·½ | `collection` ¡ú `data-collector`£¨±àÅÅÖ¸Áî£© |
+| `input` | ÏÂÓÎÏû·Ñ·½ | `data-collector` ¡ú `input`£¨²É¼¯½ø¶È·´À¡£© |
 
 ---
 
-## 2. å…¬å…±æ¥å£
+## 2. ¹«¹²½Ó¿Ú
 
-### 2.1 ç±»å‹å®šä¹‰
+### 2.1 ÀàĞÍ¶¨Òå
 
 ```typescript
 // src/services/data-collector/dataCollectorTypes.ts
@@ -84,79 +88,79 @@ export interface MissingReport {
 export type DataType = 'daily_quotes' | 'financial_report' | 'news' | 'sector_data';
 ```
 
-### 2.2 ä¸»å…¥å£å‡½æ•°
+### 2.2 Ö÷Èë¿Úº¯Êı
 
-| å‡½æ•° | ç­¾å | èŒè´£ | é”™è¯¯å¤„ç† |
+| º¯Êı | Ç©Ãû | Ö°Ôğ | ´íÎó´¦Àí |
 |------|------|------|----------|
-| `runCollection()` | `(task: CollectionTask) => Promise<CollectionResult>` | æ‰§è¡Œé‡‡é›†ä»»åŠ¡ | éƒ¨åˆ†å¤±è´¥è®°å½• missing report |
-| `detectMissing()` | `(symbol: string, dataType: DataType) => MissingReport[]` | æ£€æµ‹ç¼ºå¤±æ•°æ® | æ— ï¼ˆçº¯æŸ¥è¯¢ï¼‰ |
-| `scheduleAutoFix()` | `(reports: MissingReport[]) => void` | è‡ªåŠ¨è¡¥é‡‡è°ƒåº¦ | è°ƒåº¦å¤±è´¥ â†’ logger |
-| `getQualityMetrics()` | `(taskId: string) => QualityMetrics` | é‡‡é›†è´¨é‡ç»Ÿè®¡ | æ— ï¼ˆçº¯æŸ¥è¯¢ï¼‰ |
+| `runCollection()` | `(task: CollectionTask) => Promise<CollectionResult>` | Ö´ĞĞ²É¼¯ÈÎÎñ | ²¿·ÖÊ§°Ü¼ÇÂ¼ missing report |
+| `detectMissing()` | `(symbol: string, dataType: DataType) => MissingReport[]` | ¼ì²âÈ±Ê§Êı¾İ | ÎŞ£¨´¿²éÑ¯£© |
+| `scheduleAutoFix()` | `(reports: MissingReport[]) => void` | ×Ô¶¯²¹²Éµ÷¶È | µ÷¶ÈÊ§°Ü ¡ú logger |
+| `getQualityMetrics()` | `(taskId: string) => QualityMetrics` | ²É¼¯ÖÊÁ¿Í³¼Æ | ÎŞ£¨´¿²éÑ¯£© |
 
-### 2.3 äº‹ä»¶æ¥å£
+### 2.3 ÊÂ¼ş½Ó¿Ú
 
-| äº‹ä»¶å | å‘å¸ƒæ–¹ | è®¢é˜…æ–¹ | è¯´æ˜ |
+| ÊÂ¼şÃû | ·¢²¼·½ | ¶©ÔÄ·½ | ËµÃ÷ |
 |--------|--------|--------|------|
-| `collector:task:started` | data-collector | `collectionStore` | ä»»åŠ¡å¼€å§‹ |
-| `collector:task:completed` | data-collector | `collectionStore` | ä»»åŠ¡å®Œæˆ |
-| `collector:missing:detected` | data-collector | `missingReportStore` | ç¼ºå¤±æŠ¥å‘Šç”Ÿæˆ |
+| `collector:task:started` | data-collector | `collectionStore` | ÈÎÎñ¿ªÊ¼ |
+| `collector:task:completed` | data-collector | `collectionStore` | ÈÎÎñÍê³É |
+| `collector:missing:detected` | data-collector | `missingReportStore` | È±Ê§±¨¸æÉú³É |
 
 ---
 
-## 3. æ•°æ®æµ
+## 3. Êı¾İÁ÷
 
 ```
-ç”¨æˆ·é…ç½®ï¼ˆinput é¡µé¢ï¼‰
-  â†“
-collectionTaskStoreï¼ˆZustandï¼‰
-  â†“
+ÓÃ»§ÅäÖÃ£¨input Ò³Ãæ£©
+  ¡ı
+collectionTaskStore£¨Zustand£©
+  ¡ı
 data-collector.runCollection()
-  â”œâ”€> æ‹†åˆ†ä¸º fetcher å­ä»»åŠ¡
-  â”œâ”€> è°ƒç”¨ fetcher.fetchBatch()
-  â”œâ”€> è´¨é‡æ£€æµ‹ï¼ˆqualityMetricsCollectorï¼‰
-  â”œâ”€> ç”Ÿæˆ missing reports
-  â†“
-DataBridge.forward() â†’ IndexedDB
-  â†“
+  ©À©¤> ²ğ·ÖÎª fetcher ×ÓÈÎÎñ
+  ©À©¤> µ÷ÓÃ fetcher.fetchBatch()
+  ©À©¤> ÖÊÁ¿¼ì²â£¨qualityMetricsCollector£©
+  ©À©¤> Éú³É missing reports
+  ¡ı
+DataBridge.forward() ¡ú IndexedDB
+  ¡ı
 EventBus
-  â†“
+  ¡ı
 collectionStore / missingReportStore
 ```
 
 ---
 
-## 4. é…ç½®ä¸ä¾èµ–
+## 4. ÅäÖÃÓëÒÀÀµ
 
-### 4.1 ä¾èµ–ç™½åå•
+### 4.1 ÒÀÀµ°×Ãûµ¥
 
-| ä¾èµ– | è·¯å¾„ | ç”¨é€” |
+| ÒÀÀµ | Â·¾¶ | ÓÃÍ¾ |
 |------|------|------|
-| logger | `@/lib/logger` | é‡‡é›†ä»»åŠ¡æ—¥å¿— |
-| EventBus | `@/lib/eventBus` | ä»»åŠ¡çŠ¶æ€äº‹ä»¶ |
+| logger | `@/lib/logger` | ²É¼¯ÈÎÎñÈÕÖ¾ |
+| EventBus | `@/lib/eventBus` | ÈÎÎñ×´Ì¬ÊÂ¼ş |
 | errors | `@/lib/errors` | CollectionError |
 
-### 4.2 é…ç½®é¡¹
+### 4.2 ÅäÖÃÏî
 
-| é…ç½®å | é»˜è®¤å€¼ | è¯´æ˜ | æ¥æº |
+| ÅäÖÃÃû | Ä¬ÈÏÖµ | ËµÃ÷ | À´Ô´ |
 |--------|--------|------|------|
-| `COLLECTION_BATCH_SIZE` | 50 | æ¯æ‰¹é‡‡é›†è‚¡ç¥¨æ•° | `src/config/collection.config.ts` |
-| `COLLECTION_QUALITY_THRESHOLD` | 80 | è´¨é‡åˆ†åˆæ ¼çº¿ | `src/config/collection.config.ts` |
-| `COLLECTION_AUTO_FIX` | true | æ˜¯å¦è‡ªåŠ¨è¡¥é‡‡ | ç”¨æˆ·é…ç½®ï¼ˆlocalStorageï¼‰ |
+| `COLLECTION_BATCH_SIZE` | 50 | Ã¿Åú²É¼¯¹ÉÆ±Êı | `src/config/collectConfig.ts` |
+| `COLLECTION_QUALITY_THRESHOLD` | 80 | ÖÊÁ¿·ÖºÏ¸ñÏß | `src/config/collectConfig.ts` |
+| `COLLECTION_AUTO_FIX` | true | ÊÇ·ñ×Ô¶¯²¹²É | ÓÃ»§ÅäÖÃ£¨localStorage£© |
 
 ---
 
-## 5. æµ‹è¯•ç­–ç•¥
+## 5. ²âÊÔ²ßÂÔ
 
-| æµ‹è¯•ç±»å‹ | æ–‡ä»¶ | è¯´æ˜ |
+| ²âÊÔÀàĞÍ | ÎÄ¼ş | ËµÃ÷ |
 |----------|------|------|
-| å•å…ƒæµ‹è¯• | `collectionReportService.test.ts` | é‡‡é›†æŠ¥å‘Šç”Ÿæˆ |
-| å•å…ƒæµ‹è¯• | `missingReportDetector.test.ts` | ç¼ºå¤±æ£€æµ‹é€»è¾‘ |
-| é›†æˆæµ‹è¯• | `MarketDataAdapter.test.ts` | æ•°æ®é€‚é… |
+| µ¥Ôª²âÊÔ | `collectionReportService.test.ts` | ²É¼¯±¨¸æÉú³É |
+| µ¥Ôª²âÊÔ | `missingReportDetector.test.ts` | È±Ê§¼ì²âÂß¼­ |
+| ¼¯³É²âÊÔ | `MarketDataAdapter.test.ts` | Êı¾İÊÊÅä |
 
 ---
 
-## 6. å˜æ›´æ—¥å¿—
+## 6. ±ä¸üÈÕÖ¾
 
-| æ—¥æœŸ | ç‰ˆæœ¬ | å˜æ›´ | ä½œè€… |
+| ÈÕÆÚ | °æ±¾ | ±ä¸ü | ×÷Õß |
 |------|------|------|------|
-| 2026-07-12 | v0.1.0 | å¥‘çº¦åˆç¨¿ | æ¶æ„ç»„ |
+| 2026-07-12 | v0.1.0 | ÆõÔ¼³õ¸å | ¼Ü¹¹×é |

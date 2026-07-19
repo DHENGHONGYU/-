@@ -1,24 +1,25 @@
 ---
-title: _contract-template
+title: {subdomain}-contract.md �?{子域中文名} 接口契约
+type: reference
+domain: project
+phase: design
+tier: quick-note
+status: draft
+maintainer: V9 Architecture Team
+tags: [project, contract, template]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: important
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: Service 子域契约模板
-status: template
-owner: 架构组 / 各子域 owner
-updated: 2026-07-12
-code_version: 2.0.0
-tier: important
----
+# {subdomain}-contract.md �?{子域中文名} 接口契约
 
-# {subdomain}-contract.md — {子域中文名} 接口契约
-
-> **定位**：定义 `{subdomain}` 子域的接口契约、职责边界、数据流与依赖关系。  
-> **关联**：`./services-catalog.md`（24 子域总览）、`../../AGENTS.md` §一（分层规则）。
-
+> **定位**：定�?`{subdomain}` 子域的接口契约、职责边界、数据流与依赖关系�? 
+> **关联**：`./services-catalog.md`�?4 子域总览）、`../../AGENTS.md` §一（分层规则）�?
 ---
 
 ## 1. 职责边界
@@ -32,24 +33,23 @@ tier: important
 
 | 维度 | 说明 |
 |------|------|
-| 所属层 | `src/services/`（服务层） |
-| 依赖方向 | 只能依赖 `core/`、`data/`、`lib/`（白名单） |
-| 禁止事项 | 禁止直写 IndexedDB（须经 `DataBridge.forward()`） |
-| 被依赖方 | `store/`（状态层）、`pages/`（页面层）可消费本服务输出 |
+| 所属层 | `src/services/`（服务层�?|
+| 依赖方向 | 只能依赖 `core/`、`data/`、`lib/`（白名单�?|
+| 禁止事项 | 禁止直写 IndexedDB（须�?`DataBridge.forward()`�?|
+| 被依赖方 | `store/`（状态层）、`pages/`（页面层）可消费本服务输�?|
 
 ### 1.3 与相邻子域的关系
 
-| 相邻子域 | 关系 | 数据流 |
+| 相邻子域 | 关系 | 数据�?|
 |----------|------|--------|
-| {upstream} | 上游：提供输入 | `upstream` → `本服务` |
-| {downstream} | 下游：消费输出 | `本服务` → `downstream` |
+| {upstream} | 上游：提供输�?| `upstream` �?`本服务` |
+| {downstream} | 下游：消费输�?| `本服务` �?`downstream` |
 
 ---
 
 ## 2. 公共接口
 
-### 2.1 类型定义（TypeScript Interface）
-
+### 2.1 类型定义（TypeScript Interface�?
 ```typescript
 // 文件：src/services/{subdomain}/{subdomain}Types.ts
 
@@ -62,12 +62,10 @@ export interface {Subdomain}Output {
 }
 
 export interface {Subdomain}Config {
-  // 配置项
-}
+  // 配置�?}
 ```
 
-### 2.2 主入口函数
-
+### 2.2 主入口函�?
 | 函数 | 签名 | 职责 | 错误处理 |
 |------|------|------|----------|
 | `load{Entity}()` | `(params: {Subdomain}Input) => Promise<{Subdomain}Output>` | {描述} | `ErrorBus` 上报 + logger 记录 |
@@ -76,43 +74,37 @@ export interface {Subdomain}Config {
 
 ### 2.3 事件接口
 
-| 事件名 | 发布方 | 订阅方 | 说明 |
+| 事件�?| 发布�?| 订阅�?| 说明 |
 |--------|--------|--------|------|
-| `{subdomain}:loaded` | 本服务 | `store/{subdomain}Store` | 数据加载完成 |
-| `{subdomain}:error` | 本服务 | `errorBus` | 错误上报 |
+| `{subdomain}:loaded` | 本服�?| `store/{subdomain}Store` | 数据加载完成 |
+| `{subdomain}:error` | 本服�?| `errorBus` | 错误上报 |
 
 ---
 
-## 3. 数据流
-
+## 3. 数据�?
 ```
 [外部输入 / 上游服务]
-    ↓
-{Subdomain}Service.{action}()
-    ↓ (DataBridge.forward())
-DataBridge → routeToDB() → dataLayer → IndexedDB
-    ↓ (EventBus)
+    �?{Subdomain}Service.{action}()
+    �?(DataBridge.forward())
+DataBridge �?routeToDB() �?dataLayer �?IndexedDB
+    �?(EventBus)
 {subdomain}Store (Zustand + withBroadcast)
-    ↓
-components/pages (仅经 Store 取数)
+    �?components/pages (仅经 Store 取数)
 ```
 
 ---
 
-## 4. 配置与依赖
-
-### 4.1 依赖白名单（lib/）
-
-| 依赖 | 路径 | 用途 |
+## 4. 配置与依�?
+### 4.1 依赖白名单（lib/�?
+| 依赖 | 路径 | 用�?|
 |------|------|------|
 | logger | `@/lib/logger` | 日志输出 |
 | EventBus | `@/lib/eventBus` | 事件发布/订阅 |
-| format | `@/lib/format` | 数据格式化 |
+| format | `@/lib/format` | 数据格式�?|
 | errors | `@/lib/errors` | 错误类型定义 |
 
-### 4.2 配置项（如适用）
-
-| 配置名 | 默认值 | 说明 | 来源 |
+### 4.2 配置项（如适用�?
+| 配置�?| 默认�?| 说明 | 来源 |
 |--------|--------|------|------|
 | `{CONFIG_KEY}` | `{default}` | {说明} | `src/config/` |
 
@@ -130,10 +122,10 @@ components/pages (仅经 Store 取数)
 
 ## 6. 变更日志
 
-| 日期 | 版本 | 变更 | 作者 |
+| 日期 | 版本 | 变更 | 作�?|
 |------|------|------|------|
-| 2026-07-12 | v0.1.0 | 契约初稿 | 架构组 |
+| 2026-07-12 | v0.1.0 | 契约初稿 | 架构�?|
 
 ---
 
-> **TODO[子域 owner]**：请按本模板填充 §1-§5，确保与 `services-catalog.md` 的摘要一致。完成后运行 `tsc --noEmit` + `audit:layers` 验证。
+> **TODO[子域 owner]**：请按本模板填充 §1-§5，确保与 `services-catalog.md` 的摘要一致。完成后运行 `tsc --noEmit` + `audit:layers` 验证�?

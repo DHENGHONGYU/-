@@ -221,19 +221,61 @@ export function verdictsBySymbol(symbol: string): RiskVerdict[] {
 // ============================================================
 
 let _unsubscribeOrders: (() => void) | null = null
+let _globalSubscriptionsInitialized = false
 
 const RISK_RELEVANT_ACTIONS = new Set<EnvelopeAction>([
   ENVELOPE_ACTION.insertOrder,
   ENVELOPE_ACTION.updateOrder,
 ])
 
-/** 初始化 DataBridge 订阅，返回 cleanup 函数 */
+/** 初始化 DataBridge 订阅（组件级），返回 cleanup 函数 */
 export function initRiskStoreSubscriptions(): () => void {
   if (_unsubscribeOrders) {
     logger.warn('[riskStore] Subscriptions already initialized')
     return () => destroyRiskStoreSubscriptions()
   }
 
+  setupSubscriptions()
+  logger.info('[riskStore] DataBridge subscriptions initialized')
+  return () => destroyRiskStoreSubscriptions()
+}
+
+/**
+ * 全局初始化风控订阅（应用启动时调用）。
+ * 与组件级 initRiskStoreSubscriptions 不同，全局初始化的订阅
+ * 不会随组件卸载而销毁，确保风控数据在懒加载widget挂载前就已就绪。
+ */
+export function initRiskStoreGlobalSubscriptions(): void {
+  if (_globalSubscriptionsInitialized) {
+    logger.debug('[riskStore] Global subscriptions already initialized')
+    return
+  }
+
+  setupSubscriptions()
+  // 启动时加载一次风控裁决记录
+  void useRiskStore.getState().loadRiskVerdicts()
+  _globalSubscriptionsInitialized = true
+  logger.info('[riskStore] Global subscriptions initialized')
+}
+
+/**
+ * 测试用：重置所有订阅状态（仅在测试环境使用）
+ */
+export function _resetRiskStoreSubscriptionsForTest(): void {
+  destroyRiskStoreSubscriptions()
+  _globalSubscriptionsInitialized = false
+  useRiskStore.setState({
+    triState: 'normal',
+    circuitState: 'closed',
+    verdicts: [],
+    loading: false,
+    error: null,
+    lastChecked: 0,
+  })
+  logger.info('[riskStore] Subscriptions reset for test')
+}
+
+function setupSubscriptions(): void {
   _unsubscribeOrders = dataBridge.subscribe(
     'orders',
     (envelope) => {
@@ -245,16 +287,18 @@ export function initRiskStoreSubscriptions(): () => void {
           action: envelope.meta.action,
           traceId: envelope.meta.traceId,
         })
-        // 订单变更时，可考虑重新评估当前风控状态
+        // 订单变更时，重新加载风控裁决
+        void useRiskStore.getState().loadRiskVerdicts()
       }
     },
   )
-
-  logger.info('[riskStore] DataBridge subscriptions initialized')
-  return () => destroyRiskStoreSubscriptions()
 }
 
 function destroyRiskStoreSubscriptions(): void {
+  if (_globalSubscriptionsInitialized) {
+    logger.debug('[riskStore] Global subscriptions, skip destroy from component')
+    return
+  }
   _unsubscribeOrders?.()
   _unsubscribeOrders = null
   logger.info('[riskStore] DataBridge subscriptions destroyed')

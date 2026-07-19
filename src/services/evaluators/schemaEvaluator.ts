@@ -8,8 +8,14 @@ import type { EvaluatorContext, EvaluatorFn, EvaluationResult } from './evaluato
 
 const logger = getLogger()
 
+/**
+ * SCHEMA_EVALUATOR_ID
+ */
 export const SCHEMA_EVALUATOR_ID = 'schema-evaluator'
 
+/**
+ * schemaEvaluator
+ */
 export const schemaEvaluator: EvaluatorFn = (ctx: EvaluatorContext): EvaluationResult => {
   const startedAt = Date.now()
   const schema = ctx.params?.schema as import('zod').ZodSchema | undefined

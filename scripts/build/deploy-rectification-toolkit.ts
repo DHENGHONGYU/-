@@ -296,7 +296,7 @@ async function main() {
 
     const readmePath = path.join(targetDir, 'README.md')
     await fs.writeFile(readmePath, readmeContent, 'utf-8')
-    console.log(`  ✅ README.md`)
+    console.log(`  ✅ ${path.basename(readmePath)}`)
 
     console.log(`\n✅ 工具包已部署到: ${targetDir}`)
 

@@ -58,10 +58,9 @@ async function tryRequest<T>(
 ): Promise<{ ok: true; data: T } | { ok: false; error: unknown }> {
   try {
     const response = await fetchWithTimeout(buildUrl(path), {
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
+      headers: options.body !== undefined
+        ? { 'Content-Type': 'application/json', ...options.headers }
+        : { ...options.headers },
       ...options,
     }, timeoutMs)
 

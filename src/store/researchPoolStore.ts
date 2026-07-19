@@ -85,6 +85,9 @@ function toPoolItem(stock: Stock): PoolItem {
   } as PoolItem
 }
 
+/**
+ * useResearchPoolStore
+ */
 export const useResearchPoolStore = create<ResearchPoolState>((set, get) => ({
   ...initialState,
 
@@ -318,14 +321,27 @@ export const useResearchPoolStore = create<ResearchPoolState>((set, get) => ({
   },
 }))
 
+/**
+ * getResearchPoolTotalCount
+ * @returns number
+ */
 export function getResearchPoolTotalCount(): number {
   return useResearchPoolStore.getState().items.length
 }
 
+/**
+ * getResearchPoolItemBySymbol
+ * @param symbol
+ * @returns PoolItem | undefined
+ */
 export function getResearchPoolItemBySymbol(symbol: string): PoolItem | undefined {
   return useResearchPoolStore.getState().items.find((s) => s.symbol === symbol)
 }
 
+/**
+ * getResearchPoolGroups
+ * @returns string[]
+ */
 export function getResearchPoolGroups(): string[] {
   const { items } = useResearchPoolStore.getState()
   const groups = new Set<string>()
@@ -348,6 +364,9 @@ function debouncedRefresh(): void {
   }, DEBOUNCE_MS)
 }
 
+/**
+ * initResearchPoolStoreSubscriptions
+ */
 export function initResearchPoolStoreSubscriptions(): () => void {
   if (_unsubscribe) {
     logger.warn('[researchPoolStore] Subscriptions already initialized, skipping')

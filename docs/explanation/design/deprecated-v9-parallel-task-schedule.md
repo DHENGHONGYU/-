@@ -1,81 +1,90 @@
 ---
-title: deprecated-v9-parallel-task-schedule
-tier: important
+title: V9 ²¢ĞĞÈÎÎñµ÷¶È±í
+type: explanation
+domain: project
+phase: design
+tier: standard
+status: deprecated
+maintainer: V9 Architecture Team
+summary: "Éú³ÉÊ±¼ä£º2026-06-25 µ÷¶È¹Ù£ºAgent Orchestrator Ö´ĞĞ×´Ì¬£ºÈ«²¿Íê³É"
+tags: [project, plan, deprecated]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+deprecated_by: "V9 Parallel Task Scheduling"
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-tier: important
-code_version: 2.0.0
----
+# V9 ²¢ĞĞÈÎÎñµ÷¶È±í
 
-# V9 å¹¶è¡Œä»»åŠ¡è°ƒåº¦è¡¨
-
-> ç”Ÿæˆæ—¶é—´ï¼š2026-06-25  
-> è°ƒåº¦å®˜ï¼šAgent Orchestrator  
-> æ‰§è¡ŒçŠ¶æ€ï¼šå…¨éƒ¨å®Œæˆ
+> Éú³ÉÊ±¼ä£º2026-06-25  
+> µ÷¶È¹Ù£ºAgent Orchestrator  
+> Ö´ĞĞ×´Ì¬£ºÈ«²¿Íê³É
 
 ---
 
-## è°ƒåº¦æ€»è§ˆ
+## µ÷¶È×ÜÀÀ
 
-| Batch | ä»»åŠ¡æ•°é‡ | æ‰§è¡Œ Agent | çŠ¶æ€ |
+| Batch | ÈÎÎñÊıÁ¿ | Ö´ĞĞ Agent | ×´Ì¬ |
 |-------|----------|------------|------|
-| Batch-1 | 12 | Doc-Sync Ã— 3ã€Refactor-Agent Ã— 1 | âœ… å·²å®Œæˆ |
-| Batch-2 | 9 | Code-Reviewer Ã— 3ã€Doc-Sync Ã— 2 | âœ… å·²å®Œæˆ |
-| Batch-2.5 | 8 | Doc-Sync Ã— 3 | âœ… å·²å®Œæˆ |
-| Batch-3 | 1 | Refactor-Agent + Test-Generator Agent | âœ… å·²å®Œæˆ |
+| Batch-1 | 12 | Doc-Sync ¡Á 3¡¢Refactor-Agent ¡Á 1 | ? ÒÑÍê³É |
+| Batch-2 | 9 | Code-Reviewer ¡Á 3¡¢Doc-Sync ¡Á 2 | ? ÒÑÍê³É |
+| Batch-2.5 | 8 | Doc-Sync ¡Á 3 | ? ÒÑÍê³É |
+| Batch-3 | 1 | Refactor-Agent + Test-Generator Agent | ? ÒÑÍê³É |
 
 ---
 
-## åŸå­ä»»åŠ¡æ˜ç»†
+## Ô­×ÓÈÎÎñÃ÷Ï¸
 
-| Batchåºå· | åŸå­ä»»åŠ¡æè¿°ï¼ˆå«æ–‡ä»¶è·¯å¾„ï¼‰ | æ‰§è¡ŒAgent | çŠ¶æ€ |
+| BatchĞòºÅ | Ô­×ÓÈÎÎñÃèÊö£¨º¬ÎÄ¼şÂ·¾¶£© | Ö´ĞĞAgent | ×´Ì¬ |
 |-----------|---------------------------|-----------|------|
-| Batch-1 | ä¿®æ”¹ `../../reference/03-architecture-standards.md`ï¼šDB ç‰ˆæœ¬ã€Store æ¸…å•ã€åå·®æ¸…å•ã€DataFlow/Widget/Agent çŠ¶æ€ã€ç« èŠ‚ç¼–å·ã€eventBus ç¤ºä¾‹ | Doc-Sync Agent | âœ… å·²å®Œæˆ |
-| Batch-1 | ä¿®æ”¹ `../../reference/06-routing-specs.md`ï¼šè¡¥å…¨ 5 æ¡é—æ¼è·¯ç”±ã€ä¿®æ­£ PortalShell æ˜ å°„ã€HubPage è®¾è®¡è¯´æ˜ | Doc-Sync Agent | âœ… å·²å®Œæˆ |
-| Batch-1 | ä¿®æ”¹ `../../reference/08-implementation-plan.md`ï¼šæµ‹è¯•åŸºçº¿ã€Phase 2 ä»»åŠ¡çŠ¶æ€ã€/input/prototype å†³ç­– | Doc-Sync Agent | âœ… å·²å®Œæˆ |
-| Batch-1 | ä¿®æ”¹ `../../reference/09-quality-gates.md`ï¼šaudit åŸºçº¿ï¼ˆ0/2ã€389ã€11ï¼‰ã€.nvmrcã€coverage çŠ¶æ€ | Doc-Sync Agent | âœ… å·²å®Œæˆ |
-| Batch-1 | ä¿®æ”¹ `../../reference/10-glossary.md`ï¼šæ¨¡å— IDã€group å­—æ®µã€watchlistsã€V6 è¿ç§»æœ¯è¯­ | Doc-Sync Agent | âœ… å·²å®Œæˆ |
-| Batch-1 | ä¿®æ”¹ `../../../README.md`ï¼šç‰ˆæœ¬æ ‡è¯†ã€å¾…å®ç°åˆ—è¡¨ã€L3 æè¿° | Doc-Sync Agent | âœ… å·²å®Œæˆ |
-| Batch-1 | ä¿®æ”¹ `docs/README.md`ï¼šç‰ˆæœ¬ç»Ÿä¸€ã€æ–‡æ¡£æ€§è´¨æ ‡æ³¨ | Doc-Sync Agent | âœ… å·²å®Œæˆ |
-| Batch-1 | ä¿®æ”¹ `./implementation-governance.md`ï¼šADR æ•°é‡ã€ç¼–å·â†”æ–‡ä»¶åå¯¹ç…§è¡¨ | Doc-Sync Agent | âœ… å·²å®Œæˆ |
-| Batch-1 | ä¿®æ”¹ `../../reference/v9-system-blueprint.md`ï¼šstore æ•°é‡ã€è´¨é‡åŸºçº¿ã€åå·®æ¸…å•ã€ADR åˆ—è¡¨ | Doc-Sync Agent | âœ… å·²å®Œæˆ |
-| Batch-1 | ä¿®æ”¹ `../../reference/input-cabin-spec.md`ï¼šinputConfig çŠ¶æ€ã€/input/local-knowledge | Doc-Sync Agent | âœ… å·²å®Œæˆ |
-| Batch-1 | åˆ›å»º `.nvmrc` + é…ç½® `vite.config.ts` coverage é˜ˆå€¼ + å®‰è£… `@vitest/coverage-v8@^2.1.0` | Refactor-Agent | âœ… å·²å®Œæˆ |
-| Batch-1 | æ›´æ–° `package.json` / `package-lock.json`ï¼šæ–°å¢ `tsc` ä¸ `regression` è„šæœ¬ã€è®°å½• coverage ä¾èµ– | Refactor-Agent | âœ… å·²å®Œæˆ |
-| Batch-2 | å®¡æŸ¥ `../../reference/03-architecture-standards.md` | Code-Reviewer Agent | âœ… å·²å®Œæˆ |
-| Batch-2 | å®¡æŸ¥ `../../reference/06-routing-specs.md`ã€`../../reference/08-implementation-plan.md`ã€`../../reference/09-quality-gates.md`ã€`../../reference/10-glossary.md` | Code-Reviewer Agent | âœ… å·²å®Œæˆ |
-| Batch-2 | å®¡æŸ¥ `../../../README.md`ã€`docs/../../../README.md`ã€`docs/implementation/` ä¸‹ governance / v9-system-blueprint / input-cabin-spec | Code-Reviewer Agent | âœ… å·²å®Œæˆ |
-| Batch-2 | æ–°å¢ `../../reference/dataflow-engine-spec.md` | Doc-Sync Agent | âœ… å·²å®Œæˆ |
-| Batch-2 | æ–°å¢ `../../reference/agent-runtime-spec.md` | Doc-Sync Agent | âœ… å·²å®Œæˆ |
-| Batch-2 | æ–°å¢ `../../reference/rotation-score-spec.md` | Doc-Sync Agent | âœ… å·²å®Œæˆ |
-| Batch-2 | æ–°å¢ `../db-migration-v4-to-v6.md` | Doc-Sync Agent | âœ… å·²å®Œæˆ |
-| Batch-2 | æ–°å¢ `../quality-gates-baseline.md` | Doc-Sync Agent | âœ… å·²å®Œæˆ |
-| Batch-2 | æ–°å¢ `../2026-06-25-v6-migration.md`ï¼ˆADR-009ï¼‰ | Doc-Sync Agent | âœ… å·²å®Œæˆ |
-| Batch-2.5 | ä¿®å¤ `../../reference/03-architecture-standards.md`ï¼šDataFlow å®ç°ç»†èŠ‚ã€Widget å­ç›®å½•ã€CockpitShell æè¿°ã€ç‰ˆæœ¬å·ç»Ÿä¸€ | Doc-Sync Agent | âœ… å·²å®Œæˆ |
-| Batch-2.5 | ä¿®å¤ `../../reference/06-routing-specs.md`ï¼šHubPage ç»Ÿç§°ã€å­é¡µé¢æè¿°ã€ç¬¬ 8 èŠ‚æ˜ å°„ã€ç‰ˆæœ¬å·ç»Ÿä¸€ | Doc-Sync Agent | âœ… å·²å®Œæˆ |
-| Batch-2.5 | ä¿®å¤ `../../reference/08-implementation-plan.md`ï¼šç« èŠ‚ç¼–å·é¡ºåºã€æµ‹è¯•è¶…æ—¶è¯´æ˜ | Doc-Sync Agent | âœ… å·²å®Œæˆ |
-| Batch-2.5 | ä¿®å¤ `../../reference/09-quality-gates.md`ï¼š.nvmrc å·²åˆ›å»ºã€coverage é˜ˆå€¼å·²é…ç½® | Doc-Sync Agent | âœ… å·²å®Œæˆ |
-| Batch-2.5 | ä¿®å¤ `../../../README.md`ï¼šL3 æè¿° | Doc-Sync Agent | âœ… å·²å®Œæˆ |
-| Batch-2.5 | ä¿®å¤ `docs/README.md`ï¼šç‰ˆæœ¬è¯´æ˜ã€è¡¨æ ¼åˆ—å†—ä½™ | Doc-Sync Agent | âœ… å·²å®Œæˆ |
-| Batch-2.5 | ä¿®å¤ `../../reference/v9-system-blueprint.md`ï¼šstore æ•°é‡ã€E2E/æ­»ä»£ç åŸºçº¿ã€åå·®æ¸…å•åŒæ­¥ | Doc-Sync Agent | âœ… å·²å®Œæˆ |
-| Batch-2.5 | ä¿®å¤ `../../reference/input-cabin-spec.md` ä¸ `./implementation-governance.md`ï¼šè·¯ç”±æ˜ å°„ã€ADR æ—¥æœŸè¯´æ˜ | Doc-Sync Agent | âœ… å·²å®Œæˆ |
-| Batch-3 | å…¨é‡å›å½’æµ‹è¯•ï¼šå¹¶å‘è·‘ lint/test/auditã€ä¸²è¡Œ build + e2eï¼›è°ƒæ•´ `vite.config.ts` testTimeout ä¸º 15000ms | Refactor-Agent + Test-Generator Agent | âœ… å·²å®Œæˆ |
+| Batch-1 | ĞŞ¸Ä `../../reference/03-architecture-standards.md`£ºDB °æ±¾¡¢Store Çåµ¥¡¢Æ«²îÇåµ¥¡¢DataFlow/Widget/Agent ×´Ì¬¡¢ÕÂ½Ú±àºÅ¡¢eventBus Ê¾Àı | Doc-Sync Agent | ? ÒÑÍê³É |
+| Batch-1 | ĞŞ¸Ä `../../reference/06-routing-specs.md`£º²¹È« 5 ÌõÒÅÂ©Â·ÓÉ¡¢ĞŞÕı PortalShell Ó³Éä¡¢HubPage Éè¼ÆËµÃ÷ | Doc-Sync Agent | ? ÒÑÍê³É |
+| Batch-1 | ĞŞ¸Ä `../../reference/08-implementation-plan.md`£º²âÊÔ»ùÏß¡¢Phase 2 ÈÎÎñ×´Ì¬¡¢/input/prototype ¾ö²ß | Doc-Sync Agent | ? ÒÑÍê³É |
+| Batch-1 | ĞŞ¸Ä `../../reference/09-quality-gates.md`£ºaudit »ùÏß£¨0/2¡¢389¡¢11£©¡¢.nvmrc¡¢coverage ×´Ì¬ | Doc-Sync Agent | ? ÒÑÍê³É |
+| Batch-1 | ĞŞ¸Ä `../../reference/10-glossary.md`£ºÄ£¿é ID¡¢group ×Ö¶Î¡¢watchlists¡¢V6 Ç¨ÒÆÊõÓï | Doc-Sync Agent | ? ÒÑÍê³É |
+| Batch-1 | ĞŞ¸Ä `../../../README.md`£º°æ±¾±êÊ¶¡¢´ıÊµÏÖÁĞ±í¡¢L3 ÃèÊö | Doc-Sync Agent | ? ÒÑÍê³É |
+| Batch-1 | ĞŞ¸Ä `docs/README.md`£º°æ±¾Í³Ò»¡¢ÎÄµµĞÔÖÊ±ê×¢ | Doc-Sync Agent | ? ÒÑÍê³É |
+| Batch-1 | ĞŞ¸Ä `./implementation-governance.md`£ºADR ÊıÁ¿¡¢±àºÅ?ÎÄ¼şÃû¶ÔÕÕ±í | Doc-Sync Agent | ? ÒÑÍê³É |
+| Batch-1 | ĞŞ¸Ä `../../reference/v9-system-blueprint.md`£ºstore ÊıÁ¿¡¢ÖÊÁ¿»ùÏß¡¢Æ«²îÇåµ¥¡¢ADR ÁĞ±í | Doc-Sync Agent | ? ÒÑÍê³É |
+| Batch-1 | ĞŞ¸Ä `../../reference/input-cabin-spec.md`£ºinputConfig ×´Ì¬¡¢/input/local-knowledge | Doc-Sync Agent | ? ÒÑÍê³É |
+| Batch-1 | ´´½¨ `.nvmrc` + ÅäÖÃ `vite.config.ts` coverage ãĞÖµ + °²×° `@vitest/coverage-v8@^2.1.0` | Refactor-Agent | ? ÒÑÍê³É |
+| Batch-1 | ¸üĞÂ `package.json` / `package-lock.json`£ºĞÂÔö `tsc` Óë `regression` ½Å±¾¡¢¼ÇÂ¼ coverage ÒÀÀµ | Refactor-Agent | ? ÒÑÍê³É |
+| Batch-2 | Éó²é `../../reference/03-architecture-standards.md` | Code-Reviewer Agent | ? ÒÑÍê³É |
+| Batch-2 | Éó²é `../../reference/06-routing-specs.md`¡¢`../../reference/08-implementation-plan.md`¡¢`../../reference/09-quality-gates.md`¡¢`../../reference/10-glossary.md` | Code-Reviewer Agent | ? ÒÑÍê³É |
+| Batch-2 | Éó²é `../../../README.md`¡¢`docs/../../../README.md`¡¢`docs/implementation/` ÏÂ governance / v9-system-blueprint / input-cabin-spec | Code-Reviewer Agent | ? ÒÑÍê³É |
+| Batch-2 | ĞÂÔö `../../reference/dataflow-engine-spec.md` | Doc-Sync Agent | ? ÒÑÍê³É |
+| Batch-2 | ĞÂÔö `../../reference/agent-runtime-spec.md` | Doc-Sync Agent | ? ÒÑÍê³É |
+| Batch-2 | ĞÂÔö `../../reference/rotation-score-spec.md` | Doc-Sync Agent | ? ÒÑÍê³É |
+| Batch-2 | ĞÂÔö `../db-migration-v4-to-v6.md` | Doc-Sync Agent | ? ÒÑÍê³É |
+| Batch-2 | ĞÂÔö `../quality-gates-baseline.md` | Doc-Sync Agent | ? ÒÑÍê³É |
+| Batch-2 | ĞÂÔö `../2026-06-25-v6-migration.md`£¨ADR-009£© | Doc-Sync Agent | ? ÒÑÍê³É |
+| Batch-2.5 | ĞŞ¸´ `../../reference/03-architecture-standards.md`£ºDataFlow ÊµÏÖÏ¸½Ú¡¢Widget ×ÓÄ¿Â¼¡¢CockpitShell ÃèÊö¡¢°æ±¾ºÅÍ³Ò» | Doc-Sync Agent | ? ÒÑÍê³É |
+| Batch-2.5 | ĞŞ¸´ `../../reference/06-routing-specs.md`£ºHubPage Í³³Æ¡¢×ÓÒ³ÃæÃèÊö¡¢µÚ 8 ½ÚÓ³Éä¡¢°æ±¾ºÅÍ³Ò» | Doc-Sync Agent | ? ÒÑÍê³É |
+| Batch-2.5 | ĞŞ¸´ `../../reference/08-implementation-plan.md`£ºÕÂ½Ú±àºÅË³Ğò¡¢²âÊÔ³¬Ê±ËµÃ÷ | Doc-Sync Agent | ? ÒÑÍê³É |
+| Batch-2.5 | ĞŞ¸´ `../../reference/09-quality-gates.md`£º.nvmrc ÒÑ´´½¨¡¢coverage ãĞÖµÒÑÅäÖÃ | Doc-Sync Agent | ? ÒÑÍê³É |
+| Batch-2.5 | ĞŞ¸´ `../../../README.md`£ºL3 ÃèÊö | Doc-Sync Agent | ? ÒÑÍê³É |
+| Batch-2.5 | ĞŞ¸´ `docs/README.md`£º°æ±¾ËµÃ÷¡¢±í¸ñÁĞÈßÓà | Doc-Sync Agent | ? ÒÑÍê³É |
+| Batch-2.5 | ĞŞ¸´ `../../reference/v9-system-blueprint.md`£ºstore ÊıÁ¿¡¢E2E/ËÀ´úÂë»ùÏß¡¢Æ«²îÇåµ¥Í¬²½ | Doc-Sync Agent | ? ÒÑÍê³É |
+| Batch-2.5 | ĞŞ¸´ `../../reference/input-cabin-spec.md` Óë `./implementation-governance.md`£ºÂ·ÓÉÓ³Éä¡¢ADR ÈÕÆÚËµÃ÷ | Doc-Sync Agent | ? ÒÑÍê³É |
+| Batch-3 | È«Á¿»Ø¹é²âÊÔ£º²¢·¢ÅÜ lint/test/audit¡¢´®ĞĞ build + e2e£»µ÷Õû `vite.config.ts` testTimeout Îª 15000ms | Refactor-Agent + Test-Generator Agent | ? ÒÑÍê³É |
 
 ---
 
-## å¹¶è¡Œæ‰§è¡ŒæŒ‡ä»¤
+## ²¢ĞĞÖ´ĞĞÖ¸Áî
 
-ä»¥ä¸‹å‘½ä»¤å¯ç›´æ¥åœ¨ç»ˆç«¯è¿è¡Œï¼Œç”¨äºå¤ç° Batch-3 å…¨é‡å›å½’æµ‹è¯•æˆ–æ—¥å¸¸å¹¶è¡Œé—¨ç¦æ£€æŸ¥ã€‚
+ÒÔÏÂÃüÁî¿ÉÖ±½ÓÔÚÖÕ¶ËÔËĞĞ£¬ÓÃÓÚ¸´ÏÖ Batch-3 È«Á¿»Ø¹é²âÊÔ»òÈÕ³£²¢ĞĞÃÅ½û¼ì²é¡£
 
-### 1. ä¸€é”®å…¨é‡å›å½’ï¼ˆæ¨èï¼‰
+### 1. Ò»¼üÈ«Á¿»Ø¹é£¨ÍÆ¼ö£©
 
 ```bash
 npm run regression
 ```
 
-ç­‰ä»·äºï¼š
+µÈ¼ÛÓÚ£º
 
 ```bash
 npx concurrently \
@@ -86,7 +95,7 @@ npx concurrently \
   && npm run test:e2e
 ```
 
-### 2. ä»…å¹¶è¡Œ lint + å•å…ƒæµ‹è¯• + ä¸‰å±‚å®¡è®¡ï¼ˆä¸å« build/e2eï¼‰
+### 2. ½ö²¢ĞĞ lint + µ¥Ôª²âÊÔ + Èı²ãÉó¼Æ£¨²»º¬ build/e2e£©
 
 ```bash
 npx concurrently \
@@ -95,7 +104,7 @@ npx concurrently \
   "npm:lint" "npm:test -- --run" "npm:audit"
 ```
 
-### 3. å¹¶è¡Œè·‘ä¸‰å±‚å®¡è®¡è„šæœ¬
+### 3. ²¢ĞĞÅÜÈı²ãÉó¼Æ½Å±¾
 
 ```bash
 npx concurrently \
@@ -104,7 +113,7 @@ npx concurrently \
   "npm:run audit:layers" "npm:run audit:hardcode" "npm:run audit:deadcode"
 ```
 
-### 4. æŒ‰æ¨¡å—å¹¶è¡Œè·‘å•å…ƒæµ‹è¯•ï¼ˆç¤ºä¾‹ï¼‰
+### 4. °´Ä£¿é²¢ĞĞÅÜµ¥Ôª²âÊÔ£¨Ê¾Àı£©
 
 ```bash
 npx concurrently \
@@ -116,7 +125,7 @@ npx concurrently \
   "npx vitest run tests/*.test.tsx"
 ```
 
-### 5. å•ç‹¬è·‘ coverageï¼ˆå½“å‰é˜ˆå€¼æœªè¾¾æ ‡ï¼Œç”¨äºè·Ÿè¸ªç¼ºå£ï¼‰
+### 5. µ¥¶ÀÅÜ coverage£¨µ±Ç°ãĞÖµÎ´´ï±ê£¬ÓÃÓÚ¸ú×ÙÈ±¿Ú£©
 
 ```bash
 npm run coverage
@@ -124,15 +133,15 @@ npm run coverage
 
 ---
 
-## å›å½’æµ‹è¯•ç»“æœ
+## »Ø¹é²âÊÔ½á¹û
 
-| é—¨ç¦é¡¹ | ç»“æœ |
+| ÃÅ½ûÏî | ½á¹û |
 |--------|------|
-| `tsc --noEmit` | âœ… é€šè¿‡ |
-| `npm run lint` | âœ… é€šè¿‡ |
-| `npm test -- --run` | âœ… 44 files / 291 tests |
-| `npm run audit:layers` | âœ… 0 è¿è§„ / 2 è­¦å‘Š |
-| `npm run audit:hardcode` | âœ… 389 å¤„ï¼ˆåŸºçº¿å†…ï¼‰ |
-| `npm run audit:deadcode` | âœ… 11 å¤„ï¼ˆåŸºçº¿å†…ï¼‰ |
-| `npm run build` | âœ… é€šè¿‡ |
-| `npm run test:e2e` | âœ… 5/5 passed |
+| `tsc --noEmit` | ? Í¨¹ı |
+| `npm run lint` | ? Í¨¹ı |
+| `npm test -- --run` | ? 44 files / 291 tests |
+| `npm run audit:layers` | ? 0 Î¥¹æ / 2 ¾¯¸æ |
+| `npm run audit:hardcode` | ? 389 ´¦£¨»ùÏßÄÚ£© |
+| `npm run audit:deadcode` | ? 11 ´¦£¨»ùÏßÄÚ£© |
+| `npm run build` | ? Í¨¹ı |
+| `npm run test:e2e` | ? 5/5 passed |

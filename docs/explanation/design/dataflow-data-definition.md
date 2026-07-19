@@ -1,120 +1,129 @@
 ---
 title: dataflow-data-definition
+type: explanation
+domain: data
+phase: design
 tier: important
+status: active
+maintainer: V9 Architecture Team
+summary: "v1.2.0 ĞÂÔö¡£getStats() ·µ»ØµÄ»º´æÍ³¼Æ¶ÔÏó¡£"
+tags: [data, data-definition, dataflow, plan, architecture, explanation]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+doc_id: V9-DOC-DATA-006
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-tier: important
-code_version: 2.0.0
----
-
-# æ•°æ®æµå¼•æ“ï¼ˆDataFlow Engineï¼‰æ•°æ®å­—å…¸
+# Êı¾İÁ÷ÒıÇæ£¨DataFlow Engine£©Êı¾İ×Öµä
 
 > **Status**: Current  
 > **Version**: v1.2.0  
 > **Last Updated**: 2026-07-05  
-> æ¨¡å—èŒƒå›´ï¼š`src/core/dataflow/`  
-> å…³è”ä»»åŠ¡ï¼š`../../reference/08-implementation-plan.md` 2.1.8
+> Ä£¿é·¶Î§£º`src/core/dataflow/`  
+> ¹ØÁªÈÎÎñ£º`../../reference/08-implementation-plan.md` 2.1.8
 
 ---
 
-## ä¸€ã€ç±»å‹å®šä¹‰
+## Ò»¡¢ÀàĞÍ¶¨Òå
 
-### 1.1 DataChannel â€” æ•°æ®é€šé“
+### 1.1 DataChannel ¡ª Êı¾İÍ¨µÀ
 
-| é€šé“æ ‡è¯† | è¯´æ˜ | é»˜è®¤åˆ·æ–°é—´éš” | æŒä¹…åŒ– | ä¼˜å…ˆçº§ |
+| Í¨µÀ±êÊ¶ | ËµÃ÷ | Ä¬ÈÏË¢ĞÂ¼ä¸ô | ³Ö¾Ã»¯ | ÓÅÏÈ¼¶ |
 |----------|------|--------------|--------|--------|
-| `market:index` | å¤§ç›˜æŒ‡æ•°å®æ—¶æ•°æ® | 5000ms | true | high |
-| `market:sector` | æ¿å—æ¶¨è·Œæ’è¡Œ | 10000ms | true | high |
-| `market:fundflow` | èµ„é‡‘æµå‘ç»Ÿè®¡ | 15000ms | true | normal |
-| `market:emotion` | å¸‚åœºæƒ…ç»ªæŒ‡æ ‡ | 30000ms | false | low |
-| `portfolio:summary` | æŒä»“æ€»è§ˆ | 10000ms | true | high |
-| `portfolio:holding` | æŒä»“æ˜ç»† | 30000ms | true | normal |
-| `strategy:signal` | ä¹°å–ä¿¡å· | 5000ms | false | high |
-| `strategy:score` | è‚¡ç¥¨è¯„åˆ† | 60000ms | true | normal |
-| `agent:status` | Agent çŠ¶æ€ | 10000ms | false | normal |
-| `system:health` | ç³»ç»Ÿå¥åº· | 30000ms | false | low |
+| `market:index` | ´óÅÌÖ¸ÊıÊµÊ±Êı¾İ | 5000ms | true | high |
+| `market:sector` | °å¿éÕÇµøÅÅĞĞ | 10000ms | true | high |
+| `market:fundflow` | ×Ê½ğÁ÷ÏòÍ³¼Æ | 15000ms | true | normal |
+| `market:emotion` | ÊĞ³¡ÇéĞ÷Ö¸±ê | 30000ms | false | low |
+| `portfolio:summary` | ³Ö²Ö×ÜÀÀ | 10000ms | true | high |
+| `portfolio:holding` | ³Ö²ÖÃ÷Ï¸ | 30000ms | true | normal |
+| `strategy:signal` | ÂòÂôĞÅºÅ | 5000ms | false | high |
+| `strategy:score` | ¹ÉÆ±ÆÀ·Ö | 60000ms | true | normal |
+| `agent:status` | Agent ×´Ì¬ | 10000ms | false | normal |
+| `system:health` | ÏµÍ³½¡¿µ | 30000ms | false | low |
 
-### 1.2 DataPacket â€” æ•°æ®åŒ…
+### 1.2 DataPacket ¡ª Êı¾İ°ü
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | æè¿° |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | ÃèÊö |
 |------|------|------|------|
-| `channel` | `DataChannel` | æ˜¯ | æ‰€å±é€šé“ |
-| `data` | `T` | æ˜¯ | è½½è·æ•°æ® |
-| `timestamp` | `number` | æ˜¯ | å‘å¸ƒæ—¶é—´æˆ³ï¼ˆæ¯«ç§’ï¼‰ |
-| `seq` | `number` | æ˜¯ | å•è°ƒé€’å¢åºåˆ—å· |
+| `channel` | `DataChannel` | ÊÇ | ËùÊôÍ¨µÀ |
+| `data` | `T` | ÊÇ | ÔØºÉÊı¾İ |
+| `timestamp` | `number` | ÊÇ | ·¢²¼Ê±¼ä´Á£¨ºÁÃë£© |
+| `seq` | `number` | ÊÇ | µ¥µ÷µİÔöĞòÁĞºÅ |
 
-### 1.3 ChannelMeta â€” é€šé“å…ƒæ•°æ®
+### 1.3 ChannelMeta ¡ª Í¨µÀÔªÊı¾İ
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | æšä¸¾/èŒƒå›´ | æè¿° |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | Ã¶¾Ù/·¶Î§ | ÃèÊö |
 |------|------|------|-----------|------|
-| `channel` | `DataChannel` | æ˜¯ | è§ Â§1.1 | é€šé“æ ‡è¯† |
-| `description` | `string` | æ˜¯ | - | é€šé“æè¿° |
-| `refreshInterval` | `number` | æ˜¯ | > 0 | è½®è¯¢åˆ·æ–°é—´éš”ï¼ˆæ¯«ç§’ï¼‰ |
-| `persist` | `boolean` | æ˜¯ | - | æ˜¯å¦æŒä¹…åŒ–åˆ°ç¼“å­˜ |
-| `priority` | `string` | æ˜¯ | `high` / `normal` / `low` | åˆ†å‘ä¼˜å…ˆçº§ |
-| `ttl` | `number` | å¦ | >= 0 | ç¼“å­˜è¿‡æœŸæ—¶é—´ï¼ˆæ¯«ç§’ï¼‰ï¼Œ0 è¡¨ç¤ºä¸ç¼“å­˜ã€‚v1.2.0 æ–°å¢ |
+| `channel` | `DataChannel` | ÊÇ | ¼û ¡ì1.1 | Í¨µÀ±êÊ¶ |
+| `description` | `string` | ÊÇ | - | Í¨µÀÃèÊö |
+| `refreshInterval` | `number` | ÊÇ | > 0 | ÂÖÑ¯Ë¢ĞÂ¼ä¸ô£¨ºÁÃë£© |
+| `persist` | `boolean` | ÊÇ | - | ÊÇ·ñ³Ö¾Ã»¯µ½»º´æ |
+| `priority` | `string` | ÊÇ | `high` / `normal` / `low` | ·Ö·¢ÓÅÏÈ¼¶ |
+| `ttl` | `number` | ·ñ | >= 0 | »º´æ¹ıÆÚÊ±¼ä£¨ºÁÃë£©£¬0 ±íÊ¾²»»º´æ¡£v1.2.0 ĞÂÔö |
 
-### 1.4 DataCallback â€” è®¢é˜…å›è°ƒ
+### 1.4 DataCallback ¡ª ¶©ÔÄ»Øµ÷
 
 ```ts
 type DataCallback<T = unknown> = (packet: DataPacket<T>) => void
 ```
 
-### 1.5 CacheStats â€” æ•°æ®æµç¼“å­˜ç»Ÿè®¡
+### 1.5 CacheStats ¡ª Êı¾İÁ÷»º´æÍ³¼Æ
 
-v1.2.0 æ–°å¢ã€‚`getStats()` è¿”å›çš„ç¼“å­˜ç»Ÿè®¡å¯¹è±¡ã€‚
+v1.2.0 ĞÂÔö¡£`getStats()` ·µ»ØµÄ»º´æÍ³¼Æ¶ÔÏó¡£
 
-| å­—æ®µ | ç±»å‹ | æè¿° |
+| ×Ö¶Î | ÀàĞÍ | ÃèÊö |
 |------|------|------|
-| `hits` | `number` | ç¼“å­˜å‘½ä¸­æ¬¡æ•° |
-| `hitCount` | `number` | ç¼“å­˜å‘½ä¸­æ¡ç›®æ•° |
-| `misses` | `number` | ç¼“å­˜æœªå‘½ä¸­æ¬¡æ•° |
-| `missCount` | `number` | ç¼“å­˜æœªå‘½ä¸­æ¡ç›®æ•° |
-| `size` | `number` | å½“å‰ç¼“å­˜å¤§å° |
-| `totalRequests` | `number` | æ€»è¯·æ±‚æ•° |
-| `totalEntries` | `number` | æ€»æ¡ç›®æ•° |
-| `maxEntries` | `number` | æœ€å¤§ç¼“å­˜æ¡ç›®æ•° |
-| `hitRate` | `number` | å‘½ä¸­ç‡ï¼ˆ0-1ï¼‰ |
-| `expiredCount` | `number` | è¿‡æœŸæ¡ç›®æ•° |
-| `evictedCount` | `number` | é©±é€æ¡ç›®æ•° |
+| `hits` | `number` | »º´æÃüÖĞ´ÎÊı |
+| `hitCount` | `number` | »º´æÃüÖĞÌõÄ¿Êı |
+| `misses` | `number` | »º´æÎ´ÃüÖĞ´ÎÊı |
+| `missCount` | `number` | »º´æÎ´ÃüÖĞÌõÄ¿Êı |
+| `size` | `number` | µ±Ç°»º´æ´óĞ¡ |
+| `totalRequests` | `number` | ×ÜÇëÇóÊı |
+| `totalEntries` | `number` | ×ÜÌõÄ¿Êı |
+| `maxEntries` | `number` | ×î´ó»º´æÌõÄ¿Êı |
+| `hitRate` | `number` | ÃüÖĞÂÊ£¨0-1£© |
+| `expiredCount` | `number` | ¹ıÆÚÌõÄ¿Êı |
+| `evictedCount` | `number` | ÇıÖğÌõÄ¿Êı |
 
 ---
 
-## äºŒã€æ ¸å¿ƒ API
+## ¶ş¡¢ºËĞÄ API
 
 ### 2.1 DataFlowEngine
 
-| æ–¹æ³• | å…¥å‚ | å‡ºå‚ | è¯´æ˜ |
+| ·½·¨ | Èë²Î | ³ö²Î | ËµÃ÷ |
 |------|------|------|------|
-| `connect(url?)` | `url?: string` | `void` | å»ºç«‹ SSE è¿æ¥ï¼›æ—  URL æˆ– EventSource ä¸å¯ç”¨æ—¶åˆ‡æ¢ä¸ºè½®è¯¢æ¨¡å¼ |
-| `disconnect()` | - | `void` | æ–­å¼€è¿æ¥ï¼Œæ¸…ç†æ‰€æœ‰åˆ·æ–°å®šæ—¶å™¨ |
-| `subscribe(channel, callback)` | `channel: string`, `callback: DataCallback<T>` | `() => void` | è®¢é˜…é€šé“ï¼›è¿”å›å–æ¶ˆè®¢é˜…å‡½æ•° |
-| `publish(channel, data)` | `channel: string`, `data: T` | `void` | å‘å¸ƒæ•°æ®åŒ…ï¼Œè‡ªåŠ¨é€’å¢ seqï¼ŒæŒ‰ persist å†³å®šæ˜¯å¦ç¼“å­˜ |
-| `registerRefresh(channel, fetcher, intervalMs?)` | `channel: string`, `fetcher: () => Promise<T>`, `intervalMs?: number` | `void` | æ³¨å†Œè½®è¯¢åˆ·æ–°ä»»åŠ¡ |
-| `stopRefresh(channel)` | `channel: string` | `void` | åœæ­¢æŒ‡å®šé€šé“çš„è½®è¯¢ |
-| `onConnectionChange(listener)` | `listener: (connected: boolean) => void` | `() => void` | ç›‘å¬è¿æ¥çŠ¶æ€å˜åŒ– |
-| `getStats()` | - | ç»Ÿè®¡å¯¹è±¡ | è¿”å›è¿æ¥çŠ¶æ€ã€é€šé“æ•°ã€è®¢é˜…æ•°ã€ç¼“å­˜æ•°ã€åˆ·æ–°ä»»åŠ¡æ•° |
-| `destroy()` | - | `void` | é”€æ¯å¼•æ“ï¼Œé‡Šæ”¾æ‰€æœ‰èµ„æº |
+| `connect(url?)` | `url?: string` | `void` | ½¨Á¢ SSE Á¬½Ó£»ÎŞ URL »ò EventSource ²»¿ÉÓÃÊ±ÇĞ»»ÎªÂÖÑ¯Ä£Ê½ |
+| `disconnect()` | - | `void` | ¶Ï¿ªÁ¬½Ó£¬ÇåÀíËùÓĞË¢ĞÂ¶¨Ê±Æ÷ |
+| `subscribe(channel, callback)` | `channel: string`, `callback: DataCallback<T>` | `() => void` | ¶©ÔÄÍ¨µÀ£»·µ»ØÈ¡Ïû¶©ÔÄº¯Êı |
+| `publish(channel, data)` | `channel: string`, `data: T` | `void` | ·¢²¼Êı¾İ°ü£¬×Ô¶¯µİÔö seq£¬°´ persist ¾ö¶¨ÊÇ·ñ»º´æ |
+| `registerRefresh(channel, fetcher, intervalMs?)` | `channel: string`, `fetcher: () => Promise<T>`, `intervalMs?: number` | `void` | ×¢²áÂÖÑ¯Ë¢ĞÂÈÎÎñ |
+| `stopRefresh(channel)` | `channel: string` | `void` | Í£Ö¹Ö¸¶¨Í¨µÀµÄÂÖÑ¯ |
+| `onConnectionChange(listener)` | `listener: (connected: boolean) => void` | `() => void` | ¼àÌıÁ¬½Ó×´Ì¬±ä»¯ |
+| `getStats()` | - | Í³¼Æ¶ÔÏó | ·µ»ØÁ¬½Ó×´Ì¬¡¢Í¨µÀÊı¡¢¶©ÔÄÊı¡¢»º´æÊı¡¢Ë¢ĞÂÈÎÎñÊı |
+| `destroy()` | - | `void` | Ïú»ÙÒıÇæ£¬ÊÍ·ÅËùÓĞ×ÊÔ´ |
 
 ---
 
-## ä¸‰ã€äº‹ä»¶æ€»çº¿ä¿¡å·
+## Èı¡¢ÊÂ¼ş×ÜÏßĞÅºÅ
 
-| äº‹ä»¶å | è§¦å‘æ—¶æœº | è½½è· |
+| ÊÂ¼şÃû | ´¥·¢Ê±»ú | ÔØºÉ |
 |--------|----------|------|
-| `DATAFLOW_CONNECTED` | SSE è¿æ¥å»ºç«‹æˆ–è¿›å…¥è½®è¯¢æ¨¡å¼ | `{ connected: true }` |
-| `DATAFLOW_DISCONNECTED` | SSE è¿æ¥æ–­å¼€ | `{ connected: false }` |
-| `DATAFLOW_PACKET_PUBLISHED` | æ•°æ®åŒ…å‘å¸ƒæˆåŠŸ | `{ channel, seq }` |
+| `DATAFLOW_CONNECTED` | SSE Á¬½Ó½¨Á¢»ò½øÈëÂÖÑ¯Ä£Ê½ | `{ connected: true }` |
+| `DATAFLOW_DISCONNECTED` | SSE Á¬½Ó¶Ï¿ª | `{ connected: false }` |
+| `DATAFLOW_PACKET_PUBLISHED` | Êı¾İ°ü·¢²¼³É¹¦ | `{ channel, seq }` |
 
 ---
 
-## å››ã€é»˜è®¤å›é€€æ•°æ®
+## ËÄ¡¢Ä¬ÈÏ»ØÍËÊı¾İ
 
-å½“é€šé“åˆ·æ–°å¤±è´¥ä¸”éœ€è¦å…œåº•æ—¶ï¼Œ`DefaultDataBuilder.buildFallbackData()` è¿”å›ï¼š
+µ±Í¨µÀË¢ĞÂÊ§°ÜÇÒĞèÒª¶µµ×Ê±£¬`DefaultDataBuilder.buildFallbackData()` ·µ»Ø£º
 
-| é€šé“ | å›é€€æ•°æ®ç»“æ„ |
+| Í¨µÀ | »ØÍËÊı¾İ½á¹¹ |
 |------|--------------|
 | `market:index` | `{ index: 0, change: 0, changePercent: 0, volume: 0 }` |
 | `market:sector` | `[]` |
@@ -127,43 +136,43 @@ v1.2.0 æ–°å¢ã€‚`getStats()` è¿”å›çš„ç¼“å­˜ç»Ÿè®¡å¯¹è±¡ã€‚
 
 ---
 
-## äº”ã€é‡è¿ç­–ç•¥
+## Îå¡¢ÖØÁ¬²ßÂÔ
 
-| å‚æ•° | å€¼ | è¯´æ˜ |
+| ²ÎÊı | Öµ | ËµÃ÷ |
 |------|-----|------|
-| `maxReconnectAttempts` | 5 | æœ€å¤§é‡è¿æ¬¡æ•° |
-| `maxReconnectDelay` | 30000ms | æœ€å¤§é‡è¿é€€é¿é—´éš” |
-| é€€é¿å…¬å¼ | `min(1000 * 2^attempts, 30000)` | æŒ‡æ•°é€€é¿ï¼Œä¸Šé™ 30 ç§’ |
-| è¶…é™æ—¶è¡Œä¸º | åˆ‡å›è½®è¯¢æ¨¡å¼ | `_fallbackToPolling()` |
+| `maxReconnectAttempts` | 5 | ×î´óÖØÁ¬´ÎÊı |
+| `maxReconnectDelay` | 30000ms | ×î´óÖØÁ¬ÍË±Ü¼ä¸ô |
+| ÍË±Ü¹«Ê½ | `min(1000 * 2^attempts, 30000)` | Ö¸ÊıÍË±Ü£¬ÉÏÏŞ 30 Ãë |
+| ³¬ÏŞÊ±ĞĞÎª | ÇĞ»ØÂÖÑ¯Ä£Ê½ | `_fallbackToPolling()` |
 
 ---
 
-## å…­ã€æ€§èƒ½é˜ˆå€¼
+## Áù¡¢ĞÔÄÜãĞÖµ
 
-| æ“ä½œ | å‘Šè­¦é˜ˆå€¼ | è¯´æ˜ |
+| ²Ù×÷ | ¸æ¾¯ãĞÖµ | ËµÃ÷ |
 |------|----------|------|
-| å‘å¸ƒè€—æ—¶ | > 10ms | `publish()` è¶…è¿‡ 10ms è®°å½• warn |
-| å•è®¢é˜…è€…å›è°ƒè€—æ—¶ | > 16ms | æ…¢è®¢é˜…è€… warnï¼›> 5ms debug |
-| åˆ†å‘æ€»è€—æ—¶ | > 5ms | `_distribute()` è¶…è¿‡ 5ms è®°å½• info |
+| ·¢²¼ºÄÊ± | > 10ms | `publish()` ³¬¹ı 10ms ¼ÇÂ¼ warn |
+| µ¥¶©ÔÄÕß»Øµ÷ºÄÊ± | > 16ms | Âı¶©ÔÄÕß warn£»> 5ms debug |
+| ·Ö·¢×ÜºÄÊ± | > 5ms | `_distribute()` ³¬¹ı 5ms ¼ÇÂ¼ info |
 
 ---
 
-## ä¸ƒã€å·²çŸ¥é—®é¢˜ä¸æ•´æ”¹æ–¹å‘
+## Æß¡¢ÒÑÖªÎÊÌâÓëÕû¸Ä·½Ïò
 
-1. **é­”æ³•æ•°å­—æœªå¸¸é‡åŒ–**ï¼š`refreshInterval`ã€`maxReconnectAttempts`ã€`maxReconnectDelay`ã€æ€§èƒ½é˜ˆå€¼ç­‰ä»ä¸ºç¡¬ç¼–ç ï¼Œåç»­åº”è¿ç§»åˆ° `src/constants/dataflow.constants.ts`ã€‚
-2. **éƒ¨åˆ†é€šé“æœªæ¥å…¥çœŸå®æ•°æ®æº**ï¼šå½“å‰ `market:*`ã€`portfolio:*` ç­‰é€šé“ä¾èµ– Mock æˆ–è½®è¯¢ï¼Œå¾… Data Fetcher æˆç†Ÿåæ›¿æ¢ã€‚
-3. **SSE æ–­çº¿é‡è¿**ï¼šå·²å…·å¤‡æŒ‡æ•°é€€é¿ä¸è½®è¯¢å›é€€ï¼Œä½†ç”Ÿäº§ç¯å¢ƒéœ€è¡¥å……å¿ƒè·³æ£€æµ‹ã€‚
+1. **Ä§·¨Êı×ÖÎ´³£Á¿»¯**£º`refreshInterval`¡¢`maxReconnectAttempts`¡¢`maxReconnectDelay`¡¢ĞÔÄÜãĞÖµµÈÈÔÎªÓ²±àÂë£¬ºóĞøÓ¦Ç¨ÒÆµ½ `src/core/dataflow/dataflowTypes.ts`¡£
+2. **²¿·ÖÍ¨µÀÎ´½ÓÈëÕæÊµÊı¾İÔ´**£ºµ±Ç° `market:*`¡¢`portfolio:*` µÈÍ¨µÀÒÀÀµ Mock »òÂÖÑ¯£¬´ı Data Fetcher ³ÉÊìºóÌæ»»¡£
+3. **SSE ¶ÏÏßÖØÁ¬**£ºÒÑ¾ß±¸Ö¸ÊıÍË±ÜÓëÂÖÑ¯»ØÍË£¬µ«Éú²ú»·¾³Ğè²¹³äĞÄÌø¼ì²â¡£
 
 ---
 
-## å…«ã€å¼€å‘è°ƒè¯•å·¥å…·
+## °Ë¡¢¿ª·¢µ÷ÊÔ¹¤¾ß
 
-| æ–‡ä»¶ | è¯´æ˜ |
+| ÎÄ¼ş | ËµÃ÷ |
 |------|------|
-| `src/devtools/testDataFlow.ts` | æµè§ˆå™¨æ§åˆ¶å°è°ƒè¯•è„šæœ¬ï¼Œæš´éœ² `__DEV__.testDataFlow()` ç”¨äºæ‰‹åŠ¨éªŒè¯æ•°æ®æµå¼•æ“è®¢é˜…/å‘å¸ƒ/åˆ·æ–°é“¾è·¯ |
+| `src/devtools/testDataFlow.ts` | ä¯ÀÀÆ÷¿ØÖÆÌ¨µ÷ÊÔ½Å±¾£¬±©Â¶ `__DEV__.testDataFlow()` ÓÃÓÚÊÖ¶¯ÑéÖ¤Êı¾İÁ÷ÒıÇæ¶©ÔÄ/·¢²¼/Ë¢ĞÂÁ´Â· |
 
-## ä¹ã€å…³è”æ–‡æ¡£
+## ¾Å¡¢¹ØÁªÎÄµµ
 
-- `../../reference/03-architecture-standards.md` 3.1.2ï¼šæ•°æ®æµå¼•æ“è®¾è®¡
-- `../../reference/08-implementation-plan.md` 2.1.8ï¼šæ•°æ®æµå¼•æ“ä»»åŠ¡
-- `../../reference/data-dictionary-index.md`ï¼šæ•°æ®å­—å…¸æ€»ç´¢å¼•
+- `../../reference/03-architecture-standards.md` 3.1.2£ºÊı¾İÁ÷ÒıÇæÉè¼Æ
+- `../../reference/08-implementation-plan.md` 2.1.8£ºÊı¾İÁ÷ÒıÇæÈÎÎñ
+- `../../reference/data-dictionary-index.md`£ºÊı¾İ×Öµä×ÜË÷Òı

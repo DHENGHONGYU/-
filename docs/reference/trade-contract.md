@@ -1,63 +1,67 @@
 ---
 title: trade-contract
-code_version: 2.0.0
-
+type: reference
+domain: project
+phase: design
 tier: important
----
-
----
-title: trade-contract.md â€” äº¤æ˜“åŸŸæ¥å£å¥‘çº¦
 status: draft
-owner: æ¶æ„ç»„
-updated: 2026-07-12
+maintainer: ¼Ü¹¹×é
+summary: "¶¨Òå trade ×ÓÓòµÄ½Ó¿ÚÆõÔ¼¡¢Ö°Ôğ±ß½ç¡¢Êı¾İÁ÷ÓëÒÀÀµ¹ØÏµ¡£"
+tags: [project, trading, contract, reference, governance, documentation]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: important
+doc_id: V9-DOC-PROJ-109
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
-# trade-contract.md â€” äº¤æ˜“åŸŸæ¥å£å¥‘çº¦
+# trade-contract.md ¡ª ½»Ò×Óò½Ó¿ÚÆõÔ¼
 
-> **å®šä½**ï¼šå®šä¹‰ `trade` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ç³»ã€‚  
-> **å…³è”**ï¼š`./services-catalog.md`ï¼ˆ24 å­åŸŸæ€»è§ˆï¼‰ã€`../../AGENTS.md` Â§ä¸€ï¼ˆåˆ†å±‚è§„åˆ™ï¼‰ã€‚
+> **¶¨Î»**£º¶¨Òå `trade` ×ÓÓòµÄ½Ó¿ÚÆõÔ¼¡¢Ö°Ôğ±ß½ç¡¢Êı¾İÁ÷ÓëÒÀÀµ¹ØÏµ¡£  
+> **Source**£º`./services-catalog.md`£¨24 ×ÓÓò×ÜÀÀ£©¡¢`../../AGENTS.md` ¡ìÒ»£¨·Ö²ã¹æÔò£©¡£
 
 ---
 
-## 1. èŒè´£è¾¹ç•Œ
+## 1. Ö°Ôğ±ß½ç
 
-### 1.1 æ ¸å¿ƒèŒè´£
+### 1.1 ºËĞÄÖ°Ôğ
 
-1. **æŒä»“åˆ—è¡¨æŸ¥è¯¢**ï¼šå°è£… `/api/v1/trade/holdings` æ¥å£ï¼Œæ”¯æŒåˆ†é¡µã€æ—¥æœŸèŒƒå›´ã€äº¤æ˜“æ–¹å‘ã€å…³é”®è¯ç­›é€‰ï¼Œå†…ç½®è¯·æ±‚è¶…æ—¶ï¼ˆ15sï¼‰ä¸æŒ‡æ•°é€€é¿é‡è¯•ï¼ˆæœ€å¤š 2 æ¬¡ï¼‰ã€‚
-2. **äº¤æ˜“æ“ä½œæ‰§è¡Œ**ï¼šå°è£…è¡¥ä»“ï¼ˆ`ADD_POSITION`ï¼‰ä¸å¹³ä»“ï¼ˆ`CLOSE_POSITION`ï¼‰ä¸¤ç±»æ“ä½œï¼Œé€šè¿‡ POST è¯·æ±‚ä¸åç«¯äº¤äº’ï¼Œè¿”å›æ“ä½œæˆåŠŸ/å¤±è´¥çŠ¶æ€ã€‚
-3. **æŒä»“æ•°æ®å¯¼å‡º**ï¼šç”Ÿæˆ CSV æ ¼å¼æŒä»“æ•°æ®æ–‡ä»¶å¹¶è§¦å‘æµè§ˆå™¨ä¸‹è½½ï¼Œæ”¯æŒç›¸åŒçš„ç­›é€‰å‚æ•°ã€‚
-4. **å¯è§‚æµ‹æ€§äº‹ä»¶**ï¼šæŒä»“æ•°æ®åŠ è½½å®Œæˆä¸äº¤æ˜“æ“ä½œå®Œæˆåï¼Œé€šè¿‡ `DataBridge.forward()` å‘é€æ ‡å‡†åŒ– Envelopeï¼ˆ`holdingsDataLoaded` / `tradeActionExecuted`ï¼‰ï¼Œä¾›ä¸‹æ¸¸ Store è®¢é˜…ä¸æ—¥å¿—è¿½è¸ªã€‚
+1. **³Ö²ÖÁĞ±í²éÑ¯**£º·â×° `/api/v1/trade/holdings` ½Ó¿Ú£¬Ö§³Ö·ÖÒ³¡¢ÈÕÆÚ·¶Î§¡¢½»Ò×·½Ïò¡¢¹Ø¼ü´ÊÉ¸Ñ¡£¬ÄÚÖÃÇëÇó³¬Ê±£¨15s£©ÓëÖ¸ÊıÍË±ÜÖØÊÔ£¨×î¶à 2 ´Î£©¡£
+2. **½»Ò×²Ù×÷Ö´ĞĞ**£º·â×°²¹²Ö£¨`ADD_POSITION`£©ÓëÆ½²Ö£¨`CLOSE_POSITION`£©Á½Àà²Ù×÷£¬Í¨¹ı POST ÇëÇóÓëºó¶Ë½»»¥£¬·µ»Ø²Ù×÷³É¹¦/Ê§°Ü×´Ì¬¡£
+3. **³Ö²ÖÊı¾İµ¼³ö**£ºÉú³É CSV ¸ñÊ½³Ö²ÖÊı¾İÎÄ¼ş²¢´¥·¢ä¯ÀÀÆ÷ÏÂÔØ£¬Ö§³ÖÏàÍ¬µÄÉ¸Ñ¡²ÎÊı¡£
+4. **¿É¹Û²âĞÔÊÂ¼ş**£º³Ö²ÖÊı¾İ¼ÓÔØÍê³ÉÓë½»Ò×²Ù×÷Íê³Éºó£¬Í¨¹ı `DataBridge.forward()` ·¢ËÍ±ê×¼»¯ Envelope£¨`holdingsDataLoaded` / `tradeActionExecuted`£©£¬¹©ÏÂÓÎ Store ¶©ÔÄÓëÈÕÖ¾×·×Ù¡£
 
-### 1.2 åˆ†å±‚å®šä½
+### 1.2 ·Ö²ã¶¨Î»
 
-| ç»´åº¦ | è¯´æ˜ |
+| Î¬¶È | ËµÃ÷ |
 |------|------|
-| æ‰€å±å±‚ | `src/services/`ï¼ˆæœåŠ¡å±‚ï¼‰ |
-| ä¾èµ–æ–¹å‘ | åªèƒ½ä¾èµ– `core/`ã€`data/`ã€`lib/`ï¼ˆç™½åå•ï¼‰ |
-| ç¦æ­¢äº‹é¡¹ | ç¦æ­¢ç›´å†™ IndexedDBï¼ˆé¡»ç» `DataBridge.forward()`ï¼‰ï¼›ç¦æ­¢ç›´æ¥è°ƒç”¨ `store/`ã€`pages/`ã€`components/` |
-| è¢«ä¾èµ–æ–¹ | `store/holdingsStore.ts`ï¼ˆçŠ¶æ€å±‚ï¼‰ã€`pages/trading/`ï¼ˆé¡µé¢å±‚ï¼‰å¯æ¶ˆè´¹æœ¬æœåŠ¡è¾“å‡º |
+| ËùÊô²ã | `src/services/`£¨·şÎñ²ã£© |
+| ÒÀÀµ·½Ïò | Ö»ÄÜÒÀÀµ `core/`¡¢`data/`¡¢`lib/`£¨°×Ãûµ¥£© |
+| ½ûÖ¹ÊÂÏî | ½ûÖ¹Ö±Ğ´ IndexedDB£¨Ğë¾­ `DataBridge.forward()`£©£»½ûÖ¹Ö±½Óµ÷ÓÃ `store/`¡¢`pages/`¡¢`components/` |
+| ±»ÒÀÀµ·½ | `store/holdingsStore.ts`£¨×´Ì¬²ã£©¡¢`pages/trading/`£¨Ò³Ãæ²ã£©¿ÉÏû·Ñ±¾·şÎñÊä³ö |
 
-### 1.3 ä¸ç›¸é‚»å­åŸŸçš„å…³ç³»
+### 1.3 ÓëÏàÁÚ×ÓÓòµÄ¹ØÏµ
 
-| ç›¸é‚»å­åŸŸ | å…³ç³» | æ•°æ®æµ |
+| ÏàÁÚ×ÓÓò | ¹ØÏµ | Êı¾İÁ÷ |
 |----------|------|--------|
-| `constants/trade.constants` | åŒå±‚å¸¸é‡ä¾›ç»™ï¼šæšä¸¾ã€é…ç½®ã€é¢œè‰²æ˜ å°„ | `constants` â†’ `trade`ï¼ˆåªè¯»å¸¸é‡ï¼‰ |
-| `core/databridge` | ä¸‹æ¸¸äº‹ä»¶æŠ•é€’ï¼šé€šè¿‡ `DataBridge.forward()` å‘é€å¯è§‚æµ‹æ€§äº‹ä»¶ | `trade` â†’ `core`ï¼ˆEnvelope æŠ•é€’ï¼‰ |
-| `store/holdingsStore` | ä¸‹æ¸¸çŠ¶æ€æ¶ˆè´¹ï¼šStore è®¢é˜… `DataBridge` é¢‘é“å¹¶è°ƒç”¨æœ¬æœåŠ¡å‡½æ•° | `trade` â†’ `store`ï¼ˆå‡½æ•°è°ƒç”¨ + äº‹ä»¶å¹¿æ’­ï¼‰ |
-| `trading`ï¼ˆé¡µé¢/ä¸šåŠ¡èˆ±ï¼‰ | ä¸‹æ¸¸ UI æ¶ˆè´¹ï¼šæŒä»“é¡µé¢é€šè¿‡ Store é—´æ¥æ¶ˆè´¹æœ¬æœåŠ¡ | `store` â†’ `pages/trading`ï¼ˆçŠ¶æ€é©±åŠ¨ UIï¼‰ |
+| `constants/trade.constants` | Í¬²ã³£Á¿¹©¸ø£ºÃ¶¾Ù¡¢ÅäÖÃ¡¢ÑÕÉ«Ó³Éä | `constants` ¡ú `trade`£¨Ö»¶Á³£Á¿£© |
+| `core/databridge` | ÏÂÓÎÊÂ¼şÍ¶µİ£ºÍ¨¹ı `DataBridge.forward()` ·¢ËÍ¿É¹Û²âĞÔÊÂ¼ş | `trade` ¡ú `core`£¨Envelope Í¶µİ£© |
+| `store/holdingsStore` | ÏÂÓÎ×´Ì¬Ïû·Ñ£ºStore ¶©ÔÄ `DataBridge` ÆµµÀ²¢µ÷ÓÃ±¾·şÎñº¯Êı | `trade` ¡ú `store`£¨º¯Êıµ÷ÓÃ + ÊÂ¼ş¹ã²¥£© |
+| `trading`£¨Ò³Ãæ/ÒµÎñ²Õ£© | ÏÂÓÎ UI Ïû·Ñ£º³Ö²ÖÒ³ÃæÍ¨¹ı Store ¼ä½ÓÏû·Ñ±¾·şÎñ | `store` ¡ú `pages/trading`£¨×´Ì¬Çı¶¯ UI£© |
 
 ---
 
-## 2. å…¬å…±æ¥å£
+## 2. ¹«¹²½Ó¿Ú
 
-### 2.1 ç±»å‹å®šä¹‰ï¼ˆTypeScript Interfaceï¼‰
+### 2.1 ÀàĞÍ¶¨Òå£¨TypeScript Interface£©
 
 ```typescript
-// æ–‡ä»¶ï¼šsrc/types/modules/trade.types.ts
+// ÎÄ¼ş£ºsrc/types/modules/trade.types.ts
 
-/** æŒä»“æ˜ç»†é¡¹ */
+/** ³Ö²ÖÃ÷Ï¸Ïî */
 export interface HoldingItem {
   code: string
   name: string
@@ -71,7 +75,7 @@ export interface HoldingItem {
   strategyType: StrategyType
 }
 
-/** æŒä»“åˆ—è¡¨æŸ¥è¯¢å‚æ•° */
+/** ³Ö²ÖÁĞ±í²éÑ¯²ÎÊı */
 export interface HoldingsQueryParams {
   page: number
   pageSize: number
@@ -81,47 +85,47 @@ export interface HoldingsQueryParams {
   keyword: string
 }
 
-/** æŒä»“åˆ—è¡¨ API å“åº”æ•°æ® */
+/** ³Ö²ÖÁĞ±í API ÏìÓ¦Êı¾İ */
 export interface HoldingsListData {
   total: number
   list: HoldingItem[]
 }
 
-/** ç»Ÿä¸€ API å“åº”åŒ…è£… */
+/** Í³Ò» API ÏìÓ¦°ü×° */
 export interface HoldingsApiResponse<T = HoldingsListData> {
   code: number
   data: T
   message?: string
 }
 
-/** äº¤æ˜“æ“ä½œè¯·æ±‚å‚æ•° */
+/** ½»Ò×²Ù×÷ÇëÇó²ÎÊı */
 export interface TradeActionRequest {
   code: string
   action: HoldingAction
   quantity: number
 }
 
-/** äº¤æ˜“æ“ä½œå“åº” */
+/** ½»Ò×²Ù×÷ÏìÓ¦ */
 export interface TradeActionResponse {
   code: number
   success: boolean
   message: string
 }
 
-/** åˆ†é¡µçŠ¶æ€ */
+/** ·ÖÒ³×´Ì¬ */
 export interface PaginationState {
   page: number
   pageSize: number
   total: number
 }
 
-/** åˆ†é¡µæ“ä½œå›è°ƒ */
+/** ·ÖÒ³²Ù×÷»Øµ÷ */
 export interface PaginationHandlers {
   onPageChange: (page: number) => void
   onPageSizeChange: (pageSize: number) => void
 }
 
-/** ç­›é€‰æ¡ä»¶ */
+/** É¸Ñ¡Ìõ¼ş */
 export interface FilterState {
   startDate: string
   endDate: string
@@ -129,7 +133,7 @@ export interface FilterState {
   keyword: string
 }
 
-/** ç­›é€‰æ“ä½œå›è°ƒ */
+/** É¸Ñ¡²Ù×÷»Øµ÷ */
 export interface FilterHandlers {
   onSearch: () => void
   onReset: () => void
@@ -137,14 +141,14 @@ export interface FilterHandlers {
   onUpdateFilter: (partial: Partial<FilterState>) => void
 }
 
-/** æ•°æ®åŠ è½½çŠ¶æ€ */
+/** Êı¾İ¼ÓÔØ×´Ì¬ */
 export interface HoldingsLoadingState {
   isListLoading: boolean
   isActionLoading: boolean
   isExporting: boolean
 }
 
-/** äº¤æ˜“æ“ä½œå¼¹çª—çŠ¶æ€ */
+/** ½»Ò×²Ù×÷µ¯´°×´Ì¬ */
 export interface TradeModalState {
   open: boolean
   action: HoldingAction | null
@@ -152,103 +156,103 @@ export interface TradeModalState {
 }
 ```
 
-### 2.2 ä¸»å…¥å£å‡½æ•°
+### 2.2 Ö÷Èë¿Úº¯Êı
 
-| å‡½æ•° | ç­¾å | èŒè´£ | é”™è¯¯å¤„ç† |
+| º¯Êı | Ç©Ãû | Ö°Ôğ | ´íÎó´¦Àí |
 |------|------|------|----------|
-| `fetchHoldings()` | `(params: HoldingsQueryParams) => Promise<HoldingsApiResponse<HoldingsListData>>` | è¯·æ±‚æŒä»“åˆ—è¡¨ APIï¼Œæ”¯æŒè¶…æ—¶ä¸é‡è¯• | `logger.error` è®°å½•åæŠ›å‡ºï¼›æˆåŠŸåé€šè¿‡ `DataBridge.forward()` æŠ•é€’ `holdingsDataLoaded` äº‹ä»¶ |
-| `executeTradeAction()` | `(req: TradeActionRequest) => Promise<TradeActionResponse>` | æ‰§è¡Œè¡¥ä»“æˆ–å¹³ä»“æ“ä½œ | `logger.error` è®°å½•åæŠ›å‡ºï¼›æˆåŠŸåé€šè¿‡ `DataBridge.forward()` æŠ•é€’ `tradeActionExecuted` äº‹ä»¶ |
-| `exportHoldingsCSV()` | `(params: HoldingsQueryParams) => Promise<void>` | å¯¼å‡ºæŒä»“ CSV å¹¶è§¦å‘æµè§ˆå™¨ä¸‹è½½ | `logger.error` è®°å½•åæŠ›å‡ºï¼›æ—  DataBridge äº‹ä»¶ |
+| `fetchHoldings()` | `(params: HoldingsQueryParams) => Promise<HoldingsApiResponse<HoldingsListData>>` | ÇëÇó³Ö²ÖÁĞ±í API£¬Ö§³Ö³¬Ê±ÓëÖØÊÔ | `logger.error` ¼ÇÂ¼ºóÅ×³ö£»³É¹¦ºóÍ¨¹ı `DataBridge.forward()` Í¶µİ `holdingsDataLoaded` ÊÂ¼ş |
+| `executeTradeAction()` | `(req: TradeActionRequest) => Promise<TradeActionResponse>` | Ö´ĞĞ²¹²Ö»òÆ½²Ö²Ù×÷ | `logger.error` ¼ÇÂ¼ºóÅ×³ö£»³É¹¦ºóÍ¨¹ı `DataBridge.forward()` Í¶µİ `tradeActionExecuted` ÊÂ¼ş |
+| `exportHoldingsCSV()` | `(params: HoldingsQueryParams) => Promise<void>` | µ¼³ö³Ö²Ö CSV ²¢´¥·¢ä¯ÀÀÆ÷ÏÂÔØ | `logger.error` ¼ÇÂ¼ºóÅ×³ö£»ÎŞ DataBridge ÊÂ¼ş |
 
-### 2.3 äº‹ä»¶æ¥å£
+### 2.3 ÊÂ¼ş½Ó¿Ú
 
-| äº‹ä»¶å | å‘å¸ƒæ–¹ | è®¢é˜…æ–¹ | è¯´æ˜ |
+| ÊÂ¼şÃû | ·¢²¼·½ | ¶©ÔÄ·½ | ËµÃ÷ |
 |--------|--------|--------|------|
-| `holdingsDataLoaded` | `holdingsService.fetchHoldings()` | `dataBridge` â†’ `STORE_NAME.stocks` | æŒä»“åˆ—è¡¨åŠ è½½å®Œæˆï¼ŒEnvelope æºå¸¦ `total` / `page` / `pageSize` |
-| `tradeActionExecuted` | `holdingsService.executeTradeAction()` | `dataBridge` â†’ `STORE_NAME.orders` | äº¤æ˜“æ“ä½œå®Œæˆï¼ŒEnvelope æºå¸¦ `code` / `action` / `quantity` / `success` |
+| `holdingsDataLoaded` | `holdingsService.fetchHoldings()` | `dataBridge` ¡ú `STORE_NAME.stocks` | ³Ö²ÖÁĞ±í¼ÓÔØÍê³É£¬Envelope Ğ¯´ø `total` / `page` / `pageSize` |
+| `tradeActionExecuted` | `holdingsService.executeTradeAction()` | `dataBridge` ¡ú `STORE_NAME.orders` | ½»Ò×²Ù×÷Íê³É£¬Envelope Ğ¯´ø `code` / `action` / `quantity` / `success` |
 
-> æ³¨ï¼šä¸Šè¿°äº‹ä»¶é€šè¿‡ `DataBridge.forward()` æŠ•é€’ï¼Œç”± `holdingsStore` çš„ `initHoldingsStoreSubscriptions()` è®¢é˜…å¯¹åº”é¢‘é“ï¼Œå®ç°æœåŠ¡å±‚ä¸çŠ¶æ€å±‚çš„è§£è€¦ã€‚
+> ×¢£ºÉÏÊöÊÂ¼şÍ¨¹ı `DataBridge.forward()` Í¶µİ£¬ÓÉ `holdingsStore` µÄ `initHoldingsStoreSubscriptions()` ¶©ÔÄ¶ÔÓ¦ÆµµÀ£¬ÊµÏÖ·şÎñ²ãÓë×´Ì¬²ãµÄ½âñî¡£
 
 ---
 
-## 3. æ•°æ®æµ
+## 3. Êı¾İÁ÷
 
 ```
-[å¤–éƒ¨ API: /api/v1/trade/holdings]
-    â†“
+[Íâ²¿ API: /api/v1/trade/holdings]
+    ¡ı
 holdingsService.fetchHoldings(params)
-    â†“ (æˆåŠŸå“åº”)
-Envelope(holdingsDataLoaded) â”€â”€DataBridge.forward()â”€â”€â†’ dataLayer â†’ IndexedDB (STORE_NAME.stocks)
-    â†“ (DataBridge å¹¿æ’­)
-holdingsStore è®¢é˜…é¢‘é“ (STORE_NAME.stocks / STORE_NAME.orders)
-    â†“ (Zustand + withBroadcast)
-components/pages (ä»…ç» Store å–æ•°ï¼Œå¦‚ TradingApp / CoreResourcePanel)
+    ¡ı (³É¹¦ÏìÓ¦)
+Envelope(holdingsDataLoaded) ©¤©¤DataBridge.forward()©¤©¤¡ú dataLayer ¡ú IndexedDB (STORE_NAME.stocks)
+    ¡ı (DataBridge ¹ã²¥)
+holdingsStore ¶©ÔÄÆµµÀ (STORE_NAME.stocks / STORE_NAME.orders)
+    ¡ı (Zustand + withBroadcast)
+components/pages (½ö¾­ Store È¡Êı£¬Èç TradingApp / CoreResourcePanel)
 ```
 
-äº¤æ˜“æ“ä½œï¼ˆ`executeTradeAction`ï¼‰çš„æ•°æ®æµç±»ä¼¼ï¼š
+½»Ò×²Ù×÷£¨`executeTradeAction`£©µÄÊı¾İÁ÷ÀàËÆ£º
 
 ```
-[ç”¨æˆ·è§¦å‘: è¡¥ä»“/å¹³ä»“]
-    â†“
+[ÓÃ»§´¥·¢: ²¹²Ö/Æ½²Ö]
+    ¡ı
 holdingsService.executeTradeAction(req)
-    â†“ (POST â†’ API)
-Envelope(tradeActionExecuted) â”€â”€DataBridge.forward()â”€â”€â†’ dataLayer â†’ IndexedDB (STORE_NAME.orders)
-    â†“
-holdingsStore è®¢é˜…é¢‘é“åˆ·æ–°çŠ¶æ€ / UI åé¦ˆæ“ä½œç»“æœ
+    ¡ı (POST ¡ú API)
+Envelope(tradeActionExecuted) ©¤©¤DataBridge.forward()©¤©¤¡ú dataLayer ¡ú IndexedDB (STORE_NAME.orders)
+    ¡ı
+holdingsStore ¶©ÔÄÆµµÀË¢ĞÂ×´Ì¬ / UI ·´À¡²Ù×÷½á¹û
 ```
 
 ---
 
-## 4. é…ç½®ä¸ä¾èµ–
+## 4. ÅäÖÃÓëÒÀÀµ
 
-### 4.1 ä¾èµ–ç™½åå•ï¼ˆlib/ï¼‰
+### 4.1 ÒÀÀµ°×Ãûµ¥£¨lib/£©
 
-| ä¾èµ– | è·¯å¾„ | ç”¨é€” |
+| ÒÀÀµ | Â·¾¶ | ÓÃÍ¾ |
 |------|------|------|
-| `logger` | `@/lib/logger` | æ—¥å¿—è¾“å‡ºï¼ˆè¯·æ±‚/å“åº”/é”™è¯¯ï¼‰ |
+| `logger` | `@/lib/logger` | ÈÕÖ¾Êä³ö£¨ÇëÇó/ÏìÓ¦/´íÎó£© |
 
-### 4.2 å…¶ä»–ä¾èµ–ï¼ˆcore / config / constantsï¼‰
+### 4.2 ÆäËûÒÀÀµ£¨core / config / constants£©
 
-| ä¾èµ– | è·¯å¾„ | ç”¨é€” |
+| ÒÀÀµ | Â·¾¶ | ÓÃÍ¾ |
 |------|------|------|
-| `dataBridge` | `@/core/databridge` | `DataBridge.forward()` æŠ•é€’å¯è§‚æµ‹æ€§ Envelope |
-| `EnvelopeFactory` | `@/core/envelope` | æ„é€ æ ‡å‡†åŒ– Envelope |
-| `dbConfig` | `@/config/dbConfig` | `ENVELOPE_ACTION`ã€`ENVELOPE_TARGET`ã€`MODULE_ID` |
-| `trade.constants` | `@/constants/trade.constants` | `HOLDINGS_API`ã€`HOLDINGS_REQUEST_CONFIG` ç­‰å¸¸é‡ |
-| `trade.types` | `@/types/modules/trade.types` | TypeScript æ¥å£å®šä¹‰ |
-| `nanoid` | `nanoid` | ç”Ÿæˆ Envelope traceIdï¼ˆå¤–éƒ¨åº“ï¼‰ |
+| `dataBridge` | `@/core/databridge` | `DataBridge.forward()` Í¶µİ¿É¹Û²âĞÔ Envelope |
+| `EnvelopeFactory` | `@/core/envelope` | ¹¹Ôì±ê×¼»¯ Envelope |
+| `dbConfig` | `@/config/dbConfig` | `ENVELOPE_ACTION`¡¢`ENVELOPE_TARGET`¡¢`MODULE_ID` |
+| `trade.constants` | `@/constants/trade.constants` | `HOLDINGS_API`¡¢`HOLDINGS_REQUEST_CONFIG` µÈ³£Á¿ |
+| `trade.types` | `@/types/modules/trade.types` | TypeScript ½Ó¿Ú¶¨Òå |
+| `nanoid` | `nanoid` | Éú³É Envelope traceId£¨Íâ²¿¿â£© |
 
-### 4.3 é…ç½®é¡¹
+### 4.3 ÅäÖÃÏî
 
-| é…ç½®å | é»˜è®¤å€¼ | è¯´æ˜ | æ¥æº |
+| ÅäÖÃÃû | Ä¬ÈÏÖµ | ËµÃ÷ | À´Ô´ |
 |--------|--------|------|------|
-| `HOLDINGS_REQUEST_CONFIG.TIMEOUT` | `15000` | è¯·æ±‚è¶…æ—¶ï¼ˆæ¯«ç§’ï¼‰ | `src/constants/trade.constants.ts` |
-| `HOLDINGS_REQUEST_CONFIG.MAX_RETRIES` | `2` | æœ€å¤§é‡è¯•æ¬¡æ•° | `src/constants/trade.constants.ts` |
-| `HOLDINGS_REQUEST_CONFIG.RETRY_DELAY` | `1000` | é‡è¯•é—´éš”ï¼ˆæ¯«ç§’ï¼‰ | `src/constants/trade.constants.ts` |
+| `HOLDINGS_REQUEST_CONFIG.TIMEOUT` | `15000` | ÇëÇó³¬Ê±£¨ºÁÃë£© | `src/constants/trade.constants.ts` |
+| `HOLDINGS_REQUEST_CONFIG.MAX_RETRIES` | `2` | ×î´óÖØÊÔ´ÎÊı | `src/constants/trade.constants.ts` |
+| `HOLDINGS_REQUEST_CONFIG.RETRY_DELAY` | `1000` | ÖØÊÔ¼ä¸ô£¨ºÁÃë£© | `src/constants/trade.constants.ts` |
 
 ---
 
-## 5. æµ‹è¯•ç­–ç•¥
+## 5. ²âÊÔ²ßÂÔ
 
-| æµ‹è¯•ç±»å‹ | æ–‡ä»¶ | è¯´æ˜ |
+| ²âÊÔÀàĞÍ | ÎÄ¼ş | ËµÃ÷ |
 |----------|------|------|
-| å•å…ƒæµ‹è¯• | `../../src/services/news/__tests__/` | **å¾…åˆ›å»º**ï¼šçº¯å‡½æ•°ï¼ˆå¦‚ `requestWithTimeout`ã€`requestWithRetry` çš„ mock æµ‹è¯•ï¼‰ã€é”™è¯¯é‡è¯•é€»è¾‘ |
-| é›†æˆæµ‹è¯• | `tests/services/trade.integration.test.ts` | **å¾…åˆ›å»º**ï¼š`fetchHoldings` ä¸ `DataBridge.forward()` çš„äº¤äº’éªŒè¯ã€Store è®¢é˜…è”åŠ¨ |
-| Mock ç­–ç•¥ | `__mocks__/holdingsService.ts` | **å¾…åˆ›å»º**ï¼šéš”ç¦» `fetch` å¤–éƒ¨ API è°ƒç”¨ï¼Œmock `DataBridge` ä¸ `EnvelopeFactory` |
+| µ¥Ôª²âÊÔ | `../../src/services/news/__tests__/` | **´ı´´½¨**£º´¿º¯Êı£¨Èç `requestWithTimeout`¡¢`requestWithRetry` µÄ mock ²âÊÔ£©¡¢´íÎóÖØÊÔÂß¼­ |
+| ¼¯³É²âÊÔ | `tests/services/trade.integration.test.ts` | **´ı´´½¨**£º`fetchHoldings` Óë `DataBridge.forward()` µÄ½»»¥ÑéÖ¤¡¢Store ¶©ÔÄÁª¶¯ |
+| Mock ²ßÂÔ | `__mocks__/holdingsService.ts` | **´ı´´½¨**£º¸ôÀë `fetch` Íâ²¿ API µ÷ÓÃ£¬mock `DataBridge` Óë `EnvelopeFactory` |
 
-> å½“å‰çŠ¶æ€ï¼š`src/services/trading/` ä¸‹å°šæ—  `__tests__` ç›®å½•æˆ–æµ‹è¯•æ–‡ä»¶ã€‚å»ºè®®åœ¨å®ç°æ–°å¢åŠŸèƒ½æ—¶åŒæ­¥è¡¥å……å•å…ƒæµ‹è¯•ï¼Œè¦†ç›– `requestWithRetry` çš„é€€é¿é€»è¾‘å’Œ `fetchHoldings` çš„ Envelope æ„é€ è·¯å¾„ã€‚
+> µ±Ç°×´Ì¬£º`src/services/trading/` ÏÂÉĞÎŞ `__tests__` Ä¿Â¼»ò²âÊÔÎÄ¼ş¡£½¨ÒéÔÚÊµÏÖĞÂÔö¹¦ÄÜÊ±Í¬²½²¹³äµ¥Ôª²âÊÔ£¬¸²¸Ç `requestWithRetry` µÄÍË±ÜÂß¼­ºÍ `fetchHoldings` µÄ Envelope ¹¹ÔìÂ·¾¶¡£
 
 ---
 
-## 6. å˜æ›´æ—¥å¿—
+## 6. ±ä¸üÈÕÖ¾
 
-| æ—¥æœŸ | ç‰ˆæœ¬ | å˜æ›´ | ä½œè€… |
+| ÈÕÆÚ | °æ±¾ | ±ä¸ü | ×÷Õß |
 |------|------|------|------|
-| 2026-07-12 | v0.1.0 | å¥‘çº¦åˆç¨¿ï¼šåŸºäº `holdingsService.ts` å•æ–‡ä»¶ç»“æ„ï¼Œæå– `trade.types.ts` æ¥å£ï¼Œæ¢³ç† DataBridge äº‹ä»¶æµä¸ä¾èµ–å…³ç³» | æ¶æ„ç»„ |
+| 2026-07-12 | v0.1.0 | ÆõÔ¼³õ¸å£º»ùÓÚ `holdingsService.ts` µ¥ÎÄ¼ş½á¹¹£¬ÌáÈ¡ `trade.types.ts` ½Ó¿Ú£¬ÊáÀí DataBridge ÊÂ¼şÁ÷ÓëÒÀÀµ¹ØÏµ | ¼Ü¹¹×é |
 
 ---
 
-> **TODO[å­åŸŸ owner]**ï¼š
-> 1. è¡¥å…… `src/services/trade/__tests__/holdingsService.test.ts` å•å…ƒæµ‹è¯•ï¼ˆè¦†ç›– fetch/é‡è¯•/é”™è¯¯è·¯å¾„ï¼‰ã€‚
-> 2. è‹¥æœªæ¥æ–°å¢ `trade` å­åŸŸå†…å…¶ä»–æ–‡ä»¶ï¼ˆå¦‚ `orderService.ts`ã€`positionService.ts`ï¼‰ï¼Œé¡»åŒæ­¥æ›´æ–°æœ¬å¥‘çº¦ Â§1 èŒè´£ä¸ Â§2 æ¥å£åˆ—è¡¨ã€‚
-> 3. å®Œæˆåè¿è¡Œ `tsc --noEmit` + `audit:layers` éªŒè¯ã€‚
+> **TODO[×ÓÓò owner]**£º
+> 1. ²¹³ä `src/services/trading/portfolioService.ts` µ¥Ôª²âÊÔ£¨¸²¸Ç fetch/ÖØÊÔ/´íÎóÂ·¾¶£©¡£
+> 2. ÈôÎ´À´ĞÂÔö `trade` ×ÓÓòÄÚÆäËûÎÄ¼ş£¨Èç `orderService.ts`¡¢`positionService.ts`£©£¬ĞëÍ¬²½¸üĞÂ±¾ÆõÔ¼ ¡ì1 Ö°ÔğÓë ¡ì2 ½Ó¿ÚÁĞ±í¡£
+> 3. Íê³ÉºóÔËĞĞ `tsc --noEmit` + `audit:layers` ÑéÖ¤¡£

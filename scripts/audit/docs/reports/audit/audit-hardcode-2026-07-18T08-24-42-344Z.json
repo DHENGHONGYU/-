@@ -1,0 +1,17 @@
+{
+  "violations": [],
+  "summary": {
+    "totalFiles": 1130,
+    "totalViolations": 0,
+    "totalWarnings": 0,
+    "bySeverity": {},
+    "byCategory": {}
+  },
+  "meta": {
+    "scriptName": "audit-hardcode",
+    "version": "3.0",
+    "timestamp": "2026-07-18T08:24:42.343Z",
+    "durationMs": 394,
+    "rootDir": "G:\\FinSightV9\\scripts\\audit"
+  }
+}

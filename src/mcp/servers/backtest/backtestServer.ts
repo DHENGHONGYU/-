@@ -8,7 +8,8 @@ import { MCPServerBase } from '@/mcp/core/server'
 import type { ServerInfo, ToolDescriptor, ResourceTemplate } from '@/mcp/core/types'
 import { getLogger } from '@/lib/logger'
 import { BacktestEngine } from '@/services/backtest/BacktestEngine'
-import type { BacktestStrategy } from '@/store/backtestStore'
+// 从 types 层导入类型（store 仅为 re-export）；mcp 层不应依赖 store 层
+import type { BacktestStrategy } from '@/types/modules/backtest.types'
 
 const logger = getLogger()
 

@@ -158,7 +158,7 @@ export const SYSTEM_ARCHITECTURE_LAYERS = [
     id: 'core',
     name: '核心层',
     description: '核心工具与类型守卫',
-    modules: ['DataBridge', 'ACL', 'Envelope', 'MemoryCache', 'EventBus'],
+    modules: ['DataBridge', 'ACL', 'Envelope', 'MemoryCache'],
     color: '#8b5cf6',
   },
   {
@@ -171,7 +171,7 @@ export const SYSTEM_ARCHITECTURE_LAYERS = [
   {
     id: 'services',
     name: '服务层',
-    description: '18个子域业务服务',
+    description: '30+ 子域业务服务',
     modules: ['analysis', 'scoring', 'fetcher', 'news', 'llm', 'execution', 'portfolio', 'input', 'data-collector', 'system'],
     color: '#10b981',
   },
@@ -185,7 +185,7 @@ export const SYSTEM_ARCHITECTURE_LAYERS = [
   {
     id: 'store',
     name: '状态层',
-    description: '39个Zustand Store',
+    description: '63个Zustand Store',
     modules: ['analysisStore', 'engineStore', 'tradingStore', 'portfolioStore'],
     color: '#ef4444',
   },

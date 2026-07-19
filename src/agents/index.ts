@@ -11,7 +11,6 @@ import { agentRuntime, type AgentConfig } from './agentRuntime'
 import { getAgentRegistry, AgentRegistry } from './agentRegistry'
 import { getAgentHealthMonitor, AgentHealthMonitor } from './agentHealthMonitor'
 import { getAgentConfigManager } from './agentConfigManager'
-import { initAgentSubscriptions } from '@/store/agentStore'
 
 const logger = getLogger()
 
@@ -168,7 +167,6 @@ export function validateAgentMcpDependencies(): Array<{ agentId: string; serverN
 // ============================================================================
 
 let initialized = false
-let cleanup: (() => void) | null = null
 
 /**
  * 初始化 Agent 系统
@@ -210,8 +208,8 @@ export function initAgentSystem(): void {
   // 启动健康监控（30s 检查周期）
   healthMonitor.start(30000)
 
-  // 初始化 Store 订阅
-  cleanup = initAgentSubscriptions()
+  // Store 订阅由 src/store/agentStore.ts 模块加载时自初始化（initAgentSubscriptions），
+  // agents 层不再直接依赖 store，保持分层契约（agents 仅依赖 core/data）。
 
   initialized = true
   logger.info('[AgentSystem] Initialization complete', {
@@ -235,11 +233,6 @@ export function shutdownAgentSystem(): void {
 
   const healthMonitor = getAgentHealthMonitor()
   healthMonitor.stop()
-
-  if (cleanup) {
-    cleanup()
-    cleanup = null
-  }
 
   initialized = false
   logger.info('[AgentSystem] Shutdown complete')

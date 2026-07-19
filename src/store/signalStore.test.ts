@@ -74,7 +74,7 @@ vi.mock('@/config/dbConfig', () => ({
 // Imports
 // ============================================================
 
-import { useSignalStore, topSignals, initSignalStoreSubscriptions } from './signalStore'
+import { useSignalStore, topSignals, initSignalStoreSubscriptions, _resetSignalStoreSubscriptionsForTest } from './signalStore'
 import {
   generateSignalsForSymbol,
   pickStrongestSignal,
@@ -129,10 +129,7 @@ beforeEach(() => {
   })
 
   // 清理模块级订阅状态，确保每次测试都是干净的
-  const cleanup = initSignalStoreSubscriptions()
-  cleanup()
-  // 重置 subscribe 调用计数，避免 beforeEach 自身的 init/cleanup 污染测试内的断言
-  mockSubscribe.mockClear()
+  _resetSignalStoreSubscriptionsForTest()
 
   useSignalStore.setState({
     signals: [],
@@ -378,7 +375,7 @@ describe('initSignalStoreSubscriptions', () => {
       payload: {},
     })
 
-    await new Promise((r) => setTimeout(r, 150))
+    await new Promise((r) => setTimeout(r, 350))
     expect(mockDataBridgeQuery).not.toHaveBeenCalled()
 
     // 正确的 action 应该触发（使用 SAVE_SCORES）
@@ -387,11 +384,11 @@ describe('initSignalStoreSubscriptions', () => {
       payload: {},
     })
 
-    await new Promise((r) => setTimeout(r, 150))
+    await new Promise((r) => setTimeout(r, 400))
     expect(mockDataBridgeQuery).toHaveBeenCalledTimes(1)
   })
 
-  it('去抖 100ms + 并发锁', async () => {
+  it('去抖 300ms + 并发锁', async () => {
     const stocks = [createMockStock('A')]
     mockDataBridgeQuery.mockResolvedValue({ success: true, data: stocks })
     ;(generateSignalsForSymbol as ReturnType<typeof vi.fn>).mockResolvedValue([
@@ -418,12 +415,12 @@ describe('initSignalStoreSubscriptions', () => {
       payload: {},
     })
 
-    // 50ms 内不应触发
-    await new Promise((r) => setTimeout(r, 50))
+    // 100ms 内不应触发
+    await new Promise((r) => setTimeout(r, 100))
     expect(mockDataBridgeQuery).not.toHaveBeenCalled()
 
-    // 150ms 后应只触发一次
-    await new Promise((r) => setTimeout(r, 150))
+    // 400ms 后应只触发一次
+    await new Promise((r) => setTimeout(r, 350))
     expect(mockDataBridgeQuery).toHaveBeenCalledTimes(1)
 
     // 模拟 isRefreshing=true，再次触发应该被跳过
@@ -434,19 +431,20 @@ describe('initSignalStoreSubscriptions', () => {
       meta: { source: 'analyzer', target: 'db', action: 'SAVE_SCORES', traceId: 't4', timestamp: Date.now() },
       payload: {},
     })
-    await new Promise((r) => setTimeout(r, 150))
+    await new Promise((r) => setTimeout(r, 400))
     expect(mockDataBridgeQuery).not.toHaveBeenCalled()
   })
 
   it('返回 cleanup 函数', () => {
     const cleanup = initSignalStoreSubscriptions()
+    expect(mockSubscribe).toHaveBeenCalledTimes(2)
     expect(typeof cleanup).toBe('function')
 
     cleanup()
 
     // 再次初始化应该能重新订阅（因为之前的 cleanup 已清理）
     const cleanup2 = initSignalStoreSubscriptions()
-    expect(mockSubscribe).toHaveBeenCalledTimes(4) // beforeEach 2次 + 这里2次
+    expect(mockSubscribe).toHaveBeenCalledTimes(4) // 2次 + 2次
     expect(typeof cleanup2).toBe('function')
 
     cleanup2()

@@ -2,6 +2,10 @@
  * @module missingReportDetector
  * @description 缺失报告检测器：在采集/计算过程中登记数据缺失报告，支持去重与重试。
  *
+ * @note P1-12（已确认合规）：missingReportStore 内部通过 sendWriteEnvelope() → DataBridge 写入，
+ *   queryList/queryGet 走 DataBridge 查询。dataLayer store 是 DataBridge 的类型安全包装层，
+ *   符合 services → data 分层规则（AGENTS.md §一）。无需迁移。
+ *
  * 职责：
  *   - detect(symbol, reportType, reason, options): 检测并登记缺失报告（自动去重）
  *   - listBySymbol(symbol): 查询某股票的全部缺失报告
@@ -11,7 +15,7 @@
  */
 
 import { getLogger } from '@/lib/logger'
-import { missingReportStore } from '@/data/dataLayer'
+import { missingReportStore } from '@/data/dataLayerContentStores'
 import type { MissingReport } from '@/data/types'
 import {
   MISSING_REPORT_TYPE,

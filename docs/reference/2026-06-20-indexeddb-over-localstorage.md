@@ -1,54 +1,53 @@
 ---
-title: 2026-06-20-indexeddb-over-localstorage
-code_version: 2.0.0
-
+title: ADR-002: IndexedDB Ìæ´ú localStorage
+type: reference
+domain: data
+phase: design
 tier: reference
----
-
----
-title: ADR-002: IndexedDB æ›¿ä»£ localStorage
-version: v0.9.0
-last_updated: 2026-06-24
-maintainer: V9 Architecture Team
 status: active
-change_log:
-  - date: 2026-06-24
-    author: Documentation Governor
-    desc: æ³¨å…¥ Frontmatter å…ƒæ•°æ®ï¼ˆPhase 3 ç‰ˆæœ¬åŒ–ï¼‰
+maintainer: V9 Architecture Team
+summary: "Architecture Decision Record: IndexedDB Ìæ´ú localStorage"
+tags: [data, adr, registry, store, reference]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: reference
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
-# ADR-002: IndexedDB æ›¿ä»£ localStorage
+
+# ADR-002: IndexedDB Ìæ´ú localStorage
 
 > **Status**: Accepted  
 > **Version**: v0.9.0-docs-review  
 > **Last Updated**: 2026-06-24
 
-- çŠ¶æ€ï¼šå·²æŽ¥å—
-- æ—¥æœŸï¼š2026-06-20
-- å†³ç­–äººï¼š@architect
+- ×´Ì¬£ºÒÑ½ÓÊÜ
+- ÈÕÆÚ£º2026-06-20
+- ¾ö²ßÈË£º@architect
 
-## èƒŒæ™¯
+## ±³¾°
 
-éœ€è¦å­˜å‚¨ stocksã€scoresã€ordersã€quotes ç­‰ç»“æž„åŒ–æ•°æ®ï¼ŒlocalStorage å®¹é‡ä¸ŽåŠŸèƒ½ä¸è¶³ã€‚
+ÐèÒª´æ´¢ stocks¡¢scores¡¢orders¡¢quotes µÈ½á¹¹»¯Êý¾Ý£¬localStorage ÈÝÁ¿Óë¹¦ÄÜ²»×ã¡£
 
-## é€‰é¡¹
+## Ñ¡Ïî
 
-| é€‰é¡¹ | ä¼˜ç‚¹ | ç¼ºç‚¹ |
+| Ñ¡Ïî | ÓÅµã | È±µã |
 |------|------|------|
-| A. IndexedDB | å®¹é‡å¤§ã€ç»“æž„åŒ–ã€å¼‚æ­¥ã€æ”¯æŒç´¢å¼• | API åº•å±‚ã€éœ€è‡ªè¡Œè¿ç§» |
-| B. localStorage | ç®€å•æ˜“ç”¨ | å®¹é‡ 5â€“10 MBã€åŒæ­¥é˜»å¡žã€æ— ç´¢å¼• |
-| C. WebSQL | å…³ç³»åž‹ | å·²åºŸå¼ƒã€å…¼å®¹æ€§å·® |
+| A. IndexedDB | ÈÝÁ¿´ó¡¢½á¹¹»¯¡¢Òì²½¡¢Ö§³ÖË÷Òý | API µ×²ã¡¢Ðè×ÔÐÐÇ¨ÒÆ |
+| B. localStorage | ¼òµ¥Ò×ÓÃ | ÈÝÁ¿ 5¨C10 MB¡¢Í¬²½×èÈû¡¢ÎÞË÷Òý |
+| C. WebSQL | ¹ØÏµÐÍ | ÒÑ·ÏÆú¡¢¼æÈÝÐÔ²î |
 
-## å†³ç­–
+## ¾ö²ß
 
-é€‰æ‹© Aã€‚IndexedDB æ»¡è¶³ç»“æž„åŒ–ã€å¤§å®¹é‡ã€ç¦»çº¿éœ€æ±‚ã€‚
+Ñ¡Ôñ A¡£IndexedDB Âú×ã½á¹¹»¯¡¢´óÈÝÁ¿¡¢ÀëÏßÐèÇó¡£
 
-## åŽæžœ
+## ºó¹û
 
-- æ‰€æœ‰æ•°æ®æ“ä½œç» `src/data/db.ts` å°è£…ã€‚
-- éœ€è‡ªè¡Œå®žçŽ°ç‰ˆæœ¬è¿ç§»ä¸Žé”™è¯¯å¤„ç†ã€‚
+- ËùÓÐÊý¾Ý²Ù×÷¾­ `src/data/db.ts` ·â×°¡£
+- Ðè×ÔÐÐÊµÏÖ°æ±¾Ç¨ÒÆÓë´íÎó´¦Àí¡£
 
-## ç›¸å…³æ–‡æ¡£
+## Ïà¹ØÎÄµµ
 
 - `./03-architecture-standards.md`

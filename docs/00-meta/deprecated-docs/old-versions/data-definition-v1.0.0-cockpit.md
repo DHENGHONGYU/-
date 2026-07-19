@@ -1,52 +1,56 @@
 ---
-title: docs/00-meta/deprecated-docs/old-versions/data-definition-v1.0.0-cockpit.md
+title: ¼İÊ»²Õ Widget Êı¾İ¶¨Òå
+type: meta
+domain: data
+phase: design
+tier: standard
+status: deprecated
+maintainer: V9 Architecture Team
+summary: "## 1. ¶¨Î» ¼İÊ»²Õ£¨command cabin£©Í¨¹ı WidgetRegistry ×¢²á²¢¹ÜÀí¿ÉÍÏ×§ Widget¡£±¾ÎÄµµÊÇ Widget ÔªĞÅÏ¢¡¢Êı¾İÔ´Óë×¢²á±í API µÄµ¥Ò»ÊÂÊµÔ´¡£"
+tags: [data, data-definition, cockpit, widget]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+deprecated_by: "Cockpit Data Definition v2.0"
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/00-meta/deprecated-docs/old-versions/data-definition-v1.0.0-cockpit.md
-code_version: 2.0.0
-tier: reference
----
-
----
-title: é©¾é©¶èˆ± Widget æ•°æ®å®šä¹‰
-code_version: 2.0.0
----
-
-# é©¾é©¶èˆ± Widget æ•°æ®å®šä¹‰
+# ¼İÊ»²Õ Widget Êı¾İ¶¨Òå
 
 > **Status**: Current  
 > **Version**: v1.0.0  
 > **Last Updated**: 2026-07-12  
-> **Related**: `src/cockpit/core/widgetRegistry.ts`ã€`src/constants/cockpit.constants.ts`ã€`src/types/modules/widget.types.ts`
+> **Related**: `src/cockpit/core/widgetRegistry.ts`¡¢`src/constants/cockpit.constants.ts`¡¢`src/types/modules/widget.types.ts`
 
 ---
 
-## 1. å®šä½
+## 1. ¶¨Î»
 
-é©¾é©¶èˆ±ï¼ˆcommand cabinï¼‰é€šè¿‡ **WidgetRegistry** æ³¨å†Œå¹¶ç®¡ç†å¯æ‹–æ‹½ Widgetã€‚æœ¬æ–‡æ¡£æ˜¯ Widget å…ƒä¿¡æ¯ã€æ•°æ®æºä¸æ³¨å†Œè¡¨ API çš„**å•ä¸€äº‹å®æº**ã€‚
+¼İÊ»²Õ£¨command cabin£©Í¨¹ı **WidgetRegistry** ×¢²á²¢¹ÜÀí¿ÉÍÏ×§ Widget¡£±¾ÎÄµµÊÇ Widget ÔªĞÅÏ¢¡¢Êı¾İÔ´Óë×¢²á±í API µÄ**µ¥Ò»ÊÂÊµÔ´**¡£
 
-**æ–°å¢ / ä¿®æ”¹ Widget å¿…é¡»åŒæ­¥ä¸‰å¤„**ï¼ˆè§ `../../../../AGENTS.md` ä¸é¡¹ç›®è®°å¿†ã€Œé©¾é©¶èˆ± Widget æ‰©å±•ã€ï¼‰ï¼š
+**ĞÂÔö / ĞŞ¸Ä Widget ±ØĞëÍ¬²½Èı´¦**£¨¼û `../../../../AGENTS.md` ÓëÏîÄ¿¼ÇÒä¡¸¼İÊ»²Õ Widget À©Õ¹¡¹£©£º
 
-1. `src/cockpit/core/widgetRegistry.ts` â€” æ³¨å†Œ `WidgetTemplate`
-2. `src/constants/cockpit.constants.ts` â€” `DEFAULT_WIDGET_CONFIG`ï¼ˆæ ‡é¢˜ / åˆ†ç±» / å°ºå¯¸ï¼‰+ `WIDGET_DEFAULT_DATA_SOURCE`ï¼ˆé»˜è®¤æ•°æ®æº / ç«¯ç‚¹ï¼‰
-3. Widget ç»„ä»¶æ¶ˆè´¹ `useMarketData()`ï¼Œé¢œè‰²èµ°ä»¤ç‰Œï¼ˆç¦æ­¢ç¡¬ç¼–ç ï¼‰
+1. `src/cockpit/core/widgetRegistry.ts` ¡ª ×¢²á `WidgetTemplate`
+2. `src/constants/cockpit.constants.ts` ¡ª `DEFAULT_WIDGET_CONFIG`£¨±êÌâ / ·ÖÀà / ³ß´ç£©+ `WIDGET_DEFAULT_DATA_SOURCE`£¨Ä¬ÈÏÊı¾İÔ´ / ¶Ëµã£©
+3. Widget ×é¼şÏû·Ñ `useMarketData()`£¬ÑÕÉ«×ßÁîÅÆ£¨½ûÖ¹Ó²±àÂë£©
 
 ---
 
-## 2. ç±»å‹å®šä¹‰
+## 2. ÀàĞÍ¶¨Òå
 
-ç±»å‹æ¥è‡ª `src/types/modules/widget.types.ts`ï¼š
+ÀàĞÍÀ´×Ô `src/types/modules/widget.types.ts`£º
 
-| ç±»å‹ | è¯´æ˜ |
+| ÀàĞÍ | ËµÃ÷ |
 |------|------|
-| `WidgetMeta` | Widget å…ƒä¿¡æ¯ï¼š`id`ã€`name`ã€`category`ã€`description`ã€`defaultSize`ã€`defaultDataSource`ã€`defaultConfig` |
-| `WidgetConfig` | å®ä¾‹é…ç½®ï¼š`instanceId`ã€`widgetId`ã€`size`ã€`position`ã€`title`ã€`settings`ã€`visible`ã€`collapsed`ã€`dataSource` |
-| `WidgetRuntimeState` | è¿è¡Œæ€ï¼š`instanceId`ã€`widgetId`ã€`status`ï¼ˆ`idle`/â€¦ï¼‰ |
-| `MarketData` | Widget ç»Ÿä¸€æ¥æ”¶çš„å¸‚åœºæ•°æ®ï¼Œå¯ç”± `MarketDataProvider` æ³¨å…¥ |
+| `WidgetMeta` | Widget ÔªĞÅÏ¢£º`id`¡¢`name`¡¢`category`¡¢`description`¡¢`defaultSize`¡¢`defaultDataSource`¡¢`defaultConfig` |
+| `WidgetConfig` | ÊµÀıÅäÖÃ£º`instanceId`¡¢`widgetId`¡¢`size`¡¢`position`¡¢`title`¡¢`settings`¡¢`visible`¡¢`collapsed`¡¢`dataSource` |
+| `WidgetRuntimeState` | ÔËĞĞÌ¬£º`instanceId`¡¢`widgetId`¡¢`status`£¨`idle`/¡­£© |
+| `MarketData` | Widget Í³Ò»½ÓÊÕµÄÊĞ³¡Êı¾İ£¬¿ÉÓÉ `MarketDataProvider` ×¢Èë |
 
-`WidgetTemplate`ï¼ˆæ³¨å†Œå•å…ƒï¼‰ï¼š
+`WidgetTemplate`£¨×¢²áµ¥Ôª£©£º
 
 ```ts
 interface WidgetTemplate {
@@ -58,100 +62,100 @@ interface WidgetTemplate {
 
 ---
 
-## 3. Widget æ¸…å•ï¼ˆ22 ä¸ªï¼‰
+## 3. Widget Çåµ¥£¨22 ¸ö£©
 
-å®˜æ–¹åˆ†ç±»ï¼ˆ`cockpit.constants.ts` `category`ï¼‰ï¼š`market`ã€`portfolio`ã€`strategy`ã€`analysis`ã€`ai`ã€‚ä¸‹è¡¨æŒ‰ä¸šåŠ¡åŸŸå½’ç±»ã€‚
+¹Ù·½·ÖÀà£¨`cockpit.constants.ts` `category`£©£º`market`¡¢`portfolio`¡¢`strategy`¡¢`analysis`¡¢`ai`¡£ÏÂ±í°´ÒµÎñÓò¹éÀà¡£
 
-### 3.1 è¡Œæƒ…å¸‚åœºï¼ˆmarketï¼‰
+### 3.1 ĞĞÇéÊĞ³¡£¨market£©
 
-| id | è¯´æ˜ | ç»„ä»¶ |
+| id | ËµÃ÷ | ×é¼ş |
 |----|------|------|
-| `marketIndices` | å¤§ç›˜æŒ‡æ•°å®æ—¶æ•°æ® | `MarketIndicesWidget` |
-| `sectorHeatmap` | æ¿å—æ¶¨è·Œå¹…çƒ­åŠ›å›¾ | `SectorHeatmapWidget` |
-| `fundFlow` | èµ„é‡‘æµå‘æ•°æ® | `FundFlowWidget` |
-| `marketSentiment` | å¸‚åœºæƒ…ç»ªæŒ‡æ ‡ | `MarketSentimentWidget` |
+| `marketIndices` | ´óÅÌÖ¸ÊıÊµÊ±Êı¾İ | `MarketIndicesWidget` |
+| `sectorHeatmap` | °å¿éÕÇµø·ùÈÈÁ¦Í¼ | `SectorHeatmapWidget` |
+| `fundFlow` | ×Ê½ğÁ÷ÏòÊı¾İ | `FundFlowWidget` |
+| `marketSentiment` | ÊĞ³¡ÇéĞ÷Ö¸±ê | `MarketSentimentWidget` |
 
-### 3.2 è‡ªé€‰ä¸æŒä»“ï¼ˆportfolioï¼‰
+### 3.2 ×ÔÑ¡Óë³Ö²Ö£¨portfolio£©
 
-| id | è¯´æ˜ | ç»„ä»¶ |
+| id | ËµÃ÷ | ×é¼ş |
 |----|------|------|
-| `watchlist` | è‡ªé€‰è‚¡åˆ—è¡¨ï¼ˆç«¯ç‚¹ `/user/watchlist`ï¼‰ | `WatchlistWidget` |
-| `watchlistMovers` | è‡ªé€‰è‚¡æ¶¨å¹…æ¦œ / è·Œå¹…æ¦œ / æŒ¯å¹…æ¦œ | `WatchlistMoversWidget` |
-| `portfolioOverview` | æŒä»“æ¦‚è§ˆ | `PortfolioOverviewWidget` |
+| `watchlist` | ×ÔÑ¡¹ÉÁĞ±í£¨¶Ëµã `/user/watchlist`£© | `WatchlistWidget` |
+| `watchlistMovers` | ×ÔÑ¡¹ÉÕÇ·ù°ñ / µø·ù°ñ / Õñ·ù°ñ | `WatchlistMoversWidget` |
+| `portfolioOverview` | ³Ö²Ö¸ÅÀÀ | `PortfolioOverviewWidget` |
 
-### 3.3 ç­–ç•¥ä¸è¯„åˆ†ï¼ˆstrategyï¼‰
+### 3.3 ²ßÂÔÓëÆÀ·Ö£¨strategy£©
 
-| id | è¯´æ˜ | ç»„ä»¶ |
+| id | ËµÃ÷ | ×é¼ş |
 |----|------|------|
-| `aiTradeReview` | AI äº¤æ˜“å¤ç›˜åˆ†æ | `AITradeReviewWidget` |
-| `hotSector` | çƒ­é—¨æ¿å—ç­–ç•¥è¯„åˆ†ä¸ç›¸å…³æ ‡çš„ | `HotSectorWidget` |
-| `valuePit` | ä»·å€¼æ´¼åœ°å€™é€‰ã€äº”ç»´è¯„åˆ†ä¸è½®åŠ¨ä¿¡å·çŠ¶æ€ | `ValuePitWidget` |
-| `kaiScore` | KAI é€‰è‚¡ç»¼åˆè¯„åˆ†å›¾è°± | `KaiScoreWidget` |
-| `stockPool` | è‚¡ç¥¨æ± ç®¡ç†ä¸ç›‘æ§åˆ—è¡¨ | `StockPoolWidget` |
+| `aiTradeReview` | AI ½»Ò×¸´ÅÌ·ÖÎö | `AITradeReviewWidget` |
+| `hotSector` | ÈÈÃÅ°å¿é²ßÂÔÆÀ·ÖÓëÏà¹Ø±êµÄ | `HotSectorWidget` |
+| `valuePit` | ¼ÛÖµÍİµØºòÑ¡¡¢ÎåÎ¬ÆÀ·ÖÓëÂÖ¶¯ĞÅºÅ×´Ì¬ | `ValuePitWidget` |
+| `kaiScore` | KAI Ñ¡¹É×ÛºÏÆÀ·ÖÍ¼Æ× | `KaiScoreWidget` |
+| `stockPool` | ¹ÉÆ±³Ø¹ÜÀíÓë¼à¿ØÁĞ±í | `StockPoolWidget` |
 
-### 3.4 AI ä¸åˆ†æï¼ˆanalysis / aiï¼‰
+### 3.4 AI Óë·ÖÎö£¨analysis / ai£©
 
-| id | è¯´æ˜ | ç»„ä»¶ |
+| id | ËµÃ÷ | ×é¼ş |
 |----|------|------|
-| `investmentProfile` | æŠ•èµ„ç”»åƒ / åˆ†æä¸­å¿ƒ | `InvestmentProfileWidget` |
-| `modelCompare` | AI å¤§æ¨¡å‹æ™ºèƒ½å¯¹æ¯” | `ModelCompareWidget` |
-| `stockChat` | ä¸ªè‚¡ / å¸‚åœºæ·±åº¦åˆ†æèŠå¤© | `StockChatWidget` |
+| `investmentProfile` | Í¶×Ê»­Ïñ / ·ÖÎöÖĞĞÄ | `InvestmentProfileWidget` |
+| `modelCompare` | AI ´óÄ£ĞÍÖÇÄÜ¶Ô±È | `ModelCompareWidget` |
+| `stockChat` | ¸ö¹É / ÊĞ³¡Éî¶È·ÖÎöÁÄÌì | `StockChatWidget` |
 
-### 3.5 ç³»ç»Ÿç›‘æ§
+### 3.5 ÏµÍ³¼à¿Ø
 
-| id | è¯´æ˜ | ç»„ä»¶ |
+| id | ËµÃ÷ | ×é¼ş |
 |----|------|------|
-| `agentPerformance` | æ™ºèƒ½ä½“æ€§èƒ½è¿½è¸ªä¸å¥åº·çŠ¶æ€ç›‘æ§ | `AgentPerformanceWidget` |
-| `engineStatus` | è¯„åˆ†å¼•æ“è¿è¡ŒçŠ¶æ€ä¸æ€§èƒ½æŒ‡æ ‡ | `EngineStatusWidget` |
-| `systemArchitecture` | ç³»ç»Ÿåˆ†å±‚æ¶æ„ä¸æ¨¡å—ä¾èµ–å¯è§†åŒ– | `SystemArchitectureWidget` |
+| `agentPerformance` | ÖÇÄÜÌåĞÔÄÜ×·×ÙÓë½¡¿µ×´Ì¬¼à¿Ø | `AgentPerformanceWidget` |
+| `engineStatus` | ÆÀ·ÖÒıÇæÔËĞĞ×´Ì¬ÓëĞÔÄÜÖ¸±ê | `EngineStatusWidget` |
+| `systemArchitecture` | ÏµÍ³·Ö²ã¼Ü¹¹ÓëÄ£¿éÒÀÀµ¿ÉÊÓ»¯ | `SystemArchitectureWidget` |
 
-### 3.6 äº¤æ˜“ä¸é£æ§
+### 3.6 ½»Ò×Óë·ç¿Ø
 
-| id | è¯´æ˜ | ç»„ä»¶ |
+| id | ËµÃ÷ | ×é¼ş |
 |----|------|------|
-| `pnlAnalysis` | äº¤æ˜“ç›ˆäºå½’å› åˆ†æä¸è¶‹åŠ¿è¿½è¸ª | `PnLAnalysisWidget` |
-| `positionControl` | ä»“ä½ç®¡ç†ä¸é£é™©æ§åˆ¶é¢æ¿ | `PositionControlWidget` |
-| `riskMonitor` | å®æ—¶é£é™©æŒ‡æ ‡ç›‘æ§ä¸é¢„è­¦ | `RiskMonitorWidget` |
-| `signalMonitor` | äº¤æ˜“ä¿¡å·å®æ—¶è¿½è¸ªä¸ç½®ä¿¡åº¦è¯„ä¼° | `SignalMonitorWidget` |
+| `pnlAnalysis` | ½»Ò×Ó¯¿÷¹éÒò·ÖÎöÓëÇ÷ÊÆ×·×Ù | `PnLAnalysisWidget` |
+| `positionControl` | ²ÖÎ»¹ÜÀíÓë·çÏÕ¿ØÖÆÃæ°å | `PositionControlWidget` |
+| `riskMonitor` | ÊµÊ±·çÏÕÖ¸±ê¼à¿ØÓëÔ¤¾¯ | `RiskMonitorWidget` |
+| `signalMonitor` | ½»Ò×ĞÅºÅÊµÊ±×·×ÙÓëÖÃĞÅ¶ÈÆÀ¹À | `SignalMonitorWidget` |
 
 ---
 
-## 4. æ³¨å†Œè¡¨ APIï¼ˆ`WidgetRegistry`ï¼‰
+## 4. ×¢²á±í API£¨`WidgetRegistry`£©
 
-| æ–¹æ³• | è¯´æ˜ |
+| ·½·¨ | ËµÃ÷ |
 |------|------|
-| `register(template)` | æ³¨å†Œ Widget æ¨¡æ¿ï¼ˆid é‡å¤åˆ™è¦†ç›–å¹¶å‘Šè­¦ï¼‰ |
-| `createInstance(widgetId, overrides?)` | åˆ›å»ºå®ä¾‹ï¼Œè¿”å› `WidgetConfig`ï¼ˆå®ä¾‹ id å½¢å¦‚ `<widgetId>_<n>`ï¼‰ |
-| `removeInstance(instanceId)` | ç§»é™¤å®ä¾‹ |
-| `getTemplate(widgetId)` | å–æ¨¡æ¿ |
-| `getInstance(instanceId)` | å–å®ä¾‹é…ç½® |
-| `getAllInstances()` | å…¨éƒ¨å®ä¾‹ |
-| `updateRuntimeState(instanceId, state)` | æ›´æ–°è¿è¡Œæ€ |
-| `getRuntimeState(instanceId)` | å–è¿è¡Œæ€ |
-| `subscribe(listener)` | è®¢é˜…æ³¨å†Œè¡¨äº‹ä»¶ï¼ˆè¿”å›å–æ¶ˆå‡½æ•°ï¼‰ |
-| `getStats()` | ç»Ÿè®¡ï¼šæ¨¡æ¿æ•° / å®ä¾‹æ•° / å„å®ä¾‹çŠ¶æ€ |
+| `register(template)` | ×¢²á Widget Ä£°å£¨id ÖØ¸´Ôò¸²¸Ç²¢¸æ¾¯£© |
+| `createInstance(widgetId, overrides?)` | ´´½¨ÊµÀı£¬·µ»Ø `WidgetConfig`£¨ÊµÀı id ĞÎÈç `<widgetId>_<n>`£© |
+| `removeInstance(instanceId)` | ÒÆ³ıÊµÀı |
+| `getTemplate(widgetId)` | È¡Ä£°å |
+| `getInstance(instanceId)` | È¡ÊµÀıÅäÖÃ |
+| `getAllInstances()` | È«²¿ÊµÀı |
+| `updateRuntimeState(instanceId, state)` | ¸üĞÂÔËĞĞÌ¬ |
+| `getRuntimeState(instanceId)` | È¡ÔËĞĞÌ¬ |
+| `subscribe(listener)` | ¶©ÔÄ×¢²á±íÊÂ¼ş£¨·µ»ØÈ¡Ïûº¯Êı£© |
+| `getStats()` | Í³¼Æ£ºÄ£°åÊı / ÊµÀıÊı / ¸÷ÊµÀı×´Ì¬ |
 
-- æ„é€ æ—¶è‡ªåŠ¨ `registerDefaultWidgets()`ï¼ˆ22 ä¸ªï¼‰+ `createDefaultInstances()`ï¼ˆ22 ä¸ªé»˜è®¤å¸ƒå±€å®ä¾‹ï¼‰ã€‚
-- å•ä¾‹å¯¼å‡ºï¼š`export const widgetRegistry = new WidgetRegistry()`ã€‚
-
----
-
-## 5. é»˜è®¤å¸ƒå±€
-
-`createDefaultInstances()` æŒ‰ `defaultLayout` åˆ›å»º 22 ä¸ªé»˜è®¤å®ä¾‹ï¼Œ`position` ä»¥ `{ x, y }` ç½‘æ ¼å®šä½ï¼ˆè¯¦è§ `widgetRegistry.ts` `defaultLayout`ï¼‰ã€‚
+- ¹¹ÔìÊ±×Ô¶¯ `registerDefaultWidgets()`£¨22 ¸ö£©+ `createDefaultInstances()`£¨22 ¸öÄ¬ÈÏ²¼¾ÖÊµÀı£©¡£
+- µ¥Àıµ¼³ö£º`export const widgetRegistry = new WidgetRegistry()`¡£
 
 ---
 
-## 6. å˜æ›´è§¦å‘
+## 5. Ä¬ÈÏ²¼¾Ö
 
-> è§¦å‘äº‹ä»¶ **T9ï¼ˆWidget æ³¨å†Œè¡¨å˜æ›´ï¼‰** â€” åŒ¹é… `src/cockpit/core/widgetRegistry.ts`
+`createDefaultInstances()` °´ `defaultLayout` ´´½¨ 22 ¸öÄ¬ÈÏÊµÀı£¬`position` ÒÔ `{ x, y }` Íø¸ñ¶¨Î»£¨Ïê¼û `widgetRegistry.ts` `defaultLayout`£©¡£
 
-| åŠ¨ä½œ | æ–‡æ¡£ |
+---
+
+## 6. ±ä¸ü´¥·¢
+
+> ´¥·¢ÊÂ¼ş **T9£¨Widget ×¢²á±í±ä¸ü£©** ¡ª Æ¥Åä `src/cockpit/core/widgetRegistry.ts`
+
+| ¶¯×÷ | ÎÄµµ |
 |------|------|
-| ä¸»æ›´æ–°åŠ¨ä½œ | æœ¬æ–‡æ¡£ï¼ˆ`../../../reference/data-definition.md`ï¼‰â€” æ³¨å†Œè¡¨ç»“æ„å˜æ›´æ—¶æ•´ä½“å¯¹é½ |
-| è¡¥å……æ–‡æ¡£ | å¢é‡ç»´æŠ¤ `../../../reference/registry-index.md`ï¼ˆéå…¨é‡é‡å†™ï¼‰ |
-| å†™åæ ¡éªŒ | `npm run audit:docs`ï¼ˆæ˜¯ï¼‰ |
+| Ö÷¸üĞÂ¶¯×÷ | ±¾ÎÄµµ£¨`../../../reference/data-definition.md`£©¡ª ×¢²á±í½á¹¹±ä¸üÊ±ÕûÌå¶ÔÆë |
+| ²¹³äÎÄµµ | ÔöÁ¿Î¬»¤ `../../../reference/registry-index.md`£¨·ÇÈ«Á¿ÖØĞ´£© |
+| Ğ´ºóĞ£Ñé | `npm run audit:docs`£¨ÊÇ£© |
 
-> äº¦å— **T1ï¼ˆç±»å‹å®šä¹‰å˜æ›´ï¼‰** å½±å“ï¼š`widget.types.ts` å˜æ›´æ—¶æœ¬æ–‡æ¡£ä¸ºè¡¥å……æ›´æ–°ç›®æ ‡ã€‚
+> ÒàÊÜ **T1£¨ÀàĞÍ¶¨Òå±ä¸ü£©** Ó°Ïì£º`widget.types.ts` ±ä¸üÊ±±¾ÎÄµµÎª²¹³ä¸üĞÂÄ¿±ê¡£
 
-è¯¦è§ `docs/00-meta/doc-trigger-action-map.md` Â§äºŒ T9 è¡Œã€‚
+Ïê¼û `docs/00-meta/doc-trigger-action-map.md` ¡ì¶ş T9 ĞĞ¡£

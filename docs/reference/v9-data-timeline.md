@@ -1,80 +1,75 @@
 ---
-title: v9-data-timeline
-code_version: 2.0.0
-
-tier: important
----
-
----
-title: V9 æ•°æ®æ—¶é—´å…³ç³»ä¸Žç”Ÿå‘½å‘¨æœŸè“å›¾
-version: v1.1.0
-last_updated: 2026-06-30
-maintainer: V9 Architecture Team
+title: V9 Êý¾ÝÊ±¼ä¹ØÏµÓëÉúÃüÖÜÆÚÀ¶Í¼
+type: reference
+domain: data
+phase: design
+tier: standard
 status: active
-change_log:
-  - date: 2026-06-30
-    desc: è¡¥å…… v15/v16 æ–°å¢žç®¡çº¿é˜¶æ®µï¼ˆP12 ç¼ºå¤±æŠ¥å‘Šç™»è®° / P13 æ‰§è¡Œè®¡åˆ’ / P14 æŠ•èµ„ç»„åˆå†å¹³è¡¡ï¼‰ï¼›å°† Status/Version ä¸Ž ER è“å›¾å¯¹é½
-  - date: 2026-06-30
-    desc: Freshness è¿è¡Œæ—¶æ ¡éªŒè¡¥å…¨åˆ° 6 æ¡è§„åˆ™
-  - date: 2026-06-29
-    desc: åˆå§‹ç‰ˆæœ¬
+maintainer: V9 Architecture Team
+summary: "±¾ÎÄµµ¶¨Òå V9 ÏµÍ³Êý¾Ý²úÉú¡¢Ë¢ÐÂ¡¢Ïû·ÑµÄÈ«Á´Â·Ê±Ðò£¬ÒÔ¼°¸÷ Store Ö®¼äµÄ freshness ÒÀÀµ¹ØÏµ£¬×÷ÎªÊý¾Ý¹ÜÏß¿ª·¢¡¢µ÷¶ÈÓë¹ÊÕÏÅÅ²éµÄ±È¶Ô»ùÏß¡£"
+tags: [data, timeline, reference]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: reference
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
-# V9 æ•°æ®æ—¶é—´å…³ç³»ä¸Žç”Ÿå‘½å‘¨æœŸè“å›¾
+# V9 Êý¾ÝÊ±¼ä¹ØÏµÓëÉúÃüÖÜÆÚÀ¶Í¼
 
 > **Status**: Current  
 > **Version**: v1.1.0  
 > **Last Updated**: 2026-06-30  
-> **DB_VERSION**: 16ï¼ˆä¸Ž `src/config/dbConfig.ts` å¯¼å‡ºå€¼ä¸€è‡´ï¼‰
+> **DB_VERSION**: 16£¨Óë `src/config/dbConfig.ts` µ¼³öÖµÒ»ÖÂ£©
 >
-> æœ¬æ–‡æ¡£å®šä¹‰ V9 ç³»ç»Ÿæ•°æ®äº§ç”Ÿã€åˆ·æ–°ã€æ¶ˆè´¹çš„å…¨é“¾è·¯æ—¶åºï¼Œä»¥åŠå„ Store ä¹‹é—´çš„ freshness ä¾èµ–å…³ç³»ï¼Œä½œä¸ºæ•°æ®ç®¡çº¿å¼€å‘ã€è°ƒåº¦ä¸Žæ•…éšœæŽ’æŸ¥çš„æ¯”å¯¹åŸºçº¿ã€‚
+> ±¾ÎÄµµ¶¨Òå V9 ÏµÍ³Êý¾Ý²úÉú¡¢Ë¢ÐÂ¡¢Ïû·ÑµÄÈ«Á´Â·Ê±Ðò£¬ÒÔ¼°¸÷ Store Ö®¼äµÄ freshness ÒÀÀµ¹ØÏµ£¬×÷ÎªÊý¾Ý¹ÜÏß¿ª·¢¡¢µ÷¶ÈÓë¹ÊÕÏÅÅ²éµÄ±È¶Ô»ùÏß¡£
 
 ---
 
-## 1. æ•°æ®ç®¡çº¿ä¸»æ—¶åº
+## 1. Êý¾Ý¹ÜÏßÖ÷Ê±Ðò
 
-æ•°æ®ä»Žé‡‡é›†åˆ°æœ€ç»ˆæ¶ˆè´¹æŒ‰ä»¥ä¸‹ 15 ä¸ªé˜¶æ®µæŽ¨è¿›ï¼š
+Êý¾Ý´Ó²É¼¯µ½×îÖÕÏû·Ñ°´ÒÔÏÂ 15 ¸ö½×¶ÎÍÆ½ø£º
 
-| é˜¶æ®µ | è§¦å‘æ¡ä»¶ | è¾“å…¥ | è¾“å‡º Store | å…³é”®æ—¶é—´å­—æ®µ | è´Ÿè´£æ¨¡å— |
+| ½×¶Î | ´¥·¢Ìõ¼þ | ÊäÈë | Êä³ö Store | ¹Ø¼üÊ±¼ä×Ö¶Î | ¸ºÔðÄ£¿é |
 |------|---------|------|-----------|-------------|---------|
-| **P1 é‡‡é›†** | æ‰‹åŠ¨ / å®šæ—¶ / äº‹ä»¶ | å¤–éƒ¨ API / ç”¨æˆ·è¾“å…¥ | `stocks`, `daily_quotes` | `ingestedAt`, `updatedAt` | `fetcherService`, `TaskScheduler` |
-| **P2 æ¸…æ´—** | é‡‡é›†å®ŒæˆåŽ | `RawMarketData` | æ ‡å‡†åŒ– `MarketData` | - | `MarketDataAdapter` |
-| **P3 V6 è¯„åˆ†** | æ•°æ®å°±ç»ª / ç”¨æˆ·è§¦å‘ | `stocks` + `daily_quotes` | `v6_scores` | `calculatedAt` | `v6ScoreService` |
-| **P4 åŒç­–ç•¥è¯„åˆ†** | P3 å®ŒæˆåŽ | `stocks` + `daily_quotes` + `v6_scores` | `hot_sector_scores`, `value_pit_scores` | `calculatedAt` | `hotSectorAnalyzer`, `valuePitAnalyzer` |
-| **P5 æ¿å—è½®åŠ¨** | P4 åŽ / æ—¥ç»ˆå®šæ—¶ | `value_pit_scores` + sector æ•°æ® | `rotation_scores` | `scoreDate`, `createdAt` | `rotationScoreService` |
-| **P6 äº¤æ˜“ä¿¡å·** | P4 åŽ / æ•°æ®å˜åŒ– | `stocks` + `daily_quotes` + scores | `signals` | `createdAt` | `signalGenerator`, `dualStrategyEngine` |
-| **P7 äº¤æ˜“è®¢å•** | ä¿¡å· / ç”¨æˆ·å†³ç­– | `stocks` + `signals` | `orders` | `createdAt` | `tradingService` |
-| **P8 äº¤æ˜“å¤ç›˜** | æ”¶ç›˜åŽ / æ‰‹åŠ¨ | `orders` + `daily_quotes` | `TradeReviewReport`ï¼ˆè¿è¡Œæ—¶è¾“å‡ºï¼‰ | `generatedAt` | `tradeReviewAI` |
-| **P9 èµ„è®¯å¤„ç†** | å®šæ—¶ / äº‹ä»¶ | å¤–éƒ¨èµ„è®¯æº | `news`, `sentiment_cache`, `news_stock_map` | `publishTime`, `fetchTime`, `analyzedAt` | `newsService` |
-| **P10 æ™ºèƒ½è¯„åˆ†** | ç”¨æˆ·è§¦å‘ | `stocks` + `local_docs` | `intelligent_scores` | `scoredAt` | `intelligentScoreService` |
-| **P11 è¡Œä¸šè¯„åˆ†** | ç”¨æˆ·è§¦å‘ | sector æ•°æ® | `industry_scores` | `scoredAt` | `industryScoreService` |
-| **P12 ç¼ºå¤±æŠ¥å‘Šç™»è®°** | v15ï¼šé‡‡é›†/è®¡ç®—è¿‡ç¨‹ä¸­ | å®žé™…è¾“å…¥æ•°æ® | `missing_reports` | `detectedAt` | `data-collector`ï¼ˆè‡ªæ£€ï¼‰ |
-| **P13 æ‰§è¡Œè®¡åˆ’** | v16ï¼šä¿¡å·äº§ç”ŸåŽ | `signals` + `stocks` | `executionPlans` | `createdAt` | `execution`ï¼ˆ`executionPlanService`ï¼‰ |
-| **P14 æŠ•èµ„ç»„åˆå†å¹³è¡¡** | v16ï¼šæ‰§è¡Œå®ŒæˆåŽ | `executionPlans` + `orders` | `portfolios` | `updatedAt` | `portfolio`ï¼ˆ`portfolioService`ï¼‰ |
-| **P15 æ‰§è¡Œæ—¥å¿—** | v15ï¼šæ‰§è¡Œè®¡åˆ’/è®¢å•æ“ä½œ | `executionPlans` + `orders` | `execution_logs` | `timestamp` | `execution`ï¼ˆ`executionLogService`ï¼‰ |
+| **P1 ²É¼¯** | ÊÖ¶¯ / ¶¨Ê± / ÊÂ¼þ | Íâ²¿ API / ÓÃ»§ÊäÈë | `stocks`, `daily_quotes` | `ingestedAt`, `updatedAt` | `fetcherService`, `TaskScheduler` |
+| **P2 ÇåÏ´** | ²É¼¯Íê³Éºó | `RawMarketData` | ±ê×¼»¯ `MarketData` | - | `MarketDataAdapter` |
+| **P3 V6 ÆÀ·Ö** | Êý¾Ý¾ÍÐ÷ / ÓÃ»§´¥·¢ | `stocks` + `daily_quotes` | `v6_scores` | `calculatedAt` | `v6ScoreService` |
+| **P4 Ë«²ßÂÔÆÀ·Ö** | P3 Íê³Éºó | `stocks` + `daily_quotes` + `v6_scores` | `hot_sector_scores`, `value_pit_scores` | `calculatedAt` | `hotSectorAnalyzer`, `valuePitAnalyzer` |
+| **P5 °å¿éÂÖ¶¯** | P4 ºó / ÈÕÖÕ¶¨Ê± | `value_pit_scores` + sector Êý¾Ý | `rotation_scores` | `scoreDate`, `createdAt` | `rotationScoreService` |
+| **P6 ½»Ò×ÐÅºÅ** | P4 ºó / Êý¾Ý±ä»¯ | `stocks` + `daily_quotes` + scores | `signals` | `createdAt` | `signalGenerator`, `dualStrategyEngine` |
+| **P7 ½»Ò×¶©µ¥** | ÐÅºÅ / ÓÃ»§¾ö²ß | `stocks` + `signals` | `orders` | `createdAt` | `tradingService` |
+| **P8 ½»Ò×¸´ÅÌ** | ÊÕÅÌºó / ÊÖ¶¯ | `orders` + `daily_quotes` | `TradeReviewReport`£¨ÔËÐÐÊ±Êä³ö£© | `generatedAt` | `tradeReviewAI` |
+| **P9 ×ÊÑ¶´¦Àí** | ¶¨Ê± / ÊÂ¼þ | Íâ²¿×ÊÑ¶Ô´ | `news`, `sentiment_cache`, `news_stock_map` | `publishTime`, `fetchTime`, `analyzedAt` | `newsService` |
+| **P10 ÖÇÄÜÆÀ·Ö** | ÓÃ»§´¥·¢ | `stocks` + `local_docs` | `intelligent_scores` | `scoredAt` | `intelligentScoreService` |
+| **P11 ÐÐÒµÆÀ·Ö** | ÓÃ»§´¥·¢ | sector Êý¾Ý | `industry_scores` | `scoredAt` | `industryScoreService` |
+| **P12 È±Ê§±¨¸æµÇ¼Ç** | v15£º²É¼¯/¼ÆËã¹ý³ÌÖÐ | Êµ¼ÊÊäÈëÊý¾Ý | `missing_reports` | `detectedAt` | `data-collector`£¨×Ô¼ì£© |
+| **P13 Ö´ÐÐ¼Æ»®** | v16£ºÐÅºÅ²úÉúºó | `signals` + `stocks` | `executionPlans` | `createdAt` | `execution`£¨`executionPlanService`£© |
+| **P14 Í¶×Ê×éºÏÔÙÆ½ºâ** | v16£ºÖ´ÐÐÍê³Éºó | `executionPlans` + `orders` | `portfolios` | `updatedAt` | `portfolio`£¨`portfolioService`£© |
+| **P15 Ö´ÐÐÈÕÖ¾** | v15£ºÖ´ÐÐ¼Æ»®/¶©µ¥²Ù×÷ | `executionPlans` + `orders` | `execution_logs` | `timestamp` | `execution`£¨`executionLogService`£© |
 
 ---
 
-## 2. å·¥ä½œä¸»çº¿
+## 2. ¹¤×÷Ö÷Ïß
 
 ```mermaid
 flowchart LR
-    subgraph INPUT["è¾“å…¥å±‚"]
-        A1["æ‰‹åŠ¨å½•å…¥"]
-        A2["æ‰¹é‡å¯¼å…¥"]
-        A3["Fetcher é‡‡é›†"]
-        A4["æœ¬åœ°æ–‡æ¡£"]
+    subgraph INPUT["ÊäÈë²ã"]
+        A1["ÊÖ¶¯Â¼Èë"]
+        A2["ÅúÁ¿µ¼Èë"]
+        A3["Fetcher ²É¼¯"]
+        A4["±¾µØÎÄµµ"]
     end
 
-    subgraph CORE["æ ¸å¿ƒæ•°æ®å±‚"]
+    subgraph CORE["ºËÐÄÊý¾Ý²ã"]
         B1["stocks"]
         B2["daily_quotes"]
         B3["v6_scores"]
     end
 
-    subgraph ANALYSIS["åˆ†æžå±‚"]
+    subgraph ANALYSIS["·ÖÎö²ã"]
         C1["hot_sector_scores"]
         C2["value_pit_scores"]
         C3["rotation_scores"]
@@ -82,12 +77,12 @@ flowchart LR
         C5["industry_scores"]
     end
 
-    subgraph DECISION["å†³ç­–å±‚"]
+    subgraph DECISION["¾ö²ß²ã"]
         D1["signals"]
         D2["orders"]
     end
 
-    subgraph REVIEW["å¤ç›˜å±‚"]
+    subgraph REVIEW["¸´ÅÌ²ã"]
         E1["tradeReviewAI"]
         E2["strategy_snapshots"]
     end
@@ -116,94 +111,94 @@ flowchart LR
 
 ---
 
-## 3. æ•°æ®åˆ·æ–°é¢‘çŽ‡ä¸Ž Freshness è§„åˆ™
+## 3. Êý¾ÝË¢ÐÂÆµÂÊÓë Freshness ¹æÔò
 
-### 3.1 åˆ·æ–°é¢‘çŽ‡
+### 3.1 Ë¢ÐÂÆµÂÊ
 
-| Store | æ•°æ®æº | ç†æƒ³é¢‘çŽ‡ | å¯æŽ¥å—æœ€å¤§æ»žåŽ | ä¸‹æ¸¸å½±å“ |
+| Store | Êý¾ÝÔ´ | ÀíÏëÆµÂÊ | ¿É½ÓÊÜ×î´óÖÍºó | ÏÂÓÎÓ°Ïì |
 |-------|--------|---------|---------------|---------|
-| `stocks` | fetcher / æ‰‹åŠ¨ | æ—¥ç»ˆ 1 æ¬¡ | 1 äº¤æ˜“æ—¥ | æ‰€æœ‰è¯„åˆ†ã€äº¤æ˜“ã€ä¿¡å· |
-| `daily_quotes` | fetcher | æ—¥ç»ˆ 1 æ¬¡ / å®žæ—¶ 15min | 1 äº¤æ˜“æ—¥ | `v6_scores`, `signals`, ç­–ç•¥è¯„åˆ† |
-| `v6_scores` | è§„åˆ™å¼•æ“Ž | `daily_quotes` æ›´æ–°åŽ | ä¸Ž `daily_quotes` åŒæ­¥ | `hot_sector_scores`, `value_pit_scores` |
-| `hot_sector_scores` | ç­–ç•¥å¼•æ“Ž | `v6_scores` æ›´æ–°åŽ | ä¸Ž `v6_scores` åŒæ­¥ | `dualStrategyEngine`, `signals` |
-| `value_pit_scores` | ç­–ç•¥å¼•æ“Ž | `v6_scores` æ›´æ–°åŽ | ä¸Ž `v6_scores` åŒæ­¥ | `dualStrategyEngine`, `signals` |
-| `rotation_scores` | è½®åŠ¨å¼•æ“Ž | æ—¥ç»ˆ 1 æ¬¡ | 1 äº¤æ˜“æ—¥ | ç­–ç•¥ä¿¡å· |
-| `signals` | ä¿¡å·å¼•æ“Ž | æ•°æ®å˜åŒ– / 5min | 5 åˆ†é’Ÿ | `tradingService`, UI |
-| `orders` | ç”¨æˆ· | å®žæ—¶ | å®žæ—¶ | æŒä»“ã€å¤ç›˜ |
-| `news` | èµ„è®¯æº | 15min / äº‹ä»¶ | 30min | æƒ…ç»ªã€ä¸ªè‚¡å…³è” |
-| `sentiment_cache` | æƒ…ç»ªåˆ†æžå™¨ | é¦–æ¬¡åˆ†æžåŽç¼“å­˜ | æ— è¿‡æœŸï¼ˆéœ€æ‰‹åŠ¨åˆ·æ–°ï¼‰ | `news` |
-| `missing_reports` | data-collector è‡ªæ£€ | é‡‡é›†/è®¡ç®—å¼‚å¸¸æ—¶å®žæ—¶ | å®žæ—¶ | ç¼ºå£å‘Šè­¦ UI |
-| `executionPlans` | execution | ä¿¡å·äº§ç”ŸåŽ | å®žæ—¶ | `signals` |
-| `portfolios` | portfolio | æ‰§è¡Œå®ŒæˆåŽ / ç”¨æˆ·è°ƒæ•´ | å®žæ—¶ | æŒä»“è§†å›¾ã€å†å¹³è¡¡ |
-| `execution_logs` | execution | è®¡åˆ’/è®¢å•æ“ä½œæ—¶ | å®žæ—¶ | å®¡è®¡ã€å›žæº¯ |
+| `stocks` | fetcher / ÊÖ¶¯ | ÈÕÖÕ 1 ´Î | 1 ½»Ò×ÈÕ | ËùÓÐÆÀ·Ö¡¢½»Ò×¡¢ÐÅºÅ |
+| `daily_quotes` | fetcher | ÈÕÖÕ 1 ´Î / ÊµÊ± 15min | 1 ½»Ò×ÈÕ | `v6_scores`, `signals`, ²ßÂÔÆÀ·Ö |
+| `v6_scores` | ¹æÔòÒýÇæ | `daily_quotes` ¸üÐÂºó | Óë `daily_quotes` Í¬²½ | `hot_sector_scores`, `value_pit_scores` |
+| `hot_sector_scores` | ²ßÂÔÒýÇæ | `v6_scores` ¸üÐÂºó | Óë `v6_scores` Í¬²½ | `dualStrategyEngine`, `signals` |
+| `value_pit_scores` | ²ßÂÔÒýÇæ | `v6_scores` ¸üÐÂºó | Óë `v6_scores` Í¬²½ | `dualStrategyEngine`, `signals` |
+| `rotation_scores` | ÂÖ¶¯ÒýÇæ | ÈÕÖÕ 1 ´Î | 1 ½»Ò×ÈÕ | ²ßÂÔÐÅºÅ |
+| `signals` | ÐÅºÅÒýÇæ | Êý¾Ý±ä»¯ / 5min | 5 ·ÖÖÓ | `tradingService`, UI |
+| `orders` | ÓÃ»§ | ÊµÊ± | ÊµÊ± | ³Ö²Ö¡¢¸´ÅÌ |
+| `news` | ×ÊÑ¶Ô´ | 15min / ÊÂ¼þ | 30min | ÇéÐ÷¡¢¸ö¹É¹ØÁª |
+| `sentiment_cache` | ÇéÐ÷·ÖÎöÆ÷ | Ê×´Î·ÖÎöºó»º´æ | ÎÞ¹ýÆÚ£¨ÐèÊÖ¶¯Ë¢ÐÂ£© | `news` |
+| `missing_reports` | data-collector ×Ô¼ì | ²É¼¯/¼ÆËãÒì³£Ê±ÊµÊ± | ÊµÊ± | È±¿Ú¸æ¾¯ UI |
+| `executionPlans` | execution | ÐÅºÅ²úÉúºó | ÊµÊ± | `signals` |
+| `portfolios` | portfolio | Ö´ÐÐÍê³Éºó / ÓÃ»§µ÷Õû | ÊµÊ± | ³Ö²ÖÊÓÍ¼¡¢ÔÙÆ½ºâ |
+| `execution_logs` | execution | ¼Æ»®/¶©µ¥²Ù×÷Ê± | ÊµÊ± | Éó¼Æ¡¢»ØËÝ |
 
-### 3.2 æ—¶é—´ä¸€è‡´æ€§è§„åˆ™
+### 3.2 Ê±¼äÒ»ÖÂÐÔ¹æÔò
 
-æ‰€æœ‰è®¡ç®—ç±»è¾“å‡ºå¿…é¡»æ»¡è¶³ä»¥ä¸‹ freshness çº¦æŸã€‚å·²å®žçŽ°è¿è¡Œæ—¶æ ¡éªŒçš„è§„åˆ™åœ¨ã€Œè¿è¡Œæ—¶æ ¡éªŒã€åˆ—æ ‡æ³¨è°ƒç”¨ä½ç½®ã€‚
+ËùÓÐ¼ÆËãÀàÊä³ö±ØÐëÂú×ãÒÔÏÂ freshness Ô¼Êø¡£ÒÑÊµÏÖÔËÐÐÊ±Ð£ÑéµÄ¹æÔòÔÚ¡¸ÔËÐÐÊ±Ð£Ñé¡¹ÁÐ±ê×¢µ÷ÓÃÎ»ÖÃ¡£
 
-| # | è§„åˆ™ | æ—¶é—´çº¦æŸ | è¿è¡Œæ—¶æ ¡éªŒ |
+| # | ¹æÔò | Ê±¼äÔ¼Êø | ÔËÐÐÊ±Ð£Ñé |
 |---|------|---------|-----------|
-| 1 | V6 è¯„åˆ†å¿…é¡»åŸºäºŽæœ€æ–°è¡Œæƒ… | `v6_scores.calculatedAt >= daily_quotes.updatedAt` | âœ… `v6ScoreService.runV6Score` è°ƒç”¨ `checkV6ScoreFreshness` |
-| 2 | ç­–ç•¥è¯„åˆ†å¿…é¡»åŸºäºŽæœ€æ–° V6 è¯„åˆ† | `hot_sector_scores.calculatedAt >= v6_scores.calculatedAt` | âœ… `hotSectorAnalyzer.analyzeBySymbol` è°ƒç”¨ `checkStrategyScoreFreshness` |
-| 2 | ç­–ç•¥è¯„åˆ†å¿…é¡»åŸºäºŽæœ€æ–° V6 è¯„åˆ† | `value_pit_scores.calculatedAt >= v6_scores.calculatedAt` | âœ… `valuePitAnalyzer.analyzeBySymbol` è°ƒç”¨ `checkStrategyScoreFreshness` |
-| 3 | äº¤æ˜“ä¿¡å·å¿…é¡»åŸºäºŽæœ€æ–°è¡Œæƒ… | `signals.createdAt >= daily_quotes.updatedAt` | âœ… `signalGenerator.generateSignalsForSymbol` è°ƒç”¨ `checkSignalFreshness` |
-| 4 | è®¢å•ä»·æ ¼åº”æ¥è‡ªæœ€æ–° `stock.price` | `orders.createdAt >= stock.updatedAt`ï¼ˆä»·æ ¼æ‹‰å–åŽï¼‰ | âœ… `tradingService.createOrderWithRiskCheck` è°ƒç”¨ `checkOrderPriceFreshness` |
-| 5 | å¤ç›˜å¿…é¡»è¦†ç›–åˆ°æœ€æ–°è®¢å• | `tradeReviewReport.generatedAt >= max(orders.createdAt)` | âœ… `tradeReviewAI.generateReview` / `generateReviewAsync` è°ƒç”¨ `checkReviewFreshness` |
-| 6 | èµ„è®¯æƒ…ç»ªç¼“å­˜åˆ†æžæ—¶é—´å¿…é¡»æ™šäºŽæ–‡ç« å‘å¸ƒ | `sentiment_cache.analyzedAt >= news.publishTime` | âœ… `newsService.saveNewsArticle` è°ƒç”¨ `checkSentimentCacheFreshness` |
+| 1 | V6 ÆÀ·Ö±ØÐë»ùÓÚ×îÐÂÐÐÇé | `v6_scores.calculatedAt >= daily_quotes.updatedAt` | ? `v6ScoreService.runV6Score` µ÷ÓÃ `checkV6ScoreFreshness` |
+| 2 | ²ßÂÔÆÀ·Ö±ØÐë»ùÓÚ×îÐÂ V6 ÆÀ·Ö | `hot_sector_scores.calculatedAt >= v6_scores.calculatedAt` | ? `hotSectorAnalyzer.analyzeBySymbol` µ÷ÓÃ `checkStrategyScoreFreshness` |
+| 2 | ²ßÂÔÆÀ·Ö±ØÐë»ùÓÚ×îÐÂ V6 ÆÀ·Ö | `value_pit_scores.calculatedAt >= v6_scores.calculatedAt` | ? `valuePitAnalyzer.analyzeBySymbol` µ÷ÓÃ `checkStrategyScoreFreshness` |
+| 3 | ½»Ò×ÐÅºÅ±ØÐë»ùÓÚ×îÐÂÐÐÇé | `signals.createdAt >= daily_quotes.updatedAt` | ? `signalGenerator.generateSignalsForSymbol` µ÷ÓÃ `checkSignalFreshness` |
+| 4 | ¶©µ¥¼Û¸ñÓ¦À´×Ô×îÐÂ `stock.price` | `orders.createdAt >= stock.updatedAt`£¨¼Û¸ñÀ­È¡ºó£© | ? `tradingService.createOrderWithRiskCheck` µ÷ÓÃ `checkOrderPriceFreshness` |
+| 5 | ¸´ÅÌ±ØÐë¸²¸Çµ½×îÐÂ¶©µ¥ | `tradeReviewReport.generatedAt >= max(orders.createdAt)` | ? `tradeReviewAI.generateReview` / `generateReviewAsync` µ÷ÓÃ `checkReviewFreshness` |
+| 6 | ×ÊÑ¶ÇéÐ÷»º´æ·ÖÎöÊ±¼ä±ØÐëÍíÓÚÎÄÕÂ·¢²¼ | `sentiment_cache.analyzedAt >= news.publishTime` | ? `newsService.saveNewsArticle` µ÷ÓÃ `checkSentimentCacheFreshness` |
 
-> **è¯´æ˜Ž**ï¼šå½“å‰å®žçŽ°é‡‡ç”¨ã€Œéžé˜»å¡žæ ¡éªŒã€æ¨¡å¼ã€‚`dataFreshnessGuard` å‘çŽ°è¿è§„æ—¶è®°å½• `warn` æ—¥å¿—å¹¶è¿”å›ž `valid: false`ï¼Œä½†ä¸ä¼šä¸­æ–­è®¡ç®—æµç¨‹ï¼Œä»¥å…å½±å“æ¼”ç¤ºä¸Žæµ‹è¯•åœºæ™¯ã€‚æœªæ¥å¯æ ¹æ®éœ€è¦åœ¨å…³é”®è·¯å¾„åˆ‡æ¢ä¸ºé˜»å¡žæ¨¡å¼ã€‚
+> **ËµÃ÷**£ºµ±Ç°ÊµÏÖ²ÉÓÃ¡¸·Ç×èÈûÐ£Ñé¡¹Ä£Ê½¡£`dataFreshnessGuard` ·¢ÏÖÎ¥¹æÊ±¼ÇÂ¼ `warn` ÈÕÖ¾²¢·µ»Ø `valid: false`£¬µ«²»»áÖÐ¶Ï¼ÆËãÁ÷³Ì£¬ÒÔÃâÓ°ÏìÑÝÊ¾Óë²âÊÔ³¡¾°¡£Î´À´¿É¸ù¾ÝÐèÒªÔÚ¹Ø¼üÂ·¾¶ÇÐ»»Îª×èÈûÄ£Ê½¡£
 
 ---
 
-## 4. ä¸ªè‚¡å®šæ€§æ•°æ®æµ
+## 4. ¸ö¹É¶¨ÐÔÊý¾ÝÁ÷
 
-ä¸ªè‚¡å®šæ€§æ ‡ç­¾ï¼ˆæ ¸å¿ƒèµ›é“ã€ä»·å€¼æ´¼åœ°ã€çƒ­é—¨æ¿å—ï¼‰åœ¨ V9 ä¸­é€šè¿‡ä»¥ä¸‹ Store æ‰¿è½½ï¼š
+¸ö¹É¶¨ÐÔ±êÇ©£¨ºËÐÄÈüµÀ¡¢¼ÛÖµÍÝµØ¡¢ÈÈÃÅ°å¿é£©ÔÚ V9 ÖÐÍ¨¹ýÒÔÏÂ Store ³ÐÔØ£º
 
-| å®šæ€§æ ‡ç­¾ | æ¥æº Store | åˆ¤æ–­é€»è¾‘ | æ¶ˆè´¹æ–¹ |
+| ¶¨ÐÔ±êÇ© | À´Ô´ Store | ÅÐ¶ÏÂß¼­ | Ïû·Ñ·½ |
 |---------|-----------|---------|--------|
-| æ ¸å¿ƒèµ›é“ | `sector_scores` / `industry_scores` | `isCore === true` æˆ–è¡Œä¸šè¯„åˆ†é«˜ä¸”å±žäºŽåäº”äº”è§„åˆ’æ ¸å¿ƒè¡Œä¸š | é€‰è‚¡ç­–ç•¥ã€ç»„åˆæž„å»º |
-| ä»·å€¼æ´¼åœ° | `value_pit_scores` | `action === 'immediate'` æˆ– `'probe'`ï¼Œä¸”ä¼°å€¼/å‚¬åŒ–ç»´åº¦å¾—åˆ†é«˜ | `dualStrategyEngine`, `signals` |
-| çƒ­é—¨æ¿å— | `hot_sector_scores` | `action === 'immediate'`ï¼ŒåŠ¨é‡/æƒ…ç»ª/æŠ€æœ¯ç»´åº¦å¾—åˆ†é«˜ | `dualStrategyEngine`, `signals` |
+| ºËÐÄÈüµÀ | `sector_scores` / `industry_scores` | `isCore === true` »òÐÐÒµÆÀ·Ö¸ßÇÒÊôÓÚÊ®ÎåÎå¹æ»®ºËÐÄÐÐÒµ | Ñ¡¹É²ßÂÔ¡¢×éºÏ¹¹½¨ |
+| ¼ÛÖµÍÝµØ | `value_pit_scores` | `action === 'immediate'` »ò `'probe'`£¬ÇÒ¹ÀÖµ/´ß»¯Î¬¶ÈµÃ·Ö¸ß | `dualStrategyEngine`, `signals` |
+| ÈÈÃÅ°å¿é | `hot_sector_scores` | `action === 'immediate'`£¬¶¯Á¿/ÇéÐ÷/¼¼ÊõÎ¬¶ÈµÃ·Ö¸ß | `dualStrategyEngine`, `signals` |
 
 ---
 
-## 5. äº¤æ˜“ç­¹ç åˆ†å¸ƒä¸Žæ³¢åŠ¨å¤ç›˜
+## 5. ½»Ò×³ïÂë·Ö²¼Óë²¨¶¯¸´ÅÌ
 
-### 5.1 ç­¹ç åˆ†å¸ƒè®¡ç®—
+### 5.1 ³ïÂë·Ö²¼¼ÆËã
 
-äº¤æ˜“ç­¹ç åˆ†å¸ƒç”± V6 å¼•æ“Ž L8 å±‚è®¡ç®—ï¼Œå­˜å‚¨äºŽ `v6_scores.factors`ï¼ˆæœªæ¥å¯æ‰©å±•ç‹¬ç«‹ `chip_scores` Storeï¼‰ã€‚
+½»Ò×³ïÂë·Ö²¼ÓÉ V6 ÒýÇæ L8 ²ã¼ÆËã£¬´æ´¢ÓÚ `v6_scores.factors`£¨Î´À´¿ÉÀ©Õ¹¶ÀÁ¢ `chip_scores` Store£©¡£
 
-è®¡ç®—è¾“å…¥æ¥è‡ª `daily_quotes.history`ï¼š
+¼ÆËãÊäÈëÀ´×Ô `daily_quotes.history`£º
 
-- **SCD**ï¼ˆè‚¡ä¸œäººæ•°å˜åŒ–åº¦ä»£ç†ï¼‰ï¼š20 æ—¥æ”¶ç›ŠçŽ‡ + æ³¢åŠ¨çŽ‡ç»¼åˆ
-- **PCH**ï¼ˆç­¹ç é›†ä¸­åº¦ä»£ç†ï¼‰ï¼šè¿‘ 20 æ—¥å¹³å‡æ¢æ‰‹çŽ‡åæ¯”
-- **MATRIX**ï¼ˆç­¹ç -åŠ¨é‡çŸ©é˜µï¼‰ï¼šä»·æ ¼ä¸Žå‡çº¿ä½ç½®
-- **RSI**ã€**CCS**ã€**DIV**ã€**CSR** ç­‰æŒ‡æ ‡ç»¼åˆ
+- **SCD**£¨¹É¶«ÈËÊý±ä»¯¶È´úÀí£©£º20 ÈÕÊÕÒæÂÊ + ²¨¶¯ÂÊ×ÛºÏ
+- **PCH**£¨³ïÂë¼¯ÖÐ¶È´úÀí£©£º½ü 20 ÈÕÆ½¾ù»»ÊÖÂÊ·´±È
+- **MATRIX**£¨³ïÂë-¶¯Á¿¾ØÕó£©£º¼Û¸ñÓë¾ùÏßÎ»ÖÃ
+- **RSI**¡¢**CCS**¡¢**DIV**¡¢**CSR** µÈÖ¸±ê×ÛºÏ
 
-### 5.2 ç­¹ç æ³¢åŠ¨å¤ç›˜
+### 5.2 ³ïÂë²¨¶¯¸´ÅÌ
 
-å¤ç›˜é“¾è·¯ï¼š
+¸´ÅÌÁ´Â·£º
 
-1. `orders` æä¾›ä¹°å–æ—¶ç‚¹ã€ä»·æ ¼ã€æ•°é‡
-2. `daily_quotes` æä¾›å¤ç›˜æœŸé—´çš„ K çº¿èµ°åŠ¿
-3. `tradeReviewAI` ç»“åˆç­¹ç æŒ‡æ ‡ï¼ˆL8ï¼‰ä¸Žè®¢å•æ•°æ®ç”Ÿæˆå…­ç»´å¤ç›˜æŠ¥å‘Š
-4. è¾“å‡ºåŒ…å«çºªå¾‹è¯„åˆ†ã€é”™è¯¯åˆ†ç±»ã€æŠ€èƒ½å‘å±•å»ºè®®ã€è¡ŒåŠ¨è®¡åˆ’
+1. `orders` Ìá¹©ÂòÂôÊ±µã¡¢¼Û¸ñ¡¢ÊýÁ¿
+2. `daily_quotes` Ìá¹©¸´ÅÌÆÚ¼äµÄ K Ïß×ßÊÆ
+3. `tradeReviewAI` ½áºÏ³ïÂëÖ¸±ê£¨L8£©Óë¶©µ¥Êý¾ÝÉú³ÉÁùÎ¬¸´ÅÌ±¨¸æ
+4. Êä³ö°üº¬¼ÍÂÉÆÀ·Ö¡¢´íÎó·ÖÀà¡¢¼¼ÄÜ·¢Õ¹½¨Òé¡¢ÐÐ¶¯¼Æ»®
 
 ---
 
-## 6. å¼‚å¸¸åœºæ™¯ä¸Žå¤„ç†åŽŸåˆ™
+## 6. Òì³£³¡¾°Óë´¦ÀíÔ­Ôò
 
-| å¼‚å¸¸ | å½±å“ | å¤„ç†åŽŸåˆ™ |
+| Òì³£ | Ó°Ïì | ´¦ÀíÔ­Ôò |
 |------|------|---------|
-| `daily_quotes` ç¼ºå¤± | V6 è¯„åˆ†ã€ä¿¡å·ã€ç­–ç•¥å‡é™çº§ | è®°å½• `qualityWarning`ï¼Œå…è®¸ä½¿ç”¨åŸºç¡€æ•°æ®æˆ–æ¨¡æ‹Ÿåˆ†é™çº§ |
-| `v6_scores` è¿‡æœŸ | ç­–ç•¥è¯„åˆ†åŸºäºŽæ—§æ•°æ® | è§¦å‘é‡æ–°è®¡ç®—ï¼ŒUI æ˜¾ç¤ºæ•°æ®è¿‡æœŸè­¦å‘Š |
-| `orders` ä¸Ž `daily_quotes` æ—¶é—´é”™ä½ | å¤ç›˜ç»“æžœä¸å‡†ç¡® | å¤ç›˜æ—¶è¿‡æ»¤æ—¶é—´çª—å£ï¼Œç¼ºå¤±è¡Œæƒ…è·³è¿‡è¯¥è®¢å• |
-| `news` é‡å¤ | å­˜å‚¨è†¨èƒ€ã€æƒ…ç»ªé‡å¤è®¡ç®— | åŸºäºŽ `hash` åŽ»é‡ï¼Œç¼“å­˜å‘½ä¸­ç›´æŽ¥å¤ç”¨ |
+| `daily_quotes` È±Ê§ | V6 ÆÀ·Ö¡¢ÐÅºÅ¡¢²ßÂÔ¾ù½µ¼¶ | ¼ÇÂ¼ `qualityWarning`£¬ÔÊÐíÊ¹ÓÃ»ù´¡Êý¾Ý»òÄ£Äâ·Ö½µ¼¶ |
+| `v6_scores` ¹ýÆÚ | ²ßÂÔÆÀ·Ö»ùÓÚ¾ÉÊý¾Ý | ´¥·¢ÖØÐÂ¼ÆËã£¬UI ÏÔÊ¾Êý¾Ý¹ýÆÚ¾¯¸æ |
+| `orders` Óë `daily_quotes` Ê±¼ä´íÎ» | ¸´ÅÌ½á¹û²»×¼È· | ¸´ÅÌÊ±¹ýÂËÊ±¼ä´°¿Ú£¬È±Ê§ÐÐÇéÌø¹ý¸Ã¶©µ¥ |
+| `news` ÖØ¸´ | ´æ´¢ÅòÕÍ¡¢ÇéÐ÷ÖØ¸´¼ÆËã | »ùÓÚ `hash` È¥ÖØ£¬»º´æÃüÖÐÖ±½Ó¸´ÓÃ |
 
 ---
 
-## 7. æ²»ç†åŸºçº¿
+## 7. ÖÎÀí»ùÏß
 
-- æ‰€æœ‰è®¡ç®—è¾“å‡ºå¿…é¡»æºå¸¦æ—¶é—´æˆ³å­—æ®µï¼Œä¾¿äºŽ freshness æ ¡éªŒ
-- æ–°å¢žæ•°æ®ç®¡çº¿é˜¶æ®µå¿…é¡»åŒæ­¥æ›´æ–°æœ¬è“å›¾ä¸Ž `docs/blueprints/v9-pipeline-sequence.mmd`
-- è°ƒåº¦å™¨ `TaskScheduler` é…ç½®é¢‘çŽ‡å¿…é¡»ä¸Žæœ¬è“å›¾ç¬¬ 3 ç« ä¸€è‡´
+- ËùÓÐ¼ÆËãÊä³ö±ØÐëÐ¯´øÊ±¼ä´Á×Ö¶Î£¬±ãÓÚ freshness Ð£Ñé
+- ÐÂÔöÊý¾Ý¹ÜÏß½×¶Î±ØÐëÍ¬²½¸üÐÂ±¾À¶Í¼Óë `docs/blueprints/v9-pipeline-sequence.mmd`
+- µ÷¶ÈÆ÷ `TaskScheduler` ÅäÖÃÆµÂÊ±ØÐëÓë±¾À¶Í¼µÚ 3 ÕÂÒ»ÖÂ

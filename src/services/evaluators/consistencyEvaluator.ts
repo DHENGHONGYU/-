@@ -8,6 +8,9 @@ import type { ConsistencyEvaluatorParams, ConsistencyRule, EvaluatorContext, Eva
 
 const logger = getLogger()
 
+/**
+ * CONSISTENCY_EVALUATOR_ID
+ */
 export const CONSISTENCY_EVALUATOR_ID = 'consistency-evaluator'
 
 function getValueByPath(obj: unknown, path: string): unknown {
@@ -83,6 +86,9 @@ function evaluateRule(ctx: EvaluatorContext, rule: ConsistencyRule): { passed: b
   }
 }
 
+/**
+ * consistencyEvaluator
+ */
 export const consistencyEvaluator: EvaluatorFn = (ctx: EvaluatorContext): EvaluationResult => {
   const startedAt = Date.now()
   const params = ctx.params as ConsistencyEvaluatorParams | undefined

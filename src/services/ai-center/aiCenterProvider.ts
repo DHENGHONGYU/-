@@ -42,19 +42,29 @@ export function setAIHealthScoringStrategy(strategy: AIHealthScoringStrategy): v
 }
 
 /**
- * 获取当前健康评分策略。未注入时返回默认 Mock 策略。
+ * 获取当前健康评分策略。
+ * DEV: 未注入时使用 Mock 策略（开发阶段回退）。
+ * PROD: 未注入时抛出 Error（必须显式注入真实策略）。
  */
 export function getAIHealthScoringStrategy(): AIHealthScoringStrategy {
   if (!injectedStrategy) {
+    if (import.meta.env.PROD) {
+      throw new Error('[AICenterProvider] 生产环境未注入 AIHealthScoringStrategy，禁止静默使用 Mock')
+    }
     injectedStrategy = new MockAIHealthScoringStrategy()
   }
   return injectedStrategy
 }
 
 /**
- * 重置为默认 Mock 策略（主要用于测试隔离）。
+ * 重置策略（主要用于测试隔离）。
+ * DEV: 重置为 Mock。PROD: 禁止重置。
  */
 export function resetAIHealthScoringStrategy(): void {
+  if (import.meta.env.PROD) {
+    logger.warn('[AICenterProvider] 生产环境禁止重置策略')
+    return
+  }
   injectedStrategy = new MockAIHealthScoringStrategy()
   logger.info('[MockAICenterProvider] 健康评分策略已重置为默认 Mock 策略')
 }

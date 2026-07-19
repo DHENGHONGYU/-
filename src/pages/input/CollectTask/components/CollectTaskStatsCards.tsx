@@ -1,7 +1,7 @@
 /**
  * 采集任务监控 - 顶部统计卡片
  *
- * 8 卡片布局：4 任务统计（总数/采集中/已完成/失败）+ 4 性能统计（成功率/平均延迟/降级次数/写入率）
+ * 9 卡片布局：4 任务统计（总数/采集中/已完成/失败）+ 4 性能统计（成功率/平均延迟/降级次数/写入率）+ 1 数据新鲜度
  *
  * @module CollectTask/components/CollectTaskStatsCards
  */
@@ -17,14 +17,30 @@ interface CollectTaskStatsCardsProps {
   avgLatency: number
   fallbackCount: number
   writeRate: number
+  // 数据新鲜度（最近一次成功采集的时间戳，null = 无成功记录）
+  lastSuccessAt: number | null
 }
 
+/** 将时间戳格式化为相对时间（如"5分钟前"） */
+function formatFreshness(ts: number | null): string {
+  if (ts === null) return '暂无'
+  const diff = Date.now() - ts
+  if (diff < 60_000) return '刚刚'
+  if (diff < 3_600_000) return `${Math.floor(diff / 60_000)} 分钟前`
+  if (diff < 86_400_000) return `${Math.floor(diff / 3_600_000)} 小时前`
+  return `${Math.floor(diff / 86_400_000)} 天前`
+}
+
+/**
+ * CollectTaskStatsCards
+ */
 export function CollectTaskStatsCards({
   taskStats,
   successRate,
   avgLatency,
   fallbackCount,
   writeRate,
+  lastSuccessAt,
 }: CollectTaskStatsCardsProps): React.JSX.Element {
   return (
     <>
@@ -39,6 +55,10 @@ export function CollectTaskStatsCards({
         <StatCard label="平均延迟" value={`${avgLatency}ms`} color={COLOR_TOKENS.info.hex} />
         <StatCard label="降级次数" value={fallbackCount} color={COLOR_TOKENS.warning.hex} />
         <StatCard label="写入成功率" value={`${writeRate}%`} color={COLOR_TOKENS.success.hex} />
+      </div>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <StatCard label="数据新鲜度" value={formatFreshness(lastSuccessAt)} color={COLOR_TOKENS.info.hex} />
+        <StatCard label="采集成功率" value={`${successRate}%`} color={COLOR_TOKENS.success.hex} />
       </div>
     </>
   )

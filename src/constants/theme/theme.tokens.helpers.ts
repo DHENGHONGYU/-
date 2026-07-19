@@ -163,17 +163,17 @@ export const CHART_PALETTE = {
   /** 系列色 6 - 青 */
   series6: '#06b6d4',   // cyan-500
   /** 网格线色 */
-  grid: '#e5e7eb',      // gray-200
+  grid: '#e2e8f0',      // slate-200（中性收敛，与 tokens.json 一致）
   /** 坐标轴文字色 */
-  axis: '#6b7280',      // gray-500
+  axis: '#64748b',      // slate-500（中性收敛，与 tokens.json 一致）
   /** 提示框背景色 */
-  tooltipBg: '#1f2937', // gray-800
+  tooltipBg: '#1e293b', // slate-800（中性收敛，与 tokens.json 一致）
   /** 提示框文字色 */
   tooltipText: '#ffffff', // white
   /** 网格线色（浅） */
-  gridLight: '#e5e7eb', // gray-200
+  gridLight: '#e2e8f0', // slate-200（中性收敛，与 tokens.json 一致）
   /** 坐标轴文字色（深） */
-  axisDark: '#4b5563', // gray-600
+  axisDark: '#475569', // slate-600（中性收敛，与 tokens.json 一致）
   /** 涨跌色 - 涨 */
   upColor: '#10b981', // emerald-500
   /** 涨跌色 - 跌 */
@@ -194,6 +194,18 @@ export const CHART_PALETTE = {
   factorHeatmapMid: '#f59e0b',
   /** 因子热力图：高端颜色（1） */
   factorHeatmapHigh: '#3296ff',
+  /** 行业热力图：红绿配色 */
+  heatmapRedGreen: { low: '#ef4444', mid: '#f59e0b', high: '#10b981' },
+  /** 行业热力图：蓝黄配色 */
+  heatmapBlueYellow: { low: '#3b82f6', mid: '#f59e0b', high: '#84cc16' },
+  /** 行业热力图：紫绿配色 */
+  heatmapPurpleGreen: { low: '#8b5cf6', mid: '#06b6d4', high: '#10b981' },
+  /** 行业热力图：单色蓝配色 */
+  heatmapMonoBlue: { low: '#dbeafe', mid: '#3b82f6', high: '#1e3a8a' },
+  /** 行业热力图：深色文字（用于浅色背景） */
+  heatmapTextDark: '#1f2937',
+  /** 行业热力图：浅色文字（用于深色背景） */
+  heatmapTextLight: '#ffffff',
   /** 雷达图默认填充/描边色 */
   radarDefault: '#0ea5e9', // sky-500
 } as const

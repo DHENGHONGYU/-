@@ -57,6 +57,11 @@ const MAX_OUTPUT_PRICE_SLIDER = 3
 const CONTEXT_WINDOW_LONG = 100_000
 const RECOMMENDATION_LIMIT = 2
 
+/**
+ * useLlmConfigActions
+ * @param state
+ * @returns LlmConfigActions
+ */
 export function useLlmConfigActions(state: LlmConfigState): LlmConfigActions {
   const {
     config,
@@ -260,6 +265,9 @@ export function useLlmConfigActions(state: LlmConfigState): LlmConfigActions {
 }
 
 // 导出供组件使用的常量
+/**
+ * LLM_FILTER_CONSTANTS
+ */
 export const LLM_FILTER_CONSTANTS = {
   MAX_INPUT_PRICE_SLIDER,
   MAX_OUTPUT_PRICE_SLIDER,

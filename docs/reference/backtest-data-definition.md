@@ -1,165 +1,164 @@
 ---
-title: backtest-data-definition
+title: DEPRECATED - backtest-data-definition.md
+type: reference
+domain: data
+phase: testing
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "?? ´ËÎÄ¼şÒÑ·ÏÆú£¨2026-07-14£© Êı¾İ¶¨ÒåÒÑÕûºÏÖÁ `docs/reference/data-dictionary-index.md`£¬ÇëÍ¨¹ıÖ÷Ë÷Òı·ÃÎÊ×îĞÂ¶¨Òå¡£"
+tags: [data, data-definition, test]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: core
----
-
----
-title: docs/reference/backtest-data-definition.md
-code_version: 2.0.0
-tier: core
----
-
----
-deprecated: true
-deprecated_date: 2026-07-14
-deprecated_reason: å·²æ•´åˆè‡³ data-dictionary-index.md ç´¢å¼•ï¼Œå»ºè®®é€šè¿‡ä¸»ç´¢å¼•è®¿é—®
-replaced_by: docs/reference/data-dictionary-index.md
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
 # DEPRECATED - backtest-data-definition.md
 
-> âš ï¸ **æ­¤æ–‡ä»¶å·²åºŸå¼ƒ**ï¼ˆ2026-07-14ï¼‰
+> ?? **´ËÎÄ¼şÒÑ·ÏÆú**£¨2026-07-14£©
 > 
-> æ•°æ®å®šä¹‰å·²æ•´åˆè‡³ `docs/reference/data-dictionary-index.md`ï¼Œè¯·é€šè¿‡ä¸»ç´¢å¼•è®¿é—®æœ€æ–°å®šä¹‰ã€‚
+> Êı¾İ¶¨ÒåÒÑÕûºÏÖÁ `docs/reference/data-dictionary-index.md`£¬ÇëÍ¨¹ıÖ÷Ë÷Òı·ÃÎÊ×îĞÂ¶¨Òå¡£
 
 ---
 
-# ç­–ç•¥å›æµ‹æ¨¡å—æ•°æ®å­—å…¸
+# ²ßÂÔ»Ø²âÄ£¿éÊı¾İ×Öµä
 
 > **Status**: Current  
 > **Version**: v2.4.0  
 > **Last Updated**: 2026-07-02  
-> **Covers**: DA-006 å›æµ‹æŠ¥å‘Šå¯¼å‡ºæ‰©å±•
+> **Covers**: DA-006 »Ø²â±¨¸æµ¼³öÀ©Õ¹
 
-æœ¬æ–‡æ¡£å®šä¹‰ V9 ç­–ç•¥å›æµ‹æ¨¡å—ï¼ˆBacktestPageï¼‰çš„æ ¸å¿ƒæ•°æ®ç»“æ„ã€Store çŠ¶æ€ã€æœåŠ¡ API ä¸å¯¼å‡ºæ•°æ®å¥‘çº¦ã€‚
+±¾ÎÄµµ¶¨Òå V9 ²ßÂÔ»Ø²âÄ£¿é£¨BacktestPage£©µÄºËĞÄÊı¾İ½á¹¹¡¢Store ×´Ì¬¡¢·şÎñ API Óëµ¼³öÊı¾İÆõÔ¼¡£
 
 ---
 
-## 1. æ ¸å¿ƒç±»å‹
+## 1. ºËĞÄÀàĞÍ
 
 ### 1.1 BacktestConfig
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | è¯´æ˜ |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | ËµÃ÷ |
 |------|------|------|------|
-| `strategy` | `BacktestStrategy` | æ˜¯ | å›æµ‹ç­–ç•¥ï¼š`hot_sector` / `value_pit` / `composite` |
-| `startDate` | `string` | æ˜¯ | å›æµ‹å¼€å§‹æ—¥æœŸï¼Œæ ¼å¼ `YYYY-MM-DD` |
-| `endDate` | `string` | æ˜¯ | å›æµ‹ç»“æŸæ—¥æœŸï¼Œæ ¼å¼ `YYYY-MM-DD` |
-| `initialCapital` | `number` | æ˜¯ | åˆå§‹èµ„é‡‘ï¼ˆå…ƒï¼‰ |
+| `strategy` | `BacktestStrategy` | ÊÇ | »Ø²â²ßÂÔ£º`hot_sector` / `value_pit` / `composite` |
+| `startDate` | `string` | ÊÇ | »Ø²â¿ªÊ¼ÈÕÆÚ£¬¸ñÊ½ `YYYY-MM-DD` |
+| `endDate` | `string` | ÊÇ | »Ø²â½áÊøÈÕÆÚ£¬¸ñÊ½ `YYYY-MM-DD` |
+| `initialCapital` | `number` | ÊÇ | ³õÊ¼×Ê½ğ£¨Ôª£© |
 
-å®šä¹‰ä½ç½®ï¼š`src/store/backtestStore.ts`
+¶¨ÒåÎ»ÖÃ£º`src/store/backtestStore.ts`
 
 ### 1.2 BacktestResult
 
-| å­—æ®µ | ç±»å‹ | å¿…å¡« | è¯´æ˜ |
+| ×Ö¶Î | ÀàĞÍ | ±ØÌî | ËµÃ÷ |
 |------|------|------|------|
-| `totalReturn` | `number` | æ˜¯ | æ€»æ”¶ç›Šç‡ï¼ˆç™¾åˆ†æ¯”ï¼Œä¾‹å¦‚ 12.34ï¼‰ |
-| `annualizedReturn` | `number` | æ˜¯ | å¹´åŒ–æ”¶ç›Šç‡ï¼ˆç™¾åˆ†æ¯”ï¼‰ |
-| `maxDrawdown` | `number` | æ˜¯ | æœ€å¤§å›æ’¤ï¼ˆç™¾åˆ†æ¯”ï¼‰ |
-| `sharpeRatio` | `number` | æ˜¯ | å¤æ™®æ¯”ç‡ |
-| `winRate` | `number` | æ˜¯ | èƒœç‡ï¼ˆç™¾åˆ†æ¯”ï¼‰ |
-| `tradeCount` | `number` | æ˜¯ | äº¤æ˜“æ€»æ¬¡æ•° |
-| `profitTrades` | `number` | æ˜¯ | ç›ˆåˆ©äº¤æ˜“æ¬¡æ•° |
-| `lossTrades` | `number` | æ˜¯ | äºæŸäº¤æ˜“æ¬¡æ•° |
-| `avgProfit` | `number` | æ˜¯ | å¹³å‡ç›ˆåˆ©ï¼ˆç™¾åˆ†æ¯”ï¼‰ |
-| `avgLoss` | `number` | æ˜¯ | å¹³å‡äºæŸï¼ˆç™¾åˆ†æ¯”ï¼‰ |
-| `pnlCurve` | `number[]` | æ˜¯ | å‡€å€¼æ›²çº¿ï¼Œä»¥ 1 ä¸ºèµ·ç‚¹ |
-| `trades` | `BacktestTrade[]` | æ˜¯ | äº¤æ˜“è®°å½• |
-| `positions` | `BacktestPosition[]` | å¦ | **DA-006 æ–°å¢**ï¼šæœ€ç»ˆæŒä»“å¿«ç…§ï¼Œç”± BacktestEngine è®¡ç®—å¹¶æ³¨å…¥ï¼Œç”¨äºå¯¼å‡º |
-| `dailyValues` | `BacktestDailyValue[]` | å¦ | **DA-006 æ–°å¢**ï¼šæ¯æ—¥æ€»èµ„äº§/ç°é‡‘åºåˆ—ï¼Œç”± BacktestEngine è®¡ç®—å¹¶æ³¨å…¥ï¼Œç”¨äºå¯¼å‡º |
+| `totalReturn` | `number` | ÊÇ | ×ÜÊÕÒæÂÊ£¨°Ù·Ö±È£¬ÀıÈç 12.34£© |
+| `annualizedReturn` | `number` | ÊÇ | Äê»¯ÊÕÒæÂÊ£¨°Ù·Ö±È£© |
+| `maxDrawdown` | `number` | ÊÇ | ×î´ó»Ø³·£¨°Ù·Ö±È£© |
+| `sharpeRatio` | `number` | ÊÇ | ÏÄÆÕ±ÈÂÊ |
+| `winRate` | `number` | ÊÇ | Ê¤ÂÊ£¨°Ù·Ö±È£© |
+| `tradeCount` | `number` | ÊÇ | ½»Ò××Ü´ÎÊı |
+| `profitTrades` | `number` | ÊÇ | Ó¯Àû½»Ò×´ÎÊı |
+| `lossTrades` | `number` | ÊÇ | ¿÷Ëğ½»Ò×´ÎÊı |
+| `avgProfit` | `number` | ÊÇ | Æ½¾ùÓ¯Àû£¨°Ù·Ö±È£© |
+| `avgLoss` | `number` | ÊÇ | Æ½¾ù¿÷Ëğ£¨°Ù·Ö±È£© |
+| `pnlCurve` | `number[]` | ÊÇ | ¾»ÖµÇúÏß£¬ÒÔ 1 ÎªÆğµã |
+| `trades` | `BacktestTrade[]` | ÊÇ | ½»Ò×¼ÇÂ¼ |
+| `positions` | `BacktestPosition[]` | ·ñ | **DA-006 ĞÂÔö**£º×îÖÕ³Ö²Ö¿ìÕÕ£¬ÓÉ BacktestEngine ¼ÆËã²¢×¢Èë£¬ÓÃÓÚµ¼³ö |
+| `dailyValues` | `BacktestDailyValue[]` | ·ñ | **DA-006 ĞÂÔö**£ºÃ¿ÈÕ×Ü×Ê²ú/ÏÖ½ğĞòÁĞ£¬ÓÉ BacktestEngine ¼ÆËã²¢×¢Èë£¬ÓÃÓÚµ¼³ö |
 
-å®šä¹‰ä½ç½®ï¼š`src/store/backtestStore.ts`
+¶¨ÒåÎ»ÖÃ£º`src/store/backtestStore.ts`
 
 ### 1.3 BacktestTrade
 
-| å­—æ®µ | ç±»å‹ | è¯´æ˜ |
+| ×Ö¶Î | ÀàĞÍ | ËµÃ÷ |
 |------|------|------|
-| `symbol` | `string` | æ ‡çš„ä»£ç  |
-| `direction` | `'buy' \| 'sell'` | ä¹°å–æ–¹å‘ |
-| `price` | `number` | æˆäº¤ä»·æ ¼ |
-| `quantity` | `number` | æˆäº¤æ•°é‡ |
-| `date` | `string` | æˆäº¤æ—¥æœŸ `YYYY-MM-DD` |
-| `pnl` | `number` | å·²å®ç°ç›ˆäº |
-| `pnlPct` | `number` | ç›ˆäºç™¾åˆ†æ¯” |
-| `reason` | `string` | äº¤æ˜“åŸå›  |
+| `symbol` | `string` | ±êµÄ´úÂë |
+| `direction` | `'buy' \| 'sell'` | ÂòÂô·½Ïò |
+| `price` | `number` | ³É½»¼Û¸ñ |
+| `quantity` | `number` | ³É½»ÊıÁ¿ |
+| `date` | `string` | ³É½»ÈÕÆÚ `YYYY-MM-DD` |
+| `pnl` | `number` | ÒÑÊµÏÖÓ¯¿÷ |
+| `pnlPct` | `number` | Ó¯¿÷°Ù·Ö±È |
+| `reason` | `string` | ½»Ò×Ô­Òò |
 
-### 1.4 BacktestPositionï¼ˆå¯¼å‡ºæ‰©å±•ï¼‰
+### 1.4 BacktestPosition£¨µ¼³öÀ©Õ¹£©
 
-| å­—æ®µ | ç±»å‹ | è¯´æ˜ |
+| ×Ö¶Î | ÀàĞÍ | ËµÃ÷ |
 |------|------|------|
-| `symbol` | `string` | æ ‡çš„ä»£ç  |
-| `quantity` | `number` | æŒä»“æ•°é‡ |
-| `avgCost` | `number` | å¹³å‡æˆæœ¬ |
-| `currentPrice` | `number` | å½“å‰ä»·æ ¼ |
-| `marketValue` | `number` | å¸‚å€¼ |
-| `unrealizedPnL` | `number` | æµ®åŠ¨ç›ˆäº |
+| `symbol` | `string` | ±êµÄ´úÂë |
+| `quantity` | `number` | ³Ö²ÖÊıÁ¿ |
+| `avgCost` | `number` | Æ½¾ù³É±¾ |
+| `currentPrice` | `number` | µ±Ç°¼Û¸ñ |
+| `marketValue` | `number` | ÊĞÖµ |
+| `unrealizedPnL` | `number` | ¸¡¶¯Ó¯¿÷ |
 
-å®šä¹‰ä½ç½®ï¼š`src/types/modules/backtest.types.ts`
+¶¨ÒåÎ»ÖÃ£º`src/types/modules/backtest.types.ts`
 
-### 1.5 BacktestDailyValueï¼ˆå¯¼å‡ºæ‰©å±•ï¼‰
+### 1.5 BacktestDailyValue£¨µ¼³öÀ©Õ¹£©
 
-| å­—æ®µ | ç±»å‹ | è¯´æ˜ |
+| ×Ö¶Î | ÀàĞÍ | ËµÃ÷ |
 |------|------|------|
-| `date` | `string` | æ—¥æœŸ `YYYY-MM-DD` |
-| `totalValue` | `number` | å½“æ—¥æ€»èµ„äº§ |
-| `cash` | `number` | å½“æ—¥ç°é‡‘ |
+| `date` | `string` | ÈÕÆÚ `YYYY-MM-DD` |
+| `totalValue` | `number` | µ±ÈÕ×Ü×Ê²ú |
+| `cash` | `number` | µ±ÈÕÏÖ½ğ |
 
-å®šä¹‰ä½ç½®ï¼š`src/types/modules/backtest.types.ts`
+¶¨ÒåÎ»ÖÃ£º`src/types/modules/backtest.types.ts`
 
 ---
 
-## 2. Store çŠ¶æ€
+## 2. Store ×´Ì¬
 
-`useBacktestStore` ç®¡ç†ä»¥ä¸‹çŠ¶æ€ï¼š
+`useBacktestStore` ¹ÜÀíÒÔÏÂ×´Ì¬£º
 
-| å­—æ®µ | ç±»å‹ | è¯´æ˜ |
+| ×Ö¶Î | ÀàĞÍ | ËµÃ÷ |
 |------|------|------|
-| `config` | `BacktestConfig` | å½“å‰å›æµ‹é…ç½® |
-| `results` | `BacktestResult \| null` | æœ€æ–°å›æµ‹ç»“æœï¼ˆå«æŒä»“/å‡€å€¼ï¼Œç”¨äºå¯¼å‡ºï¼‰ |
-| `loading` | `boolean` | æ˜¯å¦æ­£åœ¨è¿è¡Œå›æµ‹ |
-| `error` | `string \| null` | é”™è¯¯ä¿¡æ¯ |
-| `lastRunAt` | `number \| null` | ä¸Šæ¬¡è¿è¡Œæ—¶é—´æˆ³ |
+| `config` | `BacktestConfig` | µ±Ç°»Ø²âÅäÖÃ |
+| `results` | `BacktestResult \| null` | ×îĞÂ»Ø²â½á¹û£¨º¬³Ö²Ö/¾»Öµ£¬ÓÃÓÚµ¼³ö£© |
+| `loading` | `boolean` | ÊÇ·ñÕıÔÚÔËĞĞ»Ø²â |
+| `error` | `string \| null` | ´íÎóĞÅÏ¢ |
+| `lastRunAt` | `number \| null` | ÉÏ´ÎÔËĞĞÊ±¼ä´Á |
 
-Actionsï¼š
+Actions£º
 
-| Action | ç­¾å | è¯´æ˜ |
+| Action | Ç©Ãû | ËµÃ÷ |
 |--------|------|------|
-| `setConfig` | `(partial: Partial<BacktestConfig>) => void` | æ›´æ–°éƒ¨åˆ†é…ç½® |
-| `runBacktest` | `() => Promise<void>` | è¿è¡Œå›æµ‹ï¼Œç»“æœå†™å…¥ `results` |
-| `clearResults` | `() => void` | æ¸…ç©ºç»“æœ |
+| `setConfig` | `(partial: Partial<BacktestConfig>) => void` | ¸üĞÂ²¿·ÖÅäÖÃ |
+| `runBacktest` | `() => Promise<void>` | ÔËĞĞ»Ø²â£¬½á¹ûĞ´Èë `results` |
+| `clearResults` | `() => void` | Çå¿Õ½á¹û |
 
-å®šä¹‰ä½ç½®ï¼š`src/store/backtestStore.ts`
+¶¨ÒåÎ»ÖÃ£º`src/store/backtestStore.ts`
 
 ---
 
-## 3. å¯¼å‡ºæœåŠ¡
+## 3. µ¼³ö·şÎñ
 
-### 3.1 æœåŠ¡å…¥å£
+### 3.1 ·şÎñÈë¿Ú
 
 `src/services/export/backtestExportService.ts`
 
-### 3.2 å¯¼å‡ºæ ¼å¼
+### 3.2 µ¼³ö¸ñÊ½
 
-| æ ¼å¼ | åŠ¨æ€å¯¼å…¥åº“ | è¾“å‡ºå†…å®¹ |
+| ¸ñÊ½ | ¶¯Ì¬µ¼Èë¿â | Êä³öÄÚÈİ |
 |------|------------|----------|
-| PDF | `jspdf`ã€`jspdf-autotable` | å°é¢æ‘˜è¦ + äº¤æ˜“æ˜ç»†è¡¨ |
-| Excel | `xlsx`ï¼ˆSheetJSï¼‰ | 4 ä¸ª Sheetï¼šæ‘˜è¦ã€æŒä»“ã€äº¤æ˜“è®°å½•ã€å‡€å€¼åºåˆ— |
+| PDF | `jspdf`¡¢`jspdf-autotable` | ·âÃæÕªÒª + ½»Ò×Ã÷Ï¸±í |
+| Excel | `xlsx`£¨SheetJS£© | 4 ¸ö Sheet£ºÕªÒª¡¢³Ö²Ö¡¢½»Ò×¼ÇÂ¼¡¢¾»ÖµĞòÁĞ |
 
-### 3.3 å¯¼å‡º Sheet åç§°
+### 3.3 µ¼³ö Sheet Ãû³Æ
 
-ç”± `src/constants/backtest.constants.ts` ä¸­ `BACKTEST_EXCEL_SHEETS` å®šä¹‰ï¼š
+ÓÉ `src/constants/backtest.constants.ts` ÖĞ `BACKTEST_EXCEL_SHEETS` ¶¨Òå£º
 
-- `summary` â†’ `æ‘˜è¦`
-- `positions` â†’ `æŒä»“`
-- `trades` â†’ `äº¤æ˜“è®°å½•`
-- `dailyValues` â†’ `å‡€å€¼åºåˆ—`
+- `summary` ¡ú `ÕªÒª`
+- `positions` ¡ú `³Ö²Ö`
+- `trades` ¡ú `½»Ò×¼ÇÂ¼`
+- `dailyValues` ¡ú `¾»ÖµĞòÁĞ`
 
-### 3.4 æ–‡ä»¶åæ¨¡æ¿
+### 3.4 ÎÄ¼şÃûÄ£°å
 
-é»˜è®¤ï¼š`å›æµ‹æŠ¥å‘Š_{ç­–ç•¥æ ‡ç­¾}_{YYYY-MM-DD}.{pdf|xlsx}`
+Ä¬ÈÏ£º`»Ø²â±¨¸æ_{²ßÂÔ±êÇ©}_{YYYY-MM-DD}.{pdf|xlsx}`
 
-ç”± `BACKTEST_EXPORT_FILENAME` å¸¸é‡å®šä¹‰ã€‚
+ÓÉ `BACKTEST_EXPORT_FILENAME` ³£Á¿¶¨Òå¡£
 
 ### 3.5 API
 
@@ -171,45 +170,45 @@ async function exportBacktestReport(
 ): Promise<BacktestExportResult>
 ```
 
-| å‚æ•° | ç±»å‹ | è¯´æ˜ |
+| ²ÎÊı | ÀàĞÍ | ËµÃ÷ |
 |------|------|------|
 | `result` | `BacktestResult` | `backtestStore.results` |
 | `config` | `BacktestConfig` | `backtestStore.config` |
-| `exportConfig.format` | `'pdf' \| 'excel'` | å¯¼å‡ºæ ¼å¼ |
-| `exportConfig.filename` | `string`ï¼ˆå¯é€‰ï¼‰ | è‡ªå®šä¹‰æ–‡ä»¶åå‰ç¼€ |
+| `exportConfig.format` | `'pdf' \| 'excel'` | µ¼³ö¸ñÊ½ |
+| `exportConfig.filename` | `string`£¨¿ÉÑ¡£© | ×Ô¶¨ÒåÎÄ¼şÃûÇ°×º |
 
-çº¦æŸï¼š
+Ô¼Êø£º
 
-- **å¯¼å‡ºæ•°æ®ä»…è¯»å– `backtestStore`ï¼Œç¦æ­¢åœ¨å¯¼å‡ºé€»è¾‘ä¸­é‡å¤è®¡ç®—å›æµ‹ç»“æœã€‚**
-- ç¬¬ä¸‰æ–¹åº“å…¨éƒ¨é€šè¿‡ `import()` åŠ¨æ€åŠ è½½ï¼Œé¿å…å¢åŠ ä¸»åŒ…ä½“ç§¯ã€‚
+- **µ¼³öÊı¾İ½ö¶ÁÈ¡ `backtestStore`£¬½ûÖ¹ÔÚµ¼³öÂß¼­ÖĞÖØ¸´¼ÆËã»Ø²â½á¹û¡£**
+- µÚÈı·½¿âÈ«²¿Í¨¹ı `import()` ¶¯Ì¬¼ÓÔØ£¬±ÜÃâÔö¼ÓÖ÷°üÌå»ı¡£
 
 ---
 
-## 4. å¸¸é‡
+## 4. ³£Á¿
 
 `src/constants/backtest.constants.ts`
 
-| å¸¸é‡ | è¯´æ˜ |
+| ³£Á¿ | ËµÃ÷ |
 |------|------|
-| `BACKTEST_STRATEGY_LABELS` | ç­–ç•¥ä»£ç åˆ°ä¸­æ–‡æ ‡ç­¾æ˜ å°„ |
-| `BACKTEST_EXCEL_SHEETS` | Excel Sheet åç§° |
-| `BACKTEST_EXPORT_FILENAME` | é»˜è®¤æ–‡ä»¶åå‰ç¼€ |
-| `BACKTEST_EXPORT_DATE_FORMAT` | æ–‡ä»¶åæ—¥æœŸæ ¼å¼ |
+| `BACKTEST_STRATEGY_LABELS` | ²ßÂÔ´úÂëµ½ÖĞÎÄ±êÇ©Ó³Éä |
+| `BACKTEST_EXCEL_SHEETS` | Excel Sheet Ãû³Æ |
+| `BACKTEST_EXPORT_FILENAME` | Ä¬ÈÏÎÄ¼şÃûÇ°×º |
+| `BACKTEST_EXPORT_DATE_FORMAT` | ÎÄ¼şÃûÈÕÆÚ¸ñÊ½ |
 
 ---
 
-## 5. é¡µé¢é›†æˆ
+## 5. Ò³Ãæ¼¯³É
 
 `src/pages/analysis/BacktestPage.tsx`
 
-- ä½¿ç”¨ `BACKTEST_STRATEGY_LABELS` æ›¿æ¢ç¡¬ç¼–ç ç­–ç•¥é€‰é¡¹ã€‚
-- æ–°å¢ã€Œå¯¼å‡º PDFã€ã€Œå¯¼å‡º Excelã€æŒ‰é’®ï¼Œè°ƒç”¨ `exportBacktestReport`ã€‚
-- å¯¼å‡ºæŒ‰é’®ä»…åœ¨å­˜åœ¨ `results` æ—¶å¯ç”¨ã€‚
+- Ê¹ÓÃ `BACKTEST_STRATEGY_LABELS` Ìæ»»Ó²±àÂë²ßÂÔÑ¡Ïî¡£
+- ĞÂÔö¡¸µ¼³ö PDF¡¹¡¸µ¼³ö Excel¡¹°´Å¥£¬µ÷ÓÃ `exportBacktestReport`¡£
+- µ¼³ö°´Å¥½öÔÚ´æÔÚ `results` Ê±¿ÉÓÃ¡£
 
 ---
 
-## 6. å˜æ›´æ—¥å¿—
+## 6. ±ä¸üÈÕÖ¾
 
-| ç‰ˆæœ¬ | æ—¥æœŸ | è¯´æ˜ |
+| °æ±¾ | ÈÕÆÚ | ËµÃ÷ |
 |------|------|------|
-| v2.4.0 | 2026-07-02 | DA-006ï¼šæ–°å¢å›æµ‹æŠ¥å‘Š PDF/Excel å¯¼å‡ºï¼ŒBacktestResult æ‰©å±• `positions`/`dailyValues`ï¼Œæ–°å¢ `backtestExportService`ã€`backtest.constants.ts`ã€`backtest.types.ts` |
+| v2.4.0 | 2026-07-02 | DA-006£ºĞÂÔö»Ø²â±¨¸æ PDF/Excel µ¼³ö£¬BacktestResult À©Õ¹ `positions`/`dailyValues`£¬ĞÂÔö `backtestExportService`¡¢`backtest.constants.ts`¡¢`backtest.types.ts` |

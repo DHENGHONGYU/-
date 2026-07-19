@@ -1,0 +1,118 @@
+{
+  "violations": [
+    {
+      "file": "src/components/atoms/DatePicker.tsx",
+      "line": 46,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 ring-blue-500",
+      "context": "focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+    },
+    {
+      "file": "src/components/atoms/Menu.tsx",
+      "line": 62,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 text-red-500",
+      "context": "${item.danger ? 'text-red-500' : ''}"
+    },
+    {
+      "file": "src/components/molecules/DataQualityIndicator.tsx",
+      "line": 51,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 text-green-500",
+      "context": "return { label: '样本充足', color: 'text-green-500' }"
+    },
+    {
+      "file": "src/components/molecules/DataQualityIndicator.tsx",
+      "line": 53,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 text-amber-500",
+      "context": "return { label: '样本偏少', color: 'text-amber-500' }"
+    },
+    {
+      "file": "src/components/molecules/DataQualityIndicator.tsx",
+      "line": 55,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 text-red-500",
+      "context": "return { label: '样本不足', color: 'text-red-500' }"
+    },
+    {
+      "file": "src/components/molecules/RankedCard.tsx",
+      "line": 32,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 bg-yellow-500",
+      "context": "1: 'bg-yellow-500 text-white',"
+    },
+    {
+      "file": "src/components/molecules/RankedCard.tsx",
+      "line": 33,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 bg-gray-400",
+      "context": "2: 'bg-gray-400 text-white',"
+    },
+    {
+      "file": "src/components/molecules/RankedCard.tsx",
+      "line": 34,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 bg-amber-600",
+      "context": "3: 'bg-amber-600 text-white',"
+    },
+    {
+      "file": "src/components/molecules/ScoreGauge.tsx",
+      "line": 17,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 bg-slate-200",
+      "context": "if (score >= 2.5) return 'bg-slate-200'"
+    },
+    {
+      "file": "src/components/molecules/SignalBadge.tsx",
+      "line": 26,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 bg-slate-200",
+      "context": "hold: 'bg-slate-200',"
+    },
+    {
+      "file": "src/components/molecules/SignalBadge.tsx",
+      "line": 29,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 bg-slate-100",
+      "context": "observe: 'bg-slate-100',"
+    },
+    {
+      "file": "src/components/molecules/TrendArrow.tsx",
+      "line": 49,
+      "severity": "Major",
+      "category": "硬编码 Tailwind 颜色类",
+      "message": "UI 层出现硬编码 Tailwind 颜色类 text-slate-400",
+      "context": ": 'text-slate-400'"
+    }
+  ],
+  "summary": {
+    "totalFiles": 1130,
+    "totalViolations": 12,
+    "totalWarnings": 0,
+    "bySeverity": {
+      "Major": 12
+    },
+    "byCategory": {
+      "硬编码 Tailwind 颜色类": 12
+    }
+  },
+  "meta": {
+    "scriptName": "audit-hardcode",
+    "version": "3.0",
+    "timestamp": "2026-07-18T08:22:58.951Z",
+    "durationMs": 394,
+    "rootDir": "G:\\FinSightV9\\scripts\\audit"
+  }
+}

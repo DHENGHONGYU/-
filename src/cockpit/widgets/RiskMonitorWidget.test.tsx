@@ -258,7 +258,7 @@ describe('RiskMonitorWidget', () => {
 
     const badge = screen.getByText('低风险')
     expect(badge).toBeInTheDocument()
-    expect(badge.className).toContain(COLOR_TOKENS.success.tailwind) // text-green-700
+    expect(badge.className).toContain(COLOR_TOKENS.success.tailwind) // text-success
     expect(badge.className).toContain('border-green-300') // twBorder('green', 300)
   })
 
@@ -377,15 +377,15 @@ describe('RiskMonitorWidget', () => {
   it('COLOR_TOKENS / THEME_TOKENS 锚点值应与 RiskMonitorWidget 源码引用一致', () => {
     // 源码 VaR 高风险 / 集中度高风险 使用 COLOR_TOKENS.danger.hex (#ef4444)
     expect(COLOR_TOKENS.danger.hex).toBe('#ef4444')
-    // 源码 夏普>=0 / 集中度<=50 使用 COLOR_TOKENS.success.hex（与 text-green-700 一致）
-    expect(COLOR_TOKENS.success.hex).toBe('#15803d')
-    expect(COLOR_TOKENS.success.tailwind).toBe('text-green-700')
+    // 源码 夏普>=0 / 集中度<=50 使用 COLOR_TOKENS.success.hex（与 text-success 一致）
+    expect(COLOR_TOKENS.success.hex).toBe('#21c45d')
+    expect(COLOR_TOKENS.success.tailwind).toBe('text-success')
     // 源码 波动率 使用 COLOR_TOKENS.info.hex (#3b82f6)
     expect(COLOR_TOKENS.info.hex).toBe('#3b82f6')
     // 源码 VaR 非高风险 使用 THEME_TOKENS.color.warningRaw (#f59e0b)
     expect(THEME_TOKENS.color.warningRaw).toBe('#f59e0b')
     // 三档 Badge 边界 token
     expect(COLOR_TOKENS.danger.tailwind).toBe('text-red-500')
-    expect(COLOR_TOKENS.success.tailwind).toBe('text-green-700')
+    expect(COLOR_TOKENS.success.tailwind).toBe('text-success')
   })
 })

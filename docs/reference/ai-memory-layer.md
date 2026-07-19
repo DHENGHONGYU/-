@@ -1,81 +1,90 @@
 ---
 title: ai-memory-layer
+type: reference
+domain: ai
+phase: design
 tier: important
+status: active
+maintainer: V9 Architecture Team
+summary: "Îª AI ¸¨Öú¿ª·¢¹¤¾ß£¨Claude Code / Cursor / Trae µÈ£©Ìá¹©¿É¼ìË÷µÄÏîÄ¿ÉÏÏÂÎÄ£¬"
+tags: [ai, memory, reference, mcp, documentation]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+doc_id: V9-DOC-AI-011
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-tier: important
-code_version: 2.0.0
----
+# ÏîÄ¿×¨Êô AI ¼ÇÒä²ã£¨RAG£©
 
-# é¡¹ç›®ä¸“å± AI è®°å¿†å±‚ï¼ˆRAGï¼‰
+> **Version**£ºv1.0.0 | ÈÕÆÚ£º2026-07-10
 
-> ç‰ˆæœ¬ï¼šv1.0.0 | æ—¥æœŸï¼š2026-07-10
+## 1. Éè¼ÆÄ¿±ê
 
-## 1. è®¾è®¡ç›®æ ‡
+Îª AI ¸¨Öú¿ª·¢¹¤¾ß£¨Claude Code / Cursor / Trae µÈ£©Ìá¹©¿É¼ìË÷µÄÏîÄ¿ÉÏÏÂÎÄ£¬
+½µµÍ AI ÔÚÇ¨ÒÆ¡¢ĞÂÔöÄ£¿é¡¢ÑÕÉ«Ê¹ÓÃ¡¢²âÊÔ²ßÂÔµÈ³¡¾°ÏÂµÄÉÏÏÂÎÄÆ¯ÒÆÓë·µ¹¤¡£
 
-ä¸º AI è¾…åŠ©å¼€å‘å·¥å…·ï¼ˆClaude Code / Cursor / Trae ç­‰ï¼‰æä¾›å¯æ£€ç´¢çš„é¡¹ç›®ä¸Šä¸‹æ–‡ï¼Œ
-é™ä½ AI åœ¨è¿ç§»ã€æ–°å¢æ¨¡å—ã€é¢œè‰²ä½¿ç”¨ã€æµ‹è¯•ç­–ç•¥ç­‰åœºæ™¯ä¸‹çš„ä¸Šä¸‹æ–‡æ¼‚ç§»ä¸è¿”å·¥ã€‚
+## 2. Ë÷Òı·¶Î§
 
-## 2. ç´¢å¼•èŒƒå›´
+µ±Ç°Ë÷Òı¸²¸ÇÒÔÏÂºËĞÄÎÄµµ£º
 
-å½“å‰ç´¢å¼•è¦†ç›–ä»¥ä¸‹æ ¸å¿ƒæ–‡æ¡£ï¼š
-
-| ç±»åˆ« | æ–‡ä»¶ |
+| Àà±ğ | ÎÄ¼ş |
 |------|------|
-| AI è¡Œä¸ºå¥‘çº¦ | `../../AGENTS.md` |
-| è®¾è®¡ä»¤ç‰Œè§„èŒƒ | `./design-token-mapping.md` |
-| UI è¿ç§»æ£€æŸ¥ | `./ui-migration-checklist.md` |
-| Widget é›†æˆæ£€æŸ¥ | `./widget-integration-checklist.md` |
-| æ–‡æ¡£ä¸æ³¨é‡Šè§„èŒƒ | `./jsdoc-convention.md` |
-| å¤æ‚åº¦æ²»ç† | `./complexity-governance.md` |
-| æµ‹è¯•ç­–ç•¥ | `./testing-strategy.md` |
-| æç¤ºè¯æ¨¡æ¿ | `prompts/*.md` |
+| AI ĞĞÎªÆõÔ¼ | `../../AGENTS.md` |
+| Éè¼ÆÁîÅÆ¹æ·¶ | `./design-token-mapping.md` |
+| UI Ç¨ÒÆ¼ì²é | `./ui-migration-checklist.md` |
+| Widget ¼¯³É¼ì²é | `./widget-integration-checklist.md` |
+| ÎÄµµÓë×¢ÊÍ¹æ·¶ | `./jsdoc-convention.md` |
+| ¸´ÔÓ¶ÈÖÎÀí | `./complexity-governance.md` |
+| ²âÊÔ²ßÂÔ | `./testing-strategy.md` |
+| ÌáÊ¾´ÊÄ£°å | `prompts/*.md` |
 
-## 3. ç”Ÿæˆä¸æ›´æ–°
+## 3. Éú³ÉÓë¸üĞÂ
 
 ```bash
-# é‡æ–°ç”Ÿæˆ AI è®°å¿†ç´¢å¼•
+# ÖØĞÂÉú³É AI ¼ÇÒäË÷Òı
 npx tsx scripts/build-ai-memory-index.ts
 
-# æˆ–
+# »ò
 npm run build:ai-memory
 ```
 
-è¾“å‡ºæ–‡ä»¶ï¼š`public/ai-memory-index.json`
+Êä³öÎÄ¼ş£º`public/ai-memory-index.json`
 
-## 4. æ£€ç´¢æ–¹å¼
+## 4. ¼ìË÷·½Ê½
 
-### 4.1 å‘½ä»¤è¡Œ
+### 4.1 ÃüÁîĞĞ
 
 ```bash
-npx tsx scripts/query-ai-memory.ts "é¢œè‰²ä»¤ç‰Œ" --top 5
+npx tsx scripts/query-ai-memory.ts "ÑÕÉ«ÁîÅÆ" --top 5
 ```
 
-### 4.2 è¿è¡Œæ—¶æœåŠ¡
+### 4.2 ÔËĞĞÊ±·şÎñ
 
 ```ts
 import { queryMemory } from '@/services/system/aiMemoryService'
 
-const results = await queryMemory('Widget æ³¨å†Œä¸‰å¤„åŒæ­¥', 3)
+const results = await queryMemory('Widget ×¢²áÈı´¦Í¬²½', 3)
 for (const { chunk, score } of results) {
   console.log(chunk.file, chunk.title, score)
 }
 ```
 
-## 5. ä¸æç¤ºè¯å·¥ç¨‹ç»“åˆ
+## 5. ÓëÌáÊ¾´Ê¹¤³Ì½áºÏ
 
-åœ¨ `prompts/system-prompt-template.md` ä¸­ï¼Œå·²è¦æ±‚ AI åœ¨ç”Ÿæˆä»£ç å‰ï¼š
+ÔÚ `../../prompts/system-prompt-template.md` ÖĞ£¬ÒÑÒªÇó AI ÔÚÉú³É´úÂëÇ°£º
 
-1. æ£€æŸ¥ `../../AGENTS.md` åˆ†å±‚ä¸é¢œè‰²è§„èŒƒï¼›
-2. å¯¹ç…§ `./ui-migration-checklist.md` / `./widget-integration-checklist.md` æ‰§è¡Œè¿ç§»æˆ–æ–°å¢ Widgetï¼›
-3. æ£€ç´¢ AI è®°å¿†ç´¢å¼•è·å–ç›¸å…³ç‰‡æ®µï¼Œä½œä¸ºä¸Šä¸‹æ–‡æ³¨å…¥ã€‚
+1. ¼ì²é `../../AGENTS.md` ·Ö²ãÓëÑÕÉ«¹æ·¶£»
+2. ¶ÔÕÕ `./ui-migration-checklist.md` / `./widget-integration-checklist.md` Ö´ĞĞÇ¨ÒÆ»òĞÂÔö Widget£»
+3. ¼ìË÷ AI ¼ÇÒäË÷Òı»ñÈ¡Ïà¹ØÆ¬¶Î£¬×÷ÎªÉÏÏÂÎÄ×¢Èë¡£
 
-æœªæ¥å¯åœ¨ AI å·¥å…·ä¾§æ¥å…¥ `aiMemoryService.queryMemory()`ï¼Œå®ç°è‡ªåŠ¨æ£€ç´¢ä¸æ³¨å…¥ã€‚
+Î´À´¿ÉÔÚ AI ¹¤¾ß²à½ÓÈë `aiMemoryService.queryMemory()`£¬ÊµÏÖ×Ô¶¯¼ìË÷Óë×¢Èë¡£
 
-## 6. æ¼”è¿›æ–¹å‘
+## 6. Ñİ½ø·½Ïò
 
-- v1.1ï¼šæ¥å…¥å‘é‡åµŒå…¥ï¼ˆå¦‚ `transformers.js` / OpenAI Embeddingï¼‰ï¼Œæ”¯æŒè¯­ä¹‰æ£€ç´¢ï¼›
-- v1.2ï¼šä¸ `build-health-report.ts` ç»“åˆï¼ŒæŠŠå¥åº·åº¦æŠ¥å‘Šä¹Ÿçº³å…¥ç´¢å¼•ï¼›
-- v1.3ï¼šåœ¨ AI ç”Ÿæˆâ€”å®¡è®¡â€”ä¿®æ­£é£è½®ä¸­ï¼Œä½œä¸ºè‡ªåŠ¨æ£€ç´¢æ¨¡å—è°ƒç”¨ã€‚
+- v1.1£º½ÓÈëÏòÁ¿Ç¶Èë£¨Èç `transformers.js` / OpenAI Embedding£©£¬Ö§³ÖÓïÒå¼ìË÷£»
+- v1.2£ºÓë `build-health-report.ts` ½áºÏ£¬°Ñ½¡¿µ¶È±¨¸æÒ²ÄÉÈëË÷Òı£»
+- v1.3£ºÔÚ AI Éú³É¡ªÉó¼Æ¡ªĞŞÕı·ÉÂÖÖĞ£¬×÷Îª×Ô¶¯¼ìË÷Ä£¿éµ÷ÓÃ¡£

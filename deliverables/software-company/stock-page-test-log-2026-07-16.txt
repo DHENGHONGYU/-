@@ -1,0 +1,25 @@
+[PASS ] (setup) CSV 解析出 50 只股票 — 解析得到 50 只
+[PASS ] (A) 批量导入预览表格渲染 50 行 — 预览行数=50
+[PASS ] (A) 预览表格包含全部 50 只 symbol+name — 全部 50 只均正确渲染
+[PASS ] (A) 预览统计"共 50 条" — 包含=true
+[PASS ] (A) 预览统计"有效 50" — 包含=true
+[PASS ] (A) 批量导入执行成功（成功 50 条） — 导入完成提示出现
+[PASS ] (A) 导入过程无未捕获异常(pageerror) — 新增 pageerror=0
+[PASS ] (A) 意向候选池计数徽章 == 50 — 显示计数=50（要求 == 50）
+[PASS ] (A) 研究池看板计数（说明 store 分离） — 研究池看板显示 0 只标的；批量导入写入的是"意向候选池"，与研究池(ResearchPoolStore)为不同 store，故 50 只不在此处出现
+[PASS ] (B) 搜索覆盖率统计 = 6/50 (12.0%) — 命中(mock库重叠)=6；未命中(覆盖缺口)=44
+[PASS ] (B) 搜索覆盖缺口已记录（mock 库仅 15 只） — 有 44 只 CSV 股票不在 MOCK_STOCK_LIBRARY，StockSearch 无法检索到（已知覆盖缺口）
+[PASS ] (C) 全部 50 只详情页均成功渲染（显示代码或"未找到"） — 渲染成功=50/50
+[PASS ] (C) 已加载标的的详情页均含 价格/PE/PB 结构元素(软断言) — 已找到 50 只中结构完整 50 只（实时行情断开，数值多为"—"，仅校验结构存在）
+[PASS ] (C) 详情页"未找到"标的清单（已导入但详情页未命中） — 50 只全部命中
+[PASS ] (C) 详情页导航无未捕获异常 — 出现异常导航=0
+[PASS ] (C) 详情页数据可达性（找到标的 vs 未找到） — 找到标的=50/50；未找到=0/50（环境限制：实时数据源断开，部分标的回退"未找到"或 Mock）
+[PASS ] (D) 批量导入耗时（50 只） — 导入+解析总耗时 ≈ 1738 ms（含文本粘贴与确认导入）
+[PASS ] (D) 详情页平均/最大导航耗时 — 平均 ≈ 36 ms；最大 ≈ 345 ms（50 只逐只导航）
+[FAIL[P3]] (D) 响应式 375px · 输入舱无横向溢出 — 横向溢出=61px；关键元素可见=true；溢出元素(样例): DIV.ml-auto flex items-center gap-3 text-xs text-muted w=50 right=436 | BUTTON.flex h-8 items-center gap-1.5 rounded-md px-2 tran w=30 right=416 | svg.[object SVGAnimatedString] w=14 right=408 | rect.[object SVGAnimatedString] w=12 right=406
+[FAIL[P3]] (D) 响应式 375px · 详情页无横向溢出 — 横向溢出=61px；关键元素可见=true；溢出元素(样例): DIV.ml-auto flex items-center gap-3 text-xs text-muted w=50 right=436 | BUTTON.flex h-8 items-center gap-1.5 rounded-md px-2 tran w=30 right=416 | svg.[object SVGAnimatedString] w=14 right=408 | rect.[object SVGAnimatedString] w=12 right=406
+[PASS ] (D) 响应式 768px · 输入舱无横向溢出 — 横向溢出=0px；关键元素可见=true
+[PASS ] (D) 响应式 768px · 详情页无横向溢出 — 横向溢出=0px；关键元素可见=true
+[PASS ] (D) 响应式 1280px · 输入舱无横向溢出 — 横向溢出=0px；关键元素可见=true
+[PASS ] (D) 响应式 1280px · 详情页无横向溢出 — 横向溢出=0px；关键元素可见=true
+[PASS ] (D) 全程控制台错误 / 未捕获异常汇总 — console.error=20；pageerror=0（环境限制：实时行情连接器断开，预期存在数据拉取类错误）

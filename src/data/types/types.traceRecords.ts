@@ -2,8 +2,6 @@
  * @fileoverview 采集链路追踪记录类型
  *
  * 对应 IndexedDB `trace_records` store，持久化单次采集链路追踪段。
- */
-
 /** 采集生命周期阶段 */
 export type CollectionLifecycleStage =
   | 'triggered'

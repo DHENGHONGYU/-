@@ -1,7 +1,7 @@
 import { ENVELOPE_ACTION, ENVELOPE_TARGET } from '@/config/dbConfig'
 import { EnvelopeFactory, type StandardEnvelope } from '@/core/envelope'
 import { dataBridge } from '@/core/databridge'
-import { generateId } from '@/data/db'
+import { generateId } from '@/lib/utils'
 import { getLogger } from '@/lib/logger'
 import type { V6ExportShape } from './migrationTypes'
 

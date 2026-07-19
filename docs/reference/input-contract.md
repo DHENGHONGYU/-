@@ -1,60 +1,63 @@
 ---
-title: input-contract
+title: input-contract.md ¡ª ÊäÈë´¦Àí×ÓÓò½Ó¿ÚÆõÔ¼
+type: reference
+domain: project
+phase: design
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "¶¨Î»£º¶¨Òå `input` ×ÓÓòµÄ½Ó¿ÚÆõÔ¼¡¢Ö°Ôğ±ß½ç¡¢Êı¾İÁ÷ÓëÒÀÀµ¹ØÏµ¡£ ¹ØÁª£º`./services-catalog.md`£¨24 ×ÓÓò×ÜÀÀ£©¡¢`../../AGENTS.md` ¡ìÒ»£¨·Ö²ã¹æÔò£©¡£"
+tags: [project, contract, reference]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: important
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: input-contract.md
-status: draft
-owner: æ¶æ„ç»„
-updated: 2026-07-12
-code_version: 2.0.0
-tier: important
----
+# input-contract.md ¡ª ÊäÈë´¦Àí×ÓÓò½Ó¿ÚÆõÔ¼
 
-# input-contract.md â€” è¾“å…¥å¤„ç†å­åŸŸæ¥å£å¥‘çº¦
-
-> **å®šä½**ï¼šå®šä¹‰ `input` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ç³»ã€‚  
-> **å…³è”**ï¼š`./services-catalog.md`ï¼ˆ24 å­åŸŸæ€»è§ˆï¼‰ã€`../../AGENTS.md` Â§ä¸€ï¼ˆåˆ†å±‚è§„åˆ™ï¼‰ã€‚
+> **¶¨Î»**£º¶¨Òå `input` ×ÓÓòµÄ½Ó¿ÚÆõÔ¼¡¢Ö°Ôğ±ß½ç¡¢Êı¾İÁ÷ÓëÒÀÀµ¹ØÏµ¡£  
+> **¹ØÁª**£º`./services-catalog.md`£¨24 ×ÓÓò×ÜÀÀ£©¡¢`../../AGENTS.md` ¡ìÒ»£¨·Ö²ã¹æÔò£©¡£
 
 ---
 
-## 1. èŒè´£è¾¹ç•Œ
+## 1. Ö°Ôğ±ß½ç
 
-### 1.1 æ ¸å¿ƒèŒè´£
+### 1.1 ºËĞÄÖ°Ôğ
 
-1. **å€™é€‰è‚¡ç¥¨å½•å…¥ç®¡ç†**ï¼šæä¾› `addStock()` ç­‰å…¥å£ï¼Œå°†ç”¨æˆ·æ‰‹åŠ¨è¾“å…¥æˆ–æœç´¢é€‰ä¸­çš„è‚¡ç¥¨å†™å…¥æ„å‘å€™é€‰æ± ï¼ˆ`stocks` storeï¼‰ï¼Œæ”¯æŒå¯é€‰çš„è‡ªåŠ¨æ‹‰å–åŸºç¡€æ•°æ® / K çº¿æ•°æ®ã€‚
-2. **æ‰¹é‡å¯¼å…¥è§£æä¸æ‰§è¡Œ**ï¼šæ”¯æŒæ–‡æœ¬æ‰¹é‡ç²˜è´´ã€CSV/JSON/Excel å¤šæ ¼å¼æ–‡ä»¶è§£æï¼Œå®ç° `importStocks()` / `importStocksWithProgress()` åˆ†æ‰¹å¹¶å‘å¯¼å…¥ï¼Œå¹¶æä¾›è¡Œçº§çŠ¶æ€é¢„è§ˆï¼ˆvalid / duplicate / invalidï¼‰ã€‚
-3. **æœ¬åœ°æœç´¢ä¸çƒ­é—¨æ¿å—æ¨è**ï¼šç»´æŠ¤ç¦»çº¿ mock è‚¡ç¥¨åº“ä¾› `searchStocks()` æ¨¡ç³ŠåŒ¹é…ï¼›æä¾› `getHotSectors()` é…ç½®åŒ–çƒ­é—¨æ¿å—åŠä¸€é”®å°†æ¿å—å†…æ¨èè‚¡ç¥¨åŠ å…¥å€™é€‰æ± ã€‚
-4. **æ± æ•°æ®å¯¼å…¥å¯¼å‡º**ï¼šæ”¯æŒå€™é€‰æ± çš„ JSON ç»“æ„åŒ–å¯¼å‡ºï¼ˆ`exportPool`ï¼‰ä¸å…¼å®¹æ€§å¯¼å…¥ï¼ˆ`importPool`ï¼‰ï¼Œå®ç°è·¨è®¾å¤‡/è·¨ä¼šè¯çš„æ•°æ®è¿ç§»ã€‚
+1. **ºòÑ¡¹ÉÆ±Â¼Èë¹ÜÀí**£ºÌá¹© `addStock()` µÈÈë¿Ú£¬½«ÓÃ»§ÊÖ¶¯ÊäÈë»òËÑË÷Ñ¡ÖĞµÄ¹ÉÆ±Ğ´ÈëÒâÏòºòÑ¡³Ø£¨`stocks` store£©£¬Ö§³Ö¿ÉÑ¡µÄ×Ô¶¯À­È¡»ù´¡Êı¾İ / K ÏßÊı¾İ¡£
+2. **ÅúÁ¿µ¼Èë½âÎöÓëÖ´ĞĞ**£ºÖ§³ÖÎÄ±¾ÅúÁ¿Õ³Ìù¡¢CSV/JSON/Excel ¶à¸ñÊ½ÎÄ¼ş½âÎö£¬ÊµÏÖ `importStocks()` / `importStocksWithProgress()` ·ÖÅú²¢·¢µ¼Èë£¬²¢Ìá¹©ĞĞ¼¶×´Ì¬Ô¤ÀÀ£¨valid / duplicate / invalid£©¡£
+3. **±¾µØËÑË÷ÓëÈÈÃÅ°å¿éÍÆ¼ö**£ºÎ¬»¤ÀëÏß mock ¹ÉÆ±¿â¹© `searchStocks()` Ä£ºıÆ¥Åä£»Ìá¹© `getHotSectors()` ÅäÖÃ»¯ÈÈÃÅ°å¿é¼°Ò»¼ü½«°å¿éÄÚÍÆ¼ö¹ÉÆ±¼ÓÈëºòÑ¡³Ø¡£
+4. **³ØÊı¾İµ¼Èëµ¼³ö**£ºÖ§³ÖºòÑ¡³ØµÄ JSON ½á¹¹»¯µ¼³ö£¨`exportPool`£©Óë¼æÈİĞÔµ¼Èë£¨`importPool`£©£¬ÊµÏÖ¿çÉè±¸/¿ç»á»°µÄÊı¾İÇ¨ÒÆ¡£
 
-### 1.2 åˆ†å±‚å®šä½
+### 1.2 ·Ö²ã¶¨Î»
 
-| ç»´åº¦ | è¯´æ˜ |
+| Î¬¶È | ËµÃ÷ |
 |------|------|
-| æ‰€å±å±‚ | `src/services/`ï¼ˆæœåŠ¡å±‚ï¼‰ |
-| ä¾èµ–æ–¹å‘ | åªèƒ½ä¾èµ– `core/`ã€`data/`ã€`lib/`ï¼ˆç™½åå•ï¼‰ |
-| ç¦æ­¢äº‹é¡¹ | ç¦æ­¢ç›´å†™ IndexedDBï¼ˆé¡»ç» `DataBridge.forward()`ï¼‰ |
-| è¢«ä¾èµ–æ–¹ | `store/`ï¼ˆçŠ¶æ€å±‚ï¼‰ã€`pages/`ï¼ˆé¡µé¢å±‚ï¼‰å¯æ¶ˆè´¹æœ¬æœåŠ¡è¾“å‡º |
+| ËùÊô²ã | `src/services/`£¨·şÎñ²ã£© |
+| ÒÀÀµ·½Ïò | Ö»ÄÜÒÀÀµ `core/`¡¢`data/`¡¢`lib/`£¨°×Ãûµ¥£© |
+| ½ûÖ¹ÊÂÏî | ½ûÖ¹Ö±Ğ´ IndexedDB£¨Ğë¾­ `DataBridge.forward()`£© |
+| ±»ÒÀÀµ·½ | `store/`£¨×´Ì¬²ã£©¡¢`pages/`£¨Ò³Ãæ²ã£©¿ÉÏû·Ñ±¾·şÎñÊä³ö |
 
-### 1.3 ä¸ç›¸é‚»å­åŸŸçš„å…³ç³»
+### 1.3 ÓëÏàÁÚ×ÓÓòµÄ¹ØÏµ
 
-| ç›¸é‚»å­åŸŸ | å…³ç³» | æ•°æ®æµ |
+| ÏàÁÚ×ÓÓò | ¹ØÏµ | Êı¾İÁ÷ |
 |----------|------|--------|
-| `fetcher` (useCase) | ä¸Šæ¸¸ï¼šæä¾›è¡Œæƒ…/åŸºç¡€æ•°æ®æ‹‰å– | `fetchBasicDataUseCase` / `fetchKlineDataUseCase` â†’ `inputService`ï¼ˆ`addStock` åè‡ªåŠ¨è¡¥å……æ•°æ®ï¼‰ |
-| `stockpool` (store/module) | ä¸‹æ¸¸ï¼šæ¶ˆè´¹å½•å…¥ç»“æœ | `inputService` â†’ `DataBridge.forward()` â†’ `stocks` store â†’ `stockpool` / `inputHubStore` |
-| `scoring` / `analysis` | ä¸‹æ¸¸ï¼šå€™é€‰æ± è§¦å‘è¯„åˆ†ä¸åˆ†æ | ç”¨æˆ·å½•å…¥åï¼Œä¸Šæ¸¸é¡µé¢å¯è·³è½¬è‡³åˆ†æ/è¯„åˆ†èˆ± |
+| `fetcher` (useCase) | ÉÏÓÎ£ºÌá¹©ĞĞÇé/»ù´¡Êı¾İÀ­È¡ | `fetchBasicDataUseCase` / `fetchKlineDataUseCase` ¡ú `inputService`£¨`addStock` ºó×Ô¶¯²¹³äÊı¾İ£© |
+| `stockpool` (store/module) | ÏÂÓÎ£ºÏû·ÑÂ¼Èë½á¹û | `inputService` ¡ú `DataBridge.forward()` ¡ú `stocks` store ¡ú `stockpool` / `inputHubStore` |
+| `scoring` / `analysis` | ÏÂÓÎ£ººòÑ¡³Ø´¥·¢ÆÀ·ÖÓë·ÖÎö | ÓÃ»§Â¼Èëºó£¬ÉÏÓÎÒ³Ãæ¿ÉÌø×ªÖÁ·ÖÎö/ÆÀ·Ö²Õ |
 
 ---
 
-## 2. å…¬å…±æ¥å£
+## 2. ¹«¹²½Ó¿Ú
 
-### 2.1 ç±»å‹å®šä¹‰ï¼ˆTypeScript Interfaceï¼‰
+### 2.1 ÀàĞÍ¶¨Òå£¨TypeScript Interface£©
 
 ```typescript
-// æ–‡ä»¶ï¼šsrc/services/input/inputService.ts
+// ÎÄ¼ş£ºsrc/services/input/inputService.ts
 
 export interface AddStockInput {
   symbol: string
@@ -62,11 +65,11 @@ export interface AddStockInput {
 }
 
 export interface AddStockOptions {
-  /** æ˜¯å¦åœ¨å½•å…¥æˆåŠŸåç«‹å³æ‹‰å– AKShare åŸºç¡€æ•°æ® */
+  /** ÊÇ·ñÔÚÂ¼Èë³É¹¦ºóÁ¢¼´À­È¡ AKShare »ù´¡Êı¾İ */
   fetchBasicAfterAdd?: boolean
-  /** æ˜¯å¦åœ¨å½•å…¥æˆåŠŸåç«‹å³æ‹‰å– AKShare Kçº¿æ•°æ® */
+  /** ÊÇ·ñÔÚÂ¼Èë³É¹¦ºóÁ¢¼´À­È¡ AKShare KÏßÊı¾İ */
   fetchKlineAfterAdd?: boolean
-  /** ç›®æ ‡è‚¡ç¥¨æ± åˆ†ç»„ï¼ŒæœªæŒ‡å®šæ—¶ä½¿ç”¨é»˜è®¤åˆ†ç»„ */
+  /** Ä¿±ê¹ÉÆ±³Ø·Ö×é£¬Î´Ö¸¶¨Ê±Ê¹ÓÃÄ¬ÈÏ·Ö×é */
   group?: string
 }
 
@@ -84,7 +87,7 @@ export interface PoolImportResult {
   errors: string[]
 }
 
-// æ–‡ä»¶ï¼šsrc/services/input/batchImportParsers.ts
+// ÎÄ¼ş£ºsrc/services/input/batchImportParsers.ts
 
 export type BulkImportRowStatus = 'valid' | 'duplicate' | 'invalid'
 
@@ -104,14 +107,14 @@ export interface BulkImportResult {
   stocks: Stock[]
 }
 
-// æ–‡ä»¶ï¼šsrc/services/input/batchImportExecutor.ts
+// ÎÄ¼ş£ºsrc/services/input/batchImportExecutor.ts
 
 export interface ImportStocksOptions extends AddStockOptions {
-  /** é‡åˆ°é‡å¤ä»£ç æ—¶æ˜¯å¦è·³è¿‡ï¼ˆé»˜è®¤ trueï¼‰ */
+  /** Óöµ½ÖØ¸´´úÂëÊ±ÊÇ·ñÌø¹ı£¨Ä¬ÈÏ true£© */
   skipDuplicates?: boolean
 }
 
-// æ–‡ä»¶ï¼šsrc/services/input/hotSectorService.ts
+// ÎÄ¼ş£ºsrc/services/input/hotSectorService.ts
 
 export interface HotSectorStock {
   symbol: string
@@ -139,7 +142,7 @@ export interface AddHotSectorStockResult {
 
 export type AddHotSectorOptions = AddStockOptions
 
-// æ–‡ä»¶ï¼šsrc/services/input/mockStockLibrary.ts
+// ÎÄ¼ş£ºsrc/services/input/mockStockLibrary.ts
 
 export interface MockStock {
   symbol: string
@@ -151,107 +154,107 @@ export interface MockStock {
 }
 ```
 
-### 2.2 ä¸»å…¥å£å‡½æ•°
+### 2.2 Ö÷Èë¿Úº¯Êı
 
-| å‡½æ•° | ç­¾å | èŒè´£ | é”™è¯¯å¤„ç† |
+| º¯Êı | Ç©Ãû | Ö°Ôğ | ´íÎó´¦Àí |
 |------|------|------|----------|
-| `addStock()` | `(input: AddStockInput, options?: AddStockOptions) => Promise<DataLayerResult<Stock>>` | å•æ¡è‚¡ç¥¨å½•å…¥å€™é€‰æ± ï¼Œå¯é€‰è‡ªåŠ¨æ‹‰å–åŸºç¡€/Kçº¿æ•°æ® | `addStockInFlight` å¹¶å‘äº’æ–¥ + logger è®°å½• + è¿”å›é”™è¯¯ä¿¡æ¯ |
-| `addStockFromSearch()` | `(result: StockSearchResult, options?: AddStockOptions) => Promise<DataLayerResult<Stock>>` | ä»æœç´¢ç»“æœå¿«æ·å½•å…¥ | å§”æ‰˜ `addStock()` |
-| `searchStocks()` | `(query: string) => StockSearchResult[]` | æœ¬åœ° mock åº“æ¨¡ç³Šæœç´¢ï¼ˆä»£ç /åç§°/è¡Œä¸šï¼‰ | æŸ¥è¯¢è¿‡çŸ­è¿”å›ç©ºæ•°ç»„ |
-| `exportPool()` | `(status?: ResearchStatus) => Promise<DataLayerResult<PoolExportPayload>>` | å¯¼å‡ºå€™é€‰æ± ä¸º JSON Payload | `DataBridge.query()` é”™è¯¯é€ä¼  |
-| `importPool()` | `(payload: PoolExportPayload) => Promise<DataLayerResult<PoolImportResult>>` | å¯¼å…¥å€™é€‰æ± ï¼Œé€æ¡å†™å…¥å¹¶è·³è¿‡å·²å­˜åœ¨é¡¹ | ç‰ˆæœ¬æ ¡éªŒ + é€è¡Œ try/catch èšåˆé”™è¯¯ |
-| `listStocks()` | `() => Promise<DataLayerResult<Stock[]>>` | è·å–å…¨éƒ¨è‚¡ç¥¨åˆ—è¡¨ | `DataBridge.query()` é”™è¯¯é€ä¼  |
-| `listStocksByStatus()` | `(status: ResearchStatus) => Promise<DataLayerResult<Stock[]>>` | æŒ‰ç ”ç©¶çŠ¶æ€è¿‡æ»¤åˆ—è¡¨ | `DataBridge.query()` é”™è¯¯é€ä¼  |
-| `parseBulkInput()` | `(text: string) => BulkImportRow[]` | è§£ææ‰¹é‡æ–‡æœ¬è¾“å…¥ï¼ˆå¤šæ ¼å¼é€‚é…ï¼‰ | æ— æ•ˆè¡Œæ ‡è®°ä¸º `invalid` |
-| `parseFile()` | `(file: File) => Promise<BulkImportRow[]>` | æ–‡ä»¶è§£æç»Ÿä¸€å…¥å£ï¼ˆCSV/JSON/Excelï¼‰ | ä¸æ”¯æŒçš„æ ¼å¼æŠ›å¼‚å¸¸ |
-| `detectDuplicates()` | `(rows: BulkImportRow[], existingSymbols: Set<string>) => BulkImportRow[]` | é‡å¤æ£€æµ‹ä¸è¡Œçº§çŠ¶æ€æ ‡è®° | çº¯å‡½æ•°ï¼Œæ— å‰¯ä½œç”¨ |
-| `importStocks()` | `(rows: BulkImportRow[], options?: ImportStocksOptions) => Promise<DataLayerResult<BulkImportResult>>` | æ‰¹é‡å¯¼å…¥ï¼ˆé¡ºåºæ‰§è¡Œï¼‰ | å¤±è´¥è¡Œè®°å½•åˆ° `errors`ï¼Œä¸é˜»å¡ |
-| `importStocksWithProgress()` | `(rows: BulkImportRow[], options?: ImportStocksOptions, onProgress?: fn) => Promise<DataLayerResult<BulkImportResult>>` | å¸¦è¿›åº¦çš„åˆ†æ‰¹å¹¶è¡Œå¯¼å…¥ | æ‰¹æ¬¡é—´éš”æ§åˆ¶å¹¶å‘ |
-| `downloadTemplate()` | `() => void` | ä¸‹è½½ CSV å¯¼å…¥æ¨¡æ¿ | å¼‚å¸¸ç”± logger æ•è· |
-| `getHotSectors()` | `() => HotSector[]` | è·å–é…ç½®åŒ–çƒ­é—¨æ¿å—åˆ—è¡¨ | è¿”å›æµ…æ‹·è´ |
-| `getHotSectorByCode()` | `(code: string) => HotSector \| undefined` | æŒ‰ä»£ç è·å–çƒ­é—¨æ¿å— | æ— åŒ¹é…è¿”å› `undefined` |
-| `addHotSectorStocks()` | `(sectorCode: string, options?: AddHotSectorOptions) => Promise<DataLayerResult<AddHotSectorStockResult>>` | å°†æ¿å—å…¨éƒ¨æ¨èè‚¡åŠ å…¥å€™é€‰æ±  | é€æ¡è°ƒç”¨ `addStock()` èšåˆç»“æœ |
-| `addHotSectorStock()` | `(sectorCode: string, symbol: string, options?: AddHotSectorOptions) => Promise<DataLayerResult<Stock>>` | å°†å•åªæ¨èè‚¡åŠ å…¥å€™é€‰æ±  | å§”æ‰˜ `addStock()` |
+| `addStock()` | `(input: AddStockInput, options?: AddStockOptions) => Promise<DataLayerResult<Stock>>` | µ¥Ìõ¹ÉÆ±Â¼ÈëºòÑ¡³Ø£¬¿ÉÑ¡×Ô¶¯À­È¡»ù´¡/KÏßÊı¾İ | `addStockInFlight` ²¢·¢»¥³â + logger ¼ÇÂ¼ + ·µ»Ø´íÎóĞÅÏ¢ |
+| `addStockFromSearch()` | `(result: StockSearchResult, options?: AddStockOptions) => Promise<DataLayerResult<Stock>>` | ´ÓËÑË÷½á¹û¿ì½İÂ¼Èë | Î¯ÍĞ `addStock()` |
+| `searchStocks()` | `(query: string) => StockSearchResult[]` | ±¾µØ mock ¿âÄ£ºıËÑË÷£¨´úÂë/Ãû³Æ/ĞĞÒµ£© | ²éÑ¯¹ı¶Ì·µ»Ø¿ÕÊı×é |
+| `exportPool()` | `(status?: ResearchStatus) => Promise<DataLayerResult<PoolExportPayload>>` | µ¼³öºòÑ¡³ØÎª JSON Payload | `DataBridge.query()` ´íÎóÍ¸´« |
+| `importPool()` | `(payload: PoolExportPayload) => Promise<DataLayerResult<PoolImportResult>>` | µ¼ÈëºòÑ¡³Ø£¬ÖğÌõĞ´Èë²¢Ìø¹ıÒÑ´æÔÚÏî | °æ±¾Ğ£Ñé + ÖğĞĞ try/catch ¾ÛºÏ´íÎó |
+| `listStocks()` | `() => Promise<DataLayerResult<Stock[]>>` | »ñÈ¡È«²¿¹ÉÆ±ÁĞ±í | `DataBridge.query()` ´íÎóÍ¸´« |
+| `listStocksByStatus()` | `(status: ResearchStatus) => Promise<DataLayerResult<Stock[]>>` | °´ÑĞ¾¿×´Ì¬¹ıÂËÁĞ±í | `DataBridge.query()` ´íÎóÍ¸´« |
+| `parseBulkInput()` | `(text: string) => BulkImportRow[]` | ½âÎöÅúÁ¿ÎÄ±¾ÊäÈë£¨¶à¸ñÊ½ÊÊÅä£© | ÎŞĞ§ĞĞ±ê¼ÇÎª `invalid` |
+| `parseFile()` | `(file: File) => Promise<BulkImportRow[]>` | ÎÄ¼ş½âÎöÍ³Ò»Èë¿Ú£¨CSV/JSON/Excel£© | ²»Ö§³ÖµÄ¸ñÊ½Å×Òì³£ |
+| `detectDuplicates()` | `(rows: BulkImportRow[], existingSymbols: Set<string>) => BulkImportRow[]` | ÖØ¸´¼ì²âÓëĞĞ¼¶×´Ì¬±ê¼Ç | ´¿º¯Êı£¬ÎŞ¸±×÷ÓÃ |
+| `importStocks()` | `(rows: BulkImportRow[], options?: ImportStocksOptions) => Promise<DataLayerResult<BulkImportResult>>` | ÅúÁ¿µ¼Èë£¨Ë³ĞòÖ´ĞĞ£© | Ê§°ÜĞĞ¼ÇÂ¼µ½ `errors`£¬²»×èÈû |
+| `importStocksWithProgress()` | `(rows: BulkImportRow[], options?: ImportStocksOptions, onProgress?: fn) => Promise<DataLayerResult<BulkImportResult>>` | ´ø½ø¶ÈµÄ·ÖÅú²¢ĞĞµ¼Èë | Åú´Î¼ä¸ô¿ØÖÆ²¢·¢ |
+| `downloadTemplate()` | `() => void` | ÏÂÔØ CSV µ¼ÈëÄ£°å | Òì³£ÓÉ logger ²¶»ñ |
+| `getHotSectors()` | `() => HotSector[]` | »ñÈ¡ÅäÖÃ»¯ÈÈÃÅ°å¿éÁĞ±í | ·µ»ØÇ³¿½±´ |
+| `getHotSectorByCode()` | `(code: string) => HotSector \| undefined` | °´´úÂë»ñÈ¡ÈÈÃÅ°å¿é | ÎŞÆ¥Åä·µ»Ø `undefined` |
+| `addHotSectorStocks()` | `(sectorCode: string, options?: AddHotSectorOptions) => Promise<DataLayerResult<AddHotSectorStockResult>>` | ½«°å¿éÈ«²¿ÍÆ¼ö¹É¼ÓÈëºòÑ¡³Ø | ÖğÌõµ÷ÓÃ `addStock()` ¾ÛºÏ½á¹û |
+| `addHotSectorStock()` | `(sectorCode: string, symbol: string, options?: AddHotSectorOptions) => Promise<DataLayerResult<Stock>>` | ½«µ¥Ö»ÍÆ¼ö¹É¼ÓÈëºòÑ¡³Ø | Î¯ÍĞ `addStock()` |
 
-### 2.3 äº‹ä»¶æ¥å£
+### 2.3 ÊÂ¼ş½Ó¿Ú
 
-| äº‹ä»¶å | å‘å¸ƒæ–¹ | è®¢é˜…æ–¹ | è¯´æ˜ |
+| ÊÂ¼şÃû | ·¢²¼·½ | ¶©ÔÄ·½ | ËµÃ÷ |
 |--------|--------|--------|------|
-| `BATCH_IMPORT_COMPLETED` | `batchImportExecutor` | `poolStore` / `inputHubStore` ç­‰æ¶ˆè´¹è€… | æ‰¹é‡å¯¼å…¥å®Œæˆæ—¶å‘å¸ƒï¼Œæºå¸¦ `{ total, success, failed }` |
+| `BATCH_IMPORT_COMPLETED` | `batchImportExecutor` | `poolStore` / `inputHubStore` µÈÏû·ÑÕß | ÅúÁ¿µ¼ÈëÍê³ÉÊ±·¢²¼£¬Ğ¯´ø `{ total, success, failed }` |
 
 ---
 
-## 3. æ•°æ®æµ
+## 3. Êı¾İÁ÷
 
 ```
-[ç”¨æˆ·è¾“å…¥ / æœç´¢ / æ–‡ä»¶ä¸Šä¼ ]
-    â†“
+[ÓÃ»§ÊäÈë / ËÑË÷ / ÎÄ¼şÉÏ´«]
+    ¡ı
 inputService.addStock() / batchImportExecutor.importStocks()
-    â†“ (DataBridge.forward() æˆ– addStock å†…éƒ¨å°è£…)
-DataBridge â†’ routeToDB() â†’ dataLayer â†’ IndexedDB
-    â†“ (eventBus.emit('BATCH_IMPORT_COMPLETED'))
+    ¡ı (DataBridge.forward() »ò addStock ÄÚ²¿·â×°)
+DataBridge ¡ú routeToDB() ¡ú dataLayer ¡ú IndexedDB
+    ¡ı (eventBus.emit('BATCH_IMPORT_COMPLETED'))
 inputHubStore / poolStore (Zustand + withBroadcast)
-    â†“
-components/pages (ä»…ç» Store å–æ•°)
+    ¡ı
+components/pages (½ö¾­ Store È¡Êı)
 ```
 
-**è¯´æ˜**ï¼š
-- å•æ¡å½•å…¥é€šè¿‡ `inputService.addStock()` æ„å»º `Envelope` å¹¶è°ƒç”¨ `dataBridge.forward()` å†™å…¥ï¼›
-- æ‰¹é‡å¯¼å…¥é€šè¿‡ `batchImportExecutor` é€è¡Œè°ƒç”¨ `addStock()`ï¼Œæœ€ç»ˆåŒæ ·èµ° `DataBridge`ï¼›
-- å¯¼å…¥å®Œæˆåé€šè¿‡ `eventBus.emit('BATCH_IMPORT_COMPLETED')` å¹¿æ’­äº‹ä»¶ï¼Œé€šçŸ¥ Store å±‚åˆ·æ–° UIã€‚
+**ËµÃ÷**£º
+- µ¥ÌõÂ¼ÈëÍ¨¹ı `inputService.addStock()` ¹¹½¨ `Envelope` ²¢µ÷ÓÃ `dataBridge.forward()` Ğ´Èë£»
+- ÅúÁ¿µ¼ÈëÍ¨¹ı `batchImportExecutor` ÖğĞĞµ÷ÓÃ `addStock()`£¬×îÖÕÍ¬Ñù×ß `DataBridge`£»
+- µ¼ÈëÍê³ÉºóÍ¨¹ı `eventBus.emit('BATCH_IMPORT_COMPLETED')` ¹ã²¥ÊÂ¼ş£¬Í¨Öª Store ²ãË¢ĞÂ UI¡£
 
 ---
 
-## 4. é…ç½®ä¸ä¾èµ–
+## 4. ÅäÖÃÓëÒÀÀµ
 
-### 4.1 ä¾èµ–ç™½åå•ï¼ˆlib/ï¼‰
+### 4.1 ÒÀÀµ°×Ãûµ¥£¨lib/£©
 
-| ä¾èµ– | è·¯å¾„ | ç”¨é€” |
+| ÒÀÀµ | Â·¾¶ | ÓÃÍ¾ |
 |------|------|------|
-| logger | `@/lib/logger` | æ¨¡å—çº§æ—¥å¿—è¾“å‡ºï¼ˆ`[inputService]` / `[batchImport]` å‰ç¼€ï¼‰ |
-| eventBus | `@/lib/eventBus` | æ‰¹é‡å¯¼å…¥å®Œæˆäº‹ä»¶å‘å¸ƒ |
+| logger | `@/lib/logger` | Ä£¿é¼¶ÈÕÖ¾Êä³ö£¨`[inputService]` / `[batchImport]` Ç°×º£© |
+| eventBus | `@/lib/eventBus` | ÅúÁ¿µ¼ÈëÍê³ÉÊÂ¼ş·¢²¼ |
 
-### 4.2 å…¶ä»–å…³é”®ä¾èµ–
+### 4.2 ÆäËû¹Ø¼üÒÀÀµ
 
-| ä¾èµ– | è·¯å¾„ | ç”¨é€” |
+| ÒÀÀµ | Â·¾¶ | ÓÃÍ¾ |
 |------|------|------|
-| dataBridge | `@/core/databridge` | å€™é€‰æ± å†™å…¥ä¸æŸ¥è¯¢ï¼ˆ`forward()` / `query()`ï¼‰ |
-| EnvelopeFactory | `@/core/envelope` | æ„å»ºæ•°æ®ä¿¡å° |
-| dataLayer | `@/data/dataLayer` | **æ³¨æ„**ï¼š`batchImportExecutor` ä¸ `hotSectorService` ä¸­ç›´æ¥è°ƒç”¨ `dataLayer.stocks.get()` åšå­˜åœ¨æ€§æ ¡éªŒï¼ˆå»ºè®®åç»­ç»Ÿä¸€æ”¶æ•›è‡³ `DataBridge.query()`ï¼‰ |
-| fetcherOrchestrator.useCase | `@/services/useCase/fetcherOrchestrator.useCase` | `addStock` åè‡ªåŠ¨æ‹‰å–åŸºç¡€/Kçº¿æ•°æ® |
+| dataBridge | `@/core/databridge` | ºòÑ¡³ØĞ´ÈëÓë²éÑ¯£¨`forward()` / `query()`£© |
+| EnvelopeFactory | `@/core/envelope` | ¹¹½¨Êı¾İĞÅ·â |
+| dataLayer | `@/data/dataLayer` | **×¢Òâ**£º`batchImportExecutor` Óë `hotSectorService` ÖĞÖ±½Óµ÷ÓÃ `dataLayer.stocks.get()` ×ö´æÔÚĞÔĞ£Ñé£¨½¨ÒéºóĞøÍ³Ò»ÊÕÁ²ÖÁ `DataBridge.query()`£© |
+| fetcherOrchestrator.useCase | `@/services/useCase/fetcherOrchestrator.useCase` | `addStock` ºó×Ô¶¯À­È¡»ù´¡/KÏßÊı¾İ |
 
-### 4.3 é…ç½®é¡¹
+### 4.3 ÅäÖÃÏî
 
-| é…ç½®å | é»˜è®¤å€¼ | è¯´æ˜ | æ¥æº |
+| ÅäÖÃÃû | Ä¬ÈÏÖµ | ËµÃ÷ | À´Ô´ |
 |--------|--------|------|------|
-| `INPUT_CONFIG.bulkImport.maxRows` | `500` | æ‰¹é‡å¯¼å…¥æœ€å¤§è¡Œæ•°é™åˆ¶ | `src/config/inputConfig.ts` |
-| `INPUT_CONFIG.bulkImport.batchSize` | `20` | åˆ†æ‰¹å¯¼å…¥æ¯æ‰¹å¹¶å‘æ•° | `src/config/inputConfig.ts` |
-| `INPUT_CONFIG.bulkImport.batchIntervalMs` | `500` | æ‰¹æ¬¡é—´é—´éš”ï¼ˆmsï¼‰ | `src/config/inputConfig.ts` |
-| `INPUT_CONFIG.search.minQueryLength` | `1` | æœç´¢è§¦å‘æœ€å°å­—ç¬¦æ•° | `src/config/inputConfig.ts` |
-| `INPUT_CONFIG.search.maxResults` | `20` | æœç´¢æœ€å¤§è¿”å›æ¡æ•° | `src/config/inputConfig.ts` |
+| `INPUT_CONFIG.bulkImport.maxRows` | `500` | ÅúÁ¿µ¼Èë×î´óĞĞÊıÏŞÖÆ | `src/config/inputConfig.ts` |
+| `INPUT_CONFIG.bulkImport.batchSize` | `20` | ·ÖÅúµ¼ÈëÃ¿Åú²¢·¢Êı | `src/config/inputConfig.ts` |
+| `INPUT_CONFIG.bulkImport.batchIntervalMs` | `500` | Åú´Î¼ä¼ä¸ô£¨ms£© | `src/config/inputConfig.ts` |
+| `INPUT_CONFIG.search.minQueryLength` | `1` | ËÑË÷´¥·¢×îĞ¡×Ö·ûÊı | `src/config/inputConfig.ts` |
+| `INPUT_CONFIG.search.maxResults` | `20` | ËÑË÷×î´ó·µ»ØÌõÊı | `src/config/inputConfig.ts` |
 
 ---
 
-## 5. æµ‹è¯•ç­–ç•¥
+## 5. ²âÊÔ²ßÂÔ
 
-| æµ‹è¯•ç±»å‹ | æ–‡ä»¶ | è¯´æ˜ |
+| ²âÊÔÀàĞÍ | ÎÄ¼ş | ËµÃ÷ |
 |----------|------|------|
-| å•å…ƒæµ‹è¯• | `src/services/input/` | **å½“å‰ç¼ºå¤±** â€” å»ºè®®è¡¥å…… `inputService`ã€`batchImportParsers`ã€`batchImportExecutor` çš„çº¯å‡½æ•°ä¸è®¡ç®—é€»è¾‘æµ‹è¯• |
-| Store æµ‹è¯• | `tests/__tests__/inputHubStore.enhanced.test.ts` | `inputHubStore` çš„çŠ¶æ€ä¸äº¤äº’æµ‹è¯•ï¼ˆä½äº Store å±‚ï¼‰ |
-| é›†æˆæµ‹è¯• | `tests/services/input.integration.test.ts` | **å½“å‰ç¼ºå¤±** â€” å»ºè®®è¡¥å…… DataBridge äº¤äº’ã€æ‰¹é‡å¯¼å…¥å…¨é“¾è·¯æµ‹è¯• |
-| Mock ç­–ç•¥ | `src/services/input/mockStockLibrary.ts` | è‡ªå¸¦ mock æ•°æ®æºï¼Œå¯ç”¨äºéš”ç¦»å¤–éƒ¨ä¾èµ– |
+| µ¥Ôª²âÊÔ | `src/services/input/` | **µ±Ç°È±Ê§** ¡ª ½¨Òé²¹³ä `inputService`¡¢`batchImportParsers`¡¢`batchImportExecutor` µÄ´¿º¯ÊıÓë¼ÆËãÂß¼­²âÊÔ |
+| Store ²âÊÔ | `tests/__tests__/inputHubStore.enhanced.test.ts` | `inputHubStore` µÄ×´Ì¬Óë½»»¥²âÊÔ£¨Î»ÓÚ Store ²ã£© |
+| ¼¯³É²âÊÔ | `tests/services/input.integration.test.ts` | **µ±Ç°È±Ê§** ¡ª ½¨Òé²¹³ä DataBridge ½»»¥¡¢ÅúÁ¿µ¼ÈëÈ«Á´Â·²âÊÔ |
+| Mock ²ßÂÔ | `src/services/input/mockStockLibrary.ts` | ×Ô´ø mock Êı¾İÔ´£¬¿ÉÓÃÓÚ¸ôÀëÍâ²¿ÒÀÀµ |
 
 ---
 
-## 6. å˜æ›´æ—¥å¿—
+## 6. ±ä¸üÈÕÖ¾
 
-| æ—¥æœŸ | ç‰ˆæœ¬ | å˜æ›´ | ä½œè€… |
+| ÈÕÆÚ | °æ±¾ | ±ä¸ü | ×÷Õß |
 |------|------|------|------|
-| 2026-07-12 | v0.1.0 | å¥‘çº¦åˆç¨¿ | æ¶æ„ç»„ |
+| 2026-07-12 | v0.1.0 | ÆõÔ¼³õ¸å | ¼Ü¹¹×é |
 
 ---
 
-> **TODO[å­åŸŸ owner]**ï¼š
-> 1. è¡¥å…… `src/services/input/` å•å…ƒæµ‹è¯•ï¼ˆ`batchImportParsers`ã€`inputService`ï¼‰ï¼›
-> 2. æ”¶æ•› `batchImportExecutor.ts` ä¸ `hotSectorService.ts` ä¸­ç›´æ¥è°ƒç”¨ `dataLayer.stocks.get()` çš„å†™æ³•ï¼Œç»Ÿä¸€é€šè¿‡ `DataBridge.query()` è¿›è¡Œå­˜åœ¨æ€§æ ¡éªŒï¼›
-> 3. å®Œæˆåè¿è¡Œ `tsc --noEmit` + `audit:layers` éªŒè¯ã€‚
+> **TODO[×ÓÓò owner]**£º
+> 1. ²¹³ä `src/services/input/` µ¥Ôª²âÊÔ£¨`batchImportParsers`¡¢`inputService`£©£»
+> 2. ÊÕÁ² `batchImportExecutor.ts` Óë `hotSectorService.ts` ÖĞÖ±½Óµ÷ÓÃ `dataLayer.stocks.get()` µÄĞ´·¨£¬Í³Ò»Í¨¹ı `DataBridge.query()` ½øĞĞ´æÔÚĞÔĞ£Ñé£»
+> 3. Íê³ÉºóÔËĞĞ `tsc --noEmit` + `audit:layers` ÑéÖ¤¡£

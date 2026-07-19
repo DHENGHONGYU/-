@@ -30,7 +30,7 @@ export const SEMANTIC_COLOR_ROLES = {
     bg: 'bg-primary',
     soft: 'bg-primary/10 text-primary',
     fg: 'text-primary-foreground',
-    raw: '#0f9d76',
+    raw: '#0d9165',
   },
   /** 辅助色：次级操作、标签底 */
   secondary: {
@@ -66,7 +66,7 @@ export const SEMANTIC_COLOR_ROLES = {
     bg: 'bg-success',
     soft: 'bg-success/10 text-success',
     fg: 'text-success-foreground',
-    raw: '#22a04b',
+    raw: '#21c45d',
   },
   /** 警示 / 注意 */
   warning: {
@@ -74,7 +74,7 @@ export const SEMANTIC_COLOR_ROLES = {
     bg: 'bg-warning',
     soft: 'bg-warning/10 text-warning',
     fg: 'text-warning-foreground',
-    raw: '#e6930a',
+    raw: '#f59f0a',
   },
   /** 危险 / 错误 */
   danger: {
@@ -90,7 +90,7 @@ export const SEMANTIC_COLOR_ROLES = {
     bg: 'bg-info',
     soft: 'bg-info/10 text-info',
     fg: 'text-info-foreground',
-    raw: '#3b82f6',
+    raw: '#3c83f6',
   },
 } as const
 
@@ -113,8 +113,12 @@ export const TYPOGRAPHY_SCALE = {
   h2: { utility: 'text-h2', px: 20, weight: 600, lineHeight: 1.3, usage: '卡片标题、子区块标题' },
   /** 三级标题 */
   h3: { utility: 'text-h3', px: 18, weight: 600, lineHeight: 1.4, usage: '分组标题、列表组头' },
-  /** 四级标题 */
+  /** 四级标题（16px/600，与 bodyLg 同字号，靠字重 600 vs 400 区分） */
   h4: { utility: 'text-h4', px: 16, weight: 600, lineHeight: 1.4, usage: '小标题、表头、标签组' },
+  /** 五级标题（15px/500，h4 与 body 之间的次级小标题） */
+  h5: { utility: 'text-h5', px: 15, weight: 500, lineHeight: 1.4, usage: '次级小标题、密集卡片标题' },
+  /** 六级标题（13px/600，最小标题层级，与 bodySm 同字号靠字重区分） */
+  h6: { utility: 'text-h6', px: 13, weight: 600, lineHeight: 1.4, usage: '最小标题、表单分组标签' },
   /** 正文（大） */
   bodyLg: { utility: 'text-body-lg', px: 16, weight: 400, lineHeight: 1.6, usage: '导语、重要段落' },
   /** 正文（默认） */
@@ -159,8 +163,8 @@ export const LAYOUT_TOKENS = {
   pagePaddingY: '24px',
   /** 区块间距 */
   sectionGap: '24px',
-  /** 卡片内边距 */
-  cardPadding: '20px',
+  /** 卡片内边距（标准化为 8px 栅格，原 20px 非 8 倍数） */
+  cardPadding: '24px',
   /** 顶栏高度 */
   headerHeight: '56px',
 } as const

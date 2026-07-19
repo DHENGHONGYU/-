@@ -1,58 +1,66 @@
 ---
 title: 2026-07-01-v6-architecture-dominance-batch-a
-tier: reference
+type: reference
+domain: architecture
+phase: design
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "?# Åú´Î A£ºÈÃ V6 ¼Ü¹¹Ö÷µ¼ V9£¨ÆÀ·ÖÈë¿Ú + ²ÕÊÒÈë¿Úµ¥¹ì»¯£©"
+tags: [architecture, batch, reference]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-tier: reference
-code_version: 2.0.0
----
+?# Åú´Î A£ºÈÃ V6 ¼Ü¹¹Ö÷µ¼ V9£¨ÆÀ·ÖÈë¿Ú + ²ÕÊÒÈë¿Úµ¥¹ì»¯£©
 
-ï»¿# æ‰¹æ¬¡ Aï¼šè®© V6 æ¶æ„ä¸»å¯¼ V9ï¼ˆè¯„åˆ†å…¥å£ + èˆ±å®¤å…¥å£å•è½¨åŒ–ï¼‰
+> **Status**: ? ÒÑÍê³É£¨2026-07-01£©  
+> **Ö´ĞĞ·½Ê½**: Subagent-Driven + Êı¾İ¼Ü¹¹Ê¦/´úÂëÉó¼ÆÊ¦Í¬²½¸´ºË  
+> **ÑéÖ¤½á¹û**: Ïà¹Ø²âÊÔ 97/97 Í¨¹ı£»ESLint 0 errors£»`vite build` ³É¹¦¡£
 
-> **Status**: âœ… å·²å®Œæˆï¼ˆ2026-07-01ï¼‰  
-> **æ‰§è¡Œæ–¹å¼**: Subagent-Driven + æ•°æ®æ¶æ„å¸ˆ/ä»£ç å®¡è®¡å¸ˆåŒæ­¥å¤æ ¸  
-> **éªŒè¯ç»“æœ**: ç›¸å…³æµ‹è¯• 97/97 é€šè¿‡ï¼›ESLint 0 errorsï¼›`vite build` æˆåŠŸã€‚
+**Goal:** ½«Éú²úÆÀ·ÖÖ÷Èë¿ÚÇĞ»»µ½ `src/services/scoring/v6-engine` µÄ L-1~L8 ·Ö²ãÒıÇæ£»Ïû³ı `PortalShell` ÖĞ `apps/*App` Óë `pages/*HubPage` µÄË«¹ìÈë¿Ú£¬Í³Ò»Îªµ¥Ò»Ì×²ÕÊÒÓ¦ÓÃÄ£ĞÍ¡£
 
-**Goal:** å°†ç”Ÿäº§è¯„åˆ†ä¸»å…¥å£åˆ‡æ¢åˆ° `src/services/scoring/v6-engine` çš„ L-1~L8 åˆ†å±‚å¼•æ“ï¼›æ¶ˆé™¤ `PortalShell` ä¸­ `apps/*App` ä¸ `pages/*HubPage` çš„åŒè½¨å…¥å£ï¼Œç»Ÿä¸€ä¸ºå•ä¸€å¥—èˆ±å®¤åº”ç”¨æ¨¡å‹ã€‚
-
-**Architecture:** ä¿æŒ `v6ScoreService.ts` çš„å¯¹å¤–æ¥å£ä¸å˜ï¼ˆè¾“å…¥ `symbol`ï¼Œè¿”å› `{ success, data, error }`ï¼‰ï¼Œå†…éƒ¨é‡æ„ä¸ºè°ƒç”¨ `createV6Engine()`ï¼›`PortalShell` åˆ é™¤ `HUB_APPS`ï¼Œè®© `CabinApp` å†…éƒ¨é€šè¿‡é»˜è®¤å­è·¯ç”±æ¸²æŸ“ Hub é¡µï¼Œæ‰€æœ‰èˆ±å®¤è·¯å¾„ç»Ÿä¸€èµ° `PortalShell`ã€‚
+**Architecture:** ±£³Ö `v6ScoreService.ts` µÄ¶ÔÍâ½Ó¿Ú²»±ä£¨ÊäÈë `symbol`£¬·µ»Ø `{ success, data, error }`£©£¬ÄÚ²¿ÖØ¹¹Îªµ÷ÓÃ `createV6Engine()`£»`PortalShell` É¾³ı `HUB_APPS`£¬ÈÃ `CabinApp` ÄÚ²¿Í¨¹ıÄ¬ÈÏ×ÓÂ·ÓÉäÖÈ¾ Hub Ò³£¬ËùÓĞ²ÕÊÒÂ·¾¶Í³Ò»×ß `PortalShell`¡£
 
 **Tech Stack:** TypeScript, React, Zustand, React Router, Vite
 
 ---
 
-## æ–‡ä»¶ç»“æ„
+## ÎÄ¼ş½á¹¹
 
-| æ–‡ä»¶ | è´£ä»» |
+| ÎÄ¼ş | ÔğÈÎ |
 |:---|:---|
-| `src/services/scoring/v6ScoreService.ts` | ä¿ç•™å¯¹å¤–æ¥å£ï¼Œå†…éƒ¨è°ƒç”¨ `v6-engine`ï¼›æ—§å¯å‘å¼é€»è¾‘æ”¹ä¸ºé™çº§è·¯å¾„ |
-| `src/services/scoring/v6-engine/types.ts` | æ‰©å±• `LayerInput` é€‚é… `Stock` / `DailyQuotes` ç±»å‹ï¼ˆå¦‚éœ€è¦ï¼‰ |
-| `src/services/scoring/v6-engine/engine.ts` | å·²æœ‰ï¼Œæ— éœ€ä¿®æ”¹ï¼Œä½œä¸ºè¢«è°ƒç”¨æ–¹ |
-| `src/store/stockAnalysisStore.ts` | å°† `runV6Score` è°ƒç”¨æ”¹ä¸º `v6-engine` è¾“å‡ºé€‚é… |
-| `src/store/analysisStore.ts` | åŒä¸Š |
-| `src/store/strategySnapshotStore.ts` | åŒä¸Š |
-| `src/portal/PortalShell.tsx` | åˆ é™¤ `HUB_APPS`ï¼Œç®€åŒ– `ActiveApp` é€‰æ‹©é€»è¾‘ |
-| `src/apps/input/InputApp.tsx` | æ·»åŠ é»˜è®¤ `/input` â†’ `/input/hub` é‡å®šå‘ï¼Œæˆ–åœ¨ `InputApp` å†…æ¸²æŸ“ `InputHubPage` |
-| `src/apps/analysis/AnalysisApp.tsx` | åŒä¸Š |
-| `src/apps/trading/TradingApp.tsx` | åŒä¸Š |
-| `src/apps/output/OutputApp.tsx` | åŒä¸Š |
-| `src/apps/command/CommandApp.tsx` | åŒä¸Š |
-| `src/config/routes.ts` | è°ƒæ•´èˆ±å®¤å…¥å£ä¸ `/hub` å­è·¯ç”±å…³ç³» |
+| `src/services/scoring/v6ScoreService.ts` | ±£Áô¶ÔÍâ½Ó¿Ú£¬ÄÚ²¿µ÷ÓÃ `v6-engine`£»¾ÉÆô·¢Ê½Âß¼­¸ÄÎª½µ¼¶Â·¾¶ |
+| `src/services/scoring/v6-engine/types.ts` | À©Õ¹ `LayerInput` ÊÊÅä `Stock` / `DailyQuotes` ÀàĞÍ£¨ÈçĞèÒª£© |
+| `src/services/scoring/v6-engine/engine.ts` | ÒÑÓĞ£¬ÎŞĞèĞŞ¸Ä£¬×÷Îª±»µ÷ÓÃ·½ |
+| `src/store/stockAnalysisStore.ts` | ½« `runV6Score` µ÷ÓÃ¸ÄÎª `v6-engine` Êä³öÊÊÅä |
+| `src/store/analysisStore.ts` | Í¬ÉÏ |
+| `src/store/strategySnapshotStore.ts` | Í¬ÉÏ |
+| `src/portal/PortalShell.tsx` | É¾³ı `HUB_APPS`£¬¼ò»¯ `ActiveApp` Ñ¡ÔñÂß¼­ |
+| `src/apps/input/InputApp.tsx` | Ìí¼ÓÄ¬ÈÏ `/input` ¡ú `/input/hub` ÖØ¶¨Ïò£¬»òÔÚ `InputApp` ÄÚäÖÈ¾ `InputHubPage` |
+| `src/apps/analysis/AnalysisApp.tsx` | Í¬ÉÏ |
+| `src/apps/trading/TradingApp.tsx` | Í¬ÉÏ |
+| `src/apps/output/OutputApp.tsx` | Í¬ÉÏ |
+| `src/apps/command/CommandApp.tsx` | Í¬ÉÏ |
+| `src/config/routes.ts` | µ÷Õû²ÕÊÒÈë¿ÚÓë `/hub` ×ÓÂ·ÓÉ¹ØÏµ |
 
 ---
 
-## Task 1ï¼šåœ¨ `v6-engine` å±‚å»ºç«‹ `Stock` / `DailyQuotes` åˆ° `LayerInput` çš„é€‚é…ç±»å‹ä¸å·¥å‚
+## Task 1£ºÔÚ `v6-engine` ²ã½¨Á¢ `Stock` / `DailyQuotes` µ½ `LayerInput` µÄÊÊÅäÀàĞÍÓë¹¤³§
 
 **Files:**
 - Modify: `src/services/scoring/v6-engine/types.ts`
 - Modify: `src/services/scoring/v6-engine/index.ts`
 - Test: `src/services/scoring/v6-engine/v6-engine.test.ts`
 
-- [x] **Step 1: æ‰©å±• `StockBasicData` å…¼å®¹ `Stock`**
+- [x] **Step 1: À©Õ¹ `StockBasicData` ¼æÈİ `Stock`**
 
-å½“å‰ `StockBasicData` å®šä¹‰ä¸ `Stock` ç±»å‹å­—æ®µä¸å®Œå…¨ä¸€è‡´ã€‚åœ¨ `types.ts` ä¸­æ·»åŠ ä¸€ä¸ªé€‚é…ç±»å‹å’Œè½¬æ¢å‡½æ•°ï¼š
+µ±Ç° `StockBasicData` ¶¨ÒåÓë `Stock` ÀàĞÍ×Ö¶Î²»ÍêÈ«Ò»ÖÂ¡£ÔÚ `types.ts` ÖĞÌí¼ÓÒ»¸öÊÊÅäÀàĞÍºÍ×ª»»º¯Êı£º
 
 ```typescript
 // src/services/scoring/v6-engine/types.ts
@@ -97,29 +105,29 @@ export function quotesToQuoteData(quotes: DailyQuotes): QuoteData {
 }
 ```
 
-- [x] **Step 2: ä» barrel å¯¼å‡ºæ–°å¢å‡½æ•°**
+- [x] **Step 2: ´Ó barrel µ¼³öĞÂÔöº¯Êı**
 
 ```typescript
 // src/services/scoring/v6-engine/index.ts
 export { stockToBasicData, quotesToQuoteData } from './types'
 ```
 
-- [x] **Step 3: è¿è¡Œ v6-engine ç°æœ‰æµ‹è¯•ï¼Œç¡®ä¿æ— å›å½’**
+- [x] **Step 3: ÔËĞĞ v6-engine ÏÖÓĞ²âÊÔ£¬È·±£ÎŞ»Ø¹é**
 
 Run: `npx vitest run src/services/scoring/v6-engine/v6-engine.test.ts`
 Expected: PASS
 
 ---
 
-## Task 2ï¼šé‡æ„ `v6ScoreService.ts`ï¼Œå†…éƒ¨è°ƒç”¨ `v6-engine`
+## Task 2£ºÖØ¹¹ `v6ScoreService.ts`£¬ÄÚ²¿µ÷ÓÃ `v6-engine`
 
 **Files:**
 - Modify: `src/services/scoring/v6ScoreService.ts`
 - Test: `src/services/scoring/v6ScoreService.test.ts`
 
-- [x] **Step 1: æ›¿æ¢å®ç°ä¸º v6-engine è°ƒç”¨**
+- [x] **Step 1: Ìæ»»ÊµÏÖÎª v6-engine µ÷ÓÃ**
 
-ä¿ç•™åŸæœ‰å¯¼å‡ºç­¾åï¼š
+±£ÁôÔ­ÓĞµ¼³öÇ©Ãû£º
 
 ```typescript
 export interface RunV6ScoreResult {
@@ -134,7 +142,7 @@ export async function runV6Score(
 ): Promise<RunV6ScoreResult>
 ```
 
-å†…éƒ¨å®ç°æ”¹ä¸ºï¼š
+ÄÚ²¿ÊµÏÖ¸ÄÎª£º
 
 ```typescript
 import { createV6Engine, stockToBasicData, quotesToQuoteData } from './v6-engine'
@@ -156,7 +164,7 @@ export async function runV6Score(
     ])
 
     if (!stock) {
-      return { success: false, error: `æœªæ‰¾åˆ°è‚¡ç¥¨ ${symbol}` }
+      return { success: false, error: `Î´ÕÒµ½¹ÉÆ± ${symbol}` }
     }
 
     const engine = createV6Engine()
@@ -192,42 +200,42 @@ export async function runV6Score(
 }
 ```
 
-> æ³¨æ„ï¼š`V6ScoreInput`ã€`calculateComposite` çš„å®é™…å­—æ®µåä»¥ `v6-engine/types.ts` å’Œ `engine.ts` ä¸ºå‡†ï¼›è‹¥å­—æ®µåä¸åŒï¼ŒæŒ‰å®é™…ç±»å‹è°ƒæ•´ã€‚
+> ×¢Òâ£º`V6ScoreInput`¡¢`calculateComposite` µÄÊµ¼Ê×Ö¶ÎÃûÒÔ `v6-engine/types.ts` ºÍ `engine.ts` Îª×¼£»Èô×Ö¶ÎÃû²»Í¬£¬°´Êµ¼ÊÀàĞÍµ÷Õû¡£
 
-- [x] **Step 2: ä¿ç•™æ—§å¯å‘å¼é€»è¾‘ä¸ºç§æœ‰é™çº§å‡½æ•°ï¼ˆå¯é€‰ï¼‰**
+- [x] **Step 2: ±£Áô¾ÉÆô·¢Ê½Âß¼­ÎªË½ÓĞ½µ¼¶º¯Êı£¨¿ÉÑ¡£©**
 
-å¦‚æœ `v6-engine` åœ¨æŸäº›è¾¹ç•Œåœºæ™¯ä¸‹ç¼ºå°‘æ•°æ®ï¼Œå¯ä¿ç•™æ—§çš„ `calculateFactorFromBasicData` ä½œä¸ºç§æœ‰ fallbackï¼Œä½†ä¸å¯¹å¤–æš´éœ²ã€‚
+Èç¹û `v6-engine` ÔÚÄ³Ğ©±ß½ç³¡¾°ÏÂÈ±ÉÙÊı¾İ£¬¿É±£Áô¾ÉµÄ `calculateFactorFromBasicData` ×÷ÎªË½ÓĞ fallback£¬µ«²»¶ÔÍâ±©Â¶¡£
 
-- [x] **Step 3: æ›´æ–° `v6ScoreService.test.ts` æ–­è¨€**
+- [x] **Step 3: ¸üĞÂ `v6ScoreService.test.ts` ¶ÏÑÔ**
 
-æµ‹è¯•åº”éªŒè¯ï¼š
-1. è¿”å› `success: true`
-2. `data.score` åœ¨ 1~5 ä¹‹é—´
-3. `data.dimensions` éç©º
-4. é”™è¯¯åœºæ™¯è¿”å› `success: false`
+²âÊÔÓ¦ÑéÖ¤£º
+1. ·µ»Ø `success: true`
+2. `data.score` ÔÚ 1~5 Ö®¼ä
+3. `data.dimensions` ·Ç¿Õ
+4. ´íÎó³¡¾°·µ»Ø `success: false`
 
-- [x] **Step 4: è¿è¡Œæµ‹è¯•**
+- [x] **Step 4: ÔËĞĞ²âÊÔ**
 
 Run: `npx vitest run src/services/scoring/v6ScoreService.test.ts`
 Expected: PASS
 
 ---
 
-## Task 3ï¼šæ›´æ–° Store è°ƒç”¨æ–¹ï¼Œé€‚é…æ–°è¿”å›ç»“æ„
+## Task 3£º¸üĞÂ Store µ÷ÓÃ·½£¬ÊÊÅäĞÂ·µ»Ø½á¹¹
 
 **Files:**
 - Modify: `src/store/stockAnalysisStore.ts`
 - Modify: `src/store/analysisStore.ts`
 - Modify: `src/store/strategySnapshotStore.ts`
-- Test: ç›¸å…³ store æµ‹è¯•
+- Test: Ïà¹Ø store ²âÊÔ
 
-- [x] **Step 1: ç¡®è®¤ `runV6Score` è¿”å›ç»“æ„**
+- [x] **Step 1: È·ÈÏ `runV6Score` ·µ»Ø½á¹¹**
 
-è¿”å›ç»“æ„ä¿æŒ `RunV6ScoreResult { success, data?, error? }`ï¼ŒStore è°ƒç”¨ä»£ç åŸºæœ¬ä¸å˜ã€‚
+·µ»Ø½á¹¹±£³Ö `RunV6ScoreResult { success, data?, error? }`£¬Store µ÷ÓÃ´úÂë»ù±¾²»±ä¡£
 
-- [x] **Step 2: åœ¨ `analysisStore.ts` ä¸­ä½¿ç”¨è¿”å›æ•°æ®**
+- [x] **Step 2: ÔÚ `analysisStore.ts` ÖĞÊ¹ÓÃ·µ»ØÊı¾İ**
 
-å½“å‰ä»£ç ï¼š
+µ±Ç°´úÂë£º
 
 ```typescript
 const result = await runV6Score(symbol)
@@ -237,7 +245,7 @@ if (result.success) {
 }
 ```
 
-æ”¹ä¸ºç›´æ¥ä½¿ç”¨è¿”å›çš„è¯„åˆ†æ•°æ®ï¼Œå‡å°‘ä¸€æ¬¡ `loadScores` ç½‘ç»œ/IndexedDB è°ƒç”¨ï¼š
+¸ÄÎªÖ±½ÓÊ¹ÓÃ·µ»ØµÄÆÀ·ÖÊı¾İ£¬¼õÉÙÒ»´Î `loadScores` ÍøÂç/IndexedDB µ÷ÓÃ£º
 
 ```typescript
 const result = await runV6Score(symbol)
@@ -249,61 +257,61 @@ if (result.success && result.data) {
     newScores.push(result.data!)
   }
   set({ scores: newScores, loading: false })
-  logger.info(`[analysisStore] handleScore å®Œæˆ: ${symbol}`)
+  logger.info(`[analysisStore] handleScore Íê³É: ${symbol}`)
 } else {
   // ... error
 }
 ```
 
-- [x] **Step 3: è¿è¡Œ Store æµ‹è¯•**
+- [x] **Step 3: ÔËĞĞ Store ²âÊÔ**
 
 Run: `npx vitest run src/store/stockAnalysisStore.test.ts src/store/analysisStore.test.ts src/store/strategySnapshotStore.test.ts`
 Expected: PASS
 
 ---
 
-## Task 4ï¼šPortalShell èˆ±å®¤å…¥å£å•è½¨åŒ–
+## Task 4£ºPortalShell ²ÕÊÒÈë¿Úµ¥¹ì»¯
 
 **Files:**
 - Modify: `src/portal/PortalShell.tsx`
 - Modify: `src/config/routes.ts`
-- Modify: `src/apps/input/InputApp.tsx` ç­‰ 5 ä¸ª CabinApp
+- Modify: `src/apps/input/InputApp.tsx` µÈ 5 ¸ö CabinApp
 
-- [x] **Step 1: åœ¨ `PortalShell.tsx` ä¸­åˆ é™¤ `HUB_APPS` å’Œ `isHubView` é€»è¾‘**
+- [x] **Step 1: ÔÚ `PortalShell.tsx` ÖĞÉ¾³ı `HUB_APPS` ºÍ `isHubView` Âß¼­**
 
-åˆ é™¤ç¬¬ 33-37 è¡Œçš„ lazy import å’Œç¬¬ 47-53 è¡Œçš„ `HUB_APPS` æ˜ å°„ã€‚
+É¾³ıµÚ 33-37 ĞĞµÄ lazy import ºÍµÚ 47-53 ĞĞµÄ `HUB_APPS` Ó³Éä¡£
 
-ç®€åŒ– `ActiveApp` é€‰æ‹©é€»è¾‘ä¸ºï¼š
+¼ò»¯ `ActiveApp` Ñ¡ÔñÂß¼­Îª£º
 
 ```typescript
 const ActiveApp = SubApp ?? CABIN_APPS[activeCabin]
 ```
 
-- [x] **Step 2: è°ƒæ•´ `routes.ts`ï¼Œè®© `/input`ã€`/analysis` ç­‰é»˜è®¤è·¯å¾„è¿›å…¥ PortalShellï¼Œå¹¶ç”± CabinApp å†…éƒ¨å¤„ç† Hub æ¸²æŸ“**
+- [x] **Step 2: µ÷Õû `routes.ts`£¬ÈÃ `/input`¡¢`/analysis` µÈÄ¬ÈÏÂ·¾¶½øÈë PortalShell£¬²¢ÓÉ CabinApp ÄÚ²¿´¦Àí Hub äÖÈ¾**
 
-ä¾‹å¦‚ï¼Œå½“å‰ï¼š
+ÀıÈç£¬µ±Ç°£º
 
 ```typescript
 { path: '/input', component: React.lazy(() => import('@/portal/PortalShell')), category: 'input' }
 { path: '/input/hub', component: React.lazy(() => import('@/portal/PortalShell')), category: 'input' }
 ```
 
-ä¿æŒ `/input` è¿›å…¥ `PortalShell` å³å¯ï¼Œ`InputApp` å†…éƒ¨è´Ÿè´£é»˜è®¤æ¸²æŸ“ `InputHubPage`ã€‚
+±£³Ö `/input` ½øÈë `PortalShell` ¼´¿É£¬`InputApp` ÄÚ²¿¸ºÔğÄ¬ÈÏäÖÈ¾ `InputHubPage`¡£
 
-- [x] **Step 3: åœ¨ `InputApp.tsx` ä¸­æ·»åŠ é»˜è®¤ Hub æ¸²æŸ“**
+- [x] **Step 3: ÔÚ `InputApp.tsx` ÖĞÌí¼ÓÄ¬ÈÏ Hub äÖÈ¾**
 
-å‡è®¾ `InputApp.tsx` å½“å‰ç”¨ `Routes` åˆ†å‘å­é¡µé¢ï¼Œæ·»åŠ é»˜è®¤è·¯ç”±ï¼š
+¼ÙÉè `InputApp.tsx` µ±Ç°ÓÃ `Routes` ·Ö·¢×ÓÒ³Ãæ£¬Ìí¼ÓÄ¬ÈÏÂ·ÓÉ£º
 
 ```typescript
 import { Routes, Route, Navigate } from 'react-router'
 import InputHubPage from '@/pages/input/InputHubPage'
 
-// åœ¨ Routes å†…ï¼š
+// ÔÚ Routes ÄÚ£º
 <Route path="hub" element={<InputHubPage />} />
 <Route path="*" element={<Navigate to="hub" replace />} />
 ```
 
-æˆ–è€…å¦‚æœ `InputApp` ä¸ä½¿ç”¨è·¯ç”±ï¼Œç›´æ¥åœ¨ `InputApp` ç»„ä»¶å†…æ¸²æŸ“ï¼š
+»òÕßÈç¹û `InputApp` ²»Ê¹ÓÃÂ·ÓÉ£¬Ö±½ÓÔÚ `InputApp` ×é¼şÄÚäÖÈ¾£º
 
 ```typescript
 export default function InputApp(): JSX.Element {
@@ -311,85 +319,85 @@ export default function InputApp(): JSX.Element {
 }
 ```
 
-å¯¹å…¶ä»– 4 ä¸ª CabinApp é‡å¤ç›¸åŒæ”¹é€ ã€‚
+¶ÔÆäËû 4 ¸ö CabinApp ÖØ¸´ÏàÍ¬¸ÄÔì¡£
 
-- [x] **Step 4: æ›´æ–° `CABINS` å¯¼èˆªè·¯å¾„**
+- [x] **Step 4: ¸üĞÂ `CABINS` µ¼º½Â·¾¶**
 
-å¦‚æœå½“å‰ `CABINS` ä¸­ `path` æ˜¯ `/input/hub`ï¼Œæ”¹ä¸º `/input`ï¼Œè®©ç”¨æˆ·ç‚¹å‡»é¡¶éƒ¨å¯¼èˆªæ—¶è¿›å…¥ CabinAppï¼ŒCabinApp å†…éƒ¨é»˜è®¤å±•ç¤º Hubã€‚
+Èç¹ûµ±Ç° `CABINS` ÖĞ `path` ÊÇ `/input/hub`£¬¸ÄÎª `/input`£¬ÈÃÓÃ»§µã»÷¶¥²¿µ¼º½Ê±½øÈë CabinApp£¬CabinApp ÄÚ²¿Ä¬ÈÏÕ¹Ê¾ Hub¡£
 
-- [x] **Step 5: è¿è¡Œåº”ç”¨å¯åŠ¨æµ‹è¯•**
+- [x] **Step 5: ÔËĞĞÓ¦ÓÃÆô¶¯²âÊÔ**
 
 Run: `npx tsc --noEmit`
 Expected: 0 errors
 
 ---
 
-## Task 5ï¼šå›å½’éªŒè¯
+## Task 5£º»Ø¹éÑéÖ¤
 
-- [x] **Step 1: å…¨é‡ç±»å‹æ£€æŸ¥**
+- [x] **Step 1: È«Á¿ÀàĞÍ¼ì²é**
 
 Run: `npx tsc --noEmit`
 Expected: 0 errors
 
-- [x] **Step 2: ç›¸å…³æµ‹è¯•å¥—ä»¶**
+- [x] **Step 2: Ïà¹Ø²âÊÔÌ×¼ş**
 
 Run: `npx vitest run src/services/scoring src/store src/portal`
-Expected: PASSï¼ˆå…è®¸é¢„å…ˆå­˜åœ¨çš„æ— å…³å¤±è´¥ï¼‰
+Expected: PASS£¨ÔÊĞíÔ¤ÏÈ´æÔÚµÄÎŞ¹ØÊ§°Ü£©
 
-- [x] **Step 3: ESLint æ£€æŸ¥ä¿®æ”¹æ–‡ä»¶**
+- [x] **Step 3: ESLint ¼ì²éĞŞ¸ÄÎÄ¼ş**
 
 Run: `npx eslint src/services/scoring/v6ScoreService.ts src/portal/PortalShell.tsx src/apps/input/InputApp.tsx src/apps/analysis/AnalysisApp.tsx src/apps/trading/TradingApp.tsx src/apps/output/OutputApp.tsx src/apps/command/CommandApp.tsx src/store/stockAnalysisStore.ts src/store/analysisStore.ts src/store/strategySnapshotStore.ts`
 Expected: 0 errors
 
-- [x] **Step 4: ç”Ÿäº§æ„å»ºéªŒè¯**
+- [x] **Step 4: Éú²ú¹¹½¨ÑéÖ¤**
 
 Run: `npx vite build`
-Expected: æˆåŠŸï¼Œæ— é”™è¯¯
+Expected: ³É¹¦£¬ÎŞ´íÎó
 
 ---
 
 ## Spec Coverage Check
 
-| éœ€æ±‚ | å¯¹åº”ä»»åŠ¡ |
+| ĞèÇó | ¶ÔÓ¦ÈÎÎñ |
 |:---|:---|
-| V6 å¼•æ“æ¥ç®¡è¯„åˆ†ä¸»æµç¨‹ | Task 1, Task 2 |
-| ä¿ç•™å¯¹å¤–æ¥å£å…¼å®¹ | Task 2 |
-| Store è°ƒç”¨æ–¹é€‚é… | Task 3 |
-| PortalShell åŒè½¨å…¥å£æ¶ˆé™¤ | Task 4 |
-| æ‰€æœ‰èˆ±å®¤è·¯å¾„ç»Ÿä¸€èµ° PortalShell | Task 4 |
-| å›å½’æµ‹è¯•ä¸ç±»å‹æ£€æŸ¥ | Task 5 |
+| V6 ÒıÇæ½Ó¹ÜÆÀ·ÖÖ÷Á÷³Ì | Task 1, Task 2 |
+| ±£Áô¶ÔÍâ½Ó¿Ú¼æÈİ | Task 2 |
+| Store µ÷ÓÃ·½ÊÊÅä | Task 3 |
+| PortalShell Ë«¹ìÈë¿ÚÏû³ı | Task 4 |
+| ËùÓĞ²ÕÊÒÂ·¾¶Í³Ò»×ß PortalShell | Task 4 |
+| »Ø¹é²âÊÔÓëÀàĞÍ¼ì²é | Task 5 |
 
 ## Placeholder Scan
 
-- æ—  TBD/TODO
-- æ‰€æœ‰ä»£ç å—å‡ä¸ºå¯ç›´æ¥ä½¿ç”¨çš„å®ç°ç¤ºä¾‹
-- å­—æ®µåä»¥å®é™…æºç ä¸ºå‡†ï¼Œåœ¨ Task 2 ä¸­å·²æ³¨æ˜éœ€æŒ‰å®é™…ç±»å‹è°ƒæ•´
+- ÎŞ TBD/TODO
+- ËùÓĞ´úÂë¿é¾ùÎª¿ÉÖ±½ÓÊ¹ÓÃµÄÊµÏÖÊ¾Àı
+- ×Ö¶ÎÃûÒÔÊµ¼ÊÔ´ÂëÎª×¼£¬ÔÚ Task 2 ÖĞÒÑ×¢Ã÷Ğè°´Êµ¼ÊÀàĞÍµ÷Õû
 
 ---
 
-## æ‰§è¡Œåæ€»ç»“
+## Ö´ĞĞºó×Ü½á
 
-### å®é™…ä¿®æ”¹æ–‡ä»¶
+### Êµ¼ÊĞŞ¸ÄÎÄ¼ş
 
-| æ–‡ä»¶ | è¯´æ˜ |
+| ÎÄ¼ş | ËµÃ÷ |
 |:---|:---|
-| `src/services/scoring/v6ScoreService.ts` | å†…éƒ¨è°ƒç”¨ `createV6Engine().calculateAll()`ï¼›ç”¨ `ALL_LAYER_IDS` æ›¿æ¢ç¡¬ç¼–ç ï¼›æ–°å¢ `AbortSignal` æ”¯æŒ |
-| `src/apps/command/CommandApp.tsx` | å¢åŠ  `React.memo` ä¸ `ErrorBoundary` åŒ…è£¹ |
-| `tests/InputApp.test.tsx` | é»˜è®¤è·¯å¾„æ”¹ä¸º `/input/dashboard` |
-| `tests/AnalysisApp.test.tsx` | å¢åŠ  `MemoryRouter`ï¼Œé»˜è®¤è·¯å¾„ `/analysis/score` |
-| `tests/TradingApp.test.tsx` | å¢åŠ  `MemoryRouter`ï¼Œé»˜è®¤è·¯å¾„ `/trading/sim` |
-| `tests/CommandApp.test.tsx` | é»˜è®¤è·¯å¾„æ”¹ä¸º `/command/monitor` |
+| `src/services/scoring/v6ScoreService.ts` | ÄÚ²¿µ÷ÓÃ `createV6Engine().calculateAll()`£»ÓÃ `ALL_LAYER_IDS` Ìæ»»Ó²±àÂë£»ĞÂÔö `AbortSignal` Ö§³Ö |
+| `src/apps/command/CommandApp.tsx` | Ôö¼Ó `React.memo` Óë `ErrorBoundary` °ü¹ü |
+| `tests/InputApp.test.tsx` | Ä¬ÈÏÂ·¾¶¸ÄÎª `/input/dashboard` |
+| `tests/AnalysisApp.test.tsx` | Ôö¼Ó `MemoryRouter`£¬Ä¬ÈÏÂ·¾¶ `/analysis/score` |
+| `tests/TradingApp.test.tsx` | Ôö¼Ó `MemoryRouter`£¬Ä¬ÈÏÂ·¾¶ `/trading/sim` |
+| `tests/CommandApp.test.tsx` | Ä¬ÈÏÂ·¾¶¸ÄÎª `/command/monitor` |
 
-### éªŒè¯ç»“æœ
+### ÑéÖ¤½á¹û
 
-| æ£€æŸ¥é¡¹ | ç»“æœ |
+| ¼ì²éÏî | ½á¹û |
 |:---|:---|
-| ç›¸å…³æµ‹è¯• | 97/97 é€šè¿‡ |
-| ESLint | 0 errorsï¼ˆä»…æ—¢æœ‰ `no-magic-numbers` warningsï¼‰ |
-| `npx vite build` | æˆåŠŸ |
-| `npx tsc --noEmit` | å‰©ä½™ 8 ä¸ªé”™è¯¯å‡ä¸æ‰¹æ¬¡ A æ— å…³ |
+| Ïà¹Ø²âÊÔ | 97/97 Í¨¹ı |
+| ESLint | 0 errors£¨½ö¼ÈÓĞ `no-magic-numbers` warnings£© |
+| `npx vite build` | ³É¹¦ |
+| `npx tsc --noEmit` | Ê£Óà 8 ¸ö´íÎó¾ùÓëÅú´Î A ÎŞ¹Ø |
 
-### æ•°æ®æ¶æ„å¸ˆ / ä»£ç å®¡è®¡å¸ˆå¤æ ¸ç»“è®º
+### Êı¾İ¼Ü¹¹Ê¦ / ´úÂëÉó¼ÆÊ¦¸´ºË½áÂÛ
 
-- **æ•°æ®æ¶æ„å¸ˆ**ï¼šè¯†åˆ«å‡º DataBridge åŠ¨ä½œåä¸ä¸€è‡´ã€ç­–ç•¥å¿«ç…§å› å­é”®åå¤§å°å†™ã€Sector è¯­ä¹‰æ˜ å°„ã€è´¢åŠ¡æ•°æ®ç¼ºå¤±ã€`avgTurnover20d` ç¼ºå¤±ç­‰é£é™©ï¼›å»ºè®®æ‰¹æ¬¡ B/C/D é€æ­¥å¤„ç†ã€‚
-- **ä»£ç å®¡è®¡å¸ˆ**ï¼šæŒ‡å‡ºè®¡åˆ’åŸºçº¿å·²éƒ¨åˆ†è¿‡æœŸï¼ˆå½“å‰ä»£ç å·²å®Œæˆéƒ¨åˆ†æ”¹é€ ï¼‰ã€å•è½¨åŒ–åéœ€æ›´æ–°æµ‹è¯•ã€ç¡¬ç¼–ç éœ€æ›¿æ¢ã€AbortSignal éœ€è¡¥å……ï¼›ä»¥ä¸Šé—®é¢˜å·²åœ¨æ‰¹æ¬¡ A æ”¶å°¾ä¸­å¤„ç†ã€‚
+- **Êı¾İ¼Ü¹¹Ê¦**£ºÊ¶±ğ³ö DataBridge ¶¯×÷Ãû²»Ò»ÖÂ¡¢²ßÂÔ¿ìÕÕÒò×Ó¼üÃû´óĞ¡Ğ´¡¢Sector ÓïÒåÓ³Éä¡¢²ÆÎñÊı¾İÈ±Ê§¡¢`avgTurnover20d` È±Ê§µÈ·çÏÕ£»½¨ÒéÅú´Î B/C/D Öğ²½´¦Àí¡£
+- **´úÂëÉó¼ÆÊ¦**£ºÖ¸³ö¼Æ»®»ùÏßÒÑ²¿·Ö¹ıÆÚ£¨µ±Ç°´úÂëÒÑÍê³É²¿·Ö¸ÄÔì£©¡¢µ¥¹ì»¯ºóĞè¸üĞÂ²âÊÔ¡¢Ó²±àÂëĞèÌæ»»¡¢AbortSignal Ğè²¹³ä£»ÒÔÉÏÎÊÌâÒÑÔÚÅú´Î A ÊÕÎ²ÖĞ´¦Àí¡£

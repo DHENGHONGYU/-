@@ -1,207 +1,209 @@
 ---
-title: dual-strategy-update-log-and-consistency-check
-code_version: 2.0.0
-
-tier: important
----
-
----
-title: V9 åŒç­–ç•¥ä½“ç³» â€” æ›´æ–°æ—¥å¿—ä¸ä¸€è‡´æ€§æ£€æŸ¥
-version: v1.0.0
-last_updated: 2026-06-27
-maintainer: V9 Architecture Team
+title: V9 Ë«²ßÂÔÌåÏµ ¡ª ¸üĞÂÈÕÖ¾ÓëÒ»ÖÂĞÔ¼ì²é
+type: reference
+domain: backend
+phase: retrospective
+tier: standard
 status: active
+maintainer: V9 Architecture Team
+summary: "ÎÊÌâÀ´Ô´£ºÓÃ»§Ìá³ö¡¸ÕûÌå½»Ò×²ßÂÔ½øĞĞ½á¹¹ĞÔµ÷Õû£¬½«Ô­ÏÈµ¥ĞĞµÄ¹ÉÆ±Ñ¡ÔñºÍ½»Ò×²ßÂÔµ÷ÕûÎªË«²ßÂÔ½»Ò×²ßÂÔ¡¹£¬ĞèÈ·ÈÏÏà¹ØÎÄ¼şÊÇ·ñÒÑ¸üĞÂ²¢Ìá¹©¸üĞÂÈÕÖ¾¡£ ¼ì²é·¶Î§£ºDOC..."
+tags: [backend, strategy, dual-strategy]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: important
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
-# V9 åŒç­–ç•¥ä½“ç³» â€” æ›´æ–°æ—¥å¿—ä¸ä¸€è‡´æ€§æ£€æŸ¥
+# V9 Ë«²ßÂÔÌåÏµ ¡ª ¸üĞÂÈÕÖ¾ÓëÒ»ÖÂĞÔ¼ì²é
 
-> **é—®é¢˜æ¥æº**ï¼šç”¨æˆ·æå‡ºã€Œæ•´ä½“äº¤æ˜“ç­–ç•¥è¿›è¡Œç»“æ„æ€§è°ƒæ•´ï¼Œå°†åŸå…ˆå•è¡Œçš„è‚¡ç¥¨é€‰æ‹©å’Œäº¤æ˜“ç­–ç•¥è°ƒæ•´ä¸ºåŒç­–ç•¥äº¤æ˜“ç­–ç•¥ã€ï¼Œéœ€ç¡®è®¤ç›¸å…³æ–‡ä»¶æ˜¯å¦å·²æ›´æ–°å¹¶æä¾›æ›´æ–°æ—¥å¿—ã€‚  
-> **æ£€æŸ¥èŒƒå›´**ï¼šDOC æ ¸å¿ƒæ–‡æ¡£ï¼ˆ`docs/01~10`ã€`docs/implementation/*`ï¼‰ã€æºç å®ç°ï¼ˆ`src/services/*`ã€`src/store/*`ã€`src/cockpit/*`ã€`src/pages/*`ï¼‰ã€æ•°æ®å±‚ï¼ˆ`src/data/*`ï¼‰ã€æµ‹è¯•ï¼ˆ`tests/*`ï¼‰ã€‚  
-> **æ£€æŸ¥æ—¥æœŸ**ï¼š2026-06-27
+> **ÎÊÌâÀ´Ô´**£ºÓÃ»§Ìá³ö¡¸ÕûÌå½»Ò×²ßÂÔ½øĞĞ½á¹¹ĞÔµ÷Õû£¬½«Ô­ÏÈµ¥ĞĞµÄ¹ÉÆ±Ñ¡ÔñºÍ½»Ò×²ßÂÔµ÷ÕûÎªË«²ßÂÔ½»Ò×²ßÂÔ¡¹£¬ĞèÈ·ÈÏÏà¹ØÎÄ¼şÊÇ·ñÒÑ¸üĞÂ²¢Ìá¹©¸üĞÂÈÕÖ¾¡£  
+> **¼ì²é·¶Î§**£ºDOC ºËĞÄÎÄµµ£¨`docs/01~10`¡¢`docs/implementation/*`£©¡¢Ô´ÂëÊµÏÖ£¨`src/services/*`¡¢`src/store/*`¡¢`src/cockpit/*`¡¢`src/pages/*`£©¡¢Êı¾İ²ã£¨`src/data/*`£©¡¢²âÊÔ£¨`tests/*`£©¡£  
+> **¼ì²éÈÕÆÚ**£º2026-06-27
 
 ---
 
-## ä¸€ã€ç»“è®ºæ€»è§ˆ
+## Ò»¡¢½áÂÛ×ÜÀÀ
 
-| æ£€æŸ¥é¡¹ | çŠ¶æ€ | è¯´æ˜ |
+| ¼ì²éÏî | ×´Ì¬ | ËµÃ÷ |
 |:---|:---|:---|
-| åŒç­–ç•¥æ ¸å¿ƒä»£ç  | âœ… å·²æ›´æ–° | å­˜åœ¨ä¸¤å¥—å®ç°ï¼Œéœ€ç»Ÿä¸€ |
-| DOC æ ¸å¿ƒæ–‡æ¡£ | âœ… å·²æ›´æ–° | `03-architecture-standards.md`ã€`05-engine-specs.md`ã€`02-functional-specs.md`ã€`10-glossary.md` å·²å¯¹é½ |
-| ADR | âœ… å·²åˆ›å»º | `ADR-009` å·²æ¥å—ï¼Œä½†å®æ–½çŠ¶æ€æ¸…å•æœªå‹¾é€‰ |
-| æ•°æ®å±‚ Schema | âœ… å·²æ›´æ–° | DB_VERSION 14ï¼Œæ–°å¢ `hot_sector_scores` / `value_pit_scores` |
-| DataBridge | âœ… å·²æ›´æ–° | æ–°å¢ `REFRESH_HOT_SECTOR_SCORES` / `REFRESH_VALUE_PIT_SCORES` action |
-| é©¾é©¶èˆ± Widget | âœ… å·²æ›´æ–° | `HotSectorWidget`ã€`ValuePitWidget` å·²æ³¨å†Œ |
-| åˆ†æèˆ±é¡µé¢ | âœ… å·²æ›´æ–° | `/analysis/hot-sectors`ã€`/analysis/value-pit` é¡µé¢å·²å­˜åœ¨ |
-| Store | âœ… å·²æ›´æ–° | `hotSectorStore`ã€`valuePitStore`ã€`rotationSignalStore` å·²å­˜åœ¨ |
-| æµ‹è¯• | âœ… å·²æ›´æ–° | å•å…ƒæµ‹è¯•è¦†ç›– `services/scoring/*` ä¸ `services/trading/*` ä¸¤ä¸ªç‰ˆæœ¬ |
-| **ä¸€è‡´æ€§é£é™©** | ğŸŸ¡ **éœ€æ•´æ”¹** | `src/services/trading/*` ä¸ `src/services/scoring/*` å­˜åœ¨ä¸¤å¥—å¹¶è¡Œå®ç°ï¼Œç±»å‹ã€è¾“å…¥ã€è¾“å‡ºå‡ä¸ä¸€è‡´ |
+| Ë«²ßÂÔºËĞÄ´úÂë | ? ÒÑ¸üĞÂ | ´æÔÚÁ½Ì×ÊµÏÖ£¬ĞèÍ³Ò» |
+| DOC ºËĞÄÎÄµµ | ? ÒÑ¸üĞÂ | `03-architecture-standards.md`¡¢`05-engine-specs.md`¡¢`02-functional-specs.md`¡¢`10-glossary.md` ÒÑ¶ÔÆë |
+| ADR | ? ÒÑ´´½¨ | `ADR-009` ÒÑ½ÓÊÜ£¬µ«ÊµÊ©×´Ì¬Çåµ¥Î´¹´Ñ¡ |
+| Êı¾İ²ã Schema | ? ÒÑ¸üĞÂ | DB_VERSION 14£¬ĞÂÔö `hot_sector_scores` / `value_pit_scores` |
+| DataBridge | ? ÒÑ¸üĞÂ | ĞÂÔö `REFRESH_HOT_SECTOR_SCORES` / `REFRESH_VALUE_PIT_SCORES` action |
+| ¼İÊ»²Õ Widget | ? ÒÑ¸üĞÂ | `HotSectorWidget`¡¢`ValuePitWidget` ÒÑ×¢²á |
+| ·ÖÎö²ÕÒ³Ãæ | ? ÒÑ¸üĞÂ | `/analysis/hot-sectors`¡¢`/analysis/value-pit` Ò³ÃæÒÑ´æÔÚ |
+| Store | ? ÒÑ¸üĞÂ | `hotSectorStore`¡¢`valuePitStore`¡¢`rotationSignalStore` ÒÑ´æÔÚ |
+| ²âÊÔ | ? ÒÑ¸üĞÂ | µ¥Ôª²âÊÔ¸²¸Ç `services/scoring/*` Óë `services/trading/*` Á½¸ö°æ±¾ |
+| **Ò»ÖÂĞÔ·çÏÕ** | ?? **ĞèÕû¸Ä** | `src/services/trading/*` Óë `src/services/scoring/*` ´æÔÚÁ½Ì×²¢ĞĞÊµÏÖ£¬ÀàĞÍ¡¢ÊäÈë¡¢Êä³ö¾ù²»Ò»ÖÂ |
 
 ---
 
-## äºŒã€å·²æ›´æ–°æ–‡ä»¶æ¸…å•ï¼ˆæŒ‰å±‚çº§ï¼‰
+## ¶ş¡¢ÒÑ¸üĞÂÎÄ¼şÇåµ¥£¨°´²ã¼¶£©
 
-### 2.1 æ¶æ„/æ–‡æ¡£å±‚
+### 2.1 ¼Ü¹¹/ÎÄµµ²ã
 
-| æ–‡ä»¶ | æ›´æ–°å†…å®¹ |
+| ÎÄ¼ş | ¸üĞÂÄÚÈİ |
 |:---|:---|
-| `./03-architecture-standards.md` | æ–°å¢ Â§3.3.2 åŒç­–ç•¥æ•°æ®æµï¼›L3 å¼•æ“å±‚å¢åŠ  HotSectorAnalyzer / ValuePitAnalyzer / RotationSignalDetector / DualStrategyEngineï¼›IndexedDB Schema å¢åŠ  `hot_sector_scores` / `value_pit_scores`ï¼›D20 åå·®é¡¹æ ‡è®°ä¸ºå·²éªŒæ”¶ |
-| `./05-engine-specs.md` | æ–°å¢ Â§2.5 åŒç­–ç•¥è¯„åˆ†å¼•æ“ï¼›æ˜ç¡®çƒ­é—¨/æ´¼åœ°äº”ç»´æƒé‡ï¼›æ–°å¢è½®åŠ¨ä¿¡å·æ£€æµ‹ï¼›åˆ—å‡ºå®ç°æ–‡ä»¶ |
-| `./02-functional-specs.md` | æ–°å¢ US-010/US-011 ç”¨æˆ·æ•…äº‹ï¼›æ–°å¢æµç¨‹ 4ã€ŒåŒç­–ç•¥é€‰è‚¡ â†’ è¯„åˆ† â†’ äº¤æ˜“ä¿¡å·ã€ï¼›æ–°å¢ Â§2.4.15/Â§2.4.16 ç­–ç•¥åŠŸèƒ½è§„æ ¼ |
-| `./10-glossary.md` | æ–°å¢ Â§10.10 åŒç­–ç•¥ä½“ç³»æœ¯è¯­ï¼šçƒ­é—¨æ¿å—ç­–ç•¥ã€ä»·å€¼æ´¼åœ°ç­–ç•¥ã€HotSectorScoreã€ValuePitScoreã€Rotation Signal Detectorã€Dual Strategy Engineã€HotSectorWidgetã€ValuePitWidget |
-| `./v9-system-blueprint.md` | D20 æ ‡è®°ä¸ºå·²è½åœ°ï¼›ADR-009 å·²æ¥å—ï¼›åŒç­–ç•¥æ•°æ®æµè§„æ ¼ä¸å·®å¼‚åˆ†ææ–‡æ¡£ç´¢å¼• |
-| `../explanation/design/2026-06-27-dual-strategy-system.md` | ADR-009 åˆ›å»ºå¹¶ Acceptedï¼Œå†³ç­–é‡‡ç”¨ã€Œç‹¬ç«‹ Store + ç‹¬ç«‹ Analyzer + dualStrategyEngine ç¼–æ’ã€ |
-| `./dual-strategy-dataflow-spec.md` | ç”¨æˆ·è¾“å…¥è§„æ ¼æ–‡æ¡£åŒ–ï¼ˆproposalï¼‰ |
-| `../explanation/dual-strategy-gap-analysis.md` | å·®å¼‚åˆ†ææŠ¥å‘Šï¼ˆproposalï¼‰ |
+| `./03-architecture-standards.md` | ĞÂÔö ¡ì3.3.2 Ë«²ßÂÔÊı¾İÁ÷£»L3 ÒıÇæ²ãÔö¼Ó HotSectorAnalyzer / ValuePitAnalyzer / RotationSignalDetector / DualStrategyEngine£»IndexedDB Schema Ôö¼Ó `hot_sector_scores` / `value_pit_scores`£»D20 Æ«²îÏî±ê¼ÇÎªÒÑÑéÊÕ |
+| `./05-engine-specs.md` | ĞÂÔö ¡ì2.5 Ë«²ßÂÔÆÀ·ÖÒıÇæ£»Ã÷È·ÈÈÃÅ/ÍİµØÎåÎ¬È¨ÖØ£»ĞÂÔöÂÖ¶¯ĞÅºÅ¼ì²â£»ÁĞ³öÊµÏÖÎÄ¼ş |
+| `./02-functional-specs.md` | ĞÂÔö US-010/US-011 ÓÃ»§¹ÊÊÂ£»ĞÂÔöÁ÷³Ì 4¡¸Ë«²ßÂÔÑ¡¹É ¡ú ÆÀ·Ö ¡ú ½»Ò×ĞÅºÅ¡¹£»ĞÂÔö ¡ì2.4.15/¡ì2.4.16 ²ßÂÔ¹¦ÄÜ¹æ¸ñ |
+| `./10-glossary.md` | ĞÂÔö ¡ì10.10 Ë«²ßÂÔÌåÏµÊõÓï£ºÈÈÃÅ°å¿é²ßÂÔ¡¢¼ÛÖµÍİµØ²ßÂÔ¡¢HotSectorScore¡¢ValuePitScore¡¢Rotation Signal Detector¡¢Dual Strategy Engine¡¢HotSectorWidget¡¢ValuePitWidget |
+| `./v9-system-blueprint.md` | D20 ±ê¼ÇÎªÒÑÂäµØ£»ADR-009 ÒÑ½ÓÊÜ£»Ë«²ßÂÔÊı¾İÁ÷¹æ¸ñÓë²îÒì·ÖÎöÎÄµµË÷Òı |
+| `../explanation/design/2026-06-27-dual-strategy-system.md` | ADR-009 ´´½¨²¢ Accepted£¬¾ö²ß²ÉÓÃ¡¸¶ÀÁ¢ Store + ¶ÀÁ¢ Analyzer + dualStrategyEngine ±àÅÅ¡¹ |
+| `./dual-strategy-dataflow-spec.md` | ÓÃ»§ÊäÈë¹æ¸ñÎÄµµ»¯£¨proposal£© |
+| `../explanation/dual-strategy-gap-analysis.md` | ²îÒì·ÖÎö±¨¸æ£¨proposal£© |
 
-### 2.2 é…ç½®å±‚
+### 2.2 ÅäÖÃ²ã
 
-| æ–‡ä»¶ | æ›´æ–°å†…å®¹ |
+| ÎÄ¼ş | ¸üĞÂÄÚÈİ |
 |:---|:---|
-| `src/config/dualStrategyRules.ts` | æ–°å¢åŒç­–ç•¥é˜ˆå€¼é…ç½®ï¼šçƒ­é—¨ V6â‰¥3.5 / HotSectorScore 4.0 ç«‹å³è·Ÿè¿›ï¼›æ´¼åœ° V6 2.8â€“3.5 / ValuePitScore 4.0 ç«‹å³å»ºä»“ï¼›è½®åŠ¨ä¿¡å·æ¡ä»¶ï¼ˆé‡æ¯” 1.5ã€èµ„é‡‘è¿ç»­ 2 æ—¥ã€ä»·æ ¼ç«™ä¸Š MA20 3%ï¼‰ï¼›æ­¢ç›ˆæ­¢æŸé…ç½® |
-| `src/config/dbConfig.ts` | DB_VERSION 13â†’14ï¼›æ–°å¢ `STORE_NAME.hotSectorScores` / `valuePitScores`ï¼›æ–°å¢ `ENVELOPE_ACTION.REFRESH_HOT_SECTOR_SCORES` / `REFRESH_VALUE_PIT_SCORES`ï¼›ACL æˆæƒ `analyzer` / `tradinghub` è¯»å†™è¿™ä¸¤ä¸ª Store |
+| `src/config/dualStrategyRules.ts` | ĞÂÔöË«²ßÂÔãĞÖµÅäÖÃ£ºÈÈÃÅ V6¡İ3.5 / HotSectorScore 4.0 Á¢¼´¸ú½ø£»ÍİµØ V6 2.8¨C3.5 / ValuePitScore 4.0 Á¢¼´½¨²Ö£»ÂÖ¶¯ĞÅºÅÌõ¼ş£¨Á¿±È 1.5¡¢×Ê½ğÁ¬Ğø 2 ÈÕ¡¢¼Û¸ñÕ¾ÉÏ MA20 3%£©£»Ö¹Ó¯Ö¹ËğÅäÖÃ |
+| `src/config/dbConfig.ts` | DB_VERSION 13¡ú14£»ĞÂÔö `STORE_NAME.hotSectorScores` / `valuePitScores`£»ĞÂÔö `ENVELOPE_ACTION.REFRESH_HOT_SECTOR_SCORES` / `REFRESH_VALUE_PIT_SCORES`£»ACL ÊÚÈ¨ `analyzer` / `tradinghub` ¶ÁĞ´ÕâÁ½¸ö Store |
 
-### 2.3 æ•°æ®å±‚
+### 2.3 Êı¾İ²ã
 
-| æ–‡ä»¶ | æ›´æ–°å†…å®¹ |
+| ÎÄ¼ş | ¸üĞÂÄÚÈİ |
 |:---|:---|
-| `src/data/types.ts` | æ–°å¢ `HotSectorScore`ã€`ValuePitScore`ã€`DualStrategyResult` ç±»å‹ï¼ˆ`trading` ç‰ˆæœ¬ä½¿ç”¨ï¼‰ |
-| `src/data/db.ts` | `onupgradeneeded` ä¸­æ–°å¢ `hot_sector_scores`ã€`value_pit_scores` Store åŠ `by-calculated-at` ç´¢å¼• |
-| `src/data/dataLayer.ts` | æ–°å¢ `hotSectorScoreStore`ã€`valuePitScoreStore` helperï¼ˆåŸºäº `src/data/types.ts` ç±»å‹ï¼‰ |
-| `src/core/databridge.ts` | æ–°å¢ `STRATEGY_CHANNEL`ï¼ˆ`strategy:hotSector` / `strategy:valuePit` / `strategy:rotationSignal`ï¼‰ï¼›æ–°å¢ `REFRESH_HOT_SECTOR_SCORES`ã€`REFRESH_VALUE_PIT_SCORES` action è·¯ç”±ï¼Œä¿å­˜åˆ° IndexedDB å¹¶å¹¿æ’­ |
+| `src/data/types.ts` | ĞÂÔö `HotSectorScore`¡¢`ValuePitScore`¡¢`DualStrategyResult` ÀàĞÍ£¨`trading` °æ±¾Ê¹ÓÃ£© |
+| `src/data/db.ts` | `onupgradeneeded` ÖĞĞÂÔö `hot_sector_scores`¡¢`value_pit_scores` Store ¼° `by-calculated-at` Ë÷Òı |
+| `src/data/dataLayer.ts` | ĞÂÔö `hotSectorScoreStore`¡¢`valuePitScoreStore` helper£¨»ùÓÚ `src/data/types.ts` ÀàĞÍ£© |
+| `src/core/databridge.ts` | ĞÂÔö `STRATEGY_CHANNEL`£¨`strategy:hotSector` / `strategy:valuePit` / `strategy:rotationSignal`£©£»ĞÂÔö `REFRESH_HOT_SECTOR_SCORES`¡¢`REFRESH_VALUE_PIT_SCORES` action Â·ÓÉ£¬±£´æµ½ IndexedDB ²¢¹ã²¥ |
 
-### 2.4 ç­–ç•¥å¼•æ“å±‚ï¼ˆâš ï¸ ä¸¤å¥—å®ç°å¹¶å­˜ï¼‰
+### 2.4 ²ßÂÔÒıÇæ²ã£¨?? Á½Ì×ÊµÏÖ²¢´æ£©
 
-#### ç‰ˆæœ¬ Aï¼š`src/services/trading/*`ï¼ˆåŸºäº `Stock[]`ï¼ŒæŒä¹…åŒ–åˆ° IndexedDBï¼‰
+#### °æ±¾ A£º`src/services/trading/*`£¨»ùÓÚ `Stock[]`£¬³Ö¾Ã»¯µ½ IndexedDB£©
 
-| æ–‡ä»¶ | èŒè´£ | è¾“å…¥ | è¾“å‡º |
+| ÎÄ¼ş | Ö°Ôğ | ÊäÈë | Êä³ö |
 |:---|:---|:---|:---|
-| `src/services/scoring/hotSectorAnalyzer.ts` | çƒ­é—¨æ¿å—äº”ç»´è¯„åˆ† | `Stock[]` | `HotSectorScore[]`ï¼ˆ`src/data/types.ts`ï¼‰ |
-| `src/services/scoring/valuePitAnalyzer.ts` | ä»·å€¼æ´¼åœ°äº”ç»´è¯„åˆ† | `Stock[]` | `ValuePitScore[]`ï¼ˆ`src/data/types.ts`ï¼‰ |
-| `src/services/scoring/rotationSignalDetector.ts` | è½®åŠ¨ä¿¡å·æ£€æµ‹ | `ValuePitScore[]` | `Signal[]` + watchlistCandidates |
-| `src/services/trading/dualStrategyEngine.ts` | åŒç­–ç•¥ç¼–æ’ | `Stock[]` | `DualStrategyResult` |
+| `src/services/scoring/hotSectorAnalyzer.ts` | ÈÈÃÅ°å¿éÎåÎ¬ÆÀ·Ö | `Stock[]` | `HotSectorScore[]`£¨`src/data/types.ts`£© |
+| `src/services/scoring/valuePitAnalyzer.ts` | ¼ÛÖµÍİµØÎåÎ¬ÆÀ·Ö | `Stock[]` | `ValuePitScore[]`£¨`src/data/types.ts`£© |
+| `src/services/scoring/rotationSignalDetector.ts` | ÂÖ¶¯ĞÅºÅ¼ì²â | `ValuePitScore[]` | `Signal[]` + watchlistCandidates |
+| `src/services/trading/dualStrategyEngine.ts` | Ë«²ßÂÔ±àÅÅ | `Stock[]` | `DualStrategyResult` |
 
-#### ç‰ˆæœ¬ Bï¼š`src/services/scoring/*`ï¼ˆåŸºäºè‡ªå®šä¹‰è¾“å…¥ç±»å‹ï¼Œè¢« DataBridge/é¡µé¢/Store ä½¿ç”¨ï¼‰
+#### °æ±¾ B£º`src/services/scoring/*`£¨»ùÓÚ×Ô¶¨ÒåÊäÈëÀàĞÍ£¬±» DataBridge/Ò³Ãæ/Store Ê¹ÓÃ£©
 
-| æ–‡ä»¶ | èŒè´£ | è¾“å…¥ | è¾“å‡º |
+| ÎÄ¼ş | Ö°Ôğ | ÊäÈë | Êä³ö |
 |:---|:---|:---|:---|
-| `src/services/scoring/hotSectorAnalyzer.ts` | çƒ­é—¨æ¿å—äº”ç»´è¯„åˆ† | `HotSectorAnalyzerInput` | `HotSectorScore`ï¼ˆè‡ªå®šä¹‰ï¼šoverallScore/signal/generatedAtï¼‰ |
-| `src/services/scoring/valuePitAnalyzer.ts` | ä»·å€¼æ´¼åœ°äº”ç»´è¯„åˆ† | `ValuePitAnalyzerInput` | `ValuePitScore`ï¼ˆè‡ªå®šä¹‰ï¼šoverallScore/status/generatedAtï¼‰ |
-| `src/services/scoring/rotationSignalDetector.ts` | è½®åŠ¨ä¿¡å·æ£€æµ‹ | `RotationSignalInput` | `RotationSignal` |
+| `src/services/scoring/hotSectorAnalyzer.ts` | ÈÈÃÅ°å¿éÎåÎ¬ÆÀ·Ö | `HotSectorAnalyzerInput` | `HotSectorScore`£¨×Ô¶¨Òå£ºoverallScore/signal/generatedAt£© |
+| `src/services/scoring/valuePitAnalyzer.ts` | ¼ÛÖµÍİµØÎåÎ¬ÆÀ·Ö | `ValuePitAnalyzerInput` | `ValuePitScore`£¨×Ô¶¨Òå£ºoverallScore/status/generatedAt£© |
+| `src/services/scoring/rotationSignalDetector.ts` | ÂÖ¶¯ĞÅºÅ¼ì²â | `RotationSignalInput` | `RotationSignal` |
 
-#### æ•°æ®é€‚é…å™¨
+#### Êı¾İÊÊÅäÆ÷
 
-| æ–‡ä»¶ | æ›´æ–°å†…å®¹ |
+| ÎÄ¼ş | ¸üĞÂÄÚÈİ |
 |:---|:---|
-| `src/services/fetcher/strategyDataAdapter.ts` | è…¾è®¯ API â†’ `HotSectorAnalyzerInput`ï¼›ä¸œè´¢ API â†’ `ValuePitAnalyzerInput`ï¼›é‡ä»·æ•°æ® â†’ `RotationSignalInput`ï¼ˆå‡æ˜ å°„åˆ° `services/scoring` ç‰ˆæœ¬ï¼‰ |
+| `src/services/fetcher/strategyDataAdapter.ts` | ÌÚÑ¶ API ¡ú `HotSectorAnalyzerInput`£»¶«²Æ API ¡ú `ValuePitAnalyzerInput`£»Á¿¼ÛÊı¾İ ¡ú `RotationSignalInput`£¨¾ùÓ³Éäµ½ `services/scoring` °æ±¾£© |
 
-### 2.5 çŠ¶æ€ç®¡ç†å±‚
+### 2.5 ×´Ì¬¹ÜÀí²ã
 
-| æ–‡ä»¶ | æ›´æ–°å†…å®¹ |
+| ÎÄ¼ş | ¸üĞÂÄÚÈİ |
 |:---|:---|
-| `src/store/hotSectorStore.ts` | ç®¡ç† `services/scoring` ç‰ˆæœ¬çš„çƒ­é—¨æ¿å—è¯„åˆ†ï¼Œå«é»˜è®¤æ ·æœ¬æ•°æ® |
-| `src/store/valuePitStore.ts` | ç®¡ç† `services/scoring` ç‰ˆæœ¬çš„ä»·å€¼æ´¼åœ°è¯„åˆ†ï¼Œå«é»˜è®¤æ ·æœ¬æ•°æ® |
-| `src/store/rotationSignalStore.ts` | ç®¡ç† `services/scoring` ç‰ˆæœ¬çš„è½®åŠ¨ä¿¡å·ï¼Œå«é»˜è®¤æ ·æœ¬æ•°æ® |
+| `src/store/hotSectorStore.ts` | ¹ÜÀí `services/scoring` °æ±¾µÄÈÈÃÅ°å¿éÆÀ·Ö£¬º¬Ä¬ÈÏÑù±¾Êı¾İ |
+| `src/store/valuePitStore.ts` | ¹ÜÀí `services/scoring` °æ±¾µÄ¼ÛÖµÍİµØÆÀ·Ö£¬º¬Ä¬ÈÏÑù±¾Êı¾İ |
+| `src/store/rotationSignalStore.ts` | ¹ÜÀí `services/scoring` °æ±¾µÄÂÖ¶¯ĞÅºÅ£¬º¬Ä¬ÈÏÑù±¾Êı¾İ |
 
-### 2.6 å±•ç¤ºå±‚
+### 2.6 Õ¹Ê¾²ã
 
-| æ–‡ä»¶ | æ›´æ–°å†…å®¹ |
+| ÎÄ¼ş | ¸üĞÂÄÚÈİ |
 |:---|:---|
-| `src/cockpit/widgets/HotSectorWidget.tsx` | é©¾é©¶èˆ±çƒ­é—¨æ¿å— Widgetï¼Œå±•ç¤º `HotSectorData`ï¼ˆaction: immediate/probe/ignoreï¼Œäº”ç»´è¯„åˆ†ï¼‰ |
-| `src/cockpit/widgets/ValuePitWidget.tsx` | é©¾é©¶èˆ±ä»·å€¼æ´¼åœ° Widgetï¼Œå±•ç¤º `ValuePitData`ï¼ˆå«è½®åŠ¨ä¿¡å·æ ‡è®°ï¼‰ |
-| `src/cockpit/core/widgetRegistry.ts` | æ³¨å†Œ `hotSector`ã€`valuePit` Widget |
-| `src/cockpit/CockpitShell.tsx` | é»˜è®¤å¸ƒå±€åŒ…å«ä¸¤ä¸ª Widget |
-| `src/pages/analysis/HotSectorPage.tsx` | åˆ†æèˆ±ã€Œçƒ­é—¨æ¿å—ç­–ç•¥ã€é¡µé¢ï¼Œä½¿ç”¨ `services/scoring/hotSectorAnalyzer` + ç¡¬ç¼–ç æ ·æœ¬ |
-| `src/pages/analysis/ValuePitPage.tsx` | åˆ†æèˆ±ã€Œä»·å€¼æ´¼åœ°ç­–ç•¥ã€é¡µé¢ï¼Œä½¿ç”¨ `services/scoring/valuePitAnalyzer` + `services/scoring/rotationSignalDetector` + ç¡¬ç¼–ç æ ·æœ¬ |
-| `src/types/modules/widget.types.ts` | æ–°å¢ `HotSectorData`ã€`ValuePitData`ï¼Œè¢« Widget ä½¿ç”¨ |
-| `src/services/data-collector/MarketDataAdapter.ts` | æ–°å¢ `hotSectors` / `valuePit` æ•°æ®é€‚é…åˆ†æ”¯ |
-| `src/services/data-collector/collectors/MockCollector.ts` | æ–°å¢ `/hot-sectors`ã€`/value-pit` è·¯ç”±ï¼Œè¿”å› mock æ•°æ® |
-| `src/services/stock-analysis/mockStockAnalysisProvider.ts` | æ–°å¢ `getHotSectors()` / `getValuePit()` mock æ•°æ®ç”Ÿæˆ |
+| `src/cockpit/widgets/HotSectorWidget.tsx` | ¼İÊ»²ÕÈÈÃÅ°å¿é Widget£¬Õ¹Ê¾ `HotSectorData`£¨action: immediate/probe/ignore£¬ÎåÎ¬ÆÀ·Ö£© |
+| `src/cockpit/widgets/ValuePitWidget.tsx` | ¼İÊ»²Õ¼ÛÖµÍİµØ Widget£¬Õ¹Ê¾ `ValuePitData`£¨º¬ÂÖ¶¯ĞÅºÅ±ê¼Ç£© |
+| `src/cockpit/core/widgetRegistry.ts` | ×¢²á `hotSector`¡¢`valuePit` Widget |
+| `src/cockpit/CockpitShell.tsx` | Ä¬ÈÏ²¼¾Ö°üº¬Á½¸ö Widget |
+| `src/pages/analysis/HotSectorPage.tsx` | ·ÖÎö²Õ¡¸ÈÈÃÅ°å¿é²ßÂÔ¡¹Ò³Ãæ£¬Ê¹ÓÃ `services/scoring/hotSectorAnalyzer` + Ó²±àÂëÑù±¾ |
+| `src/pages/analysis/ValuePitPage.tsx` | ·ÖÎö²Õ¡¸¼ÛÖµÍİµØ²ßÂÔ¡¹Ò³Ãæ£¬Ê¹ÓÃ `services/scoring/valuePitAnalyzer` + `services/scoring/rotationSignalDetector` + Ó²±àÂëÑù±¾ |
+| `src/types/modules/widget.types.ts` | ĞÂÔö `HotSectorData`¡¢`ValuePitData`£¬±» Widget Ê¹ÓÃ |
+| `src/services/data-collector/MarketDataAdapter.ts` | ĞÂÔö `hotSectors` / `valuePit` Êı¾İÊÊÅä·ÖÖ§ |
+| `src/services/data-collector/collectors/MockCollector.ts` | ĞÂÔö `/hot-sectors`¡¢`/value-pit` Â·ÓÉ£¬·µ»Ø mock Êı¾İ |
+| `src/services/stock-analysis/mockStockAnalysisProvider.ts` | ĞÂÔö `getHotSectors()` / `getValuePit()` mock Êı¾İÉú³É |
 
-### 2.7 è·¯ç”±å±‚
+### 2.7 Â·ÓÉ²ã
 
-| æ–‡ä»¶ | æ›´æ–°å†…å®¹ |
+| ÎÄ¼ş | ¸üĞÂÄÚÈİ |
 |:---|:---|
-| `src/config/routes.ts` | æ–°å¢ `/analysis/hot-sectors`ã€`/analysis/value-pit` è·¯ç”± |
-| `./06-routing-specs.md` | åŒæ­¥æ–°å¢è·¯ç”±æ˜ å°„ï¼ˆå·²æ£€æŸ¥ï¼‰ |
+| `src/config/routes.ts` | ĞÂÔö `/analysis/hot-sectors`¡¢`/analysis/value-pit` Â·ÓÉ |
+| `./06-routing-specs.md` | Í¬²½ĞÂÔöÂ·ÓÉÓ³Éä£¨ÒÑ¼ì²é£© |
 
-### 2.8 æµ‹è¯•å±‚
+### 2.8 ²âÊÔ²ã
 
-| æ–‡ä»¶ | è¦†ç›–å†…å®¹ |
+| ÎÄ¼ş | ¸²¸ÇÄÚÈİ |
 |:---|:---|
 | `tests/dualStrategyEngine.test.ts` | `services/trading/dualStrategyEngine.ts` |
 | `tests/hotSectorAnalyzer.test.ts` | `services/scoring/hotSectorAnalyzer.ts` |
 | `tests/valuePitAnalyzer.test.ts` | `services/scoring/valuePitAnalyzer.ts` |
 | `tests/rotationSignalDetector.test.ts` | `services/scoring/rotationSignalDetector.ts` |
-| `tests/HotSectorWidget.test.tsx` | é©¾é©¶èˆ± HotSectorWidget |
-| `tests/ValuePitWidget.test.tsx` | é©¾é©¶èˆ± ValuePitWidget |
-| `src/services/scoring/hotSectorAnalyzer.test.ts` | ç»´åº¦è¯„åˆ†å‡½æ•°å•å…ƒæµ‹è¯• |
-| `src/services/scoring/valuePitAnalyzer.test.ts` | ç»´åº¦è¯„åˆ†å‡½æ•°å•å…ƒæµ‹è¯• |
-| `src/services/scoring/rotationSignalDetector.test.ts` | æˆäº¤é‡/èµ„é‡‘/é‡‘å‰æ£€æµ‹å•å…ƒæµ‹è¯• |
-| `src/services/scoring/hotSectorAnalyzer.test.ts` | `trading` ç‰ˆæœ¬çƒ­é—¨æ¿å—åˆ†æ |
-| `src/services/scoring/valuePitAnalyzer.test.ts` | `trading` ç‰ˆæœ¬ä»·å€¼æ´¼åœ°åˆ†æ |
-| `src/services/scoring/rotationSignalDetector.test.ts` | `trading` ç‰ˆæœ¬è½®åŠ¨ä¿¡å·æ£€æµ‹ |
+| `tests/HotSectorWidget.test.tsx` | ¼İÊ»²Õ HotSectorWidget |
+| `tests/ValuePitWidget.test.tsx` | ¼İÊ»²Õ ValuePitWidget |
+| `src/services/scoring/hotSectorAnalyzer.test.ts` | Î¬¶ÈÆÀ·Öº¯Êıµ¥Ôª²âÊÔ |
+| `src/services/scoring/valuePitAnalyzer.test.ts` | Î¬¶ÈÆÀ·Öº¯Êıµ¥Ôª²âÊÔ |
+| `src/services/scoring/rotationSignalDetector.test.ts` | ³É½»Á¿/×Ê½ğ/½ğ²æ¼ì²âµ¥Ôª²âÊÔ |
+| `src/services/scoring/hotSectorAnalyzer.test.ts` | `trading` °æ±¾ÈÈÃÅ°å¿é·ÖÎö |
+| `src/services/scoring/valuePitAnalyzer.test.ts` | `trading` °æ±¾¼ÛÖµÍİµØ·ÖÎö |
+| `src/services/scoring/rotationSignalDetector.test.ts` | `trading` °æ±¾ÂÖ¶¯ĞÅºÅ¼ì²â |
 
 ---
 
-## ä¸‰ã€å…³é”®ä¸€è‡´æ€§æ£€æŸ¥
+## Èı¡¢¹Ø¼üÒ»ÖÂĞÔ¼ì²é
 
-### 3.1 âœ… å·²å¯¹é½é¡¹
+### 3.1 ? ÒÑ¶ÔÆëÏî
 
-| å¯¹é½é¡¹ | è¯´æ˜ |
+| ¶ÔÆëÏî | ËµÃ÷ |
 |:---|:---|
-| æ–‡æ¡£ä¸å®ç°å‘½å | `HotSectorScore` / `ValuePitScore` / `RotationSignal` / `DualStrategyEngine` åœ¨æ–‡æ¡£ä¸ä»£ç ä¸­å‘½åä¸€è‡´ |
-| äº”ç»´æƒé‡ | æ–‡æ¡£ä¸ `services/scoring/*` å®ç°ä¸­çƒ­é—¨ 35/25/20/15/5ã€æ´¼åœ° 30/25/20/15/10 æƒé‡ä¸€è‡´ |
-| é˜ˆå€¼ | `src/config/dualStrategyRules.ts` ä¸ `./05-engine-specs.md`ã€`./02-functional-specs.md` é˜ˆå€¼ä¸€è‡´ |
-| æ•°æ®å±‚ | `hot_sector_scores` / `value_pit_scores` Store åœ¨ `dbConfig.ts`ã€`db.ts`ã€`dataLayer.ts` ä¸­ä¸€è‡´ |
-| DataBridge | action åç§°ã€channel åç§°ã€ACL æˆæƒåœ¨ `dbConfig.ts` ä¸ `databridge.ts` ä¸­ä¸€è‡´ |
-| Widget æ³¨å†Œ | `widgetRegistry.ts` ä¸ `cockpit.constants.ts`ï¼ˆé€šè¿‡ `DEFAULT_WIDGET_CONFIG`ï¼‰ä¸€è‡´ |
+| ÎÄµµÓëÊµÏÖÃüÃû | `HotSectorScore` / `ValuePitScore` / `RotationSignal` / `DualStrategyEngine` ÔÚÎÄµµÓë´úÂëÖĞÃüÃûÒ»ÖÂ |
+| ÎåÎ¬È¨ÖØ | ÎÄµµÓë `services/scoring/*` ÊµÏÖÖĞÈÈÃÅ 35/25/20/15/5¡¢ÍİµØ 30/25/20/15/10 È¨ÖØÒ»ÖÂ |
+| ãĞÖµ | `src/config/dualStrategyRules.ts` Óë `./05-engine-specs.md`¡¢`./02-functional-specs.md` ãĞÖµÒ»ÖÂ |
+| Êı¾İ²ã | `hot_sector_scores` / `value_pit_scores` Store ÔÚ `dbConfig.ts`¡¢`db.ts`¡¢`dataLayer.ts` ÖĞÒ»ÖÂ |
+| DataBridge | action Ãû³Æ¡¢channel Ãû³Æ¡¢ACL ÊÚÈ¨ÔÚ `dbConfig.ts` Óë `databridge.ts` ÖĞÒ»ÖÂ |
+| Widget ×¢²á | `widgetRegistry.ts` Óë `cockpit.constants.ts`£¨Í¨¹ı `DEFAULT_WIDGET_CONFIG`£©Ò»ÖÂ |
 
-### 3.2 âš ï¸ æœªå¯¹é½é¡¹ / æ¶æ„é£é™©
+### 3.2 ?? Î´¶ÔÆëÏî / ¼Ü¹¹·çÏÕ
 
-| ç¼–å· | é—®é¢˜ | å½±å“ | å»ºè®® |
+| ±àºÅ | ÎÊÌâ | Ó°Ïì | ½¨Òé |
 |:---|:---|:---|:---|
-| UC-001 | **ä¸¤å¥—å¹¶è¡Œ Analyzer å®ç°**ï¼š`src/services/trading/*` ä¸ `src/services/scoring/*` åŒæ—¶å­˜åœ¨ï¼Œç±»å‹ã€è¾“å…¥ã€è¾“å‡ºå‡ä¸åŒ | ç»´æŠ¤æˆæœ¬ç¿»å€ï¼›æ–‡æ¡£å¼•ç”¨æ··ä¹±ï¼›åç»­å¼€å‘è€…ä¸çŸ¥é“è¯¥ç”¨å“ªå¥— | ä¿ç•™ `services/scoring` ç‰ˆæœ¬ï¼ˆå½“å‰è¢« DataBridge/é¡µé¢/Store/é€‚é…å™¨ä½¿ç”¨ï¼‰ï¼Œå°† `services/trading` ç‰ˆæœ¬é‡æ„ä¸ºåŸºäº `services/scoring` çš„ Stockâ†’Input é€‚é… + ç¼–æ’ï¼Œæˆ–åˆ é™¤ `services/trading` ç‰ˆæœ¬ |
-| UC-002 | **ADR-009 å®æ–½çŠ¶æ€æ¸…å•æœªæ›´æ–°**ï¼šADR ä¸­æ‰€æœ‰å¤é€‰æ¡†ä»ä¸º `[ ]`ï¼Œä½†ä»£ç å·²å®ç° | æ–‡æ¡£ä¸ä»£ç çŠ¶æ€ä¸åŒæ­¥ | æ›´æ–° ADR-009 å®æ–½çŠ¶æ€ä¸ºå…¨éƒ¨ `[x]`ï¼Œæˆ–æ³¨æ˜å®é™…å®Œæˆé¡¹ |
-| UC-003 | **DataBridge ä½¿ç”¨ scoring ç‰ˆæœ¬**ï¼š`databridge.ts` å¯¼å…¥ `services/scoring/hotSectorAnalyzer`ï¼Œä½† IndexedDB ä¿å­˜çš„ `hot_sector_scores` Store ç±»å‹æ˜¯ `src/data/types.ts` ä¸­çš„ `HotSectorScore`ï¼ˆtrading ç‰ˆæœ¬ç±»å‹ï¼‰ | ç±»å‹ä¸åŒ¹é…é£é™©ï¼šDataBridge ä¿å­˜ scoring ç‰ˆæœ¬è¯„åˆ†åˆ°æŒ‰ trading ç‰ˆæœ¬ç±»å‹è®¾è®¡çš„ Store | ç»Ÿä¸€ç±»å‹å®šä¹‰ï¼šè®© `src/data/types.ts` çš„ `HotSectorScore` / `ValuePitScore` ä¸ Widget ä½¿ç”¨çš„ `HotSectorData` / `ValuePitData` å¯¹é½ï¼›æˆ–è®© DataBridge ä¿å­˜çš„æ•°æ®ç¬¦åˆ Store ç±»å‹ |
-| UC-004 | **é¡µé¢/Store ä½¿ç”¨ç¡¬ç¼–ç æ ·æœ¬**ï¼š`HotSectorPage`ã€`ValuePitPage`ã€`hotSectorStore`ã€`valuePitStore`ã€`rotationSignalStore` å†…å«å¤§é‡ç¡¬ç¼–ç æ ·æœ¬ | æ¼”ç¤ºå¯ç”¨ï¼Œä½†æ— æ³•åæ˜ çœŸå®è‚¡ç¥¨æ± ï¼›æ•°æ®æ–°é²œåº¦æ— æ³•ä¿è¯ | å°†é¡µé¢/Store æ¥å…¥ `dataLayer` æˆ– `MarketDataProvider`ï¼Œæ›¿æ¢æ ·æœ¬æ•°æ®ä¸ºçœŸå®æ•°æ®æˆ–è¿ç§»åˆ° mock provider ç»Ÿä¸€ç»´æŠ¤ |
-| UC-005 | **åŒç­–ç•¥å¼•æ“æœªæ¥å…¥äº¤æ˜“æ‰§è¡Œ**ï¼š`tradingService.ts` / `riskEngine.ts` / `positionSizer.ts` æœªè¯»å– `hot_sector_scores` / `value_pit_scores` æˆ– `DualStrategyResult` | åŒç­–ç•¥è¯„åˆ†å°šæœªçœŸæ­£é©±åŠ¨ä¸‹å•ã€ä»“ä½ã€æ­¢ç›ˆæ­¢æŸ | åœ¨ `tradingService.scanWatchingSignals` ä¸­å¢åŠ å¯¹åŒç­–ç•¥è¯„åˆ†çš„è°ƒç”¨ï¼›åœ¨ `riskEngine.ts` ä¸­æ ¹æ®æ ‡çš„ç­–ç•¥åˆ†ç±»è¯»å–å·®å¼‚åŒ–æ­¢ç›ˆæ­¢æŸ |
-| UC-006 | **`dualStrategyEngine.ts` æœªè¢«è°ƒç”¨**ï¼šé™¤æµ‹è¯•å¤–ï¼Œæ— å…¶ä»–ä»£ç è°ƒç”¨ `runDualStrategy` | ç¼–æ’å¼•æ“é—²ç½® | åœ¨åˆé€‚çš„å…¥å£ï¼ˆå¦‚ `tradingService`ã€`AnalysisHubPage`ã€é©¾é©¶èˆ±æ•°æ®åˆ·æ–°ï¼‰è°ƒç”¨ `runDualStrategy`ï¼Œæˆ–æ˜ç¡®å…¶å®šä½ |
-| UC-007 | **Widget ç±»å‹ä¸ Store/Engine ç±»å‹å­—æ®µåä¸ä¸€è‡´**ï¼šWidget ä½¿ç”¨ `action`ï¼ˆimmediate/probe/ignore/waitï¼‰ï¼Œ`services/scoring` ä½¿ç”¨ `signal`ï¼ˆbuy/hold/avoidï¼‰æˆ– `status`ï¼ˆbuild/test/wait_signalï¼‰ï¼Œ`services/trading` ä½¿ç”¨ `triggerAction`ï¼ˆimmediate/probe/wait/ignoreï¼‰ | æ•°æ®è½¬æ¢å®¹æ˜“é—æ¼ï¼Œç»„ä»¶å±‚éœ€è¦åšé¢å¤–æ˜ å°„ | ç»Ÿä¸€è¾“å‡ºå­—æ®µä¸º `action`ï¼Œå¹¶åœ¨å„ Analyzer ä¸­ç»Ÿä¸€è¿”å› `action` è€Œé `signal`/`status`/`triggerAction` |
+| UC-001 | **Á½Ì×²¢ĞĞ Analyzer ÊµÏÖ**£º`src/services/trading/*` Óë `src/services/scoring/*` Í¬Ê±´æÔÚ£¬ÀàĞÍ¡¢ÊäÈë¡¢Êä³ö¾ù²»Í¬ | Î¬»¤³É±¾·­±¶£»ÎÄµµÒıÓÃ»ìÂÒ£»ºóĞø¿ª·¢Õß²»ÖªµÀ¸ÃÓÃÄÄÌ× | ±£Áô `services/scoring` °æ±¾£¨µ±Ç°±» DataBridge/Ò³Ãæ/Store/ÊÊÅäÆ÷Ê¹ÓÃ£©£¬½« `services/trading` °æ±¾ÖØ¹¹Îª»ùÓÚ `services/scoring` µÄ Stock¡úInput ÊÊÅä + ±àÅÅ£¬»òÉ¾³ı `services/trading` °æ±¾ |
+| UC-002 | **ADR-009 ÊµÊ©×´Ì¬Çåµ¥Î´¸üĞÂ**£ºADR ÖĞËùÓĞ¸´Ñ¡¿òÈÔÎª `[ ]`£¬µ«´úÂëÒÑÊµÏÖ | ÎÄµµÓë´úÂë×´Ì¬²»Í¬²½ | ¸üĞÂ ADR-009 ÊµÊ©×´Ì¬ÎªÈ«²¿ `[x]`£¬»ò×¢Ã÷Êµ¼ÊÍê³ÉÏî |
+| UC-003 | **DataBridge Ê¹ÓÃ scoring °æ±¾**£º`databridge.ts` µ¼Èë `services/scoring/hotSectorAnalyzer`£¬µ« IndexedDB ±£´æµÄ `hot_sector_scores` Store ÀàĞÍÊÇ `src/data/types.ts` ÖĞµÄ `HotSectorScore`£¨trading °æ±¾ÀàĞÍ£© | ÀàĞÍ²»Æ¥Åä·çÏÕ£ºDataBridge ±£´æ scoring °æ±¾ÆÀ·Öµ½°´ trading °æ±¾ÀàĞÍÉè¼ÆµÄ Store | Í³Ò»ÀàĞÍ¶¨Òå£ºÈÃ `src/data/types.ts` µÄ `HotSectorScore` / `ValuePitScore` Óë Widget Ê¹ÓÃµÄ `HotSectorData` / `ValuePitData` ¶ÔÆë£»»òÈÃ DataBridge ±£´æµÄÊı¾İ·ûºÏ Store ÀàĞÍ |
+| UC-004 | **Ò³Ãæ/Store Ê¹ÓÃÓ²±àÂëÑù±¾**£º`HotSectorPage`¡¢`ValuePitPage`¡¢`hotSectorStore`¡¢`valuePitStore`¡¢`rotationSignalStore` ÄÚº¬´óÁ¿Ó²±àÂëÑù±¾ | ÑİÊ¾¿ÉÓÃ£¬µ«ÎŞ·¨·´Ó³ÕæÊµ¹ÉÆ±³Ø£»Êı¾İĞÂÏÊ¶ÈÎŞ·¨±£Ö¤ | ½«Ò³Ãæ/Store ½ÓÈë `dataLayer` »ò `MarketDataProvider`£¬Ìæ»»Ñù±¾Êı¾İÎªÕæÊµÊı¾İ»òÇ¨ÒÆµ½ mock provider Í³Ò»Î¬»¤ |
+| UC-005 | **Ë«²ßÂÔÒıÇæÎ´½ÓÈë½»Ò×Ö´ĞĞ**£º`tradingService.ts` / `riskEngine.ts` / `positionSizer.ts` Î´¶ÁÈ¡ `hot_sector_scores` / `value_pit_scores` »ò `DualStrategyResult` | Ë«²ßÂÔÆÀ·ÖÉĞÎ´ÕæÕıÇı¶¯ÏÂµ¥¡¢²ÖÎ»¡¢Ö¹Ó¯Ö¹Ëğ | ÔÚ `tradingService.scanWatchingSignals` ÖĞÔö¼Ó¶ÔË«²ßÂÔÆÀ·ÖµÄµ÷ÓÃ£»ÔÚ `riskEngine.ts` ÖĞ¸ù¾İ±êµÄ²ßÂÔ·ÖÀà¶ÁÈ¡²îÒì»¯Ö¹Ó¯Ö¹Ëğ |
+| UC-006 | **`dualStrategyEngine.ts` Î´±»µ÷ÓÃ**£º³ı²âÊÔÍâ£¬ÎŞÆäËû´úÂëµ÷ÓÃ `runDualStrategy` | ±àÅÅÒıÇæÏĞÖÃ | ÔÚºÏÊÊµÄÈë¿Ú£¨Èç `tradingService`¡¢`AnalysisHubPage`¡¢¼İÊ»²ÕÊı¾İË¢ĞÂ£©µ÷ÓÃ `runDualStrategy`£¬»òÃ÷È·Æä¶¨Î» |
+| UC-007 | **Widget ÀàĞÍÓë Store/Engine ÀàĞÍ×Ö¶ÎÃû²»Ò»ÖÂ**£ºWidget Ê¹ÓÃ `action`£¨immediate/probe/ignore/wait£©£¬`services/scoring` Ê¹ÓÃ `signal`£¨buy/hold/avoid£©»ò `status`£¨build/test/wait_signal£©£¬`services/trading` Ê¹ÓÃ `triggerAction`£¨immediate/probe/wait/ignore£© | Êı¾İ×ª»»ÈİÒ×ÒÅÂ©£¬×é¼ş²ãĞèÒª×ö¶îÍâÓ³Éä | Í³Ò»Êä³ö×Ö¶ÎÎª `action`£¬²¢ÔÚ¸÷ Analyzer ÖĞÍ³Ò»·µ»Ø `action` ¶ø·Ç `signal`/`status`/`triggerAction` |
 
 ---
 
-## å››ã€ç»§ç»­æ•´æ”¹å»ºè®®æ¸…å•
+## ËÄ¡¢¼ÌĞøÕû¸Ä½¨ÒéÇåµ¥
 
-### 4.1 é«˜ä¼˜å…ˆçº§ï¼ˆP0ï¼‰
+### 4.1 ¸ßÓÅÏÈ¼¶£¨P0£©
 
-| ç¼–å· | ä»»åŠ¡ | æ¶‰åŠæ–‡ä»¶ | éªŒæ”¶æ ‡å‡† |
+| ±àºÅ | ÈÎÎñ | Éæ¼°ÎÄ¼ş | ÑéÊÕ±ê×¼ |
 |:---|:---|:---|:---|
-| FIX-001 | ç»Ÿä¸€åŒç­–ç•¥ Analyzer å®ç° | `src/services/scoring/hotSectorAnalyzer.ts`ã€`valuePitAnalyzer.ts`ã€`rotationSignalDetector.ts`ã€`dualStrategyEngine.ts` | åˆ é™¤æˆ–åˆå¹¶é‡å¤å®ç°ï¼›`tsc`ã€`lint`ã€`test` å…¨é€šè¿‡ |
-| FIX-002 | ç»Ÿä¸€ç±»å‹å®šä¹‰ | `src/data/types.ts`ã€`src/types/modules/widget.types.ts`ã€`src/services/scoring/*` | `HotSectorScore` / `ValuePitScore` å­—æ®µä¸ Widget çš„ `HotSectorData` / `ValuePitData` ä¸€è‡´ï¼›æ¶ˆé™¤ç±»å‹è½¬æ¢è­¦å‘Š |
-| FIX-003 | æ›´æ–° ADR-009 å®æ–½çŠ¶æ€ | `../explanation/design/2026-06-27-dual-strategy-system.md` | æ‰€æœ‰å·²å®ç°é¡¹å‹¾é€‰ä¸º `[x]`ï¼›æœªå®ç°é¡¹ï¼ˆå¦‚äº¤æ˜“æ‰§è¡Œå·®å¼‚åŒ–ï¼‰ä¿ç•™ä¸º `[ ]` å¹¶è¯´æ˜è®¡åˆ’ |
+| FIX-001 | Í³Ò»Ë«²ßÂÔ Analyzer ÊµÏÖ | `src/services/scoring/hotSectorAnalyzer.ts`¡¢`valuePitAnalyzer.ts`¡¢`rotationSignalDetector.ts`¡¢`dualStrategyEngine.ts` | É¾³ı»òºÏ²¢ÖØ¸´ÊµÏÖ£»`tsc`¡¢`lint`¡¢`test` È«Í¨¹ı |
+| FIX-002 | Í³Ò»ÀàĞÍ¶¨Òå | `src/data/types.ts`¡¢`src/types/modules/widget.types.ts`¡¢`src/services/scoring/*` | `HotSectorScore` / `ValuePitScore` ×Ö¶ÎÓë Widget µÄ `HotSectorData` / `ValuePitData` Ò»ÖÂ£»Ïû³ıÀàĞÍ×ª»»¾¯¸æ |
+| FIX-003 | ¸üĞÂ ADR-009 ÊµÊ©×´Ì¬ | `../explanation/design/2026-06-27-dual-strategy-system.md` | ËùÓĞÒÑÊµÏÖÏî¹´Ñ¡Îª `[x]`£»Î´ÊµÏÖÏî£¨Èç½»Ò×Ö´ĞĞ²îÒì»¯£©±£ÁôÎª `[ ]` ²¢ËµÃ÷¼Æ»® |
 
-### 4.2 ä¸­ä¼˜å…ˆçº§ï¼ˆP1ï¼‰
+### 4.2 ÖĞÓÅÏÈ¼¶£¨P1£©
 
-| ç¼–å· | ä»»åŠ¡ | æ¶‰åŠæ–‡ä»¶ | éªŒæ”¶æ ‡å‡† |
+| ±àºÅ | ÈÎÎñ | Éæ¼°ÎÄ¼ş | ÑéÊÕ±ê×¼ |
 |:---|:---|:---|:---|
-| FIX-004 | ç§»é™¤é¡µé¢/Store ä¸­çš„ç¡¬ç¼–ç æ ·æœ¬ | `src/pages/analysis/HotSectorPage.tsx`ã€`ValuePitPage.tsx`ã€`src/store/hotSectorStore.ts`ã€`valuePitStore.ts`ã€`rotationSignalStore.ts` | æ•°æ®æ¥è‡ª `dataLayer` æˆ– `MarketDataProvider`ï¼›åˆ é™¤ç»„ä»¶å†…ç¡¬ç¼–ç æ ·æœ¬ |
-| FIX-005 | å°† `dualStrategyEngine` æ¥å…¥å®é™…è°ƒç”¨é“¾ | `src/services/trading/tradingService.ts` æˆ– `src/apps/analysis/AnalysisApp.tsx` | è‡³å°‘ä¸€ä¸ªçœŸå®å…¥å£è°ƒç”¨ `runDualStrategy`ï¼›è¾“å‡ºå¯è¢« Widget/äº¤æ˜“å±‚æ¶ˆè´¹ |
-| FIX-006 | åŒç­–ç•¥è¯„åˆ†é©±åŠ¨äº¤æ˜“æ‰§è¡Œ | `src/services/trading/tradingService.ts`ã€`riskEngine.ts`ã€`positionSizer.ts`ã€`tradingConfig.ts` | `TradingSignal` å¢åŠ  `strategy` å­—æ®µï¼›é£æ§/ä»“ä½è¯»å–ç­–ç•¥å·®å¼‚åŒ–é…ç½® |
+| FIX-004 | ÒÆ³ıÒ³Ãæ/Store ÖĞµÄÓ²±àÂëÑù±¾ | `src/pages/analysis/HotSectorPage.tsx`¡¢`ValuePitPage.tsx`¡¢`src/store/hotSectorStore.ts`¡¢`valuePitStore.ts`¡¢`rotationSignalStore.ts` | Êı¾İÀ´×Ô `dataLayer` »ò `MarketDataProvider`£»É¾³ı×é¼şÄÚÓ²±àÂëÑù±¾ |
+| FIX-005 | ½« `dualStrategyEngine` ½ÓÈëÊµ¼Êµ÷ÓÃÁ´ | `src/services/trading/tradingService.ts` »ò `src/apps/analysis/AnalysisApp.tsx` | ÖÁÉÙÒ»¸öÕæÊµÈë¿Úµ÷ÓÃ `runDualStrategy`£»Êä³ö¿É±» Widget/½»Ò×²ãÏû·Ñ |
+| FIX-006 | Ë«²ßÂÔÆÀ·ÖÇı¶¯½»Ò×Ö´ĞĞ | `src/services/trading/tradingService.ts`¡¢`riskEngine.ts`¡¢`positionSizer.ts`¡¢`tradingConfig.ts` | `TradingSignal` Ôö¼Ó `strategy` ×Ö¶Î£»·ç¿Ø/²ÖÎ»¶ÁÈ¡²ßÂÔ²îÒì»¯ÅäÖÃ |
 
-### 4.3 ä½ä¼˜å…ˆçº§ï¼ˆP2ï¼‰
+### 4.3 µÍÓÅÏÈ¼¶£¨P2£©
 
-| ç¼–å· | ä»»åŠ¡ | æ¶‰åŠæ–‡ä»¶ | éªŒæ”¶æ ‡å‡† |
+| ±àºÅ | ÈÎÎñ | Éæ¼°ÎÄ¼ş | ÑéÊÕ±ê×¼ |
 |:---|:---|:---|:---|
-| FIX-007 | æ›´æ–° `./08-implementation-plan.md` ä¸­åŒç­–ç•¥ä»»åŠ¡çŠ¶æ€ | `./08-implementation-plan.md` | 2.4.1 çŠ¶æ€æ”¹ä¸º ğŸŸ¢ å·²éªŒæ”¶ï¼›è¡¥å…… FIX-005/FIX-006 åç»­ä»»åŠ¡ |
-| FIX-008 | è¡¥å…¨ CHANGELOG åŒç­–ç•¥æ¡ç›® | `CHANGELOG.md` | åœ¨ `[Unreleased]` æˆ–æ–°ç‰ˆæœ¬ä¸­è®°å½•åŒç­–ç•¥è½åœ°æ˜ç»† |
+| FIX-007 | ¸üĞÂ `./08-implementation-plan.md` ÖĞË«²ßÂÔÈÎÎñ×´Ì¬ | `./08-implementation-plan.md` | 2.4.1 ×´Ì¬¸ÄÎª ?? ÒÑÑéÊÕ£»²¹³ä FIX-005/FIX-006 ºóĞøÈÎÎñ |
+| FIX-008 | ²¹È« CHANGELOG Ë«²ßÂÔÌõÄ¿ | `CHANGELOG.md` | ÔÚ `[Unreleased]` »òĞÂ°æ±¾ÖĞ¼ÇÂ¼Ë«²ßÂÔÂäµØÃ÷Ï¸ |
 
 ---
 
-## äº”ã€è´¨é‡é—¨ç¦éªŒè¯å»ºè®®
+## Îå¡¢ÖÊÁ¿ÃÅ½ûÑéÖ¤½¨Òé
 
-æ‰§è¡Œä¸Šè¿°æ•´æ”¹åï¼Œå¿…é¡»è·‘é€šï¼š
+Ö´ĞĞÉÏÊöÕû¸Äºó£¬±ØĞëÅÜÍ¨£º
 
 ```bash
 npx tsc --noEmit
@@ -212,17 +214,17 @@ npm run audit:layers
 npm run audit:hardcode
 ```
 
-å½“å‰åŸºçº¿ï¼ˆå‚è€ƒï¼‰ï¼š
-- `tsc --noEmit`ï¼šé€šè¿‡
-- `eslint src/ --max-warnings 0`ï¼šé€šè¿‡
-- `npx vitest run`ï¼š64 æ–‡ä»¶ / 480 ç”¨ä¾‹ é€šè¿‡
-- `audit:layers`ï¼š0 è¿è§„ / 1 è­¦å‘Š
-- `audit:hardcode`ï¼š735ï¼ˆåŸºçº¿ 749ï¼‰
+µ±Ç°»ùÏß£¨²Î¿¼£©£º
+- `tsc --noEmit`£ºÍ¨¹ı
+- `eslint src/ --max-warnings 0`£ºÍ¨¹ı
+- `npx vitest run`£º64 ÎÄ¼ş / 480 ÓÃÀı Í¨¹ı
+- `audit:layers`£º0 Î¥¹æ / 1 ¾¯¸æ
+- `audit:hardcode`£º735£¨»ùÏß 749£©
 
 ---
 
-## å…­ã€å˜æ›´æ—¥å¿—
+## Áù¡¢±ä¸üÈÕÖ¾
 
-| æ—¥æœŸ | ç‰ˆæœ¬ | å˜æ›´å†…å®¹ | å˜æ›´äºº |
+| ÈÕÆÚ | °æ±¾ | ±ä¸üÄÚÈİ | ±ä¸üÈË |
 |:---|:---|:---|:---|
-| 2026-06-27 | v1.0.0 | åŸºäºç”¨æˆ·è¯¢é—®ï¼Œç”ŸæˆåŒç­–ç•¥ä½“ç³»æ›´æ–°æ—¥å¿—ä¸ä¸€è‡´æ€§æ£€æŸ¥æ–‡æ¡£ | V9 Architecture Team |
+| 2026-06-27 | v1.0.0 | »ùÓÚÓÃ»§Ñ¯ÎÊ£¬Éú³ÉË«²ßÂÔÌåÏµ¸üĞÂÈÕÖ¾ÓëÒ»ÖÂĞÔ¼ì²éÎÄµµ | V9 Architecture Team |

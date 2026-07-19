@@ -10,6 +10,22 @@ export { default as ScoreRadar } from './ScoreRadar'
 export { GaugeChart, GaugeRing } from './GaugeChart'
 export { default as FactorHeatmap } from './FactorHeatmap'
 
+// 行业分析图表组件（v2.9.5 新增）
+export {
+  IndustryV4Radar,
+  IndustryV4RadarChart,
+  SubIndicatorBar,
+  SubIndicatorBarChart,
+  IndustryHeatmap,
+  IndustryHeatmapChart,
+  TrendLineChart,
+  IndustryTrendChart,
+  ValuationDistribution,
+  ValuationDistributionChart,
+  IndustryV4Panel,
+  buildHistogram,
+} from './industry'
+
 // 命名的组件导出（部分组件同时有 named export）
 export { LineChart as LineChartComponent } from './LineChart'
 export { BarChart as BarChartComponent } from './BarChart'
@@ -19,3 +35,22 @@ export { ScoreRadarChart } from './ScoreRadar'
 // 类型导出
 export type { ScoreRadarData, ScoreRadarProps } from './ScoreRadar'
 export type { GaugeChartProps } from './GaugeChart'
+
+// 行业分析图表类型导出（v2.9.5 新增）
+export type {
+  IndustryV4RadarProps,
+  IndustryV4RadarDataItem,
+  IndustryV4RadarSeries,
+  SubIndicatorBarProps,
+  SubIndicatorBarDataItem,
+  IndustryHeatmapProps,
+  IndustryHeatmapDataItem,
+  HeatmapColorScheme,
+  TrendLineChartProps,
+  TrendLineDataPoint,
+  TrendLineSeries,
+  TrendLineReferenceLine,
+  ValuationDistributionProps,
+  ValuationDistributionBin,
+  IndustryV4PanelProps,
+} from './industry'

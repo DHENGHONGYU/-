@@ -9,6 +9,7 @@ import { create } from 'zustand'
 import {
   searchStocks as searchStocksService,
   addStockFromSearch as addStockFromSearchService,
+  listStocks,
   type StockSearchResult,
   type AddStockOptions,
 } from '@/services/input/inputService'
@@ -26,12 +27,16 @@ export interface InputHubState {
   searchResults: StockSearchResult[]
   /** 是否正在录入 */
   isAddingStock: boolean
+  /** 已导入的股票代码集合（用于搜索 UI 标记"已导入"） */
+  existingSymbols: Set<string>
+  /** 刷新已导入股票代码集合 */
+  refreshExistingSymbols: () => Promise<void>
   /** 设置当前选中模块 */
   setActiveModule: (path: string) => void
   /** 设置加载状态 */
   setLoading: (loading: boolean) => void
-  /** 搜索股票（代理 inputService.searchStocks） */
-  searchStocks: (query: string) => StockSearchResult[]
+  /** 搜索股票（全市场 A+H 股） */
+  searchStocks: (query: string) => Promise<StockSearchResult[]>
   /** 从搜索结果录入股票（代理 inputService.addStockFromSearch） */
   addStockFromSearch: (
     result: StockSearchResult,
@@ -46,6 +51,7 @@ const initialState = {
   loading: false,
   searchResults: [] as StockSearchResult[],
   isAddingStock: false,
+  existingSymbols: new Set<string>(),
 }
 
 /**
@@ -61,8 +67,19 @@ export const useInputHubStore = create<InputHubState>()((set) => ({
 
   setLoading: (loading: boolean) => set({ loading }),
 
-  searchStocks: (query: string) => {
-    const results = searchStocksService(query)
+  refreshExistingSymbols: async () => {
+    try {
+      const result = await listStocks()
+      if (result.success && result.data) {
+        set({ existingSymbols: new Set(result.data.map((s) => s.symbol)) })
+      }
+    } catch {
+      // 静默处理
+    }
+  },
+
+  searchStocks: async (query: string) => {
+    const results = await searchStocksService(query)
     set({ searchResults: results })
     logger.info('[InputHubStore] searchStocks() completed', {
       query,

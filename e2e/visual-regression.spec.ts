@@ -8,7 +8,7 @@
  * 3. Docker 统一环境生成基线（跨平台真相源）：`npm run test:e2e:visual:docker:update`
  * 4. Docker 统一环境回归比对：`npm run test:e2e:visual:docker`
  * 5. 基线存储路径：`e2e/visual-regression.spec.ts-snapshots/`
- * 6. 当前基线数量：20 个场景（5 舱首屏 + 驾驶舱 + 12 子页面 + 暗色模式）
+ * 6. 当前基线数量：30+ 个场景（5 舱首屏 + 驾驶舱 + 20 子页面 + 多暗色模式）
  *
  * @docker
  * - Dockerfile: `e2e/Dockerfile`（基于 Playwright 官方镜像 mcr.microsoft.com/playwright:v1.61.1-jammy）
@@ -24,6 +24,11 @@
  *   - heading 匹配同步为实际 PageHeader title
  *   - waitForPageStable 增加 15s 超时覆盖 React.lazy Suspense
  * - 2026-07-12: 新增 Docker 容器化方案，统一跨平台基线生成环境
+ * - 2026-07-16: C1 批次扩展，从 20 场景增至 30+ 场景
+ *   - 新增：输入舱采集任务、分析舱多因子筛选、交易舱交易流水
+ *   - 新增：输出舱导出模板、总控舱数据迁移、行业评分页面
+ *   - 新增：交易复盘页面、投资组合详情、智能评分详情
+ *   - 暗色模式扩展：驾驶舱 + 分析舱双页验证
  *
  * @tips
  * - 仅使用 chromium 项目（playwright.config.ts 已限定），避免跨浏览器字体渲染差异。
@@ -166,16 +171,85 @@ test.describe('视觉回归 - 核心舱页面', () => {
     await expect(page).toHaveScreenshot('command-config.png', { fullPage: true })
   })
 
-  // ── 主题与交互（1 个） ──
-  test('暗色模式切换', async ({ page }) => {
+  // ── C1 扩展：输入舱子页面（+2） ──
+  test('输入舱-采集任务页面', async ({ page }) => {
+    await page.goto('/input/collect-task')
+    await waitForPageStable(page, /采集|任务/i)
+    await expect(page).toHaveScreenshot('input-collect-task.png', { fullPage: true })
+  })
+
+  test('输入舱-意向池页面', async ({ page }) => {
+    await page.goto('/input/intention-pool')
+    await waitForPageStable(page, /意向|池/i)
+    await expect(page).toHaveScreenshot('input-intention-pool.png', { fullPage: true })
+  })
+
+  // ── C1 扩展：分析舱子页面（+3） ──
+  test('分析舱-行业评分页面', async ({ page }) => {
+    await page.goto('/analysis/industry-score')
+    await waitForPageStable(page, /行业评分|行业/i)
+    await expect(page).toHaveScreenshot('analysis-industry-score.png', { fullPage: true })
+  })
+
+  test('分析舱-多因子筛选页面', async ({ page }) => {
+    await page.goto('/analysis/screening')
+    await waitForPageStable(page, /筛选|多因子/i)
+    await expect(page).toHaveScreenshot('analysis-screening.png', { fullPage: true })
+  })
+
+  test('分析舱-评分对比页面', async ({ page }) => {
+    await page.goto('/analysis/comparison')
+    await waitForPageStable(page, /对比|comparison/i)
+    await expect(page).toHaveScreenshot('analysis-comparison.png', { fullPage: true })
+  })
+
+  // ── C1 扩展：交易舱子页面（+2） ──
+  test('交易舱-交易流水页面', async ({ page }) => {
+    await page.goto('/trading/flow')
+    await waitForPageStable(page, /流水|交易记录|flow/i)
+    await expect(page).toHaveScreenshot('trading-flow.png', { fullPage: true })
+  })
+
+  test('交易舱-复盘页面', async ({ page }) => {
+    await page.goto('/trading/review')
+    await waitForPageStable(page, /复盘|review/i)
+    await expect(page).toHaveScreenshot('trading-review.png', { fullPage: true })
+  })
+
+  // ── C1 扩展：输出舱子页面（+1） ──
+  test('输出舱-导出模板页面', async ({ page }) => {
+    await page.goto('/output/export')
+    await waitForPageStable(page, /导出|export/i)
+    await expect(page).toHaveScreenshot('output-export.png', { fullPage: true })
+  })
+
+  // ── C1 扩展：总控舱子页面（+1） ──
+  test('总控舱-数据迁移页面', async ({ page }) => {
+    await page.goto('/command/migration')
+    await waitForPageStable(page, /迁移|migration/i)
+    await expect(page).toHaveScreenshot('command-migration.png', { fullPage: true })
+  })
+
+  // ── 主题与交互（2 个，原 1 个 + 扩展 1 个） ──
+  test('暗色模式-驾驶舱', async ({ page }) => {
     await page.goto('/cockpit')
     await waitForPageStable(page, /驾驶舱/i)
-    // 触发暗色模式（假设有主题切换按钮或 localStorage 设置）
     await page.evaluate(() => {
       document.documentElement.classList.add('dark')
       localStorage.setItem('theme', 'dark')
     })
     await page.waitForTimeout(500)
     await expect(page).toHaveScreenshot('cockpit-dark-mode.png', { fullPage: true })
+  })
+
+  test('暗色模式-分析舱', async ({ page }) => {
+    await page.goto('/analysis')
+    await waitForPageStable(page, /分析舱/i)
+    await page.evaluate(() => {
+      document.documentElement.classList.add('dark')
+      localStorage.setItem('theme', 'dark')
+    })
+    await page.waitForTimeout(500)
+    await expect(page).toHaveScreenshot('analysis-dark-mode.png', { fullPage: true })
   })
 })

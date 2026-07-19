@@ -196,6 +196,25 @@ export class MemoryCache<T = unknown> {
   }
 
   /**
+   * 按 key 前缀清除缓存条目。
+   * @param prefix 要匹配的 key 前缀
+   * @returns 清除的条目数
+   */
+  deleteByPrefix(prefix: string): number {
+    let count = 0
+    for (const key of this.store.keys()) {
+      if (key.includes(prefix)) {
+        this.store.delete(key)
+        count++
+      }
+    }
+    if (count > 0) {
+      logger.info(`[MemoryCache:${this.options.namespace}] DELETE_BY_PREFIX: prefix="${prefix}", 已清除 ${count} 条缓存`)
+    }
+    return count
+  }
+
+  /**
    * 获取缓存统计信息。
    */
   getStats(): CacheStats {

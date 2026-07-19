@@ -1,5 +1,5 @@
 import React, { Suspense, useEffect, useMemo, useRef } from 'react'
-import { useLocation } from 'react-router'
+import { Link, useLocation } from 'react-router'
 import { Button } from '@/components/atoms/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Badge } from '@/components/atoms/Badge'
@@ -18,6 +18,7 @@ const StockAnalysisPage = React.lazy(() => import('@/pages/analysis/StockAnalysi
 const SectorAnalysisPage = React.lazy(() => import('@/pages/analysis/SectorAnalysisPage'))
 const BacktestPage = React.lazy(() => import('@/pages/analysis/BacktestPage'))
 const IndustryScorePage = React.lazy(() => import('@/pages/analysis/IndustryScorePage'))
+const IndustryDashboardPage = React.lazy(() => import('@/pages/analysis/IndustryDashboardPage'))
 const IntelligentScorePage = React.lazy(() => import('@/pages/analysis/IntelligentScorePage'))
 const ScoreDocPage = React.lazy(() => import('@/pages/analysis/ScoreDocPage'))
 const ScoreComparisonPage = React.lazy(() => import('@/pages/analysis/ScoreComparisonPage'))
@@ -25,7 +26,6 @@ const NewsPage = React.lazy(() => import('@/pages/analysis/NewsPage'))
 const HotSectorPage = React.lazy(() => import('@/pages/analysis/HotSectorPage'))
 const ValuePitPage = React.lazy(() => import('@/pages/analysis/ValuePitPage'))
 const MultiFactorFilterPage = React.lazy(() => import('@/pages/analysis/MultiFactorFilterPage'))
-const PoolBoardPage = React.lazy(() => import('@/pages/analysis/PoolBoardPage'))
 
 const logger = getLogger()
 
@@ -44,6 +44,7 @@ const ANALYSIS_ROUTES: AnalysisRoute[] = [
   { path: '/analysis/sector', branch: 'sector', componentName: 'SectorAnalysisPage', component: <SectorAnalysisPage />, fallback: '加载板块分析页...' },
   { path: '/analysis/backtest', branch: 'backtest', componentName: 'BacktestPage', component: <BacktestPage />, fallback: '加载回测页...' },
   { path: '/analysis/industry-score', branch: 'industry-score', componentName: 'IndustryScorePage', component: <IndustryScorePage />, fallback: '加载行业评分页...' },
+  { path: '/analysis/industry-dashboard', branch: 'industry-dashboard', componentName: 'IndustryDashboardPage', component: <IndustryDashboardPage />, fallback: '加载行业全景仪表盘...' },
   { path: '/analysis/intelligent-score', branch: 'intelligent-score', componentName: 'IntelligentScorePage', component: <IntelligentScorePage />, fallback: '加载智能评分页...' },
   { path: '/analysis/score-docs', branch: 'score-docs', componentName: 'ScoreDocPage', component: <ScoreDocPage />, fallback: '加载评分文档页...' },
   { path: '/analysis/score-comparison', branch: 'score-comparison', componentName: 'ScoreComparisonPage', component: <ScoreComparisonPage />, fallback: '加载评分比对看板...' },
@@ -51,7 +52,6 @@ const ANALYSIS_ROUTES: AnalysisRoute[] = [
   { path: '/analysis/hot-sector', branch: 'hot-sector', componentName: 'HotSectorPage', component: <HotSectorPage />, fallback: '加载热门板块页...' },
   { path: '/analysis/value-pit', branch: 'value-pit', componentName: 'ValuePitPage', component: <ValuePitPage />, fallback: '加载价值洼地页...' },
   { path: '/analysis/multi-factor', branch: 'multi-factor', componentName: 'MultiFactorFilterPage', component: <MultiFactorFilterPage />, fallback: '加载多因子筛选页...' },
-  { path: '/analysis/pool-board', branch: 'pool-board', componentName: 'PoolBoardPage', component: <PoolBoardPage />, fallback: '加载股票池看板...' },
 ]
 
 function matchAnalysisRoute(path: string): AnalysisRoute {
@@ -179,6 +179,14 @@ function V6ScoreCard(): React.JSX.Element {
             加载标的
           </Button>
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {stocks.length === 0 && (
+              <div className="col-span-full rounded-md border border-dashed p-6 text-center">
+                <p className="text-sm text-muted-foreground">暂无标的，请先在输入舱录入股票</p>
+                <Button variant="secondary" size="sm" asChild className="mt-2">
+                  <Link to="/input">去输入舱录入 →</Link>
+                </Button>
+              </div>
+            )}
             {stocks.map((stock) => {
               const score = scoreMap.get(stock.symbol)
               return (

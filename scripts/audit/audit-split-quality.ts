@@ -33,7 +33,7 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { runAuditPipeline, colorize, type AuditReport } from './_debug/_audit-pipeline.ts'
+import { runAuditPipeline, colorize, type AuditReport } from './_debug/_audit-pipeline'
 
 // ============================================================
 // 类型定义
@@ -103,7 +103,7 @@ export interface SplitQualityReport extends AuditReport {
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-const ROOT = path.resolve(__dirname, '..')
+const ROOT = path.resolve(__dirname, '..', '..')
 const SRC = path.join(ROOT, 'src')
 
 /** AP-001：单文件行数阈值 */
@@ -860,19 +860,19 @@ export function checkBoundarySync(
   targetModules: ModuleAnalysis[],
   warnings: SplitQualityFinding[],
 ): void {
-  const archDocPath = path.join(ROOT, 'docs', '01-requirements', '03-architecture-standards.md')
+  const archDocPath = path.join(ROOT, 'docs', 'reference', '03-architecture-standards.md')
   let archDocContent = ''
   try {
     archDocContent = fs.readFileSync(archDocPath, 'utf-8')
   } catch {
     warnings.push({
-      file: '../../docs/reference/03-architecture-standards.md',
+      file: 'docs/reference/03-architecture-standards.md',
       line: 1,
       column: 1,
       rule: 'AP-010',
       severity: 'major',
       message: '架构标准文档不存在或无法读取',
-      suggestion: '确保 ../../docs/reference/03-architecture-standards.md 存在且可读',
+      suggestion: '确保 ../docs/reference/03-architecture-standards.md 存在且可读',
       context: '文件缺失',
     })
     return

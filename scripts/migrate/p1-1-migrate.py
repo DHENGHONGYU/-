@@ -6,11 +6,11 @@ def main(ctx):
     # 1. 给 02-design/ 原文件顶部添加 DEPRECATED 迁移标记
     mappings = {
         "AI_CENTER_DATA_DEFINITION.md": "ai-center-data-definition.md",
-        "BACKTEST_DATA_DEFINITION.md": "backtest-data-definition.md",
+        "BACKTEST_DATA_DEFINITION.md": "docs/reference/backtest-data-definition.md",
         "DATAFLOW_DATA_DEFINITION.md": "dataflow-data-definition.md",
         "MULTI_FACTOR_SCREENING_DATA_DEFINITION.md": "multi-factor-screening-data-definition.md",
         "NEWS_DATA_DEFINITION.md": "news-data-definition.md",
-        "RISK_DERIVED_DATA_DEFINITION.md": "risk-derived-data-definition.md",
+        "RISK_DERIVED_DATA_DEFINITION.md": "docs/reference/risk-derived-data-definition.md",
         "SEVEN_DIM_CONFIG_DATA_DEFINITION.md": "seven-dim-config-data-definition.md",
     }
     

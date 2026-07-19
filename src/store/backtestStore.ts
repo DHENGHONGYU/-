@@ -16,7 +16,6 @@ import { dataBridge } from '@/core/databridge'
 import { ENVELOPE_ACTION, MODULE_ID, STORE_NAME } from '@/config/dbConfig'
 import type { StandardEnvelope } from '@/core/envelope'
 import { BacktestEngine } from '@/services/backtest'
-import { exportBacktestReport } from '@/services/export/backtestExportService'
 import type { BacktestExportConfig, BacktestExportResult, BacktestStrategy, BacktestHistoryRecord, BacktestHistoryQuery } from '@/types/modules/backtest.types'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { withBroadcast } from '@/store/helpers/withBroadcast'
@@ -228,6 +227,7 @@ export const useBacktestStore = create<BacktestState>((set, get) => ({
   exportReport: async (results, config, options) => {
     logger.info('[backtestStore] exportReport started', { format: options.format })
     try {
+      const { exportBacktestReport } = await import('@/services/export/backtestExportService')
       const result = await exportBacktestReport(results, config, options)
       logger.info('[backtestStore] exportReport completed')
       return result
@@ -273,6 +273,7 @@ export const useBacktestStore = create<BacktestState>((set, get) => ({
     }
     logger.info('[backtestStore] exportReportById started', { id, format: options.format })
     try {
+      const { exportBacktestReport } = await import('@/services/export/backtestExportService')
       const result = await exportBacktestReport(record.result, record.config, options)
       logger.info('[backtestStore] exportReportById completed', { id })
       return result

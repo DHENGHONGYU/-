@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react'
+import { Link } from 'react-router'
 import { Button } from '@/components/atoms/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
 import { Select, SelectItem } from '@/components/atoms/Select'
@@ -517,9 +518,14 @@ export default function BulkImportPanel(): React.JSX.Element {
           {/* ── 操作按钮区 ── */}
           <div className={cn('flex items-center justify-end gap-2 border-t pt-4', twBorder('stone', 100), DARK.borderNeutral800)}>
             {importPhase === 'done' && (
-              <Button variant="outline" size="sm" onClick={handleReset}>
-                继续导入
-              </Button>
+              <>
+                <Button variant="outline" size="sm" onClick={handleReset}>
+                  继续导入
+                </Button>
+                <Button variant="secondary" size="sm" asChild>
+                  <Link to="/input/seven-dim">前往采集配置</Link>
+                </Button>
+              </>
             )}
             <Button
               variant={getPrimaryButton().variant}

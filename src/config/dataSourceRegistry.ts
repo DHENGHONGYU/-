@@ -10,6 +10,7 @@ import {
   TENCENT_API_BASE,
   SINA_API_BASE,
   NETEASE_API_BASE,
+  TUSHARE_API_BASE,
 } from '@/config/marketDataEndpoints'
 import type {
   DataSourceEndpoint,
@@ -28,9 +29,9 @@ export const DATA_SOURCE_ENDPOINTS: DataSourceEndpoint[] = [
     retries: 2,
     enabled: true,
     supportsQuote: true,
-    supportsKline: false,
+    supportsKline: true,
     requiresProxy: true,
-    description: '实时行情、批量行情（浏览器 CORS 需代理）',
+    description: '实时行情 + 历史 K 线（Qt + IFzq 双域代理）',
   },
   {
     id: 'sina',
@@ -72,6 +73,19 @@ export const DATA_SOURCE_ENDPOINTS: DataSourceEndpoint[] = [
     description: 'Python 本地/远程服务，浏览器环境暂不可用',
   },
   {
+    id: 'tushare',
+    name: 'Tushare Pro',
+    type: 'http',
+    baseUrl: TUSHARE_API_BASE,
+    timeoutMs: 10000,
+    retries: 2,
+    enabled: true,
+    supportsQuote: true,
+    supportsKline: true,
+    requiresProxy: true,
+    description: 'Tushare Pro 金融数据 API（需经后端代理持有 Token）',
+  },
+  {
     id: 'mock',
     name: 'Mock 数据源',
     type: 'mock',
@@ -93,18 +107,20 @@ export const DATA_SOURCE_ENDPOINT_MAP: Readonly<Record<QuoteDataSourceId, DataSo
     return map
   }, {} as Record<QuoteDataSourceId, DataSourceEndpoint>)
 
-/** 默认行情数据源优先级（等价于旧硬编码链：腾讯 → 新浪 → AKShare → Mock） */
+/** 默认行情数据源优先级（Tushare Pro → 腾讯 → 新浪 → Mock） */
 export const DEFAULT_QUOTE_PRIORITY: SourcePriorityItem[] = [
-  { id: 'tencent', priority: 1, enabled: true },
-  { id: 'sina', priority: 2, enabled: true },
-  { id: 'akshare', priority: 3, enabled: false },
+  { id: 'tushare', priority: 1, enabled: true },
+  { id: 'tencent', priority: 2, enabled: true },
+  { id: 'sina', priority: 3, enabled: true },
   { id: 'mock', priority: 4, enabled: true },
 ]
 
-/** 默认 K 线数据源优先级（网易已不可用 DNS 不可达，退回 Mock） */
+/** 默认 K 线数据源优先级（Tushare Pro → 腾讯日 K 线 → 网易（已不可用） → Mock） */
 export const DEFAULT_KLINE_PRIORITY: SourcePriorityItem[] = [
-  { id: 'netease', priority: 1, enabled: false },
-  { id: 'mock', priority: 2, enabled: true },
+  { id: 'tushare', priority: 1, enabled: true },
+  { id: 'tencent', priority: 2, enabled: true },
+  { id: 'netease', priority: 3, enabled: false },
+  { id: 'mock', priority: 4, enabled: true },
 ]
 
 /**

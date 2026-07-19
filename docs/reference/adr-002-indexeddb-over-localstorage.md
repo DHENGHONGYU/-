@@ -1,137 +1,138 @@
 ---
-title: adr-002-indexeddb-over-localstorage
-code_version: 2.0.0
-
+title: ADR-002: IndexedDB Ìæ´ú localStorage
+type: reference
+domain: data
+phase: design
 tier: reference
----
-
----
-title: ADR-002: IndexedDB æ›¿ä»£ localStorage
-status: accepted
-owner: V9 Architecture Team
-decision_date: 2026-06-20
-supersedes: ""
-superseded_by: ""
+status: active
+maintainer: V9 Architecture Team
+summary: "Architecture Decision Record: IndexedDB Ìæ´ú localStorage"
+tags: [data, adr, registry, store, reference]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: reference
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
-# ADR-002: IndexedDB æ›¿ä»£ localStorage
+# ADR-002: IndexedDB Ìæ´ú localStorage
 
-> **çŠ¶æ€**: Accepted  
-> **å†³ç­–æ—¥æœŸ**: 2026-06-20  
-> **ç‰ˆæœ¬**: v1.0.0
-
----
-
-## 1. èƒŒæ™¯ï¼ˆContextï¼‰
-
-V9 ä½œä¸ºçº¯å‰ç«¯ç³»ç»Ÿï¼ˆADR-001ï¼‰ï¼Œéœ€è¦æœ¬åœ°æŒä¹…åŒ–æ–¹æ¡ˆå­˜å‚¨è‚¡ç¥¨è¡Œæƒ…ã€è¯„åˆ†ã€äº¤æ˜“è®°å½•ç­‰æ•°æ®ã€‚V6 é˜¶æ®µä½¿ç”¨ localStorage ä½œä¸ºæŒä¹…åŒ–æ–¹æ¡ˆï¼Œä½†é‡åˆ°ä»¥ä¸‹ç“¶é¢ˆï¼š
-
-- **å®¹é‡é™åˆ¶**ï¼šlocalStorage ä»… 5MBï¼Œæ— æ³•å­˜å‚¨å…¨é‡ A è‚¡æ—¥ K æ•°æ®ï¼ˆ> 3000 åªè‚¡ç¥¨ Ã— æ•°å¹´æ•°æ®ï¼‰ã€‚
-- **æ€§èƒ½é—®é¢˜**ï¼šlocalStorage åŒæ­¥è¯»å†™ï¼Œå¤§å®¹é‡æ•°æ®è§£æžé˜»å¡ž UI çº¿ç¨‹ã€‚
-- **æ•°æ®ç»“æž„**ï¼šlocalStorage ä»…æ”¯æŒå­—ç¬¦ä¸²é”®å€¼å¯¹ï¼Œæ— æ³•æ”¯æŒå¤æ‚æŸ¥è¯¢ã€ç´¢å¼•ã€äº‹åŠ¡ã€‚
-- **ç¼ºä¹ç‰ˆæœ¬ç®¡ç†**ï¼šlocalStorage æ—  Schema ç‰ˆæœ¬æ¦‚å¿µï¼Œæ•°æ®è¿ç§»å›°éš¾ã€‚
-
-### è§¦å‘æ¡ä»¶
-
-- 2026-06-20 æž¶æž„è¯„å®¡ï¼šç¡®è®¤ V9 æ•°æ®é‡å°†è¶…è¿‡ 10MBï¼ˆå…¨é‡æ—¥ K + è´¢æŠ¥ + è¯„åˆ†ï¼‰ã€‚
-- ç”¨æˆ·åé¦ˆï¼šV6 åœ¨æ•°æ®é‡ > 3MB æ—¶å‡ºçŽ°æ˜Žæ˜¾å¡é¡¿ã€‚
+> **×´Ì¬**: Accepted  
+> **¾ö²ßÈÕÆÚ**: 2026-06-20  
+> **°æ±¾**: v1.0.0
 
 ---
 
-## 2. å†³ç­–ï¼ˆDecisionï¼‰
+## 1. ±³¾°£¨Context£©
 
-**é‡‡ç”¨ IndexedDB ä½œä¸º V9 å”¯ä¸€æœ¬åœ°æŒä¹…åŒ–æ–¹æ¡ˆï¼Œæ›¿ä»£ localStorageã€‚**
+V9 ×÷Îª´¿Ç°¶ËÏµÍ³£¨ADR-001£©£¬ÐèÒª±¾µØ³Ö¾Ã»¯·½°¸´æ´¢¹ÉÆ±ÐÐÇé¡¢ÆÀ·Ö¡¢½»Ò×¼ÇÂ¼µÈÊý¾Ý¡£V6 ½×¶ÎÊ¹ÓÃ localStorage ×÷Îª³Ö¾Ã»¯·½°¸£¬µ«Óöµ½ÒÔÏÂÆ¿¾±£º
 
-- æ‰€æœ‰ä¸šåŠ¡æ•°æ®ï¼ˆstocksã€daily_quotesã€v6_scoresã€orders ç­‰ï¼‰å­˜å‚¨äºŽ IndexedDBã€‚
-- localStorage ä»…ä¿ç•™æžå°é‡é…ç½®é¡¹ï¼ˆå¦‚ `theme` åå¥½ã€API Key åŠ å¯†å­˜å‚¨ï¼‰ã€‚
-- Schema å˜æ›´å¿…é¡»é€’å¢ž `DB_VERSION`ï¼ˆ`src/config/dbConfig.ts`ï¼‰ã€‚
-- æ–°å¢ž Store é¡»åœ¨ `STORE_NAME` æ³¨å†Œï¼Œå¹¶åœ¨ `ACL_MATRIX` ä¸­é…ç½®è¯»å†™æƒé™ã€‚
+- **ÈÝÁ¿ÏÞÖÆ**£ºlocalStorage ½ö 5MB£¬ÎÞ·¨´æ´¢È«Á¿ A ¹ÉÈÕ K Êý¾Ý£¨> 3000 Ö»¹ÉÆ± ¡Á ÊýÄêÊý¾Ý£©¡£
+- **ÐÔÄÜÎÊÌâ**£ºlocalStorage Í¬²½¶ÁÐ´£¬´óÈÝÁ¿Êý¾Ý½âÎö×èÈû UI Ïß³Ì¡£
+- **Êý¾Ý½á¹¹**£ºlocalStorage ½öÖ§³Ö×Ö·û´®¼üÖµ¶Ô£¬ÎÞ·¨Ö§³Ö¸´ÔÓ²éÑ¯¡¢Ë÷Òý¡¢ÊÂÎñ¡£
+- **È±·¦°æ±¾¹ÜÀí**£ºlocalStorage ÎÞ Schema °æ±¾¸ÅÄî£¬Êý¾ÝÇ¨ÒÆÀ§ÄÑ¡£
 
-### å†³ç­–ç†ç”±
+### ´¥·¢Ìõ¼þ
 
-- **Why not localStorage**ï¼šå®¹é‡ã€æ€§èƒ½ã€ç»“æž„å‡ä¸æ»¡è¶³éœ€æ±‚ã€‚
-- **Why not SQLiteï¼ˆvia wasmï¼‰**ï¼šå¢žåŠ  ~1MB åŒ…ä½“ç§¯ï¼Œä¸”éœ€è¦é¢å¤–çš„ wasm åŠ è½½å’Œ CORS é…ç½®ï¼›IndexedDB åŽŸç”Ÿæ”¯æŒï¼Œæ— éœ€é¢å¤–ä¾èµ–ã€‚
-- **Why not OPFSï¼ˆOrigin Private File Systemï¼‰**ï¼šChrome-onlyï¼Œå…¼å®¹æ€§å·®ï¼›IndexedDB æ”¯æŒæ‰€æœ‰çŽ°ä»£æµè§ˆå™¨ã€‚
+- 2026-06-20 ¼Ü¹¹ÆÀÉó£ºÈ·ÈÏ V9 Êý¾ÝÁ¿½«³¬¹ý 10MB£¨È«Á¿ÈÕ K + ²Æ±¨ + ÆÀ·Ö£©¡£
+- ÓÃ»§·´À¡£ºV6 ÔÚÊý¾ÝÁ¿ > 3MB Ê±³öÏÖÃ÷ÏÔ¿¨¶Ù¡£
 
 ---
 
-## 3. å¤‡é€‰æ–¹æ¡ˆï¼ˆAlternatives Consideredï¼‰
+## 2. ¾ö²ß£¨Decision£©
 
-| æ–¹æ¡ˆ | ä¼˜ç‚¹ | ç¼ºç‚¹ | ç»“è®º |
+**²ÉÓÃ IndexedDB ×÷Îª V9 Î¨Ò»±¾µØ³Ö¾Ã»¯·½°¸£¬Ìæ´ú localStorage¡£**
+
+- ËùÓÐÒµÎñÊý¾Ý£¨stocks¡¢daily_quotes¡¢v6_scores¡¢orders µÈ£©´æ´¢ÓÚ IndexedDB¡£
+- localStorage ½ö±£Áô¼«Ð¡Á¿ÅäÖÃÏî£¨Èç `theme` Æ«ºÃ¡¢API Key ¼ÓÃÜ´æ´¢£©¡£
+- Schema ±ä¸ü±ØÐëµÝÔö `DB_VERSION`£¨`src/config/dbConfig.ts`£©¡£
+- ÐÂÔö Store ÐëÔÚ `STORE_NAME` ×¢²á£¬²¢ÔÚ `ACL_MATRIX` ÖÐÅäÖÃ¶ÁÐ´È¨ÏÞ¡£
+
+### ¾ö²ßÀíÓÉ
+
+- **Why not localStorage**£ºÈÝÁ¿¡¢ÐÔÄÜ¡¢½á¹¹¾ù²»Âú×ãÐèÇó¡£
+- **Why not SQLite£¨via wasm£©**£ºÔö¼Ó ~1MB °üÌå»ý£¬ÇÒÐèÒª¶îÍâµÄ wasm ¼ÓÔØºÍ CORS ÅäÖÃ£»IndexedDB Ô­ÉúÖ§³Ö£¬ÎÞÐè¶îÍâÒÀÀµ¡£
+- **Why not OPFS£¨Origin Private File System£©**£ºChrome-only£¬¼æÈÝÐÔ²î£»IndexedDB Ö§³ÖËùÓÐÏÖ´úä¯ÀÀÆ÷¡£
+
+---
+
+## 3. ±¸Ñ¡·½°¸£¨Alternatives Considered£©
+
+| ·½°¸ | ÓÅµã | È±µã | ½áÂÛ |
 |------|------|------|------|
-| **A. IndexedDB**ï¼ˆæœ€ç»ˆé€‰æ‹©ï¼‰ | åŽŸç”Ÿæ”¯æŒã€å®¹é‡å¤§ï¼ˆ~50MB+ï¼‰ã€æ”¯æŒç´¢å¼•/äº‹åŠ¡/æŸ¥è¯¢ | API è¾ƒåº•å±‚ï¼ˆPromise å°è£…éœ€è‡ªè¡Œå¤„ç†ï¼‰ | âœ… é‡‡çº³ |
-| **B. localStorage** | ç®€å•ã€åŒæ­¥ API | å®¹é‡ 5MBã€æ— ç´¢å¼•ã€é˜»å¡ž UI | âŒ å¦å†³ |
-| **C. SQLite via sql.js** | å…³ç³»åž‹æŸ¥è¯¢ã€äº‹åŠ¡å®Œæ•´ | åŒ…ä½“ç§¯å¤§ã€wasm åŠ è½½æ…¢ã€CORS é—®é¢˜ | âŒ å¦å†³ |
-| **D. OPFS** | æ–‡ä»¶ç³»ç»Ÿ APIã€é«˜æ€§èƒ½ | Chrome-onlyã€å…¼å®¹æ€§å·® | âŒ å¦å†³ï¼ˆV10 å¯é‡æ–°è¯„ä¼°ï¼‰ |
+| **A. IndexedDB**£¨×îÖÕÑ¡Ôñ£© | Ô­ÉúÖ§³Ö¡¢ÈÝÁ¿´ó£¨~50MB+£©¡¢Ö§³ÖË÷Òý/ÊÂÎñ/²éÑ¯ | API ½Ïµ×²ã£¨Promise ·â×°Ðè×ÔÐÐ´¦Àí£© | ? ²ÉÄÉ |
+| **B. localStorage** | ¼òµ¥¡¢Í¬²½ API | ÈÝÁ¿ 5MB¡¢ÎÞË÷Òý¡¢×èÈû UI | ? ·ñ¾ö |
+| **C. SQLite via sql.js** | ¹ØÏµÐÍ²éÑ¯¡¢ÊÂÎñÍêÕû | °üÌå»ý´ó¡¢wasm ¼ÓÔØÂý¡¢CORS ÎÊÌâ | ? ·ñ¾ö |
+| **D. OPFS** | ÎÄ¼þÏµÍ³ API¡¢¸ßÐÔÄÜ | Chrome-only¡¢¼æÈÝÐÔ²î | ? ·ñ¾ö£¨V10 ¿ÉÖØÐÂÆÀ¹À£© |
 
 ---
 
-## 4. åŽæžœï¼ˆConsequencesï¼‰
+## 4. ºó¹û£¨Consequences£©
 
-### æ­£é¢å½±å“
+### ÕýÃæÓ°Ïì
 
-- å®¹é‡ä»Ž 5MB æ‰©å±•åˆ° 50MB+ï¼Œå¯å­˜å‚¨å…¨é‡ A è‚¡æ•°æ®ã€‚
-- å¼‚æ­¥è¯»å†™ï¼Œä¸é˜»å¡ž UI çº¿ç¨‹ã€‚
-- æ”¯æŒç´¢å¼•å’ŒèŒƒå›´æŸ¥è¯¢ï¼Œæ•°æ®åˆ†æžæ•ˆçŽ‡æå‡ã€‚
-- Schema ç‰ˆæœ¬ç®¡ç†ï¼ˆ`DB_VERSION`ï¼‰ä½¿æ•°æ®è¿ç§»å¯æŽ§ã€‚
+- ÈÝÁ¿´Ó 5MB À©Õ¹µ½ 50MB+£¬¿É´æ´¢È«Á¿ A ¹ÉÊý¾Ý¡£
+- Òì²½¶ÁÐ´£¬²»×èÈû UI Ïß³Ì¡£
+- Ö§³ÖË÷ÒýºÍ·¶Î§²éÑ¯£¬Êý¾Ý·ÖÎöÐ§ÂÊÌáÉý¡£
+- Schema °æ±¾¹ÜÀí£¨`DB_VERSION`£©Ê¹Êý¾ÝÇ¨ÒÆ¿É¿Ø¡£
 
-### è´Ÿé¢å½±å“ / æŠ€æœ¯å€º
+### ¸ºÃæÓ°Ïì / ¼¼ÊõÕ®
 
-- IndexedDB API è¾ƒåº•å±‚ï¼Œéœ€è¦å°è£… `dataLayer` æä¾›å‹å¥½æŽ¥å£ã€‚
-  - **ç¼“è§£**ï¼šå·²å°è£… `dataLayer.ts` æä¾› CRUD + æŸ¥è¯¢ + äº‹åŠ¡æŠ½è±¡ã€‚
-- æµè§ˆå™¨éšç§æ¨¡å¼ä¸‹ IndexedDB å¯èƒ½ä¸å¯ç”¨ï¼ˆiOS Safari æ— ç—•æ¨¡å¼ï¼‰ã€‚
-  - **ç¼“è§£**ï¼šå¯åŠ¨æ—¶æ£€æµ‹ IndexedDB å¯ç”¨æ€§ï¼Œä¸å¯ç”¨é™çº§åˆ°å†…å­˜æ¨¡å¼ + æç¤ºç”¨æˆ·ã€‚
-- Schema å‡çº§æ—¶æ—§æ•°æ®è¿ç§»éœ€è¦æ‰‹åŠ¨å¤„ç†ã€‚
-  - **ç¼“è§£**ï¼š`db-migrations.ts` æä¾› Migration æŽ¥å£ï¼Œæ¯æ¬¡å‡çº§ç¼–å†™è¿ç§»è„šæœ¬ã€‚
+- IndexedDB API ½Ïµ×²ã£¬ÐèÒª·â×° `dataLayer` Ìá¹©ÓÑºÃ½Ó¿Ú¡£
+  - **»º½â**£ºÒÑ·â×° `dataLayer.ts` Ìá¹© CRUD + ²éÑ¯ + ÊÂÎñ³éÏó¡£
+- ä¯ÀÀÆ÷ÒþË½Ä£Ê½ÏÂ IndexedDB ¿ÉÄÜ²»¿ÉÓÃ£¨iOS Safari ÎÞºÛÄ£Ê½£©¡£
+  - **»º½â**£ºÆô¶¯Ê±¼ì²â IndexedDB ¿ÉÓÃÐÔ£¬²»¿ÉÓÃ½µ¼¶µ½ÄÚ´æÄ£Ê½ + ÌáÊ¾ÓÃ»§¡£
+- Schema Éý¼¶Ê±¾ÉÊý¾ÝÇ¨ÒÆÐèÒªÊÖ¶¯´¦Àí¡£
+  - **»º½â**£º`db-migrations.ts` Ìá¹© Migration ½Ó¿Ú£¬Ã¿´ÎÉý¼¶±àÐ´Ç¨ÒÆ½Å±¾¡£
 
-### å½±å“èŒƒå›´
+### Ó°Ïì·¶Î§
 
-| æ¨¡å— | å½±å“ |
+| Ä£¿é | Ó°Ïì |
 |------|------|
-| `src/data/` | æ–°å¢ž dataLayerã€db-schemaã€db-migrationsã€types |
-| `src/config/dbConfig.ts` | DB_VERSIONã€STORE_NAMEã€ACL_MATRIX å®šä¹‰ |
-| `src/services/` | æ‰€æœ‰å†™æ“ä½œç» DataBridge â†’ dataLayer â†’ IndexedDB |
-| `src/store/` | Store åˆå§‹åŒ–æ—¶ä»Ž IndexedDB è¯»å–ç§å­æ•°æ® |
+| `src/data/` | ÐÂÔö dataLayer¡¢db-schema¡¢db-migrations¡¢types |
+| `src/config/dbConfig.ts` | DB_VERSION¡¢STORE_NAME¡¢ACL_MATRIX ¶¨Òå |
+| `src/services/` | ËùÓÐÐ´²Ù×÷¾­ DataBridge ¡ú dataLayer ¡ú IndexedDB |
+| `src/store/` | Store ³õÊ¼»¯Ê±´Ó IndexedDB ¶ÁÈ¡ÖÖ×ÓÊý¾Ý |
 
 ---
 
-## 5. å®žæ–½ä¸ŽéªŒè¯
+## 5. ÊµÊ©ÓëÑéÖ¤
 
-### å®žæ–½æ­¥éª¤
+### ÊµÊ©²½Öè
 
-- [x] Step 1ï¼šé€‰æ‹© IndexedDB å°è£…åº“ï¼ˆåŽŸç”Ÿ API + è‡ªè¡Œå°è£… dataLayerï¼‰
-- [x] Step 2ï¼šå®šä¹‰åŸºçº¿ Schemaï¼ˆ30 ä¸ª Storeï¼Œv27ï¼‰
-- [x] Step 3ï¼šå®žçŽ° `db-schema.ts`ï¼ˆ`createSchema`ï¼‰å’Œ `db-migrations.ts`ï¼ˆ`Migration` æŽ¥å£ï¼‰
-- [x] Step 4ï¼šå®žçŽ° `dataLayer.ts`ï¼ˆCRUD + æŸ¥è¯¢ + äº‹åŠ¡ï¼‰
-- [ ] Step 5ï¼šè¡¥å…… IndexedDB ä¸å¯ç”¨æ—¶çš„é™çº§æ–¹æ¡ˆï¼ˆå†…å­˜æ¨¡å¼ï¼‰
-- [ ] Step 6ï¼šæ€§èƒ½åŸºå‡†æµ‹è¯•ï¼ˆå†™å…¥ 1000 æ¡è®°å½• < 1sï¼ŒæŸ¥è¯¢ < 100msï¼‰
+- [x] Step 1£ºÑ¡Ôñ IndexedDB ·â×°¿â£¨Ô­Éú API + ×ÔÐÐ·â×° dataLayer£©
+- [x] Step 2£º¶¨Òå»ùÏß Schema£¨30 ¸ö Store£¬v27£©
+- [x] Step 3£ºÊµÏÖ `db-schema.ts`£¨`createSchema`£©ºÍ `db-migrations.ts`£¨`Migration` ½Ó¿Ú£©
+- [x] Step 4£ºÊµÏÖ `dataLayer.ts`£¨CRUD + ²éÑ¯ + ÊÂÎñ£©
+- [ ] Step 5£º²¹³ä IndexedDB ²»¿ÉÓÃÊ±µÄ½µ¼¶·½°¸£¨ÄÚ´æÄ£Ê½£©
+- [ ] Step 6£ºÐÔÄÜ»ù×¼²âÊÔ£¨Ð´Èë 1000 Ìõ¼ÇÂ¼ < 1s£¬²éÑ¯ < 100ms£©
 
-### éªŒè¯å‘½ä»¤
+### ÑéÖ¤ÃüÁî
 
 ```bash
-npm run test:clean   # éªŒè¯æ•°æ®å±‚æµ‹è¯•
-npm run audit:docs   # éªŒè¯æ–‡æ¡£åŒæ­¥
+npm run test:clean   # ÑéÖ¤Êý¾Ý²ã²âÊÔ
+npm run audit:docs   # ÑéÖ¤ÎÄµµÍ¬²½
 ```
 
 ---
 
-## 6. å…³è”æ–‡æ¡£
+## 6. ¹ØÁªÎÄµµ
 
-| æ–‡æ¡£ | è·¯å¾„ |
+| ÎÄµµ | Â·¾¶ |
 |------|------|
-| ADR-001ï¼ˆçº¯å‰ç«¯æž¶æž„ï¼‰ | `../explanation/adr-001-pure-frontend-architecture.md` |
-| ADR-003ï¼ˆDataBridgeï¼‰ | `adr-003-databridge-over-direct-datalayer.md` |
-| æ•°æ®å±‚æ€»è§ˆ | `../explanation/data-layer-overview.md` |
-| åŽŸå§‹ææ¡ˆ | `./2026-06-20-indexeddb-over-localstorage.md` |
+| ADR-001£¨´¿Ç°¶Ë¼Ü¹¹£© | `../explanation/adr-001-pure-frontend-architecture.md` |
+| ADR-003£¨DataBridge£© | `adr-003-databridge-over-direct-datalayer.md` |
+| Êý¾Ý²ã×ÜÀÀ | `../explanation/data-layer-overview.md` |
+| Ô­Ê¼Ìá°¸ | `./2026-06-20-indexeddb-over-localstorage.md` |
 
 ---
 
-## 7. çŠ¶æ€å˜æ›´è®°å½•
+## 7. ×´Ì¬±ä¸ü¼ÇÂ¼
 
-| æ—¥æœŸ | çŠ¶æ€ | å˜æ›´äºº | å¤‡æ³¨ |
+| ÈÕÆÚ | ×´Ì¬ | ±ä¸üÈË | ±¸×¢ |
 |------|------|--------|------|
-| 2026-06-20 | proposed | @architect | åˆå§‹ææ¡ˆ |
-| 2026-06-20 | accepted | æž¶æž„ç»„ | è¯„å®¡é€šè¿‡ |
-| 2026-07-12 | accepted | docs æ²»ç†ç»„ | æ‰©å†™ä¸ºå®Œæ•´ ADR v1.0.0 |
+| 2026-06-20 | proposed | @architect | ³õÊ¼Ìá°¸ |
+| 2026-06-20 | accepted | ¼Ü¹¹×é | ÆÀÉóÍ¨¹ý |
+| 2026-07-12 | accepted | docs ÖÎÀí×é | À©Ð´ÎªÍêÕû ADR v1.0.0 |

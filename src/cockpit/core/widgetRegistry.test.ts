@@ -76,7 +76,7 @@ describe('WidgetRegistry', () => {
       const instances = registry.getAllInstances()
       expect(instances.length).toBeGreaterThan(0)
       expect(instances.some((i) => i.widgetId === 'marketIndices')).toBe(true)
-      expect(instances.some((i) => i.widgetId === 'signalMonitor')).toBe(true)
+      expect(instances.some((i) => i.widgetId === 'kaiScore')).toBe(true)
     })
 
     it('getStats 应返回正确的模板数、实例数和状态列表', () => {

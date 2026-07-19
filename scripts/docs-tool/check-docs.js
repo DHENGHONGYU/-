@@ -27,7 +27,7 @@ const violations = [];
 
 // 根目录白名单（允许存在的文件）
 const ROOT_WHITELIST = new Set([
-  'README.md', 'AGENTS.md', 'CHANGELOG.md', '.gitignore',
+  'docs/explanation/README.md', 'AGENTS.md', 'CHANGELOG.md', '.gitignore',
   'package.json', 'package-lock.json', 'index.html',
   'tsconfig.json', 'tsconfig.api.json', 'tsconfig.scripts.json', 'tsconfig.test.json',
   'vite.config.ts', 'playwright.config.ts',

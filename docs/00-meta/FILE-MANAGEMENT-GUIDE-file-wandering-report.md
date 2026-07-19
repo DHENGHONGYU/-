@@ -1,267 +1,274 @@
 ---
 title: file-management-guide-file-wandering-report
+type: meta
+domain: project
+phase: retrospective
+tier: important
+status: active
+maintainer: V9 Architecture Team
+summary: "ÎÄ¼şÆ¯ÒÆÅÅ²é±¨¸æ£ºÊ¶±ğÍ¬Ãû/ÖØ¸´ÎÄ¼şÉ¢Âä¶àÄ¿Â¼µÄÎÊÌâ£¨Èç toolkit Óë src/lib ÖØ¸´µÄ safeCoerce.ts£©¡£"
+tags: [project, guide, report, component, governance, documentation]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: core
+doc_id: V9-DOC-PROJ-013
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/00-meta/file-management-guide-file-wandering-report.md
-code_version: 2.0.0
-tier: core
----
+# ÎÄ¼şÁ÷ÀË¼ì²é±¨¸æ
 
-# æ–‡ä»¶æµæµªæ£€æŸ¥æŠ¥å‘Š
+> **Date**: 2026-07-20
+> ¼ì²é·¶Î§: toolkit/¡¢src/databridge/¡¢src/utils/¡¢outputs/¡¢packages/¡¢python/¡¢plugins/¡¢src/*/ Î´¶¨ÒåÄ¿Â¼
+> ÒÀ¾İÎÄµµ: [AGENTS.md](../../AGENTS.md) v1.4.3£¨2026-07-10£©
 
-> ç”Ÿæˆæ—¶é—´: 2026-07-20
-> æ£€æŸ¥èŒƒå›´: toolkit/ã€src/databridge/ã€src/utils/ã€outputs/ã€packages/ã€python/ã€plugins/ã€src/*/ æœªå®šä¹‰ç›®å½•
-> ä¾æ®æ–‡æ¡£: [AGENTS.md](../../AGENTS.md) v1.4.3ï¼ˆ2026-07-10ï¼‰
+## Ò»¡¢¼ì²é½á¹û»ã×Ü
 
-## ä¸€ã€æ£€æŸ¥ç»“æœæ±‡æ€»
-
-| ç›®å½• | çŠ¶æ€ | åˆ¤å®š | å»ºè®® |
+| Ä¿Â¼ | ×´Ì¬ | ÅĞ¶¨ | ½¨Òé |
 |------|------|------|------|
-| `toolkit/` | æµæµª | TypeScript æºç åœ¨ `src/` å¤–ï¼Œä¸”å­˜åœ¨é‡å¤æ–‡ä»¶ | è¿ç§»è‡³ `src/lib/` æˆ– `scripts/` |
-| `src/core/databridge.ts` | å½’ç±»å­˜ç–‘ | AGENTS.md Â§ä¸€ æœªå®šä¹‰ï¼Œä½†å±äº core å±‚æ‰©å±• | è¯„ä¼°æ˜¯å¦åˆå¹¶è‡³ `src/core/databridge/` |
-| `src/lib/` | éƒ¨åˆ†æµæµª | ä¸ `src/lib/utils.ts` èŒè´£é‡å  | åˆå¹¶è‡³ `src/lib/` |
-| `outputs/` | éœ€è§„èŒƒ | æœªåœ¨ .gitignore ä¸­æ’é™¤ï¼Œæ–‡ä»¶æ•°é‡è†¨èƒ€ | è¡¥å…… .gitignore è§„åˆ™æˆ–çº³å…¥ `temp/` ç®¡ç† |
-| `packages/` | éœ€è§„èŒƒ | monorepo å­åŒ…ï¼ŒAGENTS.md æœªæåŠ | è¡¥å…… monorepo æ–‡ä»¶å½’ä½è§„èŒƒ |
-| `python/` | éœ€è§„èŒƒ | å¤šè¯­è¨€é¡¹ç›®ï¼ŒPython æºç åœ¨ `src/` å¤– | è¡¥å……å¤šè¯­è¨€é¡¹ç›®è§„èŒƒ |
-| `plugins/` | åˆè§„ï¼ˆå¤–éƒ¨ï¼‰ | Kimi æ¡Œé¢æ’ä»¶ï¼Œéé¡¹ç›®æºç  | æ— éœ€è¿ç§»ï¼Œå¯è¡¥å……è¯´æ˜ |
-| `src/apps/` | å½’ç±»å­˜ç–‘ | AGENTS.md æåŠä½†æœªåœ¨ Â§ä¸€ ç›®å½•åˆ—è¡¨å®šä¹‰ | æ˜ç¡®ç›®å½•å®šä¹‰æˆ–åœ¨ AGENTS.md ä¸­è¡¥å…¨ |
-| `src/blueprints/` | æœªå®šä¹‰ | AGENTS.md Â§ä¸€ æ— æ­¤ç›®å½• | è¡¥å……å®šä¹‰æˆ–åˆå¹¶ |
-| `src/cockpit/` | å½’ç±»å­˜ç–‘ | AGENTS.md åœ¨ components æè¿°ä¸­æåŠ | ç¡®è®¤æ˜¯ç‹¬ç«‹ç›®å½•è¿˜æ˜¯ components å­é›† |
-| `src/hooks/` | æœªå®šä¹‰ | AGENTS.md Â§ä¸€ æ— æ­¤ç›®å½• | è¡¥å……å®šä¹‰ï¼ˆå¯èƒ½è¢«å½’ä¸º components å±‚ï¼‰ |
-| `src/i18n/` | æœªå®šä¹‰ | AGENTS.md Â§ä¸€ æ— æ­¤ç›®å½• | è¡¥å……å®šä¹‰ï¼ˆé…ç½®å±‚æ‰©å±•ï¼‰ |
-| `src/mcp/` | æœªå®šä¹‰ | AGENTS.md Â§ä¸€ æ— æ­¤ç›®å½• | è¡¥å……å®šä¹‰ |
-| `src/schema/` | æœªå®šä¹‰ | AGENTS.md Â§ä¸€ æ— æ­¤ç›®å½• | è¡¥å……å®šä¹‰ï¼ˆæ•°æ®å±‚æ‰©å±•ï¼‰ |
-| `src/showcase/` | æœªå®šä¹‰ | AGENTS.md Â§ä¸€ æ— æ­¤ç›®å½• | è¡¥å……å®šä¹‰æˆ–å½’æ¡£ |
-| `src/devtools/` | æœªå®šä¹‰ | AGENTS.md Â§ä¸€ æ— æ­¤ç›®å½• | è¡¥å……å®šä¹‰æˆ–å½’æ¡£ |
-| `src/fixtures/` | æœªå®šä¹‰ | AGENTS.md Â§ä¸€ æ— æ­¤ç›®å½• | è¡¥å……å®šä¹‰ï¼ˆæµ‹è¯•æ•°æ®å±‚ï¼‰ |
-| `src/generated/` | æœªå®šä¹‰ | AGENTS.md Â§ä¸€ æ— æ­¤ç›®å½• | è¡¥å……å®šä¹‰æˆ–çº³å…¥ .gitignore |
+| `toolkit/` | Á÷ÀË | TypeScript Ô´ÂëÔÚ `src/` Íâ£¬ÇÒ´æÔÚÖØ¸´ÎÄ¼ş | Ç¨ÒÆÖÁ `src/lib/` »ò `scripts/` |
+| `src/core/databridge.ts` | ¹éÀà´æÒÉ | AGENTS.md ¡ìÒ» Î´¶¨Òå£¬µ«ÊôÓÚ core ²ãÀ©Õ¹ | ÆÀ¹ÀÊÇ·ñºÏ²¢ÖÁ `src/core/databridge/` |
+| `src/lib/` | ²¿·ÖÁ÷ÀË | Óë `src/lib/utils.ts` Ö°ÔğÖØµş | ºÏ²¢ÖÁ `src/lib/` |
+| `outputs/` | Ğè¹æ·¶ | Î´ÔÚ .gitignore ÖĞÅÅ³ı£¬ÎÄ¼şÊıÁ¿ÅòÕÍ | ²¹³ä .gitignore ¹æÔò»òÄÉÈë `temp/` ¹ÜÀí |
+| `packages/` | Ğè¹æ·¶ | monorepo ×Ó°ü£¬AGENTS.md Î´Ìá¼° | ²¹³ä monorepo ÎÄ¼ş¹éÎ»¹æ·¶ |
+| `python/` | Ğè¹æ·¶ | ¶àÓïÑÔÏîÄ¿£¬Python Ô´ÂëÔÚ `src/` Íâ | ²¹³ä¶àÓïÑÔÏîÄ¿¹æ·¶ |
+| `plugins/` | ºÏ¹æ£¨Íâ²¿£© | Kimi ×ÀÃæ²å¼ş£¬·ÇÏîÄ¿Ô´Âë | ÎŞĞèÇ¨ÒÆ£¬¿É²¹³äËµÃ÷ |
+| `src/apps/` | ¹éÀà´æÒÉ | AGENTS.md Ìá¼°µ«Î´ÔÚ ¡ìÒ» Ä¿Â¼ÁĞ±í¶¨Òå | Ã÷È·Ä¿Â¼¶¨Òå»òÔÚ AGENTS.md ÖĞ²¹È« |
+| `src/blueprints/` | Î´¶¨Òå | AGENTS.md ¡ìÒ» ÎŞ´ËÄ¿Â¼ | ²¹³ä¶¨Òå»òºÏ²¢ |
+| `src/cockpit/` | ¹éÀà´æÒÉ | AGENTS.md ÔÚ components ÃèÊöÖĞÌá¼° | È·ÈÏÊÇ¶ÀÁ¢Ä¿Â¼»¹ÊÇ components ×Ó¼¯ |
+| `src/hooks/` | Î´¶¨Òå | AGENTS.md ¡ìÒ» ÎŞ´ËÄ¿Â¼ | ²¹³ä¶¨Òå£¨¿ÉÄÜ±»¹éÎª components ²ã£© |
+| `src/i18n/` | Î´¶¨Òå | AGENTS.md ¡ìÒ» ÎŞ´ËÄ¿Â¼ | ²¹³ä¶¨Òå£¨ÅäÖÃ²ãÀ©Õ¹£© |
+| `src/mcp/` | Î´¶¨Òå | AGENTS.md ¡ìÒ» ÎŞ´ËÄ¿Â¼ | ²¹³ä¶¨Òå |
+| `src/schema/` | Î´¶¨Òå | AGENTS.md ¡ìÒ» ÎŞ´ËÄ¿Â¼ | ²¹³ä¶¨Òå£¨Êı¾İ²ãÀ©Õ¹£© |
+| `src/showcase/` | Î´¶¨Òå | AGENTS.md ¡ìÒ» ÎŞ´ËÄ¿Â¼ | ²¹³ä¶¨Òå»ò¹éµµ |
+| `src/devtools/` | Î´¶¨Òå | AGENTS.md ¡ìÒ» ÎŞ´ËÄ¿Â¼ | ²¹³ä¶¨Òå»ò¹éµµ |
+| `src/fixtures/` | Î´¶¨Òå | AGENTS.md ¡ìÒ» ÎŞ´ËÄ¿Â¼ | ²¹³ä¶¨Òå£¨²âÊÔÊı¾İ²ã£© |
+| `src/generated/` | Î´¶¨Òå | AGENTS.md ¡ìÒ» ÎŞ´ËÄ¿Â¼ | ²¹³ä¶¨Òå»òÄÉÈë .gitignore |
 
 ---
 
-## äºŒã€é€é¡¹è¯¦ç»†æ£€æŸ¥
+## ¶ş¡¢ÖğÏîÏêÏ¸¼ì²é
 
 ### 2.1 `toolkit/`
 
-- **æ–‡ä»¶åˆ—è¡¨**:
-  - `../README.md`ï¼ˆ114è¡Œï¼‰
+- **ÎÄ¼şÁĞ±í**:
+  - `../README.md`£¨114ĞĞ£©
   - `toolkit/auto-register-scripts.js`
-  - `toolkit/patch-error-handling-dynamic.ts`ï¼ˆ272è¡Œï¼‰
-  - `toolkit/safeCoerce.ts`ï¼ˆ169è¡Œï¼‰
+  - `toolkit/patch-error-handling-dynamic.ts`£¨272ĞĞ£©
+  - `toolkit/safeCoerce.ts`£¨169ĞĞ£©
   - `toolkit/verify.bat`
   - `toolkit/verify.sh`
 
-- **ä¸ `src/lib/` å¯¹æ¯”**:
-  `toolkit/safeCoerce.ts` ä¸ `src/lib/safeCoerce.ts` æ˜¯**å®Œå…¨ç›¸åŒçš„æ–‡ä»¶**ï¼ˆé€è¡Œæ¯”å¯¹ 169 è¡Œï¼Œå†…å®¹ã€æ³¨é‡Šã€å¯¼å‡ºä¸€å­—ä¸å·®ï¼‰ã€‚
-  `toolkit/patch-error-handling-dynamic.ts`ï¼ˆç¬¬ 149 è¡Œï¼‰åœ¨è¿è¡Œæ—¶æ‰§è¡Œ `path.join('src', 'lib', 'safeCoerce.ts')`ï¼Œè¯´æ˜è¯¥è„šæœ¬æœ¬èº«å°±æ˜¯ä¸º `src/lib/` è®¾è®¡çš„ã€‚
+- **Óë `src/lib/` ¶Ô±È**:
+  `toolkit/safeCoerce.ts` Óë `src/lib/safeCoerce.ts` ÊÇ**ÍêÈ«ÏàÍ¬µÄÎÄ¼ş**£¨ÖğĞĞ±È¶Ô 169 ĞĞ£¬ÄÚÈİ¡¢×¢ÊÍ¡¢µ¼³öÒ»×Ö²»²î£©¡£
+  `toolkit/patch-error-handling-dynamic.ts`£¨µÚ 149 ĞĞ£©ÔÚÔËĞĞÊ±Ö´ĞĞ `path.join('src', 'lib', 'safeCoerce.ts')`£¬ËµÃ÷¸Ã½Å±¾±¾Éí¾ÍÊÇÎª `src/lib/` Éè¼ÆµÄ¡£
 
-- **é‡å¤æ£€æŸ¥**:
-  | å­—æ®µ | `toolkit/safeCoerce.ts` | `src/lib/safeCoerce.ts` |
+- **ÖØ¸´¼ì²é**:
+  | ×Ö¶Î | `toolkit/safeCoerce.ts` | `src/lib/safeCoerce.ts` |
   |------|------------------------|------------------------|
-  | è¡Œæ•° | 169 | 169 |
-  | å¯¼å‡ºå‡½æ•° | `toSafeNumber`, `toSafeNumberInRange`, `toSafeOptionalNumber`, `toSafeEnum`, `toSafeBoolean`, `toSafeArray`, `toSafeString` | ç›¸åŒ |
-  | å¯¼å‡ºåˆ«å | `getSafeString`, `getSafeNumber`, `getSafeArray` | ç›¸åŒ |
-  | fallback å¸¸é‡ | 5 é¡¹ | ç›¸åŒ |
-  | æ–‡ä»¶å“ˆå¸Œ | ç›¸åŒ | ç›¸åŒ |
+  | ĞĞÊı | 169 | 169 |
+  | µ¼³öº¯Êı | `toSafeNumber`, `toSafeNumberInRange`, `toSafeOptionalNumber`, `toSafeEnum`, `toSafeBoolean`, `toSafeArray`, `toSafeString` | ÏàÍ¬ |
+  | µ¼³ö±ğÃû | `getSafeString`, `getSafeNumber`, `getSafeArray` | ÏàÍ¬ |
+  | fallback ³£Á¿ | 5 Ïî | ÏàÍ¬ |
+  | ÎÄ¼ş¹şÏ£ | ÏàÍ¬ | ÏàÍ¬ |
 
-- **è¿ç§»å»ºè®®**:
-  1. `toolkit/safeCoerce.ts` â†’ **åˆ é™¤**ï¼ˆ`src/lib/safeCoerce.ts` å·²å­˜åœ¨ï¼Œä¸”ä¸ºå”¯ä¸€çœŸç›¸æºï¼‰
-  2. `toolkit/patch-error-handling-dynamic.ts` â†’ è¿ç§»è‡³ `scripts/` ç›®å½•ï¼ˆå…¶æœ¬è´¨æ˜¯æ„å»º/ä¿®å¤è„šæœ¬ï¼‰
-  3. `toolkit/auto-register-scripts.js` â†’ è¿ç§»è‡³ `scripts/` ç›®å½•
-  4. `toolkit/verify.sh` / `toolkit/verify.bat` â†’ è¿ç§»è‡³ `scripts/` ç›®å½•
-  5. `../README.md` â†’ å†…å®¹åˆå¹¶è‡³ `docs/03-development/` çš„å¼€å‘å·¥å…·è¯´æ˜æ–‡æ¡£
+- **Ç¨ÒÆ½¨Òé**:
+  1. `toolkit/safeCoerce.ts` ¡ú **É¾³ı**£¨`src/lib/safeCoerce.ts` ÒÑ´æÔÚ£¬ÇÒÎªÎ¨Ò»ÕæÏàÔ´£©
+  2. `toolkit/patch-error-handling-dynamic.ts` ¡ú Ç¨ÒÆÖÁ `scripts/` Ä¿Â¼£¨Æä±¾ÖÊÊÇ¹¹½¨/ĞŞ¸´½Å±¾£©
+  3. `toolkit/auto-register-scripts.js` ¡ú Ç¨ÒÆÖÁ `scripts/` Ä¿Â¼
+  4. `toolkit/verify.sh` / `toolkit/verify.bat` ¡ú Ç¨ÒÆÖÁ `scripts/` Ä¿Â¼
+  5. `../README.md` ¡ú ÄÚÈİºÏ²¢ÖÁ `docs/03-development/` µÄ¿ª·¢¹¤¾ßËµÃ÷ÎÄµµ
 
-- **é£é™©è¯„ä¼°**:
-  - é£é™©ç­‰çº§ï¼š**ä½**
-  - ä¸»è¦é£é™©ï¼š`patch-error-handling-dynamic.ts` ç¬¬ 149 è¡Œç¡¬ç¼–ç äº† `src/lib/safeCoerce.ts` è·¯å¾„ï¼Œè¿ç§»åè·¯å¾„ä¸å˜ï¼Œæ— å½±å“
-  - å›æ»šæ–¹æ¡ˆï¼šä¿ç•™ `toolkit/` ç›®å½•çš„ Git å†å²ï¼Œè¿ç§»å 1 å‘¨å†…è§‚å¯Ÿæ— é—®é¢˜å†åˆ é™¤
+- **·çÏÕÆÀ¹À**:
+  - ·çÏÕµÈ¼¶£º**µÍ**
+  - Ö÷Òª·çÏÕ£º`patch-error-handling-dynamic.ts` µÚ 149 ĞĞÓ²±àÂëÁË `src/lib/safeCoerce.ts` Â·¾¶£¬Ç¨ÒÆºóÂ·¾¶²»±ä£¬ÎŞÓ°Ïì
+  - »Ø¹ö·½°¸£º±£Áô `toolkit/` Ä¿Â¼µÄ Git ÀúÊ·£¬Ç¨ÒÆºó 1 ÖÜÄÚ¹Û²ìÎŞÎÊÌâÔÙÉ¾³ı
 
 ---
 
 ### 2.2 `src/core/databridge.ts`
 
-- **æ–‡ä»¶åˆ—è¡¨**:
-  - `../../src/showcase/index.ts`ï¼ˆ155è¡Œï¼‰
+- **ÎÄ¼şÁĞ±í**:
+  - `../../src/showcase/index.ts`£¨155ĞĞ£©
 
-- **å†…å®¹åˆ†æ**:
-  è¯¥æ–‡ä»¶å¯¼å‡º `DataBridgeAdapter` ç±»ï¼ˆç¬¬ 19 è¡Œï¼‰ï¼Œæ˜¯å¯¹ `@/core/databridge` çš„é¢å‘æ¨¡å—å°è£…ã€‚
-  å…¶ import ä¾èµ–ï¼š
-  - `@/core/databridge`ï¼ˆcore å±‚ï¼‰
-  - `@/core/envelope`ï¼ˆcore å±‚ï¼‰
-  - `@/lib/logger`ï¼ˆlib å±‚ï¼‰
-  - `@/lib/eventBus`ï¼ˆlib å±‚ï¼‰
-  - `@/types/modules/databridge.types`ï¼ˆtypes å±‚ï¼‰
+- **ÄÚÈİ·ÖÎö**:
+  ¸ÃÎÄ¼şµ¼³ö `DataBridgeAdapter` Àà£¨µÚ 19 ĞĞ£©£¬ÊÇ¶Ô `@/core/databridge` µÄÃæÏòÄ£¿é·â×°¡£
+  Æä import ÒÀÀµ£º
+  - `@/core/databridge`£¨core ²ã£©
+  - `@/core/envelope`£¨core ²ã£©
+  - `@/lib/logger`£¨lib ²ã£©
+  - `@/lib/eventBus`£¨lib ²ã£©
+  - `@/types/modules/databridge.types`£¨types ²ã£©
 
-- **ä¸ AGENTS.md å®šä¹‰å¯¹æ¯”**:
-  AGENTS.md Â§ä¸€ å®šä¹‰ `src/core/ â† æ ¸å¿ƒå·¥å…·ä¸ç±»å‹å®ˆå«ï¼ˆDataBridge/ACL/Envelope/MemoryCache/EventBusï¼‰`ï¼Œå°† DataBridge æ˜ç¡®å½’ä¸º core å±‚ã€‚
-  ä½† `src/core/databridge.ts` ä½œä¸ºä¸€ä¸ªç‹¬ç«‹ç›®å½•å­˜åœ¨ï¼Œæœªåœ¨ AGENTS.md ç›®å½•åˆ—è¡¨ä¸­å®šä¹‰ã€‚
+- **Óë AGENTS.md ¶¨Òå¶Ô±È**:
+  AGENTS.md ¡ìÒ» ¶¨Òå src/core/£¨ºËĞÄ¹¤¾ßÓëÀàĞÍÊØÎÀ£ºDataBridge/ACL/Envelope/MemoryCache/EventBus£©£¬½« DataBridge Ã÷È·¹éÎª core ²ã¡£
+  µ« `src/core/databridge.ts` ×÷ÎªÒ»¸ö¶ÀÁ¢Ä¿Â¼´æÔÚ£¬Î´ÔÚ AGENTS.md Ä¿Â¼ÁĞ±íÖĞ¶¨Òå¡£
 
-- **è¿ç§»è¯„ä¼°**:
-  - è¯¥ç›®å½•ä»… 1 ä¸ªæ–‡ä»¶ï¼Œä»£ç é‡ä¸º 155 è¡Œ
-  - è‹¥è¿ç§»è‡³ `../../src/services/workers/index.ts`ï¼Œimport è·¯å¾„ä» `@/databridge` å˜ä¸º `@/core/databridge`
-  - éœ€è¦å…¨å±€æœç´¢å¹¶ä¿®æ”¹æ‰€æœ‰å¼•ç”¨ `from '@/databridge'` çš„å¯¼å…¥è¯­å¥
+- **Ç¨ÒÆÆÀ¹À**:
+  - ¸ÃÄ¿Â¼½ö 1 ¸öÎÄ¼ş£¬´úÂëÁ¿Îª 155 ĞĞ
+  - ÈôÇ¨ÒÆÖÁ `../../src/services/workers/index.ts`£¬import Â·¾¶´Ó `@/databridge` ±äÎª `@/core/databridge`
+  - ĞèÒªÈ«¾ÖËÑË÷²¢ĞŞ¸ÄËùÓĞÒıÓÃ `from '@/databridge'` µÄµ¼ÈëÓï¾ä
 
-- **é£é™©è¯„ä¼°**:
-  - é£é™©ç­‰çº§ï¼š**ä¸­**
-  - è¿ç§»å·¥ä½œé‡ï¼šéœ€è¦å…¨å±€æœç´¢ import å¼•ç”¨ï¼Œé¢„è®¡å½±å“ 5~15 ä¸ªæ–‡ä»¶
-  - æ›¿ä»£æ–¹æ¡ˆï¼šä¿ç•™ `src/core/databridge.ts` ä½œä¸º core å±‚çš„å­ç›®å½•ï¼Œåœ¨ AGENTS.md ä¸­è¡¥å……å®šä¹‰ `src/core/databridge.ts â† DataBridge é€‚é…å±‚ï¼ˆcore å±‚æ‰©å±•ï¼‰`
+- **·çÏÕÆÀ¹À**:
+  - ·çÏÕµÈ¼¶£º**ÖĞ**
+  - Ç¨ÒÆ¹¤×÷Á¿£ºĞèÒªÈ«¾ÖËÑË÷ import ÒıÓÃ£¬Ô¤¼ÆÓ°Ïì 5~15 ¸öÎÄ¼ş
+  - Ìæ´ú·½°¸£º±£Áô `src/core/databridge.ts` ×÷Îª core ²ãµÄ×ÓÄ¿Â¼£¬ÔÚ AGENTS.md ÖĞ²¹³ä¶¨Òå `src/core/databridge.ts`
 
 ---
 
 ### 2.3 `src/lib/`
 
-- **æ–‡ä»¶åˆ—è¡¨**:
+- **ÎÄ¼şÁĞ±í**:
   - `src/lib/validation.ts`
-  - `src/lib/dataValidation.test.ts`
+  - `src/lib/validation.test.ts`
   - `src/lib/xssSanitizer.ts`
   - `src/lib/xssSanitizer.test.ts`
   - `src/lib/validation.ts`
   - `src/lib/precision.ts`
   - `src/lib/format.ts`
 
-- **ä¸ `src/lib/` å¯¹æ¯”**:
-  AGENTS.md Â§ä¸€ å®šä¹‰ `src/lib/ â† åº“å‡½æ•°ï¼ˆlogger/format/errors/utils/localStorageManagerï¼‰`ï¼Œå¹¶åœ¨ lib åŸºç¡€è®¾æ–½ç™½åå•ä¸­åˆ—å‡ºäº† `utils`ï¼ˆç¬¬ 33 è¡Œï¼‰ã€‚
-  åŒæ—¶ `src/lib/` ä¸‹å·²å­˜åœ¨ `src/lib/utils.ts`ï¼ˆé€šç”¨å·¥å…·å‡½æ•°ï¼‰ã€‚
+- **Óë `src/lib/` ¶Ô±È**:
+  AGENTS.md ¡ìÒ» ¶¨Òå src/lib/£¨¿âº¯Êı£ºlogger/format/errors/utils/localStorageManager£©£¬²¢ÔÚ lib »ù´¡ÉèÊ©°×Ãûµ¥ÖĞÁĞ³öÁË `utils`£¨µÚ 33 ĞĞ£©¡£
+  Í¬Ê± `src/lib/` ÏÂÒÑ´æÔÚ `src/lib/utils.ts`£¨Í¨ÓÃ¹¤¾ßº¯Êı£©¡£
   
-  `src/lib/` ä¸‹çš„æ–‡ä»¶èŒè´£ï¼š
-  | æ–‡ä»¶ | èŒè´£ | æ˜¯å¦åº”å½’ `src/lib/` |
+  `src/lib/` ÏÂµÄÎÄ¼şÖ°Ôğ£º
+  | ÎÄ¼ş | Ö°Ôğ | ÊÇ·ñÓ¦¹é `src/lib/` |
   |------|------|-------------------|
-  | `dataValidation.ts` | æ•°æ®éªŒè¯å·¥å…· | æ˜¯ï¼Œå±äº lib åŸºç¡€è®¾æ–½ |
-  | `xssSanitizer.ts` | XSS æ¶ˆæ¯’å·¥å…· | æ˜¯ï¼Œå±äº lib åŸºç¡€è®¾æ–½ |
-  | `a11y.ts` | æ— éšœç¢è¾…åŠ©å·¥å…· | æ˜¯ï¼Œå±äº lib åŸºç¡€è®¾æ–½ |
-  | `precision.ts` | ç²¾åº¦å¤„ç†å·¥å…· | æ˜¯ï¼Œå±äº lib åŸºç¡€è®¾æ–½ |
-  | `timeUtils.ts` | æ—¶é—´å·¥å…·å‡½æ•° | æ˜¯ï¼Œå±äº lib åŸºç¡€è®¾æ–½ |
+  | `dataValidation.ts` | Êı¾İÑéÖ¤¹¤¾ß | ÊÇ£¬ÊôÓÚ lib »ù´¡ÉèÊ© |
+  | `xssSanitizer.ts` | XSS Ïû¶¾¹¤¾ß | ÊÇ£¬ÊôÓÚ lib »ù´¡ÉèÊ© |
+  | `a11y.ts` | ÎŞÕÏ°­¸¨Öú¹¤¾ß | ÊÇ£¬ÊôÓÚ lib »ù´¡ÉèÊ© |
+  | `precision.ts` | ¾«¶È´¦Àí¹¤¾ß | ÊÇ£¬ÊôÓÚ lib »ù´¡ÉèÊ© |
+  | `timeUtils.ts` | Ê±¼ä¹¤¾ßº¯Êı | ÊÇ£¬ÊôÓÚ lib »ù´¡ÉèÊ© |
 
-- **é‡å¤æ£€æŸ¥**:
-  `src/lib/utils.ts` ä¸ `src/lib/` ä¸‹çš„æ–‡ä»¶æ— ç›´æ¥ä»£ç é‡å¤ï¼Œä½†èŒè´£åŸŸé«˜åº¦é‡å ï¼Œå­˜åœ¨åŠŸèƒ½åˆ†æ•£é£é™©ã€‚
+- **ÖØ¸´¼ì²é**:
+  `src/lib/utils.ts` Óë `src/lib/` ÏÂµÄÎÄ¼şÎŞÖ±½Ó´úÂëÖØ¸´£¬µ«Ö°ÔğÓò¸ß¶ÈÖØµş£¬´æÔÚ¹¦ÄÜ·ÖÉ¢·çÏÕ¡£
 
-- **è¿ç§»å»ºè®®**:
-  1. å°† `src/utils/*.ts` è¿ç§»è‡³ `src/lib/utils/` å­ç›®å½•ï¼ˆé¿å…ä¸ `src/lib/utils.ts` å†²çªï¼‰
-  2. æˆ–é‡å‘½å `src/lib/utils.ts` ä¸º `src/lib/common-utils.ts`ï¼Œç„¶åå°† `src/lib/` æ•´ä½“è¿å…¥ `src/lib/`
-  3. AGENTS.md ç™½åå•ä¸­ `utils` å·²æ˜ç¡®å±äº lib å±‚ï¼Œè¿ç§»æ–¹å‘æ˜ç¡®
+- **Ç¨ÒÆ½¨Òé**:
+  1. ½« `src/utils/*.ts` Ç¨ÒÆÖÁ `src/lib/utils/` ×ÓÄ¿Â¼£¨±ÜÃâÓë `src/lib/utils.ts` ³åÍ»£©
+  2. »òÖØÃüÃû `src/lib/utils.ts` Îª `src/lib/utils.ts`£¬È»ºó½« `src/lib/` ÕûÌåÇ¨Èë `src/lib/`
+  3. AGENTS.md °×Ãûµ¥ÖĞ `utils` ÒÑÃ÷È·ÊôÓÚ lib ²ã£¬Ç¨ÒÆ·½ÏòÃ÷È·
 
-- **é£é™©è¯„ä¼°**:
-  - é£é™©ç­‰çº§ï¼š**ä¸­**
-  - è¿ç§»å·¥ä½œé‡ï¼š7 ä¸ªæ–‡ä»¶ + import è·¯å¾„ä¿®æ”¹ï¼Œé¢„è®¡å½±å“ 20~40 ä¸ªå¼•ç”¨ç‚¹
-  - å›æ»šæ–¹æ¡ˆï¼šä½¿ç”¨ `git mv` ä¿ç•™å†å²è®°å½•ï¼Œä¿®æ”¹ import è·¯å¾„åè¿è¡Œ `npx tsc --noEmit` éªŒè¯
+- **·çÏÕÆÀ¹À**:
+  - ·çÏÕµÈ¼¶£º**ÖĞ**
+  - Ç¨ÒÆ¹¤×÷Á¿£º7 ¸öÎÄ¼ş + import Â·¾¶ĞŞ¸Ä£¬Ô¤¼ÆÓ°Ïì 20~40 ¸öÒıÓÃµã
+  - »Ø¹ö·½°¸£ºÊ¹ÓÃ `git mv` ±£ÁôÀúÊ·¼ÇÂ¼£¬ĞŞ¸Ä import Â·¾¶ºóÔËĞĞ `npx tsc --noEmit` ÑéÖ¤
 
 ---
 
 ### 2.4 `outputs/`
 
-- **æ–‡ä»¶è§„æ¨¡**: è¶…è¿‡ 100 ä¸ªæ–‡ä»¶ï¼ˆGlob ç»“æœè¢«æˆªæ–­ï¼‰ï¼ŒåŒ…å«å­ç›®å½• `test-doc-auto-update/`ï¼ˆçº¦ 60+ æµ‹è¯•ç”¨ä¾‹å­ç›®å½•ï¼‰
+- **ÎÄ¼ş¹æÄ£**: ³¬¹ı 100 ¸öÎÄ¼ş£¨Glob ½á¹û±»½Ø¶Ï£©£¬°üº¬×ÓÄ¿Â¼ `test-doc-auto-update/`£¨Ô¼ 60+ ²âÊÔÓÃÀı×ÓÄ¿Â¼£©
 
-- **å†…å®¹åˆ†ç±»**:
-  | ç±»åˆ« | ç¤ºä¾‹æ–‡ä»¶ |
+- **ÄÚÈİ·ÖÀà**:
+  | Àà±ğ | Ê¾ÀıÎÄ¼ş |
   |------|---------|
-  | æµ‹è¯•æŠ¥å‘Š | `test-doc-auto-update/t*/doc-auto-update-*.md`, `test-doc-auto-update/t*/doc-auto-update-*.json` |
-  | ç³»ç»Ÿè¯„ä¼° | `system-maturity-assessment-2026-07-12.md`, `v9-system-check-report-2026-07-12.md` |
-  | å›¾è¡¨è¾“å‡º | `maturity-radar-2026-07-12.svg` |
-  | å·¥å…·è„šæœ¬ | `test-doc-auto-updater.mjs` |
-  | æ²»ç†æŠ¥å‘Š | `æ–‡ä»¶å»é‡ä¸æ•´ç†æ²»ç†æ–¹æ¡ˆ.md`, `æ®‹ç•™æ ¡å¯¹æ›´æ–°æŠ¥å‘Š-2026-07-12.md` |
-  | æ–‡æ¡£è¾“å‡º | `æ”¹è¿›è·¯çº¿å›¾å®æ–½è®¡åˆ’.md`, `æ”¹è¿›è·¯çº¿å›¾å®æ–½è®¡åˆ’.docx` |
+  | ²âÊÔ±¨¸æ | `test-doc-auto-update/t*/doc-auto-update-*.md`, `test-doc-auto-update/t*/doc-auto-update-*.json` |
+  | ÏµÍ³ÆÀ¹À | `./V9-ÏîÄ¿½¡¿µ×´Ì¬×ÜÀÀ.md`, `./V9-ÏîÄ¿½¡¿µ×´Ì¬×ÜÀÀ.md` |
+  | Í¼±íÊä³ö | `maturity-radar-2026-07-12.svg` |
+  | ¹¤¾ß½Å±¾ | `test-doc-auto-updater.mjs` |
+  | ÖÎÀí±¨¸æ | `../archive/ÎÄ¼şÈ¥ÖØÓëÕûÀíÖÎÀí·½°¸.md`, `../archive/²ĞÁôĞ£¶Ô¸üĞÂ±¨¸æ-2026-07-12.md` |
+  | ÎÄµµÊä³ö | `../archive/¸Ä½øÂ·ÏßÍ¼ÊµÊ©¼Æ»®.md`, `¸Ä½øÂ·ÏßÍ¼ÊµÊ©¼Æ»®.docx` |
 
-- **.gitignore æ£€æŸ¥**:
-  .gitignore ä¸­æ— ä¸“é—¨é’ˆå¯¹ `outputs/` çš„æ’é™¤è§„åˆ™ã€‚ä»…åŒ¹é…åˆ°æ³¨é‡Šè¡Œï¼š
-  - `# Build outputs`ï¼ˆç¬¬ 4 è¡Œï¼‰
-  - `# Script-generated outputs`ï¼ˆç¬¬ 110 è¡Œï¼‰
-  ä½†æœªå®é™…å®šä¹‰ `outputs/` ç›®å½•çš„å¿½ç•¥è§„åˆ™ã€‚
+- **.gitignore ¼ì²é**:
+  .gitignore ÖĞÎŞ×¨ÃÅÕë¶Ô `outputs/` µÄÅÅ³ı¹æÔò¡£½öÆ¥Åäµ½×¢ÊÍĞĞ£º
+  - `# Build outputs`£¨µÚ 4 ĞĞ£©
+  - `# Script-generated outputs`£¨µÚ 110 ĞĞ£©
+  µ«Î´Êµ¼Ê¶¨Òå `outputs/` Ä¿Â¼µÄºöÂÔ¹æÔò¡£
 
-- **å¤„ç†å»ºè®®**:
-  1. å°† `outputs/` æ•´ä½“åŠ å…¥ .gitignoreï¼ˆæˆ–ä»…æ’é™¤æµ‹è¯•äº§ç‰©å­ç›®å½•ï¼‰
-  2. é‡è¦çš„æ²»ç†æŠ¥å‘Šï¼ˆå¦‚ `.md` ç»ˆç¨¿ï¼‰åº”è¿ç§»è‡³ `docs/07-archive/` æˆ– `docs/00-meta/`
-  3. `test-doc-auto-update/` æ˜¯å…¸å‹çš„ä¸´æ—¶æµ‹è¯•äº§ç‰©ï¼Œå¿…é¡»åŠ å…¥ .gitignore
-  4. `test-doc-auto-updater.mjs` åº”è¿ç§»è‡³ `scripts/` ç›®å½•
+- **´¦Àí½¨Òé**:
+  1. ½« `outputs/` ÕûÌå¼ÓÈë .gitignore£¨»ò½öÅÅ³ı²âÊÔ²úÎï×ÓÄ¿Â¼£©
+  2. ÖØÒªµÄÖÎÀí±¨¸æ£¨Èç `.md` ÖÕ¸å£©Ó¦Ç¨ÒÆÖÁ `docs/07-archive/` »ò `docs/00-meta/`
+  3. `test-doc-auto-update/` ÊÇµäĞÍµÄÁÙÊ±²âÊÔ²úÎï£¬±ØĞë¼ÓÈë .gitignore
+  4. `test-doc-auto-updater.mjs` Ó¦Ç¨ÒÆÖÁ `scripts/` Ä¿Â¼
 
-- **é£é™©è¯„ä¼°**:
-  - é£é™©ç­‰çº§ï¼š**é«˜**ï¼ˆ.gitignore æœªæ’é™¤ï¼Œå¯èƒ½å¯¼è‡´å¤§é‡ä¸´æ—¶æ–‡ä»¶è¢«æ„å¤–æäº¤ï¼‰
-  - ä¼˜å…ˆå¤„ç†ï¼šç«‹å³è¡¥å…… .gitignore è§„åˆ™
+- **·çÏÕÆÀ¹À**:
+  - ·çÏÕµÈ¼¶£º**¸ß**£¨.gitignore Î´ÅÅ³ı£¬¿ÉÄÜµ¼ÖÂ´óÁ¿ÁÙÊ±ÎÄ¼ş±»ÒâÍâÌá½»£©
+  - ÓÅÏÈ´¦Àí£ºÁ¢¼´²¹³ä .gitignore ¹æÔò
 
 ---
 
 ### 2.5 `packages/`
 
-- **æ–‡ä»¶åˆ—è¡¨**: `packages/audit-utils/` å­åŒ…ï¼ˆå« `src/`, `dist/`, `node_modules/`, `package.json`ï¼‰
+- **ÎÄ¼şÁĞ±í**: `packages/audit-utils/` ×Ó°ü£¨º¬ `src/`, `dist/`, `node_modules/`, `package.json`£©
 
-- **å†…å®¹åˆ†æ**:
-  è¿™æ˜¯ä¸€ä¸ªç‹¬ç«‹çš„ npm å­åŒ…ï¼Œç”¨äºå®¡è®¡å·¥å…·é€»è¾‘å¤ç”¨ã€‚åŒ…å«ï¼š
+- **ÄÚÈİ·ÖÎö**:
+  ÕâÊÇÒ»¸ö¶ÀÁ¢µÄ npm ×Ó°ü£¬ÓÃÓÚÉó¼Æ¹¤¾ßÂß¼­¸´ÓÃ¡£°üº¬£º
   - `packages/audit-utils/src/index.ts`
   - `packages/audit-utils/src/parse-output.ts`
   - `packages/audit-utils/src/test-logger.ts`
-  - æ„å»ºäº§ç‰© `dist/` å’Œ `node_modules/`
+  - ¹¹½¨²úÎï `dist/` ºÍ `node_modules/`
 
-- **ä¸ AGENTS.md å®šä¹‰å¯¹æ¯”**:
-  AGENTS.md Â§ä¸€ æœªå®šä¹‰ `packages/` ç›®å½•ï¼Œé¡¹ç›®æ•´ä½“ä¹Ÿä¸æ˜¯ä¸¥æ ¼çš„ monorepo ç»“æ„ï¼ˆæ ¹ç›®å½•æ—  `pnpm-workspace.yaml` æˆ– `lerna.json`ï¼‰ã€‚
+- **Óë AGENTS.md ¶¨Òå¶Ô±È**:
+  AGENTS.md ¡ìÒ» Î´¶¨Òå `packages/` Ä¿Â¼£¬ÏîÄ¿ÕûÌåÒ²²»ÊÇÑÏ¸ñµÄ monorepo ½á¹¹£¨¸ùÄ¿Â¼ÎŞ `pnpm-workspace.yaml` »ò `lerna.json`£©¡£
 
-- **å¤„ç†å»ºè®®**:
-  1. è¯„ä¼°æ˜¯å¦çœŸæ­£éœ€è¦ monorepoï¼šè‹¥ä»…ä¸º 3 ä¸ªæ–‡ä»¶çš„ audit-utilsï¼Œå»ºè®®åˆå¹¶å› `src/lib/audit-utils/`
-  2. è‹¥ä¿ç•™ monorepoï¼Œéœ€è¡¥å……ï¼š`pnpm-workspace.yaml`ã€æ ¹ `package.json` workspaces å­—æ®µã€file-management-guide.md monorepo è§„èŒƒç« èŠ‚
-  3. `packages/*/node_modules/` å’Œ `packages/*/dist/` å¿…é¡»åŠ å…¥ .gitignore
+- **´¦Àí½¨Òé**:
+  1. ÆÀ¹ÀÊÇ·ñÕæÕıĞèÒª monorepo£ºÈô½öÎª 3 ¸öÎÄ¼şµÄ audit-utils£¬½¨ÒéºÏ²¢»Ø `src/lib/audit-utils/`
+  2. Èô±£Áô monorepo£¬Ğè²¹³ä£º`pnpm-workspace.yaml`¡¢¸ù `package.json` workspaces ×Ö¶Î¡¢file-management-guide.md monorepo ¹æ·¶ÕÂ½Ú
+  3. `packages/*/node_modules/` ºÍ `packages/*/dist/` ±ØĞë¼ÓÈë .gitignore
 
-- **é£é™©è¯„ä¼°**:
-  - é£é™©ç­‰çº§ï¼š**ä¸­**
-  - å½“å‰å­åŒ…è§„æ¨¡å°ï¼ˆ3 ä¸ªæºæ–‡ä»¶ï¼‰ï¼Œç‹¬ç«‹ç»´æŠ¤æˆæœ¬é«˜
+- **·çÏÕÆÀ¹À**:
+  - ·çÏÕµÈ¼¶£º**ÖĞ**
+  - µ±Ç°×Ó°ü¹æÄ£Ğ¡£¨3 ¸öÔ´ÎÄ¼ş£©£¬¶ÀÁ¢Î¬»¤³É±¾¸ß
 
 ---
 
 ### 2.6 `python/`
 
-- **æ–‡ä»¶åˆ—è¡¨**:
+- **ÎÄ¼şÁĞ±í**:
   - `python/data_service/collect_endpoints.py`
   - `python/data_service/lib/timeout_utils.py`
   - `python/data_service/lib/dynamic_match.py`
   - `python/data_service/lib/cache_utils.py`
   - `python/data_service/lib/__init__.py`
   - `python/data_service/requirements.txt`
-  - `python/data_service/__pycache__/`ï¼ˆç¼“å­˜ç›®å½•ï¼‰
+  - `python/data_service/__pycache__/`£¨»º´æÄ¿Â¼£©
 
-- **å†…å®¹åˆ†æ**:
-  è¿™æ˜¯ä¸€ä¸ªç‹¬ç«‹çš„ Python æ•°æ®æœåŠ¡ç«¯ï¼ŒåŒ…å« 5 ä¸ª `.py` æ–‡ä»¶å’Œä¾èµ–é…ç½®ã€‚
+- **ÄÚÈİ·ÖÎö**:
+  ÕâÊÇÒ»¸ö¶ÀÁ¢µÄ Python Êı¾İ·şÎñ¶Ë£¬°üº¬ 5 ¸ö `.py` ÎÄ¼şºÍÒÀÀµÅäÖÃ¡£
 
-- **ä¸ AGENTS.md å®šä¹‰å¯¹æ¯”**:
-  AGENTS.md Â§ä¸€ ä»…å®šä¹‰äº† `src/` ä¸‹çš„ TypeScript é¡¹ç›®åˆ†å±‚ï¼Œæœªæ¶‰åŠå¤šè¯­è¨€é¡¹ç›®è§„èŒƒã€‚
+- **Óë AGENTS.md ¶¨Òå¶Ô±È**:
+  AGENTS.md ¡ìÒ» ½ö¶¨ÒåÁË `src/` ÏÂµÄ TypeScript ÏîÄ¿·Ö²ã£¬Î´Éæ¼°¶àÓïÑÔÏîÄ¿¹æ·¶¡£
 
-- **å¤„ç†å»ºè®®**:
-  1. `__pycache__/` å¿…é¡»åŠ å…¥ .gitignoreï¼ˆPython ç¼“å­˜ï¼‰
-  2. `.venv/` æˆ– `venv/` å·²å­˜åœ¨äº .gitignoreï¼ˆç»ä»»åŠ¡ 2.1 ç¡®è®¤ï¼‰
-  3. åœ¨ file-management-guide.md ä¸­è¡¥å……"å¤šè¯­è¨€é¡¹ç›®è§„èŒƒ"å°èŠ‚ï¼Œæ˜ç¡®ï¼š
-     - `python/` ç›®å½•ä¸ºç‹¬ç«‹æ•°æ®æœåŠ¡ï¼Œä¸å½’å…¥ `src/` åˆ†å±‚
-     - Python æºç ç®¡ç†éµå¾ªç‹¬ç«‹è§„èŒƒï¼ˆ`requirements.txt`ã€PEP 8ã€`.gitignore` è¿½åŠ ï¼‰
-  4. è€ƒè™‘åç»­æ˜¯å¦å°† Python æœåŠ¡æ‹†åˆ†ä¸ºç‹¬ç«‹å­ä»“åº“
+- **´¦Àí½¨Òé**:
+  1. `__pycache__/` ±ØĞë¼ÓÈë .gitignore£¨Python »º´æ£©
+  2. `.venv/` »ò `venv/` ÒÑ´æÔÚÓÚ .gitignore£¨¾­ÈÎÎñ 2.1 È·ÈÏ£©
+  3. ÔÚ file-management-guide.md ÖĞ²¹³ä"¶àÓïÑÔÏîÄ¿¹æ·¶"Ğ¡½Ú£¬Ã÷È·£º
+     - `python/` Ä¿Â¼Îª¶ÀÁ¢Êı¾İ·şÎñ£¬²»¹éÈë `src/` ·Ö²ã
+     - Python Ô´Âë¹ÜÀí×ñÑ­¶ÀÁ¢¹æ·¶£¨`requirements.txt`¡¢PEP 8¡¢`.gitignore` ×·¼Ó£©
+  4. ¿¼ÂÇºóĞøÊÇ·ñ½« Python ·şÎñ²ğ·ÖÎª¶ÀÁ¢×Ó²Ö¿â
 
-- **é£é™©è¯„ä¼°**:
-  - é£é™©ç­‰çº§ï¼š**ä½**
-  - Python ç›®å½•ç»“æ„æ¸…æ™°ï¼Œä»…éœ€è¡¥å……è§„èŒƒå’Œ .gitignore
+- **·çÏÕÆÀ¹À**:
+  - ·çÏÕµÈ¼¶£º**µÍ**
+  - Python Ä¿Â¼½á¹¹ÇåÎú£¬½öĞè²¹³ä¹æ·¶ºÍ .gitignore
 
 ---
 
 ### 2.7 `plugins/`
 
-- **æ–‡ä»¶åˆ—è¡¨**: 9 ä¸ª Kimi æ’ä»¶ç›®å½•ï¼ˆ`yuandian_law`, `yahoo_finance`, `world_bank_open_data`, `tianyancha`, `sec_edgar`, `scholar`, `kimi-webbridge`, `imf`, `ifind`ï¼‰
+- **ÎÄ¼şÁĞ±í**: 9 ¸ö Kimi ²å¼şÄ¿Â¼£¨`yuandian_law`, `yahoo_finance`, `world_bank_open_data`, `tianyancha`, `sec_edgar`, `scholar`, `kimi-webbridge`, `imf`, `ifind`£©
 
-- **å†…å®¹åˆ†æ**:
-  è¿™äº›æ˜¯ Kimi æ¡Œé¢å®¢æˆ·ç«¯çš„å¤–éƒ¨æ’ä»¶ï¼Œæ¯ä¸ªæ’ä»¶åŒ…å« `SKILL.md`, `scripts/`, `../../README.md`, `kimi.plugin.json`, `bundle.zip`ã€‚
+- **ÄÚÈİ·ÖÎö**:
+  ÕâĞ©ÊÇ Kimi ×ÀÃæ¿Í»§¶ËµÄÍâ²¿²å¼ş£¬Ã¿¸ö²å¼ş°üº¬ `../../.agents/skills/feature-window-context-doc/SKILL.md`, `scripts/`, `../../README.md`, `kimi.plugin.json`, `bundle.zip`¡£
 
-- **åˆ¤å®š**:
-  è¿™äº›æ’ä»¶å±äº Kimi æ¡Œé¢è¿è¡Œæ—¶åŠ è½½çš„å¤–éƒ¨æ‰©å±•ï¼Œ**ä¸å±äº V9 é¡¹ç›®æºç **ã€‚`plugins/` ç›®å½•ç­‰åŒäº `.agents/skills/` çš„æ€§è´¨â€”â€”æ˜¯ AI åŠ©æ‰‹çš„æŠ€èƒ½å®šä¹‰æ–‡ä»¶ã€‚
+- **ÅĞ¶¨**:
+  ÕâĞ©²å¼şÊôÓÚ Kimi ×ÀÃæÔËĞĞÊ±¼ÓÔØµÄÍâ²¿À©Õ¹£¬**²»ÊôÓÚ V9 ÏîÄ¿Ô´Âë**¡£`plugins/` Ä¿Â¼µÈÍ¬ÓÚ `.agents/skills/` µÄĞÔÖÊ¡ª¡ªÊÇ AI ÖúÊÖµÄ¼¼ÄÜ¶¨ÒåÎÄ¼ş¡£
 
-- **å¤„ç†å»ºè®®**:
-  1. æ— éœ€è¿ç§»è‡³ `src/`
-  2. åœ¨ file-management-guide.md ä¸­è¡¥å……è¯´æ˜ï¼š`plugins/` ä¸ºå¤–éƒ¨ AI æ’ä»¶ç›®å½•ï¼Œéé¡¹ç›®è¿è¡Œæ—¶æºç 
-  3. `plugins/*/.bundle.zip` å’Œ `plugins/*/node_modules/`ï¼ˆè‹¥å­˜åœ¨ï¼‰åº”åŠ å…¥ .gitignore
+- **´¦Àí½¨Òé**:
+  1. ÎŞĞèÇ¨ÒÆÖÁ `src/`
+  2. ÔÚ file-management-guide.md ÖĞ²¹³äËµÃ÷£º`plugins/` ÎªÍâ²¿ AI ²å¼şÄ¿Â¼£¬·ÇÏîÄ¿ÔËĞĞÊ±Ô´Âë
+  3. `plugins/*/.bundle.zip` ºÍ `plugins/*/node_modules/`£¨Èô´æÔÚ£©Ó¦¼ÓÈë .gitignore
 
-- **é£é™©è¯„ä¼°**:
-  - é£é™©ç­‰çº§ï¼š**ä½**
-  - å½“å‰æ— è¿ç§»å¿…è¦
+- **·çÏÕÆÀ¹À**:
+  - ·çÏÕµÈ¼¶£º**µÍ**
+  - µ±Ç°ÎŞÇ¨ÒÆ±ØÒª
 
 ---
 
-### 2.8 `src/` ä¸‹æœªåœ¨ AGENTS.md Â§ä¸€ å®šä¹‰çš„ç›®å½•
+### 2.8 `src/` ÏÂÎ´ÔÚ AGENTS.md ¡ìÒ» ¶¨ÒåµÄÄ¿Â¼
 
-AGENTS.md Â§ä¸€ æ˜ç¡®å®šä¹‰çš„ç›®å½•ï¼ˆå«è·¯å¾„ï¼‰:
+AGENTS.md ¡ìÒ» Ã÷È·¶¨ÒåµÄÄ¿Â¼£¨º¬Â·¾¶£©:
 ```
 src/config/
 src/core/
@@ -274,13 +281,13 @@ src/components/
 src/portal/
 src/constants/
 ```
-å¦æœ‰æœªå¸¦ `src/` å‰ç¼€çš„å®šä¹‰ï¼š
+ÁíÓĞÎ´´ø `src/` Ç°×ºµÄ¶¨Òå£º
 ```
 types/
 agents/
 ```
 
-å®é™…å­˜åœ¨çš„ `src/` ä¸€çº§å­ç›®å½•ï¼ˆæ–‡ä»¶é™¤å¤–ï¼‰:
+Êµ¼Ê´æÔÚµÄ `src/` Ò»¼¶×ÓÄ¿Â¼£¨ÎÄ¼ş³ıÍâ£©:
 ```
 src/agents/
 src/apps/
@@ -291,7 +298,7 @@ src/config/
 src/constants/
 src/core/
 src/data/
-src/databridge/      â† AGENTS.md Â§ä¸€ æœªå®šä¹‰
+src/databridge/      ¡û AGENTS.md ¡ìÒ» Î´¶¨Òå
 src/devtools/
 src/fixtures/
 src/generated/
@@ -306,67 +313,67 @@ src/services/
 src/showcase/
 src/store/
 src/types/
-src/utils/           â† AGENTS.md Â§ä¸€ æœªå®šä¹‰
+src/utils/           ¡û AGENTS.md ¡ìÒ» Î´¶¨Òå
 ```
 
-#### æœªå®šä¹‰ç›®å½•é€é¡¹è¯´æ˜
+#### Î´¶¨ÒåÄ¿Â¼ÖğÏîËµÃ÷
 
-| ç›®å½• | å®é™…ç”¨é€” | AGENTS.md æåŠæƒ…å†µ | å»ºè®® |
+| Ä¿Â¼ | Êµ¼ÊÓÃÍ¾ | AGENTS.md Ìá¼°Çé¿ö | ½¨Òé |
 |------|---------|-------------------|------|
-| `src/core/databridge.ts` | DataBridge é€‚é…å±‚ | æœªå®šä¹‰ï¼ˆcore å±‚æ‰©å±•ï¼‰ | è¡¥å……å®šä¹‰æˆ–åˆå¹¶è‡³ `src/core/databridge/` |
-| `src/lib/` | å·¥å…·å‡½æ•°é›†åˆ | ç™½åå•æåŠ `utils`ï¼ˆç¬¬ 33 è¡Œï¼‰ï¼Œä½†ç›®å½•æœªå®šä¹‰ | è¿ç§»è‡³ `src/lib/` |
-| `src/apps/` | App åˆ†å‘å™¨ï¼ˆReact.lazy åŠ è½½é¡µé¢ï¼‰ | ä¾èµ–æ–¹å‘è§„åˆ™ä¸­æåŠ `apps/`ï¼ˆç¬¬ 35 è¡Œï¼‰ï¼Œä½†ç›®å½•åˆ—è¡¨æœªå®šä¹‰ | è¡¥å……å®šä¹‰ |
-| `src/agents/` | AI Agent è¿è¡Œæ—¶æ¨¡å— | å®šä¹‰ `agents/`ï¼ˆæ— å‰ç¼€ï¼Œç¬¬ 40 è¡Œï¼‰ï¼Œä½†å®é™…åœ¨ `src/agents/` | æ˜ç¡®è·¯å¾„ |
-| `src/blueprints/` | è“å›¾/æ¨¡æ¿ | æœªæåŠ | è¡¥å……å®šä¹‰æˆ–å½’æ¡£ |
-| `src/cockpit/` | é©¾é©¶èˆ±ç»„ä»¶ | åœ¨ components æè¿°ä¸­æåŠ `cockpit/`ï¼ˆç¬¬ 23 è¡Œï¼‰ | æ˜ç¡®æ˜¯ç‹¬ç«‹ç›®å½•è¿˜æ˜¯ components å­é›† |
-| `src/devtools/` | å¼€å‘å·¥å…· | æœªæåŠ | è¡¥å……å®šä¹‰æˆ–å½’æ¡£ |
-| `src/fixtures/` | æµ‹è¯•å¤¹å…·/æ¨¡æ‹Ÿæ•°æ® | æœªæåŠ | è¡¥å……å®šä¹‰ï¼ˆæµ‹è¯•æ•°æ®å±‚ï¼‰ |
-| `src/generated/` | ç”Ÿæˆä»£ç  | æœªæåŠ | è¡¥å……å®šä¹‰æˆ–çº³å…¥ .gitignore |
-| `src/hooks/` | React Hooks | æœªæåŠ | è¡¥å……å®šä¹‰ï¼ˆå¯èƒ½è¢«å½’ä¸º components å±‚ï¼‰ |
-| `src/i18n/` | å›½é™…åŒ–é…ç½® | æœªæåŠ | è¡¥å……å®šä¹‰ï¼ˆé…ç½®å±‚æ‰©å±•ï¼‰ |
-| `src/mcp/` | MCPï¼ˆModel Context Protocolï¼‰ | æœªæåŠ | è¡¥å……å®šä¹‰ |
-| `src/schema/` | æ•°æ® Schema | æœªæåŠ | è¡¥å……å®šä¹‰ï¼ˆæ•°æ®å±‚æ‰©å±•ï¼‰ |
-| `src/showcase/` | å±•ç¤º/ç¤ºä¾‹é¡µé¢ | æœªæåŠ | è¡¥å……å®šä¹‰æˆ–å½’æ¡£ |
-| `src/types/` | TypeScript ç±»å‹å®šä¹‰ | å®šä¹‰ `types/`ï¼ˆæ— å‰ç¼€ï¼Œç¬¬ 39 è¡Œï¼‰ | æ˜ç¡®è·¯å¾„ |
+| `src/core/databridge.ts` | DataBridge ÊÊÅä²ã | Î´¶¨Òå£¨core ²ãÀ©Õ¹£© | ²¹³ä¶¨Òå»òºÏ²¢ÖÁ `src/core/databridge/` |
+| `src/lib/` | ¹¤¾ßº¯Êı¼¯ºÏ | °×Ãûµ¥Ìá¼° `utils`£¨µÚ 33 ĞĞ£©£¬µ«Ä¿Â¼Î´¶¨Òå | Ç¨ÒÆÖÁ `src/lib/` |
+| `src/apps/` | App ·Ö·¢Æ÷£¨React.lazy ¼ÓÔØÒ³Ãæ£© | ÒÀÀµ·½Ïò¹æÔòÖĞÌá¼° `apps/`£¨µÚ 35 ĞĞ£©£¬µ«Ä¿Â¼ÁĞ±íÎ´¶¨Òå | ²¹³ä¶¨Òå |
+| `src/agents/` | AI Agent ÔËĞĞÊ±Ä£¿é | ¶¨Òå `agents/`£¨ÎŞÇ°×º£¬µÚ 40 ĞĞ£©£¬µ«Êµ¼ÊÔÚ `src/agents/` | Ã÷È·Â·¾¶ |
+| `src/blueprints/` | À¶Í¼/Ä£°å | Î´Ìá¼° | ²¹³ä¶¨Òå»ò¹éµµ |
+| `src/cockpit/` | ¼İÊ»²Õ×é¼ş | ÔÚ components ÃèÊöÖĞÌá¼° `cockpit/`£¨µÚ 23 ĞĞ£© | Ã÷È·ÊÇ¶ÀÁ¢Ä¿Â¼»¹ÊÇ components ×Ó¼¯ |
+| `src/devtools/` | ¿ª·¢¹¤¾ß | Î´Ìá¼° | ²¹³ä¶¨Òå»ò¹éµµ |
+| `src/fixtures/` | ²âÊÔ¼Ğ¾ß/Ä£ÄâÊı¾İ | Î´Ìá¼° | ²¹³ä¶¨Òå£¨²âÊÔÊı¾İ²ã£© |
+| `src/generated/` | Éú³É´úÂë | Î´Ìá¼° | ²¹³ä¶¨Òå»òÄÉÈë .gitignore |
+| `src/hooks/` | React Hooks | Î´Ìá¼° | ²¹³ä¶¨Òå£¨¿ÉÄÜ±»¹éÎª components ²ã£© |
+| `src/i18n/` | ¹ú¼Ê»¯ÅäÖÃ | Î´Ìá¼° | ²¹³ä¶¨Òå£¨ÅäÖÃ²ãÀ©Õ¹£© |
+| `src/mcp/` | MCP£¨Model Context Protocol£© | Î´Ìá¼° | ²¹³ä¶¨Òå |
+| `src/schema/` | Êı¾İ Schema | Î´Ìá¼° | ²¹³ä¶¨Òå£¨Êı¾İ²ãÀ©Õ¹£© |
+| `src/showcase/` | Õ¹Ê¾/Ê¾ÀıÒ³Ãæ | Î´Ìá¼° | ²¹³ä¶¨Òå»ò¹éµµ |
+| `src/types/` | TypeScript ÀàĞÍ¶¨Òå | ¶¨Òå `types/`£¨ÎŞÇ°×º£¬µÚ 39 ĞĞ£© | Ã÷È·Â·¾¶ |
 
 ---
 
-## ä¸‰ã€ä¼˜å…ˆå¤„ç†å»ºè®®
+## Èı¡¢ÓÅÏÈ´¦Àí½¨Òé
 
-| ä¼˜å…ˆçº§ | ç›®å½•/ä»»åŠ¡ | æ“ä½œ | é¢„æœŸå·¥æ—¶ | ä¾èµ– |
+| ÓÅÏÈ¼¶ | Ä¿Â¼/ÈÎÎñ | ²Ù×÷ | Ô¤ÆÚ¹¤Ê± | ÒÀÀµ |
 |--------|----------|------|---------|------|
-| **P0** | `outputs/` â†’ .gitignore | è¡¥å…… `.gitignore` è§„åˆ™ï¼Œæ’é™¤ `outputs/` æˆ– `outputs/test-doc-auto-update/` | 15 min | æ—  |
-| **P0** | `toolkit/safeCoerce.ts` | åˆ é™¤ï¼ˆä¸ `src/lib/safeCoerce.ts` é‡å¤ï¼‰ | 5 min | æ—  |
-| **P1** | `src/lib/` â†’ `src/lib/` | åˆå¹¶ç›®å½•ï¼Œä¿®æ”¹å…¨å±€ import è·¯å¾„ | 2~4 h | éœ€å…ˆæ˜ç¡®å‘½åæ–¹æ¡ˆ |
-| **P1** | `toolkit/` å…¶ä½™æ–‡ä»¶ | è¿ç§» `patch-error-handling-dynamic.ts`ã€`auto-register-scripts.js`ã€`verify.*` è‡³ `scripts/` | 1 h | æ—  |
-| **P1** | `packages/audit-utils/` | è¯„ä¼°æ˜¯å¦åˆå¹¶å› `src/lib/audit-utils/` | 1~2 h | æ—  |
-| **P2** | `src/core/databridge.ts` | è¯„ä¼°åˆå¹¶è‡³ `src/core/databridge/` æˆ–åœ¨ AGENTS.md ä¸­è¡¥å……å®šä¹‰ | 1~2 h | éœ€è¯„ä¼° import å½±å“é¢ |
-| **P2** | AGENTS.md ç›®å½•å®šä¹‰è¡¥å…¨ | åœ¨ Â§ä¸€ è¡¥å…… `src/apps/`ã€`src/hooks/`ã€`src/i18n/` ç­‰ç¼ºå¤±ç›®å½• | 1 h | éœ€æ¶æ„ç¡®è®¤ |
-| **P2** | `python/` â†’ è§„èŒƒ | è¡¥å……å¤šè¯­è¨€é¡¹ç›®è§„èŒƒã€è¿½åŠ  `__pycache__/` è‡³ .gitignore | 30 min | æ—  |
-| **P3** | `src/blueprints/`ã€`src/devtools/`ã€`src/showcase/` | è¯„ä¼°æ˜¯å¦åºŸå¼ƒæˆ–è¡¥å……å®šä¹‰ | 1 h | éœ€ä¸šåŠ¡ç¡®è®¤ |
-| **P3** | `plugins/` | åœ¨ file-management-guide.md ä¸­è¡¥å……å¤–éƒ¨æ’ä»¶ç›®å½•è¯´æ˜ | 15 min | æ—  |
+| **P0** | `outputs/` ¡ú .gitignore | ²¹³ä `.gitignore` ¹æÔò£¬ÅÅ³ı `outputs/` »ò `outputs/test-doc-auto-update/` | 15 min | ÎŞ |
+| **P0** | `toolkit/safeCoerce.ts` | É¾³ı£¨Óë `src/lib/safeCoerce.ts` ÖØ¸´£© | 5 min | ÎŞ |
+| **P1** | `src/lib/` ¡ú `src/lib/` | ºÏ²¢Ä¿Â¼£¬ĞŞ¸ÄÈ«¾Ö import Â·¾¶ | 2~4 h | ĞèÏÈÃ÷È·ÃüÃû·½°¸ |
+| **P1** | `toolkit/` ÆäÓàÎÄ¼ş | Ç¨ÒÆ `patch-error-handling-dynamic.ts`¡¢`auto-register-scripts.js`¡¢`verify.*` ÖÁ `scripts/` | 1 h | ÎŞ |
+| **P1** | `packages/audit-utils/` | ÆÀ¹ÀÊÇ·ñºÏ²¢»Ø `src/lib/audit-utils/` | 1~2 h | ÎŞ |
+| **P2** | `src/core/databridge.ts` | ÆÀ¹ÀºÏ²¢ÖÁ `src/core/databridge/` »òÔÚ AGENTS.md ÖĞ²¹³ä¶¨Òå | 1~2 h | ĞèÆÀ¹À import Ó°ÏìÃæ |
+| **P2** | AGENTS.md Ä¿Â¼¶¨Òå²¹È« | ÔÚ ¡ìÒ» ²¹³ä `src/apps/`¡¢`src/hooks/`¡¢`src/i18n/` µÈÈ±Ê§Ä¿Â¼ | 1 h | Ğè¼Ü¹¹È·ÈÏ |
+| **P2** | `python/` ¡ú ¹æ·¶ | ²¹³ä¶àÓïÑÔÏîÄ¿¹æ·¶¡¢×·¼Ó `__pycache__/` ÖÁ .gitignore | 30 min | ÎŞ |
+| **P3** | `src/blueprints/`¡¢`src/devtools/`¡¢`src/showcase/` | ÆÀ¹ÀÊÇ·ñ·ÏÆú»ò²¹³ä¶¨Òå | 1 h | ĞèÒµÎñÈ·ÈÏ |
+| **P3** | `plugins/` | ÔÚ file-management-guide.md ÖĞ²¹³äÍâ²¿²å¼şÄ¿Â¼ËµÃ÷ | 15 min | ÎŞ |
 
 ---
 
-## å››ã€åç»­è¡ŒåŠ¨æ£€æŸ¥æ¸…å•
+## ËÄ¡¢ºóĞøĞĞ¶¯¼ì²éÇåµ¥
 
-- [ ] P0: ä¿®æ”¹ `.gitignore`ï¼Œæ’é™¤ `outputs/`ã€`__pycache__/`ã€`packages/*/dist/`ã€`packages/*/node_modules/`
-- [ ] P0: åˆ é™¤ `toolkit/safeCoerce.ts`ï¼ˆç¡®è®¤ `src/lib/safeCoerce.ts` å­˜åœ¨ä¸”å†…å®¹ä¸€è‡´ï¼‰
-- [ ] P1: åˆ¶å®š `src/lib/` â†’ `src/lib/` çš„è¿ç§»æ–¹æ¡ˆï¼ˆå‘½åå†²çªè§£å†³ç­–ç•¥ï¼‰
-- [ ] P1: è¿ç§» `toolkit/` éé‡å¤æ–‡ä»¶è‡³ `scripts/`
-- [ ] P1: è¯„ä¼° `packages/audit-utils/` çš„å»ç•™
-- [ ] P2: åœ¨ AGENTS.md Â§ä¸€ è¡¥å……ç¼ºå¤±ç›®å½•å®šä¹‰ï¼ˆéœ€æ¶æ„è¯„å®¡ï¼‰
-- [ ] P2: åœ¨ file-management-guide.md ä¸­è¡¥å…… monorepo/å¤šè¯­è¨€/å¤–éƒ¨æ’ä»¶ç›®å½•è§„èŒƒ
-- [ ] P3: æ¸…ç† `outputs/` ä¸­è¿‡æœŸçš„ä¸´æ—¶æµ‹è¯•äº§ç‰©
+- [ ] P0: ĞŞ¸Ä `.gitignore`£¬ÅÅ³ı `outputs/`¡¢`__pycache__/`¡¢`packages/*/dist/`¡¢`packages/*/node_modules/`
+- [ ] P0: É¾³ı `toolkit/safeCoerce.ts`£¨È·ÈÏ `src/lib/safeCoerce.ts` ´æÔÚÇÒÄÚÈİÒ»ÖÂ£©
+- [ ] P1: ÖÆ¶¨ `src/lib/` ¡ú `src/lib/` µÄÇ¨ÒÆ·½°¸£¨ÃüÃû³åÍ»½â¾ö²ßÂÔ£©
+- [ ] P1: Ç¨ÒÆ `toolkit/` ·ÇÖØ¸´ÎÄ¼şÖÁ `scripts/`
+- [ ] P1: ÆÀ¹À `packages/audit-utils/` µÄÈ¥Áô
+- [ ] P2: ÔÚ AGENTS.md ¡ìÒ» ²¹³äÈ±Ê§Ä¿Â¼¶¨Òå£¨Ğè¼Ü¹¹ÆÀÉó£©
+- [ ] P2: ÔÚ file-management-guide.md ÖĞ²¹³ä monorepo/¶àÓïÑÔ/Íâ²¿²å¼şÄ¿Â¼¹æ·¶
+- [ ] P3: ÇåÀí `outputs/` ÖĞ¹ıÆÚµÄÁÙÊ±²âÊÔ²úÎï
 
 ---
 
-## äº”ã€å¼•ç”¨ä¸ä¾æ®
+## Îå¡¢ÒıÓÃÓëÒÀ¾İ
 
-| æ–‡æ¡£ | è·¯å¾„ | å¼•ç”¨å†…å®¹ |
+| ÎÄµµ | Â·¾¶ | ÒıÓÃÄÚÈİ |
 |------|------|---------|
-| AGENTS.md | `../../AGENTS.md` | Â§ä¸€ é¡¹ç›®åˆ†å±‚è§„åˆ™ï¼ˆç¬¬ 13~47 è¡Œï¼‰ |
-| AGENTS.md | `../../AGENTS.md` | lib åŸºç¡€è®¾æ–½ç™½åå•ï¼ˆç¬¬ 33 è¡Œï¼‰ |
-| safeCoerce.ts | `../../src/lib/safeCoerce.ts` | 169 è¡Œï¼Œä¸ `toolkit/safeCoerce.ts` é€è¡Œä¸€è‡´ |
-| patch-error-handling-dynamic.ts | `../../toolkit/patch-error-handling-dynamic.ts` | ç¬¬ 149 è¡Œç¡¬ç¼–ç  `src/lib/safeCoerce.ts` è·¯å¾„ |
-| DataBridgeAdapter | `../../src/databridge/index.ts` | ç¬¬ 19 è¡Œ `class DataBridgeAdapter` |
+| AGENTS.md | `../../AGENTS.md` | ¡ìÒ» ÏîÄ¿·Ö²ã¹æÔò£¨µÚ 13~47 ĞĞ£© |
+| AGENTS.md | `../../AGENTS.md` | lib »ù´¡ÉèÊ©°×Ãûµ¥£¨µÚ 33 ĞĞ£© |
+| safeCoerce.ts | `../../src/lib/safeCoerce.ts` | 169 ĞĞ£¬Óë `toolkit/safeCoerce.ts` ÖğĞĞÒ»ÖÂ |
+| patch-error-handling-dynamic.ts | `../../toolkit/patch-error-handling-dynamic.ts` | µÚ 149 ĞĞÓ²±àÂë `src/lib/safeCoerce.ts` Â·¾¶ |
+| DataBridgeAdapter | `../../src/databridge/index.ts` | µÚ 19 ĞĞ `class DataBridgeAdapter` |

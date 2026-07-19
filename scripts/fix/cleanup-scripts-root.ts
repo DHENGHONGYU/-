@@ -127,7 +127,7 @@ function executeActions(actions: FileAction[]): void {
 }
 
 function updatePackageJson(): void {
-  const pkgPath = path.join(SCRIPTS_DIR, '..', 'package.json');
+  const pkgPath = path.join(SCRIPTS_DIR, '..', '..', 'package.json');
   const content = fs.readFileSync(pkgPath, 'utf-8');
   const pkg = JSON.parse(content);
   let changed = false;

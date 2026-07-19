@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import StandardAgentDetail from '../StandardAgentDetail'
-import { getAgentComponent } from '@/agents/agentComponentRegistry'
+import { getAgentComponent } from '@/components/organisms/agent/agentComponentRegistry'
 
 function renderDetail(agentId: string) {
   return render(

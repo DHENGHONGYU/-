@@ -17,7 +17,6 @@ import { describe, expect, it, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { createRef } from 'react'
 import { Button } from '@/components/atoms/Button'
-import { COLOR_TOKENS } from '@/constants/theme.tokens'
 
 describe('Button', () => {
   it('默认渲染：primary variant + md size', () => {
@@ -43,16 +42,20 @@ describe('Button', () => {
     expect(screen.getByRole('button')).toHaveClass('hover:bg-accent')
   })
 
-  it('variant=danger 应用 destructive 样式', () => {
+  it('variant=danger 应用主题感知的 destructive 语义令牌', () => {
     render(<Button variant="danger">危险</Button>)
-    // 断言令牌引用(AGENTS.md §3.5.5):COLOR_TOKENS.danger.bgClass = 'bg-red-500'
-    expect(screen.getByRole('button')).toHaveClass(COLOR_TOKENS.danger.bgClass)
+    // 迁移后：改用语义令牌 bg-destructive + text-destructive-foreground（明暗一致）
+    const btn = screen.getByRole('button')
+    expect(btn).toHaveClass('bg-destructive')
+    expect(btn).toHaveClass('text-destructive-foreground')
   })
 
-  it('variant=success 应用 success 样式', () => {
+  it('variant=success 应用主题感知的 success 语义令牌', () => {
     render(<Button variant="success">成功</Button>)
-    // 断言令牌引用(AGENTS.md §3.5.5):COLOR_TOKENS.success.bgClass = 'bg-green-700'(WCAG AA 对比度)
-    expect(screen.getByRole('button')).toHaveClass(COLOR_TOKENS.success.bgClass)
+    // 迁移后：改用语义令牌 bg-success + text-success-foreground（明暗一致）
+    const btn = screen.getByRole('button')
+    expect(btn).toHaveClass('bg-success')
+    expect(btn).toHaveClass('text-success-foreground')
   })
 
   it('size=sm 应用 sm 样式', () => {

@@ -1,7 +1,6 @@
 /**
  * 批量补齐 JSDoc 缺失（基于 audit-jsdoc.ts 报告）
  * 在 29 处缺失点插入标准 JSDoc 注释。
- */
 /**
  * @file batch-add-jsdoc.ts
  * @description 批量补齐 JSDoc 缺失（基于 audit-jsdoc.ts 报告），在缺失点插入标准 JSDoc 注释

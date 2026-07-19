@@ -6,8 +6,6 @@
  * - 链路追踪 ID 生成
  * - 耗时格式化
  * - 配置 ID 生成
- */
-
 /** 生成链路追踪 ID */
 export function generateTraceId(): string {
   return `trace_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`

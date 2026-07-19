@@ -87,12 +87,16 @@ function createInitialStats(): QualityMetrics {
     totalCollects: 0,
     successCollects: 0,
     successRate: 0,
+    mockCollects: 0,
+    mockSuccesses: 0,
+    realSuccessRate: 0,
     completeness: 0,
-    sourceCounts: { tencent: 0, sina: 0, netease: 0, akshare: 0, mock: 0 },
+    sourceCounts: { tushare: 0, tencent: 0, sina: 0, netease: 0, akshare: 0, mock: 0 },
     fallbackCount: 0,
     writeSuccess: 0,
     writeTotal: 0,
     writeRate: 0,
+    mockWrites: 0,
     avgLatency: 0,
     totalLatency: 0,
   }
@@ -173,15 +177,42 @@ export const useCollectionRuntimeStore = create<CollectionRuntimeState>((set) =>
 
   loadPersistedTraces: async () => {
     try {
-      const spans = await queryTraceRecords({ limit: 200 })
+      const spans = await queryTraceRecords({ limit: 500 })
       set((state) => {
         const merged = { ...state.traceSpans }
+        const rehydratedTasks: Record<string, CollectionTaskRuntime> = { ...state.taskStatuses }
+
         for (const span of spans) {
-          merged[span.traceId] ??= span
+          // 合并 span，不覆盖内存中已有更新版本
+          if (!merged[span.traceId]) {
+            merged[span.traceId] = span
+          }
+
+          // 从 span 重建 taskStatuses（只填充内存中尚不存在的任务）
+          if (span.taskId && !rehydratedTasks[span.taskId]) {
+            const status: CollectionTaskRuntime['status'] =
+              span.result === 'success'
+                ? 'completed'
+                : span.result === 'partial'
+                  ? 'completed'
+                  : 'error'
+
+            rehydratedTasks[span.taskId] = {
+              taskId: span.taskId,
+              dimensionCode: span.dimensionCode,
+              symbol: span.symbol,
+              status,
+              progress: span.result === 'success' || span.result === 'partial' ? 100 : 0,
+              startedAt: span.startedAt,
+              completedAt: span.completedAt,
+              error: span.error,
+            }
+          }
         }
-        return { traceSpans: merged }
+
+        return { traceSpans: merged, taskStatuses: rehydratedTasks }
       })
-      logger.info('[collectionRuntimeStore] 已加载持久化 traces', { count: spans.length })
+      logger.info('[collectionRuntimeStore] 已加载持久化 traces + 重建任务状态', { count: spans.length })
     } catch (err) {
       logger.error('[collectionRuntimeStore] 加载持久化 traces 失败', { error: err })
     }

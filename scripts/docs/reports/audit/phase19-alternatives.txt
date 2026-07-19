@@ -1,0 +1,552 @@
+=== 高频断裂目标及候选替代文件 ===
+3	src/data/themeSymbolPool.ts
+	-> (no candidate)
+3	src/services/system/reviewEngine.ts
+	-> (no candidate)
+3	src/data/gateway/dataGateway.ts
+	-> (no candidate)
+3	src/components/output/ResultCard.tsx
+	-> src/components/atoms/Result.tsx
+3	src/components/collect/CollectParamPanel.tsx
+	-> (no candidate)
+3	scripts/migration-auto-fix.cjs
+	-> (no candidate)
+2	  ✅ README.md
+	-> docs/00-meta/ai-index/.ai-index/README.md
+	-> docs/archive/README.md
+	-> docs/drafts/README.md
+	-> docs/explanation/design/blueprints/README.md
+	-> docs/explanation/README.md
+2	prd/feature-xxx.md
+	-> (no candidate)
+2	scripts/doc-notify.ts
+	-> (no candidate)
+2	scripts/doc-pipeline.ts
+	-> (no candidate)
+2	scripts/ai-dev-loop.ts
+	-> (no candidate)
+2	src/types/modules/trading.types.ts
+	-> (no candidate)
+2	src/services/xxx.ts:120-180
+	-> (no candidate)
+2	src/agents/handlers/llmIntelligentHandler.ts:268,275
+	-> (no candidate)
+2	src/apps/input/mockData.ts
+	-> (no candidate)
+2	src/pages/analysis/HotSectorStrategyPage
+	-> (no candidate)
+2	src/pages/trading/TradingHubPage
+	-> (no candidate)
+2	src/pages/command/CommandHubPage
+	-> (no candidate)
+2	src/lib/validators.ts
+	-> (no candidate)
+2	src/services/trading/timingEngine.ts
+	-> (no candidate)
+2	docs/ui-design-execution-plan.md
+	-> (no candidate)
+2	src/data/rotationData
+	-> (no candidate)
+2	src/services/trading/mockHoldingsData.ts
+	-> (no candidate)
+2	src/pages/analysis/SectorRotationPage.tsx
+	-> (no candidate)
+2	src/services/input/dataTestService.ts
+	-> (no candidate)
+2	docs/explanation/route-registry-audit-notes.md
+	-> (no candidate)
+2	docs/audit/report-7-ui-component-supplementary-audit.md
+	-> (no candidate)
+2	src/services/analysis/sectorScoreService.ts
+	-> (no candidate)
+2	scripts/audit-data-consistency.ts
+	-> (no candidate)
+2	docs/data-lineage.md
+	-> (no candidate)
+2	docs/pwa-offline-data-strategy.md
+	-> (no candidate)
+2	scripts/regression_news_v6_test.cjs
+	-> scripts/other/regression_news_v6_test.cjs
+2	(参考文档)v10-architecture-whitepaper.md
+	-> (no candidate)
+2	src/apps/trading/gateway.ts
+	-> (no candidate)
+2	src/core/stateBoard.ts
+	-> (no candidate)
+2	src/pages/SevenDimCollectPage.tsx
+	-> (no candidate)
+2	src/pages/StockPoolPage.tsx
+	-> (no candidate)
+2	src/pages/StockPool.tsx
+	-> (no candidate)
+2	src/data/rotationData.ts
+	-> (no candidate)
+2	src/cockpit/core/bus.ts
+	-> (no candidate)
+2	src/components/trading/SimulatedTrading.tsx
+	-> (no candidate)
+2	src/components/trading/TradeReviewDashboard.tsx
+	-> (no candidate)
+2	src/data/knowledgeBase.ts
+	-> (no candidate)
+2	src/lib/rag.ts
+	-> (no candidate)
+2	src/pages/AgentManagerPage.tsx
+	-> (no candidate)
+2	src/components/agents/AgentManagerPanel.tsx
+	-> (no candidate)
+2	src/pages/AIAssistant.tsx
+	-> (no candidate)
+2	src/pages/DataManagement.tsx
+	-> (no candidate)
+2	src/pages/DataHubPage.tsx
+	-> (no candidate)
+2	src/xxx/ModuleName.test.ts
+	-> (no candidate)
+2	src/pages/input/__tests__/InputHubPage.test.tsx
+	-> (no candidate)
+2	src/pages/analysis/__tests__/AnalysisHubPage.test.tsx
+	-> (no candidate)
+2	src/pages/trading/__tests__/TradingHubPage.test.tsx
+	-> (no candidate)
+2	src/pages/command/__tests__/CommandHubPage.test.tsx
+	-> (no candidate)
+2	src/mcp/__tests__/exportServer.test.ts
+	-> (no candidate)
+2	src/mcp/__tests__/inputServer.test.ts
+	-> (no candidate)
+2	src/mcp/__tests__/tradeServer.test.ts
+	-> (no candidate)
+2	src/pages/news-v6/components/newsCardUtils.tsx
+	-> (no candidate)
+2	src/services/scoring/_shared/weightedScore.ts
+	-> (no candidate)
+2	src/config/collection.config.ts
+	-> (no candidate)
+2	-data-definition.md
+	-> docs/explanation/design/data-definition.md
+	-> docs/explanation/design/news-data-definition.md
+	-> docs/explanation/news-data-definition.md
+	-> docs/reference/cockpit/data-definition.md
+	-> docs/reference/data-collection/data-definition.md
+2	src/services/trading/takeProfitEngine.ts
+	-> (no candidate)
+2	src/services/trading/tradingOrchestrator.ts
+	-> (no candidate)
+2	src/components/organisms/researchPool/ResearchPoolBoard.tsx
+	-> (no candidate)
+2	src/components/organisms/researchPool/ResearchPoolCard.tsx
+	-> (no candidate)
+2	src/components/organisms/researchPool/ResearchPoolColumn.tsx
+	-> (no candidate)
+2	src/components/organisms/researchPool/ResearchPoolList.tsx
+	-> (no candidate)
+2	src/components/organisms/researchPool/useResearchPoolDataFromStore.ts
+	-> (no candidate)
+2	src/hooks/useResearchPoolBoard.ts
+	-> (no candidate)
+2	src/pages/analysis/ResearchPoolBoardPage.tsx
+	-> (no candidate)
+2	src/cockpit/widgets/ResearchPoolBoardWidget.tsx
+	-> (no candidate)
+2	scripts/v9_dynamic_quality_engine.py
+	-> (no candidate)
+2	src/components/cockpit/SignalSpectrum.test.tsx
+	-> src/components/cockpit/SignalSpectrum.tsx
+2	src/components/widgets/WidgetAnchorBar.tsx
+	-> (no candidate)
+2	src/types/user.types.ts
+	-> src/data/types.ts
+	-> src/lib/store-audit/types.ts
+	-> src/mcp/core/types.ts
+	-> src/services/fetcher/types.ts
+	-> src/services/scoring/v6-engine/types.ts
+2	src/types/config.types.ts
+	-> (no candidate)
+2	src/types/plugin.types.ts
+	-> (no candidate)
+2	src/pages/news-v6/components/FilterPanel
+	-> src/components/organisms/news/NewsFilterPanel.tsx
+2	docs/audit/code-completeness-test-report.md
+	-> (no candidate)
+2	scripts/verify-output-routes.ts
+	-> (no candidate)
+2	scripts/doc-code-consistency.cjs
+	-> (no candidate)
+2	src/constants/colors.ts
+	-> (no candidate)
+2	src/config/limits.ts
+	-> (no candidate)
+2	src/mcp/servers/rbac/rbacServer.ts
+	-> (no candidate)
+2	scripts/mcp-tool-usage-audit.py
+	-> scripts/audit/mcp-tool-usage-audit.py
+2	src/config/engineConfig.ts
+	-> (no candidate)
+2	docs/、prompts/、AGENTS.md
+	-> (no candidate)
+
+=== 出现 1 次的断裂目标（可能需创建 stub） ===
+1	scripts/cleanup-drafts.sh
+	-> (no candidate)
+1	数据宪法.md
+	-> docs/reference/V9数据宪法.md
+1	outputs/doc-audit-2026-07-14/诊断与重梳方案报告.md
+	-> (no candidate)
+1	A/a-navigation-governance.md
+	-> (no candidate)
+1	B/b-architecture-design.md
+	-> (no candidate)
+1	…-file-wandering-report.md
+	-> (no candidate)
+1	…-optimization-prompt.md
+	-> (no candidate)
+1	…-RCA-report.md
+	-> (no candidate)
+1	…-task-list.md
+	-> (no candidate)
+1	../nonexistent.md
+	-> (no candidate)
+1	docs/explanation/design/BACKTEST_data-definition.md
+	-> (no candidate)
+1	docs/explanation/design/NEWS_data-definition.md
+	-> docs/explanation/design/data-definition.md
+	-> docs/reference/cockpit/data-definition.md
+	-> docs/reference/data-collection/data-definition.md
+1	src/core/ ← 核心工具与类型守卫（DataBridge/ACL/Envelope/MemoryCache/EventBus）
+	-> (no candidate)
+1	src/core/databridge.ts ← DataBridge 适配层（core 层扩展）
+	-> src/core/databridge.test.ts
+	-> src/core/databridge.ts
+	-> src/store/databridgeStore.ts
+1	src/lib/ ← 库函数（logger/format/errors/utils/localStorageManager）
+	-> src/lib/localStorageManager.ts
+1	src/lib/common-utils.ts
+	-> (no candidate)
+1	文件去重与整理治理方案.md
+	-> (no candidate)
+1	残留校对更新报告-2026-07-12.md
+	-> (no candidate)
+1	改进路线图实施计划.md
+	-> (no candidate)
+1	2026-07-12-security-audit.md
+	-> (no candidate)
+1	DEPRECATED_原文件名.md
+	-> (no candidate)
+1	docs/《prompts/》AGENTS.md
+	-> (no candidate)
+1	how-to-add-page.md
+	-> docs/archive/how-to-add-page.md
+1	src/cockpit/CockpitShell.tsx(278): JSX 标签未闭合
+	-> src/cockpit/CockpitShell.test.tsx
+	-> src/cockpit/CockpitShell.tsx
+1	-contract.md
+	-> docs/reference/api-contract.md
+	-> docs/reference/input-contract.md
+	-> docs/reference/llm-contract.md
+1	outputs/doc-auto-updater-diagnosis-and-score.md
+	-> (no candidate)
+1	NEWS_data-definition.md
+	-> docs/explanation/design/data-definition.md
+	-> docs/reference/cockpit/data-definition.md
+	-> docs/reference/data-collection/data-definition.md
+1	scripts/doc-retry.ts
+	-> (no candidate)
+1	docs/explanation/silent-fallback-governance.md
+	-> (no candidate)
+1	src/components/ui/FocusTrap.tsx
+	-> (no candidate)
+1	B批次代码审查与改造报告_2026-07-08.md
+	-> (no candidate)
+1	./cockpit-architecture.md
+	-> (no candidate)
+1	src/App.tsx:9,12-16
+	-> src/App.tsx
+	-> src/apps/command/AgentApp.tsx
+	-> src/apps/input/InputApp.tsx
+1	src/services/analysis/sectorScoreService.ts:8,52-53
+	-> (no candidate)
+1	src/apps/trading/TradingApp.tsx:95-125,214-221
+	-> src/apps/trading/TradingApp.test.tsx
+	-> src/apps/trading/TradingApp.tsx
+1	src/apps/analysis/AnalysisApp.tsx:15-39,50-52
+	-> src/apps/analysis/AnalysisApp.tsx
+1	src/components/input/StockSearch.tsx:60-72
+	-> src/components/organisms/input/StockSearch.tsx
+1	src/core/priorityBroadcastQueue.ts
+	-> (no candidate)
+1	src/types/modules/[module].types.ts
+	-> (no candidate)
+1	src/store/[module]Store.ts
+	-> (no candidate)
+1	src/services/[module]/[module]Service.ts
+	-> (no candidate)
+1	src/services/sector/sectorScoreService.ts
+	-> (no candidate)
+1	src/store/screeningStore.ts
+	-> (no candidate)
+1	src/services/backtest/backtestService.ts
+	-> (no candidate)
+1	src/services/score/V6ScoreEngine.ts
+	-> (no candidate)
+1	src/engine/V6ScoreEngine.ts
+	-> (no candidate)
+1	src/config/V6ScoreWeightsConfig.ts
+	-> (no candidate)
+1	src/config/V6ScoreThresholdsConfig.ts
+	-> (no candidate)
+1	src/components/analysis/score/FactorContributionWaterfall.tsx
+	-> (no candidate)
+1	src/components/ui/LoadingState.tsx:52,134
+	-> src/components/molecules/LoadingState.tsx
+1	src/components/ui/Slider.tsx:41,69
+	-> src/components/atoms/Slider.tsx
+1	src/constants/event-names.constants.ts
+	-> (no candidate)
+1	基准: v6-v9界面设计优化可行性计划.md
+	-> docs/explanation/design/v6-v9界面设计优化可行性计划.md
+1	src/generated/tokens.css\|tokens.ts
+	-> src/generated/tokens.css
+	-> src/generated/tokens.ts
+1	-p2.md
+	-> (no candidate)
+1	src/store/inputDashboardStore.ts
+	-> (no candidate)
+1	docs/implementation/adr/2026-06-24-v6-migration.md
+	-> (no candidate)
+1	file:///c:/Users/huawei/Desktop/LU/.trae/skills/ai-driven-app-development/prompts/踩坑备忘录.md
+	-> (no candidate)
+1	src/services/scoring/factorOptimizationService.ts
+	-> (no candidate)
+1	src/services/scoring/factorDriftService.ts
+	-> (no candidate)
+1	src/services/marketData/xxxAdapter.ts
+	-> (no candidate)
+1	src/pages/news-v6/components/NewsFeed.tsx
+	-> (no candidate)
+1	src/store/newsStore.selectors.ts
+	-> (no candidate)
+1	src/core/databridgeHandlers.ts::deleteIndexedRecords
+	-> src/core/databridgeHandlers.ts
+1	src/services/resilience.ts::withRetry
+	-> src/services/fetcher/orchestrator/resilienceChain.ts
+	-> src/services/resilience.test.ts
+	-> src/services/resilience.ts
+1	src/mcp/core/server.ts::readResource
+	-> src/mcp/core/server.ts
+1	src/mcp/core/client.ts::readResource
+	-> src/mcp/core/client.ts
+1	src/services/fetcher/fetcherClient.ts::request
+	-> src/services/fetcher/fetcherClient.test.ts
+	-> src/services/fetcher/fetcherClient.ts
+1	src/services/scoring/v6-engine/engine.ts::calculateAll
+	-> src/services/scoring/v6-engine/engine.ts
+	-> src/store/engineStore.ts
+1	src/services/resilience.ts::guard
+	-> src/services/fetcher/orchestrator/resilienceChain.ts
+	-> src/services/resilience.test.ts
+	-> src/services/resilience.ts
+1	src/store/marketDataStore.ts(462)
+	-> src/store/marketDataStore.test.ts
+	-> src/store/marketDataStore.ts
+1	src/cockpit/widgets/XxxWidget.tsx
+	-> (no candidate)
+1	scripts/cleanup-temp.ts
+	-> (no candidate)
+1	prompts/docs-as-mirror-quickref.md
+	-> (no candidate)
+1	scripts/compare-visual-baselines.sh
+	-> scripts/other/compare-visual-baselines.sh
+1	../explanation/databridge-migration-guide.md
+	-> (no candidate)
+1	src/services/ai-center/__tests__/aiCenterProvider.test.ts
+	-> src/services/ai-center/aiCenterProvider.ts
+1	src/store/localDocStore.ts
+	-> (no candidate)
+1	src/pages/command/SettingsPage.tsx
+	-> (no candidate)
+1	src/services/report/reportService.ts
+	-> (no candidate)
+1	src/pages/command/ReportExportPage.tsx
+	-> (no candidate)
+1	src/services/backtest/backtestEngine.types.ts
+	-> (no candidate)
+1	src/store/collectionWizardStore.configActions.ts
+	-> (no candidate)
+1	src/store/collectionWizardStore.fieldActions.ts
+	-> (no candidate)
+1	src/store/collectionWizardStore.taskActions.ts
+	-> (no candidate)
+1	src/store/executionStore.actions.ts
+	-> (no candidate)
+1	src/store/executionStore.planOps.ts
+	-> (no candidate)
+1	src/store/marketDataStore.actions.ts
+	-> (no candidate)
+1	src/store/orderStore.actions.ts
+	-> (no candidate)
+1	src/store/orderStore.subscriptions.ts
+	-> (no candidate)
+1	src/store/utils/collectionWizardStore.constants.ts
+	-> (no candidate)
+1	src/store/utils/riskDerived.circuit.ts
+	-> (no candidate)
+1	src/store/utils/riskDerived.execution.ts
+	-> (no candidate)
+1	src/store/utils/riskDerived.stats.ts
+	-> (no candidate)
+1	src/store/utils/riskDerived.symbol.ts
+	-> (no candidate)
+1	src/store/utils/riskDerived.trend.ts
+	-> (no candidate)
+1	outputs/architecture-cleanup-completion-report-2026-07-14.md
+	-> (no candidate)
+1	src/services/scoring/v6-engine/confidence.ts
+	-> (no candidate)
+1	docs/changelogs/2026-07/pr-6-module-split-plan.md
+	-> (no candidate)
+1	docs/changelogs/2026-07/trade-error-classifier-split-completion-archive.md
+	-> (no candidate)
+1	src/constants/chart.constants.ts
+	-> (no candidate)
+1	src/services/xxx.ts
+	-> (no candidate)
+1	src/components/trading/RiskBanner.tsx
+	-> (no candidate)
+1	src/components/trading/FinalConfirm.tsx
+	-> (no candidate)
+1	src/components/analysis/DebaterPanel.tsx
+	-> (no candidate)
+1	src/components/command/GatewayPanel.tsx
+	-> (no candidate)
+1	src/components/output/ReviewDrawer.tsx
+	-> (no candidate)
+1	src/portal/components/LoopBanner.tsx
+	-> (no candidate)
+1	src/data/v6StrategyEngine.ts
+	-> (no candidate)
+1	src/agents/trading/TradingOrchestrator.ts
+	-> (no candidate)
+1	src/agents/trading/paperTrading.ts
+	-> (no candidate)
+1	src/services/trading/stopLossEngine.ts
+	-> (no candidate)
+1	src/services/trading/paperTradingEngine.ts
+	-> (no candidate)
+1	src/apps/trading/panels/PortfolioRebalancePanel.tsx
+	-> (no candidate)
+1	src/services/hybrid-proofread/__tests__/hashService.test.ts
+	-> src/services/hybrid-proofread/hashService.ts
+1	src/services/hybrid-proofread/__tests__/ruleEngine.test.ts
+	-> src/services/hybrid-proofread/ruleEngine.ts
+1	src/services/hybrid-proofread/__tests__/localCollector.test.ts
+	-> src/services/hybrid-proofread/localCollector.ts
+1	src/services/hybrid-proofread/__tests__/reportGenerator.test.ts
+	-> src/services/hybrid-proofread/reportGenerator.ts
+1	scripts/monthly-doc-check.ts
+	-> (no candidate)
+1	src/services/rbac/permissionRevocationService.test.ts
+	-> src/services/rbac/permissionRevocationService.ts
+1	scripts/reports/chart_dynamic_01.png
+	-> (no candidate)
+1	scripts/reports/dynamic_analysis_report.json
+	-> docs/04-testing/audit-reports/audit/dynamic_analysis_report.json
+	-> docs/how-to/testing/audit-reports/audit/dynamic_analysis_report.json
+1	src/config/stock-analysis.config.ts
+	-> (no candidate)
+1	src/services/stockpool/__tests__/stockpoolService.test.ts
+	-> (no candidate)
+1	src/services/trade/__tests__/holdingsService.test.ts
+	-> (no candidate)
+1	src/components/ui/states/states.test.tsx
+	-> (no candidate)
+1	src/cockpit/WidgetStateBoundary.tsx
+	-> (no candidate)
+1	src/components|pages|cockpit|apps|portal
+	-> (no candidate)
+1	src/components/__token_scan_tmp__.tsx
+	-> (no candidate)
+1	src/components/widgets/WidgetAnchorBar.test.tsx
+	-> (no candidate)
+1	src/components/cockpit/SignalSpectrum.tsx(45,59)
+	-> src/components/cockpit/SignalSpectrum.tsx
+1	C:\Users\huawei\Desktop\智能股票系统测试测试\v10-architecture-whitepaper.md
+	-> (no candidate)
+1	src/apps/analysis/panels/V6ScorePanel.tsx
+	-> (no candidate)
+1	src/agents/input/StockInputAgent.ts
+	-> (no candidate)
+1	src/components/collect/CollectMonitor.tsx
+	-> (no candidate)
+1	src/components/ScoringProgress.tsx
+	-> (no candidate)
+1	src/services/fetcher/fetcherConfigService.ts
+	-> (no candidate)
+1	docs/explanation/prototype-reference.md
+	-> (no candidate)
+1	docs/implementation/adr/ADR-001~009.md
+	-> (no candidate)
+1	src/services/scoring/sectorScoreService.ts
+	-> (no candidate)
+1	src/types/research.types.ts
+	-> (no candidate)
+1	docs/explanation/completeness-profile-batch1~5.md
+	-> docs/reference/completeness-profile-batch1.md
+1	docs/audit/report-9-data-layer-compliance.md
+	-> (no candidate)
+1	docs/audit/report-10-mature-app-benchmark-comparison.md
+	-> (no candidate)
+1	docs/audit/report-11-integration-maturity-test.md
+	-> (no candidate)
+1	scripts/regression_news_v6.py
+	-> scripts/other/regression_news_v6.py
+1	scripts/run_browser_test.ps1
+	-> scripts/other/run_browser_test.ps1
+1	scripts/test-news-v6.cjs
+	-> scripts/test-tool/test-news-v6.cjs
+1	docs/BACKTEST_data-definition.md
+	-> (no candidate)
+1	src/store/fetcherStrategyStore.ts
+	-> (no candidate)
+1	src/store/fetcherStore.ts
+	-> (no candidate)
+1	src/lib/dataValidation.ts
+	-> (no candidate)
+1	scripts/check-types.sh
+	-> scripts/monitor/check-types.sh
+1	整改任务执行追踪.md
+	-> (no candidate)
+1	references/doc-code-consistency.md
+	-> (no candidate)
+1	references/checklist.md
+	-> docs/explanation/a11y-checklist.md
+1	docs/reports/2026-07-07-comprehensive-audit-report.md
+	-> (no candidate)
+1	src/components/cockpit/SecurityBadge.tsx
+	-> (no candidate)
+1	类型_主题_日期.md
+	-> (no candidate)
+1	src/mcp/servers/data-collector/data-collectorServer.ts
+	-> (no candidate)
+1	src/constants/animation.ts
+	-> (no candidate)
+1	src/types/modules/scoring.types.ts
+	-> (no candidate)
+1	src/mcp/servers/usecase/useCaseServer.ts
+	-> (no candidate)
+1	src/mcp/servers/ai-center/aiCenterServer.ts
+	-> (no candidate)
+1	src/config/timeoutConfig.ts
+	-> (no candidate)
+1	src/constants/uiDimensions.ts
+	-> (no candidate)
+1	docs/explanation/design/design-principles.md
+	-> (no candidate)
+1	src/mcp/servers/stockpool/stockPoolServer.ts
+	-> (no candidate)
+1	docs/02-design/ADR/adr-xxx-mcp-server-lifecycle.md
+	-> (no candidate)
+1	docs/quick-queries.md
+	-> (no candidate)
+1	../../prompts/../../prompts/../../prompts/system-prompt-template.md
+	-> (no candidate)

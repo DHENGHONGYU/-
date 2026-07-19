@@ -27,6 +27,9 @@ import { LlmAdvancedTab } from './components/LlmAdvancedTab'
 import { LlmFactorsTab } from './components/LlmFactorsTab'
 import { LlmStatsTab } from './components/LlmStatsTab'
 
+/**
+ * LlmManagementPage
+ */
 export default function LlmManagementPage(): React.JSX.Element {
   const state = useLlmConfigState()
   const actions = useLlmConfigActions(state)

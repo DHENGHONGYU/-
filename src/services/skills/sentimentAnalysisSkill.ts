@@ -16,6 +16,9 @@ import { CitationSchema } from './layerAnalysisSkillFactory'
 
 const logger = getLogger()
 
+/**
+ * SentimentOutputSchema
+ */
 export const SentimentOutputSchema = z.object({
   sentimentScore: z.number().min(-1).max(1),
   bullishIntensity: z.number().min(0).max(1),
@@ -31,6 +34,9 @@ export const SentimentOutputSchema = z.object({
 
 export type SentimentAnalysisOutput = z.infer<typeof SentimentOutputSchema>
 
+/**
+ * SentimentInputSchema
+ */
 export const SentimentInputSchema = z.object({
   symbol: z.string(),
   stockName: z.string().optional(),
@@ -87,6 +93,9 @@ function buildMessages(ctx: SkillContext): LlmMessage[] {
   ]
 }
 
+/**
+ * executeSentimentAnalysisSkill
+ */
 export async function executeSentimentAnalysisSkill(
   ctx: SkillContext,
 ): Promise<SkillResult<SentimentAnalysisOutput>> {
@@ -143,6 +152,9 @@ export async function executeSentimentAnalysisSkill(
   }
 }
 
+/**
+ * sentimentAnalysisSkill
+ */
 export const sentimentAnalysisSkill: SkillDefinition<SentimentAnalysisOutput> = {
   name: 'sentiment-analysis',
   title: 'D9 舆情情绪分析',

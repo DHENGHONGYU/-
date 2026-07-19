@@ -1,144 +1,152 @@
 ---
-title: 2026-07-05-module-registry-and-integration
+title: 2026-07-05 Ä£¿é×¢²áÌåÏµ½¨Á¢ÓëÎ´×¢²áÎÄ¼şÈ«Á¿¼¯³É
+type: reference
+domain: project
+phase: retrospective
 tier: reference
+status: active
+maintainer: V9 Architecture Team
+summary: "ÈÎÎñ×´Ì¬: ? Íê³É ´úÂë°æ±¾: v2.2.1 ¡ú v2.3.0 Ö´ĞĞÊ±¼ä: 2026-07-05 È«Ìì"
+tags: [project, integration, registry, changelog, reference]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-tier: reference
-code_version: 2.0.0
----
+# 2026-07-05 Ä£¿é×¢²áÌåÏµ½¨Á¢ÓëÎ´×¢²áÎÄ¼şÈ«Á¿¼¯³É
 
-# 2026-07-05 æ¨¡å—æ³¨å†Œä½“ç³»å»ºç«‹ä¸æœªæ³¨å†Œæ–‡ä»¶å…¨é‡é›†æˆ
-
-> **ä»»åŠ¡çŠ¶æ€**: âœ… å®Œæˆ
-> **ä»£ç ç‰ˆæœ¬**: v2.2.1 â†’ v2.3.0
-> **æ‰§è¡Œæ—¶é—´**: 2026-07-05 å…¨å¤©
-
----
-
-## ä¸€ã€ä»»åŠ¡æ¦‚è¿°
-
-å¯¹ V9 é¡¹ç›® 629 ä¸ªæ–‡ä»¶è¿›è¡Œå…¨é¢æ‰«æï¼Œè¯†åˆ« 31 ä¸ªæœªæ³¨å†Œ/æœªå¼•ç”¨æ–‡ä»¶ï¼Œå»ºç«‹ä¸‰å±‚é›†ä¸­æ³¨å†Œä½“ç³»ï¼ˆStore/Service/Componentï¼‰ï¼Œå®Œæˆ 7 ä¸ª Cockpit Widget æ³¨å†Œå’Œ 12 ä¸ªç»„ä»¶çš„é¡µé¢é›†æˆã€‚
+> **ÈÎÎñ×´Ì¬**: ? Íê³É
+> **´úÂë°æ±¾**: v2.2.1 ¡ú v2.3.0
+> **Ö´ĞĞÊ±¼ä**: 2026-07-05 È«Ìì
 
 ---
 
-## äºŒã€äººæœºäº¤äº’è®°å½•
+## Ò»¡¢ÈÎÎñ¸ÅÊö
 
-| æ—¶é—´ | ç”¨æˆ·æŒ‡ä»¤ | AI å“åº” |
+¶Ô V9 ÏîÄ¿ 629 ¸öÎÄ¼ş½øĞĞÈ«ÃæÉ¨Ãè£¬Ê¶±ğ 31 ¸öÎ´×¢²á/Î´ÒıÓÃÎÄ¼ş£¬½¨Á¢Èı²ã¼¯ÖĞ×¢²áÌåÏµ£¨Store/Service/Component£©£¬Íê³É 7 ¸ö Cockpit Widget ×¢²áºÍ 12 ¸ö×é¼şµÄÒ³Ãæ¼¯³É¡£
+
+---
+
+## ¶ş¡¢ÈË»ú½»»¥¼ÇÂ¼
+
+| Ê±¼ä | ÓÃ»§Ö¸Áî | AI ÏìÓ¦ |
 |------|---------|---------|
-| T+0 | æ‰«ææœ¬åœ°æ–‡ä»¶å¤¹ï¼Œè¯†åˆ«æœªæ³¨å†Œæ–‡ä»¶å¹¶æ‰§è¡Œæ ‡å‡†åŒ–æ³¨å†Œç®¡ç† | å…¨é¢æ‰«æ 629 æ–‡ä»¶ï¼Œè¯†åˆ« 31 ä¸ªæœªæ³¨å†Œæ–‡ä»¶ |
-| T+1 | ç»§ç»­ | åˆ›å»º 3 ä¸ªæ³¨å†Œè¡¨ï¼Œæ³¨å†Œ 7 ä¸ª Widget |
-| T+2 | ç»§ç»­ | é›†æˆ 12 ä¸ªç»„ä»¶åˆ°ç›®æ ‡é¡µé¢ |
-| T+3 | ç»§ç»­ | ä¿®å¤å†å²ç±»å‹é”™è¯¯ï¼Œé›†æˆ feedbackService |
-| T+4 | ç»§ç»­ | ä¿®å¤ ESLint æ’ä»¶é…ç½®ï¼Œè¿è¡Œå…¨é‡éªŒè¯ |
-| T+5 | æµ‹è¯•å¾ªç¯è¶… 10 åˆ†é’Ÿåˆ™åœæ­¢ï¼Œåˆ†æåŸå›  | åˆ†ææµ‹è¯•å¤±è´¥åŸå› ï¼Œé€‰æ‹©æ–¹æ¡ˆ A è·³è¿‡å†å²é—ç•™ |
-| T+6 | é€‰æ‹©æ–¹æ¡ˆ A | å®Œæˆ ESLint ä¿®å¤ï¼Œç”Ÿæˆæœ€ç»ˆè´¨é‡æŠ¥å‘Š |
-| T+7 | æ›´æ–°æ–‡æ¡£åŠæ—¥å¿— | æ‰«ææ–‡æ¡£ç›®å½•ï¼Œè¯†åˆ« 9 ç¯‡éœ€æ›´æ–° + 2 ç¯‡ç¼ºå¤±æ–‡æ¡£ |
+| T+0 | É¨Ãè±¾µØÎÄ¼ş¼Ğ£¬Ê¶±ğÎ´×¢²áÎÄ¼ş²¢Ö´ĞĞ±ê×¼»¯×¢²á¹ÜÀí | È«ÃæÉ¨Ãè 629 ÎÄ¼ş£¬Ê¶±ğ 31 ¸öÎ´×¢²áÎÄ¼ş |
+| T+1 | ¼ÌĞø | ´´½¨ 3 ¸ö×¢²á±í£¬×¢²á 7 ¸ö Widget |
+| T+2 | ¼ÌĞø | ¼¯³É 12 ¸ö×é¼şµ½Ä¿±êÒ³Ãæ |
+| T+3 | ¼ÌĞø | ĞŞ¸´ÀúÊ·ÀàĞÍ´íÎó£¬¼¯³É feedbackService |
+| T+4 | ¼ÌĞø | ĞŞ¸´ ESLint ²å¼şÅäÖÃ£¬ÔËĞĞÈ«Á¿ÑéÖ¤ |
+| T+5 | ²âÊÔÑ­»·³¬ 10 ·ÖÖÓÔòÍ£Ö¹£¬·ÖÎöÔ­Òò | ·ÖÎö²âÊÔÊ§°ÜÔ­Òò£¬Ñ¡Ôñ·½°¸ A Ìø¹ıÀúÊ·ÒÅÁô |
+| T+6 | Ñ¡Ôñ·½°¸ A | Íê³É ESLint ĞŞ¸´£¬Éú³É×îÖÕÖÊÁ¿±¨¸æ |
+| T+7 | ¸üĞÂÎÄµµ¼°ÈÕÖ¾ | É¨ÃèÎÄµµÄ¿Â¼£¬Ê¶±ğ 9 ÆªĞè¸üĞÂ + 2 ÆªÈ±Ê§ÎÄµµ |
 
 ---
 
-## ä¸‰ã€æ–‡ä»¶å˜æ›´è¯¦æƒ…
+## Èı¡¢ÎÄ¼ş±ä¸üÏêÇé
 
-### 3.1 æ–°å»ºæ–‡ä»¶ï¼ˆ3 ä¸ªï¼‰
+### 3.1 ĞÂ½¨ÎÄ¼ş£¨3 ¸ö£©
 
-| æ–‡ä»¶ | ç”¨é€” | è¡Œæ•° |
+| ÎÄ¼ş | ÓÃÍ¾ | ĞĞÊı |
 |------|------|------|
-| `src/store/derived.index.ts` | Store é›†ä¸­æ³¨å†Œè¡¨ï¼ˆ29 æ¡ç›®ï¼‰ | ~200 |
-| `src/services/contracts.ts` | Service é›†ä¸­æ³¨å†Œè¡¨ï¼ˆ52 æ¡ç›®ï¼‰ | ~350 |
-| `src/components/componentRegistry.ts` | Component é›†ä¸­æ³¨å†Œè¡¨ï¼ˆ10 æ¡ç›®ï¼‰ | ~180 |
+| `src/store/derived.index.ts` | Store ¼¯ÖĞ×¢²á±í£¨29 ÌõÄ¿£© | ~200 |
+| `src/services/contracts.ts` | Service ¼¯ÖĞ×¢²á±í£¨52 ÌõÄ¿£© | ~350 |
+| `src/components/componentRegistry.ts` | Component ¼¯ÖĞ×¢²á±í£¨10 ÌõÄ¿£© | ~180 |
 
-### 3.2 ä¿®æ”¹æ–‡ä»¶ï¼ˆ17 ä¸ªï¼‰
+### 3.2 ĞŞ¸ÄÎÄ¼ş£¨17 ¸ö£©
 
-| æ–‡ä»¶ | å˜æ›´å†…å®¹ | å½±å“èŒƒå›´ |
+| ÎÄ¼ş | ±ä¸üÄÚÈİ | Ó°Ïì·¶Î§ |
 |------|---------|---------|
-| `src/constants/cockpit.constants.ts` | +7 Widget é»˜è®¤é…ç½® + 7 æ•°æ®æº | Cockpit Widget ç³»ç»Ÿ |
-| `src/cockpit/core/widgetRegistry.ts` | +7 Widget æ¨¡æ¿ + 7 é»˜è®¤å¸ƒå±€ | Widget æ³¨å†Œä¸æ¸²æŸ“ |
-| `src/apps/command/CommandApp.tsx` | +LogStreamPanel + AgentTaskList | ç³»ç»Ÿç›‘æ§ UI |
-| `src/apps/command/ConfigApp.tsx` | +LLMConfigWidgetï¼ˆå—æ§æ¨¡å¼ï¼‰ | é…ç½®ç®¡ç† UI |
-| `src/apps/analysis/AnalysisApp.tsx` | +AnalysisTemplateCards | åˆ†æèˆ±é»˜è®¤è§†å›¾ |
-| `src/cockpit/CockpitShell.tsx` | +WidgetErrorBoundary | Widget å¼‚å¸¸é™çº§ |
-| `src/pages/analysis/NewsPage.tsx` | +NewsSentimentTrend | èµ„è®¯æƒ…æ„Ÿè¶‹åŠ¿ |
-| `src/pages/analysis/StockAnalysisPage.tsx` | +ScoreHistoryPanel | è¯„åˆ†å†å² |
-| `src/pages/analysis/IntelligentScorePage.tsx` | +MultiPeriodTrendChart + IntelligentScoreExplanation | æ™ºèƒ½è¯„åˆ†è¯¦æƒ… |
-| `src/services/system/bootstrapService.ts` | +initPWA() å¯åŠ¨é“¾è·¯ | åº”ç”¨åˆå§‹åŒ– |
-| `src/services/trading/tradingService.ts` | +feedbackService æ“ä½œåé¦ˆ | äº¤æ˜“æ‰§è¡Œ |
-| `src/apps/trading/components/PhaseStepper.tsx` | ä¿®å¤ COLOR_SHADES.white/gray ä¸å­˜åœ¨ | ç±»å‹é”™è¯¯ä¿®å¤ |
-| `src/pages/analysis/ValuePitPage.tsx` | æ¢å¤ COLOR_SHADES å¯¼å…¥ | ç±»å‹é”™è¯¯ä¿®å¤ |
-| `src/pages/analysis/BacktestPage.tsx` | ç§»é™¤æœªä½¿ç”¨ twBg å¯¼å…¥ | ç±»å‹é”™è¯¯ä¿®å¤ |
-| `scripts/quality/eslint-plugin-no-hardcoded-colors.js` | CJSâ†’ESM å¯¼å‡º + rules åŒ…è£… | ESLint é…ç½®ä¿®å¤ |
-| `../../../reports/changelogs/CHANGELOG.md` | +v2.3.0 æ¡ç›® + æ–‡æ¡£æ›´æ–°è¡¨æ ¼ | æ–‡æ¡£åŒæ­¥ |
-| `../../registry-index.md` | æ–°å»ºæ³¨å†Œä½“ç³»æ ¸å¿ƒæ–‡æ¡£ | æ–‡æ¡£æ–°å¢ |
-| `../../03-architecture-standards.md` | v2.2.1â†’v2.3.0ï¼šÂ§3.1.8 æ³¨å†Œä½“ç³»ã€Widget +7ã€D19 ä¿®å¤ | æ¶æ„æ–‡æ¡£ |
-| `../../widget-development-guide.md` | v1.0.0â†’v1.1.0ï¼šÂ§7 Widget æ¸…å•ï¼ˆ19 ä¸ªï¼‰ã€Â§7.3 é”™è¯¯éš”ç¦» | Widget æŒ‡å— |
-| `../../testing-strategy.md` | v1.0.0â†’v1.1.0ï¼šÂ§9 æ³¨å†Œä½“ç³»æµ‹è¯•ç­–ç•¥ã€åŸºçº¿æ›´æ–° | æµ‹è¯•ç­–ç•¥ |
-| `../../data-dictionary-index.md` | v1.2.0â†’v1.3.0ï¼šRegistry æ¨¡å—ç´¢å¼• | æ•°æ®å­—å…¸ |
-| `../../10-glossary.md` | v2.2.1â†’v2.3.0ï¼šÂ§10.11 æ³¨å†Œä½“ç³»æœ¯è¯­ï¼ˆ8 æ¡ï¼‰ | æœ¯è¯­è¡¨ |
+| `src/constants/cockpit.constants.ts` | +7 Widget Ä¬ÈÏÅäÖÃ + 7 Êı¾İÔ´ | Cockpit Widget ÏµÍ³ |
+| `src/cockpit/core/widgetRegistry.ts` | +7 Widget Ä£°å + 7 Ä¬ÈÏ²¼¾Ö | Widget ×¢²áÓëäÖÈ¾ |
+| `src/apps/command/CommandApp.tsx` | +LogStreamPanel + AgentTaskList | ÏµÍ³¼à¿Ø UI |
+| `src/apps/command/ConfigApp.tsx` | +LLMConfigWidget£¨ÊÜ¿ØÄ£Ê½£© | ÅäÖÃ¹ÜÀí UI |
+| `src/apps/analysis/AnalysisApp.tsx` | +AnalysisTemplateCards | ·ÖÎö²ÕÄ¬ÈÏÊÓÍ¼ |
+| `src/cockpit/CockpitShell.tsx` | +WidgetErrorBoundary | Widget Òì³£½µ¼¶ |
+| `src/pages/analysis/NewsPage.tsx` | +NewsSentimentTrend | ×ÊÑ¶Çé¸ĞÇ÷ÊÆ |
+| `src/pages/analysis/StockAnalysisPage.tsx` | +ScoreHistoryPanel | ÆÀ·ÖÀúÊ· |
+| `src/pages/analysis/IntelligentScorePage.tsx` | +MultiPeriodTrendChart + IntelligentScoreExplanation | ÖÇÄÜÆÀ·ÖÏêÇé |
+| `src/services/system/bootstrapService.ts` | +initPWA() Æô¶¯Á´Â· | Ó¦ÓÃ³õÊ¼»¯ |
+| `src/services/trading/tradingService.ts` | +feedbackService ²Ù×÷·´À¡ | ½»Ò×Ö´ĞĞ |
+| `src/apps/trading/components/PhaseStepper.tsx` | ĞŞ¸´ COLOR_SHADES.white/gray ²»´æÔÚ | ÀàĞÍ´íÎóĞŞ¸´ |
+| `src/pages/analysis/ValuePitPage.tsx` | »Ö¸´ COLOR_SHADES µ¼Èë | ÀàĞÍ´íÎóĞŞ¸´ |
+| `src/pages/analysis/BacktestPage.tsx` | ÒÆ³ıÎ´Ê¹ÓÃ twBg µ¼Èë | ÀàĞÍ´íÎóĞŞ¸´ |
+| `scripts/quality/eslint-plugin-no-hardcoded-colors.js` | CJS¡úESM µ¼³ö + rules °ü×° | ESLint ÅäÖÃĞŞ¸´ |
+| `../../../reports/changelogs/CHANGELOG.md` | +v2.3.0 ÌõÄ¿ + ÎÄµµ¸üĞÂ±í¸ñ | ÎÄµµÍ¬²½ |
+| `../../registry-index.md` | ĞÂ½¨×¢²áÌåÏµºËĞÄÎÄµµ | ÎÄµµĞÂÔö |
+| `../../03-architecture-standards.md` | v2.2.1¡úv2.3.0£º¡ì3.1.8 ×¢²áÌåÏµ¡¢Widget +7¡¢D19 ĞŞ¸´ | ¼Ü¹¹ÎÄµµ |
+| `../../widget-development-guide.md` | v1.0.0¡úv1.1.0£º¡ì7 Widget Çåµ¥£¨19 ¸ö£©¡¢¡ì7.3 ´íÎó¸ôÀë | Widget Ö¸ÄÏ |
+| `../../testing-strategy.md` | v1.0.0¡úv1.1.0£º¡ì9 ×¢²áÌåÏµ²âÊÔ²ßÂÔ¡¢»ùÏß¸üĞÂ | ²âÊÔ²ßÂÔ |
+| `../../data-dictionary-index.md` | v1.2.0¡úv1.3.0£ºRegistry Ä£¿éË÷Òı | Êı¾İ×Öµä |
+| `../../10-glossary.md` | v2.2.1¡úv2.3.0£º¡ì10.11 ×¢²áÌåÏµÊõÓï£¨8 Ìõ£© | ÊõÓï±í |
 
 ---
 
-## å››ã€æŠ€æœ¯å†³ç­–è®°å½•
+## ËÄ¡¢¼¼Êõ¾ö²ß¼ÇÂ¼
 
-### å†³ç­– 1ï¼šæ³¨å†Œè¡¨è®¾è®¡æ¨¡å¼é€‰æ‹©
+### ¾ö²ß 1£º×¢²á±íÉè¼ÆÄ£Ê½Ñ¡Ôñ
 
-**å€™é€‰æ–¹æ¡ˆ**ï¼š
-- A. Class å•ä¾‹æ¨¡å¼ï¼ˆå¦‚ widgetRegistryï¼‰
-- B. é™æ€å¸¸é‡æ•°ç»„æ¨¡å¼
+**ºòÑ¡·½°¸**£º
+- A. Class µ¥ÀıÄ£Ê½£¨Èç widgetRegistry£©
+- B. ¾²Ì¬³£Á¿Êı×éÄ£Ê½
 
-**å†³ç­–**ï¼šStore/Service/Component é‡‡ç”¨ Bï¼ˆé™æ€å¸¸é‡æ•°ç»„ï¼‰ï¼ŒWidget ä¿æŒ Aï¼ˆClass å•ä¾‹ï¼‰
+**¾ö²ß**£ºStore/Service/Component ²ÉÓÃ B£¨¾²Ì¬³£Á¿Êı×é£©£¬Widget ±£³Ö A£¨Class µ¥Àı£©
 
-**ç†ç”±**ï¼š
-- Store/Service/Component æ³¨å†Œä¿¡æ¯ä¸ºé™æ€å…ƒæ•°æ®ï¼Œæ— éœ€è¿è¡Œæ—¶åŠ¨æ€å¢åˆ 
-- é™æ€æ•°ç»„æ›´ç®€å•ï¼Œæ— éœ€å®ä¾‹åŒ–ï¼Œæ”¯æŒ tree-shaking
-- Widget éœ€è¦è¿è¡Œæ—¶æ‡’åŠ è½½å’Œç”Ÿå‘½å‘¨æœŸç®¡ç†ï¼Œä¿ç•™ Class å•ä¾‹
+**ÀíÓÉ**£º
+- Store/Service/Component ×¢²áĞÅÏ¢Îª¾²Ì¬ÔªÊı¾İ£¬ÎŞĞèÔËĞĞÊ±¶¯Ì¬ÔöÉ¾
+- ¾²Ì¬Êı×é¸ü¼òµ¥£¬ÎŞĞèÊµÀı»¯£¬Ö§³Ö tree-shaking
+- Widget ĞèÒªÔËĞĞÊ±ÀÁ¼ÓÔØºÍÉúÃüÖÜÆÚ¹ÜÀí£¬±£Áô Class µ¥Àı
 
-### å†³ç­– 2ï¼šæµ‹è¯•å¤±è´¥å¤„ç†ç­–ç•¥
+### ¾ö²ß 2£º²âÊÔÊ§°Ü´¦Àí²ßÂÔ
 
-**é—®é¢˜**ï¼šå•å…ƒæµ‹è¯• 3 ä¸ªæ–‡ä»¶å¤±è´¥ï¼ˆ649/653 é€šè¿‡ï¼‰ï¼Œç¬¬äºŒæ¬¡è¿è¡Œæ­»å¾ªç¯
+**ÎÊÌâ**£ºµ¥Ôª²âÊÔ 3 ¸öÎÄ¼şÊ§°Ü£¨649/653 Í¨¹ı£©£¬µÚ¶ş´ÎÔËĞĞËÀÑ­»·
 
-**å†³ç­–**ï¼šé€‰æ‹©æ–¹æ¡ˆ A â€” è·³è¿‡å†å²é—ç•™æµ‹è¯•å¤±è´¥
+**¾ö²ß**£ºÑ¡Ôñ·½°¸ A ¡ª Ìø¹ıÀúÊ·ÒÅÁô²âÊÔÊ§°Ü
 
-**ç†ç”±**ï¼š
-- 4 ä¸ªå¤±è´¥ç”¨ä¾‹å‡ä¸ºå†å²é—ç•™ï¼ˆWindows ENOENT ä¸´æ—¶æ–‡ä»¶é—®é¢˜ï¼‰
-- ä¸æœ¬æ¬¡ä»£ç å˜æ›´æ— å…³
-- ä¿®å¤éœ€è¦è°ƒæ•´ Vitest é…ç½®ï¼ˆpool: 'forks'ï¼‰ï¼Œå±äºç‹¬ç«‹ä»»åŠ¡
+**ÀíÓÉ**£º
+- 4 ¸öÊ§°ÜÓÃÀı¾ùÎªÀúÊ·ÒÅÁô£¨Windows ENOENT ÁÙÊ±ÎÄ¼şÎÊÌâ£©
+- Óë±¾´Î´úÂë±ä¸üÎŞ¹Ø
+- ĞŞ¸´ĞèÒªµ÷Õû Vitest ÅäÖÃ£¨pool: 'forks'£©£¬ÊôÓÚ¶ÀÁ¢ÈÎÎñ
 
-### å†³ç­– 3ï¼šESLint æ’ä»¶ä¿®å¤
+### ¾ö²ß 3£ºESLint ²å¼şĞŞ¸´
 
-**é—®é¢˜**ï¼š`eslint-plugin-no-hardcoded-colors.js` ä½¿ç”¨ CommonJS `module.exports` ä½†è¢« ESM `import` å¼•ç”¨
+**ÎÊÌâ**£º`eslint-plugin-no-hardcoded-colors.js` Ê¹ÓÃ CommonJS `module.exports` µ«±» ESM `import` ÒıÓÃ
 
-**å†³ç­–**ï¼šè½¬æ¢ä¸º ESM `export default { rules: { ... } }` æ ¼å¼
+**¾ö²ß**£º×ª»»Îª ESM `export default { rules: { ... } }` ¸ñÊ½
 
-**ç†ç”±**ï¼š
-- `eslint.config.js` ä½¿ç”¨ ESM è¯­æ³•
-- ESLint 9.x çš„ flat config è¦æ±‚æ’ä»¶ä»¥ `rules` å¯¹è±¡åŒ…è£…
-- æœ€å°æ”¹åŠ¨åŸåˆ™ï¼Œä»…ä¿®æ”¹å¯¼å‡ºæ ¼å¼
+**ÀíÓÉ**£º
+- `eslint.config.js` Ê¹ÓÃ ESM Óï·¨
+- ESLint 9.x µÄ flat config ÒªÇó²å¼şÒÔ `rules` ¶ÔÏó°ü×°
+- ×îĞ¡¸Ä¶¯Ô­Ôò£¬½öĞŞ¸Äµ¼³ö¸ñÊ½
 
 ---
 
-## äº”ã€è´¨é‡æŒ‡æ ‡å¿«ç…§
+## Îå¡¢ÖÊÁ¿Ö¸±ê¿ìÕÕ
 
-| æŒ‡æ ‡ | å˜æ›´å‰ | å˜æ›´å |
+| Ö¸±ê | ±ä¸üÇ° | ±ä¸üºó |
 |------|--------|--------|
-| æœªæ³¨å†Œæ–‡ä»¶æ•° | 31 | 0 |
-| æœªæ³¨å†Œé¡µé¢æ•° | 0 | 0 |
-| tsc --noEmit é”™è¯¯ | 2ï¼ˆdataLayer.test.ts å†å²é—ç•™ï¼‰ | 0 |
-| audit:layers è¿è§„ | 0 | 0 |
-| audit:deadcode å‘Šè­¦ | 0 | 0 |
-| npm run build | é€šè¿‡ | é€šè¿‡ï¼ˆ1m 29sï¼‰ |
-| å•å…ƒæµ‹è¯•é€šè¿‡ç‡ | 99.4%ï¼ˆå†å²é—ç•™ 4 å¤±è´¥ï¼‰ | 99.4%ï¼ˆä¸å˜ï¼‰ |
-| ESLint é”™è¯¯ | é…ç½®å´©æºƒï¼ˆæ— æ³•è¿è¡Œï¼‰ | 15 ä¸ªï¼ˆå…¨éƒ¨å†å²é—ç•™ï¼‰ |
-| æ³¨å†Œè¡¨è¦†ç›– | ä»… Widgetï¼ˆ14 ä¸ªï¼‰ | å››å±‚å…¨è¦†ç›–ï¼ˆWidget 19 + Store 29 + Service 52 + Component 10ï¼‰ |
-| audit:docs æœªæ–‡æ¡£åŒ– | â€” | 0ï¼ˆ452 æ–‡ä»¶å…¨éƒ¨å¼•ç”¨ï¼‰ |
-| æ–‡æ¡£æ›´æ–°æ•° | â€” | 7 ç¯‡æ–‡æ¡£æ›´æ–° + 2 ç¯‡æ–°å»º |
+| Î´×¢²áÎÄ¼şÊı | 31 | 0 |
+| Î´×¢²áÒ³ÃæÊı | 0 | 0 |
+| tsc --noEmit ´íÎó | 2£¨dataLayer.test.ts ÀúÊ·ÒÅÁô£© | 0 |
+| audit:layers Î¥¹æ | 0 | 0 |
+| audit:deadcode ¸æ¾¯ | 0 | 0 |
+| npm run build | Í¨¹ı | Í¨¹ı£¨1m 29s£© |
+| µ¥Ôª²âÊÔÍ¨¹ıÂÊ | 99.4%£¨ÀúÊ·ÒÅÁô 4 Ê§°Ü£© | 99.4%£¨²»±ä£© |
+| ESLint ´íÎó | ÅäÖÃ±ÀÀ££¨ÎŞ·¨ÔËĞĞ£© | 15 ¸ö£¨È«²¿ÀúÊ·ÒÅÁô£© |
+| ×¢²á±í¸²¸Ç | ½ö Widget£¨14 ¸ö£© | ËÄ²ãÈ«¸²¸Ç£¨Widget 19 + Store 29 + Service 52 + Component 10£© |
+| audit:docs Î´ÎÄµµ»¯ | ¡ª | 0£¨452 ÎÄ¼şÈ«²¿ÒıÓÃ£© |
+| ÎÄµµ¸üĞÂÊı | ¡ª | 7 ÆªÎÄµµ¸üĞÂ + 2 ÆªĞÂ½¨ |
 
 ---
 
-## å…­ã€åç»­å¾…åŠ
+## Áù¡¢ºóĞø´ı°ì
 
-| ä¼˜å…ˆçº§ | ä»»åŠ¡ | è¯´æ˜ |
+| ÓÅÏÈ¼¶ | ÈÎÎñ | ËµÃ÷ |
 |--------|------|------|
-| P1 | 9 ä¸ª available Store çš„ UI é›†æˆ | éœ€å¯¹åº”é¡µé¢å¼€å‘æ—¶æ¥å…¥ |
-| P1 | Vitest Windows å…¼å®¹æ€§ä¿®å¤ | é…ç½® `pool: 'forks'` è§£å†³ ENOENT |
-| P2 | 15 ä¸ª ESLint å†å²é”™è¯¯ä¿®å¤ | no-base-to-stringã€restrict-template-expressions ç­‰ |
-| P2 | audit:registry å®¡è®¡è„šæœ¬ | æ£€æŸ¥æ³¨å†Œè¡¨å®Œæ•´æ€§ï¼ˆæœªæ¥æ‰©å±•ï¼‰ |
+| P1 | 9 ¸ö available Store µÄ UI ¼¯³É | Ğè¶ÔÓ¦Ò³Ãæ¿ª·¢Ê±½ÓÈë |
+| P1 | Vitest Windows ¼æÈİĞÔĞŞ¸´ | ÅäÖÃ `pool: 'forks'` ½â¾ö ENOENT |
+| P2 | 15 ¸ö ESLint ÀúÊ·´íÎóĞŞ¸´ | no-base-to-string¡¢restrict-template-expressions µÈ |
+| P2 | audit:registry Éó¼Æ½Å±¾ | ¼ì²é×¢²á±íÍêÕûĞÔ£¨Î´À´À©Õ¹£© |

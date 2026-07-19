@@ -1,7 +1,7 @@
 import { calculateWeightedScore, getEnabledStockFactorNames } from '@/config/scoreFactors'
 import { dataBridge } from '@/core/databridge'
 import { ENVELOPE_ACTION, STORE_NAME } from '@/config/dbConfig'
-import { sendWriteEnvelope } from '@/data/dataLayerHelpers'
+import { sendWriteEnvelope } from '@/core/databridgeQueries'
 import type { DataLayerResult, DailyQuotes, DimensionScore, IntelligentScore, Stock } from '@/data/types'
 import type { LlmConfig, LlmTransparencyConfig } from '@/config/llmConfig'
 import { chat, LlmApiError } from '@/services/llm/llmGateway'

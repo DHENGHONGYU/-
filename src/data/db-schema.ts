@@ -103,7 +103,6 @@ function ensureStore(
  * @param db 当前数据库实例
  * @param request 触发 onupgradeneeded 的 IDBOpenDBRequest（用于访问 upgradeTx）
  * @param logger 结构化日志记录器
- */
 /**
  * 游标遍历 stocks store，将缺失的 group 字段 backfill 为 DEFAULT_POOL_GROUP。
  * 抽取为独立函数以避免 createSchema 内多层回调嵌套（深度 > 3）。

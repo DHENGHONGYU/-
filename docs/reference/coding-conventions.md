@@ -1,61 +1,67 @@
 ---
-title: coding-conventions
+title: V9 ±àÂë¹æ·¶£¨Coding Conventions£©
+type: reference
+domain: project
+phase: development
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "¶¨Î»£º»ã×Ü `../../AGENTS.md` ÖĞµÄ¹¤³ÌÔ¼ÊøÎªÒ»Ò³¿ÉËÙ²éµÄ±àÂë¹æ·¶£¬²¹¡¸Ó¦ÓĞÎÄµµ£ºcoding-conventions¡¹È±¿Ú¡£..."
+tags: [project, spec, reference]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: important
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/reference/coding-conventions.md
-code_version: 2.0.0
-tier: important
----
+# V9 ±àÂë¹æ·¶£¨Coding Conventions£©
 
-# V9 ç¼–ç è§„èŒƒï¼ˆCoding Conventionsï¼‰
-
-> **å®šä½**ï¼šæ±‡æ€» `../../AGENTS.md` ä¸­çš„å·¥ç¨‹çº¦æŸä¸ºä¸€é¡µå¯é€ŸæŸ¥çš„ç¼–ç è§„èŒƒï¼Œè¡¥ã€Œåº”æœ‰æ–‡æ¡£ï¼šcoding-conventionsã€ç¼ºå£ã€‚
-> **æƒå¨å¥‘çº¦**ï¼š`../../AGENTS.md`ï¼ˆä¸å¯æ›¿ä»£ï¼‰ã€‚æœ¬æ–‡æ˜¯å…¶æ‘˜è¦ç‰ˆã€‚
-> **çŠ¶æ€**ï¼šâœ… P0 æ–°å¢ï¼ˆæ‘˜è¦ç‰ˆï¼Œå†²çªä»¥ AGENTS.md ä¸ºå‡†ï¼‰
+> **¶¨Î»**£º»ã×Ü `../../AGENTS.md` ÖĞµÄ¹¤³ÌÔ¼ÊøÎªÒ»Ò³¿ÉËÙ²éµÄ±àÂë¹æ·¶£¬²¹¡¸Ó¦ÓĞÎÄµµ£ºcoding-conventions¡¹È±¿Ú¡£
+> **È¨ÍşÆõÔ¼**£º`../../AGENTS.md`£¨²»¿ÉÌæ´ú£©¡£±¾ÎÄÊÇÆäÕªÒª°æ¡£
+> **×´Ì¬**£º? P0 ĞÂÔö£¨ÕªÒª°æ£¬³åÍ»ÒÔ AGENTS.md Îª×¼£©
 
 ---
 
-## 1. ç±»å‹å®‰å…¨
+## 1. ÀàĞÍ°²È«
 
-- âŒ ç¦æ­¢ `any`ï¼ˆ`@typescript-eslint/no-explicit-any: error`ï¼‰ã€‚
-- âŒ ç¦æ­¢ `@ts-ignore`ï¼›ç”¨ `@ts-expect-error` å¹¶é™„æ³¨é‡Šè¯´æ˜åŸå› ã€‚
-- âœ… æ‰€æœ‰æ•°æ®ç»“æ„å…ˆå®šä¹‰ Interfaceï¼›å¤æ‚æ³›å‹é¡»æœ‰ `Expect<Equals>` ç±»å‹æµ‹è¯•ï¼ˆ`tests/__tests__/types/`ï¼‰ã€‚
-- âœ… ä¿®æ”¹ `UserType` ä¸å¾—ç ´å `user-type.spec.ts`ã€‚
-
----
-
-## 2. é›¶ç¡¬ç¼–ç 
-
-- **å¼•æ“å±‚**ï¼šé˜ˆå€¼/æƒé‡/å…¬å¼å‚æ•°ä» `src/services/scoring/v6-engine/config.ts` æ³¨å…¥ã€‚
-- **UI å±‚**ï¼šé¢œè‰²å¿…é¡»å¼•ç”¨ `src/constants/` ä»¤ç‰Œï¼Œç¦ç›´æ¥ HEX æˆ– Tailwind æ•°å­—é¢œè‰²ç±»ï¼ˆ`lint:colors` æ‹¦æˆªï¼‰ã€‚
-- **ç»„ä»¶å±‚**ï¼šâ‰¥3 ä½æ•°å­—é­”æ³•æ•°é¡»æå–ä¸º `const` æˆ– configã€‚
+- ? ½ûÖ¹ `any`£¨`@typescript-eslint/no-explicit-any: error`£©¡£
+- ? ½ûÖ¹ `@ts-ignore`£»ÓÃ `@ts-expect-error` ²¢¸½×¢ÊÍËµÃ÷Ô­Òò¡£
+- ? ËùÓĞÊı¾İ½á¹¹ÏÈ¶¨Òå Interface£»¸´ÔÓ·ºĞÍĞëÓĞ `Expect<Equals>` ÀàĞÍ²âÊÔ£¨`tests/__tests__/types/`£©¡£
+- ? ĞŞ¸Ä `UserType` ²»µÃÆÆ»µ `user-type.spec.ts`¡£
 
 ---
 
-## 3. å››æ­¥é›†æˆå¥‘çº¦ï¼ˆæ–°å¢æ¨¡å—ï¼‰
+## 2. ÁãÓ²±àÂë
 
-1. **ç±»å‹** â†’ `src/types/modules/` æˆ– `src/data/types.ts`
-2. **Store** â†’ `src/store/`ï¼ˆZustand + `withBroadcast` è·¨ Tab å¹¿æ’­ï¼‰
-3. **Service/é€‚é…** â†’ `src/services/`ï¼ˆç» `DataBridge.forward()` å†™æ•°æ®ï¼‰
-4. **UI** â†’ `src/pages/` æˆ– `src/components/`ï¼ˆä»…ç» Store å–æ•°ï¼‰
-
-æ¯æ­¥å¯ç‹¬ç«‹å›æ»šï¼Œå®Œæˆå `npx tsc --noEmit` éªŒè¯ã€‚
+- **ÒıÇæ²ã**£ºãĞÖµ/È¨ÖØ/¹«Ê½²ÎÊı´Ó `src/services/scoring/v6-engine/config.ts` ×¢Èë¡£
+- **UI ²ã**£ºÑÕÉ«±ØĞëÒıÓÃ `src/constants/` ÁîÅÆ£¬½ûÖ±½Ó HEX »ò Tailwind Êı×ÖÑÕÉ«Àà£¨`lint:colors` À¹½Ø£©¡£
+- **×é¼ş²ã**£º¡İ3 Î»Êı×ÖÄ§·¨ÊıĞëÌáÈ¡Îª `const` »ò config¡£
 
 ---
 
-## 4. æ—¥å¿—è§„èŒƒ
+## 3. ËÄ²½¼¯³ÉÆõÔ¼£¨ĞÂÔöÄ£¿é£©
 
-- æ ¸å¿ƒåˆ†æ”¯ï¼ˆfilter resetã€modal æäº¤ã€data fusionï¼‰é¡» `logger.info`ã€‚
-- å‰ç¼€æ ¼å¼ï¼š`[æ¨¡å—å] æ“ä½œå`ï¼Œå¦‚ `[DataBridge] routeToDB() completed`ã€‚
-- é”™è¯¯æ—¥å¿—å« contextï¼š`logger.error('æ“ä½œå¤±è´¥', { error: message })`ã€‚
+1. **ÀàĞÍ** ¡ú `src/types/modules/` »ò `src/data/types.ts`
+2. **Store** ¡ú `src/store/`£¨Zustand + `withBroadcast` ¿ç Tab ¹ã²¥£©
+3. **Service/ÊÊÅä** ¡ú `src/services/`£¨¾­ `DataBridge.forward()` Ğ´Êı¾İ£©
+4. **UI** ¡ú `src/pages/` »ò `src/components/`£¨½ö¾­ Store È¡Êı£©
+
+Ã¿²½¿É¶ÀÁ¢»Ø¹ö£¬Íê³Éºó `npx tsc --noEmit` ÑéÖ¤¡£
 
 ---
 
-## 5. äº‹ä»¶ç›‘å¬æ¸…ç†ï¼ˆæ ‡å‡†åŒ–æ¨¡æ¿ï¼‰
+## 4. ÈÕÖ¾¹æ·¶
+
+- ºËĞÄ·ÖÖ§£¨filter reset¡¢modal Ìá½»¡¢data fusion£©Ğë `logger.info`¡£
+- Ç°×º¸ñÊ½£º`[Ä£¿éÃû] ²Ù×÷Ãû`£¬Èç `[DataBridge] routeToDB() completed`¡£
+- ´íÎóÈÕÖ¾º¬ context£º`logger.error('²Ù×÷Ê§°Ü', { error: message })`¡£
+
+---
+
+## 5. ÊÂ¼ş¼àÌıÇåÀí£¨±ê×¼»¯Ä£°å£©
 
 ```typescript
 // EventBus
@@ -64,33 +70,33 @@ useEffect(() => {
   EventBus.subscribe('ev', handler)
   return () => EventBus.unsubscribe('ev', handler)
 }, [])
-// DOM äº‹ä»¶ / å®šæ—¶å™¨åŒç†ï¼Œcleanup ä¸­é…å¯¹ç§»é™¤
-// âŒ ç¦æ­¢ cleanup ä¸­ç”¨ EventBus.clear()
+// DOM ÊÂ¼ş / ¶¨Ê±Æ÷Í¬Àí£¬cleanup ÖĞÅä¶ÔÒÆ³ı
+// ? ½ûÖ¹ cleanup ÖĞÓÃ EventBus.clear()
 ```
 
-`EventBus.subscribe()` é…å¯¹ `unsubscribe()`ï¼›`vi.useFakeTimers()` é¡»åœ¨ `afterEach` ä¸­ `useRealTimers()`ã€‚
+`EventBus.subscribe()` Åä¶Ô `unsubscribe()`£»`vi.useFakeTimers()` ĞëÔÚ `afterEach` ÖĞ `useRealTimers()`¡£
 
 ---
 
-## 6. æ–‡æ¡£ä¸ JSDoc
+## 6. ÎÄµµÓë JSDoc
 
-- æ–°å¢å…¬å…±å‡½æ•°/ç»„ä»¶/Hook/Store å¿…é¡»è¡¥ JSDocï¼ˆè§ `./jsdoc-convention.md`ï¼‰ã€‚
-- é¿å…æ·±å±‚åµŒå¥—ã€é•¿é“¾å¼æ¡ä»¶ã€è¿‡é•¿å‡½æ•°ï¼ˆè§ `./complexity-governance.md`ï¼‰ã€‚
+- ĞÂÔö¹«¹²º¯Êı/×é¼ş/Hook/Store ±ØĞë²¹ JSDoc£¨¼û `./jsdoc-convention.md`£©¡£
+- ±ÜÃâÉî²ãÇ¶Ì×¡¢³¤Á´Ê½Ìõ¼ş¡¢¹ı³¤º¯Êı£¨¼û `./complexity-governance.md`£©¡£
 
 ---
 
-## 7. é—¨ç¦é€ŸæŸ¥
+## 7. ÃÅ½ûËÙ²é
 
-| å‘½ä»¤ | ä½œç”¨ |
+| ÃüÁî | ×÷ÓÃ |
 |------|------|
-| `npm run audit:layers` | è·¨å±‚è°ƒç”¨ 0 è¿è§„ |
-| `npm run audit:atomic` | åŸå­ç»„ä»¶è¾¹ç•Œ 0 è¿è§„ |
-| `npm run lint:colors` | é¢œè‰²é›¶ç¡¬ç¼–ç  |
-| `npm run audit:tokens` | è®¾è®¡ä»¤ç‰ŒåŒæ­¥ |
-| `npm run audit:docs` | æ–‡æ¡£-ä»£ç åŒæ­¥ |
-| `npm run tsc:prod` | ç”Ÿäº§ç±»å‹æ£€æŸ¥ |
-| `npm run test:clean` | å•å…ƒæµ‹è¯•ï¼ˆé¡»ç»¿ï¼‰ |
+| `npm run audit:layers` | ¿ç²ãµ÷ÓÃ 0 Î¥¹æ |
+| `npm run audit:atomic` | Ô­×Ó×é¼ş±ß½ç 0 Î¥¹æ |
+| `npm run lint:colors` | ÑÕÉ«ÁãÓ²±àÂë |
+| `npm run audit:tokens` | Éè¼ÆÁîÅÆÍ¬²½ |
+| `npm run audit:docs` | ÎÄµµ-´úÂëÍ¬²½ |
+| `npm run tsc:prod` | Éú²úÀàĞÍ¼ì²é |
+| `npm run test:clean` | µ¥Ôª²âÊÔ£¨ĞëÂÌ£© |
 
 ---
 
-_è§„èŒƒå†²çªæ—¶ä»¥ `../../AGENTS.md` ä¸ºå‡†ï¼›æœ¬æ–‡éšè§„èŒƒæ¼”è¿›æŒç»­æ›´æ–°ã€‚_
+_¹æ·¶³åÍ»Ê±ÒÔ `../../AGENTS.md` Îª×¼£»±¾ÎÄËæ¹æ·¶Ñİ½ø³ÖĞø¸üĞÂ¡£_

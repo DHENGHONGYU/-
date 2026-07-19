@@ -17,6 +17,7 @@
  */
 
 import { getLogger } from '@/lib/logger'
+import { safeRegex } from '@/lib/safeRegex'
 import type {
   MCPServer,
   ServerInfo,
@@ -380,6 +381,6 @@ export abstract class MCPServerBase implements MCPServer {
     const escaped = template
       .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
       .replace(/\\\{([^}]+)\\}/g, '([^/]+)')
-    return new RegExp(`^${escaped}$`)
+    return safeRegex(`^${escaped}$`)
   }
 }

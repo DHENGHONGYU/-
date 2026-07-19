@@ -38,7 +38,13 @@ const { mockLlmConfigured, llmOnChangeRef, mockConfirmFn } = vi.hoisted(() => ({
 vi.mock('@/hooks/useConfirmDialog', () => ({
   useConfirmDialog: () => ({
     confirm: mockConfirmFn,
-    ConfirmDialog: () => null,
+    dialogProps: {
+      open: false,
+      options: { title: '', description: '' },
+      onConfirm: () => {},
+      onCancel: () => {},
+      onOpenChange: () => {},
+    },
   }),
 }))
 

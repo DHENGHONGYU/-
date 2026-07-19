@@ -15,6 +15,7 @@
  */
 
 import { getLogger } from '@/lib/logger'
+import { safeRegex } from '@/lib/safeRegex'
 import type {
   MCPClient,
   MCPServer,
@@ -253,6 +254,6 @@ export class MCPClientImpl implements MCPClient {
     const escaped = template
       .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
       .replace(/\\\{([^}]+)\\}/g, '([^/]+)')
-    return new RegExp(`^${escaped}$`)
+    return safeRegex(`^${escaped}$`)
   }
 }

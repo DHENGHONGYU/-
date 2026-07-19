@@ -1,0 +1,47 @@
+{
+  "violations": [
+    {
+      "file": "scripts/extract-code-graph.ts",
+      "line": 0,
+      "type": "缺失文件",
+      "message": "知识图谱生成脚本不存在",
+      "suggestion": "创建 scripts/extract-code-graph.ts 并实现增量更新逻辑"
+    },
+    {
+      "file": "scripts/quick-query.sh",
+      "line": 0,
+      "type": "缺失快速查询模板",
+      "message": "未创建快速查询脚本",
+      "suggestion": "创建 scripts/quick-query.sh，提供常用查询模板（Store 依赖、跨层违规、最大文件等）"
+    },
+    {
+      "file": "AGENTS.md",
+      "line": 0,
+      "type": "缺失文档",
+      "message": "AGENTS.md 不存在",
+      "suggestion": "创建 AGENTS.md 并添加 Token 消耗控制规则"
+    },
+    {
+      "file": "docs/reports/lessons-learned/token-optimization-best-practices.md",
+      "line": 0,
+      "type": "缺失优化指南",
+      "message": "Token 优化最佳实践文档不存在",
+      "suggestion": "创建文档，包含代码关系理解、重复搜索消除、架构合规检查优化等章节"
+    }
+  ],
+  "warnings": [],
+  "summary": {
+    "totalFiles": 4,
+    "totalChecks": 4,
+    "totalViolations": 4,
+    "totalWarnings": 0,
+    "estimatedTokenSavings": 76000
+  },
+  "meta": {
+    "scriptName": "audit-token-consumption",
+    "version": "3.0",
+    "timestamp": "2026-07-18T03:59:29.734Z",
+    "durationMs": 1,
+    "rootDir": "G:\\FinSightV9\\scripts\\audit"
+  }
+}

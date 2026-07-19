@@ -37,7 +37,7 @@ import {
 } from '@/config/collectConfig'
 import { upgradeDimensionsToPipeline, runBatchTrace } from '@/services/data-collector/collectionPipeline'
 import { useCollectionRuntimeStore } from '@/store/collectionRuntimeStore'
-import { MOCK_STOCK_LIBRARY } from '@/services/input/mockStockLibrary'
+import { useIntentionPoolStore } from '@/store/intentionPoolStore'
 
 const logger = getLogger()
 
@@ -57,14 +57,16 @@ export interface SevenDimConfigState {
   isDirty: boolean
   isSaving: boolean
   isCollecting: boolean
+  /** 当前正在采集的维度 code 列表（空表示无采集进行中） */
+  collectingDimensions: string[]
   collectProgress: number
   error: string | null
 
   // --- 派生计算 ---
   enabledCount: () => number
   monthlyCallEstimate: () => number
-  isClickable: () => boolean
-  tooltipText: () => string
+  isClickable: (dimensionCode?: string) => boolean
+  tooltipText: (dimensionCode?: string) => string
   getCollectionConfig: () => CollectionConfig
 
   // --- Actions ---
@@ -139,14 +141,18 @@ function buildCollectionConfig(state: SevenDimConfigState): CollectionConfig {
 }
 
 /**
- * 生成默认采集标的池。
- * TODO: 后端真实股票池服务就绪后，替换为从 poolService / watchlist 获取的标的列表。
+ * 从用户意向池读取采集标的列表。
+ * 意向池为空时回退到空数组（调用方会 skip 采集）。
  */
-function resolveDefaultSymbols(count: number): string[] {
-  const normalized = MOCK_STOCK_LIBRARY
-    .map((stock) => stock.symbol.split('.')[0])
-    .filter((symbol): symbol is string => typeof symbol === 'string')
-  return normalized.slice(0, Math.max(1, Math.min(count, normalized.length)))
+function resolveDefaultSymbols(_count: number): string[] {
+  const poolItems = useIntentionPoolStore.getState().items
+  if (poolItems.length === 0) {
+    logger.warn('[SevenDimConfigStore] 意向池为空，无可采集标的')
+    return []
+  }
+  return poolItems
+    .map((item) => item.symbol.trim().toUpperCase())
+    .filter((symbol) => symbol.length > 0)
 }
 
 // ============================================================
@@ -176,14 +182,15 @@ const initialState: Omit<
   | 'runCollection'
   | 'clearError'
 > = {
-  activeTemplate: 'value',
-  dimensions: generateDimensionsFromTemplate('value'),
+  activeTemplate: 'full',
+  dimensions: generateDimensionsFromTemplate('full'),
   global: createDefaultGlobal(),
   symbolCount: 40,
   historyDays: 252,
   isDirty: false,
   isSaving: false,
   isCollecting: false,
+  collectingDimensions: [],
   collectProgress: 0,
   error: null,
 }
@@ -199,15 +206,23 @@ export const useSevenDimConfigStore = create<SevenDimConfigState>((set, get) => 
   monthlyCallEstimate: () =>
     estimateTotalMonthlyCalls(get().dimensions, get().symbolCount),
 
-  isClickable: () => {
+  isClickable: (dimensionCode) => {
     const state = get()
-    return !state.isSaving && !state.isCollecting
+    if (state.isSaving) return false
+    if (dimensionCode) return !state.collectingDimensions.includes(dimensionCode)
+    return state.collectingDimensions.length === 0
   },
 
-  tooltipText: () => {
+  tooltipText: (dimensionCode) => {
     const state = get()
     if (state.isSaving) return '配置保存中，请稍候...'
-    if (state.isCollecting) return '采集进行中，请稍候...'
+    if (dimensionCode) {
+      return state.collectingDimensions.includes(dimensionCode)
+        ? `维度 ${dimensionCode} 采集中，请稍候...`
+        : ''
+    }
+    if (state.collectingDimensions.length > 0)
+      return `维度 ${state.collectingDimensions.join(', ')} 采集中，请稍候...`
     return ''
   },
 
@@ -342,7 +357,7 @@ export const useSevenDimConfigStore = create<SevenDimConfigState>((set, get) => 
     logger.info('[SevenDimConfigStore] 重置为默认配置')
     set({
       ...initialState,
-      dimensions: generateDimensionsFromTemplate('value'),
+      dimensions: generateDimensionsFromTemplate('full'),
       global: createDefaultGlobal(),
       isDirty: false,
       isSaving: false,
@@ -441,54 +456,78 @@ export const useSevenDimConfigStore = create<SevenDimConfigState>((set, get) => 
 
   runCollection: async () => {
     const state = get()
-    if (state.isCollecting) return
+    if (state.collectingDimensions.length > 0) return
 
-    set({ isCollecting: true, collectProgress: 0, error: null })
+    const enabledDims = state.dimensions.filter((d) => d.enabled)
+    const symbols = resolveDefaultSymbols(state.symbolCount)
+    if (enabledDims.length === 0 || symbols.length === 0) {
+      logger.warn('[SevenDimConfigStore] 无可用维度或标的，跳过采集')
+      return
+    }
+
+    // Palantir Foundry 对标：维度就绪度检查（采集前验证配置完整性）
+    const unreadyDims = enabledDims.filter((d) => !d.code || d.sources.length === 0)
+    if (unreadyDims.length > 0) {
+      const unreadyCodes = unreadyDims.map((d) => d.code).join(', ')
+      logger.warn('[SevenDimConfigStore] 维度就绪度检查未通过', {
+        unreadyDimensions: unreadyCodes,
+        reason: '缺少 code 或 sources 为空',
+      })
+      set({ error: `维度配置不完整: ${unreadyCodes}（缺少 code 或数据源）` })
+      return
+    }
+
+    const dimCodes = enabledDims.map((d) => d.code)
+    set({
+      isCollecting: true,
+      collectingDimensions: [...dimCodes],
+      collectProgress: 0,
+      error: null,
+    })
     const runtime = useCollectionRuntimeStore.getState()
     runtime.setRunning(true)
 
+    const config = buildCollectionConfig(state)
+    const parentTaskId = `collect-${Date.now()}`
+
+    logger.info('[SevenDimConfigStore] 开始并发采集', {
+      dimensions: dimCodes.join(', '),
+      symbolCount: symbols.length,
+      parentTaskId,
+    })
+
     try {
-      const config = buildCollectionConfig(state)
-      const enabledDims = state.dimensions.filter((d) => d.enabled)
-      const symbols = resolveDefaultSymbols(state.symbolCount)
-      const taskId = `collect-${Date.now()}`
+      const results = await Promise.allSettled(
+        dimCodes.map((dimCode) =>
+          runBatchTrace({ symbols, dimensionCode: dimCode, config, parentTaskId }),
+        ),
+      )
 
-      if (enabledDims.length === 0 || symbols.length === 0) {
-        logger.warn('[SevenDimConfigStore] 无可用维度或标的，跳过采集')
-        set({ isCollecting: false, collectProgress: 100 })
-        runtime.setRunning(false)
-        return
-      }
-
-      logger.info('[SevenDimConfigStore] 开始真实采集', {
-        dimensions: enabledDims.map((d) => d.code).join(', '),
-        symbolCount: symbols.length,
-        taskId,
+      const failures = results.filter((r) => r.status === 'rejected')
+      set({
+        isCollecting: false,
+        collectingDimensions: [],
+        collectProgress: 100,
+        error: failures.length > 0
+          ? `${failures.length} 个维度采集失败`
+          : null,
       })
-
-      const totalSteps = enabledDims.length
-      let completedSteps = 0
-
-      for (const dim of enabledDims) {
-        logger.info(`[SevenDimConfigStore] 采集维度: ${dim.code}`)
-        await runBatchTrace({
-          symbols,
-          dimensionCode: dim.code,
-          config,
-          taskId,
-        })
-        completedSteps++
-        set({ collectProgress: Math.round((completedSteps / totalSteps) * 100) })
-      }
-
-      set({ isCollecting: false, collectProgress: 100 })
       runtime.setRunning(false)
-      logger.info('[SevenDimConfigStore] 采集完成')
+      runtime.refreshStats()
+
+      if (failures.length > 0) {
+        const errMsg = failures
+          .map((f) => (f as PromiseRejectedResult).reason)
+          .join('; ')
+        logger.error('[SevenDimConfigStore] 并发采集部分失败', { failures: failures.length, errors: errMsg })
+      } else {
+        logger.info('[SevenDimConfigStore] 并发采集完成')
+      }
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
       logger.error('[SevenDimConfigStore] 采集失败', { error: message })
       runtime.setRunning(false)
-      set({ isCollecting: false, error: message })
+      set({ isCollecting: false, collectingDimensions: [], error: message })
     }
   },
 

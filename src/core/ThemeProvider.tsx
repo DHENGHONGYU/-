@@ -184,8 +184,10 @@ export function ThemeProvider({ children, defaultMode = 'system' }: ThemeProvide
 /**
  * useTheme
  * @returns ThemeContextValue
+/**
+ * useTheme
+ * @returns ThemeContextValue
  */
-// eslint-disable-next-line react-refresh/only-export-components
 export function useTheme(): ThemeContextValue {
   const context = useContext(ThemeContext)
   if (context === undefined) {

@@ -14,7 +14,7 @@ import { getLogger } from '@/lib/logger'
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'
 import { ENVELOPE_ACTION, ENVELOPE_TARGET, MODULE_ID } from '@/config/dbConfig'
-import { generateId } from '@/data/db'
+import { generateId } from '@/lib/utils'
 import type { ToolResult } from '@/mcp/core/types'
 
 const logger = getLogger()
