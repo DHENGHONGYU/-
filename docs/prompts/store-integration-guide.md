@@ -11,6 +11,7 @@ tags: [data, integration, store]
 version: v1.0.0
 last_updated: 2026-07-17
 code_version: 2.0.0
+doc_id: V9-DOC-DATA-059
 change_log:
   - version: v1.0.0
 changes: Initial version established
