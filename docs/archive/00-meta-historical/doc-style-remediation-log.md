@@ -4,6 +4,7 @@ code_version: 2.0.0
 tier: reference
 source: 文档风格统一 P1–P3 执行日志
 generated: 2026-07-16
+status: archived
 ---
 
 # V9 文档风格整改执行日志（doc-style-remediation-log）

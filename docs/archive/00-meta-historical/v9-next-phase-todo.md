@@ -2,7 +2,7 @@
 title: v9-next-phase-todo
 code_version: 2.0.0
 tier: core
-status: completed
+status: archived
 owner: 架构组 / docs 治理组
 updated: 2026-07-14
 ---

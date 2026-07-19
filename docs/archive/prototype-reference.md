@@ -1,6 +1,7 @@
 ---
 title: prototype reference
 tier: archive
+status: archived
 ---
 
 # prototype reference

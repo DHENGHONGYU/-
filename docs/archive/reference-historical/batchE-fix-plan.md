@@ -5,7 +5,7 @@ tier: important
 version: v1.0.0
 last_updated: 2026-06-27
 maintainer: Quality Auditor
-status: draft
+status: archived
 ---
 
 # V9 批次 E（输出舱 + 总控舱）P2 问题修复方案

@@ -2,6 +2,7 @@
 title: trae-file-management-review
 code_version: 2.0.0
 tier: core
+status: archived
 ---
 
 # V9 文件管理体系 × TRAE 开发习惯 审查评价报告

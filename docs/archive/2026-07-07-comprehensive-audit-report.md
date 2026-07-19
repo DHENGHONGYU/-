@@ -1,6 +1,7 @@
 ---
 title: 2026 07 07 comprehensive audit report
 tier: archive
+status: archived
 ---
 
 # 2026 07 07 comprehensive audit report

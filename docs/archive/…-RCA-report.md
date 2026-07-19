@@ -1,6 +1,7 @@
 ---
 title: … RCA report
 tier: archive
+status: archived
 ---
 
 # … RCA report

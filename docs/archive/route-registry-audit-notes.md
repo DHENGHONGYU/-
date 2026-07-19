@@ -1,6 +1,7 @@
 ---
 title: route registry audit notes
 tier: archive
+status: archived
 ---
 
 # route registry audit notes

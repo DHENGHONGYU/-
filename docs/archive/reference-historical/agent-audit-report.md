@@ -5,7 +5,7 @@ code_version: 2.0.0
 version: v1.0.0
 date: 2026-06-27
 maintainer: Architecture Audit
-status: active
+status: archived
 ---
 
 # V9 智能体检视报告

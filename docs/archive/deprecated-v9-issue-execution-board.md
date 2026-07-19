@@ -2,6 +2,7 @@
 title: deprecated-v9-issue-execution-board
 tier: reference
 code_version: 2.0.0
+status: archived
 ---
 
 tier: reference
