@@ -11,6 +11,7 @@ tags: [backend, screening, adr, plan, stocks, explanation]
 version: v0.9.0
 last_updated: 2026-06-24
 code_version: 2.0.0
+doc_id: V9-DOC-BACK-015
 change_log: 
 ---
 
