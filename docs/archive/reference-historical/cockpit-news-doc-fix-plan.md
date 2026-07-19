@@ -6,6 +6,8 @@ version: v0.9.1
 last_updated: 2026-06-26
 maintainer: V9 Architecture Team
 status: archived
+related_docs: [V9-DOC-ARCH-028]
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 change_log: 
 ---
 

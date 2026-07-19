@@ -12,6 +12,7 @@ version: v1.0.0
 last_updated: 2026-07-19
 code_version: 2.0.0
 doc_id: V9-DOC-PROJ-CROSSINDEX-001
+related_docs: [V9-DOC-PROJ-016, V9-DOC-PROJ-186, V9-DOC-PROJ-321, V9-DOC-PROJ-001, V9-DOC-PROJ-017]
 change_log:
   - version: v1.0.0
 changes: Initial draft based on full inventory (674 active + 125 archived = 799 docs)

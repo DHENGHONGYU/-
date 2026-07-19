@@ -3,6 +3,7 @@ title: prompt-execute-remediation
 code_version: 2.0.0
 tier: core
 status: archived
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
 
 # 提示词：V9 文档治理与文件结构整改执行（P0→P3，AI Agent 集群协同）

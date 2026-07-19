@@ -11,6 +11,7 @@ last_updated: 2026-07-04
 code_version: 2.0.0
 audit_source: 
 doc_id: V9-DOC-ARCH-018
+referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-ARCH-025, V9-DOC-PROJ-176]
 ---
 
 # V6 �?V9 架构一致性整改行动清�?

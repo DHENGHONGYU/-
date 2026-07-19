@@ -5,6 +5,7 @@ tier: core
 status: archived
 owner: 架构组 / docs 治理组
 updated: 2026-07-14
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
 
 # V9 文档体系治理 — 下一阶段任务图（P4 执行计划）

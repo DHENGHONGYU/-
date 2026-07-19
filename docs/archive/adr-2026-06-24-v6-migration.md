@@ -2,6 +2,7 @@
 title: adr 2026 06 24 v6 migration
 tier: archive
 status: archived
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
 
 # adr 2026 06 24 v6 migration

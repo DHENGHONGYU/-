@@ -12,6 +12,8 @@ version: v1.0.0
 last_updated: 2026-07-17
 code_version: 2.0.0
 doc_id: V9-DOC-BACK-026
+related_docs: [V9-DOC-BACK-027, V9-DOC-BACK-023, V9-DOC-PROJ-271, V9-DOC-DATA-055, V9-DOC-PROJ-225]
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-BACK-033, V9-DOC-BACK-045, V9-DOC-AI-012, V9-DOC-PROJ-149]
 change_log:
   - version: v1.0.0
 changes: Initial version established

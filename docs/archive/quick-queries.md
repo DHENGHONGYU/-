@@ -2,6 +2,7 @@
 title: quick queries
 tier: archive
 status: archived
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
 
 # quick queries

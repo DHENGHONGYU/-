@@ -3,6 +3,7 @@ title: 23-core-docs-v2-final-report
 code_version: 2.0.0
 tier: core
 status: archived
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
 
 # V9 智能投研复盘系统 — 23个核心文档 · 二次校对最终报告

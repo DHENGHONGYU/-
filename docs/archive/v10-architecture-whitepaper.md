@@ -2,6 +2,7 @@
 title: v10 architecture whitepaper
 tier: archive
 status: archived
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
 
 # v10 architecture whitepaper

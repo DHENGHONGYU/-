@@ -3,6 +3,8 @@ title: file-management-guide-rca-report
 code_version: 2.0.0
 tier: core
 status: archived
+related_docs: [docs/archive/00-meta-historical/trae-file-management-review.md]
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
 
 # file-management-guide.md 根因分析与二次开发教训报告

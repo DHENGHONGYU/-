@@ -12,6 +12,7 @@ version: v0.1.0
 last_updated: 2026-07-17
 code_version: 2.0.0
 doc_id: V9-DOC-PROJ-001
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-CROSSINDEX-001, V9-DOC-PROJ-017]
 change_log:
   - version: v0.1.0
 changes: Initial version established

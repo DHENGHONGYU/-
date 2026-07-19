@@ -12,6 +12,8 @@ version: v1.0.0
 last_updated: 2026-07-17
 code_version: 2.0.0
 doc_id: V9-DOC-QA-102
+related_docs: [V9-DOC-QA-051, V9-DOC-QA-106, V9-DOC-QA-020, V9-DOC-QA-074, V9-DOC-ARCH-004, V9-DOC-ARCH-030, V9-DOC-PROJ-286, V9-DOC-QA-092]
+referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-QA-007, V9-DOC-QA-020, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-QA-070, V9-DOC-FRONT-042, V9-DOC-PROJ-149]
 change_log:
   - version: v1.0.0
 changes: Initial version established

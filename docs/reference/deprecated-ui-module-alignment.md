@@ -12,6 +12,7 @@ version: v1.0.0
 last_updated: 2026-07-17
 code_version: 2.0.0
 doc_id: V9-DOC-FRONT-011
+referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-164, V9-DOC-PROJ-176, V9-DOC-PROJ-182]
 change_log:
   - version: v1.0.0
 deprecated_by: "UI Module Unification Plan"
