@@ -9,6 +9,7 @@ tags: [architecture, strategy, design, remediation, plan]
 version: v1.0.0
 last_updated: 2026-06-27
 code_version: 2.0.0
+doc_id: V9-DOC-ARCH-012
 ---
 
 # V9 架构整改总体策略与执行计�?

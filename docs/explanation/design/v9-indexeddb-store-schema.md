@@ -11,6 +11,7 @@ tags: [data, registry, store, plan, architecture, explanation]
 version: v1.0.0
 last_updated: 2026-07-17
 code_version: 2.0.0
+doc_id: V9-DOC-DATA-031
 change_log:
   - version: v1.0.0
 changes: Initial version established
