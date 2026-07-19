@@ -1,6 +1,7 @@
 ---
 title: architecture cleanup completion report 2026 07 14
 tier: archive
+status: archived
 ---
 
 # architecture cleanup completion report 2026 07 14

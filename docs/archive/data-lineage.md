@@ -1,6 +1,7 @@
 ---
 title: data lineage
 tier: archive
+status: archived
 ---
 
 # data lineage

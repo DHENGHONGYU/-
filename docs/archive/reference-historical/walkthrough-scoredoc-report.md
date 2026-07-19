@@ -2,6 +2,7 @@
 title: walkthrough-scoredoc-report
 tier: reference
 code_version: 2.0.0
+status: archived
 ---
 
 # 评分拍照比对功能模块 — 补充穿行测试报告

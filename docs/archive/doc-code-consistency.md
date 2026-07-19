@@ -1,6 +1,7 @@
 ---
 title: 文档-代码一致性报告（归档）
 tier: archive
+status: archived
 ---
 
 # 文档-代码一致性报告（归档）

@@ -5,7 +5,7 @@ code_version: 2.0.0
 version: v0.9.0
 last_updated: 2026-06-25
 maintainer: V9 Architecture Team
-status: active
+status: archived
 change_log: 
 ---
 

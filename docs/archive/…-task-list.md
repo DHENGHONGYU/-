@@ -1,6 +1,7 @@
 ---
 title: … task list
 tier: archive
+status: archived
 ---
 
 # … task list

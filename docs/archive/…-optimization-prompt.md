@@ -1,6 +1,7 @@
 ---
 title: … optimization prompt
 tier: archive
+status: archived
 ---
 
 # … optimization prompt

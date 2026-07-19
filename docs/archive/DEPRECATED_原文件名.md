@@ -1,6 +1,7 @@
 ---
 title: DEPRECATED 原文件名
 tier: archive
+status: archived
 ---
 
 # DEPRECATED 原文件名

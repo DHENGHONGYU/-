@@ -5,7 +5,7 @@ tier: core
 version: v1.0.0
 last_updated: 2026-06-27
 maintainer: V9 Architecture Team
-status: active
+status: archived
 change_log: 
 ---
 

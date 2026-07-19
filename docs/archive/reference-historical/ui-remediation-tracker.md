@@ -2,6 +2,7 @@
 title: ui-remediation-tracker
 code_version: 2.0.0
 tier: reference
+status: archived
 ---
 
 # V6-V9 界面设计优化整改任务明细表

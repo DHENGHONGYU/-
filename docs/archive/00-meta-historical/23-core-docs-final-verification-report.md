@@ -2,6 +2,7 @@
 title: 23-core-docs-final-verification-report
 code_version: 2.0.0
 tier: core
+status: archived
 ---
 
 # V9 智能投研复盘系统 — 23个核心文档 · 最终检索核实报告

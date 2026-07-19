@@ -1,6 +1,7 @@
 ---
 title: nonexistent placeholder
 tier: archive
+status: archived
 ---
 
 # nonexistent placeholder

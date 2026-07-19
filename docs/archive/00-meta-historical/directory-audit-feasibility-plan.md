@@ -2,6 +2,7 @@
 title: directory-audit-feasibility-plan
 code_version: 2.0.0
 tier: core
+status: archived
 ---
 
 # 目录结构文档 — 整体可行性方案（诊断阶段交付物 1/2）

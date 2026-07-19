@@ -5,7 +5,7 @@ code_version: 2.0.0
 version: v2.3.0
 last_updated: 2026-06-30
 maintainer: V9 Quality Audit Team
-status: active
+status: archived
 changelog: 
 ---
 

@@ -1,6 +1,7 @@
 ---
 title: v10 architecture whitepaper
 tier: archive
+status: archived
 ---
 
 # v10 architecture whitepaper

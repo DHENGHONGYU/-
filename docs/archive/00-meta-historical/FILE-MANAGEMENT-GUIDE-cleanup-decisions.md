@@ -2,6 +2,7 @@
 title: file-management-guide-cleanup-decisions
 code_version: 2.0.0
 tier: core
+status: archived
 ---
 
 # FILE-MANAGEMENT-GUIDE 代码清理决策报告

@@ -2,6 +2,7 @@
 title: audit-b4-4-security
 code_version: 2.0.0
 tier: reference
+status: archived
 ---
 
 # V9 前端应用安全质量审计报告

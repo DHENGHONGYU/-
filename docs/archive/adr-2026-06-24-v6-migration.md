@@ -1,6 +1,7 @@
 ---
 title: adr 2026 06 24 v6 migration
 tier: archive
+status: archived
 ---
 
 # adr 2026 06 24 v6 migration

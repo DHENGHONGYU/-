@@ -2,6 +2,7 @@
 title: audit-b4-1-code-quality
 code_version: 2.0.0
 tier: reference
+status: archived
 ---
 
 # V9 前端应用代码编写质量审计报告 (B4-1)

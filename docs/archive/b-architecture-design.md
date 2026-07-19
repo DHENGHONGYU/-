@@ -1,6 +1,7 @@
 ---
 title: b architecture design
 tier: archive
+status: archived
 ---
 
 # b architecture design

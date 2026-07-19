@@ -2,6 +2,7 @@
 title: directory-structure-audit-report
 code_version: 2.0.0
 tier: core
+status: archived
 ---
 
 # V9 目录结构文档审计报告

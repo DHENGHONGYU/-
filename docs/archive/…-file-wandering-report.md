@@ -1,6 +1,7 @@
 ---
 title: … file wandering report
 tier: archive
+status: archived
 ---
 
 # … file wandering report

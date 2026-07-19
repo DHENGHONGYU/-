@@ -2,6 +2,7 @@
 title: changelog-warnings-handling-strategy
 code_version: 2.0.0
 tier: core
+status: archived
 ---
 
 # CHANGELOG 警告处理策略
