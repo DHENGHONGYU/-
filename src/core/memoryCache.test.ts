@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-017
  * MemoryCache 压力测试
  *
  * 测试场景：
@@ -7,7 +8,8 @@
  * 3. 高频写入压力（1000 次 set）
  * 4. 命中率统计正确性
  * 5. delete 与 destroy
- */
+  * @covers_docs []
+*/
 import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest'
 import { MemoryCache } from '@/core/memoryCache'
 

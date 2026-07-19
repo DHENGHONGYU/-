@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-082
+ * @covers_docs [V9-DOC-PROJ-092, V9-DOC-BACK-003, V9-DOC-ARCH-008, V9-DOC-BACK-010, V9-DOC-QA-010]
+ */
 import { describe, test, expect } from 'vitest'
 import {
   adaptToHotSector,

@@ -1,7 +1,9 @@
 /**
+ * @test_id V9-TEST-ST-111
  * @module services/skills/factorRegressionSkill.test
  * @description S-01 因子回归权重校验 SKILL 单元测试
- */
+  * @covers_docs []
+*/
 
 import { describe, it, expect } from 'vitest'
 import { SkillRegistry } from './skillRegistry'

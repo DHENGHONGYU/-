@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-117
  * 核心数据类型 类型级（Type-level）单元测试
  *
  * @description
@@ -11,7 +12,8 @@
  *
  * @module tests/__tests__/types/data-types.spec
  * @created 2026-07-05 - P2 类型测试扩展
- */
+  * @covers_docs [V9-DOC-ARCH-008, V9-DOC-PROJ-054, V9-DOC-PROJ-113, V9-DOC-PROJ-066, V9-DOC-PROJ-053]
+*/
 
 import { describe, it } from 'vitest'
 import { expectType } from 'ts-expect'

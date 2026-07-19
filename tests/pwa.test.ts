@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-045
  * PWA 离线验证测试
  * 质量门禁 #11
  *
@@ -6,7 +7,8 @@
  * 1. manifest.json 存在且包含必要字段
  * 2. SW 注册函数可被调用
  * 3. 不实际注册 SW（使用 vi.mock）
- */
+  * @covers_docs []
+*/
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { readFileSync } from 'node:fs'

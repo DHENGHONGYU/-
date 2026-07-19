@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-119
+ * @covers_docs [V9-DOC-BACK-008, V9-DOC-BACK-013, V9-DOC-ARCH-008, V9-DOC-BACK-005, V9-DOC-QA-080]
+ */
 import { describe, it, expect } from 'vitest'
 import { SKILL_DIMENSIONS, scoreToSkillLevel, getTargetLevel, getTargetScore } from './tradeReviewAI.dimensions'
 import type { SkillLevel } from './tradeReviewAI.types'

@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-162
+ * @covers_docs [V9-DOC-ARCH-007, V9-DOC-BACK-015]
+ */
 import { describe, test, expect, beforeEach } from 'vitest'
 import { useValuePitStore, topScores, buildCandidates, waitSignalList } from './valuePitStore'
 

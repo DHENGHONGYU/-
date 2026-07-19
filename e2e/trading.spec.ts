@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-E2E-018
+ * @covers_docs [V9-DOC-BACK-008, V9-DOC-BACK-013, V9-DOC-ARCH-008, V9-DOC-BACK-005, V9-DOC-BACK-025]
+ */
 import { test, expect } from '@playwright/test'
 
 test.describe('交易舱功能测试', () => {

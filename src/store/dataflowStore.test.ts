@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-132
  * dataflowStore 单元测试
  *
  * 覆盖场景：
@@ -17,7 +18,8 @@
  * 13. 多 channel 独立管理
  * 14. stats 正确反映 dataFlowEngine.getStats()
  * 15. createMockDataPacket 辅助函数可用
- */
+  * @covers_docs [V9-DOC-DATA-018, V9-DOC-DATA-002, V9-DOC-DATA-021, V9-DOC-DATA-008, V9-DOC-DATA-006]
+*/
 
 const {
   mockGetStats,

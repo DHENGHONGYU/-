@@ -1,7 +1,9 @@
 /**
+ * @test_id V9-TEST-ST-113
  * @module services/skills/selfPurificationSkill.test
  * @description S-16 SKILL 自我净化/迭代 SKILL 单元测试
- */
+  * @covers_docs [V9-DOC-AI-017, V9-DOC-AI-033]
+*/
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 

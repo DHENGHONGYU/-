@@ -1,6 +1,7 @@
 import type { NewsArticle } from '@/data/types'
 import { Badge } from '@/components/atoms/Badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/atoms/Card'
+import { THEME_TOKENS } from '@/constants/theme/theme.tokens.base'
 import { twBg } from '@/constants/theme.tokens'
 
 export interface NewsCardProps {
@@ -18,8 +19,11 @@ const SENTIMENT_CONFIG: Record<
 }
 
 /**
- * NewsCard
- * @param onClick }
+ * NewsCard — 资讯卡片
+ *
+ * @param props 组件 props
+ * @param props.article 资讯数据
+ * @param props.onClick 点击或键盘激活时的回调（Enter/Space）
  */
 export function NewsCard({ article, onClick }: NewsCardProps): React.JSX.Element {
   const sentiment = SENTIMENT_CONFIG[article.sentiment]
@@ -27,7 +31,11 @@ export function NewsCard({ article, onClick }: NewsCardProps): React.JSX.Element
 
   return (
     <Card
-      className="cursor-pointer transition-shadow hover:shadow-md"
+      className={
+        onClick
+          ? `cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:${THEME_TOKENS.focusVisible.ringWidth} focus-visible:${THEME_TOKENS.focusVisible.ringColor} focus-visible:${THEME_TOKENS.focusVisible.ringOffset}`
+          : 'cursor-pointer transition-shadow hover:shadow-md'
+      }
       onClick={onClick}
       role="button"
       tabIndex={0}
@@ -45,7 +53,8 @@ export function NewsCard({ article, onClick }: NewsCardProps): React.JSX.Element
             {sentiment.label}
           </Badge>
         </div>
-        <CardTitle className="text-base leading-snug hover:text-primary" onClick={onClick}>
+        {/* 修复 B-bubbled：移除 CardTitle 的 onClick，避免点击标题冒泡到 Card 触发双 onClick */}
+        <CardTitle className="text-base leading-snug hover:text-primary">
           {article.title}
         </CardTitle>
       </CardHeader>

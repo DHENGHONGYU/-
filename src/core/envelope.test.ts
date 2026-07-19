@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-014
+ * @covers_docs []
+ */
 import { describe, it, expect } from 'vitest'
 import { EnvelopeFactory, EnvelopeError, type StandardEnvelope } from './envelope'
 import { ENVELOPE_TARGET, MODULE_ID } from '@/config/dbConfig'

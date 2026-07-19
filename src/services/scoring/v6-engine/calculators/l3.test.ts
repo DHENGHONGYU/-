@@ -1,10 +1,12 @@
 /**
+ * @test_id V9-TEST-ST-101
  * L3a/L3v 计算器 — 单元测试
  *
  * 覆盖：
  * - scoreMoat / scoreCompetition
  * - L3aFinancialCalculator / L3vValuationCalculator
- */
+  * @covers_docs [V9-DOC-PROJ-114, V9-DOC-PROJ-054, V9-DOC-PROJ-113, V9-DOC-PROJ-066]
+*/
 
 import {
   scoreMoat,

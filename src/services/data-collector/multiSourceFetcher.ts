@@ -177,9 +177,13 @@ export async function fetchChipData(symbol: string): Promise<ChipData | null> {
 /**
  * 获取新闻/重大事项（04/05）
  *
- * 优先级：Tushare → 东财爬虫 → 新浪代理 → []
+ * 优先级：Tushare → 东财爬虫 → LLM 联网搜索 → 新浪代理 → []
  */
-export async function fetchNews(symbol: string, category: 'announcement' | 'hot_news'): Promise<NewsItem[]> {
+export async function fetchNews(
+  symbol: string,
+  category: 'announcement' | 'hot_news',
+  stockName?: string,
+): Promise<NewsItem[]> {
   // 1. Tushare
   try {
     const startDate = getRecentTradeDate(30)
@@ -204,6 +208,33 @@ export async function fetchNews(symbol: string, category: 'announcement' | 'hot_
     }
   } catch (err) {
     logger.warn(`[multiSourceFetcher] 东财新闻失败: ${symbol} ${category}`, { error: err instanceof Error ? err.message : String(err) })
+  }
+
+  // 2.5 LLM 联网搜索（P0 新增）
+  if (stockName) {
+    try {
+      const { searchAnnouncements, searchNews, getCachedOrSearch } = await import('./llmSearchAgent')
+      const dimension = category === 'announcement' ? 'announcements' : 'news'
+      const cacheKey = `${symbol}_${dimension}`
+      const ttlHours = category === 'announcement' ? 720 : 168 // 公告 30 天，新闻 7 天
+      const cached = await getCachedOrSearch(
+        cacheKey,
+        async () => {
+          if (category === 'announcement') {
+            return searchAnnouncements(symbol, stockName)
+          }
+          return searchNews(symbol, stockName)
+        },
+        ttlHours,
+      )
+      if (cached && cached.length > 0) {
+        return cached.map((item) => ({ ...item, _source: 'llm' as const }))
+      }
+    } catch (err) {
+      logger.warn(`[multiSourceFetcher] LLM 搜索失败: ${symbol} ${category}`, {
+        error: err instanceof Error ? err.message : String(err),
+      })
+    }
   }
 
   // 3. 新浪代理（原有兜底）
@@ -406,9 +437,9 @@ function calculateBeta(pairs: Array<[number, number]>): number {
 /**
  * 获取研报数据（08）
  *
- * 优先级：Tushare report_rc → 东财研报 → 网易（已下线）→ []
+ * 优先级：Tushare report_rc → 东财研报 → LLM 联网搜索 → 网易（已下线）→ []
  */
-export async function fetchResearchReports(symbol: string): Promise<ResearchReport[]> {
+export async function fetchResearchReports(symbol: string, stockName?: string): Promise<ResearchReport[]> {
   // 1. Tushare
   try {
     const records = await tushareResearchReports(symbol)
@@ -427,6 +458,26 @@ export async function fetchResearchReports(symbol: string): Promise<ResearchRepo
     }
   } catch (err) {
     logger.warn(`[multiSourceFetcher] 东财研报失败: ${symbol}`, { error: err instanceof Error ? err.message : String(err) })
+  }
+
+  // 2.5 LLM 联网搜索（P0 新增）
+  if (stockName) {
+    try {
+      const { searchReports, getCachedOrSearch } = await import('./llmSearchAgent')
+      const cacheKey = `${symbol}_reports`
+      const cached = await getCachedOrSearch(
+        cacheKey,
+        async () => searchReports(symbol, stockName),
+        720, // 研报缓存 30 天
+      )
+      if (cached && cached.length > 0) {
+        return cached.map((item) => ({ ...item, _source: 'llm' as const }))
+      }
+    } catch (err) {
+      logger.warn(`[multiSourceFetcher] LLM 研报搜索失败: ${symbol}`, {
+        error: err instanceof Error ? err.message : String(err),
+      })
+    }
   }
 
   // 3. 网易端点已不可用（DNS 不可达），直接返回空 → 触发 Mock 回退

@@ -1,7 +1,9 @@
 /**
+ * @test_id V9-TEST-E2E-030
  * E2E 功能测试 — 导航跳转
  * 覆盖：五舱室导航、侧边栏面板跳转、顶栏切换、驾驶舱入口、404、面包屑
- */
+  * @covers_docs []
+*/
 
 import { test, expect } from '@playwright/test'
 import { navigateTo, waitForAppReady, ROUTES, SAMPLE_STOCKS } from '../utils/helpers'

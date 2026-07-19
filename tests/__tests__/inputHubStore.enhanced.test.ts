@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-085
  * inputHubStore 增强单元测试
  *
  * 覆盖场景：
@@ -8,7 +9,8 @@
  * 4. reset 回到初始值
  * 5. 并发设置不冲突
  * 6. Store 订阅响应（zustand subscribe）
- */
+  * @covers_docs []
+*/
 
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { useInputHubStore } from '@/store/inputHubStore'

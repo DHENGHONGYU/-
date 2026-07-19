@@ -1,7 +1,9 @@
 /**
+ * @test_id V9-TEST-E2E-035
  * E2E 视觉测试 — 响应式适配
  * 覆盖：移动端 (375px) / 平板 (768px) / 桌面 (1440px) 在不同视口下的布局切换
- */
+  * @covers_docs []
+*/
 
 import { test, expect } from '@playwright/test'
 import { navigateTo, ROUTES } from '../utils/helpers'

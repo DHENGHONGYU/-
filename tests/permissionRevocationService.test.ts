@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-040
  * 权限自动回收服务测试
  *
  * 测试场景：
@@ -14,7 +15,8 @@
  * - 验证完整的调用参数（per project_memory: DataBridge 单元测试必须 mock dataBridge.query()）
  * - 使用 vi.hoisted 解决 mock 提升问题
  * - 不依赖真实 IndexedDB，纯逻辑测试
- */
+  * @covers_docs []
+*/
 
 import { describe, expect, it, beforeEach, vi } from 'vitest'
 

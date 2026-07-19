@@ -1,9 +1,11 @@
 /**
+ * @test_id V9-TEST-ST-034
  * MCPClient 禁用守卫专项测试（F5 整改验证）
  *
  * 验证：对已注册但 disabled（enabled:false）的 Server 调用返回结构化错误，
  * 防止禁用 Server 被误调用。
- */
+  * @covers_docs [V9-DOC-AI-005, V9-DOC-AI-007, V9-DOC-AI-013, V9-DOC-AI-023, V9-DOC-AI-021]
+*/
 import { describe, it, expect } from 'vitest'
 import { MCPRegistry } from '@/mcp/core/registry'
 import { MCPClientImpl } from '@/mcp/core/client'

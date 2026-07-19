@@ -1,7 +1,9 @@
 /**
+ * @test_id V9-TEST-ST-112
  * @module services/skills/industryScoreMappingSkill.test
  * @description S-06 行业评分映射 SKILL 单元测试
- */
+  * @covers_docs []
+*/
 
 import { describe, it, expect } from 'vitest'
 import { SkillRegistry } from './skillRegistry'

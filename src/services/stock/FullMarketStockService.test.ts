@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-116
+ * @covers_docs [V9-DOC-AI-017, V9-DOC-AI-033]
+ */
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 // 隔离网络调用：mock Smartbox API 客户端

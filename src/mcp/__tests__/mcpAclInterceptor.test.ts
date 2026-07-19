@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-042
  * MCP ACL 拦截器单元测试
  *
  * @description
@@ -10,7 +11,8 @@
  *
  * @module mcp/__tests__/mcpAclInterceptor.test.ts
  * @created 2026-07-08 - P0 MCP 权限控制修复
- */
+  * @covers_docs [V9-DOC-DATA-024, V9-DOC-PROJ-108, V9-DOC-AI-005]
+*/
 
 import { describe, it, expect } from 'vitest'
 import {

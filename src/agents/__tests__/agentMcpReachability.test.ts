@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-002
+ * @covers_docs [V9-DOC-AI-006, V9-DOC-AI-003, V9-DOC-AI-007, V9-DOC-AI-002, V9-DOC-AI-005]
+ */
 import { describe, it, expect } from 'vitest'
 import { mcpRegistry } from '@/mcp/core/registry'
 // 副作用导入：registerAllServers() 经由 Vite import.meta.glob 同步注册所有 enabled Server。

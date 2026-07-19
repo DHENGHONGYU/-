@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-117
+ * @covers_docs []
+ */
 const { mockDataBridgeInit, mockInitPWA, mockDataBridgeSubscribe } = vi.hoisted(() => ({
   mockDataBridgeInit: vi.fn().mockResolvedValue(undefined),
   mockInitPWA: vi.fn(),

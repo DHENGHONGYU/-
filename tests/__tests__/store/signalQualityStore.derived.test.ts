@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-UT-116
+ * @covers_docs [V9-DOC-AI-017, V9-DOC-AI-033, V9-DOC-ARCH-007, V9-DOC-BACK-015]
+ */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import {
   signalQualityStoreNormalState,

@@ -2,13 +2,22 @@
  * @fileoverview 爬虫补充层
  *
  * 职责：
- * - 当 Tushare 覆盖不足或不可用时，通过东方财富、Baostock 等公开端点补充数据
+ * - 当 Tushare 覆盖不足或不可用时，通过东方财富等公开端点补充数据
  * - 统一节流、User-Agent 轮换、失败降级
- * - 所有请求经后端/Vite proxy 转发，避免浏览器 CORS
+ * - 直连东方财富公开 API（绝对 URL），不依赖 Vite 代理
+ *
+ * 2026-07-19 重写：移除所有 /api/proxy/* 代理路径，
+ * 改为直连 emweb.securities.eastmoney.com / np-anotice-stock.eastmoney.com 等真实端点。
  */
 
 import { getLogger } from '@/lib/logger'
-import { SINA_FINANCE_API_BASE, TENCENT_FINANCE_API_BASE } from '@/config/marketDataEndpoints'
+import {
+  EASTMONEY_F10_SHAREHOLDER_API,
+  EASTMONEY_ANNOUNCEMENT_API,
+  EASTMONEY_NEWS_API_UNAVAILABLE,
+  EASTMONEY_RESEARCH_API_UNAVAILABLE,
+  EASTMONEY_INDUSTRY_API_UNAVAILABLE,
+} from '@/config/marketDataEndpoints'
 import type { ChipData, NewsItem, CompetitorData, ResearchReport } from './dimensionDataTypes'
 import type { KlineBar } from '@/data/types/types.marketData'
 
@@ -60,22 +69,99 @@ function extractSixDigitCode(symbol: string): string {
   return symbol.replace(/\.(SH|SZ|BJ)$/i, '').trim()
 }
 
+/**
+ * 将 600519.SH 格式转为东财 F10 所需格式（SH600519 / SZ000001）。
+ * 沪市加 SH 前缀，深市/创业板/北交所加 SZ 前缀。
+ */
+function toEastMoneyF10Code(symbol: string): string {
+  const upper = symbol.toUpperCase()
+  if (upper.endsWith('.SH')) {
+    return `SH${extractSixDigitCode(symbol)}`
+  }
+  if (upper.endsWith('.SZ') || upper.endsWith('.BJ')) {
+    return `SZ${extractSixDigitCode(symbol)}`
+  }
+  // 无后缀时按代码首位推断：6 → SH，0/3 → SZ
+  const code = extractSixDigitCode(symbol)
+  if (code.startsWith('6')) return `SH${code}`
+  return `SZ${code}`
+}
+
+/**
+ * 将 600519.SH 格式转为东财公告 API 所需格式（纯 6 位数字）。
+ */
+function toEastMoneyStockListCode(symbol: string): string {
+  return extractSixDigitCode(symbol)
+}
+
 // ── 03 筹码：东财股东户数 ──
 
+/** F10 ShareholderResearch 响应中单条股东户数记录 */
+interface EmShareholderRecord {
+  SECUCODE?: string
+  SECURITY_CODE?: string
+  END_DATE?: string
+  HOLDER_TOTAL_NUM?: number
+  TOTAL_NUM_RATIO?: number
+  AVG_FREE_SHARES?: number
+  AVG_FREESHARES_RATIO?: number
+  HOLD_FOCUS?: string
+  PRICE?: number
+  AVG_HOLD_AMT?: number
+  HOLD_RATIO_TOTAL?: number
+  NOTICE_DATE?: string
+}
+
+/** F10 ShareholderResearch 完整响应结构 */
+interface EmShareholderResponse {
+  gdrs?: EmShareholderRecord[]
+  sdltgd_date?: Array<{ END_DATE?: string }>
+}
+
+/**
+ * 获取东方财富股东户数（筹码数据）。
+ *
+ * 端点：emweb.securities.eastmoney.com/PC_HSF10/ShareholderResearch/PageAjax
+ * 2026-07-19 curl 验证：返回真实数据（贵州茅台 243,159 户等）。
+ */
 export async function fetchEastMoneyHolderNumber(symbol: string): Promise<ChipData | null> {
-  const code = extractSixDigitCode(symbol)
-  const url = `${SINA_FINANCE_API_BASE}eastmoney/holder?code=${code}`
+  const f10Code = toEastMoneyF10Code(symbol)
+  const url = `${EASTMONEY_F10_SHAREHOLDER_API}?code=${f10Code}`
   const resp = await safeFetch(url)
   if (!resp) return null
   try {
-    const data = (await resp.json()) as Record<string, unknown>
-    const result = Array.isArray(data?.result) ? (data.result as Record<string, unknown>[]) : []
-    const latest = result[0]
+    const data: EmShareholderResponse = await resp.json()
+    const gdrs = data?.gdrs
+    if (!Array.isArray(gdrs) || gdrs.length === 0) {
+      logger.warn('[crawlerProvider] 东财股东户数无数据', { symbol })
+      return null
+    }
+    const latest = gdrs[0]
     if (!latest) return null
+
+    // 解析持股集中度趋势
+    let trend: ChipData['trend'] = 'stable'
+    if (latest.TOTAL_NUM_RATIO != null) {
+      if (latest.TOTAL_NUM_RATIO > 5) trend = 'decreasing'
+      else if (latest.TOTAL_NUM_RATIO < -5) trend = 'increasing'
+    }
+
+    // 将 HOLD_FOCUS 映射为 concentration 数值（非常集中≈80, 较集中≈60, 一般≈40, 较分散≈25, 非常分散≈10）
+    const focusMap: Record<string, number> = {
+      '非常集中': 80,
+      '较集中': 60,
+      '一般': 40,
+      '较分散': 25,
+      '非常分散': 10,
+    }
+    const concentration = focusMap[latest.HOLD_FOCUS ?? ''] ?? undefined
+
     return {
-      shareholderCount: latest.holderNum != null ? Number(latest.holderNum) : undefined,
-      avgSharesPerHolder: latest.avgSharesPerHolder != null ? Number(latest.avgSharesPerHolder) : undefined,
-      date: toString(latest.endDate) || new Date().toISOString().slice(0, 10),
+      shareholderCount: latest.HOLDER_TOTAL_NUM != null ? Number(latest.HOLDER_TOTAL_NUM) : undefined,
+      avgSharesPerHolder: latest.AVG_FREE_SHARES != null ? Number(latest.AVG_FREE_SHARES) : undefined,
+      concentration,
+      trend,
+      date: latest.END_DATE ? latest.END_DATE.slice(0, 10) : new Date().toISOString().slice(0, 10),
     }
   } catch (err) {
     logger.warn('[crawlerProvider] 东财股东户数解析失败', { symbol, error: err instanceof Error ? err.message : String(err) })
@@ -83,24 +169,55 @@ export async function fetchEastMoneyHolderNumber(symbol: string): Promise<ChipDa
   }
 }
 
-// ── 04/05 公告/新闻 ──
+// ── 04 公告 ──
 
+/** 东财公告 API 响应中单条公告记录 */
+interface EmAnnouncementRecord {
+  art_code?: string
+  title?: string
+  notice_date?: string
+  display_time?: string
+  columns?: Array<{ column_name?: string }>
+  stock_code?: string
+}
+
+/** 东财公告 API 响应结构 */
+interface EmAnnouncementResponse {
+  success?: number
+  data?: {
+    list?: EmAnnouncementRecord[]
+    total_hits?: number
+    page_index?: number
+    page_size?: number
+  }
+}
+
+/**
+ * 获取东方财富公告。
+ *
+ * 端点：np-anotice-stock.eastmoney.com/api/security/ann
+ * 2026-07-19 curl 验证：返回真实公告数据（贵州茅台 1068 条）。
+ */
 export async function fetchEastMoneyAnnouncements(symbol: string): Promise<NewsItem[]> {
-  const code = extractSixDigitCode(symbol)
-  const url = `${SINA_FINANCE_API_BASE}eastmoney/announcement?code=${code}`
+  const code = toEastMoneyStockListCode(symbol)
+  const url = `${EASTMONEY_ANNOUNCEMENT_API}?sr=-1&page_size=10&page_index=1&ann_type=A&stock_list=${code}`
   const resp = await safeFetch(url)
   if (!resp) return []
   try {
-    const data = (await resp.json()) as { data?: { data?: Record<string, unknown>[] } }
-    const items = data?.data?.data ?? []
+    const data: EmAnnouncementResponse = await resp.json()
+    if (data?.success !== 1) {
+      logger.warn('[crawlerProvider] 东财公告 API 返回失败', { symbol, success: data?.success })
+      return []
+    }
+    const items = data?.data?.list ?? []
     return items.map((item) => ({
-      id: `${code}-${toString(item.noticeDate)}-${toString(item.title).slice(0, 16)}`,
-      title: toString(item.title),
+      id: item.art_code ?? `${code}-${item.notice_date ?? Date.now()}`,
+      title: item.title ?? '',
       content: '',
       source: '东方财富公告',
-      date: toString(item.noticeDate)?.slice(0, 10) || '',
+      date: (item.notice_date ?? '').slice(0, 10),
       category: 'announcement' as const,
-      url: toString(item.url),
+      url: item.art_code ? `https://np-anotice-stock.eastmoney.com/api/security/ann/detail?art_code=${item.art_code}` : undefined,
     }))
   } catch (err) {
     logger.warn('[crawlerProvider] 东财公告解析失败', { symbol, error: err instanceof Error ? err.message : String(err) })
@@ -108,74 +225,60 @@ export async function fetchEastMoneyAnnouncements(symbol: string): Promise<NewsI
   }
 }
 
+// ── 05 新闻 ──
+
+/**
+ * 获取东方财富新闻。
+ *
+ * 2026-07-19 curl 验证：push2.eastmoney.com/api/qt/stock/news/get 始终返回空响应，
+ * 疑似需要浏览器 Cookie / 反爬令牌。标记为不可用，直接返回空数组。
+ * 若未来端点恢复可用，将在此处接入。
+ */
 export async function fetchEastMoneyNews(symbol: string): Promise<NewsItem[]> {
-  const code = extractSixDigitCode(symbol)
-  const url = `${TENCENT_FINANCE_API_BASE}eastmoney/news?code=${code}`
-  const resp = await safeFetch(url)
-  if (!resp) return []
-  try {
-    const data = (await resp.json()) as { result?: { data?: Record<string, unknown>[] } }
-    const items = data?.result?.data ?? []
-    return items.map((item) => ({
-      id: `${code}-${toString(item.artTime)}-${toString(item.title).slice(0, 16)}`,
-      title: toString(item.title),
-      content: toString(item.content),
-      source: toString(item.mediaName) || '东方财富',
-      date: toString(item.artTime)?.slice(0, 10) || '',
-      category: 'hot_news' as const,
-    }))
-  } catch (err) {
-    logger.warn('[crawlerProvider] 东财新闻解析失败', { symbol, error: err instanceof Error ? err.message : String(err) })
+  if (EASTMONEY_NEWS_API_UNAVAILABLE) {
+    logger.info('[crawlerProvider] 东财新闻端点不可用（push2 反爬），返回空', { symbol })
     return []
   }
+  // 占位：未来若端点恢复，参考格式：
+  // const code = extractSixDigitCode(symbol)
+  // const url = `https://push2.eastmoney.com/api/qt/stock/news/get?secid=1.${code}&page=1&size=10`
+  return []
 }
 
 // ── 06 行业竞品 ──
 
+/**
+ * 获取东方财富同行业竞品数据。
+ *
+ * 2026-07-19 curl 验证：push2.eastmoney.com 同行业股票查询返回 rc:102（反爬拦截），
+ * F10 IndustryAnalysis 端点无同行业股票数据。标记为不可用，直接返回空数组。
+ */
 export async function fetchEastMoneyIndustry(symbol: string): Promise<CompetitorData[]> {
-  const code = extractSixDigitCode(symbol)
-  const url = `${TENCENT_FINANCE_API_BASE}eastmoney/industry?code=${code}`
-  const resp = await safeFetch(url)
-  if (!resp) return []
-  try {
-    const data = (await resp.json()) as { data?: Record<string, unknown>[] }
-    const items = data?.data ?? []
-    return items.map((item) => ({
-      symbol: toString(item.code),
-      name: toString(item.name),
-      pe: item.pe != null ? Number(item.pe) : undefined,
-      pb: item.pb != null ? Number(item.pb) : undefined,
-    }))
-  } catch (err) {
-    logger.warn('[crawlerProvider] 东财行业解析失败', { symbol, error: err instanceof Error ? err.message : String(err) })
+  if (EASTMONEY_INDUSTRY_API_UNAVAILABLE) {
+    logger.info('[crawlerProvider] 东财行业竞品端点不可用（push2 反爬），返回空', { symbol })
     return []
   }
+  return []
 }
 
 // ── 08 研报 ──
 
+/**
+ * 获取东方财富研报。
+ *
+ * 2026-07-19 curl 验证：reportapi.eastmoney.com/report/list 可返回数据，
+ * 但 stockCode 过滤参数不生效（返回全市场研报，无法按股票筛选）。
+ * 标记为不可用，直接返回空数组。若未来端点支持按股票筛选，将在此处接入。
+ */
 export async function fetchEastMoneyResearch(symbol: string): Promise<ResearchReport[]> {
-  const code = extractSixDigitCode(symbol)
-  const url = `${SINA_FINANCE_API_BASE}eastmoney/research?code=${code}`
-  const resp = await safeFetch(url)
-  if (!resp) return []
-  try {
-    const data = (await resp.json()) as { data?: Record<string, unknown>[] }
-    const items = data?.data ?? []
-    return items.map((item) => ({
-      id: `${code}-${toString(item.publishDate)}-${toString(item.title).slice(0, 16)}`,
-      title: toString(item.title),
-      author: toString(item.author),
-      institution: toString(item.orgName),
-      rating: toString(item.ratingName) || '中性',
-      targetPrice: item.predictThisYearPe != null ? Number(item.predictThisYearPe) : undefined,
-      date: toString(item.publishDate)?.slice(0, 10) || '',
-      summary: toString(item.summary),
-    }))
-  } catch (err) {
-    logger.warn('[crawlerProvider] 东财研报解析失败', { symbol, error: err instanceof Error ? err.message : String(err) })
+  if (EASTMONEY_RESEARCH_API_UNAVAILABLE) {
+    logger.info('[crawlerProvider] 东财研报端点不可用（stockCode 过滤无效），返回空', { symbol })
     return []
   }
+  // 占位：未来若端点支持过滤，参考格式：
+  // const code = extractSixDigitCode(symbol)
+  // const url = `https://reportapi.eastmoney.com/report/list?pageSize=10&pageNo=1&qType=0&beginTime=...&endTime=...&stockCode=${code}`
+  return []
 }
 
 // ── 02 K线：Baostock 补充 ──
@@ -192,9 +295,4 @@ export async function fetchBaostockKline(symbol: string, days: number): Promise<
     logger.warn('[crawlerProvider] Baostock K线解析失败', { symbol, error: err instanceof Error ? err.message : String(err) })
     return []
   }
-}
-
-function toString(value: unknown): string {
-  if (value === null || value === undefined) return ''
-  return String(value)
 }

@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-135
  * engineStore 单元测试
  *
  * 覆盖场景：
@@ -13,7 +14,8 @@
  * 9. updateStats: 同时合并 dataflow 和 agents
  * 10. reset: 重置所有状态为初始值
  * 11. reset 后 store 可重用
- */
+  * @covers_docs []
+*/
 
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 import type { EngineConfig } from '@/types/modules/engine.types'

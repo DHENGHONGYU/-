@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-029
  * @fileoverview 全模块量化校验测试
  *
  * 对所有功能模块执行量化指标测试，验证：
@@ -19,7 +20,8 @@
  *
  * @module tests/full-module-verification.test
  * @created 2026-07-15 - 全模块量化校验
- */
+  * @covers_docs [V9-DOC-PROJ-114, V9-DOC-ARCH-008, V9-DOC-PROJ-066, V9-DOC-PROJ-113]
+*/
 
 import { describe, it, expect } from 'vitest'
 import { identifyMarketCycle, generatePrediction, verifyPrediction, computeFactorICs } from '@/services/output/predictionVerifier'

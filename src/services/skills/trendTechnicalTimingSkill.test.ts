@@ -1,7 +1,9 @@
 /**
+ * @test_id V9-TEST-ST-115
  * @module services/skills/trendTechnicalTimingSkill.test
  * @description S-12 趋势股技术分析择时 SKILL 单元测试
- */
+  * @covers_docs []
+*/
 
 import { describe, it, expect } from 'vitest'
 import { SkillRegistry } from './skillRegistry'

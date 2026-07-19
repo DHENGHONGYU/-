@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-UT-109
+ * @covers_docs [V9-DOC-BACK-044, V9-DOC-BACK-018, V9-DOC-BACK-037, V9-DOC-BACK-042]
+ */
 import { describe, it, expect } from 'vitest'
 import {
   buildScoreComparison,

@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-055
+ * @covers_docs [V9-DOC-ARCH-008, V9-DOC-PROJ-054, V9-DOC-PROJ-113, V9-DOC-PROJ-066]
+ */
 import { describe, it, expect } from 'vitest'
 import { V6ScoringServer } from '@/mcp/servers/scoring/v6ScoringServer'
 

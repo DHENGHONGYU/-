@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-081
  * DataBridge 层 normalize 函数专项单元测试
  *
  * 测试目标：
@@ -14,7 +15,8 @@
  *
  * 运行命令：
  *   npm test -- --run src/services/fetcher/strategyDataAdapter.normalize.test.ts
- */
+  * @covers_docs [V9-DOC-PROJ-092, V9-DOC-BACK-003, V9-DOC-ARCH-008, V9-DOC-BACK-010, V9-DOC-QA-010]
+*/
 import { describe, test, expect } from 'vitest'
 import {
   toSafeNumber,

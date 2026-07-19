@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-UT-043
+ * @covers_docs [V9-DOC-PROJ-053, V9-DOC-PROJ-114, V9-DOC-PROJ-054, V9-DOC-ARCH-008, V9-DOC-PROJ-066]
+ */
 import { describe, expect, it, beforeEach } from 'vitest'
 import { CORE_RESOURCE_THEME } from '@/config/themeRegistry'
 import { db } from '@/data/db'

@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-022
  * queryBuilder.ts 单元测试 — D-02 类型安全化
  *
  * 通过 mock @/core/databridge 隔离底层存储，验证：
@@ -8,7 +9,8 @@
  * - 批量查询返回 ok(Map)
  *
  * @vitest
- */
+  * @covers_docs []
+*/
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 const {

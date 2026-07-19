@@ -1,9 +1,11 @@
 /**
+ * @test_id V9-TEST-ST-079
  * fetcherClient 单元测试
  *
  * 覆盖：checkFetcherHealth, collectBasic, collectKline
  * Mock 策略：mock globalThis.fetch 和 getDefaultFetcherServiceConfig
- */
+  * @covers_docs [V9-DOC-PROJ-092]
+*/
 
 import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest'
 import { checkFetcherHealth, collectBasic, collectKline } from './fetcherClient'

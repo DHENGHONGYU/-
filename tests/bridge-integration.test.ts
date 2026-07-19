@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-005
  * @file bridge-integration.test.ts
  * @description 数据流桥接（Phase 1）端到端集成测试
  *
@@ -11,7 +12,8 @@
  *
  * @phase Phase 1 桥接
  * @see docs/03-development/data-flow-convergence-plan.md
- */
+  * @covers_docs [V9-DOC-DATA-030]
+*/
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { marketDataAdapter } from '@/services/data-collector/MarketDataAdapter'

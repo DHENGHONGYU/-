@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-089
  * @fileoverview MCP ACL 真实场景权限拦截集成测试
  *
  * @description
@@ -25,7 +26,8 @@
  *
  * @module tests/__tests__/integration/mcp-acl-scenarios.integration.test
  * @created 2026-07-08 - P0 MCP 权限控制修复
- */
+  * @covers_docs [V9-DOC-AI-005, V9-DOC-AI-007, V9-DOC-AI-013, V9-DOC-AI-023, V9-DOC-AI-021]
+*/
 
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { db, close } from '@/data/db'

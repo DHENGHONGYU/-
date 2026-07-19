@@ -1,7 +1,9 @@
 /**
+ * @test_id V9-TEST-E2E-002
  * 可访问性测试
  * 验证系统的 ARIA 标签、键盘导航和颜色对比度
- */
+  * @covers_docs []
+*/
 
 import { test, expect } from '@playwright/test'
 

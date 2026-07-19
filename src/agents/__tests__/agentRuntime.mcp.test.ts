@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-004
+ * @covers_docs [V9-DOC-AI-006, V9-DOC-AI-003, V9-DOC-AI-007, V9-DOC-AI-002, V9-DOC-AI-005]
+ */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 // Mock mcpBridge

@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-139
  * industryScoreStore 单元测试
  *
  * 覆盖场景：
@@ -13,7 +14,8 @@
  * 9. runScore 失败（code 为空 / LLM 未配置 / service 返回 error）
  * 10. runScore 异常（抛出错误）
  * 11. resetResult
- */
+  * @covers_docs [V9-DOC-BACK-020]
+*/
 
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 import {

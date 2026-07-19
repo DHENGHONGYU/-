@@ -1,7 +1,9 @@
 /**
+ * @test_id V9-TEST-ST-090
  * @module portfolioService.test
  * @description 投资组合服务单元测试（E-2-6）
- */
+  * @covers_docs [V9-DOC-BACK-008, V9-DOC-BACK-013, V9-DOC-ARCH-008, V9-DOC-BACK-005, V9-DOC-PROJ-229]
+*/
 
  
 import { describe, it, expect, vi, beforeEach } from 'vitest'

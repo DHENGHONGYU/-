@@ -1,7 +1,9 @@
 /**
+ * @test_id V9-TEST-E2E-034
  * E2E 视觉测试 — 元素渲染
  * 覆盖：输入舱/总控舱页面元素完整性、404 页面渲染
- */
+  * @covers_docs []
+*/
 
 import { test, expect } from '@playwright/test'
 import { navigateTo, ROUTES } from '../utils/helpers'

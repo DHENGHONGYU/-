@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-102
  * audit-split-quality.test.ts
  * 模块拆分质量审计器单元测试
  *
@@ -7,7 +8,8 @@
  * 2. 各规则检查函数（AP-001 ~ AP-010）的正确性
  * 3. formatReport() 输出格式正确
  * 4. 边界条件与健壮性
- */
+  * @covers_docs [V9-DOC-BACK-020]
+*/
 
 import { describe, it, expect } from 'vitest'
 import {

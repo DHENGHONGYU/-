@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-UT-017
+ * @covers_docs []
+ */
 import { describe, it, expect, vi } from 'vitest'
 import { STORE_NAME } from '@/config/dbConfig'
 import { createSchema } from '@/data/db-schema'

@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-147
  * pageStore 单元测试
  *
  * 覆盖场景：
@@ -13,7 +14,8 @@
  * 9. initPageSubscriptions 响应 PAGE_DATA_LOADED / PAGE_ERROR / PAGE_RESET
  * 10. destroyPageSubscriptions 清理所有订阅
  * 11. 重复 initPageSubscriptions 先清理旧订阅
- */
+  * @covers_docs []
+*/
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 

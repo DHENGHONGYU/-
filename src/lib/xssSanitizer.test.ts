@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-028
  * xssSanitizer 单元测试
  *
  * 覆盖场景：
@@ -12,7 +13,8 @@
  * 8. sanitizeSearchQuery: 移除控制字符与 HTML 标签
  * 9. sanitizeSearchQuery: 限制最大长度
  * 10. sanitizeHtml: 处理空输入与非字符串
- */
+  * @covers_docs []
+*/
 import { describe, it, expect } from 'vitest'
 import {
   escapeHtml,

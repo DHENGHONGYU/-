@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-E2E-017
+ * @covers_docs []
+ */
 import { test, expect } from '@playwright/test'
 
 test.describe('交易复盘流程', () => {

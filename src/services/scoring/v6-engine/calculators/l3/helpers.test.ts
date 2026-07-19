@@ -1,10 +1,12 @@
 /**
+ * @test_id V9-TEST-ST-105
  * L3 辅助函数单元测试
  * 
  * 覆盖：
  * - scoreMoat（护城河评分）
  * - scoreCompetition（竞争格局评分）
- */
+  * @covers_docs [V9-DOC-PROJ-114, V9-DOC-PROJ-054, V9-DOC-PROJ-113, V9-DOC-PROJ-066]
+*/
 
 import { describe, it, expect } from 'vitest'
 import { scoreMoat, scoreCompetition } from './helpers'

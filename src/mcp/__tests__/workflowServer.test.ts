@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-056
  * WorkflowServer 单元测试
  *
  * 测试范围：
@@ -11,7 +12,8 @@
  *
  * @module mcp/__tests__/workflowServer.test.ts
  * @created 2026-07-13
- */
+  * @covers_docs [V9-DOC-AI-005, V9-DOC-AI-007, V9-DOC-AI-013, V9-DOC-AI-023, V9-DOC-AI-021]
+*/
 
 import { describe, it, expect, beforeEach } from 'vitest'
 import { WorkflowServer } from '../servers/workflow/workflowServer'

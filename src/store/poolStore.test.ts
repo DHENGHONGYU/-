@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-148
  * 三池三分拆 Store 单元测试
  *
  * 覆盖场景：
@@ -12,7 +13,8 @@
  * 8. getByStatus / getByGroup
  * 9. 派生查询函数
  * 10. 订阅 / source 过滤 / cleanup
- */
+  * @covers_docs [V9-DOC-DATA-024, V9-DOC-PROJ-108, V9-DOC-BACK-011]
+*/
 
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import type { StandardEnvelope } from '@/core/envelope'

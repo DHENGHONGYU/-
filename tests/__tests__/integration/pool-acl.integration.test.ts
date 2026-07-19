@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-091
  * @fileoverview Pool ACL 权限验证集成测试
  *
  * 测试目标：
@@ -20,7 +21,8 @@
  *   套件4: 所有 ResearchStatus 状态流转（5 用例）
  *   套件5: ACL 拒绝验证（4 用例）
  *   套件6: 缓存与 ACL 一致性（2 用例）
- */
+  * @covers_docs [V9-DOC-DATA-024, V9-DOC-BACK-011, V9-DOC-PROJ-108, V9-DOC-DATA-013]
+*/
 
 import { db, close } from '@/data/db'
 import { dataBridge } from '@/core/databridge'

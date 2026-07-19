@@ -1,11 +1,13 @@
 /**
+ * @test_id V9-TEST-ST-023
  * repository.ts 单元测试 — D-02 统一数据访问层
  *
  * 通过 mock dataBridge / envelope / logger 隔离测试 createRepository 工厂，
  * 验证统一契约的读取（query）与写入（forward）路径及失败处理。
  *
  * @vitest
- */
+  * @covers_docs []
+*/
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 const {

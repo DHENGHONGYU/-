@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-UT-023
+ * @covers_docs []
+ */
 import { describe, expect, it, beforeEach, vi } from 'vitest'
 import { eventBus } from '@/lib/eventBus'
 

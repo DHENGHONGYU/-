@@ -1,7 +1,9 @@
 /**
+ * @test_id V9-TEST-E2E-033
  * E2E 视觉测试 — 布局一致性
  * 覆盖：首页功能卡片与状态概览、顶栏 Logo/Tab/按钮、侧边栏面板
- */
+  * @covers_docs []
+*/
 
 import { test, expect } from '@playwright/test'
 import { navigateTo, waitForAppReady, ROUTES } from '../utils/helpers'

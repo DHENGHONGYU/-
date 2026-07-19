@@ -1,8 +1,10 @@
 /**
+ * @test_id V9-TEST-ST-099
  * V6 评分引擎 — 单元测试
  *
  * 覆盖：11 层计算器，引擎聚合，审计追踪，边界条件
- */
+  * @covers_docs [V9-DOC-PROJ-114, V9-DOC-PROJ-054, V9-DOC-PROJ-113, V9-DOC-PROJ-066]
+*/
 
 import { describe, test, expect } from 'vitest'
 import { V6ScoreEngine } from './engine'

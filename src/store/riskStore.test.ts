@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-ST-151
  * riskStore 单元测试
  *
  * 覆盖场景：
@@ -11,7 +12,8 @@
  * 7. verdictsBySymbol 按标的查询
  * 8. 裁决记录上限淘汰
  * 9. checkRisk 异常处理
- */
+  * @covers_docs [V9-DOC-BACK-008, V9-DOC-BACK-013, V9-DOC-ARCH-008, V9-DOC-BACK-005, V9-DOC-DATA-046]
+*/
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 

@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-045
+ * @covers_docs [V9-DOC-DATA-024, V9-DOC-PROJ-108, V9-DOC-AI-005]
+ */
 import { describe, it, expect } from 'vitest'
 import { PoolServer } from '@/mcp/servers/pool/poolServer'
 

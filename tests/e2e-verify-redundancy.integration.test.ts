@@ -1,4 +1,5 @@
 /**
+ * @test_id V9-TEST-UT-021
  * 冗余设计专项端到端验证（R1–R5）
  *
  * 目标：在「软件冗余设计」维度上验证系统是否具备
@@ -10,7 +11,8 @@
  *
  * 环境：Vitest + jsdom + fake-indexeddb（tests/setup.ts 已注入）
  * 关键：it() 开头必须 await db.init()，否则 dataBridge.query 卡在 db.ready()。
- */
+  * @covers_docs [V9-DOC-PROJ-113, V9-DOC-PROJ-114, V9-DOC-FRONT-012, V9-DOC-PROJ-066]
+*/
 
 import { it, expect, vi } from 'vitest'
 import { writeFileSync } from 'node:fs'

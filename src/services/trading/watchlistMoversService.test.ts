@@ -1,3 +1,7 @@
+/**
+ * @test_id V9-TEST-ST-126
+ * @covers_docs [V9-DOC-BACK-008, V9-DOC-BACK-013, V9-DOC-ARCH-008, V9-DOC-BACK-005, V9-DOC-BACK-025]
+ */
 import { describe, it, expect } from 'vitest'
 import { computeWatchlistMovers, DEFAULT_TOP_N } from './watchlistMoversService'
 import type { WatchlistData } from '@/types/modules/widget.types'
