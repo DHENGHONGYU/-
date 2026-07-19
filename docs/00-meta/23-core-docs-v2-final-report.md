@@ -1,186 +1,193 @@
 ---
 title: 23-core-docs-v2-final-report
+type: meta
+domain: project
+phase: retrospective
+tier: important
+status: active
+maintainer: V9 Architecture Team
+summary: "23 ¸öºËĞÄÎÄµµ¶ş´ÎĞ£¶ÔµÄ×îÖÕ±¨¸æ£¬È·ÈÏ¸÷ÎÄµµ°æ±¾Ò»ÖÂĞÔÓëÄÚÈİÍêÕûĞÔ¡£"
+tags: [project, report, meta, documentation, governance]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: core
+doc_id: V9-DOC-PROJ-003
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/00-meta/23-core-docs-v2-final-report.md
-code_version: 2.0.0
-tier: core
----
+# V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª 23¸öºËĞÄÎÄµµ ¡¤ ¶ş´ÎĞ£¶Ô×îÖÕ±¨¸æ
 
-# V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” 23ä¸ªæ ¸å¿ƒæ–‡æ¡£ Â· äºŒæ¬¡æ ¡å¯¹æœ€ç»ˆæŠ¥å‘Š
-
-> **æŠ¥å‘Šç”Ÿæˆæ—¶é—´**ï¼š2026-07-12
-> **æ ¡å¯¹è½®æ¬¡**ï¼šç¬¬2è½®ï¼ˆäººå·¥å¤æ ¸æ‰€æœ‰åˆ¤å®šï¼‰
-> **æ ¡å¯¹ä¾æ®**ï¼šé‡æ–°è¯»å– `../explanation/design/implementation-governance.md`ã€`../README.md`ã€`v9-test-cases.md`ã€`../reference/audit-b4-4-security.md` ç­‰å…³é”®æ–‡æ¡£å…¨æ–‡
+> **Date**£º2026-07-12
+> **Ğ£¶ÔÂÖ´Î**£ºµÚ2ÂÖ£¨ÈË¹¤¸´ºËËùÓĞÅĞ¶¨£©
+> **Ğ£¶ÔÒÀ¾İ**£ºÖØĞÂ¶ÁÈ¡ `../explanation/design/implementation-governance.md`¡¢`../README.md`¡¢`../reference/V9-TEST-CASES.md`¡¢`../reference/audit-b4-4-security.md` µÈ¹Ø¼üÎÄµµÈ«ÎÄ
 
 ---
 
-## ğŸ“Š ç»Ÿè®¡æ±‡æ€»ï¼ˆäºŒæ¬¡æ ¡å¯¹åï¼‰
+## Í³¼Æ»ã×Ü£¨¶ş´ÎĞ£¶Ôºó£©
 
-| çŠ¶æ€ | æ•°é‡ | è¯´æ˜ |
+| ×´Ì¬ | ÊıÁ¿ | ËµÃ÷ |
 |------|------|------|
-| âœ… å·²å­˜åœ¨ | 4 | åŠŸèƒ½ç­‰ä»·ï¼Œä»…ç›®å½•/æ–‡ä»¶åä¸åŒ |
-| ğŸ”¶ éƒ¨åˆ†æ»¡è¶³ | 7 | ç›¸å…³æ–‡æ¡£å­˜åœ¨ä½†åŠŸèƒ½æœªå®Œå…¨è¦†ç›– |
-| ğŸ”´ ç¼ºå¤± | 12 | å®Œå…¨ä¸å­˜åœ¨ï¼ˆç‹¬ç«‹æ–‡æ¡£ï¼‰ |
-| **åˆè®¡** | **23** | â€” |
+| ? ÒÑ´æÔÚ | 4 | ¹¦ÄÜµÈ¼Û£¬½öÄ¿Â¼/ÎÄ¼şÃû²»Í¬ |
+| ?? ²¿·ÖÂú×ã | 7 | Ïà¹ØÎÄµµ´æÔÚµ«¹¦ÄÜÎ´ÍêÈ«¸²¸Ç |
+| ?? È±Ê§ | 12 | ÍêÈ«²»´æÔÚ£¨¶ÀÁ¢ÎÄµµ£© |
+| **ºÏ¼Æ** | **23** | ¡ª |
 
-> **å…³é”®ä¿®æ­£**ï¼šä¸ç¬¬1è½®ç›¸æ¯”ï¼Œå°† `governance.md` å’Œ `../reference/test-catalog.md` ä»ã€ç¼ºå¤±ã€è°ƒæ•´ä¸ºã€éƒ¨åˆ†æ»¡è¶³ã€ã€‚æœ€ç»ˆç¼ºå¤±æ•°ä» **14** é™è‡³ **12**ï¼ˆå‡å°‘2ä¸ªï¼‰ã€‚
-
----
-
-## ğŸ“‹ è¯¦ç»†åˆ¤å®šæ¸…å•ï¼ˆæ ¡å¯¹åï¼‰
-
-### `docs/README.md` ğŸ”´
-
-- **åˆ¤å®šç†ç”±**ï¼šæ—  `docs/README.md`ï¼›`../README.md` æ˜¯å­ç›®å½•å¯¼èˆªï¼Œéé¡¶å±‚æ€»å…¥å£
-
-### `./governance.md` ğŸ”¶
-
-- **å®é™…æ–‡æ¡£**ï¼š`../explanation/design/implementation-governance.md + ../README.md`
-- **åˆ¤å®šç†ç”±**ï¼š`../explanation/design/implementation-governance.md` å«ADRæ¨¡æ¿/ç‰ˆæœ¬æ¯”å¯¹/å®¡è®¡åŸºçº¿/ä»£ç -æ–‡æ¡£åŒæ­¥ï¼›`../README.md` å«Frontmatterè§„èŒƒ/ä¿é²œåº¦å‘Šè­¦/DoDï¼›ä½†ä¸¤è€…æ˜¯ç‹¬ç«‹æ–‡æ¡£ï¼Œæ— ç»Ÿä¸€ã€æ–‡æ¡£æ²»ç†å…¬çº¦ã€æ€»è¿°
-
-### `../explanation/overview.md` âœ…
-
-- **å®é™…æ–‡æ¡£**ï¼š`../reference/v9-system-blueprint.md`
-- **åˆ¤å®šç†ç”±**ï¼š444è¡Œï¼Œæ ‡é¢˜ã€æ•´ä½“æ¶æ„è“å›¾ã€ï¼Œå«äº”å±‚æ¶æ„ã€æ•°æ®æ¶æ„ã€è·¯ç”±æ˜ å°„ã€ADRç´¢å¼•ã€å®æ–½è·¯çº¿
-
-### `../explanation/cabins-overview.md` ğŸ”´
-
-- **åˆ¤å®šç†ç”±**ï¼šæ— ç‹¬ç«‹5èˆ±ä½“ç³»æ€»è§ˆï¼›`docs/explanation/v9-current-state-review.md` æŒ‰å®æ–½è¿›åº¦æè¿°äº”èˆ±ï¼Œéæ¶æ„è§†è§’ï¼›`06-routing-specs` ä»…è·¯ç”±ï¼›`input-cabin-spec` ä»…inputèˆ±
-
-### `../reports/release-management/README.md` ğŸ”´
-
-- **åˆ¤å®šç†ç”±**ï¼šæ— ADRé›†ä¸­ç´¢å¼•ï¼›`../explanation/design/implementation-governance.md` å«ADRæ¨¡æ¿å’Œå·²å½’æ¡£åˆ—è¡¨ï¼ˆ9ä¸ªï¼‰ï¼Œä½†æ— ç‹¬ç«‹ç´¢å¼•READMEï¼›9ä»½ADRæ•£è½å„å­ç›®å½•
-
-### `../reports/release-management/README.md` ğŸ”´
-
-- **åˆ¤å®šç†ç”±**ï¼š`01-requirements/adr/` ä¸‹æ— README.mdï¼›ä¸ `../reference/README.md` æ˜¯åŒä¸€åŠŸèƒ½çš„ä¸åŒè·¯å¾„å»ºè®®
-
-### `../reference/api-contract.md` ğŸ”¶
-
-- **å®é™…æ–‡æ¡£**ï¼š`../reference/api-contract.md`
-- **åˆ¤å®šç†ç”±**ï¼šä»…äº¤æ˜“æŒä»“APIå¥‘çº¦ï¼Œéå…¨å±€DataBridge/è¡Œæƒ…ç«¯ç‚¹/äº‹ä»¶åå¥‘çº¦
-
-### `../explanation/data-layer-overview.md` ğŸ”¶
-
-- **å®é™…æ–‡æ¡£**ï¼š`../reference/v9-indexeddb-store-schema.md`
-- **åˆ¤å®šç†ç”±**ï¼š1009è¡Œï¼Œå«25ä¸ªStoreå®Œæ•´Schema/ç´¢å¼•/ç‰ˆæœ¬å†å²ï¼Œä½†ç¼ºDataBridge/collectionç«¯åˆ°ç«¯æ•°æ®åœ°å›¾
-
-### `../prompts/store-integration-guide.md` ğŸ”´
-
-- **åˆ¤å®šç†ç”±**ï¼šæ— ç‹¬ç«‹Storeé›†æˆè§„èŒƒï¼›`prompts/store-prompt-template.md` æ˜¯AIç”Ÿæˆæç¤ºè¯ï¼Œéé›†æˆæŒ‡å—
-
-### `../prompts/service-integration-guide.md` ğŸ”´
-
-- **åˆ¤å®šç†ç”±**ï¼šæ— ç‹¬ç«‹Serviceé›†æˆè§„èŒƒï¼›`prompts/service-prompt-template.md` æ˜¯AIç”Ÿæˆæç¤ºè¯ï¼Œéé›†æˆæŒ‡å—
-
-### `../reference/coding-conventions.md` âœ…
-
-- **å®é™…æ–‡æ¡£**ï¼š`../reference/03-architecture-standards.md`
-- **åˆ¤å®šç†ç”±**ï¼š1199è¡Œï¼Œæ ‡é¢˜ã€æ¶æ„æ ‡å‡†ã€ï¼Œå«äº”å±‚æ¶æ„ã€è°ƒç”¨é“å¾‹ã€æ•°æ®è®¿é—®è§„èŒƒã€å¼•æ“å±‚è§„èŒƒã€æ˜ å°„å±‚è§„èŒƒ
-
-### `../explanation/song-aesthetics.md` ğŸ”¶
-
-- **å®é™…æ–‡æ¡£**ï¼š`../reference/design-tokens.md + ../reference/04-ui-ux-specs.md`
-- **åˆ¤å®šç†ç”±**ï¼šdesign-tokens 495è¡Œï¼ˆä»¤ç‰Œä½¿ç”¨æŒ‡å—ï¼‰ï¼Œui-design-system 279è¡Œï¼ˆå«ã€å®‹ç“·ç»¿ã€ã€å¤é“œé‡‘ã€æåŠï¼‰ï¼Œä½†æ— ç‹¬ç«‹ã€å®‹éŸµç¾å­¦ã€æ€»è¿°æ–‡æ¡£
-
-### `../explanation/quality-gates-baseline.md` âœ…
-
-- **å®é™…æ–‡æ¡£**ï¼š`../reference/09-quality-gates.md + ../explanation/quality-gates-baseline.md`
-- **åˆ¤å®šç†ç”±**ï¼šä¸¤ä»½æ–‡æ¡£åˆèµ·æ¥è¦†ç›–è´¨é‡é—¨ç¦æ•°å€¼åŸºçº¿å’Œç­–ç•¥
-
-### `../reference/test-catalog.md` ğŸ”¶
-
-- **å®é™…æ–‡æ¡£**ï¼š`../reference/v9-test-cases.md`
-- **åˆ¤å®šç†ç”±**ï¼š1178è¡Œå®Œæ•´æµ‹è¯•ç”¨ä¾‹æ¸…å•ï¼Œå«10ä¸ªåˆ†ç±»ã€60+æµ‹è¯•ç”¨ä¾‹ï¼Œä½†ä½“ç³»ç»“æ„æ–‡æ¡£è®¤ä¸ºã€åä¸€æ¬¡æ€§æ¸…å•ã€ï¼Œéé›†ä¸­ç»´æŠ¤ç›®å½•
-
-### `../reference/README.md` ğŸ”¶
-
-- **å®é™…æ–‡æ¡£**ï¼š`../reference/ai-memory-layer.md`
-- **åˆ¤å®šç†ç”±**ï¼š70è¡Œï¼Œå«AIè®°å¿†å±‚è®¾è®¡ã€ç´¢å¼•ã€æ£€ç´¢ã€ä¸æç¤ºè¯ç»“åˆï¼Œä½†ç¼ºprompts/æ£€æŸ¥è¡¨/é£è½®çš„æ€»è§ˆä¸²è”
-
-### `../reference/security-model.md` ğŸ”´
-
-- **åˆ¤å®šç†ç”±**ï¼šä»…`../how-to/mcp-acl-guide.md`ï¼ˆMCP ACLï¼‰å’Œ`../reference/audit-b4-4-security.md`ï¼ˆå‰ç«¯å®‰å…¨å®¡è®¡ï¼‰ï¼Œæ— æ•´ä½“å®‰å…¨/æƒé™æ¨¡å‹
-
-### `../reference/deployment.md` ğŸ”´
-
-- **åˆ¤å®šç†ç”±**ï¼šä»…`05-deployment/ADR-004`ï¼ˆHashRouteré™æ€æ‰˜ç®¡ï¼‰ï¼Œæ— éƒ¨ç½²æ¶æ„æ–‡æ¡£
-
-### `../explanation/runbook.md` ğŸ”´
-
-- **åˆ¤å®šç†ç”±**ï¼šæ— è¿è¡Œ/æ•…éšœæ‰‹å†Œï¼›`07-operation-strategy.md` å«é£é™©æ§åˆ¶/å›æ»šåŸåˆ™ï¼Œä½†éè¿ç»´æ‰‹å†Œ
-
-### `../tutorials/getting-started.md` ğŸ”´
-
-- **åˆ¤å®šç†ç”±**ï¼š`autonomous-workflow-user-guide.md` æ˜¯è‡ªä¸»å·¥ä½œæµå·¥å…·æŒ‡å—ï¼Œéæ–°æ‰‹å…¥é—¨æ•™ç¨‹ï¼›`../README.md` æ˜¯æ–‡æ¡£å¯¼èˆªï¼Œéå…¥é—¨æŒ‡å—
-
-### `../how-to/how-to-add-widget.md` âœ…
-
-- **å®é™…æ–‡æ¡£**ï¼š`../reference/widget-development-guide.md`
-- **åˆ¤å®šç†ç”±**ï¼š481è¡Œï¼ŒWidgetå¼€å‘å…¨æµç¨‹æŒ‡å—ï¼ˆæ³¨å†Œ/ç›®å½•/å¼€å‘/æµ‹è¯•/å‘å¸ƒï¼‰
-
-### `../how-to/how-to-add-store.md` ğŸ”´
-
-- **åˆ¤å®šç†ç”±**ï¼šæ— ã€å¦‚ä½•æ–°å¢Storeã€æ“ä½œæŒ‡å—ï¼›`../reference/v9-l2çŠ¶æ€å±‚è¡¥é½è·¯çº¿å›¾.md` æ˜¯è¡¥é½è®¡åˆ’ï¼Œéæ–°å¢æŒ‡å—ï¼›`migration-news-usestate-to-zustand.md` æ˜¯è¿ç§»æŒ‡å—
-
-### `../how-to/how-to-add-service.md` ğŸ”´
-
-- **åˆ¤å®šç†ç”±**ï¼šæ— ã€å¦‚ä½•æ–°å¢Serviceã€æ“ä½œæŒ‡å—ï¼›AGENTS.mdå››æ­¥é›†æˆæœ‰æè¿°ä½†éæŒ‡å—æ ¼å¼ï¼›`../explanation/data-collection-architecture.md` æ˜¯é‡‡é›†æ¶æ„ï¼ŒéServiceæŒ‡å—
-
-### `../explanation/a11y-i18n.md` ğŸ”¶
-
-- **å®é™…æ–‡æ¡£**ï¼š`../explanation/a11y-checklist.md`
-- **åˆ¤å®šç†ç”±**ï¼š239è¡Œï¼Œå«æ— éšœç¢æ£€æŸ¥æ¸…å•ï¼Œä½†æ— i18nç­–ç•¥
+> **¹Ø¼üĞŞÕı**£ºÓëµÚ1ÂÖÏà±È£¬½« `governance.md` ºÍ `../reference/test-catalog.md` ´Ó¡ºÈ±Ê§¡»µ÷ÕûÎª¡º²¿·ÖÂú×ã¡»¡£×îÖÕÈ±Ê§Êı´Ó **14** ½µÖÁ **12**£¨¼õÉÙ2¸ö£©¡£
 
 ---
 
-## ğŸ”„ ä¸¤æ¬¡æ ¡å¯¹å¯¹æ¯”
+## ÏêÏ¸ÅĞ¶¨Çåµ¥£¨Ğ£¶Ôºó£©
 
-| æ–‡æ¡£ | ç¬¬1è½®åˆ¤å®š | ç¬¬2è½®åˆ¤å®š | ä¿®æ­£è¯´æ˜ |
+### `docs/README.md` ??
+
+- **ÅĞ¶¨ÀíÓÉ**£ºÎŞ `docs/README.md`£»`../README.md` ÊÇ×ÓÄ¿Â¼µ¼º½£¬·Ç¶¥²ã×ÜÈë¿Ú
+
+### `./governance.md` ??
+
+- **Êµ¼ÊÎÄµµ**£º`../explanation/design/implementation-governance.md + ../README.md`
+- **ÅĞ¶¨ÀíÓÉ**£º`../explanation/design/implementation-governance.md` º¬ADRÄ£°å/°æ±¾±È¶Ô/Éó¼Æ»ùÏß/´úÂë-ÎÄµµÍ¬²½£»`../README.md` º¬Frontmatter¹æ·¶/±£ÏÊ¶È¸æ¾¯/DoD£»µ«Á½ÕßÊÇ¶ÀÁ¢ÎÄµµ£¬ÎŞÍ³Ò»¡ºÎÄµµÖÎÀí¹«Ô¼¡»×ÜÊö
+
+### `../explanation/overview.md` ?
+
+- **Êµ¼ÊÎÄµµ**£º`../reference/v9-system-blueprint.md`
+- **ÅĞ¶¨ÀíÓÉ**£º444ĞĞ£¬±êÌâ¡ºÕûÌå¼Ü¹¹À¶Í¼¡»£¬º¬Îå²ã¼Ü¹¹¡¢Êı¾İ¼Ü¹¹¡¢Â·ÓÉÓ³Éä¡¢ADRË÷Òı¡¢ÊµÊ©Â·Ïß
+
+### `../explanation/cabins-overview.md` ??
+
+- **ÅĞ¶¨ÀíÓÉ**£ºÎŞ¶ÀÁ¢5²ÕÌåÏµ×ÜÀÀ£»`../explanation/design/v9-current-state-review.md` °´ÊµÊ©½ø¶ÈÃèÊöÎå²Õ£¬·Ç¼Ü¹¹ÊÓ½Ç£»`06-routing-specs` ½öÂ·ÓÉ£»`input-cabin-spec` ½öinput²Õ
+
+### `../reports/release-management/README.md` ??
+
+- **ÅĞ¶¨ÀíÓÉ**£ºÎŞADR¼¯ÖĞË÷Òı£»`../explanation/design/implementation-governance.md` º¬ADRÄ£°åºÍÒÑ¹éµµÁĞ±í£¨9¸ö£©£¬µ«ÎŞ¶ÀÁ¢Ë÷ÒıREADME£»9·İADRÉ¢Âä¸÷×ÓÄ¿Â¼
+
+### `../reports/release-management/README.md` ??
+
+- **ÅĞ¶¨ÀíÓÉ**£º`01-requirements/adr/` ÏÂÎŞREADME.md£»Óë `../reference/README.md` ÊÇÍ¬Ò»¹¦ÄÜµÄ²»Í¬Â·¾¶½¨Òé
+
+### `../reference/api-contract.md` ??
+
+- **Êµ¼ÊÎÄµµ**£º`../reference/api-contract.md`
+- **ÅĞ¶¨ÀíÓÉ**£º½ö½»Ò×³Ö²ÖAPIÆõÔ¼£¬·ÇÈ«¾ÖDataBridge/ĞĞÇé¶Ëµã/ÊÂ¼şÃûÆõÔ¼
+
+### `../explanation/data-layer-overview.md` ??
+
+- **Êµ¼ÊÎÄµµ**£º`../reference/v9-indexeddb-store-schema.md`
+- **ÅĞ¶¨ÀíÓÉ**£º1009ĞĞ£¬º¬25¸öStoreÍêÕûSchema/Ë÷Òı/°æ±¾ÀúÊ·£¬µ«È±DataBridge/collection¶Ëµ½¶ËÊı¾İµØÍ¼
+
+### `../prompts/store-integration-guide.md` ??
+
+- **ÅĞ¶¨ÀíÓÉ**£ºÎŞ¶ÀÁ¢Store¼¯³É¹æ·¶£»`../../prompts/store-prompt-template.md` ÊÇAIÉú³ÉÌáÊ¾´Ê£¬·Ç¼¯³ÉÖ¸ÄÏ
+
+### `../prompts/service-integration-guide.md` ??
+
+- **ÅĞ¶¨ÀíÓÉ**£ºÎŞ¶ÀÁ¢Service¼¯³É¹æ·¶£»`../../prompts/service-prompt-template.md` ÊÇAIÉú³ÉÌáÊ¾´Ê£¬·Ç¼¯³ÉÖ¸ÄÏ
+
+### `../reference/coding-conventions.md` ?
+
+- **Êµ¼ÊÎÄµµ**£º`../reference/03-architecture-standards.md`
+- **ÅĞ¶¨ÀíÓÉ**£º1199ĞĞ£¬±êÌâ¡º¼Ü¹¹±ê×¼¡»£¬º¬Îå²ã¼Ü¹¹¡¢µ÷ÓÃÌúÂÉ¡¢Êı¾İ·ÃÎÊ¹æ·¶¡¢ÒıÇæ²ã¹æ·¶¡¢Ó³Éä²ã¹æ·¶
+
+### `../explanation/song-aesthetics.md` ??
+
+- **Êµ¼ÊÎÄµµ**£º`../reference/design-tokens.md + ../reference/04-ui-ux-specs.md`
+- **ÅĞ¶¨ÀíÓÉ**£ºdesign-tokens 495ĞĞ£¨ÁîÅÆÊ¹ÓÃÖ¸ÄÏ£©£¬ui-design-system 279ĞĞ£¨º¬¡ºËÎ´ÉÂÌ¡»¡º¹ÅÍ­½ğ¡»Ìá¼°£©£¬µ«ÎŞ¶ÀÁ¢¡ºËÎÔÏÃÀÑ§¡»×ÜÊöÎÄµµ
+
+### `../explanation/quality-gates-baseline.md` ?
+
+- **Êµ¼ÊÎÄµµ**£º`../reference/09-quality-gates.md + ../explanation/quality-gates-baseline.md`
+- **ÅĞ¶¨ÀíÓÉ**£ºÁ½·İÎÄµµºÏÆğÀ´¸²¸ÇÖÊÁ¿ÃÅ½ûÊıÖµ»ùÏßºÍ²ßÂÔ
+
+### `../reference/test-catalog.md` ??
+
+- **Êµ¼ÊÎÄµµ**£º`../reference/v9-test-cases.md`
+- **ÅĞ¶¨ÀíÓÉ**£º1178ĞĞÍêÕû²âÊÔÓÃÀıÇåµ¥£¬º¬10¸ö·ÖÀà¡¢60+²âÊÔÓÃÀı£¬µ«ÌåÏµ½á¹¹ÎÄµµÈÏÎª¡ºÆ«Ò»´ÎĞÔÇåµ¥¡»£¬·Ç¼¯ÖĞÎ¬»¤Ä¿Â¼
+
+### `../reference/README.md` ??
+
+- **Êµ¼ÊÎÄµµ**£º`../reference/ai-memory-layer.md`
+- **ÅĞ¶¨ÀíÓÉ**£º70ĞĞ£¬º¬AI¼ÇÒä²ãÉè¼Æ¡¢Ë÷Òı¡¢¼ìË÷¡¢ÓëÌáÊ¾´Ê½áºÏ£¬µ«È±prompts/¼ì²é±í/·ÉÂÖµÄ×ÜÀÀ´®Áª
+
+### `../reference/security-model.md` ??
+
+- **ÅĞ¶¨ÀíÓÉ**£º½ö`../how-to/mcp-acl-guide.md`£¨MCP ACL£©ºÍ`../reference/audit-b4-4-security.md`£¨Ç°¶Ë°²È«Éó¼Æ£©£¬ÎŞÕûÌå°²È«/È¨ÏŞÄ£ĞÍ
+
+### `../reference/deployment.md` ??
+
+- **ÅĞ¶¨ÀíÓÉ**£º½ö`05-deployment/ADR-004`£¨HashRouter¾²Ì¬ÍĞ¹Ü£©£¬ÎŞ²¿Êğ¼Ü¹¹ÎÄµµ
+
+### `../explanation/runbook.md` ??
+
+- **ÅĞ¶¨ÀíÓÉ**£ºÎŞÔËĞĞ/¹ÊÕÏÊÖ²á£»`../reference/07-operation-strategy.md` º¬·çÏÕ¿ØÖÆ/»Ø¹öÔ­Ôò£¬µ«·ÇÔËÎ¬ÊÖ²á
+
+### `../tutorials/getting-started.md` ??
+
+- **ÅĞ¶¨ÀíÓÉ**£º`../reference/autonomous-workflow-user-guide.md` ÊÇ×ÔÖ÷¹¤×÷Á÷¹¤¾ßÖ¸ÄÏ£¬·ÇĞÂÊÖÈëÃÅ½Ì³Ì£»`../README.md` ÊÇÎÄµµµ¼º½£¬·ÇÈëÃÅÖ¸ÄÏ
+
+### `../how-to/how-to-add-widget.md` ?
+
+- **Êµ¼ÊÎÄµµ**£º`../reference/widget-development-guide.md`
+- **ÅĞ¶¨ÀíÓÉ**£º481ĞĞ£¬Widget¿ª·¢È«Á÷³ÌÖ¸ÄÏ£¨×¢²á/Ä¿Â¼/¿ª·¢/²âÊÔ/·¢²¼£©
+
+### `../how-to/how-to-add-store.md` ??
+
+- **ÅĞ¶¨ÀíÓÉ**£ºÎŞ¡ºÈçºÎĞÂÔöStore¡»²Ù×÷Ö¸ÄÏ£»`../reference/v9-l2×´Ì¬²ã²¹ÆëÂ·ÏßÍ¼.md` ÊÇ²¹Æë¼Æ»®£¬·ÇĞÂÔöÖ¸ÄÏ£»`../explanation/migration-news-useState-to-zustand.md` ÊÇÇ¨ÒÆÖ¸ÄÏ
+
+### `../how-to/how-to-add-service.md` ??
+
+- **ÅĞ¶¨ÀíÓÉ**£ºÎŞ¡ºÈçºÎĞÂÔöService¡»²Ù×÷Ö¸ÄÏ£»AGENTS.mdËÄ²½¼¯³ÉÓĞÃèÊöµ«·ÇÖ¸ÄÏ¸ñÊ½£»`../explanation/data-collection-architecture.md` ÊÇ²É¼¯¼Ü¹¹£¬·ÇServiceÖ¸ÄÏ
+
+### `../explanation/a11y-i18n.md` ??
+
+- **Êµ¼ÊÎÄµµ**£º`../explanation/a11y-checklist.md`
+- **ÅĞ¶¨ÀíÓÉ**£º239ĞĞ£¬º¬ÎŞÕÏ°­¼ì²éÇåµ¥£¬µ«ÎŞi18n²ßÂÔ
+
+---
+
+## ?? Á½´ÎĞ£¶Ô¶Ô±È
+
+| ÎÄµµ | µÚ1ÂÖÅĞ¶¨ | µÚ2ÂÖÅĞ¶¨ | ĞŞÕıËµÃ÷ |
 |------|----------|----------|----------|
-| `./governance.md` | ğŸ”´ ç¼ºå¤± | ğŸ”¶ éƒ¨åˆ†æ»¡è¶³ | `../explanation/design/implementation-governance.md`ï¼ˆADR/ç‰ˆæœ¬æ¯”å¯¹/å®¡è®¡åŸºçº¿ï¼‰+ `../README.md`ï¼ˆFrontmatter/DoD/ä¿é²œåº¦ï¼‰åˆèµ·æ¥è¦†ç›–å¤§éƒ¨åˆ†æ²»ç†å†…å®¹ï¼Œä½†åˆ†æ•£åœ¨ä¸¤ä¸ªç‹¬ç«‹æ–‡æ¡£ä¸­ï¼Œæ— ç»Ÿä¸€æ²»ç†æ€»è¿° |
-| `../reference/test-catalog.md` | ğŸ”´ ç¼ºå¤± | ğŸ”¶ éƒ¨åˆ†æ»¡è¶³ | `v9-test-cases.md` æ˜¯1178è¡Œå®Œæ•´æµ‹è¯•ç”¨ä¾‹æ¸…å•ï¼ˆ10åˆ†ç±»/60+ç”¨ä¾‹ï¼‰ï¼Œä½†ä½“ç³»ç»“æ„è®¤ä¸ºã€åä¸€æ¬¡æ€§æ¸…å•ã€ï¼Œéé›†ä¸­ç»´æŠ¤ç›®å½• |
-| å…¶ä½™21ä¸ª | ä¸å˜ | ä¸å˜ | å¤æ ¸ç¡®è®¤æ— è¯¯ |
+| `./governance.md` | ?? È±Ê§ | ?? ²¿·ÖÂú×ã | `../explanation/design/implementation-governance.md`£¨ADR/°æ±¾±È¶Ô/Éó¼Æ»ùÏß£©+ `../README.md`£¨Frontmatter/DoD/±£ÏÊ¶È£©ºÏÆğÀ´¸²¸Ç´ó²¿·ÖÖÎÀíÄÚÈİ£¬µ«·ÖÉ¢ÔÚÁ½¸ö¶ÀÁ¢ÎÄµµÖĞ£¬ÎŞÍ³Ò»ÖÎÀí×ÜÊö |
+| `../reference/test-catalog.md` | ?? È±Ê§ | ?? ²¿·ÖÂú×ã | `../reference/V9-TEST-CASES.md` ÊÇ1178ĞĞÍêÕû²âÊÔÓÃÀıÇåµ¥£¨10·ÖÀà/60+ÓÃÀı£©£¬µ«ÌåÏµ½á¹¹ÈÏÎª¡ºÆ«Ò»´ÎĞÔÇåµ¥¡»£¬·Ç¼¯ÖĞÎ¬»¤Ä¿Â¼ |
+| ÆäÓà21¸ö | ²»±ä | ²»±ä | ¸´ºËÈ·ÈÏÎŞÎó |
 
 ---
 
-## ğŸ”´ çœŸæ­£ç¼ºå¤±æ–‡æ¡£æ¸…å•ï¼ˆ12ä¸ªï¼‰
+## ?? ÕæÕıÈ±Ê§ÎÄµµÇåµ¥£¨12¸ö£©
 
-- `docs/README.md` â€” `../README.md` æ˜¯å­ç›®å½•å¯¼èˆªï¼Œéé¡¶å±‚æ€»å…¥å£
-- `../explanation/cabins-overview.md` â€” `input-cabin-spec` ä»…inputèˆ±
-- `../reports/release-management/README.md` â€” 9ä»½ADRæ•£è½å„å­ç›®å½•
-- `../reports/release-management/README.md` â€” ä¸ `../reference/README.md` æ˜¯åŒä¸€åŠŸèƒ½çš„ä¸åŒè·¯å¾„å»ºè®®
-- `../prompts/store-integration-guide.md` â€” `prompts/store-prompt-template.md` æ˜¯AIç”Ÿæˆæç¤ºè¯ï¼Œéé›†æˆæŒ‡å—
-- `../prompts/service-integration-guide.md` â€” `prompts/service-prompt-template.md` æ˜¯AIç”Ÿæˆæç¤ºè¯ï¼Œéé›†æˆæŒ‡å—
-- `../reference/security-model.md` â€” ä»…`../how-to/mcp-acl-guide.md`ï¼ˆMCP ACLï¼‰å’Œ`../reference/audit-b4-4-security.md`ï¼ˆå‰ç«¯å®‰å…¨å®¡è®¡ï¼‰ï¼Œæ— æ•´ä½“å®‰å…¨/æƒé™æ¨¡å‹
-- `../reference/deployment.md` â€” ä»…`05-deployment/ADR-004`ï¼ˆHashRouteré™æ€æ‰˜ç®¡ï¼‰ï¼Œæ— éƒ¨ç½²æ¶æ„æ–‡æ¡£
-- `../explanation/runbook.md` â€” `07-operation-strategy.md` å«é£é™©æ§åˆ¶/å›æ»šåŸåˆ™ï¼Œä½†éè¿ç»´æ‰‹å†Œ
-- `../tutorials/getting-started.md` â€” `../README.md` æ˜¯æ–‡æ¡£å¯¼èˆªï¼Œéå…¥é—¨æŒ‡å—
-- `../how-to/how-to-add-store.md` â€” `migration-news-usestate-to-zustand.md` æ˜¯è¿ç§»æŒ‡å—
-- `../how-to/how-to-add-service.md` â€” `../explanation/data-collection-architecture.md` æ˜¯é‡‡é›†æ¶æ„ï¼ŒéServiceæŒ‡å—
-
----
-
-## ğŸ”¶ éƒ¨åˆ†æ»¡è¶³æ–‡æ¡£æ¸…å•ï¼ˆ7ä¸ªï¼‰
-
-- `./governance.md` â†’ `../explanation/design/implementation-governance.md + ../README.md` â€” ä½†ä¸¤è€…æ˜¯ç‹¬ç«‹æ–‡æ¡£ï¼Œæ— ç»Ÿä¸€ã€æ–‡æ¡£æ²»ç†å…¬çº¦ã€æ€»è¿°
-- `../reference/api-contract.md` â†’ `../reference/api-contract.md` â€” ä»…äº¤æ˜“æŒä»“APIå¥‘çº¦ï¼Œéå…¨å±€DataBridge/è¡Œæƒ…ç«¯ç‚¹/äº‹ä»¶åå¥‘çº¦
-- `../explanation/data-layer-overview.md` â†’ `../reference/v9-indexeddb-store-schema.md` â€” 1009è¡Œï¼Œå«25ä¸ªStoreå®Œæ•´Schema/ç´¢å¼•/ç‰ˆæœ¬å†å²ï¼Œä½†ç¼ºDataBridge/collectionç«¯åˆ°ç«¯æ•°æ®åœ°å›¾
-- `../explanation/song-aesthetics.md` â†’ `../reference/design-tokens.md + ../reference/04-ui-ux-specs.md` â€” design-tokens 495è¡Œï¼ˆä»¤ç‰Œä½¿ç”¨æŒ‡å—ï¼‰ï¼Œui-design-system 279è¡Œï¼ˆå«ã€å®‹ç“·ç»¿ã€ã€å¤é“œé‡‘ã€æåŠï¼‰ï¼Œä½†æ— ç‹¬ç«‹ã€å®‹éŸµç¾å­¦ã€æ€»è¿°æ–‡æ¡£
-- `../reference/test-catalog.md` â†’ `../reference/v9-test-cases.md` â€” 1178è¡Œå®Œæ•´æµ‹è¯•ç”¨ä¾‹æ¸…å•ï¼Œå«10ä¸ªåˆ†ç±»ã€60+æµ‹è¯•ç”¨ä¾‹ï¼Œä½†ä½“ç³»ç»“æ„æ–‡æ¡£è®¤ä¸ºã€åä¸€æ¬¡æ€§æ¸…å•ã€ï¼Œéé›†ä¸­ç»´æŠ¤ç›®å½•
-- `../reference/README.md` â†’ `../reference/ai-memory-layer.md` â€” 70è¡Œï¼Œå«AIè®°å¿†å±‚è®¾è®¡ã€ç´¢å¼•ã€æ£€ç´¢ã€ä¸æç¤ºè¯ç»“åˆï¼Œä½†ç¼ºprompts/æ£€æŸ¥è¡¨/é£è½®çš„æ€»è§ˆä¸²è”
-- `../explanation/a11y-i18n.md` â†’ `../explanation/a11y-checklist.md` â€” 239è¡Œï¼Œå«æ— éšœç¢æ£€æŸ¥æ¸…å•ï¼Œä½†æ— i18nç­–ç•¥
+- `docs/README.md` ¡ª `../README.md` ÊÇ×ÓÄ¿Â¼µ¼º½£¬·Ç¶¥²ã×ÜÈë¿Ú
+- `../explanation/cabins-overview.md` ¡ª `input-cabin-spec` ½öinput²Õ
+- `../reports/release-management/README.md` ¡ª 9·İADRÉ¢Âä¸÷×ÓÄ¿Â¼
+- `../reports/release-management/README.md` ¡ª Óë `../reference/README.md` ÊÇÍ¬Ò»¹¦ÄÜµÄ²»Í¬Â·¾¶½¨Òé
+- `../prompts/store-integration-guide.md` ¡ª `../../prompts/store-prompt-template.md` ÊÇAIÉú³ÉÌáÊ¾´Ê£¬·Ç¼¯³ÉÖ¸ÄÏ
+- `../prompts/service-integration-guide.md` ¡ª `../../prompts/service-prompt-template.md` ÊÇAIÉú³ÉÌáÊ¾´Ê£¬·Ç¼¯³ÉÖ¸ÄÏ
+- `../reference/security-model.md` ¡ª ½ö`../how-to/mcp-acl-guide.md`£¨MCP ACL£©ºÍ`../reference/audit-b4-4-security.md`£¨Ç°¶Ë°²È«Éó¼Æ£©£¬ÎŞÕûÌå°²È«/È¨ÏŞÄ£ĞÍ
+- `../reference/deployment.md` ¡ª ½ö`05-deployment/ADR-004`£¨HashRouter¾²Ì¬ÍĞ¹Ü£©£¬ÎŞ²¿Êğ¼Ü¹¹ÎÄµµ
+- `../explanation/runbook.md` ¡ª `../reference/07-operation-strategy.md` º¬·çÏÕ¿ØÖÆ/»Ø¹öÔ­Ôò£¬µ«·ÇÔËÎ¬ÊÖ²á
+- `../tutorials/getting-started.md` ¡ª `../README.md` ÊÇÎÄµµµ¼º½£¬·ÇÈëÃÅÖ¸ÄÏ
+- `../how-to/how-to-add-store.md` ¡ª `../explanation/migration-news-useState-to-zustand.md` ÊÇÇ¨ÒÆÖ¸ÄÏ
+- `../how-to/how-to-add-service.md` ¡ª `../explanation/data-collection-architecture.md` ÊÇ²É¼¯¼Ü¹¹£¬·ÇServiceÖ¸ÄÏ
 
 ---
 
-## âœ… å·²å­˜åœ¨æ–‡æ¡£æ¸…å•ï¼ˆ4ä¸ªï¼‰
+## ²¿·ÖÂú×ãÎÄµµÇåµ¥£¨7¸ö£©
 
-- `../explanation/overview.md` â†’ `../reference/v9-system-blueprint.md` â€” 444è¡Œï¼Œæ ‡é¢˜ã€æ•´ä½“æ¶æ„è“å›¾ã€ï¼Œå«äº”å±‚æ¶æ„ã€æ•°æ®æ¶æ„ã€è·¯ç”±æ˜ å°„ã€ADRç´¢å¼•ã€å®æ–½è·¯çº¿
-- `../reference/coding-conventions.md` â†’ `../reference/03-architecture-standards.md` â€” 1199è¡Œï¼Œæ ‡é¢˜ã€æ¶æ„æ ‡å‡†ã€ï¼Œå«äº”å±‚æ¶æ„ã€è°ƒç”¨é“å¾‹ã€æ•°æ®è®¿é—®è§„èŒƒã€å¼•æ“å±‚è§„èŒƒã€æ˜ å°„å±‚è§„èŒƒ
-- `../explanation/quality-gates-baseline.md` â†’ `../reference/09-quality-gates.md + ../explanation/quality-gates-baseline.md` â€” ä¸¤ä»½æ–‡æ¡£åˆèµ·æ¥è¦†ç›–è´¨é‡é—¨ç¦æ•°å€¼åŸºçº¿å’Œç­–ç•¥
-- `../how-to/how-to-add-widget.md` â†’ `../reference/widget-development-guide.md` â€” 481è¡Œï¼ŒWidgetå¼€å‘å…¨æµç¨‹æŒ‡å—ï¼ˆæ³¨å†Œ/ç›®å½•/å¼€å‘/æµ‹è¯•/å‘å¸ƒï¼‰
+- `./governance.md` ¡ú `../explanation/design/implementation-governance.md + ../README.md` ¡ª µ«Á½ÕßÊÇ¶ÀÁ¢ÎÄµµ£¬ÎŞÍ³Ò»¡ºÎÄµµÖÎÀí¹«Ô¼¡»×ÜÊö
+- `../reference/api-contract.md` ¡ú `../reference/api-contract.md` ¡ª ½ö½»Ò×³Ö²ÖAPIÆõÔ¼£¬·ÇÈ«¾ÖDataBridge/ĞĞÇé¶Ëµã/ÊÂ¼şÃûÆõÔ¼
+- `../explanation/data-layer-overview.md` ¡ú `../reference/v9-indexeddb-store-schema.md` ¡ª 1009ĞĞ£¬º¬25¸öStoreÍêÕûSchema/Ë÷Òı/°æ±¾ÀúÊ·£¬µ«È±DataBridge/collection¶Ëµ½¶ËÊı¾İµØÍ¼
+- `../explanation/song-aesthetics.md` ¡ú `../reference/design-tokens.md + ../reference/04-ui-ux-specs.md` ¡ª design-tokens 495ĞĞ£¨ÁîÅÆÊ¹ÓÃÖ¸ÄÏ£©£¬ui-design-system 279ĞĞ£¨º¬¡ºËÎ´ÉÂÌ¡»¡º¹ÅÍ­½ğ¡»Ìá¼°£©£¬µ«ÎŞ¶ÀÁ¢¡ºËÎÔÏÃÀÑ§¡»×ÜÊöÎÄµµ
+- `../reference/test-catalog.md` ¡ú `../reference/v9-test-cases.md` ¡ª 1178ĞĞÍêÕû²âÊÔÓÃÀıÇåµ¥£¬º¬10¸ö·ÖÀà¡¢60+²âÊÔÓÃÀı£¬µ«ÌåÏµ½á¹¹ÎÄµµÈÏÎª¡ºÆ«Ò»´ÎĞÔÇåµ¥¡»£¬·Ç¼¯ÖĞÎ¬»¤Ä¿Â¼
+- `../reference/README.md` ¡ú `../reference/ai-memory-layer.md` ¡ª 70ĞĞ£¬º¬AI¼ÇÒä²ãÉè¼Æ¡¢Ë÷Òı¡¢¼ìË÷¡¢ÓëÌáÊ¾´Ê½áºÏ£¬µ«È±prompts/¼ì²é±í/·ÉÂÖµÄ×ÜÀÀ´®Áª
+- `../explanation/a11y-i18n.md` ¡ú `../explanation/a11y-checklist.md` ¡ª 239ĞĞ£¬º¬ÎŞÕÏ°­¼ì²éÇåµ¥£¬µ«ÎŞi18n²ßÂÔ
+
+---
+
+## ? ÒÑ´æÔÚÎÄµµÇåµ¥£¨4¸ö£©
+
+- `../explanation/overview.md` ¡ú `../reference/v9-system-blueprint.md` ¡ª 444ĞĞ£¬±êÌâ¡ºÕûÌå¼Ü¹¹À¶Í¼¡»£¬º¬Îå²ã¼Ü¹¹¡¢Êı¾İ¼Ü¹¹¡¢Â·ÓÉÓ³Éä¡¢ADRË÷Òı¡¢ÊµÊ©Â·Ïß
+- `../reference/coding-conventions.md` ¡ú `../reference/03-architecture-standards.md` ¡ª 1199ĞĞ£¬±êÌâ¡º¼Ü¹¹±ê×¼¡»£¬º¬Îå²ã¼Ü¹¹¡¢µ÷ÓÃÌúÂÉ¡¢Êı¾İ·ÃÎÊ¹æ·¶¡¢ÒıÇæ²ã¹æ·¶¡¢Ó³Éä²ã¹æ·¶
+- `../explanation/quality-gates-baseline.md` ¡ú `../reference/09-quality-gates.md + ../explanation/quality-gates-baseline.md` ¡ª Á½·İÎÄµµºÏÆğÀ´¸²¸ÇÖÊÁ¿ÃÅ½ûÊıÖµ»ùÏßºÍ²ßÂÔ
+- `../how-to/how-to-add-widget.md` ¡ú `../reference/widget-development-guide.md` ¡ª 481ĞĞ£¬Widget¿ª·¢È«Á÷³ÌÖ¸ÄÏ£¨×¢²á/Ä¿Â¼/¿ª·¢/²âÊÔ/·¢²¼£©

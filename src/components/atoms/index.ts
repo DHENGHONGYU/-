@@ -49,9 +49,6 @@ export {
 export { Tooltip } from './Tooltip'
 export type { TooltipProps } from './Tooltip'
 
-export { Popover } from './Popover'
-export type { PopoverProps, PopoverPlacement, PopoverTrigger } from './Popover'
-
 export {
   Sheet,
   SheetClose,
@@ -63,12 +60,6 @@ export {
 } from './Sheet'
 
 export type { Toast } from './Toast'
-
-export { Menu, MenuItem, SubMenu } from './Menu'
-export type { MenuProps, MenuItemProps, SubMenuProps } from './Menu'
-
-export { Pagination } from './Pagination'
-export type { PaginationProps } from './Pagination'
 
 export {
   Breadcrumb,
@@ -82,16 +73,7 @@ export {
 export { Result } from './Result'
 export type { ResultProps, ResultStatus } from './Result'
 
-export { List, ListItem } from './List'
-export type { ListProps, ListItemProps } from './List'
-
-export { Grid, Row, Col } from './Grid'
-export type { GridProps, RowProps, ColProps } from './Grid'
-
 export { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './Table'
-
-export { DatePicker } from './DatePicker'
-export type { DatePickerProps } from './DatePicker'
 
 export { StockPriceChange } from './StockPriceChange'
 
@@ -107,18 +89,9 @@ export type { BadgeStyle } from './statusColors'
 // 注：PageContainer 属模板层，已在 templates/index.ts 导出，原子桶不重复导出
 
 // 全局签名母题：信号频谱（统一视觉锚点）
-export { SignalSpectrum } from '../cockpit/SignalSpectrum'
-export type { SignalSpectrumProps } from '../cockpit/SignalSpectrum'
 
 // 安全状态组件（本地加密存储状态展示）
-export { SecurityStatus, SecurityBadge } from '../cockpit/SecurityStatus'
-export type { SecurityStatusProps, SecurityBadgeProps } from '../cockpit/SecurityStatus'
 
 // 信息密度控制组件（渐进披露与自适应密度）
-export { DensityToggle } from '../cockpit/DensityToggle'
-export { DensityProvider, useDensity, useDensityConfig, useDensityClass } from '../cockpit/DensityContext'
-export type { DensityLevel, DensityConfig } from '../cockpit/DensityContext'
 
 // 交互状态组件（四态组件库：loading/empty/error/skeleton）
-export { Loading, Empty, ErrorState } from '../molecules/states'
-export type { LoadingProps, EmptyProps, ErrorStateProps } from '../molecules/states'

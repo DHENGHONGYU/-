@@ -1,62 +1,65 @@
 ---
-title: news-contract
+title: news-contract.md ¡ª ĞÂÎÅ×ÊÑ¶×ÓÓò½Ó¿ÚÆõÔ¼
+type: reference
+domain: project
+phase: design
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "¶¨Î»£º¶¨Òå `news` ×ÓÓòµÄ½Ó¿ÚÆõÔ¼¡¢Ö°Ôğ±ß½ç¡¢Êı¾İÁ÷ÓëÒÀÀµ¹ØÏµ¡£ ¹ØÁª£º`./services-catalog.md`£¨24 ×ÓÓò×ÜÀÀ£©¡¢`../../AGENTS.md` ¡ìÒ»£¨·Ö²ã¹æÔò£©¡£"
+tags: [project, news, contract]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: important
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: news-contract.md â€” æ–°é—»èµ„è®¯å­åŸŸæ¥å£å¥‘çº¦
-status: draft
-owner: æ¶æ„ç»„
-updated: 2026-07-12
-code_version: 2.0.0
-tier: important
----
+# news-contract.md ¡ª ĞÂÎÅ×ÊÑ¶×ÓÓò½Ó¿ÚÆõÔ¼
 
-# news-contract.md â€” æ–°é—»èµ„è®¯å­åŸŸæ¥å£å¥‘çº¦
-
-> **å®šä½**ï¼šå®šä¹‰ `news` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ç³»ã€‚  
-> **å…³è”**ï¼š`./services-catalog.md`ï¼ˆ24 å­åŸŸæ€»è§ˆï¼‰ã€`../../AGENTS.md` Â§ä¸€ï¼ˆåˆ†å±‚è§„åˆ™ï¼‰ã€‚
+> **¶¨Î»**£º¶¨Òå `news` ×ÓÓòµÄ½Ó¿ÚÆõÔ¼¡¢Ö°Ôğ±ß½ç¡¢Êı¾İÁ÷ÓëÒÀÀµ¹ØÏµ¡£  
+> **¹ØÁª**£º`./services-catalog.md`£¨24 ×ÓÓò×ÜÀÀ£©¡¢`../../AGENTS.md` ¡ìÒ»£¨·Ö²ã¹æÔò£©¡£
 
 ---
 
-## 1. èŒè´£è¾¹ç•Œ
+## 1. Ö°Ôğ±ß½ç
 
-### 1.1 æ ¸å¿ƒèŒè´£
+### 1.1 ºËĞÄÖ°Ôğ
 
-1. **æ–°é—»èµ„è®¯é‡‡é›†ä¸å­˜å‚¨**ï¼šæ¥æ”¶å¤–éƒ¨æ–°é—»æ•°æ®ï¼ˆ`newsService.ts`ï¼‰ï¼Œæ‰§è¡Œå»é‡ï¼ˆDJB2 å“ˆå¸Œï¼‰ã€æƒ…æ„Ÿåˆ†æã€è‚¡ç¥¨å…³è”åï¼Œå†™å…¥ `dataLayer.news` ä¸ `newsStockMap` åŒè¡¨ï¼›æä¾›å¤šç»´åº¦æŸ¥è¯¢ï¼ˆæ¥æºã€åˆ†ç±»ã€æƒ…æ„Ÿã€è‚¡ç¥¨ã€å…³é”®è¯ã€æ—¶é—´èŒƒå›´ï¼‰ã€‚
-2. **è§„åˆ™å¼æƒ…æ„Ÿåˆ†æ**ï¼ˆ`sentimentAnalyzer.ts`ï¼‰ï¼šåŸºäºä¸­æ–‡è´¢ç»è¯å…¸ï¼ˆæ­£é¢/è´Ÿé¢è¯åº“ + ç¨‹åº¦å‰¯è¯ + å¦å®šè¯ï¼‰å¯¹æ–°é—»æ ‡é¢˜ä¸æ­£æ–‡è¿›è¡ŒåŠ æƒæƒ…æ„Ÿè¯„åˆ†ï¼Œè¾“å‡º `positive` / `negative` / `neutral` ä¸‰æ€æ ‡ç­¾åŠç½®ä¿¡åº¦ï¼›ç»“æœå¯å†™å…¥ `sentimentCache` é¿å…é‡å¤è®¡ç®—ã€‚
-3. **æ–°é—»-è‚¡ç¥¨å…³è”æ˜ å°„**ï¼ˆ`stockLinker.ts`ï¼‰ï¼šé€šè¿‡å››é˜¶åŒ¹é…ç­–ç•¥ï¼ˆç²¾ç¡®ä»£ç ã€ç²¾ç¡®åç§°ã€æ¨¡ç³Šåç§°ã€è¡Œä¸šå…³é”®è¯ï¼‰å°†å•ç¯‡æ–°é—»å…³è”åˆ°è‚¡ç¥¨æ± ï¼Œç”Ÿæˆ `NewsStockMap` å¤šå¯¹å¤šå…³ç³»ï¼Œç½®ä¿¡åº¦é˜ˆå€¼å¯é…ç½®ã€‚
-4. **æƒ…æ„Ÿè¶‹åŠ¿èšåˆ**ï¼ˆ`sentimentTrendEngine.ts`ï¼‰ï¼šå¯¹å·²å…¥åº“æ–°é—»åšçº¯æœ¬åœ°èšåˆï¼ˆæ— ç½‘ç»œ/LLM è°ƒç”¨ï¼‰ï¼ŒæŒ‰ `global` / `stock` / `industry` ä¸‰ç»´åº¦ç”Ÿæˆæ—¥çº§æƒ…æ„Ÿåˆ†å¸ƒåºåˆ—ï¼Œæ”¯æŒç©ºæ—¥æœŸå¡«å……ä¸æ—¥æœŸèŒƒå›´ç­›é€‰ã€‚
+1. **ĞÂÎÅ×ÊÑ¶²É¼¯Óë´æ´¢**£º½ÓÊÕÍâ²¿ĞÂÎÅÊı¾İ£¨`newsService.ts`£©£¬Ö´ĞĞÈ¥ÖØ£¨DJB2 ¹şÏ££©¡¢Çé¸Ğ·ÖÎö¡¢¹ÉÆ±¹ØÁªºó£¬Ğ´Èë `dataLayer.news` Óë `newsStockMap` Ë«±í£»Ìá¹©¶àÎ¬¶È²éÑ¯£¨À´Ô´¡¢·ÖÀà¡¢Çé¸Ğ¡¢¹ÉÆ±¡¢¹Ø¼ü´Ê¡¢Ê±¼ä·¶Î§£©¡£
+2. **¹æÔòÊ½Çé¸Ğ·ÖÎö**£¨`sentimentAnalyzer.ts`£©£º»ùÓÚÖĞÎÄ²Æ¾­´Êµä£¨ÕıÃæ/¸ºÃæ´Ê¿â + ³Ì¶È¸±´Ê + ·ñ¶¨´Ê£©¶ÔĞÂÎÅ±êÌâÓëÕıÎÄ½øĞĞ¼ÓÈ¨Çé¸ĞÆÀ·Ö£¬Êä³ö `positive` / `negative` / `neutral` ÈıÌ¬±êÇ©¼°ÖÃĞÅ¶È£»½á¹û¿ÉĞ´Èë `sentimentCache` ±ÜÃâÖØ¸´¼ÆËã¡£
+3. **ĞÂÎÅ-¹ÉÆ±¹ØÁªÓ³Éä**£¨`stockLinker.ts`£©£ºÍ¨¹ıËÄ½×Æ¥Åä²ßÂÔ£¨¾«È·´úÂë¡¢¾«È·Ãû³Æ¡¢Ä£ºıÃû³Æ¡¢ĞĞÒµ¹Ø¼ü´Ê£©½«µ¥ÆªĞÂÎÅ¹ØÁªµ½¹ÉÆ±³Ø£¬Éú³É `NewsStockMap` ¶à¶Ô¶à¹ØÏµ£¬ÖÃĞÅ¶ÈãĞÖµ¿ÉÅäÖÃ¡£
+4. **Çé¸ĞÇ÷ÊÆ¾ÛºÏ**£¨`sentimentTrendEngine.ts`£©£º¶ÔÒÑÈë¿âĞÂÎÅ×ö´¿±¾µØ¾ÛºÏ£¨ÎŞÍøÂç/LLM µ÷ÓÃ£©£¬°´ `global` / `stock` / `industry` ÈıÎ¬¶ÈÉú³ÉÈÕ¼¶Çé¸Ğ·Ö²¼ĞòÁĞ£¬Ö§³Ö¿ÕÈÕÆÚÌî³äÓëÈÕÆÚ·¶Î§É¸Ñ¡¡£
 
-### 1.2 åˆ†å±‚å®šä½
+### 1.2 ·Ö²ã¶¨Î»
 
-| ç»´åº¦ | è¯´æ˜ |
+| Î¬¶È | ËµÃ÷ |
 |------|------|
-| æ‰€å±å±‚ | `src/services/`ï¼ˆæœåŠ¡å±‚ï¼‰ |
-| ä¾èµ–æ–¹å‘ | åªèƒ½ä¾èµ– `core/`ã€`data/`ã€`lib/`ï¼ˆç™½åå•ï¼‰ã€`config/`ã€`types/`ï¼ˆé›¶ä¾èµ–ç±»å‹ï¼‰ |
-| ç¦æ­¢äº‹é¡¹ | ç¦æ­¢ç›´å†™ IndexedDBï¼ˆé¡»ç» `DataBridge.forward()` æˆ– `dataLayer` æ¥å£ï¼‰ï¼›ç¦æ­¢ç›´æ¥è°ƒç”¨ `store/`ã€`pages/`ã€`components/` |
-| è¢«ä¾èµ–æ–¹ | `store/`ï¼ˆ`analysisNewsStore` æ¶ˆè´¹ `newsService` ä¸ `sentimentTrendEngine`ï¼‰ã€`mcp/servers/news/`ï¼ˆ`NewsServer` å°è£…æš´éœ²ä¸º MCP å·¥å…·ï¼‰ |
+| ËùÊô²ã | `src/services/`£¨·şÎñ²ã£© |
+| ÒÀÀµ·½Ïò | Ö»ÄÜÒÀÀµ `core/`¡¢`data/`¡¢`lib/`£¨°×Ãûµ¥£©¡¢`config/`¡¢`types/`£¨ÁãÒÀÀµÀàĞÍ£© |
+| ½ûÖ¹ÊÂÏî | ½ûÖ¹Ö±Ğ´ IndexedDB£¨Ğë¾­ `DataBridge.forward()` »ò `dataLayer` ½Ó¿Ú£©£»½ûÖ¹Ö±½Óµ÷ÓÃ `store/`¡¢`pages/`¡¢`components/` |
+| ±»ÒÀÀµ·½ | `store/`£¨`analysisNewsStore` Ïû·Ñ `newsService` Óë `sentimentTrendEngine`£©¡¢`mcp/servers/news/`£¨`NewsServer` ·â×°±©Â¶Îª MCP ¹¤¾ß£© |
 
-### 1.3 ä¸ç›¸é‚»å­åŸŸçš„å…³ç³»
+### 1.3 ÓëÏàÁÚ×ÓÓòµÄ¹ØÏµ
 
-| ç›¸é‚»å­åŸŸ | å…³ç³» | æ•°æ®æµ |
+| ÏàÁÚ×ÓÓò | ¹ØÏµ | Êı¾İÁ÷ |
 |----------|------|--------|
-| `fetcher` | ä¸Šæ¸¸ï¼šæä¾›åŸå§‹æ–°é—»æŠ“å–æ•°æ® | `fetcher` æŠ“å– â†’ `newsService.saveNewsArticle()` å…¥åº“ |
-| `data/` | åŒå±‚åŸºç¡€è®¾æ–½ï¼šé€šè¿‡ `dataLayer` è¯»å†™ IndexedDB | `newsService` â†” `dataLayer.news` / `dataLayer.newsStockMap` / `dataLayer.sentimentCache` |
-| `core/` | åŒå±‚åŸºç¡€è®¾æ–½ï¼šé€šè¿‡ `DataBridge` äº‹ä»¶è½¬å‘ | `newsService` â†’ `EnvelopeFactory` â†’ `dataBridge.forward()` â†’ `store/` è®¢é˜…è€… |
-| `mcp/servers/news` | ä¸‹æ¸¸ï¼šæ¶ˆè´¹æœ¬æœåŠ¡è¾“å‡ºä¸º MCP å·¥å…· | `newsService` / `sentimentAnalyzer` / `sentimentTrendEngine` â†’ `NewsServer` å·¥å…· |
-| `store/analysisNewsStore` | ä¸‹æ¸¸ï¼šçŠ¶æ€å±‚å°è£…æœåŠ¡è°ƒç”¨ | `analysisNewsStore` â†’ `listNews` / `saveNewsArticles` / `aggregateSentimentTrend` |
+| `fetcher` | ÉÏÓÎ£ºÌá¹©Ô­Ê¼ĞÂÎÅ×¥È¡Êı¾İ | `fetcher` ×¥È¡ ¡ú `newsService.saveNewsArticle()` Èë¿â |
+| `data/` | Í¬²ã»ù´¡ÉèÊ©£ºÍ¨¹ı `dataLayer` ¶ÁĞ´ IndexedDB | `newsService` ? `dataLayer.news` / `dataLayer.newsStockMap` / `dataLayer.sentimentCache` |
+| `core/` | Í¬²ã»ù´¡ÉèÊ©£ºÍ¨¹ı `DataBridge` ÊÂ¼ş×ª·¢ | `newsService` ¡ú `EnvelopeFactory` ¡ú `dataBridge.forward()` ¡ú `store/` ¶©ÔÄÕß |
+| `mcp/servers/news` | ÏÂÓÎ£ºÏû·Ñ±¾·şÎñÊä³öÎª MCP ¹¤¾ß | `newsService` / `sentimentAnalyzer` / `sentimentTrendEngine` ¡ú `NewsServer` ¹¤¾ß |
+| `store/analysisNewsStore` | ÏÂÓÎ£º×´Ì¬²ã·â×°·şÎñµ÷ÓÃ | `analysisNewsStore` ¡ú `listNews` / `saveNewsArticles` / `aggregateSentimentTrend` |
 
 ---
 
-## 2. å…¬å…±æ¥å£
+## 2. ¹«¹²½Ó¿Ú
 
-### 2.1 ç±»å‹å®šä¹‰ï¼ˆTypeScript Interfaceï¼‰
+### 2.1 ÀàĞÍ¶¨Òå£¨TypeScript Interface£©
 
 ```typescript
-// æ–‡ä»¶ï¼šsrc/services/news/stockLinker.ts
+// ÎÄ¼ş£ºsrc/services/news/stockLinker.ts
 
 export interface StockInfo {
   symbol: string
@@ -85,7 +88,7 @@ export interface LinkerConfig {
   contentWeight: number
 }
 
-// æ–‡ä»¶ï¼šsrc/services/news/sentimentAnalyzer.ts
+// ÎÄ¼ş£ºsrc/services/news/sentimentAnalyzer.ts
 
 export type SentimentLabel = 'positive' | 'negative' | 'neutral'
 
@@ -95,7 +98,7 @@ export interface SentimentResult {
   score: number // normalized score in [-1, +1]
 }
 
-// æ–‡ä»¶ï¼šsrc/types/modules/news.types.ts
+// ÎÄ¼ş£ºsrc/types/modules/news.types.ts
 
 export type SentimentTrendDimension = 'global' | 'stock' | 'industry'
 export type SentimentType = 'positive' | 'negative' | 'neutral'
@@ -139,7 +142,7 @@ export interface NewsFilterState {
   source: string
 }
 
-// æ–‡ä»¶ï¼šsrc/data/types/types.knowledge.ts
+// ÎÄ¼ş£ºsrc/data/types/types.knowledge.ts
 
 export interface NewsArticle {
   id: string
@@ -178,112 +181,112 @@ export interface SentimentCache {
 }
 ```
 
-### 2.2 ä¸»å…¥å£å‡½æ•°
+### 2.2 Ö÷Èë¿Úº¯Êı
 
-| å‡½æ•° | ç­¾å | èŒè´£ | é”™è¯¯å¤„ç† |
+| º¯Êı | Ç©Ãû | Ö°Ôğ | ´íÎó´¦Àí |
 |------|------|------|----------|
-| `saveNewsArticle()` | `(article, options?) => Promise<DataLayerResult<NewsArticle>>` | å•ç¯‡ä¿å­˜ï¼šå»é‡â†’æƒ…æ„Ÿåˆ†æâ†’è‚¡ç¥¨å…³è”â†’å†™å…¥åŒè¡¨â†’DataBridge äº‹ä»¶è½¬å‘ | `logger.error` + `DataLayerResult` åŒ…è£¹ |
-| `saveNewsArticles()` | `(articles, options?) => Promise<DataLayerResult<NewsArticle[]>>` | æ‰¹é‡ä¿å­˜ï¼ˆå†…éƒ¨ä¸²è¡Œè°ƒç”¨ `saveNewsArticle`ï¼Œè·³è¿‡å…³è”ï¼‰ | åŒä¸Š |
-| `listNews()` | `(options?) => Promise<DataLayerResult<NewsArticle[]>>` | å¤šæ¡ä»¶æŸ¥è¯¢ï¼ˆæ¥æº/åˆ†ç±»/æƒ…æ„Ÿ/è‚¡ç¥¨/å…³é”®è¯/æ—¶é—´èŒƒå›´ï¼‰ | åŒä¸Š |
-| `getNewsBySymbol()` | `(symbol) => Promise<DataLayerResult<NewsArticle[]>>` | æŒ‰è‚¡ç¥¨ä»£ç æŸ¥è¯¢å…³è”æ–°é—» | åŒä¸Š |
-| `getNewsByHash()` | `(hash) => Promise<DataLayerResult<NewsArticle\|undefined>>` | æŒ‰å“ˆå¸ŒæŸ¥è¯¢ï¼ˆå»é‡æ£€æŸ¥ï¼‰ | åŒä¸Š |
-| `generateMockArticles()` | `(count=5) => NewsArticle[]` | ç”Ÿæˆæ¨¡æ‹Ÿèµ„è®¯ï¼ˆæµ‹è¯•/æ¼”ç¤ºç”¨ï¼‰ | æ— å‰¯ä½œç”¨ï¼Œçº¯å‡½æ•° |
-| `analyzeNewsArticle()` | `(article) => SentimentResult` | å•ç¯‡æ ‡é¢˜+æ­£æ–‡åŠ æƒæƒ…æ„Ÿåˆ†æ | çº¯è®¡ç®— |
-| `getOrAnalyzeSentiment()` | `(content, method?) => Promise<SentimentResult & {contentHash}>` | å…ˆæŸ¥ç¼“å­˜å†åˆ†æï¼Œç»“æœå†™å…¥ç¼“å­˜ | åŒä¸Š |
-| `analyzeText()` | `(text) => SentimentResult` | é€šç”¨æ–‡æœ¬æƒ…æ„Ÿåˆ†æ | çº¯è®¡ç®— |
-| `classifySentiment()` | `(score, threshold?) => SentimentLabel` | åˆ†æ•°è½¬ä¸‰æ€æ ‡ç­¾ | çº¯è®¡ç®— |
-| `linkArticleToStocks()` | `(article, stocks, config?) => {article, links, maps}` | å››é˜¶åŒ¹é…å…³è”æ–°é—»åˆ°è‚¡ç¥¨ | çº¯è®¡ç®— |
-| `buildStockMap()` | `(stocks) => Map<string, StockInfo>` | æ„å»º symbol+6ä½ä»£ç åŒé‡ç´¢å¼• | çº¯è®¡ç®— |
-| `aggregateSentimentTrend()` | `(articles, options) => SentimentTrendSeries` | æƒ…æ„Ÿè¶‹åŠ¿èšåˆï¼ˆglobal/stock/industryï¼‰ | `logger.info` è®°å½• |
-| `extractStockOptions()` | `(articles) => string[]` | æå–å»é‡æ’åºçš„è‚¡ç¥¨ä»£ç  | çº¯è®¡ç®— |
-| `extractIndustryOptions()` | `(articles) => string[]` | æå–å»é‡æ’åºçš„åˆ†ç±» | çº¯è®¡ç®— |
+| `saveNewsArticle()` | `(article, options?) => Promise<DataLayerResult<NewsArticle>>` | µ¥Æª±£´æ£ºÈ¥ÖØ¡úÇé¸Ğ·ÖÎö¡ú¹ÉÆ±¹ØÁª¡úĞ´ÈëË«±í¡úDataBridge ÊÂ¼ş×ª·¢ | `logger.error` + `DataLayerResult` °ü¹ü |
+| `saveNewsArticles()` | `(articles, options?) => Promise<DataLayerResult<NewsArticle[]>>` | ÅúÁ¿±£´æ£¨ÄÚ²¿´®ĞĞµ÷ÓÃ `saveNewsArticle`£¬Ìø¹ı¹ØÁª£© | Í¬ÉÏ |
+| `listNews()` | `(options?) => Promise<DataLayerResult<NewsArticle[]>>` | ¶àÌõ¼ş²éÑ¯£¨À´Ô´/·ÖÀà/Çé¸Ğ/¹ÉÆ±/¹Ø¼ü´Ê/Ê±¼ä·¶Î§£© | Í¬ÉÏ |
+| `getNewsBySymbol()` | `(symbol) => Promise<DataLayerResult<NewsArticle[]>>` | °´¹ÉÆ±´úÂë²éÑ¯¹ØÁªĞÂÎÅ | Í¬ÉÏ |
+| `getNewsByHash()` | `(hash) => Promise<DataLayerResult<NewsArticle\|undefined>>` | °´¹şÏ£²éÑ¯£¨È¥ÖØ¼ì²é£© | Í¬ÉÏ |
+| `generateMockArticles()` | `(count=5) => NewsArticle[]` | Éú³ÉÄ£Äâ×ÊÑ¶£¨²âÊÔ/ÑİÊ¾ÓÃ£© | ÎŞ¸±×÷ÓÃ£¬´¿º¯Êı |
+| `analyzeNewsArticle()` | `(article) => SentimentResult` | µ¥Æª±êÌâ+ÕıÎÄ¼ÓÈ¨Çé¸Ğ·ÖÎö | ´¿¼ÆËã |
+| `getOrAnalyzeSentiment()` | `(content, method?) => Promise<SentimentResult & {contentHash}>` | ÏÈ²é»º´æÔÙ·ÖÎö£¬½á¹ûĞ´Èë»º´æ | Í¬ÉÏ |
+| `analyzeText()` | `(text) => SentimentResult` | Í¨ÓÃÎÄ±¾Çé¸Ğ·ÖÎö | ´¿¼ÆËã |
+| `classifySentiment()` | `(score, threshold?) => SentimentLabel` | ·ÖÊı×ªÈıÌ¬±êÇ© | ´¿¼ÆËã |
+| `linkArticleToStocks()` | `(article, stocks, config?) => {article, links, maps}` | ËÄ½×Æ¥Åä¹ØÁªĞÂÎÅµ½¹ÉÆ± | ´¿¼ÆËã |
+| `buildStockMap()` | `(stocks) => Map<string, StockInfo>` | ¹¹½¨ symbol+6Î»´úÂëË«ÖØË÷Òı | ´¿¼ÆËã |
+| `aggregateSentimentTrend()` | `(articles, options) => SentimentTrendSeries` | Çé¸ĞÇ÷ÊÆ¾ÛºÏ£¨global/stock/industry£© | `logger.info` ¼ÇÂ¼ |
+| `extractStockOptions()` | `(articles) => string[]` | ÌáÈ¡È¥ÖØÅÅĞòµÄ¹ÉÆ±´úÂë | ´¿¼ÆËã |
+| `extractIndustryOptions()` | `(articles) => string[]` | ÌáÈ¡È¥ÖØÅÅĞòµÄ·ÖÀà | ´¿¼ÆËã |
 
-### 2.3 äº‹ä»¶æ¥å£ï¼ˆDataBridge ä¿¡å°ï¼‰
+### 2.3 ÊÂ¼ş½Ó¿Ú£¨DataBridge ĞÅ·â£©
 
-| äº‹ä»¶å | å‘å¸ƒæ–¹ | è®¢é˜…æ–¹ | è¯´æ˜ |
+| ÊÂ¼şÃû | ·¢²¼·½ | ¶©ÔÄ·½ | ËµÃ÷ |
 |--------|--------|--------|------|
-| `ENVELOPE_ACTION.saveNews` | `newsService` | `DataBridge` â†’ `store/` | æ–°æ–‡ç« ä¿å­˜æˆåŠŸåè½¬å‘ï¼Œå«å®Œæ•´ `NewsArticle` è´Ÿè½½ |
-| `ENVELOPE_ACTION.newsArticleLoaded` | `newsService` | `DataBridge` â†’ å¯è§‚æµ‹æ€§ | `listNews` æŸ¥è¯¢å®Œæˆåè½¬å‘ï¼Œå«æŸ¥è¯¢ç»“æœç»Ÿè®¡ |
+| `ENVELOPE_ACTION.saveNews` | `newsService` | `DataBridge` ¡ú `store/` | ĞÂÎÄÕÂ±£´æ³É¹¦ºó×ª·¢£¬º¬ÍêÕû `NewsArticle` ¸ºÔØ |
+| `ENVELOPE_ACTION.newsArticleLoaded` | `newsService` | `DataBridge` ¡ú ¿É¹Û²âĞÔ | `listNews` ²éÑ¯Íê³Éºó×ª·¢£¬º¬²éÑ¯½á¹ûÍ³¼Æ |
 
-> **æ³¨**ï¼šæœ¬æœåŠ¡æœªç›´æ¥è°ƒç”¨ `EventBus.subscribe/publish`ï¼Œæ‰€æœ‰äº‹ä»¶é€šè¿‡ `DataBridge.forward(envelope)` ç»Ÿä¸€è·¯ç”±ã€‚
+> **×¢**£º±¾·şÎñÎ´Ö±½Óµ÷ÓÃ `EventBus.subscribe/publish`£¬ËùÓĞÊÂ¼şÍ¨¹ı `DataBridge.forward(envelope)` Í³Ò»Â·ÓÉ¡£
 
 ---
 
-## 3. æ•°æ®æµ
+## 3. Êı¾İÁ÷
 
 ```
-[å¤–éƒ¨è¾“å…¥: fetcher / MCP Server / UI Mock æŒ‰é’®]
-    â†“
+[Íâ²¿ÊäÈë: fetcher / MCP Server / UI Mock °´Å¥]
+    ¡ı
 newsService.saveNewsArticle()
-    â”œâ”€â”€ sentimentAnalyzer.analyzeNewsArticle()  â†’ sentimentCacheï¼ˆç¼“å­˜å†™å…¥ï¼‰
-    â”œâ”€â”€ stockLinker.linkArticleToStocks()        â†’ newsStockMapï¼ˆå…³è”æ˜ å°„ï¼‰
-    â†“
+    ©À©¤©¤ sentimentAnalyzer.analyzeNewsArticle()  ¡ú sentimentCache£¨»º´æĞ´Èë£©
+    ©À©¤©¤ stockLinker.linkArticleToStocks()        ¡ú newsStockMap£¨¹ØÁªÓ³Éä£©
+    ¡ı
 dataLayer.news.save()  +  dataLayer.newsStockMap.save()
-    â†“ (DataBridge.forward)
-Envelope â†’ routeToDB() â†’ é€šçŸ¥ store å±‚è®¢é˜…è€…
-    â†“
+    ¡ı (DataBridge.forward)
+Envelope ¡ú routeToDB() ¡ú Í¨Öª store ²ã¶©ÔÄÕß
+    ¡ı
 analysisNewsStore (Zustand)
-    â”œâ”€â”€ articles[] â†’ NewsCard / NewsFilterPanel / NewsDetail
-    â””â”€â”€ sentimentTrend â†’ NewsSentimentTrend (Recharts å›¾è¡¨)
+    ©À©¤©¤ articles[] ¡ú NewsCard / NewsFilterPanel / NewsDetail
+    ©¸©¤©¤ sentimentTrend ¡ú NewsSentimentTrend (Recharts Í¼±í)
 ```
 
-**è¡¥å……è¯´æ˜**ï¼š
-- `sentimentTrendEngine` æ˜¯çº¯æœ¬åœ°èšåˆå¼•æ“ï¼Œä¸è§¦å‘ç½‘ç»œ/LLMï¼Œè¾“å…¥ä¸º `newsStore` å·²åŠ è½½çš„ `NewsArticle[]`ï¼Œè¾“å‡ºä¸º `SentimentTrendSeries` ä¾›å›¾è¡¨æ¸²æŸ“ã€‚
-- `newsService` ä¸­çš„ `DataBridge.forward()` è°ƒç”¨å‡åŒ…è£¹ `try-catch`ï¼Œç¡®ä¿è½¬å‘å¤±è´¥ä¸å½±å“ä¸»æ•°æ®ä¿å­˜æµç¨‹ã€‚
+**²¹³äËµÃ÷**£º
+- `sentimentTrendEngine` ÊÇ´¿±¾µØ¾ÛºÏÒıÇæ£¬²»´¥·¢ÍøÂç/LLM£¬ÊäÈëÎª `newsStore` ÒÑ¼ÓÔØµÄ `NewsArticle[]`£¬Êä³öÎª `SentimentTrendSeries` ¹©Í¼±íäÖÈ¾¡£
+- `newsService` ÖĞµÄ `DataBridge.forward()` µ÷ÓÃ¾ù°ü¹ü `try-catch`£¬È·±£×ª·¢Ê§°Ü²»Ó°ÏìÖ÷Êı¾İ±£´æÁ÷³Ì¡£
 
 ---
 
-## 4. é…ç½®ä¸ä¾èµ–
+## 4. ÅäÖÃÓëÒÀÀµ
 
-### 4.1 ä¾èµ–ç™½åå•ï¼ˆlib/ åŠåŸºç¡€è®¾æ–½ï¼‰
+### 4.1 ÒÀÀµ°×Ãûµ¥£¨lib/ ¼°»ù´¡ÉèÊ©£©
 
-| ä¾èµ– | è·¯å¾„ | ç”¨é€” |
+| ÒÀÀµ | Â·¾¶ | ÓÃÍ¾ |
 |------|------|------|
-| `dataLayer` | `@/data/dataLayer` | IndexedDB è¯»å†™ï¼ˆnews / newsStockMap / sentimentCacheï¼‰ |
-| `generateId` | `@/data/db` | ç”Ÿæˆæ•°æ®åº“ ID |
-| `DataLayerResult` ç±»å‹ | `@/data/types` | è¿”å›ç±»å‹åŒ…è£… |
-| `dataBridge` | `@/core/databridge` | äº‹ä»¶ä¿¡å°è½¬å‘ |
-| `EnvelopeFactory` | `@/core/envelope` | æ„å»ºæ ‡å‡†åŒ–ä¿¡å° |
-| `logger` | `@/lib/logger` | æ“ä½œæ—¥å¿—ä¸é”™è¯¯è®°å½• |
-| `ENVELOPE_ACTION/ENVELOPE_TARGET/MODULE_ID` | `@/config/dbConfig` | ä¿¡å°è·¯ç”±å¸¸é‡ |
-| `MOCK_NEWS_URL_PREFIX` | `@/config/dataSourceUrls` | æ¨¡æ‹Ÿèµ„è®¯ URL å‰ç¼€ |
-| `DJB2_HASH_INIT/DJB2_HASH_MULTIPLIER` | `@/config/mathConstants` | å“ˆå¸Œç®—æ³•å¸¸é‡ |
-| `nanoid` | `nanoid` (npm) | ä¿¡å° traceId ç”Ÿæˆ |
+| `dataLayer` | `@/data/dataLayer` | IndexedDB ¶ÁĞ´£¨news / newsStockMap / sentimentCache£© |
+| `generateId` | `@/data/db` | Éú³ÉÊı¾İ¿â ID |
+| `DataLayerResult` ÀàĞÍ | `@/data/types` | ·µ»ØÀàĞÍ°ü×° |
+| `dataBridge` | `@/core/databridge` | ÊÂ¼şĞÅ·â×ª·¢ |
+| `EnvelopeFactory` | `@/core/envelope` | ¹¹½¨±ê×¼»¯ĞÅ·â |
+| `logger` | `@/lib/logger` | ²Ù×÷ÈÕÖ¾Óë´íÎó¼ÇÂ¼ |
+| `ENVELOPE_ACTION/ENVELOPE_TARGET/MODULE_ID` | `@/config/dbConfig` | ĞÅ·âÂ·ÓÉ³£Á¿ |
+| `MOCK_NEWS_URL_PREFIX` | `@/config/dataSourceUrls` | Ä£Äâ×ÊÑ¶ URL Ç°×º |
+| `DJB2_HASH_INIT/DJB2_HASH_MULTIPLIER` | `@/config/mathConstants` | ¹şÏ£Ëã·¨³£Á¿ |
+| `nanoid` | `nanoid` (npm) | ĞÅ·â traceId Éú³É |
 
-### 4.2 é…ç½®é¡¹
+### 4.2 ÅäÖÃÏî
 
-| é…ç½®å | é»˜è®¤å€¼ | è¯´æ˜ | æ¥æº |
+| ÅäÖÃÃû | Ä¬ÈÏÖµ | ËµÃ÷ | À´Ô´ |
 |--------|--------|------|------|
-| `DEFAULT_LINKER_CONFIG` | `enableExactCode: true`, `enableExactName: true`, `enableFuzzy: true`, `enableIndustry: true`, `minFuzzyLength: 3`, `confidenceThreshold: 0.3`, `maxLinks: 5`, `titleWeight: 1.5`, `contentWeight: 1.0` | è‚¡ç¥¨å…³è”å™¨é…ç½® | `src/services/news/stockLinker.ts` |
-| `DEFAULT_INDUSTRY_KEYWORDS` | 10 è¡Œä¸šæ˜ å°„è¡¨ | è¡Œä¸šå…³é”®è¯æ˜ å°„ï¼ˆé“¶è¡Œ/ç™½é…’/æ–°èƒ½æºç­‰ï¼‰ | `src/services/news/stockLinker.ts` |
-| `DEFAULT_STOCK_LIBRARY` | 18 åª A è‚¡ | å†…ç½®è‚¡ç¥¨åº“ï¼ˆæµ‹è¯•ä¸å…œåº•ï¼‰ | `src/services/news/stockLinker.ts` |
-| `POSITIVE_WORDS` | 24 è¯ | æ­£é¢æƒ…æ„Ÿè¯å…¸ | `src/services/news/sentimentAnalyzer.ts` |
-| `NEGATIVE_WORDS` | 23 è¯ | è´Ÿé¢æƒ…æ„Ÿè¯å…¸ | `src/services/news/sentimentAnalyzer.ts` |
-| `NEGATION_WORDS` | 9 è¯ | å¦å®šè¯è¯å…¸ | `src/services/news/sentimentAnalyzer.ts` |
-| `DEGREE_WORDS` | 10 ç»„ | ç¨‹åº¦å‰¯è¯ï¼ˆå«æ”¾å¤§å€æ•°ï¼‰ | `src/services/news/sentimentAnalyzer.ts` |
-| `TITLE_WEIGHT` | `1.5` | æ ‡é¢˜æƒ…æ„Ÿæƒé‡ | `src/services/news/sentimentAnalyzer.ts` |
-| `CONTENT_WEIGHT` | `1.0` | æ­£æ–‡æƒ…æ„Ÿæƒé‡ | `src/services/news/sentimentAnalyzer.ts` |
-| `SENTIMENT_THRESHOLD` | `0.1` | æƒ…æ„Ÿåˆ†ç±»é˜ˆå€¼ | `src/services/news/sentimentAnalyzer.ts` |
+| `DEFAULT_LINKER_CONFIG` | `enableExactCode: true`, `enableExactName: true`, `enableFuzzy: true`, `enableIndustry: true`, `minFuzzyLength: 3`, `confidenceThreshold: 0.3`, `maxLinks: 5`, `titleWeight: 1.5`, `contentWeight: 1.0` | ¹ÉÆ±¹ØÁªÆ÷ÅäÖÃ | `src/services/news/stockLinker.ts` |
+| `DEFAULT_INDUSTRY_KEYWORDS` | 10 ĞĞÒµÓ³Éä±í | ĞĞÒµ¹Ø¼ü´ÊÓ³Éä£¨ÒøĞĞ/°×¾Æ/ĞÂÄÜÔ´µÈ£© | `src/services/news/stockLinker.ts` |
+| `DEFAULT_STOCK_LIBRARY` | 18 Ö» A ¹É | ÄÚÖÃ¹ÉÆ±¿â£¨²âÊÔÓë¶µµ×£© | `src/services/news/stockLinker.ts` |
+| `POSITIVE_WORDS` | 24 ´Ê | ÕıÃæÇé¸Ğ´Êµä | `src/services/news/sentimentAnalyzer.ts` |
+| `NEGATIVE_WORDS` | 23 ´Ê | ¸ºÃæÇé¸Ğ´Êµä | `src/services/news/sentimentAnalyzer.ts` |
+| `NEGATION_WORDS` | 9 ´Ê | ·ñ¶¨´Ê´Êµä | `src/services/news/sentimentAnalyzer.ts` |
+| `DEGREE_WORDS` | 10 ×é | ³Ì¶È¸±´Ê£¨º¬·Å´ó±¶Êı£© | `src/services/news/sentimentAnalyzer.ts` |
+| `TITLE_WEIGHT` | `1.5` | ±êÌâÇé¸ĞÈ¨ÖØ | `src/services/news/sentimentAnalyzer.ts` |
+| `CONTENT_WEIGHT` | `1.0` | ÕıÎÄÇé¸ĞÈ¨ÖØ | `src/services/news/sentimentAnalyzer.ts` |
+| `SENTIMENT_THRESHOLD` | `0.1` | Çé¸Ğ·ÖÀàãĞÖµ | `src/services/news/sentimentAnalyzer.ts` |
 
 ---
 
-## 5. æµ‹è¯•ç­–ç•¥
+## 5. ²âÊÔ²ßÂÔ
 
-| æµ‹è¯•ç±»å‹ | æ–‡ä»¶ | è¯´æ˜ |
+| ²âÊÔÀàĞÍ | ÎÄ¼ş | ËµÃ÷ |
 |----------|------|------|
-| å•å…ƒæµ‹è¯• | `src/services/news/__tests__/sentimentTrendEngine.test.ts` | æƒ…æ„Ÿè¶‹åŠ¿èšåˆå¼•æ“ï¼šglobal/stock/industry ç»´åº¦ã€fillGapsã€æ—¥æœŸèŒƒå›´ã€ç©ºåˆ—è¡¨ã€é€‰é¡¹æå–ï¼ˆ8 ç”¨ä¾‹ï¼‰ |
-| å•å…ƒæµ‹è¯• | `src/services/news/stockLinker.test.ts` | è‚¡ç¥¨å…³è”å™¨æµ‹è¯•ï¼ˆåŒç›®å½•ï¼‰ |
-| é›†æˆæµ‹è¯• | `tests/services/news.integration.test.ts` | å»ºè®®è¦†ç›–ï¼šDataBridge äº¤äº’ã€`newsStore` è”åŠ¨ã€ä¿å­˜-æŸ¥è¯¢é—­ç¯ |
-| Mock ç­–ç•¥ | `generateMockArticles()` | å†…ç½®æ¨¡æ‹Ÿæ•°æ®ç”Ÿæˆå™¨ï¼Œæ— éœ€å¤–éƒ¨ä¾èµ– |
+| µ¥Ôª²âÊÔ | `src/services/news/__tests__/sentimentTrendEngine.test.ts` | Çé¸ĞÇ÷ÊÆ¾ÛºÏÒıÇæ£ºglobal/stock/industry Î¬¶È¡¢fillGaps¡¢ÈÕÆÚ·¶Î§¡¢¿ÕÁĞ±í¡¢Ñ¡ÏîÌáÈ¡£¨8 ÓÃÀı£© |
+| µ¥Ôª²âÊÔ | `src/services/news/stockLinker.test.ts` | ¹ÉÆ±¹ØÁªÆ÷²âÊÔ£¨Í¬Ä¿Â¼£© |
+| ¼¯³É²âÊÔ | `tests/services/news.integration.test.ts` | ½¨Òé¸²¸Ç£ºDataBridge ½»»¥¡¢`newsStore` Áª¶¯¡¢±£´æ-²éÑ¯±Õ»· |
+| Mock ²ßÂÔ | `generateMockArticles()` | ÄÚÖÃÄ£ÄâÊı¾İÉú³ÉÆ÷£¬ÎŞĞèÍâ²¿ÒÀÀµ |
 
 ---
 
-## 6. å˜æ›´æ—¥å¿—
+## 6. ±ä¸üÈÕÖ¾
 
-| æ—¥æœŸ | ç‰ˆæœ¬ | å˜æ›´ | ä½œè€… |
+| ÈÕÆÚ | °æ±¾ | ±ä¸ü | ×÷Õß |
 |------|------|------|------|
-| 2026-07-12 | v0.1.0 | å¥‘çº¦åˆç¨¿ | æ¶æ„ç»„ |
+| 2026-07-12 | v0.1.0 | ÆõÔ¼³õ¸å | ¼Ü¹¹×é |
 
 ---
 
-> **TODO[å­åŸŸ owner]**ï¼šè¯·æŒ‰æœ¬å¥‘çº¦ç»´æŠ¤ Â§1-Â§5ï¼Œç¡®ä¿ä¸ `services-catalog.md` çš„æ‘˜è¦ä¸€è‡´ã€‚å®Œæˆåè¿è¡Œ `tsc --noEmit` + `audit:layers` éªŒè¯ã€‚
+> **TODO[×ÓÓò owner]**£ºÇë°´±¾ÆõÔ¼Î¬»¤ ¡ì1-¡ì5£¬È·±£Óë `services-catalog.md` µÄÕªÒªÒ»ÖÂ¡£Íê³ÉºóÔËĞĞ `tsc --noEmit` + `audit:layers` ÑéÖ¤¡£

@@ -175,9 +175,7 @@ function getCachedApiKey(): string {
       // 存在加密条目，标记为已配置（实际值由异步方法读取）
       cachedApiKey = '__encrypted_pending__'
     }
-  } catch {
-    // localStorage 不可用时忽略
-  }
+  } catch { console.warn('[llmConfig.ts] localStorage 不可用时忽略, using fallback') }
   return cachedApiKey
 }
 
@@ -224,7 +222,7 @@ export function isLlmApiKeyConfigured(): boolean {
     const fullKey = `app:${LLM_API_KEY_STORAGE}`
     const raw = localStorage.getItem(fullKey)
     return !!(raw && raw.includes('"__encrypted":true'))
-  } catch {
+  } catch (err) { console.warn('[llmConfig.ts]', err);
     return false
   }
 }

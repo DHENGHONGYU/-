@@ -13,7 +13,6 @@ import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { createRef } from 'react'
 import { Badge } from '@/components/atoms/Badge'
-import { COLOR_TOKENS } from '@/constants/theme.tokens'
 
 describe('Badge', () => {
   it('默认 variant=default 应用 primary 样式', () => {
@@ -29,32 +28,35 @@ describe('Badge', () => {
     expect(screen.getByText('次要')).toHaveClass('bg-secondary')
   })
 
-  it('variant=outline 应用 outline 样式（无背景色）', () => {
+  it('variant=outline 应用 outline 样式（主题感知前景色，无背景色）', () => {
     render(<Badge variant="outline">轮廓</Badge>)
     const badge = screen.getByText('轮廓')
-    expect(badge).toHaveClass(COLOR_TOKENS.textPrimary.tailwind)
+    // 迁移后：outline 用主题感知的 text-foreground + border-border
+    expect(badge).toHaveClass('text-foreground')
+    expect(badge).toHaveClass('border-border')
     // outline 不应该带 bg-primary/secondary/destructive
     expect(badge).not.toHaveClass('bg-primary')
   })
 
-  it('variant=destructive 应用 destructive 样式', () => {
+  it('variant=destructive 应用主题感知的 destructive 语义令牌', () => {
     render(<Badge variant="destructive">危险</Badge>)
-    expect(screen.getByText('危险')).toHaveClass(COLOR_TOKENS.danger.bgClass)
-    expect(screen.getByText('危险')).toHaveClass('text-white')
+    const badge = screen.getByText('危险')
+    expect(badge).toHaveClass('bg-destructive')
+    expect(badge).toHaveClass('text-destructive-foreground')
   })
 
-  it('variant=success 应用 success 样式', () => {
+  it('variant=success 应用主题感知的 success 语义令牌', () => {
     render(<Badge variant="success">成功</Badge>)
     const badge = screen.getByText('成功')
-    expect(badge).toHaveClass(COLOR_TOKENS.success.bgClass.split(' ')[0]!)
-    expect(badge).toHaveClass('text-white')
+    expect(badge).toHaveClass('bg-success')
+    expect(badge).toHaveClass('text-success-foreground')
   })
 
-  it('variant=warning 应用 warning 样式', () => {
+  it('variant=warning 应用主题感知的 warning 语义令牌', () => {
     render(<Badge variant="warning">警告</Badge>)
     const badge = screen.getByText('警告')
-    expect(badge).toHaveClass(COLOR_TOKENS.warning.bgClass.split(' ')[0]!)
-    expect(badge).toHaveClass('text-white')
+    expect(badge).toHaveClass('bg-warning')
+    expect(badge).toHaveClass('text-warning-foreground')
   })
 
   it('应用基础徽章样式（rounded-full, px-2.5 等）', () => {

@@ -15,7 +15,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
         <input
           ref={ref}
           type="checkbox"
-          className="h-4 w-4 rounded border-border bg-background text-primary accent-primary focus:ring-1 focus:ring-ring"
+          className="h-4 w-4 rounded border-border bg-background text-primary accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           {...props}
         />
         {label && <span className="text-foreground">{label}</span>}

@@ -1,93 +1,90 @@
 ---
-title: v9-data-relationship-er
-code_version: 2.0.0
-
-tier: important
----
-
----
-title: V9 æ•°æ®åº“å®ä½“å…³ç³»è“å›¾
-version: v1.1.0
-last_updated: 2026-06-30
-maintainer: V9 Architecture Team
+title: V9 Êı¾İ¿âÊµÌå¹ØÏµÀ¶Í¼ (ER)
+type: explanation
+domain: data
+phase: planning
+tier: standard
 status: active
-change_log:
-  - date: 2026-06-30
-    desc: è¡¥é½ v15/v16 æ–°å¢ 4 ä¸ª Storeï¼ˆexecution_logs, missing_reports, executionPlans, portfoliosï¼‰ï¼›DB_VERSION 14â†’16
-  - date: 2026-06-29
-    desc: åˆå§‹ç‰ˆæœ¬
+maintainer: V9 Architecture Team
+summary: "±¾ÎÄµµÒÔ `src/data/types.ts` ÖĞµÄÀàĞÍ¶¨ÒåÓë `src/data/db.ts` ÖĞµÄ 24 ¸ö IndexedDB ObjectStore ÎªÃªµã£¬»æÖÆ V9..."
+tags: [data, plan, explanation]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: important
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
-# V9 æ•°æ®åº“å®ä½“å…³ç³»è“å›¾ (ER)
+# V9 Êı¾İ¿âÊµÌå¹ØÏµÀ¶Í¼ (ER)
 
 > **Status**: Current  
 > **Version**: v1.1.0  
 > **Last Updated**: 2026-06-30  
-> **DB_VERSION**: 16ï¼ˆä»¥ `src/config/dbConfig.ts` å®é™…å¯¼å‡ºä¸ºå‡†ï¼‰
+> **DB_VERSION**: 16£¨ÒÔ `src/config/dbConfig.ts` Êµ¼Êµ¼³öÎª×¼£©
 >
-> æœ¬æ–‡æ¡£ä»¥ `src/data/types.ts` ä¸­çš„ç±»å‹å®šä¹‰ä¸ `src/data/db.ts` ä¸­çš„ 24 ä¸ª IndexedDB ObjectStore ä¸ºé”šç‚¹ï¼Œç»˜åˆ¶ V9 ç³»ç»Ÿæ ¸å¿ƒæ•°æ®å®ä½“å…³ç³»ï¼Œä½œä¸ºå¼€å‘ã€æµ‹è¯•ä¸æ•°æ®æ²»ç†çš„æ¯”å¯¹åŸºçº¿ã€‚
+> ±¾ÎÄµµÒÔ `src/data/types.ts` ÖĞµÄÀàĞÍ¶¨ÒåÓë `src/data/db.ts` ÖĞµÄ 24 ¸ö IndexedDB ObjectStore ÎªÃªµã£¬»æÖÆ V9 ÏµÍ³ºËĞÄÊı¾İÊµÌå¹ØÏµ£¬×÷Îª¿ª·¢¡¢²âÊÔÓëÊı¾İÖÎÀíµÄ±È¶Ô»ùÏß¡£
 
 ---
 
-## 1. Store æ¸…å•
+## 1. Store Çåµ¥
 
-| Store | ä¸»é”® | è‡ªå¢ | ç´¢å¼• | æ ¸å¿ƒå®ä½“ | å†™å…¥æ¨¡å— |
+| Store | Ö÷¼ü | ×ÔÔö | Ë÷Òı | ºËĞÄÊµÌå | Ğ´ÈëÄ£¿é |
 |-------|------|------|------|---------|---------|
-| `stocks` | `symbol` | å¦ | `by-status`, `by-group` | `Stock` | `stockpool`, `fetcher` |
-| `daily_quotes` | `symbol` | å¦ | - | `DailyQuotes` | `fetcher` |
-| `v6_scores` | `symbol` | å¦ | - | `V6Score` | `analyzer` |
-| `intelligent_scores` | `id` | æ˜¯ | `by-symbol` | `IntelligentScore` | `analyzer` |
-| `industry_scores` | `id` | æ˜¯ | `by-code` | `IndustryScore` | `analyzer` |
-| `hot_sector_scores` | `symbol` | å¦ | `by-calculated-at` | `HotSectorScore` | `analyzer` |
-| `value_pit_scores` | `symbol` | å¦ | `by-calculated-at` | `ValuePitScore` | `analyzer` |
-| `rotation_scores` | `id` | å¦ | `by-sector-date`(å”¯ä¸€), `by-sector`, `by-total`, `by-resonance` | `RotationSectorScore` | `rotation` |
-| `sector_scores` | `id` | å¦ | `by-sector`, `by-composite`, `by-is-core` | `SectorScoreRecord` | `sector` |
-| `score_docs` | `docId` | å¦ | `by-symbol`, `by-symbol-version`(å”¯ä¸€), `by-composite` | `ScoreDocVersion` | `analyzer` |
-| `strategy_snapshots` | `id` | å¦ | `by-version`(å”¯ä¸€), `by-date`, `by-timestamp` | `StrategySnapshot` | `tradinghub` |
-| `local_docs` | `id` | å¦ | `by-symbol`, `by-category`, `by-added-at` | `LocalDoc` | `system` |
-| `news` | `id` | å¦ | `by-source`, `by-category`, `by-publish-time`, `by-hash`(å”¯ä¸€) | `NewsArticle` | `news` |
-| `news_stock_map` | `id` | å¦ | `by-symbol`, `by-news` | `NewsStockMap` | `news` |
-| `sentiment_cache` | `id` | å¦ | `by-content-hash`(å”¯ä¸€), `by-analyzed-at` | `SentimentCache` | `news` |
-| `news_bookmarks` | `id` | å¦ | `by-bookmarked-at` | `NewsBookmark` | `news` |
-| `orders` | `id` | å¦ | - | `Order` | `tradinghub` |
-| `signals` | `id` | å¦ | - | `Signal` | `tradinghub`, `strategy` |
-| `watchlists` | `id` | å¦ | - | `Watchlist` | `user` |
-| `research_logs` | `id` | æ˜¯ | - | `ResearchLog` | `system` |
-| `execution_logs` | `id` | æ˜¯ | `by-plan`, `by-symbol`, `by-timestamp` | `ExecutionLog` | `execution` |
-| `missing_reports` | `id` | æ˜¯ | `by-symbol`, `by-severity`, `by-detected-at` | `MissingReport` | `data-collector` |
-| `executionPlans` | `id` | å¦ | `by-signal`, `by-symbol`, `by-phase`, `by-created-at` | `ExecutionPlan` | `execution` |
-| `portfolios` | `id` | å¦ | `by-theme`, `by-updated-at` | `Portfolio` | `portfolio` |
+| `stocks` | `symbol` | ·ñ | `by-status`, `by-group` | `Stock` | `stockpool`, `fetcher` |
+| `daily_quotes` | `symbol` | ·ñ | - | `DailyQuotes` | `fetcher` |
+| `v6_scores` | `symbol` | ·ñ | - | `V6Score` | `analyzer` |
+| `intelligent_scores` | `id` | ÊÇ | `by-symbol` | `IntelligentScore` | `analyzer` |
+| `industry_scores` | `id` | ÊÇ | `by-code` | `IndustryScore` | `analyzer` |
+| `hot_sector_scores` | `symbol` | ·ñ | `by-calculated-at` | `HotSectorScore` | `analyzer` |
+| `value_pit_scores` | `symbol` | ·ñ | `by-calculated-at` | `ValuePitScore` | `analyzer` |
+| `rotation_scores` | `id` | ·ñ | `by-sector-date`(Î¨Ò»), `by-sector`, `by-total`, `by-resonance` | `RotationSectorScore` | `rotation` |
+| `sector_scores` | `id` | ·ñ | `by-sector`, `by-composite`, `by-is-core` | `SectorScoreRecord` | `sector` |
+| `score_docs` | `docId` | ·ñ | `by-symbol`, `by-symbol-version`(Î¨Ò»), `by-composite` | `ScoreDocVersion` | `analyzer` |
+| `strategy_snapshots` | `id` | ·ñ | `by-version`(Î¨Ò»), `by-date`, `by-timestamp` | `StrategySnapshot` | `tradinghub` |
+| `local_docs` | `id` | ·ñ | `by-symbol`, `by-category`, `by-added-at` | `LocalDoc` | `system` |
+| `news` | `id` | ·ñ | `by-source`, `by-category`, `by-publish-time`, `by-hash`(Î¨Ò») | `NewsArticle` | `news` |
+| `news_stock_map` | `id` | ·ñ | `by-symbol`, `by-news` | `NewsStockMap` | `news` |
+| `sentiment_cache` | `id` | ·ñ | `by-content-hash`(Î¨Ò»), `by-analyzed-at` | `SentimentCache` | `news` |
+| `news_bookmarks` | `id` | ·ñ | `by-bookmarked-at` | `NewsBookmark` | `news` |
+| `orders` | `id` | ·ñ | - | `Order` | `tradinghub` |
+| `signals` | `id` | ·ñ | - | `Signal` | `tradinghub`, `strategy` |
+| `watchlists` | `id` | ·ñ | - | `Watchlist` | `user` |
+| `research_logs` | `id` | ÊÇ | - | `ResearchLog` | `system` |
+| `execution_logs` | `id` | ÊÇ | `by-plan`, `by-symbol`, `by-timestamp` | `ExecutionLog` | `execution` |
+| `missing_reports` | `id` | ÊÇ | `by-symbol`, `by-severity`, `by-detected-at` | `MissingReport` | `data-collector` |
+| `executionPlans` | `id` | ·ñ | `by-signal`, `by-symbol`, `by-phase`, `by-created-at` | `ExecutionPlan` | `execution` |
+| `portfolios` | `id` | ·ñ | `by-theme`, `by-updated-at` | `Portfolio` | `portfolio` |
 
 ---
 
-## 2. å®ä½“å…³ç³»
+## 2. ÊµÌå¹ØÏµ
 
-| ä¸»ä½“å®ä½“ | å…³ç³» | å®¢ä½“å®ä½“ | å…³è”å­—æ®µ | è¯´æ˜ |
+| Ö÷ÌåÊµÌå | ¹ØÏµ | ¿ÍÌåÊµÌå | ¹ØÁª×Ö¶Î | ËµÃ÷ |
 |---------|------|---------|---------|------|
-| `Stock` (symbol) | 1:1 | `DailyQuotes` (symbol) | `symbol` | ä¸€åªè‚¡ç¥¨å¯¹åº”ä¸€æ¡æœ€æ–° K çº¿è®°å½• |
-| `Stock` (symbol) | 1:1 | `V6Score` (symbol) | `symbol` | ä¸€åªè‚¡ç¥¨å¯¹åº”ä¸€æ¡æœ€æ–°ç»¼åˆè¯„åˆ† |
-| `Stock` (symbol) | 1:N | `IntelligentScore` (symbol) | `symbol` | ä¸€åªè‚¡ç¥¨å¯æœ‰å¤šæ¡å†å²æ™ºèƒ½è¯„åˆ† |
-| `IndustryScore` (code) | 1:N | `Stock` (industryCode) | `industryCode` | ä¸€ä¸ªè¡Œä¸šåŒ…å«å¤šåªè‚¡ç¥¨ |
-| `Stock` (symbol) | 1:1 | `HotSectorScore` (symbol) | `symbol` | åŒç­–ç•¥çƒ­é—¨è¯„åˆ† |
-| `Stock` (symbol) | 1:1 | `ValuePitScore` (symbol) | `symbol` | åŒç­–ç•¥æ´¼åœ°è¯„åˆ† |
-| `NewsArticle` (id) | N:M | `Stock` (symbol) | `news_stock_map.newsId` / `symbol` | æ–‡ç« ä¸è‚¡ç¥¨çš„å…³è”æ˜ å°„ |
-| `NewsArticle` (hash) | 1:1 | `SentimentCache` (contentHash) | `hash` / `contentHash` | æ–‡ç« æƒ…ç»ªç¼“å­˜ |
-| `Stock` (symbol) | 1:N | `Order` (symbol) | `symbol` | è®¢å•å¼•ç”¨è‚¡ç¥¨ |
-| `Stock` (symbol) | 1:N | `Signal` (symbol) | `symbol` | ä¿¡å·å¼•ç”¨è‚¡ç¥¨ |
-| `SectorScoreRecord` (sectorCode) | 1:N | `RotationSectorScore` (sectorCode) | `sectorCode` | æ¿å—è¯„åˆ†ä¸è½®åŠ¨è¯„åˆ†å¯äº’è¡¥ |
-| `Stock` (symbol) | 1:N | `LocalDoc` (symbol) | `symbol` | ä¸€åªè‚¡ç¥¨å¯æœ‰å¤šä»½æœ¬åœ°æ–‡æ¡£ |
-| `Stock` (symbol) | 1:N | `ScoreDocVersion` (symbol) | `symbol` | ä¸€åªè‚¡ç¥¨å¯æœ‰å¤šä»½è¯„åˆ†æ–‡æ¡£ç‰ˆæœ¬ |
-| `StrategySnapshot` | N:M | `Stock` / `Score` / `Signal` | `holdings.scores.symbols` | å¿«ç…§èšåˆå¤šå®ä½“ |
-| `ExecutionPlan` (id) | 1:N | `ExecutionLog` (planId) | `planId` | ä¸€ä¸ªæ‰§è¡Œè®¡åˆ’å¯¹åº”å¤šæ¡æ‰§è¡Œæ—¥å¿— |
-| `Signal` (id) | 1:N | `ExecutionPlan` (signalId) | `signalId` | ä¸€ä¸ªä¿¡å·å¯æ´¾ç”Ÿä¸€ä¸ªæ‰§è¡Œè®¡åˆ’ |
-| `Stock` (symbol) | 1:N | `MissingReport` (symbol) | `symbol` | ä¸€åªè‚¡ç¥¨å¯èƒ½å­˜åœ¨å¤šæ¡ç¼ºå¤±æŠ¥å‘Š |
-| `Portfolio` (theme) | N:M | `Stock` (symbol) | `holdings.symbol` | æŠ•èµ„ç»„åˆæŒä»“ä¸è‚¡ç¥¨å…³è” |
+| `Stock` (symbol) | 1:1 | `DailyQuotes` (symbol) | `symbol` | Ò»Ö»¹ÉÆ±¶ÔÓ¦Ò»Ìõ×îĞÂ K Ïß¼ÇÂ¼ |
+| `Stock` (symbol) | 1:1 | `V6Score` (symbol) | `symbol` | Ò»Ö»¹ÉÆ±¶ÔÓ¦Ò»Ìõ×îĞÂ×ÛºÏÆÀ·Ö |
+| `Stock` (symbol) | 1:N | `IntelligentScore` (symbol) | `symbol` | Ò»Ö»¹ÉÆ±¿ÉÓĞ¶àÌõÀúÊ·ÖÇÄÜÆÀ·Ö |
+| `IndustryScore` (code) | 1:N | `Stock` (industryCode) | `industryCode` | Ò»¸öĞĞÒµ°üº¬¶àÖ»¹ÉÆ± |
+| `Stock` (symbol) | 1:1 | `HotSectorScore` (symbol) | `symbol` | Ë«²ßÂÔÈÈÃÅÆÀ·Ö |
+| `Stock` (symbol) | 1:1 | `ValuePitScore` (symbol) | `symbol` | Ë«²ßÂÔÍİµØÆÀ·Ö |
+| `NewsArticle` (id) | N:M | `Stock` (symbol) | `news_stock_map.newsId` / `symbol` | ÎÄÕÂÓë¹ÉÆ±µÄ¹ØÁªÓ³Éä |
+| `NewsArticle` (hash) | 1:1 | `SentimentCache` (contentHash) | `hash` / `contentHash` | ÎÄÕÂÇéĞ÷»º´æ |
+| `Stock` (symbol) | 1:N | `Order` (symbol) | `symbol` | ¶©µ¥ÒıÓÃ¹ÉÆ± |
+| `Stock` (symbol) | 1:N | `Signal` (symbol) | `symbol` | ĞÅºÅÒıÓÃ¹ÉÆ± |
+| `SectorScoreRecord` (sectorCode) | 1:N | `RotationSectorScore` (sectorCode) | `sectorCode` | °å¿éÆÀ·ÖÓëÂÖ¶¯ÆÀ·Ö¿É»¥²¹ |
+| `Stock` (symbol) | 1:N | `LocalDoc` (symbol) | `symbol` | Ò»Ö»¹ÉÆ±¿ÉÓĞ¶à·İ±¾µØÎÄµµ |
+| `Stock` (symbol) | 1:N | `ScoreDocVersion` (symbol) | `symbol` | Ò»Ö»¹ÉÆ±¿ÉÓĞ¶à·İÆÀ·ÖÎÄµµ°æ±¾ |
+| `StrategySnapshot` | N:M | `Stock` / `Score` / `Signal` | `holdings.scores.symbols` | ¿ìÕÕ¾ÛºÏ¶àÊµÌå |
+| `ExecutionPlan` (id) | 1:N | `ExecutionLog` (planId) | `planId` | Ò»¸öÖ´ĞĞ¼Æ»®¶ÔÓ¦¶àÌõÖ´ĞĞÈÕÖ¾ |
+| `Signal` (id) | 1:N | `ExecutionPlan` (signalId) | `signalId` | Ò»¸öĞÅºÅ¿ÉÅÉÉúÒ»¸öÖ´ĞĞ¼Æ»® |
+| `Stock` (symbol) | 1:N | `MissingReport` (symbol) | `symbol` | Ò»Ö»¹ÉÆ±¿ÉÄÜ´æÔÚ¶àÌõÈ±Ê§±¨¸æ |
+| `Portfolio` (theme) | N:M | `Stock` (symbol) | `holdings.symbol` | Í¶×Ê×éºÏ³Ö²ÖÓë¹ÉÆ±¹ØÁª |
 
 ---
 
-## 3. ER å›¾
+## 3. ER Í¼
 
 ```mermaid
 erDiagram
@@ -115,18 +112,18 @@ erDiagram
 
 ---
 
-## 4. ä¸­å¿ƒæ¢çº½è¯´æ˜
+## 4. ÖĞĞÄÊàÅ¦ËµÃ÷
 
-`Stock` æ˜¯ V9 æ•°æ®å…³ç³»çš„æ ¸å¿ƒæ¢çº½ï¼š
+`Stock` ÊÇ V9 Êı¾İ¹ØÏµµÄºËĞÄÊàÅ¦£º
 
-- **1:1 ä¾èµ–**ï¼š`DailyQuotes`ã€`V6Score`ã€`HotSectorScore`ã€`ValuePitScore` å‡ä»¥ `symbol` ä¸ºä¸»é”®ï¼Œä¸è‚¡ç¥¨ä¸€ä¸€å¯¹åº”
-- **1:N ä¾èµ–**ï¼š`IntelligentScore`ã€`Order`ã€`Signal`ã€`LocalDoc`ã€`ScoreDocVersion` é€šè¿‡ `symbol` å¤–é”®å…³è”ï¼Œæ”¯æŒå†å²ç‰ˆæœ¬ä¸å¤šè®°å½•
-- **N:M å…³è”**ï¼š`NewsArticle` é€šè¿‡ `news_stock_map` ä¸ `Stock` å»ºç«‹å¤šå¯¹å¤šæ˜ å°„ï¼Œå®ç°èµ„è®¯ä¸ä¸ªè‚¡çš„åŠ¨æ€å…³è”
+- **1:1 ÒÀÀµ**£º`DailyQuotes`¡¢`V6Score`¡¢`HotSectorScore`¡¢`ValuePitScore` ¾ùÒÔ `symbol` ÎªÖ÷¼ü£¬Óë¹ÉÆ±Ò»Ò»¶ÔÓ¦
+- **1:N ÒÀÀµ**£º`IntelligentScore`¡¢`Order`¡¢`Signal`¡¢`LocalDoc`¡¢`ScoreDocVersion` Í¨¹ı `symbol` Íâ¼ü¹ØÁª£¬Ö§³ÖÀúÊ·°æ±¾Óë¶à¼ÇÂ¼
+- **N:M ¹ØÁª**£º`NewsArticle` Í¨¹ı `news_stock_map` Óë `Stock` ½¨Á¢¶à¶Ô¶àÓ³Éä£¬ÊµÏÖ×ÊÑ¶Óë¸ö¹ÉµÄ¶¯Ì¬¹ØÁª
 
 ---
 
-## 5. æ²»ç†åŸºçº¿
+## 5. ÖÎÀí»ùÏß
 
-- æ–°å¢ Store å¿…é¡»åŒæ­¥æ›´æ–° `src/config/dbConfig.ts`ã€`src/data/db.ts`ã€`src/data/types.ts` ä¸æœ¬è“å›¾
-- ä¿®æ”¹ä¸»é”®æˆ–ç´¢å¼•å¿…é¡»é€’å¢ `DB_VERSION`
-- æ¯ä¸ª Store å¿…é¡»å­˜åœ¨å¯¹åº”çš„ TypeScript æ¥å£
+- ĞÂÔö Store ±ØĞëÍ¬²½¸üĞÂ `src/config/dbConfig.ts`¡¢`src/data/db.ts`¡¢`src/data/types.ts` Óë±¾À¶Í¼
+- ĞŞ¸ÄÖ÷¼ü»òË÷Òı±ØĞëµİÔö `DB_VERSION`
+- Ã¿¸ö Store ±ØĞë´æÔÚ¶ÔÓ¦µÄ TypeScript ½Ó¿Ú

@@ -1,68 +1,77 @@
 ---
 title: multi-factor-screening-data-definition
-tier: core
+type: reference
+domain: data
+phase: design
+tier: important
+status: active
+maintainer: V9 Architecture Team
+summary: "¶àÒò×ÓÑ¡¹ÉÉ¸Ñ¡Æ÷£¨DA-007£©Ö§³Ö»ùÓÚ PE¡¢PB¡¢ROE¡¢ÊĞÖµ¡¢ÓªÊÕÔöËÙ¡¢¾»ÀûÈóÔöËÙ Áù¸öÒò×Ó¹¹½¨Ìõ¼ş×é£¬¶ÔÈ«Á¿¹ÉÆ±½øĞĞÉ¸Ñ¡£¬²¢Ö§³ÖÄ£°å±£´æ/¼ÓÔØÓë CSV µ¼³ö¡£"
+tags: [data, data-definition, screening, factor, reference]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+doc_id: V9-DOC-DATA-022
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-tier: core
-code_version: 2.0.0
----
+# ¶àÒò×ÓÑ¡¹ÉÉ¸Ñ¡Æ÷Êı¾İ×Öµä
 
-# å¤šå› å­é€‰è‚¡ç­›é€‰å™¨æ•°æ®å­—å…¸
+> **Version**£ºv1.0.0  
+> **Date**£º2026-07-05£¨°æ±¾ºÅ²¹±ê£©  
+> **Ä£¿é´úºÅ**£ºDA-007
 
-> **ç‰ˆæœ¬**ï¼šv1.0.0  
-> **ç”Ÿæˆæ—¥æœŸ**ï¼š2026-07-05ï¼ˆç‰ˆæœ¬å·è¡¥æ ‡ï¼‰  
-> **æ¨¡å—ä»£å·**ï¼šDA-007
+## Ä£¿é¸ÅÊö
 
-## æ¨¡å—æ¦‚è¿°
+¶àÒò×ÓÑ¡¹ÉÉ¸Ñ¡Æ÷£¨DA-007£©Ö§³Ö»ùÓÚ PE¡¢PB¡¢ROE¡¢ÊĞÖµ¡¢ÓªÊÕÔöËÙ¡¢¾»ÀûÈóÔöËÙ Áù¸öÒò×Ó¹¹½¨Ìõ¼ş×é£¬¶ÔÈ«Á¿¹ÉÆ±½øĞĞÉ¸Ñ¡£¬²¢Ö§³ÖÄ£°å±£´æ/¼ÓÔØÓë CSV µ¼³ö¡£
 
-å¤šå› å­é€‰è‚¡ç­›é€‰å™¨ï¼ˆDA-007ï¼‰æ”¯æŒåŸºäº PEã€PBã€ROEã€å¸‚å€¼ã€è¥æ”¶å¢é€Ÿã€å‡€åˆ©æ¶¦å¢é€Ÿ å…­ä¸ªå› å­æ„å»ºæ¡ä»¶ç»„ï¼Œå¯¹å…¨é‡è‚¡ç¥¨è¿›è¡Œç­›é€‰ï¼Œå¹¶æ”¯æŒæ¨¡æ¿ä¿å­˜/åŠ è½½ä¸ CSV å¯¼å‡ºã€‚
+## ¼¯³ÉºÏÔ¼
 
-## é›†æˆåˆçº¦
+ÑÏ¸ñ×ñÑ­ËÄ²½¼¯³ÉºÏÔ¼£º
 
-ä¸¥æ ¼éµå¾ªå››æ­¥é›†æˆåˆçº¦ï¼š
+1. **ÀàĞÍ** ¡ª `src/types/modules/screening.types.ts`
+2. **Store** ¡ª `src/store/multiFactorScreeningStore.ts`
+3. **Builder** ¡ª `src/services/screening/multiFactorScreeningEngine.ts`
+4. **UI** ¡ª `src/pages/analysis/MultiFactorFilterPage.tsx` + `src/components/organisms/analysis/screening/MultiFactorFilterPanel.tsx`
 
-1. **ç±»å‹** â€” `src/types/modules/screening.types.ts`
-2. **Store** â€” `src/store/multiFactorScreeningStore.ts`
-3. **Builder** â€” `src/services/screening/multiFactorScreeningEngine.ts`
-4. **UI** â€” `src/pages/analysis/MultiFactorScreeningPage.tsx` + `src/components/organisms/analysis/screening/MultiFactorFilterPanel.tsx`
+## ºËĞÄÀàĞÍ
 
-## æ ¸å¿ƒç±»å‹
-
-| ç±»å‹ | æ–‡ä»¶ | è¯´æ˜ |
+| ÀàĞÍ | ÎÄ¼ş | ËµÃ÷ |
 |------|------|------|
-| `ScreeningFactor` | `src/types/modules/screening.types.ts` | å¯ç­›é€‰å› å­æšä¸¾ï¼š`pe`/`pb`/`roe`/`marketCap`/`revenueGrowth`/`profitGrowth` |
-| `ScreeningOperator` | åŒä¸Š | æ“ä½œç¬¦ï¼š`gt`/`lt`/`gte`/`lte`/`eq`/`between` |
-| `ScreeningLogic` | åŒä¸Š | æ¡ä»¶ç»„å†…é€»è¾‘ï¼š`and` / `or` |
-| `ScreeningCriterion` | åŒä¸Š | å•æ¡ç­›é€‰æ¡ä»¶ï¼ˆå› å­ã€æ“ä½œç¬¦ã€æ•°å€¼ã€åŒºé—´ä¸Šé™ï¼‰ |
-| `ScreeningConditionGroup` | åŒä¸Š | æ¡ä»¶ç»„ï¼ˆIDã€é€»è¾‘ã€æ¡ä»¶åˆ—è¡¨ï¼‰ |
-| `ScreeningTemplate` | åŒä¸Š | ç”¨æˆ·ä¿å­˜çš„æ¨¡æ¿ï¼ˆåç§°ã€æ¡ä»¶ç»„ã€æ—¶é—´æˆ³ï¼‰ |
-| `ScreenableStockData` | åŒä¸Š | å¯è¢«ç­›é€‰çš„è‚¡ç¥¨æ•°æ®è§†å›¾ |
-| `ScreeningResultItem` | åŒä¸Š | ç­›é€‰ç»“æœï¼ˆåŒ…å« `matchedGroups`ï¼‰ |
-| `ScreeningRunResult` | åŒä¸Š | ä¸€æ¬¡ç­›é€‰è¿è¡Œçš„ç»“æœå…ƒæ•°æ® |
+| `ScreeningFactor` | `src/types/modules/screening.types.ts` | ¿ÉÉ¸Ñ¡Òò×ÓÃ¶¾Ù£º`pe`/`pb`/`roe`/`marketCap`/`revenueGrowth`/`profitGrowth` |
+| `ScreeningOperator` | Í¬ÉÏ | ²Ù×÷·û£º`gt`/`lt`/`gte`/`lte`/`eq`/`between` |
+| `ScreeningLogic` | Í¬ÉÏ | Ìõ¼ş×éÄÚÂß¼­£º`and` / `or` |
+| `ScreeningCriterion` | Í¬ÉÏ | µ¥ÌõÉ¸Ñ¡Ìõ¼ş£¨Òò×Ó¡¢²Ù×÷·û¡¢ÊıÖµ¡¢Çø¼äÉÏÏŞ£© |
+| `ScreeningConditionGroup` | Í¬ÉÏ | Ìõ¼ş×é£¨ID¡¢Âß¼­¡¢Ìõ¼şÁĞ±í£© |
+| `ScreeningTemplate` | Í¬ÉÏ | ÓÃ»§±£´æµÄÄ£°å£¨Ãû³Æ¡¢Ìõ¼ş×é¡¢Ê±¼ä´Á£© |
+| `ScreenableStockData` | Í¬ÉÏ | ¿É±»É¸Ñ¡µÄ¹ÉÆ±Êı¾İÊÓÍ¼ |
+| `ScreeningResultItem` | Í¬ÉÏ | É¸Ñ¡½á¹û£¨°üº¬ `matchedGroups`£© |
+| `ScreeningRunResult` | Í¬ÉÏ | Ò»´ÎÉ¸Ñ¡ÔËĞĞµÄ½á¹ûÔªÊı¾İ |
 
-## æ•°æ®æº
+## Êı¾İÔ´
 
-- å…¨é‡è‚¡ç¥¨ä»£ç é€šè¿‡ `dataLayer.stocks.list()` è·å–ã€‚
-- è‚¡ç¥¨è¯¦ç»†æŒ‡æ ‡é€šè¿‡ `getUnifiedStockViews(symbols, { includeQuotes: false, includeV6Score: false })` è·å–ã€‚
-- `revenueGrowth` / `profitGrowth` å½“å‰ç”±ç»Ÿä¸€è§†å›¾é¢„ç•™å­—æ®µæ‰¿è½½ï¼Œåç»­æ¥å…¥çœŸå®è´¢æŠ¥æ•°æ®åè‡ªåŠ¨ç”Ÿæ•ˆã€‚
+- È«Á¿¹ÉÆ±´úÂëÍ¨¹ı `dataLayer.stocks.list()` »ñÈ¡¡£
+- ¹ÉÆ±ÏêÏ¸Ö¸±êÍ¨¹ı `getUnifiedStockViews(symbols, { includeQuotes: false, includeV6Score: false })` »ñÈ¡¡£
+- `revenueGrowth` / `profitGrowth` µ±Ç°ÓÉÍ³Ò»ÊÓÍ¼Ô¤Áô×Ö¶Î³ĞÔØ£¬ºóĞø½ÓÈëÕæÊµ²Æ±¨Êı¾İºó×Ô¶¯ÉúĞ§¡£
 
-## ç­›é€‰è§„åˆ™
+## É¸Ñ¡¹æÔò
 
-- æ¡ä»¶ç»„å†…éƒ¨æŒ‰ `and`/`or` è®¡ç®—ã€‚
-- å¤šä¸ªæ¡ä»¶ç»„ä¹‹é—´ä¸º **ä¸”** å…³ç³»ï¼Œå³è‚¡ç¥¨å¿…é¡»å‘½ä¸­æ‰€æœ‰æ¡ä»¶ç»„æ‰è¿›å…¥ç»“æœã€‚
-- å½“æŸå› å­å€¼ä¸º `null` æ—¶ï¼Œè¯¥æ¡ä»¶åˆ¤å®šä¸ºä¸åŒ¹é…ã€‚
+- Ìõ¼ş×éÄÚ²¿°´ `and`/`or` ¼ÆËã¡£
+- ¶à¸öÌõ¼ş×éÖ®¼äÎª **ÇÒ** ¹ØÏµ£¬¼´¹ÉÆ±±ØĞëÃüÖĞËùÓĞÌõ¼ş×é²Å½øÈë½á¹û¡£
+- µ±Ä³Òò×ÓÖµÎª `null` Ê±£¬¸ÃÌõ¼şÅĞ¶¨Îª²»Æ¥Åä¡£
 
-## æŒä¹…åŒ–
+## ³Ö¾Ã»¯
 
-- æ¨¡æ¿ä½¿ç”¨ `LocalStorageManager`ï¼ˆå‘½åç©ºé—´ `multiFactorScreening`ï¼‰å­˜å‚¨ï¼Œkey ä¸º `templates`ã€‚
+- Ä£°åÊ¹ÓÃ `LocalStorageManager`£¨ÃüÃû¿Õ¼ä `multiFactorScreening`£©´æ´¢£¬key Îª `templates`¡£
 
-## å¯¼å‡ºæ ¼å¼
+## µ¼³ö¸ñÊ½
 
-- CSV å¸¦ UTF-8 BOMï¼Œåˆ—ï¼šä»£ç ã€åç§°ã€è¡Œä¸šã€PEã€PBã€ROEã€æ€»å¸‚å€¼(äº¿)ã€è¥æ”¶å¢é€Ÿ(%)ã€å‡€åˆ©æ¶¦å¢é€Ÿ(%)ã€‚
+- CSV ´ø UTF-8 BOM£¬ÁĞ£º´úÂë¡¢Ãû³Æ¡¢ĞĞÒµ¡¢PE¡¢PB¡¢ROE¡¢×ÜÊĞÖµ(ÒÚ)¡¢ÓªÊÕÔöËÙ(%)¡¢¾»ÀûÈóÔöËÙ(%)¡£
 
-## ç›¸å…³æ–‡ä»¶
+## Ïà¹ØÎÄ¼ş
 
-- `src/config/multiFactorScreeningConfig.ts`ï¼šå› å­å…ƒæ•°æ®ã€æ“ä½œç¬¦ã€é€»è¾‘é€‰é¡¹ã€å­˜å‚¨ keyã€‚
-- `src/config/routes.ts`ï¼šé¡µé¢è·¯ç”± `/analysis/multi-factor-screening`ã€‚
+- `src/config/multiFactorScreeningConfig.ts`£ºÒò×ÓÔªÊı¾İ¡¢²Ù×÷·û¡¢Âß¼­Ñ¡Ïî¡¢´æ´¢ key¡£
+- `src/config/routes.ts`£ºÒ³ÃæÂ·ÓÉ `/analysis/multi-factor-screening`¡£

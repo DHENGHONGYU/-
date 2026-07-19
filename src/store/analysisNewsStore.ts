@@ -102,6 +102,11 @@ export const useAnalysisNewsStore = create<AnalysisNewsState>((set, get) => ({
   // - 防重入锁：通过 loading 状态防止并发调用
   // - 日志追踪：logger.info 打印核心分支
   generateMockArticles: async () => {
+    // 生产环境禁止生成 Mock 资讯并持久化到 DB
+    if (import.meta.env.PROD) {
+      logger.warn('[analysisNewsStore] generateMockArticles: 生产环境禁用')
+      return
+    }
     const { loading } = get()
     // @note 防重入锁
     if (loading) {

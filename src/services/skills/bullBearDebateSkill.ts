@@ -26,6 +26,9 @@ const ArgumentSchema = z.object({
   citations: z.array(CitationSchema),
 })
 
+/**
+ * BullBearDebateOutputSchema
+ */
 export const BullBearDebateOutputSchema = z.object({
   bullArgument: ArgumentSchema,
   bearArgument: ArgumentSchema,
@@ -36,6 +39,9 @@ export const BullBearDebateOutputSchema = z.object({
 
 export type BullBearDebateOutput = z.infer<typeof BullBearDebateOutputSchema>
 
+/**
+ * BullBearDebateInputSchema
+ */
 export const BullBearDebateInputSchema = z.object({
   symbol: z.string(),
   stockName: z.string().optional(),
@@ -104,6 +110,9 @@ function buildMessages(ctx: SkillContext): LlmMessage[] {
   ]
 }
 
+/**
+ * executeBullBearDebateSkill
+ */
 export async function executeBullBearDebateSkill(
   ctx: SkillContext,
 ): Promise<SkillResult<BullBearDebateOutput>> {
@@ -159,6 +168,9 @@ export async function executeBullBearDebateSkill(
   }
 }
 
+/**
+ * bullBearDebateSkill
+ */
 export const bullBearDebateSkill: SkillDefinition<BullBearDebateOutput> = {
   name: 'bull-bear-debate',
   title: 'S-08b 多空辩论',

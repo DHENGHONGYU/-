@@ -16,15 +16,6 @@
  */
 
 import { useState, useCallback, useRef } from 'react'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from '@/components/molecules/Dialog'
-import { Button } from '@/components/atoms/Button'
 
 /**
  * 确认对话框选项
@@ -36,7 +27,7 @@ import { Button } from '@/components/atoms/Button'
  * @property {string} [cancelLabel='取消'] - 取消按钮文字
  * @property {'default' | 'danger'} [variant='default'] - 确认按钮变体
  */
-interface ConfirmOptions {
+export interface ConfirmOptions {
   title: string
   description: string
   confirmLabel?: string
@@ -52,17 +43,20 @@ interface ConfirmOptions {
  *
  * @example
  * ```tsx
- * const { confirm, ConfirmDialog } = useConfirmDialog()
+ * const { confirm, dialogProps } = useConfirmDialog()
+ * // 渲染由调用方负责（组件层渲染，维持「组件依赖 hooks」单向流）：
+ * // <ConfirmDialog {...dialogProps} />
  *
  * const handleClick = async () => {
  *   const ok = await confirm({ title: '确认删除？', description: '此操作不可恢复' })
  *   if (ok) { ... }
  * }
- *
- * return <>{ConfirmDialog}</>
  * ```
 /**
  * useConfirmDialog
+ *
+ * 仅管理状态与 Promise 解析（不依赖任何 UI 组件），渲染交由调用方使用
+ * `components/molecules/ConfirmDialog` 完成。
  */
 export function useConfirmDialog() {
   const [open, setOpen] = useState(false)
@@ -102,27 +96,17 @@ export function useConfirmDialog() {
     setOpen(false)
   }, [resolveAndClear])
 
-  const ConfirmDialog = (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{options.title}</DialogTitle>
-          <DialogDescription>{options.description}</DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-          <Button variant="outline" onClick={handleCancel}>
-            {options.cancelLabel ?? '取消'}
-          </Button>
-          <Button
-            variant={options.variant === 'danger' ? 'danger' : 'primary'}
-            onClick={handleConfirm}
-          >
-            {options.confirmLabel ?? '确认'}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  )
+  /**
+   * 渲染所需的 props（由调用方传递给 `components/molecules/ConfirmDialog`）。
+   * hook 自身不引入任何 UI 组件，维持「组件依赖 hooks」单向流。
+   */
+  const dialogProps = {
+    open,
+    options,
+    onConfirm: handleConfirm,
+    onCancel: handleCancel,
+    onOpenChange: handleOpenChange,
+  }
 
-  return { confirm, ConfirmDialog }
+  return { confirm, dialogProps }
 }

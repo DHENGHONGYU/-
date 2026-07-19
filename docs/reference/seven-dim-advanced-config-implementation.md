@@ -1,37 +1,37 @@
 ---
-title: seven-dim-advanced-config-implementation
+title: SevenDimConfigPage 高级配置补全方案
+type: reference
+domain: frontend
+phase: development
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "## 一、缺失功能清�? 根据 V6 设计规范（`data-collection-route-ui-audit.md` �?节），需要补全："
+tags: [frontend, factor, implementation]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: important
----
-
----
-title: docs/reference/seven-dim-advanced-config-implementation.md
-code_version: 2.0.0
-tier: important
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
 # SevenDimConfigPage 高级配置补全方案
 
-## 一、缺失功能清单
-
-根据 V6 设计规范（`data-collection-route-ui-audit.md` 第3节），需要补全：
+## 一、缺失功能清�?
+根据 V6 设计规范（`data-collection-route-ui-audit.md` �?节），需要补全：
 
 1. **采集方案整合面板**
-   - 四层数据源架构图（腾讯→AKShare→Kimi→Mock）
-   - 维度接口映射表
-   - 8维度频率配置表
-   - 限流配置展示
+   - 四层数据源架构图（腾讯→AKShare→Kimi→Mock�?   - 维度接口映射�?   - 8维度频率配置�?   - 限流配置展示
 
 2. **接口测试弹窗**
-   - 5接口一键测试（AKShare/iFinD/Yahoo/天眼查/学术）
-   - 多源对比展示
+   - 5接口一键测试（AKShare/iFinD/Yahoo/天眼�?学术�?   - 多源对比展示
    - 降级测试结果
 
 ---
 
-## 二、采集方案整合面板实现方案
-
+## 二、采集方案整合面板实现方�?
 ### 2.1 新增组件：CollectionPlanPanel
 
 **文件路径**：`src/components/organisms/input/CollectionPlanPanel.tsx`
@@ -55,8 +55,7 @@ import {
   GLOBAL_LIMITS,
 } from '@/config/collectConfig'
 
-// 四层数据源架构
-const DATA_SOURCE_LAYERS = [
+// 四层数据源架�?const DATA_SOURCE_LAYERS = [
   {
     layer: 'L1',
     name: '腾讯财经',
@@ -76,7 +75,7 @@ const DATA_SOURCE_LAYERS = [
   {
     layer: 'L3',
     name: 'Kimi Work',
-    description: 'AI增强数据源',
+    description: 'AI增强数据�?,
     status: 'premium',
     latency: '~500ms',
     color: COLOR_TOKENS.warning,
@@ -91,10 +90,9 @@ const DATA_SOURCE_LAYERS = [
   },
 ]
 
-// 维度接口映射表
-const DIMENSION_API_MAPPING = [
+// 维度接口映射�?const DIMENSION_API_MAPPING = [
   { code: '01', name: '基本信息', api: '/api/stock/basic', method: 'GET', cache: '43200s' },
-  { code: '02', name: 'K线数据', api: '/api/stock/kline', method: 'GET', cache: '1440s' },
+  { code: '02', name: 'K线数�?, api: '/api/stock/kline', method: 'GET', cache: '1440s' },
   { code: '03', name: '筹码分布', api: '/api/stock/chip', method: 'GET', cache: '4320s' },
   { code: '04', name: '重大事项', api: '/api/stock/news', method: 'GET', cache: '1440s' },
   { code: '05', name: '热点新闻', api: '/api/news/hot', method: 'GET', cache: '720s' },
@@ -107,13 +105,12 @@ export const CollectionPlanPanel = memo(() => {
   const dimensions = useSevenDimConfigStore((s) => s.dimensions)
   const enabledCount = dimensions.filter((d) => d.enabled).length
 
-  // 计算每个维度的预估调用次数
-  const dimensionEstimates = useMemo(() => {
+  // 计算每个维度的预估调用次�?  const dimensionEstimates = useMemo(() => {
     return dimensions
       .filter((d) => d.enabled)
       .map((dim) => {
         const frequencyLabel = FREQUENCY_LABELS[dim.frequency]
-        const sources = dim.sources.map((s) => DATA_SOURCE_LABELS[s]).join(' → ')
+        const sources = dim.sources.map((s) => DATA_SOURCE_LABELS[s]).join(' �?')
         return {
           code: dim.code,
           name: dim.name,
@@ -138,7 +135,7 @@ export const CollectionPlanPanel = memo(() => {
       <CardContent className="space-y-6">
         {/* 四层数据源架构图 */}
         <div>
-          <h3 className="mb-3 text-sm font-semibold">四层数据源架构</h3>
+          <h3 className="mb-3 text-sm font-semibold">四层数据源架�?/h3>
           <div className="space-y-2">
             {DATA_SOURCE_LAYERS.map((layer) => (
               <div
@@ -163,7 +160,7 @@ export const CollectionPlanPanel = memo(() => {
 
         <Separator />
 
-        {/* 维度接口映射表 */}
+        {/* 维度接口映射�?*/}
         <div>
           <h3 className="mb-3 text-sm font-semibold">维度接口映射</h3>
           <div className="overflow-x-auto">
@@ -206,7 +203,7 @@ export const CollectionPlanPanel = memo(() => {
 
         <Separator />
 
-        {/* 8维度频率配置表 */}
+        {/* 8维度频率配置�?*/}
         <div>
           <h3 className="mb-3 text-sm font-semibold">维度频率配置</h3>
           <div className="space-y-2">
@@ -221,11 +218,11 @@ export const CollectionPlanPanel = memo(() => {
                 </div>
                 <div className="flex items-center gap-4 text-xs">
                   <div>
-                    <span className="text-muted-foreground">频率：</span>
+                    <span className="text-muted-foreground">频率�?/span>
                     <span>{est.frequency}</span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">批次：</span>
+                    <span className="text-muted-foreground">批次�?/span>
                     <span>{est.batchSize}</span>
                   </div>
                   <div>
@@ -253,7 +250,7 @@ export const CollectionPlanPanel = memo(() => {
               <p className="text-lg font-bold">{GLOBAL_LIMITS.rateLimitPerHour}</p>
             </div>
             <div className="rounded-md border p-3">
-              <p className="text-xs text-muted-foreground">日限流</p>
+              <p className="text-xs text-muted-foreground">日限�?/p>
               <p className="text-lg font-bold">{GLOBAL_LIMITS.rateLimitPerDay}</p>
             </div>
           </div>
@@ -273,8 +270,7 @@ CollectionPlanPanel.displayName = 'CollectionPlanPanel'
 ```typescript
 /**
  * @module ApiTestDialog
- * @description 接口测试弹窗 - 5接口一键测试
- */
+ * @description 接口测试弹窗 - 5接口一键测�? */
 
 import { memo, useState } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/Dialog'
@@ -302,7 +298,7 @@ const TEST_SOURCES = [
   { id: 'akshare', name: 'AKShare', testApi: '/api/test/akshare' },
   { id: 'ifind', name: 'iFinD', testApi: '/api/test/ifind' },
   { id: 'yahoo', name: 'Yahoo', testApi: '/api/test/yahoo' },
-  { id: 'tianyancha', name: '天眼查', testApi: '/api/test/tianyancha' },
+  { id: 'tianyancha', name: '天眼�?, testApi: '/api/test/tianyancha' },
   { id: 'scholar', name: '学术', testApi: '/api/test/scholar' },
 ]
 
@@ -317,8 +313,7 @@ export const ApiTestDialog = memo(({ open, onOpenChange }: ApiTestDialogProps) =
   const handleTestAll = async () => {
     logger.info('[ApiTestDialog] 开始测试所有数据源')
 
-    // 重置所有状态
-    const initialResults = TEST_SOURCES.reduce((acc, source) => {
+    // 重置所有状�?    const initialResults = TEST_SOURCES.reduce((acc, source) => {
       acc[source.id] = { source: source.id, status: 'testing' }
       return acc
     }, {} as Record<string, TestResult>)
@@ -328,7 +323,7 @@ export const ApiTestDialog = memo(({ open, onOpenChange }: ApiTestDialogProps) =
     const testPromises = TEST_SOURCES.map(async (source) => {
       const startTime = Date.now()
       try {
-        // TODO: 调用真实的测试 API
+        // TODO: 调用真实的测�?API
         // const response = await fetch(source.testApi)
         // if (!response.ok) throw new Error('Test failed')
         
@@ -374,7 +369,7 @@ export const ApiTestDialog = memo(({ open, onOpenChange }: ApiTestDialogProps) =
     const source = TEST_SOURCES.find((s) => s.id === sourceId)
     if (!source) return
 
-    logger.info(`[ApiTestDialog] 开始测试 ${source.name}`)
+    logger.info(`[ApiTestDialog] 开始测�?${source.name}`)
     setResults((prev) => ({
       ...prev,
       [sourceId]: { source: sourceId, status: 'testing' },
@@ -382,7 +377,7 @@ export const ApiTestDialog = memo(({ open, onOpenChange }: ApiTestDialogProps) =
 
     const startTime = Date.now()
     try {
-      // TODO: 调用真实的测试 API
+      // TODO: 调用真实的测�?API
       await new Promise((resolve) => setTimeout(resolve, 500 + Math.random() * 500))
       
       const latency = Date.now() - startTime
@@ -413,9 +408,9 @@ export const ApiTestDialog = memo(({ open, onOpenChange }: ApiTestDialogProps) =
   const getStatusBadge = (status: TestResult['status']) => {
     switch (status) {
       case 'idle':
-        return <Badge variant="outline">待测试</Badge>
+        return <Badge variant="outline">待测�?/Badge>
       case 'testing':
-        return <Badge className={COLOR_TOKENS.info.bgClass}>测试中...</Badge>
+        return <Badge className={COLOR_TOKENS.info.bgClass}>测试�?..</Badge>
       case 'success':
         return <Badge className={COLOR_TOKENS.success.bgClass}>正常</Badge>
       case 'error':
@@ -489,21 +484,19 @@ export const ApiTestDialog = memo(({ open, onOpenChange }: ApiTestDialogProps) =
 ApiTestDialog.displayName = 'ApiTestDialog'
 ```
 
-### 2.3 修改 SevenDimConfigPage 集成新组件
-
+### 2.3 修改 SevenDimConfigPage 集成新组�?
 **修改文件**：`src/pages/input/SevenDimConfigPage.tsx`
 
-在页面底部添加两个新面板：
-
+在页面底部添加两个新面板�?
 ```typescript
-// 在 import 部分添加
+// �?import 部分添加
 import { CollectionPlanPanel } from '@/components/input/CollectionPlanPanel'
 import { ApiTestDialog } from '@/components/input/ApiTestDialog'
 
 // 在组件状态中添加
 const [showApiTest, setShowApiTest] = useState(false)
 
-// 在操作按钮区域添加"接口测试"按钮
+// 在操作按钮区域添�?接口测试"按钮
 <Button
   variant="outline"
   className="w-full"
@@ -512,60 +505,51 @@ const [showApiTest, setShowApiTest] = useState(false)
   接口测试
 </Button>
 
-// 在页面底部添加采集方案整合面板
-<CollectionPlanPanel />
+// 在页面底部添加采集方案整合面�?<CollectionPlanPanel />
 
-// 在 ErrorBoundary 内添加接口测试弹窗
-<ApiTestDialog open={showApiTest} onOpenChange={setShowApiTest} />
+// �?ErrorBoundary 内添加接口测试弹�?<ApiTestDialog open={showApiTest} onOpenChange={setShowApiTest} />
 ```
 
 ---
 
-## 三、实施步骤
-
-### Phase 1：创建组件文件（P2 - 中期）
-
+## 三、实施步�?
+### Phase 1：创建组件文件（P2 - 中期�?
 1. 创建 `src/components/organisms/input/CollectionPlanPanel.tsx`
 2. 创建 `src/components/organisms/input/ApiTestDialog.tsx`
-3. 修改 `src/pages/input/SevenDimConfigPage.tsx` 集成新组件
+3. 修改 `src/pages/input/SevenDimConfigPage.tsx` 集成新组�?
+### Phase 2：实现真�?API 调用（P1 - 高）
 
-### Phase 2：实现真实 API 调用（P1 - 高）
-
-1. 修改 `sevenDimConfigStore.saveConfig()` 调用 DataBridge 持久化
-2. 修改 `sevenDimConfigStore.runCollection()` 调用 fetcherService
-3. 修改 `ApiTestDialog` 调用真实的测试 API
+1. 修改 `sevenDimConfigStore.saveConfig()` 调用 DataBridge 持久�?2. 修改 `sevenDimConfigStore.runCollection()` 调用 fetcherService
+3. 修改 `ApiTestDialog` 调用真实的测�?API
 
 ### Phase 3：测试验证（P1 - 高）
 
-1. 为 `CollectionPlanPanel` 添加单元测试
-2. 为 `ApiTestDialog` 添加单元测试
-3. 为 `saveConfig` 和 `runCollection` 添加集成测试
+1. �?`CollectionPlanPanel` 添加单元测试
+2. �?`ApiTestDialog` 添加单元测试
+3. �?`saveConfig` �?`runCollection` 添加集成测试
 
 ---
 
-## 四、依赖关系
-
+## 四、依赖关�?
 ```
 SevenDimConfigPage
 ├── CollectionPlanPanel（新增）
-│   ├── useSevenDimConfigStore
-│   └── collectConfig 常量
+�?  ├── useSevenDimConfigStore
+�?  └── collectConfig 常量
 └── ApiTestDialog（新增）
-    └── 测试 API（待实现）
-```
+    └── 测试 API（待实现�?```
 
 ---
 
-## 五、风险评估
-
+## 五、风险评�?
 | 风险 | 等级 | 应对策略 |
 |------|------|---------|
-| 真实 API 未实现 | 高 | 先使用模拟数据，后续迭代 |
-| DataBridge 契约未定义 | 中 | 需要先定义 `collectConfig.save` 契约 |
-| fetcherService 接口不匹配 | 中 | 需要先确认 fetcherService 的调用方式 |
+| 真实 API 未实�?| �?| 先使用模拟数据，后续迭代 |
+| DataBridge 契约未定�?| �?| 需要先定义 `collectConfig.save` 契约 |
+| fetcherService 接口不匹�?| �?| 需要先确认 fetcherService 的调用方�?|
 
 ---
 
 **文档版本**：v1.0  
-**创建日期**：2026-07-09  
-**状态**：待评审
+**创建日期**�?026-07-09  
+**状�?*：待评审

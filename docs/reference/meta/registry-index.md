@@ -1,18 +1,25 @@
 ---
-title: registry-index
-tier: important
+title: 文档索引
+type: meta
+domain: project
+phase: planning
+tier: reference
+status: active
+maintainer: V9 Architecture Team
+summary: "Document category index registry with domain and type-based library navigation"
+tags: [project, registry, documentation, reference, governance]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
----
-
----
-tier: important
-code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
 # 文档索引
 
-> 本文件由每日文档验证流程自动生成，请勿手动修改。
-
+> 本文件由每日文档验证流程自动生成，请勿手动修改�?
 ## 目录
 
 ### 00-readme.md
@@ -37,7 +44,7 @@ code_version: 2.0.0
 
 ### 03-architecture-standards.md
 
-- [03-architecture-standards](../../explanation/03-architecture-standards.md)
+- [03-architecture-standards](../03-architecture-standards.md)
 
 ### 04-ui-ux-specs.md
 
@@ -191,9 +198,9 @@ code_version: 2.0.0
 
 - [23-core-docs-v2-final-report](../../00-meta/23-core-docs-v2-final-report.md)
 
-### 23个核心文档重新检索报告.md
+### 23个核心文档重新检索报�?md
 
-- [23个核心文档重新检索报告](../../00-meta/23个核心文档重新检索报告.md)
+- [23个核心文档重新检索报告](../../00-meta/23个核心文档重新检索报�?md)
 
 ### a-h-index.md
 
@@ -219,9 +226,9 @@ code_version: 2.0.0
 
 - [B批次组件集成测试报告_B6_2026-07-08](../../explanation/b批次组件集成测试报告-b6-2026-07-08.md)
 
-### b批次高价值孤儿集成状态报告-2026-07-08.md
+### b批次高价值孤儿集成状态报�?2026-07-08.md
 
-- [B批次高价值孤儿集成状态报告_2026-07-08](../../explanation/b批次高价值孤儿集成状态报告-2026-07-08.md)
+- [B批次高价值孤儿集成状态报告_2026-07-08](../../explanation/b批次高价值孤儿集成状态报�?2026-07-08.md)
 
 ### CHANGELOG.md
 
@@ -307,9 +314,9 @@ code_version: 2.0.0
 
 - [HOOKS_GUIDE](../../how-to/hooks-guide.md)
 
-### p4-文档去重清单与执行方案.md
+### p4-文档去重清单与执行方�?md
 
-- [P4-文档去重清单与执行方案](../../explanation/design/p4-文档去重清单与执行方案.md)
+- [P4-文档去重清单与执行方案](../../explanation/design/p4-文档去重清单与执行方�?md)
 
 ### p5-verification-report.md
 
@@ -371,9 +378,9 @@ code_version: 2.0.0
 
 - [RELEASE_NOTES](../release-notes.md)
 
-### rm剩余任务全量盘点与整改方案-2026-07-08.md
+### rm剩余任务全量盘点与整改方�?2026-07-08.md
 
-- [RM剩余任务全量盘点与整改方案_2026-07-08](../rm剩余任务全量盘点与整改方案-2026-07-08.md)
+- [RM剩余任务全量盘点与整改方案_2026-07-08](../rm剩余任务全量盘点与整改方�?2026-07-08.md)
 
 ### solo-review.md
 
@@ -387,29 +394,29 @@ code_version: 2.0.0
 
 - [TECH-DEBT](../../explanation/design/tech-debt.md)
 
-### typescript错误处理和类型安全检测报告.md
+### typescript错误处理和类型安全检测报�?md
 
-- [TypeScript错误处理和类型安全检测报告](../../reports/audit/typescript错误处理和类型安全检测报告.md)
+- [TypeScript错误处理和类型安全检测报告](../../reports/audit/typescript错误处理和类型安全检测报�?md)
 
-### ui改善部分检索报告.md
+### ui改善部分检索报�?md
 
-- [UI改善部分检索报告](../../explanation/design/ui改善部分检索报告.md)
+- [UI改善部分检索报告](../../explanation/design/ui改善部分检索报�?md)
 
-### ui设计优化实施计划-详细版.md
+### ui设计优化实施计划-详细�?md
 
-- [UI设计优化实施计划_详细版](../ui设计优化实施计划-详细版.md)
+- [UI设计优化实施计划_详细版](../ui设计优化实施计划-详细�?md)
 
 ### v6-v9界面设计html精读报告.md
 
 - [V6-V9界面设计HTML精读报告](../../explanation/design/v6-v9界面设计html精读报告.md)
 
-### v6-v9界面设计优化可行性计划.md
+### v6-v9界面设计优化可行性计�?md
 
-- [V6-V9界面设计优化可行性计划](../../explanation/design/v6-v9界面设计优化可行性计划.md)
+- [V6-V9界面设计优化可行性计划](../../explanation/design/v6-v9界面设计优化可行性计�?md)
 
-### v9-架构缺陷与整改行动清单.md
+### v9-架构缺陷与整改行动清�?md
 
-- [V9 架构缺陷与整改行动清单](../../explanation/v9-架构缺陷与整改行动清单.md)
+- [V9 架构缺陷与整改行动清单](../../explanation/v9-架构缺陷与整改行动清�?md)
 
 ### v9-pre-launch-audit-report-20260713.md
 
@@ -419,9 +426,9 @@ code_version: 2.0.0
 
 - [V9-TEST-CASES](../v9-test-cases.md)
 
-### v9-体系化上线测试-todo-list.md
+### v9-体系化上线测�?todo-list.md
 
-- [V9-体系化上线测试-TODO-LIST](../../explanation/v9-体系化上线测试-todo-list.md)
+- [V9-体系化上线测�?TODO-LIST](../../explanation/v9-体系化上线测�?todo-list.md)
 
 ### v9-文档治理修复行动计划.md
 
@@ -435,13 +442,13 @@ code_version: 2.0.0
 
 - [V9_IndexedDB_Store_Schema](../../explanation/design/v9-indexeddb-store-schema.md)
 
-### v9-l2状态层补齐路线图.md
+### v9-l2状态层补齐路线�?md
 
-- [V9_L2状态层补齐路线图](../../explanation/v9-l2状态层补齐路线图.md)
+- [V9_L2状态层补齐路线图](../../explanation/v9-l2状态层补齐路线�?md)
 
-### v9-数据血缘追踪.md
+### v9-数据血缘追�?md
 
-- [V9_数据血缘追踪](../v9-数据血缘追踪.md)
+- [V9_数据血缘追踪](../v9-数据血缘追�?md)
 
 ### v9数据宪法.md
 
@@ -635,9 +642,9 @@ code_version: 2.0.0
 
 - [cockpit_widget_40错误核查-分析判断](../../reports/audit/cockpit_widget_40错误核查-分析判断.md)
 
-### cockpit_整体设计一致性审查.md
+### cockpit_整体设计一致性审�?md
 
-- [cockpit_整体设计一致性审查](../../reports/audit/cockpit_整体设计一致性审查.md)
+- [cockpit_整体设计一致性审查](../../reports/audit/cockpit_整体设计一致性审�?md)
 
 ### code-quality-audit-report.md
 
@@ -813,7 +820,7 @@ code_version: 2.0.0
 
 ### doc-governance-audit-report-2026-07-13.md
 
-- [doc-governance-audit-report-2026-07-13](../../reports/doc-governance-audit-report-2026-07-13.md)
+- [doc-governance-audit-report-2026-07-13](../../reports/audit/doc-governance-audit-report-2026-07-13.md)
 
 ### doc-sync-execution-plan.md
 
@@ -841,15 +848,15 @@ code_version: 2.0.0
 
 ### e2e-verify-25stocks-plan.md
 
-- [e2e-verify-25stocks-plan](../../reports/e2e-verify-25stocks-plan.md)
+- [e2e-verify-25stocks-plan](../../reports/retrospectives/e2e-verify-25stocks-plan.md)
 
 ### e2e-verify-25stocks-report.md
 
-- [e2e-verify-25stocks-report](../../reports/e2e-verify-25stocks-report.md)
+- [e2e-verify-25stocks-report](../../reports/retrospectives/e2e-verify-25stocks-report.md)
 
 ### e2e-verify-redundancy-report.md
 
-- [e2e-verify-redundancy-report](../../reports/e2e-verify-redundancy-report.md)
+- [e2e-verify-redundancy-report](../../reports/retrospectives/e2e-verify-redundancy-report.md)
 
 ### execution-contract.md
 
@@ -1515,17 +1522,17 @@ code_version: 2.0.0
 
 - [《DataBridge数据链路全景分析报告》](../../explanation/design/databridge数据链路全景分析报告.md)
 
-### databridge端点与数据映射清单.md
+### databridge端点与数据映射清�?md
 
-- [《DataBridge端点与数据映射清单》](../databridge端点与数据映射清单.md)
+- [《DataBridge端点与数据映射清单》](../databridge端点与数据映射清�?md)
 
 ### v9-代码实现分析报告.md
 
 - [《V9 代码实现分析报告》](../../explanation/v9-代码实现分析报告.md)
 
-### v9-架构缺陷与整改行动清单.md
+### v9-架构缺陷与整改行动清�?md
 
-- [《V9 架构缺陷与整改行动清单》](../../explanation/v9-架构缺陷与整改行动清单.md)
+- [《V9 架构缺陷与整改行动清单》](../../explanation/v9-架构缺陷与整改行动清�?md)
 
 ### v9-架构覆盖分析报告.md
 
@@ -1539,9 +1546,9 @@ code_version: 2.0.0
 
 - [《V9数据架构修订建议》](../v9数据架构修订建议.md)
 
-### v9核心数据字典与类型定义(整合版).md
+### v9核心数据字典与类型定�?整合�?.md
 
-- [《V9核心数据字典与类型定义（整合版）》](../v9核心数据字典与类型定义(整合版).md).md)
+- [《V9核心数据字典与类型定义（整合版）》](../v9核心数据字典与类型定�?整合�?.md).md)
 
 ### v9现有数据资产清单.md
 
@@ -1567,25 +1574,25 @@ code_version: 2.0.0
 
 - [代码质量整改与回归测试报告_2026-07-08](../../reports/audit/代码质量整改与回归测试报告_2026-07-08.md)
 
-### 双通道投研评分系统技术方案.md
+### 双通道投研评分系统技术方�?md
 
-- [双通道投研评分系统技术方案](../../explanation/双通道投研评分系统技术方案.md)
+- [双通道投研评分系统技术方案](../../explanation/双通道投研评分系统技术方�?md)
 
-### 发布计划与评审-r01.md
+### 发布计划与评�?r01.md
 
-- [发布计划与评审_R01](../../explanation/design/发布计划与评审-r01.md)
+- [发布计划与评审_R01](../../explanation/design/发布计划与评�?r01.md)
 
-### 回滚方案与演练-r03.md
+### 回滚方案与演�?r03.md
 
-- [回滚方案与演练_R03](../../explanation/design/回滚方案与演练-r03.md)
+- [回滚方案与演练_R03](../../explanation/design/回滚方案与演�?r03.md)
 
 ### 执行校验报告.md
 
 - [执行校验报告](../../00-meta/执行校验报告.md)
 
-### 数据治理路线图.md
+### 数据治理路线�?md
 
-- [数据治理路线图](../../explanation/design/数据治理路线图.md)
+- [数据治理路线图](../../explanation/design/数据治理路线�?md)
 
 ### 文件整理清单.md
 
@@ -1615,13 +1622,13 @@ code_version: 2.0.0
 
 - [文档管理系统评分报告](../../00-meta/文档管理系统评分报告.md)
 
-### 文档自动更新体系-架构梳理与任务清单.md
+### 文档自动更新体系-架构梳理与任务清�?md
 
-- [文档自动更新体系-架构梳理与任务清单](../../00-meta/文档自动更新体系-架构梳理与任务清单.md)
+- [文档自动更新体系-架构梳理与任务清单](../../00-meta/文档自动更新体系-架构梳理与任务清�?md)
 
-### 月度文档体检检查清单.md
+### 月度文档体检检查清�?md
 
-- [月度文档体检检查清单](../../00-meta/月度文档体检检查清单.md)
+- [月度文档体检检查清单](../../00-meta/月度文档体检检查清�?md)
 
 ### 模块补全验收报告.md
 
@@ -1631,15 +1638,15 @@ code_version: 2.0.0
 
 - [比对分析报告检索与比对报告](../../reports/audit/比对分析报告检索与比对报告.md)
 
-### 网页测试检索校对纳入采集方案分析.md
+### 网页测试检索校对纳入采集方案分�?md
 
-- [网页测试检索校对纳入采集方案分析](../网页测试检索校对纳入采集方案分析.md)
+- [网页测试检索校对纳入采集方案分析](../网页测试检索校对纳入采集方案分�?md)
 
 ### 踩坑规则门禁指南.md
 
 - [踩坑规则门禁指南](../../explanation/design/踩坑规则门禁指南.md)
 
-### 迁移风险复盘与应对策略文档.md
+### 迁移风险复盘与应对策略文�?md
 
-- [迁移风险复盘与应对策略文档](../../explanation/design/迁移风险复盘与应对策略文档.md)
+- [迁移风险复盘与应对策略文档](../../explanation/design/迁移风险复盘与应对策略文�?md)
 

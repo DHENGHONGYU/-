@@ -1,62 +1,65 @@
 ---
-title: trading-contract
+title: trading-contract.md °™ Ωª“◊“µŒÒ◊””ÚΩ”ø⁄∆ı‘º
+type: reference
+domain: backend
+phase: design
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "∂®Œª£∫∂®“Â `trading` ◊””ÚµƒΩ”ø⁄∆ı‘º°¢÷∞‘±ﬂΩÁ°¢ ˝æ›¡˜”Î“¿¿µπÿœµ°£ πÿ¡™£∫`./services-catalog.md`£®24 ◊””Ú◊‹¿¿£©°¢`../../AGENTS.md`..."
+tags: [backend, trading, contract]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: important
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: trading-contract.md
-status: draft
-owner: Êû∂ÊûÑÁªÑ
-updated: 2026-07-12
-code_version: 2.0.0
-tier: important
----
+# trading-contract.md °™ Ωª“◊“µŒÒ◊””ÚΩ”ø⁄∆ı‘º
 
-# trading-contract.md ‚Äî ‰∫§Êòì‰∏öÂä°Â≠êÂüüÊé•Âè£Â•ëÁ∫¶
-
-> **ÂÆö‰Ωç**ÔºöÂÆö‰πâ `trading` Â≠êÂüüÁöÑÊé•Âè£Â•ëÁ∫¶„ÄÅËÅåË¥£ËæπÁïå„ÄÅÊï∞ÊçÆÊµÅ‰∏é‰æùËµñÂÖ≥Á≥ª„ÄÇ  
-> **ÂÖ≥ËÅî**Ôºö`./services-catalog.md`Ôºà24 Â≠êÂüüÊÄªËßàÔºâ„ÄÅ`../../AGENTS.md` ¬ß‰∏ÄÔºàÂàÜÂ±ÇËßÑÂàôÔºâ„ÄÇ
+> **∂®Œª**£∫∂®“Â `trading` ◊””ÚµƒΩ”ø⁄∆ı‘º°¢÷∞‘±ﬂΩÁ°¢ ˝æ›¡˜”Î“¿¿µπÿœµ°£  
+> **πÿ¡™**£∫`./services-catalog.md`£®24 ◊””Ú◊‹¿¿£©°¢`../../AGENTS.md` °Ï“ª£®∑÷≤„πÊ‘Ú£©°£
 
 ---
 
-## 1. ËÅåË¥£ËæπÁïå
+## 1. ÷∞‘±ﬂΩÁ
 
-### 1.1 Ê†∏ÂøÉËÅåË¥£
+### 1.1 ∫À–ƒ÷∞‘
 
-- **‰∫§Êòì‰ø°Âè∑ÁîüÊàê‰∏éÁ≠ñÁï•ÊâßË°å**ÔºöÂü∫‰∫éË°åÊÉÖÊï∞ÊçÆÔºàK Á∫ø„ÄÅPE/PB„ÄÅÊàê‰∫§Èáè„ÄÅMACD/RSIÔºâÁîüÊàê‰π∞ÂÖ•/ÂçñÂá∫/ËßÇÂØü/ÊåÅÊúâ‰ø°Âè∑ÔºõÊîØÊåÅÊ†∏ÂøÉÁ®ÄÁº∫„ÄÅÁÉ≠ÁÇπÂä®Èáè„ÄÅ‰ª∑ÂÄº bargain ‰∏âÁ≠ñÁï•ÂàÜÁªÑÔºåÁîüÊàêÁ≠ñÁï•Âø´ÁÖßÂπ∂ÊåÅ‰πÖÂåñÂà∞ `strategy_snapshots`„ÄÇ
-- **ËÆ¢ÂçïÁîüÂëΩÂë®Êúü‰∏éÈ£éÊéßÁºñÊéí**ÔºöÊèê‰æõËßÇÂØüÊ±†Êâ´Êèè„ÄÅÂçïËÇ°‰∫§ÊòìÂª∫ËÆÆ„ÄÅÂàõÂª∫‰π∞ÂÖ•/ÂçñÂá∫ËÆ¢ÂçïÁ≠âÊé•Âè£ÔºõÂÜÖÂµåÈ£éÊéßÊ£ÄÊü•Ôºà‰ªì‰Ωç‰∏äÈôê„ÄÅÂêåÊ†áÁöÑÂÜ∑Âç¥Êúü„ÄÅÂΩìÊó•‰∫§ÊòìÊ¨°Êï∞„ÄÅÊï∞ÊçÆÊñ∞È≤úÂ∫¶ÔºâÔºåÈÄöËøá `DataBridge.forward()` ÂÜôÂÖ• IndexedDB„ÄÇ
-- **ÁªÑÂêàÊûÑÂª∫‰∏é‰ªì‰ΩçÁÆ°ÁêÜ**ÔºöÂü∫‰∫é‰∏ªÈ¢òÈÖçÁΩÆ‰∏éÁªºÂêàËØÑÂàÜÔºàV6 Ëá™Âä®ËØÑÂàÜ„ÄÅÊô∫ËÉΩËØÑÂàÜ„ÄÅË°å‰∏öËØÑÂàÜÔºâÊûÑÂª∫ÁõÆÊ†áÊäïËµÑÁªÑÂêàÔºõËÆ°ÁÆó FIFO ‰∫§ÊòìÂØπ„ÄÅÂ∑≤ÂÆûÁé∞Áõà‰∫è„ÄÅÂΩìÂâçÊåÅ‰ªì„ÄÅÂÜçÂπ≥Ë°°ËÆ°ÂàíÔºõÊèê‰æõ‰ªì‰ΩçÂ§ßÂ∞èËÆ°ÁÆóÔºàÂçäÂáØÂà©ÂÖ¨Âºè + Êï¥ÊâãÂèñÊï¥Ôºâ„ÄÇ
-- **AI ‰∫§ÊòìÂ§çÁõò‰∏éÈîôËØØËØäÊñ≠**ÔºöÁîüÊàêÂÖ≠Áª¥‰∫§ÊòìÂ§çÁõòÊä•ÂëäÔºà‰∫§ÊòìÊëòË¶Å„ÄÅÈîôËØØÂàÜÊûê„ÄÅÁ∫™ÂæãÂàÜÊûê„ÄÅÊäÄËÉΩÂèëÂ±ï„ÄÅË°åÂä®ËÆ°Âàí„ÄÅAI Ê∑±Â∫¶Ê¥ûÂØüÔºâÔºõËÅöÂêà‰∫§ÊòìÈîôËØØÊ£ÄÊµã„ÄÅÂøÉÁêÜÁîªÂÉè‰∏éÈ£éÈô©ÁîªÂÉè„ÄÇ
+- **Ωª“◊–≈∫≈…˙≥…”Î≤ﬂ¬‘÷¥––**£∫ª˘”⁄––«È ˝æ›£®K œﬂ°¢PE/PB°¢≥…Ωª¡ø°¢MACD/RSI£©…˙≥…¬Ú»Î/¬Ù≥ˆ/π€≤Ï/≥÷”––≈∫≈£ª÷ß≥÷∫À–ƒœ°»±°¢»»µ„∂Ø¡ø°¢º€÷µ bargain »˝≤ﬂ¬‘∑÷◊È£¨…˙≥…≤ﬂ¬‘øÏ’’≤¢≥÷æ√ªØµΩ `strategy_snapshots`°£
+- **∂©µ•…˙√¸÷‹∆⁄”Î∑Áøÿ±‡≈≈**£∫Ã·π©π€≤Ï≥ÿ…®√Ë°¢µ•π…Ωª“◊Ω®“È°¢¥¥Ω®¬Ú»Î/¬Ù≥ˆ∂©µ•µ»Ω”ø⁄£ªƒ⁄«∂∑ÁøÿºÏ≤È£®≤÷Œª…œœﬁ°¢Õ¨±Íµƒ¿‰»¥∆⁄°¢µ±»’Ωª“◊¥Œ ˝°¢ ˝æ›–¬œ ∂»£©£¨Õ®π˝ `DataBridge.forward()` –¥»Î IndexedDB°£
+- **◊È∫œππΩ®”Î≤÷Œªπ‹¿Ì**£∫ª˘”⁄÷˜Ã‚≈‰÷√”Î◊€∫œ∆¿∑÷£®V6 ◊‘∂Ø∆¿∑÷°¢÷«ƒ‹∆¿∑÷°¢––“µ∆¿∑÷£©ππΩ®ƒø±ÍÕ∂◊ ◊È∫œ£ªº∆À„ FIFO Ωª“◊∂‘°¢“— µœ÷”Øø˜°¢µ±«∞≥÷≤÷°¢‘Ÿ∆Ω∫‚º∆ªÆ£ªÃ·π©≤÷Œª¥Û–°º∆À„£®∞Îø≠¿˚π´ Ω + ’˚ ÷»°’˚£©°£
+- **AI Ωª“◊∏¥≈Ã”Î¥ÌŒÛ’Ô∂œ**£∫…˙≥…¡˘Œ¨Ωª“◊∏¥≈Ã±®∏Ê£®Ωª“◊’™“™°¢¥ÌŒÛ∑÷Œˆ°¢ºÕ¬…∑÷Œˆ°¢ººƒ‹∑¢’π°¢––∂Øº∆ªÆ°¢AI …Ó∂»∂¥≤Ï£©£ªæ€∫œΩª“◊¥ÌŒÛºÏ≤‚°¢–ƒ¿Ìª≠œÒ”Î∑Áœ’ª≠œÒ°£
 
-### 1.2 ÂàÜÂ±ÇÂÆö‰Ωç
+### 1.2 ∑÷≤„∂®Œª
 
-| Áª¥Â∫¶ | ËØ¥Êòé |
+| Œ¨∂» | Àµ√˜ |
 |------|------|
-| ÊâÄÂ±ûÂ±Ç | `src/services/`ÔºàÊúçÂä°Â±ÇÔºâ |
-| ‰æùËµñÊñπÂêë | Âè™ËÉΩ‰æùËµñ `core/`„ÄÅ`data/`„ÄÅ`lib/`ÔºàÁôΩÂêçÂçïÔºâ„ÄÅ`config/`„ÄÅ`types/` |
-| Á¶ÅÊ≠¢‰∫ãÈ°π | Á¶ÅÊ≠¢Áõ¥ÂÜô IndexedDBÔºàÈ°ªÁªè `DataBridge.forward()` Êàñ `dataLayer`Ôºâ |
-| Ë¢´‰æùËµñÊñπ | `store/`ÔºàÁä∂ÊÄÅÂ±ÇÔºâ„ÄÅ`pages/`ÔºàÈ°µÈù¢Â±ÇÔºâ„ÄÅ`apps/`ÔºàApp ÂàÜÂèëÂô®Ôºâ„ÄÅ`cockpit/`ÔºàÈ©æÈ©∂Ëà±ÔºâÂèØÊ∂àË¥πÊú¨ÊúçÂä°ËæìÂá∫ |
+| À˘ Ù≤„ | `src/services/`£®∑˛ŒÒ≤„£© |
+| “¿¿µ∑ΩœÚ | ÷ªƒ‹“¿¿µ `core/`°¢`data/`°¢`lib/`£®∞◊√˚µ•£©°¢`config/`°¢`types/` |
+| Ω˚÷π ¬œÓ | Ω˚÷π÷±–¥ IndexedDB£®–Îæ≠ `DataBridge.forward()` ªÚ `dataLayer`£© |
+| ±ª“¿¿µ∑Ω | `store/`£®◊¥Ã¨≤„£©°¢`pages/`£®“≥√Ê≤„£©°¢`apps/`£®App ∑÷∑¢∆˜£©°¢`cockpit/`£®º› ª≤’£©ø…œ˚∑—±æ∑˛ŒÒ ‰≥ˆ |
 
-### 1.3 ‰∏éÁõ∏ÈÇªÂ≠êÂüüÁöÑÂÖ≥Á≥ª
+### 1.3 ”Îœ‡¡⁄◊””Úµƒπÿœµ
 
-| Áõ∏ÈÇªÂ≠êÂüü | ÂÖ≥Á≥ª | Êï∞ÊçÆÊµÅ |
+| œ‡¡⁄◊””Ú | πÿœµ |  ˝æ›¡˜ |
 |----------|------|--------|
-| `useCase` | ‰∏äÊ∏∏ÔºöÊèê‰æõ AI Â§çÁõòÁî®‰æã„ÄÅÂèåÁ≠ñÁï•Áî®‰æã„ÄÅÁÉ≠ÁÇπÊùøÂùóÊü•ËØ¢ | `useCase` ‚Üí `trading`ÔºàË∞ÉÁî®Ôºâ |
-| `input` | ‰∏äÊ∏∏ÔºöÊèê‰æõÁÉ≠ÁÇπÊùøÂùóÁ±ªÂûãÂÆö‰πâ | `input` ‚Üí `trading`ÔºàÁ±ªÂûãÂºïÁî®Ôºâ |
-| `llm` | ‰∏äÊ∏∏ÔºöÊèê‰æõ LLM Ê∂àÊÅØÁ±ªÂûã | `llm` ‚Üí `trading`ÔºàÁ±ªÂûãÂºïÁî®Ôºâ |
-| `scoring` | ‰∏äÊ∏∏Ôºö‰∫ßÂá∫ V6/Êô∫ËÉΩ/Ë°å‰∏öËØÑÂàÜÔºåÁªè `dataLayer` Ê∂àË¥π | `scoring` ‚Üí `trading`ÔºàÈó¥Êé•Êï∞ÊçÆÔºâ |
-| `execution` | ‰∏ãÊ∏∏ÔºöÊ∂àË¥πËÆ¢Âçï‰∏éÊâßË°åËÆ°Âàí | `trading` ‚Üí `execution`ÔºàËÆ¢Âçï/ËÆ°ÂàíÔºâ |
-| `portfolio` | ‰∏ãÊ∏∏/ÂêåÁ∫ßÔºöÊ∂àË¥πÁªÑÂêà‰∏éÊåÅ‰ªìÊï∞ÊçÆ | `trading` ‚Üí `portfolio`ÔºàÁªÑÂêà/ÊåÅ‰ªìÔºâ |
+| `useCase` | …œ”Œ£∫Ã·π© AI ∏¥≈Ã”√¿˝°¢À´≤ﬂ¬‘”√¿˝°¢»»µ„∞ÂøÈ≤È—Ø | `useCase` °˙ `trading`£®µ˜”√£© |
+| `input` | …œ”Œ£∫Ã·π©»»µ„∞ÂøÈ¿‡–Õ∂®“Â | `input` °˙ `trading`£®¿‡–Õ“˝”√£© |
+| `llm` | …œ”Œ£∫Ã·π© LLM œ˚œ¢¿‡–Õ | `llm` °˙ `trading`£®¿‡–Õ“˝”√£© |
+| `scoring` | …œ”Œ£∫≤˙≥ˆ V6/÷«ƒ‹/––“µ∆¿∑÷£¨æ≠ `dataLayer` œ˚∑— | `scoring` °˙ `trading`£®º‰Ω” ˝æ›£© |
+| `execution` | œ¬”Œ£∫œ˚∑—∂©µ•”Î÷¥––º∆ªÆ | `trading` °˙ `execution`£®∂©µ•/º∆ªÆ£© |
+| `portfolio` | œ¬”Œ/Õ¨º∂£∫œ˚∑—◊È∫œ”Î≥÷≤÷ ˝æ› | `trading` °˙ `portfolio`£®◊È∫œ/≥÷≤÷£© |
 
 ---
 
-## 2. ÂÖ¨ÂÖ±Êé•Âè£
+## 2. π´π≤Ω”ø⁄
 
-### 2.1 Á±ªÂûãÂÆö‰πâÔºàTypeScript InterfaceÔºâ
+### 2.1 ¿‡–Õ∂®“Â£®TypeScript Interface£©
 
-> Á±ªÂûãÂàÜÊï£‰∫é `src/services/trading/` ÂêÑÊ®°ÂùóÔºåÊó†ÈõÜ‰∏≠ `types.ts`„ÄÇ‰ª•‰∏ãÊèêÂèñÊ†∏ÂøÉÂÖ¨ÂÖ±Êé•Âè£„ÄÇ
+> ¿‡–Õ∑÷…¢”⁄ `src/services/trading/` ∏˜ƒ£øÈ£¨ŒﬁºØ÷– `types.ts`°£“‘œ¬Ã·»°∫À–ƒπ´π≤Ω”ø⁄°£
 
 ```typescript
 // src/services/trading/tradingService.ts
@@ -219,7 +222,7 @@ export interface PositionItem {
   lastChangedAt: number
 }
 
-// src/services/trading/tradeReviewAI.types.tsÔºàÊ†∏ÂøÉÂ§çÁõòÁ±ªÂûãÔºâ
+// src/services/trading/tradeReviewAI.types.ts£®∫À–ƒ∏¥≈Ã¿‡–Õ£©
 export interface TradeSummary {
   totalTrades: number
   profitableTrades: number
@@ -335,120 +338,120 @@ export interface TradePair {
 }
 ```
 
-### 2.2 ‰∏ªÂÖ•Âè£ÂáΩÊï∞
+### 2.2 ÷˜»Îø⁄∫Ø ˝
 
-| ÂáΩÊï∞ | Á≠æÂêç | ËÅåË¥£ | ÈîôËØØÂ§ÑÁêÜ |
+| ∫Ø ˝ | «©√˚ | ÷∞‘ | ¥ÌŒÛ¥¶¿Ì |
 |------|------|------|----------|
-| `scanWatchingSignals()` | `() => Promise<TradingSignal[]>` | Êâ´ÊèèËßÇÂØüÊ±†ÂÖ®ÈÉ®ËÇ°Á•®ÔºåÁîüÊàê‰∫§Êòì‰ø°Âè∑Âπ∂ÊåÅ‰πÖÂåñ | `DataBridge` ÂÜôÂÖ•Â§±Ë¥•ËøîÂõûÁ©∫Êï∞ÁªÑ |
-| `adviseForStock(stock)` | `(stock: Stock) => Promise<DataLayerResult<TradeAdvice>>` | ‰∏∫ÂçïÂè™ËÇ°Á•®ÁîüÊàê‰∫§ÊòìÂª∫ËÆÆÔºà‰ø°Âè∑+‰ªì‰Ωç+È£éÊéßÔºâ | ËøîÂõû `DataLayerResult` ÈîôËØØÂØπË±° |
-| `createBuyOrder(stock, quantity?)` | `(stock: Stock, quantity?: number) => Promise<DataLayerResult<Order>>` | ÂàõÂª∫‰π∞ÂÖ•ËÆ¢ÂçïÔºàÂê´È£éÊéßÊ£ÄÊü•Ôºâ | È£éÊéßÊú™ÈÄöËøáÊàñÂÜôÂÖ•Â§±Ë¥•ËøîÂõûÈîôËØØ |
-| `createSellOrder(stock, quantity?)` | `(stock: Stock, quantity?: number) => Promise<DataLayerResult<Order>>` | ÂàõÂª∫ÂçñÂá∫ËÆ¢ÂçïÔºàÂê´È£éÊéßÊ£ÄÊü•Ôºâ | Âêå‰∏ä |
-| `getWatchlistStocks()` | `() => Promise<DataLayerResult<Stock[]>>` | Ëé∑ÂèñËßÇÂØüÊ±†ËÇ°Á•®ÂàóË°® | `DataBridge` Êü•ËØ¢Â§±Ë¥•ËøîÂõûÈîôËØØ |
-| `getOrders()` | `() => Promise<DataLayerResult<Order[]>>` | Ëé∑ÂèñÂÖ®ÈÉ®ËÆ¢ÂçïÊµÅÊ∞¥ | `DataBridge` Êü•ËØ¢Â§±Ë¥•ËøîÂõûÈîôËØØ |
-| `loadPortfolioInput()` | `() => Promise<PortfolioInput>` | ‰ªé IndexedDB Âä†ËΩΩÁªÑÂêàÊûÑÂª∫ÊâÄÈúÄÊï∞ÊçÆ | ÊäõÂá∫ÂºÇÂ∏∏ |
-| `buildPortfolioFromRealData()` | `() => Promise<StrategyPortfolioResult>` | Âü∫‰∫éÁúüÂÆûÊï∞ÊçÆÊûÑÂª∫Ê†∏ÂøÉÁªÑÂêà‰∏éÁ≠ñÁï•Á≠õÈÄâÁªìÊûú | ÊäõÂá∫ÂºÇÂ∏∏ |
-| `buildThemePortfolio(input, options?)` | `(input: PortfolioBuilderInput, options?: PortfolioBuilderOptions) => Promise<Portfolio>` | Êåâ‰∏ªÈ¢ò‰∏éËØÑÂàÜÊûÑÂª∫ÁõÆÊ†áÊäïËµÑÁªÑÂêà | ÊäõÂá∫ÂºÇÂ∏∏ |
-| `buildStrategyFilteredPortfolio(input, options?)` | `(input: PortfolioBuilderInput, options?: PortfolioBuilderOptions) => Promise<StrategyPortfolioResult>` | ÂÖàÁªèÁ≠ñÁï•ÂºïÊìéÁ≠õÈÄâÔºåÂÜçÊûÑÂª∫‰∏ªÈ¢òÁªÑÂêà | ÊäõÂá∫ÂºÇÂ∏∏ |
-| `calculatePosition(input)` | `(input: PositionSizingInput) => PositionSizingResult` | Á∫ØÂáΩÊï∞ÔºöËÆ°ÁÆóÁõÆÊ†á‰ªì‰ΩçÔºàÂçäÂáØÂà©+Á∫¶ÊùüÔºâ | Á∫ØËÆ°ÁÆóÔºåÊó†ÂâØ‰ΩúÁî® |
-| `checkOrderRisk(input)` | `(input: OrderRiskInput) => Promise<RiskCheckResult>` | ÂºÇÊ≠•È£éÊéßÊ£ÄÊü•ÔºöÂÜ∑Âç¥Êúü„ÄÅ‰ªì‰Ωç„ÄÅÊ¨°Êï∞Á≠â | ËøîÂõû `blocks`/`warnings` |
-| `generateSignalsForSymbol(symbol)` | `(symbol: string) => Promise<TradingSignal[]>` | Âü∫‰∫éË°åÊÉÖÊï∞ÊçÆÁîüÊàêÂçïËÇ°‰∫§Êòì‰ø°Âè∑ | Êï∞ÊçÆ‰∏çË∂≥ËøîÂõû `watch` ‰ø°Âè∑ |
-| `pickStrongestSignal(signals)` | `(signals: TradingSignal[]) => TradingSignal \| undefined` | ‰ªé‰ø°Âè∑ÁªÑ‰∏≠ÊåëÈÄâÊúÄÂº∫‰ø°Âè∑ | Á∫ØËÆ°ÁÆó |
-| `getCompositeScore(stock, options?)` | `(stock: Stock, options?: ScoringAdapterOptions) => Promise<CompositeScoreView>` | ËÅöÂêà V6/Êô∫ËÉΩ/Ë°å‰∏öËØÑÂàÜ‰∏∫Âçï‰∏ÄËßÜÂõæ | `logger.warn` ËÆ∞ÂΩïËØªÂèñÂ§±Ë¥• |
-| `getCompositeScores(stocks, options?)` | `(stocks: Stock[], options?: ScoringAdapterOptions) => Promise<CompositeScoreView[]>` | ÊâπÈáèËé∑ÂèñÁªºÂêàËØÑÂàÜ | Âêå‰∏ä |
-| `classifyStocks(input)` | `(input: ClassifyStocksInput) => StrategyGroupItem[]` | Êåâ‰∏âÁ≠ñÁï•ÂàÜÁ±ªËÇ°Á•® | Á∫ØËÆ°ÁÆó |
-| `saveStrategySnapshot(input, trigger?)` | `(input: ClassifyStocksInput, trigger?: string) => Promise<DataLayerResult<StrategySnapshot>>` | ‰øùÂ≠òÁ≠ñÁï•Âø´ÁÖßÂà∞ IndexedDB | `DataLayer` ÂÜôÂÖ•Â§±Ë¥•ËøîÂõûÈîôËØØ |
-| `getLatestSnapshot()` | `() => Promise<DataLayerResult<StrategySnapshot \| undefined>>` | Ëé∑ÂèñÊúÄÊñ∞Á≠ñÁï•Âø´ÁÖß | `DataLayer` Êü•ËØ¢Â§±Ë¥•ËøîÂõûÈîôËØØ |
-| `listSnapshots(limit?)` | `(limit?: number) => Promise<DataLayerResult<StrategySnapshot[]>>` | ÂàóÂá∫ÂéÜÂè≤Á≠ñÁï•Âø´ÁÖß | `DataLayer` Êü•ËØ¢Â§±Ë¥•ËøîÂõûÈîôËØØ |
-| `computeWatchlistMovers(watchlist, topN?)` | `(watchlist: WatchlistData[], topN?: number) => WatchlistMoversResult` | Á∫ØÂáΩÊï∞ÔºöËÆ°ÁÆóËá™ÈÄâËÇ°ÂºÇÂä®Ê¶ú | Á∫ØËÆ°ÁÆó |
-| `buildTradePairs(orders)` | `(orders: Order[]) => SymbolTradePair[]` | FIFO ÈÖçÂØπËÆ°ÁÆó‰∫§ÊòìÂØπ‰∏éÂ∑≤ÂÆûÁé∞Áõà‰∫è | Á∫ØËÆ°ÁÆó |
-| `buildPositions(tradePairs)` | `(tradePairs: SymbolTradePair[]) => PositionItem[]` | ‰ªé‰∫§ÊòìÂØπÊ¥æÁîüÂΩìÂâçÊåÅ‰ªìÂàóË°® | Á∫ØËÆ°ÁÆó |
-| `generateReview(...)` | `(...) => Promise<TradeReviewReport>` | AI ‰∫§ÊòìÂ§çÁõòÊä•ÂëäÔºàFacadeÔºåÊù•Ëá™ useCaseÔºâ | Áî± useCase Â§ÑÁêÜ |
-| `generateReviewAsync(...)` | `(...) => Promise<TradeReviewReport>` | ÂºÇÊ≠•Áâà AI ‰∫§ÊòìÂ§çÁõòÊä•ÂëäÔºàFacadeÔºâ | Áî± useCase Â§ÑÁêÜ |
-| `generatePsychologicalProfile(...)` | `(...) => PsychologicalProfile` | ÁîüÊàêÂøÉÁêÜÁîªÂÉè | Á∫ØËÆ°ÁÆó |
-| `generateRiskProfile(...)` | `(...) => RiskProfile` | ÁîüÊàêÈ£éÈô©ÁîªÂÉè | Á∫ØËÆ°ÁÆó |
+| `scanWatchingSignals()` | `() => Promise<TradingSignal[]>` | …®√Ëπ€≤Ï≥ÿ»´≤øπ…∆±£¨…˙≥…Ωª“◊–≈∫≈≤¢≥÷æ√ªØ | `DataBridge` –¥»Î ß∞‹∑µªÿø’ ˝◊È |
+| `adviseForStock(stock)` | `(stock: Stock) => Promise<DataLayerResult<TradeAdvice>>` | Œ™µ•÷ªπ…∆±…˙≥…Ωª“◊Ω®“È£®–≈∫≈+≤÷Œª+∑Áøÿ£© | ∑µªÿ `DataLayerResult` ¥ÌŒÛ∂‘œÛ |
+| `createBuyOrder(stock, quantity?)` | `(stock: Stock, quantity?: number) => Promise<DataLayerResult<Order>>` | ¥¥Ω®¬Ú»Î∂©µ•£®∫¨∑ÁøÿºÏ≤È£© | ∑ÁøÿŒ¥Õ®π˝ªÚ–¥»Î ß∞‹∑µªÿ¥ÌŒÛ |
+| `createSellOrder(stock, quantity?)` | `(stock: Stock, quantity?: number) => Promise<DataLayerResult<Order>>` | ¥¥Ω®¬Ù≥ˆ∂©µ•£®∫¨∑ÁøÿºÏ≤È£© | Õ¨…œ |
+| `getWatchlistStocks()` | `() => Promise<DataLayerResult<Stock[]>>` | ªÒ»°π€≤Ï≥ÿπ…∆±¡–±Ì | `DataBridge` ≤È—Ø ß∞‹∑µªÿ¥ÌŒÛ |
+| `getOrders()` | `() => Promise<DataLayerResult<Order[]>>` | ªÒ»°»´≤ø∂©µ•¡˜ÀÆ | `DataBridge` ≤È—Ø ß∞‹∑µªÿ¥ÌŒÛ |
+| `loadPortfolioInput()` | `() => Promise<PortfolioInput>` | ¥” IndexedDB º”‘ÿ◊È∫œππΩ®À˘–Ë ˝æ› | ≈◊≥ˆ“Ï≥£ |
+| `buildPortfolioFromRealData()` | `() => Promise<StrategyPortfolioResult>` | ª˘”⁄’Ê µ ˝æ›ππΩ®∫À–ƒ◊È∫œ”Î≤ﬂ¬‘…∏—°Ω·π˚ | ≈◊≥ˆ“Ï≥£ |
+| `buildThemePortfolio(input, options?)` | `(input: PortfolioBuilderInput, options?: PortfolioBuilderOptions) => Promise<Portfolio>` | ∞¥÷˜Ã‚”Î∆¿∑÷ππΩ®ƒø±ÍÕ∂◊ ◊È∫œ | ≈◊≥ˆ“Ï≥£ |
+| `buildStrategyFilteredPortfolio(input, options?)` | `(input: PortfolioBuilderInput, options?: PortfolioBuilderOptions) => Promise<StrategyPortfolioResult>` | œ»æ≠≤ﬂ¬‘“˝«Ê…∏—°£¨‘ŸππΩ®÷˜Ã‚◊È∫œ | ≈◊≥ˆ“Ï≥£ |
+| `calculatePosition(input)` | `(input: PositionSizingInput) => PositionSizingResult` | ¥ø∫Ø ˝£∫º∆À„ƒø±Í≤÷Œª£®∞Îø≠¿˚+‘º ¯£© | ¥øº∆À„£¨Œﬁ∏±◊˜”√ |
+| `checkOrderRisk(input)` | `(input: OrderRiskInput) => Promise<RiskCheckResult>` | “Ï≤Ω∑ÁøÿºÏ≤È£∫¿‰»¥∆⁄°¢≤÷Œª°¢¥Œ ˝µ» | ∑µªÿ `blocks`/`warnings` |
+| `generateSignalsForSymbol(symbol)` | `(symbol: string) => Promise<TradingSignal[]>` | ª˘”⁄––«È ˝æ›…˙≥…µ•π…Ωª“◊–≈∫≈ |  ˝æ›≤ª◊„∑µªÿ `watch` –≈∫≈ |
+| `pickStrongestSignal(signals)` | `(signals: TradingSignal[]) => TradingSignal \| undefined` | ¥”–≈∫≈◊È÷–ÃÙ—°◊Ó«ø–≈∫≈ | ¥øº∆À„ |
+| `getCompositeScore(stock, options?)` | `(stock: Stock, options?: ScoringAdapterOptions) => Promise<CompositeScoreView>` | æ€∫œ V6/÷«ƒ‹/––“µ∆¿∑÷Œ™µ•“ª ”Õº | `logger.warn` º«¬º∂¡»° ß∞‹ |
+| `getCompositeScores(stocks, options?)` | `(stocks: Stock[], options?: ScoringAdapterOptions) => Promise<CompositeScoreView[]>` | ≈˙¡øªÒ»°◊€∫œ∆¿∑÷ | Õ¨…œ |
+| `classifyStocks(input)` | `(input: ClassifyStocksInput) => StrategyGroupItem[]` | ∞¥»˝≤ﬂ¬‘∑÷¿‡π…∆± | ¥øº∆À„ |
+| `saveStrategySnapshot(input, trigger?)` | `(input: ClassifyStocksInput, trigger?: string) => Promise<DataLayerResult<StrategySnapshot>>` | ±£¥Ê≤ﬂ¬‘øÏ’’µΩ IndexedDB | `DataLayer` –¥»Î ß∞‹∑µªÿ¥ÌŒÛ |
+| `getLatestSnapshot()` | `() => Promise<DataLayerResult<StrategySnapshot \| undefined>>` | ªÒ»°◊Ó–¬≤ﬂ¬‘øÏ’’ | `DataLayer` ≤È—Ø ß∞‹∑µªÿ¥ÌŒÛ |
+| `listSnapshots(limit?)` | `(limit?: number) => Promise<DataLayerResult<StrategySnapshot[]>>` | ¡–≥ˆ¿˙ ∑≤ﬂ¬‘øÏ’’ | `DataLayer` ≤È—Ø ß∞‹∑µªÿ¥ÌŒÛ |
+| `computeWatchlistMovers(watchlist, topN?)` | `(watchlist: WatchlistData[], topN?: number) => WatchlistMoversResult` | ¥ø∫Ø ˝£∫º∆À„◊‘—°π…“Ï∂Ø∞Ò | ¥øº∆À„ |
+| `buildTradePairs(orders)` | `(orders: Order[]) => SymbolTradePair[]` | FIFO ≈‰∂‘º∆À„Ωª“◊∂‘”Î“— µœ÷”Øø˜ | ¥øº∆À„ |
+| `buildPositions(tradePairs)` | `(tradePairs: SymbolTradePair[]) => PositionItem[]` | ¥”Ωª“◊∂‘≈……˙µ±«∞≥÷≤÷¡–±Ì | ¥øº∆À„ |
+| `generateReview(...)` | `(...) => Promise<TradeReviewReport>` | AI Ωª“◊∏¥≈Ã±®∏Ê£®Facade£¨¿¥◊‘ useCase£© | ”… useCase ¥¶¿Ì |
+| `generateReviewAsync(...)` | `(...) => Promise<TradeReviewReport>` | “Ï≤Ω∞Ê AI Ωª“◊∏¥≈Ã±®∏Ê£®Facade£© | ”… useCase ¥¶¿Ì |
+| `generatePsychologicalProfile(...)` | `(...) => PsychologicalProfile` | …˙≥…–ƒ¿Ìª≠œÒ | ¥øº∆À„ |
+| `generateRiskProfile(...)` | `(...) => RiskProfile` | …˙≥…∑Áœ’ª≠œÒ | ¥øº∆À„ |
 
-### 2.3 ‰∫ã‰ª∂Êé•Âè£
+### 2.3  ¬º˛Ω”ø⁄
 
-> ÂΩìÂâçÂ≠êÂüüÊú™ÈÄöËøá `EventBus` ÂèëÂ∏É‰∫ã‰ª∂„ÄÇÊï∞ÊçÆÂõûÊµÅÈÄöËøá `DataBridge` ÂÜôÂÖ• IndexedDB ÂêéÔºåÁî± `store/` Â±ÇËÆ¢ÈòÖÂπ∂ÂπøÊí≠„ÄÇ
+> µ±«∞◊””ÚŒ¥Õ®π˝ `EventBus` ∑¢≤º ¬º˛°£ ˝æ›ªÿ¡˜Õ®π˝ `DataBridge` –¥»Î IndexedDB ∫Û£¨”… `store/` ≤„∂©‘ƒ≤¢π„≤•°£
 
 ---
 
-## 3. Êï∞ÊçÆÊµÅ
+## 3.  ˝æ›¡˜
 
 ```
-[Â§ñÈÉ®Ë°åÊÉÖ / Êï∞ÊçÆÈááÈõÜÂ±Ç (data-collector/fetcher)]
-        ‚Üì
+[Õ‚≤ø––«È /  ˝æ›≤…ºØ≤„ (data-collector/fetcher)]
+        °˝
 DataLayer.stocks / DataLayer.dailyQuotes
-        ‚Üì
+        °˝
 tradingService.scanWatchingSignals() / signalGenerator.generateSignalsForSymbol()
-        ‚Üì (DataBridge.forward() Êàñ dataLayer.signals.save)
-DataBridge ‚Üí routeToDB() ‚Üí dataLayer ‚Üí IndexedDB (signals / orders / strategy_snapshots)
-        ‚Üì (Store ËÆ¢ÈòÖ)
+        °˝ (DataBridge.forward() ªÚ dataLayer.signals.save)
+DataBridge °˙ routeToDB() °˙ dataLayer °˙ IndexedDB (signals / orders / strategy_snapshots)
+        °˝ (Store ∂©‘ƒ)
 tradingStore / orderStore / signalStore / portfolioStore / positionStore / strategySnapshotStore
-        ‚Üì
+        °˝
 pages/trading/* / apps/trading/* / cockpit/widgets (PortfolioOverviewWidget, SignalMonitorWidget, etc.)
 ```
 
 ---
 
-## 4. ÈÖçÁΩÆ‰∏é‰æùËµñ
+## 4. ≈‰÷√”Î“¿¿µ
 
-### 4.1 ‰æùËµñÁôΩÂêçÂçïÔºàlib/Ôºâ
+### 4.1 “¿¿µ∞◊√˚µ•£®lib/£©
 
-| ‰æùËµñ | Ë∑ØÂæÑ | Áî®ÈÄî |
+| “¿¿µ | ¬∑æ∂ | ”√Õæ |
 |------|------|------|
-| logger | `@/lib/logger` | Êó•ÂøóËæìÂá∫Ôºàportfolio„ÄÅÈ£éÊéß„ÄÅËØÑÂàÜ„ÄÅÂø´ÁÖß„ÄÅÂ§çÁõòÔºâ |
-| nanoid | `nanoid` | ÁîüÊàêÂîØ‰∏Ä IDÔºàËÆ¢Âçï„ÄÅ‰ø°Âè∑„ÄÅÁªÑÂêàÔºâ |
+| logger | `@/lib/logger` | »’÷æ ‰≥ˆ£®portfolio°¢∑Áøÿ°¢∆¿∑÷°¢øÏ’’°¢∏¥≈Ã£© |
+| nanoid | `nanoid` | …˙≥…Œ®“ª ID£®∂©µ•°¢–≈∫≈°¢◊È∫œ£© |
 
-> Ê≥®ÔºöÊú¨Â≠êÂüüÊú™Áõ¥Êé•Ê∂àË¥π `eventBus`„ÄÅ`format`„ÄÅ`errors` Á≠â lib Ê®°ÂùóÔºõÈîôËØØ‰ª•ËøîÂõûÂÄºÊàñÂºÇÂ∏∏ÊñπÂºè‰º†ÈÄí„ÄÇ
+> ◊¢£∫±æ◊””ÚŒ¥÷±Ω”œ˚∑— `eventBus`°¢`format`°¢`errors` µ» lib ƒ£øÈ£ª¥ÌŒÛ“‘∑µªÿ÷µªÚ“Ï≥£∑Ω Ω¥´µ›°£
 
-### 4.2 Ë∑®Â≠êÂüü‰æùËµñÔºàservices/Ôºâ
+### 4.2 øÁ◊””Ú“¿¿µ£®services/£©
 
-| ‰æùËµñ | Ë∑ØÂæÑ | Áî®ÈÄî |
+| “¿¿µ | ¬∑æ∂ | ”√Õæ |
 |------|------|------|
-| `useCase` | `@/services/useCase/generateTradeReview.useCase` | AI ‰∫§ÊòìÂ§çÁõòÊä•ÂëäÁî®‰æã |
-| `useCase` | `@/services/useCase/runDualStrategy.useCase` | ÂèåÁ≠ñÁï•ËøêË°åÁî®‰æã |
-| `useCase` | `@/services/useCase/hotSectorQuery.useCase` | ÁÉ≠ÁÇπÊùøÂùóÊü•ËØ¢Áî®‰æã |
-| `input` | `@/services/input/hotSectorService` | ÁÉ≠ÁÇπÊùøÂùóÁ±ªÂûãÂºïÁî® |
-| `llm` | `@/services/llm/llmTypes` | LLM Ê∂àÊÅØÁ±ªÂûãÔºàÂ§çÁõòÂ¢ûÂº∫Ôºâ |
+| `useCase` | `@/services/useCase/generateTradeReview.useCase` | AI Ωª“◊∏¥≈Ã±®∏Ê”√¿˝ |
+| `useCase` | `@/services/useCase/runDualStrategy.useCase` | À´≤ﬂ¬‘‘À––”√¿˝ |
+| `useCase` | `@/services/useCase/hotSectorQuery.useCase` | »»µ„∞ÂøÈ≤È—Ø”√¿˝ |
+| `input` | `@/services/input/hotSectorService` | »»µ„∞ÂøÈ¿‡–Õ“˝”√ |
+| `llm` | `@/services/llm/llmTypes` | LLM œ˚œ¢¿‡–Õ£®∏¥≈Ã‘ˆ«ø£© |
 
-### 4.3 Ê†∏ÂøÉ / Êï∞ÊçÆ / ÈÖçÁΩÆ‰æùËµñ
+### 4.3 ∫À–ƒ /  ˝æ› / ≈‰÷√“¿¿µ
 
-| ‰æùËµñ | Ë∑ØÂæÑ | Áî®ÈÄî |
+| “¿¿µ | ¬∑æ∂ | ”√Õæ |
 |------|------|------|
-| `dataBridge` | `@/core/databridge` | ËÆ¢Âçï/‰ø°Âè∑ÂÜôÂÖ•‰∏éÊü•ËØ¢ |
-| `EnvelopeFactory` | `@/core/envelope` | ÊûÑÂª∫‰ø°Â∞Å |
-| `dataLayer` | `@/data/dataLayer` | Áõ¥Êé•Êü•ËØ¢ stocks„ÄÅorders„ÄÅquotes„ÄÅscores„ÄÅsnapshots |
-| `dbConfig` | `@/config/dbConfig` | Ê®°Âùó ID„ÄÅ‰ø°Â∞ÅÂä®‰Ωú„ÄÅStore ÂêçÁß∞„ÄÅËÆ¢ÂçïÁä∂ÊÄÅÂ∏∏Èáè |
-| `tradingConfig` | `@/config/tradingConfig.ts` | ‰∫§ÊòìÈÖçÁΩÆÔºàÈ£éÊéß„ÄÅÂáØÂà©„ÄÅ‰ø°Âè∑ÈòàÂÄºÔºâ |
-| `thresholds` | `@/config/thresholds.ts` | ‰ø°Âè∑ÁîüÊàê„ÄÅÂ§çÁõò„ÄÅÈ£éÊéßÈòàÂÄºÂ∏∏Èáè |
-| `themeRegistry` | `@/config/themeRegistry.ts` | ‰∏ªÈ¢òÈÖçÁΩÆ‰∏éÂåπÈÖç |
-| `strategyRules` | `@/config/strategyRules.ts` | Á≠ñÁï•ËßÑÂàôÈÖçÁΩÆ |
-| `mathConstants` | `@/config/mathConstants.ts` | Âπ¥Âåñ‰∫§ÊòìÊó•„ÄÅVaR Z ÂÄº„ÄÅÊØ´ÁßíÊØèÂ§© |
+| `dataBridge` | `@/core/databridge` | ∂©µ•/–≈∫≈–¥»Î”Î≤È—Ø |
+| `EnvelopeFactory` | `@/core/envelope` | ππΩ®–≈∑‚ |
+| `dataLayer` | `@/data/dataLayer` | ÷±Ω”≤È—Ø stocks°¢orders°¢quotes°¢scores°¢snapshots |
+| `dbConfig` | `@/config/dbConfig` | ƒ£øÈ ID°¢–≈∑‚∂Ø◊˜°¢Store √˚≥∆°¢∂©µ•◊¥Ã¨≥£¡ø |
+| `tradingConfig` | `@/config/tradingConfig.ts` | Ωª“◊≈‰÷√£®∑Áøÿ°¢ø≠¿˚°¢–≈∫≈„–÷µ£© |
+| `thresholds` | `@/config/thresholds.ts` | –≈∫≈…˙≥…°¢∏¥≈Ã°¢∑Áøÿ„–÷µ≥£¡ø |
+| `themeRegistry` | `@/config/themeRegistry.ts` | ÷˜Ã‚≈‰÷√”Î∆•≈‰ |
+| `strategyRules` | `@/config/strategyRules.ts` | ≤ﬂ¬‘πÊ‘Ú≈‰÷√ |
+| `mathConstants` | `@/config/mathConstants.ts` | ƒÍªØΩª“◊»’°¢VaR Z ÷µ°¢∫¡√Î√øÃÏ |
 
-### 4.4 ÈÖçÁΩÆÈ°π
+### 4.4 ≈‰÷√œÓ
 
-| ÈÖçÁΩÆÂêç | Êù•Ê∫ê | ËØ¥Êòé |
+| ≈‰÷√√˚ | ¿¥‘¥ | Àµ√˜ |
 |--------|------|------|
-| `tradingConfig.risk` | `src/config/tradingConfig.ts` | ÁªÑÂêàÂáÄÂÄº„ÄÅÂçïÁ¨î/ÊÄª‰ªì‰Ωç‰∏äÈôê„ÄÅÊúÄÂ§ßÊó•‰∫§ÊòìÊ¨°Êï∞„ÄÅÂÜ∑Âç¥Êúü„ÄÅÊï∞ÊçÆÊñ∞È≤úÂ∫¶ |
-| `tradingConfig.kelly` | `src/config/tradingConfig.ts` | ÂçäÂáØÂà©ÊØî‰æã„ÄÅÈªòËÆ§ËÉúÁéá/Áõà‰∫èÊØî„ÄÅÊúÄÂ∞è/ÊúÄÂ§ß‰ªì‰Ωç„ÄÅÊï¥ÊâãÂçï‰Ωç |
-| `tradingConfig.signalThresholds` | `src/config/tradingConfig.ts` | ‰ø°Âè∑ÁîüÊàêÈòàÂÄºÔºàRSI„ÄÅÈáèÊØî„ÄÅMACD„ÄÅPE/PBÔºâ |
-| `SIGNAL_GENERATOR_THRESHOLDS` | `src/config/thresholds.ts` | ÊäÄÊúØÊåáÊ†áËÆ°ÁÆóÊúÄÂ∞èÊ†∑Êú¨Êï∞ |
-| `TRADE_REVIEW_AI_THRESHOLDS` | `src/config/thresholds.ts` | Â§çÁõòËØÑÂàÜÈòàÂÄº |
-| `RISK_THRESHOLDS` | `src/config/thresholds.ts` | È£éÈô©ËÆ°ÁÆóÈòàÂÄº |
-| `CORE_RESOURCE_THEME` | `src/config/themeRegistry.ts` | ÈªòËÆ§‰∏ªÈ¢òÈÖçÁΩÆÔºàÁ¨¨ÂõõÊ¨°Â∑•‰∏öÈù©ÂëΩÁ®ÄÁº∫Ê†∏ÂøÉËµÑÊ∫êÔºâ |
+| `tradingConfig.risk` | `src/config/tradingConfig.ts` | ◊È∫œæª÷µ°¢µ•± /◊‹≤÷Œª…œœﬁ°¢◊Ó¥Û»’Ωª“◊¥Œ ˝°¢¿‰»¥∆⁄°¢ ˝æ›–¬œ ∂» |
+| `tradingConfig.kelly` | `src/config/tradingConfig.ts` | ∞Îø≠¿˚±»¿˝°¢ƒ¨»œ §¬ /”Øø˜±»°¢◊Ó–°/◊Ó¥Û≤÷Œª°¢’˚ ÷µ•Œª |
+| `tradingConfig.signalThresholds` | `src/config/tradingConfig.ts` | –≈∫≈…˙≥…„–÷µ£®RSI°¢¡ø±»°¢MACD°¢PE/PB£© |
+| `SIGNAL_GENERATOR_THRESHOLDS` | `src/config/thresholds.ts` | ºº ı÷∏±Íº∆À„◊Ó–°—˘±æ ˝ |
+| `TRADE_REVIEW_AI_THRESHOLDS` | `src/config/thresholds.ts` | ∏¥≈Ã∆¿∑÷„–÷µ |
+| `RISK_THRESHOLDS` | `src/config/thresholds.ts` | ∑Áœ’º∆À„„–÷µ |
+| `CORE_RESOURCE_THEME` | `src/config/themeRegistry.ts` | ƒ¨»œ÷˜Ã‚≈‰÷√£®µ⁄Àƒ¥Œπ§“µ∏Ô√¸œ°»±∫À–ƒ◊ ‘¥£© |
 
 ---
 
-## 5. ÊµãËØïÁ≠ñÁï•
+## 5. ≤‚ ‘≤ﬂ¬‘
 
-| ÊµãËØïÁ±ªÂûã | Êñá‰ª∂ | ËØ¥Êòé |
+| ≤‚ ‘¿‡–Õ | Œƒº˛ | Àµ√˜ |
 |----------|------|------|
-| ÂçïÂÖÉÊµãËØï | `src/services/trading/*.test.ts`ÔºàÂÖ± 8 ‰∏™Ôºâ | Á∫ØÂáΩÊï∞‰∏é‰∏öÂä°ÈÄªËæëÔºåË¶ÜÁõñ‰∫§ÊòìÂ§çÁõò„ÄÅÊäÄËÉΩÂèëÂ±ï„ÄÅÁª¥Â∫¶ÂÆö‰πâ„ÄÅLLM Â¢ûÂº∫„ÄÅÁîªÂÉèÁîüÊàê„ÄÅÊä•ÂëäÁîüÊàê„ÄÅÂ∑•ÂÖ∑ÂáΩÊï∞„ÄÅËßÇÂØüÊ±†ÂºÇÂä®Ê¶ú |
-| ÈõÜÊàêÊµãËØï | `tests/services/trading.integration.test.ts` | **ÂæÖË°•ÂÖÖ**ÔºöÂª∫ËÆÆË¶ÜÁõñ DataBridge ËÆ¢ÂçïÂÜôÂÖ•„ÄÅStore ËÅîÂä®„ÄÅ‰ø°Âè∑ÁîüÊàêÁ´ØÂà∞Á´Ø |
-| Mock Á≠ñÁï• | `__mocks__/tradingService.ts` | **ÂæÖË°•ÂÖÖ**ÔºöÈöîÁ¶ªÂ§ñÈÉ®Ë°åÊÉÖ‰∏é dataLayer ‰æùËµñ |
+| µ•‘™≤‚ ‘ | `src/services/trading/*.test.ts`£®π≤ 8 ∏ˆ£© | ¥ø∫Ø ˝”Î“µŒÒ¬ﬂº≠£¨∏≤∏«Ωª“◊∏¥≈Ã°¢ººƒ‹∑¢’π°¢Œ¨∂»∂®“Â°¢LLM ‘ˆ«ø°¢ª≠œÒ…˙≥…°¢±®∏Ê…˙≥…°¢π§æﬂ∫Ø ˝°¢π€≤Ï≥ÿ“Ï∂Ø∞Ò |
+| ºØ≥…≤‚ ‘ | `tests/services/trading.integration.test.ts` | **¥˝≤π≥‰**£∫Ω®“È∏≤∏« DataBridge ∂©µ•–¥»Î°¢Store ¡™∂Ø°¢–≈∫≈…˙≥…∂ÀµΩ∂À |
+| Mock ≤ﬂ¬‘ | `__mocks__/tradingService.ts` | **¥˝≤π≥‰**£∫∏Ù¿ÎÕ‚≤ø––«È”Î dataLayer “¿¿µ |
 
-**Áé∞ÊúâÊµãËØïÊ∏ÖÂçï**Ôºö
+**œ÷”–≤‚ ‘«Âµ•**£∫
 - `tradeReviewAI.test.ts`
 - `tradeReviewAI.dimensions.test.ts`
 - `tradeReviewAI.llmEnhancer.test.ts`
@@ -460,16 +463,16 @@ pages/trading/* / apps/trading/* / cockpit/widgets (PortfolioOverviewWidget, Sig
 
 ---
 
-## 6. ÂèòÊõ¥Êó•Âøó
+## 6. ±‰∏¸»’÷æ
 
-| Êó•Êúü | ÁâàÊú¨ | ÂèòÊõ¥ | ‰ΩúËÄÖ |
+| »’∆⁄ | ∞Ê±æ | ±‰∏¸ | ◊˜’ﬂ |
 |------|------|------|------|
-| 2026-07-12 | v0.1.0 | Â•ëÁ∫¶ÂàùÁ®ø | Êû∂ÊûÑÁªÑ |
+| 2026-07-12 | v0.1.0 | ∆ı‘º≥ı∏Â | º‹ππ◊È |
 
 ---
 
-> **TODO[Â≠êÂüü owner]**Ôºö
-> 1. Á°ÆËÆ§ `useCase` / `input` / `llm` Ë∑®Â≠êÂüü‰æùËµñÊòØÂê¶Á¨¶Âêà `../../AGENTS.md` ÂàÜÂ±ÇËßÑÂàôÔºàÂΩìÂâç `services/` Â≠òÂú®‰∫íË∞ÉÔºâ„ÄÇ
-> 2. Â∞ÜÂàÜÊï£ÁöÑÊµãËØïÊñá‰ª∂ÂΩíÊã¢Ëá≥ `__tests__/` ÁõÆÂΩïÔºåÊàñË°•ÂÖÖÈõÜÊàêÊµãËØï„ÄÇ
-> 3. Ë°•ÂÖÖ `__mocks__/tradingService.ts` Mock ÂÆûÁé∞„ÄÇ
-> 4. ÂÆåÊàêÂêéËøêË°å `tsc --noEmit` + `audit:layers` È™åËØÅ„ÄÇ
+> **TODO[◊””Ú owner]**£∫
+> 1. »∑»œ `useCase` / `input` / `llm` øÁ◊””Ú“¿¿µ «∑Ò∑˚∫œ `../../AGENTS.md` ∑÷≤„πÊ‘Ú£®µ±«∞ `services/` ¥Ê‘⁄ª•µ˜£©°£
+> 2. Ω´∑÷…¢µƒ≤‚ ‘Œƒº˛πÈ¬£÷¡ `__tests__/` ƒø¬º£¨ªÚ≤π≥‰ºØ≥…≤‚ ‘°£
+> 3. ≤π≥‰ `__mocks__/tradingService.ts` Mock  µœ÷°£
+> 4. ÕÍ≥…∫Û‘À–– `tsc --noEmit` + `audit:layers` —È÷§°£

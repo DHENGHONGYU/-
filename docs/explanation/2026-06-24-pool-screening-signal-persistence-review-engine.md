@@ -1,81 +1,77 @@
 ---
-title: 2026-06-24-pool-screening-signal-persistence-review-engine
-code_version: 2.0.0
-
+title: ADR-007: ²¹ÆëÉ¸Ñ¡ÒıÇæ¡¢ĞÅºÅ³Ö¾Ã»¯Óë¸´ÅÌÒıÇæ
+type: explanation
+domain: backend
+phase: design
 tier: reference
----
-
----
-title: ADR-007: è¡¥é½ç­›é€‰å¼•æ“ã€ä¿¡å·æŒä¹…åŒ–ä¸å¤ç›˜å¼•æ“
+status: active
+maintainer: V9 Architecture Team
+summary: "Architecture Decision Record: ²¹ÆëÉ¸Ñ¡ÒıÇæ¡¢ĞÅºÅ³Ö¾Ã»¯Óë¸´ÅÌÒıÇæ"
+tags: [backend, screening, adr, plan, stocks, explanation]
 version: v0.9.0
 last_updated: 2026-06-24
-maintainer: V9 Architecture Team
-status: active
-change_log:
-  - date: 2026-06-24
-    author: Documentation Governor
-    desc: æ³¨å…¥ Frontmatter å…ƒæ•°æ®ï¼ˆPhase 3 ç‰ˆæœ¬åŒ–ï¼‰
 code_version: 2.0.0
-tier: reference
+change_log: 
 ---
-# ADR-007: è¡¥é½ç­›é€‰å¼•æ“ã€ä¿¡å·æŒä¹…åŒ–ä¸å¤ç›˜å¼•æ“
+
+# ADR-007: ²¹ÆëÉ¸Ñ¡ÒıÇæ¡¢ĞÅºÅ³Ö¾Ã»¯Óë¸´ÅÌÒıÇæ
 
 > **Status**: Accepted  
 > **Version**: v0.9.0-docs-review  
 > **Last Updated**: 2026-06-24
 
-- çŠ¶æ€ï¼šå·²æ¥å—
-- æ—¥æœŸï¼š2026-06-24
-- å†³ç­–äººï¼š@frontend-lead
+- ×´Ì¬£ºÒÑ½ÓÊÜ
+- ÈÕÆÚ£º2026-06-24
+- ¾ö²ßÈË£º@frontend-lead
 
-## èƒŒæ™¯
+## ±³¾°
 
-V9 å·²è·‘é€šâ€œå½•å…¥ â†’ è¯„åˆ† â†’ ä¿¡å·/ä¸‹å• â†’ å¯¼å‡ºâ€çš„ä¸»é“¾è·¯ï¼Œä½†æŠ•èµ„æµç¨‹ä¸­çš„ä¸‰ä¸ªå…³é”®èŠ‚ç‚¹ä»å¤„äºç¼ºå¤±æˆ–åŠç¼ºå¤±çŠ¶æ€ï¼š
+V9 ÒÑÅÜÍ¨¡°Â¼Èë ¡ú ÆÀ·Ö ¡ú ĞÅºÅ/ÏÂµ¥ ¡ú µ¼³ö¡±µÄÖ÷Á´Â·£¬µ«Í¶×ÊÁ÷³ÌÖĞµÄÈı¸ö¹Ø¼ü½ÚµãÈÔ´¦ÓÚÈ±Ê§»ò°ëÈ±Ê§×´Ì¬£º
 
-1. **ç­›é€‰å¼•æ“**ï¼šåˆ†æèˆ±äº§ç”Ÿçš„è¯„åˆ†æ— æ³•è‡ªåŠ¨é©±åŠ¨è‚¡ç¥¨æ± çŠ¶æ€æµè½¬ï¼ˆcandidate â†’ screened â†’ deepDiveï¼‰ï¼Œç›®å‰å…¨é è¾“å…¥èˆ±çœ‹æ¿æ‰‹åŠ¨ç‚¹å‡»ã€‚
-2. **ä¿¡å·æŒä¹…åŒ–**ï¼šäº¤æ˜“èˆ± `signalGenerator` ç”Ÿæˆçš„ä¹°å–ä¿¡å·åªåœ¨å†…å­˜ä¸­ä½¿ç”¨ï¼Œæœªå†™å…¥ `signals` Storeï¼Œå¯¼è‡´æ— æ³•å¤ç›˜ä¿¡å·å‡†ç¡®ç‡ã€‚
-3. **å¤ç›˜å¼•æ“**ï¼šè¾“å‡ºèˆ±ä»…æœ‰å…¨é‡å¯¼å‡ºï¼Œç¼ºå°‘å¯¹ `orders`ã€`scores`ã€`stocks` çš„èšåˆå¤ç›˜èƒ½åŠ›ã€‚
+1. **É¸Ñ¡ÒıÇæ**£º·ÖÎö²Õ²úÉúµÄÆÀ·ÖÎŞ·¨×Ô¶¯Çı¶¯¹ÉÆ±³Ø×´Ì¬Á÷×ª£¨candidate ¡ú screened ¡ú deepDive£©£¬Ä¿Ç°È«¿¿ÊäÈë²Õ¿´°åÊÖ¶¯µã»÷¡£
+2. **ĞÅºÅ³Ö¾Ã»¯**£º½»Ò×²Õ `signalGenerator` Éú³ÉµÄÂòÂôĞÅºÅÖ»ÔÚÄÚ´æÖĞÊ¹ÓÃ£¬Î´Ğ´Èë `signals` Store£¬µ¼ÖÂÎŞ·¨¸´ÅÌĞÅºÅ×¼È·ÂÊ¡£
+3. **¸´ÅÌÒıÇæ**£ºÊä³ö²Õ½öÓĞÈ«Á¿µ¼³ö£¬È±ÉÙ¶Ô `orders`¡¢`scores`¡¢`stocks` µÄ¾ÛºÏ¸´ÅÌÄÜÁ¦¡£
 
-## é€‰é¡¹
+## Ñ¡Ïî
 
-| é€‰é¡¹ | ä¼˜ç‚¹ | ç¼ºç‚¹ |
+| Ñ¡Ïî | ÓÅµã | È±µã |
 |------|------|------|
-| A. åœ¨åˆ†æèˆ±å®ç° `ScreeningEngine`ï¼Œåœ¨äº¤æ˜“èˆ±æŒä¹…åŒ– `signals`ï¼Œåœ¨è¾“å‡ºèˆ±å®ç° `ReviewEngine` | èŒè´£ä¸äº”èˆ±å®šä½ä¸€è‡´ï¼Œæ•°æ®æµå‘æ¸…æ™° | éœ€è¦æ–°å¢å¤šä¸ª service å’Œæµ‹è¯• |
-| B. å…¨éƒ¨æ”¾åœ¨è¾“å…¥èˆ±/æ€»æ§èˆ±ç»Ÿä¸€è°ƒåº¦ | å…¥å£é›†ä¸­ | è¿åâ€œåˆ†æå½’åˆ†æã€äº¤æ˜“å½’äº¤æ˜“â€çš„èˆ±èŒè´£åˆ’åˆ†ï¼Œè·¨å±‚è€¦åˆé‡ |
-| C. ç»§ç»­æ‰‹åŠ¨/å ä½ï¼Œåç»­å†è¡¥ | å½“å‰æ”¹åŠ¨æœ€å° | æŠ•èµ„ç ”ç©¶é—­ç¯æ— æ³•å½¢æˆï¼Œé•¿æœŸæŠ€æœ¯å€ºåŠ¡ç´¯ç§¯ |
+| A. ÔÚ·ÖÎö²ÕÊµÏÖ `ScreeningEngine`£¬ÔÚ½»Ò×²Õ³Ö¾Ã»¯ `signals`£¬ÔÚÊä³ö²ÕÊµÏÖ `ReviewEngine` | Ö°ÔğÓëÎå²Õ¶¨Î»Ò»ÖÂ£¬Êı¾İÁ÷ÏòÇåÎú | ĞèÒªĞÂÔö¶à¸ö service ºÍ²âÊÔ |
+| B. È«²¿·ÅÔÚÊäÈë²Õ/×Ü¿Ø²ÕÍ³Ò»µ÷¶È | Èë¿Ú¼¯ÖĞ | Î¥·´¡°·ÖÎö¹é·ÖÎö¡¢½»Ò×¹é½»Ò×¡±µÄ²ÕÖ°Ôğ»®·Ö£¬¿ç²ãñîºÏÖØ |
+| C. ¼ÌĞøÊÖ¶¯/Õ¼Î»£¬ºóĞøÔÙ²¹ | µ±Ç°¸Ä¶¯×îĞ¡ | Í¶×ÊÑĞ¾¿±Õ»·ÎŞ·¨ĞÎ³É£¬³¤ÆÚ¼¼ÊõÕ®ÎñÀÛ»ı |
 
-## å†³ç­–
+## ¾ö²ß
 
-é€‰æ‹© **A**ã€‚æŒ‰ä»¥ä¸‹é¡ºåºè½åœ°ï¼š
+Ñ¡Ôñ **A**¡£°´ÒÔÏÂË³ĞòÂäµØ£º
 
-1. **ç­›é€‰å¼•æ“ï¼ˆScreeningEngineï¼‰**ï¼šä½äº `src/services/analysis/screeningEngine.ts`ï¼ŒåŸºäº `v6_scores` / `intelligent_scores` / `dataQuality` è§„åˆ™ï¼Œè°ƒç”¨ `stockpoolService.transitionStock` æ‰¹é‡æ™‹å‡ candidate/screenedã€‚
-2. **ä¿¡å·æŒä¹…åŒ–ï¼ˆSignal Persistenceï¼‰**ï¼šä½äº `src/services/trading/tradingService.ts` çš„ `scanWatchingSignals` æµç¨‹ä¸­ï¼Œç”Ÿæˆä¿¡å·åé€šè¿‡ `DataBridge.forward(INSERT_SIGNAL)` å†™å…¥ `signals` Storeã€‚
-3. **å¤ç›˜å¼•æ“ï¼ˆReviewEngineï¼‰**ï¼šä½äº `src/services/output/reviewEngine.ts`ï¼ˆæˆ– `src/services/system/reviewEngine.ts`ï¼‰ï¼Œèšåˆ `orders`ã€`v6_scores`ã€`intelligent_scores`ã€`stocks` è®¡ç®—èƒœç‡ã€ç›ˆäºã€ä¿¡å·å‡†ç¡®ç‡ç­‰æŒ‡æ ‡ã€‚
+1. **É¸Ñ¡ÒıÇæ£¨ScreeningEngine£©**£ºÎ»ÓÚ `src/services/analysis/screeningEngine.ts`£¬»ùÓÚ `v6_scores` / `intelligent_scores` / `dataQuality` ¹æÔò£¬µ÷ÓÃ `stockpoolService.transitionStock` ÅúÁ¿½úÉı candidate/screened¡£
+2. **ĞÅºÅ³Ö¾Ã»¯£¨Signal Persistence£©**£ºÎ»ÓÚ `src/services/trading/tradingService.ts` µÄ `scanWatchingSignals` Á÷³ÌÖĞ£¬Éú³ÉĞÅºÅºóÍ¨¹ı `DataBridge.forward(INSERT_SIGNAL)` Ğ´Èë `signals` Store¡£
+3. **¸´ÅÌÒıÇæ£¨ReviewEngine£©**£ºÎ»ÓÚ `src/services/output/index.ts`£¨»ò `src/services/system/systemService.ts`£©£¬¾ÛºÏ `orders`¡¢`v6_scores`¡¢`intelligent_scores`¡¢`stocks` ¼ÆËãÊ¤ÂÊ¡¢Ó¯¿÷¡¢ĞÅºÅ×¼È·ÂÊµÈÖ¸±ê¡£
 
-## å®æ–½çŠ¶æ€
+## ÊµÊ©×´Ì¬
 
-- [x] ç­›é€‰å¼•æ“å·²å®ç°å¹¶é€šè¿‡æµ‹è¯• (`tests/screeningEngine.test.ts`)
-- [x] ä¿¡å·æŒä¹…åŒ–å·²å®ç°å¹¶é€šè¿‡æµ‹è¯• (`tests/signalPersistence.test.ts`)
-- [ ] å¤ç›˜å¼•æ“å¾…ä¸‹ä¸€è½®å®ç°
+- [x] É¸Ñ¡ÒıÇæÒÑÊµÏÖ²¢Í¨¹ı²âÊÔ (`tests/screeningEngine.test.ts`)
+- [x] ĞÅºÅ³Ö¾Ã»¯ÒÑÊµÏÖ²¢Í¨¹ı²âÊÔ (`tests/signalPersistence.test.ts`)
+- [ ] ¸´ÅÌÒıÇæ´ıÏÂÒ»ÂÖÊµÏÖ
 
-## å…³é”®è½åœ°æ–‡ä»¶
+## ¹Ø¼üÂäµØÎÄ¼ş
 
 - `src/config/screeningConfig.ts`
 - `src/services/analysis/screeningEngine.ts`
-- `src/config/dbConfig.ts`ï¼ˆæ–°å¢ `insertSignal`ã€ACL æ‰©å±•ï¼‰
-- `src/core/databridge.ts`ï¼ˆæ–°å¢ `insertSignal` è·¯ç”±ï¼‰
-- `src/data/dataLayer.ts`ï¼ˆæ–°å¢ `signalStore`ï¼‰
-- `src/data/types.ts`ï¼ˆ`Signal` / `SignalSnapshot` ç±»å‹å¯¹é½ï¼‰
-- `src/services/trading/signalGenerator.ts` / `tradingService.ts`ï¼ˆä¿¡å·æŒä¹…åŒ–ï¼‰
+- `src/config/dbConfig.ts`£¨ĞÂÔö `insertSignal`¡¢ACL À©Õ¹£©
+- `src/core/databridge.ts`£¨ĞÂÔö `insertSignal` Â·ÓÉ£©
+- `src/data/dataLayer.ts`£¨ĞÂÔö `signalStore`£©
+- `src/data/types.ts`£¨`Signal` / `SignalSnapshot` ÀàĞÍ¶ÔÆë£©
+- `src/services/trading/signalGenerator.ts` / `tradingService.ts`£¨ĞÅºÅ³Ö¾Ã»¯£©
 
-## åæœ
+## ºó¹û
 
-- åˆ†æèˆ±ä»â€œåªè¯»è¯„åˆ†â€å‡çº§ä¸ºâ€œå¯é©±åŠ¨æµè½¬â€ã€‚
-- äº¤æ˜“ä¿¡å·è¿›å…¥æŒä¹…åŒ–ï¼Œæ”¯æŒå†å²å¤ç›˜ã€‚
-- è¾“å‡ºèˆ±å…·å¤‡ä¸“é—¨çš„å¤ç›˜èƒ½åŠ›ï¼Œå½¢æˆâ€œè¯„åˆ† â†’ äº¤æ˜“ â†’ å¤ç›˜â€é—­ç¯ã€‚
-- æ‰€æœ‰å†™æ“ä½œç»§ç»­é€šè¿‡ `DataBridge.forward` å®Œæˆï¼Œä¿æŒç°æœ‰æ•°æ®åè®®ä¸å˜ã€‚
+- ·ÖÎö²Õ´Ó¡°Ö»¶ÁÆÀ·Ö¡±Éı¼¶Îª¡°¿ÉÇı¶¯Á÷×ª¡±¡£
+- ½»Ò×ĞÅºÅ½øÈë³Ö¾Ã»¯£¬Ö§³ÖÀúÊ·¸´ÅÌ¡£
+- Êä³ö²Õ¾ß±¸×¨ÃÅµÄ¸´ÅÌÄÜÁ¦£¬ĞÎ³É¡°ÆÀ·Ö ¡ú ½»Ò× ¡ú ¸´ÅÌ¡±±Õ»·¡£
+- ËùÓĞĞ´²Ù×÷¼ÌĞøÍ¨¹ı `DataBridge.forward` Íê³É£¬±£³ÖÏÖÓĞÊı¾İĞ­Òé²»±ä¡£
 
-## ç›¸å…³æ–‡æ¡£
+## Ïà¹ØÎÄµµ
 
 - `./design/investment-pipeline-stage-analysis.md`
 - `../reference/10-glossary.md`

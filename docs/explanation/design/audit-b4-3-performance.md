@@ -1,89 +1,97 @@
 ---
 title: audit-b4-3-performance
+type: explanation
+domain: qa
+phase: design
 tier: reference
+status: active
+maintainer: V9 Architecture Team
+summary: "Éó¼ÆÈÕÆÚ£º2026-06-29 ĞŞ¸´×´Ì¬£¨2026-07-01 Í¬²½£©£º¸ß·çÏÕÎÊÌâ 1.1/1.2£¨ÅúÁ¿·ÖÎöË³Ğò await£©ÒÑÍ¨¹ı Promise.allSettled ĞŞ¸´£»ÎÊÌâ..."
+tags: [qa, audit, performance, plan, architecture, explanation]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-tier: reference
-code_version: 2.0.0
----
+# V9 Ç°¶ËÓ¦ÓÃĞÔÄÜÖÊÁ¿Éó¼Æ±¨¸æ
 
-# V9 å‰ç«¯åº”ç”¨æ€§èƒ½è´¨é‡å®¡è®¡æŠ¥å‘Š
-
-> å®¡è®¡æ—¥æœŸï¼š2026-06-29
-> **ä¿®å¤çŠ¶æ€**ï¼ˆ2026-07-01 åŒæ­¥ï¼‰ï¼šé«˜é£é™©é—®é¢˜ 1.1/1.2ï¼ˆæ‰¹é‡åˆ†æé¡ºåº awaitï¼‰å·²é€šè¿‡ Promise.allSettled ä¿®å¤ï¼›é—®é¢˜ 1.4ï¼ˆç»Ÿä¸€è‚¡ç¥¨è§†å›¾é¡ºåºè·å–ï¼‰å·²ä½¿ç”¨ Promise.all ä¿®å¤ï¼›18 ä¸ª Widget React.memo ä¼˜åŒ–å·²å®Œæˆï¼›CockpitShell layout å·²ä½¿ç”¨ useMemo ç¼“å­˜ã€‚å‰©ä½™ä¸­ä½é£é™©é¡¹æŒç»­ä¼˜åŒ–ä¸­ã€‚
-> å®¡è®¡èŒƒå›´ï¼š`src/pages/`ã€`src/components/`ã€`src/hooks/`ã€`src/services/` æ ¸å¿ƒæ–‡ä»¶
-> å®¡è®¡ç»´åº¦ï¼šè¯·æ±‚ç€‘å¸ƒã€é‡å¤æ¸²æŸ“ã€Bundle ä½“ç§¯é™æ€åˆ†æ
+> Éó¼ÆÈÕÆÚ£º2026-06-29
+> **ĞŞ¸´×´Ì¬**£¨2026-07-01 Í¬²½£©£º¸ß·çÏÕÎÊÌâ 1.1/1.2£¨ÅúÁ¿·ÖÎöË³Ğò await£©ÒÑÍ¨¹ı Promise.allSettled ĞŞ¸´£»ÎÊÌâ 1.4£¨Í³Ò»¹ÉÆ±ÊÓÍ¼Ë³Ğò»ñÈ¡£©ÒÑÊ¹ÓÃ Promise.all ĞŞ¸´£»18 ¸ö Widget React.memo ÓÅ»¯ÒÑÍê³É£»CockpitShell layout ÒÑÊ¹ÓÃ useMemo »º´æ¡£Ê£ÓàÖĞµÍ·çÏÕÏî³ÖĞøÓÅ»¯ÖĞ¡£
+> Éó¼Æ·¶Î§£º`src/pages/`¡¢`src/components/`¡¢`src/hooks/`¡¢`src/services/` ºËĞÄÎÄ¼ş
+> Éó¼ÆÎ¬¶È£ºÇëÇóÆÙ²¼¡¢ÖØ¸´äÖÈ¾¡¢Bundle Ìå»ı¾²Ì¬·ÖÎö
 
 ---
 
-## ä¸€ã€å®¡è®¡æ€»è§ˆ
+## Ò»¡¢Éó¼Æ×ÜÀÀ
 
-| ç»´åº¦ | é—®é¢˜æ•°é‡ | é«˜é£é™© | ä¸­é£é™© | ä½é£é™© |
+| Î¬¶È | ÎÊÌâÊıÁ¿ | ¸ß·çÏÕ | ÖĞ·çÏÕ | µÍ·çÏÕ |
 |------|---------|--------|--------|--------|
-| 1. è¯·æ±‚ç€‘å¸ƒï¼ˆé¡ºåº async è¯·æ±‚ï¼‰ | 8 | 3 | 3 | 2 |
-| 2. é‡å¤æ¸²æŸ“ï¼ˆç¼ºå°‘ä¼˜åŒ–ï¼‰ | 25+ | 2 | 3 | 20+ |
-| 3. Bundle ä½“ç§¯é™æ€åˆ†æ | 9 | 3 | 4 | 2 |
-| **åˆè®¡** | **42+** | **8** | **10** | **24+** |
+| 1. ÇëÇóÆÙ²¼£¨Ë³Ğò async ÇëÇó£© | 8 | 3 | 3 | 2 |
+| 2. ÖØ¸´äÖÈ¾£¨È±ÉÙÓÅ»¯£© | 25+ | 2 | 3 | 20+ |
+| 3. Bundle Ìå»ı¾²Ì¬·ÖÎö | 9 | 3 | 4 | 2 |
+| **ºÏ¼Æ** | **42+** | **8** | **10** | **24+** |
 
-### é£é™©ç­‰çº§è¯´æ˜
-- ğŸ”´ **é«˜é£é™©**ï¼šä¸¥é‡å½±å“æ€§èƒ½ï¼Œç”¨æˆ·å¯æ„ŸçŸ¥çš„å¡é¡¿/å»¶è¿Ÿï¼Œå»ºè®®ä¼˜å…ˆä¿®å¤
-- ğŸŸ¡ **ä¸­é£é™©**ï¼šæ½œåœ¨æ€§èƒ½ç“¶é¢ˆï¼Œç‰¹å®šåœºæ™¯ä¸‹å¯æ„ŸçŸ¥ï¼Œå»ºè®®è®¡åˆ’ä¿®å¤
-- ğŸŸ¢ **ä½é£é™©**ï¼šè½»å¾®å½±å“æˆ–ä»…ç†è®ºä¸Šå­˜åœ¨ï¼Œå¯ä½œä¸ºä¼˜åŒ–é¡¹
+### ·çÏÕµÈ¼¶ËµÃ÷
+- ?? **¸ß·çÏÕ**£ºÑÏÖØÓ°ÏìĞÔÄÜ£¬ÓÃ»§¿É¸ĞÖªµÄ¿¨¶Ù/ÑÓ³Ù£¬½¨ÒéÓÅÏÈĞŞ¸´
+- ?? **ÖĞ·çÏÕ**£ºÇ±ÔÚĞÔÄÜÆ¿¾±£¬ÌØ¶¨³¡¾°ÏÂ¿É¸ĞÖª£¬½¨Òé¼Æ»®ĞŞ¸´
+- ?? **µÍ·çÏÕ**£ºÇáÎ¢Ó°Ïì»ò½öÀíÂÛÉÏ´æÔÚ£¬¿É×÷ÎªÓÅ»¯Ïî
 
 ---
 
-## äºŒã€ç»´åº¦ä¸€ï¼šè¯·æ±‚ç€‘å¸ƒï¼ˆé¡ºåº async è¯·æ±‚ï¼‰
+## ¶ş¡¢Î¬¶ÈÒ»£ºÇëÇóÆÙ²¼£¨Ë³Ğò async ÇëÇó£©
 
-### 2.1 é«˜é£é™©é—®é¢˜
+### 2.1 ¸ß·çÏÕÎÊÌâ
 
-#### é—®é¢˜ 1.1ï¼šæ‰¹é‡åˆ†æå‡½æ•°é¡ºåº awaitï¼ˆä»·å€¼æ´¼åœ°ç­–ç•¥ï¼‰
-- **æ–‡ä»¶**ï¼š`src/services/scoring/valuePitAnalyzer.ts`
-- **è¡Œå·**ï¼š491-498
-- **é£é™©ç­‰çº§**ï¼šâœ… å·²ä¿®å¤ï¼ˆåŸ ğŸ”´ é«˜ï¼‰
-- **é—®é¢˜æè¿°**ï¼š`analyzeBatch` å‡½æ•°ä½¿ç”¨ for å¾ªç¯ + é¡ºåº await å¤„ç†å¤šåªè‚¡ç¥¨ï¼Œæœªåˆ©ç”¨ `Promise.all` å¹¶è¡ŒåŒ–ã€‚å½“è‚¡ç¥¨æ•°é‡è¾ƒå¤šæ—¶ï¼Œæ€»è€—æ—¶ä¸ºå•åªçš„ N å€ã€‚
+#### ÎÊÌâ 1.1£ºÅúÁ¿·ÖÎöº¯ÊıË³Ğò await£¨¼ÛÖµÍİµØ²ßÂÔ£©
+- **ÎÄ¼ş**£º`src/services/scoring/valuePitAnalyzer.ts`
+- **ĞĞºÅ**£º491-498
+- **·çÏÕµÈ¼¶**£º? ÒÑĞŞ¸´£¨Ô­ ?? ¸ß£©
+- **ÎÊÌâÃèÊö**£º`analyzeBatch` º¯ÊıÊ¹ÓÃ for Ñ­»· + Ë³Ğò await ´¦Àí¶àÖ»¹ÉÆ±£¬Î´ÀûÓÃ `Promise.all` ²¢ĞĞ»¯¡£µ±¹ÉÆ±ÊıÁ¿½Ï¶àÊ±£¬×ÜºÄÊ±Îªµ¥Ö»µÄ N ±¶¡£
 
 ```typescript
-// ç¬¬ 491-498 è¡Œ
+// µÚ 491-498 ĞĞ
 export async function analyzeBatch(symbols: string[]): Promise<ValuePitScore[]> {
   const results: ValuePitScore[] = []
   for (const symbol of symbols) {
-    const score = await analyzeBySymbol(symbol)  // é¡ºåºç­‰å¾…ï¼Œæœªå¹¶è¡Œ
+    const score = await analyzeBySymbol(symbol)  // Ë³ĞòµÈ´ı£¬Î´²¢ĞĞ
     if (score) results.push(score)
   }
-  logger.info(`[valuePitAnalyzer] æ‰¹é‡åˆ†æå®Œæˆ: ${results.length}/${symbols.length}`)
+  logger.info(`[valuePitAnalyzer] ÅúÁ¿·ÖÎöÍê³É: ${results.length}/${symbols.length}`)
   return results
 }
 ```
 
-#### é—®é¢˜ 1.2ï¼šæ‰¹é‡åˆ†æå‡½æ•°é¡ºåº awaitï¼ˆçƒ­é—¨æ¿å—ç­–ç•¥ï¼‰
-- **æ–‡ä»¶**ï¼š`src/services/scoring/hotSectorAnalyzer.ts`
-- **è¡Œå·**ï¼š587-594
-- **é£é™©ç­‰çº§**ï¼šâœ… å·²ä¿®å¤ï¼ˆåŸ ğŸ”´ é«˜ï¼‰
-- **é—®é¢˜æè¿°**ï¼šä¸ valuePitAnalyzer ç›¸åŒé—®é¢˜ï¼Œ`analyzeBatch` ä½¿ç”¨ for å¾ªç¯é¡ºåº awaitã€‚
+#### ÎÊÌâ 1.2£ºÅúÁ¿·ÖÎöº¯ÊıË³Ğò await£¨ÈÈÃÅ°å¿é²ßÂÔ£©
+- **ÎÄ¼ş**£º`src/services/scoring/hotSectorAnalyzer.ts`
+- **ĞĞºÅ**£º587-594
+- **·çÏÕµÈ¼¶**£º? ÒÑĞŞ¸´£¨Ô­ ?? ¸ß£©
+- **ÎÊÌâÃèÊö**£ºÓë valuePitAnalyzer ÏàÍ¬ÎÊÌâ£¬`analyzeBatch` Ê¹ÓÃ for Ñ­»·Ë³Ğò await¡£
 
 ```typescript
-// ç¬¬ 587-594 è¡Œ
+// µÚ 587-594 ĞĞ
 export async function analyzeBatch(symbols: string[]): Promise<HotSectorScore[]> {
   const results: HotSectorScore[] = []
   for (const symbol of symbols) {
-    const score = await analyzeBySymbol(symbol)  // é¡ºåºç­‰å¾…ï¼Œæœªå¹¶è¡Œ
+    const score = await analyzeBySymbol(symbol)  // Ë³ĞòµÈ´ı£¬Î´²¢ĞĞ
     if (score) results.push(score)
   }
-  logger.info(`[hotSectorAnalyzer] æ‰¹é‡åˆ†æå®Œæˆ: ${results.length}/${symbols.length}`)
+  logger.info(`[hotSectorAnalyzer] ÅúÁ¿·ÖÎöÍê³É: ${results.length}/${symbols.length}`)
   return results
 }
 ```
 
-#### é—®é¢˜ 1.3ï¼šè¿‡æ»¤é˜¶æ®µé¡ºåºè·å– V6 è¯„åˆ†
-- **æ–‡ä»¶**ï¼š`src/services/scoring/valuePitAnalyzer.ts`ã€`src/services/scoring/hotSectorAnalyzer.ts`
-- **è¡Œå·**ï¼švaluePitAnalyzer: 519-525 / hotSectorAnalyzer: 615-620
-- **é£é™©ç­‰çº§**ï¼šğŸ”´ é«˜
-- **é—®é¢˜æè¿°**ï¼šåœ¨æ‰§è¡Œç­–ç•¥åˆ†æå‰ï¼Œéœ€è¦å…ˆè·å–æ¯åªè‚¡ç¥¨çš„ V6 è¯„åˆ†è¿›è¡Œè¿‡æ»¤ï¼Œå½“å‰ä½¿ç”¨ for å¾ªç¯é¡ºåºè·å–ã€‚
+#### ÎÊÌâ 1.3£º¹ıÂË½×¶ÎË³Ğò»ñÈ¡ V6 ÆÀ·Ö
+- **ÎÄ¼ş**£º`src/services/scoring/valuePitAnalyzer.ts`¡¢`src/services/scoring/hotSectorAnalyzer.ts`
+- **ĞĞºÅ**£ºvaluePitAnalyzer: 519-525 / hotSectorAnalyzer: 615-620
+- **·çÏÕµÈ¼¶**£º?? ¸ß
+- **ÎÊÌâÃèÊö**£ºÔÚÖ´ĞĞ²ßÂÔ·ÖÎöÇ°£¬ĞèÒªÏÈ»ñÈ¡Ã¿Ö»¹ÉÆ±µÄ V6 ÆÀ·Ö½øĞĞ¹ıÂË£¬µ±Ç°Ê¹ÓÃ for Ñ­»·Ë³Ğò»ñÈ¡¡£
 
 ```typescript
-// valuePitAnalyzer.ts ç¬¬ 519-525 è¡Œ
+// valuePitAnalyzer.ts µÚ 519-525 ĞĞ
 for (const stock of stocks) {
   const v6Score = await dataLayer.v6Scores.get(stock.symbol).catch(() => undefined)
   const score = v6Score?.score ?? VALUE_PIT_THRESHOLDS.DEFAULT_V6_SCORE_FALLBACK
@@ -95,41 +103,41 @@ for (const stock of stocks) {
 
 ---
 
-### 2.2 ä¸­é£é™©é—®é¢˜
+### 2.2 ÖĞ·çÏÕÎÊÌâ
 
-#### é—®é¢˜ 1.4ï¼šç»Ÿä¸€è‚¡ç¥¨è§†å›¾å¤šæ•°æ®æºé¡ºåºè·å–
-- **æ–‡ä»¶**ï¼š`src/services/unifiedStockService.ts`
-- **è¡Œå·**ï¼š91-168
-- **é£é™©ç­‰çº§**ï¼šğŸŸ¡ ä¸­
-- **é—®é¢˜æè¿°**ï¼š`getUnifiedStockView` å‡½æ•°æŒ‰é¡ºåºè·å– quotesã€v6Scoreã€intelligentScoreã€industryScoreã€rotationScoreã€signal ç­‰å¤šä¸ªæ•°æ®æºï¼Œè¿™äº›æ•°æ®æºä¹‹é—´æ— ä¾èµ–å…³ç³»ï¼Œå¯ä»¥ç”¨ `Promise.all` å¹¶è¡Œè·å–ã€‚
+#### ÎÊÌâ 1.4£ºÍ³Ò»¹ÉÆ±ÊÓÍ¼¶àÊı¾İÔ´Ë³Ğò»ñÈ¡
+- **ÎÄ¼ş**£º`src/services/unifiedStockService.ts`
+- **ĞĞºÅ**£º91-168
+- **·çÏÕµÈ¼¶**£º?? ÖĞ
+- **ÎÊÌâÃèÊö**£º`getUnifiedStockView` º¯Êı°´Ë³Ğò»ñÈ¡ quotes¡¢v6Score¡¢intelligentScore¡¢industryScore¡¢rotationScore¡¢signal µÈ¶à¸öÊı¾İÔ´£¬ÕâĞ©Êı¾İÔ´Ö®¼äÎŞÒÀÀµ¹ØÏµ£¬¿ÉÒÔÓÃ `Promise.all` ²¢ĞĞ»ñÈ¡¡£
 
 ```typescript
-// ç¬¬ 99-161 è¡Œï¼ˆç®€åŒ–ç¤ºæ„ï¼‰
+// µÚ 99-161 ĞĞ£¨¼ò»¯Ê¾Òâ£©
 let quotes: DailyQuotes | undefined
 if (opts.includeQuotes) {
-  quotes = await dataLayer.dailyQuotes.get(symbol)  // ç¬¬ 1 ä¸ª await
+  quotes = await dataLayer.dailyQuotes.get(symbol)  // µÚ 1 ¸ö await
 }
 
 let v6Score: V6Score | undefined
 if (opts.includeV6Score) {
-  v6Score = await dataLayer.v6Scores.get(symbol)    // ç¬¬ 2 ä¸ª awaitï¼ˆå¯å¹¶è¡Œï¼‰
+  v6Score = await dataLayer.v6Scores.get(symbol)    // µÚ 2 ¸ö await£¨¿É²¢ĞĞ£©
 }
 
 let intelligentScore: IntelligentScore | undefined
 if (opts.includeIntelligentScore) {
-  intelligentScore = await dataLayer.intelligentScores.getLatestBySymbol(symbol)  // ç¬¬ 3 ä¸ª awaitï¼ˆå¯å¹¶è¡Œï¼‰
+  intelligentScore = await dataLayer.intelligentScores.getLatestBySymbol(symbol)  // µÚ 3 ¸ö await£¨¿É²¢ĞĞ£©
 }
-// ... æ›´å¤šé¡ºåº await
+// ... ¸ü¶àË³Ğò await
 ```
 
-#### é—®é¢˜ 1.5ï¼šæ™ºèƒ½è¯„åˆ†é¡µé¢åˆå§‹åŒ–é¡ºåºåŠ è½½
-- **æ–‡ä»¶**ï¼š`src/hooks/cabin/useIntelligentScorePage.ts`
-- **è¡Œå·**ï¼š138-142
-- **é£é™©ç­‰çº§**ï¼šğŸŸ¡ ä¸­
-- **é—®é¢˜æè¿°**ï¼š`useEffect` ä¸­é¡ºåºè°ƒç”¨ `loadIntelligentScoreHistory` å’Œ `loadResearchLogsForTarget`ï¼Œä¸¤è€…æ— ä¾èµ–å…³ç³»ã€‚
+#### ÎÊÌâ 1.5£ºÖÇÄÜÆÀ·ÖÒ³Ãæ³õÊ¼»¯Ë³Ğò¼ÓÔØ
+- **ÎÄ¼ş**£º`src/hooks/cabin/useIntelligentScorePage.ts`
+- **ĞĞºÅ**£º138-142
+- **·çÏÕµÈ¼¶**£º?? ÖĞ
+- **ÎÊÌâÃèÊö**£º`useEffect` ÖĞË³Ğòµ÷ÓÃ `loadIntelligentScoreHistory` ºÍ `loadResearchLogsForTarget`£¬Á½ÕßÎŞÒÀÀµ¹ØÏµ¡£
 
 ```typescript
-// ç¬¬ 131-143 è¡Œ
+// µÚ 131-143 ĞĞ
 useEffect(() => {
   if (!symbol) {
     setPreviousResult(undefined)
@@ -141,62 +149,62 @@ useEffect(() => {
     setHistory(sorted)
     setPreviousResult(sorted[0])
   })
-  loadResearchLogsForTarget(symbol).then(setLogs)  // ä¸¤ä¸ªç‹¬ç«‹çš„ Promise é“¾ï¼Œä½†æœªç”¨ Promise.all ç»Ÿä¸€é”™è¯¯å¤„ç†
+  loadResearchLogsForTarget(symbol).then(setLogs)  // Á½¸ö¶ÀÁ¢µÄ Promise Á´£¬µ«Î´ÓÃ Promise.all Í³Ò»´íÎó´¦Àí
 }, [symbol])
 ```
 
-#### é—®é¢˜ 1.6ï¼šè¯„åˆ†å®Œæˆåé¡ºåºåˆ·æ–°å†å²å’Œæ—¥å¿—
-- **æ–‡ä»¶**ï¼š`src/hooks/cabin/useIntelligentScorePage.ts`
-- **è¡Œå·**ï¼š208-211
-- **é£é™©ç­‰çº§**ï¼šğŸŸ¡ ä¸­
-- **é—®é¢˜æè¿°**ï¼šè¯„åˆ†ç»“æŸåï¼Œé¡ºåºé‡æ–°åŠ è½½å†å²å’Œæ—¥å¿—ï¼Œå¯å¹¶è¡Œã€‚
+#### ÎÊÌâ 1.6£ºÆÀ·ÖÍê³ÉºóË³ĞòË¢ĞÂÀúÊ·ºÍÈÕÖ¾
+- **ÎÄ¼ş**£º`src/hooks/cabin/useIntelligentScorePage.ts`
+- **ĞĞºÅ**£º208-211
+- **·çÏÕµÈ¼¶**£º?? ÖĞ
+- **ÎÊÌâÃèÊö**£ºÆÀ·Ö½áÊøºó£¬Ë³ĞòÖØĞÂ¼ÓÔØÀúÊ·ºÍÈÕÖ¾£¬¿É²¢ĞĞ¡£
 
 ```typescript
-// ç¬¬ 206-211 è¡Œ
+// µÚ 206-211 ĞĞ
 if (scoreResult.success && scoreResult.data) {
   setResult(scoreResult.data)
-  const updatedHistory = await loadIntelligentScoreHistory(symbol)  // ç¬¬ 1 ä¸ª await
+  const updatedHistory = await loadIntelligentScoreHistory(symbol)  // µÚ 1 ¸ö await
   setHistory(updatedHistory)
-  const updatedLogs = await loadResearchLogsForTarget(symbol)       // ç¬¬ 2 ä¸ª awaitï¼ˆå¯å¹¶è¡Œï¼‰
+  const updatedLogs = await loadResearchLogsForTarget(symbol)       // µÚ 2 ¸ö await£¨¿É²¢ĞĞ£©
   setLogs(updatedLogs)
 }
 ```
 
 ---
 
-### 2.3 ä½é£é™©é—®é¢˜
+### 2.3 µÍ·çÏÕÎÊÌâ
 
-#### é—®é¢˜ 1.7ï¼šä¿å­˜è¯„åˆ†ç»“æœé¡ºåºå†™å…¥
-- **æ–‡ä»¶**ï¼š`src/services/scoring/valuePitAnalyzer.ts:529-531`ã€`src/services/scoring/hotSectorAnalyzer.ts:624-626`
-- **é£é™©ç­‰çº§**ï¼šğŸŸ¢ ä½
-- **é—®é¢˜æè¿°**ï¼šæ‰¹é‡ä¿å­˜è¯„åˆ†æ—¶ä½¿ç”¨ for å¾ªç¯é¡ºåºå†™å…¥ IndexedDBã€‚IndexedDB æœ¬èº«æœ‰äº‹åŠ¡é™åˆ¶ï¼Œä½†æ‰¹é‡å†™å…¥ä»æœ‰ä¼˜åŒ–ç©ºé—´ã€‚
+#### ÎÊÌâ 1.7£º±£´æÆÀ·Ö½á¹ûË³ĞòĞ´Èë
+- **ÎÄ¼ş**£º`src/services/scoring/valuePitAnalyzer.ts:529-531`¡¢`src/services/scoring/hotSectorAnalyzer.ts:624-626`
+- **·çÏÕµÈ¼¶**£º?? µÍ
+- **ÎÊÌâÃèÊö**£ºÅúÁ¿±£´æÆÀ·ÖÊ±Ê¹ÓÃ for Ñ­»·Ë³ĞòĞ´Èë IndexedDB¡£IndexedDB ±¾ÉíÓĞÊÂÎñÏŞÖÆ£¬µ«ÅúÁ¿Ğ´ÈëÈÔÓĞÓÅ»¯¿Õ¼ä¡£
 
-#### é—®é¢˜ 1.8ï¼šLLM å¢å¼ºåˆ†æé¡ºåºå¤„ç†å„å±‚
-- **æ–‡ä»¶**ï¼š`src/services/analysis`
-- **è¡Œå·**ï¼š1100-1137
-- **é£é™©ç­‰çº§**ï¼šğŸŸ¢ ä½
-- **é—®é¢˜æè¿°**ï¼š`analyzeStockWithLLM` ä¸­å¯¹ 9 ä¸ªå±‚çº§é¡ºåºè°ƒç”¨ LLMã€‚ç”±äº LLM è°ƒç”¨é€šå¸¸æœ‰é€Ÿç‡é™åˆ¶å’Œæˆæœ¬è€ƒé‡ï¼Œé¡ºåºæ‰§è¡Œå¯èƒ½æ˜¯è®¾è®¡é€‰æ‹©ï¼Œä½†å¦‚æœæ”¯æŒå¹¶å‘å¯æ˜¾è‘—æå‡é€Ÿåº¦ã€‚
+#### ÎÊÌâ 1.8£ºLLM ÔöÇ¿·ÖÎöË³Ğò´¦Àí¸÷²ã
+- **ÎÄ¼ş**£º`src/services/analysis`
+- **ĞĞºÅ**£º1100-1137
+- **·çÏÕµÈ¼¶**£º?? µÍ
+- **ÎÊÌâÃèÊö**£º`analyzeStockWithLLM` ÖĞ¶Ô 9 ¸ö²ã¼¶Ë³Ğòµ÷ÓÃ LLM¡£ÓÉÓÚ LLM µ÷ÓÃÍ¨³£ÓĞËÙÂÊÏŞÖÆºÍ³É±¾¿¼Á¿£¬Ë³ĞòÖ´ĞĞ¿ÉÄÜÊÇÉè¼ÆÑ¡Ôñ£¬µ«Èç¹ûÖ§³Ö²¢·¢¿ÉÏÔÖøÌáÉıËÙ¶È¡£
 
 ---
 
-## ä¸‰ã€ç»´åº¦äºŒï¼šé‡å¤æ¸²æŸ“ï¼ˆç¼ºå°‘ React.memo/useMemo/useCallbackï¼‰
+## Èı¡¢Î¬¶È¶ş£ºÖØ¸´äÖÈ¾£¨È±ÉÙ React.memo/useMemo/useCallback£©
 
-### 3.1 é«˜é£é™©é—®é¢˜
+### 3.1 ¸ß·çÏÕÎÊÌâ
 
-#### é—®é¢˜ 2.1ï¼šCockpit å…¨éƒ¨ 18 ä¸ª Widget ç»„ä»¶ç¼ºå°‘ React.memo
-- **æ–‡ä»¶**ï¼š`src/cockpit/widgets/` ç›®å½•ä¸‹å…¨éƒ¨ 18 ä¸ª Widget
-- **é£é™©ç­‰çº§**ï¼šğŸ”´ é«˜
-- **é—®é¢˜æè¿°**ï¼šé©¾é©¶èˆ± 18 ä¸ª Widget ç»„ä»¶å…¨éƒ¨æ²¡æœ‰ä½¿ç”¨ `React.memo` åŒ…è£¹ã€‚å½“ `mergedData` æˆ– `config` å¼•ç”¨å˜åŒ–æ—¶ï¼ˆå³ä½¿å€¼ç›¸åŒï¼‰ï¼Œæ‰€æœ‰ Widget éƒ½ä¼šé‡æ–°æ¸²æŸ“ã€‚
+#### ÎÊÌâ 2.1£ºCockpit È«²¿ 18 ¸ö Widget ×é¼şÈ±ÉÙ React.memo
+- **ÎÄ¼ş**£º`src/cockpit/widgets/` Ä¿Â¼ÏÂÈ«²¿ 18 ¸ö Widget
+- **·çÏÕµÈ¼¶**£º?? ¸ß
+- **ÎÊÌâÃèÊö**£º¼İÊ»²Õ 18 ¸ö Widget ×é¼şÈ«²¿Ã»ÓĞÊ¹ÓÃ `React.memo` °ü¹ü¡£µ± `mergedData` »ò `config` ÒıÓÃ±ä»¯Ê±£¨¼´Ê¹ÖµÏàÍ¬£©£¬ËùÓĞ Widget ¶¼»áÖØĞÂäÖÈ¾¡£
 
-**å…¸å‹æ¡ˆä¾‹ï¼ˆKaiScoreWidgetï¼‰ï¼š**
+**µäĞÍ°¸Àı£¨KaiScoreWidget£©£º**
 ```typescript
-// src/cockpit/widgets/KaiScoreWidget.tsx ç¬¬ 38 è¡Œ
+// src/cockpit/widgets/KaiScoreWidget.tsx µÚ 38 ĞĞ
 export default function KaiScoreWidget({ config, data }: KaiScoreWidgetProps): React.JSX.Element {
-  // æ—  React.memo åŒ…è£¹
+  // ÎŞ React.memo °ü¹ü
 }
 ```
 
-**å½±å“çš„ç»„ä»¶æ¸…å•ï¼ˆå…± 18 ä¸ªï¼‰ï¼š**
+**Ó°ÏìµÄ×é¼şÇåµ¥£¨¹² 18 ¸ö£©£º**
 - `InvestmentProfileWidget.tsx`
 - `StockPoolWidget.tsx`
 - `RiskMonitorWidget.tsx`
@@ -216,14 +224,14 @@ export default function KaiScoreWidget({ config, data }: KaiScoreWidgetProps): R
 - `PositionControlWidget.tsx`
 - `PnLAnalysisWidget.tsx`
 
-#### é—®é¢˜ 2.2ï¼šCockpitShell ä¸­ layout æ¯æ¬¡æ¸²æŸ“é‡æ–°è®¡ç®—
-- **æ–‡ä»¶**ï¼š`src/cockpit/CockpitShell.tsx`
-- **è¡Œå·**ï¼š169-183
-- **é£é™©ç­‰çº§**ï¼šğŸ”´ é«˜
-- **é—®é¢˜æè¿°**ï¼š`layout` å˜é‡åœ¨æ¯æ¬¡æ¸²æŸ“æ—¶é€šè¿‡ IIFE é‡æ–°è®¡ç®—ï¼Œå¯¼è‡´ `GridLayout` ç»„ä»¶çš„ `layout` prop å¼•ç”¨æ¯æ¬¡éƒ½å˜åŒ–ï¼Œè§¦å‘æ•´ä¸ªç½‘æ ¼çš„é‡æ¸²æŸ“ã€‚
+#### ÎÊÌâ 2.2£ºCockpitShell ÖĞ layout Ã¿´ÎäÖÈ¾ÖØĞÂ¼ÆËã
+- **ÎÄ¼ş**£º`src/cockpit/CockpitShell.tsx`
+- **ĞĞºÅ**£º169-183
+- **·çÏÕµÈ¼¶**£º?? ¸ß
+- **ÎÊÌâÃèÊö**£º`layout` ±äÁ¿ÔÚÃ¿´ÎäÖÈ¾Ê±Í¨¹ı IIFE ÖØĞÂ¼ÆËã£¬µ¼ÖÂ `GridLayout` ×é¼şµÄ `layout` prop ÒıÓÃÃ¿´Î¶¼±ä»¯£¬´¥·¢Õû¸öÍø¸ñµÄÖØäÖÈ¾¡£
 
 ```typescript
-// ç¬¬ 169-183 è¡Œ
+// µÚ 169-183 ĞĞ
 const layout = (() => {
   const persisted = loadLayout()
   return instances.map((instance) => {
@@ -238,269 +246,269 @@ const layout = (() => {
       minH: 1,
     }
   })
-})()  // æ¯æ¬¡æ¸²æŸ“éƒ½é‡æ–°è®¡ç®—ï¼Œè¿”å›æ–°æ•°ç»„å¼•ç”¨
+})()  // Ã¿´ÎäÖÈ¾¶¼ÖØĞÂ¼ÆËã£¬·µ»ØĞÂÊı×éÒıÓÃ
 ```
 
 ---
 
-### 3.2 ä¸­é£é™©é—®é¢˜
+### 3.2 ÖĞ·çÏÕÎÊÌâ
 
-#### é—®é¢˜ 2.3ï¼šUI åŸºç¡€ç»„ä»¶ç¼ºå°‘ React.memo
-- **æ–‡ä»¶**ï¼š`src/components/ui/` ç›®å½•ä¸‹å¤šä¸ªç»„ä»¶
-- **é£é™©ç­‰çº§**ï¼šğŸŸ¡ ä¸­
-- **é—®é¢˜æè¿°**ï¼šå¤§éƒ¨åˆ† UI åŸºç¡€ç»„ä»¶ï¼ˆButtonã€Cardã€Badgeã€Input ç­‰ï¼‰æ²¡æœ‰ä½¿ç”¨ `React.memo`ã€‚è™½ç„¶è¿™äº›ç»„ä»¶æ¸²æŸ“å¼€é”€å°ï¼Œä½†åœ¨åˆ—è¡¨/ç½‘æ ¼ç­‰é«˜é¢‘æ¸²æŸ“åœºæ™¯ä¸­ç´¯ç§¯æ•ˆåº”æ˜æ˜¾ã€‚
+#### ÎÊÌâ 2.3£ºUI »ù´¡×é¼şÈ±ÉÙ React.memo
+- **ÎÄ¼ş**£º`src/components/ui/` Ä¿Â¼ÏÂ¶à¸ö×é¼ş
+- **·çÏÕµÈ¼¶**£º?? ÖĞ
+- **ÎÊÌâÃèÊö**£º´ó²¿·Ö UI »ù´¡×é¼ş£¨Button¡¢Card¡¢Badge¡¢Input µÈ£©Ã»ÓĞÊ¹ÓÃ `React.memo`¡£ËäÈ»ÕâĞ©×é¼şäÖÈ¾¿ªÏúĞ¡£¬µ«ÔÚÁĞ±í/Íø¸ñµÈ¸ßÆµäÖÈ¾³¡¾°ÖĞÀÛ»ıĞ§Ó¦Ã÷ÏÔ¡£
 
-**å…¸å‹æ¡ˆä¾‹ï¼ˆButton ç»„ä»¶ï¼‰ï¼š**
+**µäĞÍ°¸Àı£¨Button ×é¼ş£©£º**
 ```typescript
-// src/components/ui/Button.tsx ç¬¬ 28 è¡Œ
+// src/components/ui/Button.tsx µÚ 28 ĞĞ
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  // ... æ—  memo åŒ…è£¹
+  // ... ÎŞ memo °ü¹ü
 )
 ```
 
-#### é—®é¢˜ 2.4ï¼šå†…è” style å¯¹è±¡å¯¼è‡´å­ç»„ä»¶é‡æ¸²æŸ“
-- **æ–‡ä»¶**ï¼šå¤šå¤„
-- **é£é™©ç­‰çº§**ï¼šğŸŸ¡ ä¸­
-- **é—®é¢˜æè¿°**ï¼šä½¿ç”¨ `style={{...}}` å†…è”å¯¹è±¡ä½œä¸º propsï¼Œæ¯æ¬¡æ¸²æŸ“åˆ›å»ºæ–°å¯¹è±¡å¼•ç”¨ï¼Œå¯¼è‡´å­ç»„ä»¶æ— æ³•é€šè¿‡æµ…æ¯”è¾ƒè·³è¿‡æ¸²æŸ“ã€‚
+#### ÎÊÌâ 2.4£ºÄÚÁª style ¶ÔÏóµ¼ÖÂ×Ó×é¼şÖØäÖÈ¾
+- **ÎÄ¼ş**£º¶à´¦
+- **·çÏÕµÈ¼¶**£º?? ÖĞ
+- **ÎÊÌâÃèÊö**£ºÊ¹ÓÃ `style={{...}}` ÄÚÁª¶ÔÏó×÷Îª props£¬Ã¿´ÎäÖÈ¾´´½¨ĞÂ¶ÔÏóÒıÓÃ£¬µ¼ÖÂ×Ó×é¼şÎŞ·¨Í¨¹ıÇ³±È½ÏÌø¹ıäÖÈ¾¡£
 
-**å‘ç°ä½ç½®ï¼š**
+**·¢ÏÖÎ»ÖÃ£º**
 - `src/pages/trading/components/VirtualizedHoldingsTable.tsx:59,122,159,240,243,257`
-- `src/components/ui/LoadingState.tsx:52,134`
-- `src/components/ui/Slider.tsx:41,69`
+- `src/components/molecules/states/Loading.tsx`
+- `src/components/atoms/Slider.tsx`
 - `src/components/ui/Progress.tsx:30`
 
-**å…¸å‹ä»£ç ï¼š**
+**µäĞÍ´úÂë£º**
 ```typescript
-// VirtualizedHoldingsTable.tsx ç¬¬ 59 è¡Œ
-style={{ minHeight: '48px' }}  // æ¯æ¬¡æ¸²æŸ“åˆ›å»ºæ–°å¯¹è±¡
+// VirtualizedHoldingsTable.tsx µÚ 59 ĞĞ
+style={{ minHeight: '48px' }}  // Ã¿´ÎäÖÈ¾´´½¨ĞÂ¶ÔÏó
 ```
 
-#### é—®é¢˜ 2.5ï¼šWidgetWrapper ç»„ä»¶ç¼ºå°‘ memo
-- **æ–‡ä»¶**ï¼š`src/cockpit/CockpitShell.tsx`
-- **è¡Œå·**ï¼š48-146
-- **é£é™©ç­‰çº§**ï¼šğŸŸ¡ ä¸­
-- **é—®é¢˜æè¿°**ï¼š`WidgetWrapper` æ˜¯å†…éƒ¨ç»„ä»¶ï¼Œæ¥æ”¶ `config` å’Œ `data` ä¸¤ä¸ªå¯¹è±¡ propsï¼Œä½†æ²¡æœ‰ä½¿ç”¨ `React.memo`ã€‚å½“çˆ¶ç»„ä»¶é‡æ¸²æŸ“æ—¶ï¼Œå³ä½¿ props å€¼æœªå˜ï¼Œæ‰€æœ‰ WidgetWrapper éƒ½ä¼šé‡æ¸²æŸ“ã€‚
+#### ÎÊÌâ 2.5£ºWidgetWrapper ×é¼şÈ±ÉÙ memo
+- **ÎÄ¼ş**£º`src/cockpit/CockpitShell.tsx`
+- **ĞĞºÅ**£º48-146
+- **·çÏÕµÈ¼¶**£º?? ÖĞ
+- **ÎÊÌâÃèÊö**£º`WidgetWrapper` ÊÇÄÚ²¿×é¼ş£¬½ÓÊÕ `config` ºÍ `data` Á½¸ö¶ÔÏó props£¬µ«Ã»ÓĞÊ¹ÓÃ `React.memo`¡£µ±¸¸×é¼şÖØäÖÈ¾Ê±£¬¼´Ê¹ props ÖµÎ´±ä£¬ËùÓĞ WidgetWrapper ¶¼»áÖØäÖÈ¾¡£
 
 ---
 
-### 3.3 ä½é£é™©é—®é¢˜
+### 3.3 µÍ·çÏÕÎÊÌâ
 
-#### é—®é¢˜ 2.6ï¼šé¡µé¢ç»„ä»¶æ™®éç¼ºå°‘ useMemo/useCallback
-- **æ–‡ä»¶**ï¼š`src/pages/` ç›®å½•ä¸‹å¤šä¸ªé¡µé¢
-- **é£é™©ç­‰çº§**ï¼šğŸŸ¢ ä½
-- **é—®é¢˜æè¿°**ï¼šéƒ¨åˆ†é¡µé¢ç»„ä»¶çš„äº‹ä»¶å¤„ç†å‡½æ•°å’Œè®¡ç®—å€¼æœªä½¿ç”¨ `useCallback`/`useMemo` åŒ…è£¹ã€‚è™½ç„¶é¡µé¢çº§ç»„ä»¶é‡æ¸²æŸ“å½±å“æœ‰é™ï¼Œä½†ä¼ é€’ç»™æ·±å±‚å­ç»„ä»¶æ—¶å¯èƒ½é€ æˆçº§è”é‡æ¸²æŸ“ã€‚
+#### ÎÊÌâ 2.6£ºÒ³Ãæ×é¼şÆÕ±éÈ±ÉÙ useMemo/useCallback
+- **ÎÄ¼ş**£º`src/pages/` Ä¿Â¼ÏÂ¶à¸öÒ³Ãæ
+- **·çÏÕµÈ¼¶**£º?? µÍ
+- **ÎÊÌâÃèÊö**£º²¿·ÖÒ³Ãæ×é¼şµÄÊÂ¼ş´¦Àíº¯ÊıºÍ¼ÆËãÖµÎ´Ê¹ÓÃ `useCallback`/`useMemo` °ü¹ü¡£ËäÈ»Ò³Ãæ¼¶×é¼şÖØäÖÈ¾Ó°ÏìÓĞÏŞ£¬µ«´«µİ¸øÉî²ã×Ó×é¼şÊ±¿ÉÄÜÔì³É¼¶ÁªÖØäÖÈ¾¡£
 
-**å·²æ­£ç¡®ä¼˜åŒ–çš„æ­£é¢æ¡ˆä¾‹ï¼š**
-- `HoldingsPage.tsx` - ä½¿ç”¨äº† useCallback åŒ…è£…æ‰€æœ‰å¤„ç†å‡½æ•°
-- `ValuePitPage.tsx` - ä½¿ç”¨äº† useCallback
-- `HotSectorPage.tsx` - ä½¿ç”¨äº† useCallback
-- `NewsPage.tsx`ï¼ˆnews-v6ï¼‰- ä½¿ç”¨äº† useCallback å’Œ useMemo
+**ÒÑÕıÈ·ÓÅ»¯µÄÕıÃæ°¸Àı£º**
+- `HoldingsPage.tsx` - Ê¹ÓÃÁË useCallback °ü×°ËùÓĞ´¦Àíº¯Êı
+- `ValuePitPage.tsx` - Ê¹ÓÃÁË useCallback
+- `HotSectorPage.tsx` - Ê¹ÓÃÁË useCallback
+- `NewsPage.tsx`£¨news-v6£©- Ê¹ÓÃÁË useCallback ºÍ useMemo
 
-**æœªå……åˆ†ä¼˜åŒ–çš„é¡µé¢ï¼š**
-- `StockAnalysisPage.tsx` - ç®€å•é¡µé¢ï¼Œå½±å“æœ‰é™
-- `IntelligentScorePage.tsx` - è¾ƒå¤æ‚é¡µé¢ï¼Œéƒ¨åˆ†è®¡ç®—å€¼å¯ useMemo åŒ–
+**Î´³ä·ÖÓÅ»¯µÄÒ³Ãæ£º**
+- `StockAnalysisPage.tsx` - ¼òµ¥Ò³Ãæ£¬Ó°ÏìÓĞÏŞ
+- `IntelligentScorePage.tsx` - ½Ï¸´ÔÓÒ³Ãæ£¬²¿·Ö¼ÆËãÖµ¿É useMemo »¯
 
-#### é—®é¢˜ 2.7ï¼šScoreFactorDeltaPanel ç­‰ä¸šåŠ¡ç»„ä»¶ç¼ºå°‘ memo
-- **æ–‡ä»¶**ï¼š`src/components/organisms/shared/ScoreFactorDeltaPanel.tsx`ã€`src/components/organisms/shared/ScoreUpdateAlert.tsx` ç­‰
-- **é£é™©ç­‰çº§**ï¼šğŸŸ¢ ä½
-- **é—®é¢˜æè¿°**ï¼šä¸šåŠ¡ç»„ä»¶æœªä½¿ç”¨ memoï¼Œåœ¨çˆ¶ç»„ä»¶é¢‘ç¹é‡æ¸²æŸ“æ—¶å¯èƒ½é€ æˆä¸å¿…è¦çš„å¼€é”€ã€‚
-
----
-
-## å››ã€ç»´åº¦ä¸‰ï¼šBundle ä½“ç§¯é™æ€åˆ†æ
-
-### 4.1 é«˜é£é™©é—®é¢˜ï¼ˆå¤§æ–‡ä»¶ > 500 è¡Œï¼‰
-
-#### é—®é¢˜ 3.1ï¼šstockAnalysisEngine.ts è¶…å¤§å‹æ–‡ä»¶
-- **æ–‡ä»¶**ï¼š`src/services/analysis`
-- **è¡Œæ•°**ï¼š1150 è¡Œ
-- **é£é™©ç­‰çº§**ï¼šğŸ”´ é«˜
-- **é—®é¢˜æè¿°**ï¼šå•æ–‡ä»¶ 1150 è¡Œï¼ŒåŒ…å« L0-L8 ä¹å±‚åˆ†æçš„æ‰€æœ‰ç±»å‹å®šä¹‰ã€é˜ˆå€¼å¸¸é‡ã€è®¡ç®—å‡½æ•°ã€‚æ–‡ä»¶è¿‡å¤§å¯¼è‡´ï¼š
-  - Tree-shaking æ•ˆç‡é™ä½
-  - å¼€å‘è€…è®¤çŸ¥è´Ÿè·é«˜
-  - å•ä¸€èŒè´£åŸåˆ™è¢«è¿å
-
-**ä¸»è¦å†…å®¹åˆ†å¸ƒï¼š**
-- ç±»å‹å®šä¹‰ï¼šçº¦ 300 è¡Œï¼ˆL0-L8 çš„ input/output æ¥å£ï¼‰
-- é˜ˆå€¼å¸¸é‡ï¼šçº¦ 120 è¡Œ
-- 9 ä¸ªåˆ†æå‡½æ•°ï¼šçº¦ 500 è¡Œ
-- LLM å¢å¼ºé€»è¾‘ï¼šçº¦ 150 è¡Œ
-
-#### é—®é¢˜ 3.2ï¼šmockDataCollection.ts è¶…å¤§å‹æ–‡ä»¶
-- **æ–‡ä»¶**ï¼š`src/services/data-collector/mockDataCollection.ts`
-- **è¡Œæ•°**ï¼š1027 è¡Œ
-- **é£é™©ç­‰çº§**ï¼šğŸ”´ é«˜
-- **é—®é¢˜æè¿°**ï¼šMock æ•°æ®ç”Ÿæˆæ–‡ä»¶è¶…è¿‡ 1000 è¡Œï¼Œç”Ÿäº§æ„å»ºä¸­å¦‚æœæœªæ­£ç¡®æ’é™¤ä¼šæ˜¾è‘—å¢åŠ  bundle ä½“ç§¯ã€‚éœ€ç¡®è®¤è¯¥æ–‡ä»¶ä»…åœ¨å¼€å‘ç¯å¢ƒå¼•å…¥ã€‚
-
-#### é—®é¢˜ 3.3ï¼šhotSectorAnalyzer.ts å¤§å‹æ–‡ä»¶
-- **æ–‡ä»¶**ï¼š`src/services/scoring/hotSectorAnalyzer.ts`
-- **è¡Œæ•°**ï¼š636 è¡Œ
-- **é£é™©ç­‰çº§**ï¼šğŸ”´ é«˜
-- **é—®é¢˜æè¿°**ï¼šçƒ­é—¨æ¿å—ç­–ç•¥åˆ†æå™¨å•æ–‡ä»¶ 636 è¡Œï¼ŒåŒ…å«ç±»å‹å®šä¹‰ã€è®¡ç®—é€»è¾‘ã€æ‰¹é‡å¤„ç†ã€æŒä¹…åŒ–ç­‰å¤šä¸ªèŒè´£ã€‚
+#### ÎÊÌâ 2.7£ºScoreFactorDeltaPanel µÈÒµÎñ×é¼şÈ±ÉÙ memo
+- **ÎÄ¼ş**£º`src/components/organisms/shared/ScoreFactorDeltaPanel.tsx`¡¢`src/components/organisms/shared/ScoreUpdateAlert.tsx` µÈ
+- **·çÏÕµÈ¼¶**£º?? µÍ
+- **ÎÊÌâÃèÊö**£ºÒµÎñ×é¼şÎ´Ê¹ÓÃ memo£¬ÔÚ¸¸×é¼şÆµ·±ÖØäÖÈ¾Ê±¿ÉÄÜÔì³É²»±ØÒªµÄ¿ªÏú¡£
 
 ---
 
-### 4.2 ä¸­é£é™©é—®é¢˜
+## ËÄ¡¢Î¬¶ÈÈı£ºBundle Ìå»ı¾²Ì¬·ÖÎö
 
-#### é—®é¢˜ 3.4ï¼šintelligentScoreService.ts å¤§å‹æ–‡ä»¶
-- **æ–‡ä»¶**ï¼š`src/services/scoring/intelligentScoreService.ts`
-- **è¡Œæ•°**ï¼š593 è¡Œ
-- **é£é™©ç­‰çº§**ï¼šğŸŸ¡ ä¸­
-- **é—®é¢˜æè¿°**ï¼šæ™ºèƒ½è¯„åˆ†æœåŠ¡ 593 è¡Œï¼ŒåŒ…å« Prompt æ„å»ºã€LLM è°ƒç”¨ã€ç»“æœè§£æã€è¿›åº¦å›è°ƒç­‰é€»è¾‘ã€‚
+### 4.1 ¸ß·çÏÕÎÊÌâ£¨´óÎÄ¼ş > 500 ĞĞ£©
 
-#### é—®é¢˜ 3.5ï¼švaluePitAnalyzer.ts å¤§å‹æ–‡ä»¶
-- **æ–‡ä»¶**ï¼š`src/services/scoring/valuePitAnalyzer.ts`
-- **è¡Œæ•°**ï¼š541 è¡Œ
-- **é£é™©ç­‰çº§**ï¼šğŸŸ¡ ä¸­
-- **é—®é¢˜æè¿°**ï¼šä»·å€¼æ´¼åœ°ç­–ç•¥åˆ†æå™¨ 541 è¡Œï¼ŒèŒè´£ä¸ hotSectorAnalyzer ç±»ä¼¼ã€‚
+#### ÎÊÌâ 3.1£ºstockAnalysisEngine.ts ³¬´óĞÍÎÄ¼ş
+- **ÎÄ¼ş**£º`src/services/analysis`
+- **ĞĞÊı**£º1150 ĞĞ
+- **·çÏÕµÈ¼¶**£º?? ¸ß
+- **ÎÊÌâÃèÊö**£ºµ¥ÎÄ¼ş 1150 ĞĞ£¬°üº¬ L0-L8 ¾Å²ã·ÖÎöµÄËùÓĞÀàĞÍ¶¨Òå¡¢ãĞÖµ³£Á¿¡¢¼ÆËãº¯Êı¡£ÎÄ¼ş¹ı´óµ¼ÖÂ£º
+  - Tree-shaking Ğ§ÂÊ½µµÍ
+  - ¿ª·¢ÕßÈÏÖª¸ººÉ¸ß
+  - µ¥Ò»Ö°ÔğÔ­Ôò±»Î¥·´
 
-#### é—®é¢˜ 3.6ï¼šl3.ts å¤§å‹è®¡ç®—æ–‡ä»¶
-- **æ–‡ä»¶**ï¼š`src/services/scoring/v6-engine/calculators/l3.ts`
-- **è¡Œæ•°**ï¼š535 è¡Œ
-- **é£é™©ç­‰çº§**ï¼šğŸŸ¡ ä¸­
-- **é—®é¢˜æè¿°**ï¼šL3 è´¢åŠ¡å¥åº· + æŠ¤åŸæ²³ + ä¼°å€¼è®¡ç®—å™¨å•æ–‡ä»¶ 535 è¡Œï¼ŒåŒ…å«å¤šä¸ªè®¡ç®—æ¨¡å—ã€‚
+**Ö÷ÒªÄÚÈİ·Ö²¼£º**
+- ÀàĞÍ¶¨Òå£ºÔ¼ 300 ĞĞ£¨L0-L8 µÄ input/output ½Ó¿Ú£©
+- ãĞÖµ³£Á¿£ºÔ¼ 120 ĞĞ
+- 9 ¸ö·ÖÎöº¯Êı£ºÔ¼ 500 ĞĞ
+- LLM ÔöÇ¿Âß¼­£ºÔ¼ 150 ĞĞ
 
-#### é—®é¢˜ 3.7ï¼šreact-grid-layout å…¨é‡å¯¼å…¥
-- **æ–‡ä»¶**ï¼š`src/cockpit/CockpitShell.tsx`
-- **è¡Œå·**ï¼š7-9
-- **é£é™©ç­‰çº§**ï¼šğŸŸ¡ ä¸­
-- **é—®é¢˜æè¿°**ï¼š`react-grid-layout` æ˜¯ä¸€ä¸ªè¾ƒå¤§çš„ä¾èµ–ï¼ˆ~50KB gzippedï¼‰ï¼Œä¸”å…¶ CSS æ–‡ä»¶ä¹Ÿä¼šå¢åŠ ä½“ç§¯ã€‚å½“å‰ä»…åœ¨é©¾é©¶èˆ±é¡µé¢ä½¿ç”¨ï¼Œä½†ä½œä¸ºé¡¶å±‚ç»„ä»¶å¯¼å…¥ä¼šå¢åŠ é¦–å± bundle å¤§å°ã€‚
+#### ÎÊÌâ 3.2£ºmockDataCollection.ts ³¬´óĞÍÎÄ¼ş
+- **ÎÄ¼ş**£º`src/services/data-collector/mockDataCollection.ts`
+- **ĞĞÊı**£º1027 ĞĞ
+- **·çÏÕµÈ¼¶**£º?? ¸ß
+- **ÎÊÌâÃèÊö**£ºMock Êı¾İÉú³ÉÎÄ¼ş³¬¹ı 1000 ĞĞ£¬Éú²ú¹¹½¨ÖĞÈç¹ûÎ´ÕıÈ·ÅÅ³ı»áÏÔÖøÔö¼Ó bundle Ìå»ı¡£ĞèÈ·ÈÏ¸ÃÎÄ¼ş½öÔÚ¿ª·¢»·¾³ÒıÈë¡£
+
+#### ÎÊÌâ 3.3£ºhotSectorAnalyzer.ts ´óĞÍÎÄ¼ş
+- **ÎÄ¼ş**£º`src/services/scoring/hotSectorAnalyzer.ts`
+- **ĞĞÊı**£º636 ĞĞ
+- **·çÏÕµÈ¼¶**£º?? ¸ß
+- **ÎÊÌâÃèÊö**£ºÈÈÃÅ°å¿é²ßÂÔ·ÖÎöÆ÷µ¥ÎÄ¼ş 636 ĞĞ£¬°üº¬ÀàĞÍ¶¨Òå¡¢¼ÆËãÂß¼­¡¢ÅúÁ¿´¦Àí¡¢³Ö¾Ã»¯µÈ¶à¸öÖ°Ôğ¡£
+
+---
+
+### 4.2 ÖĞ·çÏÕÎÊÌâ
+
+#### ÎÊÌâ 3.4£ºintelligentScoreService.ts ´óĞÍÎÄ¼ş
+- **ÎÄ¼ş**£º`src/services/scoring/intelligentScoreService.ts`
+- **ĞĞÊı**£º593 ĞĞ
+- **·çÏÕµÈ¼¶**£º?? ÖĞ
+- **ÎÊÌâÃèÊö**£ºÖÇÄÜÆÀ·Ö·şÎñ 593 ĞĞ£¬°üº¬ Prompt ¹¹½¨¡¢LLM µ÷ÓÃ¡¢½á¹û½âÎö¡¢½ø¶È»Øµ÷µÈÂß¼­¡£
+
+#### ÎÊÌâ 3.5£ºvaluePitAnalyzer.ts ´óĞÍÎÄ¼ş
+- **ÎÄ¼ş**£º`src/services/scoring/valuePitAnalyzer.ts`
+- **ĞĞÊı**£º541 ĞĞ
+- **·çÏÕµÈ¼¶**£º?? ÖĞ
+- **ÎÊÌâÃèÊö**£º¼ÛÖµÍİµØ²ßÂÔ·ÖÎöÆ÷ 541 ĞĞ£¬Ö°ÔğÓë hotSectorAnalyzer ÀàËÆ¡£
+
+#### ÎÊÌâ 3.6£ºl3.ts ´óĞÍ¼ÆËãÎÄ¼ş
+- **ÎÄ¼ş**£º`src/services/scoring/v6-engine/calculators/l3.ts`
+- **ĞĞÊı**£º535 ĞĞ
+- **·çÏÕµÈ¼¶**£º?? ÖĞ
+- **ÎÊÌâÃèÊö**£ºL3 ²ÆÎñ½¡¿µ + »¤³ÇºÓ + ¹ÀÖµ¼ÆËãÆ÷µ¥ÎÄ¼ş 535 ĞĞ£¬°üº¬¶à¸ö¼ÆËãÄ£¿é¡£
+
+#### ÎÊÌâ 3.7£ºreact-grid-layout È«Á¿µ¼Èë
+- **ÎÄ¼ş**£º`src/cockpit/CockpitShell.tsx`
+- **ĞĞºÅ**£º7-9
+- **·çÏÕµÈ¼¶**£º?? ÖĞ
+- **ÎÊÌâÃèÊö**£º`react-grid-layout` ÊÇÒ»¸ö½Ï´óµÄÒÀÀµ£¨~50KB gzipped£©£¬ÇÒÆä CSS ÎÄ¼şÒ²»áÔö¼ÓÌå»ı¡£µ±Ç°½öÔÚ¼İÊ»²ÕÒ³ÃæÊ¹ÓÃ£¬µ«×÷Îª¶¥²ã×é¼şµ¼Èë»áÔö¼ÓÊ×ÆÁ bundle ´óĞ¡¡£
 
 ```typescript
-// ç¬¬ 7-9 è¡Œ
+// µÚ 7-9 ĞĞ
 import { GridLayout } from 'react-grid-layout'
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
 ```
 
-**å»ºè®®**ï¼šä½¿ç”¨åŠ¨æ€ import + React.lazy æ‡’åŠ è½½ Cockpit æ¨¡å—ã€‚
+**½¨Òé**£ºÊ¹ÓÃ¶¯Ì¬ import + React.lazy ÀÁ¼ÓÔØ Cockpit Ä£¿é¡£
 
 ---
 
-### 4.3 ä½é£é™©é—®é¢˜
+### 4.3 µÍ·çÏÕÎÊÌâ
 
-#### é—®é¢˜ 3.8ï¼šdayjs å¯¼å…¥æ–¹å¼
-- **æ–‡ä»¶**ï¼š`src/lib/format.ts`
-- **è¡Œå·**ï¼š7
-- **é£é™©ç­‰çº§**ï¼šğŸŸ¢ ä½
-- **é—®é¢˜æè¿°**ï¼šä½¿ç”¨ `import * as dayjs from 'dayjs'` å‘½åç©ºé—´å¯¼å…¥ï¼Œè™½ç„¶ dayjs æœ¬èº«å¾ˆå°ï¼ˆ~2KBï¼‰ï¼Œä½†æœ€ä½³å®è·µæ˜¯ä½¿ç”¨é»˜è®¤å¯¼å…¥ã€‚
+#### ÎÊÌâ 3.8£ºdayjs µ¼Èë·½Ê½
+- **ÎÄ¼ş**£º`src/lib/format.ts`
+- **ĞĞºÅ**£º7
+- **·çÏÕµÈ¼¶**£º?? µÍ
+- **ÎÊÌâÃèÊö**£ºÊ¹ÓÃ `import * as dayjs from 'dayjs'` ÃüÃû¿Õ¼äµ¼Èë£¬ËäÈ» dayjs ±¾ÉíºÜĞ¡£¨~2KB£©£¬µ«×î¼ÑÊµ¼ùÊÇÊ¹ÓÃÄ¬ÈÏµ¼Èë¡£
 
 ```typescript
-// å½“å‰
+// µ±Ç°
 import * as dayjs from 'dayjs'
 
-// å»ºè®®
+// ½¨Òé
 import dayjs from 'dayjs'
 ```
 
-#### é—®é¢˜ 3.9ï¼šlucide-react å›¾æ ‡åº“
-- **æ–‡ä»¶**ï¼šå¤šå¤„
-- **é£é™©ç­‰çº§**ï¼šğŸŸ¢ ä½
-- **é—®é¢˜æè¿°**ï¼šé¡¹ç›®ä¸­å¤§é‡ä½¿ç”¨ `lucide-react` å›¾æ ‡ï¼ˆ30+ å¤„å¯¼å…¥ï¼‰ã€‚è™½ç„¶ Vite æ”¯æŒ tree-shakingï¼Œä½†å¯¼å…¥çš„å›¾æ ‡æ•°é‡è¾ƒå¤šæ—¶ä»æœ‰ä¸€å®šä½“ç§¯ã€‚
+#### ÎÊÌâ 3.9£ºlucide-react Í¼±ê¿â
+- **ÎÄ¼ş**£º¶à´¦
+- **·çÏÕµÈ¼¶**£º?? µÍ
+- **ÎÊÌâÃèÊö**£ºÏîÄ¿ÖĞ´óÁ¿Ê¹ÓÃ `lucide-react` Í¼±ê£¨30+ ´¦µ¼Èë£©¡£ËäÈ» Vite Ö§³Ö tree-shaking£¬µ«µ¼ÈëµÄÍ¼±êÊıÁ¿½Ï¶àÊ±ÈÔÓĞÒ»¶¨Ìå»ı¡£
 
-**å½“å‰çŠ¶æ€**ï¼šä½¿ç”¨å‘½åå¯¼å…¥æ–¹å¼ï¼ˆ`import { X } from 'lucide-react'`ï¼‰ï¼ŒVite æ„å»ºæ—¶å¯ tree-shakeï¼Œé£é™©è¾ƒä½ã€‚
-
----
-
-## äº”ã€ä¼˜åŒ–å»ºè®®ä¼˜å…ˆçº§æ’åº
-
-### P0 - ç«‹å³ä¼˜åŒ–ï¼ˆé«˜æ”¶ç›Šã€ä½æˆæœ¬ï¼‰
-
-1. **æ‰¹é‡åˆ†æå¹¶è¡ŒåŒ–**
-   - `valuePitAnalyzer.ts` å’Œ `hotSectorAnalyzer.ts` çš„ `analyzeBatch` æ”¹ä¸º `Promise.all`
-   - é¢„ä¼°æ”¶ç›Šï¼šæ‰¹é‡åˆ†æé€Ÿåº¦æå‡ 3-10 å€ï¼ˆå–å†³äºå¹¶å‘åº¦ï¼‰
-
-2. **Cockpit layout ç”¨ useMemo ç¼“å­˜**
-   - `CockpitShell.tsx` ä¸­çš„ `layout` è®¡ç®—ç”¨ `useMemo` åŒ…è£¹
-   - é¢„ä¼°æ”¶ç›Šï¼šå‡å°‘é©¾é©¶èˆ±ä¸å¿…è¦çš„é‡æ¸²æŸ“
-
-3. **Widget ç»„ä»¶åŠ  React.memo**
-   - ä¸º 18 ä¸ª Cockpit Widget æ·»åŠ  `React.memo`
-   - é¢„ä¼°æ”¶ç›Šï¼šå•ä¸ªæ•°æ®æ›´æ–°æ—¶ä»…ç›¸å…³ Widget é‡æ¸²æŸ“ï¼Œè€Œéå…¨éƒ¨ 18 ä¸ª
-
-### P1 - è®¡åˆ’ä¼˜åŒ–ï¼ˆé«˜æ”¶ç›Šã€ä¸­ç­‰æˆæœ¬ï¼‰
-
-4. **unifiedStockService å¹¶è¡Œè·å–å¤šæ•°æ®æº**
-   - å°†æ— ä¾èµ–çš„æ•°æ®æºè·å–æ”¹ä¸º `Promise.all`
-   - é¢„ä¼°æ”¶ç›Šï¼šå•åªè‚¡ç¥¨æ•°æ®èåˆé€Ÿåº¦æå‡ 2-5 å€
-
-5. **æ‹†åˆ†è¶…å¤§å‹æ–‡ä»¶**
-   - `stockAnalysisEngine.ts` æŒ‰å±‚çº§æ‹†åˆ†åˆ°ç‹¬ç«‹æ–‡ä»¶
-   - `hotSectorAnalyzer.ts` / `valuePitAnalyzer.ts` æ‹†åˆ†ç±»å‹ä¸é€»è¾‘
-   - é¢„ä¼°æ”¶ç›Šï¼šæå‡ tree-shaking æ•ˆç‡ï¼Œæ”¹å–„å¯ç»´æŠ¤æ€§
-
-6. **Cockpit æ¨¡å—æ‡’åŠ è½½**
-   - ä½¿ç”¨ `React.lazy` + åŠ¨æ€ import æ‡’åŠ è½½é©¾é©¶èˆ±æ¨¡å—
-   - é¢„ä¼°æ”¶ç›Šï¼šå‡å°‘é¦–å± bundle ä½“ç§¯ ~50KB
-
-### P2 - æŒç»­ä¼˜åŒ–ï¼ˆä¸­ç­‰æ”¶ç›Šã€ä½æˆæœ¬ï¼‰
-
-7. **UI ç»„ä»¶åº“æ·»åŠ  React.memo**
-   - ä¸ºé«˜é¢‘ä½¿ç”¨çš„ UI ç»„ä»¶ï¼ˆButtonã€Cardã€Badge ç­‰ï¼‰æ·»åŠ  memo
-   - ç»“åˆ shallowequal è¿›è¡Œè‡ªå®šä¹‰æ¯”è¾ƒ
-
-8. **å†…è” style å¯¹è±¡æå–**
-   - å°†å¸¸ç”¨çš„å†…è” style æå–ä¸ºæ¨¡å—çº§å¸¸é‡æˆ–ä½¿ç”¨ styled/tailwind ç±»åæ›¿ä»£
-
-9. **é¡µé¢çº§è®¡ç®—å€¼ useMemo åŒ–**
-   - å®¡æŸ¥å¤æ‚é¡µé¢ç»„ä»¶ï¼Œå°†æ´¾ç”Ÿè®¡ç®—å€¼ç”¨ useMemo åŒ…è£¹
+**µ±Ç°×´Ì¬**£ºÊ¹ÓÃÃüÃûµ¼Èë·½Ê½£¨`import { X } from 'lucide-react'`£©£¬Vite ¹¹½¨Ê±¿É tree-shake£¬·çÏÕ½ÏµÍ¡£
 
 ---
 
-## å…­ã€é™„å½•ï¼šæ–‡ä»¶è¡Œæ•°ç»Ÿè®¡ï¼ˆ> 300 è¡Œçš„æ–‡ä»¶ï¼‰
+## Îå¡¢ÓÅ»¯½¨ÒéÓÅÏÈ¼¶ÅÅĞò
 
-| æ–‡ä»¶è·¯å¾„ | è¡Œæ•° | é£é™©ç­‰çº§ |
+### P0 - Á¢¼´ÓÅ»¯£¨¸ßÊÕÒæ¡¢µÍ³É±¾£©
+
+1. **ÅúÁ¿·ÖÎö²¢ĞĞ»¯**
+   - `valuePitAnalyzer.ts` ºÍ `hotSectorAnalyzer.ts` µÄ `analyzeBatch` ¸ÄÎª `Promise.all`
+   - Ô¤¹ÀÊÕÒæ£ºÅúÁ¿·ÖÎöËÙ¶ÈÌáÉı 3-10 ±¶£¨È¡¾öÓÚ²¢·¢¶È£©
+
+2. **Cockpit layout ÓÃ useMemo »º´æ**
+   - `CockpitShell.tsx` ÖĞµÄ `layout` ¼ÆËãÓÃ `useMemo` °ü¹ü
+   - Ô¤¹ÀÊÕÒæ£º¼õÉÙ¼İÊ»²Õ²»±ØÒªµÄÖØäÖÈ¾
+
+3. **Widget ×é¼ş¼Ó React.memo**
+   - Îª 18 ¸ö Cockpit Widget Ìí¼Ó `React.memo`
+   - Ô¤¹ÀÊÕÒæ£ºµ¥¸öÊı¾İ¸üĞÂÊ±½öÏà¹Ø Widget ÖØäÖÈ¾£¬¶ø·ÇÈ«²¿ 18 ¸ö
+
+### P1 - ¼Æ»®ÓÅ»¯£¨¸ßÊÕÒæ¡¢ÖĞµÈ³É±¾£©
+
+4. **unifiedStockService ²¢ĞĞ»ñÈ¡¶àÊı¾İÔ´**
+   - ½«ÎŞÒÀÀµµÄÊı¾İÔ´»ñÈ¡¸ÄÎª `Promise.all`
+   - Ô¤¹ÀÊÕÒæ£ºµ¥Ö»¹ÉÆ±Êı¾İÈÚºÏËÙ¶ÈÌáÉı 2-5 ±¶
+
+5. **²ğ·Ö³¬´óĞÍÎÄ¼ş**
+   - `stockAnalysisEngine.ts` °´²ã¼¶²ğ·Öµ½¶ÀÁ¢ÎÄ¼ş
+   - `hotSectorAnalyzer.ts` / `valuePitAnalyzer.ts` ²ğ·ÖÀàĞÍÓëÂß¼­
+   - Ô¤¹ÀÊÕÒæ£ºÌáÉı tree-shaking Ğ§ÂÊ£¬¸ÄÉÆ¿ÉÎ¬»¤ĞÔ
+
+6. **Cockpit Ä£¿éÀÁ¼ÓÔØ**
+   - Ê¹ÓÃ `React.lazy` + ¶¯Ì¬ import ÀÁ¼ÓÔØ¼İÊ»²ÕÄ£¿é
+   - Ô¤¹ÀÊÕÒæ£º¼õÉÙÊ×ÆÁ bundle Ìå»ı ~50KB
+
+### P2 - ³ÖĞøÓÅ»¯£¨ÖĞµÈÊÕÒæ¡¢µÍ³É±¾£©
+
+7. **UI ×é¼ş¿âÌí¼Ó React.memo**
+   - Îª¸ßÆµÊ¹ÓÃµÄ UI ×é¼ş£¨Button¡¢Card¡¢Badge µÈ£©Ìí¼Ó memo
+   - ½áºÏ shallowequal ½øĞĞ×Ô¶¨Òå±È½Ï
+
+8. **ÄÚÁª style ¶ÔÏóÌáÈ¡**
+   - ½«³£ÓÃµÄÄÚÁª style ÌáÈ¡ÎªÄ£¿é¼¶³£Á¿»òÊ¹ÓÃ styled/tailwind ÀàÃûÌæ´ú
+
+9. **Ò³Ãæ¼¶¼ÆËãÖµ useMemo »¯**
+   - Éó²é¸´ÔÓÒ³Ãæ×é¼ş£¬½«ÅÉÉú¼ÆËãÖµÓÃ useMemo °ü¹ü
+
+---
+
+## Áù¡¢¸½Â¼£ºÎÄ¼şĞĞÊıÍ³¼Æ£¨> 300 ĞĞµÄÎÄ¼ş£©
+
+| ÎÄ¼şÂ·¾¶ | ĞĞÊı | ·çÏÕµÈ¼¶ |
 |---------|------|---------|
-| `src/services/analysis` | 1150 | ğŸ”´ é«˜ |
-| `src/services/data-collector/mockDataCollection.ts` | 1027 | ğŸ”´ é«˜ |
-| `src/services/scoring/hotSectorAnalyzer.ts` | 636 | ğŸ”´ é«˜ |
-| `src/services/scoring/intelligentScoreService.ts` | 593 | ğŸŸ¡ ä¸­ |
-| `src/services/scoring/valuePitAnalyzer.ts` | 541 | ğŸŸ¡ ä¸­ |
-| `src/services/scoring/v6-engine/calculators/l3.ts` | 535 | ğŸŸ¡ ä¸­ |
-| `src/services/scoring/v6-engine/calculators/l4_l5_l6.ts` | 402 | ğŸŸ¢ ä½ |
-| `src/components/molecules/ErrorState.tsx` | 323 | ğŸŸ¢ ä½ |
-| `src/pages/analysis/IntelligentScorePage.tsx` | 305 | ğŸŸ¢ ä½ |
-| `src/pages/trading/HoldingsPage.tsx` | 301 | ğŸŸ¢ ä½ |
+| `src/services/analysis` | 1150 | ?? ¸ß |
+| `src/services/data-collector/mockDataCollection.ts` | 1027 | ?? ¸ß |
+| `src/services/scoring/hotSectorAnalyzer.ts` | 636 | ?? ¸ß |
+| `src/services/scoring/intelligentScoreService.ts` | 593 | ?? ÖĞ |
+| `src/services/scoring/valuePitAnalyzer.ts` | 541 | ?? ÖĞ |
+| `src/services/scoring/v6-engine/calculators/l3.ts` | 535 | ?? ÖĞ |
+| `src/services/scoring/v6-engine/calculators/l4_l5_l6.ts` | 402 | ?? µÍ |
+| `src/components/molecules/ErrorState.tsx` | 323 | ?? µÍ |
+| `src/pages/analysis/IntelligentScorePage.tsx` | 305 | ?? µÍ |
+| `src/pages/trading/HoldingsPage.tsx` | 301 | ?? µÍ |
 
 ---
 
-## ä¸ƒã€å®¡è®¡ç»“è®º
+## Æß¡¢Éó¼Æ½áÂÛ
 
-æœ¬æ¬¡å®¡è®¡å…±å‘ç° **42+** ä¸ªæ€§èƒ½ç›¸å…³é—®é¢˜ï¼Œå…¶ä¸­ï¼š
+±¾´ÎÉó¼Æ¹²·¢ÏÖ **42+** ¸öĞÔÄÜÏà¹ØÎÊÌâ£¬ÆäÖĞ£º
 
-- **é«˜é£é™©é—®é¢˜ 8 ä¸ª**ï¼ˆå…¶ä¸­ 4 é¡¹å·²ä¿®å¤ï¼šæ‰¹é‡åˆ†æ Promise.allSettled x2ã€ç»Ÿä¸€è§†å›¾ Promise.allã€Widget React.memoï¼‰ï¼šä¸»è¦é›†ä¸­åœ¨æ‰¹é‡åˆ†æçš„é¡ºåº await å’Œé©¾é©¶èˆ±ç»„ä»¶çš„é‡æ¸²æŸ“é—®é¢˜ä¸Šï¼Œè¿™äº›é—®é¢˜åœ¨å¤§æ•°æ®é‡åœºæ™¯ä¸‹ä¼šé€ æˆæ˜æ˜¾çš„æ€§èƒ½ç“¶é¢ˆï¼Œå»ºè®®ä¼˜å…ˆä¿®å¤ã€‚
+- **¸ß·çÏÕÎÊÌâ 8 ¸ö**£¨ÆäÖĞ 4 ÏîÒÑĞŞ¸´£ºÅúÁ¿·ÖÎö Promise.allSettled x2¡¢Í³Ò»ÊÓÍ¼ Promise.all¡¢Widget React.memo£©£ºÖ÷Òª¼¯ÖĞÔÚÅúÁ¿·ÖÎöµÄË³Ğò await ºÍ¼İÊ»²Õ×é¼şµÄÖØäÖÈ¾ÎÊÌâÉÏ£¬ÕâĞ©ÎÊÌâÔÚ´óÊı¾İÁ¿³¡¾°ÏÂ»áÔì³ÉÃ÷ÏÔµÄĞÔÄÜÆ¿¾±£¬½¨ÒéÓÅÏÈĞŞ¸´¡£
 
-- **ä¸­é£é™©é—®é¢˜ 10 ä¸ª**ï¼šæ¶‰åŠå¤šæ•°æ®æºå¹¶è¡Œè·å–ã€UI ç»„ä»¶ä¼˜åŒ–ã€å¤§æ–‡ä»¶æ‹†åˆ†ç­‰ï¼Œå»ºè®®çº³å…¥ä¸‹ä¸ªè¿­ä»£çš„æ€§èƒ½ä¼˜åŒ–è®¡åˆ’ã€‚
+- **ÖĞ·çÏÕÎÊÌâ 10 ¸ö**£ºÉæ¼°¶àÊı¾İÔ´²¢ĞĞ»ñÈ¡¡¢UI ×é¼şÓÅ»¯¡¢´óÎÄ¼ş²ğ·ÖµÈ£¬½¨ÒéÄÉÈëÏÂ¸öµü´úµÄĞÔÄÜÓÅ»¯¼Æ»®¡£
 
-- **ä½é£é™©é—®é¢˜ 24+ ä¸ª**ï¼šä¸»è¦æ˜¯ç»†èŠ‚å±‚é¢çš„ä¼˜åŒ–ç‚¹ï¼Œå¯åœ¨æ—¥å¸¸å¼€å‘ä¸­é€æ­¥æ”¹è¿›ã€‚
+- **µÍ·çÏÕÎÊÌâ 24+ ¸ö**£ºÖ÷ÒªÊÇÏ¸½Ú²ãÃæµÄÓÅ»¯µã£¬¿ÉÔÚÈÕ³£¿ª·¢ÖĞÖğ²½¸Ä½ø¡£
 
-**æ•´ä½“æ€§èƒ½è¯„çº§ï¼šB-**
+**ÕûÌåĞÔÄÜÆÀ¼¶£ºB-**
 
-ä»£ç åœ¨æ ¸å¿ƒä¸šåŠ¡é€»è¾‘ä¸Šæœ‰ä¸€å®šçš„æ€§èƒ½æ„è¯†ï¼ˆå¦‚ `getUnifiedStockViews` å·²ä½¿ç”¨ `Promise.all`ã€éƒ¨åˆ†é¡µé¢ä½¿ç”¨äº† `useCallback`ï¼‰ï¼Œä½†åœ¨æ‰¹é‡å¤„ç†ã€ç»„ä»¶æ¸²æŸ“ä¼˜åŒ–ã€ä»£ç æ‹†åˆ†ç­‰æ–¹é¢ä»æœ‰è¾ƒå¤§æå‡ç©ºé—´ã€‚å»ºè®®æŒ‰ç…§ P0 â†’ P1 â†’ P2 çš„ä¼˜å…ˆçº§é€æ­¥æ¨è¿›ä¼˜åŒ–å·¥ä½œã€‚
+´úÂëÔÚºËĞÄÒµÎñÂß¼­ÉÏÓĞÒ»¶¨µÄĞÔÄÜÒâÊ¶£¨Èç `getUnifiedStockViews` ÒÑÊ¹ÓÃ `Promise.all`¡¢²¿·ÖÒ³ÃæÊ¹ÓÃÁË `useCallback`£©£¬µ«ÔÚÅúÁ¿´¦Àí¡¢×é¼şäÖÈ¾ÓÅ»¯¡¢´úÂë²ğ·ÖµÈ·½ÃæÈÔÓĞ½Ï´óÌáÉı¿Õ¼ä¡£½¨Òé°´ÕÕ P0 ¡ú P1 ¡ú P2 µÄÓÅÏÈ¼¶Öğ²½ÍÆ½øÓÅ»¯¹¤×÷¡£
 
 ---
 
-## å…«ã€G1 æ‰¹æ¬¡ä½é£é™©ä¼˜åŒ–çŠ¶æ€ï¼ˆ2026-06-30ï¼‰
+## °Ë¡¢G1 Åú´ÎµÍ·çÏÕÓÅ»¯×´Ì¬£¨2026-06-30£©
 
-> **çŠ¶æ€**ï¼š24/24 = 100% é—­ç¯  
-> **å…³è”æ–‡æ¡£**ï¼š[`v9-code-quality-audit-report-20260629.md` ç¬¬ 16 ç« ](../v9-code-quality-audit-report-20260629.md)
+> **×´Ì¬**£º24/24 = 100% ±Õ»·  
+> **¹ØÁªÎÄµµ**£º[`v9-code-quality-audit-report-20260629.md` µÚ 16 ÕÂ](../v9-code-quality-audit-report-20260629.md)
 
-é’ˆå¯¹æœ¬å®¡è®¡æŠ¥å‘Š**ç¬¬ 2.3 èŠ‚ / 3.3 èŠ‚ / 4.3 èŠ‚**æ ‡æ³¨çš„ 24+ é¡¹ä½é£é™©é—®é¢˜ï¼ŒG1 æ‰¹æ¬¡å·² 100% é—­ç¯ã€‚
+Õë¶Ô±¾Éó¼Æ±¨¸æ**µÚ 2.3 ½Ú / 3.3 ½Ú / 4.3 ½Ú**±ê×¢µÄ 24+ ÏîµÍ·çÏÕÎÊÌâ£¬G1 Åú´ÎÒÑ 100% ±Õ»·¡£
 
-| ç±»åˆ« | é—­ç¯æ•° | ä¸»è¦ä¿®å¤ç‚¹ |
+| Àà±ğ | ±Õ»·Êı | Ö÷ÒªĞŞ¸´µã |
 |:---|:---|:---|
-| dataLayer è¡¥ store | 4 | `executionLogStore` / `missingReportStore` / `watchlistStore` / `newsBookmarkStore` |
-| é‡å¤å­—é¢é‡æå– | 1 | `src/constants/store-channels.constants.ts` |
-| ç±»å‹å®ˆå«è¡¥é½ | 24 | `src/types/guards.ts`ï¼ˆ6 åŸºç¡€ + 18 ä¸šåŠ¡ï¼‰ |
-| é”™è¯¯ç±»å‹ç»†åˆ† | 1 | `src/lib/errors.ts`ï¼ˆåŸºç±» 1 + å­ç±» 8 + å·¥å…· 2ï¼‰ |
-| è·¯å¾„ç™½åå• | 1 | `src/config/routes.ts`ï¼ˆ`ROUTE_WHITELIST` / `ROUTE_PREFIX_WHITELIST` / `isPathWhitelisted`ï¼‰ |
-| å•å…ƒæµ‹è¯• | 27 | `src/data/dataLayer.test.ts` æ–°å¢ 4 store è¦†ç›– + aggregator éªŒè¯ |
-| æ–‡æ¡£åŒæ­¥ | 3 | CHANGELOG.md / completeness-profile.md / v9-code-quality-audit-report |
+| dataLayer ²¹ store | 4 | `executionLogStore` / `missingReportStore` / `watchlistStore` / `newsBookmarkStore` |
+| ÖØ¸´×ÖÃæÁ¿ÌáÈ¡ | 1 | `src/constants/store-channels.constants.ts` |
+| ÀàĞÍÊØÎÀ²¹Æë | 24 | `src/types/guards.ts`£¨6 »ù´¡ + 18 ÒµÎñ£© |
+| ´íÎóÀàĞÍÏ¸·Ö | 1 | `src/lib/errors.ts`£¨»ùÀà 1 + ×ÓÀà 8 + ¹¤¾ß 2£© |
+| Â·¾¶°×Ãûµ¥ | 1 | `src/config/routes.ts`£¨`ROUTE_WHITELIST` / `ROUTE_PREFIX_WHITELIST` / `isPathWhitelisted`£© |
+| µ¥Ôª²âÊÔ | 27 | `src/data/dataLayer.test.ts` ĞÂÔö 4 store ¸²¸Ç + aggregator ÑéÖ¤ |
+| ÎÄµµÍ¬²½ | 3 | CHANGELOG.md / completeness-profile.md / v9-code-quality-audit-report |
 
-å‰©ä½™**é«˜/ä¸­é£é™© 18 é¡¹**å·²çº³å…¥åç»­ G2/G3 æ‰¹æ¬¡æ¨è¿›è®¡åˆ’ã€‚
+Ê£Óà**¸ß/ÖĞ·çÏÕ 18 Ïî**ÒÑÄÉÈëºóĞø G2/G3 Åú´ÎÍÆ½ø¼Æ»®¡£
 
 ---
 
-*æŠ¥å‘Šç”Ÿæˆæ—¶é—´ï¼š2026-06-29*
-*å®¡è®¡å·¥å…·ï¼šä»£ç é™æ€åˆ†æ + äººå·¥å®¡æŸ¥*
-*G1 é—­ç¯æ›´æ–°æ—¶é—´ï¼š2026-06-30*
+*±¨¸æÉú³ÉÊ±¼ä£º2026-06-29*
+*Éó¼Æ¹¤¾ß£º´úÂë¾²Ì¬·ÖÎö + ÈË¹¤Éó²é*
+*G1 ±Õ»·¸üĞÂÊ±¼ä£º2026-06-30*

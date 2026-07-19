@@ -1,51 +1,57 @@
 ---
-title: widget-integration-checklist
+title: ¼İÊ»²Õ Widget ¼¯³É¼ì²éÇåµ¥
+type: reference
+domain: frontend
+phase: testing
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "ĞÂÔö»òĞŞ¸Ä¼İÊ»²Õ Widget Ê±£¬±ØĞëÍ¬²½Íê³ÉÈı´¦×¢²á£¬²¢×ñÑ­Éè¼ÆÁîÅÆÓëÊı¾İÏû·Ñ¹æ·¶¡£"
+tags: [frontend, widget, integration, checklist]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: important
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/reference/widget-integration-checklist.md
-code_version: 2.0.0
-tier: important
----
+# ¼İÊ»²Õ Widget ¼¯³É¼ì²éÇåµ¥
 
-# é©¾é©¶èˆ± Widget é›†æˆæ£€æŸ¥æ¸…å•
+> ĞÂÔö»òĞŞ¸Ä¼İÊ»²Õ Widget Ê±£¬±ØĞëÍ¬²½Íê³ÉÈı´¦×¢²á£¬²¢×ñÑ­Éè¼ÆÁîÅÆÓëÊı¾İÏû·Ñ¹æ·¶¡£
 
-> æ–°å¢æˆ–ä¿®æ”¹é©¾é©¶èˆ± Widget æ—¶ï¼Œå¿…é¡»åŒæ­¥å®Œæˆä¸‰å¤„æ³¨å†Œï¼Œå¹¶éµå¾ªè®¾è®¡ä»¤ç‰Œä¸æ•°æ®æ¶ˆè´¹è§„èŒƒã€‚
-
-> **è‡ªåŠ¨åŒ–æ ¡éªŒï¼ˆæ¨èä¼˜å…ˆä½¿ç”¨ï¼‰**ï¼šæ–°å¢/ä¿®æ”¹ Widget åè¿è¡Œ `npm run audit:widget-registry`ï¼Œè„šæœ¬è‡ªåŠ¨æ ¡éªŒä¸‰å¤„æ³¨å†Œä¸€è‡´æ€§ï¼ˆregistry â†” config â†” dataSourceï¼‰ã€ç»„ä»¶æ–‡ä»¶å­˜åœ¨æ€§ã€é»˜è®¤å¸ƒå±€è¦†ç›–æ€§ã€‚P0 è¿è§„ç›´æ¥ exit 1ï¼Œæ— éœ€äººå·¥é€æ¡å¯¹ç…§æœ¬æ¸…å•ã€‚
+> **×Ô¶¯»¯Ğ£Ñé£¨ÍÆ¼öÓÅÏÈÊ¹ÓÃ£©**£ºĞÂÔö/ĞŞ¸Ä Widget ºóÔËĞĞ `npm run audit:widget-registry`£¬½Å±¾×Ô¶¯Ğ£ÑéÈı´¦×¢²áÒ»ÖÂĞÔ£¨registry ? config ? dataSource£©¡¢×é¼şÎÄ¼ş´æÔÚĞÔ¡¢Ä¬ÈÏ²¼¾Ö¸²¸ÇĞÔ¡£P0 Î¥¹æÖ±½Ó exit 1£¬ÎŞĞèÈË¹¤ÖğÌõ¶ÔÕÕ±¾Çåµ¥¡£
 >
-> **ä½•æ—¶ä»éœ€äººå·¥æ£€æŸ¥**ï¼šè„šæœ¬ä¸è¦†ç›–çš„ç»´åº¦ï¼ˆä»¤ç‰Œå¼•ç”¨ã€å››æ€å®ç°ã€JSDocã€useEffect cleanupï¼‰ä»éœ€æŒ‰ä¸‹æ–¹æ¸…å•é€é¡¹ç¡®è®¤ã€‚
+> **ºÎÊ±ÈÔĞèÈË¹¤¼ì²é**£º½Å±¾²»¸²¸ÇµÄÎ¬¶È£¨ÁîÅÆÒıÓÃ¡¢ËÄÌ¬ÊµÏÖ¡¢JSDoc¡¢useEffect cleanup£©ÈÔĞè°´ÏÂ·½Çåµ¥ÖğÏîÈ·ÈÏ¡£
 
-## Widget ç»„ä»¶å¼€å‘
+## Widget ×é¼ş¿ª·¢
 
-- [ ] åœ¨ `src/cockpit/widgets/` ä¸‹åˆ›å»º Widget ç»„ä»¶æ–‡ä»¶ï¼ˆå‘½åï¼š`XxxWidget.tsx`ï¼‰
-- [ ] å®šä¹‰ Props Interfaceï¼š`{ config: WidgetConfig; data?: MarketData }`
-- [ ] ä½¿ç”¨ `useMarketData()` æˆ– `MarketDataProvider` æ¶ˆè´¹æ•°æ®
-- [ ] å®ç° `Loading / Empty / Error / Skeleton` å››æ€ï¼ˆæ¨èå¤ç”¨ `WidgetStateShell`ï¼‰
-- [ ] æ‰€æœ‰é¢œè‰²å¼•ç”¨ä»¤ç‰Œï¼š`THEME_TOKENS`ã€`COLOR_TOKENS`ã€`COLOR_SHADES`ã€`STOCK_COLOR_TOKENS`
-- [ ] å›¾æ ‡å°ºå¯¸ä½¿ç”¨ `THEME_TOKENS.iconSizes`
-- [ ] å­—ä½“ä½¿ç”¨ `THEME_TOKENS.typography`
-- [ ] `useEffect` ä¸­æœ‰ cleanup å‡½æ•°ï¼Œç§»é™¤äº‹ä»¶ç›‘å¬/å®šæ—¶å™¨
-- [ ] å…¬å…±å‡½æ•°æœ‰ JSDoc
+- [ ] ÔÚ `src/cockpit/widgets/` ÏÂ´´½¨ Widget ×é¼şÎÄ¼ş£¨ÃüÃû£º`XxxWidget.tsx`£©
+- [ ] ¶¨Òå Props Interface£º`{ config: WidgetConfig; data?: MarketData }`
+- [ ] Ê¹ÓÃ `useMarketData()` »ò `MarketDataProvider` Ïû·ÑÊı¾İ
+- [ ] ÊµÏÖ `Loading / Empty / Error / Skeleton` ËÄÌ¬£¨ÍÆ¼ö¸´ÓÃ `WidgetStateShell`£©
+- [ ] ËùÓĞÑÕÉ«ÒıÓÃÁîÅÆ£º`THEME_TOKENS`¡¢`COLOR_TOKENS`¡¢`COLOR_SHADES`¡¢`STOCK_COLOR_TOKENS`
+- [ ] Í¼±ê³ß´çÊ¹ÓÃ `THEME_TOKENS.iconSizes`
+- [ ] ×ÖÌåÊ¹ÓÃ `THEME_TOKENS.typography`
+- [ ] `useEffect` ÖĞÓĞ cleanup º¯Êı£¬ÒÆ³ıÊÂ¼ş¼àÌı/¶¨Ê±Æ÷
+- [ ] ¹«¹²º¯ÊıÓĞ JSDoc
 
-## ç¬¬ä¸€å¤„æ³¨å†Œï¼š`widgetRegistry.ts`
+## µÚÒ»´¦×¢²á£º`widgetRegistry.ts`
 
-æ–‡ä»¶ï¼š`src/cockpit/core/widgetRegistry.ts`
+ÎÄ¼ş£º`src/cockpit/core/widgetRegistry.ts`
 
-- [ ] åœ¨ `registerDefaultWidgets()` çš„ `widgets` æ•°ç»„ä¸­æ·»åŠ  `WidgetTemplate` å¯¹è±¡
-- [ ] `meta.id` ä¸ `DEFAULT_WIDGET_CONFIG` ä¸­çš„ key ä¸€è‡´
-- [ ] `meta.name` ä½¿ç”¨ `DEFAULT_WIDGET_CONFIG.<key>.title`
-- [ ] `meta.category` ä½¿ç”¨ `DEFAULT_WIDGET_CONFIG.<key>.category`
-- [ ] `meta.defaultSize` ä½¿ç”¨ `DEFAULT_WIDGET_CONFIG.<key>.size`
-- [ ] `meta.defaultDataSource` ä½¿ç”¨ `WIDGET_DEFAULT_DATA_SOURCE.<key>`
-- [ ] `component` ä½¿ç”¨ `() => import('@/cockpit/widgets/XxxWidget')`
-- [ ] å¦‚éœ€é…ç½®é¢æ¿ï¼Œæ·»åŠ  `configPanel` å­—æ®µ
-- [ ] å¦‚éœ€é»˜è®¤å¸ƒå±€ï¼Œåœ¨ `createDefaultInstances()` çš„ `defaultLayout` ä¸­æ·»åŠ ä½ç½®
+- [ ] ÔÚ `registerDefaultWidgets()` µÄ `widgets` Êı×éÖĞÌí¼Ó `WidgetTemplate` ¶ÔÏó
+- [ ] `meta.id` Óë `DEFAULT_WIDGET_CONFIG` ÖĞµÄ key Ò»ÖÂ
+- [ ] `meta.name` Ê¹ÓÃ `DEFAULT_WIDGET_CONFIG.<key>.title`
+- [ ] `meta.category` Ê¹ÓÃ `DEFAULT_WIDGET_CONFIG.<key>.category`
+- [ ] `meta.defaultSize` Ê¹ÓÃ `DEFAULT_WIDGET_CONFIG.<key>.size`
+- [ ] `meta.defaultDataSource` Ê¹ÓÃ `WIDGET_DEFAULT_DATA_SOURCE.<key>`
+- [ ] `component` Ê¹ÓÃ `() => import('@/cockpit/widgets/XxxWidget')`
+- [ ] ÈçĞèÅäÖÃÃæ°å£¬Ìí¼Ó `configPanel` ×Ö¶Î
+- [ ] ÈçĞèÄ¬ÈÏ²¼¾Ö£¬ÔÚ `createDefaultInstances()` µÄ `defaultLayout` ÖĞÌí¼ÓÎ»ÖÃ
 
-ç¤ºä¾‹ï¼š
+Ê¾Àı£º
 
 ```typescript
 {
@@ -53,7 +59,7 @@ tier: important
     id: 'myWidget',
     name: DEFAULT_WIDGET_CONFIG.myWidget.title,
     category: DEFAULT_WIDGET_CONFIG.myWidget.category,
-    description: 'æˆ‘çš„ Widget æè¿°',
+    description: 'ÎÒµÄ Widget ÃèÊö',
     defaultSize: DEFAULT_WIDGET_CONFIG.myWidget.size,
     defaultDataSource: WIDGET_DEFAULT_DATA_SOURCE.myWidget,
   },
@@ -61,22 +67,22 @@ tier: important
 }
 ```
 
-## ç¬¬äºŒå¤„æ³¨å†Œï¼š`DEFAULT_WIDGET_CONFIG`
+## µÚ¶ş´¦×¢²á£º`DEFAULT_WIDGET_CONFIG`
 
-æ–‡ä»¶ï¼š`src/constants/cockpit.constants.ts`
+ÎÄ¼ş£º`src/constants/cockpit.constants.ts`
 
-- [ ] åœ¨ `DEFAULT_WIDGET_CONFIG` å¯¹è±¡ä¸­æ·»åŠ å¯¹åº” key
-- [ ] é…ç½®å­—æ®µåŒ…å«ï¼š`title`ã€`category`ã€`size`ã€`icon`ã€`defaultConfig`ï¼ˆå¦‚éœ€è¦ï¼‰
-- [ ] `size` ä½¿ç”¨ `WIDGET_SIZE` ä¸­çš„é¢„è®¾å€¼ï¼ˆå¦‚ `WIDGET_SIZE.FULL_WIDTH`ï¼‰
-- [ ] `category` ä½¿ç”¨é¡¹ç›®çº¦å®šçš„åˆ†ç±»å¸¸é‡
+- [ ] ÔÚ `DEFAULT_WIDGET_CONFIG` ¶ÔÏóÖĞÌí¼Ó¶ÔÓ¦ key
+- [ ] ÅäÖÃ×Ö¶Î°üº¬£º`title`¡¢`category`¡¢`size`¡¢`icon`¡¢`defaultConfig`£¨ÈçĞèÒª£©
+- [ ] `size` Ê¹ÓÃ `WIDGET_SIZE` ÖĞµÄÔ¤ÉèÖµ£¨Èç `WIDGET_SIZE.FULL_WIDTH`£©
+- [ ] `category` Ê¹ÓÃÏîÄ¿Ô¼¶¨µÄ·ÖÀà³£Á¿
 
-ç¤ºä¾‹ï¼š
+Ê¾Àı£º
 
 ```typescript
 export const DEFAULT_WIDGET_CONFIG = {
-  // ... å·²æœ‰ Widget
+  // ... ÒÑÓĞ Widget
   myWidget: {
-    title: 'æˆ‘çš„ Widget',
+    title: 'ÎÒµÄ Widget',
     category: WIDGET_CATEGORY.MARKET,
     size: WIDGET_SIZE.FULL_WIDTH,
     icon: 'BarChart3',
@@ -87,20 +93,20 @@ export const DEFAULT_WIDGET_CONFIG = {
 } as const
 ```
 
-## ç¬¬ä¸‰å¤„æ³¨å†Œï¼š`WIDGET_DEFAULT_DATA_SOURCE`
+## µÚÈı´¦×¢²á£º`WIDGET_DEFAULT_DATA_SOURCE`
 
-æ–‡ä»¶ï¼š`src/constants/cockpit.constants.ts`
+ÎÄ¼ş£º`src/constants/cockpit.constants.ts`
 
-- [ ] åœ¨ `WIDGET_DEFAULT_DATA_SOURCE` å¯¹è±¡ä¸­æ·»åŠ ä¸ `DEFAULT_WIDGET_CONFIG` ç›¸åŒçš„ key
-- [ ] é…ç½®æ•°æ®æºç±»å‹ã€API ç«¯ç‚¹ã€åˆ·æ–°é¢‘ç‡ã€è½¬æ¢å‡½æ•°
-- [ ] API è·¯å¾„å¿…é¡»å¼•ç”¨ `src/config/apiPaths.ts` æˆ– `src/config/marketDataEndpoints.ts` ä¸­å®šä¹‰çš„å¸¸é‡
-- [ ] é¿å…åœ¨æ•°æ®æºé…ç½®ä¸­ç¡¬ç¼–ç  URL
+- [ ] ÔÚ `WIDGET_DEFAULT_DATA_SOURCE` ¶ÔÏóÖĞÌí¼ÓÓë `DEFAULT_WIDGET_CONFIG` ÏàÍ¬µÄ key
+- [ ] ÅäÖÃÊı¾İÔ´ÀàĞÍ¡¢API ¶Ëµã¡¢Ë¢ĞÂÆµÂÊ¡¢×ª»»º¯Êı
+- [ ] API Â·¾¶±ØĞëÒıÓÃ `src/config/apiPaths.ts` »ò `src/config/marketDataEndpoints.ts` ÖĞ¶¨ÒåµÄ³£Á¿
+- [ ] ±ÜÃâÔÚÊı¾İÔ´ÅäÖÃÖĞÓ²±àÂë URL
 
-ç¤ºä¾‹ï¼š
+Ê¾Àı£º
 
 ```typescript
 export const WIDGET_DEFAULT_DATA_SOURCE = {
-  // ... å·²æœ‰ Widget
+  // ... ÒÑÓĞ Widget
   myWidget: {
     type: 'rest',
     endpoint: API_MARKET_OVERVIEW,
@@ -110,33 +116,33 @@ export const WIDGET_DEFAULT_DATA_SOURCE = {
 } as const
 ```
 
-## ç±»å‹è¡¥å……
+## ÀàĞÍ²¹³ä
 
-- [ ] å¦‚æ–°å¢ Widget ID æœªåœ¨ `WidgetId` è”åˆç±»å‹ä¸­ï¼Œæ›´æ–° `src/types/modules/widget.types.ts`
-- [ ] å¦‚æ–°å¢æ•°æ®æºç±»å‹ï¼Œæ›´æ–° `WidgetDataSource` ç›¸å…³ç±»å‹
+- [ ] ÈçĞÂÔö Widget ID Î´ÔÚ `WidgetId` ÁªºÏÀàĞÍÖĞ£¬¸üĞÂ `src/types/modules/widget.types.ts`
+- [ ] ÈçĞÂÔöÊı¾İÔ´ÀàĞÍ£¬¸üĞÂ `WidgetDataSource` Ïà¹ØÀàĞÍ
 
-## æµ‹è¯•ä¸é—¨ç¦
+## ²âÊÔÓëÃÅ½û
 
-- [ ] è¿è¡Œ `npx tsc --noEmit`
-- [ ] è¿è¡Œ `npm run audit:layers`
-- [ ] è¿è¡Œ `npm run lint:colors`
-- [ ] è¿è¡Œ `npm run test -- --run`
-- [ ] åœ¨æµè§ˆå™¨ä¸­æ‰“å¼€é©¾é©¶èˆ±ï¼Œç¡®è®¤ Widget æ­£å¸¸æ¸²æŸ“
-- [ ] æ£€æŸ¥ Widget æ•°æ®åŠ è½½ã€ç©ºæ€ã€é”™è¯¯æ€æ˜¯å¦æ­£å¸¸
+- [ ] ÔËĞĞ `npx tsc --noEmit`
+- [ ] ÔËĞĞ `npm run audit:layers`
+- [ ] ÔËĞĞ `npm run lint:colors`
+- [ ] ÔËĞĞ `npm run test -- --run`
+- [ ] ÔÚä¯ÀÀÆ÷ÖĞ´ò¿ª¼İÊ»²Õ£¬È·ÈÏ Widget Õı³£äÖÈ¾
+- [ ] ¼ì²é Widget Êı¾İ¼ÓÔØ¡¢¿ÕÌ¬¡¢´íÎóÌ¬ÊÇ·ñÕı³£
 
-## æ–‡æ¡£åŒæ­¥
+## ÎÄµµÍ¬²½
 
-- [ ] æ›´æ–° `docs/` ä¸­é©¾é©¶èˆ± Widget åˆ—è¡¨
-- [ ] åœ¨ `CHANGELOG.md` ä¸­è®°å½•æ–°å¢ Widget
-- [ ] å¦‚ Widget æœ‰é…ç½®é¡¹ï¼Œè¡¥å……ä½¿ç”¨è¯´æ˜
+- [ ] ¸üĞÂ `docs/` ÖĞ¼İÊ»²Õ Widget ÁĞ±í
+- [ ] ÔÚ `CHANGELOG.md` ÖĞ¼ÇÂ¼ĞÂÔö Widget
+- [ ] Èç Widget ÓĞÅäÖÃÏî£¬²¹³äÊ¹ÓÃËµÃ÷
 
-## å¸¸è§é™·é˜±
+## ³£¼ûÏİÚå
 
-| é™·é˜± | è¡¨ç° | æ’æŸ¥æ–¹æ³• |
+| ÏİÚå | ±íÏÖ | ÅÅ²é·½·¨ |
 |------|------|----------|
-| åªæ³¨å†Œç»„ä»¶ï¼Œæœªé… `DEFAULT_WIDGET_CONFIG` | Widget æ ‡é¢˜ä¸ºç©ºæˆ–æŠ¥é”™ | æ£€æŸ¥ `cockpit.constants.ts` |
-| æœªé… `WIDGET_DEFAULT_DATA_SOURCE` | Widget æ•°æ®ä¸ºç©º | æ£€æŸ¥æ•°æ®æºé…ç½®ä¸ key ä¸€è‡´æ€§ |
-| Widget ID æ‹¼å†™ä¸ä¸€è‡´ | TypeScript æŠ¥é”™æˆ–è¿è¡Œæ—¶å¼‚å¸¸ | å…¨å±€æœç´¢ id/key æ˜¯å¦ä¸€è‡´ |
-| ç¡¬ç¼–ç  API è·¯å¾„ | `audit:hardcode` å¤±è´¥ | å¼•ç”¨ `apiPaths.ts` å¸¸é‡ |
-| æœªå¤„ç†ç©ºæ€/é”™è¯¯æ€ | æ•°æ®å¼‚å¸¸æ—¶é¡µé¢ç™½å± | æ¥å…¥ `WidgetStateShell` |
+| Ö»×¢²á×é¼ş£¬Î´Åä `DEFAULT_WIDGET_CONFIG` | Widget ±êÌâÎª¿Õ»ò±¨´í | ¼ì²é `cockpit.constants.ts` |
+| Î´Åä `WIDGET_DEFAULT_DATA_SOURCE` | Widget Êı¾İÎª¿Õ | ¼ì²éÊı¾İÔ´ÅäÖÃÓë key Ò»ÖÂĞÔ |
+| Widget ID Æ´Ğ´²»Ò»ÖÂ | TypeScript ±¨´í»òÔËĞĞÊ±Òì³£ | È«¾ÖËÑË÷ id/key ÊÇ·ñÒ»ÖÂ |
+| Ó²±àÂë API Â·¾¶ | `audit:hardcode` Ê§°Ü | ÒıÓÃ `apiPaths.ts` ³£Á¿ |
+| Î´´¦Àí¿ÕÌ¬/´íÎóÌ¬ | Êı¾İÒì³£Ê±Ò³Ãæ°×ÆÁ | ½ÓÈë `WidgetStateShell` |
 

@@ -1,483 +1,495 @@
 ---
 title: data-layer-overview
-code_version: 2.0.0
-
+type: explanation
+domain: data
+phase: planning
 tier: important
----
-
----
-title: docs/explanation/data-layer-overview.md
-code_version: 2.0.0
-tier: important
----
-
----
-title: docs/explanation/data-layer-overview.md
-code_version: 2.0.0
----
-
----
-title: æ•°æ®å±‚æ€»è§ˆï¼ˆData Layer Overviewï¼‰
 status: draft
-owner: æ¶æ„ç»„ / æ•°æ®å±‚è´Ÿè´£äºº
-updated: 2026-07-12
+maintainer: ¼Ü¹¹×é / Êı¾İ²ã¸ºÔğÈË
+summary: "±¾ÎÄµµÊÇ src/data/ Óë src/core/databridge.ts µÄÈ¨ÍşÈ«¾°ËµÃ÷£¬ÃæÏòĞèÒªÀí½âÊı¾İÁ÷¡¢ĞÂÔö store¡¢ÅÅ²éÊı¾İÒ»ÖÂĞÔÎÊÌâµÄ¿ª·¢ÕßÓë AI Agent¡£"
+tags: [data, plan, architecture, explanation, data-definition, store, strategy]
+version: v1.0.0
+last_updated: 2026-07-17
+code_version: 2.0.0
+doc_id: V9-DOC-DATA-003
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
-# V9 æ•°æ®å±‚æ€»è§ˆ
+# V9 Êı¾İ²ã×ÜÀÀ
 
-> **å®šä½**ï¼šæœ¬æ–‡æ¡£æ˜¯ `src/data/` ä¸ `src/core/databridge.ts` çš„æƒå¨å…¨æ™¯è¯´æ˜ï¼Œé¢å‘éœ€è¦ç†è§£æ•°æ®æµã€æ–°å¢ storeã€æ’æŸ¥æ•°æ®ä¸€è‡´æ€§é—®é¢˜çš„å¼€å‘è€…ä¸ AI Agentã€‚
-> **åˆè§„åŸºå‡†**ï¼šåŸºäº `../../AGENTS.md` v1.4.3 Â§å…«ï¼ˆæ•°æ®åº“ç‰ˆæœ¬ç®¡ç†ï¼‰åŠ `src/data/` å®é™…æºç ç¼–å†™ã€‚
-> **å…³è”æ–‡æ¡£**ï¼š
-> - [æ¶æ„æ€»è§ˆ](overview.md) â€” å…¨å±€åˆ†å±‚ä¸ä¾èµ–æ–¹å‘
-> - [AGENTS.md](../../AGENTS.md) â€” å·¥ç¨‹å¥‘çº¦ï¼ˆç¦æ­¢è·¨å±‚è°ƒç”¨ã€å››æ­¥é›†æˆã€DB_VERSION è§„åˆ™ï¼‰
-> - [æ•°æ®å­—å…¸ç´¢å¼•](design/data-dictionary-index.md) â€” å­—æ®µçº§å®šä¹‰å”¯ä¸€ç´¢å¼•
-> - [å¼•æ“è§„æ ¼](../reference/05-engine-specs.md) â€” L0-L8 å¼•æ“åˆ†å±‚è¯´æ˜
+> **¶¨Î»**£º±¾ÎÄµµÊÇ `src/data/` Óë `src/core/databridge.ts` µÄÈ¨ÍşÈ«¾°ËµÃ÷£¬ÃæÏòĞèÒªÀí½âÊı¾İÁ÷¡¢ĞÂÔö store¡¢ÅÅ²éÊı¾İÒ»ÖÂĞÔÎÊÌâµÄ¿ª·¢ÕßÓë AI Agent¡£
+> **ºÏ¹æ»ù×¼**£º»ùÓÚ `../../AGENTS.md` v1.4.3 ¡ì°Ë£¨Êı¾İ¿â°æ±¾¹ÜÀí£©¼° `src/data/` Êµ¼ÊÔ´Âë±àĞ´¡£
+> **¹ØÁªÎÄµµ**£º
+> - [¼Ü¹¹×ÜÀÀ](overview.md) ¡ª È«¾Ö·Ö²ãÓëÒÀÀµ·½Ïò
+> - [AGENTS.md](../../AGENTS.md) ¡ª ¹¤³ÌÆõÔ¼£¨½ûÖ¹¿ç²ãµ÷ÓÃ¡¢ËÄ²½¼¯³É¡¢DB_VERSION ¹æÔò£©
+> - [Êı¾İ×ÖµäË÷Òı](design/data-dictionary-index.md) ¡ª ×Ö¶Î¼¶¶¨ÒåÎ¨Ò»Ë÷Òı
+> - [ÒıÇæ¹æ¸ñ](../reference/05-engine-specs.md) ¡ª L0-L8 ÒıÇæ·Ö²ãËµÃ÷
 
 ---
 
-## 1. æ•°æ®å±‚ç›®å½•ç»“æ„
+## 1. Êı¾İ²ãÄ¿Â¼½á¹¹
 
 ```
 src/data/
-â”œâ”€â”€ db.ts                    # V6Database å•ä¾‹ç±»ï¼ˆget/put/delete/äº‹åŠ¡/å¯¼å‡ºå¯¼å…¥ï¼‰
-â”œâ”€â”€ db-connection.ts         # IndexedDB è¿æ¥ç®¡ç†ï¼ˆopenDB / deleteDB / ç‰ˆæœ¬å†²çªå¤„ç†ï¼‰
-â”œâ”€â”€ db-schema.ts             # åŸºçº¿ Schema åˆ›å»ºï¼ˆcreateSchema + ensureStore å¹‚ç­‰è¾…åŠ©ï¼‰
-â”œâ”€â”€ db-migrations.ts         # è¿ç§»æ¡†æ¶ï¼ˆMigration æ¥å£ + runMigrations + MIGRATIONS æ³¨å†Œè¡¨ï¼‰
-â”œâ”€â”€ db-utils.ts              # ä½å±‚å·¥å…·ï¼ˆgenerateId / nowï¼‰
-â”œâ”€â”€ types.ts                 # Barrel ç»Ÿä¸€å‡ºå£ï¼ˆ13 ä¸ªå­æ¨¡å—ç±»å‹èšåˆï¼‰
-â”œâ”€â”€ types/                   # æŒ‰åŸŸæ‹†åˆ†çš„ç±»å‹å­æ¨¡å—ï¼ˆPR-1 æ‹†åˆ†ï¼‰
-â”‚   â”œâ”€â”€ types.dataLayer.ts   # L0 åŸºç¡€ç±»å‹ï¼ˆDataLayerResult / dbConfig re-exportï¼‰
-â”‚   â”œâ”€â”€ types.stock.ts       # è‚¡ç¥¨åŸºç¡€åŸŸ
-â”‚   â”œâ”€â”€ types.score.ts       # è¯„åˆ†åŸŸ
-â”‚   â”œâ”€â”€ types.order.ts       # è®¢å•åŸŸ
-â”‚   â”œâ”€â”€ types.portfolio.ts   # ç»„åˆåŸŸ
-â”‚   â”œâ”€â”€ types.strategy.ts    # ç­–ç•¥åŸŸ
-â”‚   â”œâ”€â”€ types.signal.ts      # ä¿¡å·åŸŸ
-â”‚   â”œâ”€â”€ types.marketData.ts  # è¡Œæƒ…æ•°æ®åŸŸ
-â”‚   â”œâ”€â”€ types.sector.ts      # æ¿å—è¯„åˆ†åŸŸ
-â”‚   â”œâ”€â”€ types.rotation.ts    # è½®åŠ¨åŸŸ
-â”‚   â”œâ”€â”€ types.scoreDoc.ts    # è¯„åˆ†æ–‡æ¡£åŸŸ
-â”‚   â”œâ”€â”€ types.knowledge.ts   # çŸ¥è¯†åº“/èµ„è®¯åŸŸ
-â”‚   â”œâ”€â”€ types.sevenDimensions.ts  # ä¸ƒç»´æ•°æ®åŸŸ
-â”‚   â”œâ”€â”€ types.execution.ts   # æ‰§è¡Œè®¡åˆ’åŸŸ
-â”‚   â”œâ”€â”€ types.hybridProofread.ts  # æ··åˆæ ¡å¯¹åŸŸ
-â”‚   â””â”€â”€ types.customAgent.ts # è‡ªå®šä¹‰æ™ºèƒ½ä½“åŸŸï¼ˆv26ï¼‰
-â”œâ”€â”€ dataLayer.ts             # dataLayer barrel â€” èšåˆå…¨éƒ¨ domain store çš„ç»Ÿä¸€å…¥å£
-â”œâ”€â”€ dataLayerHelpers.ts      # å…±äº«è¾…åŠ©ï¼ˆsendWriteEnvelope / queryGet / queryList / queryByIndexï¼‰
-â”œâ”€â”€ dataLayerStockStores.ts  # è‚¡ç¥¨åŸŸ storeï¼ˆstock / dailyQuote / financialReportï¼‰
-â”œâ”€â”€ dataLayerScoreStores.ts  # è¯„åˆ†åŸŸ storeï¼ˆv6 / intelligent / industry / rotation / sector / scoreDoc / hotSector / valuePitï¼‰
-â”œâ”€â”€ dataLayerTradingStores.ts # äº¤æ˜“åŸŸ storeï¼ˆorder / signal / executionPlan / executionLog / portfolio / tradeReviewï¼‰
-â”œâ”€â”€ dataLayerContentStores.ts # å†…å®¹åŸŸ storeï¼ˆresearchLog / strategySnapshot / localDoc / news / newsStockMap / sentimentCache / missingReport / customAgentï¼‰
-â”œâ”€â”€ dataLayerWatchlistStore.ts # è§‚å¯Ÿåˆ—è¡¨ storeï¼ˆwatchlistï¼‰
-â”œâ”€â”€ queryBuilder.ts          # ç»¼åˆæŸ¥è¯¢å¼•æ“ï¼ˆå¤šç»´åº¦å¹¶å‘æŸ¥è¯¢ + zod æ ¡éªŒï¼‰
-â”œâ”€â”€ repository.ts            # D-02 ç»Ÿä¸€ä»“å‚¨å¥‘çº¦ï¼ˆRepository<T> + createRepository å·¥å‚ï¼‰
-â”œâ”€â”€ migrations/              # ç‹¬ç«‹è¿ç§»æ–‡ä»¶
-â”‚   â””â”€â”€ rbacMigrationV24.ts  # RBAC 6 è¡¨åˆ›å»ºï¼ˆv24ï¼‰
-â””â”€â”€ schemas/                 # JSON Schema / æ ¡éªŒå®šä¹‰ï¼ˆå¦‚å­˜åœ¨ï¼‰
+©À©¤©¤ db.ts                    # V6Database µ¥ÀıÀà£¨get/put/delete/ÊÂÎñ/µ¼³öµ¼Èë£©
+©À©¤©¤ db-connection.ts         # IndexedDB Á¬½Ó¹ÜÀí£¨openDB / deleteDB / °æ±¾³åÍ»´¦Àí£©
+©À©¤©¤ db-schema.ts             # »ùÏß Schema ´´½¨£¨createSchema + ensureStore ÃİµÈ¸¨Öú£©
+©À©¤©¤ db-migrations.ts         # Ç¨ÒÆ¿ò¼Ü£¨Migration ½Ó¿Ú + runMigrations + MIGRATIONS ×¢²á±í£©
+©À©¤©¤ db-utils.ts              # µÍ²ã¹¤¾ß£¨generateId / now£©¡ú ÒÑÉÏÒÆµ½ src/lib/utils.ts£¬´Ë´¦ÎªÏòºó¼æÈİ re-export
+©À©¤©¤ types.ts                 # Barrel Í³Ò»³ö¿Ú£¨13 ¸ö×ÓÄ£¿éÀàĞÍ¾ÛºÏ£©
+©À©¤©¤ types/                   # °´Óò²ğ·ÖµÄÀàĞÍ×ÓÄ£¿é£¨PR-1 ²ğ·Ö£©
+©¦   ©À©¤©¤ types.dataLayer.ts   # L0 »ù´¡ÀàĞÍ£¨DataLayerResult / dbConfig re-export£©
+©¦   ©À©¤©¤ types.stock.ts       # ¹ÉÆ±»ù´¡Óò
+©¦   ©À©¤©¤ types.score.ts       # ÆÀ·ÖÓò
+©¦   ©À©¤©¤ types.order.ts       # ¶©µ¥Óò
+©¦   ©À©¤©¤ types.portfolio.ts   # ×éºÏÓò
+©¦   ©À©¤©¤ types.strategy.ts    # ²ßÂÔÓò
+©¦   ©À©¤©¤ types.signal.ts      # ĞÅºÅÓò
+©¦   ©À©¤©¤ types.marketData.ts  # ĞĞÇéÊı¾İÓò
+©¦   ©À©¤©¤ types.sector.ts      # °å¿éÆÀ·ÖÓò
+©¦   ©À©¤©¤ types.rotation.ts    # ÂÖ¶¯Óò
+©¦   ©À©¤©¤ types.scoreDoc.ts    # ÆÀ·ÖÎÄµµÓò
+©¦   ©À©¤©¤ types.knowledge.ts   # ÖªÊ¶¿â/×ÊÑ¶Óò
+©¦   ©À©¤©¤ types.sevenDimensions.ts  # ÆßÎ¬Êı¾İÓò
+©¦   ©À©¤©¤ types.execution.ts   # Ö´ĞĞ¼Æ»®Óò
+©¦   ©À©¤©¤ types.hybridProofread.ts  # »ìºÏĞ£¶ÔÓò
+©¦   ©¸©¤©¤ types.customAgent.ts # ×Ô¶¨ÒåÖÇÄÜÌåÓò£¨v26£©
+©À©¤©¤ dataLayer.ts             # dataLayer barrel ¡ª ¾ÛºÏÈ«²¿ domain store µÄÍ³Ò»Èë¿Ú
+©À©¤©¤ dataLayerHelpers.ts      # ¹²Ïí¸¨Öú£¨sendWriteEnvelope / queryGet / queryList / queryByIndex£©¡ú ÒÑÇ¨ÒÆµ½ src/core/databridgeQueries.ts£¬´Ë´¦ÎªÏòºó¼æÈİ re-export
+©À©¤©¤ dataLayerStockStores.ts  # ¹ÉÆ±Óò store£¨stock / dailyQuote / financialReport£©
+©À©¤©¤ dataLayerScoreStores.ts  # ÆÀ·ÖÓò store£¨v6 / intelligent / industry / rotation / sector / scoreDoc / hotSector / valuePit£©
+©À©¤©¤ dataLayerTradingStores.ts # ½»Ò×Óò store£¨order / signal / executionPlan / executionLog / portfolio / tradeReview£©
+©À©¤©¤ dataLayerContentStores.ts # ÄÚÈİÓò store£¨researchLog / strategySnapshot / localDoc / news / newsStockMap / sentimentCache / missingReport / customAgent£©
+©À©¤©¤ dataLayerWatchlistStore.ts # ¹Û²ìÁĞ±í store£¨watchlist£©
+©À©¤©¤ queryBuilder.ts          # ×ÛºÏ²éÑ¯ÒıÇæ£¨¶àÎ¬¶È²¢·¢²éÑ¯ + zod Ğ£Ñé£©
+©À©¤©¤ repository.ts            # D-02 Í³Ò»²Ö´¢ÆõÔ¼£¨Repository<T> + createRepository ¹¤³§£©
+©À©¤©¤ migrations/              # ¶ÀÁ¢Ç¨ÒÆÎÄ¼ş
+©¦   ©¸©¤©¤ rbacMigrationV24.ts  # RBAC 6 ±í´´½¨£¨v24£©
+©¸©¤©¤ schemas/                 # JSON Schema / Ğ£Ñé¶¨Òå£¨Èç´æÔÚ£©
 ```
 
-> **ä¾èµ–è§„åˆ™**ï¼š`src/data/` ä»…å¯ä¾èµ– `src/core/`ã€`src/config/`ã€`src/lib/`ï¼ˆåŸºç¡€è®¾æ–½ï¼‰ã€`src/types/`ï¼›ç¦æ­¢åå‘ä¾èµ– `src/services/` æˆ– `src/store/`ï¼ˆè§ `../../AGENTS.md` Â§ä¸€ï¼‰ã€‚
+> **ÒÀÀµ¹æÔò**£º`src/data/` ½ö¿ÉÒÀÀµ `src/core/`¡¢`src/config/`¡¢`src/lib/`£¨»ù´¡ÉèÊ©£©¡¢`src/types/`£»½ûÖ¹·´ÏòÒÀÀµ `src/services/` »ò `src/store/`£¨¼û `../../AGENTS.md` ¡ìÒ»£©¡£
 
 ---
 
-## 2. IndexedDB Schemaï¼ˆ36 Storeï¼‰
+## 2. IndexedDB Schema£¨36 Store£©
 
-### 2.1 åŸºçº¿ Storeï¼ˆ30 ä¸ªï¼Œç”± `createSchema` åˆ›å»ºï¼‰
+### 2.1 »ùÏß Store£¨30 ¸ö£¬ÓÉ `createSchema` ´´½¨£©
 
-ä»¥ä¸‹ store åœ¨ `db-schema.ts` çš„ `createSchema()` ä¸­é€šè¿‡ `ensureStore()` æˆ–ç‰¹æ®Šé€»è¾‘**å¹‚ç­‰åˆ›å»º**ï¼Œå±äºé¦–æ¬¡å®‰è£…å³å¿…é¡»å­˜åœ¨çš„æ ¸å¿ƒå­˜å‚¨ã€‚
+ÒÔÏÂ store ÔÚ `db-schema.ts` µÄ `createSchema()` ÖĞÍ¨¹ı `ensureStore()` »òÌØÊâÂß¼­**ÃİµÈ´´½¨**£¬ÊôÓÚÊ×´Î°²×°¼´±ØĞë´æÔÚµÄºËĞÄ´æ´¢¡£
 
-| # | Store å¸¸é‡å | ç‰©ç†å | ä¸»é”® | ç´¢å¼• | è¯´æ˜ |
+| # | Store ³£Á¿Ãû | ÎïÀíÃû | Ö÷¼ü | Ë÷Òı | ËµÃ÷ |
 |---|-------------|--------|------|------|------|
-| 1 | `stocks` | `stocks` | `symbol` | `by-status`, `by-group` | è‚¡ç¥¨åŸºç¡€æ•°æ®ï¼›å« group å­—æ®µ backfill é€»è¾‘ |
-| 2 | `v6Scores` | `v6_scores` | `symbol` | â€” | V6 ç»¼åˆè¯„åˆ† |
-| 3 | `intelligentScores` | `intelligent_scores` | `id` (autoIncrement) | `by-symbol` | æ™ºèƒ½è¯„åˆ† |
-| 4 | `industryScores` | `industry_scores` | `id` (autoIncrement) | `by-code` | è¡Œä¸šè¯„åˆ† |
-| 5 | `orders` | `orders` | `id` | â€” | äº¤æ˜“è®¢å• |
-| 6 | `watchlists` | `watchlists` | `id` | â€” | è‡ªé€‰è‚¡/è§‚å¯Ÿåˆ—è¡¨ |
-| 7 | `signals` | `signals` | `id` | â€” | äº¤æ˜“ä¿¡å· |
-| 8 | `researchLogs` | `research_logs` | `id` (autoIncrement) | â€” | ç ”ç©¶/å®¡è®¡æ—¥å¿—ï¼ˆDataBridge å®¡è®¡å†™å…¥ï¼‰ |
-| 9 | `dailyQuotes` | `daily_quotes` | `symbol` | â€” | æ—¥çº¿/K çº¿è¡Œæƒ… |
-| 10 | `rotationScores` | `rotation_scores` | `id` | `by-sector-date`, `by-sector`, `by-total`, `by-resonance` | æ¿å—è½®åŠ¨è¯„åˆ† |
-| 11 | `sectorScores` | `sector_scores` | `id` | `by-sector`, `by-composite`, `by-is-core` | åäº”äº”æ¿å—è¯„åˆ† |
-| 12 | `scoreDocs` | `score_docs` | `docId` | `by-symbol`, `by-symbol-version`, `by-composite` | è¯„åˆ†æ–‡æ¡£ç‰ˆæœ¬åº“ |
-| 13 | `strategySnapshots` | `strategy_snapshots` | `id` | `by-version`, `by-date`, `by-timestamp` | ç­–ç•¥å¿«ç…§ |
-| 14 | `localDocs` | `local_docs` | `id` | `by-symbol`, `by-category`, `by-added-at` | æœ¬åœ°çŸ¥è¯†åº“ |
-| 15 | `news` | `news` | `id` | `by-source`, `by-category`, `by-publish-time`, `by-hash` (unique) | èµ„è®¯æ–‡ç«  |
-| 16 | `newsStockMap` | `news_stock_map` | `id` | `by-symbol`, `by-news` | è‚¡ç¥¨-èµ„è®¯å¤šå¯¹å¤šå…³è” |
-| 17 | `sentimentCache` | `sentiment_cache` | `id` | `by-content-hash` (unique), `by-analyzed-at` | æƒ…æ„Ÿåˆ†æç¼“å­˜ |
-| 18 | `newsBookmarks` | `news_bookmarks` | `id` | `by-bookmarked-at` | èµ„è®¯æ”¶è—ï¼ˆv13ï¼‰ |
-| 19 | `hotSectorScores` | `hot_sector_scores` | `symbol` | `by-calculated-at` | åŒç­–ç•¥-çƒ­é—¨æ¿å—ï¼ˆv14ï¼‰ |
-| 20 | `valuePitScores` | `value_pit_scores` | `symbol` | `by-calculated-at` | åŒç­–ç•¥-ä»·å€¼æ´¼åœ°ï¼ˆv14ï¼‰ |
-| 21 | `executionLogs` | `execution_logs` | `id` (autoIncrement) | `by-plan`, `by-symbol`, `by-timestamp` | æ‰§è¡Œæ—¥å¿—ï¼ˆv15ï¼‰ |
-| 22 | `missingReports` | `missing_reports` | `id` (autoIncrement) | `by-symbol`, `by-severity`, `by-detected-at` | ç¼ºå¤±æŠ¥å‘Šç™»è®°ï¼ˆv15ï¼‰ |
-| 23 | `executionPlans` | `execution_plans` | `id` | `by-signal`, `by-symbol`, `by-phase`, `by-created-at` | æ‰§è¡Œè®¡åˆ’ï¼ˆv16ï¼‰ |
-| 24 | `portfolios` | `portfolios` | `id` | `by-theme`, `by-updated-at` | æŠ•èµ„ç»„åˆï¼ˆv16ï¼‰ |
-| 25 | `tradeReviews` | `trade_reviews` | `id` | `by-generated-at` | äº¤æ˜“çºªå¾‹å¤ç›˜ï¼ˆv17ï¼‰ |
-| 26 | `financialReports` | `financial_reports` | `symbol` | `by-symbol` (unique), `by-report-date`, `by-updated-at` | è´¢åŠ¡æ•°æ®æŠ¥å‘Šï¼ˆv22ï¼‰ |
-| 27 | `schemaMigrations` | `schema_migrations` | `id` | â€” | è¿ç§»è¿½è¸ªï¼ˆD-01 æ¡†æ¶ï¼Œv23ï¼‰ |
-| 28 | `collectConfig` | `collect_config` | `id` | `by-updated-at` | é‡‡é›†ç­–ç•¥é…ç½®ï¼ˆv25ï¼‰ |
-| 29 | `customAgents` | `custom_agents` | `id` | `by-type`, `by-updated-at` | ç”¨æˆ·è‡ªå®šä¹‰æ™ºèƒ½ä½“ï¼ˆv26ï¼‰ |
-| 30 | `traceRecords` | `trace_records` | `traceId` | `by-symbol`, `by-dimension`, `by-started-at`, `by-result` | é‡‡é›†é“¾è·¯è¿½è¸ªï¼ˆv27ï¼‰ |
+| 1 | `stocks` | `stocks` | `symbol` | `by-status`, `by-group` | ¹ÉÆ±»ù´¡Êı¾İ£»º¬ group ×Ö¶Î backfill Âß¼­ |
+| 2 | `v6Scores` | `v6_scores` | `symbol` | ¡ª | V6 ×ÛºÏÆÀ·Ö |
+| 3 | `intelligentScores` | `intelligent_scores` | `id` (autoIncrement) | `by-symbol` | ÖÇÄÜÆÀ·Ö |
+| 4 | `industryScores` | `industry_scores` | `id` (autoIncrement) | `by-code` | ĞĞÒµÆÀ·Ö |
+| 5 | `orders` | `orders` | `id` | ¡ª | ½»Ò×¶©µ¥ |
+| 6 | `watchlists` | `watchlists` | `id` | ¡ª | ×ÔÑ¡¹É/¹Û²ìÁĞ±í |
+| 7 | `signals` | `signals` | `id` | ¡ª | ½»Ò×ĞÅºÅ |
+| 8 | `researchLogs` | `research_logs` | `id` (autoIncrement) | ¡ª | ÑĞ¾¿/Éó¼ÆÈÕÖ¾£¨DataBridge Éó¼ÆĞ´Èë£© |
+| 9 | `dailyQuotes` | `daily_quotes` | `symbol` | ¡ª | ÈÕÏß/K ÏßĞĞÇé |
+| 10 | `rotationScores` | `rotation_scores` | `id` | `by-sector-date`, `by-sector`, `by-total`, `by-resonance` | °å¿éÂÖ¶¯ÆÀ·Ö |
+| 11 | `sectorScores` | `sector_scores` | `id` | `by-sector`, `by-composite`, `by-is-core` | Ê®ÎåÎå°å¿éÆÀ·Ö |
+| 12 | `scoreDocs` | `score_docs` | `docId` | `by-symbol`, `by-symbol-version`, `by-composite` | ÆÀ·ÖÎÄµµ°æ±¾¿â |
+| 13 | `strategySnapshots` | `strategy_snapshots` | `id` | `by-version`, `by-date`, `by-timestamp` | ²ßÂÔ¿ìÕÕ |
+| 14 | `localDocs` | `local_docs` | `id` | `by-symbol`, `by-category`, `by-added-at` | ±¾µØÖªÊ¶¿â |
+| 15 | `news` | `news` | `id` | `by-source`, `by-category`, `by-publish-time`, `by-hash` (unique) | ×ÊÑ¶ÎÄÕÂ |
+| 16 | `newsStockMap` | `news_stock_map` | `id` | `by-symbol`, `by-news` | ¹ÉÆ±-×ÊÑ¶¶à¶Ô¶à¹ØÁª |
+| 17 | `sentimentCache` | `sentiment_cache` | `id` | `by-content-hash` (unique), `by-analyzed-at` | Çé¸Ğ·ÖÎö»º´æ |
+| 18 | `newsBookmarks` | `news_bookmarks` | `id` | `by-bookmarked-at` | ×ÊÑ¶ÊÕ²Ø£¨v13£© |
+| 19 | `hotSectorScores` | `hot_sector_scores` | `symbol` | `by-calculated-at` | Ë«²ßÂÔ-ÈÈÃÅ°å¿é£¨v14£© |
+| 20 | `valuePitScores` | `value_pit_scores` | `symbol` | `by-calculated-at` | Ë«²ßÂÔ-¼ÛÖµÍİµØ£¨v14£© |
+| 21 | `executionLogs` | `execution_logs` | `id` (autoIncrement) | `by-plan`, `by-symbol`, `by-timestamp` | Ö´ĞĞÈÕÖ¾£¨v15£© |
+| 22 | `missingReports` | `missing_reports` | `id` (autoIncrement) | `by-symbol`, `by-severity`, `by-detected-at` | È±Ê§±¨¸æµÇ¼Ç£¨v15£© |
+| 23 | `executionPlans` | `execution_plans` | `id` | `by-signal`, `by-symbol`, `by-phase`, `by-created-at` | Ö´ĞĞ¼Æ»®£¨v16£© |
+| 24 | `portfolios` | `portfolios` | `id` | `by-theme`, `by-updated-at` | Í¶×Ê×éºÏ£¨v16£© |
+| 25 | `tradeReviews` | `trade_reviews` | `id` | `by-generated-at` | ½»Ò×¼ÍÂÉ¸´ÅÌ£¨v17£© |
+| 26 | `financialReports` | `financial_reports` | `symbol` | `by-symbol` (unique), `by-report-date`, `by-updated-at` | ²ÆÎñÊı¾İ±¨¸æ£¨v22£© |
+| 27 | `schemaMigrations` | `schema_migrations` | `id` | ¡ª | Ç¨ÒÆ×·×Ù£¨D-01 ¿ò¼Ü£¬v23£© |
+| 28 | `collectConfig` | `collect_config` | `id` | `by-updated-at` | ²É¼¯²ßÂÔÅäÖÃ£¨v25£© |
+| 29 | `customAgents` | `custom_agents` | `id` | `by-type`, `by-updated-at` | ÓÃ»§×Ô¶¨ÒåÖÇÄÜÌå£¨v26£© |
+| 30 | `traceRecords` | `trace_records` | `traceId` | `by-symbol`, `by-dimension`, `by-started-at`, `by-result` | ²É¼¯Á´Â·×·×Ù£¨v27£© |
 
-> **æ³¨æ„**ï¼š`../../AGENTS.md` v1.4.3 Â§å…« ä¸­åˆ—å‡ºçš„åŸºçº¿ store ä¸º 29 ä¸ªï¼ˆæˆªè‡³ `customAgents`ï¼‰ï¼Œ`traceRecords`ï¼ˆv27ï¼‰ä¸ºåç»­æ–°å¢ï¼Œå®é™…ä»£ç ä¸­ `createSchema` å·²åŒ…å«è¯¥ storeã€‚
+> **×¢Òâ**£º`../../AGENTS.md` v1.4.3 ¡ì°Ë ÖĞÁĞ³öµÄ»ùÏß store Îª 29 ¸ö£¨½ØÖÁ `customAgents`£©£¬`traceRecords`£¨v27£©ÎªºóĞøĞÂÔö£¬Êµ¼Ê´úÂëÖĞ `createSchema` ÒÑ°üº¬¸Ã store¡£
 
-### 2.2 å¢é‡ Storeï¼ˆ6 ä¸ªï¼Œç”± Migration åˆ›å»ºï¼‰
+### 2.2 ÔöÁ¿ Store£¨6 ¸ö£¬ÓÉ Migration ´´½¨£©
 
-ä»¥ä¸‹ store ä¸åœ¨ `createSchema` ä¸­åˆ›å»ºï¼Œè€Œåœ¨ç‰ˆæœ¬å‡çº§æ—¶ç”±å¯¹åº” `Migration.up()` åŠ¨æ€åˆ›å»ºã€‚
+ÒÔÏÂ store ²»ÔÚ `createSchema` ÖĞ´´½¨£¬¶øÔÚ°æ±¾Éı¼¶Ê±ÓÉ¶ÔÓ¦ `Migration.up()` ¶¯Ì¬´´½¨¡£
 
-| Store å¸¸é‡å | ç‰©ç†å | åˆ›å»ºè¿ç§» | è¯´æ˜ |
+| Store ³£Á¿Ãû | ÎïÀíÃû | ´´½¨Ç¨ÒÆ | ËµÃ÷ |
 |-------------|--------|---------|------|
-| `rbacUsers` | `rbac_users` | `rbacMigrationV24` | RBAC ç”¨æˆ· |
-| `rbacRoles` | `rbac_roles` | `rbacMigrationV24` | RBAC è§’è‰² |
-| `rbacPermissions` | `rbac_permissions` | `rbacMigrationV24` | RBAC æƒé™ |
-| `rbacUserRoles` | `rbac_user_roles` | `rbacMigrationV24` | ç”¨æˆ·-è§’è‰²æ˜ å°„ |
-| `rbacRolePermissions` | `rbac_role_permissions` | `rbacMigrationV24` | è§’è‰²-æƒé™æ˜ å°„ |
-| `rbacPermissionAuditLogs` | `rbac_permission_audit_logs` | `rbacMigrationV24` | æƒé™å®¡è®¡æ—¥å¿—ï¼ˆappend-onlyï¼‰ |
+| `rbacUsers` | `rbac_users` | `rbacMigrationV24` | RBAC ÓÃ»§ |
+| `rbacRoles` | `rbac_roles` | `rbacMigrationV24` | RBAC ½ÇÉ« |
+| `rbacPermissions` | `rbac_permissions` | `rbacMigrationV24` | RBAC È¨ÏŞ |
+| `rbacUserRoles` | `rbac_user_roles` | `rbacMigrationV24` | ÓÃ»§-½ÇÉ«Ó³Éä |
+| `rbacRolePermissions` | `rbac_role_permissions` | `rbacMigrationV24` | ½ÇÉ«-È¨ÏŞÓ³Éä |
+| `rbacPermissionAuditLogs` | `rbac_permission_audit_logs` | `rbacMigrationV24` | È¨ÏŞÉó¼ÆÈÕÖ¾£¨append-only£© |
 
-### 2.3 Schema åˆ›å»ºèŒè´£åˆ’åˆ†ï¼ˆAGENTS.md Â§å…« è§„åˆ™ï¼‰
+### 2.3 Schema ´´½¨Ö°Ôğ»®·Ö£¨AGENTS.md ¡ì°Ë ¹æÔò£©
 
-- **åŸºçº¿ store**ï¼ˆé¦–æ¬¡å®‰è£…å³éœ€è¦ï¼‰â†’ åœ¨ `createSchema`ï¼ˆ`db-schema.ts`ï¼‰ä¸­æ·»åŠ 
-- **å¢é‡ store**ï¼ˆç‰ˆæœ¬å‡çº§æ–°å¢ï¼‰â†’ åœ¨å¯¹åº”ç‰ˆæœ¬çš„ `Migration.up()`ï¼ˆ`db-migrations.ts` æˆ– `src/data/migrations/`ï¼‰ä¸­æ·»åŠ 
-- **ç¦æ­¢** åœ¨ä¸¤å¤„åŒæ—¶æ·»åŠ åŒä¸€ store çš„åˆ›å»ºé€»è¾‘ï¼ˆè¿å DRYï¼‰
-- `schemaMigrations` / `customAgents` ç­‰ store æœ¬èº«ç”± `createSchema` åˆ›å»ºï¼ˆåŸºçº¿ï¼‰ï¼Œç§å­æ•°æ®ç”± migration å†™å…¥
+- **»ùÏß store**£¨Ê×´Î°²×°¼´ĞèÒª£©¡ú ÔÚ `createSchema`£¨`db-schema.ts`£©ÖĞÌí¼Ó
+- **ÔöÁ¿ store**£¨°æ±¾Éı¼¶ĞÂÔö£©¡ú ÔÚ¶ÔÓ¦°æ±¾µÄ `Migration.up()`£¨`db-migrations.ts` »ò `src/data/migrations/`£©ÖĞÌí¼Ó
+- **½ûÖ¹** ÔÚÁ½´¦Í¬Ê±Ìí¼ÓÍ¬Ò» store µÄ´´½¨Âß¼­£¨Î¥·´ DRY£©
+- `schemaMigrations` / `customAgents` µÈ store ±¾ÉíÓÉ `createSchema` ´´½¨£¨»ùÏß£©£¬ÖÖ×ÓÊı¾İÓÉ migration Ğ´Èë
 
 ---
 
-## 3. DataBridge è·¯ç”±æœºåˆ¶
+## 3. DataBridge Â·ÓÉ»úÖÆ
 
-### 3.1 æ ¸å¿ƒç±»ä¸å…¥å£
+### 3.1 ºËĞÄÀàÓëÈë¿Ú
 
-`DataBridge`ï¼ˆ`src/core/databridge.ts`ï¼‰æ˜¯æ•°æ®å±‚çš„ç»Ÿä¸€æ¡¥æ¥å™¨ï¼Œä½äº `src/core/`ï¼ˆæ ¸å¿ƒå±‚ï¼‰ï¼ŒèŒè´£åŒ…æ‹¬ï¼š
+`DataBridge`£¨`src/core/databridge.ts`£©ÊÇÊı¾İ²ãµÄÍ³Ò»ÇÅ½ÓÆ÷£¬Î»ÓÚ `src/core/`£¨ºËĞÄ²ã£©£¬Ö°Ôğ°üÀ¨£º
 
-- **`forward(envelope)`** â€” å†™æ“ä½œå…¥å£ï¼šACL æ ¡éªŒ â†’ è·¯ç”± â†’ DB/ç­–ç•¥/äº‹ä»¶/ç®¡ç†å™¨
-- **`query(request)`** â€” è¯»æ“ä½œå…¥å£ï¼šç¼“å­˜ â†’ ACL æ ¡éªŒ â†’ æ•°æ®åº“æŸ¥è¯¢ â†’ å®¡è®¡æ—¥å¿—
-- **`subscribe(channel, callback)`** â€” é¢‘é“è®¢é˜…ï¼ˆè·¨æ¨¡å—å¹¿æ’­é€šä¿¡ï¼‰
-- **`retryFailed()`** â€” å¤±è´¥ envelope é‡è¯•ï¼ˆfallbackQueueï¼‰
+- **`init()`** ¡ª Êı¾İ¿â³õÊ¼»¯£¨ÃİµÈ£©£ºÓ¦ÓÃÆô¶¯Ê±µ÷ÓÃ£¬ÒÑ³õÊ¼»¯ÔòÖ±½Ó·µ»Ø
+- **`forward(envelope)`** ¡ª Ğ´²Ù×÷Èë¿Ú£ºACL Ğ£Ñé ¡ú Â·ÓÉ ¡ú DB/²ßÂÔ/ÊÂ¼ş/¹ÜÀíÆ÷
+- **`query(request)`** ¡ª ¶Á²Ù×÷Èë¿Ú£º»º´æ ¡ú ACL Ğ£Ñé ¡ú Êı¾İ¿â²éÑ¯ ¡ú Éó¼ÆÈÕÖ¾
+- **`subscribe(channel, callback)`** ¡ª ÆµµÀ¶©ÔÄ£¨¿çÄ£¿é¹ã²¥Í¨ĞÅ£©
+- **`retryFailed()`** ¡ª Ê§°Ü envelope ÖØÊÔ£¨fallbackQueue£©
+- **`exportAllData(source)`** ¡ª È«Á¿Êı¾İµ¼³ö£º¾­ ACL Ğ£Ñé + Éó¼Æºó·µ»ØËùÓĞ store Êı¾İ
+- **`importAllData(data, source)`** ¡ª È«Á¿Êı¾İµ¼Èë£º¾­ ACL Ğ£ÑéºóÅúÁ¿Ğ´ÈëËùÓĞ store
+- **`resetAllData(source)`** ¡ª È«Á¿Êı¾İÖØÖÃ£º¾­ ACL Ğ£ÑéºóÇå¿ÕËùÓĞ store
 
-### 3.2 Envelope ä¸ Action å®šä¹‰
+### 3.2 Envelope Óë Action ¶¨Òå
 
-ä¿¡å°å…ƒæ•°æ®å®šä¹‰äº `src/config/dbConfig.ts`ï¼š
+ĞÅ·âÔªÊı¾İ×ÖµäÓÚ `src/config/dbConfig.ts`£º
 
 ```typescript
 interface EnvelopeMeta {
-  source: ModuleId      // æ¥æºæ¨¡å—ï¼ˆå¦‚ 'fetcher' / 'analyzer' / 'system'ï¼‰
-  target: EnvelopeTarget // ç›®æ ‡ï¼ˆ'db' / 'strategy:hotSector' / 'executionPlans' ç­‰ï¼‰
-  action: EnvelopeAction // åŠ¨ä½œï¼ˆè§ ENVELOPE_ACTION å¸¸é‡ï¼‰
-  traceId: string       // è¿½è¸ª ID
-  timestamp: number     // æ—¶é—´æˆ³
+  source: ModuleId      // À´Ô´Ä£¿é£¨Èç 'fetcher' / 'analyzer' / 'system'£©
+  target: EnvelopeTarget // Ä¿±ê£¨'db' / 'strategy:hotSector' / 'executionPlans' µÈ£©
+  action: EnvelopeAction // ¶¯×÷£¨¼û ENVELOPE_ACTION ³£Á¿£©
+  traceId: string       // ×·×Ù ID
+  timestamp: number     // Ê±¼ä´Á
 }
 ```
 
-å½“å‰å·²å®šä¹‰çš„ `ENVELOPE_ACTION` å¸¸é‡ï¼ˆæˆªè‡³ DB_VERSION = 27ï¼‰ï¼š
+µ±Ç°ÒÑ¶¨ÒåµÄ `ENVELOPE_ACTION` ³£Á¿£¨½ØÖÁ DB_VERSION = 27£©£º
 
-| ç±»åˆ« | Action æ•°é‡ | å…³é”® Action ç¤ºä¾‹ |
+| Àà±ğ | Action ÊıÁ¿ | ¹Ø¼ü Action Ê¾Àı |
 |------|------------|----------------|
-| å•æ¡å†™å…¥ | ~30 | `INSERT_STOCK`, `UPDATE_STOCK`, `SAVE_SCORES`, `SAVE_NEWS`, `SAVE_EXECUTION_PLAN` |
-| æ‰¹é‡å†™å…¥ | 5 | `BULK_INSERT_STOCK`, `BULK_SAVE_DAILY_QUOTES`, `BULK_SAVE_SCORES`, `BULK_SAVE_FINANCIAL_REPORTS`, `BULK_SAVE_NEWS` |
-| æŸ¥è¯¢ | 3 | `QUERY_GET`, `QUERY_LIST`, `QUERY_BY_INDEX` |
-| ç­–ç•¥è§¦å‘ | 3 | `STRATEGY_HOT_SECTOR_REFRESH`, `STRATEGY_VALUE_PIT_REFRESH`, `STRATEGY_ROTATION_SIGNAL_DETECT` |
-| äº‹ä»¶å¹¿æ’­ | 4 | `NEWS_ARTICLE_LOADED`, `HOLDINGS_DATA_LOADED`, `TRADE_ACTION_EXECUTED`, `LOAD_HOLDINGS_DATA` |
-| ç®¡ç†æ“ä½œ | 3 | `RESET_ALL`, `IMPORT_ALL`, `EXPORT_ALL` |
+| µ¥ÌõĞ´Èë | ~30 | `INSERT_STOCK`, `UPDATE_STOCK`, `SAVE_SCORES`, `SAVE_NEWS`, `SAVE_EXECUTION_PLAN` |
+| ÅúÁ¿Ğ´Èë | 5 | `BULK_INSERT_STOCK`, `BULK_SAVE_DAILY_QUOTES`, `BULK_SAVE_SCORES`, `BULK_SAVE_FINANCIAL_REPORTS`, `BULK_SAVE_NEWS` |
+| ²éÑ¯ | 3 | `QUERY_GET`, `QUERY_LIST`, `QUERY_BY_INDEX` |
+| ²ßÂÔ´¥·¢ | 3 | `STRATEGY_HOT_SECTOR_REFRESH`, `STRATEGY_VALUE_PIT_REFRESH`, `STRATEGY_ROTATION_SIGNAL_DETECT` |
+| ÊÂ¼ş¹ã²¥ | 4 | `NEWS_ARTICLE_LOADED`, `HOLDINGS_DATA_LOADED`, `TRADE_ACTION_EXECUTED`, `LOAD_HOLDINGS_DATA` |
+| ¹ÜÀí²Ù×÷ | 3 | `RESET_ALL`, `IMPORT_ALL`, `EXPORT_ALL` |
 | RBAC | 7 | `SAVE_RBAC_USER` ~ `SAVE_RBAC_AUDIT_LOG`, `DELETE_RBAC_AUDIT_LOG` |
-| é‡‡é›†/æ™ºèƒ½ä½“ | 4 | `SAVE_COLLECT_CONFIG`, `DELETE_COLLECT_CONFIG`, `SAVE_CUSTOM_AGENT`, `DELETE_CUSTOM_AGENT`, `SAVE_TRACE_RECORD` |
+| ²É¼¯/ÖÇÄÜÌå | 4 | `SAVE_COLLECT_CONFIG`, `DELETE_COLLECT_CONFIG`, `SAVE_CUSTOM_AGENT`, `DELETE_CUSTOM_AGENT`, `SAVE_TRACE_RECORD` |
 
-> **è§„åˆ™**ï¼šæ–°å¢ `ENVELOPE_ACTION` å¿…é¡»åœ¨ `DataBridge.routeToDB()` ä¸­æ·»åŠ å¯¹åº” caseï¼ˆè§ `../../AGENTS.md` Â§å…«ï¼‰ã€‚
+> **¹æÔò**£ºĞÂÔö `ENVELOPE_ACTION` ±ØĞëÔÚ `DataBridge.routeToDB()` ÖĞÌí¼Ó¶ÔÓ¦ case£¨¼û `../../AGENTS.md` ¡ì°Ë£©¡£
 
-### 3.3 è·¯ç”±æµç¨‹å›¾
+### 3.3 Â·ÓÉÁ÷³ÌÍ¼
 
 ```
-envelope è¿›å…¥ forward()
-    â”‚
-    â–¼
-Envelope æ ¼å¼æ ¡éªŒï¼ˆEnvelopeFactory.validateï¼‰
-    â”‚
-    â–¼
-æ¨æ–­ targetStoreï¼ˆACTION_TO_STORE_MAP æ˜¾å¼æ˜ å°„ æˆ– payload.storeï¼‰
-    â”‚
-    â–¼
-ACL æ ¡éªŒï¼ˆaclEngine.assertï¼‰â€” å¤±è´¥æ—¶å¸‚åœºç±» envelope å…¥ fallbackQueue é‡è¯•
-    â”‚
-    â–¼
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚  æŒ‰ action ç±»å‹åˆ†å‘ï¼ˆrouteToActionï¼‰                         â”‚
-â”‚  â”œâ”€â”€ STRATEGY_ACTIONS â†’ routeToStrategyï¼ˆç­–ç•¥å¼•æ“ï¼‰          â”‚
-â”‚  â”œâ”€â”€ QUERY_ACTIONS    â†’ routeToQueryï¼ˆæŸ¥è¯¢ç¼“å­˜ + DBï¼‰        â”‚
-â”‚  â”œâ”€â”€ EVENT_ACTIONS    â†’ routeToEventï¼ˆçº¯å¹¿æ’­ï¼Œä¸å†™ DBï¼‰      â”‚
-â”‚  â”œâ”€â”€ reset/import/export â†’ routeToManagerï¼ˆDB ç®¡ç†ï¼‰         â”‚
-â”‚  â””â”€â”€ å…¶ä½™             â†’ routeToDBï¼ˆHandler æ¨¡å¼å†™å…¥ï¼‰        â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-    â”‚
-    â–¼
-å†™æ“ä½œæˆåŠŸåï¼šinvalidateCache(targetStore) + broadcast(channel, envelope)
+envelope ½øÈë forward()
+    ©¦
+    ¨‹
+Envelope ¸ñÊ½Ğ£Ñé£¨EnvelopeFactory.validate£©
+    ©¦
+    ¨‹
+ÍÆ¶Ï targetStore£¨ACTION_TO_STORE_MAP ÏÔÊ½Ó³Éä »ò payload.store£©
+    ©¦
+    ¨‹
+ACL Ğ£Ñé£¨aclEngine.assert£©¡ª Ê§°ÜÊ±ÊĞ³¡Àà envelope Èë fallbackQueue ÖØÊÔ
+    ©¦
+    ¨‹
+©°©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©´
+©¦  °´ action ÀàĞÍ·Ö·¢£¨routeToAction£©                         ©¦
+©¦  ©À©¤©¤ STRATEGY_ACTIONS ¡ú routeToStrategy£¨²ßÂÔÒıÇæ£©          ©¦
+©¦  ©À©¤©¤ QUERY_ACTIONS    ¡ú routeToQuery£¨²éÑ¯»º´æ + DB£©        ©¦
+©¦  ©À©¤©¤ EVENT_ACTIONS    ¡ú routeToEvent£¨´¿¹ã²¥£¬²»Ğ´ DB£©      ©¦
+©¦  ©À©¤©¤ reset/import/export ¡ú routeToManager£¨DB ¹ÜÀí£©         ©¦
+©¦  ©¸©¤©¤ ÆäÓà             ¡ú routeToDB£¨Handler Ä£Ê½Ğ´Èë£©        ©¦
+©¸©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼
+    ©¦
+    ¨‹
+Ğ´²Ù×÷³É¹¦ºó£ºinvalidateCache(targetStore) + broadcast(channel, envelope)
 ```
 
-### 3.4 routeToDB çš„ Handler æ¨¡å¼
+### 3.4 routeToDB µÄ Handler Ä£Ê½
 
-`routeToDB()` ä½¿ç”¨ç­–ç•¥æ¨¡å¼å§”æ‰˜ç»™ `HandlerRegistry`ï¼Œè€Œéåœ¨ switch-case ä¸­ç¡¬ç¼–ç æ‰€æœ‰å†™å…¥é€»è¾‘ï¼š
+`routeToDB()` Ê¹ÓÃ²ßÂÔÄ£Ê½Î¯ÍĞ¸ø `HandlerRegistry`£¬¶ø·ÇÔÚ switch-case ÖĞÓ²±àÂëËùÓĞĞ´ÈëÂß¼­£º
 
-1. æŸ¥æ‰¾ `meta.action` å¯¹åº”çš„ `EnvelopeHandler`
-2. è‹¥æ‰¾åˆ°ï¼Œè°ƒç”¨ `handler.handle(envelope, store)`
-3. è‹¥æœªæ‰¾åˆ°ï¼Œå›é€€ä¸ºé»˜è®¤ `db.put(store, envelope.payload)`
+1. ²éÕÒ `meta.action` ¶ÔÓ¦µÄ `EnvelopeHandler`
+2. ÈôÕÒµ½£¬µ÷ÓÃ `handler.handle(envelope, store)`
+3. ÈôÎ´ÕÒµ½£¬»ØÍËÎªÄ¬ÈÏ `db.put(store, envelope.payload)`
 
-Handler å®šä¹‰é›†ä¸­ç®¡ç†äº `src/core/databridgeHandlers.ts`ï¼Œä¾¿äºæ–°å¢ action æ—¶ç‹¬ç«‹æ‰©å±•ã€‚
+Handler ¶¨Òå¼¯ÖĞ¹ÜÀíÓÚ `src/core/databridgeHandlers.ts`£¬±ãÓÚĞÂÔö action Ê±¶ÀÁ¢À©Õ¹¡£
 
-### 3.5 ACL çŸ©é˜µï¼ˆç²¾ç®€ç‰ˆï¼‰
+### 3.5 ACL ¾ØÕó£¨¾«¼ò°æ£©
 
-å®Œæ•´ ACL å®šä¹‰è§ `src/config/dbConfig.ts` â†’ `ACL_MATRIX`ã€‚ä»¥ä¸‹ä¸ºæ ¸å¿ƒæ¨¡å—æƒé™æ‘˜è¦ï¼š
+ÍêÕû ACL ¶¨Òå¼û `src/config/dbConfig.ts` ¡ú `ACL_MATRIX`¡£ÒÔÏÂÎªºËĞÄÄ£¿éÈ¨ÏŞÕªÒª£º
 
-| æ¨¡å— | è¯»æƒé™ | å†™æƒé™ |
+| Ä£¿é | ¶ÁÈ¨ÏŞ | Ğ´È¨ÏŞ |
 |------|--------|--------|
 | `fetcher` | `traceRecords`, `collectConfig` | `stocks`, `dailyQuotes`, `financialReports`, `collectConfig`, `traceRecords` |
 | `analyzer` | stocks, v6Scores, intelligentScores, industryScores, scoreDocs, hotSectorScores, valuePitScores, signals | v6Scores, intelligentScores, industryScores, scoreDocs, hotSectorScores, valuePitScores |
 | `stockpool` | stocks, v6Scores | stocks |
 | `tradinghub` | stocks, v6Scores, orders, signals, strategySnapshots, hotSectorScores, valuePitScores | orders, signals, strategySnapshots, hotSectorScores, valuePitScores |
 | `news` | stocks, news, newsStockMap, sentimentCache, newsBookmarks | news, newsStockMap, sentimentCache, newsBookmarks |
-| `rbac` | rbacUsers ~ rbacPermissionAuditLogs | rbacUsers ~ rbacPermissionAuditLogsï¼ˆå®¡è®¡æ—¥å¿— append-onlyï¼‰ |
-| `system` | **å…¨éƒ¨** | **å…¨éƒ¨** |
-| `datalayer` | **å…¨éƒ¨** | æ— ï¼ˆåªè¯»ä»£ç†ï¼‰ |
+| `rbac` | rbacUsers ~ rbacPermissionAuditLogs | rbacUsers ~ rbacPermissionAuditLogs£¨Éó¼ÆÈÕÖ¾ append-only£© |
+| `system` | **È«²¿** | **È«²¿** |
+| `datalayer` | **È«²¿** | ÎŞ£¨Ö»¶Á´úÀí£© |
+
+### 3.6 Store °ü×°²ãÓë·Ö²ãºÏ¹æ
+
+`dataLayer*Stores.ts` ÏµÁĞÎÄ¼ş£¨Èç `dataLayerStockStores.ts`¡¢`dataLayerTradingStores.ts` µÈ£©ÊÇ**ÁìÓò Store °ü×°²ã**£¬Æä¶¨Î»Îª£º
+
+- **Ö°Ôğ**£º·â×°ÁìÓòÏà¹ØµÄÒµÎñÂß¼­£¨Ğ£Ñé¡¢¾ÛºÏ¡¢¼ÆËã£©£¬Ìá¹©ÓïÒå»¯µÄ CRUD ½Ó¿Ú
+- **Êı¾İ·ÃÎÊ**£ºÄÚ²¿Í¨¹ı `dataLayerHelpers` ¡ú `databridgeQueries` ¡ú `DataBridge` ·ÃÎÊÊı¾İ£¬**²»Ö±½Ó³ÖÓĞ db ÊµÀı**
+- **·Ö²ãºÏ¹æ**£ºservices ²ã´ÓÕâĞ© store ÎÄ¼şµ¼ÈëÊÇºÏ¹æµÄ£¨×îÖÕÈÔ×ß DataBridge£©£¬`audit:layers` v3.4+ »á×Ô¶¯Ê¶±ğ²¢»íÃâ
+
+**ºÏ¹æÅĞ¶¨±ê×¼**£¨`isCompliantStoreModule`£©£º
+1. ²»Ö±½Óµ¼Èë `db` ÊµÀı£¨½öµ¼Èë¹¤¾ßº¯ÊıÈç `generateId`/`now` ²»ËãÎ¥¹æ£©
+2. Êı¾İ·ÃÎÊÍ¨¹ı `dataLayerHelpers` »ò `databridgeQueries`£¨×îÖÕ×ß DataBridge£©
+3. ½ö°üº¬ÁìÓòÂß¼­·â×°£¬²»ÈÆ¹ı ACL / Éó¼Æ / »º´æ»úÖÆ
 
 ---
 
-## 4. æ•°æ®åº“è¿ç§»å‡çº§ç­–ç•¥ï¼ˆD-01ï¼‰
+## 4. Êı¾İ¿âÇ¨ÒÆÉı¼¶²ßÂÔ£¨D-01£©
 
-### 4.1 è¿ç§»æ¡†æ¶
+### 4.1 Ç¨ÒÆ¿ò¼Ü
 
 ```typescript
 // db-migrations.ts
 export interface Migration {
-  version: number        // è§¦å‘è¯¥è¿ç§»çš„ç›®æ ‡ç‰ˆæœ¬å·ï¼ˆä¸¥æ ¼é€’å¢ï¼‰
-  name: string           // è¿ç§»åç§°ï¼ˆæ—¥å¿—/å®¡è®¡ï¼‰
-  up(ctx: MigrationContext): void   // æ­£å‘è¿ç§»ï¼ˆåŒæ­¥æ‰§è¡Œï¼Œç¦æ­¢ awaitï¼‰
-  down?(ctx: MigrationContext): void // åå‘å›æ»šï¼ˆå¤±è´¥æ—¶é€†åºè°ƒç”¨ï¼‰
+  version: number        // ´¥·¢¸ÃÇ¨ÒÆµÄÄ¿±ê°æ±¾ºÅ£¨ÑÏ¸ñµİÔö£©
+  name: string           // Ç¨ÒÆÃû³Æ£¨ÈÕÖ¾/Éó¼Æ£©
+  up(ctx: MigrationContext): void   // ÕıÏòÇ¨ÒÆ£¨Í¬²½Ö´ĞĞ£¬½ûÖ¹ await£©
+  down?(ctx: MigrationContext): void // ·´Ïò»Ø¹ö£¨Ê§°ÜÊ±ÄæĞòµ÷ÓÃ£©
 }
 ```
 
-### 4.2 å‡çº§è§¦å‘é“¾
+### 4.2 Éı¼¶´¥·¢Á´
 
 ```
-æµè§ˆå™¨æ‰“å¼€é¡µé¢ â†’ V6Database.init() â†’ openDB()
-    â”‚
-    â–¼
+ä¯ÀÀÆ÷´ò¿ªÒ³Ãæ ¡ú V6Database.init() ¡ú openDB()
+    ©¦
+    ¨‹
 indexedDB.open(DB_NAME, DB_VERSION)  // DB_VERSION = 27
-    â”‚
-    â–¼
-onupgradeneeded å›è°ƒ
-    â”œâ”€â”€ createSchema(db, request, logger)     // åˆ›å»º/ç¡®è®¤åŸºçº¿ store
-    â””â”€â”€ runMigrations(db, oldVersion, DB_VERSION, MIGRATIONS, logger, tx)
-            â”‚
-            â–¼
-        ç­›é€‰ pending è¿ç§»ï¼ˆoldVersion < version â‰¤ DB_VERSIONï¼‰
-            â”‚
-            â–¼
-        æŒ‰ version å‡åºæ‰§è¡Œ up()
-        ä»»ä¸€å¤±è´¥ â†’ é€†åºæ‰§è¡Œ down() å›æ»š â†’ æŠ›é”™
+    ©¦
+    ¨‹
+onupgradeneeded »Øµ÷
+    ©À©¤©¤ createSchema(db, request, logger)     // ´´½¨/È·ÈÏ»ùÏß store
+    ©¸©¤©¤ runMigrations(db, oldVersion, DB_VERSION, MIGRATIONS, logger, tx)
+            ©¦
+            ¨‹
+        É¸Ñ¡ pending Ç¨ÒÆ£¨oldVersion < version ¡Ü DB_VERSION£©
+            ©¦
+            ¨‹
+        °´ version ÉıĞòÖ´ĞĞ up()
+        ÈÎÒ»Ê§°Ü ¡ú ÄæĞòÖ´ĞĞ down() »Ø¹ö ¡ú Å×´í
 ```
 
-### 4.3 DB_VERSION å‡çº§å†å²
+### 4.3 DB_VERSION Éı¼¶ÀúÊ·
 
-| ç‰ˆæœ¬ | å˜æ›´å†…å®¹ |
+| °æ±¾ | ±ä¸üÄÚÈİ |
 |------|---------|
-| v3 â†’ v4 | æ–°å¢ `dailyQuotes` |
-| v4 â†’ v5 | stocks æ–°å¢ `group` å­—æ®µä¸ `by-group` ç´¢å¼• |
-| v5 â†’ v6 | æ–°å¢ rotationScores / sectorScores / scoreDocs / strategySnapshots / localDocs / news / newsStockMap / sentimentCache |
-| v12 â†’ v13 | æ–°å¢ `newsBookmarks` |
-| v13 â†’ v14 | æ–°å¢ `hotSectorScores` / `valuePitScores` |
-| v14 â†’ v15 | æ–°å¢ `executionLogs` / `missingReports` |
-| v15 â†’ v16 | æ–°å¢ `executionPlans` / `portfolios` |
-| v19 â†’ v20 | æ•°æ®å­—å…¸è¡¥å…¨ï¼Œæ–°å¢ datalayer ACL |
-| v20 â†’ v22 | æ–°å¢ `financialReports` |
-| v22 â†’ v23 | æ–°å¢ `schemaMigrations`ï¼ˆD-01 è¿ç§»æ¡†æ¶è½åœ°ï¼‰ |
-| v23 â†’ v24 | æ–°å¢ RBAC 6 è¡¨ï¼ˆç”± `rbacMigrationV24` åˆ›å»ºï¼‰ |
-| v24 â†’ v25 | æ–°å¢ `collectConfig` |
-| v25 â†’ v26 | æ–°å¢ `customAgents` |
-| v26 â†’ v27 | æ–°å¢ `traceRecords` |
+| v3 ¡ú v4 | ĞÂÔö `dailyQuotes` |
+| v4 ¡ú v5 | stocks ĞÂÔö `group` ×Ö¶ÎÓë `by-group` Ë÷Òı |
+| v5 ¡ú v6 | ĞÂÔö rotationScores / sectorScores / scoreDocs / strategySnapshots / localDocs / news / newsStockMap / sentimentCache |
+| v12 ¡ú v13 | ĞÂÔö `newsBookmarks` |
+| v13 ¡ú v14 | ĞÂÔö `hotSectorScores` / `valuePitScores` |
+| v14 ¡ú v15 | ĞÂÔö `executionLogs` / `missingReports` |
+| v15 ¡ú v16 | ĞÂÔö `executionPlans` / `portfolios` |
+| v19 ¡ú v20 | Êı¾İ×Öµä²¹È«£¬ĞÂÔö datalayer ACL |
+| v20 ¡ú v22 | ĞÂÔö `financialReports` |
+| v22 ¡ú v23 | ĞÂÔö `schemaMigrations`£¨D-01 Ç¨ÒÆ¿ò¼ÜÂäµØ£© |
+| v23 ¡ú v24 | ĞÂÔö RBAC 6 ±í£¨ÓÉ `rbacMigrationV24` ´´½¨£© |
+| v24 ¡ú v25 | ĞÂÔö `collectConfig` |
+| v25 ¡ú v26 | ĞÂÔö `customAgents` |
+| v26 ¡ú v27 | ĞÂÔö `traceRecords` |
 
-### 4.4 æ–°å¢ Store çš„ SOP
+### 4.4 ĞÂÔö Store µÄ SOP
 
-1. `src/config/dbConfig.ts` ä¸­ï¼š
+1. `src/config/dbConfig.ts` ÖĞ£º
    - `DB_VERSION + 1`
-   - `STORE_NAME` ä¸­æ³¨å†Œæ–°å¸¸é‡
-   - `ACL_MATRIX` ä¸­è¡¥å…… read/write ç™½åå•
-2. åˆ¤æ–­åŸºçº¿/å¢é‡ï¼š
-   - åŸºçº¿ â†’ åœ¨ `db-schema.ts` `createSchema()` ä¸­æ·»åŠ  `ensureStore()` è°ƒç”¨
-   - å¢é‡ â†’ åœ¨ `db-migrations.ts` `MIGRATIONS` æ•°ç»„ä¸­è¿½åŠ  Migration è®°å½•ï¼ˆæˆ–æ–°å»º `src/data/migrations/*.ts`ï¼‰
-3. å¦‚æœ‰æ–°å†™å…¥é€šé“ â†’ åœ¨ `src/core/databridge.ts` `ACTION_TO_STORE_MAP` ä¸­æ³¨å†Œ action â†’ store æ˜ å°„
-4. è¿è¡Œ `npm run audit:layers` ç¡®è®¤æ— è·¨å±‚è¿è§„
-5. è¿è¡Œ `npx tsc --noEmit` ç¡®è®¤ç±»å‹å®‰å…¨
+   - `STORE_NAME` ÖĞ×¢²áĞÂ³£Á¿
+   - `ACL_MATRIX` ÖĞ²¹³ä read/write °×Ãûµ¥
+2. ÅĞ¶Ï»ùÏß/ÔöÁ¿£º
+   - »ùÏß ¡ú ÔÚ `db-schema.ts` `createSchema()` ÖĞÌí¼Ó `ensureStore()` µ÷ÓÃ
+   - ÔöÁ¿ ¡ú ÔÚ `db-migrations.ts` `MIGRATIONS` Êı×éÖĞ×·¼Ó Migration ¼ÇÂ¼£¨»òĞÂ½¨ `src/data/migrations/*.ts`£©
+3. ÈçÓĞĞÂĞ´ÈëÍ¨µÀ ¡ú ÔÚ `src/core/databridge.ts` `ACTION_TO_STORE_MAP` ÖĞ×¢²á action ¡ú store Ó³Éä
+4. ÔËĞĞ `npm run audit:layers` È·ÈÏÎŞ¿ç²ãÎ¥¹æ
+5. ÔËĞĞ `npx tsc --noEmit` È·ÈÏÀàĞÍ°²È«
 
-> **TODO**ï¼šè¡¥å……ä¸€å›¾æµã€Œæ–°å¢ Store å†³ç­–æ ‘ã€ï¼Œç”±æ¶æ„ç»„æ‰©å†™ã€‚
+> **TODO**£º²¹³äÒ»Í¼Á÷¡¸ĞÂÔö Store ¾ö²ßÊ÷¡¹£¬ÓÉ¼Ü¹¹×éÀ©Ğ´¡£
 
 ---
 
-## 5. æ•°æ®ç±»å‹å®šä¹‰ï¼ˆsrc/data/types.tsï¼‰
+## 5. Êı¾İÀàĞÍ¶¨Òå£¨src/data/types.ts£©
 
-### 5.1 Barrel ç»“æ„
+### 5.1 Barrel ½á¹¹
 
-`types.ts` æ˜¯ 13+ ä¸ªå­æ¨¡å—çš„ barrel re-exportï¼Œä¿æŒåŸ `import type { Stock, Order } from '@/data/types'` è·¯å¾„å®Œå…¨å…¼å®¹ã€‚
+`types.ts` ÊÇ 13+ ¸ö×ÓÄ£¿éµÄ barrel re-export£¬±£³ÖÔ­ `import type { Stock, Order } from '@/data/types'` Â·¾¶ÍêÈ«¼æÈİ¡£
 
 ```typescript
-// æŒ‰ä¸šåŠ¡åŸŸèšåˆçš„å­æ¨¡å—
-L0 åŸºç¡€å±‚          â†’ types/types.dataLayer.ts
-æ‰§è¡Œè®¡åˆ’åŸŸ          â†’ types/types.execution.ts
-è‚¡ç¥¨åŸºç¡€åŸŸ          â†’ types/types.stock.ts
-è¯„åˆ†åŸŸ              â†’ types/types.score.ts
-è®¢å•åŸŸ              â†’ types/types.order.ts
-ç»„åˆåŸŸ              â†’ types/types.portfolio.ts
-ç­–ç•¥åŸŸ              â†’ types/types.strategy.ts
-ä¿¡å·åŸŸ              â†’ types/types.signal.ts
-è¡Œæƒ…æ•°æ®åŸŸ          â†’ types/types.marketData.ts
-æ¿å—è¯„åˆ†åŸŸ          â†’ types/types.sector.ts
-è½®åŠ¨åŸŸ              â†’ types/types.rotation.ts
-è¯„åˆ†æ–‡æ¡£åŸŸ          â†’ types/types.scoreDoc.ts
-çŸ¥è¯†åº“/èµ„è®¯åŸŸ       â†’ types/types.knowledge.ts
-ä¸ƒç»´æ•°æ®åŸŸ          â†’ types/types.sevenDimensions.ts
-æ··åˆæ ¡å¯¹åŸŸ          â†’ types/types.hybridProofread.ts
-è‡ªå®šä¹‰æ™ºèƒ½ä½“åŸŸ      â†’ types/types.customAgent.ts
+// °´ÒµÎñÓò¾ÛºÏµÄ×ÓÄ£¿é
+L0 »ù´¡²ã          ¡ú types/types.dataLayer.ts
+Ö´ĞĞ¼Æ»®Óò          ¡ú types/types.execution.ts
+¹ÉÆ±»ù´¡Óò          ¡ú types/types.stock.ts
+ÆÀ·ÖÓò              ¡ú types/types.score.ts
+¶©µ¥Óò              ¡ú types/types.order.ts
+×éºÏÓò              ¡ú types/types.portfolio.ts
+²ßÂÔÓò              ¡ú types/types.strategy.ts
+ĞÅºÅÓò              ¡ú types/types.signal.ts
+ĞĞÇéÊı¾İÓò          ¡ú types/types.marketData.ts
+°å¿éÆÀ·ÖÓò          ¡ú types/types.sector.ts
+ÂÖ¶¯Óò              ¡ú types/types.rotation.ts
+ÆÀ·ÖÎÄµµÓò          ¡ú types/types.scoreDoc.ts
+ÖªÊ¶¿â/×ÊÑ¶Óò       ¡ú types/types.knowledge.ts
+ÆßÎ¬Êı¾İÓò          ¡ú types/types.sevenDimensions.ts
+»ìºÏĞ£¶ÔÓò          ¡ú types/types.hybridProofread.ts
+×Ô¶¨ÒåÖÇÄÜÌåÓò      ¡ú types/types.customAgent.ts
 ```
 
-### 5.2 æ ¸å¿ƒç±»å‹é€ŸæŸ¥
+### 5.2 ºËĞÄÀàĞÍËÙ²é
 
-| ç±»å‹ | æ¥æºæ–‡ä»¶ | è¯´æ˜ |
+| ÀàĞÍ | À´Ô´ÎÄ¼ş | ËµÃ÷ |
 |------|---------|------|
-| `Stock` | `types.stock.ts` | è‚¡ç¥¨åŸºç¡€ä¿¡æ¯ï¼ˆsymbol / name / industry / group / researchStatusï¼‰ |
-| `V6Score` | `types.score.ts` | V6 è¯„åˆ†ç»“æœï¼ˆcomposite + 8 ç»´åº¦åˆ†ï¼‰ |
-| `Order` | `types.order.ts` | äº¤æ˜“è®¢å•ï¼ˆdirection / status / price / quantityï¼‰ |
-| `Signal` | `types.signal.ts` | äº¤æ˜“ä¿¡å·ï¼ˆtype / symbol / confidence / triggeredAtï¼‰ |
-| `DailyQuotes` | `types.marketData.ts` | æ—¥çº¿/K çº¿æ•°æ® |
-| `ExecutionPlan` | `types.execution.ts` | æ‰§è¡Œè®¡åˆ’ï¼ˆphases / riskChecksï¼‰ |
-| `Portfolio` | `types.portfolio.ts` | æŠ•èµ„ç»„åˆï¼ˆholdings / theme / metricsï¼‰ |
-| `UnifiedStockData` | ç”± `unifiedStockService` èšåˆäº§å‡º | æ•°æ®èåˆç»Ÿä¸€å¥‘çº¦ï¼Œè¢« store ä¸å„é¡µé¢æ¶ˆè´¹ |
+| `Stock` | `types.stock.ts` | ¹ÉÆ±»ù´¡ĞÅÏ¢£¨symbol / name / industry / group / researchStatus£© |
+| `V6Score` | `types.score.ts` | V6 ÆÀ·Ö½á¹û£¨composite + 8 Î¬¶È·Ö£© |
+| `Order` | `types.order.ts` | ½»Ò×¶©µ¥£¨direction / status / price / quantity£© |
+| `Signal` | `types.signal.ts` | ½»Ò×ĞÅºÅ£¨type / symbol / confidence / triggeredAt£© |
+| `DailyQuotes` | `types.marketData.ts` | ÈÕÏß/K ÏßÊı¾İ |
+| `ExecutionPlan` | `types.execution.ts` | Ö´ĞĞ¼Æ»®£¨phases / riskChecks£© |
+| `Portfolio` | `types.portfolio.ts` | Í¶×Ê×éºÏ£¨holdings / theme / metrics£© |
+| `UnifiedStockData` | ÓÉ `unifiedStockService` ¾ÛºÏ²ú³ö | Êı¾İÈÚºÏÍ³Ò»ÆõÔ¼£¬±» store Óë¸÷Ò³ÃæÏû·Ñ |
 
-> **å­—æ®µçº§å®šä¹‰** â†’ æŸ¥è¯¢ [æ•°æ®å­—å…¸ç´¢å¼•](design/data-dictionary-index.md)ã€‚
+> **×Ö¶Î¼¶¶¨Òå** ¡ú ²éÑ¯ [Êı¾İ×ÖµäË÷Òı](design/data-dictionary-index.md)¡£
 
 ---
 
-## 6. QueryBuilder æŸ¥è¯¢æ„é€ 
+## 6. QueryBuilder ²éÑ¯¹¹Ôì
 
-### 6.1 å®šä½
+### 6.1 ¶¨Î»
 
-`QueryBuilder`ï¼ˆ`src/data/queryBuilder.ts`ï¼‰æä¾›**ç»•å¼€ Store çš„ç»¼åˆæŸ¥è¯¢**èƒ½åŠ›ï¼Œä¸€æ¬¡æ€§è·å–å•åªè‚¡ç¥¨åœ¨å¤šç»´åº¦ä¸Šçš„æ•°æ®ï¼Œé¿å…ç»„ä»¶å±‚å‘èµ·å¤šæ¬¡ç‹¬ç«‹ store æŸ¥è¯¢ã€‚
+`QueryBuilder`£¨`src/data/queryBuilder.ts`£©Ìá¹©**ÈÆ¿ª Store µÄ×ÛºÏ²éÑ¯**ÄÜÁ¦£¬Ò»´ÎĞÔ»ñÈ¡µ¥Ö»¹ÉÆ±ÔÚ¶àÎ¬¶ÈÉÏµÄÊı¾İ£¬±ÜÃâ×é¼ş²ã·¢Æğ¶à´Î¶ÀÁ¢ store ²éÑ¯¡£
 
-### 6.2 æŸ¥è¯¢å‚æ•°ï¼ˆzod æ ¡éªŒï¼‰
+### 6.2 ²éÑ¯²ÎÊı£¨zod Ğ£Ñé£©
 
 ```typescript
 const unifiedStockQuerySchema = z.object({
   symbol: z.string().min(1),
-  includeBasic: z.boolean().optional(),           // è‚¡ç¥¨åŸºç¡€ä¿¡æ¯
-  includeQuotes: z.boolean().optional(),          // K çº¿è¡Œæƒ…
-  includeV6Score: z.boolean().optional(),         // V6 è¯„åˆ†
-  includeIntelligentScore: z.boolean().optional(), // æ™ºèƒ½è¯„åˆ†
-  includeIndustryScore: z.boolean().optional(),   // è¡Œä¸šè¯„åˆ†
-  includeSignals: z.boolean().optional(),         // äº¤æ˜“ä¿¡å·
-  includeNews: z.boolean().optional(),            // å…³è”æ–°é—»
+  includeBasic: z.boolean().optional(),           // ¹ÉÆ±»ù´¡ĞÅÏ¢
+  includeQuotes: z.boolean().optional(),          // K ÏßĞĞÇé
+  includeV6Score: z.boolean().optional(),         // V6 ÆÀ·Ö
+  includeIntelligentScore: z.boolean().optional(), // ÖÇÄÜÆÀ·Ö
+  includeIndustryScore: z.boolean().optional(),   // ĞĞÒµÆÀ·Ö
+  includeSignals: z.boolean().optional(),         // ½»Ò×ĞÅºÅ
+  includeNews: z.boolean().optional(),            // ¹ØÁªĞÂÎÅ
 })
 ```
 
-### 6.3 æ‰§è¡Œæ¨¡å‹
+### 6.3 Ö´ĞĞÄ£ĞÍ
 
-- **å¹¶å‘æŸ¥è¯¢**ï¼šå„ç»´åº¦é€šè¿‡ `Promise.all(tasks)` å¹¶è¡Œæ‰§è¡Œ
-- **Partial Success**ï¼šå•ç»´åº¦å¤±è´¥ä»…è®°å…¥ `errors` å­—æ®µï¼Œä¸å½±å“å…¶ä½™ç»´åº¦
-- **è¿”å›ç±»å‹**ï¼š`Result<QueryBuilderResult>`ï¼ˆä¸ S-01 ç»Ÿä¸€ Result çº¦å®šä¸€è‡´ï¼‰
-- **æ‰¹é‡æ¥å£**ï¼š`queryStocksBatch(symbols, params)` â€” ä¸²è¡Œé€æ ‡æŸ¥è¯¢é¿å… IndexedDB äº‹åŠ¡ç«äº‰
+- **²¢·¢²éÑ¯**£º¸÷Î¬¶ÈÍ¨¹ı `Promise.all(tasks)` ²¢ĞĞÖ´ĞĞ
+- **Partial Success**£ºµ¥Î¬¶ÈÊ§°Ü½ö¼ÇÈë `errors` ×Ö¶Î£¬²»Ó°ÏìÆäÓàÎ¬¶È
+- **·µ»ØÀàĞÍ**£º`Result<QueryBuilderResult>`£¨Óë S-01 Í³Ò» Result Ô¼¶¨Ò»ÖÂ£©
+- **ÅúÁ¿½Ó¿Ú**£º`queryStocksBatch(symbols, params)` ¡ª ´®ĞĞÖğ±ê²éÑ¯±ÜÃâ IndexedDB ÊÂÎñ¾ºÕù
 
-### 6.4 å†…éƒ¨å®ç°è¦ç‚¹
+### 6.4 ÄÚ²¿ÊµÏÖÒªµã
 
-| ç»´åº¦ | dataLayer è°ƒç”¨ |
+| Î¬¶È | dataLayer µ÷ÓÃ |
 |------|---------------|
-| åŸºç¡€ä¿¡æ¯ | `dataLayer.stocks.get(symbol)` |
-| è¡Œæƒ… | `dataLayer.dailyQuotes.get(symbol)` |
-| V6 è¯„åˆ† | `dataLayer.v6Scores.get(symbol)` |
-| æ™ºèƒ½è¯„åˆ† | `dataLayer.intelligentScores.getLatestBySymbol(symbol)` |
-| è¡Œä¸šè¯„åˆ† | `dataLayer.industryScores.getLatestByCode(industryCode)` |
-| äº¤æ˜“ä¿¡å· | `dataLayer.signals.listBySymbol(symbol)` |
-| å…³è”æ–°é—» | `dataLayer.newsStockMap.listBySymbol(symbol)` â†’ `dataLayer.news.get(newsId)` |
+| »ù´¡ĞÅÏ¢ | `dataLayer.stocks.get(symbol)` |
+| ĞĞÇé | `dataLayer.dailyQuotes.get(symbol)` |
+| V6 ÆÀ·Ö | `dataLayer.v6Scores.get(symbol)` |
+| ÖÇÄÜÆÀ·Ö | `dataLayer.intelligentScores.getLatestBySymbol(symbol)` |
+| ĞĞÒµÆÀ·Ö | `dataLayer.industryScores.getLatestByCode(industryCode)` |
+| ½»Ò×ĞÅºÅ | `dataLayer.signals.listBySymbol(symbol)` |
+| ¹ØÁªĞÂÎÅ | `dataLayer.newsStockMap.listBySymbol(symbol)` ¡ú `dataLayer.news.get(newsId)` |
 
 ---
 
-## 7. æ•°æ®æµå…¨æ™¯
+## 7. Êı¾İÁ÷È«¾°
 
-### 7.1 æ ‡å‡†å†™å…¥æµï¼ˆå¤–éƒ¨æ•°æ® â†’ IndexedDBï¼‰
+### 7.1 ±ê×¼Ğ´ÈëÁ÷£¨Íâ²¿Êı¾İ ¡ú IndexedDB£©
 
 ```
-å¤–éƒ¨ APIï¼ˆakshare / æ‰‹åŠ¨å¯¼å…¥ / LLMï¼‰
-    â”‚
-    â–¼
-src/services/fetcher/          â† fetcherService / orchestrator / adapters
-    â”‚
-    â–¼
-DataBridge.forward(envelope)   â† æ ¸å¿ƒæ¡¥æ¥å±‚ï¼ˆsrc/core/databridge.tsï¼‰
-    â”‚
-    â”œâ”€â”€ ACL æ ¡éªŒï¼ˆaclEngine.assertï¼‰
-    â”œâ”€â”€ å®¡è®¡æ—¥å¿—ï¼ˆresearchLogs storeï¼‰
-    â””â”€â”€ è·¯ç”± â†’ routeToDB / routeToStrategy / routeToEvent
-    â”‚
-    â–¼
-dataLayer.{store}.put(...)     â† src/data/dataLayer*.ts domain store
-    â”‚
-    â–¼
-V6Database.put(store, value)   â† src/data/db.tsï¼ˆIndexedDB äº‹åŠ¡ï¼‰
-    â”‚
-    â–¼
-IndexedDBï¼ˆæµè§ˆå™¨æœ¬åœ°ï¼‰
-    â”‚
-    â–¼
-EventBus.broadcast("{store}:changed")  â† è§¦å‘ store å±‚é‡æ–°æ‹‰å–
+Íâ²¿ API£¨akshare / ÊÖ¶¯µ¼Èë / LLM£©
+    ©¦
+    ¨‹
+src/services/fetcher/          ¡û fetcherService / orchestrator / adapters
+    ©¦
+    ¨‹
+DataBridge.forward(envelope)   ¡û ºËĞÄÇÅ½Ó²ã£¨src/core/databridge.ts£©
+    ©¦
+    ©À©¤©¤ ACL Ğ£Ñé£¨aclEngine.assert£©
+    ©À©¤©¤ Éó¼ÆÈÕÖ¾£¨researchLogs store£©
+    ©¸©¤©¤ Â·ÓÉ ¡ú routeToDB / routeToStrategy / routeToEvent
+    ©¦
+    ¨‹
+dataLayer.{store}.put(...)     ¡û src/data/dataLayer*.ts domain store
+    ©¦
+    ¨‹
+V6Database.put(store, value)   ¡û src/data/db.ts£¨IndexedDB ÊÂÎñ£©
+    ©¦
+    ¨‹
+IndexedDB£¨ä¯ÀÀÆ÷±¾µØ£©
+    ©¦
+    ¨‹
+EventBus.broadcast("{store}:changed")  ¡û ´¥·¢ store ²ãÖØĞÂÀ­È¡
 ```
 
-### 7.2 æ ‡å‡†è¯»å–æµï¼ˆIndexedDB â†’ UIï¼‰
+### 7.2 ±ê×¼¶ÁÈ¡Á÷£¨IndexedDB ¡ú UI£©
 
 ```
 IndexedDB
-    â”‚
-    â–¼
+    ©¦
+    ¨‹
 V6Database.get / getAll / getAllByIndex
-    â”‚
-    â–¼
-dataLayer / queryBuilder / Repository  â† è¯»ç»Ÿä¸€å…¥å£
-    â”‚
-    â–¼
-DataBridge.query(request)      â† å¯é€‰ï¼šå¸¦ç¼“å­˜ä¸ ACL
-    â”‚
-    â–¼
-src/services/{domain}/         â† ä¸šåŠ¡æœåŠ¡å±‚ï¼ˆå¦‚ scoring / trading / newsï¼‰
-    â”‚
-    â–¼
-src/store/{domain}Store.ts     â† Zustand Storeï¼ˆwithBroadcast è·¨ Tabï¼‰
-    â”‚
-    â–¼
-src/pages/ æˆ– src/components/  â† UI å±‚ï¼ˆä»…é€šè¿‡ Store è·å–æ•°æ®ï¼‰
+    ©¦
+    ¨‹
+dataLayer / queryBuilder / Repository  ¡û ¶ÁÍ³Ò»Èë¿Ú
+    ©¦
+    ¨‹
+DataBridge.query(request)      ¡û ¿ÉÑ¡£º´ø»º´æÓë ACL
+    ©¦
+    ¨‹
+src/services/{domain}/         ¡û ÒµÎñ·şÎñ²ã£¨Èç scoring / trading / news£©
+    ©¦
+    ¨‹
+src/store/{domain}Store.ts     ¡û Zustand Store£¨withBroadcast ¿ç Tab£©
+    ©¦
+    ¨‹
+src/pages/ »ò src/components/  ¡û UI ²ã£¨½öÍ¨¹ı Store »ñÈ¡Êı¾İ£©
 ```
 
-### 7.3 åˆ†å±‚ä¾èµ–çº¦æŸ
+### 7.3 ·Ö²ãÒÀÀµÔ¼Êø
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚  UI å±‚ï¼ˆpages / components / portal / appsï¼‰ â”‚
-â”‚  â”€â”€â”€ åªèƒ½ä¾èµ– store/ å’Œ services/ â”€â”€â”€       â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚  Store å±‚ï¼ˆ49 ä¸ª Zustand Storeï¼‰             â”‚
-â”‚  â”€â”€â”€ åªèƒ½ä¾èµ– services/ å’Œ core/ â”€â”€â”€        â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚  Services å±‚ï¼ˆ24 å­åŸŸï¼‰                      â”‚
-â”‚  â”€â”€â”€ åªèƒ½ä¾èµ– core/ã€data/ã€lib/ï¼ˆç™½åå•ï¼‰ â”€ â”‚
-â”‚  â”€â”€â”€ ç¦æ­¢ç›´æ¥å†™ dbï¼›é€šè¿‡ DataBridge.forward() â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚  Data å±‚ï¼ˆæœ¬å±‚ï¼‰                             â”‚
-â”‚  â”€â”€â”€ åªèƒ½ä¾èµ– core/ã€config/ã€lib/ã€types/ â”€ â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚  Core å±‚ï¼ˆDataBridge / ACL / Envelope /     â”‚
-â”‚  MemoryCache / EventBusï¼‰                    â”‚
-â”‚  â”€â”€â”€ ç¦æ­¢ä¾èµ– pages / components / lib/ â”€â”€â”€ â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+©°©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©´
+©¦  UI ²ã£¨pages / components / portal / apps£© ©¦
+©¦  ©¤©¤©¤ Ö»ÄÜÒÀÀµ store/ ºÍ services/ ©¤©¤©¤       ©¦
+©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
+©¦  Store ²ã£¨49 ¸ö Zustand Store£©             ©¦
+©¦  ©¤©¤©¤ Ö»ÄÜÒÀÀµ services/ ºÍ core/ ©¤©¤©¤        ©¦
+©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
+©¦  Services ²ã£¨24 ×ÓÓò£©                      ©¦
+©¦  ©¤©¤©¤ Ö»ÄÜÒÀÀµ core/¡¢data/¡¢lib/£¨°×Ãûµ¥£© ©¤ ©¦
+©¦  ©¤©¤©¤ ½ûÖ¹Ö±½ÓĞ´ db£»Í¨¹ı DataBridge.forward() ©¦
+©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
+©¦  Data ²ã£¨±¾²ã£©                             ©¦
+©¦  ©¤©¤©¤ Ö»ÄÜÒÀÀµ core/¡¢config/¡¢lib/¡¢types/ ©¤ ©¦
+©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
+©¦  Core ²ã£¨DataBridge / ACL / Envelope /     ©¦
+©¦  MemoryCache / EventBus£©                    ©¦
+©¦  ©¤©¤©¤ ½ûÖ¹ÒÀÀµ pages / components / lib/ ©¤©¤©¤ ©¦
+©¸©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼
 ```
 
-> å®Œæ•´åˆ†å±‚è§„åˆ™è§ [AGENTS.md Â§ä¸€](../../AGENTS.md)ã€‚
+> ÍêÕû·Ö²ã¹æÔò¼û [AGENTS.md ¡ìÒ»](../../AGENTS.md)¡£
 
 ---
 
-## 8. Repository ç»Ÿä¸€ä»“å‚¨å¥‘çº¦ï¼ˆD-02ï¼‰
+## 8. Repository Í³Ò»²Ö´¢ÆõÔ¼£¨D-02£©
 
-`repository.ts` æä¾› **Repository<T>** æ¥å£ä¸ `createRepository()` å·¥å‚å‡½æ•°ï¼Œç›®æ ‡æ˜¯ä¸ºåˆ†æ•£åœ¨ 24+ store ä¸­çš„å¼‚æ„æ•°æ®è®¿é—®æä¾›ç»Ÿä¸€å¥‘çº¦ã€‚
+`repository.ts` Ìá¹© **Repository<T>** ½Ó¿ÚÓë `createRepository()` ¹¤³§º¯Êı£¬Ä¿±êÊÇÎª·ÖÉ¢ÔÚ 24+ store ÖĞµÄÒì¹¹Êı¾İ·ÃÎÊÌá¹©Í³Ò»ÆõÔ¼¡£
 
 ```typescript
 export interface Repository<T, TKey = string> {
@@ -490,54 +502,54 @@ export interface Repository<T, TKey = string> {
 }
 ```
 
-- **è¯»å–**ï¼šç›´æ¥å§”æ‰˜ `dataBridge.query()`ï¼ˆä¸ dataLayer åŒæºï¼‰
-- **å†™å…¥**ï¼šå§”æ‰˜ `dataBridge.forward()`ï¼Œå¤ç”¨å„ store æ—¢æœ‰ envelope action
-- **ä¸æ–°å¢ action**ï¼šä¿è¯ä¸æ—¢æœ‰ DataBridge è·¯ç”±å®Œå…¨å…¼å®¹
+- **¶ÁÈ¡**£ºÖ±½ÓÎ¯ÍĞ `dataBridge.query()`£¨Óë dataLayer Í¬Ô´£©
+- **Ğ´Èë**£ºÎ¯ÍĞ `dataBridge.forward()`£¬¸´ÓÃ¸÷ store ¼ÈÓĞ envelope action
+- **²»ĞÂÔö action**£º±£Ö¤Óë¼ÈÓĞ DataBridge Â·ÓÉÍêÈ«¼æÈİ
 
-> **TODO**ï¼šD-03 æ¶ˆé™¤ç›´è¿ IndexedDB æ—è·¯çš„è¿ç§»è¿›åº¦ï¼Œç”±æ•°æ®å±‚è´Ÿè´£äººç»´æŠ¤è·Ÿè¸ªè¡¨ã€‚
-
----
-
-## 9. æ•°æ®å­—å…¸ç´¢å¼•
-
-æ‰€æœ‰å­—æ®µçº§æ•°æ®å®šä¹‰ç»Ÿä¸€åœ¨ä»¥ä¸‹ç´¢å¼•ä¸­ç®¡ç†ï¼š
-
-â†’ **[æ•°æ®å­—å…¸ç´¢å¼•](design/data-dictionary-index.md)**
-
-è¯¥ç´¢å¼•ç»´æŠ¤ï¼š
-- 1 ä»½æ•´åˆä¸»å­—å…¸ï¼ˆ`../reference/data-definition.md`ï¼‰â€” å…¨æ¨¡å—å­—æ®µå®šä¹‰ SSOT
-- 7 ä»½ç‹¬ç«‹åŸŸå®šä¹‰ï¼ˆå‘½åè§„èŒƒ `*-data-definition.md`ï¼‰
-- `UnifiedStockData` ç»Ÿä¸€æ•°æ®æ¨¡å‹é”šç‚¹
-
-**æŸ¥è¯¢è·¯å¾„**ï¼šå­—æ®µå®šä¹‰ â†’ å…ˆæŸ¥ `../reference/data-dictionary-index.md` â†’ å†è¿›å…¥å¯¹åº”æ–‡ä»¶ï¼Œç¦æ­¢åœ¨åˆ«å¤„æ–°å»ºå‰¯æœ¬ã€‚
+> **TODO**£ºD-03 Ïû³ıÖ±Á¬ IndexedDB ÅÔÂ·µÄÇ¨ÒÆ½ø¶È£¬ÓÉÊı¾İ²ã¸ºÔğÈËÎ¬»¤¸ú×Ù±í¡£
 
 ---
 
-## 10. éªŒè¯å‘½ä»¤é€ŸæŸ¥
+## 9. Êı¾İ×ÖµäË÷Òı
 
-| å‘½ä»¤ | ç”¨é€” | æœŸæœ›ç»“æœ |
+ËùÓĞ×Ö¶Î¼¶Êı¾İ×ÖµäÍ³Ò»ÔÚÒÔÏÂË÷ÒıÖĞ¹ÜÀí£º
+
+¡ú **[Êı¾İ×ÖµäË÷Òı](design/data-dictionary-index.md)**
+
+¸ÃË÷ÒıÎ¬»¤£º
+- 1 ·İÕûºÏÖ÷×Öµä£¨`../reference/data-definition.md`£©¡ª È«Ä£¿é×Ö¶Î¶¨Òå SSOT
+- 7 ·İ¶ÀÁ¢Óò¶¨Òå£¨ÃüÃû¹æ·¶ `*-data-definition.md`£©
+- `UnifiedStockData` Í³Ò»Êı¾İÄ£ĞÍÃªµã
+
+**²éÑ¯Â·¾¶**£º×Ö¶Î¶¨Òå ¡ú ÏÈ²é `../reference/data-dictionary-index.md` ¡ú ÔÙ½øÈë¶ÔÓ¦ÎÄ¼ş£¬½ûÖ¹ÔÚ±ğ´¦ĞÂ½¨¸±±¾¡£
+
+---
+
+## 10. ÑéÖ¤ÃüÁîËÙ²é
+
+| ÃüÁî | ÓÃÍ¾ | ÆÚÍû½á¹û |
 |------|------|---------|
-| `npx tsc --noEmit` | ç±»å‹å®‰å…¨æ£€æŸ¥ | 0 errors |
-| `npm run audit:layers` | è·¨å±‚è°ƒç”¨å®¡è®¡ | 0 violations, 0 warnings |
-| `npm run audit:docs` | æ–‡æ¡£åŒæ­¥æ£€æŸ¥ | ç´¢å¼•ä¸å¼•ç”¨ä¸€è‡´ |
-| `npm run audit:hardcode` | ç¡¬ç¼–ç é¢œè‰²/æ•°å­—æ‰«æ | 0 è¿è§„ |
-| `npm test -- --run` | å•å…ƒæµ‹è¯• | å…¨éƒ¨é€šè¿‡ |
-| `npm run build` | ç”Ÿäº§æ„å»º | æˆåŠŸ |
+| `npx tsc --noEmit` | ÀàĞÍ°²È«¼ì²é | 0 errors |
+| `npm run audit:layers` | ¿ç²ãµ÷ÓÃÉó¼Æ | 0 violations, 0 warnings |
+| `npm run audit:docs` | ÎÄµµÍ¬²½¼ì²é | Ë÷ÒıÓëÒıÓÃÒ»ÖÂ |
+| `npm run audit:hardcode` | Ó²±àÂëÑÕÉ«/Êı×ÖÉ¨Ãè | 0 Î¥¹æ |
+| `npm test -- --run` | µ¥Ôª²âÊÔ | È«²¿Í¨¹ı |
+| `npm run build` | Éú²ú¹¹½¨ | ³É¹¦ |
 
 ---
 
-## 11. TODO æ¸…å•ï¼ˆå¾…æ‰©å†™ï¼‰
+## 11. TODO Çåµ¥£¨´ıÀ©Ğ´£©
 
-ä»¥ä¸‹èŠ‚ç‚¹éœ€ç”±æ¶æ„ç»„æˆ–æ¨¡å— owner è¡¥å……å®Œå–„ï¼š
+ÒÔÏÂ½ÚµãĞèÓÉ¼Ü¹¹×é»òÄ£¿é owner ²¹³äÍêÉÆ£º
 
-- [ ] **Â§2.1** â€” è¡¥å……æ¯ä¸ªåŸºçº¿ store çš„å®Œæ•´å­—æ®µè¡¨ï¼ˆæˆ–å¼•ç”¨æ•°æ®å­—å…¸å…·ä½“ç« èŠ‚ï¼‰
-- [ ] **Â§3.3** â€” è¡¥å…… DataBridge è·¯ç”±æ—¶åºå›¾ï¼ˆMermaid åºåˆ—å›¾ï¼‰
-- [ ] **Â§4.4** â€” æ–°å¢ Store å†³ç­–æ ‘æµç¨‹å›¾ï¼ˆåŸºçº¿ vs å¢é‡ vs Handler æ³¨å†Œï¼‰
-- [ ] **Â§6** â€” QueryBuilder çš„ç¼“å­˜ç­–ç•¥ä¸é™çº§æ–¹æ¡ˆï¼ˆå½“å‰æ— ç¼“å­˜ï¼Œå¾…è¯„ä¼°ï¼‰
-- [ ] **Â§7.1** â€” fetcher â†’ DataBridge çš„ envelope æ„é€ ç¤ºä¾‹ä»£ç ï¼ˆè‡³å°‘ 2 ä¸ªå…¸å‹åœºæ™¯ï¼‰
-- [ ] **Â§8** â€” Repository å®é™…ä½¿ç”¨ç¤ºä¾‹ä¸å·²è¿ç§» store æ¸…å•ï¼ˆD-03 è¿›åº¦ï¼‰
-- [ ] **Â§12** â€” dataLayer å„ domain store çš„ CRUD æ¥å£é€ŸæŸ¥è¡¨ï¼ˆè‡ªåŠ¨ç”Ÿæˆè„šæœ¬ï¼‰
+- [ ] **¡ì2.1** ¡ª ²¹³äÃ¿¸ö»ùÏß store µÄÍêÕû×Ö¶Î±í£¨»òÒıÓÃÊı¾İ×Öµä¾ßÌåÕÂ½Ú£©
+- [ ] **¡ì3.3** ¡ª ²¹³ä DataBridge Â·ÓÉÊ±ĞòÍ¼£¨Mermaid ĞòÁĞÍ¼£©
+- [ ] **¡ì4.4** ¡ª ĞÂÔö Store ¾ö²ßÊ÷Á÷³ÌÍ¼£¨»ùÏß vs ÔöÁ¿ vs Handler ×¢²á£©
+- [ ] **¡ì6** ¡ª QueryBuilder µÄ»º´æ²ßÂÔÓë½µ¼¶·½°¸£¨µ±Ç°ÎŞ»º´æ£¬´ıÆÀ¹À£©
+- [ ] **¡ì7.1** ¡ª fetcher ¡ú DataBridge µÄ envelope ¹¹ÔìÊ¾Àı´úÂë£¨ÖÁÉÙ 2 ¸öµäĞÍ³¡¾°£©
+- [ ] **¡ì8** ¡ª Repository Êµ¼ÊÊ¹ÓÃÊ¾ÀıÓëÒÑÇ¨ÒÆ store Çåµ¥£¨D-03 ½ø¶È£©
+- [ ] **¡ì12** ¡ª dataLayer ¸÷ domain store µÄ CRUD ½Ó¿ÚËÙ²é±í£¨×Ô¶¯Éú³É½Å±¾£©
 
 ---
 
-_æœ¬æ–‡æ¡£ç”±æ–‡æ¡£æ²»ç†æµç¨‹åˆ›å»ºï¼Œéµå¾ª `../../AGENTS.md` Â§ä¸‰ æ–‡æ¡£è§„èŒƒï¼ˆFrontmatter / kebab-case / å¼•ç”¨ä»£æ›¿å‰¯æœ¬ï¼‰ã€‚å¦‚æœ‰ Schema å˜æ›´ï¼Œè¯·åŒæ­¥æ›´æ–°æœ¬æ–‡ä»¶å¹¶è¿è¡Œ `npm run audit:docs` æ£€æŸ¥ç´¢å¼•ä¸€è‡´æ€§ã€‚_
+_±¾ÎÄµµÓÉÎÄµµÖÎÀíÁ÷³Ì´´½¨£¬×ñÑ­ `../../AGENTS.md` ¡ìÈı ÎÄµµ¹æ·¶£¨Frontmatter / kebab-case / ÒıÓÃ´úÌæ¸±±¾£©¡£ÈçÓĞ Schema ±ä¸ü£¬ÇëÍ¬²½¸üĞÂ±¾ÎÄ¼ş²¢ÔËĞĞ `npm run audit:docs` ¼ì²éË÷ÒıÒ»ÖÂĞÔ¡£_

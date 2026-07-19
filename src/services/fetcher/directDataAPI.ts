@@ -1,8 +1,19 @@
 /**
- * 直连数据源 API（腾讯 / 新浪 / 网易）
+ * 直连数据源 API（腾讯 / 新浪 / 网易）— CANONICAL 实现
  *
  * 提供 StockQuote 与 KlineItem 直连采集能力，绕过 Python AKShare 后端，
  * 用于数据采集四层降级编排（腾讯 → 新浪 → AKShare → Mock / 网易 → 腾讯 → AKShare → Mock）。
+ *
+ * ⚠️ **收敛说明**：此文件为 canonical 实现。
+ * `src/services/data-collector/directDataAPI.ts` 为独立副本（类型/签名/错误策略均不兼容）。
+ *
+ * **阶段 1（2026-07-19）**: 代码格式化函数已提取至 `src/core/stockCodeUtils.ts`。
+ * data-collector 副本新增 `tencentKline()`（腾讯 web.ifzq.gtimg.cn 日 K线）。
+ *
+ * **阶段 2（计划中）**: 统一迁移到此版本。迁移时需处理：
+ *   - 类型映射：RealtimeQuote → StockQuote, KlineBar → KlineItem
+ *   - 错误策略：null/空数组 → throw DirectDataAPIError
+ *   - 适配函数：quoteToStock/klinesToDailyQuotes 保留在 data-collector 层作为 wrapper
  *
  * 注意：
  * - 浏览器跨域 (CORS) 限制可能导致这些请求在开发环境直接失败，
@@ -233,7 +244,7 @@ function parseTencentTimestamp(dateStr: string, timeStr: string): number {
     const s = Number(parts[2] ?? 0)
     const ts = new Date(y, m - 1, d, h, mi, s).getTime()
     return Number.isFinite(ts) ? ts : Date.now()
-  } catch {
+  } catch (err) { console.warn('[directDataAPI.ts]', err);
     return Date.now()
   }
 }
@@ -491,7 +502,7 @@ function parseSinaTimestamp(dateStr: string, timeStr: string): number {
     const combined = timeStr ? `${dateStr}T${timeStr}` : dateStr
     const ts = new Date(combined).getTime()
     return Number.isFinite(ts) ? ts : Date.now()
-  } catch {
+  } catch (err) { console.warn('[directDataAPI.ts]', err);
     return Date.now()
   }
 }

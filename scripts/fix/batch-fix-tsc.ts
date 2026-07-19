@@ -7,7 +7,6 @@
  * 5. useIntelligentScorePage.ts — 补全 v6EngineCalculation
  * 6. intelligentScoreStore.ts — 补全 v6EngineCalculation
  * 7. intelligentScoreStore.test.ts — 补全 v6EngineCalculation
- */
 /**
  * @file batch-fix-tsc.ts
  * @description 批量修复 tsc 既存类型错误（如导入清理、字段补全、导出修复）

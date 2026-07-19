@@ -1,0 +1,1294 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Users\\DELL\\.workbuddy\\binaries\\node\\versions\\22.22.2\\node.exe",
+      "G:\\FinSightV9\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "cross-browser/compatibility.spec.ts",
+      "visual/layout.spec.ts",
+      "boundary/invalid-data.spec.ts",
+      "--project=chromium",
+      "--output=./_tmp3_v"
+    ],
+    "configFile": "G:\\FinSightV9\\e2e\\full-coverage\\playwright.config.ts",
+    "rootDir": "G:/FinSightV9/e2e/full-coverage",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 4
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "G:/FinSightV9/e2e/full-coverage/_tmp3_v",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 4
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "G:/FinSightV9/e2e/full-coverage",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "G:/FinSightV9/e2e/full-coverage/_tmp3_v",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 4
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "G:/FinSightV9/e2e/full-coverage",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "G:/FinSightV9/e2e/full-coverage/_tmp3_v",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 4
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "G:/FinSightV9/e2e/full-coverage",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "./test-results-e2e/results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.61.1",
+    "workers": 4,
+    "webServer": {
+      "command": "npx vite --port 3005",
+      "url": "http://localhost:3005",
+      "reuseExistingServer": true,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "boundary\\invalid-data.spec.ts",
+      "file": "boundary/invalid-data.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "特殊字符导入",
+          "file": "boundary/invalid-data.spec.ts",
+          "line": 9,
+          "column": 6,
+          "specs": [
+            {
+              "title": "导入特殊字符 !@#$% → 无崩溃",
+              "ok": true,
+              "tags": [
+                "#$%"
+              ],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2720,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:20.787Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "36f9d8f58742824bd214-2b3f5dd6c6c05cd396c5",
+              "file": "boundary/invalid-data.spec.ts",
+              "line": 17,
+              "column": 3
+            },
+            {
+              "title": "导入特殊字符后确认按钮 disabled",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2715,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:20.772Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "36f9d8f58742824bd214-bc2796d370ebd3b07590",
+              "file": "boundary/invalid-data.spec.ts",
+              "line": 25,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "纯空白字符",
+          "file": "boundary/invalid-data.spec.ts",
+          "line": 36,
+          "column": 6,
+          "specs": [
+            {
+              "title": "输入纯空格 → 导入按钮 disabled",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 2712,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:20.787Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "36f9d8f58742824bd214-b5050fbba3f9641b9e5d",
+              "file": "boundary/invalid-data.spec.ts",
+              "line": 44,
+              "column": 3
+            },
+            {
+              "title": "输入纯换行 → 导入按钮 disabled",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 2696,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:20.786Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "36f9d8f58742824bd214-127d6f902bc6fa78e982",
+              "file": "boundary/invalid-data.spec.ts",
+              "line": 58,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "XSS payload",
+          "file": "boundary/invalid-data.spec.ts",
+          "line": 71,
+          "column": 6,
+          "specs": [
+            {
+              "title": "输入 XSS payload → 无弹窗/不渲染为 HTML",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 2504,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:23.918Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "36f9d8f58742824bd214-ceadf7c49bd637ab8d54",
+              "file": "boundary/invalid-data.spec.ts",
+              "line": 79,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "负数标的数量",
+          "file": "boundary/invalid-data.spec.ts",
+          "line": 99,
+          "column": 6,
+          "specs": [
+            {
+              "title": "导入负数标的数量 → 不超过下限",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 2238,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:23.920Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "36f9d8f58742824bd214-8ca55701519d35f87127",
+              "file": "boundary/invalid-data.spec.ts",
+              "line": 106,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "cross-browser\\compatibility.spec.ts",
+      "file": "cross-browser/compatibility.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "跨浏览器核心渲染",
+          "file": "cross-browser/compatibility.spec.ts",
+          "line": 5,
+          "column": 6,
+          "specs": [
+            {
+              "title": "首页在 Chromium 下正常渲染",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2934,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:23.942Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c352832e70b48740da76-98ee2eb385809c4b9a69",
+              "file": "cross-browser/compatibility.spec.ts",
+              "line": 6,
+              "column": 3
+            },
+            {
+              "title": "首页在 Firefox 下正常渲染",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "仅 Firefox 测试",
+                      "location": {
+                        "file": "G:\\FinSightV9\\e2e\\full-coverage\\cross-browser\\compatibility.spec.ts",
+                        "line": 14,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "skipped",
+                      "duration": 86,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:23.942Z",
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "description": "仅 Firefox 测试",
+                          "location": {
+                            "file": "G:\\FinSightV9\\e2e\\full-coverage\\cross-browser\\compatibility.spec.ts",
+                            "line": 14,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c352832e70b48740da76-c3825363fddf0b40f2bb",
+              "file": "cross-browser/compatibility.spec.ts",
+              "line": 13,
+              "column": 3
+            },
+            {
+              "title": "首页在 WebKit 下正常渲染",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "仅 WebKit 测试",
+                      "location": {
+                        "file": "G:\\FinSightV9\\e2e\\full-coverage\\cross-browser\\compatibility.spec.ts",
+                        "line": 21,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "skipped",
+                      "duration": 107,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:24.038Z",
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "description": "仅 WebKit 测试",
+                          "location": {
+                            "file": "G:\\FinSightV9\\e2e\\full-coverage\\cross-browser\\compatibility.spec.ts",
+                            "line": 21,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c352832e70b48740da76-2e5f4b73d85f9909c647",
+              "file": "cross-browser/compatibility.spec.ts",
+              "line": 20,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "跨浏览器导航",
+          "file": "cross-browser/compatibility.spec.ts",
+          "line": 28,
+          "column": 6,
+          "specs": [
+            {
+              "title": "导航到输入舱正常",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 3463,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:24.153Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c352832e70b48740da76-0c75f21fb359ea44be29",
+              "file": "cross-browser/compatibility.spec.ts",
+              "line": 31,
+              "column": 5
+            },
+            {
+              "title": "导航到分析舱正常",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 3384,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:26.185Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c352832e70b48740da76-fc15fe8045f49407663d",
+              "file": "cross-browser/compatibility.spec.ts",
+              "line": 31,
+              "column": 5
+            },
+            {
+              "title": "导航到交易舱正常",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 3397,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:26.435Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c352832e70b48740da76-45b53c9e8e212fddba2a",
+              "file": "cross-browser/compatibility.spec.ts",
+              "line": 31,
+              "column": 5
+            },
+            {
+              "title": "导航到输出舱正常",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3398,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:26.886Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c352832e70b48740da76-d50a892f365240e1f837",
+              "file": "cross-browser/compatibility.spec.ts",
+              "line": 31,
+              "column": 5
+            },
+            {
+              "title": "导航到总控舱正常",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 3394,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:27.623Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c352832e70b48740da76-4d71fb0940dbca207495",
+              "file": "cross-browser/compatibility.spec.ts",
+              "line": 31,
+              "column": 5
+            }
+          ]
+        },
+        {
+          "title": "跨浏览器表单交互",
+          "file": "cross-browser/compatibility.spec.ts",
+          "line": 46,
+          "column": 6,
+          "specs": [
+            {
+              "title": "七维配置模板切换在 Chromium",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 1848,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:29.578Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c352832e70b48740da76-12ef98a78406cc772d32",
+              "file": "cross-browser/compatibility.spec.ts",
+              "line": 47,
+              "column": 3
+            },
+            {
+              "title": "七维配置模板切换在 Firefox",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "仅 Firefox",
+                      "location": {
+                        "file": "G:\\FinSightV9\\e2e\\full-coverage\\cross-browser\\compatibility.spec.ts",
+                        "line": 58,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "skipped",
+                      "duration": 53,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:29.841Z",
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "description": "仅 Firefox",
+                          "location": {
+                            "file": "G:\\FinSightV9\\e2e\\full-coverage\\cross-browser\\compatibility.spec.ts",
+                            "line": 58,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c352832e70b48740da76-2c98219da354d91f0da6",
+              "file": "cross-browser/compatibility.spec.ts",
+              "line": 57,
+              "column": 3
+            },
+            {
+              "title": "七维配置模板切换在 WebKit",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "仅 WebKit",
+                      "location": {
+                        "file": "G:\\FinSightV9\\e2e\\full-coverage\\cross-browser\\compatibility.spec.ts",
+                        "line": 66,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "skipped",
+                      "duration": 49,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:29.903Z",
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "description": "仅 WebKit",
+                          "location": {
+                            "file": "G:\\FinSightV9\\e2e\\full-coverage\\cross-browser\\compatibility.spec.ts",
+                            "line": 66,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c352832e70b48740da76-8edbbe6c0bbb17327d18",
+              "file": "cross-browser/compatibility.spec.ts",
+              "line": 65,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "visual\\layout.spec.ts",
+      "file": "visual/layout.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "首页布局",
+          "file": "visual/layout.spec.ts",
+          "line": 9,
+          "column": 6,
+          "specs": [
+            {
+              "title": "4 张功能卡片渲染（输入/分析/交易/输出）",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 2812,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:29.968Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c1315b768a5365a7a8bf-5712da37640610822b16",
+              "file": "visual/layout.spec.ts",
+              "line": 16,
+              "column": 3
+            },
+            {
+              "title": "状态概览卡片渲染（股票池/信号/采集任务/采集服务）",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2992,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:30.297Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c1315b768a5365a7a8bf-ec4561e5e35113ffdb57",
+              "file": "visual/layout.spec.ts",
+              "line": 23,
+              "column": 3
+            },
+            {
+              "title": "\"打开驾驶舱\"链接可见",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2885,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:31.044Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c1315b768a5365a7a8bf-8a00b7e7a5d0c955a892",
+              "file": "visual/layout.spec.ts",
+              "line": 33,
+              "column": 3
+            },
+            {
+              "title": "页面标题\"智能投研复盘系统 V9\"",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 2901,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:31.448Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c1315b768a5365a7a8bf-f221789531d5bb856b6b",
+              "file": "visual/layout.spec.ts",
+              "line": 37,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "顶栏布局",
+          "file": "visual/layout.spec.ts",
+          "line": 42,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Logo \"V9\" 渲染",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 2810,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:32.792Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c1315b768a5365a7a8bf-469cb304b376abfc9624",
+              "file": "visual/layout.spec.ts",
+              "line": 50,
+              "column": 3
+            },
+            {
+              "title": "5 个舱室 Tab 渲染",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2805,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:33.296Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c1315b768a5365a7a8bf-8241111f0c0884e8f7ce",
+              "file": "visual/layout.spec.ts",
+              "line": 56,
+              "column": 3
+            },
+            {
+              "title": "驾驶舱按钮渲染",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2799,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:33.938Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c1315b768a5365a7a8bf-376bf72071612850a46d",
+              "file": "visual/layout.spec.ts",
+              "line": 65,
+              "column": 3
+            },
+            {
+              "title": "主题切换按钮渲染",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 2804,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:34.357Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c1315b768a5365a7a8bf-a75d8e562092d933cd42",
+              "file": "visual/layout.spec.ts",
+              "line": 71,
+              "column": 3
+            },
+            {
+              "title": "采集状态指示器渲染",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 2858,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:35.612Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c1315b768a5365a7a8bf-df13e28bab43fd0be1c1",
+              "file": "visual/layout.spec.ts",
+              "line": 79,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "侧边栏布局",
+          "file": "visual/layout.spec.ts",
+          "line": 87,
+          "column": 6,
+          "specs": [
+            {
+              "title": "侧边栏面板渲染",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1803,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:36.112Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c1315b768a5365a7a8bf-03781664e9bff3b650b0",
+              "file": "visual/layout.spec.ts",
+              "line": 93,
+              "column": 3
+            },
+            {
+              "title": "分组标题渲染（意向候选池 / 数据采集）",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 1890,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:36.745Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c1315b768a5365a7a8bf-6d638553054fff6a5b86",
+              "file": "visual/layout.spec.ts",
+              "line": 99,
+              "column": 3
+            },
+            {
+              "title": "导航项渲染",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 1817,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-07-18T05:43:37.170Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c1315b768a5365a7a8bf-ebb78924e1e46a02df0a",
+              "file": "visual/layout.spec.ts",
+              "line": 108,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-07-18T05:43:20.117Z",
+    "duration": 19119.997,
+    "expected": 25,
+    "skipped": 4,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

@@ -4,7 +4,6 @@ tier: reference
 code_version: 2.0.0
 ---
 
----
 tier: reference
 code_version: 2.0.0
 ---
@@ -37,7 +36,7 @@ code_version: 2.0.0
 | ARCH-003 | Architecture-Fix | Architecture-Fix | `src/services/system/v6MigrationService.ts` → `src/services/system/migration/` | ⏳ 待执行（批次2 JT-003） |
 | ARCH-004 | Architecture-Fix | Architecture-Fix | `src/services/analysis/rotationScoreService.ts` | ⏳ 待执行（批次1） |
 | ARCH-005 | Architecture-Fix | Architecture-Fix | `src/pages/analysis/ScoreDocPage.tsx`, `src/pages/trading/StrategySnapshotPage.tsx` | ⏳ 待执行（批次1） |
-| ARCH-006 | Architecture-Fix | Architecture-Fix | `src/config/themeRegistry.ts`, `src/config/symbols.ts`, `src/data/themeSymbolPool.ts` | ⏳ 待执行（批次1） |
+| ARCH-006 | Architecture-Fix | Architecture-Fix | `src/config/themeRegistry.ts`, `src/config/symbols.ts`, `src/data/sectorDefinitions.ts` | ⏳ 待执行（批次1） |
 | ARCH-007 | Architecture-Fix | Architecture-Fix | `src/pages/analysis/IndustryScorePage.tsx`, `src/pages/analysis/IntelligentScorePage.tsx`, `src/hooks/cabin/` | ⏳ 待执行（批次2 JT-004） |
 | DF-001 | Data-Flow-Fix | Data-Flow-Fix | `src/core/databridge.ts` | ✅ 已完成 |
 | DF-002 | Data-Flow-Fix | Architecture-Fix（JT-002 牵头） | `src/services/trading/tradingService.ts` | ⏳ 待执行（批次2 JT-002） |

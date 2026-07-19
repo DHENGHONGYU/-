@@ -146,6 +146,40 @@ export default defineConfig({
         rewrite: (path) => '/list=' + path.replace('/api/proxy/sina/', ''),
         headers: { Referer: 'https://finance.sina.com.cn' },
       },
+      // 腾讯 Smartbox 搜索 API 代理（股票搜索建议，免费无 Key）
+      '/api/proxy/smartbox': {
+        target: 'https://smartbox.gtimg.cn',
+        changeOrigin: true,
+        rewrite: (path) => '/s3/' + path.replace('/api/proxy/smartbox/', ''),
+        headers: { Referer: 'https://finance.qq.com' },
+      },
+      // 腾讯历史 K 线 API 代理（web.ifzq.gtimg.cn 日 K线数据，解决浏览器 CORS）
+      '/api/proxy/tencent-kline': {
+        target: 'https://web.ifzq.gtimg.cn',
+        changeOrigin: true,
+        rewrite: (path) => path.replace('/api/proxy/tencent-kline/', '/'),
+        headers: { Referer: 'https://finance.qq.com' },
+      },
+      // 新浪财经数据 API 代理（股东户数/公告/新闻等非行情端点）
+      '/api/proxy/sina-finance': {
+        target: 'https://vip.stock.finance.sina.com.cn',
+        changeOrigin: true,
+        rewrite: (path) => path.replace('/api/proxy/sina-finance/', '/'),
+        headers: { Referer: 'https://finance.sina.com.cn' },
+      },
+      // 腾讯财经数据 API 代理（行业/板块等非行情端点）
+      '/api/proxy/tencent-finance': {
+        target: 'https://proxy.finance.qq.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace('/api/proxy/tencent-finance/', '/'),
+        headers: { Referer: 'https://finance.qq.com' },
+      },
+      // Tushare Pro API 代理（POST http://api.tushare.pro，由服务端持有 Token）
+      '/api/proxy/tushare': {
+        target: 'http://api.tushare.pro',
+        changeOrigin: true,
+        rewrite: (path) => path.replace('/api/proxy/tushare/', '/'),
+      },
     },
   },
   build: {
@@ -153,6 +187,16 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false,
     chunkSizeWarningLimit: 800,
+    modulePreload: {
+      polyfill: false,
+      resolveDependencies(_filename, deps, context) {
+        const heavyChunks = ['charts', 'pdf', 'excel', 'transformers', 'duckdb', 'html2canvas']
+        return deps.filter((dep) => {
+          const isHeavy = heavyChunks.some((name) => dep.includes(name))
+          return !isHeavy
+        })
+      },
+    },
     rollupOptions: {
       output: {
         manualChunks: {

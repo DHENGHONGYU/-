@@ -1,127 +1,146 @@
-# P1-03 æ‹†åˆ†æŠ¥å‘Š â€” collectionWizardStore æ¨¡å—åŒ–é‡æ„
+---
+title: TODO-ADD-TITLE
+type: meta
+domain: data
+phase: retrospective
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "ÈÎÎñ±àºÅ: P1-03 Ö´ĞĞÈÕÆÚ: 2026-07-15 Ö´ĞĞÈË: AI ¸¨Öú¿ª·¢Á÷³Ì ·çÏÕµÈ¼¶: ?? ÖĞ£¨Éæ¼°×´Ì¬¹ÜÀíÖØ¹¹£¬±£ÁôÈ«²¿ actions ĞĞÎªÆõÔ¼£© ÒÀÀµ:..."
+tags: [data, collection, store]
+version: v1.0.0
+last_updated: 2026-07-17
+code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
+---
 
-> **ä»»åŠ¡ç¼–å·**: P1-03
-> **æ‰§è¡Œæ—¥æœŸ**: 2026-07-15
-> **æ‰§è¡Œäºº**: AI è¾…åŠ©å¼€å‘æµç¨‹
-> **é£é™©ç­‰çº§**: ğŸŸ¡ ä¸­ï¼ˆæ¶‰åŠçŠ¶æ€ç®¡ç†é‡æ„ï¼Œä¿ç•™å…¨éƒ¨ actions è¡Œä¸ºå¥‘çº¦ï¼‰
-> **ä¾èµ–**: P1-02ï¼ˆCollectTaskPage æ‹†åˆ†ï¼‰å·²å®Œæˆçš„å®¹å™¨åŒ–æ€è·¯
+# P1-03 ²ğ·Ö±¨¸æ ¡ª collectionWizardStore Ä£¿é»¯ÖØ¹¹
+
+> **ÈÎÎñ±àºÅ**: P1-03
+> **Ö´ĞĞÈÕÆÚ**: 2026-07-15
+> **Ö´ĞĞÈË**: AI ¸¨Öú¿ª·¢Á÷³Ì
+> **·çÏÕµÈ¼¶**: ?? ÖĞ£¨Éæ¼°×´Ì¬¹ÜÀíÖØ¹¹£¬±£ÁôÈ«²¿ actions ĞĞÎªÆõÔ¼£©
+> **ÒÀÀµ**: P1-02£¨CollectTaskPage ²ğ·Ö£©ÒÑÍê³ÉµÄÈİÆ÷»¯Ë¼Â·
 
 ---
 
-## ä¸€ã€ä»»åŠ¡èƒŒæ™¯
+## Ò»¡¢ÈÎÎñ±³¾°
 
-| æŒ‡æ ‡ | æ‹†åˆ†å‰ | æ‹†åˆ†å | æ”¹å–„å¹…åº¦ |
+| Ö¸±ê | ²ğ·ÖÇ° | ²ğ·Öºó | ¸ÄÉÆ·ù¶È |
 |------|--------|--------|---------|
-| å•æ–‡ä»¶æœ€å¤§è¡Œæ•° | **693** | 486 | **-29.9%** |
-| æŒä¹…åŒ– actions è€¦åˆåº¦ | å†…è”åœ¨ä¸» store | ç‹¬ç«‹ mixin æ¨¡å— | å®Œå…¨è§£è€¦ |
-| å•å…ƒæµ‹è¯•è¦†ç›– | âŒ 0 ä¸ª | âœ… 17 ä¸ª | æ–°å¢ |
-| å·¥å…·å‡½æ•°å¯å¤ç”¨æ€§ | âŒ ç§æœ‰ | âœ… ç‹¬ç«‹å¯¼å‡º | æ–°å¢ |
-| MOCK æ•°æ®å¯ç‹¬ç«‹ç»´æŠ¤ | âŒ æ··å…¥ INITIAL_STATE | âœ… ç‹¬ç«‹æ¨¡å— | æ–°å¢ |
+| µ¥ÎÄ¼ş×î´óĞĞÊı | **693** | 486 | **-29.9%** |
+| ³Ö¾Ã»¯ actions ñîºÏ¶È | ÄÚÁªÔÚÖ÷ store | ¶ÀÁ¢ mixin Ä£¿é | ÍêÈ«½âñî |
+| µ¥Ôª²âÊÔ¸²¸Ç | ? 0 ¸ö | ? 17 ¸ö | ĞÂÔö |
+| ¹¤¾ßº¯Êı¿É¸´ÓÃĞÔ | ? Ë½ÓĞ | ? ¶ÀÁ¢µ¼³ö | ĞÂÔö |
+| MOCK Êı¾İ¿É¶ÀÁ¢Î¬»¤ | ? »ìÈë INITIAL_STATE | ? ¶ÀÁ¢Ä£¿é | ĞÂÔö |
 
 ---
 
-## äºŒã€æ‹†åˆ†å‰æ¶æ„é—®é¢˜
+## ¶ş¡¢²ğ·ÖÇ°¼Ü¹¹ÎÊÌâ
 
-åŸ [collectionWizardStore.ts](file:///g:/FinSightV9/src/store/collectionWizardStore.ts) å­˜åœ¨ 4 ç±»é—®é¢˜ï¼š
+Ô­ [collectionWizardStore.ts](file:///g:/FinSightV9/src/store/collectionWizardStore.ts) ´æÔÚ 4 ÀàÎÊÌâ£º
 
-1. **èŒè´£è¿‡è½½** â€” å•æ–‡ä»¶åŒæ—¶æ‰¿æ‹…ï¼šçŠ¶æ€å®šä¹‰ã€20+ actionsã€MOCK æ•°æ®ã€å·¥å…·å‡½æ•°ã€æŒä¹…åŒ–ã€å¹¿æ’­
-2. **æŒä¹…åŒ–é€»è¾‘æ·±åº¦è€¦åˆ** â€” `loadSavedConfigs` / `deleteSavedConfig` / `renameSavedConfig` / `exportConfig` / `importConfig` ç­‰ 6 ä¸ª action ç›´æ¥ä¾èµ– services å±‚ï¼Œéš¾ä»¥ç‹¬ç«‹æµ‹è¯•
-3. **MOCK æ•°æ®ä¸çŠ¶æ€æ··åˆ** â€” 60+ è¡Œ MOCK_CONFIGS æ•°æ®åµŒå…¥ INITIAL_STATE
-4. **å·¥å…·å‡½æ•°æ— ç‹¬ç«‹å¯æµ‹æ€§** â€” `generateTraceId` / `formatDuration` ç­‰è¢«ä¸»æ–‡ä»¶é—­åŒ…ç§æœ‰ï¼Œæ— æ³•ç›´æ¥å¤ç”¨
+1. **Ö°Ôğ¹ıÔØ** ¡ª µ¥ÎÄ¼şÍ¬Ê±³Ğµ££º×´Ì¬¶¨Òå¡¢20+ actions¡¢MOCK Êı¾İ¡¢¹¤¾ßº¯Êı¡¢³Ö¾Ã»¯¡¢¹ã²¥
+2. **³Ö¾Ã»¯Âß¼­Éî¶ÈñîºÏ** ¡ª `loadSavedConfigs` / `deleteSavedConfig` / `renameSavedConfig` / `exportConfig` / `importConfig` µÈ 6 ¸ö action Ö±½ÓÒÀÀµ services ²ã£¬ÄÑÒÔ¶ÀÁ¢²âÊÔ
+3. **MOCK Êı¾İÓë×´Ì¬»ìºÏ** ¡ª 60+ ĞĞ MOCK_CONFIGS Êı¾İÇ¶Èë INITIAL_STATE
+4. **¹¤¾ßº¯ÊıÎŞ¶ÀÁ¢¿É²âĞÔ** ¡ª `generateTraceId` / `formatDuration` µÈ±»Ö÷ÎÄ¼ş±Õ°üË½ÓĞ£¬ÎŞ·¨Ö±½Ó¸´ÓÃ
 
 ---
 
-## ä¸‰ã€æ‹†åˆ†åæ¶æ„
+## Èı¡¢²ğ·Öºó¼Ü¹¹
 
-### 3.1 æ–‡ä»¶ç»“æ„
+### 3.1 ÎÄ¼ş½á¹¹
 
-| æ–‡ä»¶ | è¡Œæ•° | èŒè´£ |
+| ÎÄ¼ş | ĞĞÊı | Ö°Ôğ |
 |------|------|------|
-| [collectionWizardStore.ts](file:///g:/FinSightV9/src/store/collectionWizardStore.ts) | 486 | æ ¸å¿ƒçŠ¶æ€ + ç®€å• set actions + ä»»åŠ¡ç”Ÿå‘½å‘¨æœŸ |
-| [collectionWizardStore.persistence.ts](file:///g:/FinSightV9/src/store/collectionWizardStore.persistence.ts) | 342 | æŒä¹…åŒ–ç›¸å…³ actionsï¼ˆload/delete/rename/export/import + loadConfigToWizardï¼‰ |
-| [collectionWizardStore.mock.ts](file:///g:/FinSightV9/src/store/collectionWizardStore.mock.ts) | 113 | MOCK_CONFIGS é»˜è®¤æ•°æ® |
+| [collectionWizardStore.ts](file:///g:/FinSightV9/src/store/collectionWizardStore.ts) | 486 | ºËĞÄ×´Ì¬ + ¼òµ¥ set actions + ÈÎÎñÉúÃüÖÜÆÚ |
+| [collectionWizardStore.persistence.ts](file:///g:/FinSightV9/src/store/collectionWizardStore.persistence.ts) | 342 | ³Ö¾Ã»¯Ïà¹Ø actions£¨load/delete/rename/export/import + loadConfigToWizard£© |
+| [collectionWizardStore.mock.ts](file:///g:/FinSightV9/src/store/collectionWizardStore.mock.ts) | 113 | MOCK_CONFIGS Ä¬ÈÏÊı¾İ |
 | [collectionWizardStore.utils.ts](file:///g:/FinSightV9/src/store/collectionWizardStore.utils.ts) | 26 | generateTraceId / formatDuration / generateConfigId |
-| [__tests__/collectionWizardStore.test.ts](file:///g:/FinSightV9/src/store/__tests__/collectionWizardStore.test.ts) | 230 | å•å…ƒæµ‹è¯•ï¼ˆ17 ä¸ªæµ‹è¯•ç”¨ä¾‹ï¼‰ |
+| [__tests__/collectionWizardStore.test.ts](file:///g:/FinSightV9/src/store/__tests__/collectionWizardStore.test.ts) | 230 | µ¥Ôª²âÊÔ£¨17 ¸ö²âÊÔÓÃÀı£© |
 
-### 3.2 æ‹†åˆ†æ¨¡å¼ï¼šStateCreator Mixin
+### 3.2 ²ğ·ÖÄ£Ê½£ºStateCreator Mixin
 
-é‡‡ç”¨ zustand å®˜æ–¹æ¨èçš„ `StateCreator` æ¨¡å¼å®ç° mixin æ³¨å…¥ï¼š
+²ÉÓÃ zustand ¹Ù·½ÍÆ¼öµÄ `StateCreator` Ä£Ê½ÊµÏÖ mixin ×¢Èë£º
 
 ```typescript
-// ä¸» store é€šè¿‡ spread åˆå¹¶ persistence actions
+// Ö÷ store Í¨¹ı spread ºÏ²¢ persistence actions
 export const useCollectionWizardStore = create<CollectionWizardStore>()((set, get, store) => ({
   ...INITIAL_STATE,
-  ...createPersistenceActions(set, get, store),  // â† æŒä¹…åŒ– mixin
+  ...createPersistenceActions(set, get, store),  // ¡û ³Ö¾Ã»¯ mixin
   setStep: (step) => { /* ... */ },
-  // ... å…¶ä»– actions
+  // ... ÆäËû actions
 }))
 ```
 
-**ä¼˜åŠ¿**ï¼š
-- ä¸» store æ–‡ä»¶ä¿æŒç²¾ç®€ï¼Œæ‰€æœ‰ actions ä»å¯é€šè¿‡ `useCollectionWizardStore.getState().xxx()` ç»Ÿä¸€è°ƒç”¨
-- persistence æ¨¡å—å¯ç‹¬ç«‹æµ‹è¯•ï¼ˆä»…éœ€ mock PersistenceStateSlice æ¥å£ï¼‰
-- ç±»å‹ç³»ç»Ÿé€šè¿‡ `PersistenceStateSlice` æ¥å£ç²¾ç¡®çº¦æŸä¾èµ–ï¼Œé¿å…å¾ªç¯å¼•ç”¨
+**ÓÅÊÆ**£º
+- Ö÷ store ÎÄ¼ş±£³Ö¾«¼ò£¬ËùÓĞ actions ÈÔ¿ÉÍ¨¹ı `useCollectionWizardStore.getState().xxx()` Í³Ò»µ÷ÓÃ
+- persistence Ä£¿é¿É¶ÀÁ¢²âÊÔ£¨½öĞè mock PersistenceStateSlice ½Ó¿Ú£©
+- ÀàĞÍÏµÍ³Í¨¹ı `PersistenceStateSlice` ½Ó¿Ú¾«È·Ô¼ÊøÒÀÀµ£¬±ÜÃâÑ­»·ÒıÓÃ
 
-### 3.3 ä¾èµ–å…³ç³»å›¾
+### 3.3 ÒÀÀµ¹ØÏµÍ¼
 
 ```
-                  collectionWizardStore (core, 486 è¡Œ)
-                          â”‚
-                â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-                â”‚         â”‚         â”‚
-                â–¼         â–¼         â–¼
+                  collectionWizardStore (core, 486 ĞĞ)
+                          ©¦
+                ©°©¤©¤©¤©¤©¤©¤©¤©¤©¤©à©¤©¤©¤©¤©¤©¤©¤©¤©¤©´
+                ©¦         ©¦         ©¦
+                ¨‹         ¨‹         ¨‹
         .persistence  .mock    .utils
-         (342 è¡Œ)   (113 è¡Œ)  (26 è¡Œ)
-                â”‚
-                â–¼
-       services/collection/*  (DataBridge æŒä¹…åŒ–)
-       services/collection/configExportService  (å¯¼å…¥å¯¼å‡º)
-       lib/withBroadcast  (äº‹ä»¶å¹¿æ’­)
-       lib/validation  (é…ç½®åæ ¡éªŒ)
+         (342 ĞĞ)   (113 ĞĞ)  (26 ĞĞ)
+                ©¦
+                ¨‹
+       services/collection/*  (DataBridge ³Ö¾Ã»¯)
+       services/collection/configExportService  (µ¼Èëµ¼³ö)
+       lib/withBroadcast  (ÊÂ¼ş¹ã²¥)
+       lib/validation  (ÅäÖÃÃûĞ£Ñé)
 ```
 
 ---
 
-## å››ã€å…³é”®æŠ€æœ¯å†³ç­–
+## ËÄ¡¢¹Ø¼ü¼¼Êõ¾ö²ß
 
-### 4.1 æŒä¹…åŒ– actions æ‹†åˆ†ä¸ºç‹¬ç«‹ mixin è€Œéç‹¬ç«‹ store
+### 4.1 ³Ö¾Ã»¯ actions ²ğ·ÖÎª¶ÀÁ¢ mixin ¶ø·Ç¶ÀÁ¢ store
 
-**åŸå› **ï¼š
-- ä¿æŒæ‰€æœ‰ actions é€šè¿‡åŒä¸€ `useCollectionWizardStore` å…¥å£ï¼ŒUI å±‚æ— éœ€é‡æ„
-- æŒä¹…åŒ–æ“ä½œä¸å‘å¯¼çŠ¶æ€æ·±åº¦è€¦åˆï¼ˆå¦‚ `loadConfigToWizard` éœ€å†™å…¥ 8 ä¸ªçŠ¶æ€å­—æ®µï¼‰ï¼Œç‹¬ç«‹ store åè€Œå¢åŠ èƒ¶æ°´ä»£ç 
-- StateCreator æ¨¡å¼æ˜¯ zustand å®˜æ–¹æ¨èçš„ä»£ç ç»„ç»‡æ–¹å¼ï¼Œä¸é¡¹ç›®ç°æœ‰ store æ¶æ„ä¸€è‡´
+**Ô­Òò**£º
+- ±£³ÖËùÓĞ actions Í¨¹ıÍ¬Ò» `useCollectionWizardStore` Èë¿Ú£¬UI ²ãÎŞĞèÖØ¹¹
+- ³Ö¾Ã»¯²Ù×÷ÓëÏòµ¼×´Ì¬Éî¶ÈñîºÏ£¨Èç `loadConfigToWizard` ĞèĞ´Èë 8 ¸ö×´Ì¬×Ö¶Î£©£¬¶ÀÁ¢ store ·´¶øÔö¼Ó½ºË®´úÂë
+- StateCreator Ä£Ê½ÊÇ zustand ¹Ù·½ÍÆ¼öµÄ´úÂë×éÖ¯·½Ê½£¬ÓëÏîÄ¿ÏÖÓĞ store ¼Ü¹¹Ò»ÖÂ
 
-### 4.2 MOCK_CONFIGS ç‹¬ç«‹æˆæ¨¡å—
+### 4.2 MOCK_CONFIGS ¶ÀÁ¢³ÉÄ£¿é
 
-**åŸå› **ï¼š
-- MOCK_CONFIGS æ•°æ®æ˜¯å¼€å‘æœŸ fallbackï¼Œä¸åº”æ±¡æŸ“ç”Ÿäº§è·¯å¾„
-- ç‹¬ç«‹åå¯åœ¨ dev/test ç¯å¢ƒå•ç‹¬æ›¿æ¢ mock æ•°æ®æº
-- 60+ è¡Œä¸šåŠ¡æ•°æ®ä¸ INITIAL_STATE åˆ†ç¦»ï¼Œä¸» store å¯è¯»æ€§æ˜¾è‘—æå‡
+**Ô­Òò**£º
+- MOCK_CONFIGS Êı¾İÊÇ¿ª·¢ÆÚ fallback£¬²»Ó¦ÎÛÈ¾Éú²úÂ·¾¶
+- ¶ÀÁ¢ºó¿ÉÔÚ dev/test »·¾³µ¥¶ÀÌæ»» mock Êı¾İÔ´
+- 60+ ĞĞÒµÎñÊı¾İÓë INITIAL_STATE ·ÖÀë£¬Ö÷ store ¿É¶ÁĞÔÏÔÖøÌáÉı
 
-### 4.3 å·¥å…·å‡½æ•°æŠ½ç¦»è‡³ utils
+### 4.3 ¹¤¾ßº¯Êı³éÀëÖÁ utils
 
-**åŸå› **ï¼š
-- `generateTraceId` ä¸ `formatDuration` è¢«å¤šä¸ªæ¨¡å—æ½œåœ¨éœ€è¦ï¼ˆå¦‚ collectionRuntimeStoreï¼‰
-- å·¥å…·å‡½æ•°çº¯å‡½æ•°åŒ–ï¼Œé›¶ä¾èµ–ï¼Œæ–¹ä¾¿å•æµ‹ä¸å¤ç”¨
-- `generateConfigId` ä¸ `collectionWizardPersistence.ts` ä¸­çš„ ID ç”Ÿæˆé€»è¾‘ä¿æŒä¸€è‡´ï¼ˆç»Ÿä¸€å‰ç¼€ `wizard_config_`ï¼‰
+**Ô­Òò**£º
+- `generateTraceId` Óë `formatDuration` ±»¶à¸öÄ£¿éÇ±ÔÚĞèÒª£¨Èç collectionRuntimeStore£©
+- ¹¤¾ßº¯Êı´¿º¯Êı»¯£¬ÁãÒÀÀµ£¬·½±ãµ¥²âÓë¸´ÓÃ
+- `generateConfigId` Óë `collectionWizardPersistence.ts` ÖĞµÄ ID Éú³ÉÂß¼­±£³ÖÒ»ÖÂ£¨Í³Ò»Ç°×º `wizard_config_`£©
 
 ---
 
-## äº”ã€éªŒè¯ç»“æœ
+## Îå¡¢ÑéÖ¤½á¹û
 
-### 5.1 è‡ªåŠ¨åŒ–éªŒè¯
+### 5.1 ×Ô¶¯»¯ÑéÖ¤
 
-| æ£€æŸ¥é¡¹ | ç»“æœ |
+| ¼ì²éÏî | ½á¹û |
 |--------|------|
-| TypeScript ç±»å‹æ£€æŸ¥ | âœ… 0 errors |
-| ESLintï¼ˆæ‹†åˆ†æ–‡ä»¶ï¼‰ | âœ… 0 errorsï¼Œ1 ä¸ªæ— å…³ warningï¼ˆno-magic-numbersï¼‰ |
-| ESLintï¼ˆæ¶ˆè´¹æ–¹ç»„ä»¶ï¼‰ | âœ… 0 errorsï¼Œ16 ä¸ªåŸæœ‰ warningï¼ˆæœªæ–°å¢ï¼‰ |
-| audit:layers | âœ… 0 violations |
-| å•å…ƒæµ‹è¯• | âœ… 17/17 passed |
+| TypeScript ÀàĞÍ¼ì²é | ? 0 errors |
+| ESLint£¨²ğ·ÖÎÄ¼ş£© | ? 0 errors£¬1 ¸öÎŞ¹Ø warning£¨no-magic-numbers£© |
+| ESLint£¨Ïû·Ñ·½×é¼ş£© | ? 0 errors£¬16 ¸öÔ­ÓĞ warning£¨Î´ĞÂÔö£© |
+| audit:layers | ? 0 violations |
+| µ¥Ôª²âÊÔ | ? 17/17 passed |
 
-### 5.2 æ¶ˆè´¹æ–¹éªŒè¯
+### 5.2 Ïû·Ñ·½ÑéÖ¤
 
-æ‰€æœ‰è°ƒç”¨ `useCollectionWizardStore` çš„ 6 ä¸ªä¸šåŠ¡ç»„ä»¶å‡æ— å›å½’ï¼š
+ËùÓĞµ÷ÓÃ `useCollectionWizardStore` µÄ 6 ¸öÒµÎñ×é¼ş¾ùÎŞ»Ø¹é£º
 
 - [DataCollectionWizard.tsx](file:///g:/FinSightV9/src/components/organisms/input/DataCollectionWizard.tsx)
 - [wizard-steps/CollectionStrategyStep.tsx](file:///g:/FinSightV9/src/components/organisms/input/wizard-steps/CollectionStrategyStep.tsx)
@@ -130,73 +149,73 @@ export const useCollectionWizardStore = create<CollectionWizardStore>()((set, ge
 - [wizard-steps/ExecutionMonitorStep.tsx](file:///g:/FinSightV9/src/components/organisms/input/wizard-steps/ExecutionMonitorStep.tsx)
 - [TradingFlowPage.tsx](file:///g:/FinSightV9/src/pages/trading/TradingFlowPage.tsx)
 
-### 5.3 æµ‹è¯•è¦†ç›–èŒƒå›´
+### 5.3 ²âÊÔ¸²¸Ç·¶Î§
 
 ```typescript
-// utils æ¨¡å—ï¼š3 ä¸ªæµ‹è¯•
-âœ“ generateTraceId æ ¼å¼æ ¡éªŒ
-âœ“ formatDuration æ¯«ç§’/ç§’æ ¼å¼åŒ–
-âœ“ generateConfigId å‰ç¼€æ ¡éªŒ
+// utils Ä£¿é£º3 ¸ö²âÊÔ
+? generateTraceId ¸ñÊ½Ğ£Ñé
+? formatDuration ºÁÃë/Ãë¸ñÊ½»¯
+? generateConfigId Ç°×ºĞ£Ñé
 
-// mock æ¨¡å—ï¼š2 ä¸ªæµ‹è¯•
-âœ“ MOCK_CONFIGS é»˜è®¤ 3 ä¸ªé…ç½®
-âœ“ MOCK_CONFIGS å®Œæ•´å­—æ®µç»“æ„
+// mock Ä£¿é£º2 ¸ö²âÊÔ
+? MOCK_CONFIGS Ä¬ÈÏ 3 ¸öÅäÖÃ
+? MOCK_CONFIGS ÍêÕû×Ö¶Î½á¹¹
 
-// core æ¨¡å—ï¼š6 ä¸ªæµ‹è¯•
-âœ“ åˆå§‹çŠ¶æ€é»˜è®¤å€¼
-âœ“ setStep æ­¥éª¤æ§åˆ¶
-âœ“ toggleDimension ç»´åº¦åˆ‡æ¢
-âœ“ setFrequency/setPriority ç­‰ setActions
-âœ“ addLog æ—¥å¿—è®°å½•
-âœ“ resetWizard çŠ¶æ€é‡ç½®ï¼ˆä¿ç•™ savedConfigsï¼‰
+// core Ä£¿é£º6 ¸ö²âÊÔ
+? ³õÊ¼×´Ì¬Ä¬ÈÏÖµ
+? setStep ²½Öè¿ØÖÆ
+? toggleDimension Î¬¶ÈÇĞ»»
+? setFrequency/setPriority µÈ setActions
+? addLog ÈÕÖ¾¼ÇÂ¼
+? resetWizard ×´Ì¬ÖØÖÃ£¨±£Áô savedConfigs£©
 
-// persistence æ¨¡å—ï¼š6 ä¸ªæµ‹è¯•
-âœ“ loadSavedConfigs ä» IndexedDB åŠ è½½
-âœ“ loadConfigToWizard å­—æ®µåŠ è½½
-âœ“ deleteSavedConfig ç§»é™¤é…ç½®
-âœ“ renameSavedConfig é‡åæ£€æµ‹ï¼ˆè¿”å› success=falseï¼‰
-âœ“ renameSavedConfig æˆåŠŸæ›´æ–°ï¼ˆè¿”å› success=trueï¼‰
-âœ“ exportConfig ä¸å­˜åœ¨çš„é…ç½®ä¸æŠ›é”™
+// persistence Ä£¿é£º6 ¸ö²âÊÔ
+? loadSavedConfigs ´Ó IndexedDB ¼ÓÔØ
+? loadConfigToWizard ×Ö¶Î¼ÓÔØ
+? deleteSavedConfig ÒÆ³ıÅäÖÃ
+? renameSavedConfig ÖØÃû¼ì²â£¨·µ»Ø success=false£©
+? renameSavedConfig ³É¹¦¸üĞÂ£¨·µ»Ø success=true£©
+? exportConfig ²»´æÔÚµÄÅäÖÃ²»Å×´í
 ```
 
 ---
 
-## å…­ã€ç»éªŒæ•™è®­
+## Áù¡¢¾­Ñé½ÌÑµ
 
-### 6.1 ç»éªŒ
+### 6.1 ¾­Ñé
 
-1. **StateCreator Mixin æ¨¡å¼é€‚åˆå¼ºè€¦åˆçš„ actions æ‹†åˆ†** â€” å½“ actions éœ€æ“ä½œå¤§é‡çŠ¶æ€å­—æ®µæ—¶ï¼Œç‹¬ç«‹ store åè€Œå¼•å…¥èƒ¶æ°´ä»£ç ï¼Œmixin æ›´è½»é‡
-2. **MOCK æ•°æ®åº”ä» INITIAL_STATE åˆ†ç¦»** â€” ä¸šåŠ¡çŠ¶æ€ä¸å¼€å‘æœŸ fallback æ•°æ®åº”è§£è€¦ï¼Œä¾¿äºæµ‹è¯•ä¸ç»´æŠ¤
-3. **å·¥å…·å‡½æ•°ç«‹å³ export** â€” `generateTraceId` ç­‰æ˜“è¢«å…¶ä»– store å¤ç”¨ï¼Œç‹¬ç«‹å¯¼å‡ºé¿å…ä»£ç é‡å¤
+1. **StateCreator Mixin Ä£Ê½ÊÊºÏÇ¿ñîºÏµÄ actions ²ğ·Ö** ¡ª µ± actions Ğè²Ù×÷´óÁ¿×´Ì¬×Ö¶ÎÊ±£¬¶ÀÁ¢ store ·´¶øÒıÈë½ºË®´úÂë£¬mixin ¸üÇáÁ¿
+2. **MOCK Êı¾İÓ¦´Ó INITIAL_STATE ·ÖÀë** ¡ª ÒµÎñ×´Ì¬Óë¿ª·¢ÆÚ fallback Êı¾İÓ¦½âñî£¬±ãÓÚ²âÊÔÓëÎ¬»¤
+3. **¹¤¾ßº¯ÊıÁ¢¼´ export** ¡ª `generateTraceId` µÈÒ×±»ÆäËû store ¸´ÓÃ£¬¶ÀÁ¢µ¼³ö±ÜÃâ´úÂëÖØ¸´
 
-### 6.2 æ•™è®­
+### 6.2 ½ÌÑµ
 
-1. **persist mock å¼•ç”¨å¯¼è‡´æµ‹è¯•æ±¡æŸ“** â€” `resetWizard` ä¿ç•™ `savedConfigs` å¼•ç”¨ï¼Œä½† `deleteSavedConfig` ä¿®æ”¹çš„æ˜¯åŒä¸€å¼•ç”¨ï¼Œå¯¼è‡´åç»­æµ‹è¯•çœ‹åˆ°çš„çŠ¶æ€ä¸åˆå§‹ä¸ä¸€è‡´
-   - **ä¿®å¤**ï¼šæµ‹è¯•ä¸­æ˜¾å¼ `useCollectionWizardStore.setState({ savedConfigs: MOCK_CONFIGS })` é‡ç½®
-   - **å¯ç¤º**ï¼šç”Ÿäº§ä»£ç åº”è€ƒè™‘ MOCK_CONFIGS æµ…æ‹·è´é¿å…å¼•ç”¨æ±¡æŸ“
+1. **persist mock ÒıÓÃµ¼ÖÂ²âÊÔÎÛÈ¾** ¡ª `resetWizard` ±£Áô `savedConfigs` ÒıÓÃ£¬µ« `deleteSavedConfig` ĞŞ¸ÄµÄÊÇÍ¬Ò»ÒıÓÃ£¬µ¼ÖÂºóĞø²âÊÔ¿´µ½µÄ×´Ì¬Óë³õÊ¼²»Ò»ÖÂ
+   - **ĞŞ¸´**£º²âÊÔÖĞÏÔÊ½ `useCollectionWizardStore.setState({ savedConfigs: MOCK_CONFIGS })` ÖØÖÃ
+   - **ÆôÊ¾**£ºÉú²ú´úÂëÓ¦¿¼ÂÇ MOCK_CONFIGS Ç³¿½±´±ÜÃâÒıÓÃÎÛÈ¾
 
-2. **re-export ç±»å‹éœ€åŒæ­¥é‡å‘½å** â€” æ‹†åˆ†æ—¶ `PersistenceSlice` é‡å‘½åä¸º `PersistenceStateSlice`ï¼Œä¸» store ä¸­çš„ re-export éœ€åŒæ­¥æ›´æ–°ï¼Œé¿å…å¤–éƒ¨æ¶ˆè´¹è€…ç±»å‹å¼•ç”¨æ–­è£‚
-
----
-
-## ä¸ƒã€åç»­å·¥ä½œ
-
-- [ ] å°† `generateTraceId` æ¨å¹¿è‡³å…¶ä»– storeï¼ˆcollectionRuntimeStore ç­‰ï¼‰ï¼Œç»Ÿä¸€ traceId å‘½åç©ºé—´
-- [ ] å¢åŠ  `collectionWizardStore.derived.ts` æ´¾ç”ŸæŸ¥è¯¢ï¼ˆå¦‚ `hasRunningTask()`ã€`isConfigValid()`ï¼‰ï¼Œä¸é¡¹ç›®å…¶ä»– store ä¿æŒä¸€è‡´
-- [ ] MOCK_CONFIGS æ·±æ‹·è´åŒ–ï¼ˆä½¿ç”¨ `[...MOCK_CONFIGS]`ï¼‰é¿å…å¼•ç”¨æ±¡æŸ“
+2. **re-export ÀàĞÍĞèÍ¬²½ÖØÃüÃû** ¡ª ²ğ·ÖÊ± `PersistenceSlice` ÖØÃüÃûÎª `PersistenceStateSlice`£¬Ö÷ store ÖĞµÄ re-export ĞèÍ¬²½¸üĞÂ£¬±ÜÃâÍâ²¿Ïû·ÑÕßÀàĞÍÒıÓÃ¶ÏÁÑ
 
 ---
 
-## å…«ã€å˜æ›´æ¸…å•
+## Æß¡¢ºóĞø¹¤×÷
 
-### 8.1 æ–°å¢æ–‡ä»¶ï¼ˆ5 ä¸ªï¼‰
+- [ ] ½« `generateTraceId` ÍÆ¹ãÖÁÆäËû store£¨collectionRuntimeStore µÈ£©£¬Í³Ò» traceId ÃüÃû¿Õ¼ä
+- [ ] Ôö¼Ó `collectionWizardStore.derived.ts` ÅÉÉú²éÑ¯£¨Èç `hasRunningTask()`¡¢`isConfigValid()`£©£¬ÓëÏîÄ¿ÆäËû store ±£³ÖÒ»ÖÂ
+- [ ] MOCK_CONFIGS Éî¿½±´»¯£¨Ê¹ÓÃ `[...MOCK_CONFIGS]`£©±ÜÃâÒıÓÃÎÛÈ¾
 
-- `src/store/collectionWizardStore.persistence.ts` â€” æŒä¹…åŒ– actions mixin
-- `src/store/collectionWizardStore.mock.ts` â€” MOCK æ•°æ®
-- `src/store/collectionWizardStore.utils.ts` â€” å·¥å…·å‡½æ•°
-- `src/store/__tests__/collectionWizardStore.test.ts` â€” å•å…ƒæµ‹è¯•
-- `src/store/__backup__/collectionWizardStore.ts.2026-07-15.bak` â€” æ‹†åˆ†å‰å¤‡ä»½
+---
 
-### 8.2 ä¿®æ”¹æ–‡ä»¶ï¼ˆ1 ä¸ªï¼‰
+## °Ë¡¢±ä¸üÇåµ¥
 
-- `src/store/collectionWizardStore.ts` â€” 693 â†’ 486 è¡Œï¼ˆ-29.9%ï¼‰ï¼Œé€šè¿‡ spread æ³¨å…¥ persistence actions
+### 8.1 ĞÂÔöÎÄ¼ş£¨5 ¸ö£©
+
+- `src/store/collectionWizardStore.persistence.ts` ¡ª ³Ö¾Ã»¯ actions mixin
+- `src/store/collectionWizardStore.mock.ts` ¡ª MOCK Êı¾İ
+- `src/store/collectionWizardStore.utils.ts` ¡ª ¹¤¾ßº¯Êı
+- `src/store/__tests__/collectionWizardStore.test.ts` ¡ª µ¥Ôª²âÊÔ
+- `src/store/__backup__/collectionWizardStore.ts.2026-07-15.bak` ¡ª ²ğ·ÖÇ°±¸·İ
+
+### 8.2 ĞŞ¸ÄÎÄ¼ş£¨1 ¸ö£©
+
+- `src/store/collectionWizardStore.ts` ¡ª 693 ¡ú 486 ĞĞ£¨-29.9%£©£¬Í¨¹ı spread ×¢Èë persistence actions

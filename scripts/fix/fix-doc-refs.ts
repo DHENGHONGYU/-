@@ -58,7 +58,7 @@ const ROOT_DOC_FILES = [
   'architecture.md',
   'CHANGELOG.md',
   'data-definition.md',
-  'README.md',
+  'docs/explanation/README.md',
 ]
 
 const PATH_PREFIXES = [

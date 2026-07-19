@@ -34,7 +34,7 @@ export interface TestTask {
 
 export type SingleTestStatus = 'idle' | 'running' | 'done'
 
-export type TraceDimension = '01' | '02'
+export type TraceDimension = '01' | '02' | '03' | '04' | '05' | '06' | '07' | '08'
 
 interface DataTestState {
   // 服务健康检查

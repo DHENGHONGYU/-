@@ -7,6 +7,7 @@ import {
   API_TRADE_POSITIONS,
   API_TRADE_SIGNALS,
 } from '@/config/apiPaths'
+import { STOCK_COLOR_TOKENS } from '@/constants/theme.tokens'
 
 /**
  * AI 生成内容免责声明（合规：C07）。
@@ -20,6 +21,15 @@ export const GRID_COLUMNS = 4
 export const GRID_ROW_HEIGHT = 120
 
 export const GRID_GAP = 16
+
+export const PRELOAD_WIDGETS = [
+  'marketIndices',
+  'sectorHeatmap',
+  'fundFlow',
+  'watchlist',
+  'portfolioOverview',
+  'aiTradeReview',
+] as const
 
 /**
  * 实时行情查询的 SLA 延迟预算（毫秒）
@@ -83,32 +93,6 @@ export const SENTIMENT_LEVELS = {
   NEUTRAL: { min: 40, max: 60, label: '中性', color: 'bg-yellow-400' },
   GREEDY: { min: 60, max: 80, label: '贪婪', color: 'bg-green-400' },
   EXTREME_GREEDY: { min: 80, max: 100, label: '极度贪婪', color: 'bg-green-600' },
-}
-
-/** 股票涨跌颜色映射（A 股市场标准：红涨绿跌）
- * @deprecated 请使用 `STOCK_COLOR_TOKENS`（位于 `src/constants/theme.tokens.ts`）
- * @remarks 所有涉及涨跌幅颜色展示的组件必须从 `STOCK_COLOR_TOKENS` 读取，禁止硬编码
- * @see STOCK_COLOR_TOKENS
- */
-export const STOCK_COLOR_MAPPING = {
-  /** 上涨颜色 */
-  UP: '#ef4444',
-  /** 下跌颜色 */
-  DOWN: '#22c55e',
-  /** 平盘/中性颜色 */
-  NEUTRAL: '#9ca3af',
-  /** 上涨 Tailwind 类名 */
-  UP_CLASS: 'text-red-500',
-  /** 下跌 Tailwind 类名 */
-  DOWN_CLASS: 'text-green-500',
-  /** 中性 Tailwind 类名 */
-  NEUTRAL_CLASS: 'text-gray-400',
-  /** 上涨背景类名 */
-  UP_BG_CLASS: 'bg-red-500',
-  /** 下跌背景类名 */
-  DOWN_BG_CLASS: 'bg-green-500',
-  /** 中性背景类名 */
-  NEUTRAL_BG_CLASS: 'bg-gray-400',
 }
 
 /** 评分等级映射
@@ -184,6 +168,17 @@ export const COLORS = {
   SECONDARY: '#6b7280',
   BACKGROUND: '#f8fafc',
   CARD: '#ffffff',
+}
+
+/**
+ * A 股涨跌颜色映射（红涨绿跌）
+ * @remarks 与 STOCK_COLOR_TOKENS 保持一致，供测试与历史代码引用
+ */
+export const STOCK_COLOR_MAPPING = {
+  UP: STOCK_COLOR_TOKENS.up.hex,
+  DOWN: STOCK_COLOR_TOKENS.down.hex,
+  UP_CLASS: STOCK_COLOR_TOKENS.up.tailwind,
+  DOWN_CLASS: STOCK_COLOR_TOKENS.down.tailwind,
 }
 
 // ============================================================
@@ -490,7 +485,7 @@ export const DEFAULT_WIDGET_CONFIG = {
   },
   portfolioOverview: {
     title: '持仓概览',
-    size: WIDGET_SIZE.HALF_WIDTH,
+    size: WIDGET_SIZE.FULL_WIDTH,
     category: 'portfolio',
   },
   aiTradeReview: {
@@ -551,47 +546,47 @@ export const DEFAULT_WIDGET_CONFIG = {
   // ============================================================
   agentPerformance: {
     title: '智能体性能追踪',
-    category: '系统监控',
-    size: { cols: 2, rows: 2 },
+    category: 'system',
+    size: WIDGET_SIZE.HALF_WIDTH,
   },
   engineStatus: {
     title: '引擎状态监控',
-    category: '系统监控',
+    category: 'system',
     size: { cols: 1, rows: 1 },
   },
   systemArchitecture: {
     title: '系统架构视图',
-    category: '系统监控',
-    size: { cols: 2, rows: 2 },
+    category: 'system',
+    size: WIDGET_SIZE.HALF_WIDTH,
   },
   pnlAnalysis: {
     title: '盈亏分析',
-    category: '交易分析',
-    size: { cols: 2, rows: 2 },
+    category: 'trading',
+    size: WIDGET_SIZE.HALF_WIDTH,
   },
   positionControl: {
     title: '仓位控制',
-    category: '投资组合',
-    size: { cols: 2, rows: 2 },
+    category: 'portfolio',
+    size: WIDGET_SIZE.HALF_WIDTH,
   },
   riskMonitor: {
     title: '风险监控',
-    category: '系统监控',
-    size: { cols: 2, rows: 2 },
+    category: 'system',
+    size: WIDGET_SIZE.HALF_WIDTH,
   },
   signalMonitor: {
     title: '信号监控',
-    category: '交易分析',
-    size: { cols: 1, rows: 2 },
+    category: 'trading',
+    size: WIDGET_SIZE.THIRD_WIDTH,
   },
   industryChain: {
     title: '产业链图谱',
-    category: '行业分析',
-    size: { cols: 2, rows: 2 },
+    category: 'sector',
+    size: WIDGET_SIZE.HALF_WIDTH,
   },
   mechanismHealth: {
     title: '机制健康监控',
     category: 'system',
-    size: { cols: 2, rows: 2 },
+    size: WIDGET_SIZE.HALF_WIDTH,
   },
 }

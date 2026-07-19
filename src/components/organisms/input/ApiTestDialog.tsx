@@ -23,6 +23,11 @@ async function probeEndpoint(url: string): Promise<{ ok: boolean; latency: numbe
   const timeoutId = setTimeout(() => controller.abort(), TEST_TIMEOUT_MS)
 
   try {
+    // 意图说明：本弹窗是「数据源连通性探针」，需按用户实时配置的任意 URL 发起
+    // 一次性探测请求。此处故意直连全局 fetch 而非走 data-fetcher 服务/DataBridge，
+    // 原因：① 探测目标由用户在对话框内自由输入（含内网/临时地址），不属于
+    // 已知数据源注册表，无对应 service 封装；② 仅做连通性与延迟测量，不落地数据，
+    // 故无需经过 StandardEnvelope/DataBridge 写入链路。属有意为之的旁路，非架构违规。
     const response = await fetch(url, {
       method: 'GET',
       signal: controller.signal,

@@ -1,48 +1,50 @@
 ---
-title: feedback-loop-spec
+title: V9 ²Ù×÷·´À¡±Õ»·¹æ¸ñ
+type: explanation
+domain: project
+phase: planning
 tier: important
+status: active
+maintainer: V9 Architecture Team
+summary: "±¾ÎÄµµ¹æ¶¨ V9 ÏµÍ³ÖĞËùÓĞÓÃ»§²Ù×÷µÄ·´À¡»úÖÆ£¬°üÀ¨ Toast ÇáÌáÊ¾ÌåÏµ¡¢³Ö¾Ã»¯·´À¡·şÎñ FeedbackService¡¢²Ù×÷×´Ì¬±Õ»·Á÷³ÌÒÔ¼°Óë EventBus µÄ¼¯³É·½Ê½¡£"
+tags: [project, spec, plan, explanation, governance, documentation, strategy]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
----
-
----
-title: V9 æ“ä½œåé¦ˆé—­ç¯è§„æ ¼
-version: v0.9.0-doc-sync-batch2
-last_review: 2026-06-27
-status: draft
+doc_id: V9-DOC-PROJ-061
 change_log:
-  - date: 2026-06-27
-    author: Documentation Governor
-    desc: é¦–æ¬¡å®šä¹‰ Toast ä½“ç³»ã€FeedbackService æ¥å£ã€é—­ç¯æµç¨‹ä¸ EventBus é›†æˆ
-tier: important
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
-# V9 æ“ä½œåé¦ˆé—­ç¯è§„æ ¼
+# V9 ²Ù×÷·´À¡±Õ»·¹æ¸ñ
 
-> **å¯¹åº”è“å›¾**ï¼š`../reference/v9-system-blueprint.md` Â§5.3 äº‹ä»¶æ€»çº¿è§„èŒƒã€Â§7.2 UI/UX åé¦ˆè§„èŒƒã€Â§10 åå·®é¡¹ D18ã€Œç¼ºå°‘æ“ä½œåé¦ˆé—­ç¯ã€ã€‚
-> **ä¾èµ–æ–‡æ¡£**ï¼š`../reference/04-ui-ux-specs.md`ï¼ˆToast ç»„ä»¶è§„èŒƒï¼‰ã€`../reference/widget-error-handling.md`ï¼ˆé”™è¯¯çŠ¶æ€çš„ä¸ŠæŠ¥ä¸é™çº§å±•ç¤ºï¼‰ã€‚
-
----
-
-## 1. ç›®æ ‡ä¸èŒƒå›´
-
-æœ¬æ–‡æ¡£è§„å®š V9 ç³»ç»Ÿä¸­æ‰€æœ‰ç”¨æˆ·æ“ä½œçš„åé¦ˆæœºåˆ¶ï¼ŒåŒ…æ‹¬ Toast è½»æç¤ºä½“ç³»ã€æŒä¹…åŒ–åé¦ˆæœåŠ¡ `FeedbackService`ã€æ“ä½œçŠ¶æ€é—­ç¯æµç¨‹ä»¥åŠä¸ `EventBus` çš„é›†æˆæ–¹å¼ã€‚ä¸è¦†ç›–å›¾è¡¨æ¸²æŸ“æ€§èƒ½ä¸ Widget é”™è¯¯è¾¹ç•Œï¼ˆåˆ†åˆ«è§ `../reference/chart-integration.md` ä¸ `../reference/widget-error-handling.md`ï¼‰ã€‚
+> **¶ÔÓ¦À¶Í¼**£º`../reference/v9-system-blueprint.md` ¡ì5.3 ÊÂ¼ş×ÜÏß¹æ·¶¡¢¡ì7.2 UI/UX ·´À¡¹æ·¶¡¢¡ì10 Æ«²îÏî D18¡¸È±ÉÙ²Ù×÷·´À¡±Õ»·¡¹¡£
+> **ÒÀÀµÎÄµµ**£º`../reference/04-ui-ux-specs.md`£¨Toast ×é¼ş¹æ·¶£©¡¢`../reference/widget-error-handling.md`£¨´íÎó×´Ì¬µÄÉÏ±¨Óë½µ¼¶Õ¹Ê¾£©¡£
 
 ---
 
-## 2. Toast åé¦ˆä½“ç³»
+## 1. Ä¿±êÓë·¶Î§
 
-### 2.1 å››ç§çŠ¶æ€ä¸æŒç»­æ—¶é—´
+±¾ÎÄµµ¹æ¶¨ V9 ÏµÍ³ÖĞËùÓĞÓÃ»§²Ù×÷µÄ·´À¡»úÖÆ£¬°üÀ¨ Toast ÇáÌáÊ¾ÌåÏµ¡¢³Ö¾Ã»¯·´À¡·şÎñ `FeedbackService`¡¢²Ù×÷×´Ì¬±Õ»·Á÷³ÌÒÔ¼°Óë `EventBus` µÄ¼¯³É·½Ê½¡£²»¸²¸ÇÍ¼±íäÖÈ¾ĞÔÄÜÓë Widget ´íÎó±ß½ç£¨·Ö±ğ¼û `../reference/chart-integration.md` Óë `../reference/widget-error-handling.md`£©¡£
 
-| çŠ¶æ€ï¼ˆvariantï¼‰ | è¯­ä¹‰ | é»˜è®¤æŒç»­æ—¶é—´ | ä½¿ç”¨åœºæ™¯ |
+---
+
+## 2. Toast ·´À¡ÌåÏµ
+
+### 2.1 ËÄÖÖ×´Ì¬Óë³ÖĞøÊ±¼ä
+
+| ×´Ì¬£¨variant£© | ÓïÒå | Ä¬ÈÏ³ÖĞøÊ±¼ä | Ê¹ÓÃ³¡¾° |
 |---|---|---|---|
-| `success` | æ“ä½œæˆåŠŸ | 3000 ms | ä¿å­˜ã€æäº¤ã€å¯¼å…¥å®Œæˆã€æµè½¬æˆåŠŸ |
-| `error` | æ“ä½œå¤±è´¥ | 8000 ms | API å¤±è´¥ã€æ ¡éªŒä¸é€šè¿‡ã€å¼‚å¸¸å´©æºƒ |
-| `warning` | è­¦å‘Š/éœ€å…³æ³¨ | 5000 ms | æ•°æ®ç¼ºå¤±ã€é™çº§ã€éƒ¨åˆ†æˆåŠŸ |
-| `info` | ä¸­æ€§æç¤º | 4000 ms | å¼€å§‹åŠ è½½ã€çŠ¶æ€å˜æ›´ã€å¸®åŠ©è¯´æ˜ |
+| `success` | ²Ù×÷³É¹¦ | 3000 ms | ±£´æ¡¢Ìá½»¡¢µ¼ÈëÍê³É¡¢Á÷×ª³É¹¦ |
+| `error` | ²Ù×÷Ê§°Ü | 8000 ms | API Ê§°Ü¡¢Ğ£Ñé²»Í¨¹ı¡¢Òì³£±ÀÀ£ |
+| `warning` | ¾¯¸æ/Ğè¹Ø×¢ | 5000 ms | Êı¾İÈ±Ê§¡¢½µ¼¶¡¢²¿·Ö³É¹¦ |
+| `info` | ÖĞĞÔÌáÊ¾ | 4000 ms | ¿ªÊ¼¼ÓÔØ¡¢×´Ì¬±ä¸ü¡¢°ïÖúËµÃ÷ |
 
-> å½“å‰åŸºç¡€ç»„ä»¶å®ç°è§ `src/components/atoms/Toast.tsx` ä¸ `src/hooks/useToast.tsx`ã€‚
+> µ±Ç°»ù´¡×é¼şÊµÏÖ¼û `src/components/atoms/Toast.tsx` Óë `src/hooks/useToast.tsx`¡£
 
-### 2.2 ä¼˜å…ˆçº§ä¸å»é‡è§„åˆ™
+### 2.2 ÓÅÏÈ¼¶ÓëÈ¥ÖØ¹æÔò
 
 ```ts
 // src/constants/feedback.constants.ts
@@ -56,14 +58,14 @@ export const TOAST_DURATION: Record<ToastVariant, number> = {
 export const TOAST_DEDUPLICATION_WINDOW_MS = 2000
 ```
 
-- åŒä¸€ `title` + `variant` åœ¨ 2 ç§’å†…é‡å¤è§¦å‘æ—¶ï¼Œä»…æ›´æ–°æ—¶é—´æˆ³ï¼Œä¸æ–°å¢å®ä¾‹ã€‚
-- `error` ç±» Toast å¼ºåˆ¶æ˜¾ç¤ºå…³é—­æŒ‰é’®ï¼Œä¸å…è®¸è‡ªåŠ¨æ¶ˆå¤±ï¼ˆ`duration: 0` æ—¶å¯é…ç½®ï¼‰ã€‚
+- Í¬Ò» `title` + `variant` ÔÚ 2 ÃëÄÚÖØ¸´´¥·¢Ê±£¬½ö¸üĞÂÊ±¼ä´Á£¬²»ĞÂÔöÊµÀı¡£
+- `error` Àà Toast Ç¿ÖÆÏÔÊ¾¹Ø±Õ°´Å¥£¬²»ÔÊĞí×Ô¶¯ÏûÊ§£¨`duration: 0` Ê±¿ÉÅäÖÃ£©¡£
 
 ---
 
-## 3. FeedbackService æ¥å£å®šä¹‰
+## 3. FeedbackService ½Ó¿Ú¶¨Òå
 
-`FeedbackService` æ˜¯åº”ç”¨å±‚ï¼ˆL4ï¼‰ä¸å¼•æ“å±‚ï¼ˆL3ï¼‰ç»Ÿä¸€è°ƒç”¨åé¦ˆèƒ½åŠ›çš„å…¥å£ï¼Œé¿å…é¡µé¢ç»„ä»¶ç›´æ¥æ“ä½œ Toast Contextã€‚
+`FeedbackService` ÊÇÓ¦ÓÃ²ã£¨L4£©ÓëÒıÇæ²ã£¨L3£©Í³Ò»µ÷ÓÃ·´À¡ÄÜÁ¦µÄÈë¿Ú£¬±ÜÃâÒ³Ãæ×é¼şÖ±½Ó²Ù×÷ Toast Context¡£
 
 ```ts
 // src/services/feedback/feedbackService.ts
@@ -105,46 +107,46 @@ export interface FeedbackService {
 }
 
 export const feedbackService: FeedbackService = {
-  notify: (item) => { /* é€šè¿‡ EventBus è½¬å‘ */ },
-  notifyAsync: async (promise, messages) => { /* è‡ªåŠ¨åˆ‡æ¢ loading/success/error */ },
+  notify: (item) => { /* Í¨¹ı EventBus ×ª·¢ */ },
+  notifyAsync: async (promise, messages) => { /* ×Ô¶¯ÇĞ»» loading/success/error */ },
   dismiss: (id) => { /* ... */ },
   dismissByScope: (scope) => { /* ... */ },
-  getHistory: () => { /* è¿”å›æœ€è¿‘ 50 æ¡ */ },
+  getHistory: () => { /* ·µ»Ø×î½ü 50 Ìõ */ },
 }
 ```
 
 ---
 
-## 4. æ“ä½œåé¦ˆé—­ç¯æµç¨‹å›¾
+## 4. ²Ù×÷·´À¡±Õ»·Á÷³ÌÍ¼
 
 ```mermaid
 flowchart LR
-    A[ç”¨æˆ·æ“ä½œ] --> B[è°ƒç”¨ Service / Engine]
-    B --> C{æ‰§è¡Œç»“æœ}
-    C -->|æˆåŠŸ| D[feedbackService.notify success]
-    C -->|å¤±è´¥| E[feedbackService.notify error]
-    C -->|éœ€è¦ç¡®è®¤| F[feedbackService.notify warning]
+    A[ÓÃ»§²Ù×÷] --> B[µ÷ÓÃ Service / Engine]
+    B --> C{Ö´ĞĞ½á¹û}
+    C -->|³É¹¦| D[feedbackService.notify success]
+    C -->|Ê§°Ü| E[feedbackService.notify error]
+    C -->|ĞèÒªÈ·ÈÏ| F[feedbackService.notify warning]
     D --> G[eventBus.emit FEEDBACK_SHOWN]
     E --> G
     F --> G
-    G --> H[Toast UI æ¸²æŸ“]
-    H --> I[æ—¥å¿—/å®¡è®¡è®°å½•]
-    I --> J[å¯é€‰ï¼šè§¦å‘è¡¥å¿/é‡è¯•]
+    G --> H[Toast UI äÖÈ¾]
+    H --> I[ÈÕÖ¾/Éó¼Æ¼ÇÂ¼]
+    I --> J[¿ÉÑ¡£º´¥·¢²¹³¥/ÖØÊÔ]
 ```
 
-### 4.1 å…¸å‹è°ƒç”¨ç¤ºä¾‹
+### 4.1 µäĞÍµ÷ÓÃÊ¾Àı
 
 ```ts
-// åº”ç”¨å±‚è°ƒç”¨ç¤ºä¾‹
+// Ó¦ÓÃ²ãµ÷ÓÃÊ¾Àı
 import { feedbackService } from '@/services/feedback/feedbackService'
 
 async function handleImport(files: File[]) {
   await feedbackService.notifyAsync(
     batchImportService.import(files),
     {
-      loading: 'æ­£åœ¨å¯¼å…¥ï¼Œè¯·ç¨å€™â€¦',
-      success: `æˆåŠŸå¯¼å…¥ ${files.length} æ¡è®°å½•`,
-      error: 'å¯¼å…¥å¤±è´¥ï¼Œè¯·æ£€æŸ¥æ–‡ä»¶æ ¼å¼',
+      loading: 'ÕıÔÚµ¼Èë£¬ÇëÉÔºò¡­',
+      success: `³É¹¦µ¼Èë ${files.length} Ìõ¼ÇÂ¼`,
+      error: 'µ¼ÈëÊ§°Ü£¬Çë¼ì²éÎÄ¼ş¸ñÊ½',
     },
   )
 }
@@ -152,18 +154,18 @@ async function handleImport(files: File[]) {
 
 ---
 
-## 5. ä¸ EventBus çš„é›†æˆæ–¹å¼
+## 5. Óë EventBus µÄ¼¯³É·½Ê½
 
-### 5.1 äº‹ä»¶å‘½åè§„èŒƒ
+### 5.1 ÊÂ¼şÃüÃû¹æ·¶
 
-| äº‹ä»¶å | è§¦å‘æ—¶æœº | è®¢é˜…æ–¹ |
+| ÊÂ¼şÃû | ´¥·¢Ê±»ú | ¶©ÔÄ·½ |
 |--------|----------|--------|
-| `feedback:notify` | `FeedbackService.notify()` è¢«è°ƒç”¨ | `ToastProvider`ã€æ—¥å¿—è®°å½•å™¨ |
-| `feedback:dismiss` | ç”¨æˆ·æˆ–ä»£ç ä¸»åŠ¨å…³é—­ | `ToastProvider` |
-| `feedback:scopeCleared` | æŒ‰ scope æ‰¹é‡æ¸…é™¤ | `ToastProvider` |
-| `feedback:historyUpdated` | å†å²è®°å½•å˜åŒ– | è°ƒè¯•é¢æ¿ã€å®¡è®¡æ—¥å¿— |
+| `feedback:notify` | `FeedbackService.notify()` ±»µ÷ÓÃ | `ToastProvider`¡¢ÈÕÖ¾¼ÇÂ¼Æ÷ |
+| `feedback:dismiss` | ÓÃ»§»ò´úÂëÖ÷¶¯¹Ø±Õ | `ToastProvider` |
+| `feedback:scopeCleared` | °´ scope ÅúÁ¿Çå³ı | `ToastProvider` |
+| `feedback:historyUpdated` | ÀúÊ·¼ÇÂ¼±ä»¯ | µ÷ÊÔÃæ°å¡¢Éó¼ÆÈÕÖ¾ |
 
-### 5.2 é›†æˆå®ç°
+### 5.2 ¼¯³ÉÊµÏÖ
 
 ```ts
 // src/services/feedback/feedbackService.ts
@@ -192,7 +194,7 @@ export const feedbackService: FeedbackService = {
 ```
 
 ```tsx
-// src/hooks/useToast.tsxï¼ˆæ‰©å±•è®¢é˜…ï¼‰
+// src/hooks/useToast.tsx£¨À©Õ¹¶©ÔÄ£©
 import { eventBus } from '@/lib/eventBus'
 
 useEffect(() => {
@@ -211,24 +213,24 @@ useEffect(() => {
 
 ---
 
-## 6. ä¸é”™è¯¯è¾¹ç•Œçš„åä½œ
+## 6. Óë´íÎó±ß½çµÄĞ­×÷
 
-Widget æˆ–é¡µé¢çº§é”™è¯¯è¾¹ç•Œæ•è·å¼‚å¸¸åï¼Œä¸åº”ç›´æ¥æ¸²æŸ“ Toastï¼Œè€Œæ˜¯é€šè¿‡ `feedbackService.notify()` å‘é€ `error` åé¦ˆï¼Œç”± `ToastProvider` ç»Ÿä¸€å±•ç¤ºã€‚è¯¦è§ `../reference/widget-error-handling.md` Â§4.2ã€‚
-
----
-
-## 7. éªŒæ”¶æ ‡å‡†
-
-- [ ] `feedbackService.notifyAsync` è¦†ç›–æ‰€æœ‰å¼‚æ­¥æ“ä½œå…¥å£ï¼ˆå¯¼å…¥ã€æµè½¬ã€é‡‡é›†ã€è¯„åˆ†ï¼‰ã€‚
-- [ ] `eventBus` ä¸Š `feedback:*` äº‹ä»¶å‘½åç¬¦åˆæœ¬ç« è§„èŒƒã€‚
-- [ ] å•å…ƒæµ‹è¯•è¦†ç›–æˆåŠŸ/å¤±è´¥/è­¦å‘Š/å»é‡/æŒ‰ scope æ¸…é™¤ã€‚
-- [ ] `audit:hardcode` ä¸æ–°å¢ç¡¬ç¼–ç  Toast æ–‡æ¡ˆã€‚
+Widget »òÒ³Ãæ¼¶´íÎó±ß½ç²¶»ñÒì³£ºó£¬²»Ó¦Ö±½ÓäÖÈ¾ Toast£¬¶øÊÇÍ¨¹ı `feedbackService.notify()` ·¢ËÍ `error` ·´À¡£¬ÓÉ `ToastProvider` Í³Ò»Õ¹Ê¾¡£Ïê¼û `../reference/widget-error-handling.md` ¡ì4.2¡£
 
 ---
 
-## 8. ç›¸å…³é“¾æ¥
+## 7. ÑéÊÕ±ê×¼
 
-- `../reference/v9-system-blueprint.md` Â§5.3ã€Â§7.2ã€D18
-- `../reference/04-ui-ux-specs.md` Â§4.6 äº¤äº’åé¦ˆ
-- `../reference/chart-integration.md` Â§5.2ï¼ˆå›¾è¡¨æ•°æ®åˆ·æ–°åé¦ˆï¼‰
-- `../reference/widget-error-handling.md` Â§4.2ï¼ˆé”™è¯¯è¾¹ç•Œâ†’åé¦ˆæœåŠ¡ï¼‰
+- [ ] `feedbackService.notifyAsync` ¸²¸ÇËùÓĞÒì²½²Ù×÷Èë¿Ú£¨µ¼Èë¡¢Á÷×ª¡¢²É¼¯¡¢ÆÀ·Ö£©¡£
+- [ ] `eventBus` ÉÏ `feedback:*` ÊÂ¼şÃüÃû·ûºÏ±¾ÕÂ¹æ·¶¡£
+- [ ] µ¥Ôª²âÊÔ¸²¸Ç³É¹¦/Ê§°Ü/¾¯¸æ/È¥ÖØ/°´ scope Çå³ı¡£
+- [ ] `audit:hardcode` ²»ĞÂÔöÓ²±àÂë Toast ÎÄ°¸¡£
+
+---
+
+## 8. Ïà¹ØÁ´½Ó
+
+- `../reference/v9-system-blueprint.md` ¡ì5.3¡¢¡ì7.2¡¢D18
+- `../reference/04-ui-ux-specs.md` ¡ì4.6 ½»»¥·´À¡
+- `../reference/chart-integration.md` ¡ì5.2£¨Í¼±íÊı¾İË¢ĞÂ·´À¡£©
+- `../reference/widget-error-handling.md` ¡ì4.2£¨´íÎó±ß½ç¡ú·´À¡·şÎñ£©

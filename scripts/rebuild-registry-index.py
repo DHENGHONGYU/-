@@ -21,7 +21,7 @@ cat_names = {
 }
 
 md = "---\n"
-md += "title: 文档注册索引\ntier: core\ncode_version: 2.0.0\n---\n\n"
+md += "title: 文档注册索引\ntype: meta\ndomain: project\nphase: development\ntier: important\nstatus: active\nversion: v1.0.0\nlast_updated: " + __import__('datetime').date.today().isoformat() + "\ncode_version: 2.0.0\nmaintainer: V9 Architecture Team\n---\n\n"
 md += "# 文档注册索引\n\n"
 md += "> 本索引由 `doc-manifest.csv` 派生。编号仅用于查阅/审计，文档间引用请用 slug（文件名）。\n"
 md += "> 改编号只改 CSV 1 份文件，零文档影响。`npm run doc:manifest` 可重建。\n\n"

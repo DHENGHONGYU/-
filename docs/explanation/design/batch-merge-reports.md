@@ -1,142 +1,139 @@
 ---
 title: batch-merge-reports
+type: explanation
+domain: project
+phase: design
 tier: reference
-code_version: 2.0.0
----
-
----
-title: V9 é˜¶æ®µæ€§åˆå¹¶æŠ¥å‘Šï¼ˆBatch 1-3 æ±‡æ€»ï¼‰
+status: active
+maintainer: Agent Orchestrator
+summary: "¹é²¢À´Ô´£º`./deprecated-batch1-merge-report.md` + `../deprecated-batch2-merge-report.md` +..."
+tags: [project, batch, report, plan, governance, documentation, strategy, architecture, explanation]
 version: v1.0.0
 last_updated: 2026-06-27
-maintainer: Agent Orchestrator
-status: active
-change_log:
-  - date: 2026-06-27
-    author: Documentation Governor
-    desc: åˆå¹¶ batch1/2/3 ä¸‰ä»½æŠ¥å‘Šä¸ºç»Ÿä¸€æ–‡æ¡£ï¼Œæ³¨å…¥ Frontmatter
-tier: reference
+code_version: 2.0.0
+change_log: 
 ---
 
-# V9 é˜¶æ®µæ€§åˆå¹¶æŠ¥å‘Šï¼ˆBatch 1-3 æ±‡æ€»ï¼‰
+# V9 ½×¶ÎĞÔºÏ²¢±¨¸æ£¨Batch 1-3 »ã×Ü£©
 
-> å½’å¹¶æ¥æºï¼š`batch1-merge-report.md` + `batch2-merge-report.md` + `batch3-merge-report.md`  
-> å½’å¹¶æ—¥æœŸï¼š2026-06-27  
-> å½’å¹¶ç†ç”±ï¼šä¸‰ä»½æŠ¥å‘Šä¸ºåŒä¸€è½®è¿­ä»£çš„è¿ç»­æ‰§è¡Œè®°å½•ï¼Œåˆå¹¶åä¾¿äºè¿½æº¯
+> ¹é²¢À´Ô´£º`./deprecated-batch1-merge-report.md` + `../deprecated-batch2-merge-report.md` + `./deprecated-batch3-merge-report.md`  
+> ¹é²¢ÈÕÆÚ£º2026-06-27  
+> ¹é²¢ÀíÓÉ£ºÈı·İ±¨¸æÎªÍ¬Ò»ÂÖµü´úµÄÁ¬ĞøÖ´ĞĞ¼ÇÂ¼£¬ºÏ²¢ºó±ãÓÚ×·Ëİ
 
 ---
 
-## ä¸€ã€Batch-1ï¼šæ–‡æ¡£åŒæ­¥ä¸é…ç½®åŸºçº¿
+## Ò»¡¢Batch-1£ºÎÄµµÍ¬²½ÓëÅäÖÃ»ùÏß
 
-> ç”Ÿæˆæ—¶é—´ï¼š2026-06-25  
-> æ‰§è¡Œæ™ºèƒ½ä½“ï¼šDoc-Sync Agent Ã— 3ã€Refactor-Agent Ã— 1
+> **Date**£º2026-06-25  
+> Ö´ĞĞÖÇÄÜÌå£ºDoc-Sync Agent ¡Á 3¡¢Refactor-Agent ¡Á 1
 
-### å·²å®Œæˆæ–‡ä»¶æ¸…å•
+### ÒÑÍê³ÉÎÄ¼şÇåµ¥
 
-| æ–‡ä»¶è·¯å¾„ | ä¿®æ”¹ç±»å‹ | æ‰§è¡Œ Agent | çŠ¶æ€ | éªŒè¯ç»“æœ |
+| ÎÄ¼şÂ·¾¶ | ĞŞ¸ÄÀàĞÍ | Ö´ĞĞ Agent | ×´Ì¬ | ÑéÖ¤½á¹û |
 |----------|----------|------------|------|----------|
-| `../../reference/03-architecture-standards.md` | ä¿®æ”¹ | Doc-Sync | âœ… | lint âœ… / build âœ… |
-| `../../reference/06-routing-specs.md` | ä¿®æ”¹ | Doc-Sync | âœ… | lint âœ… / build âœ… |
-| `../../reference/08-implementation-plan.md` | ä¿®æ”¹ | Doc-Sync | âœ… | lint âœ… / build âœ… |
-| `../../reference/09-quality-gates.md` | ä¿®æ”¹ | Doc-Sync | âœ… | lint âœ… / build âœ… |
-| `../../reference/10-glossary.md` | ä¿®æ”¹ | Doc-Sync | âœ… | lint âœ… / build âœ… |
-| `../../../README.md` | ä¿®æ”¹ | Doc-Sync | âœ… | lint âœ… / build âœ… |
-| `docs/README.md` | ä¿®æ”¹ | Doc-Sync | âœ… | lint âœ… / build âœ… |
-| `./implementation-governance.md` | ä¿®æ”¹ | Doc-Sync | âœ… | lint âœ… / build âœ… |
-| `../../reference/v9-system-blueprint.md` | ä¿®æ”¹ | Doc-Sync | âœ… | lint âœ… / build âœ… |
-| `../../reference/input-cabin-spec.md` | ä¿®æ”¹ | Doc-Sync | âœ… | lint âœ… / build âœ… |
-| `.nvmrc` | æ–°å¢ | Refactor-Agent | âœ… | lint âœ… / build âœ… / test âœ… |
-| `vite.config.ts` | ä¿®æ”¹ | Refactor-Agent | âœ… | lint âœ… / build âœ… / test âœ… |
-| `package.json` | ä¿®æ”¹ï¼ˆå®‰è£… `@vitest/coverage-v8@^2.1.0`ï¼‰ | Refactor-Agent | âœ… | lint âœ… / build âœ… / test âœ… |
-| `package-lock.json` | ä¿®æ”¹ | Refactor-Agent | âœ… | lint âœ… / build âœ… / test âœ… |
+| `../../reference/03-architecture-standards.md` | ĞŞ¸Ä | Doc-Sync | ? | lint ? / build ? |
+| `../../reference/06-routing-specs.md` | ĞŞ¸Ä | Doc-Sync | ? | lint ? / build ? |
+| `../../reference/08-implementation-plan.md` | ĞŞ¸Ä | Doc-Sync | ? | lint ? / build ? |
+| `../../reference/09-quality-gates.md` | ĞŞ¸Ä | Doc-Sync | ? | lint ? / build ? |
+| `../../reference/10-glossary.md` | ĞŞ¸Ä | Doc-Sync | ? | lint ? / build ? |
+| `../../../README.md` | ĞŞ¸Ä | Doc-Sync | ? | lint ? / build ? |
+| `docs/README.md` | ĞŞ¸Ä | Doc-Sync | ? | lint ? / build ? |
+| `./implementation-governance.md` | ĞŞ¸Ä | Doc-Sync | ? | lint ? / build ? |
+| `../../reference/v9-system-blueprint.md` | ĞŞ¸Ä | Doc-Sync | ? | lint ? / build ? |
+| `../../reference/input-cabin-spec.md` | ĞŞ¸Ä | Doc-Sync | ? | lint ? / build ? |
+| `.nvmrc` | ĞÂÔö | Refactor-Agent | ? | lint ? / build ? / test ? |
+| `vite.config.ts` | ĞŞ¸Ä | Refactor-Agent | ? | lint ? / build ? / test ? |
+| `package.json` | ĞŞ¸Ä£¨°²×° `@vitest/coverage-v8@^2.1.0`£© | Refactor-Agent | ? | lint ? / build ? / test ? |
+| `package-lock.json` | ĞŞ¸Ä | Refactor-Agent | ? | lint ? / build ? / test ? |
 
-### å…³é”®ä¿®æ”¹æ‘˜è¦
+### ¹Ø¼üĞŞ¸ÄÕªÒª
 
-1. **`../03-architecture-standards.md`**ï¼šDB ç‰ˆæœ¬ `4` â†’ `6`ï¼ŒStore æ¸…å•ä» 8 ä¸ªè¡¥å…¨è‡³ 16 ä¸ªï¼›`agents/`ã€`dataflow`ã€Widgetã€Agentã€ErrorBoundary ç­‰çŠ¶æ€æ›´æ–°ï¼›åå·®æ¸…å• D01/D07/D12/D14/D17/D19 åŒæ­¥ä¸ºä»£ç çœŸå®çŠ¶æ€ã€‚
-2. **`06-routing-specs.md`**ï¼šè¡¥å…¨ 5 æ¡é—æ¼è·¯ç”±ï¼›ä¿®æ­£ç¬¬ 8 èŠ‚å…¥å£è·¯ç”±ç»„ä»¶æ˜ å°„ä¸º `PortalShell`ã€‚
-3. **`08-implementation-plan.md`**ï¼šç»Ÿä¸€æµ‹è¯•åŸºçº¿ä¸º 44 files / 291 testsï¼›æ•°æ®æµå¼•æ“ã€æ¿å—è½®åŠ¨ã€Widget æ¡†æ¶ç­‰ä»»åŠ¡çŠ¶æ€æ›´æ–°ã€‚
-4. **`09-quality-gates.md`**ï¼šè·¨å±‚è°ƒç”¨ 0 è¿è§„ / 2 è­¦å‘Šï¼›ç¡¬ç¼–ç  389 å¤„ï¼›æ­»ä»£ç  11 å¤„ã€‚
-5. **é…ç½®ä¸ä¾èµ–**ï¼šæ–°å¢ `.nvmrc`ï¼ˆNode 22ï¼‰ï¼›`vite.config.ts` æ–°å¢ coverage é˜ˆå€¼é…ç½®ï¼›å®‰è£… `@vitest/coverage-v8@^2.1.0`ã€‚
+1. **`../03-architecture-standards.md`**£ºDB °æ±¾ `4` ¡ú `6`£¬Store Çåµ¥´Ó 8 ¸ö²¹È«ÖÁ 16 ¸ö£»`agents/`¡¢`dataflow`¡¢Widget¡¢Agent¡¢ErrorBoundary µÈ×´Ì¬¸üĞÂ£»Æ«²îÇåµ¥ D01/D07/D12/D14/D17/D19 Í¬²½Îª´úÂëÕæÊµ×´Ì¬¡£
+2. **`06-routing-specs.md`**£º²¹È« 5 ÌõÒÅÂ©Â·ÓÉ£»ĞŞÕıµÚ 8 ½ÚÈë¿ÚÂ·ÓÉ×é¼şÓ³ÉäÎª `PortalShell`¡£
+3. **`08-implementation-plan.md`**£ºÍ³Ò»²âÊÔ»ùÏßÎª 44 files / 291 tests£»Êı¾İÁ÷ÒıÇæ¡¢°å¿éÂÖ¶¯¡¢Widget ¿ò¼ÜµÈÈÎÎñ×´Ì¬¸üĞÂ¡£
+4. **`09-quality-gates.md`**£º¿ç²ãµ÷ÓÃ 0 Î¥¹æ / 2 ¾¯¸æ£»Ó²±àÂë 389 ´¦£»ËÀ´úÂë 11 ´¦¡£
+5. **ÅäÖÃÓëÒÀÀµ**£ºĞÂÔö `.nvmrc`£¨Node 22£©£»`vite.config.ts` ĞÂÔö coverage ãĞÖµÅäÖÃ£»°²×° `@vitest/coverage-v8@^2.1.0`¡£
 
-### éªŒè¯ç»“æœ
+### ÑéÖ¤½á¹û
 
-| é—¨ç¦é¡¹ | ç»“æœ |
+| ÃÅ½ûÏî | ½á¹û |
 |--------|------|
-| `npm run lint` | âœ… 0 warnings / 0 errors |
-| `npm run build` | âœ… é€šè¿‡ |
-| `npm test -- --run` | âœ… 44 files / 291 tests |
-| `npm run coverage` | âš ï¸ é˜ˆå€¼å‘Šè­¦ï¼ˆå½“å‰è¦†ç›–ç‡æœªè¾¾è®¾å®šé˜ˆå€¼ï¼‰ |
+| `npm run lint` | ? 0 warnings / 0 errors |
+| `npm run build` | ? Í¨¹ı |
+| `npm test -- --run` | ? 44 files / 291 tests |
+| `npm run coverage` | ?? ãĞÖµ¸æ¾¯£¨µ±Ç°¸²¸ÇÂÊÎ´´ïÉè¶¨ãĞÖµ£© |
 
 ---
 
-## äºŒã€Batch-2ï¼šæ–‡æ¡£å®¡æŸ¥ä¸æ–°å¢è§„æ ¼
+## ¶ş¡¢Batch-2£ºÎÄµµÉó²éÓëĞÂÔö¹æ¸ñ
 
-> ç”Ÿæˆæ—¶é—´ï¼š2026-06-25  
-> æ‰§è¡Œæ™ºèƒ½ä½“ï¼šCode-Reviewer Agent Ã— 3ã€Doc-Sync Agent Ã— 2
+> **Date**£º2026-06-25  
+> Ö´ĞĞÖÇÄÜÌå£ºCode-Reviewer Agent ¡Á 3¡¢Doc-Sync Agent ¡Á 2
 
-### æ–°å¢æ–‡æ¡£
+### ĞÂÔöÎÄµµ
 
-| æ–‡ä»¶è·¯å¾„ | æ‰§è¡Œ Agent | çŠ¶æ€ |
+| ÎÄ¼şÂ·¾¶ | Ö´ĞĞ Agent | ×´Ì¬ |
 |----------|------------|------|
-| `../../reference/dataflow-engine-spec.md` | Doc-Sync | âœ… |
-| `../../reference/agent-runtime-spec.md` | Doc-Sync | âœ… |
-| `../../reference/rotation-score-spec.md` | Doc-Sync | âœ… |
-| `../db-migration-v4-to-v6.md` | Doc-Sync | âœ… |
-| `../quality-gates-baseline.md` | Doc-Sync | âœ… |
-| `../2026-06-25-v6-migration.md` | Doc-Sync | âœ… |
+| `../../reference/dataflow-engine-spec.md` | Doc-Sync | ? |
+| `../../reference/agent-runtime-spec.md` | Doc-Sync | ? |
+| `../../reference/rotation-score-spec.md` | Doc-Sync | ? |
+| `../db-migration-v4-to-v6.md` | Doc-Sync | ? |
+| `../quality-gates-baseline.md` | Doc-Sync | ? |
+| `../2026-06-25-v6-migration.md` | Doc-Sync | ? |
 
-### å®¡æŸ¥å‘ç°çš„å…±æ€§é—®é¢˜
+### Éó²é·¢ÏÖµÄ¹²ĞÔÎÊÌâ
 
-1. **ç‰ˆæœ¬æ ‡è¯†ä¸ç»Ÿä¸€**ï¼šå…¨ä»“åº“æ–‡æ¡£ä½¿ç”¨ `v0.9.0-migration-implemented`ã€`v0.9.0-docs-review`ã€`v0.9.0-docs-v6pro-assessment` ä¸‰ç§åç¼€ã€‚
-2. **åŸºçº¿æ•°æ®é”™è¯¯**ï¼š`../../reference/v9-system-blueprint.md` ä¸­ E2E/æ­»ä»£ç åŸºçº¿ä¸å®æµ‹ä¸ç¬¦ã€‚
-3. **æ¨¡å—å®ç°çŠ¶æ€æè¿°ä¸ç²¾ç¡®**ï¼šDataFlow ç¼“å­˜ã€Widget å­ç›®å½•ã€CockpitShell åŠ¨æ€æ€§ç­‰ã€‚
-4. **ç« èŠ‚ç¼–å·é”™ä¹±**ï¼š`08-implementation-plan.md` å‡ºç° 10 åæ¥ 9ã€‚
+1. **°æ±¾±êÊ¶²»Í³Ò»**£ºÈ«²Ö¿âÎÄµµÊ¹ÓÃ `v0.9.0-migration-implemented`¡¢`v0.9.0-docs-review`¡¢`v0.9.0-docs-v6pro-assessment` ÈıÖÖºó×º¡£
+2. **»ùÏßÊı¾İ´íÎó**£º`../../reference/v9-system-blueprint.md` ÖĞ E2E/ËÀ´úÂë»ùÏßÓëÊµ²â²»·û¡£
+3. **Ä£¿éÊµÏÖ×´Ì¬ÃèÊö²»¾«È·**£ºDataFlow »º´æ¡¢Widget ×ÓÄ¿Â¼¡¢CockpitShell ¶¯Ì¬ĞÔµÈ¡£
+4. **ÕÂ½Ú±àºÅ´íÂÒ**£º`08-implementation-plan.md` ³öÏÖ 10 ºó½Ó 9¡£
 
 ---
 
-## ä¸‰ã€Batch-3ï¼šå…¨é‡å›å½’æµ‹è¯•
+## Èı¡¢Batch-3£ºÈ«Á¿»Ø¹é²âÊÔ
 
-> ç”Ÿæˆæ—¶é—´ï¼š2026-06-25  
-> æ‰§è¡Œæ™ºèƒ½ä½“ï¼šTest-Generator Agent / Refactor-Agent
+> **Date**£º2026-06-25  
+> Ö´ĞĞÖÇÄÜÌå£ºTest-Generator Agent / Refactor-Agent
 
-### å›å½’æµ‹è¯•ç»“æœ
+### »Ø¹é²âÊÔ½á¹û
 
-| é—¨ç¦é¡¹ | å‘½ä»¤ | ç»“æœ |
+| ÃÅ½ûÏî | ÃüÁî | ½á¹û |
 |--------|------|------|
-| TypeScript ç±»å‹æ£€æŸ¥ | `tsc --noEmit` | âœ… 0 errors |
-| ESLint | `npm run lint` | âœ… 0 warnings / 0 errors |
-| å•å…ƒæµ‹è¯• | `npm test -- --run` | âœ… 44 files / 291 tests |
-| è·¨å±‚è°ƒç”¨å®¡è®¡ | `npm run audit:layers` | âœ… 0 è¿è§„ / 2 è­¦å‘Š |
-| ç¡¬ç¼–ç å®¡è®¡ | `npm run audit:hardcode` | âœ… 389 å¤„ï¼ˆåŸºçº¿ï¼‰ |
-| æ­»ä»£ç å®¡è®¡ | `npm run audit:deadcode` | âœ… 11 å¤„ï¼ˆåŸºçº¿ï¼‰ |
-| ç”Ÿäº§æ„å»º | `npm run build` | âœ… é€šè¿‡ |
-| E2E å†’çƒŸæµ‹è¯• | `npm run test:e2e` | âœ… 5/5 passed |
+| TypeScript ÀàĞÍ¼ì²é | `tsc --noEmit` | ? 0 errors |
+| ESLint | `npm run lint` | ? 0 warnings / 0 errors |
+| µ¥Ôª²âÊÔ | `npm test -- --run` | ? 44 files / 291 tests |
+| ¿ç²ãµ÷ÓÃÉó¼Æ | `npm run audit:layers` | ? 0 Î¥¹æ / 2 ¾¯¸æ |
+| Ó²±àÂëÉó¼Æ | `npm run audit:hardcode` | ? 389 ´¦£¨»ùÏß£© |
+| ËÀ´úÂëÉó¼Æ | `npm run audit:deadcode` | ? 11 ´¦£¨»ùÏß£© |
+| Éú²ú¹¹½¨ | `npm run build` | ? Í¨¹ı |
+| E2E Ã°ÑÌ²âÊÔ | `npm run test:e2e` | ? 5/5 passed |
 
-### å…³é”®è°ƒæ•´
+### ¹Ø¼üµ÷Õû
 
-1. å¹¶å‘å›å½’è„šæœ¬ï¼š`package.json` æ–°å¢ `regression` è„šæœ¬
-2. æµ‹è¯•è¶…æ—¶è°ƒæ•´ï¼š`testTimeout` ä» 10000ms â†’ 15000ms
-3. `.nvmrc` å·²åˆ›å»ºï¼ŒæŒ‡å®š Node 22
-4. è¦†ç›–ç‡é˜ˆå€¼å·²é…ç½®ï¼Œå½“å‰å®æµ‹æœªè¾¾æ ‡ï¼ˆå·²çŸ¥é—®é¢˜ï¼‰
+1. ²¢·¢»Ø¹é½Å±¾£º`package.json` ĞÂÔö `regression` ½Å±¾
+2. ²âÊÔ³¬Ê±µ÷Õû£º`testTimeout` ´Ó 10000ms ¡ú 15000ms
+3. `.nvmrc` ÒÑ´´½¨£¬Ö¸¶¨ Node 22
+4. ¸²¸ÇÂÊãĞÖµÒÑÅäÖÃ£¬µ±Ç°Êµ²âÎ´´ï±ê£¨ÒÑÖªÎÊÌâ£©
 
-### é—ç•™é—®é¢˜
+### ÒÅÁôÎÊÌâ
 
-| é—®é¢˜ | çŠ¶æ€ | è®¡åˆ’ |
+| ÎÊÌâ | ×´Ì¬ | ¼Æ»® |
 |------|------|------|
-| è¦†ç›–ç‡æœªè¾¾é˜ˆå€¼ | ğŸŸ¡ å·²çŸ¥ | Phase 2/3 è¡¥å……æµ‹è¯•æˆ–è°ƒæ•´é˜ˆå€¼ |
-| `audit:hardcode` 389 å¤„ | ğŸŸ¡ å·²çŸ¥ | Phase 2 é€æ­¥æ”¶æ•› |
-| `audit:deadcode` 11 å¤„ | ğŸŸ¡ å·²çŸ¥ | HubPage è®¾è®¡é€‰æ‹©ï¼Œåç»­åŠ å…¥ç™½åå• |
+| ¸²¸ÇÂÊÎ´´ïãĞÖµ | ?? ÒÑÖª | Phase 2/3 ²¹³ä²âÊÔ»òµ÷ÕûãĞÖµ |
+| `audit:hardcode` 389 ´¦ | ?? ÒÑÖª | Phase 2 Öğ²½ÊÕÁ² |
+| `audit:deadcode` 11 ´¦ | ?? ÒÑÖª | HubPage Éè¼ÆÑ¡Ôñ£¬ºóĞø¼ÓÈë°×Ãûµ¥ |
 
 ---
 
-## å››ã€ç»“è®º
+## ËÄ¡¢½áÂÛ
 
-Batch-3 å…¨é‡å›å½’æµ‹è¯•é€šè¿‡ã€‚æ–‡æ¡£åŒæ­¥ä¸æ–°å¢å·¥ä½œæœªç ´åä»£ç æ„å»ºä¸å·²æœ‰åŠŸèƒ½ã€‚é¡¹ç›®å½“å‰å¤„äº `v0.9.0-migration-implemented` å¯äº¤ä»˜çŠ¶æ€ã€‚
+Batch-3 È«Á¿»Ø¹é²âÊÔÍ¨¹ı¡£ÎÄµµÍ¬²½ÓëĞÂÔö¹¤×÷Î´ÆÆ»µ´úÂë¹¹½¨ÓëÒÑÓĞ¹¦ÄÜ¡£ÏîÄ¿µ±Ç°´¦ÓÚ `v0.9.0-migration-implemented` ¿É½»¸¶×´Ì¬¡£
 
 ---
 
-## äº”ã€å˜æ›´æ—¥å¿—
+## Îå¡¢±ä¸üÈÕÖ¾
 
-| æ—¥æœŸ | ç‰ˆæœ¬ | å˜æ›´å†…å®¹ | å˜æ›´äºº |
+| ÈÕÆÚ | °æ±¾ | ±ä¸üÄÚÈİ | ±ä¸üÈË |
 |:---|:---|:---|:---|
-| 2026-06-27 | v1.0.0 | åˆå¹¶ batch1/2/3 ä¸‰ä»½æŠ¥å‘Šä¸ºç»Ÿä¸€æ–‡æ¡£ | Documentation Governor |
-| 2026-06-25 | â€” | Batch-1/2/3 åŸå§‹æŠ¥å‘Šç”Ÿæˆ | Agent Orchestrator |
+| 2026-06-27 | v1.0.0 | ºÏ²¢ batch1/2/3 Èı·İ±¨¸æÎªÍ³Ò»ÎÄµµ | Documentation Governor |
+| 2026-06-25 | ¡ª | Batch-1/2/3 Ô­Ê¼±¨¸æÉú³É | Agent Orchestrator |

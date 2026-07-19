@@ -246,7 +246,7 @@ export function syncCrossReferences(
   const report = findBrokenCrossReferences(docsDir, scannedFiles, options)
   const updates: DocUpdateEntry[] = []
 
-  const indexPath = join(docsDir, 'REGISTRY_INDEX.md')
+  const indexPath = join(docsDir, '00-meta', 'REGISTRY_INDEX.md')
   try {
     const docFiles = scannedFiles.filter((f) => f.category === 'doc')
     const lines: string[] = ['# 文档索引', '']

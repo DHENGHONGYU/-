@@ -7,8 +7,8 @@ DATA_DEFINITION_FILES = [
     ('explanation/multi-factor-screening-data-definition.md', 'screening', '多因子筛选'),
     ('explanation/news-data-definition.md', 'news', '新闻资讯'),
     ('explanation/seven-dim-config-data-definition.md', 'seven-dim-config', '七维配置'),
-    ('reference/backtest-data-definition.md', 'backtest', '回测数据'),
-    ('reference/risk-derived-data-definition.md', 'risk', '衍生风险'),
+    ('docs/reference/backtest-data-definition.md', 'backtest', '回测数据'),
+    ('docs/reference/risk-derived-data-definition.md', 'risk', '衍生风险'),
 ]
 
 def update_data_dictionary_index(docs_root):

@@ -1,146 +1,154 @@
 ---
 title: 2026-07-05-ui-testing-optimization
+type: reference
+domain: qa
+phase: testing
 tier: reference
+status: active
+maintainer: V9 Architecture Team
+summary: "ÈÕÆÚ: 2026-07-05 °æ±¾: v1.2.0 ÀàĞÍ: ²âÊÔ¸²¸Ç + ÊÓ¾õÒ»ÖÂĞÔĞŞ¸´"
+tags: [qa, optimization, test, changelog, testing, component, reference]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-tier: reference
-code_version: 2.0.0
----
+# UI ²âÊÔÓëÓÅ»¯¸üĞÂÈÕÖ¾
 
-# UI æµ‹è¯•ä¸ä¼˜åŒ–æ›´æ–°æ—¥å¿—
-
-**æ—¥æœŸ**: 2026-07-05  
-**ç‰ˆæœ¬**: v1.2.0  
-**ç±»å‹**: æµ‹è¯•è¦†ç›– + è§†è§‰ä¸€è‡´æ€§ä¿®å¤
-
----
-
-## æ¦‚è¿°
-
-æœ¬æ¬¡æ›´æ–°å®Œæˆäº†ç•Œé¢åŠŸèƒ½æµ‹è¯•ä¸ä¼˜åŒ–æ‰§è¡Œæ–¹æ¡ˆçš„å‰ 4 ä¸ªé˜¶æ®µï¼ŒåŒ…æ‹¬ UI ç»„ä»¶åŸºç¡€æµ‹è¯•ã€äº”èˆ± Hub é¡µé¢é›†æˆæµ‹è¯•ã€è§†è§‰ä¸€è‡´æ€§å®¡æŸ¥ä¸ä¿®å¤ã€äº¤äº’ä½“éªŒä¼˜åŒ–ã€‚
+**ÈÕÆÚ**: 2026-07-05  
+**°æ±¾**: v1.2.0  
+**ÀàĞÍ**: ²âÊÔ¸²¸Ç + ÊÓ¾õÒ»ÖÂĞÔĞŞ¸´
 
 ---
 
-## æ–°å¢åŠŸèƒ½
+## ¸ÅÊö
 
-### 1. å®¡è®¡è„šæœ¬å·¥å…·
+±¾´Î¸üĞÂÍê³ÉÁË½çÃæ¹¦ÄÜ²âÊÔÓëÓÅ»¯Ö´ĞĞ·½°¸µÄÇ° 4 ¸ö½×¶Î£¬°üÀ¨ UI ×é¼ş»ù´¡²âÊÔ¡¢Îå²Õ Hub Ò³Ãæ¼¯³É²âÊÔ¡¢ÊÓ¾õÒ»ÖÂĞÔÉó²éÓëĞŞ¸´¡¢½»»¥ÌåÑéÓÅ»¯¡£
 
-æ–°å¢ 3 ä¸ªè‡ªåŠ¨åŒ–å®¡è®¡è„šæœ¬ï¼Œç”¨äºæŒç»­ç›‘æ§è§†è§‰è§„èŒƒåˆè§„æ€§ï¼š
+---
 
-| è„šæœ¬è·¯å¾„ | åŠŸèƒ½æè¿° |
+## ĞÂÔö¹¦ÄÜ
+
+### 1. Éó¼Æ½Å±¾¹¤¾ß
+
+ĞÂÔö 3 ¸ö×Ô¶¯»¯Éó¼Æ½Å±¾£¬ÓÃÓÚ³ÖĞø¼à¿ØÊÓ¾õ¹æ·¶ºÏ¹æĞÔ£º
+
+| ½Å±¾Â·¾¶ | ¹¦ÄÜÃèÊö |
 |---------|---------|
-| `scripts/audit-color-tokens.ts` | é¢œè‰²ç³»ç»Ÿåˆè§„æ€§æ£€æŸ¥ï¼Œæ£€æµ‹ç¡¬ç¼–ç  HEX/RGB/HSL é¢œè‰² |
-| `scripts/audit-spacing.ts` | é—´è·ç³»ç»Ÿåˆè§„æ€§æ£€æŸ¥ï¼Œæ£€æµ‹é 4px æ …æ ¼çš„ç¡¬ç¼–ç é—´è· |
-| `scripts/audit-typography.ts` | å­—ä½“ç³»ç»Ÿåˆè§„æ€§æ£€æŸ¥ï¼Œæ£€æµ‹ç¡¬ç¼–ç å­—ä½“å¤§å°/å­—é‡/è¡Œé«˜ |
+| `scripts/audit-color-tokens.ts` | ÑÕÉ«ÏµÍ³ºÏ¹æĞÔ¼ì²é£¬¼ì²âÓ²±àÂë HEX/RGB/HSL ÑÕÉ« |
+| `scripts/audit-spacing.ts` | ¼ä¾àÏµÍ³ºÏ¹æĞÔ¼ì²é£¬¼ì²â·Ç 4px Õ¤¸ñµÄÓ²±àÂë¼ä¾à |
+| `scripts/audit-typography.ts` | ×ÖÌåÏµÍ³ºÏ¹æĞÔ¼ì²é£¬¼ì²âÓ²±àÂë×ÖÌå´óĞ¡/×ÖÖØ/ĞĞ¸ß |
 
-**ä½¿ç”¨æ–¹æ³•**:
+**Ê¹ÓÃ·½·¨**:
 ```bash
 npx tsx scripts/audit-color-tokens.ts
 npx tsx scripts/audit-spacing.ts
 npx tsx scripts/audit-typography.ts
 ```
 
-### 2. E2E æµ‹è¯•ç”¨ä¾‹
+### 2. E2E ²âÊÔÓÃÀı
 
-æ–°å¢ 2 ä¸ª Playwright E2E æµ‹è¯•æ–‡ä»¶ï¼š
+ĞÂÔö 2 ¸ö Playwright E2E ²âÊÔÎÄ¼ş£º
 
-| æ–‡ä»¶è·¯å¾„ | æµ‹è¯•ç”¨ä¾‹æ•° | è¦†ç›–èŒƒå›´ |
+| ÎÄ¼şÂ·¾¶ | ²âÊÔÓÃÀıÊı | ¸²¸Ç·¶Î§ |
 |---------|-----------|---------|
-| `e2e/responsive.spec.ts` | 10 | ç§»åŠ¨ç«¯(375x667)ã€å¹³æ¿ç«¯(768x1024)ã€æ¡Œé¢ç«¯(1920x1080) å“åº”å¼å¸ƒå±€ |
-| `e2e/accessibility.spec.ts` | 10 | ARIA æ ‡ç­¾å®Œæ•´æ€§ã€Tab é”®å¯¼èˆªã€ç„¦ç‚¹ç®¡ç† |
+| `e2e/responsive.spec.ts` | 10 | ÒÆ¶¯¶Ë(375x667)¡¢Æ½°å¶Ë(768x1024)¡¢×ÀÃæ¶Ë(1920x1080) ÏìÓ¦Ê½²¼¾Ö |
+| `e2e/accessibility.spec.ts` | 10 | ARIA ±êÇ©ÍêÕûĞÔ¡¢Tab ¼üµ¼º½¡¢½¹µã¹ÜÀí |
 
-### 3. Hub é¡µé¢å•å…ƒæµ‹è¯•
+### 3. Hub Ò³Ãæµ¥Ôª²âÊÔ
 
-æ–°å¢ 5 ä¸ª Hub é¡µé¢æµ‹è¯•æ–‡ä»¶ï¼Œå…± 26 ä¸ªæµ‹è¯•ç”¨ä¾‹ï¼š
+ĞÂÔö 5 ¸ö Hub Ò³Ãæ²âÊÔÎÄ¼ş£¬¹² 26 ¸ö²âÊÔÓÃÀı£º
 
-| æ–‡ä»¶è·¯å¾„ | æµ‹è¯•ç”¨ä¾‹æ•° |
+| ÎÄ¼şÂ·¾¶ | ²âÊÔÓÃÀıÊı |
 |---------|-----------|
-| `src/pages/input/__tests__/InputHubPage.test.tsx` | 6 |
-| `src/pages/analysis/__tests__/AnalysisHubPage.test.tsx` | 5 |
-| `src/pages/trading/__tests__/TradingHubPage.test.tsx` | 5 |
+| `src/apps/input/InputApp.tsx` | 6 |
+| `src/apps/analysis/AnalysisApp.tsx` | 5 |
+| `src/apps/trading/TradingApp.tsx` | 5 |
 | `src/pages/output/__tests__/OutputHubPage.test.tsx` | 5 |
-| `src/pages/command/__tests__/CommandHubPage.test.tsx` | 5 |
+| `src/apps/command/CommandApp.tsx` | 5 |
 
 ---
 
-## ä¿®å¤å†…å®¹
+## ĞŞ¸´ÄÚÈİ
 
-### 1. ç»„ä»¶æµ‹è¯•ä¿®å¤
+### 1. ×é¼ş²âÊÔĞŞ¸´
 
-ä¿®å¤äº† 2 ä¸ª UI ç»„ä»¶æµ‹è¯•æ–‡ä»¶ä¸­çš„æ–­è¨€é”™è¯¯ï¼š
+ĞŞ¸´ÁË 2 ¸ö UI ×é¼ş²âÊÔÎÄ¼şÖĞµÄ¶ÏÑÔ´íÎó£º
 
-| æ–‡ä»¶ | ä¿®å¤å†…å®¹ |
+| ÎÄ¼ş | ĞŞ¸´ÄÚÈİ |
 |-----|---------|
-| `src/components/atoms/Button.test.tsx` | 6 ä¸ªæµ‹è¯•ç”¨ä¾‹ï¼šCSS ç±»åæ–­è¨€ä» `from-primary` ä¿®æ­£ä¸º `bg-primary`ï¼Œ`border-2` ä¿®æ­£ä¸º `border`ï¼Œ`from-destructive` ä¿®æ­£ä¸º `bg-destructive`ï¼Œ`from-positive` ä¿®æ­£ä¸º `bg-green-500`ï¼Œç§»é™¤ isLoading çš„ disabled æ–­è¨€ |
-| `src/components/atoms/Card.test.tsx` | 2 ä¸ªæµ‹è¯•ç”¨ä¾‹ï¼šCSS ç±»åæ–­è¨€ä» `rounded-xl` ä¿®æ­£ä¸º `rounded-lg` |
+| `src/components/atoms/Button.test.tsx` | 6 ¸ö²âÊÔÓÃÀı£ºCSS ÀàÃû¶ÏÑÔ´Ó `from-primary` ĞŞÕıÎª `bg-primary`£¬`border-2` ĞŞÕıÎª `border`£¬`from-destructive` ĞŞÕıÎª `bg-destructive`£¬`from-positive` ĞŞÕıÎª `bg-green-500`£¬ÒÆ³ı isLoading µÄ disabled ¶ÏÑÔ |
+| `src/components/atoms/Card.test.tsx` | 2 ¸ö²âÊÔÓÃÀı£ºCSS ÀàÃû¶ÏÑÔ´Ó `rounded-xl` ĞŞÕıÎª `rounded-lg` |
 
-### 2. ç¡¬ç¼–ç é¢œè‰²ä¿®å¤
+### 2. Ó²±àÂëÑÕÉ«ĞŞ¸´
 
-ä¿®å¤äº† 11 ä¸ªæ–‡ä»¶ä¸­çš„ç¡¬ç¼–ç é¢œè‰²ï¼Œç»Ÿä¸€ä½¿ç”¨ `theme.tokens.ts` ä¸­çš„è®¾è®¡ä»¤ç‰Œï¼š
+ĞŞ¸´ÁË 11 ¸öÎÄ¼şÖĞµÄÓ²±àÂëÑÕÉ«£¬Í³Ò»Ê¹ÓÃ `theme.tokens.ts` ÖĞµÄÉè¼ÆÁîÅÆ£º
 
-| æ–‡ä»¶ | ä¿®å¤å†…å®¹ |
+| ÎÄ¼ş | ĞŞ¸´ÄÚÈİ |
 |-----|---------|
-| `src/components/chart/LineChart.tsx` | `#fff` â†’ `CHART_PALETTE.tooltipText` |
-| `src/components/chart/BarChart.tsx` | `#fff` â†’ `CHART_PALETTE.tooltipText` |
-| `src/components/chart/AreaChart.tsx` | `#fff` â†’ `CHART_PALETTE.tooltipText` |
-| `src/components/chart/ScoreRadar.tsx` | `hsl(220, 13%, 91%)` â†’ `CHART_PALETTE.gridLight`ï¼Œ`hsl(220, 9%, 46%)` â†’ `CHART_PALETTE.axis` |
-| `src/components/chart/CandlestickChart.tsx` | å¤šä¸ª hsl é¢œè‰² â†’ `CHART_PALETTE.upColor`/`downColor`/`axis`/`gridLight`/`accent` |
-| `src/components/chart/FactorHeatmap.tsx` | `hsl(220, 9%, 46%)` â†’ `CHART_PALETTE.axis`ï¼Œ`hsl(222, 47%, 11%)` â†’ `CHART_PALETTE.tooltipBg` |
-| `src/components/widgets/WidgetShell.tsx` | `#e5e7eb` â†’ `THEME_TOKENS.color.borderRaw`ï¼Œ`#f9fafb` â†’ å†…è”æ ·å¼ä¼˜åŒ– |
-| `src/pages/analysis/BacktestPage.tsx` | `rgba(34, 197, 94, 0.3)` â†’ `COLOR_TOKENS.success.hex` + stopOpacity |
-| `src/services/analysis/scoreDocService.ts` | `#9ca3af` â†’ `COLOR_TOKENS.neutral.hex` |
-| `src/services/system/migration/migrationTransformers.ts` | `#6b7280` â†’ `COLOR_TOKENS.neutral.hex` |
-| `src/services/analysis/rotation/rotationCalculator.ts` | `#ef4444` â†’ `COLOR_TOKENS.danger.hex`ï¼Œ`#f97316`/`#f59e0b` â†’ `COLOR_TOKENS.warning.hex`ï¼Œ`#10b981` â†’ `COLOR_TOKENS.success.hex` |
+| `src/components/chart/LineChart.tsx` | `#fff` ¡ú `CHART_PALETTE.tooltipText` |
+| `src/components/chart/BarChart.tsx` | `#fff` ¡ú `CHART_PALETTE.tooltipText` |
+| `src/components/chart/AreaChart.tsx` | `#fff` ¡ú `CHART_PALETTE.tooltipText` |
+| `src/components/chart/ScoreRadar.tsx` | `hsl(220, 13%, 91%)` ¡ú `CHART_PALETTE.gridLight`£¬`hsl(220, 9%, 46%)` ¡ú `CHART_PALETTE.axis` |
+| `src/components/chart/CandlestickChart.tsx` | ¶à¸ö hsl ÑÕÉ« ¡ú `CHART_PALETTE.upColor`/`downColor`/`axis`/`gridLight`/`accent` |
+| `src/components/chart/FactorHeatmap.tsx` | `hsl(220, 9%, 46%)` ¡ú `CHART_PALETTE.axis`£¬`hsl(222, 47%, 11%)` ¡ú `CHART_PALETTE.tooltipBg` |
+| `src/components/widgets/WidgetShell.tsx` | `#e5e7eb` ¡ú `THEME_TOKENS.color.borderRaw`£¬`#f9fafb` ¡ú ÄÚÁªÑùÊ½ÓÅ»¯ |
+| `src/pages/analysis/BacktestPage.tsx` | `rgba(34, 197, 94, 0.3)` ¡ú `COLOR_TOKENS.success.hex` + stopOpacity |
+| `src/services/analysis/scoreDocService.ts` | `#9ca3af` ¡ú `COLOR_TOKENS.neutral.hex` |
+| `src/services/system/migration/migrationTransformers.ts` | `#6b7280` ¡ú `COLOR_TOKENS.neutral.hex` |
+| `src/services/analysis/rotation/rotationCalculator.ts` | `#ef4444` ¡ú `COLOR_TOKENS.danger.hex`£¬`#f97316`/`#f59e0b` ¡ú `COLOR_TOKENS.warning.hex`£¬`#10b981` ¡ú `COLOR_TOKENS.success.hex` |
 
-### 3. æ–°å¢è®¾è®¡ä»¤ç‰Œ
+### 3. ĞÂÔöÉè¼ÆÁîÅÆ
 
-åœ¨ `src/constants/theme.tokens.ts` çš„ `CHART_PALETTE` ä¸­æ–°å¢ 6 ä¸ªå›¾è¡¨ä¸“ç”¨ä»¤ç‰Œï¼š
+ÔÚ `src/constants/theme.tokens.ts` µÄ `CHART_PALETTE` ÖĞĞÂÔö 6 ¸öÍ¼±í×¨ÓÃÁîÅÆ£º
 
-| Token åç§° | å€¼ | ç”¨é€” |
+| Token Ãû³Æ | Öµ | ÓÃÍ¾ |
 |-----------|-----|------|
-| `tooltipText` | `#ffffff` | æç¤ºæ¡†æ–‡å­—è‰² |
-| `gridLight` | `#e5e7eb` | ç½‘æ ¼çº¿è‰²ï¼ˆæµ…ï¼‰ |
-| `axisDark` | `#4b5563` | åæ ‡è½´æ–‡å­—è‰²ï¼ˆæ·±ï¼‰ |
-| `upColor` | `#10b981` | æ¶¨è·Œè‰² - æ¶¨ |
-| `downColor` | `#ef4444` | æ¶¨è·Œè‰² - è·Œ |
-| `accent` | `#0ea5e9` | ä¸»é¢˜å¼ºè°ƒè‰² |
+| `tooltipText` | `#ffffff` | ÌáÊ¾¿òÎÄ×ÖÉ« |
+| `gridLight` | `#e5e7eb` | Íø¸ñÏßÉ«£¨Ç³£© |
+| `axisDark` | `#4b5563` | ×ø±êÖáÎÄ×ÖÉ«£¨Éî£© |
+| `upColor` | `#10b981` | ÕÇµøÉ« - ÕÇ |
+| `downColor` | `#ef4444` | ÕÇµøÉ« - µø |
+| `accent` | `#0ea5e9` | Ö÷ÌâÇ¿µ÷É« |
 
-### 4. TypeScript ç±»å‹é”™è¯¯ä¿®å¤
+### 4. TypeScript ÀàĞÍ´íÎóĞŞ¸´
 
-ä¿®å¤äº† 13 ä¸ªæµ‹è¯•æ–‡ä»¶ä¸­çš„ TypeScript ç±»å‹é”™è¯¯ï¼š
+ĞŞ¸´ÁË 13 ¸ö²âÊÔÎÄ¼şÖĞµÄ TypeScript ÀàĞÍ´íÎó£º
 
-| æ–‡ä»¶ | é”™è¯¯ç±»å‹ |
+| ÎÄ¼ş | ´íÎóÀàĞÍ |
 |-----|---------|
-| `src/agents/agentComponentRegistry.test.ts` | å¯¹è±¡å¯èƒ½æœªå®šä¹‰ |
-| `src/blueprints/` | ç¼ºå°‘å¿…éœ€å±æ€§ `strategy` |
-| `src/components/organisms/shared/ScoreFactorDeltaPanel.test.tsx` | ç±»å‹æœªå¯¼å‡º |
-| `src/components/atoms/Skeleton.test.tsx` | ç»„ä»¶ä¸æ”¯æŒ ref |
-| `src/data/dataLayer.test.ts` | å¤šä¸ªç±»å‹ä¸åŒ¹é… |
-| `src/services/data-collector/missingReportDetector.test.ts` | ç¼ºå°‘ `createdAt` |
-| `src/services/execution/executionLogService.test.ts` | ç¼ºå°‘ `name` å±æ€§ |
-| `src/services/execution/executionPlanService.test.ts` | ç¼ºå°‘ `name` å±æ€§ |
-| `src/services/scoring/hotSectorAnalyzer.test.ts` | å€¼å¯èƒ½ä¸º undefined |
-| `src/services/unifiedStockService.test.ts` | è®¿é—®ä¸å­˜åœ¨çš„å±æ€§ |
-| `src/store/dualStrategyStore.test.ts` | ç¼ºå°‘ `strategy` å±æ€§ |
-| `src/store/hotSectorStore.test.ts` | ç±»å‹ä¸åŒ¹é… |
-| `src/store/signalQualityStore.test.ts` | ç¼ºå°‘ `strategy` å±æ€§ |
+| `src/components/organisms/agent/__tests__/agentComponentRegistry.test.ts` | ¶ÔÏó¿ÉÄÜÎ´¶¨Òå |
+| `src/blueprints/` | È±ÉÙ±ØĞèÊôĞÔ `strategy` |
+| `src/components/organisms/shared/ScoreFactorDeltaPanel.test.tsx` | ÀàĞÍÎ´µ¼³ö |
+| `src/components/atoms/Skeleton.test.tsx` | ×é¼ş²»Ö§³Ö ref |
+| `src/data/dataLayer.test.ts` | ¶à¸öÀàĞÍ²»Æ¥Åä |
+| `src/services/data-collector/missingReportDetector.test.ts` | È±ÉÙ `createdAt` |
+| `src/services/execution/executionLogService.test.ts` | È±ÉÙ `name` ÊôĞÔ |
+| `src/services/execution/executionPlanService.test.ts` | È±ÉÙ `name` ÊôĞÔ |
+| `src/services/scoring/hotSectorAnalyzer.test.ts` | Öµ¿ÉÄÜÎª undefined |
+| `src/services/unifiedStockService.test.ts` | ·ÃÎÊ²»´æÔÚµÄÊôĞÔ |
+| `src/store/dualStrategyStore.test.ts` | È±ÉÙ `strategy` ÊôĞÔ |
+| `src/store/hotSectorStore.test.ts` | ÀàĞÍ²»Æ¥Åä |
+| `src/store/signalQualityStore.test.ts` | È±ÉÙ `strategy` ÊôĞÔ |
 
 ---
 
-## æµ‹è¯•ç»“æœ
+## ²âÊÔ½á¹û
 
-### å•å…ƒæµ‹è¯•
+### µ¥Ôª²âÊÔ
 
 ```
 Test Files: 198 passed / 38 failed (236 total)
 Tests:      2959 passed / 111 failed (3070 total)
 ```
 
-**è¯´æ˜**: å¤±è´¥çš„æµ‹è¯•æ˜¯é¡¹ç›®ä¸­é¢„å…ˆå­˜åœ¨çš„é—®é¢˜ï¼Œä¸æ˜¯æœ¬æ¬¡å·¥ä½œå¼•å…¥çš„ã€‚æœ¬æ¬¡æ–°å¢çš„ 26 ä¸ª Hub é¡µé¢æµ‹è¯•å…¨éƒ¨é€šè¿‡ã€‚
+**ËµÃ÷**: Ê§°ÜµÄ²âÊÔÊÇÏîÄ¿ÖĞÔ¤ÏÈ´æÔÚµÄÎÊÌâ£¬²»ÊÇ±¾´Î¹¤×÷ÒıÈëµÄ¡£±¾´ÎĞÂÔöµÄ 26 ¸ö Hub Ò³Ãæ²âÊÔÈ«²¿Í¨¹ı¡£
 
-### TypeScript ç¼–è¯‘
+### TypeScript ±àÒë
 
 ```
 tsc --noEmit: 0 errors
@@ -148,18 +156,18 @@ tsc --noEmit: 0 errors
 
 ---
 
-## å¾…å®Œæˆå·¥ä½œ
+## ´ıÍê³É¹¤×÷
 
-æ ¹æ®åŸå§‹æ‰§è¡Œæ–¹æ¡ˆï¼Œä»¥ä¸‹é˜¶æ®µå°šæœªæ‰§è¡Œï¼š
+¸ù¾İÔ­Ê¼Ö´ĞĞ·½°¸£¬ÒÔÏÂ½×¶ÎÉĞÎ´Ö´ĞĞ£º
 
-- **Phase 5**: å“åº”å¼è®¾è®¡éªŒè¯ï¼ˆE2E æµ‹è¯•å·²åˆ›å»ºï¼Œå¾…è¿è¡Œï¼‰
-- **Phase 6**: å¯è®¿é—®æ€§æ£€æŸ¥ï¼ˆE2E æµ‹è¯•å·²åˆ›å»ºï¼Œå¾…è¿è¡Œï¼‰
+- **Phase 5**: ÏìÓ¦Ê½Éè¼ÆÑéÖ¤£¨E2E ²âÊÔÒÑ´´½¨£¬´ıÔËĞĞ£©
+- **Phase 6**: ¿É·ÃÎÊĞÔ¼ì²é£¨E2E ²âÊÔÒÑ´´½¨£¬´ıÔËĞĞ£©
 
 ---
 
-## æ–‡ä»¶å˜æ›´æ¸…å•
+## ÎÄ¼ş±ä¸üÇåµ¥
 
-### æ–°å¢æ–‡ä»¶ (10)
+### ĞÂÔöÎÄ¼ş (10)
 
 ```
 scripts/audit-color-tokens.ts
@@ -174,7 +182,7 @@ src/pages/output/__tests__/OutputHubPage.test.tsx
 src/pages/command/__tests__/CommandHubPage.test.tsx
 ```
 
-### ä¿®æ”¹æ–‡ä»¶ (16)
+### ĞŞ¸ÄÎÄ¼ş (16)
 
 ```
 src/constants/theme.tokens.ts
@@ -197,51 +205,51 @@ src/components/ui/Skeleton.tsx
 
 ---
 
-## éªŒè¯å‘½ä»¤
+## ÑéÖ¤ÃüÁî
 
 ```bash
-# è¿è¡Œæ‰€æœ‰ UI ç»„ä»¶æµ‹è¯•
+# ÔËĞĞËùÓĞ UI ×é¼ş²âÊÔ
 npx vitest run src/components/ui/Button.test.tsx src/components/ui/Input.test.tsx src/components/ui/Dialog.test.tsx src/components/ui/Card.test.tsx
 
-# è¿è¡Œæ‰€æœ‰ Hub é¡µé¢æµ‹è¯•
+# ÔËĞĞËùÓĞ Hub Ò³Ãæ²âÊÔ
 npx vitest run src/pages/input/__tests__/InputHubPage.test.tsx src/pages/analysis/__tests__/AnalysisHubPage.test.tsx src/pages/trading/__tests__/TradingHubPage.test.tsx src/pages/output/__tests__/OutputHubPage.test.tsx src/pages/command/__tests__/CommandHubPage.test.tsx
 
-# è¿è¡Œè§†è§‰å®¡è®¡è„šæœ¬
+# ÔËĞĞÊÓ¾õÉó¼Æ½Å±¾
 npx tsx scripts/audit-color-tokens.ts
 npx tsx scripts/audit-spacing.ts
 npx tsx scripts/audit-typography.ts
 
-# TypeScript ç±»å‹æ£€æŸ¥
+# TypeScript ÀàĞÍ¼ì²é
 npx tsc --noEmit
 ```
 
 ---
 
-## æŠ€æœ¯å†³ç­–è®°å½•
+## ¼¼Êõ¾ö²ß¼ÇÂ¼
 
-### å†³ç­– 1: å›¾è¡¨é¢œè‰²ç»Ÿä¸€ä½¿ç”¨ CHART_PALETTE
+### ¾ö²ß 1: Í¼±íÑÕÉ«Í³Ò»Ê¹ÓÃ CHART_PALETTE
 
-**èƒŒæ™¯**: å›¾è¡¨ç»„ä»¶ä¸­å­˜åœ¨å¤§é‡ç¡¬ç¼–ç çš„ hsl/rgb é¢œè‰²å€¼  
-**å†³ç­–**: åœ¨ `CHART_PALETTE` ä¸­æ–°å¢è¯­ä¹‰åŒ– tokenï¼Œç»„ä»¶å±‚ç»Ÿä¸€å¼•ç”¨  
-**ç†ç”±**: ä¿æŒå›¾è¡¨é¢œè‰²ä¸€è‡´æ€§ï¼Œä¾¿äºä¸»é¢˜åˆ‡æ¢å’Œè§†è§‰å®¡æŸ¥
+**±³¾°**: Í¼±í×é¼şÖĞ´æÔÚ´óÁ¿Ó²±àÂëµÄ hsl/rgb ÑÕÉ«Öµ  
+**¾ö²ß**: ÔÚ `CHART_PALETTE` ÖĞĞÂÔöÓïÒå»¯ token£¬×é¼ş²ãÍ³Ò»ÒıÓÃ  
+**ÀíÓÉ**: ±£³ÖÍ¼±íÑÕÉ«Ò»ÖÂĞÔ£¬±ãÓÚÖ÷ÌâÇĞ»»ºÍÊÓ¾õÉó²é
 
-### å†³ç­– 2: æœåŠ¡å±‚é¢œè‰²ä½¿ç”¨ COLOR_TOKENS
+### ¾ö²ß 2: ·şÎñ²ãÑÕÉ«Ê¹ÓÃ COLOR_TOKENS
 
-**èƒŒæ™¯**: æœåŠ¡å±‚ï¼ˆå¦‚ scoreDocServiceã€rotationCalculatorï¼‰ä¸­å­˜åœ¨ç¡¬ç¼–ç é¢œè‰²  
-**å†³ç­–**: ä½¿ç”¨ `COLOR_TOKENS` ä¸­çš„è¯­ä¹‰åŒ–é¢œè‰²ï¼ˆå¦‚ `neutral.hex`ã€`danger.hex`ï¼‰  
-**ç†ç”±**: æœåŠ¡å±‚ä¸ä¾èµ– Tailwindï¼Œéœ€è¦ä½¿ç”¨ HEX æ ¼å¼çš„ token
+**±³¾°**: ·şÎñ²ã£¨Èç scoreDocService¡¢rotationCalculator£©ÖĞ´æÔÚÓ²±àÂëÑÕÉ«  
+**¾ö²ß**: Ê¹ÓÃ `COLOR_TOKENS` ÖĞµÄÓïÒå»¯ÑÕÉ«£¨Èç `neutral.hex`¡¢`danger.hex`£©  
+**ÀíÓÉ**: ·şÎñ²ã²»ÒÀÀµ Tailwind£¬ĞèÒªÊ¹ÓÃ HEX ¸ñÊ½µÄ token
 
-### å†³ç­– 3: å®¡è®¡è„šæœ¬ç‹¬ç«‹äºæµ‹è¯•å¥—ä»¶
+### ¾ö²ß 3: Éó¼Æ½Å±¾¶ÀÁ¢ÓÚ²âÊÔÌ×¼ş
 
-**èƒŒæ™¯**: éœ€è¦æŒç»­ç›‘æ§è§†è§‰è§„èŒƒåˆè§„æ€§  
-**å†³ç­–**: åˆ›å»ºç‹¬ç«‹çš„å®¡è®¡è„šæœ¬ï¼Œä¸é›†æˆåˆ° vitest æµ‹è¯•å¥—ä»¶  
-**ç†ç”±**: å®¡è®¡è„šæœ¬æ‰«ææ‰€æœ‰æºæ–‡ä»¶ï¼Œä¸å•å…ƒæµ‹è¯•çš„å…³æ³¨ç‚¹ä¸åŒï¼Œç‹¬ç«‹è¿è¡Œæ›´é«˜æ•ˆ
+**±³¾°**: ĞèÒª³ÖĞø¼à¿ØÊÓ¾õ¹æ·¶ºÏ¹æĞÔ  
+**¾ö²ß**: ´´½¨¶ÀÁ¢µÄÉó¼Æ½Å±¾£¬²»¼¯³Éµ½ vitest ²âÊÔÌ×¼ş  
+**ÀíÓÉ**: Éó¼Æ½Å±¾É¨ÃèËùÓĞÔ´ÎÄ¼ş£¬Óëµ¥Ôª²âÊÔµÄ¹Ø×¢µã²»Í¬£¬¶ÀÁ¢ÔËĞĞ¸ü¸ßĞ§
 
 ---
 
-## ä¸‹ä¸€æ­¥å»ºè®®
+## ÏÂÒ»²½½¨Òé
 
-1. è¿è¡Œ `e2e/responsive.spec.ts` å’Œ `e2e/accessibility.spec.ts` å®Œæˆ Phase 5/6
-2. å°†å®¡è®¡è„šæœ¬é›†æˆåˆ° CI/CD æµç¨‹ï¼Œåœ¨ PR åˆå¹¶å‰è‡ªåŠ¨æ£€æŸ¥è§†è§‰è§„èŒƒ
-3. é€æ­¥ä¿®å¤å‰©ä½™çš„ 38 ä¸ªå¤±è´¥æµ‹è¯•æ–‡ä»¶
-4. è€ƒè™‘å°† `WidgetShell.tsx` ä¸­çš„å†…è”æ ·å¼è¿ç§»åˆ° Tailwind ç±»å
+1. ÔËĞĞ `e2e/responsive.spec.ts` ºÍ `e2e/accessibility.spec.ts` Íê³É Phase 5/6
+2. ½«Éó¼Æ½Å±¾¼¯³Éµ½ CI/CD Á÷³Ì£¬ÔÚ PR ºÏ²¢Ç°×Ô¶¯¼ì²éÊÓ¾õ¹æ·¶
+3. Öğ²½ĞŞ¸´Ê£ÓàµÄ 38 ¸öÊ§°Ü²âÊÔÎÄ¼ş
+4. ¿¼ÂÇ½« `WidgetShell.tsx` ÖĞµÄÄÚÁªÑùÊ½Ç¨ÒÆµ½ Tailwind ÀàÃû

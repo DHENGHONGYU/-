@@ -1,6 +1,6 @@
 import { STORE_NAME } from '@/config/dbConfig'
 import { sendWriteEnvelope, queryGet, queryByIndex } from '@/data/dataLayerHelpers'
-import { generateId } from '@/data/db'
+import { generateId } from '@/lib/utils'
 import { getLogger } from '@/lib/logger'
 import { writeMigrationAuditLog } from './migrationValidators'
 import type { MigrationReport, MigrationOptions, StoreImportContext, V9ImportShape } from './migrationTypes'

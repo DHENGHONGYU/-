@@ -109,6 +109,10 @@ jobs:
       - name: Documentation sync audit (P0 blocking gate)
         run: npm run audit:docs
         continue-on-error: false
+      # 文档-代码交叉引用断裂率门禁 — 阈值 0.5%（P0 阻塞）
+      - name: Documentation cross-reference broken rate gate (P0 blocking)
+        run: npm run doc:crossref:audit -- --max-broken-rate=0.5%
+        continue-on-error: false
       # 文档-代码双向完整性审计 — 非阻塞，先积累基线数据
       - name: Documentation-Code integrity audit (baseline collection)
         run: npm run audit:doc-integrity

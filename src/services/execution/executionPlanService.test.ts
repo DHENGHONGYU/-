@@ -11,7 +11,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 // Mock dataLayer
-vi.mock('@/data/dataLayer', () => ({
+vi.mock('@/data/dataLayerTradingStores', () => ({
   executionPlanStore: {
     list: vi.fn(),
     getAll: vi.fn(),
@@ -33,7 +33,7 @@ vi.mock('@/services/analysis/dataFreshnessGuard', () => ({
   checkExecutionLogFreshness: vi.fn(() => ({ valid: true })),
 }))
 
-import { executionPlanStore, executionLogStore } from '@/data/dataLayer'
+import { executionPlanStore, executionLogStore } from '@/data/dataLayerTradingStores'
 import {
   createPlan,
   listPlans,

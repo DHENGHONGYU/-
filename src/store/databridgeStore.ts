@@ -1,3 +1,4 @@
+/** @unused — 已实现但当前无 UI 层消费者，待后续产品规划接入。 */
 import { create } from 'zustand'
 import { eventBus } from '@/lib/eventBus'
 import type { DataBridgeAdapterStats, BridgeQueryResult } from '@/types/modules/databridge.types'

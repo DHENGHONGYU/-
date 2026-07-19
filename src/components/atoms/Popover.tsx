@@ -1,115 +1,48 @@
-import { type HTMLAttributes, type ReactNode, forwardRef, memo, useEffect, useRef, useState } from 'react'
-import { cn } from '@/lib/utils'
+/**
+ * Popover — 气泡浮层原子
+ *
+ * 纯 CSS hover/focus 实现，支持四方向定位与自定义内容。
+ * 不依赖第三方 Popover 库，适用于简单 tooltip-like 场景。
+ *
+ * @module atoms/Popover
+ * @since 2026-07-18 (P2 规划实现)
+ */
 
-export type PopoverPlacement = 'top' | 'bottom' | 'left' | 'right'
-export type PopoverTrigger = 'click' | 'hover' | 'focus'
+import { type HTMLAttributes, type ReactNode } from 'react'
 
 export interface PopoverProps extends Omit<HTMLAttributes<HTMLDivElement>, 'content'> {
-  /** 触发方式 */
-  trigger?: PopoverTrigger
-  /** 浮层内容 */
+  /** 浮层内容（必填） */
   content: ReactNode
-  /** 浮层位置 */
-  placement?: PopoverPlacement
+  /** 弹出方向 */
+  side?: 'top' | 'bottom' | 'left' | 'right'
   /** 触发元素 */
   children: ReactNode
-  /** 是否默刻显示 */
-  defaultOpen?: boolean
 }
 
-const placementClasses: Record<PopoverPlacement, string> = {
-  top: 'bottom-full mb-2 left-1/2 -translate-x-1/2',
-  bottom: 'top-full mt-2 left-1/2 -translate-x-1/2',
-  left: 'right-full mr-2 top-1/2 -translate-y-1/2',
-  right: 'left-full ml-2 top-1/2 -translate-y-1/2',
+const sideClasses: Record<string, string> = {
+  top: 'bottom-full left-1/2 -translate-x-1/2 mb-2',
+  bottom: 'top-full left-1/2 -translate-x-1/2 mt-2',
+  left: 'right-full top-1/2 -translate-y-1/2 mr-2',
+  right: 'left-full top-1/2 -translate-y-1/2 ml-2',
 }
 
 /**
  * Popover
  */
-export const Popover = memo(forwardRef<HTMLDivElement, PopoverProps>(
-  ({
-    className,
-    trigger = 'click',
-    content,
-    placement = 'bottom',
-    children,
-    defaultOpen = false,
-    ...props
-  }, ref) => {
-    const [isOpen, setIsOpen] = useState(defaultOpen)
-    const popoverRef = useRef<HTMLDivElement>(null)
-    const triggerRef = useRef<HTMLDivElement>(null)
-
-    useEffect(() => {
-      if (!isOpen) return
-
-      const handleClickOutside = (event: MouseEvent) => {
-        if (
-          popoverRef.current &&
-          !popoverRef.current.contains(event.target as Node) &&
-          !triggerRef.current?.contains(event.target as Node)
-        ) {
-          setIsOpen(false)
-        }
-      }
-
-      document.addEventListener('mousedown', handleClickOutside)
-      return () => document.removeEventListener('mousedown', handleClickOutside)
-    }, [isOpen])
-
-    const handleTrigger = () => {
-      setIsOpen((prev) => !prev)
-    }
-
-    const handleMouseEnter = () => {
-      if (trigger === 'hover') setIsOpen(true)
-    }
-
-    const handleMouseLeave = () => {
-      if (trigger === 'hover') setIsOpen(false)
-    }
-
-    const handleFocus = () => {
-      if (trigger === 'focus') setIsOpen(true)
-    }
-
-    const handleBlur = () => {
-      if (trigger === 'focus') setIsOpen(false)
-    }
-
-    return (
+export function Popover({ content, side = 'top', children, className = '', ...rest }: PopoverProps) {
+  return (
+    <div className={`relative inline-block group ${className}`} {...rest}>
+      {children}
       <div
-        ref={ref}
-        className={cn('relative inline-block', className)}
-        {...props}
+        role="tooltip"
+        className={`
+          absolute z-50 opacity-0 group-hover:opacity-100 transition-opacity
+          pointer-events-none rounded-md border bg-popover px-3 py-2 text-sm text-popover-foreground shadow-md
+          ${sideClasses[side] ?? sideClasses.top}
+        `}
       >
-        <div
-          ref={triggerRef}
-          onClick={trigger === 'click' ? handleTrigger : undefined}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-        >
-          {children}
-        </div>
-        {isOpen && (
-          <div
-            ref={popoverRef}
-            className={cn(
-              'absolute z-50 min-w-[200px] rounded-md border bg-popover p-4 text-popover-foreground shadow-md',
-              'animate-in fade-in-0 zoom-in-95',
-              placementClasses[placement],
-            )}
-            style={{ transformOrigin: 'center' }}
-          >
-            {content}
-          </div>
-        )}
+        {content}
       </div>
-    )
-  },
-))
-
-Popover.displayName = 'Popover'
+    </div>
+  )
+}

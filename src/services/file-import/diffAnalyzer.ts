@@ -245,8 +245,8 @@ export async function analyzeDiff(
   // 构建新数据主键集合
   const newKeys = new Set<string>()
   for (const record of newRecords) {
-    const key = extractPrimaryKey(record)
-    if (key) newKeys.add(key)
+    const pk = extractPrimaryKey(record)
+    if (pk) newKeys.add(pk)
   }
 
   // 逐记录比对

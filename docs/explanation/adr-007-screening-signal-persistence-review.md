@@ -1,138 +1,136 @@
 ---
-title: adr-007-screening-signal-persistence-review
+title: ADR-007: ����ɸѡ���桢�źų־û��븴������
+type: explanation
+domain: architecture
+phase: planning
+tier: important
+status: active
+maintainer: V9 Architecture Team
+summary: "ADR-007: ����ɸѡ���桢�źų־û��븴������ - explanation documentation (architecture)"
+tags: [architecture, screening, adr, plan, explanation]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: reference
+doc_id: V9-DOC-ARCH-007
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/explanation/adr-007-screening-signal-persistence-review.md
-code_version: 2.0.0
-tier: reference
----
+# ADR-007: ����ɸѡ���桢�źų־û��븴������
 
----
-title: ADR-007: 补齐筛选引擎、信号持久化与复盘引擎
-status: accepted
-owner: V9 Architecture Team
-decision_date: 2026-06-24
-supersedes: ""
-superseded_by: "ADR-009"
----
-
-# ADR-007: 补齐筛选引擎、信号持久化与复盘引擎
-
-> **状态**: Accepted（部分条款被 ADR-009 取代）  
-> **决策日期**: 2026-06-24  
-> **版本**: v1.0.0
+> **״̬**: Accepted��������� ADR-009 ȡ����  
+> **��������**: 2026-06-24  
+> **�汾**: v1.0.0
 
 ---
 
-## 1. 背景（Context）
+## 1. ������Context��
 
-V9 早期版本中，analysis 舱缺少三个关键引擎：
+V9 ���ڰ汾�У�analysis ��ȱ�������ؼ����棺
 
-- **筛选引擎（screening）**：用户无法按条件（如「PE < 20 且 ROE > 15%」）筛选股票。
-- **信号持久化（signal）**：交易信号仅存在于内存，刷新后丢失，无法回溯。
-- **交易复盘引擎（review）**：用户无法系统性地回顾交易决策，缺乏纪律性分析工具。
+- **ɸѡ���棨screening��**���û��޷����������硸PE < 20 �� ROE > 15%����ɸѡ��Ʊ��
+- **�źų־û���signal��**�������źŽ��������ڴ棬ˢ�º�ʧ���޷����ݡ�
+- **���׸������棨review��**���û��޷�ϵͳ�Եػع˽��׾��ߣ�ȱ�������Է������ߡ�
 
-这三个引擎是 V6 用户反馈中最高频的需求缺口。
+������������ V6 �û����������Ƶ������ȱ�ڡ�
 
-### 触发条件
+### ��������
 
-- `./2026-06-24-pool-screening-signal-persistence-review-engine.md` 提出补齐方案。
-- 用户调研：80% 用户认为「筛选」和「复盘」是最高优先级功能。
-
----
-
-## 2. 决策（Decision）
-
-**补齐 `screening`（选股筛选）、`signal`（信号持久化）、`review`（交易复盘）三个引擎。**
-
-- **筛选引擎**：支持多条件组合筛选（基本面 + 技术面 + 资金面 + 消息面 + 估值面），输出符合条件的股票列表。
-- **信号持久化**：所有交易信号（买入/卖出/观望）写入 IndexedDB，支持历史回溯和性能评估。
-- **交易复盘引擎**：基于订单数据生成复盘报告（错误分类、纪律分析、筹码波动复盘）。
-
-> **注意**：ADR-007 中「热门板块」与「价值洼地」相关条款已被 ADR-009 取代。ADR-009 引入了更完整的双策略评分体系，覆盖并扩展了 ADR-007 中「筛选引擎」的范畴。
-
-### 决策理由
-
-- 三个引擎是用户高频需求，缺失导致 V9 核心功能不完整。
-- 三个引擎可独立开发，互不阻塞（screening 和 signal 无依赖，review 依赖 orders Store）。
+- `./2026-06-24-pool-screening-signal-persistence-review-engine.md` ������뷽����
+- �û����У�80% �û���Ϊ��ɸѡ���͡����̡���������ȼ����ܡ�
 
 ---
 
-## 3. 备选方案（Alternatives Considered）
+## 2. ���ߣ�Decision��
 
-| 方案 | 优点 | 缺点 | 结论 |
+**���� `screening`��ѡ��ɸѡ����`signal`���źų־û�����`review`�����׸��̣��������档**
+
+- **ɸѡ����**��֧�ֶ��������ɸѡ�������� + ������ + �ʽ��� + ��Ϣ�� + ��ֵ�棩��������������Ĺ�Ʊ�б���
+- **�źų־û�**�����н����źţ�����/����/������д�� IndexedDB��֧����ʷ���ݺ�����������
+- **���׸�������**�����ڶ����������ɸ��̱��棨������ࡢ���ɷ��������벨�����̣���
+
+> **ע��**��ADR-007 �С����Ű�项�롸��ֵ�ݵء���������ѱ� ADR-009 ȡ����ADR-009 �����˸�������˫����������ϵ�����ǲ���չ�� ADR-007 �С�ɸѡ���桹�ķ��롣
+
+### ��������
+
+- �����������û���Ƶ����ȱʧ���� V9 ���Ĺ��ܲ�������
+- ��������ɶ�������������������screening �� signal ��������review ���� orders Store����
+
+---
+
+## 3. ��ѡ������Alternatives Considered��
+
+| ���� | �ŵ� | ȱ�� | ���� |
 |------|------|------|------|
-| **A. 补齐三引擎**（最终选择） | 满足用户核心需求 | 工作量大，需分阶段交付 | ✅ 采纳 |
-| **B. 仅做筛选** | 工作量小 | 信号和复盘仍缺失，用户满意度低 | ❌ 否决 |
-| **C. 使用第三方筛选服务** | 无需自研 | 数据隐私风险、定制性差、长期依赖 | ❌ 否决 |
+| **A. ����������**������ѡ�� | �����û��������� | ����������ֽ׶ν��� | ? ���� |
+| **B. ����ɸѡ** | ������С | �źź͸�����ȱʧ���û�����ȵ� | ? ��� |
+| **C. ʹ�õ�����ɸѡ����** | �������� | ������˽���ա������Բ�������� | ? ��� |
 
 ---
 
-## 4. 后果（Consequences）
+## 4. �����Consequences��
 
-### 正面影响
+### ����Ӱ��
 
-- 筛选引擎使用户可按自定义条件选股，提高投研效率。
-- 信号持久化支持历史回溯，用户可评估策略有效性。
-- 交易复盘引擎帮助用户建立纪律性，减少重复错误。
+- ɸѡ����ʹ�û��ɰ��Զ�������ѡ�ɣ����Ͷ��Ч�ʡ�
+- �źų־û�֧����ʷ���ݣ��û�������������Ч�ԡ�
+- ���׸�����������û����������ԣ������ظ�����
 
-### 负面影响 / 技术债
+### ����Ӱ�� / ����ծ
 
-- 「热门板块」和「价值洼地」筛选逻辑被 ADR-009 的双策略体系取代，部分代码需要重构。
-  - **技术债**：`./design/tech-debt.md` — 「ADR-007 筛选逻辑迁移至 ADR-009 双策略」。
-- 复盘引擎需要访问订单数据，涉及隐私敏感信息（持仓、盈亏）。
-  - **缓解**：数据完全本地存储，不上传任何服务器；提供数据导出加密选项。
+- �����Ű�项�͡���ֵ�ݵء�ɸѡ�߼��� ADR-009 ��˫������ϵȡ�������ִ�����Ҫ�ع���
+  - **����ծ**��`./design/tech-debt.md` �� ��ADR-007 ɸѡ�߼�Ǩ���� ADR-009 ˫���ԡ���
+- ����������Ҫ���ʶ������ݣ��漰��˽������Ϣ���ֲ֡�ӯ������
+  - **����**��������ȫ���ش洢�����ϴ��κη��������ṩ���ݵ�������ѡ�
 
-### 影响范围
+### Ӱ�췶Χ
 
-| 模块 | 影响 |
+| ģ�� | Ӱ�� |
 |------|------|
-| `src/services/screening/` | 新增筛选引擎 |
-| `src/services/analysis/` | 消费筛选结果 |
-| `src/store/signalStore/` | 新增信号持久化 Store |
-| `src/services/tradeReview/` | 新增复盘引擎（tradeReviewAI） |
-| `src/pages/output/` | 新增复盘报告页面 |
+| `src/services/screening/` | ����ɸѡ���� |
+| `src/services/analysis/` | ����ɸѡ��� |
+| `src/store/signalStore/` | �����źų־û� Store |
+| `src/services/tradeReview/` | �����������棨tradeReviewAI�� |
+| `src/pages/output/` | �������̱���ҳ�� |
 
 ---
 
-## 5. 实施与验证
+## 5. ʵʩ����֤
 
-### 实施步骤
+### ʵʩ����
 
-- [x] Step 1：实现筛选引擎核心（条件解析 + 股票过滤）
-- [x] Step 2：实现信号持久化（signalStore + DataBridge 写入）
-- [x] Step 3：实现交易复盘引擎（tradeReviewAI）
-- [ ] Step 4：将筛选逻辑迁移至 ADR-009 双策略框架（hotSectorAnalyzer / valuePitAnalyzer）
-- [ ] Step 5：复盘引擎 Widget 完善（ discipline analysis、筹码波动）
+- [x] Step 1��ʵ��ɸѡ������ģ��������� + ��Ʊ���ˣ�
+- [x] Step 2��ʵ���źų־û���signalStore + DataBridge д�룩
+- [x] Step 3��ʵ�ֽ��׸������棨tradeReviewAI��
+- [ ] Step 4����ɸѡ�߼�Ǩ���� ADR-009 ˫���Կ�ܣ�hotSectorAnalyzer / valuePitAnalyzer��
+- [ ] Step 5���������� Widget ���ƣ� discipline analysis�����벨����
 
-### 验证命令
+### ��֤����
 
 ```bash
-npm run test:clean   # 验证筛选/信号/复盘测试
-npm run audit:layers # 验证引擎层依赖合规
+npm run test:clean   # ��֤ɸѡ/�ź�/���̲���
+npm run audit:layers # ��֤����������Ϲ�
 ```
 
 ---
 
-## 6. 关联文档
+## 6. �����ĵ�
 
-| 文档 | 路径 |
+| �ĵ� | ·�� |
 |------|------|
-| ADR-009（取代部分条款） | `adr-009-dual-strategy-system.md` |
-| 引擎规格 | `../reference/05-engine-specs.md` §3.7-3.8 |
-| 原始提案 | `./2026-06-24-pool-screening-signal-persistence-review-engine.md` |
+| ADR-009��ȡ��������� | `adr-009-dual-strategy-system.md` |
+| ������ | `../reference/05-engine-specs.md` ��3.7-3.8 |
+| ԭʼ�᰸ | `./2026-06-24-pool-screening-signal-persistence-review-engine.md` |
 
 ---
 
-## 7. 状态变更记录
+## 7. ״̬�����¼
 
-| 日期 | 状态 | 变更人 | 备注 |
+| ���� | ״̬ | ����� | ��ע |
 |------|------|--------|------|
-| 2026-06-24 | proposed | @architect | 初始提案 |
-| 2026-06-24 | accepted | 架构组 | 评审通过 |
-| 2026-06-27 | accepted | 架构组 | ADR-009 取代部分条款（热门板块/价值洼地） |
-| 2026-07-12 | accepted | docs 治理组 | 扩写为完整 ADR v1.0.0 |
+| 2026-06-24 | proposed | @architect | ��ʼ�᰸ |
+| 2026-06-24 | accepted | �ܹ��� | ����ͨ�� |
+| 2026-06-27 | accepted | �ܹ��� | ADR-009 ȡ������������Ű��/��ֵ�ݵأ� |
+| 2026-07-12 | accepted | docs ������ | ��дΪ���� ADR v1.0.0 |

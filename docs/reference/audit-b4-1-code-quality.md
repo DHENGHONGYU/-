@@ -1,62 +1,68 @@
 ---
-title: audit-b4-1-code-quality
+title: V9 Ç°¶ËÓ¦ÓÃ´úÂë±àĞ´ÖÊÁ¿Éó¼Æ±¨¸æ (B4-1)
+type: reference
+domain: qa
+phase: testing
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "Éó¼ÆÈÕÆÚ£º2026-06-29 Éó¼Æ·¶Î§£ºsrc/ Ä¿Â¼ÏÂËùÓĞ .ts ºÍ .tsx ÎÄ¼ş£¨²»º¬ .d.ts ÉùÃ÷ÎÄ¼ş£© Éó¼ÆÎ¬¶È£ºTypeScript ÀàĞÍÍêÕûĞÔ¡¢´íÎó´¦Àí¡¢ÄÚ´æÇåÀí¡¢Loading..."
+tags: [qa, quality, audit]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: reference
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/reference/audit-b4-1-code-quality.md
-code_version: 2.0.0
-tier: reference
----
+# V9 Ç°¶ËÓ¦ÓÃ´úÂë±àĞ´ÖÊÁ¿Éó¼Æ±¨¸æ (B4-1)
 
-# V9 å‰ç«¯åº”ç”¨ä»£ç ç¼–å†™è´¨é‡å®¡è®¡æŠ¥å‘Š (B4-1)
-
-> å®¡è®¡æ—¥æœŸï¼š2026-06-29  
-> å®¡è®¡èŒƒå›´ï¼šsrc/ ç›®å½•ä¸‹æ‰€æœ‰ .ts å’Œ .tsx æ–‡ä»¶ï¼ˆä¸å« .d.ts å£°æ˜æ–‡ä»¶ï¼‰  
-> å®¡è®¡ç»´åº¦ï¼šTypeScript ç±»å‹å®Œæ•´æ€§ã€é”™è¯¯å¤„ç†ã€å†…å­˜æ¸…ç†ã€Loading çŠ¶æ€ã€è·¯ç”±å‚æ•°å˜åŒ–å¤„ç†  
-> å®¡è®¡æ–¹æ³•ï¼šé™æ€ä»£ç æ‰«æ + å…³é”®æ–‡ä»¶äººå·¥æŠ½æ ·å¤æ ¸
+> Éó¼ÆÈÕÆÚ£º2026-06-29  
+> Éó¼Æ·¶Î§£ºsrc/ Ä¿Â¼ÏÂËùÓĞ .ts ºÍ .tsx ÎÄ¼ş£¨²»º¬ .d.ts ÉùÃ÷ÎÄ¼ş£©  
+> Éó¼ÆÎ¬¶È£ºTypeScript ÀàĞÍÍêÕûĞÔ¡¢´íÎó´¦Àí¡¢ÄÚ´æÇåÀí¡¢Loading ×´Ì¬¡¢Â·ÓÉ²ÎÊı±ä»¯´¦Àí  
+> Éó¼Æ·½·¨£º¾²Ì¬´úÂëÉ¨Ãè + ¹Ø¼üÎÄ¼şÈË¹¤³éÑù¸´ºË
 
 ---
 
-## ä¸€ã€å®¡è®¡æ¦‚è§ˆ
+## Ò»¡¢Éó¼Æ¸ÅÀÀ
 
-| æŒ‡æ ‡ | æ•°å€¼ |
+| Ö¸±ê | ÊıÖµ |
 |------|------|
-| å®¡è®¡æ–‡ä»¶æ€»æ•° | çº¦ 180 ä¸ª |
-| æ€»ä»£ç è¡Œæ•° | çº¦ 32,000 è¡Œ |
-| æ•´ä½“è´¨é‡è¯„åˆ† | **72.5 / 100** |
-| æ•´ä½“é£é™©ç­‰çº§ | ğŸŸ¡ ä¸­é£é™© |
+| Éó¼ÆÎÄ¼ş×ÜÊı | Ô¼ 180 ¸ö |
+| ×Ü´úÂëĞĞÊı | Ô¼ 32,000 ĞĞ |
+| ÕûÌåÖÊÁ¿ÆÀ·Ö | **72.5 / 100** |
+| ÕûÌå·çÏÕµÈ¼¶ | ?? ÖĞ·çÏÕ |
 
-### å„ç»´åº¦è¯„åˆ†
+### ¸÷Î¬¶ÈÆÀ·Ö
 
-| ç»´åº¦ | å¾—åˆ† | æƒé‡ | é£é™©ç­‰çº§ |
+| Î¬¶È | µÃ·Ö | È¨ÖØ | ·çÏÕµÈ¼¶ |
 |------|------|------|----------|
-| 1. TypeScript ç±»å‹å®Œæ•´æ€§ | 68.0 | 25% | ğŸŸ¡ ä¸­é£é™© |
-| 2. é”™è¯¯å¤„ç†ï¼ˆasync try-catchï¼‰ | 70.5 | 25% | ğŸŸ¡ ä¸­é£é™© |
-| 3. å†…å­˜æ¸…ç†ï¼ˆuseEffect cleanupï¼‰ | 82.0 | 20% | ğŸŸ¢ ä½é£é™© |
-| 4. Loading çŠ¶æ€ç®¡ç† | 75.0 | 15% | ğŸŸ¡ ä¸­é£é™© |
-| 5. è·¯ç”±å‚æ•°å˜åŒ–å¤„ç† | 70.0 | 15% | ğŸŸ¡ ä¸­é£é™© |
+| 1. TypeScript ÀàĞÍÍêÕûĞÔ | 68.0 | 25% | ?? ÖĞ·çÏÕ |
+| 2. ´íÎó´¦Àí£¨async try-catch£© | 70.5 | 25% | ?? ÖĞ·çÏÕ |
+| 3. ÄÚ´æÇåÀí£¨useEffect cleanup£© | 82.0 | 20% | ?? µÍ·çÏÕ |
+| 4. Loading ×´Ì¬¹ÜÀí | 75.0 | 15% | ?? ÖĞ·çÏÕ |
+| 5. Â·ÓÉ²ÎÊı±ä»¯´¦Àí | 70.0 | 15% | ?? ÖĞ·çÏÕ |
 
 ---
 
-## äºŒã€ç»´åº¦ä¸€ï¼šTypeScript ç±»å‹å®Œæ•´æ€§
+## ¶ş¡¢Î¬¶ÈÒ»£ºTypeScript ÀàĞÍÍêÕûĞÔ
 
-### 2.1 ç»Ÿè®¡æ•°æ®
+### 2.1 Í³¼ÆÊı¾İ
 
-| è¿è§„ç±»å‹ | æ•°é‡ | æ¶‰åŠæ–‡ä»¶æ•° |
+| Î¥¹æÀàĞÍ | ÊıÁ¿ | Éæ¼°ÎÄ¼şÊı |
 |----------|------|------------|
-| `any` ç±»å‹ä½¿ç”¨ | 14 å¤„ | 6 ä¸ªæ–‡ä»¶ |
-| ç±»å‹æ–­è¨€ (`as`) | 322 å¤„ | 98 ä¸ªæ–‡ä»¶ |
-| éç©ºæ–­è¨€ (`!`) | çº¦ 45 å¤„ | çº¦ 20 ä¸ªæ–‡ä»¶ |
-| **åˆè®¡** | **çº¦ 381 å¤„** | **çº¦ 100 ä¸ªæ–‡ä»¶** |
+| `any` ÀàĞÍÊ¹ÓÃ | 14 ´¦ | 6 ¸öÎÄ¼ş |
+| ÀàĞÍ¶ÏÑÔ (`as`) | 322 ´¦ | 98 ¸öÎÄ¼ş |
+| ·Ç¿Õ¶ÏÑÔ (`!`) | Ô¼ 45 ´¦ | Ô¼ 20 ¸öÎÄ¼ş |
+| **ºÏ¼Æ** | **Ô¼ 381 ´¦** | **Ô¼ 100 ¸öÎÄ¼ş** |
 
-> æ³¨ï¼š`any` ç±»å‹ä½¿ç”¨ä¸­çº¦ 70% å‡ºç°åœ¨æµ‹è¯•æ–‡ä»¶ä¸­ï¼Œä¸šåŠ¡ä»£ç ä¸­ `any` ä½¿ç”¨æ§åˆ¶è¾ƒå¥½ã€‚
+> ×¢£º`any` ÀàĞÍÊ¹ÓÃÖĞÔ¼ 70% ³öÏÖÔÚ²âÊÔÎÄ¼şÖĞ£¬ÒµÎñ´úÂëÖĞ `any` Ê¹ÓÃ¿ØÖÆ½ÏºÃ¡£
 
-### 2.2 å…¸å‹è¿è§„ - any ç±»å‹ä½¿ç”¨
+### 2.2 µäĞÍÎ¥¹æ - any ÀàĞÍÊ¹ÓÃ
 
-| æ–‡ä»¶ | è¡Œ | ä»£ç ç‰‡æ®µ |
+| ÎÄ¼ş | ĞĞ | ´úÂëÆ¬¶Î |
 |------|----|----------|
 | `store/marketDataStore.ts` | 73 | `data: any` |
 | `store/marketDataStore.test.ts` | 47 | `callback: null as ((taskId: string, rawData: any, error?: Error) => void)` |
@@ -64,61 +70,61 @@ tier: reference
 | `store/signalStore.test.ts` | 31 | `new Map<string, ((envelope: any) => void)>` |
 | `store/dualStrategyStore.test.ts` | 64 | `new Map<string, ((envelope: any) => void)>` |
 
-### 2.3 å…¸å‹è¿è§„ - ç±»å‹æ–­è¨€
+### 2.3 µäĞÍÎ¥¹æ - ÀàĞÍ¶ÏÑÔ
 
-ç±»å‹æ–­è¨€ä½¿ç”¨è¾ƒä¸ºå¹¿æ³›ï¼Œä¸»è¦é›†ä¸­åœ¨ä»¥ä¸‹åœºæ™¯ï¼š
+ÀàĞÍ¶ÏÑÔÊ¹ÓÃ½ÏÎª¹ã·º£¬Ö÷Òª¼¯ÖĞÔÚÒÔÏÂ³¡¾°£º
 
-1. **Store å±‚ç±»å‹è½¬æ¢**ï¼ˆçº¦ 40 å¤„ï¼‰
-   - `store/tradingStore.ts`: 6 å¤„
-   - `store/dualStrategyStore.ts`: 3 å¤„
-   - `store/holdingsStore.ts`: 5 å¤„
+1. **Store ²ãÀàĞÍ×ª»»**£¨Ô¼ 40 ´¦£©
+   - `store/tradingStore.ts`: 6 ´¦
+   - `store/dualStrategyStore.ts`: 3 ´¦
+   - `store/holdingsStore.ts`: 5 ´¦
 
-2. **DataBridge / Envelope ç³»ç»Ÿ**ï¼ˆçº¦ 30 å¤„ï¼‰
-   - `core/databridge.ts`: 27 å¤„
+2. **DataBridge / Envelope ÏµÍ³**£¨Ô¼ 30 ´¦£©
+   - `core/databridge.ts`: 27 ´¦
 
-3. **è¯„åˆ†è®¡ç®—æ¨¡å—**ï¼ˆçº¦ 32 å¤„ï¼‰
-   - `services/scoring/v6-engine/calculators/l4_l5_l6.ts`: 9 å¤„
-   - `services/scoring/v6-engine/calculators/l0_l1_l2.ts`: 6 å¤„
-   - `services/scoring/v6-engine/calculators/l7_l8.ts`: 6 å¤„
+3. **ÆÀ·Ö¼ÆËãÄ£¿é**£¨Ô¼ 32 ´¦£©
+   - `services/scoring/v6-engine/calculators/l4_l5_l6.ts`: 9 ´¦
+   - `services/scoring/v6-engine/calculators/l0_l1_l2.ts`: 6 ´¦
+   - `services/scoring/v6-engine/calculators/l7_l8.ts`: 6 ´¦
 
-4. **æ•°æ®é‡‡é›†é€‚é…å±‚**ï¼ˆçº¦ 16 å¤„ï¼‰
-   - `services/data-collector/MarketDataAdapter.ts`: 16 å¤„
+4. **Êı¾İ²É¼¯ÊÊÅä²ã**£¨Ô¼ 16 ´¦£©
+   - `services/data-collector/MarketDataAdapter.ts`: 16 ´¦
 
-5. **é…ç½®è¿ç§»æ¨¡å—**ï¼ˆçº¦ 11 å¤„ï¼‰
-   - `services/system/migration/storeMigrators.ts`: 11 å¤„
+5. **ÅäÖÃÇ¨ÒÆÄ£¿é**£¨Ô¼ 11 ´¦£©
+   - `services/system/migration/storeMigrators.ts`: 11 ´¦
 
-### 2.4 é£é™©åˆ†æ
+### 2.4 ·çÏÕ·ÖÎö
 
-- **ä¸­é£é™©**ï¼šç±»å‹æ–­è¨€ä½¿ç”¨è¾ƒå¤šï¼Œéƒ¨åˆ†æ¨¡å—ç±»å‹ä¿æŠ¤ä¸è¶³ã€‚
-- `any` ç±»å‹æ§åˆ¶è¾ƒå¥½ï¼Œä¸šåŠ¡ä»£ç ä¸­ä»…æœ‰å°‘é‡ä½¿ç”¨ã€‚
-- DataBridge å’Œè¯„åˆ†å¼•æ“æ¨¡å—å­˜åœ¨è¾ƒå¤š `as` æ–­è¨€ï¼Œå¯èƒ½éšè—ç±»å‹ä¸åŒ¹é…é—®é¢˜ã€‚
+- **ÖĞ·çÏÕ**£ºÀàĞÍ¶ÏÑÔÊ¹ÓÃ½Ï¶à£¬²¿·ÖÄ£¿éÀàĞÍ±£»¤²»×ã¡£
+- `any` ÀàĞÍ¿ØÖÆ½ÏºÃ£¬ÒµÎñ´úÂëÖĞ½öÓĞÉÙÁ¿Ê¹ÓÃ¡£
+- DataBridge ºÍÆÀ·ÖÒıÇæÄ£¿é´æÔÚ½Ï¶à `as` ¶ÏÑÔ£¬¿ÉÄÜÒş²ØÀàĞÍ²»Æ¥ÅäÎÊÌâ¡£
 
-**æ”¹è¿›å»ºè®®**ï¼š
-- ä¼˜å…ˆä¸º `core/databridge.ts` çš„ 27 å¤„ç±»å‹æ–­è¨€å¼•å…¥æ³›å‹æˆ–è”åˆç±»å‹
-- ä¸ºè¯„åˆ†å¼•æ“æ¨¡å—ï¼ˆl0_l1_l2.ts ~ l7_l8.tsï¼‰å»ºç«‹å®Œå–„çš„ç±»å‹ä½“ç³»
-- é€æ­¥ç§»é™¤ `store/marketDataStore.ts:73` ä¸­çš„ `data: any`
-- å¼€å¯ `@typescript-eslint/no-explicit-any` ESLint è§„åˆ™
-- ä½¿ç”¨ç±»å‹å®ˆå«ï¼ˆType Guardï¼‰æ›¿ä»£ç±»å‹æ–­è¨€
+**¸Ä½ø½¨Òé**£º
+- ÓÅÏÈÎª `core/databridge.ts` µÄ 27 ´¦ÀàĞÍ¶ÏÑÔÒıÈë·ºĞÍ»òÁªºÏÀàĞÍ
+- ÎªÆÀ·ÖÒıÇæÄ£¿é£¨l0_l1_l2.ts ~ l7_l8.ts£©½¨Á¢ÍêÉÆµÄÀàĞÍÌåÏµ
+- Öğ²½ÒÆ³ı `store/marketDataStore.ts:73` ÖĞµÄ `data: any`
+- ¿ªÆô `@typescript-eslint/no-explicit-any` ESLint ¹æÔò
+- Ê¹ÓÃÀàĞÍÊØÎÀ£¨Type Guard£©Ìæ´úÀàĞÍ¶ÏÑÔ
 
 ---
 
-## ä¸‰ã€ç»´åº¦äºŒï¼šé”™è¯¯å¤„ç†ï¼ˆasync å‡½æ•° try-catch è¦†ç›–ï¼‰
+## Èı¡¢Î¬¶È¶ş£º´íÎó´¦Àí£¨async º¯Êı try-catch ¸²¸Ç£©
 
-### 3.1 ç»Ÿè®¡æ•°æ®
+### 3.1 Í³¼ÆÊı¾İ
 
-| æŒ‡æ ‡ | æ•°é‡ |
+| Ö¸±ê | ÊıÁ¿ |
 |------|------|
-| async å‡½æ•°æ€»æ•° | çº¦ 620 å¤„ |
-| å« try-catch çš„ async å‡½æ•° | çº¦ 231 å¤„ |
-| è¦†ç›–ç‡ | **çº¦ 37.3%** |
+| async º¯Êı×ÜÊı | Ô¼ 620 ´¦ |
+| º¬ try-catch µÄ async º¯Êı | Ô¼ 231 ´¦ |
+| ¸²¸ÇÂÊ | **Ô¼ 37.3%** |
 
-> æ³¨ï¼šæ­¤å¤„ç»Ÿè®¡ä¸ºåŒ…å« `async` å…³é”®å­—çš„è¡Œæ•°ï¼Œå®é™… async å‡½æ•°æ•°é‡çº¦ 300-350 ä¸ªã€‚ä¿®æ­£åè¦†ç›–ç‡çº¦ä¸º **60-70%**ã€‚
+> ×¢£º´Ë´¦Í³¼ÆÎª°üº¬ `async` ¹Ø¼ü×ÖµÄĞĞÊı£¬Êµ¼Ê async º¯ÊıÊıÁ¿Ô¼ 300-350 ¸ö¡£ĞŞÕıºó¸²¸ÇÂÊÔ¼Îª **60-70%**¡£
 
-### 3.2 é”™è¯¯å¤„ç†è¾ƒå¥½çš„æ¨¡å—
+### 3.2 ´íÎó´¦Àí½ÏºÃµÄÄ£¿é
 
-ä»¥ä¸‹æ¨¡å—é”™è¯¯å¤„ç†è¾ƒä¸ºè§„èŒƒï¼Œè¦†ç›–ç‡è¶…è¿‡ 80%ï¼š
+ÒÔÏÂÄ£¿é´íÎó´¦Àí½ÏÎª¹æ·¶£¬¸²¸ÇÂÊ³¬¹ı 80%£º
 
-- `store/stockAnalysisStore.ts`: 2/2 ä¸ª async å‡½æ•°æœ‰ try-catch (100%)
+- `store/stockAnalysisStore.ts`: 2/2 ¸ö async º¯ÊıÓĞ try-catch (100%)
 - `store/scoreDocStore.ts`: 4/4 (100%)
 - `store/intelligentScoreStore.ts`: 4/4 (100%)
 - `store/industryScoreStore.ts`: 3/3 (100%)
@@ -126,197 +132,197 @@ tier: reference
 - `services/trading/tradeReviewAI.ts`: 4/4 (100%)
 - `cockpit/widgets/StockChatWidget.tsx`: 1/1 (100%)
 
-### 3.3 å…¸å‹è¿è§„ - ç¼ºå°‘é”™è¯¯å¤„ç†çš„åœºæ™¯
+### 3.3 µäĞÍÎ¥¹æ - È±ÉÙ´íÎó´¦ÀíµÄ³¡¾°
 
-1. **æ•°æ®å±‚ï¼ˆdataLayerï¼‰**
-   - `data/dataLayer.ts`: 74 ä¸ª async å‡½æ•°ï¼Œä»… 1 å¤„ try-catch
-   - å¤§é‡æ•°æ®åº“æ“ä½œå‡½æ•°ç¼ºå°‘é”™è¯¯æ•è·
+1. **Êı¾İ²ã£¨dataLayer£©**
+   - `data/dataLayer.ts`: 74 ¸ö async º¯Êı£¬½ö 1 ´¦ try-catch
+   - ´óÁ¿Êı¾İ¿â²Ù×÷º¯ÊıÈ±ÉÙ´íÎó²¶»ñ
 
-2. **Service å±‚éƒ¨åˆ†å‡½æ•°**
-   - `services/analysis/scorePageService.ts`: 7 ä¸ª asyncï¼Œ5 å¤„ try-catch
-   - `services/fetcher/fetcherService.ts`: 7 ä¸ª asyncï¼Œ2 å¤„ try-catch
+2. **Service ²ã²¿·Öº¯Êı**
+   - `services/analysis/scorePageService.ts`: 7 ¸ö async£¬5 ´¦ try-catch
+   - `services/fetcher/fetcherService.ts`: 7 ¸ö async£¬2 ´¦ try-catch
 
-3. **è¯„åˆ†è®¡ç®—æ¨¡å—**
-   - `services/scoring/v6-engine/calculators/*.ts`: å¤šä¸ªè®¡ç®—å‡½æ•°ç¼ºå°‘é”™è¯¯è¾¹ç•Œ
+3. **ÆÀ·Ö¼ÆËãÄ£¿é**
+   - `services/scoring/v6-engine/calculators/*.ts`: ¶à¸ö¼ÆËãº¯ÊıÈ±ÉÙ´íÎó±ß½ç
 
-### 3.4 æŠ½æ ·å®¡è®¡å‘ç°
+### 3.4 ³éÑùÉó¼Æ·¢ÏÖ
 
-é€šè¿‡å¯¹ `src/services/analysis/scorePageService.ts` çš„äººå·¥å®¡è®¡ï¼š
+Í¨¹ı¶Ô `src/services/analysis/scorePageService.ts` µÄÈË¹¤Éó¼Æ£º
 
 ```typescript
-// ç¼ºå°‘é”™è¯¯å¤„ç†çš„ä¾‹å­
+// È±ÉÙ´íÎó´¦ÀíµÄÀı×Ó
 export async function loadStockForAnalysis(symbol: string): Promise<Stock | undefined> {
-  return dataLayer.stocks.get(symbol)  // å¦‚æœ dataLayer æŠ›é”™ï¼Œç›´æ¥å‘ä¸Šå†’æ³¡
+  return dataLayer.stocks.get(symbol)  // Èç¹û dataLayer Å×´í£¬Ö±½ÓÏòÉÏÃ°Åİ
 }
 ```
 
-è¿™äº›å‡½æ•°ä½œä¸º service å±‚ï¼Œåº”æ‰¿æ‹…é”™è¯¯è½¬æ¢èŒè´£ï¼Œè€Œä¸æ˜¯ç›´æ¥é€ä¼ åº•å±‚é”™è¯¯ã€‚
+ÕâĞ©º¯Êı×÷Îª service ²ã£¬Ó¦³Ğµ£´íÎó×ª»»Ö°Ôğ£¬¶ø²»ÊÇÖ±½ÓÍ¸´«µ×²ã´íÎó¡£
 
-### 3.5 é£é™©åˆ†æ
+### 3.5 ·çÏÕ·ÖÎö
 
-- **ä¸­é£é™©**ï¼šæ ¸å¿ƒä¸šåŠ¡ï¼ˆstore å±‚ï¼‰é”™è¯¯å¤„ç†è¾ƒä¸ºè§„èŒƒï¼Œä½†æ•°æ®å±‚å’Œéƒ¨åˆ† service å±‚è¦†ç›–ä¸è¶³ã€‚
-- dataLayer ä½œä¸ºæœ€åº•å±‚ï¼Œé”™è¯¯åº”åœ¨ service å±‚æˆ– store å±‚æ•è·å¹¶è½¬æ¢ã€‚
-- éƒ¨åˆ†çº¯è®¡ç®—å‡½æ•°ï¼ˆè¯„åˆ†å¼•æ“ï¼‰å‡ºé”™æ¦‚ç‡è¾ƒä½ï¼Œä½†ä»å»ºè®®å¢åŠ é˜²å¾¡æ€§é”™è¯¯å¤„ç†ã€‚
+- **ÖĞ·çÏÕ**£ººËĞÄÒµÎñ£¨store ²ã£©´íÎó´¦Àí½ÏÎª¹æ·¶£¬µ«Êı¾İ²ãºÍ²¿·Ö service ²ã¸²¸Ç²»×ã¡£
+- dataLayer ×÷Îª×îµ×²ã£¬´íÎóÓ¦ÔÚ service ²ã»ò store ²ã²¶»ñ²¢×ª»»¡£
+- ²¿·Ö´¿¼ÆËãº¯Êı£¨ÆÀ·ÖÒıÇæ£©³ö´í¸ÅÂÊ½ÏµÍ£¬µ«ÈÔ½¨ÒéÔö¼Ó·ÀÓùĞÔ´íÎó´¦Àí¡£
 
-**æ”¹è¿›å»ºè®®**ï¼š
-- ä¸º `data/dataLayer.ts` ä¸­æ‰€æœ‰å¯¹å¤–æš´éœ²çš„ async å‡½æ•°å¢åŠ  try-catch
-- service å±‚ç»Ÿä¸€é”™è¯¯æ ¼å¼ï¼Œè½¬æ¢ä¸ºåº”ç”¨å±‚é”™è¯¯ç 
-- å»ºç«‹å…¨å±€é”™è¯¯ä¸ŠæŠ¥æœºåˆ¶ï¼ˆSentry æˆ–è‡ªå»ºï¼‰
-- ç»Ÿä¸€é”™è¯¯è¾¹ç•Œï¼ˆErrorBoundaryï¼‰å¤„ç†æ¸²æŸ“é˜¶æ®µé”™è¯¯
+**¸Ä½ø½¨Òé**£º
+- Îª `data/dataLayer.ts` ÖĞËùÓĞ¶ÔÍâ±©Â¶µÄ async º¯ÊıÔö¼Ó try-catch
+- service ²ãÍ³Ò»´íÎó¸ñÊ½£¬×ª»»ÎªÓ¦ÓÃ²ã´íÎóÂë
+- ½¨Á¢È«¾Ö´íÎóÉÏ±¨»úÖÆ£¨Sentry »ò×Ô½¨£©
+- Í³Ò»´íÎó±ß½ç£¨ErrorBoundary£©´¦ÀíäÖÈ¾½×¶Î´íÎó
 
 ---
 
-## å››ã€ç»´åº¦ä¸‰ï¼šå†…å­˜æ¸…ç†ï¼ˆuseEffect cleanupï¼‰
+## ËÄ¡¢Î¬¶ÈÈı£ºÄÚ´æÇåÀí£¨useEffect cleanup£©
 
-### 4.1 ç»Ÿè®¡æ•°æ®
+### 4.1 Í³¼ÆÊı¾İ
 
-| æŒ‡æ ‡ | æ•°é‡ |
+| Ö¸±ê | ÊıÁ¿ |
 |------|------|
-| useEffect æ€»æ•° | 89 å¤„ |
-| å«è®¢é˜…çš„ useEffect | çº¦ 15-20 å¤„ |
-| ç¼ºå°‘ cleanup çš„ useEffect | çº¦ 3-5 å¤„ |
-| eventBus è®¢é˜…æ€»æ•° | 19 å¤„ |
-| æ¸…ç†ç‡ | **çº¦ 75-80%** |
+| useEffect ×ÜÊı | 89 ´¦ |
+| º¬¶©ÔÄµÄ useEffect | Ô¼ 15-20 ´¦ |
+| È±ÉÙ cleanup µÄ useEffect | Ô¼ 3-5 ´¦ |
+| eventBus ¶©ÔÄ×ÜÊı | 19 ´¦ |
+| ÇåÀíÂÊ | **Ô¼ 75-80%** |
 
-### 4.2 eventBus è®¢é˜…ç®¡ç†
+### 4.2 eventBus ¶©ÔÄ¹ÜÀí
 
-eventBus è®¢é˜…ä¸»è¦é›†ä¸­åœ¨ store å±‚åˆå§‹åŒ–æ—¶ï¼Œé‡‡ç”¨ç»Ÿä¸€çš„ init/destroy æ¨¡å¼ï¼Œç®¡ç†è¾ƒä¸ºè§„èŒƒï¼š
+eventBus ¶©ÔÄÖ÷Òª¼¯ÖĞÔÚ store ²ã³õÊ¼»¯Ê±£¬²ÉÓÃÍ³Ò»µÄ init/destroy Ä£Ê½£¬¹ÜÀí½ÏÎª¹æ·¶£º
 
-| Store æ–‡ä»¶ | è®¢é˜…æ•° | æ¸…ç†æ–¹å¼ |
+| Store ÎÄ¼ş | ¶©ÔÄÊı | ÇåÀí·½Ê½ |
 |------------|--------|----------|
 | `store/agentStore.ts` | 6 | `initAgentSubscriptions()` / `destroyAgentSubscriptions()` |
 | `store/widgetStore.ts` | 4 | `initWidgetSubscriptions()` / `destroyWidgetSubscriptions()` |
-| `store/pageStore.ts` | 3 | ç±»ä¼¼æ¨¡å¼ |
-| `store/dataflowStore.ts` | 3 | ç±»ä¼¼æ¨¡å¼ |
-| `databridge/index.ts` | 1 | è¿”å› unsubscribe å‡½æ•° |
-| `devtools/testDataFlow.ts` | 2 | å¼€å‘å·¥å…· |
+| `store/pageStore.ts` | 3 | ÀàËÆÄ£Ê½ |
+| `store/dataflowStore.ts` | 3 | ÀàËÆÄ£Ê½ |
+| `databridge/index.ts` | 1 | ·µ»Ø unsubscribe º¯Êı |
+| `devtools/testDataFlow.ts` | 2 | ¿ª·¢¹¤¾ß |
 
-### 4.3 å…¸å‹è¿è§„ - ç¼ºå°‘ cleanup çš„åœºæ™¯
+### 4.3 µäĞÍÎ¥¹æ - È±ÉÙ cleanup µÄ³¡¾°
 
-é€šè¿‡æŠ½æ ·å®¡è®¡å‘ç°ä»¥ä¸‹æ½œåœ¨é—®é¢˜ï¼š
+Í¨¹ı³éÑùÉó¼Æ·¢ÏÖÒÔÏÂÇ±ÔÚÎÊÌâ£º
 
-1. **éƒ¨åˆ†é¡µé¢ç»„ä»¶çš„ useEffect**
-   - `pages/analysis/StockAnalysisPage.tsx:17-21`: useEffect è°ƒç”¨ `loadStockAnalysis`ï¼Œæœªå¤„ç†ç»„ä»¶å¸è½½å setState
-   - `pages/trading/StrategySnapshotPage.tsx:44-54`: ä¸¤ä¸ª useEffect åŠ è½½æ•°æ®ï¼Œç¼ºå°‘ AbortController å–æ¶ˆæœºåˆ¶
+1. **²¿·ÖÒ³Ãæ×é¼şµÄ useEffect**
+   - `pages/analysis/StockAnalysisPage.tsx:17-21`: useEffect µ÷ÓÃ `loadStockAnalysis`£¬Î´´¦Àí×é¼şĞ¶ÔØºó setState
+   - `pages/trading/StrategySnapshotPage.tsx:44-54`: Á½¸ö useEffect ¼ÓÔØÊı¾İ£¬È±ÉÙ AbortController È¡Ïû»úÖÆ
 
-2. **Widget ç»„ä»¶ä¸­çš„å®šæ—¶å™¨**
-   - éƒ¨åˆ† cockpit widget å¯èƒ½å­˜åœ¨ setInterval æœªæ¸…ç†çš„æƒ…å†µï¼ˆéœ€è¿›ä¸€æ­¥ç¡®è®¤ï¼‰
+2. **Widget ×é¼şÖĞµÄ¶¨Ê±Æ÷**
+   - ²¿·Ö cockpit widget ¿ÉÄÜ´æÔÚ setInterval Î´ÇåÀíµÄÇé¿ö£¨Ğè½øÒ»²½È·ÈÏ£©
 
-### 4.4 ä¼˜ç§€å®è·µ
+### 4.4 ÓÅĞãÊµ¼ù
 
-`lib/eventBus.ts` çš„è®¾è®¡å€¼å¾—è‚¯å®šï¼š
-- `on()` æ–¹æ³•ç›´æ¥è¿”å› unsubscribe å‡½æ•°ï¼Œä¾¿äºä½¿ç”¨
-- å†…éƒ¨ä½¿ç”¨ `Map<string, Set<EventCallback>>` ç®¡ç†è®¢é˜…
-- æœ‰å®Œæ•´çš„æ—¥å¿—è®°å½•å’Œé”™è¯¯éš”ç¦»ï¼ˆå•ä¸ª listener é”™è¯¯ä¸å½±å“å…¶ä»–ï¼‰
+`lib/eventBus.ts` µÄÉè¼ÆÖµµÃ¿Ï¶¨£º
+- `on()` ·½·¨Ö±½Ó·µ»Ø unsubscribe º¯Êı£¬±ãÓÚÊ¹ÓÃ
+- ÄÚ²¿Ê¹ÓÃ `Map<string, Set<EventCallback>>` ¹ÜÀí¶©ÔÄ
+- ÓĞÍêÕûµÄÈÕÖ¾¼ÇÂ¼ºÍ´íÎó¸ôÀë£¨µ¥¸ö listener ´íÎó²»Ó°ÏìÆäËû£©
 
-### 4.5 é£é™©åˆ†æ
+### 4.5 ·çÏÕ·ÖÎö
 
-- **ä½é£é™©**ï¼šå¤§éƒ¨åˆ†å‰¯ä½œç”¨æ¸…ç†è¾ƒä¸ºè§„èŒƒã€‚
-- Store å±‚çš„ eventBus è®¢é˜…é‡‡ç”¨ç»Ÿä¸€ init/destroy æ¨¡å¼ï¼Œç®¡ç†è‰¯å¥½ã€‚
-- å°‘æ•°é¡µé¢ç»„ä»¶çš„å¼‚æ­¥æ“ä½œç¼ºå°‘å–æ¶ˆæœºåˆ¶ï¼Œå¯èƒ½å¯¼è‡´è­¦å‘Šä½†ä¸ä¼šé€ æˆä¸¥é‡å†…å­˜æ³„æ¼ã€‚
+- **µÍ·çÏÕ**£º´ó²¿·Ö¸±×÷ÓÃÇåÀí½ÏÎª¹æ·¶¡£
+- Store ²ãµÄ eventBus ¶©ÔÄ²ÉÓÃÍ³Ò» init/destroy Ä£Ê½£¬¹ÜÀíÁ¼ºÃ¡£
+- ÉÙÊıÒ³Ãæ×é¼şµÄÒì²½²Ù×÷È±ÉÙÈ¡Ïû»úÖÆ£¬¿ÉÄÜµ¼ÖÂ¾¯¸æµ«²»»áÔì³ÉÑÏÖØÄÚ´æĞ¹Â©¡£
 
-**æ”¹è¿›å»ºè®®**ï¼š
-- ä¸ºæ•°æ®åŠ è½½çš„ useEffect å¢åŠ  AbortController æˆ– mounted ref æ£€æŸ¥
-- ç¡®ä¿æ‰€æœ‰ setInterval/setTimeout åœ¨ cleanup ä¸­æ¸…é™¤
-- ä½¿ç”¨ React Query/SWR ç­‰åº“è‡ªåŠ¨ç®¡ç†è¯·æ±‚ç”Ÿå‘½å‘¨æœŸ
-- å¢åŠ  ESLint è§„åˆ™ `react-hooks/exhaustive-deps` ä¸¥æ ¼æ£€æŸ¥
+**¸Ä½ø½¨Òé**£º
+- ÎªÊı¾İ¼ÓÔØµÄ useEffect Ôö¼Ó AbortController »ò mounted ref ¼ì²é
+- È·±£ËùÓĞ setInterval/setTimeout ÔÚ cleanup ÖĞÇå³ı
+- Ê¹ÓÃ React Query/SWR µÈ¿â×Ô¶¯¹ÜÀíÇëÇóÉúÃüÖÜÆÚ
+- Ôö¼Ó ESLint ¹æÔò `react-hooks/exhaustive-deps` ÑÏ¸ñ¼ì²é
 
 ---
 
-## äº”ã€ç»´åº¦å››ï¼šLoading çŠ¶æ€ç®¡ç†
+## Îå¡¢Î¬¶ÈËÄ£ºLoading ×´Ì¬¹ÜÀí
 
-### 5.1 ç»Ÿè®¡æ•°æ®
+### 5.1 Í³¼ÆÊı¾İ
 
-| æŒ‡æ ‡ | æ•°é‡ |
+| Ö¸±ê | ÊıÁ¿ |
 |------|------|
-| é¡µé¢çº§ç»„ä»¶æ€»æ•° | 21 ä¸ª |
-| æœ‰ Loading çŠ¶æ€çš„é¡µé¢ | 12 ä¸ª |
-| ç¼ºå°‘ Loading çŠ¶æ€çš„é¡µé¢ | 9 ä¸ª |
-| è¦†ç›–ç‡ | **57.1%** |
+| Ò³Ãæ¼¶×é¼ş×ÜÊı | 21 ¸ö |
+| ÓĞ Loading ×´Ì¬µÄÒ³Ãæ | 12 ¸ö |
+| È±ÉÙ Loading ×´Ì¬µÄÒ³Ãæ | 9 ¸ö |
+| ¸²¸ÇÂÊ | **57.1%** |
 
-### 5.2 æœ‰ Loading çŠ¶æ€çš„é¡µé¢ï¼ˆ12ä¸ªï¼‰
+### 5.2 ÓĞ Loading ×´Ì¬µÄÒ³Ãæ£¨12¸ö£©
 
-| é¡µé¢ | Loading å®ç°æ–¹å¼ |
+| Ò³Ãæ | Loading ÊµÏÖ·½Ê½ |
 |------|-----------------|
-| `pages/analysis/HotSectorPage.tsx` | loading çŠ¶æ€ + æ¡ä»¶æ¸²æŸ“ |
-| `pages/analysis/NewsPage.tsx` | loading çŠ¶æ€ |
-| `pages/analysis/BacktestPage.tsx` | loading çŠ¶æ€ |
-| `pages/analysis/IntelligentScorePage.tsx` | loading çŠ¶æ€ |
-| `pages/analysis/ScoreDocPage.tsx` | loading çŠ¶æ€ |
-| `pages/analysis/IndustryScorePage.tsx` | loading çŠ¶æ€ |
-| `pages/analysis/ValuePitPage.tsx` | loading çŠ¶æ€ |
-| `pages/analysis/SectorAnalysisPage.tsx` | loading çŠ¶æ€ |
-| `pages/input/LocalKnowledgePage.tsx` | loading çŠ¶æ€ |
-| `pages/trading/StrategySnapshotPage.tsx` | loading + saving çŠ¶æ€ |
-| `pages/trading/HoldingsPage.tsx` | loading çŠ¶æ€ |
-| `pages/news-v6/NewsPage.tsx` | loading çŠ¶æ€ |
+| `pages/analysis/HotSectorPage.tsx` | loading ×´Ì¬ + Ìõ¼şäÖÈ¾ |
+| `pages/analysis/NewsPage.tsx` | loading ×´Ì¬ |
+| `pages/analysis/BacktestPage.tsx` | loading ×´Ì¬ |
+| `pages/analysis/IntelligentScorePage.tsx` | loading ×´Ì¬ |
+| `pages/analysis/ScoreDocPage.tsx` | loading ×´Ì¬ |
+| `pages/analysis/IndustryScorePage.tsx` | loading ×´Ì¬ |
+| `pages/analysis/ValuePitPage.tsx` | loading ×´Ì¬ |
+| `pages/analysis/SectorAnalysisPage.tsx` | loading ×´Ì¬ |
+| `pages/input/LocalKnowledgePage.tsx` | loading ×´Ì¬ |
+| `pages/trading/StrategySnapshotPage.tsx` | loading + saving ×´Ì¬ |
+| `pages/trading/HoldingsPage.tsx` | loading ×´Ì¬ |
+| `pages/news-v6/NewsPage.tsx` | loading ×´Ì¬ |
 
-### 5.3 ç¼ºå°‘ Loading çŠ¶æ€çš„é¡µé¢ï¼ˆ9ä¸ªï¼‰
+### 5.3 È±ÉÙ Loading ×´Ì¬µÄÒ³Ãæ£¨9¸ö£©
 
-| é¡µé¢ | é£é™©ç­‰çº§ | è¯´æ˜ |
+| Ò³Ãæ | ·çÏÕµÈ¼¶ | ËµÃ÷ |
 |------|----------|------|
-| `pages/HomePage.tsx` | ä½ | é¦–é¡µå¯èƒ½ä¸ºé™æ€å¯¼èˆª |
-| `pages/MockTestPage.tsx` | ä½ | æµ‹è¯•é¡µé¢ |
-| `pages/analysis/StockAnalysisPage.tsx` | ä¸­ | æœ‰ scoreLoading ä½†ç¼ºå°‘æ•´ä½“ loading çŠ¶æ€å±•ç¤º |
-| `pages/analysis/AnalysisHubPage.tsx` | ä¸­ | Hub é¡µé¢å¯èƒ½æœ‰å­é¡µé¢ç®¡ç† |
-| `pages/trading/TradingHubPage.tsx` | ä¸­ | Hub é¡µé¢ |
-| `pages/input/InputHubPage.tsx` | ä¸­ | Hub é¡µé¢ |
-| `pages/command/CommandHubPage.tsx` | ä½ | å‘½ä»¤ä¸­å¿ƒé¡µé¢ |
-| `pages/analysis/StockAnalysisPage.tsx` | ä¸­ | æœ‰ scoreLoading ä½†æ•°æ®åŠ è½½æ—¶æ— éª¨æ¶å± |
+| `pages/HomePage.tsx` | µÍ | Ê×Ò³¿ÉÄÜÎª¾²Ì¬µ¼º½ |
+| `pages/MockTestPage.tsx` | µÍ | ²âÊÔÒ³Ãæ |
+| `pages/analysis/StockAnalysisPage.tsx` | ÖĞ | ÓĞ scoreLoading µ«È±ÉÙÕûÌå loading ×´Ì¬Õ¹Ê¾ |
+| `pages/analysis/AnalysisHubPage.tsx` | ÖĞ | Hub Ò³Ãæ¿ÉÄÜÓĞ×ÓÒ³Ãæ¹ÜÀí |
+| `pages/trading/TradingHubPage.tsx` | ÖĞ | Hub Ò³Ãæ |
+| `pages/input/InputHubPage.tsx` | ÖĞ | Hub Ò³Ãæ |
+| `pages/command/CommandHubPage.tsx` | µÍ | ÃüÁîÖĞĞÄÒ³Ãæ |
+| `pages/analysis/StockAnalysisPage.tsx` | ÖĞ | ÓĞ scoreLoading µ«Êı¾İ¼ÓÔØÊ±ÎŞ¹Ç¼ÜÆÁ |
 
-### 5.4 æŠ½æ ·å®¡è®¡å‘ç°
+### 5.4 ³éÑùÉó¼Æ·¢ÏÖ
 
-**StockAnalysisPage å®¡è®¡** (`src/pages/analysis/StockAnalysisPage.tsx`):
-- âœ… æœ‰ `scoreLoading` çŠ¶æ€ç”¨äºè¯„åˆ†æŒ‰é’®
-- âš ï¸ ç¼ºå°‘åˆå§‹æ•°æ®åŠ è½½çš„ loading å±•ç¤ºï¼ˆ`loading` çŠ¶æ€åœ¨ store ä¸­ä½†æœªä½¿ç”¨ï¼‰
-- âš ï¸ æ— éª¨æ¶å±æˆ– LoadingState ç»„ä»¶
-- âœ… ç©ºçŠ¶æ€æœ‰å¤„ç†ï¼ˆ"æœªæ‰¾åˆ° symbol" / "è¯·æŒ‡å®šè‚¡ç¥¨ä»£ç "ï¼‰
+**StockAnalysisPage Éó¼Æ** (`src/pages/analysis/StockAnalysisPage.tsx`):
+- ? ÓĞ `scoreLoading` ×´Ì¬ÓÃÓÚÆÀ·Ö°´Å¥
+- ?? È±ÉÙ³õÊ¼Êı¾İ¼ÓÔØµÄ loading Õ¹Ê¾£¨`loading` ×´Ì¬ÔÚ store ÖĞµ«Î´Ê¹ÓÃ£©
+- ?? ÎŞ¹Ç¼ÜÆÁ»ò LoadingState ×é¼ş
+- ? ¿Õ×´Ì¬ÓĞ´¦Àí£¨"Î´ÕÒµ½ symbol" / "ÇëÖ¸¶¨¹ÉÆ±´úÂë"£©
 
-**StrategySnapshotPage å®¡è®¡** (`src/pages/trading/StrategySnapshotPage.tsx`):
-- âœ… æœ‰ `loading` å’Œ `saving` ä¸¤ä¸ªçŠ¶æ€
-- âœ… åŠ è½½æ—¶æ˜¾ç¤º "åŠ è½½ä¸­..." æ–‡æœ¬
-- âš ï¸ åŠ è½½çŠ¶æ€å±•ç¤ºè¾ƒç®€å•ï¼Œæ— éª¨æ¶å±
-- âœ… é”™è¯¯çŠ¶æ€æœ‰å±•ç¤ºï¼ˆ`error && <p className="text-sm text-destructive">{error}</p>`ï¼‰
+**StrategySnapshotPage Éó¼Æ** (`src/pages/trading/StrategySnapshotPage.tsx`):
+- ? ÓĞ `loading` ºÍ `saving` Á½¸ö×´Ì¬
+- ? ¼ÓÔØÊ±ÏÔÊ¾ "¼ÓÔØÖĞ..." ÎÄ±¾
+- ?? ¼ÓÔØ×´Ì¬Õ¹Ê¾½Ï¼òµ¥£¬ÎŞ¹Ç¼ÜÆÁ
+- ? ´íÎó×´Ì¬ÓĞÕ¹Ê¾£¨`error && <p className="text-sm text-destructive">{error}</p>`£©
 
-### 5.5 é£é™©åˆ†æ
+### 5.5 ·çÏÕ·ÖÎö
 
-- **ä¸­é£é™©**ï¼šçº¦ 43% çš„é¡µé¢ç¼ºå°‘æ˜ç¡®çš„ Loading çŠ¶æ€ç®¡ç†ã€‚
-- æ ¸å¿ƒåˆ†æé¡µé¢ï¼ˆanalysis ç›®å½•ä¸‹ï¼‰Loading çŠ¶æ€è¾ƒå®Œå–„ã€‚
-- Hub é¡µé¢å’Œå¯¼èˆªç±»é¡µé¢ Loading éœ€æ±‚è¾ƒä½ã€‚
-- éƒ¨åˆ†é¡µé¢æœ‰ loading çŠ¶æ€ä½† UI å±•ç¤ºè¾ƒç®€é™‹ã€‚
+- **ÖĞ·çÏÕ**£ºÔ¼ 43% µÄÒ³ÃæÈ±ÉÙÃ÷È·µÄ Loading ×´Ì¬¹ÜÀí¡£
+- ºËĞÄ·ÖÎöÒ³Ãæ£¨analysis Ä¿Â¼ÏÂ£©Loading ×´Ì¬½ÏÍêÉÆ¡£
+- Hub Ò³ÃæºÍµ¼º½ÀàÒ³Ãæ Loading ĞèÇó½ÏµÍ¡£
+- ²¿·ÖÒ³ÃæÓĞ loading ×´Ì¬µ« UI Õ¹Ê¾½Ï¼òÂª¡£
 
-**æ”¹è¿›å»ºè®®**ï¼š
-- ä¸ºæ‰€æœ‰æ•°æ®é©±åŠ¨çš„é¡µé¢å¢åŠ  isLoading çŠ¶æ€å’Œéª¨æ¶å±
-- ç»Ÿä¸€ä½¿ç”¨ `<LoadingState />` æˆ– `<PageSkeleton />` ç»„ä»¶
-- Hub é¡µé¢å¯è€ƒè™‘ä½¿ç”¨å­é¡µé¢å„è‡ªçš„ Loading çŠ¶æ€
-- æŒ‰é’®ç­‰äº¤äº’å…ƒç´ åœ¨åŠ è½½æ—¶ç¦ç”¨ï¼Œé˜²æ­¢é‡å¤æäº¤
-- è€ƒè™‘ä½¿ç”¨ Suspense + React Query ç»Ÿä¸€åŠ è½½çŠ¶æ€ç®¡ç†
+**¸Ä½ø½¨Òé**£º
+- ÎªËùÓĞÊı¾İÇı¶¯µÄÒ³ÃæÔö¼Ó isLoading ×´Ì¬ºÍ¹Ç¼ÜÆÁ
+- Í³Ò»Ê¹ÓÃ `<LoadingState />` »ò `<PageSkeleton />` ×é¼ş
+- Hub Ò³Ãæ¿É¿¼ÂÇÊ¹ÓÃ×ÓÒ³Ãæ¸÷×ÔµÄ Loading ×´Ì¬
+- °´Å¥µÈ½»»¥ÔªËØÔÚ¼ÓÔØÊ±½ûÓÃ£¬·ÀÖ¹ÖØ¸´Ìá½»
+- ¿¼ÂÇÊ¹ÓÃ Suspense + React Query Í³Ò»¼ÓÔØ×´Ì¬¹ÜÀí
 
 ---
 
-## å…­ã€ç»´åº¦äº”ï¼šè·¯ç”±å‚æ•°å˜åŒ–å¤„ç†
+## Áù¡¢Î¬¶ÈÎå£ºÂ·ÓÉ²ÎÊı±ä»¯´¦Àí
 
-### 6.1 ç»Ÿè®¡æ•°æ®
+### 6.1 Í³¼ÆÊı¾İ
 
-| æŒ‡æ ‡ | æ•°é‡ |
+| Ö¸±ê | ÊıÁ¿ |
 |------|------|
-| é¡µé¢æ€»æ•° | 21 ä¸ª |
-| ä½¿ç”¨è·¯ç”±å‚æ•°çš„é¡µé¢ | 2 ä¸ª |
-| ç¼ºå°‘å‚æ•°å˜åŒ–é‡ç½®é€»è¾‘çš„é¡µé¢ | 1 ä¸ª |
-| åˆè§„ç‡ | **50%** |
+| Ò³Ãæ×ÜÊı | 21 ¸ö |
+| Ê¹ÓÃÂ·ÓÉ²ÎÊıµÄÒ³Ãæ | 2 ¸ö |
+| È±ÉÙ²ÎÊı±ä»¯ÖØÖÃÂß¼­µÄÒ³Ãæ | 1 ¸ö |
+| ºÏ¹æÂÊ | **50%** |
 
-### 6.2 ä½¿ç”¨è·¯ç”±å‚æ•°çš„é¡µé¢
+### 6.2 Ê¹ÓÃÂ·ÓÉ²ÎÊıµÄÒ³Ãæ
 
-| é¡µé¢ | ä½¿ç”¨çš„ Hook | å‚æ•°é‡ç½®å¤„ç† | åˆè§„æ€§ |
+| Ò³Ãæ | Ê¹ÓÃµÄ Hook | ²ÎÊıÖØÖÃ´¦Àí | ºÏ¹æĞÔ |
 |------|------------|-------------|--------|
-| `pages/analysis/StockAnalysisPage.tsx` | `useParams` | âœ… æœ‰ useEffect ç›‘å¬ symbol å˜åŒ– | âš ï¸ éƒ¨åˆ†åˆè§„ |
-| `pages/analysis/StockAnalysisPage.test.tsx` | `useParams` | æµ‹è¯•æ–‡ä»¶ | - |
+| `pages/analysis/StockAnalysisPage.tsx` | `useParams` | ? ÓĞ useEffect ¼àÌı symbol ±ä»¯ | ?? ²¿·ÖºÏ¹æ |
+| `pages/analysis/StockAnalysisPage.test.tsx` | `useParams` | ²âÊÔÎÄ¼ş | - |
 
-### 6.3 è¯¦ç»†å®¡è®¡ï¼šStockAnalysisPage
+### 6.3 ÏêÏ¸Éó¼Æ£ºStockAnalysisPage
 
-**æ–‡ä»¶**: `src/pages/analysis/StockAnalysisPage.tsx`
+**ÎÄ¼ş**: `src/pages/analysis/StockAnalysisPage.tsx`
 
-**ä¼˜ç‚¹**:
+**ÓÅµã**:
 ```typescript
 useEffect(() => {
   if (symbol) {
@@ -324,163 +330,163 @@ useEffect(() => {
   }
 }, [symbol, loadStockAnalysis])
 ```
-- âœ… ä½¿ç”¨ useEffect ç›‘å¬è·¯ç”±å‚æ•°å˜åŒ–
-- âœ… å‚æ•°å˜åŒ–æ—¶é‡æ–°åŠ è½½æ•°æ®
+- ? Ê¹ÓÃ useEffect ¼àÌıÂ·ÓÉ²ÎÊı±ä»¯
+- ? ²ÎÊı±ä»¯Ê±ÖØĞÂ¼ÓÔØÊı¾İ
 
-**ä¸è¶³**:
-- âš ï¸ `loadStockAnalysis` åœ¨ store ä¸­ä¼šé‡ç½®çŠ¶æ€ï¼ˆ`set({ ...initialState, ... })`ï¼‰ï¼Œä½†ç¼ºå°‘æ˜¾å¼çš„ resetState è°ƒç”¨
-- âš ï¸ æœªå¤„ç†ç»„ä»¶å¸è½½åçš„ç«æ€æ¡ä»¶ï¼ˆå¯èƒ½è®¾ç½®å·²å¸è½½ç»„ä»¶çš„ stateï¼‰
-- âš ï¸ æ—  AbortController å–æ¶ˆä¸Šä¸€æ¬¡è¯·æ±‚
+**²»×ã**:
+- ?? `loadStockAnalysis` ÔÚ store ÖĞ»áÖØÖÃ×´Ì¬£¨`set({ ...initialState, ... })`£©£¬µ«È±ÉÙÏÔÊ½µÄ resetState µ÷ÓÃ
+- ?? Î´´¦Àí×é¼şĞ¶ÔØºóµÄ¾ºÌ¬Ìõ¼ş£¨¿ÉÄÜÉèÖÃÒÑĞ¶ÔØ×é¼şµÄ state£©
+- ?? ÎŞ AbortController È¡ÏûÉÏÒ»´ÎÇëÇó
 
-### 6.4 å…¶ä»–æ½œåœ¨é£é™©é¡µé¢
+### 6.4 ÆäËûÇ±ÔÚ·çÏÕÒ³Ãæ
 
-è™½ç„¶æœªç›´æ¥ä½¿ç”¨ `useParams`ï¼Œä½†ä»¥ä¸‹é¡µé¢å¯èƒ½å­˜åœ¨ç±»ä¼¼é—®é¢˜ï¼š
+ËäÈ»Î´Ö±½ÓÊ¹ÓÃ `useParams`£¬µ«ÒÔÏÂÒ³Ãæ¿ÉÄÜ´æÔÚÀàËÆÎÊÌâ£º
 
-- `pages/analysis/ScoreDocPage.tsx`: å¯èƒ½é€šè¿‡ URL å‚æ•°å±•ç¤ºä¸åŒæ–‡æ¡£ç‰ˆæœ¬
-- `pages/analysis/IndustryScorePage.tsx`: å¯èƒ½æœ‰è¡Œä¸šä»£ç å‚æ•°
-- `pages/analysis/IntelligentScorePage.tsx`: å¯èƒ½æœ‰è‚¡ç¥¨ä»£ç å‚æ•°
+- `pages/analysis/ScoreDocPage.tsx`: ¿ÉÄÜÍ¨¹ı URL ²ÎÊıÕ¹Ê¾²»Í¬ÎÄµµ°æ±¾
+- `pages/analysis/IndustryScorePage.tsx`: ¿ÉÄÜÓĞĞĞÒµ´úÂë²ÎÊı
+- `pages/analysis/IntelligentScorePage.tsx`: ¿ÉÄÜÓĞ¹ÉÆ±´úÂë²ÎÊı
 
-è¿™äº›é¡µé¢ä½¿ç”¨è‡ªå®šä¹‰ hooksï¼ˆå¦‚ `useIntelligentScorePage`ã€`useIndustryScorePage`ï¼‰ç®¡ç†æ•°æ®ï¼Œéœ€ç¡®è®¤ hooks å†…éƒ¨æ˜¯å¦æ­£ç¡®å¤„ç†å‚æ•°å˜åŒ–ã€‚
+ÕâĞ©Ò³ÃæÊ¹ÓÃ×Ô¶¨Òå hooks£¨Èç `useIntelligentScorePage`¡¢`useIndustryScorePage`£©¹ÜÀíÊı¾İ£¬ĞèÈ·ÈÏ hooks ÄÚ²¿ÊÇ·ñÕıÈ·´¦Àí²ÎÊı±ä»¯¡£
 
-### 6.5 é£é™©åˆ†æ
+### 6.5 ·çÏÕ·ÖÎö
 
-- **ä¸­é£é™©**ï¼šä½¿ç”¨è·¯ç”±å‚æ•°çš„é¡µé¢è¾ƒå°‘ï¼ˆä»… 2 ä¸ªï¼‰ï¼Œä½†åˆè§„ç‡ä»… 50%ã€‚
-- StockAnalysisPage æœ‰åŸºæœ¬çš„å‚æ•°ç›‘å¬ï¼Œä½†é‡ç½®é€»è¾‘ä¸å¤Ÿå¥å£®ã€‚
-- éšç€åŠŸèƒ½å¢åŠ ï¼Œä½¿ç”¨è·¯ç”±å‚æ•°çš„é¡µé¢ä¼šå¢å¤šï¼Œéœ€å»ºç«‹è§„èŒƒã€‚
+- **ÖĞ·çÏÕ**£ºÊ¹ÓÃÂ·ÓÉ²ÎÊıµÄÒ³Ãæ½ÏÉÙ£¨½ö 2 ¸ö£©£¬µ«ºÏ¹æÂÊ½ö 50%¡£
+- StockAnalysisPage ÓĞ»ù±¾µÄ²ÎÊı¼àÌı£¬µ«ÖØÖÃÂß¼­²»¹»½¡×³¡£
+- Ëæ×Å¹¦ÄÜÔö¼Ó£¬Ê¹ÓÃÂ·ÓÉ²ÎÊıµÄÒ³Ãæ»áÔö¶à£¬Ğè½¨Á¢¹æ·¶¡£
 
-**æ”¹è¿›å»ºè®®**ï¼š
-- ä¸º StockAnalysisPage å¢åŠ æ˜¾å¼çš„ resetState è°ƒç”¨ + AbortController
-- ä½¿ç”¨ useEffect ç›‘å¬è·¯ç”±å‚æ•°å˜åŒ–ï¼Œéµå¾ª resetState â†’ refetch æ¨¡å¼
-- è€ƒè™‘ä½¿ç”¨ React Query çš„ queryKey è‡ªåŠ¨ç®¡ç†ç¼“å­˜å’Œé‡å–
-- å»ºç«‹è‡ªå®šä¹‰ hook è§„èŒƒï¼ˆå¦‚ `useParamData(key, fetcher)`ï¼‰ç»Ÿä¸€å¤„ç†
-- å‚æ•°å˜åŒ–æ—¶é‡ç½®è¡¨å•ã€åˆ†é¡µã€ç­›é€‰ç­‰å…³è”çŠ¶æ€
+**¸Ä½ø½¨Òé**£º
+- Îª StockAnalysisPage Ôö¼ÓÏÔÊ½µÄ resetState µ÷ÓÃ + AbortController
+- Ê¹ÓÃ useEffect ¼àÌıÂ·ÓÉ²ÎÊı±ä»¯£¬×ñÑ­ resetState ¡ú refetch Ä£Ê½
+- ¿¼ÂÇÊ¹ÓÃ React Query µÄ queryKey ×Ô¶¯¹ÜÀí»º´æºÍÖØÈ¡
+- ½¨Á¢×Ô¶¨Òå hook ¹æ·¶£¨Èç `useParamData(key, fetcher)`£©Í³Ò»´¦Àí
+- ²ÎÊı±ä»¯Ê±ÖØÖÃ±íµ¥¡¢·ÖÒ³¡¢É¸Ñ¡µÈ¹ØÁª×´Ì¬
 
 ---
 
-## ä¸ƒã€æ–‡ä»¶è¿è§„ TOP 10
+## Æß¡¢ÎÄ¼şÎ¥¹æ TOP 10
 
-æŒ‰è¿è§„æ€»æ•°ä¼°ç®—æ’åºçš„é—®é¢˜æœ€å¤šçš„æ–‡ä»¶ï¼š
+°´Î¥¹æ×ÜÊı¹ÀËãÅÅĞòµÄÎÊÌâ×î¶àµÄÎÄ¼ş£º
 
-| æ’å | æ–‡ä»¶ | è¿è§„ç±»å‹ | ä¼°ç®—è¿è§„æ•° |
+| ÅÅÃû | ÎÄ¼ş | Î¥¹æÀàĞÍ | ¹ÀËãÎ¥¹æÊı |
 |------|------|----------|-----------|
-| 1 | `core/databridge.ts` | ç±»å‹æ–­è¨€ | 27 å¤„ |
-| 2 | `data/dataLayer.ts` | ç¼ºå°‘ try-catch | çº¦ 70 å¤„ |
-| 3 | `services/data-collector/MarketDataAdapter.ts` | ç±»å‹æ–­è¨€ | 16 å¤„ |
-| 4 | `config/rotationConfig.ts` | ç±»å‹æ–­è¨€ | 16 å¤„ |
-| 5 | `services/scoring/v6-engine/calculators/l4_l5_l6.ts` | ç±»å‹æ–­è¨€ | 9 å¤„ |
-| 6 | `store/orderStore.test.ts` | ç±»å‹æ–­è¨€ + any | çº¦ 9 å¤„ |
-| 7 | `services/system/migration/storeMigrators.ts` | ç±»å‹æ–­è¨€ | 11 å¤„ |
-| 8 | `services/scoring/v6-engine/calculators/l3.ts` | ç±»å‹æ–­è¨€ | 6 å¤„ |
-| 9 | `services/scoring/v6-engine/calculators/l0_l1_l2.ts` | ç±»å‹æ–­è¨€ | 6 å¤„ |
-| 10 | `services/scoring/v6-engine/calculators/l7_l8.ts` | ç±»å‹æ–­è¨€ | 6 å¤„ |
+| 1 | `core/databridge.ts` | ÀàĞÍ¶ÏÑÔ | 27 ´¦ |
+| 2 | `data/dataLayer.ts` | È±ÉÙ try-catch | Ô¼ 70 ´¦ |
+| 3 | `services/data-collector/MarketDataAdapter.ts` | ÀàĞÍ¶ÏÑÔ | 16 ´¦ |
+| 4 | `config/rotationConfig.ts` | ÀàĞÍ¶ÏÑÔ | 16 ´¦ |
+| 5 | `services/scoring/v6-engine/calculators/l4_l5_l6.ts` | ÀàĞÍ¶ÏÑÔ | 9 ´¦ |
+| 6 | `store/orderStore.test.ts` | ÀàĞÍ¶ÏÑÔ + any | Ô¼ 9 ´¦ |
+| 7 | `services/system/migration/storeMigrators.ts` | ÀàĞÍ¶ÏÑÔ | 11 ´¦ |
+| 8 | `services/scoring/v6-engine/calculators/l3.ts` | ÀàĞÍ¶ÏÑÔ | 6 ´¦ |
+| 9 | `services/scoring/v6-engine/calculators/l0_l1_l2.ts` | ÀàĞÍ¶ÏÑÔ | 6 ´¦ |
+| 10 | `services/scoring/v6-engine/calculators/l7_l8.ts` | ÀàĞÍ¶ÏÑÔ | 6 ´¦ |
 
-> æ³¨ï¼šè¿è§„æ•°ä¸ºä¼°ç®—å€¼ï¼ŒåŒ…å«ç±»å‹æ–­è¨€ã€any ä½¿ç”¨ã€ç¼ºå°‘é”™è¯¯å¤„ç†ç­‰å¤šç§ç±»å‹ã€‚
-
----
-
-## å…«ã€æ€»ç»“ä¸å»ºè®®
-
-### 8.1 æ€»ä½“è¯„ä»·
-
-æ•´ä½“ä»£ç è´¨é‡è¯„åˆ†ï¼š**72.5 / 100**ï¼Œç­‰çº§ï¼š**ğŸŸ¡ ä¸­é£é™©**
-
-ä»£ç è´¨é‡æ•´ä½“ä¸­ç­‰ï¼Œæ ¸å¿ƒä¸šåŠ¡æ¨¡å—ï¼ˆstore å±‚ï¼‰è´¨é‡è¾ƒå¥½ï¼Œç±»å‹å®‰å…¨å’Œé”™è¯¯å¤„ç†æœ‰ä¸€å®šåŸºç¡€ã€‚ä¸»è¦æ”¹è¿›ç©ºé—´é›†ä¸­åœ¨ï¼š
-- ç±»å‹æ–­è¨€è¿‡å¤šï¼ˆ322 å¤„ï¼‰ï¼Œéœ€é€æ­¥ä¼˜åŒ–ä¸ºæ›´å®‰å…¨çš„ç±»å‹æ–¹æ¡ˆ
-- æ•°æ®å±‚é”™è¯¯å¤„ç†è¦†ç›–ç‡ä½ï¼Œéœ€åŠ å¼º service å±‚çš„é”™è¯¯è½¬æ¢
-- éƒ¨åˆ†é¡µé¢ Loading çŠ¶æ€å’Œè·¯ç”±å‚æ•°å¤„ç†ä¸å¤Ÿå®Œå–„
-
-### 8.2 ä¼˜å…ˆçº§æ”¹è¿›å»ºè®®
-
-#### P0ï¼ˆç«‹å³ä¿®å¤ï¼Œ1-2å‘¨ï¼‰
-
-1. **ä¿®å¤ StockAnalysisPage çš„ç«æ€æ¡ä»¶**
-   - å¢åŠ  AbortController å–æ¶ˆæœªå®Œæˆçš„è¯·æ±‚
-   - ç¡®ä¿å‚æ•°åˆ‡æ¢æ—¶æ—§è¯·æ±‚ä¸ä¼šè¦†ç›–æ–°æ•°æ®
-
-2. **ç§»é™¤ `store/marketDataStore.ts:73` çš„ `data: any`**
-   - å®šä¹‰å…·ä½“çš„ WidgetData ç±»å‹
-   - å¢åŠ ç±»å‹å®‰å…¨
-
-3. **ä¸º dataLayer å…³é”®æ“ä½œå¢åŠ é”™è¯¯å¤„ç†**
-   - ä¼˜å…ˆè¦†ç›– `stocks`ã€`dailyQuotes`ã€`v6Scores` ç­‰æ ¸å¿ƒè¡¨
-   - ç»Ÿä¸€è¿”å› `DataLayerResult<T>` æ ¼å¼
-
-#### P1ï¼ˆè¿‘æœŸæ”¹è¿›ï¼Œ1ä¸ªæœˆï¼‰
-
-1. **ä¼˜åŒ– core/databridge.ts çš„ç±»å‹å®‰å…¨**
-   - ä¸º 27 å¤„ç±»å‹æ–­è¨€å¼•å…¥æ³›å‹æˆ–è”åˆç±»å‹
-   - å»ºç«‹ Envelope ç±»å‹ä½“ç³»
-
-2. **å®Œå–„é¡µé¢ Loading çŠ¶æ€**
-   - ä¸º 9 ä¸ªç¼ºå°‘ Loading çš„é¡µé¢å¢åŠ åŠ è½½çŠ¶æ€
-   - ç»Ÿä¸€ä½¿ç”¨éª¨æ¶å±ç»„ä»¶
-
-3. **åŠ å¼º service å±‚é”™è¯¯å¤„ç†**
-   - æ‰€æœ‰å¯¹å¤– async å‡½æ•°å¿…é¡»æœ‰ try-catch
-   - ç»Ÿä¸€é”™è¯¯ç å’Œé”™è¯¯ä¿¡æ¯æ ¼å¼
-
-4. **å»ºç«‹ ESLint è§„åˆ™é›†**
-   - å¼€å¯ `@typescript-eslint/no-explicit-any`
-   - å¼€å¯ `react-hooks/exhaustive-deps`
-   - é…ç½® husky + lint-staged æäº¤å‰æ£€æŸ¥
-
-#### P2ï¼ˆé•¿æœŸä¼˜åŒ–ï¼Œ3ä¸ªæœˆï¼‰
-
-1. **å¼•å…¥ React Query / SWR**
-   - ç»Ÿä¸€æ•°æ®è·å–å’Œç¼“å­˜ç®¡ç†
-   - è‡ªåŠ¨å¤„ç† Loadingã€Errorã€Refetch çŠ¶æ€
-   - è‡ªåŠ¨å–æ¶ˆé‡å¤è¯·æ±‚
-
-2. **é€æ­¥è¿ç§»è‡³ TypeScript ä¸¥æ ¼æ¨¡å¼**
-   - å¼€å¯ `strictNullChecks`ã€`noImplicitAny`
-   - åˆ†æ¨¡å—é€æ­¥ä¿®å¤ç±»å‹é—®é¢˜
-
-3. **å»ºç«‹è‡ªåŠ¨åŒ–ä»£ç è´¨é‡é—¨ç¦**
-   - CI ä¸­é›†æˆ ESLintã€TypeScript ç±»å‹æ£€æŸ¥
-   - é…ç½® SonarQube æˆ–ç±»ä¼¼å·¥å…·æŒç»­ç›‘æ§
-
-4. **è¡¥å……å•å…ƒæµ‹è¯•**
-   - æ ¸å¿ƒæ¨¡å—æµ‹è¯•è¦†ç›–ç‡è¾¾åˆ° 70%+
-   - é‡ç‚¹è¦†ç›–é”™è¯¯å¤„ç†è¾¹ç•Œæƒ…å†µ
-
-### 8.3 äº®ç‚¹ä¸è‚¯å®š
-
-åœ¨å®¡è®¡è¿‡ç¨‹ä¸­ä¹Ÿå‘ç°äº†ä¸€äº›ä¼˜ç§€å®è·µï¼š
-
-1. **Store å±‚æ¶æ„æ¸…æ™°**
-   - Zustand + ç»Ÿä¸€çš„ action æ¨¡å¼
-   - æ¯ä¸ª store éƒ½æœ‰æ˜ç¡®çš„ interface å®šä¹‰
-   - loading/error çŠ¶æ€ç®¡ç†è§„èŒƒ
-
-2. **eventBus è®¾è®¡è‰¯å¥½**
-   - è®¢é˜…è¿”å› unsubscribe å‡½æ•°ï¼Œä½¿ç”¨æ–¹ä¾¿
-   - å†…éƒ¨é”™è¯¯éš”ç¦»ï¼Œå•ä¸ª listener é”™è¯¯ä¸å½±å“å…¨å±€
-   - å®Œæ•´çš„æ—¥å¿—è®°å½•
-
-3. **é”™è¯¯è¾¹ç•Œç»„ä»¶**
-   - æœ‰ `WidgetErrorBoundary` å’Œ `ErrorBoundary` ç»„ä»¶
-   - ç»„ä»¶çº§é”™è¯¯éš”ç¦»
-
-4. **ç±»å‹å®šä¹‰å®Œå–„**
-   - `data/types.ts` ä¸­æœ‰å®Œæ•´çš„ä¸šåŠ¡ç±»å‹å®šä¹‰
-   - å„æ¨¡å—æœ‰ç‹¬ç«‹çš„ types æ–‡ä»¶ï¼ˆå¦‚ `types/modules/*.ts`ï¼‰
-
-### 8.4 å®¡è®¡æ–¹æ³•è¯´æ˜
-
-æœ¬æŠ¥å‘Šé€šè¿‡ä»¥ä¸‹æ–¹å¼ç”Ÿæˆï¼š
-1. **å…¨å±€æ‰«æ**ï¼šä½¿ç”¨ grep æ­£åˆ™åŒ¹é…ç»Ÿè®¡å„ç»´åº¦è¿è§„æ•°é‡
-2. **æŠ½æ ·å®¡è®¡**ï¼šäººå·¥å¤æ ¸ 10+ ä¸ªå…³é”®æ–‡ä»¶ï¼ˆé¡µé¢ã€storeã€serviceã€hooksï¼‰
-3. **æ¨¡å¼åˆ†æ**ï¼šåˆ†æä»£ç ç»“æ„å’Œè®¾è®¡æ¨¡å¼çš„è§„èŒƒæ€§
-
-æ‰«æè§„åˆ™åŒ…æ‹¬ï¼š
-- æ­£åˆ™åŒ¹é… `any` ç±»å‹ã€ç±»å‹æ–­è¨€ï¼ˆ`as`ï¼‰ã€éç©ºæ–­è¨€ï¼ˆ`!`ï¼‰
-- æ£€æµ‹ async å‡½æ•°å’Œ try-catch åˆ†å¸ƒ
-- åˆ†æ useEffect ä¸­çš„è®¢é˜…æ¨¡å¼å’Œ cleanup è¿”å›å‡½æ•°
-- ç»Ÿè®¡é¡µé¢ç»„ä»¶ä¸­çš„ Loading ç›¸å…³å˜é‡å’Œç»„ä»¶
-- æ£€æŸ¥ä½¿ç”¨è·¯ç”±å‚æ•°çš„é¡µé¢çŠ¶æ€é‡ç½®é€»è¾‘
-
-**æ³¨**ï¼šè‡ªåŠ¨åŒ–æ‰«æå¯èƒ½å­˜åœ¨è¯¯æŠ¥å’Œæ¼æŠ¥ï¼Œå…³é”®é—®é¢˜å»ºè®®äººå·¥å¤æ ¸ã€‚è¿è§„æ•°é‡ä¸ºä¼°ç®—å€¼ï¼Œå®é™…æ•°é‡å¯èƒ½æœ‰åå·®ã€‚
+> ×¢£ºÎ¥¹æÊıÎª¹ÀËãÖµ£¬°üº¬ÀàĞÍ¶ÏÑÔ¡¢any Ê¹ÓÃ¡¢È±ÉÙ´íÎó´¦ÀíµÈ¶àÖÖÀàĞÍ¡£
 
 ---
 
-*æŠ¥å‘Šç”Ÿæˆæ—¶é—´ï¼š2026-06-29*
+## °Ë¡¢×Ü½áÓë½¨Òé
+
+### 8.1 ×ÜÌåÆÀ¼Û
+
+ÕûÌå´úÂëÖÊÁ¿ÆÀ·Ö£º**72.5 / 100**£¬µÈ¼¶£º**?? ÖĞ·çÏÕ**
+
+´úÂëÖÊÁ¿ÕûÌåÖĞµÈ£¬ºËĞÄÒµÎñÄ£¿é£¨store ²ã£©ÖÊÁ¿½ÏºÃ£¬ÀàĞÍ°²È«ºÍ´íÎó´¦ÀíÓĞÒ»¶¨»ù´¡¡£Ö÷Òª¸Ä½ø¿Õ¼ä¼¯ÖĞÔÚ£º
+- ÀàĞÍ¶ÏÑÔ¹ı¶à£¨322 ´¦£©£¬ĞèÖğ²½ÓÅ»¯Îª¸ü°²È«µÄÀàĞÍ·½°¸
+- Êı¾İ²ã´íÎó´¦Àí¸²¸ÇÂÊµÍ£¬Ğè¼ÓÇ¿ service ²ãµÄ´íÎó×ª»»
+- ²¿·ÖÒ³Ãæ Loading ×´Ì¬ºÍÂ·ÓÉ²ÎÊı´¦Àí²»¹»ÍêÉÆ
+
+### 8.2 ÓÅÏÈ¼¶¸Ä½ø½¨Òé
+
+#### P0£¨Á¢¼´ĞŞ¸´£¬1-2ÖÜ£©
+
+1. **ĞŞ¸´ StockAnalysisPage µÄ¾ºÌ¬Ìõ¼ş**
+   - Ôö¼Ó AbortController È¡ÏûÎ´Íê³ÉµÄÇëÇó
+   - È·±£²ÎÊıÇĞ»»Ê±¾ÉÇëÇó²»»á¸²¸ÇĞÂÊı¾İ
+
+2. **ÒÆ³ı `store/marketDataStore.ts:73` µÄ `data: any`**
+   - ¶¨Òå¾ßÌåµÄ WidgetData ÀàĞÍ
+   - Ôö¼ÓÀàĞÍ°²È«
+
+3. **Îª dataLayer ¹Ø¼ü²Ù×÷Ôö¼Ó´íÎó´¦Àí**
+   - ÓÅÏÈ¸²¸Ç `stocks`¡¢`dailyQuotes`¡¢`v6Scores` µÈºËĞÄ±í
+   - Í³Ò»·µ»Ø `DataLayerResult<T>` ¸ñÊ½
+
+#### P1£¨½üÆÚ¸Ä½ø£¬1¸öÔÂ£©
+
+1. **ÓÅ»¯ core/databridge.ts µÄÀàĞÍ°²È«**
+   - Îª 27 ´¦ÀàĞÍ¶ÏÑÔÒıÈë·ºĞÍ»òÁªºÏÀàĞÍ
+   - ½¨Á¢ Envelope ÀàĞÍÌåÏµ
+
+2. **ÍêÉÆÒ³Ãæ Loading ×´Ì¬**
+   - Îª 9 ¸öÈ±ÉÙ Loading µÄÒ³ÃæÔö¼Ó¼ÓÔØ×´Ì¬
+   - Í³Ò»Ê¹ÓÃ¹Ç¼ÜÆÁ×é¼ş
+
+3. **¼ÓÇ¿ service ²ã´íÎó´¦Àí**
+   - ËùÓĞ¶ÔÍâ async º¯Êı±ØĞëÓĞ try-catch
+   - Í³Ò»´íÎóÂëºÍ´íÎóĞÅÏ¢¸ñÊ½
+
+4. **½¨Á¢ ESLint ¹æÔò¼¯**
+   - ¿ªÆô `@typescript-eslint/no-explicit-any`
+   - ¿ªÆô `react-hooks/exhaustive-deps`
+   - ÅäÖÃ husky + lint-staged Ìá½»Ç°¼ì²é
+
+#### P2£¨³¤ÆÚÓÅ»¯£¬3¸öÔÂ£©
+
+1. **ÒıÈë React Query / SWR**
+   - Í³Ò»Êı¾İ»ñÈ¡ºÍ»º´æ¹ÜÀí
+   - ×Ô¶¯´¦Àí Loading¡¢Error¡¢Refetch ×´Ì¬
+   - ×Ô¶¯È¡ÏûÖØ¸´ÇëÇó
+
+2. **Öğ²½Ç¨ÒÆÖÁ TypeScript ÑÏ¸ñÄ£Ê½**
+   - ¿ªÆô `strictNullChecks`¡¢`noImplicitAny`
+   - ·ÖÄ£¿éÖğ²½ĞŞ¸´ÀàĞÍÎÊÌâ
+
+3. **½¨Á¢×Ô¶¯»¯´úÂëÖÊÁ¿ÃÅ½û**
+   - CI ÖĞ¼¯³É ESLint¡¢TypeScript ÀàĞÍ¼ì²é
+   - ÅäÖÃ SonarQube »òÀàËÆ¹¤¾ß³ÖĞø¼à¿Ø
+
+4. **²¹³äµ¥Ôª²âÊÔ**
+   - ºËĞÄÄ£¿é²âÊÔ¸²¸ÇÂÊ´ïµ½ 70%+
+   - ÖØµã¸²¸Ç´íÎó´¦Àí±ß½çÇé¿ö
+
+### 8.3 ÁÁµãÓë¿Ï¶¨
+
+ÔÚÉó¼Æ¹ı³ÌÖĞÒ²·¢ÏÖÁËÒ»Ğ©ÓÅĞãÊµ¼ù£º
+
+1. **Store ²ã¼Ü¹¹ÇåÎú**
+   - Zustand + Í³Ò»µÄ action Ä£Ê½
+   - Ã¿¸ö store ¶¼ÓĞÃ÷È·µÄ interface ¶¨Òå
+   - loading/error ×´Ì¬¹ÜÀí¹æ·¶
+
+2. **eventBus Éè¼ÆÁ¼ºÃ**
+   - ¶©ÔÄ·µ»Ø unsubscribe º¯Êı£¬Ê¹ÓÃ·½±ã
+   - ÄÚ²¿´íÎó¸ôÀë£¬µ¥¸ö listener ´íÎó²»Ó°ÏìÈ«¾Ö
+   - ÍêÕûµÄÈÕÖ¾¼ÇÂ¼
+
+3. **´íÎó±ß½ç×é¼ş**
+   - ÓĞ `WidgetErrorBoundary` ºÍ `ErrorBoundary` ×é¼ş
+   - ×é¼ş¼¶´íÎó¸ôÀë
+
+4. **ÀàĞÍ¶¨ÒåÍêÉÆ**
+   - `data/types.ts` ÖĞÓĞÍêÕûµÄÒµÎñÀàĞÍ¶¨Òå
+   - ¸÷Ä£¿éÓĞ¶ÀÁ¢µÄ types ÎÄ¼ş£¨Èç `types/modules/*.ts`£©
+
+### 8.4 Éó¼Æ·½·¨ËµÃ÷
+
+±¾±¨¸æÍ¨¹ıÒÔÏÂ·½Ê½Éú³É£º
+1. **È«¾ÖÉ¨Ãè**£ºÊ¹ÓÃ grep ÕıÔòÆ¥ÅäÍ³¼Æ¸÷Î¬¶ÈÎ¥¹æÊıÁ¿
+2. **³éÑùÉó¼Æ**£ºÈË¹¤¸´ºË 10+ ¸ö¹Ø¼üÎÄ¼ş£¨Ò³Ãæ¡¢store¡¢service¡¢hooks£©
+3. **Ä£Ê½·ÖÎö**£º·ÖÎö´úÂë½á¹¹ºÍÉè¼ÆÄ£Ê½µÄ¹æ·¶ĞÔ
+
+É¨Ãè¹æÔò°üÀ¨£º
+- ÕıÔòÆ¥Åä `any` ÀàĞÍ¡¢ÀàĞÍ¶ÏÑÔ£¨`as`£©¡¢·Ç¿Õ¶ÏÑÔ£¨`!`£©
+- ¼ì²â async º¯ÊıºÍ try-catch ·Ö²¼
+- ·ÖÎö useEffect ÖĞµÄ¶©ÔÄÄ£Ê½ºÍ cleanup ·µ»Øº¯Êı
+- Í³¼ÆÒ³Ãæ×é¼şÖĞµÄ Loading Ïà¹Ø±äÁ¿ºÍ×é¼ş
+- ¼ì²éÊ¹ÓÃÂ·ÓÉ²ÎÊıµÄÒ³Ãæ×´Ì¬ÖØÖÃÂß¼­
+
+**×¢**£º×Ô¶¯»¯É¨Ãè¿ÉÄÜ´æÔÚÎó±¨ºÍÂ©±¨£¬¹Ø¼üÎÊÌâ½¨ÒéÈË¹¤¸´ºË¡£Î¥¹æÊıÁ¿Îª¹ÀËãÖµ£¬Êµ¼ÊÊıÁ¿¿ÉÄÜÓĞÆ«²î¡£
+
+---
+
+*±¨¸æÉú³ÉÊ±¼ä£º2026-06-29*

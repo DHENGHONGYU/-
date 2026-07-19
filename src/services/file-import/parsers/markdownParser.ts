@@ -12,6 +12,7 @@
  */
 
 import { getLogger } from '@/lib/logger'
+import { safeRegex } from '@/lib/safeRegex'
 import { STORE_NAME } from '@/config/dbConfig'
 import type { FileParser, ParseOptions, ParsedData } from '@/types/modules/data-sync.types'
 
@@ -94,7 +95,7 @@ function extractTitle(content: string): string {
 function extractStockCodes(content: string): string[] {
   const codes = new Set<string>()
   let match: RegExpExecArray | null
-  const pattern = new RegExp(STOCK_CODE_PATTERN)
+  const pattern = safeRegex(STOCK_CODE_PATTERN.source, 'g')
   while ((match = pattern.exec(content)) !== null) {
     codes.add(match[1] ?? '')
   }

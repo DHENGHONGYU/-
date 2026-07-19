@@ -15,9 +15,10 @@ import { Input } from '@/components/atoms/Input'
 import { Badge } from '@/components/atoms/Badge'
 import { Select, SelectItem } from '@/components/atoms/Select'
 import { Skeleton } from '@/components/molecules/states/Skeleton'
-import { useDataTestStore } from '@/store/dataTestStore'
+import { useDataTestStore, type TraceDimension } from '@/store/dataTestStore'
 import { useSevenDimConfigStore } from '@/store/sevenDimConfigStore'
 import { useCollectionRuntimeStore } from '@/store/collectionRuntimeStore'
+import { DEFAULT_DIMENSIONS } from '@/config/collectConfig'
 import { getLogger } from '@/lib/logger'
 import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import CollectionTimeline from '@/components/organisms/input/CollectionTimeline'
@@ -32,10 +33,11 @@ function parseSymbols(text: string): string[] {
     .filter(Boolean)
 }
 
-const DIMENSION_OPTIONS = [
-  { value: '01', label: '基本信息（行情）' },
-  { value: '02', label: 'K线数据' },
-] as const
+/** 从 DEFAULT_DIMENSIONS 动态构建维度选项（L24 修复：原硬编码仅 2 项） */
+const DIMENSION_OPTIONS = DEFAULT_DIMENSIONS.map((dim) => ({
+  value: dim.code,
+  label: dim.name,
+})) as readonly { value: TraceDimension; label: string }[]
 
 export default function DataTestPanel(): React.JSX.Element {
   const store = useDataTestStore()
@@ -109,7 +111,7 @@ export default function DataTestPanel(): React.JSX.Element {
             />
             <Select
               value={store.selectedDimension}
-              onValueChange={(value) => store.setSelectedDimension(value as '01' | '02')}
+              onValueChange={(value) => store.setSelectedDimension(value as TraceDimension)}
               className="h-9 w-40 text-sm"
             >
               {DIMENSION_OPTIONS.map((opt) => (

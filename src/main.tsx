@@ -25,6 +25,16 @@ async function bootstrap(): Promise<void> {
     const { setStrategyAnalyzers } = await import('@/core/databridgeStrategyRouter')
     const { setFeedbackServices } = await import('@/core/feedbackOrchestrator')
     const { setPipelineServices } = await import('@/core/pipelineScheduler')
+    const { setScoreTriggerServices, scoreAutoTrigger } = await import('@/services/scoring/scoreAutoTrigger')
+    const { setIndustryAnalysisServices } = await import('@/services/scoring/v6ScoreService')
+    const {
+      runFullIndustryAnalysis,
+      getStockIndustryV4Analysis,
+      invalidateIndustryCache,
+      v4ToIndustryScoreData,
+      runFullIndustryAnalysisEnhanced,
+      getStockIndustryV4AnalysisEnhanced,
+    } = await import('@/services/analysis/industryAnalysisService')
 
     const { analyze: analyzeHotSector } = await import('@/services/scoring/hotSectorAnalyzer')
     const { detect: detectRotation } = await import('@/services/scoring/rotationSignalDetector')
@@ -48,6 +58,20 @@ async function bootstrap(): Promise<void> {
 
     setPipelineServices({
       runV6Score,
+    })
+
+    setScoreTriggerServices({ runV6Score })
+    scoreAutoTrigger.start()
+
+    // v2.9.0: 行业分析服务注入
+    setIndustryAnalysisServices({
+      runFullIndustryAnalysis,
+      getStockIndustryV4Analysis,
+      invalidateIndustryCache,
+      v4ToIndustryScoreData,
+      // v2.9.5 增强版
+      runFullIndustryAnalysisEnhanced,
+      getStockIndustryV4AnalysisEnhanced,
     })
 
     logger.info('[main] Core 层服务注册完成')

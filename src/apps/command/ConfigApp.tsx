@@ -31,6 +31,7 @@ import { COLOR_TOKENS } from '@/constants/theme.tokens'
 import { getLogger } from '@/lib/logger'
 import { toSafeNumberInRange } from '@/lib/safeCoerce'
 import { useConfirmDialog } from '@/hooks/useConfirmDialog'
+import { ConfirmDialog } from '@/components/molecules/ConfirmDialog'
 import { useRuntimeTradingConfigStore } from '@/store/runtimeTradingConfigStore'
 
 const logger = getLogger()
@@ -114,9 +115,7 @@ function loadConfig(): AppConfig {
       const parsed = JSON.parse(raw) as Partial<AppConfig>
       return { ...DEFAULT_CONFIG, ...parsed }
     }
-  } catch {
-    // 解析失败，使用默认值
-  }
+  } catch { console.warn('[ConfigApp.tsx] 解析失败，使用默认值, using fallback') }
   return { ...DEFAULT_CONFIG }
 }
 
@@ -172,14 +171,14 @@ export default function ConfigApp(): React.JSX.Element {
   const [config, setConfig] = useState<AppConfig>(loadConfig)
   const [saved, setSaved] = useState(false)
   const savedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const { confirm } = useConfirmDialog()
+  const { confirm, dialogProps } = useConfirmDialog()
 
   // LLM 配置状态（受控模式）
   const [llmConfig, setLlmConfig] = useState<PartialLlmConfig>(() => {
     try {
       const stored = localStorage.getItem(LLM_CONFIG_KEY)
       return stored ? JSON.parse(stored) : {}
-    } catch {
+    } catch (err) { console.warn('[ConfigApp.tsx]', err);
       return {}
     }
   })
@@ -483,6 +482,9 @@ export default function ConfigApp(): React.JSX.Element {
           />
         </CardContent>
       </Card>
+
+      {/* 命令式确认对话框（由 useConfirmDialog 驱动渲染） */}
+      <ConfirmDialog {...dialogProps} />
     </div>
   )
 }

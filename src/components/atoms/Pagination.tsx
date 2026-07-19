@@ -1,135 +1,98 @@
-import { forwardRef, memo, useCallback, useMemo } from 'react'
-import { cn } from '@/lib/utils'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+/**
+ * Pagination — 分页原子
+ *
+ * 受控页码/每页条数，显示页码按钮和首/末/前/后导航。
+ *
+ * @module atoms/Pagination
+ * @since 2026-07-18 (P2 规划实现)
+ */
 
-export interface PaginationProps {
+import { type HTMLAttributes } from 'react'
+
+export interface PaginationProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
+  /** 当前页码（1-based） */
+  page: number
+  /** 总页数 */
   total: number
+  /** 页码变化回调 */
+  onChange: (page: number) => void
+  /** 每页条数 */
   pageSize?: number
-  current?: number
-  onChange?: (page: number) => void
-  className?: string
+  /** 每页条数变化回调 */
+  onPageSizeChange?: (size: number) => void
+  /** 可选每页条数 */
+  pageSizeOptions?: number[]
+  /** 是否显示每页条数选择器 */
+  showSizeChanger?: boolean
 }
 
-function generatePages(current: number, totalPages: number): (number | 'ellipsis-start' | 'ellipsis-end')[] {
-  if (totalPages <= 7) {
-    return Array.from({ length: totalPages }, (_, i) => i + 1)
-  }
-
-  const pages: (number | 'ellipsis-start' | 'ellipsis-end')[] = []
-
-  pages.push(1)
-
-  if (current <= 3) {
-    for (let i = 2; i <= 5; i++) pages.push(i)
-    pages.push('ellipsis-end')
-  } else if (current >= totalPages - 2) {
-    pages.push('ellipsis-start')
-    for (let i = totalPages - 4; i < totalPages; i++) pages.push(i)
-  } else {
-    pages.push('ellipsis-start')
-    pages.push(current - 1, current, current + 1)
-    pages.push('ellipsis-end')
-  }
-
-  pages.push(totalPages)
-
-  return pages
+function PageBtn({ active, disabled, onClick, label }: {
+  active?: boolean; disabled?: boolean; onClick: () => void; label: string
+}) {
+  return (
+    <button
+      disabled={disabled}
+      onClick={onClick}
+      className={`
+        inline-flex h-8 w-8 items-center justify-center rounded text-sm
+        ${active ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'}
+        ${disabled ? 'cursor-not-allowed opacity-40' : 'cursor-pointer'}
+      `}
+    >
+      {label}
+    </button>
+  )
 }
+
+const ELLIPSIS = '…'
 
 /**
  * Pagination
  */
-export const Pagination = memo(forwardRef<HTMLDivElement, PaginationProps>(
-  ({ total, pageSize = 10, current = 1, onChange, className }, ref) => {
-    const totalPages = useMemo(() => Math.max(1, Math.ceil(total / pageSize)), [total, pageSize])
+export function Pagination({
+  page, total, onChange, pageSize, onPageSizeChange,
+  pageSizeOptions = [10, 20, 50], showSizeChanger = false,
+  className = '', ...rest
+}: PaginationProps) {
+  if (total <= 1) return null
 
-    const safeCurrent = useMemo(() => {
-      if (current < 1) return 1
-      if (current > totalPages) return totalPages
-      return current
-    }, [current, totalPages])
+  const pages: (number | string)[] = []
+  for (let i = 1; i <= total; i++) {
+    if (i === 1 || i === total || (i >= page - 1 && i <= page + 1)) {
+      pages.push(i)
+    } else if (pages[pages.length - 1] !== ELLIPSIS) {
+      pages.push(ELLIPSIS)
+    }
+  }
 
-    const pages = useMemo(() => generatePages(safeCurrent, totalPages), [safeCurrent, totalPages])
+  return (
+    <div className={`flex items-center gap-1 ${className}`} {...rest}>
+      <PageBtn label="«" disabled={page === 1} onClick={() => onChange(1)} />
+      <PageBtn label="‹" disabled={page === 1} onClick={() => onChange(page - 1)} />
+      {pages.map((p, i) =>
+        p === ELLIPSIS ? (
+          <span key={`e-${i}`} className="inline-flex h-8 w-8 items-center justify-center text-sm text-muted-foreground">
+            {ELLIPSIS}
+          </span>
+        ) : (
+          <PageBtn key={p} label={String(p)} active={p === page} onClick={() => onChange(p as number)} />
+        ),
+      )}
+      <PageBtn label="›" disabled={page === total} onClick={() => onChange(page + 1)} />
+      <PageBtn label="»" disabled={page === total} onClick={() => onChange(total)} />
 
-    const handlePageChange = useCallback(
-      (page: number) => {
-        if (page < 1 || page > totalPages || page === safeCurrent) return
-        onChange?.(page)
-      },
-      [totalPages, safeCurrent, onChange],
-    )
-
-    if (total === 0) return <></>
-
-    return (
-      <nav ref={ref} role="navigation" aria-label="pagination" className={cn('flex items-center gap-1', className)}>
-        <button
-          type="button"
-          disabled={safeCurrent <= 1}
-          onClick={() => handlePageChange(safeCurrent - 1)}
-          className={cn(
-            'inline-flex h-9 w-9 items-center justify-center rounded-md text-sm',
-            'hover:bg-accent hover:text-accent-foreground',
-            'disabled:pointer-events-none disabled:opacity-50',
-          )}
-          aria-label="上一页"
+      {showSizeChanger && (
+        <select
+          value={pageSize}
+          onChange={(e) => onPageSizeChange?.(Number(e.target.value))}
+          className="ml-3 h-8 rounded border bg-background px-2 text-xs"
+          aria-label="每页条数"
         >
-          <ChevronLeft className="h-4 w-4" />
-        </button>
-
-        {pages.map((page, index) => {
-          if (page === 'ellipsis-start' || page === 'ellipsis-end') {
-            return (
-              <span
-                key={`ellipsis-${index}`}
-                className="flex h-9 w-9 items-center justify-center text-sm text-muted-foreground"
-                aria-hidden="true"
-              >
-                ...
-              </span>
-            )
-          }
-
-          const isActive = page === safeCurrent
-          return (
-            <button
-              key={page}
-              type="button"
-              disabled={isActive}
-              onClick={() => handlePageChange(page)}
-              className={cn(
-                'inline-flex h-9 w-9 items-center justify-center rounded-md text-sm',
-                'hover:bg-accent hover:text-accent-foreground',
-                isActive && 'bg-primary text-primary-foreground hover:bg-primary/90',
-                'disabled:pointer-events-none',
-              )}
-              aria-current={isActive ? 'page' : undefined}
-              aria-label={`第 ${page} 页`}
-            >
-              {page}
-            </button>
-          )
-        })}
-
-        <button
-          type="button"
-          disabled={safeCurrent >= totalPages}
-          onClick={() => handlePageChange(safeCurrent + 1)}
-          className={cn(
-            'inline-flex h-9 w-9 items-center justify-center rounded-md text-sm',
-            'hover:bg-accent hover:text-accent-foreground',
-            'disabled:pointer-events-none disabled:opacity-50',
-          )}
-          aria-label="下一页"
-        >
-          <ChevronRight className="h-4 w-4" />
-        </button>
-
-        <span className="ml-2 text-sm text-muted-foreground">
-          共 {total} 条
-        </span>
-      </nav>
-    )
-  },
-))
-Pagination.displayName = 'Pagination'
+          {pageSizeOptions.map((s) => (
+            <option key={s} value={s}>{s} 条/页</option>
+          ))}
+        </select>
+      )}
+    </div>
+  )
+}

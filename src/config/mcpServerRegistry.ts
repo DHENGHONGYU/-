@@ -89,7 +89,10 @@ export const MCP_SERVER_REGISTRY: ReadonlyArray<MCPServerConfigEntry> = [
     modulePath: '@/mcp/servers/analysis/analysisServer',
     exportName: 'AnalysisServer',
     priority: 'medium',
-    enabled: false, // 2026-07-20: 零业务调用，已注册 screening-agent 覆盖筛选能力
+    enabled: false,
+    // 恢复条件：Agent 分析编排需求明确时（如多维度交叉分析 Agent）
+    // 恢复审批：架构评审会议
+    // 恢复检查项：tsc, audit:layers, Agent 注册, ACL 更新, ADR 更新
   },
   {
     name: 'news:main',
@@ -112,7 +115,10 @@ export const MCP_SERVER_REGISTRY: ReadonlyArray<MCPServerConfigEntry> = [
     modulePath: '@/mcp/servers/portfolio/portfolioServer',
     exportName: 'PortfolioServer',
     priority: 'medium',
-    enabled: false, // 2026-07-20: 零业务调用，待 Agent 场景恢复
+    enabled: false,
+    // 恢复条件：组合管理 Agent 上线时（如投资组合再平衡 Agent）
+    // 恢复审批：架构评审会议
+    // 恢复检查项：tsc, audit:layers, Agent 注册, ACL 更新, ADR 更新
   },
   {
     name: 'screening:main',
@@ -128,7 +134,10 @@ export const MCP_SERVER_REGISTRY: ReadonlyArray<MCPServerConfigEntry> = [
     modulePath: '@/mcp/servers/knowledge/knowledgeServer',
     exportName: 'KnowledgeServer',
     priority: 'medium',
-    enabled: false, // 2026-07-20: 零业务调用，待知识库场景恢复
+    enabled: false,
+    // 恢复条件：知识库问答 Agent 上线时（如本地研报检索 Agent）
+    // 恢复审批：架构评审会议
+    // 恢复检查项：tsc, audit:layers, Agent 注册, ACL 更新, ADR 更新
   },
   {
     name: 'backtest:main',
@@ -165,7 +174,10 @@ export const MCP_SERVER_REGISTRY: ReadonlyArray<MCPServerConfigEntry> = [
     modulePath: '@/mcp/servers/execution/executionServer',
     exportName: 'ExecutionServer',
     priority: 'medium',
-    enabled: false, // 2026-07-20: 零业务调用，待执行计划场景恢复
+    enabled: false,
+    // 恢复条件：自动执行 Agent 上线时（如执行计划自动调度 Agent）
+    // 恢复审批：架构评审会议
+    // 恢复检查项：tsc, audit:layers, Agent 注册, ACL 更新, ADR 更新
   },
 
 
@@ -175,6 +187,9 @@ export const MCP_SERVER_REGISTRY: ReadonlyArray<MCPServerConfigEntry> = [
     modulePath: '@/mcp/servers/workflow/workflowServer',
     exportName: 'WorkflowServer',
     priority: 'medium',
-    enabled: false, // 2026-07-20: 零业务调用，待调度器场景恢复
+    enabled: false,
+    // 恢复条件：工作流编排 Agent 上线时（如多步骤工作流调度 Agent）
+    // 恢复审批：架构评审会议
+    // 恢复检查项：tsc, audit:layers, Agent 注册, ACL 更新, ADR 更新
   },
 ] as const

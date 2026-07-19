@@ -20,7 +20,7 @@ import { THEME_TOKENS, COLOR_TOKENS } from '@/constants/theme.tokens'
 /** 饼图 / 多系列图表调色板 */
 export const PIE_CHART_PALETTE = [
   COLOR_TOKENS.info.hex,        // #3b82f6 蓝
-  COLOR_TOKENS.success.hex,     // #22c55e 绿
+  COLOR_TOKENS.success.hex,     // #21c45d 语义成功色
   COLOR_TOKENS.warning.hex,     // #f59e0b 琥珀
   COLOR_TOKENS.danger.hex,      // #ef4444 红
   COLOR_TOKENS.purple.hex,      // #8b5cf6 紫
@@ -111,7 +111,7 @@ export const ALERT_LEVEL_COLORS = {
 
 /** 股票池状态颜色（活跃/温热/冷清/冷淡） */
 export const POOL_STATUS_RAW_COLORS = [
-  COLOR_TOKENS.success.hex,   // 活跃 - #22c55e
+  COLOR_TOKENS.success.hex,   // 活跃 - #21c45d 语义成功色
   COLOR_TOKENS.info.hex,      // 温热 - #3b82f6
   COLOR_TOKENS.warning.hex,   // 冷清 - #f59e0b
   COLOR_TOKENS.neutral.hex,   // 冷淡 - #9ca3af

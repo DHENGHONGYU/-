@@ -1,169 +1,168 @@
 ---
-title: db-migration-v4-to-v6
-code_version: 2.0.0
-
-tier: important
----
-
----
-title: V6ProDB IndexedDB å‡çº§è§„èŒƒï¼ˆv4 â†’ v6ï¼‰
-version: v0.9.0
-last_updated: 2026-06-25
-maintainer: V9 Architecture Team
+title: V6ProDB IndexedDB Éý¼¶¹æ·¶£¨v4 ¡ú v6£©
+type: explanation
+domain: data
+phase: planning
+tier: standard
 status: active
-change_log:
-  - date: 2026-06-25
-    author: Documentation Governor
-    desc: æ³¨å…¥ Frontmatter å…ƒæ•°æ®ï¼ˆPhase 3 ç‰ˆæœ¬åŒ–ï¼‰
+maintainer: V9 Architecture Team
+summary: "## 1. ¸ÅÊö ±¾ÎÄµµ¹æ¶¨ `V6ProDB` ´Ó°æ±¾ `4` Éý¼¶µ½°æ±¾ `6` µÄÍêÕû²½Öè£¬°üÀ¨ÐÂÔö Store¡¢Ë÷Òý±ä¸ü¡¢ÀúÊ·Êý¾Ý¼æÈÝ´¦Àí¼°Î´À´Éý¼¶¹æ·¶¡£"
+tags: [data, registry, migration]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: important
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
+
 > **Status**: Current  
 > **Version**: v0.9.0-migration-implemented  
 > **Last Updated**: 2026-06-25
 
-# V6ProDB IndexedDB å‡çº§è§„èŒƒï¼ˆv4 â†’ v6ï¼‰
+# V6ProDB IndexedDB Éý¼¶¹æ·¶£¨v4 ¡ú v6£©
 
-## 1. æ¦‚è¿°
+## 1. ¸ÅÊö
 
-| é¡¹ç›® | å€¼ |
+| ÏîÄ¿ | Öµ |
 |------|-----|
-| æ•°æ®åº“å | `V6ProDB` |
-| å½“å‰ç‰ˆæœ¬ | `6` |
-| å‡çº§å…¥å£ | `src/data/db.ts` çš„ `request.onupgradeneeded` |
-| å‡çº§æ–¹å¼ | é€ç‰ˆæœ¬é€’è¿›ï¼ˆsequentialï¼‰ï¼Œä¸å¯é€† |
+| Êý¾Ý¿âÃû | `V6ProDB` |
+| µ±Ç°°æ±¾ | `6` |
+| Éý¼¶Èë¿Ú | `src/data/db.ts` µÄ `request.onupgradeneeded` |
+| Éý¼¶·½Ê½ | Öð°æ±¾µÝ½ø£¨sequential£©£¬²»¿ÉÄæ |
 
-æœ¬æ–‡æ¡£è§„å®š `V6ProDB` ä»Žç‰ˆæœ¬ `4` å‡çº§åˆ°ç‰ˆæœ¬ `6` çš„å®Œæ•´æ­¥éª¤ï¼ŒåŒ…æ‹¬æ–°å¢ž Storeã€ç´¢å¼•å˜æ›´ã€åŽ†å²æ•°æ®å…¼å®¹å¤„ç†åŠæœªæ¥å‡çº§è§„èŒƒã€‚
+±¾ÎÄµµ¹æ¶¨ `V6ProDB` ´Ó°æ±¾ `4` Éý¼¶µ½°æ±¾ `6` µÄÍêÕû²½Öè£¬°üÀ¨ÐÂÔö Store¡¢Ë÷Òý±ä¸ü¡¢ÀúÊ·Êý¾Ý¼æÈÝ´¦Àí¼°Î´À´Éý¼¶¹æ·¶¡£
 
 ---
 
-## 2. é€ç‰ˆæœ¬å‡çº§è¯´æ˜Ž
+## 2. Öð°æ±¾Éý¼¶ËµÃ÷
 
-### 2.1 v3 â†’ v4ï¼šè¡Œæƒ…ä¸Žä¿¡å· Store
+### 2.1 v3 ¡ú v4£ºÐÐÇéÓëÐÅºÅ Store
 
-**å˜æ›´å†…å®¹**ï¼š
-- æ–°å¢ž `daily_quotes` Storeï¼Œç”¨äºŽä¿å­˜ K çº¿ / è¡Œæƒ…æ•°æ®ã€‚
-- æ–°å¢ž `signals` Storeï¼Œç”¨äºŽä¿å­˜äº¤æ˜“ä¿¡å·ã€‚
+**±ä¸üÄÚÈÝ**£º
+- ÐÂÔö `daily_quotes` Store£¬ÓÃÓÚ±£´æ K Ïß / ÐÐÇéÊý¾Ý¡£
+- ÐÂÔö `signals` Store£¬ÓÃÓÚ±£´æ½»Ò×ÐÅºÅ¡£
 
-**Schema**ï¼š
-| Store | KeyPath | ç´¢å¼• |
+**Schema**£º
+| Store | KeyPath | Ë÷Òý |
 |------|---------|------|
-| `daily_quotes` | `symbol` | æ—  |
-| `signals` | `id` | æ—  |
+| `daily_quotes` | `symbol` | ÎÞ |
+| `signals` | `id` | ÎÞ |
 
-**å…¼å®¹å¤„ç†**ï¼š
-- é¦–æ¬¡åˆ›å»ºæ—¶ç›´æŽ¥ `createObjectStore`ã€‚
-- è‹¥ Store å·²å­˜åœ¨ï¼ˆç†è®ºä¸Šä¸å­˜åœ¨ï¼Œå›  v3 æ— æ­¤ Storeï¼‰ï¼Œè·³è¿‡åˆ›å»ºã€‚
+**¼æÈÝ´¦Àí**£º
+- Ê×´Î´´½¨Ê±Ö±½Ó `createObjectStore`¡£
+- Èô Store ÒÑ´æÔÚ£¨ÀíÂÛÉÏ²»´æÔÚ£¬Òò v3 ÎÞ´Ë Store£©£¬Ìø¹ý´´½¨¡£
 
 ---
 
-### 2.2 v4 â†’ v5ï¼š`stocks` æ–°å¢žåˆ†ç»„å­—æ®µä¸Žç´¢å¼•
+### 2.2 v4 ¡ú v5£º`stocks` ÐÂÔö·Ö×é×Ö¶ÎÓëË÷Òý
 
-**å˜æ›´å†…å®¹**ï¼š
-- `stocks` Store æ–°å¢ž `group` å­—æ®µã€‚
-- `stocks` Store æ–°å¢ž `by-group` ç´¢å¼•ï¼ŒæŒ‰åˆ†ç»„å¿«é€ŸæŸ¥è¯¢è‚¡ç¥¨æ± ã€‚
+**±ä¸üÄÚÈÝ**£º
+- `stocks` Store ÐÂÔö `group` ×Ö¶Î¡£
+- `stocks` Store ÐÂÔö `by-group` Ë÷Òý£¬°´·Ö×é¿ìËÙ²éÑ¯¹ÉÆ±³Ø¡£
 
-**å‡çº§é€»è¾‘**ï¼š
-1. è‹¥ `stocks` Store ä¸å­˜åœ¨ï¼Œåˆ›å»º Store å¹¶åŒæ—¶å»ºç«‹ `by-status` ä¸Ž `by-group` ç´¢å¼•ã€‚
-2. è‹¥ `stocks` Store å·²å­˜åœ¨ï¼š
-   - é€šè¿‡ `request.transaction.objectStore(STORE_NAME.stocks)` èŽ·å– Storeã€‚
-   - æ£€æŸ¥ `indexNames` ä¸­æ˜¯å¦å·²åŒ…å« `by-group`ï¼›è‹¥æœªåŒ…å«ï¼Œåˆ™ `createIndex('by-group', 'group', { unique: false })`ã€‚
-   - æ‰“å¼€æ¸¸æ ‡éåŽ†å…¨éƒ¨åŽ†å²æ•°æ®ï¼Œå¯¹ç¼ºå¤± `group` å­—æ®µçš„è®°å½•å›žå†™ä¸ºé»˜è®¤åˆ†ç»„ `DEFAULT_POOL_GROUP`ã€‚
+**Éý¼¶Âß¼­**£º
+1. Èô `stocks` Store ²»´æÔÚ£¬´´½¨ Store ²¢Í¬Ê±½¨Á¢ `by-status` Óë `by-group` Ë÷Òý¡£
+2. Èô `stocks` Store ÒÑ´æÔÚ£º
+   - Í¨¹ý `request.transaction.objectStore(STORE_NAME.stocks)` »ñÈ¡ Store¡£
+   - ¼ì²é `indexNames` ÖÐÊÇ·ñÒÑ°üº¬ `by-group`£»ÈôÎ´°üº¬£¬Ôò `createIndex('by-group', 'group', { unique: false })`¡£
+   - ´ò¿ªÓÎ±ê±éÀúÈ«²¿ÀúÊ·Êý¾Ý£¬¶ÔÈ±Ê§ `group` ×Ö¶ÎµÄ¼ÇÂ¼»ØÐ´ÎªÄ¬ÈÏ·Ö×é `DEFAULT_POOL_GROUP`¡£
 
-**é»˜è®¤å€¼**ï¼š
+**Ä¬ÈÏÖµ**£º
 ```ts
 const DEFAULT_POOL_GROUP = 'DEFAULT_POOL_GROUP'
 ```
 
-> **æ³¨æ„**ï¼šè¯¥å›žå†™æ˜¯ä¸€æ¬¡æ€§æ•°æ®è¿ç§»ï¼Œå‡çº§å®ŒæˆåŽæ—§æ•°æ®å³å…·å¤‡ `group` å­—æ®µï¼ŒåŽç»­ä¸šåŠ¡å±‚å¯ç›´æŽ¥ä¾èµ–è¯¥å­—æ®µã€‚
+> **×¢Òâ**£º¸Ã»ØÐ´ÊÇÒ»´ÎÐÔÊý¾ÝÇ¨ÒÆ£¬Éý¼¶Íê³Éºó¾ÉÊý¾Ý¼´¾ß±¸ `group` ×Ö¶Î£¬ºóÐøÒµÎñ²ã¿ÉÖ±½ÓÒÀÀµ¸Ã×Ö¶Î¡£
 
 ---
 
-### 2.3 v5 â†’ v6ï¼šV6 Pro è¿ç§»ä¸“ç”¨ Store
+### 2.3 v5 ¡ú v6£ºV6 Pro Ç¨ÒÆ×¨ÓÃ Store
 
-**å˜æ›´å†…å®¹**ï¼šæ–°å¢ž 8 ä¸ª Storeï¼Œæ”¯æ’‘ V6 Pro JSON å…¨é‡å¯¼å‡ºæ•°æ®è¿ç§»è‡³ V9 IndexedDBã€‚
+**±ä¸üÄÚÈÝ**£ºÐÂÔö 8 ¸ö Store£¬Ö§³Å V6 Pro JSON È«Á¿µ¼³öÊý¾ÝÇ¨ÒÆÖÁ V9 IndexedDB¡£
 
-| Store | KeyPath | ç´¢å¼• |
+| Store | KeyPath | Ë÷Òý |
 |------|---------|------|
-| `rotation_scores` | `id` | `by-sector-date`ï¼ˆ`[sectorCode, scoreDate]`ï¼Œå”¯ä¸€ï¼‰ã€`by-sector`ã€`by-total`ã€`by-resonance` |
-| `sector_scores` | `id` | `by-sector`ã€`by-composite`ã€`by-is-core` |
-| `score_docs` | `docId` | `by-symbol`ã€`by-symbol-version`ï¼ˆ`[symbol, version]`ï¼Œå”¯ä¸€ï¼‰ã€`by-composite` |
-| `strategy_snapshots` | `id` | `by-version`ï¼ˆå”¯ä¸€ï¼‰ã€`by-date`ã€`by-timestamp` |
-| `local_docs` | `id` | `by-symbol`ã€`by-category`ã€`by-added-at` |
-| `news` | `id` | `by-source`ã€`by-category`ã€`by-publish-time`ã€`by-hash`ï¼ˆå”¯ä¸€ï¼‰ |
-| `news_stock_map` | `id` | `by-symbol`ã€`by-news` |
-| `sentiment_cache` | `id` | `by-content-hash`ï¼ˆå”¯ä¸€ï¼‰ã€`by-analyzed-at` |
+| `rotation_scores` | `id` | `by-sector-date`£¨`[sectorCode, scoreDate]`£¬Î¨Ò»£©¡¢`by-sector`¡¢`by-total`¡¢`by-resonance` |
+| `sector_scores` | `id` | `by-sector`¡¢`by-composite`¡¢`by-is-core` |
+| `score_docs` | `docId` | `by-symbol`¡¢`by-symbol-version`£¨`[symbol, version]`£¬Î¨Ò»£©¡¢`by-composite` |
+| `strategy_snapshots` | `id` | `by-version`£¨Î¨Ò»£©¡¢`by-date`¡¢`by-timestamp` |
+| `local_docs` | `id` | `by-symbol`¡¢`by-category`¡¢`by-added-at` |
+| `news` | `id` | `by-source`¡¢`by-category`¡¢`by-publish-time`¡¢`by-hash`£¨Î¨Ò»£© |
+| `news_stock_map` | `id` | `by-symbol`¡¢`by-news` |
+| `sentiment_cache` | `id` | `by-content-hash`£¨Î¨Ò»£©¡¢`by-analyzed-at` |
 
-**å‡çº§é€»è¾‘**ï¼š
-- æ¯ä¸ª Store ç‹¬ç«‹åˆ¤æ–­ `db.objectStoreNames.contains(storeName)`ã€‚
-- ä¸å­˜åœ¨åˆ™åˆ›å»ºï¼Œå¹¶ä¸€å¹¶å»ºç«‹å¯¹åº”ç´¢å¼•ï¼›å·²å­˜åœ¨åˆ™è·³è¿‡ã€‚
-- å› è¿™äº› Store åœ¨ v5 ä¹‹å‰ä¸å­˜åœ¨ï¼ŒåŽ†å²æ•°æ®ä¸ºç©ºï¼Œæ— éœ€é¢å¤–å›žå†™ã€‚
+**Éý¼¶Âß¼­**£º
+- Ã¿¸ö Store ¶ÀÁ¢ÅÐ¶Ï `db.objectStoreNames.contains(storeName)`¡£
+- ²»´æÔÚÔò´´½¨£¬²¢Ò»²¢½¨Á¢¶ÔÓ¦Ë÷Òý£»ÒÑ´æÔÚÔòÌø¹ý¡£
+- ÒòÕâÐ© Store ÔÚ v5 Ö®Ç°²»´æÔÚ£¬ÀúÊ·Êý¾ÝÎª¿Õ£¬ÎÞÐè¶îÍâ»ØÐ´¡£
 
 ---
 
-## 3. å‡çº§å®žçŽ°ä½ç½®
+## 3. Éý¼¶ÊµÏÖÎ»ÖÃ
 
-æ‰€æœ‰å‡çº§é€»è¾‘é›†ä¸­åœ¨ï¼š
+ËùÓÐÉý¼¶Âß¼­¼¯ÖÐÔÚ£º
 
 ```ts
 // src/data/db.ts
 request.onupgradeneeded = (event) => {
   const db = (event.target as IDBOpenDBRequest).result
-  // v3 â†’ v4 / v4 â†’ v5 / v5 â†’ v6 çš„é€’è¿›å¤„ç†...
+  // v3 ¡ú v4 / v4 ¡ú v5 / v5 ¡ú v6 µÄµÝ½ø´¦Àí...
 }
 ```
 
-**ä»£ç ç»„ç»‡è¦æ±‚**ï¼š
-- ç¦æ­¢åœ¨ `onupgradeneeded` å¤–éƒ¨ç›´æŽ¥ä¿®æ”¹ `DB_VERSION` æ¥è§¦å‘å‡çº§ã€‚
-- æ¯ä¸ªç‰ˆæœ¬åˆ†æ”¯éœ€ä½¿ç”¨ `if (!db.objectStoreNames.contains(...))` åšå¹‚ç­‰åˆ¤æ–­ï¼Œç¡®ä¿é‡å¤æ‰§è¡Œä¸ä¼šæŠ¥é”™ã€‚
-- å¯¹å·²æœ‰ Store çš„ç´¢å¼•å˜æ›´ï¼Œå¿…é¡»å…ˆé€šè¿‡ `request.transaction` èŽ·å– upgrade transactionï¼Œå†è°ƒç”¨ `createIndex`ã€‚
+**´úÂë×éÖ¯ÒªÇó**£º
+- ½ûÖ¹ÔÚ `onupgradeneeded` Íâ²¿Ö±½ÓÐÞ¸Ä `DB_VERSION` À´´¥·¢Éý¼¶¡£
+- Ã¿¸ö°æ±¾·ÖÖ§ÐèÊ¹ÓÃ `if (!db.objectStoreNames.contains(...))` ×öÃÝµÈÅÐ¶Ï£¬È·±£ÖØ¸´Ö´ÐÐ²»»á±¨´í¡£
+- ¶ÔÒÑÓÐ Store µÄË÷Òý±ä¸ü£¬±ØÐëÏÈÍ¨¹ý `request.transaction` »ñÈ¡ upgrade transaction£¬ÔÙµ÷ÓÃ `createIndex`¡£
 
 ---
 
-## 4. å›žé€€ä¸Žå…¼å®¹ç­–ç•¥
+## 4. »ØÍËÓë¼æÈÝ²ßÂÔ
 
-### 4.1 å‡çº§ä¸å¯é€†
+### 4.1 Éý¼¶²»¿ÉÄæ
 
-IndexedDB çš„ `onupgradeneeded` åªèƒ½å‘å‰å‡çº§ï¼Œä¸æ”¯æŒè‡ªåŠ¨å›žæ»šã€‚å› æ­¤ï¼š
-- ä»»ä½• Schema å˜æ›´å‘å¸ƒå‰ï¼Œå¿…é¡»åœ¨æµ‹è¯•çŽ¯å¢ƒå®Œæ•´éªŒè¯ã€‚
-- ç”Ÿäº§çŽ¯å¢ƒå‡çº§å¤±è´¥æ—¶ï¼Œä¸èƒ½ä¾èµ–æµè§ˆå™¨å›žé€€ç‰ˆæœ¬å·ã€‚
+IndexedDB µÄ `onupgradeneeded` Ö»ÄÜÏòÇ°Éý¼¶£¬²»Ö§³Ö×Ô¶¯»Ø¹ö¡£Òò´Ë£º
+- ÈÎºÎ Schema ±ä¸ü·¢²¼Ç°£¬±ØÐëÔÚ²âÊÔ»·¾³ÍêÕûÑéÖ¤¡£
+- Éú²ú»·¾³Éý¼¶Ê§°ÜÊ±£¬²»ÄÜÒÀÀµä¯ÀÀÆ÷»ØÍË°æ±¾ºÅ¡£
 
-### 4.2 åŽ†å²æ•°æ®è¿ç§»æ–¹å¼
+### 4.2 ÀúÊ·Êý¾ÝÇ¨ÒÆ·½Ê½
 
-- å­—æ®µé»˜è®¤å€¼å›žå†™ï¼šä½¿ç”¨ IndexedDB æ¸¸æ ‡ï¼ˆ`openCursor()`ï¼‰é€æ¡è¯»å–å¹¶ `cursor.update()`ã€‚
-- æ‰¹é‡æ•°æ®è¿ç§»ï¼šè‹¥æœªæ¥éœ€è¦åœ¨å‡çº§æ—¶è·¨ Store æ¬ç§»æ•°æ®ï¼Œåº”åœ¨ upgrade transaction å†…å®Œæˆï¼Œé¿å…éƒ¨åˆ†æˆåŠŸã€‚
+- ×Ö¶ÎÄ¬ÈÏÖµ»ØÐ´£ºÊ¹ÓÃ IndexedDB ÓÎ±ê£¨`openCursor()`£©ÖðÌõ¶ÁÈ¡²¢ `cursor.update()`¡£
+- ÅúÁ¿Êý¾ÝÇ¨ÒÆ£ºÈôÎ´À´ÐèÒªÔÚÉý¼¶Ê±¿ç Store °áÒÆÊý¾Ý£¬Ó¦ÔÚ upgrade transaction ÄÚÍê³É£¬±ÜÃâ²¿·Ö³É¹¦¡£
 
-### 4.3 å‡çº§å¤±è´¥åº”æ€¥é¢„æ¡ˆ
+### 4.3 Éý¼¶Ê§°ÜÓ¦¼±Ô¤°¸
 
-è‹¥ç”¨æˆ·æµè§ˆå™¨ä¸­æ•°æ®åº“æŸåæˆ–å‡çº§äº‹åŠ¡ä¸­æ–­ï¼š
-1. **å¯¼å‡ºå¤‡ä»½**ï¼šå¼•å¯¼ç”¨æˆ·é€šè¿‡ `dataLayer.export()` æˆ– `dataManager.export()` å¯¼å‡ºå¯è¯» JSONã€‚
-2. **åˆ é™¤å¹¶é‡å»ºæ•°æ®åº“**ï¼šè°ƒç”¨ `indexedDB.deleteDatabase(DB_NAME)` æ¸…é™¤æ—§åº“ã€‚
-3. **æ¢å¤æ•°æ®**ï¼šé‡æ–°æ‰“å¼€åº”ç”¨åŽï¼Œé€šè¿‡è¿ç§»é¢æ¿å¯¼å…¥å¤‡ä»½ JSONã€‚
+ÈôÓÃ»§ä¯ÀÀÆ÷ÖÐÊý¾Ý¿âËð»µ»òÉý¼¶ÊÂÎñÖÐ¶Ï£º
+1. **µ¼³ö±¸·Ý**£ºÒýµ¼ÓÃ»§Í¨¹ý `dataLayer.export()` »ò `dataManager.export()` µ¼³ö¿É¶Á JSON¡£
+2. **É¾³ý²¢ÖØ½¨Êý¾Ý¿â**£ºµ÷ÓÃ `indexedDB.deleteDatabase(DB_NAME)` Çå³ý¾É¿â¡£
+3. **»Ö¸´Êý¾Ý**£ºÖØÐÂ´ò¿ªÓ¦ÓÃºó£¬Í¨¹ýÇ¨ÒÆÃæ°åµ¼Èë±¸·Ý JSON¡£
 
-> è¯¥æµç¨‹ä»…ä½œä¸ºæœ€åŽæ‰‹æ®µï¼Œæ­£å¸¸å‡çº§åº”ä¿è¯äº‹åŠ¡å†…å®Œæˆã€‚
-
----
-
-## 5. æœªæ¥å‡çº§è§„èŒƒ
-
-1. **ç¦æ­¢ç›´æŽ¥æ”¹ `DB_VERSION` è·³ç‰ˆ**ï¼š
-   - å¿…é¡»ä»Žå½“å‰ç‰ˆæœ¬ `N` é€æ¡å¤„ç†åˆ°ç›®æ ‡ç‰ˆæœ¬ `N+1`ï¼Œä¸å¾—åœ¨ `onupgradeneeded` ä¸­æŒ‰ `event.oldVersion` å†™æ­»åˆ†æ”¯åŽè·³è¿‡ä¸­é—´ç‰ˆæœ¬ã€‚
-2. **æ¯ä¸ªç‰ˆæœ¬ä¸€ä¸ªç‹¬ç«‹ä»£ç å—**ï¼š
-   - ä½¿ç”¨ `if (event.oldVersion < X)` åŒ…è£¹ç¬¬ `X` ç‰ˆæœ¬çš„å‡çº§é€»è¾‘ï¼Œç¡®ä¿ä»Žä»»æ„æ—§ç‰ˆæœ¬å¯åŠ¨éƒ½èƒ½æ­£ç¡®æ‰§è¡Œå…¨éƒ¨å‡çº§æ­¥éª¤ã€‚
-3. **æ–°å¢ž Store å¿…é¡»å¹‚ç­‰**ï¼š
-   - å§‹ç»ˆå…ˆæ£€æŸ¥ `db.objectStoreNames.contains(storeName)`ã€‚
-4. **å·²æœ‰ Store åŠ ç´¢å¼•å¿…é¡»å¹‚ç­‰**ï¼š
-   - å§‹ç»ˆå…ˆæ£€æŸ¥ `store.indexNames.contains(indexName)`ã€‚
-5. **æ•°æ®å›žå†™å¿…é¡»é˜²å¾¡æ€§**ï¼š
-   - å¯¹åŽ†å²è®°å½•åš `undefined` / `null` åˆ¤æ–­ï¼Œé¿å…æŠŠæœ‰æ•ˆæ—§å€¼è¦†ç›–ä¸ºé»˜è®¤å€¼ã€‚
-6. **Schema å˜æ›´éœ€åŒæ­¥æ–‡æ¡£**ï¼š
-   - æ¯æ¬¡ä¿®æ”¹ `src/data/db.ts` çš„å‡çº§é€»è¾‘åŽï¼Œå¿…é¡»åŒæ­¥æ›´æ–°æœ¬æ–‡æ¡£çš„"é€ç‰ˆæœ¬å‡çº§è¯´æ˜Ž"ã€‚
+> ¸ÃÁ÷³Ì½ö×÷Îª×îºóÊÖ¶Î£¬Õý³£Éý¼¶Ó¦±£Ö¤ÊÂÎñÄÚÍê³É¡£
 
 ---
 
-## 6. ç›¸å…³æ–‡ä»¶
+## 5. Î´À´Éý¼¶¹æ·¶
 
-- `src/data/db.ts`ï¼šå‡çº§å®žçŽ°ã€‚
-- `src/config/dbConfig.ts`ï¼š`DB_NAME`ã€`DB_VERSION`ã€`DEFAULT_POOL_GROUP`ã€`STORE_NAME` å®šä¹‰ã€‚
-- `../reference/v6-to-v9-migration-spec.md`ï¼šV6 Pro JSON è¿ç§»è½¬æ¢è§„èŒƒã€‚
-- `./2026-06-25-v6-migration.md`ï¼šV6 Pro å…¨é‡å¯¼å‡ºè¿ç§»å†³ç­–è®°å½•ã€‚
+1. **½ûÖ¹Ö±½Ó¸Ä `DB_VERSION` Ìø°æ**£º
+   - ±ØÐë´Óµ±Ç°°æ±¾ `N` ÖðÌõ´¦Àíµ½Ä¿±ê°æ±¾ `N+1`£¬²»µÃÔÚ `onupgradeneeded` ÖÐ°´ `event.oldVersion` Ð´ËÀ·ÖÖ§ºóÌø¹ýÖÐ¼ä°æ±¾¡£
+2. **Ã¿¸ö°æ±¾Ò»¸ö¶ÀÁ¢´úÂë¿é**£º
+   - Ê¹ÓÃ `if (event.oldVersion < X)` °ü¹üµÚ `X` °æ±¾µÄÉý¼¶Âß¼­£¬È·±£´ÓÈÎÒâ¾É°æ±¾Æô¶¯¶¼ÄÜÕýÈ·Ö´ÐÐÈ«²¿Éý¼¶²½Öè¡£
+3. **ÐÂÔö Store ±ØÐëÃÝµÈ**£º
+   - Ê¼ÖÕÏÈ¼ì²é `db.objectStoreNames.contains(storeName)`¡£
+4. **ÒÑÓÐ Store ¼ÓË÷Òý±ØÐëÃÝµÈ**£º
+   - Ê¼ÖÕÏÈ¼ì²é `store.indexNames.contains(indexName)`¡£
+5. **Êý¾Ý»ØÐ´±ØÐë·ÀÓùÐÔ**£º
+   - ¶ÔÀúÊ·¼ÇÂ¼×ö `undefined` / `null` ÅÐ¶Ï£¬±ÜÃâ°ÑÓÐÐ§¾ÉÖµ¸²¸ÇÎªÄ¬ÈÏÖµ¡£
+6. **Schema ±ä¸üÐèÍ¬²½ÎÄµµ**£º
+   - Ã¿´ÎÐÞ¸Ä `src/data/db.ts` µÄÉý¼¶Âß¼­ºó£¬±ØÐëÍ¬²½¸üÐÂ±¾ÎÄµµµÄ"Öð°æ±¾Éý¼¶ËµÃ÷"¡£
+
+---
+
+## 6. Ïà¹ØÎÄ¼þ
+
+- `src/data/db.ts`£ºÉý¼¶ÊµÏÖ¡£
+- `src/config/dbConfig.ts`£º`DB_NAME`¡¢`DB_VERSION`¡¢`DEFAULT_POOL_GROUP`¡¢`STORE_NAME` ¶¨Òå¡£
+- `../reference/v6-to-v9-migration-spec.md`£ºV6 Pro JSON Ç¨ÒÆ×ª»»¹æ·¶¡£
+- `./2026-06-25-v6-migration.md`£ºV6 Pro È«Á¿µ¼³öÇ¨ÒÆ¾ö²ß¼ÇÂ¼¡£

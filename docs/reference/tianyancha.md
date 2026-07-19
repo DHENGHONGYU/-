@@ -1,80 +1,86 @@
 ---
-title: tianyancha
+title: Tianyancha ²å¼ş
+type: reference
+domain: project
+phase: development
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "Êı¾İÓò: ÌìÑÛ²éÆóÒµÊı¾İ¿â£¨ÖĞ¹ú´óÂ½ÆóÒµĞÅÏ¢£© Ô­Ê¼Â·¾¶:..."
+tags: [data-source, company, reference, project]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: important
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/reference/tianyancha.md
-code_version: 2.0.0
-tier: important
----
+# Tianyancha ²å¼ş
 
-# Tianyancha æ’ä»¶
-
-> **æ•°æ®åŸŸ**: å¤©çœ¼æŸ¥ä¼ä¸šæ•°æ®åº“ï¼ˆä¸­å›½å¤§é™†ä¼ä¸šä¿¡æ¯ï¼‰  
-> **åŸå§‹è·¯å¾„**: [`plugins/tianyancha/SKILL.md`](../../plugins/tianyancha/SKILL.md)ï¼ˆæ‰å¹³åŒ–ï¼‰ / [`plugins/tianyancha/skills/tianyancha/SKILL.md`](../../plugins/tianyancha/skills/tianyancha/SKILL.md)ï¼ˆåµŒå¥—ï¼‰  
-> **åŒæ­¥æ—¥æœŸ**: 2025-07-12
+> **Êı¾İÓò**: ÌìÑÛ²éÆóÒµÊı¾İ¿â£¨ÖĞ¹ú´óÂ½ÆóÒµĞÅÏ¢£©  
+> **Ô­Ê¼Â·¾¶**: [`plugins/tianyancha/SKILL.md`](../../plugins/tianyancha/SKILL.md)£¨±âÆ½»¯£© / [`plugins/tianyancha/skills/tianyancha/SKILL.md`](../../plugins/tianyancha/skills/tianyancha/SKILL.md)£¨Ç¶Ì×£©  
+> **Í¬²½ÈÕÆÚ**: 2025-07-12
 
 ---
 
-## ç®€ä»‹
+## ¼ò½é
 
-å¤©çœ¼æŸ¥ä¼ä¸šæ•°æ®åº“è¦†ç›–ä¼ä¸šæ³¨å†Œã€ç»è¥ã€é£é™©ã€ä¸Šå¸‚ã€å¸æ³•ã€çŸ¥è¯†äº§æƒã€æŠ•èµ„ã€å…³ç³»ã€é›†å›¢ã€èµ„è´¨ã€ç§å‹ŸåŸºé‡‘ã€äººå‘˜ã€æŠ¥å‘Šå’Œæœç´¢ç­‰æ•°æ®ï¼Œå…± 17 å¤§ç±» 226 ä¸ªæ¥å£ã€‚
+ÌìÑÛ²éÆóÒµÊı¾İ¿â¸²¸ÇÆóÒµ×¢²á¡¢¾­Óª¡¢·çÏÕ¡¢ÉÏÊĞ¡¢Ë¾·¨¡¢ÖªÊ¶²úÈ¨¡¢Í¶×Ê¡¢¹ØÏµ¡¢¼¯ÍÅ¡¢×ÊÖÊ¡¢Ë½Ä¼»ù½ğ¡¢ÈËÔ±¡¢±¨¸æºÍËÑË÷µÈÊı¾İ£¬¹² 17 ´óÀà 226 ¸ö½Ó¿Ú¡£
 
-## ä½¿ç”¨åœºæ™¯
+## Ê¹ÓÃ³¡¾°
 
-- ä¼ä¸šæ³¨å†Œä¿¡æ¯æŸ¥è¯¢
-- ç»è¥çŠ¶æ€ä¸é£é™©ç›‘æ§
-- ä¸Šå¸‚ä¿¡æ¯ã€å¸æ³•ä¿¡æ¯ã€çŸ¥è¯†äº§æƒæŸ¥è¯¢
-- æŠ•èµ„å…³ç³»ã€é›†å›¢å…³ç³»ã€èµ„è´¨æŸ¥è¯¢
-- ç§å‹ŸåŸºé‡‘ã€äººå‘˜ã€æŠ¥å‘Šæ•°æ®
-- ä¼ä¸šå¤šç»´æœç´¢
+- ÆóÒµ×¢²áĞÅÏ¢²éÑ¯
+- ¾­Óª×´Ì¬Óë·çÏÕ¼à¿Ø
+- ÉÏÊĞĞÅÏ¢¡¢Ë¾·¨ĞÅÏ¢¡¢ÖªÊ¶²úÈ¨²éÑ¯
+- Í¶×Ê¹ØÏµ¡¢¼¯ÍÅ¹ØÏµ¡¢×ÊÖÊ²éÑ¯
+- Ë½Ä¼»ù½ğ¡¢ÈËÔ±¡¢±¨¸æÊı¾İ
+- ÆóÒµ¶àÎ¬ËÑË÷
 
-## ç¯å¢ƒå‡†å¤‡
+## »·¾³×¼±¸
 
 ```bash
-# æ£€æŸ¥å¹¶å®‰è£… agent-gw Python SDK
+# ¼ì²é²¢°²×° agent-gw Python SDK
 python3 -c "import agent_gw" || python3 -m pip install "$(curl -s https://cdn.kimi.com/agentgw/pysdk/manifest.json | python3 -c "import json,sys; print(json.load(sys.stdin)['latest']['url'])")"
 ```
 
-API Key æ¥æºï¼š
-1. å‘½ä»¤è¡Œå‚æ•° `api_key=...`
-2. ç¯å¢ƒå˜é‡ `KIMI_API_KEY`
-3. é…ç½®æ–‡ä»¶ `~/.kimi/agent-gw.json`
+API Key À´Ô´£º
+1. ÃüÁîĞĞ²ÎÊı `api_key=...`
+2. »·¾³±äÁ¿ `KIMI_API_KEY`
+3. ÅäÖÃÎÄ¼ş `~/.kimi/agent-gw.json`
 
-## å·¥ä½œæµ
+## ¹¤×÷Á÷
 
-1. è¿è¡Œ `python3 scripts/tianyancha_tool.py describe` è·å–æ•°æ®æºæè¿°æ–‡æ¡£
-2. ä»”ç»†é˜…è¯»è¿”å›çš„ Markdownï¼Œäº†è§£æ•°æ®æºè§„åˆ™ã€è¯åˆ¸/å®ä½“æ ¼å¼ã€å…¨å±€çº¦æŸåŠå„ API çš„å‚æ•°è¦æ±‚
-3. é€‰æ‹©æœ€åŒ¹é…ç”¨æˆ·é—®é¢˜çš„ API
-4. ä¸¥æ ¼æŒ‰ç…§ Markdown è¦æ±‚æ„å»º `params`
-5. ä½¿ç”¨ `python3 scripts/tianyancha_tool.py call` è°ƒç”¨å…·ä½“ API
-6. è°ƒç”¨å¤±è´¥æ—¶ï¼Œä»å“åº”ä¸­è§£é‡Šå¤±è´¥åŸå› 
-7. è°ƒç”¨æˆåŠŸæ—¶ï¼Œå…ˆä¿å­˜è¿”å›çš„æ–‡ä»¶ï¼Œç„¶åä½¿ç”¨ `resp.result.assistant` å›ç­”ï¼›ä»…åœ¨éœ€è¦å±•ç¤ºå†…å®¹æ—¶å‚è€ƒ `resp.result.user`
+1. ÔËĞĞ `python3 scripts/tianyancha_tool.py describe` »ñÈ¡Êı¾İÔ´ÃèÊöÎÄµµ
+2. ×ĞÏ¸ÔÄ¶Á·µ»ØµÄ Markdown£¬ÁË½âÊı¾İÔ´¹æÔò¡¢Ö¤È¯/ÊµÌå¸ñÊ½¡¢È«¾ÖÔ¼Êø¼°¸÷ API µÄ²ÎÊıÒªÇó
+3. Ñ¡Ôñ×îÆ¥ÅäÓÃ»§ÎÊÌâµÄ API
+4. ÑÏ¸ñ°´ÕÕ Markdown ÒªÇó¹¹½¨ `params`
+5. Ê¹ÓÃ `python3 scripts/tianyancha_tool.py call` µ÷ÓÃ¾ßÌå API
+6. µ÷ÓÃÊ§°ÜÊ±£¬´ÓÏìÓ¦ÖĞ½âÊÍÊ§°ÜÔ­Òò
+7. µ÷ÓÃ³É¹¦Ê±£¬ÏÈ±£´æ·µ»ØµÄÎÄ¼ş£¬È»ºóÊ¹ÓÃ `resp.result.assistant` »Ø´ğ£»½öÔÚĞèÒªÕ¹Ê¾ÄÚÈİÊ±²Î¿¼ `resp.result.user`
 
-## è„šæœ¬ä½¿ç”¨
+## ½Å±¾Ê¹ÓÃ
 
 ```bash
-# æŸ¥çœ‹æ•°æ®èƒ½åŠ›
+# ²é¿´Êı¾İÄÜÁ¦
 cd plugins/tianyancha
 python3 scripts/tianyancha_tool.py describe
 
-# è°ƒç”¨å…·ä½“ API
+# µ÷ÓÃ¾ßÌå API
 python3 scripts/tianyancha_tool.py call \
   --api-name "<api name from markdown>" \
   --params-json '{"required_param":"value"}'
 ```
 
-å‚æ•°è¾ƒå¤šæ—¶ï¼Œå¯å†™å…¥ JSON æ–‡ä»¶ï¼š
+²ÎÊı½Ï¶àÊ±£¬¿ÉĞ´Èë JSON ÎÄ¼ş£º
 ```bash
 python3 scripts/tianyancha_tool.py call \
   --api-name "<api name>" \
   --params-file path/to/params.json
 ```
 
-## å“åº”æ ¼å¼
+## ÏìÓ¦¸ñÊ½
 
 ```python
 {
@@ -85,9 +91,9 @@ python3 scripts/tianyancha_tool.py call \
 }
 ```
 
-- æˆåŠŸæ—¶ï¼Œä¼˜å…ˆä½¿ç”¨ `result.assistant` å†…å®¹
-- æœ‰æ–‡ä»¶è¿”å›æ—¶ï¼ŒæŒ‰ `files[].name` ä¿å­˜æ–‡ä»¶
+- ³É¹¦Ê±£¬ÓÅÏÈÊ¹ÓÃ `result.assistant` ÄÚÈİ
+- ÓĞÎÄ¼ş·µ»ØÊ±£¬°´ `files[].name` ±£´æÎÄ¼ş
 
 ---
 
-*æœ¬æ–‡æ¡£ä¸ [`plugins/tianyancha/SKILL.md`](../../plugins/tianyancha/SKILL.md) åŒæ­¥ï¼Œæ›´æ–°æ—¶è¯·åŒæ—¶ä¿®æ”¹ä¸¤è€…ã€‚*
+*±¾ÎÄµµÓë [`plugins/tianyancha/SKILL.md`](../../plugins/tianyancha/SKILL.md) Í¬²½£¬¸üĞÂÊ±ÇëÍ¬Ê±ĞŞ¸ÄÁ½Õß¡£*

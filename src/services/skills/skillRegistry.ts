@@ -3,6 +3,9 @@ import type { SkillContext, SkillDefinition, SkillExecutionOptions, SkillResult 
 
 const logger = getLogger()
 
+/**
+ * SkillRegistry
+ */
 export class SkillRegistry {
   private skills = new Map<string, SkillDefinition>()
 

@@ -1,6 +1,6 @@
 import { STORE_NAME } from '@/config/dbConfig'
 import type { NewsArticle, SentimentCache } from '@/data/types'
-import { queryByIndex, sendWriteEnvelope } from '@/data/dataLayerHelpers'
+import { queryByIndex, sendWriteEnvelope } from '@/core/databridgeQueries'
 import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()

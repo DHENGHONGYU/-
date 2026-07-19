@@ -30,7 +30,7 @@
  * @see docs/reference/v9核心数据字典与类型定义(整合版).md — BacktestEngineConfig / VirtualOrder / VirtualPosition / BacktestEngineResult
  */
 
-import { generateId } from '@/data/db'
+import { generateId } from '@/lib/utils'
 import type { DailyQuotes } from '@/data/types'
 import { getLogger } from '@/lib/logger'
 import { calculatePosition } from '@/services/trading/positionSizer'

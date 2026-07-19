@@ -63,6 +63,9 @@ function applyStoredThemeOnLoad(): ThemeMode {
   return mode
 }
 
+/**
+ * useThemeStore
+ */
 export const useThemeStore = create<ThemeState>()(
   persist(
     (set, get) => ({

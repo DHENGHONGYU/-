@@ -53,6 +53,9 @@ const initialState = {
   loading: false,
 }
 
+/**
+ * usePredictionStore
+ */
 export const usePredictionStore = create<PredictionState>((set, get) => ({
   ...initialState,
 

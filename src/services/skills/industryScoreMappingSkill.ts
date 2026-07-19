@@ -18,6 +18,9 @@ import type { SkillContext, SkillDefinition, SkillResult } from './skillTypes'
 
 const logger = getLogger()
 
+/**
+ * IndustryScoreMappingInputSchema
+ */
 export const IndustryScoreMappingInputSchema = z.object({
   symbol: z.string(),
   stockName: z.string().optional(),
@@ -34,6 +37,9 @@ export const IndustryScoreMappingInputSchema = z.object({
 
 export type IndustryScoreMappingInput = z.infer<typeof IndustryScoreMappingInputSchema>
 
+/**
+ * IndustryScoreMappingOutputSchema
+ */
 export const IndustryScoreMappingOutputSchema = z.object({
   matched: z.boolean(),
   symbol: z.string(),
@@ -142,6 +148,9 @@ function calculateL1Score(sector: SectorSkillAnalysis, relevance: number): numbe
   return Math.round((skillC * relevance + bonus) * 100) / 100
 }
 
+/**
+ * executeIndustryScoreMappingSkill
+ */
 export async function executeIndustryScoreMappingSkill(
   ctx: SkillContext,
 ): Promise<SkillResult<IndustryScoreMappingOutput>> {
@@ -246,6 +255,9 @@ export async function executeIndustryScoreMappingSkill(
   }
 }
 
+/**
+ * industryScoreMappingSkill
+ */
 export const industryScoreMappingSkill: SkillDefinition<IndustryScoreMappingOutput> = {
   name: 'industry-score-mapping',
   title: '行业评分映射',

@@ -7,7 +7,7 @@
 
 import { STORE_NAME } from '@/config/dbConfig'
 import type { DataLayerResult, FileLibraryStats, ScoreDocVersion, V6LayerScore } from '@/data/types'
-import { queryByIndex, queryList } from '@/data/dataLayerHelpers'
+import { queryByIndex, queryList } from '@/core/databridgeQueries'
 import type {
   ScoreComparisonMode,
   ScoreComparisonResult,

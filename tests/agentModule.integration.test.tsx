@@ -6,7 +6,7 @@ import { MemoryRouter } from 'react-router'
 import AgentHubPage from '@/pages/command/agent/AgentHubPage'
 import AgentRegistryPage from '@/pages/command/agent/AgentRegistryPage'
 import AgentDetailPage from '@/pages/command/agent/AgentDetailPage'
-import { getAllAgentComponents, getAgentDetailComponent, hasAgentComponent } from '@/agents/agentComponentRegistry'
+import { getAllAgentComponents, getAgentDetailComponent, hasAgentComponent } from '@/components/organisms/agent/agentComponentRegistry'
 import type { AgentTask } from '@/agents/agentRuntime'
 
 vi.mock('@/store/agentStore', () => {

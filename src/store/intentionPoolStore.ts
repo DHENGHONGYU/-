@@ -47,6 +47,7 @@ interface IntentionPoolState {
   ) => Promise<boolean>
   updateItem: (symbol: string, updates: Partial<IntentionPoolItem>) => Promise<boolean>
   deleteItem: (symbol: string) => Promise<boolean>
+  deleteItems: (symbols: string[]) => Promise<number>
   updateStatus: (symbol: string, newStatus: IntentionStatus) => Promise<boolean>
   updateGroup: (symbol: string, group: string) => Promise<boolean>
   getByStatus: (status: IntentionStatus) => PoolItem[]
@@ -85,6 +86,9 @@ function toPoolItem(stock: Stock): PoolItem {
   } as PoolItem
 }
 
+/**
+ * useIntentionPoolStore
+ */
 export const useIntentionPoolStore = create<IntentionPoolState>((set, get) => ({
   ...initialState,
 
@@ -234,6 +238,29 @@ export const useIntentionPoolStore = create<IntentionPoolState>((set, get) => ({
     }
   },
 
+  deleteItems: async (symbols) => {
+    if (!Array.isArray(symbols) || symbols.length === 0) {
+      logger.warn('[intentionPoolStore] deleteItems 收到空列表，跳过')
+      return 0
+    }
+
+    // 归一化 + 去重，避免重复删除同一标的
+    const normalized = Array.from(
+      new Set(symbols.map((s) => s.trim().toUpperCase()).filter(Boolean)),
+    )
+    logger.info(`[intentionPoolStore] deleteItems: ${normalized.length} 条`)
+    set({ error: null })
+
+    let deleted = 0
+    for (const symbol of normalized) {
+      // 复用单条删除逻辑（统一走 DataBridge 信封协议 + ACL 校验 + 广播）
+      const ok = await get().deleteItem(symbol)
+      if (ok) deleted++
+    }
+    await get().refresh()
+    return deleted
+  },
+
   updateStatus: async (symbol, newStatus) => {
     const normalized = symbol.trim().toUpperCase()
     logger.info(`[intentionPoolStore] updateStatus: ${normalized} → ${newStatus}`)
@@ -318,14 +345,27 @@ export const useIntentionPoolStore = create<IntentionPoolState>((set, get) => ({
   },
 }))
 
+/**
+ * getIntentionPoolTotalCount
+ * @returns number
+ */
 export function getIntentionPoolTotalCount(): number {
   return useIntentionPoolStore.getState().items.length
 }
 
+/**
+ * getIntentionPoolItemBySymbol
+ * @param symbol
+ * @returns PoolItem | undefined
+ */
 export function getIntentionPoolItemBySymbol(symbol: string): PoolItem | undefined {
   return useIntentionPoolStore.getState().items.find((s) => s.symbol === symbol)
 }
 
+/**
+ * getIntentionPoolGroups
+ * @returns string[]
+ */
 export function getIntentionPoolGroups(): string[] {
   const { items } = useIntentionPoolStore.getState()
   const groups = new Set<string>()
@@ -348,6 +388,9 @@ function debouncedRefresh(): void {
   }, DEBOUNCE_MS)
 }
 
+/**
+ * initIntentionPoolStoreSubscriptions
+ */
 export function initIntentionPoolStoreSubscriptions(): () => void {
   if (_unsubscribe) {
     logger.warn('[intentionPoolStore] Subscriptions already initialized, skipping')

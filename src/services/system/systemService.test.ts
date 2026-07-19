@@ -4,13 +4,15 @@ import { loadSystemStats, resetAll, exportAll } from './systemService'
 /* ------------------------------------------------------------------ */
 /*  vi.hoisted: 在 vi.mock 之前声明所有 mock 函数                      */
 /* ------------------------------------------------------------------ */
-const { mockForward, mockStocksList, mockOrdersList, mockV6ScoresList, mockExport } =
+const { mockForward, mockStocksList, mockOrdersList, mockV6ScoresList, mockExport, mockImport, mockReset } =
   vi.hoisted(() => ({
     mockForward: vi.fn(),
     mockStocksList: vi.fn().mockResolvedValue([]),
     mockOrdersList: vi.fn().mockResolvedValue([]),
     mockV6ScoresList: vi.fn().mockResolvedValue([]),
     mockExport: vi.fn().mockResolvedValue({ stocks: [], orders: [] }),
+    mockImport: vi.fn().mockResolvedValue(undefined),
+    mockReset: vi.fn().mockResolvedValue(undefined),
   }))
 
 /* ------------------------------------------------------------------ */
@@ -26,6 +28,9 @@ vi.mock('@/data/dataLayer', () => ({
 vi.mock('@/core/databridge', () => ({
   dataBridge: {
     forward: mockForward,
+    exportAllData: mockExport,
+    importAllData: mockImport,
+    resetAllData: mockReset,
     query: vi.fn(({ store }) => {
       if (store === 'stocks') return mockStocksList().then((data: unknown[]) => ({ success: true, data }))
       if (store === 'orders') return mockOrdersList().then((data: unknown[]) => ({ success: true, data }))
@@ -106,49 +111,32 @@ describe('resetAll', () => {
     vi.clearAllMocks()
   })
 
-  it('成功调用 dataBridge.forward 并返回 success', async () => {
-    mockForward.mockResolvedValue(undefined)
+  it('成功调用 dataBridge.resetAllData 并返回 success', async () => {
+    mockReset.mockResolvedValue(undefined)
 
     const result = await resetAll()
     expect(result.success).toBe(true)
-    expect(mockForward).toHaveBeenCalledTimes(1)
+    expect(mockReset).toHaveBeenCalledTimes(1)
   })
 
-  it('dataBridge.forward 失败返回 error', async () => {
-    mockForward.mockRejectedValue(new Error('forward failed'))
+  it('dataBridge.resetAllData 失败返回 error', async () => {
+    mockReset.mockRejectedValue(new Error('reset failed'))
 
     const result = await resetAll()
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error).toBe('forward failed')
+      expect(result.error).toBe('reset failed')
     }
   })
 
   it('非 Error 异常也能正确捕获', async () => {
-    mockForward.mockRejectedValue({ code: 500 })
+    mockReset.mockRejectedValue({ code: 500 })
 
     const result = await resetAll()
     expect(result.success).toBe(false)
     if (!result.success) {
       expect(result.error).toBe('[object Object]')
     }
-  })
-
-  it('Envelope 参数正确：source/target/action', async () => {
-    mockForward.mockResolvedValue(undefined)
-
-    // 引入被 mock 的 EnvelopeFactory 来捕获调用参数
-    const { EnvelopeFactory } = await import('@/core/envelope')
-    await resetAll()
-
-    expect(EnvelopeFactory.create).toHaveBeenCalledTimes(1)
-    const callArgs = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls[0]!
-    expect(callArgs[0]).toMatchObject({
-      source: 'system',
-      target: 'system',
-      action: 'RESET_ALL',
-    })
-    expect(callArgs[0].traceId).toMatch(/^system-reset-[A-Za-z0-9_-]+$/)
   })
 })
 
@@ -162,8 +150,6 @@ describe('exportAll', () => {
   })
 
   it('成功返回导出数据', async () => {
-    mockForward.mockResolvedValue(undefined)
-
     const result = await exportAll()
     expect(result.success).toBe(true)
     if (result.success) {
@@ -171,18 +157,7 @@ describe('exportAll', () => {
     }
   })
 
-  it('dataBridge.forward 失败返回 error', async () => {
-    mockForward.mockRejectedValue(new Error('bridge error'))
-
-    const result = await exportAll()
-    expect(result.success).toBe(false)
-    if (!result.success) {
-      expect(result.error).toBe('bridge error')
-    }
-  })
-
-  it('manager.export 失败返回 error', async () => {
-    mockForward.mockResolvedValue(undefined)
+  it('dataBridge.exportAllData 失败返回 error', async () => {
     mockExport.mockRejectedValue(new Error('export failed'))
 
     const result = await exportAll()
@@ -192,19 +167,13 @@ describe('exportAll', () => {
     }
   })
 
-  it('Envelope 参数正确：source/target/action', async () => {
-    mockForward.mockResolvedValue(undefined)
+  it('非 Error 异常也能正确捕获', async () => {
+    mockExport.mockRejectedValue({ code: 500 })
 
-    const { EnvelopeFactory } = await import('@/core/envelope')
-    await exportAll()
-
-    expect(EnvelopeFactory.create).toHaveBeenCalledTimes(1)
-    const callArgs = (EnvelopeFactory.create as ReturnType<typeof vi.fn>).mock.calls[0]!
-    expect(callArgs[0]).toMatchObject({
-      source: 'system',
-      target: 'system',
-      action: 'EXPORT_ALL',
-    })
-    expect(callArgs[0].traceId).toMatch(/^system-export-[A-Za-z0-9_-]+$/)
+    const result = await exportAll()
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      expect(result.error).toBe('[object Object]')
+    }
   })
 })

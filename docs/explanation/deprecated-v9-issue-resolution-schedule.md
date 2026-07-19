@@ -1,75 +1,85 @@
 ---
 title: deprecated-v9-issue-resolution-schedule
+type: explanation
+domain: project
+phase: planning
 tier: important
+status: deprecated
+maintainer: V9 Architecture Team
+summary: "ÈôÕû¸Äºó³öÏÖÎÊÌâ£¬¿É¿ìËÙ git checkout ÒÔÏÂÎÄ¼ş»ØÍË£¨°´ÔğÈÎ Agent ·Ö×é£©£º"
+tags: [project, plan, deprecated, explanation, governance, documentation, strategy]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+doc_id: V9-DOC-PROJ-038
+change_log:
+  - version: v1.0.0
+deprecated_by: "V9 Bug Fix & Refactor Roadmap"
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-tier: important
-code_version: 2.0.0
----
+# V9 ÎÊÌâÕû¸Äµ÷¶È±í
 
-# V9 é—®é¢˜æ•´æ”¹è°ƒåº¦è¡¨
-
-> ç”Ÿæˆæ—¶é—´ï¼š2026-06-25  
-> è°ƒåº¦å®˜ï¼šIssue Resolution Orchestrator  
-> è¾“å…¥ææ–™ï¼š`./design/v9-documentation-audit-report.md` + `src/` ä»£ç æ‰«æ  
-> è§„åˆ™ï¼šåŒä¸€ç‰©ç†æ–‡ä»¶è¢«å¤šä¸ª Agent å‘½ä¸­æ—¶ï¼Œåˆå¹¶ä¸ºè”åˆä¿®å¤ä»»åŠ¡ï¼Œç”± **Architecture-Fix Agent** ç‰µå¤´
+> **Date**£º2026-06-25  
+> µ÷¶È¹Ù£ºIssue Resolution Orchestrator  
+> ÊäÈë²ÄÁÏ£º`./design/v9-documentation-audit-report.md` + `src/` ´úÂëÉ¨Ãè  
+> ¹æÔò£ºÍ¬Ò»ÎïÀíÎÄ¼ş±»¶à¸ö Agent ÃüÖĞÊ±£¬ºÏ²¢ÎªÁªºÏĞŞ¸´ÈÎÎñ£¬ÓÉ **Architecture-Fix Agent** Ç£Í·
 
 ---
 
-## é—®é¢˜æ±‡æ€»ä¸è´£ä»»è·¯ç”±
+## ÎÊÌâ»ã×ÜÓëÔğÈÎÂ·ÓÉ
 
-| é—®é¢˜ID | è´£ä»»Agent | ä¿®æ”¹ä»£ç è´£ä»»ï¼ˆç‰µå¤´Agentï¼‰ | æ ¹å› åˆ†æï¼ˆä¸€å¥è¯ï¼‰ | æ ¸å¿ƒä¿®å¤ä»£ç ç‰‡æ®µï¼ˆå«è·¯å¾„ï¼‰ | éªŒè¯æ–¹å¼ | çŠ¶æ€ |
+| ÎÊÌâID | ÔğÈÎAgent | ĞŞ¸Ä´úÂëÔğÈÎ£¨Ç£Í·Agent£© | ¸ùÒò·ÖÎö£¨Ò»¾ä»°£© | ºËĞÄĞŞ¸´´úÂëÆ¬¶Î£¨º¬Â·¾¶£© | ÑéÖ¤·½Ê½ | ×´Ì¬ |
 |--------|-----------|---------------------------|--------------------|---------------------------|----------|------|
-| **ARCH-001** | Architecture-Fix | **Architecture-Fixï¼ˆè”åˆï¼šInteraction-Fix åä½œç”¨äº INT-007ï¼‰** | `App.tsx` ä½œä¸º L5/L4 å…¥å£ç›´æ¥è°ƒç”¨ `db.init()`ï¼Œè·³è¿‡ Service/DataBridgeã€‚ | `src/App.tsx:9,12-16`ï¼šåˆ é™¤ `import { db }`ï¼Œæ”¹ä¸º `import { initializeApp } from '@/services/system/bootstrapService'`ã€‚ | `grep -n "from '@/data/db'" src/App.tsx` ä¸ºç©ºï¼›`db.init()` ä»…å‡ºç°åœ¨ L2/L1ã€‚ | å¾…æ‰§è¡Œ |
-| **ARCH-002** | Architecture-Fix | **Architecture-Fixï¼ˆè”åˆï¼šData-Flow-Fix åä½œç”¨äº DF-002 åœ¨ tradingService.ts çš„ price æ ¡éªŒï¼‰** | L3 æœåŠ¡å¤§é‡è°ƒç”¨ `dataLayer.*.save()`ï¼Œä¿¡å° source/traceId ç”± dataLayer ç¡¬ç¼–ç ï¼Œè¿å L3 â€œå†™èµ° DataBridgeâ€ çº¦å®šã€‚ | `src/services/analysis/sectorScoreService.ts:8,52-53` ç­‰ 13 ä¸ªæ–‡ä»¶ï¼šæ”¹ `dataLayer.*.save()` ä¸º `DataBridge.forward(EnvelopeFactory.create(...))`ã€‚ | å¢å¼º `audit-layer-calls.ts` æ‰«æ `dataLayer\.[a-zA-Z]+\.(save\|add\|put\|update\|delete)` ç»“æœä¸º 0ã€‚ | å¾…æ‰§è¡Œ |
-| **ARCH-003** | Architecture-Fix | **Architecture-Fixï¼ˆè”åˆï¼šData-Flow-Fix åä½œç”¨äº DF-007 çš„ dataVersion/å®¡è®¡æ—¥å¿—ï¼‰** | `v6MigrationService.ts` 982 è¡Œï¼ŒåŒæ—¶æ‰¿æ‹…ç±»å‹ã€æ¨æ–­ã€æ˜ å°„ã€æ ¡éªŒã€11+ store å¯¼å…¥ï¼Œæ˜¯ God Serviceã€‚ | æ‹†åˆ†ä¸º `src/services/system/migration/{migrationTypes,transformers,validators,storeMigrators/*,v6MigrationService}.ts`ã€‚ | `wc -l src/services/system/v6MigrationService.ts` â‰¤ 250ï¼›é›†æˆæµ‹è¯•ç»“æœä¸æ”¹é€ å‰ä¸€è‡´ã€‚ | å¾…æ‰§è¡Œ |
-| **ARCH-004** | Architecture-Fix | Architecture-Fix | `rotationScoreService.ts` 775 è¡Œï¼Œé…ç½®/è®¡ç®—/æŒä¹…åŒ–è€¦åˆã€‚ | æå– `src/config/rotationConfig.ts`ã€`src/services/analysis/rotation/{calculator,signalGrader}.ts`ã€‚ | `wc -l rotationScoreService.ts` â‰¤ 250ï¼›è®¡ç®—å¾—åˆ†ä¸æ”¹é€ å‰ä¸€è‡´ã€‚ | å¾…æ‰§è¡Œ |
-| **ARCH-005** | Architecture-Fix | Architecture-Fix | `ScoreDocPage.tsx` / `StrategySnapshotPage.tsx` ä½œä¸º L5 ç›´æ¥è¯» `dataLayer`ï¼Œä¸”æ— è¿‡æ¸¡æœŸæ ‡æ³¨ã€‚ | `src/pages/analysis/ScoreDocPage.tsx:14,41` ç­‰æ”¹ä¸ºè°ƒç”¨åªè¯» Serviceã€‚ | `npm run audit:layers` çš„ L5/L4 è¯» dataLayer è­¦å‘Šé™ä¸º 0ã€‚ | å¾…æ‰§è¡Œ |
-| **ARCH-006** | Architecture-Fix | Architecture-Fix | `src/config/themeRegistry.ts` åå‘ä¾èµ– `src/data/themeSymbolPool.ts` ä¸šåŠ¡æ•°æ®ã€‚ | æ–°å»º `src/config/symbols.ts`ï¼Œ`themeRegistry.ts` æ”¹ä» `@/config/symbols` å¯¼å…¥ã€‚ | `grep -R "from '@/data/themeSymbolPool'" src/config` ä¸ºç©ºã€‚ | å¾…æ‰§è¡Œ |
-| **ARCH-007** | Architecture-Fix | **Architecture-Fixï¼ˆè”åˆï¼šInteraction-Fix åä½œç”¨äº INT-006 çš„ç¦ç”¨ Tooltipï¼‰** | `IntelligentScorePage`/`IndustryScorePage`/`InputDashboard` è¶…è¿‡ 400 è¡Œï¼ŒGod Componentã€‚ | æå– `src/hooks/cabin/useIntelligentScorePage.ts` ç­‰ Hookï¼Œé¡µé¢ä»…è´Ÿè´£æ¸²æŸ“ã€‚ | ESLint `max-lines: 300` é€šè¿‡ï¼›é¡µé¢æµ‹è¯•è¡Œä¸ºä¸å˜ã€‚ | å¾…æ‰§è¡Œ |
-| **DF-001** | Data-Flow-Fix | Data-Flow-Fix | DataBridge å†™æˆåŠŸååªå¹¿æ’­åˆ°ç¦ç”¨çš„ `'db'` é¢‘é“ï¼Œæ²¡æœ‰æŒ‰çœŸå® store å¹¿æ’­ï¼ŒUI æ— æ³•è‡ªåŠ¨åŒæ­¥ã€‚ | `src/core/databridge.ts:97-104`ï¼šå¢åŠ  `this.broadcast(targetStore, envelope)` ä¸ `eventBus.emit(`${targetStore}:changed`, envelope)`ã€‚ | DataBridge æµ‹è¯•ä¸­ mock `db.put`ï¼Œæ–­è¨€ `eventBus.emit('stocks:changed')` è¢«è°ƒç”¨ã€‚ | å¾…æ‰§è¡Œ |
-| **DF-002** | Data-Flow-Fix | **Architecture-Fix ç‰µå¤´ï¼ˆåœ¨ ARCH-002 è”åˆä¿®å¤ä¸­å¤„ç† tradingService.ts çš„ä»·æ ¼æ ¡éªŒï¼‰** | `tradingService.ts` å¯¹ç¼ºå¤±è‚¡ä»·ä½¿ç”¨ `?? 0` é™é»˜å›é€€ï¼Œå¯¼è‡´è®¢å•/ä»“ä½è®¡ç®—å¤±çœŸã€‚ | `src/services/trading/tradingService.ts:60-66`ï¼šæ˜¾å¼æ ¡éªŒ `stock.price === undefined \|\| stock.price <= 0` å¹¶è¿”å›é”™è¯¯ã€‚ | `tradingService.test.ts` æ„é€  `price: undefined` çš„ stockï¼Œæ–­è¨€è¿”å› `success: false`ã€‚ | å¾…æ‰§è¡Œ |
-| **DF-003** | Data-Flow-Fix | Data-Flow-Fix | `dataflowStore`/`pageStore`/`widgetStore`/`agentStore` æ¨¡å—é¡¶å±‚è®¢é˜… eventBus æ°¸ä¸å–æ¶ˆã€‚ | `src/store/dataflowStore.ts:35-51` ç­‰æ”¹ä¸º `init*Subscriptions()` / `destroy*Subscriptions()` æ¨¡å¼ã€‚ | `eventBus.getStats().totalListeners` åœ¨ destroy ååº”ä¸º 0ã€‚ | å¾…æ‰§è¡Œ |
-| **DF-004** | Data-Flow-Fix | Data-Flow-Fix | `updateStatus`/`updateGroup` æœªé€’å¢ `dataVersion`ï¼Œæ•°æ®è¡€ç¼˜æ–­è£‚ã€‚ | `src/core/databridge.ts:153-162`ï¼šè‡ªåŠ¨é€’å¢ `dataVersion: (existing.dataVersion ?? 1) + 1`ã€‚ | æµ‹è¯•æ–­è¨€ `updateGroup` å `dataVersion` +1ã€‚ | å¾…æ‰§è¡Œ |
-| **DF-005** | Data-Flow-Fix | Data-Flow-Fix | ACL æ‹’ç»å DataBridge ç›´æ¥æŠ›é”™ï¼Œç¼ºå°‘é™çº§é˜Ÿåˆ—/é‡è¯•ã€‚ | `src/core/databridge.ts:76-79`ï¼šå¯¹è¡Œæƒ…ç±» envelope å†™å…¥ `fallbackQueue`ï¼Œæä¾› `DataBridge.retryFailed()`ã€‚ | mock ACL æŠ›é”™ï¼Œæ–­è¨€è¡Œæƒ… envelope è¿›å…¥é™çº§é˜Ÿåˆ—è€ŒéæŠ›é”™ã€‚ | å¾…æ‰§è¡Œ |
-| **DF-006** | Data-Flow-Fix | Data-Flow-Fix | DataFlowEngine SSE æ–­å¼€åä¸è‡ªåŠ¨é‡è¿æˆ–åˆ‡å›è½®è¯¢ã€‚ | `src/core/dataflow/dataflowEngine.ts:74-79`ï¼šå¢åŠ æŒ‡æ•°é€€é¿é‡è¿ä¸ `_fallbackToPolling`ã€‚ | mock EventSource onerrorï¼Œæ–­è¨€ setTimeout é‡è¿è¢«è°ƒåº¦ã€‚ | å¾…æ‰§è¡Œ |
-| **DF-007** | Data-Flow-Fix | **Architecture-Fix ç‰µå¤´ï¼ˆåœ¨ ARCH-003 è”åˆä¿®å¤ä¸­å¤„ç† v6MigrationService.ts çš„æ•°æ®è¡€ç¼˜ï¼‰** | `db.import()` å¯¹ç¼ºå¤±è¡¨é™é»˜ `?? []`ï¼Œæ•°æ®è¦†ç›–ä¸å¯æ„ŸçŸ¥ä¸”æ— è¡€ç¼˜ã€‚ | `src/data/db.ts:265-273`ï¼šå‰ç½® schema æ ¡éªŒï¼Œç¼ºå¤±è¡¨æ—¶æŠ›é”™æˆ– warningï¼›å¯¼å…¥åå†™å®¡è®¡æ—¥å¿—ã€‚ | æ„é€ ç¼ºè¡¨æ•°æ®è°ƒç”¨ `db.import()`ï¼Œæ–­è¨€æŠ›å‡º `ImportSchemaError` æˆ–è®°å½• warningã€‚ | å¾…æ‰§è¡Œ |
-| **INT-001** | Interaction-Fix | Interaction-Fix | `TradingApp` ä¹°å…¥/å–å‡ºæ—  pending æ€ä¸å¤±è´¥åé¦ˆï¼Œå¯é‡å¤ä¸‹å•ã€‚ | `src/apps/trading/TradingApp.tsx:95-125,214-221`ï¼šå¢åŠ  `processingSymbols` + `useToast`ã€‚ | è¿ç»­å¿«é€Ÿç‚¹å‡»â€œä¹°å…¥â€åªäº§ç”Ÿä¸€ç¬”è®¢å•ï¼›å¤±è´¥æ—¶å¼¹å‡º error Toastã€‚ | å¾…æ‰§è¡Œ |
-| **INT-002** | Interaction-Fix | Interaction-Fix | `HotSectorPanel` â€œå…¨éƒ¨åŠ å…¥å€™é€‰æ± â€ æ—  loading/ç¦ç”¨æ€ã€‚ | `src/apps/input/HotSectorPanel.tsx:63-85,147`ï¼šå¢åŠ  `addingAll` + `useToast`ã€‚ | è¯·æ±‚æœŸé—´æŒ‰é’®ç¦ç”¨å¹¶æ˜¾ç¤ºâ€œåŠ å…¥ä¸­...â€ï¼›å¤±è´¥æ—¶å¼¹å‡º error Toastã€‚ | å¾…æ‰§è¡Œ |
-| **INT-003** | Interaction-Fix | Interaction-Fix | `AnalysisApp` åŠ è½½/è¯„åˆ†å¤±è´¥é™é»˜åé”™ï¼Œæ—  loadingã€‚ | `src/apps/analysis/AnalysisApp.tsx:15-39,50-52`ï¼šå¢åŠ  loading ä¸ Toast é”™è¯¯åé¦ˆã€‚ | æ¨¡æ‹Ÿ `listStocks`/`runV6Score` å¤±è´¥ï¼Œç‚¹å‡»åå¼¹å‡º error Toastã€‚ | å¾…æ‰§è¡Œ |
-| **INT-004** | Interaction-Fix | Interaction-Fix | `StockSearch` ç›´æ¥å½•å…¥æ¨¡å¼æ—  loading/é”™è¯¯/é˜²é‡æ”¾ã€‚ | `src/components/input/StockSearch.tsx:60-72`ï¼šå¢åŠ  `adding` + `useToast`ã€‚ | å¿«é€Ÿå¤šæ¬¡ç‚¹å‡»åŒä¸€ç»“æœåªäº§ç”Ÿä¸€æ¬¡å½•å…¥ï¼›å¤±è´¥æ—¶å¼¹å‡º error Toastã€‚ | å¾…æ‰§è¡Œ |
-| **INT-005** | Interaction-Fix | Interaction-Fix | `LocalKnowledgePage` å¼‚æ­¥æ“ä½œæ—  loading/é”™è¯¯åé¦ˆã€‚ | `src/pages/input/LocalKnowledgePage.tsx:81-124`ï¼šå¢åŠ  `loading` + `useToast`ã€‚ | å¯¼å…¥/æœç´¢æ—¶æŒ‰é’®ç¦ç”¨ï¼›å¤±è´¥æ—¶å¼¹å‡º error Toastã€‚ | å¾…æ‰§è¡Œ |
-| **INT-006** | Interaction-Fix | **Architecture-Fix ç‰µå¤´ï¼ˆåœ¨ ARCH-007 è”åˆä¿®å¤ä¸­å¤„ç†é¡µé¢æ‹†åˆ†æ—¶åŒæ­¥å¢åŠ  Tooltipï¼‰** | `IndustryScorePage`/`IntelligentScorePage` è¯„åˆ†æŒ‰é’®ç¦ç”¨æ—  Tooltipã€‚ | `src/pages/analysis/IndustryScorePage.tsx:272`ã€`IntelligentScorePage.tsx:274`ï¼šç”¨ `Tooltip` åŒ…è£¹ç¦ç”¨æŒ‰é’®ã€‚ | æ‚¬åœç¦ç”¨æŒ‰é’®æ˜¾ç¤ºå…·ä½“åŸå› ï¼ˆé…ç½®ç¼ºå¤±/è¯„åˆ†ä¸­ï¼‰ã€‚ | å¾…æ‰§è¡Œ |
-| **INT-007** | Interaction-Fix | **Architecture-Fix ç‰µå¤´ï¼ˆåœ¨ ARCH-001 è”åˆä¿®å¤ä¸­å¤„ç† App.tsx åˆå§‹åŒ–å¤±è´¥åé¦ˆï¼‰** | `App.tsx` IndexedDB åˆå§‹åŒ–å¤±è´¥ä»… `console.error`ï¼Œç”¨æˆ·æ— æ„ŸçŸ¥ã€‚ | `src/App.tsx:12-15`ï¼šå¢åŠ  `useToast` é”™è¯¯æç¤ºã€‚ | è®© `db.init()` rejectï¼Œé¡µé¢åŠ è½½ååº”å¸¸é©»æ˜¾ç¤º error Toastã€‚ | å¾…æ‰§è¡Œ |
-| **DOC-001** | Doc-Sync-Fix | Doc-Sync-Fix | `.env.example` æ–°å¢ `VITE_AKSHARE_BASE_URL` ä½† `src/vite-env.d.ts` æœªå£°æ˜ç±»å‹ã€‚ | `src/vite-env.d.ts:3-7`ï¼šå¢åŠ  `readonly VITE_AKSHARE_BASE_URL?: string`ã€‚ | `npm run tsc` é€šè¿‡ï¼›grep å‘½ä¸­è¯¥å£°æ˜ã€‚ | å¾…æ‰§è¡Œ |
-| **DOC-002** | Doc-Sync-Fix | Doc-Sync-Fix | `../reference/05-engine-specs.md` ä»æ ‡è®°æ•°æ®æµå¼•æ“ä¸ºâ€œæœªå®ç°â€ï¼Œä¸ä»£ç çŸ›ç›¾ã€‚ | `../reference/05-engine-specs.md:94-114`ï¼šæ›´æ–°ç›®å½•ä¸çŠ¶æ€ä¸º ğŸŸ¡ éƒ¨åˆ†å®ç°ã€‚ | é€šè¯»è¯¥èŠ‚ä¸å†å‡ºç°â€œğŸ”´ æœªå®ç°â€ã€‚ | å¾…æ‰§è¡Œ |
-| **DOC-003** | Doc-Sync-Fix | Doc-Sync-Fix | `../reference/05-engine-specs.md` å¼•ç”¨ä¸å­˜åœ¨çš„ `rotationSignalGenerator.ts`/`rotationConfig.ts`ã€‚ | `../reference/05-engine-specs.md:302-317`ï¼šæ›¿æ¢ä¸ºå®é™…æ–‡ä»¶ `rotationScoreService.ts`ã€‚ | `find src -name 'rotationSignalGenerator.ts'` æ— ç»“æœã€‚ | å¾…æ‰§è¡Œ |
-| **DOC-004** | Doc-Sync-Fix | Doc-Sync-Fix | `../reference/05-engine-specs.md` æŠŠ `fetcherConfig.ts` æ”¾åœ¨é”™è¯¯ç›®å½•ã€‚ | `../reference/05-engine-specs.md:30-37,330-335`ï¼šè·¯å¾„æ”¹ä¸º `src/config/fetcherConfig.ts`ã€‚ | `ls src/services/fetcher/` æ—  `fetcherConfig.ts`ã€‚ | å¾…æ‰§è¡Œ |
-| **DOC-005** | Doc-Sync-Fix | Doc-Sync-Fix | æ ¸å¿ƒ/å®æ–½æ–‡æ¡£ frontmatter ç‰ˆæœ¬å·æœªç»Ÿä¸€ã€‚ | æ‰¹é‡æ›´æ–° 8 ä¸ªæ–‡æ¡£çš„ `> **Version**: ...` ä¸º `v0.9.0-migration-implemented`ã€‚ | `grep -R '^> \*\*Version' docs/` ä»… Deferred æ–‡æ¡£ä¿ç•™æ—§ç‰ˆæœ¬ã€‚ | å¾…æ‰§è¡Œ |
-| **DOC-006** | Doc-Sync-Fix | Doc-Sync-Fix | `../reference/09-quality-gates.md` E2E çŠ¶æ€å‰åçŸ›ç›¾ã€‚ | `../reference/09-quality-gates.md:275-276` åŠ 4.3 èŠ‚ï¼šæ›´æ–°ä¸º E2E å·²å»ºç«‹ 5/5 é€šè¿‡ã€‚ | `npm run test:e2e` é€šè¿‡ï¼›æ–‡æ¡£æ— â€œE2E æµ‹è¯•ç¼ºå¤±â€å­—æ ·ã€‚ | å¾…æ‰§è¡Œ |
-| **DOC-007** | Doc-Sync-Fix | Doc-Sync-Fix | `../reference/06-routing-specs.md` ç¬¬ 8 èŠ‚æ˜ å°„è¡¨é—æ¼å·²æ³¨å†Œè·¯ç”±ã€‚ | `../reference/06-routing-specs.md:221-242`ï¼šè¿½åŠ  score-docs/news/strategy-snapshots/local-knowledgeã€‚ | å°† `getAllPaths()` è¾“å‡ºä¸è¡¨æ ¼é€è¡Œæ¯”å¯¹æ— é—æ¼ã€‚ | å¾…æ‰§è¡Œ |
+| **ARCH-001** | Architecture-Fix | **Architecture-Fix£¨ÁªºÏ£ºInteraction-Fix Ğ­×÷ÓÃÓÚ INT-007£©** | `App.tsx` ×÷Îª L5/L4 Èë¿ÚÖ±½Óµ÷ÓÃ `db.init()`£¬Ìø¹ı Service/DataBridge¡£ | src/App.tsx:9,12-16£ºÉ¾³ı `import { db }`£¬¸ÄÎª `import { initializeApp } from '@/services/system/bootstrapService'`¡£ | `grep -n "from '@/data/db'" src/App.tsx` Îª¿Õ£»`db.init()` ½ö³öÏÖÔÚ L2/L1¡£ | ´ıÖ´ĞĞ |
+| **ARCH-002** | Architecture-Fix | **Architecture-Fix£¨ÁªºÏ£ºData-Flow-Fix Ğ­×÷ÓÃÓÚ DF-002 ÔÚ tradingService.ts µÄ price Ğ£Ñé£©** | L3 ·şÎñ´óÁ¿µ÷ÓÃ `dataLayer.*.save()`£¬ĞÅ·â source/traceId ÓÉ dataLayer Ó²±àÂë£¬Î¥·´ L3 ¡°Ğ´×ß DataBridge¡± Ô¼¶¨¡£ | `src/services/scoring/industryScoreService.ts` µÈ 13 ¸öÎÄ¼ş£º¸Ä `dataLayer.*.save()` Îª `DataBridge.forward(EnvelopeFactory.create(...))`¡£ | ÔöÇ¿ `audit-layer-calls.ts` É¨Ãè `dataLayer\.[a-zA-Z]+\.(save\|add\|put\|update\|delete)` ½á¹ûÎª 0¡£ | ´ıÖ´ĞĞ |
+| **ARCH-003** | Architecture-Fix | **Architecture-Fix£¨ÁªºÏ£ºData-Flow-Fix Ğ­×÷ÓÃÓÚ DF-007 µÄ dataVersion/Éó¼ÆÈÕÖ¾£©** | `v6MigrationService.ts` 982 ĞĞ£¬Í¬Ê±³Ğµ£ÀàĞÍ¡¢ÍÆ¶Ï¡¢Ó³Éä¡¢Ğ£Ñé¡¢11+ store µ¼Èë£¬ÊÇ God Service¡£ | ²ğ·ÖÎª `src/services/system/migration/{migrationTypes,transformers,validators,storeMigrators/*,v6MigrationService}.ts`¡£ | `wc -l src/services/system/v6MigrationService.ts` ¡Ü 250£»¼¯³É²âÊÔ½á¹ûÓë¸ÄÔìÇ°Ò»ÖÂ¡£ | ´ıÖ´ĞĞ |
+| **ARCH-004** | Architecture-Fix | Architecture-Fix | `rotationScoreService.ts` 775 ĞĞ£¬ÅäÖÃ/¼ÆËã/³Ö¾Ã»¯ñîºÏ¡£ | ÌáÈ¡ `src/config/rotationConfig.ts`¡¢`src/services/analysis/rotation/{calculator,signalGrader}.ts`¡£ | `wc -l rotationScoreService.ts` ¡Ü 250£»¼ÆËãµÃ·ÖÓë¸ÄÔìÇ°Ò»ÖÂ¡£ | ´ıÖ´ĞĞ |
+| **ARCH-005** | Architecture-Fix | Architecture-Fix | `ScoreDocPage.tsx` / `StrategySnapshotPage.tsx` ×÷Îª L5 Ö±½Ó¶Á `dataLayer`£¬ÇÒÎŞ¹ı¶ÉÆÚ±ê×¢¡£ | `src/pages/analysis/ScoreDocPage.tsx:14,41` µÈ¸ÄÎªµ÷ÓÃÖ»¶Á Service¡£ | `npm run audit:layers` µÄ L5/L4 ¶Á dataLayer ¾¯¸æ½µÎª 0¡£ | ´ıÖ´ĞĞ |
+| **ARCH-006** | Architecture-Fix | Architecture-Fix | `src/config/themeRegistry.ts` ·´ÏòÒÀÀµ `src/data/sectorDefinitions.ts` ÒµÎñÊı¾İ¡£ | ĞÂ½¨ `src/config/symbols.ts`£¬`themeRegistry.ts` ¸Ä´Ó `@/config/symbols` µ¼Èë¡£ | `grep -R "from '@/data/themeSymbolPool'" src/config` Îª¿Õ¡£ | ´ıÖ´ĞĞ |
+| **ARCH-007** | Architecture-Fix | **Architecture-Fix£¨ÁªºÏ£ºInteraction-Fix Ğ­×÷ÓÃÓÚ INT-006 µÄ½ûÓÃ Tooltip£©** | `IntelligentScorePage`/`IndustryScorePage`/`InputDashboard` ³¬¹ı 400 ĞĞ£¬God Component¡£ | ÌáÈ¡ `src/hooks/cabin/useIntelligentScorePage.ts` µÈ Hook£¬Ò³Ãæ½ö¸ºÔğäÖÈ¾¡£ | ESLint `max-lines: 300` Í¨¹ı£»Ò³Ãæ²âÊÔĞĞÎª²»±ä¡£ | ´ıÖ´ĞĞ |
+| **DF-001** | Data-Flow-Fix | Data-Flow-Fix | DataBridge Ğ´³É¹¦ºóÖ»¹ã²¥µ½½ûÓÃµÄ `'db'` ÆµµÀ£¬Ã»ÓĞ°´ÕæÊµ store ¹ã²¥£¬UI ÎŞ·¨×Ô¶¯Í¬²½¡£ | `src/core/databridge.ts:97-104`£ºÔö¼Ó `this.broadcast(targetStore, envelope)` Óë `eventBus.emit(`${targetStore}:changed`, envelope)`¡£ | DataBridge ²âÊÔÖĞ mock `db.put`£¬¶ÏÑÔ `eventBus.emit('stocks:changed')` ±»µ÷ÓÃ¡£ | ´ıÖ´ĞĞ |
+| **DF-002** | Data-Flow-Fix | **Architecture-Fix Ç£Í·£¨ÔÚ ARCH-002 ÁªºÏĞŞ¸´ÖĞ´¦Àí tradingService.ts µÄ¼Û¸ñĞ£Ñé£©** | `tradingService.ts` ¶ÔÈ±Ê§¹É¼ÛÊ¹ÓÃ `?? 0` ¾²Ä¬»ØÍË£¬µ¼ÖÂ¶©µ¥/²ÖÎ»¼ÆËãÊ§Õæ¡£ | `src/services/trading/tradingService.ts:60-66`£ºÏÔÊ½Ğ£Ñé `stock.price === undefined \|\| stock.price <= 0` ²¢·µ»Ø´íÎó¡£ | `tradingService.test.ts` ¹¹Ôì `price: undefined` µÄ stock£¬¶ÏÑÔ·µ»Ø `success: false`¡£ | ´ıÖ´ĞĞ |
+| **DF-003** | Data-Flow-Fix | Data-Flow-Fix | `dataflowStore`/`pageStore`/`widgetStore`/`agentStore` Ä£¿é¶¥²ã¶©ÔÄ eventBus ÓÀ²»È¡Ïû¡£ | `src/store/dataflowStore.ts:35-51` µÈ¸ÄÎª `init*Subscriptions()` / `destroy*Subscriptions()` Ä£Ê½¡£ | `eventBus.getStats().totalListeners` ÔÚ destroy ºóÓ¦Îª 0¡£ | ´ıÖ´ĞĞ |
+| **DF-004** | Data-Flow-Fix | Data-Flow-Fix | `updateStatus`/`updateGroup` Î´µİÔö `dataVersion`£¬Êı¾İÑªÔµ¶ÏÁÑ¡£ | `src/core/databridge.ts:153-162`£º×Ô¶¯µİÔö `dataVersion: (existing.dataVersion ?? 1) + 1`¡£ | ²âÊÔ¶ÏÑÔ `updateGroup` ºó `dataVersion` +1¡£ | ´ıÖ´ĞĞ |
+| **DF-005** | Data-Flow-Fix | Data-Flow-Fix | ACL ¾Ü¾øºó DataBridge Ö±½ÓÅ×´í£¬È±ÉÙ½µ¼¶¶ÓÁĞ/ÖØÊÔ¡£ | `src/core/databridge.ts:76-79`£º¶ÔĞĞÇéÀà envelope Ğ´Èë `fallbackQueue`£¬Ìá¹© `DataBridge.retryFailed()`¡£ | mock ACL Å×´í£¬¶ÏÑÔĞĞÇé envelope ½øÈë½µ¼¶¶ÓÁĞ¶ø·ÇÅ×´í¡£ | ´ıÖ´ĞĞ |
+| **DF-006** | Data-Flow-Fix | Data-Flow-Fix | DataFlowEngine SSE ¶Ï¿ªºó²»×Ô¶¯ÖØÁ¬»òÇĞ»ØÂÖÑ¯¡£ | `src/core/dataflow/dataflowEngine.ts:74-79`£ºÔö¼ÓÖ¸ÊıÍË±ÜÖØÁ¬Óë `_fallbackToPolling`¡£ | mock EventSource onerror£¬¶ÏÑÔ setTimeout ÖØÁ¬±»µ÷¶È¡£ | ´ıÖ´ĞĞ |
+| **DF-007** | Data-Flow-Fix | **Architecture-Fix Ç£Í·£¨ÔÚ ARCH-003 ÁªºÏĞŞ¸´ÖĞ´¦Àí v6MigrationService.ts µÄÊı¾İÑªÔµ£©** | `db.import()` ¶ÔÈ±Ê§±í¾²Ä¬ `?? []`£¬Êı¾İ¸²¸Ç²»¿É¸ĞÖªÇÒÎŞÑªÔµ¡£ | `src/data/db.ts:265-273`£ºÇ°ÖÃ schema Ğ£Ñé£¬È±Ê§±íÊ±Å×´í»ò warning£»µ¼ÈëºóĞ´Éó¼ÆÈÕÖ¾¡£ | ¹¹ÔìÈ±±íÊı¾İµ÷ÓÃ `db.import()`£¬¶ÏÑÔÅ×³ö `ImportSchemaError` »ò¼ÇÂ¼ warning¡£ | ´ıÖ´ĞĞ |
+| **INT-001** | Interaction-Fix | Interaction-Fix | `TradingApp` ÂòÈë/Âô³öÎŞ pending Ì¬ÓëÊ§°Ü·´À¡£¬¿ÉÖØ¸´ÏÂµ¥¡£ | `src/apps/trading/TradingApp.tsx`£ºÔö¼Ó `processingSymbols` + `useToast`¡£ | Á¬Ğø¿ìËÙµã»÷¡°ÂòÈë¡±Ö»²úÉúÒ»±Ê¶©µ¥£»Ê§°ÜÊ±µ¯³ö error Toast¡£ | ´ıÖ´ĞĞ |
+| **INT-002** | Interaction-Fix | Interaction-Fix | `HotSectorPanel` ¡°È«²¿¼ÓÈëºòÑ¡³Ø¡± ÎŞ loading/½ûÓÃÌ¬¡£ | `src/apps/input/HotSectorPanel.tsx:63-85,147`£ºÔö¼Ó `addingAll` + `useToast`¡£ | ÇëÇóÆÚ¼ä°´Å¥½ûÓÃ²¢ÏÔÊ¾¡°¼ÓÈëÖĞ...¡±£»Ê§°ÜÊ±µ¯³ö error Toast¡£ | ´ıÖ´ĞĞ |
+| **INT-003** | Interaction-Fix | Interaction-Fix | `AnalysisApp` ¼ÓÔØ/ÆÀ·ÖÊ§°Ü¾²Ä¬ÍÌ´í£¬ÎŞ loading¡£ | `src/apps/analysis/AnalysisApp.tsx`£ºÔö¼Ó loading Óë Toast ´íÎó·´À¡¡£ | Ä£Äâ `listStocks`/`runV6Score` Ê§°Ü£¬µã»÷ºóµ¯³ö error Toast¡£ | ´ıÖ´ĞĞ |
+| **INT-004** | Interaction-Fix | Interaction-Fix | `StockSearch` Ö±½ÓÂ¼ÈëÄ£Ê½ÎŞ loading/´íÎó/·ÀÖØ·Å¡£ | `src/components/organisms/input/StockSearch.tsx`£ºÔö¼Ó `adding` + `useToast`¡£ | ¿ìËÙ¶à´Îµã»÷Í¬Ò»½á¹ûÖ»²úÉúÒ»´ÎÂ¼Èë£»Ê§°ÜÊ±µ¯³ö error Toast¡£ | ´ıÖ´ĞĞ |
+| **INT-005** | Interaction-Fix | Interaction-Fix | `LocalKnowledgePage` Òì²½²Ù×÷ÎŞ loading/´íÎó·´À¡¡£ | `src/pages/input/LocalKnowledgePage.tsx:81-124`£ºÔö¼Ó `loading` + `useToast`¡£ | µ¼Èë/ËÑË÷Ê±°´Å¥½ûÓÃ£»Ê§°ÜÊ±µ¯³ö error Toast¡£ | ´ıÖ´ĞĞ |
+| **INT-006** | Interaction-Fix | **Architecture-Fix Ç£Í·£¨ÔÚ ARCH-007 ÁªºÏĞŞ¸´ÖĞ´¦ÀíÒ³Ãæ²ğ·ÖÊ±Í¬²½Ôö¼Ó Tooltip£©** | `IndustryScorePage`/`IntelligentScorePage` ÆÀ·Ö°´Å¥½ûÓÃÎŞ Tooltip¡£ | `src/pages/analysis/IndustryScorePage.tsx:272`¡¢`IntelligentScorePage.tsx:274`£ºÓÃ `Tooltip` °ü¹ü½ûÓÃ°´Å¥¡£ | ĞüÍ£½ûÓÃ°´Å¥ÏÔÊ¾¾ßÌåÔ­Òò£¨ÅäÖÃÈ±Ê§/ÆÀ·ÖÖĞ£©¡£ | ´ıÖ´ĞĞ |
+| **INT-007** | Interaction-Fix | **Architecture-Fix Ç£Í·£¨ÔÚ ARCH-001 ÁªºÏĞŞ¸´ÖĞ´¦Àí App.tsx ³õÊ¼»¯Ê§°Ü·´À¡£©** | `App.tsx` IndexedDB ³õÊ¼»¯Ê§°Ü½ö `console.error`£¬ÓÃ»§ÎŞ¸ĞÖª¡£ | `src/App.tsx:12-15`£ºÔö¼Ó `useToast` ´íÎóÌáÊ¾¡£ | ÈÃ `db.init()` reject£¬Ò³Ãæ¼ÓÔØºóÓ¦³£×¤ÏÔÊ¾ error Toast¡£ | ´ıÖ´ĞĞ |
+| **DOC-001** | Doc-Sync-Fix | Doc-Sync-Fix | `.env.example` ĞÂÔö `VITE_AKSHARE_BASE_URL` µ« `src/vite-env.d.ts` Î´ÉùÃ÷ÀàĞÍ¡£ | `src/vite-env.d.ts:3-7`£ºÔö¼Ó `readonly VITE_AKSHARE_BASE_URL?: string`¡£ | `npm run tsc` Í¨¹ı£»grep ÃüÖĞ¸ÃÉùÃ÷¡£ | ´ıÖ´ĞĞ |
+| **DOC-002** | Doc-Sync-Fix | Doc-Sync-Fix | `../reference/05-engine-specs.md` ÈÔ±ê¼ÇÊı¾İÁ÷ÒıÇæÎª¡°Î´ÊµÏÖ¡±£¬Óë´úÂëÃ¬¶Ü¡£ | `../reference/05-engine-specs.md:94-114`£º¸üĞÂÄ¿Â¼Óë×´Ì¬Îª ?? ²¿·ÖÊµÏÖ¡£ | Í¨¶Á¸Ã½Ú²»ÔÙ³öÏÖ¡°?? Î´ÊµÏÖ¡±¡£ | ´ıÖ´ĞĞ |
+| **DOC-003** | Doc-Sync-Fix | Doc-Sync-Fix | `../reference/05-engine-specs.md` ÒıÓÃ²»´æÔÚµÄ `rotationSignalGenerator.ts`/`rotationConfig.ts`¡£ | `../reference/05-engine-specs.md:302-317`£ºÌæ»»ÎªÊµ¼ÊÎÄ¼ş `rotationScoreService.ts`¡£ | `find src -name 'rotationSignalGenerator.ts'` ÎŞ½á¹û¡£ | ´ıÖ´ĞĞ |
+| **DOC-004** | Doc-Sync-Fix | Doc-Sync-Fix | `../reference/05-engine-specs.md` °Ñ `fetcherConfig.ts` ·ÅÔÚ´íÎóÄ¿Â¼¡£ | `../reference/05-engine-specs.md:30-37,330-335`£ºÂ·¾¶¸ÄÎª `src/config/fetcherConfig.ts`¡£ | `ls src/services/fetcher/` ÎŞ `fetcherConfig.ts`¡£ | ´ıÖ´ĞĞ |
+| **DOC-005** | Doc-Sync-Fix | Doc-Sync-Fix | ºËĞÄ/ÊµÊ©ÎÄµµ frontmatter °æ±¾ºÅÎ´Í³Ò»¡£ | ÅúÁ¿¸üĞÂ 8 ¸öÎÄµµµÄ `> **Version**: ...` Îª `v0.9.0-migration-implemented`¡£ | `grep -R '^> \*\*Version' docs/` ½ö Deferred ÎÄµµ±£Áô¾É°æ±¾¡£ | ´ıÖ´ĞĞ |
+| **DOC-006** | Doc-Sync-Fix | Doc-Sync-Fix | `../reference/09-quality-gates.md` E2E ×´Ì¬Ç°ºóÃ¬¶Ü¡£ | `../reference/09-quality-gates.md:275-276` ¼° 4.3 ½Ú£º¸üĞÂÎª E2E ÒÑ½¨Á¢ 5/5 Í¨¹ı¡£ | `npm run test:e2e` Í¨¹ı£»ÎÄµµÎŞ¡°E2E ²âÊÔÈ±Ê§¡±×ÖÑù¡£ | ´ıÖ´ĞĞ |
+| **DOC-007** | Doc-Sync-Fix | Doc-Sync-Fix | `../reference/06-routing-specs.md` µÚ 8 ½ÚÓ³Éä±íÒÅÂ©ÒÑ×¢²áÂ·ÓÉ¡£ | `../reference/06-routing-specs.md:221-242`£º×·¼Ó score-docs/news/strategy-snapshots/local-knowledge¡£ | ½« `getAllPaths()` Êä³öÓë±í¸ñÖğĞĞ±È¶ÔÎŞÒÅÂ©¡£ | ´ıÖ´ĞĞ |
 
 ---
 
-## è”åˆä¿®å¤ä»»åŠ¡è¯´æ˜
+## ÁªºÏĞŞ¸´ÈÎÎñËµÃ÷
 
-| è”åˆä»»åŠ¡ | ç‰µå¤´ Agent | åä½œè€… | æ¶‰åŠæ–‡ä»¶ | åˆå¹¶ç†ç”± |
+| ÁªºÏÈÎÎñ | Ç£Í· Agent | Ğ­×÷Õß | Éæ¼°ÎÄ¼ş | ºÏ²¢ÀíÓÉ |
 |----------|------------|--------|----------|----------|
-| JT-001 App.tsx å¯åŠ¨ä¸åˆå§‹åŒ–åé¦ˆ | Architecture-Fix | Interaction-Fix | `src/App.tsx` | ARCH-001 ä¸ INT-007 å‡ä¿®æ”¹ `App.tsx` |
-| JT-002 tradingService.ts å†™æ“ä½œä¸ä»·æ ¼æ ¡éªŒ | Architecture-Fix | Data-Flow-Fix | `src/services/trading/tradingService.ts` | ARCH-002 ä¸ DF-002 å‡ä¿®æ”¹è¯¥æ–‡ä»¶ |
-| JT-003 v6MigrationService.ts æ‹†åˆ†ä¸æ•°æ®è¡€ç¼˜ | Architecture-Fix | Data-Flow-Fix | `src/services/system/v6MigrationService.ts` | ARCH-003 ä¸ DF-007 å‡ä¿®æ”¹è¯¥æ–‡ä»¶ |
-| JT-004 IndustryScorePage / IntelligentScorePage æ‹†åˆ†ä¸ç¦ç”¨æç¤º | Architecture-Fix | Interaction-Fix | `src/pages/analysis/IndustryScorePage.tsx`ã€`src/pages/analysis/IntelligentScorePage.tsx` | ARCH-007 ä¸ INT-006 å‡ä¿®æ”¹è¿™ä¸¤ä¸ªæ–‡ä»¶ |
+| JT-001 App.tsx Æô¶¯Óë³õÊ¼»¯·´À¡ | Architecture-Fix | Interaction-Fix | `src/App.tsx` | ARCH-001 Óë INT-007 ¾ùĞŞ¸Ä `App.tsx` |
+| JT-002 tradingService.ts Ğ´²Ù×÷Óë¼Û¸ñĞ£Ñé | Architecture-Fix | Data-Flow-Fix | `src/services/trading/tradingService.ts` | ARCH-002 Óë DF-002 ¾ùĞŞ¸Ä¸ÃÎÄ¼ş |
+| JT-003 v6MigrationService.ts ²ğ·ÖÓëÊı¾İÑªÔµ | Architecture-Fix | Data-Flow-Fix | `src/services/system/v6MigrationService.ts` | ARCH-003 Óë DF-007 ¾ùĞŞ¸Ä¸ÃÎÄ¼ş |
+| JT-004 IndustryScorePage / IntelligentScorePage ²ğ·ÖÓë½ûÓÃÌáÊ¾ | Architecture-Fix | Interaction-Fix | `src/pages/analysis/IndustryScorePage.tsx`¡¢`src/pages/analysis/IntelligentScorePage.tsx` | ARCH-007 Óë INT-006 ¾ùĞŞ¸ÄÕâÁ½¸öÎÄ¼ş |
 
 ---
 
-## ä¸€é”®å›æ»šé¢„æ¡ˆ
+## Ò»¼ü»Ø¹öÔ¤°¸
 
-è‹¥æ•´æ”¹åå‡ºç°é—®é¢˜ï¼Œå¯å¿«é€Ÿ `git checkout` ä»¥ä¸‹æ–‡ä»¶å›é€€ï¼ˆæŒ‰è´£ä»» Agent åˆ†ç»„ï¼‰ï¼š
+ÈôÕû¸Äºó³öÏÖÎÊÌâ£¬¿É¿ìËÙ `git checkout` ÒÔÏÂÎÄ¼ş»ØÍË£¨°´ÔğÈÎ Agent ·Ö×é£©£º
 
 ```bash
-# Architecture-Fix ä¿®æ”¹çš„æ–‡ä»¶
+# Architecture-Fix ĞŞ¸ÄµÄÎÄ¼ş
 git checkout src/App.tsx \
   src/services/system/bootstrapService.ts \
   src/services/analysis/rotationScoreService.ts \
@@ -95,7 +105,7 @@ git checkout src/App.tsx \
   src/pages/analysis/IndustryScorePage.tsx \
   src/hooks/cabin/
 
-# Data-Flow-Fix ä¿®æ”¹çš„æ–‡ä»¶
+# Data-Flow-Fix ĞŞ¸ÄµÄÎÄ¼ş
 git checkout src/core/databridge.ts \
   src/core/dataflow/dataflowEngine.ts \
   src/core/fallbackQueue.ts \
@@ -107,14 +117,14 @@ git checkout src/core/databridge.ts \
   src/store/agentStore.ts \
   src/services/fetcher/fetcherService.ts
 
-# Interaction-Fix ä¿®æ”¹çš„æ–‡ä»¶
+# Interaction-Fix ĞŞ¸ÄµÄÎÄ¼ş
 git checkout src/apps/trading/TradingApp.tsx \
   src/apps/input/HotSectorPanel.tsx \
   src/apps/analysis/AnalysisApp.tsx \
   src/components/input/StockSearch.tsx \
   src/pages/input/LocalKnowledgePage.tsx
 
-# Doc-Sync-Fix ä¿®æ”¹çš„æ–‡ä»¶
+# Doc-Sync-Fix ĞŞ¸ÄµÄÎÄ¼ş
 git checkout src/vite-env.d.ts \
   .env.example \
   docs/05-engine-specs.md \
@@ -130,4 +140,4 @@ git checkout src/vite-env.d.ts \
   docs/implementation/architecture-version-comparison.md
 ```
 
-> æç¤ºï¼šè‹¥å·²æ–°å¢æ–‡ä»¶ï¼ˆå¦‚ `src/services/system/bootstrapService.ts`ã€`src/config/symbols.ts`ã€`src/core/fallbackQueue.ts`ã€`src/hooks/cabin/`ã€`src/services/system/migration/`ï¼‰ï¼Œ`git checkout` æ— æ³•ç›´æ¥åˆ é™¤æ–°å¢æ–‡ä»¶ï¼Œéœ€ä½¿ç”¨ `git clean -fd` æˆ– `git reset --hard` è°¨æ…æ¸…ç†ã€‚
+> ÌáÊ¾£ºÈôÒÑĞÂÔöÎÄ¼ş£¨Èç `src/services/system/bootstrapService.ts`¡¢`src/config/symbols.ts`¡¢`src/core/fallbackQueue.ts`¡¢`src/hooks/cabin/`¡¢`src/services/system/migration/`£©£¬`git checkout` ÎŞ·¨Ö±½ÓÉ¾³ıĞÂÔöÎÄ¼ş£¬ĞèÊ¹ÓÃ `git clean -fd` »ò `git reset --hard` ½÷É÷ÇåÀí¡£

@@ -1,60 +1,64 @@
 ---
-title: hybrid-proofread-contract
-code_version: 2.0.0
-
+title: hybrid-proofread ·şÎñÆõÔ¼
+type: reference
+domain: project
+phase: design
 tier: important
----
-
----
-title: hybrid-proofread æœåŠ¡å¥‘çº¦
 status: draft
-owner: æ¶æ„ç»„
-updated: 2026-07-12
+maintainer: ¼Ü¹¹×é
+summary: "¶¨Òå hybrid-proofread ×ÓÓòµÄ½Ó¿ÚÆõÔ¼¡¢Ö°Ôğ±ß½ç¡¢Êı¾İÁ÷ÓëÒÀÀµ¹ØÏµ¡£"
+tags: [project, contract, reference, governance, documentation]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: important
+doc_id: V9-DOC-PROJ-096
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
-# hybrid-proofread-contract.md â€” æ··åˆæ ¡å¯¹ï¼ˆäººæœºååŒæ ¡éªŒï¼‰æœåŠ¡æ¥å£å¥‘çº¦
+# hybrid-proofread-contract.md ¡ª »ìºÏĞ£¶Ô£¨ÈË»úĞ­Í¬Ğ£Ñé£©·şÎñ½Ó¿ÚÆõÔ¼
 
-> **å®šä½**ï¼šå®šä¹‰ `hybrid-proofread` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ç³»ã€‚  
-> **å…³è”**ï¼š`./services-catalog.md`ï¼ˆå­åŸŸ #9ï¼‰ã€`../../AGENTS.md` Â§ä¸€ï¼ˆåˆ†å±‚è§„åˆ™ï¼‰ã€‚
+> **¶¨Î»**£º¶¨Òå `hybrid-proofread` ×ÓÓòµÄ½Ó¿ÚÆõÔ¼¡¢Ö°Ôğ±ß½ç¡¢Êı¾İÁ÷ÓëÒÀÀµ¹ØÏµ¡£  
+> **¹ØÁª**£º`./services-catalog.md`£¨×ÓÓò #9£©¡¢`../../AGENTS.md` ¡ìÒ»£¨·Ö²ã¹æÔò£©¡£
 
 ---
 
-## 1. èŒè´£è¾¹ç•Œ
+## 1. Ö°Ôğ±ß½ç
 
-### 1.1 æ ¸å¿ƒèŒè´£
+### 1.1 ºËĞÄÖ°Ôğ
 
-1. **æœ¬åœ°æ–‡ä»¶æ‰«æä¸å“ˆå¸Œé‡‡é›†**ï¼šé€’å½’æ‰«æé¡¹ç›®ç›®å½•ï¼ŒæŒ‰æ–‡ä»¶ç±»å‹åˆ†ç±»ï¼Œè®¡ç®—æ–‡ä»¶å“ˆå¸Œå€¼ï¼Œæ”¯æŒå¹¶å‘æ‰«æä¸å–æ¶ˆæ“ä½œã€‚
-2. **è§„åˆ™å¼•æ“è¯„ä¼°**ï¼šåŠ è½½å®‰å…¨è§„åˆ™ï¼ˆæœ¬åœ°ç¼“å­˜/äº‘ç«¯åŒæ­¥ï¼‰ï¼Œå¯¹æºä»£ç ä¸é…ç½®æ–‡ä»¶æ‰§è¡Œæ­£åˆ™åŒ¹é…ï¼Œå‘ç°æ•æ„Ÿæ•°æ®ã€ç¡¬ç¼–ç å¯†é’¥ã€ä¾èµ–æ¼æ´ç­‰é£é™©ã€‚
-3. **äº‘ç«¯é£é™©æ ¡éªŒ**ï¼šå°†æœ¬åœ°æ–‡ä»¶å“ˆå¸Œæ‰¹é‡ä¸Šä¼ è‡³äº‘ç«¯ï¼Œæ¯”å¯¹å·²çŸ¥é£é™©åº“ï¼ˆCVEï¼‰ï¼Œè·å–é£é™©è¯¦æƒ…ä¸ä¿®å¤å»ºè®®ã€‚
-4. **æ ¡å¯¹æŠ¥å‘Šç”Ÿæˆ**ï¼šèšåˆæœ¬åœ°è§„åˆ™åŒ¹é…ç»“æœä¸äº‘ç«¯é£é™©æ•°æ®ï¼Œç”Ÿæˆç»“æ„åŒ–æŠ¥å‘Šï¼ˆJSON / HTML / Markdownï¼‰ï¼ŒåŒ…å«é£é™©åˆ†çº§ã€ç»Ÿè®¡ã€æ‘˜è¦ä¸ä¿®å¤å»ºè®®ã€‚
+1. **±¾µØÎÄ¼şÉ¨ÃèÓë¹şÏ£²É¼¯**£ºµİ¹éÉ¨ÃèÏîÄ¿Ä¿Â¼£¬°´ÎÄ¼şÀàĞÍ·ÖÀà£¬¼ÆËãÎÄ¼ş¹şÏ£Öµ£¬Ö§³Ö²¢·¢É¨ÃèÓëÈ¡Ïû²Ù×÷¡£
+2. **¹æÔòÒıÇæÆÀ¹À**£º¼ÓÔØ°²È«¹æÔò£¨±¾µØ»º´æ/ÔÆ¶ËÍ¬²½£©£¬¶ÔÔ´´úÂëÓëÅäÖÃÎÄ¼şÖ´ĞĞÕıÔòÆ¥Åä£¬·¢ÏÖÃô¸ĞÊı¾İ¡¢Ó²±àÂëÃÜÔ¿¡¢ÒÀÀµÂ©¶´µÈ·çÏÕ¡£
+3. **ÔÆ¶Ë·çÏÕĞ£Ñé**£º½«±¾µØÎÄ¼ş¹şÏ£ÅúÁ¿ÉÏ´«ÖÁÔÆ¶Ë£¬±È¶ÔÒÑÖª·çÏÕ¿â£¨CVE£©£¬»ñÈ¡·çÏÕÏêÇéÓëĞŞ¸´½¨Òé¡£
+4. **Ğ£¶Ô±¨¸æÉú³É**£º¾ÛºÏ±¾µØ¹æÔòÆ¥Åä½á¹ûÓëÔÆ¶Ë·çÏÕÊı¾İ£¬Éú³É½á¹¹»¯±¨¸æ£¨JSON / HTML / Markdown£©£¬°üº¬·çÏÕ·Ö¼¶¡¢Í³¼Æ¡¢ÕªÒªÓëĞŞ¸´½¨Òé¡£
 
-### 1.2 åˆ†å±‚å®šä½
+### 1.2 ·Ö²ã¶¨Î»
 
-| ç»´åº¦ | è¯´æ˜ |
+| Î¬¶È | ËµÃ÷ |
 |------|------|
-| æ‰€å±å±‚ | `src/services/hybrid-proofread/`ï¼ˆæœåŠ¡å±‚ #9ï¼‰ |
-| ä¾èµ–æ–¹å‘ | `core/`ã€`data/`ã€`lib/`ï¼ˆç™½åå•ï¼‰ã€`config/`ï¼ˆé…ç½®å±‚ï¼‰ã€`constants/`ï¼ˆå¸¸é‡å±‚ï¼‰ |
-| ç¦æ­¢äº‹é¡¹ | ç¦æ­¢ç›´å†™ IndexedDBï¼ˆé¡»ç» `DataBridge.forward()`ï¼‰ï¼›ç¦æ­¢ç›´æ¥ä¾èµ– `store/`ã€`pages/`ã€`components/` |
-| è¢«ä¾èµ–æ–¹ | `store/`ï¼ˆçŠ¶æ€å±‚ï¼‰ã€`pages/`ï¼ˆé¡µé¢å±‚ï¼‰å¯æ¶ˆè´¹æœ¬æœåŠ¡è¾“å‡º |
+| ËùÊô²ã | `src/services/hybrid-proofread/`£¨·şÎñ²ã #9£© |
+| ÒÀÀµ·½Ïò | `core/`¡¢`data/`¡¢`lib/`£¨°×Ãûµ¥£©¡¢`config/`£¨ÅäÖÃ²ã£©¡¢`constants/`£¨³£Á¿²ã£© |
+| ½ûÖ¹ÊÂÏî | ½ûÖ¹Ö±Ğ´ IndexedDB£¨Ğë¾­ `DataBridge.forward()`£©£»½ûÖ¹Ö±½ÓÒÀÀµ `store/`¡¢`pages/`¡¢`components/` |
+| ±»ÒÀÀµ·½ | `store/`£¨×´Ì¬²ã£©¡¢`pages/`£¨Ò³Ãæ²ã£©¿ÉÏû·Ñ±¾·şÎñÊä³ö |
 
-### 1.3 ä¸ç›¸é‚»å­åŸŸçš„å…³ç³»
+### 1.3 ÓëÏàÁÚ×ÓÓòµÄ¹ØÏµ
 
-| ç›¸é‚»å­åŸŸ | å…³ç³» | æ•°æ®æµ |
+| ÏàÁÚ×ÓÓò | ¹ØÏµ | Êı¾İÁ÷ |
 |----------|------|--------|
-| `data/`ï¼ˆdataLayerï¼‰ | ä¸‹æ¸¸å†™å…¥ | `hybrid-proofread` â†’ `dataLayer`ï¼ˆé€šè¿‡ `DataBridge` å†™å…¥æŠ¥å‘Š/æ‰«æç»“æœï¼‰ |
-| `pages/command` | ä¸Šæ¸¸è°ƒç”¨æ–¹ | ç”¨æˆ·è§¦å‘å®Œæ•´æ ¡å¯¹æµç¨‹ â†’ `hybrid-proofread` |
-| `config/` | é…ç½®ä¾èµ– | `hybrid-proofread` è¯»å– `src/config/hybridProofreadConfig.ts` |
+| `data/`£¨dataLayer£© | ÏÂÓÎĞ´Èë | `hybrid-proofread` ¡ú `dataLayer`£¨Í¨¹ı `DataBridge` Ğ´Èë±¨¸æ/É¨Ãè½á¹û£© |
+| `pages/command` | ÉÏÓÎµ÷ÓÃ·½ | ÓÃ»§´¥·¢ÍêÕûĞ£¶ÔÁ÷³Ì ¡ú `hybrid-proofread` |
+| `config/` | ÅäÖÃÒÀÀµ | `hybrid-proofread` ¶ÁÈ¡ `src/config/hybridProofreadConfig.ts` |
 
 ---
 
-## 2. å…¬å…±æ¥å£
+## 2. ¹«¹²½Ó¿Ú
 
-### 2.1 ç±»å‹å®šä¹‰ï¼ˆTypeScript Interfaceï¼‰
+### 2.1 ÀàĞÍ¶¨Òå£¨TypeScript Interface£©
 
 ```typescript
-// æ–‡ä»¶ï¼šsrc/services/hybrid-proofread/localCollector.ts
+// ÎÄ¼ş£ºsrc/services/hybrid-proofread/localCollector.ts
 
 export interface ScanOptions {
   projectId: string
@@ -65,117 +69,117 @@ export interface ScanOptions {
 }
 ```
 
-> **æ³¨**ï¼šæœ¬æœåŠ¡é‡åº¦æ¶ˆè´¹ `@/data/types` ä¸­çš„ä»¥ä¸‹ç±»å‹ï¼Œä½†ç±»å‹å®šä¹‰æœ¬èº«ä½äº `data/` å±‚ï¼š
+> **×¢**£º±¾·şÎñÖØ¶ÈÏû·Ñ `@/data/types` ÖĞµÄÒÔÏÂÀàĞÍ£¬µ«ÀàĞÍ¶¨Òå±¾ÉíÎ»ÓÚ `data/` ²ã£º
 > - `FileHash`, `FileType`, `LocalScanResult`, `RuleMatchResult`, `CloudRiskResult`
 > - `ProofreadReport`, `RiskLevel`, `RuleConfig`, `RulePackage`
 > - `HashVerifyRequest`, `HashVerifyResponse`, `HashBatchVerifyRequest`, `HashBatchVerifyResponse`
 > - `RiskDetailsRequest`, `RiskDetailsResponse`, `RiskDetail`, `RulesSyncResult`, `PerformanceMetric`
 
-### 2.2 ä¸»å…¥å£å‡½æ•°
+### 2.2 Ö÷Èë¿Úº¯Êı
 
-| å‡½æ•° | ç­¾å | èŒè´£ | é”™è¯¯å¤„ç† |
+| º¯Êı | Ç©Ãû | Ö°Ôğ | ´íÎó´¦Àí |
 |------|------|------|----------|
-| `runFullProofread()` | `(projectId, projectName, projectPath) => Promise<{ success: boolean; report?: ProofreadReport; error?: string }>` | ç¼–æ’ 4 æ­¥å®Œæ•´æ ¡å¯¹æµç¨‹ï¼ˆåŒæ­¥è§„åˆ™â†’æœ¬åœ°æ‰«æâ†’è§„åˆ™è¯„ä¼°â†’äº‘ç«¯æ£€æŸ¥â†’ç”ŸæˆæŠ¥å‘Šï¼‰ | `logger.error` è®°å½• + è¿”å› `{ success: false, error }` |
-| `LocalCollector.scan()` | `(options: ScanOptions) => Promise<LocalScanResult>` | é€’å½’æ‰«æé¡¹ç›®ç›®å½•ï¼Œè®¡ç®—æ–‡ä»¶å“ˆå¸Œ | è·³è¿‡å¼‚å¸¸æ–‡ä»¶ï¼Œ`logger.warn` è®°å½• |
-| `RuleEngine.evaluateFile()` | `(filePath: string, content: string) => Promise<RuleMatchResult[]>` | å¯¹å•æ–‡ä»¶å†…å®¹æ‰§è¡Œè§„åˆ™åŒ¹é… | æ— å¼‚å¸¸æŠ›å‡ºï¼Œç©ºè§„åˆ™è¿”å› `[]` |
-| `RuleEngine.syncRules()` | `() => Promise<RulesSyncResult>` | æ£€æŸ¥äº‘ç«¯è§„åˆ™ç‰ˆæœ¬ï¼ŒæŒ‰éœ€ä¸‹è½½å¹¶ç¼“å­˜ | é™çº§ä¸ºæœ¬åœ°é»˜è®¤è§„åˆ™ï¼Œ`logger.error` è®°å½• |
-| `CloudSyncClient.batchVerifyHashes()` | `(request: HashBatchVerifyRequest) => Promise<HashBatchVerifyResponse>` | æ‰¹é‡ä¸Šä¼ å“ˆå¸Œè‡³äº‘ç«¯æ¯”å¯¹é£é™©åº“ | è¿”å› `unknown` çŠ¶æ€å…œåº• |
-| `CloudSyncClient.getRiskDetails()` | `(request: RiskDetailsRequest) => Promise<RiskDetailsResponse>` | è·å–é£é™©å“ˆå¸Œçš„ CVE è¯¦æƒ… | æ— åŒ¹é…æ—¶è¿”å› `[]` |
-| `HashService.computeHash()` | `(data: string \| Buffer) => Promise<string>` | è®¡ç®— SHA-256 å“ˆå¸Œå€¼ | çº¯è®¡ç®—ï¼Œæ—  IO é”™è¯¯ |
-| `HashService.batchComputeHashes()` | `(filePaths: string[], projectId: string, batchSize?: number) => Promise<FileHash[]>` | æ‰¹é‡è®¡ç®—æ–‡ä»¶å“ˆå¸Œï¼Œæ”¯æŒåˆ†æ‰¹å¤„ç† | å•æ–‡ä»¶å¤±è´¥è·³è¿‡ï¼Œ`logger.warn` è®°å½• |
-| `ReportGenerator.generateReport()` | `(projectId, projectName, localScan, cloudRisk) => ProofreadReport` | èšåˆæœ¬åœ°ä¸äº‘ç«¯ç»“æœï¼Œç”Ÿæˆç»“æ„åŒ–æŠ¥å‘Š | çº¯è®¡ç®—ï¼Œæ— å¼‚å¸¸æŠ›å‡º |
-| `ReportGenerator.exportReport()` | `(report: ProofreadReport, format: 'json' \| 'html' \| 'markdown') => string` | å°†æŠ¥å‘Šå¯¼å‡ºä¸ºæŒ‡å®šæ ¼å¼å­—ç¬¦ä¸² | çº¯è®¡ç®— |
+| `runFullProofread()` | `(projectId, projectName, projectPath) => Promise<{ success: boolean; report?: ProofreadReport; error?: string }>` | ±àÅÅ 4 ²½ÍêÕûĞ£¶ÔÁ÷³Ì£¨Í¬²½¹æÔò¡ú±¾µØÉ¨Ãè¡ú¹æÔòÆÀ¹À¡úÔÆ¶Ë¼ì²é¡úÉú³É±¨¸æ£© | `logger.error` ¼ÇÂ¼ + ·µ»Ø `{ success: false, error }` |
+| `LocalCollector.scan()` | `(options: ScanOptions) => Promise<LocalScanResult>` | µİ¹éÉ¨ÃèÏîÄ¿Ä¿Â¼£¬¼ÆËãÎÄ¼ş¹şÏ£ | Ìø¹ıÒì³£ÎÄ¼ş£¬`logger.warn` ¼ÇÂ¼ |
+| `RuleEngine.evaluateFile()` | `(filePath: string, content: string) => Promise<RuleMatchResult[]>` | ¶Ôµ¥ÎÄ¼şÄÚÈİÖ´ĞĞ¹æÔòÆ¥Åä | ÎŞÒì³£Å×³ö£¬¿Õ¹æÔò·µ»Ø `[]` |
+| `RuleEngine.syncRules()` | `() => Promise<RulesSyncResult>` | ¼ì²éÔÆ¶Ë¹æÔò°æ±¾£¬°´ĞèÏÂÔØ²¢»º´æ | ½µ¼¶Îª±¾µØÄ¬ÈÏ¹æÔò£¬`logger.error` ¼ÇÂ¼ |
+| `CloudSyncClient.batchVerifyHashes()` | `(request: HashBatchVerifyRequest) => Promise<HashBatchVerifyResponse>` | ÅúÁ¿ÉÏ´«¹şÏ£ÖÁÔÆ¶Ë±È¶Ô·çÏÕ¿â | ·µ»Ø `unknown` ×´Ì¬¶µµ× |
+| `CloudSyncClient.getRiskDetails()` | `(request: RiskDetailsRequest) => Promise<RiskDetailsResponse>` | »ñÈ¡·çÏÕ¹şÏ£µÄ CVE ÏêÇé | ÎŞÆ¥ÅäÊ±·µ»Ø `[]` |
+| `HashService.computeHash()` | `(data: string \| Buffer) => Promise<string>` | ¼ÆËã SHA-256 ¹şÏ£Öµ | ´¿¼ÆËã£¬ÎŞ IO ´íÎó |
+| `HashService.batchComputeHashes()` | `(filePaths: string[], projectId: string, batchSize?: number) => Promise<FileHash[]>` | ÅúÁ¿¼ÆËãÎÄ¼ş¹şÏ££¬Ö§³Ö·ÖÅú´¦Àí | µ¥ÎÄ¼şÊ§°ÜÌø¹ı£¬`logger.warn` ¼ÇÂ¼ |
+| `ReportGenerator.generateReport()` | `(projectId, projectName, localScan, cloudRisk) => ProofreadReport` | ¾ÛºÏ±¾µØÓëÔÆ¶Ë½á¹û£¬Éú³É½á¹¹»¯±¨¸æ | ´¿¼ÆËã£¬ÎŞÒì³£Å×³ö |
+| `ReportGenerator.exportReport()` | `(report: ProofreadReport, format: 'json' \| 'html' \| 'markdown') => string` | ½«±¨¸æµ¼³öÎªÖ¸¶¨¸ñÊ½×Ö·û´® | ´¿¼ÆËã |
 
-### 2.3 äº‹ä»¶æ¥å£
+### 2.3 ÊÂ¼ş½Ó¿Ú
 
-> **å½“å‰çŠ¶æ€**ï¼šæœ¬æœåŠ¡æš‚æ— æ˜¾å¼ `EventBus` å‘å¸ƒ/è®¢é˜…ä»£ç ã€‚çŠ¶æ€é€šçŸ¥é€šè¿‡ `runFullProofread()` çš„è¿”å›å€¼ç”±è°ƒç”¨æ–¹å¤„ç†ã€‚  
-> **å»ºè®®**ï¼šåç»­å¦‚éœ€å®æ—¶è¿›åº¦æ¨é€ï¼Œå¯è¡¥å…… `EventBus` äº‹ä»¶ï¼š
+> **µ±Ç°×´Ì¬**£º±¾·şÎñÔİÎŞÏÔÊ½ `EventBus` ·¢²¼/¶©ÔÄ´úÂë¡£×´Ì¬Í¨ÖªÍ¨¹ı `runFullProofread()` µÄ·µ»ØÖµÓÉµ÷ÓÃ·½´¦Àí¡£  
+> **½¨Òé**£ººóĞøÈçĞèÊµÊ±½ø¶ÈÍÆËÍ£¬¿É²¹³ä `EventBus` ÊÂ¼ş£º
 
-| äº‹ä»¶å | å‘å¸ƒæ–¹ | è®¢é˜…æ–¹ | è¯´æ˜ |
+| ÊÂ¼şÃû | ·¢²¼·½ | ¶©ÔÄ·½ | ËµÃ÷ |
 |--------|--------|--------|------|
-| `hybrid-proofread:progress` | `LocalCollector` / `runFullProofread` | `proofreadStore` | æ‰«æ/è¯„ä¼°è¿›åº¦ç™¾åˆ†æ¯” |
-| `hybrid-proofread:completed` | `runFullProofread` | `proofreadStore` | æ ¡å¯¹å®Œæˆï¼ŒæŠ¥å‘Šå°±ç»ª |
-| `hybrid-proofread:error` | `runFullProofread` | `errorBus` | æµç¨‹å¼‚å¸¸ç»ˆæ­¢ |
+| `hybrid-proofread:progress` | `LocalCollector` / `runFullProofread` | `proofreadStore` | É¨Ãè/ÆÀ¹À½ø¶È°Ù·Ö±È |
+| `hybrid-proofread:completed` | `runFullProofread` | `proofreadStore` | Ğ£¶ÔÍê³É£¬±¨¸æ¾ÍĞ÷ |
+| `hybrid-proofread:error` | `runFullProofread` | `errorBus` | Á÷³ÌÒì³£ÖÕÖ¹ |
 
 ---
 
-## 3. æ•°æ®æµ
+## 3. Êı¾İÁ÷
 
 ```
-ç”¨æˆ·è§¦å‘ï¼ˆCommand é¡µé¢ / CLIï¼‰
-    â†“
+ÓÃ»§´¥·¢£¨Command Ò³Ãæ / CLI£©
+    ¡ı
 runFullProofread(projectId, projectName, projectPath)
-    â”œâ”€> Step 1: ruleEngine.syncRules()        â† æœ¬åœ°ç¼“å­˜ / äº‘ç«¯ä¸‹è½½
-    â”œâ”€> Step 2: localCollector.scan()       â† æ–‡ä»¶ç³»ç»Ÿéå† + å“ˆå¸Œè®¡ç®—
-    â”œâ”€> Step 3: ruleEngine.evaluateFile()    â† æ­£åˆ™è§„åˆ™åŒ¹é…ï¼ˆæœ¬åœ°ï¼‰
-    â”œâ”€> Step 4: cloudSyncClient.batchVerifyHashes() / getRiskDetails() â† äº‘ç«¯ CVE æ¯”å¯¹
-    â””â”€> reportGenerator.generateReport()     â† èšåˆæœ¬åœ° + äº‘ç«¯ç»“æœ
-        â†“
-    DataBridge.forward() â†’ routeToDB() â†’ dataLayer â†’ IndexedDB
-        â†“
+    ©À©¤> Step 1: ruleEngine.syncRules()        ¡û ±¾µØ»º´æ / ÔÆ¶ËÏÂÔØ
+    ©À©¤> Step 2: localCollector.scan()       ¡û ÎÄ¼şÏµÍ³±éÀú + ¹şÏ£¼ÆËã
+    ©À©¤> Step 3: ruleEngine.evaluateFile()    ¡û ÕıÔò¹æÔòÆ¥Åä£¨±¾µØ£©
+    ©À©¤> Step 4: cloudSyncClient.batchVerifyHashes() / getRiskDetails() ¡û ÔÆ¶Ë CVE ±È¶Ô
+    ©¸©¤> reportGenerator.generateReport()     ¡û ¾ÛºÏ±¾µØ + ÔÆ¶Ë½á¹û
+        ¡ı
+    DataBridge.forward() ¡ú routeToDB() ¡ú dataLayer ¡ú IndexedDB
+        ¡ı
     proofreadStore (Zustand + withBroadcast)
-        â†“
-    components/pages (ä»…ç» Store å–æ•°)
+        ¡ı
+    components/pages (½ö¾­ Store È¡Êı)
 ```
 
 ---
 
-## 4. é…ç½®ä¸ä¾èµ–
+## 4. ÅäÖÃÓëÒÀÀµ
 
-### 4.1 ä¾èµ–ç™½åå•ï¼ˆlib/ï¼‰
+### 4.1 ÒÀÀµ°×Ãûµ¥£¨lib/£©
 
-| ä¾èµ– | è·¯å¾„ | ç”¨é€” |
+| ÒÀÀµ | Â·¾¶ | ÓÃÍ¾ |
 |------|------|------|
-| logger | `@/lib/logger` | å„æ­¥éª¤è€—æ—¶ã€ç»“æœã€é”™è¯¯æ—¥å¿— |
-| localStorageManager | `@/lib/localStorageManager` | `RuleEngine` ç¼“å­˜è§„åˆ™åŒ…ï¼ˆ`defaultStorage.set/get`ï¼‰ |
+| logger | `@/lib/logger` | ¸÷²½ÖèºÄÊ±¡¢½á¹û¡¢´íÎóÈÕÖ¾ |
+| localStorageManager | `@/lib/localStorageManager` | `RuleEngine` »º´æ¹æÔò°ü£¨`defaultStorage.set/get`£© |
 
-### 4.2 å…¶ä»–ä¾èµ–
+### 4.2 ÆäËûÒÀÀµ
 
-| ä¾èµ– | è·¯å¾„ | ç”¨é€” |
+| ÒÀÀµ | Â·¾¶ | ÓÃÍ¾ |
 |------|------|------|
-| data/types | `@/data/types` | å…¨å­åŸŸç±»å‹å®šä¹‰ï¼ˆFileHashã€ProofreadReport ç­‰ï¼‰ |
-| config/hybridProofreadConfig | `@/config/hybridProofreadConfig` | æ‰«æé…ç½®ã€å“ˆå¸Œç®—æ³•ã€è§„åˆ™ç‰ˆæœ¬ã€API ç«¯ç‚¹ |
-| constants/theme.tokens | `@/constants/theme.tokens` | `ReportGenerator` ç”Ÿæˆ HTML æŠ¥å‘Šæ—¶å¼•ç”¨ `COLOR_SHADES` |
+| data/types | `@/data/types` | È«×ÓÓòÀàĞÍ¶¨Òå£¨FileHash¡¢ProofreadReport µÈ£© |
+| config/hybridProofreadConfig | `@/config/hybridProofreadConfig` | É¨ÃèÅäÖÃ¡¢¹şÏ£Ëã·¨¡¢¹æÔò°æ±¾¡¢API ¶Ëµã |
+| constants/theme.tokens | `@/constants/theme.tokens` | `ReportGenerator` Éú³É HTML ±¨¸æÊ±ÒıÓÃ `COLOR_SHADES` |
 
-### 4.3 é…ç½®é¡¹
+### 4.3 ÅäÖÃÏî
 
-| é…ç½®å | é»˜è®¤å€¼ | è¯´æ˜ | æ¥æº |
+| ÅäÖÃÃû | Ä¬ÈÏÖµ | ËµÃ÷ | À´Ô´ |
 |--------|--------|------|------|
-| `hash.algorithm` | `'sha256'` | å“ˆå¸Œç®—æ³• | `src/config/hybridProofreadConfig.ts` |
-| `hash.batchSize` | `50` | æ‰¹é‡å“ˆå¸Œå¤„ç†æ‰¹æ¬¡å¤§å° | `src/config/hybridProofreadConfig.ts` |
-| `hash.maxFileSizeBytes` | `10MB` | æœ€å¤§æ‰«ææ–‡ä»¶å¤§å° | `src/config/hybridProofreadConfig.ts` |
-| `rules.syncIntervalMs` | `24h` | è§„åˆ™åŒæ­¥æœ€å°é—´éš” | `src/config/hybridProofreadConfig.ts` |
-| `scanning.maxConcurrentFiles` | `10` | å¹¶å‘æ‰«ææ–‡ä»¶æ•° | `src/config/hybridProofreadConfig.ts` |
-| `scanning.defaultExcludes` | `['node_modules/**', '.git/**', ...]` | é»˜è®¤æ’é™¤æ¨¡å¼ | `src/config/hybridProofreadConfig.ts` |
-| `scanning.defaultIncludes` | `['**/*.ts', '**/*.tsx', ...]` | é»˜è®¤åŒ…å«æ¨¡å¼ | `src/config/hybridProofreadConfig.ts` |
+| `hash.algorithm` | `'sha256'` | ¹şÏ£Ëã·¨ | `src/config/hybridProofreadConfig.ts` |
+| `hash.batchSize` | `50` | ÅúÁ¿¹şÏ£´¦ÀíÅú´Î´óĞ¡ | `src/config/hybridProofreadConfig.ts` |
+| `hash.maxFileSizeBytes` | `10MB` | ×î´óÉ¨ÃèÎÄ¼ş´óĞ¡ | `src/config/hybridProofreadConfig.ts` |
+| `rules.syncIntervalMs` | `24h` | ¹æÔòÍ¬²½×îĞ¡¼ä¸ô | `src/config/hybridProofreadConfig.ts` |
+| `scanning.maxConcurrentFiles` | `10` | ²¢·¢É¨ÃèÎÄ¼şÊı | `src/config/hybridProofreadConfig.ts` |
+| `scanning.defaultExcludes` | `['node_modules/**', '.git/**', ...]` | Ä¬ÈÏÅÅ³ıÄ£Ê½ | `src/config/hybridProofreadConfig.ts` |
+| `scanning.defaultIncludes` | `['**/*.ts', '**/*.tsx', ...]` | Ä¬ÈÏ°üº¬Ä£Ê½ | `src/config/hybridProofreadConfig.ts` |
 
 ---
 
-## 5. æµ‹è¯•ç­–ç•¥
+## 5. ²âÊÔ²ßÂÔ
 
-> **å½“å‰çŠ¶æ€**ï¼š`src/services/hybrid-proofread/` ä¸‹æš‚æ—  `__tests__` ç›®å½•æˆ–æµ‹è¯•æ–‡ä»¶ã€‚  
-> **å»ºè®®è¡¥å……**ï¼š
+> **µ±Ç°×´Ì¬**£º`src/services/hybrid-proofread/` ÏÂÔİÎŞ `__tests__` Ä¿Â¼»ò²âÊÔÎÄ¼ş¡£  
+> **½¨Òé²¹³ä**£º
 
-| æµ‹è¯•ç±»å‹ | æ–‡ä»¶ | è¯´æ˜ |
+| ²âÊÔÀàĞÍ | ÎÄ¼ş | ËµÃ÷ |
 |----------|------|------|
-| å•å…ƒæµ‹è¯• | `src/services/hybrid-proofread/__tests__/hashService.test.ts` | `computeHash`ã€`batchComputeHashes` æ­£ç¡®æ€§ä¸æ€§èƒ½ |
-| å•å…ƒæµ‹è¯• | `src/services/hybrid-proofread/__tests__/ruleEngine.test.ts` | `evaluateFile` æ­£åˆ™åŒ¹é…ã€è§„åˆ™è¿‡æ»¤ã€é™çº§é€»è¾‘ |
-| å•å…ƒæµ‹è¯• | `src/services/hybrid-proofread/__tests__/localCollector.test.ts` | `collectFiles` è·¯å¾„è¿‡æ»¤ã€å¹¶å‘æ§åˆ¶ã€å–æ¶ˆé€»è¾‘ |
-| å•å…ƒæµ‹è¯• | `src/services/hybrid-proofread/__tests__/reportGenerator.test.ts` | `countIssues`ã€`calculateOverallRiskLevel` è¾¹ç•Œå€¼ |
-| é›†æˆæµ‹è¯• | `tests/services/hybrid-proofread.integration.test.ts` | `runFullProofread` ç«¯åˆ°ç«¯æµç¨‹ï¼ˆMock fs + Mock cloudï¼‰ |
-| Mock ç­–ç•¥ | `__mocks__/cloudSyncClient.ts` | éš”ç¦»äº‘ç«¯ä¾èµ–ï¼Œä½¿ç”¨ `MOCK_RISKY_HASHES` æ¨¡å¼ |
+| µ¥Ôª²âÊÔ | `src/services/hybrid-proofread/hashService.ts` | `computeHash`¡¢`batchComputeHashes` ÕıÈ·ĞÔÓëĞÔÄÜ |
+| µ¥Ôª²âÊÔ | `src/services/hybrid-proofread/ruleEngine.ts` | `evaluateFile` ÕıÔòÆ¥Åä¡¢¹æÔò¹ıÂË¡¢½µ¼¶Âß¼­ |
+| µ¥Ôª²âÊÔ | `src/services/hybrid-proofread/localCollector.ts` | `collectFiles` Â·¾¶¹ıÂË¡¢²¢·¢¿ØÖÆ¡¢È¡ÏûÂß¼­ |
+| µ¥Ôª²âÊÔ | `src/services/hybrid-proofread/reportGenerator.ts` | `countIssues`¡¢`calculateOverallRiskLevel` ±ß½çÖµ |
+| ¼¯³É²âÊÔ | `tests/services/hybrid-proofread.integration.test.ts` | `runFullProofread` ¶Ëµ½¶ËÁ÷³Ì£¨Mock fs + Mock cloud£© |
+| Mock ²ßÂÔ | `__mocks__/cloudSyncClient.ts` | ¸ôÀëÔÆ¶ËÒÀÀµ£¬Ê¹ÓÃ `MOCK_RISKY_HASHES` Ä£Ê½ |
 
 ---
 
-## 6. å˜æ›´æ—¥å¿—
+## 6. ±ä¸üÈÕÖ¾
 
-| æ—¥æœŸ | ç‰ˆæœ¬ | å˜æ›´ | ä½œè€… |
+| ÈÕÆÚ | °æ±¾ | ±ä¸ü | ×÷Õß |
 |------|------|------|------|
-| 2026-07-12 | v0.1.0 | å¥‘çº¦åˆç¨¿ | æ¶æ„ç»„ |
+| 2026-07-12 | v0.1.0 | ÆõÔ¼³õ¸å | ¼Ü¹¹×é |
 
 ---
 
-> **TODO[å­åŸŸ owner]**ï¼š
-> 1. è¡¥å…… `__tests__` ç›®å½•åŠå•å…ƒæµ‹è¯•ï¼Œè¦†ç›– `RuleEngine.evaluateFile`ã€`HashService.computeHash`ã€`ReportGenerator.calculateOverallRiskLevel` ç­‰æ ¸å¿ƒé€»è¾‘ã€‚
-> 2. å¦‚éœ€ Store æ¶ˆè´¹ï¼Œåœ¨ `src/store/` åˆ›å»º `proofreadStore.ts`ï¼Œé€šè¿‡ `DataBridge` è¯»å–æŠ¥å‘Šæ•°æ®ã€‚
-> 3. å®Œæˆåè¿è¡Œ `tsc --noEmit` + `audit:layers` éªŒè¯ã€‚
+> **TODO[×ÓÓò owner]**£º
+> 1. ²¹³ä `__tests__` Ä¿Â¼¼°µ¥Ôª²âÊÔ£¬¸²¸Ç `RuleEngine.evaluateFile`¡¢`HashService.computeHash`¡¢`ReportGenerator.calculateOverallRiskLevel` µÈºËĞÄÂß¼­¡£
+> 2. ÈçĞè Store Ïû·Ñ£¬ÔÚ `src/store/` ´´½¨ `proofreadStore.ts`£¬Í¨¹ı `DataBridge` ¶ÁÈ¡±¨¸æÊı¾İ¡£
+> 3. Íê³ÉºóÔËĞĞ `tsc --noEmit` + `audit:layers` ÑéÖ¤¡£

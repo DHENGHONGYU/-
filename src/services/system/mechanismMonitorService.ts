@@ -57,6 +57,9 @@ export interface MechanismHealthSnapshot {
 
 /** eventBus 事件名（与 COLLECTION_EVENTS 同风格，使用字面量通道） */
 export const MECHANISM_SCAN_EVENT = 'mechanism:scan:completed'
+/**
+ * MECHANISM_ALERT_EVENT
+ */
 export const MECHANISM_ALERT_EVENT = 'mechanism:alert'
 
 /** 激活率低于该阈值即广播告警（19 探针中 ≥1 项失活即触发） */

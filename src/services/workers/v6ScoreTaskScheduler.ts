@@ -301,6 +301,11 @@ export class V6ScoreTaskScheduler {
 /** 全局单例（应用生命周期内复用） */
 let globalScheduler: V6ScoreTaskScheduler | null = null
 
+/**
+ * getGlobalScheduler
+ * @param options?
+ * @returns V6ScoreTaskScheduler
+ */
 export function getGlobalScheduler(options?: TaskSchedulerOptions): V6ScoreTaskScheduler {
   if (!globalScheduler) {
     globalScheduler = new V6ScoreTaskScheduler(options)
@@ -308,6 +313,10 @@ export function getGlobalScheduler(options?: TaskSchedulerOptions): V6ScoreTaskS
   return globalScheduler
 }
 
+/**
+ * destroyGlobalScheduler
+ * @returns void
+ */
 export function destroyGlobalScheduler(): void {
   globalScheduler?.destroy()
   globalScheduler = null

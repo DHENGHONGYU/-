@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const SRC_DIR = path.join(__dirname, '..', 'src');
-const OUTPUT_FILE = path.join(__dirname, '..', 'docs', 'implementation', 'audit-b4-1-code-quality.md');
+const OUTPUT_FILE = path.join(__dirname, '..', 'docs', 'implementation', 'docs/reference/audit-b4-1-code-quality.md');
 
 const results = {
   totalFiles: 0,

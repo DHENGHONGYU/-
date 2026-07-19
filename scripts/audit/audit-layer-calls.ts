@@ -47,7 +47,7 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { runAuditPipeline, colorize, type AuditReport } from './_debug/_audit-pipeline.ts'
+import { runAuditPipeline, colorize, type AuditReport } from './_debug/_audit-pipeline'
 
 /** 跨层调用违规/警告项 */
 export interface Finding {
@@ -74,7 +74,7 @@ export interface Report extends AuditReport {
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-const ROOT = path.resolve(__dirname, '../..')
+const ROOT = path.resolve(__dirname, '..', '..')
 const SRC = path.join(ROOT, 'src')
 
 // 写操作模式
@@ -88,11 +88,11 @@ const IMPORT_STORE_PATTERN = /from\s+['"](?:\.\.\/store\/|@\/store\/)(?!types\/)
 const DYNAMIC_IMPORT_STORE_PATTERN = /import\s*\(\s*['"](?:\.\.\/store\/|@\/store\/)(?!types\/)[^'"]+['"]\s*\)/
 
 // v2.2 新增：检测 services 依赖 lib 中的业务模块（排除基础设施）
-// services 可以依赖 lib 中的基础设施（logger、withBroadcast、eventBus、format、errors、utils、localStorageManager、safeCoerce、perf、precision、validation），但不能依赖业务模块
+// services 可以依赖 lib 中的基础设施（logger、withBroadcast、eventBus、format、errors、utils、localStorageManager、safeCoerce、perf、precision、validation、safeRegex），但不能依赖业务模块
 // 注：precision 为金融数值精度/数组安全工具（safeArrayGet/safeFirst/safeLast/formatPrice），validation 为数据校验/XSS/脱敏工具（validateConfigName/isValidLlmBaseURL 等），二者均为无业务依赖的纯函数基础设施
 // 注：perf 为性能监控基础设施（measureAsync/measureSync/getPerfStats），与 logger 同属 lib 基础设施
-// statistics 为统计计算基础设施（spearmanCorrelation 等纯数学函数），不涉及业务逻辑
-const SERVICES_IMPORT_LIB_BUSINESS = /from\s+['"](?:\.\.\/lib\/|@\/lib\/)(?!logger|withBroadcast|eventBus|format|errors|utils|localStorageManager|safeCoerce|perf|precision|validation|statistics)[^'"]+['"]/
+// 注：safeRegex 为安全正则构造器（限制模式长度防 ReDoS），纯函数无业务依赖，同属 lib 基础设施
+const SERVICES_IMPORT_LIB_BUSINESS = /from\s+['"](?:\.\.\/lib\/|@\/lib\/)(?!logger|withBroadcast|eventBus|format|errors|utils|localStorageManager|safeCoerce|perf|precision|validation|safeRegex)[^'"]+['"]/
 
 // v2.1 修复：检测 lib 层依赖上层（排除 types 层）
 const LIB_IMPORT_UPPER_LAYER = /from\s+['"](?:\.\.\/(services|store|pages|components|apps|portal|cockpit)\/(?!types\/)|@\/(services|store|pages|components|apps|portal|cockpit)\/(?!types\/))[^'"]+['"]/
@@ -102,6 +102,179 @@ const CONSTANTS_IMPORT_BUSINESS = /from\s+['"](?:\.\.\/(services|store|pages|com
 
 // v2.1 新增：检测 import type（类型导入应豁免）
 const IMPORT_TYPE_PATTERN = /^\s*import\s+type\s+/
+
+// ── v3.2 新增（2026-07-16 D5：智能追踪 re-export 链） ──────────────────
+// 识别 re-export 语句：export ... from '...'
+const REEXPORT_PATTERN = /^\s*export\s+(?:\{[^}]*\}|\*)\s+from\s+['"]([^'"]+)['"]/
+// 在某些运行时路径中暂时未直接使用该正则，但保留以备后续智能追踪功能使用。
+// 使用 void 操作符引用以避免 TS6133 未使用变量的类型检查错误。
+void REEXPORT_PATTERN
+// DataBridge 相关路径（最终目的地是这些则视为合规）
+const DATABRIDGE_SAFE_PATHS = [
+  '@/core/databridge',
+  '@/core/databridgeQueries',
+  '@/core/envelope',
+  '@/core/acl',
+]
+
+const reexportCache = new Map<string, string[] | null>()
+const storeLayerCache = new Map<string, boolean>()
+
+function resolveImportPath(importPath: string, fromFile: string): string {
+  if (importPath.startsWith('@/')) {
+    return path.join(SRC, importPath.slice(2))
+  }
+  return path.resolve(path.dirname(fromFile), importPath)
+}
+
+function tryResolveFile(modulePath: string): string | null {
+  const candidates = [
+    `${modulePath}.ts`,
+    `${modulePath}.tsx`,
+    `${modulePath}/index.ts`,
+    `${modulePath}/index.tsx`,
+  ]
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) return candidate
+  }
+  return null
+}
+
+function getReexportTargets(filePath: string): string[] | null {
+  if (reexportCache.has(filePath)) {
+    return reexportCache.get(filePath) ?? null
+  }
+  try {
+    const content = fs.readFileSync(filePath, 'utf-8')
+    const targets: string[] = []
+
+    const cleaned = content
+      .replace(/\/\/[^\n]*/g, '')
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/^\s*import\s+type\s+[^\n]*/gm, '')
+      .replace(/^\s*export\s+type\s+[^\n]*/gm, '')
+
+    const reexportRegex = /export\s+(?:\{[^}]*\}|\*)\s+from\s+['"]([^'"]+)['"]/g
+    let match: RegExpExecArray | null
+    while ((match = reexportRegex.exec(cleaned)) !== null) {
+      targets.push(match[1]!)
+    }
+
+    const stripped = cleaned
+      .replace(/export\s+(?:\{[^}]*\}|\*)\s+from\s+['"][^'"]+['"];?/g, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+
+    const result = stripped.length === 0 && targets.length > 0 ? targets : null
+    reexportCache.set(filePath, result)
+    return result
+  } catch {
+    reexportCache.set(filePath, null)
+    return null
+  }
+}
+
+function resolvesToDatabridge(importPath: string, fromFile: string, depth = 0): boolean {
+  if (depth > 5) return false
+  if (DATABRIDGE_SAFE_PATHS.some((p) => importPath === p || importPath.startsWith(p + '/'))) {
+    return true
+  }
+  const resolved = resolveImportPath(importPath, fromFile)
+  const actualFile = tryResolveFile(resolved)
+  if (!actualFile) return false
+  const reexports = getReexportTargets(actualFile)
+  if (!reexports) return false
+  return reexports.some((target) => resolvesToDatabridge(target, actualFile, depth + 1))
+}
+
+/**
+ * v3.4 新增（D10b）：判断一个 data 层的 store 模块是否为"合规包装层"。
+ *
+ * 合规包装层定义：
+ * - 不直接导入 db 实例（即不持有数据库连接）
+ * - 数据访问通过 dataLayerHelpers / databridgeQueries（最终走 DataBridge）
+ * - 只导入工具函数（generateId/now 等）、类型、常量
+ *
+ * 这类 store 属于领域模型包装层，services 从这里导入不算违规。
+ */
+function isCompliantStoreModule(importPath: string, fromFile: string): boolean {
+  const resolved = resolveImportPath(importPath, fromFile)
+  const actualFile = tryResolveFile(resolved)
+  if (!actualFile) return false
+
+  if (storeLayerCache.has(actualFile)) {
+    return storeLayerCache.get(actualFile) ?? false
+  }
+
+  try {
+    const content = fs.readFileSync(actualFile, 'utf-8')
+    const imports = content.match(/^\s*import\s+(?:type\s+)?(?:\{[^}]*\}|\*)\s+from\s+['"]([^'"]+)['"]/gm) ?? []
+
+    let hasDirectDbImport = false
+    let hasDataLayerHelpersImport = false
+
+    for (const imp of imports) {
+      const pathMatch = imp.match(/from\s+['"]([^'"]+)['"]/)
+      if (!pathMatch) continue
+      const src = pathMatch[1]!
+
+      if (src === './db' || src === '@/data/db') {
+        const isTypeOnly = imp.startsWith('import type')
+        if (!isTypeOnly) {
+          const namedMatch = imp.match(/import\s+type\s+/) || imp.match(/import\s+\{([^}]*)\}/)
+          if (namedMatch && namedMatch[1]) {
+            const names = namedMatch[1].split(',').map((s) => s.trim())
+            const hasDbInstance = names.some((n) => n === 'db' || n.startsWith('db '))
+            if (hasDbInstance) {
+              hasDirectDbImport = true
+              break
+            }
+          } else {
+            hasDirectDbImport = true
+            break
+          }
+        }
+      }
+
+      if (
+        src === './dataLayerHelpers' ||
+        src === '@/data/dataLayerHelpers' ||
+        src === '@/core/databridgeQueries'
+      ) {
+        hasDataLayerHelpersImport = true
+      }
+    }
+
+    const result = !hasDirectDbImport && hasDataLayerHelpersImport
+    storeLayerCache.set(actualFile, result)
+    return result
+  } catch {
+    storeLayerCache.set(actualFile, false)
+    return false
+  }
+}
+
+// ── v3.1 新增（2026-07-16 架构审查 P0：堵住既有盲区） ──────────────────
+// lib 基础设施白名单（core/config/services 三层可依赖的横切基础设施）
+// v3.2: 补入 safeRegex（安全正则构造器，纯函数无业务依赖）
+const LIB_INFRA_WHITELIST =
+  'logger|withBroadcast|eventBus|format|errors|utils|localStorageManager|safeCoerce|perf|precision|validation|safeRegex'
+// core/config 依赖 lib 中的业务模块（白名单外）——违规；白名单内基础设施放行
+const CORE_CONFIG_IMPORT_LIB_BUSINESS = new RegExp(
+  `from\\s+['"](?:\\.\\.\\/lib\\/|@\\/lib\\/)(?!${LIB_INFRA_WHITELIST})[^'"]+['"]`,
+)
+// services 直接 import 数据层实现（db / dataLayer / dataLayerHelpers / dataLayer*Stores）——绕过 DataBridge/gateway
+// v3.4 扩展（D10a）：纳入所有 dataLayer*Stores 系列文件
+const SERVICES_IMPORT_DATA_IMPL =
+  /from\s+['"](?:(?:\.\.\/)+|@\/)data\/(db|dataLayer(?:Helpers|TradingStores|StockStores|ScoreStores|ContentStores|InternalStores|WatchlistStore)?)['"]/
+// data 层反向依赖 services（除 types）——构成 data↔services 循环
+const DATA_IMPORT_SERVICES =
+  /from\s+['"](?:(?:\.\.\/)+services\/(?!types\/)|@\/services\/(?!types\/))[^'"]+['"]/
+// agents 层依赖 UI/状态/应用层（除 types）——越权（agents 仅可依赖 core/data）
+const AGENTS_IMPORT_UI =
+  /from\s+['"](?:(?:\.\.\/)+(components|store|pages|apps|portal|cockpit)\/(?!types\/)|@\/(components|store|pages|apps|portal|cockpit)\/(?!types\/))[^'"]+['"]/
+// dataLayer.manager.* 写操作（原写模式盲区补齐）
+const DATA_LAYER_MANAGER_WRITE = /\bdataLayer\.manager\.(export|import|reset|clear|save|delete)\s*\(/
 
 // v2.0 新增：检测动态 import() 和 re-export
 
@@ -220,6 +393,19 @@ function scanFile(file: string): Pick<Report, 'violations' | 'warnings'> {
           })
         }
       }
+
+      // v3.1：config 层禁止依赖 lib 业务模块（仅允许基础设施白名单）
+      const libBizMatch = raw?.match(CORE_CONFIG_IMPORT_LIB_BUSINESS)
+      if (libBizMatch) {
+        violations.push({
+          file: rel,
+          line: i + 1,
+          column: (libBizMatch.index ?? 0) + 1,
+          type: 'config 依赖 lib 业务模块',
+          message: `配置层仅可依赖 lib 基础设施（${LIB_INFRA_WHITELIST}）`,
+          context: trimmed!.slice(0, 80),
+        })
+      }
     }
 
     // 规则 3：core 层禁止依赖展示层/应用层
@@ -241,6 +427,19 @@ function scanFile(file: string): Pick<Report, 'violations' | 'warnings'> {
           })
         }
       }
+
+      // v3.1：core 层禁止依赖 lib 业务模块（仅允许基础设施白名单，与 services 一致）
+      const coreLibBizMatch = raw?.match(CORE_CONFIG_IMPORT_LIB_BUSINESS)
+      if (coreLibBizMatch) {
+        violations.push({
+          file: rel,
+          line: i + 1,
+          column: (coreLibBizMatch.index ?? 0) + 1,
+          type: 'core 依赖 lib 业务模块',
+          message: `core 层仅可依赖 lib 基础设施（${LIB_INFRA_WHITELIST}）`,
+          context: trimmed!.slice(0, 80),
+        })
+      }
     }
 
     // 规则 4：services 层禁止直接写 db（应通过 DataBridge）
@@ -253,6 +452,43 @@ function scanFile(file: string): Pick<Report, 'violations' | 'warnings'> {
           column: (dbWriteMatch.index ?? 0) + 1,
           type: 'services 直接写 DB',
           message: '引擎层禁止直接调用 db 写方法，应使用 DataBridge.forward()',
+          context: trimmed!.slice(0, 80),
+        })
+      }
+
+      const isTestFile = rel.includes('__tests__') || rel.includes('.test.')
+
+      // v3.1 规则 4b：services 直接 import 数据层实现，绕过 DataBridge/gateway
+      // v3.2 升级（D5）：智能追踪 re-export 链，纯转发到 DataBridge 的兼容层免除警告
+      // v3.3 豁免（D8）：services/storage/ 目录下的 StorageProvider 实现属于存储基础设施适配层，豁免
+      // v3.4 升级（D10b）：合规 Store 包装层（内部走 DataBridge 且不直连 db）免除警告
+      const dataImplMatch = raw?.match(SERVICES_IMPORT_DATA_IMPL)
+      if (dataImplMatch && !isTestFile) {
+        const isStorageProvider = rel.startsWith('src/services/storage/')
+        const importPath = dataImplMatch[0]?.match(/from\s+['"]([^'"]+)['"]/)?.[1] ?? ''
+        const isSafeReexport = resolvesToDatabridge(importPath, file)
+        const isCompliantStore = isCompliantStoreModule(importPath, file)
+        if (!isSafeReexport && !isStorageProvider && !isCompliantStore) {
+          warnings.push({
+            file: rel,
+            line: i + 1,
+            column: (dataImplMatch.index ?? 0) + 1,
+            type: 'services 直连数据层实现（过渡期）',
+            message: '引擎层应经 DataBridge.forward()/gateway 访问数据，避免直连 db/dataLayer（P0 待整改）',
+            context: trimmed!.slice(0, 80),
+          })
+        }
+      }
+
+      // v3.1 规则 4c：services 经 dataLayer.manager.* 旁路写（原写模式盲区补齐）
+      const mgrWriteMatch = raw?.match(DATA_LAYER_MANAGER_WRITE)
+      if (mgrWriteMatch && !isTestFile) {
+        warnings.push({
+          file: rel,
+          line: i + 1,
+          column: (mgrWriteMatch.index ?? 0) + 1,
+          type: 'services 经 dataLayer.manager 旁路写（过渡期）',
+          message: 'dataLayer.manager 写操作应迁移到 DataBridge（P0 待整改）',
           context: trimmed!.slice(0, 80),
         })
       }
@@ -291,7 +527,7 @@ function scanFile(file: string): Pick<Report, 'violations' | 'warnings'> {
           line: i + 1,
           column: (libBusinessMatch.index ?? 0) + 1,
           type: 'services 依赖 lib 业务模块',
-          message: '引擎层仅可依赖 lib 中的基础设施（logger/withBroadcast/eventBus/format/errors/utils/localStorageManager/safeCoerce/perf/precision/validation）',
+          message: '引擎层仅可依赖 lib 中的基础设施（logger/withBroadcast/eventBus/format/errors/utils/localStorageManager/safeCoerce/perf/precision/validation/safeRegex）',
           context: trimmed!.slice(0, 80),
         })
       }
@@ -322,6 +558,37 @@ function scanFile(file: string): Pick<Report, 'violations' | 'warnings'> {
           column: (constantsBusinessMatch.index ?? 0) + 1,
           type: 'constants 层依赖业务层',
           message: '常量层必须零依赖，禁止导入任何业务模块',
+          context: trimmed!.slice(0, 80),
+        })
+      }
+    }
+
+    // v3.1 规则 8：data 层禁止反向依赖 services（除 types）——防 data↔services 循环回归
+    if (rel.startsWith('src/data/') && !rel.includes('__tests__') && !rel.includes('.test.')) {
+      const dataServicesMatch = raw?.match(DATA_IMPORT_SERVICES)
+      if (dataServicesMatch) {
+        violations.push({
+          file: rel,
+          line: i + 1,
+          column: (dataServicesMatch.index ?? 0) + 1,
+          type: 'data 层反向依赖 services',
+          message: 'data 层禁止依赖 services（会构成 data↔services 循环），纯类型应下沉 core/types',
+          context: trimmed!.slice(0, 80),
+        })
+      }
+    }
+
+    // v3.1 规则 9：agents 层禁止依赖 UI/状态/应用层（agents 仅可依赖 core/data）
+    // 存量 4 处，按过渡期 warning 暴露追踪（P1 待整改：改运行时注册 / 事件总线订阅）
+    if (rel.startsWith('src/agents/') && !rel.includes('__tests__') && !rel.includes('.test.')) {
+      const agentsUiMatch = raw?.match(AGENTS_IMPORT_UI)
+      if (agentsUiMatch) {
+        warnings.push({
+          file: rel,
+          line: i + 1,
+          column: (agentsUiMatch.index ?? 0) + 1,
+          type: 'agents 层越权依赖 UI/状态（过渡期）',
+          message: 'agents 仅可依赖 core/data，应改用运行时注册或事件总线订阅（P1 待整改）',
           context: trimmed!.slice(0, 80),
         })
       }

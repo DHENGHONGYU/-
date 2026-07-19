@@ -170,7 +170,7 @@ async function detectEncoding(file: File): Promise<'utf-8' | 'gbk' | 'unknown'> 
     if (validUtf8 && highByteCount > 0) return 'utf-8'
     if (highByteCount > bytes.length * 0.1) return 'gbk'
     return 'utf-8' // 纯 ASCII 归为 utf-8
-  } catch {
+  } catch (err) { console.warn('[unifiedFileValidator.ts]', err);
     return 'unknown'
   }
 }

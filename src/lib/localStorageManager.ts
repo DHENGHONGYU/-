@@ -437,9 +437,7 @@ export class LocalStorageManager {
         newestTime = updated.newestTime
         oldestEntry = updated.oldestEntry
         newestEntry = updated.newestEntry
-      } catch {
-        // 忽略解析失败
-      }
+      } catch { console.warn('[localStorageManager.ts] 忽略解析失败, using fallback') }
     }
 
     return {

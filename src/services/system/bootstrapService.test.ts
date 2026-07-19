@@ -1,9 +1,15 @@
-const { mockDbInit, mockInitPWA } = vi.hoisted(() => ({
-  mockDbInit: vi.fn().mockResolvedValue(undefined),
-  mockInitPWA: vi.fn()
+const { mockDataBridgeInit, mockInitPWA, mockDataBridgeSubscribe } = vi.hoisted(() => ({
+  mockDataBridgeInit: vi.fn().mockResolvedValue(undefined),
+  mockInitPWA: vi.fn(),
+  mockDataBridgeSubscribe: vi.fn().mockReturnValue(() => {}),
 }))
 
-vi.mock('@/data/db', () => ({ db: { init: mockDbInit } }))
+vi.mock('@/core/databridge', () => ({
+  dataBridge: {
+    init: mockDataBridgeInit,
+    subscribe: mockDataBridgeSubscribe,
+  }
+}))
 vi.mock('@/services/pwa/registerServiceWorker', () => ({ initPWA: mockInitPWA }))
 
 import { initializeApp } from './bootstrapService'
@@ -13,9 +19,9 @@ describe('bootstrapService', () => {
     vi.clearAllMocks()
   })
 
-  it('initializeApp: 调用 db.init', async () => {
+  it('initializeApp: 调用 dataBridge.init', async () => {
     await initializeApp()
-    expect(mockDbInit).toHaveBeenCalledTimes(1)
+    expect(mockDataBridgeInit).toHaveBeenCalledTimes(1)
   })
 
   it('initializeApp: 调用 initPWA', async () => {
@@ -23,35 +29,34 @@ describe('bootstrapService', () => {
     expect(mockInitPWA).toHaveBeenCalledTimes(1)
   })
 
-  it('initializeApp: 按正确顺序调用（先 db.init，后 initPWA）', async () => {
+  it('initializeApp: 按正确顺序调用（dataBridge.init → initPWA）', async () => {
     await initializeApp()
-    expect(mockDbInit).toHaveBeenCalledTimes(1)
+    expect(mockDataBridgeInit).toHaveBeenCalledTimes(1)
     expect(mockInitPWA).toHaveBeenCalledTimes(1)
-    // db.init 的调用序号应小于 initPWA
-    const dbCallOrder = mockDbInit.mock.invocationCallOrder[0]!
+    const dbCallOrder = mockDataBridgeInit.mock.invocationCallOrder[0]!
     const pwaCallOrder = mockInitPWA.mock.invocationCallOrder[0]!
     expect(dbCallOrder).toBeLessThan(pwaCallOrder)
   })
 
-  it('initializeApp: db.init 失败时抛出异常', async () => {
+  it('initializeApp: dataBridge.init 失败时抛出异常', async () => {
     const error = new Error('db init failed')
-    mockDbInit.mockRejectedValueOnce(error)
+    mockDataBridgeInit.mockRejectedValueOnce(error)
 
     await expect(initializeApp()).rejects.toThrow('db init failed')
     expect(mockInitPWA).not.toHaveBeenCalled()
   })
 
-  it('initializeApp: db.init 返回 Promise.resolve', async () => {
-    mockDbInit.mockResolvedValueOnce(undefined)
+  it('initializeApp: dataBridge.init 返回 Promise.resolve', async () => {
+    mockDataBridgeInit.mockResolvedValueOnce(undefined)
 
     await expect(initializeApp()).resolves.toBeUndefined()
-    expect(mockDbInit).toHaveBeenCalled()
+    expect(mockDataBridgeInit).toHaveBeenCalled()
   })
 
-  it('initializeApp: initPWA 在 db.init 完成后调用', async () => {
+  it('initializeApp: initPWA 在 dataBridge.init 完成后调用', async () => {
     await initializeApp()
 
-    const dbInitCallOrder = mockDbInit.mock.invocationCallOrder[0]!
+    const dbInitCallOrder = mockDataBridgeInit.mock.invocationCallOrder[0]!
     const pwaInitCallOrder = mockInitPWA.mock.invocationCallOrder[0]!
 
     expect(pwaInitCallOrder).toBeGreaterThan(dbInitCallOrder)

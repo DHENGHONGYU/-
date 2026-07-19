@@ -1,112 +1,120 @@
 ---
 title: v9-rectification-tasks-v15-v16
+type: explanation
+domain: project
+phase: planning
 tier: reference
+status: active
+maintainer: V9 Architecture Team
+summary: "´´½¨ÈÕÆÚ: 2026-06-30 Íê³ÉÈÕÆÚ: 2026-06-30 ×´Ì¬: ? È«²¿Íê³É£¨E-2 Ğ´ÈëÄ£¿é + E-3 Freshness Ğ£Ñé£© ¹ØÁªÎÄµµ: -..."
+tags: [project, plan, explanation, checklist, governance, documentation, strategy]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-tier: reference
-code_version: 2.0.0
----
+# V9 À¶Í¼²¹È«Õû¸ÄÈÎÎñÇåµ¥ ¡ª Åú´Î E£¨v15/v16 ĞÂÔö Store£©
 
-# V9 è“å›¾è¡¥å…¨æ•´æ”¹ä»»åŠ¡æ¸…å• â€” æ‰¹æ¬¡ Eï¼ˆv15/v16 æ–°å¢ Storeï¼‰
-
-> **åˆ›å»ºæ—¥æœŸ**: 2026-06-30
-> **å®Œæˆæ—¥æœŸ**: 2026-06-30
-> **çŠ¶æ€**: âœ… å…¨éƒ¨å®Œæˆï¼ˆE-2 å†™å…¥æ¨¡å— + E-3 Freshness æ ¡éªŒï¼‰
-> **å…³è”æ–‡æ¡£**:
-> - `../reports/retrospectives/v9-data-blueprint-task-tracking.md`ï¼ˆæ‰¹æ¬¡ Eï¼‰
-> - `./v9-data-relationship-er.md`ï¼ˆè“å›¾ ERï¼‰
-> - `../reference/v9-data-timeline.md`ï¼ˆè“å›¾ TimeLineï¼‰
-> - `./weekly-check-2026-06-30.md`ï¼ˆæœ¬å‘¨æ£€æŸ¥å•ï¼‰
+> **´´½¨ÈÕÆÚ**: 2026-06-30
+> **Íê³ÉÈÕÆÚ**: 2026-06-30
+> **×´Ì¬**: ? È«²¿Íê³É£¨E-2 Ğ´ÈëÄ£¿é + E-3 Freshness Ğ£Ñé£©
+> **¹ØÁªÎÄµµ**:
+> - `../reports/retrospectives/v9-data-blueprint-task-tracking.md`£¨Åú´Î E£©
+> - `./v9-data-relationship-er.md`£¨À¶Í¼ ER£©
+> - `../reference/v9-data-timeline.md`£¨À¶Í¼ TimeLine£©
+> - `./weekly-check-2026-06-30.md`£¨±¾ÖÜ¼ì²éµ¥£©
 >
-> **ä¼˜å…ˆçº§**: P1
-> **é¢„è®¡æ€»å·¥ä½œé‡**: 2-3 å¤©
+> **ÓÅÏÈ¼¶**: P1
+> **Ô¤¼Æ×Ü¹¤×÷Á¿**: 2-3 Ìì
 
 ---
 
-## ä¸€ã€é—®é¢˜èƒŒæ™¯
+## Ò»¡¢ÎÊÌâ±³¾°
 
-`src/config/dbConfig.ts` å·²å‡çº§åˆ° `DB_VERSION = 16`ï¼ŒIndexedDB æ–°å¢ 4 ä¸ª Storeï¼ˆv15/v16 å‡çº§ï¼‰ï¼Œä½†å½“å‰ä»£ç åº“**å†™å…¥æ¨¡å—ä¸ ACL æ¥å…¥å°šæœªå®Œæ•´å®ç°**ï¼š
+`src/config/dbConfig.ts` ÒÑÉı¼¶µ½ `DB_VERSION = 16`£¬IndexedDB ĞÂÔö 4 ¸ö Store£¨v15/v16 Éı¼¶£©£¬µ«µ±Ç°´úÂë¿â**Ğ´ÈëÄ£¿éÓë ACL ½ÓÈëÉĞÎ´ÍêÕûÊµÏÖ**£º
 
-| Store | DB ç‰ˆæœ¬ | è“å›¾ç™»è®° | å†™å…¥ Service | ACL æ¥å…¥ | Freshness æ ¡éªŒ |
+| Store | DB °æ±¾ | À¶Í¼µÇ¼Ç | Ğ´Èë Service | ACL ½ÓÈë | Freshness Ğ£Ñé |
 |:---|:---:|:---:|:---:|:---:|:---:|
-| `execution_logs` | v15 | âœ… | âŒ | ğŸŸ¡ éƒ¨åˆ† | âŒ |
-| `missing_reports` | v15 | âœ… | âŒ | ğŸŸ¡ éƒ¨åˆ† | âŒ |
-| `executionPlans` | v16 | âœ… | ğŸŸ¡ éƒ¨åˆ† | ğŸŸ¡ éƒ¨åˆ† | âŒ |
-| `portfolios` | v16 | âœ… | ğŸŸ¡ éƒ¨åˆ† | ğŸŸ¡ éƒ¨åˆ† | âŒ |
+| `execution_logs` | v15 | ? | ? | ?? ²¿·Ö | ? |
+| `missing_reports` | v15 | ? | ? | ?? ²¿·Ö | ? |
+| `executionPlans` | v16 | ? | ?? ²¿·Ö | ?? ²¿·Ö | ? |
+| `portfolios` | v16 | ? | ?? ²¿·Ö | ?? ²¿·Ö | ? |
 
-> å¤‡æ³¨ï¼š`ğŸŸ¡ éƒ¨åˆ†` = `src/data/dataLayer.ts` ä¸­å·²å­˜åœ¨ list/get/save/remove æ¡©æ–¹æ³•ï¼Œä½†ä¸Šå±‚ Service æœªæ¥å…¥ï¼›ACL çŸ©é˜µä¸­ system æ¨¡å—å…·å¤‡è¯»å†™æƒé™ä½†å…·ä½“ä¸šåŠ¡æ¨¡å—æœªæˆæƒã€‚
+> ±¸×¢£º`?? ²¿·Ö` = `src/data/dataLayer.ts` ÖĞÒÑ´æÔÚ list/get/save/remove ×®·½·¨£¬µ«ÉÏ²ã Service Î´½ÓÈë£»ACL ¾ØÕóÖĞ system Ä£¿é¾ß±¸¶ÁĞ´È¨ÏŞµ«¾ßÌåÒµÎñÄ£¿éÎ´ÊÚÈ¨¡£
 
 ---
 
-## äºŒã€å¾…åŠä»»åŠ¡
+## ¶ş¡¢´ı°ìÈÎÎñ
 
-### E-2: å†™å…¥æ¨¡å—ä¸ ACL æ¥å…¥ï¼ˆP1ï¼Œ8-12 å°æ—¶ï¼‰
+### E-2: Ğ´ÈëÄ£¿éÓë ACL ½ÓÈë£¨P1£¬8-12 Ğ¡Ê±£©
 
-| ç¼–å· | ä»»åŠ¡ | æ–‡ä»¶ | éªŒæ”¶æ ‡å‡† | ä¼˜å…ˆçº§ |
+| ±àºÅ | ÈÎÎñ | ÎÄ¼ş | ÑéÊÕ±ê×¼ | ÓÅÏÈ¼¶ |
 |:---|:---|:---|:---|:---:|
-| E-2-1 | åˆ›å»º `executionPlanService.ts` | `src/services/execution/executionPlanService.ts` | å« `createPlan(signal) / listPlans / updatePhase / cancelPlan` 4 ä¸ªæ–¹æ³•ï¼›try-catch + logger.info | P1 |
-| E-2-2 | åˆ›å»º `executionLogService.ts` | `src/services/execution/executionLogService.ts` | å« `writeLog(plan, action) / listByPlan / listBySymbol` 3 ä¸ªæ–¹æ³•ï¼›å¸¦ phase çŠ¶æ€æœºæ ¡éªŒ | P1 |
-| E-2-3 | åˆ›å»º `portfolioService.ts` | `src/services/portfolio/portfolioService.ts` | å« `rebalance / addHolding / removeHolding / listByTheme` 4 ä¸ªæ–¹æ³•ï¼›target_weight æ ¡éªŒ | P1 |
-| E-2-4 | åˆ›å»º `missingReportDetector.ts` | `src/services/data-collector/missingReportDetector.ts` | å« `detect(symbol, reportType) / listBySymbol / clear` 3 ä¸ªæ–¹æ³•ï¼›dedupe by (symbol, reportType) | P1 |
-| E-2-5 | è¡¥å…¨ ACL ç™½åå• | `src/config/dbConfig.ts` | `execution` / `portfolio` / `data-collector` ä¸‰ä¸ª MODULE_ID å®Œæ•´æ³¨å†Œ 4 ä¸ª Store è¯»å†™æƒé™ | P1 |
-| E-2-6 | å•å…ƒæµ‹è¯• | `tests/services/execution/*.test.ts`ã€`tests/services/portfolio/*.test.ts`ã€`tests/services/data-collector/*.test.ts` | è‡³å°‘ 20 ä¸ªæ–°æµ‹è¯•ç”¨ä¾‹ï¼Œ0 å¤±è´¥ | P1 |
+| E-2-1 | ´´½¨ `executionPlanService.ts` | `src/services/execution/executionPlanService.ts` | º¬ `createPlan(signal) / listPlans / updatePhase / cancelPlan` 4 ¸ö·½·¨£»try-catch + logger.info | P1 |
+| E-2-2 | ´´½¨ `executionLogService.ts` | `src/services/execution/executionLogService.ts` | º¬ `writeLog(plan, action) / listByPlan / listBySymbol` 3 ¸ö·½·¨£»´ø phase ×´Ì¬»úĞ£Ñé | P1 |
+| E-2-3 | ´´½¨ `portfolioService.ts` | `src/services/portfolio/portfolioService.ts` | º¬ `rebalance / addHolding / removeHolding / listByTheme` 4 ¸ö·½·¨£»target_weight Ğ£Ñé | P1 |
+| E-2-4 | ´´½¨ `missingReportDetector.ts` | `src/services/data-collector/missingReportDetector.ts` | º¬ `detect(symbol, reportType) / listBySymbol / clear` 3 ¸ö·½·¨£»dedupe by (symbol, reportType) | P1 |
+| E-2-5 | ²¹È« ACL °×Ãûµ¥ | `src/config/dbConfig.ts` | `execution` / `portfolio` / `data-collector` Èı¸ö MODULE_ID ÍêÕû×¢²á 4 ¸ö Store ¶ÁĞ´È¨ÏŞ | P1 |
+| E-2-6 | µ¥Ôª²âÊÔ | `tests/services/execution/*.test.ts`¡¢`tests/services/portfolio/*.test.ts`¡¢`tests/services/data-collector/*.test.ts` | ÖÁÉÙ 20 ¸öĞÂ²âÊÔÓÃÀı£¬0 Ê§°Ü | P1 |
 
-### E-3: è“å›¾è¿è¡Œæ—¶æ ¡éªŒè¡¥å…¨ï¼ˆP1ï¼Œ4-6 å°æ—¶ï¼‰
+### E-3: À¶Í¼ÔËĞĞÊ±Ğ£Ñé²¹È«£¨P1£¬4-6 Ğ¡Ê±£©
 
-| ç¼–å· | ä»»åŠ¡ | æ–‡ä»¶ | éªŒæ”¶æ ‡å‡† | ä¼˜å…ˆçº§ |
+| ±àºÅ | ÈÎÎñ | ÎÄ¼ş | ÑéÊÕ±ê×¼ | ÓÅÏÈ¼¶ |
 |:---|:---|:---|:---|:---:|
-| E-3-1 | `checkExecutionPlanFreshness` | `src/services/analysis/dataFreshnessGuard.ts` | è§„åˆ™ï¼š`executionPlans.createdAt >= signals.createdAt`ï¼›éé˜»å¡æ¨¡å¼ | P1 |
-| E-3-2 | `checkPortfolioFreshness` | åŒä¸Š | è§„åˆ™ï¼š`portfolios.updatedAt >= max(orders.createdAt)` | P1 |
-| E-3-3 | `checkExecutionLogFreshness` | åŒä¸Š | è§„åˆ™ï¼š`execution_logs.timestamp >= executionPlans.createdAt` | P1 |
-| E-3-4 | `checkMissingReportFreshness` | åŒä¸Š | è§„åˆ™ï¼š`missing_reports.detectedAt <= currentTime && > signal.publishedAt` | P1 |
-| E-3-5 | åœ¨ 4 ä¸ªæ–° Service å…¥å£æ¥å…¥æ ¡éªŒ | 4 ä¸ª service æ–‡ä»¶ | æ¯ä¸ª Service è‡³å°‘ä¸€ä¸ªå…¥å£è°ƒç”¨ `check*Freshness` | P1 |
-| E-3-6 | å•å…ƒæµ‹è¯• | `tests/services/analysis/dataFreshnessGuard.test.ts` | è‡³å°‘ 8 ä¸ªæ–°æµ‹è¯•ç”¨ä¾‹ï¼ˆ4 ä¸ªæ–°å¢ check å‡½æ•°çš„æˆåŠŸ/å¤±è´¥/è¾¹ç•Œåœºæ™¯ï¼‰ | P1 |
+| E-3-1 | `checkExecutionPlanFreshness` | `src/services/analysis/dataFreshnessGuard.ts` | ¹æÔò£º`executionPlans.createdAt >= signals.createdAt`£»·Ç×èÈûÄ£Ê½ | P1 |
+| E-3-2 | `checkPortfolioFreshness` | Í¬ÉÏ | ¹æÔò£º`portfolios.updatedAt >= max(orders.createdAt)` | P1 |
+| E-3-3 | `checkExecutionLogFreshness` | Í¬ÉÏ | ¹æÔò£º`execution_logs.timestamp >= executionPlans.createdAt` | P1 |
+| E-3-4 | `checkMissingReportFreshness` | Í¬ÉÏ | ¹æÔò£º`missing_reports.detectedAt <= currentTime && > signal.publishedAt` | P1 |
+| E-3-5 | ÔÚ 4 ¸öĞÂ Service Èë¿Ú½ÓÈëĞ£Ñé | 4 ¸ö service ÎÄ¼ş | Ã¿¸ö Service ÖÁÉÙÒ»¸öÈë¿Úµ÷ÓÃ `check*Freshness` | P1 |
+| E-3-6 | µ¥Ôª²âÊÔ | `tests/services/analysis/dataFreshnessGuard.test.ts` | ÖÁÉÙ 8 ¸öĞÂ²âÊÔÓÃÀı£¨4 ¸öĞÂÔö check º¯ÊıµÄ³É¹¦/Ê§°Ü/±ß½ç³¡¾°£© | P1 |
 
 ---
 
-## ä¸‰ã€ä¾èµ–ä¸é£é™©
+## Èı¡¢ÒÀÀµÓë·çÏÕ
 
-| é£é™© | åº”å¯¹ |
+| ·çÏÕ | Ó¦¶Ô |
 |:---|:---|
-| 4 ä¸ªæ–° Store å½“å‰ä»…åœ¨ `dataLayer.ts` æœ‰æ¡©æ–¹æ³•ï¼ŒUI å±‚ï¼ˆ`/trading`ã€`/command`ï¼‰å¯èƒ½å·²å­˜åœ¨ç›´æ¥è°ƒç”¨ | ä¼˜å…ˆå®¡è®¡æ˜¯å¦å·²å­˜åœ¨ç›´æ¥è°ƒç”¨ï¼Œè‹¥æœ‰åˆ™ä¿æŒå¹¶è¡¥ Service åŒ…è£…å±‚ |
-| `executionPlan` å…³è” `signals` éœ€è€ƒè™‘ signal åˆ é™¤å orphan è®¡åˆ’ | åœ¨ `executionPlanService` ä¸­åŠ å…¥ `getOrphanPlans()` è‡ªæ£€ |
-| `portfolios` ä¸ç°æœ‰ `holdings` Store æ¦‚å¿µé‡å  | åœ¨æ–‡æ¡£ä¸­æ˜ç¡® `holdings` = å•åªè‚¡ç¥¨æŒä»“ï¼Œ`portfolios` = ä¸»é¢˜å¤šè‚¡ç»„åˆ |
-| `missing_reports` è‡ªæ£€å¯èƒ½äº§ç”Ÿå¤§é‡å†™å…¥ | æä¾› `enabled: boolean` é…ç½®é¡¹ï¼Œåˆå§‹é»˜è®¤å…³é—­ï¼Œç”±ç”¨æˆ·åœ¨ ConfigApp ä¸­å¯ç”¨ |
+| 4 ¸öĞÂ Store µ±Ç°½öÔÚ `dataLayer.ts` ÓĞ×®·½·¨£¬UI ²ã£¨`/trading`¡¢`/command`£©¿ÉÄÜÒÑ´æÔÚÖ±½Óµ÷ÓÃ | ÓÅÏÈÉó¼ÆÊÇ·ñÒÑ´æÔÚÖ±½Óµ÷ÓÃ£¬ÈôÓĞÔò±£³Ö²¢²¹ Service °ü×°²ã |
+| `executionPlan` ¹ØÁª `signals` Ğè¿¼ÂÇ signal É¾³ıºó orphan ¼Æ»® | ÔÚ `executionPlanService` ÖĞ¼ÓÈë `getOrphanPlans()` ×Ô¼ì |
+| `portfolios` ÓëÏÖÓĞ `holdings` Store ¸ÅÄîÖØµş | ÔÚÎÄµµÖĞÃ÷È· `holdings` = µ¥Ö»¹ÉÆ±³Ö²Ö£¬`portfolios` = Ö÷Ìâ¶à¹É×éºÏ |
+| `missing_reports` ×Ô¼ì¿ÉÄÜ²úÉú´óÁ¿Ğ´Èë | Ìá¹© `enabled: boolean` ÅäÖÃÏî£¬³õÊ¼Ä¬ÈÏ¹Ø±Õ£¬ÓÉÓÃ»§ÔÚ ConfigApp ÖĞÆôÓÃ |
 
 ---
 
-## å››ã€æ‰§è¡Œé¡ºåºå»ºè®®
+## ËÄ¡¢Ö´ĞĞË³Ğò½¨Òé
 
-1. **E-2-5** ACL çŸ©é˜µè¡¥å…¨ï¼ˆ5 åˆ†é’Ÿï¼Œæ— å¤–éƒ¨ä¾èµ–ï¼‰
-2. **E-2-1 â†’ E-2-2 â†’ E-2-3 â†’ E-2-4** 4 ä¸ª Service æ–‡ä»¶æŒ‰ä¾èµ–é¡ºåºåˆ›å»ºï¼ˆexecution ä¼˜å…ˆï¼Œå›  portfolios ä¾èµ– executionï¼‰
-3. **E-2-6** Service å•å…ƒæµ‹è¯•
-4. **E-3-1 â†’ E-3-2 â†’ E-3-3 â†’ E-3-4** 4 ä¸ª Freshness check å‡½æ•°
-5. **E-3-5** åœ¨ Service å…¥å£æ¥å…¥
-6. **E-3-6** Freshness å•å…ƒæµ‹è¯•
-7. æäº¤åæ›´æ–° `weekly-check-*.md` ä¸ `v9-data-blueprint-task-tracking.md` çŠ¶æ€
-
----
-
-## äº”ã€éªŒæ”¶æ¸…å•
-
-- [x] 4 ä¸ªæ–° Service æ–‡ä»¶å­˜åœ¨ä¸”é€šè¿‡ ESLint 0 é”™è¯¯
-- [x] 4 ä¸ªæ–° Service é€šè¿‡å•å…ƒæµ‹è¯•ï¼ˆ47 ç”¨ä¾‹ï¼Œè¶…è¿‡ 20 ç”¨ä¾‹è¦æ±‚ï¼‰
-- [x] 4 ä¸ªæ–° check å‡½æ•°é€šè¿‡å•å…ƒæµ‹è¯•ï¼ˆ8 ç”¨ä¾‹ï¼‰
-- [x] ACL çŸ©é˜µä¸­ `execution` / `portfolio` / `data-collector` ä¸‰ä¸ªæ¨¡å—å…·å¤‡ 4 ä¸ªæ–° Store çš„è¯»å†™æƒé™
-- [x] `npm run validate:blueprint` ä»é€šè¿‡
-- [x] `dataRelationship.test.ts` 6/6 é€šè¿‡
-- [x] å…¨é‡æµ‹è¯•æœªå¼•å…¥å›å½’ï¼ˆæ–°å¢ 67 ç”¨ä¾‹å…¨éƒ¨é€šè¿‡ï¼‰
-- [x] `weekly-check-*.md` ä¸­"ä¸‹å‘¨è¡ŒåŠ¨é¡¹"å¯¹åº”é¡¹å·² âœ… å‹¾é€‰
+1. **E-2-5** ACL ¾ØÕó²¹È«£¨5 ·ÖÖÓ£¬ÎŞÍâ²¿ÒÀÀµ£©
+2. **E-2-1 ¡ú E-2-2 ¡ú E-2-3 ¡ú E-2-4** 4 ¸ö Service ÎÄ¼ş°´ÒÀÀµË³Ğò´´½¨£¨execution ÓÅÏÈ£¬Òò portfolios ÒÀÀµ execution£©
+3. **E-2-6** Service µ¥Ôª²âÊÔ
+4. **E-3-1 ¡ú E-3-2 ¡ú E-3-3 ¡ú E-3-4** 4 ¸ö Freshness check º¯Êı
+5. **E-3-5** ÔÚ Service Èë¿Ú½ÓÈë
+6. **E-3-6** Freshness µ¥Ôª²âÊÔ
+7. Ìá½»ºó¸üĞÂ `weekly-check-*.md` Óë `../reports/retrospectives/v9-data-blueprint-task-tracking.md` ×´Ì¬
 
 ---
 
-## å…­ã€å˜æ›´å½±å“
+## Îå¡¢ÑéÊÕÇåµ¥
 
-| ç»´åº¦ | å½±å“ |
+- [x] 4 ¸öĞÂ Service ÎÄ¼ş´æÔÚÇÒÍ¨¹ı ESLint 0 ´íÎó
+- [x] 4 ¸öĞÂ Service Í¨¹ıµ¥Ôª²âÊÔ£¨47 ÓÃÀı£¬³¬¹ı 20 ÓÃÀıÒªÇó£©
+- [x] 4 ¸öĞÂ check º¯ÊıÍ¨¹ıµ¥Ôª²âÊÔ£¨8 ÓÃÀı£©
+- [x] ACL ¾ØÕóÖĞ `execution` / `portfolio` / `data-collector` Èı¸öÄ£¿é¾ß±¸ 4 ¸öĞÂ Store µÄ¶ÁĞ´È¨ÏŞ
+- [x] `npm run validate:blueprint` ÈÔÍ¨¹ı
+- [x] `dataRelationship.test.ts` 6/6 Í¨¹ı
+- [x] È«Á¿²âÊÔÎ´ÒıÈë»Ø¹é£¨ĞÂÔö 67 ÓÃÀıÈ«²¿Í¨¹ı£©
+- [x] `weekly-check-*.md` ÖĞ"ÏÂÖÜĞĞ¶¯Ïî"¶ÔÓ¦ÏîÒÑ ? ¹´Ñ¡
+
+---
+
+## Áù¡¢±ä¸üÓ°Ïì
+
+| Î¬¶È | Ó°Ïì |
 |:---|:---|
-| æ•°æ®å±‚ | 4 ä¸ª Store ä»ã€Œæ— ä¸»ã€å˜ä¸ºã€Œæœ‰ Service ä¸»ã€ |
-| ä¸šåŠ¡å±‚ | `dualStrategyEngine` / `tradingService` å¯è°ƒç”¨ `executionPlanService`ï¼›`commandStore` å¯è°ƒç”¨ `portfolioService` |
-| UI å±‚ | `/trading/execution` `/command/portfolio` `/command/missing-reports` ä¸‰é¡µå¯å»ºï¼ˆåç»­è¿­ä»£ï¼‰ |
-| æ²»ç† | Freshness æ ¡éªŒè§„åˆ™ä» 6 æ¡æ‰©å±•åˆ° 10 æ¡ï¼›ER è“å›¾è¾¹ä» 14 å¢åŠ åˆ° 18 |
+| Êı¾İ²ã | 4 ¸ö Store ´Ó¡¸ÎŞÖ÷¡¹±äÎª¡¸ÓĞ Service Ö÷¡¹ |
+| ÒµÎñ²ã | `dualStrategyEngine` / `tradingService` ¿Éµ÷ÓÃ `executionPlanService`£»`commandStore` ¿Éµ÷ÓÃ `portfolioService` |
+| UI ²ã | `/trading/execution` `/command/portfolio` `/command/missing-reports` ÈıÒ³¿É½¨£¨ºóĞøµü´ú£© |
+| ÖÎÀí | Freshness Ğ£Ñé¹æÔò´Ó 6 ÌõÀ©Õ¹µ½ 10 Ìõ£»ER À¶Í¼±ß´Ó 14 Ôö¼Óµ½ 18 |

@@ -16,6 +16,9 @@ import { toStructuredOptions } from './skillTypes'
 
 const logger = getLogger()
 
+/**
+ * CitationSchema
+ */
 export const CitationSchema = z.object({
   source: z.string().min(1),
   content: z.string().min(1),
@@ -23,6 +26,9 @@ export const CitationSchema = z.object({
   date: z.string().optional(),
 })
 
+/**
+ * LayerAnalysisOutputSchema
+ */
 export const LayerAnalysisOutputSchema = z.object({
   layerId: z.string(),
   score: z.number().min(0).max(5),
@@ -36,6 +42,9 @@ export const LayerAnalysisOutputSchema = z.object({
 
 export type LayerAnalysisOutput = z.infer<typeof LayerAnalysisOutputSchema>
 
+/**
+ * LayerAnalysisInputSchema
+ */
 export const LayerAnalysisInputSchema = z.object({
   symbol: z.string(),
   stockName: z.string().optional(),
@@ -103,6 +112,11 @@ function buildMessages(ctx: SkillContext, cfg: LayerAnalysisSkillConfig): LlmMes
   ]
 }
 
+/**
+ * createLayerAnalysisSkill
+ * @param cfg
+ * @returns SkillDefinition<LayerAnalysisOutput>
+ */
 export function createLayerAnalysisSkill(cfg: LayerAnalysisSkillConfig): SkillDefinition<LayerAnalysisOutput> {
   async function executor(ctx: SkillContext): Promise<SkillResult<LayerAnalysisOutput>> {
     const startedAt = Date.now()

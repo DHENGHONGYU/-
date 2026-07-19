@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { ok, fail, type Result } from '@/services/contracts'
+import { ok, fail, type Result } from '@/core/result'
 import { ValidationError } from '@/lib/errors'
 import { getLogger } from '@/lib/logger'
 import { dataBridge } from '@/core/databridge'

@@ -1,3 +1,4 @@
+/** @unused — 已实现但当前无 UI 层消费者，待后续产品规划接入。 */
 /**
  * @module analysisHubStore
  * @lifecycle @Global

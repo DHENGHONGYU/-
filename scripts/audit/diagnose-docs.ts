@@ -3,7 +3,7 @@ import * as path from 'path';
 
 const __filename = new URL(import.meta.url).pathname;
 const __dirname = path.dirname(__filename).replace(/^\/([A-Z]:)/, '$1');
-const PROJECT_ROOT = path.resolve(__dirname, '..');
+const PROJECT_ROOT = path.resolve(__dirname, '..', '..');
 const REGISTRY_INDEX = path.join(PROJECT_ROOT, 'docs', '00-meta', 'registry-index.md');
 
 interface PathCheckResult {

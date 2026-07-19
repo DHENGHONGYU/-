@@ -31,6 +31,9 @@ const IssueSchema = z.object({
   suggestion: z.string().min(1),
 })
 
+/**
+ * SelfPurificationOutputSchema
+ */
 export const SelfPurificationOutputSchema = z.object({
   iterationCount: z.number().int().min(1),
   stopReason: z.enum(['converged', 'max_iterations', 'no_issue', 'failed']),
@@ -43,6 +46,9 @@ export const SelfPurificationOutputSchema = z.object({
 
 export type SelfPurificationOutput = z.infer<typeof SelfPurificationOutputSchema>
 
+/**
+ * SelfPurificationInputSchema
+ */
 export const SelfPurificationInputSchema = z.object({
   symbol: z.string(),
   stockName: z.string().optional(),
@@ -136,6 +142,9 @@ function outputsEqual(a: Record<string, unknown>, b: Record<string, unknown>): b
   return JSON.stringify(a) === JSON.stringify(b)
 }
 
+/**
+ * executeSelfPurificationSkill
+ */
 export async function executeSelfPurificationSkill(
   ctx: SkillContext,
 ): Promise<SkillResult<SelfPurificationOutput>> {
@@ -181,7 +190,7 @@ export async function executeSelfPurificationSkill(
       }
 
       const refinedOutput = typeof parsed.refinedOutput === 'object' && parsed.refinedOutput !== null
-        ? (parsed.refinedOutput as Record<string, unknown>)
+        ? (parsed.refinedOutput)
         : { ...currentOutput }
 
       const stopReason = parsed.issues.length === 0
@@ -257,6 +266,9 @@ export async function executeSelfPurificationSkill(
   }
 }
 
+/**
+ * selfPurificationSkill
+ */
 export const selfPurificationSkill: SkillDefinition<SelfPurificationOutput> = {
   name: 'self-purification',
   title: 'SKILL 自我净化/迭代',

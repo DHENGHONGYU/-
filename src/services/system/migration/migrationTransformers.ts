@@ -1,4 +1,4 @@
-import { generateId } from '@/data/db'
+import { generateId } from '@/lib/utils'
 import { getLogger } from '@/lib/logger'
 import { DATA_SOURCE, ORDER_DIRECTION, ORDER_STATUS, ACCOUNT_TYPE, type DataSource, type OrderDirection } from '@/config/dbConfig'
 import { DEFAULT_POOL_GROUP, DEFAULT_POOL_TYPE, RESEARCH_STATUS, type ResearchStatus } from '@/constants/pool.constants'

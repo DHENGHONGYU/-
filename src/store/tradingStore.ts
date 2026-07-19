@@ -317,34 +317,56 @@ export function initTradingStoreFacadeSync(): () => void {
 
   const cleanupFns: Array<() => void> = []
 
-  // 订阅 watchlistStore
+  // 订阅 watchlistStore（仅 stocks 引用变化时同步，避免无关字段变化触发连锁重渲染）
+  let prevWatchlistStocks = useWatchlistStore.getState().stocks
   const unsubWatchlist = useWatchlistStore.subscribe((state) => {
-    useTradingStore.setState({ stocks: state.stocks })
+    if (state.stocks !== prevWatchlistStocks) {
+      prevWatchlistStocks = state.stocks
+      useTradingStore.setState({ stocks: state.stocks })
+    }
   })
   cleanupFns.push(unsubWatchlist)
 
-  // 订阅 signalAdviceStore
+  // 订阅 signalAdviceStore（仅 signals/adviceMap 引用变化时同步）
+  let prevSignals = useSignalAdviceStore.getState().signals
+  let prevAdviceMap = useSignalAdviceStore.getState().adviceMap
   const unsubSignal = useSignalAdviceStore.subscribe((state) => {
-    useTradingStore.setState({
-      signals: state.signals,
-      adviceMap: state.adviceMap,
-    })
+    if (state.signals !== prevSignals || state.adviceMap !== prevAdviceMap) {
+      prevSignals = state.signals
+      prevAdviceMap = state.adviceMap
+      useTradingStore.setState({
+        signals: state.signals,
+        adviceMap: state.adviceMap,
+      })
+    }
   })
   cleanupFns.push(unsubSignal)
 
-  // 订阅 portfolioStore
+  // 订阅 portfolioStore（仅 portfolio/strategyResult/loading 引用变化时同步）
+  let prevPortfolio = usePortfolioStore.getState().portfolio
+  let prevStrategyResult = usePortfolioStore.getState().strategyResult
+  let prevPortfolioLoading = usePortfolioStore.getState().loading
   const unsubPortfolio = usePortfolioStore.subscribe((state) => {
-    useTradingStore.setState({
-      portfolio: state.portfolio,
-      strategyResult: state.strategyResult,
-      portfolioLoading: state.loading,
-    })
+    if (state.portfolio !== prevPortfolio || state.strategyResult !== prevStrategyResult || state.loading !== prevPortfolioLoading) {
+      prevPortfolio = state.portfolio
+      prevStrategyResult = state.strategyResult
+      prevPortfolioLoading = state.loading
+      useTradingStore.setState({
+        portfolio: state.portfolio,
+        strategyResult: state.strategyResult,
+        portfolioLoading: state.loading,
+      })
+    }
   })
   cleanupFns.push(unsubPortfolio)
 
-  // 订阅 orderStore
+  // 订阅 orderStore（仅 orders 引用变化时同步）
+  let prevOrders = useOrderStore.getState().orders
   const unsubOrder = useOrderStore.subscribe((state) => {
-    useTradingStore.setState({ orders: state.orders })
+    if (state.orders !== prevOrders) {
+      prevOrders = state.orders
+      useTradingStore.setState({ orders: state.orders })
+    }
   })
   cleanupFns.push(unsubOrder)
 

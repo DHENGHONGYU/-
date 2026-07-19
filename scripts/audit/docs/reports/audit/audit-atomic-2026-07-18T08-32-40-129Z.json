@@ -1,0 +1,106 @@
+{
+  "violations": [
+    {
+      "file": "atoms/DatePicker.tsx",
+      "tier": "unregistered",
+      "rule": "unregistered",
+      "level": "warning",
+      "message": "业务组件未在 componentRegistry 登记（默认按 organism 处理）。建议补登 targetPath 与层级。"
+    },
+    {
+      "file": "atoms/Grid.tsx",
+      "tier": "unregistered",
+      "rule": "unregistered",
+      "level": "warning",
+      "message": "业务组件未在 componentRegistry 登记（默认按 organism 处理）。建议补登 targetPath 与层级。"
+    },
+    {
+      "file": "atoms/List.tsx",
+      "tier": "unregistered",
+      "rule": "unregistered",
+      "level": "warning",
+      "message": "业务组件未在 componentRegistry 登记（默认按 organism 处理）。建议补登 targetPath 与层级。"
+    },
+    {
+      "file": "atoms/Menu.tsx",
+      "tier": "unregistered",
+      "rule": "unregistered",
+      "level": "warning",
+      "message": "业务组件未在 componentRegistry 登记（默认按 organism 处理）。建议补登 targetPath 与层级。"
+    },
+    {
+      "file": "atoms/Pagination.tsx",
+      "tier": "unregistered",
+      "rule": "unregistered",
+      "level": "warning",
+      "message": "业务组件未在 componentRegistry 登记（默认按 organism 处理）。建议补登 targetPath 与层级。"
+    },
+    {
+      "file": "atoms/Popover.tsx",
+      "tier": "unregistered",
+      "rule": "unregistered",
+      "level": "warning",
+      "message": "业务组件未在 componentRegistry 登记（默认按 organism 处理）。建议补登 targetPath 与层级。"
+    },
+    {
+      "file": "molecules/DataQualityIndicator.tsx",
+      "tier": "unregistered",
+      "rule": "unregistered",
+      "level": "warning",
+      "message": "业务组件未在 componentRegistry 登记（默认按 organism 处理）。建议补登 targetPath 与层级。"
+    },
+    {
+      "file": "molecules/RankedCard.tsx",
+      "tier": "unregistered",
+      "rule": "unregistered",
+      "level": "warning",
+      "message": "业务组件未在 componentRegistry 登记（默认按 organism 处理）。建议补登 targetPath 与层级。"
+    },
+    {
+      "file": "molecules/ScoreGauge.tsx",
+      "tier": "unregistered",
+      "rule": "unregistered",
+      "level": "warning",
+      "message": "业务组件未在 componentRegistry 登记（默认按 organism 处理）。建议补登 targetPath 与层级。"
+    },
+    {
+      "file": "molecules/SignalBadge.tsx",
+      "tier": "unregistered",
+      "rule": "unregistered",
+      "level": "warning",
+      "message": "业务组件未在 componentRegistry 登记（默认按 organism 处理）。建议补登 targetPath 与层级。"
+    },
+    {
+      "file": "molecules/TrendArrow.tsx",
+      "tier": "unregistered",
+      "rule": "unregistered",
+      "level": "warning",
+      "message": "业务组件未在 componentRegistry 登记（默认按 organism 处理）。建议补登 targetPath 与层级。"
+    },
+    {
+      "file": "registration/StatusQueryPanel.tsx",
+      "tier": "unregistered",
+      "rule": "unregistered",
+      "level": "warning",
+      "message": "业务组件未在 componentRegistry 登记（默认按 organism 处理）。建议补登 targetPath 与层级。"
+    }
+  ],
+  "summary": {
+    "totalFiles": 186,
+    "totalViolations": 12,
+    "totalWarnings": 12,
+    "byTier": {
+      "unregistered": 12
+    },
+    "byRule": {
+      "unregistered": 12
+    }
+  },
+  "meta": {
+    "scriptName": "audit-atomic",
+    "version": "1.0.0",
+    "timestamp": "2026-07-18T08:32:40.129Z",
+    "durationMs": 13,
+    "rootDir": "G:\\FinSightV9\\scripts\\audit"
+  }
+}

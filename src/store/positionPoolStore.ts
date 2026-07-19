@@ -1,3 +1,4 @@
+/** @unused — 已实现但当前无 UI 层消费者，待后续产品规划接入。 */
 /**
  * @module positionPoolStore
  * @description 持仓池 Zustand Store。
@@ -87,6 +88,9 @@ function toPoolItem(stock: Stock): PoolItem {
   } as PoolItem
 }
 
+/**
+ * usePositionPoolStore
+ */
 export const usePositionPoolStore = create<PositionPoolState>((set, get) => ({
   ...initialState,
 
@@ -320,14 +324,27 @@ export const usePositionPoolStore = create<PositionPoolState>((set, get) => ({
   },
 }))
 
+/**
+ * getPositionPoolTotalCount
+ * @returns number
+ */
 export function getPositionPoolTotalCount(): number {
   return usePositionPoolStore.getState().items.length
 }
 
+/**
+ * getPositionPoolItemBySymbol
+ * @param symbol
+ * @returns PoolItem | undefined
+ */
 export function getPositionPoolItemBySymbol(symbol: string): PoolItem | undefined {
   return usePositionPoolStore.getState().items.find((s) => s.symbol === symbol)
 }
 
+/**
+ * getPositionPoolGroups
+ * @returns string[]
+ */
 export function getPositionPoolGroups(): string[] {
   const { items } = usePositionPoolStore.getState()
   const groups = new Set<string>()
@@ -350,6 +367,9 @@ function debouncedRefresh(): void {
   }, DEBOUNCE_MS)
 }
 
+/**
+ * initPositionPoolStoreSubscriptions
+ */
 export function initPositionPoolStoreSubscriptions(): () => void {
   if (_unsubscribe) {
     logger.warn('[positionPoolStore] Subscriptions already initialized, skipping')

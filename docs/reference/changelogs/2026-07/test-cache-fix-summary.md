@@ -1,46 +1,54 @@
 ---
-title: test-cache-fix-summary
-tier: important
+title: ²âÊÔ»º´æÇåÀíĞŞ¸´×Ü½á
+type: reference
+domain: qa
+phase: testing
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "ÈÕÆÚ: 2026-07-05 ÎÊÌâ: DataBridge readCache ÔÚ `db.reset()` ºóÎ´±»Çå³ı£¬µ¼ÖÂ²âÊÔÓÃÀı¼äÊı¾İÎÛÈ¾ Ó°Ïì: 23 ¸ö²âÊÔÎÄ¼ş£¬45+ ¸ö²âÊÔÓÃÀıÊ§°Ü..."
+tags: [qa, fix, test]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-tier: important
-code_version: 2.0.0
----
+# ²âÊÔ»º´æÇåÀíĞŞ¸´×Ü½á
 
-# æµ‹è¯•ç¼“å­˜æ¸…ç†ä¿®å¤æ€»ç»“
-
-**æ—¥æœŸ**: 2026-07-05  
-**é—®é¢˜**: DataBridge readCache åœ¨ `db.reset()` åæœªè¢«æ¸…é™¤ï¼Œå¯¼è‡´æµ‹è¯•ç”¨ä¾‹é—´æ•°æ®æ±¡æŸ“  
-**å½±å“**: 23 ä¸ªæµ‹è¯•æ–‡ä»¶ï¼Œ45+ ä¸ªæµ‹è¯•ç”¨ä¾‹å¤±è´¥  
-**ä¿®å¤æ–¹æ¡ˆ**: åœ¨æ‰€æœ‰ä½¿ç”¨ `db.reset()` çš„æµ‹è¯•æ–‡ä»¶çš„ `beforeEach` ä¸­æ·»åŠ  `dataBridge.invalidateCache()` è°ƒç”¨
-
----
-
-## é—®é¢˜æ ¹å› 
-
-`dataBridge` æ˜¯å•ä¾‹å¯¹è±¡ï¼ˆ`export const dataBridge = new DataBridge()`ï¼‰ï¼Œå…¶å†…éƒ¨çš„ `readCache`ï¼ˆMemoryCache å®ä¾‹ï¼‰åœ¨æµ‹è¯•ç”¨ä¾‹é—´æŒä¹…å­˜åœ¨ã€‚`db.reset()` åªæ¸…ç©º IndexedDB æ•°æ®ï¼Œä½†ä¸ä¼šæ¸…é™¤å†…å­˜ç¼“å­˜ï¼Œå¯¼è‡´ï¼š
-
-1. å‰ä¸€ä¸ªæµ‹è¯•ç”¨ä¾‹ç¼“å­˜äº†æŸ¥è¯¢ç»“æœï¼ˆå¦‚ `QUERY_GET:stocks:key=000001.SZ`ï¼‰
-2. `db.reset()` æ¸…ç©ºäº† IndexedDBï¼Œä½† readCache ä»ä¿ç•™æ—§æ•°æ®
-3. ä¸‹ä¸€ä¸ªæµ‹è¯•ç”¨ä¾‹æ‰§è¡Œ `dataLayer.stocks.add()` æ—¶ï¼Œ`queryGet()` å‘½ä¸­ç¼“å­˜ï¼Œè¯¯åˆ¤è‚¡ç¥¨å·²å­˜åœ¨
-4. INSERT æ“ä½œæœªæ‰§è¡Œï¼Œåç»­æŸ¥è¯¢è¿”å›ç©ºç»“æœï¼Œæµ‹è¯•å¤±è´¥
+**ÈÕÆÚ**: 2026-07-05  
+**ÎÊÌâ**: DataBridge readCache ÔÚ `db.reset()` ºóÎ´±»Çå³ı£¬µ¼ÖÂ²âÊÔÓÃÀı¼äÊı¾İÎÛÈ¾  
+**Ó°Ïì**: 23 ¸ö²âÊÔÎÄ¼ş£¬45+ ¸ö²âÊÔÓÃÀıÊ§°Ü  
+**ĞŞ¸´·½°¸**: ÔÚËùÓĞÊ¹ÓÃ `db.reset()` µÄ²âÊÔÎÄ¼şµÄ `beforeEach` ÖĞÌí¼Ó `dataBridge.invalidateCache()` µ÷ÓÃ
 
 ---
 
-## ä¿®æ”¹æ–‡ä»¶æ¸…å•
+## ÎÊÌâ¸ùÒò
+
+`dataBridge` ÊÇµ¥Àı¶ÔÏó£¨`export const dataBridge = new DataBridge()`£©£¬ÆäÄÚ²¿µÄ `readCache`£¨MemoryCache ÊµÀı£©ÔÚ²âÊÔÓÃÀı¼ä³Ö¾Ã´æÔÚ¡£`db.reset()` Ö»Çå¿Õ IndexedDB Êı¾İ£¬µ«²»»áÇå³ıÄÚ´æ»º´æ£¬µ¼ÖÂ£º
+
+1. Ç°Ò»¸ö²âÊÔÓÃÀı»º´æÁË²éÑ¯½á¹û£¨Èç `QUERY_GET:stocks:key=000001.SZ`£©
+2. `db.reset()` Çå¿ÕÁË IndexedDB£¬µ« readCache ÈÔ±£Áô¾ÉÊı¾İ
+3. ÏÂÒ»¸ö²âÊÔÓÃÀıÖ´ĞĞ `dataLayer.stocks.add()` Ê±£¬`queryGet()` ÃüÖĞ»º´æ£¬ÎóÅĞ¹ÉÆ±ÒÑ´æÔÚ
+4. INSERT ²Ù×÷Î´Ö´ĞĞ£¬ºóĞø²éÑ¯·µ»Ø¿Õ½á¹û£¬²âÊÔÊ§°Ü
+
+---
+
+## ĞŞ¸ÄÎÄ¼şÇåµ¥
 
 ### 1. stockpoolService.test.ts
-**ä¿®æ”¹å†…å®¹**:
-- æ·»åŠ å¯¼å…¥: `import { dataBridge } from '@/core/databridge'`
-- æ·»åŠ å¯¼å…¥: `import { STORE_NAME } from '@/config/dbConfig'`ï¼ˆåˆå¹¶åˆ°ç°æœ‰å¯¼å…¥ï¼‰
-- åœ¨ `beforeEach` ä¸­æ·»åŠ :
+**ĞŞ¸ÄÄÚÈİ**:
+- Ìí¼Óµ¼Èë: `import { dataBridge } from '@/core/databridge'`
+- Ìí¼Óµ¼Èë: `import { STORE_NAME } from '@/config/dbConfig'`£¨ºÏ²¢µ½ÏÖÓĞµ¼Èë£©
+- ÔÚ `beforeEach` ÖĞÌí¼Ó:
   ```typescript
   dataBridge.invalidateCache(STORE_NAME.stocks)
   ```
 
-**ä¿®å¤ç”¨ä¾‹**: 4 ä¸ª
+**ĞŞ¸´ÓÃÀı**: 4 ¸ö
 - should archive from any active pool
 - should reactivate archived to candidate
 - should get stocks by status
@@ -49,26 +57,26 @@ code_version: 2.0.0
 ---
 
 ### 2. tradingService.test.ts
-**ä¿®æ”¹å†…å®¹**:
-- æ·»åŠ å¯¼å…¥: `import { dataBridge } from '@/core/databridge'`
-- æ·»åŠ å¯¼å…¥: `import { STORE_NAME } from '@/config/dbConfig'`ï¼ˆåˆå¹¶åˆ°ç°æœ‰å¯¼å…¥ï¼‰
-- åœ¨ `beforeEach` ä¸­æ·»åŠ :
+**ĞŞ¸ÄÄÚÈİ**:
+- Ìí¼Óµ¼Èë: `import { dataBridge } from '@/core/databridge'`
+- Ìí¼Óµ¼Èë: `import { STORE_NAME } from '@/config/dbConfig'`£¨ºÏ²¢µ½ÏÖÓĞµ¼Èë£©
+- ÔÚ `beforeEach` ÖĞÌí¼Ó:
   ```typescript
   dataBridge.invalidateCache(STORE_NAME.stocks)
   dataBridge.invalidateCache(STORE_NAME.dailyQuotes)
   dataBridge.invalidateCache(STORE_NAME.orders)
   ```
 
-**ä¿®å¤ç”¨ä¾‹**: 1 ä¸ª
+**ĞŞ¸´ÓÃÀı**: 1 ¸ö
 - returns watch advice when quotes are missing
 
 ---
 
 ### 3. dataLayer.test.ts
-**ä¿®æ”¹å†…å®¹**:
-- æ·»åŠ å¯¼å…¥: `import { dataBridge } from '@/core/databridge'`
-- æ·»åŠ å¯¼å…¥: `import { STORE_NAME } from '@/config/dbConfig'`ï¼ˆåˆå¹¶åˆ°ç°æœ‰å¯¼å…¥ï¼‰
-- åœ¨ `beforeEach` ä¸­æ·»åŠ :
+**ĞŞ¸ÄÄÚÈİ**:
+- Ìí¼Óµ¼Èë: `import { dataBridge } from '@/core/databridge'`
+- Ìí¼Óµ¼Èë: `import { STORE_NAME } from '@/config/dbConfig'`£¨ºÏ²¢µ½ÏÖÓĞµ¼Èë£©
+- ÔÚ `beforeEach` ÖĞÌí¼Ó:
   ```typescript
   dataBridge.invalidateCache(STORE_NAME.stocks)
   dataBridge.invalidateCache(STORE_NAME.dailyQuotes)
@@ -76,30 +84,30 @@ code_version: 2.0.0
   dataBridge.invalidateCache(STORE_NAME.orders)
   ```
 
-**ä¿®å¤ç”¨ä¾‹**: æ•°æ®å±‚æ ¸å¿ƒæµ‹è¯•ï¼Œå½±å“å¤šä¸ªåç»­æµ‹è¯•
+**ĞŞ¸´ÓÃÀı**: Êı¾İ²ãºËĞÄ²âÊÔ£¬Ó°Ïì¶à¸öºóĞø²âÊÔ
 
 ---
 
 ### 4. StrategySnapshotPage.test.tsx
-**ä¿®æ”¹å†…å®¹**:
-- æ·»åŠ å¯¼å…¥: `import { dataBridge } from '@/core/databridge'`
-- æ·»åŠ å¯¼å…¥: `import { STORE_NAME } from '@/config/dbConfig'`
-- åœ¨ `beforeEach` ä¸­æ·»åŠ :
+**ĞŞ¸ÄÄÚÈİ**:
+- Ìí¼Óµ¼Èë: `import { dataBridge } from '@/core/databridge'`
+- Ìí¼Óµ¼Èë: `import { STORE_NAME } from '@/config/dbConfig'`
+- ÔÚ `beforeEach` ÖĞÌí¼Ó:
   ```typescript
   dataBridge.invalidateCache(STORE_NAME.stocks)
   dataBridge.invalidateCache(STORE_NAME.v6Scores)
   dataBridge.invalidateCache(STORE_NAME.rotationScores)
   ```
 
-**ä¿®å¤ç”¨ä¾‹**: ç­–ç•¥å¿«ç…§é¡µé¢æ¸²æŸ“å’Œäº¤äº’æµ‹è¯•
+**ĞŞ¸´ÓÃÀı**: ²ßÂÔ¿ìÕÕÒ³ÃæäÖÈ¾ºÍ½»»¥²âÊÔ
 
 ---
 
 ### 5. v6MigrationService.test.ts
-**ä¿®æ”¹å†…å®¹**:
-- æ·»åŠ å¯¼å…¥: `import { dataBridge } from '@/core/databridge'`
-- æ·»åŠ å¯¼å…¥: `import { STORE_NAME } from '@/config/dbConfig'`
-- åœ¨ `beforeEach` ä¸­æ·»åŠ :
+**ĞŞ¸ÄÄÚÈİ**:
+- Ìí¼Óµ¼Èë: `import { dataBridge } from '@/core/databridge'`
+- Ìí¼Óµ¼Èë: `import { STORE_NAME } from '@/config/dbConfig'`
+- ÔÚ `beforeEach` ÖĞÌí¼Ó:
   ```typescript
   dataBridge.invalidateCache(STORE_NAME.stocks)
   dataBridge.invalidateCache(STORE_NAME.dailyQuotes)
@@ -111,16 +119,16 @@ code_version: 2.0.0
   dataBridge.invalidateCache(STORE_NAME.strategySnapshots)
   ```
 
-**ä¿®å¤ç”¨ä¾‹**: V6 æ•°æ®è¿ç§»å…¨æµç¨‹æµ‹è¯•
+**ĞŞ¸´ÓÃÀı**: V6 Êı¾İÇ¨ÒÆÈ«Á÷³Ì²âÊÔ
 
 ---
 
 ### 6. intelligentScore.test.ts
-**ä¿®æ”¹å†…å®¹**:
-- æ·»åŠ å¯¼å…¥: `import { dataBridge } from '@/core/databridge'`
-- æ·»åŠ å¯¼å…¥: `import { STORE_NAME } from '@/config/dbConfig'`ï¼ˆåˆå¹¶åˆ°ç°æœ‰å¯¼å…¥ï¼‰
-- æ·»åŠ å¯¼å…¥: `beforeEach` åˆ° vitest å¯¼å…¥åˆ—è¡¨
-- æ–°å¢ `beforeEach` å—ï¼ˆåŸæ–‡ä»¶æ— æ­¤å—ï¼‰:
+**ĞŞ¸ÄÄÚÈİ**:
+- Ìí¼Óµ¼Èë: `import { dataBridge } from '@/core/databridge'`
+- Ìí¼Óµ¼Èë: `import { STORE_NAME } from '@/config/dbConfig'`£¨ºÏ²¢µ½ÏÖÓĞµ¼Èë£©
+- Ìí¼Óµ¼Èë: `beforeEach` µ½ vitest µ¼ÈëÁĞ±í
+- ĞÂÔö `beforeEach` ¿é£¨Ô­ÎÄ¼şÎŞ´Ë¿é£©:
   ```typescript
   beforeEach(async () => {
     await db.init()
@@ -130,17 +138,17 @@ code_version: 2.0.0
   })
   ```
 
-**ä¿®å¤ç”¨ä¾‹**: æ™ºèƒ½è¯„åˆ†æœåŠ¡æµ‹è¯•
+**ĞŞ¸´ÓÃÀı**: ÖÇÄÜÆÀ·Ö·şÎñ²âÊÔ
 
 ---
 
-### 7-23. å…¶ä»– 17 ä¸ªæµ‹è¯•æ–‡ä»¶ï¼ˆé€šè¿‡ sub-agent æ‰¹é‡ä¿®å¤ï¼‰
+### 7-23. ÆäËû 17 ¸ö²âÊÔÎÄ¼ş£¨Í¨¹ı sub-agent ÅúÁ¿ĞŞ¸´£©
 
-ä»¥ä¸‹æ–‡ä»¶å‡é€šè¿‡ sub-agent æ‰¹é‡ä¿®å¤ï¼Œä¿®æ”¹æ¨¡å¼ä¸€è‡´ï¼š
-- æ·»åŠ  `dataBridge` å’Œ `STORE_NAME` å¯¼å…¥
-- åœ¨ `beforeEach` ä¸­æ·»åŠ ç›¸åº”çš„ `invalidateCache` è°ƒç”¨
+ÒÔÏÂÎÄ¼ş¾ùÍ¨¹ı sub-agent ÅúÁ¿ĞŞ¸´£¬ĞŞ¸ÄÄ£Ê½Ò»ÖÂ£º
+- Ìí¼Ó `dataBridge` ºÍ `STORE_NAME` µ¼Èë
+- ÔÚ `beforeEach` ÖĞÌí¼ÓÏàÓ¦µÄ `invalidateCache` µ÷ÓÃ
 
-**æ–‡ä»¶åˆ—è¡¨**:
+**ÎÄ¼şÁĞ±í**:
 1. v6Lifecycle.test.ts
 2. v6ExceptionHandling.test.ts
 3. batchImportService.test.ts
@@ -161,34 +169,34 @@ code_version: 2.0.0
 
 ---
 
-## ä¿®æ”¹æ¨¡å¼æ€»ç»“
+## ĞŞ¸ÄÄ£Ê½×Ü½á
 
-æ‰€æœ‰ä¿®æ”¹éµå¾ªç»Ÿä¸€æ¨¡å¼ï¼š
+ËùÓĞĞŞ¸Ä×ñÑ­Í³Ò»Ä£Ê½£º
 
 ```typescript
-// 1. æ·»åŠ å¯¼å…¥
+// 1. Ìí¼Óµ¼Èë
 import { dataBridge } from '@/core/databridge'
 import { STORE_NAME } from '@/config/dbConfig'
 
-// 2. åœ¨ beforeEach ä¸­æ·»åŠ ç¼“å­˜æ¸…ç†
+// 2. ÔÚ beforeEach ÖĞÌí¼Ó»º´æÇåÀí
 beforeEach(async () => {
   await db.init()
   await db.reset()
-  // æ–°å¢ï¼šæ¸…é™¤ DataBridge ç¼“å­˜
+  // ĞÂÔö£ºÇå³ı DataBridge »º´æ
   dataBridge.invalidateCache(STORE_NAME.stocks)
   dataBridge.invalidateCache(STORE_NAME.dailyQuotes)
-  // ... æ ¹æ®æµ‹è¯•æ¶‰åŠçš„ store æ·»åŠ ç›¸åº”çš„ invalidateCache è°ƒç”¨
+  // ... ¸ù¾İ²âÊÔÉæ¼°µÄ store Ìí¼ÓÏàÓ¦µÄ invalidateCache µ÷ÓÃ
 })
 ```
 
 ---
 
-## éªŒè¯ç»“æœ
+## ÑéÖ¤½á¹û
 
-ä¿®å¤åè¿è¡Œå®Œæ•´æµ‹è¯•å¥—ä»¶ï¼Œæ‰€æœ‰ 45+ ä¸ªå¤±è´¥ç”¨ä¾‹å…¨éƒ¨é€šè¿‡ï¼Œæµ‹è¯•å¥—ä»¶æ•´ä½“é€šè¿‡ç‡è¾¾åˆ° 100%ã€‚
+ĞŞ¸´ºóÔËĞĞÍêÕû²âÊÔÌ×¼ş£¬ËùÓĞ 45+ ¸öÊ§°ÜÓÃÀıÈ«²¿Í¨¹ı£¬²âÊÔÌ×¼şÕûÌåÍ¨¹ıÂÊ´ïµ½ 100%¡£
 
 ---
 
-## åç»­å»ºè®®
+## ºóĞø½¨Òé
 
-å»ºè®®åˆ›å»ºé€šç”¨æµ‹è¯•å·¥å…·å‡½æ•°æˆ– Vitest æ’ä»¶ï¼Œè‡ªåŠ¨åœ¨ `beforeEach` ä¸­å¤„ç†ç¼“å­˜æ¸…ç†ï¼Œé¿å…æœªæ¥å†å‡ºç°ç±»ä¼¼é—®é¢˜ã€‚è¯¦è§ `tests/utils/db-reset-with-cache.ts`ã€‚
+½¨Òé´´½¨Í¨ÓÃ²âÊÔ¹¤¾ßº¯Êı»ò Vitest ²å¼ş£¬×Ô¶¯ÔÚ `beforeEach` ÖĞ´¦Àí»º´æÇåÀí£¬±ÜÃâÎ´À´ÔÙ³öÏÖÀàËÆÎÊÌâ¡£Ïê¼û `tests/utils/db-reset-with-cache.ts`¡£

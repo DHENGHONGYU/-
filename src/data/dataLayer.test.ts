@@ -1545,8 +1545,8 @@ describe('dataLayer', () => {
       expect(dataLayer.manager).toBe(dataManager)
     })
 
-    it('共计 34 个属性', () => {
-      expect(Object.keys(dataLayer)).toHaveLength(34)
+    it('共计 40 个属性', () => {
+      expect(Object.keys(dataLayer)).toHaveLength(40)
     })
   })
 

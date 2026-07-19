@@ -350,7 +350,13 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
     // fetchStockBasic / fetchStockKline 在 forward 更新前需 SELECT 现有 stock
     // （合并 dataVersion / dataQuality / source、校验存在性），原配置仅授予 write 会触发
     // ACL_PERMISSION_DENIED（"Module fetcher cannot SELECT on store stocks"）。
-    read: [STORE_NAME.stocks, STORE_NAME.financialReports, STORE_NAME.traceRecords, STORE_NAME.collectConfig],
+    // 2026-07-18 修复：新增 news / sectorScores / researchLogs 至 write。
+    // 8 维度采集（03 筹码/04 重大事项/05 热点新闻 → news；06 行业竞品/07 关联指数 → sector_scores；
+    // 08 研报 → research_logs）原配置未授权，触发 ACL 写入失败。
+    read: [STORE_NAME.stocks, STORE_NAME.financialReports, STORE_NAME.traceRecords, STORE_NAME.collectConfig,
+      // P2: 补充可写目标的 read 权限（2026-07-18 四维扫描发现）
+      STORE_NAME.collectionHistory, STORE_NAME.conflictLog, STORE_NAME.fileImportRecords,
+      STORE_NAME.proofreadReports, STORE_NAME.researchLogs, STORE_NAME.sectorScores, STORE_NAME.news],
     write: [
       STORE_NAME.stocks,
       STORE_NAME.dailyQuotes,
@@ -362,6 +368,10 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
       STORE_NAME.conflictLog,
       STORE_NAME.fileImportRecords,
       STORE_NAME.proofreadReports,
+      // ── 8 维度采集目标存储（2026-07-18 新增） ──
+      STORE_NAME.news,
+      STORE_NAME.sectorScores,
+      STORE_NAME.researchLogs,
     ],
     actions: [DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete, DB_OPERATION.select],
   },
@@ -382,6 +392,7 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
       STORE_NAME.hotSectorScores,
       STORE_NAME.valuePitScores,
       STORE_NAME.signals,
+      STORE_NAME.analysisResults,
       // 2026-07-12 修复：V6 评分引擎需读取行情(K线)与财务数据计算因子，
       // 原 read 列表缺失导致 runV6Score 触发 ACL_PERMISSION_DENIED
       STORE_NAME.dailyQuotes,
@@ -457,7 +468,8 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
       STORE_NAME.rotationScores,
       STORE_NAME.signals,
     ],
-    write: [STORE_NAME.hotSectorScores, STORE_NAME.valuePitScores, STORE_NAME.signals],
+    // v32: 补全 v6Scores write 权限（dualStrategyStore 通过 saveScores 写入 v6Scores）
+    write: [STORE_NAME.v6Scores, STORE_NAME.hotSectorScores, STORE_NAME.valuePitScores, STORE_NAME.signals],
     actions: [DB_OPERATION.select, DB_OPERATION.insert, DB_OPERATION.update],
   },
   [MODULE_ID.orderstore]: {

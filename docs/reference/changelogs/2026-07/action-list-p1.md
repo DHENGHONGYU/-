@@ -1,71 +1,79 @@
 ---
-title: action-list-p1
-tier: important
+title: P1 Åú´ÎĞĞ¶¯Çåµ¥ ¡ª 2026-07-05
+type: reference
+domain: project
+phase: retrospective
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "## Åú´ÎÖ´ĞĞË³Ğò °´ÒÀÀµ¹ØÏµÓë·çÏÕÓÉµÍµ½¸ßÖ´ĞĞ£º"
+tags: [project, changelog, plan]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-tier: important
-code_version: 2.0.0
----
+# P1 Åú´ÎĞĞ¶¯Çåµ¥ ¡ª 2026-07-05
 
-# P1 æ‰¹æ¬¡è¡ŒåŠ¨æ¸…å• â€” 2026-07-05
+## Åú´ÎÖ´ĞĞË³Ğò
+°´ÒÀÀµ¹ØÏµÓë·çÏÕÓÉµÍµ½¸ßÖ´ĞĞ£º
 
-## æ‰¹æ¬¡æ‰§è¡Œé¡ºåº
-æŒ‰ä¾èµ–å…³ç³»ä¸é£é™©ç”±ä½åˆ°é«˜æ‰§è¡Œï¼š
+**A ¡ú E ¡ú D ¡ú C ¡ú B ¡ú F**
 
-**A â†’ E â†’ D â†’ C â†’ B â†’ F**
+- A£ºÑÕÉ«ÁîÅÆÇ¨ÒÆ£¨´¿ UI ³£Á¿Ìæ»»£¬ÁãÒµÎñ·çÏÕ£©
+- E£ºÊÂÎñ¹¤¾ßÍÆ¹ã£¨ĞÂÔö core/transaction.ts£¬¶ÀÁ¢ÑéÖ¤£©
+- D£ºUseCase ³éÈ¡£¨ÒÀÀµÊÂÎñ¹¤¾ß£©
+- C£ºService Ö±µ÷ĞŞÕı£¨ÒÀÀµ UseCase / core Â·ÓÉ£©
+- B£ºÉÏµÛ Store ²ğ·Ö£¨Ó°ÏìÃæ×î´ó£¬×îºóÖ´ĞĞ£©
+- F£ºMCP-DataBridge ¼¯³É£¨¶ÀÁ¢Ä£¿é£¬¿ÉÔÚÈÎÒâÅú´ÎºóÖ´ĞĞ£©
 
-- Aï¼šé¢œè‰²ä»¤ç‰Œè¿ç§»ï¼ˆçº¯ UI å¸¸é‡æ›¿æ¢ï¼Œé›¶ä¸šåŠ¡é£é™©ï¼‰
-- Eï¼šäº‹åŠ¡å·¥å…·æ¨å¹¿ï¼ˆæ–°å¢ core/transaction.tsï¼Œç‹¬ç«‹éªŒè¯ï¼‰
-- Dï¼šUseCase æŠ½å–ï¼ˆä¾èµ–äº‹åŠ¡å·¥å…·ï¼‰
-- Cï¼šService ç›´è°ƒä¿®æ­£ï¼ˆä¾èµ– UseCase / core è·¯ç”±ï¼‰
-- Bï¼šä¸Šå¸ Store æ‹†åˆ†ï¼ˆå½±å“é¢æœ€å¤§ï¼Œæœ€åæ‰§è¡Œï¼‰
-- Fï¼šMCP-DataBridge é›†æˆï¼ˆç‹¬ç«‹æ¨¡å—ï¼Œå¯åœ¨ä»»æ„æ‰¹æ¬¡åæ‰§è¡Œï¼‰
+## Åú´Î A£ºÑÕÉ«ÁîÅÆÇ¨ÒÆ
 
-## æ‰¹æ¬¡ Aï¼šé¢œè‰²ä»¤ç‰Œè¿ç§»
+- ĞŞ¸Ä `src/components/chart/ScoreRadar.tsx`£ºÄ¬ÈÏ fill/stroke ¸ÄÎªÒıÓÃ `CHART_PALETTE` ³£Á¿¡£
+- ĞŞ¸Ä `src/components/chart/FactorHeatmap.tsx`£ºÒÆ³ı rgb Ó²±àÂë£¬¸ÄÎª `CHART_PALETTE.factorHeatmap`¡£
+- ĞŞ¸Ä `src/cockpit/widgets/SectorHeatmapWidget.tsx`£ºÒÆ³ı Tailwind ÑÕÉ«Àà×ÖÃæÁ¿Óë rgb ¼ÆËã£¬¸ÄÎª theme tokens¡£
 
-- ä¿®æ”¹ `src/components/chart/ScoreRadar.tsx`ï¼šé»˜è®¤ fill/stroke æ”¹ä¸ºå¼•ç”¨ `CHART_PALETTE` å¸¸é‡ã€‚
-- ä¿®æ”¹ `src/components/chart/FactorHeatmap.tsx`ï¼šç§»é™¤ rgb ç¡¬ç¼–ç ï¼Œæ”¹ä¸º `CHART_PALETTE.factorHeatmap`ã€‚
-- ä¿®æ”¹ `src/cockpit/widgets/SectorHeatmapWidget.tsx`ï¼šç§»é™¤ Tailwind é¢œè‰²ç±»å­—é¢é‡ä¸ rgb è®¡ç®—ï¼Œæ”¹ä¸º theme tokensã€‚
+## Åú´Î E£ºÊÂÎñ¹¤¾ßÍÆ¹ã
 
-## æ‰¹æ¬¡ Eï¼šäº‹åŠ¡å·¥å…·æ¨å¹¿
-
-- æ–°å»º `src/core/transaction.ts`ï¼š
+- ĞÂ½¨ `src/core/transaction.ts`£º
   - `runInTransaction<T>(stores: string[], mode: IDBTransactionMode, callback: (tx: IDBTransaction) => Promise<T>): Promise<T>`
-  - è‡ªåŠ¨å›æ»š/é”™è¯¯å¤„ç†/è¶…æ—¶ã€‚
-- åœ¨ `src/data/db.ts` ä¸­æš´éœ² `getDatabase()` åªè¯»è®¿é—®ã€‚
-- åº”ç”¨åˆ° `executePlan.useCase.ts`ã€`submitOrder.useCase.ts`ã€`portfolioService.rebalance()`ã€‚
+  - ×Ô¶¯»Ø¹ö/´íÎó´¦Àí/³¬Ê±¡£
+- ÔÚ `src/data/db.ts` ÖĞ±©Â¶ `getDatabase()` Ö»¶Á·ÃÎÊ¡£
+- Ó¦ÓÃµ½ `executePlan.useCase.ts`¡¢`submitOrder.useCase.ts`¡¢`portfolioService.rebalance()`¡£
 
-## æ‰¹æ¬¡ Dï¼šUseCase æŠ½å–
+## Åú´Î D£ºUseCase ³éÈ¡
 
-- æ–°å»º `src/services/useCase/getUnifiedStockView.useCase.ts`
-- æ–°å»º `src/services/useCase/rebalancePortfolio.useCase.ts`
-- æ–°å»º `src/services/useCase/runDualStrategy.useCase.ts`
-- æ–°å»º `src/services/useCase/generateTradeReview.useCase.ts`
-- å°†åŸ `unifiedStockService.getUnifiedStockView`ã€`portfolioService.rebalance`ã€`dualStrategyEngine.runDualStrategy`ã€`tradeReviewAI.generateReviewAsync` å†…éƒ¨é€»è¾‘è¿ç§»åˆ°å¯¹åº” UseCaseï¼ŒåŸå‡½æ•°æ”¹ä¸ºè–„åŒ…è£…ã€‚
+- ĞÂ½¨ `src/services/useCase/getUnifiedStockView.useCase.ts`
+- ĞÂ½¨ `src/services/useCase/rebalancePortfolio.useCase.ts`
+- ĞÂ½¨ `src/services/useCase/runDualStrategy.useCase.ts`
+- ĞÂ½¨ `src/services/useCase/generateTradeReview.useCase.ts`
+- ½«Ô­ `unifiedStockService.getUnifiedStockView`¡¢`portfolioService.rebalance`¡¢`dualStrategyEngine.runDualStrategy`¡¢`tradeReviewAI.generateReviewAsync` ÄÚ²¿Âß¼­Ç¨ÒÆµ½¶ÔÓ¦ UseCase£¬Ô­º¯Êı¸ÄÎª±¡°ü×°¡£
 
-## æ‰¹æ¬¡ Cï¼šService ç›´è°ƒä¿®æ­£
+## Åú´Î C£ºService Ö±µ÷ĞŞÕı
 
-- å°† `analysis/dataFreshnessGuard` ä¸‹æ²‰åˆ° `src/core/freshnessGuard.ts`
-- å°† `llm/llmClient.chat()` å°è£…åˆ° `src/services/llm/llmGateway.ts`ï¼ˆL3 æœåŠ¡ï¼‰
-- å°†è·¨åŸŸç›´è°ƒæ”¹ä¸ºè°ƒç”¨ UseCase / core å·¥å…· / L3 gatewayï¼š
-  - `dualStrategyEngine` â†’ `RunDualStrategyUseCase`
-  - `inputService` â†’ `FetcherOrchestratorUseCase`
-  - `strategyEngine` â†’ `HotSectorQueryUseCase`
-- ä¿®æ­£ audit:layers æ£€æµ‹åˆ°çš„ services â†’ store ç›´æ¥ä¾èµ–ã€‚
+- ½« `analysis/dataFreshnessGuard` ÏÂ³Áµ½ `src/core/freshnessGuard.ts`
+- ½« `llm/llmClient.chat()` ·â×°µ½ `src/services/llm/llmGateway.ts`£¨L3 ·şÎñ£©
+- ½«¿çÓòÖ±µ÷¸ÄÎªµ÷ÓÃ UseCase / core ¹¤¾ß / L3 gateway£º
+  - `dualStrategyEngine` ¡ú `RunDualStrategyUseCase`
+  - `inputService` ¡ú `FetcherOrchestratorUseCase`
+  - `strategyEngine` ¡ú `HotSectorQueryUseCase`
+- ĞŞÕı audit:layers ¼ì²âµ½µÄ services ¡ú store Ö±½ÓÒÀÀµ¡£
 
-## æ‰¹æ¬¡ Bï¼šä¸Šå¸ Store æ‹†åˆ†
+## Åú´Î B£ºÉÏµÛ Store ²ğ·Ö
 
-- `tradingStore.ts` â†’ `watchlistStore.ts` + `signalAdviceStore.ts` + `portfolioStore.ts`
-- `marketDataStore.ts` â†’ æŒ‰ widget/èˆ±å®¤æ‹†åˆ†ä¸ºå¤šä¸ª `DataSourceStore`
-- `dualStrategyStore.ts` æ”¹ä¸ºåªè¯» facadeï¼Œæˆ–æ¢å¤ç‹¬ç«‹ç­–ç•¥ Store
-- `positionStore.ts` å»é™¤ `useOrderStore` ç›´æ¥å¼•ç”¨ï¼Œæ”¹ä¸º DataBridge è®¢é˜…
-- `orderStore.ts` ä¿ç•™ orders å¯ä¿¡æºï¼Œæ´¾ç”Ÿè®¡ç®—æ‹†åˆ†åˆ° `positionComputer/pnlComputer/riskComputer`
+- `tradingStore.ts` ¡ú `watchlistStore.ts` + `signalAdviceStore.ts` + `portfolioStore.ts`
+- `marketDataStore.ts` ¡ú °´ widget/²ÕÊÒ²ğ·ÖÎª¶à¸ö `DataSourceStore`
+- `dualStrategyStore.ts` ¸ÄÎªÖ»¶Á facade£¬»ò»Ö¸´¶ÀÁ¢²ßÂÔ Store
+- `positionStore.ts` È¥³ı `useOrderStore` Ö±½ÓÒıÓÃ£¬¸ÄÎª DataBridge ¶©ÔÄ
+- `orderStore.ts` ±£Áô orders ¿ÉĞÅÔ´£¬ÅÉÉú¼ÆËã²ğ·Öµ½ `positionComputer/pnlComputer/riskComputer`
 
-## æ‰¹æ¬¡ Fï¼šMCP-DataBridge é›†æˆ
+## Åú´Î F£ºMCP-DataBridge ¼¯³É
 
-- ä¿®æ”¹ `src/mcp/bridge/mcpBridge.ts`ï¼š
-  - åœ¨ `callTool` è·¯å¾„ä¸­åŠ å…¥ `DataBridge.forward()` ä¿¡å°å†™å…¥ï¼ˆç”¨äºå®¡è®¡æ—¥å¿—/æ•°æ®å˜æ›´ï¼‰
-  - è¯»å–è·¯å¾„ä»èµ°ç°æœ‰ Client/Server åˆ†å‘
-- æ–°å¢ `src/mcp/core/mcpAuditLogger.ts` è®°å½•æ‰€æœ‰ MCP tool è°ƒç”¨
+- ĞŞ¸Ä `src/mcp/bridge/mcpBridge.ts`£º
+  - ÔÚ `callTool` Â·¾¶ÖĞ¼ÓÈë `DataBridge.forward()` ĞÅ·âĞ´Èë£¨ÓÃÓÚÉó¼ÆÈÕÖ¾/Êı¾İ±ä¸ü£©
+  - ¶ÁÈ¡Â·¾¶ÈÔ×ßÏÖÓĞ Client/Server ·Ö·¢
+- ĞÂÔö `src/mcp/core/mcpAuditLogger.ts` ¼ÇÂ¼ËùÓĞ MCP tool µ÷ÓÃ

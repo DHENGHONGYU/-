@@ -19,49 +19,6 @@ import { withBroadcast } from '@/store/helpers/withBroadcast'
 
 const logger = getLogger()
 
-// ============================================================
-// 默认样本数据（股票池为空时的回退数据）
-// ============================================================
-
-const HOT_SECTOR_DEFAULT_SAMPLES: HotSectorAnalyzerInput[] = [
-  {
-    symbol: 'AI_算力',
-    sectorName: 'AI 算力',
-    momentum: { sectorStrengthScore: 4.5, priceChangeRank: 1, volumeExpansion: 2.5, consecutiveInflow: 8, relativeStrength: 85 },
-    sentiment: { sentimentRank: 1, retailSentiment: 0.85, institutionBuyCount: 12, limitUpCount: 5 },
-    breakout: { hasBreakoutPattern: true, rsiSignal: 'bullish', rsi: 65, priceAboveMA20: true, priceAboveMA60: true },
-    valuationRisk: { pe: 65, pbPercentile: 80, marketCap: 8000, dividendYield: 0.5 },
-    marketEnv: { marketTrend: 'bull', systemicRisk: 'low' },
-  },
-  {
-    symbol: '半导体',
-    sectorName: '半导体',
-    momentum: { sectorStrengthScore: 4.0, priceChangeRank: 3, volumeExpansion: 1.8, consecutiveInflow: 5, relativeStrength: 72 },
-    sentiment: { sentimentRank: 4, retailSentiment: 0.7, institutionBuyCount: 8, limitUpCount: 3 },
-    breakout: { hasBreakoutPattern: true, rsiSignal: 'bullish', rsi: 58, priceAboveMA20: true, priceAboveMA60: false },
-    valuationRisk: { pe: 55, pbPercentile: 65, marketCap: 5000, dividendYield: 0.8 },
-    marketEnv: { marketTrend: 'bull', systemicRisk: 'low' },
-  },
-  {
-    symbol: '新能源',
-    sectorName: '新能源',
-    momentum: { sectorStrengthScore: 2.5, priceChangeRank: 8, volumeExpansion: 0.8, consecutiveInflow: 1, relativeStrength: 45 },
-    sentiment: { sentimentRank: 10, retailSentiment: 0.4, institutionBuyCount: 2, limitUpCount: 0 },
-    breakout: { hasBreakoutPattern: false, rsiSignal: 'bearish', rsi: 35, priceAboveMA20: false, priceAboveMA60: false },
-    valuationRisk: { pe: 18, pbPercentile: 20, marketCap: 2000, dividendYield: 2.0 },
-    marketEnv: { marketTrend: 'sideways', systemicRisk: 'medium' },
-  },
-  {
-    symbol: '白酒',
-    sectorName: '白酒',
-    momentum: { sectorStrengthScore: 3.2, priceChangeRank: 5, volumeExpansion: 1.2, consecutiveInflow: 3, relativeStrength: 58 },
-    sentiment: { sentimentRank: 6, retailSentiment: 0.55, institutionBuyCount: 5, limitUpCount: 1 },
-    breakout: { hasBreakoutPattern: false, rsiSignal: 'neutral', rsi: 48, priceAboveMA20: true, priceAboveMA60: false },
-    valuationRisk: { pe: 32, pbPercentile: 50, marketCap: 3000, dividendYield: 1.5 },
-    marketEnv: { marketTrend: 'sideways', systemicRisk: 'medium' },
-  },
-]
-
 export interface HotSectorState {
   scores: HotSectorScore[]
   loading: boolean
@@ -139,7 +96,12 @@ export const useHotSectorStore = create<HotSectorState>((set, get) => ({
     set({ isRefreshing: true, loading: isFirstLoad, error: null })
 
     try {
-      const analysisInputs = inputs ?? HOT_SECTOR_DEFAULT_SAMPLES
+      if (!inputs || inputs.length === 0) {
+        logger.info('[hotSectorStore] 无输入数据，返回空结果（不 fallback 到 Mock 数据）')
+        set({ isRefreshing: false, loading: false, error: null })
+        return
+      }
+      const analysisInputs = inputs
       logger.info(`[hotSectorStore] 使用 ${analysisInputs.length} 个标的进行分析`)
 
       // 调用引擎进行批量分析

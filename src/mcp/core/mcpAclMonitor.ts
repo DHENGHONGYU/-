@@ -29,6 +29,7 @@
  */
 
 import { getLogger } from '@/lib/logger'
+import { safeRegex } from '@/lib/safeRegex'
 import { eventBus } from '@/lib/eventBus'
 import { mcpAclInterceptor } from './mcpAclInterceptor'
 import type { McpAclCheckResult } from './mcpAclInterceptor'
@@ -252,7 +253,7 @@ class McpAclMonitor {
           e.timestamp <= now &&
           e.eventType === rule.eventType &&
           (rule.callerPattern === '*' || rule.callerPattern === e.caller) &&
-          (rule.serverPattern === '*' || new RegExp(rule.serverPattern).test(e.serverName)),
+          (rule.serverPattern === '*' || safeRegex(rule.serverPattern).test(e.serverName)),
       ).length
 
       // 5. 未达阈值 → 跳过
@@ -285,7 +286,7 @@ class McpAclMonitor {
 
   private isServerMatch(rule: (typeof MCP_ACL_ALERT_RULES)[number], serverName: string): boolean {
     if (rule.serverPattern === '*') return true
-    return new RegExp(rule.serverPattern).test(serverName)
+    return safeRegex(rule.serverPattern).test(serverName)
   }
 
   /**

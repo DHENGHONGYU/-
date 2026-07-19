@@ -52,6 +52,10 @@ const INITIAL_MODEL_FILTERS: ModelFilters = {
   providers: [],
 }
 
+/**
+ * LlmConfigTab
+ * @param actions }
+ */
 export function LlmConfigTab({ state, actions }: LlmConfigTabProps): React.JSX.Element {
   const {
     config,

@@ -87,6 +87,7 @@ const EXPECTED_PATHS: Record<string, { path: string; label: string }[]> = {
     { path: '/input/data-test', label: '采集测试' },
     { path: '/input/local-knowledge', label: '本地知识库' },
     { path: '/input/collect-tasks', label: '采集任务监控' },
+    { path: '/input/pool-board', label: '股票池看板（候选池管理）' },
     { path: '/input/seven-dim', label: '七维采集策略配置' },
     { path: '/input/fetcher-config', label: '抓取引擎配置' },
   ],
@@ -103,9 +104,9 @@ const EXPECTED_PATHS: Record<string, { path: string; label: string }[]> = {
     { path: '/analysis/news', label: '智能资讯' },
     { path: '/analysis/hot-sector', label: '热门板块策略' },
     { path: '/analysis/value-pit', label: '价值洼地策略' },
-    { path: '/analysis/pool-board', label: '股票池看板' },
     { path: '/analysis/score-comparison', label: '历史评分比对看板' },
     { path: '/analysis/multi-factor', label: '多因子筛选' },
+    { path: '/analysis/industry-dashboard', label: '行业全景仪表盘' },
   ],
   trading: [
     { path: '/trading', label: '交易舱' },

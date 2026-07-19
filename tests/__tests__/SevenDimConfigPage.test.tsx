@@ -103,14 +103,14 @@ describe('SevenDimConfigPage - 策略模板卡片', () => {
     }
   })
 
-  it('value 模板显示 "当前" 徽章', () => {
+  it('full 模板显示 "当前" 徽章', () => {
     renderPage()
     expect(screen.getByText('当前')).toBeInTheDocument()
   })
 
   it('每个卡片显示维度数', () => {
     renderPage()
-    // value 和 defense 都有 4 个维度，用 getAllByText
+    // full 和 defense 都有不同数量的维度，用 getAllByText
     for (const template of STRATEGY_TEMPLATES) {
       const matches = screen.getAllByText(`${template.dimensions.length} 个维度`)
       expect(matches.length).toBeGreaterThanOrEqual(1)
@@ -136,19 +136,19 @@ describe('SevenDimConfigPage - 维度开关面板', () => {
     }
   })
 
-  it('渲染维度计数 Badge "4 / 8"', () => {
+  it('渲染维度计数 Badge "8 / 8"', () => {
     renderPage()
-    expect(screen.getByText('4 / 8')).toBeInTheDocument()
+    expect(screen.getByText('8 / 8')).toBeInTheDocument()
   })
 
-  it('渲染 "已启用 4 / 8 个维度" 描述', () => {
+  it('渲染 "已启用 8 / 8 个维度" 描述', () => {
     renderPage()
-    expect(screen.getByText(/已启用 4/)).toBeInTheDocument()
+    expect(screen.getByText(/已启用 8/)).toBeInTheDocument()
   })
 
   it('渲染重要性 Badge（核心/高/中/低）', () => {
     renderPage()
-    expect(screen.getByText(UI_TEXT.common.core)).toBeInTheDocument()
+    expect(screen.getAllByText(UI_TEXT.common.core).length).toBeGreaterThanOrEqual(1)
     expect(screen.getAllByText('高').length).toBeGreaterThanOrEqual(1)
     expect(screen.getAllByText('中').length).toBeGreaterThanOrEqual(1)
     expect(screen.getAllByText('低').length).toBeGreaterThanOrEqual(1)
@@ -185,10 +185,11 @@ describe('SevenDimConfigPage - 维度开关面板', () => {
 describe('SevenDimConfigPage - 模板切换交互', () => {
   it('点击 "全维度" 卡片切换到 full 模板', () => {
     renderPage()
-    // 初始 4/8
+    // 初始为 full（8/8），先切换到 value（4/8）
+    fireEvent.click(screen.getByText('价值投资'))
     expect(screen.getByText('4 / 8')).toBeInTheDocument()
 
-    // 点击全维度卡片
+    // 点击全维度卡片切换回 full
     fireEvent.click(screen.getByText(UI_TEXT.input.dashboard.allDimensions))
 
     // 切换后 8/8
@@ -232,7 +233,8 @@ describe('SevenDimConfigPage - 模板切换交互', () => {
 describe('SevenDimConfigPage - 维度开关交互', () => {
   it('点击维度 Switch 切换启用状态', () => {
     renderPage()
-    // 初始 4/8
+    // 先切换到 value 模板（4/8），否则 full 模板无从禁用
+    fireEvent.click(screen.getByText('价值投资'))
     expect(screen.getByText('4 / 8')).toBeInTheDocument()
 
     // 找到第一个 checkbox（维度 01 的 Switch）
@@ -246,15 +248,20 @@ describe('SevenDimConfigPage - 维度开关交互', () => {
 
   it('启用未启用维度后计数增加', () => {
     renderPage()
+    // 先切换到 value 模板，其中 05 默认未启用
+    fireEvent.click(screen.getByText('价值投资'))
     const switches = screen.getAllByRole('checkbox')
 
-    // 维度 05 默认未启用（value 模板），索引为 4
+    // 维度 05 在 value 模板下未启用，索引为 4
     fireEvent.click(switches[4]!)
     expect(screen.getByText('5 / 8')).toBeInTheDocument()
   })
 
   it('连续切换同一维度恢复原状', () => {
     renderPage()
+    // 先切换到 value 模板
+    fireEvent.click(screen.getByText('价值投资'))
+    expect(screen.getByText('4 / 8')).toBeInTheDocument()
     const switches = screen.getAllByRole('checkbox')
     fireEvent.click(switches[0]!)
     expect(screen.getByText('3 / 8')).toBeInTheDocument()
@@ -362,22 +369,21 @@ describe('SevenDimConfigPage - 操作按钮', () => {
 
   it('点击重置按钮恢复默认配置', () => {
     renderPage()
-    // 先切换模板
-    fireEvent.click(screen.getByText(UI_TEXT.input.dashboard.allDimensions))
-    expect(screen.getByText('8 / 8')).toBeInTheDocument()
+    // 先切换到 value 模板偏离默认
+    fireEvent.click(screen.getByText('价值投资'))
+    expect(screen.getByText('4 / 8')).toBeInTheDocument()
     // 点击重置
     fireEvent.click(screen.getByText('重置为默认'))
-    expect(screen.getByText('4 / 8')).toBeInTheDocument()
+    expect(screen.getByText('8 / 8')).toBeInTheDocument()
   })
 })
 
 describe('SevenDimConfigPage - 边界测试', () => {
   it('全部维度禁用时 "开始采集" 按钮禁用', () => {
     renderPage()
-    // 禁用全部 4 个启用维度
+    // 禁用全部 8 个维度（full 模板默认全部启用）
     const switches = screen.getAllByRole('checkbox')
-    // 禁用前 4 个（value 模板启用的 01/02/03/04）
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 8; i++) {
       fireEvent.click(switches[i]!)
     }
     expect(screen.getByText('0 / 8')).toBeInTheDocument()
@@ -426,10 +432,10 @@ describe('SevenDimConfigPage - 边界测试', () => {
     expect(screen.getByText(/配置保存中/)).toBeInTheDocument()
   })
 
-  it('isCollecting 时渲染不可交互提示', () => {
+  it('isCollecting 时渲染采集中状态', () => {
     useSevenDimConfigStore.setState({ isCollecting: true })
     renderPage()
-    expect(screen.getByText(/采集进行中/)).toBeInTheDocument()
+    expect(screen.getAllByText(/采集中/).length).toBeGreaterThanOrEqual(1)
   })
 })
 

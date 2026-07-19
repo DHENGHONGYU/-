@@ -1,78 +1,84 @@
 ---
-title: world_bank_open_data
+title: World Bank Open Data ²å¼ş
+type: reference
+domain: data
+phase: development
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "Êı¾İÓò: ÊÀ½çÒøĞĞ¿ª·ÅÊı¾İ£¨È«Çò·¢Õ¹Ö¸±ê£© Ô­Ê¼Â·¾¶:..."
+tags: [data-source, macro, reference, data]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: important
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/reference/world_bank_open_data.md
-code_version: 2.0.0
-tier: important
----
+# World Bank Open Data ²å¼ş
 
-# World Bank Open Data æ’ä»¶
-
-> **æ•°æ®åŸŸ**: ä¸–ç•Œé“¶è¡Œå¼€æ”¾æ•°æ®ï¼ˆå…¨çƒå‘å±•æŒ‡æ ‡ï¼‰  
-> **åŸå§‹è·¯å¾„**: [`plugins/world_bank_open_data/SKILL.md`](../../plugins/world_bank_open_data/SKILL.md)ï¼ˆæ‰å¹³åŒ–ï¼‰ / [`plugins/world_bank_open_data/skills/world_bank_open_data/SKILL.md`](../../plugins/world_bank_open_data/skills/world_bank_open_data/SKILL.md)ï¼ˆåµŒå¥—ï¼‰  
-> **åŒæ­¥æ—¥æœŸ**: 2025-07-12
+> **Êı¾İÓò**: ÊÀ½çÒøĞĞ¿ª·ÅÊı¾İ£¨È«Çò·¢Õ¹Ö¸±ê£©  
+> **Ô­Ê¼Â·¾¶**: [`plugins/world_bank_open_data/SKILL.md`](../../plugins/world_bank_open_data/SKILL.md)£¨±âÆ½»¯£© / [`plugins/world_bank_open_data/skills/world_bank_open_data/SKILL.md`](../../plugins/world_bank_open_data/skills/world_bank_open_data/SKILL.md)£¨Ç¶Ì×£©  
+> **Í¬²½ÈÕÆÚ**: 2025-07-12
 
 ---
 
-## ç®€ä»‹
+## ¼ò½é
 
-ä¸–ç•Œé“¶è¡Œå¼€æ”¾æ•°æ®æ˜¯ä¸€ä¸ªå…è´¹çš„å…¨çƒå‘å±•æ•°æ®å¹³å°ï¼Œè¦†ç›–ä¸–ç•Œå„å›½ï¼Œæä¾› 29,000+ æŒ‡æ ‡ï¼Œæ¶µç›–ç»æµã€ç¤¾ä¼šå’Œç¯å¢ƒæŒ‡æ ‡ï¼ŒåŒ…æ‹¬ GDPã€GNPã€äººå£ã€è´«å›°ã€å¤±ä¸šç‡ã€è´¸æ˜“ã€é€šèƒ€ã€æ•™è‚²ã€å¥åº·å’Œç¯å¢ƒç­‰æ—¶é—´åºåˆ—ï¼Œæ•°æ®ä» 1960 å¹´è‡³ä»Šã€‚
+ÊÀ½çÒøĞĞ¿ª·ÅÊı¾İÊÇÒ»¸öÃâ·ÑµÄÈ«Çò·¢Õ¹Êı¾İÆ½Ì¨£¬¸²¸ÇÊÀ½ç¸÷¹ú£¬Ìá¹© 29,000+ Ö¸±ê£¬º­¸Ç¾­¼Ã¡¢Éç»áºÍ»·¾³Ö¸±ê£¬°üÀ¨ GDP¡¢GNP¡¢ÈË¿Ú¡¢Æ¶À§¡¢Ê§ÒµÂÊ¡¢Ã³Ò×¡¢Í¨ÕÍ¡¢½ÌÓı¡¢½¡¿µºÍ»·¾³µÈÊ±¼äĞòÁĞ£¬Êı¾İ´Ó 1960 ÄêÖÁ½ñ¡£
 
-## ä½¿ç”¨åœºæ™¯
+## Ê¹ÓÃ³¡¾°
 
-- å›½å®¶å±‚é¢çš„ GDPã€GNPã€äººå£ã€è´«å›°ç‡ã€å¤±ä¸šç‡ã€è´¸æ˜“ã€é€šèƒ€ã€æ•™è‚²ã€å¥åº·å’Œç¯å¢ƒæ•°æ®æ—¶é—´åºåˆ—
-- è·¨å›½å‘å±•æŒ‡æ ‡æ¯”è¾ƒ
-- 1960 å¹´è‡³ä»Šçš„å¹´åº¦é•¿æœŸè¶‹åŠ¿åˆ†æï¼ˆæ•°æ®å¯å¾—æ—¶ï¼‰
-- éœ€è¦ä¸–ç•Œé“¶è¡ŒæŒ‡æ ‡å®šä¹‰å’Œå›½å®¶å±‚é¢è§‚å¯Ÿçš„ç»æµã€ç¤¾ä¼šå’Œç¯å¢ƒç ”ç©¶
+- ¹ú¼Ò²ãÃæµÄ GDP¡¢GNP¡¢ÈË¿Ú¡¢Æ¶À§ÂÊ¡¢Ê§ÒµÂÊ¡¢Ã³Ò×¡¢Í¨ÕÍ¡¢½ÌÓı¡¢½¡¿µºÍ»·¾³Êı¾İÊ±¼äĞòÁĞ
+- ¿ç¹ú·¢Õ¹Ö¸±ê±È½Ï
+- 1960 ÄêÖÁ½ñµÄÄê¶È³¤ÆÚÇ÷ÊÆ·ÖÎö£¨Êı¾İ¿ÉµÃÊ±£©
+- ĞèÒªÊÀ½çÒøĞĞÖ¸±ê¶¨ÒåºÍ¹ú¼Ò²ãÃæ¹Û²ìµÄ¾­¼Ã¡¢Éç»áºÍ»·¾³ÑĞ¾¿
 
-## ç¯å¢ƒå‡†å¤‡
+## »·¾³×¼±¸
 
 ```bash
-# æ£€æŸ¥å¹¶å®‰è£… agent-gw Python SDK
+# ¼ì²é²¢°²×° agent-gw Python SDK
 python3 -c "import agent_gw" || python3 -m pip install "$(curl -s https://cdn.kimi.com/agentgw/pysdk/manifest.json | python3 -c "import json,sys; print(json.load(sys.stdin)['latest']['url'])")"
 ```
 
-API Key æ¥æºï¼š
-1. å‘½ä»¤è¡Œå‚æ•° `api_key=...`
-2. ç¯å¢ƒå˜é‡ `KIMI_API_KEY`
-3. é…ç½®æ–‡ä»¶ `~/.kimi/agent-gw.json`
+API Key À´Ô´£º
+1. ÃüÁîĞĞ²ÎÊı `api_key=...`
+2. »·¾³±äÁ¿ `KIMI_API_KEY`
+3. ÅäÖÃÎÄ¼ş `~/.kimi/agent-gw.json`
 
-## å·¥ä½œæµ
+## ¹¤×÷Á÷
 
-1. è¿è¡Œ `python3 scripts/world_bank_open_data_tool.py describe` è·å–æ•°æ®æºæè¿°æ–‡æ¡£
-2. ä»”ç»†é˜…è¯»è¿”å›çš„ Markdownï¼Œäº†è§£æ•°æ®æºè§„åˆ™ã€å›½å®¶æ ¼å¼ã€æŒ‡æ ‡æ ¼å¼ã€æ—¥æœŸèŒƒå›´çº¦æŸåŠå„ API çš„å‚æ•°è¦æ±‚
-3. é€‰æ‹©æœ€åŒ¹é…ç”¨æˆ·é—®é¢˜çš„ API
-4. ä¸¥æ ¼æŒ‰ç…§ Markdown è¦æ±‚æ„å»º `params`ï¼Œæ³¨æ„å›½å®¶/åœ°åŒºã€æŒ‡æ ‡ä»£ç æˆ–åç§°ã€å¹´ä»½èŒƒå›´ã€å•ä½ã€æ¥æºã€é¢‘ç‡å’Œå›½å®¶å±‚é¢æ•°æ®çº¦æŸ
-5. ä½¿ç”¨ `python3 scripts/world_bank_open_data_tool.py call` è°ƒç”¨å…·ä½“ API
-6. è°ƒç”¨å¤±è´¥æ—¶ï¼Œä»å“åº”ä¸­è§£é‡Šå¤±è´¥åŸå› 
-7. è°ƒç”¨æˆåŠŸæ—¶ï¼Œå…ˆä¿å­˜è¿”å›çš„æ–‡ä»¶ï¼Œç„¶åä½¿ç”¨ `resp.result.assistant` å›ç­”ï¼›ä»…åœ¨éœ€è¦å±•ç¤ºå†…å®¹æ—¶å‚è€ƒ `resp.result.user`
+1. ÔËĞĞ `python3 scripts/world_bank_open_data_tool.py describe` »ñÈ¡Êı¾İÔ´ÃèÊöÎÄµµ
+2. ×ĞÏ¸ÔÄ¶Á·µ»ØµÄ Markdown£¬ÁË½âÊı¾İÔ´¹æÔò¡¢¹ú¼Ò¸ñÊ½¡¢Ö¸±ê¸ñÊ½¡¢ÈÕÆÚ·¶Î§Ô¼Êø¼°¸÷ API µÄ²ÎÊıÒªÇó
+3. Ñ¡Ôñ×îÆ¥ÅäÓÃ»§ÎÊÌâµÄ API
+4. ÑÏ¸ñ°´ÕÕ Markdown ÒªÇó¹¹½¨ `params`£¬×¢Òâ¹ú¼Ò/µØÇø¡¢Ö¸±ê´úÂë»òÃû³Æ¡¢Äê·İ·¶Î§¡¢µ¥Î»¡¢À´Ô´¡¢ÆµÂÊºÍ¹ú¼Ò²ãÃæÊı¾İÔ¼Êø
+5. Ê¹ÓÃ `python3 scripts/world_bank_open_data_tool.py call` µ÷ÓÃ¾ßÌå API
+6. µ÷ÓÃÊ§°ÜÊ±£¬´ÓÏìÓ¦ÖĞ½âÊÍÊ§°ÜÔ­Òò
+7. µ÷ÓÃ³É¹¦Ê±£¬ÏÈ±£´æ·µ»ØµÄÎÄ¼ş£¬È»ºóÊ¹ÓÃ `resp.result.assistant` »Ø´ğ£»½öÔÚĞèÒªÕ¹Ê¾ÄÚÈİÊ±²Î¿¼ `resp.result.user`
 
-## è„šæœ¬ä½¿ç”¨
+## ½Å±¾Ê¹ÓÃ
 
 ```bash
-# æŸ¥çœ‹æ•°æ®èƒ½åŠ›
+# ²é¿´Êı¾İÄÜÁ¦
 cd plugins/world_bank_open_data
 python3 scripts/world_bank_open_data_tool.py describe
 
-# è°ƒç”¨å…·ä½“ API
+# µ÷ÓÃ¾ßÌå API
 python3 scripts/world_bank_open_data_tool.py call \
   --api-name "<api name from markdown>" \
   --params-json '{"required_param":"value"}'
 ```
 
-å‚æ•°è¾ƒå¤šæ—¶ï¼Œå¯å†™å…¥ JSON æ–‡ä»¶ï¼š
+²ÎÊı½Ï¶àÊ±£¬¿ÉĞ´Èë JSON ÎÄ¼ş£º
 ```bash
 python3 scripts/world_bank_open_data_tool.py call \
   --api-name "<api name>" \
   --params-file path/to/params.json
 ```
 
-## å“åº”æ ¼å¼
+## ÏìÓ¦¸ñÊ½
 
 ```python
 {
@@ -83,9 +89,9 @@ python3 scripts/world_bank_open_data_tool.py call \
 }
 ```
 
-- æˆåŠŸæ—¶ï¼Œä¼˜å…ˆä½¿ç”¨ `result.assistant` å†…å®¹
-- æœ‰æ–‡ä»¶è¿”å›æ—¶ï¼ŒæŒ‰ `files[].name` ä¿å­˜æ–‡ä»¶
+- ³É¹¦Ê±£¬ÓÅÏÈÊ¹ÓÃ `result.assistant` ÄÚÈİ
+- ÓĞÎÄ¼ş·µ»ØÊ±£¬°´ `files[].name` ±£´æÎÄ¼ş
 
 ---
 
-*æœ¬æ–‡æ¡£ä¸ [`plugins/world_bank_open_data/SKILL.md`](../../plugins/world_bank_open_data/SKILL.md) åŒæ­¥ï¼Œæ›´æ–°æ—¶è¯·åŒæ—¶ä¿®æ”¹ä¸¤è€…ã€‚*
+*±¾ÎÄµµÓë [`plugins/world_bank_open_data/SKILL.md`](../../plugins/world_bank_open_data/SKILL.md) Í¬²½£¬¸üĞÂÊ±ÇëÍ¬Ê±ĞŞ¸ÄÁ½Õß¡£*

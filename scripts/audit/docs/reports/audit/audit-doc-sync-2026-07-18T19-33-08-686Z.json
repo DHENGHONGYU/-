@@ -1,0 +1,27 @@
+{
+  "violations": [
+    {
+      "file": "src/core/stockCodeUtils.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现"
+    },
+    {
+      "file": "src/store/registrationContractStore.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、data-definition.md、architecture.md、CHANGELOG.md）中体现"
+    }
+  ],
+  "summary": {
+    "totalFiles": 820,
+    "totalViolations": 2,
+    "scanMode": "all",
+    "docFilesCount": 807
+  },
+  "meta": {
+    "scriptName": "audit-doc-sync",
+    "version": "3.0",
+    "timestamp": "2026-07-18T19:33:08.684Z",
+    "durationMs": 59944,
+    "rootDir": "G:\\FinSightV9\\scripts\\audit"
+  }
+}

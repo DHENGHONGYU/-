@@ -98,6 +98,9 @@ function computeDateRange(preset: SearchState['datePreset']): SearchCriteria['da
   }
 }
 
+/**
+ * useSearchStore
+ */
 export const useSearchStore = create<SearchState>((set, get) => ({
   ...initialState,
 

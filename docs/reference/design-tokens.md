@@ -1,56 +1,56 @@
 ---
-title: design-tokens
-tier: important
+title: Design Tokens 系统使用指南
+type: reference
+domain: frontend
+phase: design
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "## 概述 V9 智能投研复盘系统采用统一�?Design Tokens..."
+tags: [frontend, token, design, system]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
----
-
----
-tier: important
-code_version: 2.0.0
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
 # Design Tokens 系统使用指南
 
 ## 概述
 
-V9 智能投研复盘系统采用统一的 Design Tokens 架构，确保颜色、间距、字体等视觉元素的一致性和可维护性。系统支持 light/dark 主题切换，所有令牌通过 JSON 规范文件生成。
-
+V9 智能投研复盘系统采用统一�?Design Tokens 架构，确保颜色、间距、字体等视觉元素的一致性和可维护性。系统支�?light/dark 主题切换，所有令牌通过 JSON 规范文件生成�?
 ## 架构层次
 
 ```
-design-tokens/tokens.json (单一数据源)
-    ↓
-scripts/generate-tokens.ts (生成器)
-    ↓
-src/generated/tokens.css (CSS 变量)
+design-tokens/tokens.json (单一数据�?
+    �?scripts/generate-tokens.ts (生成�?
+    �?src/generated/tokens.css (CSS 变量)
 src/generated/tokens.ts (TypeScript 常量)
-    ↓
-src/constants/theme.tokens.ts (语义化令牌)
-    ↓
-组件层 (消费令牌)
+    �?src/constants/theme.tokens.ts (语义化令�?
+    �?组件�?(消费令牌)
 ```
 
-## 快速开始
-
+## 快速开�?
 ### 1. 在组件中使用颜色令牌
 
 ```tsx
 import { COLOR_TOKENS, COLOR_SHADES, twText, twBg } from '@/constants/theme.tokens'
 
-// ✅ 正确：使用语义化令牌
+// �?正确：使用语义化令牌
 <span className={COLOR_TOKENS.up.tailwind}>上涨</span>
 <div className={COLOR_TOKENS.bgCard.bgClass}>卡片背景</div>
 <span style={{ color: COLOR_TOKENS.danger.hex }}>危险</span>
 
-// ✅ 正确：使用色阶令牌
-<div className={COLOR_SHADES.red[50]}>浅红背景</div>
+// �?正确：使用色阶令�?<div className={COLOR_SHADES.red[50]}>浅红背景</div>
 <span className={COLOR_SHADES.blue[600]}>深蓝文字</span>
 
-// ✅ 正确：使用辅助函数
-<span className={twText('red', 600)}>深红文字</span>
+// �?正确：使用辅助函�?<span className={twText('red', 600)}>深红文字</span>
 <div className={twBg('blue', 50)}>浅蓝背景</div>
 
-// ❌ 错误：硬编码颜色
+// �?错误：硬编码颜色
 <span className="text-red-500">上涨</span>
 <div style={{ color: '#ef4444' }}>危险</div>
 ```
@@ -67,7 +67,7 @@ function MyComponent() {
     <div>
       <p>当前主题: {resolvedMode}</p>
       <button onClick={toggleTheme}>切换 light/dark</button>
-      <button onClick={cycleMode}>循环 light → dark → system</button>
+      <button onClick={cycleMode}>循环 light �?dark �?system</button>
       <button onClick={() => setMode('light')}>亮色模式</button>
       <button onClick={() => setMode('dark')}>暗色模式</button>
       <button onClick={() => setMode('system')}>跟随系统</button>
@@ -94,8 +94,7 @@ import { SPACING_TOKENS } from '@/constants/theme.tokens'
 
 ### 1. 颜色令牌 (COLOR_TOKENS)
 
-#### 股票涨跌色
-```tsx
+#### 股票涨跌�?```tsx
 COLOR_TOKENS.up       // 上涨 - 红色 (#ef4444)
 COLOR_TOKENS.down     // 下跌 - 绿色 (#22c55e)
 COLOR_TOKENS.neutral  // 平盘 - 灰色 (#9ca3af)
@@ -109,59 +108,51 @@ COLOR_TOKENS.warning  // 警告 - 琥珀 (#f59e0b)
 COLOR_TOKENS.danger   // 危险 - 红色 (#ef4444)
 ```
 
-#### 评分等级色
-```tsx
+#### 评分等级�?```tsx
 COLOR_TOKENS.scoreHigh  // 高分 - 绿色
 COLOR_TOKENS.scoreMid   // 中分 - 琥珀
 COLOR_TOKENS.scoreLow   // 低分 - 红色
 ```
 
-#### 轮动因子色
-```tsx
+#### 轮动因子�?```tsx
 COLOR_TOKENS.factorJingqi     // 景气因子 - 红色
 COLOR_TOKENS.factorZijin      // 资金因子 - 琥珀
-COLOR_TOKENS.factorGuzhi      // 估值因子 - 蓝色
+COLOR_TOKENS.factorGuzhi      // 估值因�?- 蓝色
 COLOR_TOKENS.factorBeta       // β因子 - 紫色
 COLOR_TOKENS.factorNengliang  // 量能因子 - 青色
 ```
 
-#### 信号分级色
-```tsx
-COLOR_TOKENS.signalStrong         // 强信号 - 翠绿
+#### 信号分级�?```tsx
+COLOR_TOKENS.signalStrong         // 强信�?- 翠绿
 COLOR_TOKENS.signalMediumStrong   // 中强信号 - 绿色
-COLOR_TOKENS.signalMedium         // 中信号 - 蓝色
-COLOR_TOKENS.signalWeak           // 弱信号 - 琥珀
-COLOR_TOKENS.signalNone           // 无信号 - 灰色
+COLOR_TOKENS.signalMedium         // 中信�?- 蓝色
+COLOR_TOKENS.signalWeak           // 弱信�?- 琥珀
+COLOR_TOKENS.signalNone           // 无信�?- 灰色
 ```
 
-#### 背景色
-```tsx
+#### 背景�?```tsx
 COLOR_TOKENS.bgCard     // 卡片背景 - 白色
 COLOR_TOKENS.bgHover    // 悬停背景 - 浅灰
 COLOR_TOKENS.bgMuted    // 次要背景 - 灰色
-COLOR_TOKENS.bgEmerald50  // 浅翠绿背景
-COLOR_TOKENS.bgGreen50    // 浅绿背景
+COLOR_TOKENS.bgEmerald50  // 浅翠绿背�?COLOR_TOKENS.bgGreen50    // 浅绿背景
 COLOR_TOKENS.bgBlue50     // 浅蓝背景
 COLOR_TOKENS.bgAmber50    // 浅琥珀背景
 ```
 
-#### 文字色
-```tsx
+#### 文字�?```tsx
 COLOR_TOKENS.textPrimary    // 主要文字 - 深色
 COLOR_TOKENS.textSecondary  // 次要文字 - 中灰
 COLOR_TOKENS.textMuted      // 弱化文字 - 浅灰
 ```
 
-#### 边框色
-```tsx
+#### 边框�?```tsx
 COLOR_TOKENS.border       // 默认边框
 COLOR_TOKENS.borderHover  // 悬停边框
 ```
 
 ### 2. 色阶令牌 (COLOR_SHADES)
 
-用于需要特定色阶的场景：
-
+用于需要特定色阶的场景�?
 ```tsx
 // 红色色阶
 COLOR_SHADES.red[50]   // bg-red-50
@@ -176,8 +167,7 @@ COLOR_SHADES.red['200Dark']      // dark:text-red-200
 COLOR_SHADES.red['900DarkBg']    // dark:bg-red-950
 COLOR_SHADES.red['900DarkBorder'] // dark:border-red-900
 
-// HEX 值
-COLOR_SHADES.red.hex[500]  // #ef4444
+// HEX �?COLOR_SHADES.red.hex[500]  // #ef4444
 ```
 
 ### 3. 间距令牌 (SPACING_TOKENS)
@@ -192,15 +182,12 @@ SPACING_TOKENS.xl    // 24px
 SPACING_TOKENS.xxl   // 32px
 SPACING_TOKENS.xxxl  // 48px
 
-// 语义化间距
-SPACING_TOKENS.sectionGap        // 24px - 区块间距
-SPACING_TOKENS.cardPadding       // 16px - 卡片内边距
-SPACING_TOKENS.componentGap      // 12px - 组件间距
+// 语义化间�?SPACING_TOKENS.sectionGap        // 24px - 区块间距
+SPACING_TOKENS.cardPadding       // 16px - 卡片内边�?SPACING_TOKENS.componentGap      // 12px - 组件间距
 SPACING_TOKENS.textGap           // 8px - 文本间距
 SPACING_TOKENS.iconGap           // 8px - 图标间距
 SPACING_TOKENS.inputPadding      // 8px 12px - 输入框内边距
-SPACING_TOKENS.pagePadding       // 24px - 页面内边距
-SPACING_TOKENS.widgetGap         // 16px - Widget 间距
+SPACING_TOKENS.pagePadding       // 24px - 页面内边�?SPACING_TOKENS.widgetGap         // 16px - Widget 间距
 SPACING_TOKENS.tableCellPadding  // 8px 12px - 表格单元格内边距
 ```
 
@@ -256,8 +243,7 @@ THEME_TOKENS.stackGap.md   // space-y-3
 THEME_TOKENS.stackGap.lg   // space-y-4
 THEME_TOKENS.stackGap.xl   // space-y-6
 
-// 评分阈值
-THEME_TOKENS.score.excellent  // 4
+// 评分阈�?THEME_TOKENS.score.excellent  // 4
 THEME_TOKENS.score.good       // 3
 THEME_TOKENS.score.ok         // 2
 
@@ -272,23 +258,11 @@ THEME_TOKENS.focusVisible.ringOffset  // ring-offset-2
 ```tsx
 import { CHART_PALETTE } from '@/constants/theme.tokens'
 
-// 系列色
-CHART_PALETTE.series1  // #3b82f6 - 蓝
-CHART_PALETTE.series2  // #10b981 - 翠绿
+// 系列�?CHART_PALETTE.series1  // #3b82f6 - �?CHART_PALETTE.series2  // #10b981 - 翠绿
 CHART_PALETTE.series3  // #f59e0b - 琥珀
-CHART_PALETTE.series4  // #ef4444 - 红
-CHART_PALETTE.series5  // #8b5cf6 - 紫
-CHART_PALETTE.series6  // #06b6d4 - 青
-
+CHART_PALETTE.series4  // #ef4444 - �?CHART_PALETTE.series5  // #8b5cf6 - �?CHART_PALETTE.series6  // #06b6d4 - �?
 // 辅助元素
-CHART_PALETTE.grid         // #e5e7eb - 网格线
-CHART_PALETTE.axis         // #6b7280 - 坐标轴文字
-CHART_PALETTE.tooltipBg    // #1f2937 - 提示框背景
-CHART_PALETTE.tooltipText  // #ffffff - 提示框文字
-CHART_PALETTE.upColor      // #10b981 - 涨跌色-涨
-CHART_PALETTE.downColor    // #ef4444 - 涨跌色-跌
-CHART_PALETTE.accent       // #0ea5e9 - 强调色
-```
+CHART_PALETTE.grid         // #e5e7eb - 网格�?CHART_PALETTE.axis         // #6b7280 - 坐标轴文�?CHART_PALETTE.tooltipBg    // #1f2937 - 提示框背�?CHART_PALETTE.tooltipText  // #ffffff - 提示框文�?CHART_PALETTE.upColor      // #10b981 - 涨跌�?�?CHART_PALETTE.downColor    // #ef4444 - 涨跌�?�?CHART_PALETTE.accent       // #0ea5e9 - 强调�?```
 
 ### 6. 业务配色 (chartColors.ts)
 
@@ -308,23 +282,18 @@ import {
   SENTIMENT_TREND_COLORS
 } from '@/config/chartColors'
 
-// 饼图调色板
-<RechartsPie data={data} colors={PIE_CHART_PALETTE} />
+// 饼图调色�?<RechartsPie data={data} colors={PIE_CHART_PALETTE} />
 
-// 轮动因子色
-<LineChart lineColor={ROTATION_FACTOR_COLORS.JINGQI} />
+// 轮动因子�?<LineChart lineColor={ROTATION_FACTOR_COLORS.JINGQI} />
 
-// 市场风格色
-<div style={{ color: MARKET_STYLE_COLORS.GROWTH }}>成长期</div>
+// 市场风格�?<div style={{ color: MARKET_STYLE_COLORS.GROWTH }}>成长�?/div>
 
-// 信号分级色
-<Badge style={{ backgroundColor: SIGNAL_GRADE_COLORS.STRONG }}>强信号</Badge>
+// 信号分级�?<Badge style={{ backgroundColor: SIGNAL_GRADE_COLORS.STRONG }}>强信�?/Badge>
 ```
 
 ## 暗色模式支持
 
-### 使用 DARK 辅助类
-
+### 使用 DARK 辅助�?
 ```tsx
 import { DARK, HOVER, GRADIENT } from '@/constants/theme.tokens'
 
@@ -355,16 +324,14 @@ import { DARK, HOVER, GRADIENT } from '@/constants/theme.tokens'
 
 ## 生成令牌
 
-### 运行生成器
-
+### 运行生成�?
 ```bash
 npm run generate:tokens
 ```
 
 ### 生成输出
 
-- `src/generated/tokens.css` - CSS 变量（自动应用到 `:root`）
-- `src/generated/tokens.ts` - TypeScript 常量
+- `src/generated/tokens.css` - CSS 变量（自动应用到 `:root`�?- `src/generated/tokens.ts` - TypeScript 常量
 
 ### 修改令牌
 
@@ -376,7 +343,7 @@ npm run generate:tokens
 
 ### ESLint 规则
 
-系统已配置 ESLint 规则防止硬编码颜色值：
+系统已配�?ESLint 规则防止硬编码颜色值：
 
 ```bash
 npm run lint
@@ -385,8 +352,7 @@ npm run lint
 ### 审计脚本
 
 ```bash
-npm run audit:hardcode  # 扫描颜色硬编码违规
-```
+npm run audit:hardcode  # 扫描颜色硬编码违�?```
 
 ### 豁免清单
 
@@ -397,11 +363,10 @@ npm run audit:hardcode  # 扫描颜色硬编码违规
 - `src/theme.config.ts` - 主题配置文件
 - `tests/` 目录 - 测试文件
 
-## 最佳实践
+## 最佳实�?
+### �?推荐做法
 
-### ✅ 推荐做法
-
-1. **使用语义化令牌**
+1. **使用语义化令�?*
    ```tsx
    <span className={COLOR_TOKENS.up.tailwind}>上涨</span>
    ```
@@ -421,82 +386,70 @@ npm run audit:hardcode  # 扫描颜色硬编码违规
    <PieChart colors={PIE_CHART_PALETTE} />
    ```
 
-5. **暗色模式使用 DARK 辅助类**
+5. **暗色模式使用 DARK 辅助�?*
    ```tsx
    <div className={DARK.bgSlate800}>暗色背景</div>
    ```
 
-### ❌ 禁止做法
+### �?禁止做法
 
-1. **硬编码 HEX 值**
+1. **硬编�?HEX �?*
    ```tsx
-   // ❌ 错误
+   // �?错误
    <div style={{ color: '#ef4444' }}>危险</div>
    ```
 
-2. **硬编码 Tailwind 颜色类**
+2. **硬编�?Tailwind 颜色�?*
    ```tsx
-   // ❌ 错误
+   // �?错误
    <span className="text-red-500">上涨</span>
    ```
 
 3. **内联 RGB/HSL**
    ```tsx
-   // ❌ 错误
+   // �?错误
    <div style={{ color: 'rgb(239, 68, 68)' }}>危险</div>
    ```
 
 ## 常见问题
 
-### Q: 如何添加新的颜色令牌？
-
-A: 按照以下决策树选择放置位置：
-
+### Q: 如何添加新的颜色令牌�?
+A: 按照以下决策树选择放置位置�?
 ```
-需要新颜色？
-├── 通用语义色（info/warning/success 级别）？
-│   └── → 添加到 THEME_TOKENS.color + COLOR_TOKENS
+需要新颜色�?├── 通用语义色（info/warning/success 级别）？
+�?  └── �?添加�?THEME_TOKENS.color + COLOR_TOKENS
 ├── 业务语义色（涨跌/评分/信号/因子）？
-│   └── → 添加到 COLOR_TOKENS 对应分区
-├── 图表专用色（饼图/热力图/轮动图）？
-│   └── → 添加到 src/config/chartColors.ts
-├── 需要特定色阶（如 red-50、red-600）？
-│   └── → 添加到 COLOR_SHADES 对应色系
+�?  └── �?添加�?COLOR_TOKENS 对应分区
+├── 图表专用色（饼图/热力�?轮动图）�?�?  └── �?添加�?src/config/chartColors.ts
+├── 需要特定色阶（�?red-50、red-600）？
+�?  └── �?添加�?COLOR_SHADES 对应色系
 └── 定制色（非标准色）？
-    └── → 添加到 chartColors.ts 并注释说明
-```
+    └── �?添加�?chartColors.ts 并注释说�?```
 
-### Q: 如何在组件中切换主题？
-
-A: 使用 `useThemeStore`：
-
+### Q: 如何在组件中切换主题�?
+A: 使用 `useThemeStore`�?
 ```tsx
 import { useThemeStore } from '@/store/themeStore'
 
 const { setMode, toggleTheme, cycleMode } = useThemeStore()
-setMode('dark')      // 切换到暗色模式
-toggleTheme()        // 在 light/dark 之间切换
-cycleMode()          // 按 light → dark → system 循环
+setMode('dark')      // 切换到暗色模�?toggleTheme()        // �?light/dark 之间切换
+cycleMode()          // �?light �?dark �?system 循环
 ```
 
-### Q: 生成的 CSS 变量如何使用？
-
+### Q: 生成�?CSS 变量如何使用�?
 A: CSS 变量已自动应用到 `:root`，可以直接使用：
 
 ```tsx
 <div style={{ color: 'var(--color-base-red-500)' }}>红色文字</div>
 ```
 
-### Q: 如何测试暗色模式？
-
-A: 在浏览器开发者工具中：
-
-1. 打开开发者工具 (F12)
-2. 切换到 Console 标签
+### Q: 如何测试暗色模式�?
+A: 在浏览器开发者工具中�?
+1. 打开开发者工�?(F12)
+2. 切换�?Console 标签
 3. 运行：`document.documentElement.setAttribute('data-theme', 'dark')`
 
-或使用主题切换按钮测试。
-
+或使用主题切换按钮测试�?
 ## 相关文档
 
 - [Design Tokens 规范](https://design-tokens.github.io/community-group/format/)
@@ -505,8 +458,7 @@ A: 在浏览器开发者工具中：
 
 ### 7. 门户布局令牌 (PORTAL_TOKENS)
 
-`PORTAL_TOKENS` 是 L6 设计系统层的扩展，专为 `PortalShell` 提供布局、导航、舱室切换、移动端导航、状态指示等样式令牌，消除组件层硬编码颜色类。
-
+`PORTAL_TOKENS` �?L6 设计系统层的扩展，专�?`PortalShell` 提供布局、导航、舱室切换、移动端导航、状态指示等样式令牌，消除组件层硬编码颜色类�?
 ```tsx
 import { PORTAL_TOKENS } from '@/constants/theme.tokens'
 
@@ -518,23 +470,19 @@ layout.headerBg    // bg-background/90 backdrop-blur-md
 layout.sidebarBg   // bg-muted/70
 layout.mainBg      // bg-card
 
-// 舱室切换器
-cabin.active       // bg-card text-foreground shadow-sm
+// 舱室切换�?cabin.active       // bg-card text-foreground shadow-sm
 cabin.inactive     // text-muted-foreground hover:text-foreground hover:bg-muted/80
 
-// 侧边栏导航
-nav.active         // bg-card text-foreground shadow-sm
+// 侧边栏导�?nav.active         // bg-card text-foreground shadow-sm
 nav.activeIndicator // before:bg-primary
 nav.inactive       // text-muted-foreground hover:bg-muted hover:text-foreground
 
-// 移动端
-mobile.hamburger        // text-muted-foreground hover:bg-muted
+// 移动�?mobile.hamburger        // text-muted-foreground hover:bg-muted
 mobile.bottomNavBg      // bg-background/95 backdrop-blur-md border-t border-border
 mobile.bottomNavActive  // text-primary
 mobile.bottomNavInactive // text-muted-foreground
 
-// 状态指示
-status.checking     // bg-amber-400/80 ring-1 ring-amber-400/40 animate-pulse
+// 状态指�?status.checking     // bg-amber-400/80 ring-1 ring-amber-400/40 animate-pulse
 status.connected    // bg-emerald-500/80 ring-1 ring-emerald-500/40
 status.disconnected // bg-destructive/80 ring-1 ring-destructive/40
 
@@ -548,8 +496,7 @@ brand.logoShadow   // shadow-primary/20
 
 ### 使用 themeStore
 
-V9 使用基于 Zustand 的 `themeStore` 管理主题模式（`light` / `dark` / `system`），并持久化到 `localStorage`。
-
+V9 使用基于 Zustand �?`themeStore` 管理主题模式（`light` / `dark` / `system`），并持久化�?`localStorage`�?
 ```tsx
 import { useThemeStore } from '@/store/themeStore'
 
@@ -558,28 +505,22 @@ function MyComponent() {
 
   return (
     <div>
-      <p>当前模式: {mode}（实际: {resolvedMode}）</p>
+      <p>当前模式: {mode}（实�? {resolvedMode}�?/p>
       <button onClick={toggleTheme}>切换 light/dark</button>
-      <button onClick={cycleMode}>循环 light → dark → system</button>
+      <button onClick={cycleMode}>循环 light �?dark �?system</button>
       <button onClick={() => setMode('system')}>跟随系统</button>
     </div>
   )
 }
 ```
 
-- `mode`: 用户选择的模式（`light` | `dark` | `system`）
-- `resolvedMode`: 解析后的实际主题（`light` | `dark`）
-- `setMode(mode)`: 设置指定模式
-- `toggleTheme()`: 在 `light` / `dark` 之间切换
-- `cycleMode()`: 按 `light → dark → system → light` 循环
+- `mode`: 用户选择的模式（`light` | `dark` | `system`�?- `resolvedMode`: 解析后的实际主题（`light` | `dark`�?- `setMode(mode)`: 设置指定模式
+- `toggleTheme()`: �?`light` / `dark` 之间切换
+- `cycleMode()`: �?`light �?dark �?system �?light` 循环
 
-主题状态会在应用启动时从 `localStorage` 恢复，并在 `system` 模式下自动响应系统主题变化。
-
-### 与 ThemeProvider 的关系
-
-`themeStore` 已取代 `src/core/ThemeProvider.tsx` 成为主题唯一真相源。`ThemeProvider` 已退役并从 `App.tsx` 中移除，新代码应统一使用 `useThemeStore`。
-
+主题状态会在应用启动时�?`localStorage` 恢复，并�?`system` 模式下自动响应系统主题变化�?
+### �?ThemeProvider 的关�?
+`themeStore` 已取�?`src/core/ThemeProvider.tsx` 成为主题唯一真相源。`ThemeProvider` 已退役并�?`App.tsx` 中移除，新代码应统一使用 `useThemeStore`�?
 ## 更新日志
 
-- **2026-07-15**: 新增 `PORTAL_TOKENS`（L6 门户布局令牌扩展）；新增 `themeStore` 统一管理 light/dark/system 主题切换；`PortalShell.tsx` 全面改用 PORTAL_TOKENS 并集成 themeStore。
-- **2026-07-05**: 初始版本，建立 Design Tokens 系统和主题切换机制
+- **2026-07-15**: 新增 `PORTAL_TOKENS`（L6 门户布局令牌扩展）；新增 `themeStore` 统一管理 light/dark/system 主题切换；`PortalShell.tsx` 全面改用 PORTAL_TOKENS 并集�?themeStore�?- **2026-07-05**: 初始版本，建�?Design Tokens 系统和主题切换机�?

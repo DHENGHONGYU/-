@@ -91,8 +91,8 @@ export type MissingReportSeverity = (typeof MISSING_REPORT_SEVERITY)[keyof typeo
 /** 缺失报告默认重试上限 */
 export const DEFAULT_MAX_RETRY_COUNT = 3
 
-/** 缺失报告默认启用状态（初始关闭，由用户在 ConfigApp 中启用） */
-export const DEFAULT_MISSING_REPORT_ENABLED = false
+/** 缺失报告默认启用状态（采集质量基线，默认开启以自动检测数据缺失） */
+export const DEFAULT_MISSING_REPORT_ENABLED = true
 
 // ============================================================
 // 投资组合配置

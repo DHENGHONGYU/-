@@ -11,24 +11,30 @@
  * - databridgeHandlers.ts: EnvelopeHandler 类族 + HandlerRegistry + createHandlerRegistry
  * - databridgeStrategyRouter.ts: STRATEGY_CHANNEL + routeToStrategy 策略路由逻辑
  *
- * @todo P1-16: 拆分计划（当前 957 行 CC=100，audit:split-quality 建议拆分）
- *   Phase 1: 提取 routeToQuery/Event/Manager 到独立类（~200 行）
+ * @todo P1-4: 拆分计划（当前 843 行 CC=86，audit:split-quality 建议拆分）
+ *   Phase 1 (done): 提取 ACL 方法到 databridgeAcl.ts（assertQueryAcl 等，CC 100→86）
  *   Phase 2: 提取 broadcast/subscribe/auditLog 到独立类（~150 行）
  *   Phase 3: 提取 cache 逻辑到独立类（~100 行）
  *   目标：主文件 < 400 行，CC < 30
  */
 
-import { ENVELOPE_ACTION, ENVELOPE_TARGET, STORE_NAME, type DbOperation, type ModuleId, type StoreName } from '@/config/dbConfig'
+import { ENVELOPE_ACTION, ENVELOPE_TARGET, STORE_NAME, type ModuleId, type StoreName } from '@/config/dbConfig'
 import { db } from '@/data/db'
 import { CHANGED_SUFFIX } from '@/constants/store-channels.constants'
 import { eventBus } from '@/lib/eventBus'
 import { getLogger } from '@/lib/logger'
-import { aclEngine, inferOperation } from './acl'
+import { inferOperation } from './acl'
 import { EnvelopeError, EnvelopeFactory, type StandardEnvelope } from './envelope'
 import { fallbackQueue, FallbackQueue } from './fallbackQueue'
 import { MemoryCache } from './memoryCache'
 import { createHandlerRegistry, type HandlerRegistry } from './databridgeHandlers'
 import { nanoid } from 'nanoid'
+import {
+  assertQueryAcl,
+  assertQueryGetKey,
+  assertQueryByIndexKey,
+  assertAclWithFallback,
+} from './databridgeAcl'
 import {
   routeToStrategy,
   type StrategyRouterContext,
@@ -253,7 +259,7 @@ export class DataBridge {
       logger.info(`[DataBridge] query() cache MISS: key="${cacheKey}", proceeding to database query`)
 
       // 3. ACL 校验
-      this.assertQueryAcl(source, request.store)
+      assertQueryAcl(source, request.store)
 
       // 4. 执行数据库操作
       logger.debug(`[DataBridge] query() executing database operation: action="${request.action}", store="${request.store}"`)
@@ -305,27 +311,12 @@ export class DataBridge {
   }
 
   /**
-   * 执行 query 的 ACL 校验，校验失败抛出原错误（query 内部抽出，降低主函数嵌套深度）
-   */
-  private assertQueryAcl(source: ModuleId, store: StoreName): void {
-    try {
-      logger.debug(`[DataBridge] query() ACL check starting: module="${source}", store="${store}", operation="SELECT"`)
-      aclEngine.assert({ module: source, store, operation: 'SELECT' })
-      logger.info(`[DataBridge] query() ACL check PASSED: module="${source}", store="${store}", operation="SELECT"`)
-    } catch (aclErr) {
-      const aclErrorMessage = aclErr instanceof Error ? aclErr.message : String(aclErr)
-      logger.error(`[DataBridge] query() ACL check FAILED: module="${source}", store="${store}", operation="SELECT", reason="${aclErrorMessage}"`)
-      throw aclErr
-    }
-  }
-
-  /**
    * 根据 action 执行具体数据库读取操作（query 内部抽出，降低主函数嵌套深度）
    */
   private async executeQueryAction<T>(request: QueryRequest): Promise<T> {
     switch (request.action) {
       case ENVELOPE_ACTION.queryGet: {
-        this.assertQueryGetKey(request)
+        assertQueryGetKey(request)
         logger.debug(`[DataBridge] query() executing db.get: store="${request.store}", key="${request.key}"`)
         const getResult = await db.get(request.store, request.key!) as T
         logger.debug(`[DataBridge] query() db.get completed: found=${getResult != null}`)
@@ -339,7 +330,7 @@ export class DataBridge {
         return listResult
       }
       case ENVELOPE_ACTION.queryByIndex: {
-        this.assertQueryByIndexKey(request)
+        assertQueryByIndexKey(request)
         const indexValueStr = typeof request.indexValue === 'string' ? request.indexValue : JSON.stringify(request.indexValue)
         logger.debug(`[DataBridge] query() executing db.getAllByIndex: store="${request.store}", indexName="${request.indexName}", indexValue="${indexValueStr}"`)
         const indexResult = await db.getAllByIndex(request.store, request.indexName!, request.indexValue as string) as T
@@ -355,30 +346,21 @@ export class DataBridge {
     }
   }
 
-  private assertQueryGetKey(request: QueryRequest): void {
-    if (request.key != null) return
-    logger.error(`[DataBridge] query() parameter validation failed: queryGet requires key parameter`)
-    throw new EnvelopeError('queryGet requires key parameter')
-  }
 
-  private assertQueryByIndexKey(request: QueryRequest): void {
-    if (request.indexName != null && request.indexValue !== undefined) return
-    logger.error(`[DataBridge] query() parameter validation failed: queryByIndex requires indexName and indexValue parameters`)
-    throw new EnvelopeError('queryByIndex requires indexName and indexValue parameters')
-  }
 
   /**
-   * 清除指定 store 的缓存
-   * 在写操作后调用，保证数据一致性
+   * 清除指定 store 的缓存（按 store 名精确匹配，不再全量清空）。
+   * 在写操作后调用，保证数据一致性。
+   *
+   * 缓存 Key 格式: `{action}:{store}[:key=...][:idx=...][:val=...]`
+   * 匹配规则: 包含 `:{store}:`（store 作为中间段）或以 `:{store}` 结尾
    */
   invalidateCache(store: StoreName): void {
     const statsBefore = this.readCache.getStats()
     logger.info(`[DataBridge] invalidateCache() called: store="${store}", cacheSizeBefore=${statsBefore.size}, hitCount=${statsBefore.hitCount}, missCount=${statsBefore.missCount}`)
-    // MemoryCache 不支持批量删除，只能 clear 全部
-    // 后续可优化为按 pattern 删除
-    this.readCache.clear()
+    const cleared = this.readCache.deleteByPrefix(`:${store}`)
     const statsAfter = this.readCache.getStats()
-    logger.info(`[DataBridge] invalidateCache() completed: store="${store}", cacheSizeAfter=${statsAfter.size}, clearedEntries=${statsBefore.size - statsAfter.size}`)
+    logger.info(`[DataBridge] invalidateCache() completed: store="${store}", clearedEntries=${cleared}, cacheSizeAfter=${statsAfter.size}`)
   }
 
   /**
@@ -407,7 +389,7 @@ export class DataBridge {
 
     const operation = inferOperation(ENVELOPE_ACTION.exportAll)
     const targetStore = STORE_NAME.stocks
-    const shouldContinue = await this.assertAclWithFallback(envelope, targetStore, operation)
+    const shouldContinue = await assertAclWithFallback(envelope, targetStore, operation)
     if (!shouldContinue) {
       throw new EnvelopeError('Export rejected by ACL')
     }
@@ -440,7 +422,7 @@ export class DataBridge {
 
     const operation = inferOperation(ENVELOPE_ACTION.importAll)
     const targetStore = STORE_NAME.stocks
-    const shouldContinue = await this.assertAclWithFallback(envelope, targetStore, operation)
+    const shouldContinue = await assertAclWithFallback(envelope, targetStore, operation)
     if (!shouldContinue) {
       throw new EnvelopeError('Import rejected by ACL')
     }
@@ -473,7 +455,7 @@ export class DataBridge {
 
     const operation = inferOperation(ENVELOPE_ACTION.resetAll)
     const targetStore = STORE_NAME.stocks
-    const shouldContinue = await this.assertAclWithFallback(envelope, targetStore, operation)
+    const shouldContinue = await assertAclWithFallback(envelope, targetStore, operation)
     if (!shouldContinue) {
       throw new EnvelopeError('Reset rejected by ACL')
     }
@@ -565,7 +547,7 @@ export class DataBridge {
       `  Action 类型: ${STRATEGY_ACTIONS.has(meta.action) ? '策略' : QUERY_ACTIONS.has(meta.action) ? '查询' : EVENT_ACTIONS.has(meta.action) ? '事件' : 'DB操作'}`
     )
 
-    const shouldContinue = await this.assertAclWithFallback(envelope, targetStore, operation)
+    const shouldContinue = await assertAclWithFallback(envelope, targetStore, operation)
     if (!shouldContinue) {
       logger.info(`[DataBridge] ACL 校验未通过，已降级处理: action="${meta.action}", traceId="${meta.traceId}"`)
       return
@@ -690,39 +672,6 @@ export class DataBridge {
       return typeof symbol === 'string' ? symbol : undefined
     }
     return undefined
-  }
-
-  private isMarketEnvelope(action: string): boolean {
-    return action === ENVELOPE_ACTION.saveDailyQuotes
-  }
-
-  /**
-   * ACL 校验；若市场类 envelope 被拒绝则入队重试并返回 false，
-   * 否则返回 true 表示继续处理。
-   */
-  private async assertAclWithFallback(
-    envelope: StandardEnvelope,
-    targetStore: StoreName,
-    operation: DbOperation,
-  ): Promise<boolean> {
-    const { meta } = envelope
-    try {
-      aclEngine.assert({
-        module: meta.source,
-        store: targetStore,
-        operation,
-      })
-      logger.debug(`[DataBridge] ACL check passed: module="${meta.source}", store="${targetStore}", operation="${operation}"`)
-      return true
-    } catch (aclErr) {
-      logger.error(`[DataBridge] ACL check failed: module="${meta.source}", store="${targetStore}", operation="${operation}"`, { error: aclErr })
-      if (this.isMarketEnvelope(meta.action)) {
-        logger.warn(`[DataBridge] ACL rejected market envelope, enqueueing for retry: action="${meta.action}", traceId="${meta.traceId}"`)
-        this.fallbackQueue.push(envelope)
-        return false
-      }
-      throw aclErr
-    }
   }
 
   private async routeToQuery(envelope: StandardEnvelope, store: StoreName): Promise<void> {
@@ -851,22 +800,34 @@ export class DataBridge {
       let errorCount = 0
       let subscriberIndex = 0
 
+      // 异步分发：避免一个慢 subscriber 阻塞后续订阅者和 eventBus.emit
+      // 每个 subscriber 在独立 microtask 中执行，允许 React 在回调间批处理状态更新
+      const dispatchPromises: Promise<void>[] = []
       callbacks.forEach((cb) => {
         subscriberIndex++
-        try {
-          cb(envelope)
-          successCount++
-        } catch (err) {
-          errorCount++
-          logger.error(`[DataBridge] Subscriber #${subscriberIndex} error for channel "${targetChannel}"`, { error: err })
-        }
+        dispatchPromises.push(
+          new Promise<void>((resolve) => {
+            queueMicrotask(() => {
+              try {
+                cb(envelope)
+                successCount++
+              } catch (err) {
+                errorCount++
+                logger.error(`[DataBridge] Subscriber #${subscriberIndex} error for channel "${targetChannel}"`, { error: err })
+              }
+              resolve()
+            })
+          })
+        )
       })
 
-      totalCallbackCount += callbackCount
-      totalSuccessCount += successCount
-      totalErrorCount += errorCount
-
-      logger.info(`[DataBridge] broadcast() to subscribers: channel="${targetChannel}", listeners=${callbackCount}, success=${successCount}, errors=${errorCount}`)
+      // 等待所有 subscriber 完成后记录日志
+      Promise.all(dispatchPromises).then(() => {
+        totalCallbackCount += callbackCount
+        totalSuccessCount += successCount
+        totalErrorCount += errorCount
+        logger.info(`[DataBridge] broadcast() to subscribers: channel="${targetChannel}", listeners=${callbackCount}, success=${successCount}, errors=${errorCount}`)
+      }).catch(() => { /* Promise.all 不 reject（每个 microtask 内部已 catch） */ })
     }
 
     const eventName = `${channel}${CHANGED_SUFFIX}`

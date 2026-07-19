@@ -14,6 +14,9 @@ import {
   BreadcrumbSeparator,
 } from '@/components/atoms'
 
+/**
+ * CollectTaskBreadcrumb
+ */
 export function CollectTaskBreadcrumb(): React.JSX.Element {
   return (
     <Breadcrumb>

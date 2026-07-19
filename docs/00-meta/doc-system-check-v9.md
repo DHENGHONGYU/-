@@ -1,94 +1,101 @@
 ---
 title: doc-system-check-v9
+type: meta
+domain: project
+phase: planning
+tier: important
+status: active
+maintainer: V9 Architecture Team
+summary: "ÒÔÏÂÎÄµµÔÚÌåÏµÖÐ±»Ã÷È·ÐèÒª£¬µ«´ÅÅÌÉÏÈÔ²»´æÔÚ£¨È«Á¿ 388 ÎÄ¼þ¹Ø¼ü´ÊÆ¥ÅäÈ·ÈÏ£©£º"
+tags: [project, system, meta, documentation, governance]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: core
+doc_id: V9-DOC-PROJ-011
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/00-meta/doc-system-check-v9.md
-code_version: 2.0.0
-tier: core
----
+# ÖÇÄÜÍ¶ÑÐ¸´ÅÌÏµÍ³ V9 ¡ª ÎÄµµ¹éÀàÌåÏµÌå¼ì±¨¸æ
 
-# æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ V9 â€” æ–‡æ¡£å½’ç±»ä½“ç³»ä½“æ£€æŠ¥å‘Š
-
-> **ä½“æ£€æ—¥æœŸ**ï¼š2026-07-12  
-> **ä¿®è®¢æ—¥æœŸ**ï¼š2026-07-12ï¼ˆç¬¬2æ¬¡ä¿®è®¢ï¼ŒåŸºäºŽå…¨é‡é‡æ‰«æï¼‰  
-> **ä½“æ£€å¯¹è±¡**ï¼š`./æ–‡æ¡£å½’ç±»ä½“ç³»ç»“æž„.md`ï¼ˆv1.0.0ï¼‰+ å…¨é‡ 388 ä»½ `.md` æ–‡æ¡£èµ„äº§ï¼ˆè¾ƒåˆæ£€ +32 ä»½ï¼‰  
-> **å‚ç…§æ ‡å‡†**ï¼šDocTaxonomy V9ï¼ˆAâ€“H å…«ç±»ä½“ç³»ï¼‰+ Kimi å¼€å‘åŒºæ–‡ä»¶ç®¡ç†ç­–ç•¥ + ä¸šç•Œ Docs-as-Code æœ€ä½³å®žè·µ  
-> **ä½“æ£€ç»“è®º**ï¼š**P0 ç¼ºé™·å·²ä¿®å¤ 6/7 é¡¹ï¼ŒP1 How-to ç³»åˆ—å·²è¡¥é½ï¼ˆ4/4ï¼‰ï¼Œ18 ä¸ªç¼ºå¤±æ–‡æ¡£å·²è¡¥é½ 10 ä¸ªï¼Œ orphans çŽ‡ä»Ž 19.7% é™è‡³çº¦ 12%ï¼Œç›®å½•é”™ä½æ˜¾è‘—æ”¹å–„**ã€‚æ®‹ä½™é—®é¢˜é›†ä¸­åœ¨ deploymentã€security-modelã€test-catalogã€ai-README ç­‰ 8 ä¸ªæ ¸å¿ƒç¼ºå¤±ã€‚  
-> **æ›´æ–°**ï¼šç»å…¨é‡ 388 æ–‡ä»¶é‡æ–°æ£€ç´¢ï¼Œ`../reference/api-contract.md`ï¼ˆ`docs/02-design/`ï¼‰å’Œ `quality-gates` ç³»åˆ—ï¼ˆ`../reference/09-quality-gates.md`ã€`../explanation/quality-gates-baseline.md`ï¼‰å®žé™…å­˜åœ¨ï¼ŒåŽŸ 23 ä¸ªç¼ºå£ä¿®æ­£ä¸º **12 ç¡®è®¤ç¼ºå¤± + 5 å¯èƒ½å·²å­˜åœ¨**ã€‚è¯¦è§ Â§ç¼ºé™· 2ã€‚
+> **Ìå¼ìÈÕÆÚ**£º2026-07-12  
+> **ÐÞ¶©ÈÕÆÚ**£º2026-07-12£¨µÚ2´ÎÐÞ¶©£¬»ùÓÚÈ«Á¿ÖØÉ¨Ãè£©  
+> **Ìå¼ì¶ÔÏó**£º`./ÎÄµµ¹éÀàÌåÏµ½á¹¹.md`£¨v1.0.0£©+ È«Á¿ 388 ·Ý `.md` ÎÄµµ×Ê²ú£¨½Ï³õ¼ì +32 ·Ý£©  
+> **²ÎÕÕ±ê×¼**£ºDocTaxonomy V9£¨A¨CH °ËÀàÌåÏµ£©+ Kimi ¿ª·¢ÇøÎÄ¼þ¹ÜÀí²ßÂÔ + Òµ½ç Docs-as-Code ×î¼ÑÊµ¼ù  
+> **Ìå¼ì½áÂÛ**£º**P0 È±ÏÝÒÑÐÞ¸´ 6/7 Ïî£¬P1 How-to ÏµÁÐÒÑ²¹Æë£¨4/4£©£¬18 ¸öÈ±Ê§ÎÄµµÒÑ²¹Æë 10 ¸ö£¬ orphans ÂÊ´Ó 19.7% ½µÖÁÔ¼ 12%£¬Ä¿Â¼´íÎ»ÏÔÖø¸ÄÉÆ**¡£²ÐÓàÎÊÌâ¼¯ÖÐÔÚ deployment¡¢security-model¡¢test-catalog¡¢ai-README µÈ 8 ¸öºËÐÄÈ±Ê§¡£  
+> **¸üÐÂ**£º¾­È«Á¿ 388 ÎÄ¼þÖØÐÂ¼ìË÷£¬`../reference/api-contract.md`£¨`docs/02-design/`£©ºÍ `quality-gates` ÏµÁÐ£¨`../reference/09-quality-gates.md`¡¢`../explanation/quality-gates-baseline.md`£©Êµ¼Ê´æÔÚ£¬Ô­ 23 ¸öÈ±¿ÚÐÞÕýÎª **12 È·ÈÏÈ±Ê§ + 5 ¿ÉÄÜÒÑ´æÔÚ**¡£Ïê¼û ¡ìÈ±ÏÝ 2¡£
 
 ---
 
-## ä¸€ã€æ–‡æ¡£èµ„äº§å…¨æ™¯ï¼ˆåŸºç¡€ä½“å¾ï¼‰
+## Ò»¡¢ÎÄµµ×Ê²úÈ«¾°£¨»ù´¡ÌåÕ÷£©
 
-| æŒ‡æ ‡ | æ•°å€¼ | å¥åº·é˜ˆå€¼ | è¯„çº§ |
+| Ö¸±ê | ÊýÖµ | ½¡¿µãÐÖµ | ÆÀ¼¶ |
 |------|------|----------|------|
-| `.md` æ–‡æ¡£æ€»æ•° | **388** ä»½ï¼ˆè¾ƒåˆæ£€ +32ï¼‰ | â€” | â€” |
-| `docs/` å­ç›®å½•æ•° | 25+ ä¸ª | 8Â±2ï¼ˆä¸Ž Aâ€“H å¯¹é½ï¼‰ | âš ï¸ è¶…å‘ï¼ˆå«è‡ªåŠ¨äº§ç‰©/ç¼“å­˜ï¼‰ |
-| æŒ‰ 8 ç±»ä½“ç³»å¯å½’ç±» | ~341 ä»½ï¼ˆ87.9%ï¼‰ | â‰¥90% | ðŸŸ¡ æŽ¥è¿‘è¾¾æ ‡ |
-| **å­¤å„¿æ–‡æ¡£ï¼ˆæœªè¦†ç›–ï¼‰** | **~47** ä»½ï¼ˆ12.1%ï¼‰ | â‰¤5% | ðŸŸ¡ æ”¹å–„ä¸­ï¼ˆåŽŸ 19.7%ï¼‰ |
-| åº”æœ‰æ–‡æ¡£ç¼ºå£ | **10 ä¸ªç¡®è®¤ç¼ºå¤± + 5 ä¸ªå¯èƒ½å·²å­˜åœ¨** | 0 | ðŸŸ¡ æ”¹å–„ä¸­ï¼ˆåŽŸ 18+5ï¼‰ |
-| DEPRECATED æœªæ¸…ç† | 0 ä»½ï¼ˆå…¨éƒ¨å½’æ¡£ï¼‰ | 0 | âœ… å·²æ¸…ç†ï¼ˆåŽŸ 9 ä»½ï¼‰ |
-| æ•°æ®å®šä¹‰é‡å¤æ–‡ä»¶ | 8 ä»½ | 1 | ðŸ”´ ä»ä¸¥é‡ï¼ˆåŽŸ 10 ä»½ï¼Œå·²å‡ 2ï¼‰ |
-| ç›®å½•å-å†…å®¹é”™ä½ | 2 ä¸ªç›®å½•ï¼ˆè¾ƒåŽŸ 3 ä¸ªæ”¹å–„ï¼‰ | 0 | ðŸŸ¡ æ”¹å–„ä¸­ |
+| `.md` ÎÄµµ×ÜÊý | **388** ·Ý£¨½Ï³õ¼ì +32£© | ¡ª | ¡ª |
+| `docs/` ×ÓÄ¿Â¼Êý | 25+ ¸ö | 8¡À2£¨Óë A¨CH ¶ÔÆë£© | ?? ³¬·¢£¨º¬×Ô¶¯²úÎï/»º´æ£© |
+| °´ 8 ÀàÌåÏµ¿É¹éÀà | ~341 ·Ý£¨87.9%£© | ¡Ý90% | ?? ½Ó½ü´ï±ê |
+| **¹Â¶ùÎÄµµ£¨Î´¸²¸Ç£©** | **~47** ·Ý£¨12.1%£© | ¡Ü5% | ?? ¸ÄÉÆÖÐ£¨Ô­ 19.7%£© |
+| Ó¦ÓÐÎÄµµÈ±¿Ú | **10 ¸öÈ·ÈÏÈ±Ê§ + 5 ¸ö¿ÉÄÜÒÑ´æÔÚ** | 0 | ?? ¸ÄÉÆÖÐ£¨Ô­ 18+5£© |
+| DEPRECATED Î´ÇåÀí | 0 ·Ý£¨È«²¿¹éµµ£© | 0 | ? ÒÑÇåÀí£¨Ô­ 9 ·Ý£© |
+| Êý¾Ý×ÖµäÖØ¸´ÎÄ¼þ | 8 ·Ý | 1 | ?? ÈÔÑÏÖØ£¨Ô­ 10 ·Ý£¬ÒÑ¼õ 2£© |
+| Ä¿Â¼Ãû-ÄÚÈÝ´íÎ» | 2 ¸öÄ¿Â¼£¨½ÏÔ­ 3 ¸ö¸ÄÉÆ£© | 0 | ?? ¸ÄÉÆÖÐ |
 
-### 1.1 å…«ç±»ä½“ç³»åˆ†å¸ƒï¼ˆå®žé™…æ˜ å°„ï¼‰
+### 1.1 °ËÀàÌåÏµ·Ö²¼£¨Êµ¼ÊÓ³Éä£©
 
 ```
-A. å¯¼èˆªä¸Žæ²»ç†       â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–‘â–‘  38 ä»½ï¼ˆ9.8%ï¼‰   â† âœ… README.md + governance.md å·²è¡¥é½
-B. æž¶æž„è®¾è®¡         â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–‘â–‘â–‘â–‘  46 ä»½ï¼ˆ11.9%ï¼‰  â† âœ… overview/cabins-overview/services-catalog å·²è¡¥é½
-C. åŠŸèƒ½æ¨¡å—         â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–‘â–‘  64 ä»½ï¼ˆ16.5%ï¼‰  â† è¾ƒå……å®žï¼Œ4èˆ±specå·²è¡¥é½
-D. æŠ€æœ¯è§„èŒƒ         â–ˆâ–ˆâ–ˆâ–ˆâ–‘â–‘â–‘â–‘â–‘â–‘  22 ä»½ï¼ˆ5.7%ï¼‰   â† âœ… coding-conventions å·²è¡¥é½ï¼Œä»ç¼º a11y-i18n
-E. æµ‹è¯•ç­–ç•¥         â–ˆâ–ˆâ–ˆâ–‘â–‘â–‘â–‘â–‘â–‘â–‘  16 ä»½ï¼ˆ4.1%ï¼‰   â† ä»ç¼º test-catalog/è§†è§‰å›žå½’åŸºçº¿
-F. AI è¾…åŠ©å·¥ç¨‹æ²»ç†  â–ˆâ–ˆâ–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘  12 ä»½ï¼ˆ3.1%ï¼‰   â† âœ… ai-index/ å·²åˆ›å»º
-G. è¿‡ç¨‹ä¸Žè´¨é‡äº§ç‰©   â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–‘ 128 ä»½ï¼ˆ33.0%ï¼‰  â† ä»è†¨èƒ€ï¼Œä½† drafts å·²éƒ¨åˆ†å½’æ¡£
-H. è·¨åŸŸè¡¥å……         â–ˆâ–ˆâ–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘  15 ä»½ï¼ˆ3.9%ï¼‰   â† runbook/coding-conventions å·²è¡¥é½ï¼Œgetting-started/how-to å·²è¡¥é½ï¼Œä»ç¼º deployment/security-model
-æœªåˆ†ç±»/å­¤å„¿         â–ˆâ–ˆâ–ˆâ–‘â–‘â–‘â–‘â–‘â–‘â–‘  ~47 ä»½ï¼ˆ12.1%ï¼‰ â† è¾ƒåˆæ£€ 70 ä»½å¤§å¹…æ”¹å–„
+A. µ¼º½ÓëÖÎÀí       ¨€¨€¨€¨€¨€¨€¨€¨€??  38 ·Ý£¨9.8%£©   ¡û ? README.md + governance.md ÒÑ²¹Æë
+B. ¼Ü¹¹Éè¼Æ         ¨€¨€¨€¨€¨€¨€????  46 ·Ý£¨11.9%£©  ¡û ? overview/cabins-overview/services-catalog ÒÑ²¹Æë
+C. ¹¦ÄÜÄ£¿é         ¨€¨€¨€¨€¨€¨€¨€¨€??  64 ·Ý£¨16.5%£©  ¡û ½Ï³äÊµ£¬4²ÕspecÒÑ²¹Æë
+D. ¼¼Êõ¹æ·¶         ¨€¨€¨€¨€??????  22 ·Ý£¨5.7%£©   ¡û ? coding-conventions ÒÑ²¹Æë£¬ÈÔÈ± a11y-i18n
+E. ²âÊÔ²ßÂÔ         ¨€¨€¨€???????  16 ·Ý£¨4.1%£©   ¡û ÈÔÈ± test-catalog/ÊÓ¾õ»Ø¹é»ùÏß
+F. AI ¸¨Öú¹¤³ÌÖÎÀí  ¨€¨€????????  12 ·Ý£¨3.1%£©   ¡û ? ai-index/ ÒÑ´´½¨
+G. ¹ý³ÌÓëÖÊÁ¿²úÎï   ¨€¨€¨€¨€¨€¨€¨€¨€¨€? 128 ·Ý£¨33.0%£©  ¡û ÈÔÅòÕÍ£¬µ« drafts ÒÑ²¿·Ö¹éµµ
+H. ¿çÓò²¹³ä         ¨€¨€????????  15 ·Ý£¨3.9%£©   ¡û runbook/coding-conventions ÒÑ²¹Æë£¬getting-started/how-to ÒÑ²¹Æë£¬ÈÔÈ± deployment/security-model
+Î´·ÖÀà/¹Â¶ù         ¨€¨€¨€???????  ~47 ·Ý£¨12.1%£© ¡û ½Ï³õ¼ì 70 ·Ý´ó·ù¸ÄÉÆ
 ```
 
-### 1.2 ä¸Žä½“ç³» v1.0.0 è‡ªæŸ¥çš„å¯¹æ¯”
+### 1.2 ÓëÌåÏµ v1.0.0 ×Ô²éµÄ¶Ô±È
 
-| æŒ‡æ ‡ | v1.0.0 è‡ªæŸ¥ | æœ¬æ¬¡ä½“æ£€ï¼ˆåˆæ£€ 2026-07-12ï¼‰ | ä¿®è®¢å¤æµ‹ï¼ˆåŒæ—¥ä¸‹åˆï¼‰ | å·®å¼‚è¯´æ˜Ž |
+| Ö¸±ê | v1.0.0 ×Ô²é | ±¾´ÎÌå¼ì£¨³õ¼ì 2026-07-12£© | ÐÞ¶©¸´²â£¨Í¬ÈÕÏÂÎç£© | ²îÒìËµÃ÷ |
 |------|------------|---------------------------|-------------------|----------|
-| `docs/` æ€»æ–‡ä»¶æ•° | 1,794ï¼ˆå« HTML/JSONï¼‰ | 351 `.md` + å¤§é‡è‡ªåŠ¨äº§ç‰© | **388 `.md`** + è‡ªåŠ¨äº§ç‰© | P0 ä¿®å¤æ–°å¢ž 32 ä»½æ–‡æ¡£ |
-| `reports/` è‡ªåŠ¨äº§ç‰©å æ¯” | 78%ï¼ˆ1,401/1,794ï¼‰ | çº¦ 70% | çº¦ 65% | P0 æ–°å¢žæ–‡æ¡£ç¨€é‡Šå æ¯” |
-| å­¤å„¿æ–‡æ¡£ | æœªç»Ÿè®¡ | **70 ä»½** | **~47 ä»½** | P0 å½’ç±» + æ–°å¢žæ–‡æ¡£è¦†ç›– |
-| åº”æœ‰æ–‡æ¡£ç¼ºå£ | 12 ä»½ï¼ˆç¬¬ä¸‰ç« ï¼‰ | **18 ç¡®è®¤ç¼ºå¤± + 5 å¯èƒ½å·²å­˜åœ¨** | **10 ç¡®è®¤ç¼ºå¤± + 5 å¯èƒ½å·²å­˜åœ¨** | 10 ä»½å·²è¡¥é½ï¼ˆP0: README/GOVERNANCE/overview/cabins/services-catalog/coding-conventions/runbookï¼›P1: getting-started/how-toÃ—3ï¼‰ |
-| ç›®å½•å-å†…å®¹é”™ä½ | æåŠ 00-README æ¼‚ç§» | **3 å¤„ç›®å½•é”™ä½** | **2 å¤„** | 01-req/02-design éƒ¨åˆ†è¿ç§» |
-| æ•°æ®å®šä¹‰é‡å¤ | æœªæåŠ | **10 ä»½é‡å¤** | **8 ä»½é‡å¤** | æ ¹çº§ä¸Ž 01-req çš„ DATA_DEFINITION å·²ç§»é™¤ |
-| ç©ºç½®ç›®å½• | æœªæåŠ | **2 ä¸ªï¼ˆblueprints/ã€plans/ï¼‰** | **2 ä¸ª** | ä»ç©ºç½®ï¼ŒP1 å¾…å¤„ç† |
-| DEPRECATED æ•£è½ | æœªæåŠ | **8 ä»½æ•£è½** | **0 ä»½** | å…¨éƒ¨å½’æ¡£è‡³ 07-archive/ |
-| `.ai-index/` ç¼“å­˜ | æœªæåŠ | **ç¼ºå¤±** | **å·²åˆ›å»º** | å« code-graph.json + ai-memory-index.json |
+| `docs/` ×ÜÎÄ¼þÊý | 1,794£¨º¬ HTML/JSON£© | 351 `.md` + ´óÁ¿×Ô¶¯²úÎï | **388 `.md`** + ×Ô¶¯²úÎï | P0 ÐÞ¸´ÐÂÔö 32 ·ÝÎÄµµ |
+| `reports/` ×Ô¶¯²úÎïÕ¼±È | 78%£¨1,401/1,794£© | Ô¼ 70% | Ô¼ 65% | P0 ÐÂÔöÎÄµµÏ¡ÊÍÕ¼±È |
+| ¹Â¶ùÎÄµµ | Î´Í³¼Æ | **70 ·Ý** | **~47 ·Ý** | P0 ¹éÀà + ÐÂÔöÎÄµµ¸²¸Ç |
+| Ó¦ÓÐÎÄµµÈ±¿Ú | 12 ·Ý£¨µÚÈýÕÂ£© | **18 È·ÈÏÈ±Ê§ + 5 ¿ÉÄÜÒÑ´æÔÚ** | **10 È·ÈÏÈ±Ê§ + 5 ¿ÉÄÜÒÑ´æÔÚ** | 10 ·ÝÒÑ²¹Æë£¨P0: README/GOVERNANCE/overview/cabins/services-catalog/coding-conventions/runbook£»P1: getting-started/how-to¡Á3£© |
+| Ä¿Â¼Ãû-ÄÚÈÝ´íÎ» | Ìá¼° 00-README Æ¯ÒÆ | **3 ´¦Ä¿Â¼´íÎ»** | **2 ´¦** | 01-req/02-design ²¿·ÖÇ¨ÒÆ |
+| Êý¾Ý×ÖµäÖØ¸´ | Î´Ìá¼° | **10 ·ÝÖØ¸´** | **8 ·ÝÖØ¸´** | ¸ù¼¶Óë 01-req µÄ DATA_DEFINITION ÒÑÒÆ³ý |
+| ¿ÕÖÃÄ¿Â¼ | Î´Ìá¼° | **2 ¸ö£¨blueprints/¡¢plans/£©** | **2 ¸ö** | ÈÔ¿ÕÖÃ£¬P1 ´ý´¦Àí |
+| DEPRECATED É¢Âä | Î´Ìá¼° | **8 ·ÝÉ¢Âä** | **0 ·Ý** | È«²¿¹éµµÖÁ 07-archive/ |
+| `.ai-index/` »º´æ | Î´Ìá¼° | **È±Ê§** | **ÒÑ´´½¨** | º¬ code-graph.json + ai-memory-index.json |
 
 ---
 
-## äºŒã€ç»“æž„æ€§ç¼ºé™·ï¼ˆ7 é¡¹ï¼‰
+## ¶þ¡¢½á¹¹ÐÔÈ±ÏÝ£¨7 Ïî£©
 
-### ç¼ºé™· 1ï¼šé¡¶å±‚å…¥å£ç¼ºå¤±ï¼ˆP0ï¼‰â€” âœ… å·²ä¿®å¤
+### È±ÏÝ 1£º¶¥²ãÈë¿ÚÈ±Ê§£¨P0£©¡ª ? ÒÑÐÞ¸´
 
-- **ç—‡çŠ¶**ï¼š`docs/README.md` ä¸å­˜åœ¨ã€‚æ–°æˆå‘˜/AI é¦–æ¬¡è¿›å…¥ `docs/` æ— å…¥å£ã€‚
-- **å½±å“**ï¼šè¿èƒŒ DiÃ¡taxisã€Œå¯¼èˆªä¼˜å…ˆã€åŽŸåˆ™ï¼›Kimi åŠ è½½é¡¹ç›®æ—¶æ— æ³•å¿«é€Ÿå®šä½æ ¸å¿ƒæ–‡æ¡£ã€‚
-- **æ ¹å› **ï¼š`../explanation/design/00-readme.md` æ‰¿æ‹…äº†éƒ¨åˆ†ç´¢å¼•èŒè´£ï¼Œä½†è‡ªèº«ä½äºŽ `02-design/`ï¼ˆè®¾è®¡ç›®å½•ï¼‰ï¼Œä¸”å·²å‘ç”Ÿæ–‡æ¡£æ¼‚ç§»ï¼ˆå£°ç§° `implementation/` æœ‰ 44 ä»½æ–‡æ¡£ï¼Œå®žé™…ä»… 14 ä»½æˆªå›¾ï¼‰ã€‚
-- **ä¿®å¤**ï¼šâœ… **å·²å®Œæˆ**ã€‚æ–°å»º `docs/README.md`ï¼ˆ58 è¡Œï¼Œå« Aâ€“H å…«ç±»ç´¢å¼• + å¿«é€Ÿå…¥å£ + è´¡çŒ®çº¦å®šï¼‰ï¼ŒæŒ‰ Aâ€“H å…«ç±»ç»„ç»‡é“¾æŽ¥ï¼Œå°† `../README.md` çš„ Frontmatter/DoD è§„èŒƒæå‡ä¸º `./governance.md`ï¼ˆv1.0.0ï¼‰ã€‚
-- **éªŒè¯**ï¼š`docs/README.md` å­˜åœ¨ï¼Œ`./governance.md` å­˜åœ¨ã€‚
+- **Ö¢×´**£º`docs/README.md` ²»´æÔÚ¡£ÐÂ³ÉÔ±/AI Ê×´Î½øÈë `docs/` ÎÞÈë¿Ú¡£
+- **Ó°Ïì**£ºÎ¥±³ Di¨¢taxis¡¸µ¼º½ÓÅÏÈ¡¹Ô­Ôò£»Kimi ¼ÓÔØÏîÄ¿Ê±ÎÞ·¨¿ìËÙ¶¨Î»ºËÐÄÎÄµµ¡£
+- **¸ùÒò**£º`../explanation/design/00-readme.md` ³Ðµ£ÁË²¿·ÖË÷ÒýÖ°Ôð£¬µ«×ÔÉíÎ»ÓÚ `02-design/`£¨Éè¼ÆÄ¿Â¼£©£¬ÇÒÒÑ·¢ÉúÎÄµµÆ¯ÒÆ£¨Éù³Æ `implementation/` ÓÐ 44 ·ÝÎÄµµ£¬Êµ¼Ê½ö 14 ·Ý½ØÍ¼£©¡£
+- **ÐÞ¸´**£º? **ÒÑÍê³É**¡£ÐÂ½¨ `docs/README.md`£¨58 ÐÐ£¬º¬ A¨CH °ËÀàË÷Òý + ¿ìËÙÈë¿Ú + ¹±Ï×Ô¼¶¨£©£¬°´ A¨CH °ËÀà×éÖ¯Á´½Ó£¬½« `../README.md` µÄ Frontmatter/DoD ¹æ·¶ÌáÉýÎª `./governance.md`£¨v1.0.0£©¡£
+- **ÑéÖ¤**£º`docs/README.md` ´æÔÚ£¬`./governance.md` ´æÔÚ¡£
 
-### ç¼ºé™· 2ï¼š18 ä¸ªæ ¸å¿ƒæ–‡æ¡£ç¡®è®¤ç¼ºå¤± + 5 ä¸ªå¯èƒ½å·²å­˜åœ¨ï¼ˆP0ï¼‰â€” ðŸŸ¡ 6/18 å·²è¡¥é½
+### È±ÏÝ 2£º18 ¸öºËÐÄÎÄµµÈ·ÈÏÈ±Ê§ + 5 ¸ö¿ÉÄÜÒÑ´æÔÚ£¨P0£©¡ª ?? 6/18 ÒÑ²¹Æë
 
-> **æ›´æ–°è¯´æ˜Ž**ï¼šç»å…¨é‡ 388 æ–‡ä»¶é‡æ–°æ£€ç´¢ï¼ˆå…³é”®è¯æ¨¡ç³ŠåŒ¹é…ï¼‰ï¼ŒåŽŸåˆ—å‡ºçš„ 23 ä¸ªæ–‡æ¡£ä¸­ï¼š
-> - **6 ä¸ªå·²è¡¥é½**ï¼ˆP0 æ•´æ”¹å®Œæˆï¼‰ï¼š`../../README.md`ã€`governance.md`ã€`../explanation/overview.md`ã€`../explanation/cabins-overview.md`ã€`../reference/coding-conventions.md`ã€`../explanation/runbook.md`
-> - **12 ä¸ªç¡®è®¤ä»ç¼ºå¤±**ï¼ˆæ— ä»»ä½•åŒ¹é…æ–‡ä»¶ï¼‰
-> - **5 ä¸ªå¯èƒ½å·²å­˜åœ¨**ï¼ˆæœ‰è¿‘ä¼¼åŒ¹é…æ–‡ä»¶ï¼Œéœ€äººå·¥å¤æ ¸æ˜¯å¦æ»¡è¶³éœ€æ±‚ï¼‰
-> - **2 ä¸ªè¯¯æŠ¥å·²çº æ­£**ï¼š`../reference/api-contract.md` å®žé™…å­˜åœ¨äºŽ `docs/02-design/`ï¼›`quality-gates` æ–‡æ¡£å®žé™…å­˜åœ¨äºŽ `docs/02-design/` å’Œ `docs/03-development/`
-> - **1 ä¸ªæ–°å¢žå‘çŽ°**ï¼š`../reference/services-catalog.md`ï¼ˆP0 æ–°å¢žï¼Œè¶…åŽŸæ¸…å•é¢„æœŸï¼‰
+> **¸üÐÂËµÃ÷**£º¾­È«Á¿ 388 ÎÄ¼þÖØÐÂ¼ìË÷£¨¹Ø¼ü´ÊÄ£ºýÆ¥Åä£©£¬Ô­ÁÐ³öµÄ 23 ¸öÎÄµµÖÐ£º
+> - **6 ¸öÒÑ²¹Æë**£¨P0 Õû¸ÄÍê³É£©£º`../../README.md`¡¢`governance.md`¡¢`../explanation/overview.md`¡¢`../explanation/cabins-overview.md`¡¢`../reference/coding-conventions.md`¡¢`../explanation/runbook.md`
+> - **12 ¸öÈ·ÈÏÈÔÈ±Ê§**£¨ÎÞÈÎºÎÆ¥ÅäÎÄ¼þ£©
+> - **5 ¸ö¿ÉÄÜÒÑ´æÔÚ**£¨ÓÐ½üËÆÆ¥ÅäÎÄ¼þ£¬ÐèÈË¹¤¸´ºËÊÇ·ñÂú×ãÐèÇó£©
+> - **2 ¸öÎó±¨ÒÑ¾ÀÕý**£º`../reference/api-contract.md` Êµ¼Ê´æÔÚÓÚ `docs/02-design/`£»`quality-gates` ÎÄµµÊµ¼Ê´æÔÚÓÚ `docs/02-design/` ºÍ `docs/03-development/`
+> - **1 ¸öÐÂÔö·¢ÏÖ**£º`../reference/services-catalog.md`£¨P0 ÐÂÔö£¬³¬Ô­Çåµ¥Ô¤ÆÚ£©
 
-#### ç¡®è®¤ä»ç¼ºå¤±æ–‡æ¡£ï¼ˆå·²è¡¥é½ 4 ä¸ªï¼Œå‰©ä½™ 10 ä¸ªæ ¸å¿ƒç¼ºå¤±ï¼‰
+#### È·ÈÏÈÔÈ±Ê§ÎÄµµ£¨ÒÑ²¹Æë 4 ¸ö£¬Ê£Óà 10 ¸öºËÐÄÈ±Ê§£©
 
-ä»¥ä¸‹æ–‡æ¡£åœ¨ä½“ç³»ä¸­è¢«æ˜Žç¡®éœ€è¦ï¼Œä½†**ç£ç›˜ä¸Šä»ä¸å­˜åœ¨**ï¼ˆå…¨é‡ 388 æ–‡ä»¶å…³é”®è¯åŒ¹é…ç¡®è®¤ï¼‰ï¼š
+ÒÔÏÂÎÄµµÔÚÌåÏµÖÐ±»Ã÷È·ÐèÒª£¬µ«**´ÅÅÌÉÏÈÔ²»´æÔÚ**£¨È«Á¿ 388 ÎÄ¼þ¹Ø¼ü´ÊÆ¥ÅäÈ·ÈÏ£©£º
 
-| ç¼ºå¤±æ–‡æ¡£ | æ‰€å±žç±»åˆ« | ä¼˜å…ˆçº§ | æŠ•å…¥ä¼°ç®— | å¤‡æ³¨ |
+| È±Ê§ÎÄµµ | ËùÊôÀà±ð | ÓÅÏÈ¼¶ | Í¶Èë¹ÀËã | ±¸×¢ |
 |----------|----------|--------|----------|------|
 | `../reports/release-management/README.md` | B | P1 | 1h | |
 | `../explanation/data-layer-overview.md` | C | P1 | 2h | |
@@ -101,322 +108,322 @@ H. è·¨åŸŸè¡¥å……         â–ˆâ–ˆâ–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘  15 ä»½ï¼ˆ3.9%ï¼‰   â† r
 | `../reference/deployment.md` | H | P1 | 2h | |
 | `../explanation/a11y-i18n.md` | H | P2 | 2h | |
 
-> **æ€»æŠ•å…¥ä¼°ç®—**ï¼šçº¦ 19 äººæ—¶ï¼ˆå¯åˆ† 2 ä¸ªè¿­ä»£å®Œæˆï¼‰ã€‚
-> **å·²è¡¥é½ 4 ä¸ªï¼ˆP1 æ–°å¢žï¼‰**ï¼š`../tutorials/../tutorials/getting-started.md`ã€`../how-to/how-to-add-widget.md`ã€`../how-to/../how-to/how-to-add-store.md`ã€`../how-to/how-to-add-service.md`ï¼ˆ2026-07-12 å®Œæˆï¼‰ã€‚
+> **×ÜÍ¶Èë¹ÀËã**£ºÔ¼ 19 ÈËÊ±£¨¿É·Ö 2 ¸öµü´úÍê³É£©¡£
+> **ÒÑ²¹Æë 4 ¸ö£¨P1 ÐÂÔö£©**£º`../tutorials/../tutorials/getting-started.md`¡¢`../how-to/how-to-add-widget.md`¡¢`../how-to/../how-to/how-to-add-store.md`¡¢`../how-to/how-to-add-service.md`£¨2026-07-12 Íê³É£©¡£
 
-#### å·²è¡¥é½æ–‡æ¡£ï¼ˆP0 + P1 æ•´æ”¹ï¼Œ10 ä»½ï¼‰
+#### ÒÑ²¹ÆëÎÄµµ£¨P0 + P1 Õû¸Ä£¬10 ·Ý£©
 
-| è¡¥é½æ–‡æ¡£ | å®žé™…è·¯å¾„ | çŠ¶æ€ | éªŒè¯ |
+| ²¹ÆëÎÄµµ | Êµ¼ÊÂ·¾¶ | ×´Ì¬ | ÑéÖ¤ |
 |----------|----------|------|------|
-| `docs/README.md` | `docs/README.md` | âœ… å·²åˆ›å»ºï¼ˆ58 è¡Œï¼‰ | `find docs -name 'README.md'` |
-| `./governance.md` | `./governance.md` | âœ… å·²åˆ›å»ºï¼ˆv1.0.0ï¼‰ | `find docs -name 'governance.md'` |
-| `../explanation/overview.md` | `../explanation/overview.md` | âœ… å·²åˆ›å»º | `find docs/architecture -name '*.md'` |
-| `../explanation/cabins-overview.md` | `../explanation/cabins-overview.md` | âœ… å·²åˆ›å»º | åŒä¸Š |
-| `../reference/coding-conventions.md` | `../reference/coding-conventions.md` | âœ… å·²åˆ›å»º | `find docs/standards -name '*.md'` |
-| `../explanation/runbook.md` | `../explanation/runbook.md` | âœ… å·²åˆ›å»º | `find docs/ops -name '*.md'` |
-| `../tutorials/../tutorials/getting-started.md` | `../tutorials/../tutorials/getting-started.md` | âœ… å·²åˆ›å»ºï¼ˆP1ï¼‰ | `find docs/guides -name '../tutorials/getting-started.md'` |
-| `../how-to/how-to-add-widget.md` | `../how-to/how-to-add-widget.md` | âœ… å·²åˆ›å»ºï¼ˆP1ï¼‰ | `find docs/guides -name 'how-to-add-widget.md'` |
-| `../how-to/../how-to/how-to-add-store.md` | `../how-to/../how-to/how-to-add-store.md` | âœ… å·²åˆ›å»ºï¼ˆP1ï¼‰ | `find docs/guides -name '../how-to/how-to-add-store.md'` |
-| `../how-to/how-to-add-service.md` | `../how-to/how-to-add-service.md` | âœ… å·²åˆ›å»ºï¼ˆP1ï¼‰ | `find docs/guides -name 'how-to-add-service.md'` |
+| `docs/README.md` | `docs/README.md` | ? ÒÑ´´½¨£¨58 ÐÐ£© | `find docs -name 'README.md'` |
+| `./governance.md` | `./governance.md` | ? ÒÑ´´½¨£¨v1.0.0£© | `find docs -name 'governance.md'` |
+| `../explanation/overview.md` | `../explanation/overview.md` | ? ÒÑ´´½¨ | `find docs/architecture -name '*.md'` |
+| `../explanation/cabins-overview.md` | `../explanation/cabins-overview.md` | ? ÒÑ´´½¨ | Í¬ÉÏ |
+| `../reference/coding-conventions.md` | `../reference/coding-conventions.md` | ? ÒÑ´´½¨ | `find docs/standards -name '*.md'` |
+| `../explanation/runbook.md` | `../explanation/runbook.md` | ? ÒÑ´´½¨ | `find docs/ops -name '*.md'` |
+| `../tutorials/../tutorials/getting-started.md` | `../tutorials/../tutorials/getting-started.md` | ? ÒÑ´´½¨£¨P1£© | `find docs/guides -name '../tutorials/getting-started.md'` |
+| `../how-to/how-to-add-widget.md` | `../how-to/how-to-add-widget.md` | ? ÒÑ´´½¨£¨P1£© | `find docs/guides -name 'how-to-add-widget.md'` |
+| `../how-to/../how-to/how-to-add-store.md` | `../how-to/../how-to/how-to-add-store.md` | ? ÒÑ´´½¨£¨P1£© | `find docs/guides -name '../how-to/how-to-add-store.md'` |
+| `../how-to/how-to-add-service.md` | `../how-to/how-to-add-service.md` | ? ÒÑ´´½¨£¨P1£© | `find docs/guides -name 'how-to-add-service.md'` |
 
-> **é¢å¤–æ–°å¢ž**ï¼š`../reference/services-catalog.md`ï¼ˆP0 æ–°å¢žï¼Œè¶…åŽŸæ¸…å•é¢„æœŸï¼Œè¦†ç›– 23 ä¸ªæœåŠ¡å­åŸŸï¼‰ã€‚
+> **¶îÍâÐÂÔö**£º`../reference/services-catalog.md`£¨P0 ÐÂÔö£¬³¬Ô­Çåµ¥Ô¤ÆÚ£¬¸²¸Ç 23 ¸ö·þÎñ×ÓÓò£©¡£
 
-#### 5 ä¸ªå¯èƒ½å·²å­˜åœ¨æ–‡æ¡£ï¼ˆéœ€äººå·¥å¤æ ¸ï¼‰
+#### 5 ¸ö¿ÉÄÜÒÑ´æÔÚÎÄµµ£¨ÐèÈË¹¤¸´ºË£©
 
-| æœŸæœ›æ–‡æ¡£ | å®žé™…å‘çŽ°çš„åŒ¹é…æ–‡ä»¶ | æ˜¯å¦æ»¡è¶³éœ€æ±‚ | å»ºè®® |
+| ÆÚÍûÎÄµµ | Êµ¼Ê·¢ÏÖµÄÆ¥ÅäÎÄ¼þ | ÊÇ·ñÂú×ãÐèÇó | ½¨Òé |
 |----------|-------------------|-------------|------|
-| `../reference/api-contract.md` | `../reference/api-contract.md` âœ… | åŸºæœ¬æ»¡è¶³ | ç¡®è®¤å†…å®¹æ˜¯å¦è¦†ç›–å…¨éƒ¨ DataBridge / è¡Œæƒ…ç«¯ç‚¹ / äº‹ä»¶åå¥‘çº¦ï¼Œå¦‚æ»¡è¶³åˆ™æ›´æ–°è·¯å¾„æ˜ å°„å³å¯ |
-| `../explanation/quality-gates-baseline.md` | `../reference/09-quality-gates.md` + `../explanation/quality-gates-baseline.md` âœ… | éƒ¨åˆ†æ»¡è¶³ | å‰è€…åè®¾è®¡é˜¶æ®µé—¨ç¦ï¼ŒåŽè€…ååŸºçº¿æ•°å€¼ï¼›éœ€ç¡®è®¤æ˜¯å¦éœ€åˆå¹¶ä¸ºç»Ÿä¸€çš„ `quality-gates.md` |
-| `./governance.md` | `../explanation/design/implementation-governance.md` + `../explanation/design/2026-06-29-data-architecture-governance.md` + `../reference/complexity-governance.md` | ~~ä¸æ»¡è¶³~~ â†’ âœ… **å·²ç‹¬ç«‹åˆ›å»º** | ~~åŒ¹é…åˆ°çš„éƒ½æ˜¯**ä¸“é¡¹æ²»ç†**æ–‡æ¡£~~ï¼›**2026-07-12 å·²æ–°å»ºç‹¬ç«‹ `governance.md` v1.0.0** |
-| `../reports/release-management/README.md` | `file-management-system/templates/ADR-template.md` | ä¸æ»¡è¶³ | åŒ¹é…çš„æ˜¯**æ¨¡æ¿æ–‡ä»¶**ï¼Œéžå®žé™… ADR ä¸»ç´¢å¼•ï¼›ADR ä¸»ç´¢å¼•ä»ç¼ºå¤± |
-| `docs/../../README.md` | æ ¹çº§ `../../README.md` + `../reference/../../README.md` + `../explanation/design/00-readme.md` | ~~ä¸æ»¡è¶³~~ â†’ âœ… **å·²ç‹¬ç«‹åˆ›å»º** | ~~æ ¹çº§ README æ˜¯é¡¹ç›®å¯åŠ¨è¯´æ˜Ž~~ï¼›**2026-07-12 å·²æ–°å»ºç‹¬ç«‹ `docs/../../README.md`ï¼ˆ58 è¡Œï¼‰** |
+| `../reference/api-contract.md` | `../reference/api-contract.md` ? | »ù±¾Âú×ã | È·ÈÏÄÚÈÝÊÇ·ñ¸²¸ÇÈ«²¿ DataBridge / ÐÐÇé¶Ëµã / ÊÂ¼þÃûÆõÔ¼£¬ÈçÂú×ãÔò¸üÐÂÂ·¾¶Ó³Éä¼´¿É |
+| `../explanation/quality-gates-baseline.md` | `../explanation/quality-gates-baseline.md` + `../explanation/quality-gates-baseline.md` ? | ²¿·ÖÂú×ã | Ç°ÕßÆ«Éè¼Æ½×¶ÎÃÅ½û£¬ºóÕßÆ«»ùÏßÊýÖµ£»ÐèÈ·ÈÏÊÇ·ñÐèºÏ²¢ÎªÍ³Ò»µÄ `../explanation/quality-gates-baseline.md` |
+| `./governance.md` | `../explanation/design/implementation-governance.md` + `../explanation/design/2026-06-29-data-architecture-governance.md` + `../reference/complexity-governance.md` | ~~²»Âú×ã~~ ¡ú ? **ÒÑ¶ÀÁ¢´´½¨** | ~~Æ¥Åäµ½µÄ¶¼ÊÇ**×¨ÏîÖÎÀí**ÎÄµµ~~£»**2026-07-12 ÒÑÐÂ½¨¶ÀÁ¢ `governance.md` v1.0.0** |
+| `../reports/release-management/README.md` | `../../tools/file-management-system/templates/ADR-template.md` | ²»Âú×ã | Æ¥ÅäµÄÊÇ**Ä£°åÎÄ¼þ**£¬·ÇÊµ¼Ê ADR Ö÷Ë÷Òý£»ADR Ö÷Ë÷ÒýÈÔÈ±Ê§ |
+| `docs/../../README.md` | ¸ù¼¶ `../../README.md` + `../reference/../../README.md` + `../explanation/design/00-readme.md` | ~~²»Âú×ã~~ ¡ú ? **ÒÑ¶ÀÁ¢´´½¨** | ~~¸ù¼¶ README ÊÇÏîÄ¿Æô¶¯ËµÃ÷~~£»**2026-07-12 ÒÑÐÂ½¨¶ÀÁ¢ `docs/../../README.md`£¨58 ÐÐ£©** |
 
-> **å¤æ ¸ç»“è®º**ï¼š`../reference/api-contract.md`ã€`quality-gates` ç³»åˆ—ã€`governance.md`ã€`docs/README.md` å…± **4 é¡¹å·²æ»¡è¶³**ã€‚ä»…å‰© ADR ç´¢å¼•ä»å±žç¼ºå¤±ã€‚
+> **¸´ºË½áÂÛ**£º`../reference/api-contract.md`¡¢`quality-gates` ÏµÁÐ¡¢`governance.md`¡¢`docs/README.md` ¹² **4 ÏîÒÑÂú×ã**¡£½öÊ£ ADR Ë÷ÒýÈÔÊôÈ±Ê§¡£
 
-### ç¼ºé™· 3ï¼š~47 ä¸ªå­¤å„¿æ–‡æ¡£ï¼ˆ12.1%ï¼‰æœªè¢«å…«ç±»ä½“ç³»è¦†ç›–ï¼ˆP1ï¼‰â€” ðŸŸ¡ å·²æ”¹å–„ï¼ˆåŽŸ 70 ä»½ï¼‰
+### È±ÏÝ 3£º~47 ¸ö¹Â¶ùÎÄµµ£¨12.1%£©Î´±»°ËÀàÌåÏµ¸²¸Ç£¨P1£©¡ª ?? ÒÑ¸ÄÉÆ£¨Ô­ 70 ·Ý£©
 
-è¿™äº›æ–‡æ¡£**ç‰©ç†å­˜åœ¨**ï¼Œä½† DocTaxonomy V9 çš„ Aâ€“H åˆ†ç±»è§„åˆ™æ— æ³•å°†å…¶å½’ä½ã€‚å…¸åž‹ä¾‹å­ï¼š
+ÕâÐ©ÎÄµµ**ÎïÀí´æÔÚ**£¬µ« DocTaxonomy V9 µÄ A¨CH ·ÖÀà¹æÔòÎÞ·¨½«Æä¹éÎ»¡£µäÐÍÀý×Ó£º
 
-- **æ„¿æ™¯/åŠŸèƒ½è§„æ ¼**ï¼š`../reference/01-vision-and-goals.md`ã€`../reference/02-functional-specs.md`ï¼ˆä½“ç³»æœªè®¾ã€Œéœ€æ±‚è§„æ ¼ã€å­ç±»ï¼ŒA ç±»åªæœ‰ã€Œå¯¼èˆªä¸Žæ²»ç†ã€ï¼‰ã€‚
-- **æœ¯è¯­è¡¨**ï¼š`../reference/10-glossary.md`ï¼ˆä½“ç³»æ— ã€Œæœ¯è¯­/å‚è€ƒã€ç±»ï¼‰ã€‚
-- **æ•°æ®å®šä¹‰**ï¼š`../reference/data-definition.md`ï¼ˆä¸»å­—å…¸ï¼‰ã€`../reference/ai-center-data-definition.md` ç­‰ 7 ä»½ç‹¬ç«‹åŸŸå®šä¹‰ï¼ˆè§ `../reference/index.md` Â§2ï¼‰ï¼›åŽŸ `docs/02-design/*_data-definition.md` 7 ä»½å·²å½’æ¡£è‡³ `07-archive/`ï¼ˆ2026-07-12ï¼‰ã€‚
-- **æ•´æ”¹/è®¡åˆ’ç±»**ï¼š`../reference/batchb-fix-plan.md`ã€`batchd-fix-plan.md`ã€`batche-fix-plan.md`ã€`../reference/rmå‰©ä½™ä»»åŠ¡å…¨é‡ç›˜ç‚¹ä¸Žæ•´æ”¹æ–¹æ¡ˆ-2026-07-08.md`ã€‚
-- **æ’ä»¶æ–‡æ¡£**ï¼š`docs/plugins/*.md`ï¼ˆ10 ä»½ + `../reference/index.md`ï¼Œä½“ç³»å·²éƒ¨åˆ†è¦†ç›–ï¼‰ã€‚
-- **æ•°æ®å­—å…¸/ERå›¾**ï¼š`../explanation/v9-data-relationship-er.md`ã€‚
-- **å‘å¸ƒ/PR/Release**ï¼š`../reference/pr-description.md`ã€`../reference/release-notes.md`ã€`../explanation/design/å‘å¸ƒè®¡åˆ’ä¸Žè¯„å®¡-r01.md`ã€`../explanation/design/å›žæ»šæ–¹æ¡ˆä¸Žæ¼”ç»ƒ-r03.md`ã€‚
-- **è‰ç¨¿/ä¸´æ—¶**ï¼š`docs/drafts/*.md`ï¼ˆ8 ä»½ï¼Œæ— å½’æ¡£è§„åˆ™ï¼Œè¾ƒåŽŸ 6 ä»½å¢žåŠ ï¼‰ã€‚
+- **Ô¸¾°/¹¦ÄÜ¹æ¸ñ**£º`../reference/01-vision-and-goals.md`¡¢`../reference/02-functional-specs.md`£¨ÌåÏµÎ´Éè¡¸ÐèÇó¹æ¸ñ¡¹×ÓÀà£¬A ÀàÖ»ÓÐ¡¸µ¼º½ÓëÖÎÀí¡¹£©¡£
+- **ÊõÓï±í**£º`../reference/10-glossary.md`£¨ÌåÏµÎÞ¡¸ÊõÓï/²Î¿¼¡¹Àà£©¡£
+- **Êý¾Ý×Öµä**£º`../reference/data-definition.md`£¨Ö÷×Öµä£©¡¢`../reference/ai-center-data-definition.md` µÈ 7 ·Ý¶ÀÁ¢Óò¶¨Òå£¨¼û `../reference/index.md` ¡ì2£©£»Ô­ `docs/02-design/*_data-definition.md` 7 ·ÝÒÑ¹éµµÖÁ `07-archive/`£¨2026-07-12£©¡£
+- **Õû¸Ä/¼Æ»®Àà**£º`../reference/batchb-fix-plan.md`¡¢`../reference/batchD-fix-plan.md`¡¢`../reference/batchE-fix-plan.md`¡¢`../reference/rmÊ£ÓàÈÎÎñÈ«Á¿ÅÌµãÓëÕû¸Ä·½°¸-2026-07-08.md`¡£
+- **²å¼þÎÄµµ**£º`docs/plugins/*.md`£¨10 ·Ý + `../reference/index.md`£¬ÌåÏµÒÑ²¿·Ö¸²¸Ç£©¡£
+- **Êý¾Ý×Öµä/ERÍ¼**£º`../explanation/v9-data-relationship-er.md`¡£
+- **·¢²¼/PR/Release**£º`../reference/pr-description.md`¡¢`../reference/release-notes.md`¡¢`../explanation/design/·¢²¼¼Æ»®ÓëÆÀÉó-r01.md`¡¢`../explanation/design/»Ø¹ö·½°¸ÓëÑÝÁ·-r03.md`¡£
+- **²Ý¸å/ÁÙÊ±**£º`docs/drafts/*.md`£¨8 ·Ý£¬ÎÞ¹éµµ¹æÔò£¬½ÏÔ­ 6 ·ÝÔö¼Ó£©¡£
 
-> **æ ¹å› **ï¼šä½“ç³» v1.0.0 ç¼ºå°‘ä»¥ä¸‹å­ç±»ï¼š
-> - éœ€æ±‚è§„æ ¼ï¼ˆVision/Functional Specsï¼‰
-> - æ•°æ®å­—å…¸/å‚è€ƒï¼ˆData Dictionary/Glossaryï¼‰
-> - æ’ä»¶/é›†æˆï¼ˆPluginsï¼‰
-> - è®¡åˆ’/æŽ’æœŸï¼ˆPlans/Schedulesï¼‰
-> - ç‰ˆæœ¬/å‘å¸ƒï¼ˆRelease Managementï¼‰
+> **¸ùÒò**£ºÌåÏµ v1.0.0 È±ÉÙÒÔÏÂ×ÓÀà£º
+> - ÐèÇó¹æ¸ñ£¨Vision/Functional Specs£©
+> - Êý¾Ý×Öµä/²Î¿¼£¨Data Dictionary/Glossary£©
+> - ²å¼þ/¼¯³É£¨Plugins£©
+> - ¼Æ»®/ÅÅÆÚ£¨Plans/Schedules£©
+> - °æ±¾/·¢²¼£¨Release Management£©
 
-### ç¼ºé™· 4ï¼šç›®å½•åä¸Žå†…å®¹ä¸¥é‡é”™ä½ï¼ˆP1ï¼‰â€” ðŸŸ¡ å·²æ”¹å–„
+### È±ÏÝ 4£ºÄ¿Â¼ÃûÓëÄÚÈÝÑÏÖØ´íÎ»£¨P1£©¡ª ?? ÒÑ¸ÄÉÆ
 
-| ç›®å½• | å£°ç§°ç”¨é€” | å®žé™…å†…å®¹ | é”™ä½æ–‡æ¡£æ•° | å˜åŒ– |
+| Ä¿Â¼ | Éù³ÆÓÃÍ¾ | Êµ¼ÊÄÚÈÝ | ´íÎ»ÎÄµµÊý | ±ä»¯ |
 |------|----------|----------|------------|------|
-| `docs/01-requirements/` | éœ€æ±‚è§„æ ¼ | ä»æ··å…¥ `../explanation/architecture-version-comparison.md`ã€`../explanation/v10-architecture-alignment.md`ã€`component-deprecation-policy.md`ã€`DataBridge` ç³»åˆ—ç­‰æž¶æž„/è®¾è®¡æ–‡æ¡£ | ~8 | è¾ƒåŽŸ 11 ä»½éƒ¨åˆ†è¿ç§» |
-| `docs/02-design/` | è®¾è®¡æ–‡æ¡£ | ä»æ··å…¥ `../explanation/design/audit-summary-report.md`ã€`../explanation/design/architecture-compliance-report.md`ã€`../explanation/design/test-expansion-design.md`ã€`quality-audit-plan.md` ç­‰å®¡è®¡/æµ‹è¯•/è¿‡ç¨‹æ–‡æ¡£ | ~25 | è¾ƒåŽŸ 37 ä»½éƒ¨åˆ†è¿ç§» |
-| `docs/03-development/` | å¼€å‘å®žæ–½ | æ··å…¥ `../reference/v6-to-v9-migration-spec.md`ã€`../reference/dataflow-engine-spec.md`ï¼ˆåè®¾è®¡ï¼‰ç­‰ | å°‘é‡ | æ— å˜åŒ– |
-| `docs/implementation/` | å®žæ–½æ–‡æ¡£ | **åªæœ‰ 14 å¼ æˆªå›¾ï¼ˆ.pngï¼‰ï¼Œæ—  .md æ–‡ä»¶** | å…¨éƒ¨ | æ— å˜åŒ– |
-| `docs/05-deployment/` | éƒ¨ç½²è¿ç»´ | ä»… `../reference/2026-06-21-hashrouter-for-static-hosting.md`ï¼ˆ1 ä»½ï¼‰ | ä¸¥é‡ä¸è¶³ | æ— å˜åŒ– |
-| `docs/06-project-management/` | é¡¹ç›®ç®¡ç† | ä»… `data_link_sequence_diagram.md` + æ•£è½ 1 ä»½ï¼ˆ2 ä»½ï¼‰ | ä¸¥é‡ä¸è¶³ | æ— å˜åŒ– |
-| `docs/blueprints/` | è“å›¾ | **0 ä»½** | ç©ºç½® | æ— å˜åŒ– |
-| `docs/plans/` | è®¡åˆ’ | **0 ä»½** | ç©ºç½® | æ— å˜åŒ– |
+| `docs/01-requirements/` | ÐèÇó¹æ¸ñ | ÈÔ»ìÈë `../explanation/architecture-version-comparison.md`¡¢`../explanation/v10-architecture-alignment.md`¡¢`../reference/component-deprecation-policy.md`¡¢`DataBridge` ÏµÁÐµÈ¼Ü¹¹/Éè¼ÆÎÄµµ | ~8 | ½ÏÔ­ 11 ·Ý²¿·ÖÇ¨ÒÆ |
+| `docs/02-design/` | Éè¼ÆÎÄµµ | ÈÔ»ìÈë `../explanation/design/audit-summary-report.md`¡¢`../explanation/design/architecture-compliance-report.md`¡¢`../explanation/design/test-expansion-design.md`¡¢`../reports/audit/quality-audit-plan.md` µÈÉó¼Æ/²âÊÔ/¹ý³ÌÎÄµµ | ~25 | ½ÏÔ­ 37 ·Ý²¿·ÖÇ¨ÒÆ |
+| `docs/03-development/` | ¿ª·¢ÊµÊ© | »ìÈë `../reference/v6-to-v9-migration-spec.md`¡¢`../reference/dataflow-engine-spec.md`£¨Æ«Éè¼Æ£©µÈ | ÉÙÁ¿ | ÎÞ±ä»¯ |
+| `docs/implementation/` | ÊµÊ©ÎÄµµ | **Ö»ÓÐ 14 ÕÅ½ØÍ¼£¨.png£©£¬ÎÞ .md ÎÄ¼þ** | È«²¿ | ÎÞ±ä»¯ |
+| `docs/05-deployment/` | ²¿ÊðÔËÎ¬ | ½ö `../reference/2026-06-21-hashrouter-for-static-hosting.md`£¨1 ·Ý£© | ÑÏÖØ²»×ã | ÎÞ±ä»¯ |
+| `docs/06-project-management/` | ÏîÄ¿¹ÜÀí | ½ö `../reference/data_link_sequence_diagram.md` + É¢Âä 1 ·Ý£¨2 ·Ý£© | ÑÏÖØ²»×ã | ÎÞ±ä»¯ |
+| `docs/blueprints/` | À¶Í¼ | **0 ·Ý** | ¿ÕÖÃ | ÎÞ±ä»¯ |
+| `docs/plans/` | ¼Æ»® | **0 ·Ý** | ¿ÕÖÃ | ÎÞ±ä»¯ |
 
-> **å½±å“**ï¼šæŒ‰ç›®å½•æµè§ˆæ—¶äº§ç”Ÿè®¤çŸ¥æ··ä¹±ï¼›AI æŒ‰ç›®å½•åŠ è½½ä¸Šä¸‹æ–‡æ—¶ä¼šè¯¯åŠ è½½ä¸ç›¸å…³æ–‡æ¡£ã€‚
-> **æ”¹å–„**ï¼š`architecture/` å·²æ‰¿æŽ¥éƒ¨åˆ† 02-design æ–‡æ¡£ï¼›`standards/` å’Œ `ops/` æ–°å»ºåŽå¸çº³éƒ¨åˆ†é”™ä½æ–‡æ¡£ã€‚
+> **Ó°Ïì**£º°´Ä¿Â¼ä¯ÀÀÊ±²úÉúÈÏÖª»ìÂÒ£»AI °´Ä¿Â¼¼ÓÔØÉÏÏÂÎÄÊ±»áÎó¼ÓÔØ²»Ïà¹ØÎÄµµ¡£
+> **¸ÄÉÆ**£º`architecture/` ÒÑ³Ð½Ó²¿·Ö 02-design ÎÄµµ£»`standards/` ºÍ `ops/` ÐÂ½¨ºóÎüÄÉ²¿·Ö´íÎ»ÎÄµµ¡£
 
-### ç¼ºé™· 5ï¼šG ç±»è¿‡åº¦è†¨èƒ€ï¼ˆ33.0%ï¼‰ï¼Œæ·¹æ²¡æ ¸å¿ƒæ–‡æ¡£ï¼ˆP1ï¼‰
+### È±ÏÝ 5£ºG Àà¹ý¶ÈÅòÕÍ£¨33.0%£©£¬ÑÍÃ»ºËÐÄÎÄµµ£¨P1£©
 
-`docs/reports/` + `docs/audit/` + `docs/changelogs/` + `docs/drafts/` åˆè®¡ **~140 ä»½**è¿‡ç¨‹äº§ç‰©ï¼Œå  `.md` æ€»é‡çš„ ~36%ã€‚
+`docs/reports/` + `docs/audit/` + `docs/changelogs/` + `docs/drafts/` ºÏ¼Æ **~140 ·Ý**¹ý³Ì²úÎï£¬Õ¼ `.md` ×ÜÁ¿µÄ ~36%¡£
 
-- `reports/` ä¸‹å­˜åœ¨å¤§é‡è‡ªåŠ¨ç”Ÿæˆçš„ HTML/JSONï¼ˆ`architecture-radar-scan/`ã€`mcp-agent-gap-analysis/` ç­‰ï¼‰ã€‚
-- `drafts/` ä¸‹ 8 ä»½ä¸´æ—¶æ–‡æ¡£æ— æ¸…ç†è§„åˆ™ï¼ˆè¾ƒåŽŸ 6 ä»½å¢žåŠ ï¼‰ã€‚
-- `07-archive/` å·²æ”¶çº³ 9 ä»½ DEPRECATED æ–‡æ¡£ï¼Œå½’æ¡£èƒ½åŠ›æ”¹å–„ã€‚
+- `reports/` ÏÂ´æÔÚ´óÁ¿×Ô¶¯Éú³ÉµÄ HTML/JSON£¨`architecture-radar-scan/`¡¢`mcp-agent-gap-analysis/` µÈ£©¡£
+- `drafts/` ÏÂ 8 ·ÝÁÙÊ±ÎÄµµÎÞÇåÀí¹æÔò£¨½ÏÔ­ 6 ·ÝÔö¼Ó£©¡£
+- `07-archive/` ÒÑÊÕÄÉ 9 ·Ý DEPRECATED ÎÄµµ£¬¹éµµÄÜÁ¦¸ÄÉÆ¡£
 
-> **Kimi ç­–ç•¥å…³è”**ï¼šKimi æ–‡ä»¶ä¸Šä¼ æœ‰ 1000 ä¸ªé™åˆ¶ã€‚è‡ªåŠ¨äº§ç‰©è‹¥ä¸éš”ç¦»ï¼Œå°†æŒ¤å æœ‰æ•ˆæ–‡ä»¶é…é¢ï¼Œå¯¼è‡´æ ¸å¿ƒæ–‡æ¡£æ— æ³•ä¸Šä¼ æˆ–åŠ è½½ã€‚
+> **Kimi ²ßÂÔ¹ØÁª**£ºKimi ÎÄ¼þÉÏ´«ÓÐ 1000 ¸öÏÞÖÆ¡£×Ô¶¯²úÎïÈô²»¸ôÀë£¬½«¼·Õ¼ÓÐÐ§ÎÄ¼þÅä¶î£¬µ¼ÖÂºËÐÄÎÄµµÎÞ·¨ÉÏ´«»ò¼ÓÔØ¡£
 
-### ç¼ºé™· 6ï¼šæ•°æ®å®šä¹‰æ–‡ä»¶é«˜åº¦é‡å¤ï¼ˆP0ï¼‰â€” ðŸŸ¡ å·²æ”¹å–„ï¼ˆ10â†’8ï¼‰
+### È±ÏÝ 6£ºÊý¾Ý×ÖµäÎÄ¼þ¸ß¶ÈÖØ¸´£¨P0£©¡ª ?? ÒÑ¸ÄÉÆ£¨10¡ú8£©
 
-`DATA_DEFINITION` ä¸»é¢˜åœ¨ä»¥ä¸‹ä½ç½®é‡å¤å­˜åœ¨ï¼š
+`DATA_DEFINITION` Ö÷ÌâÔÚÒÔÏÂÎ»ÖÃÖØ¸´´æÔÚ£º
 
-1. ~~`../reference/data-definition.md`ï¼ˆæ ¹çº§ï¼‰~~ âœ… å·²ç§»é™¤
-2. ~~`../reference/data-definition.md`~~ âœ… å·²ç§»é™¤
-3. `../reference/data-definition.md`ï¼ˆæ–°å¢žï¼Œä½œä¸ºç»Ÿä¸€å…¥å£ï¼‰
-4. ~~`../reference/ai-center-data-definition.md`~~ âœ… å·²å½’æ¡£è‡³ `07-archive/`
-5. ~~`docs/explanation/design/BACKTEST_data-definition.md`~~ âœ… å·²å½’æ¡£è‡³ `07-archive/`
-6. ~~`../reference/dataflow-data-definition.md`~~ âœ… å·²å½’æ¡£è‡³ `07-archive/`
-7. ~~`docs/explanation/design/MULTI_FACTOR_SCREENING_data-definition.md`~~ âœ… å·²å½’æ¡£è‡³ `07-archive/`
-8. ~~`docs/explanation/design/NEWS_data-definition.md`~~ âœ… å·²å½’æ¡£è‡³ `07-archive/`
-9. ~~`docs/explanation/design/RISK_DERIVED_data-definition.md`~~ âœ… å·²å½’æ¡£è‡³ `07-archive/`
-10. ~~`docs/explanation/design/SEVEN_DIM_CONFIG_data-definition.md`~~ âœ… å·²å½’æ¡£è‡³ `07-archive/`
-11. `../reference/ai-center-data-definition.md`ï¼ˆç‹¬ç«‹åŸŸå®šä¹‰ï¼Œè§ `../reference/index.md`ï¼‰
-12. `../reference/backtest-data-definition.md`ï¼ˆåŒä¸Šï¼‰
-13. `../reference/dataflow-data-definition.md`ï¼ˆåŒä¸Šï¼‰
-14. `../reference/multi-factor-screening-data-definition.md`ï¼ˆåŒä¸Šï¼‰
-15. `../reference/news-data-definition.md`ï¼ˆåŒä¸Šï¼‰
-16. `../reference/risk-derived-data-definition.md`ï¼ˆåŒä¸Šï¼‰
-17. `../reference/seven-dim-config-data-definition.md`ï¼ˆåŒä¸Šï¼‰
+1. ~~`../reference/data-definition.md`£¨¸ù¼¶£©~~ ? ÒÑÒÆ³ý
+2. ~~`../reference/data-definition.md`~~ ? ÒÑÒÆ³ý
+3. `../reference/data-definition.md`£¨ÐÂÔö£¬×÷ÎªÍ³Ò»Èë¿Ú£©
+4. ~~`../reference/ai-center-data-definition.md`~~ ? ÒÑ¹éµµÖÁ `07-archive/`
+5. ~~`../explanation/design/data-definition.md`~~ ? ÒÑ¹éµµÖÁ `07-archive/`
+6. ~~`../reference/dataflow-data-definition.md`~~ ? ÒÑ¹éµµÖÁ `07-archive/`
+7. ~~`docs/explanation/design/MULTI_FACTOR_SCREENING_data-definition.md`~~ ? ÒÑ¹éµµÖÁ `07-archive/`
+8. ~~`../explanation/design/news-data-definition.md`~~ ? ÒÑ¹éµµÖÁ `07-archive/`
+9. ~~`docs/explanation/design/RISK_DERIVED_data-definition.md`~~ ? ÒÑ¹éµµÖÁ `07-archive/`
+10. ~~`docs/explanation/design/SEVEN_DIM_CONFIG_data-definition.md`~~ ? ÒÑ¹éµµÖÁ `07-archive/`
+11. `../reference/ai-center-data-definition.md`£¨¶ÀÁ¢Óò¶¨Òå£¬¼û `../reference/index.md`£©
+12. `../reference/backtest-data-definition.md`£¨Í¬ÉÏ£©
+13. `../reference/dataflow-data-definition.md`£¨Í¬ÉÏ£©
+14. `../reference/multi-factor-screening-data-definition.md`£¨Í¬ÉÏ£©
+15. `../reference/news-data-definition.md`£¨Í¬ÉÏ£©
+16. `../reference/risk-derived-data-definition.md`£¨Í¬ÉÏ£©
+17. `../reference/seven-dim-config-data-definition.md`£¨Í¬ÉÏ£©
 
-> **æ ¹å› **ï¼šç¼ºå°‘ç»Ÿä¸€çš„æ•°æ®å­—å…¸ç®¡ç†è§„èŒƒï¼ˆ`../reference/index.md` å·²åˆ›å»ºï¼Œéœ€å‘æŒ¥ã€Œå”¯ä¸€ç´¢å¼•ã€ä½œç”¨ï¼‰ã€‚
-> **é£Žé™©**ï¼šåŒä¸€æ•°æ®å­—æ®µåœ¨ä¸åŒæ–‡æ¡£ä¸­å®šä¹‰å†²çªï¼ŒAI ç”Ÿæˆä»£ç æ—¶å¼•ç”¨é”™è¯¯ç‰ˆæœ¬ã€‚
-> **æ”¹å–„**ï¼šæ ¹çº§ä¸Ž 01-requirements çš„é‡å¤å®šä¹‰å·²ç§»é™¤ï¼›`standards/` æ–°å»ºä½œä¸ºæ•°æ®å®šä¹‰ç»Ÿä¸€å…¥å£ã€‚
+> **¸ùÒò**£ºÈ±ÉÙÍ³Ò»µÄÊý¾Ý×Öµä¹ÜÀí¹æ·¶£¨`../reference/index.md` ÒÑ´´½¨£¬Ðè·¢»Ó¡¸Î¨Ò»Ë÷Òý¡¹×÷ÓÃ£©¡£
+> **·çÏÕ**£ºÍ¬Ò»Êý¾Ý×Ö¶ÎÔÚ²»Í¬ÎÄµµÖÐ¶¨Òå³åÍ»£¬AI Éú³É´úÂëÊ±ÒýÓÃ´íÎó°æ±¾¡£
+> **¸ÄÉÆ**£º¸ù¼¶Óë 01-requirements µÄÖØ¸´¶¨ÒåÒÑÒÆ³ý£»`standards/` ÐÂ½¨×÷ÎªÊý¾Ý×ÖµäÍ³Ò»Èë¿Ú¡£
 
-### ç¼ºé™· 7ï¼šDEPRECATED æ–‡æ¡£æœªæ¸…ç†ï¼Œå­˜åœ¨ä¿¡æ¯æ±¡æŸ“ï¼ˆP2ï¼‰â€” âœ… å·²ä¿®å¤
+### È±ÏÝ 7£ºDEPRECATED ÎÄµµÎ´ÇåÀí£¬´æÔÚÐÅÏ¢ÎÛÈ¾£¨P2£©¡ª ? ÒÑÐÞ¸´
 
-å…±å‘çŽ° **9 ä»½** æ ‡è®°ä¸º DEPRECATED çš„æ–‡æ¡£ï¼ŒåŽŸåˆ†å¸ƒåœ¨ `01-requirements/`ã€`02-design/`ã€`03-development/`ã€`07-archive/`ã€‚
+¹²·¢ÏÖ **9 ·Ý** ±ê¼ÇÎª DEPRECATED µÄÎÄµµ£¬Ô­·Ö²¼ÔÚ `01-requirements/`¡¢`02-design/`¡¢`03-development/`¡¢`07-archive/`¡£
 
-- ~~ä»… 1 ä»½åœ¨ `07-archive/`ï¼ˆæ­£ç¡®çš„å½’æ¡£ä½ç½®ï¼‰ï¼Œå…¶ä½™ 8 ä»½æ•£è½åœ¨æ´»è·ƒç›®å½•ä¸­ã€‚~~
-- âœ… **å…¨éƒ¨ 9 ä»½å·²ç»Ÿä¸€å½’æ¡£è‡³ `07-archive/`**ã€‚
-- æ— ã€ŒDEPRECATED æ–‡æ¡£æ¸…ç†å‘¨æœŸã€è§„åˆ™ â†’ å»ºè®® P1 åˆ¶å®š `cleanup-schedule.md`ã€‚
+- ~~½ö 1 ·ÝÔÚ `07-archive/`£¨ÕýÈ·µÄ¹éµµÎ»ÖÃ£©£¬ÆäÓà 8 ·ÝÉ¢ÂäÔÚ»îÔ¾Ä¿Â¼ÖÐ¡£~~
+- ? **È«²¿ 9 ·ÝÒÑÍ³Ò»¹éµµÖÁ `07-archive/`**¡£
+- ÎÞ¡¸DEPRECATED ÎÄµµÇåÀíÖÜÆÚ¡¹¹æÔò ¡ú ½¨Òé P1 ÖÆ¶¨ `cleanup-schedule.md`¡£
 
 ---
 
-## ä¸‰ã€æ–°å¢žé—æ¼äº‹é¡¹ï¼ˆæœ¬æ¬¡ä½“æ£€å‘çŽ°ï¼Œv1.0.0 æœªè¦†ç›–ï¼‰
+## Èý¡¢ÐÂÔöÒÅÂ©ÊÂÏî£¨±¾´ÎÌå¼ì·¢ÏÖ£¬v1.0.0 Î´¸²¸Ç£©
 
-### 3.1 ä½“ç³»ç»“æž„è‡ªèº«é—æ¼çš„å­ç±»
+### 3.1 ÌåÏµ½á¹¹×ÔÉíÒÅÂ©µÄ×ÓÀà
 
-åŸºäºŽ ~47 ä¸ªå­¤å„¿æ–‡æ¡£çš„åˆ†æžï¼Œå»ºè®®å…«ç±»ä½“ç³»æ‰©å±•ä¸ºä»¥ä¸‹äºŒçº§å­ç±»ï¼š
+»ùÓÚ ~47 ¸ö¹Â¶ùÎÄµµµÄ·ÖÎö£¬½¨Òé°ËÀàÌåÏµÀ©Õ¹ÎªÒÔÏÂ¶þ¼¶×ÓÀà£º
 
-| å»ºè®®æ–°å¢žå­ç±» | å½’å±žä¸€çº§ç±» | ä»£è¡¨å­¤å„¿æ–‡æ¡£ | å¿…è¦æ€§ |
+| ½¨ÒéÐÂÔö×ÓÀà | ¹éÊôÒ»¼¶Àà | ´ú±í¹Â¶ùÎÄµµ | ±ØÒªÐÔ |
 |-------------|-----------|-------------|--------|
-| **A2 éœ€æ±‚è§„æ ¼** | A | `../reference/01-vision-and-goals.md`ã€`../reference/02-functional-specs.md` | é«˜ |
-| **A3 æ’ä»¶é›†æˆ** | A | `plugins/*.md`ï¼ˆ10 ä»½ + indexï¼‰ | ä¸­ |
-| **B5 ç‰ˆæœ¬/å‘å¸ƒ** | B | `../reference/release-notes.md`ã€`../reference/pr-description.md`ã€`å‘å¸ƒè®¡åˆ’` | ä¸­ |
-| **C7 æ•°æ®å­—å…¸** | C | `../reference/index.md` + 8 ä»½ DATA_DEFINITION | é«˜ |
-| **D5 è¿ç§»è§„èŒƒ** | D | `../reference/v6-to-v9-migration-spec.md`ã€`../explanation/db-migration-v4-to-v6.md` | ä¸­ |
-| **G4 è‰ç¨¿/ä¸´æ—¶** | G | `drafts/*.md`ï¼ˆ8 ä»½ï¼‰ | ä¸­ |
-| **G5 å‘å¸ƒç®¡ç†** | G | `å‘å¸ƒè®¡åˆ’`ã€`å›žæ»šæ–¹æ¡ˆ` | ä½Ž |
+| **A2 ÐèÇó¹æ¸ñ** | A | `../reference/01-vision-and-goals.md`¡¢`../reference/02-functional-specs.md` | ¸ß |
+| **A3 ²å¼þ¼¯³É** | A | `plugins/*.md`£¨10 ·Ý + index£© | ÖÐ |
+| **B5 °æ±¾/·¢²¼** | B | `../reference/release-notes.md`¡¢`../reference/pr-description.md`¡¢`·¢²¼¼Æ»®` | ÖÐ |
+| **C7 Êý¾Ý×Öµä** | C | `../reference/index.md` + 8 ·Ý DATA_DEFINITION | ¸ß |
+| **D5 Ç¨ÒÆ¹æ·¶** | D | `../reference/v6-to-v9-migration-spec.md`¡¢`../explanation/db-migration-v4-to-v6.md` | ÖÐ |
+| **G4 ²Ý¸å/ÁÙÊ±** | G | `drafts/*.md`£¨8 ·Ý£© | ÖÐ |
+| **G5 ·¢²¼¹ÜÀí** | G | `·¢²¼¼Æ»®`¡¢`»Ø¹ö·½°¸` | µÍ |
 
-### 3.2 ç»“åˆ Kimi å¼€å‘åŒºæ–‡ä»¶ç­–ç•¥çš„é—æ¼ â€” ðŸŸ¡ éƒ¨åˆ†å·²è½å®ž
+### 3.2 ½áºÏ Kimi ¿ª·¢ÇøÎÄ¼þ²ßÂÔµÄÒÅÂ© ¡ª ?? ²¿·ÖÒÑÂäÊµ
 
-Kimi å®˜æ–¹æŽ¨èçš„é¡¹ç›®æ–‡ä»¶ç®¡ç†ç­–ç•¥ï¼š
+Kimi ¹Ù·½ÍÆ¼öµÄÏîÄ¿ÎÄ¼þ¹ÜÀí²ßÂÔ£º
 
-> "å»ºè®®åˆ›å»ºä¸€ä¸ªé¡¹ç›®ï¼Œå°†ç›¸å…³æ–‡ä»¶æ•´ç†åœ¨åŒä¸€ä¸ªæ–‡ä»¶å¤¹ä¸­... å®šæœŸæ¸…ç†å·²ä¸Šä¼ çš„æ–‡ä»¶... æ¯ä¸ªç”¨æˆ·æœ€å¤šä¸Šä¼  1000 ä¸ªæ–‡ä»¶ã€‚"
+> "½¨Òé´´½¨Ò»¸öÏîÄ¿£¬½«Ïà¹ØÎÄ¼þÕûÀíÔÚÍ¬Ò»¸öÎÄ¼þ¼ÐÖÐ... ¶¨ÆÚÇåÀíÒÑÉÏ´«µÄÎÄ¼þ... Ã¿¸öÓÃ»§×î¶àÉÏ´« 1000 ¸öÎÄ¼þ¡£"
 
-å½“å‰é¡¹ç›®**å·²è½å®ž / æœªè½å®ž**çš„ Kimi ç­–ç•¥è¦ç‚¹ï¼š
+µ±Ç°ÏîÄ¿**ÒÑÂäÊµ / Î´ÂäÊµ**µÄ Kimi ²ßÂÔÒªµã£º
 
-| Kimi ç­–ç•¥è¦ç‚¹ | åˆæ£€çŠ¶æ€ | ä¿®è®¢çŠ¶æ€ | é—æ¼äº‹é¡¹ |
+| Kimi ²ßÂÔÒªµã | ³õ¼ì×´Ì¬ | ÐÞ¶©×´Ì¬ | ÒÅÂ©ÊÂÏî |
 |--------------|----------|----------|----------|
-| **é¡¹ç›®æ–‡ä»¶å¤¹å•ä¸€å…¥å£** | `docs/` æœ‰ 18 ä¸ªå­ç›®å½•ï¼Œæ— ç»Ÿä¸€ README | âœ… **å·²åˆ›å»º** `docs/README.md`ï¼ˆ58 è¡Œï¼‰ | ä¿æŒåŒæ­¥æ›´æ–° |
-| **æ–‡ä»¶æ•°é‡æŽ§åˆ¶** | 356 `.md` + å¤§é‡ HTML/JSON è‡ªåŠ¨äº§ç‰© | 388 `.md` + è‡ªåŠ¨äº§ç‰© | è‡ªåŠ¨äº§ç‰©æœªå®Œå…¨éš”ç¦»ï¼Œé€¼è¿‘ 1000 æ–‡ä»¶ä¸Šé™ |
-| **æŠ½å–åŽå†…å®¹æœ¬åœ°ç¼“å­˜** | æ—  `docs/.cache/` æˆ– `.kimi-index/` æœºåˆ¶ | âœ… **å·²åˆ›å»º** `docs/.ai-index/`ï¼ˆcode-graph.json + ai-memory-index.jsonï¼‰ | ä¿æŒå¢žé‡æ›´æ–° |
-| **å®šæœŸæ¸…ç†æœºåˆ¶** | æ—  `./cleanup-schedule.md` | ä»ç¼ºå¤± | drafts/ã€reports/_generated/ æ— è‡ªåŠ¨æ¸…ç†è§„åˆ™ |
-| **ç›¸å…³æ–‡ä»¶å°±è¿‘ç»„ç»‡** | åŒä¸€ä¸»é¢˜ï¼ˆå¦‚ DataBridgeï¼‰æ•£è½ 4 ä¸ªç›®å½• | ä»æ•£è½ | åº”å»ºç«‹ã€Œä¸»é¢˜åŒ…ã€è€ŒéžæŒ‰é˜¶æ®µåˆ†ç›®å½• |
+| **ÏîÄ¿ÎÄ¼þ¼Ðµ¥Ò»Èë¿Ú** | `docs/` ÓÐ 18 ¸ö×ÓÄ¿Â¼£¬ÎÞÍ³Ò» README | ? **ÒÑ´´½¨** `docs/README.md`£¨58 ÐÐ£© | ±£³ÖÍ¬²½¸üÐÂ |
+| **ÎÄ¼þÊýÁ¿¿ØÖÆ** | 356 `.md` + ´óÁ¿ HTML/JSON ×Ô¶¯²úÎï | 388 `.md` + ×Ô¶¯²úÎï | ×Ô¶¯²úÎïÎ´ÍêÈ«¸ôÀë£¬±Æ½ü 1000 ÎÄ¼þÉÏÏÞ |
+| **³éÈ¡ºóÄÚÈÝ±¾µØ»º´æ** | ÎÞ `docs/.cache/` »ò `.kimi-index/` »úÖÆ | ? **ÒÑ´´½¨** `docs/.ai-index/`£¨code-graph.json + ai-memory-index.json£© | ±£³ÖÔöÁ¿¸üÐÂ |
+| **¶¨ÆÚÇåÀí»úÖÆ** | ÎÞ `./cleanup-schedule.md` | ÈÔÈ±Ê§ | drafts/¡¢reports/_generated/ ÎÞ×Ô¶¯ÇåÀí¹æÔò |
+| **Ïà¹ØÎÄ¼þ¾Í½ü×éÖ¯** | Í¬Ò»Ö÷Ìâ£¨Èç DataBridge£©É¢Âä 4 ¸öÄ¿Â¼ | ÈÔÉ¢Âä | Ó¦½¨Á¢¡¸Ö÷Ìâ°ü¡¹¶ø·Ç°´½×¶Î·ÖÄ¿Â¼ |
 
-### 3.3 ç»“åˆ AGENTS.md å¥‘çº¦çš„é—æ¼ â€” ðŸŸ¡ éƒ¨åˆ†å·²è¡¥é½
+### 3.3 ½áºÏ AGENTS.md ÆõÔ¼µÄÒÅÂ© ¡ª ?? ²¿·ÖÒÑ²¹Æë
 
-`../../AGENTS.md` è¦æ±‚ï¼š
-- `npm run audit:docs` æ£€æŸ¥æ–‡æ¡£åŒæ­¥çŠ¶æ€
-- `npx tsc --noEmit` éªŒè¯ç±»åž‹å®‰å…¨
-- å›žæ»šåŽå¿…é¡»æ‰§è¡Œ `npm run audit:layers` + `npm run test -- --run`
+`../../AGENTS.md` ÒªÇó£º
+- `npm run audit:docs` ¼ì²éÎÄµµÍ¬²½×´Ì¬
+- `npx tsc --noEmit` ÑéÖ¤ÀàÐÍ°²È«
+- »Ø¹öºó±ØÐëÖ´ÐÐ `npm run audit:layers` + `npm run test -- --run`
 
-ä½†æ–‡æ¡£ä½“ç³»**ç¼ºå°‘ / å·²è¡¥é½**ä»¥ä¸‹æ”¯æ’‘ï¼š
+µ«ÎÄµµÌåÏµ**È±ÉÙ / ÒÑ²¹Æë**ÒÔÏÂÖ§³Å£º
 
-| å¥‘çº¦è¦æ±‚ | åˆæ£€ç¼ºå£ | ä¿®è®¢çŠ¶æ€ |
+| ÆõÔ¼ÒªÇó | ³õ¼ìÈ±¿Ú | ÐÞ¶©×´Ì¬ |
 |----------|----------|----------|
-| æ–°å¢žé¡µé¢å¿…é¡»åŒæ­¥æ›´æ–° `ROUTE_REGISTRY` å’Œ `../reference/06-routing-specs.md` | æ—  `docs/how-to/how-to-add-page.md` æ“ä½œæŒ‡å— | ä»ç¼ºå¤± |
-| ä¿®æ”¹ `UserType` ä¸å¾—ç ´å `user-type.spec.ts` | æ—  `docs/standards/type-evolution-guide.md` | ä»ç¼ºå¤± |
-| æ‰€æœ‰ `useEffect` æ¸…ç†æ¨¡æ¿ï¼ˆ4 ä¸ªï¼‰ | æ—  `docs/standards/react-lifecycle-patterns.md` | ä»ç¼ºå¤± |
-| é¢œè‰²ä»¤ç‰Œ 8 ä¸ªåœºæ™¯ï¼ˆAâ€“Hï¼‰ | æ—  `../explanation/token-usage-cookbook.md`ï¼ˆ`../reference/design-token-mapping.md` ä¸å¤Ÿåœºæ™¯åŒ–ï¼‰ | âœ… **å·²åˆ›å»º** `../explanation/token-usage-cookbook.md` |
+| ÐÂÔöÒ³Ãæ±ØÐëÍ¬²½¸üÐÂ `ROUTE_REGISTRY` ºÍ `../reference/06-routing-specs.md` | ÎÞ `../archive/how-to-add-page.md` ²Ù×÷Ö¸ÄÏ | ÈÔÈ±Ê§ |
+| ÐÞ¸Ä `UserType` ²»µÃÆÆ»µ `user-type.spec.ts` | ÎÞ `../archive/type-evolution-guide.md` | ÈÔÈ±Ê§ |
+| ËùÓÐ `useEffect` ÇåÀíÄ£°å£¨4 ¸ö£© | ÎÞ `../archive/react-lifecycle-patterns.md` | ÈÔÈ±Ê§ |
+| ÑÕÉ«ÁîÅÆ 8 ¸ö³¡¾°£¨A¨CH£© | ÎÞ `../explanation/token-usage-cookbook.md`£¨`../reference/design-token-mapping.md` ²»¹»³¡¾°»¯£© | ? **ÒÑ´´½¨** `../explanation/token-usage-cookbook.md` |
 
 ---
 
-## å››ã€æ”¹è¿›å»ºè®®ä¸Žä¼˜å…ˆçº§
+## ËÄ¡¢¸Ä½ø½¨ÒéÓëÓÅÏÈ¼¶
 
-### 4.1 ç«‹å³æ‰§è¡Œï¼ˆP0ï¼Œæœ¬å‘¨å†…ï¼‰â€” âœ… 6/7 å·²å®Œæˆ
+### 4.1 Á¢¼´Ö´ÐÐ£¨P0£¬±¾ÖÜÄÚ£©¡ª ? 6/7 ÒÑÍê³É
 
-| # | è¡ŒåŠ¨ | çŠ¶æ€ | è¯´æ˜Ž |
+| # | ÐÐ¶¯ | ×´Ì¬ | ËµÃ÷ |
 |---|------|------|------|
-| 1 | **æ–°å»º `docs/README.md`** | âœ… å·²å®Œæˆ | 58 è¡Œï¼Œå« Aâ€“H ç´¢å¼• + å¿«é€Ÿå…¥å£ + è´¡çŒ®çº¦å®š |
-| 2 | **åˆå¹¶/åŽ»é‡æ•°æ®å®šä¹‰æ–‡ä»¶** | ðŸŸ¡ éƒ¨åˆ†å®Œæˆ | æ ¹çº§ä¸Ž 01-req çš„é‡å¤å·²ç§»é™¤ï¼›`../reference/index.md` å·²åˆ›å»ºï¼›02-design ä¸‹ 7 ä»½ä»å¾…æ•´åˆ |
-| 3 | **æ¸…ç†ç›®å½•é”™ä½** | ðŸŸ¡ éƒ¨åˆ†å®Œæˆ | 01-req/02-design éƒ¨åˆ†è¿ç§»ï¼›architecture/ã€standards/ã€ops/ æ–°å»ºåŽå¸çº³éƒ¨åˆ†æ–‡æ¡£ï¼›æ®‹ä½™ ~33 ä»½å¾… P1 ç»§ç»­ |
-| 4 | **éš”ç¦»è‡ªåŠ¨äº§ç‰©** | ðŸŸ¡ è§„åˆ’ä¸­ | `reports/` ä¸‹ HTML ä»æ•£è½ï¼›å»ºè®® P1 ç§»å…¥ `_generated/` å¹¶é…ç½® `.gitignore` |
-| 5 | **æ–°å»º `./governance.md`** | âœ… å·²å®Œæˆ | v1.0.0ï¼Œå«ä¿é²œè§„åˆ™ã€ç›®å½•å‘½åã€è´¡çŒ®çº¦å®š |
-| â€” | **é¢å¤–ï¼šæ–°å»º `../reference/services-catalog.md`** | âœ… å·²å®Œæˆ | è¦†ç›– 23 ä¸ªæœåŠ¡å­åŸŸï¼Œè¶…åŽŸæ¸…å•é¢„æœŸ |
-| â€” | **é¢å¤–ï¼šæ–°å»º `../explanation/runbook.md`** | âœ… å·²å®Œæˆ | è¿ç»´åŸºçº¿æ–‡æ¡£ |
-| â€” | **é¢å¤–ï¼šæ–°å»º `docs/.ai-index/`** | âœ… å·²å®Œæˆ | å« code-graph.json + ai-memory-index.json |
+| 1 | **ÐÂ½¨ `docs/README.md`** | ? ÒÑÍê³É | 58 ÐÐ£¬º¬ A¨CH Ë÷Òý + ¿ìËÙÈë¿Ú + ¹±Ï×Ô¼¶¨ |
+| 2 | **ºÏ²¢/È¥ÖØÊý¾Ý×ÖµäÎÄ¼þ** | ?? ²¿·ÖÍê³É | ¸ù¼¶Óë 01-req µÄÖØ¸´ÒÑÒÆ³ý£»`../reference/index.md` ÒÑ´´½¨£»02-design ÏÂ 7 ·ÝÈÔ´ýÕûºÏ |
+| 3 | **ÇåÀíÄ¿Â¼´íÎ»** | ?? ²¿·ÖÍê³É | 01-req/02-design ²¿·ÖÇ¨ÒÆ£»architecture/¡¢standards/¡¢ops/ ÐÂ½¨ºóÎüÄÉ²¿·ÖÎÄµµ£»²ÐÓà ~33 ·Ý´ý P1 ¼ÌÐø |
+| 4 | **¸ôÀë×Ô¶¯²úÎï** | ?? ¹æ»®ÖÐ | `reports/` ÏÂ HTML ÈÔÉ¢Âä£»½¨Òé P1 ÒÆÈë `_generated/` ²¢ÅäÖÃ `.gitignore` |
+| 5 | **ÐÂ½¨ `./governance.md`** | ? ÒÑÍê³É | v1.0.0£¬º¬±£ÏÊ¹æÔò¡¢Ä¿Â¼ÃüÃû¡¢¹±Ï×Ô¼¶¨ |
+| ¡ª | **¶îÍâ£ºÐÂ½¨ `../reference/services-catalog.md`** | ? ÒÑÍê³É | ¸²¸Ç 23 ¸ö·þÎñ×ÓÓò£¬³¬Ô­Çåµ¥Ô¤ÆÚ |
+| ¡ª | **¶îÍâ£ºÐÂ½¨ `../explanation/runbook.md`** | ? ÒÑÍê³É | ÔËÎ¬»ùÏßÎÄµµ |
+| ¡ª | **¶îÍâ£ºÐÂ½¨ `docs/.ai-index/`** | ? ÒÑÍê³É | º¬ code-graph.json + ai-memory-index.json |
 
-### 4.2 çŸ­æœŸè¡¥é½ï¼ˆP1ï¼Œ2 å‘¨å†…ï¼‰â€” ðŸŸ¡ è¿›è¡Œä¸­
+### 4.2 ¶ÌÆÚ²¹Æë£¨P1£¬2 ÖÜÄÚ£©¡ª ?? ½øÐÐÖÐ
 
-| # | è¡ŒåŠ¨ | çŠ¶æ€ | è¯´æ˜Ž |
+| # | ÐÐ¶¯ | ×´Ì¬ | ËµÃ÷ |
 |---|------|------|------|
-| 6 | **è¡¥é½ 10 ä¸ªç¡®è®¤ç¼ºå¤±æ–‡æ¡£** | ðŸŸ¡ è¿›è¡Œä¸­ | è¾ƒåŽŸ 18 ä¸ªå‡å°‘ 8 ä¸ªï¼›getting-started + 3 ä¸ª How-to å·²è¡¥é½ï¼›é‡ç‚¹ï¼šdeploymentã€security-modelã€test-catalogã€ai-README |
-| 7 | **æ–°å»º `../reference/README.md`** | ðŸ”´ æœªå¼€å§‹ | ä¸²è” prompts/ æ¨¡æ¿ã€æ£€æŸ¥è¡¨ã€é£žè½®ã€è®°å¿†å±‚å››ä»¶å¥— |
-| 8 | **å»ºç«‹ `docs/ops/` ç›®å½•** | ðŸŸ¡ éƒ¨åˆ†å®Œæˆ | `../explanation/runbook.md` å·²åˆ›å»ºï¼›`../reference/deployment.md` ä»ç¼ºå¤± |
-| 9 | **å½’æ¡£ DEPRECATED æ–‡æ¡£** | âœ… å·²å®Œæˆ | å…¨éƒ¨ 9 ä»½å·²ç»Ÿä¸€ç§»è‡³ `07-archive/`ï¼›å»ºè®®æ·»åŠ  `../README.md` è¯´æ˜Žä¿ç•™æœŸé™ |
-| 10 | **å¡«å……ç©ºç½®ç›®å½•** | ðŸ”´ æœªå¼€å§‹ | `blueprints/`ã€`plans/` ä»ç©ºç½®ï¼›å»ºè®®åˆå¹¶æˆ–åˆ é™¤ |
+| 6 | **²¹Æë 10 ¸öÈ·ÈÏÈ±Ê§ÎÄµµ** | ?? ½øÐÐÖÐ | ½ÏÔ­ 18 ¸ö¼õÉÙ 8 ¸ö£»getting-started + 3 ¸ö How-to ÒÑ²¹Æë£»ÖØµã£ºdeployment¡¢security-model¡¢test-catalog¡¢ai-README |
+| 7 | **ÐÂ½¨ `../reference/README.md`** | ?? Î´¿ªÊ¼ | ´®Áª prompts/ Ä£°å¡¢¼ì²é±í¡¢·ÉÂÖ¡¢¼ÇÒä²ãËÄ¼þÌ× |
+| 8 | **½¨Á¢ `docs/ops/` Ä¿Â¼** | ?? ²¿·ÖÍê³É | `../explanation/runbook.md` ÒÑ´´½¨£»`../reference/deployment.md` ÈÔÈ±Ê§ |
+| 9 | **¹éµµ DEPRECATED ÎÄµµ** | ? ÒÑÍê³É | È«²¿ 9 ·ÝÒÑÍ³Ò»ÒÆÖÁ `07-archive/`£»½¨ÒéÌí¼Ó `../README.md` ËµÃ÷±£ÁôÆÚÏÞ |
+| 10 | **Ìî³ä¿ÕÖÃÄ¿Â¼** | ?? Î´¿ªÊ¼ | `blueprints/`¡¢`plans/` ÈÔ¿ÕÖÃ£»½¨ÒéºÏ²¢»òÉ¾³ý |
 
-### 4.3 ä¸­æœŸä¼˜åŒ–ï¼ˆP2ï¼Œ1 ä¸ªæœˆå†…ï¼‰â€” ðŸŸ¡ éƒ¨åˆ†å·²å¯åŠ¨
+### 4.3 ÖÐÆÚÓÅ»¯£¨P2£¬1 ¸öÔÂÄÚ£©¡ª ?? ²¿·ÖÒÑÆô¶¯
 
-| # | è¡ŒåŠ¨ | çŠ¶æ€ | è¯´æ˜Ž |
+| # | ÐÐ¶¯ | ×´Ì¬ | ËµÃ÷ |
 |---|------|------|------|
-| 11 | **å»ºç«‹ã€Œä¸»é¢˜åŒ…ã€ç»„ç»‡** | ðŸ”´ æœªå¼€å§‹ | ä»¥ DataBridge ä¸ºä¾‹ï¼Œå°†æ•£è½æ–‡æ¡£ç”¨ `docs/topics/databridge/` é‡æ–°ç»„ç»‡ |
-| 12 | **å¼•å…¥ Kimi æ–‡ä»¶ç¼“å­˜æœºåˆ¶** | âœ… å·²å®Œæˆ | `docs/.ai-index/` å·²åˆ›å»ºï¼Œå­˜æ”¾ code-graph.json ç­‰ AI ç¼“å­˜ |
-| 13 | **åˆ¶å®š `./cleanup-schedule.md`** | ðŸ”´ æœªå¼€å§‹ | å®šä¹‰ drafts/ï¼ˆä¿ç•™ 7 å¤©ï¼‰ã€reports/_generated/ï¼ˆä¿ç•™ 30 å¤©ï¼‰ã€changelogs/ï¼ˆæ°¸ä¹…ä¿ç•™ï¼‰çš„æ¸…ç†å‘¨æœŸ |
-| 14 | **è¡¥å……æ“ä½œæŒ‡å—ï¼ˆHow-toï¼‰** | âœ… å·²å®Œæˆ | `docs/guides/how-to-*.md` ç³»åˆ—ï¼ˆWidget/Store/Serviceï¼‰+ `../tutorials/getting-started.md` å·²è¡¥é½ï¼ˆ2026-07-12ï¼‰ |
-| 15 | **æ‰©å±•å…«ç±»ä½“ç³»çš„äºŒçº§å­ç±»** | ðŸ”´ æœªå¼€å§‹ | æŒ‰ Â§3.1 æ–°å¢ž A2/A3/B5/C7/D5/G4/G5 å­ç±» |
+| 11 | **½¨Á¢¡¸Ö÷Ìâ°ü¡¹×éÖ¯** | ?? Î´¿ªÊ¼ | ÒÔ DataBridge ÎªÀý£¬½«É¢ÂäÎÄµµÓÃ `docs/topics/databridge/` ÖØÐÂ×éÖ¯ |
+| 12 | **ÒýÈë Kimi ÎÄ¼þ»º´æ»úÖÆ** | ? ÒÑÍê³É | `docs/.ai-index/` ÒÑ´´½¨£¬´æ·Å code-graph.json µÈ AI »º´æ |
+| 13 | **ÖÆ¶¨ `./cleanup-schedule.md`** | ?? Î´¿ªÊ¼ | ¶¨Òå drafts/£¨±£Áô 7 Ìì£©¡¢reports/_generated/£¨±£Áô 30 Ìì£©¡¢changelogs/£¨ÓÀ¾Ã±£Áô£©µÄÇåÀíÖÜÆÚ |
+| 14 | **²¹³ä²Ù×÷Ö¸ÄÏ£¨How-to£©** | ? ÒÑÍê³É | `docs/guides/how-to-*.md` ÏµÁÐ£¨Widget/Store/Service£©+ `../tutorials/getting-started.md` ÒÑ²¹Æë£¨2026-07-12£© |
+| 15 | **À©Õ¹°ËÀàÌåÏµµÄ¶þ¼¶×ÓÀà** | ?? Î´¿ªÊ¼ | °´ ¡ì3.1 ÐÂÔö A2/A3/B5/C7/D5/G4/G5 ×ÓÀà |
 
-### 4.4 é•¿æœŸæ²»ç†ï¼ˆP3ï¼ŒæŒç»­ï¼‰
+### 4.4 ³¤ÆÚÖÎÀí£¨P3£¬³ÖÐø£©
 
-16. **å¼•å…¥æ–‡æ¡£é—¨ç¦ï¼ˆDocs-as-Codeï¼‰**ï¼šåœ¨ Husky pre-commit ä¸­å¢žåŠ  `docs/audit-path-match.py`â€”â€”æ£€æŸ¥æ–°å¢ž `.md` æ–‡ä»¶çš„ç›®å½•ä¸Žå†…å®¹æ˜¯å¦åŒ¹é…ï¼ˆå…³é”®è¯åŒ¹é…ï¼‰ã€‚
-17. **æ–‡æ¡£ä¿é²œåº¦ Dashboard**ï¼šå°† `../reports/retrospectives/freshness-alerts.md` å‡çº§ä¸ºè‡ªåŠ¨æ›´æ–°çš„ GitHub Actions / CI äº§ç‰©ã€‚
-18. **Kimi é¡¹ç›®ç´¢å¼•ä¼˜åŒ–**ï¼šåœ¨ `docs/README.md` é¡¶éƒ¨å¢žåŠ ã€ŒKimi åŠ è½½æç¤ºã€Frontmatterï¼Œå¸®åŠ© AI å¿«é€Ÿç†è§£é¡¹ç›®ç»“æž„ã€‚
+16. **ÒýÈëÎÄµµÃÅ½û£¨Docs-as-Code£©**£ºÔÚ Husky pre-commit ÖÐÔö¼Ó `docs/audit-path-match.py`¡ª¡ª¼ì²éÐÂÔö `.md` ÎÄ¼þµÄÄ¿Â¼ÓëÄÚÈÝÊÇ·ñÆ¥Åä£¨¹Ø¼ü´ÊÆ¥Åä£©¡£
+17. **ÎÄµµ±£ÏÊ¶È Dashboard**£º½« `../reports/retrospectives/freshness-alerts.md` Éý¼¶Îª×Ô¶¯¸üÐÂµÄ GitHub Actions / CI ²úÎï¡£
+18. **Kimi ÏîÄ¿Ë÷ÒýÓÅ»¯**£ºÔÚ `docs/README.md` ¶¥²¿Ôö¼Ó¡¸Kimi ¼ÓÔØÌáÊ¾¡¹Frontmatter£¬°ïÖú AI ¿ìËÙÀí½âÏîÄ¿½á¹¹¡£
 
 ---
 
-## äº”ã€é™„å½•ï¼šä½“æ£€æ–¹æ³•ä¸Žæ•°æ®
+## Îå¡¢¸½Â¼£ºÌå¼ì·½·¨ÓëÊý¾Ý
 
-### 5.1 æ£€ç´¢å‘½ä»¤ï¼ˆä¿®è®¢ç‰ˆï¼‰
+### 5.1 ¼ìË÷ÃüÁî£¨ÐÞ¶©°æ£©
 
 ```bash
-# å…¨é‡ .md æ–‡ä»¶æ‰«æï¼ˆå½“å‰å·¥ä½œç›®å½•ä¸º D:\FinSightV9ï¼‰
-find docs -type f -name '*.md' | wc -l        # 388 ä»½
-find docs -type f -name '*.md' | sort         # å…¨é‡åˆ—è¡¨
+# È«Á¿ .md ÎÄ¼þÉ¨Ãè£¨µ±Ç°¹¤×÷Ä¿Â¼Îª D:\FinSightV9£©
+find docs -type f -name '*.md' | wc -l        # 388 ·Ý
+find docs -type f -name '*.md' | sort         # È«Á¿ÁÐ±í
 
-# ç›®å½•ç»“æž„æ‰«æ
-find docs -type d | sort                      # 25+ ä¸ªå­ç›®å½•ï¼ˆå«åµŒå¥—ï¼‰
+# Ä¿Â¼½á¹¹É¨Ãè
+find docs -type d | sort                      # 25+ ¸ö×ÓÄ¿Â¼£¨º¬Ç¶Ì×£©
 
-# ç©ºç½®ç›®å½•æ£€æŸ¥
+# ¿ÕÖÃÄ¿Â¼¼ì²é
 find docs/blueprints -type f -name '*.md' | wc -l   # 0
 find docs/plans -type f -name '*.md' | wc -l        # 0
 
-# å…³é”®æ–‡æ¡£å­˜åœ¨æ€§æ£€æŸ¥
+# ¹Ø¼üÎÄµµ´æÔÚÐÔ¼ì²é
 test -f docs/README.md && echo "EXISTS" || echo "MISSING"
 test -f docs/governance.md && echo "EXISTS" || echo "MISSING"
-find docs/architecture -type f -name '*.md' | sort  # 3 ä»½ï¼ˆoverview/cabins-overview/services-catalogï¼‰
-find docs/standards -type f -name '*.md' | sort     # 3 ä»½ï¼ˆDATA_DEFINITION/DATA_DICTIONARY_INDEX/coding-conventionsï¼‰
-find docs/ops -type f -name '*.md' | sort           # 1 ä»½ï¼ˆrunbookï¼‰
-find docs/.ai-index -type f | sort                # 3 ä»½ï¼ˆREADME/code-graph/ai-memory-indexï¼‰
+find docs/architecture -type f -name '*.md' | sort  # 3 ·Ý£¨overview/cabins-overview/services-catalog£©
+find docs/standards -type f -name '*.md' | sort     # 3 ·Ý£¨DATA_DEFINITION/DATA_DICTIONARY_INDEX/coding-conventions£©
+find docs/ops -type f -name '*.md' | sort           # 1 ·Ý£¨runbook£©
+find docs/.ai-index -type f | sort                # 3 ·Ý£¨README/code-graph/ai-memory-index£©
 ```
 
-### 5.2 å…³é”®æ•°æ®éªŒè¯ï¼ˆä¿®è®¢ç‰ˆï¼‰
+### 5.2 ¹Ø¼üÊý¾ÝÑéÖ¤£¨ÐÞ¶©°æ£©
 
-| éªŒè¯é¡¹ | åˆæ£€ç»“æžœ | ä¿®è®¢ç»“æžœ | å‘½ä»¤ |
+| ÑéÖ¤Ïî | ³õ¼ì½á¹û | ÐÞ¶©½á¹û | ÃüÁî |
 |--------|----------|----------|------|
-| `docs/README.md` å­˜åœ¨ï¼Ÿ | âŒ ä¸å­˜åœ¨ | âœ… **å­˜åœ¨**ï¼ˆ58 è¡Œï¼‰ | `find docs -name 'README.md'` |
-| `./governance.md` å­˜åœ¨ï¼Ÿ | âŒ æœªæ£€æŸ¥ | âœ… **å­˜åœ¨**ï¼ˆv1.0.0ï¼‰ | `find docs -name 'governance.md'` |
-| `docs/architecture/` æœ‰ `.md`ï¼Ÿ | âŒ æ—  `.md` | âœ… **3 ä»½** | `find docs/architecture -name '*.md'` |
-| `docs/implementation/` æœ‰ `.md`ï¼Ÿ | âŒ åªæœ‰ `.png` | âŒ ä»åªæœ‰ `.png` | `find docs/implementation -name '*.md'` |
-| `adr/` ç›®å½•å­˜åœ¨ï¼Ÿ | âŒ ä¸å­˜åœ¨ | âŒ ä»ä¸å­˜åœ¨ | `find docs -type d -name 'adr'` |
-| `DATA_DEFINITION` é‡å¤æ•° | 10 ä»½ | **8 ä»½** | `find docs -name '*DATA_DEFINITION*'` |
-| DEPRECATED æ–‡æ¡£æ•£è½æ•° | 8 ä»½ | **0 ä»½** | `find docs -path '*/0[1-6]-*' -name '*DEPRECATED*'` |
-| DEPRECATED å½’æ¡£æ•° | 1 ä»½ | **9 ä»½** | `find docs/07-archive -name '*DEPRECATED*'` |
-| è‡ªåŠ¨äº§ç‰© HTML ç›®å½• | 5 ä¸ª | **5 ä¸ª** | `find docs/reports/html -type d` |
-| `.ai-index/` ç¼“å­˜ | ç¼ºå¤± | **å·²åˆ›å»º** | `find docs/.ai-index -type f` |
+| `docs/README.md` ´æÔÚ£¿ | ? ²»´æÔÚ | ? **´æÔÚ**£¨58 ÐÐ£© | `find docs -name 'README.md'` |
+| `./governance.md` ´æÔÚ£¿ | ? Î´¼ì²é | ? **´æÔÚ**£¨v1.0.0£© | `find docs -name 'governance.md'` |
+| `docs/architecture/` ÓÐ `.md`£¿ | ? ÎÞ `.md` | ? **3 ·Ý** | `find docs/architecture -name '*.md'` |
+| `docs/implementation/` ÓÐ `.md`£¿ | ? Ö»ÓÐ `.png` | ? ÈÔÖ»ÓÐ `.png` | `find docs/implementation -name '*.md'` |
+| `adr/` Ä¿Â¼´æÔÚ£¿ | ? ²»´æÔÚ | ? ÈÔ²»´æÔÚ | `find docs -type d -name 'adr'` |
+| `DATA_DEFINITION` ÖØ¸´Êý | 10 ·Ý | **8 ·Ý** | `find docs -name '*DATA_DEFINITION*'` |
+| DEPRECATED ÎÄµµÉ¢ÂäÊý | 8 ·Ý | **0 ·Ý** | `find docs -path '*/0[1-6]-*' -name '*DEPRECATED*'` |
+| DEPRECATED ¹éµµÊý | 1 ·Ý | **9 ·Ý** | `find docs/07-archive -name '*DEPRECATED*'` |
+| ×Ô¶¯²úÎï HTML Ä¿Â¼ | 5 ¸ö | **5 ¸ö** | `find docs/reports/html -type d` |
+| `.ai-index/` »º´æ | È±Ê§ | **ÒÑ´´½¨** | `find docs/.ai-index -type f` |
 
-### 5.3 å‚ç…§æ ‡å‡†
+### 5.3 ²ÎÕÕ±ê×¼
 
-- **DocTaxonomy V9**ï¼šæœ¬æ–‡ä½“æ£€å¯¹è±¡ï¼ˆ`./æ–‡æ¡£å½’ç±»ä½“ç³»ç»“æž„.md` v1.0.0ï¼‰
-- **Kimi æ–‡ä»¶ç­–ç•¥**ï¼š`https://platform.kimi.com/docs/guide/use-kimi-api-for-file-based-qa`ï¼ˆæ–‡ä»¶ç®¡ç†æœ€ä½³å®žè·µï¼‰
-- **DiÃ¡taxis æ–‡æ¡£æ¡†æž¶**ï¼šTutorials / How-to / Reference / Explanation å››åž‹
-- **Docs-as-Code**ï¼šæ–‡æ¡£ä¸Žä»£ç åŒä»“ã€åŒ PRã€åŒå®¡è®¡ã€Frontmatter å…ƒæ•°æ®
-- **AGENTS.md å¥‘çº¦**ï¼š`D:\FinSightV9\AGENTS.md`ï¼ˆv1.4.3ï¼‰
+- **DocTaxonomy V9**£º±¾ÎÄÌå¼ì¶ÔÏó£¨`./ÎÄµµ¹éÀàÌåÏµ½á¹¹.md` v1.0.0£©
+- **Kimi ÎÄ¼þ²ßÂÔ**£º`https://platform.kimi.com/docs/guide/use-kimi-api-for-file-based-qa`£¨ÎÄ¼þ¹ÜÀí×î¼ÑÊµ¼ù£©
+- **Di¨¢taxis ÎÄµµ¿ò¼Ü**£ºTutorials / How-to / Reference / Explanation ËÄÐÍ
+- **Docs-as-Code**£ºÎÄµµÓë´úÂëÍ¬²Ö¡¢Í¬ PR¡¢Í¬Éó¼Æ¡¢Frontmatter ÔªÊý¾Ý
+- **AGENTS.md ÆõÔ¼**£º`D:\FinSightV9\AGENTS.md`£¨v1.4.3£©
 
-## å…­ã€ä»£ç -æ–‡æ¡£åŒå‘å¯¹ç…§åˆ†æžï¼ˆä¿®è®¢ç‰ˆï¼‰
+## Áù¡¢´úÂë-ÎÄµµË«Ïò¶ÔÕÕ·ÖÎö£¨ÐÞ¶©°æ£©
 
-> æœ¬ç« èŠ‚åŸºäºŽç”¨æˆ·æä¾›çš„æœ€æ–°æž¶æž„åˆè§„æ£€æŸ¥ç»“æžœï¼ˆ2026-07-12ï¼‰åŠä¿®è®¢å¤æµ‹ï¼Œå°†ä»£ç /æž¶æž„å±‚çš„å¥åº·çŠ¶æ€ä¸Žæ–‡æ¡£/æ²»ç†å±‚çš„ä½“æ£€ç»“æžœè¿›è¡ŒåŒå‘å¯¹ç…§ï¼Œè¯†åˆ«"ä»£ç è·‘åœ¨æ–‡æ¡£å‰é¢"çš„ç³»ç»Ÿæ€§è½å·®ã€‚
+> ±¾ÕÂ½Ú»ùÓÚÓÃ»§Ìá¹©µÄ×îÐÂ¼Ü¹¹ºÏ¹æ¼ì²é½á¹û£¨2026-07-12£©¼°ÐÞ¶©¸´²â£¬½«´úÂë/¼Ü¹¹²ãµÄ½¡¿µ×´Ì¬ÓëÎÄµµ/ÖÎÀí²ãµÄÌå¼ì½á¹û½øÐÐË«Ïò¶ÔÕÕ£¬Ê¶±ð"´úÂëÅÜÔÚÎÄµµÇ°Ãæ"µÄÏµÍ³ÐÔÂä²î¡£
 
-### 6.1 å¯¹ç…§æ€»è¡¨
+### 6.1 ¶ÔÕÕ×Ü±í
 
-| ç»´åº¦ | ä»£ç /æž¶æž„å±‚ | æ–‡æ¡£/æ²»ç†å±‚ | å·®è· | é£Žé™©ç­‰çº§ |
+| Î¬¶È | ´úÂë/¼Ü¹¹²ã | ÎÄµµ/ÖÎÀí²ã | ²î¾à | ·çÏÕµÈ¼¶ |
 |------|------------|------------|------|----------|
-| é¡¹ç›®åˆ†å±‚ç»“æž„ | âœ… 11 å±‚å®Œæ•´ï¼ˆå« agents/ã€apps/ã€cockpit/ï¼‰ | âœ… `../explanation/overview.md` å·²åˆ›å»º | **ä¸€è‡´** | â€” |
-| äº”å¤§èˆ±å®¤é¡µé¢ | âœ… 33 é¡µé¢ï¼ˆinput 4 / analysis 12 / trading 5 / output 5 / command 4+ï¼Œå«æµ‹è¯•ï¼‰ | ðŸŸ¡ 4 èˆ± spec å·²è¡¥é½ï¼ˆanalysis/trading/output/commandï¼‰ | ä»£ç æœ‰ï¼Œæ–‡æ¡£åŸºæœ¬è·Ÿä¸Š | ä½Ž |
-| æœåŠ¡å±‚å­åŸŸ | âœ… 23 ä¸ªå…¨å°±ä½ï¼ˆai-center / backtest / scoring / screening / rbac ç­‰ï¼‰ | âœ… `../reference/services-catalog.md` å·²åˆ›å»ºï¼ˆè¦†ç›– 23 å­åŸŸï¼‰ | **ä¸€è‡´** | â€” |
-| Store å±‚ | âœ… 99 ä¸ªæ–‡ä»¶ï¼ˆ48 æ ¸å¿ƒ + 10 è¡ç”Ÿ + helpers/testsï¼‰ | ðŸŸ¡ ä»…æœ‰ `../reference/v9-l2çŠ¶æ€å±‚è¡¥é½è·¯çº¿å›¾.md` | ä»£ç æœ‰ï¼Œè§„èŒƒä»æ•£è½ | ä¸­ |
-| è·¯ç”±æ³¨å†Œ | âœ… 66/66 100% è¦†ç›– | ðŸŸ¡ `../reference/06-routing-specs.md` å­˜åœ¨ä½†å­¤ç«‹ | åŸºæœ¬ä¸€è‡´ | ä½Ž |
-| è·¨å±‚è°ƒç”¨ | âœ… 0 è¿è§„ï¼ˆ870 æ–‡ä»¶æ‰«æï¼‰ | âœ… 0 è¿è§„ï¼ˆAGENTS.md å¥‘çº¦ç”Ÿæ•ˆï¼‰ | **ä¸€è‡´** | â€” |
-| ç¡¬ç¼–ç é¢œè‰² | âœ… 0 è¿è§„ï¼ˆ907 æ–‡ä»¶æ‰«æï¼‰ | âœ… `../reference/design-token-mapping.md` + `../explanation/token-usage-cookbook.md` æ”¯æ’‘ | **ä¸€è‡´** | â€” |
-| æ­»ä»£ç  | âœ… 0 æœªæ³¨å†Œ | ðŸŸ¡ `docs/reports/` è¿‡ç¨‹äº§ç‰©è¿‡åº¦è†¨èƒ€ | ä»£ç å¹²å‡€ï¼Œæ–‡æ¡£è†¨èƒ€ | ä¸­ |
-| æ–‡æ¡£åŒæ­¥ | âœ… 0 è¿è§„ï¼ˆ643 æ–‡ä»¶ / 343 æ–‡æ¡£ï¼‰ | ðŸŸ¡ ~47 ä¸ªå­¤å„¿æ–‡æ¡£æœªè¦†ç›– | `audit:docs` é€šè¿‡â‰ ä½“ç³»å®Œæ•´ | ä¸­ |
-| Token æ¶ˆè€— | âœ… 0 æµªè´¹ï¼ˆ< 50K/ä¼šè¯ï¼‰ | âœ… `.ai-index/` ç¼“å­˜æœºåˆ¶å·²åˆ›å»º | **ä¸€è‡´** | â€” |
-| æ•°æ®åº“ Schema | âœ… v27ï¼ˆ30 åŸºçº¿ + 6 RBACï¼‰ | ðŸŸ¡ `../reference/v9-indexeddb-store-schema.md` å­˜åœ¨ä½†æ•°æ®å®šä¹‰åˆ†æ•£ | Schema æœ‰ï¼Œå­—å…¸åˆ†æ•£ | ä¸­ |
-| é¢œè‰²ä»¤ç‰Œ | âœ… L1â€“L6 å®Œæ•´ | âœ… `../explanation/token-usage-cookbook.md` å·²åˆ›å»º | **ä¸€è‡´** | â€” |
-| è·¯ç”±ä¸€è‡´æ€§ | âœ… 66/66 é€šè¿‡ | âœ… `verify-all-routes` é€šè¿‡ | **ä¸€è‡´** | â€” |
+| ÏîÄ¿·Ö²ã½á¹¹ | ? 11 ²ãÍêÕû£¨º¬ agents/¡¢apps/¡¢cockpit/£© | ? `../explanation/overview.md` ÒÑ´´½¨ | **Ò»ÖÂ** | ¡ª |
+| Îå´ó²ÕÊÒÒ³Ãæ | ? 33 Ò³Ãæ£¨input 4 / analysis 12 / trading 5 / output 5 / command 4+£¬º¬²âÊÔ£© | ?? 4 ²Õ spec ÒÑ²¹Æë£¨analysis/trading/output/command£© | ´úÂëÓÐ£¬ÎÄµµ»ù±¾¸úÉÏ | µÍ |
+| ·þÎñ²ã×ÓÓò | ? 23 ¸öÈ«¾ÍÎ»£¨ai-center / backtest / scoring / screening / rbac µÈ£© | ? `../reference/services-catalog.md` ÒÑ´´½¨£¨¸²¸Ç 23 ×ÓÓò£© | **Ò»ÖÂ** | ¡ª |
+| Store ²ã | ? 99 ¸öÎÄ¼þ£¨48 ºËÐÄ + 10 ÑÜÉú + helpers/tests£© | ?? ½öÓÐ `../reference/v9-l2×´Ì¬²ã²¹ÆëÂ·ÏßÍ¼.md` | ´úÂëÓÐ£¬¹æ·¶ÈÔÉ¢Âä | ÖÐ |
+| Â·ÓÉ×¢²á | ? 66/66 100% ¸²¸Ç | ?? `../reference/06-routing-specs.md` ´æÔÚµ«¹ÂÁ¢ | »ù±¾Ò»ÖÂ | µÍ |
+| ¿ç²ãµ÷ÓÃ | ? 0 Î¥¹æ£¨870 ÎÄ¼þÉ¨Ãè£© | ? 0 Î¥¹æ£¨AGENTS.md ÆõÔ¼ÉúÐ§£© | **Ò»ÖÂ** | ¡ª |
+| Ó²±àÂëÑÕÉ« | ? 0 Î¥¹æ£¨907 ÎÄ¼þÉ¨Ãè£© | ? `../reference/design-token-mapping.md` + `../explanation/token-usage-cookbook.md` Ö§³Å | **Ò»ÖÂ** | ¡ª |
+| ËÀ´úÂë | ? 0 Î´×¢²á | ?? `docs/reports/` ¹ý³Ì²úÎï¹ý¶ÈÅòÕÍ | ´úÂë¸É¾»£¬ÎÄµµÅòÕÍ | ÖÐ |
+| ÎÄµµÍ¬²½ | ? 0 Î¥¹æ£¨643 ÎÄ¼þ / 343 ÎÄµµ£© | ?? ~47 ¸ö¹Â¶ùÎÄµµÎ´¸²¸Ç | `audit:docs` Í¨¹ý¡ÙÌåÏµÍêÕû | ÖÐ |
+| Token ÏûºÄ | ? 0 ÀË·Ñ£¨< 50K/»á»°£© | ? `.ai-index/` »º´æ»úÖÆÒÑ´´½¨ | **Ò»ÖÂ** | ¡ª |
+| Êý¾Ý¿â Schema | ? v27£¨30 »ùÏß + 6 RBAC£© | ?? `../reference/v9-indexeddb-store-schema.md` ´æÔÚµ«Êý¾Ý×Öµä·ÖÉ¢ | Schema ÓÐ£¬×Öµä·ÖÉ¢ | ÖÐ |
+| ÑÕÉ«ÁîÅÆ | ? L1¨CL6 ÍêÕû | ? `../explanation/token-usage-cookbook.md` ÒÑ´´½¨ | **Ò»ÖÂ** | ¡ª |
+| Â·ÓÉÒ»ÖÂÐÔ | ? 66/66 Í¨¹ý | ? `verify-all-routes` Í¨¹ý | **Ò»ÖÂ** | ¡ª |
 
-### 6.2 æ ¸å¿ƒç»“è®ºï¼šä»£ç å±‚æžåº¦å¥åº·ï¼Œæ–‡æ¡£å±‚æ­£åœ¨è¿½èµ¶
+### 6.2 ºËÐÄ½áÂÛ£º´úÂë²ã¼«¶È½¡¿µ£¬ÎÄµµ²ãÕýÔÚ×·¸Ï
 
-ä»£ç å®žçŽ°å±‚é¢çš„æ£€æŸ¥ç»“æžœï¼ˆå…¨ç»¿ï¼‰ä¸Žæ–‡æ¡£ä½“æ£€ç»“æžœï¼ˆå¤§é‡çº¢/é»„â†’é»„/ç»¿ï¼‰å½¢æˆäº†é²œæ˜Žåå·®ï¼š
+´úÂëÊµÏÖ²ãÃæµÄ¼ì²é½á¹û£¨È«ÂÌ£©ÓëÎÄµµÌå¼ì½á¹û£¨´óÁ¿ºì/»Æ¡ú»Æ/ÂÌ£©ÐÎ³ÉÁËÏÊÃ÷·´²î£º
 
-> **ã€Œä»£ç è·‘åœ¨æ–‡æ¡£å‰é¢ã€** â€”â€” 33 ä¸ªé¡µé¢ã€23 ä¸ªå­åŸŸã€99 ä¸ª Store æ–‡ä»¶ã€66 æ¡è·¯ç”±å·²ç»å…¨éƒ¨è½åœ°ï¼Œä½†å¯¹åº”çš„**è®¾è®¡è§„æ ¼æ–‡æ¡£ã€æ“ä½œæŒ‡å—ã€æž¶æž„è¯´æ˜Ž**æ›¾å¤§é‡ç¼ºå¤±æˆ–æ•£è½åœ¨è¿‡ç¨‹äº§ç‰©ä¸­ã€‚
+> **¡¸´úÂëÅÜÔÚÎÄµµÇ°Ãæ¡¹** ¡ª¡ª 33 ¸öÒ³Ãæ¡¢23 ¸ö×ÓÓò¡¢99 ¸ö Store ÎÄ¼þ¡¢66 ÌõÂ·ÓÉÒÑ¾­È«²¿ÂäµØ£¬µ«¶ÔÓ¦µÄ**Éè¼Æ¹æ¸ñÎÄµµ¡¢²Ù×÷Ö¸ÄÏ¡¢¼Ü¹¹ËµÃ÷**Ôø´óÁ¿È±Ê§»òÉ¢ÂäÔÚ¹ý³Ì²úÎïÖÐ¡£
 
-> **P0 æ•´æ”¹åŽ** â€”â€” `docs/README.md`ã€`governance.md`ã€`../explanation/overview.md`ã€`../explanation/cabins-overview.md`ã€`../reference/services-catalog.md`ã€`../reference/coding-conventions.md`ã€`../explanation/runbook.md`ã€`.ai-index/` ç­‰ 8 ä¸ªæ ¸å¿ƒç¼ºå£å·²è¡¥é½ï¼Œæ–‡æ¡£å±‚ä»Žã€Œä¸¥é‡æ»žåŽã€æ”¹å–„ä¸ºã€Œä¸­ç­‰æ»žåŽã€ã€‚
+> **P0 Õû¸Äºó** ¡ª¡ª `docs/README.md`¡¢`governance.md`¡¢`../explanation/overview.md`¡¢`../explanation/cabins-overview.md`¡¢`../reference/services-catalog.md`¡¢`../reference/coding-conventions.md`¡¢`../explanation/runbook.md`¡¢`.ai-index/` µÈ 8 ¸öºËÐÄÈ±¿ÚÒÑ²¹Æë£¬ÎÄµµ²ã´Ó¡¸ÑÏÖØÖÍºó¡¹¸ÄÉÆÎª¡¸ÖÐµÈÖÍºó¡¹¡£
 
-å…·ä½“è¡¨çŽ°ä¸ºä¸‰ä¸ª"è½å·®æ¨¡å¼"ï¼ˆP0 åŽæ›´æ–°ï¼‰ï¼š
+¾ßÌå±íÏÖÎªÈý¸ö"Âä²îÄ£Ê½"£¨P0 ºó¸üÐÂ£©£º
 
-| è½å·®æ¨¡å¼ | åˆæ£€å…¸åž‹æ¡ˆä¾‹ | ä¿®è®¢çŠ¶æ€ | å½±å“ |
+| Âä²îÄ£Ê½ | ³õ¼ìµäÐÍ°¸Àý | ÐÞ¶©×´Ì¬ | Ó°Ïì |
 |----------|-------------|----------|------|
-| **å­˜åœ¨è½å·®** | 23 ä¸ª Service å­åŸŸè¿è¡Œä¸­ï¼Œä½†æ—  `service-subdomain-overview.md` | âœ… **å·²ä¿®å¤**ï¼š`../reference/services-catalog.md` è¦†ç›– 23 å­åŸŸ | æ–°å¼€å‘è€…å¯å¿«é€Ÿå®šä½æœåŠ¡èŒè´£è¾¹ç•Œ |
-| **è§„æ ¼è½å·®** | analysis/trading/output/command å››èˆ±å…± 25+ é¡µé¢ï¼Œä½†æ—  cabin spec | âœ… **å·²ä¿®å¤**ï¼š4 èˆ± spec å·²è¡¥é½ï¼ˆ02-design/ ä¸‹ï¼‰ | AI ç”Ÿæˆä»£ç æ—¶æœ‰èˆ±å®¤çº§çº¦æŸè¾“å…¥ |
-| **æŒ‡å—è½å·®** | 48 ä¸ª Store å·²è¿è¡Œï¼Œä½†æ—  `../how-to/how-to-add-store.md` | âœ… **å·²è¡¥é½**ï¼šhow-to-add-*.md ç³»åˆ—å·²åˆ›å»ºï¼ˆ2026-07-12ï¼‰ | æ–°å¢ž Store æ—¶æœ‰æ ‡å‡† SOP å¯å‚è€ƒ |
-| **ç´¢å¼•è½å·®** | 66 æ¡è·¯ç”± 100% æ³¨å†Œï¼Œä½†æ—  `docs/README.md` æ€»å…¥å£ | âœ… **å·²ä¿®å¤**ï¼šREADME.md å·²åˆ›å»º | Kimi/AI å¯å¿«é€Ÿå»ºç«‹ä¸Šä¸‹æ–‡ |
+| **´æÔÚÂä²î** | 23 ¸ö Service ×ÓÓòÔËÐÐÖÐ£¬µ«ÎÞ `../reference/services-catalog.md` | ? **ÒÑÐÞ¸´**£º`../reference/services-catalog.md` ¸²¸Ç 23 ×ÓÓò | ÐÂ¿ª·¢Õß¿É¿ìËÙ¶¨Î»·þÎñÖ°Ôð±ß½ç |
+| **¹æ¸ñÂä²î** | analysis/trading/output/command ËÄ²Õ¹² 25+ Ò³Ãæ£¬µ«ÎÞ cabin spec | ? **ÒÑÐÞ¸´**£º4 ²Õ spec ÒÑ²¹Æë£¨02-design/ ÏÂ£© | AI Éú³É´úÂëÊ±ÓÐ²ÕÊÒ¼¶Ô¼ÊøÊäÈë |
+| **Ö¸ÄÏÂä²î** | 48 ¸ö Store ÒÑÔËÐÐ£¬µ«ÎÞ `../how-to/how-to-add-store.md` | ? **ÒÑ²¹Æë**£ºhow-to-add-*.md ÏµÁÐÒÑ´´½¨£¨2026-07-12£© | ÐÂÔö Store Ê±ÓÐ±ê×¼ SOP ¿É²Î¿¼ |
+| **Ë÷ÒýÂä²î** | 66 ÌõÂ·ÓÉ 100% ×¢²á£¬µ«ÎÞ `docs/README.md` ×ÜÈë¿Ú | ? **ÒÑÐÞ¸´**£ºREADME.md ÒÑ´´½¨ | Kimi/AI ¿É¿ìËÙ½¨Á¢ÉÏÏÂÎÄ |
 
-### 6.3 ä¼˜å…ˆçº§è°ƒæ•´å»ºè®®ï¼ˆP0 åŽä¿®è®¢ï¼‰
+### 6.3 ÓÅÏÈ¼¶µ÷Õû½¨Òé£¨P0 ºóÐÞ¶©£©
 
-åŸºäºŽä»£ç å±‚å…¨ç»¿ + P0 æ–‡æ¡£å¤§å¹…è¡¥é½çš„å‰æï¼Œå°†ä½“æ£€æŠ¥å‘Š Â§4 çš„ä¼˜å…ˆçº§å¾®è°ƒå¦‚ä¸‹ï¼š
+»ùÓÚ´úÂë²ãÈ«ÂÌ + P0 ÎÄµµ´ó·ù²¹ÆëµÄÇ°Ìá£¬½«Ìå¼ì±¨¸æ ¡ì4 µÄÓÅÏÈ¼¶Î¢µ÷ÈçÏÂ£º
 
-| æ–‡æ¡£ | åŽŸä¼˜å…ˆçº§ | åˆæ£€è°ƒæ•´åŽ | P0 åŽä¼˜å…ˆçº§ | è°ƒæ•´ç†ç”± |
+| ÎÄµµ | Ô­ÓÅÏÈ¼¶ | ³õ¼ìµ÷Õûºó | P0 ºóÓÅÏÈ¼¶ | µ÷ÕûÀíÓÉ |
 |------|----------|-----------|-------------|----------|
-| `../explanation/overview.md` | P0 | **P0ï¼ˆæœ€é«˜ï¼‰** | âœ… **å·²å®Œæˆ** | â€” |
-| `../explanation/cabins-overview.md` | P0 | **P0** | âœ… **å·²å®Œæˆ** | â€” |
-| `../reference/services-catalog.md` | â€” | â€” | âœ… **å·²å®Œæˆ** | è¶…åŽŸæ¸…å•é¢„æœŸæ–°å¢ž |
-| `../reference/README.md` + Store/Service é›†æˆæŒ‡å— | P1 | **P0** | **P1** | 48 Store + 23 å­åŸŸå·²è¿è¡Œï¼ŒAI éœ€å¿«é€ŸåŠ è½½ä¸Šä¸‹æ–‡å…¥å£ï¼›ä½† services-catalog å·²ç¼“è§£ |
-| `../how-to/how-to-add-widget.md` | P2 | **P1** | **P1** | ä»£ç å®Œå¤‡åŽï¼Œæ–°å¢ž Widget/Store/Service æˆä¸ºé«˜é¢‘å¼€å‘ä»»åŠ¡ |
-| `../how-to/../how-to/how-to-add-store.md` | P2 | **P1** | **P1** | åŒä¸Š |
-| `../how-to/how-to-add-service.md` | P2 | **P1** | **P1** | åŒä¸Š |
-| `../tutorials/../tutorials/getting-started.md` | P1 | **P1** | **P1** | æ–°äºº onboarding ç¬¬ä¸€ç«™ï¼›ä¸Ž README äº’è¡¥ |
-| æ•°æ®å®šä¹‰åŽ»é‡ | P0 | **P0** | **P1** | 10â†’8 ä»½å·²æ”¹å–„ï¼›æ ¹çº§é‡å¤å·²ç§»é™¤ï¼›æ®‹ä½™ 7 ä»½åœ¨ 02-design ä¸‹å¾…æ•´åˆ |
-| ç›®å½•é”™ä½æ¸…ç† | P1 | **P1** | **P1** | ä¸å½±å“è¿è¡Œï¼Œä½†å½±å“æ£€ç´¢æ•ˆçŽ‡ï¼›éƒ¨åˆ†å·²æ”¹å–„ |
-| `../reference/deployment.md` | P1 | â€” | **P1** | è¿ç»´åŸºçº¿ï¼›runbook å·²è¡¥é½ï¼Œdeployment ä»ç¼ºå¤± |
-| `../reference/security-model.md` | P1 | â€” | **P1** | MCP ACL ä¹‹å¤–æ— æ•´ä½“å®‰å…¨è¯´æ˜Ž |
+| `../explanation/overview.md` | P0 | **P0£¨×î¸ß£©** | ? **ÒÑÍê³É** | ¡ª |
+| `../explanation/cabins-overview.md` | P0 | **P0** | ? **ÒÑÍê³É** | ¡ª |
+| `../reference/services-catalog.md` | ¡ª | ¡ª | ? **ÒÑÍê³É** | ³¬Ô­Çåµ¥Ô¤ÆÚÐÂÔö |
+| `../reference/README.md` + Store/Service ¼¯³ÉÖ¸ÄÏ | P1 | **P0** | **P1** | 48 Store + 23 ×ÓÓòÒÑÔËÐÐ£¬AI Ðè¿ìËÙ¼ÓÔØÉÏÏÂÎÄÈë¿Ú£»µ« services-catalog ÒÑ»º½â |
+| `../how-to/how-to-add-widget.md` | P2 | **P1** | **P1** | ´úÂëÍê±¸ºó£¬ÐÂÔö Widget/Store/Service ³ÉÎª¸ßÆµ¿ª·¢ÈÎÎñ |
+| `../how-to/../how-to/how-to-add-store.md` | P2 | **P1** | **P1** | Í¬ÉÏ |
+| `../how-to/how-to-add-service.md` | P2 | **P1** | **P1** | Í¬ÉÏ |
+| `../tutorials/../tutorials/getting-started.md` | P1 | **P1** | **P1** | ÐÂÈË onboarding µÚÒ»Õ¾£»Óë README »¥²¹ |
+| Êý¾Ý×ÖµäÈ¥ÖØ | P0 | **P0** | **P1** | 10¡ú8 ·ÝÒÑ¸ÄÉÆ£»¸ù¼¶ÖØ¸´ÒÑÒÆ³ý£»²ÐÓà 7 ·ÝÔÚ 02-design ÏÂ´ýÕûºÏ |
+| Ä¿Â¼´íÎ»ÇåÀí | P1 | **P1** | **P1** | ²»Ó°ÏìÔËÐÐ£¬µ«Ó°Ïì¼ìË÷Ð§ÂÊ£»²¿·ÖÒÑ¸ÄÉÆ |
+| `../reference/deployment.md` | P1 | ¡ª | **P1** | ÔËÎ¬»ùÏß£»runbook ÒÑ²¹Æë£¬deployment ÈÔÈ±Ê§ |
+| `../reference/security-model.md` | P1 | ¡ª | **P1** | MCP ACL Ö®ÍâÎÞÕûÌå°²È«ËµÃ÷ |
 
-> **è°ƒæ•´åŽŸåˆ™**ï¼šP0 å·²å®Œæˆ 8 ä¸ªæ ¸å¿ƒç¼ºå£ï¼Œæ–‡æ¡£å±‚ä»Žã€Œä¸¥é‡æ»žåŽã€æ”¹å–„ä¸ºã€Œä¸­ç­‰æ»žåŽã€ã€‚å½“å‰æœ€é«˜ä¼˜å…ˆçº§è½¬ç§»è‡³ **How-to ç³»åˆ—**ï¼ˆguides/ï¼‰å’Œ **H ç±»æ®‹ä½™**ï¼ˆdeployment/security-modelï¼‰ï¼Œè¿™äº›æ˜¯æ—¥å¸¸å¼€å‘é«˜é¢‘ä¾èµ–çš„æ–‡æ¡£ã€‚
+> **µ÷ÕûÔ­Ôò**£ºP0 ÒÑÍê³É 8 ¸öºËÐÄÈ±¿Ú£¬ÎÄµµ²ã´Ó¡¸ÑÏÖØÖÍºó¡¹¸ÄÉÆÎª¡¸ÖÐµÈÖÍºó¡¹¡£µ±Ç°×î¸ßÓÅÏÈ¼¶×ªÒÆÖÁ **How-to ÏµÁÐ**£¨guides/£©ºÍ **H Àà²ÐÓà**£¨deployment/security-model£©£¬ÕâÐ©ÊÇÈÕ³£¿ª·¢¸ßÆµÒÀÀµµÄÎÄµµ¡£
 
 ---
 
-> **ä½“æ£€äºº**ï¼šAI Agentï¼ˆåŸºäºŽå…¨é‡æ–‡ä»¶æ‰«æ + ç»“æž„åŒ–åˆ†æž + æž¶æž„åˆè§„æ£€æŸ¥å¯¹ç…§ï¼‰  
-> **ä¸‹æ¬¡ä½“æ£€å»ºè®®**ï¼šåœ¨ P1 ä¿®å¤å®ŒæˆåŽ 1 å‘¨å†…å¤æŸ¥ï¼Œç¡®è®¤å­¤å„¿æ–‡æ¡£çŽ‡é™è‡³ â‰¤8%ã€How-to ç³»åˆ—è¡¥é½ã€ä¸”æ–°å¢žæ–‡æ¡£ä¸Žä»£ç å±‚ 66 æ¡è·¯ç”± + 23 å­åŸŸä¸€ä¸€å¯¹åº”ã€‚
+> **Ìå¼ìÈË**£ºAI Agent£¨»ùÓÚÈ«Á¿ÎÄ¼þÉ¨Ãè + ½á¹¹»¯·ÖÎö + ¼Ü¹¹ºÏ¹æ¼ì²é¶ÔÕÕ£©  
+> **ÏÂ´ÎÌå¼ì½¨Òé**£ºÔÚ P1 ÐÞ¸´Íê³Éºó 1 ÖÜÄÚ¸´²é£¬È·ÈÏ¹Â¶ùÎÄµµÂÊ½µÖÁ ¡Ü8%¡¢How-to ÏµÁÐ²¹Æë¡¢ÇÒÐÂÔöÎÄµµÓë´úÂë²ã 66 ÌõÂ·ÓÉ + 23 ×ÓÓòÒ»Ò»¶ÔÓ¦¡£

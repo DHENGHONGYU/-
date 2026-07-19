@@ -25,6 +25,9 @@ const FACTOR_IDS = [
   'lMinus1', 'l0', 'l1', 'l2', 'l3f', 'l3v', 'l4', 'l5', 'l6', 'l7', 'l8',
 ] as const
 
+/**
+ * FactorRegressionInputSchema
+ */
 export const FactorRegressionInputSchema = z.object({
   symbol: z.string(),
   stockName: z.string().optional(),
@@ -57,6 +60,9 @@ const FactorWeightSchema = z.object({
   rationale: z.string(),
 })
 
+/**
+ * FactorRegressionOutputSchema
+ */
 export const FactorRegressionOutputSchema = z.object({
   rSquared: z.number(),
   adjustedRSquared: z.number(),
@@ -208,6 +214,9 @@ function calibrateWeights(
   return calibrated
 }
 
+/**
+ * executeFactorRegressionSkill
+ */
 export async function executeFactorRegressionSkill(
   ctx: SkillContext,
 ): Promise<SkillResult<FactorRegressionOutput>> {
@@ -369,6 +378,9 @@ export async function executeFactorRegressionSkill(
   }
 }
 
+/**
+ * factorRegressionSkill
+ */
 export const factorRegressionSkill: SkillDefinition<FactorRegressionOutput> = {
   name: 'factor-regression',
   title: '因子回归权重校验',

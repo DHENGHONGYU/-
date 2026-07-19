@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url'
 /**
  * 构建项目 AI 记忆索引。
  *
- * 扫描 docs/、prompts/、AGENTS.md 等关键文档，按标题层级切分片段，
+ * 扫描 AGENTS.md 等关键文档，按标题层级切分片段，
  * 建立关键词 → 文档片段的倒排索引，供 AI 辅助开发时快速检索项目上下文。
  *
  * 输出：public/ai-memory-index.json

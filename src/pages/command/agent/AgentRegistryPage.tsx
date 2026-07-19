@@ -22,8 +22,8 @@ import {
   TabsTrigger,
 } from '@/components/molecules/Tabs'
 import { getLogger } from '@/lib/logger'
-import { getAllAgentComponents } from '@/agents/agentComponentRegistry'
-import type { AgentComponentEntry } from '@/agents/agentComponentRegistry'
+import { getAllAgentComponents } from '@/components/organisms/agent/agentComponentRegistry'
+import type { AgentComponentEntry } from '@/components/organisms/agent/agentComponentRegistry'
 import { useAgentStore } from '@/store/agentStore'
 import { PageContainer, PageHeader } from '@/components/templates'
 

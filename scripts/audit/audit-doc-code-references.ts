@@ -34,7 +34,11 @@ function audit(): AuditResult {
   return runFullAudit(PROJECT_ROOT)
 }
 
-function printReport(result: AuditResult): void {
+function formatPercent(value: number): string {
+  return `${(value * 100).toFixed(2)}%`
+}
+
+function printReport(result: AuditResult, maxBrokenRate: number): void {
   console.log('\n' + '='.repeat(70))
   console.log('文档-代码引用验证审计报告')
   console.log('='.repeat(70))
@@ -43,6 +47,7 @@ function printReport(result: AuditResult): void {
   console.log(`  总引用数: ${result.totalReferences}`)
   console.log(`  有效引用: ${result.validReferences.length}`)
   console.log(`  断裂引用: ${result.brokenReferences.length}`)
+  console.log(`  断裂率: ${formatPercent(result.brokenRate)} (门禁阈值: ${formatPercent(maxBrokenRate)})`)
 
   console.log(`\n📈 分类统计:`)
   console.log(`  文档→代码: ${result.summary.docToCode.total} (${result.summary.docToCode.broken} 断裂)`)
@@ -93,17 +98,51 @@ function saveReport(result: AuditResult): string {
   return reportPath
 }
 
+function parseMaxBrokenRate(): number {
+  const flag = '--max-broken-rate'
+  const argIndex = process.argv.findIndex((arg) => arg.startsWith(flag))
+  if (argIndex === -1) {
+    return 0 // 默认零容忍
+  }
+
+  const raw = process.argv[argIndex].includes('=')
+    ? process.argv[argIndex].split('=')[1]
+    : process.argv[argIndex + 1]
+
+  if (!raw) {
+    console.error(`[audit-doc-code-references] ❌ ${flag} 需要参数值，例如 ${flag}=0.5% 或 ${flag} 0.005`)
+    process.exit(1)
+  }
+
+  const normalized = raw.trim().replace('%', '')
+  const value = Number(normalized)
+  if (Number.isNaN(value) || value < 0) {
+    console.error(`[audit-doc-code-references] ❌ ${flag} 参数无效: ${raw}`)
+    process.exit(1)
+  }
+
+  // 支持 0.5（小数）或 0.5%（百分比）两种写法
+  return raw.includes('%') ? value / 100 : value
+}
+
 function main(): void {
   try {
+    const maxBrokenRate = parseMaxBrokenRate()
     const result = audit()
-    printReport(result)
+    printReport(result, maxBrokenRate)
 
     const reportPath = saveReport(result)
     console.log(`[audit-doc-code-references] 💾 报告已持久化: ${reportPath}`)
 
-    if (result.brokenReferences.length > 0) {
+    if (result.brokenRate > maxBrokenRate) {
+      console.error(
+        `[audit-doc-code-references] ❌ 断裂率 ${formatPercent(result.brokenRate)} 超过门禁阈值 ${formatPercent(maxBrokenRate)}`
+      )
       process.exit(1)
     } else {
+      console.log(
+        `[audit-doc-code-references] ✅ 断裂率 ${formatPercent(result.brokenRate)} 未超过门禁阈值 ${formatPercent(maxBrokenRate)}`
+      )
       process.exit(0)
     }
   } catch (error) {

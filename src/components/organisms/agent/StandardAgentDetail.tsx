@@ -11,8 +11,8 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
 } from '@/components/atoms/Breadcrumb'
-import { getAgentComponent } from '@/agents/agentComponentRegistry'
-import type { AgentDetailComponentProps } from '@/agents/agentComponentRegistry'
+import { getAgentComponent } from '@/components/organisms/agent/agentComponentRegistry'
+import type { AgentDetailComponentProps } from '@/components/organisms/agent/agentComponentRegistry'
 
 /**
  * StandardAgentDetail

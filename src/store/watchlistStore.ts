@@ -3,6 +3,7 @@
  * @lifecycle @Global
  * @description 自选股管理 Store —— 观察池股票列表的唯一可信源。
  * 从 tradingStore 拆分出来，专注于自选股的加载、管理和状态维护。
+ * @facade — 当前仅通过 tradingStore 间接使用，无独立 UI 消费者。
  *
  * @compliance
  * - 所有写操作通过 dataBridge.forward() 走信封协议

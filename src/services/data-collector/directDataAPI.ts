@@ -1,9 +1,24 @@
 /**
  * @fileoverview 直连数据 API — 腾讯/新浪/网易真实行情接口
  *
+ * ⚠️ **收敛状态**：此文件与 `src/services/fetcher/directDataAPI.ts` 为独立副本，
+ * API 签名/类型/错误策略均不兼容。
+ *
+ * **阶段 1（2026-07-19）**: 代码格式化函数 (toTencentCode/toSinaCode/toNeteaseCode)
+ * 已提取至 `src/core/stockCodeUtils.ts` 作为 canonical shared utility。
+ *
+ * **阶段 2（计划中）**: 统一类型 (RealtimeQuote↔StockQuote, KlineBar↔KlineItem)
+ * 与错误策略 (null→return null vs throw DirectDataAPIError)。迁移时需处理：
+ *   - 所有消费者 import 路径更新
+ *   - quoteToStock/klinesToDailyQuotes adapter wrapper 保留
+ *
+ * @see src/core/stockCodeUtils.ts — 共享代码格式化函数
+ * @see src/services/fetcher/directDataAPI.ts — canonical 实现（待阶段 2 迁移）
+ *
  * 职责：
  * - B-1: 腾讯财经直连 API（qt.gtimg.cn）实时行情
  * - B-2: 新浪（hq.sinajs.cn）+ 网易（quotes.163.com）备用 API
+ * - B-3: 腾讯历史 K 线（web.ifzq.gtimg.cn）← 2026-07-19 新增
  *
  * 注意：浏览器环境可能遇到 CORS 限制，生产环境需配置代理。
  * 所有函数在失败时返回 null，由 dataSourceOrchestrator 负责降级。
@@ -15,12 +30,14 @@ import type { Stock, DailyQuotes } from '@/data/types'
 import type { KlineBar } from '@/data/types/types.marketData'
 import {
   TENCENT_API_BASE,
+  TENCENT_KLINE_API_BASE,
   TENCENT_REFERER,
   SINA_API_BASE,
   SINA_REFERER,
   NETEASE_API_BASE,
   NETEASE_REFERER,
 } from '@/config/marketDataEndpoints'
+import { toTencentCode, toSinaCode, toNeteaseCode } from '@/core/stockCodeUtils'
 
 const logger = getLogger()
 
@@ -49,25 +66,6 @@ export interface SourceInfo {
 }
 
 // ── 工具函数 ──
-
-/** 将 6 位代码转换为腾讯格式（sh/sz 前缀） */
-function toTencentCode(code: string): string {
-  if (code.startsWith('6')) return `sh${code}`
-  if (code.startsWith('0') || code.startsWith('3')) return `sz${code}`
-  if (code.startsWith('8') || code.startsWith('4')) return `bj${code}`
-  return `sh${code}`
-}
-
-/** 将 6 位代码转换为新浪格式 */
-function toSinaCode(code: string): string {
-  return toTencentCode(code)
-}
-
-/** 将 6 位代码转换为网易格式（0=沪/1=深 前缀） */
-function toNeteaseCode(code: string): string {
-  if (code.startsWith('6')) return `0${code}`
-  return `1${code}`
-}
 
 /** 安全 fetch（带超时+可配自定义请求头） */
 async function safeFetch(url: string, timeoutMs = 5000, extraHeaders: Record<string, string> = {}): Promise<string | null> {
@@ -350,12 +348,15 @@ function parseNeteaseLine(line: string | undefined): KlineBar | null {
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const open = parseFloat(cols[6] || '0') || 0
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  const turnoverStr = (cols[10] || '0').trim()
+  const turnoverRate = turnoverStr && turnoverStr !== '-' ? parseFloat(turnoverStr) : undefined
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const volume = parseInt(cols[11] || '0') || 0
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const amount = parseFloat(cols[12] || '0') || 0
 
   if (!date || close <= 0) return null
-  return { date, open, high, low, close, volume, amount }
+  return { date, open, high, low, close, volume, amount, turnoverRate }
 }
 
 /** 解析网易 CSV 历史 K 线文本为多根 KlineBar（正序） */
@@ -366,6 +367,61 @@ function parseNeteaseLines(lines: string[]): KlineBar[] {
     if (kline) klines.push(kline)
   }
   return klines
+}
+
+// ── B-3: 腾讯历史 K 线 API ──
+
+/**
+ * 腾讯历史日 K 线数据（替代已不可用的网易端点）。
+ *
+ * API: https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh600519,day,,,60,qfq
+ * 返回字段: [date, open, close, high, low, volume]
+ * 注意：需通过 Vite proxy（/api/proxy/tencent-kline）解决浏览器 CORS。
+ *
+ * @param code 6 位代码（如 600519）
+ * @param days 获取天数（默认 60）
+ */
+export async function tencentKline(code: string, days = 60): Promise<KlineBar[]> {
+  const tencentCode = toTencentCode(code)
+  const url = `${TENCENT_KLINE_API_BASE}appstock/app/fqkline/get?param=${tencentCode},day,,,${days},qfq`
+  const start = Date.now()
+
+  const text = await safeFetch(url, 5000, { Referer: TENCENT_REFERER })
+  if (!text) {
+    logger.warn(`[directDataAPI] 腾讯 K 线请求失败: ${code}`)
+    return []
+  }
+
+  try {
+    const parsed = JSON.parse(text) as {
+      code: number
+      data: Record<string, { day?: string[][] }>
+    }
+    if (parsed.code !== 0 || !parsed.data) return []
+
+    const stockData = parsed.data[tencentCode]
+    if (!stockData?.day || stockData.day.length === 0) return []
+
+    // 腾讯 K 线字段顺序: [date, open, close, high, low, volume]
+    const klines: KlineBar[] = stockData.day
+      .map((row: string[]) => {
+        const date = row[0] ?? ''
+        const open = parseFloat(row[1] ?? '0') || 0
+        const close = parseFloat(row[2] ?? '0') || 0
+        const high = parseFloat(row[3] ?? '0') || 0
+        const low = parseFloat(row[4] ?? '0') || 0
+        const volume = parseInt(row[5] ?? '0') || 0
+        if (!date || close <= 0) return null
+        return { date, open, high, low, close, volume }
+      })
+      .filter((b) => b !== null) as KlineBar[]
+
+    logger.info(`[directDataAPI] 腾讯 K 线获取成功: ${code}, ${klines.length} 条`, { latency: Date.now() - start })
+    return klines
+  } catch (err) {
+    logger.warn(`[directDataAPI] 腾讯 K 线解析失败: ${code}`, { error: err instanceof Error ? err.message : String(err) })
+    return []
+  }
 }
 
 // ── 类型转换工具 ──

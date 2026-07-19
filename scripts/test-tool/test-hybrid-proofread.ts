@@ -69,7 +69,7 @@ SECRET_TOKEN=my-secret-token-value
 `,
     },
     {
-      name: 'README.md',
+      name: 'docs/explanation/README.md',
       content: `# Test Project
 This is a test project for hybrid proofreading.
 `,

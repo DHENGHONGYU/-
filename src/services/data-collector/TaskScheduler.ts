@@ -8,8 +8,10 @@ import type {
 import { DATA_SOURCE_TYPE } from '@/constants/cockpit.constants'
 import { BaseCollector } from './collectors/BaseCollector'
 import { MockCollector } from './collectors/MockCollector'
+import { RestCollector } from './collectors/RestCollector'
 import { WebSocketCollector } from './collectors/WebSocketCollector'
 import { LiveCollector } from './collectors/LiveCollector'
+import { NewsCrawler } from './collectors/NewsCrawler'
 import { eventBus } from '@/lib/eventBus'
 import { COLLECTION_EVENTS } from '@/types/modules/collection.types'
 import { runSingleTrace } from './collectionPipeline'
@@ -35,6 +37,26 @@ function emitTaskStatus(
   }
 }
 
+function emitTaskProgress(
+  taskId: string,
+  progress: number,
+  completedCount: number,
+  totalCount: number,
+  payload?: Record<string, unknown>,
+): void {
+  try {
+    eventBus.emit('collect:task:progress', {
+      traceId: taskId,
+      taskId,
+      message: `任务进度更新: ${progress}% (${completedCount}/${totalCount})`,
+      timestamp: Date.now(),
+      payload: { progress, completedCount, totalCount, ...payload },
+    })
+  } catch (err) {
+    logger.warn('[TaskScheduler] 任务进度事件发射失败', { error: err, taskId })
+  }
+}
+
 /** 数据采集轮询默认间隔（毫秒）。原硬编码 60000 提取为命名常量，供 audit:hardcode「硬编码超时」门禁放行。 */
 const DEFAULT_POLL_INTERVAL_MS = 60000
 
@@ -42,6 +64,7 @@ const DEFAULT_POLL_INTERVAL_MS = 60000
  * 采集任务调度器
  * @description 负责单个 Widget 数据采集任务的注册、启动、停止、错误状态管理
  * @remarks 支持自动定时轮询，页面销毁时自动清理定时器防止内存泄漏
+ * @remarks 2026-07-18 新增批量任务进度监控功能
  */
 export class TaskScheduler {
   private tasks = new Map<string, CollectionTask>()
@@ -49,6 +72,7 @@ export class TaskScheduler {
   private collectors = new Map<string, BaseCollector>()
   private listeners = new Set<CollectionResultCallback>()
   private taskCounter = 0
+  private batchTasks = new Map<string, BatchTaskInfo>()
 
   /**
    * 注册采集任务
@@ -230,7 +254,7 @@ export class TaskScheduler {
     const taskId = `pipeline-once-${dimensionCode}-${Date.now()}`
     emitTaskStatus(taskId, 'running', { symbol, dimensionCode })
 
-    const result = await runSingleTrace({ symbol, dimensionCode, config, taskId })
+    const result = await runSingleTrace({ symbol, dimensionCode, config, parentTaskId: taskId })
 
     emitTaskStatus(taskId, result.success ? 'completed' : 'error', {
       symbol,
@@ -366,14 +390,160 @@ export class TaskScheduler {
       case DATA_SOURCE_TYPE.MOCK:
         return new MockCollector()
       case DATA_SOURCE_TYPE.REST:
-        return new LiveCollector()
+        return new RestCollector()
       case DATA_SOURCE_TYPE.WEBSOCKET:
         return new WebSocketCollector()
+      case 'newsCrawler':
+        return new NewsCrawler()
       default:
         logger.warn(`[TaskScheduler] 未知的数据源类型: ${type}, 使用 MockCollector`)
         return new MockCollector()
     }
   }
+
+  /**
+   * 创建批量采集任务
+   * @param batchId 批次 ID
+   * @param tasks 任务列表
+   * @param collectorType 采集器类型
+   */
+  createBatchTask(batchId: string, tasks: { widgetId: string; instanceId: string; dataSource: DataSourceConfig }[], collectorType: string): void {
+    const batchInfo: BatchTaskInfo = {
+      batchId,
+      totalCount: tasks.length,
+      completedCount: 0,
+      successCount: 0,
+      failCount: 0,
+      status: 'running',
+      startTime: Date.now(),
+      tasks: [],
+      errors: [],
+    }
+
+    this.batchTasks.set(batchId, batchInfo)
+    emitTaskStatus(batchId, 'running', { totalCount: tasks.length })
+
+    tasks.forEach((taskConfig, index) => {
+      const taskId = this.registerTask(taskConfig.widgetId, taskConfig.instanceId, taskConfig.dataSource)
+      batchInfo.tasks.push(taskId)
+
+      this.startTask(taskId).then(() => {
+        batchInfo.completedCount++
+        const task = this.tasks.get(taskId)
+        if (task?.status === 'completed' || task?.successCount > 0) {
+          batchInfo.successCount++
+        } else if (task?.status === 'error') {
+          batchInfo.failCount++
+          batchInfo.errors.push({ taskId, error: task.error || '未知错误' })
+        }
+
+        const progress = Math.round((batchInfo.completedCount / batchInfo.totalCount) * 100)
+        emitTaskProgress(batchId, progress, batchInfo.completedCount, batchInfo.totalCount, {
+          successCount: batchInfo.successCount,
+          failCount: batchInfo.failCount,
+          currentTaskIndex: index,
+        })
+
+        if (batchInfo.completedCount >= batchInfo.totalCount) {
+          batchInfo.status = batchInfo.failCount === 0 ? 'completed' : 'completed'
+          batchInfo.endTime = Date.now()
+          emitTaskStatus(batchId, 'completed', {
+            totalCount: batchInfo.totalCount,
+            successCount: batchInfo.successCount,
+            failCount: batchInfo.failCount,
+            durationMs: batchInfo.endTime - batchInfo.startTime,
+          })
+        }
+      }).catch((err) => {
+        batchInfo.completedCount++
+        batchInfo.failCount++
+        batchInfo.errors.push({ taskId, error: err instanceof Error ? err.message : String(err) })
+
+        const progress = Math.round((batchInfo.completedCount / batchInfo.totalCount) * 100)
+        emitTaskProgress(batchId, progress, batchInfo.completedCount, batchInfo.totalCount, {
+          successCount: batchInfo.successCount,
+          failCount: batchInfo.failCount,
+          error: err instanceof Error ? err.message : String(err),
+        })
+      })
+    })
+  }
+
+  /**
+   * 获取批量任务进度
+   * @param batchId 批次 ID
+   */
+  getBatchProgress(batchId: string): BatchTaskInfo | undefined {
+    return this.batchTasks.get(batchId)
+  }
+
+  /**
+   * 停止批量任务
+   * @param batchId 批次 ID
+   */
+  stopBatchTask(batchId: string): void {
+    const batchInfo = this.batchTasks.get(batchId)
+    if (!batchInfo) return
+
+    batchInfo.status = 'paused'
+    batchInfo.endTime = Date.now()
+
+    batchInfo.tasks.forEach((taskId) => {
+      this.stopTask(taskId)
+    })
+
+    emitTaskStatus(batchId, 'paused', {
+      completedCount: batchInfo.completedCount,
+      totalCount: batchInfo.totalCount,
+    })
+  }
+
+  /**
+   * 获取所有批量任务统计
+   */
+  getAllBatchTasks(): BatchTaskInfo[] {
+    return Array.from(this.batchTasks.values())
+  }
+
+  /**
+   * 获取任务统计摘要
+   */
+  getTaskSummary(): {
+    totalTasks: number
+    runningTasks: number
+    completedTasks: number
+    errorTasks: number
+    totalBatchTasks: number
+    runningBatchTasks: number
+  } {
+    const tasks = this.getAllTasks()
+    const batchTasks = this.getAllBatchTasks()
+
+    return {
+      totalTasks: tasks.length,
+      runningTasks: tasks.filter((t) => t.status === 'running').length,
+      completedTasks: tasks.filter((t) => t.status === 'completed').length,
+      errorTasks: tasks.filter((t) => t.status === 'error').length,
+      totalBatchTasks: batchTasks.length,
+      runningBatchTasks: batchTasks.filter((b) => b.status === 'running').length,
+    }
+  }
+}
+
+/**
+ * 批量任务信息
+ */
+export interface BatchTaskInfo {
+  batchId: string
+  totalCount: number
+  completedCount: number
+  successCount: number
+  failCount: number
+  status: 'running' | 'completed' | 'error' | 'paused'
+  startTime: number
+  endTime?: number
+  tasks: string[]
+  errors: { taskId: string; error: string }[]
 }
 
 /**

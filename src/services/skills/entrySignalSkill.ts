@@ -25,6 +25,9 @@ const SignalSchema = z.object({
   createdAt: z.number(),
 })
 
+/**
+ * EntrySignalInputSchema
+ */
 export const EntrySignalInputSchema = z.object({
   symbol: z.string(),
   stockName: z.string().optional(),
@@ -39,6 +42,9 @@ export const EntrySignalInputSchema = z.object({
 
 export type EntrySignalInput = z.infer<typeof EntrySignalInputSchema>
 
+/**
+ * EntrySignalOutputSchema
+ */
 export const EntrySignalOutputSchema = z.object({
   /** 最强买入信号 */
   strongestSignal: SignalSchema,
@@ -83,6 +89,9 @@ function normalizeSignal(signal: TradingSignal): z.infer<typeof SignalSchema> {
   }
 }
 
+/**
+ * executeEntrySignalSkill
+ */
 export async function executeEntrySignalSkill(
   ctx: SkillContext,
 ): Promise<SkillResult<EntrySignalOutput>> {
@@ -205,6 +214,9 @@ export async function executeEntrySignalSkill(
   }
 }
 
+/**
+ * entrySignalSkill
+ */
 export const entrySignalSkill: SkillDefinition<EntrySignalOutput> = {
   name: 'entry-signal',
   title: '入场信号',

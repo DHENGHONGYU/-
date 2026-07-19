@@ -50,8 +50,11 @@ function parsePercentString(value: string | number | undefined): number | null {
  * adaptHeatmapData
  * @param sectors
  * @returns HeatmapCell[]
+/**
+ * adaptHeatmapData
+ * @param sectors
+ * @returns HeatmapCell[]
  */
-// eslint-disable-next-line react-refresh/only-export-components
 export function adaptHeatmapData(sectors: SectorHeatmapData[]): HeatmapCell[] {
   return sectors.map((sector) => ({
     code: sector.code,
@@ -67,8 +70,12 @@ export function adaptHeatmapData(sectors: SectorHeatmapData[]): HeatmapCell[] {
  * @param cell
  * @param metric
  * @returns number | null
+/**
+ * getMetricValue
+ * @param cell
+ * @param metric
+ * @returns number | null
  */
-// eslint-disable-next-line react-refresh/only-export-components
 export function getMetricValue(cell: HeatmapCell, metric: SectorHeatmapMetric): number | null {
   if (metric === 'changePercent') return cell.changePercent
   if (metric === 'turnover') return cell.turnover

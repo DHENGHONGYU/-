@@ -51,7 +51,7 @@ function loadFromConfigAppStorage(): ConfigAppStored | null {
     const raw = localStorage.getItem(APP_CONFIG_STORAGE_KEY)
     if (!raw) return null
     return JSON.parse(raw) as ConfigAppStored
-  } catch {
+  } catch (err) { console.warn('[runtimeTradingConfigStore.ts]', err);
     return null
   }
 }

@@ -225,6 +225,11 @@ async function persistResult(result: AnalysisResult): Promise<void> {
   }
 }
 
+/**
+ * runAnalysis
+ * @param req
+ * @returns Promise<AnalysisRunResult>
+ */
 export async function runAnalysis(req: AnalysisRequest): Promise<AnalysisRunResult> {
   const symbol = req.symbol
   const maxReAnalysis = req.maxReAnalysis ?? DEFAULT_K
@@ -299,6 +304,9 @@ export async function runAnalysis(req: AnalysisRequest): Promise<AnalysisRunResu
   return { success: true, data: result }
 }
 
+/**
+ * runAnalysisBatch
+ */
 export async function runAnalysisBatch(
   symbols: string[],
   options?: Pick<AnalysisRequest, 'enableFeedback' | 'maxReAnalysis'>,

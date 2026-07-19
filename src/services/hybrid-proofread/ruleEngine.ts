@@ -1,4 +1,5 @@
 import { getLogger } from '@/lib/logger'
+import { safeRegex } from '@/lib/safeRegex'
 import type { RuleConfig, RulePackage, RuleMatchResult, RulesSyncResult } from '@/data/types'
 import { HYBRID_PROOFREAD_CONFIG, HYBRID_PROOFREAD_DEFAULT_RULES } from '@/config/hybridProofreadConfig'
 import { defaultStorage } from '@/lib/localStorageManager'
@@ -284,13 +285,13 @@ export class RuleEngine {
   }
 
   private matchesFilePattern(filePath: string, filePattern: string): boolean {
-    const regex = new RegExp(filePattern.replace(/\*\*/g, '.*').replace(/\*/g, '[^/]*'))
+    const regex = safeRegex(filePattern.replace(/\*\*/g, '.*').replace(/\*/g, '[^/]*'))
     return regex.test(filePath)
   }
 
   private findMatches(content: string, pattern: string): Array<{ text: string; lineNumber: number; column: number }> {
     const results: Array<{ text: string; lineNumber: number; column: number }> = []
-    const regex = new RegExp(pattern, 'g')
+    const regex = safeRegex(pattern, 'g')
     let match: RegExpExecArray | null
 
     while ((match = regex.exec(content)) !== null) {

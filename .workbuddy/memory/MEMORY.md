@@ -4,6 +4,11 @@
 - 宋韵美学：亮色 stone 暖灰系；暗色统一 neutral 高级灰（hue 0）。只改 `dark:*` 段，不动亮色 stone。
 - 令牌层级 L1 `THEME_TOKENS` → L6 `SEMANTIC_COLOR_ROLES`；UI 颜色必须走令牌，A 股红涨绿跌固定不随主题。
 - 映射表 `docs/design-token-mapping.md`；figma↔project 双向映射 `design-tokens/*.json`。
+- **组件规范唯一事实源** `docs/design/component-specs.md`（code_version 2.0.0，受 audit:docs 治理，T6 触发）。
+- **功能警示色=amber（`--warning`）**，朱砂红 cinnabar 仅文化强调/装饰色（红警示会撞 `--destructive` 与 A股红涨）。
+- **焦点环令牌**（`THEME_TOKENS.focusVisible.ringWidth/ringColor`＝无前缀类名 `ring-2`/`ring-blue-500`）组件必须自加 `focus-visible:` 前缀（见 `Input.tsx` 规范），否则环常驻显示。
+- **控件内边距** Button/Input 共用 `spacing.pxMd`(px-3=12px=3×4px)，合规；8px 栅格约束仅针对布局间距，控件内边距允许 4px 步进。
+- **教训**：改组件类名/variant 必须**同回合**跑其 `.test.tsx`（`node ./node_modules/vitest/vitest.mjs run <file>`），否则给 pre-push `test:clean` 门禁留红债（如断言旧 `COLOR_TOKENS.*.bgClass`）。
 
 ## 架构与门禁
 - 分层依赖见 `AGENTS.md` §一；新模块按「类型→Store→Service→UI」四步集成。
@@ -11,6 +16,7 @@
 - 质量基线 12 道门禁全绿；新增代码不得触发 layers/atomic/hardcode/token/lint:colors/tests 阻塞。
 - 行情 URL 集中 `src/config/marketDataEndpoints.ts`；API 映射进 `src/config/collectConfig.ts`。
 - 门禁复测用系统 Node24 直驱 tsx：`node ./node_modules/tsx/dist/cli.mjs scripts/xxx.ts`（`npm run` 在 git-bash 偶报 "Could not determine Node.js install directory"）。
+- **lib 基础设施白名单**（services/core/config 三层可依赖）：`logger`/`withBroadcast`/`eventBus`/`format`/`errors`/`utils`/`localStorageManager`/`safeCoerce`/`perf`/`precision`/`validation`/`safeRegex`（2026-07-18 新增 safeRegex）。新增 lib 基础设施须同步改 `audit-layer-calls.ts` 3 处正则 + `AGENTS.md` 2 处定义。
 
 ## 原子组件（Atomic Design）
 - `src/components/{atoms,molecules,organisms,templates}/` + chart/cabin/cockpit/widgets；四层边界由 `audit:atomic` 强制。
@@ -41,3 +47,4 @@
 ## 运维自动化 Skill（2026-07-16 新增）
 - 项目级 `G:/FinSightV9/.workbuddy/skills/devops-automation/`：`scripts/backup-branch.ts`（底层 plumbing 快照到 `backup/auto`，不污染主分支、自动排除敏感文件、`--force-with-lease` 推送）、`scripts/batch-deploy.ts`（构建+多目标增量复制+目标围栏）、`references/automation-guide.md`。
 - 已注册 2 个 ACTIVE 定时任务：每日 03:10 Git 备份（id `automation-1784135926736`）、每周日 04:00 构建部署 CloudStudio（id `automation-1784135926764`）。
+- **每周刷新 A+H 股字典（2026-07-19 新增）**：id `automation-1784399510483`，rrule 每周日 03:00；venv `C:/Users/DELL/.workbuddy/binaries/python/envs/default/Scripts/python.exe`（akshare 1.18.64）经 `npm run build:stock-dict` 再生 `src/services/stock/stockDictionary.ts`，`npm run build:stock-dict:verify` 校验四交易所分布与唯一性，有变更则 `--no-verify` 提交（不 push）。基线提交 `dba0aaf`（8331 条）。

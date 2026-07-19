@@ -1,7 +1,7 @@
 /**
  * 自动生成的 Design Tokens
  * 源文件: design-tokens/tokens.json
- * 生成时间: 2026-07-15T17:16:17.278Z
+ * 生成时间: 2026-07-17T16:49:02.816Z
  * 请勿手动编辑此文件
  */
 
@@ -91,19 +91,6 @@ export const BASE_COLORS = {
     500: '#6366f1',
     700: '#4338ca',
   },
-  gray: {
-    50: '#f9fafb',
-    100: '#f3f4f6',
-    200: '#e5e7eb',
-    300: '#d1d5db',
-    400: '#9ca3af',
-    500: '#6b7280',
-    600: '#4b5563',
-    700: '#374151',
-    800: '#1f2937',
-    900: '#111827',
-    950: '#030712',
-  },
   slate: {
     50: '#f8fafc',
     100: '#f1f5f9',
@@ -132,9 +119,9 @@ export const BASE_COLORS = {
 export const SEMANTIC_COLORS = {
   stock_up: '#ef4444',
   stock_down: '#22c55e',
-  stock_neutral: '#9ca3af',
+  stock_neutral: '#94a3b8',
   status_info: '#3b82f6',
-  status_success: '#15803d',
+  status_success: '#21c45d',
   status_warning: '#f59e0b',
   status_danger: '#ef4444',
   score_high: '#22c55e',
@@ -149,7 +136,7 @@ export const SEMANTIC_COLORS = {
   signal_mediumStrong: '#22c55e',
   signal_medium: '#3b82f6',
   signal_weak: '#f59e0b',
-  signal_none: '#9ca3af',
+  signal_none: '#94a3b8',
 } as const
 
 export const CHART_TOKENS = {
@@ -159,9 +146,9 @@ export const CHART_TOKENS = {
   palette_series4: '#ef4444',
   palette_series5: '#8b5cf6',
   palette_series6: '#06b6d4',
-  grid: '#e5e7eb',
-  axis: '#6b7280',
-  tooltipBg: '#1f2937',
+  grid: '#e2e8f0',
+  axis: '#64748b',
+  tooltipBg: '#1e293b',
   tooltipText: '#ffffff',
 } as const
 

@@ -1,213 +1,220 @@
 ---
 title: README
-code_version: 2.0.0
-
+type: reference
+domain: ai
+phase: development
 tier: important
----
-
----
-title: docs/prompts/README.md
+status: active
+maintainer: V9 Architecture Team
+summary: "README - reference documentation (ai)"
+tags: [index, documentation, reference, ai, mcp]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: reference
+doc_id: V9-DOC-AI-004
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
-# AI Engineering Governance â€” V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ
+# AI Engineering Governance ¡ª V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³
 
-> **ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-10
-> **é€‚ç”¨èŒƒå›´**: æ‰€æœ‰ LLM è°ƒç”¨ã€Agent è°ƒåº¦ã€æç¤ºè¯å·¥ç¨‹ä¸ AI å¢å¼ºè¯„åˆ†
-> **æ²»ç†åŸåˆ™**: é€æ˜å¯æ§ã€åˆ†å±‚éš”ç¦»ã€å®‰å…¨é™çº§ã€æˆæœ¬å¯æ§
+> **Version**: v1.0.0 | **ÈÕÆÚ**: 2026-07-10
+> **ÊÊÓÃ·¶Î§**: ËùÓĞ LLM µ÷ÓÃ¡¢Agent µ÷¶È¡¢ÌáÊ¾´Ê¹¤³ÌÓë AI ÔöÇ¿ÆÀ·Ö
+> **ÖÎÀíÔ­Ôò**: Í¸Ã÷¿É¿Ø¡¢·Ö²ã¸ôÀë¡¢°²È«½µ¼¶¡¢³É±¾¿É¿Ø
 
 ---
 
-## ä¸€ã€AI æ¶æ„æ€»è§ˆ
+## Ò»¡¢AI ¼Ü¹¹×ÜÀÀ
 
-V9 çš„ AI ä½“ç³»é‡‡ç”¨**ä¸‰å±‚è°ƒç”¨æ ˆ + åŒå¼•æ“è¯„åˆ†**æ¶æ„ï¼š
+V9 µÄ AI ÌåÏµ²ÉÓÃ**Èı²ãµ÷ÓÃÕ» + Ë«ÒıÇæÆÀ·Ö**¼Ü¹¹£º
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                      AI æ¶æ„åˆ†å±‚                                â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚  L4 åº”ç”¨å±‚                                                        â”‚
-â”‚  â”œâ”€ IntelligentScoreServiceï¼ˆæ™ºèƒ½è¯„åˆ†ï¼‰                         â”‚
-â”‚  â”œâ”€ Scoring V6 Engineï¼ˆ9 å±‚è¯„åˆ†å¼•æ“ï¼‰                           â”‚
-â”‚  â””â”€ AgentRuntimeï¼ˆä»»åŠ¡è°ƒåº¦ï¼‰                                     â”‚
-â”‚                          â”‚                                      â”‚
-â”‚  L3 æœåŠ¡å±‚ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤                                      â”‚
-â”‚  â”œâ”€ LLM Gatewayï¼ˆè°ƒç”¨å®¡è®¡ + é”™è¯¯é™çº§ + Token ç»Ÿè®¡ï¼‰             â”‚
-â”‚  â””â”€ MCP ACLï¼ˆæƒé™æ§åˆ¶ï¼‰                                          â”‚
-â”‚                          â”‚                                      â”‚
-â”‚  L6 å¤–éƒ¨å±‚ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤                                      â”‚
-â”‚  â”œâ”€ LLM Clientï¼ˆHTTP / SSE æµå¼ï¼‰                               â”‚
-â”‚  â””â”€ å¤–éƒ¨ LLM APIï¼ˆOpenAI å…¼å®¹æ ¼å¼ï¼‰                             â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+©°©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©´
+©¦                      AI ¼Ü¹¹·Ö²ã                                ©¦
+©À©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È
+©¦  L4 Ó¦ÓÃ²ã                                                        ©¦
+©¦  ©À©¤ IntelligentScoreService£¨ÖÇÄÜÆÀ·Ö£©                         ©¦
+©¦  ©À©¤ Scoring V6 Engine£¨9 ²ãÆÀ·ÖÒıÇæ£©                           ©¦
+©¦  ©¸©¤ AgentRuntime£¨ÈÎÎñµ÷¶È£©                                     ©¦
+©¦                          ©¦                                      ©¦
+©¦  L3 ·şÎñ²ã ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È                                      ©¦
+©¦  ©À©¤ LLM Gateway£¨µ÷ÓÃÉó¼Æ + ´íÎó½µ¼¶ + Token Í³¼Æ£©             ©¦
+©¦  ©¸©¤ MCP ACL£¨È¨ÏŞ¿ØÖÆ£©                                          ©¦
+©¦                          ©¦                                      ©¦
+©¦  L6 Íâ²¿²ã ©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©È                                      ©¦
+©¦  ©À©¤ LLM Client£¨HTTP / SSE Á÷Ê½£©                               ©¦
+©¦  ©¸©¤ Íâ²¿ LLM API£¨OpenAI ¼æÈİ¸ñÊ½£©                             ©¦
+©¸©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¤©¼
 ```
 
-### 1.1 æ ¸å¿ƒè®¾è®¡åŸåˆ™
+### 1.1 ºËĞÄÉè¼ÆÔ­Ôò
 
-| åŸåˆ™ | å®ç° | è¯´æ˜ |
+| Ô­Ôò | ÊµÏÖ | ËµÃ÷ |
 |------|------|------|
-| **è°ƒç”¨é€æ˜** | `LlmTransparencyConfig` | æ¯ä¸ªå› å­æ˜¯å¦ä½¿ç”¨ LLM å¯¹ç”¨æˆ·å¯è§ |
-| **ç”¨æˆ·å¯æ§** | æ€»å¼€å…³ + å› å­çº§è¦†ç›– | ç”¨æˆ·å¯ç‹¬ç«‹å¯ç”¨/ç¦ç”¨ä»»æ„å› å­çš„ LLM å¢å¼º |
-| **å®‰å…¨é™çº§** | `allowFallback` | LLM å¤±è´¥æ—¶è¿”å›ç©ºå†…å®¹è€ŒéæŠ›é”™ï¼Œä¸å½±å“ä¸»æµç¨‹ |
-| **æˆæœ¬å¯æ§** | Token ç»Ÿè®¡ + æ¶ˆè€—å®¡è®¡ | æ¯æ¬¡è°ƒç”¨è®°å½• prompt/completion tokens |
-| **è¾“å‡ºæ¶ˆæ¯’** | `sanitizeLlmOutput` / `sanitizeScore` | é˜²æ­¢ XSS å’Œå¼‚å¸¸å€¼æ±¡æŸ“è¯„åˆ†ç»“æœ |
-| **æç¤ºè¯å·¥ç¨‹** | `prompts/` æ¨¡æ¿åŒ– | 5 ç±»åœºæ™¯æ¨¡æ¿ï¼Œç»Ÿä¸€ AI ç”Ÿæˆé£æ ¼ |
+| **µ÷ÓÃÍ¸Ã÷** | `LlmTransparencyConfig` | Ã¿¸öÒò×ÓÊÇ·ñÊ¹ÓÃ LLM ¶ÔÓÃ»§¿É¼û |
+| **ÓÃ»§¿É¿Ø** | ×Ü¿ª¹Ø + Òò×Ó¼¶¸²¸Ç | ÓÃ»§¿É¶ÀÁ¢ÆôÓÃ/½ûÓÃÈÎÒâÒò×ÓµÄ LLM ÔöÇ¿ |
+| **°²È«½µ¼¶** | `allowFallback` | LLM Ê§°ÜÊ±·µ»Ø¿ÕÄÚÈİ¶ø·ÇÅ×´í£¬²»Ó°ÏìÖ÷Á÷³Ì |
+| **³É±¾¿É¿Ø** | Token Í³¼Æ + ÏûºÄÉó¼Æ | Ã¿´Îµ÷ÓÃ¼ÇÂ¼ prompt/completion tokens |
+| **Êä³öÏû¶¾** | `sanitizeLlmOutput` / `sanitizeScore` | ·ÀÖ¹ XSS ºÍÒì³£ÖµÎÛÈ¾ÆÀ·Ö½á¹û |
+| **ÌáÊ¾´Ê¹¤³Ì** | `prompts/` Ä£°å»¯ | 5 Àà³¡¾°Ä£°å£¬Í³Ò» AI Éú³É·ç¸ñ |
 
 ---
 
-## äºŒã€LLM æœåŠ¡å±‚ï¼ˆL3ï¼‰
+## ¶ş¡¢LLM ·şÎñ²ã£¨L3£©
 
-### 2.1 è°ƒç”¨æ ˆ
+### 2.1 µ÷ÓÃÕ»
 
 ```
-ä¸šåŠ¡ä»£ç ï¼ˆå¦‚ intelligentScoreServiceï¼‰
-    â”‚
-    â–¼
-LLM Gatewayï¼ˆllmGateway.tsï¼‰
-    â”œâ”€ é…ç½®æ ¡éªŒï¼ˆbaseURL / apiKey / modelï¼‰
-    â”œâ”€ è°ƒç”¨å®¡è®¡ï¼ˆtraceId + duration + tokensï¼‰
-    â”œâ”€ é”™è¯¯é™çº§ï¼ˆallowFallback â†’ ç©ºå†…å®¹ï¼‰
-    â””â”€ Token ç»Ÿè®¡ï¼ˆprompt + completion + totalï¼‰
-    â”‚
-    â–¼
-LLM Clientï¼ˆllmClient.tsï¼‰
-    â”œâ”€ éæµå¼ï¼šchat() â†’ fetch /v1/chat/completions
-    â””â”€ æµå¼ï¼šstreamingChat() â†’ SSE é€è¡Œè§£æ
-    â”‚
-    â–¼
-å¤–éƒ¨ LLM APIï¼ˆOpenAI å…¼å®¹æ ¼å¼ï¼‰
+ÒµÎñ´úÂë£¨Èç intelligentScoreService£©
+    ©¦
+    ¨‹
+LLM Gateway£¨llmGateway.ts£©
+    ©À©¤ ÅäÖÃĞ£Ñé£¨baseURL / apiKey / model£©
+    ©À©¤ µ÷ÓÃÉó¼Æ£¨traceId + duration + tokens£©
+    ©À©¤ ´íÎó½µ¼¶£¨allowFallback ¡ú ¿ÕÄÚÈİ£©
+    ©¸©¤ Token Í³¼Æ£¨prompt + completion + total£©
+    ©¦
+    ¨‹
+LLM Client£¨llmClient.ts£©
+    ©À©¤ ·ÇÁ÷Ê½£ºchat() ¡ú fetch /v1/chat/completions
+    ©¸©¤ Á÷Ê½£ºstreamingChat() ¡ú SSE ÖğĞĞ½âÎö
+    ©¦
+    ¨‹
+Íâ²¿ LLM API£¨OpenAI ¼æÈİ¸ñÊ½£©
 ```
 
-### 2.2 LLM Clientï¼ˆåº•å±‚å®ç°ï¼‰
+### 2.2 LLM Client£¨µ×²ãÊµÏÖ£©
 
-æ–‡ä»¶: `src/services/llm/llmClient.ts`
+ÎÄ¼ş: `src/services/llm/llmClient.ts`
 
-| ç‰¹æ€§ | å®ç° |
+| ÌØĞÔ | ÊµÏÖ |
 |------|------|
-| åè®® | OpenAI å…¼å®¹ `/v1/chat/completions` |
-| éæµå¼ | `chat(messages, config?)` â†’ `LlmResponse` |
-| æµå¼ | `streamingChat(messages, callback, config?)` â†’ SSE é€ chunk å›è°ƒ |
-| è¶…æ—¶ | `AbortController` + æ€»è¶…æ—¶ï¼ˆconfig.timeoutï¼‰+ ç©ºé—²è¶…æ—¶ï¼ˆ30sï¼‰ |
-| åè®®ç™½åå• | `isValidLlmBaseURL()` æ ¡éªŒï¼Œä»…å…è®¸ `http://` / `https://`ï¼ˆé˜² XSS-003ï¼‰ |
-| é”™è¯¯å¤„ç† | `LlmConfigError`ï¼ˆé…ç½®é”™è¯¯ï¼‰/ `LlmApiError`ï¼ˆAPI é”™è¯¯ï¼Œå« statusCodeï¼‰ |
-| å“åº”è§£æ | è‡ªåŠ¨è§£æ JSON + æå– `choices[0].message.content` + usage ç»Ÿè®¡ |
-| æµå¼è§£æ | SSE `data:` è¡Œé€è¡Œè§£æï¼Œæ”¯æŒ `[DONE]` ç»ˆæ­¢ + é”™è¯¯å†…è” |
+| Ğ­Òé | OpenAI ¼æÈİ `/v1/chat/completions` |
+| ·ÇÁ÷Ê½ | `chat(messages, config?)` ¡ú `LlmResponse` |
+| Á÷Ê½ | `streamingChat(messages, callback, config?)` ¡ú SSE Öğ chunk »Øµ÷ |
+| ³¬Ê± | `AbortController` + ×Ü³¬Ê±£¨config.timeout£©+ ¿ÕÏĞ³¬Ê±£¨30s£© |
+| Ğ­Òé°×Ãûµ¥ | `isValidLlmBaseURL()` Ğ£Ñé£¬½öÔÊĞí `http://` / `https://`£¨·À XSS-003£© |
+| ´íÎó´¦Àí | `LlmConfigError`£¨ÅäÖÃ´íÎó£©/ `LlmApiError`£¨API ´íÎó£¬º¬ statusCode£© |
+| ÏìÓ¦½âÎö | ×Ô¶¯½âÎö JSON + ÌáÈ¡ `choices[0].message.content` + usage Í³¼Æ |
+| Á÷Ê½½âÎö | SSE `data:` ĞĞÖğĞĞ½âÎö£¬Ö§³Ö `[DONE]` ÖÕÖ¹ + ´íÎóÄÚÁª |
 
-### 2.3 LLM Gatewayï¼ˆä¸­é—´å±‚å°è£…ï¼‰
+### 2.3 LLM Gateway£¨ÖĞ¼ä²ã·â×°£©
 
-æ–‡ä»¶: `src/services/llm/llmGateway.ts`
+ÎÄ¼ş: `src/services/llm/llmGateway.ts`
 
-| èŒè´£ | å®ç° |
+| Ö°Ôğ | ÊµÏÖ |
 |------|------|
-| è°ƒç”¨è¿½è¸ª | `traceId = llm-${nanoid(8)}-${generateId(8)}` |
-| æ€§èƒ½ç›‘æ§ | è®°å½• `durationMs` + `model` + `totalTokens` |
-| é”™è¯¯é™çº§ | `options.allowFallback` â†’ è¿”å›ç©ºå†…å®¹ï¼ˆ`{ content: '', model: 'fallback' }`ï¼‰ |
-| æ—¥å¿—åˆ†çº§ | `info`ï¼ˆæˆåŠŸï¼‰/ `error`ï¼ˆå¤±è´¥ï¼‰+ ç»“æ„åŒ– context |
-| å¼‚å¸¸é€ä¼  | åº•å±‚ `LlmApiError` ç›´æ¥æŠ›å‡ºï¼Œä¸åæ²¡ |
+| µ÷ÓÃ×·×Ù | `traceId = llm-${nanoid(8)}-${generateId(8)}` |
+| ĞÔÄÜ¼à¿Ø | ¼ÇÂ¼ `durationMs` + `model` + `totalTokens` |
+| ´íÎó½µ¼¶ | `options.allowFallback` ¡ú ·µ»Ø¿ÕÄÚÈİ£¨`{ content: '', model: 'fallback' }`£© |
+| ÈÕÖ¾·Ö¼¶ | `info`£¨³É¹¦£©/ `error`£¨Ê§°Ü£©+ ½á¹¹»¯ context |
+| Òì³£Í¸´« | µ×²ã `LlmApiError` Ö±½ÓÅ×³ö£¬²»ÍÌÃ» |
 
-> **åˆ†å±‚è§„åˆ™**: L4 åº”ç”¨å±‚**ç¦æ­¢**ç›´æ¥è°ƒç”¨ `llmClient.ts`ï¼Œå¿…é¡»é€šè¿‡ `llmGateway.ts` è·¯ç”±ã€‚è¿™æ˜¯ AGENTS.md Â§å…­ çš„å¼ºåˆ¶æ€§çº¦æŸã€‚
+> **·Ö²ã¹æÔò**: L4 Ó¦ÓÃ²ã**½ûÖ¹**Ö±½Óµ÷ÓÃ `llmClient.ts`£¬±ØĞëÍ¨¹ı `llmGateway.ts` Â·ÓÉ¡£ÕâÊÇ AGENTS.md ¡ìÁù µÄÇ¿ÖÆĞÔÔ¼Êø¡£
 
 ---
 
-## ä¸‰ã€LLM é…ç½®ä¸æ¨¡å‹ç®¡ç†
+## Èı¡¢LLM ÅäÖÃÓëÄ£ĞÍ¹ÜÀí
 
-### 3.1 å†…ç½®æ¨¡å‹é¢„è®¾
+### 3.1 ÄÚÖÃÄ£ĞÍÔ¤Éè
 
-æ–‡ä»¶: `src/config/llmConfig.ts`
+ÎÄ¼ş: `src/config/llmConfig.ts`
 
-| é¢„è®¾ ID | åç§° | æä¾›å•† | é»˜è®¤æ¨¡å‹ | ä¸Šä¸‹æ–‡çª—å£ | è¾“å…¥ä»· | è¾“å‡ºä»· |
+| Ô¤Éè ID | Ãû³Æ | Ìá¹©ÉÌ | Ä¬ÈÏÄ£ĞÍ | ÉÏÏÂÎÄ´°¿Ú | ÊäÈë¼Û | Êä³ö¼Û |
 |---------|------|--------|---------|-----------|--------|--------|
 | `deepseek` | DeepSeek | DeepSeek | `deepseek-v4-flash` | 1,000,000 | $0.14 | $0.28 |
 | `kimi` | Kimi K2 | Moonshot | `kimi-k2.7-code` | 128,000 | $0.60 | $1.80 |
-| `qwen` | é€šä¹‰åƒé—® | Alibaba | `qwen3.6-flash` | 128,000 | $0.40 | $1.20 |
-| `siliconflow` | ç¡…åŸºæµåŠ¨ | SiliconFlow | `Qwen/Qwen2.5-7B-Instruct` | 32,000 | $0.42 | $0.42 |
-| `custom` | è‡ªå®šä¹‰ | â€” | â€” | â€” | â€” | â€” |
+| `qwen` | Í¨ÒåÇ§ÎÊ | Alibaba | `qwen3.6-flash` | 128,000 | $0.40 | $1.20 |
+| `siliconflow` | ¹è»ùÁ÷¶¯ | SiliconFlow | `Qwen/Qwen2.5-7B-Instruct` | 32,000 | $0.42 | $0.42 |
+| `custom` | ×Ô¶¨Òå | ¡ª | ¡ª | ¡ª | ¡ª | ¡ª |
 
-### 3.2 é…ç½®å­˜å‚¨å®‰å…¨
+### 3.2 ÅäÖÃ´æ´¢°²È«
 
-| é…ç½®é¡¹ | å­˜å‚¨æ–¹å¼ | åŠ å¯† | è¯»å–æ–¹å¼ |
+| ÅäÖÃÏî | ´æ´¢·½Ê½ | ¼ÓÃÜ | ¶ÁÈ¡·½Ê½ |
 |-------|---------|------|---------|
-| API Key | `localStorageManager.setEncrypted()` | âœ… AES-GCM | `getLlmApiKeyAsync()`ï¼ˆå¼‚æ­¥è§£å¯†ï¼‰ |
-| Base URL | è¿è¡Œæ—¶ `import.meta.env` + ç”¨æˆ· UI é…ç½® | âŒ | æ˜æ–‡ |
-| Model | åŒä¸Š | âŒ | æ˜æ–‡ |
-| æ¸©åº¦/æœ€å¤§Token | åŒä¸Š | âŒ | æ˜æ–‡ |
+| API Key | `localStorageManager.setEncrypted()` | ? AES-GCM | `getLlmApiKeyAsync()`£¨Òì²½½âÃÜ£© |
+| Base URL | ÔËĞĞÊ± `import.meta.env` + ÓÃ»§ UI ÅäÖÃ | ? | Ã÷ÎÄ |
+| Model | Í¬ÉÏ | ? | Ã÷ÎÄ |
+| ÎÂ¶È/×î´óToken | Í¬ÉÏ | ? | Ã÷ÎÄ |
 
-> **å®‰å…¨ä¿®å¤ P0-01**: API Key ä¸å†ä» `VITE_LLM_API_KEY` ç¯å¢ƒå˜é‡è¯»å–ï¼ˆé˜²æ­¢æ‰“åŒ…æ³„éœ²ï¼‰ï¼Œæ”¹ä¸ºä»åŠ å¯† localStorage å¼‚æ­¥è¯»å–ã€‚
+> **°²È«ĞŞ¸´ P0-01**: API Key ²»ÔÙ´Ó `VITE_LLM_API_KEY` »·¾³±äÁ¿¶ÁÈ¡£¨·ÀÖ¹´ò°üĞ¹Â¶£©£¬¸ÄÎª´Ó¼ÓÃÜ localStorage Òì²½¶ÁÈ¡¡£
 
-### 3.3 LLM é€æ˜åº¦é…ç½®
+### 3.3 LLM Í¸Ã÷¶ÈÅäÖÃ
 
 ```typescript
 interface LlmTransparencyConfig extends LlmConfig {
-  enableLlm: boolean              // æ€»å¼€å…³ï¼ˆé»˜è®¤å…³é—­ï¼‰
-  showTransparencyPanel: boolean // æ˜¯å¦æ˜¾ç¤ºé€æ˜åº¦é¢æ¿ï¼ˆé»˜è®¤å…³é—­ï¼‰
-  factorOverrides: LlmFactorOverride[]  // å› å­çº§è¦†ç›–
+  enableLlm: boolean              // ×Ü¿ª¹Ø£¨Ä¬ÈÏ¹Ø±Õ£©
+  showTransparencyPanel: boolean // ÊÇ·ñÏÔÊ¾Í¸Ã÷¶ÈÃæ°å£¨Ä¬ÈÏ¹Ø±Õ£©
+  factorOverrides: LlmFactorOverride[]  // Òò×Ó¼¶¸²¸Ç
 }
 
 interface LlmFactorOverride {
-  factorId: string   // ä¸ scoreFactors.ts ä¸­çš„å› å­åç§°å¯¹é½
-  useLlm: boolean    // è¯¥å› å­æ˜¯å¦å…è®¸è°ƒç”¨ LLM
+  factorId: string   // Óë scoreFactors.ts ÖĞµÄÒò×ÓÃû³Æ¶ÔÆë
+  useLlm: boolean    // ¸ÃÒò×ÓÊÇ·ñÔÊĞíµ÷ÓÃ LLM
 }
 ```
 
-**é»˜è®¤ LLM å¯ç”¨å±‚çº§**ï¼ˆV6 è¯„åˆ†å¼•æ“ï¼‰ï¼š
+**Ä¬ÈÏ LLM ÆôÓÃ²ã¼¶**£¨V6 ÆÀ·ÖÒıÇæ£©£º
 
-| å±‚çº§ | åç§° | ç±»å‹ | é»˜è®¤ä½¿ç”¨ LLM | æƒé‡ |
+| ²ã¼¶ | Ãû³Æ | ÀàĞÍ | Ä¬ÈÏÊ¹ÓÃ LLM | È¨ÖØ |
 |------|------|------|-------------|------|
-| L0 | å®è§‚æ”¿ç­– | LLM å¯å¢å¼º | âœ… | â€” |
-| L1 | è¡Œä¸šæ™¯æ°” | LLM å¯å¢å¼º | âœ… | â€” |
-| L2 | æŠ¤åŸæ²³ä¸ç«äº‰ | LLM å¯å¢å¼º | âœ… | â€” |
-| L3 | ç›ˆåˆ©è´¨é‡ | ç¡®å®šæ€§ | âŒ | â€” |
-| L4 | ä¼°å€¼æ°´å¹³ | ç¡®å®šæ€§ | âŒ | â€” |
-| L5 | ç®¡ç†å±‚ | LLM å¯å¢å¼º | âœ… | â€” |
-| L6 | èµ„æœ¬é…ç½® | LLM å¯å¢å¼º | âœ… | â€” |
-| L7 | ç¬¬äºŒæ›²çº¿ | LLM å¯å¢å¼º | â€” | 15% |
-| L8 | æŠ€æœ¯ç­¹ç  | ç¡®å®šæ€§ | âŒ | 4% |
+| L0 | ºê¹ÛÕş²ß | LLM ¿ÉÔöÇ¿ | ? | ¡ª |
+| L1 | ĞĞÒµ¾°Æø | LLM ¿ÉÔöÇ¿ | ? | ¡ª |
+| L2 | »¤³ÇºÓÓë¾ºÕù | LLM ¿ÉÔöÇ¿ | ? | ¡ª |
+| L3 | Ó¯ÀûÖÊÁ¿ | È·¶¨ĞÔ | ? | ¡ª |
+| L4 | ¹ÀÖµË®Æ½ | È·¶¨ĞÔ | ? | ¡ª |
+| L5 | ¹ÜÀí²ã | LLM ¿ÉÔöÇ¿ | ? | ¡ª |
+| L6 | ×Ê±¾ÅäÖÃ | LLM ¿ÉÔöÇ¿ | ? | ¡ª |
+| L7 | µÚ¶şÇúÏß | LLM ¿ÉÔöÇ¿ | ¡ª | 15% |
+| L8 | ¼¼Êõ³ïÂë | È·¶¨ĞÔ | ? | 4% |
 
-> **é»˜è®¤é…ç½®**: `DEFAULT_LLM_ENABLED_LAYER_INDICES = new Set([0, 1, 2, 5, 6])`ï¼ˆL0/L1/L2/L5/L6ï¼‰ã€‚L3/L4/L7/L8 ç”±è§„åˆ™å¼•æ“è‡ªåŠ¨è®¡ç®—ï¼Œä¸è°ƒç”¨ LLMã€‚
+> **Ä¬ÈÏÅäÖÃ**: `DEFAULT_LLM_ENABLED_LAYER_INDICES = new Set([0, 1, 2, 5, 6])`£¨L0/L1/L2/L5/L6£©¡£L3/L4/L7/L8 ÓÉ¹æÔòÒıÇæ×Ô¶¯¼ÆËã£¬²»µ÷ÓÃ LLM¡£
 
 ---
 
-## å››ã€è¯„åˆ†å¼•æ“ AI å¢å¼ºï¼ˆV6 Engineï¼‰
+## ËÄ¡¢ÆÀ·ÖÒıÇæ AI ÔöÇ¿£¨V6 Engine£©
 
-### 4.1 ä¹å±‚è¯„åˆ†æ¨¡å‹
+### 4.1 ¾Å²ãÆÀ·ÖÄ£ĞÍ
 
-æ–‡ä»¶: `src/services/scoring/v6-engine/`
+ÎÄ¼ş: `src/services/scoring/v6-engine/`
 
-V6 è¯„åˆ†å¼•æ“å°†è‚¡ç¥¨è¯„åˆ†æ‹†åˆ†ä¸º 9 ä¸ªç‹¬ç«‹ç»´åº¦ï¼ˆL0-L8ï¼‰ï¼Œæ¯ä¸ªç»´åº¦ç‹¬ç«‹è®¡ç®—ååŠ æƒæ±‡æ€»ï¼š
-
-```
-L0 å®è§‚æ”¿ç­– â”€â”€â”€â”€â”€â”
-L1 è¡Œä¸šæ™¯æ°” â”€â”€â”€â”€â”€â”¤ LLM å¯å¢å¼ºå±‚ï¼ˆè¯­ä¹‰åˆ†æï¼‰
-L2 æŠ¤åŸæ²³ç«äº‰ â”€â”€â”€â”¤
-L3 ç›ˆåˆ©è´¨é‡ â”€â”€â”€â”€â”€â”¤
-L4 ä¼°å€¼æ°´å¹³ â”€â”€â”€â”€â”€â”¤ ç¡®å®šæ€§å±‚ï¼ˆè§„åˆ™è®¡ç®—ï¼‰
-L5 ç®¡ç†å±‚ â”€â”€â”€â”€â”€â”€â”€â”¤ LLM å¯å¢å¼ºå±‚ï¼ˆä¸»è§‚è¯„ä¼°ï¼‰
-L6 èµ„æœ¬é…ç½® â”€â”€â”€â”€â”€â”¤
-L7 ç¬¬äºŒæ›²çº¿ â”€â”€â”€â”€â”€â”¤ æ··åˆå±‚ï¼ˆè§„åˆ™ + å¯é€‰ LLMï¼‰
-L8 æŠ€æœ¯ç­¹ç  â”€â”€â”€â”€â”€â”˜ ç¡®å®šæ€§å±‚ï¼ˆKçº¿é‡ä»·è®¡ç®—ï¼‰
-```
-
-### 4.2 æ™ºèƒ½è¯„åˆ†æœåŠ¡ï¼ˆIntelligent Scoreï¼‰
-
-æ–‡ä»¶: `src/services/scoring/intelligentScoreService.ts`
-
-`runIntelligentScore()` æ‰§è¡Œ 6 æ­¥è¯„åˆ†æµç¨‹ï¼š
+V6 ÆÀ·ÖÒıÇæ½«¹ÉÆ±ÆÀ·Ö²ğ·ÖÎª 9 ¸ö¶ÀÁ¢Î¬¶È£¨L0-L8£©£¬Ã¿¸öÎ¬¶È¶ÀÁ¢¼ÆËãºó¼ÓÈ¨»ã×Ü£º
 
 ```
-1. fetchBasicData      â†’ è¯»å–è‚¡ç¥¨åŸºç¡€æ•°æ®ï¼ˆpe/pb/roe/marketCapï¼‰
-2. readSupplementaryFiles â†’ è¯»å–ç”¨æˆ·ä¸Šä¼ çš„è¡¥å……æ–‡ä»¶ï¼ˆç ”æŠ¥/è´¢æŠ¥ï¼‰
-3. prepareReportText   â†’ æ•´ç†è¡Œä¸šæŠ¥å‘Šèµ„æ–™
-4. llmAnalysis         â†’ è°ƒç”¨ LLM ç”Ÿæˆå¤šç»´åº¦è¯„åˆ†ï¼ˆJSON æ ¼å¼ï¼‰
-5. parseScore          â†’ è§£æ LLM è¾“å‡º + å› å­çº§é€æ˜åº¦æ ‡è®°
-6. saveResult          â†’ ä¿å­˜åˆ° intelligent_scores å­˜å‚¨è¡¨
+L0 ºê¹ÛÕş²ß ©¤©¤©¤©¤©¤©´
+L1 ĞĞÒµ¾°Æø ©¤©¤©¤©¤©¤©È LLM ¿ÉÔöÇ¿²ã£¨ÓïÒå·ÖÎö£©
+L2 »¤³ÇºÓ¾ºÕù ©¤©¤©¤©È
+L3 Ó¯ÀûÖÊÁ¿ ©¤©¤©¤©¤©¤©È
+L4 ¹ÀÖµË®Æ½ ©¤©¤©¤©¤©¤©È È·¶¨ĞÔ²ã£¨¹æÔò¼ÆËã£©
+L5 ¹ÜÀí²ã ©¤©¤©¤©¤©¤©¤©¤©È LLM ¿ÉÔöÇ¿²ã£¨Ö÷¹ÛÆÀ¹À£©
+L6 ×Ê±¾ÅäÖÃ ©¤©¤©¤©¤©¤©È
+L7 µÚ¶şÇúÏß ©¤©¤©¤©¤©¤©È »ìºÏ²ã£¨¹æÔò + ¿ÉÑ¡ LLM£©
+L8 ¼¼Êõ³ïÂë ©¤©¤©¤©¤©¤©¼ È·¶¨ĞÔ²ã£¨KÏßÁ¿¼Û¼ÆËã£©
 ```
 
-**LLM æç¤ºè¯æ„å»º**: `buildIntelligentScorePrompt()` å°†è‚¡ç¥¨æ•°æ® + è¡¥å……æ–‡ä»¶ + æŠ¥å‘Šæ–‡æœ¬ç»„è£…ä¸ºç»“æ„åŒ– promptï¼Œè¦æ±‚ LLM è¿”å›æ ‡å‡† JSON æ ¼å¼ï¼š
+### 4.2 ÖÇÄÜÆÀ·Ö·şÎñ£¨Intelligent Score£©
+
+ÎÄ¼ş: `src/services/scoring/intelligentScoreService.ts`
+
+`runIntelligentScore()` Ö´ĞĞ 6 ²½ÆÀ·ÖÁ÷³Ì£º
+
+```
+1. fetchBasicData      ¡ú ¶ÁÈ¡¹ÉÆ±»ù´¡Êı¾İ£¨pe/pb/roe/marketCap£©
+2. readSupplementaryFiles ¡ú ¶ÁÈ¡ÓÃ»§ÉÏ´«µÄ²¹³äÎÄ¼ş£¨ÑĞ±¨/²Æ±¨£©
+3. prepareReportText   ¡ú ÕûÀíĞĞÒµ±¨¸æ×ÊÁÏ
+4. llmAnalysis         ¡ú µ÷ÓÃ LLM Éú³É¶àÎ¬¶ÈÆÀ·Ö£¨JSON ¸ñÊ½£©
+5. parseScore          ¡ú ½âÎö LLM Êä³ö + Òò×Ó¼¶Í¸Ã÷¶È±ê¼Ç
+6. saveResult          ¡ú ±£´æµ½ intelligent_scores ´æ´¢±í
+```
+
+**LLM ÌáÊ¾´Ê¹¹½¨**: `buildIntelligentScorePrompt()` ½«¹ÉÆ±Êı¾İ + ²¹³äÎÄ¼ş + ±¨¸æÎÄ±¾×é×°Îª½á¹¹»¯ prompt£¬ÒªÇó LLM ·µ»Ø±ê×¼ JSON ¸ñÊ½£º
 
 ```json
 {
   "dimensions": [
-    { "name": "ç›ˆåˆ©è´¨é‡", "score": 4.5, "rationale": "...", "evidence": ["..."] }
+    { "name": "Ó¯ÀûÖÊÁ¿", "score": 4.5, "rationale": "...", "evidence": ["..."] }
   ],
   "summary": "...",
   "basis": "...",
@@ -215,196 +222,196 @@ L8 æŠ€æœ¯ç­¹ç  â”€â”€â”€â”€â”€â”˜ ç¡®å®šæ€§å±‚ï¼ˆKçº¿é‡ä»·è®¡ç®—ï¼‰
 }
 ```
 
-### 4.3 è¾“å‡ºæ¶ˆæ¯’ä¸æ ¡éªŒ
+### 4.3 Êä³öÏû¶¾ÓëĞ£Ñé
 
-| æ¶ˆæ¯’ç‚¹ | å®ç° | è¯´æ˜ |
+| Ïû¶¾µã | ÊµÏÖ | ËµÃ÷ |
 |--------|------|------|
-| JSON æå– | `extractJsonFromMarkdown()` | ä» Markdown ä»£ç å—ä¸­æå– JSON |
-| JSON è§£æ | `parseRawScoreOutput()` | å¤±è´¥æ—¶æŠ› `LlmApiError` |
-| åˆ†æ•°å½’ä¸€åŒ– | `normalizeDimensionScore()` | `Math.max(1, Math.min(5, score))` |
-| è¯„åˆ†æ€»æ ¡éªŒ | `sanitizeScore()` | `Number.isFinite()` + `[0, 100]` clamp |
-| ç±»å‹è¿‡æ»¤ | `filter()` + `typeof` | ç¡®ä¿ `evidence` ä¸ºå­—ç¬¦ä¸²æ•°ç»„ |
+| JSON ÌáÈ¡ | `extractJsonFromMarkdown()` | ´Ó Markdown ´úÂë¿éÖĞÌáÈ¡ JSON |
+| JSON ½âÎö | `parseRawScoreOutput()` | Ê§°ÜÊ±Å× `LlmApiError` |
+| ·ÖÊı¹éÒ»»¯ | `normalizeDimensionScore()` | `Math.max(1, Math.min(5, score))` |
+| ÆÀ·Ö×ÜĞ£Ñé | `sanitizeScore()` | `Number.isFinite()` + `[0, 100]` clamp |
+| ÀàĞÍ¹ıÂË | `filter()` + `typeof` | È·±£ `evidence` Îª×Ö·û´®Êı×é |
 
 ---
 
-## äº”ã€Agent ç³»ç»Ÿ
+## Îå¡¢Agent ÏµÍ³
 
-### 5.1 Agent è¿è¡Œæ—¶
+### 5.1 Agent ÔËĞĞÊ±
 
-æ–‡ä»¶: `src/agents/agentRuntime.ts`
+ÎÄ¼ş: `src/agents/agentRuntime.ts`
 
-`AgentRuntime` æ˜¯åŸºäº MCP çš„è½»é‡çº§ä»»åŠ¡è°ƒåº¦å™¨ï¼š
+`AgentRuntime` ÊÇ»ùÓÚ MCP µÄÇáÁ¿¼¶ÈÎÎñµ÷¶ÈÆ÷£º
 
 ```typescript
 class AgentRuntime {
-  register(config: AgentConfig)     // æ³¨å†Œ Agentï¼ˆname/timeout/maxConcurrent/mcpServerï¼‰
-  execute(agentId, type, payload)   // æ‰§è¡Œå•ä»»åŠ¡ï¼ˆå«è¶…æ—¶æ§åˆ¶ï¼‰
-  executeParallel(tasks[])          // å¹¶è¡Œæ‰§è¡Œå¤šä»»åŠ¡
-  cancelTask(id)                    // å–æ¶ˆè¿è¡Œä¸­ä»»åŠ¡
-  getTask(id) / listTasks(status)   // ä»»åŠ¡æŸ¥è¯¢
+  register(config: AgentConfig)     // ×¢²á Agent£¨name/timeout/maxConcurrent/mcpServer£©
+  execute(agentId, type, payload)   // Ö´ĞĞµ¥ÈÎÎñ£¨º¬³¬Ê±¿ØÖÆ£©
+  executeParallel(tasks[])          // ²¢ĞĞÖ´ĞĞ¶àÈÎÎñ
+  cancelTask(id)                    // È¡ÏûÔËĞĞÖĞÈÎÎñ
+  getTask(id) / listTasks(status)   // ÈÎÎñ²éÑ¯
 }
 ```
 
-**ä»»åŠ¡ç”Ÿå‘½å‘¨æœŸ**: `pending â†’ running â†’ completed/failed/timeout`
+**ÈÎÎñÉúÃüÖÜÆÚ**: `pending ¡ú running ¡ú completed/failed/timeout`
 
-**äº‹ä»¶é©±åŠ¨**: é€šè¿‡ `eventBus` å‘å°„çŠ¶æ€å˜æ›´äº‹ä»¶ï¼Œ`AgentStore` è®¢é˜…åŒæ­¥ï¼š
+**ÊÂ¼şÇı¶¯**: Í¨¹ı `eventBus` ·¢Éä×´Ì¬±ä¸üÊÂ¼ş£¬`AgentStore` ¶©ÔÄÍ¬²½£º
 - `AGENT_REGISTERED` / `AGENT_TASK_STARTED` / `AGENT_TASK_COMPLETED`
 - `AGENT_TASK_FAILED` / `AGENT_TASK_TIMEOUT` / `AGENT_TASK_CANCELLED`
 
 ### 5.2 Agent Store
 
-æ–‡ä»¶: `src/store/agentStore.ts`
+ÎÄ¼ş: `src/store/agentStore.ts`
 
-Zustand Store ç®¡ç† Agent çŠ¶æ€ï¼š
+Zustand Store ¹ÜÀí Agent ×´Ì¬£º
 
-| çŠ¶æ€ | è¯´æ˜ |
+| ×´Ì¬ | ËµÃ÷ |
 |------|------|
-| `registeredAgents` | å·²æ³¨å†Œ Agent ID åˆ—è¡¨ |
-| `tasks` | `Map<string, AgentTask>` ä»»åŠ¡é›†åˆ |
-| `stats` | è¿è¡Œç»Ÿè®¡ï¼ˆpending/running/completed/failedï¼‰ |
-| `triggerPayload` | ä»»åŠ¡è§¦å‘å‚æ•° |
-| `mcpCallHistory` | MCP è°ƒç”¨å†å²ï¼ˆæœ€å¤§ä¿ç•™ `MCP_CALL_HISTORY_MAX_SIZE` æ¡ï¼‰ |
+| `registeredAgents` | ÒÑ×¢²á Agent ID ÁĞ±í |
+| `tasks` | `Map<string, AgentTask>` ÈÎÎñ¼¯ºÏ |
+| `stats` | ÔËĞĞÍ³¼Æ£¨pending/running/completed/failed£© |
+| `triggerPayload` | ÈÎÎñ´¥·¢²ÎÊı |
+| `mcpCallHistory` | MCP µ÷ÓÃÀúÊ·£¨×î´ó±£Áô `MCP_CALL_HISTORY_MAX_SIZE` Ìõ£© |
 
-### 5.3 è‡ªå®šä¹‰æ™ºèƒ½ä½“ï¼ˆv26ï¼‰
+### 5.3 ×Ô¶¨ÒåÖÇÄÜÌå£¨v26£©
 
-DB_VERSION 26 å¼•å…¥ `custom_agents` å­˜å‚¨è¡¨ï¼Œæ”¯æŒç”¨æˆ·åœ¨ã€Œè‡ªå®šä¹‰æ™ºèƒ½ä½“ã€é¡µé¢åˆ›å»ºå’Œç®¡ç† Agentï¼š
+DB_VERSION 26 ÒıÈë `custom_agents` ´æ´¢±í£¬Ö§³ÖÓÃ»§ÔÚ¡¸×Ô¶¨ÒåÖÇÄÜÌå¡¹Ò³Ãæ´´½¨ºÍ¹ÜÀí Agent£º
 
-- é…ç½® Agent çš„ `mcpServerName` / `defaultToolName` / `timeout` / `maxConcurrent`
-- é€šè¿‡ `AgentRuntime.register()` æ³¨å†Œåˆ°è¿è¡Œæ—¶
-- ä»»åŠ¡æ‰§è¡Œé€šè¿‡ `mcpBridge.callTool()` è°ƒç”¨å¯¹åº” MCP Server
+- ÅäÖÃ Agent µÄ `mcpServerName` / `defaultToolName` / `timeout` / `maxConcurrent`
+- Í¨¹ı `AgentRuntime.register()` ×¢²áµ½ÔËĞĞÊ±
+- ÈÎÎñÖ´ĞĞÍ¨¹ı `mcpBridge.callTool()` µ÷ÓÃ¶ÔÓ¦ MCP Server
 
 ---
 
-## å…­ã€æç¤ºè¯å·¥ç¨‹
+## Áù¡¢ÌáÊ¾´Ê¹¤³Ì
 
-### 6.1 æ¨¡æ¿ç›®å½•
+### 6.1 Ä£°åÄ¿Â¼
 
-æ–‡ä»¶: `../README.md`
+ÎÄ¼ş: `../README.md`
 
-| æ¨¡æ¿ | ç”¨é€” | å…³é”®çº¦æŸ |
+| Ä£°å | ÓÃÍ¾ | ¹Ø¼üÔ¼Êø |
 |------|------|---------|
-| `../system-prompt-template.md` | é€šç”¨ç³»ç»Ÿæç¤ºè¯ | é¡¹ç›®æ¶æ„ã€åˆ†å±‚è§„åˆ™ã€é¢œè‰²ä»¤ç‰Œã€æ—¥å¿—è§„èŒƒ |
-| `../component-prompt-template.md` | UI ç»„ä»¶ç”Ÿæˆ | è®¾è®¡ä½“ç³»ã€ç»„ä»¶å±‚çº§ã€Widget ä¸‰å¤„æ³¨å†Œ |
-| `../service-prompt-template.md` | Service ç”Ÿæˆ | DataBridge ä½¿ç”¨ã€äº‹ä»¶è§„èŒƒã€æ—¥å¿—è§„èŒƒ |
-| `../store-prompt-template.md` | Store ç”Ÿæˆ | `withBroadcast` è·¨ Tab å¹¿æ’­ |
-| `../types-prompt-template.md` | ç±»å‹å®šä¹‰ç”Ÿæˆ | é›¶ä¾èµ–åŸåˆ™ |
+| `../../prompts/system-prompt-template.md` | Í¨ÓÃÏµÍ³ÌáÊ¾´Ê | ÏîÄ¿¼Ü¹¹¡¢·Ö²ã¹æÔò¡¢ÑÕÉ«ÁîÅÆ¡¢ÈÕÖ¾¹æ·¶ |
+| `../../prompts/component-prompt-template.md` | UI ×é¼şÉú³É | Éè¼ÆÌåÏµ¡¢×é¼ş²ã¼¶¡¢Widget Èı´¦×¢²á |
+| `../../prompts/service-prompt-template.md` | Service Éú³É | DataBridge Ê¹ÓÃ¡¢ÊÂ¼ş¹æ·¶¡¢ÈÕÖ¾¹æ·¶ |
+| `../../prompts/store-prompt-template.md` | Store Éú³É | `withBroadcast` ¿ç Tab ¹ã²¥ |
+| `../../prompts/types-prompt-template.md` | ÀàĞÍ¶¨ÒåÉú³É | ÁãÒÀÀµÔ­Ôò |
 
-### 6.2 ä½¿ç”¨æ–¹å¼
+### 6.2 Ê¹ÓÃ·½Ê½
 
-1. **ç³»ç»Ÿæç¤ºè¯**: å°† `../system-prompt-template.md` ç²˜è´´åˆ° Cursor / Trae / WorkBuddy çš„ç³»ç»Ÿæç¤ºè¯
-2. **`.cursorrules`**: é¡¹ç›®æ ¹ç›®å½•å·²é…ç½®è‡ªåŠ¨åŠ è½½
-3. **ä»»åŠ¡çº§åŠ è½½**: å¤æ‚ä»»åŠ¡å‰æ‰‹åŠ¨è¿½åŠ å¯¹åº”æ¨¡æ¿
+1. **ÏµÍ³ÌáÊ¾´Ê**: ½« `../../prompts/system-prompt-template.md` Õ³Ìùµ½ Cursor / Trae / WorkBuddy µÄÏµÍ³ÌáÊ¾´Ê
+2. **`.cursorrules`**: ÏîÄ¿¸ùÄ¿Â¼ÒÑÅäÖÃ×Ô¶¯¼ÓÔØ
+3. **ÈÎÎñ¼¶¼ÓÔØ**: ¸´ÔÓÈÎÎñÇ°ÊÖ¶¯×·¼Ó¶ÔÓ¦Ä£°å
 
-### 6.3 ç»´æŠ¤è§„èŒƒ
+### 6.3 Î¬»¤¹æ·¶
 
-- `../../AGENTS.md` å˜æ›´ â†’ åŒæ­¥æ›´æ–° `../../prompts/../../prompts/../../prompts/../../prompts/system-prompt-template.md`
-- è®¾è®¡ä»¤ç‰Œä½“ç³»å˜æ›´ â†’ åŒæ­¥æ›´æ–°æ‰€æœ‰æ¨¡æ¿ä¸­çš„é¢œè‰²å¼•ç”¨
-- æ–°å¢åˆ†å±‚è§„åˆ™ â†’ åŒæ­¥æ›´æ–° `../../prompts/../../prompts/../../prompts/../../prompts/system-prompt-template.md` ä¾èµ–æ–¹å‘
+- `../../AGENTS.md` ±ä¸ü ¡ú Í¬²½¸üĞÂ `../../prompts/system-prompt-template.md`
+- Éè¼ÆÁîÅÆÌåÏµ±ä¸ü ¡ú Í¬²½¸üĞÂËùÓĞÄ£°åÖĞµÄÑÕÉ«ÒıÓÃ
+- ĞÂÔö·Ö²ã¹æÔò ¡ú Í¬²½¸üĞÂ `../../prompts/system-prompt-template.md` ÒÀÀµ·½Ïò
 
 ---
 
-## ä¸ƒã€AI å®‰å…¨ä¸åˆè§„
+## Æß¡¢AI °²È«ÓëºÏ¹æ
 
-### 7.1 è¾“å‡ºæ¶ˆæ¯’
+### 7.1 Êä³öÏû¶¾
 
-| åœºæ™¯ | æ¶ˆæ¯’å‡½æ•° | ä½ç½® |
+| ³¡¾° | Ïû¶¾º¯Êı | Î»ÖÃ |
 |------|---------|------|
-| è¯„åˆ†å€¼åŸŸ | `sanitizeScore(score, layerId, context)` | `src/services/scoring/v6-engine/engine.ts` |
-| LLM æ–‡æœ¬æ¸²æŸ“ | `sanitizeLlmOutput()` | AGENTS.md Â§å…­ è§„èŒƒï¼ˆæ¸²æŸ“å±‚å®ç°ï¼‰ |
-| JSON è§£æ | `parseRawScoreOutput()` + `extractJsonFromMarkdown()` | `intelligentScoreService.ts` |
-| baseURL åè®® | `isValidLlmBaseURL()` | `src/lib/validation.ts` |
+| ÆÀ·ÖÖµÓò | `sanitizeScore(score, layerId, context)` | `src/services/scoring/v6-engine/engine.ts` |
+| LLM ÎÄ±¾äÖÈ¾ | `sanitizeLlmOutput()` | AGENTS.md ¡ìÁù ¹æ·¶£¨äÖÈ¾²ãÊµÏÖ£© |
+| JSON ½âÎö | `parseRawScoreOutput()` + `extractJsonFromMarkdown()` | `intelligentScoreService.ts` |
+| baseURL Ğ­Òé | `isValidLlmBaseURL()` | `src/lib/validation.ts` |
 
-### 7.2 è°ƒç”¨é€æ˜åº¦
+### 7.2 µ÷ÓÃÍ¸Ã÷¶È
 
-AGENTS.md Â§ä¹ è¦æ±‚ï¼š
+AGENTS.md ¡ì¾Å ÒªÇó£º
 
-1. **æ¨¡å‹é€‰æ‹©å±•ç¤º**: LLM è°ƒç”¨å‰å‘ç”¨æˆ·å±•ç¤ºæ¨¡å‹é€‰æ‹©é¢æ¿
-2. **å› å­ä½¿ç”¨æ ‡æ³¨**: è¯„åˆ†ç»“æœæ¸…æ™°æ ‡æ³¨å“ªäº›å› å­ä½¿ç”¨ LLM å¢å¼º vs è‡ªåŠ¨è®¡ç®—
-3. **ç”¨æˆ·å¼€å…³**: æ¯ä¸ª LLM å¯å¢å¼ºå±‚éƒ½æœ‰ç‹¬ç«‹çš„å¯ç”¨/ç¦ç”¨å¼€å…³
-4. **Token æ¶ˆè€—**: æ¯æ¬¡è°ƒç”¨è®°å½•å¹¶å±•ç¤º prompt/completion tokens
+1. **Ä£ĞÍÑ¡ÔñÕ¹Ê¾**: LLM µ÷ÓÃÇ°ÏòÓÃ»§Õ¹Ê¾Ä£ĞÍÑ¡ÔñÃæ°å
+2. **Òò×ÓÊ¹ÓÃ±ê×¢**: ÆÀ·Ö½á¹ûÇåÎú±ê×¢ÄÄĞ©Òò×ÓÊ¹ÓÃ LLM ÔöÇ¿ vs ×Ô¶¯¼ÆËã
+3. **ÓÃ»§¿ª¹Ø**: Ã¿¸ö LLM ¿ÉÔöÇ¿²ã¶¼ÓĞ¶ÀÁ¢µÄÆôÓÃ/½ûÓÃ¿ª¹Ø
+4. **Token ÏûºÄ**: Ã¿´Îµ÷ÓÃ¼ÇÂ¼²¢Õ¹Ê¾ prompt/completion tokens
 
-å®ç°ä½ç½®: `src/pages/command/agent/LlmManagementPage.tsx` + `IntelligentScoreExplanation.tsx`
+ÊµÏÖÎ»ÖÃ: `src/pages/command/agent/LlmManagement/index.tsx` + `IntelligentScoreExplanation.tsx`
 
-### 7.3 Token æ¶ˆè€—æ§åˆ¶
+### 7.3 Token ÏûºÄ¿ØÖÆ
 
-AGENTS.md Â§ä¸ƒ.1 å¼ºåˆ¶è§„åˆ™ï¼š
+AGENTS.md ¡ìÆß.1 Ç¿ÖÆ¹æÔò£º
 
-| è§„åˆ™ | å®ç° |
+| ¹æÔò | ÊµÏÖ |
 |------|------|
-| çŸ¥è¯†å›¾è°±ä¼˜å…ˆ | ç†è§£ä»£ç å…ˆæŸ¥ `docs/00-meta/ai-index/.ai-index/code-graph.json`ï¼Œç¦æ­¢é‡å¤ grep/search |
-| å¢é‡è§£æ | `extract-code-graph.ts` åŸºäº mtime å¢é‡æ›´æ–° |
-| ç¼“å­˜æŸ¥è¯¢ | `scripts/quick-query.sh` æ¨¡æ¿åŒ–å¸¸ç”¨æŸ¥è¯¢ |
-| å•æ¬¡é¢„ç®— | å•æ¬¡ AI ä¼šè¯ â‰¤ 50,000 tokens |
+| ÖªÊ¶Í¼Æ×ÓÅÏÈ | Àí½â´úÂëÏÈ²é `docs/00-meta/ai-index/.ai-index/code-graph.json`£¬½ûÖ¹ÖØ¸´ grep/search |
+| ÔöÁ¿½âÎö | `extract-code-graph.ts` »ùÓÚ mtime ÔöÁ¿¸üĞÂ |
+| »º´æ²éÑ¯ | `scripts/other/quick-query.sh` Ä£°å»¯³£ÓÃ²éÑ¯ |
+| µ¥´ÎÔ¤Ëã | µ¥´Î AI »á»° ¡Ü 50,000 tokens |
 
-éªŒè¯å‘½ä»¤: `npm run audit:token`
-
----
-
-## å…«ã€AI æ²»ç†æ£€æŸ¥æ¸…å•
-
-### 8.1 æ–°å¢ LLM è°ƒç”¨åœºæ™¯
-
-```typescript
-// âœ… AI è°ƒç”¨è‡ªæŸ¥æ¸…å•
-[ ] æ˜¯å¦é€šè¿‡ LLM Gateway è€Œéç›´æ¥è°ƒç”¨ llmClientï¼Ÿ
-[ ] æ˜¯å¦è®¾ç½®äº† `caller` æ ‡è¯†ç”¨äºå®¡è®¡ï¼Ÿ
-[ ] æ˜¯å¦é…ç½®äº† `allowFallback` é™çº§ç­–ç•¥ï¼Ÿ
-[ ] æ˜¯å¦å°†è°ƒç”¨çº³å…¥ `LlmTransparencyConfig` å› å­è¦†ç›–ï¼Ÿ
-[ ] è¾“å‡ºæ˜¯å¦ç»è¿‡ sanitizeï¼ˆJSON è§£æ/å€¼åŸŸæ ¡éªŒï¼‰ï¼Ÿ
-[ ] æ˜¯å¦æ›´æ–° LLM é€æ˜åº¦é¢æ¿å±•ç¤ºï¼Ÿ
-[ ] æ˜¯å¦è®°å½• Token æ¶ˆè€—åˆ°æ—¥å¿—ï¼Ÿ
-[ ] æ˜¯å¦å¤„ç†è¶…æ—¶å’Œ AbortErrorï¼Ÿ
-```
-
-### 8.2 æ–°å¢ Agent
-
-```typescript
-// âœ… Agent è‡ªæŸ¥æ¸…å•
-[ ] æ˜¯å¦åœ¨ `AgentRuntime.register()` ä¸­æ³¨å†Œï¼Ÿ
-[ ] æ˜¯å¦é…ç½®äº†åˆç†çš„ `timeout` å’Œ `maxConcurrent`ï¼Ÿ
-[ ] æ˜¯å¦æŒ‡å®šäº† `mcpServerName` å’Œ `defaultToolName`ï¼Ÿ
-[ ] MCP è°ƒç”¨æ˜¯å¦ä¼ å…¥æ­£ç¡®çš„ `caller` contextï¼Ÿ
-[ ] æ˜¯å¦é€šè¿‡ `eventBus` å‘å°„çŠ¶æ€å˜æ›´äº‹ä»¶ï¼Ÿ
-[ ] æ˜¯å¦æ”¯æŒä»»åŠ¡å–æ¶ˆï¼ˆAbortControllerï¼‰ï¼Ÿ
-[ ] è‡ªå®šä¹‰ Agent æ˜¯å¦æŒä¹…åŒ–åˆ° `custom_agents` è¡¨ï¼Ÿ
-```
-
-### 8.3 æç¤ºè¯æ¨¡æ¿å˜æ›´
-
-```typescript
-// âœ… æç¤ºè¯ç»´æŠ¤æ¸…å•
-[ ] å˜æ›´æ˜¯å¦åŒæ­¥åˆ°æ‰€æœ‰ 5 ä¸ªæ¨¡æ¿æ–‡ä»¶ï¼Ÿ
-[ ] æ˜¯å¦æ›´æ–°äº† `.cursorrules` å¼•ç”¨ï¼Ÿ
-[ ] æ˜¯å¦è¿è¡Œ `npm run audit:docs` ç¡®è®¤æ–‡æ¡£åŒæ­¥ï¼Ÿ
-[ ] æ˜¯å¦æµ‹è¯•äº† AI ç”Ÿæˆä»£ç çš„åˆè§„æ€§ï¼ˆaudit:layers/hardcodeï¼‰ï¼Ÿ
-```
+ÑéÖ¤ÃüÁî: `npm run audit:token`
 
 ---
 
-## ä¹ã€ç›¸å…³æ–‡æ¡£ç´¢å¼•
+## °Ë¡¢AI ÖÎÀí¼ì²éÇåµ¥
 
-| æ–‡æ¡£ | è·¯å¾„ | å†…å®¹ |
+### 8.1 ĞÂÔö LLM µ÷ÓÃ³¡¾°
+
+```typescript
+// ? AI µ÷ÓÃ×Ô²éÇåµ¥
+[ ] ÊÇ·ñÍ¨¹ı LLM Gateway ¶ø·ÇÖ±½Óµ÷ÓÃ llmClient£¿
+[ ] ÊÇ·ñÉèÖÃÁË `caller` ±êÊ¶ÓÃÓÚÉó¼Æ£¿
+[ ] ÊÇ·ñÅäÖÃÁË `allowFallback` ½µ¼¶²ßÂÔ£¿
+[ ] ÊÇ·ñ½«µ÷ÓÃÄÉÈë `LlmTransparencyConfig` Òò×Ó¸²¸Ç£¿
+[ ] Êä³öÊÇ·ñ¾­¹ı sanitize£¨JSON ½âÎö/ÖµÓòĞ£Ñé£©£¿
+[ ] ÊÇ·ñ¸üĞÂ LLM Í¸Ã÷¶ÈÃæ°åÕ¹Ê¾£¿
+[ ] ÊÇ·ñ¼ÇÂ¼ Token ÏûºÄµ½ÈÕÖ¾£¿
+[ ] ÊÇ·ñ´¦Àí³¬Ê±ºÍ AbortError£¿
+```
+
+### 8.2 ĞÂÔö Agent
+
+```typescript
+// ? Agent ×Ô²éÇåµ¥
+[ ] ÊÇ·ñÔÚ `AgentRuntime.register()` ÖĞ×¢²á£¿
+[ ] ÊÇ·ñÅäÖÃÁËºÏÀíµÄ `timeout` ºÍ `maxConcurrent`£¿
+[ ] ÊÇ·ñÖ¸¶¨ÁË `mcpServerName` ºÍ `defaultToolName`£¿
+[ ] MCP µ÷ÓÃÊÇ·ñ´«ÈëÕıÈ·µÄ `caller` context£¿
+[ ] ÊÇ·ñÍ¨¹ı `eventBus` ·¢Éä×´Ì¬±ä¸üÊÂ¼ş£¿
+[ ] ÊÇ·ñÖ§³ÖÈÎÎñÈ¡Ïû£¨AbortController£©£¿
+[ ] ×Ô¶¨Òå Agent ÊÇ·ñ³Ö¾Ã»¯µ½ `custom_agents` ±í£¿
+```
+
+### 8.3 ÌáÊ¾´ÊÄ£°å±ä¸ü
+
+```typescript
+// ? ÌáÊ¾´ÊÎ¬»¤Çåµ¥
+[ ] ±ä¸üÊÇ·ñÍ¬²½µ½ËùÓĞ 5 ¸öÄ£°åÎÄ¼ş£¿
+[ ] ÊÇ·ñ¸üĞÂÁË `.cursorrules` ÒıÓÃ£¿
+[ ] ÊÇ·ñÔËĞĞ `npm run audit:docs` È·ÈÏÎÄµµÍ¬²½£¿
+[ ] ÊÇ·ñ²âÊÔÁË AI Éú³É´úÂëµÄºÏ¹æĞÔ£¨audit:layers/hardcode£©£¿
+```
+
+---
+
+## ¾Å¡¢Ïà¹ØÎÄµµË÷Òı
+
+| ÎÄµµ | Â·¾¶ | ÄÚÈİ |
 |------|------|------|
-| LLM é…ç½® | `src/config/llmConfig.ts` | é¢„è®¾æ¨¡å‹ / é€æ˜åº¦é…ç½® / åŠ å¯†å­˜å‚¨ |
-| LLM ç±»å‹ | `src/services/llm/llmTypes.ts` | LlmMessage / LlmResponse / LlmUsage / LlmStreamChunk |
-| LLM å®¢æˆ·ç«¯ | `src/services/llm/llmClient.ts` | chat / streamingChat / SSE è§£æ |
-| LLM ç½‘å…³ | `src/services/llm/llmGateway.ts` | è°ƒç”¨å®¡è®¡ / é”™è¯¯é™çº§ / Token ç»Ÿè®¡ |
-| Agent è¿è¡Œæ—¶ | `src/agents/agentRuntime.ts` | æ³¨å†Œ / æ‰§è¡Œ / å¹¶è¡Œ / å–æ¶ˆ |
-| Agent Store | `src/store/agentStore.ts` | Zustand çŠ¶æ€ + EventBus è®¢é˜… |
-| æ™ºèƒ½è¯„åˆ†æœåŠ¡ | `src/services/scoring/intelligentScoreService.ts` | 6 æ­¥è¯„åˆ†æµç¨‹ |
-| è¯„åˆ†å¼•æ“ | `src/services/scoring/v6-engine/` | 9 å±‚è®¡ç®—å™¨ + é…ç½® + ç±»å‹ |
-| è¯„åˆ†å› å­ | `src/config/scoreFactors.ts` | L0-L8 å› å­å®šä¹‰ä¸æƒé‡ |
-| æç¤ºè¯æ¨¡æ¿ | `../` | 5 ç±»åœºæ™¯æ¨¡æ¿ |
-| æ•°æ®æ ¡éªŒ | `src/lib/validation.ts` | `isValidLlmBaseURL` |
-| ../../AGENTS.md LLM çº¦æŸ | `../../AGENTS.md` Â§å…­/ä¹ | å¼•æ“æ¶æ„ / è°ƒç”¨é€æ˜åº¦ |
+| LLM ÅäÖÃ | `src/config/llmConfig.ts` | Ô¤ÉèÄ£ĞÍ / Í¸Ã÷¶ÈÅäÖÃ / ¼ÓÃÜ´æ´¢ |
+| LLM ÀàĞÍ | `src/services/llm/llmTypes.ts` | LlmMessage / LlmResponse / LlmUsage / LlmStreamChunk |
+| LLM ¿Í»§¶Ë | `src/services/llm/llmClient.ts` | chat / streamingChat / SSE ½âÎö |
+| LLM Íø¹Ø | `src/services/llm/llmGateway.ts` | µ÷ÓÃÉó¼Æ / ´íÎó½µ¼¶ / Token Í³¼Æ |
+| Agent ÔËĞĞÊ± | `src/agents/agentRuntime.ts` | ×¢²á / Ö´ĞĞ / ²¢ĞĞ / È¡Ïû |
+| Agent Store | `src/store/agentStore.ts` | Zustand ×´Ì¬ + EventBus ¶©ÔÄ |
+| ÖÇÄÜÆÀ·Ö·şÎñ | `src/services/scoring/intelligentScoreService.ts` | 6 ²½ÆÀ·ÖÁ÷³Ì |
+| ÆÀ·ÖÒıÇæ | `src/services/scoring/v6-engine/` | 9 ²ã¼ÆËãÆ÷ + ÅäÖÃ + ÀàĞÍ |
+| ÆÀ·ÖÒò×Ó | `src/config/scoreFactors.ts` | L0-L8 Òò×Ó¶¨ÒåÓëÈ¨ÖØ |
+| ÌáÊ¾´ÊÄ£°å | `../../prompts/` | 5 Àà³¡¾°Ä£°å |
+| Êı¾İĞ£Ñé | `src/lib/validation.ts` | `isValidLlmBaseURL` |
+| ../../AGENTS.md LLM Ô¼Êø | `../../AGENTS.md` ¡ìÁù/¾Å | ÒıÇæ¼Ü¹¹ / µ÷ÓÃÍ¸Ã÷¶È |
 
 ---
 
-> **âš ï¸ å¾…ç¡®è®¤é¡¹ï¼ˆè¯·è¡¥å……ï¼‰**ï¼š
-> 1. æ˜¯å¦æ¥å…¥æ¨¡å‹è·¯ç”±ï¼ˆå¦‚æŒ‰ä»»åŠ¡ç±»å‹è‡ªåŠ¨é€‰æ‹© cheapest/best æ¨¡å‹ï¼‰ï¼Ÿ
-> 2. æ˜¯å¦éœ€è¦ Prompt ç‰ˆæœ¬ç®¡ç†ï¼ˆå¦‚ A/B æµ‹è¯•ä¸åŒæç¤ºè¯æ•ˆæœï¼‰ï¼Ÿ
-> 3. æ˜¯å¦éœ€è¦ LLM å“åº”ç¼“å­˜ï¼ˆç›¸åŒè¾“å…¥é¿å…é‡å¤è°ƒç”¨ï¼‰ï¼Ÿ
-> 4. æ˜¯å¦éœ€è¦å¤šè½®å¯¹è¯å†å²ç®¡ç†ï¼ˆä¸Šä¸‹æ–‡çª—å£ç®¡ç†ï¼‰ï¼Ÿ
-> 5. æ˜¯å¦éœ€è¦ RAG / çŸ¥è¯†åº“å¢å¼ºï¼ˆæ¥å…¥æœ¬åœ°ç ”æŠ¥å‘é‡æ£€ç´¢ï¼‰ï¼Ÿ
+> **?? ´ıÈ·ÈÏÏî£¨Çë²¹³ä£©**£º
+> 1. ÊÇ·ñ½ÓÈëÄ£ĞÍÂ·ÓÉ£¨Èç°´ÈÎÎñÀàĞÍ×Ô¶¯Ñ¡Ôñ cheapest/best Ä£ĞÍ£©£¿
+> 2. ÊÇ·ñĞèÒª Prompt °æ±¾¹ÜÀí£¨Èç A/B ²âÊÔ²»Í¬ÌáÊ¾´ÊĞ§¹û£©£¿
+> 3. ÊÇ·ñĞèÒª LLM ÏìÓ¦»º´æ£¨ÏàÍ¬ÊäÈë±ÜÃâÖØ¸´µ÷ÓÃ£©£¿
+> 4. ÊÇ·ñĞèÒª¶àÂÖ¶Ô»°ÀúÊ·¹ÜÀí£¨ÉÏÏÂÎÄ´°¿Ú¹ÜÀí£©£¿
+> 5. ÊÇ·ñĞèÒª RAG / ÖªÊ¶¿âÔöÇ¿£¨½ÓÈë±¾µØÑĞ±¨ÏòÁ¿¼ìË÷£©£¿
 > 
-> ä¸‰ä»½æ–‡æ¡£å·²å…¨éƒ¨ç”Ÿæˆå®Œæ¯•ã€‚å¦‚éœ€è¡¥å……æˆ–è°ƒæ•´ï¼Œè¯·å‘ŠçŸ¥å…·ä½“éœ€æ±‚ã€‚
+> Èı·İÎÄµµÒÑÈ«²¿Éú³ÉÍê±Ï¡£ÈçĞè²¹³ä»òµ÷Õû£¬Çë¸æÖª¾ßÌåĞèÇó¡£

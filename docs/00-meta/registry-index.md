@@ -1,643 +1,890 @@
 ---
-title: æ–‡æ¡£æ³¨å†Œç´¢å¼•
-tier: core
+title: ÎÄµµË÷Òı
+type: meta
+domain: project
+phase: development
+tier: important
+status: active
+maintainer: V9 Architecture Team
+summary: "V9 È«Á¿ÎÄµµË÷Òı£¬°´Àà±ğ¾ÛºÏ£¬ÓÉÃ¿ÈÕÎÄµµÑéÖ¤Á÷³Ì×Ô¶¯Éú³É¡£"
+tags: [project, registry, documentation, governance]
+version: v1.0.0
+last_updated: 2026-07-18
 code_version: 2.0.0
+doc_id: V9-DOC-META-000
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-18
 ---
+# ÎÄµµË÷Òı
 
-# æ–‡æ¡£æ³¨å†Œç´¢å¼•
+> ±¾ÎÄ¼şÓÉÃ¿ÈÕÎÄµµÑéÖ¤Á÷³Ì×Ô¶¯Éú³É£¬ÇëÎğÊÖ¶¯ĞŞ¸Ä¡£
 
-> æœ¬ç´¢å¼•ç”± `doc-manifest.csv` æ´¾ç”Ÿã€‚ç¼–å·ä»…ç”¨äºæŸ¥é˜…/å®¡è®¡ï¼Œæ–‡æ¡£é—´å¼•ç”¨è¯·ç”¨ slugï¼ˆæ–‡ä»¶åï¼‰ã€‚
-> æ”¹ç¼–å·åªæ”¹ CSV 1 ä»½æ–‡ä»¶ï¼Œé›¶æ–‡æ¡£å½±å“ã€‚`npm run doc:manifest` å¯é‡å»ºã€‚
+## Ä¿Â¼
 
-## ç¼–å·è§„åˆ™
+### 00-meta
 
-| å±‚çº§ | å‰ç¼€ | åºå· | ç¤ºä¾‹ | è¯´æ˜ |
-|------|------|------|------|------|
-| æ ¸å¿ƒ | C | 2ä½ | C-01 | æ²»ç†/å¥‘çº¦/äº‹å®æºï¼Œå˜æ›´éœ€è¯„å®¡ |
-| é‡è¦ | I | 2ä½ | I-01 | å¼€å‘è§„èŒƒ/æŒ‡å—ï¼Œå˜æ›´éœ€ review |
-| å‚è€ƒ | R | 3ä½ | R-001 | å†å²æŠ¥å‘Š/ADRï¼Œåªè¯»å½’æ¡£ |
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª 23¸öºËĞÄÎÄµµ ¡¤ ×îÖÕ¼ìË÷ºËÊµ±¨¸æ](23-core-docs-final-verification-report.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª 23¸öºËĞÄÎÄµµ ¡¤ ¹¦ÄÜÆ¥Åä×îÖÕ±¨¸æ](23-core-docs-functional-match-report.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª 23¸öºËĞÄÎÄµµ ¡¤ ¶ş´ÎĞ£¶Ô×îÖÕ±¨¸æ](23-core-docs-v2-final-report.md)
+- [23 ¸öºËĞÄÎÄµµÖØĞÂ¼ìË÷±¨¸æ](23¸öºËĞÄÎÄµµÖØĞÂ¼ìË÷±¨¸æ.md)
+- [ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ V9 ¡ª ÎÄµµ¹ÜÀíÏµÍ³ÆÀ·Ö±¨¸æ](ÎÄµµ¹ÜÀíÏµÍ³ÆÀ·Ö±¨¸æ.md)
+- [ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ V9 ¡ª ÎÄµµ¹éÀàÌåÏµ½á¹¹£¨DocTaxonomy V9£©](ÎÄµµ¹éÀàÌåÏµ½á¹¹.md)
+- [V9 ÎÄµµÏµÍ³ĞÔ·ÖÀàÓëÀí½âÉî¶ÈºË²é±¨¸æ](ÎÄµµÀí½âºË²é±¨¸æ.md)
+- [ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ V9 ¡ª ÎÄµµ¹éÀàÌåÏµÌå¼ì±¨¸æ](ÎÄµµÌåÏµÌå¼ì±¨¸æ-v9.md)
+- [V9 ÎÄµµÌåÏµĞŞ¸´Ö´ĞĞ¼Æ»® v1.0](ÎÄµµÌåÏµĞŞ¸´Ö´ĞĞ¼Æ»®-v1.md)
+- [ÎÄµµÕûÀí´ı°ìÇåµ¥](ÎÄµµÕûÀí´ı°ìÇåµ¥.md)
+- [ÎÄµµ×Ô¶¯¸üĞÂÌåÏµ ¡ª ¼Ü¹¹ÊáÀí¡¢ÈÎÎñ¼ìË÷ÓëÍêÉÆÓÅ»¯¼Æ»®](ÎÄµµ×Ô¶¯¸üĞÂÌåÏµ-¼Ü¹¹ÊáÀíÓëÈÎÎñÇåµ¥.md)
+- [ÔÂ¶ÈÎÄµµÌåÏµÌå¼ì¼ì²éÇåµ¥](ÔÂ¶ÈÎÄµµÌå¼ì¼ì²éÇåµ¥.md)
+- [V9 ÎÄµµÖÎÀíÕû¸Ä ¡ª Ö´ĞĞĞ£Ñé±¨¸æ£¨P0¡úP2£©](Ö´ĞĞĞ£Ñé±¨¸æ.md)
+- [Agent Ó¦ÓÃ ¡¤ ÎÄµµ·ÖÀàË÷Òı±í](agent-app-docs-classification.md)
+- [CHANGELOG ¾¯¸æ´¦Àí²ßÂÔ](changelog-warnings-handling-strategy.md)
+- [ÎÄµµÇåÀíÖÜÆÚ£¨CLEANUP_SCHEDULE£©](cleanup-schedule.md)
+- [V9 ÎÄ¼şÏµÍ³Õû¸Ä¿ª·¢ÈÕÖ¾](development-log.md)
+- [Ä¿Â¼½á¹¹ÎÄµµ ¡ª ÕûÌå¿ÉĞĞĞÔ·½°¸£¨Õï¶Ï½×¶Î½»¸¶Îï 1/2£©](directory-audit-feasibility-plan.md)
+- [P4 ÏµÍ³ĞÔÄ¿Â¼ÊáÀí±¨¸æ](directory-audit-report-v1.4.3.md)
+- [Ä¿Â¼½á¹¹ÎÄµµ ¡ª TODO Çåµ¥£¨Õï¶Ï½×¶Î½»¸¶Îï 2/2£©](directory-audit-todo.md)
+- [V9 Ä¿Â¼½á¹¹ÎÄµµÉó¼Æ±¨¸æ](directory-structure-audit-report.md)
+- [V9 ÏîÄ¿Ä¿Â¼½á¹¹¹æ·¶ÓëÊ¹ÓÃÖ¸ÄÏ](directory-structure-guide.md)
+- [ÎÄµµ×Ô¶¯¸üĞÂÌåÏµ ¡ª ÈÎÎñ¿´°å£¨µ¥Ò»ÊÂÊµÔ´£©](doc-auto-update-kanban.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª ÎÄµµÓëÎÄ¼ş¹ÜÀíÌåÏµÓÅ»¯·½°¸](doc-file-management-optimization-plan.md)
+- [V9 doc_id Registry](doc-id-registry.md)
+- [×Ô¶¯ÎÄµµĞ£¶Ô²ßÂÔ£¨doc-proofreading-strategy£©](doc-proofreading-strategy.md)
+- [V9 ÎÄµµ·ç¸ñÍ³Ò»±ê×¼£¨doc-style-standard£©](doc-style-standard.md)
+- [ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ V9 ¡ª ÎÄµµ¹éÀàÌåÏµÌå¼ì±¨¸æ](doc-system-check-v9.md)
+- [´¥·¢ÊÂ¼ş ¡ú ¸üĞÂ¶¯×÷ Ò»Ò»Ó³ÉäÈ¨Íş±í](doc-trigger-action-map.md)
+- [V9 ËÀÎÄµµÉó¼ÆÓë¹éµµ¹ÜÀí¹æ·¶](document-archive-management.md)
+- [V9 ÎÄµµ·ÖÀàÌåÏµ¹æ·¶](document-classification-system.md)
+- [V9 ÎÄµµÔªÊı¾İ±ê×¼¹æ·¶](document-metadata-standard.md)
+- [V9 ÎÄµµÕûÀí¹¤×÷Á÷³ÌÖ¸ÄÏ](document-organization-workflow.md)
+- [V9 ÎÄµµÏµÍ³»¯ÕûÀíÖÊÁ¿¿ØÖÆ±¨¸æ](document-quality-control-report.md)
+- [V9 ÎÄµµ·ç¸ñÖ¸ÄÏÓëÃüÃû¹æ·¶](document-style-guide.md)
+- [V9 ÎÄµµ¹ÜÀíÌåÏµÍÅ¶ÓÅàÑµ²ÄÁÏ](documentation-team-training.md)
+- [FILE-MANAGEMENT-GUIDE ´úÂëÇåÀí¾ö²ß±¨¸æ](FILE-MANAGEMENT-GUIDE-cleanup-decisions.md)
+- [ÎÄ¼şÁ÷ÀË¼ì²é±¨¸æ](FILE-MANAGEMENT-GUIDE-file-wandering-report.md)
+- [file-management-guide.md ÌåÏµÓÅ»¯ÌáÊ¾´Ê](FILE-MANAGEMENT-GUIDE-optimization-prompt.md)
+- [file-management-guide.md ¸ùÒò·ÖÎöÓë¶ş´Î¿ª·¢½ÌÑµ±¨¸æ](FILE-MANAGEMENT-GUIDE-RCA-report.md)
+- [file-management-guide.md ĞŞ¶©ÈÎÎñÇåµ¥](FILE-MANAGEMENT-GUIDE-task-list.md)
+- [V9 ÎÄ¼şÏµÍ³È«ÃæÆÀ¹À±¨¸æ](file-system-assessment-v2.md)
+- [¹¦ÄÜÄ£¿é·ÖÀàÍ¼Ê¾Óë¿ª·¢Õß±Ø¶ÁÇåµ¥](functional-module-guide.md)
+- [V9 ÎÄµµÖÎÀíÏÜ·¨£¨GOVERNANCE£©](GOVERNANCE.md)
+- [¼Ü¹¹Éó²éÓëÊı¾İÎÛÈ¾¼ì²â ¡ª ½ÌÑµ×Ü½á£¨2026-07-16£©](lessons-architecture-review-2026-07-16.md)
+- [V9 Markdown ÎÄµµÌåÏµÊáÀíÓëÖØ¹¹·½°¸](markdown-reorg-framework.md)
+- [V9 ÎÄµµÔªÊı¾İÖÎÀí ¡ª ·Ö½×¶ÎÏêÏ¸ÊµÊ©¼Æ»®](metadata-governance-phased-plan.md)
+- [V9 ÎÄµµÇ¨ÒÆ¼Æ»®£¨A-H ·ÖÀàÌåÏµ£©](migration-plan.md)
+- [outputs/ ºÍÎ´¶¨Òå src/ Ä¿Â¼ÆÀ¹À±¨¸æ](outputs-and-undefined-src-evaluation-report.md)
+- [P1-01 ²ğ·Ö±¨¸æ ¡ª LlmManagementPage ÈİÆ÷»¯ÖØ¹¹](p1-01-llm-management-split-report.md)
+- [P1-03 ²ğ·Ö±¨¸æ ¡ª collectionWizardStore Ä£¿é»¯ÖØ¹¹](p1-03-collection-wizard-store-split-report.md)
+- [P1-06 ESLint ¾¯¸æ¼¼ÊõÕ®±¨¸æ](p1-06-eslint-warning-tech-debt-report.md)
+- [P1-13 ±¨¸æ ¡ª code-to-doc ÒıÓÃ¶ÏÁÑĞŞ¸´£¨ÖĞÎÄÊéÃûºÅÎ±Â·¾¶ĞŞÕı£©](p1-13-code-to-doc-refs-fix-report.md)
+- [P1 ¼Ü¹¹Õ®ÎñÇåÀí TODO Çåµ¥](p1-debt-cleanup-todo.md)
+- [P1 ¶ş´ÎĞ£¶Ô±¨¸æ](P1-secondary-verification-report.md)
+- [P5 ÑéÖ¤±¨¸æ ¡ª ÏµÍ³ĞÔÄ¿Â¼ÊáÀíÊÕÎ²](P5-verification-report.md)
+- [Phase 2 ÈË¹¤ÈÎÎñÇåµ¥](phase2-manual-task-list.md)
+- [ÌáÊ¾´Ê£ºV9 ÎÄµµÖÎÀíÓëÎÄ¼ş½á¹¹Õû¸ÄÖ´ĞĞ£¨P0¡úP3£¬AI Agent ¼¯ÈºĞ­Í¬£©](prompt-execute-remediation.md)
+- [ÔöÇ¿ÌáÊ¾´Ê£º¶àÔ´ĞÅÏ¢ºÏ²¢È¥ÖØ£¨×îĞÂÓÅÏÈ / ³åÍ»¸²¸Ç£©](prompt-merge-dedup.md)
+- [00-meta ¡ª ÎÄµµÖÎÀíÓëÔªÊı¾İ](README.md)
+- [ÎÄµµË÷Òı](REGISTRY_INDEX.md)
+- [ÎÄµµ×¢²áË÷Òı](registry-index.md)
+- [¶ş´ÎĞ£Ñé±¨¸æ ¡ª 2026-07-15](secondary-verification-report-2026-07-15.md)
+- [src/databridge/ ºÍ src/utils/ ÆÀ¹À±¨¸æ](src-directories-evaluation-report.md)
+- [V9 ÎÄµµ±êÇ©·ÖÀàÌåÏµ£¨Tag Taxonomy£©](tag-taxonomy.md)
+- [V9 ÎÄ¼ş¹ÜÀíÌåÏµ ¡Á TRAE ¿ª·¢Ï°¹ß Éó²éÆÀ¼Û±¨¸æ](trae-file-management-review.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª ÎÄµµÖÎÀíĞŞ¸´ĞĞ¶¯¼Æ»®£¨Action Plan£©](V9-ÎÄµµÖÎÀíĞŞ¸´ĞĞ¶¯¼Æ»®.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª ÏîÄ¿½¡¿µ×´Ì¬×ÜÀÀ](V9-ÏîÄ¿½¡¿µ×´Ì¬×ÜÀÀ.md)
+- [V9 ÎÄµµÌåÏµÖÎÀí ¡ª ÏÂÒ»½×¶ÎÈÎÎñÍ¼£¨P4 Ö´ĞĞ¼Æ»®£©](v9-next-phase-todo.md)
+- [V9 ÉÏÏßÇ°ÏµÍ³ĞÔÊáÀí±¨¸æ](V9-PRE-LAUNCH-AUDIT-REPORT-20260713.md)
 
-## ç±»ç›®
+### 01-p1-debt-cleanup-todo.md
 
-| ä»£ç  | å«ä¹‰ | ä»£ç  | å«ä¹‰ |
-|------|------|------|------|
-| GOV | æ²»ç† | ARC | æ¶æ„ |
-| DAT | æ•°æ® | API | å¥‘çº¦ |
-| GUIDE | æŒ‡å— | SPEC | è§„æ ¼ |
-| ADR | å†³ç­– | RPT | æŠ¥å‘Š |
-| LOG | æ—¥å¿— | SEC | å®‰å…¨ |
-| PERF | æ€§èƒ½ | DESIGN | è®¾è®¡ |
-| UI | ç•Œé¢ | TEST | æµ‹è¯• |
-| AI | AI | MCP | MCP |
-| MIGR | è¿ç§» | MISC | å…¶ä»– |
+- [P1 ¼Ü¹¹Õ®ÎñÇåÀí TODO Çåµ¥](../01-p1-debt-cleanup-todo.md)
 
-## ğŸ”´ æ ¸å¿ƒï¼ˆå¿…è¯»ï¼Œå˜æ›´éœ€è¯„å®¡ï¼‰ï¼ˆ71 ä»½ï¼‰
+### 01-product
 
-| ç¼–å· | ç±»ç›® | æ ‡é¢˜ | å…³æ³¨ç‚¹ | å¼•ç”¨â†’ | è¢«å¼•ç”¨â† | æ–‡æ¡£é“¾æ¥ |
-|------|------|------|--------|-------|---------|----------|
-| C-01 | AI | V9 AI ç´¢å¼•ç¼“å­˜ï¼ˆ.ai-indexï¼‰ | å®šä½**ï¼šå­˜æ”¾ä¾› AI Agent å¿«é€ŸåŠ è½½çš„é¡¹ç›®çŸ¥è¯†ç¼“å­˜ï¼Œé™ä½æ¯æ¬¡å¯¹è¯é‡å¤è§£æ | - | C-37 | [README.md](../00-meta/ai-index/.ai-index/README.md) |
-| C-02 | AI | å¢å¼ºæç¤ºè¯ï¼šå¤šæºä¿¡æ¯åˆå¹¶å»é‡ï¼ˆæœ€æ–°ä¼˜å…ˆ / å†²çªè¦†ç›–ï¼‰ | ç”¨é€”**ï¼šå°†å¤šä¸ªæ•°æ®æºï¼ˆåŒåæˆ–åŒä¸»é¢˜æ–‡ä»¶ï¼‰çš„ä¿¡æ¯åˆå¹¶ä¸ºä¸€ä»½å»é‡ä¸”å®Œæ•´çš„äº§ç‰©ã€‚ | - | C-37,I-82 | [prompt-merge-dedup.md](../00-meta/prompt-merge-dedup.md) |
-| C-03 | API | ADR-003: DataBridge æ›¿ä»£ç›´æ¥ dataLayer å†™å…¥ | çŠ¶æ€**: Accepted | - | C-37,I-82 | [adr-003-databridge-over-direct-datalayer.md](../reference/adr-003-databridge-over-direct-datalayer.md) |
-| C-04 | API | ADR-003: DataBridge æ›¿ä»£ç›´æ¥ dataLayer å†™å…¥ | Status**: Accepted | - | C-37,I-177,I-80,I-81,I-82,R-03 | [2026-06-21-databridge-over-direct-datalayer.md](../reference/project/2026-06-21-databridge-over-direct-datalayer.md) |
-| C-05 | API | DataBridge æ”¹è¿›å»ºè®®æ•´æ”¹å®æ–½è®¡åˆ’ | æ–‡æ¡£ç»“æŸ** | - | C-37,I-10,I-80,I-82,R-037 | [databridgeæ”¹è¿›å»ºè®®æ•´æ”¹å®æ–½è®¡åˆ’.md](../reference/databridgeæ”¹è¿›å»ºè®®æ•´æ”¹å®æ–½è®¡åˆ’.md) |
-| C-06 | API | DataBridge ç«¯ç‚¹ä¸æ•°æ®æ˜ å°„æ¸…å• | æ–‡æ¡£ç‰ˆæœ¬**ï¼šv1.2.0 | - | C-37,I-80,I-81,I-82,R-037 | [databridgeç«¯ç‚¹ä¸æ•°æ®æ˜ å°„æ¸…å•.md](../reference/databridgeç«¯ç‚¹ä¸æ•°æ®æ˜ å°„æ¸…å•.md) |
-| C-07 | API | databridge.ts è¯¦ç»†åˆ†æ‹†æ–¹æ¡ˆ | ç‰ˆæœ¬**: v1.0 | **æ—¥æœŸ**: 2026-07-07 | - | C-37,I-80,I-82,R-037 | [databridge-split-plan.md](../reference/databridge-split-plan.md) |
-| C-08 | API | äº¤æ˜“æŒä»“ç®¡ç†æ¨¡å— API å¥‘çº¦æ–‡æ¡£ | Version**: v1.2.0 | - | C-37,I-80,I-82,R-037 | [api-contract.md](../reference/api-contract.md) |
-| C-09 | API | äº¤æ˜“æŒä»“ç®¡ç†æ¨¡å— API å¥‘çº¦æ–‡æ¡£ | Version**: v1.1.0 | - | C-37,I-81 | [api-contract.md](../reference/trade/api-contract.md) |
-| C-10 | API | åŠŸèƒ½æ¨¡å—åˆ†ç±»å›¾ç¤ºä¸å¼€å‘è€…å¿…è¯»æ¸…å• | æœ¬æ–‡æ¡£æŒ‰åŠŸèƒ½æ¨¡å—å¯¹ docs/ ä¸‹ 596 ä»½æ–‡æ¡£è¿›è¡Œåˆ†ç±»ï¼Œæ¯ä¸ªæ¨¡å—é…å¤‡é¢œè‰²æ ‡æ³¨ | - | C-37 | [functional-module-guide.md](../00-meta/functional-module-guide.md) |
-| C-11 | API | æŠ€æœ¯æ—¥å¿—ï¼šDataBridge.query() å®ç°ä¸ dataLayer è¯»æ“ | å…ˆå¸®æˆ‘è¿è¡Œ tsc --noEmit éªŒè¯ä¸€ä¸‹å½“å‰å·²ä¿®æ”¹çš„ä»£ç æœ‰æ²¡æœ‰ç±»å‹é”™è¯¯ï¼›ç„¶ | - | C-37,I-80,I-81,I-82,R-037 | [2026-07-05-databridge-query-implementation.md](../reference/changelogs/2026-07/2026-07-05-databridge-query-implementation.md) |
-| C-12 | ARC | 03. æ¶æ„æ ‡å‡† | Status**: Current | - | C-37,I-179,I-81,R-116 | [03-architecture-standards.md](../reference/03-architecture-standards.md) |
-| C-13 | ARC | V9 æ¶æ„ Phase 4 ä¸€è‡´æ€§éªŒè¯æŠ¥å‘Š | - | - | C-37,I-177,I-80,I-81,I-82,R-03 | [v9-architecture-data-dictionary-validation-report.md](../reference/v9-architecture-data-dictionary-validation-report.md) |
-| C-14 | DAT | AI æ™ºèƒ½ä½“è°ƒåº¦ä¸­å¿ƒ / å¥åº·ç›‘æ§ / è¯Šæ–­åˆ†æ â€” æ•°æ®å­—å…¸ | Version**: v1.2.0 | - | C-37,I-81 | [ai-center-data-definition.md](../reference/ai-center-data-definition.md) |
-| C-15 | DAT | Cockpit Widget æ¡†æ¶æ•°æ®å­—å…¸ | Version**: v1.2.0 | - | C-37,I-81 | [data-definition.md](../reference/cockpit/data-definition.md) |
-| C-16 | DAT | data-definition.md â€” V9 ä¸»æ•°æ®å­—å…¸ï¼ˆæ•´åˆç‰ˆï¼‰ | Version**: v2.0.0ï¼ˆæ•´åˆç‰ˆï¼‰ | - | C-37 | [data-definition.md](../reference/data-definition.md) |
-| C-17 | DAT | DEPRECATED - backtest-data-definition.md | âš ï¸ **æ­¤æ–‡ä»¶å·²åºŸå¼ƒ**ï¼ˆ2026-07-14ï¼‰ | - | C-37,I-80,I-81,I-82,R-037 | [backtest-data-definition.md](../reference/backtest-data-definition.md) |
-| C-18 | DAT | DEPRECATED - risk-derived-data-definitio | âš ï¸ **æ­¤æ–‡ä»¶å·²åºŸå¼ƒ**ï¼ˆ2026-07-14ï¼‰ | - | C-37,I-80,I-82,R-037 | [risk-derived-data-definition.md](../reference/risk-derived-data-definition.md) |
-| C-19 | DAT | NewsPageï¼ˆæ™ºèƒ½èµ„è®¯ä¸­å¿ƒï¼‰æ•°æ®å­—å…¸ | ç‰ˆæœ¬**ï¼šv1.0.0 | - | C-37 | [news-data-definition.md](../reference/news-data-definition.md) |
-| C-20 | DAT | V9 æ•°æ®å­—å…¸ç´¢å¼•ï¼ˆDATA_DICTIONARY_INDEXï¼‰ | å®šä½**ï¼šæ‰€æœ‰ `DATA_DEFINITION*` æ–‡æ¡£çš„**å”¯ä¸€ç´¢å¼•**ï¼ˆS | - | C-37,I-81 | [data-dictionary-index.md](../reference/data-dictionary-index.md) |
-| C-21 | DAT | ä¸ƒç»´é‡‡é›†é…ç½®æ¨¡å— â€” æ•°æ®å­—å…¸ | Version**: v1.0.0 | - | C-37 | [seven-dim-config-data-definition.md](../reference/seven-dim-config-data-definition.md) |
-| C-22 | DAT | å¤šå› å­é€‰è‚¡ç­›é€‰å™¨æ•°æ®å­—å…¸ | ç‰ˆæœ¬**ï¼šv1.0.0 | - | C-37 | [multi-factor-screening-data-definition.md](../reference/multi-factor-screening-data-definition.md) |
-| C-23 | DAT | æ•°æ®æµå¼•æ“ï¼ˆDataFlow Engineï¼‰æ•°æ®å­—å…¸ | Status**: Current | - | C-37,I-81 | [dataflow-data-definition.md](../reference/dataflow-data-definition.md) |
-| C-24 | DAT | æ•°æ®é‡‡é›†æ¨¡å—æ•°æ®å­—å…¸ | Version**: v1.2.0 | - | C-37,I-81 | [data-definition.md](../reference/data-collection/data-definition.md) |
-| C-25 | DAT | æ–°é—»èµ„è®¯æ¨¡å—æ•°æ®å­—å…¸ | Version**: v1.2.0 | - | C-37,I-81 | [data-definition.md](../reference/news/data-definition.md) |
-| C-26 | GOV | FILE-MANAGEMENT-GUIDE ä»£ç æ¸…ç†å†³ç­–æŠ¥å‘Š | ç”Ÿæˆæ—¶é—´**: 2026-07-20 | - | C-37,I-82 | [file-management-guide-cleanup-decisions.md](../00-meta/file-management-guide-cleanup-decisions.md) |
-| C-27 | GOV | file-management-guide.md ä½“ç³»ä¼˜åŒ–æç¤ºè¯ | ç”¨é€”: åµŒå…¥ AI ç³»ç»Ÿæç¤ºè¯ï¼Œé˜²æ­¢æ–‡ä»¶ç®¡ç†è§„èŒƒæ¼‚ç§» | - | C-37,I-82 | [file-management-guide-optimization-prompt.md](../00-meta/file-management-guide-optimization-prompt.md) |
-| C-28 | GOV | file-management-guide.md ä¿®è®¢ä»»åŠ¡æ¸…å• | ç”Ÿæˆæ—¶é—´**: 2026-07-20 | C-30 | C-37,I-82 | [file-management-guide-task-list.md](../00-meta/file-management-guide-task-list.md) |
-| C-29 | GOV | file-management-guide.md æ ¹å› åˆ†æä¸äºŒæ¬¡å¼€å‘æ•™è®­æŠ¥å‘Š | ç”Ÿæˆæ—¶é—´: 2026-07-12 | C-30 | C-37,I-82 | [file-management-guide-rca-report.md](../00-meta/file-management-guide-rca-report.md) |
-| C-30 | GOV | V9 æ–‡ä»¶ç®¡ç†ä½“ç³» Ã— TRAE å¼€å‘ä¹ æƒ¯ å®¡æŸ¥è¯„ä»·æŠ¥å‘Š | âš ï¸ **æœ¬æ–‡æ¡£å·²è¿‡æ—¶ï¼ˆ2026-07-12 æ ‡æ³¨ï¼ŒN5 æ²»ç†ï¼‰**ï¼šæœ¬æŠ¥å‘Šæè¿° | - | C-28,C-29,C-37,I-76,I-82 | [trae-file-management-review.md](../00-meta/trae-file-management-review.md) |
-| C-31 | GOV | V9 æ–‡æ¡£æ²»ç†å®ªæ³•ï¼ˆGOVERNANCEï¼‰ | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-12 | - | C-37,I-185,I-201,I-94 | [governance.md](../00-meta/governance.md) |
-| C-32 | GOV | V9 æ–‡æ¡£è¿ç§»è®¡åˆ’ï¼ˆA-H åˆ†ç±»ä½“ç³»ï¼‰ | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-13 | - | C-37,I-82 | [migration-plan.md](../00-meta/migration-plan.md) |
-| C-33 | GOV | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” æ–‡æ¡£ä¸æ–‡ä»¶ç®¡ç†ä½“ç³»ä¼˜åŒ–æ–¹æ¡ˆ | ç‰ˆæœ¬**: v1.0.0 ï½œ **æ—¥æœŸ**: 2026-07-13 ï½œ **ä½œè€… | - | C-37,I-185 | [doc-file-management-optimization-plan.md](../00-meta/doc-file-management-optimization-plan.md) |
-| C-34 | GOV | V9 ç›®å½•ç»“æ„æ–‡æ¡£å®¡è®¡æŠ¥å‘Š | Version**: v1.0.0 | C-35 | C-37,I-82 | [directory-structure-audit-report.md](../00-meta/directory-structure-audit-report.md) |
-| C-35 | GOV | V9 é¡¹ç›®ç›®å½•ç»“æ„è§„èŒƒä¸ä½¿ç”¨æŒ‡å— | Version**: v3.1.1 | - | C-34,C-37,C-59,I-185 | [directory-structure-guide.md](../00-meta/directory-structure-guide.md) |
-| C-36 | GOV | æ–‡ä»¶æµæµªæ£€æŸ¥æŠ¥å‘Š | ç”Ÿæˆæ—¶é—´: 2026-07-20 | - | C-37,I-82 | [file-management-guide-file-wandering-report.md](../00-meta/file-management-guide-file-wandering-report.md) |
-| C-37 | GOV | æ–‡æ¡£æ³¨å†Œç´¢å¼• | æœ¬ç´¢å¼•ç”± `doc-manifest.csv` æ´¾ç”Ÿã€‚ç¼–å·ä»…ç”¨äºæŸ¥é˜…/å®¡è®¡ï¼Œæ–‡æ¡£ | C-01,C-02,C-03,C-04,C-05,C-06, | C-37,I-185,R-037 | [registry-index.md](../00-meta/registry-index.md) |
-| C-38 | GOV | æ–‡æ¡£æ¸…ç†å‘¨æœŸï¼ˆCLEANUP_SCHEDULEï¼‰ | å®šä½**ï¼šå®šä¹‰æ–‡æ¡£/äº§ç‰©çš„ä¿ç•™ä¸æ¸…ç†è§„åˆ™ï¼Œæ¶ˆé™¤ã€Œè¿‡ç¨‹äº§ç‰©è¿‡åº¦è†¨èƒ€ã€æ— æ¸…ç†è§„åˆ™ã€ç¼º | - | C-37,I-82 | [cleanup-schedule.md](../00-meta/cleanup-schedule.md) |
-| C-39 | GOV | è§¦å‘äº‹ä»¶ â†’ æ›´æ–°åŠ¨ä½œ ä¸€ä¸€æ˜ å°„æƒå¨è¡¨ | æ–‡æ¡£æ—¥æœŸï¼š2026-07-14ï¼ˆpr-6 DiÃ¡taxis é‡ç»„åè·¯å¾„åŒæ­¥ä¿®è®¢ï¼‰ | - | C-37,I-185 | [doc-trigger-action-map.md](../00-meta/doc-trigger-action-map.md) |
-| C-40 | MISC | 23 ä¸ªæ ¸å¿ƒæ–‡æ¡£é‡æ–°æ£€ç´¢æŠ¥å‘Š | æ£€ç´¢æ–¹æ³•**ï¼šå…¨é‡æ–‡ä»¶éå† + å…³é”®è¯æ¨¡ç³ŠåŒ¹é…ï¼ˆæ’é™¤ node_modules/ | - | C-37,I-82 | [23ä¸ªæ ¸å¿ƒæ–‡æ¡£é‡æ–°æ£€ç´¢æŠ¥å‘Š.md](../00-meta/23ä¸ªæ ¸å¿ƒæ–‡æ¡£é‡æ–°æ£€ç´¢æŠ¥å‘Š.md) |
-| C-41 | MISC | V9 æ–‡ä»¶ç³»ç»Ÿæ•´æ”¹å¼€å‘æ—¥å¿— | è¯´æ˜ï¼šå¤–éƒ¨æ–‡æ¡£å¯¼å…¥åï¼Œé¡¹ç›®æ–‡æ¡£æ€»æ•°è™½ç„¶ä» ~563 å¢è‡³ 887ï¼Œä½†ä¸å­˜åœ¨å†…å®¹å®Œ | R-035 | C-37 | [development-log.md](../00-meta/development-log.md) |
-| C-42 | MISC | V9 æ–‡æ¡£ä½“ç³»ä¿®å¤æ‰§è¡Œè®¡åˆ’ v1.0 | åˆ¶å®šæ—¥æœŸ**ï¼š2026-07-12 | - | C-37,I-82 | [æ–‡æ¡£ä½“ç³»ä¿®å¤æ‰§è¡Œè®¡åˆ’-v1.md](../00-meta/æ–‡æ¡£ä½“ç³»ä¿®å¤æ‰§è¡Œè®¡åˆ’-v1.md) |
-| C-43 | MISC | V9 æ–‡æ¡£ä½“ç³»æ²»ç† â€” ä¸‹ä¸€é˜¶æ®µä»»åŠ¡å›¾ï¼ˆP4 æ‰§è¡Œè®¡åˆ’ï¼‰ | å®šä½**ï¼šåŸºäº `docs/00-meta/æ–‡æ¡£ä½“ç³»ä½“æ£€æŠ¥å‘Š-v9.md`ï¼ˆç¬¬3 | - | C-37,I-82 | [v9-next-phase-todo.md](../00-meta/v9-next-phase-todo.md) |
-| C-44 | MISC | V9 æ–‡æ¡£æ²»ç†æ•´æ”¹ â€” æ‰§è¡Œæ ¡éªŒæŠ¥å‘Šï¼ˆP0â†’P2ï¼‰ | æ—¥æœŸ**ï¼š2026-07-12 ï½œ **æ‰§è¡Œä¾æ®**ï¼š`v9-æ–‡æ¡£æ²»ç†ä¿®å¤è¡ŒåŠ¨è®¡ | - | C-37,I-82 | [æ‰§è¡Œæ ¡éªŒæŠ¥å‘Š.md](../00-meta/æ‰§è¡Œæ ¡éªŒæŠ¥å‘Š.md) |
-| C-45 | MISC | V9 æ–‡æ¡£ç³»ç»Ÿæ€§åˆ†ç±»ä¸ç†è§£æ·±åº¦æ ¸æŸ¥æŠ¥å‘Š | ç”Ÿæˆæ—¥æœŸ**ï¼š2026-07-12 | - | C-37,I-82 | [æ–‡æ¡£ç†è§£æ ¸æŸ¥æŠ¥å‘Š.md](../00-meta/æ–‡æ¡£ç†è§£æ ¸æŸ¥æŠ¥å‘Š.md) |
-| C-46 | MISC | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” æ–‡æ¡£æ²»ç†ä¿®å¤è¡ŒåŠ¨è®¡åˆ’ï¼ˆAction Planï¼‰ | ç‰ˆæœ¬**ï¼šv1.0.0 ï½œ **æ—¥æœŸ**ï¼š2026-07-12 ï½œ **ä½œè€…** | - | C-37,I-82 | [v9-æ–‡æ¡£æ²»ç†ä¿®å¤è¡ŒåŠ¨è®¡åˆ’.md](../00-meta/v9-æ–‡æ¡£æ²»ç†ä¿®å¤è¡ŒåŠ¨è®¡åˆ’.md) |
-| C-47 | MISC | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” é¡¹ç›®å¥åº·çŠ¶æ€æ€»è§ˆ | ç‰ˆæœ¬**ï¼šv1.1.0ï¼ˆP0 æ•´æ”¹åä¿®è®¢ï¼‰ | - | C-37,I-82 | [v9-é¡¹ç›®å¥åº·çŠ¶æ€æ€»è§ˆ.md](../00-meta/v9-é¡¹ç›®å¥åº·çŠ¶æ€æ€»è§ˆ.md) |
-| C-48 | MISC | æ–‡æ¡£è‡ªåŠ¨æ›´æ–°ä½“ç³» â€” æ¶æ„æ¢³ç†ã€ä»»åŠ¡æ£€ç´¢ä¸å®Œå–„ä¼˜åŒ–è®¡åˆ’ | æ–‡æ¡£æ—¥æœŸï¼š2026-07-12 | - | C-37,I-82 | [æ–‡æ¡£è‡ªåŠ¨æ›´æ–°ä½“ç³»-æ¶æ„æ¢³ç†ä¸ä»»åŠ¡æ¸…å•.md](../00-meta/æ–‡æ¡£è‡ªåŠ¨æ›´æ–°ä½“ç³»-æ¶æ„æ¢³ç†ä¸ä»»åŠ¡æ¸…å•.md) |
-| C-49 | MISC | æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ V9 â€” æ–‡æ¡£å½’ç±»ä½“ç³»ä½“æ£€æŠ¥å‘Š | ä½“æ£€æ—¥æœŸ**ï¼š2026-07-12 | - | C-37,I-82 | [doc-system-check-v9.md](../00-meta/doc-system-check-v9.md) |
-| C-50 | MISC | æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ V9 â€” æ–‡æ¡£å½’ç±»ä½“ç³»ä½“æ£€æŠ¥å‘Š | ä½“æ£€æ—¥æœŸ**ï¼š2026-07-12 | - | C-37,I-82 | [æ–‡æ¡£ä½“ç³»ä½“æ£€æŠ¥å‘Š-v9.md](../00-meta/æ–‡æ¡£ä½“ç³»ä½“æ£€æŠ¥å‘Š-v9.md) |
-| C-51 | MISC | æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ V9 â€” æ–‡æ¡£å½’ç±»ä½“ç³»ç»“æ„ï¼ˆDocTaxonomy V9ï¼‰ | ç‰ˆæœ¬**ï¼šv1.1.0ï¼ˆ2026-07-12ï¼‰ | - | C-37,I-82 | [æ–‡æ¡£å½’ç±»ä½“ç³»ç»“æ„.md](../00-meta/æ–‡æ¡£å½’ç±»ä½“ç³»ç»“æ„.md) |
-| C-52 | MISC | æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ V9 â€” æ–‡æ¡£ç®¡ç†ç³»ç»Ÿè¯„åˆ†æŠ¥å‘Š | ç‰ˆæœ¬**ï¼šv1.0.0 | - | C-37,I-82 | [æ–‡æ¡£ç®¡ç†ç³»ç»Ÿè¯„åˆ†æŠ¥å‘Š.md](../00-meta/æ–‡æ¡£ç®¡ç†ç³»ç»Ÿè¯„åˆ†æŠ¥å‘Š.md) |
-| C-53 | MISC | æœˆåº¦æ–‡æ¡£ä½“ç³»ä½“æ£€æ£€æŸ¥æ¸…å• | å®šä½**ï¼šæ¯æœˆè¿è¡Œä¸€æ¬¡çš„æ ‡å‡†åŒ–æ£€æŸ¥æµç¨‹ï¼Œç¡®ä¿æ–‡æ¡£ä½“ç³»å¥åº·åº¦æŒç»­è¾¾æ ‡ã€‚ | - | C-37,I-82 | [æœˆåº¦æ–‡æ¡£ä½“æ£€æ£€æŸ¥æ¸…å•.md](../00-meta/æœˆåº¦æ–‡æ¡£ä½“æ£€æ£€æŸ¥æ¸…å•.md) |
-| C-54 | RPT | outputs/ å’Œæœªå®šä¹‰ src/ ç›®å½•è¯„ä¼°æŠ¥å‘Š | è¯„ä¼°æ—¶é—´: 2026-07-12 | - | C-37,I-82 | [outputs-and-undefined-src-evaluation-report.md](../00-meta/outputs-and-undefined-src-evaluation-report.md) |
-| C-55 | RPT | P1 äºŒæ¬¡æ ¡å¯¹æŠ¥å‘Š | æ—¥æœŸ**ï¼š2026-07-14 | - | C-37 | [p1-secondary-verification-report.md](../00-meta/p1-secondary-verification-report.md) |
-| C-56 | RPT | P4 ç³»ç»Ÿæ€§ç›®å½•æ¢³ç†æŠ¥å‘Š | ç”Ÿæˆæ—¥æœŸ**: 2026-07-20 | - | C-37,I-82 | [directory-audit-report-v1.4.3.md](../00-meta/directory-audit-report-v1.4.3.md) |
-| C-57 | RPT | P5 éªŒè¯æŠ¥å‘Š â€” ç³»ç»Ÿæ€§ç›®å½•æ¢³ç†æ”¶å°¾ | éªŒè¯æ—¥æœŸ**: 2026-07-20 | - | C-37,I-82 | [p5-verification-report.md](../00-meta/p5-verification-report.md) |
-| C-58 | RPT | src/databridge/ å’Œ src/utils/ è¯„ä¼°æŠ¥å‘Š | è¯„ä¼°æ—¶é—´: 2026-07-12 | - | C-37,I-82 | [src-directories-evaluation-report.md](../00-meta/src-directories-evaluation-report.md) |
-| C-59 | RPT | V9 ä¸Šçº¿å‰ç³»ç»Ÿæ€§æ¢³ç†æŠ¥å‘Š | æ—¥æœŸ**: 2026-07-13 | C-35,C-65,C-66,R-043,R-117 | C-37,I-82 | [v9-pre-launch-audit-report-20260713.md](../00-meta/v9-pre-launch-audit-report-20260713.md) |
-| C-60 | RPT | V9 æ–‡ä»¶ç³»ç»Ÿå…¨é¢è¯„ä¼°æŠ¥å‘Š | - | - | C-37 | [file-system-assessment-v2.md](../00-meta/file-system-assessment-v2.md) |
-| C-61 | RPT | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” 23ä¸ªæ ¸å¿ƒæ–‡æ¡£ Â· äºŒæ¬¡æ ¡å¯¹æœ€ç»ˆæŠ¥å‘Š | æŠ¥å‘Šç”Ÿæˆæ—¶é—´**ï¼š2026-07-12 | - | C-37,I-82 | [23-core-docs-v2-final-report.md](../00-meta/23-core-docs-v2-final-report.md) |
-| C-62 | RPT | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” 23ä¸ªæ ¸å¿ƒæ–‡æ¡£ Â· æœ€ç»ˆæ£€ç´¢æ ¸å®æŠ¥å‘Š | æŠ¥å‘Šç”Ÿæˆæ—¶é—´**ï¼š2026-07-12 | - | C-37,I-82 | [23-core-docs-final-verification-report.md](../00-meta/23-core-docs-final-verification-report.md) |
-| C-63 | RPT | æç¤ºè¯ï¼šV9 æ–‡æ¡£æ²»ç†ä¸æ–‡ä»¶ç»“æ„æ•´æ”¹æ‰§è¡Œï¼ˆP0â†’P3ï¼ŒAI Agent é›†ç¾¤ååŒ | ç”¨é€”ï¼šä½œä¸ºå¯å¤ç”¨çš„å…ƒæç¤ºè¯ï¼ˆmeta-promptï¼‰ï¼Œé©±åŠ¨ AI åœ¨ã€ŒV9 æ™ºèƒ½ | - | C-37,I-82 | [prompt-execute-remediation.md](../00-meta/prompt-execute-remediation.md) |
-| C-64 | RPT | æ–‡æ¡£è‡ªåŠ¨æ›´æ–°ä½“ç³» â€” ä»»åŠ¡çœ‹æ¿ï¼ˆå•ä¸€äº‹å®æºï¼‰ | æ–‡æ¡£æ—¥æœŸï¼š2026-07-12ï¼ˆM1 æ”¶å°¾ + ç»´åº¦äºŒå®¡æŸ¥åå»ºç«‹ï¼‰ | - | C-37,I-82 | [doc-auto-update-kanban.md](../00-meta/doc-auto-update-kanban.md) |
-| C-65 | RPT | ç›®å½•ç»“æ„æ–‡æ¡£ â€” TODO æ¸…å•ï¼ˆè¯Šæ–­é˜¶æ®µäº¤ä»˜ç‰© 2/2ï¼‰ | é˜¶æ®µ**ï¼šç¬¬ä¸€é˜¶æ®µäº§å‡º â†’ ç¬¬äºŒé˜¶æ®µæ‰§è¡Œå®Œæˆ | - | C-37,C-59,I-82 | [directory-audit-todo.md](../00-meta/directory-audit-todo.md) |
-| C-66 | RPT | ç›®å½•ç»“æ„æ–‡æ¡£ â€” æ•´ä½“å¯è¡Œæ€§æ–¹æ¡ˆï¼ˆè¯Šæ–­é˜¶æ®µäº¤ä»˜ç‰© 1/2ï¼‰ | é˜¶æ®µ**ï¼šç¬¬ä¸€é˜¶æ®µ Â· ç°çŠ¶æ‘¸åº•ï¼ˆè¯Šæ–­ï¼‰â†’ ç¬¬äºŒé˜¶æ®µ Â· æ‰§è¡Œå®Œæˆ | - | C-37,C-59,I-82 | [directory-audit-feasibility-plan.md](../00-meta/directory-audit-feasibility-plan.md) |
-| C-67 | SPEC | 05. å¼•æ“è§„æ ¼ | Status**: Current | - | C-37,I-199,I-200,I-201,I-215,I | [05-engine-specs.md](../reference/05-engine-specs.md) |
-| C-68 | SPEC | 06. è·¯ç”±è§„æ ¼ | Status**: Current | - | C-37,I-81,R-029 | [06-routing-specs.md](../reference/06-routing-specs.md) |
-| C-69 | SPEC | 09. è´¨é‡é—¨ç¦ | Status**: Current | I-236 | C-37,I-81 | [09-quality-gates.md](../reference/09-quality-gates.md) |
-| C-70 | SPEC | V9 æ•°æ®æµè§„èŒƒ | ç‰ˆæœ¬ï¼šv0.9.14 P6-DATA | I-179,I-296,I-44,I-52,I-59 | C-37 | [data-flow-spec.md](../reference/data-flow-spec.md) |
-| C-71 | SPEC | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” 23ä¸ªæ ¸å¿ƒæ–‡æ¡£ Â· åŠŸèƒ½åŒ¹é…æœ€ç»ˆæŠ¥å‘Š | æŠ¥å‘Šç”Ÿæˆæ—¶é—´**ï¼š2026-07-12 | - | C-37,I-82 | [23-core-docs-functional-match-report.md](../00-meta/23-core-docs-functional-match-report.md) |
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡¤ ¾ºÆ··ÖÎöÓë²îÒì»¯¶¨Î»](../01-product/competitive-analysis.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡¤ Êı¾İ°²È«ÓëÒşË½±£»¤°×Æ¤Êé](../01-product/data-security-and-privacy.md)
+- [01-product ¡ª ²úÆ·Õ½ÂÔÎÄµµ](../01-product/README.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡¤ ÓÃ»§»­ÏñÓëÊ¹ÓÃ³¡¾°](../01-product/user-personas-and-scenarios.md)
 
-## ğŸŸ¡ é‡è¦ï¼ˆå¼€å‘æŸ¥é˜…ï¼‰ï¼ˆ302 ä»½ï¼‰
+### 01-requirements
 
-| ç¼–å· | ç±»ç›® | æ ‡é¢˜ | å…³æ³¨ç‚¹ | å¼•ç”¨â†’ | è¢«å¼•ç”¨â† | æ–‡æ¡£é“¾æ¥ |
-|------|------|------|--------|-------|---------|----------|
-| I-01 | ADR | ADR-013: MCP Server ç”Ÿå‘½å‘¨æœŸç®¡ç† SOP | - | - | C-37,I-82 | [adr-mcp-server-lifecycle.md](../reference/adr-mcp-server-lifecycle.md) |
-| I-02 | AI | AI Engineering Governance â€” V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-10 | - | C-37 | [README.md](../prompts/README.md) |
-| I-03 | AI | é¡¹ç›®ä¸“å± AI è®°å¿†å±‚ï¼ˆRAGï¼‰ | ç‰ˆæœ¬ï¼šv1.0.0 | æ—¥æœŸï¼š2026-07-10 | - | C-37,I-80,I-82,R-037 | [ai-memory-layer.md](../explanation/ai-memory-layer.md) |
-| I-04 | AI | é¡¹ç›®ä¸“å± AI è®°å¿†å±‚ï¼ˆRAGï¼‰ | ç‰ˆæœ¬ï¼šv1.0.0 | æ—¥æœŸï¼š2026-07-10 | - | C-37 | [ai-memory-layer.md](../reference/ai-memory-layer.md) |
-| I-05 | API | ai-center-contract.md â€” AI ä¸­å¿ƒæ¥å£å¥‘çº¦ | å®šä½**ï¼šå®šä¹‰ `ai-center` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ | - | C-37,I-82 | [ai-center-contract.md](../reference/ai-center-contract.md) |
-| I-06 | API | analysis-contract.md â€” æŠ•ç ”åˆ†ææ ¸å¿ƒå­åŸŸæ¥å£å¥‘çº¦ | å®šä½**ï¼šå®šä¹‰ `analysis` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ç³» | - | C-37,I-82 | [analysis-contract.md](../reference/analysis-contract.md) |
-| I-07 | API | backtest-contract.md â€” å›æµ‹å¼•æ“æ¥å£å¥‘çº¦ | å®šä½**ï¼šå®šä¹‰ `backtest` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ç³» | - | C-37,I-82 | [backtest-contract.md](../reference/backtest-contract.md) |
-| I-08 | API | collection-contract.md â€” æ•°æ®é‡‡é›†å­åŸŸæ¥å£å¥‘çº¦ | å®šä½**ï¼šå®šä¹‰ `collection` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ– | - | C-37,I-82 | [collection-contract.md](../reference/collection-contract.md) |
-| I-09 | API | data-collector-contract.md â€” æ•°æ®é‡‡é›†ç¼–æ’æœåŠ¡ | å®šä½**ï¼šåè°ƒ fetcher æœåŠ¡æ‰§è¡Œæ•°æ®é‡‡é›†ä»»åŠ¡ï¼Œç®¡ç†é‡‡é›†ç®¡é“ã€è´¨é‡æ£€æµ‹ã€ç¼º | - | C-37,I-82 | [data-collector-contract.md](../reference/data-collector-contract.md) |
-| I-10 | API | DataBridge æ”¹è¿›å»ºè®®æ•´æ”¹æŠ¥å‘Š | æ–‡æ¡£ç»“æŸ** | C-05,I-10 | C-37,I-10,I-80,I-82,R-037 | [databridgeæ”¹è¿›å»ºè®®æ•´æ”¹æŠ¥å‘Š.md](../explanation/design/databridgeæ”¹è¿›å»ºè®®æ•´æ”¹æŠ¥å‘Š.md) |
-| I-11 | API | DataBridge æ•°æ®é“¾è·¯å…¨æ™¯åˆ†ææŠ¥å‘Š | æ–‡æ¡£ç»“æŸ** | - | C-37,I-80,I-82,R-037 | [databridgeæ•°æ®é“¾è·¯å…¨æ™¯åˆ†ææŠ¥å‘Š.md](../explanation/design/databridgeæ•°æ®é“¾è·¯å…¨æ™¯åˆ†ææŠ¥å‘Š.md) |
-| I-12 | API | execution-contract.md â€” äº¤æ˜“æ‰§è¡Œå­åŸŸæ¥å£å¥‘çº¦ | å®šä½**ï¼šå®šä¹‰ `execution` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ | - | C-37,I-82 | [execution-contract.md](../reference/execution-contract.md) |
-| I-13 | API | export-contract.md â€” å¯¼å‡ºæœåŠ¡æ¥å£å¥‘çº¦ | å®šä½**ï¼šå®šä¹‰ `export` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ç³»ã€‚ | - | C-37,I-82 | [export-contract.md](../reference/export-contract.md) |
-| I-14 | API | fetcher-contract.md â€” è¡Œæƒ…/èµ„è®¯æŠ“å–æœåŠ¡ | å®šä½**ï¼šç»Ÿä¸€å¤–éƒ¨è¡Œæƒ…/èµ„è®¯ API é€‚é…å±‚ï¼Œè´Ÿè´£é‡‡é›†ã€é™æµã€ç¼“å­˜ã€é”™è¯¯æ¢å¤ã€‚ | - | C-37,I-82 | [fetcher-contract.md](../reference/fetcher-contract.md) |
-| I-15 | API | hybrid-proofread-contract.md â€” æ··åˆæ ¡å¯¹ï¼ˆäººæœºååŒ | å®šä½**ï¼šå®šä¹‰ `hybrid-proofread` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€ | - | C-37,I-82 | [hybrid-proofread-contract.md](../reference/hybrid-proofread-contract.md) |
-| I-16 | API | input-contract.md â€” è¾“å…¥å¤„ç†å­åŸŸæ¥å£å¥‘çº¦ | å®šä½**ï¼šå®šä¹‰ `input` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ç³»ã€‚ | - | C-37,I-82 | [input-contract.md](../reference/input-contract.md) |
-| I-17 | API | llm-contract.md â€” å¤§æ¨¡å‹æœåŠ¡æ¥å£å¥‘çº¦ | å®šä½**ï¼šå®šä¹‰ `llm` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ç³»ã€‚ | - | C-37,I-82 | [llm-contract.md](../reference/llm-contract.md) |
-| I-18 | API | news-contract.md â€” æ–°é—»èµ„è®¯å­åŸŸæ¥å£å¥‘çº¦ | å®šä½**ï¼šå®šä¹‰ `news` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ç³»ã€‚ | - | C-37,I-82 | [news-contract.md](../reference/news-contract.md) |
-| I-19 | API | portfolio-contract.md â€” æŠ•èµ„ç»„åˆï¼ˆPortfolioï¼‰æ¥ | å®šä½**ï¼šå®šä¹‰ `portfolio` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ | - | C-37,I-82 | [portfolio-contract.md](../reference/portfolio-contract.md) |
-| I-20 | API | pwa-contract.md â€” PWA Service Worker æ¥å£å¥‘ | å®šä½**ï¼šå®šä¹‰ `pwa` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ç³»ã€‚ | - | C-37,I-82 | [pwa-contract.md](../reference/pwa-contract.md) |
-| I-21 | API | rbac-contract.md â€” RBAC æƒé™ç®¡ç†å­åŸŸæ¥å£å¥‘çº¦ | å®šä½**ï¼šå®šä¹‰ `rbac` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ç³»ã€‚ | - | C-37,I-82 | [rbac-contract.md](../reference/rbac-contract.md) |
-| I-22 | API | scoring-contract.md â€” è¯„åˆ†å¼•æ“æœåŠ¡ | å®šä½**ï¼šV9 æ ¸å¿ƒæŠ•ç ”è¯„åˆ†å¼•æ“ï¼ŒåŒ…å« v6 äº”å› å­è¯„åˆ†ã€çƒ­é—¨æ¿å—/ä»·å€¼æ´¼åœ°åŒç­– | - | C-37,I-82 | [scoring-contract.md](../reference/scoring-contract.md) |
-| I-23 | API | screening-contract.md â€” é€‰è‚¡/ç­›é€‰å­åŸŸæ¥å£å¥‘çº¦ | å®šä½**ï¼šå®šä¹‰ `screening` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ | - | C-37,I-82 | [screening-contract.md](../reference/screening-contract.md) |
-| I-24 | API | stock-analysis-contract.md â€” ä¸ªè‚¡åˆ†æå­åŸŸæ¥å£å¥‘çº¦ | å®šä½**ï¼šå®šä¹‰ `stock-analysis` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ® | - | C-37,I-82 | [stock-analysis-contract.md](../reference/stock-analysis-contract.md) |
-| I-25 | API | stockpool-contract.md â€” è‚¡ç¥¨æ± ç®¡ç†å­åŸŸæ¥å£å¥‘çº¦ | å®šä½**ï¼šå®šä¹‰ `stockpool` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ | - | C-37,I-82 | [stockpool-contract.md](../reference/stockpool-contract.md) |
-| I-26 | API | system-contract.md â€” ç³»ç»Ÿçº§æœåŠ¡æ¥å£å¥‘çº¦ | å®šä½**ï¼šå®šä¹‰ `system` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ç³»ã€‚ | - | C-37,I-82 | [system-contract.md](../reference/system-contract.md) |
-| I-27 | API | trade-contract.md â€” äº¤æ˜“åŸŸæ¥å£å¥‘çº¦ | å®šä½**ï¼šå®šä¹‰ `trade` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ç³»ã€‚ | - | C-37,I-82 | [trade-contract.md](../reference/trade-contract.md) |
-| I-28 | API | trading-contract.md â€” äº¤æ˜“ä¸šåŠ¡å­åŸŸæ¥å£å¥‘çº¦ | å®šä½**ï¼šå®šä¹‰ `trading` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ç³»ã€‚ | - | C-37,I-82 | [trading-contract.md](../reference/trading-contract.md) |
-| I-29 | API | usecase-contract.md â€” ä¸šåŠ¡ç”¨ä¾‹ç¼–æ’æ¥å£å¥‘çº¦ | å®šä½**ï¼šå®šä¹‰ `useCase` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ç³»ã€‚ | - | C-37,I-82 | [usecase-contract.md](../reference/usecase-contract.md) |
-| I-30 | API | {subdomain}-contract.md â€” {å­åŸŸä¸­æ–‡å} æ¥å£å¥‘çº¦ | å®šä½**ï¼šå®šä¹‰ `{subdomain}` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾ | - | C-37 | [_contract-template.md](../reference/_contract-template.md) |
-| I-31 | ARC | 03. æ¶æ„æ ‡å‡† | Status**: Current | - | C-37,I-118,I-181,I-182,I-199,I | [03-architecture-standards.md](../explanation/03-architecture-standards.md) |
-| I-32 | ARC | V10 æ¶æ„ç™½çš®ä¹¦ä¸ V9 å¯¹é½æŠ¥å‘Š | Status: Future Reference / Deferred** | - | C-37,I-177,I-80,I-81,I-82 | [v10-architecture-alignment.md](../explanation/v10-architecture-alignment.md) |
-| I-33 | ARC | V10 æ¶æ„ç™½çš®ä¹¦ä¸ V9 å¯¹é½æŠ¥å‘Š | Status: Future Reference / Deferred** | - | C-37,I-242 | [v10-architecture-alignment.md](../reference/v10-architecture-alignment.md) |
-| I-34 | ARC | V9 ç­–ç•¥æ¶æ„æ–‡æ¡£ | Status**: Active | C-67,I-199,I-215,I-226,I-228,I | C-37,I-199,I-63,I-81,I-82,R-03 | [v9-strategy-architecture.md](../explanation/v9-strategy-architecture.md) |
-| I-35 | ARC | V9 ç­–ç•¥æ¶æ„æ–‡æ¡£ | Status**: Active | C-67,I-200,I-215,I-226,I-228,I | C-37,I-200,I-215,I-226,I-228,I | [v9-strategy-architecture.md](../explanation/design/v9-strategy-architecture.md) |
-| I-36 | ARC | æ•°æ®é‡‡é›†æ¨¡å—æ¶æ„è®¾è®¡ | Status**: Current | - | C-37,I-81,I-82,R-037 | [data-collection-architecture.md](../explanation/data-collection-architecture.md) |
-| I-37 | ARC | æ•°æ®é‡‡é›†æ¨¡å—æ¶æ„è®¾è®¡ | Status**: Current | - | C-37,I-177,I-80 | [data-collection-architecture.md](../explanation/design/data-collection-architecture.md) |
-| I-38 | ARC | æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ V9 â€” ç³»ç»Ÿæ¶æ„ä¸è®¾è®¡æ–‡æ¡£ | ç‰ˆæœ¬**ï¼šv1.0 Â· **æ—¥æœŸ**ï¼š2026-07-12 | - | C-37,I-93 | [system-architecture.md](../explanation/system-architecture.md) |
-| I-39 | ARC | æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ V9 â€” é©¾é©¶èˆ± Widget æ¶æ„è¯´æ˜ | æœ¬æ–‡æ¡£é¢å‘åç»­æ¥å…¥çš„ AI æ™ºèƒ½ä½“ä¸ç ”å‘äººå‘˜ï¼Œè¯´æ˜é©¾é©¶èˆ±ï¼ˆCockpitï¼‰Wid | - | C-37,I-146,I-185,I-65,I-82,I-9 | [architecture.md](../explanation/architecture.md) |
-| I-40 | ARC | æ¶æ„è®¾è®¡æ–‡æ¡£ç‰ˆæœ¬æ¯”å¯¹ | Status**: Current | - | C-37,I-177,I-80,I-81,I-82 | [architecture-version-comparison.md](../explanation/architecture-version-comparison.md) |
-| I-41 | ARC | æ¶æ„è®¾è®¡æ–‡æ¡£ç‰ˆæœ¬æ¯”å¯¹ | Status**: Current | - | C-37 | [architecture-version-comparison.md](../reference/architecture-version-comparison.md) |
-| I-42 | DAT | AI æ™ºèƒ½ä½“è°ƒåº¦ä¸­å¿ƒ / å¥åº·ç›‘æ§ / è¯Šæ–­åˆ†æ â€” æ•°æ®å­—å…¸ | Version**: v1.2.0 | - | C-37,I-80 | [ai-center-data-definition.md](../explanation/design/ai-center-data-definition.md) |
-| I-43 | DAT | Cockpit Widget æ¡†æ¶æ•°æ®å­—å…¸ | Version**: v1.2.0 | - | C-37,I-185,I-80,I-82,R-037 | [data-definition.md](../explanation/design/data-definition.md) |
-| I-44 | DAT | DataFlow Engine å®ç°è§„æ ¼ | Status**: Current | - | C-37,C-70,I-177,I-271,I-80,I-8 | [dataflow-engine-spec.md](../reference/dataflow-engine-spec.md) |
-| I-45 | DAT | DEPRECATED - ai-center-data-definition.m | âš ï¸ **æ­¤æ–‡ä»¶å·²åºŸå¼ƒ**ï¼ˆ2026-07-14ï¼‰ | - | C-37,I-82,R-037 | [ai-center-data-definition.md](../explanation/ai-center-data-definition.md) |
-| I-46 | DAT | DEPRECATED - dataflow-data-definition.md | âš ï¸ **æ­¤æ–‡ä»¶å·²åºŸå¼ƒ**ï¼ˆ2026-07-14ï¼‰ | - | C-37,I-82,R-037 | [dataflow-data-definition.md](../explanation/dataflow-data-definition.md) |
-| I-47 | DAT | DEPRECATED - multi-factor-screening-data | âš ï¸ **æ­¤æ–‡ä»¶å·²åºŸå¼ƒ**ï¼ˆ2026-07-14ï¼‰ | - | C-37,I-80,I-81,I-82,R-037 | [multi-factor-screening-data-definition.md](../explanation/multi-factor-screening-data-definition.md) |
-| I-48 | DAT | DEPRECATED - news-data-definition.md | âš ï¸ **æ­¤æ–‡ä»¶å·²åºŸå¼ƒ**ï¼ˆ2026-07-14ï¼‰ | - | C-37,I-80,I-81,I-82,R-037 | [news-data-definition.md](../explanation/news-data-definition.md) |
-| I-49 | DAT | DEPRECATED - seven-dim-config-data-defin | âš ï¸ **æ­¤æ–‡ä»¶å·²åºŸå¼ƒ**ï¼ˆ2026-07-14ï¼‰ | - | C-37,I-80,I-81,I-82,R-037 | [seven-dim-config-data-definition.md](../explanation/seven-dim-config-data-definition.md) |
-| I-50 | DAT | NewsPageï¼ˆæ™ºèƒ½èµ„è®¯ä¸­å¿ƒï¼‰æ•°æ®å­—å…¸ | ç‰ˆæœ¬**ï¼šv1.0.0 | - | C-37 | [news-data-definition.md](../explanation/design/news-data-definition.md) |
-| I-51 | DAT | V9 åŒç­–ç•¥ä½“ç³»ä¸æ•°æ®æµæ¶æ„è§„æ ¼ | Status**: Proposal / å¾…æ ¡å¯¹ | - | C-37,I-271,I-34,I-35,I-80,I-81 | [dual-strategy-dataflow-spec.md](../explanation/design/dual-strategy-dataflow-spec.md) |
-| I-52 | DAT | V9 åŒç­–ç•¥ä½“ç³»ä¸æ•°æ®æµæ¶æ„è§„æ ¼ | Status**: Proposal / å¾…æ ¡å¯¹ | - | C-37,C-70 | [dual-strategy-dataflow-spec.md](../reference/dual-strategy-dataflow-spec.md) |
-| I-53 | DAT | V9 æ•°æ®å…³ç³»è“å›¾ä»»åŠ¡è·Ÿè¸ªè®¡åˆ’ | Goal:** ç¡®ä¿ `docs/blueprints/` ä¸­çš„æ•°æ®å…³ç³»ä¸æ—¶é—´å…³ | - | C-37,I-80,I-81,I-82,R-037 | [v9-data-blueprint-task-tracking.md](../explanation/design/v9-data-blueprint-task-tracking.md) |
-| I-54 | DAT | V9 æ•°æ®å­—å…¸ç´¢å¼• | Status**: Current | - | C-37,I-179,I-181,I-182,I-185,I | [data-dictionary-index.md](../explanation/design/data-dictionary-index.md) |
-| I-55 | DAT | V9 æ•°æ®å±‚æ€»è§ˆ | å®šä½**ï¼šæœ¬æ–‡æ¡£æ˜¯ `src/data/` ä¸ `src/core/databr | C-67,I-232,I-54 | C-37,I-82 | [data-layer-overview.md](../explanation/data-layer-overview.md) |
-| I-56 | DAT | V9 æ•°æ®åº“å®ä½“å…³ç³»è“å›¾ (ER) | Status**: Current | - | C-37,I-80,I-81,I-82,R-037 | [v9-data-relationship-er.md](../explanation/v9-data-relationship-er.md) |
-| I-57 | DAT | V9 æ•°æ®æ—¶é—´å…³ç³»ä¸ç”Ÿå‘½å‘¨æœŸè“å›¾ | Status**: Current | - | C-37,I-80,I-81,I-82,R-037 | [v9-data-timeline.md](../reference/v9-data-timeline.md) |
-| I-58 | DAT | å¤šå› å­é€‰è‚¡ç­›é€‰å™¨æ•°æ®å­—å…¸ | ç‰ˆæœ¬**ï¼šv1.0.0 | - | C-37 | [multi-factor-screening-data-definition.md](../explanation/design/multi-factor-screening-data-definition.md) |
-| I-59 | DAT | æ•°æ®äº¤äº’åè®® | Status**: Current | - | C-37,C-70,I-177,I-179,I-271,I- | [data-interaction-protocols.md](../reference/data-interaction-protocols.md) |
-| I-60 | DAT | æ•°æ®æµå¼•æ“ï¼ˆDataFlow Engineï¼‰æ•°æ®å­—å…¸ | Status**: Current | - | C-37,I-80 | [dataflow-data-definition.md](../explanation/design/dataflow-data-definition.md) |
-| I-61 | DAT | æ•°æ®é‡‡é›†åŠŸèƒ½å·®è·åˆ†ææŠ¥å‘Š | åŸºäºFç›˜æŠ•èµ„èµ›é“åˆ†ææ–‡æ¡£ä¸V9é¡¹ç›®å®é™…ä»£ç å®ç°çš„å…¨é¢æ¯”å¯¹ | - | C-37,I-80,I-81,I-82,R-037 | [data-collection-gap-analysis.md](../explanation/design/data-collection-gap-analysis.md) |
-| I-62 | DAT | æ•°æ®é‡‡é›†æ¨¡å—å¼€å‘ä»»åŠ¡æ¸…å• | åŸºäºå·®è·åˆ†ææŠ¥å‘Š + è·¯ç”±UIæ ¡å¯¹æŠ¥å‘Š + ç”¨æˆ·éœ€æ±‚ | - | C-37,I-80,I-81,I-82,R-037 | [data-collection-task-list.md](../reference/data-collection-task-list.md) |
-| I-63 | DESIGN | Design Tokens ç³»ç»Ÿä½¿ç”¨æŒ‡å— | - | I-34 | C-37,I-82,R-037 | [design-tokens.md](../explanation/design-tokens.md) |
-| I-64 | DESIGN | Design Tokens ç³»ç»Ÿä½¿ç”¨æŒ‡å— | - | I-35 | C-37,I-80 | [design-tokens.md](../explanation/design/design-tokens.md) |
-| I-65 | DESIGN | Design Tokens ç³»ç»Ÿä½¿ç”¨æŒ‡å— | - | I-39 | C-37,I-81 | [design-tokens.md](../reference/design-tokens.md) |
-| I-66 | DESIGN | V6 Pro UI / Page å¸æ”¶è½åœ°æ€»ç»“ï¼ˆä»… UI å±•ç¤ºå±‚ï¼Œä¸åŠ¨æ•°æ®æ¶æ„ï¼‰ | Status**: Implemented | - | C-37,I-81,I-82,R-037 | [ui-only-implementation-summary.md](../explanation/ui-only-implementation-summary.md) |
-| I-67 | DESIGN | V6 Pro UI / Page å¸æ”¶è½åœ°æ€»ç»“ï¼ˆä»… UI å±•ç¤ºå±‚ï¼Œä¸åŠ¨æ•°æ®æ¶æ„ï¼‰ | Status**: Implemented | - | C-37,I-177,I-80 | [ui-only-implementation-summary.md](../explanation/design/ui-only-implementation-summary.md) |
-| I-68 | DESIGN | V9 UI è®¾è®¡ä¼˜åŒ–åˆ†å¸ƒå¼ AGENT ä»»åŠ¡æ‰§è¡Œæ¸…å• | èšåˆæ¥æºï¼š`../reference/uiè®¾è®¡ä¼˜åŒ–å®æ–½è®¡åˆ’-è¯¦ç»†ç‰ˆ.md`ï¼ˆv3.0ï¼‰ | - | C-37,I-82,R-037 | [ui-design-agent-execution-plan.md](../explanation/ui-design-agent-execution-plan.md) |
-| I-69 | DESIGN | V9 UI è®¾è®¡ä¼˜åŒ–åˆ†å¸ƒå¼ AGENT ä»»åŠ¡æ‰§è¡Œæ¸…å• | èšåˆæ¥æºï¼š`../reference/uiè®¾è®¡ä¼˜åŒ–å®æ–½è®¡åˆ’-è¯¦ç»†ç‰ˆ.md`ï¼ˆv3.0ï¼‰ | - | C-37,I-80 | [ui-design-agent-execution-plan.md](../explanation/design/ui-design-agent-execution-plan.md) |
-| I-70 | DESIGN | V9 UI è®¾è®¡ç³»ç»Ÿ | Status**: Current | - | C-37,I-80,I-81,I-82,R-037,R-11 | [ui-design-system.md](../explanation/design/ui-design-system.md) |
-| I-71 | DESIGN | V9 è®¾è®¡ä»¤ç‰Œæ˜ å°„è¡¨ | æ–‡æ¡£ç¼–å·**: DOC-TOKENS-002 | - | C-37,I-80,I-82,R-037 | [design-token-mapping.md](../reference/design-token-mapping.md) |
-| I-72 | DESIGN | V9 é—´è·ä»¤ç‰Œè§„èŒƒï¼ˆSpacing Tokensï¼‰ | ç‰ˆæœ¬**: v0.9.14 P5-SPACE | - | C-37,I-80,I-81,I-82,R-037 | [spacing-tokens.md](../explanation/design/spacing-tokens.md) |
-| I-73 | DESIGN | ä»¤ç‰Œä½¿ç”¨ Cookbookï¼ˆtoken-usage-cookbookï¼‰ | å®šä½**ï¼š`../reference/design-token-mapping. | - | C-37,I-82 | [token-usage-cookbook.md](../explanation/token-usage-cookbook.md) |
-| I-74 | DESIGN | å®‹éŸµç¾å­¦è®¾è®¡æŒ‡å—ï¼ˆSong Aestheticsï¼‰ | å®šä½**ï¼šå®šä¹‰ V9 çš„ã€Œå®‹éŸµç¾å­¦ã€è§†è§‰è¯­è¨€ï¼Œè¡¥ H ç±»è®¾è®¡æŒ‡å—ç¼ºå£ï¼ˆP2-2ï¼‰ | - | C-37,I-82 | [song-aesthetics.md](../explanation/song-aesthetics.md) |
-| I-75 | DESIGN | æ— éšœç¢ä¸å›½é™…åŒ–æŒ‡å—ï¼ˆA11y & i18nï¼‰ | å®šä½**ï¼šå®šä¹‰ V9 çš„æ— éšœç¢ï¼ˆA11yï¼‰ä¸å›½é™…åŒ–ï¼ˆi18nï¼‰åŸºçº¿ï¼Œè¡¥ H ç±»æŒ‡ | - | C-37,I-82 | [a11y-i18n.md](../explanation/a11y-i18n.md) |
-| I-76 | GOV | V9 æ–‡ä»¶ç®¡ç†è§„èŒƒ | ç‰ˆæœ¬**: v1.4.0 | **æ—¥æœŸ**: 2026-07-20 | C-30,I-137 | C-37,I-263,I-82 | [file-management-guide.md](../how-to/file-management-guide.md) |
-| I-77 | GOV | ä»£ç å¤æ‚åº¦ä¸“é¡¹æ²»ç†è§„èŒƒ | ç‰ˆæœ¬ï¼šv1.0.0 | æ—¥æœŸï¼š2026-07-10 | - | C-37 | [complexity-governance.md](../reference/complexity-governance.md) |
-| I-78 | GOV | ä»£ç å¤æ‚åº¦æ²»ç†è§„èŒƒ | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-13 | - | C-37,I-185,I-80,I-82,R-037 | [complexity-governance.md](../explanation/complexity-governance.md) |
-| I-79 | GOV | å®æ–½æ²»ç†ä¸æ¶æ„å†³ç­–è®°å½• | Status**: Current | - | C-37,I-100,I-177,I-80,I-81,I-8 | [implementation-governance.md](../explanation/design/implementation-governance.md) |
-| I-80 | GOV | æ–‡æ¡£ç´¢å¼• | æœ¬æ–‡ä»¶ç”±æ¯æ—¥æ–‡æ¡£éªŒè¯æµç¨‹è‡ªåŠ¨ç”Ÿæˆï¼Œè¯·å‹¿æ‰‹åŠ¨ä¿®æ”¹ã€‚ | C-04,C-05,C-06,C-07,C-08,C-11, | C-37,I-80 | [registry-index.md](../explanation/design/registry-index.md) |
-| I-81 | GOV | æ–‡æ¡£ç´¢å¼• | æœ¬æ–‡ä»¶ç”±æ¯æ—¥æ–‡æ¡£éªŒè¯æµç¨‹è‡ªåŠ¨ç”Ÿæˆï¼Œè¯·å‹¿æ‰‹åŠ¨ä¿®æ”¹ã€‚ | C-04,C-06,C-09,C-11,C-12,C-13, | C-37,I-81 | [registry-index.md](../reference/registry-index.md) |
-| I-82 | GOV | æ–‡æ¡£ç´¢å¼• | æœ¬æ–‡ä»¶ç”±æ¯æ—¥æ–‡æ¡£éªŒè¯æµç¨‹è‡ªåŠ¨ç”Ÿæˆï¼Œè¯·å‹¿æ‰‹åŠ¨ä¿®æ”¹ã€‚ | C-02,C-03,C-04,C-05,C-06,C-07, | C-37 | [registry-index.md](../reference/meta/registry-index.md) |
-| I-83 | GOV | è§¦å‘äº‹ä»¶ â†’ æ›´æ–°åŠ¨ä½œ ä¸€ä¸€æ˜ å°„æƒå¨è¡¨ | æ–‡æ¡£æ—¥æœŸï¼š2026-07-12ï¼ˆN2/N3 ä¿®è®¢ï¼‰ | - | C-37 | [doc-trigger-action-map.md](../reference/meta/doc-trigger-action-map.md) |
-| I-84 | GUIDE | MCP æƒé™æ§åˆ¶å¼€å‘æŒ‡å— | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-08 | - | C-37,I-80,I-82,R-037 | [mcp-acl-guide.md](../how-to/mcp-acl-guide.md) |
-| I-85 | GUIDE | Service é›†æˆå¼€å‘æŒ‡å— | å®šä½**ï¼šæœ¬æ–‡æ˜¯ `src/services/` å±‚çš„æ–°å¢/ç»´æŠ¤ Service | I-105,I-106,I-191,I-198,I-232 | C-37,I-82 | [service-integration-guide.md](../prompts/service-integration-guide.md) |
-| I-86 | GUIDE | Store é›†æˆå¼€å‘æŒ‡å— | å®šä½**ï¼šæœ¬æ–‡æ¡£æ˜¯ `src/store/` ç›®å½•çš„**æƒå¨å¼€å‘æŒ‡å—**ï¼ŒæŒ‡å¯¼å¼€ | - | C-37,I-82 | [store-integration-guide.md](../prompts/store-integration-guide.md) |
-| I-87 | GUIDE | UI ç»„ä»¶è¿ç§»æ£€æŸ¥æ¸…å• | é€‚ç”¨äºè·¨èˆ±ã€è·¨ç›®å½•ã€è·¨æ¨¡å—çš„ UI ç»„ä»¶è¿ç§»æˆ–é‡æ„ï¼Œç¡®ä¿å¼•ç”¨å…³ç³»æ— é—æ¼ã€è´¨é‡é—¨ç¦ | - | C-37,I-80,I-82,R-037 | [ui-migration-checklist.md](../reference/ui-migration-checklist.md) |
-| I-88 | GUIDE | V9 PWA ç¦»çº¿åŒ–å®æ–½æŒ‡å— | å¯¹åº”è“å›¾**ï¼š`../reference/v9-system-blueprint | - | C-37,I-80,I-81,I-82,R-037 | [pwa-offline-guide.md](../how-to/pwa-offline-guide.md) |
-| I-89 | GUIDE | V9 PWA ç¦»çº¿åŒ–å®æ–½æŒ‡å— | å¯¹åº”è“å›¾**ï¼š`../reference/v9-system-blueprint.md` Â§1 ç³»ç»Ÿå®š | - | C-37 | [pwa-offline-guide.md](../reference/pwa-offline-guide.md) |
-| I-90 | GUIDE | V9 UI ç»„ä»¶åº“ä½¿ç”¨æŒ‡å— | ç‰ˆæœ¬ï¼šv1.0.0ï¼ˆP6-UI ç»„ä»¶åº“å®Œå–„ + æ— éšœç¢å¢å¼ºï¼‰ | - | C-37,I-80,I-81,I-82,R-037 | [component-library-guide.md](../explanation/design/component-library-guide.md) |
-| I-91 | GUIDE | V9 ä¸‰å±‚æµ‹è¯•ç­–ç•¥ | ç‰ˆæœ¬ï¼šv1.0.0 | æ—¥æœŸï¼š2026-07-10 | - | C-37,I-185,I-80,I-82,R-037 | [testing-strategy.md](../how-to/testing/testing-strategy.md) |
-| I-92 | GUIDE | V9 æ— éšœç¢ï¼ˆAccessibilityï¼‰æ£€æŸ¥æ¸…å• | - | - | C-37,I-80,I-81,I-82,R-037 | [a11y-checklist.md](../explanation/a11y-checklist.md) |
-| I-93 | GUIDE | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ Â· æµ‹è¯•å‰å‡†å¤‡æ¸…å• | ç‰ˆæœ¬**: v1.0.0 ï½œ **æ›´æ–°æ—¥æœŸ**: 2026-07-15 ï½œ ** | I-104,I-109,I-165,I-197,I-281, | C-37,I-242 | [pre-testing-checklist.md](../04-testing/pre-testing-checklist.md) |
-| I-94 | GUIDE | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” å¼€å‘å·¥ä½œæµ SOP | æ–‡æ¡£ä½“ç³»ç‰ˆæœ¬**: v2.0.0 | **æœ¬æ–‡æ¡£ä¿®è®¢**: rev.1 | ** | C-31,I-39 | C-37,I-185,I-82 | [development-workflow-sop.md](../reference/development-workflow-sop.md) |
-| I-95 | GUIDE | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” æ–°æˆå‘˜ 30 åˆ†é’Ÿä¸Šæ‰‹æŒ‡å— | ç‰ˆæœ¬**ï¼šv1.0.0 | - | C-37,I-82 | [getting-started.md](../tutorials/getting-started.md) |
-| I-96 | GUIDE | V9 æ¨¡å—å®Œæˆåº¦å‰–é¢å›¾ â€” æ‰¹æ¬¡ Bï¼ˆè¾“å…¥èˆ±ï¼‰ | å®¡è®¡èŒƒå›´**ï¼šè¾“å…¥èˆ± 6 ä¸ªå­é¡µé¢ | - | C-37 | [completeness-profile-batch2.md](../how-to/testing/completeness-profile-batch2.md) |
-| I-97 | GUIDE | V9 è‡ªä¸»å·¥ä½œæµä¼˜åŒ–ç­–ç•¥ | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-04 | I-119,I-254,I-79 | C-37,I-100,I-80,I-81,I-82,R-03 | [autonomous-workflow-optimization.md](../explanation/design/autonomous-workflow-optimization.md) |
-| I-98 | GUIDE | V9 è‡ªä¸»å·¥ä½œæµä¼˜åŒ–ç­–ç•¥ | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-04 | I-119,I-254,I-79 | C-37,I-99 | [autonomous-workflow-optimization.md](../prompts/autonomous-workflow-optimization.md) |
-| I-99 | GUIDE | V9 è‡ªä¸»å·¥ä½œæµä½¿ç”¨æŒ‡å— | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-04 | I-254,I-79,I-98 | C-37,I-80,I-81,I-82,R-037 | [autonomous-workflow-user-guide.md](../prompts/autonomous-workflow-user-guide.md) |
-| I-100 | GUIDE | V9 è‡ªä¸»å·¥ä½œæµä½¿ç”¨æŒ‡å— | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-04 | I-254,I-79,I-97 | C-37 | [autonomous-workflow-user-guide.md](../reference/autonomous-workflow-user-guide.md) |
-| I-101 | GUIDE | V9 è§†è§‰å›å½’åŸºçº¿ç®¡ç†è§„èŒƒ | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-12 | - | C-37,I-82 | [visual-regression-guide.md](../how-to/visual-regression-guide.md) |
-| I-102 | GUIDE | Widget å¼€å‘æŒ‡å— | é€‚ç”¨èŒƒå›´**ï¼šé©¾é©¶èˆ±ï¼ˆCockpitï¼‰æ‰€æœ‰ Widget ç»„ä»¶çš„å¼€å‘ã€æ³¨å†Œä¸é›†æˆ | - | C-37,I-298,I-299,I-80,I-82,R-0 | [widget-development-guide.md](../how-to/widget-development-guide.md) |
-| I-103 | GUIDE | Widget å¼€å‘æŒ‡å— | é€‚ç”¨èŒƒå›´**ï¼šé©¾é©¶èˆ±ï¼ˆCockpitï¼‰æ‰€æœ‰ Widget ç»„ä»¶çš„å¼€å‘ã€æ³¨å†Œä¸é›†æˆ | - | C-37,I-81 | [widget-development-guide.md](../reference/widget-development-guide.md) |
-| I-104 | GUIDE | ä½“ç³»åŒ–ä¸Šçº¿æµ‹è¯•æ£€æŸ¥æ¸…å• Skill | ç‰ˆæœ¬**: v1.0.1 | **æ›´æ–°æ—¥æœŸ**: 2026-07-13 | - | C-37,I-82,I-93 | [production-release-checklist-skill.md](../explanation/production-release-checklist-skill.md) |
-| I-105 | GUIDE | å¦‚ä½•æ–°å¢ä¸€ä¸ª Serviceï¼ˆDataBridge + Envelope è·¯ç”±ï¼‰ | ç‰ˆæœ¬**ï¼šv1.0.0 | - | C-37,I-82,I-85 | [how-to-add-service.md](../how-to/how-to-add-service.md) |
-| I-106 | GUIDE | å¦‚ä½•æ–°å¢ä¸€ä¸ª Storeï¼ˆZustand + withBroadcastï¼‰ | ç‰ˆæœ¬**ï¼šv1.0.0 | - | C-37,I-82,I-85 | [how-to-add-store.md](../how-to/how-to-add-store.md) |
-| I-107 | GUIDE | å¦‚ä½•æ–°å¢ä¸€ä¸ª Widgetï¼ˆWidgetShell + äº‹ä»¶æ€»çº¿ï¼‰ | ç‰ˆæœ¬**ï¼šv1.0.0 | - | C-37,I-82 | [how-to-add-widget.md](../how-to/how-to-add-widget.md) |
-| I-108 | GUIDE | è‡ªå®šä¹‰ Hook ä½¿ç”¨æŒ‡å— | Status**: Current | - | C-37,I-82 | [hooks-guide.md](../how-to/hooks-guide.md) |
-| I-109 | GUIDE | è¿ç»´ä¸å‘å¸ƒæ‰‹å†Œï¼ˆRunbookï¼‰ | å®šä½**ï¼šå®šä¹‰ V9 çš„æœ¬åœ°æ„å»ºã€é¢„è§ˆã€å¥åº·ç›‘æ§ä¸å¸¸è§æ•…éšœå¤„ç½®ï¼Œè¡¥ H ç±»è¿ç»´ç¼º | - | C-37,I-201,I-291,I-82,I-93 | [runbook.md](../explanation/runbook.md) |
-| I-110 | GUIDE | é©¾é©¶èˆ± Widget é›†æˆæ£€æŸ¥æ¸…å• | æ–°å¢æˆ–ä¿®æ”¹é©¾é©¶èˆ± Widget æ—¶ï¼Œå¿…é¡»åŒæ­¥å®Œæˆä¸‰å¤„æ³¨å†Œï¼Œå¹¶éµå¾ªè®¾è®¡ä»¤ç‰Œä¸æ•°æ®æ¶ˆ | - | C-37,I-80,I-82,R-037 | [widget-integration-checklist.md](../explanation/design/widget-integration-checklist.md) |
-| I-111 | GUIDE | é©¾é©¶èˆ± Widget é›†æˆæ£€æŸ¥æ¸…å• | æ–°å¢æˆ–ä¿®æ”¹é©¾é©¶èˆ± Widget æ—¶ï¼Œå¿…é¡»åŒæ­¥å®Œæˆä¸‰å¤„æ³¨å†Œï¼Œå¹¶éµå¾ªè®¾è®¡ä»¤ç‰Œä¸æ•°æ®æ¶ˆ | - | C-37 | [widget-integration-checklist.md](../reference/widget-integration-checklist.md) |
-| I-112 | LOG | JSDoc æ–‡æ¡£æ›´æ–°æ¸…å• - Data Collector æ¨¡å— | æ—¥æœŸ**: 2026-07-12 | - | C-37 | [jsdoc-update-summary-data-collector-20260712.md](../reference/changelogs/2026-07/jsdoc-update-summary-data-collector-20260712.md) |
-| I-113 | LOG | JSDoc æ³¨é‡Šè¡¥å……æ±‡æ€»æŠ¥å‘Š | æ—¥æœŸ**: 2026-07-12 | - | C-37 | [jsdoc-update-summary-20260712.md](../reference/changelogs/2026-07/jsdoc-update-summary-20260712.md) |
-| I-114 | LOG | P1 æ‰¹æ¬¡å®Œæ•´æ€§ç”»åƒ â€” 2026-07-05 | ç”Ÿæˆä¾æ®ï¼šæ¶æ„é›·è¾¾æ‰«æ v2.0.0ã€audit:layersã€audit:ha | - | C-37,I-80,I-81,I-82,R-037,R-15 | [completeness-profile-p1.md](../reference/changelogs/2026-07/completeness-profile-p1.md) |
-| I-115 | LOG | P1 æ‰¹æ¬¡è¡ŒåŠ¨æ¸…å• â€” 2026-07-05 | - | - | C-37,I-80,I-81,I-82,R-037,R-15 | [action-list-p1.md](../reference/changelogs/2026-07/action-list-p1.md) |
-| I-116 | LOG | PR-5 æ„å»ºæ€§èƒ½ä¼˜åŒ–æ€»ç»“ | ç‰ˆæœ¬**: v1.0 | **æ—¥æœŸ**: 2026-07-07 | I-137 | C-37,I-80,I-81,I-82,R-037 | [pr-5-build-optimization-summary.md](../reference/changelogs/2026-07/pr-5-build-optimization-summary.md) |
-| I-117 | LOG | PR-7 tradeErrorClassifier.ts æ‹†åˆ†æ–¹æ¡ˆæ–‡æ¡£ | æ–¹æ¡ˆç¼–å·**: PR-7 | - | C-37,I-80,I-82,R-037 | [pr-7-trade-error-classifier-split-plan.md](../reference/changelogs/2026-07/pr-7-trade-error-classifier-split-plan.md) |
-| I-118 | LOG | PR-8 é‡å¤å‡½æ•°å»é‡é‡æ„æ–¹æ¡ˆ | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-08 | I-119,I-31,R-092 | C-37,I-80,I-82,R-037 | [pr-8-dedup-plan.md](../reference/changelogs/2026-07/pr-8-dedup-plan.md) |
-| I-119 | LOG | V9 æ¶æ„æ–‡æ¡£å˜æ›´æ—¥å¿— | éµå¾ª"å˜æ›´å³è®°å½•ï¼ˆChange as Recordï¼‰"åŸåˆ™ï¼Œæ¯æ¬¡æ¶æ„/æ•°æ®å˜æ›´å‡ | - | C-37,I-118,I-240,I-80,I-81,I-8 | [CHANGELOG.md](../reference/CHANGELOG.md) |
-| I-120 | LOG | å‘å¸ƒè¯´æ˜ | æœ¬æ–‡ä»¶é¢å‘ç”¨æˆ·ä¸å¼€å‘è€…ï¼Œæ±‡æ€»æ¯ä¸ªå·²å‘å¸ƒç‰ˆæœ¬çš„æ ¸å¿ƒå˜æ›´ã€è´¨é‡æŒ‡æ ‡ä¸å‡çº§é¡»çŸ¥ã€‚ | - | C-37,I-185,I-80,I-81,I-82,R-03 | [release-notes.md](../reference/release-notes.md) |
-| I-121 | LOG | å˜æ›´æ‘˜è¦-2026-06-28-phase0-æ•°æ®å±‚æ”¹é€  | - | - | C-37,I-80,I-81,R-037 | [å˜æ›´æ‘˜è¦-2026-06-28-phase0-æ•°æ®å±‚æ”¹é€ .md](../reference/changelogs/å˜æ›´æ‘˜è¦-2026-06-28-phase0-æ•°æ®å±‚æ”¹é€ .md) |
-| I-122 | LOG | æœ¬å‘¨æ‰§è¡Œä»»åŠ¡æ¸…å•ï¼ˆ2026-07-05 è‡³ 2026-07-12ï¼‰ | ç›®æ ‡**: å»ºç«‹å¹¶éªŒè¯ä»£ç å®¡æŸ¥ç³»ç»Ÿå·¥ä½œæµ | - | C-37,I-80,I-81,I-82,R-037 | [weekly-tasks-2026-07-05.md](../explanation/design/weekly-tasks-2026-07-05.md) |
-| I-123 | LOG | æ¯æ—¥æ–‡æ¡£å˜æ›´å†å² â€” 2026-07-12 | æœ¬æ–‡ä»¶ç”±æ¯æ—¥æ–‡æ¡£éªŒè¯æµç¨‹è‡ªåŠ¨ç”Ÿæˆï¼Œè®°å½•å½“å¤©æ‰€æœ‰ææ–™çš„å˜æ›´æƒ…å†µã€‚ | - | C-37 | [daily-doc-validation-2026-07-12.md](../reference/changelogs/2026-07/daily-doc-validation-2026-07-12.md) |
-| I-124 | LOG | æµ‹è¯•ç¼“å­˜æ¸…ç†ä¿®å¤æ€»ç»“ | - | - | C-37,I-80,I-81,I-82,R-037 | [test-cache-fix-summary.md](../reference/changelogs/2026-07/test-cache-fix-summary.md) |
-| I-125 | MIGR | V6 Pro â†’ V9 æºç æ¯”å¯¹ä¸äºŒæ¬¡å¼€å‘é‡ç‚¹æ¨¡å—æ¢³ç† | Status**: Current | - | C-37,I-177,I-80,I-81,I-82,R-03 | [v6pro-to-v9-migration-analysis.md](../explanation/v6pro-to-v9-migration-analysis.md) |
-| I-126 | MIGR | V6 Pro â†’ V9 æºç æ¯”å¯¹ä¸äºŒæ¬¡å¼€å‘é‡ç‚¹æ¨¡å—æ¢³ç† | Status**: Current | - | C-37 | [v6pro-to-v9-migration-analysis.md](../reference/v6pro-to-v9-migration-analysis.md) |
-| I-127 | MIGR | V6ProDB IndexedDB å‡çº§è§„èŒƒï¼ˆv4 â†’ v6ï¼‰ | Status**: Current | - | C-37,I-177,I-80,I-81,I-82,R-03 | [db-migration-v4-to-v6.md](../explanation/db-migration-v4-to-v6.md) |
-| I-128 | MIGR | å˜æ›´å½±å“åˆ†ææŠ¥å‘Š | - | - | C-37,I-81,I-82,R-037 | [refactor-impact-analysis-2026-06-27.md](../explanation/refactor-impact-analysis-2026-06-27.md) |
-| I-129 | MIGR | å˜æ›´å½±å“åˆ†ææŠ¥å‘Š | - | - | C-37,I-80 | [refactor-impact-analysis-2026-06-27.md](../explanation/design/refactor-impact-analysis-2026-06-27.md) |
-| I-130 | MISC | 08. å®æ–½è®¡åˆ’ | Status**: Current | - | C-37,I-80,I-82,R-037 | [08-implementation-plan.md](../explanation/design/08-implementation-plan.md) |
-| I-131 | MISC | 08. å®æ–½è®¡åˆ’ | Status**: Current | - | C-37,I-81 | [08-implementation-plan.md](../reference/08-implementation-plan.md) |
-| I-132 | MISC | B æ‰¹æ¬¡ç»„ä»¶é›†æˆæµ‹è¯•æŠ¥å‘Šï¼ˆB-6ï¼‰ | æ—¥æœŸï¼š2026-07-08 | - | C-37,I-80,I-82,R-037 | [bæ‰¹æ¬¡ç»„ä»¶é›†æˆæµ‹è¯•æŠ¥å‘Š-b6-2026-07-08.md](../explanation/bæ‰¹æ¬¡ç»„ä»¶é›†æˆæµ‹è¯•æŠ¥å‘Š-b6-2026-07-08.md) |
-| I-133 | MISC | B æ‰¹æ¬¡é«˜ä»·å€¼å­¤å„¿ç»„ä»¶é›†æˆçŠ¶æ€æŠ¥å‘Š | æ—¥æœŸï¼š2026-07-08 | - | C-37,I-80,I-82,R-037 | [bæ‰¹æ¬¡é«˜ä»·å€¼å­¤å„¿é›†æˆçŠ¶æ€æŠ¥å‘Š-2026-07-08.md](../explanation/bæ‰¹æ¬¡é«˜ä»·å€¼å­¤å„¿é›†æˆçŠ¶æ€æŠ¥å‘Š-2026-07-08.md) |
-| I-134 | MISC | Blueprints | å®šä½**ï¼šç³»ç»Ÿæ¶æ„è“å›¾ã€æµç¨‹è®¾è®¡å›¾ã€æŠ€æœ¯æ–¹æ¡ˆå¯è§†åŒ–ã€‚ | - | C-37 | [README.md](../explanation/design/blueprints/README.md) |
-| I-135 | MISC | buildScoreDocDiff ä¿®å¤ â€” ç”Ÿäº§éƒ¨ç½²å›æ»šé¢„æ¡ˆ | ç‰ˆæœ¬**: v1.0 | **æ—¥æœŸ**: 2026-07-04 | - | C-37,I-80,I-81,I-82,R-037 | [buildscoredocdiff-rollback-plan.md](../explanation/design/buildscoredocdiff-rollback-plan.md) |
-| I-136 | MISC | data_link_sequence_diagram | - | - | C-37,I-80,I-82,R-037 | [data_link_sequence_diagram.md](../reference/data_link_sequence_diagram.md) |
-| I-137 | MISC | FinSightV9 æ–‡æ¡£ä¸­å¿ƒ | - | - | C-37,I-116,I-76,I-80,I-82,R-03 | [README.md](../README.md) |
-| I-138 | MISC | iFinD æ’ä»¶ | æ•°æ®åŸŸ**: åŒèŠ±é¡ºé‡‘èæ•°æ®å¹³å°ï¼ˆä¸­å›½ A è‚¡ã€æ¸¯è‚¡ã€ç¾è‚¡åŠå…¶ä»–å¸‚åœºï¼‰ | - | C-37,I-225,I-82 | [ifind.md](../reference/ifind.md) |
-| I-139 | MISC | IMF æ’ä»¶ | æ•°æ®åŸŸ**: å›½é™…è´§å¸åŸºé‡‘ç»„ç»‡ï¼ˆIMFï¼‰å…¨çƒå®è§‚ç»æµæ•°æ® | - | C-37,I-225,I-82 | [imf.md](../reference/imf.md) |
-| I-140 | MISC | JSDoc ä¸æ–‡æ¡£é—¨ç¦è§„èŒƒ | ç‰ˆæœ¬ï¼šv1.0.0 | æ—¥æœŸï¼š2026-07-10 | - | C-37 | [jsdoc-convention.md](../reference/jsdoc-convention.md) |
-| I-141 | MISC | JSDoc ç¼–å†™è§„èŒƒ | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-13 | - | C-37,I-185,I-80,I-82,R-037 | [jsdoc-convention.md](../explanation/jsdoc-convention.md) |
-| I-142 | MISC | Kimi WebBridge æ’ä»¶ | åŠŸèƒ½åŸŸ**: æµè§ˆå™¨è‡ªåŠ¨åŒ–æ§åˆ¶ï¼ˆå¯¼èˆªã€ç‚¹å‡»ã€è¾“å…¥ã€æˆªå›¾ã€PDF ä¿å­˜ï¼‰ | - | C-37,I-225,I-82 | [kimi-webbridge.md](../explanation/kimi-webbridge.md) |
-| I-143 | MISC | Kimi åŠ è½½æç¤ºï¼šæœ¬é¡¹ç›®ä¸º V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿï¼ŒæŒ‰ AGENTS.md v | ç”¨é€”**ï¼šæœ¬æ–‡ä»¶æ˜¯ `docs/` çš„å”¯ä¸€é¡¶å±‚å…¥å£ã€‚ä»»ä½•æ–°æˆå‘˜æˆ– AI Agen | - | C-37,I-81 | [README.md](../reference/README.md) |
-| I-144 | MISC | P4 æ–‡æ¡£å»é‡æ¸…å•ä¸æ‰§è¡Œæ–¹æ¡ˆ | ç‰ˆæœ¬**ï¼šv1.0 | **æ—¥æœŸ**ï¼š2026-07-08 | **å½’å±**ï¼šè´¨ | - | C-37,I-80,I-82,R-037 | [p4-æ–‡æ¡£å»é‡æ¸…å•ä¸æ‰§è¡Œæ–¹æ¡ˆ.md](../explanation/design/p4-æ–‡æ¡£å»é‡æ¸…å•ä¸æ‰§è¡Œæ–¹æ¡ˆ.md) |
-| I-145 | MISC | Plans | å®šä½**ï¼šé¡¹ç›®è®¡åˆ’ã€å®æ–½æ–¹æ¡ˆã€è·¯çº¿å›¾ã€‚ | - | C-37 | [README.md](../reference/project/plans/README.md) |
-| I-146 | MISC | Pull Request: P0 çº§èµ„é‡‘å®‰å…¨ä¿®å¤ + P1 è·¯ç”±æŒ‚è½½ + æµ‹è¯•è¦† | - | I-151,I-39 | C-37,I-185,I-82 | [pr-description.md](../reference/pr-description.md) |
-| I-147 | MISC | R01 å‘å¸ƒè®¡åˆ’ä¸è¯„å®¡æ–‡æ¡£ â€” V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ | æ–‡æ¡£ç‰ˆæœ¬**ï¼šv1.0 ï½œ **æ—¥æœŸ**ï¼š2026-07-08 ï½œ **è´Ÿè´£äºº* | - | C-37,I-80,I-82,R-037 | [å‘å¸ƒè®¡åˆ’ä¸è¯„å®¡-r01.md](../explanation/design/å‘å¸ƒè®¡åˆ’ä¸è¯„å®¡-r01.md) |
-| I-148 | MISC | R03 å›æ»šæ–¹æ¡ˆä¸æ¼”ç»ƒæ–‡æ¡£ â€” V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ | æ–‡æ¡£ç‰ˆæœ¬**ï¼šv1.0 ï½œ **æ—¥æœŸ**ï¼š2026-07-08 ï½œ **å…³è”æ¸…å• | - | C-37,I-80,I-82,R-037 | [å›æ»šæ–¹æ¡ˆä¸æ¼”ç»ƒ-r03.md](../explanation/design/å›æ»šæ–¹æ¡ˆä¸æ¼”ç»ƒ-r03.md) |
-| I-149 | MISC | Scholar æ’ä»¶ | æ•°æ®åŸŸ**: å­¦æœ¯æ–‡çŒ®æ£€ç´¢ï¼ˆGoogle Scholar é£æ ¼ï¼‰ | - | C-37,I-225,I-82 | [scholar.md](../reference/scholar.md) |
-| I-150 | MISC | SEC EDGAR æ’ä»¶ | æ•°æ®åŸŸ**: ç¾å›½ SEC ä¸Šå¸‚å…¬å¸ç”³æŠ¥æ–‡ä»¶ä¸è´¢åŠ¡æ•°æ® | - | C-37,I-225,I-82 | [sec_edgar.md](../reference/sec_edgar.md) |
-| I-151 | MISC | tech-debt.md â€” æŠ€æœ¯å€ºç®¡ç†æ–‡æ¡£ | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-05 | - | C-37,I-146,I-80,I-81,I-82,R-03 | [tech-debt.md](../explanation/design/tech-debt.md) |
-| I-152 | MISC | Tianyancha æ’ä»¶ | æ•°æ®åŸŸ**: å¤©çœ¼æŸ¥ä¼ä¸šæ•°æ®åº“ï¼ˆä¸­å›½å¤§é™†ä¼ä¸šä¿¡æ¯ï¼‰ | - | C-37,I-225,I-82 | [tianyancha.md](../reference/tianyancha.md) |
-| I-153 | MISC | UI è®¾è®¡ä¼˜åŒ–å®æ–½è®¡åˆ’ï¼ˆè¯¦ç»†ç‰ˆï¼‰ | åˆå¹¶ã€ŠUIè®¾è®¡ä¼˜åŒ–å®æ“æ–¹æ¡ˆ V6Ã—V9Ã—WorkBuddyã€‹ä¸ã€ŠUIè®¾è®¡åŸåˆ™åŸºçº¿ | - | C-37,I-80,I-82,R-037 | [../reference/uiè®¾è®¡ä¼˜åŒ–å®æ–½è®¡åˆ’-è¯¦ç»†ç‰ˆ.md](../reference/../reference/uiè®¾è®¡ä¼˜åŒ–å®æ–½è®¡åˆ’-è¯¦ç»†ç‰ˆ.md) |
-| I-154 | MISC | V6 Pro UI æ¨¡å—æ–°æ—§æ¯”å¯¹ä¸ V9 å¸æ”¶æŠ¥å‘Š | Status: Future Reference / Deferred** | - | C-37,I-177,I-80,I-81,R-037 | [deprecated-ui-module-alignment.md](../reference/deprecated-ui-module-alignment.md) |
-| I-155 | MISC | V6 Pro â†’ V9 æ¶æ„å·®å¼‚åˆ†ææŠ¥å‘Š | å®¡è®¡åŸºå‡†ï¼š`V6Pro_æ•´ä½“æ¶æ„æ¢³ç†_v3.md`ã€`trade_review_ | - | C-37,I-80,I-81,I-82,R-037 | [v6pro-v9-gap-analysis-final.md](../explanation/design/v6pro-v9-gap-analysis-final.md) |
-| I-156 | MISC | V6-V9 ç•Œé¢è®¾è®¡ä¼˜åŒ–è¯¦ç»†å¯è¡Œæ€§è®¡åˆ’ | ç‰ˆæœ¬**: v1.0 | **æ—¥æœŸ**: 2026-07-08 | - | C-37,I-80,I-82,R-037 | [v6-v9ç•Œé¢è®¾è®¡ä¼˜åŒ–å¯è¡Œæ€§è®¡åˆ’.md](../explanation/design/v6-v9ç•Œé¢è®¾è®¡ä¼˜åŒ–å¯è¡Œæ€§è®¡åˆ’.md) |
-| I-157 | MISC | V6-V9 ç•Œé¢è®¾è®¡æœ€æ–° HTML ç²¾è¯»æŠ¥å‘Š | æ£€ç´¢æ—¥æœŸ**: 2026-07-08 | - | C-37,I-80,I-82,R-037 | [v6-v9ç•Œé¢è®¾è®¡htmlç²¾è¯»æŠ¥å‘Š.md](../explanation/design/v6-v9ç•Œé¢è®¾è®¡htmlç²¾è¯»æŠ¥å‘Š.md) |
-| I-158 | MISC | V9 IndexedDB Store Schema æ–‡æ¡£ | ç‰ˆæœ¬**ï¼šv21 | - | C-37,I-80,I-82,R-037 | [v9-indexeddb-store-schema.md](../explanation/design/v9-indexeddb-store-schema.md) |
-| I-159 | MISC | V9 IndexedDB Store Schema æ–‡æ¡£ | ç‰ˆæœ¬**ï¼šv21 | - | C-37,I-81 | [v9-indexeddb-store-schema.md](../reference/v9-indexeddb-store-schema.md) |
-| I-160 | MISC | V9 L2 çŠ¶æ€å±‚è¡¥é½è·¯çº¿å›¾ | æ³¨ï¼š`HotSectorPage` ä¸ `ValuePitPage` è™½åœ¨å†å²æ¸… | - | C-37,I-80,I-82,R-037 | [v9-l2çŠ¶æ€å±‚è¡¥é½è·¯çº¿å›¾.md](../explanation/v9-l2çŠ¶æ€å±‚è¡¥é½è·¯çº¿å›¾.md) |
-| I-161 | MISC | V9 L2 çŠ¶æ€å±‚è¡¥é½è·¯çº¿å›¾ | æ³¨ï¼š`HotSectorPage` ä¸ `ValuePitPage` è™½åœ¨å†å²æ¸… | - | C-37,I-81 | [v9-l2çŠ¶æ€å±‚è¡¥é½è·¯çº¿å›¾.md](../reference/v9-l2çŠ¶æ€å±‚è¡¥é½è·¯çº¿å›¾.md) |
-| I-162 | MISC | V9 äº”å±‚è¿½æº¯å®¡è®¡ â€” ä¿®å¤è¡ŒåŠ¨æ¸…å• | å®¡è®¡èŒƒå›´**ï¼šæ‰¹æ¬¡ A-Eï¼ˆ48 ä¸ªåŠŸèƒ½å…¥å£ + 21 ä¸ª Widgetï¼‰ | - | C-37,I-80,I-81,I-82,R-037 | [action-list.md](../explanation/action-list.md) |
-| I-163 | MISC | V9 äº”å±‚è¿½æº¯å®¡è®¡ â€” ä¿®å¤è¡ŒåŠ¨æ¸…å• | å®¡è®¡èŒƒå›´**ï¼šæ‰¹æ¬¡ A-Eï¼ˆ48 ä¸ªåŠŸèƒ½å…¥å£ + 21 ä¸ª Widgetï¼‰ | - | C-37 | [action-list.md](../reference/action-list.md) |
-| I-164 | MISC | V9 ä»£ç å®ç°åˆ†ææŠ¥å‘Š | å®¡è®¡èŒƒå›´ï¼šæ‰¹æ¬¡ A-Eï¼ˆ28 ä¸ªæ¨¡å—ï¼‰ | - | C-37,I-80,I-81,I-82,R-037 | [v9-ä»£ç å®ç°åˆ†ææŠ¥å‘Š.md](../explanation/v9-ä»£ç å®ç°åˆ†ææŠ¥å‘Š.md) |
-| I-165 | MISC | V9 ä½“ç³»åŒ–ä¸Šçº¿æµ‹è¯• TODO LIST | ç”Ÿæˆæ—¶é—´**: 2026-07-13 11:09:49 ï½œ **æ›´æ–°**: 20 | - | C-37,I-82,I-93 | [v9-ä½“ç³»åŒ–ä¸Šçº¿æµ‹è¯•-todo-list.md](../explanation/v9-ä½“ç³»åŒ–ä¸Šçº¿æµ‹è¯•-todo-list.md) |
-| I-166 | MISC | V9 åŠŸèƒ½å…¥å£æ¸…å• | æ‰«ææ¥æºï¼š`src/config/routes.ts`ï¼ˆè·¯ç”±å”¯ä¸€çœŸç›¸æºï¼‰ã€`sr | - | C-37,I-80,I-81,I-82,R-037 | [feature-entry-list.md](../explanation/feature-entry-list.md) |
-| I-167 | MISC | V9 åŒç­–ç•¥ä½“ç³» â€” æ›´æ–°æ—¥å¿—ä¸ä¸€è‡´æ€§æ£€æŸ¥ | é—®é¢˜æ¥æº**ï¼šç”¨æˆ·æå‡ºã€Œæ•´ä½“äº¤æ˜“ç­–ç•¥è¿›è¡Œç»“æ„æ€§è°ƒæ•´ï¼Œå°†åŸå…ˆå•è¡Œçš„è‚¡ç¥¨é€‰æ‹©å’Œäº¤æ˜“ç­– | - | C-37,I-80,I-81,I-82,R-037 | [dual-strategy-update-log-and-consistency-check.md](../reference/dual-strategy-update-log-and-consistency-check.md) |
-| I-168 | MISC | V9 åŒç­–ç•¥è§„æ ¼ä¸ç°æœ‰é¡¹ç›®å·®å¼‚åˆ†ææŠ¥å‘Š | Status**: Proposal / å¾…è¯„å®¡ | - | C-37,I-81,I-82,R-037 | [dual-strategy-gap-analysis.md](../explanation/dual-strategy-gap-analysis.md) |
-| I-169 | MISC | V9 åŒç­–ç•¥è§„æ ¼ä¸ç°æœ‰é¡¹ç›®å·®å¼‚åˆ†ææŠ¥å‘Š | Status**: Proposal / å¾…è¯„å®¡ | - | C-37,I-80 | [dual-strategy-gap-analysis.md](../explanation/design/dual-strategy-gap-analysis.md) |
-| I-170 | MISC | V9 å›¾è¡¨ç»„ä»¶é›†æˆè§„æ ¼ | å¯¹åº”è“å›¾**ï¼š`../reference/v9-system-blueprint.md` Â§2 æŠ€æœ¯æ ˆ | - | C-37,I-80,I-81,I-82,R-037 | [chart-integration.md](../reference/chart-integration.md) |
-| I-171 | MISC | V9 å®æ–½æ–‡æ¡£ä¿é²œåº¦å‘Šè­¦æ¸…å• | ç”Ÿæˆæ—¥æœŸï¼š2026-06-27 | - | C-37,I-177,I-80,I-81,I-82,R-03 | [freshness-alerts.md](../explanation/design/freshness-alerts.md) |
-| I-172 | MISC | V9 å¹¶è¡Œä»»åŠ¡è°ƒåº¦è¡¨ | ç”Ÿæˆæ—¶é—´ï¼š2026-06-25 | - | C-37,I-177,I-80,I-81,R-037 | [deprecated-v9-parallel-task-schedule.md](../explanation/design/deprecated-v9-parallel-task-schedule.md) |
-| I-173 | MISC | V9 å¾…å¤„ç†äº‹é¡¹æ¸…å•ï¼ˆBacklogï¼‰ | ç”Ÿæˆæ—¥æœŸ**: 2026-07-04 | - | C-37,I-81,I-82,R-037 | [pending-items-backlog-20260704.md](../explanation/pending-items-backlog-20260704.md) |
-| I-174 | MISC | V9 å¾…å¤„ç†äº‹é¡¹æ¸…å•ï¼ˆBacklogï¼‰ | ç”Ÿæˆæ—¥æœŸ**: 2026-07-04 | - | C-37,I-80 | [pending-items-backlog-20260704.md](../explanation/design/pending-items-backlog-20260704.md) |
-| I-175 | MISC | V9 æ‰¹æ¬¡ Dï¼ˆäº¤æ˜“èˆ±ï¼‰P2 é—®é¢˜ä¿®å¤æ–¹æ¡ˆ | å®¡è®¡èŒƒå›´**ï¼šäº¤æ˜“èˆ± 4 æ¨¡å—ï¼ˆD1-D4ï¼‰ | - | C-37,I-80,I-81,I-82,R-037 | [batchd-fix-plan.md](../reference/batchd-fix-plan.md) |
-| I-176 | MISC | V9 æ‰¹æ¬¡ Eï¼ˆè¾“å‡ºèˆ± + æ€»æ§èˆ±ï¼‰P2 é—®é¢˜ä¿®å¤æ–¹æ¡ˆ | å®¡è®¡èŒƒå›´**ï¼šè¾“å‡ºèˆ± + æ€»æ§èˆ±ï¼ˆ4 æ¨¡å—ï¼‰ | - | C-37,I-80,I-81,I-82,R-037 | [batche-fix-plan.md](../reference/batche-fix-plan.md) |
-| I-177 | MISC | V9 æŠ€æœ¯å®æ–½æ–‡æ¡£ç´¢å¼• | ç›®å½•**: `docs/implementation/` | C-04,C-13,I-125,I-127,I-154,I- | C-37,I-177,I-80,I-81,I-82 | [00-readme.md](../explanation/design/00-readme.md) |
-| I-178 | MISC | V9 æ•°æ®åˆ†æä¸ç­›é€‰æ¨¡å—å¼€å‘ä»»åŠ¡è§„åˆ’ä¸ Agent åˆ†é… | è§’è‰²ï¼šV9 æ•°æ®åˆ†æä¸ç­›é€‰æ¨¡å—å¼€å‘è´Ÿè´£äºº | - | C-37,I-80,I-82,R-037 | [analysis-screening-module-dev-plan.md](../explanation/design/analysis-screening-module-dev-plan.md) |
-| I-179 | MISC | V9 æ•°æ®å®ªæ³•ï¼ˆData Constitutionï¼‰ | æ–‡æ¡£ç‰ˆæœ¬**ï¼šv1.0 | C-12,I-196,I-54,I-59 | C-37,C-70,I-181,I-182,I-271,I- | [v9æ•°æ®å®ªæ³•.md](../reference/v9æ•°æ®å®ªæ³•.md) |
-| I-180 | MISC | V9 æ•°æ®æ¶æ„ä¿®è®¢å»ºè®® | åŸºäºæ–‡æ¡£**ï¼š`../reference/v9-system-blueprint.md` vs `V9æ ¸å¿ƒ | - | C-37,I-80,I-81,I-82,R-037,R-16 | [v9æ•°æ®æ¶æ„ä¿®è®¢å»ºè®®.md](../reference/v9æ•°æ®æ¶æ„ä¿®è®¢å»ºè®®.md) |
-| I-181 | MISC | V9 æ•°æ®æ²»ç†è·¯çº¿å›¾ä¸æ‰§è¡Œä¼˜å…ˆçº§ | ç¼–åˆ¶æ—¥æœŸ**ï¼š2026-07-02 | I-179,I-196,I-254,I-31,I-54 | C-37,I-80,I-82,R-037 | [æ•°æ®æ²»ç†è·¯çº¿å›¾.md](../explanation/design/æ•°æ®æ²»ç†è·¯çº¿å›¾.md) |
-| I-182 | MISC | V9 æ•°æ®æ²»ç†è·¯çº¿å›¾ä¸æ‰§è¡Œä¼˜å…ˆçº§ | ç¼–åˆ¶æ—¥æœŸ**ï¼š2026-07-02 | I-179,I-196,I-254,I-31,I-54 | C-37,I-81 | [æ•°æ®æ²»ç†è·¯çº¿å›¾.md](../reference/æ•°æ®æ²»ç†è·¯çº¿å›¾.md) |
-| I-183 | MISC | V9 æ•°æ®è¡€ç¼˜è¿½è¸ªä¸æ•°æ®æµå…¨æ™¯å›¾ | æ–‡æ¡£ç‰ˆæœ¬**: v1.2 | - | C-37,I-80,I-81,I-82,R-037 | [v9-æ•°æ®è¡€ç¼˜è¿½è¸ª.md](../reference/v9-æ•°æ®è¡€ç¼˜è¿½è¸ª.md) |
-| I-184 | MISC | V9 æ–‡ä»¶å‘½åè§„èŒƒï¼ˆFile Naming Conventionsï¼‰ | å®šä½**ï¼šç»Ÿä¸€é¡¹ç›®ä¸­æ‰€æœ‰æ–‡ä»¶å’Œç›®å½•çš„å‘½åè§„åˆ™ï¼Œç¡®ä¿ä»£ç åº“çš„ä¸€è‡´æ€§å’Œå¯ç»´æŠ¤æ€§ã€‚ | - | C-37 | [file-naming-conventions.md](../reference/file-naming-conventions.md) |
-| I-185 | MISC | V9 æ–‡æ¡£ä½“ç³» â€” A-H åˆ†ç±»ç´¢å¼•ï¼ˆçœŸå®æ˜ å°„ï¼‰ | ç‰ˆæœ¬**: v2.0.0 | **æ—¥æœŸ**: 2026-07-13 | C-31,C-33,C-35,C-37,C-39,I-120 | C-37,I-82 | [a-h-index.md](../explanation/a-h-index.md) |
-| I-186 | MISC | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ Â· ç”¨æˆ·ç”»åƒä¸ä½¿ç”¨åœºæ™¯ | ç‰ˆæœ¬**: v1.0.0 ï½œ **æ›´æ–°æ—¥æœŸ**: 2026-07-15 ï½œ ** | - | - | [user-personas-and-scenarios.md](../01-product/user-personas-and-scenarios.md) |
-| I-187 | MISC | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” RM å‰©ä½™ä»»åŠ¡å…¨é‡ç›˜ç‚¹ä¸æ•´æ”¹æ–¹æ¡ˆ | ç”Ÿæˆæ—¶é—´ï¼š2026-07-08 19:30 | æœ€åæ›´æ–°ï¼š2026-07-09  | - | C-37,I-80,I-82,R-037 | [rmå‰©ä½™ä»»åŠ¡å…¨é‡ç›˜ç‚¹ä¸æ•´æ”¹æ–¹æ¡ˆ-2026-07-08.md](../reference/rmå‰©ä½™ä»»åŠ¡å…¨é‡ç›˜ç‚¹ä¸æ•´æ”¹æ–¹æ¡ˆ-2026-07-08.md) |
-| I-188 | MISC | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” UI æ”¹å–„éƒ¨åˆ†æ£€ç´¢æŠ¥å‘Š | æ£€ç´¢æ—¶é—´ï¼š2026-07-08 ï½œ èŒƒå›´ï¼šå·¥ä½œåŒºæ ¹ç›®å½•åŠ `docs/`ã€`sc | - | C-37,I-80,I-82,R-037 | [uiæ”¹å–„éƒ¨åˆ†æ£€ç´¢æŠ¥å‘Š.md](../explanation/design/uiæ”¹å–„éƒ¨åˆ†æ£€ç´¢æŠ¥å‘Š.md) |
-| I-189 | MISC | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” æ•´ä½“æ¶æ„è“å›¾ | Status**: Current | - | C-37,I-177,I-242,I-80,I-81,I-8 | [v9-system-blueprint.md](../reference/v9-system-blueprint.md) |
-| I-190 | MISC | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” æ–‡æ¡£ä¸­å¿ƒï¼ˆdocs/ æ€»å…¥å£ï¼‰ | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-13 | - | C-37,I-185 | [README.md](../explanation/README.md) |
-| I-191 | MISC | V9 æœåŠ¡å­åŸŸç›®å½•ï¼ˆServices Catalogï¼‰ | å®šä½**ï¼šä¸º 24 ä¸ªæœåŠ¡å­åŸŸæä¾›ç»Ÿä¸€æ–‡æ¡£é”šç‚¹ï¼Œæ¶ˆé™¤ã€Œ24 å­åŸŸè¿è¡Œä¸­ä½†ç¼ºæ€»è§ˆæ–‡ | - | C-37,I-185,I-82,I-85 | [services-catalog.md](../reference/services-catalog.md) |
-| I-192 | MISC | V9 æœªå®Œæˆä»»åŠ¡æ¸…å•ï¼ˆå·²éªŒè¯ç‰ˆï¼‰ | ç”Ÿæˆæ—¶é—´ï¼š2026-07-01 | - | C-37,I-80,I-81,I-82,R-037 | [pending-tasks-inventory-20260701.md](../explanation/pending-tasks-inventory-20260701.md) |
-| I-193 | MISC | V9 æ¶æ„ç¼ºé™·ä¸æ•´æ”¹è¡ŒåŠ¨æ¸…å• | å®¡è®¡èŒƒå›´ï¼šæ‰¹æ¬¡ A-Eï¼ˆ28 ä¸ªæ¨¡å—ï¼‰ | - | C-37,I-80,I-81,I-82,R-037 | [v9-æ¶æ„ç¼ºé™·ä¸æ•´æ”¹è¡ŒåŠ¨æ¸…å•.md](../explanation/v9-æ¶æ„ç¼ºé™·ä¸æ•´æ”¹è¡ŒåŠ¨æ¸…å•.md) |
-| I-194 | MISC | V9 æ¶æ„è¦†ç›–åˆ†ææŠ¥å‘Š | å®¡è®¡èŒƒå›´ï¼šæ‰¹æ¬¡ A-Eï¼ˆ28 ä¸ªæ¨¡å—ï¼‰ | - | C-37,I-80,I-81,I-82,R-037 | [v9-æ¶æ„è¦†ç›–åˆ†ææŠ¥å‘Š.md](../explanation/v9-æ¶æ„è¦†ç›–åˆ†ææŠ¥å‘Š.md) |
-| I-195 | MISC | V9 æ ¸å¿ƒæ•°æ®å­—å…¸ä¸ç±»å‹å®šä¹‰ï¼ˆæ•´åˆç‰ˆï¼‰ | æ–‡æ¡£ç‰ˆæœ¬**ï¼šv1.4 | - | - | [v9æ ¸å¿ƒæ•°æ®å­—å…¸ä¸ç±»å‹å®šä¹‰(æ•´åˆç‰ˆ).md](../reference/v9æ ¸å¿ƒæ•°æ®å­—å…¸ä¸ç±»å‹å®šä¹‰(æ•´åˆç‰ˆ).md).md) |
-| I-196 | MISC | V9 ç°æœ‰æ•°æ®èµ„äº§æ¸…å• | ç¼–åˆ¶æ—¥æœŸ**ï¼š2026-06-29 | - | C-37,I-179,I-181,I-182,I-80,I- | [v9ç°æœ‰æ•°æ®èµ„äº§æ¸…å•.md](../explanation/design/v9ç°æœ‰æ•°æ®èµ„äº§æ¸…å•.md) |
-| I-197 | MISC | V9 ç›®æ ‡åŠŸèƒ½æ¸…å• | æ‰«ææ¥æºï¼š`src/config/routes.ts`ï¼ˆè·¯ç”±å”¯ä¸€çœŸç›¸æºï¼‰ã€`sr | - | C-37,I-242,I-80,I-81,I-82,I-93 | [v9-ç›®æ ‡åŠŸèƒ½æ¸…å•.md](../explanation/v9-ç›®æ ‡åŠŸèƒ½æ¸…å•.md) |
-| I-198 | MISC | V9 ç¼–ç è§„èŒƒï¼ˆCoding Conventionsï¼‰ | å®šä½**ï¼šæ±‡æ€» `../../AGENTS.md` ä¸­çš„å·¥ç¨‹çº¦æŸä¸ºä¸€é¡µå¯é€ŸæŸ¥çš„ç¼– | - | C-37,I-185,I-291,I-82,I-85 | [coding-conventions.md](../reference/coding-conventions.md) |
-| I-199 | MISC | V9 é€‰è‚¡ç­–ç•¥æ€»æ–‡æ¡£ | Status**: Active | C-67,I-215,I-226,I-228,I-233,I | C-37,I-34,I-81,I-82,R-037 | [stock-selection-strategy.md](../explanation/stock-selection-strategy.md) |
-| I-200 | MISC | V9 é€‰è‚¡ç­–ç•¥æ€»æ–‡æ¡£ | Status**: Active | C-67,I-215,I-226,I-228,I-233,I | C-37,I-215,I-226,I-228,I-233,I | [stock-selection-strategy.md](../explanation/design/stock-selection-strategy.md) |
-| I-201 | MISC | V9 éƒ¨ç½²è¿ç»´åŸºçº¿ | æ–‡æ¡£ä½“ç³»ç‰ˆæœ¬**: v2.0.0 | **æœ¬æ–‡æ¡£ä¿®è®¢**: rev.1 | ** | C-31,C-67,I-109,I-232,I-251 | C-37,I-82 | [deployment.md](../reference/deployment.md) |
-| I-202 | MISC | V9 é—®é¢˜æ•´æ”¹ç®¡ç†ä¸è°ƒåº¦è®°å½• | å½’å¹¶æ¥æºï¼š`v9-issue-execution-board.md` + `v9 | - | C-37,I-177,I-80,I-81,I-82,R-03 | [v9-issue-management.md](../explanation/v9-issue-management.md) |
-| I-203 | MISC | V9 é—®é¢˜æ•´æ”¹è°ƒåº¦è¡¨ | ç”Ÿæˆæ—¶é—´ï¼š2026-06-25 | - | C-37,I-177,I-80,I-81,R-037 | [deprecated-v9-issue-resolution-schedule.md](../explanation/deprecated-v9-issue-resolution-schedule.md) |
-| I-204 | MISC | V9 é¡¹ç›®æ–‡ä»¶æ•´ç†æ¸…å• | Version**: v1.3.0 | - | C-37,I-80,I-81,I-82,R-037 | [æ–‡ä»¶æ•´ç†æ¸…å•.md](../reference/æ–‡ä»¶æ•´ç†æ¸…å•.md) |
-| I-205 | MISC | World Bank Open Data æ’ä»¶ | æ•°æ®åŸŸ**: ä¸–ç•Œé“¶è¡Œå¼€æ”¾æ•°æ®ï¼ˆå…¨çƒå‘å±•æŒ‡æ ‡ï¼‰ | - | C-37,I-225,I-82 | [world_bank_open_data.md](../reference/world_bank_open_data.md) |
-| I-206 | MISC | Yahoo Finance æ’ä»¶ | æ•°æ®åŸŸ**: Yahoo Finance å…¨çƒè‚¡ç¥¨æ•°æ® | - | C-37,I-225,I-82 | [yahoo_finance.md](../reference/yahoo_finance.md) |
-| I-207 | MISC | Yuandian Law æ’ä»¶ | æ•°æ®åŸŸ**: å…ƒå…¸æ³•å¾‹æ•°æ®åº“ï¼ˆä¸­å›½å¤§é™†æ³•å¾‹æ³•è§„ä¸æ¡ˆä¾‹ï¼‰ | - | C-37,I-225,I-82 | [yuandian_law.md](../reference/yuandian_law.md) |
-| I-208 | MISC | ã€Œè‚¡ç¥¨æ± ã€æ³›åŒ–æ—§åç§° å†…éƒ¨æ ‡è¯†ç¬¦é‡å‘½åé‡æ„æ–¹æ¡ˆ | ç‰ˆæœ¬**: v1.0 | **æ—¥æœŸ**: 2026-07-20 | - | C-37,I-82 | [refactor-research-pool-rename-plan.md](../reference/refactor-research-pool-rename-plan.md) |
-| I-209 | MISC | ä¸šåŠ¡èƒ½åŠ›è¡¥å……æŠ¥å‘Šï¼šè‡ªé€‰è‚¡å¼‚åŠ¨ Widget | - | - | C-37,I-80,I-82,R-037 | [ä¸šåŠ¡èƒ½åŠ›è¡¥å……æŠ¥å‘Š_è‡ªé€‰è‚¡å¼‚åŠ¨_2026-07-09.md](../explanation/design/ä¸šåŠ¡èƒ½åŠ›è¡¥å……æŠ¥å‘Š_è‡ªé€‰è‚¡å¼‚åŠ¨_2026-07-09.md) |
-| I-210 | MISC | äº¤æ˜“æ ¸å¿ƒå› å­ä¸å¤ç›˜æŒ‡æ ‡å¯¼å…¥ | Status: Future Reference / Deferred** | - | C-37,I-81,I-82,R-037 | [trading-core-factors.md](../explanation/trading-core-factors.md) |
-| I-211 | MISC | äº¤æ˜“æ ¸å¿ƒå› å­ä¸å¤ç›˜æŒ‡æ ‡å¯¼å…¥ | Status: Future Reference / Deferred** | - | C-37,I-177,I-80 | [trading-core-factors.md](../explanation/design/trading-core-factors.md) |
-| I-212 | MISC | ä»£ç -æ–‡æ¡£åŒæ­¥å·®å¼‚æ¸…å• | Status**: Current | - | C-37,I-177,I-80,I-81,R-037 | [deprecated-doc-sync-gap-list.md](../explanation/design/deprecated-doc-sync-gap-list.md) |
-| I-213 | MISC | ä»£ç -æ–‡æ¡£åŒæ­¥æ•´ä½“æ–¹æ¡ˆä¸æ‰§è¡Œè®¡åˆ’ | Status**: Current | - | C-37,I-177,I-80,I-81,I-82,R-03 | [doc-sync-execution-plan.md](../explanation/design/doc-sync-execution-plan.md) |
-| I-214 | MISC | ä»£ç è´¨é‡ä¼˜åŒ–å¤„ç†è®¡åˆ’ | åŸºäº `nested-code-review-report.json` çš„é™æ€è¯„ | - | C-37,I-82 | [optimization-plan.md](../explanation/optimization-plan.md) |
-| I-215 | MISC | ä»·å€¼æ´¼åœ°ç­–ç•¥ï¼ˆvalue-bargainï¼‰ | Status**: Active | C-67,I-200,I-228,I-233,I-35,R- | C-37,I-199,I-200,I-228,I-233,I | [value-bargain-strategy.md](../explanation/design/value-bargain-strategy.md) |
-| I-216 | MISC | ä»»åŠ¡å›¾æ¨¡æ¿ | ç”¨é€”**: å¤æ‚ä»»åŠ¡ï¼ˆæ¶‰åŠ 3+ æ–‡ä»¶æˆ–è·¨æ¨¡å—ï¼‰çš„ç»“æ„åŒ–æ‹†è§£æ¨¡æ¿ | - | C-37,I-80,I-82,R-037 | [task-graph-template.md](../explanation/task-graph-template.md) |
-| I-217 | MISC | ä»»åŠ¡å›¾æ¨¡æ¿ | æœ¬æ¨¡æ¿å‚ç…§ AGENTS.md Â§12.3 ä»»åŠ¡å›¾æ ¸å¿ƒç»“æ„ã€‚ | - | C-37 | [task-graph-template.md](../reference/templates/task-graph-template.md) |
-| I-218 | MISC | åŠŸèƒ½æ¨¡å—æ•°æ®å¥‘çº¦ | æ–‡æ¡£ç‰ˆæœ¬**ï¼šv1.0 | - | C-37,I-80,I-81,I-82,R-037 | [åŠŸèƒ½æ¨¡å—æ•°æ®å¥‘çº¦.md](../reference/åŠŸèƒ½æ¨¡å—æ•°æ®å¥‘çº¦.md) |
-| I-219 | MISC | åŒé€šé“æŠ•ç ”è¯„åˆ†ç³»ç»ŸæŠ€æœ¯æ–¹æ¡ˆï¼ˆå¯è¡Œæ€§è®ºè¯æŠ¥å‘Šï¼‰ | æ–‡æ¡£å®šä½ï¼šç³»ç»Ÿæ€§å¯è¡Œæ€§è®ºè¯ + å¯æ‰§è¡ŒæŠ€æœ¯æ–¹æ¡ˆ | - | C-37,I-82,R-037 | [åŒé€šé“æŠ•ç ”è¯„åˆ†ç³»ç»ŸæŠ€æœ¯æ–¹æ¡ˆ.md](../explanation/åŒé€šé“æŠ•ç ”è¯„åˆ†ç³»ç»ŸæŠ€æœ¯æ–¹æ¡ˆ.md) |
-| I-220 | MISC | åŒé€šé“æŠ•ç ”è¯„åˆ†ç³»ç»ŸæŠ€æœ¯æ–¹æ¡ˆï¼ˆå¯è¡Œæ€§è®ºè¯æŠ¥å‘Šï¼‰ | æ–‡æ¡£å®šä½ï¼šç³»ç»Ÿæ€§å¯è¡Œæ€§è®ºè¯ + å¯æ‰§è¡ŒæŠ€æœ¯æ–¹æ¡ˆ | - | C-37,I-80 | [åŒé€šé“æŠ•ç ”è¯„åˆ†ç³»ç»ŸæŠ€æœ¯æ–¹æ¡ˆ.md](../explanation/design/åŒé€šé“æŠ•ç ”è¯„åˆ†ç³»ç»ŸæŠ€æœ¯æ–¹æ¡ˆ.md) |
-| I-221 | MISC | å‘æ–‡å°±ç»ªå¡ Â· è…¾è®¯äº‘å¼€å‘è€…ç¤¾åŒº | ä¸¤ç¯‡æ–‡ç« å·²é€šè¿‡è´¨æ£€ï¼Œä»¥ä¸‹ä¸ºå‘å¸ƒå‰å¯ç›´æ¥å¥—ç”¨çš„å…ƒæ•°æ®ä¸æ“ä½œæ¸…å•ã€‚ | - | C-37,I-82 | [publish-ready.md](../assets/articles/publish-ready.md) |
-| I-222 | MISC | å› å­æç‚¼ã€æ‰©å®¹ä¸è¿½è¸ªè·¯å¾„åˆ†æ | Status**: Current | - | C-37,I-177,I-80,I-81,I-82,R-03 | [factor-tracking-roadmap.md](../explanation/factor-tracking-roadmap.md) |
-| I-223 | MISC | æ‰¹æ¬¡ B P2 é—®é¢˜ä¿®å¤æ–¹æ¡ˆ | é—®é¢˜æ¥æº**ï¼šæ‰¹æ¬¡ Bï¼ˆè¾“å…¥èˆ±ï¼‰å®¡è®¡å‘ç°çš„ 7 ä¸ª P2 çº§é—®é¢˜ | - | C-37,I-80,I-81,I-82,R-037 | [batchb-fix-plan.md](../reference/batchb-fix-plan.md) |
-| I-224 | MISC | æŠ•èµ„æµç¨‹é˜¶æ®µåŒ–åˆ†æï¼šä»“ä½ã€å¼•æ“ã€æ•°æ®æ¶æ„ä¸æ•°æ®äº¤äº’ | Status**: Current | - | C-37,I-177,I-80,I-81,I-82,R-03 | [investment-pipeline-stage-analysis.md](../explanation/design/investment-pipeline-stage-analysis.md) |
-| I-225 | MISC | æ’ä»¶æŠ€èƒ½æ–‡æ¡£ç´¢å¼• | åŒæ­¥æ—¥æœŸ**: 2025-07-12 | I-138,I-139,I-142,I-149,I-150, | C-37,I-225,I-82 | [index.md](../reference/index.md) |
-| I-226 | MISC | æ ¸å¿ƒç¨€ç¼ºèµ„æºç­–ç•¥ï¼ˆcore-scarceï¼‰ | Status**: Active | C-67,I-200,I-35,R-055 | C-37,I-199,I-200,I-233,I-34,I- | [core-scarce-strategy.md](../explanation/design/core-scarce-strategy.md) |
-| I-227 | MISC | æ¯å‘¨æ•°æ®è“å›¾ä¸€è‡´æ€§æ£€æŸ¥ â€” 2026-06-30 | æŒ‰ `../reports/retrospectives/v9-data-blu | - | C-37,I-80,I-81,I-82,R-037 | [weekly-check-2026-06-30.md](../explanation/weekly-check-2026-06-30.md) |
-| I-228 | MISC | çƒ­é—¨èµ›é“ç­–ç•¥ï¼ˆhot-momentumï¼‰ | Status**: Active | C-67,I-200,I-215,I-35,R-057 | C-37,I-199,I-200,I-215,I-233,I | [hot-momentum-strategy.md](../explanation/design/hot-momentum-strategy.md) |
-| I-229 | MISC | çŠ¶æ€ç®¡ç†è§„èŒƒ | Status**: Current | - | C-37,I-82 | [state-management.md](../explanation/state-management.md) |
-| I-230 | MISC | ç¬¬å››æ¬¡å·¥ä¸šé©å‘½ç¨€ç¼ºæ ¸å¿ƒèµ„æº â€” äº¤æ˜“ç­–ç•¥è§£æä¸ V9 é‡‡ç”¨æ–¹æ¡ˆ | Status**: Accepted / Phase 1 Implemented | - | C-37,I-177,I-80,I-81,I-82,R-03 | [fourth-industrial-revolution-core-resource-strategy.md](../reference/fourth-industrial-revolution-core-resource-strategy.md) |
-| I-231 | MISC | ç½‘é¡µæµ‹è¯•æ£€ç´¢æ ¡å¯¹æ˜¯å¦çº³å…¥æ•°æ®é‡‡é›†æ”¹è¿›æ–¹æ¡ˆâ€”â€”æ¯”å¯¹åˆ†æä¸å»ºè®® | ç»“è®ºå…ˆè¡Œ**ï¼šä¸å»ºè®®å°†â€œç½‘é¡µæµ‹è¯•/æ£€ç´¢/æ ¡å¯¹â€èƒ½åŠ›ï¼ˆå½“å‰å®ç°ä¸º `hybrid- | - | C-37,I-80,I-82,R-037 | [ç½‘é¡µæµ‹è¯•æ£€ç´¢æ ¡å¯¹çº³å…¥é‡‡é›†æ–¹æ¡ˆåˆ†æ.md](../reference/ç½‘é¡µæµ‹è¯•æ£€ç´¢æ ¡å¯¹çº³å…¥é‡‡é›†æ–¹æ¡ˆåˆ†æ.md) |
-| I-232 | MISC | è‚¡ç¥¨æ± çœ‹æ¿è¿ç§» + é‡‡é›†è¿›åº¦æ±‡æŠ¥ + æ—¢æœ‰å€ºåŠ¡æ²»ç†å®Œæˆ | - | - | C-37,I-185,I-201,I-55,I-82,I-8 | [overview.md](../explanation/overview.md) |
-| I-233 | MISC | è§‚å¯Ÿä»“ç­–ç•¥ï¼ˆwatchlistï¼‰ | Status**: Active | I-200,I-215,I-226,I-228,I-35,R | C-37,I-199,I-200,I-215,I-34,I- | [watchlist-strategy.md](../explanation/design/watchlist-strategy.md) |
-| I-234 | MISC | è´¨é‡ä¿éšœç­–ç•¥ï¼šåˆ†é˜¶æ®µè‡ªé€‚åº”æ£€æŸ¥æœºåˆ¶ | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-12 | - | C-37,I-82 | [quality-assurance-strategy.md](../explanation/design/quality-assurance-strategy.md) |
-| I-235 | MISC | è¸©å‘è§„åˆ™é—¨ç¦æŒ‡å— | Status**: Current | I-254 | C-37,I-254,I-80,I-82,R-037 | [è¸©å‘è§„åˆ™é—¨ç¦æŒ‡å—.md](../explanation/design/è¸©å‘è§„åˆ™é—¨ç¦æŒ‡å—.md) |
-| I-236 | MISC | è¸©å‘è§„åˆ™é—¨ç¦æŒ‡å— | Status**: Current | I-254 | C-37,C-69,I-81 | [è¸©å‘è§„åˆ™é—¨ç¦æŒ‡å—.md](../reference/è¸©å‘è§„åˆ™é—¨ç¦æŒ‡å—.md) |
-| I-237 | MISC | è¿ç§»é£é™©å¤ç›˜ä¸åº”å¯¹ç­–ç•¥æ–‡æ¡£ | æ–‡æ¡£ç¼–å·**: V9-MIGRATION-RISK-001 | - | C-37,I-80,I-82,R-037 | [è¿ç§»é£é™©å¤ç›˜ä¸åº”å¯¹ç­–ç•¥æ–‡æ¡£.md](../explanation/design/è¿ç§»é£é™©å¤ç›˜ä¸åº”å¯¹ç­–ç•¥æ–‡æ¡£.md) |
-| I-238 | MISC | é¡µé¢ç»“æ„ä¸äº”èˆ±å¸ƒå±€ | Status**: Current | - | C-37,I-82 | [page-structure.md](../explanation/page-structure.md) |
-| I-239 | PERF | V9 æ€§èƒ½åŸºçº¿ | å»ºç«‹äº v0.9.11 | P2-PERF æ€§èƒ½æ•´æ”¹ | - | C-37,I-80,I-81,I-82,R-037 | [performance-baseline.md](../explanation/performance-baseline.md) |
-| I-240 | RPT | V9 ä»£ç è´¨é‡æ ¡å¯¹åˆ†æ â€” è¿‡ç¨‹é€æ˜çœ‹æ¿ | ç‰ˆæœ¬**: v1.0.0 | I-119,I-284,I-31,R-115 | C-37,I-299,I-80,I-81,I-82,R-03 | [v9-code-quality-kanban-20260629.md](../explanation/design/v9-code-quality-kanban-20260629.md) |
-| I-241 | RPT | V9 æ–‡ä»¶ç³»ç»Ÿå…¨é¢è¯„ä¼°æŠ¥å‘Š | - | - | C-37 | [file-system-assessment-v2.md](../reference/meta/file-system-assessment-v2.md) |
-| I-242 | RPT | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ Â· ç»¼åˆéªŒè¯ä¸å®šä½åˆ†ææŠ¥å‘Š | ç‰ˆæœ¬**: v2.0.0 ï½œ **ç”Ÿæˆæ—¥æœŸ**: 2026-07-15 ï½œ ** | I-189,I-197,I-247,I-278,I-281, | - | [ç»¼åˆéªŒè¯ä¸å®šä½åˆ†ææŠ¥å‘Š-v2.0.0.md](../reports/ç»¼åˆéªŒè¯ä¸å®šä½åˆ†ææŠ¥å‘Š-v2.0.0.md) |
-| I-243 | RPT | æ–‡æ¡£è‡ªåŠ¨æ›´æ–°ä½“ç³» â€” ä»»åŠ¡çœ‹æ¿ï¼ˆå•ä¸€äº‹å®æºï¼‰ | æ–‡æ¡£æ—¥æœŸï¼š2026-07-12ï¼ˆM1 æ”¶å°¾ + ç»´åº¦äºŒå®¡æŸ¥åå»ºç«‹ï¼‰ | - | C-37 | [doc-auto-update-kanban.md](../reference/meta/doc-auto-update-kanban.md) |
-| I-244 | SEC | RBAC æ•´åˆï¼šå¯è¡Œæ€§åˆ†æ + å®æ–½è®¡åˆ’ + æ•´æ”¹æ–¹æ¡ˆ | ç”Ÿæˆæ—¶é—´ï¼š2026-07-08 ï½œ ä¾æ®ï¼šå®åœ°æ ¸æŸ¥å½“å‰ç£ç›˜çœŸå®çŠ¶æ€ï¼ˆV9 å·¥ä½œæ ‘ | - | C-37,I-80,I-82,R-037 | [rbacæ•´åˆå¯è¡Œæ€§åˆ†æä¸å®æ–½è®¡åˆ’-2026-07-08.md](../explanation/rbacæ•´åˆå¯è¡Œæ€§åˆ†æä¸å®æ–½è®¡åˆ’-2026-07-08.md) |
-| I-245 | SEC | Security Model â€” V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿå®‰å…¨æ¶æ„ | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-10 | - | C-37,I-82 | [security-model.md](../reference/security-model.md) |
-| I-246 | SPEC | 01. æ„¿æ™¯ä¸ç›®æ ‡ | Status**: Current | - | C-37,I-80,I-82,R-037 | [01-vision-and-goals.md](../explanation/01-vision-and-goals.md) |
-| I-247 | SPEC | 01. æ„¿æ™¯ä¸ç›®æ ‡ | Status**: Current | - | C-37,I-242,I-81 | [01-vision-and-goals.md](../reference/01-vision-and-goals.md) |
-| I-248 | SPEC | 02. åŠŸèƒ½è§„æ ¼ | Status**: Current | - | C-37,I-80,I-81,I-82,R-037 | [02-functional-specs.md](../reference/02-functional-specs.md) |
-| I-249 | SPEC | 04. UI/UX è§„èŒƒ | Status**: Current | - | C-37,I-80,I-82,R-037 | [04-ui-ux-specs.md](../explanation/design/04-ui-ux-specs.md) |
-| I-250 | SPEC | 04. UI/UX è§„èŒƒ | Status**: Current | - | C-37,I-81 | [04-ui-ux-specs.md](../reference/04-ui-ux-specs.md) |
-| I-251 | SPEC | 06. è·¯ç”±è§„æ ¼ | Status**: Current | - | C-37,I-201,I-80,I-82,R-028,R-0 | [06-routing-specs.md](../explanation/design/06-routing-specs.md) |
-| I-252 | SPEC | 07. è¿è¥ç­–ç•¥ | Status**: Current | - | C-37,I-80,I-82,R-037 | [07-operation-strategy.md](../explanation/design/07-operation-strategy.md) |
-| I-253 | SPEC | 07. è¿è¥ç­–ç•¥ | Status**: Current | - | C-37,I-81 | [07-operation-strategy.md](../reference/07-operation-strategy.md) |
-| I-254 | SPEC | 09. è´¨é‡é—¨ç¦ | Status**: Current | I-235 | C-37,I-100,I-181,I-182,I-235,I | [09-quality-gates.md](../explanation/design/09-quality-gates.md) |
-| I-255 | SPEC | 10. é¢†åŸŸè¯æ±‡è¡¨ | Status**: Current | - | C-37,I-274,I-80,I-82,R-037 | [10-glossary.md](../explanation/10-glossary.md) |
-| I-256 | SPEC | 10. é¢†åŸŸè¯æ±‡è¡¨ | Status**: Current | - | C-37,I-81 | [10-glossary.md](../reference/10-glossary.md) |
-| I-257 | SPEC | Agent Runtime å®ç°è§„æ ¼ | Status**: Current | - | C-37,I-177,I-80,I-81,I-82,R-03 | [agent-runtime-spec.md](../reference/agent-runtime-spec.md) |
-| I-258 | SPEC | AI ä¸­å¿ƒ Vue3 ç»„ä»¶ç¤ºä¾‹ | æ³¨æ„**ï¼š`src/services/ai-center/mockAICente | - | C-37,I-80,I-81,I-82,R-037 | [ai-center-vue3-examples.md](../explanation/ai-center-vue3-examples.md) |
-| I-259 | SPEC | Analysis èˆ±è§„æ ¼ï¼ˆanalysis-cabin-specï¼‰ | å®šä½**ï¼šanalysis èˆ±ï¼ˆæŠ•ç ”åˆ†æä¸­æ¢ï¼‰çš„èŒè´£è¾¹ç•Œã€é¡µé¢ã€è·¯ç”±ã€æ•°æ®æµå®šä¹‰ | - | C-37,I-82 | [analysis-cabin-spec.md](../reference/analysis-cabin-spec.md) |
-| I-260 | SPEC | Cockpit & News æ¨¡å—æ–‡æ¡£ä¿®æ­£æ–¹æ¡ˆï¼ˆPhase 2-3ï¼‰ | Status**: Draft | - | C-37,I-177,I-80,I-81,R-037 | [deprecated-cockpit-news-doc-correction-plan.md](../explanation/design/deprecated-cockpit-news-doc-correction-plan.md) |
-| I-261 | SPEC | Cockpit + News æ¨¡å—æ–‡æ¡£ä¿®æ­£æ–¹æ¡ˆ | åŸºäº**: [v9-architecture-data-diff-report. | R-022 | C-37,I-177,I-80,I-81,I-82,R-03 | [cockpit-news-doc-fix-plan.md](../reference/cockpit-news-doc-fix-plan.md) |
-| I-262 | SPEC | Command èˆ±è§„æ ¼ï¼ˆcommand-cabin-specï¼‰ | å®šä½**ï¼šcommand èˆ±ï¼ˆæ€»æ§èˆ±ï¼‰çš„èŒè´£è¾¹ç•Œã€å­è·¯ç”±ã€æ•°æ®æµã€‚è¡¥ã€Œ4 èˆ±ç¼º  | - | C-37,I-82 | [command-cabin-spec.md](../reference/command-cabin-spec.md) |
-| I-263 | SPEC | Gateway å±‚å†™å…¥æƒé™è§„èŒƒ | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-13 | I-76,R-134 | C-37,I-185,I-274,I-82 | [gateway-write-permission-spec.md](../reference/gateway-write-permission-spec.md) |
-| I-264 | SPEC | Output èˆ±è§„æ ¼ï¼ˆoutput-cabin-specï¼‰ | å®šä½**ï¼šoutput èˆ±ï¼ˆäº§å‡ºä¸å¤ç›˜ï¼‰çš„èŒè´£è¾¹ç•Œã€é¡µé¢ã€è·¯ç”±ã€æ•°æ®æµã€‚è¡¥ã€Œ4  | - | C-37,I-82 | [output-cabin-spec.md](../reference/output-cabin-spec.md) |
-| I-265 | SPEC | Rotation Score Service å®ç°è§„æ ¼ | Status**: Current | - | C-37,I-177,I-80,I-81,I-82,R-03 | [rotation-score-spec.md](../reference/rotation-score-spec.md) |
-| I-266 | SPEC | SevenDimConfigPage é«˜çº§é…ç½®è¡¥å…¨æ–¹æ¡ˆ | æ¥å£æµ‹è¯• | - | C-37,I-80,I-82,R-037 | [seven-dim-advanced-config-implementation.md](../reference/seven-dim-advanced-config-implementation.md) |
-| I-267 | SPEC | Trading èˆ±è§„æ ¼ï¼ˆtrading-cabin-specï¼‰ | å®šä½**ï¼štrading èˆ±ï¼ˆäº¤æ˜“ä¸æŒä»“ï¼‰çš„èŒè´£è¾¹ç•Œã€é¡µé¢ã€è·¯ç”±ã€æ•°æ®æµã€‚è¡¥ã€Œ4 | - | C-37,I-82 | [trading-cabin-spec.md](../reference/trading-cabin-spec.md) |
-| I-268 | SPEC | V6 Pro â†’ V9 JSON æ•°æ®è¿ç§»è§„èŒƒï¼ˆä¸­é—´æ–‡æ¡£ï¼‰ | æ–‡æ¡£ç‰ˆæœ¬ï¼š1.0 | - | C-37,I-177,I-80,I-81,I-82,R-03 | [v6-to-v9-migration-spec.md](../reference/v6-to-v9-migration-spec.md) |
-| I-269 | SPEC | V9 æ“ä½œåé¦ˆé—­ç¯è§„æ ¼ | å¯¹åº”è“å›¾**ï¼š`../reference/v9-system-blueprint | - | C-37,I-80,I-81,I-82,R-037 | [feedback-loop-spec.md](../explanation/feedback-loop-spec.md) |
-| I-270 | SPEC | V9 æ“ä½œåé¦ˆé—­ç¯è§„æ ¼ | å¯¹åº”è“å›¾**ï¼š`../reference/v9-system-blueprint.md` Â§5.3 äº‹ | - | C-37 | [feedback-loop-spec.md](../reference/feedback-loop-spec.md) |
-| I-271 | SPEC | V9 æ•°æ®æµè§„èŒƒ | ç‰ˆæœ¬ï¼šv0.9.14 P6-DATA | I-179,I-296,I-44,I-51,I-59 | C-37,I-298,I-299,I-80,I-81,I-8 | [data-flow-spec.md](../explanation/design/data-flow-spec.md) |
-| I-272 | SPEC | å®¡è®¡åœºæ™¯ä¸‹ WorkBuddy çš„ 5 ä¸ªçœŸå®è¸©å‘ä¸è§£æ³• #WorkBuddy | ç”¨ WorkBuddy æ”¹é€ å®¡è®¡å·¥ä½œæµä¸‰ä¸ªæœˆï¼Œæˆ‘è¸©è¿‡ä¸å°‘å‘ã€‚è¿™ç¯‡æ–‡ç« æŒ‘ 5 ä¸ªæœ€ | - | C-37,I-82 | [02-experience-five-pitfalls.md](../assets/articles/02-experience-five-pitfalls.md) |
-| I-273 | SPEC | æ–°é—»æ¨¡å— â€” useState â†’ Zustand è¿ç§»æ–‡æ¡£ | - | - | C-37,I-80,I-81,I-82,R-037 | [migration-news-usestate-to-zustand.md](../explanation/migration-news-usestate-to-zustand.md) |
-| I-274 | SPEC | è‚¡ç¥¨æ± ç»Ÿä¸€å­˜å‚¨æ–¹æ¡ˆè§„èŒƒ | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-13 | I-255,I-263,R-134 | C-37,I-82 | [unified-pool-storage-spec.md](../reference/unified-pool-storage-spec.md) |
-| I-275 | SPEC | è´¨é‡é—¨ç¦å®æµ‹åŸºçº¿ï¼ˆ2026-06-25ï¼‰ | Status**: Current | - | C-37,I-177,I-80,I-81,I-82,R-03 | [quality-gates-baseline.md](../explanation/quality-gates-baseline.md) |
-| I-276 | SPEC | è¾“å…¥èˆ±ä¸šåŠ¡è§„æ ¼ä¸å®ç°æ˜ å°„ | Status**: Current | - | C-37,I-177,I-80,I-81,I-82,R-03 | [input-cabin-spec.md](../explanation/design/input-cabin-spec.md) |
-| I-277 | SPEC | è¾“å…¥èˆ±ä¸šåŠ¡è§„æ ¼ä¸å®ç°æ˜ å°„ | Status**: Current | - | C-37 | [input-cabin-spec.md](../reference/input-cabin-spec.md) |
-| I-278 | TEST | V9 ä¸‰å±‚æµ‹è¯•ç­–ç•¥ | ç‰ˆæœ¬**: v2.0.0 | **æ—¥æœŸ**: 2026-07-12 | I-291 | C-37,I-242,I-291,I-81 | [testing-strategy.md](../reference/testing-strategy.md) |
-| I-279 | TEST | V9 æ‰¹æ¬¡ Eï¼šè¾“å‡ºèˆ± + æ€»æ§èˆ± + å…¶ä»– â€” å®Œæˆåº¦å‰–é¢å›¾ | å®¡è®¡æ—¥æœŸ**ï¼š2026-06-27 | - | C-37,I-80,I-81,I-82,R-037 | [completeness-profile-batch5.md](../explanation/completeness-profile-batch5.md) |
-| I-280 | TEST | V9 æ‰¹æ¬¡ Eï¼šè¾“å‡ºèˆ± + æ€»æ§èˆ± + å…¶ä»– â€” å®Œæˆåº¦å‰–é¢å›¾ | å®¡è®¡æ—¥æœŸ**ï¼š2026-06-27 | - | C-37 | [completeness-profile-batch5.md](../reference/completeness-profile-batch5.md) |
-| I-281 | TEST | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ - æµ‹è¯•ç”¨ä¾‹æ¸…å• | - | - | C-37,I-242,I-80,I-81,I-82,I-93 | [v9-test-cases.md](../reference/v9-test-cases.md) |
-| I-282 | TEST | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ å…¨é¢è‡ªåŠ¨åŒ–æµ‹è¯•å®æ–½è®¡åˆ’ | å…¨éƒ¨å®Œæˆ**ã€‚æ‰€æœ‰ 24 ä¸ªä»»åŠ¡å·²æ‰§è¡Œå®Œæ¯•ï¼Œç»¼åˆè¯„ä¼°æŠ¥å‘Šå·²ç”Ÿæˆã€‚ | - | C-37,I-80,I-82,R-037 | [automation-test-plan.md](../reference/automation-test-plan.md) |
-| I-283 | TEST | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ ç»¼åˆæµ‹è¯•ä¸å¯è¡Œæ€§è¯„ä¼°æŠ¥å‘Š | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-09 | - | C-37,I-80,I-82,R-037 | [automation-test-evaluation.md](../explanation/design/automation-test-evaluation.md) |
-| I-284 | TEST | V9 æ¨¡å—å®Œæˆåº¦å‰–é¢å›¾ â€” å…¨é‡æ±‡æ€» | å®¡è®¡èŒƒå›´**ï¼šæ‰¹æ¬¡ Aï¼ˆé—¨æˆ·ä¸é©¾é©¶èˆ±ï¼‰+ æ‰¹æ¬¡ Bï¼ˆè¾“å…¥èˆ± 9 å…¥å£ï¼‰+ æ‰¹æ¬¡  | - | C-37,I-240,I-80,I-81,I-82,R-03 | [completeness-profile.md](../explanation/completeness-profile.md) |
-| I-285 | TEST | V9 æ¨¡å—å®Œæˆåº¦å‰–é¢å›¾ â€” å…¨é‡æ±‡æ€» | å®¡è®¡èŒƒå›´**ï¼šæ‰¹æ¬¡ Aï¼ˆé—¨æˆ·ä¸é©¾é©¶èˆ±ï¼‰+ æ‰¹æ¬¡ Bï¼ˆè¾“å…¥èˆ± 9 å…¥å£ï¼‰+ æ‰¹æ¬¡  | - | C-37,R-116 | [completeness-profile.md](../reference/completeness-profile.md) |
-| I-286 | TEST | V9 æ¨¡å—å®Œæˆåº¦å‰–é¢å›¾ â€” æ‰¹æ¬¡ 1 | å®¡è®¡èŒƒå›´ï¼šé¦–é¡µã€é©¾é©¶èˆ±ã€æ–°é—»èµ„è®¯ï¼ˆV6ï¼‰ã€äº¤æ˜“æŒä»“ã€å½•å…¥çœ‹æ¿ | - | C-37,I-80,I-81,I-82,R-037 | [completeness-profile-batch1.md](../reference/completeness-profile-batch1.md) |
-| I-287 | TEST | V9 æ¨¡å—å®Œæˆåº¦å‰–é¢å›¾ â€” æ‰¹æ¬¡ Bï¼ˆè¾“å…¥èˆ±ï¼‰ | å®¡è®¡èŒƒå›´**ï¼šè¾“å…¥èˆ± 6 ä¸ªå­é¡µé¢ | - | C-37,I-80,I-81,I-82,R-037 | [completeness-profile-batch2.md](../explanation/completeness-profile-batch2.md) |
-| I-288 | TEST | V9 æ¨¡å—å®Œæˆåº¦å‰–é¢å›¾ â€” æ‰¹æ¬¡ Cï¼ˆåˆ†æèˆ±ï¼‰ | å®¡è®¡èŒƒå›´**ï¼šåˆ†æèˆ± 9 ä¸ªå­é¡µé¢ | - | C-37,I-80,I-81,I-82,R-037 | [completeness-profile-batch3.md](../explanation/completeness-profile-batch3.md) |
-| I-289 | TEST | V9 æ¨¡å—å®Œæˆåº¦å‰–é¢å›¾ â€” æ‰¹æ¬¡ Dï¼ˆäº¤æ˜“èˆ±ï¼‰ | å®¡è®¡èŒƒå›´**ï¼šäº¤æ˜“èˆ± 4 ä¸ªå­é¡µé¢ | - | C-37,I-81,I-82,R-037 | [completeness-profile-batch4.md](../explanation/completeness-profile-batch4.md) |
-| I-290 | TEST | V9 æ¨¡å—å®Œæˆåº¦å‰–é¢å›¾ â€” æ‰¹æ¬¡ Dï¼ˆäº¤æ˜“èˆ±ï¼‰ | å®¡è®¡èŒƒå›´**ï¼šäº¤æ˜“èˆ± 4 ä¸ªå­é¡µé¢ | - | C-37,I-80 | [completeness-profile-batch4.md](../explanation/design/completeness-profile-batch4.md) |
-| I-291 | TEST | V9 æµ‹è¯•ç›®å½•ä¸ç­–ç•¥ | æ–‡æ¡£å®šä½**ï¼šæœ¬æ–‡æ¡£æ˜¯ V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿå…¨éƒ¨æµ‹è¯•èµ„äº§çš„**å•ä¸€çœŸç›¸æº**ï¼ˆ | I-109,I-198,I-278 | C-37,I-278,I-82,I-93 | [test-catalog.md](../reference/test-catalog.md) |
-| I-292 | TEST | å›å½’æµ‹è¯•å¥—ä»¶æ¨¡æ¿ | ç”¨é€”**: å®šä¹‰å•æ¬¡å˜æ›´æˆ–ä¸€ä¸ª phase å®Œæˆååº”è¿è¡Œçš„éªŒè¯å‘½ä»¤ | - | C-37,I-80,I-82,R-037 | [regression-suite.md](../explanation/regression-suite.md) |
-| I-293 | TEST | å›å½’æµ‹è¯•å¥—ä»¶æ¨¡æ¿ | æœ¬æ¨¡æ¿å‚ç…§ AGENTS.md Â§12.4 ä¸‰çº§å›å½’æµ‹è¯•å¥—ä»¶ã€‚ | - | C-37 | [regression-suite.md](../reference/templates/regression-suite.md) |
-| I-294 | TEST | æµ‹è¯•æ‰©å……è®¾è®¡æ–¹æ¡ˆ | ç‰ˆæœ¬**: v1.0 | **æ—¥æœŸ**: 2026-07-12 | - | C-37,I-82 | [test-expansion-design.md](../explanation/design/test-expansion-design.md) |
-| I-295 | UI | v6-pro-cockpit UI ç»„ä»¶å‚è€ƒï¼ˆè¾“å…¥èˆ±ï¼‰ | Status: Future Reference / Deferred** | - | C-37,I-177,I-80,I-81,I-82,R-03 | [v6-cockpit-ui-reference.md](../reference/v6-cockpit-ui-reference.md) |
-| I-296 | UI | V9 Widget é”™è¯¯éš”ç¦»ä¸é™çº§è§„æ ¼ | å¯¹åº”è“å›¾**ï¼š`../reference/v9-system-blueprint.md` Â§7.1 P | - | C-37,C-70,I-271,I-80,I-81,I-82 | [widget-error-handling.md](../reference/widget-error-handling.md) |
-| I-297 | UI | V9 åŸå­ç»„ä»¶æ„æˆä½“ç³»ï¼ˆAtomic Design Systemï¼‰ | ç‰ˆæœ¬**ï¼šv1.0.0 | - | C-37,I-80,I-82,R-037 | [atomic-component-system.md](../reference/atomic-component-system.md) |
-| I-298 | UI | V9 ç»„ä»¶å¼ƒç”¨æ”¿ç­– | ç‰ˆæœ¬ï¼šv0.9.14 P6-DATA | I-102,I-271,R-115 | C-37,I-80,I-81,I-82 | [component-deprecation-policy.md](../explanation/component-deprecation-policy.md) |
-| I-299 | UI | V9 ç»„ä»¶å¼ƒç”¨æ”¿ç­– | ç‰ˆæœ¬ï¼šv0.9.14 P6-DATA | I-102,I-240,I-271,R-116 | C-37 | [component-deprecation-policy.md](../reference/component-deprecation-policy.md) |
-| I-300 | UI | V9 èˆ±å®¤æ€»è§ˆï¼ˆCabins Overviewï¼‰ | å®šä½**ï¼šç»Ÿè§ˆ 5 å¤§èˆ±ï¼ˆcabinï¼‰çš„èŒè´£ã€é¡µé¢ä¸å…³é”®è·¯ç”±ï¼Œè¡¥ã€Šæ–‡æ¡£ç†è§£æ ¸æŸ¥æŠ¥ | - | C-37,I-185,I-82 | [cabins-overview.md](../explanation/cabins-overview.md) |
-| I-301 | UI | è‚¡ç¥¨æ± çœ‹æ¿è¿ç§»è‡³åˆ†æèˆ± â€” å¯è¡Œæ€§æ–¹æ¡ˆè®ºè¯ | ç‰ˆæœ¬ï¼šv1.0 | æ—¥æœŸï¼š2026-07-09 | çŠ¶æ€ï¼šå¾…å†³ç­– | - | C-37,I-80,I-82,R-037 | [stock-pool-board-migration-proposal.md](../reference/stock-pool-board-migration-proposal.md) |
-| I-302 | UI | è¾“å…¥èˆ± UI ä½“ç³»åŒ–é‡å¡‘è¯´æ˜ | Status**: Current | - | C-37,I-177,I-80,I-81,I-82,R-03 | [input-cabin-ui-reshaping.md](../reference/input-cabin-ui-reshaping.md) |
+- [ADR Èë¿Ú](../01-requirements/adr/README.md)
+- [01-requirements ¡ª ĞèÇóÓë¼Ü¹¹¾ö²ß](../01-requirements/README.md)
 
-## ğŸ”µ å‚è€ƒï¼ˆåªè¯»å½’æ¡£ï¼‰ï¼ˆ222 ä»½ï¼‰
+### 04-testing
 
-| ç¼–å· | ç±»ç›® | æ ‡é¢˜ | å…³æ³¨ç‚¹ | å¼•ç”¨â†’ | è¢«å¼•ç”¨â† | æ–‡æ¡£é“¾æ¥ |
-|------|------|------|--------|-------|---------|----------|
-| R-001 | ADR | ADR-002: IndexedDB æ›¿ä»£ localStorage | çŠ¶æ€**: Accepted | - | C-37,I-82 | [adr-002-indexeddb-over-localstorage.md](../reference/adr-002-indexeddb-over-localstorage.md) |
-| R-002 | ADR | ADR-004: HashRouter é™æ€æ‰˜ç®¡æ–¹æ¡ˆ | çŠ¶æ€**: Accepted | - | C-37,I-82 | [adr-004-hashrouter-static-hosting.md](../explanation/adr-004-hashrouter-static-hosting.md) |
-| R-003 | ADR | ADR-005: PortalShell æ·±è‰² Kimi ç»å…¸å¸ƒå±€ | çŠ¶æ€**: Accepted | - | C-37,I-82 | [adr-005-portalshell-dark-kimi-layout.md](../explanation/adr-005-portalshell-dark-kimi-layout.md) |
-| R-004 | ADR | ADR-006: è¾“å…¥èˆ±æ‹†åˆ†ä¸ºå››å­é¡µé¢ | çŠ¶æ€**: Accepted | - | C-37,I-82 | [adr-006-input-cabin-subpages.md](../reference/adr-006-input-cabin-subpages.md) |
-| R-005 | ADR | ADR-007: è¡¥é½ç­›é€‰å¼•æ“ã€ä¿¡å·æŒä¹…åŒ–ä¸å¤ç›˜å¼•æ“ | çŠ¶æ€**: Acceptedï¼ˆéƒ¨åˆ†æ¡æ¬¾è¢« ADR-009 å–ä»£ï¼‰ | - | C-37,I-82 | [adr-007-screening-signal-persistence-review.md](../explanation/adr-007-screening-signal-persistence-review.md) |
-| R-006 | ADR | ADR-008: é‡‡ç”¨ V6 æ ¸å¿ƒèµ„æºäº¤æ˜“ç­–ç•¥ | çŠ¶æ€**: Accepted | - | C-37,I-82 | [adr-008-v6-core-resource-trading-strategy.md](../explanation/adr-008-v6-core-resource-trading-strategy.md) |
-| R-007 | ADR | ADR-009: å¼•å…¥çƒ­é—¨æ¿å—ä¸ä»·å€¼æ´¼åœ°åŒç­–ç•¥ä½“ç³» | çŠ¶æ€**: Acceptedï¼ˆsupersedes ADR-007 éƒ¨åˆ†æ¡æ¬¾ï¼‰ | - | C-37,I-82 | [adr-009-dual-strategy-system.md](../explanation/adr-009-dual-strategy-system.md) |
-| R-008 | ARC | 2026-07-01-v6-architecture-dominance-bat | Status**: âœ… å·²å®Œæˆï¼ˆ2026-07-01ï¼‰ | - | C-37,I-80,I-81,I-82,R-037 | [2026-07-01-v6-architecture-dominance-batch-a.md](../reference/2026-07-01-v6-architecture-dominance-batch-a.md) |
-| R-009 | ARC | ADR-001: çº¯å‰ç«¯æ— åç«¯æ¶æ„ | çŠ¶æ€**: Accepted | - | C-37,I-82 | [adr-001-pure-frontend-architecture.md](../explanation/adr-001-pure-frontend-architecture.md) |
-| R-010 | ARC | ADR-001: çº¯å‰ç«¯æ— åç«¯æ¶æ„ | Status**: Accepted | - | C-37,I-177,I-80,I-81,I-82,R-03 | [2026-06-20-pure-frontend-architecture.md](../explanation/design/2026-06-20-pure-frontend-architecture.md) |
-| R-011 | ARC | FinSightV9 åˆ†ææŠ¥å‘Šè¾“å‡ºåŠŸèƒ½æ¶æ„è¯„ä¼° | æŠ¥å‘Šç‰ˆæœ¬**: v3.0.0 | - | C-37,I-82 | [report-generation-architecture-assessment.md](../explanation/report-generation-architecture-assessment.md) |
-| R-012 | ARC | MCP æ¶æ„æ•´æ”¹è¡ŒåŠ¨è®¡åˆ’ | åŸºäºæ–‡æ¡£**: mcp-architecture-audit-report-20 | - | C-37,I-80,R-037 | [mcp-architecture-remediation-plan-2026-07-08.md](../reports/mcp-architecture-remediation-plan-2026-07-08.md) |
-| R-013 | ARC | MCP æ¶æ„è§„åˆ™ä¸é€»è¾‘å…¨é¢äºŒæ¬¡å®¡æŸ¥æŠ¥å‘Š | å®¡æŸ¥æ—¥æœŸ**: 2026-07-08 | - | C-37,I-80,R-037 | [mcp-architecture-audit-report-2026-07-08.md](../reports/mcp-architecture-audit-report-2026-07-08.md) |
-| R-014 | ARC | V6 â†’ V9 æ¶æ„ä¸€è‡´æ€§å®¡è®¡è®¡åˆ’ | çŠ¶æ€ï¼šå·²å½’æ¡£ï¼ˆsupersededï¼‰**ã€‚æœ¬æ–‡æ¡£è®°å½•çš„æ˜¯ 2026-06-30  | R-016 | C-37,I-80,I-81,I-82,R-037 | [v6-v9-architecture-audit-plan.md](../explanation/design/v6-v9-architecture-audit-plan.md) |
-| R-015 | ARC | V6 â†’ V9 æ¶æ„ä¸€è‡´æ€§æ•´æ”¹è¡ŒåŠ¨æ¸…å• | å®¡è®¡ç»“è®º**ï¼šV6 æ¶æ„æ€æƒ³åœ¨ V9 ä¸­â€œæœ‰å®ç°ã€æœªä¸»å¯¼â€ã€‚é¡¹ç›®åŒæ—¶å­˜åœ¨ V6  | - | C-37,I-81,I-82,R-037 | [v6-v9-architecture-audit-action-list.md](../explanation/v6-v9-architecture-audit-action-list.md) |
-| R-016 | ARC | V6 â†’ V9 æ¶æ„ä¸€è‡´æ€§æ•´æ”¹è¡ŒåŠ¨æ¸…å• | å®¡è®¡ç»“è®º**ï¼šV6 æ¶æ„æ€æƒ³åœ¨ V9 ä¸­â€œæœ‰å®ç°ã€æœªä¸»å¯¼â€ã€‚é¡¹ç›®åŒæ—¶å­˜åœ¨ V6  | - | C-37,I-80,R-014 | [v6-v9-architecture-audit-action-list.md](../explanation/design/v6-v9-architecture-audit-action-list.md) |
-| R-017 | ARC | V6â†’V9 æ¶æ„æ•´æ”¹æ ¡æ­£è¯„ä¼°ä¸å¯è¡Œæ€§åˆ†ææŠ¥å‘Š | å†³ç­–1**: `V6Score` ç±»å‹æ˜¯å¦éœ€è¦æ‰©å±•ï¼Ÿ | - | C-37,I-80,I-81,I-82,R-037 | [v6-v9-rectification-feasibility-report.md](../explanation/design/v6-v9-rectification-feasibility-report.md) |
-| R-018 | ARC | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” å½“å‰çŠ¶æ€å…¨é¢æ¢³ç†ï¼ˆæŒ‰å®æ–½è¿›åº¦ï¼‰ | Status**: Current | - | C-37,I-177,I-80,I-81,I-82,R-03 | [v9-current-state-review.md](../explanation/design/v9-current-state-review.md) |
-| R-019 | ARC | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” å½“å‰çŠ¶æ€å…¨é¢æ¢³ç†ï¼ˆæŒ‰å®æ–½è¿›åº¦ï¼‰ | Status**: Current | - | C-37 | [v9-current-state-review.md](../reports/retrospectives/v9-current-state-review.md) |
-| R-020 | ARC | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” æ¶æ„åˆè§„å®¡è®¡æŠ¥å‘Šï¼ˆT-11 ç¬¬ä¸€è½®ï¼‰ | å®¡è®¡è§’è‰²**: A8 Â· æ¶æ„åˆè§„ AGENT | - | C-37,I-80,I-82,R-037 | [architecture-compliance-report.md](../explanation/design/architecture-compliance-report.md) |
-| R-021 | ARC | V9 æ¶æ„æ•´æ”¹æ€»ä½“ç­–ç•¥ä¸æ‰§è¡Œè®¡åˆ’ | å…³è”æ–‡æ¡£**ï¼š | - | C-37,I-80,I-81,I-82,R-037 | [v9-architecture-rectification-strategy.md](../explanation/design/v9-architecture-rectification-strategy.md) |
-| R-022 | ARC | V9 æ¶æ„èµ„äº§å·®å¼‚åˆ†ææŠ¥å‘Šï¼ˆPhase 5 æ·±å±‚å®¡è®¡ï¼‰ | Status**: Active | - | C-37,I-177,I-261,I-80,I-81,I-8 | [v9-architecture-data-diff-report.md](../explanation/design/v9-architecture-data-diff-report.md) |
-| R-023 | ARC | V9 è“å›¾è¡¥å…¨æ•´æ”¹ä»»åŠ¡æ¸…å• â€” æ‰¹æ¬¡ Eï¼ˆv15/v16 æ–°å¢ Storeï¼‰ | åˆ›å»ºæ—¥æœŸ**: 2026-06-30 | - | C-37,I-80,I-81,I-82,R-037 | [v9-rectification-tasks-v15-v16.md](../explanation/v9-rectification-tasks-v15-v16.md) |
-| R-024 | DAT | V9 æ•°æ®å…³ç³»è“å›¾ä»»åŠ¡è·Ÿè¸ªè®¡åˆ’ | Goal:** ç¡®ä¿ `docs/blueprints/` ä¸­çš„æ•°æ®å…³ç³»ä¸æ—¶é—´å…³ | - | C-37 | [v9-data-blueprint-task-tracking.md](../reports/retrospectives/v9-data-blueprint-task-tracking.md) |
-| R-025 | DAT | V9 æ•°æ®å­—å…¸ç´¢å¼• | Status**: Current | - | C-37,I-82 | [data-dictionary-index-v1.6.0.md](../00-meta/deprecated-docs/old-versions/data-dictionary-index-v1.6.0.md) |
-| R-026 | DAT | V9 æ•°æ®åº“æ•°æ®å…³ç³»ä¸æ—¶é—´å…³ç³»è“å›¾è®¡åˆ’ | For agentic workers:** REQUIRED SUB-SKIL | - | C-37,I-80,I-81,I-82,R-037 | [2026-06-29-data-relationship-blueprint.md](../reference/2026-06-29-data-relationship-blueprint.md) |
-| R-027 | DAT | æ•°æ®é‡‡é›†æ¨¡å—å¼€å‘ä»»åŠ¡æ¸…å• | åŸºäºå·®è·åˆ†ææŠ¥å‘Š + è·¯ç”±UIæ ¡å¯¹æŠ¥å‘Š + ç”¨æˆ·éœ€æ±‚ | - | C-37 | [data-collection-task-list.md](../reports/retrospectives/data-collection-task-list.md) |
-| R-028 | DAT | æ•°æ®é‡‡é›†æ¨¡å—è·¯ç”±ä¸UIæ ¡å¯¹åˆ†ææŠ¥å‘Š | åŸºäºV9è·¯ç”±æ³¨å†Œè¡¨ã€UIç»„ä»¶æ¸…å•ã€Fç›˜V6è®¾è®¡æ–‡æ¡£çš„ä¸‰ç»´äº¤å‰æ ¡å¯¹ | I-251 | C-37,I-80,I-81,I-82,R-037 | [data-collection-route-ui-audit.md](../explanation/design/data-collection-route-ui-audit.md) |
-| R-029 | DAT | æ•°æ®é‡‡é›†æ¨¡å—è·¯ç”±ä¸UIæ ¡å¯¹åˆ†ææŠ¥å‘Š | åŸºäºV9è·¯ç”±æ³¨å†Œè¡¨ã€UIç»„ä»¶æ¸…å•ã€Fç›˜V6è®¾è®¡æ–‡æ¡£çš„ä¸‰ç»´äº¤å‰æ ¡å¯¹ | C-68 | C-37 | [data-collection-route-ui-audit.md](../reference/data-collection-route-ui-audit.md) |
-| R-030 | DAT | é©¾é©¶èˆ± Widget æ•°æ®å®šä¹‰ | Status**: Current | - | C-37,I-82 | [data-definition-v1.0.0-cockpit.md](../00-meta/deprecated-docs/old-versions/data-definition-v1.0.0-cockpit.md) |
-| R-031 | GOV | 2026-07-14 æ¶æ„æ²»ç†ä¸ä»£ç æ•´ç† | - | - | C-37 | [2026-07-14-architecture-governance.md](../reference/changelogs/2026-07/2026-07-14-architecture-governance.md) |
-| R-032 | GOV | file-management-guide.md ç»¼åˆæµ‹è¯•è¯„åˆ†æŠ¥å‘Š | æ£€æŸ¥æ—¶é—´**: 2026-07-20 | - | C-37,I-82 | [file-management-guide-test-report.md](../reports/audit/file-management-guide-test-report.md) |
-| R-033 | GOV | MCP Server æ²»ç†å¤ç›˜æ·±åº¦æŠ¥å‘Š | ç»“è®ºå‰ç½®**ï¼šRegistry ä¸­æ³¨å†Œçš„ 18 ä¸ª Serverï¼Œå®é™…ä»… 12  | - | C-37,I-82 | [mcp-server-governance-retrospective.md](../reports/audit/mcp-server-governance-retrospective.md) |
-| R-034 | GOV | V9 æ•°æ®æ¶æ„äº”å¤§é—®é¢˜æ²»ç†è®¡åˆ’ | For agentic workers:** REQUIRED SUB-SKIL | - | C-37,I-80,I-81,I-82,R-037 | [2026-06-29-data-architecture-governance.md](../explanation/design/2026-06-29-data-architecture-governance.md) |
-| R-035 | GOV | V9 æ–‡ä»¶ç®¡ç†ä½“ç³»åŒ…åˆè§„æ€§å®¡æŸ¥æŠ¥å‘Š | ç‰ˆæœ¬**: v1.0 | **æ—¥æœŸ**: 2026-07-12 | **å®¡æŸ¥èŒƒå›´ | - | C-37,C-41 | [file-management-compliance-report-2026-07-12.md](../reports/file-management-compliance-report-2026-07-12.md) |
-| R-036 | GOV | V9 æ–‡æ¡£ä¸æ–‡ä»¶ç®¡ç†ä½“ç³» â€” æ²»ç†å®¡è®¡æŠ¥å‘Š | ç‰ˆæœ¬**: v1.0.0 ï½œ **æ—¥æœŸ**: 2026-07-13 ï½œ **æ‰§è¡Œ | - | C-37,I-82 | [doc-governance-audit-report-2026-07-13.md](../reports/doc-governance-audit-report-2026-07-13.md) |
-| R-037 | GOV | æ–‡æ¡£ç´¢å¼• | æœ¬æ–‡ä»¶ç”±æ¯æ—¥æ–‡æ¡£éªŒè¯æµç¨‹è‡ªåŠ¨ç”Ÿæˆï¼Œè¯·å‹¿æ‰‹åŠ¨ä¿®æ”¹ã€‚ | C-04,C-05,C-06,C-07,C-08,C-11, | C-37,I-82 | [registry-index-v1.0.0-02-design.md](../00-meta/deprecated-docs/old-versions/registry-index-v1.0.0-02-design.md) |
-| R-038 | GOV | æµ‹è¯•/æ„å»ºäº§ç‰©æ¸…ç†è®°å½•ï¼ˆæœ€ç»ˆçŠ¶æ€ï¼‰ | ç”Ÿæˆæ—¶é—´ï¼š2026-07-12 | - | C-37,I-80,R-037 | [test-artifacts-cleanup-list.md](../reports/test-artifacts-cleanup-list.md) |
-| R-039 | GUIDE | ä»£ç è¯„å®¡æŒ‡å—ä¸è´¨é‡é—¨ç¦ SOP | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-12 | - | C-37,I-185,I-82 | [code-review-guide.md](../how-to/code-review-guide.md) |
-| R-040 | GUIDE | å‰©ä½™å¤æ‚åº¦æ•´æ”¹ä»»åŠ¡æ¸…å•ä¸è®¡åˆ’ï¼ˆ2026-07-12ï¼‰ | åŸºå‡†ï¼š`complexity-baseline-current.json`ï¼ˆå®æµ‹ | - | C-37 | [complexity-remediation-plan.md](../how-to/testing/complexity-remediation-plan.md) |
-| R-041 | GUIDE | æˆ‘ç”¨ WorkBuddy ç»™å®¡è®¡å›¢é˜Ÿæ­äº† 20 ä¸ª"åˆ†èº«"ï¼šä¸€ä¸ªå®¡è®¡åˆä¼™äººçš„ A | ä½œè€…èº«ä»½ï¼šèµ„æ·±å®¡è®¡åˆä¼™äººï¼Œ20 å¹´å®¡è®¡ä»ä¸šç»éªŒã€‚æœ¬æ–‡è®°å½•æˆ‘ç”¨ WorkBuddy | - | C-37,I-82 | [01-tutorial-audit-workflow.md](../assets/articles/01-tutorial-audit-workflow.md) |
-| R-042 | LOG | 2026-07-05 æ¨¡å—æ³¨å†Œä½“ç³»å»ºç«‹ä¸æœªæ³¨å†Œæ–‡ä»¶å…¨é‡é›†æˆ | ä»»åŠ¡çŠ¶æ€**: âœ… å®Œæˆ | - | C-37,I-80,I-81,I-82,R-037 | [2026-07-05-module-registry-and-integration.md](../reference/changelogs/2026-07/2026-07-05-module-registry-and-integration.md) |
-| R-043 | LOG | CHANGELOG è­¦å‘Šå¤„ç†ç­–ç•¥ | Created**: 2026-07-13 | - | C-37,C-59,I-82 | [changelog-warnings-handling-strategy.md](../00-meta/changelog-warnings-handling-strategy.md) |
-| R-044 | LOG | Jira ä»»åŠ¡å•å½’æ¡£:P0-5 ç¼ºé™· + 6 ä¸ªå†å² Bug ä¿®å¤ | å½’æ¡£æ—¥æœŸ**: 2026-07-05 | - | C-37,I-80,I-81,I-82,R-037 | [2026-07-05-p0-5-and-legacy-bugs-jira-tickets.md](../reference/changelogs/2026-07/2026-07-05-p0-5-and-legacy-bugs-jira-tickets.md) |
-| R-045 | LOG | P2 æ‰¹æ¬¡å®ŒæˆæŠ¥å‘Š & åç»­è¿­ä»£ä»»åŠ¡æ¸…å• â€” 2026-07-05 | - | - | C-37,I-80,I-81,I-82,R-037 | [2026-07-05-p2-completion-and-backlog.md](../reference/changelogs/2026-07/2026-07-05-p2-completion-and-backlog.md) |
-| R-046 | LOG | P4 é˜¶æ®µå®Œæˆ â€” æ–‡æ¡£ä½“ç³»æ²»ç† | - | - | C-37 | [2026-07-14-p4-completion.md](../reference/project/changelogs/2026-07/2026-07-14-p4-completion.md) |
-| R-047 | LOG | UI æµ‹è¯•ä¸ä¼˜åŒ–æ›´æ–°æ—¥å¿— | - | - | C-37,I-80,I-81,I-82,R-037 | [2026-07-05-ui-testing-optimization.md](../reference/changelogs/2026-07/2026-07-05-ui-testing-optimization.md) |
-| R-048 | LOG | V9 ç³»ç»Ÿæ€§æ–‡æ¡£æ›´æ–°ä¸äº¤å‰éªŒè¯æŠ¥å‘Š | æŠ¥å‘Šæ—¥æœŸï¼š2026-07-05 | - | C-37,I-80,I-81,I-82,R-037 | [2026-07-05-systematic-doc-update.md](../reference/changelogs/2026-07/2026-07-05-systematic-doc-update.md) |
-| R-049 | LOG | é¢œè‰²ä»¤ç‰Œé‡æ„æ¸…å• | - | - | C-37,I-80,I-81,I-82,R-037 | [2026-07-05-color-token-refactor.md](../reference/changelogs/2026-07/2026-07-05-color-token-refactor.md) |
-| R-050 | LOG | é¢œè‰²ç¡¬ç¼–ç æ²»ç† - P1 æ‰¹æ¬¡æŠ€æœ¯æ—¥å¿— | - | - | C-37,I-80,I-81,I-82,R-037 | [2026-07-05-color-refactor-p1.md](../reference/changelogs/2026-07/2026-07-05-color-refactor-p1.md) |
-| R-051 | LOG | é¢œè‰²ç¡¬ç¼–ç æ²»ç† - P2 æ‰¹æ¬¡æŠ€æœ¯æ—¥å¿— | - | - | C-37,I-80,I-81,I-82,R-037 | [2026-07-05-color-refactor-p2.md](../reference/changelogs/2026-07/2026-07-05-color-refactor-p2.md) |
-| R-052 | MIGR | ADR-009: V6 Pro JSON å…¨é‡å¯¼å‡ºè¿ç§»è‡³ V9 IndexedD | Status**: Current | - | C-37,I-177,I-80,I-81,I-82,R-03 | [2026-06-25-v6-migration.md](../explanation/2026-06-25-v6-migration.md) |
-| R-053 | MISC | ADR-002: IndexedDB æ›¿ä»£ localStorage | Status**: Accepted | - | C-37,I-177,I-80,I-81,I-82,R-03 | [2026-06-20-indexeddb-over-localstorage.md](../reference/2026-06-20-indexeddb-over-localstorage.md) |
-| R-054 | MISC | ADR-004: React Router HashRouter | Status**: Accepted | - | C-37,I-177,I-80,I-81,I-82,R-03 | [2026-06-21-hashrouter-for-static-hosting.md](../reference/2026-06-21-hashrouter-for-static-hosting.md) |
-| R-055 | MISC | ADR-008: é‡‡ç”¨ v6-pro-cockpit "ç¬¬å››æ¬¡å·¥ä¸šé©å‘½ç¨€ç¼ºæ ¸å¿ƒèµ„ | - | - | C-37,I-177,I-199,I-200,I-226,I | [2026-06-24-adopt-v6-core-resource-trading-strategy.md](../reference/2026-06-24-adopt-v6-core-resource-trading-strategy.md) |
-| R-056 | MISC | ADR-009: å¼•å…¥çƒ­é—¨æ¿å—ä¸ä»·å€¼æ´¼åœ°åŒç­–ç•¥ä½“ç³» | - | - | C-37,I-199,I-34,I-81,I-82,R-03 | [2026-06-27-dual-strategy-system.md](../explanation/2026-06-27-dual-strategy-system.md) |
-| R-057 | MISC | ADR-009: å¼•å…¥çƒ­é—¨æ¿å—ä¸ä»·å€¼æ´¼åœ°åŒç­–ç•¥ä½“ç³» | - | - | C-37,I-200,I-215,I-228,I-233,I | [2026-06-27-dual-strategy-system.md](../explanation/design/2026-06-27-dual-strategy-system.md) |
-| R-058 | MISC | Deployment Guide â€” V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿéƒ¨ç½²åŸºçº¿ | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-10 | - | C-37,I-82 | [deployment-v1.0.0.md](../00-meta/deprecated-docs/old-versions/deployment-v1.0.0.md) |
-| R-059 | MISC | docs/drafts/ â€” ä¸´æ—¶è‰ç¨¿åŒº | è§’è‰²**: æ ¹æ® `docs/00-meta/governance.md` Â§2 | - | C-37 | [README.md](../drafts/README.md) |
-| R-060 | MISC | V9 æ–‡æ¡£ä½“ç³»æ²»ç† â€” ä¸‹ä¸€é˜¶æ®µä»»åŠ¡å›¾ï¼ˆP4 æ‰§è¡Œè®¡åˆ’ï¼‰ | å®šä½**ï¼šåŸºäº `docs/00-meta/æ–‡æ¡£ä½“ç³»ä½“æ£€æŠ¥å‘Š-v9.md`ï¼ˆç¬¬3 | - | C-37 | [v9-next-phase-todo.md](../archive/00-meta-archive-2026-07-13/v9-next-phase-todo.md) |
-| R-061 | MISC | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ - API æ–‡æ¡£ | ç”Ÿæˆæ—¶é—´: 2026-07-12T08:33:40Z | - | C-37 | [complete-api-doc.md](../drafts/complete-api-doc.md) |
-| R-062 | MISC | V9 ç°æœ‰æ•°æ®èµ„äº§æ¸…å• | ç¼–åˆ¶æ—¥æœŸ**ï¼š2026-06-29 | - | C-37 | [V9ç°æœ‰æ•°æ®èµ„äº§æ¸…å•.md](../reference/V9ç°æœ‰æ•°æ®èµ„äº§æ¸…å•.md) |
-| R-063 | MISC | V9 é—®é¢˜æ•´æ”¹æ‰§è¡Œçœ‹æ¿ | è°ƒåº¦å®˜ï¼šMulti-Agent Orchestrator | - | C-37,I-177,I-80,I-81,R-037 | [deprecated-v9-issue-execution-board.md](../archive/deprecated-v9-issue-execution-board.md) |
-| R-064 | MISC | åˆ é™¤æ—¥å¿— | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-13 | - | C-37,I-82 | [deletion-log.md](../archive/deletion-log.md) |
-| R-065 | MISC | å½’æ¡£ç›®å½•ï¼ˆ07-archiveï¼‰ | å®šä½**ï¼šå­˜æ”¾å·²åºŸå¼ƒã€è¿‡æ—¶æˆ–ä¸å†ç»´æŠ¤çš„æ–‡æ¡£å’Œèµ„æºã€‚ | - | C-37 | [README.md](../archive/README.md) |
-| R-066 | RPT | 25 åªè‚¡ç¥¨å…¨æµç¨‹ç«¯åˆ°ç«¯æ ¡å¯¹æµ‹è¯• â€” æŒ‰èˆ±åˆ†ææŠ¥å‘Š | ç‰ˆæœ¬**ï¼šv1.0 | **æ—¥æœŸ**ï¼š2026-07-14 | R-067 | C-37,I-82 | [e2e-verify-25stocks-report.md](../reports/e2e-verify-25stocks-report.md) |
-| R-067 | RPT | 25 åªè‚¡ç¥¨å…¨æµç¨‹ç«¯åˆ°ç«¯æ ¡å¯¹æµ‹è¯• â€” è€ƒæ ¸æŒ‡æ ‡æ–¹æ¡ˆ | ç‰ˆæœ¬**ï¼šv1.1 | **æ—¥æœŸ**ï¼š2026-07-14ï¼ˆæ–°å¢ã€Œç»´åº¦ Fï¼šå†—ä½™ | - | C-37,I-82,R-066 | [e2e-verify-25stocks-plan.md](../reports/e2e-verify-25stocks-plan.md) |
-| R-068 | RPT | ADR-007: è¡¥é½ç­›é€‰å¼•æ“ã€ä¿¡å·æŒä¹…åŒ–ä¸å¤ç›˜å¼•æ“ | Status**: Accepted | - | C-37,I-177,I-80,I-81,I-82,R-03 | [2026-06-24-pool-screening-signal-persistence-review-engine.md](../explanation/2026-06-24-pool-screening-signal-persistence-review-engine.md) |
-| R-069 | RPT | AI ç”Ÿæˆâ€”å®¡è®¡â€”ä¿®æ­£é£è½® | ç‰ˆæœ¬ï¼šv1.0.0 | æ—¥æœŸï¼š2026-07-10 | - | C-37,I-80,I-82,R-037 | [ai-generate-audit-fix-loop.md](../explanation/ai-generate-audit-fix-loop.md) |
-| R-070 | RPT | AI ç”Ÿæˆâ€”å®¡è®¡â€”ä¿®æ­£é£è½® | ç‰ˆæœ¬ï¼šv1.0.0 | æ—¥æœŸï¼š2026-07-10 | - | C-37 | [ai-generate-audit-fix-loop.md](../reference/ai-generate-audit-fix-loop.md) |
-| R-071 | RPT | audit:hardcode Warning åˆ†å¸ƒåˆ†ææŠ¥å‘Š | ç”Ÿæˆæ—¶é—´: 2026-07-05 | å®¡è®¡è„šæœ¬ç‰ˆæœ¬: audit-hardcod | - | C-37,I-80,I-81,R-037 | [audit-hardcode-warning-distribution.md](../reports/audit-hardcode-warning-distribution.md) |
-| R-072 | RPT | audit:hardcode å‰©ä½™ 107 é¡¹ Warning æ ¹å› åˆ†ç±»æŠ¥å‘Š | ç”Ÿæˆæ—¥æœŸ: 2026-07-05 | - | C-37,I-80,I-81,R-037 | [hardcode-warning-root-cause-analysis.md](../reports/hardcode-warning-root-cause-analysis.md) |
-| R-073 | RPT | Batch-1 é˜¶æ®µæ€§åˆå¹¶æŠ¥å‘Š | ç”Ÿæˆæ—¶é—´ï¼š2026-06-25 | - | C-37,I-177,I-80,I-81,R-037 | [deprecated-batch1-merge-report.md](../explanation/design/deprecated-batch1-merge-report.md) |
-| R-074 | RPT | Batch-2 é˜¶æ®µæ€§åˆå¹¶æŠ¥å‘Š | ç”Ÿæˆæ—¶é—´ï¼š2026-06-25 | - | C-37,I-177,I-80,I-81,R-037 | [deprecated-batch2-merge-report.md](../explanation/deprecated-batch2-merge-report.md) |
-| R-075 | RPT | Batch-3 å…¨é‡å›å½’æµ‹è¯•æŠ¥å‘Š | ç”Ÿæˆæ—¶é—´ï¼š2026-06-25 | - | C-37,I-177,I-80,I-81,R-037 | [deprecated-batch3-merge-report.md](../explanation/design/deprecated-batch3-merge-report.md) |
-| R-076 | RPT | buildScoreDocDiff ä¿®å¤ â€” ç”Ÿäº§éƒ¨ç½²å›æ»šé¢„æ¡ˆ | ç‰ˆæœ¬**: v1.0 | **æ—¥æœŸ**: 2026-07-04 | - | C-37 | [buildscoredocdiff-rollback-plan.md](../reports/release-management/buildscoredocdiff-rollback-plan.md) |
-| R-077 | RPT | cockpit / æ•´ä½“è®¾è®¡ä¸€è‡´æ€§å®¡æŸ¥ | è§¦å‘ï¼šç”¨æˆ·è¦æ±‚"æ‰©å¤§æ£€ç´¢æœ¬åœ°æ‰€æœ‰æ–‡ä»¶çš„èŒƒå›´ï¼Œåšæ›´å¹¿çš„ cockpit / æ•´ä½“è®¾ | - | C-37,I-80,I-82,R-037 | [cockpit_æ•´ä½“è®¾è®¡ä¸€è‡´æ€§å®¡æŸ¥.md](../reports/audit/cockpit_æ•´ä½“è®¾è®¡ä¸€è‡´æ€§å®¡æŸ¥.md) |
-| R-078 | RPT | cockpit widgetã€Œ40 ä¸ªç±»å‹é”™è¯¯ã€æ ¸æŸ¥ Â· åˆ†ææ€§åˆ¤æ–­ | è§¦å‘ï¼šç”¨æˆ·è¦æ±‚ã€Œæ£€ç´¢æœ¬åœ°æ‰€æœ‰çœŸå®æ–‡ä»¶ï¼Œæ ¸å®ç›¸å…³è®¾è®¡çš„æ•´ä½“æ€è·¯æ˜¯å¦é‡‡ç”¨ä¸Šè¿° 40  | - | C-37,I-80,I-82,R-037 | [cockpit_widget_40é”™è¯¯æ ¸æŸ¥-åˆ†æåˆ¤æ–­.md](../reports/audit/cockpit_widget_40é”™è¯¯æ ¸æŸ¥-åˆ†æåˆ¤æ–­.md) |
-| R-079 | RPT | code-review.md â€” V9 ä»£ç å®¡æŸ¥æ ‡å‡†ä¸æµç¨‹ | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-05 | - | C-37,I-80,I-81,I-82,R-037 | [code-review.md](../reference/code-review.md) |
-| R-080 | RPT | CollectionPlanPanel V6 è®¾è®¡æ ¡å¯¹åˆ†ææŠ¥å‘Š | æ ¡å¯¹æ—¥æœŸ**: 2026-07-09 | - | C-37,I-80,R-037 | [2026-07-09-collection-plan-panel-v6-audit.md](../reports/2026-07-09-collection-plan-panel-v6-audit.md) |
-| R-081 | RPT | Debug Session: output-cabin-not-renderin | Session ID**: `output-cabin-not-renderin | - | C-37,I-80,I-82,R-037 | [debug-output-cabin-not-rendering.md](../reports/audit/debug-output-cabin-not-rendering.md) |
-| R-082 | RPT | Design Tokens ç³»ç»Ÿå®æ–½äº‹ååˆ†ææŠ¥å‘Š | - | I-34 | C-37,I-80,I-81,R-037 | [design-tokens-implementation-report.md](../reports/design-tokens-implementation-report.md) |
-| R-083 | RPT | Jira ä»»åŠ¡å¡ç‰‡å†…å®¹ | ç”Ÿæˆæ—¶é—´**: 2026-07-09 | - | C-37,I-80,R-037 | [2026-07-09-jira-tasks.md](../reports/2026-07-09-jira-tasks.md) |
-| R-084 | RPT | JSDoc æ³¨é‡Šå®Œæ•´æ±‡æ€»æŠ¥å‘Š | æ—¥æœŸ**: 2026-07-12 | - | C-37 | [jsdoc-combined-report-20260712.md](../reference/changelogs/2026-07/jsdoc-combined-report-20260712.md) |
-| R-085 | RPT | MCP Server é›†æˆæµ‹è¯•æŠ¥å‘Šï¼ˆä¿®å¤åé‡è·‘ï¼‰ | æ—¥æœŸ**: 2026-07-08 | - | C-37,I-80,R-037 | [mcp-integration-test-report-2026-07-08-v2.md](../reports/mcp-integration-test-report-2026-07-08-v2.md) |
-| R-086 | RPT | MCP å±‚æƒé™æ§åˆ¶ä¿®å¤æ–¹æ¡ˆ | é—®é¢˜çº§åˆ«**: P0 é«˜é£é™© | - | C-37,I-80,R-037 | [mcp-acl-fix-plan-2026-07-08.md](../reports/mcp-acl-fix-plan-2026-07-08.md) |
-| R-087 | RPT | P0 ä¼˜å…ˆçº§å¾…åŠä»»åŠ¡æ¸…å• | ç”Ÿæˆæ—¶é—´**: 2026-07-09 | - | C-37,I-80,R-037 | [2026-07-09-p0-todo-list.md](../reports/2026-07-09-p0-todo-list.md) |
-| R-088 | RPT | P0/P1 è·¯ç”±ç¼ºå£ä¿®å¤ä»£ç æ–¹æ¡ˆ | æ—¥æœŸ**: 2026-07-09 | **çŠ¶æ€**: P0 å·²ä¿®å¤ï¼ŒP1 å¾…æ‰§è¡Œ | - | C-37,I-80,R-037 | [2026-07-09-p0-p1-fix-code-plan.md](../reports/2026-07-09-p0-p1-fix-code-plan.md) |
-| R-089 | RPT | P1 çº§æµ‹è¯•ä¿®å¤ä¸æ—¥å¿—åŸ‹ç‚¹æŠ€æœ¯æ€»ç»“ | æ—¥æœŸ**: 2026-07-09 | **ç‰ˆæœ¬**: v1.0 | **ä½œè€…** | - | C-37,I-80,R-037 | [2026-07-09-p1-fix-technical-summary.md](../reports/2026-07-09-p1-fix-technical-summary.md) |
-| R-090 | RPT | P1 ç¼ºå£ä¿®å¤æŠ€æœ¯å¤ç›˜ | æ—¥æœŸ**: 2026-07-09 | **çŠ¶æ€**: å·²å®Œæˆ | **ä¿®å¤ç¼ºå£æ•° | - | C-37,I-80,R-037 | [2026-07-09-p1-gaps-fix-technical-review.md](../reports/2026-07-09-p1-gaps-fix-technical-review.md) |
-| R-091 | RPT | PR-5 æ„å»ºæ€§èƒ½ä¼˜åŒ–æ€»ç»“ | ç‰ˆæœ¬**: v1.0 | **æ—¥æœŸ**: 2026-07-07 | I-137 | C-37 | [pr-5-build-optimization-summary.md](../reports/changelogs/pr-5-build-optimization-summary.md) |
-| R-092 | RPT | PR-8 é‡å¤å‡½æ•°å»é‡å®¡è®¡æŠ¥å‘Š | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-08 | I-119,I-31 | C-37,I-118,I-80,I-82,R-037 | [pr-8-dedup-audit-report.md](../reference/changelogs/2026-07/pr-8-dedup-audit-report.md) |
-| R-093 | RPT | PR-8 é‡å¤å‡½æ•°å»é‡å®¡è®¡æŠ¥å‘Š | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-08 | I-31,R-139 | C-37,R-094 | [pr-8-dedup-audit-report.md](../reports/changelogs/pr-8-dedup-audit-report.md) |
-| R-094 | RPT | PR-8 é‡å¤å‡½æ•°å»é‡é‡æ„æ–¹æ¡ˆ | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-08 | I-31,R-093,R-139 | C-37 | [pr-8-dedup-plan.md](../reports/changelogs/pr-8-dedup-plan.md) |
-| R-095 | RPT | Report-6 æ•´æ”¹è¡ŒåŠ¨æ¸…å• | å®¡è®¡æ¥æº**ï¼š`../../reference/v9-code-quality- | - | C-37,I-80,I-81,R-037 | [report-6-remediation-action-list.md](../reports/audit/report-6-remediation-action-list.md) |
-| R-096 | RPT | RMæ•´æ”¹æ–¹æ¡ˆ â€” å…¨é‡å®¡è®¡å·®å¼‚æ¸…å• | ç”Ÿæˆæ—¶é—´ï¼š2026-07-09 10:03 | å®¡è®¡åŸºå‡†ï¼šæ–‡æ¡£ v.s. ä»£ç å® | - | C-37,I-80,R-037 | [2026-07-09-rm-audit-diff-report.md](../reports/2026-07-09-rm-audit-diff-report.md) |
-| R-097 | RPT | solo-review.md â€” å•äººå¼€å‘ä»£ç å®¡æŸ¥æŒ‡å— | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-05 | - | C-37,I-80,I-81,I-82,R-037 | [solo-review.md](../explanation/design/solo-review.md) |
-| R-098 | RPT | src/store æ´¾ç”Ÿè®¡ç®—æ–‡ä»¶æ–‡æ¡£åŒ–å¿…è¦æ€§åˆ†æ | åˆ†æå¯¹è±¡**: src/store ä¸‹ 5 ä¸ªæ´¾ç”Ÿè®¡ç®—æ–‡ä»¶ | - | C-37,I-80,R-037 | [2026-07-08-store-derived-documentation-analysis.md](../reports/2026-07-08-store-derived-documentation-analysis.md) |
-| R-099 | RPT | src/store æ´¾ç”Ÿè®¡ç®—æ–‡ä»¶æ–‡æ¡£åŒ–å¿…è¦æ€§åˆ†æ | ç”Ÿæˆæ—¶é—´**: 2026-07-09 | - | C-37,I-80,R-037 | [2026-07-09-store-derived-documentation-analysis.md](../reports/2026-07-09-store-derived-documentation-analysis.md) |
-| R-100 | RPT | T-09 WCAG å¯¹æ¯”åº¦å¤æ ¸æŠ¥å‘Š | - | - | C-37,I-80,I-82,R-037 | [a11y-contrast-report.md](../explanation/a11y-contrast-report.md) |
-| R-101 | RPT | T-11 åˆ†å±‚ä¾èµ–ä¸æ–‡æ¡£åŒæ­¥å®¡è®¡æŠ¥å‘Š | ä»»åŠ¡**: T-11 Â· åˆ†å±‚ä¾èµ–ä¸æ–‡æ¡£åŒæ­¥å®¡è®¡ | - | C-37,I-80,R-037 | [t11-compliance-audit-report.md](../reports/t11-compliance-audit-report.md) |
-| R-102 | RPT | TradeReviewAI SkillDevelopment æµ‹è¯•è¯´æ˜ | - | - | C-37,I-80,I-81,I-82,R-037 | [tradereviewai-skill-testing.md](../explanation/design/tradereviewai-skill-testing.md) |
-| R-103 | RPT | TypeScript é”™è¯¯å¤„ç†å’Œç±»å‹å®‰å…¨æ£€æµ‹æŠ¥å‘Š | - | - | C-37,I-80,I-82,R-037 | [typescripté”™è¯¯å¤„ç†å’Œç±»å‹å®‰å…¨æ£€æµ‹æŠ¥å‘Š.md](../reports/audit/typescripté”™è¯¯å¤„ç†å’Œç±»å‹å®‰å…¨æ£€æµ‹æŠ¥å‘Š.md) |
-| R-104 | RPT | v2.2.1 dataLayer.test.ts æµ‹è¯•è¦†ç›–ç‡å¯¹æ¯”æŠ¥å‘Š | - | - | C-37,I-80,I-81,R-037 | [v2.2.1-test-coverage-comparison.md](../reports/v2.2.1-test-coverage-comparison.md) |
-| R-105 | RPT | v2.2.1 æµ‹è¯•è¦†ç›–ç‡å¯¹æ¯”æŠ¥å‘Š | - | - | C-37,I-80,I-81,R-037 | [test-coverage-comparison-v2.2.1.md](../reports/test-coverage-comparison-v2.2.1.md) |
-| R-106 | RPT | V6 Pro å¤‡ä»½æºç /çº¿ä¸Šç«™ç‚¹ ä¸ V9 å½“å‰é¡¹ç›® UI & Page å·®å¼‚å…¨ | Status**: Current / Analysis | - | C-37,I-81,I-82,R-037 | [v6pro-ui-page-diff-report.md](../explanation/v6pro-ui-page-diff-report.md) |
-| R-107 | RPT | V6 Pro å¤‡ä»½æºç /çº¿ä¸Šç«™ç‚¹ ä¸ V9 å½“å‰é¡¹ç›® UI & Page å·®å¼‚å…¨ | Status**: Current / Analysis | - | C-37,I-177,I-80 | [v6pro-ui-page-diff-report.md](../explanation/design/v6pro-ui-page-diff-report.md) |
-| R-108 | RPT | V6-V9 UI ç»„ä»¶åº“æ¯”å¯¹åˆ†ææŠ¥å‘Š | ç”Ÿæˆæ—¶é—´: 2026-07-01 | - | C-37,I-80,I-81,I-82,R-037,R-11 | [v6-v9-ui-component-comparison-report.md](../reports/audit/v6-v9-ui-component-comparison-report.md) |
-| R-109 | RPT | V6-V9 ç•Œé¢è®¾è®¡ä¼˜åŒ–æ•´æ”¹ä»»åŠ¡æ˜ç»†è¡¨ | ç‰ˆæœ¬**: v1.0 | **å»ºç«‹**: 2026-07-08 | **åŸºå‡†** | - | C-37,I-80,I-82,R-037 | [ui-remediation-tracker.md](../reference/ui-remediation-tracker.md) |
-| R-110 | RPT | V9 P0 ä¸¥é‡é—®é¢˜ä¿®å¤æ–¹æ¡ˆ | æ–‡æ¡£ç‰ˆæœ¬**ï¼šv1.0 | R-136 | C-37,I-80,I-81,I-82,R-037 | [v9-p0-remediation-plan.md](../explanation/design/v9-p0-remediation-plan.md) |
-| R-111 | RPT | V9 UI ç»„ä»¶å¢åŠ å¯è¡Œæ€§è¯„ä¼°æŠ¥å‘Š | è¯„ä¼°æ—¥æœŸ: 2026-07-01 | I-70,R-108 | C-37,I-80,I-81,I-82,R-037 | [v9-ui-component-feasibility-assessment.md](../reports/audit/v9-ui-component-feasibility-assessment.md) |
-| R-112 | RPT | V9 ä¸Šçº¿å‰ç»ˆå®¡æŠ¥å‘Š | æ³¨æ„**ï¼šé¦–è½®æ ¡å¯¹ä¸­ 27 ä¸ªæµ‹è¯•æ–‡ä»¶ / 90 ä¸ªç”¨ä¾‹å¤±è´¥ï¼Œä¸»è¦é›†ä¸­åœ¨ V6  | - | C-37,I-242 | [pre-launch-audit-report-2026-07-14.md](../reports/audit/pre-launch-audit-report-2026-07-14.md) |
-| R-113 | RPT | V9 äº¤äº’æ—¶åºæ–‡æ¡£å¤æ ¸æŠ¥å‘Š | å¤æ ¸å¯¹è±¡ï¼š`docs/v9-interaction-flows.html` | - | C-37,I-80,I-82,R-037 | [v9-interaction-flows-review.md](../explanation/design/v9-interaction-flows-review.md) |
-| R-114 | RPT | V9 ä»£ç è´¨é‡æ ¡å¯¹åˆ†æ â€” è¿‡ç¨‹é€æ˜çœ‹æ¿ | âš ï¸ **æœ¬æ–‡æ¡£å·²è¿‡æ—¶ï¼ˆ2026-07-12 æ ‡æ³¨ï¼ŒN5 æ¨¡å¼ï¼‰**ï¼šæœ¬çœ‹æ¿ä¸º  | I-119,I-284,I-31,R-115 | C-37 | [v9-code-quality-kanban-20260629.md](../reports/audit/v9-code-quality-kanban-20260629.md) |
-| R-115 | RPT | V9 ä»£ç è´¨é‡æ ¡å¯¹åˆ†ææŠ¥å‘Š | å®¡è®¡å‘¨æœŸ**: 2026-06-29 | I-284,I-31,I-34,R-119,R-120,R- | C-37,I-240,I-298,I-80,I-81,I-8 | [v9-code-quality-audit-report-20260629.md](../explanation/v9-code-quality-audit-report-20260629.md) |
-| R-116 | RPT | V9 ä»£ç è´¨é‡æ ¡å¯¹åˆ†ææŠ¥å‘Š | å®¡è®¡å‘¨æœŸ**: 2026-06-29 | C-12,I-285,I-34,R-119,R-120,R- | C-37,I-299 | [v9-code-quality-audit-report-20260629.md](../reference/v9-code-quality-audit-report-20260629.md) |
-| R-117 | RPT | V9 ä»£ç è´¨é‡æ ¡å¯¹åˆ†ææŠ¥å‘Šï¼ˆ2026-07-13 æ›´æ–°ï¼‰ | å®¡è®¡å‘¨æœŸ**: 2026-07-13 | - | C-37,C-59,I-82 | [v9-code-quality-audit-report-20260713.md](../explanation/v9-code-quality-audit-report-20260713.md) |
-| R-118 | RPT | V9 å…¨é‡å®¡è®¡é—®é¢˜è¯¦ç»†æ¸…å• | ç”Ÿæˆæ—¶é—´**: 2026-07-05 | - | C-37,I-80,I-81,R-037 | [full-audit-inventory-2026-07-05.md](../reports/full-audit-inventory-2026-07-05.md) |
-| R-119 | RPT | V9 å‰ç«¯åº”ç”¨ä»£ç ç¼–å†™è´¨é‡å®¡è®¡æŠ¥å‘Š (B4-1) | å®¡è®¡æ—¥æœŸï¼š2026-06-29 | - | C-37,I-80,I-81,I-82,R-037,R-11 | [audit-b4-1-code-quality.md](../reference/audit-b4-1-code-quality.md) |
-| R-120 | RPT | V9 å‰ç«¯åº”ç”¨å®‰å…¨è´¨é‡å®¡è®¡æŠ¥å‘Š | è¯´æ˜**: æœ¬å®¡è®¡ä»…è¦†ç›–å‰ç«¯ä»£ç å±‚é¢çš„å®‰å…¨é—®é¢˜ï¼Œä¸åŒ…å«åç«¯ APIã€æœåŠ¡å™¨é…ç½®ã€ | - | C-37,I-80,I-81,I-82,R-037,R-11 | [audit-b4-4-security.md](../reference/audit-b4-4-security.md) |
-| R-121 | RPT | V9 å‰ç«¯åº”ç”¨æ€§èƒ½è´¨é‡å®¡è®¡æŠ¥å‘Š | å®¡è®¡æ—¥æœŸï¼š2026-06-29 | R-115 | C-37,I-80,I-81,I-82,R-037,R-11 | [audit-b4-3-performance.md](../explanation/design/audit-b4-3-performance.md) |
-| R-122 | RPT | V9 å‰ç«¯åº”ç”¨æµ‹è¯•è´¨é‡å®¡è®¡æŠ¥å‘Š | å®¡è®¡æ—¥æœŸï¼š2026-06-29 | - | C-37,I-80,I-81,I-82,R-037,R-11 | [audit-b4-2-test-quality.md](../explanation/audit-b4-2-test-quality.md) |
-| R-123 | RPT | V9 åŒç­–ç•¥ä¸€è‡´æ€§æ”¶æ•› â€” éªŒæ”¶æŠ¥å‘Š | - | - | C-37,I-80,I-81,I-82,R-037 | [v9-acceptance-report.md](../explanation/design/v9-acceptance-report.md) |
-| R-124 | RPT | V9 å›æ»šæ–¹æ¡ˆæ¼”ç»ƒè®°å½•ï¼ˆP0-08ï¼‰ | ç”Ÿæˆæ—¶é—´**: 2026-07-13 | - | C-37,I-82 | [rollback-drill-report.md](../explanation/rollback-drill-report.md) |
-| R-125 | RPT | V9 å¼€å‘åå¤ç›˜æŠ¥å‘Š | Status**: Current | - | C-37,I-80,I-81,I-82,R-037 | [v9-post-dev-review.md](../explanation/design/v9-post-dev-review.md) |
-| R-126 | RPT | V9 æ–‡æ¡£ä½“ç³»åŒ–å®¡è®¡ä¸è¡¥å…¨å»ºè®®ä¹¦ | è§’è‰²**ï¼šæ¶æ„æ²»ç†å®˜ | - | C-37,I-177,I-80,I-81,I-82,R-03 | [v9-documentation-audit-report.md](../explanation/design/v9-documentation-audit-report.md) |
-| R-127 | RPT | V9 æ–‡æ¡£æ›´æ–°æŠ¥å‘Š â€” 2026-07-08 | æŠ¥å‘Šç±»å‹**: æ–‡æ¡£åŒæ­¥ä¸äº¤å‰æ£€æŸ¥æŠ¥å‘Š | - | C-37,I-80,R-037 | [2026-07-08-document-update-report.md](../reports/2026-07-08-document-update-report.md) |
-| R-128 | RPT | V9 æ™ºèƒ½ä½“æ£€è§†æŠ¥å‘Š | ç”Ÿæˆæ—¥æœŸï¼š2026-06-27 | - | C-37,I-80,I-81,I-82,R-037 | [agent-audit-report.md](../reference/agent-audit-report.md) |
-| R-129 | RPT | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ - MCP æœ€å°è€¦åˆåŸåˆ™åˆè§„æ€§åˆ†ææŠ¥å‘Š | - | - | C-37,I-80,I-81,I-82,R-037,R-15 | [mcp-coupling-analysis-report.md](../explanation/design/mcp-coupling-analysis-report.md) |
-| R-130 | RPT | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ - å®¡è®¡è­¦å‘ŠæŠ¥å‘Š | ç”Ÿæˆæ—¶é—´**: 2026-07-12 | - | C-37 | [audit-warning-report.md](../reports/audit/audit-warning-report.md) |
-| R-131 | RPT | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” å…¨é¢æ•´æ”¹æŠ¥å‘Š | ç‰ˆæœ¬**: v1.0 | **æ—¥æœŸ**: 2026-07-12 | - | C-37 | [system-rectification-report-2026-07-12.md](../reports/system-rectification-report-2026-07-12.md) |
-| R-132 | RPT | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” æ•´æ”¹å®ŒæˆæŠ¥å‘Š | ç”Ÿæˆæ—¶é—´**ï¼š2026-07-12 | - | C-37,R-133 | [system-rectification-final-report.md](../reports/system-rectification-final-report.md) |
-| R-133 | RPT | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” æ•´æ”¹é—ç•™äº‹é¡¹åç»­å¤„ç†è®¡åˆ’ | ç‰ˆæœ¬**: v1.0 | **æ—¥æœŸ**: 2026-07-12 | R-132 | C-37 | [rectification-follow-up-plan.md](../reports/rectification-follow-up-plan.md) |
-| R-134 | RPT | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” æ ¸å¿ƒæ•°æ®ç­–ç•¥æŠ¥å‘Š | æ–‡æ¡£ä½“ç³»ç‰ˆæœ¬**: v2.0.0 | **æœ¬æ–‡æ¡£ä¿®è®¢**: rev.1 | ** | - | C-37,I-263,I-274,I-82 | [core-data-strategy-report.md](../explanation/core-data-strategy-report.md) |
-| R-135 | RPT | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” æµ‹è¯•æŠ¥å‘Š | ç”Ÿæˆæ—¶é—´**: 2026-07-12 | - | C-37,I-242 | [test-report-2026-07-12.md](../reports/test-report-2026-07-12.md) |
-| R-136 | RPT | V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” è´¨é‡å®¡è®¡æ€»ç»“æŠ¥å‘Š | å®¡è®¡å‘¨æœŸ**ï¼š2026-06-27 | - | C-37,I-80,I-81,I-82,R-037,R-11 | [audit-summary-report.md](../explanation/design/audit-summary-report.md) |
-| R-137 | RPT | V9 æ›´æ–°æ—¥å¿—æŠ¥å‘Š | ç”Ÿæˆæ—¶é—´: 2026-07-04 06:45:59 | - | C-37,I-80,I-81,R-037 | [changelog-2026-07-04t06-45-59.md](../reports/changelog-2026-07-04t06-45-59.md) |
-| R-138 | RPT | V9 æ›´æ–°æ—¥å¿—æŠ¥å‘Š | ç”Ÿæˆæ—¶é—´: 2026-07-04 06:46:30 | - | C-37,I-80,I-81,R-037 | [monthly-2026-07.md](../reports/monthly-2026-07.md) |
-| R-139 | RPT | V9 æ¶æ„æ–‡æ¡£å˜æ›´æ—¥å¿— | éµå¾ª"å˜æ›´å³è®°å½•ï¼ˆChange as Recordï¼‰"åŸåˆ™ï¼Œæ¯æ¬¡æ¶æ„/æ•°æ®å˜æ›´å‡ | - | C-37,R-093,R-094 | [CHANGELOG.md](../reports/changelogs/CHANGELOG.md) |
-| R-140 | RPT | V9 æ¶æ„ç¼ºé™·ä¸æ•´æ”¹è¡ŒåŠ¨æ¸…å• | æ¥æºæ–‡æ¡£**ï¼š | - | C-37,I-242 | [v9-æ¶æ„ç¼ºé™·ä¸æ•´æ”¹è¡ŒåŠ¨æ¸…å•.md](../reports/audit/v9-æ¶æ„ç¼ºé™·ä¸æ•´æ”¹è¡ŒåŠ¨æ¸…å•.md) |
-| R-141 | RPT | V9 æ¨¡å—å®Œæˆåº¦é€†å‘æ ¡éªŒ â€” æ‰§è¡Œè®¡åˆ’ | æ‰¹æ¬¡ E åˆè®¡**ï¼š5ï¼ˆè¾“å‡ºèˆ±ï¼‰+ 2ï¼ˆæ€»æ§èˆ± Hub+æ ¹ï¼‰+ 10ï¼ˆAgent | - | C-37,I-80,I-81,I-82,R-037 | [quality-audit-plan.md](../explanation/design/quality-audit-plan.md) |
-| R-142 | RPT | V9 æ¨¡å—å®Œæˆåº¦é€†å‘æ ¡éªŒ â€” æ‰§è¡Œè®¡åˆ’ | æ‰¹æ¬¡ E åˆè®¡**ï¼š5ï¼ˆè¾“å‡ºèˆ±ï¼‰+ 2ï¼ˆæ€»æ§èˆ± Hub+æ ¹ï¼‰+ 10ï¼ˆAgent | - | C-37 | [quality-audit-plan.md](../reports/audit/quality-audit-plan.md) |
-| R-143 | RPT | V9 æ¨¡å—è¡¥å…¨éªŒæ”¶æŠ¥å‘Š | - | - | C-37,I-80,I-82,R-037 | [æ¨¡å—è¡¥å…¨éªŒæ”¶æŠ¥å‘Š.md](../reports/audit/æ¨¡å—è¡¥å…¨éªŒæ”¶æŠ¥å‘Š.md) |
-| R-144 | RPT | V9 æ¨¡å—é›†æˆæ°´å¹³æµ‹è¯•æ¯”å¯¹æŠ¥å‘Š â€” Agenté›†ç¾¤ä¿®å¤å | å®¡è®¡æ—¥æœŸ**ï¼š2026-06-29ï¼ˆAgenté›†ç¾¤ä¿®å¤æ‰¹æ¬¡ï¼‰ | - | C-37,I-80,I-81,R-037 | [report-12-integration-baseline-comparison.md](../reports/audit/report-12-integration-baseline-comparison.md) |
-| R-145 | RPT | V9 æ¯”å¯¹/åˆ†ææŠ¥å‘Š â€” æ£€ç´¢ä¸æ¨ªå‘æ¯”å¯¹æŠ¥å‘Š | æ£€ç´¢æ—¶é—´ï¼š2026-07-08 ï½œ èŒƒå›´ï¼š`docs/`ã€`æ ¹ç›®å½•` ä¸‹æ‰€æœ‰ ` | - | C-37,I-80,I-82,R-037 | [æ¯”å¯¹åˆ†ææŠ¥å‘Šæ£€ç´¢ä¸æ¯”å¯¹æŠ¥å‘Š.md](../reports/audit/æ¯”å¯¹åˆ†ææŠ¥å‘Šæ£€ç´¢ä¸æ¯”å¯¹æŠ¥å‘Š.md) |
-| R-146 | RPT | V9 æ¸—é€æµ‹è¯•è‡ªæŸ¥æŠ¥å‘Šï¼ˆP0-03ï¼‰ | ç”Ÿæˆæ—¶é—´**: 2026-07-13 | - | C-37,I-82 | [penetration-test-report.md](../explanation/penetration-test-report.md) |
-| R-147 | RPT | V9 æ¼æ´æ‰«ææŠ¥å‘Šä¸å¤„ç†å»ºè®® | ç”Ÿæˆæ—¶é—´**: 2026-07-13 | - | C-37,I-82 | [vulnerability-scan-report.md](../explanation/vulnerability-scan-report.md) |
-| R-148 | RPT | V9 ç³»ç»Ÿä»£ç è´¨é‡ç»¼åˆæŠ¥å‘Š | - | - | C-37,I-80,I-81,R-037 | [code-quality-report-2026-07-06.md](../reports/code-quality-report-2026-07-06.md) |
-| R-149 | RPT | V9 ç³»ç»Ÿä»£ç é‡æ„æ‰§è¡Œæ–¹æ¡ˆ | ç”Ÿæˆæ—¶é—´**: 2026-07-04 | - | C-37,I-80,I-81,R-037 | [refactoring-plan-2026-07-04.md](../reports/refactoring-plan-2026-07-04.md) |
-| R-150 | RPT | V9 è®¡åˆ’ä¸æ’æœŸï¼ˆPlansï¼‰ | å®šä½**ï¼šå­˜æ”¾è®¾è®¡é˜¶æ®µçš„è¿‡ç¨‹äº§ç‰©ï¼ˆæ–¹æ¡ˆã€åŸºçº¿ã€è¯„ä¼°ã€æ’æœŸè¡¨ï¼‰ã€‚ | - | C-37 | [README.md](../reports/release-management/README.md) |
-| R-151 | RPT | V9 è¾“å…¥èˆ±å‡çº§ç­–ç•¥æŠ¥å‘Š | Status**: Current | - | C-37,I-177,I-80,I-81,I-82,R-03 | [v9-input-cabin-strategy-report.md](../reference/v9-input-cabin-strategy-report.md) |
-| R-152 | RPT | V9 é—®é¢˜ä¿®å¤æ’æœŸæŠ¥å‘Š | åŸºå‡†ï¼š`V6Pro_æ•´ä½“æ¶æ„æ¢³ç†_v3.md`ã€`v6pro_architect | - | C-37,I-80,I-81,I-82,R-037 | [v9-remediation-plan.md](../explanation/design/v9-remediation-plan.md) |
-| R-153 | RPT | V9 é˜¶æ®µæ€§åˆå¹¶æŠ¥å‘Šï¼ˆBatch 1-3 æ±‡æ€»ï¼‰ | å½’å¹¶æ¥æºï¼š`batch1-merge-report.md` + `batch2- | - | C-37,I-177,I-80,I-81,I-82,R-03 | [batch-merge-reports.md](../explanation/design/batch-merge-reports.md) |
-| R-154 | RPT | V9 é¡¹ç›®å®¡è®¡æŠ¥å‘Š â€” 2026-07-05 | å®¡è®¡æ—¶é—´ï¼š2026-07-05 | I-114,I-115,R-129,R-162 | C-37,I-80,I-81,R-037 | [audit-findings-2026-07-05.md](../reports/audit-findings-2026-07-05.md) |
-| R-155 | RPT | V9 é¡¹ç›®æ–‡ä»¶ç³»ç»Ÿå…¨å±€è¯Šæ–­æŠ¥å‘Š | æ‰«æèŒƒå›´**ï¼šD:\FinSightV9ï¼ˆæ’é™¤ node_modules/.gi | - | C-37,I-82 | [file-system-diagnosis-report-2026-07-20.md](../reports/audit/file-system-diagnosis-report-2026-07-20.md) |
-| R-156 | RPT | V9 é¡¹ç›®æ–‡æ¡£åŒ–å·¥ä½œæŠ€æœ¯åˆ†äº« PPT å¤§çº² | ç”Ÿæˆæ—¶é—´**: 2026-07-09 | - | C-37,I-80,R-037 | [2026-07-09-technical-sharing-ppt-outline.md](../reports/2026-07-09-technical-sharing-ppt-outline.md) |
-| R-157 | RPT | V9 é¡¹ç›®æ–‡æ¡£åŒ–å·¥ä½œæœ€ç»ˆæ€»ç»“æŠ¥å‘Š | ç”Ÿæˆæ—¶é—´**: 2026-07-08 | - | C-37,I-80,R-037 | [2026-07-08-documentation-summary-report.md](../reports/2026-07-08-documentation-summary-report.md) |
-| R-158 | RPT | V9 é¡¹ç›®æ›´æ–°æ—¥å¿— â€” æ–‡æ¡£åŒ–å·¥ä½œå®Œæˆ | æ—¥æœŸ**: 2026-07-09 | - | C-37,I-80,R-037 | [2026-07-09-update-log.md](../reports/2026-07-09-update-log.md) |
-| R-159 | RPT | V9 é¡¹ç›®æœªæ–‡æ¡£åŒ–æ–‡ä»¶æŠ¥å‘Š | ç”Ÿæˆæ—¶é—´**: 2026-07-08 | - | C-37,I-80,R-037 | [2026-07-08-undocumented-files-report.md](../reports/2026-07-08-undocumented-files-report.md) |
-| R-160 | RPT | V9 é¡¹ç›®æœªæ–‡æ¡£åŒ–æ–‡ä»¶æŠ¥å‘Šï¼ˆæ›´æ–°ç‰ˆï¼‰ | ç”Ÿæˆæ—¶é—´**: 2026-07-09 | - | C-37,I-80,R-037 | [2026-07-09-undocumented-files-report.md](../reports/2026-07-09-undocumented-files-report.md) |
-| R-161 | RPT | V9ç³»ç»Ÿå››ç±»å¸¸æ€é—®é¢˜ç»¼åˆåˆ†ææŠ¥å‘Š | - | - | C-37,I-80,R-037 | [2026-07-09-four-category-problem-analysis.md](../reports/2026-07-09-four-category-problem-analysis.md) |
-| R-162 | RPT | V9é¡¹ç›®Tokenä¼˜åŒ–æœ€ä½³å®è·µæŒ‡å— | - | I-180,I-31,R-163 | C-37,I-80,I-81,R-037,R-154 | [token-optimization-best-practices.md](../reports/token-optimization-best-practices.md) |
-| R-163 | RPT | V9é¡¹ç›®Tokenæ¶ˆè€—æ·±åº¦åˆ†ææŠ¥å‘Š | - | - | C-37,I-80,I-81,R-037,R-162 | [token-consumption-analysis-2026-07-04.md](../reports/token-consumption-analysis-2026-07-04.md) |
-| R-164 | RPT | ä¸ƒç»´é‡‡é›†é…ç½®æ¨¡å— â€” æ–‡æ¡£äº¤å‰æ£€æŸ¥æŠ¥å‘Š | æ£€æŸ¥æ—¥æœŸ**: 2026-07-01 | - | C-37,I-80,I-81,I-82,R-037 | [doc-cross-check-report.md](../explanation/design/doc-cross-check-report.md) |
-| R-165 | RPT | äºŒæ¬¡æ ¡éªŒæŠ¥å‘Š â€” 2026-07-15 | æŠ¥å‘ŠèŒƒå›´**: V9 v2.6.1 ç³»ç»Ÿæ€§è¯„åˆ†çš„äºŒæ¬¡æ·±åº¦æ ¡éªŒ | - | C-37 | [secondary-verification-report-2026-07-15.md](../00-meta/secondary-verification-report-2026-07-15.md) |
-| R-166 | RPT | ä»£ç å¤šå±‚åµŒå¥—è¯„å®¡æŠ¥å‘Š | è¯„å®¡èŒƒå›´ï¼š`src/` ç›®å½•ä¸‹å…¨éƒ¨éæµ‹è¯• TypeScript/TSX æ–‡ä»¶ | - | C-37,I-82 | [nested-code-review-report.md](../explanation/nested-code-review-report.md) |
-| R-167 | RPT | ä»£ç å®¡æŸ¥å¿«é€Ÿå‚è€ƒå¡ç‰‡ | æ‰“å°å»ºè®®**: å°†æœ¬èŠ‚æ‰“å°å¹¶è´´åœ¨æ˜¾ç¤ºå™¨æ—ï¼Œæˆ–ä½¿ç”¨ asciiflow.com è½¬ | - | C-37,I-80,I-81,I-82,R-037 | [code-review-cheatsheet.md](../reference/code-review-cheatsheet.md) |
-| R-168 | RPT | ä»£ç å®¡æŸ¥è€…åŸ¹è®­ææ–™ | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-05 | - | C-37,I-80,I-81,I-82,R-037 | [code-review-training.md](../explanation/design/code-review-training.md) |
-| R-169 | RPT | ä»£ç æ¸…ç†å¾…ç¡®è®¤æ¸…å•ä¸ä¿¡æ¯å­¤å²›æ•´åˆå»ºè®® | ç‰ˆæœ¬**ï¼šv1.0ï¼ˆçœŸå®é‡å»ºï¼‰ | **æ—¥æœŸ**ï¼š2026-07-07 | - | C-37,I-80,I-82,R-037 | [ä»£ç æ¸…ç†å¾…ç¡®è®¤æ¸…å•ä¸ä¿¡æ¯å­¤å²›æ•´åˆå»ºè®®.md](../reports/audit/ä»£ç æ¸…ç†å¾…ç¡®è®¤æ¸…å•ä¸ä¿¡æ¯å­¤å²›æ•´åˆå»ºè®®.md) |
-| R-170 | RPT | ä»£ç è¯„å®¡æŠ¥å‘Š Â· WIP èšç„¦è¯„å®¡ï¼ˆ2026-07-11ï¼‰ | è¯„å®¡èŒƒå›´**ï¼šå·¥ä½œæ ‘ä¸­ 19 ä¸ªæœªæäº¤æ–‡ä»¶ + æœªè·Ÿè¸ªæ–‡ä»¶ï¼ˆi18n/UI_TE | - | C-37,I-80,R-037 | [code-review-wip-2026-07-11.md](../reports/code-review-wip-2026-07-11.md) |
-| R-171 | RPT | ä»£ç è´¨é‡åˆè§„å®¡æŸ¥æŠ¥å‘Š | å®¡æŸ¥å¯¹è±¡**ï¼šæ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ V9ï¼ˆ``ï¼‰ | - | C-37,I-80,I-82,R-037 | [ä»£ç è´¨é‡åˆè§„å®¡æŸ¥æŠ¥å‘Š_2026-07-08.md](../reports/audit/ä»£ç è´¨é‡åˆè§„å®¡æŸ¥æŠ¥å‘Š_2026-07-08.md) |
-| R-172 | RPT | ä»£ç è´¨é‡å®¡æŸ¥æŠ¥å‘Š | å®¡æŸ¥æ—¥æœŸ**: 2026-06-30 | R-174 | C-37,I-80,I-81,I-82,R-037 | [code-quality-audit-report.md](../reports/audit/code-quality-audit-report.md) |
-| R-173 | RPT | ä»£ç è´¨é‡æ•´æ”¹ä¸å›å½’æµ‹è¯•æŠ¥å‘Š | å·¥ç¨‹**ï¼šæ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ V9 | - | C-37,I-80,I-82,R-037 | [ä»£ç è´¨é‡æ•´æ”¹ä¸å›å½’æµ‹è¯•æŠ¥å‘Š_2026-07-08.md](../reports/audit/ä»£ç è´¨é‡æ•´æ”¹ä¸å›å½’æµ‹è¯•æŠ¥å‘Š_2026-07-08.md) |
-| R-174 | RPT | ä»£ç è´¨é‡é‡åŒ–è€ƒæ ¸æ ‡å‡†ï¼ˆv1.0ï¼‰ | æœ¬æ ‡å‡†åŸºäºé¡¹ç›® Hard Constraints å’Œ Engineering C | - | C-37,I-80,I-81,I-82,R-037,R-17 | [code-quality-rubric.md](../reports/audit/code-quality-rubric.md) |
-| R-175 | RPT | ä¼˜åŒ–è®¡åˆ’æ‰§è¡Œè¿›åº¦æŠ¥å‘Šï¼ˆP1 æœåŠ¡å±‚ä¸­ä¼˜é¡¹æ¨è¿›ï¼‰ | ç”Ÿæˆæ—¶é—´ï¼š2026-07-11 00:25 | - | C-37,I-82 | [optimization-progress-report.md](../explanation/optimization-progress-report.md) |
-| R-176 | RPT | ä¾èµ–åˆ†ææŠ¥å‘Š | - | - | C-37 | [dependency-analysis.md](../reports/dependency-analysis.md) |
-| R-177 | RPT | å…¨é¢æ£€æµ‹ã€æ€»ç»“ä¸æ•´æ”¹æŠ¥å‘Š â€” 2026-07-05 | æ£€æµ‹èŒƒå›´**ï¼šå…¨é‡å®¡è®¡ï¼ˆtsc / audit:layers / audit:h | - | C-37,I-80,I-81,I-82,R-037 | [2026-07-05-comprehensive-audit-and-remediation.md](../reference/changelogs/2026-07/2026-07-05-comprehensive-audit-and-remediation.md) |
-| R-178 | RPT | å†—ä½™è®¾è®¡ä¸“é¡¹ç«¯åˆ°ç«¯éªŒè¯æŠ¥å‘Šï¼ˆR1â€“R5ï¼‰ | ç‰ˆæœ¬**ï¼šv1.0 | **æ—¥æœŸ**ï¼š2026-07-14 | - | C-37,I-82 | [e2e-verify-redundancy-report.md](../reports/e2e-verify-redundancy-report.md) |
-| R-179 | RPT | å‰©ä½™ 3 ä¸ª P1 ç¼ºå£ä¿®å¤ä»£ç æ–¹æ¡ˆ | æ—¥æœŸ**: 2026-07-09 | **çŠ¶æ€**: å¾…æ‰§è¡Œ | **ç¼ºå£æ•°** | - | C-37,I-80,R-037 | [2026-07-09-remaining-p1-gaps-fix-plan.md](../reports/2026-07-09-remaining-p1-gaps-fix-plan.md) |
-| R-180 | RPT | å‰©ä½™å¤æ‚åº¦æ•´æ”¹ä»»åŠ¡æ¸…å•ä¸è®¡åˆ’ï¼ˆ2026-07-12ï¼‰ | åŸºå‡†ï¼š`complexity-baseline-current.json`ï¼ˆå®æµ‹ | - | C-37,I-82 | [complexity-remediation-plan.md](../explanation/complexity-remediation-plan.md) |
-| R-181 | RPT | å˜æ›´æ—¥å¿— â€” 2026-07-05 å¼€å‘åå¤ç›˜ä¿®å¤ | æ—¥æœŸ**: 2026-07-05 | - | C-37,I-80,I-81,I-82,R-037 | [2026-07-05-post-dev-review.md](../reference/changelogs/2026-07/2026-07-05-post-dev-review.md) |
-| R-182 | RPT | åœˆå¤æ‚åº¦ä¼˜åŒ–æ–¹æ¡ˆ | ç”Ÿæˆæ—¥æœŸ**: 2026-07-12 | - | C-37 | [complexity-optimization-plan.md](../reports/complexity-optimization-plan.md) |
-| R-183 | RPT | å®¡è®¡è„šæœ¬è¯¯æŠ¥åˆ†ææŠ¥å‘Š | æŠ¥å‘Šç¼–å·**: FP-2026-07-05-001 | - | C-37,I-80,I-81,I-82,R-037 | [2026-07-05-audit-false-positive-analysis.md](../reference/changelogs/2026-07/2026-07-05-audit-false-positive-analysis.md) |
-| R-184 | RPT | å·¥ä½œåŒºæœªè·Ÿè¸ªæ–‡ä»¶æ•´æ”¹æŠ¥å‘Š | å·¥ä½œåŒº**ï¼š`c:\Users\huawei\Documents\kimi\Wo | - | C-37,I-80,I-82,R-037 | [untracked-files-remediation-report.md](../reports/audit/untracked-files-remediation-report.md) |
-| R-185 | RPT | å¼€å‘å¤ç›˜è¡ŒåŠ¨é¡¹æ‰§è¡Œæ—¥å¿— | æ—¥æœŸ**ï¼š2026-07-05 | - | C-37,I-80,I-81,I-82,R-037 | [2026-07-05-post-dev-review-actions.md](../reference/changelogs/2026-07/2026-07-05-post-dev-review-actions.md) |
-| R-186 | RPT | å¼€å‘æ•™è®­æ€»ç»“ä¸çŸ¥è¯†æ²‰æ·€æŠ¥å‘Š | ç”Ÿæˆæ—¶é—´: 2026-07-12T00:39:37.015Z | - | C-37,I-80,R-037 | [latest.md](../reports/lessons-learned/latest.md) |
-| R-187 | RPT | å¼€å‘æ•™è®­æ€»ç»“ä¸çŸ¥è¯†æ²‰æ·€æŠ¥å‘Š | ç”Ÿæˆæ—¶é—´: 2026-07-12T00:39:37.015Z | - | C-37,I-80,R-037 | [lessons-learned-2026-07-12.md](../reports/lessons-learned/lessons-learned-2026-07-12.md) |
-| R-188 | RPT | æ‰¹æ¬¡ Bï¼ˆè¾“å…¥èˆ±ï¼‰L1-L5 äº”å±‚è¿½æº¯å®¡è®¡æŠ¥å‘Š | å®¡è®¡æ—¥æœŸ**: 2026-07-05 | - | C-37,I-80,I-81,R-037 | [batch-b-input-audit.md](../reports/batch-b-input-audit.md) |
-| R-189 | RPT | æ‰¹æ¬¡ Cï¼ˆåˆ†æèˆ±ï¼‰L1-L5 äº”å±‚è¿½æº¯å®¡è®¡æŠ¥å‘Š | å®¡è®¡æ—¥æœŸ**: 2026-07-05 | - | C-37,I-80,I-81,R-037 | [audit-batch-c-analysis.md](../reports/audit-batch-c-analysis.md) |
-| R-190 | RPT | æ–‡æ¡£â†”ä»£ç åŒå‘ä¸€è‡´æ€§æ£€æµ‹æŠ¥å‘Š | è¯´æ˜ï¼šAGENTS.md æœåŠ¡å±‚æ¸…å•ç”¨çœç•¥å·ï¼ˆ`analysis/scoring | - | C-37,I-80,I-82,R-037 | [æ–‡æ¡£-ä»£ç åŒå‘ä¸€è‡´æ€§æ£€æµ‹æŠ¥å‘Š_2026-07-08.md](../reports/audit/æ–‡æ¡£-ä»£ç åŒå‘ä¸€è‡´æ€§æ£€æµ‹æŠ¥å‘Š_2026-07-08.md) |
-| R-191 | RPT | æ–‡æ¡£æ›´æ–°ç»“æœæŠ¥å‘Š | æŠ¥å‘Šæ—¥æœŸ**: 2026-07-05 | - | C-37,I-80,I-81,R-037 | [2026-07-05-document-update-report.md](../reports/2026-07-05-document-update-report.md) |
-| R-192 | RPT | æ–‡æ¡£è‡ªåŠ¨åŒ–æ›´æ–°ä¸äº¤å‰æ£€æŸ¥ç»“æœæŠ¥å‘Š | æ‰§è¡Œæ—¶é—´ï¼š2026-07-01 æ™šé—´æ‰¹æ¬¡ | - | C-37,I-80,I-81,I-82,R-037 | [doc-update-report-20260701.md](../explanation/design/doc-update-report-20260701.md) |
-| R-193 | RPT | æœªæ–‡æ¡£åŒ–æ–‡ä»¶ JSDoc/TSDoc æ–‡æ¡£æ³¨é‡Šæ¨¡æ¿ | ç”Ÿæˆæ—¶é—´**: 2026-07-08 | - | C-37,I-80,R-037 | [2026-07-08-undocumented-files-jsdoc-templates.md](../reports/2026-07-08-undocumented-files-jsdoc-templates.md) |
-| R-194 | RPT | æµ‹è¯•å¤±è´¥åˆ†ææŠ¥å‘Š | - | I-119 | C-37,I-80,I-81,R-037 | [test-failure-analysis-report.md](../reports/test-failure-analysis-report.md) |
-| R-195 | RPT | çŸ¥è¯†å›¾è°±æ„å»ºTokenæ¶ˆè€—å¤ç›˜ä¸ä¼˜åŒ–æŠ¥å‘Š | - | - | C-37,I-80,I-81,R-037 | [knowledge-graph-token-optimization-report.md](../reports/knowledge-graph-token-optimization-report.md) |
-| R-196 | RPT | ç±»å‹é”™è¯¯è¯Šæ–­æŠ¥å‘Š | ç”Ÿæˆæ—¥æœŸ**: 2026-07-05 | - | C-37,I-80,I-81,R-037 | [type-error-diagnosis-report.md](../reports/type-error-diagnosis-report.md) |
-| R-197 | RPT | ç»Ÿä¸€é”™è¯¯å¤„ç†è¡¥ä¸æŠ¥å‘Š | ç”Ÿæˆæ—¶é—´ï¼š2026-07-12T06:41:54.485Z | - | C-37 | [error-handling-patch-report-2026-07-12.md](../reports/error-handling-patch-report-2026-07-12.md) |
-| R-198 | RPT | è‚¡ç¥¨æ± çœ‹æ¿è¿ç§»å›å½’æµ‹è¯•æŠ¥å‘Š | - | - | C-37,I-82 | [regression-test-report.md](../explanation/regression-test-report.md) |
-| R-199 | RPT | è„šæœ¬ä¸æµ‹è¯•è´¨é‡æ£€æŸ¥æŠ¥å‘Š | æ£€æŸ¥æ—¥æœŸï¼š2026-07-05 | - | C-37,I-80,I-81,R-037 | [è„šæœ¬ä¸æµ‹è¯•è´¨é‡æ£€æŸ¥æŠ¥å‘Š.md](../reports/è„šæœ¬ä¸æµ‹è¯•è´¨é‡æ£€æŸ¥æŠ¥å‘Š.md) |
-| R-200 | RPT | è¯„åˆ†å¼•æ“å¼‚å¸¸å¤„ç†ä¼˜åŒ–æµ‹è¯•æŠ¥å‘Š | - | - | C-37,I-80,I-81,I-82,R-037 | [2026-07-05-exception-handling-test-report.md](../explanation/2026-07-05-exception-handling-test-report.md) |
-| R-201 | RPT | è¯„åˆ†æ‹ç…§æ¯”å¯¹åŠŸèƒ½æ¨¡å— â€” è¡¥å……ç©¿è¡Œæµ‹è¯•æŠ¥å‘Š | ç‰ˆæœ¬**: v1.1 | **æ—¥æœŸ**: 2026-07-04 | - | C-37,I-80,I-81,I-82,R-037 | [walkthrough-scoredoc-report.md](../reference/walkthrough-scoredoc-report.md) |
-| R-202 | RPT | è·¯ç”±æ³¨å†Œç¼ºå¤±æŠ¥å‘Š | æ—¥æœŸ**: 2026-07-09 | **ä¸¥é‡çº§åˆ«**: P1 | **å½±å“èŒƒå›´ | - | C-37,I-80,R-037 | [2026-07-09-route-registration-gap-report.md](../reports/2026-07-09-route-registration-gap-report.md) |
-| R-203 | RPT | è¾“å‡ºèˆ±æ¨¡å—æœªæ˜¾ç¤ºé—®é¢˜ â€” æ•´æ”¹æŠ¥å‘Š | æŠ¥å‘Šç¼–å·**: V9-OUTPUT-CABIN-REMEDIATION-2026 | - | C-37,I-80,I-82,R-037 | [output-cabin-remediation-report.md](../reports/audit/output-cabin-remediation-report.md) |
-| R-204 | RPT | é‚®ä»¶æ­£æ–‡ï¼šV9 é¡¹ç›®æ–‡æ¡£åŒ–å·¥ä½œå®Œæˆé€šçŸ¥ | - | - | C-37,I-80,R-037 | [2026-07-09-email-body.md](../reports/2026-07-09-email-body.md) |
-| R-205 | RPT | é¡¹ç›®ä¼˜åŒ–å¤„ç†æ€»ç»“æŠ¥å‘Š | æ±‡æ€»èŒƒå›´ï¼šV9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ `src/`ã€`docs/`ã€`scripts | - | C-37,I-82 | [optimization-summary-report.md](../explanation/design/optimization-summary-report.md) |
-| R-206 | RPT | é¢œè‰²æ•´æ”¹æ€»ç»“æŠ¥å‘Š | æŠ¥å‘Šæ—¥æœŸ**: 2026-07-03 | - | C-37,I-81,I-82,R-037 | [color-remediation-summary-report-20260703.md](../reports/audit/color-remediation-summary-report-20260703.md) |
-| R-207 | SPEC | 6 ä¸ª Disabled MCP Server æ·±åº¦å¤ç›˜æŠ¥å‘Š | å®¡è®¡æ—¥æœŸ**: 2026-07-20 | - | C-37,I-82 | [mcp-disabled-server-deep-dive.md](../reports/retrospectives/mcp-disabled-server-deep-dive.md) |
-| R-208 | SPEC | data_link_sequence_diagram | - | - | C-37 | [data_link_sequence_diagram.md](../reports/retrospectives/data_link_sequence_diagram.md) |
-| R-209 | SPEC | MCP Server åƒµå°¸æ¨¡å—å®¡è®¡æŠ¥å‘Š | å®¡è®¡æ—¥æœŸ**: 2026-07-20 | - | C-37,I-82 | [mcp-zombie-server-audit-report.md](../reports/retrospectives/mcp-zombie-server-audit-report.md) |
-| R-210 | SPEC | MCP æ¨¡å—çŠ¶æ€ä¸å†å²å˜æ›´è®°å½• | æ–‡æ¡£ç”¨é€”**ï¼šè®°å½• MCP Server ç”Ÿå‘½å‘¨æœŸä¸­çš„æ‰€æœ‰çŠ¶æ€å˜æ›´ï¼Œä½œä¸ºå†³ç­–è¿½æº¯ | - | C-37,I-82 | [mcp-module-status.md](../reports/retrospectives/mcp-module-status.md) |
-| R-211 | SPEC | V9 å®æ–½æ–‡æ¡£ä¿é²œåº¦å‘Šè­¦æ¸…å• | ç”Ÿæˆæ—¥æœŸï¼š2026-06-27 | - | C-37 | [freshness-alerts.md](../reports/retrospectives/freshness-alerts.md) |
-| R-212 | SPEC | V9 å®æ–½æ–‡æ¡£å¥åº·åº¦æŠ¥å‘Š | ç”Ÿæˆæ—¥æœŸï¼š2026-06-27 | - | C-37,I-81,I-82,R-037 | [health-report.md](../reports/retrospectives/health-report.md) |
-| R-213 | SPEC | V9 å®æ–½æ–‡æ¡£æ—¶é—´è½´æŠ¥å‘Š | ç”Ÿæˆæ—¥æœŸï¼š2026-06-27 | - | C-37,I-81,I-82,R-037 | [timeline-report.md](../reports/retrospectives/timeline-report.md) |
-| R-214 | SPEC | V9 é˜¶æ®µæ€§åˆå¹¶æŠ¥å‘Šï¼ˆBatch 1-3 æ±‡æ€»ï¼‰ | å½’å¹¶æ¥æºï¼š`batch1-merge-report.md` + `batch2- | - | C-37 | [batch-merge-reports.md](../reports/retrospectives/batch-merge-reports.md) |
-| R-215 | SPEC | V9 é¡¹ç›®ç»éªŒæ•™è®­ â€” å›¢é˜Ÿåˆ†äº«æ‘˜è¦ç‰ˆ | ç‰ˆæœ¬**: v1.0.0 | **æ—¥æœŸ**: 2026-07-13 | **é˜…è¯» | R-216 | C-37,I-82 | [lessons-learned-summary.md](../reports/retrospectives/lessons-learned-summary.md) |
-| R-216 | SPEC | V9 é¡¹ç›®ç»éªŒæ•™è®­çŸ¥è¯†åº“ | ç‰ˆæœ¬**: v1.0.0 | **ç”Ÿæˆæ—¥æœŸ**: 2026-07-13 | ** | - | C-37,I-82,R-215 | [lessons-learned.md](../reports/retrospectives/lessons-learned.md) |
-| R-217 | SPEC | ä»£ç -æ–‡æ¡£åŒæ­¥æ•´ä½“æ–¹æ¡ˆä¸æ‰§è¡Œè®¡åˆ’ | Status**: Current | - | C-37 | [doc-sync-execution-plan.md](../reports/retrospectives/doc-sync-execution-plan.md) |
-| R-218 | SPEC | è¯„åˆ†æ‹ç…§æ¯”å¯¹åŠŸèƒ½æ¨¡å— â€” è¡¥å……ç©¿è¡Œæµ‹è¯•æŠ¥å‘Š | ç‰ˆæœ¬**: v1.1 | **æ—¥æœŸ**: 2026-07-04 | - | C-37 | [walkthrough-scoredoc-report.md](../reports/retrospectives/walkthrough-scoredoc-report.md) |
-| R-219 | TEST | V9 ç³»ç»Ÿç•Œé¢åŠŸèƒ½æµ‹è¯•ä¸ä¼˜åŒ–æ‰§è¡Œæ–¹æ¡ˆ | For agentic workers:** REQUIRED SUB-SKIL | - | C-37,I-80,I-81,I-82,R-037 | [2026-07-04-ui-testing-optimization.md](../reference/2026-07-04-ui-testing-optimization.md) |
-| R-220 | TEST | å›å½’æµ‹è¯•å¥—ä»¶æ¨¡æ¿ | æœ¬æ¨¡æ¿å‚ç…§ AGENTS.md Â§12.4 ä¸‰çº§å›å½’æµ‹è¯•å¥—ä»¶ã€‚ | - | C-37,I-82 | [regression-suite-v1.0.0.md](../00-meta/deprecated-docs/old-versions/regression-suite-v1.0.0.md) |
-| R-221 | UI | ADR-005: PortalShell æ·±è‰² Kimi ç»å…¸å¸ƒå±€ | Status**: Accepted | - | C-37,I-177,I-80,I-81,I-82,R-03 | [2026-06-23-portalshell-dark-kimi-layout.md](../explanation/2026-06-23-portalshell-dark-kimi-layout.md) |
-| R-222 | UI | ADR-006: è¾“å…¥èˆ±æ‹†åˆ†ä¸ºå››å­é¡µé¢ | Status**: Accepted | - | C-37,I-177,I-80,I-81,I-82,R-03 | [2026-06-24-input-cabin-subpages.md](../explanation/2026-06-24-input-cabin-subpages.md) |
+- [V9 E2E ²âÊÔÀ©Õ¹¼Æ»®](../04-testing/e2e-test-expansion-plan.md)
+- [V9 Ó²±àÂëÓë¾²Ä¬»ØÍËÇåÀí¼Æ»®](../04-testing/hardcode-cleanup-plan.md)
+- [V9 ĞÔÄÜ²âÊÔ»ùÏß±¨¸æ](../04-testing/performance-baseline.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡¤ ²âÊÔÇ°×¼±¸Çåµ¥](../04-testing/pre-testing-checklist.md)
+- [V9 °²È«²âÊÔ¼Æ»®Óë XSS ×¨Ïî²âÊÔÓÃÀı](../04-testing/security-test-plan.md)
+- [V9 µ¥Ôª²âÊÔĞŞ¸´Â·ÏßÍ¼](../04-testing/unit-test-repair-roadmap.md)
 
+### 06-project-management
+
+- [06-project-management ¡ª ÏîÄ¿¹ÜÀíÎÄµµ](../06-project-management/README.md)
+
+### ai
+
+- [AI Ïà¹ØÎÄµµÈë¿Ú](../ai/README.md)
+- [Service ¼¯³ÉÖ¸ÄÏ](../ai/service-integration-guide.md)
+- [Store ¼¯³ÉÖ¸ÄÏ](../ai/store-integration-guide.md)
+
+### architecture
+
+- [¼Ü¹¹¾ö²ß¼ÇÂ¼Èë¿Ú](../architecture/adr/README.md)
+- [API ÆõÔ¼](../architecture/api-contracts.md)
+- [²ÕÊÒ×ÜÀÀ](../architecture/cabins-overview.md)
+- [¼Ü¹¹×ÜÀÀ](../architecture/overview.md)
+- [°²È«Ä£ĞÍ](../architecture/security-model.md)
+
+### archive
+
+- [p2](../archive/-p2.md)
+- [¡­ file wandering report](../archive/¡­-file-wandering-report.md)
+- [¡­ optimization prompt](../archive/¡­-optimization-prompt.md)
+- [¡­ RCA report](../archive/¡­-RCA-report.md)
+- [¡­ task list](../archive/¡­-task-list.md)
+- [V9 ÎÄµµÌåÏµÖÎÀí ¡ª ÏÂÒ»½×¶ÎÈÎÎñÍ¼£¨P4 Ö´ĞĞ¼Æ»®£©](../archive/00-meta-archive-2026-07-13/v9-next-phase-todo.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª 23¸öºËĞÄÎÄµµ ¡¤ ×îÖÕ¼ìË÷ºËÊµ±¨¸æ](../archive/00-meta-historical/23-core-docs-final-verification-report.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª 23¸öºËĞÄÎÄµµ ¡¤ ¹¦ÄÜÆ¥Åä×îÖÕ±¨¸æ](../archive/00-meta-historical/23-core-docs-functional-match-report.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª 23¸öºËĞÄÎÄµµ ¡¤ ¶ş´ÎĞ£¶Ô×îÖÕ±¨¸æ](../archive/00-meta-historical/23-core-docs-v2-final-report.md)
+- [23 ¸öºËĞÄÎÄµµÖØĞÂ¼ìË÷±¨¸æ](../archive/00-meta-historical/23¸öºËĞÄÎÄµµÖØĞÂ¼ìË÷±¨¸æ.md)
+- [ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ V9 ¡ª ÎÄµµ¹ÜÀíÏµÍ³ÆÀ·Ö±¨¸æ](../archive/00-meta-historical/ÎÄµµ¹ÜÀíÏµÍ³ÆÀ·Ö±¨¸æ.md)
+- [ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ V9 ¡ª ÎÄµµ¹éÀàÌåÏµ½á¹¹£¨DocTaxonomy V9£©](../archive/00-meta-historical/ÎÄµµ¹éÀàÌåÏµ½á¹¹.md)
+- [V9 ÎÄµµÏµÍ³ĞÔ·ÖÀàÓëÀí½âÉî¶ÈºË²é±¨¸æ](../archive/00-meta-historical/ÎÄµµÀí½âºË²é±¨¸æ.md)
+- [ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ V9 ¡ª ÎÄµµ¹éÀàÌåÏµÌå¼ì±¨¸æ](../archive/00-meta-historical/ÎÄµµÌåÏµÌå¼ì±¨¸æ-v9.md)
+- [V9 ÎÄµµÌåÏµĞŞ¸´Ö´ĞĞ¼Æ»® v1.0](../archive/00-meta-historical/ÎÄµµÌåÏµĞŞ¸´Ö´ĞĞ¼Æ»®-v1.md)
+- [ÎÄµµ×Ô¶¯¸üĞÂÌåÏµ ¡ª ¼Ü¹¹ÊáÀí¡¢ÈÎÎñ¼ìË÷ÓëÍêÉÆÓÅ»¯¼Æ»®](../archive/00-meta-historical/ÎÄµµ×Ô¶¯¸üĞÂÌåÏµ-¼Ü¹¹ÊáÀíÓëÈÎÎñÇåµ¥.md)
+- [ÔÂ¶ÈÎÄµµÌåÏµÌå¼ì¼ì²éÇåµ¥](../archive/00-meta-historical/ÔÂ¶ÈÎÄµµÌå¼ì¼ì²éÇåµ¥.md)
+- [V9 ÎÄµµÖÎÀíÕû¸Ä ¡ª Ö´ĞĞĞ£Ñé±¨¸æ£¨P0¡úP2£©](../archive/00-meta-historical/Ö´ĞĞĞ£Ñé±¨¸æ.md)
+- [CHANGELOG ¾¯¸æ´¦Àí²ßÂÔ](../archive/00-meta-historical/changelog-warnings-handling-strategy.md)
+- [ÎÄµµÇåÀíÖÜÆÚ£¨CLEANUP_SCHEDULE£©](../archive/00-meta-historical/cleanup-schedule.md)
+- [V9 ÎÄ¼şÏµÍ³Õû¸Ä¿ª·¢ÈÕÖ¾](../archive/00-meta-historical/development-log.md)
+- [Ä¿Â¼½á¹¹ÎÄµµ ¡ª ÕûÌå¿ÉĞĞĞÔ·½°¸£¨Õï¶Ï½×¶Î½»¸¶Îï 1/2£©](../archive/00-meta-historical/directory-audit-feasibility-plan.md)
+- [P4 ÏµÍ³ĞÔÄ¿Â¼ÊáÀí±¨¸æ](../archive/00-meta-historical/directory-audit-report-v1.4.3.md)
+- [Ä¿Â¼½á¹¹ÎÄµµ ¡ª TODO Çåµ¥£¨Õï¶Ï½×¶Î½»¸¶Îï 2/2£©](../archive/00-meta-historical/directory-audit-todo.md)
+- [V9 Ä¿Â¼½á¹¹ÎÄµµÉó¼Æ±¨¸æ](../archive/00-meta-historical/directory-structure-audit-report.md)
+- [ÎÄµµ×Ô¶¯¸üĞÂÌåÏµ ¡ª ÈÎÎñ¿´°å£¨µ¥Ò»ÊÂÊµÔ´£©](../archive/00-meta-historical/doc-auto-update-kanban.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª ÎÄµµÓëÎÄ¼ş¹ÜÀíÌåÏµÓÅ»¯·½°¸](../archive/00-meta-historical/doc-file-management-optimization-plan.md)
+- [×Ô¶¯ÎÄµµĞ£¶Ô²ßÂÔ£¨doc-proofreading-strategy£©](../archive/00-meta-historical/doc-proofreading-strategy.md)
+- [V9 ÎÄµµ·ç¸ñÕû¸ÄÖ´ĞĞÈÕÖ¾£¨doc-style-remediation-log£©](../archive/00-meta-historical/doc-style-remediation-log.md)
+- [V9 ÎÄµµ·ç¸ñÕû¸Ä·½°¸£¨doc-style-remediation-plan£©](../archive/00-meta-historical/doc-style-remediation-plan.md)
+- [ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ V9 ¡ª ÎÄµµ¹éÀàÌåÏµÌå¼ì±¨¸æ](../archive/00-meta-historical/doc-system-check-v9.md)
+- [FILE-MANAGEMENT-GUIDE ´úÂëÇåÀí¾ö²ß±¨¸æ](../archive/00-meta-historical/FILE-MANAGEMENT-GUIDE-cleanup-decisions.md)
+- [ÎÄ¼şÁ÷ÀË¼ì²é±¨¸æ](../archive/00-meta-historical/FILE-MANAGEMENT-GUIDE-file-wandering-report.md)
+- [file-management-guide.md ÌåÏµÓÅ»¯ÌáÊ¾´Ê](../archive/00-meta-historical/FILE-MANAGEMENT-GUIDE-optimization-prompt.md)
+- [file-management-guide.md ¸ùÒò·ÖÎöÓë¶ş´Î¿ª·¢½ÌÑµ±¨¸æ](../archive/00-meta-historical/FILE-MANAGEMENT-GUIDE-RCA-report.md)
+- [file-management-guide.md ĞŞ¶©ÈÎÎñÇåµ¥](../archive/00-meta-historical/FILE-MANAGEMENT-GUIDE-task-list.md)
+- [V9 ÎÄ¼şÏµÍ³È«ÃæÆÀ¹À±¨¸æ](../archive/00-meta-historical/file-system-assessment-v2.md)
+- [¹¦ÄÜÄ£¿é·ÖÀàÍ¼Ê¾Óë¿ª·¢Õß±Ø¶ÁÇåµ¥](../archive/00-meta-historical/functional-module-guide.md)
+- [¼Ü¹¹Éó²éÓëÊı¾İÎÛÈ¾¼ì²â ¡ª ½ÌÑµ×Ü½á£¨2026-07-16£©](../archive/00-meta-historical/lessons-architecture-review-2026-07-16.md)
+- [V9 ÎÄµµÇ¨ÒÆ¼Æ»®£¨A-H ·ÖÀàÌåÏµ£©](../archive/00-meta-historical/migration-plan.md)
+- [outputs/ ºÍÎ´¶¨Òå src/ Ä¿Â¼ÆÀ¹À±¨¸æ](../archive/00-meta-historical/outputs-and-undefined-src-evaluation-report.md)
+- [P1-01 ²ğ·Ö±¨¸æ ¡ª LlmManagementPage ÈİÆ÷»¯ÖØ¹¹](../archive/00-meta-historical/p1-01-llm-management-split-report.md)
+- [P1-03 ²ğ·Ö±¨¸æ ¡ª collectionWizardStore Ä£¿é»¯ÖØ¹¹](../archive/00-meta-historical/p1-03-collection-wizard-store-split-report.md)
+- [P1-06 ESLint ¾¯¸æ¼¼ÊõÕ®±¨¸æ](../archive/00-meta-historical/p1-06-eslint-warning-tech-debt-report.md)
+- [P1-13 ±¨¸æ ¡ª code-to-doc ÒıÓÃ¶ÏÁÑĞŞ¸´£¨ÖĞÎÄÊéÃûºÅÎ±Â·¾¶ĞŞÕı£©](../archive/00-meta-historical/p1-13-code-to-doc-refs-fix-report.md)
+- [P1 ¶ş´ÎĞ£¶Ô±¨¸æ](../archive/00-meta-historical/P1-secondary-verification-report.md)
+- [P5 ÑéÖ¤±¨¸æ ¡ª ÏµÍ³ĞÔÄ¿Â¼ÊáÀíÊÕÎ²](../archive/00-meta-historical/P5-verification-report.md)
+- [ÌáÊ¾´Ê£ºV9 ÎÄµµÖÎÀíÓëÎÄ¼ş½á¹¹Õû¸ÄÖ´ĞĞ£¨P0¡úP3£¬AI Agent ¼¯ÈºĞ­Í¬£©](../archive/00-meta-historical/prompt-execute-remediation.md)
+- [ÔöÇ¿ÌáÊ¾´Ê£º¶àÔ´ĞÅÏ¢ºÏ²¢È¥ÖØ£¨×îĞÂÓÅÏÈ / ³åÍ»¸²¸Ç£©](../archive/00-meta-historical/prompt-merge-dedup.md)
+- [¶ş´ÎĞ£Ñé±¨¸æ ¡ª 2026-07-15](../archive/00-meta-historical/secondary-verification-report-2026-07-15.md)
+- [src/databridge/ ºÍ src/utils/ ÆÀ¹À±¨¸æ](../archive/00-meta-historical/src-directories-evaluation-report.md)
+- [V9 ÎÄ¼ş¹ÜÀíÌåÏµ ¡Á TRAE ¿ª·¢Ï°¹ß Éó²éÆÀ¼Û±¨¸æ](../archive/00-meta-historical/trae-file-management-review.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª ÎÄµµÖÎÀíĞŞ¸´ĞĞ¶¯¼Æ»®£¨Action Plan£©](../archive/00-meta-historical/V9-ÎÄµµÖÎÀíĞŞ¸´ĞĞ¶¯¼Æ»®.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª ÏîÄ¿½¡¿µ×´Ì¬×ÜÀÀ](../archive/00-meta-historical/V9-ÏîÄ¿½¡¿µ×´Ì¬×ÜÀÀ.md)
+- [V9 ÎÄµµÌåÏµÖÎÀí ¡ª ÏÂÒ»½×¶ÎÈÎÎñÍ¼£¨P4 Ö´ĞĞ¼Æ»®£©](../archive/00-meta-historical/v9-next-phase-todo.md)
+- [V9 ÉÏÏßÇ°ÏµÍ³ĞÔÊáÀí±¨¸æ](../archive/00-meta-historical/V9-PRE-LAUNCH-AUDIT-REPORT-20260713.md)
+- [¼Ü¹¹Éó¼Æ±¨¸æ£¨2026-07-16£©](../archive/01-architecture-audit-report-2026-07-16.md)
+- [2026 07 07 comprehensive audit report](../archive/2026-07-07-comprehensive-audit-report.md)
+- [2026 07 12 security audit](../archive/2026-07-12-security-audit.md)
+- [²ĞÁôĞ£¶Ô¸üĞÂ±¨¸æ 2026 07 12](../archive/²ĞÁôĞ£¶Ô¸üĞÂ±¨¸æ-2026-07-12.md)
+- [¸Ä½øÂ·ÏßÍ¼ÊµÊ©¼Æ»®](../archive/¸Ä½øÂ·ÏßÍ¼ÊµÊ©¼Æ»®.md)
+- [ÎÄ¼şÈ¥ÖØÓëÕûÀíÖÎÀí·½°¸](../archive/ÎÄ¼şÈ¥ÖØÓëÕûÀíÖÎÀí·½°¸.md)
+- [Õï¶ÏÓëÖØÊá·½°¸±¨¸æ](../archive/Õï¶ÏÓëÖØÊá·½°¸±¨¸æ.md)
+- [a navigation governance](../archive/a-navigation-governance.md)
+- [ADR 001~009](../archive/ADR-001~009.md)
+- [adr 2026 06 24 v6 migration](../archive/adr-2026-06-24-v6-migration.md)
+- [adr xxx mcp server lifecycle](../archive/adr-xxx-mcp-server-lifecycle.md)
+- [API ±¨¸æ](../archive/api-report.md)
+- [architecture cleanup completion report 2026 07 14](../archive/architecture-cleanup-completion-report-2026-07-14.md)
+- [b architecture design](../archive/b-architecture-design.md)
+- [code completeness test report](../archive/code-completeness-test-report.md)
+- [data lineage](../archive/data-lineage.md)
+- [É¾³ıÈÕÖ¾](../archive/deletion-log.md)
+- [DEPRECATED Ô­ÎÄ¼şÃû](../archive/DEPRECATED_Ô­ÎÄ¼şÃû.md)
+- [V9 ÎÊÌâÕû¸ÄÖ´ĞĞ¿´°å](../archive/deprecated-v9-issue-execution-board.md)
+- [design principles](../archive/design-principles.md)
+- [doc auto updater diagnosis and score](../archive/doc-auto-updater-diagnosis-and-score.md)
+- [ÎÄµµ-´úÂëÒ»ÖÂĞÔ±¨¸æ£¨¹éµµ£©](../archive/doc-code-consistency.md)
+- [Ë«²ßÂÔ·ÖÆçÇåµ¥](../archive/dual-strategy-divergence-list.md)
+- [feature xxx template](../archive/feature-xxx-template.md)
+- [How to Add Page](../archive/how-to-add-page.md)
+- [NewsPage Ç¨ÒÆÑéÊÕÈ·ÈÏÊé](../archive/NewsPage-Ç¨ÒÆÑéÊÕÈ·ÈÏÊé.md)
+- [nonexistent placeholder](../archive/nonexistent-placeholder.md)
+- [pr 6 module split plan](../archive/pr-6-module-split-plan.md)
+- [prototype reference](../archive/prototype-reference.md)
+- [pwa offline data strategy](../archive/pwa-offline-data-strategy.md)
+- [quick queries](../archive/quick-queries.md)
+- [React Lifecycle Patterns](../archive/react-lifecycle-patterns.md)
+- [¹éµµÄ¿Â¼£¨07-archive£©](../archive/README.md)
+- [ÈßÓà Store ²¹³äÑéÖ¤±¨¸æ](../archive/redundant-stores-supplementary-verification.md)
+- [08. ÊµÊ©¼Æ»®](../archive/reference-historical/08-implementation-plan.md)
+- [V9 ÖÇÄÜÌå¼ìÊÓ±¨¸æ](../archive/reference-historical/agent-audit-report.md)
+- [V9 Ç°¶ËÓ¦ÓÃ´úÂë±àĞ´ÖÊÁ¿Éó¼Æ±¨¸æ (B4-1)](../archive/reference-historical/audit-b4-1-code-quality.md)
+- [V9 Ç°¶ËÓ¦ÓÃ°²È«ÖÊÁ¿Éó¼Æ±¨¸æ](../archive/reference-historical/audit-b4-4-security.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ È«Ãæ×Ô¶¯»¯²âÊÔÊµÊ©¼Æ»®](../archive/reference-historical/automation-test-plan.md)
+- [Åú´Î B P2 ÎÊÌâĞŞ¸´·½°¸](../archive/reference-historical/batchB-fix-plan.md)
+- [V9 Åú´Î D£¨½»Ò×²Õ£©P2 ÎÊÌâĞŞ¸´·½°¸](../archive/reference-historical/batchD-fix-plan.md)
+- [V9 Åú´Î E£¨Êä³ö²Õ + ×Ü¿Ø²Õ£©P2 ÎÊÌâĞŞ¸´·½°¸](../archive/reference-historical/batchE-fix-plan.md)
+- [Cockpit + News Ä£¿éÎÄµµĞŞÕı·½°¸](../archive/reference-historical/cockpit-news-doc-fix-plan.md)
+- [Êı¾İ²É¼¯Ä£¿éÂ·ÓÉÓëUIĞ£¶Ô·ÖÎö±¨¸æ](../archive/reference-historical/data-collection-route-ui-audit.md)
+- [databridge.ts ÏêÏ¸·Ö²ğ·½°¸](../archive/reference-historical/databridge-split-plan.md)
+- [¡¸¹ÉÆ±³Ø¡¹·º»¯¾ÉÃû³Æ ÄÚ²¿±êÊ¶·ûÖØÃüÃûÖØ¹¹·½°¸](../archive/reference-historical/refactor-research-pool-rename-plan.md)
+- [¹ÉÆ±³Ø¿´°åÇ¨ÒÆÖÁ·ÖÎö²Õ ¡ª ¿ÉĞĞĞÔ·½°¸ÂÛÖ¤](../archive/reference-historical/stock-pool-board-migration-proposal.md)
+- [V6-V9 ½çÃæÉè¼ÆÓÅ»¯Õû¸ÄÈÎÎñÃ÷Ï¸±í](../archive/reference-historical/ui-remediation-tracker.md)
+- [V6 Pro ¡ú V9 Ô´Âë±È¶ÔÓë¶ş´Î¿ª·¢ÖØµãÄ£¿éÊáÀí](../archive/reference-historical/v6pro-to-v9-migration-analysis.md)
+- [V9 ¼Ü¹¹ Phase 4 Ò»ÖÂĞÔÑéÖ¤±¨¸æ](../archive/reference-historical/v9-architecture-data-dictionary-validation-report.md)
+- [V9 ´úÂëÖÊÁ¿Ğ£¶Ô·ÖÎö±¨¸æ](../archive/reference-historical/v9-code-quality-audit-report-20260629.md)
+- [V9 ÊäÈë²ÕÉı¼¶²ßÂÔ±¨¸æ](../archive/reference-historical/v9-input-cabin-strategy-report.md)
+- [ÆÀ·ÖÅÄÕÕ±È¶Ô¹¦ÄÜÄ£¿é ¡ª ²¹³ä´©ĞĞ²âÊÔ±¨¸æ](../archive/reference-historical/walkthrough-scoredoc-report.md)
+- [Report 1: Architecture Health](../archive/report-1-architecture-health.md)
+- [report 10 mature app benchmark comparison](../archive/report-10-mature-app-benchmark-comparison.md)
+- [report 11 integration maturity test](../archive/report-11-integration-maturity-test.md)
+- [Report 2: Function Completeness](../archive/report-2-function-completeness.md)
+- [Report 3: Data Type Consistency](../archive/report-3-data-type-consistency.md)
+- [Report 4: Test Quality Gates](../archive/report-4-test-quality-gates.md)
+- [Report 5: Documentation Completeness](../archive/report-5-documentation-completeness.md)
+- [report 7 ui component supplementary audit](../archive/report-7-ui-component-supplementary-audit.md)
+- [report 9 data layer compliance](../archive/report-9-data-layer-compliance.md)
+- [route registry audit notes](../archive/route-registry-audit-notes.md)
+- [Silent Fallback ĞŞ¸´±¨¸æ](../archive/silent-fallback-fix-report.md)
+- [trade error classifier split completion archive](../archive/trade-error-classifier-split-completion-archive.md)
+- [Type Evolution Guide](../archive/type-evolution-guide.md)
+- [UI Ä£¿é¶ÔÆëËµÃ÷](../archive/ui-module-alignment.md)
+- [UI ÓÅ»¯¼Æ»®](../archive/ui-optimization-plan.md)
+- [v10 architecture whitepaper](../archive/v10-architecture-whitepaper.md)
+
+### assets
+
+- [ÎÒÓÃ WorkBuddy ¸øÉó¼ÆÍÅ¶Ó´îÁË 20 ¸ö"·ÖÉí"£ºÒ»¸öÉó¼ÆºÏ»ïÈËµÄ AI ¹¤×÷Á÷¸ÄÔìÊµÂ¼ #WorkBuddy](../assets/articles/01-tutorial-audit-workflow.md)
+- [Éó¼Æ³¡¾°ÏÂ WorkBuddy µÄ 5 ¸öÕæÊµ²È¿ÓÓë½â·¨ #WorkBuddy](../assets/articles/02-experience-five-pitfalls.md)
+- [·¢ÎÄ¾ÍĞ÷¿¨ ¡¤ ÌÚÑ¶ÔÆ¿ª·¢ÕßÉçÇø](../assets/articles/publish-ready.md)
+
+### design
+
+- [ÎŞÕÏ°­Óë¹ú¼Ê»¯](../design/a11y-i18n.md)
+- [ÑÕÉ«ÁîÅÆµ¥Ô´Õû¸Ä ¡¤ ¿ÉĞĞĞÔ·ÖÎöÓëÊµ¼ù·½°¸](../design/color-token-consolidation-feasibility.md)
+- [»ù´¡×é¼ş¹æ·¶£¨V9 Éè¼Æ»ù×ù£©](../design/component-specs.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡¤ Éè¼ÆÏµÍ³²îÒì¶Ô±È±¨¸æ](../design/design-system-audit-report.md)
+- [design ¡ª Éè¼ÆÎÄµµ£¨¼æÈİÖØ¶¨Ïò£©](../design/README.md)
+- [ËÎÔÏÃÀÑ§](../design/song-aesthetics.md)
+
+### drafts
+
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ - API ÎÄµµ](../drafts/complete-api-doc.md)
+- [docs/drafts/ ¡ª ÁÙÊ±²İ¸åÇø](../drafts/README.md)
+
+### explanation
+
+- [01. Ô¸¾°ÓëÄ¿±ê](../explanation/01-vision-and-goals.md)
+- [10. ÁìÓò´Ê»ã±í](../explanation/10-glossary.md)
+- [ADR-005: PortalShell ÉîÉ« Kimi ¾­µä²¼¾Ö](../explanation/2026-06-23-portalshell-dark-kimi-layout.md)
+- [ADR-006: ÊäÈë²Õ²ğ·ÖÎªËÄ×ÓÒ³Ãæ](../explanation/2026-06-24-input-cabin-subpages.md)
+- [ADR-007: ²¹ÆëÉ¸Ñ¡ÒıÇæ¡¢ĞÅºÅ³Ö¾Ã»¯Óë¸´ÅÌÒıÇæ](../explanation/2026-06-24-pool-screening-signal-persistence-review-engine.md)
+- [ADR-009: V6 Pro JSON È«Á¿µ¼³öÇ¨ÒÆÖÁ V9 IndexedDB](../explanation/2026-06-25-v6-migration.md)
+- [ADR-009: ÒıÈëÈÈÃÅ°å¿éÓë¼ÛÖµÍİµØË«²ßÂÔÌåÏµ](../explanation/2026-06-27-dual-strategy-system.md)
+- [ÆÀ·ÖÒıÇæÒì³£´¦ÀíÓÅ»¯²âÊÔ±¨¸æ](../explanation/2026-07-05-exception-handling-test-report.md)
+- [Ë«Í¨µÀÍ¶ÑĞÆÀ·ÖÏµÍ³¼¼Êõ·½°¸£¨¿ÉĞĞĞÔÂÛÖ¤±¨¸æ£©](../explanation/Ë«Í¨µÀÍ¶ÑĞÆÀ·ÖÏµÍ³¼¼Êõ·½°¸.md)
+- [V9 ÎÄµµÌåÏµ ¡ª A-H ·ÖÀàË÷Òı£¨ÕæÊµÓ³Éä£©](../explanation/A-H-INDEX.md)
+- [V9 ÎŞÕÏ°­£¨Accessibility£©¼ì²éÇåµ¥](../explanation/a11y-checklist.md)
+- [T-09 WCAG ¶Ô±È¶È¸´ºË±¨¸æ](../explanation/a11y-contrast-report.md)
+- [ÎŞÕÏ°­Óë¹ú¼Ê»¯Ö¸ÄÏ£¨A11y & i18n£©](../explanation/a11y-i18n.md)
+- [V9 Îå²ã×·ËİÉó¼Æ ¡ª ĞŞ¸´ĞĞ¶¯Çåµ¥](../explanation/action-list.md)
+- [ADR-001: ´¿Ç°¶ËÎŞºó¶Ë¼Ü¹¹](../explanation/adr-001-pure-frontend-architecture.md)
+- [ADR-004: HashRouter ¾²Ì¬ÍĞ¹Ü·½°¸](../explanation/adr-004-hashrouter-static-hosting.md)
+- [ADR-005: PortalShell ÉîÉ« Kimi ¾­µä²¼¾Ö](../explanation/adr-005-portalshell-dark-kimi-layout.md)
+- [ADR-007: ²¹ÆëÉ¸Ñ¡ÒıÇæ¡¢ĞÅºÅ³Ö¾Ã»¯Óë¸´ÅÌÒıÇæ](../explanation/adr-007-screening-signal-persistence-review.md)
+- [ADR-008: ²ÉÓÃ V6 ºËĞÄ×ÊÔ´½»Ò×²ßÂÔ](../explanation/adr-008-v6-core-resource-trading-strategy.md)
+- [ADR-009: ÒıÈëÈÈÃÅ°å¿éÓë¼ÛÖµÍİµØË«²ßÂÔÌåÏµ](../explanation/adr-009-dual-strategy-system.md)
+- [DEPRECATED - ai-center-data-definition.md](../explanation/ai-center-data-definition.md)
+- [AI ÖĞĞÄ Vue3 ×é¼şÊ¾Àı](../explanation/ai-center-vue3-examples.md)
+- [AI Éú³É¡ªÉó¼Æ¡ªĞŞÕı·ÉÂÖ](../explanation/ai-generate-audit-fix-loop.md)
+- [ÏîÄ¿×¨Êô AI ¼ÇÒä²ã£¨RAG£©](../explanation/ai-memory-layer.md)
+- [¼Ü¹¹Éè¼ÆÎÄµµ°æ±¾±È¶Ô](../explanation/architecture-version-comparison.md)
+- [ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ V9 ¡ª ¼İÊ»²Õ Widget ¼Ü¹¹ËµÃ÷](../explanation/ARCHITECTURE.md)
+- [V9 Ç°¶ËÓ¦ÓÃ²âÊÔÖÊÁ¿Éó¼Æ±¨¸æ](../explanation/audit-b4-2-test-quality.md)
+- [B Åú´Î¸ß¼ÛÖµ¹Â¶ù×é¼ş¼¯³É×´Ì¬±¨¸æ](../explanation/bÅú´Î¸ß¼ÛÖµ¹Â¶ù¼¯³É×´Ì¬±¨¸æ-2026-07-08.md)
+- [B Åú´Î×é¼ş¼¯³É²âÊÔ±¨¸æ£¨B-6£©](../explanation/bÅú´Î×é¼ş¼¯³É²âÊÔ±¨¸æ-b6-2026-07-08.md)
+- [V9 ²ÕÊÒ×ÜÀÀ£¨Cabins Overview£©](../explanation/cabins-overview.md)
+- [V9 Ä£¿éÍê³É¶ÈÆÊÃæÍ¼ ¡ª Åú´Î B£¨ÊäÈë²Õ£©](../explanation/completeness-profile-batch2.md)
+- [V9 Ä£¿éÍê³É¶ÈÆÊÃæÍ¼ ¡ª Åú´Î C£¨·ÖÎö²Õ£©](../explanation/completeness-profile-batch3.md)
+- [V9 Ä£¿éÍê³É¶ÈÆÊÃæÍ¼ ¡ª Åú´Î D£¨½»Ò×²Õ£©](../explanation/completeness-profile-batch4.md)
+- [V9 Åú´Î E£ºÊä³ö²Õ + ×Ü¿Ø²Õ + ÆäËû ¡ª Íê³É¶ÈÆÊÃæÍ¼](../explanation/completeness-profile-batch5.md)
+- [V9 Ä£¿éÍê³É¶ÈÆÊÃæÍ¼ ¡ª È«Á¿»ã×Ü](../explanation/completeness-profile.md)
+- [´úÂë¸´ÔÓ¶ÈÖÎÀí¹æ·¶](../explanation/complexity-governance.md)
+- [´úÂë¸´ÔÓ¶ÈÖÎÀí¹æ·¶](../explanation/complexity-redlines.md)
+- [Ê£Óà¸´ÔÓ¶ÈÕû¸ÄÈÎÎñÇåµ¥Óë¼Æ»®£¨2026-07-12£©](../explanation/complexity-remediation-plan.md)
+- [V9 ×é¼şÆúÓÃÕş²ß](../explanation/component-deprecation-policy.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª ºËĞÄÊı¾İ²ßÂÔ±¨¸æ](../explanation/core-data-strategy-report.md)
+- [Êı¾İ²É¼¯Ä£¿é¼Ü¹¹Éè¼Æ](../explanation/data-collection-architecture.md)
+- [V9 Êı¾İ²ã×ÜÀÀ](../explanation/data-layer-overview.md)
+- [DEPRECATED - dataflow-data-definition.md](../explanation/dataflow-data-definition.md)
+- [V6ProDB IndexedDB Éı¼¶¹æ·¶£¨v4 ¡ú v6£©](../explanation/db-migration-v4-to-v6.md)
+- [Batch-2 ½×¶ÎĞÔºÏ²¢±¨¸æ](../explanation/deprecated-batch2-merge-report.md)
+- [V9 ÎÊÌâÕû¸Äµ÷¶È±í](../explanation/deprecated-v9-issue-resolution-schedule.md)
+- [Design Tokens ÏµÍ³Ê¹ÓÃÖ¸ÄÏ](../explanation/design-tokens.md)
+- [V9 ¼¼ÊõÊµÊ©ÎÄµµË÷Òı](../explanation/design/00-readme.md)
+- [04. UI/UX ¹æ·¶](../explanation/design/04-ui-ux-specs.md)
+- [06. Â·ÓÉ¹æ¸ñ](../explanation/design/06-routing-specs.md)
+- [07. ÔËÓª²ßÂÔ](../explanation/design/07-operation-strategy.md)
+- [08. ÊµÊ©¼Æ»®](../explanation/design/08-implementation-plan.md)
+- [09. ÖÊÁ¿ÃÅ½û](../explanation/design/09-quality-gates.md)
+- [ADR-001: ´¿Ç°¶ËÎŞºó¶Ë¼Ü¹¹](../explanation/design/2026-06-20-pure-frontend-architecture.md)
+- [ADR-009: ÒıÈëÈÈÃÅ°å¿éÓë¼ÛÖµÍİµØË«²ßÂÔÌåÏµ](../explanation/design/2026-06-27-dual-strategy-system.md)
+- [V9 Êı¾İ¼Ü¹¹Îå´óÎÊÌâÖÎÀí¼Æ»®](../explanation/design/2026-06-29-data-architecture-governance.md)
+- [²È¿Ó¹æÔòÃÅ½ûÖ¸ÄÏ](../explanation/design/²È¿Ó¹æÔòÃÅ½ûÖ¸ÄÏ.md)
+- [R01 ·¢²¼¼Æ»®ÓëÆÀÉóÎÄµµ ¡ª V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³](../explanation/design/·¢²¼¼Æ»®ÓëÆÀÉó-r01.md)
+- [R03 »Ø¹ö·½°¸ÓëÑİÁ·ÎÄµµ ¡ª V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³](../explanation/design/»Ø¹ö·½°¸ÓëÑİÁ·-r03.md)
+- [Ç¨ÒÆ·çÏÕ¸´ÅÌÓëÓ¦¶Ô²ßÂÔÎÄµµ](../explanation/design/Ç¨ÒÆ·çÏÕ¸´ÅÌÓëÓ¦¶Ô²ßÂÔÎÄµµ.md)
+- [V9 Êı¾İÖÎÀíÂ·ÏßÍ¼ÓëÖ´ĞĞÓÅÏÈ¼¶](../explanation/design/Êı¾İÖÎÀíÂ·ÏßÍ¼.md)
+- [Ë«Í¨µÀÍ¶ÑĞÆÀ·ÖÏµÍ³¼¼Êõ·½°¸£¨¿ÉĞĞĞÔÂÛÖ¤±¨¸æ£©](../explanation/design/Ë«Í¨µÀÍ¶ÑĞÆÀ·ÖÏµÍ³¼¼Êõ·½°¸.md)
+- [ÒµÎñÄÜÁ¦²¹³ä±¨¸æ£º×ÔÑ¡¹ÉÒì¶¯ Widget](../explanation/design/ÒµÎñÄÜÁ¦²¹³ä±¨¸æ_×ÔÑ¡¹ÉÒì¶¯_2026-07-09.md)
+- [AI ÖÇÄÜÌåµ÷¶ÈÖĞĞÄ / ½¡¿µ¼à¿Ø / Õï¶Ï·ÖÎö ¡ª Êı¾İ×Öµä](../explanation/design/ai-center-data-definition.md)
+- [V9 Êı¾İ·ÖÎöÓëÉ¸Ñ¡Ä£¿é¿ª·¢ÈÎÎñ¹æ»®Óë Agent ·ÖÅä](../explanation/design/analysis-screening-module-dev-plan.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª ¼Ü¹¹ºÏ¹æÉó¼Æ±¨¸æ£¨T-11 µÚÒ»ÂÖ£©](../explanation/design/architecture-compliance-report.md)
+- [V9 Ç°¶ËÓ¦ÓÃĞÔÄÜÖÊÁ¿Éó¼Æ±¨¸æ](../explanation/design/audit-b4-3-performance.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª ÖÊÁ¿Éó¼Æ×Ü½á±¨¸æ](../explanation/design/audit-summary-report.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ×ÛºÏ²âÊÔÓë¿ÉĞĞĞÔÆÀ¹À±¨¸æ](../explanation/design/automation-test-evaluation.md)
+- [V9 ×ÔÖ÷¹¤×÷Á÷ÓÅ»¯²ßÂÔ](../explanation/design/autonomous-workflow-optimization.md)
+- [V9 ½×¶ÎĞÔºÏ²¢±¨¸æ£¨Batch 1-3 »ã×Ü£©](../explanation/design/batch-merge-reports.md)
+- [Blueprints](../explanation/design/blueprints/README.md)
+- [buildScoreDocDiff ĞŞ¸´ ¡ª Éú²ú²¿Êğ»Ø¹öÔ¤°¸](../explanation/design/buildscoredocdiff-rollback-plan.md)
+- [´úÂëÉó²éÕßÅàÑµ²ÄÁÏ](../explanation/design/code-review-training.md)
+- [V9 Ä£¿éÍê³É¶ÈÆÊÃæÍ¼ ¡ª Åú´Î D£¨½»Ò×²Õ£©](../explanation/design/completeness-profile-batch4.md)
+- [V9 UI ×é¼ş¿âÊ¹ÓÃÖ¸ÄÏ](../explanation/design/component-library-guide.md)
+- [ºËĞÄÏ¡È±×ÊÔ´²ßÂÔ£¨core-scarce£©](../explanation/design/core-scarce-strategy.md)
+- [Êı¾İ²É¼¯Ä£¿é¼Ü¹¹Éè¼Æ](../explanation/design/data-collection-architecture.md)
+- [Êı¾İ²É¼¯¹¦ÄÜ²î¾à·ÖÎö±¨¸æ](../explanation/design/data-collection-gap-analysis.md)
+- [Êı¾İ²É¼¯Ä£¿éÂ·ÓÉÓëUIĞ£¶Ô·ÖÎö±¨¸æ](../explanation/design/data-collection-route-ui-audit.md)
+- [Cockpit Widget ¿ò¼ÜÊı¾İ×Öµä](../explanation/design/data-definition.md)
+- [V9 Êı¾İ×ÖµäË÷Òı](../explanation/design/data-dictionary-index.md)
+- [V9 Êı¾İÁ÷¹æ·¶](../explanation/design/data-flow-spec.md)
+- [DataBridge ¸Ä½ø½¨ÒéÕû¸Ä±¨¸æ](../explanation/design/databridge¸Ä½ø½¨ÒéÕû¸Ä±¨¸æ.md)
+- [DataBridge Êı¾İÁ´Â·È«¾°·ÖÎö±¨¸æ](../explanation/design/databridgeÊı¾İÁ´Â·È«¾°·ÖÎö±¨¸æ.md)
+- [Êı¾İÁ÷ÒıÇæ£¨DataFlow Engine£©Êı¾İ×Öµä](../explanation/design/dataflow-data-definition.md)
+- [Batch-1 ½×¶ÎĞÔºÏ²¢±¨¸æ](../explanation/design/deprecated-batch1-merge-report.md)
+- [Batch-3 È«Á¿»Ø¹é²âÊÔ±¨¸æ](../explanation/design/deprecated-batch3-merge-report.md)
+- [Cockpit & News Ä£¿éÎÄµµĞŞÕı·½°¸£¨Phase 2-3£©](../explanation/design/deprecated-cockpit-news-doc-correction-plan.md)
+- [´úÂë-ÎÄµµÍ¬²½²îÒìÇåµ¥](../explanation/design/deprecated-doc-sync-gap-list.md)
+- [V9 ²¢ĞĞÈÎÎñµ÷¶È±í](../explanation/design/deprecated-v9-parallel-task-schedule.md)
+- [Design Tokens ÏµÍ³Ê¹ÓÃÖ¸ÄÏ](../explanation/design/design-tokens.md)
+- [ÆßÎ¬²É¼¯ÅäÖÃÄ£¿é ¡ª ÎÄµµ½»²æ¼ì²é±¨¸æ](../explanation/design/doc-cross-check-report.md)
+- [´úÂë-ÎÄµµÍ¬²½ÕûÌå·½°¸ÓëÖ´ĞĞ¼Æ»®](../explanation/design/doc-sync-execution-plan.md)
+- [ÎÄµµ×Ô¶¯»¯¸üĞÂÓë½»²æ¼ì²é½á¹û±¨¸æ](../explanation/design/doc-update-report-20260701.md)
+- [V9 Ë«²ßÂÔÌåÏµÓëÊı¾İÁ÷¼Ü¹¹¹æ¸ñ](../explanation/design/dual-strategy-dataflow-spec.md)
+- [V9 Ë«²ßÂÔ¹æ¸ñÓëÏÖÓĞÏîÄ¿²îÒì·ÖÎö±¨¸æ](../explanation/design/dual-strategy-gap-analysis.md)
+- [V9 ÊµÊ©ÎÄµµ±£ÏÊ¶È¸æ¾¯Çåµ¥](../explanation/design/freshness-alerts.md)
+- [ÈÈÃÅÈüµÀ²ßÂÔ£¨hot-momentum£©](../explanation/design/hot-momentum-strategy.md)
+- [ÊµÊ©ÖÎÀíÓë¼Ü¹¹¾ö²ß¼ÇÂ¼](../explanation/design/implementation-governance.md)
+- [ÊäÈë²ÕÒµÎñ¹æ¸ñÓëÊµÏÖÓ³Éä](../explanation/design/input-cabin-spec.md)
+- [Í¶×ÊÁ÷³Ì½×¶Î»¯·ÖÎö£º²ÖÎ»¡¢ÒıÇæ¡¢Êı¾İ¼Ü¹¹ÓëÊı¾İ½»»¥](../explanation/design/investment-pipeline-stage-analysis.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ - MCP ×îĞ¡ñîºÏÔ­ÔòºÏ¹æĞÔ·ÖÎö±¨¸æ](../explanation/design/mcp-coupling-analysis-report.md)
+- [¶àÒò×ÓÑ¡¹ÉÉ¸Ñ¡Æ÷Êı¾İ×Öµä](../explanation/design/multi-factor-screening-data-definition.md)
+- [NewsPage£¨ÖÇÄÜ×ÊÑ¶ÖĞĞÄ£©Êı¾İ×Öµä](../explanation/design/news-data-definition.md)
+- [ÏîÄ¿ÓÅ»¯´¦Àí×Ü½á±¨¸æ](../explanation/design/optimization-summary-report.md)
+- [P4 ÎÄµµÈ¥ÖØÇåµ¥ÓëÖ´ĞĞ·½°¸](../explanation/design/p4-ÎÄµµÈ¥ÖØÇåµ¥ÓëÖ´ĞĞ·½°¸.md)
+- [V9 ´ı´¦ÀíÊÂÏîÇåµ¥£¨Backlog£©](../explanation/design/pending-items-backlog-20260704.md)
+- [ÖÊÁ¿±£ÕÏ²ßÂÔ£º·Ö½×¶Î×ÔÊÊÓ¦¼ì²é»úÖÆ](../explanation/design/quality-assurance-strategy.md)
+- [V9 Ä£¿éÍê³É¶ÈÄæÏòĞ£Ñé ¡ª Ö´ĞĞ¼Æ»®](../explanation/design/quality-audit-plan.md)
+- [±ä¸üÓ°Ïì·ÖÎö±¨¸æ](../explanation/design/refactor-impact-analysis-2026-06-27.md)
+- [ÎÄµµË÷Òı](../explanation/design/registry-index.md)
+- [solo-review.md ¡ª µ¥ÈË¿ª·¢´úÂëÉó²éÖ¸ÄÏ](../explanation/design/solo-review.md)
+- [V9 ¼ä¾àÁîÅÆ¹æ·¶£¨Spacing Tokens£©](../explanation/design/spacing-tokens.md)
+- [V9 Ñ¡¹É²ßÂÔ×ÜÎÄµµ](../explanation/design/stock-selection-strategy.md)
+- [tech-debt.md ¡ª ¼¼ÊõÕ®¹ÜÀíÎÄµµ](../explanation/design/tech-debt.md)
+- [²âÊÔÀ©³äÉè¼Æ·½°¸](../explanation/design/test-expansion-design.md)
+- [TradeReviewAI SkillDevelopment ²âÊÔËµÃ÷](../explanation/design/tradereviewai-skill-testing.md)
+- [½»Ò×ºËĞÄÒò×ÓÓë¸´ÅÌÖ¸±êµ¼Èë](../explanation/design/trading-core-factors.md)
+- [V9 UI Éè¼ÆÓÅ»¯·Ö²¼Ê½ AGENT ÈÎÎñÖ´ĞĞÇåµ¥](../explanation/design/ui-design-agent-execution-plan.md)
+- [V9 UI Éè¼ÆÏµÍ³](../explanation/design/ui-design-system.md)
+- [V6 Pro UI / Page ÎüÊÕÂäµØ×Ü½á£¨½ö UI Õ¹Ê¾²ã£¬²»¶¯Êı¾İ¼Ü¹¹£©](../explanation/design/ui-only-implementation-summary.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª UI ¸ÄÉÆ²¿·Ö¼ìË÷±¨¸æ](../explanation/design/ui¸ÄÉÆ²¿·Ö¼ìË÷±¨¸æ.md)
+- [V6 ¡ú V9 ¼Ü¹¹Ò»ÖÂĞÔÕû¸ÄĞĞ¶¯Çåµ¥](../explanation/design/v6-v9-architecture-audit-action-list.md)
+- [V6 ¡ú V9 ¼Ü¹¹Ò»ÖÂĞÔÉó¼Æ¼Æ»®](../explanation/design/v6-v9-architecture-audit-plan.md)
+- [V6¡úV9 ¼Ü¹¹Õû¸ÄĞ£ÕıÆÀ¹ÀÓë¿ÉĞĞĞÔ·ÖÎö±¨¸æ](../explanation/design/v6-v9-rectification-feasibility-report.md)
+- [V6-V9 ½çÃæÉè¼ÆÓÅ»¯ÏêÏ¸¿ÉĞĞĞÔ¼Æ»®](../explanation/design/v6-v9½çÃæÉè¼ÆÓÅ»¯¿ÉĞĞĞÔ¼Æ»®.md)
+- [V6-V9 ½çÃæÉè¼Æ×îĞÂ HTML ¾«¶Á±¨¸æ](../explanation/design/v6-v9½çÃæÉè¼Æhtml¾«¶Á±¨¸æ.md)
+- [V6 Pro ±¸·İÔ´Âë/ÏßÉÏÕ¾µã Óë V9 µ±Ç°ÏîÄ¿ UI & Page ²îÒìÈ«Á¿¶Ô±È±¨¸æ](../explanation/design/v6pro-ui-page-diff-report.md)
+- [V6 Pro ¡ú V9 ¼Ü¹¹²îÒì·ÖÎö±¨¸æ](../explanation/design/v6pro-v9-gap-analysis-final.md)
+- [V9 Ë«²ßÂÔÒ»ÖÂĞÔÊÕÁ² ¡ª ÑéÊÕ±¨¸æ](../explanation/design/v9-acceptance-report.md)
+- [V9 ¼Ü¹¹×Ê²ú²îÒì·ÖÎö±¨¸æ£¨Phase 5 Éî²ãÉó¼Æ£©](../explanation/design/v9-architecture-data-diff-report.md)
+- [V9 ¼Ü¹¹Õû¸Ä×ÜÌå²ßÂÔÓëÖ´ĞĞ¼Æ»®](../explanation/design/v9-architecture-rectification-strategy.md)
+- [V9 ´úÂëÖÊÁ¿Ğ£¶Ô·ÖÎö ¡ª ¹ı³ÌÍ¸Ã÷¿´°å](../explanation/design/v9-code-quality-kanban-20260629.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª µ±Ç°×´Ì¬È«ÃæÊáÀí£¨°´ÊµÊ©½ø¶È£©](../explanation/design/v9-current-state-review.md)
+- [V9 Êı¾İ¹ØÏµÀ¶Í¼ÈÎÎñ¸ú×Ù¼Æ»®](../explanation/design/v9-data-blueprint-task-tracking.md)
+- [V9 ÎÄµµÌåÏµ»¯Éó¼ÆÓë²¹È«½¨ÒéÊé](../explanation/design/v9-documentation-audit-report.md)
+- [V9 IndexedDB Store Schema ÎÄµµ](../explanation/design/v9-indexeddb-store-schema.md)
+- [V9 ½»»¥Ê±ĞòÎÄµµ¸´ºË±¨¸æ](../explanation/design/v9-interaction-flows-review.md)
+- [V9 P0 ÑÏÖØÎÊÌâĞŞ¸´·½°¸](../explanation/design/v9-p0-remediation-plan.md)
+- [V9 ¿ª·¢ºó¸´ÅÌ±¨¸æ](../explanation/design/v9-post-dev-review.md)
+- [V9 ÎÊÌâĞŞ¸´ÅÅÆÚ±¨¸æ](../explanation/design/v9-remediation-plan.md)
+- [V9 ²ßÂÔ¼Ü¹¹ÎÄµµ](../explanation/design/v9-strategy-architecture.md)
+- [V9 ÏÖÓĞÊı¾İ×Ê²úÇåµ¥](../explanation/design/v9ÏÖÓĞÊı¾İ×Ê²úÇåµ¥.md)
+- [¼ÛÖµÍİµØ²ßÂÔ£¨value-bargain£©](../explanation/design/value-bargain-strategy.md)
+- [¹Û²ì²Ö²ßÂÔ£¨watchlist£©](../explanation/design/watchlist-strategy.md)
+- [±¾ÖÜÖ´ĞĞÈÎÎñÇåµ¥£¨2026-07-05 ÖÁ 2026-07-12£©](../explanation/design/weekly-tasks-2026-07-05.md)
+- [¼İÊ»²Õ Widget ¼¯³É¼ì²éÇåµ¥](../explanation/design/widget-integration-checklist.md)
+- [V9 Ë«²ßÂÔ¹æ¸ñÓëÏÖÓĞÏîÄ¿²îÒì·ÖÎö±¨¸æ](../explanation/dual-strategy-gap-analysis.md)
+- [Òò×ÓÌáÁ¶¡¢À©ÈİÓë×·×ÙÂ·¾¶·ÖÎö](../explanation/factor-tracking-roadmap.md)
+- [V9 ¹¦ÄÜÈë¿ÚÇåµ¥](../explanation/feature-entry-list.md)
+- [V9 ²Ù×÷·´À¡±Õ»·¹æ¸ñ](../explanation/feedback-loop-spec.md)
+- [JSDoc ±àĞ´¹æ·¶](../explanation/jsdoc-convention.md)
+- [Kimi WebBridge ²å¼ş](../explanation/kimi-webbridge.md)
+- [ĞÂÎÅÄ£¿é ¡ª useState ¡ú Zustand Ç¨ÒÆÎÄµµ](../explanation/migration-news-useState-to-zustand.md)
+- [DEPRECATED - multi-factor-screening-data-definition.md](../explanation/multi-factor-screening-data-definition.md)
+- [´úÂë¶à²ãÇ¶Ì×ÆÀÉó±¨¸æ](../explanation/nested-code-review-report.md)
+- [DEPRECATED - news-data-definition.md](../explanation/news-data-definition.md)
+- [´úÂëÖÊÁ¿ÓÅ»¯´¦Àí¼Æ»®](../explanation/optimization-plan.md)
+- [ÓÅ»¯¼Æ»®Ö´ĞĞ½ø¶È±¨¸æ£¨P1 ·şÎñ²ãÖĞÓÅÏîÍÆ½ø£©](../explanation/optimization-progress-report.md)
+- [¹ÉÆ±³Ø¿´°åÇ¨ÒÆ + ²É¼¯½ø¶È»ã±¨ + ¼ÈÓĞÕ®ÎñÖÎÀíÍê³É](../explanation/overview.md)
+- [Ò³Ãæ½á¹¹ÓëÎå²Õ²¼¾Ö](../explanation/page-structure.md)
+- [V9 ´ı´¦ÀíÊÂÏîÇåµ¥£¨Backlog£©](../explanation/pending-items-backlog-20260704.md)
+- [V9 Î´Íê³ÉÈÎÎñÇåµ¥£¨ÒÑÑéÖ¤°æ£©](../explanation/pending-tasks-inventory-20260701.md)
+- [V9 ÉøÍ¸²âÊÔ×Ô²é±¨¸æ£¨P0-03£©](../explanation/penetration-test-report.md)
+- [V9 ĞÔÄÜ»ùÏß](../explanation/performance-baseline.md)
+- [ÌåÏµ»¯ÉÏÏß²âÊÔ¼ì²éÇåµ¥ Skill](../explanation/production-release-checklist-SKILL.md)
+- [ÖÊÁ¿ÃÅ½ûÊµ²â»ùÏß£¨2026-06-25£©](../explanation/quality-gates-baseline.md)
+- [RBAC ÕûºÏ£º¿ÉĞĞĞÔ·ÖÎö + ÊµÊ©¼Æ»® + Õû¸Ä·½°¸](../explanation/rbacÕûºÏ¿ÉĞĞĞÔ·ÖÎöÓëÊµÊ©¼Æ»®-2026-07-08.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª ÎÄµµÖĞĞÄ£¨docs/ ×ÜÈë¿Ú£©](../explanation/README.md)
+- [±ä¸üÓ°Ïì·ÖÎö±¨¸æ](../explanation/refactor-impact-analysis-2026-06-27.md)
+- [»Ø¹é²âÊÔÌ×¼şÄ£°å](../explanation/regression-suite.md)
+- [¹ÉÆ±³Ø¿´°åÇ¨ÒÆ»Ø¹é²âÊÔ±¨¸æ](../explanation/regression-test-report.md)
+- [FinSightV9 ·ÖÎö±¨¸æÊä³ö¹¦ÄÜ¼Ü¹¹ÆÀ¹À](../explanation/report-generation-architecture-assessment.md)
+- [V9 »Ø¹ö·½°¸ÑİÁ·¼ÇÂ¼£¨P0-08£©](../explanation/rollback-drill-report.md)
+- [ÔËÎ¬Óë·¢²¼ÊÖ²á£¨Runbook£©](../explanation/runbook.md)
+- [DEPRECATED - seven-dim-config-data-definition.md](../explanation/seven-dim-config-data-definition.md)
+- [ËÎÔÏÃÀÑ§Éè¼ÆÖ¸ÄÏ£¨Song Aesthetics£©](../explanation/song-aesthetics.md)
+- [×´Ì¬¹ÜÀí¹æ·¶](../explanation/state-management.md)
+- [V9 Ñ¡¹É²ßÂÔ×ÜÎÄµµ](../explanation/stock-selection-strategy.md)
+- [ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ V9 ¡ª ÏµÍ³¼Ü¹¹ÓëÉè¼ÆÎÄµµ](../explanation/system-architecture.md)
+- [ÈÎÎñÍ¼Ä£°å](../explanation/task-graph-template.md)
+- [ÁîÅÆÊ¹ÓÃ Cookbook£¨token-usage-cookbook£©](../explanation/token-usage-cookbook.md)
+- [½»Ò×ºËĞÄÒò×ÓÓë¸´ÅÌÖ¸±êµ¼Èë](../explanation/trading-core-factors.md)
+- [V9 UI Éè¼ÆÓÅ»¯·Ö²¼Ê½ AGENT ÈÎÎñÖ´ĞĞÇåµ¥](../explanation/ui-design-agent-execution-plan.md)
+- [V6 Pro UI / Page ÎüÊÕÂäµØ×Ü½á£¨½ö UI Õ¹Ê¾²ã£¬²»¶¯Êı¾İ¼Ü¹¹£©](../explanation/ui-only-implementation-summary.md)
+- [V10 ¼Ü¹¹°×Æ¤ÊéÓë V9 ¶ÔÆë±¨¸æ](../explanation/v10-architecture-alignment.md)
+- [V6 ¡ú V9 ¼Ü¹¹Ò»ÖÂĞÔÕû¸ÄĞĞ¶¯Çåµ¥](../explanation/v6-v9-architecture-audit-action-list.md)
+- [V6 Pro ¡ú V9 Ô´Âë±È¶ÔÓë¶ş´Î¿ª·¢ÖØµãÄ£¿éÊáÀí](../explanation/v6pro-to-v9-migration-analysis.md)
+- [V6 Pro ±¸·İÔ´Âë/ÏßÉÏÕ¾µã Óë V9 µ±Ç°ÏîÄ¿ UI & Page ²îÒìÈ«Á¿¶Ô±È±¨¸æ](../explanation/v6pro-ui-page-diff-report.md)
+- [V9 ´úÂëÊµÏÖ·ÖÎö±¨¸æ](../explanation/v9-´úÂëÊµÏÖ·ÖÎö±¨¸æ.md)
+- [V9 ¼Ü¹¹¸²¸Ç·ÖÎö±¨¸æ](../explanation/v9-¼Ü¹¹¸²¸Ç·ÖÎö±¨¸æ.md)
+- [V9 ¼Ü¹¹È±ÏİÓëÕû¸ÄĞĞ¶¯Çåµ¥](../explanation/v9-¼Ü¹¹È±ÏİÓëÕû¸ÄĞĞ¶¯Çåµ¥.md)
+- [V9 Ä¿±ê¹¦ÄÜÇåµ¥](../explanation/v9-Ä¿±ê¹¦ÄÜÇåµ¥.md)
+- [V9 ÌåÏµ»¯ÉÏÏß²âÊÔ TODO LIST](../explanation/V9-ÌåÏµ»¯ÉÏÏß²âÊÔ-TODO-LIST.md)
+- [V9 ´úÂëÖÊÁ¿Ğ£¶Ô·ÖÎö±¨¸æ](../explanation/v9-code-quality-audit-report-20260629.md)
+- [V9 ´úÂëÖÊÁ¿Ğ£¶Ô·ÖÎö±¨¸æ£¨2026-07-13 ¸üĞÂ£©](../explanation/v9-code-quality-audit-report-20260713.md)
+- [V9 Êı¾İ¿âÊµÌå¹ØÏµÀ¶Í¼ (ER)](../explanation/v9-data-relationship-er.md)
+- [V9 ÎÊÌâÕû¸Ä¹ÜÀíÓëµ÷¶È¼ÇÂ¼](../explanation/v9-issue-management.md)
+- [V9 L2 ×´Ì¬²ã²¹ÆëÂ·ÏßÍ¼](../explanation/v9-l2×´Ì¬²ã²¹ÆëÂ·ÏßÍ¼.md)
+- [V9 À¶Í¼²¹È«Õû¸ÄÈÎÎñÇåµ¥ ¡ª Åú´Î E£¨v15/v16 ĞÂÔö Store£©](../explanation/v9-rectification-tasks-v15-v16.md)
+- [V9 ²ßÂÔ¼Ü¹¹ÎÄµµ](../explanation/v9-strategy-architecture.md)
+- [V9 Â©¶´É¨Ãè±¨¸æÓë´¦Àí½¨Òé](../explanation/vulnerability-scan-report.md)
+- [Ã¿ÖÜÊı¾İÀ¶Í¼Ò»ÖÂĞÔ¼ì²é ¡ª 2026-06-30](../explanation/weekly-check-2026-06-30.md)
+
+### guides
+
+- [¿ìËÙÈëÃÅ](../guides/getting-started.md)
+- [ÈçºÎĞÂÔö Service](../guides/how-to-add-service.md)
+- [ÈçºÎĞÂÔö Store](../guides/how-to-add-store.md)
+- [ÈçºÎĞÂÔö Widget](../guides/how-to-add-widget.md)
+
+### how-to
+
+- [´úÂëÆÀÉóÖ¸ÄÏÓëÖÊÁ¿ÃÅ½û SOP](../how-to/code-review-guide.md)
+- [V9 ÎÄ¼ş¹ÜÀí¹æ·¶](../how-to/FILE-MANAGEMENT-GUIDE.md)
+- [×Ô¶¨Òå Hook Ê¹ÓÃÖ¸ÄÏ](../how-to/hooks-guide.md)
+- [ÈçºÎĞÂÔöÒ»¸ö Service£¨DataBridge + Envelope Â·ÓÉ£©](../how-to/how-to-add-service.md)
+- [ÈçºÎĞÂÔöÒ»¸ö Store£¨Zustand + withBroadcast£©](../how-to/how-to-add-store.md)
+- [ÈçºÎĞÂÔöÒ»¸ö Widget£¨WidgetShell + ÊÂ¼ş×ÜÏß£©](../how-to/how-to-add-widget.md)
+- [MCP È¨ÏŞ¿ØÖÆ¿ª·¢Ö¸ÄÏ](../how-to/mcp-acl-guide.md)
+- [V9 PWA ÀëÏß»¯ÊµÊ©Ö¸ÄÏ](../how-to/pwa-offline-guide.md)
+- [how-to ¡ª ²Ù×÷Ö¸ÄÏ](../how-to/README.md)
+- [V9 Ä£¿éÍê³É¶ÈÆÊÃæÍ¼ ¡ª Åú´Î B£¨ÊäÈë²Õ£©](../how-to/testing/completeness-profile-batch2.md)
+- [Ê£Óà¸´ÔÓ¶ÈÕû¸ÄÈÎÎñÇåµ¥Óë¼Æ»®£¨2026-07-12£©](../how-to/testing/complexity-remediation-plan.md)
+- [V9 Èı²ã²âÊÔ²ßÂÔ](../how-to/testing/testing-strategy.md)
+- [V9 ÊÓ¾õ»Ø¹é»ùÏß¹ÜÀí¹æ·¶](../how-to/visual-regression-guide.md)
+- [Widget ¿ª·¢Ö¸ÄÏ](../how-to/widget-development-guide.md)
+
+### modules
+
+- [Êı¾İ²ã×ÜÀÀ](../modules/data-layer-overview.md)
+- [modules ¡ª Ä£¿éÎÄµµ£¨¼æÈİÖØ¶¨Ïò£©](../modules/README.md)
+
+### ops
+
+- [²¿ÊğËµÃ÷](../ops/deployment.md)
+- [ÔËĞĞÊÖ²á](../ops/runbook.md)
+
+### prompts
+
+- [V9 ×ÔÖ÷¹¤×÷Á÷ÓÅ»¯²ßÂÔ](../prompts/autonomous-workflow-optimization.md)
+- [V9 ×ÔÖ÷¹¤×÷Á÷Ê¹ÓÃÖ¸ÄÏ](../prompts/autonomous-workflow-user-guide.md)
+- [AI Engineering Governance ¡ª V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³](../prompts/README.md)
+- [Service ¼¯³É¿ª·¢Ö¸ÄÏ](../prompts/service-integration-guide.md)
+- [Store ¼¯³É¿ª·¢Ö¸ÄÏ](../prompts/store-integration-guide.md)
+
+### README.md
+
+- [FinSightV9 ÎÄµµÖĞĞÄ](../README.md)
+
+### reference
+
+- [{subdomain}-contract.md ¡ª {×ÓÓòÖĞÎÄÃû} ½Ó¿ÚÆõÔ¼](../reference/_contract-template.md)
+- [01. Ô¸¾°ÓëÄ¿±ê](../reference/01-vision-and-goals.md)
+- [02. ¹¦ÄÜ¹æ¸ñ](../reference/02-functional-specs.md)
+- [03. ¼Ü¹¹±ê×¼](../reference/03-architecture-standards.md)
+- [04. UI/UX ¹æ·¶](../reference/04-ui-ux-specs.md)
+- [05. ÒıÇæ¹æ¸ñ](../reference/05-engine-specs.md)
+- [06. Â·ÓÉ¹æ¸ñ](../reference/06-routing-specs.md)
+- [07. ÔËÓª²ßÂÔ](../reference/07-operation-strategy.md)
+- [08. ÊµÊ©¼Æ»®](../reference/08-implementation-plan.md)
+- [09. ÖÊÁ¿ÃÅ½û](../reference/09-quality-gates.md)
+- [10. ÁìÓò´Ê»ã±í](../reference/10-glossary.md)
+- [ADR-002: IndexedDB Ìæ´ú localStorage](../reference/2026-06-20-indexeddb-over-localstorage.md)
+- [ADR-004: React Router HashRouter](../reference/2026-06-21-hashrouter-for-static-hosting.md)
+- [ADR-008: ²ÉÓÃ v6-pro-cockpit "µÚËÄ´Î¹¤Òµ¸ïÃüÏ¡È±ºËĞÄ×ÊÔ´" ½»Ò×²ßÂÔ](../reference/2026-06-24-adopt-v6-core-resource-trading-strategy.md)
+- [V9 Êı¾İ¿âÊı¾İ¹ØÏµÓëÊ±¼ä¹ØÏµÀ¶Í¼¼Æ»®](../reference/2026-06-29-data-relationship-blueprint.md)
+- [Untitled](../reference/2026-07-01-v6-architecture-dominance-batch-a.md)
+- [V9 ÏµÍ³½çÃæ¹¦ÄÜ²âÊÔÓëÓÅ»¯Ö´ĞĞ·½°¸](../reference/2026-07-04-ui-testing-optimization.md)
+- [²È¿Ó¹æÔòÃÅ½ûÖ¸ÄÏ](../reference/²È¿Ó¹æÔòÃÅ½ûÖ¸ÄÏ.md)
+- [¹¦ÄÜÄ£¿éÊı¾İÆõÔ¼](../reference/¹¦ÄÜÄ£¿éÊı¾İÆõÔ¼.md)
+- [V9 Êı¾İÖÎÀíÂ·ÏßÍ¼ÓëÖ´ĞĞÓÅÏÈ¼¶](../reference/Êı¾İÖÎÀíÂ·ÏßÍ¼.md)
+- [ÍøÒ³²âÊÔ¼ìË÷Ğ£¶ÔÊÇ·ñÄÉÈëÊı¾İ²É¼¯¸Ä½ø·½°¸¡ª¡ª±È¶Ô·ÖÎöÓë½¨Òé](../reference/ÍøÒ³²âÊÔ¼ìË÷Ğ£¶ÔÄÉÈë²É¼¯·½°¸·ÖÎö.md)
+- [V9 ÏîÄ¿ÎÄ¼şÕûÀíÇåµ¥](../reference/ÎÄ¼şÕûÀíÇåµ¥.md)
+- [V9 Îå²ã×·ËİÉó¼Æ ¡ª ĞŞ¸´ĞĞ¶¯Çåµ¥](../reference/action-list.md)
+- [ADR-002: IndexedDB Ìæ´ú localStorage](../reference/adr-002-indexeddb-over-localstorage.md)
+- [ADR-003: DataBridge Ìæ´úÖ±½Ó dataLayer Ğ´Èë](../reference/adr-003-databridge-over-direct-datalayer.md)
+- [ADR-006: ÊäÈë²Õ²ğ·ÖÎªËÄ×ÓÒ³Ãæ](../reference/adr-006-input-cabin-subpages.md)
+- [ADR-013: MCP Server ÉúÃüÖÜÆÚ¹ÜÀí SOP](../reference/adr-mcp-server-lifecycle.md)
+- [V9 ÖÇÄÜÌå¼ìÊÓ±¨¸æ](../reference/agent-audit-report.md)
+- [Agent Runtime ÊµÏÖ¹æ¸ñ](../reference/agent-runtime-spec.md)
+- [ai-center-contract.md ¡ª AI ÖĞĞÄ½Ó¿ÚÆõÔ¼](../reference/ai-center-contract.md)
+- [AI ÖÇÄÜÌåµ÷¶ÈÖĞĞÄ / ½¡¿µ¼à¿Ø / Õï¶Ï·ÖÎö ¡ª Êı¾İ×Öµä](../reference/ai-center-data-definition.md)
+- [AI Éú³É¡ªÉó¼Æ¡ªĞŞÕı·ÉÂÖ](../reference/ai-generate-audit-fix-loop.md)
+- [ÏîÄ¿×¨Êô AI ¼ÇÒä²ã£¨RAG£©](../reference/ai-memory-layer.md)
+- [Analysis ²Õ¹æ¸ñ£¨analysis-cabin-spec£©](../reference/analysis-cabin-spec.md)
+- [analysis-contract.md ¡ª Í¶ÑĞ·ÖÎöºËĞÄ×ÓÓò½Ó¿ÚÆõÔ¼](../reference/analysis-contract.md)
+- [½»Ò×³Ö²Ö¹ÜÀíÄ£¿é API ÆõÔ¼ÎÄµµ](../reference/api-contract.md)
+- [¼Ü¹¹Éè¼ÆÎÄµµ°æ±¾±È¶Ô](../reference/architecture-version-comparison.md)
+- [V9 Ô­×Ó×é¼ş¹¹³ÉÌåÏµ£¨Atomic Design System£©](../reference/atomic-component-system.md)
+- [V9 Ç°¶ËÓ¦ÓÃ´úÂë±àĞ´ÖÊÁ¿Éó¼Æ±¨¸æ (B4-1)](../reference/audit-b4-1-code-quality.md)
+- [V9 Ç°¶ËÓ¦ÓÃ°²È«ÖÊÁ¿Éó¼Æ±¨¸æ](../reference/audit-b4-4-security.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ È«Ãæ×Ô¶¯»¯²âÊÔÊµÊ©¼Æ»®](../reference/automation-test-plan.md)
+- [V9 ×ÔÖ÷¹¤×÷Á÷Ê¹ÓÃÖ¸ÄÏ](../reference/autonomous-workflow-user-guide.md)
+- [backtest-contract.md ¡ª »Ø²âÒıÇæ½Ó¿ÚÆõÔ¼](../reference/backtest-contract.md)
+- [DEPRECATED - backtest-data-definition.md](../reference/backtest-data-definition.md)
+- [Åú´Î B P2 ÎÊÌâĞŞ¸´·½°¸](../reference/batchB-fix-plan.md)
+- [V9 Åú´Î D£¨½»Ò×²Õ£©P2 ÎÊÌâĞŞ¸´·½°¸](../reference/batchD-fix-plan.md)
+- [V9 Åú´Î E£¨Êä³ö²Õ + ×Ü¿Ø²Õ£©P2 ÎÊÌâĞŞ¸´·½°¸](../reference/batchE-fix-plan.md)
+- [V9 ¼Ü¹¹ÎÄµµ±ä¸üÈÕÖ¾](../reference/CHANGELOG.md)
+- [Éó¼Æ½Å±¾Îó±¨·ÖÎö±¨¸æ](../reference/changelogs/2026-07/2026-07-05-audit-false-positive-analysis.md)
+- [ÑÕÉ«Ó²±àÂëÖÎÀí - P1 Åú´Î¼¼ÊõÈÕÖ¾](../reference/changelogs/2026-07/2026-07-05-color-refactor-p1.md)
+- [ÑÕÉ«Ó²±àÂëÖÎÀí - P2 Åú´Î¼¼ÊõÈÕÖ¾](../reference/changelogs/2026-07/2026-07-05-color-refactor-p2.md)
+- [ÑÕÉ«ÁîÅÆÖØ¹¹Çåµ¥](../reference/changelogs/2026-07/2026-07-05-color-token-refactor.md)
+- [È«Ãæ¼ì²â¡¢×Ü½áÓëÕû¸Ä±¨¸æ ¡ª 2026-07-05](../reference/changelogs/2026-07/2026-07-05-comprehensive-audit-and-remediation.md)
+- [¼¼ÊõÈÕÖ¾£ºDataBridge.query() ÊµÏÖÓë dataLayer ¶Á²Ù×÷¸ÄÔì](../reference/changelogs/2026-07/2026-07-05-databridge-query-implementation.md)
+- [2026-07-05 Ä£¿é×¢²áÌåÏµ½¨Á¢ÓëÎ´×¢²áÎÄ¼şÈ«Á¿¼¯³É](../reference/changelogs/2026-07/2026-07-05-module-registry-and-integration.md)
+- [Jira ÈÎÎñµ¥¹éµµ:P0-5 È±Ïİ + 6 ¸öÀúÊ· Bug ĞŞ¸´](../reference/changelogs/2026-07/2026-07-05-p0-5-and-legacy-bugs-jira-tickets.md)
+- [P2 Åú´ÎÍê³É±¨¸æ & ºóĞøµü´úÈÎÎñÇåµ¥ ¡ª 2026-07-05](../reference/changelogs/2026-07/2026-07-05-p2-completion-and-backlog.md)
+- [¿ª·¢¸´ÅÌĞĞ¶¯ÏîÖ´ĞĞÈÕÖ¾](../reference/changelogs/2026-07/2026-07-05-post-dev-review-actions.md)
+- [±ä¸üÈÕÖ¾ ¡ª 2026-07-05 ¿ª·¢ºó¸´ÅÌĞŞ¸´](../reference/changelogs/2026-07/2026-07-05-post-dev-review.md)
+- [V9 ÏµÍ³ĞÔÎÄµµ¸üĞÂÓë½»²æÑéÖ¤±¨¸æ](../reference/changelogs/2026-07/2026-07-05-systematic-doc-update.md)
+- [UI ²âÊÔÓëÓÅ»¯¸üĞÂÈÕÖ¾](../reference/changelogs/2026-07/2026-07-05-ui-testing-optimization.md)
+- [2026-07-14 ¼Ü¹¹ÖÎÀíÓë´úÂëÕûÀí](../reference/changelogs/2026-07/2026-07-14-architecture-governance.md)
+- [P1 Åú´ÎĞĞ¶¯Çåµ¥ ¡ª 2026-07-05](../reference/changelogs/2026-07/action-list-p1.md)
+- [P1 Åú´ÎÍêÕûĞÔ»­Ïñ ¡ª 2026-07-05](../reference/changelogs/2026-07/completeness-profile-p1.md)
+- [Ã¿ÈÕÎÄµµ±ä¸üÀúÊ· ¡ª 2026-07-12](../reference/changelogs/2026-07/daily-doc-validation-2026-07-12.md)
+- [JSDoc ×¢ÊÍÍêÕû»ã×Ü±¨¸æ](../reference/changelogs/2026-07/jsdoc-combined-report-20260712.md)
+- [JSDoc ×¢ÊÍ²¹³ä»ã×Ü±¨¸æ](../reference/changelogs/2026-07/jsdoc-update-summary-20260712.md)
+- [JSDoc ÎÄµµ¸üĞÂÇåµ¥ - Data Collector Ä£¿é](../reference/changelogs/2026-07/jsdoc-update-summary-data-collector-20260712.md)
+- [PR-5 ¹¹½¨ĞÔÄÜÓÅ»¯×Ü½á](../reference/changelogs/2026-07/pr-5-build-optimization-summary.md)
+- [PR-7 tradeErrorClassifier.ts ²ğ·Ö·½°¸ÎÄµµ](../reference/changelogs/2026-07/pr-7-trade-error-classifier-split-plan.md)
+- [PR-8 ÖØ¸´º¯ÊıÈ¥ÖØÉó¼Æ±¨¸æ](../reference/changelogs/2026-07/pr-8-dedup-audit-report.md)
+- [PR-8 ÖØ¸´º¯ÊıÈ¥ÖØÖØ¹¹·½°¸](../reference/changelogs/2026-07/pr-8-dedup-plan.md)
+- [²âÊÔ»º´æÇåÀíĞŞ¸´×Ü½á](../reference/changelogs/2026-07/test-cache-fix-summary.md)
+- [Untitled](../reference/changelogs/±ä¸üÕªÒª-2026-06-28-phase0-Êı¾İ²ã¸ÄÔì.md)
+- [V9 Í¼±í×é¼ş¼¯³É¹æ¸ñ](../reference/chart-integration.md)
+- [Cockpit + News Ä£¿éÎÄµµĞŞÕı·½°¸](../reference/cockpit-news-doc-fix-plan.md)
+- [Cockpit Widget ¿ò¼ÜÊı¾İ×Öµä](../reference/cockpit/data-definition.md)
+- [´úÂëÉó²é¿ìËÙ²Î¿¼¿¨Æ¬](../reference/code-review-cheatsheet.md)
+- [code-review.md ¡ª V9 ´úÂëÉó²é±ê×¼ÓëÁ÷³Ì](../reference/CODE-REVIEW.md)
+- [V9 ±àÂë¹æ·¶£¨Coding Conventions£©](../reference/coding-conventions.md)
+- [collection-contract.md ¡ª Êı¾İ²É¼¯×ÓÓò½Ó¿ÚÆõÔ¼](../reference/collection-contract.md)
+- [Command ²Õ¹æ¸ñ£¨command-cabin-spec£©](../reference/command-cabin-spec.md)
+- [V9 Ä£¿éÍê³É¶ÈÆÊÃæÍ¼ ¡ª Åú´Î 1](../reference/completeness-profile-batch1.md)
+- [V9 Åú´Î E£ºÊä³ö²Õ + ×Ü¿Ø²Õ + ÆäËû ¡ª Íê³É¶ÈÆÊÃæÍ¼](../reference/completeness-profile-batch5.md)
+- [V9 Ä£¿éÍê³É¶ÈÆÊÃæÍ¼ ¡ª È«Á¿»ã×Ü](../reference/completeness-profile.md)
+- [´úÂë¸´ÔÓ¶È×¨ÏîÖÎÀí¹æ·¶](../reference/complexity-governance.md)
+- [V9 ×é¼şÆúÓÃÕş²ß](../reference/component-deprecation-policy.md)
+- [Untitled](../reference/data_link_sequence_diagram.md)
+- [Êı¾İ²É¼¯Ä£¿éÂ·ÓÉÓëUIĞ£¶Ô·ÖÎö±¨¸æ](../reference/data-collection-route-ui-audit.md)
+- [Êı¾İ²É¼¯Ä£¿é¿ª·¢ÈÎÎñÇåµ¥](../reference/data-collection-task-list.md)
+- [Êı¾İ²É¼¯Ä£¿éÊı¾İ×Öµä](../reference/data-collection/data-definition.md)
+- [data-collector-contract.md ¡ª Êı¾İ²É¼¯±àÅÅ·şÎñ](../reference/data-collector-contract.md)
+- [data-definition.md ¡ª V9 Ö÷Êı¾İ×Öµä£¨ÕûºÏ°æ£©](../reference/data-definition.md)
+- [V9 Êı¾İ×ÖµäË÷Òı£¨DATA_DICTIONARY_INDEX£©](../reference/data-dictionary-index.md)
+- [V9 Êı¾İÁ÷¹æ·¶](../reference/data-flow-spec.md)
+- [Êı¾İ½»»¥Ğ­Òé](../reference/data-interaction-protocols.md)
+- [databridge.ts ÏêÏ¸·Ö²ğ·½°¸](../reference/databridge-split-plan.md)
+- [DataBridge ¶ËµãÓëÊı¾İÓ³ÉäÇåµ¥](../reference/databridge¶ËµãÓëÊı¾İÓ³ÉäÇåµ¥.md)
+- [DataBridge ¸Ä½ø½¨ÒéÕû¸ÄÊµÊ©¼Æ»®](../reference/databridge¸Ä½ø½¨ÒéÕû¸ÄÊµÊ©¼Æ»®.md)
+- [Êı¾İÁ÷ÒıÇæ£¨DataFlow Engine£©Êı¾İ×Öµä](../reference/dataflow-data-definition.md)
+- [DataFlow Engine ÊµÏÖ¹æ¸ñ](../reference/dataflow-engine-spec.md)
+- [V9 ²¿ÊğÔËÎ¬»ùÏß](../reference/deployment.md)
+- [V6 Pro UI Ä£¿éĞÂ¾É±È¶ÔÓë V9 ÎüÊÕ±¨¸æ](../reference/deprecated-ui-module-alignment.md)
+- [V9 Éè¼ÆÁîÅÆÓ³Éä±í](../reference/design-token-mapping.md)
+- [Design Tokens ÏµÍ³Ê¹ÓÃÖ¸ÄÏ](../reference/design-tokens.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª ¿ª·¢¹¤×÷Á÷ SOP](../reference/development-workflow-sop.md)
+- [V9 Ë«²ßÂÔÌåÏµÓëÊı¾İÁ÷¼Ü¹¹¹æ¸ñ](../reference/dual-strategy-dataflow-spec.md)
+- [V9 Ë«²ßÂÔÌåÏµ ¡ª ¸üĞÂÈÕÖ¾ÓëÒ»ÖÂĞÔ¼ì²é](../reference/dual-strategy-update-log-and-consistency-check.md)
+- [execution-contract.md ¡ª ½»Ò×Ö´ĞĞ×ÓÓò½Ó¿ÚÆõÔ¼](../reference/execution-contract.md)
+- [export-contract.md ¡ª µ¼³ö·şÎñ½Ó¿ÚÆõÔ¼](../reference/export-contract.md)
+- [V9 ²Ù×÷·´À¡±Õ»·¹æ¸ñ](../reference/feedback-loop-spec.md)
+- [fetcher-contract.md ¡ª ĞĞÇé/×ÊÑ¶×¥È¡·şÎñ](../reference/fetcher-contract.md)
+- [V9 ÎÄ¼şÃüÃû¹æ·¶£¨File Naming Conventions£©](../reference/file-naming-conventions.md)
+- [µÚËÄ´Î¹¤Òµ¸ïÃüÏ¡È±ºËĞÄ×ÊÔ´ ¡ª ½»Ò×²ßÂÔ½âÎöÓë V9 ²ÉÓÃ·½°¸](../reference/fourth-industrial-revolution-core-resource-strategy.md)
+- [Gateway ²ãĞ´ÈëÈ¨ÏŞ¹æ·¶](../reference/gateway-write-permission-spec.md)
+- [hybrid-proofread-contract.md ¡ª »ìºÏĞ£¶Ô£¨ÈË»úĞ­Í¬Ğ£Ñé£©·şÎñ½Ó¿ÚÆõÔ¼](../reference/hybrid-proofread-contract.md)
+- [iFinD ²å¼ş](../reference/ifind.md)
+- [IMF ²å¼ş](../reference/imf.md)
+- [²å¼ş¼¼ÄÜÎÄµµË÷Òı](../reference/index.md)
+- [ÊäÈë²ÕÒµÎñ¹æ¸ñÓëÊµÏÖÓ³Éä](../reference/input-cabin-spec.md)
+- [ÊäÈë²Õ UI ÌåÏµ»¯ÖØËÜËµÃ÷](../reference/input-cabin-ui-reshaping.md)
+- [input-contract.md ¡ª ÊäÈë´¦Àí×ÓÓò½Ó¿ÚÆõÔ¼](../reference/input-contract.md)
+- [JSDoc ÓëÎÄµµÃÅ½û¹æ·¶](../reference/jsdoc-convention.md)
+- [llm-contract.md ¡ª ´óÄ£ĞÍ·şÎñ½Ó¿ÚÆõÔ¼](../reference/llm-contract.md)
+- [ÎÄµµ×Ô¶¯¸üĞÂÌåÏµ ¡ª ÈÎÎñ¿´°å£¨µ¥Ò»ÊÂÊµÔ´£©](../reference/meta/doc-auto-update-kanban.md)
+- [´¥·¢ÊÂ¼ş ¡ú ¸üĞÂ¶¯×÷ Ò»Ò»Ó³ÉäÈ¨Íş±í](../reference/meta/doc-trigger-action-map.md)
+- [V9 ÎÄ¼şÏµÍ³È«ÃæÆÀ¹À±¨¸æ](../reference/meta/file-system-assessment-v2.md)
+- [ÎÄµµË÷Òı](../reference/meta/registry-index.md)
+- [¶àÒò×ÓÑ¡¹ÉÉ¸Ñ¡Æ÷Êı¾İ×Öµä](../reference/multi-factor-screening-data-definition.md)
+- [news-contract.md ¡ª ĞÂÎÅ×ÊÑ¶×ÓÓò½Ó¿ÚÆõÔ¼](../reference/news-contract.md)
+- [NewsPage£¨ÖÇÄÜ×ÊÑ¶ÖĞĞÄ£©Êı¾İ×Öµä](../reference/news-data-definition.md)
+- [ĞÂÎÅ×ÊÑ¶Ä£¿éÊı¾İ×Öµä](../reference/news/data-definition.md)
+- [Output ²Õ¹æ¸ñ£¨output-cabin-spec£©](../reference/output-cabin-spec.md)
+- [portfolio-contract.md ¡ª Í¶×Ê×éºÏ£¨Portfolio£©½Ó¿ÚÆõÔ¼](../reference/portfolio-contract.md)
+- [Pull Request: P0 ¼¶×Ê½ğ°²È«ĞŞ¸´ + P1 Â·ÓÉ¹ÒÔØ + ²âÊÔ¸²¸ÇÔöÇ¿](../reference/pr-description.md)
+- [ADR-003: DataBridge Ìæ´úÖ±½Ó dataLayer Ğ´Èë](../reference/project/2026-06-21-databridge-over-direct-datalayer.md)
+- [P4 ½×¶ÎÍê³É ¡ª ÎÄµµÌåÏµÖÎÀí](../reference/project/changelogs/2026-07/2026-07-14-p4-completion.md)
+- [Plans](../reference/project/plans/README.md)
+- [pwa-contract.md ¡ª PWA Service Worker ½Ó¿ÚÆõÔ¼](../reference/pwa-contract.md)
+- [V9 PWA ÀëÏß»¯ÊµÊ©Ö¸ÄÏ](../reference/pwa-offline-guide.md)
+- [rbac-contract.md ¡ª RBAC È¨ÏŞ¹ÜÀí×ÓÓò½Ó¿ÚÆõÔ¼](../reference/rbac-contract.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª ÎÄµµÖĞĞÄ£¨Ö÷¿ØË÷Òı£©](../reference/README.md)
+- [¡¸¹ÉÆ±³Ø¡¹·º»¯¾ÉÃû³Æ ÄÚ²¿±êÊ¶·ûÖØÃüÃûÖØ¹¹·½°¸](../reference/refactor-research-pool-rename-plan.md)
+- [ÎÄµµË÷Òı](../reference/registry-index.md)
+- [·¢²¼ËµÃ÷](../reference/release-notes.md)
+- [DEPRECATED - risk-derived-data-definition.md](../reference/risk-derived-data-definition.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª RM Ê£ÓàÈÎÎñÈ«Á¿ÅÌµãÓëÕû¸Ä·½°¸](../reference/rmÊ£ÓàÈÎÎñÈ«Á¿ÅÌµãÓëÕû¸Ä·½°¸-2026-07-08.md)
+- [Rotation Score Service ÊµÏÖ¹æ¸ñ](../reference/rotation-score-spec.md)
+- [Scholar ²å¼ş](../reference/scholar.md)
+- [scoring-contract.md ¡ª ÆÀ·ÖÒıÇæ·şÎñ](../reference/scoring-contract.md)
+- [screening-contract.md ¡ª Ñ¡¹É/É¸Ñ¡×ÓÓò½Ó¿ÚÆõÔ¼](../reference/screening-contract.md)
+- [SEC EDGAR ²å¼ş](../reference/sec_edgar.md)
+- [Security Model ¡ª V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³°²È«¼Ü¹¹](../reference/security-model.md)
+- [V9 ·şÎñ×ÓÓòÄ¿Â¼£¨Services Catalog£©](../reference/services-catalog.md)
+- [SevenDimConfigPage ¸ß¼¶ÅäÖÃ²¹È«·½°¸](../reference/seven-dim-advanced-config-implementation.md)
+- [ÆßÎ¬²É¼¯ÅäÖÃÄ£¿é ¡ª Êı¾İ×Öµä](../reference/seven-dim-config-data-definition.md)
+- [stock-analysis-contract.md ¡ª ¸ö¹É·ÖÎö×ÓÓò½Ó¿ÚÆõÔ¼](../reference/stock-analysis-contract.md)
+- [¹ÉÆ±³Ø¿´°åÇ¨ÒÆÖÁ·ÖÎö²Õ ¡ª ¿ÉĞĞĞÔ·½°¸ÂÛÖ¤](../reference/stock-pool-board-migration-proposal.md)
+- [stockpool-contract.md ¡ª ¹ÉÆ±³Ø¹ÜÀí×ÓÓò½Ó¿ÚÆõÔ¼](../reference/stockpool-contract.md)
+- [system-contract.md ¡ª ÏµÍ³¼¶·şÎñ½Ó¿ÚÆõÔ¼](../reference/system-contract.md)
+- [»Ø¹é²âÊÔÌ×¼şÄ£°å](../reference/templates/regression-suite.md)
+- [ÈÎÎñÍ¼Ä£°å](../reference/templates/task-graph-template.md)
+- [V9 ²âÊÔÄ¿Â¼Óë²ßÂÔ](../reference/test-catalog.md)
+- [V9 Èı²ã²âÊÔ²ßÂÔ](../reference/testing-strategy.md)
+- [Tianyancha ²å¼ş](../reference/tianyancha.md)
+- [trade-contract.md ¡ª ½»Ò×Óò½Ó¿ÚÆõÔ¼](../reference/trade-contract.md)
+- [½»Ò×³Ö²Ö¹ÜÀíÄ£¿é API ÆõÔ¼ÎÄµµ](../reference/trade/api-contract.md)
+- [Trading ²Õ¹æ¸ñ£¨trading-cabin-spec£©](../reference/trading-cabin-spec.md)
+- [trading-contract.md ¡ª ½»Ò×ÒµÎñ×ÓÓò½Ó¿ÚÆõÔ¼](../reference/trading-contract.md)
+- [UI ×é¼şÇ¨ÒÆ¼ì²éÇåµ¥](../reference/ui-migration-checklist.md)
+- [V6-V9 ½çÃæÉè¼ÆÓÅ»¯Õû¸ÄÈÎÎñÃ÷Ï¸±í](../reference/ui-remediation-tracker.md)
+- [UI Éè¼ÆÓÅ»¯ÊµÊ©¼Æ»®£¨ÏêÏ¸°æ£©](../reference/uiÉè¼ÆÓÅ»¯ÊµÊ©¼Æ»®-ÏêÏ¸°æ.md)
+- [¹ÉÆ±³ØÍ³Ò»´æ´¢·½°¸¹æ·¶](../reference/unified-pool-storage-spec.md)
+- [usecase-contract.md ¡ª ÒµÎñÓÃÀı±àÅÅ½Ó¿ÚÆõÔ¼](../reference/useCase-contract.md)
+- [V10 ¼Ü¹¹°×Æ¤ÊéÓë V9 ¶ÔÆë±¨¸æ](../reference/v10-architecture-alignment.md)
+- [v6-pro-cockpit UI ×é¼ş²Î¿¼£¨ÊäÈë²Õ£©](../reference/v6-cockpit-ui-reference.md)
+- [V6 Pro ¡ú V9 JSON Êı¾İÇ¨ÒÆ¹æ·¶£¨ÖĞ¼äÎÄµµ£©](../reference/v6-to-v9-migration-spec.md)
+- [V6 Pro ¡ú V9 Ô´Âë±È¶ÔÓë¶ş´Î¿ª·¢ÖØµãÄ£¿éÊáÀí](../reference/v6pro-to-v9-migration-analysis.md)
+- [V9 Êı¾İÑªÔµ×·×ÙÓëÊı¾İÁ÷È«¾°Í¼](../reference/v9-Êı¾İÑªÔµ×·×Ù.md)
+- [V9 ¼Ü¹¹ Phase 4 Ò»ÖÂĞÔÑéÖ¤±¨¸æ](../reference/v9-architecture-data-dictionary-validation-report.md)
+- [V9 ´úÂëÖÊÁ¿Ğ£¶Ô·ÖÎö±¨¸æ](../reference/v9-code-quality-audit-report-20260629.md)
+- [V9 Êı¾İÊ±¼ä¹ØÏµÓëÉúÃüÖÜÆÚÀ¶Í¼](../reference/v9-data-timeline.md)
+- [V9 IndexedDB Store Schema ÎÄµµ](../reference/v9-indexeddb-store-schema.md)
+- [V9 ÊäÈë²ÕÉı¼¶²ßÂÔ±¨¸æ](../reference/v9-input-cabin-strategy-report.md)
+- [V9 L2 ×´Ì¬²ã²¹ÆëÂ·ÏßÍ¼](../reference/v9-l2×´Ì¬²ã²¹ÆëÂ·ÏßÍ¼.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª ÕûÌå¼Ü¹¹À¶Í¼](../reference/v9-system-blueprint.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ - ²âÊÔÓÃÀıÇåµ¥](../reference/V9-TEST-CASES.md)
+- [V9 ºËĞÄÊı¾İ×ÖµäÓëÀàĞÍ¶¨Òå£¨ÕûºÏ°æ£©](../reference/v9ºËĞÄÊı¾İ×ÖµäÓëÀàĞÍ¶¨Òå(ÕûºÏ°æ).md)
+- [V9 Êı¾İ¼Ü¹¹ĞŞ¶©½¨Òé](../reference/v9Êı¾İ¼Ü¹¹ĞŞ¶©½¨Òé.md)
+- [V9 Êı¾İÏÜ·¨£¨Data Constitution£©](../reference/V9Êı¾İÏÜ·¨.md)
+- [V9 ÏÖÓĞÊı¾İ×Ê²úÇåµ¥](../reference/V9ÏÖÓĞÊı¾İ×Ê²úÇåµ¥.md)
+- [ÆÀ·ÖÅÄÕÕ±È¶Ô¹¦ÄÜÄ£¿é ¡ª ²¹³ä´©ĞĞ²âÊÔ±¨¸æ](../reference/walkthrough-scoredoc-report.md)
+- [Widget ¿ª·¢Ö¸ÄÏ](../reference/widget-development-guide.md)
+- [V9 Widget ´íÎó¸ôÀëÓë½µ¼¶¹æ¸ñ](../reference/widget-error-handling.md)
+- [¼İÊ»²Õ Widget ¼¯³É¼ì²éÇåµ¥](../reference/widget-integration-checklist.md)
+- [World Bank Open Data ²å¼ş](../reference/world_bank_open_data.md)
+- [Yahoo Finance ²å¼ş](../reference/yahoo_finance.md)
+- [Yuandian Law ²å¼ş](../reference/yuandian_law.md)
+
+### registry-index.md
+
+- [ÎÄµµË÷ÒıÒÑÇ¨ÒÆ](../registry-index.md)
+
+### reports
+
+- [Î´ÎÄµµ»¯ÎÄ¼ş JSDoc/TSDoc ÎÄµµ×¢ÊÍÄ£°å](../reports/audit/2026-07-08-undocumented-files-jsdoc-templates.md)
+- [V9 ÏîÄ¿Î´ÎÄµµ»¯ÎÄ¼ş±¨¸æ](../reports/audit/2026-07-08-undocumented-files-report.md)
+- [CollectionPlanPanel V6 Éè¼ÆĞ£¶Ô·ÖÎö±¨¸æ](../reports/audit/2026-07-09-collection-plan-panel-v6-audit.md)
+- [RMÕû¸Ä·½°¸ ¡ª È«Á¿Éó¼Æ²îÒìÇåµ¥](../reports/audit/2026-07-09-rm-audit-diff-report.md)
+- [V9 ÏîÄ¿Î´ÎÄµµ»¯ÎÄ¼ş±¨¸æ£¨¸üĞÂ°æ£©](../reports/audit/2026-07-09-undocumented-files-report.md)
+- [V9 ±È¶Ô/·ÖÎö±¨¸æ ¡ª ¼ìË÷ÓëºáÏò±È¶Ô±¨¸æ](../reports/audit/±È¶Ô·ÖÎö±¨¸æ¼ìË÷Óë±È¶Ô±¨¸æ.md)
+- [´úÂëÇåÀí´ıÈ·ÈÏÇåµ¥ÓëĞÅÏ¢¹ÂµºÕûºÏ½¨Òé](../reports/audit/´úÂëÇåÀí´ıÈ·ÈÏÇåµ¥ÓëĞÅÏ¢¹ÂµºÕûºÏ½¨Òé.md)
+- [´úÂëÖÊÁ¿ºÏ¹æÉó²é±¨¸æ](../reports/audit/´úÂëÖÊÁ¿ºÏ¹æÉó²é±¨¸æ_2026-07-08.md)
+- [´úÂëÖÊÁ¿Õû¸ÄÓë»Ø¹é²âÊÔ±¨¸æ](../reports/audit/´úÂëÖÊÁ¿Õû¸ÄÓë»Ø¹é²âÊÔ±¨¸æ_2026-07-08.md)
+- [½Å±¾Óë²âÊÔÖÊÁ¿¼ì²é±¨¸æ](../reports/audit/½Å±¾Óë²âÊÔÖÊÁ¿¼ì²é±¨¸æ.md)
+- [V9 Ä£¿é²¹È«ÑéÊÕ±¨¸æ](../reports/audit/Ä£¿é²¹È«ÑéÊÕ±¨¸æ.md)
+- [V9 ÉÏÏßÇ°È«ÃæĞ£Ñé±¨¸æ](../reports/audit/ÉÏÏßÇ°È«ÃæĞ£Ñé±¨¸æ-v1.0.0.md)
+- [ÎÄµµ?´úÂëË«ÏòÒ»ÖÂĞÔ¼ì²â±¨¸æ](../reports/audit/ÎÄµµ-´úÂëË«ÏòÒ»ÖÂĞÔ¼ì²â±¨¸æ_2026-07-08.md)
+- [Åú´Î C£¨·ÖÎö²Õ£©L1-L5 Îå²ã×·ËİÉó¼Æ±¨¸æ](../reports/audit/audit-batch-c-analysis.md)
+- [V9 ÏîÄ¿Éó¼Æ±¨¸æ ¡ª 2026-07-05](../reports/audit/audit-findings-2026-07-05.md)
+- [Untitled](../reports/audit/audit-hardcode-warning-distribution.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ - Éó¼Æ¾¯¸æ±¨¸æ](../reports/audit/audit-warning-report.md)
+- [Åú´Î B£¨ÊäÈë²Õ£©L1-L5 Îå²ã×·ËİÉó¼Æ±¨¸æ](../reports/audit/batch-b-input-audit.md)
+- [cockpit / ÕûÌåÉè¼ÆÒ»ÖÂĞÔÉó²é](../reports/audit/cockpit_ÕûÌåÉè¼ÆÒ»ÖÂĞÔÉó²é.md)
+- [cockpit widget¡¸40 ¸öÀàĞÍ´íÎó¡¹ºË²é ¡¤ ·ÖÎöĞÔÅĞ¶Ï](../reports/audit/cockpit_widget_40´íÎóºË²é-·ÖÎöÅĞ¶Ï.md)
+- [´úÂëÖÊÁ¿Éó²é±¨¸æ](../reports/audit/code-quality-audit-report.md)
+- [V9 ÏµÍ³´úÂëÖÊÁ¿×ÛºÏ±¨¸æ](../reports/audit/code-quality-report-2026-07-06.md)
+- [´úÂëÖÊÁ¿Á¿»¯¿¼ºË±ê×¼£¨v1.0£©](../reports/audit/code-quality-rubric.md)
+- [´úÂëÆÀÉó±¨¸æ ¡¤ WIP ¾Û½¹ÆÀÉó£¨2026-07-11£©](../reports/audit/code-review-wip-2026-07-11.md)
+- [ÑÕÉ«Õû¸Ä×Ü½á±¨¸æ](../reports/audit/color-remediation-summary-report-20260703.md)
+- [Debug Session: output-cabin-not-rendering](../reports/audit/debug-output-cabin-not-rendering.md)
+- [V9 ÎÄµµÓëÎÄ¼ş¹ÜÀíÌåÏµ ¡ª ÖÎÀíÉó¼Æ±¨¸æ](../reports/audit/doc-governance-audit-report-2026-07-13.md)
+- [Í³Ò»´íÎó´¦Àí²¹¶¡±¨¸æ](../reports/audit/error-handling-patch-report-2026-07-12.md)
+- [V9 ÎÄ¼ş¹ÜÀíÌåÏµ°üºÏ¹æĞÔÉó²é±¨¸æ](../reports/audit/file-management-compliance-report-2026-07-12.md)
+- [file-management-guide.md ×ÛºÏ²âÊÔÆÀ·Ö±¨¸æ](../reports/audit/file-management-guide-test-report.md)
+- [V9 ÏîÄ¿ÎÄ¼şÏµÍ³È«¾ÖÕï¶Ï±¨¸æ](../reports/audit/file-system-diagnosis-report-2026-07-20.md)
+- [V9 È«Á¿Éó¼ÆÎÊÌâÏêÏ¸Çåµ¥](../reports/audit/full-audit-inventory-2026-07-05.md)
+- [Untitled](../reports/audit/hardcode-warning-root-cause-analysis.md)
+- [MCP ¼Ü¹¹¹æÔòÓëÂß¼­È«Ãæ¶ş´ÎÉó²é±¨¸æ](../reports/audit/mcp-architecture-audit-report-2026-07-08.md)
+- [MCP Server ¼¯³É²âÊÔ±¨¸æ£¨ĞŞ¸´ºóÖØÅÜ£©](../reports/audit/mcp-integration-test-report-2026-07-08-v2.md)
+- [MCP Server ÖÎÀí¸´ÅÌÉî¶È±¨¸æ](../reports/audit/mcp-server-governance-retrospective.md)
+- [MCP Tool Ê¹ÓÃÉó¼Æ±¨¸æ](../reports/audit/mcp-usage/mcp-usage-report-1784135579861.md)
+- [MCP Tool Ê¹ÓÃÉó¼Æ±¨¸æ](../reports/audit/mcp-usage/mcp-usage-report-1784154384439.md)
+- [MCP Tool Ê¹ÓÃÉó¼Æ±¨¸æ](../reports/audit/mcp-usage/mcp-usage-report-1784154519536.md)
+- [Êä³ö²ÕÄ£¿éÎ´ÏÔÊ¾ÎÊÌâ ¡ª Õû¸Ä±¨¸æ](../reports/audit/output-cabin-remediation-report.md)
+- [V9 ÉÏÏßÇ°ÖÕÉó±¨¸æ](../reports/audit/pre-launch-audit-report-2026-07-14.md)
+- [V9 Ä£¿éÍê³É¶ÈÄæÏòĞ£Ñé ¡ª Ö´ĞĞ¼Æ»®](../reports/audit/quality-audit-plan.md)
+- [V9 Ä£¿é¼¯³ÉË®Æ½²âÊÔ±È¶Ô±¨¸æ ¡ª Agent¼¯ÈºĞŞ¸´ºó](../reports/audit/report-12-integration-baseline-comparison.md)
+- [Report-6 Õû¸ÄĞĞ¶¯Çåµ¥](../reports/audit/report-6-remediation-action-list.md)
+- [T-11 ·Ö²ãÒÀÀµÓëÎÄµµÍ¬²½Éó¼Æ±¨¸æ](../reports/audit/t11-compliance-audit-report.md)
+- [v2.2.1 ²âÊÔ¸²¸ÇÂÊ¶Ô±È±¨¸æ](../reports/audit/test-coverage-comparison-v2.2.1.md)
+- [²âÊÔÊ§°Ü·ÖÎö±¨¸æ](../reports/audit/test-failure-analysis-report.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª ²âÊÔ±¨¸æ](../reports/audit/test-report-2026-07-12.md)
+- [ÀàĞÍ´íÎóÕï¶Ï±¨¸æ](../reports/audit/type-error-diagnosis-report.md)
+- [TypeScript ´íÎó´¦ÀíºÍÀàĞÍ°²È«¼ì²â±¨¸æ](../reports/audit/typescript´íÎó´¦ÀíºÍÀàĞÍ°²È«¼ì²â±¨¸æ.md)
+- [¹¤×÷ÇøÎ´¸ú×ÙÎÄ¼şÕû¸Ä±¨¸æ](../reports/audit/untracked-files-remediation-report.md)
+- [v2.2.1 dataLayer.test.ts ²âÊÔ¸²¸ÇÂÊ¶Ô±È±¨¸æ](../reports/audit/v2.2.1-test-coverage-comparison.md)
+- [V6-V9 UI ×é¼ş¿â±È¶Ô·ÖÎö±¨¸æ](../reports/audit/v6-v9-ui-component-comparison-report.md)
+- [V9 ¼Ü¹¹È±ÏİÓëÕû¸ÄĞĞ¶¯Çåµ¥](../reports/audit/v9-¼Ü¹¹È±ÏİÓëÕû¸ÄĞĞ¶¯Çåµ¥.md)
+- [V9 ´úÂëÖÊÁ¿Ğ£¶Ô·ÖÎö ¡ª ¹ı³ÌÍ¸Ã÷¿´°å](../reports/audit/v9-code-quality-kanban-20260629.md)
+- [V9 UI ×é¼şÔö¼Ó¿ÉĞĞĞÔÆÀ¹À±¨¸æ](../reports/audit/v9-ui-component-feasibility-assessment.md)
+- [ÎÄµµ¸üĞÂ½á¹û±¨¸æ](../reports/changelogs/2026-07-05-document-update-report.md)
+- [V9 ÎÄµµ¸üĞÂ±¨¸æ ¡ª 2026-07-08](../reports/changelogs/2026-07-08-document-update-report.md)
+- [V9 ÏîÄ¿ÎÄµµ»¯¹¤×÷×îÖÕ×Ü½á±¨¸æ](../reports/changelogs/2026-07-08-documentation-summary-report.md)
+- [V9 ÏîÄ¿¸üĞÂÈÕÖ¾ ¡ª ÎÄµµ»¯¹¤×÷Íê³É](../reports/changelogs/2026-07-09-update-log.md)
+- [V9 ¸üĞÂÈÕÖ¾±¨¸æ](../reports/changelogs/changelog-2026-07-04t06-45-59.md)
+- [V9 ¼Ü¹¹ÎÄµµ±ä¸üÈÕÖ¾](../reports/changelogs/CHANGELOG.md)
+- [V9 ¸üĞÂÈÕÖ¾±¨¸æ](../reports/changelogs/monthly-2026-07.md)
+- [PR-5 ¹¹½¨ĞÔÄÜÓÅ»¯×Ü½á](../reports/changelogs/pr-5-build-optimization-summary.md)
+- [PR-8 ÖØ¸´º¯ÊıÈ¥ÖØÉó¼Æ±¨¸æ](../reports/changelogs/pr-8-dedup-audit-report.md)
+- [PR-8 ÖØ¸´º¯ÊıÈ¥ÖØÖØ¹¹·½°¸](../reports/changelogs/pr-8-dedup-plan.md)
+- [ÖªÊ¶Í¼Æ×¹¹½¨TokenÏûºÄ¸´ÅÌÓëÓÅ»¯±¨¸æ](../reports/lessons-learned/knowledge-graph-token-optimization-report.md)
+- [¿ª·¢½ÌÑµ×Ü½áÓëÖªÊ¶³Áµí±¨¸æ](../reports/lessons-learned/latest.md)
+- [¿ª·¢½ÌÑµ×Ü½áÓëÖªÊ¶³Áµí±¨¸æ](../reports/lessons-learned/lessons-learned-2026-07-12.md)
+- [V9ÏîÄ¿TokenÏûºÄÉî¶È·ÖÎö±¨¸æ](../reports/lessons-learned/token-consumption-analysis-2026-07-04.md)
+- [V9ÏîÄ¿TokenÓÅ»¯×î¼ÑÊµ¼ùÖ¸ÄÏ](../reports/lessons-learned/token-optimization-best-practices.md)
+- [reports ¡ª ¹ı³Ì²úÎïÓëÉó¼Æ±¨¸æ](../reports/README.md)
+- [buildScoreDocDiff ĞŞ¸´ ¡ª Éú²ú²¿Êğ»Ø¹öÔ¤°¸](../reports/release-management/buildscoredocdiff-rollback-plan.md)
+- [V9 ¼Æ»®ÓëÅÅÆÚ£¨Plans£©](../reports/release-management/README.md)
+- [src/store ÅÉÉú¼ÆËãÎÄ¼şÎÄµµ»¯±ØÒªĞÔ·ÖÎö](../reports/retrospectives/2026-07-08-store-derived-documentation-analysis.md)
+- [ÓÊ¼şÕıÎÄ£ºV9 ÏîÄ¿ÎÄµµ»¯¹¤×÷Íê³ÉÍ¨Öª](../reports/retrospectives/2026-07-09-email-body.md)
+- [V9ÏµÍ³ËÄÀà³£Ì¬ÎÊÌâ×ÛºÏ·ÖÎö±¨¸æ](../reports/retrospectives/2026-07-09-four-category-problem-analysis.md)
+- [Jira ÈÎÎñ¿¨Æ¬ÄÚÈİ](../reports/retrospectives/2026-07-09-jira-tasks.md)
+- [P0/P1 Â·ÓÉÈ±¿ÚĞŞ¸´´úÂë·½°¸](../reports/retrospectives/2026-07-09-p0-p1-fix-code-plan.md)
+- [P0 ÓÅÏÈ¼¶´ı°ìÈÎÎñÇåµ¥](../reports/retrospectives/2026-07-09-p0-todo-list.md)
+- [P1 ¼¶²âÊÔĞŞ¸´ÓëÈÕÖ¾Âñµã¼¼Êõ×Ü½á](../reports/retrospectives/2026-07-09-p1-fix-technical-summary.md)
+- [P1 È±¿ÚĞŞ¸´¼¼Êõ¸´ÅÌ](../reports/retrospectives/2026-07-09-p1-gaps-fix-technical-review.md)
+- [Ê£Óà 3 ¸ö P1 È±¿ÚĞŞ¸´´úÂë·½°¸](../reports/retrospectives/2026-07-09-remaining-p1-gaps-fix-plan.md)
+- [Â·ÓÉ×¢²áÈ±Ê§±¨¸æ](../reports/retrospectives/2026-07-09-route-registration-gap-report.md)
+- [src/store ÅÉÉú¼ÆËãÎÄ¼şÎÄµµ»¯±ØÒªĞÔ·ÖÎö](../reports/retrospectives/2026-07-09-store-derived-documentation-analysis.md)
+- [V9 ÏîÄ¿ÎÄµµ»¯¹¤×÷¼¼Êõ·ÖÏí PPT ´ó¸Ù](../reports/retrospectives/2026-07-09-technical-sharing-ppt-outline.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡¤ ×ÛºÏÑéÖ¤Óë¶¨Î»·ÖÎö±¨¸æ](../reports/retrospectives/×ÛºÏÑéÖ¤Óë¶¨Î»·ÖÎö±¨¸æ-v2.0.0.md)
+- [V9 ½×¶ÎĞÔºÏ²¢±¨¸æ£¨Batch 1-3 »ã×Ü£©](../reports/retrospectives/batch-merge-reports.md)
+- [È¦¸´ÔÓ¶ÈÓÅ»¯·½°¸](../reports/retrospectives/complexity-optimization-plan.md)
+- [Untitled](../reports/retrospectives/data_link_sequence_diagram.md)
+- [Êı¾İ²É¼¯Ä£¿é¿ª·¢ÈÎÎñÇåµ¥](../reports/retrospectives/data-collection-task-list.md)
+- [ÒÀÀµ·ÖÎö±¨¸æ](../reports/retrospectives/dependency-analysis.md)
+- [Design Tokens ÏµÍ³ÊµÊ©ÊÂºó·ÖÎö±¨¸æ](../reports/retrospectives/design-tokens-implementation-report.md)
+- [´úÂë-ÎÄµµÍ¬²½ÕûÌå·½°¸ÓëÖ´ĞĞ¼Æ»®](../reports/retrospectives/doc-sync-execution-plan.md)
+- [25 Ö»¹ÉÆ±È«Á÷³Ì¶Ëµ½¶ËĞ£¶Ô²âÊÔ ¡ª ¿¼ºËÖ¸±ê·½°¸](../reports/retrospectives/e2e-verify-25stocks-plan.md)
+- [25 Ö»¹ÉÆ±È«Á÷³Ì¶Ëµ½¶ËĞ£¶Ô²âÊÔ ¡ª °´²Õ·ÖÎö±¨¸æ](../reports/retrospectives/e2e-verify-25stocks-report.md)
+- [ÈßÓàÉè¼Æ×¨Ïî¶Ëµ½¶ËÑéÖ¤±¨¸æ£¨R1¨CR5£©](../reports/retrospectives/e2e-verify-redundancy-report.md)
+- [V9 ÊµÊ©ÎÄµµ±£ÏÊ¶È¸æ¾¯Çåµ¥](../reports/retrospectives/freshness-alerts.md)
+- [V9 ÊµÊ©ÎÄµµ½¡¿µ¶È±¨¸æ](../reports/retrospectives/health-report.md)
+- [V9 ÏîÄ¿¾­Ñé½ÌÑµ ¡ª ÍÅ¶Ó·ÖÏíÕªÒª°æ](../reports/retrospectives/lessons-learned-summary.md)
+- [V9 ÏîÄ¿¾­Ñé½ÌÑµÖªÊ¶¿â](../reports/retrospectives/lessons-learned.md)
+- [MCP ²ãÈ¨ÏŞ¿ØÖÆĞŞ¸´·½°¸](../reports/retrospectives/mcp-acl-fix-plan-2026-07-08.md)
+- [MCP ¼Ü¹¹Õû¸ÄĞĞ¶¯¼Æ»®](../reports/retrospectives/mcp-architecture-remediation-plan-2026-07-08.md)
+- [6 ¸ö Disabled MCP Server Éî¶È¸´ÅÌ±¨¸æ](../reports/retrospectives/mcp-disabled-server-deep-dive.md)
+- [MCP Ä£¿é×´Ì¬ÓëÀúÊ·±ä¸ü¼ÇÂ¼](../reports/retrospectives/mcp-module-status.md)
+- [MCP Server ½©Ê¬Ä£¿éÉó¼Æ±¨¸æ](../reports/retrospectives/mcp-zombie-server-audit-report.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª ÏîÄ¿¿ª·¢Àú³ÌÏµÍ³ÊáÀí](../reports/retrospectives/project-development-journey.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª Õû¸ÄÒÅÁôÊÂÏîºóĞø´¦Àí¼Æ»®](../reports/retrospectives/rectification-follow-up-plan.md)
+- [V9 ÏµÍ³´úÂëÖØ¹¹Ö´ĞĞ·½°¸](../reports/retrospectives/refactoring-plan-2026-07-04.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª Õû¸ÄÍê³É±¨¸æ](../reports/retrospectives/system-rectification-final-report.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª È«ÃæÕû¸Ä±¨¸æ](../reports/retrospectives/system-rectification-report-2026-07-12.md)
+- [²âÊÔ/¹¹½¨²úÎïÇåÀí¼ÇÂ¼£¨×îÖÕ×´Ì¬£©](../reports/retrospectives/test-artifacts-cleanup-list.md)
+- [V9 ÊµÊ©ÎÄµµÊ±¼äÖá±¨¸æ](../reports/retrospectives/timeline-report.md)
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª µ±Ç°×´Ì¬È«ÃæÊáÀí£¨°´ÊµÊ©½ø¶È£©](../reports/retrospectives/v9-current-state-review.md)
+- [V9 Êı¾İ¹ØÏµÀ¶Í¼ÈÎÎñ¸ú×Ù¼Æ»®](../reports/retrospectives/v9-data-blueprint-task-tracking.md)
+- [ÆÀ·ÖÅÄÕÕ±È¶Ô¹¦ÄÜÄ£¿é ¡ª ²¹³ä´©ĞĞ²âÊÔ±¨¸æ](../reports/retrospectives/walkthrough-scoredoc-report.md)
+
+### standards
+
+- [±àÂë¹æ·¶](../standards/coding-conventions.md)
+- [ÖÊÁ¿ÃÅ½û](../standards/quality-gates.md)
+
+### team-handbook
+
+- [01 ¡¤ Éè¼ÆÓëÔ­´´Ë¼Â·£¨Design & Original Thinking£©](../team-handbook/01-design-philosophy.md)
+- [02 ¡¤ ÕûÌå¼Ü¹¹Éè¼ÆË¼Â·£¨Overall Architecture£©](../team-handbook/02-architecture.md)
+- [03 ¡¤ UI ×é¼şÉè¼ÆË¼Â·£¨UI Component Design£©](../team-handbook/03-ui-components.md)
+- [04 ¡¤ Ä£ĞÍÔËĞĞË¼Â·£¨Model Runtime & Data Flow£©](../team-handbook/04-model-runtime.md)
+- [05 ¡¤ ¾ºÆ·¶Ô±È·ÖÎö£¨Competitive Analysis£©](../team-handbook/05-competitive-analysis.md)
+- [V9 ÍÅ¶Ó¿ª·¢²Ù×÷Ö¸ÄÏ](../team-handbook/06-team-operation-guide.md)
+- [FinSightV9 ÍÅ¶ÓÌåÏµÊÖ²á£¨Team Handbook£©](../team-handbook/README.md)
+
+### testing
+
+- [testing ¡ª ²âÊÔÎÄµµ£¨¼æÈİÖØ¶¨Ïò£©](../testing/README.md)
+- [²âÊÔÄ¿Â¼ÓëÓÃÀıÄ¿Â¼](../testing/test-catalog.md)
+
+### tutorials
+
+- [V9 ÖÇÄÜÍ¶ÑĞ¸´ÅÌÏµÍ³ ¡ª ĞÂ³ÉÔ± 30 ·ÖÖÓÉÏÊÖÖ¸ÄÏ](../tutorials/getting-started.md)
+- [tutorials ¡ª ÈëÃÅ½Ì³Ì](../tutorials/README.md)

@@ -21,31 +21,6 @@ import { detect, type RotationSignalInput, type RotationSignal } from '@/service
 const logger = getLogger()
 
 // ============================================================
-// 内部样本数据（后续由 dataLayer 替代）
-// ============================================================
-
-const DEFAULT_SAMPLES: RotationSignalInput[] = [
-  {
-    sectorId: '银行',
-    volume: { history: [...Array(50).fill(60000), 100000, 110000, 120000, 115000, 105000] },
-    capitalFlow: { dailyNetFlow: [10, 20, 15, 30, 25] },
-    goldenCross: { closes: [...Array(20).fill(105), 100, 100, 100, 100, 130] },
-  },
-  {
-    sectorId: '钢铁',
-    volume: { history: [...Array(50).fill(30000), 35000, 32000, 31000, 33000, 34000] },
-    capitalFlow: { dailyNetFlow: [5, 3, -2, 8, 2] },
-    goldenCross: { closes: [...Array(25).fill(100)] },
-  },
-  {
-    sectorId: '煤炭',
-    volume: { history: [...Array(40).fill(15000), ...Array(10).fill(20000), 16000, 16000, 16000, 16000, 16000] },
-    capitalFlow: { dailyNetFlow: [-3, -5, -2, 1, -1] },
-    goldenCross: { closes: Array(25).fill(100).map((v, i) => v - i * 0.5) },
-  },
-]
-
-// ============================================================
 // Store 接口
 // ============================================================
 
@@ -91,7 +66,12 @@ export const useRotationSignalStore = create<RotationSignalState>((set) => ({
     set({ loading: true, error: null })
 
     try {
-      const sourceInputs = inputs ?? DEFAULT_SAMPLES
+      if (!inputs || inputs.length === 0) {
+        logger.info('[rotationSignalStore] fetchSignals: 无输入数据，返回空结果')
+        set({ loading: false })
+        return
+      }
+      const sourceInputs = inputs
       const results = sourceInputs.map((input) => {
         const signal = detect(input)
         logger.info(
@@ -115,7 +95,11 @@ export const useRotationSignalStore = create<RotationSignalState>((set) => ({
 
   detectSignal: (sectorId, inputs) => {
     logger.info(`[rotationSignalStore] detectSignal: ${sectorId}`)
-    const sourceInputs = inputs ?? DEFAULT_SAMPLES
+    if (!inputs || inputs.length === 0) {
+      logger.warn(`[rotationSignalStore] detectSignal: 无输入数据`)
+      return
+    }
+    const sourceInputs = inputs
     const target = sourceInputs.find((i) => i.sectorId === sectorId)
 
     if (!target) {

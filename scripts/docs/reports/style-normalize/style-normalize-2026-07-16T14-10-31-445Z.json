@@ -1,0 +1,929 @@
+{
+  "dry": true,
+  "timestamp": "2026-07-16T14:10:31.312Z",
+  "totalFiles": 694,
+  "changedFiles": 411,
+  "counts": {
+    "t1_key": 594,
+    "t2_author": 118,
+    "t3_emoji": 68,
+    "t4_date": 3,
+    "t5_term": 110
+  },
+  "samples": [
+    {
+      "file": "docs/00-meta/23-core-docs-final-verification-report.md",
+      "deltas": [
+        {
+          "line": 9,
+          "rule": "T1-key",
+          "from": "> **报告生成时间**：2026-07-12",
+          "to": "> **Date**："
+        },
+        {
+          "line": 15,
+          "rule": "T3-emoji",
+          "from": "## 📊 统计汇总",
+          "to": "## 统计汇总"
+        },
+        {
+          "line": 28,
+          "rule": "T3-emoji",
+          "from": "## 📋 详细判定清单",
+          "to": "## 详细判定清单"
+        },
+        {
+          "line": 165,
+          "rule": "T3-emoji",
+          "from": "## 📝 附录：检索过程说明",
+          "to": "## 附录：检索过程说明"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/23-core-docs-functional-match-report.md",
+      "deltas": [
+        {
+          "line": 9,
+          "rule": "T1-key",
+          "from": "> **报告生成时间**：2026-07-12",
+          "to": "> **Date**："
+        },
+        {
+          "line": 15,
+          "rule": "T3-emoji",
+          "from": "## 📊 统计汇总",
+          "to": "## 统计汇总"
+        },
+        {
+          "line": 28,
+          "rule": "T3-emoji",
+          "from": "## 📋 详细判定清单",
+          "to": "## 详细判定清单"
+        },
+        {
+          "line": 214,
+          "rule": "T3-emoji",
+          "from": "## 📝 附录：与前期报告的修正对照",
+          "to": "## 附录：与前期报告的修正对照"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/23-core-docs-v2-final-report.md",
+      "deltas": [
+        {
+          "line": 9,
+          "rule": "T1-key",
+          "from": "> **报告生成时间**：2026-07-12",
+          "to": "> **Date**："
+        },
+        {
+          "line": 10,
+          "rule": "T1-key",
+          "from": "> **校对轮次**：第2轮（人工复核所有判定）",
+          "to": "> **Proofreader**："
+        },
+        {
+          "line": 11,
+          "rule": "T1-key",
+          "from": "> **校对依据**：重新读取 `../explanation/design/implementation-governance.md`、`../README.md`、`../reference/V9-TEST-CASES.md`、`../reference/audit-b4-4-security.md` 等关键文档全文",
+          "to": "> **Proofreader**："
+        },
+        {
+          "line": 15,
+          "rule": "T3-emoji",
+          "from": "## 📊 统计汇总（二次校对后）",
+          "to": "## 统计汇总（二次校对后）"
+        },
+        {
+          "line": 28,
+          "rule": "T3-emoji",
+          "from": "## 📋 详细判定清单（校对后）",
+          "to": "## 详细判定清单（校对后）"
+        },
+        {
+          "line": 162,
+          "rule": "T3-emoji",
+          "from": "## 🔶 部分满足文档清单（7个）",
+          "to": "## 部分满足文档清单（7个）"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/agent-app-docs-classification.md",
+      "deltas": [
+        {
+          "line": 12,
+          "rule": "T1-key",
+          "from": "> **生成时间**：2026-07-16",
+          "to": "> **Generator**："
+        },
+        {
+          "line": 43,
+          "rule": "T3-emoji",
+          "from": "### 🔶 重要（6 份）",
+          "to": "### 重要（6 份）"
+        },
+        {
+          "line": 54,
+          "rule": "T3-emoji",
+          "from": "### 📘 参考（5 份）",
+          "to": "### 参考（5 份）"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/changelog-warnings-handling-strategy.md",
+      "deltas": [
+        {
+          "line": 32,
+          "rule": "T5-term",
+          "from": "| 数据定义文档 | `docs/RISK_DERIVED_data-definition.md` | 已归档到 `archive/docs/07-archive/` |",
+          "to": "| 数据字典文档 | `docs/RISK_DERIVED_data-definition.md` | 已归档到 `archive/docs/07-archive/` |"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/cleanup-schedule.md",
+      "deltas": [
+        {
+          "line": 10,
+          "rule": "T1-key",
+          "from": "> **关联**：被 CI（`audit:docs`、文档门禁）引用；与 `governance.md` §4 保鲜规则一致。",
+          "to": "> **Source**："
+        },
+        {
+          "line": 11,
+          "rule": "T1-key",
+          "from": "> **版本**：v1.1.0（2026-07-12）",
+          "to": "> **Version**："
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/deprecated-docs/old-versions/data-definition-v1.0.0-cockpit.md",
+      "deltas": [
+        {
+          "line": 13,
+          "rule": "T5-term",
+          "from": "title: 驾驶舱 Widget 数据定义",
+          "to": "title: 驾驶舱 Widget 数据字典"
+        },
+        {
+          "line": 17,
+          "rule": "T5-term",
+          "from": "# 驾驶舱 Widget 数据定义",
+          "to": "# 驾驶舱 Widget 数据字典"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/deprecated-docs/old-versions/deployment-v1.0.0.md",
+      "deltas": [
+        {
+          "line": 14,
+          "rule": "T1-key",
+          "from": "> **版本**: v1.0.0 | **日期**: 2026-07-10",
+          "to": "> **Version**:"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/directory-audit-feasibility-plan.md",
+      "deltas": [
+        {
+          "line": 10,
+          "rule": "T1-key",
+          "from": "> **日期**：2026-07-13",
+          "to": "> **Date**："
+        },
+        {
+          "line": 12,
+          "rule": "T2-author",
+          "from": "> **方法**：doc-code 双重校对（文档声称 ↔ 磁盘真实）；逐项 `ls`/`find`/`du` 核对",
+          "to": "> **方法**：doc-code 双重校对（文档声称 ↔ 磁盘真实） | 逐项 `ls` | `find` | `du` 核对"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/directory-audit-report-v1.4.3.md",
+      "deltas": [
+        {
+          "line": 9,
+          "rule": "T1-key",
+          "from": "> **生成日期**: 2026-07-20",
+          "to": "> **Date**:"
+        },
+        {
+          "line": 9,
+          "rule": "T2-author",
+          "from": "> **生成日期**: 2026-07-20",
+          "to": "> **Date**:"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/directory-audit-todo.md",
+      "deltas": [
+        {
+          "line": 10,
+          "rule": "T1-key",
+          "from": "> **日期**：2026-07-13",
+          "to": "> **Date**："
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/directory-structure-audit-report.md",
+      "deltas": [
+        {
+          "line": 265,
+          "rule": "T1-key",
+          "from": "> **审计日期**: 2026-07-13",
+          "to": "> **Date**:"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/directory-structure-guide.md",
+      "deltas": [
+        {
+          "line": 49,
+          "rule": "T2-author",
+          "from": "> **工具/IDE/环境点目录（按需存在，不一一列举）**：`.trae/`、`.trae-cn/`、`.cursorrules`、`.dbg/`、`.playwright-mcp/`、`.venv/`、`.vscode/`、`.npmrc`、`.nvmrc`、`.env.*`、`.complexity-baseline.json`、`.token-baseline.json`、`.dependency-cruiser.js`。这些属工具/环境配置，新开发者按本地环境自行生成，不纳入版本结构约束。",
+          "to": "> **工具/IDE/环境点目录（按需存在，不一一列举）**：`.trae | ` | `.trae-cn | ` | `.cursorrules` | `.dbg | ` | `.playwright-mcp | ` | `.venv | ` | `.vscode | ` | `.npmrc` | `.nvmrc` | `.env.*` | `.complexity-baseline.json` | `.token-baseline.json` | `.dependency-cruiser.js`。这些属工具 | 环境配置 | 新开发者按本地环境自行生成 | 不纳入版本结构约束。"
+        },
+        {
+          "line": 304,
+          "rule": "T5-term",
+          "from": "- 每个数据定义、API 契约、业务规则应有**唯一的权威文档**",
+          "to": "- 每个数据字典、API 契约、业务规则应有**唯一的权威文档**"
+        },
+        {
+          "line": 336,
+          "rule": "T5-term",
+          "from": "| **P0** | `../reference/v9数据宪法.md` | v9数据宪法.md | 数据定义规范、数据源标准 | §2.5 |",
+          "to": "| **P0** | `../reference/v9数据宪法.md` | v9数据宪法.md | 数据字典规范、数据源标准 | §2.5 |"
+        },
+        {
+          "line": 611,
+          "rule": "T1-key",
+          "from": "> **生效日期**: 2026-07-13",
+          "to": "> **Date**:"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/doc-auto-update-kanban.md",
+      "deltas": [
+        {
+          "line": 9,
+          "rule": "T1-key",
+          "from": "> 文档日期：2026-07-12（M1 收尾 + 维度二审查后建立）",
+          "to": "> **Date**："
+        },
+        {
+          "line": 11,
+          "rule": "T1-key",
+          "from": "> 关联文档：`docs/00-meta/文档自动更新体系-架构梳理与任务清单.md`（原 §四 任务清单）、`docs/00-meta/doc-trigger-action-map.md`、`../reports/retrospectives/freshness-alerts.md`",
+          "to": "> **Source**："
+        },
+        {
+          "line": 54,
+          "rule": "T1-key",
+          "from": "> **A3/A4/A5 核实（2026-07-12 二次校对）**：双重校对 `doc-auto-updater.ts` 代码实况——",
+          "to": "> **Proofreader**："
+        },
+        {
+          "line": 76,
+          "rule": "T1-key",
+          "from": "> **A9 核实（2026-07-12 二次校对）**：结构化日志已用（`logger.info/warn/error` 带 context 对象，如 `{ count, modules }`）；但 `doc-auto-updater.ts` **0 个 `export function`**，纯函数导出/DI 未做，故 🟡。",
+          "to": "> **Proofreader**："
+        },
+        {
+          "line": 101,
+          "rule": "T2-author",
+          "from": "> - **N3** — `doc-update-trigger --auto-update` 空桩落地：新增 `--since/--base-ref/--files/--dry-run/--strict` 参数校验；`DocGenerator` 注册表扩展点（内置 `defaultDocGenerator`=建骨架+幂等校验标记、`versionCheckGenerator`=对接 `doc:version-check`）；按映射表路由生成 → 按需 `audit:docs`；修复 `matchPattern` 的 `**/*.ts` 不匹配顶层文件缺陷；新增 T9/T10 规则与 `auditDocs` 字段。",
+          "to": "> - **N3** — `doc-update-trigger --auto-update` 空桩落地：新增 `--since | --base-ref | --files | --dry-run | --strict` 参数校验 | `DocGenerator` 注册表扩展点（内置 `defaultDocGenerator`=建骨架+幂等校验标记 | `versionCheckGenerator`=对接 `doc:version-check`） | 按映射表路由生成 → 按需 `audit:docs` | 修复 `matchPattern` 的 `** | *.ts` 不匹配顶层文件缺陷 | 新增 T9 | T10 规则与 `auditDocs` 字段。"
+        },
+        {
+          "line": 104,
+          "rule": "T1-key",
+          "from": "> **N5 闭环核实（2026-07-12 双重校对）**：`trae-file-management-review.md` 顶部已实际标注「⚠️ 本文档已过时（2026-07-12，N5 治理）」并列出全部已处置项，故 N5 状态由 🔴 修订为 ✅（本次盘点发现看板状态滞后于实况的漂移，已同步）。",
+          "to": "> **Proofreader**："
+        },
+        {
+          "line": 109,
+          "rule": "T2-author",
+          "from": "> pr-6 提交（4e736e9, 2026-07-14 \"chore(refactor/pr-6): 偏差校对整改 R1-R8 落盘\"）将 docs 从旧编号目录（`01-requirements/`、`02-design/`、`03-development/`、`04-testing/`、`05-deployment/`）整体迁移到 Diátaxis 新结构（`explanation/`、`reference/`、`how-to/`、`tutorials/`、`reports/`、`00-meta/`），导致 N2 上述\"19 路径 ✓ EXISTS\"的结论**全部失效**——映射表 §二 与代码 `TRIGGER_RULES.docsToUpdate` 仍指向旧路径，`--auto-update` 会 `FILE_NOT_FOUND`。",
+          "to": "> pr-6 提交（4e736e9, 2026-07-14 \"chore(refactor/pr-6): 偏差校对整改 R1-R8 落盘\"）将 docs 从旧编号目录（`01-requirements | ` | `02-design | ` | `03-development | ` | `04-testing | ` | `05-deployment | `）整体迁移到 Diátaxis 新结构（`explanation | ` | `reference | ` | `how-to | ` | `tutorials | ` | `reports | ` | `00-meta | `） | 导致 N2 上述\"19 路径 ✓ EXISTS\"的结论**全部失效**——映射表 §二 与代码 `TRIGGER_RULES.docsToUpdate` 仍指向旧路径 | `--auto-update` 会 `FILE_NOT_FOUND`。"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/doc-file-management-optimization-plan.md",
+      "deltas": [
+        {
+          "line": 9,
+          "rule": "T1-key",
+          "from": "> **版本**: v1.0.0 ｜ **日期**: 2026-07-13 ｜ **作者**: Senior Developer（高级开发工程师）",
+          "to": "> **Version**:"
+        },
+        {
+          "line": 9,
+          "rule": "T2-author",
+          "from": "> **版本**: v1.0.0 ｜ **日期**: 2026-07-13 ｜ **作者**: Senior Developer（高级开发工程师）",
+          "to": "> **Version**:"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/doc-proofreading-strategy.md",
+      "deltas": [
+        {
+          "line": 3,
+          "rule": "T1-key",
+          "from": "> **版本**：v1.0.0 ｜ **日期**：2026-07-15",
+          "to": "> **Version**："
+        },
+        {
+          "line": 4,
+          "rule": "T1-key",
+          "from": "> **单一事实源**：`scripts/docs-tool/doc-proofreading-strategy.ts`",
+          "to": "> **Source**："
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/doc-style-remediation-plan.md",
+      "deltas": [
+        {
+          "line": 12,
+          "rule": "T2-author",
+          "from": "> **目标**：消除多模型校对导致的风格割裂，使 694 份 docs/.md 100% 符合统一标准。",
+          "to": "> **目标**：消除多模型校对导致的风格割裂 | 使 694 份 docs | .md 100% 符合统一标准。"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/doc-style-standard.md",
+      "deltas": [
+        {
+          "line": 12,
+          "rule": "T1-key",
+          "from": "> **关联契约**：`doc-proofreading-strategy.md`（交叉引用检查）、`hybrid-proofread-contract.md`（校对服务）、`markdown-reorg-framework.md`（三级分类）。",
+          "to": "> **Source**："
+        },
+        {
+          "line": 90,
+          "rule": "T4-date",
+          "from": "- **日期格式**：`YYYY-MM-DD`；确需时分用 `YYYY-MM-DD HH:mm`。**禁止** `2026年7月16日` / `2026/07/16`。",
+          "to": "- **日期格式**：`YYYY-MM-DD`；确需时分用 `YYYY-MM-DD HH:mm`。**禁止** `2026-07-16` / `2026-07-16`。"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/doc-system-check-v9.md",
+      "deltas": [
+        {
+          "line": 9,
+          "rule": "T1-key",
+          "from": "> **体检日期**：2026-07-12",
+          "to": "> **Date**："
+        },
+        {
+          "line": 10,
+          "rule": "T1-key",
+          "from": "> **修订日期**：2026-07-12（第2次修订，基于全量重扫描）",
+          "to": "> **Date**："
+        },
+        {
+          "line": 28,
+          "rule": "T5-term",
+          "from": "| 数据定义重复文件 | 8 份 | 1 | 🔴 仍严重（原 10 份，已减 2） |",
+          "to": "| 数据字典重复文件 | 8 份 | 1 | 🔴 仍严重（原 10 份，已减 2） |"
+        },
+        {
+          "line": 54,
+          "rule": "T5-term",
+          "from": "| 数据定义重复 | 未提及 | **10 份重复** | **8 份重复** | 根级与 01-req 的 DATA_DEFINITION 已移除 |",
+          "to": "| 数据字典重复 | 未提及 | **10 份重复** | **8 份重复** | 根级与 01-req 的 DATA_DEFINITION 已移除 |"
+        },
+        {
+          "line": 135,
+          "rule": "T5-term",
+          "from": "- **数据定义**：`../reference/data-definition.md`（主字典）、`../reference/ai-center-data-definition.md` 等 7 份独立域定义（见 `../reference/index.md` §2）；原 `docs/02-design/*_data-definition.md` 7 份已归档至 `07-archive/`（2026-07-12）。",
+          "to": "- **数据字典**：`../reference/data-definition.md`（主字典）、`../reference/ai-center-data-definition.md` 等 7 份独立域定义（见 `../reference/index.md` §2）；原 `docs/02-design/*_data-definition.md` 7 份已归档至 `07-archive/`（2026-07-12）。"
+        },
+        {
+          "line": 173,
+          "rule": "T1-key",
+          "from": "> **Kimi 策略关联**：Kimi 文件上传有 1000 个限制。自动产物若不隔离，将挤占有效文件配额，导致核心文档无法上传或加载。",
+          "to": "> **Source**："
+        },
+        {
+          "line": 175,
+          "rule": "T5-term",
+          "from": "### 缺陷 6：数据定义文件高度重复（P0）— 🟡 已改善（10→8）",
+          "to": "### 缺陷 6：数据字典文件高度重复（P0）— 🟡 已改善（10→8）"
+        },
+        {
+          "line": 198,
+          "rule": "T2-author",
+          "from": "> **风险**：同一数据字段在不同文档中定义冲突，AI 生成代码时引用错误版本。",
+          "to": "> **风险**：同一数据字段在不同文档中定义冲突 | AI 生成代码时引用错误版本。"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/doc-trigger-action-map.md",
+      "deltas": [
+        {
+          "line": 9,
+          "rule": "T1-key",
+          "from": "> 文档日期：2026-07-14（pr-6 Diátaxis 重组后路径同步修订）",
+          "to": "> **Date**："
+        },
+        {
+          "line": 11,
+          "rule": "T1-key",
+          "from": "> 关联文档：`./文档自动更新体系-架构梳理与任务清单.md` §三 约束1、`scripts/docs-tool/doc-update-trigger.ts` 的 `TRIGGER_RULES`",
+          "to": "> **Source**："
+        },
+        {
+          "line": 50,
+          "rule": "T5-term",
+          "from": "| **T9 Widget 注册表变更** | `src/cockpit/core/widgetRegistry.ts` | 重写 `docs/reference/cockpit/data-definition.md` | 是 | 补充：增量维护 `docs/00-meta/registry-index.md`（非全量重写，见任务 A1）、团队手册 `docs/team-handbook/03-ui-components.md` + 跑 `audit:docs`。注册表结构变更时 cockpit 数据定义需整体对齐。 |",
+          "to": "| **T9 Widget 注册表变更** | `src/cockpit/core/widgetRegistry.ts` | 重写 `docs/reference/cockpit/data-definition.md` | 是 | 补充：增量维护 `docs/00-meta/registry-index.md`（非全量重写，见任务 A1）、团队手册 `docs/team-handbook/03-ui-components.md` + 跑 `audit:docs`。注册表结构变更时 cockpit 数据字典需整体对齐。 |"
+        },
+        {
+          "line": 55,
+          "rule": "T2-author",
+          "from": "> **团队手册接入（2026-07-15）**：团队体系手册 `docs/team-handbook/`（01 设计原创 / 02 整体架构 / 03 UI 组件 / 04 模型运行 / 05 竞品对比）已注册为上述 T1–T9 的补充文档，按维度映射：02 整体架构 ← T2/T3/T5/T8；03 UI 组件 ← T6/T7/T9；04 模型运行 ← T1/T2/T4。触发对应规则时，`--auto-update` 会刷新手册 `.md` 末尾的 `<!-- auto-update -->` 校验标记并提示人工复核（手册为人工策展文档，生成器仅刷新标记，不重写正文）。手册的 HTML 版（`docs/team-handbook-html/`）由 `node scripts/convert-handbook-to-html.mjs` 从 `.md` 派生，**`.md` 更新后须重跑该脚本重新生成 HTML**；HTML 不纳入自动改写范围，避免覆盖派生产物。",
+          "to": "> **团队手册接入（2026-07-15）**：团队体系手册 `docs | team-handbook | `（01 设计原创 | 02 整体架构 | 03 UI 组件 | 04 模型运行 | 05 竞品对比）已注册为上述 T1–T9 的补充文档 | 按维度映射：02 整体架构 ← T2 | T3 | T5 | T8 | 03 UI 组件 ← T6 | T7 | T9 | 04 模型运行 ← T1 | T2 | T4。触发对应规则时 | human | 生成器仅刷新标记 | 不重写正文）。手册的 HTML 版（`docs | team-handbook-html | `）由 `node scripts | convert-handbook-to-html.mjs` 从 `.md` 派生 | **`.md` 更新后须重跑该脚本重新生成 HTML** | HTML 不纳入自动改写范围 | 避免覆盖派生产物。"
+        },
+        {
+          "line": 94,
+          "rule": "T1-key",
+          "from": "> 文档日期：2026-07-12（N2/N3 修订）",
+          "to": "> **Date**："
+        },
+        {
+          "line": 96,
+          "rule": "T1-key",
+          "from": "> 关联文档：`./文档自动更新体系-架构梳理与任务清单.md` §三 约束1、`scripts/docs-tool/doc-update-trigger.ts` 的 `TRIGGER_RULES`",
+          "to": "> **Source**："
+        },
+        {
+          "line": 107,
+          "rule": "T5-term",
+          "from": "| **T9 Widget 注册表变更** | `src/cockpit/core/widgetRegistry.ts` | 重写 `../reference/data-definition.md` | 是 | 补充：增量维护 `../reference/registry-index.md`（非全量重写，见任务 A1）+ 跑 `audit:docs`。注册表结构变更时 cockpit 数据定义需整体对齐。 |",
+          "to": "| **T9 Widget 注册表变更** | `src/cockpit/core/widgetRegistry.ts` | 重写 `../reference/data-definition.md` | 是 | 补充：增量维护 `../reference/registry-index.md`（非全量重写，见任务 A1）+ 跑 `audit:docs`。注册表结构变更时 cockpit 数据字典需整体对齐。 |"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/FILE-MANAGEMENT-GUIDE-cleanup-decisions.md",
+      "deltas": [
+        {
+          "line": 9,
+          "rule": "T1-key",
+          "from": "> **生成时间**: 2026-07-20",
+          "to": "> **Generator**:"
+        },
+        {
+          "line": 9,
+          "rule": "T2-author",
+          "from": "> **生成时间**: 2026-07-20",
+          "to": "> **Generator**:"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/FILE-MANAGEMENT-GUIDE-file-wandering-report.md",
+      "deltas": [
+        {
+          "line": 9,
+          "rule": "T1-key",
+          "from": "> 生成时间: 2026-07-20",
+          "to": "> **Generator**:"
+        },
+        {
+          "line": 9,
+          "rule": "T2-author",
+          "from": "> 生成时间: 2026-07-20",
+          "to": "> **Generator**:"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/FILE-MANAGEMENT-GUIDE-optimization-prompt.md",
+      "deltas": [
+        {
+          "line": 10,
+          "rule": "T1-key",
+          "from": "> 版本: v1.0.0",
+          "to": "> **Version**:"
+        },
+        {
+          "line": 24,
+          "rule": "T2-author",
+          "from": "> **证据**: 测试报告 2.1 问题1-7（Major），`src/` 目录映射遗漏率高达 42%，直接导致 AI 生成文件时放错位置。",
+          "to": "> **证据**: 测试报告 2.1 问题1-7（Major） | `src | ` 目录映射遗漏率高达 42% | 直接导致 AI 生成文件时放错位置。"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/FILE-MANAGEMENT-GUIDE-RCA-report.md",
+      "deltas": [
+        {
+          "line": 9,
+          "rule": "T1-key",
+          "from": "> 生成时间: 2026-07-12",
+          "to": "> **Generator**:"
+        },
+        {
+          "line": 9,
+          "rule": "T2-author",
+          "from": "> 生成时间: 2026-07-12",
+          "to": "> **Generator**:"
+        },
+        {
+          "line": 10,
+          "rule": "T1-key",
+          "from": "> 关联报告: `../reports/audit/file-management-guide-test-report.md` (2026-07-20)",
+          "to": "> **Source**:"
+        },
+        {
+          "line": 21,
+          "rule": "T1-key",
+          "from": "> **测试报告来源**: §2.1（7项Major）、§2.3（3项Major+1项Minor+1项Info）、§2.4（1项Major）",
+          "to": "> **Source**:"
+        },
+        {
+          "line": 61,
+          "rule": "T1-key",
+          "from": "> **测试报告来源**: §2.2（5项）、§2.3（10项）",
+          "to": "> **Source**:"
+        },
+        {
+          "line": 85,
+          "rule": "T1-key",
+          "from": "> **测试报告来源**: §2.4（10项缺失）",
+          "to": "> **Source**:"
+        },
+        {
+          "line": 109,
+          "rule": "T1-key",
+          "from": "> **测试报告来源**: §2.5（5项）",
+          "to": "> **Source**:"
+        },
+        {
+          "line": 296,
+          "rule": "T1-key",
+          "from": "> 项目采用\"项目级版本 + 文档修订号\"双版本号体系。所有文档头部必须声明：文档体系版本（与项目版本一致）、本文档修订号、兼容的架构契约版本。",
+          "to": "> **Version**："
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/FILE-MANAGEMENT-GUIDE-task-list.md",
+      "deltas": [
+        {
+          "line": 9,
+          "rule": "T1-key",
+          "from": "> **生成时间**: 2026-07-20",
+          "to": "> **Generator**:"
+        },
+        {
+          "line": 9,
+          "rule": "T2-author",
+          "from": "> **生成时间**: 2026-07-20",
+          "to": "> **Generator**:"
+        },
+        {
+          "line": 10,
+          "rule": "T1-key",
+          "from": "> **关联报告**: `../reports/audit/file-management-guide-test-report.md`",
+          "to": "> **Source**:"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/GOVERNANCE.md",
+      "deltas": [
+        {
+          "line": 9,
+          "rule": "T1-key",
+          "from": "> **版本**: v1.0.0 | **日期**: 2026-07-12",
+          "to": "> **Version**:"
+        },
+        {
+          "line": 77,
+          "rule": "T1-key",
+          "from": "> **版本**: v1.0.0 | **日期**: 2026-07-12",
+          "to": "> **Version**:"
+        },
+        {
+          "line": 89,
+          "rule": "T5-term",
+          "from": "| 数据定义 | `*-data-definition.md` | `../reference/news-data-definition.md` |",
+          "to": "| 数据字典 | `*-data-definition.md` | `../reference/news-data-definition.md` |"
+        },
+        {
+          "line": 180,
+          "rule": "T1-key",
+          "from": "> **归档日期**: 2026-07-12",
+          "to": "> **Date**:"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/markdown-reorg-framework.md",
+      "deltas": [
+        {
+          "line": 11,
+          "rule": "T1-key",
+          "from": "> **生成时间**：2026-07-16",
+          "to": "> **Generator**："
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/migration-plan.md",
+      "deltas": [
+        {
+          "line": 9,
+          "rule": "T1-key",
+          "from": "> **版本**: v1.0.0 | **日期**: 2026-07-13",
+          "to": "> **Version**:"
+        },
+        {
+          "line": 48,
+          "rule": "T5-term",
+          "from": "| C7 数据字典 | C | `02-design/standards/` | DATA_DICTIONARY_INDEX + 数据定义 |",
+          "to": "| C7 数据字典 | C | `02-design/standards/` | DATA_DICTIONARY_INDEX + 数据字典 |"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/p1-01-llm-management-split-report.md",
+      "deltas": [
+        {
+          "line": 4,
+          "rule": "T1-key",
+          "from": "> **执行日期**: 2026-07-15",
+          "to": "> **Date**:"
+        },
+        {
+          "line": 5,
+          "rule": "T1-key",
+          "from": "> **执行人**: AI 辅助开发流程",
+          "to": "> **Proofreader**:"
+        },
+        {
+          "line": 5,
+          "rule": "T2-author",
+          "from": "> **执行人**: AI 辅助开发流程",
+          "to": "> **Proofreader**:"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/p1-03-collection-wizard-store-split-report.md",
+      "deltas": [
+        {
+          "line": 4,
+          "rule": "T1-key",
+          "from": "> **执行日期**: 2026-07-15",
+          "to": "> **Date**:"
+        },
+        {
+          "line": 5,
+          "rule": "T1-key",
+          "from": "> **执行人**: AI 辅助开发流程",
+          "to": "> **Proofreader**:"
+        },
+        {
+          "line": 5,
+          "rule": "T2-author",
+          "from": "> **执行人**: AI 辅助开发流程",
+          "to": "> **Proofreader**:"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/p1-06-eslint-warning-tech-debt-report.md",
+      "deltas": [
+        {
+          "line": 4,
+          "rule": "T1-key",
+          "from": "> **执行日期**: 2026-07-15",
+          "to": "> **Date**:"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/p1-13-code-to-doc-refs-fix-report.md",
+      "deltas": [
+        {
+          "line": 4,
+          "rule": "T1-key",
+          "from": "> **执行日期**: 2026-07-15",
+          "to": "> **Date**:"
+        },
+        {
+          "line": 5,
+          "rule": "T1-key",
+          "from": "> **执行人**: AI 辅助开发流程",
+          "to": "> **Proofreader**:"
+        },
+        {
+          "line": 5,
+          "rule": "T2-author",
+          "from": "> **执行人**: AI 辅助开发流程",
+          "to": "> **Proofreader**:"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/P1-secondary-verification-report.md",
+      "deltas": [
+        {
+          "line": 9,
+          "rule": "T1-key",
+          "from": "> **日期**：2026-07-14",
+          "to": "> **Date**："
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/P5-verification-report.md",
+      "deltas": [
+        {
+          "line": 9,
+          "rule": "T1-key",
+          "from": "> **验证日期**: 2026-07-20",
+          "to": "> **Date**:"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/prompt-execute-remediation.md",
+      "deltas": [
+        {
+          "line": 10,
+          "rule": "T2-author",
+          "from": "> 适用工具：TRAE / Cursor / Claude Code 等支持 Agent 编排的 AI IDE。",
+          "to": "> 适用工具：TRAE | Cursor | claude"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/registry-index.md",
+      "deltas": [
+        {
+          "line": 482,
+          "rule": "T5-term",
+          "from": "| R-032 | DAT | 驾驶舱 Widget 数据定义 | Status**: Current | - | C-37,I-89 | [data-definition-v1.0.0-cockpit.md](../00-meta/deprecated-docs/old-versions/data-definition-v1.0.0-cockpit.md) |",
+          "to": "| R-032 | DAT | 驾驶舱 Widget 数据字典 | Status**: Current | - | C-37,I-89 | [data-definition-v1.0.0-cockpit.md](../00-meta/deprecated-docs/old-versions/data-definition-v1.0.0-cockpit.md) |"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/trae-file-management-review.md",
+      "deltas": [
+        {
+          "line": 17,
+          "rule": "T1-key",
+          "from": "> **审查日期**：2026-07-12",
+          "to": "> **Date**："
+        },
+        {
+          "line": 18,
+          "rule": "T2-author",
+          "from": "> **审查视角**：TRAE 开发工具（AI 编码助手）的项目结构 / 文件管理习惯",
+          "to": "> **审查视角**：TRAE 开发工具（AI 编码助手）的项目结构 | 文件管理习惯"
+        },
+        {
+          "line": 19,
+          "rule": "T2-author",
+          "from": "> **方法**：全量本地文件检索（排除 `node_modules`/`dist*`/`coverage*`/`.git`）+ 与用户给定的「文档治理层 52 / 双向一致性 61」评分表逐项交叉校对 + TRAE 官方/社区发布规范的匹配度评价",
+          "to": "> **方法**：全量本地文件检索（排除 `node_modules` | `dist*` | `coverage*` | `.git`）+ 与用户给定的「文档治理层 52 | 双向一致性 61」评分表逐项交叉校对 + TRAE 官方 | 社区发布规范的匹配度评价"
+        },
+        {
+          "line": 20,
+          "rule": "T1-key",
+          "from": "> **TRAE 规范基准**（来源：TRAE 官方社区《全局开发规范调教实录 v2》、社区《AI-Native 开发工作流手册》、个人规则经验帖）：",
+          "to": "> **Source**："
+        },
+        {
+          "line": 98,
+          "rule": "T1-key",
+          "from": "> **校对结论**：两张表对 `docs/` 内部治理刻画较准（顶层入口、归档、存在/规格落差均确认），但存在 **2 处误报**（DATA_DEFINITION 重复数、AI 缓存绝对 0）、**3 处偏差**（README/令牌/索引落差口径过严）、**7 处重大遗漏**（全部指向**根级文件卫生与 `.gitignore` 缺口**）——而这些恰恰是 TRAE 视角下最刺眼的问题。",
+          "to": "> **Proofreader**："
+        },
+        {
+          "line": 114,
+          "rule": "T5-term",
+          "from": "- **匹配度：65** —— 主体可接受，但数据定义命名与临时脚本破坏一致性。",
+          "to": "- **匹配度：65** —— 主体可接受，但数据字典命名与临时脚本破坏一致性。"
+        },
+        {
+          "line": 142,
+          "rule": "T2-author",
+          "from": "> **综合匹配度 ≈ 56/100（中等偏低）**：TRAE 工具链已就位且代码治理优秀，但**文件组织结构与文档卫生明显未遵从 TRAE 自身发布的规范**，根级散落与 `.gitignore` 缺口是最大扣分项。",
+          "to": "> **综合匹配度 ≈ 56/100（中等偏低）**：TRAE 工具链已就位且代码治理优秀 | 但**文件组织结构与文档卫生明显未遵从 TRAE 自身发布的规范** | 根级散落与 `.gitignore` 缺口是最大扣分项。"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/v9-next-phase-todo.md",
+      "deltas": [
+        {
+          "line": 23,
+          "rule": "T5-term",
+          "from": "| **数据定义重复** | 8 份 `DATA_DEFINITION` 分散在 02-design/ | 缺少统一数据字典归口 | 中（纯文档迁移） |",
+          "to": "| **数据字典重复** | 8 份 `DATA_DEFINITION` 分散在 02-design/ | 缺少统一数据字典归口 | 中（纯文档迁移） |"
+        },
+        {
+          "line": 41,
+          "rule": "T5-term",
+          "from": "| T1 | 数据定义去重整合（7 份） | P1 | 🔴 最高 | 文档 | ✅ 自主执行 | 2h | ✅ 已完成 |",
+          "to": "| T1 | 数据字典去重整合（7 份） | P1 | 🔴 最高 | 文档 | ✅ 自主执行 | 2h | ✅ 已完成 |"
+        },
+        {
+          "line": 59,
+          "rule": "T5-term",
+          "from": "#### T1 — 数据定义去重整合",
+          "to": "#### T1 — 数据字典去重整合"
+        },
+        {
+          "line": 62,
+          "rule": "T5-term",
+          "from": "- `rootTask.intent`：消除数据定义重复，避免 AI 引用错误版本",
+          "to": "- `rootTask.intent`：消除数据字典重复，避免 AI 引用错误版本"
+        },
+        {
+          "line": 208,
+          "rule": "T5-term",
+          "from": "1. **意图锚点**：当前操作是否服务于 `rootTask.intent`？（消除数据定义重复 / 目录错位 / 跨层违规）",
+          "to": "1. **意图锚点**：当前操作是否服务于 `rootTask.intent`？（消除数据字典重复 / 目录错位 / 跨层违规）"
+        },
+        {
+          "line": 254,
+          "rule": "T5-term",
+          "from": "> **下次体检建议**：P1 全部完成后 1 周内复查，确认数据定义重复 = 1、目录错位 = 0、跨层违规 = 0。",
+          "to": "> **下次体检建议**：P1 全部完成后 1 周内复查，确认数据字典重复 = 1、目录错位 = 0、跨层违规 = 0。"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/V9-PRE-LAUNCH-AUDIT-REPORT-20260713.md",
+      "deltas": [
+        {
+          "line": 9,
+          "rule": "T1-key",
+          "from": "> **日期**: 2026-07-13",
+          "to": "> **Date**:"
+        },
+        {
+          "line": 10,
+          "rule": "T1-key",
+          "from": "> **版本**: v1.0.0",
+          "to": "> **Version**:"
+        }
+      ]
+    },
+    {
+      "file": "docs/00-meta/V9-文档治理修复行动计划.md",
+      "deltas": [
+        {
+          "line": 9,
+          "rule": "T1-key",
+          "from": "> **版本**：v1.0.0 ｜ **日期**：2026-07-12 ｜ **作者**：AI 文档治理 Agent",
+          "to": "> **Version**："
+        },
+        {
+          "line": 10,
+          "rule": "T1-key",
+          "from": "> **依据来源**：",
+          "to": "> **Source**："
+        },
+        {
+          "line": 56,
+          "rule": "T5-term",
+          "from": "| 孤儿文档 19.7% 🔴 | 同上 70 份（愿景/术语/数据定义泛滥/插件/草稿等） | 物理迁移至对应子类目录；无法归类的进 `docs/misc/` 并登记 | docs 治理 | P1 | 同体系覆盖验收 |",
+          "to": "| 孤儿文档 19.7% 🔴 | 同上 70 份（愿景/术语/数据字典泛滥/插件/草稿等） | 物理迁移至对应子类目录；无法归类的进 `docs/misc/` 并登记 | docs 治理 | P1 | 同体系覆盖验收 |"
+        },
+        {
+          "line": 146,
+          "rule": "T5-term",
+          "from": "| **迭代 1** | 本周 | P0-1~P0-6 | docs/README.md+GOVERNANCE 落地；数据定义去重；4 舱 spec+24 子域目录骨架完成 |",
+          "to": "| **迭代 1** | 本周 | P0-1~P0-6 | docs/README.md+GOVERNANCE 落地；数据字典去重；4 舱 spec+24 子域目录骨架完成 |"
+        }
+      ]
+    }
+  ]
+}

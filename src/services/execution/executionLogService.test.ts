@@ -6,7 +6,7 @@
  
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-vi.mock('@/data/dataLayer', () => ({
+vi.mock('@/data/dataLayerTradingStores', () => ({
   executionLogStore: {
     save: vi.fn(),
     listByPlan: vi.fn(),
@@ -22,7 +22,7 @@ vi.mock('@/services/analysis/dataFreshnessGuard', () => ({
   checkExecutionLogFreshness: vi.fn(() => ({ valid: true })),
 }))
 
-import { executionLogStore } from '@/data/dataLayer'
+import { executionLogStore } from '@/data/dataLayerTradingStores'
 import { writeLog, listByPlan, listBySymbol, listFailed } from '@/services/execution/executionLogService'
 import { EXECUTION_PHASE, EXECUTION_LOG_ACTION } from '@/constants/execution.constants'
 import type { ExecutionPlan } from '@/data/types'

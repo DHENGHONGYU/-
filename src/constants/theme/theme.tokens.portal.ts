@@ -9,8 +9,6 @@
  *
  * @module constants/theme/portal
  * @created 2026-07-15
- */
-
 /** 门户布局容器令牌 */
 export const PORTAL_LAYOUT_TOKENS = {
   /** 整个 Shell 背景（高级灰 / 宋韵宣纸） */

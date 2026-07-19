@@ -14,7 +14,7 @@ const args = process.argv.slice(2)
 const isDryRun = !args.includes('--apply')
 const PROJECT_ROOT = resolve(process.cwd())
 
-const ROOT_DOCS = ['AGENTS.md', 'README.md', 'CHANGELOG.md', 'LICENSE', 'CONTRIBUTING.md']
+const ROOT_DOCS = ['AGENTS.md', 'docs/explanation/README.md', 'CHANGELOG.md', 'LICENSE', 'CONTRIBUTING.md']
 
 function normalizePath(p: string): string {
   return p.replace(/\\/g, '/')

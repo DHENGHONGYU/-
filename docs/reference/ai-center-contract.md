@@ -1,65 +1,69 @@
 ---
 title: ai-center-contract
-code_version: 2.0.0
-
+type: reference
+domain: ai
+phase: design
 tier: important
----
-
----
-title: ai-center-contract.md â€” AI ä¸­å¿ƒæ¥å£å¥‘çº¦
 status: draft
-owner: æ¶æ„ç»„
-updated: 2026-07-12
+maintainer: ¼Ü¹¹×é
+summary: "¶¨Òå ai-center ×ÓÓòµÄ½Ó¿ÚÆõÔ¼¡¢Ö°Ôğ±ß½ç¡¢Êı¾İÁ÷ÓëÒÀÀµ¹ØÏµ¡£"
+tags: [ai, contract, reference, mcp, documentation]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: important
+doc_id: V9-DOC-AI-010
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
-# ai-center-contract.md â€” AI ä¸­å¿ƒæ¥å£å¥‘çº¦
+# ai-center-contract.md ¡ª AI ÖĞĞÄ½Ó¿ÚÆõÔ¼
 
-> **å®šä½**ï¼šå®šä¹‰ `ai-center` å­åŸŸçš„æ¥å£å¥‘çº¦ã€èŒè´£è¾¹ç•Œã€æ•°æ®æµä¸ä¾èµ–å…³ç³»ã€‚  
-> **å…³è”**ï¼š`./services-catalog.md`ï¼ˆ24 å­åŸŸæ€»è§ˆï¼‰ã€`../../AGENTS.md` Â§ä¸€ï¼ˆåˆ†å±‚è§„åˆ™ï¼‰ã€‚
+> **¶¨Î»**£º¶¨Òå `ai-center` ×ÓÓòµÄ½Ó¿ÚÆõÔ¼¡¢Ö°Ôğ±ß½ç¡¢Êı¾İÁ÷ÓëÒÀÀµ¹ØÏµ¡£  
+> **Source**£º`./services-catalog.md`£¨24 ×ÓÓò×ÜÀÀ£©¡¢`../../AGENTS.md` ¡ìÒ»£¨·Ö²ã¹æÔò£©¡£
 
 ---
 
-## 1. èŒè´£è¾¹ç•Œ
+## 1. Ö°Ôğ±ß½ç
 
-### 1.1 æ ¸å¿ƒèŒè´£
+### 1.1 ºËĞÄÖ°Ôğ
 
-- **AI ä¸­å¿ƒæ•°æ®æä¾›**ï¼šæä¾› `AICenterProvider` æ¥å£ä¸ `MockAICenterProvider` å®ç°ï¼Œç»Ÿä¸€è¾“å‡ºæ™ºèƒ½ä½“åˆ—è¡¨ã€ç³»ç»Ÿå¥åº·ç›‘æ§ã€è¯Šæ–­åˆ†æä¸‰ç±»æ•°æ®ã€‚
-- **æ™ºèƒ½ä½“è°ƒåº¦æ¨¡æ‹Ÿ**ï¼šåŸºäº `AGENT_TYPE_MAP` ä¸ `AGENT_STATUS` å¸¸é‡ï¼Œç”Ÿæˆæœ¬åœ°æ¨¡æ‹Ÿæ™ºèƒ½ä½“æ•°æ®ï¼ˆå«è¿è¡ŒçŠ¶æ€ã€è°ƒç”¨æ¬¡æ•°ã€æ ‡ç­¾ã€çŸ¥è¯†åº“ä½¿ç”¨æ¬¡æ•°ï¼‰ã€‚
-- **ç³»ç»Ÿå¥åº·ç›‘æ§**ï¼šæŒ‰ `HEALTH_MODULE_CATEGORY` åˆ†ç±»ç”Ÿæˆå„æ¨¡å—å¥åº·è¯„åˆ†ã€çŠ¶æ€ã€é™„åŠ æŒ‡æ ‡ï¼ˆæˆåŠŸç‡ã€å“åº”æ—¶é—´ï¼‰åŠç»¼åˆè¯„åˆ†ã€‚
-- **è¯Šæ–­åˆ†ææŠ¥å‘Š**ï¼šæŒ‰ä¸šåŠ¡æ¨¡å—ï¼ˆé‡åŒ–é€‰è‚¡ã€æ¿å—è½®åŠ¨ã€é£é™©é¢„è­¦ã€çŸ¥è¯†æ£€ç´¢ã€å¤ç›˜ç”Ÿæˆï¼‰ç”Ÿæˆå¥åº·è¯„åˆ†ã€æˆåŠŸç‡ã€ç¨³å®šæ€§è¯„åˆ†åŠç»¼åˆç­‰çº§æŠ¥å‘Šã€‚
+- **AI ÖĞĞÄÊı¾İÌá¹©**£ºÌá¹© `AICenterProvider` ½Ó¿ÚÓë `MockAICenterProvider` ÊµÏÖ£¬Í³Ò»Êä³öÖÇÄÜÌåÁĞ±í¡¢ÏµÍ³½¡¿µ¼à¿Ø¡¢Õï¶Ï·ÖÎöÈıÀàÊı¾İ¡£
+- **ÖÇÄÜÌåµ÷¶ÈÄ£Äâ**£º»ùÓÚ `AGENT_TYPE_MAP` Óë `AGENT_STATUS` ³£Á¿£¬Éú³É±¾µØÄ£ÄâÖÇÄÜÌåÊı¾İ£¨º¬ÔËĞĞ×´Ì¬¡¢µ÷ÓÃ´ÎÊı¡¢±êÇ©¡¢ÖªÊ¶¿âÊ¹ÓÃ´ÎÊı£©¡£
+- **ÏµÍ³½¡¿µ¼à¿Ø**£º°´ `HEALTH_MODULE_CATEGORY` ·ÖÀàÉú³É¸÷Ä£¿é½¡¿µÆÀ·Ö¡¢×´Ì¬¡¢¸½¼ÓÖ¸±ê£¨³É¹¦ÂÊ¡¢ÏìÓ¦Ê±¼ä£©¼°×ÛºÏÆÀ·Ö¡£
+- **Õï¶Ï·ÖÎö±¨¸æ**£º°´ÒµÎñÄ£¿é£¨Á¿»¯Ñ¡¹É¡¢°å¿éÂÖ¶¯¡¢·çÏÕÔ¤¾¯¡¢ÖªÊ¶¼ìË÷¡¢¸´ÅÌÉú³É£©Éú³É½¡¿µÆÀ·Ö¡¢³É¹¦ÂÊ¡¢ÎÈ¶¨ĞÔÆÀ·Ö¼°×ÛºÏµÈ¼¶±¨¸æ¡£
 
-### 1.2 åˆ†å±‚å®šä½
+### 1.2 ·Ö²ã¶¨Î»
 
-| ç»´åº¦ | è¯´æ˜ |
+| Î¬¶È | ËµÃ÷ |
 |------|------|
-| æ‰€å±å±‚ | `src/services/`ï¼ˆæœåŠ¡å±‚ï¼‰ |
-| ä¾èµ–æ–¹å‘ | åªèƒ½ä¾èµ– `core/`ã€`data/`ã€`lib/`ï¼ˆç™½åå•ï¼‰ |
-| ç¦æ­¢äº‹é¡¹ | ç¦æ­¢ç›´å†™ IndexedDBï¼ˆé¡»ç» `DataBridge.forward()`ï¼‰ |
-| è¢«ä¾èµ–æ–¹ | `store/`ï¼ˆçŠ¶æ€å±‚ï¼‰ã€`pages/`ï¼ˆé¡µé¢å±‚ï¼‰å¯æ¶ˆè´¹æœ¬æœåŠ¡è¾“å‡º |
+| ËùÊô²ã | `src/services/`£¨·şÎñ²ã£© |
+| ÒÀÀµ·½Ïò | Ö»ÄÜÒÀÀµ `core/`¡¢`data/`¡¢`lib/`£¨°×Ãûµ¥£© |
+| ½ûÖ¹ÊÂÏî | ½ûÖ¹Ö±Ğ´ IndexedDB£¨Ğë¾­ `DataBridge.forward()`£© |
+| ±»ÒÀÀµ·½ | `store/`£¨×´Ì¬²ã£©¡¢`pages/`£¨Ò³Ãæ²ã£©¿ÉÏû·Ñ±¾·şÎñÊä³ö |
 
-### 1.3 ä¸ç›¸é‚»å­åŸŸçš„å…³ç³»
+### 1.3 ÓëÏàÁÚ×ÓÓòµÄ¹ØÏµ
 
-| ç›¸é‚»å­åŸŸ | å…³ç³» | æ•°æ®æµ |
+| ÏàÁÚ×ÓÓò | ¹ØÏµ | Êı¾İÁ÷ |
 |----------|------|--------|
-| `types/modules/ai-center.types` | ç±»å‹ä¾èµ–ï¼šæ¶ˆè´¹ TypeScript æ¥å£ | ç±»å‹å®šä¹‰ â†’ `ai-center` |
-| `constants/ai-center.constants` | å¸¸é‡ä¾èµ–ï¼šæ¶ˆè´¹çŠ¶æ€ã€æ ‡ç­¾ã€ç±»å‹æ˜ å°„ | å¸¸é‡ â†’ `ai-center` |
-| `constants/health.constants` | å¸¸é‡ä¾èµ–ï¼šæ¶ˆè´¹å¥åº·çŠ¶æ€ã€æ¨¡å—åˆ†ç±»ã€è¯Šæ–­ç­‰çº§ | å¸¸é‡ â†’ `ai-center` |
-| `store/ai-center` | ä¸‹æ¸¸ï¼šå¾…æ¥å…¥ï¼ˆç›®å‰æ—  Store æ¶ˆè´¹ï¼‰ | `ai-center` â†’ `store/`ï¼ˆå¾…å®ç°ï¼‰ |
+| `types/modules/ai-center.types` | ÀàĞÍÒÀÀµ£ºÏû·Ñ TypeScript ½Ó¿Ú | ÀàĞÍ¶¨Òå ¡ú `ai-center` |
+| `constants/ai-center.constants` | ³£Á¿ÒÀÀµ£ºÏû·Ñ×´Ì¬¡¢±êÇ©¡¢ÀàĞÍÓ³Éä | ³£Á¿ ¡ú `ai-center` |
+| `constants/health.constants` | ³£Á¿ÒÀÀµ£ºÏû·Ñ½¡¿µ×´Ì¬¡¢Ä£¿é·ÖÀà¡¢Õï¶ÏµÈ¼¶ | ³£Á¿ ¡ú `ai-center` |
+| `store/ai-center` | ÏÂÓÎ£º´ı½ÓÈë£¨Ä¿Ç°ÎŞ Store Ïû·Ñ£© | `ai-center` ¡ú `store/`£¨´ıÊµÏÖ£© |
 
-> **è¯´æ˜**ï¼šå½“å‰ `ai-center` å­åŸŸä»…åŒ…å« `aiCenterProvider.ts`ï¼Œå°šæ— å¤–éƒ¨æ¶ˆè´¹æ–¹ã€‚æœªæ¥æ¥å…¥åç«¯æ—¶ï¼Œæ–°å¢ REST/WebSocket å®ç°æ›¿æ¢ `MockAICenterProvider` å³å¯ï¼ŒUI ä¸ Store å±‚æ— éœ€æ”¹åŠ¨ã€‚
+> **ËµÃ÷**£ºµ±Ç° `ai-center` ×ÓÓò½ö°üº¬ `aiCenterProvider.ts`£¬ÉĞÎŞÍâ²¿Ïû·Ñ·½¡£Î´À´½ÓÈëºó¶ËÊ±£¬ĞÂÔö REST/WebSocket ÊµÏÖÌæ»» `MockAICenterProvider` ¼´¿É£¬UI Óë Store ²ãÎŞĞè¸Ä¶¯¡£
 
 ---
 
-## 2. å…¬å…±æ¥å£
+## 2. ¹«¹²½Ó¿Ú
 
-### 2.1 ç±»å‹å®šä¹‰ï¼ˆTypeScript Interfaceï¼‰
+### 2.1 ÀàĞÍ¶¨Òå£¨TypeScript Interface£©
 
 ```typescript
-// æ–‡ä»¶ï¼šsrc/types/modules/ai-center.types.ts
+// ÎÄ¼ş£ºsrc/types/modules/ai-center.types.ts
 
-/** AI æ™ºèƒ½ä½“æ¡ç›® */
+/** AI ÖÇÄÜÌåÌõÄ¿ */
 export interface AgentItem {
   id: string
   type: string
@@ -72,7 +76,7 @@ export interface AgentItem {
   knowledgeUsage?: number
 }
 
-/** é¡¶éƒ¨æ€»è§ˆæŒ‡æ ‡ */
+/** ¶¥²¿×ÜÀÀÖ¸±ê */
 export interface AgentOverviewMetrics {
   totalAgents: number
   knowledgeUsage: number
@@ -80,7 +84,7 @@ export interface AgentOverviewMetrics {
   monitorAlerts: number
 }
 
-/** Agent åˆ—è¡¨æ•°æ® */
+/** Agent ÁĞ±íÊı¾İ */
 export interface AgentListData {
   agents: AgentItem[]
   overview: AgentOverviewMetrics
@@ -89,7 +93,7 @@ export interface AgentListData {
   pageSize: number
 }
 
-/** å¥åº·æŒ‡æ ‡æ¡ç›® */
+/** ½¡¿µÖ¸±êÌõÄ¿ */
 export interface HealthMetricItem {
   id: string
   name: string
@@ -100,7 +104,7 @@ export interface HealthMetricItem {
   checkedAt: number
 }
 
-/** å¥åº·ç›‘æ§æ•°æ® */
+/** ½¡¿µ¼à¿ØÊı¾İ */
 export interface HealthMetricsData {
   metrics: HealthMetricItem[]
   overallScore: number
@@ -108,7 +112,7 @@ export interface HealthMetricsData {
   lastUpdatedAt: number
 }
 
-/** è¯Šæ–­æŠ¥å‘Šæ¡ç›® */
+/** Õï¶Ï±¨¸æÌõÄ¿ */
 export interface DiagnosticReportItem {
   id: string
   name: string
@@ -121,14 +125,14 @@ export interface DiagnosticReportItem {
   reportedAt: number
 }
 
-/** è¯Šæ–­åˆ†ææ•°æ® */
+/** Õï¶Ï·ÖÎöÊı¾İ */
 export interface DiagnosticReportsData {
   reports: DiagnosticReportItem[]
   overallLevel: DiagnosticLevel
   lastUpdatedAt: number
 }
 
-/** AI ä¸­å¿ƒç»Ÿä¸€æ•°æ® */
+/** AI ÖĞĞÄÍ³Ò»Êı¾İ */
 export interface AICenterData {
   agents: AgentListData
   healthMetrics: HealthMetricsData
@@ -136,95 +140,95 @@ export interface AICenterData {
 }
 ```
 
-### 2.2 ä¸»å…¥å£å‡½æ•°
+### 2.2 Ö÷Èë¿Úº¯Êı
 
-| å‡½æ•°/ç±» | ç­¾å | èŒè´£ | é”™è¯¯å¤„ç† |
+| º¯Êı/Àà | Ç©Ãû | Ö°Ôğ | ´íÎó´¦Àí |
 |---------|------|------|----------|
-| `AICenterProvider`ï¼ˆæ¥å£ï¼‰ | `{ getAICenterData: () => Promise<AICenterData> }` | å®šä¹‰ AI ä¸­å¿ƒæ•°æ®æä¾›å™¨å¥‘çº¦ | â€” |
-| `MockAICenterProvider` | `implements AICenterProvider` | Mock å®ç°ï¼šç”Ÿæˆæœ¬åœ°æ¨¡æ‹Ÿæ•°æ® | å†…éƒ¨ç”Ÿæˆï¼Œæ— å¤–éƒ¨é”™è¯¯æº |
-| `getAICenterData()` | `() => Promise<AICenterData>` | è¿”å›æ™ºèƒ½ä½“åˆ—è¡¨ + å¥åº·ç›‘æ§ + è¯Šæ–­åˆ†æ | æ— ï¼ˆMock 500ms å»¶è¿Ÿå resolveï¼‰ |
+| `AICenterProvider`£¨½Ó¿Ú£© | `{ getAICenterData: () => Promise<AICenterData> }` | ¶¨Òå AI ÖĞĞÄÊı¾İÌá¹©Æ÷ÆõÔ¼ | ¡ª |
+| `MockAICenterProvider` | `implements AICenterProvider` | Mock ÊµÏÖ£ºÉú³É±¾µØÄ£ÄâÊı¾İ | ÄÚ²¿Éú³É£¬ÎŞÍâ²¿´íÎóÔ´ |
+| `getAICenterData()` | `() => Promise<AICenterData>` | ·µ»ØÖÇÄÜÌåÁĞ±í + ½¡¿µ¼à¿Ø + Õï¶Ï·ÖÎö | ÎŞ£¨Mock 500ms ÑÓ³Ùºó resolve£© |
 
-> **å·¥å‚å‡½æ•°**ï¼š`getAICenterProvider()` å¾…å®ç°ï¼ˆå½“å‰æ— å·¥å‚å‡½æ•°ï¼Œç›´æ¥å®ä¾‹åŒ– `MockAICenterProvider`ï¼‰ã€‚
+> **¹¤³§º¯Êı**£º`getAICenterProvider()` ´ıÊµÏÖ£¨µ±Ç°ÎŞ¹¤³§º¯Êı£¬Ö±½ÓÊµÀı»¯ `MockAICenterProvider`£©¡£
 
-### 2.3 äº‹ä»¶æ¥å£
+### 2.3 ÊÂ¼ş½Ó¿Ú
 
-> **å¾…å®ç°**ï¼šå½“å‰ `ai-center` å­åŸŸæœªä½¿ç”¨ `EventBus`ã€‚æœªæ¥æ¥å…¥çœŸå®æ•°æ®æºæ—¶ï¼Œå»ºè®®è¡¥å……ä»¥ä¸‹äº‹ä»¶ï¼š
+> **´ıÊµÏÖ**£ºµ±Ç° `ai-center` ×ÓÓòÎ´Ê¹ÓÃ `EventBus`¡£Î´À´½ÓÈëÕæÊµÊı¾İÔ´Ê±£¬½¨Òé²¹³äÒÔÏÂÊÂ¼ş£º
 
-| äº‹ä»¶å | å‘å¸ƒæ–¹ | è®¢é˜…æ–¹ | è¯´æ˜ |
+| ÊÂ¼şÃû | ·¢²¼·½ | ¶©ÔÄ·½ | ËµÃ÷ |
 |--------|--------|--------|------|
-| `ai-center:loaded` | `ai-center` | `store/aiCenterStore` | æ•°æ®åŠ è½½å®Œæˆ |
-| `ai-center:error` | `ai-center` | `errorBus` | æ•°æ®åŠ è½½å¤±è´¥ |
+| `ai-center:loaded` | `ai-center` | `store/aiCenterStore` | Êı¾İ¼ÓÔØÍê³É |
+| `ai-center:error` | `ai-center` | `errorBus` | Êı¾İ¼ÓÔØÊ§°Ü |
 
 ---
 
-## 3. æ•°æ®æµ
+## 3. Êı¾İÁ÷
 
 ```
-[Mock æ•°æ®ç”Ÿæˆå™¨]
-    â†“
+[Mock Êı¾İÉú³ÉÆ÷]
+    ¡ı
 aiCenterProvider.ts (MockAICenterProvider.getAICenterData)
-    â†“
-Promise<AICenterData> è¿”å›
-    â†“ (å¾…æ¥å…¥ï¼šDataBridge.forward() è·¯ç”±)
-DataBridge â†’ routeToDB() â†’ dataLayer â†’ IndexedDB
-    â†“ (å¾…æ¥å…¥ï¼šEventBus)
+    ¡ı
+Promise<AICenterData> ·µ»Ø
+    ¡ı (´ı½ÓÈë£ºDataBridge.forward() Â·ÓÉ)
+DataBridge ¡ú routeToDB() ¡ú dataLayer ¡ú IndexedDB
+    ¡ı (´ı½ÓÈë£ºEventBus)
 aiCenterStore (Zustand + withBroadcast)
-    â†“ (å¾…æ¥å…¥ï¼šç»„ä»¶æ¶ˆè´¹)
-components/pages (ä»…ç» Store å–æ•°)
+    ¡ı (´ı½ÓÈë£º×é¼şÏû·Ñ)
+components/pages (½ö¾­ Store È¡Êı)
 ```
 
-> **å½“å‰çŠ¶æ€**ï¼š`ai-center` å­åŸŸç›®å‰ä¸ºçº¯ Mock æ•°æ®å±‚ï¼Œå°šæœªæ¥å…¥ `DataBridge` ä¸ `Store`ã€‚æ•°æ®ç›´æ¥åœ¨ `MockAICenterProvider.getAICenterData()` ä¸­ç”Ÿæˆå¹¶è¿”å›ï¼Œæ— æŒä¹…åŒ–ä¸äº‹ä»¶æµè½¬ã€‚
+> **µ±Ç°×´Ì¬**£º`ai-center` ×ÓÓòÄ¿Ç°Îª´¿ Mock Êı¾İ²ã£¬ÉĞÎ´½ÓÈë `DataBridge` Óë `Store`¡£Êı¾İÖ±½ÓÔÚ `MockAICenterProvider.getAICenterData()` ÖĞÉú³É²¢·µ»Ø£¬ÎŞ³Ö¾Ã»¯ÓëÊÂ¼şÁ÷×ª¡£
 
 ---
 
-## 4. é…ç½®ä¸ä¾èµ–
+## 4. ÅäÖÃÓëÒÀÀµ
 
-### 4.1 ä¾èµ–ç™½åå•ï¼ˆlib/ï¼‰
+### 4.1 ÒÀÀµ°×Ãûµ¥£¨lib/£©
 
-> **å½“å‰çŠ¶æ€**ï¼š`ai-center` å­åŸŸæœªä½¿ç”¨ `lib/` åŸºç¡€è®¾æ–½æ¨¡å—ï¼ˆ`logger`ã€`eventBus`ã€`format`ã€`errors` ç­‰ï¼‰ã€‚æœªæ¥æ¥å…¥çœŸå®åç«¯æ—¶ï¼Œå»ºè®®è¡¥å…… `logger` ä¸ `eventBus`ã€‚
+> **µ±Ç°×´Ì¬**£º`ai-center` ×ÓÓòÎ´Ê¹ÓÃ `lib/` »ù´¡ÉèÊ©Ä£¿é£¨`logger`¡¢`eventBus`¡¢`format`¡¢`errors` µÈ£©¡£Î´À´½ÓÈëÕæÊµºó¶ËÊ±£¬½¨Òé²¹³ä `logger` Óë `eventBus`¡£
 
-| ä¾èµ– | è·¯å¾„ | ç”¨é€” |
+| ÒÀÀµ | Â·¾¶ | ÓÃÍ¾ |
 |------|------|------|
-| `nanoid` | `nanoid` (npm) | ç”Ÿæˆæ™ºèƒ½ä½“/è¯Šæ–­é¡¹å”¯ä¸€ ID |
+| `nanoid` | `nanoid` (npm) | Éú³ÉÖÇÄÜÌå/Õï¶ÏÏîÎ¨Ò» ID |
 
-### 4.2 é…ç½®é¡¹
+### 4.2 ÅäÖÃÏî
 
-| é…ç½®å | é»˜è®¤å€¼ | è¯´æ˜ | æ¥æº |
+| ÅäÖÃÃû | Ä¬ÈÏÖµ | ËµÃ÷ | À´Ô´ |
 |--------|--------|------|------|
-| `MOCK_AGENT_CALL_COUNT_RANGE` | `900` | Mock æ™ºèƒ½ä½“è°ƒç”¨æ¬¡æ•°éšæœºä¸Šé™ | æ¨¡å—å†…å¸¸é‡ |
-| `MOCK_AGENT_CALL_COUNT_MIN` | `50` | Mock æ™ºèƒ½ä½“è°ƒç”¨æ¬¡æ•°éšæœºä¸‹é™ | æ¨¡å—å†…å¸¸é‡ |
-| `AI_CENTER_DATA_SOURCE` | `{ agents: { endpoint: '/ai-center/agents', mode: 'polling', interval: 5000 }, ... }` | é»˜è®¤æ•°æ®æºç«¯ç‚¹ä¸è½®è¯¢é…ç½® | `src/constants/ai-center.constants.ts` |
-| `AGENT_STATUS` | `{ NORMAL, WARNING, ERROR, PAUSED }` | æ™ºèƒ½ä½“çŠ¶æ€æšä¸¾ | `src/constants/ai-center.constants.ts` |
-| `AGENT_TAG` | `{ LLM, KNOWLEDGE, TOOL, STRATEGY }` | æ™ºèƒ½ä½“æ ‡ç­¾æšä¸¾ | `src/constants/ai-center.constants.ts` |
-| `AGENT_TYPE_MAP` | 4 ç±»æ™ºèƒ½ä½“æ˜ å°„ | ç±»å‹/è§’è‰²åç§°ã€å›¾æ ‡ã€æè¿° | `src/constants/ai-center.constants.ts` |
-| `HEALTH_STATUS` | `{ HEALTHY, WARNING, CRITICAL }` | å¥åº·çŠ¶æ€æšä¸¾ | `src/constants/health.constants.ts` |
-| `HEALTH_MODULE_CATEGORY` | `{ CORE, SYSTEM, AGENT, DATA }` | å¥åº·æ¨¡å—åˆ†ç±» | `src/constants/health.constants.ts` |
-| `DIAGNOSTIC_LEVEL` | `{ EXCELLENT, GOOD, AVERAGE, POOR }` | è¯Šæ–­ç­‰çº§æšä¸¾ | `src/constants/health.constants.ts` |
+| `MOCK_AGENT_CALL_COUNT_RANGE` | `900` | Mock ÖÇÄÜÌåµ÷ÓÃ´ÎÊıËæ»úÉÏÏŞ | Ä£¿éÄÚ³£Á¿ |
+| `MOCK_AGENT_CALL_COUNT_MIN` | `50` | Mock ÖÇÄÜÌåµ÷ÓÃ´ÎÊıËæ»úÏÂÏŞ | Ä£¿éÄÚ³£Á¿ |
+| `AI_CENTER_DATA_SOURCE` | `{ agents: { endpoint: '/ai-center/agents', mode: 'polling', interval: 5000 }, ... }` | Ä¬ÈÏÊı¾İÔ´¶ËµãÓëÂÖÑ¯ÅäÖÃ | `src/constants/ai-center.constants.ts` |
+| `AGENT_STATUS` | `{ NORMAL, WARNING, ERROR, PAUSED }` | ÖÇÄÜÌå×´Ì¬Ã¶¾Ù | `src/constants/ai-center.constants.ts` |
+| `AGENT_TAG` | `{ LLM, KNOWLEDGE, TOOL, STRATEGY }` | ÖÇÄÜÌå±êÇ©Ã¶¾Ù | `src/constants/ai-center.constants.ts` |
+| `AGENT_TYPE_MAP` | 4 ÀàÖÇÄÜÌåÓ³Éä | ÀàĞÍ/½ÇÉ«Ãû³Æ¡¢Í¼±ê¡¢ÃèÊö | `src/constants/ai-center.constants.ts` |
+| `HEALTH_STATUS` | `{ HEALTHY, WARNING, CRITICAL }` | ½¡¿µ×´Ì¬Ã¶¾Ù | `src/constants/health.constants.ts` |
+| `HEALTH_MODULE_CATEGORY` | `{ CORE, SYSTEM, AGENT, DATA }` | ½¡¿µÄ£¿é·ÖÀà | `src/constants/health.constants.ts` |
+| `DIAGNOSTIC_LEVEL` | `{ EXCELLENT, GOOD, AVERAGE, POOR }` | Õï¶ÏµÈ¼¶Ã¶¾Ù | `src/constants/health.constants.ts` |
 
 ---
 
-## 5. æµ‹è¯•ç­–ç•¥
+## 5. ²âÊÔ²ßÂÔ
 
-> **å¾…å®ç°**ï¼šå½“å‰ `ai-center` å­åŸŸæ— æµ‹è¯•æ–‡ä»¶ä¸ `__tests__` ç›®å½•ã€‚
+> **´ıÊµÏÖ**£ºµ±Ç° `ai-center` ×ÓÓòÎŞ²âÊÔÎÄ¼şÓë `__tests__` Ä¿Â¼¡£
 
-| æµ‹è¯•ç±»å‹ | æ–‡ä»¶ | è¯´æ˜ |
+| ²âÊÔÀàĞÍ | ÎÄ¼ş | ËµÃ÷ |
 |----------|------|------|
-| å•å…ƒæµ‹è¯• | `src/services/ai-center/__tests__/aiCenterProvider.test.ts` | çº¯å‡½æ•°ã€æ•°æ®ç”Ÿæˆé€»è¾‘ï¼ˆ`generateAgentList`ã€`generateHealthMetrics`ã€`generateDiagnosticReports`ï¼‰ |
-| é›†æˆæµ‹è¯• | `tests/services/ai-center.integration.test.ts` | å¾…æ¥å…¥ï¼šDataBridge äº¤äº’ã€Store è”åŠ¨ |
-| Mock ç­–ç•¥ | `__mocks__/aiCenterProvider.ts` | å¾…æ¥å…¥ï¼šéš”ç¦»å¤–éƒ¨ä¾èµ–ï¼ˆæœªæ¥ REST/WebSocket å®ç°ï¼‰ |
+| µ¥Ôª²âÊÔ | `src/services/ai-center/aiCenterProvider.ts` | ´¿º¯Êı¡¢Êı¾İÉú³ÉÂß¼­£¨`generateAgentList`¡¢`generateHealthMetrics`¡¢`generateDiagnosticReports`£© |
+| ¼¯³É²âÊÔ | `tests/services/ai-center.integration.test.ts` | ´ı½ÓÈë£ºDataBridge ½»»¥¡¢Store Áª¶¯ |
+| Mock ²ßÂÔ | `__mocks__/aiCenterProvider.ts` | ´ı½ÓÈë£º¸ôÀëÍâ²¿ÒÀÀµ£¨Î´À´ REST/WebSocket ÊµÏÖ£© |
 
 ---
 
-## 6. å˜æ›´æ—¥å¿—
+## 6. ±ä¸üÈÕÖ¾
 
-| æ—¥æœŸ | ç‰ˆæœ¬ | å˜æ›´ | ä½œè€… |
+| ÈÕÆÚ | °æ±¾ | ±ä¸ü | ×÷Õß |
 |------|------|------|------|
-| 2026-07-12 | v0.1.0 | å¥‘çº¦åˆç¨¿ | æ¶æ„ç»„ |
+| 2026-07-12 | v0.1.0 | ÆõÔ¼³õ¸å | ¼Ü¹¹×é |
 
 ---
 
-> **TODO[å­åŸŸ owner]**ï¼š
-> 1. æŒ‰æœ¬å¥‘çº¦æ¥å…¥ `DataBridge` ä¸ `Store`ï¼Œå®Œæˆæ•°æ®æŒä¹…åŒ–ä¸äº‹ä»¶æµè½¬ã€‚
-> 2. è¡¥å…… `__tests__` å•å…ƒæµ‹è¯•ï¼Œè¦†ç›– `MockAICenterProvider` æ•°æ®ç”Ÿæˆé€»è¾‘ã€‚
-> 3. æ¥å…¥çœŸå®åç«¯æ—¶ï¼Œå®ç° `getAICenterProvider()` å·¥å‚å‡½æ•°ä¸ REST/WebSocket æä¾›å™¨ã€‚
-> 4. å®Œæˆåè¿è¡Œ `tsc --noEmit` + `audit:layers` éªŒè¯ã€‚
+> **TODO[×ÓÓò owner]**£º
+> 1. °´±¾ÆõÔ¼½ÓÈë `DataBridge` Óë `Store`£¬Íê³ÉÊı¾İ³Ö¾Ã»¯ÓëÊÂ¼şÁ÷×ª¡£
+> 2. ²¹³ä `__tests__` µ¥Ôª²âÊÔ£¬¸²¸Ç `MockAICenterProvider` Êı¾İÉú³ÉÂß¼­¡£
+> 3. ½ÓÈëÕæÊµºó¶ËÊ±£¬ÊµÏÖ `getAICenterProvider()` ¹¤³§º¯ÊıÓë REST/WebSocket Ìá¹©Æ÷¡£
+> 4. Íê³ÉºóÔËĞĞ `tsc --noEmit` + `audit:layers` ÑéÖ¤¡£

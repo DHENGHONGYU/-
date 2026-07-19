@@ -19,11 +19,11 @@ def update_registry_index(docs_root):
         '《V9核心数据字典与类型定义（整合版）》.md': '../reference/《V9核心数据字典与类型定义（整合版）》.md',
         '《V9数据架构修订建议》.md': '../reference/《V9数据架构修订建议》.md',
         '《V9现有数据资产清单》.md': '../reference/《V9现有数据资产清单》.md',
-        '01-vision-and-goals.md': '../explanation/01-vision-and-goals.md',
-        '02-functional-specs.md': '../reference/02-functional-specs.md',
-        '03-architecture-standards.md': '../explanation/03-architecture-standards.md',
+        'docs/explanation/01-vision-and-goals.md': '../explanation/docs/explanation/01-vision-and-goals.md',
+        'docs/reference/02-functional-specs.md': 'docs/reference/02-functional-specs.md',
+        'docs/reference/03-architecture-standards.md': 'docs/reference/03-architecture-standards.md',
         '04-ui-ux-specs.md': '../reference/04-ui-ux-specs.md',
-        '05-engine-specs.md': '../reference/05-engine-specs.md',
+        'docs/reference/05-engine-specs.md': 'docs/reference/05-engine-specs.md',
         '06-routing-specs.md': '../reference/06-routing-specs.md',
         '07-operation-strategy.md': '../reference/07-operation-strategy.md',
         '08-implementation-plan.md': '../reference/08-implementation-plan.md',
@@ -32,7 +32,7 @@ def update_registry_index(docs_root):
         '变更摘要-2026-06-28-Phase0-数据层改造.md': '../reports/changelogs/变更摘要-2026-06-28-Phase0-数据层改造.md',
         '踩坑规则门禁指南.md': '../reference/踩坑规则门禁指南.md',
         '数据治理路线图.md': '../reference/数据治理路线图.md',
-        '文件整理清单.md': '../reference/文件整理清单.md',
+        'docs/reference/文件整理清单.md': 'docs/reference/文件整理清单.md',
     }
     
     for old_path, new_path in path_mappings.items():
@@ -41,7 +41,7 @@ def update_registry_index(docs_root):
     with open(registry_path, 'w', encoding='utf-8') as f:
         f.write(updated_content)
     
-    print('✅ 更新 REGISTRY_INDEX.md')
+    print('✅ 更新 docs/00-meta/REGISTRY_INDEX.md')
 
 def rebuild_registry_index(docs_root):
     registry_path = os.path.join(docs_root, '00-meta', 'REGISTRY_INDEX.md')
@@ -56,13 +56,26 @@ def rebuild_registry_index(docs_root):
     
     all_files.sort(key=lambda x: x[0])
     
-    content = """# 文档索引
+    content = """---
+title: 文档索引
+type: meta
+domain: project
+phase: development
+tier: reference
+status: active
+version: v1.0.0
+last_updated: {date}
+code_version: 2.0.0
+maintainer: V9 Architecture Team
+---
+
+# 文档索引
 
 > 本文件由每日文档验证流程自动生成，请勿手动修改。
 
 ## 目录
 
-"""
+""".format(date=__import__('datetime').date.today().isoformat())
     
     for filename, rel_path in all_files:
         if rel_path.startswith('00-meta/'):
@@ -79,7 +92,7 @@ def rebuild_registry_index(docs_root):
     with open(registry_path, 'w', encoding='utf-8') as f:
         f.write(content)
     
-    print(f'✅ 重新生成 REGISTRY_INDEX.md ({len(all_files)} 个文件)')
+    print(f'[OK] regenerate docs/00-meta/REGISTRY_INDEX.md ({len(all_files)} files)')
 
 if __name__ == '__main__':
     docs_root = os.path.join(os.path.dirname(__file__), '..', 'docs')

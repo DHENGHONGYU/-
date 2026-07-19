@@ -5,8 +5,8 @@ import { INTENTION_STATUS, DEFAULT_POOL_GROUP, DEFAULT_POOL_TYPE, type ResearchS
 import { INPUT_CONFIG } from '@/config/inputConfig'
 import type { DataLayerResult, Stock } from '@/data/types'
 import { fetchBasicDataUseCase, fetchKlineDataUseCase } from '@/services/useCase/fetcherOrchestrator.useCase'
-import { MOCK_STOCK_LIBRARY, type MockStock } from './mockStockLibrary'
 import { getLogger } from '@/lib/logger'
+import { searchFullMarket } from '@/services/stock/FullMarketStockService'
 
 import { nanoid } from 'nanoid'
 
@@ -16,7 +16,13 @@ export interface AddStockInput {
   name: string
 }
 
-export type StockSearchResult = MockStock
+/** 股票搜索结果（基于用户已导入的真实股票，非 Mock 数据） */
+export interface StockSearchResult {
+  symbol: string
+  name: string
+  /** 行业标签（取自 Stock.industryText 或 industryCode） */
+  industry: string
+}
 
 export interface PoolExportPayload {
   version: 'v9-pool-export-1'
@@ -64,7 +70,6 @@ const addStockInFlight = new Set<string>()
  * - 进程内同 symbol 并发 addStock 用 `addStockInFlight` Set 互斥
  * - 避免「A 读不存在 + B 读不存在 → 双方同时 forward insertStock」竞态
  * - 跨进程/跨 Tab 互斥由 IDB 主键冲突兜底（dataVersion 仍=1，下次 update 会覆盖）
- */
 /**
  * 按 options 拉取基础数据并合并到 stock；未开启或失败时返回 warning 但不中断主流程。
  */
@@ -205,26 +210,58 @@ export async function addStockFromSearch(
 }
 
 /**
- * 搜索本地 mock 股票库
+ * 搜索股票（A+H 股全市场）
  *
- * 支持按代码、名称、行业进行大小写不敏感模糊匹配。
- * 当前为离线降级数据源，未来可切换为 AKShare 搜索接口。
+ * 搜索策略（双层冗余）：
+ *   Layer 1（主方案）：本地静态字典匹配（A+H 股 ~5000 只，离线可用，<1ms）
+ *   Layer 2（回退）  ：腾讯 Smartbox API 在线搜索（网络补充）
+ *
+ * 本地字典已导入的标的优先展示，并标记"已导入"。
  */
-export function searchStocks(query: string): StockSearchResult[] {
+export async function searchStocks(query: string): Promise<StockSearchResult[]> {
   const trimmed = query.trim()
   if (trimmed.length < INPUT_CONFIG.search.minQueryLength) {
     return []
   }
 
-  const lower = trimmed.toLowerCase()
-  const matches = MOCK_STOCK_LIBRARY.filter(
-    (s) =>
-      s.symbol.toLowerCase().includes(lower) ||
-      s.name.toLowerCase().includes(lower) ||
-      s.industry.toLowerCase().includes(lower),
-  )
+  // 获取用户已导入的股票代码集合（用于排序和标记）
+  let existingSymbols = new Set<string>()
+  try {
+    const result = await dataBridge.query<Stock[]>({
+      action: ENVELOPE_ACTION.queryList,
+      store: STORE_NAME.stocks,
+    })
+    if (result.success && result.data) {
+      existingSymbols = new Set(result.data.map((s) => s.symbol))
+    }
+  } catch {
+    // 本地查询失败不影响主搜索流程
+  }
 
-  return matches.slice(0, INPUT_CONFIG.search.maxResults)
+  try {
+    const matches = await searchFullMarket(trimmed, existingSymbols, INPUT_CONFIG.search.maxResults)
+
+    const result = matches.map((m) => ({
+      symbol: m.symbol,
+      name: m.name,
+      industry: m.market, // market 字段标记市场（SH/SZ/HK）
+    }))
+
+    logger.info('[inputService] searchStocks（全市场）', {
+      query: trimmed,
+      hitCount: result.length,
+      dictHits: matches.filter((m) => m.source === 'dict').length,
+      apiHits: matches.filter((m) => m.source === 'smartbox').length,
+    })
+
+    return result
+  } catch (err) {
+    logger.warn('[inputService] searchStocks: 搜索异常', {
+      error: err instanceof Error ? err.message : String(err),
+      query: trimmed,
+    })
+    return []
+  }
 }
 
 /**

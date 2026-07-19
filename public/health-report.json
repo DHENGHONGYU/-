@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-13T04:55:28.374Z",
-  "agentsVersion": "v1.4.6",
+  "generatedAt": "2026-07-18T04:04:15.490Z",
+  "agentsVersion": "v1.4.9",
   "overallScore": 93,
   "metrics": [
     {
@@ -22,7 +22,7 @@
     {
       "name": "deepNesting",
       "label": "深层嵌套（≥4 层）",
-      "value": 22,
+      "value": 46,
       "baseline": 104,
       "unit": "处",
       "status": "warning",
@@ -40,7 +40,7 @@
     {
       "name": "duplicateConditions",
       "label": "重复 if 条件",
-      "value": 2,
+      "value": 9,
       "baseline": 39,
       "unit": "处",
       "status": "warning",

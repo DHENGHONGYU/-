@@ -10,6 +10,8 @@
  * - 新增 API Key 脱敏函数（LEAK-004）
  */
 
+import { safeRegex } from './safeRegex'
+
 // ============================================================
 // 配置名称验证
 // ============================================================
@@ -241,7 +243,7 @@ export function isValidLlmBaseURL(baseURL: string): boolean {
       return false
     }
     return true
-  } catch {
+  } catch (err) { console.warn('[validation.ts]', err);
     return false
   }
 }
@@ -293,7 +295,6 @@ export function isValidLlmModel(model: string): boolean {
  *
  * @param apiKey 原 API Key
  * @returns 脱敏后的字符串
- */
 /**
  * 脱敏通用实现：长度 ≤ 8 全替换，否则保留前 4 后 4。
  */
@@ -358,7 +359,7 @@ export function isSensitiveField(fieldName: string): boolean {
     // 精确匹配
     if (lower === sensitive) return true
     // 词边界匹配，避免 "author" 误判为 "auth"、"tokenize" 误判为 "token"
-    return new RegExp(`(^|[^a-z0-9_])${sensitive}([^a-z0-9_]|$)`, 'i').test(lower)
+    return safeRegex(`(^|[^a-z0-9_])${sensitive}([^a-z0-9_]|$)`, 'i').test(lower)
   })
 }
 

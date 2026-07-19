@@ -1,131 +1,133 @@
 ---
 title: index
-code_version: 2.0.0
-
+type: reference
+domain: project
+phase: planning
 tier: important
----
-
----
-title: docs/reference/index.md
+status: active
+maintainer: V9 Architecture Team
+summary: "Ô­Ê¼ Kimi °²×°Â·¾¶£¨system prompt Ó²±àÂë£¬Ã¿´Î¶Ô»°×Ô¶¯×¢Èë£©£º"
+tags: [project, registry, reference, governance, documentation]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: important
+doc_id: V9-DOC-PROJ-097
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/reference/index.md
-code_version: 2.0.0
----
+# ²å¼ş¼¼ÄÜÎÄµµË÷Òı
 
-# æ’ä»¶æŠ€èƒ½æ–‡æ¡£ç´¢å¼•
-
-> **åŒæ­¥æ—¥æœŸ**: 2025-07-12  
-> **æ¥æº**: `plugins/` ç›®å½•ï¼ˆä» Kimi è‡ªåŠ¨å®‰è£…ä½ç½®åŒæ­¥ï¼‰  
-> **ç”¨é€”**: é¡¹ç›®å›¢é˜Ÿå†…éƒ¨æŸ¥é˜…ï¼Œæ— éœ€ä¾èµ–å¤–éƒ¨å®‰è£…è·¯å¾„
+> **Date**: 2026-07-12  
+> **Source**: `plugins/` Ä¿Â¼£¨´Ó Kimi ×Ô¶¯°²×°Î»ÖÃÍ¬²½£©  
+> **ÓÃÍ¾**: ÏîÄ¿ÍÅ¶ÓÄÚ²¿²éÔÄ£¬ÎŞĞèÒÀÀµÍâ²¿°²×°Â·¾¶
 
 ---
 
-## å·²åŒæ­¥æ’ä»¶æ¸…å•ï¼ˆ9 ä¸ªï¼‰
+## ÒÑÍ¬²½²å¼şÇåµ¥£¨9 ¸ö£©
 
-### è·¯å¾„å¯¹ç…§è¡¨ï¼ˆæ¨èç›´æ¥ä½¿ç”¨ã€Œæ‰å¹³åŒ–è·¯å¾„ã€ï¼‰
+### Â·¾¶¶ÔÕÕ±í£¨ÍÆ¼öÖ±½ÓÊ¹ÓÃ¡¸±âÆ½»¯Â·¾¶¡¹£©
 
-| æ’ä»¶åç§° | æ•°æ®åŸŸ | æœ¬åœ°æ•´ç†æ–‡æ¡£ | æ‰å¹³åŒ– SKILL è·¯å¾„ï¼ˆæ¨èï¼‰ | åŸå§‹åµŒå¥— SKILL è·¯å¾„ |
+| ²å¼şÃû³Æ | Êı¾İÓò | ±¾µØÕûÀíÎÄµµ | ±âÆ½»¯ SKILL Â·¾¶£¨ÍÆ¼ö£© | Ô­Ê¼Ç¶Ì× SKILL Â·¾¶ |
 |---------|--------|------------|------------------------|-------------------|
-| **ifind** | åŒèŠ±é¡ºé‡‘èæ•°æ®ï¼ˆAè‚¡/æ¸¯è‚¡/ç¾è‚¡ï¼‰ | [ifind.md](ifind.md) | [`plugins/ifind/SKILL.md`](../../plugins/ifind/SKILL.md) | [`plugins/ifind/skills/ifind/SKILL.md`](../../plugins/ifind/skills/ifind/SKILL.md) |
-| **imf** | IMF å…¨çƒå®è§‚ç»æµæ•°æ® | [imf.md](imf.md) | [`plugins/imf/SKILL.md`](../../plugins/imf/SKILL.md) | [`plugins/imf/skills/imf/SKILL.md`](../../plugins/imf/skills/imf/SKILL.md) |
-| **kimi-webbridge** | æµè§ˆå™¨è‡ªåŠ¨åŒ–æ§åˆ¶ | [kimi-webbridge.md](../explanation/kimi-webbridge.md) | [`plugins/kimi-webbridge/SKILL.md`](../../plugins/kimi-webbridge/SKILL.md) | [`plugins/kimi-webbridge/skills/kimi-webbridge/SKILL.md`](../../plugins/kimi-webbridge/skills/kimi-webbridge/SKILL.md) |
-| **scholar** | å­¦æœ¯æ–‡çŒ®æ£€ç´¢ | [scholar.md](scholar.md) | [`plugins/scholar/SKILL.md`](../../plugins/scholar/SKILL.md) | [`plugins/scholar/skills/scholar/SKILL.md`](../../plugins/scholar/skills/scholar/SKILL.md) |
-| **sec_edgar** | ç¾å›½ SEC ä¸Šå¸‚å…¬å¸è´¢æŠ¥ | [sec_edgar.md](sec_edgar.md) | [`plugins/sec_edgar/SKILL.md`](../../plugins/sec_edgar/SKILL.md) | [`plugins/sec_edgar/skills/sec_edgar/SKILL.md`](../../plugins/sec_edgar/skills/sec_edgar/SKILL.md) |
-| **tianyancha** | å¤©çœ¼æŸ¥ä¼ä¸šæ•°æ®åº“ | [tianyancha.md](tianyancha.md) | [`plugins/tianyancha/SKILL.md`](../../plugins/tianyancha/SKILL.md) | [`plugins/tianyancha/skills/tianyancha/SKILL.md`](../../plugins/tianyancha/skills/tianyancha/SKILL.md) |
-| **world_bank_open_data** | ä¸–ç•Œé“¶è¡Œå¼€æ”¾æ•°æ® | [world_bank_open_data.md](world_bank_open_data.md) | [`plugins/world_bank_open_data/SKILL.md`](../../plugins/world_bank_open_data/SKILL.md) | [`plugins/world_bank_open_data/skills/world_bank_open_data/SKILL.md`](../../plugins/world_bank_open_data/skills/world_bank_open_data/SKILL.md) |
-| **yahoo_finance** | Yahoo Finance è‚¡ç¥¨æ•°æ® | [yahoo_finance.md](yahoo_finance.md) | [`plugins/yahoo_finance/SKILL.md`](../../plugins/yahoo_finance/SKILL.md) | [`plugins/yahoo_finance/skills/yahoo_finance/SKILL.md`](../../plugins/yahoo_finance/skills/yahoo_finance/SKILL.md) |
-| **yuandian_law** | å…ƒå…¸æ³•å¾‹æ•°æ®åº“ | [yuandian_law.md](yuandian_law.md) | [`plugins/yuandian_law/SKILL.md`](../../plugins/yuandian_law/SKILL.md) | [`plugins/yuandian_law/skills/yuandian_law/SKILL.md`](../../plugins/yuandian_law/skills/yuandian_law/SKILL.md) |
+| **ifind** | Í¬»¨Ë³½ğÈÚÊı¾İ£¨A¹É/¸Û¹É/ÃÀ¹É£© | [ifind.md](ifind.md) | [`plugins/ifind/SKILL.md`](../../plugins/ifind/SKILL.md) | [`plugins/ifind/skills/ifind/SKILL.md`](../../plugins/ifind/skills/ifind/SKILL.md) |
+| **imf** | IMF È«Çòºê¹Û¾­¼ÃÊı¾İ | [imf.md](imf.md) | [`plugins/imf/SKILL.md`](../../plugins/imf/SKILL.md) | [`plugins/imf/skills/imf/SKILL.md`](../../plugins/imf/skills/imf/SKILL.md) |
+| **kimi-webbridge** | ä¯ÀÀÆ÷×Ô¶¯»¯¿ØÖÆ | [kimi-webbridge.md](../explanation/kimi-webbridge.md) | [`plugins/kimi-webbridge/SKILL.md`](../../plugins/kimi-webbridge/SKILL.md) | [`plugins/kimi-webbridge/skills/kimi-webbridge/SKILL.md`](../../plugins/kimi-webbridge/skills/kimi-webbridge/SKILL.md) |
+| **scholar** | Ñ§ÊõÎÄÏ×¼ìË÷ | [scholar.md](scholar.md) | [`plugins/scholar/SKILL.md`](../../plugins/scholar/SKILL.md) | [`plugins/scholar/skills/scholar/SKILL.md`](../../plugins/scholar/skills/scholar/SKILL.md) |
+| **sec_edgar** | ÃÀ¹ú SEC ÉÏÊĞ¹«Ë¾²Æ±¨ | [sec_edgar.md](sec_edgar.md) | [`plugins/sec_edgar/SKILL.md`](../../plugins/sec_edgar/SKILL.md) | [`plugins/sec_edgar/skills/sec_edgar/SKILL.md`](../../plugins/sec_edgar/skills/sec_edgar/SKILL.md) |
+| **tianyancha** | ÌìÑÛ²éÆóÒµÊı¾İ¿â | [tianyancha.md](tianyancha.md) | [`plugins/tianyancha/SKILL.md`](../../plugins/tianyancha/SKILL.md) | [`plugins/tianyancha/skills/tianyancha/SKILL.md`](../../plugins/tianyancha/skills/tianyancha/SKILL.md) |
+| **world_bank_open_data** | ÊÀ½çÒøĞĞ¿ª·ÅÊı¾İ | [world_bank_open_data.md](world_bank_open_data.md) | [`plugins/world_bank_open_data/SKILL.md`](../../plugins/world_bank_open_data/SKILL.md) | [`plugins/world_bank_open_data/skills/world_bank_open_data/SKILL.md`](../../plugins/world_bank_open_data/skills/world_bank_open_data/SKILL.md) |
+| **yahoo_finance** | Yahoo Finance ¹ÉÆ±Êı¾İ | [yahoo_finance.md](yahoo_finance.md) | [`plugins/yahoo_finance/SKILL.md`](../../plugins/yahoo_finance/SKILL.md) | [`plugins/yahoo_finance/skills/yahoo_finance/SKILL.md`](../../plugins/yahoo_finance/skills/yahoo_finance/SKILL.md) |
+| **yuandian_law** | Ôªµä·¨ÂÉÊı¾İ¿â | [yuandian_law.md](yuandian_law.md) | [`plugins/yuandian_law/SKILL.md`](../../plugins/yuandian_law/SKILL.md) | [`plugins/yuandian_law/skills/yuandian_law/SKILL.md`](../../plugins/yuandian_law/skills/yuandian_law/SKILL.md) |
 
 ---
 
-## è·¯å¾„é—®é¢˜è¯´æ˜
+## Â·¾¶ÎÊÌâËµÃ÷
 
-### ä¸ºä»€ä¹ˆä¼šå‡ºç°"æ‰¾ä¸åˆ°è·¯å¾„"
+### ÎªÊ²Ã´»á³öÏÖ"ÕÒ²»µ½Â·¾¶"
 
-**åŸå§‹ Kimi å®‰è£…è·¯å¾„**ï¼ˆsystem prompt ç¡¬ç¼–ç ï¼Œæ¯æ¬¡å¯¹è¯è‡ªåŠ¨æ³¨å…¥ï¼‰ï¼š
+**Ô­Ê¼ Kimi °²×°Â·¾¶**£¨system prompt Ó²±àÂë£¬Ã¿´Î¶Ô»°×Ô¶¯×¢Èë£©£º
 ```
 C:\Users\DELL\AppData\Roaming\kimi-desktop\daimon-share\daimon\runtime\kimi-code\home\plugins\managed\<plugin>\skills\<plugin>\SKILL.md
 ```
-æ­¤è·¯å¾„ä½äº C ç›˜ï¼Œä¸æ‚¨çš„ E ç›˜å·¥ä½œç›®å½•éš”ç¦»ï¼Œ**æ— æ³•åœ¨å·¥ä½œç›®å½•ä¸­ç›´æ¥æ‰“å¼€**ã€‚
+´ËÂ·¾¶Î»ÓÚ C ÅÌ£¬ÓëÄúµÄ E ÅÌ¹¤×÷Ä¿Â¼¸ôÀë£¬**ÎŞ·¨ÔÚ¹¤×÷Ä¿Â¼ÖĞÖ±½Ó´ò¿ª**¡£
 
-**åŸå§‹åµŒå¥—è·¯å¾„**ï¼ˆå¤åˆ¶åä¿ç•™çš„æ’ä»¶è§„èŒƒç»“æ„ï¼‰ï¼š
+**Ô­Ê¼Ç¶Ì×Â·¾¶**£¨¸´ÖÆºó±£ÁôµÄ²å¼ş¹æ·¶½á¹¹£©£º
 ```
-plugins/ifind/skills/ifind/SKILL.md  â† ifind é‡å¤å‡ºç°ï¼Œå±‚çº§å¤ªæ·±
+plugins/ifind/skills/ifind/SKILL.md  ¡û ifind ÖØ¸´³öÏÖ£¬²ã¼¶Ì«Éî
 ```
-è¿™ç§ `plugins/<name>/skills/<name>/SKILL.md` çš„é‡å¤åµŒå¥—ç»“æ„å®¹æ˜“åœ¨è·¯å¾„å¯¼èˆªæ—¶é€ æˆæ··æ·†ã€‚
+ÕâÖÖ `plugins/<name>/skills/<name>/SKILL.md` µÄÖØ¸´Ç¶Ì×½á¹¹ÈİÒ×ÔÚÂ·¾¶µ¼º½Ê±Ôì³É»ìÏı¡£
 
-### è§£å†³æ–¹æ¡ˆ
+### ½â¾ö·½°¸
 
-1. **æ¶ˆé™¤é‡å¤åµŒå¥—**ï¼šå°† `SKILL.md` å¤åˆ¶åˆ°æ’ä»¶æ ¹ç›®å½•ï¼Œè·¯å¾„ç®€åŒ–ä¸º [`plugins/ifind/SKILL.md`](../../plugins/ifind/SKILL.md)
-2. **åˆ›å»ºæ•´ç†æ–‡æ¡£**ï¼šåœ¨ `docs/plugins/` ä¸‹ä¸ºæ¯ä¸ªæ’ä»¶ç¼–å†™ä¸­æ–‡æ•´ç†ç‰ˆï¼Œå«ä½¿ç”¨åœºæ™¯ã€å·¥ä½œæµå’Œè„šæœ¬ç¤ºä¾‹
-3. **ä¿ç•™åŸå§‹ç»“æ„**ï¼š`skills/<name>/SKILL.md` ä»ä¿ç•™ï¼Œä»¥å…¼å®¹æ’ä»¶è§„èŒƒ
+1. **Ïû³ıÖØ¸´Ç¶Ì×**£º½« `../../.agents/skills/feature-window-context-doc/SKILL.md` ¸´ÖÆµ½²å¼ş¸ùÄ¿Â¼£¬Â·¾¶¼ò»¯Îª [`plugins/ifind/../../.agents/skills/feature-window-context-doc/SKILL.md`](../../plugins/ifind/../../.agents/skills/feature-window-context-doc/SKILL.md)
+2. **´´½¨ÕûÀíÎÄµµ**£ºÔÚ `docs/plugins/` ÏÂÎªÃ¿¸ö²å¼ş±àĞ´ÖĞÎÄÕûÀí°æ£¬º¬Ê¹ÓÃ³¡¾°¡¢¹¤×÷Á÷ºÍ½Å±¾Ê¾Àı
+3. **±£ÁôÔ­Ê¼½á¹¹**£º`skills/<name>/SKILL.md` ÈÔ±£Áô£¬ÒÔ¼æÈİ²å¼ş¹æ·¶
 
-### æ¨èè®¿é—®é¡ºåº
+### ÍÆ¼ö·ÃÎÊË³Ğò
 
-1. **å¿«é€ŸæŸ¥é˜…** â†’ å½“å‰æ–‡ä»¶ [`./index.md`](index.md)
-2. **äº†è§£ç”¨æ³•** â†’ [`docs/plugins/<plugin>.md`](ifind.md)ï¼ˆä¸­æ–‡æ•´ç†ç‰ˆï¼Œå«ç¤ºä¾‹ï¼‰
-3. **æŸ¥çœ‹åŸæ–‡** â†’ [`plugins/<plugin>/SKILL.md`](../../plugins/ifind/SKILL.md)ï¼ˆæ‰å¹³åŒ–åçš„åŸå§‹æ–‡ä»¶ï¼‰
-4. **è„šæœ¬è°ƒç”¨** â†’ [`plugins/<plugin>/scripts/<plugin>_tool.py`](../../plugins/ifind/scripts/ifind_tool.py)
+1. **¿ìËÙ²éÔÄ** ¡ú µ±Ç°ÎÄ¼ş [`./index.md`](index.md)
+2. **ÁË½âÓÃ·¨** ¡ú [`docs/plugins/<plugin>.md`](ifind.md)£¨ÖĞÎÄÕûÀí°æ£¬º¬Ê¾Àı£©
+3. **²é¿´Ô­ÎÄ** ¡ú [`plugins/<plugin>/SKILL.md`](../../plugins/ifind/SKILL.md)£¨±âÆ½»¯ºóµÄÔ­Ê¼ÎÄ¼ş£©
+4. **½Å±¾µ÷ÓÃ** ¡ú [`plugins/<plugin>/scripts/<plugin>_tool.py`](../../plugins/ifind/scripts/ifind_tool.py)
 
 ---
 
-## æŒ‰ä½¿ç”¨åœºæ™¯åˆ†ç±»
+## °´Ê¹ÓÃ³¡¾°·ÖÀà
 
-### é‡‘èæ•°æ®ç±»
-- **ifind** â€” ä¸­å›½ A è‚¡ã€æ¸¯è‚¡ã€ç¾è‚¡å¸‚åœºæ•°æ®ï¼Œè´¢åŠ¡æŠ¥è¡¨ã€æ™ºèƒ½é€‰è‚¡
-- **yahoo_finance** â€” å…¨çƒè‚¡ç¥¨è¡Œæƒ…ã€è´¢åŠ¡æŒ‡æ ‡ã€åˆ†æå¸ˆè¦†ç›–
-- **sec_edgar** â€” ç¾å›½ä¸Šå¸‚å…¬å¸ SEC ç”³æŠ¥æ–‡ä»¶ã€XBRL æ•°æ®ã€å†…å¹•äº¤æ˜“
+### ½ğÈÚÊı¾İÀà
+- **ifind** ¡ª ÖĞ¹ú A ¹É¡¢¸Û¹É¡¢ÃÀ¹ÉÊĞ³¡Êı¾İ£¬²ÆÎñ±¨±í¡¢ÖÇÄÜÑ¡¹É
+- **yahoo_finance** ¡ª È«Çò¹ÉÆ±ĞĞÇé¡¢²ÆÎñÖ¸±ê¡¢·ÖÎöÊ¦¸²¸Ç
+- **sec_edgar** ¡ª ÃÀ¹úÉÏÊĞ¹«Ë¾ SEC Éê±¨ÎÄ¼ş¡¢XBRL Êı¾İ¡¢ÄÚÄ»½»Ò×
 
-### å®è§‚ç»æµç±»
-- **imf** â€” GDPã€é€šèƒ€ã€å¤±ä¸šç‡ã€æ”¿åºœå€ºåŠ¡ã€COFER å‚¨å¤‡è´§å¸
-- **world_bank_open_data** â€” 29,000+ å›½å®¶å‘å±•æŒ‡æ ‡ï¼Œæ¶µç›–ç»æµã€ç¤¾ä¼šã€ç¯å¢ƒ
+### ºê¹Û¾­¼ÃÀà
+- **imf** ¡ª GDP¡¢Í¨ÕÍ¡¢Ê§ÒµÂÊ¡¢Õş¸®Õ®Îñ¡¢COFER ´¢±¸»õ±Ò
+- **world_bank_open_data** ¡ª 29,000+ ¹ú¼Ò·¢Õ¹Ö¸±ê£¬º­¸Ç¾­¼Ã¡¢Éç»á¡¢»·¾³
 
-### ä¼ä¸š/æ³•å¾‹ç±»
-- **tianyancha** â€” ä¼ä¸šæ³¨å†Œã€ç»è¥ã€é£é™©ã€å¸æ³•ã€çŸ¥è¯†äº§æƒã€æŠ•èµ„å…³ç³»
-- **yuandian_law** â€” ä¸­å›½æ³•å¾‹æ³•è§„ã€å¸æ³•è§£é‡Šã€è¡Œæ”¿è§„ç« ã€æ³•é™¢æ¡ˆä¾‹
+### ÆóÒµ/·¨ÂÉÀà
+- **tianyancha** ¡ª ÆóÒµ×¢²á¡¢¾­Óª¡¢·çÏÕ¡¢Ë¾·¨¡¢ÖªÊ¶²úÈ¨¡¢Í¶×Ê¹ØÏµ
+- **yuandian_law** ¡ª ÖĞ¹ú·¨ÂÉ·¨¹æ¡¢Ë¾·¨½âÊÍ¡¢ĞĞÕş¹æÕÂ¡¢·¨Ôº°¸Àı
 
-### å·¥å…·/ç ”ç©¶ç±»
-- **kimi-webbridge** â€” æµè§ˆå™¨è‡ªåŠ¨åŒ–ã€ç½‘é¡µæˆªå›¾ã€PDF ä¿å­˜ã€è¡¨å•å¡«å†™
-- **scholar** â€” å­¦æœ¯è®ºæ–‡æœç´¢ã€å¼•æ–‡åˆ†æã€ä½œè€…ç”»åƒ
+### ¹¤¾ß/ÑĞ¾¿Àà
+- **kimi-webbridge** ¡ª ä¯ÀÀÆ÷×Ô¶¯»¯¡¢ÍøÒ³½ØÍ¼¡¢PDF ±£´æ¡¢±íµ¥ÌîĞ´
+- **scholar** ¡ª Ñ§ÊõÂÛÎÄËÑË÷¡¢ÒıÎÄ·ÖÎö¡¢×÷Õß»­Ïñ
 
 ---
 
-## é€šç”¨ä½¿ç”¨è§„èŒƒ
+## Í¨ÓÃÊ¹ÓÃ¹æ·¶
 
-### 1. ç¯å¢ƒå‡†å¤‡
+### 1. »·¾³×¼±¸
 
-æ‰€æœ‰æ•°æ®æºæ’ä»¶ï¼ˆé™¤ kimi-webbridge å¤–ï¼‰å‡ä¾èµ– `agent-gw` Python SDKï¼š
+ËùÓĞÊı¾İÔ´²å¼ş£¨³ı kimi-webbridge Íâ£©¾ùÒÀÀµ `agent-gw` Python SDK£º
 
 ```bash
 python3 -c "import agent_gw" || python3 -m pip install "$(curl -s https://cdn.kimi.com/agentgw/pysdk/manifest.json | python3 -c "import json,sys; print(json.load(sys.stdin)['latest']['url'])")"
 ```
 
-API Key é…ç½®ä¼˜å…ˆçº§ï¼š
-1. å‘½ä»¤è¡Œå‚æ•° `api_key=...`
-2. ç¯å¢ƒå˜é‡ `KIMI_API_KEY`
-3. é…ç½®æ–‡ä»¶ `~/.kimi/agent-gw.json`
+API Key ÅäÖÃÓÅÏÈ¼¶£º
+1. ÃüÁîĞĞ²ÎÊı `api_key=...`
+2. »·¾³±äÁ¿ `KIMI_API_KEY`
+3. ÅäÖÃÎÄ¼ş `~/.kimi/agent-gw.json`
 
-### 2. æ ‡å‡†è°ƒç”¨æµç¨‹
+### 2. ±ê×¼µ÷ÓÃÁ÷³Ì
 
 ```
-describe â†’ é€‰ API â†’ å»ºå‚æ•° â†’ call â†’ å¤„ç†ç»“æœ
+describe ¡ú Ñ¡ API ¡ú ½¨²ÎÊı ¡ú call ¡ú ´¦Àí½á¹û
 ```
 
 ```bash
-# ç¬¬ 1 æ­¥ï¼šæŸ¥çœ‹æ•°æ®èƒ½åŠ›
+# µÚ 1 ²½£º²é¿´Êı¾İÄÜÁ¦
 python3 scripts/<plugin>_tool.py describe
 
-# ç¬¬ 2 æ­¥ï¼šè°ƒç”¨å…·ä½“ API
+# µÚ 2 ²½£ºµ÷ÓÃ¾ßÌå API
 python3 scripts/<plugin>_tool.py call \
   --api-name "<api name>" \
   --params-json '{"required_param":"value"}'
 ```
 
-### 3. å“åº”ç»“æ„
+### 3. ÏìÓ¦½á¹¹
 
 ```python
 {
@@ -136,16 +138,16 @@ python3 scripts/<plugin>_tool.py call \
 }
 ```
 
-**ä½¿ç”¨åŸåˆ™**ï¼šä¼˜å…ˆä½¿ç”¨ `result.assistant`ï¼Œä»…åœ¨éœ€è¦å±•ç¤ºå†…å®¹æ—¶å‚è€ƒ `result.user`ã€‚
+**Ê¹ÓÃÔ­Ôò**£ºÓÅÏÈÊ¹ÓÃ `result.assistant`£¬½öÔÚĞèÒªÕ¹Ê¾ÄÚÈİÊ±²Î¿¼ `result.user`¡£
 
 ---
 
-## ç»´æŠ¤è¯´æ˜
+## Î¬»¤ËµÃ÷
 
-- æœ¬æ–‡æ¡£ä¸ `plugins/` ç›®å½•ä¸‹çš„åŸå§‹ SKILL.md åŒæ­¥ï¼Œæ›´æ–°æ—¶è¯·åŒæ—¶ä¿®æ”¹ä¸¤è€…
-- æ–°å¢æ’ä»¶æ—¶ï¼Œè¯·åœ¨æ­¤ç´¢å¼•ä¸­è¡¥å……æ¡ç›®å¹¶åˆ›å»ºå¯¹åº”çš„ç‹¬ç«‹æ–‡æ¡£
-- æ‰€æœ‰æ’ä»¶è„šæœ¬å‡ä½äºå„è‡ªç›®å½•çš„ `scripts/` å­ç›®å½•ä¸­
+- ±¾ÎÄµµÓë `plugins/` Ä¿Â¼ÏÂµÄÔ­Ê¼ SKILL.md Í¬²½£¬¸üĞÂÊ±ÇëÍ¬Ê±ĞŞ¸ÄÁ½Õß
+- ĞÂÔö²å¼şÊ±£¬ÇëÔÚ´ËË÷ÒıÖĞ²¹³äÌõÄ¿²¢´´½¨¶ÔÓ¦µÄ¶ÀÁ¢ÎÄµµ
+- ËùÓĞ²å¼ş½Å±¾¾ùÎ»ÓÚ¸÷×ÔÄ¿Â¼µÄ `scripts/` ×ÓÄ¿Â¼ÖĞ
 
 ---
 
-*æœ¬ç´¢å¼•ç”± AI è‡ªåŠ¨åŒæ­¥ç”Ÿæˆï¼Œå¦‚æœ‰é—æ¼è¯·ä»¥ `plugins/` ç›®å½•ä¸‹çš„åŸå§‹ SKILL.md ä¸ºå‡†ã€‚*
+*±¾Ë÷ÒıÓÉ AI ×Ô¶¯Í¬²½Éú³É£¬ÈçÓĞÒÅÂ©ÇëÒÔ `plugins/` Ä¿Â¼ÏÂµÄÔ­Ê¼ SKILL.md Îª×¼¡£*

@@ -1,136 +1,134 @@
 ---
 title: README
-code_version: 2.0.0
-
+type: reference
+domain: project
+phase: planning
 tier: important
----
-
----
-title: docs/reference/README.md
+status: active
+maintainer: V9 Architecture Team
+summary: "reference Ä¿Â¼Ë÷Òý£º°ËÀàÎÄµµµÄÏÖÓÐÃªµãÓëÈ±¿Ú±ê¼Ç¡£"
+tags: [index, documentation, reference, project, governance]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-tier: important
+doc_id: V9-DOC-PROJ-102
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-# Kimi åŠ è½½æç¤ºï¼šæœ¬é¡¹ç›®ä¸º V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿï¼ŒæŒ‰ AGENTS.md v1.4.3 åˆ†å±‚æž¶æž„è¿è¡Œ
-# å¿«é€Ÿå…¥å£ï¼šdocs/governance.md | docs/architecture/overview.md | docs/00-meta/æ–‡æ¡£ä½“ç³»ä½“æ£€æŠ¥å‘Š-v9.md
-# åŠ è½½ç­–ç•¥ï¼šå…ˆè¯»å–æœ¬æ–‡ä»¶èŽ·å–æ–‡æ¡£åœ°å›¾ï¼Œå†æŒ‰éœ€æ·±å…¥å¯¹åº”å­ç±»ï¼›ä¸è¦é€ä¸ªæ‰«æ docs/ å…¨éƒ¨æ–‡ä»¶
-title: V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” æ–‡æ¡£ä¸­å¿ƒï¼ˆä¸»æŽ§ç´¢å¼•ï¼‰
-code_version: 2.0.0
-kimi_index: true
----
+# V9 ÖÇÄÜÍ¶ÑÐ¸´ÅÌÏµÍ³ ¡ª ÎÄµµÖÐÐÄ£¨Ö÷¿ØË÷Òý£©
 
-# V9 æ™ºèƒ½æŠ•ç ”å¤ç›˜ç³»ç»Ÿ â€” æ–‡æ¡£ä¸­å¿ƒï¼ˆä¸»æŽ§ç´¢å¼•ï¼‰
-
-> **ç”¨é€”**ï¼šæœ¬æ–‡ä»¶æ˜¯ `docs/` çš„å”¯ä¸€é¡¶å±‚å…¥å£ã€‚ä»»ä½•æ–°æˆå‘˜æˆ– AI Agent åº”ä»Žè¿™é‡Œ 1 æ­¥å®šä½æ ¸å¿ƒæ–‡æ¡£ã€‚
-> **ç»´æŠ¤è§„åˆ™**ï¼šæ–°å¢ž/ç§»åŠ¨æ–‡æ¡£åŽå¿…é¡»åŒæ­¥æ›´æ–°æœ¬ç´¢å¼•ï¼ˆè§ `governance.md` ä¿é²œè§„åˆ™ï¼‰ã€‚
-> **AI åŠ è½½æç¤ºï¼ˆKimi / é€šç”¨ LLMï¼‰**ï¼š"è¯·å…ˆè¯»å– `docs/README.md` èŽ·å–æ–‡æ¡£åœ°å›¾ï¼Œå†æŒ‰éœ€æ·±å…¥å¯¹åº”å­ç±»ï¼›ä¸è¦é€ä¸ªæ‰«æ `docs/` å…¨éƒ¨ 1794 ä¸ªæ–‡ä»¶ã€‚"
+> **ÓÃÍ¾**£º±¾ÎÄ¼þÊÇ `docs/` µÄÎ¨Ò»¶¥²ãÈë¿Ú¡£ÈÎºÎÐÂ³ÉÔ±»ò AI Agent Ó¦´ÓÕâÀï 1 ²½¶¨Î»ºËÐÄÎÄµµ¡£
+> **Î¬»¤¹æÔò**£ºÐÂÔö/ÒÆ¶¯ÎÄµµºó±ØÐëÍ¬²½¸üÐÂ±¾Ë÷Òý£¨¼û `../00-meta/GOVERNANCE.md` ±£ÏÊ¹æÔò£©¡£
+> **AI ¼ÓÔØÌáÊ¾£¨Kimi / Í¨ÓÃ LLM£©**£º"ÇëÏÈ¶ÁÈ¡ `docs/README.md` »ñÈ¡ÎÄµµµØÍ¼£¬ÔÙ°´ÐèÉîÈë¶ÔÓ¦×ÓÀà£»²»ÒªÖð¸öÉ¨Ãè `docs/` È«²¿ 1794 ¸öÎÄ¼þ¡£"
 
 ---
 
-## ä¸€ã€æ–‡æ¡£å½’ç±»ä½“ç³»ï¼ˆAâ€“H å…«ç±»ï¼‰
+## Ò»¡¢ÎÄµµ¹éÀàÌåÏµ£¨A¨CH °ËÀà£©
 
-åŸºäºŽã€Šæ–‡æ¡£å½’ç±»ä½“ç³»ç»“æž„.mdã€‹ï¼Œæ‰€æœ‰æ–‡æ¡£å½’å…¥ä»¥ä¸‹å…«ç±»ã€‚æ¯ç±»ä¸‹ç»™å‡º**çŽ°æœ‰é”šç‚¹**ä¸Ž**ç¼ºå£æ ‡è®°ï¼ˆðŸ”´ ç¼º / ðŸŸ¡ å¼± / âœ… å°±ç»ªï¼‰**ã€‚
+»ùÓÚ¡¶ÎÄµµ¹éÀàÌåÏµ½á¹¹.md¡·£¬ËùÓÐÎÄµµ¹éÈëÒÔÏÂ°ËÀà¡£Ã¿ÀàÏÂ¸ø³ö**ÏÖÓÐÃªµã**Óë**È±¿Ú±ê¼Ç£¨?? È± / ?? Èõ / ? ¾ÍÐ÷£©**¡£
 
-| ç±» | åç§° | èŒè´£ | çŽ°æœ‰é”šç‚¹ | çŠ¶æ€ |
+| Àà | Ãû³Æ | Ö°Ôð | ÏÖÓÐÃªµã | ×´Ì¬ |
 |----|------|------|----------|------|
-| **A** | å¯¼èˆªä¸Žæ²»ç† | ç´¢å¼•ã€å®ªæ³•ã€å½’ç±»ã€ä½“æ£€ã€éœ€æ±‚è§„æ ¼ã€æ’ä»¶é›†æˆ | `README.md`(æœ¬æ–‡ä»¶)ã€`../00-meta/governance.md`ã€`../00-meta/æ–‡æ¡£å½’ç±»ä½“ç³»ç»“æž„.md`ã€`../00-meta/v9-æ–‡æ¡£æ²»ç†ä¿®å¤è¡ŒåŠ¨è®¡åˆ’.md`ã€`../00-meta/æ–‡æ¡£ä½“ç³»ä½“æ£€æŠ¥å‘Š-v9.md`ã€`./registry-index.md`ã€`./01-vision-and-goals.md`ã€`./v9æ•°æ®å®ªæ³•.md`ã€`./index.md` | âœ… |
-| **B** | æž¶æž„è®¾è®¡ | å…¨å±€æž¶æž„ã€èˆ±å®¤ã€æœåŠ¡ã€å¼•æ“Žã€æ•°æ®å±‚ã€å®‰å…¨æ¨¡åž‹ã€ç‰ˆæœ¬å‘å¸ƒ | `../explanation/overview.md`(P0âœ…)ã€`../explanation/cabins-overview.md`(P0âœ…)ã€`./services-catalog.md`(P0âœ…)ã€`./security-model.md`(P1âœ…)ã€`./deployment.md`(P1âœ…)ã€`02-design/architecture/adr/`ã€`./release-notes.md` | âœ… |
-| **C** | åŠŸèƒ½æ¨¡å— | å„èˆ± specã€ç»„ä»¶ä½“ç³»ã€Widgetã€Storeã€æœåŠ¡å¥‘çº¦ã€æ•°æ®å±‚ã€æ•°æ®å­—å…¸ | `./input-cabin-spec.md`ã€`./analysis-cabin-spec.md`(P0âœ…)ã€`./trading-cabin-spec.md`(P0âœ…)ã€`./output-cabin-spec.md`(P0âœ…)ã€`./command-cabin-spec.md`(P0âœ…)ã€`./atomic-component-system.md`ã€`./widget-development-guide.md`ã€`./api-contract.md`ã€`./data-dictionary-index.md` | âœ… |
-| **D** | æŠ€æœ¯è§„èŒƒ | åˆ†å±‚ã€é—¨ç¦ã€ä»¤ç‰Œã€å¤æ‚åº¦ã€API å¥‘çº¦ã€å¼€å‘å·¥ä½œæµã€è¿ç§»è§„èŒƒ | `../../AGENTS.md`(æ ¹)ã€`./coding-conventions.md`(P0âœ…)ã€`./complexity-governance.md`ã€`./jsdoc-convention.md`ã€`./development-workflow-sop.md`ã€`./design-tokens.md`ã€`./design-token-mapping.md`ã€`./v6-to-v9-migration-spec.md` | âœ… |
-| **E** | æµ‹è¯•ç­–ç•¥ | å•å…ƒ/e2e/è¦†ç›–çŽ‡ã€æµ‹è¯•ç”¨ä¾‹ã€é—¨ç¦ | `./testing-strategy.md`(P1âœ…)ã€`./test-catalog.md`ã€`../explanation/production-release-checklist-skill.md` | âœ… |
-| **F** | AI è¾…åŠ©å·¥ç¨‹æ²»ç† | æç¤ºè¯æ¨¡æ¿ã€è®°å¿†å±‚ã€é£žè½®ã€AI å·¥ç¨‹å…¥å£ã€æ£€æŸ¥è¡¨ | `./README.md`(P1âœ…)ã€`../prompts/store-integration-guide.md`ã€`../prompts/service-integration-guide.md`ã€`./ai-memory-layer.md`ã€`./ai-generate-audit-fix-loop.md`ã€`./ui-migration-checklist.md`ã€`./widget-integration-checklist.md` | âœ… |
-| **G** | è¿‡ç¨‹ä¸Žè´¨é‡äº§ç‰© | æŠ¥å‘Šã€å®¡è®¡ã€changelogã€è‰ç¨¿ã€å‘å¸ƒç®¡ç† | `docs/reports/audit/`ï¼ˆè‡ªåŠ¨äº§ç‰©ï¼‰ã€`docs/reports/changelogs/`ã€`CHANGELOG.md`(æ ¹)ã€`../00-meta/../00-meta/../00-meta/cleanup-schedule.md`(P1âœ…)ã€`../explanation/design/v9-post-dev-review.md`ã€`../explanation/design/å‘å¸ƒè®¡åˆ’ä¸Žè¯„å®¡-r01.md` | âœ… |
-| **H** | è·¨åŸŸè¡¥å…… | å…¥é—¨ã€How-toã€å®‰å…¨ã€éƒ¨ç½²ã€i18n | `../tutorials/getting-started.md`(P1âœ…)ã€`../how-to/how-to-add-widget.md`(P1âœ…)ã€`../how-to/how-to-add-store.md`(P1âœ…)ã€`../how-to/how-to-add-service.md`(P1âœ…)ã€`../how-to/mcp-acl-guide.md`ã€`../explanation/runbook.md`(P2âœ…)ã€`../explanation/a11y-i18n.md`(P2) | âœ… |
+| **A** | µ¼º½ÓëÖÎÀí | Ë÷Òý¡¢ÏÜ·¨¡¢¹éÀà¡¢Ìå¼ì¡¢ÐèÇó¹æ¸ñ¡¢²å¼þ¼¯³É | `README.md`(±¾ÎÄ¼þ)¡¢`../00-meta/governance.md`¡¢`../00-meta/ÎÄµµ¹éÀàÌåÏµ½á¹¹.md`¡¢`../00-meta/v9-ÎÄµµÖÎÀíÐÞ¸´ÐÐ¶¯¼Æ»®.md`¡¢`../00-meta/ÎÄµµÌåÏµÌå¼ì±¨¸æ-v9.md`¡¢`./registry-index.md`¡¢`./01-vision-and-goals.md`¡¢`./v9Êý¾ÝÏÜ·¨.md`¡¢`./index.md` | ? |
+| **B** | ¼Ü¹¹Éè¼Æ | È«¾Ö¼Ü¹¹¡¢²ÕÊÒ¡¢·þÎñ¡¢ÒýÇæ¡¢Êý¾Ý²ã¡¢°²È«Ä£ÐÍ¡¢°æ±¾·¢²¼ | `../explanation/overview.md`(P0?)¡¢`../explanation/cabins-overview.md`(P0?)¡¢`./services-catalog.md`(P0?)¡¢`./security-model.md`(P1?)¡¢`./deployment.md`(P1?)¡¢`02-design/architecture/adr/`¡¢`./release-notes.md` | ? |
+| **C** | ¹¦ÄÜÄ£¿é | ¸÷²Õ spec¡¢×é¼þÌåÏµ¡¢Widget¡¢Store¡¢·þÎñÆõÔ¼¡¢Êý¾Ý²ã¡¢Êý¾Ý×Öµä | `./input-cabin-spec.md`¡¢`./analysis-cabin-spec.md`(P0?)¡¢`./trading-cabin-spec.md`(P0?)¡¢`./output-cabin-spec.md`(P0?)¡¢`./command-cabin-spec.md`(P0?)¡¢`./atomic-component-system.md`¡¢`./widget-development-guide.md`¡¢`./api-contract.md`¡¢`./data-dictionary-index.md` | ? |
+| **D** | ¼¼Êõ¹æ·¶ | ·Ö²ã¡¢ÃÅ½û¡¢ÁîÅÆ¡¢¸´ÔÓ¶È¡¢API ÆõÔ¼¡¢¿ª·¢¹¤×÷Á÷¡¢Ç¨ÒÆ¹æ·¶ | `../../AGENTS.md`(¸ù)¡¢`./coding-conventions.md`(P0?)¡¢`./complexity-governance.md`¡¢`./jsdoc-convention.md`¡¢`./development-workflow-sop.md`¡¢`./design-tokens.md`¡¢`./design-token-mapping.md`¡¢`./v6-to-v9-migration-spec.md` | ? |
+| **E** | ²âÊÔ²ßÂÔ | µ¥Ôª/e2e/¸²¸ÇÂÊ¡¢²âÊÔÓÃÀý¡¢ÃÅ½û | `./testing-strategy.md`(P1?)¡¢`./test-catalog.md`¡¢`../explanation/production-release-checklist-skill.md` | ? |
+| **F** | AI ¸¨Öú¹¤³ÌÖÎÀí | ÌáÊ¾´ÊÄ£°å¡¢¼ÇÒä²ã¡¢·ÉÂÖ¡¢AI ¹¤³ÌÈë¿Ú¡¢¼ì²é±í | `./README.md`(P1?)¡¢`../prompts/store-integration-guide.md`¡¢`../prompts/service-integration-guide.md`¡¢`./ai-memory-layer.md`¡¢`./ai-generate-audit-fix-loop.md`¡¢`./ui-migration-checklist.md`¡¢`./widget-integration-checklist.md` | ? |
+| **G** | ¹ý³ÌÓëÖÊÁ¿²úÎï | ±¨¸æ¡¢Éó¼Æ¡¢changelog¡¢²Ý¸å¡¢·¢²¼¹ÜÀí | `docs/reports/audit/`£¨×Ô¶¯²úÎï£©¡¢`docs/reports/changelogs/`¡¢`CHANGELOG.md`(¸ù)¡¢`../00-meta/../00-meta/../00-meta/cleanup-schedule.md`(P1?)¡¢`../explanation/design/v9-post-dev-review.md`¡¢`../explanation/design/·¢²¼¼Æ»®ÓëÆÀÉó-r01.md` | ? |
+| **H** | ¿çÓò²¹³ä | ÈëÃÅ¡¢How-to¡¢°²È«¡¢²¿Êð¡¢i18n | `../tutorials/getting-started.md`(P1?)¡¢`../how-to/how-to-add-widget.md`(P1?)¡¢`../how-to/how-to-add-store.md`(P1?)¡¢`../how-to/how-to-add-service.md`(P1?)¡¢`../how-to/mcp-acl-guide.md`¡¢`../explanation/runbook.md`(P2?)¡¢`../explanation/a11y-i18n.md`(P2) | ? |
 
 ---
 
-## äºŒã€æŒ‰ä½¿ç”¨åœºæ™¯çš„å¿«é€Ÿå…¥å£
+## ¶þ¡¢°´Ê¹ÓÃ³¡¾°µÄ¿ìËÙÈë¿Ú
 
-| åœºæ™¯ | æŽ¨èæ–‡æ¡£è·¯å¾„ |
+| ³¡¾° | ÍÆ¼öÎÄµµÂ·¾¶ |
 |------|-------------|
-| **æ–°æˆå‘˜ 30 åˆ†é’Ÿä¸Šæ‰‹** | `../tutorials/getting-started.md` â†’ `../explanation/overview.md` â†’ `C/*-cabin-spec.md` |
-| **æ–°å¢ž Widget** | `./widget-integration-checklist.md` + `../how-to/how-to-add-widget.md` + `./atomic-component-system.md` |
-| **æ–°å¢ž Store / Service / Page** | `F/*-prompt-template.md` + `H/how-to-add-*.md` + `../../AGENTS.md` Â§äºŒ å››æ­¥é›†æˆ |
-| **äº†è§£å…¨å±€æž¶æž„** | `../explanation/overview.md` â†’ `../explanation/cabins-overview.md` â†’ `./services-catalog.md` |
-| **ä»£ç è¯„å®¡ / åˆè§„æ£€æŸ¥** | `../../AGENTS.md` + `./development-workflow-sop.md` + `D/eslint.colors.config.js` + `npm run audit:layers` |
-| **äº†è§£å¼€å‘å·¥ä½œæµ** | `./development-workflow-sop.md` â†’ `../../AGENTS.md` â†’ `F/*-prompt-template.md` |
-| **æ‹†è§£å¤æ‚ä»»åŠ¡ / å›žå½’å¥—ä»¶** | `./templates/task-graph-template.md` + `./templates/regression-suite.md` |
-| **æŸ¥å®‰å…¨æž¶æž„** | `./security-model.md` â†’ `../how-to/mcp-acl-guide.md` â†’ `../../AGENTS.md` Â§ä¸‰/å…­/å…« |
-| **æŸ¥éƒ¨ç½²åŸºçº¿** | `./deployment.md` â†’ `../explanation/runbook.md` â†’ `.github/workflows/quality-check.yml` |
-| **æŸ¥ AI å·¥ç¨‹æ²»ç†** | `./README.md` â†’ `../prompts/README.md` â†’ `../prompts/service-integration-guide.md` |
-| **æŸ¥æ•°æ®å±‚æž¶æž„** | `../explanation/data-layer-overview.md` â†’ `./data-dictionary-index.md` |
-| **æŸ¥æ•°æ®å­—æ®µå®šä¹‰** | `./data-dictionary-index.md` â†’ `./api-contract.md` |
-| **æŸ¥ API å¥‘çº¦** | `./api-contract.md` â†’ `../explanation/data-layer-overview.md` |
-| **è´¨é‡é—¨ç¦ç»“æžœ** | `G/reports/` + æ ¹ `audit-*-result.txt` |
-| **AI Agent å¿«é€ŸåŠ è½½** | `docs/.ai-index/`ï¼ˆcode-graph + ai-memory-indexï¼‰ |
+| **ÐÂ³ÉÔ± 30 ·ÖÖÓÉÏÊÖ** | `../tutorials/getting-started.md` ¡ú `../explanation/overview.md` ¡ú `C/*-cabin-spec.md` |
+| **ÐÂÔö Widget** | `./widget-integration-checklist.md` + `../how-to/how-to-add-widget.md` + `./atomic-component-system.md` |
+| **ÐÂÔö Store / Service / Page** | `F/*-prompt-template.md` + `H/how-to-add-*.md` + `../../AGENTS.md` ¡ì¶þ ËÄ²½¼¯³É |
+| **ÁË½âÈ«¾Ö¼Ü¹¹** | `../explanation/overview.md` ¡ú `../explanation/cabins-overview.md` ¡ú `./services-catalog.md` |
+| **´úÂëÆÀÉó / ºÏ¹æ¼ì²é** | `../../AGENTS.md` + `./development-workflow-sop.md` + `D/eslint.colors.config.js` + `npm run audit:layers` |
+| **ÁË½â¿ª·¢¹¤×÷Á÷** | `./development-workflow-sop.md` ¡ú `../../AGENTS.md` ¡ú `F/*-prompt-template.md` |
+| **²ð½â¸´ÔÓÈÎÎñ / »Ø¹éÌ×¼þ** | `./templates/task-graph-template.md` + `./templates/regression-suite.md` |
+| **²é°²È«¼Ü¹¹** | `./security-model.md` ¡ú `../how-to/mcp-acl-guide.md` ¡ú `../../AGENTS.md` ¡ìÈý/Áù/°Ë |
+| **²é²¿Êð»ùÏß** | `./deployment.md` ¡ú `../explanation/runbook.md` ¡ú `.github/workflows/quality-check.yml` |
+| **²é AI ¹¤³ÌÖÎÀí** | `./README.md` ¡ú `../prompts/README.md` ¡ú `../prompts/service-integration-guide.md` |
+| **²éÊý¾Ý²ã¼Ü¹¹** | `../explanation/data-layer-overview.md` ¡ú `./data-dictionary-index.md` |
+| **²éÊý¾Ý×Ö¶Î¶¨Òå** | `./data-dictionary-index.md` ¡ú `./api-contract.md` |
+| **²é API ÆõÔ¼** | `./api-contract.md` ¡ú `../explanation/data-layer-overview.md` |
+| **ÖÊÁ¿ÃÅ½û½á¹û** | `G/reports/` + ¸ù `audit-*-result.txt` |
+| **AI Agent ¿ìËÙ¼ÓÔØ** | `docs/.ai-index/`£¨code-graph + ai-memory-index£© |
 
 ---
 
-## ä¸‰ã€ç›®å½•å¥åº·ä¸Žæ²»ç†çŠ¶æ€ï¼ˆå®žæ—¶é”šç‚¹ï¼‰
+## Èý¡¢Ä¿Â¼½¡¿µÓëÖÎÀí×´Ì¬£¨ÊµÊ±Ãªµã£©
 
-- **æ–‡æ¡£æ²»ç†å±‚è¯„åˆ†**ï¼š85/100 â†’ ç›®æ ‡ 90+ï¼ˆè§ `../00-meta/v9-æ–‡æ¡£æ²»ç†ä¿®å¤è¡ŒåŠ¨è®¡åˆ’.md`ï¼‰
-- **åŒå‘ä¸€è‡´æ€§è¯„åˆ†**ï¼š85/100 â†’ ç›®æ ‡ 90+ï¼ˆåŒä¸Šï¼‰
-- **å½“å‰è¿­ä»£**ï¼š**P1 å·²å®Œæˆ**ï¼ˆAâ€“H å…«ç±»å…¨éƒ¨ âœ…ï¼‰
-- **P2 å·²å®Œæˆ**ï¼š
-  - âœ… è‡ªåŠ¨åŒ–ç´¢å¼•ç”Ÿæˆï¼ˆ`docs/.ai-index/`ï¼šcode-graph 708 æ–‡ä»¶ / 138K è¡Œ + ai-memory-index 288KBï¼‰
-  - âœ… è§†è§‰å›žå½’åŸºçº¿å†»ç»“ï¼ˆ6 â†’ 20 åœºæ™¯ï¼Œ20/20 å…¨é‡å›žå½’é€šè¿‡ï¼ŒåŸºçº¿ 1.6MBï¼‰
-  - âœ… æ ¹çº§ `audit-*-result.txt` è¿ç§»ï¼ˆå·²ç¡®è®¤æ ¹çº§æ— æ®‹ç•™ï¼Œ`docs/reports/audit/` å·²åˆ›å»ºï¼‰
-- **å½’æ¡£ç›®å½•**ï¼š`07-archive/`ï¼ˆDEPRECATED æ–‡æ¡£ç»Ÿä¸€å½’æ­¤ï¼‰
-- **è‡ªåŠ¨äº§ç‰©**ï¼š`reports/`ï¼ˆç”± `../00-meta/../00-meta/cleanup-schedule.md` ç®¡ç†ä¿ç•™æœŸï¼ŒCI ç”Ÿæˆï¼‰
-- **æœ¬æ¬¡æ–°å¢ž / æ›´æ–°æ–‡æ¡£æ¸…å•ï¼ˆå…¨é‡ï¼‰**ï¼š
-  - `./security-model.md` â€” å®‰å…¨æ¨¡åž‹æ€»è§ˆï¼ˆL1-L7 çºµæ·±é˜²å¾¡ï¼‰
-  - `./deployment.md` â€” éƒ¨ç½²åŸºçº¿ï¼ˆçº¯å‰ç«¯ SPA + CI/CDï¼‰
-  - `../README.md` â€” AI å·¥ç¨‹æ²»ç†å…¥å£ï¼ˆLLM è°ƒç”¨æ ˆ / Agent ç³»ç»Ÿ / æç¤ºè¯å·¥ç¨‹ï¼‰
-  - `./testing-strategy.md` â€” ä¸‰å±‚æµ‹è¯•ç­–ç•¥ v2.0.0ï¼ˆé‡‘å­—å¡” / å¥‘çº¦ / è¦†ç›–çŽ‡ï¼‰
-  - `governance.md` â€” æ–‡æ¡£æ²»ç†å®ªæ³•ï¼ˆAâ€“H å½’ç±» / ç‰ˆæœ¬è§„èŒƒ / å½’æ¡£è§„åˆ™ï¼‰
-  - `../00-meta/../00-meta/cleanup-schedule.md` â€” è‡ªåŠ¨äº§ç‰©æ¸…ç†å‘¨æœŸè¡¨ï¼ˆä¿ç•™çŸ©é˜µ / æ¸…ç†è„šæœ¬ï¼‰
-  - `./api-contract.md` â€” äº¤æ˜“æŒä»“ API å¥‘çº¦ï¼ˆv1.4.0 å·²æ£€ç´¢æ›´æ–°ï¼‰
-  - `docs/README.md` â€” ä¸»æŽ§ç´¢å¼•æ›´æ–°ï¼ˆAâ€“H å…¨éƒ¨ âœ…ï¼Œ14 æ¡å¿«é€Ÿå…¥å£ï¼‰
-- `./development-workflow-sop.md` â€” V9 å¼€å‘å·¥ä½œæµ SOPï¼ˆç¼–ç å‰/ä¸­/åŽ/ä¸Šçº¿åŽå…¨å‘¨æœŸï¼‰
-- `./jsdoc-convention.md` â€” JSDoc ç¼–å†™è§„èŒƒ
-- `./complexity-governance.md` â€” ä»£ç å¤æ‚åº¦æ²»ç†è§„èŒƒ
-- `./templates/task-graph-template.md` â€” ä»»åŠ¡å›¾æ¨¡æ¿
-- `./templates/regression-suite.md` â€” å›žå½’æµ‹è¯•å¥—ä»¶æ¨¡æ¿
-- `docs/00-meta/directory-structure-guide.md` â€” é¡¹ç›®ç›®å½•ç»“æž„è§„èŒƒä¸Žä½¿ç”¨æŒ‡å—ï¼ˆå¯¹é½ AGENTS.md v1.4.6ï¼‰
-- `docs/00-meta/directory-audit-feasibility-plan.md` â€” ç›®å½•ç»“æž„å®¡è®¡å¯è¡Œæ€§å¤æ ¸æ–¹æ¡ˆ
-- `docs/00-meta/directory-audit-todo.md` â€” ç›®å½•ç»“æž„å®¡è®¡æ•´æ”¹ TODO
-- `docs/00-meta/directory-structure-audit-report.md` â€” ç›®å½•ç»“æž„æ–‡æ¡£å®¡è®¡æŠ¥å‘Šï¼ˆå·²å½’æ¡£ï¼‰
-- `docs/00-meta/v9-pre-launch-audit-report-20260713.md` â€” V9 ä¸Šçº¿å‰ç³»ç»Ÿæ€§æ¢³ç†æŠ¥å‘Š
-- `docs/00-meta/changelog-warnings-handling-strategy.md` â€” CHANGELOG è­¦å‘Šé¡¹å¤„ç†ç­–ç•¥
-- `../explanation/v9-code-quality-audit-report-20260713.md` â€” V9 ä»£ç è´¨é‡é‡åŒ–å®¡è®¡æŠ¥å‘Š
-- `archive/ARCHIVE_INDEX.md` â€” å½’æ¡£ç›®å½•ç´¢å¼•
-
----
-
-## å››ã€è´¡çŒ®çº¦å®šï¼ˆæ‘˜è¦ï¼Œè¯¦è§ governance.mdï¼‰
-
-1. æ‰€æœ‰æ–°å¢žæ–‡æ¡£å¿…é¡»è½å…¥ Aâ€“H å¯¹åº”å­ç±»ç›®å½•ï¼Œ**ç¦æ­¢æ•£è½ `docs/` æ ¹**ã€‚
-2. æ–‡ä»¶å `kebab-case`ï¼Œè‹±æ–‡/æ•°å­—ä¼˜å…ˆï¼›æ•°æ®å®šä¹‰ç»Ÿä¸€ `*-data-definition.md`ï¼ˆè§ `data-dictionary-index.md`ï¼‰ã€‚
-3. æ–°å¢žæ–‡æ¡£åŽ**å¿…é¡»**å›žé“¾æœ¬ README å¯¹åº”ç±»ç›®ã€‚
-4. ç ´åæ€§ç§»åŠ¨/åˆ é™¤éœ€å…ˆåˆ—æ¸…å•ç¡®è®¤ï¼Œå¹¶ `git status` æ ¸å¯¹ã€‚
+- **ÎÄµµÖÎÀí²ãÆÀ·Ö**£º85/100 ¡ú Ä¿±ê 90+£¨¼û `../00-meta/v9-ÎÄµµÖÎÀíÐÞ¸´ÐÐ¶¯¼Æ»®.md`£©
+- **Ë«ÏòÒ»ÖÂÐÔÆÀ·Ö**£º85/100 ¡ú Ä¿±ê 90+£¨Í¬ÉÏ£©
+- **µ±Ç°µü´ú**£º**P1 ÒÑÍê³É**£¨A¨CH °ËÀàÈ«²¿ ?£©
+- **P2 ÒÑÍê³É**£º
+  - ? ×Ô¶¯»¯Ë÷ÒýÉú³É£¨`docs/.ai-index/`£ºcode-graph 708 ÎÄ¼þ / 138K ÐÐ + ai-memory-index 288KB£©
+  - ? ÊÓ¾õ»Ø¹é»ùÏß¶³½á£¨6 ¡ú 20 ³¡¾°£¬20/20 È«Á¿»Ø¹éÍ¨¹ý£¬»ùÏß 1.6MB£©
+  - ? ¸ù¼¶ `audit-*-result.txt` Ç¨ÒÆ£¨ÒÑÈ·ÈÏ¸ù¼¶ÎÞ²ÐÁô£¬`docs/reports/audit/` ÒÑ´´½¨£©
+- **¹éµµÄ¿Â¼**£º`07-archive/`£¨DEPRECATED ÎÄµµÍ³Ò»¹é´Ë£©
+- **×Ô¶¯²úÎï**£º`reports/`£¨ÓÉ `../00-meta/../00-meta/cleanup-schedule.md` ¹ÜÀí±£ÁôÆÚ£¬CI Éú³É£©
+- **±¾´ÎÐÂÔö / ¸üÐÂÎÄµµÇåµ¥£¨È«Á¿£©**£º
+  - `./security-model.md` ¡ª °²È«Ä£ÐÍ×ÜÀÀ£¨L1-L7 ×ÝÉî·ÀÓù£©
+  - `./deployment.md` ¡ª ²¿Êð»ùÏß£¨´¿Ç°¶Ë SPA + CI/CD£©
+  - `../README.md` ¡ª AI ¹¤³ÌÖÎÀíÈë¿Ú£¨LLM µ÷ÓÃÕ» / Agent ÏµÍ³ / ÌáÊ¾´Ê¹¤³Ì£©
+  - `./testing-strategy.md` ¡ª Èý²ã²âÊÔ²ßÂÔ v2.0.0£¨½ð×ÖËþ / ÆõÔ¼ / ¸²¸ÇÂÊ£©
+  - `../00-meta/GOVERNANCE.md` ¡ª ÎÄµµÖÎÀíÏÜ·¨£¨A¨CH ¹éÀà / °æ±¾¹æ·¶ / ¹éµµ¹æÔò£©
+  - `../00-meta/../00-meta/cleanup-schedule.md` ¡ª ×Ô¶¯²úÎïÇåÀíÖÜÆÚ±í£¨±£Áô¾ØÕó / ÇåÀí½Å±¾£©
+  - `./api-contract.md` ¡ª ½»Ò×³Ö²Ö API ÆõÔ¼£¨v1.4.0 ÒÑ¼ìË÷¸üÐÂ£©
+  - `docs/README.md` ¡ª Ö÷¿ØË÷Òý¸üÐÂ£¨A¨CH È«²¿ ?£¬14 Ìõ¿ìËÙÈë¿Ú£©
+- `./development-workflow-sop.md` ¡ª V9 ¿ª·¢¹¤×÷Á÷ SOP£¨±àÂëÇ°/ÖÐ/ºó/ÉÏÏßºóÈ«ÖÜÆÚ£©
+- `./jsdoc-convention.md` ¡ª JSDoc ±àÐ´¹æ·¶
+- `./complexity-governance.md` ¡ª ´úÂë¸´ÔÓ¶ÈÖÎÀí¹æ·¶
+- `./templates/task-graph-template.md` ¡ª ÈÎÎñÍ¼Ä£°å
+- `./templates/regression-suite.md` ¡ª »Ø¹é²âÊÔÌ×¼þÄ£°å
+- `docs/00-meta/directory-structure-guide.md` ¡ª ÏîÄ¿Ä¿Â¼½á¹¹¹æ·¶ÓëÊ¹ÓÃÖ¸ÄÏ£¨¶ÔÆë AGENTS.md v1.4.6£©
+- `docs/00-meta/directory-audit-feasibility-plan.md` ¡ª Ä¿Â¼½á¹¹Éó¼Æ¿ÉÐÐÐÔ¸´ºË·½°¸
+- `docs/00-meta/directory-audit-todo.md` ¡ª Ä¿Â¼½á¹¹Éó¼ÆÕû¸Ä TODO
+- `docs/00-meta/directory-structure-audit-report.md` ¡ª Ä¿Â¼½á¹¹ÎÄµµÉó¼Æ±¨¸æ£¨ÒÑ¹éµµ£©
+- `docs/00-meta/v9-pre-launch-audit-report-20260713.md` ¡ª V9 ÉÏÏßÇ°ÏµÍ³ÐÔÊáÀí±¨¸æ
+- `docs/00-meta/changelog-warnings-handling-strategy.md` ¡ª CHANGELOG ¾¯¸æÏî´¦Àí²ßÂÔ
+- `../explanation/v9-code-quality-audit-report-20260713.md` ¡ª V9 ´úÂëÖÊÁ¿Á¿»¯Éó¼Æ±¨¸æ
+- `archive/ARCHIVE_INDEX.md` ¡ª ¹éµµÄ¿Â¼Ë÷Òý
 
 ---
 
+## ËÄ¡¢¹±Ï×Ô¼¶¨£¨ÕªÒª£¬Ïê¼û governance.md£©
+
+1. ËùÓÐÐÂÔöÎÄµµ±ØÐëÂäÈë A¨CH ¶ÔÓ¦×ÓÀàÄ¿Â¼£¬**½ûÖ¹É¢Âä `docs/` ¸ù**¡£
+2. ÎÄ¼þÃû `kebab-case`£¬Ó¢ÎÄ/Êý×ÖÓÅÏÈ£»Êý¾Ý×ÖµäÍ³Ò» `*-data-definition.md`£¨¼û `data-dictionary-index.md`£©¡£
+3. ÐÂÔöÎÄµµºó**±ØÐë**»ØÁ´±¾ README ¶ÔÓ¦ÀàÄ¿¡£
+4. ÆÆ»µÐÔÒÆ¶¯/É¾³ýÐèÏÈÁÐÇåµ¥È·ÈÏ£¬²¢ `git status` ºË¶Ô¡£
+
 ---
 
-## äº”ã€äºŒçº§å­ç±»é€ŸæŸ¥è¡¨ï¼ˆP2-3ï¼‰
+---
 
-> åŸºäºŽã€Šæ–‡æ¡£ä½“ç³»ä½“æ£€æŠ¥å‘Šã€‹Â§3.1ï¼ŒAâ€“H å…«ç±»æ‰©å±•ä¸ºä»¥ä¸‹äºŒçº§å­ç±»ï¼Œç”¨äºŽæ›´ç²¾ç¡®å½’ç±»å­¤å„¿æ–‡æ¡£ã€‚
-> æ–°å¢žæ–‡æ¡£æ—¶ï¼Œå…ˆè½å…¥ä¸€çº§ç±»ï¼Œå†æŒ‰å†…å®¹å½’å…¥å¯¹åº”äºŒçº§å­ç±»ã€‚
+## Îå¡¢¶þ¼¶×ÓÀàËÙ²é±í£¨P2-3£©
 
-| äºŒçº§å­ç±» | å½’å±žä¸€çº§ç±» | è¯´æ˜Ž | ä»£è¡¨æ–‡æ¡£ |
+> »ùÓÚ¡¶ÎÄµµÌåÏµÌå¼ì±¨¸æ¡·¡ì3.1£¬A¨CH °ËÀàÀ©Õ¹ÎªÒÔÏÂ¶þ¼¶×ÓÀà£¬ÓÃÓÚ¸ü¾«È·¹éÀà¹Â¶ùÎÄµµ¡£
+> ÐÂÔöÎÄµµÊ±£¬ÏÈÂäÈëÒ»¼¶Àà£¬ÔÙ°´ÄÚÈÝ¹éÈë¶ÔÓ¦¶þ¼¶×ÓÀà¡£
+
+| ¶þ¼¶×ÓÀà | ¹éÊôÒ»¼¶Àà | ËµÃ÷ | ´ú±íÎÄµµ |
 |----------|-----------|------|----------|
-| **A2 éœ€æ±‚è§„æ ¼** | A | æ„¿æ™¯ã€åŠŸèƒ½è§„æ ¼ã€ç›®æ ‡ | `./01-vision-and-goals.md`ã€`02-functional-specs.md` |
-| **A3 æ’ä»¶é›†æˆ** | A | æ’ä»¶/æ‰©å±•æ–‡æ¡£ | `plugins/*.md`ï¼ˆ10 ä»½ + indexï¼‰ |
-| **B5 ç‰ˆæœ¬å‘å¸ƒ** | B | ç‰ˆæœ¬è¯´æ˜Žã€å‘å¸ƒè®¡åˆ’ã€PR æè¿° | `./release-notes.md`ã€`./pr-description.md`ã€`../explanation/design/å‘å¸ƒè®¡åˆ’ä¸Žè¯„å®¡-r01.md` |
-| **C7 æ•°æ®å­—å…¸** | C | æ•°æ®å®šä¹‰ã€å­—æ®µå¥‘çº¦ã€ER å›¾ | `./data-dictionary-index.md` + 7 ä»½ `*-data-definition.md` |
-| **D5 è¿ç§»è§„èŒƒ** | D | ç‰ˆæœ¬è¿ç§»ã€Schema å‡çº§ã€æž¶æž„å¯¹é½ | `v6-to-v9-migration-spec.md`ã€`../explanation/db-migration-v4-to-v6.md` |
-| **G4 è‰ç¨¿/ä¸´æ—¶** | G | è¿‡ç¨‹è‰ç¨¿ã€ä¸´æ—¶äº§ç‰© | `drafts/*.md`ï¼ˆ8 ä»½ + .logï¼‰ |
-| **G5 å‘å¸ƒç®¡ç†** | G | å‘å¸ƒè®¡åˆ’ã€å›žæ»šæ–¹æ¡ˆã€è¿‡ç¨‹æŽ’æœŸ | `../explanation/design/å‘å¸ƒè®¡åˆ’ä¸Žè¯„å®¡-r01.md`ã€`../explanation/design/å›žæ»šæ–¹æ¡ˆä¸Žæ¼”ç»ƒ-r03.md`ã€`plans/` |
+| **A2 ÐèÇó¹æ¸ñ** | A | Ô¸¾°¡¢¹¦ÄÜ¹æ¸ñ¡¢Ä¿±ê | `./01-vision-and-goals.md`¡¢`02-functional-specs.md` |
+| **A3 ²å¼þ¼¯³É** | A | ²å¼þ/À©Õ¹ÎÄµµ | `plugins/*.md`£¨10 ·Ý + index£© |
+| **B5 °æ±¾·¢²¼** | B | °æ±¾ËµÃ÷¡¢·¢²¼¼Æ»®¡¢PR ÃèÊö | `./release-notes.md`¡¢`./pr-description.md`¡¢`../explanation/design/·¢²¼¼Æ»®ÓëÆÀÉó-r01.md` |
+| **C7 Êý¾Ý×Öµä** | C | Êý¾Ý×Öµä¡¢×Ö¶ÎÆõÔ¼¡¢ER Í¼ | `./data-dictionary-index.md` + 7 ·Ý `*-data-definition.md` |
+| **D5 Ç¨ÒÆ¹æ·¶** | D | °æ±¾Ç¨ÒÆ¡¢Schema Éý¼¶¡¢¼Ü¹¹¶ÔÆë | `v6-to-v9-migration-spec.md`¡¢`../explanation/db-migration-v4-to-v6.md` |
+| **G4 ²Ý¸å/ÁÙÊ±** | G | ¹ý³Ì²Ý¸å¡¢ÁÙÊ±²úÎï | `drafts/*.md`£¨8 ·Ý + .log£© |
+| **G5 ·¢²¼¹ÜÀí** | G | ·¢²¼¼Æ»®¡¢»Ø¹ö·½°¸¡¢¹ý³ÌÅÅÆÚ | `../explanation/design/·¢²¼¼Æ»®ÓëÆÀÉó-r01.md`¡¢`../explanation/design/»Ø¹ö·½°¸ÓëÑÝÁ·-r03.md`¡¢`plans/` |
 
-> **å‘½åè§„èŒƒ**ï¼šäºŒçº§å­ç±»æ–‡æ¡£å‘½åå»ºè®®åŠ å­ç±»å‰ç¼€ï¼Œå¦‚ `a2-vision-and-goals.md`ã€`c7-data-dictionary-index.md`ï¼ˆå¯é€‰ï¼Œä¸å¼ºåˆ¶ï¼‰ã€‚
+> **ÃüÃû¹æ·¶**£º¶þ¼¶×ÓÀàÎÄµµÃüÃû½¨Òé¼Ó×ÓÀàÇ°×º£¬Èç `./01-vision-and-goals.md`¡¢`./data-dictionary-index.md`£¨¿ÉÑ¡£¬²»Ç¿ÖÆ£©¡£
 
 ---
 
-_æœ¬ç´¢å¼•ç”±æ–‡æ¡£æ²»ç†æ•´æ”¹ï¼ˆP0ï¼‰åˆ›å»ºï¼ŒP1 å·²è¡¥å…¨ï¼ˆAâ€“H å…«ç±» âœ…ï¼‰ï¼ŒP2-3 å·²æ‰©å±•äºŒçº§å­ç±»ï¼Œéš P3 è¿­ä»£æŒç»­ä¼˜åŒ–ã€‚_
+_±¾Ë÷ÒýÓÉÎÄµµÖÎÀíÕû¸Ä£¨P0£©´´½¨£¬P1 ÒÑ²¹È«£¨A¨CH °ËÀà ?£©£¬P2-3 ÒÑÀ©Õ¹¶þ¼¶×ÓÀà£¬Ëæ P3 µü´ú³ÖÐøÓÅ»¯¡£_

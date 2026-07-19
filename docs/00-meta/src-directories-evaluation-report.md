@@ -1,225 +1,232 @@
 ---
 title: src-directories-evaluation-report
+type: meta
+domain: project
+phase: retrospective
+tier: important
+status: active
+maintainer: V9 Architecture Team
+summary: "src ¸÷Ä¿Â¼Ö°ÔğÓë½á¹¹ºÏÀíĞÔÆÀ¹À±¨¸æ£¬º¬ DataBridgeAdapter µÈÊÊÅäÆ÷¶¨Î»·ÖÎö¡£"
+tags: [project, report, meta, governance, documentation]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: core
+doc_id: V9-DOC-PROJ-019
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/00-meta/src-directories-evaluation-report.md
-code_version: 2.0.0
-tier: core
----
+# src/databridge/ ºÍ src/utils/ ÆÀ¹À±¨¸æ
 
-# src/databridge/ å’Œ src/utils/ è¯„ä¼°æŠ¥å‘Š
-
-> è¯„ä¼°æ—¶é—´: 2026-07-12
-> è¯„ä¼°ä¾æ®: AGENTS.md v1.4.3
-> è¯„ä¼°å·¥å…·: Grep å…¨å±€å¼•ç”¨æœç´¢ + æ–‡ä»¶å†…å®¹è¯»å– + ç›®å½•ç»“æ„å¯¹æ¯”
+> ÆÀ¹ÀÊ±¼ä: 2026-07-12
+> ÆÀ¹ÀÒÀ¾İ: AGENTS.md v1.4.3
+> ÆÀ¹À¹¤¾ß: Grep È«¾ÖÒıÓÃËÑË÷ + ÎÄ¼şÄÚÈİ¶ÁÈ¡ + Ä¿Â¼½á¹¹¶Ô±È
 
 ---
 
-## ä¸€ã€src/databridge/ è¯„ä¼°
+## Ò»¡¢src/databridge/ ÆÀ¹À
 
-### 1.1 æ–‡ä»¶æ¸…å•
+### 1.1 ÎÄ¼şÇåµ¥
 
-| æ–‡ä»¶ | è¡Œæ•° | æ˜¯å¦æœ‰æµ‹è¯• |
+| ÎÄ¼ş | ĞĞÊı | ÊÇ·ñÓĞ²âÊÔ |
 |------|------|-----------|
-| `../../src/showcase/index.ts` | 155 | æ˜¯ (`tests/databridgeAdapter.test.ts`) |
+| `../../src/showcase/index.ts` | 155 | ÊÇ (`tests/databridgeAdapter.test.ts`) |
 
-### 1.2 èŒè´£åˆ†æ
+### 1.2 Ö°Ôğ·ÖÎö
 
-`../../src/showcase/index.ts` å®ç°äº†ä¸€ä¸ª **`DataBridgeAdapter` é€‚é…å™¨ç±»**ï¼Œå¯¹ `src/core/databridge.ts` è¿›è¡Œè–„åŒ…è£…ï¼š
+`../../src/showcase/index.ts` ÊµÏÖÁËÒ»¸ö **`DataBridgeAdapter` ÊÊÅäÆ÷Àà**£¬¶Ô `src/core/databridge.ts` ½øĞĞ±¡°ü×°£º
 
-- æä¾› `query()` / `subscribe()` / `getStats()` / `destroySubscriptions()` ç­‰å®ä¾‹æ–¹æ³•
-- ä½¿ç”¨ `Promise` + `Map` ç®¡ç†å¾…å¤„ç†æŸ¥è¯¢çš„è¶…æ—¶å’Œè¿½è¸ª
-- ç»´æŠ¤å•ä¾‹ç”Ÿå‘½å‘¨æœŸï¼ˆ`createDataBridgeAdapter` / `getDataBridgeAdapter` / `destroyDataBridgeAdapter`ï¼‰
-- ä» `@/core/databridge` å¯¼å…¥ `dataBridge` å•ä¾‹ï¼Œé€šè¿‡ `EnvelopeFactory` å°è£…æ ‡å‡†ä¿¡å°
+- Ìá¹© `query()` / `subscribe()` / `getStats()` / `destroySubscriptions()` µÈÊµÀı·½·¨
+- Ê¹ÓÃ `Promise` + `Map` ¹ÜÀí´ı´¦Àí²éÑ¯µÄ³¬Ê±ºÍ×·×Ù
+- Î¬»¤µ¥ÀıÉúÃüÖÜÆÚ£¨`createDataBridgeAdapter` / `getDataBridgeAdapter` / `destroyDataBridgeAdapter`£©
+- ´Ó `@/core/databridge` µ¼Èë `dataBridge` µ¥Àı£¬Í¨¹ı `EnvelopeFactory` ·â×°±ê×¼ĞÅ·â
 
-### 1.3 ä¸ AGENTS.md å®šä¹‰å¯¹æ¯”
+### 1.3 Óë AGENTS.md ¶¨Òå¶Ô±È
 
-AGENTS.md Â§ä¸€ å®šä¹‰ `src/core/` å±‚åŒ…å« **DataBridge/ACL/Envelope/MemoryCache/EventBus**ï¼Œæœªå®šä¹‰ `src/core/databridge.ts` ç›®å½•ã€‚
+AGENTS.md ¡ìÒ» ¶¨Òå `src/core/` ²ã°üº¬ **DataBridge/ACL/Envelope/MemoryCache/EventBus**£¬Î´¶¨Òå `src/core/databridge.ts` Ä¿Â¼¡£
 
-å®é™…ç›®å½•ç»“æ„å¯¹æ¯”ï¼š
+Êµ¼ÊÄ¿Â¼½á¹¹¶Ô±È£º
 
-| ç›®å½• | èŒè´£ | ä¸ AGENTS.md å…³ç³» |
+| Ä¿Â¼ | Ö°Ôğ | Óë AGENTS.md ¹ØÏµ |
 |------|------|-------------------|
-| `src/core/databridge.ts` | æ ¸å¿ƒ DataBridge å®ç°ï¼ˆforward/query/subscribe/fallbackQueueï¼Œ810 è¡Œï¼‰ | âœ… å·²å®šä¹‰ |
-| `src/core/databridgeHandlers.ts` | EnvelopeHandler æ³¨å†Œè¡¨ | âœ… å·²å®šä¹‰ |
-| `src/core/databridgeStrategyRouter.ts` | STRATEGY_CHANNEL è·¯ç”±é€»è¾‘ | âœ… å·²å®šä¹‰ |
-| `../../src/showcase/index.ts` | DataBridgeAdapter é€‚é…å™¨ï¼ˆé¢å‘æ¨¡å—çš„ä¾¿æ· APIï¼‰ | âŒ æœªå®šä¹‰ |
+| `src/core/databridge.ts` | ºËĞÄ DataBridge ÊµÏÖ£¨forward/query/subscribe/fallbackQueue£¬810 ĞĞ£© | ? ÒÑ¶¨Òå |
+| `src/core/databridgeHandlers.ts` | EnvelopeHandler ×¢²á±í | ? ÒÑ¶¨Òå |
+| `src/core/databridgeStrategyRouter.ts` | STRATEGY_CHANNEL Â·ÓÉÂß¼­ | ? ÒÑ¶¨Òå |
+| `../../src/showcase/index.ts` | DataBridgeAdapter ÊÊÅäÆ÷£¨ÃæÏòÄ£¿éµÄ±ã½İ API£© | ? Î´¶¨Òå |
 
-### 1.4 å¼•ç”¨åˆ†æ
+### 1.4 ÒıÓÃ·ÖÎö
 
-**å…¨å±€æœç´¢ `src/core/databridge.ts` è·¯å¾„å¼•ç”¨**ï¼ˆè¦†ç›– `../README.md`ï¼‰ï¼š
+**È«¾ÖËÑË÷ `src/core/databridge.ts` Â·¾¶ÒıÓÃ**£¨¸²¸Ç `../README.md`£©£º
 
-| å¼•ç”¨ç±»å‹ | æ–‡ä»¶ | å…·ä½“å¼•ç”¨ | è¯´æ˜ |
+| ÒıÓÃÀàĞÍ | ÎÄ¼ş | ¾ßÌåÒıÓÃ | ËµÃ÷ |
 |---------|------|---------|------|
-| è‡ªèº« | `../../src/showcase/index.ts` | N/A | å¯¼å‡ºå®šä¹‰ |
-| æµ‹è¯• | `tests/databridgeAdapter.test.ts` | `import { ... } from '@/databridge'` | å…¨éƒ¨ 7 ä¸ªæµ‹è¯•ç”¨ä¾‹ä¾èµ–æ­¤æ–‡ä»¶ |
-| æ–‡æ¡£ | `docs/00-meta/file-management-guide-file-wandering-report.md` | æåŠç›®å½•å | éä»£ç å¼•ç”¨ |
+| ×ÔÉí | `../../src/showcase/index.ts` | N/A | µ¼³ö¶¨Òå |
+| ²âÊÔ | `tests/databridgeAdapter.test.ts` | `import { ... } from '@/databridge'` | È«²¿ 7 ¸ö²âÊÔÓÃÀıÒÀÀµ´ËÎÄ¼ş |
+| ÎÄµµ | `docs/00-meta/file-management-guide-file-wandering-report.md` | Ìá¼°Ä¿Â¼Ãû | ·Ç´úÂëÒıÓÃ |
 
-**ç”Ÿäº§ä»£ç å¼•ç”¨**ï¼š**0 ä¸ªæ–‡ä»¶**ã€‚æ— ä»»ä½•ç”Ÿäº§ä»£ç ä» `@/databridge` è·¯å¾„å¯¼å…¥ã€‚
+**Éú²ú´úÂëÒıÓÃ**£º**0 ¸öÎÄ¼ş**¡£ÎŞÈÎºÎÉú²ú´úÂë´Ó `@/databridge` Â·¾¶µ¼Èë¡£
 
-**å¯¹æ¯”ï¼šå¤§é‡ç”Ÿäº§ä»£ç ç›´æ¥ä½¿ç”¨ `src/core/databridge.ts`**ï¼š
+**¶Ô±È£º´óÁ¿Éú²ú´úÂëÖ±½ÓÊ¹ÓÃ `src/core/databridge.ts`**£º
 
-- `src/store/databridgeStore.ts`ï¼ˆä½¿ç”¨ `BridgeQueryResult` ç±»å‹ï¼Œä» `types/modules/databridge.types` å¯¼å…¥ï¼Œé `src/core/databridge.ts`ï¼‰
-- `src/core/feedbackOrchestrator.ts`ï¼ˆç›´æ¥ä½¿ç”¨ `dataBridge`ï¼‰
-- `src/core/pipelineScheduler.ts`ï¼ˆç›´æ¥ä½¿ç”¨ `dataBridge`ï¼‰
-- `src/data/repository.ts`ï¼ˆç›´æ¥ä½¿ç”¨ `dataBridge`ï¼‰
-- è¶…è¿‡ 60 ä¸ªæ–‡ä»¶å¼•ç”¨ `src/core/databridge` æˆ–å…¶å­æ¨¡å—ï¼ˆ`databridgeHandlers.ts`, `databridgeStrategyRouter.ts`ï¼‰
+- `src/store/databridgeStore.ts`£¨Ê¹ÓÃ `BridgeQueryResult` ÀàĞÍ£¬´Ó `types/modules/databridge.types` µ¼Èë£¬·Ç `src/core/databridge.ts`£©
+- `src/core/feedbackOrchestrator.ts`£¨Ö±½ÓÊ¹ÓÃ `dataBridge`£©
+- `src/core/pipelineScheduler.ts`£¨Ö±½ÓÊ¹ÓÃ `dataBridge`£©
+- `src/data/repository.ts`£¨Ö±½ÓÊ¹ÓÃ `dataBridge`£©
+- ³¬¹ı 60 ¸öÎÄ¼şÒıÓÃ `src/core/databridge` »òÆä×ÓÄ£¿é£¨`databridgeHandlers.ts`, `databridgeStrategyRouter.ts`£©
 
-### 1.5 å†³ç­–å»ºè®®
+### 1.5 ¾ö²ß½¨Òé
 
-| è¯„ä¼°é¡¹ | å†³ç­– |
+| ÆÀ¹ÀÏî | ¾ö²ß |
 |--------|------|
-| **å†³ç­–** | **åˆ é™¤**ï¼ˆéœ€å…ˆè¿ç§»æµ‹è¯•æ–‡ä»¶ï¼‰ |
-| **ä¾æ®** | æ— ç”Ÿäº§ä»£ç å¼•ç”¨ï¼›ä¸ `src/core/databridge.ts` èŒè´£é‡å ï¼›AGENTS.md æœªå®šä¹‰æ­¤ç›®å½•ï¼›ç°æœ‰æµ‹è¯•ä»…éªŒè¯å•ä¾‹è¡Œä¸ºå’Œ API ç­¾åï¼Œæ— ä¸šåŠ¡é€»è¾‘è¦†ç›– |
-| **é£é™©ç­‰çº§** | ä½ |
-| **æ‰§è¡Œå»ºè®®** | 1. å°† `DataBridgeAdapter` ç±»åˆå¹¶è‡³ `src/core/databridge.ts` æœ«å°¾ï¼ˆæˆ–æ–°å»º `src/core/databridgeAdapter.ts`ï¼‰<br>2. æ›´æ–° `tests/databridgeAdapter.test.ts` çš„å¯¼å…¥è·¯å¾„ä¸º `@/core/databridge` æˆ– `@/core/databridgeAdapter`<br>3. ç¡®è®¤ `tests/contracts/databridge.contract.ts` å’Œ `tests/contracts/setup.ts` çš„å¼•ç”¨å…³ç³»ï¼ˆå½“å‰å¥‘çº¦æµ‹è¯•ä» `types/modules/databridge.types` å¯¼å…¥ç±»å‹ï¼Œä¸å—è¿ç§»å½±å“ï¼‰<br>4. åˆ é™¤ `src/core/databridge.ts` ç©ºç›®å½• |
+| **¾ö²ß** | **É¾³ı**£¨ĞèÏÈÇ¨ÒÆ²âÊÔÎÄ¼ş£© |
+| **ÒÀ¾İ** | ÎŞÉú²ú´úÂëÒıÓÃ£»Óë `src/core/databridge.ts` Ö°ÔğÖØµş£»AGENTS.md Î´¶¨Òå´ËÄ¿Â¼£»ÏÖÓĞ²âÊÔ½öÑéÖ¤µ¥ÀıĞĞÎªºÍ API Ç©Ãû£¬ÎŞÒµÎñÂß¼­¸²¸Ç |
+| **·çÏÕµÈ¼¶** | µÍ |
+| **Ö´ĞĞ½¨Òé** | 1. ½« `DataBridgeAdapter` ÀàºÏ²¢ÖÁ `src/core/databridge.ts` Ä©Î²£¨»òĞÂ½¨ `src/core/databridgeAdapter.ts`£©<br>2. ¸üĞÂ `tests/databridgeAdapter.test.ts` µÄµ¼ÈëÂ·¾¶Îª `@/core/databridge` »ò `@/core/databridgeAdapter`<br>3. È·ÈÏ `tests/contracts/databridge.contract.ts` ºÍ `tests/contracts/setup.ts` µÄÒıÓÃ¹ØÏµ£¨µ±Ç°ÆõÔ¼²âÊÔ´Ó `types/modules/databridge.types` µ¼ÈëÀàĞÍ£¬²»ÊÜÇ¨ÒÆÓ°Ïì£©<br>4. É¾³ı `src/core/databridge.ts` ¿ÕÄ¿Â¼ |
 
 ---
 
-## äºŒã€src/utils/ è¯„ä¼°
+## ¶ş¡¢src/utils/ ÆÀ¹À
 
-### 2.1 æ–‡ä»¶æ¸…å•
+### 2.1 ÎÄ¼şÇåµ¥
 
-| æ–‡ä»¶ | è¡Œæ•° | æ˜¯å¦æœ‰æµ‹è¯• | å½“å‰å¼•ç”¨æ•° |
+| ÎÄ¼ş | ĞĞÊı | ÊÇ·ñÓĞ²âÊÔ | µ±Ç°ÒıÓÃÊı |
 |------|------|-----------|---------|
-| `src/lib/validation.ts` | 401 | æ˜¯ (`dataValidation.test.ts`) | **~11** |
-| `src/lib/xssSanitizer.ts` | 206 | æ˜¯ (`xssSanitizer.test.ts`) | **2** |
-| `src/lib/validation.ts` | 185 | å¦ | **0** |
-| `src/lib/precision.ts` | 184 | å¦ | **4** |
-| `src/lib/format.ts` | 113 | å¦ | **0** |
+| `src/lib/validation.ts` | 401 | ÊÇ (`dataValidation.test.ts`) | **~11** |
+| `src/lib/xssSanitizer.ts` | 206 | ÊÇ (`xssSanitizer.test.ts`) | **2** |
+| `src/lib/validation.ts` | 185 | ·ñ | **0** |
+| `src/lib/precision.ts` | 184 | ·ñ | **4** |
+| `src/lib/format.ts` | 113 | ·ñ | **0** |
 
-### 2.2 èŒè´£åˆ†æ
+### 2.2 Ö°Ôğ·ÖÎö
 
-| æ–‡ä»¶ | æ ¸å¿ƒèŒè´£ | ä¾èµ–å±‚ |
+| ÎÄ¼ş | ºËĞÄÖ°Ôğ | ÒÀÀµ²ã |
 |------|---------|--------|
-| `dataValidation.ts` | é…ç½®å/è‚¡ç¥¨ä»£ç ï¼ˆA/æ¸¯/ç¾ï¼‰/æ•°å€¼èŒƒå›´/LLM é…ç½®ï¼ˆbaseURL/API Key/æ¨¡å‹åï¼‰éªŒè¯ï¼›æ•æ„Ÿä¿¡æ¯è„±æ• | é›¶è¿è¡Œæ—¶ä¾èµ–ï¼ˆçº¯é€»è¾‘ï¼‰ |
-| `xssSanitizer.ts` | HTML å®ä½“è½¬ä¹‰ã€HTML å‡€åŒ–ã€Markdown å‡€åŒ–ã€æœç´¢å…³é”®è¯å‡€åŒ– | é›¶è¿è¡Œæ—¶ä¾èµ–ï¼ˆçº¯å­—ç¬¦ä¸²å¤„ç†ï¼‰ |
-| `a11y.ts` | æ— éšœç¢ ID ç”Ÿæˆã€é”®ç›˜å¯¼èˆªåŠ©æ‰‹ã€ç„¦ç‚¹ç®¡ç†ã€å±å¹•é˜…è¯»å™¨å…¬å‘Šã€è¿åŠ¨/å¯¹æ¯”åº¦åå¥½æ£€æµ‹ | ä¾èµ– React ç±»å‹ï¼ˆ`React.KeyboardEvent`ï¼‰+ DOM API |
-| `precision.ts` | é‡‘èæ•°å€¼æ ¼å¼åŒ–ï¼ˆä»·æ ¼/æ¶¨è·Œå¹…/æˆäº¤é‡/é¢/ç™¾åˆ†æ¯”ï¼‰ã€å®‰å…¨æ•°ç»„/å¯¹è±¡è®¿é—® | é›¶è¿è¡Œæ—¶ä¾èµ–ï¼ˆçº¯æ•°å­¦é€»è¾‘ï¼‰ |
-| `timeUtils.ts` | æ—¶é—´æ ¼å¼åŒ–ï¼ˆUTCâ†’Asia/Shanghaiï¼‰ã€ç›¸å¯¹æ—¶é—´ã€æ—¥æœŸèŒƒå›´ã€äº¤æ˜“æ—¶é—´å¸¸é‡ | ä¾èµ– `dayjs` + æ’ä»¶ |
+| `dataValidation.ts` | ÅäÖÃÃû/¹ÉÆ±´úÂë£¨A/¸Û/ÃÀ£©/ÊıÖµ·¶Î§/LLM ÅäÖÃ£¨baseURL/API Key/Ä£ĞÍÃû£©ÑéÖ¤£»Ãô¸ĞĞÅÏ¢ÍÑÃô | ÁãÔËĞĞÊ±ÒÀÀµ£¨´¿Âß¼­£© |
+| `xssSanitizer.ts` | HTML ÊµÌå×ªÒå¡¢HTML ¾»»¯¡¢Markdown ¾»»¯¡¢ËÑË÷¹Ø¼ü´Ê¾»»¯ | ÁãÔËĞĞÊ±ÒÀÀµ£¨´¿×Ö·û´®´¦Àí£© |
+| `a11y.ts` | ÎŞÕÏ°­ ID Éú³É¡¢¼üÅÌµ¼º½ÖúÊÖ¡¢½¹µã¹ÜÀí¡¢ÆÁÄ»ÔÄ¶ÁÆ÷¹«¸æ¡¢ÔË¶¯/¶Ô±È¶ÈÆ«ºÃ¼ì²â | ÒÀÀµ React ÀàĞÍ£¨`React.KeyboardEvent`£©+ DOM API |
+| `precision.ts` | ½ğÈÚÊıÖµ¸ñÊ½»¯£¨¼Û¸ñ/ÕÇµø·ù/³É½»Á¿/¶î/°Ù·Ö±È£©¡¢°²È«Êı×é/¶ÔÏó·ÃÎÊ | ÁãÔËĞĞÊ±ÒÀÀµ£¨´¿ÊıÑ§Âß¼­£© |
+| `timeUtils.ts` | Ê±¼ä¸ñÊ½»¯£¨UTC¡úAsia/Shanghai£©¡¢Ïà¶ÔÊ±¼ä¡¢ÈÕÆÚ·¶Î§¡¢½»Ò×Ê±¼ä³£Á¿ | ÒÀÀµ `dayjs` + ²å¼ş |
 
-### 2.3 ä¸ src/lib/ å¯¹æ¯”
+### 2.3 Óë src/lib/ ¶Ô±È
 
-AGENTS.md å®šä¹‰ `src/lib/` åŒ…å« `utils`ï¼ˆåŸºç¡€è®¾æ–½ç™½åå•ï¼‰ï¼Œä½†æœªå®šä¹‰ `src/lib/` ç›®å½•ã€‚
+AGENTS.md ¶¨Òå `src/lib/` °üº¬ `utils`£¨»ù´¡ÉèÊ©°×Ãûµ¥£©£¬µ«Î´¶¨Òå `src/lib/` Ä¿Â¼¡£
 
-å®é™…æ–‡ä»¶å¯¹æ¯”ï¼š
+Êµ¼ÊÎÄ¼ş¶Ô±È£º
 
-| ç›®å½• | æ–‡ä»¶æ•° | æ€»è¡Œæ•° | å¼•ç”¨æ–‡ä»¶æ•° | å¼•ç”¨æ–¹å±‚çº§ |
+| Ä¿Â¼ | ÎÄ¼şÊı | ×ÜĞĞÊı | ÒıÓÃÎÄ¼şÊı | ÒıÓÃ·½²ã¼¶ |
 |------|--------|--------|-----------|---------|
-| `src/lib/utils.ts` | 1 | 28 | **58+** | ä¸»è¦æ˜¯ UI ç»„ä»¶å±‚ï¼ˆ`cn()` å’Œ `hexToRgba()`ï¼‰ |
-| `src/lib/` | 5 | 1099 | **~17** | æœåŠ¡å±‚ + ç»„ä»¶å±‚ï¼ˆæ•°æ®éªŒè¯ã€å‡€åŒ–ã€æ ¼å¼åŒ–ï¼‰ |
+| `src/lib/utils.ts` | 1 | 28 | **58+** | Ö÷ÒªÊÇ UI ×é¼ş²ã£¨`cn()` ºÍ `hexToRgba()`£© |
+| `src/lib/` | 5 | 1099 | **~17** | ·şÎñ²ã + ×é¼ş²ã£¨Êı¾İÑéÖ¤¡¢¾»»¯¡¢¸ñÊ½»¯£© |
 
-**å‘½åå†²çªé£é™©**ï¼š`src/lib/utils.ts`ï¼ˆå•æ–‡ä»¶ï¼‰å’Œ `src/lib/`ï¼ˆç›®å½•ï¼‰å¹¶å­˜ã€‚å¦‚å°† `src/lib/` è¿ç§»è‡³ `src/lib/utils/` ç›®å½•ï¼Œä¼šä¸ç°æœ‰ `src/lib/utils.ts` å†²çªã€‚
+**ÃüÃû³åÍ»·çÏÕ**£º`src/lib/utils.ts`£¨µ¥ÎÄ¼ş£©ºÍ `src/lib/`£¨Ä¿Â¼£©²¢´æ¡£Èç½« `src/lib/` Ç¨ÒÆÖÁ `src/lib/utils/` Ä¿Â¼£¬»áÓëÏÖÓĞ `src/lib/utils.ts` ³åÍ»¡£
 
-### 2.4 å¼•ç”¨åˆ†æï¼ˆè¯¦ç»†ï¼‰
+### 2.4 ÒıÓÃ·ÖÎö£¨ÏêÏ¸£©
 
-#### dataValidation.ts â€” çº¦ 11 ä¸ªå¼•ç”¨
+#### dataValidation.ts ¡ª Ô¼ 11 ¸öÒıÓÃ
 
-| å¼•ç”¨æ–‡ä»¶ | å¯¼å…¥å†…å®¹ | ç”¨é€” |
+| ÒıÓÃÎÄ¼ş | µ¼ÈëÄÚÈİ | ÓÃÍ¾ |
 |---------|---------|------|
-| `src/services/llm/llmClient.ts` | `isValidLlmBaseURL`, `isValidLlmApiKey`, `isValidLlmModel` | LLM é…ç½®éªŒè¯ |
-| `src/store/collectionWizardStore.ts` | `validateConfigName` | é…ç½®æ¨¡æ¿åç§°æ ¡éªŒ |
-| `src/services/scoring/v6-engine/calculators/l7_l8.ts` | `isValidStockCode`, `safeParseNumber` | è‚¡ç¥¨ä»£ç éªŒè¯ã€æ•°å€¼è§£æ |
-| `src/components/organisms/input/wizard-steps/TaskPreviewStep.tsx` | `validateConfigName` | è¡¨å•æ ¡éªŒ |
-| `src/services/collection/configExportService.ts` | `validateConfigName` | å¯¼å‡ºé…ç½®æ ¡éªŒ |
-| `src/components/organisms/analysis/score/IntelligentScoreExplanation.tsx` | `sanitizeObject` | æ•æ„Ÿä¿¡æ¯è„±æ• |
-| `src/components/organisms/shared/LLMConfigWidget.tsx` | `isValidLlmBaseURL`, `isValidLlmApiKey` | LLM é…ç½®è¡¨å•æ ¡éªŒ |
-| `src/services/scoring/v6-engine/calculators/l3/l3a-financial.ts` | `isValidStockCode` | è‚¡ç¥¨ä»£ç éªŒè¯ |
-| `src/services/scoring/v6-engine/calculators/l4_l5_l6.ts` | `isValidStockCode`, `isValidPercent` | è‚¡ç¥¨ä»£ç /ç™¾åˆ†æ¯”éªŒè¯ |
-| `src/services/scoring/v6-engine/calculators/l0_l1_l2.ts` | `isValidStockCode`, `safeParseNumber` | è‚¡ç¥¨ä»£ç /æ•°å€¼è§£æ |
-| `tests/__tests__/integration/llmEnhancer.integration.test.ts` | `isValidLlmBaseURL` | é›†æˆæµ‹è¯•éªŒè¯ |
+| `src/services/llm/llmClient.ts` | `isValidLlmBaseURL`, `isValidLlmApiKey`, `isValidLlmModel` | LLM ÅäÖÃÑéÖ¤ |
+| `src/store/collectionWizardStore.ts` | `validateConfigName` | ÅäÖÃÄ£°åÃû³ÆĞ£Ñé |
+| `src/services/scoring/v6-engine/calculators/l7_l8.ts` | `isValidStockCode`, `safeParseNumber` | ¹ÉÆ±´úÂëÑéÖ¤¡¢ÊıÖµ½âÎö |
+| `src/components/organisms/input/wizard-steps/TaskPreviewStep.tsx` | `validateConfigName` | ±íµ¥Ğ£Ñé |
+| `src/services/collection/configExportService.ts` | `validateConfigName` | µ¼³öÅäÖÃĞ£Ñé |
+| `src/components/organisms/analysis/score/IntelligentScoreExplanation.tsx` | `sanitizeObject` | Ãô¸ĞĞÅÏ¢ÍÑÃô |
+| `src/components/organisms/shared/LLMConfigWidget.tsx` | `isValidLlmBaseURL`, `isValidLlmApiKey` | LLM ÅäÖÃ±íµ¥Ğ£Ñé |
+| `src/services/scoring/v6-engine/calculators/l3/l3a-financial.ts` | `isValidStockCode` | ¹ÉÆ±´úÂëÑéÖ¤ |
+| `src/services/scoring/v6-engine/calculators/l4_l5_l6.ts` | `isValidStockCode`, `isValidPercent` | ¹ÉÆ±´úÂë/°Ù·Ö±ÈÑéÖ¤ |
+| `src/services/scoring/v6-engine/calculators/l0_l1_l2.ts` | `isValidStockCode`, `safeParseNumber` | ¹ÉÆ±´úÂë/ÊıÖµ½âÎö |
+| `tests/__tests__/integration/llmEnhancer.integration.test.ts` | `isValidLlmBaseURL` | ¼¯³É²âÊÔÑéÖ¤ |
 
-#### xssSanitizer.ts â€” 2 ä¸ªå¼•ç”¨
+#### xssSanitizer.ts ¡ª 2 ¸öÒıÓÃ
 
-| å¼•ç”¨æ–‡ä»¶ | å¯¼å…¥å†…å®¹ | ç”¨é€” |
+| ÒıÓÃÎÄ¼ş | µ¼ÈëÄÚÈİ | ÓÃÍ¾ |
 |---------|---------|------|
-| `src/components/organisms/analysis/score/IntelligentScoreExplanation.tsx` | `sanitizeLlmOutput` | LLM è¾“å‡ºå‡€åŒ– |
-| `tests/sanitizeLlmOutput.test.ts` | `sanitizeLlmOutput` | å•å…ƒæµ‹è¯• |
+| `src/components/organisms/analysis/score/IntelligentScoreExplanation.tsx` | `sanitizeLlmOutput` | LLM Êä³ö¾»»¯ |
+| `tests/sanitizeLlmOutput.test.ts` | `sanitizeLlmOutput` | µ¥Ôª²âÊÔ |
 
-#### a11y.ts â€” 0 ä¸ªå¼•ç”¨
+#### a11y.ts ¡ª 0 ¸öÒıÓÃ
 
-**å…¨å±€æœç´¢** `from '@/utils/a11y'` åœ¨æ‰€æœ‰ `.ts/.tsx` æ–‡ä»¶ä¸­ï¼š
-- **æ— åŒ¹é…ç»“æœ**
-- æœç´¢ `generateId(`ã€`KEYS.`ã€`handleKeyboardActivation(` ç­‰å‡½æ•°ååœ¨å…¶ä»–æ–‡ä»¶ä¸­çš„å¼•ç”¨ï¼šå…±å‘ç° 18 ä¸ªæ–‡ä»¶ä½¿ç”¨äº†ç±»ä¼¼å‡½æ•°åï¼Œä½†**å‡éä» `@/utils/a11y` å¯¼å…¥**ï¼ˆå¤šæ•°ä¸ºè‡ªæœ‰å®ç°æˆ–ä»å…¶ä»–åº“å¯¼å…¥ï¼‰
+**È«¾ÖËÑË÷** `from '@/utils/a11y'` ÔÚËùÓĞ `.ts/.tsx` ÎÄ¼şÖĞ£º
+- **ÎŞÆ¥Åä½á¹û**
+- ËÑË÷ `generateId(`¡¢`KEYS.`¡¢`handleKeyboardActivation(` µÈº¯ÊıÃûÔÚÆäËûÎÄ¼şÖĞµÄÒıÓÃ£º¹²·¢ÏÖ 18 ¸öÎÄ¼şÊ¹ÓÃÁËÀàËÆº¯ÊıÃû£¬µ«**¾ù·Ç´Ó `@/utils/a11y` µ¼Èë**£¨¶àÊıÎª×ÔÓĞÊµÏÖ»ò´ÓÆäËû¿âµ¼Èë£©
 
-#### precision.ts â€” 4 ä¸ªå¼•ç”¨
+#### precision.ts ¡ª 4 ¸öÒıÓÃ
 
-| å¼•ç”¨æ–‡ä»¶ | å¯¼å…¥å†…å®¹ | ç”¨é€” |
+| ÒıÓÃÎÄ¼ş | µ¼ÈëÄÚÈİ | ÓÃÍ¾ |
 |---------|---------|------|
-| `src/services/scoring/v6-engine/calculators/l7_l8.ts` | `formatPrice`, `formatChangeRate`, `formatChange` | é‡‘èæ•°å€¼æ ¼å¼åŒ– |
-| `src/services/scoring/v6-engine/calculators/l3/l3a-financial.ts` | åŒä¸Š | åŒä¸Š |
-| `src/services/scoring/v6-engine/calculators/l4_l5_l6.ts` | åŒä¸Š | åŒä¸Š |
-| `src/services/scoring/v6-engine/calculators/l0_l1_l2.ts` | åŒä¸Š | åŒä¸Š |
+| `src/services/scoring/v6-engine/calculators/l7_l8.ts` | `formatPrice`, `formatChangeRate`, `formatChange` | ½ğÈÚÊıÖµ¸ñÊ½»¯ |
+| `src/services/scoring/v6-engine/calculators/l3/l3a-financial.ts` | Í¬ÉÏ | Í¬ÉÏ |
+| `src/services/scoring/v6-engine/calculators/l4_l5_l6.ts` | Í¬ÉÏ | Í¬ÉÏ |
+| `src/services/scoring/v6-engine/calculators/l0_l1_l2.ts` | Í¬ÉÏ | Í¬ÉÏ |
 
-#### timeUtils.ts â€” 0 ä¸ªå¼•ç”¨
+#### timeUtils.ts ¡ª 0 ¸öÒıÓÃ
 
-**å…¨å±€æœç´¢** `from '@/utils/timeUtils'` åœ¨æ‰€æœ‰ `.ts/.tsx` æ–‡ä»¶ä¸­ï¼š
-- **æ— åŒ¹é…ç»“æœ**
-- æœç´¢ `formatTime(`ã€`formatDate(`ã€`formatRelativeTime(` ç­‰å‡½æ•°ååœ¨å…¶ä»–æ–‡ä»¶ä¸­çš„å¼•ç”¨ï¼šå…±å‘ç° 12 ä¸ªæ–‡ä»¶ä½¿ç”¨äº†ç±»ä¼¼å‡½æ•°åï¼Œä½†**å‡éä» `@/utils/timeUtils` å¯¼å…¥**ï¼ˆå¤šæ•°ä½¿ç”¨è‡ªæœ‰ `dayjs` å®ä¾‹æˆ– `date-fns` ç­‰ï¼‰
+**È«¾ÖËÑË÷** `from '@/utils/timeUtils'` ÔÚËùÓĞ `.ts/.tsx` ÎÄ¼şÖĞ£º
+- **ÎŞÆ¥Åä½á¹û**
+- ËÑË÷ `formatTime(`¡¢`formatDate(`¡¢`formatRelativeTime(` µÈº¯ÊıÃûÔÚÆäËûÎÄ¼şÖĞµÄÒıÓÃ£º¹²·¢ÏÖ 12 ¸öÎÄ¼şÊ¹ÓÃÁËÀàËÆº¯ÊıÃû£¬µ«**¾ù·Ç´Ó `@/utils/timeUtils` µ¼Èë**£¨¶àÊıÊ¹ÓÃ×ÔÓĞ `dayjs` ÊµÀı»ò `date-fns` µÈ£©
 
-### 2.5 å†³ç­–å»ºè®®
+### 2.5 ¾ö²ß½¨Òé
 
-#### 2.5.1 æœ‰æ´»è·ƒå¼•ç”¨çš„æ–‡ä»¶ï¼ˆdataValidation.ts + xssSanitizer.ts + precision.tsï¼‰
+#### 2.5.1 ÓĞ»îÔ¾ÒıÓÃµÄÎÄ¼ş£¨dataValidation.ts + xssSanitizer.ts + precision.ts£©
 
-| è¯„ä¼°é¡¹ | å†³ç­– |
+| ÆÀ¹ÀÏî | ¾ö²ß |
 |--------|------|
-| **å†³ç­–** | **è¿ç§»è‡³ `src/lib/` ç›®å½•** |
-| **ä¾æ®** | æœ‰æ´»è·ƒç”Ÿäº§ä»£ç å¼•ç”¨ï¼›èŒè´£å±äºåº“å‡½æ•°å±‚ï¼ˆæ•°æ®éªŒè¯ã€XSS å‡€åŒ–ã€é‡‘èæ•°å€¼æ ¼å¼åŒ–ï¼‰ï¼›ä¸ AGENTS.md å®šä¹‰ä¸€è‡´ |
-| **é£é™©ç­‰çº§** | ä¸­ï¼ˆéœ€ä¿®æ”¹çº¦ 17 ä¸ªæ–‡ä»¶çš„ import è·¯å¾„ï¼‰ |
-| **æ‰§è¡Œå»ºè®®** | 1. å°† `src/lib/validation.ts` â†’ `src/lib/validation.ts`<br>2. å°† `src/lib/xssSanitizer.ts` â†’ `src/lib/sanitize.ts`<br>3. å°† `src/lib/precision.ts` â†’ `src/lib/financeFormat.ts`ï¼ˆé¿å…ä¸ç°æœ‰ `format.ts` å†²çªï¼‰<br>4. å°†å¯¹åº”æµ‹è¯•æ–‡ä»¶åŒæ­¥è¿ç§»<br>5. å…¨å±€æ›¿æ¢ `from '@/utils/...'` â†’ `from '@/lib/...'`<br>6. è¿è¡Œ `npx tsc --noEmit` å’Œ `npm test -- --run` éªŒè¯ |
+| **¾ö²ß** | **Ç¨ÒÆÖÁ `src/lib/` Ä¿Â¼** |
+| **ÒÀ¾İ** | ÓĞ»îÔ¾Éú²ú´úÂëÒıÓÃ£»Ö°ÔğÊôÓÚ¿âº¯Êı²ã£¨Êı¾İÑéÖ¤¡¢XSS ¾»»¯¡¢½ğÈÚÊıÖµ¸ñÊ½»¯£©£»Óë AGENTS.md ¶¨ÒåÒ»ÖÂ |
+| **·çÏÕµÈ¼¶** | ÖĞ£¨ĞèĞŞ¸ÄÔ¼ 17 ¸öÎÄ¼şµÄ import Â·¾¶£© |
+| **Ö´ĞĞ½¨Òé** | 1. ½« `src/lib/validation.ts` ¡ú `src/lib/validation.ts`<br>2. ½« `src/lib/xssSanitizer.ts` ¡ú `src/lib/xssSanitizer.ts`<br>3. ½« `src/lib/precision.ts` ¡ú `src/lib/format.ts`£¨±ÜÃâÓëÏÖÓĞ `format.ts` ³åÍ»£©<br>4. ½«¶ÔÓ¦²âÊÔÎÄ¼şÍ¬²½Ç¨ÒÆ<br>5. È«¾ÖÌæ»» `from '@/utils/...'` ¡ú `from '@/lib/...'`<br>6. ÔËĞĞ `npx tsc --noEmit` ºÍ `npm test -- --run` ÑéÖ¤ |
 
-#### 2.5.2 æ— å¼•ç”¨çš„æ–‡ä»¶ï¼ˆa11y.ts + timeUtils.tsï¼‰
+#### 2.5.2 ÎŞÒıÓÃµÄÎÄ¼ş£¨a11y.ts + timeUtils.ts£©
 
-| è¯„ä¼°é¡¹ | å†³ç­– |
+| ÆÀ¹ÀÏî | ¾ö²ß |
 |--------|------|
-| **å†³ç­–** | **éœ€è¿›ä¸€æ­¥ç¡®è®¤**ï¼ˆç–‘ä¼¼æ­»ä»£ç ï¼Œä½†å¯èƒ½æ˜¯é¢„ç•™æ¨¡å—ï¼‰ |
-| **ä¾æ®** | å½“å‰æ— ä»»ä½•ç”Ÿäº§ä»£ç æˆ–æµ‹è¯•å¼•ç”¨ï¼›ä½†æ–‡ä»¶å†…å®¹å®Œæ•´ã€JSDoc é½å…¨ã€æ–‡æ¡£è§„èŒƒ |
-| **é£é™©ç­‰çº§** | ä½ |
-| **æ‰§è¡Œå»ºè®®** | 1. æ£€æŸ¥è¿‘æœŸæäº¤å†å²ï¼ˆ`git log -- src/utils/a11y.ts src/utils/timeUtils.ts`ï¼‰ç¡®è®¤æ˜¯å¦ä¸ºè¿‘æœŸä¸»åŠ¨æ·»åŠ çš„é¢„ç•™æ¨¡å—<br>2. æ£€æŸ¥æ˜¯å¦æœ‰æœªåˆå¹¶åˆ†æ”¯æˆ– PR ä¸­è®¡åˆ’ä½¿ç”¨è¿™äº›æ¨¡å—<br>3. å¦‚ç¡®è®¤æ— ä½¿ç”¨è®¡åˆ’ä¸”æ— è¿‘æœŸæäº¤ï¼š<br>   - æ–¹æ¡ˆ Aï¼šå®‰å…¨åˆ é™¤ï¼ˆå½’æ¡£è‡³ `docs/00-meta/archive/`ï¼‰<br>   - æ–¹æ¡ˆ Bï¼šä¿ç•™ä½†æ ‡è®°ä¸º `@deprecated`ï¼Œåœ¨ AGENTS.md ä¸­æ³¨æ˜ä¸º"é¢„ç•™æ¨¡å—"<br>4. å¦‚æœåç»­å‘ç°ä»å…¶ä»–è·¯å¾„ï¼ˆå¦‚ `@/lib/a11y` ç­‰ï¼‰è¢«å¼•ç”¨ï¼Œæ›´æ–°æ­¤è¯„ä¼° |
+| **¾ö²ß** | **Ğè½øÒ»²½È·ÈÏ**£¨ÒÉËÆËÀ´úÂë£¬µ«¿ÉÄÜÊÇÔ¤ÁôÄ£¿é£© |
+| **ÒÀ¾İ** | µ±Ç°ÎŞÈÎºÎÉú²ú´úÂë»ò²âÊÔÒıÓÃ£»µ«ÎÄ¼şÄÚÈİÍêÕû¡¢JSDoc ÆëÈ«¡¢ÎÄµµ¹æ·¶ |
+| **·çÏÕµÈ¼¶** | µÍ |
+| **Ö´ĞĞ½¨Òé** | 1. ¼ì²é½üÆÚÌá½»ÀúÊ·£¨`git log -- src/utils/a11y.ts src/utils/timeUtils.ts`£©È·ÈÏÊÇ·ñÎª½üÆÚÖ÷¶¯Ìí¼ÓµÄÔ¤ÁôÄ£¿é<br>2. ¼ì²éÊÇ·ñÓĞÎ´ºÏ²¢·ÖÖ§»ò PR ÖĞ¼Æ»®Ê¹ÓÃÕâĞ©Ä£¿é<br>3. ÈçÈ·ÈÏÎŞÊ¹ÓÃ¼Æ»®ÇÒÎŞ½üÆÚÌá½»£º<br>   - ·½°¸ A£º°²È«É¾³ı£¨¹éµµÖÁ `docs/00-meta/archive/`£©<br>   - ·½°¸ B£º±£Áôµ«±ê¼ÇÎª `@deprecated`£¬ÔÚ AGENTS.md ÖĞ×¢Ã÷Îª"Ô¤ÁôÄ£¿é"<br>4. Èç¹ûºóĞø·¢ÏÖ´ÓÆäËûÂ·¾¶£¨Èç `@/lib/a11y` µÈ£©±»ÒıÓÃ£¬¸üĞÂ´ËÆÀ¹À |
 
-#### 2.5.3 æ•´ä½“è¿ç§»æ–¹æ¡ˆå¯¹æ¯”
+#### 2.5.3 ÕûÌåÇ¨ÒÆ·½°¸¶Ô±È
 
-| æ–¹æ¡ˆ | æè¿° | å½±å“æ–‡ä»¶æ•° | å†²çªæƒ…å†µ | é£é™©ç­‰çº§ |
+| ·½°¸ | ÃèÊö | Ó°ÏìÎÄ¼şÊı | ³åÍ»Çé¿ö | ·çÏÕµÈ¼¶ |
 |------|------|-----------|---------|---------|
-| **Aï¼šé€ä¸ªè¿ç§»è‡³ `src/lib/`** | æŒ‰åŠŸèƒ½é‡å‘½åååˆ†åˆ«è¿ç§»åˆ° `src/lib/` ä¸‹ | ~17 | ä¸ `src/lib/format.ts` æ— å†²çªï¼ˆå¯å¹¶å­˜ï¼‰ | ä¸­ |
-| **Bï¼šæ•´ä½“ç§»åŠ¨ä¸º `src/lib/utils/` ç›®å½•** | å°† `src/lib/` æ•´ä½“ç§»è‡³ `src/lib/utils/` | ~17 + 58 | âš ï¸ ä¸ `src/lib/utils.ts` å‘½åå†²çªï¼ˆç›®å½• vs æ–‡ä»¶ï¼‰ | **é«˜** |
-| **Cï¼šä¿ç•™å¹¶è¡¥å…… AGENTS.md å®šä¹‰** | åœ¨ AGENTS.md ä¸­è¡¥å…… `src/lib/` ä¸º"ä¸šåŠ¡å·¥å…·å±‚" | 0 | æ—  | ä½ï¼ˆä½†å¢åŠ ç›®å½•å¤æ‚åº¦ï¼Œè¿åç°æœ‰è§„èŒƒï¼‰ |
-| **Dï¼šæ‹†åˆ†ä¸º lib/ + components/ æ··åˆ** | a11y è¿è‡³ `src/hooks/`ï¼›timeUtils è¿è‡³ `../../src/config/timeouts.ts` | è§†å¼•ç”¨è€Œå®š | éƒ¨åˆ† | ä¸­ |
+| **A£ºÖğ¸öÇ¨ÒÆÖÁ `src/lib/`** | °´¹¦ÄÜÖØÃüÃûºó·Ö±ğÇ¨ÒÆµ½ `src/lib/` ÏÂ | ~17 | Óë `src/lib/format.ts` ÎŞ³åÍ»£¨¿É²¢´æ£© | ÖĞ |
+| **B£ºÕûÌåÒÆ¶¯Îª `src/lib/utils/` Ä¿Â¼** | ½« `src/lib/` ÕûÌåÒÆÖÁ `src/lib/utils/` | ~17 + 58 | ?? Óë `src/lib/utils.ts` ÃüÃû³åÍ»£¨Ä¿Â¼ vs ÎÄ¼ş£© | **¸ß** |
+| **C£º±£Áô²¢²¹³ä AGENTS.md ¶¨Òå** | ÔÚ AGENTS.md ÖĞ²¹³ä `src/lib/` Îª"ÒµÎñ¹¤¾ß²ã" | 0 | ÎŞ | µÍ£¨µ«Ôö¼ÓÄ¿Â¼¸´ÔÓ¶È£¬Î¥·´ÏÖÓĞ¹æ·¶£© |
+| **D£º²ğ·ÖÎª lib/ + components/ »ìºÏ** | a11y Ç¨ÖÁ `src/hooks/`£»timeUtils Ç¨ÖÁ `../../src/config/timeouts.ts` | ÊÓÒıÓÃ¶ø¶¨ | ²¿·Ö | ÖĞ |
 
-**æ¨èæ–¹æ¡ˆï¼šAï¼ˆé€ä¸ªè¿ç§»ï¼‰** â€” ç†ç”±ï¼š
-- é¿å…ä¸ `src/lib/utils.ts` çš„å‘½åå†²çª
-- æ¯ä¸ªæ–‡ä»¶èŒè´£æ¸…æ™°ï¼ŒæŒ‰åŠŸèƒ½å‘½åæ›´ç¬¦åˆ AGENTS.md çš„åº“å‡½æ•°å®šä¹‰
-- ä¿®æ”¹èŒƒå›´å¯æ§ï¼ˆçº¦ 17 ä¸ªæ–‡ä»¶ï¼‰ï¼Œå¯åˆ†æ­¥æ‰§è¡Œ
-- ä¸å¼•å…¥æ–°ç›®å½•å±‚çº§ï¼Œä¿æŒç°æœ‰ç»“æ„æ‰å¹³
+**ÍÆ¼ö·½°¸£ºA£¨Öğ¸öÇ¨ÒÆ£©** ¡ª ÀíÓÉ£º
+- ±ÜÃâÓë `src/lib/utils.ts` µÄÃüÃû³åÍ»
+- Ã¿¸öÎÄ¼şÖ°ÔğÇåÎú£¬°´¹¦ÄÜÃüÃû¸ü·ûºÏ AGENTS.md µÄ¿âº¯Êı¶¨Òå
+- ĞŞ¸Ä·¶Î§¿É¿Ø£¨Ô¼ 17 ¸öÎÄ¼ş£©£¬¿É·Ö²½Ö´ĞĞ
+- ²»ÒıÈëĞÂÄ¿Â¼²ã¼¶£¬±£³ÖÏÖÓĞ½á¹¹±âÆ½
 
 ---
 
-## ä¸‰ã€ç»¼åˆå»ºè®®
+## Èı¡¢×ÛºÏ½¨Òé
 
-### 3.1 æ‰§è¡Œä¼˜å…ˆçº§
+### 3.1 Ö´ĞĞÓÅÏÈ¼¶
 
-| ä¼˜å…ˆçº§ | å·¥ä½œé¡¹ | é£é™© | é¢„è®¡å½±å“æ–‡ä»¶æ•° |
+| ÓÅÏÈ¼¶ | ¹¤×÷Ïî | ·çÏÕ | Ô¤¼ÆÓ°ÏìÎÄ¼şÊı |
 |--------|--------|------|---------------|
-| P1 | åˆ é™¤ `../../src/showcase/index.ts` + è¿ç§»æµ‹è¯•æ–‡ä»¶ | ä½ | 2 |
-| P2 | è¿ç§» `src/lib/validation.ts` â†’ `src/lib/validation.ts` | ä¸­ | ~11 |
-| P3 | è¿ç§» `src/lib/xssSanitizer.ts` â†’ `src/lib/sanitize.ts` | ä¸­ | 2 |
-| P4 | è¿ç§» `src/lib/precision.ts` â†’ `src/lib/financeFormat.ts` | ä¸­ | 4 |
-| P5 | ç¡®è®¤ `a11y.ts` å’Œ `timeUtils.ts` çš„æ­»ä»£ç çŠ¶æ€ååˆ é™¤æˆ–å½’æ¡£ | ä½ | 2 |
+| P1 | É¾³ı `../../src/showcase/index.ts` + Ç¨ÒÆ²âÊÔÎÄ¼ş | µÍ | 2 |
+| P2 | Ç¨ÒÆ `src/lib/validation.ts` ¡ú `src/lib/validation.ts` | ÖĞ | ~11 |
+| P3 | Ç¨ÒÆ `src/lib/xssSanitizer.ts` ¡ú `src/lib/xssSanitizer.ts` | ÖĞ | 2 |
+| P4 | Ç¨ÒÆ `src/lib/precision.ts` ¡ú `src/lib/format.ts` | ÖĞ | 4 |
+| P5 | È·ÈÏ `a11y.ts` ºÍ `timeUtils.ts` µÄËÀ´úÂë×´Ì¬ºóÉ¾³ı»ò¹éµµ | µÍ | 2 |
 
-### 3.2 éªŒè¯æ¸…å•ï¼ˆæ‰§è¡Œåå¿…é¡»å®Œæˆï¼‰
+### 3.2 ÑéÖ¤Çåµ¥£¨Ö´ĞĞºó±ØĞëÍê³É£©
 
-- [ ] `npx tsc --noEmit` ç±»å‹æ£€æŸ¥é€šè¿‡
-- [ ] `npm run audit:layers` æ— è·¨å±‚è°ƒç”¨è¿è§„
-- [ ] `npm test -- --run` å•å…ƒæµ‹è¯•é€šè¿‡ï¼ˆå«è¿ç§»åçš„æµ‹è¯•æ–‡ä»¶ï¼‰
-- [ ] `npm run audit:deadcode` ç¡®è®¤æ— æ–°å¢æœªæ³¨å†Œæ–‡ä»¶
-- [ ] æ›´æ–° AGENTS.md Â§ä¸€ ç›®å½•å®šä¹‰ï¼ˆå¦‚åˆ é™¤ `src/core/databridge.ts` åç¡®è®¤ç›®å½•åˆ—è¡¨ä¸€è‡´æ€§ï¼‰
+- [ ] `npx tsc --noEmit` ÀàĞÍ¼ì²éÍ¨¹ı
+- [ ] `npm run audit:layers` ÎŞ¿ç²ãµ÷ÓÃÎ¥¹æ
+- [ ] `npm test -- --run` µ¥Ôª²âÊÔÍ¨¹ı£¨º¬Ç¨ÒÆºóµÄ²âÊÔÎÄ¼ş£©
+- [ ] `npm run audit:deadcode` È·ÈÏÎŞĞÂÔöÎ´×¢²áÎÄ¼ş
+- [ ] ¸üĞÂ AGENTS.md ¡ìÒ» Ä¿Â¼¶¨Òå£¨ÈçÉ¾³ı `src/core/databridge.ts` ºóÈ·ÈÏÄ¿Â¼ÁĞ±íÒ»ÖÂĞÔ£©
 
-### 3.3 å¤‡æ³¨
+### 3.3 ±¸×¢
 
-- `src/lib/validation.ts` å’Œ `src/lib/xssSanitizer.ts` æ˜¯å®‰å…¨æ•æ„Ÿæ–‡ä»¶ï¼ˆæ¶‰åŠ XSS é˜²æŠ¤ã€API Key è„±æ•ã€URL åè®®æ ¡éªŒï¼‰ï¼Œè¿ç§»æ—¶åŠ¡å¿…ä¿æŒæ–‡ä»¶å†…å®¹ä¸å˜ï¼Œä»…ä¿®æ”¹ import è·¯å¾„å’Œæ–‡ä»¶å
-- `src/lib/validation.ts` å’Œ `src/lib/format.ts` å½“å‰æ— ä»»ä½•å¼•ç”¨ï¼Œä½†ä¸æ’é™¤åœ¨ä»£ç ä¸­é€šè¿‡å­è·¯å¾„åˆ«åï¼ˆå¦‚ `import { generateId } from '...'` ä½¿ç”¨ç›¸å¯¹è·¯å¾„ï¼‰å¼•ç”¨ã€‚å»ºè®®åœ¨æ‰§è¡Œåˆ é™¤å‰ï¼Œé€šè¿‡ `grep -r "generateId" src/` å’Œ `grep -r "formatTime" src/` ç¡®è®¤æ— ç›¸å¯¹è·¯å¾„å¼•ç”¨
-- æœ¬æŠ¥å‘ŠåŸºäº 2026-07-12 çš„ä»£ç å¿«ç…§ã€‚å¦‚åç»­æœ‰æ–°æäº¤å¼•å…¥å¯¹è¿™äº›æ–‡ä»¶çš„å¼•ç”¨ï¼Œéœ€é‡æ–°è¯„ä¼°
+- `src/lib/validation.ts` ºÍ `src/lib/xssSanitizer.ts` ÊÇ°²È«Ãô¸ĞÎÄ¼ş£¨Éæ¼° XSS ·À»¤¡¢API Key ÍÑÃô¡¢URL Ğ­ÒéĞ£Ñé£©£¬Ç¨ÒÆÊ±Îñ±Ø±£³ÖÎÄ¼şÄÚÈİ²»±ä£¬½öĞŞ¸Ä import Â·¾¶ºÍÎÄ¼şÃû
+- `src/lib/validation.ts` ºÍ `src/lib/format.ts` µ±Ç°ÎŞÈÎºÎÒıÓÃ£¬µ«²»ÅÅ³ıÔÚ´úÂëÖĞÍ¨¹ı×ÓÂ·¾¶±ğÃû£¨Èç `import { generateId } from '...'` Ê¹ÓÃÏà¶ÔÂ·¾¶£©ÒıÓÃ¡£½¨ÒéÔÚÖ´ĞĞÉ¾³ıÇ°£¬Í¨¹ı `grep -r "generateId" src/` ºÍ `grep -r "formatTime" src/` È·ÈÏÎŞÏà¶ÔÂ·¾¶ÒıÓÃ
+- ±¾±¨¸æ»ùÓÚ 2026-07-12 µÄ´úÂë¿ìÕÕ¡£ÈçºóĞøÓĞĞÂÌá½»ÒıÈë¶ÔÕâĞ©ÎÄ¼şµÄÒıÓÃ£¬ĞèÖØĞÂÆÀ¹À

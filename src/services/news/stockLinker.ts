@@ -1,4 +1,4 @@
-import { generateId } from '@/data/db'
+import { generateId } from '@/lib/utils'
 import type { NewsArticle, NewsStockMap } from '@/data/types'
 
 export interface StockInfo {

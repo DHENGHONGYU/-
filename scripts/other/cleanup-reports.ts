@@ -10,8 +10,6 @@
  * - 不递归进入子目录（只清理目录顶层条目）
  * - 保护名为 latest.json 的文件
  * - 目录使用 rmdirSync（要求空目录），文件使用 unlinkSync
- */
-
 /**
  * @file cleanup-reports.ts
  * @description 按保留期规则清理过期自动产物（报告、覆盖率、构建目录等）

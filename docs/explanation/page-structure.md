@@ -1,113 +1,119 @@
 ---
-title: page-structure
+title: Ò³Ãæ½á¹¹ÓëÎå²Õ²¼¾Ö
+type: explanation
+domain: frontend
+phase: planning
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "## 1. ¶¨Î» V9 Ç°¶Ë²ÉÓÃÎå²Õ£¨cabin£©¼Ü¹¹£¬Ò³ÃæÍ³Ò»ÖÃÓÚ `src/pages/<cabin>/`£¬Â·ÓÉ¶¨Òå¼¯ÖĞÓÚ `src/config/routes.ts`£¨Ïê¼û..."
+tags: [frontend, plan, explanation]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: important
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/explanation/page-structure.md
-code_version: 2.0.0
-tier: important
----
-
-# é¡µé¢ç»“æ„ä¸äº”èˆ±å¸ƒå±€
+# Ò³Ãæ½á¹¹ÓëÎå²Õ²¼¾Ö
 
 > **Status**: Current  
 > **Version**: v1.0.0  
 > **Last Updated**: 2026-07-12  
-> **Related**: `src/pages/`ã€`src/config/routes.ts`ã€`../reference/06-routing-specs.md`
+> **Related**: `src/pages/`¡¢`src/config/routes.ts`¡¢`../reference/06-routing-specs.md`
 
 ---
 
-## 1. å®šä½
+## 1. ¶¨Î»
 
-V9 å‰ç«¯é‡‡ç”¨**äº”èˆ±ï¼ˆcabinï¼‰æ¶æ„**ï¼Œé¡µé¢ç»Ÿä¸€ç½®äº `src/pages/<cabin>/`ï¼Œè·¯ç”±å®šä¹‰é›†ä¸­äº `src/config/routes.ts`ï¼ˆè¯¦è§ `../reference/06-routing-specs.md`ï¼‰ã€‚å„èˆ±å®¤è§„æ ¼è§ `docs/02-design/*-cabin-spec.md`ã€‚
+V9 Ç°¶Ë²ÉÓÃ**Îå²Õ£¨cabin£©¼Ü¹¹**£¬Ò³ÃæÍ³Ò»ÖÃÓÚ `src/pages/<cabin>/`£¬Â·ÓÉ¶¨Òå¼¯ÖĞÓÚ `src/config/routes.ts`£¨Ïê¼û `../reference/06-routing-specs.md`£©¡£¸÷²ÕÊÒ¹æ¸ñ¼û `docs/02-design/*-cabin-spec.md`¡£
 
 ---
 
-## 2. äº”èˆ±æ€»è§ˆ
+## 2. Îå²Õ×ÜÀÀ
 
-| èˆ±å®¤ | ç›®å½• | é¡µé¢æ–‡ä»¶æ•° | èŒè´£ |
+| ²ÕÊÒ | Ä¿Â¼ | Ò³ÃæÎÄ¼şÊı | Ö°Ôğ |
 |------|------|-----------|------|
-| è¾“å…¥èˆ± | `src/pages/input/` | 4 | æ•°æ®é‡‡é›†ã€é…ç½®ã€æœ¬åœ°çŸ¥è¯† |
-| åˆ†æèˆ± | `src/pages/analysis/` | 16 | è¯„åˆ†ã€ç­›é€‰ã€å›æµ‹ã€æ–°é—»ã€æ¿å— |
-| äº¤æ˜“èˆ± | `src/pages/trading/` | 10 | æŒä»“ã€ç»„åˆã€é£æ§ã€æµæ°´ |
-| è¾“å‡ºèˆ± | `src/pages/output/` | 6 | çœ‹æ¿ã€ç ”æŠ¥ã€å¤ç›˜å‘å¯¼ |
-| æŒ‡æŒ¥èˆ± | `src/pages/command/` | 25 | æ™ºèƒ½ä½“ã€MCPã€å¥åº·ã€Showcase |
+| ÊäÈë²Õ | `src/pages/input/` | 4 | Êı¾İ²É¼¯¡¢ÅäÖÃ¡¢±¾µØÖªÊ¶ |
+| ·ÖÎö²Õ | `src/pages/analysis/` | 16 | ÆÀ·Ö¡¢É¸Ñ¡¡¢»Ø²â¡¢ĞÂÎÅ¡¢°å¿é |
+| ½»Ò×²Õ | `src/pages/trading/` | 10 | ³Ö²Ö¡¢×éºÏ¡¢·ç¿Ø¡¢Á÷Ë® |
+| Êä³ö²Õ | `src/pages/output/` | 6 | ¿´°å¡¢ÑĞ±¨¡¢¸´ÅÌÏòµ¼ |
+| Ö¸»Ó²Õ | `src/pages/command/` | 25 | ÖÇÄÜÌå¡¢MCP¡¢½¡¿µ¡¢Showcase |
 
 ---
 
-## 3. å„èˆ±é¡µé¢æ¸…å•
+## 3. ¸÷²ÕÒ³ÃæÇåµ¥
 
-### 3.1 è¾“å…¥èˆ±ï¼ˆinputï¼‰
+### 3.1 ÊäÈë²Õ£¨input£©
 
-- `CollectTaskPage.tsx` â€” é‡‡é›†ä»»åŠ¡
-- `FetcherConfigPage.tsx` â€” é‡‡é›†å™¨é…ç½®
-- `LocalKnowledgePage.tsx` â€” æœ¬åœ°çŸ¥è¯†
-- `SevenDimConfigPage.tsx` â€” ä¸ƒç»´é…ç½®
+- `CollectTaskPage.tsx` ¡ª ²É¼¯ÈÎÎñ
+- `FetcherConfigPage.tsx` ¡ª ²É¼¯Æ÷ÅäÖÃ
+- `LocalKnowledgePage.tsx` ¡ª ±¾µØÖªÊ¶
+- `SevenDimConfigPage.tsx` ¡ª ÆßÎ¬ÅäÖÃ
 
-### 3.2 åˆ†æèˆ±ï¼ˆanalysisï¼‰
+### 3.2 ·ÖÎö²Õ£¨analysis£©
 
-- `BacktestPage.tsx` â€” å›æµ‹
-- `HotSectorPage.tsx` â€” çƒ­é—¨æ¿å—ï¼ˆå« `.test.tsx`ï¼‰
-- `IndustryScorePage.tsx` â€” è¡Œä¸šè¯„åˆ†
-- `IntelligentScorePage.tsx` â€” æ™ºèƒ½é€‰è‚¡è¯„åˆ†
-- `MultiFactorFilterPage.tsx` â€” å¤šå› å­ç­›é€‰
-- `NewsPage.tsx` â€” æ–°é—»
-- `ScoreComparisonPage.tsx` â€” è¯„åˆ†å¯¹æ¯”
-- `ScoreDocPage.tsx` â€” è¯„åˆ†æ–‡æ¡£
-- `SectorAnalysisPage.tsx` â€” æ¿å—åˆ†æï¼ˆå« `.test.tsx`ï¼‰
-- `StockAnalysisPage.tsx` â€” ä¸ªè‚¡åˆ†æï¼ˆå« `.test.tsx`ï¼‰
-- `StockPoolBoardPage.tsx` â€” è‚¡ç¥¨æ± çœ‹æ¿
-- `ValuePitPage.tsx` â€” ä»·å€¼æ´¼åœ°ï¼ˆå« `.test.tsx`ï¼‰
+- `BacktestPage.tsx` ¡ª »Ø²â
+- `HotSectorPage.tsx` ¡ª ÈÈÃÅ°å¿é£¨º¬ `.test.tsx`£©
+- `IndustryScorePage.tsx` ¡ª ĞĞÒµÆÀ·Ö
+- `IntelligentScorePage.tsx` ¡ª ÖÇÄÜÑ¡¹ÉÆÀ·Ö
+- `MultiFactorFilterPage.tsx` ¡ª ¶àÒò×ÓÉ¸Ñ¡
+- `NewsPage.tsx` ¡ª ĞÂÎÅ
+- `ScoreComparisonPage.tsx` ¡ª ÆÀ·Ö¶Ô±È
+- `ScoreDocPage.tsx` ¡ª ÆÀ·ÖÎÄµµ
+- `SectorAnalysisPage.tsx` ¡ª °å¿é·ÖÎö£¨º¬ `.test.tsx`£©
+- `StockAnalysisPage.tsx` ¡ª ¸ö¹É·ÖÎö£¨º¬ `.test.tsx`£©
+- `StockPoolBoardPage.tsx` ¡ª ¹ÉÆ±³Ø¿´°å
+- `ValuePitPage.tsx` ¡ª ¼ÛÖµÍİµØ£¨º¬ `.test.tsx`£©
 
-### 3.3 äº¤æ˜“èˆ±ï¼ˆtradingï¼‰
+### 3.3 ½»Ò×²Õ£¨trading£©
 
-- `HoldingsPage.tsx` â€” æŒä»“
-- `PortfolioPage.tsx` â€” ç»„åˆ
-- `RiskControlPage.tsx` â€” é£æ§
-- `StrategySnapshotPage.tsx` â€” ç­–ç•¥å¿«ç…§
-- `TradingFlowPage.tsx` â€” äº¤æ˜“æµæ°´
-- `components/` â€” `HoldingsFilter`ã€`HoldingsTable`ã€`Pagination`ã€`TradeModal`ã€`VirtualizedHoldingsTable`
+- `HoldingsPage.tsx` ¡ª ³Ö²Ö
+- `PortfolioPage.tsx` ¡ª ×éºÏ
+- `RiskControlPage.tsx` ¡ª ·ç¿Ø
+- `StrategySnapshotPage.tsx` ¡ª ²ßÂÔ¿ìÕÕ
+- `TradingFlowPage.tsx` ¡ª ½»Ò×Á÷Ë®
+- `components/` ¡ª `HoldingsFilter`¡¢`HoldingsTable`¡¢`Pagination`¡¢`TradeModal`¡¢`VirtualizedHoldingsTable`
 
-### 3.4 è¾“å‡ºèˆ±ï¼ˆoutputï¼‰
+### 3.4 Êä³ö²Õ£¨output£©
 
-- `DashboardPage.tsx` â€” çœ‹æ¿
-- `OutputHubPage.tsx` â€” è¾“å‡ºä¸­å¿ƒï¼ˆå« `__tests__`ï¼‰
-- `ResearchReportPage.tsx` â€” ç ”æŠ¥
-- `ReviewWizardPage.tsx` â€” å¤ç›˜å‘å¯¼
-- `TradeReviewPage.tsx` â€” äº¤æ˜“å¤ç›˜
+- `DashboardPage.tsx` ¡ª ¿´°å
+- `OutputHubPage.tsx` ¡ª Êä³öÖĞĞÄ£¨º¬ `__tests__`£©
+- `ResearchReportPage.tsx` ¡ª ÑĞ±¨
+- `ReviewWizardPage.tsx` ¡ª ¸´ÅÌÏòµ¼
+- `TradeReviewPage.tsx` ¡ª ½»Ò×¸´ÅÌ
 
-### 3.5 æŒ‡æŒ¥èˆ±ï¼ˆcommandï¼‰
+### 3.5 Ö¸»Ó²Õ£¨command£©
 
-- `MCPServerDashboardPage.tsx` â€” MCP æœåŠ¡çœ‹æ¿ï¼ˆå« `__tests__`ï¼‰
-- `agent/` â€” `AgentDetailPage`ã€`AgentFeedbackPage`ã€`AgentHubPage`ã€`AgentRegistryPage`ã€`AgentTasksPage`ã€`AgentTriggerPage`ã€`ApiConfigurationPage`ã€`CapabilityGraphPage`ã€`ChangelogPage`ã€`CustomAgentPage`ã€`DagSchedulerPage`ã€`DataLabelManagementPage`ã€`LlmManagementPage`ã€`ModelUpgradePage`ã€`OptimizationSuggestionsPage`ã€`SkillAuditPage`ï¼ˆéƒ¨åˆ†å« `__tests__`ï¼‰
-- `health/HealthDashboardPage.tsx` â€” å¥åº·çœ‹æ¿
-- `showcase/ComponentShowcasePage.tsx` â€” ç»„ä»¶ Showcase
+- `MCPServerDashboardPage.tsx` ¡ª MCP ·şÎñ¿´°å£¨º¬ `__tests__`£©
+- `agent/` ¡ª `AgentDetailPage`¡¢`AgentFeedbackPage`¡¢`AgentHubPage`¡¢`AgentRegistryPage`¡¢`AgentTasksPage`¡¢`AgentTriggerPage`¡¢`ApiConfigurationPage`¡¢`CapabilityGraphPage`¡¢`ChangelogPage`¡¢`CustomAgentPage`¡¢`DagSchedulerPage`¡¢`DataLabelManagementPage`¡¢`LlmManagementPage`¡¢`ModelUpgradePage`¡¢`OptimizationSuggestionsPage`¡¢`SkillAuditPage`£¨²¿·Öº¬ `__tests__`£©
+- `health/HealthDashboardPage.tsx` ¡ª ½¡¿µ¿´°å
+- `showcase/ComponentShowcasePage.tsx` ¡ª ×é¼ş Showcase
 
 ---
 
-## 4. èˆ±å®¤è§„æ ¼æ–‡æ¡£
+## 4. ²ÕÊÒ¹æ¸ñÎÄµµ
 
-| èˆ±å®¤ | è§„æ ¼æ–‡æ¡£ |
+| ²ÕÊÒ | ¹æ¸ñÎÄµµ |
 |------|---------|
-| è¾“å…¥èˆ± | `../reference/input-cabin-spec.md` |
-| åˆ†æèˆ± | `../reference/analysis-cabin-spec.md` |
-| äº¤æ˜“èˆ± | `../reference/trading-cabin-spec.md` |
-| è¾“å‡ºèˆ± | `../reference/output-cabin-spec.md` |
-| æŒ‡æŒ¥èˆ± | `../reference/command-cabin-spec.md` |
+| ÊäÈë²Õ | `../reference/input-cabin-spec.md` |
+| ·ÖÎö²Õ | `../reference/analysis-cabin-spec.md` |
+| ½»Ò×²Õ | `../reference/trading-cabin-spec.md` |
+| Êä³ö²Õ | `../reference/output-cabin-spec.md` |
+| Ö¸»Ó²Õ | `../reference/command-cabin-spec.md` |
 
 ---
 
-## 5. å˜æ›´è§¦å‘
+## 5. ±ä¸ü´¥·¢
 
-> è§¦å‘äº‹ä»¶ **T8ï¼ˆé¡µé¢ç»„ä»¶å˜æ›´ï¼‰** â€” åŒ¹é… `src/pages/**/*.tsx`ã€`src/pages/**/*.ts`
+> ´¥·¢ÊÂ¼ş **T8£¨Ò³Ãæ×é¼ş±ä¸ü£©** ¡ª Æ¥Åä `src/pages/**/*.tsx`¡¢`src/pages/**/*.ts`
 
-| åŠ¨ä½œ | æ–‡æ¡£ |
+| ¶¯×÷ | ÎÄµµ |
 |------|------|
-| ä¸»æ›´æ–°åŠ¨ä½œ | æœ¬æ–‡æ¡£ï¼ˆ`./page-structure.md`ï¼‰ |
-| è¡¥å……æ–‡æ¡£ | `../reference/06-routing-specs.md` |
-| å†™åæ ¡éªŒ | `npm run audit:docs`ï¼ˆæ˜¯ï¼‰ |
+| Ö÷¸üĞÂ¶¯×÷ | ±¾ÎÄµµ£¨`./page-structure.md`£© |
+| ²¹³äÎÄµµ | `../reference/06-routing-specs.md` |
+| Ğ´ºóĞ£Ñé | `npm run audit:docs`£¨ÊÇ£© |
 
-è¯¦è§ `docs/00-meta/doc-trigger-action-map.md` Â§äºŒ T8 è¡Œã€‚
+Ïê¼û `docs/00-meta/doc-trigger-action-map.md` ¡ì¶ş T8 ĞĞ¡£

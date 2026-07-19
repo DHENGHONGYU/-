@@ -1,54 +1,60 @@
 ---
-title: nested-code-review-report
+title: ´úÂë¶à²ãÇ¶Ì×ÆÀÉó±¨¸æ
+type: explanation
+domain: project
+phase: planning
+tier: standard
+status: active
+maintainer: V9 Architecture Team
+summary: "ÆÀÉó·¶Î§£º`src/` Ä¿Â¼ÏÂÈ«²¿·Ç²âÊÔ TypeScript/TSX ÎÄ¼ş É¨ÃèÎÄ¼şÊı£º674 ¸ö Éú³ÉÊ±¼ä£º2026/7/10 08:42:12"
+tags: [project, report, plan]
+version: v1.0.0
+last_updated: 2026-07-17
 code_version: 2.0.0
-
-tier: reference
+change_log:
+  - version: v1.0.0
+changes: Initial version established
+date: 2026-07-17
 ---
 
----
-title: docs/explanation/nested-code-review-report.md
-code_version: 2.0.0
-tier: reference
----
+# ´úÂë¶à²ãÇ¶Ì×ÆÀÉó±¨¸æ
 
-# ä»£ç å¤šå±‚åµŒå¥—è¯„å®¡æŠ¥å‘Š
+> ÆÀÉó·¶Î§£º`src/` Ä¿Â¼ÏÂÈ«²¿·Ç²âÊÔ TypeScript/TSX ÎÄ¼ş  
+> É¨ÃèÎÄ¼şÊı£º674 ¸ö  
+> Éú³ÉÊ±¼ä£º2026/7/10 08:42:12
 
-> è¯„å®¡èŒƒå›´ï¼š`src/` ç›®å½•ä¸‹å…¨éƒ¨éæµ‹è¯• TypeScript/TSX æ–‡ä»¶  
-> æ‰«ææ–‡ä»¶æ•°ï¼š674 ä¸ª  
-> ç”Ÿæˆæ—¶é—´ï¼š2026/7/10 08:42:12
+## Ò»¡¢×ÜÌå¸ÅÀÀ
 
-## ä¸€ã€æ€»ä½“æ¦‚è§ˆ
-
-| ç»´åº¦ | æ•°é‡ | è¯´æ˜ |
+| Î¬¶È | ÊıÁ¿ | ËµÃ÷ |
 |------|------|------|
-| æ·±å±‚åµŒå¥—ç»“æ„ï¼ˆâ‰¥4 å±‚ï¼‰ | 66 å¤„ | æ’é™¤ if-else-if é“¾åçš„çœŸå®åµŒå¥— |
-| è¿‡é•¿ if-else-if é“¾ | 32 å¤„ | åˆ†æ”¯æ•° â‰¥4 çš„é“¾å¼æ¡ä»¶ |
-| å«è¯­å¥/æå‰è¿”å›ä¼˜åŒ–æœºä¼š | 0 å¤„ | å½“å‰ä»£ç ä¸­å¯è¢«ç›´æ¥ä¼˜åŒ–çš„æ¨¡å¼ |
-| å†—ä½™ break è¯­å¥ | 0 å¤„ | å¾ªç¯æœ«å°¾æ— æ„ä¹‰çš„ break |
-| é‡å¤æ¡ä»¶åˆ¤æ–­ | 194 å¤„ | å·²æ’é™¤é“¾å¼æ¡ä»¶å’Œç®€å•è·¯å¾„åŒ¹é… |
+| Éî²ãÇ¶Ì×½á¹¹£¨¡İ4 ²ã£© | 66 ´¦ | ÅÅ³ı if-else-if Á´ºóµÄÕæÊµÇ¶Ì× |
+| ¹ı³¤ if-else-if Á´ | 32 ´¦ | ·ÖÖ§Êı ¡İ4 µÄÁ´Ê½Ìõ¼ş |
+| ÎÀÓï¾ä/ÌáÇ°·µ»ØÓÅ»¯»ú»á | 0 ´¦ | µ±Ç°´úÂëÖĞ¿É±»Ö±½ÓÓÅ»¯µÄÄ£Ê½ |
+| ÈßÓà break Óï¾ä | 0 ´¦ | Ñ­»·Ä©Î²ÎŞÒâÒåµÄ break |
+| ÖØ¸´Ìõ¼şÅĞ¶Ï | 194 ´¦ | ÒÑÅÅ³ıÁ´Ê½Ìõ¼şºÍ¼òµ¥Â·¾¶Æ¥Åä |
 
 ---
 
-## äºŒã€æ·±å±‚åµŒå¥—ç»“æ„ï¼ˆâ‰¥4 å±‚ï¼‰
+## ¶ş¡¢Éî²ãÇ¶Ì×½á¹¹£¨¡İ4 ²ã£©
 
-ä»¥ä¸‹åˆ—å‡ºçœŸå®åµŒå¥—æ·±åº¦è¾¾åˆ°æˆ–è¶…è¿‡ 4 å±‚çš„æ§åˆ¶ç»“æ„ï¼ŒæŒ‰æ–‡ä»¶èšåˆå±•ç¤ºå‰ 20 ä¸ªå…¸å‹ä½ç½®ã€‚
+ÒÔÏÂÁĞ³öÕæÊµÇ¶Ì×Éî¶È´ïµ½»ò³¬¹ı 4 ²ãµÄ¿ØÖÆ½á¹¹£¬°´ÎÄ¼ş¾ÛºÏÕ¹Ê¾Ç° 20 ¸öµäĞÍÎ»ÖÃ¡£
 
 ### src/core/databridge.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | åµŒå¥—è¡Œ | åµŒå¥—æ·±åº¦ | ç»“æ„ç±»å‹ | ä»£ç ç‰‡æ®µ |
+| ·½·¨ | º¯ÊıĞĞ | Ç¶Ì×ĞĞ | Ç¶Ì×Éî¶È | ½á¹¹ÀàĞÍ | ´úÂëÆ¬¶Î |
 |------|--------|--------|----------|----------|----------|
 | forward | 330 | 371:9 | 4 | IfStatement | if (this.isMarketEnvelope(meta.action)) { |
 
 ### src/core/databridgeHandlers.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | åµŒå¥—è¡Œ | åµŒå¥—æ·±åº¦ | ç»“æ„ç±»å‹ | ä»£ç ç‰‡æ®µ |
+| ·½·¨ | º¯ÊıĞĞ | Ç¶Ì×ĞĞ | Ç¶Ì×Éî¶È | ½á¹¹ÀàĞÍ | ´úÂëÆ¬¶Î |
 |------|--------|--------|----------|----------|----------|
 | handle | 198 | 235:11 | 4 | IfStatement | if (rec.id) { |
 | handle | 198 | 254:11 | 4 | IfStatement | if (rec.id) { |
 
 ### src/data/db-migrations.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | åµŒå¥—è¡Œ | åµŒå¥—æ·±åº¦ | ç»“æ„ç±»å‹ | ä»£ç ç‰‡æ®µ |
+| ·½·¨ | º¯ÊıĞĞ | Ç¶Ì×ĞĞ | Ç¶Ì×Éî¶È | ½á¹¹ÀàĞÍ | ´úÂëÆ¬¶Î |
 |------|--------|--------|----------|----------|----------|
 | runMigrations | 49 | 80:7 | 4 | IfStatement | if (!m) continue |
 | runMigrations | 49 | 81:7 | 4 | IfStatement | if (m.down) { |
@@ -57,14 +63,14 @@ tier: reference
 
 ### src/data/sectorDefinitions.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | åµŒå¥—è¡Œ | åµŒå¥—æ·±åº¦ | ç»“æ„ç±»å‹ | ä»£ç ç‰‡æ®µ |
+| ·½·¨ | º¯ÊıĞĞ | Ç¶Ì×ĞĞ | Ç¶Ì×Éî¶È | ½á¹¹ÀàĞÍ | ´úÂëÆ¬¶Î |
 |------|--------|--------|----------|----------|----------|
 | matchStocksToSectors | 514 | 533:9 | 4 | IfStatement | if (!mapping.stockSymbols.includes(stock.symbol)) { |
 | matchStocksToSectors | 514 | 544:9 | 4 | IfStatement | if (!mapping.stockSymbols.includes(stock.symbol)) { |
 
 ### src/lib/localStorageManager.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | åµŒå¥—è¡Œ | åµŒå¥—æ·±åº¦ | ç»“æ„ç±»å‹ | ä»£ç ç‰‡æ®µ |
+| ·½·¨ | º¯ÊıĞĞ | Ç¶Ì×ĞĞ | Ç¶Ì×Éî¶È | ½á¹¹ÀàĞÍ | ´úÂëÆ¬¶Î |
 |------|--------|--------|----------|----------|----------|
 | byteLength | 96 | 105:7 | 4 | IfStatement | if (code < 0x80) len += 1 |
 | getNamespaceInfo | 414 | 429:11 | 4 | IfStatement | if (entry.createdAt < oldestTime) { |
@@ -73,19 +79,19 @@ tier: reference
 
 ### src/mcp/core/client.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | åµŒå¥—è¡Œ | åµŒå¥—æ·±åº¦ | ç»“æ„ç±»å‹ | ä»£ç ç‰‡æ®µ |
+| ·½·¨ | º¯ÊıĞĞ | Ç¶Ì×ĞĞ | Ç¶Ì×Éî¶È | ½á¹¹ÀàĞÍ | ´úÂëÆ¬¶Î |
 |------|--------|--------|----------|----------|----------|
 | readResource | 133 | 150:11 | 4 | IfStatement | if (!aclResult.allowed) { |
 
 ### src/mcp/core/notification.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | åµŒå¥—è¡Œ | åµŒå¥—æ·±åº¦ | ç»“æ„ç±»å‹ | ä»£ç ç‰‡æ®µ |
+| ·½·¨ | º¯ÊıĞĞ | Ç¶Ì×ĞĞ | Ç¶Ì×Éî¶È | ½á¹¹ÀàĞÍ | ´úÂëÆ¬¶Î |
 |------|--------|--------|----------|----------|----------|
 | emit | 49 | 57:11 | 4 | CatchClause | catch (error) { |
 
 ### src/mcp/core/server.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | åµŒå¥—è¡Œ | åµŒå¥—æ·±åº¦ | ç»“æ„ç±»å‹ | ä»£ç ç‰‡æ®µ |
+| ·½·¨ | º¯ÊıĞĞ | Ç¶Ì×ĞĞ | Ç¶Ì×Éî¶È | ½á¹¹ÀàĞÍ | ´úÂëÆ¬¶Î |
 |------|--------|--------|----------|----------|----------|
 | readResource | 217 | 227:11 | 4 | CatchClause | catch (err) { |
 | readResource | 217 | 228:11 | 5 | IfStatement | if (err instanceof McpAclError) { |
@@ -93,7 +99,7 @@ tier: reference
 
 ### src/services/analysis/scoreTrendService.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | åµŒå¥—è¡Œ | åµŒå¥—æ·±åº¦ | ç»“æ„ç±»å‹ | ä»£ç ç‰‡æ®µ |
+| ·½·¨ | º¯ÊıĞĞ | Ç¶Ì×ĞĞ | Ç¶Ì×Éî¶È | ½á¹¹ÀàĞÍ | ´úÂëÆ¬¶Î |
 |------|--------|--------|----------|----------|----------|
 | aggregateScoresByPeriod | 81 | 112:9 | 4 | IfStatement | if (!dim \|\| !dim.name) continue |
 | aggregateScoresByPeriod | 81 | 114:9 | 4 | IfStatement | if (typeof s !== 'number' \|\| !Number.isFinite(s)) continue |
@@ -101,37 +107,37 @@ tier: reference
 
 ### src/services/backtest/BacktestEngine.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | åµŒå¥—è¡Œ | åµŒå¥—æ·±åº¦ | ç»“æ„ç±»å‹ | ä»£ç ç‰‡æ®µ |
+| ·½·¨ | º¯ÊıĞĞ | Ç¶Ì×ĞĞ | Ç¶Ì×Éî¶È | ½á¹¹ÀàĞÍ | ´úÂëÆ¬¶Î |
 |------|--------|--------|----------|----------|----------|
 | run | 103 | 154:11 | 4 | IfStatement | if (remaining <= 0) { |
 
 ### src/services/data-collector/collectors/BaseCollector.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | åµŒå¥—è¡Œ | åµŒå¥—æ·±åº¦ | ç»“æ„ç±»å‹ | ä»£ç ç‰‡æ®µ |
+| ·½·¨ | º¯ÊıĞĞ | Ç¶Ì×ĞĞ | Ç¶Ì×Éî¶È | ½á¹¹ÀàĞÍ | ´úÂëÆ¬¶Î |
 |------|--------|--------|----------|----------|----------|
 | collectWithRetry | 39 | 56:9 | 4 | IfStatement | if (attempt < this.config.retryCount) { |
 
 ### src/services/data-collector/mockDataCollection.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | åµŒå¥—è¡Œ | åµŒå¥—æ·±åº¦ | ç»“æ„ç±»å‹ | ä»£ç ç‰‡æ®µ |
+| ·½·¨ | º¯ÊıĞĞ | Ç¶Ì×ĞĞ | Ç¶Ì×Éî¶È | ½á¹¹ÀàĞÍ | ´úÂëÆ¬¶Î |
 |------|--------|--------|----------|----------|----------|
 | mockCollectorFetchWithRetry | 790 | 802:7 | 4 | IfStatement | if (attempt < maxRetries) { |
 
 ### src/services/feedbackService.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | åµŒå¥—è¡Œ | åµŒå¥—æ·±åº¦ | ç»“æ„ç±»å‹ | ä»£ç ç‰‡æ®µ |
+| ·½·¨ | º¯ÊıĞĞ | Ç¶Ì×ĞĞ | Ç¶Ì×Éî¶È | ½á¹¹ÀàĞÍ | ´úÂëÆ¬¶Î |
 |------|--------|--------|----------|----------|----------|
 | wrapOperation | 308 | 352:7 | 4 | IfStatement | if (attempt < maxRetries) { |
 
 ### src/services/fetcher/fetcherClient.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | åµŒå¥—è¡Œ | åµŒå¥—æ·±åº¦ | ç»“æ„ç±»å‹ | ä»£ç ç‰‡æ®µ |
+| ·½·¨ | º¯ÊıĞĞ | Ç¶Ì×ĞĞ | Ç¶Ì×Éî¶È | ½á¹¹ÀàĞÍ | ´úÂëÆ¬¶Î |
 |------|--------|--------|----------|----------|----------|
 | request | 53 | 85:7 | 4 | IfStatement | if (!isNetworkError \|\| attempt === maxRetries) { |
 
 ### src/services/fetcher/fetcherInterceptor.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | åµŒå¥—è¡Œ | åµŒå¥—æ·±åº¦ | ç»“æ„ç±»å‹ | ä»£ç ç‰‡æ®µ |
+| ·½·¨ | º¯ÊıĞĞ | Ç¶Ì×ĞĞ | Ç¶Ì×Éî¶È | ½á¹¹ÀàĞÍ | ´úÂëÆ¬¶Î |
 |------|--------|--------|----------|----------|----------|
 | interceptedFetch | 67 | 98:9 | 4 | IfStatement | if (errorType === HttpErrorType.UNAUTHORIZED && config.onUnauthorized) { |
 | interceptedFetch | 67 | 101:9 | 4 | IfStatement | if (errorType === HttpErrorType.FORBIDDEN && config.onForbidden) { |
@@ -141,28 +147,28 @@ tier: reference
 
 ### src/services/fetcher/orchestrator/resilienceChain.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | åµŒå¥—è¡Œ | åµŒå¥—æ·±åº¦ | ç»“æ„ç±»å‹ | ä»£ç ç‰‡æ®µ |
+| ·½·¨ | º¯ÊıĞĞ | Ç¶Ì×ĞĞ | Ç¶Ì×Éî¶È | ½á¹¹ÀàĞÍ | ´úÂëÆ¬¶Î |
 |------|--------|--------|----------|----------|----------|
 | fetchQuote | 48 | 83:9 | 4 | IfStatement | if (next) { |
 | fetchKline | 110 | 145:9 | 4 | IfStatement | if (next) { |
 
 ### src/services/hybrid-proofread/index.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | åµŒå¥—è¡Œ | åµŒå¥—æ·±åº¦ | ç»“æ„ç±»å‹ | ä»£ç ç‰‡æ®µ |
+| ·½·¨ | º¯ÊıĞĞ | Ç¶Ì×ĞĞ | Ç¶Ì×Éî¶È | ½á¹¹ÀàĞÍ | ´úÂëÆ¬¶Î |
 |------|--------|--------|----------|----------|----------|
 | runFullProofread | 11 | 70:9 | 4 | TryStatement | try { |
 | runFullProofread | 11 | 74:11 | 5 | CatchClause | catch (error) { |
 
 ### src/services/input/batchImportParsers.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | åµŒå¥—è¡Œ | åµŒå¥—æ·±åº¦ | ç»“æ„ç±»å‹ | ä»£ç ç‰‡æ®µ |
+| ·½·¨ | º¯ÊıĞĞ | Ç¶Ì×ĞĞ | Ç¶Ì×Éî¶È | ½á¹¹ÀàĞÍ | ´úÂëÆ¬¶Î |
 |------|--------|--------|----------|----------|----------|
 | parseCsvLine | 169 | 179:9 | 4 | IfStatement | if (line[i + 1] === '"') { |
 | parseJsonFile | 323 | 350:9 | 4 | IfStatement | if (STOCK_CODE_PATTERN.test(code)) { |
 
 ### src/services/llm/llmClient.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | åµŒå¥—è¡Œ | åµŒå¥—æ·±åº¦ | ç»“æ„ç±»å‹ | ä»£ç ç‰‡æ®µ |
+| ·½·¨ | º¯ÊıĞĞ | Ç¶Ì×ĞĞ | Ç¶Ì×Éî¶È | ½á¹¹ÀàĞÍ | ´úÂëÆ¬¶Î |
 |------|--------|--------|----------|----------|----------|
 | chat | 123 | 166:9 | 4 | IfStatement | if (raw.error?.message) { |
 | chat | 123 | 169:9 | 4 | CatchClause | catch { |
@@ -172,448 +178,448 @@ tier: reference
 
 ### src/services/news/stockLinker.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | åµŒå¥—è¡Œ | åµŒå¥—æ·±åº¦ | ç»“æ„ç±»å‹ | ä»£ç ç‰‡æ®µ |
+| ·½·¨ | º¯ÊıĞĞ | Ç¶Ì×ĞĞ | Ç¶Ì×Éî¶È | ½á¹¹ÀàĞÍ | ´úÂëÆ¬¶Î |
 |------|--------|--------|----------|----------|----------|
 | matchText | 122 | 140:9 | 4 | IfStatement | if (!code) continue |
 | matchText | 122 | 142:9 | 4 | IfStatement | if (matchedStock && matchedStock.symbol === stock.symbol) { |
 | matchText | 122 | 169:9 | 4 | IfStatement | if (text.includes(prefix)) { |
 | matchText | 122 | 186:9 | 4 | IfStatement | if (text.includes(keyword)) { |
 
-> å®Œæ•´åˆ—è¡¨è§ JSON æŠ¥å‘Š `nested-code-review-report.json` â†’ `deeplyNestedBlocks`ã€‚
+> ÍêÕûÁĞ±í¼û JSON ±¨¸æ `nested-code-review-report.json` ¡ú `deeplyNestedBlocks`¡£
 
 ---
 
-## ä¸‰ã€è¿‡é•¿ if-else-if é“¾
+## Èı¡¢¹ı³¤ if-else-if Á´
 
-ä»¥ä¸‹é“¾å¼æ¡ä»¶ç»“æ„å»ºè®®æ”¹ç”¨ `switch` æˆ– `Map<condition, handler>` æ¨¡å¼ï¼Œä»¥é™ä½ç»´æŠ¤æˆæœ¬ã€‚
+ÒÔÏÂÁ´Ê½Ìõ¼ş½á¹¹½¨Òé¸ÄÓÃ `switch` »ò `Map<condition, handler>` Ä£Ê½£¬ÒÔ½µµÍÎ¬»¤³É±¾¡£
 
 ### src/apps/analysis/AnalysisApp.tsx
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | é“¾èµ·å§‹è¡Œ | é“¾ç»“æŸè¡Œ | åˆ†æ”¯æ•° | ä¼˜åŒ–å»ºè®® |
+| ·½·¨ | º¯ÊıĞĞ | Á´ÆğÊ¼ĞĞ | Á´½áÊøĞĞ | ·ÖÖ§Êı | ÓÅ»¯½¨Òé |
 |------|--------|----------|----------|--------|----------|
-| <arrow> | 52 | 62 | 95 | 12 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
+| <arrow> | 52 | 62 | 95 | 12 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
 
 ### src/apps/input/InputApp.tsx
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | é“¾èµ·å§‹è¡Œ | é“¾ç»“æŸè¡Œ | åˆ†æ”¯æ•° | ä¼˜åŒ–å»ºè®® |
+| ·½·¨ | º¯ÊıĞĞ | Á´ÆğÊ¼ĞĞ | Á´½áÊøĞĞ | ·ÖÖ§Êı | ÓÅ»¯½¨Òé |
 |------|--------|----------|----------|--------|----------|
-| <arrow> | 47 | 58 | 76 | 7 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
-| InputApp | 41 | 95 | 115 | 7 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
+| <arrow> | 47 | 58 | 76 | 7 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
+| InputApp | 41 | 95 | 115 | 7 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
 
 ### src/apps/output/OutputApp.tsx
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | é“¾èµ·å§‹è¡Œ | é“¾ç»“æŸè¡Œ | åˆ†æ”¯æ•° | ä¼˜åŒ–å»ºè®® |
+| ·½·¨ | º¯ÊıĞĞ | Á´ÆğÊ¼ĞĞ | Á´½áÊøĞĞ | ·ÖÖ§Êı | ÓÅ»¯½¨Òé |
 |------|--------|----------|----------|--------|----------|
-| <arrow> | 181 | 192 | 207 | 6 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
-| OutputApp | 175 | 230 | 240 | 6 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
+| <arrow> | 181 | 192 | 207 | 6 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
+| OutputApp | 175 | 230 | 240 | 6 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
 
 ### src/apps/trading/TradingApp.tsx
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | é“¾èµ·å§‹è¡Œ | é“¾ç»“æŸè¡Œ | åˆ†æ”¯æ•° | ä¼˜åŒ–å»ºè®® |
+| ·½·¨ | º¯ÊıĞĞ | Á´ÆğÊ¼ĞĞ | Á´½áÊøĞĞ | ·ÖÖ§Êı | ÓÅ»¯½¨Òé |
 |------|--------|----------|----------|--------|----------|
-| <arrow> | 60 | 71 | 86 | 6 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
-| TradingApp | 36 | 130 | 166 | 7 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
+| <arrow> | 60 | 71 | 86 | 6 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
+| TradingApp | 36 | 130 | 166 | 7 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
 
 ### src/core/entityValidators.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | é“¾èµ·å§‹è¡Œ | é“¾ç»“æŸè¡Œ | åˆ†æ”¯æ•° | ä¼˜åŒ–å»ºè®® |
+| ·½·¨ | º¯ÊıĞĞ | Á´ÆğÊ¼ĞĞ | Á´½áÊøĞĞ | ·ÖÖ§Êı | ÓÅ»¯½¨Òé |
 |------|--------|----------|----------|--------|----------|
-| validateOrder | 46 | 64 | 70 | 4 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
-| validateOrder | 46 | 75 | 81 | 4 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
+| validateOrder | 46 | 64 | 70 | 4 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
+| validateOrder | 46 | 75 | 81 | 4 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
 
 ### src/services/analysis/rotation/rotationCalculator.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | é“¾èµ·å§‹è¡Œ | é“¾ç»“æŸè¡Œ | åˆ†æ”¯æ•° | ä¼˜åŒ–å»ºè®® |
+| ·½·¨ | º¯ÊıĞĞ | Á´ÆğÊ¼ĞĞ | Á´½áÊøĞĞ | ·ÖÖ§Êı | ÓÅ»¯½¨Òé |
 |------|--------|----------|----------|--------|----------|
-| calculateResonance | 71 | 74 | 80 | 7 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
+| calculateResonance | 71 | 74 | 80 | 7 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
 
 ### src/services/input/batchImportParsers.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | é“¾èµ·å§‹è¡Œ | é“¾ç»“æŸè¡Œ | åˆ†æ”¯æ•° | ä¼˜åŒ–å»ºè®® |
+| ·½·¨ | º¯ÊıĞĞ | Á´ÆğÊ¼ĞĞ | Á´½áÊøĞĞ | ·ÖÖ§Êı | ÓÅ»¯½¨Òé |
 |------|--------|----------|----------|--------|----------|
-| parseBulkInput | 88 | 109 | 128 | 4 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
+| parseBulkInput | 88 | 109 | 128 | 4 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
 
 ### src/services/scoring/hotSectorDimensions.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | é“¾èµ·å§‹è¡Œ | é“¾ç»“æŸè¡Œ | åˆ†æ”¯æ•° | ä¼˜åŒ–å»ºè®® |
+| ·½·¨ | º¯ÊıĞĞ | Á´ÆğÊ¼ĞĞ | Á´½áÊøĞĞ | ·ÖÖ§Êı | ÓÅ»¯½¨Òé |
 |------|--------|----------|----------|--------|----------|
-| calculateSentiment | 177 | 185 | 191 | 4 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
-| calculateValuationRisk | 277 | 281 | 291 | 6 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
+| calculateSentiment | 177 | 185 | 191 | 4 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
+| calculateValuationRisk | 277 | 281 | 291 | 6 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
 
 ### src/services/scoring/v6-engine/calculators/l0_l1_l2.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | é“¾èµ·å§‹è¡Œ | é“¾ç»“æŸè¡Œ | åˆ†æ”¯æ•° | ä¼˜åŒ–å»ºè®® |
+| ·½·¨ | º¯ÊıĞĞ | Á´ÆğÊ¼ĞĞ | Á´½áÊøĞĞ | ·ÖÖ§Êı | ÓÅ»¯½¨Òé |
 |------|--------|----------|----------|--------|----------|
-| scoreLongTermTrend | 263 | 270 | 273 | 4 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
+| scoreLongTermTrend | 263 | 270 | 273 | 4 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
 
 ### src/services/scoring/v6-engine/calculators/l3/helpers.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | é“¾èµ·å§‹è¡Œ | é“¾ç»“æŸè¡Œ | åˆ†æ”¯æ•° | ä¼˜åŒ–å»ºè®® |
+| ·½·¨ | º¯ÊıĞĞ | Á´ÆğÊ¼ĞĞ | Á´½áÊøĞĞ | ·ÖÖ§Êı | ÓÅ»¯½¨Òé |
 |------|--------|----------|----------|--------|----------|
-| scoreMoat | 58 | 64 | 68 | 5 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
+| scoreMoat | 58 | 64 | 68 | 5 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
 
 ### src/services/scoring/v6-engine/calculators/l3/l3a-financial.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | é“¾èµ·å§‹è¡Œ | é“¾ç»“æŸè¡Œ | åˆ†æ”¯æ•° | ä¼˜åŒ–å»ºè®® |
+| ·½·¨ | º¯ÊıĞĞ | Á´ÆğÊ¼ĞĞ | Á´½áÊøĞĞ | ·ÖÖ§Êı | ÓÅ»¯½¨Òé |
 |------|--------|----------|----------|--------|----------|
-| scoreFinancialDimensions | 27 | 33 | 36 | 4 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
-| scoreFinancialDimensions | 27 | 43 | 46 | 4 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
-| scoreFinancialDimensions | 27 | 53 | 56 | 4 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
-| scoreFinancialDimensions | 27 | 65 | 68 | 4 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
-| scoreFinancialDimensions | 27 | 75 | 78 | 4 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
-| evaluateIPC | 190 | 199 | 202 | 4 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
-| evaluateIPC | 190 | 233 | 239 | 4 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
-| evaluateIPC | 190 | 262 | 274 | 4 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
+| scoreFinancialDimensions | 27 | 33 | 36 | 4 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
+| scoreFinancialDimensions | 27 | 43 | 46 | 4 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
+| scoreFinancialDimensions | 27 | 53 | 56 | 4 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
+| scoreFinancialDimensions | 27 | 65 | 68 | 4 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
+| scoreFinancialDimensions | 27 | 75 | 78 | 4 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
+| evaluateIPC | 190 | 199 | 202 | 4 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
+| evaluateIPC | 190 | 233 | 239 | 4 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
+| evaluateIPC | 190 | 262 | 274 | 4 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
 
 ### src/services/scoring/v6-engine/calculators/l3/l3v-valuation.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | é“¾èµ·å§‹è¡Œ | é“¾ç»“æŸè¡Œ | åˆ†æ”¯æ•° | ä¼˜åŒ–å»ºè®® |
+| ·½·¨ | º¯ÊıĞĞ | Á´ÆğÊ¼ĞĞ | Á´½áÊøĞĞ | ·ÖÖ§Êı | ÓÅ»¯½¨Òé |
 |------|--------|----------|----------|--------|----------|
-| scoreValuation | 24 | 32 | 35 | 4 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
+| scoreValuation | 24 | 32 | 35 | 4 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
 
 ### src/services/scoring/v6-engine/calculators/l4_l5_l6.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | é“¾èµ·å§‹è¡Œ | é“¾ç»“æŸè¡Œ | åˆ†æ”¯æ•° | ä¼˜åŒ–å»ºè®® |
+| ·½·¨ | º¯ÊıĞĞ | Á´ÆğÊ¼ĞĞ | Á´½áÊøĞĞ | ·ÖÖ§Êı | ÓÅ»¯½¨Òé |
 |------|--------|----------|----------|--------|----------|
-| scoreScenario | 74 | 103 | 113 | 6 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
-| evaluateTMMatrix | 186 | 231 | 237 | 4 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
-| evaluateHypeCycle | 317 | 334 | 352 | 6 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
+| scoreScenario | 74 | 103 | 113 | 6 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
+| evaluateTMMatrix | 186 | 231 | 237 | 4 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
+| evaluateHypeCycle | 317 | 334 | 352 | 6 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
 
 ### src/services/scoring/valuePitAnalyzer.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | é“¾èµ·å§‹è¡Œ | é“¾ç»“æŸè¡Œ | åˆ†æ”¯æ•° | ä¼˜åŒ–å»ºè®® |
+| ·½·¨ | º¯ÊıĞĞ | Á´ÆğÊ¼ĞĞ | Á´½áÊøĞĞ | ·ÖÖ§Êı | ÓÅ»¯½¨Òé |
 |------|--------|----------|----------|--------|----------|
-| calculateValuationMargin | 156 | 160 | 166 | 4 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
-| calculateRotationPosition | 249 | 253 | 259 | 4 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
-| calculateLiquidity | 284 | 290 | 296 | 4 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
+| calculateValuationMargin | 156 | 160 | 166 | 4 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
+| calculateRotationPosition | 249 | 253 | 259 | 4 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
+| calculateLiquidity | 284 | 290 | 296 | 4 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
 
 ### src/store/analysisStore.derived.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | é“¾èµ·å§‹è¡Œ | é“¾ç»“æŸè¡Œ | åˆ†æ”¯æ•° | ä¼˜åŒ–å»ºè®® |
+| ·½·¨ | º¯ÊıĞĞ | Á´ÆğÊ¼ĞĞ | Á´½áÊøĞĞ | ·ÖÖ§Êı | ÓÅ»¯½¨Òé |
 |------|--------|----------|----------|--------|----------|
-| <arrow> | 105 | 114 | 117 | 4 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
+| <arrow> | 105 | 114 | 117 | 4 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
 
 ### src/store/rotationSignalStore.derived.ts
 
-| æ–¹æ³• | å‡½æ•°è¡Œ | é“¾èµ·å§‹è¡Œ | é“¾ç»“æŸè¡Œ | åˆ†æ”¯æ•° | ä¼˜åŒ–å»ºè®® |
+| ·½·¨ | º¯ÊıĞĞ | Á´ÆğÊ¼ĞĞ | Á´½áÊøĞĞ | ·ÖÖ§Êı | ÓÅ»¯½¨Òé |
 |------|--------|----------|----------|--------|----------|
-| <arrow> | 143 | 151 | 157 | 4 | Consider replacing the long if-else-if chain with a switch statement or a routeâ†’component map |
+| <arrow> | 143 | 151 | 157 | 4 | Consider replacing the long if-else-if chain with a switch statement or a route¡úcomponent map |
 
 ---
 
-## å››ã€é‡å¤æ¡ä»¶åˆ¤æ–­
+## ËÄ¡¢ÖØ¸´Ìõ¼şÅĞ¶Ï
 
-ä»¥ä¸‹æ¡ä»¶åœ¨å¤šä¸ªä½ç½®é‡å¤å‡ºç°ï¼Œå»ºè®®æå–ä¸ºå¸ƒå°”å˜é‡æˆ–è¾…åŠ©è°“è¯å‡½æ•°ã€‚
+ÒÔÏÂÌõ¼şÔÚ¶à¸öÎ»ÖÃÖØ¸´³öÏÖ£¬½¨ÒéÌáÈ¡Îª²¼¶û±äÁ¿»ò¸¨ÖúÎ½´Êº¯Êı¡£
 
 ### src/agents/agentHealthMonitor.ts
 
-**é‡å¤æ¡ä»¶ï¼š** `monitorInstance`
+**ÖØ¸´Ìõ¼ş£º** `monitorInstance`
 
-| å‡ºç°ä½ç½® | ä»£ç ç‰‡æ®µ |
+| ³öÏÖÎ»ÖÃ | ´úÂëÆ¬¶Î |
 |----------|----------|
 | 173:3 | if (monitorInstance) return monitorInstance |
 | 184:3 | if (monitorInstance) { |
 
-> å»ºè®®ï¼šConsider extracting the shared condition into a boolean variable or a helper predicate
+> ½¨Òé£ºConsider extracting the shared condition into a boolean variable or a helper predicate
 
 ### src/apps/input/BulkImportPanel.tsx
 
-**é‡å¤æ¡ä»¶ï¼š** `importPhase === 'importing'`
+**ÖØ¸´Ìõ¼ş£º** `importPhase === 'importing'`
 
-| å‡ºç°ä½ç½® | ä»£ç ç‰‡æ®µ |
+| ³öÏÖÎ»ÖÃ | ´úÂëÆ¬¶Î |
 |----------|----------|
-| 208:5 | if (importPhase === 'importing') return `å¯¼å…¥ä¸­ ${importProgress}%` |
+| 208:5 | if (importPhase === 'importing') return `µ¼ÈëÖĞ ${importProgress}%` |
 | 218:5 | if (importPhase === 'importing') return 'secondary' |
 
-> å»ºè®®ï¼šConsider extracting the shared condition into a boolean variable or a helper predicate
+> ½¨Òé£ºConsider extracting the shared condition into a boolean variable or a helper predicate
 
 ### src/apps/trading/components/PhaseStepper.tsx
 
-**é‡å¤æ¡ä»¶ï¼š** `cancelled`
+**ÖØ¸´Ìõ¼ş£º** `cancelled`
 
-| å‡ºç°ä½ç½® | ä»£ç ç‰‡æ®µ |
+| ³öÏÖÎ»ÖÃ | ´úÂëÆ¬¶Î |
 |----------|----------|
 | 38:5 | if (cancelled) { |
 | 47:5 | if (cancelled) { |
 
-> å»ºè®®ï¼šConsider extracting the shared condition into a boolean variable or a helper predicate
+> ½¨Òé£ºConsider extracting the shared condition into a boolean variable or a helper predicate
 
 ### src/cockpit/core/widgetRegistry.ts
 
-**é‡å¤æ¡ä»¶ï¼š** `!template`
+**ÖØ¸´Ìõ¼ş£º** `!template`
 
-| å‡ºç°ä½ç½® | ä»£ç ç‰‡æ®µ |
+| ³öÏÖÎ»ÖÃ | ´úÂëÆ¬¶Î |
 |----------|----------|
 | 340:5 | if (!template) { |
 | 387:5 | if (!template) { |
 
-> å»ºè®®ï¼šConsider extracting the shared condition into a boolean variable or a helper predicate
+> ½¨Òé£ºConsider extracting the shared condition into a boolean variable or a helper predicate
 
 ### src/cockpit/providers/MarketDataProvider.tsx
 
-**é‡å¤æ¡ä»¶ï¼š** `instanceId`
+**ÖØ¸´Ìõ¼ş£º** `instanceId`
 
-| å‡ºç°ä½ç½® | ä»£ç ç‰‡æ®µ |
+| ³öÏÖÎ»ÖÃ | ´úÂëÆ¬¶Î |
 |----------|----------|
 | 50:7 | if (instanceId) { |
 | 59:7 | if (instanceId) { |
 
-> å»ºè®®ï¼šConsider extracting the shared condition into a boolean variable or a helper predicate
+> ½¨Òé£ºConsider extracting the shared condition into a boolean variable or a helper predicate
 
 ### src/cockpit/widgets/SignalMonitorWidget.tsx
 
-**é‡å¤æ¡ä»¶ï¼š** `direction === 'buy'`
+**ÖØ¸´Ìõ¼ş£º** `direction === 'buy'`
 
-| å‡ºç°ä½ç½® | ä»£ç ç‰‡æ®µ |
+| ³öÏÖÎ»ÖÃ | ´úÂëÆ¬¶Î |
 |----------|----------|
 | 68:5 | if (direction === 'buy') return <ArrowUpCircle className={`h-5 w-5 ${COLOR_TOKENS.success.tailwind}` |
 | 74:5 | if (direction === 'buy') return <Badge className="text-xs" style={{ backgroundColor: THEME_TOKENS.co |
 
-> å»ºè®®ï¼šConsider extracting the shared condition into a boolean variable or a helper predicate
+> ½¨Òé£ºConsider extracting the shared condition into a boolean variable or a helper predicate
 
-**é‡å¤æ¡ä»¶ï¼š** `direction === 'sell'`
+**ÖØ¸´Ìõ¼ş£º** `direction === 'sell'`
 
-| å‡ºç°ä½ç½® | ä»£ç ç‰‡æ®µ |
+| ³öÏÖÎ»ÖÃ | ´úÂëÆ¬¶Î |
 |----------|----------|
 | 69:5 | if (direction === 'sell') return <ArrowDownCircle className={`h-5 w-5 ${COLOR_TOKENS.danger.tailwind |
 | 75:5 | if (direction === 'sell') return <Badge className="text-xs" style={{ backgroundColor: THEME_TOKENS.c |
 
-> å»ºè®®ï¼šConsider extracting the shared condition into a boolean variable or a helper predicate
+> ½¨Òé£ºConsider extracting the shared condition into a boolean variable or a helper predicate
 
 ### src/cockpit/widgets/SignalQualityDashboardWidget.tsx
 
-**é‡å¤æ¡ä»¶ï¼š** `value === undefined || value === null`
+**ÖØ¸´Ìõ¼ş£º** `value === undefined || value === null`
 
-| å‡ºç°ä½ç½® | ä»£ç ç‰‡æ®µ |
+| ³öÏÖÎ»ÖÃ | ´úÂëÆ¬¶Î |
 |----------|----------|
-| 134:3 | if (value === undefined \|\| value === null) return 'â€”' |
-| 140:3 | if (value === undefined \|\| value === null) return 'â€”' |
-| 146:3 | if (value === undefined \|\| value === null) return 'â€”' |
+| 134:3 | if (value === undefined \|\| value === null) return '¡ª' |
+| 140:3 | if (value === undefined \|\| value === null) return '¡ª' |
+| 146:3 | if (value === undefined \|\| value === null) return '¡ª' |
 
-> å»ºè®®ï¼šConsider extracting the shared condition into a boolean variable or a helper predicate
+> ½¨Òé£ºConsider extracting the shared condition into a boolean variable or a helper predicate
 
 ### src/components/analysis/score/ScoreFactorWaterfall.tsx
 
-**é‡å¤æ¡ä»¶ï¼š** `row.isTotal`
+**ÖØ¸´Ìõ¼ş£º** `row.isTotal`
 
-| å‡ºç°ä½ç½® | ä»£ç ç‰‡æ®µ |
+| ³öÏÖÎ»ÖÃ | ´úÂëÆ¬¶Î |
 |----------|----------|
 | 149:3 | if (row.isTotal) { |
 | 257:15 | if (row.isTotal) { |
 
-> å»ºè®®ï¼šConsider extracting the shared condition into a boolean variable or a helper predicate
+> ½¨Òé£ºConsider extracting the shared condition into a boolean variable or a helper predicate
 
 ### src/components/analysis/sector/SectorRotationHeatmap.tsx
 
-**é‡å¤æ¡ä»¶ï¼š** `value === null`
+**ÖØ¸´Ìõ¼ş£º** `value === null`
 
-| å‡ºç°ä½ç½® | ä»£ç ç‰‡æ®µ |
+| ³öÏÖÎ»ÖÃ | ´úÂëÆ¬¶Î |
 |----------|----------|
 | 66:3 | if (value === null) { |
 | 88:3 | if (value === null) return 'N/A' |
 
-> å»ºè®®ï¼šConsider extracting the shared condition into a boolean variable or a helper predicate
+> ½¨Òé£ºConsider extracting the shared condition into a boolean variable or a helper predicate
 
 ### src/components/collection/CollectionReportPanel.tsx
 
-**é‡å¤æ¡ä»¶ï¼š** `rate >= 80`
+**ÖØ¸´Ìõ¼ş£º** `rate >= 80`
 
-| å‡ºç°ä½ç½® | ä»£ç ç‰‡æ®µ |
+| ³öÏÖÎ»ÖÃ | ´úÂëÆ¬¶Î |
 |----------|----------|
 | 25:3 | if (rate >= 80) return COLOR_TOKENS.success.tailwind |
 | 31:3 | if (rate >= 80) return 'default' |
 
-> å»ºè®®ï¼šConsider extracting the shared condition into a boolean variable or a helper predicate
+> ½¨Òé£ºConsider extracting the shared condition into a boolean variable or a helper predicate
 
-**é‡å¤æ¡ä»¶ï¼š** `rate >= 50`
+**ÖØ¸´Ìõ¼ş£º** `rate >= 50`
 
-| å‡ºç°ä½ç½® | ä»£ç ç‰‡æ®µ |
+| ³öÏÖÎ»ÖÃ | ´úÂëÆ¬¶Î |
 |----------|----------|
 | 26:3 | if (rate >= 50) return COLOR_TOKENS.warning.tailwind |
 | 32:3 | if (rate >= 50) return 'secondary' |
 
-> å»ºè®®ï¼šConsider extracting the shared condition into a boolean variable or a helper predicate
+> ½¨Òé£ºConsider extracting the shared condition into a boolean variable or a helper predicate
 
 ### src/components/input/StockSearch.tsx
 
-**é‡å¤æ¡ä»¶ï¼š** `debounceRef.current`
+**ÖØ¸´Ìõ¼ş£º** `debounceRef.current`
 
-| å‡ºç°ä½ç½® | ä»£ç ç‰‡æ®µ |
+| ³öÏÖÎ»ÖÃ | ´úÂëÆ¬¶Î |
 |----------|----------|
 | 37:5 | if (debounceRef.current) { |
 | 57:7 | if (debounceRef.current) { |
 
-> å»ºè®®ï¼šConsider extracting the shared condition into a boolean variable or a helper predicate
+> ½¨Òé£ºConsider extracting the shared condition into a boolean variable or a helper predicate
 
 ### src/components/input/TraceReplayPanel.tsx
 
-**é‡å¤æ¡ä»¶ï¼š** `index >= stages.length - 1`
+**ÖØ¸´Ìõ¼ş£º** `index >= stages.length - 1`
 
-| å‡ºç°ä½ç½® | ä»£ç ç‰‡æ®µ |
+| ³öÏÖÎ»ÖÃ | ´úÂëÆ¬¶Î |
 |----------|----------|
 | 106:5 | if (index >= stages.length - 1) return 100 |
 | 131:5 | if (index >= stages.length - 1) { |
 
-> å»ºè®®ï¼šConsider extracting the shared condition into a boolean variable or a helper predicate
+> ½¨Òé£ºConsider extracting the shared condition into a boolean variable or a helper predicate
 
 ### src/components/output/reviewArtifact.ts
 
-**é‡å¤æ¡ä»¶ï¼š** `items.length === 0`
+**ÖØ¸´Ìõ¼ş£º** `items.length === 0`
 
-| å‡ºç°ä½ç½® | ä»£ç ç‰‡æ®µ |
+| ³öÏÖÎ»ÖÃ | ´úÂëÆ¬¶Î |
 |----------|----------|
 | 42:3 | if (items.length === 0) return '' |
 | 63:3 | if (items.length === 0) return '' |
 | 71:3 | if (items.length === 0) return '' |
 
-> å»ºè®®ï¼šConsider extracting the shared condition into a boolean variable or a helper predicate
+> ½¨Òé£ºConsider extracting the shared condition into a boolean variable or a helper predicate
 
 ### src/components/pool/usePoolDataFromStore.ts
 
-**é‡å¤æ¡ä»¶ï¼š** `!success`
+**ÖØ¸´Ìõ¼ş£º** `!success`
 
-| å‡ºç°ä½ç½® | ä»£ç ç‰‡æ®µ |
+| ³öÏÖÎ»ÖÃ | ´úÂëÆ¬¶Î |
 |----------|----------|
 | 108:7 | if (!success) { |
 | 122:7 | if (!success) { |
 
-> å»ºè®®ï¼šConsider extracting the shared condition into a boolean variable or a helper predicate
+> ½¨Òé£ºConsider extracting the shared condition into a boolean variable or a helper predicate
 
 ### src/components/system/LogStreamPanel.tsx
 
-**é‡å¤æ¡ä»¶ï¼š** `!isPaused`
+**ÖØ¸´Ìõ¼ş£º** `!isPaused`
 
-| å‡ºç°ä½ç½® | ä»£ç ç‰‡æ®µ |
+| ³öÏÖÎ»ÖÃ | ´úÂëÆ¬¶Î |
 |----------|----------|
 | 160:7 | if (!isPaused) { |
 | 167:5 | if (!isPaused) { |
 
-> å»ºè®®ï¼šConsider extracting the shared condition into a boolean variable or a helper predicate
+> ½¨Òé£ºConsider extracting the shared condition into a boolean variable or a helper predicate
 
 ### src/components/system/migration/useMcpMigration.ts
 
-**é‡å¤æ¡ä»¶ï¼š** `result.isError`
+**ÖØ¸´Ìõ¼ş£º** `result.isError`
 
-| å‡ºç°ä½ç½® | ä»£ç ç‰‡æ®µ |
+| ³öÏÖÎ»ÖÃ | ´úÂëÆ¬¶Î |
 |----------|----------|
 | 27:5 | if (result.isError) { |
 | 72:5 | if (result.isError) { |
 
-> å»ºè®®ï¼šConsider extracting the shared condition into a boolean variable or a helper predicate
+> ½¨Òé£ºConsider extracting the shared condition into a boolean variable or a helper predicate
 
 ### src/components/ui/DataState.tsx
 
-**é‡å¤æ¡ä»¶ï¼š** `isLoading`
+**ÖØ¸´Ìõ¼ş£º** `isLoading`
 
-| å‡ºç°ä½ç½® | ä»£ç ç‰‡æ®µ |
+| ³öÏÖÎ»ÖÃ | ´úÂëÆ¬¶Î |
 |----------|----------|
 | 59:3 | if (isLoading) { |
 | 127:3 | if (isLoading) { |
 | 171:3 | if (isLoading) { |
 
-> å»ºè®®ï¼šConsider extracting the shared condition into a boolean variable or a helper predicate
+> ½¨Òé£ºConsider extracting the shared condition into a boolean variable or a helper predicate
 
-**é‡å¤æ¡ä»¶ï¼š** `showEmpty`
+**ÖØ¸´Ìõ¼ş£º** `showEmpty`
 
-| å‡ºç°ä½ç½® | ä»£ç ç‰‡æ®µ |
+| ³öÏÖÎ»ÖÃ | ´úÂëÆ¬¶Î |
 |----------|----------|
 | 88:3 | if (showEmpty) { |
 | 181:3 | if (showEmpty) { |
 
-> å»ºè®®ï¼šConsider extracting the shared condition into a boolean variable or a helper predicate
+> ½¨Òé£ºConsider extracting the shared condition into a boolean variable or a helper predicate
 
 ### src/components/ui/Popover.tsx
 
-**é‡å¤æ¡ä»¶ï¼š** `trigger === 'hover'`
+**ÖØ¸´Ìõ¼ş£º** `trigger === 'hover'`
 
-| å‡ºç°ä½ç½® | ä»£ç ç‰‡æ®µ |
+| ³öÏÖÎ»ÖÃ | ´úÂëÆ¬¶Î |
 |----------|----------|
 | 63:7 | if (trigger === 'hover') setIsOpen(true) |
 | 67:7 | if (trigger === 'hover') setIsOpen(false) |
 
-> å»ºè®®ï¼šConsider extracting the shared condition into a boolean variable or a helper predicate
+> ½¨Òé£ºConsider extracting the shared condition into a boolean variable or a helper predicate
 
-**é‡å¤æ¡ä»¶ï¼š** `trigger === 'focus'`
+**ÖØ¸´Ìõ¼ş£º** `trigger === 'focus'`
 
-| å‡ºç°ä½ç½® | ä»£ç ç‰‡æ®µ |
+| ³öÏÖÎ»ÖÃ | ´úÂëÆ¬¶Î |
 |----------|----------|
 | 71:7 | if (trigger === 'focus') setIsOpen(true) |
 | 75:7 | if (trigger === 'focus') setIsOpen(false) |
 
-> å»ºè®®ï¼šConsider extracting the shared condition into a boolean variable or a helper predicate
+> ½¨Òé£ºConsider extracting the shared condition into a boolean variable or a helper predicate
 
 ### src/config/dataSourceRegistry.ts
 
-**é‡å¤æ¡ä»¶ï¼š** `dimensionSourcePriority && dimensionSourcePriority.length > 0`
+**ÖØ¸´Ìõ¼ş£º** `dimensionSourcePriority && dimensionSourcePriority.length > 0`
 
-| å‡ºç°ä½ç½® | ä»£ç ç‰‡æ®µ |
+| ³öÏÖÎ»ÖÃ | ´úÂëÆ¬¶Î |
 |----------|----------|
 | 139:3 | if (dimensionSourcePriority && dimensionSourcePriority.length > 0) { |
 | 151:3 | if (dimensionSourcePriority && dimensionSourcePriority.length > 0) { |
 
-> å»ºè®®ï¼šConsider extracting the shared condition into a boolean variable or a helper predicate
+> ½¨Òé£ºConsider extracting the shared condition into a boolean variable or a helper predicate
 
 ### src/constants/theme/theme.tokens.shades.ts
 
-**é‡å¤æ¡ä»¶ï¼š** `shade === undefined`
+**ÖØ¸´Ìõ¼ş£º** `shade === undefined`
 
-| å‡ºç°ä½ç½® | ä»£ç ç‰‡æ®µ |
+| ³öÏÖÎ»ÖÃ | ´úÂëÆ¬¶Î |
 |----------|----------|
 | 203:3 | if (shade === undefined) { |
 | 225:3 | if (shade === undefined) { |
 | 247:3 | if (shade === undefined) { |
 
-> å»ºè®®ï¼šConsider extracting the shared condition into a boolean variable or a helper predicate
+> ½¨Òé£ºConsider extracting the shared condition into a boolean variable or a helper predicate
 
-**é‡å¤æ¡ä»¶ï¼š** `color in SEMANTIC_COLORS`
+**ÖØ¸´Ìõ¼ş£º** `color in SEMANTIC_COLORS`
 
-| å‡ºç°ä½ç½® | ä»£ç ç‰‡æ®µ |
+| ³öÏÖÎ»ÖÃ | ´úÂëÆ¬¶Î |
 |----------|----------|
 | 205:5 | if (color in SEMANTIC_COLORS) { |
 | 227:5 | if (color in SEMANTIC_COLORS) { |
 | 249:5 | if (color in SEMANTIC_COLORS) { |
 
-> å»ºè®®ï¼šConsider extracting the shared condition into a boolean variable or a helper predicate
+> ½¨Òé£ºConsider extracting the shared condition into a boolean variable or a helper predicate
 
 ---
 
-## äº”ã€å†—ä½™ break è¯­å¥
+## Îå¡¢ÈßÓà break Óï¾ä
 
-æœªåœ¨å¾ªç¯æœ«å°¾å‘ç°å†—ä½™çš„ `break` è¯­å¥ã€‚ç°æœ‰ `break` å‡ä½äº `switch` åˆ†æ”¯æˆ–æ¡ä»¶åˆ¤æ–­å†…ï¼Œå±äºåˆæ³•ç”¨æ³•ã€‚
-
----
-
-## å…­ã€ä¼˜åŒ–å»ºè®®æ±‡æ€»
-
-### 6.1 æ·±å±‚åµŒå¥—ä¼˜åŒ–æ–¹å‘
-
-1. **å«è¯­å¥/æå‰è¿”å›**ï¼šå¯¹äº `if (condition) { return; } else { ... }` æ¨¡å¼ï¼Œå°†æ¡ä»¶å–ååç›´æ¥è¿”å›ï¼ŒæŠŠ else å—æå‡ä¸ºä¸»æµç¨‹ã€‚
-2. **å¾ªç¯å†…å®ˆå«**ï¼šå¯¹äº `for (...) { if (skip) continue; ... }`ï¼Œç¡®ä¿ `continue` å°½æ—©å‡ºç°ï¼Œé¿å…åœ¨è·³è¿‡æ¡ä»¶åç»§ç»­å¤šå±‚ç¼©è¿›ã€‚
-3. **å¼‚å¸¸å¤„ç†æŠ½ç¦»**ï¼š`try/catch` åµŒå¥—å¤šå±‚æ—¶ï¼Œå°†å†…éƒ¨é€»è¾‘æŠ½å–ä¸ºç‹¬ç«‹å‡½æ•°ï¼Œå‡å°‘å¤–å±‚ catch çš„åµŒå¥—æ·±åº¦ã€‚
-4. **ç­–ç•¥è¡¨/æ˜ å°„**ï¼šå°†åˆ†æ”¯æ¡ä»¶æ˜ å°„åˆ°å¤„ç†å‡½æ•°ï¼ˆå¦‚ `const handlers = { '/a': A, '/b': B }`ï¼‰ï¼Œæ¶ˆé™¤ if-else-if é“¾ã€‚
-
-### 6.2 é‡å¤é€»è¾‘å¤„ç†æ–¹å‘
-
-1. **æå–å¸ƒå°”å˜é‡**ï¼šå¯¹å¤šæ¬¡å‡ºç°çš„å¤æ‚æ¡ä»¶ï¼Œèµ‹äºˆè¯­ä¹‰åŒ–å˜é‡åã€‚
-2. **æå–è°“è¯å‡½æ•°**ï¼šå°†ä¸šåŠ¡æ¡ä»¶å°è£…ä¸º `isXxx(...)` è¾…åŠ©å‡½æ•°ã€‚
-3. **ç»Ÿä¸€é…ç½®/å¸¸é‡**ï¼šè·¯å¾„å‰ç¼€ã€é˜ˆå€¼ã€çŠ¶æ€ç ç­‰åº”è¿›å…¥ `src/constants` æˆ– `src/config`ï¼Œé¿å…å­—ç¬¦ä¸²ç¡¬ç¼–ç ã€‚
-
-### 6.3 break ä½¿ç”¨æ–¹å‘
-
-å½“å‰æœªå‘ç°å¾ªç¯æœ«å°¾å†—ä½™ `break`ã€‚ä¿æŒç°çŠ¶å³å¯ï¼Œä½†æ–°å¢å¾ªç¯æ—¶åº”æ³¨æ„ï¼š
-- å¾ªç¯æ­£å¸¸ç»“æŸä¸è¦æ‰‹åŠ¨ `break`ï¼›
-- `break` ä»…ç”¨äºæå‰é€€å‡ºæˆ– `switch` åˆ†æ”¯ã€‚
+Î´ÔÚÑ­»·Ä©Î²·¢ÏÖÈßÓàµÄ `break` Óï¾ä¡£ÏÖÓĞ `break` ¾ùÎ»ÓÚ `switch` ·ÖÖ§»òÌõ¼şÅĞ¶ÏÄÚ£¬ÊôÓÚºÏ·¨ÓÃ·¨¡£
 
 ---
 
-## ä¸ƒã€é™„å½•ï¼šå¤ç°æ–¹æ³•
+## Áù¡¢ÓÅ»¯½¨Òé»ã×Ü
+
+### 6.1 Éî²ãÇ¶Ì×ÓÅ»¯·½Ïò
+
+1. **ÎÀÓï¾ä/ÌáÇ°·µ»Ø**£º¶ÔÓÚ `if (condition) { return; } else { ... }` Ä£Ê½£¬½«Ìõ¼şÈ¡·´ºóÖ±½Ó·µ»Ø£¬°Ñ else ¿éÌáÉıÎªÖ÷Á÷³Ì¡£
+2. **Ñ­»·ÄÚÊØÎÀ**£º¶ÔÓÚ `for (...) { if (skip) continue; ... }`£¬È·±£ `continue` ¾¡Ôç³öÏÖ£¬±ÜÃâÔÚÌø¹ıÌõ¼şºó¼ÌĞø¶à²ãËõ½ø¡£
+3. **Òì³£´¦Àí³éÀë**£º`try/catch` Ç¶Ì×¶à²ãÊ±£¬½«ÄÚ²¿Âß¼­³éÈ¡Îª¶ÀÁ¢º¯Êı£¬¼õÉÙÍâ²ã catch µÄÇ¶Ì×Éî¶È¡£
+4. **²ßÂÔ±í/Ó³Éä**£º½«·ÖÖ§Ìõ¼şÓ³Éäµ½´¦Àíº¯Êı£¨Èç `const handlers = { '/a': A, '/b': B }`£©£¬Ïû³ı if-else-if Á´¡£
+
+### 6.2 ÖØ¸´Âß¼­´¦Àí·½Ïò
+
+1. **ÌáÈ¡²¼¶û±äÁ¿**£º¶Ô¶à´Î³öÏÖµÄ¸´ÔÓÌõ¼ş£¬¸³ÓèÓïÒå»¯±äÁ¿Ãû¡£
+2. **ÌáÈ¡Î½´Êº¯Êı**£º½«ÒµÎñÌõ¼ş·â×°Îª `isXxx(...)` ¸¨Öúº¯Êı¡£
+3. **Í³Ò»ÅäÖÃ/³£Á¿**£ºÂ·¾¶Ç°×º¡¢ãĞÖµ¡¢×´Ì¬ÂëµÈÓ¦½øÈë `src/constants` »ò `src/config`£¬±ÜÃâ×Ö·û´®Ó²±àÂë¡£
+
+### 6.3 break Ê¹ÓÃ·½Ïò
+
+µ±Ç°Î´·¢ÏÖÑ­»·Ä©Î²ÈßÓà `break`¡£±£³ÖÏÖ×´¼´¿É£¬µ«ĞÂÔöÑ­»·Ê±Ó¦×¢Òâ£º
+- Ñ­»·Õı³£½áÊø²»ÒªÊÖ¶¯ `break`£»
+- `break` ½öÓÃÓÚÌáÇ°ÍË³ö»ò `switch` ·ÖÖ§¡£
+
+---
+
+## Æß¡¢¸½Â¼£º¸´ÏÖ·½·¨
 
 ```bash
 node /tmp/nest-review/nested-review-v2.cjs
 ```
 
-å·¥å…·ä¾èµ–é¡¹ç›®æœ¬åœ° `typescript` åŒ…ï¼Œé€šè¿‡ `NODE_PATH` æŒ‡å‘é¡¹ç›® `node_modules`ã€‚
+¹¤¾ßÒÀÀµÏîÄ¿±¾µØ `typescript` °ü£¬Í¨¹ı `NODE_PATH` Ö¸ÏòÏîÄ¿ `node_modules`¡£
 
 ---
 
-*æ³¨ï¼šæœ¬æŠ¥å‘Šä¸ºé™æ€æ‰«æç»“æœï¼Œå…·ä½“é‡æ„å‰è¯·åœ¨ç›®æ ‡ä»£ç å¤„è¡¥å…¨å•å…ƒæµ‹è¯•ã€‚*
+*×¢£º±¾±¨¸æÎª¾²Ì¬É¨Ãè½á¹û£¬¾ßÌåÖØ¹¹Ç°ÇëÔÚÄ¿±ê´úÂë´¦²¹È«µ¥Ôª²âÊÔ¡£*

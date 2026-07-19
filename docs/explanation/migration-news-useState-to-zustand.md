@@ -1,118 +1,114 @@
 ---
-title: migration-news-usestate-to-zustand
-code_version: 2.0.0
-
+title: ĞÂÎÅÄ£¿é ¡ª useState ¡ú Zustand Ç¨ÒÆÎÄµµ
+type: explanation
+domain: project
+phase: planning
 tier: important
----
-
----
-title: æ–°é—»æ¨¡å— â€” useState â†’ Zustand è¿ç§»æ–‡æ¡£
+status: active
+maintainer: Quality Auditor
+summary: "µ¥Ò» Zustand store£¬¹ÜÀí 13 ¸ö×´Ì¬Óò + 14 ¸ö action£º"
+tags: [project, news, store, migration, governance, documentation, strategy, explanation, state]
 version: v1.0.0
 last_updated: 2026-06-27
-maintainer: Quality Auditor
-status: active
-change_log:
-  - date: 2026-06-27
-    author: Quality Auditor
-    desc: åˆå§‹ç‰ˆæœ¬ï¼Œè®°å½• NewsPage + NewsFeed ä» useState åˆ° Zustand çš„è¿ç§»
 code_version: 2.0.0
-tier: important
+doc_id: V9-DOC-PROJ-062
+change_log: 
 ---
 
-# æ–°é—»æ¨¡å— â€” useState â†’ Zustand è¿ç§»æ–‡æ¡£
+# ĞÂÎÅÄ£¿é ¡ª useState ¡ú Zustand Ç¨ÒÆÎÄµµ
 
-## 1. è¿ç§»æ¦‚è§ˆ
+## 1. Ç¨ÒÆ¸ÅÀÀ
 
-| ç»´åº¦ | è¿ç§»å‰ (useState) | è¿ç§»å (Zustand) |
+| Î¬¶È | Ç¨ÒÆÇ° (useState) | Ç¨ÒÆºó (Zustand) |
 |:---|:---|:---|
-| çŠ¶æ€ç®¡ç†æ–‡ä»¶ | æ— ï¼ˆçŠ¶æ€æ•£è½åœ¨ç»„ä»¶å†…ï¼‰ | `src/store/analysisNewsStore.ts` |
-| NewsPage çŠ¶æ€å£°æ˜ | 7 ä¸ª `useState` + 2 ä¸ªå·¥å…·å‡½æ•° | 1 ä¸ª `useNewsStore()` è§£æ„ |
-| NewsFeed çŠ¶æ€å£°æ˜ | 4 ä¸ª `useState` + 1 ä¸ª `useRef` | 1 ä¸ª `useNewsStore()` è§£æ„ |
-| NewsPage â†’ NewsFeed props | 10 ä¸ª | 4 ä¸ªï¼ˆä»…å›è°ƒï¼‰ |
-| è·¨ç»„ä»¶å…±äº« | ä¸æ”¯æŒ | ä»»æ„ç»„ä»¶é€šè¿‡ `useNewsStore()` è®¿é—® |
-| æ”¶è—æŒä¹…åŒ– | åœ¨ NewsPage ä¸­ | åœ¨ store ä¸­ï¼Œè°ƒç”¨æ–¹æ— æ„ŸçŸ¥ |
-| TypeScript ç¼–è¯‘ | é€šè¿‡ | é€šè¿‡ (`tsc --noEmit` exit 0) |
+| ×´Ì¬¹ÜÀíÎÄ¼ş | ÎŞ£¨×´Ì¬É¢ÂäÔÚ×é¼şÄÚ£© | `src/store/analysisNewsStore.ts` |
+| NewsPage ×´Ì¬ÉùÃ÷ | 7 ¸ö `useState` + 2 ¸ö¹¤¾ßº¯Êı | 1 ¸ö `useNewsStore()` ½â¹¹ |
+| NewsFeed ×´Ì¬ÉùÃ÷ | 4 ¸ö `useState` + 1 ¸ö `useRef` | 1 ¸ö `useNewsStore()` ½â¹¹ |
+| NewsPage ¡ú NewsFeed props | 10 ¸ö | 4 ¸ö£¨½ö»Øµ÷£© |
+| ¿ç×é¼ş¹²Ïí | ²»Ö§³Ö | ÈÎÒâ×é¼şÍ¨¹ı `useNewsStore()` ·ÃÎÊ |
+| ÊÕ²Ø³Ö¾Ã»¯ | ÔÚ NewsPage ÖĞ | ÔÚ store ÖĞ£¬µ÷ÓÃ·½ÎŞ¸ĞÖª |
+| TypeScript ±àÒë | Í¨¹ı | Í¨¹ı (`tsc --noEmit` exit 0) |
 
-## 2. æ–°å¢æ–‡ä»¶
+## 2. ĞÂÔöÎÄ¼ş
 
 ### `src/store/analysisNewsStore.ts`
 
-å•ä¸€ Zustand storeï¼Œç®¡ç† 13 ä¸ªçŠ¶æ€åŸŸ + 14 ä¸ª actionï¼š
+µ¥Ò» Zustand store£¬¹ÜÀí 13 ¸ö×´Ì¬Óò + 14 ¸ö action£º
 
 ```typescript
-// æ•°æ®å±‚ï¼ˆ5 ä¸ªï¼‰ï¼šarticles / loading / error / hasMore / currentOffset
-// UI å±‚ï¼ˆ8 ä¸ªï¼‰ï¼šselectedArticle / bookmarkedIds / filter / searchInput / showFilter / displayCount
-// Actionsï¼ˆ14 ä¸ªï¼‰ï¼šsetArticles / appendArticles / setLoading / setError / setHasMore /
+// Êı¾İ²ã£¨5 ¸ö£©£ºarticles / loading / error / hasMore / currentOffset
+// UI ²ã£¨8 ¸ö£©£ºselectedArticle / bookmarkedIds / filter / searchInput / showFilter / displayCount
+// Actions£¨14 ¸ö£©£ºsetArticles / appendArticles / setLoading / setError / setHasMore /
 //                  setCurrentOffset / selectArticle / toggleBookmark / setFilter /
 //                  setSearchInput / setShowFilter / setDisplayCount / resetDisplay
 ```
 
-å…³é”®è®¾è®¡å†³ç­–ï¼š
-- `bookmarkedIds` ä½¿ç”¨ `Set<string>` ç±»å‹ï¼Œåœ¨ `toggleBookmark` action ä¸­è‡ªåŠ¨åŒæ­¥ localStorage
-- `appendArticles` ä½¿ç”¨ `set((state) => ...)` æ¨¡å¼å®ç°ä¸å¯å˜è¿½åŠ 
-- `setFilter` åŒæ—¶é‡ç½® `displayCount`ï¼Œé¿å…ç­›é€‰åä»æ˜¾ç¤ºæ—§çš„åˆ†é¡µåç§»
-- æ‰€æœ‰ action å˜æ›´å‡åŒ…å« `logger.info` æ—¥å¿—
+¹Ø¼üÉè¼Æ¾ö²ß£º
+- `bookmarkedIds` Ê¹ÓÃ `Set<string>` ÀàĞÍ£¬ÔÚ `toggleBookmark` action ÖĞ×Ô¶¯Í¬²½ localStorage
+- `appendArticles` Ê¹ÓÃ `set((state) => ...)` Ä£Ê½ÊµÏÖ²»¿É±ä×·¼Ó
+- `setFilter` Í¬Ê±ÖØÖÃ `displayCount`£¬±ÜÃâÉ¸Ñ¡ºóÈÔÏÔÊ¾¾ÉµÄ·ÖÒ³Æ«ÒÆ
+- ËùÓĞ action ±ä¸ü¾ù°üº¬ `logger.info` ÈÕÖ¾
 
-## 3. å˜æ›´æ–‡ä»¶
+## 3. ±ä¸üÎÄ¼ş
 
 ### `src/pages/analysis/NewsPage.tsx`
 
-**å˜æ›´æ¸…å•ï¼š**
+**±ä¸üÇåµ¥£º**
 
-| è¡Œå· | å˜æ›´ç±»å‹ | è¯´æ˜ |
+| ĞĞºÅ | ±ä¸üÀàĞÍ | ËµÃ÷ |
 |:---|:---|:---|
-| L4 | æ³¨é‡Š | æ–°å¢ "çŠ¶æ€ç®¡ç†å·²ä» useState è¿ç§»è‡³ useNewsStore (Zustand)" |
-| L7 | å¯¼å…¥ | ç§»é™¤ `useMemo, useState`ï¼Œä¿ç•™ `useCallback, useEffect` |
-| L13 | å¯¼å…¥ | æ–°å¢ `import { useNewsStore } from '@/store/newsStore'` |
-| L14 | ç§»é™¤ | åˆ é™¤ `import type { NewsFilter } from './components/FilterPanel'` |
-| L18-19 | ç§»é™¤ | åˆ é™¤ `BOOKMARK_STORAGE_KEY`ã€`PAGE_SIZE`ï¼ˆ`PAGE_SIZE` ä¿ç•™ï¼Œä»…ç§»é™¤ `BOOKMARK_STORAGE_KEY`ï¼‰ |
-| L33-49 | ç§»é™¤ | åˆ é™¤ `loadBookmarks()` / `saveBookmarks()` å·¥å…·å‡½æ•° |
-| L53-60 | ç§»é™¤ | åˆ é™¤ 7 ä¸ª `useState()` å£°æ˜ |
-| L63-82 | ç§»é™¤ | åˆ é™¤ `filteredArticles` useMemoï¼ˆç­›é€‰é€»è¾‘ç§»è‡³ NewsFeedï¼‰ |
-| L34-39 | æ–°å¢ | 1 ä¸ª `useNewsStore()` è§£æ„æ›¿ä»£ 7 ä¸ª useState |
-| L52 | ä¿®æ”¹ | `append` åˆ†æ”¯æ”¹ç”¨ `useNewsStore.getState().appendArticles(adapted)` |
-| L70 | ä¿®æ”¹ | `loadData` deps æ•°ç»„ä» `[]` æ›´æ–°ä¸º `[setArticles, ...]` |
-| L90 | ä¿®æ”¹ | `handleRefresh` deps æ–°å¢ `setCurrentOffset` |
-| L102-106 | ä¿®æ”¹ | `handleFilterChange` æ”¹ä¸ºè°ƒç”¨ `setFilter(filter)` + `setCurrentOffset(0)` |
-| L110-111 | ä¿®æ”¹ | `handleArticleClick` æ”¹ä¸ºè°ƒç”¨ `selectArticle(article)` |
-| L114-128 | ç§»é™¤ | åˆ é™¤ `handleBookmark` å‡½æ•°ï¼ˆé€»è¾‘ç§»è‡³ storeï¼‰ |
-| L140-147 | ä¿®æ”¹ | `<NewsFeed>` props ä» 10 ä¸ªç¼©å‡ä¸º 4 ä¸ª |
-| L153, L185 | ä¿®æ”¹ | `setSelectedArticle(null)` â†’ `selectArticle(null)` |
+| L4 | ×¢ÊÍ | ĞÂÔö "×´Ì¬¹ÜÀíÒÑ´Ó useState Ç¨ÒÆÖÁ useNewsStore (Zustand)" |
+| L7 | µ¼Èë | ÒÆ³ı `useMemo, useState`£¬±£Áô `useCallback, useEffect` |
+| L13 | µ¼Èë | ĞÂÔö `import { useNewsStore } from '@/store/newsStore'` |
+| L14 | ÒÆ³ı | É¾³ı `import type { NewsFilter } from './components/FilterPanel'` |
+| L18-19 | ÒÆ³ı | É¾³ı `BOOKMARK_STORAGE_KEY`¡¢`PAGE_SIZE`£¨`PAGE_SIZE` ±£Áô£¬½öÒÆ³ı `BOOKMARK_STORAGE_KEY`£© |
+| L33-49 | ÒÆ³ı | É¾³ı `loadBookmarks()` / `saveBookmarks()` ¹¤¾ßº¯Êı |
+| L53-60 | ÒÆ³ı | É¾³ı 7 ¸ö `useState()` ÉùÃ÷ |
+| L63-82 | ÒÆ³ı | É¾³ı `filteredArticles` useMemo£¨É¸Ñ¡Âß¼­ÒÆÖÁ NewsFeed£© |
+| L34-39 | ĞÂÔö | 1 ¸ö `useNewsStore()` ½â¹¹Ìæ´ú 7 ¸ö useState |
+| L52 | ĞŞ¸Ä | `append` ·ÖÖ§¸ÄÓÃ `useNewsStore.getState().appendArticles(adapted)` |
+| L70 | ĞŞ¸Ä | `loadData` deps Êı×é´Ó `[]` ¸üĞÂÎª `[setArticles, ...]` |
+| L90 | ĞŞ¸Ä | `handleRefresh` deps ĞÂÔö `setCurrentOffset` |
+| L102-106 | ĞŞ¸Ä | `handleFilterChange` ¸ÄÎªµ÷ÓÃ `setFilter(filter)` + `setCurrentOffset(0)` |
+| L110-111 | ĞŞ¸Ä | `handleArticleClick` ¸ÄÎªµ÷ÓÃ `selectArticle(article)` |
+| L114-128 | ÒÆ³ı | É¾³ı `handleBookmark` º¯Êı£¨Âß¼­ÒÆÖÁ store£© |
+| L140-147 | ĞŞ¸Ä | `<NewsFeed>` props ´Ó 10 ¸öËõ¼õÎª 4 ¸ö |
+| L153, L185 | ĞŞ¸Ä | `setSelectedArticle(null)` ¡ú `selectArticle(null)` |
 
-### `src/pages/news-v6/components/NewsFeed.tsx`
+### `src/components/organisms/analysis/news/NewsSentimentTrend.tsx`
 
-**å˜æ›´æ¸…å•ï¼š**
+**±ä¸üÇåµ¥£º**
 
-| è¡Œå· | å˜æ›´ç±»å‹ | è¯´æ˜ |
+| ĞĞºÅ | ±ä¸üÀàĞÍ | ËµÃ÷ |
 |:---|:---|:---|
-| L4 | æ³¨é‡Š | æ–°å¢ "çŠ¶æ€ç®¡ç†å·²ä» useState è¿ç§»è‡³ useNewsStore (Zustand)" |
-| L7 | å¯¼å…¥ | `useState, useRef` â†’ `useMemo, useCallback` |
-| L15 | å¯¼å…¥ | æ–°å¢ `import { useNewsStore } from '@/store/newsStore'` |
-| L17-26 | ä¿®æ”¹ | `NewsFeedProps` ç§»é™¤ `articles`/`loading`/`hasMore`/`onBookmark`/`bookmarkedIds`ï¼ˆ5 ä¸ª propsï¼‰ |
-| L28-37 | ä¿®æ”¹ | å‡½æ•°ç­¾åç§»é™¤å¯¹åº”å‚æ•°ï¼Œæ–°å¢ `useNewsStore()` è§£æ„ |
-| L40-44 | ç§»é™¤ | åˆ é™¤ 4 ä¸ª `useState` + 1 ä¸ª `useRef` å£°æ˜ |
-| L57-66 | ä¿®æ”¹ | `handleSearchChange` æ”¹ç”¨ store actionsï¼Œç§»é™¤é˜²æŠ– ref |
-| L68-76 | ä¿®æ”¹ | `handleFilterChange` æ”¹ç”¨ `setFilter` + `resetDisplay` |
-| L78-86 | ä¿®æ”¹ | `handleLoadMore` æ”¹ç”¨ `setDisplayCount` |
-| L88-92 | ä¿®æ”¹ | `handleRefresh` æ”¹ç”¨ `resetDisplay` |
-| L189-190 | ä¿®æ”¹ | `onBookmark={onBookmark}` â†’ `onBookmark={toggleBookmark}`ï¼Œ`bookmarkedIds?.has` â†’ `bookmarkedIds.has` |
+| L4 | ×¢ÊÍ | ĞÂÔö "×´Ì¬¹ÜÀíÒÑ´Ó useState Ç¨ÒÆÖÁ useNewsStore (Zustand)" |
+| L7 | µ¼Èë | `useState, useRef` ¡ú `useMemo, useCallback` |
+| L15 | µ¼Èë | ĞÂÔö `import { useNewsStore } from '@/store/newsStore'` |
+| L17-26 | ĞŞ¸Ä | `NewsFeedProps` ÒÆ³ı `articles`/`loading`/`hasMore`/`onBookmark`/`bookmarkedIds`£¨5 ¸ö props£© |
+| L28-37 | ĞŞ¸Ä | º¯ÊıÇ©ÃûÒÆ³ı¶ÔÓ¦²ÎÊı£¬ĞÂÔö `useNewsStore()` ½â¹¹ |
+| L40-44 | ÒÆ³ı | É¾³ı 4 ¸ö `useState` + 1 ¸ö `useRef` ÉùÃ÷ |
+| L57-66 | ĞŞ¸Ä | `handleSearchChange` ¸ÄÓÃ store actions£¬ÒÆ³ı·À¶¶ ref |
+| L68-76 | ĞŞ¸Ä | `handleFilterChange` ¸ÄÓÃ `setFilter` + `resetDisplay` |
+| L78-86 | ĞŞ¸Ä | `handleLoadMore` ¸ÄÓÃ `setDisplayCount` |
+| L88-92 | ĞŞ¸Ä | `handleRefresh` ¸ÄÓÃ `resetDisplay` |
+| L189-190 | ĞŞ¸Ä | `onBookmark={onBookmark}` ¡ú `onBookmark={toggleBookmark}`£¬`bookmarkedIds?.has` ¡ú `bookmarkedIds.has` |
 
-## 4. è¿ç§»æ¨¡å¼é€ŸæŸ¥
+## 4. Ç¨ÒÆÄ£Ê½ËÙ²é
 
-### æ¨¡å¼ 1ï¼šuseState â†’ Zustand state
+### Ä£Ê½ 1£ºuseState ¡ú Zustand state
 
 ```typescript
-// è¿ç§»å‰
+// Ç¨ÒÆÇ°
 const [articles, setArticles] = useState<V6NewsArticle[]>([])
 
-// è¿ç§»å
+// Ç¨ÒÆºó
 const { articles, setArticles } = useNewsStore()
 ```
 
-### æ¨¡å¼ 2ï¼šuseState + å›è°ƒ â†’ Zustand action
+### Ä£Ê½ 2£ºuseState + »Øµ÷ ¡ú Zustand action
 
 ```typescript
-// è¿ç§»å‰
+// Ç¨ÒÆÇ°
 const handleBookmark = useCallback((id: string) => {
   setBookmarkedIds((prev) => {
     const next = new Set(prev)
@@ -122,35 +118,35 @@ const handleBookmark = useCallback((id: string) => {
   })
 }, [])
 
-// è¿ç§»å
+// Ç¨ÒÆºó
 const { toggleBookmark } = useNewsStore()
-// toggleBookmark å†…éƒ¨å·²åŒ…å« localStorage æŒä¹…åŒ– + æ—¥å¿—
+// toggleBookmark ÄÚ²¿ÒÑ°üº¬ localStorage ³Ö¾Ã»¯ + ÈÕÖ¾
 ```
 
-### æ¨¡å¼ 3ï¼šuseCallback å†…è°ƒç”¨ setState â†’ ç›´æ¥è°ƒç”¨ store action
+### Ä£Ê½ 3£ºuseCallback ÄÚµ÷ÓÃ setState ¡ú Ö±½Óµ÷ÓÃ store action
 
 ```typescript
-// è¿ç§»å‰
+// Ç¨ÒÆÇ°
 const handleFilterChange = useCallback((filter: NewsFilter) => {
-  setActiveFilter(filter)     // æœ¬åœ° useState setter
-  setCurrentOffset(0)         // æœ¬åœ° useState setter
-  void loadData(0)           // æœ¬åœ°å‡½æ•°
+  setActiveFilter(filter)     // ±¾µØ useState setter
+  setCurrentOffset(0)         // ±¾µØ useState setter
+  void loadData(0)           // ±¾µØº¯Êı
 }, [loadData])
 
-// è¿ç§»å
+// Ç¨ÒÆºó
 const handleFilterChange = useCallback((filter: NewsFilter) => {
-  setFilter(filter)           // store actionï¼ˆè‡ªåŠ¨é‡ç½® displayCountï¼‰
+  setFilter(filter)           // store action£¨×Ô¶¯ÖØÖÃ displayCount£©
   setCurrentOffset(0)         // store action
-  void loadData(0)           // æœ¬åœ°å‡½æ•°ï¼ˆä¸å˜ï¼‰
+  void loadData(0)           // ±¾µØº¯Êı£¨²»±ä£©
 }, [loadData, setFilter, setCurrentOffset])
 ```
 
-### æ¨¡å¼ 4ï¼šProps ä¼ é€’ â†’ Store æ¶ˆè´¹
+### Ä£Ê½ 4£ºProps ´«µİ ¡ú Store Ïû·Ñ
 
 ```typescript
-// è¿ç§»å‰ â€” NewsPage â†’ NewsFeed
+// Ç¨ÒÆÇ° ¡ª NewsPage ¡ú NewsFeed
 <NewsFeed
-  articles={filteredArticles}   // 10 ä¸ª props
+  articles={filteredArticles}   // 10 ¸ö props
   loading={loading}
   hasMore={hasMore}
   onBookmark={handleBookmark}
@@ -158,28 +154,28 @@ const handleFilterChange = useCallback((filter: NewsFilter) => {
   ...
 />
 
-// è¿ç§»å â€” NewsPage â†’ NewsFeed
+// Ç¨ÒÆºó ¡ª NewsPage ¡ú NewsFeed
 <NewsFeed
-  onLoadMore={loadMore}         // 4 ä¸ª propsï¼ˆä»…å›è°ƒï¼‰
+  onLoadMore={loadMore}         // 4 ¸ö props£¨½ö»Øµ÷£©
   onRefresh={handleRefresh}
   onFilterChange={handleFilterChange}
   onArticleClick={handleArticleClick}
 />
-// NewsFeed å†…éƒ¨é€šè¿‡ useNewsStore() ç›´æ¥è¯»å– articles/loading/hasMore/bookmarkedIds
+// NewsFeed ÄÚ²¿Í¨¹ı useNewsStore() Ö±½Ó¶ÁÈ¡ articles/loading/hasMore/bookmarkedIds
 ```
 
-## 5. éªŒè¯ç»“æœ
+## 5. ÑéÖ¤½á¹û
 
-| æ£€æŸ¥é¡¹ | ç»“æœ |
+| ¼ì²éÏî | ½á¹û |
 |:---|:---|
-| `tsc --noEmit` | exit 0ï¼Œé›¶é”™è¯¯ |
-| NewsPage ç­›é€‰åŠŸèƒ½ | æ­£å¸¸ï¼ˆfilter å˜æ›´ â†’ store.setFilter â†’ NewsFeed å“åº”ï¼‰ |
-| NewsFeed æ”¶è—åŠŸèƒ½ | æ­£å¸¸ï¼ˆtoggleBookmark â†’ store æŒä¹…åŒ– â†’ localStorageï¼‰ |
-| åˆ†é¡µåŠ è½½ | æ­£å¸¸ï¼ˆcurrentOffset â†’ loadMore â†’ appendArticlesï¼‰ |
-| è·¨ç»„ä»¶çŠ¶æ€å…±äº« | æ­£å¸¸ï¼ˆNewsPage å’Œ NewsFeed å…±äº«åŒä¸€ store å®ä¾‹ï¼‰ |
+| `tsc --noEmit` | exit 0£¬Áã´íÎó |
+| NewsPage É¸Ñ¡¹¦ÄÜ | Õı³££¨filter ±ä¸ü ¡ú store.setFilter ¡ú NewsFeed ÏìÓ¦£© |
+| NewsFeed ÊÕ²Ø¹¦ÄÜ | Õı³££¨toggleBookmark ¡ú store ³Ö¾Ã»¯ ¡ú localStorage£© |
+| ·ÖÒ³¼ÓÔØ | Õı³££¨currentOffset ¡ú loadMore ¡ú appendArticles£© |
+| ¿ç×é¼ş×´Ì¬¹²Ïí | Õı³££¨NewsPage ºÍ NewsFeed ¹²ÏíÍ¬Ò» store ÊµÀı£© |
 
-## 6. åç»­å¯æ‰©å±•ç‚¹
+## 6. ºóĞø¿ÉÀ©Õ¹µã
 
-- å¯æ–°å¢ `src/store/newsStore.selectors.ts`ï¼Œå°è£… `useFilteredArticles()` / `useArticleStats()` ç­‰æ´¾ç”Ÿé€‰æ‹©å™¨
-- æ”¶è—æ•°æ®å¯å‡çº§ä¸º IndexedDB å­˜å‚¨ï¼ˆæ›¿ä»£ localStorageï¼‰ï¼Œå˜æ›´ç‚¹ä»…é™ store å†…éƒ¨
-- å¯æ¥å…¥ DataBridge äº‹ä»¶é€šé“ï¼ˆP2-3ï¼‰ï¼Œå®ç°æ–°é—»æ•°æ®å˜æ›´çš„è‡ªåŠ¨åˆ·æ–°
+- ¿ÉĞÂÔö `src/store/analysisNewsStore.ts`£¬·â×° `useFilteredArticles()` / `useArticleStats()` µÈÅÉÉúÑ¡ÔñÆ÷
+- ÊÕ²ØÊı¾İ¿ÉÉı¼¶Îª IndexedDB ´æ´¢£¨Ìæ´ú localStorage£©£¬±ä¸üµã½öÏŞ store ÄÚ²¿
+- ¿É½ÓÈë DataBridge ÊÂ¼şÍ¨µÀ£¨P2-3£©£¬ÊµÏÖĞÂÎÅÊı¾İ±ä¸üµÄ×Ô¶¯Ë¢ĞÂ
