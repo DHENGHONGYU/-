@@ -3,6 +3,7 @@ title: refactor-research-pool-rename-plan
 code_version: 2.0.0
 tier: important
 status: archived
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
 
 # 「股票池」泛化旧名称 内部标识符重命名重构方案

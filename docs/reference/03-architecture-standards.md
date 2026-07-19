@@ -12,6 +12,7 @@ version: v1.0.0
 last_updated: 2026-07-17
 code_version: 2.0.0
 doc_id: V9-DOC-ARCH-004
+referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-QA-007, V9-DOC-PROJ-058, V9-DOC-ARCH-026, V9-DOC-PROJ-264, V9-DOC-QA-034, V9-DOC-PROJ-119, V9-DOC-PROJ-331, V9-DOC-PROJ-176, V9-DOC-QA-095, V9-DOC-ARCH-030, V9-DOC-QA-025, V9-DOC-PROJ-182, V9-DOC-QA-070, V9-DOC-FRONT-044, V9-DOC-BACK-040, V9-DOC-QA-102, V9-DOC-PROJ-193, V9-DOC-PROJ-085, V9-DOC-BACK-028, docs/archive/reference-historical/v9-code-quality-audit-report-20260629.md, V9-DOC-FRONT-051, V9-DOC-PROJ-149]
 change_log:
   - version: v1.0.0
 changes: Initial version established

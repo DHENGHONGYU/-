@@ -3,6 +3,8 @@ title: automation-test-plan
 code_version: 2.0.0
 tier: important
 status: archived
+related_docs: [V9-DOC-QA-091]
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
 
 # V9 智能投研复盘系统 全面自动化测试实施计划

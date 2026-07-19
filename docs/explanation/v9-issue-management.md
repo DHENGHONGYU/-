@@ -11,6 +11,7 @@ tags: [project, plan, management, explanation, governance, documentation, strate
 version: v1.0.0
 last_updated: 2026-06-27
 doc_id: V9-DOC-PROJ-067
+referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-164, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-PROJ-149]
 change_log: 
 ---
 

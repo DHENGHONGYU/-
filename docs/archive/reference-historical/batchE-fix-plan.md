@@ -6,6 +6,7 @@ version: v1.0.0
 last_updated: 2026-06-27
 maintainer: Quality Auditor
 status: archived
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
 
 # V9 批次 E（输出舱 + 总控舱）P2 问题修复方案

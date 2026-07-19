@@ -12,6 +12,8 @@ version: v1.0.0
 last_updated: 2026-07-17
 code_version: 2.0.0
 doc_id: V9-DOC-FRONT-042
+related_docs: [V9-DOC-FRONT-025, V9-DOC-QA-102, V9-DOC-QA-070, V9-DOC-DATA-007]
+referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-PROJ-149]
 change_log:
   - version: v1.0.0
 changes: Initial version established

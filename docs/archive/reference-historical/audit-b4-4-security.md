@@ -3,6 +3,7 @@ title: audit-b4-4-security
 code_version: 2.0.0
 tier: reference
 status: archived
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, docs/archive/reference-historical/v9-code-quality-audit-report-20260629.md]
 ---
 
 # V9 前端应用安全质量审计报告

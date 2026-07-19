@@ -3,6 +3,7 @@ title: changelog-warnings-handling-strategy
 code_version: 2.0.0
 tier: core
 status: archived
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, docs/archive/00-meta-historical/V9-PRE-LAUNCH-AUDIT-REPORT-20260713.md]
 ---
 
 # CHANGELOG 警告处理策略

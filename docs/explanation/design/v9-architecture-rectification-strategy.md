@@ -10,6 +10,7 @@ version: v1.0.0
 last_updated: 2026-06-27
 code_version: 2.0.0
 doc_id: V9-DOC-ARCH-012
+referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-PROJ-149]
 ---
 
 # V9 架构整改总体策略与执行计�?

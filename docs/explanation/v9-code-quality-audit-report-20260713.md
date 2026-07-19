@@ -12,6 +12,7 @@ version: v1.0.0
 last_updated: 2026-07-17
 code_version: 2.0.0
 doc_id: V9-DOC-QA-101
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, docs/archive/00-meta-historical/V9-PRE-LAUNCH-AUDIT-REPORT-20260713.md, V9-DOC-QA-113, V9-DOC-PROJ-149]
 change_log:
   - version: v1.0.0
 changes: Initial version established

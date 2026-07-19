@@ -3,6 +3,7 @@ title: directory-audit-todo
 code_version: 2.0.0
 tier: core
 status: archived
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, docs/archive/00-meta-historical/V9-PRE-LAUNCH-AUDIT-REPORT-20260713.md]
 ---
 
 # 目录结构文档 — TODO 清单（诊断阶段交付物 2/2）
