@@ -3,6 +3,7 @@ title: migration-plan
 code_version: 2.0.0
 tier: core
 status: archived
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
 
 # V9 文档迁移计划（A-H 分类体系）

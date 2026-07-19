@@ -5,6 +5,7 @@ tier: core
 source: 文档风格统一整改方案（基于 doc-style-standard）
 generated: 2026-07-16
 status: archived
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
 
 # V9 文档风格整改方案（doc-style-remediation-plan）

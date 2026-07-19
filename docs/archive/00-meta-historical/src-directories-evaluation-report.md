@@ -3,6 +3,7 @@ title: src-directories-evaluation-report
 code_version: 2.0.0
 tier: core
 status: archived
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
 
 # src/databridge/ 和 src/utils/ 评估报告

@@ -5,6 +5,7 @@ tier: reference
 source: 文档风格统一 P1–P3 执行日志
 generated: 2026-07-16
 status: archived
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
 
 # V9 文档风格整改执行日志（doc-style-remediation-log）

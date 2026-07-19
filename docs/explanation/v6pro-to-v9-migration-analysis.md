@@ -11,6 +11,7 @@ tags: [project, migration, analysis, plan, explanation]
 version: v0.9.0
 last_updated: 2026-06-25
 doc_id: V9-DOC-PROJ-066
+referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-164, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-PROJ-149]
 change_log: 
 ---
 

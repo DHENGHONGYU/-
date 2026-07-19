@@ -3,6 +3,7 @@ title: p5-verification-report
 code_version: 2.0.0
 tier: core
 status: archived
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
 
 # P5 验证报告 — 系统性目录梳理收尾

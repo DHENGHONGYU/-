@@ -3,6 +3,7 @@ title: 08-implementation-plan
 code_version: 2.0.0
 tier: important
 status: archived
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
 
 # 08. 实施计划

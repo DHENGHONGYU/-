@@ -12,6 +12,7 @@ version: v2.0.0
 last_updated: 2026-07-19
 code_version: 2.0.0
 doc_id: V9-DOC-PROJ-016
+referenced_by: [V9-DOC-PROJ-032, V9-DOC-META-000, V9-DOC-PROJ-CROSSINDEX-001, V9-DOC-PROJ-217, V9-DOC-PROJ-175, V9-DOC-PROJ-218]
 change_log:
   - version: v2.0.0
     changes: "重写分类体系：A-H 八类 → Diátaxis + 数字前缀（对齐实测数据 806 文档）"

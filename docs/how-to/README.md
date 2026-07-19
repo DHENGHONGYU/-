@@ -12,6 +12,8 @@ version: v1.0.0
 last_updated: 2026-07-17
 code_version: 2.0.0
 doc_id: V9-DOC-PROJ-157
+related_docs: [V9-DOC-DATA-055, V9-DOC-BACK-027, V9-DOC-FRONT-026, V9-DOC-AI-018, V9-DOC-PROJ-161, V9-DOC-PROJ-239, V9-DOC-PROJ-071, V9-DOC-PROJ-072, V9-DOC-PROJ-070, V9-DOC-FRONT-025, V9-DOC-QA-008, V9-DOC-QA-064, V9-DOC-QA-063]
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 change_log:
   - version: v1.0.0
 changes: Initial version established

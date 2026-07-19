@@ -3,6 +3,7 @@ title: directory-audit-report-v1.4.3
 code_version: 2.0.0
 tier: core
 status: archived
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
 
 # P4 系统性目录梳理报告

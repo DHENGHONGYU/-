@@ -2,6 +2,7 @@
 title: 架构审计报告（2026-07-16）
 status: archived
 tier: archive
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-338]
 ---
 
 # 架构审计报告（2026-07-16）

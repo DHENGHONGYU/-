@@ -6,6 +6,7 @@ version: v1.0.0
 date: 2026-06-27
 maintainer: Architecture Audit
 status: archived
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
 
 # V9 智能体检视报告

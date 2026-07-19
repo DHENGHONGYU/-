@@ -3,6 +3,7 @@ title: file-management-guide-optimization-prompt
 code_version: 2.0.0
 tier: core
 status: archived
+referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 ---
 
 # file-management-guide.md 体系优化提示词

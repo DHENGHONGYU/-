@@ -12,6 +12,7 @@ version: v1.0.0
 last_updated: 2026-07-17
 code_version: 2.0.0
 doc_id: V9-DOC-QA-092
+referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-152, V9-DOC-QA-034, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-QA-102, docs/archive/reference-historical/v9-code-quality-audit-report-20260629.md, V9-DOC-PROJ-149]
 change_log:
   - version: v1.0.0
 changes: Initial version established

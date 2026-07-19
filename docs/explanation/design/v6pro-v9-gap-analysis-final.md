@@ -11,6 +11,7 @@ version: v2.1.0
 last_updated: 2026-07-02
 code_version: 2.0.0
 doc_id: V9-DOC-PROJ-053
+referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-182, V9-DOC-PROJ-149]
 ---
 
 # V6 Pro �?V9 架构差异分析报告
