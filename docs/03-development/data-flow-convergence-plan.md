@@ -11,6 +11,7 @@ tags: [data, architecture, widget, store, convergence]
 version: v1.2
 last_updated: 2026-07-18
 code_version: 2.0.0
+doc_id: V9-DOC-DATA-030
 change_log:
   - version: v1.2
 changes: Phase 1 bridge + Phase 2 migration completed, Phase 3 planning
