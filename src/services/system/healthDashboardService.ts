@@ -3,7 +3,8 @@
  *
  * 从 `public/health-report.json` 获取由 `scripts/build-health-report.ts`
  * 生成的最新健康报告。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import type { HealthMetric, HealthReport } from '@/types/modules/health.types'
 

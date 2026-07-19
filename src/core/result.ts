@@ -15,7 +15,8 @@
  *
  * `src/services/contracts.ts` 现从本模块 re-export，保持所有既有
  * `import { ok, fail, type Result } from '@/services/contracts'` 向后兼容。
- */
+  * @doc [V9-DOC-BACK-005, V9-DOC-BACK-012, V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-ARCH-008]
+*/
 
 import type { V9Error } from '@/lib/errors'
 

@@ -1,3 +1,6 @@
+/**
+ * @doc []
+ */
 import { STORE_NAME } from '@/config/dbConfig'
 import { getLogger } from '@/lib/logger'
 import { openDB, resetDbInstance } from './db-connection'

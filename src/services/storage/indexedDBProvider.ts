@@ -15,7 +15,8 @@
  *
  * @see src/core/databridge.ts — 统一数据访问门面
  * @see docs/03-development/mock-data-cleanup-lessons.md §"Service 绕过 DataBridge"
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import { getLogger } from '@/lib/logger'
 import type {

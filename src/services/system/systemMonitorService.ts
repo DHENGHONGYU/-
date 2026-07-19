@@ -9,7 +9,8 @@
  * - 两个轮询定时器：Agent 状态（15s）+ 系统综合快照（30s），间隔由
  *   `MONITOR_INTERVALS` 常量注入，零硬编码。
  * - 所有公开方法均含 try-catch 与 logger.error 兜底，监控服务自身不得拖垮宿主应用。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import { getAgentSystemStatus, DEFAULT_AGENTS, type AgentConfig } from '@/agents'
 import { getAgentHealthMonitor, type AgentHealthReport } from '@/agents/agentHealthMonitor'

@@ -4,7 +4,8 @@
  * F4 整改：将原启发式 9 因子逻辑切换到 v6-engine L-1~L8 分层引擎。
  * 通过 createV6Engine().calculateAll() 执行 11 层加权评分，
  * 结果映射为 V6Score 持久化到 IndexedDB。
- */
+  * @doc [V9-DOC-BACK-005, V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-PROJ-113, V9-DOC-PROJ-054]
+*/
 
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'

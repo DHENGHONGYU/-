@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+ */
 import { generateId } from '@/lib/utils'
 import type { NewsArticle, NewsStockMap } from '@/data/types'
 

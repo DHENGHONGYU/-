@@ -2,7 +2,8 @@
  * @module mcp/servers/system
  * @description 系统管理 MCP Server — 系统状态、数据导出、重置
  * @created 2026-07-04
- */
+  * @doc [V9-DOC-AI-005, V9-DOC-AI-007, V9-DOC-AI-013, V9-DOC-AI-021, V9-DOC-AI-022]
+*/
 
 import { MCPServerBase } from '@/mcp/core/server'
 import type { ServerInfo, ToolDescriptor, ResourceTemplate } from '@/mcp/core/types'

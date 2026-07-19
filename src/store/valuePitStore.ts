@@ -9,7 +9,8 @@
  * - 无输入数据时返回空结果，不 fallback 到 Mock 数据
  * - 核心分支包含 logger.info 打印
  * - 遵循现有 Zustand Store 风格
- */
+  * @doc [V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-076, V9-DOC-DATA-075, V9-DOC-DATA-073]
+*/
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'

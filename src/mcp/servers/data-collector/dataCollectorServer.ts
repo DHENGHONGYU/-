@@ -2,7 +2,8 @@
  * @module mcp/servers/data-collector
  * @description 数据采集 MCP Server — 行情数据获取、缺失报告检测
  * @created 2026-07-05
- */
+  * @doc [V9-DOC-AI-005, V9-DOC-AI-007, V9-DOC-AI-013, V9-DOC-AI-021, V9-DOC-AI-022]
+*/
 
 import { MCPServerBase } from '@/mcp/core/server'
 import type { ServerInfo, ToolDescriptor } from '@/types/modules/mcp.types'

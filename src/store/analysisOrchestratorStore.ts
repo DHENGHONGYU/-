@@ -4,7 +4,8 @@
  *
  * @module store/analysisOrchestratorStore
  * @created 2026-07-13 B1 阶段
- */
+  * @doc [V9-DOC-PROJ-053, V9-DOC-BACK-006, V9-DOC-PROJ-124, V9-DOC-PROJ-107, V9-DOC-PROD-001]
+*/
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'

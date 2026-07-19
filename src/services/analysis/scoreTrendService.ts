@@ -3,7 +3,8 @@
  *
  * 为行业评分（V4）与智能评分（个股）提供按周/月/季度的趋势数据聚合，
  * 所有标签、阈值均来自配置与类型，组件层零硬编码。
- */
+  * @doc [V9-DOC-BACK-010, V9-DOC-BACK-012, V9-DOC-PROJ-113, V9-DOC-PROJ-066, V9-DOC-BACK-006]
+*/
 
 import { dataBridge } from '@/core/databridge'
 import { ENVELOPE_ACTION, STORE_NAME } from '@/config/dbConfig'

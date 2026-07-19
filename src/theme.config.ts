@@ -2,7 +2,8 @@
  * @deprecated C8 字体/间距体系收敛：本文件为第三套并行体系，经全仓扫描 **零引用**（死代码）。
  *   颜色请用 `THEME_TOKENS` / `SEMANTIC_COLOR_ROLES`，字号请用 `TYPOGRAPHY_SCALE` + `text-*` 工具类，
  *   间距请用 `THEME_TOKENS.spacing/gap` 与 8px 刻度。计划在下一次清理窗口删除本文件。
- */
+  * @doc [V9-DOC-DATA-047, V9-DOC-FRONT-020, V9-DOC-DATA-068]
+*/
 export const theme = {
   colors: {
     background: 'hsl(var(--background))',

@@ -2,7 +2,8 @@
  * @module agentFeedbackStore
  * @description Agent 反馈 Store — 反馈收集、评分汇总、状态管理
  * @created 2026-07-04
- */
+  * @doc [V9-DOC-AI-003, V9-DOC-AI-006, V9-DOC-AI-002, V9-DOC-DATA-031, V9-DOC-DATA-032]
+*/
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'

@@ -12,7 +12,8 @@
  *   - listBySeverity(severity): 按严重度查询
  *   - clear(symbol?): 清理已解决的缺失报告
  *   - incrementRetry(id): 增加重试次数
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import { getLogger } from '@/lib/logger'
 import { missingReportStore } from '@/data/dataLayerContentStores'

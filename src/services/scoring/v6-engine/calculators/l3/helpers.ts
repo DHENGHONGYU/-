@@ -8,7 +8,8 @@
  * 评分体系：1-5 分制，5 分为最高，1 分为最低
  *
  * @compliance AGENTS.md §六 引擎架构约束：L3 是确定性层（程序计算）
- */
+  * @doc [V9-DOC-ARCH-008, V9-DOC-PROJ-053, V9-DOC-PROJ-113, V9-DOC-PROJ-066, V9-DOC-FRONT-012]
+*/
 
 import type { LayerInput } from '../../types'
 

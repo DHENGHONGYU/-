@@ -3,7 +3,8 @@
  * @description 资讯情感趋势聚合引擎（DA-008）。
  * 仅对 newsStore 已加载的 NewsArticle 做纯聚合，不触发任何网络请求或 LLM 调用，
  * 不修改输入数据，输出按日期排序的情感分布序列。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import type { NewsArticle } from '@/data/types'
 import type {

@@ -6,7 +6,8 @@
  *
  * @module constants/theme/badges
  * @created 2026-07-15
- */
+  * @doc []
+*/
 
 export const BADGE_COLORS = {
   /** 市场周期徽章 */

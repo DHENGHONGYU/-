@@ -7,7 +7,8 @@
  *
  * @module types/guards
  * @created 2026-06-30 - G1 批次低风险优化（类型守卫函数补充）
- */
+  * @doc [V9-DOC-QA-066]
+*/
 
 import type {
   DailyQuotes,

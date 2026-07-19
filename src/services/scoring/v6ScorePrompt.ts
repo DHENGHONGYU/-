@@ -3,7 +3,8 @@
  *
  * 当规则引擎无法覆盖所有维度时，将基础数据+K线统计+已计算的因子发给 LLM 补全。
  * LLM 仅补充规则引擎无法计算的维度（成长/质量/行业/情绪），不覆盖已有计算结果。
- */
+  * @doc [V9-DOC-BACK-005, V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-PROJ-113, V9-DOC-PROJ-054]
+*/
 
 import type { LlmMessage } from '@/services/llm/llmTypes'
 import type { Stock } from '@/data/types'

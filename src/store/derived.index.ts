@@ -15,7 +15,8 @@
  *
  * @since v2.2.0
  * @compliance AGENTS.md §一 分层规则
- */
+  * @doc [V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-076, V9-DOC-DATA-075, V9-DOC-DATA-073]
+*/
 
 // ═══════════════════════════════════════════════════════════════
 // analysisStore 派生查询

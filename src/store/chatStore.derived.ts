@@ -9,7 +9,8 @@
  *   4. 空状态安全
  *
  * @compliance AGENTS.md §一 分层规则
- */
+  * @doc [V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-076, V9-DOC-DATA-075, V9-DOC-DATA-073]
+*/
 
 import { useChatStore } from '@/store/chatStore'
 import type { ChatMessage } from '@/store/chatStore'

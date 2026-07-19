@@ -9,7 +9,8 @@
  *
  * 设计原则：纯连接管理，不持有 V6Database 业务状态。
  * 通过 db.ts 的 re-export 保持 '@/data/db' 内部调用兼容。
- */
+  * @doc []
+*/
 import { DB_NAME, DB_VERSION } from '@/config/dbConfig'
 import { getLogger } from '@/lib/logger'
 import { createSchema } from './db-schema'

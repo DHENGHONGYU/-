@@ -2,7 +2,8 @@
  * @module systemMonitorStore
  * @lifecycle @Global
  * @description 系统监控统一状态 Store，整合 SystemMonitorService 快照与 EventBus 事件
- */
+  * @doc [V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-076, V9-DOC-DATA-075, V9-DOC-DATA-073]
+*/
 
 import { create } from 'zustand'
 import { eventBus } from '@/lib/eventBus'

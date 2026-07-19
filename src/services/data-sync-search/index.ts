@@ -3,7 +3,8 @@
  *
  * @module services/data-sync-search
  * @created 2026-07-14 - 双通道整改 P2-2
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 // 多源检索引擎
 export { search, quickSearch } from './searchEngine'

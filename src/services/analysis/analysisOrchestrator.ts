@@ -9,7 +9,8 @@
  *
  * @module services/analysis/analysisOrchestrator
  * @created 2026-07-13 B1 阶段
- */
+  * @doc [V9-DOC-PROJ-124, V9-DOC-BACK-004, V9-DOC-BACK-012, V9-DOC-PROJ-113, V9-DOC-PROD-001]
+*/
 
 import { getLogger } from '@/lib/logger'
 import { dataBridge } from '@/core/databridge'

@@ -15,7 +15,8 @@
  * 确保 Store 依赖分析算法与审计脚本之间的类型契约一致。
 /**
  * Store 文件元信息
- */
+  * @doc [V9-DOC-DATA-032, V9-DOC-DATA-031, V9-DOC-DATA-075, V9-DOC-DATA-073, V9-DOC-FRONT-037]
+*/
 export interface StoreMeta {
   /** Store 文件名（不含扩展名），如 tradingStore */
   fileName: string

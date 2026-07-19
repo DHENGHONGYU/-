@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-AI-017, V9-DOC-AI-033, V9-DOC-DATA-047, V9-DOC-FRONT-020, V9-DOC-DATA-068]
+ */
 import { getSafeString } from '@/lib/safeCoerce'
 import { STOCK_SCORE_FACTORS } from './scoreFactors'
 import { defaultStorage } from '@/lib/localStorageManager'

@@ -2,7 +2,8 @@
  * @module mcp/servers/screening
  * @description 多因子筛选 MCP Server — 股票筛选、条件组合
  * @created 2026-07-04
- */
+  * @doc [V9-DOC-BACK-004, V9-DOC-ARCH-007, V9-DOC-AI-007, V9-DOC-DATA-011, V9-DOC-AI-005]
+*/
 
 import { MCPServerBase } from '@/mcp/core/server'
 import type { ServerInfo, ToolDescriptor, ResourceTemplate } from '@/mcp/core/types'

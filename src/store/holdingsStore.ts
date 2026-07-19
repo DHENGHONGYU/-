@@ -8,7 +8,8 @@
  * - 所有颜色值从 @/constants/trade.constants 引用
  * - 所有枚举值从 @/constants/trade.constants 引用
  * - 魔法值禁止出现在 actions 中
- */
+  * @doc [V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-076, V9-DOC-DATA-075, V9-DOC-DATA-073]
+*/
 
 import { create } from 'zustand'
 import {

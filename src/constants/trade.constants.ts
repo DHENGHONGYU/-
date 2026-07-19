@@ -1,7 +1,8 @@
 /**
  * @module TradeConstants
  * @description 交易持仓模块常量定义。所有枚举值、颜色映射、配置数值必须从此文件引用，禁止在组件中硬编码。
- */
+  * @doc []
+*/
 
 import {
   API_TRADE_HOLDINGS,

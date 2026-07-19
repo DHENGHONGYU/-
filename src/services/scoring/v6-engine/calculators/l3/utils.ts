@@ -2,7 +2,8 @@
  * L3 计算器工具函数
  * 
  * 提供行业基准匹配、评分截断等通用工具
- */
+  * @doc [V9-DOC-ARCH-008, V9-DOC-PROJ-053, V9-DOC-PROJ-113, V9-DOC-PROJ-066, V9-DOC-FRONT-012]
+*/
 
 import type { IndustryBenchmark } from '../../config'
 import { INDUSTRY_BENCHMARKS } from '../../config'

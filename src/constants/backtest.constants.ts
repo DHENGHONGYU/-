@@ -3,7 +3,8 @@
  * @description 策略回测模块常量（DA-006）。
  * 集中管理策略标签、导出 Sheet 名称、文件命名模板等，
  * 供 Store、页面、导出服务统一引用，禁止在组件中硬编码。
- */
+  * @doc []
+*/
 
 import type { BacktestStrategy } from '@/types/modules/backtest.types'
 

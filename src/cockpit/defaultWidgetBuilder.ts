@@ -1,3 +1,6 @@
+/**
+ * @doc []
+ */
 import type { WidgetConfig, WidgetRuntimeState, WidgetMeta } from '@/types/modules/widget.types'
 
 import { nanoid } from 'nanoid'

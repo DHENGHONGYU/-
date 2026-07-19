@@ -9,7 +9,8 @@
  * - 状态变更通过订阅机制通知外部
  *
  * @see src/agents/agentRuntime.ts
- */
+  * @doc [V9-DOC-AI-006, V9-DOC-AI-003, V9-DOC-AI-002, V9-DOC-AI-014, V9-DOC-QA-077]
+*/
 
 import { getLogger } from '@/lib/logger'
 

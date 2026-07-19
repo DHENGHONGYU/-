@@ -1,7 +1,8 @@
 /**
  * @module score.types
  * @description 评分模块类型定义
-/** 评分趋势周期 */
+/** 评分趋势周期  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-008, V9-DOC-BACK-005, V9-DOC-BACK-010, V9-DOC-PROJ-003]
+*/
 export type ScoreTrendPeriod = 'week' | 'month' | 'quarter'
 
 /** 评分趋势实体类型 */

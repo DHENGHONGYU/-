@@ -14,7 +14,8 @@
  * 使用方式：写入路径以 warn-only 调用（仅记日志/统计，不阻断写入）。
  *
  * @module lib/validation/marketDataContract
- */
+  * @doc [V9-DOC-FRONT-037]
+*/
 
 // ── 结构化入参（duck-type，兼容 fetcher.StockQuote / data-collector.RealtimeQuote 等）──
 

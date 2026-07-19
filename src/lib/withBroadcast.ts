@@ -7,7 +7,8 @@
  * 从 store/helpers/ 迁移到 lib/ 以解除 services 层对 store 层的依赖。
  *
  * Channel 常量应从 `@/constants/store-channels.constants` 的 EVENT_NAMES 引用。
- */
+  * @doc [V9-DOC-FRONT-037]
+*/
 
 import { eventBus } from '@/lib/eventBus'
 import { getLogger } from '@/lib/logger'

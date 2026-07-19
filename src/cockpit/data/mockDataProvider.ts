@@ -1,3 +1,6 @@
+/**
+ * @doc []
+ */
 export interface MarketIndex {
   name: string
   code: string

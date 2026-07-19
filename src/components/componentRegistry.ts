@@ -10,7 +10,8 @@
  * - 新增组件必须在本文件登记
  * - 组件迁移时必须同步更新 targetPath
  * - status: 'active' | 'migrating' | 'deprecated'
- */
+  * @doc [V9-DOC-FRONT-046]
+*/
 
 export type AtomicLevel = 'atom' | 'molecule' | 'organism' | 'template'
 

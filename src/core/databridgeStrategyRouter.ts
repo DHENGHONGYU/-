@@ -8,7 +8,8 @@
  *
  * 设计原则：通过 StrategyRouterContext 注入 subscribers 与 broadcast 回调，
  * 使策略路由逻辑与 DataBridge 主类解耦，可独立单元测试。
- */
+  * @doc [V9-DOC-PROJ-002, V9-DOC-ARCH-008, V9-DOC-BACK-009, V9-DOC-DATA-008, V9-DOC-BACK-010]
+*/
 import { ENVELOPE_ACTION } from '@/config/dbConfig'
 import { EVENT_NAMES } from '@/constants/store-channels.constants'
 import { eventBus } from '@/lib/eventBus'

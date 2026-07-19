@@ -3,7 +3,8 @@
  *
  * 集中定义热门板块策略与价值洼地策略的评分阈值、动作阈值、轮动信号条件。
  * 本文件位于 L2 config，禁止依赖 services/apps/pages/components/core。
- */
+  * @doc [V9-DOC-BACK-003, V9-DOC-BACK-010, V9-DOC-ARCH-008, V9-DOC-DATA-021, V9-DOC-QA-010]
+*/
 
 export interface DualStrategyRuleConfig {
   /** 热门板块路径：V6 个股评分最低门槛 */

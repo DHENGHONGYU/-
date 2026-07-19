@@ -13,7 +13,8 @@
  *
  * @module types/modules/data-sync
  * @created 2026-07-14 - 双通道数据采集整改 P0-1
- */
+  * @doc [V9-DOC-QA-066]
+*/
 
 import type { QuoteDataSourceId, UpdateFrequency } from './collection.types'
 import type { StoreName } from '@/config/dbConfig'

@@ -11,7 +11,8 @@
  *   - 开发/测试：createMockFacade() → 注入 Mock 实现（不触发网络请求）
  *
  * 向后兼容：原 dataSourceOrchestrator.ts 的所有导出均通过此门面代理。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-PROJ-092, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021]
+*/
 
 import { getLogger } from '@/lib/logger'
 import { collectBasic } from '../fetcherClient'

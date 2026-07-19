@@ -8,7 +8,8 @@
  * - 汇报数据（已采集条数、时间范围、最近采集时间、失败记录）
  *
  * 本服务不依赖 UI 层，返回纯数据，供页面组件消费。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import type {
   CollectionTraceSpan,

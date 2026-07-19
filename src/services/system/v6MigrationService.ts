@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-ARCH-008, V9-DOC-PROJ-053, V9-DOC-PROJ-113, V9-DOC-PROJ-066, V9-DOC-FRONT-012]
+ */
 import { getLogger } from '@/lib/logger'
 import type { DataLayerResult } from '@/data/types'
 import { parseV6Export, transformV6ToV9 } from './migration/migrationTransformers'

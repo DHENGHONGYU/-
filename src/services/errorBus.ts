@@ -9,7 +9,8 @@
  * - 复用 `src/lib/errors` 的 `V9Error` 体系，不新建错误类。
  * - 仅依赖 lib 基础设施（eventBus / errors / logger），符合 AGENTS.md §一 分层白名单。
  * - UI 层（A-03 全局错误边界）可订阅 `ERROR_CAPTURED_EVENT` 做统一提示与上报。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import { V9Error, toV9Error } from '@/lib/errors'
 import { eventBus } from '@/lib/eventBus'

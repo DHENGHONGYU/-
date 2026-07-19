@@ -3,7 +3,8 @@
  *
  * @module types/registration-contract
  * @since 2026-07-18
- */
+  * @doc [V9-DOC-QA-066]
+*/
 
 // ── 注册状态 ───────────────────────────────────────────────
 

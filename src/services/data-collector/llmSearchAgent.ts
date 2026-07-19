@@ -8,7 +8,8 @@
  * 环境适配：
  * - Node 环境（typeof window === 'undefined'）：直连 https://dashscope.aliyuncs.com
  * - 浏览器环境：走 Vite 代理 /api/proxy/qwen → https://dashscope.aliyuncs.com
- */
+  * @doc [V9-DOC-AI-006, V9-DOC-AI-003, V9-DOC-BACK-012, V9-DOC-AI-002, V9-DOC-AI-014]
+*/
 
 import { getLogger } from '@/lib/logger'
 import type { NewsItem, ResearchReport } from './dimensionDataTypes'

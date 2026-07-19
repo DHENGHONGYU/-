@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-BACK-012, V9-DOC-PROJ-003, V9-DOC-PROJ-002, V9-DOC-ARCH-008, V9-DOC-BACK-008]
+ */
 import type { ChannelMeta, DataPacket, DataChannel } from './dataflowTypes'
 
 /**

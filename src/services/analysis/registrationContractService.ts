@@ -6,7 +6,8 @@
  *
  * @module services/registrationContractService
  * @since 2026-07-18
- */
+  * @doc [V9-DOC-PROJ-124, V9-DOC-BACK-004, V9-DOC-BACK-012, V9-DOC-PROJ-113, V9-DOC-PROD-001]
+*/
 
 import type {
   StatusQueryInput,

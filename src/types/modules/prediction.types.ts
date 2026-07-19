@@ -5,7 +5,8 @@
  *
  * @module types/modules/prediction
  * @created 2026-07-15 - 输出模块补强
-/** 市场周期阶段 */
+/** 市场周期阶段  * @doc [V9-DOC-QA-066]
+*/
 export type MarketCycle = 'left-bottom' | 'right-up' | 'top' | 'left-down'
 
 /** 预测方向 */

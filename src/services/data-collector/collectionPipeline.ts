@@ -9,7 +9,8 @@
  * - 每个阶段 emit `CollectionLifecycleEvent`
  *
  * 注意：本 service 不依赖任何 store，配置由调用方（store / UI）传入。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import { getLogger } from '@/lib/logger'
 import { eventBus } from '@/lib/eventBus'

@@ -5,7 +5,8 @@
  *
  * @module data/types/types.order
  * @updated 2026-07-07 - PR-1：从 data/types.ts 拆分
- */
+  * @doc [V9-DOC-QA-066]
+*/
 
 import type { AccountType, OrderDirection, OrderStatus } from '@/config/dbConfig'
 

@@ -6,7 +6,8 @@
  *
  * @module lib/batchQueue
  * @created 2026-07-13 R3
- */
+  * @doc [V9-DOC-FRONT-037]
+*/
 
 const DEFAULT_CONCURRENCY = 10
 

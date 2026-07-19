@@ -28,7 +28,8 @@
  * @see tradeErrorClassifier.ts — 主入口（re-export 本模块函数）
  * @see tradeErrorDefinitions.ts — 类型与常量
  * @see tradeErrorUtils.ts — 辅助函数
- */
+  * @doc [V9-DOC-BACK-013, V9-DOC-BACK-012, V9-DOC-BACK-008, V9-DOC-ARCH-008, V9-DOC-BACK-005]
+*/
 
 import type { Order } from '@/data/types'
 import type { DetectedError } from './tradeErrorDefinitions'

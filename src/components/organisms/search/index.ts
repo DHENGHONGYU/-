@@ -3,7 +3,8 @@
  *
  * @module components/organisms/search
  * @created 2026-07-14 - 双通道整改 P2-3
- */
+  * @doc [V9-DOC-FRONT-046]
+*/
 
 export { SearchBar } from './SearchBar'
 export type { SearchBarProps } from './SearchBar'

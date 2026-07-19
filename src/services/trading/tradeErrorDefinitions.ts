@@ -18,7 +18,8 @@
  * @see tradeErrorClassifier.ts — 主入口（re-export 本模块类型与常量）
  * @see tradeErrorDetectors.ts — 检测器（import 本模块类型与常量）
  * @see tradeErrorUtils.ts — 辅助函数（import 本模块类型）
- */
+  * @doc [V9-DOC-BACK-013, V9-DOC-BACK-012, V9-DOC-BACK-008, V9-DOC-ARCH-008, V9-DOC-BACK-005]
+*/
 
 // ============================================================
 // 类型定义

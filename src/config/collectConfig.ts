@@ -11,7 +11,8 @@
  * - 字段注册表与默认策略
  *
  * @see V6 Pro: cockpit-app/src/data/collectConfig.ts
- */
+  * @doc [V9-DOC-DATA-047, V9-DOC-FRONT-020, V9-DOC-DATA-068]
+*/
 
 import type {
   UpdateFrequency,

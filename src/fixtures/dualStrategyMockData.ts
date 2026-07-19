@@ -5,7 +5,8 @@
  * 用于股票池为空时的回退数据，保持页面与测试可用。
  *
  * @module src/fixtures/dualStrategyMockData
- */
+  * @doc [V9-DOC-BACK-003, V9-DOC-BACK-010, V9-DOC-ARCH-008, V9-DOC-BACK-006, V9-DOC-DATA-021]
+*/
 
 import type { HotSectorAnalyzerInput } from '@/services/scoring/hotSectorAnalyzer'
 import type { ValuePitAnalyzerInput } from '@/services/scoring/valuePitAnalyzer'

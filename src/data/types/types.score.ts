@@ -5,7 +5,8 @@
  *
  * @module data/types/types.score
  * @updated 2026-07-07 - PR-1：从 data/types.ts 拆分
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-008, V9-DOC-BACK-005, V9-DOC-BACK-010, V9-DOC-PROJ-003]
+*/
 
 import type { Stock } from './types.stock'
 

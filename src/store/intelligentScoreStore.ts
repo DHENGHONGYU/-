@@ -11,7 +11,8 @@
  * - 所有数据请求经 Store Action 分发
  * - 核心分支包含 logger.info 打印（带 [intelligentScoreStore] 前缀）
  * - 遵循现有 Zustand Store 风格
- */
+  * @doc [V9-DOC-BACK-010, V9-DOC-BACK-012, V9-DOC-PROJ-002, V9-DOC-PROJ-003, V9-DOC-ARCH-008]
+*/
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'

@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-BACK-006, V9-DOC-PROJ-079, V9-DOC-PROJ-113, V9-DOC-PROJ-107, V9-DOC-BACK-012]
+ */
 import { ENVELOPE_ACTION, STORE_NAME, MODULE_ID } from '@/config/dbConfig'
 import { RESEARCH_STATUS, type ResearchStatus } from '@/constants/pool.constants'
 import { getDefaultScreeningConfig } from '@/config/screeningConfig'

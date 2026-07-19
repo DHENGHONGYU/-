@@ -15,7 +15,8 @@
 /**
  * 危险的 HTML 实体字符 → 转义映射
  * 用于将纯文本嵌入 HTML 上下文时防止 XSS
- */
+  * @doc [V9-DOC-FRONT-037]
+*/
 const HTML_ESCAPE_MAP: Record<string, string> = {
   '&': '&amp;',
   '<': '&lt;',

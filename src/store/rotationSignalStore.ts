@@ -12,7 +12,8 @@
  * - 所有数据展示来自 rotationSignalDetector 服务，禁止硬编码
  * - 核心分支包含 logger.info 打印
  * - 遵循现有 Zustand Store 风格
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-ARCH-007, V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-BACK-015]
+*/
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'

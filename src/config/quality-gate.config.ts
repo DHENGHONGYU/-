@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-DATA-047, V9-DOC-FRONT-020, V9-DOC-DATA-068]
+ */
 import type { QualityGate } from '@/types/modules/doc-validation.types'
 
 export type CheckTier = 'P0' | 'P1' | 'P2'

@@ -4,7 +4,8 @@
  * 原则：
  * - 本文件位于 src/config/，禁止依赖 services/、apps/、pages/、components/、core/（除类型外）。
  * - 所有默认值可通过环境变量覆盖。
- */
+  * @doc [V9-DOC-PROJ-092, V9-DOC-DATA-047, V9-DOC-FRONT-020, V9-DOC-DATA-068]
+*/
 
 import { isLlmApiKeyConfigured } from './llmConfig'
 

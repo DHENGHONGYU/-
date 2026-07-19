@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-DATA-047, V9-DOC-FRONT-020, V9-DOC-DATA-068]
+ */
 export const HYBRID_PROOFREAD_CONFIG = {
   api: {
     baseUrl: 'https://api.example.com/security',

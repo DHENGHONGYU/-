@@ -9,7 +9,8 @@
  * 
  * 权重：10%
  * 类型：确定性层（程序直算）
- */
+  * @doc [V9-DOC-ARCH-008, V9-DOC-PROJ-053, V9-DOC-PROJ-113, V9-DOC-PROJ-066, V9-DOC-FRONT-012]
+*/
 
 import { getLogger } from '@/lib/logger'
 import type { LayerInput, LayerScore, LayerCalculator, RiskWarningResult, IPCResult } from '../../types'

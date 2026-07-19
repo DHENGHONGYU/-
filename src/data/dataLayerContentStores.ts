@@ -10,7 +10,8 @@
  * - sentimentCacheStore: 情绪缓存 save/get/getByContentHash
  * - missingReportStore: 缺失报告 report/list/listBySymbol/listBySeverity/incrementRetry
  * - customAgentStore: 用户自定义智能体 list/get/save/delete（v26 新增，阶段 B-1）
- */
+  * @doc [V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-076, V9-DOC-DATA-075, V9-DOC-DATA-073]
+*/
 import { STORE_NAME } from '@/config/dbConfig'
 import { now } from './db'
 import type {

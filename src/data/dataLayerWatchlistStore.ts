@@ -8,7 +8,8 @@
  *
  * @see src/store/watchlistStore.ts — 调用方（落表触发点）
  * @see src/data/types.ts — Watchlist 接口定义（keyPath: id）
- */
+  * @doc [V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-076, V9-DOC-DATA-075, V9-DOC-DATA-073]
+*/
 import { STORE_NAME } from '@/config/dbConfig'
 import { getLogger } from '@/lib/logger'
 import type { DataLayerResult, Watchlist } from './types'

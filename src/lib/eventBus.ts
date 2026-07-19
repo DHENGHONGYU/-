@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-FRONT-037]
+ */
 import { getLogger } from '@/lib/logger'
 
 const logger = getLogger()

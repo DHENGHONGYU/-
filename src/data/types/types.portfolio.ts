@@ -8,7 +8,8 @@
 /**
  * 组合持仓明细（目标 vs 当前）。
  * 用于主题投资组合的构建、展示与再平衡。
- */
+  * @doc [V9-DOC-PROJ-229, V9-DOC-QA-066]
+*/
 export interface PortfolioHolding {
   symbol: string
   name: string

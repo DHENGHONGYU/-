@@ -7,5 +7,6 @@
  *
  * D3 迁移：实现已提升到 @/lib/utils，此处为向后兼容 re-export
  * 新代码应直接从 '@/lib/utils' 导入
- */
+  * @doc []
+*/
 export { generateId, now } from '@/lib/utils'

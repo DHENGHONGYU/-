@@ -2,7 +2,8 @@
  * @module DataBridgeTypes
  * @lifecycle @Global
  * @description DataBridge 扩展适配层类型契约
-/** DataBridgeAdapter 配置 */
+/** DataBridgeAdapter 配置  * @doc [V9-DOC-DATA-013, V9-DOC-DATA-051, V9-DOC-BACK-027, V9-DOC-QA-066, V9-DOC-DATA-042]
+*/
 export interface DataBridgeAdapterConfig {
   /** 是否启用降级队列 */
   enableFallbackQueue?: boolean

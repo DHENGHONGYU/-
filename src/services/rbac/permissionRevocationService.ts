@@ -3,7 +3,8 @@
  * @lifecycle @Global
  * @description
  * 权限自动回收定时任务服务，解决"僵尸账号"与"权限膨胀"两大风险。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import { nanoid } from 'nanoid'
 import { dataBridge } from '@/core/databridge'

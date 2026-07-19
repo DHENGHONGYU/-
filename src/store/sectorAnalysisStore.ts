@@ -4,7 +4,8 @@
  * 通过 sectorAnalysisEngine 计算并从 dataLayer 加载数据。
  *
  * @compliance DF-002 合规：引擎调用经由 Store action 分发
- */
+  * @doc [V9-DOC-PROJ-053, V9-DOC-BACK-006, V9-DOC-PROJ-124, V9-DOC-PROJ-107, V9-DOC-PROD-001]
+*/
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'

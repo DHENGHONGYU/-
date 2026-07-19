@@ -6,7 +6,8 @@
  *
  * @module constants/pool.constants
  * @version v2.0.0（2026-07-13 三分拆迁移）
- */
+  * @doc [V9-DOC-BACK-015, V9-DOC-BACK-011, V9-DOC-DATA-045, V9-DOC-PROJ-108, V9-DOC-DATA-024]
+*/
 
 import type { PoolType, PoolStatus } from '@/types/modules/pool.types'
 

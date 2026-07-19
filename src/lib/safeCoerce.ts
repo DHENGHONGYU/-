@@ -25,7 +25,8 @@
  * @param value
  * @param defaultValue
  * @returns number
- */
+  * @doc [V9-DOC-FRONT-037]
+*/
 export function toSafeNumber(value: unknown, defaultValue = 0): number {
   if (value === null || value === undefined || value === '') return defaultValue
   const num = Number(value)

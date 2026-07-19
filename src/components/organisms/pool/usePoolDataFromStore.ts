@@ -3,7 +3,8 @@
  * @description 桥接 hook：从 researchPoolStore 读取数据，返回 PoolLane[] 接口。
  *
  * 用于将 PoolBoard 从本地 useState 迁移到 Zustand Store，同时保持看板接口兼容性。
- */
+  * @doc [V9-DOC-PROJ-108, V9-DOC-BACK-011, V9-DOC-DATA-024, V9-DOC-DATA-031, V9-DOC-DATA-032]
+*/
 
 import { useCallback, useMemo, useState } from 'react'
 import { useResearchPoolStore } from '@/store/researchPoolStore'

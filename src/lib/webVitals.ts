@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-FRONT-037]
+ */
 import { onCLS, onFCP, onLCP, onTTFB, onINP, type Metric } from 'web-vitals'
 import { getLogger } from './logger'
 

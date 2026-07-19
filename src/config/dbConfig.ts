@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-DATA-047, V9-DOC-FRONT-020, V9-DOC-DATA-068]
+ */
 const testDbName = typeof process !== 'undefined' ? process.env.TEST_DB_NAME : undefined
 export const DB_NAME = testDbName ?? ('V6ProDB' as const)
 export const DB_VERSION = 31 as const

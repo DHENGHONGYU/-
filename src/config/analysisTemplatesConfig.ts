@@ -2,7 +2,8 @@
  * @module analysisTemplatesConfig
  * @description 分析舱快捷入口模板配置。
  * @remarks 所有路径、标题、默认参数均来自配置，组件中禁止硬编码。
- */
+  * @doc [V9-DOC-PROJ-113, V9-DOC-PROJ-079, V9-DOC-BACK-004, V9-DOC-PROJ-124, V9-DOC-PROD-001]
+*/
 
 export type AnalysisTemplateId = 'quick-score' | 'industry-compare' | 'backtest-wizard'
 

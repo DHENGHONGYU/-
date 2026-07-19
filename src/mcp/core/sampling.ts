@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-ARCH-008, V9-DOC-PROJ-002, V9-DOC-AI-007, V9-DOC-AI-005, V9-DOC-PROJ-003]
+ */
 import type { SamplingRequest, SamplingResponse } from '@/types/modules/mcp.types'
 import { getLogger } from '@/lib/logger'
 

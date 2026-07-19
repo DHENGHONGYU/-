@@ -15,7 +15,8 @@
  *
  * @see src/services/stock-analysis/scoringStrategy.ts — 策略接口与实现
  * @see src/services/data-collector/collectors/MockCollector.ts — 采集层不再生成评分
- */
+  * @doc [V9-DOC-PROJ-124, V9-DOC-BACK-004, V9-DOC-BACK-012, V9-DOC-PROJ-113, V9-DOC-PROD-001]
+*/
 
 import type {
   AnalysisScores,

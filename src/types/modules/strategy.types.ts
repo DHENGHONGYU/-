@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-BACK-003, V9-DOC-BACK-010, V9-DOC-ARCH-008, V9-DOC-BACK-006, V9-DOC-DATA-021]
+ */
 import type { HotSectorScore, ValuePitScore } from '@/data/types'
 
 export type {

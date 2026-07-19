@@ -15,7 +15,8 @@
  * @module services/analysis/industryV4Analyzer
  * @created 2026-07-16 - v2.9.0
  * @updated 2026-07-16 - v2.9.5：V4子指标细化 + 趋势分析 + 估值集成
- */
+  * @doc [V9-DOC-PROJ-124, V9-DOC-BACK-004, V9-DOC-BACK-012, V9-DOC-PROJ-113, V9-DOC-PROD-001]
+*/
 
 import { getLogger } from '@/lib/logger'
 import type {

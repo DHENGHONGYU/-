@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-FRONT-037]
+ */
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { nanoid } from 'nanoid'

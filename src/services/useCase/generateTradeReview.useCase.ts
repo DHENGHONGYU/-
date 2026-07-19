@@ -4,7 +4,8 @@
  *
  * 将原先 trading/tradeReviewAI 中的长流程（错误分类、五维规则生成、LLM 洞察）
  * 抽取为独立 UseCase，减少 tradeReviewAI.ts 的职责。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-021, V9-DOC-BACK-033, V9-DOC-BACK-027]
+*/
 
 import { getLogger } from '@/lib/logger'
 import type { Order } from '@/data/types'

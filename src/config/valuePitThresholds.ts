@@ -5,7 +5,8 @@
  * 本文件位于 src/config/，禁止依赖 services/、apps/、pages/、components/、core/（除类型外）。
 /**
  * ValuePit 评分引擎阈值常量集合。
- */
+  * @doc [V9-DOC-DATA-047, V9-DOC-FRONT-020, V9-DOC-DATA-068]
+*/
 export const VALUE_PIT_THRESHOLDS = {
   // ============================================================
   // 通用评分边界与精度

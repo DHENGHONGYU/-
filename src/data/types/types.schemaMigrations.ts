@@ -2,7 +2,8 @@
  * @fileoverview Schema 迁移追踪记录类型
  *
  * 对应 IndexedDB `schema_migrations` store，用于记录迁移框架状态与版本标记。
-/** Schema 迁移追踪记录 */
+/** Schema 迁移追踪记录  * @doc [V9-DOC-QA-066]
+*/
 export interface SchemaMigrationRecord {
   /** 迁移记录 ID */
   id: string

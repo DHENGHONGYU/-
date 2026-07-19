@@ -16,7 +16,8 @@
  * 
  * 反馈循环流程：
  * 检测 → 评估 → 触发重采集 → 重评分 → 验证
- */
+  * @doc [V9-DOC-BACK-005, V9-DOC-BACK-012, V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-ARCH-008]
+*/
 
 import { getLogger } from '@/lib/logger'
 import { dataBridge } from './databridge'

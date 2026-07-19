@@ -19,7 +19,8 @@
  * @see src/store/signalAdviceStore.ts — 信号建议
  * @see src/store/portfolioStore.ts — 投资组合
  * @see src/store/orderStore.ts — 订单管理
- */
+  * @doc [V9-DOC-BACK-008, V9-DOC-BACK-013, V9-DOC-ARCH-008, V9-DOC-BACK-005, V9-DOC-DATA-031]
+*/
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'

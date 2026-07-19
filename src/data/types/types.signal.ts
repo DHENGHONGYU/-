@@ -5,7 +5,8 @@
  *
  * @module data/types/types.signal
  * @updated 2026-07-07 - PR-1：从 data/types.ts 拆分
-/** 信号快照（技术指标） */
+/** 信号快照（技术指标）  * @doc [V9-DOC-ARCH-007, V9-DOC-BACK-015, V9-DOC-QA-066]
+*/
 export interface SignalSnapshot {
   pePercentile?: number
   pbPercentile?: number

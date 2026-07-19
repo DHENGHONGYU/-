@@ -3,7 +3,8 @@
  *
  * 对应 IndexedDB `workflow_defs` / `workflow_schedules` / `workflow_triggers` /
  * `workflow_runs` 四个 store。
-/** 工作流步骤类型 */
+/** 工作流步骤类型  * @doc [V9-DOC-QA-066]
+*/
 export type WorkflowStepType = 'mcp_tool' | 'delay' | 'note'
 
 /** 步骤执行出错时的处理策略 */

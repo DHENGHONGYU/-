@@ -8,7 +8,8 @@
  * - 遵循 Zustand store 模式（参考 holdingsStore.ts）
  * - DataBridge 订阅采用显式 init/destroy 生命周期管理
  * - 模拟算法仅用于当前阶段，后续可接入真实回测引擎
- */
+  * @doc [V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-076, V9-DOC-DATA-075, V9-DOC-DATA-073]
+*/
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'

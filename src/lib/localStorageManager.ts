@@ -11,7 +11,8 @@
  * - 新增 setEncrypted / getEncrypted 方法，使用 Web Crypto API (AES-GCM) 加密敏感字段
  * - 加密 key 派生自设备指纹（浏览器+origin），防止跨站攻击
  * - 加密失败时降级为不存储，避免明文回退
- */
+  * @doc [V9-DOC-FRONT-037]
+*/
 
 import { getLogger } from '@/lib/logger'
 import {

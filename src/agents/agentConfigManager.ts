@@ -2,7 +2,8 @@
  * @module AgentConfigManager
  * @lifecycle @Global
  * @description Agent 配置管理中心，负责默认配置、运行时覆盖、配置校验与变更广播
- */
+  * @doc [V9-DOC-AI-006, V9-DOC-AI-003, V9-DOC-AI-002, V9-DOC-AI-014, V9-DOC-FRONT-020]
+*/
 
 import { getLogger } from '@/lib/logger'
 import { eventBus } from '@/lib/eventBus'

@@ -6,7 +6,8 @@
  *
  * 职责单一：只负责"从指定数据源采集一条数据"。
  * 复用现有基础设施：directDataAPI（直连） + fetcherClient（AKShare 后端）。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-PROJ-092, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021]
+*/
 
 import { getLogger } from '@/lib/logger'
 import {

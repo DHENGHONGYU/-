@@ -10,7 +10,8 @@
  *   - `syncWithConfig()` → 增量同步（配置变更后调用，添加/移除 Server）
  *
  * @module mcp/register
- */
+  * @doc [V9-DOC-AI-005, V9-DOC-AI-007, V9-DOC-AI-013, V9-DOC-AI-021, V9-DOC-AI-022]
+*/
 
 import { mcpRegistry } from '@/mcp/core/registry'
 import { MCP_SERVER_REGISTRY, type MCPServerModule } from '@/config/mcpServerRegistry'

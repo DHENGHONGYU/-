@@ -21,7 +21,8 @@
  *   - 新增 Phase 5 只需在 steps 数组加一项（开闭原则）
  *   - 交易所 API 大改只需重写 MarketDataFetcher（依赖倒置原则）
  *   - 日志/降级/Mock 均可独立替换，互不影响（单一职责原则）
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-PROJ-092, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021]
+*/
 
 // ============================================================
 // 类型 re-export

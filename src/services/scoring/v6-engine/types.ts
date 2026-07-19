@@ -2,7 +2,8 @@
  * V6 评分引擎类型层
  *
  * 定义 LayerInput、LayerScore、CompositeScore、AuditTrail 等核心类型。
- */
+  * @doc [V9-DOC-PROJ-066, V9-DOC-PROJ-053, V9-DOC-PROJ-113, V9-DOC-ARCH-008, V9-DOC-FRONT-012]
+*/
 
 import type { Stock, DailyQuotes } from '@/data/types'
 import type { ChipLevel, V6ScoreEngineConfig, LayerId } from '@/types/modules/engine.types'

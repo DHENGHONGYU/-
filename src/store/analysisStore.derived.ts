@@ -9,7 +9,8 @@
  *   4. 不引入循环依赖：仅依赖 analysisStore 和 lib/derivedCache
  *
  * @compliance AGENTS.md §一 分层规则：store 层仅依赖 services 和 core（lib 属于基础设施白名单）
- */
+  * @doc [V9-DOC-PROJ-053, V9-DOC-BACK-006, V9-DOC-PROJ-124, V9-DOC-PROJ-107, V9-DOC-PROD-001]
+*/
 
 import { useAnalysisStore } from '@/store/analysisStore'
 import {

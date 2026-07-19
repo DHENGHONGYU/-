@@ -1,6 +1,7 @@
 /**
  * AI 智能体调度中心 / 健康监控 / 诊断分析 类型定义
- */
+  * @doc [V9-DOC-QA-066]
+*/
 
 import type { AgentStatus, AgentTag } from '@/constants/ai-center.constants'
 import type { HealthStatus, HealthModuleCategory, DiagnosticLevel } from '@/constants/health.constants'

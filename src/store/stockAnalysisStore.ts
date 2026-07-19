@@ -3,7 +3,8 @@
  * @description 个股分析页面状态管理层。集中管理单只股票的基础信息、K线数据、V6评分及加载状态。
  *
  * @see @/pages/analysis/StockAnalysisPage.tsx - 消费此 Store 的个股分析页面
- */
+  * @doc [V9-DOC-PROJ-053, V9-DOC-BACK-006, V9-DOC-PROJ-124, V9-DOC-PROJ-107, V9-DOC-PROD-001]
+*/
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'

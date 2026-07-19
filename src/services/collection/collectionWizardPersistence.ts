@@ -9,7 +9,8 @@
  *
  * 依赖方向：services/ → core/ (DataBridge) + data/ (types)
  * @compliance AGENTS.md §一：services 层通过 DataBridge.forward() 写入数据
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import { dataBridge } from '@/core/databridge'
 import { EnvelopeFactory } from '@/core/envelope'

@@ -36,7 +36,8 @@
  * @property {string} sector - 板块代码
  * @property {string} track - 赛道名称
  * @property {number} heat - 热力等级（1-5）
- */
+  * @doc []
+*/
 export const HOT_TRACKS = [
   { sector: "AI", track: "AI推理芯片", heat: 5 },
   { sector: "AI", track: "大模型应用", heat: 5 },

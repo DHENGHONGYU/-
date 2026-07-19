@@ -3,7 +3,8 @@
  *
  * 为单只股票保存每次评分的完整 Markdown 报告与维度得分，
  * 自动递增版本号并计算与上一版的差异。
- */
+  * @doc [V9-DOC-BACK-010, V9-DOC-BACK-012, V9-DOC-PROJ-113, V9-DOC-PROJ-066, V9-DOC-BACK-006]
+*/
 
 import { STORE_NAME } from '@/config/dbConfig'
 import type { DataLayerResult, FileLibraryStats, ScoreDocVersion, V6LayerScore } from '@/data/types'

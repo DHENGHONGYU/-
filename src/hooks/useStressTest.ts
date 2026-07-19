@@ -7,7 +7,8 @@
  *
  * @module hooks/useStressTest
  * @created 2026-07-14 偏差校对整改 R7
- */
+  * @doc [V9-DOC-PROJ-239]
+*/
 import { useCallback } from 'react'
 import { runStressTest } from '@/services/perf/stressTestService'
 import { usePerfMetricsStore } from '@/store/perfMetricsStore'

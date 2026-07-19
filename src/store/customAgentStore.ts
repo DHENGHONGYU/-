@@ -9,7 +9,8 @@
  * - 所有 CRUD 经 customAgentService（services/ 层）转发，Store 不再直接依赖 data/ 层
  * - UI 状态由 action 同步更新
  * - 组件挂载时调 loadAll() 拉取；创建/更新/删除完成后调 loadAll() 刷新
- */
+  * @doc [V9-DOC-AI-003, V9-DOC-AI-006, V9-DOC-AI-002, V9-DOC-DATA-031, V9-DOC-DATA-032]
+*/
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'
 import {

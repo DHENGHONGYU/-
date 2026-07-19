@@ -2,7 +2,8 @@
  * @module EngineTypes
  * @lifecycle @Global
  * @description Engine 核心类型契约，定义配置、统计与生命周期事件载荷
- */
+  * @doc [V9-DOC-QA-066]
+*/
 
 // ============================================================
 // V6 评分引擎类型

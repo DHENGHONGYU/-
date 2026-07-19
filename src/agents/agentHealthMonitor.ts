@@ -2,7 +2,8 @@
  * @module AgentHealthMonitor
  * @lifecycle @Global
  * @description Agent 健康监控模块，实时检测 Agent 存活状态、失败率与性能指标
- */
+  * @doc [V9-DOC-AI-006, V9-DOC-AI-003, V9-DOC-AI-002, V9-DOC-AI-014, V9-DOC-QA-077]
+*/
 
 import { getLogger } from '@/lib/logger'
 import { eventBus } from '@/lib/eventBus'

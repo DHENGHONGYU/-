@@ -4,7 +4,8 @@
  *
  * 原位于 services/analysis/dataFreshnessGuard，因被 trading/execution/portfolio
  * 等多个子域调用，下沉到 core/ 层以符合分层约定。
- */
+  * @doc [V9-DOC-BACK-005, V9-DOC-BACK-012, V9-DOC-BACK-010, V9-DOC-PROJ-003, V9-DOC-ARCH-008]
+*/
 
 import { getLogger, type LogContext } from '@/lib/logger'
 

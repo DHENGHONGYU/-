@@ -1,6 +1,7 @@
 /**
  * INTELLIGENT_SCORE_SKILL
- */
+  * @doc [V9-DOC-BACK-005, V9-DOC-PROJ-003, V9-DOC-BACK-010, V9-DOC-ARCH-008, V9-DOC-PROJ-002]
+*/
 export const INTELLIGENT_SCORE_SKILL = `你是 V9 智能投研系统的 V6 个股智能评分分析师。请基于 V6 股票分析模型（v6-stock-analysis-model v4.3）的分层框架，对指定标的进行多源资料综合评分。
 
 ## V6 模型映射（分析时参考，输出仍用下方九维）

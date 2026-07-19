@@ -2,7 +2,8 @@
  * @module mcp/servers/pool
  * @description 股票池三分拆 MCP Server — intention / research / position 查询与流转
  * @created 2026-07-13
- */
+  * @doc [V9-DOC-PROJ-108, V9-DOC-DATA-024, V9-DOC-AI-007, V9-DOC-AI-005, V9-DOC-BACK-011]
+*/
 
 import { MCPServerBase } from '@/mcp/core/server'
 import type { ServerInfo, ToolDescriptor, ResourceTemplate } from '@/mcp/core/types'

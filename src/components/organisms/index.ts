@@ -2,7 +2,8 @@
  * 有机体组件统一导出入口
  *
  * 有机体 = 业务领域复合组件，可含局部状态、可调用 Hook/Service/Store
- */
+  * @doc [V9-DOC-FRONT-046]
+*/
 
 // 股票池
 export { PoolBoard } from './pool/PoolBoard'

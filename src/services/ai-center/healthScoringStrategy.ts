@@ -11,7 +11,8 @@
  * - 生产环境应注入真实策略，从运行时指标或后端 API 获取健康评分
  *
  * @see src/services/ai-center/aiCenterProvider.ts — 策略消费方
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-010, V9-DOC-ARCH-008, V9-DOC-BACK-003, V9-DOC-DATA-021]
+*/
 
 import { nanoid } from 'nanoid'
 import type {

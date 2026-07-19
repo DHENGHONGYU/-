@@ -8,7 +8,8 @@
  *
  * 权重：L4=8%, L5=5%, L6=7%
  * 类型：半确定性（L4价格计算为确定性，概率/阶段需LLM增强）
- */
+  * @doc [V9-DOC-ARCH-008, V9-DOC-PROJ-053, V9-DOC-PROJ-113, V9-DOC-PROJ-066, V9-DOC-FRONT-012]
+*/
 
 import { getLogger } from '@/lib/logger'
 import type { LayerInput, LayerScore, LayerCalculator } from '../types'

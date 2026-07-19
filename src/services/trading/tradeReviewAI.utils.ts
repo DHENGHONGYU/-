@@ -2,7 +2,8 @@
  * 交易复盘 AI 工具函数
  *
  * 提供共享的辅助函数，避免循环依赖
- */
+  * @doc [V9-DOC-BACK-013, V9-DOC-BACK-012, V9-DOC-BACK-008, V9-DOC-ARCH-008, V9-DOC-BACK-005]
+*/
 
 import type { Order } from '@/data/types'
 import type { TradePair } from './tradeReviewAI.types'

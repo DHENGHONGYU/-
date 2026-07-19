@@ -21,7 +21,8 @@
  *   - 热更新：`syncWithConfig()` → 增量同步（添加新 Server / 移除已删 Server）
  *
  * @module config/mcpServerRegistry
- */
+  * @doc [V9-DOC-AI-007, V9-DOC-AI-005, V9-DOC-AI-013, V9-DOC-AI-021, V9-DOC-AI-022]
+*/
 
 import type { ServerRegistrationOptions } from '@/types/modules/mcp.types'
 

@@ -8,7 +8,8 @@
  * 消费者：mcp-confirmation-demo.ts / audit-installations.ps1 / CI policy-verify
  *
  * 遵循 AGENTS.md 第三节"零硬编码"约束：所有阈值、规则从 config 层注入
- */
+  * @doc [V9-DOC-DATA-047, V9-DOC-FRONT-020, V9-DOC-DATA-068]
+*/
 
 import * as fs from 'fs'
 import * as path from 'path'

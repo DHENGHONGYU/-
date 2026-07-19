@@ -3,7 +3,8 @@
  *
  * 定义信息采集与存储的七个维度：
  * 01_basic / 02_kline / 03_chip / 04_events / 05_news / 06_industry / 07_index
- */
+  * @doc [V9-DOC-DATA-047, V9-DOC-FRONT-020, V9-DOC-DATA-068]
+*/
 
 export type DataDimensionType =
   | '01_basic'

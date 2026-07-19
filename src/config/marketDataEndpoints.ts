@@ -12,7 +12,8 @@
  * Node 环境 fetch 不走 Vite 代理，直接请求东财公开 API。
  *
  * @module config/marketDataEndpoints
- */
+  * @doc [V9-DOC-DATA-047, V9-DOC-FRONT-020, V9-DOC-DATA-068]
+*/
 
 /** 腾讯财经实时行情 API 基础地址（经 Vite proxy 转发） */
 export const TENCENT_API_BASE = '/api/proxy/tencent/'

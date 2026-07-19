@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-PROJ-113, V9-DOC-PROJ-079, V9-DOC-BACK-004, V9-DOC-PROJ-066, V9-DOC-PROD-001]
+ */
 import { SIGNAL_GRADES } from '@/config/rotationConfig'
 import type { RotationSignalGrade } from '@/data/types'
 

@@ -9,7 +9,8 @@
  *   4. 空状态安全
  *
  * @compliance AGENTS.md §一 分层规则
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-ARCH-007, V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-BACK-015]
+*/
 
 import { useRotationSignalStore } from '@/store/rotationSignalStore'
 import type { RotationSignal } from '@/services/scoring/rotationSignalDetector'

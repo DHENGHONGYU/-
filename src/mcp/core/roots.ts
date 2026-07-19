@@ -2,7 +2,8 @@
  * @module mcp/core/roots
  * @description MCP Roots 管理器 — 客户端声明可访问的目录范围，Server 据此限制文件访问
  * @created 2026-07-04
- */
+  * @doc [V9-DOC-ARCH-008, V9-DOC-PROJ-002, V9-DOC-AI-007, V9-DOC-AI-005, V9-DOC-PROJ-003]
+*/
 
 import type { RootDescriptor, ListRootsResult } from '@/types/modules/mcp.types'
 import { getLogger } from '@/lib/logger'

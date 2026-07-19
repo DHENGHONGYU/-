@@ -1,6 +1,7 @@
 /**
  * 数据采集模块类型定义
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-PROJ-092, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-QA-066]
+*/
 
 export interface CollectBasicRequest {
   symbol: string

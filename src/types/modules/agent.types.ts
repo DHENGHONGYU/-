@@ -2,7 +2,8 @@
  * @module AgentRuntime
  * @lifecycle @Global
  * @description Agent 运行时模块，提供任务调度、超时控制、状态监控能力
- */
+  * @doc [V9-DOC-AI-006, V9-DOC-AI-003, V9-DOC-AI-002, V9-DOC-AI-014, V9-DOC-QA-066]
+*/
 
 export interface AgentModuleInput {
   agentId: string

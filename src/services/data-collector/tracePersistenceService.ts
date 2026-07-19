@@ -4,7 +4,8 @@
  *
  * 负责将 `CollectionTraceSpan` 写入/读取 IndexedDB 的 `trace_records` store，
  * 所有操作通过 `DataBridge` 完成，禁止 service 直接写 DB。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import { dataBridge } from '@/core/databridge'
 import { ENVELOPE_ACTION, STORE_NAME, MODULE_ID, ENVELOPE_TARGET } from '@/config/dbConfig'

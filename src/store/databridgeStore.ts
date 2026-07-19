@@ -1,4 +1,5 @@
-/** @unused — 已实现但当前无 UI 层消费者，待后续产品规划接入。 */
+/** @unused — 已实现但当前无 UI 层消费者，待后续产品规划接入。  * @doc [V9-DOC-DATA-013, V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-061, V9-DOC-DATA-073]
+*/
 import { create } from 'zustand'
 import { eventBus } from '@/lib/eventBus'
 import type { DataBridgeAdapterStats, BridgeQueryResult } from '@/types/modules/databridge.types'

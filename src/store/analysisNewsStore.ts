@@ -1,3 +1,6 @@
+/**
+ * @doc [V9-DOC-PROJ-079, V9-DOC-PROJ-113, V9-DOC-BACK-004, V9-DOC-PROJ-107, V9-DOC-PROJ-053]
+ */
 // @module analysisNewsStore
 // @lifecycle @Analysis
 // 分析舱-智能资讯页面的全局状态管理（Zustand）。

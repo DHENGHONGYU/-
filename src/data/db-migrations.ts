@@ -8,7 +8,8 @@
  *
  * 设计原则：纯迁移逻辑，不持有数据库连接状态。
  * 通过 db.ts 的 re-export 保持 '@/data/db' 路径向后兼容。
- */
+  * @doc []
+*/
 import { DB_VERSION, STORE_NAME } from '@/config/dbConfig'
 import type { LogContext } from '@/lib/logger'
 import { rbacMigrationV24 } from './migrations/rbacMigrationV24'

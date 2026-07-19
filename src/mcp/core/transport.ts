@@ -7,7 +7,8 @@
  *
  * @module mcp/core/transport
  * @created 2026-07-04 - Phase 0 MCP 基础设施层建设
- */
+  * @doc [V9-DOC-ARCH-008, V9-DOC-PROJ-002, V9-DOC-AI-007, V9-DOC-AI-005, V9-DOC-PROJ-003]
+*/
 
 import type { MCPTransport, MCPServer, NotificationMethod, SamplingRequest, McpCallerContext } from '@/types/modules/mcp.types'
 import { getLogger } from '@/lib/logger'

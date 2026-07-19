@@ -12,7 +12,8 @@
  *
  * @see docs/reference/v9核心数据字典与类型定义(整合版).md
  * @see src/config/chartColors.ts - PIE_CHART_PALETTE
- */
+  * @doc [V9-DOC-DATA-031, V9-DOC-DATA-032, V9-DOC-DATA-076, V9-DOC-DATA-075, V9-DOC-DATA-073]
+*/
 
 import { create } from 'zustand'
 import { getLogger } from '@/lib/logger'

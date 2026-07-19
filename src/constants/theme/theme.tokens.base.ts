@@ -5,7 +5,8 @@
  *
  * @module constants/theme/base
  * @created 2026-07-07 - 从 theme.tokens.ts 拆分
- */
+  * @doc []
+*/
 
 export const THEME_TOKENS = {
   /**

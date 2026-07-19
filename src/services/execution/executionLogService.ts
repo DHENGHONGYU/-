@@ -10,7 +10,8 @@
  *   - listByPlan(planId): 查询某计划的全部日志
  * @convergence DataBridge 迁移（Phase 2）：当前直接 import executionLogStore，
  *   写入和查询应改为 DataBridge.forward()/query()。
- */
+  * @doc [V9-DOC-BACK-012, V9-DOC-BACK-023, V9-DOC-BACK-033, V9-DOC-BACK-021, V9-DOC-BACK-026]
+*/
 
 import { getLogger } from '@/lib/logger'
 import { executionLogStore } from '@/data/dataLayerTradingStores'
