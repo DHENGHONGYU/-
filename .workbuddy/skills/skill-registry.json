@@ -1,0 +1,103 @@
+{
+  "version": "1.0.0",
+  "updated": "2026-07-21",
+  "note": "L1 注册层单一真相源。与各 SKILL.md frontmatter 的 triggers/gates/mandatory 保持一致；漂移由 npm run audit:skill-coverage 拦截。",
+  "skills": [
+    {
+      "id": "V9-SKILL-BASH",
+      "name": "bash-conventions",
+      "path": ".workbuddy/skills/bash-conventions/SKILL.md",
+      "triggers": {
+        "keywords": ["跑命令", "执行脚本", "npm run", "Git Bash", "路径转换", "终端操作", "构建", "跑测试", "审计脚本", "Python 脚本", "pip", "vitest", "tsc", "门禁"],
+        "files": [],
+        "events": ["bash-invoke", "command-failure", "path-error"]
+      },
+      "gates": ["按正文 §4「执行后联动义务」表选择必跑命令（改什么跑什么）"],
+      "mandatory": false
+    },
+    {
+      "id": "V9-SKILL-COLLECTION",
+      "name": "collection-pipeline-testing",
+      "path": ".workbuddy/skills/collection-pipeline-testing/SKILL.md",
+      "triggers": {
+        "keywords": ["采集链路", "七维", "collectionPipeline", "sevenDimConfigStore", "采集维度", "采集测试", "联动测试"],
+        "files": [
+          "src/store/sevenDimConfigStore.ts",
+          "src/services/data-collector/**",
+          "src/types/modules/collection.types.ts",
+          "tests/__tests__/sevenDimConfigStore.test.ts",
+          "tests/unit/sevenDimEstimate.test.ts"
+        ],
+        "events": ["test-failure"]
+      },
+      "gates": [
+        "npx tsc --noEmit",
+        "npm run tsc:prod",
+        "npm run audit:layers",
+        "node ./node_modules/vitest/vitest.mjs run tests/__tests__/sevenDimConfigStore.test.ts"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "V9-SKILL-DATAFLOW",
+      "name": "data-flow-integrity-audit",
+      "path": ".workbuddy/skills/data-flow-integrity-audit/SKILL.md",
+      "triggers": {
+        "keywords": ["按钮点击无响应", "功能键不可点击", "数据采集链路断裂", "板块间数据传递异常", "假绿灯", "KPI 看板数据与实际不一致", "数据流完整性审计", "采集维度覆盖度验证", "Vite 缓存", "EnvelopeAction", "ACL_MATRIX"],
+        "files": [
+          "src/core/databridge*.ts",
+          "src/config/dbConfig.ts",
+          "src/services/data-collector/**",
+          "src/store/sevenDimConfigStore.ts"
+        ],
+        "events": ["new-envelope-action", "acl-matrix-change", "mock-switch", "kpi-inconsistent"]
+      },
+      "gates": [
+        "npx tsc --noEmit",
+        "npm run tsc:prod",
+        "npm run audit:layers",
+        "npm run audit:acl-consistency"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "V9-SKILL-MOCK-DIAG",
+      "name": "mock-data-diagnosis",
+      "path": ".workbuddy/skills/mock-data-diagnosis/SKILL.md",
+      "triggers": {
+        "keywords": ["排查Mock数据残留", "Mock到真实数据过渡", "数据链路Mock残留", "信息孤岛诊断", "Mock与真实数据兼容性", "数据检查与校对", "mock data diagnosis", "mock audit", "数据流健康度", "Mock→真实切换", "假数据", "Mock残留"],
+        "files": [
+          "src/fixtures/**",
+          "src/**/*.mock.ts",
+          "src/**/mockData*.ts",
+          "src/**/__mocks__/**"
+        ],
+        "events": ["mock-switch", "pre-release-audit"]
+      },
+      "gates": [
+        "三维 Grep 扫描全部完成且每项产出 file:line 证据",
+        "产出 outputs/mock-diagnosis-report-YYYY-MM-DD.html 诊断报告"
+      ],
+      "mandatory": false
+    },
+    {
+      "id": "V9-SKILL-DEVOPS",
+      "name": "devops-automation",
+      "path": ".workbuddy/skills/devops-automation/SKILL.md",
+      "triggers": {
+        "keywords": ["定时备份", "自动提交", "Git 快照", "批量部署", "定时构建部署", "注册定时任务", "部署到静态托管", "周期性任务", "自动化 Skill", "备份失败", "部署失败"],
+        "files": [
+          ".workbuddy/skills/devops-automation/scripts/**",
+          "scripts/monitor/system-check-loop.ts",
+          "scripts/build/deploy-rectification-toolkit.ts"
+        ],
+        "events": ["schedule-register", "backup-failure", "deploy-failure"]
+      },
+      "gates": [
+        "脚本零破坏性检查（无 reset --hard / rm -rf / 不切换主分支）",
+        "敏感文件排除校验（.env / 密钥 / token 模式）"
+      ],
+      "mandatory": false
+    }
+  ]
+}

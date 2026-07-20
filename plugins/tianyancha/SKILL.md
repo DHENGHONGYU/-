@@ -1,6 +1,8 @@
 ---
+skill_id: V9-PLUGIN-TYC
 name: tianyancha
 description: "Tianyancha Enterprise Database: query enterprise registration, operating, risk, listing, judicial, intellectual property, investment, relationship, group, qualification, private equity fund, personnel, report, and search data across 17 major categories and 226 interfaces."
+covers_docs: [V9-DOC-PROJ-201]
 ---
 
 # Tianyancha

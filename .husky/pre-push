@@ -5,9 +5,26 @@
 
 set -e
 
+# 便携垫片：本机无独立 Node 安装（仅 Kimi 受管 runtime 的 npm.cmd/npx.cmd），
+# Git Bash 的 sh 不按裸名解析 .cmd，此处兜底定义为 shell 函数（不影响已有正常环境）。
+command -v npx >/dev/null 2>&1 || npx() { npx.cmd "$@"; }
+command -v npm >/dev/null 2>&1 || npm() { npm.cmd "$@"; }
+
 echo ""
 echo "🚀 V9 pre-push 门禁启动 ..."
 echo "================================================"
+
+# 0. 技能路由强制校验（mandatory 技能 gates 确认；旁路：SKILL_GATE_CONFIRM=1 git push）
+echo ""
+echo "🧭 [0/5] 运行 skill-router --enforce（mandatory 技能门禁确认）..."
+PUSH_BASE=$(git rev-parse --abbrev-ref @{u} 2>/dev/null || echo "origin/main")
+git merge-base "$PUSH_BASE" HEAD >/dev/null 2>&1 || PUSH_BASE="HEAD~10"
+node scripts/skill-router.cjs --enforce --since "$PUSH_BASE" --log || {
+  echo ""
+  echo "⛔ 推送被技能路由拦截：请运行上述 mandatory 技能的 gates 并确认全绿；"
+  echo "   若确已跑过，使用 SKILL_GATE_CONFIRM=1 git push 放行。"
+  exit 1
+}
 
 # 1. 快速门禁（分层 + Mock 安全 + ACL + 原子组件 + 文档 + DB 引用）
 echo ""

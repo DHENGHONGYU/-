@@ -1,6 +1,8 @@
 ---
+skill_id: V9-PLUGIN-YUANDIAN
 name: yuandian_law
 description: "Yuandian Law (元典法律数据库), a Chinese (mainland-PRC) legal database covering statutes, regulations, and court cases. Provides semantic and keyword search plus detail lookup — over laws/regulations across all effect levels (the Constitution, national laws, judicial interpretations, administrative regulations, departmental rules, etc.) and over both ordinary and authoritative cases — with multi-dimensional filters (effect level, effectiveness status, court, administrative region, case category, date, etc.). Suitable for legal case analysis, legal consultation, legal research, and compliance analysis."
+covers_docs: [V9-DOC-PROJ-190]
 ---
 
 # Yuandian Law

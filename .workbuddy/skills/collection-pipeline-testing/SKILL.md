@@ -1,23 +1,24 @@
 ---
 skill_id: V9-SKILL-COLLECTION
+name: collection-pipeline-testing
 title: "采集链路测试与修复标准工作流"
-summary: "FinSightV9 数据采集链路（sevenDimConfigStore + collectionPipeline 及其依赖）改动后的标准化测试、修复与门禁验证流程。基于 ①-⑦ 修复全流程的 16 条教训提炼。"
-trigger:
-  - 修改 src/store/sevenDimConfigStore.ts 或其依赖链上的文件
-  - 修改 src/services/data-collector/collectionPipeline.ts 或其导出
-  - 修改 src/types/modules/collection.types.ts 中的接口
-  - 新增/修改采集维度实现
-  - 测试文件 tests/__tests__/sevenDimConfigStore.test.ts 出现失败
-covers_docs: [V9-DOC-DATA-054, V9-DOC-QA-046, V9-DOC-DATA-036, V9-DOC-DATA-064]
----9-SKILL-COLLECTION
-title: "采集链路测试与修复标准工作流"
-summary: "FinSightV9 数据采集链路（sevenDimConfigStore + collectionPipeline 及其依赖）改动后的标准化测试、修复与门禁验证流程。基于 ①-⑦ 修复全流程的 16 条教训提炼。"
-trigger:
-  - 修改 src/store/sevenDimConfigStore.ts 或其依赖链上的文件
-  - 修改 src/services/data-collector/collectionPipeline.ts 或其导出
-  - 修改 src/types/modules/collection.types.ts 中的接口
-  - 新增/修改采集维度实现
-  - 测试文件 tests/__tests__/sevenDimConfigStore.test.ts 出现失败
+description: "FinSightV9 数据采集链路（sevenDimConfigStore + collectionPipeline 及其依赖）改动后的标准化测试、修复与门禁验证流程。基于 ①-⑦ 修复全流程的 16 条教训提炼。"
+agent_created: true
+triggers:
+  keywords: [采集链路, 七维, collectionPipeline, sevenDimConfigStore, 采集维度, 采集测试, 联动测试]
+  files:
+    - "src/store/sevenDimConfigStore.ts"
+    - "src/services/data-collector/**"
+    - "src/types/modules/collection.types.ts"
+    - "tests/__tests__/sevenDimConfigStore.test.ts"
+    - "tests/unit/sevenDimEstimate.test.ts"
+  events: [test-failure]
+gates:
+  - "npx tsc --noEmit"
+  - "npm run tsc:prod"
+  - "npm run audit:layers"
+  - "node ./node_modules/vitest/vitest.mjs run tests/__tests__/sevenDimConfigStore.test.ts"
+mandatory: true
 covers_docs: [V9-DOC-DATA-054, V9-DOC-QA-046, V9-DOC-DATA-036, docs/archive/reference-historical/data-collection-route-ui-audit.md, V9-DOC-DATA-064]
 ---
 
