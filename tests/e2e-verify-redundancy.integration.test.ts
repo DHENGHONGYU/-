@@ -21,6 +21,7 @@ import path from 'node:path'
 import { db } from '@/data/db'
 import { importStocks } from '@/services/input/batchImportExecutor'
 import { getQuoteWithConfig, getKlineWithConfig } from '@/services/data-collector/dataSourceOrchestrator'
+import { resetAdaptiveOrchestrator } from '@/services/data-collector/adaptiveSourceOrchestrator'
 import {
   resolveQuoteChain,
   resolveKlineChain,
@@ -161,6 +162,8 @@ it('冗余设计 E2E 验证（R1 配置冗余 / R2 降级 / R3 幂等 / R4 隔�
   }
 
   // ── R2：降级可用性（动态，强制真实源失败） ──
+  // 重置自适应编排状态：防止同 fork 内其他测试文件积累的源健康指标改变链顺序
+  resetAdaptiveOrchestrator()
   let r2QuoteOk = false
   let r2KlineOk = false
   let r2Detail = ''

@@ -120,7 +120,9 @@ test('FinSightV9 股票页面功能测试 · 全维度 A/B/C/D', async ({ page }
 
   // ════════════════════ 维度 A · 信息展示正确性 ════════════════════
   try {
-    await page.goto('/#/input/bulk-import')
+    await page.goto('/#/input')
+    // 点击"批量导入"Tab 切换到批量导入面板
+    await page.locator('button[role="tab"]:has-text("批量导入")').click()
     await page.locator('textarea').waitFor({ state: 'visible', timeout: 15000 })
 
     const importText = stocks.map((s) => `${s.code},${s.name}`).join('\n')
