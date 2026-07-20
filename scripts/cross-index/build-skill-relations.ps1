@@ -25,7 +25,15 @@ $skillDirs = @(
     ".workbuddy/skills/collection-pipeline-testing",
     ".workbuddy/skills/data-flow-integrity-audit",
     ".workbuddy/skills/devops-automation",
-    ".workbuddy/skills/mock-data-diagnosis"
+    ".workbuddy/skills/mock-data-diagnosis",
+    "plugins/ifind",
+    "plugins/imf",
+    "plugins/kimi-webbridge",
+    "plugins/scholar",
+    "plugins/sec_edgar",
+    "plugins/tianyancha",
+    "plugins/yahoo_finance",
+    "plugins/yuandian_law"
 )
 
 $skillToDocs = @{}

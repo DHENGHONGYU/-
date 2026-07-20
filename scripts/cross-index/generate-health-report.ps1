@@ -36,6 +36,8 @@ $statusCoverage = $masterIndex.stats.status_coverage
 $totalLinks = $relationIndex.stats.total_links
 $resolvedLinks = $relationIndex.stats.resolved_links
 $unresolvedLinks = $relationIndex.stats.unresolved_links
+$activeUnresolvedLinks = $relationIndex.stats.active_unresolved_links
+$archivedUnresolvedLinks = $relationIndex.stats.archived_unresolved_links
 $linkResolutionRate = [math]::Round(($resolvedLinks / $totalLinks) * 100, 1)
 
 $orphanCount = $relationIndex.stats.orphan_docs
@@ -69,9 +71,34 @@ foreach ($prop in Get-Member -InputObject $masterIndex.documents -MemberType Not
 
 $relationCoverage = if ($totalActiveDocs -gt 0) { [math]::Round(($activeDocsWithRelation / $totalActiveDocs) * 100, 1) } else { 0 }
 
+$dateNow = Get-Date
+$date7Days = $dateNow.AddDays(7).ToString('yyyy-MM-dd')
+$date14Days = $dateNow.AddDays(14).ToString('yyyy-MM-dd')
+$dateFormat = $dateNow.ToString('yyyy-MM-dd')
+$dateFormatHM = $dateNow.ToString('yyyy-MM-dd HH:mm')
+$dateFormatYM = $dateNow.ToString('yyyy-MM')
+$docIdMonth = $dateNow.ToString('MM')
+
+$activePercent = if ($totalDocs -gt 0) { [math]::Round(($activeDocs / $totalDocs) * 100, 1) } else { 0 }
+$archivedPercent = if ($totalDocs -gt 0) { [math]::Round(($archivedDocs / $totalDocs) * 100, 1) } else { 0 }
+
+$masterIndexSize = (Get-Item "docs/00-meta/ai-index/master-index.json").Length
+$relationIndexSize = (Get-Item "docs/00-meta/ai-index/relation-index.json").Length
+$testDocIndexSize = (Get-Item "docs/00-meta/ai-index/test-doc-index.json").Length
+$codeDocIndexSize = (Get-Item "docs/00-meta/ai-index/code-doc-index.json").Length
+$skillDocIndexSize = (Get-Item "docs/00-meta/ai-index/skill-doc-index.json").Length
+
+$utCount = $testDocIndex.stats.ut_count
+$e2eCount = $testDocIndex.stats.e2e_count
+$stCount = $testDocIndex.stats.st_count
+$docsWithLinks = $relationIndex.stats.docs_with_links
+$tierCoverage = $masterIndex.stats.tier_coverage
+
+$orphanStatus = if ($orphanCount -lt 50) { "OK" } else { "WARN" }
+
 $report = @"
 ---
-title: Document Health Dashboard $(Get-Date -Format 'yyyy-MM')
+title: Document Health Dashboard $dateFormatYM
 type: report
 domain: project
 phase: maintenance
@@ -81,18 +108,18 @@ maintainer: V9 Architecture Team
 summary: "Monthly document health report covering cross-index completeness, link quality, and coverage metrics"
 tags: [project, audit, documentation, governance, health, dashboard]
 version: v1.0.0
-last_updated: $(Get-Date -Format 'yyyy-MM-dd')
-doc_id: V9-DOC-QA-$(Get-Date -Format 'MM')
+last_updated: $dateFormat
+doc_id: V9-DOC-QA-$docIdMonth
 change_log:
   - version: v1.0.0
     changes: "Initial health dashboard"
-    date: $(Get-Date -Format 'yyyy-MM-dd')
+    date: $dateFormat
 ---
 
 # Document Health Dashboard
 
-> **Generated**: $(Get-Date -Format 'yyyy-MM-dd HH:mm')
-> **Report Period**: $(Get-Date -Format 'yyyy-MM')
+> **Generated**: $dateFormatHM
+> **Report Period**: $dateFormatYM
 > **Project**: FinSightV9
 
 ---
@@ -101,17 +128,17 @@ change_log:
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| Total Documents | $totalDocs | ✅ |
-| Active Documents | $activeDocs | ✅ |
-| Archived Documents | $archivedDocs | ✅ |
-| doc_id Coverage | $docIdCoverage | ✅ |
-| status Coverage | $statusCoverage | ✅ |
-| Link Resolution Rate | $linkResolutionRate% | ✅ |
-| Relation Coverage (Active) | $relationCoverage% | ✅ |
-| Orphan Documents | $orphanCount | ⚠️ |
-| Tests with Doc Coverage | $testsWithCoverage/$totalTests | ✅ |
-| Code with Doc Coverage | $srcWithCoverage/$totalSrc | ✅ |
-| SKILLs with Doc Coverage | $totalSkills | ✅ |
+| Total Documents | $totalDocs | OK |
+| Active Documents | $activeDocs | OK |
+| Archived Documents | $archivedDocs | OK |
+| doc_id Coverage | $docIdCoverage | OK |
+| status Coverage | $statusCoverage | OK |
+| Link Resolution Rate | $linkResolutionRate% | OK |
+| Relation Coverage (Active) | $relationCoverage% | OK |
+| Orphan Documents | $orphanCount | $orphanStatus |
+| Tests with Doc Coverage | $testsWithCoverage/$totalTests | OK |
+| Code with Doc Coverage | $srcWithCoverage/$totalSrc | OK |
+| SKILLs with Doc Coverage | $totalSkills | OK |
 
 ---
 
@@ -122,16 +149,16 @@ change_log:
 | Category | Count | % of Total |
 |----------|-------|------------|
 | Total | $totalDocs | 100% |
-| Active | $activeDocs | $(if ($totalDocs -gt 0) { [math]::Round(($activeDocs / $totalDocs) * 100, 1) } else { 0 })% |
-| Archived | $archivedDocs | $(if ($totalDocs -gt 0) { [math]::Round(($archivedDocs / $totalDocs) * 100, 1) } else { 0 })% |
+| Active | $activeDocs | $activePercent% |
+| Archived | $archivedDocs | $archivedPercent% |
 
 ### 1.2 Metadata Coverage
 
 | Field | Coverage | Status |
 |-------|----------|--------|
-| doc_id | $docIdCoverage | ✅ |
-| status | $statusCoverage | ✅ |
-| tier | $($masterIndex.stats.tier_coverage) | ✅ |
+| doc_id | $docIdCoverage | OK |
+| status | $statusCoverage | OK |
+| tier | $tierCoverage | OK |
 
 ---
 
@@ -144,6 +171,8 @@ change_log:
 | Total Links | $totalLinks |
 | Resolved Links | $resolvedLinks |
 | Unresolved Links | $unresolvedLinks |
+| Active Unresolved | $activeUnresolvedLinks |
+| Archived Unresolved | $archivedUnresolvedLinks |
 | Resolution Rate | $linkResolutionRate% |
 
 ### 2.2 Relation Coverage
@@ -161,9 +190,9 @@ change_log:
 
 | Category | Count |
 |----------|-------|
-| Unit Tests | $($testDocIndex.stats.ut_count) |
-| E2E Tests | $($testDocIndex.stats.e2e_count) |
-| Store Tests | $($testDocIndex.stats.st_count) |
+| Unit Tests | $utCount |
+| E2E Tests | $e2eCount |
+| Store Tests | $stCount |
 | **Total** | $totalTests |
 
 ### 3.2 Coverage Metrics
@@ -213,22 +242,22 @@ change_log:
 
 | Index | Location | Size |
 |-------|----------|------|
-| master-index.json | docs/00-meta/ai-index/ | $((Get-Item "docs/00-meta/ai-index/master-index.json").Length) bytes |
-| relation-index.json | docs/00-meta/ai-index/ | $((Get-Item "docs/00-meta/ai-index/relation-index.json").Length) bytes |
-| test-doc-index.json | docs/00-meta/ai-index/ | $((Get-Item "docs/00-meta/ai-index/test-doc-index.json").Length) bytes |
-| code-doc-index.json | docs/00-meta/ai-index/ | $((Get-Item "docs/00-meta/ai-index/code-doc-index.json").Length) bytes |
-| skill-doc-index.json | docs/00-meta/ai-index/ | $((Get-Item "docs/00-meta/ai-index/skill-doc-index.json").Length) bytes |
+| master-index.json | docs/00-meta/ai-index/ | $masterIndexSize bytes |
+| relation-index.json | docs/00-meta/ai-index/ | $relationIndexSize bytes |
+| test-doc-index.json | docs/00-meta/ai-index/ | $testDocIndexSize bytes |
+| code-doc-index.json | docs/00-meta/ai-index/ | $codeDocIndexSize bytes |
+| skill-doc-index.json | docs/00-meta/ai-index/ | $skillDocIndexSize bytes |
 
 ### 6.2 Coverage Heatmap
 
 ```
                         Docs    Tests    Code    SKILLs
                         ======  ======  ======  ======
-Docs → Related          $activeDocsWithRelation/$totalActiveDocs
-Docs → Referenced By    $($relationIndex.stats.docs_with_links)/$totalDocs
-Tests → Covers Docs     $testsWithCoverage/$totalTests
-Code → @doc             $srcWithCoverage/$totalSrc
-SKILLs → Covers Docs    $totalSkills/15
+Docs -> Related          $activeDocsWithRelation/$totalActiveDocs
+Docs -> Referenced By    $docsWithLinks/$totalDocs
+Tests -> Covers Docs     $testsWithCoverage/$totalTests
+Code -> @doc             $srcWithCoverage/$totalSrc
+SKILLs -> Covers Docs    $totalSkills/15
 ```
 
 ---
@@ -239,8 +268,8 @@ SKILLs → Covers Docs    $totalSkills/15
 
 | Priority | Action | Owner | Target Date |
 |----------|--------|-------|-------------|
-| P1 | Review and resolve $unresolvedLinks unresolved links | Architecture Team | $(Get-Date).AddDays(7).ToString('yyyy-MM-dd') |
-| P1 | Audit $orphanCount orphan documents for deprecation | Architecture Team | $(Get-Date).AddDays(14).ToString('yyyy-MM-dd') |
+| P1 | Review and resolve $unresolvedLinks unresolved links | Architecture Team | $date7Days |
+| P1 | Audit $orphanCount orphan documents for deprecation | Architecture Team | $date14Days |
 
 ### 7.2 Ongoing Maintenance
 
@@ -256,12 +285,12 @@ SKILLs → Covers Docs    $totalSkills/15
 
 | Metric | Previous | Current | Change |
 |--------|----------|---------|--------|
-| Total Documents | — | $totalDocs | New |
-| doc_id Coverage | — | $docIdCoverage | New |
-| Link Resolution Rate | — | $linkResolutionRate% | New |
-| Relation Coverage | — | $relationCoverage% | New |
-
-> **Note**: This is the first health report. Future reports will include historical comparisons.
+| Total Documents | 801 | $totalDocs | $($totalDocs - 801) |
+| doc_id Coverage | 83.8% | $docIdCoverage | $([math]::Round(([regex]::Match($docIdCoverage, '(\d+(\.\d+)?)').Groups[1].Value -as [double]) - 83.8, 1))% |
+| Link Resolution Rate | 82.5% | $linkResolutionRate% | $([math]::Round($linkResolutionRate - 82.5, 1))% |
+| Relation Coverage | 90.7% | $relationCoverage% | $([math]::Round($relationCoverage - 90.7, 1))% |
+| Orphan Documents | 108 | $orphanCount | $($orphanCount - 108) |
+| Unresolved Links | 565 | $activeUnresolvedLinks | $($activeUnresolvedLinks - 565) |
 "@
 
 $outDir = Split-Path $OutputPath -Parent

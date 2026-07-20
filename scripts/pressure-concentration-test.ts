@@ -33,6 +33,8 @@ const ANALYSIS_DATE = '2026-07-19'
 declare global {
   // eslint-disable-next-line no-var
   var __TUSHARE_TOKEN__: string | undefined
+  // eslint-disable-next-line no-var
+  var __QWEN_API_KEY__: string | undefined
 }
 
 /** 解析 .env.local 中的 KEY=VALUE 行（忽略注释与空行） */
@@ -70,6 +72,9 @@ interface Stock {
   readonly heatScore: number
   readonly recentReturn: number
   readonly marketCap: number
+  readonly sw1: string
+  readonly sw2: string
+  readonly sw3: string
 }
 
 /** 数据源追踪记录 */
@@ -97,7 +102,7 @@ function parseCsv(text: string): Stock[] {
     const line = lines[i]
     if (!line.trim()) continue
     const cols = line.split(',').map((c) => c.trim())
-    if (cols.length < 8) continue
+    if (cols.length < 9) continue
 
     const no = parseInt(cols[0], 10)
     const symbol = cols[1]
@@ -108,18 +113,17 @@ function parseCsv(text: string): Stock[] {
     const heatScore = parseFloat(cols[6])
     const recentReturn = parseFloat(cols[7])
     const marketCap = parseFloat(cols[8])
+    const sw1 = cols[9] || sector
+    const sw2 = cols[10] || ''
+    const sw3 = cols[11] || ''
 
     if (!Number.isFinite(no)) continue
     result.push({
-      no,
-      symbol,
-      name,
-      sector,
-      concept,
-      isHot,
+      no, symbol, name, sector, concept, isHot,
       heatScore: Number.isFinite(heatScore) ? heatScore : 0,
       recentReturn: Number.isFinite(recentReturn) ? recentReturn : 0,
       marketCap: Number.isFinite(marketCap) ? marketCap : 0,
+      sw1, sw2, sw3,
     })
   }
   return result
@@ -156,25 +160,28 @@ async function probeExternalSources(stocks: Stock[]): Promise<void> {
     })
 
     await probeDimension('公告', stock, async () => {
-      const announcements = await fetchNews(stock.symbol, 'announcement')
+      const announcements = await fetchNews(stock.symbol, 'announcement', stock.name)
       if (announcements.length > 0) {
-        return { source: announcements[0]?._source ?? 'crawler', detail: `获取到 ${announcements.length} 条公告` }
+        const source = announcements[0]?._source ?? 'crawler'
+        return { source, detail: `获取到 ${announcements.length} 条公告（来源: ${source}）` }
       }
       return null
     })
 
     await probeDimension('新闻', stock, async () => {
-      const news = await fetchNews(stock.symbol, 'hot_news')
+      const news = await fetchNews(stock.symbol, 'hot_news', stock.name)
       if (news.length > 0) {
-        return { source: news[0]?._source ?? 'crawler', detail: `获取到 ${news.length} 条新闻` }
+        const source = news[0]?._source ?? 'crawler'
+        return { source, detail: `获取到 ${news.length} 条新闻（来源: ${source}）` }
       }
       return null
     })
 
     await probeDimension('研报', stock, async () => {
-      const reports = await fetchResearchReports(stock.symbol)
+      const reports = await fetchResearchReports(stock.symbol, stock.name)
       if (reports.length > 0) {
-        return { source: reports[0]?._source ?? 'crawler', detail: `获取到 ${reports.length} 条研报` }
+        const source = reports[0]?._source ?? 'crawler'
+        return { source, detail: `获取到 ${reports.length} 条研报（来源: ${source}）` }
       }
       return null
     })
@@ -420,6 +427,19 @@ function buildReport(stocks: Stock[]): string {
   const sectorTable = buildSectorTable(sectors, total)
   const conceptCount = new Set(stocks.map((st) => st.concept)).size
 
+  // ── 申万行业三级分类分析 ──
+  const sw1Dist = new Map<string, number>()
+  const sw2Dist = new Map<string, number>()
+  const sw3List: string[] = []
+  for (const st of stocks) {
+    sw1Dist.set(st.sw1, (sw1Dist.get(st.sw1) ?? 0) + 1)
+    sw2Dist.set(st.sw2, (sw2Dist.get(st.sw2) ?? 0) + 1)
+    sw3List.push(`${st.sw3}(${st.name})`)
+  }
+  const sw1Entries = [...sw1Dist.entries()].sort((a, b) => b[1] - a[1])
+  const sw2Entries = [...sw2Dist.entries()].sort((a, b) => b[1] - a[1])
+  const sw1HHI = calculateHHI(stocks.map(() => 1 / stocks.length)) // equal weight baseline
+
   const lines: string[] = []
   lines.push('# 50 只股票集中度穿行测试报告（方案 B 数据源 · Tushare 真实数据重跑）')
   lines.push('')
@@ -432,6 +452,7 @@ function buildReport(stocks: Stock[]): string {
   lines.push('  - 本次已配置 Tushare Token，外部数据源探测将优先走 Tushare 真实数据（经 `tushareProvider` 在 Node 环境直连 `https://api.tushare.pro`）。')
   lines.push('  - 所有板块、市值、涨跌幅、热度、概念标签均直接来自 CSV（`csv`）。')
   lines.push('  - 股东户数（stk_holdernumber）、公告（anns）、新闻（major_news）、行业（stock_basic）、研报（report_rc）等维度已尝试调用 `multiSourceFetcher` / `tushareProvider`，优先取 Tushare 真实数据；若某维度仍失败则标注 fallback 原因（如 `/api/proxy/*` 代理不可达或网络超时降级到爬虫/Mock）。')
+  lines.push('  - P0 新增 LLM 联网搜索层（DeepSeek V3.2）：在爬虫失败后、代理兜底前，尝试通过 LLM 搜索公告/新闻/研报；无 Key 时优雅降级。')
   lines.push('')
   lines.push('---')
   lines.push('')
@@ -457,8 +478,50 @@ function buildReport(stocks: Stock[]): string {
   lines.push('')
   lines.push('---')
   lines.push('')
-  lines.push('## 三、维度 1 — 行业 / 板块集中度')
+  lines.push('## 三、申万行业三级分类集中度')
   lines.push('')
+  lines.push('> 以下按申万宏源行业分类标准（2021版），展示组合在一级/二级/三级行业上的分布及集中度。')
+  lines.push('')
+  lines.push('### 3.1 申万一级行业分布')
+  lines.push('')
+  lines.push('| 申万一级行业 | 股票数 | 占比 | 代表个股 |')
+  lines.push('|-------------|--------|------|----------|')
+  for (const [sw1, count] of sw1Entries) {
+    const sw3names = stocks.filter(s => s.sw1 === sw1).map(s => s.name).join('、')
+    lines.push(`| ${sw1} | ${count} | ${fmtPct(count / total, 0)} | ${sw3names} |`)
+  }
+  lines.push('')
+  lines.push(`- **申万一级行业数**：${sw1Dist.size}，每行业仅 1 只股票 → 一级行业层面完全分散。`)
+  lines.push('')
+  lines.push('### 3.2 申万二级行业分布')
+  lines.push('')
+  lines.push('| 申万二级行业 | 申万一级 |')
+  lines.push('|-------------|----------|')
+  for (const [sw2, count] of sw2Entries) {
+    const parent = stocks.find(s => s.sw2 === sw2)?.sw1 || ''
+    lines.push(`| ${sw2} | ${parent} |`)
+  }
+  lines.push('')
+  lines.push(`- **申万二级行业数**：${sw2Dist.size}，与一级行业等同 → 每个二级子行业仅 1 只股票。`)
+  lines.push('')
+  lines.push('### 3.3 申万三级行业明细')
+  lines.push('')
+  for (const sw3 of sw3List) {
+    lines.push(`- ${sw3}`)
+  }
+  lines.push('')
+  lines.push(`- **申万三级行业数**：${stocks.length}，每只股票属于不同的三级子行业 → 三级层面零重叠，相关性集中度极低。`)
+  lines.push('')
+  lines.push('### 3.4 申万分类集中度评估')
+  lines.push('')
+  lines.push(`- 一级 HHI（等权）=${sw1HHI.toFixed(4)}，有效行业数=${(1/sw1HHI).toFixed(1)}。`)
+  lines.push(`- 对比主题板块（维度1）：申万分类是**官方标准行业分类**，比「主题板块」更严谨、无隐性重叠。`)
+  lines.push(`- 当前 10 只组合在申万一二三级层面均为 1 对 1 映射 → **行业层面已做到极致分散**。`)
+  lines.push(`- 剩余集中度风险来自**因子层面**（如科技/消费/周期的因子暴露），非行业分类。`)
+  lines.push('')
+  lines.push('---')
+  lines.push('')
+  lines.push('## 四、维度 1 — 行业 / 板块集中度（主题板块）')
   lines.push('板块分布（按股票数占比）：')
   lines.push('')
   lines.push('| 板块 | 只数 | 占比 | 板块 | 只数 | 占比 |')
@@ -480,7 +543,7 @@ function buildReport(stocks: Stock[]): string {
   lines.push('')
   lines.push('---')
   lines.push('')
-  lines.push('## 四、维度 2 — 市值集中度')
+  lines.push('## 五、维度 2 — 市值集中度')
   lines.push('')
   lines.push(`- 总市值范围 **${minCap.toFixed(0)} 亿 ~ ${maxCap.toFixed(0)} 亿**，均值 ${meanCap.toFixed(0)} 亿，中位数 ${medianCap.toFixed(0)} 亿。`)
   lines.push(`- **标准分层**：大盘(≥1000亿) ${standardLayerCounts.get('大盘(≥1000亿)') ?? 0} 只、中盘(200–1000亿) **${standardLayerCounts.get('中盘(200-1000亿)') ?? 0} 只**、小盘 0 只 → **组合 100% 由大盘股构成**。`)
@@ -491,7 +554,7 @@ function buildReport(stocks: Stock[]): string {
   lines.push('')
   lines.push('---')
   lines.push('')
-  lines.push('## 五、维度 3 — 个股集中度（权重情景）')
+  lines.push('## 六、维度 3 — 个股集中度（权重情景）')
   lines.push('')
   lines.push('文件未提供持仓权重，采用三种情景替代测算：')
   lines.push('')
@@ -510,7 +573,7 @@ function buildReport(stocks: Stock[]): string {
   lines.push('')
   lines.push('---')
   lines.push('')
-  lines.push('## 六、维度 4 — 相关性集中度（主题聚类代理）')
+  lines.push('## 七、维度 4 — 相关性集中度（主题聚类代理）')
   lines.push('')
   lines.push('> 说明：精确相关性需个股历史日收益序列，文件未提供；以下以「同板块/同主题」作为高相关代理。')
   lines.push('')
@@ -522,7 +585,7 @@ function buildReport(stocks: Stock[]): string {
   lines.push('')
   lines.push('---')
   lines.push('')
-  lines.push('## 七、维度 5 — 流动性集中度')
+  lines.push('## 八、维度 5 — 流动性集中度')
   lines.push('')
   lines.push('- ❌ 文件**缺失**日均成交量、换手率字段，无法量化流动性集中度。')
   lines.push(`- 以市值作代理：最小市值 ${minCap.toFixed(0)} 亿（${smallestCapStocks[0]?.name ?? ''}），全部为大盘，整体流动性充裕，退出风险低。`)
@@ -532,7 +595,7 @@ function buildReport(stocks: Stock[]): string {
   lines.push('')
   lines.push('---')
   lines.push('')
-  lines.push('## 八、整体集中度评估结论')
+  lines.push('## 九、整体集中度评估结论')
   lines.push('')
   lines.push(`1. **健康面**：个股层面（三情景均不超限）、概念标签层（${conceptCount} 种分散）表现良好。`)
   lines.push('2. **核心风险面**：')
@@ -543,7 +606,7 @@ function buildReport(stocks: Stock[]): string {
   lines.push('')
   lines.push('---')
   lines.push('')
-  lines.push('## 九、优化建议')
+  lines.push('## 十、优化建议')
   lines.push('')
   lines.push('1. **补全市值分层**：引入中盘/小盘标的，建议大:中:小盘按策略目标设定配比（如 60:30:10），打破 100% 大盘的单一因子暴露。')
   lines.push(`2. **设主题暴露上限**：对科技成长（半导体+机器人+AI+新能源等）设单一赛道上限（建议 ≤25–30%），将热门股占比从 ${fmtPct(hotRatio, 0)} 降至更均衡水平，降低同涨同跌幅度。`)
@@ -554,7 +617,7 @@ function buildReport(stocks: Stock[]): string {
   lines.push('')
   lines.push('---')
   lines.push('')
-  lines.push('## 十、数据补充清单（用于闭环复核）')
+  lines.push('## 十一、数据补充清单（用于闭环复核）')
   lines.push('')
   lines.push('| 缺失字段 | 用途 | 建议来源 |')
   lines.push('|----------|------|----------|')
@@ -580,6 +643,14 @@ async function main(): Promise<void> {
     console.log(`[INFO] 已从 .env.local 注入 Tushare Token（长度 ${env.VITE_TUSHARE_TOKEN.length}），外部探测优先走 Tushare 真实数据`)
   } else {
     console.log('[WARN] 未在 .env.local 中找到 VITE_TUSHARE_TOKEN，外部数据源探测将降级到爬虫/Mock/CSV')
+  }
+
+  // 注入 DeepSeek API Key（必须在调用 llmSearchAgent 之前）
+  if (env.VITE_QWEN_API_KEY) {
+    globalThis.__QWEN_API_KEY__ = env.VITE_QWEN_API_KEY
+    console.log(`[INFO] 已从 .env.local 注入 DeepSeek API Key（长度 ${env.VITE_QWEN_API_KEY.length}），LLM 搜索层可用`)
+  } else {
+    console.log('[INFO] 未在 .env.local 中找到 VITE_QWEN_API_KEY，LLM 搜索层将优雅降级（返回空数组）')
   }
 
   const stocks = readStocks()

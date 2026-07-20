@@ -82,13 +82,13 @@ const EXPECTED_PATHS: Record<string, { path: string; label: string }[]> = {
   input: [
     { path: '/input', label: '录入看板' },
     { path: '/input/hub', label: '输入舱首页' },
-    { path: '/input/bulk-import', label: '批量导入' },
     { path: '/input/hot-sectors', label: '热门板块' },
     { path: '/input/data-test', label: '采集测试' },
     { path: '/input/local-knowledge', label: '本地知识库' },
     { path: '/input/collect-tasks', label: '采集任务监控' },
     { path: '/input/seven-dim', label: '七维采集策略配置' },
     { path: '/input/fetcher-config', label: '抓取引擎配置' },
+    { path: '/input/intention-pool', label: '意向候选池' },
   ],
   analysis: [
     { path: '/analysis', label: '分析舱' },
@@ -124,6 +124,7 @@ const EXPECTED_PATHS: Record<string, { path: string; label: string }[]> = {
     { path: '/output/review', label: '交易复盘' },
     { path: '/output/export', label: '数据导出' },
     { path: '/output/dashboard', label: '输出舱仪表盘' },
+    { path: '/output/profile', label: '八域资料浏览' },
   ],
   command: [
     { path: '/command', label: '总控舱' },
