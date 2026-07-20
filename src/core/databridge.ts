@@ -150,6 +150,16 @@ const ACTION_TO_STORE_MAP: Record<string, StoreName> = {
   [ENVELOPE_ACTION.deleteScheduleConfig]: STORE_NAME.scheduleConfigs,
   [ENVELOPE_ACTION.saveProofreadReport]: STORE_NAME.proofreadReports,
   [ENVELOPE_ACTION.saveAnalysisResult]: STORE_NAME.analysisResults,
+  // ── 八域资料体系（v32 新增，ADR-010） ──
+  [ENVELOPE_ACTION.saveProfileItem]: STORE_NAME.profileItems,
+  [ENVELOPE_ACTION.bulkSaveProfileItems]: STORE_NAME.profileItems,
+  [ENVELOPE_ACTION.deleteProfileItem]: STORE_NAME.profileItems,
+  [ENVELOPE_ACTION.saveScoreEvidence]: STORE_NAME.scoreEvidence,
+  [ENVELOPE_ACTION.bulkSaveScoreEvidence]: STORE_NAME.scoreEvidence,
+  [ENVELOPE_ACTION.deleteScoreEvidence]: STORE_NAME.scoreEvidence,
+  [ENVELOPE_ACTION.saveStockProfile]: STORE_NAME.stockProfiles,
+  [ENVELOPE_ACTION.saveProfileTag]: STORE_NAME.profileTags,
+  [ENVELOPE_ACTION.deleteProfileTag]: STORE_NAME.profileTags,
 }
 
 // 查询动作集合（目标 store 由 payload 传入，**不**走 ACTION_TO_STORE_MAP）
