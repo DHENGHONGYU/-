@@ -13,7 +13,8 @@
   // ---- 1. 防 FOUC：主题预解析 ----
   try {
     var stored = localStorage.getItem('v9-theme');
-    var mode = stored === 'light' || stored === 'dark' || stored === 'system' ? stored : 'dark';
+    // 默认与兜底固定为浅色（用户决策：禁用暗色默认）
+    var mode = stored === 'light' || stored === 'dark' || stored === 'system' ? stored : 'light';
     var resolved = mode === 'system'
       ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
       : mode;
@@ -22,7 +23,7 @@
     if (resolved === 'dark') root.classList.add('dark');
     else root.classList.remove('dark');
   } catch (e) {
-    /* 无 localStorage 时静默降级为默认（暗色） */
+    /* 无 localStorage 时静默降级为默认（浅色） */
   }
 
   // ---- 2. HashRouter 降级重定向 ----
