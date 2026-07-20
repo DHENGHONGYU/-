@@ -1,0 +1,34 @@
+sequenceDiagram
+    actor User
+    participant StockSearch as StockSearch.tsx
+    participant Store as useInputHubStore
+    participant InputSvc as inputService
+    participant FMSS as FullMarketStockService
+    participant Lookup as industryLookup
+    participant Map as swIndustryMap.ts
+
+    User->>StockSearch: 输入 "贵州"
+    StockSearch->>StockSearch: 防抖 200ms
+    StockSearch->>Store: searchStocks("贵州")
+    Store->>InputSvc: searchStocks("贵州")
+    InputSvc->>InputSvc: 获取 existingSymbols
+    InputSvc->>FMSS: searchFullMarket("贵州", existingSymbols, 20)
+
+    FMSS->>FMSS: searchLocalDict("贵州")
+    Note over FMSS: 遍历 STOCK_DICT<br/>匹配 贵州茅台(600519) 等
+
+    loop 每个本地匹配项
+        FMSS->>Lookup: enrichStockDictItem(item)
+        Lookup->>Map: SW_INDUSTRY_MAP["600519"]
+        Map-->>Lookup: {swL1:"食品饮料",swL2:"白酒Ⅱ",swL3:"白酒Ⅲ"}
+        Lookup-->>FMSS: StockDictItem + 行业字段
+    end
+
+    FMSS-->>InputSvc: MarketStockResult[] (含 swL1/2/3)
+
+    InputSvc->>InputSvc: 映射为 StockSearchResult[]
+    InputSvc-->>Store: StockSearchResult[]
+    Store-->>StockSearch: StockSearchResult[]
+
+    StockSearch->>StockSearch: 渲染下拉列表
+    Note over StockSearch: 600519 贵州茅台 [沪]<br/>食品饮料 / 白酒Ⅱ / 白酒Ⅲ

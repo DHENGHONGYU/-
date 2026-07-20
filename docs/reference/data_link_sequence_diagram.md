@@ -12,7 +12,7 @@ version: v1.0.0
 last_updated: 2026-07-17
 code_version: 2.0.0
 doc_id: V9-DOC-DATA-049
-referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-176, V9-DOC-PROJ-149]
+referenced_by: [V9-DOC-PROJ-174, V9-DOC-META-000, V9-DOC-PROJ-176, docs/00-meta/deprecated-docs/old-versions/registry-index-v1.0.0-02-design.md, V9-DOC-PROJ-149]
 change_log:
   - version: v1.0.0
 changes: Initial version established
