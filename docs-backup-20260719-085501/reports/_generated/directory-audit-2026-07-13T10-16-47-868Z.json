@@ -1,0 +1,14 @@
+{
+  "violations": [],
+  "warnings": [],
+  "summary": {
+    "totalFiles": 22,
+    "totalViolations": 0,
+    "totalWarnings": 0,
+    "definedInDoc": 22,
+    "actualInFs": 22,
+    "missingInFs": 0,
+    "missingInDoc": 0,
+    "deprecatedResidual": 0
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "violations": [],
+  "summary": {
+    "totalFiles": 15,
+    "totalViolations": 0,
+    "scanMode": "changed",
+    "docFilesCount": 405
+  },
+  "meta": {
+    "scriptName": "audit-doc-sync",
+    "version": "3.0",
+    "timestamp": "2026-07-13T08:06:39.341Z",
+    "durationMs": 458,
+    "rootDir": "D:\\FinSightV9"
+  }
+}

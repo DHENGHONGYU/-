@@ -1,0 +1,28 @@
+{
+  "violations": [],
+  "warnings": [],
+  "summary": {
+    "totalFiles": 0,
+    "totalViolations": 0,
+    "totalWarnings": 0,
+    "updates": {
+      "rulesUpdated": false,
+      "guideUpdated": false,
+      "newDirectories": [],
+      "updatedFiles": []
+    }
+  },
+  "meta": {
+    "scriptName": "audit-directory-update",
+    "version": "1.0.0",
+    "timestamp": "2026-07-13T11:59:36.425Z",
+    "durationMs": 4,
+    "rootDir": "D:\\FinSightV9"
+  },
+  "updates": {
+    "rulesUpdated": false,
+    "guideUpdated": false,
+    "newDirectories": [],
+    "updatedFiles": []
+  }
+}

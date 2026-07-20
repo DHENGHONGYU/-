@@ -1,0 +1,56 @@
+{
+  "violations": [],
+  "warnings": [],
+  "summary": {
+    "totalFiles": 3,
+    "totalViolations": 0,
+    "totalWarnings": 0,
+    "updatesCount": 5,
+    "updatedFilesCount": 3
+  },
+  "updates": [
+    {
+      "type": "add-directory",
+      "target": "src/showcase/",
+      "change": "Added to rules",
+      "description": "检测到新的 src/ 子目录: showcase"
+    },
+    {
+      "type": "update-rules",
+      "target": "scripts/file-system-rules.json",
+      "change": "Updated",
+      "description": "规则配置文件已更新"
+    },
+    {
+      "type": "update-guide",
+      "target": "docs/00-meta/DIRECTORY_STRUCTURE_GUIDE.md",
+      "change": "Updated directory tree",
+      "description": "目录结构指南已更新"
+    },
+    {
+      "type": "update-guide",
+      "target": "docs/00-meta/DIRECTORY_STRUCTURE_GUIDE.md",
+      "change": "Updated src/ subdirectory table",
+      "description": "src/ 子目录表格已更新"
+    },
+    {
+      "type": "update-guide",
+      "target": "docs/00-meta/DIRECTORY_STRUCTURE_GUIDE.md",
+      "change": "Updated docs/ subdirectory table",
+      "description": "docs/ 子目录表格已更新"
+    }
+  ],
+  "updatedFiles": [
+    "src/showcase/",
+    "scripts/file-system-rules.json",
+    "docs/00-meta/DIRECTORY_STRUCTURE_GUIDE.md"
+  ],
+  "skippedFiles": [],
+  "meta": {
+    "scriptName": "audit-directory-update",
+    "version": "1.0.0",
+    "timestamp": "2026-07-13T11:51:13.832Z",
+    "durationMs": 27,
+    "rootDir": "D:\\FinSightV9"
+  }
+}

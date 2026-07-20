@@ -1,0 +1,34 @@
+{
+  "violations": [
+    {
+      "cabin": "analysis",
+      "path": "/analysis/stock-pool",
+      "label": "股票池看板",
+      "type": "missing-route",
+      "message": "预期路径 /analysis/stock-pool（股票池看板）未在 ROUTE_REGISTRY 中注册"
+    }
+  ],
+  "warnings": [],
+  "summary": {
+    "totalFiles": 65,
+    "totalViolations": 1,
+    "totalWarnings": 0,
+    "totalRoutes": 65,
+    "totalExpected": 66,
+    "totalCovered": 65,
+    "coverageRate": "98.5%",
+    "duplicatePaths": 0,
+    "orphanPaths": 0,
+    "byViolationType": {
+      "missing-route": 1
+    },
+    "byWarningType": {}
+  },
+  "meta": {
+    "scriptName": "verify-all-routes",
+    "version": "3.0",
+    "timestamp": "2026-07-13T15:55:32.671Z",
+    "durationMs": 1,
+    "rootDir": "D:\\FinSightV9"
+  }
+}
