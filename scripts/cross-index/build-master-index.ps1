@@ -48,14 +48,14 @@ function Extract-Field {
     return $null
 }
 
-# Collect all docs (active + archived)
-$allDocs = Get-ChildItem -Path "docs" -Filter "*.md" -Recurse -File |
-    Where-Object { $_.FullName -notmatch "\\deprecated-docs\\old-versions\\" }
-Write-Host "Scanned $($allDocs.Count) total docs"
+# Collect all docs (active + archived + deprecated)
+# Use .NET API to handle Chinese filenames correctly
+$allDocPaths = @([System.IO.Directory]::EnumerateFiles((Get-Location).Path + "\docs", "*.md", [System.IO.SearchOption]::AllDirectories))
+Write-Host "Scanned $($allDocPaths.Count) total docs"
 
 $documents = @{}
 $stats = @{
-    total_docs = $allDocs.Count
+    total_docs = $allDocPaths.Count
     active_docs = 0
     archived_docs = 0
     doc_id_coverage = 0
@@ -68,11 +68,12 @@ $noDocId = @()
 $noStatus = @()
 $noTier = @()
 
-foreach ($f in $allDocs) {
-    $info = Read-File-Ascii -Path $f.FullName
+$basePath = (Get-Location).Path + "\"
+foreach ($fullPath in $allDocPaths) {
+    $info = Read-File-Ascii -Path $fullPath
     $fm = Parse-Frontmatter -AsciiStr $info.AsciiStr
 
-    $relPath = $f.FullName.Substring((Get-Location).Path.Length + 1) -replace '\\', '/'
+    $relPath = $fullPath.Substring($basePath.Length) -replace '\\', '/'
 
     if (-not $fm) {
         # No frontmatter

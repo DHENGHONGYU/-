@@ -4,6 +4,7 @@
 .DESCRIPTION
   Reads relation-index.json, inserts related_docs (outgoing links) and referenced_by (incoming links)
   into each doc's frontmatter. Uses byte-level manipulation for 100% encoding preservation.
+  Idempotent: removes existing related_docs/referenced_by lines before inserting new ones.
 #>
 param([switch]$DryRun)
 
@@ -63,6 +64,7 @@ $allDocs = Get-ChildItem -Path "docs" -Filter "*.md" -Recurse -File |
 $modified = 0
 $skipped = 0
 $noDocId = 0
+$unchanged = 0
 
 foreach ($f in $allDocs) {
     $info = Read-File-Ascii -Path $f.FullName
@@ -72,6 +74,7 @@ foreach ($f in $allDocs) {
         $skipped++; continue
     }
     $fm = $matches[1]
+    $fmFullMatch = $matches[0]
 
     $relPath = $f.FullName.Substring((Get-Location).Path.Length + 1) -replace '\\', '/'
     $relPathLower = $relPath.ToLower()
@@ -85,57 +88,103 @@ foreach ($f in $allDocs) {
     $outgoing = $docIdToLinks[$docId].outgoing
     $incoming = $docIdToLinks[$docId].incoming
 
-    if ($outgoing.Count -eq 0 -and $incoming.Count -eq 0) {
+    # Detect line ending from frontmatter
+    $lineEnding = "`r`n"
+    if ($fm -match "`n" -and $fm -notmatch "`r`n") {
+        $lineEnding = "`n"
+    }
+
+    # Split frontmatter into lines, remove existing related_docs and referenced_by
+    $fmLines = $fm -split "`r?`n"
+    $cleanLines = @()
+    $foundRelDocs = $false
+    $foundRefBy = $false
+    foreach ($line in $fmLines) {
+        if ($line -match '^related_docs:\s*\[') {
+            $foundRelDocs = $true
+            continue
+        }
+        if ($line -match '^referenced_by:\s*\[') {
+            $foundRefBy = $true
+            continue
+        }
+        $cleanLines += $line
+    }
+
+    # Build new field lines
+    $newFieldLines = @()
+    if ($outgoing.Count -gt 0) {
+        $outgoingStr = $outgoing -join ", "
+        $newFieldLines += "related_docs: [$outgoingStr]"
+    }
+    if ($incoming.Count -gt 0) {
+        $incomingStr = $incoming -join ", "
+        $newFieldLines += "referenced_by: [$incomingStr]"
+    }
+
+    # If no fields to add and none existed, skip
+    if ($newFieldLines.Count -eq 0 -and -not $foundRelDocs -and -not $foundRefBy) {
         continue
     }
 
-    # Detect line ending
-    $lineEnding = "`r`n"
-    for ($i = 3; $i -lt [Math]::Min($asciiStr.Length, 8); $i++) {
-        if ($bytes[$i + $bomLen] -eq 0x0A) {
-            $lineEnding = if ($i -gt 0 -and $bytes[$i + $bomLen - 1] -eq 0x0D) { "`r`n" } else { "`n" }
+    # Find insertion point: before change_log if exists, otherwise before closing ---
+    $insertIndex = $cleanLines.Count
+    $changeLogIndex = -1
+    for ($i = 0; $i -lt $cleanLines.Count; $i++) {
+        if ($cleanLines[$i] -match '^change_log:') {
+            $changeLogIndex = $i
             break
         }
     }
-
-    $openingMarkerLen = 3 + $lineEnding.Length
-    $closingMarkerPattern = $lineEnding + "---"
-    $closingPosInStr = $asciiStr.IndexOf($closingMarkerPattern, $openingMarkerLen)
-    if ($closingPosInStr -lt 0) { $skipped++; continue }
-
-    # Build insert text
-    $insertLines = @()
-    
-    if ($outgoing.Count -gt 0) {
-        $outgoingStr = $outgoing -join ", "
-        $insertLines += "related_docs: [$outgoingStr]"
-    }
-    
-    if ($incoming.Count -gt 0) {
-        $incomingStr = $incoming -join ", "
-        $insertLines += "referenced_by: [$incomingStr]"
+    if ($changeLogIndex -ge 0) {
+        $insertIndex = $changeLogIndex
     }
 
-    $insertText = ($insertLines -join $lineEnding) + $lineEnding
+    # Build new frontmatter lines
+    $newFmLines = @()
+    for ($i = 0; $i -lt $cleanLines.Count; $i++) {
+        if ($i -eq $insertIndex) {
+            foreach ($fl in $newFieldLines) {
+                $newFmLines += $fl
+            }
+        }
+        $newFmLines += $cleanLines[$i]
+    }
+    # If insert at end (no change_log and closing --- position)
+    if ($insertIndex -eq $cleanLines.Count) {
+        foreach ($fl in $newFieldLines) {
+            $newFmLines += $fl
+        }
+    }
 
-    # Find insert position: before change_log: if exists, otherwise before closing ---
-    $changeLogPattern = $lineEnding + "change_log:"
-    $changeLogPosInStr = $asciiStr.IndexOf($changeLogPattern, $openingMarkerLen, $closingPosInStr - $openingMarkerLen)
+    $newFm = $newFmLines -join $lineEnding
 
-    if ($changeLogPosInStr -ge 0) {
-        $insertPosInStr = $changeLogPosInStr + $lineEnding.Length
+    # Check if anything changed
+    if ($foundRelDocs -or $foundRefBy) {
+        $oldFmNormalized = ($fmLines | Where-Object { $_ -notmatch '^related_docs:\s*\[' -and $_ -notmatch '^referenced_by:\s*\[' }) -join $lineEnding
     } else {
-        $insertPosInStr = $closingPosInStr
-        $insertText = $lineEnding + ($insertLines -join $lineEnding)
+        $oldFmNormalized = $fm
     }
 
-    $insertPos = $insertPosInStr + $bomLen
-    $insertBytes = $ascii.GetBytes($insertText)
+    # Build new full content
+    $newFmFull = "---" + $lineEnding + $newFm + $lineEnding + "---"
+    $newAsciiStr = $asciiStr.Replace($fmFullMatch, $newFmFull)
 
-    $newBytes = New-Object byte[] ($bytes.Length + $insertBytes.Length)
-    [Array]::Copy($bytes, 0, $newBytes, 0, $insertPos)
-    [Array]::Copy($insertBytes, 0, $newBytes, $insertPos, $insertBytes.Length)
-    [Array]::Copy($bytes, $insertPos, $newBytes, $insertPos + $insertBytes.Length, $bytes.Length - $insertPos)
+    # Skip if unchanged
+    if ($newAsciiStr -eq $asciiStr) {
+        $unchanged++
+        continue
+    }
+
+    # Convert back to bytes
+    $newContentBytes = $ascii.GetBytes($newAsciiStr)
+    if ($bomLen -gt 0) {
+        $newBytes = New-Object byte[] ($bomLen + $newContentBytes.Length)
+        [Array]::Copy($bytes, 0, $newBytes, 0, $bomLen)
+        [Array]::Copy($newContentBytes, 0, $newBytes, $bomLen, $newContentBytes.Length)
+    } else {
+        $newBytes = $newContentBytes
+    }
 
     if ($DryRun) {
         Write-Host "[DRY] $relPath : related_docs=$($outgoing.Count), referenced_by=$($incoming.Count)"
@@ -147,7 +196,8 @@ foreach ($f in $allDocs) {
 }
 
 Write-Host ""
-Write-Host "========== Relation Fields Added =========="
+Write-Host "========== Relation Fields Updated =========="
 Write-Host "Modified: $modified"
+Write-Host "Unchanged: $unchanged"
 Write-Host "Skipped (no frontmatter/closing marker): $skipped"
 Write-Host "No doc_id in relation-index: $noDocId"

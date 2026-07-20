@@ -82,7 +82,6 @@ const EXPECTED_PATHS: Record<string, { path: string; label: string }[]> = {
   input: [
     { path: '/input', label: '录入看板' },
     { path: '/input/hub', label: '输入舱首页' },
-    { path: '/input/bulk-import', label: '批量导入' },
     { path: '/input/hot-sectors', label: '热门板块' },
     { path: '/input/data-test', label: '采集测试' },
     { path: '/input/local-knowledge', label: '本地知识库' },
