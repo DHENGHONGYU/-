@@ -1,12 +1,13 @@
 #!/usr/bin/env tsx
 /**
  * audit-dead-code.ts
- * 死代码/空壳/路由一致性扫描器 v3.3（白盒/透明管道）
+ * 死代码/空壳/路由一致性/未使用组件扫描器 v3.4（白盒/透明管道）
  *
  * 检查目标：
  * 1. src/ 下是否存在空函数、空组件、仅返回 null 的组件。
  * 2. src/config/routes.ts 中注册的路由是否对应真实存在的页面文件。
  * 3. pages/ 下是否存在未被任何路由或 App 分发器注册的页面文件（仅提示）。
+ * 4. src/components/ 下是否存在未被任何文件引用的组件（仅提示，v3.4 新增）。
  *
  * v3.1 改造（2026-07-06）：
  * - 新增动态导入全量扫描：覆盖 React.lazy / lazy() / () => import() / import() 四种模式
@@ -86,6 +87,10 @@ export interface Report extends AuditReport {
     dynamicImportSources: number
     /** v3.1 新增：通过动态导入注册的页面数（仅 @/pages/ 前缀） */
     dynamicRegisteredPages: number
+    /** v3.4 新增：扫描到的组件文件总数 */
+    totalComponents: number
+    /** v3.4 新增：未使用组件数（无任何引用的组件文件） */
+    unusedComponents: number
   }
 }
 
@@ -540,6 +545,257 @@ function isExcludedFromPageAudit(relativePath: string): boolean {
   return false
 }
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// v3.4 新增：未使用组件扫描
+// 扫描 src/components/ 下所有组件文件，检查是否被项目中其他文件引用
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/** 组件文件信息 */
+interface ComponentInfo {
+  /** 组件文件相对路径（从 src/ 开始，不含扩展名） */
+  filePath: string
+  /** 组件名（从文件名推导，PascalCase） */
+  componentName: string
+  /** 绝对路径 */
+  absolutePath: string
+  /** 是否为 index 桶文件（目录入口） */
+  isIndex: boolean
+}
+
+/**
+ * 从文件名推导组件名（PascalCase）。
+ * 例如：stock-card.tsx → StockCard，Button.tsx → Button
+ */
+function deriveComponentName(fileName: string): string {
+  const base = fileName.replace(/\.(tsx?|jsx?)$/, '')
+  return base
+    .split(/[-_]/)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join('')
+}
+
+/**
+ * 收集 src/components/ 下所有组件文件。
+ * 排除：测试文件、__tests__/ 目录、纯类型文件、hooks 文件
+ */
+function collectComponentFiles(): ComponentInfo[] {
+  const componentsDir = path.join(SRC, 'components')
+  if (!fs.existsSync(componentsDir)) return []
+
+  const files = collectFiles(componentsDir).filter((f) => {
+    const rel = relativeFromRoot(f)
+    // 排除测试文件
+    if (rel.includes('.test.') || rel.includes('.spec.')) return false
+    if (rel.includes('__tests__/')) return false
+    // 排除 .ts 纯类型/工具文件（只扫描 .tsx 组件文件）
+    if (!f.endsWith('.tsx')) return false
+    // 排除 hooks 文件
+    const baseName = path.basename(f)
+    if (baseName.startsWith('use') && baseName[3]! >= 'A' && baseName[3]! <= 'Z') return false
+    return true
+  })
+
+  return files.map((absPath) => {
+    const relPath = relativeFromSrc(absPath) // 如 components/atoms/Button
+    const fileName = path.basename(absPath)
+    const isIndex = fileName === 'index.tsx'
+    // 对于 index 文件，组件名取父目录名
+    const nameSource = isIndex ? path.basename(path.dirname(absPath)) : fileName
+    const componentName = deriveComponentName(nameSource)
+
+    return {
+      filePath: relPath,
+      componentName,
+      absolutePath: absPath,
+      isIndex,
+    }
+  })
+}
+
+/**
+ * 从文件内容中提取所有导入路径，用于构建组件引用图。
+ * 同时扫描 JSX 中的组件名使用（作为补充判断）。
+ */
+function extractImportsFromFile(filePath: string): string[] {
+  const content = fs.readFileSync(filePath, 'utf-8')
+  const imports: string[] = []
+
+  // 匹配 ES Module import 语句
+  // import X from '...'
+  // import { X, Y } from '...'
+  // import * as X from '...'
+  // import '...'
+  const importRegex = /import\s+(?:(?:type\s+)?[\w*{}\s,]+from\s+)?['"]([^'"]+)['"]/g
+  let match: RegExpExecArray | null
+  while ((match = importRegex.exec(content)) !== null) {
+    imports.push(match[1]!)
+  }
+
+  // 匹配动态 import()
+  const dynamicImportRegex = /import\s*\(\s*['"]([^'"]+)['"]\s*\)/g
+  while ((match = dynamicImportRegex.exec(content)) !== null) {
+    imports.push(match[1]!)
+  }
+
+  // 匹配 require()（兼容旧代码）
+  const requireRegex = /require\s*\(\s*['"]([^'"]+)['"]\s*\)/g
+  while ((match = requireRegex.exec(content)) !== null) {
+    imports.push(match[1]!)
+  }
+
+  return imports
+}
+
+/**
+ * 解析导入路径为组件文件的相对路径（相对于 src/）。
+ * 处理 @/ 别名和相对路径。
+ */
+function resolveComponentImport(importPath: string, fromFile: string): string | null {
+  // 只处理项目内部导入（@/ 开头或相对路径）
+  if (importPath.startsWith('@/')) {
+    const sub = importPath.slice(2)
+    // 尝试直接匹配（不含扩展名）
+    const candidates = [
+      `${sub}.tsx`,
+      `${sub}.ts`,
+      `${sub}/index.tsx`,
+      `${sub}/index.ts`,
+    ]
+    for (const c of candidates) {
+      if (fs.existsSync(path.join(SRC, c))) {
+        return c.replace(/\.(tsx?|jsx?)$/, '')
+      }
+    }
+    return null
+  }
+
+  // 相对路径
+  if (importPath.startsWith('.') || importPath.startsWith('..')) {
+    const fromDir = path.dirname(fromFile)
+    const resolved = path.resolve(fromDir, importPath)
+    const candidates = [
+      `${resolved}.tsx`,
+      `${resolved}.ts`,
+      `${resolved}/index.tsx`,
+      `${resolved}/index.ts`,
+    ]
+    for (const c of candidates) {
+      if (fs.existsSync(c)) {
+        return path.relative(SRC, c).replace(/\\/g, '/').replace(/\.(tsx?|jsx?)$/, '')
+      }
+    }
+    return null
+  }
+
+  return null // 第三方依赖，跳过
+}
+
+/**
+ * 检查组件是否被 JSX 直接使用（作为补充判断，防止桶导出漏判）。
+ * 对于通过 index 桶文件导出的组件，导入路径可能指向目录而非具体文件，
+ * 此时通过 JSX 标签名匹配作为辅助判断。
+ */
+function isComponentUsedInJSX(componentName: string, allSourceFiles: string[]): boolean {
+  // 组件名太短（如 2 字母缩写）容易误判，跳过
+  if (componentName.length < 3) return false
+
+  // JSX 标签使用模式：<ComponentName 或 <ComponentName/> 或 </ComponentName>
+  const jsxRegex = new RegExp(
+    `</?${componentName}(\\s|>|\\.|/)`,
+    'g',
+  )
+
+  for (const file of allSourceFiles) {
+    try {
+      const content = fs.readFileSync(file, 'utf-8')
+      // 跳过组件自身文件
+      const fileName = path.basename(file)
+      if (deriveComponentName(fileName) === componentName) continue
+
+      if (jsxRegex.test(content)) {
+        return true
+      }
+    } catch {
+      // 文件读取失败，跳过
+    }
+  }
+
+  return false
+}
+
+/**
+ * 扫描未使用的组件。
+ *
+ * 检测策略：
+ * 1. 收集 src/components/ 下所有 .tsx 组件文件
+ * 2. 遍历全项目所有 .ts/.tsx 文件，提取导入路径
+ * 3. 将导入路径解析为组件文件路径，建立"被引用组件"集合
+ * 4. 对于未被导入路径直接命中的组件，额外用 JSX 标签名扫描兜底
+ * 5. 输出未使用组件列表
+ *
+ * 注意：
+ * - 这是启发式检测，可能存在误判（如通过字符串动态加载、MCP 服务端渲染等）
+ * - 仅作为提示，不作为硬性违规（exit code 不受影响）
+ */
+function scanUnusedComponents(): Issue[] {
+  const components = collectComponentFiles()
+  if (components.length === 0) return []
+
+  // 收集所有源文件（用于导入分析和 JSX 扫描）
+  const allSourceFiles = collectFiles(SRC).filter(
+    (f) =>
+      (f.endsWith('.ts') || f.endsWith('.tsx')) &&
+      !f.includes('.test.') &&
+      !f.includes('.spec.') &&
+      !f.includes('__tests__/'),
+  )
+
+  // 构建"被引用的组件文件"集合（相对 src/ 路径，不含扩展名）
+  const referencedComponents = new Set<string>()
+
+  for (const file of allSourceFiles) {
+    const imports = extractImportsFromFile(file)
+    for (const imp of imports) {
+      const resolved = resolveComponentImport(imp, file)
+      if (resolved && resolved.startsWith('components/')) {
+        referencedComponents.add(resolved)
+      }
+    }
+  }
+
+  // 检查每个组件是否被引用
+  const issues: Issue[] = []
+  for (const comp of components) {
+    const compPath = comp.filePath // 如 components/atoms/Button
+
+    // 1. 检查是否被导入路径直接命中
+    if (referencedComponents.has(compPath)) continue
+
+    // 2. 对于非 index 文件，检查是否通过父目录 index 桶被引用
+    if (!comp.isIndex) {
+      const parentDir = path.dirname(compPath)
+      if (referencedComponents.has(parentDir)) continue
+      // 也可能是 components/atoms/index 这种桶
+      const grandParentDir = path.dirname(parentDir)
+      if (referencedComponents.has(grandParentDir)) continue
+    }
+
+    // 3. JSX 标签名兜底扫描（防止桶导出漏判）
+    if (isComponentUsedInJSX(comp.componentName, allSourceFiles)) continue
+
+    // 未被引用，报告为警告
+    issues.push({
+      file: `src/${compPath}.tsx`,
+      line: 1,
+      type: '未使用组件',
+      message: `组件 ${comp.componentName} 未在项目中找到任何引用（导入或 JSX 使用）`,
+      context: `src/${compPath}.tsx`,
+    })
+  }
+
+  return issues
+}
+
 function scanRouteConsistency(): Issue[] {
   const issues: Issue[] = []
   const importPaths = parseRoutes()
@@ -633,7 +889,10 @@ export function scan(): Report {
 
   issues.push(...scanRouteConsistency())
 
-  // 退出码语义：路由文件缺失=violation(exit 1)，空函数/未注册页面/条件返回 null=warning(exit 0)
+  // v3.4 新增：未使用组件扫描
+  issues.push(...scanUnusedComponents())
+
+  // 退出码语义：路由文件缺失=violation(exit 1)，其他=warning(exit 0)
   const violations = issues.filter((i) => i.type === '路由文件缺失')
   const warnings = issues.filter((i) => i.type !== '路由文件缺失')
 
@@ -646,6 +905,10 @@ export function scan(): Report {
   const dynamicImports = dynamicScan.imports.length
   const dynamicImportSources = dynamicScan.sourceFiles.size
   const dynamicRegisteredPages = dynamicScan.registeredPages.size
+
+  // v3.4 新增：组件统计
+  const componentFiles = collectComponentFiles()
+  const unusedComponents = issues.filter((i) => i.type === '未使用组件').length
 
   return {
     issues,
@@ -664,6 +927,8 @@ export function scan(): Report {
       dynamicImports,
       dynamicImportSources,
       dynamicRegisteredPages,
+      totalComponents: componentFiles.length,
+      unusedComponents,
     },
   }
 }
@@ -673,12 +938,12 @@ export function formatReport(report: Report): string {
   const lines: string[] = []
 
   lines.push('╔════════════════════════════════════════════════════════════╗')
-  lines.push('║  死代码与路由一致性审计 — audit-dead-code.ts v3.1          ║')
+  lines.push('║  死代码/路由一致性/未使用组件审计 — audit-dead-code.ts v3.4 ║')
   lines.push('╚════════════════════════════════════════════════════════════╝')
   lines.push('')
 
   if (report.issues.length === 0) {
-    lines.push(colorize('✅ 未发现空壳函数/组件或路由不一致', 'green'))
+    lines.push(colorize('✅ 未发现空壳函数/组件、路由不一致或未使用组件', 'green'))
   } else {
     lines.push(
       colorize(
@@ -700,6 +965,9 @@ export function formatReport(report: Report): string {
   lines.push(`空函数/组件: ${report.summary.emptyFunctions}`)
   lines.push(`路由文件缺失: ${report.summary.missingRouteFiles}`)
   lines.push(`未注册页面: ${report.summary.unregisteredPages}（仅提示）`)
+  lines.push(
+    `未使用组件: ${report.summary.unusedComponents}/${report.summary.totalComponents}（仅提示，v3.4）`,
+  )
   lines.push('────────────────────────────────────────────────────────────')
   lines.push(
     `注册源统计: routes.ts(${report.summary.routeImports}) + apps/(${report.summary.appImports}) + portal/(${report.summary.portalImports})`,
@@ -711,9 +979,14 @@ export function formatReport(report: Report): string {
   lines.push(`覆盖路径: @/pages/ + @/apps/ + @/cockpit/ + @/portal/`)
   lines.push(`排除规则: 测试文件 + __tests__/ + pages/*/components/`)
   lines.push('────────────────────────────────────────────────────────────')
+  lines.push('未使用组件检测策略: 导入路径解析 + JSX 标签名兜底扫描')
+  lines.push('注意: 未使用组件为启发式检测，可能存在误判（动态加载/桶导出等）')
+  lines.push('────────────────────────────────────────────────────────────')
 
   if (report.summary.missingRouteFiles > 0) {
     lines.push(colorize('❌ 存在路由文件缺失，请补全组件或清理路由表', 'red'))
+  } else if (report.issues.length > 0) {
+    lines.push(colorize('⚠️  存在警告项，请酌情清理或确认', 'yellow'))
   }
 
   return lines.join('\n')
@@ -723,7 +996,7 @@ export function formatReport(report: Report): string {
 export function main(): void {
   const result = runAuditPipeline<Report>({
     scriptName: 'audit-dead-code',
-    version: '3.1',
+    version: '3.4',
     scanFn: scan,
     formatReportFn: formatReport,
   })
