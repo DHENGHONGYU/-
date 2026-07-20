@@ -45,7 +45,7 @@ test.describe('表单交互测试', () => {
   })
 
   // ============================================================
-  // 批量导入文本输入
+  // 批量导入文本输入（已整合到录入看板 InputDashboard 的 Tabs 中）
   // ============================================================
   test.describe('批量导入文本输入', () => {
     test.beforeEach(async ({ page }) => {
@@ -54,8 +54,8 @@ test.describe('表单交互测试', () => {
     })
 
     test('粘贴 SAMPLE_STOCKS 列表文本后应正确解析', async ({ page }) => {
-      // 打开批量导入面板
-      await page.locator('main button:has-text("批量导入")').click()
+      // 批量导入已整合到录入看板 Tabs，点击"批量导入"Tab 切换
+      await page.getByRole('tab', { name: '批量导入' }).click()
       // 构造导入文本
       const importText = SAMPLE_STOCKS.map(s => `${s.code},${s.name}`).join('\n')
       // 填入文本区域
@@ -66,7 +66,7 @@ test.describe('表单交互测试', () => {
     })
 
     test('文本解析应展示标准化代码预览', async ({ page }) => {
-      await page.locator('main button:has-text("批量导入")').click()
+      await page.getByRole('tab', { name: '批量导入' }).click()
       const importText = SAMPLE_STOCKS.map(s => `${s.code},${s.name}`).join('\n')
       await page.locator('textarea').fill(importText)
       // 预览表格应包含股票名称
@@ -75,7 +75,7 @@ test.describe('表单交互测试', () => {
     })
 
     test('可切换粘贴文本/上传文件模式', async ({ page }) => {
-      await page.locator('main button:has-text("批量导入")').click()
+      await page.getByRole('tab', { name: '批量导入' }).click()
       await expect(page.locator('button:has-text("粘贴文本")')).toBeVisible()
       await expect(page.locator('button:has-text("上传文件")')).toBeVisible()
     })

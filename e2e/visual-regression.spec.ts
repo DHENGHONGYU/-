@@ -90,13 +90,7 @@ test.describe('视觉回归 - 核心舱页面', () => {
     await expect(page).toHaveScreenshot('cockpit.png', { fullPage: true })
   })
 
-  // ── 输入舱子页面（2 个） ──
-  test('批量导入页面', async ({ page }) => {
-    await page.goto('/input/bulk-import')
-    await waitForPageStable(page, /批量导入/i)
-    await expect(page).toHaveScreenshot('input-bulk-import.png', { fullPage: true })
-  })
-
+  // ── 输入舱子页面 ──
   test('热门板块录入页面', async ({ page }) => {
     await page.goto('/input/hot-sectors')
     await waitForPageStable(page, /热门板块/i)

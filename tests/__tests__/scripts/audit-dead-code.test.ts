@@ -37,7 +37,7 @@ const mockExistsSync = vi.mocked(existsSync)
 
 type TestFiles = Record<string, string>
 
-describe('audit-dead-code.ts v3.0（白盒测试）', () => {
+describe('audit-dead-code.ts v3.4（白盒测试）', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     vi.resetModules()
@@ -112,8 +112,8 @@ describe('audit-dead-code.ts v3.0（白盒测试）', () => {
   }
 
   /** 动态导入 scan 函数（确保 vi.resetModules 后获取新实例） */
-  async function importScan(): Promise<typeof import('../../../scripts/audit-dead-code')> {
-    return await import('../../../scripts/audit-dead-code')
+  async function importScan(): Promise<typeof import('../../../scripts/audit/audit-dead-code')> {
+    return await import('../../../scripts/audit/audit-dead-code')
   }
 
   // ============================================================
@@ -372,6 +372,112 @@ export interface AnalysisResult {
   })
 
   // ============================================================
+  // scan() 未使用组件扫描（v3.4 新增）
+  // ============================================================
+
+  describe('scan() 未使用组件扫描', () => {
+    it('检测未被任何文件引用的组件', async () => {
+      setupVirtualFS({
+        'components/atoms/UnusedButton.tsx': `
+export function UnusedButton() {
+  return <button>unused</button>
+}
+`,
+        'components/atoms/UsedButton.tsx': `
+export function UsedButton() {
+  return <button>used</button>
+}
+`,
+        'pages/home/HomePage.tsx': `
+import { UsedButton } from '@/components/atoms/UsedButton'
+export default function HomePage() {
+  return <UsedButton />
+}
+`,
+        'config/routes.ts': 'export const ROUTES = []',
+      })
+      const { scan } = await importScan()
+      const report = scan()
+
+      const unusedComps = report.warnings.filter(w => w.type === '未使用组件')
+      // UnusedButton 应该被检测为未使用
+      expect(unusedComps.some(w => w.file.includes('UnusedButton'))).toBe(true)
+      // UsedButton 不应被检测为未使用
+      expect(unusedComps.some(w => w.file.includes('UsedButton'))).toBe(false)
+      expect(report.summary.totalComponents).toBeGreaterThan(0)
+      expect(report.summary.unusedComponents).toBeGreaterThan(0)
+    })
+
+    it('识别通过 JSX 标签使用的组件（桶导出兜底）', async () => {
+      setupVirtualFS({
+        'components/atoms/UsedInJSX.tsx': `
+export function UsedInJSX() {
+  return <div>used</div>
+}
+`,
+        'pages/home/HomePage.tsx': `
+import { UsedInJSX } from '@/components/atoms'
+export default function HomePage() {
+  return <UsedInJSX />
+}
+`,
+        'components/atoms/index.ts': `
+export { UsedInJSX } from './UsedInJSX'
+`,
+        'config/routes.ts': 'export const ROUTES = []',
+      })
+      const { scan } = await importScan()
+      const report = scan()
+
+      const unusedComps = report.warnings.filter(w => w.type === '未使用组件')
+      // 通过 JSX 标签名匹配到的组件不应被标记为未使用
+      expect(unusedComps.some(w => w.file.includes('UsedInJSX'))).toBe(false)
+    })
+
+    it('排除测试文件中的组件使用检测', async () => {
+      setupVirtualFS({
+        'components/atoms/OnlyInTest.tsx': `
+export function OnlyInTest() {
+  return <div>test only</div>
+}
+`,
+        'components/atoms/OnlyInTest.test.tsx': `
+import { OnlyInTest } from './OnlyInTest'
+test('renders', () => {
+  render(<OnlyInTest />)
+})
+`,
+        'config/routes.ts': 'export const ROUTES = []',
+      })
+      const { scan } = await importScan()
+      const report = scan()
+
+      const unusedComps = report.warnings.filter(w => w.type === '未使用组件')
+      // 仅在测试中使用的组件应被视为未使用（生产代码未使用）
+      expect(unusedComps.some(w => w.file.includes('OnlyInTest'))).toBe(true)
+    })
+
+    it('未使用组件属于 warnings 而非 violations（不影响 exit code）', async () => {
+      setupVirtualFS({
+        'components/atoms/UnusedComp.tsx': `
+export function UnusedComp() {
+  return <div>unused</div>
+}
+`,
+        'config/routes.ts': 'export const ROUTES = []',
+      })
+      const { scan } = await importScan()
+      const report = scan()
+
+      // 未使用组件只应出现在 warnings 中
+      const inViolations = report.violations.filter(v => v.type === '未使用组件')
+      const inWarnings = report.warnings.filter(w => w.type === '未使用组件')
+      expect(inViolations).toHaveLength(0)
+      expect(inWarnings.length).toBeGreaterThan(0)
+    })
+  })
+
+  // ============================================================
   // scan() 报告结构
   // ============================================================
 
@@ -400,6 +506,8 @@ export interface AnalysisResult {
       expect(report.summary).toHaveProperty('routeImports')
       expect(report.summary).toHaveProperty('appImports')
       expect(report.summary).toHaveProperty('portalImports')
+      expect(report.summary).toHaveProperty('totalComponents')
+      expect(report.summary).toHaveProperty('unusedComponents')
     })
 
     it('violations 仅包含路由文件缺失（其他为 warnings）', async () => {
@@ -456,11 +564,16 @@ export const ROUTES = [{ path: '/missing', component: Missing }]
           routeImports: 0,
           appImports: 0,
           portalImports: 0,
+          dynamicImports: 0,
+          dynamicImportSources: 0,
+          dynamicRegisteredPages: 0,
+          totalComponents: 0,
+          unusedComponents: 0,
         },
       }
       const output = formatReport(emptyReport as never)
 
-      expect(output).toContain('未发现空壳函数/组件或路由不一致')
+      expect(output).toContain('未发现空壳函数/组件、路由不一致或未使用组件')
       expect(output).toContain('扫描文件数: 10')
     })
 
@@ -496,6 +609,11 @@ export const ROUTES = [{ path: '/missing', component: Missing }]
           routeImports: 0,
           appImports: 0,
           portalImports: 0,
+          dynamicImports: 0,
+          dynamicImportSources: 0,
+          dynamicRegisteredPages: 0,
+          totalComponents: 0,
+          unusedComponents: 0,
         },
       }
       const output = formatReport(report as never)
@@ -538,6 +656,11 @@ export const ROUTES = [{ path: '/missing', component: Missing }]
           routeImports: 1,
           appImports: 0,
           portalImports: 0,
+          dynamicImports: 0,
+          dynamicImportSources: 0,
+          dynamicRegisteredPages: 0,
+          totalComponents: 0,
+          unusedComponents: 0,
         },
       }
       const output = formatReport(report as never)
