@@ -1,0 +1,52 @@
+classDiagram
+    direction LR
+
+    class StockDictItem {
+        +string symbol
+        +string name
+        +'SH'|'SZ'|'BJ'|'HK' market
+        +string? swL1
+        +string? swL2
+        +string? swL3
+    }
+
+    class SwIndustry {
+        +string swL1
+        +string swL2
+        +string swL3
+    }
+
+    class MarketStockResult {
+        +string symbol
+        +string name
+        +string market
+        +'dict'|'smartbox' source
+        +string? swL1
+        +string? swL2
+        +string? swL3
+    }
+
+    class StockSearchResult {
+        +string symbol
+        +string name
+        +string industry
+        +string? swL1
+        +string? swL2
+        +string? swL3
+    }
+
+    class SW_INDUSTRY_MAP {
+        <<Record~string, SwIndustry~>>
+    }
+
+    class industryLookup {
+        +enrichStockDictItem(item: StockDictItem) StockDictItem
+        +getSwIndustry(symbol: string) SwIndustry | undefined
+    }
+
+    SW_INDUSTRY_MAP --> SwIndustry : values
+    StockDictItem ..> SwIndustry : swL1/swL2/swL3 对齐
+    MarketStockResult --|> StockDictItem : 扩展自
+    StockSearchResult ..> MarketStockResult : 映射自
+    industryLookup ..> SW_INDUSTRY_MAP : 读取
+    industryLookup ..> StockDictItem : 丰富

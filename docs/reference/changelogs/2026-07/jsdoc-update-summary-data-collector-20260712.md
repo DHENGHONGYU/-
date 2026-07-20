@@ -1,12 +1,12 @@
 ---
-title: JSDoc ĵ嵥 - Data Collector ģ
+title: JSDoc ????? - Data Collector ??
 type: reference
 domain: data
 phase: retrospective
 tier: standard
 status: active
 maintainer: V9 Architecture Team
-summary: ": 2026-07-12 汾: v1.0 ģ: data-collector ļ: 3 עͷ: 28"
+summary: ": 2026-07-12 ???: v1.0 ??: data-collector ??: 3 ????: 28"
 tags: [data, collection, jsdoc]
 version: v1.0.0
 last_updated: 2026-07-17
@@ -19,57 +19,57 @@ changes: Initial version established
 date: 2026-07-17
 ---
 
-# JSDoc ĵ嵥 - Data Collector ģ
+# JSDoc ????? - Data Collector ??
 
 > ****: 2026-07-12
-> **汾**: v1.0
-> **ģ**: data-collector
-> **ļ**: 3
-> **עͷ**: 28
+> **???**: v1.0
+> **??**: data-collector
+> **??**: 3
+> **????**: 28
 
 ---
 
-## Ŀ¼
+## ????
 
 1. [](#)
-2. [ļϸ](#ļϸ)
+2. [????](#????)
    - [BaseCollector.ts](#basecollectorts)
    - [WebSocketCollector.ts](#websocketcollectorts)
    - [TaskScheduler.ts](#taskschedulerts)
-3. [Աȱ](#Աȱ)
-4. [֤](#֤)
-5. [Ҫ](#Ҫ)
+3. [????](#????)
+4. [??](#??)
+5. [??](#??)
 
 ---
 
 ## 
 
-| ļ | ԭ | ע |  | ״̬ |
+| ?? | ?? | ?? |  | ???? |
 |------|---------|-----------|---------|---------|
-| [BaseCollector.ts](../../../../src/services/data-collector/collectors/BaseCollector.ts) | 9 | 9 |  + ֶ + 캯 + з | ?  |
-| [WebSocketCollector.ts](../../../../src/services/data-collector/collectors/WebSocketCollector.ts) | 10 | 10 |  + ֶ + 캯 + з | ?  |
-| [TaskScheduler.ts](../../../../src/services/data-collector/TaskScheduler.ts) | 14 | 14 |  +  +  + ֶ + з +  | ?  |
+| [BaseCollector.ts](../../../../src/services/data-collector/collectors/BaseCollector.ts) | 9 | 9 |  + ?? + ??? + ?? | ?  |
+| [WebSocketCollector.ts](../../../../src/services/data-collector/collectors/WebSocketCollector.ts) | 10 | 10 |  + ?? + ??? + ?? | ?  |
+| [TaskScheduler.ts](../../../../src/services/data-collector/TaskScheduler.ts) | 14 | 14 |  +  +  + ?? + ?? +  | ?  |
 
 ---
 
-## ļϸ
+## ????
 
 ### BaseCollector.ts
 
-**ļ·**: `src/services/data-collector/collectors/BaseCollector.ts`
+**????**: `src/services/data-collector/collectors/BaseCollector.ts`
 
-#### ע
+#### ??
 
 ```typescript
 /**
- * ݲɼ
- * @description ṩȫֳʱжϡͳһ󲶻Իơݰװͨĳ
- * @abstract оɼ RESTWebSocketMock̳дಢʵ collect 
+ * ????
+ * @description ?????????????????????????????????
+ * @abstract ???? RESTWebSocketMock????????? collect 
  * @example
  * ```typescript
  * class MyCollector extends BaseCollector {
  *   async collect(dataSource: DataSourceConfig): Promise<RawMarketData> {
- *     // ʵ־ɼ߼
+ *     // ????????
  *     return this.wrapData('indices', rawData, 'my-source')
  *   }
  * }
@@ -77,237 +77,237 @@ date: 2026-07-17
  */
 ```
 
-#### ֶע
+#### ????
 
-| ֶ | ע |
+| ?? | ?? |
 |--------|---------|
-| `config` | ɼãʱԴԼȲ |
-| `abortController` | ȡڽеĲɼĿ |
-| `isRunning` | ɼ״̬ʶ |
+| `config` | ???????????? |
+| `abortController` | ???????????? |
+| `isRunning` | ???????? |
 
-#### 캯ע
+#### ?????
 
 ```typescript
 /**
- * 캯
- * @param config ɼѡѡδṩʹĬֵ
- * @see COLLECTOR_DEFAULT_CONFIG ȡĬֵ
+ * ???
+ * @param config ????????????????????
+ * @see COLLECTOR_DEFAULT_CONFIG ??????
  */
 ```
 
-#### ע
+#### ??
 
-|  | עͱǩ | ؼֶ |
+|  | ?????? | ???? |
 |--------|---------|---------|
-| `collect()` | `@description`, `@param`, `@returns`, `@abstract`, `@throws` | 󷽷ʵ |
-| `collectWithRetry()` | `@description`, `@param`, `@returns`, `@throws`, `@remarks`, `@see` | ʱԻƵĲɼװ |
-| `tryCollectOnce()` | `@description`, `@param`, `@returns`, `@private` | ִеβɼԣڲ |
-| `executeWithTimeout()` | `@description`, `@param`, `@returns`, `@throws`, `@private` | ִдʱƵĲɼڲ |
-| `cancel()` | `@description`, `@remarks` | ȡǰڽеĲɼ |
-| `getIsRunning()` | `@description`, `@returns` | ȡǰɼ״̬ |
-| `delay()` | `@description`, `@param`, `@returns`, `@protected` | ӳٹ߷ |
-| `wrapData()` | `@description`, `@param`, `@returns`, `@protected`, `@example` | ͳһݰװʽ |
+| `collect()` | `@description`, `@param`, `@returns`, `@abstract`, `@throws` | ?????? |
+| `collectWithRetry()` | `@description`, `@param`, `@returns`, `@throws`, `@remarks`, `@see` | ???????????? |
+| `tryCollectOnce()` | `@description`, `@param`, `@returns`, `@private` | ???????????? |
+| `executeWithTimeout()` | `@description`, `@param`, `@returns`, `@throws`, `@private` | ?????????????? |
+| `cancel()` | `@description`, `@remarks` | ???????????? |
+| `getIsRunning()` | `@description`, `@returns` | ?????????? |
+| `delay()` | `@description`, `@param`, `@returns`, `@protected` | ?????? |
+| `wrapData()` | `@description`, `@param`, `@returns`, `@protected`, `@example` | ?????????? |
 
 ---
 
 ### WebSocketCollector.ts
 
-**ļ·**: `src/services/data-collector/collectors/WebSocketCollector.ts`
+**????**: `src/services/data-collector/collectors/WebSocketCollector.ts`
 
-#### ע
+#### ??
 
 ```typescript
 /**
- * WebSocket ݲɼ
- * @description  WebSocket Эʵʱݲɼ֧ԶϢл塢ƶϵȹ
- * @remarks  VITE_DATA_SOURCE_TYPE=websocket ʱãڳʵʱͳ
+ * WebSocket ????
+ * @description  WebSocket ???????????????????????????
+ * @remarks  VITE_DATA_SOURCE_TYPE=websocket ????????????
  * @extends BaseCollector
  * @example
  * ```typescript
  * const collector = new WebSocketCollector()
  * collector.onMessage((data) => {
- *   console.log('յʵʱ:', data)
+ *   console.log('??????:', data)
  * })
  * collector.connect('/ws/indices')
  * ```
- * @todo ڲ߼ɸʵ WebSocket Э鲹ʵ
+ * @todo ???????? WebSocket ???????
  */
 ```
 
-#### ֶע
+#### ????
 
-| ֶ | ע |
+| ?? | ?? |
 |--------|---------|
-| `ws` | WebSocket ʵ |
-| `reconnectCount` | ǰ |
-| `reconnectTimer` | ʱ ID |
-| `messageQueue` | ϢУδʱϢ |
-| `onMessageCallback` | Ϣջص |
+| `ws` | WebSocket ?? |
+| `reconnectCount` | ?? |
+| `reconnectTimer` | ?? ID |
+| `messageQueue` | ?????????? |
+| `onMessageCallback` | ?????? |
 
-#### 캯ע
+#### ?????
 
 ```typescript
 /**
- * 캯
- * @param config ɼѡ̳ BaseCollector
+ * ???
+ * @param config ????????? BaseCollector
  */
 ```
 
-#### ע
+#### ??
 
-|  | עͱǩ | ؼֶ |
+|  | ?????? | ???? |
 |--------|---------|---------|
-| `collect()` | `@description`, `@param`, `@returns`, `@remarks` | ִ WebSocket ӣԤչӿڣ |
+| `collect()` | `@description`, `@param`, `@returns`, `@remarks` | ?? WebSocket ?????????? |
 | `connect()` | `@description`, `@param`, `@remarks`, `@see` |  WebSocket  |
-| `disconnect()` | `@description`, `@remarks` | Ͽ WebSocket  |
-| `send()` | `@description`, `@param`, `@remarks` | Ϣ WebSocket  |
-| `onMessage()` | `@description`, `@param`, `@example` | Ϣջص |
-| `handleReconnect()` | `@description`, `@param`, `@remarks`, `@private` | ӶϿ߼ڲ |
-| `flushMessageQueue()` | `@description`, `@remarks`, `@private` | ˢϢУڲ |
-| `inferDataType()` | `@description`, `@param`, `@returns`, `@private` |  endpoint ·ƶͣڲ |
-| `cancel()` | `@description`, `@remarks` | ȡɼ񣨶ϿӲ״̬ |
+| `disconnect()` | `@description`, `@remarks` | ?? WebSocket  |
+| `send()` | `@description`, `@param`, `@remarks` | ?? WebSocket  |
+| `onMessage()` | `@description`, `@param`, `@example` | ?????? |
+| `handleReconnect()` | `@description`, `@param`, `@remarks`, `@private` | ???????? |
+| `flushMessageQueue()` | `@description`, `@remarks`, `@private` | ???????? |
+| `inferDataType()` | `@description`, `@param`, `@returns`, `@private` |  endpoint ???????? |
+| `cancel()` | `@description`, `@remarks` | ???????????????? |
 
 ---
 
 ### TaskScheduler.ts
 
-**ļ·**: `src/services/data-collector/TaskScheduler.ts`
+**????**: `src/services/data-collector/TaskScheduler.ts`
 
-#### 볣ע
+#### ?????
 
 ```typescript
 /**
- * ״̬¼ڲ
+ * ????????
  * @param taskId  ID
- * @param status ״̬
- * @param payload Ӹ
+ * @param status ????
+ * @param payload ??
  * @private
  */
 function emitTaskStatus(...)
 
 /**
- * ݲɼѯĬϼ룩
- * @remarks ԭӲ 60000 ȡΪ audit:hardcodeӲ볬ʱŽ
+ * ?????????????
+ * @remarks ???? 60000 ???? audit:hardcode?????????
  */
 const DEFAULT_POLL_INTERVAL_MS = 60000
 ```
 
-#### ע
+#### ??
 
 ```typescript
 /**
- * ɼ
- * @description 𵥸 Widget ݲɼעᡢֹͣ״̬
- * @remarks ֧Զʱѯpolling ģʽִУonce ģʽʽɼstreaming ģʽҳʱ dispose ʱֹڴй©
+ * ??
+ * @description ???? Widget ?????????????????
+ * @remarks ????????polling ????????once ????????streaming ???????? dispose ??????????
  * @example
  * ```typescript
- * // עᲢɼ
+ * // ???????
  * const taskId = taskScheduler.registerTask('widget-1', 'instance-1', dataSource)
  * taskScheduler.startTask(taskId)
  *
- * // Ĳɼ
+ * // ????
  * const unsubscribe = taskScheduler.subscribe((taskId, data, error) => {
  *   if (error) {
- *     console.error('ɼʧ:', error)
+ *     console.error('????:', error)
  *   } else {
- *     console.log('ɼɹ:', data)
+ *     console.log('????:', data)
  *   }
  * })
  *
- * // ҳʱ
+ * // ????
  * unsubscribe()
  * taskScheduler.dispose()
  * ```
  */
 ```
 
-#### ֶע
+#### ????
 
-| ֶ | ע |
+| ?? | ?? |
 |--------|---------|
-| `tasks` | ӳkey Ϊ taskIdvalue Ϊ |
-| `timers` | ʱӳkey Ϊ taskIdvalue Ϊʱ ID |
-| `collectors` | ɼӳkey Ϊ taskIdvalue Ϊɼʵ |
+| `tasks` | ??key ?? taskIdvalue ?? |
+| `timers` | ????key ?? taskIdvalue ???? ID |
+| `collectors` | ????key ?? taskIdvalue ?????? |
 | `listeners` |  |
-| `taskCounter` | Ψһ ID |
+| `taskCounter` | ???? ID |
 
-#### ע
+#### ??
 
-|  | עͱǩ | ؼֶ |
+|  | ?????? | ???? |
 |--------|---------|---------|
-| `registerTask()` | `@description`, `@param`, `@returns`, `@remarks`, `@example` | עɼ |
-| `startTask()` | `@description`, `@param`, `@returns`, `@remarks`, `@throws` | ɼ |
-| `stopTask()` | `@description`, `@param`, `@remarks` | ֹͣɼ |
-| `unregisterTask()` | `@description`, `@param`, `@remarks` | עɼ |
-| `subscribe()` | `@description`, `@param`, `@returns`, `@example` | Ĳɼ |
-| `getTaskStatus()` | `@description`, `@param`, `@returns` | ȡ״̬ |
-| `getAllTasks()` | `@description`, `@returns` | ȡעб |
-| `runPipelineOnce()` | `@description`, `@param`, `@returns`, `@remarks` | ʹ collectionPipeline ִеβɼ |
-| `dispose()` | `@description`, `@remarks` | ҳʱã |
-| `executeTask()` | `@description`, `@param`, `@returns`, `@remarks`, `@private` | ִеβɼڲ |
-| `notifyErrorListeners()` | `@description`, `@param`, `@remarks`, `@private` | м㲥ڲ |
-| `getOrCreateCollector()` | `@description`, `@param`, `@returns`, `@remarks`, `@private` | Դͻȡ򴴽ӦĲɼڲ |
+| `registerTask()` | `@description`, `@param`, `@returns`, `@remarks`, `@example` | ???? |
+| `startTask()` | `@description`, `@param`, `@returns`, `@remarks`, `@throws` | ?? |
+| `stopTask()` | `@description`, `@param`, `@remarks` | ?????? |
+| `unregisterTask()` | `@description`, `@param`, `@remarks` | ???? |
+| `subscribe()` | `@description`, `@param`, `@returns`, `@example` | ???? |
+| `getTaskStatus()` | `@description`, `@param`, `@returns` | ?????? |
+| `getAllTasks()` | `@description`, `@returns` | ?????? |
+| `runPipelineOnce()` | `@description`, `@param`, `@returns`, `@remarks` | ?? collectionPipeline ???????? |
+| `dispose()` | `@description`, `@remarks` | ?????? |
+| `executeTask()` | `@description`, `@param`, `@returns`, `@remarks`, `@private` | ?????????? |
+| `notifyErrorListeners()` | `@description`, `@param`, `@remarks`, `@private` | ??????? |
+| `getOrCreateCollector()` | `@description`, `@param`, `@returns`, `@remarks`, `@private` | ?????????????????? |
 
-#### ʵע
+#### ????
 
 ```typescript
 /**
- * TaskScheduler ʵ
- * @description ȫֹĲɼʵڹݲɼ
+ * TaskScheduler ??
+ * @description ????????????????
  */
 export const taskScheduler = new TaskScheduler()
 ```
 
 ---
 
-## Աȱ
+## ????
 
-### BaseCollector.ts Ա
+### BaseCollector.ts ??
 
-|  | ޸ǰ | ޸ĺ |
+|  | ???? | ???? |
 |--------|--------|--------|
-| ͷע |  |  + ʾ |
-| ֶע |  | ȫ 3 ֶע |
-| 캯ע |  | עͣ@param + @see |
-| `collect()` | ע |  @throws ǩ |
-| `collectWithRetry()` | ע |  @throws + @remarks + @see |
-| ˽з | ע | ȫע |
-| `wrapData()` | ע |  @example ʾ |
+| ???? |  |  + ?? |
+| ???? |  | ?? 3 ???? |
+| ????? |  | ????@param + @see |
+| `collect()` | ?? |  @throws ?? |
+| `collectWithRetry()` | ?? |  @throws + @remarks + @see |
+| ???? | ?? | ???? |
+| `wrapData()` | ?? |  @example ?? |
 
-### WebSocketCollector.ts Ա
+### WebSocketCollector.ts ??
 
-|  | ޸ǰ | ޸ĺ |
+|  | ???? | ???? |
 |--------|--------|--------|
-| ͷע |  |  + @extends + ʾ |
-| ֶע |  | ȫ 5 ֶע |
-| 캯ע |  | ע |
-| `connect()` | ע |  @see ó |
-| `send()` | ע |  @remarks ˵Ϣл |
-| `onMessage()` | ע |  @example ʾ |
-| ˽з | ע | ȫע |
-| `cancel()` | ע |  @remarks ˵д߼ |
+| ???? |  |  + @extends + ?? |
+| ???? |  | ?? 5 ???? |
+| ????? |  | ?? |
+| `connect()` | ?? |  @see ?? |
+| `send()` | ?? |  @remarks ?????? |
+| `onMessage()` | ?? |  @example ?? |
+| ???? | ?? | ???? |
+| `cancel()` | ?? |  @remarks ?????? |
 
-### TaskScheduler.ts Ա
+### TaskScheduler.ts ??
 
-|  | ޸ǰ | ޸ĺ |
+|  | ???? | ???? |
 |--------|--------|--------|
-| `emitTaskStatus()` | ע | עͣ@private |
-| `DEFAULT_POLL_INTERVAL_MS` | ע |  JSDoc ע |
-| ͷע |  |  + ʾ |
-| ֶע |  | ȫ 5 ֶע |
-| `registerTask()` | ע |  @example ʾ |
-| `startTask()` | ע |  @remarks ˵ģʽ |
-| `subscribe()` | ע |  @example ʾ |
-| `runPipelineOnce()` | ע | ϸ˵ |
-| `dispose()` | ע |  @remarks ǿڴй© |
-| ˽з | ע | ȫע |
-| ʵ | ע | ע |
+| `emitTaskStatus()` | ?? | ????@private |
+| `DEFAULT_POLL_INTERVAL_MS` | ?? |  JSDoc ?? |
+| ???? |  |  + ?? |
+| ???? |  | ?? 5 ???? |
+| `registerTask()` | ?? |  @example ?? |
+| `startTask()` | ?? |  @remarks ?????? |
+| `subscribe()` | ?? |  @example ?? |
+| `runPipelineOnce()` | ?? | ???? |
+| `dispose()` | ?? |  @remarks ???????? |
+| ???? | ?? | ???? |
+| ?? | ?? | ?? |
 
 ---
 
-## ֤
+## ??
 
-### Ԫ
+### ??
 
 ```powershell
 npm test -- --run src/services/data-collector/
@@ -318,13 +318,13 @@ Tests       53 passed (53)
 Duration    4.60s
 ```
 
-### ͼ
+### ??
 
 ```powershell
 npx tsc --noEmit --skipLibCheck
 
 # 
-? ޴
+? ??
 ```
 
 ### JSDoc 
@@ -333,46 +333,46 @@ npx tsc --noEmit --skipLibCheck
 npm run audit:jsdoc
 
 # 
-??  16 ʵȱ JSDoc޸ĵļ
+??  16 ???? JSDoc??????
 ```
 
 ---
 
-## Ҫ
+## ??
 
-### 1. ע
+### 1. ??
 
-- [x] й `@param`  `@returns`
-- [x] ׳쳣ķ `@throws`
-- [x] ؼ `@example` ʹʾ
-- [x] ˽з `@private` ǩ
-- [x] ֶκͳע
+- [x] ?? `@param`  `@returns`
+- [x] ??????? `@throws`
+- [x] ?? `@example` ????
+- [x] ???? `@private` ??
+- [x] ????????
 
-### 2. һ
+### 2. ??
 
-- [x] עͷͳһ
-- [x] JSDoc ǩʹù淶
-- [x] ͷֵ׼ȷ
+- [x] ????????
+- [x] JSDoc ?????????
+- [x] ????????
 
 ### 3. 
 
-- [x] ߼
-- [x] עͣ޸ҵ߼
-- [x] µ
+- [x] ??
+- [x] ??????????
+- [x] ??
 
-### 4. ȫ
+### 4. ??
 
-- [x] ¶Ϣ
-- [x] ޸־ʽ
+- [x] ????
+- [x] ??????
 
 ---
 
 ## 
 
-1. **ʣģ**ȼб P0/P1/P2 ȱʧעļ
-2. ** API ĵ**ʹ TypeDoc  API ĵ
-3. **Զ** pre-commit hook ȷ JSDoc ע
+1. **????**???? P0/P1/P2 ????????
+2. ** API ??**?? TypeDoc  API ??
+3. **??** pre-commit hook ?? JSDoc ??
 
 ---
 
-*ĵʱ: 2026-07-12*
+*????: 2026-07-12*

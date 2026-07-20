@@ -1,135 +1,138 @@
-# Â·ÓÉ¹æ¸ñÎÄµµ (Routing Specs)
+# è·¯ç”±è§„æ ¼æ–‡æ¡£ (Routing Specs)
 
-> ×Ô¶¯ÌáÈ¡×Ô `src/config/routes.ts`£¬×îºóÍ¬²½: 2026-07-18
-> ²¹³ä±¨¸æ P1-14: docs/routing-specs.md È±Ê§ ¡ú ÒÑ´´½¨
-
----
-
-## Â·ÓÉ¼Ü¹¹
-
-FinsightV9 ²ÉÓÃ±âÆ½Â·ÓÉ±í + React.lazy ÀÁ¼ÓÔØ¼Ü¹¹¡£Ã¿¸öÂ·ÓÉ¶ÔÓ¦Ò»¸öÒ³Ãæ×é¼şºÍ¿ÉÑ¡×ÓÂ·ÓÉ¡£
+> è‡ªåŠ¨æå–è‡ª `src/config/routes.ts`ï¼Œæœ€ååŒæ­¥: 2026-07-18
+> è¡¥å……æŠ¥å‘Š P1-14: docs/routing-specs.md ç¼ºå¤± â†’ å·²åˆ›å»º
 
 ---
 
-## Â·ÓÉÇåµ¥
+## è·¯ç”±æ¶æ„
 
-### ¸ùÂ·ÓÉ
-| Â·¾¶ | Ò³Ãæ | ±¸×¢ |
-|------|------|------|
-| `/` | HomePage | Ê×Ò³ |
-
-### ¼İÊ»²Õ
-| Â·¾¶ | Ò³Ãæ | ±¸×¢ |
-|------|------|------|
-| `/cockpit` | CockpitPage | ¼İÊ»²ÕÖ÷Èë¿Ú£¨26 Widget£© |
-
-### ÊäÈë²Õ (Input)
-| Â·¾¶ | Ò³Ãæ | ±¸×¢ |
-|------|------|------|
-| `/input` | InputHubPage | ÊäÈë²ÕÊ×Ò³£¨ÖØ¶¨Ïò£© |
-| `/input/hub` | InputHubPage | ÊäÈë²Õ Hub |
-| `/input/bulk-import` | BulkImportPage | ÅúÁ¿µ¼Èë |
-| `/input/hot-sectors` | HotSectorsPage | ÈÈÃÅ°å¿é |
-| `/input/data-test` | DataTestPage | Êı¾İ²âÊÔ |
-
-### ·ÖÎö²Õ (Analysis)
-| Â·¾¶ | Ò³Ãæ | ±¸×¢ |
-|------|------|------|
-| `/analysis` | AnalysisHubPage | ·ÖÎö²ÕÊ×Ò³£¨ÖØ¶¨Ïò£© |
-| `/analysis/hub` | AnalysisHubPage | ·ÖÎö²Õ Hub |
-
-### ½»Ò×²Õ (Trading)
-| Â·¾¶ | Ò³Ãæ | ±¸×¢ |
-|------|------|------|
-| `/trading` | TradingHubPage | ½»Ò×²ÕÊ×Ò³£¨ÖØ¶¨Ïò£© |
-| `/trading/flow` | TradingFlowPage | ½»Ò×Á÷³Ì |
-
-### Êä³ö²Õ (Output)
-| Â·¾¶ | Ò³Ãæ | ±¸×¢ |
-|------|------|------|
-| `/output` | OutputHubPage | Êä³ö²ÕÊ×Ò³ |
-| `/output/hub` | OutputHubPage | Êä³ö Hub |
-| `/output/research` | ResearchReportPage | ÑĞ±¨Êä³ö |
-| `/output/review` | ReviewWizardPage | ¸´ÅÌÏòµ¼ |
-| `/output/export` | ExportPage | Êı¾İµ¼³ö |
-| `/output/dashboard` | OutputDashboardPage | Êä³öÒÇ±íÅÌ |
-| `/output/wizard` | OutputWizardPage | Êä³öÏòµ¼ |
-| `/output/prediction` | PredictionPage | Ô¤²âĞ£Ñé |
-| `/output/retrospective` | RetrospectivePage | »Ø²â·ÖÎö |
-| `/output/factor-dashboard` | FactorDashboardPage | Òò×Ó¿´°å |
-
-### Ö¸Áî²Õ (Command)
-| Â·¾¶ | Ò³Ãæ | ±¸×¢ |
-|------|------|------|
-| `/command` | CommandHubPage | Ö¸Áî²ÕÊ×Ò³ |
-| `/command/hub` | CommandHubPage | Ö¸Áî²Õ Hub |
-| `/command/agents` | AgentsPage | ÖÇÄÜÌåÁĞ±í |
-| `/command/agents/registry` | AgentRegistryPage | Agent ×¢²á±í |
-| `/command/agents/registry/:agentId` | AgentDetailPage | Agent ÏêÇé |
-| `/command/agents/trigger` | AgentTriggerPage | Agent ´¥·¢ |
-| `/command/agents/tasks` | AgentTasksPage | Agent ÈÎÎñ |
-
-### Í¨ÓÃ
-| Â·¾¶ | Ò³Ãæ | ±¸×¢ |
-|------|------|------|
-| `/showcase` | ShowcasePage | ×é¼şÕ¹Ê¾£¨½ö dev£© |
-| `*` | NotFoundPage | 404 Ò³Ãæ |
+FinsightV9 é‡‡ç”¨æ‰å¹³è·¯ç”±è¡¨ + React.lazy æ‡’åŠ è½½æ¶æ„ã€‚æ¯ä¸ªè·¯ç”±å¯¹åº”ä¸€ä¸ªé¡µé¢ç»„ä»¶å’Œå¯é€‰å­è·¯ç”±ã€‚
 
 ---
 
-## Â·ÓÉÍ³¼Æ
+## è·¯ç”±æ¸…å•
 
-| ²ÕÎ» | Â·ÓÉÊı |
+### æ ¹è·¯ç”±
+| è·¯å¾„ | é¡µé¢ | å¤‡æ³¨ |
+|------|------|------|
+| `/` | HomePage | é¦–é¡µ |
+
+### é©¾é©¶èˆ±
+| è·¯å¾„ | é¡µé¢ | å¤‡æ³¨ |
+|------|------|------|
+| `/cockpit` | CockpitPage | é©¾é©¶èˆ±ä¸»å…¥å£ï¼ˆ26 Widgetï¼‰ |
+
+### è¾“å…¥èˆ± (Input)
+| è·¯å¾„ | é¡µé¢ | å¤‡æ³¨ |
+|------|------|------|
+| `/input` | InputHubPage | è¾“å…¥èˆ±é¦–é¡µï¼ˆé‡å®šå‘ï¼‰ |
+| `/input/hub` | InputHubPage | è¾“å…¥èˆ± Hub |
+| `/input/hot-sectors` | HotSectorsPage | çƒ­é—¨æ¿å— |
+| `/input/intention-pool` | IntentionPoolBoardPage | æ„å‘å€™é€‰æ± ï¼ˆè‡ªé€‰è‚¡å¯¼å…¥+çƒ­é—¨æ¿å—æ¨è+ä¸‰åˆ—çœ‹æ¿ï¼‰ |
+| `/input/data-test` | DataTestPage | æ•°æ®æµ‹è¯• |
+
+### åˆ†æèˆ± (Analysis)
+| è·¯å¾„ | é¡µé¢ | å¤‡æ³¨ |
+|------|------|------|
+| `/analysis` | AnalysisHubPage | åˆ†æèˆ±é¦–é¡µï¼ˆé‡å®šå‘ï¼‰ |
+| `/analysis/hub` | AnalysisHubPage | åˆ†æèˆ± Hub |
+
+### äº¤æ˜“èˆ± (Trading)
+| è·¯å¾„ | é¡µé¢ | å¤‡æ³¨ |
+|------|------|------|
+| `/trading` | TradingHubPage | äº¤æ˜“èˆ±é¦–é¡µï¼ˆé‡å®šå‘ï¼‰ |
+| `/trading/flow` | TradingFlowPage | äº¤æ˜“æµç¨‹ |
+
+### è¾“å‡ºèˆ± (Output)
+| è·¯å¾„ | é¡µé¢ | å¤‡æ³¨ |
+|------|------|------|
+| `/output` | OutputHubPage | è¾“å‡ºèˆ±é¦–é¡µ |
+| `/output/hub` | OutputHubPage | è¾“å‡º Hub |
+| `/output/research` | ResearchReportPage | ç ”æŠ¥è¾“å‡º |
+| `/output/review` | ReviewWizardPage | å¤ç›˜å‘å¯¼ |
+| `/output/export` | ExportPage | æ•°æ®å¯¼å‡º |
+| `/output/dashboard` | OutputDashboardPage | è¾“å‡ºä»ªè¡¨ç›˜ |
+| `/output/wizard` | OutputWizardPage | è¾“å‡ºå‘å¯¼ |
+| `/output/prediction` | PredictionPage | é¢„æµ‹æ ¡éªŒ |
+| `/output/retrospective` | RetrospectivePage | å›æµ‹åˆ†æ |
+| `/output/factor-dashboard` | FactorDashboardPage | å› å­çœ‹æ¿ |
+| `/output/profile` | ProfileBrowsePage | å…«åŸŸèµ„æ–™æµè§ˆ |
+
+### æŒ‡ä»¤èˆ± (Command)
+| è·¯å¾„ | é¡µé¢ | å¤‡æ³¨ |
+|------|------|------|
+| `/command` | CommandHubPage | æŒ‡ä»¤èˆ±é¦–é¡µ |
+| `/command/hub` | CommandHubPage | æŒ‡ä»¤èˆ± Hub |
+| `/command/agents` | AgentsPage | æ™ºèƒ½ä½“åˆ—è¡¨ |
+| `/command/agents/registry` | AgentRegistryPage | Agent æ³¨å†Œè¡¨ |
+| `/command/agents/registry/:agentId` | AgentDetailPage | Agent è¯¦æƒ… |
+| `/command/agents/trigger` | AgentTriggerPage | Agent è§¦å‘ |
+| `/command/agents/tasks` | AgentTasksPage | Agent ä»»åŠ¡ |
+
+### é€šç”¨
+| è·¯å¾„ | é¡µé¢ | å¤‡æ³¨ |
+|------|------|------|
+| `/showcase` | ShowcasePage | ç»„ä»¶å±•ç¤ºï¼ˆä»… devï¼‰ |
+| `*` | NotFoundPage | 404 é¡µé¢ |
+
+---
+
+## è·¯ç”±ç»Ÿè®¡
+
+| èˆ±ä½ | è·¯ç”±æ•° |
 |------|--------|
-| ¸ù | 2 |
-| ¼İÊ»²Õ | 1 |
-| ÊäÈë²Õ | 5 |
-| ·ÖÎö²Õ | 2 |
-| ½»Ò×²Õ | 2 |
-| Êä³ö²Õ | 10 |
-| Ö¸Áî²Õ | 7 |
-| Í¨ÓÃ | 2 |
-| **×Ü¼Æ** | **31** |
+| æ ¹ | 2 |
+| é©¾é©¶èˆ± | 1 |
+| è¾“å…¥èˆ± | 5 |
+| åˆ†æèˆ± | 2 |
+| äº¤æ˜“èˆ± | 2 |
+| è¾“å‡ºèˆ± | 10 |
+| æŒ‡ä»¤èˆ± | 7 |
+| é€šç”¨ | 2 |
+| **æ€»è®¡** | **31** |
 
 ---
 
-## µ¼º½½á¹¹
+## å¯¼èˆªç»“æ„
 
 ```
-/ (Ê×Ò³)
-©À©¤©¤ /cockpit (¼İÊ»²Õ)
-©À©¤©¤ /input (ÊäÈë²Õ)
-©¦   ©À©¤©¤ /hub
-©¦   ©À©¤©¤ /bulk-import
-©¦   ©À©¤©¤ /hot-sectors
-©¦   ©¸©¤©¤ /data-test
-©À©¤©¤ /analysis (·ÖÎö²Õ)
-©¦   ©¸©¤©¤ /hub
-©À©¤©¤ /trading (½»Ò×²Õ)
-©¦   ©¸©¤©¤ /flow
-©À©¤©¤ /output (Êä³ö²Õ)
-©¦   ©À©¤©¤ /hub
-©¦   ©À©¤©¤ /research (ÑĞ±¨)
-©¦   ©À©¤©¤ /review (¸´ÅÌ)
-©¦   ©À©¤©¤ /export
-©¦   ©À©¤©¤ /dashboard
-©¦   ©À©¤©¤ /wizard
-©¦   ©À©¤©¤ /prediction
-©¦   ©À©¤©¤ /retrospective
-©¦   ©¸©¤©¤ /factor-dashboard
-©¸©¤©¤ /command (Ö¸Áî²Õ)
-    ©À©¤©¤ /hub
-    ©À©¤©¤ /agents
-    ©¦   ©À©¤©¤ /registry
-    ©¦   ©¦   ©¸©¤©¤ /:agentId
-    ©¦   ©À©¤©¤ /trigger
-    ©¦   ©¸©¤©¤ /tasks
+/ (é¦–é¡µ)
+â”œâ”€â”€ /cockpit (é©¾é©¶èˆ±)
+â”œâ”€â”€ /input (è¾“å…¥èˆ±)
+â”‚   â”œâ”€â”€ /hub
+â”‚   â”œâ”€â”€ /hot-sectors
+â”‚   â”œâ”€â”€ /intention-pool
+â”‚   â””â”€â”€ /data-test
+â”‚   â””â”€â”€ ï¼ˆæ‰¹é‡å¯¼å…¥å·²æ•´åˆåˆ° InputDashboard Tabs ä¸­ï¼Œä¸å†æœ‰ç‹¬ç«‹è·¯ç”±ï¼‰
+â”œâ”€â”€ /analysis (åˆ†æèˆ±)
+â”‚   â””â”€â”€ /hub
+â”œâ”€â”€ /trading (äº¤æ˜“èˆ±)
+â”‚   â””â”€â”€ /flow
+â”œâ”€â”€ /output (è¾“å‡ºèˆ±)
+â”‚   â”œâ”€â”€ /hub
+â”‚   â”œâ”€â”€ /research (ç ”æŠ¥)
+â”‚   â”œâ”€â”€ /review (å¤ç›˜)
+â”‚   â”œâ”€â”€ /export
+â”‚   â”œâ”€â”€ /dashboard
+â”‚   â”œâ”€â”€ /wizard
+â”‚   â”œâ”€â”€ /prediction
+â”‚   â”œâ”€â”€ /retrospective
+â”‚   â”œâ”€â”€ /factor-dashboard
+â”‚   â””â”€â”€ /profile
+â””â”€â”€ /command (æŒ‡ä»¤èˆ±)
+    â”œâ”€â”€ /hub
+    â”œâ”€â”€ /agents
+    â”‚   â”œâ”€â”€ /registry
+    â”‚   â”‚   â””â”€â”€ /:agentId
+    â”‚   â”œâ”€â”€ /trigger
+    â”‚   â””â”€â”€ /tasks
 ```
 
 ---
 
-## Î¬»¤¹æÔò
+## ç»´æŠ¤è§„åˆ™
 
-1. ĞÂÔöÒ³Ãæ±ØĞëÔÚ´ËÎÄµµµÇ¼ÇÂ·¾¶ºÍÒ³Ãæ×é¼ş
-2. ±ä¸üÂ·ÓÉºóÔËĞĞ `npm run audit:deadcode` È·ÈÏÎŞ¹Â¶ùÒ³Ãæ
-3. ´ËÎÄµµÓë `src/config/routes.ts` ±£³ÖÍ¬²½£¨T8 ´¥·¢£©
+1. æ–°å¢é¡µé¢å¿…é¡»åœ¨æ­¤æ–‡æ¡£ç™»è®°è·¯å¾„å’Œé¡µé¢ç»„ä»¶
+2. å˜æ›´è·¯ç”±åè¿è¡Œ `npm run audit:deadcode` ç¡®è®¤æ— å­¤å„¿é¡µé¢
+3. æ­¤æ–‡æ¡£ä¸ `src/config/routes.ts` ä¿æŒåŒæ­¥ï¼ˆT8 è§¦å‘ï¼‰
