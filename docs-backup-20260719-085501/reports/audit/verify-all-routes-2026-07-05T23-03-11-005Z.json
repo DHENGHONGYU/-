@@ -1,0 +1,122 @@
+{
+  "violations": [
+    {
+      "cabin": "analysis",
+      "path": "/analysis/news-v6",
+      "label": "智能资讯 V6",
+      "type": "missing-route",
+      "message": "预期路径 /analysis/news-v6（智能资讯 V6）未在 ROUTE_REGISTRY 中注册"
+    }
+  ],
+  "warnings": [
+    {
+      "path": "/command/agents",
+      "type": "orphan-route",
+      "message": "路径 \"/command/agents\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/agents/registry",
+      "type": "orphan-route",
+      "message": "路径 \"/command/agents/registry\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/agents/registry/:agentId",
+      "type": "orphan-route",
+      "message": "路径 \"/command/agents/registry/:agentId\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/agents/trigger",
+      "type": "orphan-route",
+      "message": "路径 \"/command/agents/trigger\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/agents/tasks",
+      "type": "orphan-route",
+      "message": "路径 \"/command/agents/tasks\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/agents/custom",
+      "type": "orphan-route",
+      "message": "路径 \"/command/agents/custom\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/agents/llm",
+      "type": "orphan-route",
+      "message": "路径 \"/command/agents/llm\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/agents/capability-graph",
+      "type": "orphan-route",
+      "message": "路径 \"/command/agents/capability-graph\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/agents/dag-scheduler",
+      "type": "orphan-route",
+      "message": "路径 \"/command/agents/dag-scheduler\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/agents/feedback",
+      "type": "orphan-route",
+      "message": "路径 \"/command/agents/feedback\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/mcp-servers",
+      "type": "orphan-route",
+      "message": "路径 \"/command/mcp-servers\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/monitor",
+      "type": "orphan-route",
+      "message": "路径 \"/command/monitor\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/command/config",
+      "type": "orphan-route",
+      "message": "路径 \"/command/config\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/input/seven-dim",
+      "type": "orphan-route",
+      "message": "路径 \"/input/seven-dim\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/input/fetcher-config",
+      "type": "orphan-route",
+      "message": "路径 \"/input/fetcher-config\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/input/collect-tasks",
+      "type": "orphan-route",
+      "message": "路径 \"/input/collect-tasks\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    },
+    {
+      "path": "/mock-test",
+      "type": "orphan-route",
+      "message": "路径 \"/mock-test\" 已在 ROUTE_REGISTRY 注册但未在预期列表中声明"
+    }
+  ],
+  "summary": {
+    "totalFiles": 48,
+    "totalViolations": 1,
+    "totalWarnings": 17,
+    "totalRoutes": 48,
+    "totalExpected": 32,
+    "totalCovered": 31,
+    "coverageRate": "96.9%",
+    "duplicatePaths": 0,
+    "orphanPaths": 17,
+    "byViolationType": {
+      "missing-route": 1
+    },
+    "byWarningType": {
+      "orphan-route": 17
+    }
+  },
+  "meta": {
+    "scriptName": "verify-all-routes",
+    "version": "3.0",
+    "timestamp": "2026-07-05T23:03:11.004Z",
+    "durationMs": 2,
+    "rootDir": "C:\\Users\\huawei\\Documents\\kimi\\Workspaces\\智能投研复盘系统V9"
+  }
+}

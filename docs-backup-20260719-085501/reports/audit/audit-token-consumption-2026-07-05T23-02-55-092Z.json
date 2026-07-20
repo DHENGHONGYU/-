@@ -1,0 +1,40 @@
+{
+  "violations": [
+    {
+      "file": "scripts/extract-code-graph.ts",
+      "line": 1,
+      "type": "缺少增量更新",
+      "message": "知识图谱生成脚本未支持增量更新（基于文件 mtime）",
+      "suggestion": "添加文件 mtime 检查逻辑，仅重新解析变更文件，预计节省 7.5M tokens/月"
+    },
+    {
+      "file": "scripts/extract-code-graph.ts",
+      "line": 1,
+      "type": "缺少缓存机制",
+      "message": "知识图谱生成脚本未缓存已解析的文件 AST",
+      "suggestion": "添加 AST 缓存机制，避免重复解析未变更文件"
+    },
+    {
+      "file": "scripts/quick-query.sh",
+      "line": 0,
+      "type": "缺失快速查询模板",
+      "message": "未创建快速查询脚本",
+      "suggestion": "创建 scripts/quick-query.sh，提供常用查询模板（Store 依赖、跨层违规、最大文件等）"
+    }
+  ],
+  "warnings": [],
+  "summary": {
+    "totalFiles": 4,
+    "totalChecks": 4,
+    "totalViolations": 3,
+    "totalWarnings": 0,
+    "estimatedTokenSavings": 7576000
+  },
+  "meta": {
+    "scriptName": "audit-token-consumption",
+    "version": "3.0",
+    "timestamp": "2026-07-05T23:02:55.091Z",
+    "durationMs": 2,
+    "rootDir": "C:\\Users\\huawei\\Documents\\kimi\\Workspaces\\智能投研复盘系统V9"
+  }
+}

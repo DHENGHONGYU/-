@@ -1,0 +1,198 @@
+{
+  "violations": [],
+  "warnings": [],
+  "summary": {
+    "totalFiles": 0,
+    "totalViolations": 0,
+    "totalWarnings": 0,
+    "archivedItems": 25,
+    "deletedItems": 0,
+    "skippedItems": 0
+  },
+  "meta": {
+    "scriptName": "audit-directory-archive",
+    "version": "1.0.0",
+    "timestamp": "2026-07-13T11:58:30.127Z",
+    "durationMs": 1066,
+    "rootDir": "D:\\FinSightV9"
+  },
+  "archivedItems": [
+    {
+      "path": "D:\\FinSightV9\\.trae\\logs\\mcp-audit.log",
+      "type": "file",
+      "archivePath": "D:\\FinSightV9\\archive\\2026-07-13\\.trae\\logs\\mcp-audit.log",
+      "reason": "文件扩展名在归档列表中: .log",
+      "lastModified": "2026-07-04T03:06:08.646Z"
+    },
+    {
+      "path": "D:\\FinSightV9\\.venv\\Lib\\site-packages\\numpy\\ma\\tests\\test_old_ma.py",
+      "type": "file",
+      "archivePath": "D:\\FinSightV9\\archive\\2026-07-13\\.venv\\Lib\\site-packages\\numpy\\ma\\tests\\test_old_ma.py",
+      "reason": "文件匹配废弃模式: _old",
+      "lastModified": "2026-07-04T02:42:28.574Z"
+    },
+    {
+      "path": "D:\\FinSightV9\\.venv\\Lib\\site-packages\\numpy\\ma\\tests\\__pycache__\\test_old_ma.cpython-314.pyc",
+      "type": "file",
+      "archivePath": "D:\\FinSightV9\\archive\\2026-07-13\\.venv\\Lib\\site-packages\\numpy\\ma\\tests\\__pycache__\\test_old_ma.cpython-314.pyc",
+      "reason": "文件匹配废弃模式: _old",
+      "lastModified": "2026-07-04T02:42:34.902Z"
+    },
+    {
+      "path": "D:\\FinSightV9\\.venv\\Lib\\site-packages\\pandas\\tests\\indexes\\test_old_base.py",
+      "type": "file",
+      "archivePath": "D:\\FinSightV9\\archive\\2026-07-13\\.venv\\Lib\\site-packages\\pandas\\tests\\indexes\\test_old_base.py",
+      "reason": "文件匹配废弃模式: _old",
+      "lastModified": "2026-07-04T02:42:50.840Z"
+    },
+    {
+      "path": "D:\\FinSightV9\\.venv\\Lib\\site-packages\\pandas\\tests\\indexes\\__pycache__\\test_old_base.cpython-314.pyc",
+      "type": "file",
+      "archivePath": "D:\\FinSightV9\\archive\\2026-07-13\\.venv\\Lib\\site-packages\\pandas\\tests\\indexes\\__pycache__\\test_old_base.cpython-314.pyc",
+      "reason": "文件匹配废弃模式: _old",
+      "lastModified": "2026-07-04T02:43:06.858Z"
+    },
+    {
+      "path": "D:\\FinSightV9\\.venv\\Scripts\\python.exe",
+      "type": "file",
+      "archivePath": "D:\\FinSightV9\\archive\\2026-07-13\\.venv\\Scripts\\python.exe",
+      "reason": "文件超过最大保留天数 (49 > 30)",
+      "lastModified": "2026-05-25T01:10:12.524Z"
+    },
+    {
+      "path": "D:\\FinSightV9\\.venv\\Scripts\\pythonw.exe",
+      "type": "file",
+      "archivePath": "D:\\FinSightV9\\archive\\2026-07-13\\.venv\\Scripts\\pythonw.exe",
+      "reason": "文件超过最大保留天数 (49 > 30)",
+      "lastModified": "2026-05-25T01:10:12.529Z"
+    },
+    {
+      "path": "D:\\FinSightV9\\e2e\\snapshot-baseline-2026-07-12.log",
+      "type": "file",
+      "archivePath": "D:\\FinSightV9\\archive\\2026-07-13\\e2e\\snapshot-baseline-2026-07-12.log",
+      "reason": "文件扩展名在归档列表中: .log",
+      "lastModified": "2026-07-12T15:34:13.334Z"
+    },
+    {
+      "path": "D:\\FinSightV9\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\fix-run-2.log",
+      "type": "file",
+      "archivePath": "D:\\FinSightV9\\archive\\2026-07-13\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\fix-run-2.log",
+      "reason": "文件扩展名在归档列表中: .log",
+      "lastModified": "2026-07-08T06:07:51.184Z"
+    },
+    {
+      "path": "D:\\FinSightV9\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\fix-run-3.log",
+      "type": "file",
+      "archivePath": "D:\\FinSightV9\\archive\\2026-07-13\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\fix-run-3.log",
+      "reason": "文件扩展名在归档列表中: .log",
+      "lastModified": "2026-07-08T06:09:01.140Z"
+    },
+    {
+      "path": "D:\\FinSightV9\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\fix-run-final.log",
+      "type": "file",
+      "archivePath": "D:\\FinSightV9\\archive\\2026-07-13\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\fix-run-final.log",
+      "reason": "文件扩展名在归档列表中: .log",
+      "lastModified": "2026-07-08T06:13:11.641Z"
+    },
+    {
+      "path": "D:\\FinSightV9\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\fix-run-v2.log",
+      "type": "file",
+      "archivePath": "D:\\FinSightV9\\archive\\2026-07-13\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\fix-run-v2.log",
+      "reason": "文件扩展名在归档列表中: .log",
+      "lastModified": "2026-07-08T06:39:47.121Z"
+    },
+    {
+      "path": "D:\\FinSightV9\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\fix-run-v3.log",
+      "type": "file",
+      "archivePath": "D:\\FinSightV9\\archive\\2026-07-13\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\fix-run-v3.log",
+      "reason": "文件扩展名在归档列表中: .log",
+      "lastModified": "2026-07-08T07:17:40.283Z"
+    },
+    {
+      "path": "D:\\FinSightV9\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\fix-run.log",
+      "type": "file",
+      "archivePath": "D:\\FinSightV9\\archive\\2026-07-13\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\fix-run.log",
+      "reason": "文件扩展名在归档列表中: .log",
+      "lastModified": "2026-07-08T06:06:16.241Z"
+    },
+    {
+      "path": "D:\\FinSightV9\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\run-v5.log",
+      "type": "file",
+      "archivePath": "D:\\FinSightV9\\archive\\2026-07-13\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\run-v5.log",
+      "reason": "文件扩展名在归档列表中: .log",
+      "lastModified": "2026-07-08T07:31:53.030Z"
+    },
+    {
+      "path": "D:\\FinSightV9\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\tsc-after-fix-utf8.log",
+      "type": "file",
+      "archivePath": "D:\\FinSightV9\\archive\\2026-07-13\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\tsc-after-fix-utf8.log",
+      "reason": "文件扩展名在归档列表中: .log",
+      "lastModified": "2026-07-08T08:00:26.222Z"
+    },
+    {
+      "path": "D:\\FinSightV9\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\tsc-after-fix.log",
+      "type": "file",
+      "archivePath": "D:\\FinSightV9\\archive\\2026-07-13\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\tsc-after-fix.log",
+      "reason": "文件扩展名在归档列表中: .log",
+      "lastModified": "2026-07-08T07:58:42.501Z"
+    },
+    {
+      "path": "D:\\FinSightV9\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\tsc-after-v5.log",
+      "type": "file",
+      "archivePath": "D:\\FinSightV9\\archive\\2026-07-13\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\tsc-after-v5.log",
+      "reason": "文件扩展名在归档列表中: .log",
+      "lastModified": "2026-07-08T07:51:29.345Z"
+    },
+    {
+      "path": "D:\\FinSightV9\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\tsc-before.log",
+      "type": "file",
+      "archivePath": "D:\\FinSightV9\\archive\\2026-07-13\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\tsc-before.log",
+      "reason": "文件扩展名在归档列表中: .log",
+      "lastModified": "2026-07-08T06:02:55.967Z"
+    },
+    {
+      "path": "D:\\FinSightV9\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\tsc-v5-final.log",
+      "type": "file",
+      "archivePath": "D:\\FinSightV9\\archive\\2026-07-13\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\tsc-v5-final.log",
+      "reason": "文件扩展名在归档列表中: .log",
+      "lastModified": "2026-07-08T08:04:22.243Z"
+    },
+    {
+      "path": "D:\\FinSightV9\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\tsc-v5-verify-utf8.log",
+      "type": "file",
+      "archivePath": "D:\\FinSightV9\\archive\\2026-07-13\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\tsc-v5-verify-utf8.log",
+      "reason": "文件扩展名在归档列表中: .log",
+      "lastModified": "2026-07-08T08:08:05.574Z"
+    },
+    {
+      "path": "D:\\FinSightV9\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\tsc-v5-verify.log",
+      "type": "file",
+      "archivePath": "D:\\FinSightV9\\archive\\2026-07-13\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\null-check-fix-backup\\tsc-v5-verify.log",
+      "reason": "文件扩展名在归档列表中: .log",
+      "lastModified": "2026-07-08T08:06:35.810Z"
+    },
+    {
+      "path": "D:\\FinSightV9\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\test-logs\\pr-8-regression-err.log",
+      "type": "file",
+      "archivePath": "D:\\FinSightV9\\archive\\2026-07-13\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\test-logs\\pr-8-regression-err.log",
+      "reason": "文件扩展名在归档列表中: .log",
+      "lastModified": "2026-07-08T06:32:46.316Z"
+    },
+    {
+      "path": "D:\\FinSightV9\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\test-logs\\pr-8-regression-test.log",
+      "type": "file",
+      "archivePath": "D:\\FinSightV9\\archive\\2026-07-13\\outputs\\pre-launch-review\\redundant-files\\docs-reports-archive\\test-logs\\pr-8-regression-test.log",
+      "reason": "文件扩展名在归档列表中: .log",
+      "lastModified": "2026-07-08T06:32:52.125Z"
+    },
+    {
+      "path": "D:\\FinSightV9\\outputs\\pre-launch-review\\redundant-files\\构建与审计产物\\build-artifacts\\_backup-20260712",
+      "type": "directory",
+      "archivePath": "D:\\FinSightV9\\archive\\2026-07-13\\outputs\\pre-launch-review\\redundant-files\\构建与审计产物\\build-artifacts\\_backup-20260712",
+      "reason": "文件匹配废弃模式: _backup",
+      "lastModified": "2026-07-13T11:58:30.045Z"
+    }
+  ],
+  "deletedItems": [],
+  "skippedItems": []
+}

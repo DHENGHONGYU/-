@@ -1,0 +1,247 @@
+{
+  "meta": {
+    "runId": "mrjvv6e1-2qf57k",
+    "startedAt": "2026-07-13T23:58:33.241Z",
+    "finishedAt": "2026-07-13T23:58:33.242Z",
+    "durationMs": 1,
+    "rootDir": "D:\\FinSightV9",
+    "triggeredBy": "phase-adaptive",
+    "qualityPhase": "intensive",
+    "dryRun": true
+  },
+  "stages": [
+    {
+      "stageId": "P1_QUALITY_CHECK",
+      "stageName": "代码质量检查",
+      "status": "pass",
+      "commandResults": [
+        {
+          "name": "tsc:prod",
+          "command": "npm run tsc:prod",
+          "exitCode": 0,
+          "output": "(dry-run skipped)",
+          "durationMs": 0,
+          "timestamp": "2026-07-13T23:58:33.241Z",
+          "timedOut": false
+        },
+        {
+          "name": "lint",
+          "command": "npm run lint",
+          "exitCode": 0,
+          "output": "(dry-run skipped)",
+          "durationMs": 0,
+          "timestamp": "2026-07-13T23:58:33.241Z",
+          "timedOut": false
+        },
+        {
+          "name": "audit:layers",
+          "command": "npm run audit:layers",
+          "exitCode": 0,
+          "output": "(dry-run skipped)",
+          "durationMs": 0,
+          "timestamp": "2026-07-13T23:58:33.241Z",
+          "timedOut": false
+        },
+        {
+          "name": "audit:atomic",
+          "command": "npm run audit:atomic",
+          "exitCode": 0,
+          "output": "(dry-run skipped)",
+          "durationMs": 0,
+          "timestamp": "2026-07-13T23:58:33.241Z",
+          "timedOut": false
+        },
+        {
+          "name": "audit:db-references",
+          "command": "npm run audit:db-references",
+          "exitCode": 0,
+          "output": "(dry-run skipped)",
+          "durationMs": 0,
+          "timestamp": "2026-07-13T23:58:33.241Z",
+          "timedOut": false
+        }
+      ],
+      "startedAt": "2026-07-13T23:58:33.241Z",
+      "finishedAt": "2026-07-13T23:58:33.241Z",
+      "durationMs": 0,
+      "errorStrategy": "retry",
+      "retryCount": 0,
+      "message": "阶段通过"
+    },
+    {
+      "stageId": "P2_CODE_REVIEW",
+      "stageName": "代码校对",
+      "status": "pass",
+      "commandResults": [
+        {
+          "name": "pre-review-check",
+          "command": "npx tsx scripts/pre-review-check.ts",
+          "exitCode": 0,
+          "output": "(dry-run skipped)",
+          "durationMs": 0,
+          "timestamp": "2026-07-13T23:58:33.241Z",
+          "timedOut": false
+        },
+        {
+          "name": "audit:jsdoc",
+          "command": "npm run audit:jsdoc",
+          "exitCode": 0,
+          "output": "(dry-run skipped)",
+          "durationMs": 0,
+          "timestamp": "2026-07-13T23:58:33.242Z",
+          "timedOut": false
+        },
+        {
+          "name": "audit:complexity",
+          "command": "npm run complexity-scan",
+          "exitCode": 0,
+          "output": "(dry-run skipped)",
+          "durationMs": 0,
+          "timestamp": "2026-07-13T23:58:33.242Z",
+          "timedOut": false
+        },
+        {
+          "name": "audit:hardcode",
+          "command": "npm run audit:hardcode",
+          "exitCode": 0,
+          "output": "(dry-run skipped)",
+          "durationMs": 0,
+          "timestamp": "2026-07-13T23:58:33.242Z",
+          "timedOut": false
+        },
+        {
+          "name": "audit:deadcode",
+          "command": "npm run audit:deadcode",
+          "exitCode": 0,
+          "output": "(dry-run skipped)",
+          "durationMs": 0,
+          "timestamp": "2026-07-13T23:58:33.242Z",
+          "timedOut": false
+        }
+      ],
+      "startedAt": "2026-07-13T23:58:33.241Z",
+      "finishedAt": "2026-07-13T23:58:33.242Z",
+      "durationMs": 1,
+      "errorStrategy": "degrade",
+      "retryCount": 0,
+      "message": "阶段通过"
+    },
+    {
+      "stageId": "P3_DOC_UPDATE",
+      "stageName": "文档自动更新",
+      "status": "pass",
+      "commandResults": [
+        {
+          "name": "doc-update-trigger",
+          "command": "npx tsx scripts/doc-update-trigger.ts --auto-update",
+          "exitCode": 0,
+          "output": "(dry-run skipped)",
+          "durationMs": 0,
+          "timestamp": "2026-07-13T23:58:33.242Z",
+          "timedOut": false
+        }
+      ],
+      "startedAt": "2026-07-13T23:58:33.242Z",
+      "finishedAt": "2026-07-13T23:58:33.242Z",
+      "durationMs": 0,
+      "errorStrategy": "skip",
+      "retryCount": 0,
+      "message": "阶段通过"
+    },
+    {
+      "stageId": "P4_DOC_VALIDATION",
+      "stageName": "文档验证",
+      "status": "pass",
+      "commandResults": [
+        {
+          "name": "daily-doc-validation",
+          "command": "npx tsx scripts/daily-doc-validation.ts --auto-update",
+          "exitCode": 0,
+          "output": "(dry-run skipped)",
+          "durationMs": 0,
+          "timestamp": "2026-07-13T23:58:33.242Z",
+          "timedOut": false
+        },
+        {
+          "name": "audit:docs",
+          "command": "npm run audit:docs",
+          "exitCode": 0,
+          "output": "(dry-run skipped)",
+          "durationMs": 0,
+          "timestamp": "2026-07-13T23:58:33.242Z",
+          "timedOut": false
+        },
+        {
+          "name": "doc-freshness-score",
+          "command": "npx tsx scripts/doc-freshness-score.ts",
+          "exitCode": 0,
+          "output": "(dry-run skipped)",
+          "durationMs": 0,
+          "timestamp": "2026-07-13T23:58:33.242Z",
+          "timedOut": false
+        }
+      ],
+      "startedAt": "2026-07-13T23:58:33.242Z",
+      "finishedAt": "2026-07-13T23:58:33.242Z",
+      "durationMs": 0,
+      "errorStrategy": "degrade",
+      "retryCount": 0,
+      "message": "阶段通过"
+    },
+    {
+      "stageId": "P5_SOP_MAINTENANCE",
+      "stageName": "文件夹 SOP 维护",
+      "status": "pass",
+      "commandResults": [
+        {
+          "name": "directory-audit",
+          "command": "npx tsx scripts/directory-audit.ts",
+          "exitCode": 0,
+          "output": "(dry-run skipped)",
+          "durationMs": 0,
+          "timestamp": "2026-07-13T23:58:33.242Z",
+          "timedOut": false
+        },
+        {
+          "name": "cleanup-reports",
+          "command": "npx tsx scripts/cleanup-reports.ts",
+          "exitCode": 0,
+          "output": "(dry-run skipped)",
+          "durationMs": 0,
+          "timestamp": "2026-07-13T23:58:33.242Z",
+          "timedOut": false
+        },
+        {
+          "name": "audit:doc-integrity",
+          "command": "npm run audit:doc-integrity",
+          "exitCode": 0,
+          "output": "(dry-run skipped)",
+          "durationMs": 0,
+          "timestamp": "2026-07-13T23:58:33.242Z",
+          "timedOut": false
+        }
+      ],
+      "startedAt": "2026-07-13T23:58:33.242Z",
+      "finishedAt": "2026-07-13T23:58:33.242Z",
+      "durationMs": 0,
+      "errorStrategy": "skip",
+      "retryCount": 0,
+      "message": "阶段通过"
+    }
+  ],
+  "summary": {
+    "totalStages": 5,
+    "passedStages": 5,
+    "failedStages": 0,
+    "skippedStages": 0,
+    "degradedStages": 0,
+    "circuitBrokenStages": 0,
+    "overallStatus": "pass",
+    "totalCommands": 17,
+    "failedCommands": 0
+  },
+  "issues": [],
+  "recommendations": [
+    "全部阶段通过，无需操作"
+  ]
+}
