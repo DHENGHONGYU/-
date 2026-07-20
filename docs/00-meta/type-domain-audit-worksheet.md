@@ -1,18 +1,18 @@
 ---
-title: Type/Domain ƹ
+title: Type/Domain ??
 type: meta
 domain: project
 phase: testing
 tier: standard
 status: active
 maintainer: V9 Architecture Team
-summary: 'Type/Domain ֲƹ 8   6 ĵͳȡ˹ƶ׼ȷʡ'
+summary: 'Type/Domain ???? 8   6 ????????????????'
 tags: [project, audit, meta]
 version: v1.0.0
 last_updated: 2026-07-18
 code_version: 2.0.0
 doc_id: V9-DOC-PROJ-331
-related_docs: [V9-DOC-AI-018, V9-DOC-AI-031, V9-DOC-AI-030, V9-DOC-AI-010, V9-DOC-AI-021, V9-DOC-AI-028, V9-DOC-PROJ-173, V9-DOC-ARCH-006, V9-DOC-ARCH-047, V9-DOC-ARCH-046, V9-DOC-ARCH-004, V9-DOC-ARCH-020, V9-DOC-ARCH-033, V9-DOC-ARCH-044, V9-DOC-BACK-035, V9-DOC-BACK-038, V9-DOC-BACK-012, V9-DOC-FRONT-045, V9-DOC-FRONT-009, V9-DOC-FRONT-013, V9-DOC-FRONT-048, V9-DOC-FRONT-052, V9-DOC-PROD-009, V9-DOC-PROD-008, V9-DOC-PROJ-239, V9-DOC-PROJ-109, V9-DOC-PROJ-310, V9-DOC-PROJ-266, V9-DOC-QA-091, V9-DOC-PROJ-072, V9-DOC-QA-115, V9-DOC-QA-114, V9-DOC-QA-048, V9-DOC-QA-005, V9-DOC-QA-040, V9-DOC-QA-103]
+related_docs: [V9-DOC-AI-002, V9-DOC-AI-018, V9-DOC-AI-031, V9-DOC-AI-030, V9-DOC-AI-009, V9-DOC-AI-010, V9-DOC-AI-021, V9-DOC-AI-028, V9-DOC-ARCH-014, V9-DOC-ARCH-006, V9-DOC-ARCH-047, V9-DOC-ARCH-046, V9-DOC-ARCH-004, V9-DOC-ARCH-020, V9-DOC-ARCH-033, V9-DOC-ARCH-044, V9-DOC-BACK-035, V9-DOC-BACK-038, V9-DOC-BACK-027, V9-DOC-BACK-012, V9-DOC-BACK-037, V9-DOC-BACK-018, V9-DOC-DATA-003, V9-DOC-DATA-006, V9-DOC-DATA-055, docs/00-meta/deprecated-docs/old-versions/data-definition-v1.0.0-cockpit.md, docs/00-meta/deprecated-docs/old-versions/data-dictionary-index-v1.6.0.md, V9-DOC-DATA-004, V9-DOC-DATA-054, V9-DOC-DATA-062, V9-DOC-FRONT-045, V9-DOC-FRONT-032, V9-DOC-FRONT-018, V9-DOC-FRONT-026, V9-DOC-FRONT-009, V9-DOC-FRONT-013, V9-DOC-FRONT-048, V9-DOC-FRONT-052, V9-DOC-PROD-009, V9-DOC-PROD-010, V9-DOC-PROD-006, V9-DOC-PROD-008, V9-DOC-PROJ-289, V9-DOC-PROJ-239, docs/00-meta/deprecated-docs/old-versions/deployment-v1.0.0.md, docs/archive/00-meta-historical/23-core-docs-final-verification-report.md, V9-DOC-PROJ-085, V9-DOC-PROJ-109, V9-DOC-PROJ-310, V9-DOC-PROJ-266, V9-DOC-PROJ-246, V9-DOC-QA-007, V9-DOC-QA-091, V9-DOC-PROJ-072, V9-DOC-ARCH-034, V9-DOC-QA-115, V9-DOC-QA-114, V9-DOC-QA-048, V9-DOC-QA-005, V9-DOC-QA-040, V9-DOC-QA-103]
 referenced_by: [V9-DOC-PROJ-017]
 change_log:
   - version: v1.0.0
@@ -20,123 +20,123 @@ changes: Initial version established
 date: 2026-07-18
 ---
 
-# Type/Domain ƹ
+# Type/Domain ??
 
->  **domain  type** ֲ㣬ÿ 2 ݣȫȡ
+>  **domain  type** ??????? 2 ??????
 > 67 / 66810%
 
-## ˵
+## ??
 
-|  | ˵ |
+|  | ?? |
 |----|------|
-| ж | ĵһΣжĵͣDiataxis ++ԪĵǷ |
-| дʽ | ÿе Correct_Type / Correct_Domain ʵֵԭֵȷջ same |
-| ŵȼ | A=϶ȷ / B=ȷ / C= / D= |
+| ?? | ????????????Diataxis ++?????? |
+| ???? | ???? Correct_Type / Correct_Domain ???????????? same |
+| ???? | A=???? / B=?? / C= / D= |
 
-## ai 9 ݣ
+## ai 9 ??
 
-| # | ĵ | ԭֵ type | ԭֵ domain | ж type | ж domain |  | ע |
+| # | ?? | ???? type | ???? domain | ?? type | ?? domain |  | ?? |
 |---|------|-----------|------------|----------|------------|------|------|
-| 1 | [explanation/design/ui-design-agent-execution-plan.md](explanation/design/ui-design-agent-execution-plan.md) | explanation | ai | | | | |
-| 2 | [explanation/ui-design-agent-execution-plan.md](explanation/ui-design-agent-execution-plan.md) | explanation | ai | | | | |
-| 3 | [how-to/mcp-acl-guide.md](../how-to/mcp-acl-guide.md) | how-to | ai | | | | |
-| 4 | [00-meta/agent-app-docs-classification.md](agent-app-docs-classification.md) | meta | ai | | | | |
-| 5 | [00-meta/FILE-MANAGEMENT-GUIDE-optimization-prompt.md](FILE-MANAGEMENT-GUIDE-optimization-prompt.md) | meta | ai | | | | |
-| 6 | [reference/ai-memory-layer.md](reference/ai-memory-layer.md) | reference | ai | | | | |
-| 7 | [reference/ai-center-contract.md](../reference/ai-center-contract.md) | reference | ai | | | | |
-| 8 | [reports/audit/mcp-usage/mcp-usage-report-1784135579861.md](../reports/audit/mcp-usage/mcp-usage-report-1784135579861.md) | reports | ai | | | | |
-| 9 | [reports/retrospectives/mcp-zombie-server-audit-report.md](../reports/retrospectives/mcp-zombie-server-audit-report.md) | reports | ai | | | | |
+| 1 | [explanation/design/ui-design-agent-execution-plan.md](docs/explanation/design/ui-design-agent-execution-plan.md) | explanation | ai | | | | |
+| 2 | [explanation/ui-design-agent-execution-plan.md](docs/explanation/design/ui-design-agent-execution-plan.md) | explanation | ai | | | | |
+| 3 | [how-to/mcp-acl-guide.md](docs/how-to/mcp-acl-guide.md) | how-to | ai | | | | |
+| 4 | [00-meta/agent-app-docs-classification.md](docs/00-meta/agent-app-docs-classification.md) | meta | ai | | | | |
+| 5 | [00-meta/FILE-MANAGEMENT-GUIDE-optimization-prompt.md](docs/00-meta/FILE-MANAGEMENT-GUIDE-optimization-prompt.md) | meta | ai | | | | |
+| 6 | [reference/ai-memory-layer.md](docs/explanation/ai-memory-layer.md) | reference | ai | | | | |
+| 7 | [reference/ai-center-contract.md](docs/reference/ai-center-contract.md) | reference | ai | | | | |
+| 8 | [reports/audit/mcp-usage/mcp-usage-report-1784135579861.md](docs/reports/audit/mcp-usage/mcp-usage-report-1784135579861.md) | reports | ai | | | | |
+| 9 | [reports/retrospectives/mcp-zombie-server-audit-report.md](docs/reports/retrospectives/mcp-zombie-server-audit-report.md) | reports | ai | | | | |
 
-## architecture 8 ݣ
+## architecture 8 ??
 
-| # | ĵ | ԭֵ type | ԭֵ domain | ж type | ж domain |  | ע |
+| # | ?? | ???? type | ???? domain | ?? type | ?? domain |  | ?? |
 |---|------|-----------|------------|----------|------------|------|------|
-| 1 | [explanation/design/blueprints/README.md](../explanation/README.md) | explanation | architecture | | | | |
-| 2 | [explanation/adr-004-hashrouter-static-hosting.md](../explanation/adr-004-hashrouter-static-hosting.md) | explanation | architecture | | | | |
-| 3 | [00-meta/markdown-reorg-framework.md](markdown-reorg-framework.md) | meta | architecture | | | | |
-| 4 | [00-meta/lessons-architecture-review-2026-07-16.md](lessons-architecture-review-2026-07-16.md) | meta | architecture | | | | |
-| 5 | [reference/03-architecture-standards.md](../reference/03-architecture-standards.md) | reference | architecture | | | | |
-| 6 | [reference/v9-architecture-data-dictionary-validation-report.md](../reference/v9-architecture-data-dictionary-validation-report.md) | reference | architecture | | | | |
-| 7 | [reports/retrospectives/mcp-architecture-remediation-plan-2026-07-08.md](../reports/retrospectives/mcp-architecture-remediation-plan-2026-07-08.md) | reports | architecture | | | | |
-| 8 | [reports/retrospectives/complexity-optimization-plan.md](../reports/retrospectives/complexity-optimization-plan.md) | reports | architecture | | | | |
+| 1 | [explanation/design/blueprints/README.md](docs/explanation/design/blueprints/README.md) | explanation | architecture | | | | |
+| 2 | [explanation/adr-004-hashrouter-static-hosting.md](docs/explanation/adr-004-hashrouter-static-hosting.md) | explanation | architecture | | | | |
+| 3 | [00-meta/markdown-reorg-framework.md](docs/00-meta/markdown-reorg-framework.md) | meta | architecture | | | | |
+| 4 | [00-meta/lessons-architecture-review-2026-07-16.md](docs/00-meta/lessons-architecture-review-2026-07-16.md) | meta | architecture | | | | |
+| 5 | [reference/03-architecture-standards.md](docs/reference/03-architecture-standards.md) | reference | architecture | | | | |
+| 6 | [reference/v9-architecture-data-dictionary-validation-report.md](docs/reference/v9-architecture-data-dictionary-validation-report.md) | reference | architecture | | | | |
+| 7 | [reports/retrospectives/mcp-architecture-remediation-plan-2026-07-08.md](docs/reports/retrospectives/mcp-architecture-remediation-plan-2026-07-08.md) | reports | architecture | | | | |
+| 8 | [reports/retrospectives/complexity-optimization-plan.md](docs/reports/retrospectives/complexity-optimization-plan.md) | reports | architecture | | | | |
 
-## backend 7 ݣ
+## backend 7 ??
 
-| # | ĵ | ԭֵ type | ԭֵ domain | ж type | ж domain |  | ע |
+| # | ?? | ???? type | ???? domain | ?? type | ?? domain |  | ?? |
 |---|------|-----------|------------|----------|------------|------|------|
-| 1 | [explanation/design/value-bargain-strategy.md](../explanation/design/value-bargain-strategy.md) | explanation | backend | | | | |
-| 2 | [explanation/design/core-scarce-strategy.md](../explanation/design/core-scarce-strategy.md) | explanation | backend | | | | |
-| 3 | [how-to/how-to-add-service.md](how-to/how-to-add-service.md) | how-to | backend | | | | |
-| 4 | [guides/how-to-add-service.md](guides/how-to-add-service.md) | reference | backend | | | | |
-| 5 | [reference/rotation-score-spec.md](../reference/rotation-score-spec.md) | reference | backend | | | | |
-| 6 | [reports/release-management/buildscoredocdiff-rollback-plan.md](reports/release-management/buildscoredocdiff-rollback-plan.md) | reports | backend | | | | |
-| 7 | [reports/retrospectives/walkthrough-scoredoc-report.md](reports/retrospectives/walkthrough-scoredoc-report.md) | reports | backend | | | | |
+| 1 | [explanation/design/value-bargain-strategy.md](docs/explanation/design/value-bargain-strategy.md) | explanation | backend | | | | |
+| 2 | [explanation/design/core-scarce-strategy.md](docs/explanation/design/core-scarce-strategy.md) | explanation | backend | | | | |
+| 3 | [how-to/how-to-add-service.md](docs/how-to/how-to-add-service.md) | how-to | backend | | | | |
+| 4 | [guides/how-to-add-service.md](docs/how-to/how-to-add-service.md) | reference | backend | | | | |
+| 5 | [reference/rotation-score-spec.md](docs/reference/rotation-score-spec.md) | reference | backend | | | | |
+| 6 | [reports/release-management/buildscoredocdiff-rollback-plan.md](docs/explanation/design/buildscoredocdiff-rollback-plan.md) | reports | backend | | | | |
+| 7 | [reports/retrospectives/walkthrough-scoredoc-report.md](docs/reference/walkthrough-scoredoc-report.md) | reports | backend | | | | |
 
-## data 9 ݣ
+## data 9 ??
 
-| # | ĵ | ԭֵ type | ԭֵ domain | ж type | ж domain |  | ע |
+| # | ?? | ???? type | ???? domain | ?? type | ?? domain |  | ?? |
 |---|------|-----------|------------|----------|------------|------|------|
-| 1 | [explanation/data-layer-overview.md](explanation/data-layer-overview.md) | explanation | data | | | | |
-| 2 | [explanation/design/dataflow-data-definition.md](explanation/design/dataflow-data-definition.md) | explanation | data | | | | |
-| 3 | [how-to/how-to-add-store.md](how-to/how-to-add-store.md) | how-to | data | | | | |
-| 4 | [00-meta/deprecated-docs/old-versions/data-definition-v1.0.0-cockpit.md](deprecated-docs/old-versions/data-definition-v1.0.0-cockpit.md) | meta | data | | | | |
-| 5 | [00-meta/deprecated-docs/old-versions/data-dictionary-index-v1.6.0.md](deprecated-docs/old-versions/data-dictionary-index-v1.6.0.md) | meta | data | | | | |
-| 6 | [reference/data-collection/data-definition.md](reference/data-collection/data-definition.md) | reference | data | | | | |
-| 7 | [modules/data-layer-overview.md](modules/data-layer-overview.md) | reference | data | | | | |
-| 8 | [reports/retrospectives/data-collection-task-list.md](reports/retrospectives/data-collection-task-list.md) | reports | data | | | | |
-| 9 | [reports/retrospectives/v9-data-blueprint-task-tracking.md](reports/retrospectives/v9-data-blueprint-task-tracking.md) | reports | data | | | | |
+| 1 | [explanation/data-layer-overview.md](docs/explanation/data-layer-overview.md) | explanation | data | | | | |
+| 2 | [explanation/design/dataflow-data-definition.md](docs/explanation/design/dataflow-data-definition.md) | explanation | data | | | | |
+| 3 | [how-to/how-to-add-store.md](docs/how-to/how-to-add-store.md) | how-to | data | | | | |
+| 4 | [00-meta/deprecated-docs/old-versions/data-definition-v1.0.0-cockpit.md](docs/00-meta/deprecated-docs/old-versions/data-definition-v1.0.0-cockpit.md) | meta | data | | | | |
+| 5 | [00-meta/deprecated-docs/old-versions/data-dictionary-index-v1.6.0.md](docs/00-meta/deprecated-docs/old-versions/data-dictionary-index-v1.6.0.md) | meta | data | | | | |
+| 6 | [reference/data-collection/data-definition.md](docs/explanation/design/data-definition.md) | reference | data | | | | |
+| 7 | [modules/data-layer-overview.md](docs/explanation/data-layer-overview.md) | reference | data | | | | |
+| 8 | [reports/retrospectives/data-collection-task-list.md](docs/reference/data-collection-task-list.md) | reports | data | | | | |
+| 9 | [reports/retrospectives/v9-data-blueprint-task-tracking.md](docs/explanation/design/v9-data-blueprint-task-tracking.md) | reports | data | | | | |
 
-## frontend 8 ݣ
+## frontend 8 ??
 
-| # | ĵ | ԭֵ type | ԭֵ domain | ж type | ж domain |  | ע |
+| # | ?? | ???? type | ???? domain | ?? type | ?? domain |  | ?? |
 |---|------|-----------|------------|----------|------------|------|------|
-| 1 | [explanation/kimi-webbridge.md](../explanation/kimi-webbridge.md) | explanation | frontend | | | | |
-| 2 | [explanation/design/widget-integration-checklist.md](explanation/design/widget-integration-checklist.md) | explanation | frontend | | | | |
-| 3 | [how-to/widget-development-guide.md](how-to/widget-development-guide.md) | how-to | frontend | | | | |
-| 4 | [how-to/how-to-add-widget.md](how-to/how-to-add-widget.md) | how-to | frontend | | | | |
-| 5 | [reference/chart-integration.md](../reference/chart-integration.md) | reference | frontend | | | | |
-| 6 | [reference/ui-remediation-tracker.md](../reference/ui-remediation-tracker.md) | reference | frontend | | | | |
-| 7 | [reports/retrospectives/design-tokens-implementation-report.md](../reports/retrospectives/design-tokens-implementation-report.md) | reports | frontend | | | | |
-| 8 | [reports/retrospectives/2026-07-09-route-registration-gap-report.md](../reports/retrospectives/2026-07-09-route-registration-gap-report.md) | reports | frontend | | | | |
+| 1 | [explanation/kimi-webbridge.md](docs/explanation/kimi-webbridge.md) | explanation | frontend | | | | |
+| 2 | [explanation/design/widget-integration-checklist.md](docs/explanation/design/widget-integration-checklist.md) | explanation | frontend | | | | |
+| 3 | [how-to/widget-development-guide.md](docs/reference/widget-development-guide.md) | how-to | frontend | | | | |
+| 4 | [how-to/how-to-add-widget.md](docs/how-to/how-to-add-widget.md) | how-to | frontend | | | | |
+| 5 | [reference/chart-integration.md](docs/reference/chart-integration.md) | reference | frontend | | | | |
+| 6 | [reference/ui-remediation-tracker.md](docs/reference/ui-remediation-tracker.md) | reference | frontend | | | | |
+| 7 | [reports/retrospectives/design-tokens-implementation-report.md](docs/reports/retrospectives/design-tokens-implementation-report.md) | reports | frontend | | | | |
+| 8 | [reports/retrospectives/2026-07-09-route-registration-gap-report.md](docs/reports/retrospectives/2026-07-09-route-registration-gap-report.md) | reports | frontend | | | | |
 
-## product 4 ݣ
+## product 4 ??
 
-| # | ĵ | ԭֵ type | ԭֵ domain | ж type | ж domain |  | ע |
+| # | ?? | ???? type | ???? domain | ?? type | ?? domain |  | ?? |
 |---|------|-----------|------------|----------|------------|------|------|
-| 1 | [explanation/production-release-checklist-SKILL.md](../explanation/production-release-checklist-SKILL.md) | explanation | product | | | | |
-| 2 | [explanation/01-vision-and-goals.md](explanation/01-vision-and-goals.md) | explanation | product | | | | |
-| 3 | [reference/autonomous-workflow-user-guide.md](reference/autonomous-workflow-user-guide.md) | reference | product | | | | |
-| 4 | [team-handbook/05-competitive-analysis.md](../team-handbook/05-competitive-analysis.md) | reference | product | | | | |
+| 1 | [explanation/production-release-checklist-SKILL.md](docs/explanation/production-release-checklist-SKILL.md) | explanation | product | | | | |
+| 2 | [explanation/01-vision-and-goals.md](docs/explanation/01-vision-and-goals.md) | explanation | product | | | | |
+| 3 | [reference/autonomous-workflow-user-guide.md](docs/reference/autonomous-workflow-user-guide.md) | reference | product | | | | |
+| 4 | [team-handbook/05-competitive-analysis.md](docs/team-handbook/05-competitive-analysis.md) | reference | product | | | | |
 
-## project 12 ݣ
+## project 12 ??
 
-| # | ĵ | ԭֵ type | ԭֵ domain | ж type | ж domain |  | ע |
+| # | ?? | ???? type | ???? domain | ?? type | ?? domain |  | ?? |
 |---|------|-----------|------------|----------|------------|------|------|
-| 1 | [explanation/completeness-profile-batch2.md](explanation/completeness-profile-batch2.md) | explanation | project | | | | |
-| 2 | [explanation/README.md](../explanation/README.md) | explanation | project | | | | |
-| 3 | [how-to/README.md](../explanation/README.md) | how-to | project | | | | |
-| 4 | [how-to/hooks-guide.md](../how-to/hooks-guide.md) | how-to | project | | | | |
-| 5 | [00-meta/deprecated-docs/old-versions/deployment-v1.0.0.md](deprecated-docs/old-versions/deployment-v1.0.0.md) | meta | project | | | | |
-| 6 | [00-meta/23-core-docs-final-verification-report.md](23-core-docs-final-verification-report.md) | meta | project | | | | |
-| 7 | [reference/changelogs/2026-07/pr-8-dedup-plan.md](reference/changelogs/2026-07/pr-8-dedup-plan.md) | reference | project | | | | |
-| 8 | [reference/trade-contract.md](../reference/trade-contract.md) | reference | project | | | | |
-| 9 | [reports/retrospectives/2026-07-09-technical-sharing-ppt-outline.md](../reports/retrospectives/2026-07-09-technical-sharing-ppt-outline.md) | reports | project | | | | |
-| 10 | [reports/changelogs/2026-07-08-documentation-summary-report.md](../reports/changelogs/2026-07-08-documentation-summary-report.md) | reports | project | | | | |
-| 11 | [tutorials/getting-started.md](tutorials/getting-started.md) | tutorials | project | | | | |
-| 12 | [tutorials/README.md](../explanation/README.md) | tutorials | project | | | | |
+| 1 | [explanation/completeness-profile-batch2.md](docs/explanation/completeness-profile-batch2.md) | explanation | project | | | | |
+| 2 | [explanation/README.md](docs/explanation/design/blueprints/README.md) | explanation | project | | | | |
+| 3 | [how-to/README.md](docs/explanation/design/blueprints/README.md) | how-to | project | | | | |
+| 4 | [how-to/hooks-guide.md](docs/how-to/hooks-guide.md) | how-to | project | | | | |
+| 5 | [00-meta/deprecated-docs/old-versions/deployment-v1.0.0.md](docs/00-meta/deprecated-docs/old-versions/deployment-v1.0.0.md) | meta | project | | | | |
+| 6 | [00-meta/23-core-docs-final-verification-report.md](docs/archive/00-meta-historical/23-core-docs-final-verification-report.md) | meta | project | | | | |
+| 7 | [reference/changelogs/2026-07/pr-8-dedup-plan.md](docs/reference/changelogs/2026-07/pr-8-dedup-plan.md) | reference | project | | | | |
+| 8 | [reference/trade-contract.md](docs/reference/trade-contract.md) | reference | project | | | | |
+| 9 | [reports/retrospectives/2026-07-09-technical-sharing-ppt-outline.md](docs/reports/retrospectives/2026-07-09-technical-sharing-ppt-outline.md) | reports | project | | | | |
+| 10 | [reports/changelogs/2026-07-08-documentation-summary-report.md](docs/reports/changelogs/2026-07-08-documentation-summary-report.md) | reports | project | | | | |
+| 11 | [tutorials/getting-started.md](docs/guides/getting-started.md) | tutorials | project | | | | |
+| 12 | [tutorials/README.md](docs/explanation/design/blueprints/README.md) | tutorials | project | | | | |
 
-## qa 10 ݣ
+## qa 10 ??
 
-| # | ĵ | ԭֵ type | ԭֵ domain | ж type | ж domain |  | ע |
+| # | ?? | ???? type | ???? domain | ?? type | ?? domain |  | ?? |
 |---|------|-----------|------------|----------|------------|------|------|
-| 1 | [explanation/design/v9-code-quality-kanban-20260629.md](explanation/design/v9-code-quality-kanban-20260629.md) | explanation | qa | | | | |
-| 2 | [explanation/design/automation-test-evaluation.md](../explanation/design/automation-test-evaluation.md) | explanation | qa | | | | |
-| 3 | [how-to/visual-regression-guide.md](../how-to/visual-regression-guide.md) | how-to | qa | | | | |
-| 4 | [how-to/testing/complexity-remediation-plan.md](how-to/testing/complexity-remediation-plan.md) | how-to | qa | | | | |
-| 5 | [00-meta/directory-audit-report-v1.4.3.md](directory-audit-report-v1.4.3.md) | meta | qa | | | | |
-| 6 | [00-meta/directory-structure-audit-report.md](directory-structure-audit-report.md) | meta | qa | | | | |
-| 7 | [reference/changelogs/2026-07/test-cache-fix-summary.md](../reference/changelogs/2026-07/test-cache-fix-summary.md) | reference | qa | | | | |
-| 8 | [04-testing/security-test-plan.md](../04-testing/security-test-plan.md) | reference | qa | | | | |
-| 9 | [reports/audit/audit-warning-report.md](../reports/audit/audit-warning-report.md) | reports | qa | | | | |
-| 10 | [reports/retrospectives/e2e-verify-redundancy-report.md](../reports/retrospectives/e2e-verify-redundancy-report.md) | reports | qa | | | | |
+| 1 | [explanation/design/v9-code-quality-kanban-20260629.md](docs/explanation/design/v9-code-quality-kanban-20260629.md) | explanation | qa | | | | |
+| 2 | [explanation/design/automation-test-evaluation.md](docs/explanation/design/automation-test-evaluation.md) | explanation | qa | | | | |
+| 3 | [how-to/visual-regression-guide.md](docs/how-to/visual-regression-guide.md) | how-to | qa | | | | |
+| 4 | [how-to/testing/complexity-remediation-plan.md](docs/explanation/complexity-remediation-plan.md) | how-to | qa | | | | |
+| 5 | [00-meta/directory-audit-report-v1.4.3.md](docs/00-meta/directory-audit-report-v1.4.3.md) | meta | qa | | | | |
+| 6 | [00-meta/directory-structure-audit-report.md](docs/00-meta/directory-structure-audit-report.md) | meta | qa | | | | |
+| 7 | [reference/changelogs/2026-07/test-cache-fix-summary.md](docs/reference/changelogs/2026-07/test-cache-fix-summary.md) | reference | qa | | | | |
+| 8 | [04-testing/security-test-plan.md](docs/04-testing/security-test-plan.md) | reference | qa | | | | |
+| 9 | [reports/audit/audit-warning-report.md](docs/reports/audit/audit-warning-report.md) | reports | qa | | | | |
+| 10 | [reports/retrospectives/e2e-verify-redundancy-report.md](docs/reports/retrospectives/e2e-verify-redundancy-report.md) | reports | qa | | | | |
 

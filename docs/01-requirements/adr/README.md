@@ -1,5 +1,5 @@
 ---
-title: ADR 入口
+title: ADR ????
 type: reference
 domain: product
 phase: requirements
@@ -13,18 +13,17 @@ last_updated: 2026-07-17
 code_version: 2.0.0
 doc_id: V9-DOC-PROD-005
 related_docs: [V9-DOC-DATA-035, V9-DOC-DATA-013, V9-DOC-AI-005]
-referenced_by: [V9-DOC-META-000, V9-DOC-PROJ-176]
 change_log:
   - version: v1.0.0
 changes: Initial version established
 date: 2026-07-17
 ---
 
-# ADR 入口
+# ADR ????
 
-> 该路径为旧文档入口，当前内容指向现有 ADR 参考集合。
+> ???????????????????????????????????? ADR ??????????
 
-## 入口
+## ????
 
 - [../../reference/adr-002-indexeddb-over-localstorage.md](../../reference/adr-002-indexeddb-over-localstorage.md)
 - [../../reference/adr-003-databridge-over-direct-datalayer.md](../../reference/adr-003-databridge-over-direct-datalayer.md)
