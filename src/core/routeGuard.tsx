@@ -1,21 +1,34 @@
 /**
  * @module core/routeGuard
  * @lifecycle @Global
- * @description 路由守卫 — 提供路由级鉴权拦截和按钮级权限检查
+ * @description 模块化边界检查器 — 提供路由级舱室隔离和按钮级敏感操作防护
  *
- * 解决问题：
- * - App.tsx 无路由守卫，所有路由直接渲染
- * - ACL 仅模块级+CRUD级，无按钮级权限
+ * ⚠️ 架构定位：这是**模块化边界检查器**，不是完整的 RBAC 权限系统。
+ * - 路由级：确保路由属于已注册的舱室类别（防止非法路径注入）
+ * - 按钮级：保护各舱室的敏感操作（导出/删除/重置等）
+ * - 无用户身份概念：所有检查对所有访问者一视同仁（静态白名单）
+ *
+ * 与其他访问控制体系的关系（三层防护）：
+ *   L1 路由守卫  ← 本文件（前端舱室边界 + 敏感按钮防护）
+ *   L2 数据 ACL  ← acl.ts / ACL_MATRIX（DataBridge 层模块-存储-操作矩阵）
+ *   L3 RBAC 体系  ← services/rbac/（用户-角色-权限，服务层可用，前端待集成）
+ *
+ * 安全原则：
+ * - 默认拒绝：未注册的模块/按钮一律拒绝访问
+ * - 白名单模式：仅显式注册的操作才放行
+ * - 深度防御：路由守卫是第一道防线，数据 ACL 是核心防线
  *
  * 使用方式：
  * 1. 在 App.tsx 中用 <GuardedRoute> 替换 <Route>
- * 2. 在组件中调用 hasPermission('trading', 'button', 'export') 检查按钮级权限
+ * 2. 在组件中调用 hasPermission({ module: 'trading', level: 'button', action: 'export' })
+ * 3. 新模块接入时调用 registerButtonPermission() 注册敏感操作
+ *
+ * @doc [V9-DOC-SEC-001, V9-DOC-ARCH-008, V9-DOC-BACK-012]
  */
 
 import React, { type ReactNode } from 'react'
 import { Navigate, Route, useLocation } from 'react-router'
 import { getLogger } from '@/lib/logger'
-import { MODULE_ID } from '@/config/dbConfig'
 import { ROUTE_WHITELIST } from '@/config/routes'
 
 const logger = getLogger()
@@ -197,35 +210,83 @@ export function GuardedRoute({
 }
 
 // ============================================================================
-// 初始化：注册默认按钮权限规则
+// 初始化：注册各舱室的按钮级敏感操作权限
+// 统一使用路由类别字符串（portal/input/analysis/trading/output/command）
+// 安全原则：仅显式注册的敏感操作才放行，未注册的模块默认拒绝
 // ============================================================================
 
-// 交易舱敏感操作
-registerButtonPermission(MODULE_ID.trading, [
-  'export',
-  'batchDelete',
-  'reset',
-  'forceExecute',
+// ── 门户舱（portal）──
+// 门户舱主要是展示类页面，敏感操作较少
+registerButtonPermission('portal', [
+  'exportLayout',    // 导出驾驶舱布局
+  'resetLayout',     // 重置驾驶舱布局
+  'addWidget',       // 添加自定义 Widget
+  'removeWidget',    // 移除 Widget
 ])
 
-// 命令舱敏感操作（使用路由类别字符串，不使用 MODULE_ID）
+// ── 输入舱（input）──
+// 输入舱涉及数据导入、采集配置等敏感操作
+registerButtonPermission('input', [
+  'import',          // 数据导入
+  'batchImport',     // 批量导入
+  'export',          // 导出配置/数据
+  'deleteImport',    // 删除导入记录
+  'collectStart',    // 启动采集
+  'collectStop',     // 停止采集
+  'collectReset',    // 重置采集状态
+  'configEdit',      // 修改采集配置
+  'templateExport',  // 导出模板
+])
+
+// ── 分析舱（analysis）──
+registerButtonPermission('analysis', [
+  'export',          // 导出分析结果
+  'batchScore',      // 批量评分
+  'deleteScore',     // 删除评分数据
+  'refreshAll',      // 全量刷新分析
+  'customAnalysis',  // 自定义分析
+])
+
+// ── 交易舱（trading）──
+registerButtonPermission('trading', [
+  'export',          // 导出交易数据
+  'batchDelete',     // 批量删除订单/持仓
+  'reset',           // 重置交易数据
+  'forceExecute',    // 强制执行计划
+  'placeOrder',      // 下单操作
+  'cancelOrder',     // 撤单操作
+  'strategyEdit',    // 修改策略配置
+])
+
+// ── 输出舱（output）──
+// 输出舱主要是查看/导出，写操作较少
+registerButtonPermission('output', [
+  'export',          // 导出报告
+  'batchExport',     // 批量导出
+  'deleteReport',    // 删除报告
+  'generateReport',  // 生成新报告
+  'shareReport',     // 分享报告
+])
+
+// ── 总控舱（command）──
+// 总控舱权限最多，涉及系统级敏感操作
 registerButtonPermission('command', [
-  'resetAll',
-  'clearData',
-  'migration',
-  'exportDB',
-  'importDB',
-  // 赛道相关交互对话（Agent 智能体权限）
+  'resetAll',        // 重置全部数据
+  'clearData',       // 清理数据
+  'migration',       // 数据迁移
+  'exportDB',        // 导出数据库
+  'importDB',        // 导入数据库
+  // Agent 智能体权限
   'agentTrigger',    // 触发评分/赛道分析智能体
   'agentConfig',     // 修改智能体配置
   'sectorDialogue',  // 赛道交互对话
+  // MCP 服务管理
+  'mcpServerManage', // MCP 服务管理
+  'mcpServerRestart',// 重启 MCP 服务
+  // 系统管理
+  'userManage',      // 用户管理
+  'roleManage',      // 角色管理
+  'systemConfig',    // 系统配置
 ])
 
-// 分析舱敏感操作（使用路由类别字符串，不使用 MODULE_ID）
-registerButtonPermission('analysis', [
-  'export',
-  'batchScore',
-  'deleteScore',
-])
-
-logger.info('[routeGuard] 路由守卫初始化完成，已注册按钮级权限规则')
+logger.info('[routeGuard] 模块化边界检查器初始化完成，已注册 6 个舱室的按钮级权限规则')
