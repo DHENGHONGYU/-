@@ -193,3 +193,4 @@ docs/reports/automation-pipeline/*.json
 /.test-output/
 /test-output.json
 /scripts/audit/docs/reports/
+/.encoding-recovery/

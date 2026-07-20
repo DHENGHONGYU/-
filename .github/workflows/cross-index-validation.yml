@@ -1,0 +1,40 @@
+name: Cross-Index Validation
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build doc relations
+        run: powershell -File scripts/cross-index/build-doc-relations.ps1
+
+      - name: Build test-doc relations
+        run: powershell -File scripts/cross-index/build-test-relations.ps1
+
+      - name: Build code-doc relations
+        run: powershell -File scripts/cross-index/build-code-relations.ps1
+
+      - name: Build skill-doc relations
+        run: powershell -File scripts/cross-index/build-skill-relations.ps1
+
+      - name: Analyze unresolved links
+        run: powershell -File scripts/cross-index/analyze-unresolved-links.ps1
+
+      - name: Audit orphan docs
+        run: powershell -File scripts/cross-index/audit-orphan-docs.ps1
+
+      - name: Generate health report
+        run: powershell -File scripts/cross-index/generate-health-report.ps1
+
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        with:
+          name: doc-health-report
+          path: docs/reports/audit/doc-health-report-*.md
