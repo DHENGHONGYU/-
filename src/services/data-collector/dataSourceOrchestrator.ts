@@ -43,6 +43,7 @@ import {
 import { mapDailyToQuote, mapDailyToKlines } from './tushareAdapter'
 import { fetchBaostockKline } from './crawlerProvider'
 import { getQualityMetrics } from './qualityMetricsCollector'
+import { orderChainAdaptive, recordSourceResult } from './adaptiveSourceOrchestrator'
 
 const logger = getLogger()
 
@@ -68,6 +69,11 @@ export interface QuoteFetchConfig {
   taskId?: string
   /** 维度 code */
   dimensionCode?: string
+  /**
+   * 是否允许全源失败后降级到 Mock 数据（缺省 true 保持旧行为）。
+   * 生产环境应传 false：全源失败返回 success:false，不写库、不计成功。
+   */
+  allowMockFallback?: boolean
 }
 
 export interface KlineFetchConfig {
@@ -75,6 +81,8 @@ export interface KlineFetchConfig {
   traceId?: string
   taskId?: string
   dimensionCode?: string
+  /** 同 QuoteFetchConfig.allowMockFallback */
+  allowMockFallback?: boolean
 }
 
 // ── Mock 数据常量 ──
@@ -265,7 +273,8 @@ type KlineAttempt =
 
 /**
  * 尝试单个行情数据源（由 getQuoteWithConfig 的降级循环调用）。
- * 精确保留 SOURCE_SUCCESS / SOURCE_FAIL 事件与质量指标采集语义。
+ * 精确保留 SOURCE_SUCCESS / SOURCE_FAIL 事件与质量指标采集语义；
+ * 每次尝试同步记录 EWMA 源健康指标（recordSourceResult）供自适应链排序消费。
  */
 async function attemptQuoteSource(
   code: string,
@@ -276,11 +285,16 @@ async function attemptQuoteSource(
   config: QuoteFetchConfig,
   start: number,
 ): Promise<QuoteAttempt> {
+  const attemptStart = Date.now()
   try {
     const result = await tryQuoteSource(code, source)
-    if (!result) return { kind: 'empty' }
+    if (!result) {
+      recordSourceResult(source, { success: false, isMock: false, latencyMs: Date.now() - attemptStart, completeness: 0 })
+      return { kind: 'empty' }
+    }
     const latency = Date.now() - start
     const fallbackChain = chain.slice(0, index + 1)
+    recordSourceResult(source, { success: true, isMock: source === 'mock', latencyMs: Date.now() - attemptStart, completeness: 1 })
     getQualityMetrics().recordCollect(true, source, latency, fallbackChain)
     emitLifecycleEvent(COLLECTION_EVENTS.SOURCE_SUCCESS, {
       traceId,
@@ -294,6 +308,7 @@ async function attemptQuoteSource(
     return { kind: 'success', result: { success: true, data: result, source, latency, fallbackChain } }
   } catch (err) {
     const errorMsg = err instanceof Error ? err.message : String(err)
+    recordSourceResult(source, { success: false, isMock: false, latencyMs: Date.now() - attemptStart, completeness: 0 })
     logger.warn(`[orchestrator] 数据源 ${source} 异常: ${code}`, { error: errorMsg })
     emitLifecycleEvent(COLLECTION_EVENTS.SOURCE_FAIL, {
       traceId,
@@ -310,6 +325,7 @@ async function attemptQuoteSource(
 
 /**
  * 尝试单个 K 线数据源（由 getKlineWithConfig 的降级循环调用）。
+ * 每次尝试同步记录 EWMA 源健康指标（recordSourceResult），完整度按返回条数/请求天数估算。
  */
 async function attemptKlineSource(
   code: string,
@@ -321,11 +337,17 @@ async function attemptKlineSource(
   config: KlineFetchConfig,
   start: number,
 ): Promise<KlineAttempt> {
+  const attemptStart = Date.now()
   try {
     const result = await tryKlineSource(code, days, source)
-    if (!result || result.length === 0) return { kind: 'empty' }
+    if (!result || result.length === 0) {
+      recordSourceResult(source, { success: false, isMock: false, latencyMs: Date.now() - attemptStart, completeness: 0 })
+      return { kind: 'empty' }
+    }
     const latency = Date.now() - start
     const fallbackChain = chain.slice(0, index + 1)
+    const completeness = Math.min(1, result.length / Math.max(1, days))
+    recordSourceResult(source, { success: true, isMock: source === 'mock', latencyMs: Date.now() - attemptStart, completeness })
     getQualityMetrics().recordCollect(true, source, latency, fallbackChain)
     emitLifecycleEvent(COLLECTION_EVENTS.SOURCE_SUCCESS, {
       traceId,
@@ -339,6 +361,7 @@ async function attemptKlineSource(
     return { kind: 'success', result: { success: true, data: result, source, latency, fallbackChain } }
   } catch (err) {
     const errorMsg = err instanceof Error ? err.message : String(err)
+    recordSourceResult(source, { success: false, isMock: false, latencyMs: Date.now() - attemptStart, completeness: 0 })
     logger.warn(`[orchestrator] K 线数据源 ${source} 异常: ${code}`, { error: errorMsg })
     emitLifecycleEvent(COLLECTION_EVENTS.SOURCE_FAIL, {
       traceId,
@@ -354,13 +377,17 @@ async function attemptKlineSource(
 }
 
 /**
- * 获取实时行情（按配置优先级链降级）
+ * 获取实时行情（按配置优先级链降级，链顺序经 orderChainAdaptive 按源健康分自适应重排）
+ *
+ * Mock 假绿灯防护：config.allowMockFallback === false 时，全源失败返回
+ * success:false（附错误原因），不生成 mock 数据、不计采集成功；
+ * 允许 mock 时返回的 result.source 恒为 'mock'，保证 dataProvenance 血缘标记正确。
  */
 export async function getQuoteWithConfig(
   code: string,
   config: QuoteFetchConfig = {},
 ): Promise<CollectionResult<RealtimeQuote>> {
-  const chain = resolveSourcePriority(config.sourcePriority, defaultQuotePriority)
+  const chain = orderChainAdaptive(resolveSourcePriority(config.sourcePriority, defaultQuotePriority))
   const traceId = config.traceId ?? createTraceId('quote', code)
   const start = Date.now()
 
@@ -411,25 +438,51 @@ export async function getQuoteWithConfig(
     }
   }
 
-  // 全部失败（理论上 chain 最后一个应为 mock）
   const finalLatency = Date.now() - start
-  const finalSource = chain[chain.length - 1] ?? 'mock'
+
+  // Mock 兜底禁用：全源失败即失败，不写假数据、不计成功（假绿灯修复）
+  if (config.allowMockFallback === false) {
+    const failedResult: CollectionResult<RealtimeQuote> = {
+      success: false,
+      data: null,
+      source: chain[chain.length - 1] ?? 'mock',
+      latency: finalLatency,
+      fallbackChain: chain,
+      error: '所有真实数据源失败，且 Mock 兜底已禁用',
+    }
+    getQualityMetrics().recordCollect(false, failedResult.source, finalLatency, chain)
+    emitLifecycleEvent(COLLECTION_EVENTS.SOURCE_FAIL, {
+      traceId,
+      taskId: config.taskId,
+      dimensionCode: config.dimensionCode,
+      symbol: code,
+      sourceId: failedResult.source,
+      durationMs: finalLatency,
+      message: '全部数据源失败，Mock 兜底已禁用',
+      error: failedResult.error,
+    })
+    logger.warn(`[orchestrator] 全部行情源失败且 Mock 已禁用: ${code}`)
+    return failedResult
+  }
+
+  // Mock 兜底：source 恒为 'mock'，保证 dataProvenance 血缘可区分假数据
+  recordSourceResult('mock', { success: true, isMock: true, latencyMs: finalLatency, completeness: 1 })
   const finalResult: CollectionResult<RealtimeQuote> = {
     success: true,
     data: mockQuote(code),
-    source: finalSource,
+    source: 'mock',
     latency: finalLatency,
     fallbackChain: chain,
     error: '所有真实数据源失败，使用 Mock 数据',
   }
 
-  getQualityMetrics().recordCollect(finalResult.success, finalSource, finalLatency, chain)
+  getQualityMetrics().recordCollect(finalResult.success, finalResult.source, finalLatency, chain)
   emitLifecycleEvent(COLLECTION_EVENTS.SOURCE_SUCCESS, {
     traceId,
     taskId: config.taskId,
     dimensionCode: config.dimensionCode,
     symbol: code,
-    sourceId: finalSource,
+    sourceId: finalResult.source,
     durationMs: finalLatency,
     message: '全部数据源失败，返回 Mock 数据',
     error: finalResult.error,
@@ -445,45 +498,57 @@ export async function getQuote(code: string): Promise<CollectionResult<RealtimeQ
   return getQuoteWithConfig(code, { sourcePriority: defaultQuotePriority() })
 }
 
-/**
- * 尝试单一层批量数据源，返回结果或非空时 null。
- * 将 `results.length > 0` 判断收敛到单一位置，避免 getBatchQuotes 内重复条件。
- */
-async function tryBatchSource(
-  fetch: () => Promise<RealtimeQuote[]>,
-  source: DataSource,
-  start: number,
-  chain: DataSource[],
-): Promise<CollectionResult<RealtimeQuote[]> | null> {
-  const results = await fetch()
-  if (results.length > 0) {
-    return { success: true, data: results, source, latency: Date.now() - start, fallbackChain: chain }
-  }
-  return null
+/** 批量行情可选策略 */
+export interface BatchQuotesOptions {
+  /** 同 QuoteFetchConfig.allowMockFallback（缺省 true 保持旧行为） */
+  allowMockFallback?: boolean
 }
 
 /**
- * 批量获取实时行情（仍使用默认优先级链，暂不支持单维度配置）
+ * 批量获取实时行情（sina/tencent 双源，顺序经 orderChainAdaptive 自适应重排）。
+ *
+ * Mock 假绿灯防护：options.allowMockFallback === false 时全源失败返回
+ * success:false，不生成 mock 数据；允许 mock 时 source 恒为 'mock'。
+ * 每个真实源的成败/延迟同步记录 EWMA 源健康指标。
  */
-export async function getBatchQuotes(codes: string[]): Promise<CollectionResult<RealtimeQuote[]>> {
-  const chain: DataSource[] = ['sina']
+export async function getBatchQuotes(
+  codes: string[],
+  options: BatchQuotesOptions = {},
+): Promise<CollectionResult<RealtimeQuote[]>> {
+  const chain: DataSource[] = []
   const start = Date.now()
 
-  // 层 1: 新浪批量（首选：更快 + UTF-8 中文名）
-  const sinaResult = await tryBatchSource(() => sinaBatchQuotes(codes), 'sina', start, chain)
-  if (sinaResult) {
-    return sinaResult
+  for (const source of orderChainAdaptive<DataSource>(['sina', 'tencent'])) {
+    chain.push(source)
+    const attemptStart = Date.now()
+    try {
+      const results = source === 'sina' ? await sinaBatchQuotes(codes) : await tencentBatchQuotes(codes)
+      if (results.length > 0) {
+        recordSourceResult(source, { success: true, isMock: false, latencyMs: Date.now() - attemptStart, completeness: 1 })
+        return { success: true, data: results, source, latency: Date.now() - start, fallbackChain: [...chain] }
+      }
+      recordSourceResult(source, { success: false, isMock: false, latencyMs: Date.now() - attemptStart, completeness: 0 })
+    } catch (err) {
+      recordSourceResult(source, { success: false, isMock: false, latencyMs: Date.now() - attemptStart, completeness: 0 })
+      logger.warn(`[orchestrator] 批量行情源 ${source} 异常`, { error: err instanceof Error ? err.message : String(err) })
+    }
   }
 
-  // 层 2: 腾讯批量（兜底）
-  chain.push('tencent')
-  const tencentResult = await tryBatchSource(() => tencentBatchQuotes(codes), 'tencent', start, chain)
-  if (tencentResult) {
-    return tencentResult
+  // Mock 兜底禁用：全源失败即失败（假绿灯修复）
+  if (options.allowMockFallback === false) {
+    logger.warn('[orchestrator] 批量行情全部源失败，Mock 兜底已禁用')
+    return {
+      success: false,
+      data: null,
+      source: chain[chain.length - 1] ?? 'sina',
+      latency: Date.now() - start,
+      fallbackChain: chain,
+      error: '所有真实数据源失败，且 Mock 兜底已禁用',
+    }
   }
 
-  // 层 3: Mock 批量
   chain.push('mock')
+  recordSourceResult('mock', { success: true, isMock: true, latencyMs: Date.now() - start, completeness: 1 })
   logger.warn('[orchestrator] 批量行情全部源失败，返回 Mock 数据')
   return {
     success: true,
@@ -525,14 +590,17 @@ async function tryKlineSource(code: string, days: number, source: DataSource): P
 }
 
 /**
- * 获取历史 K 线（按配置优先级链降级）
+ * 获取历史 K 线（按配置优先级链降级，链顺序经 orderChainAdaptive 自适应重排）
+ *
+ * Mock 假绿灯防护同 getQuoteWithConfig：allowMockFallback === false 时全源失败
+ * 返回 success:false；允许 mock 时 result.source 恒为 'mock'。
  */
 export async function getKlineWithConfig(
   code: string,
   days: number,
   config: KlineFetchConfig = {},
 ): Promise<CollectionResult<KlineBar[]>> {
-  const chain = resolveSourcePriority(config.sourcePriority, defaultKlinePriority)
+  const chain = orderChainAdaptive(resolveSourcePriority(config.sourcePriority, defaultKlinePriority))
   const traceId = config.traceId ?? createTraceId('kline', code)
   const start = Date.now()
 
@@ -584,24 +652,50 @@ export async function getKlineWithConfig(
   }
 
   const finalLatency = Date.now() - start
-  const finalSource = chain[chain.length - 1] ?? 'mock'
-  const finalData = mockKlines(code, days)
+
+  // Mock 兜底禁用：全源失败即失败，不写假数据、不计成功（假绿灯修复）
+  if (config.allowMockFallback === false) {
+    const failedResult: CollectionResult<KlineBar[]> = {
+      success: false,
+      data: null,
+      source: chain[chain.length - 1] ?? 'mock',
+      latency: finalLatency,
+      fallbackChain: chain,
+      error: 'K 线真实数据源失败，且 Mock 兜底已禁用',
+    }
+    getQualityMetrics().recordCollect(false, failedResult.source, finalLatency, chain)
+    emitLifecycleEvent(COLLECTION_EVENTS.SOURCE_FAIL, {
+      traceId,
+      taskId: config.taskId,
+      dimensionCode: config.dimensionCode,
+      symbol: code,
+      sourceId: failedResult.source,
+      durationMs: finalLatency,
+      message: 'K 线全部数据源失败，Mock 兜底已禁用',
+      error: failedResult.error,
+    })
+    logger.warn(`[orchestrator] 全部 K 线源失败且 Mock 已禁用: ${code}`)
+    return failedResult
+  }
+
+  // Mock 兜底：source 恒为 'mock'，保证血缘可区分假数据
+  recordSourceResult('mock', { success: true, isMock: true, latencyMs: finalLatency, completeness: 1 })
   const finalResult: CollectionResult<KlineBar[]> = {
     success: true,
-    data: finalData,
-    source: finalSource,
+    data: mockKlines(code, days),
+    source: 'mock',
     latency: finalLatency,
     fallbackChain: chain,
     error: 'K 线真实数据源失败，使用 Mock 数据',
   }
 
-  getQualityMetrics().recordCollect(finalResult.success, finalSource, finalLatency, chain)
+  getQualityMetrics().recordCollect(finalResult.success, finalResult.source, finalLatency, chain)
   emitLifecycleEvent(COLLECTION_EVENTS.SOURCE_SUCCESS, {
     traceId,
     taskId: config.taskId,
     dimensionCode: config.dimensionCode,
     symbol: code,
-    sourceId: finalSource,
+    sourceId: finalResult.source,
     durationMs: finalLatency,
     message: 'K 线全部数据源失败，返回 Mock 数据',
     error: finalResult.error,

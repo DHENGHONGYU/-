@@ -197,6 +197,27 @@ export type {
   RiskDetailsResponse,
 } from './types/types.hybridProofread'
 
+// ============================================================
+// 八域资料体系域（ADR-010）
+// ============================================================
+export type {
+  ProfileDomain,
+  ProfileItemType,
+  SentimentLabel,
+  EvidenceType,
+  ScoreLayerId,
+  TagCategory,
+  DomainMeta,
+  ProfileItem,
+  ScoreEvidence,
+  StockProfile,
+  ProfileTag,
+  ProfileQueryFilter,
+  SyncOptions,
+  SyncResult,
+} from './types/types.profile'
+export { DOMAIN_META } from './types/types.profile'
+
 // ── 阶段 B-1：自定义智能体（v26 新增） ──
 export type { CustomAgent, CustomAgentType, CustomAgentApiConfig } from './types/types.customAgent'
 

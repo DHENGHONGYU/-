@@ -178,7 +178,7 @@ export async function adviseForStock(stock: Stock): Promise<DataLayerResult<Trad
   return { success: true, data: { signal, sizing, risk } }
 }
 
-async function createOrderWithRiskCheck(
+export async function createOrderWithRiskCheck(
   input: CreateOrderInput,
 ): Promise<DataLayerResult<Order>> {
   const price = Math.max(0, input.price)

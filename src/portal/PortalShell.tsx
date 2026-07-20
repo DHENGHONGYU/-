@@ -83,7 +83,7 @@ const PANEL_ITEMS: Record<CabinType, PanelGroup[]> = {
       group: '意向候选池',
       items: [
         { key: 'dashboard', label: '录入看板', path: '/input', icon: LayoutDashboard },
-        { key: 'pool-board', label: '股票池看板', path: '/input/pool-board', icon: Database },
+        { key: 'pool-board', label: '研究候选池', path: '/input/pool-board', icon: Database },
         { key: 'bulk-import', label: '批量导入', path: '/input/bulk-import', icon: Upload },
         { key: 'hot-sectors', label: '热门板块', path: '/input/hot-sectors', icon: Flame },
         { key: 'local-knowledge', label: '本地知识库', path: '/input/local-knowledge', icon: BookOpen },
@@ -104,8 +104,7 @@ const PANEL_ITEMS: Record<CabinType, PanelGroup[]> = {
       group: '评分与筛选',
       items: [
         { key: 'industry-score', label: 'V4 行业评分', path: '/analysis/industry-score', icon: BarChart3 },
-        { key: 'stock-score', label: 'V6 个股评分', path: '/analysis/stock-score', icon: Activity },
-        { key: 'intelligent-score', label: 'V6 智能评分', path: '/analysis/intelligent-score', icon: Activity },
+        { key: 'intelligent-score', label: '个股智能分析', path: '/analysis/intelligent-score', icon: Activity },
         { key: 'sector', label: '行业分析', path: '/analysis/sector', icon: Database },
         { key: 'backtest', label: '策略回测', path: '/analysis/backtest', icon: TrendingUp },
         { key: 'score-docs', label: '评分文档', path: '/analysis/score-docs', icon: FileText },

@@ -3,9 +3,11 @@
  */
 const testDbName = typeof process !== 'undefined' ? process.env.TEST_DB_NAME : undefined
 export const DB_NAME = testDbName ?? ('V6ProDB' as const)
-export const DB_VERSION = 31 as const
+export const DB_VERSION = 32 as const
 
 // DB_VERSION 升级历史：
+// v31 → v32: 新增 profile_items、score_evidence、stock_profiles、profile_tags 存储，
+//            支撑八域资料体系与证据链（ADR-010）。
 // v30 → v31: 新增 collection_history、conflict_log、file_import_records、proofread_reports、
 //            schedule_configs 存储，支撑双通道数据采集与更新（P2-1 整改）。
 // v29 → v30: 新增 analysis_results 存储，支撑 AnalysisOrchestrator 持久化分析结论。
@@ -216,6 +218,25 @@ export const ENVELOPE_ACTION = {
   deleteScheduleConfig: 'DELETE_SCHEDULE_CONFIG',
   /** 保存校对报告 */
   saveProofreadReport: 'SAVE_PROOFREAD_REPORT',
+  // ── 八域资料体系（v32 新增，ADR-010） ──
+  /** 保存资料条目 */
+  saveProfileItem: 'SAVE_PROFILE_ITEM',
+  /** 批量保存资料条目 */
+  bulkSaveProfileItems: 'BULK_SAVE_PROFILE_ITEMS',
+  /** 删除资料条目 */
+  deleteProfileItem: 'DELETE_PROFILE_ITEM',
+  /** 保存评分证据 */
+  saveScoreEvidence: 'SAVE_SCORE_EVIDENCE',
+  /** 批量保存评分证据 */
+  bulkSaveScoreEvidence: 'BULK_SAVE_SCORE_EVIDENCE',
+  /** 删除评分证据 */
+  deleteScoreEvidence: 'DELETE_SCORE_EVIDENCE',
+  /** 保存股票资料包 */
+  saveStockProfile: 'SAVE_STOCK_PROFILE',
+  /** 保存资料标签 */
+  saveProfileTag: 'SAVE_PROFILE_TAG',
+  /** 删除资料标签 */
+  deleteProfileTag: 'DELETE_PROFILE_TAG',
   // ── 批量操作（BulkEnvelope） ──
   /** 批量插入股票 */
   bulkInsertStock: 'BULK_INSERT_STOCK',
@@ -328,6 +349,11 @@ export const STORE_NAME = {
   fileImportRecords: 'file_import_records',
   proofreadReports: 'proofread_reports',
   scheduleConfigs: 'schedule_configs',
+  // ── 八域资料体系（v32 新增，ADR-010） ──
+  profileItems: 'profile_items',
+  scoreEvidence: 'score_evidence',
+  stockProfiles: 'stock_profiles',
+  profileTags: 'profile_tags',
 } as const
 
 export type StoreName = (typeof STORE_NAME)[keyof typeof STORE_NAME]
@@ -400,6 +426,11 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
       // 原 read 列表缺失导致 runV6Score 触发 ACL_PERMISSION_DENIED
       STORE_NAME.dailyQuotes,
       STORE_NAME.financialReports,
+      // 2026-07-21 新增：八域资料体系（ADR-010）读权限
+      STORE_NAME.profileItems,
+      STORE_NAME.scoreEvidence,
+      STORE_NAME.stockProfiles,
+      STORE_NAME.profileTags,
     ],
     write: [
       STORE_NAME.v6Scores,
@@ -409,6 +440,11 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
       STORE_NAME.hotSectorScores,
       STORE_NAME.valuePitScores,
       STORE_NAME.analysisResults,
+      // 2026-07-21 新增：八域资料体系（ADR-010）写权限
+      STORE_NAME.profileItems,
+      STORE_NAME.scoreEvidence,
+      STORE_NAME.stockProfiles,
+      STORE_NAME.profileTags,
     ],
     actions: [DB_OPERATION.select, DB_OPERATION.insert, DB_OPERATION.update],
   },
@@ -423,8 +459,8 @@ export const ACL_MATRIX: Readonly<Record<ModuleId, AclPermission>> = {
     actions: [DB_OPERATION.select, DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete],
   },
   [MODULE_ID.news]: {
-    read: [STORE_NAME.stocks, STORE_NAME.news, STORE_NAME.newsStockMap, STORE_NAME.sentimentCache, STORE_NAME.newsBookmarks],
-    write: [STORE_NAME.news, STORE_NAME.newsStockMap, STORE_NAME.sentimentCache, STORE_NAME.newsBookmarks],
+    read: [STORE_NAME.stocks, STORE_NAME.news, STORE_NAME.newsStockMap, STORE_NAME.sentimentCache, STORE_NAME.newsBookmarks, STORE_NAME.profileItems, STORE_NAME.profileTags],
+    write: [STORE_NAME.news, STORE_NAME.newsStockMap, STORE_NAME.sentimentCache, STORE_NAME.newsBookmarks, STORE_NAME.profileItems, STORE_NAME.profileTags],
     actions: [DB_OPERATION.select, DB_OPERATION.insert, DB_OPERATION.update, DB_OPERATION.delete],
   },
   [MODULE_ID.tradinghub]: {

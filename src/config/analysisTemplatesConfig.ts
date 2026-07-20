@@ -20,9 +20,9 @@ export interface AnalysisTemplate {
 export const ANALYSIS_TEMPLATES: AnalysisTemplate[] = [
   {
     id: 'quick-score',
-    title: '快速个股评分',
+    title: '快速个股智能分析',
     description: '输入股票代码，一键生成 V6 九层漏斗综合评分与投资建议。',
-    path: '/analysis/stock-score',
+    path: '/analysis/intelligent-score',
     params: { template: 'quick-score' },
     iconName: 'Zap',
     badge: '常用',

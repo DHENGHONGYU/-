@@ -139,14 +139,14 @@ describe('PortalShell 日志埋点', () => {
     })
 
     it('pathname 匹配子路径时也打印 info 日志', () => {
-      mockLocation = { pathname: '/analysis/stock-score' }
+      mockLocation = { pathname: '/analysis/intelligent-score' }
 
       render(<PortalShell />)
 
       expect(mockLogger.info).toHaveBeenCalledWith(
         '[PortalShell] 路径匹配',
         expect.objectContaining({
-          pathname: '/analysis/stock-score',
+          pathname: '/analysis/intelligent-score',
           cabin: 'analysis',
         }),
       )

@@ -47,6 +47,9 @@ export default function BulkImportPanel(): React.JSX.Element {
   const items = useIntentionPoolStore((s) => s.items)
   const allGroups = useMemo(() => getIntentionPoolGroups(), [])
 
+  /** 意向池数据是否已加载完成（防止 refresh 未完成时误判重复） */
+  const [poolReady, setPoolReady] = useState(false)
+
   const [inputMode, setInputMode] = useState<InputMode>('text')
   const [importText, setImportText] = useState('')
   const [importPreview, setImportPreview] = useState<BulkImportRow[]>([])
@@ -73,7 +76,10 @@ export default function BulkImportPanel(): React.JSX.Element {
 
   useEffect(() => {
     logger.info('[BulkImportPanel] 组件初始化，加载股票池数据')
-    void refresh()
+    void (async () => {
+      await refresh()
+      setPoolReady(true)
+    })()
   }, [refresh])
 
   // ── 文本输入解析 ──
@@ -487,6 +493,9 @@ export default function BulkImportPanel(): React.JSX.Element {
                   </p>
                   <p className={cn('mt-0.5', twText('stone', 600), DARK.textNeutral400)}>
                     成功 <strong className={cn(twText('stone', 800), DARK.textNeutral100)}>{importResult.success}</strong> 条
+                    {importResult.skipped > 0 && (
+                      <>，跳过 <strong className={cn(twText('amber', 600), DARK.textAmber300)}>{importResult.skipped}</strong> 条（已在池中）</>
+                    )}
                     {importResult.failed > 0 && (
                       <>，失败 <strong className={cn(twText('red', 600), DARK.textRed400)}>{importResult.failed}</strong> 条</>
                     )}
@@ -531,7 +540,7 @@ export default function BulkImportPanel(): React.JSX.Element {
               variant={getPrimaryButton().variant}
               size="sm"
               onClick={() => void handleConfirmImport()}
-              disabled={stats.valid === 0 || importPhase === 'importing'}
+              disabled={stats.valid === 0 || importPhase === 'importing' || !poolReady}
             >
               {getPrimaryButton().label}
             </Button>

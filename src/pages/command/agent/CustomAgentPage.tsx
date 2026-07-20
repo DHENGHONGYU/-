@@ -1,11 +1,11 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import {
-  PlusIcon,
-  PencilIcon,
-  TrashIcon,
-  BeakerIcon,
-  ArrowPathIcon,
-} from '@heroicons/react/24/outline'
+  Plus as PlusIcon,
+  Pencil as PencilIcon,
+  Trash2 as TrashIcon,
+  FlaskConical as BeakerIcon,
+  RefreshCw as ArrowPathIcon,
+} from 'lucide-react'
 import { PageContainer } from '@/components/templates/PageContainer'
 import { PageHeader } from '@/components/templates/PageHeader'
 import { Button } from '@/components/atoms/Button'

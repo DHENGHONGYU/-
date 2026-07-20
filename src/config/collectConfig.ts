@@ -77,6 +77,7 @@ export const FREQUENCY_MINUTES: Record<UpdateFrequency, number> = {
 export const DATA_SOURCE_LABELS: Record<DataSourceType, string> = {
   akshare: 'AKShare',
   ifind: 'iFinD',
+  tushare: 'Tushare',
   yahoo: 'Yahoo',
   tianyancha: '天眼查',
   scholar: '学术',

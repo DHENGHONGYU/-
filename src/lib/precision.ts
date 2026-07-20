@@ -24,7 +24,7 @@ export const PRECISION = {
  * @param decimals 小数位数，默认2位
  * @returns 格式化后的价格字符串，无效值返回 '--'
  */
-export function formatPrice(value: number | undefined | null, decimals = PRECISION.PRICE): string {
+export function formatPrice(value: number | undefined | null, decimals: number = PRECISION.PRICE): string {
   if (value == null || isNaN(value)) return '--'
   return value.toFixed(decimals)
 }
@@ -93,7 +93,7 @@ export function formatAmount(value: number | undefined | null, unit: 'auto' | 'w
  * @param decimals 小数位数
  * @returns 带百分号的字符串
  */
-export function formatPercent(value: number | undefined | null, decimals = PRECISION.PERCENT): string {
+export function formatPercent(value: number | undefined | null, decimals: number = PRECISION.PERCENT): string {
   if (value == null || isNaN(value)) return '--'
   // 如果值大于1，假设是百分比形式（如 50 表示 50%）
   const percentValue = value > 1 ? value : value * 100

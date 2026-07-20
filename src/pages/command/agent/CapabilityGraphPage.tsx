@@ -1,10 +1,10 @@
 import React, { useState, useRef } from 'react'
 import {
-  CubeTransparentIcon,
-  LinkIcon,
-  MagnifyingGlassIcon,
-  ArrowsPointingOutIcon,
-} from '@heroicons/react/24/outline'
+  Box as CubeTransparentIcon,
+  Link as LinkIcon,
+  Search as MagnifyingGlassIcon,
+  Maximize2 as ArrowsPointingOutIcon,
+} from 'lucide-react'
 import { PageContainer } from '@/components/templates/PageContainer'
 import { PageHeader } from '@/components/templates/PageHeader'
 import { Button } from '@/components/atoms/Button'

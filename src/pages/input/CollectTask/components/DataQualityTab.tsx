@@ -23,6 +23,10 @@ import type { ScoreStats, DimHealth } from '../hooks/useCollectionTaskStats'
 interface DataQualityTabProps {
   // 采集质量指标
   successRate: number
+  /** 真实数据源成功率（排除 mock，防假绿灯），用于 Accuracy 维度 */
+  realSuccessRate: number
+  /** 必填字段非空率（qualityMetricsCollector 实测，P0 已接通 recordCompleteness） */
+  completeness: number
   writeRate: number
   fallbackCount: number
   totalCollects: number
@@ -57,6 +61,8 @@ function formatFreshness(ts: number | null): string {
  */
 export function DataQualityTab({
   successRate,
+  realSuccessRate,
+  completeness,
   writeRate,
   fallbackCount,
   totalCollects,
@@ -66,11 +72,11 @@ export function DataQualityTab({
 }: DataQualityTabProps): React.JSX.Element {
   // ── 计算 6 维分数 ──
 
-  // 1. Accuracy：采集成功率（已采集成功 / 总采集次数）
-  const accuracyScore = successRate
+  // 1. Accuracy：真实数据源成功率（排除 mock，防假绿灯）
+  const accuracyScore = realSuccessRate
 
-  // 2. Completeness：写入成功率（写入成功 / 写入总次数）
-  const completenessScore = writeRate
+  // 2. Completeness：必填字段非空率（recordCompleteness 实测滚动均值）
+  const completenessScore = completeness
 
   // 3. Consistency：维度一致性（成功维度数 / 总维度数）
   let consistentDims = 0
@@ -101,8 +107,8 @@ export function DataQualityTab({
     : 0
 
   const metrics = [
-    { name: '准确性', code: 'Accuracy', score: accuracyScore, desc: '采集数据与实际行情匹配度' },
-    { name: '完整性', code: 'Completeness', score: completenessScore, desc: '必填字段非空率（写入成功/总写入）' },
+    { name: '准确性', code: 'Accuracy', score: accuracyScore, desc: `真实源成功率（含Mock口径 ${successRate}%）` },
+    { name: '完整性', code: 'Completeness', score: completenessScore, desc: `必填字段非空率实测（写入成功率 ${writeRate}%）` },
     { name: '一致性', code: 'Consistency', score: consistencyScore, desc: `${consistentDims}/${totalDims} 维度全部成功` },
     { name: '时效性', code: 'Timeliness', score: timelinessScore, desc: `最近采集: ${formatFreshness(lastSuccessAt)}` },
     { name: '有效性', code: 'Validity', score: validityScore, desc: `降级 ${fallbackCount} 次 / 共 ${totalCollects} 次` },

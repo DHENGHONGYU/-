@@ -193,7 +193,7 @@ export class LiveCollector extends BaseCollector {
       throw new Error(`[LiveCollector] 股票基本信息采集失败: ${symbol}`)
     }
 
-    const quote = result.data[0]
+    const quote = result.data[0]!
     const industryInfo = INDUSTRY_MAP[code] || { name: '未知行业', competitors: [], marketShare: 0 }
 
     const profile = {

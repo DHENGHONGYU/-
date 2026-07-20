@@ -13,7 +13,6 @@ import { BaseCollector } from './collectors/BaseCollector'
 import { MockCollector } from './collectors/MockCollector'
 import { RestCollector } from './collectors/RestCollector'
 import { WebSocketCollector } from './collectors/WebSocketCollector'
-import { LiveCollector } from './collectors/LiveCollector'
 import { NewsCrawler } from './collectors/NewsCrawler'
 import { eventBus } from '@/lib/eventBus'
 import { COLLECTION_EVENTS } from '@/types/modules/collection.types'
@@ -410,7 +409,7 @@ export class TaskScheduler {
    * @param tasks 任务列表
    * @param collectorType 采集器类型
    */
-  createBatchTask(batchId: string, tasks: { widgetId: string; instanceId: string; dataSource: DataSourceConfig }[], collectorType: string): void {
+  createBatchTask(batchId: string, tasks: { widgetId: string; instanceId: string; dataSource: DataSourceConfig }[], _collectorType: string): void {
     const batchInfo: BatchTaskInfo = {
       batchId,
       totalCount: tasks.length,
@@ -433,7 +432,7 @@ export class TaskScheduler {
       this.startTask(taskId).then(() => {
         batchInfo.completedCount++
         const task = this.tasks.get(taskId)
-        if (task?.status === 'completed' || task?.successCount > 0) {
+        if (task?.status === 'completed' || (task?.successCount ?? 0) > 0) {
           batchInfo.successCount++
         } else if (task?.status === 'error') {
           batchInfo.failCount++

@@ -194,14 +194,14 @@ export function memoizeByRef<TInput, TResult>(
  * 适用于带参数的派生查询，如 bySymbol(symbol)。
  * 注意：hash 基于 JSON.stringify，参数需可序列化。
  */
-export function memoizeByKey<TResult>(
-  fn: (...args: unknown[]) => TResult,
+export function memoizeByKey<TArgs extends unknown[], TResult>(
+  fn: (...args: TArgs) => TResult,
   name?: string,
-): (...args: unknown[]) => TResult {
+): (...args: TArgs) => TResult {
   const fnName = name ?? fn.name ?? 'anonymousByKey'
   const cache = new Map<string, TResult>()
 
-  return (...args: unknown[]): TResult => {
+  return (...args: TArgs): TResult => {
     const stats = getCacheStats(fnName)
     stats.totalCalls++
 
