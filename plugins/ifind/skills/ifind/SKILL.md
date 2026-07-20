@@ -1,6 +1,8 @@
 ---
+skill_id: V9-PLUGIN-IFIND
 name: ifind
 description: "iFinD, also known as Tonghuashun, is a financial data platform for global market analysis across China A-shares, Hong Kong, US markets, and other supported securities. It covers stock information, financial statements, business segmentation, prices, announcements, holders, forecasts, and intelligent stock screening."
+covers_docs: [V9-DOC-PROJ-219, V9-DOC-PROJ-107, V9-DOC-BACK-040]
 ---
 
 # iFinD

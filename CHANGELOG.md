@@ -11,6 +11,74 @@
 
 ### Added
 
+- **投研闭环状态体系（Loop Status，2026-07-21）**：
+  - `src/store/loopStatusStore.ts`：闭环五阶段（采集/评分/信号/交易/复盘）状态全局 Store，提供 markStageEvent / refresh / reset，派生函数均为纯函数（AGENTS.md §二 类型 B）
+  - `src/store/loopStatusSubscriptions.ts`：EventBus → 闭环阶段订阅管理模块，幂等初始化、完整 cleanup；遵例落位 store 层（audit:layers 规则 5）
+  - `src/config/loopConfig.ts`：闭环横幅配置单一真相源（阶段顺序/显示名/stale 阈值 24h/刷新间隔 60s/EventBus 事件→阶段映射），禁止下游硬编码
+- **级联删除策略配置（2026-07-21）**：
+  - `src/config/cascadeConfig.ts`：所有 Object Store 外键依赖与级联策略（CASCADE/RESTRICT/SET_NULL/SOFT_DELETE/NONE），cascadeExecutor 执行删除前读取此配置处理关联数据
+- **行业仪表盘状态管理（2026-07-21）**：
+  - `src/store/industryDashboardStore.ts`：行业仪表盘页面 Store（V4 行业分析 + 行业轮动信号），经 fetchIndustryDashboardUseCase 业务编排，DF-002 合规（数据访问经由 Store action 分发）
+
+### Changed
+
+- **驾驶舱分栏面板布局重构（v2.7.0 - 2026-07-20）**：
+  - `CockpitShell.tsx` 从单层 ReactGridLayout 重构为 5 面板分栏布局（市场全景/研究筛选/持仓复盘/信号监控/系统状态）
+  - 全部 26 个 Widget 保留，按投资者决策流分组到对应面板
+  - 面板内部采用左右两列 CSS grid 布局（大 Widget 占整行，小 Widget 并排）
+  - 每个面板支持独立折叠/展开，状态持久化到 localStorage
+  - 移除 `ReactGridLayout` 依赖，清理 `loadLayout`/`saveLayout`/`sanitizeLayout` 等遗留函数
+  - `LAYOUT_VERSION` 升至 v5，触发旧布局自动重置
+  - 修复 Widget 标题/数据字体对比度问题（`CardTitle` 添加 `text-foreground`，移除 `opacity-60`）
+  - `widgetRegistry.ts` 默认实例按面板重新编排位置坐标
+  - 字体对比度修复扩展至 7 个 Widget（`gray-400`→`gray-500`，移除 `opacity-60`）
+  - 面板强调色集中到 `PANEL_ACCENT_COLORS` 常量，消除 JSX 硬编码
+  - 新增 `CockpitShell.panel.test.tsx` 渲染测试（10 个用例覆盖面板渲染/折叠/持久化/空面板处理）
+  - **产业链图谱 Widget v2 重构（v2.7.0 - 2026-07-20）**：
+    - 新增上中下游下拉菜单切换（上游/中游/下游/横向）
+    - SVG 图谱改用贝塞尔曲线 + 箭头，减少视觉交叉
+    - 选中层级居中布局，关联节点分列两侧
+    - 节点点击高亮关联路径，非关联元素淡化
+    - 底部核心标的卡片 + 实时股价（涨跌色标，30 秒自动刷新）
+    - 通过 `tencentBatchQuotes` 批量获取实时行情
+
+- **批量导入整合到录入看板统一入口（v2.7.0 - 2026-07-19）**：
+  - `BulkImportPanel` 从独立路由 `/input/bulk-import` 整合到 `InputDashboard` 的 Tabs 中（单次录入 / 批量导入两个 Tab）
+  - 移除 `/input/bulk-import` 独立路由、侧边栏入口、PortalShell 导航项
+  - `InputDashboard` 使用 `Tabs` molecule 组件替代手写分段控件，统一交互模式
+  - `BulkImportPanel` 简化为纯内容组件（移除 Card 包装、步骤指引、bare prop）
+  - 同步更新 12 个活跃文档、8 个测试/e2e 文件、路由验证脚本中的引用
+
+### Added
+
+- **八域资料体系与评分证据链（v2.7.0 - 2026-07-19）**：
+  - 新增八域资料体系（D1-D8），与 V6 评分层一一映射，支撑评分证据链与研究迭代闭环
+  - 新增 4 个 IndexedDB Store：`stock_profiles` / `profile_items` / `score_evidence` / `profile_tags`，DB 版本升至 v32
+  - 新增类型定义 `src/data/types/types.profile.ts`，含 ProfileItem / ScoreEvidence / StockProfile / ProfileTag 等 15+ 类型
+  - 新增 `profileStore.ts`（Zustand），封装资料查询、筛选、详情、证据链等状态管理
+  - 新增资料同步适配器：新闻同步（`newsSyncService`）、本地知识库同步（`localDocSyncService`）、评分报告归档（`scoreDocArchiveService`）
+  - 新增衍生指标计算引擎（`derivedMetricsEngine`），4 大类 12+ 指标：杜邦分析 / 估值指标 / 成长质量 / 风险评估
+  - 新增分析编排器集成（`profileIntegrationService`）：分析前自动收集资料摘要作为 LLM 上下文，分析后自动归档结论到资料体系
+  - 新增八域资料浏览页面（`ProfileBrowsePage`），路由 `/output/profile`：八域导航、多维筛选、资料详情抽屉、证据链可视化
+  - 新增 4 个端到端测试脚本：profile-e2e / full-e2e / 4source-e2e / orchestrator-e2e
+  - 设计文档：ADR-010（V9-DOC-DATA-028）、八域资料体系设计（V9-DOC-DATA-029）、衍生指标引擎（V9-DOC-DATA-030）、文件系统映射规范（V9-DOC-DATA-031）
+
+- **意向候选池功能（v2.7.0 - 2026-07-20）**：
+  - `feat(input): 新增意向候选池功能 — 自选股导入、热门板块推荐、三列看板、批量流转`
+  - 新增 `src/pages/input/IntentionPoolBoardPage.tsx`，路由 `/input/intention-pool`
+  - 支持自选股导入、热门板块推荐、三列看板展示与批量流转操作
+
+- **股票代码格式转换工具收敛（v2.7.0 - 2026-07-19）**：
+  - 新建 `src/core/stockCodeUtils.ts`：抽出 `toTencentCode` / `toSinaCode` / `toNeteaseCode` 三个工具
+  - 解决 `services/data-collector/directDataAPI.ts` 与 `services/fetcher/directDataAPI.ts` 双副本维护成本
+  - 阶段 1（共享工具抽取）完成，阶段 2（双副本替换为引用）待跟进
+
+- **注册与契约状态查询 Store 落地（v2.7.0 - 2026-07-18）**：
+  - 新建 `src/store/registrationContractStore.ts`（Zustand + withBroadcast），封装 `queryStatus` action
+  - 服务层 `src/services/analysis/registrationContractService.ts` 提供 `queryStatusService`，与 store 解耦
+  - 状态契约类型 `src/types/modules/registration-contract.types.ts` 定义输入/输出 schema
+  - 归档理由：补 audit-doc-sync 历史 violation，模块已实际承载"注册与契约状态查询"业务
+
 - **股票字典重生为全市场离线搜索单一事实源（v2.7.0 - 2026-07-19）**：
   - 字典重生为 **8331** 条，覆盖四交易所完整口径：上交所 SH 2308 / 深交所 SZ 2892 / 北交所 BJ 328 / 港交所 HK 2803，跨市场 symbol 零重复。
   - 新增校验门禁 `npm run build:stock-dict:verify`（脚本 `scripts/verify-stock-dict.py`），校验四交易所完整性与零重复。

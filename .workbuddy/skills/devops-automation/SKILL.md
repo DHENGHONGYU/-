@@ -10,18 +10,17 @@ tags:
   - devops
   - schedule
   - project:finsightv9
-covers_docs: [V9-DOC-PROJ-232, V9-DOC-PROJ-218, V9-DOC-QA-091, V9-DOC-QA-050]
---- V9-SKILL-DEVOPS
-name: devops-automation
-description: 项目级运维自动化技能（FinSightV9）。当用户要求「定时备份」「自动提交」「Git 快照备份」「批量部署」「定时构建部署」「注册定时任务」「部署到静态托管」「周期性自动化」时使用；也适用于为该项目配置每日/每周周期性任务，或排查备份与部署失败。
-agent_created: true
-tags:
-  - automation
-  - backup
-  - deploy
-  - devops
-  - schedule
-  - project:finsightv9
+triggers:
+  keywords: [定时备份, 自动提交, Git 快照, 批量部署, 定时构建部署, 注册定时任务, 部署到静态托管, 周期性任务, 自动化 Skill, 备份失败, 部署失败]
+  files:
+    - ".workbuddy/skills/devops-automation/scripts/**"
+    - "scripts/monitor/system-check-loop.ts"
+    - "scripts/build/deploy-rectification-toolkit.ts"
+  events: [schedule-register, backup-failure, deploy-failure]
+gates:
+  - 脚本零破坏性检查（无 reset --hard / rm -rf / 不切换主分支）
+  - 敏感文件排除校验（.env / 密钥 / token 模式）
+mandatory: false
 covers_docs: [V9-DOC-PROJ-232, V9-DOC-PROJ-218, docs/archive/reference-historical/automation-test-plan.md, V9-DOC-QA-091, V9-DOC-QA-050]
 ---
 

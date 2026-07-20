@@ -4,6 +4,11 @@
 
 set -e
 
+# 便携垫片：本机无独立 Node 安装（仅 Kimi 受管 runtime 的 npm.cmd/npx.cmd），
+# Git Bash 的 sh 不按裸名解析 .cmd，此处兜底定义为 shell 函数（不影响已有正常环境）。
+command -v npx >/dev/null 2>&1 || npx() { npx.cmd "$@"; }
+command -v npm >/dev/null 2>&1 || npm() { npm.cmd "$@"; }
+
 echo ""
 echo "🚦 V9 预提交门禁启动 ..."
 echo "================================================"
@@ -11,6 +16,11 @@ echo "================================================"
 # 1. 获取当前 AGENTS.md 版本，用于提示
 AGENTS_VERSION=$(grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' "AGENTS.md" | head -n 1 || echo "unknown")
 echo "📋 当前 AGENTS.md 版本: $AGENTS_VERSION"
+
+# 1.5 技能路由匹配（warn 模式，不阻断；命中记录写入 .workbuddy/skills/usage.log）
+echo ""
+echo "🧭 [skill-router] 技能路由匹配（提醒模式）..."
+node scripts/skill-router.cjs --remind --log || true
 
 # 2. lint-staged：仅对暂存区文件运行 ESLint --fix
 echo ""

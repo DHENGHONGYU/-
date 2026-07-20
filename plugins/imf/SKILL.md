@@ -1,6 +1,8 @@
 ---
+skill_id: V9-PLUGIN-IMF
 name: imf
 description: "IMF provides global macroeconomic data through the World Economic Outlook database, including historical statistics and forecasts for GDP growth, inflation, government debt, unemployment, trade balances, and other indicators across 190+ countries and regions, plus COFER reserve currency composition data."
+covers_docs: [V9-DOC-PROJ-220]
 ---
 
 # IMF

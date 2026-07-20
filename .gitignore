@@ -146,6 +146,7 @@ checklist_record.json
 
 # Agent 工作日志（保留 .workbuddy/memory 与 .workbuddy/skills 纳入版本控制）
 .workbuddy/*.log
+.workbuddy/skills/usage.log
 
 # --- 2026-07-12 文档治理整改（P1）补充 ---
 # 自动产物（报告/审计 HTML，由 npm run audit:* / build:health 生成，不入 VCS）
@@ -186,3 +187,9 @@ docs/reports/automation-pipeline/*.json
 # Generated audit/proofread reports in scripts/docs/reports/
 /scripts/docs/reports/audit/*.json
 /scripts/docs/reports/proofread/*.json
+
+# 测试运行产物（一次性，可重建，不入 VCS）
+/test-results-tmp/
+/.test-output/
+/test-output.json
+/scripts/audit/docs/reports/

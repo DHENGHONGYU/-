@@ -1,8 +1,16 @@
 # AGENTS.md — V9 智能投研复盘系统 AI 行为约束契约
 
-> **版本**: v1.5.1 | **日期**: 2026-07-19
+> **版本**: v1.5.5 | **日期**: 2026-07-21
 > **适用范围**: 所有 AI 辅助开发工具（Claude Code、Cursor、Trae 等）
 > **强制等级**: 所有 AI 生成的代码必须遵守以下约束
+>
+> **v1.5.5 变更**：落地技能触发机制迭代 3——pre-push 挂 `skill-router --enforce --since <base>` 强制模式（mandatory 命中未确认即拦截，旁路 `SKILL_GATE_CONFIRM=1 git push`）；`skill-router.cjs` 新增 `--since`（推送范围三点 diff）与环境变量旁路；`.trae/rules` 追加技能路由规则段（与 registry/AGENTS.md 三方同步）；注册 2 个定时任务（L5 调度层）：「Mock 残留周检」`40 3 * * 1`、「技能健康度月检」`17 8 1 * *`（Asia/Shanghai）
+>
+> **v1.5.4 变更**：落地技能触发机制迭代 2——新增 L1 注册表 `.workbuddy/skills/skill-registry.json`、L4 路由器 `scripts/skill-router.cjs`（已挂 pre-commit 提醒模式，命中日志写入 `.workbuddy/skills/usage.log`，`--enforce` 预留给 pre-push）、L6 防漂移审计 `scripts/audit/audit-skill-coverage.cjs`（frontmatter ↔ registry ↔ AGENTS.md 三方一致性）；package.json 新增 `skill:route` / `audit:skill-coverage`
+>
+> **v1.5.3 变更**：新增「技能路由表」（SKILL 索引升级为 IF-THEN 路由规则：文件信号/关键词信号 × mandatory 门禁，未全绿不得声明完成）；统一 `.workbuddy/skills/` 5 个技能的 frontmatter schema（`triggers.keywords/files/events` + `gates` + `mandatory` 机器可读字段）并修复 4 个损坏的 YAML 头；归因于 2026-07-21 确认技能自动触发机制缺失，落地五层触发体系的 L0 修复层与 L2 路由层（后续迭代：L1 registry、L4 skill-router 钩子、L5 周期任务）
+>
+> **v1.5.2 变更**：新增 §十六 Bash 使用约定（Git Bash 路径规范 + 受管 venv Python 固化 + 命令入口统一 + 禁止命令清单 + 执行后联动义务）；归因于 2026-07-20 确认 AI 工具默认开放 Bash 调用，需统一 Shell 行为防路径漂移
 >
 > **v1.5.1 变更**：新增 §二.Store 状态订阅规范（Zustand 响应式铁律 3 条 + 派生函数归类 + Widget 组件数据订阅模板）；归因于 2026-07-19 发现 26 个 Store 派生函数裸用 `getState()` 导致 P0 阻断性不渲染
 >
@@ -23,6 +31,21 @@
 > - `mock-data-diagnosis`：Mock 数据残留三维诊断（查什么）
 > - `data-flow-integrity-audit`：全链路数据流完整性审计（从哪查到哪）
 > - `devops-automation`：备份分支 + 批量部署（运维自动化）
+> - `bash-conventions`：Bash 执行规范与命令速查（怎么跑命令，§十六 配套操作手册）
+
+### 技能路由表（任务开始时必须先匹配，v1.5.3 新增）
+
+> **匹配规则**：先文件信号（改动路径），再关键词信号（用户表述/问题现象）；命中 **mandatory** 技能时，其「交付前必跑」未全绿不得声明"完成"。各技能的完整触发词与 gates 以其 SKILL.md frontmatter（`triggers` / `gates` / `mandatory` 字段）为单一真相源，本表为会话级路由摘要。
+
+| 信号（满足任一即触发） | 必加载技能 | 类型 | 交付前必跑 |
+|---|---|---|---|
+| 改动 `src/services/data-collector/**`、`src/store/sevenDimConfigStore.ts`、`src/types/modules/collection.types.ts`，或相关 vitest 失败 | `collection-pipeline-testing` | mandatory | `npx tsc --noEmit` + `npm run tsc:prod` + `npm run audit:layers` + 相关 vitest |
+| 新增 EnvelopeAction / 写入新 store、改动 `src/core/databridge*.ts` 或 `src/config/dbConfig.ts`、排查按钮无响应 / 假绿灯 / 跨板块数据异常 | `data-flow-integrity-audit` | mandatory | 该技能 §三 阶段 1–6 + `npm run audit:acl-consistency` |
+| 排查 Mock 残留 / 假数据 / 信息孤岛、Mock→真实切换、上线前 Mock 清理审计 | `mock-data-diagnosis` | advisory | 三维 Grep 扫描（每项 file:line 证据）+ 诊断报告归档 `outputs/` |
+| 定时备份、批量部署、注册周期任务、排查备份/部署失败 | `devops-automation` | advisory | 脚本零破坏性检查 + 敏感文件排除校验 |
+| 执行任何 Bash 命令、路径/解释器/门禁命令选择（全局生效） | `bash-conventions` | advisory | 按该技能 §4「执行后联动义务」表选必跑命令 |
+
+> **变更纪律**：新增技能 = ① 新建 `.workbuddy/skills/<name>/SKILL.md`（frontmatter 含 `triggers`/`gates`/`mandatory`）→ ② 同步 `.workbuddy/skills/skill-registry.json`（L1 注册表）→ ③ 更新本索引与路由表 → ④ 跑 `npm run audit:skill-coverage` 校验三方一致。钩子状态：pre-commit 挂 `--remind --log`（提醒模式，命中记录写入 `.workbuddy/skills/usage.log`）；pre-push 挂 `--enforce --since <base>`（强制模式，mandatory 命中未确认即拦截，旁路 `SKILL_GATE_CONFIRM=1 git push`）。`npm run skill:route` 可随时手工查询。
 
 ---
 
@@ -30,12 +53,12 @@
 
 ```
 src/config/       ← 配置层（零硬编码锚点）
-src/core/         ← 核心工具与类型守卫（DataBridge/databridgeAcl/databridgeHandlers/databridgeRouter/databridgeStrategyRouter/ACL/Envelope/MemoryCache/workerPool）
+src/core/         ← 核心工具与类型守卫（DataBridge/databridgeAcl/databridgeHandlers/databridgeRouter/databridgeStrategyRouter/ACL/Envelope/MemoryCache/workerPool/stockCodeUtils）
 src/agents/       ← AI 行为扩展（运行时模块，core 层扩展）
 src/data/         ← 数据层（IndexedDB/dataLayer/queryBuilder/types/gateway）
 src/lib/          ← 库函数（logger/format/errors/utils/localStorageManager）
 src/services/      ← 服务层（30+子域：analysis/scoring/fetcher/news/llm/trading/execution/...）
-src/store/        ← 状态层（63个Zustand Store + helpers/withBroadcast；含 intentionPoolStore.ts / researchPoolStore.ts / positionPoolStore.ts 三分拆）
+src/store/        ← 状态层（63个Zustand Store + helpers/withBroadcast；含 intentionPoolStore.ts / researchPoolStore.ts / positionPoolStore.ts / registrationContractStore.ts）
 src/pages/        ← 页面层（5舱：input/analysis/trading/output/command）
 src/components/   ← 组件层（atoms/molecules/organisms/templates + chart/cabin/cockpit/widgets）
 src/portal/       ← PortalShell 舱室入口层
@@ -1443,6 +1466,7 @@ npx tsc --noEmit | findstr /R "mcpAcl mcpBridge MCPServer MCPClient"
 
 | 版本 | 日期 | 变更摘要 |
 |------|------|----------|
+| v1.5.2 | 2026-07-20 | 新增 §十六 Bash 使用约定（16.1-16.6）：Git Bash 路径规范、受管 venv Python 固化、命令入口统一（npm scripts）、禁止命令清单、执行后联动义务、长命令与超时纪律 |
 | v1.4.9 | 2026-07-18 | §七.4 新增数据质量断言三件套规则（auditRecord + recordCollect + refreshStats）；§七 验证命令新增 `audit:acl-consistency`；§八 新增 ENVELOPE_ACTION → handler 注册一致性规则；新增 `scripts/audit/audit-acl-consistency.ts` 门禁脚本；Husky pre-commit 扩展为 16 项 |
 | v1.4.8 | 2026-07-18 | §八 强化 ACL 白名单约束（新增 store → 必跑 audit:acl-consistency）；增加 §四 状态假红灯教训（recordCollect + recordWrite + refreshStats 三件套） |
 | v1.4.6 | 2026-07-20 | §一 新增 `data/gateway/` 层定义；明确 Gateway 是唯一允许直接操作 `dataLayer`/`db` 的入口，`DataBridge` 写操作必须委托 Gateway；新增 `docs/03-development/gateway-write-permission-spec.md` 规范文档 |
@@ -1550,6 +1574,61 @@ FinSightV9 是**个人本地投研复盘工具**，定位决定了部署架构�
 
 - 新增模块代码审查时检查：是否违反 15.2 中的任一约束。
 - 所有新增 npm 依赖审查：避免引入服务端运行时依赖。
+
+---
+
+## 十六、Bash 使用约定（v1.5.2 新增）
+
+> **归因**：2026-07-20 会话确认 Kimi Work 等 AI 工具默认开放 Bash 工具调用。为统一不同 AI 工具的 Shell 行为、避免路径漂移与环境污染，固化本节约定。权限放行（每次调用是否需人工确认）由客户端权限模式控制，不属于本节范围。
+
+### 16.1 默认 Shell 与路径规范
+
+1. 默认 Shell 为 **Git Bash**（POSIX 语义）；禁止假设 PowerShell/CMD 语法。
+2. Git Bash 返回的 `/g/...` 路径必须转换为 Windows 形式 `G:\...`（大写盘符 + 反斜杠）；获取当前目录 Windows 路径用 `pwd -W`。
+3. 含空格路径在命令行中必须加双引号，如 `"C:\Program Files\Git\bin\bash.exe"`。
+4. 一切文件操作限定在 `G:\FinSightV9` 内；确需目录外文件时，先复制进工作区再操作副本，禁止直接改原文件。
+
+### 16.2 Python 环境选择（固化，禁止漂移）
+
+1. 项目 Python 脚本一律通过 `package.json` npm scripts 调用，解释器路径已固化为受管 venv：
+   `C:/Users/DELL/.workbuddy/binaries/python/envs/default/Scripts/python.exe`
+   （现有 `build:stock-dict`、`build:sw-industry` 等脚本即此模式）。
+2. 新增 Python 脚本入口必须登记为 npm script 并沿用同一路径，禁止在脚本、文档、提示词中引入第二个 Python 解释器路径。
+3. 禁止向系统 Python 或受管 venv 安装项目依赖；任何 `pip install` 需用户显式确认。
+
+### 16.3 命令入口统一
+
+1. 测试、审计、构建一律走 `package.json` npm scripts，禁止直接调用裸 `vitest` / `tsc` 绕过门禁参数：
+   - 单元测试：`npm run test`（即 `vitest run`）
+   - 快速门禁：`npm run gate:quick`（完整清单见 §七）
+   - 类型检查：`npm run tsc:prod`
+2. 有依赖关系的多步命令用 `&&` 串联；相互独立的只读命令应并行发起，禁止串行等待。
+
+### 16.4 禁止命令清单
+
+| 类别 | 禁止项 |
+|------|--------|
+| 权限 | 任何需要 sudo / 管理员权限的命令 |
+| 删除 | `rm -rf` 指向 `src/`、`docs/`、`scripts/` 等受管目录；跨盘符删除 |
+| Git | `git push --force`、`git reset --hard`、`git clean -fd`（未经用户显式确认） |
+| 配置 | 修改 `.env`、`.env.local`、`.env.development.local`（密钥类文件只读） |
+| 依赖 | 未经用户确认的 `npm install` / `pip install` 新依赖 |
+| 进程 | 交互式或常驻进程命令；调试启动的 dev server 用完必须终止，禁止残留后台 Node/Vite 进程 |
+
+### 16.5 执行后联动义务
+
+| 触发动作 | 必跑命令/流程 |
+|---------|--------------|
+| 新增/修改 `src/store/` 下 Store | `npm run audit:acl-consistency` |
+| 文件迁移 / 目录重构 | `npm run audit:layers` + §二 全文件类型旧路径扫描 |
+| 回滚操作 | §二 回滚验证流程五项（tsc / audit:docs / 接口文档 / audit:layers / test） |
+| 修改 token / 颜色相关代码 | `npm run audit:tokens`（基线只减不增） |
+
+### 16.6 长命令与超时纪律
+
+1. 单命令默认预算 60s；构建 / 全量测试类命令须显式声明预期耗时。
+2. 禁止交互式命令；可能长时间运行的命令必须先给出退出条件。
+3. 每条命令附一句中文说明（为什么跑）；失败时如实报告退出码与 stderr，禁止掩盖为"成功"。
 
 ---
 
