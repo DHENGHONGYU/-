@@ -1,0 +1,22 @@
+{
+  "violations": [],
+  "warnings": [],
+  "summary": {
+    "totalFiles": 0,
+    "totalViolations": 0,
+    "totalWarnings": 0,
+    "archivedItems": 0,
+    "deletedItems": 0,
+    "skippedItems": 0
+  },
+  "meta": {
+    "scriptName": "audit-directory-archive",
+    "version": "1.0.0",
+    "timestamp": "2026-07-13T11:59:37.419Z",
+    "durationMs": 315,
+    "rootDir": "D:\\FinSightV9"
+  },
+  "archivedItems": [],
+  "deletedItems": [],
+  "skippedItems": []
+}

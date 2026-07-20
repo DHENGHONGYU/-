@@ -1,0 +1,18 @@
+{
+  "violations": [],
+  "warnings": [],
+  "summary": {
+    "totalFiles": 909,
+    "totalViolations": 0,
+    "totalWarnings": 0,
+    "byViolationType": {},
+    "byWarningType": {}
+  },
+  "meta": {
+    "scriptName": "audit-layer-calls",
+    "version": "3.0",
+    "timestamp": "2026-07-13T12:50:56.300Z",
+    "durationMs": 118,
+    "rootDir": "D:\\FinSightV9"
+  }
+}

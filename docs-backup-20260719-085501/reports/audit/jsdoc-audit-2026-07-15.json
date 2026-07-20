@@ -1,0 +1,875 @@
+{
+  "count": 145,
+  "entries": [
+    {
+      "file": "src\\services\\workers\\v6ScoreTaskScheduler.ts",
+      "line": 304,
+      "name": "getGlobalScheduler",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\workers\\v6ScoreTaskScheduler.ts",
+      "line": 311,
+      "name": "destroyGlobalScheduler",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\trading\\signalGenerator.ts",
+      "line": 57,
+      "name": "buildSnapshot",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\trading\\signalGenerator.ts",
+      "line": 76,
+      "name": "generateBuySignals",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\trading\\signalGenerator.ts",
+      "line": 146,
+      "name": "generateSellSignals",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\system\\mechanismMonitorService.ts",
+      "line": 60,
+      "name": "MECHANISM_ALERT_EVENT",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\storage\\hnswIndex.ts",
+      "line": 153,
+      "name": "HNSWIndex",
+      "type": "class"
+    },
+    {
+      "file": "src\\services\\skills\\trendTechnicalTimingSkill.ts",
+      "line": 15,
+      "name": "TrendTechnicalTimingInputSchema",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\trendTechnicalTimingSkill.ts",
+      "line": 35,
+      "name": "TrendTechnicalTimingOutputSchema",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\trendTechnicalTimingSkill.ts",
+      "line": 219,
+      "name": "executeTrendTechnicalTimingSkill",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\skills\\trendTechnicalTimingSkill.ts",
+      "line": 326,
+      "name": "trendTechnicalTimingSkill",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\skillRegistry.ts",
+      "line": 6,
+      "name": "SkillRegistry",
+      "type": "class"
+    },
+    {
+      "file": "src\\services\\skills\\sentimentAnalysisSkill.ts",
+      "line": 19,
+      "name": "SentimentOutputSchema",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\sentimentAnalysisSkill.ts",
+      "line": 34,
+      "name": "SentimentInputSchema",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\sentimentAnalysisSkill.ts",
+      "line": 90,
+      "name": "executeSentimentAnalysisSkill",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\skills\\sentimentAnalysisSkill.ts",
+      "line": 146,
+      "name": "sentimentAnalysisSkill",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\selfPurificationSkill.ts",
+      "line": 34,
+      "name": "SelfPurificationOutputSchema",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\selfPurificationSkill.ts",
+      "line": 46,
+      "name": "SelfPurificationInputSchema",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\selfPurificationSkill.ts",
+      "line": 139,
+      "name": "executeSelfPurificationSkill",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\skills\\selfPurificationSkill.ts",
+      "line": 260,
+      "name": "selfPurificationSkill",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\riskStopLossSkill.ts",
+      "line": 17,
+      "name": "RiskStopLossInputSchema",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\riskStopLossSkill.ts",
+      "line": 39,
+      "name": "RiskStopLossOutputSchema",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\riskStopLossSkill.ts",
+      "line": 121,
+      "name": "executeRiskStopLossSkill",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\skills\\riskStopLossSkill.ts",
+      "line": 233,
+      "name": "riskStopLossSkill",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\positionManagementSkill.ts",
+      "line": 16,
+      "name": "PositionManagementInputSchema",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\positionManagementSkill.ts",
+      "line": 42,
+      "name": "PositionManagementOutputSchema",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\positionManagementSkill.ts",
+      "line": 87,
+      "name": "executePositionManagementSkill",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\skills\\positionManagementSkill.ts",
+      "line": 159,
+      "name": "positionManagementSkill",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\layerAnalysisSkills.ts",
+      "line": 25,
+      "name": "macroScanSkill",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\layerAnalysisSkills.ts",
+      "line": 37,
+      "name": "moatAnalysisSkill",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\layerAnalysisSkills.ts",
+      "line": 49,
+      "name": "peerCompetitionSkill",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\layerAnalysisSkills.ts",
+      "line": 61,
+      "name": "scenarioForecastingSkill",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\layerAnalysisSkills.ts",
+      "line": 73,
+      "name": "techMarketMatrixSkill",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\layerAnalysisSkills.ts",
+      "line": 85,
+      "name": "hypeCycleSkill",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\layerAnalysisSkills.ts",
+      "line": 97,
+      "name": "secondCurveSkill",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\layerAnalysisSkillFactory.ts",
+      "line": 19,
+      "name": "CitationSchema",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\layerAnalysisSkillFactory.ts",
+      "line": 26,
+      "name": "LayerAnalysisOutputSchema",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\layerAnalysisSkillFactory.ts",
+      "line": 39,
+      "name": "LayerAnalysisInputSchema",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\layerAnalysisSkillFactory.ts",
+      "line": 106,
+      "name": "createLayerAnalysisSkill",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\skills\\industryScoreMappingSkill.ts",
+      "line": 21,
+      "name": "IndustryScoreMappingInputSchema",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\industryScoreMappingSkill.ts",
+      "line": 37,
+      "name": "IndustryScoreMappingOutputSchema",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\industryScoreMappingSkill.ts",
+      "line": 145,
+      "name": "executeIndustryScoreMappingSkill",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\skills\\industryScoreMappingSkill.ts",
+      "line": 249,
+      "name": "industryScoreMappingSkill",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\factorRegressionSkill.ts",
+      "line": 28,
+      "name": "FactorRegressionInputSchema",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\factorRegressionSkill.ts",
+      "line": 60,
+      "name": "FactorRegressionOutputSchema",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\factorRegressionSkill.ts",
+      "line": 211,
+      "name": "executeFactorRegressionSkill",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\skills\\factorRegressionSkill.ts",
+      "line": 372,
+      "name": "factorRegressionSkill",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\exitSignalSkill.ts",
+      "line": 29,
+      "name": "ExitSignalInputSchema",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\exitSignalSkill.ts",
+      "line": 45,
+      "name": "ExitSignalOutputSchema",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\exitSignalSkill.ts",
+      "line": 151,
+      "name": "executeExitSignalSkill",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\skills\\exitSignalSkill.ts",
+      "line": 280,
+      "name": "exitSignalSkill",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\entrySignalSkill.ts",
+      "line": 28,
+      "name": "EntrySignalInputSchema",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\entrySignalSkill.ts",
+      "line": 42,
+      "name": "EntrySignalOutputSchema",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\entrySignalSkill.ts",
+      "line": 86,
+      "name": "executeEntrySignalSkill",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\skills\\entrySignalSkill.ts",
+      "line": 208,
+      "name": "entrySignalSkill",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\bullBearDebateSkill.ts",
+      "line": 29,
+      "name": "BullBearDebateOutputSchema",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\bullBearDebateSkill.ts",
+      "line": 39,
+      "name": "BullBearDebateInputSchema",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\bullBearDebateSkill.ts",
+      "line": 107,
+      "name": "executeBullBearDebateSkill",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\skills\\bullBearDebateSkill.ts",
+      "line": 162,
+      "name": "bullBearDebateSkill",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\analysisConclusionSkill.ts",
+      "line": 20,
+      "name": "AnalysisConclusionSchema",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\analysisConclusionSkill.ts",
+      "line": 31,
+      "name": "AnalysisConclusionInputSchema",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\skills\\analysisConclusionSkill.ts",
+      "line": 78,
+      "name": "executeAnalysisConclusionSkill",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\skills\\analysisConclusionSkill.ts",
+      "line": 144,
+      "name": "analysisConclusionSkill",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\scoring\\v6ScoreService.ts",
+      "line": 413,
+      "name": "runV6ScoreBatch",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\scoring\\v6-engine\\crossValidator.ts",
+      "line": 78,
+      "name": "DEFAULT_CROSS_VALIDATOR_CONFIG",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\lifecycle\\analysisResultLifecycle.ts",
+      "line": 27,
+      "name": "TTL_HARD_DAYS",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\evaluators\\schemaEvaluator.ts",
+      "line": 11,
+      "name": "SCHEMA_EVALUATOR_ID",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\evaluators\\schemaEvaluator.ts",
+      "line": 13,
+      "name": "schemaEvaluator",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\evaluators\\rubricEvaluator.ts",
+      "line": 11,
+      "name": "RUBRIC_EVALUATOR_ID",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\evaluators\\rubricEvaluator.ts",
+      "line": 58,
+      "name": "rubricEvaluator",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\evaluators\\regressionEvaluator.ts",
+      "line": 11,
+      "name": "REGRESSION_EVALUATOR_ID",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\evaluators\\regressionEvaluator.ts",
+      "line": 48,
+      "name": "regressionEvaluator",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\evaluators\\consistencyEvaluator.ts",
+      "line": 11,
+      "name": "CONSISTENCY_EVALUATOR_ID",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\evaluators\\consistencyEvaluator.ts",
+      "line": 86,
+      "name": "consistencyEvaluator",
+      "type": "constant"
+    },
+    {
+      "file": "src\\services\\analysis\\analysisOrchestrator.ts",
+      "line": 228,
+      "name": "runAnalysis",
+      "type": "function"
+    },
+    {
+      "file": "src\\services\\analysis\\analysisOrchestrator.ts",
+      "line": 302,
+      "name": "runAnalysisBatch",
+      "type": "function"
+    },
+    {
+      "file": "src\\store\\themeStore.ts",
+      "line": 66,
+      "name": "useThemeStore",
+      "type": "constant"
+    },
+    {
+      "file": "src\\store\\searchStore.ts",
+      "line": 101,
+      "name": "useSearchStore",
+      "type": "constant"
+    },
+    {
+      "file": "src\\store\\researchPoolStore.ts",
+      "line": 88,
+      "name": "useResearchPoolStore",
+      "type": "constant"
+    },
+    {
+      "file": "src\\store\\researchPoolStore.ts",
+      "line": 321,
+      "name": "getResearchPoolTotalCount",
+      "type": "function"
+    },
+    {
+      "file": "src\\store\\researchPoolStore.ts",
+      "line": 325,
+      "name": "getResearchPoolItemBySymbol",
+      "type": "function"
+    },
+    {
+      "file": "src\\store\\researchPoolStore.ts",
+      "line": 329,
+      "name": "getResearchPoolGroups",
+      "type": "function"
+    },
+    {
+      "file": "src\\store\\researchPoolStore.ts",
+      "line": 351,
+      "name": "initResearchPoolStoreSubscriptions",
+      "type": "function"
+    },
+    {
+      "file": "src\\store\\predictionStore.ts",
+      "line": 56,
+      "name": "usePredictionStore",
+      "type": "constant"
+    },
+    {
+      "file": "src\\store\\positionPoolStore.ts",
+      "line": 90,
+      "name": "usePositionPoolStore",
+      "type": "constant"
+    },
+    {
+      "file": "src\\store\\positionPoolStore.ts",
+      "line": 323,
+      "name": "getPositionPoolTotalCount",
+      "type": "function"
+    },
+    {
+      "file": "src\\store\\positionPoolStore.ts",
+      "line": 327,
+      "name": "getPositionPoolItemBySymbol",
+      "type": "function"
+    },
+    {
+      "file": "src\\store\\positionPoolStore.ts",
+      "line": 331,
+      "name": "getPositionPoolGroups",
+      "type": "function"
+    },
+    {
+      "file": "src\\store\\positionPoolStore.ts",
+      "line": 353,
+      "name": "initPositionPoolStoreSubscriptions",
+      "type": "function"
+    },
+    {
+      "file": "src\\store\\perfMetricsStore.ts",
+      "line": 37,
+      "name": "usePerfMetricsStore",
+      "type": "constant"
+    },
+    {
+      "file": "src\\store\\perfMetricsStore.ts",
+      "line": 66,
+      "name": "PERF_METRICS_STORE_VERSION",
+      "type": "constant"
+    },
+    {
+      "file": "src\\store\\intentionPoolStore.ts",
+      "line": 88,
+      "name": "useIntentionPoolStore",
+      "type": "constant"
+    },
+    {
+      "file": "src\\store\\intentionPoolStore.ts",
+      "line": 321,
+      "name": "getIntentionPoolTotalCount",
+      "type": "function"
+    },
+    {
+      "file": "src\\store\\intentionPoolStore.ts",
+      "line": 325,
+      "name": "getIntentionPoolItemBySymbol",
+      "type": "function"
+    },
+    {
+      "file": "src\\store\\intentionPoolStore.ts",
+      "line": 329,
+      "name": "getIntentionPoolGroups",
+      "type": "function"
+    },
+    {
+      "file": "src\\store\\intentionPoolStore.ts",
+      "line": 351,
+      "name": "initIntentionPoolStoreSubscriptions",
+      "type": "function"
+    },
+    {
+      "file": "src\\store\\analysisOrchestratorStore.ts",
+      "line": 24,
+      "name": "useAnalysisOrchestratorStore",
+      "type": "constant"
+    },
+    {
+      "file": "src\\store\\analysisOrchestratorStore.ts",
+      "line": 56,
+      "name": "makeAnalysisTraceId",
+      "type": "function"
+    },
+    {
+      "file": "src\\lib\\rolePermissionMapper.ts",
+      "line": 5,
+      "name": "mapUserRoleToMcpRole",
+      "type": "function"
+    },
+    {
+      "file": "src\\lib\\rolePermissionMapper.ts",
+      "line": 20,
+      "name": "mapDeveloperRoleToMcpRole",
+      "type": "function"
+    },
+    {
+      "file": "src\\lib\\rolePermissionMapper.ts",
+      "line": 39,
+      "name": "getUserRoleAllowedModules",
+      "type": "function"
+    },
+    {
+      "file": "src\\lib\\rolePermissionMapper.ts",
+      "line": 60,
+      "name": "getDeveloperRoleAllowedModules",
+      "type": "function"
+    },
+    {
+      "file": "src\\lib\\rolePermissionMapper.ts",
+      "line": 98,
+      "name": "checkUserRolePermission",
+      "type": "function"
+    },
+    {
+      "file": "src\\lib\\rolePermissionMapper.ts",
+      "line": 117,
+      "name": "checkDeveloperRolePermission",
+      "type": "function"
+    },
+    {
+      "file": "src\\lib\\rolePermissionMapper.ts",
+      "line": 136,
+      "name": "checkUserRoleDbOperation",
+      "type": "function"
+    },
+    {
+      "file": "src\\lib\\rolePermissionMapper.ts",
+      "line": 154,
+      "name": "checkDeveloperRoleDbOperation",
+      "type": "function"
+    },
+    {
+      "file": "src\\components\\organisms\\analysis\\sector\\SectorRotationHeatmap.tsx",
+      "line": 55,
+      "name": "adaptHeatmapData",
+      "type": "function"
+    },
+    {
+      "file": "src\\components\\organisms\\analysis\\sector\\SectorRotationHeatmap.tsx",
+      "line": 72,
+      "name": "getMetricValue",
+      "type": "function"
+    },
+    {
+      "file": "src\\components\\organisms\\analysis\\score\\IntelligentScoreExplanation.tsx",
+      "line": 39,
+      "name": "buildRadarData",
+      "type": "function"
+    },
+    {
+      "file": "src\\components\\organisms\\analysis\\score\\IntelligentScoreExplanation.tsx",
+      "line": 55,
+      "name": "buildKeyFactors",
+      "type": "function"
+    },
+    {
+      "file": "src\\components\\organisms\\analysis\\score\\IntelligentScoreExplanation.tsx",
+      "line": 69,
+      "name": "buildFactorHeatmapData",
+      "type": "function"
+    },
+    {
+      "file": "src\\components\\cockpit\\SecurityStatus.tsx",
+      "line": 17,
+      "name": "SecurityStatus",
+      "type": "class"
+    },
+    {
+      "file": "src\\components\\cockpit\\SecurityStatus.tsx",
+      "line": 82,
+      "name": "SecurityBadge",
+      "type": "function"
+    },
+    {
+      "file": "src\\components\\cockpit\\DensityToggle.tsx",
+      "line": 17,
+      "name": "DensityToggle",
+      "type": "function"
+    },
+    {
+      "file": "src\\components\\cockpit\\DensityContext.tsx",
+      "line": 14,
+      "name": "DENSITY_PRESETS",
+      "type": "constant"
+    },
+    {
+      "file": "src\\components\\cockpit\\DensityContext.tsx",
+      "line": 49,
+      "name": "DensityProvider",
+      "type": "function"
+    },
+    {
+      "file": "src\\components\\cockpit\\DensityContext.tsx",
+      "line": 90,
+      "name": "useDensity",
+      "type": "function"
+    },
+    {
+      "file": "src\\components\\cockpit\\DensityContext.tsx",
+      "line": 98,
+      "name": "useDensityConfig",
+      "type": "function"
+    },
+    {
+      "file": "src\\components\\cockpit\\DensityContext.tsx",
+      "line": 102,
+      "name": "useDensityClass",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\input\\CollectTask\\index.tsx",
+      "line": 53,
+      "name": "CollectTaskPage",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\input\\CollectTask\\hooks\\useCollectionTaskStats.ts",
+      "line": 94,
+      "name": "useCollectionTaskStats",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\input\\CollectTask\\components\\TaskListTab.tsx",
+      "line": 38,
+      "name": "TaskListTab",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\input\\CollectTask\\components\\ScoreTrend.tsx",
+      "line": 19,
+      "name": "ScoreTrend",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\input\\CollectTask\\components\\ScoreStatsCards.tsx",
+      "line": 15,
+      "name": "ScoreStatsCards",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\input\\CollectTask\\components\\ScoreProgress.tsx",
+      "line": 25,
+      "name": "ScoreProgress",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\input\\CollectTask\\components\\ScoreDistribution.tsx",
+      "line": 22,
+      "name": "ScoreDistribution",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\input\\CollectTask\\components\\ScoreAnalysisTab.tsx",
+      "line": 15,
+      "name": "ScoreAnalysisTab",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\input\\CollectTask\\components\\DimHealthTab.tsx",
+      "line": 19,
+      "name": "DimHealthTab",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\input\\CollectTask\\components\\DimHealthCard.tsx",
+      "line": 25,
+      "name": "DimHealthCard",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\input\\CollectTask\\components\\CollectTaskStatsCards.tsx",
+      "line": 22,
+      "name": "CollectTaskStatsCards",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\input\\CollectTask\\components\\CollectTaskBreadcrumb.tsx",
+      "line": 17,
+      "name": "CollectTaskBreadcrumb",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\command\\agent\\LlmManagement\\index.tsx",
+      "line": 30,
+      "name": "LlmManagementPage",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\command\\agent\\LlmManagement\\hooks\\useLlmConfigActions.ts",
+      "line": 60,
+      "name": "useLlmConfigActions",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\command\\agent\\LlmManagement\\hooks\\useLlmConfigActions.ts",
+      "line": 263,
+      "name": "LLM_FILTER_CONSTANTS",
+      "type": "constant"
+    },
+    {
+      "file": "src\\pages\\command\\agent\\LlmManagement\\components\\LlmStatsTab.tsx",
+      "line": 33,
+      "name": "LlmStatsTab",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\command\\agent\\LlmManagement\\components\\LlmStatsCards.tsx",
+      "line": 17,
+      "name": "LlmStatsCards",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\command\\agent\\LlmManagement\\components\\LlmFactorsTab.tsx",
+      "line": 23,
+      "name": "LlmFactorsTab",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\command\\agent\\LlmManagement\\components\\LlmConfigTab.tsx",
+      "line": 55,
+      "name": "LlmConfigTab",
+      "type": "function"
+    },
+    {
+      "file": "src\\pages\\command\\agent\\LlmManagement\\components\\LlmAdvancedTab.tsx",
+      "line": 21,
+      "name": "LlmAdvancedTab",
+      "type": "function"
+    },
+    {
+      "file": "src\\cockpit\\providers\\MarketDataProvider.tsx",
+      "line": 203,
+      "name": "useMarketData",
+      "type": "function"
+    },
+    {
+      "file": "src\\cockpit\\providers\\MarketDataProvider.tsx",
+      "line": 217,
+      "name": "useOptionalMarketData",
+      "type": "function"
+    },
+    {
+      "file": "src\\core\\ThemeProvider.tsx",
+      "line": 189,
+      "name": "useTheme",
+      "type": "function"
+    },
+    {
+      "file": "src\\core\\routeGuard.tsx",
+      "line": 50,
+      "name": "registerButtonPermission",
+      "type": "function"
+    },
+    {
+      "file": "src\\core\\routeGuard.tsx",
+      "line": 74,
+      "name": "hasPermission",
+      "type": "constant"
+    },
+    {
+      "file": "src\\core\\routeGuard.tsx",
+      "line": 113,
+      "name": "usePermission",
+      "type": "function"
+    }
+  ]
+}

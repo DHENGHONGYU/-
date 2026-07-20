@@ -1,0 +1,37 @@
+{
+  "violations": [
+    {
+      "file": "src/hooks/usePoolBoard.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、DATA_DEFINITION.md、ARCHITECTURE.md、CHANGELOG.md）中体现"
+    },
+    {
+      "file": "src/store/intentionPoolStore.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、DATA_DEFINITION.md、ARCHITECTURE.md、CHANGELOG.md）中体现"
+    },
+    {
+      "file": "src/store/positionPoolStore.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、DATA_DEFINITION.md、ARCHITECTURE.md、CHANGELOG.md）中体现"
+    },
+    {
+      "file": "src/store/researchPoolStore.ts",
+      "type": "未文档化文件",
+      "message": "文件可能尚未在文档（docs/*.md、DATA_DEFINITION.md、ARCHITECTURE.md、CHANGELOG.md）中体现"
+    }
+  ],
+  "summary": {
+    "totalFiles": 69,
+    "totalViolations": 4,
+    "scanMode": "changed",
+    "docFilesCount": 411
+  },
+  "meta": {
+    "scriptName": "audit-doc-sync",
+    "version": "3.0",
+    "timestamp": "2026-07-13T14:10:56.363Z",
+    "durationMs": 2235,
+    "rootDir": "D:\\FinSightV9"
+  }
+}

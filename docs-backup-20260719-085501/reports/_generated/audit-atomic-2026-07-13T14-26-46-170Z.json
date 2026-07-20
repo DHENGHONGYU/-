@@ -1,0 +1,29 @@
+{
+  "violations": [
+    {
+      "file": "organisms/agent/StandardAgentDetail.tsx",
+      "tier": "unregistered",
+      "rule": "unregistered",
+      "level": "warning",
+      "message": "业务组件未在 componentRegistry 登记（默认按 organism 处理）。建议补登 targetPath 与层级。"
+    }
+  ],
+  "summary": {
+    "totalFiles": 135,
+    "totalViolations": 1,
+    "totalWarnings": 1,
+    "byTier": {
+      "unregistered": 1
+    },
+    "byRule": {
+      "unregistered": 1
+    }
+  },
+  "meta": {
+    "scriptName": "audit-atomic",
+    "version": "1.0.0",
+    "timestamp": "2026-07-13T14:26:46.170Z",
+    "durationMs": 12,
+    "rootDir": "D:\\FinSightV9"
+  }
+}

@@ -1,0 +1,4818 @@
+{
+  "generatedAt": "2026-07-17T16:30:20.404Z",
+  "reportCount": 492,
+  "totals": {
+    "totalViolations": 14332,
+    "bySeverity": {
+      "Warning": 4317,
+      "Major": 1204,
+      "Critical": 31,
+      "Minor": 7569
+    }
+  },
+  "reports": [
+    {
+      "file": "audit-quality-enhanced-2026-07-17T16-09-28-093Z.json",
+      "scriptName": "audit-quality-enhanced",
+      "timestamp": "2026-07-17T16:09:28.058Z",
+      "totalViolations": 3513,
+      "totalFiles": 885,
+      "bySeverity": {
+        "Warning": 663,
+        "Major": 104,
+        "Critical": 3,
+        "Minor": 2743
+      },
+      "byRule": {
+        "smell:deep-nesting": 46,
+        "smell:hooks-missing-deps": 306,
+        "smell:long-fn": 211,
+        "defect:empty-catch": 104,
+        "smell:debug-log": 20,
+        "smell:explicit-any": 3,
+        "defect:switch-no-default": 21,
+        "smell:unused-import": 20,
+        "defect:parseint-no-radix": 11,
+        "smell:commented-code": 1,
+        "perf:json-in-loop": 11,
+        "perf:nested-loops": 13,
+        "sec:sql-injection": 3,
+        "arch:unused-export": 2423,
+        "arch:orphan-module": 320
+      }
+    },
+    {
+      "file": "audit-quality-enhanced-2026-07-17T16-29-14-012Z.json",
+      "scriptName": "audit-quality-enhanced",
+      "timestamp": "2026-07-17T16:29:13.978Z",
+      "totalViolations": 2958,
+      "totalFiles": 885,
+      "bySeverity": {
+        "Warning": 1239,
+        "Major": 113,
+        "Minor": 1603,
+        "Critical": 3
+      },
+      "byRule": {
+        "perf:array-method-chain": 228,
+        "smell:deep-nesting": 46,
+        "smell:hooks-missing-deps": 306,
+        "smell:long-fn": 211,
+        "smell:nested-ternary": 264,
+        "defect:empty-catch": 104,
+        "smell:debug-log": 20,
+        "smell:todo-fixme": 20,
+        "smell:explicit-any": 3,
+        "defect:switch-no-default": 21,
+        "smell:unused-import": 20,
+        "defect:parseint-no-radix": 11,
+        "defect:switch-fallthrough": 28,
+        "smell:commented-code": 1,
+        "perf:string-concat-in-loop": 5,
+        "perf:json-in-loop": 11,
+        "perf:nested-loops": 13,
+        "sec:regex-injection": 9,
+        "norm:interface-prefix": 11,
+        "sec:sql-injection": 3,
+        "defect:unreachable-code": 1,
+        "arch:god-module": 24,
+        "arch:unused-export": 1570,
+        "arch:circular-dep": 6,
+        "arch:orphan-module": 22
+      }
+    },
+    {
+      "file": "audit-quality-enhanced-2026-07-17T16-11-42-824Z.json",
+      "scriptName": "audit-quality-enhanced",
+      "timestamp": "2026-07-17T16:11:42.791Z",
+      "totalViolations": 2368,
+      "totalFiles": 885,
+      "bySeverity": {
+        "Warning": 669,
+        "Major": 104,
+        "Critical": 3,
+        "Minor": 1592
+      },
+      "byRule": {
+        "smell:deep-nesting": 46,
+        "smell:hooks-missing-deps": 306,
+        "smell:long-fn": 211,
+        "defect:empty-catch": 104,
+        "smell:debug-log": 20,
+        "smell:explicit-any": 3,
+        "defect:switch-no-default": 21,
+        "smell:unused-import": 20,
+        "defect:parseint-no-radix": 11,
+        "smell:commented-code": 1,
+        "perf:json-in-loop": 11,
+        "perf:nested-loops": 13,
+        "sec:sql-injection": 3,
+        "arch:unused-export": 1570,
+        "arch:circular-dep": 6,
+        "arch:orphan-module": 22
+      }
+    },
+    {
+      "file": "audit-quality-enhanced-2026-07-17T16-16-05-906Z.json",
+      "scriptName": "audit-quality-enhanced",
+      "timestamp": "2026-07-17T16:16:05.894Z",
+      "totalViolations": 2368,
+      "totalFiles": 885,
+      "bySeverity": {
+        "Warning": 669,
+        "Major": 104,
+        "Critical": 3,
+        "Minor": 1592
+      },
+      "byRule": {
+        "smell:deep-nesting": 46,
+        "smell:hooks-missing-deps": 306,
+        "smell:long-fn": 211,
+        "defect:empty-catch": 104,
+        "smell:debug-log": 20,
+        "smell:explicit-any": 3,
+        "defect:switch-no-default": 21,
+        "smell:unused-import": 20,
+        "defect:parseint-no-radix": 11,
+        "smell:commented-code": 1,
+        "perf:json-in-loop": 11,
+        "perf:nested-loops": 13,
+        "sec:sql-injection": 3,
+        "arch:unused-export": 1570,
+        "arch:circular-dep": 6,
+        "arch:orphan-module": 22
+      }
+    },
+    {
+      "file": "audit-quality-enhanced-2026-07-17T15-30-39-785Z.json",
+      "scriptName": "audit-quality-enhanced",
+      "timestamp": "2026-07-17T15:30:39.782Z",
+      "totalViolations": 770,
+      "totalFiles": 1118,
+      "bySeverity": {
+        "Warning": 663,
+        "Major": 104,
+        "Critical": 3
+      },
+      "byRule": {
+        "smell:deep-nesting": 46,
+        "smell:hooks-missing-deps": 306,
+        "smell:long-fn": 211,
+        "defect:empty-catch": 104,
+        "smell:debug-log": 20,
+        "smell:explicit-any": 3,
+        "defect:switch-no-default": 21,
+        "smell:unused-import": 20,
+        "defect:parseint-no-radix": 11,
+        "smell:commented-code": 1,
+        "perf:json-in-loop": 11,
+        "perf:nested-loops": 13,
+        "sec:sql-injection": 3
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-16T15-31-04-815Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-16T15:31:04.815Z",
+      "totalViolations": 154,
+      "totalFiles": 180,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 154
+      }
+    },
+    {
+      "file": "dependency-analysis.json",
+      "scriptName": "dependency-analysis",
+      "timestamp": null,
+      "totalViolations": 125,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T01-29-30-966Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T01:29:30.956Z",
+      "totalViolations": 77,
+      "totalFiles": 1035,
+      "bySeverity": {
+        "Major": 64,
+        "Warning": 13
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T01-32-22-525Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T01:32:22.509Z",
+      "totalViolations": 77,
+      "totalFiles": 1035,
+      "bySeverity": {
+        "Major": 64,
+        "Warning": 13
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T01-32-31-883Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T01:32:31.881Z",
+      "totalViolations": 77,
+      "totalFiles": 1035,
+      "bySeverity": {
+        "Major": 64,
+        "Warning": 13
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T01-35-53-149Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T01:35:53.145Z",
+      "totalViolations": 77,
+      "totalFiles": 1035,
+      "bySeverity": {
+        "Major": 64,
+        "Warning": 13
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T01-19-13-360Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T01:19:13.354Z",
+      "totalViolations": 74,
+      "totalFiles": 1023,
+      "bySeverity": {
+        "Major": 61,
+        "Warning": 13
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T01-43-17-029Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T01:43:17.017Z",
+      "totalViolations": 71,
+      "totalFiles": 1036,
+      "bySeverity": {
+        "Major": 58,
+        "Warning": 13
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T01-48-07-025Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T01:48:07.018Z",
+      "totalViolations": 54,
+      "totalFiles": 1036,
+      "bySeverity": {
+        "Major": 41,
+        "Warning": 13
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-quality-enhanced-2026-07-17T16-27-09-045Z.json",
+      "scriptName": "audit-quality-enhanced",
+      "timestamp": "2026-07-17T16:27:09.044Z",
+      "totalViolations": 47,
+      "totalFiles": 2,
+      "bySeverity": {
+        "Minor": 34,
+        "Warning": 11,
+        "Major": 1,
+        "Critical": 1
+      },
+      "byRule": {
+        "norm:interface-prefix": 1,
+        "smell:boolean-param": 1,
+        "norm:var-keyword": 1,
+        "sec:regex-injection": 1,
+        "sec:open-redirect": 1,
+        "defect:switch-fallthrough": 1,
+        "perf:array-method-chain": 1,
+        "smell:unused-var": 4,
+        "smell:todo-fixme": 1,
+        "arch:deep-import": 1,
+        "arch:god-module": 1,
+        "arch:unused-export": 31,
+        "arch:orphan-module": 2
+      }
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T00-51-41-042Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T00:51:41.036Z",
+      "totalViolations": 43,
+      "totalFiles": 1011,
+      "bySeverity": {
+        "Major": 30,
+        "Warning": 13
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T01-12-52-013Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T01:12:52.008Z",
+      "totalViolations": 43,
+      "totalFiles": 1011,
+      "bySeverity": {
+        "Major": 30,
+        "Warning": 13
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T00-13-09-913Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T00:13:09.900Z",
+      "totalViolations": 42,
+      "totalFiles": 1004,
+      "bySeverity": {
+        "Major": 30,
+        "Warning": 12
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T00-13-37-733Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T00:13:37.697Z",
+      "totalViolations": 42,
+      "totalFiles": 1004,
+      "bySeverity": {
+        "Major": 30,
+        "Warning": 12
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T00-14-13-665Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T00:14:13.626Z",
+      "totalViolations": 42,
+      "totalFiles": 1004,
+      "bySeverity": {
+        "Major": 30,
+        "Warning": 12
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T00-25-55-272Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T00:25:55.270Z",
+      "totalViolations": 42,
+      "totalFiles": 1004,
+      "bySeverity": {
+        "Major": 30,
+        "Warning": 12
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-integrity-2026-07-17T16-05-53-874Z.json",
+      "scriptName": "audit-doc-integrity",
+      "timestamp": "2026-07-17T16:05:53.853Z",
+      "totalViolations": 40,
+      "totalFiles": 805,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-integrity-2026-07-16T13-31-31-578Z.json",
+      "scriptName": "audit-doc-integrity",
+      "timestamp": "2026-07-16T13:31:31.553Z",
+      "totalViolations": 30,
+      "totalFiles": 707,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T02-02-14-451Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T02:02:14.449Z",
+      "totalViolations": 30,
+      "totalFiles": 1043,
+      "bySeverity": {
+        "Major": 17,
+        "Warning": 13
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-integrity-2026-07-16T13-24-42-233Z.json",
+      "scriptName": "audit-doc-integrity",
+      "timestamp": "2026-07-16T13:24:42.213Z",
+      "totalViolations": 29,
+      "totalFiles": 705,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-integrity-2026-07-14T01-57-23-430Z.json",
+      "scriptName": "audit-doc-integrity",
+      "timestamp": "2026-07-14T01:57:23.364Z",
+      "totalViolations": 28,
+      "totalFiles": 468,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-integrity-2026-07-14T01-59-01-905Z.json",
+      "scriptName": "audit-doc-integrity",
+      "timestamp": "2026-07-14T01:59:01.893Z",
+      "totalViolations": 28,
+      "totalFiles": 468,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T02-02-50-369Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T02:02:50.362Z",
+      "totalViolations": 27,
+      "totalFiles": 1043,
+      "bySeverity": {
+        "Major": 14,
+        "Warning": 13
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T02-11-41-082Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T02:11:41.078Z",
+      "totalViolations": 27,
+      "totalFiles": 1043,
+      "bySeverity": {
+        "Major": 14,
+        "Warning": 13
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-integrity-2026-07-15T00-47-51-801Z.json",
+      "scriptName": "audit-doc-integrity",
+      "timestamp": "2026-07-15T00:47:51.729Z",
+      "totalViolations": 26,
+      "totalFiles": 607,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-integrity-2026-07-15T00-51-46-910Z.json",
+      "scriptName": "audit-doc-integrity",
+      "timestamp": "2026-07-15T00:51:46.577Z",
+      "totalViolations": 26,
+      "totalFiles": 605,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-integrity-2026-07-15T01-12-52-666Z.json",
+      "scriptName": "audit-doc-integrity",
+      "timestamp": "2026-07-15T01:12:52.423Z",
+      "totalViolations": 26,
+      "totalFiles": 607,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-integrity-2026-07-15T01-19-16-792Z.json",
+      "scriptName": "audit-doc-integrity",
+      "timestamp": "2026-07-15T01:19:16.689Z",
+      "totalViolations": 26,
+      "totalFiles": 608,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-integrity-2026-07-15T01-29-59-543Z.json",
+      "scriptName": "audit-doc-integrity",
+      "timestamp": "2026-07-15T01:29:59.299Z",
+      "totalViolations": 26,
+      "totalFiles": 612,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-integrity-2026-07-15T01-36-37-421Z.json",
+      "scriptName": "audit-doc-integrity",
+      "timestamp": "2026-07-15T01:36:37.331Z",
+      "totalViolations": 26,
+      "totalFiles": 615,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-integrity-2026-07-15T01-58-11-673Z.json",
+      "scriptName": "audit-doc-integrity",
+      "timestamp": "2026-07-15T01:58:11.579Z",
+      "totalViolations": 26,
+      "totalFiles": 616,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-integrity-2026-07-15T02-11-45-531Z.json",
+      "scriptName": "audit-doc-integrity",
+      "timestamp": "2026-07-15T02:11:45.296Z",
+      "totalViolations": 26,
+      "totalFiles": 623,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-integrity-2026-07-15T02-54-39-029Z.json",
+      "scriptName": "audit-doc-integrity",
+      "timestamp": "2026-07-15T02:54:39.003Z",
+      "totalViolations": 26,
+      "totalFiles": 624,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-integrity-2026-07-15T02-56-44-039Z.json",
+      "scriptName": "audit-doc-integrity",
+      "timestamp": "2026-07-15T02:56:44.011Z",
+      "totalViolations": 26,
+      "totalFiles": 624,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-integrity-2026-07-15T03-01-03-299Z.json",
+      "scriptName": "audit-doc-integrity",
+      "timestamp": "2026-07-15T03:01:03.270Z",
+      "totalViolations": 26,
+      "totalFiles": 624,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-integrity-2026-07-15T03-06-59-321Z.json",
+      "scriptName": "audit-doc-integrity",
+      "timestamp": "2026-07-15T03:06:59.298Z",
+      "totalViolations": 26,
+      "totalFiles": 624,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-integrity-2026-07-15T03-09-11-172Z.json",
+      "scriptName": "audit-doc-integrity",
+      "timestamp": "2026-07-15T03:09:11.152Z",
+      "totalViolations": 26,
+      "totalFiles": 624,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-integrity-2026-07-15T21-56-09-313Z.json",
+      "scriptName": "audit-doc-integrity",
+      "timestamp": "2026-07-15T21:56:09.289Z",
+      "totalViolations": 26,
+      "totalFiles": 625,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-integrity-2026-07-15T21-58-55-209Z.json",
+      "scriptName": "audit-doc-integrity",
+      "timestamp": "2026-07-15T21:58:55.185Z",
+      "totalViolations": 26,
+      "totalFiles": 625,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-integrity-2026-07-15T22-58-57-218Z.json",
+      "scriptName": "audit-doc-integrity",
+      "timestamp": "2026-07-15T22:58:57.164Z",
+      "totalViolations": 26,
+      "totalFiles": 632,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-integrity-2026-07-16T00-02-46-778Z.json",
+      "scriptName": "audit-doc-integrity",
+      "timestamp": "2026-07-16T00:02:46.594Z",
+      "totalViolations": 26,
+      "totalFiles": 681,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-integrity-2026-07-16T01-22-50-631Z.json",
+      "scriptName": "audit-doc-integrity",
+      "timestamp": "2026-07-16T01:22:50.607Z",
+      "totalViolations": 26,
+      "totalFiles": 682,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-quality-enhanced-2026-07-17T16-28-41-816Z.json",
+      "scriptName": "audit-quality-enhanced",
+      "timestamp": "2026-07-17T16:28:41.815Z",
+      "totalViolations": 21,
+      "totalFiles": 26,
+      "bySeverity": {
+        "Warning": 20,
+        "Major": 1
+      },
+      "byRule": {
+        "defect:switch-fallthrough": 9,
+        "smell:nested-ternary": 3,
+        "perf:array-method-chain": 3,
+        "smell:deep-nesting": 2,
+        "defect:empty-catch": 1,
+        "smell:hooks-missing-deps": 3
+      }
+    },
+    {
+      "file": "audit-quality-enhanced-2026-07-17T16-28-54-989Z.json",
+      "scriptName": "audit-quality-enhanced",
+      "timestamp": "2026-07-17T16:28:54.987Z",
+      "totalViolations": 21,
+      "totalFiles": 26,
+      "bySeverity": {
+        "Warning": 20,
+        "Major": 1
+      },
+      "byRule": {
+        "defect:switch-fallthrough": 9,
+        "smell:nested-ternary": 3,
+        "perf:array-method-chain": 3,
+        "smell:deep-nesting": 2,
+        "defect:empty-catch": 1,
+        "smell:hooks-missing-deps": 3
+      }
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T01-19-53-952Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T01:19:53.950Z",
+      "totalViolations": 20,
+      "totalFiles": 740,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T01-12-07-849Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T01:12:07.849Z",
+      "totalViolations": 19,
+      "totalFiles": 730,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T01-15-53-908Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T01:15:53.905Z",
+      "totalViolations": 19,
+      "totalFiles": 730,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-quality-enhanced-2026-07-17T16-28-40-349Z.json",
+      "scriptName": "audit-quality-enhanced",
+      "timestamp": "2026-07-17T16:28:40.348Z",
+      "totalViolations": 16,
+      "totalFiles": 2,
+      "bySeverity": {
+        "Minor": 1,
+        "Warning": 13,
+        "Major": 1,
+        "Critical": 1
+      },
+      "byRule": {
+        "norm:interface-prefix": 1,
+        "smell:boolean-param": 1,
+        "norm:var-keyword": 1,
+        "smell:nested-ternary": 1,
+        "sec:regex-injection": 1,
+        "sec:open-redirect": 1,
+        "defect:switch-fallthrough": 1,
+        "perf:array-method-chain": 1,
+        "perf:string-concat-in-loop": 1,
+        "defect:unreachable-code": 1,
+        "smell:unused-var": 5,
+        "smell:todo-fixme": 1
+      }
+    },
+    {
+      "file": "audit-hardcode-2026-07-14T04-51-32-179Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-14T04:51:32.172Z",
+      "totalViolations": 15,
+      "totalFiles": 966,
+      "bySeverity": {
+        "Warning": 11,
+        "Major": 4
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-14T04-53-22-912Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-14T04:53:22.911Z",
+      "totalViolations": 15,
+      "totalFiles": 966,
+      "bySeverity": {
+        "Warning": 11,
+        "Major": 4
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-14T13-39-04-253Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-14T13:39:04.252Z",
+      "totalViolations": 15,
+      "totalFiles": 965,
+      "bySeverity": {
+        "Warning": 11,
+        "Major": 4
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T02-23-12-443Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T02:23:12.443Z",
+      "totalViolations": 14,
+      "totalFiles": 1043,
+      "bySeverity": {
+        "Major": 1,
+        "Warning": 13
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-quality-enhanced-2026-07-17T16-28-26-754Z.json",
+      "scriptName": "audit-quality-enhanced",
+      "timestamp": "2026-07-17T16:28:26.753Z",
+      "totalViolations": 14,
+      "totalFiles": 2,
+      "bySeverity": {
+        "Minor": 1,
+        "Warning": 11,
+        "Major": 1,
+        "Critical": 1
+      },
+      "byRule": {
+        "norm:interface-prefix": 1,
+        "smell:boolean-param": 1,
+        "norm:var-keyword": 1,
+        "smell:nested-ternary": 1,
+        "sec:regex-injection": 1,
+        "sec:open-redirect": 1,
+        "defect:switch-fallthrough": 1,
+        "perf:array-method-chain": 1,
+        "perf:string-concat-in-loop": 1,
+        "smell:unused-var": 4,
+        "smell:todo-fixme": 1
+      }
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T01-57-34-994Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T01:57:34.991Z",
+      "totalViolations": 13,
+      "totalFiles": 1041,
+      "bySeverity": {
+        "Warning": 13
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T02-25-59-494Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T02:25:59.494Z",
+      "totalViolations": 13,
+      "totalFiles": 1043,
+      "bySeverity": {
+        "Warning": 13
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T12-47-16-448Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T12:47:16.445Z",
+      "totalViolations": 13,
+      "totalFiles": 1058,
+      "bySeverity": {
+        "Warning": 13
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T12-56-58-476Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T12:56:58.474Z",
+      "totalViolations": 13,
+      "totalFiles": 1058,
+      "bySeverity": {
+        "Warning": 13
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T13-18-41-589Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T13:18:41.587Z",
+      "totalViolations": 13,
+      "totalFiles": 1065,
+      "bySeverity": {
+        "Warning": 13
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-atomic-2026-07-15T02-11-40-286Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-15T02:11:40.284Z",
+      "totalViolations": 12,
+      "totalFiles": 146,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 12
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-15T02-52-06-897Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-15T02:52:06.896Z",
+      "totalViolations": 12,
+      "totalFiles": 146,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 12
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-15T02-54-26-004Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-15T02:54:26.004Z",
+      "totalViolations": 12,
+      "totalFiles": 146,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 12
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-15T02-56-23-840Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-15T02:56:23.840Z",
+      "totalViolations": 12,
+      "totalFiles": 146,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 12
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-15T03-00-26-406Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-15T03:00:26.406Z",
+      "totalViolations": 12,
+      "totalFiles": 146,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 12
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-15T03-06-21-820Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-15T03:06:21.820Z",
+      "totalViolations": 12,
+      "totalFiles": 146,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 12
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-15T03-08-33-673Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-15T03:08:33.673Z",
+      "totalViolations": 12,
+      "totalFiles": 146,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 12
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-15T12-45-22-126Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-15T12:45:22.123Z",
+      "totalViolations": 12,
+      "totalFiles": 146,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 12
+      }
+    },
+    {
+      "file": "audit-quality-enhanced-2026-07-17T16-27-08-430Z.json",
+      "scriptName": "audit-quality-enhanced",
+      "timestamp": "2026-07-17T16:27:08.429Z",
+      "totalViolations": 12,
+      "totalFiles": 2,
+      "bySeverity": {
+        "Minor": 1,
+        "Warning": 9,
+        "Major": 1,
+        "Critical": 1
+      },
+      "byRule": {
+        "norm:interface-prefix": 1,
+        "smell:boolean-param": 1,
+        "norm:var-keyword": 1,
+        "sec:regex-injection": 1,
+        "sec:open-redirect": 1,
+        "defect:switch-fallthrough": 1,
+        "perf:array-method-chain": 1,
+        "smell:unused-var": 4,
+        "smell:todo-fixme": 1
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-16T00-15-21-254Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-16T00:15:21.253Z",
+      "totalViolations": 6,
+      "totalFiles": 153,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 6
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-16T01-19-39-628Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-16T01:19:39.628Z",
+      "totalViolations": 6,
+      "totalFiles": 153,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 6
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-16T01-20-57-190Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-16T01:20:57.189Z",
+      "totalViolations": 6,
+      "totalFiles": 153,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 6
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-16T01-22-37-227Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-16T01:22:37.226Z",
+      "totalViolations": 6,
+      "totalFiles": 153,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 6
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-16T13-06-15-350Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-16T13:06:15.349Z",
+      "totalViolations": 6,
+      "totalFiles": 153,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 6
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-16T13-11-56-860Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-16T13:11:56.859Z",
+      "totalViolations": 6,
+      "totalFiles": 153,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 6
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-16T13-20-52-708Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-16T13:20:52.708Z",
+      "totalViolations": 6,
+      "totalFiles": 153,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 6
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-16T13-24-27-142Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-16T13:24:27.142Z",
+      "totalViolations": 6,
+      "totalFiles": 153,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 6
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-16T13-26-13-190Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-16T13:26:13.190Z",
+      "totalViolations": 6,
+      "totalFiles": 153,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 6
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-16T13-31-16-450Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-16T13:31:16.450Z",
+      "totalViolations": 6,
+      "totalFiles": 153,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 6
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-16T13-46-39-474Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-16T13:46:39.474Z",
+      "totalViolations": 6,
+      "totalFiles": 153,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 6
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-16T14-14-46-612Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-16T14:14:46.612Z",
+      "totalViolations": 6,
+      "totalFiles": 153,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 6
+      }
+    },
+    {
+      "file": "audit-quality-enhanced-2026-07-17T16-09-07-992Z.json",
+      "scriptName": "audit-quality-enhanced",
+      "timestamp": "2026-07-17T16:09:07.990Z",
+      "totalViolations": 6,
+      "totalFiles": 26,
+      "bySeverity": {
+        "Warning": 5,
+        "Major": 1
+      },
+      "byRule": {
+        "smell:deep-nesting": 2,
+        "defect:empty-catch": 1,
+        "smell:hooks-missing-deps": 3
+      }
+    },
+    {
+      "file": "audit-quality-enhanced-2026-07-17T16-15-09-233Z.json",
+      "scriptName": "audit-quality-enhanced",
+      "timestamp": "2026-07-17T16:15:09.231Z",
+      "totalViolations": 6,
+      "totalFiles": 26,
+      "bySeverity": {
+        "Warning": 5,
+        "Major": 1
+      },
+      "byRule": {
+        "smell:deep-nesting": 2,
+        "defect:empty-catch": 1,
+        "smell:hooks-missing-deps": 3
+      }
+    },
+    {
+      "file": "audit-doc-sync-2026-07-16T14-06-55-199Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-16T14:06:55.199Z",
+      "totalViolations": 5,
+      "totalFiles": 793,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-16T14-17-00-934Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-16T14:17:00.933Z",
+      "totalViolations": 5,
+      "totalFiles": 793,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-16T14-17-15-859Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-16T14:17:15.858Z",
+      "totalViolations": 5,
+      "totalFiles": 793,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-16T14-19-24-027Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-16T14:19:24.025Z",
+      "totalViolations": 5,
+      "totalFiles": 793,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-16T00-02-56-963Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-16T00:02:56.962Z",
+      "totalViolations": 5,
+      "totalFiles": 1102,
+      "bySeverity": {
+        "Critical": 4,
+        "Warning": 1
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-16T00-03-47-601Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-16T00:03:47.601Z",
+      "totalViolations": 5,
+      "totalFiles": 1102,
+      "bySeverity": {
+        "Critical": 4,
+        "Warning": 1
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-16T00-08-54-391Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-16T00:08:54.390Z",
+      "totalViolations": 5,
+      "totalFiles": 1105,
+      "bySeverity": {
+        "Major": 5
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-16T00-18-35-383Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-16T00:18:35.382Z",
+      "totalViolations": 5,
+      "totalFiles": 1109,
+      "bySeverity": {
+        "Major": 5
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T23-51-07-538Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T23:51:07.537Z",
+      "totalViolations": 4,
+      "totalFiles": 1102,
+      "bySeverity": {
+        "Critical": 4
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-14T00-46-32-348Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-14T00:46:32.348Z",
+      "totalViolations": 3,
+      "totalFiles": 6,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T01-41-51-536Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T01:41:51.536Z",
+      "totalViolations": 3,
+      "totalFiles": 997,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T01-41-56-198Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T01:41:56.197Z",
+      "totalViolations": 3,
+      "totalFiles": 997,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T01-42-11-923Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T01:42:11.923Z",
+      "totalViolations": 3,
+      "totalFiles": 997,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T01-42-22-291Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T01:42:22.290Z",
+      "totalViolations": 3,
+      "totalFiles": 997,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T01-42-51-802Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T01:42:51.802Z",
+      "totalViolations": 3,
+      "totalFiles": 997,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T01-43-00-441Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T01:43:00.440Z",
+      "totalViolations": 3,
+      "totalFiles": 997,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T01-53-45-812Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T01:53:45.811Z",
+      "totalViolations": 3,
+      "totalFiles": 1001,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T01-53-51-107Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T01:53:51.107Z",
+      "totalViolations": 3,
+      "totalFiles": 1001,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T01-55-08-753Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T01:55:08.753Z",
+      "totalViolations": 3,
+      "totalFiles": 1001,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T17-13-04-682Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T17:13:04.682Z",
+      "totalViolations": 2,
+      "totalFiles": 1090,
+      "bySeverity": {
+        "Major": 1,
+        "Warning": 1
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T17-22-08-918Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T17:22:08.916Z",
+      "totalViolations": 2,
+      "totalFiles": 1090,
+      "bySeverity": {
+        "Major": 1,
+        "Warning": 1
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-quality-enhanced-2026-07-17T16-08-45-885Z.json",
+      "scriptName": "audit-quality-enhanced",
+      "timestamp": "2026-07-17T16:08:45.884Z",
+      "totalViolations": 2,
+      "totalFiles": 2,
+      "bySeverity": {
+        "Minor": 2
+      },
+      "byRule": {
+        "arch:orphan-module": 2
+      }
+    },
+    {
+      "file": "audit-token-consumption-2026-07-16T13-22-43-362Z.json",
+      "scriptName": "audit-token-consumption",
+      "timestamp": "2026-07-16T13:22:43.361Z",
+      "totalViolations": 2,
+      "totalFiles": 4,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-atomic-2026-07-14T00-46-30-508Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-14T00:46:30.508Z",
+      "totalViolations": 1,
+      "totalFiles": 135,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 1
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-14T00-47-37-412Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-14T00:47:37.411Z",
+      "totalViolations": 1,
+      "totalFiles": 135,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 1
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-14T00-48-02-031Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-14T00:48:02.030Z",
+      "totalViolations": 1,
+      "totalFiles": 135,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 1
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-14T00-51-23-077Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-14T00:51:23.076Z",
+      "totalViolations": 1,
+      "totalFiles": 135,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 1
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-14T00-58-01-929Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-14T00:58:01.928Z",
+      "totalViolations": 1,
+      "totalFiles": 135,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 1
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-14T01-55-24-164Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-14T01:55:24.164Z",
+      "totalViolations": 1,
+      "totalFiles": 135,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 1
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-14T01-57-13-721Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-14T01:57:13.720Z",
+      "totalViolations": 1,
+      "totalFiles": 135,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 1
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-14T01-58-51-738Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-14T01:58:51.738Z",
+      "totalViolations": 1,
+      "totalFiles": 135,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 1
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-15T22-26-16-114Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-15T22:26:16.113Z",
+      "totalViolations": 1,
+      "totalFiles": 147,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 1
+      }
+    },
+    {
+      "file": "audit-atomic-2026-07-15T22-27-20-431Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-15T22:27:20.431Z",
+      "totalViolations": 1,
+      "totalFiles": 147,
+      "bySeverity": null,
+      "byRule": {
+        "unregistered": 1
+      }
+    },
+    {
+      "file": "audit-doc-sync-2026-07-14T04-51-38-740Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-14T04:51:38.734Z",
+      "totalViolations": 1,
+      "totalFiles": 19,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-14T04-54-12-443Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-14T04:54:12.441Z",
+      "totalViolations": 1,
+      "totalFiles": 19,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-14T13-16-20-322Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-14T13:16:20.320Z",
+      "totalViolations": 1,
+      "totalFiles": 19,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-14T13-32-29-358Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-14T13:32:29.356Z",
+      "totalViolations": 1,
+      "totalFiles": 19,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-14T13-48-28-087Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-14T13:48:28.087Z",
+      "totalViolations": 1,
+      "totalFiles": 19,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-14T14-01-20-928Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-14T14:01:20.926Z",
+      "totalViolations": 1,
+      "totalFiles": 19,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T00-13-13-275Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T00:13:13.274Z",
+      "totalViolations": 1,
+      "totalFiles": 19,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T00-26-08-612Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T00:26:08.612Z",
+      "totalViolations": 1,
+      "totalFiles": 19,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T00-44-45-628Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T00:44:45.627Z",
+      "totalViolations": 1,
+      "totalFiles": 19,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T01-27-32-230Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T01:27:32.228Z",
+      "totalViolations": 1,
+      "totalFiles": 751,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-17T09-27-05-970Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-17T09:27:05.969Z",
+      "totalViolations": 1,
+      "totalFiles": 796,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-17T09-39-48-147Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-17T09:39:48.146Z",
+      "totalViolations": 1,
+      "totalFiles": 797,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-17T10-27-39-893Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-17T10:27:39.890Z",
+      "totalViolations": 1,
+      "totalFiles": 797,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T22-53-21-200Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T22:53:21.200Z",
+      "totalViolations": 1,
+      "totalFiles": 1098,
+      "bySeverity": {
+        "Major": 1
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-16T00-05-18-842Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-16T00:05:18.841Z",
+      "totalViolations": 1,
+      "totalFiles": 1102,
+      "bySeverity": {
+        "Warning": 1
+      },
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-14T00-44-46-346Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-14T00:44:46.346Z",
+      "totalViolations": 1,
+      "totalFiles": 921,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T01-55-23-379Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T01:55:23.379Z",
+      "totalViolations": 1,
+      "totalFiles": 1001,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T23-58-51-755Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T23:58:51.754Z",
+      "totalViolations": 1,
+      "totalFiles": 1057,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "directory-audit-2026-07-15T22-38-59-261Z.json",
+      "scriptName": "directory-audit",
+      "timestamp": "2026-07-15T22:38:59.261Z",
+      "totalViolations": 1,
+      "totalFiles": 22,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "directory-audit-2026-07-16T14-16-25-354Z.json",
+      "scriptName": "directory-audit",
+      "timestamp": "2026-07-16T14:16:25.353Z",
+      "totalViolations": 1,
+      "totalFiles": 22,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "verify-all-routes-2026-07-14T04-46-30-235Z.json",
+      "scriptName": "verify-all-routes",
+      "timestamp": "2026-07-14T04:46:30.231Z",
+      "totalViolations": 1,
+      "totalFiles": 64,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "verify-all-routes-2026-07-14T13-36-39-413Z.json",
+      "scriptName": "verify-all-routes",
+      "timestamp": "2026-07-14T13:36:39.412Z",
+      "totalViolations": 1,
+      "totalFiles": 64,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "verify-all-routes-2026-07-15T12-45-23-147Z.json",
+      "scriptName": "verify-all-routes",
+      "timestamp": "2026-07-15T12:45:23.145Z",
+      "totalViolations": 1,
+      "totalFiles": 64,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-atomic-2026-07-15T12-47-01-572Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-15T12:47:01.571Z",
+      "totalViolations": 0,
+      "totalFiles": 146,
+      "bySeverity": null,
+      "byRule": {}
+    },
+    {
+      "file": "audit-atomic-2026-07-15T12-52-56-234Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-15T12:52:56.232Z",
+      "totalViolations": 0,
+      "totalFiles": 146,
+      "bySeverity": null,
+      "byRule": {}
+    },
+    {
+      "file": "audit-atomic-2026-07-15T17-13-00-372Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-15T17:13:00.371Z",
+      "totalViolations": 0,
+      "totalFiles": 146,
+      "bySeverity": null,
+      "byRule": {}
+    },
+    {
+      "file": "audit-atomic-2026-07-15T17-30-46-161Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-15T17:30:46.160Z",
+      "totalViolations": 0,
+      "totalFiles": 146,
+      "bySeverity": null,
+      "byRule": {}
+    },
+    {
+      "file": "audit-atomic-2026-07-15T17-32-48-147Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-15T17:32:48.146Z",
+      "totalViolations": 0,
+      "totalFiles": 146,
+      "bySeverity": null,
+      "byRule": {}
+    },
+    {
+      "file": "audit-atomic-2026-07-15T21-50-43-795Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-15T21:50:43.795Z",
+      "totalViolations": 0,
+      "totalFiles": 146,
+      "bySeverity": null,
+      "byRule": {}
+    },
+    {
+      "file": "audit-atomic-2026-07-15T21-55-56-459Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-15T21:55:56.458Z",
+      "totalViolations": 0,
+      "totalFiles": 146,
+      "bySeverity": null,
+      "byRule": {}
+    },
+    {
+      "file": "audit-atomic-2026-07-15T21-58-42-655Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-15T21:58:42.654Z",
+      "totalViolations": 0,
+      "totalFiles": 146,
+      "bySeverity": null,
+      "byRule": {}
+    },
+    {
+      "file": "audit-atomic-2026-07-15T22-29-15-222Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-15T22:29:15.221Z",
+      "totalViolations": 0,
+      "totalFiles": 147,
+      "bySeverity": null,
+      "byRule": {}
+    },
+    {
+      "file": "audit-atomic-2026-07-15T23-38-51-598Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-15T23:38:51.597Z",
+      "totalViolations": 0,
+      "totalFiles": 147,
+      "bySeverity": null,
+      "byRule": {}
+    },
+    {
+      "file": "audit-atomic-2026-07-16T00-03-21-995Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-16T00:03:21.995Z",
+      "totalViolations": 0,
+      "totalFiles": 147,
+      "bySeverity": null,
+      "byRule": {}
+    },
+    {
+      "file": "audit-atomic-2026-07-16T15-09-47-289Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-16T15:09:47.289Z",
+      "totalViolations": 0,
+      "totalFiles": 154,
+      "bySeverity": null,
+      "byRule": {}
+    },
+    {
+      "file": "audit-atomic-2026-07-16T15-32-27-850Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-16T15:32:27.850Z",
+      "totalViolations": 0,
+      "totalFiles": 180,
+      "bySeverity": null,
+      "byRule": {}
+    },
+    {
+      "file": "audit-atomic-2026-07-17T15-56-22-635Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-17T15:56:22.634Z",
+      "totalViolations": 0,
+      "totalFiles": 180,
+      "bySeverity": null,
+      "byRule": {}
+    },
+    {
+      "file": "audit-atomic-2026-07-17T16-05-01-879Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-17T16:05:01.879Z",
+      "totalViolations": 0,
+      "totalFiles": 180,
+      "bySeverity": null,
+      "byRule": {}
+    },
+    {
+      "file": "audit-atomic-2026-07-17T16-17-47-038Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-17T16:17:47.038Z",
+      "totalViolations": 0,
+      "totalFiles": 180,
+      "bySeverity": null,
+      "byRule": {}
+    },
+    {
+      "file": "audit-atomic-2026-07-17T16-20-56-913Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-17T16:20:56.912Z",
+      "totalViolations": 0,
+      "totalFiles": 180,
+      "bySeverity": null,
+      "byRule": {}
+    },
+    {
+      "file": "audit-atomic-2026-07-17T16-25-00-863Z.json",
+      "scriptName": "audit-atomic",
+      "timestamp": "2026-07-17T16:25:00.863Z",
+      "totalViolations": 0,
+      "totalFiles": 180,
+      "bySeverity": null,
+      "byRule": {}
+    },
+    {
+      "file": "audit-dead-code-2026-07-14T04-51-32-581Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-14T04:51:32.578Z",
+      "totalViolations": 0,
+      "totalFiles": 966,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-14T04-53-23-244Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-14T04:53:23.242Z",
+      "totalViolations": 0,
+      "totalFiles": 966,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T00-13-09-796Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T00:13:09.761Z",
+      "totalViolations": 0,
+      "totalFiles": 1004,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T00-14-08-217Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T00:14:08.215Z",
+      "totalViolations": 0,
+      "totalFiles": 1004,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T00-14-32-297Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T00:14:32.295Z",
+      "totalViolations": 0,
+      "totalFiles": 1004,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T00-14-37-682Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T00:14:37.651Z",
+      "totalViolations": 0,
+      "totalFiles": 1004,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T00-14-52-926Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T00:14:52.924Z",
+      "totalViolations": 0,
+      "totalFiles": 1004,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T00-26-00-631Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T00:26:00.629Z",
+      "totalViolations": 0,
+      "totalFiles": 1004,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T00-51-41-749Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T00:51:41.741Z",
+      "totalViolations": 0,
+      "totalFiles": 1011,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T01-19-13-446Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T01:19:13.441Z",
+      "totalViolations": 0,
+      "totalFiles": 1023,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T01-29-31-719Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T01:29:31.714Z",
+      "totalViolations": 0,
+      "totalFiles": 1035,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T01-35-53-235Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T01:35:53.225Z",
+      "totalViolations": 0,
+      "totalFiles": 1035,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T01-43-16-948Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T01:43:16.938Z",
+      "totalViolations": 0,
+      "totalFiles": 1036,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T01-58-09-831Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T01:58:09.827Z",
+      "totalViolations": 0,
+      "totalFiles": 1043,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T02-02-15-847Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T02:02:15.844Z",
+      "totalViolations": 0,
+      "totalFiles": 1043,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T02-11-41-816Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T02:11:41.805Z",
+      "totalViolations": 0,
+      "totalFiles": 1043,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T13-18-54-068Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T13:18:53.964Z",
+      "totalViolations": 0,
+      "totalFiles": 1065,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T13-24-10-186Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T13:24:10.132Z",
+      "totalViolations": 0,
+      "totalFiles": 1065,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T13-25-53-050Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T13:25:53.005Z",
+      "totalViolations": 0,
+      "totalFiles": 1065,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T13-26-31-977Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T13:26:31.939Z",
+      "totalViolations": 0,
+      "totalFiles": 1065,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T14-41-56-990Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T14:41:56.953Z",
+      "totalViolations": 0,
+      "totalFiles": 1073,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T15-28-01-883Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T15:28:01.882Z",
+      "totalViolations": 0,
+      "totalFiles": 1080,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T15-29-04-869Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T15:29:04.868Z",
+      "totalViolations": 0,
+      "totalFiles": 1080,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T15-29-40-440Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T15:29:40.438Z",
+      "totalViolations": 0,
+      "totalFiles": 1080,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T15-32-27-063Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T15:32:27.062Z",
+      "totalViolations": 0,
+      "totalFiles": 1080,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T15-36-33-433Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T15:36:33.432Z",
+      "totalViolations": 0,
+      "totalFiles": 1080,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T15-37-35-843Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T15:37:35.841Z",
+      "totalViolations": 0,
+      "totalFiles": 1082,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T22-26-20-318Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T22:26:20.317Z",
+      "totalViolations": 0,
+      "totalFiles": 1095,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T22-28-08-369Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T22:28:08.369Z",
+      "totalViolations": 0,
+      "totalFiles": 1095,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T22-29-00-197Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T22:29:00.196Z",
+      "totalViolations": 0,
+      "totalFiles": 1095,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-15T22-55-11-037Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-15T22:55:11.036Z",
+      "totalViolations": 0,
+      "totalFiles": 1098,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-16T05-55-00-527Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-16T05:55:00.526Z",
+      "totalViolations": 0,
+      "totalFiles": 1109,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-16T13-39-32-649Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-16T13:39:32.649Z",
+      "totalViolations": 0,
+      "totalFiles": 1109,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-16T14-16-26-597Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-16T14:16:26.596Z",
+      "totalViolations": 0,
+      "totalFiles": 1109,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-dead-code-2026-07-17T10-16-32-846Z.json",
+      "scriptName": "audit-dead-code",
+      "timestamp": "2026-07-17T10:16:32.845Z",
+      "totalViolations": 0,
+      "totalFiles": 1118,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T00-14-47-762Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T00:14:47.762Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T00-15-05-494Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T00:15:05.495Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T00-18-15-090Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T00:18:15.090Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T00-19-50-081Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T00:19:50.082Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T00-21-35-846Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T00:21:35.847Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T00-22-37-041Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T00:22:37.042Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T00-23-32-755Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T00:23:32.755Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T00-23-50-931Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T00:23:50.931Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T00-25-30-355Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T00:25:30.355Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T00-26-04-005Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T00:26:04.005Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T00-39-51-700Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T00:39:51.700Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T00-45-06-063Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T00:45:06.063Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T00-52-22-510Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T00:52:22.510Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T01-03-43-958Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T01:03:43.959Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T01-08-02-331Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T01:08:02.331Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T01-10-03-660Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T01:10:03.661Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T01-13-21-596Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T01:13:21.596Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T01-25-42-093Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T01:25:42.094Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T01-30-18-746Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T01:30:18.747Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T01-42-17-827Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T01:42:17.827Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T01-45-24-454Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T01:45:24.454Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T02-17-32-013Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T02:17:32.014Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T02-17-40-838Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T02:17:40.838Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T02-20-47-496Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T02:20:47.497Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T02-31-22-460Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T02:31:22.460Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T02-35-30-727Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T02:35:30.728Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T02-39-40-967Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T02:39:40.967Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T02-44-21-058Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T02:44:21.058Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T02-50-07-904Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T02:50:07.904Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T02-53-30-852Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T02:53:30.853Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T02-55-51-445Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T02:55:51.446Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T02-56-02-617Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T02:56:02.618Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T22-29-11-584Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T22:29:11.585Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T22-29-40-254Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T22:29:40.254Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T22-30-28-816Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T22:30:28.816Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T22-32-32-527Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T22:32:32.527Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T22-33-51-470Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T22:33:51.470Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T22-34-37-384Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T22:34:37.385Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T22-38-01-732Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T22:38:01.732Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T22-38-32-326Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T22:38:32.327Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T22-39-26-161Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T22:39:26.162Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T22-47-28-416Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T22:47:28.416Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T22-51-06-453Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T22:51:06.454Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T22-53-21-654Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T22:53:21.654Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T22-55-17-618Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T22:55:17.619Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T22-55-57-875Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T22:55:57.875Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T22-57-31-181Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T22:57:31.182Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T22-58-00-610Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T22:58:00.610Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T23-01-09-994Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T23:01:09.995Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T23-04-16-482Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T23:04:16.483Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T23-07-27-802Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T23:07:27.803Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T23-10-56-575Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T23:10:56.575Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T23-15-50-498Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T23:15:50.499Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T23-17-28-130Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T23:17:28.131Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T23-20-26-955Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T23:20:26.956Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T23-38-25-836Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T23:38:25.837Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T23-48-47-616Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T23:48:47.616Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T23-49-49-429Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T23:49:49.429Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T23-50-05-821Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T23:50:05.821Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T23-52-11-311Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T23:52:11.311Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T23-57-47-680Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T23:57:47.680Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-15T23-58-53-084Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-15T23:58:53.084Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-16T00-01-43-307Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-16T00:01:43.307Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-code-references-2026-07-16T00-03-01-474Z.json",
+      "scriptName": "audit-doc-code-references",
+      "timestamp": "2026-07-16T00:03:01.474Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-14T00-47-38-634Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-14T00:47:38.634Z",
+      "totalViolations": 0,
+      "totalFiles": 6,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-14T00-58-05-260Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-14T00:58:05.259Z",
+      "totalViolations": 0,
+      "totalFiles": 6,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-14T01-57-17-668Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-14T01:57:17.668Z",
+      "totalViolations": 0,
+      "totalFiles": 6,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-14T01-58-56-049Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-14T01:58:56.049Z",
+      "totalViolations": 0,
+      "totalFiles": 6,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T00-47-09-298Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T00:47:09.297Z",
+      "totalViolations": 0,
+      "totalFiles": 19,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T00-47-43-636Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T00:47:43.636Z",
+      "totalViolations": 0,
+      "totalFiles": 19,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T00-51-44-949Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T00:51:44.948Z",
+      "totalViolations": 0,
+      "totalFiles": 19,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T00-55-26-584Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T00:55:26.583Z",
+      "totalViolations": 0,
+      "totalFiles": 19,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T01-29-07-369Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T01:29:07.365Z",
+      "totalViolations": 0,
+      "totalFiles": 751,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T01-30-51-201Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T01:30:51.200Z",
+      "totalViolations": 0,
+      "totalFiles": 751,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T01-37-03-729Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T01:37:03.728Z",
+      "totalViolations": 0,
+      "totalFiles": 751,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T01-58-37-956Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T01:58:37.955Z",
+      "totalViolations": 0,
+      "totalFiles": 756,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T02-02-19-382Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T02:02:19.381Z",
+      "totalViolations": 0,
+      "totalFiles": 5,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T02-11-46-142Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T02:11:46.141Z",
+      "totalViolations": 0,
+      "totalFiles": 5,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T02-17-08-865Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T02:17:08.864Z",
+      "totalViolations": 0,
+      "totalFiles": 5,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T02-36-13-485Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T02:36:13.485Z",
+      "totalViolations": 0,
+      "totalFiles": 5,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T02-51-20-278Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T02:51:20.278Z",
+      "totalViolations": 0,
+      "totalFiles": 5,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T02-53-39-236Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T02:53:39.236Z",
+      "totalViolations": 0,
+      "totalFiles": 5,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T02-54-32-999Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T02:54:32.999Z",
+      "totalViolations": 0,
+      "totalFiles": 5,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T02-56-38-137Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T02:56:38.137Z",
+      "totalViolations": 0,
+      "totalFiles": 148,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T03-00-57-246Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T03:00:57.245Z",
+      "totalViolations": 0,
+      "totalFiles": 756,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T03-06-53-297Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T03:06:53.297Z",
+      "totalViolations": 0,
+      "totalFiles": 756,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T03-09-05-371Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T03:09:05.371Z",
+      "totalViolations": 0,
+      "totalFiles": 756,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T13-28-03-861Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T13:28:03.860Z",
+      "totalViolations": 0,
+      "totalFiles": 762,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T17-13-28-917Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T17:13:28.917Z",
+      "totalViolations": 0,
+      "totalFiles": 0,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T21-56-03-018Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T21:56:03.017Z",
+      "totalViolations": 0,
+      "totalFiles": 0,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T21-58-49-103Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T21:58:49.103Z",
+      "totalViolations": 0,
+      "totalFiles": 0,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T22-26-16-252Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T22:26:16.251Z",
+      "totalViolations": 0,
+      "totalFiles": 6,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T22-28-10-327Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T22:28:10.326Z",
+      "totalViolations": 0,
+      "totalFiles": 6,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T22-29-01-092Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T22:29:01.092Z",
+      "totalViolations": 0,
+      "totalFiles": 6,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-15T22-58-50-369Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-15T22:58:50.369Z",
+      "totalViolations": 0,
+      "totalFiles": 6,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-16T00-02-46-204Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-16T00:02:46.204Z",
+      "totalViolations": 0,
+      "totalFiles": 6,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-16T00-14-40-812Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-16T00:14:40.812Z",
+      "totalViolations": 0,
+      "totalFiles": 6,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-16T01-22-44-449Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-16T01:22:44.449Z",
+      "totalViolations": 0,
+      "totalFiles": 6,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-16T05-55-02-756Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-16T05:55:02.756Z",
+      "totalViolations": 0,
+      "totalFiles": 12,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-16T13-24-34-937Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-16T13:24:34.937Z",
+      "totalViolations": 0,
+      "totalFiles": 12,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-16T13-28-28-932Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-16T13:28:28.932Z",
+      "totalViolations": 0,
+      "totalFiles": 2,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-16T13-28-28-933Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-16T13:28:28.931Z",
+      "totalViolations": 0,
+      "totalFiles": 2,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-16T13-31-24-723Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-16T13:31:24.722Z",
+      "totalViolations": 0,
+      "totalFiles": 2,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-16T14-54-19-077Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-16T14:54:19.076Z",
+      "totalViolations": 0,
+      "totalFiles": 793,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-17T11-46-44-039Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-17T11:46:44.038Z",
+      "totalViolations": 0,
+      "totalFiles": 797,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-17T16-05-45-575Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-17T16:05:45.575Z",
+      "totalViolations": 0,
+      "totalFiles": 797,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-17T16-19-05-309Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-17T16:19:05.309Z",
+      "totalViolations": 0,
+      "totalFiles": 797,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-doc-sync-2026-07-17T16-21-41-548Z.json",
+      "scriptName": "audit-doc-sync",
+      "timestamp": "2026-07-17T16:21:41.548Z",
+      "totalViolations": 0,
+      "totalFiles": 797,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T13-23-22-964Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T13:23:22.961Z",
+      "totalViolations": 0,
+      "totalFiles": 1065,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T17-30-07-757Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T17:30:07.755Z",
+      "totalViolations": 0,
+      "totalFiles": 1094,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T17-32-48-556Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T17:32:48.311Z",
+      "totalViolations": 0,
+      "totalFiles": 1094,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T21-48-21-019Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T21:48:21.018Z",
+      "totalViolations": 0,
+      "totalFiles": 1094,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T22-26-15-020Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T22:26:15.017Z",
+      "totalViolations": 0,
+      "totalFiles": 1095,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T22-28-07-772Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T22:28:07.771Z",
+      "totalViolations": 0,
+      "totalFiles": 1095,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T22-29-00-180Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T22:29:00.179Z",
+      "totalViolations": 0,
+      "totalFiles": 1095,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T22-55-00-125Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T22:55:00.125Z",
+      "totalViolations": 0,
+      "totalFiles": 1098,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T23-01-48-624Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T23:01:48.624Z",
+      "totalViolations": 0,
+      "totalFiles": 1098,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T23-20-00-890Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T23:20:00.889Z",
+      "totalViolations": 0,
+      "totalFiles": 1102,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T23-22-03-194Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T23:22:03.194Z",
+      "totalViolations": 0,
+      "totalFiles": 1102,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T23-33-09-934Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T23:33:09.933Z",
+      "totalViolations": 0,
+      "totalFiles": 1102,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T23-40-28-699Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T23:40:28.698Z",
+      "totalViolations": 0,
+      "totalFiles": 1102,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T23-42-13-587Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T23:42:13.586Z",
+      "totalViolations": 0,
+      "totalFiles": 1102,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T23-43-26-075Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T23:43:26.074Z",
+      "totalViolations": 0,
+      "totalFiles": 1102,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-15T23-49-02-253Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-15T23:49:02.253Z",
+      "totalViolations": 0,
+      "totalFiles": 1102,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-16T00-07-09-544Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-16T00:07:09.544Z",
+      "totalViolations": 0,
+      "totalFiles": 1102,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-16T00-29-56-755Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-16T00:29:56.754Z",
+      "totalViolations": 0,
+      "totalFiles": 1109,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-16T05-54-58-454Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-16T05:54:58.452Z",
+      "totalViolations": 0,
+      "totalFiles": 1109,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-16T13-38-20-875Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-16T13:38:20.874Z",
+      "totalViolations": 0,
+      "totalFiles": 1109,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-16T14-16-26-042Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-16T14:16:26.042Z",
+      "totalViolations": 0,
+      "totalFiles": 1109,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-16T14-18-15-463Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-16T14:18:15.462Z",
+      "totalViolations": 0,
+      "totalFiles": 1109,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-17T10-16-23-932Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-17T10:16:23.931Z",
+      "totalViolations": 0,
+      "totalFiles": 1118,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-17T10-29-22-005Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-17T10:29:22.005Z",
+      "totalViolations": 0,
+      "totalFiles": 1118,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-17T10-49-24-848Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-17T10:49:24.848Z",
+      "totalViolations": 0,
+      "totalFiles": 1118,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-17T11-46-15-340Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-17T11:46:15.340Z",
+      "totalViolations": 0,
+      "totalFiles": 1118,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-17T11-54-19-078Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-17T11:54:19.078Z",
+      "totalViolations": 0,
+      "totalFiles": 1118,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-hardcode-2026-07-17T11-59-38-448Z.json",
+      "scriptName": "audit-hardcode",
+      "timestamp": "2026-07-17T11:59:38.447Z",
+      "totalViolations": 0,
+      "totalFiles": 1118,
+      "bySeverity": {},
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-14T00-46-29-943Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-14T00:46:29.941Z",
+      "totalViolations": 0,
+      "totalFiles": 921,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-14T00-47-36-730Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-14T00:47:36.728Z",
+      "totalViolations": 0,
+      "totalFiles": 921,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-14T00-48-01-238Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-14T00:48:01.237Z",
+      "totalViolations": 0,
+      "totalFiles": 921,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-14T00-51-22-353Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-14T00:51:22.353Z",
+      "totalViolations": 0,
+      "totalFiles": 922,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-14T00-58-01-225Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-14T00:58:01.225Z",
+      "totalViolations": 0,
+      "totalFiles": 922,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-14T01-55-23-490Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-14T01:55:23.490Z",
+      "totalViolations": 0,
+      "totalFiles": 926,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-14T01-57-13-057Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-14T01:57:13.056Z",
+      "totalViolations": 0,
+      "totalFiles": 926,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-14T01-58-50-966Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-14T01:58:50.966Z",
+      "totalViolations": 0,
+      "totalFiles": 926,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-14T04-46-26-072Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-14T04:46:26.070Z",
+      "totalViolations": 0,
+      "totalFiles": 926,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-14T04-51-29-554Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-14T04:51:29.552Z",
+      "totalViolations": 0,
+      "totalFiles": 927,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-14T04-53-20-390Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-14T04:53:20.388Z",
+      "totalViolations": 0,
+      "totalFiles": 927,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-14T13-09-55-578Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-14T13:09:55.576Z",
+      "totalViolations": 0,
+      "totalFiles": 926,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-14T13-32-39-115Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-14T13:32:39.113Z",
+      "totalViolations": 0,
+      "totalFiles": 926,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-14T13-36-37-661Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-14T13:36:37.659Z",
+      "totalViolations": 0,
+      "totalFiles": 926,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-14T14-01-16-816Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-14T14:01:16.815Z",
+      "totalViolations": 0,
+      "totalFiles": 929,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T00-13-09-750Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T00:13:09.750Z",
+      "totalViolations": 0,
+      "totalFiles": 965,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T00-18-30-567Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T00:18:30.566Z",
+      "totalViolations": 0,
+      "totalFiles": 965,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T00-25-49-714Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T00:25:49.713Z",
+      "totalViolations": 0,
+      "totalFiles": 965,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T00-27-06-758Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T00:27:06.756Z",
+      "totalViolations": 0,
+      "totalFiles": 965,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T00-51-39-726Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T00:51:39.725Z",
+      "totalViolations": 0,
+      "totalFiles": 972,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T01-11-08-442Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T01:11:08.441Z",
+      "totalViolations": 0,
+      "totalFiles": 972,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T01-12-51-129Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T01:12:51.128Z",
+      "totalViolations": 0,
+      "totalFiles": 972,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T01-13-49-318Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T01:13:49.317Z",
+      "totalViolations": 0,
+      "totalFiles": 972,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T01-19-11-469Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T01:19:11.468Z",
+      "totalViolations": 0,
+      "totalFiles": 984,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T01-22-44-965Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T01:22:44.965Z",
+      "totalViolations": 0,
+      "totalFiles": 985,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T01-29-29-928Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T01:29:29.927Z",
+      "totalViolations": 0,
+      "totalFiles": 996,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T01-32-50-686Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T01:32:50.685Z",
+      "totalViolations": 0,
+      "totalFiles": 996,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T01-35-51-817Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T01:35:51.816Z",
+      "totalViolations": 0,
+      "totalFiles": 996,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T01-55-30-715Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T01:55:30.715Z",
+      "totalViolations": 0,
+      "totalFiles": 1001,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T01-55-42-155Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T01:55:42.155Z",
+      "totalViolations": 0,
+      "totalFiles": 1001,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T01-58-09-111Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T01:58:09.110Z",
+      "totalViolations": 0,
+      "totalFiles": 1003,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T02-02-12-352Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T02:02:12.351Z",
+      "totalViolations": 0,
+      "totalFiles": 1003,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T02-02-48-082Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T02:02:48.082Z",
+      "totalViolations": 0,
+      "totalFiles": 1003,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T02-11-39-834Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T02:11:39.833Z",
+      "totalViolations": 0,
+      "totalFiles": 1003,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T02-18-15-207Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T02:18:15.206Z",
+      "totalViolations": 0,
+      "totalFiles": 1003,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T02-50-35-475Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T02:50:35.474Z",
+      "totalViolations": 0,
+      "totalFiles": 1003,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T02-52-06-166Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T02:52:06.166Z",
+      "totalViolations": 0,
+      "totalFiles": 1003,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T02-54-25-266Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T02:54:25.265Z",
+      "totalViolations": 0,
+      "totalFiles": 1003,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T02-56-23-018Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T02:56:23.018Z",
+      "totalViolations": 0,
+      "totalFiles": 1003,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T03-00-25-671Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T03:00:25.671Z",
+      "totalViolations": 0,
+      "totalFiles": 1003,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T03-06-21-107Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T03:06:21.107Z",
+      "totalViolations": 0,
+      "totalFiles": 1003,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T03-08-32-942Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T03:08:32.942Z",
+      "totalViolations": 0,
+      "totalFiles": 1003,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T13-18-47-602Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T13:18:47.601Z",
+      "totalViolations": 0,
+      "totalFiles": 1025,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T13-20-17-414Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T13:20:17.412Z",
+      "totalViolations": 0,
+      "totalFiles": 1025,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T14-32-01-066Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T14:32:01.064Z",
+      "totalViolations": 0,
+      "totalFiles": 1033,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T15-14-15-570Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T15:14:15.568Z",
+      "totalViolations": 0,
+      "totalFiles": 1040,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T15-43-48-094Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T15:43:48.093Z",
+      "totalViolations": 0,
+      "totalFiles": 1045,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T15-44-49-941Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T15:44:49.940Z",
+      "totalViolations": 0,
+      "totalFiles": 1045,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T16-05-31-245Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T16:05:31.191Z",
+      "totalViolations": 0,
+      "totalFiles": 1047,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T16-16-42-013Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T16:16:42.011Z",
+      "totalViolations": 0,
+      "totalFiles": 1050,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T16-22-25-732Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T16:22:25.730Z",
+      "totalViolations": 0,
+      "totalFiles": 1050,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T16-35-37-940Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T16:35:37.938Z",
+      "totalViolations": 0,
+      "totalFiles": 1050,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T17-02-45-593Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T17:02:45.591Z",
+      "totalViolations": 0,
+      "totalFiles": 1050,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T17-13-04-484Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T17:13:04.484Z",
+      "totalViolations": 0,
+      "totalFiles": 1050,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T17-30-45-961Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T17:30:45.961Z",
+      "totalViolations": 0,
+      "totalFiles": 1050,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T17-32-48-216Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T17:32:48.216Z",
+      "totalViolations": 0,
+      "totalFiles": 1050,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T21-48-20-838Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T21:48:20.838Z",
+      "totalViolations": 0,
+      "totalFiles": 1050,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T21-50-42-925Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T21:50:42.924Z",
+      "totalViolations": 0,
+      "totalFiles": 1050,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T21-55-55-679Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T21:55:55.679Z",
+      "totalViolations": 0,
+      "totalFiles": 1050,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T21-58-41-834Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T21:58:41.834Z",
+      "totalViolations": 0,
+      "totalFiles": 1050,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T22-02-26-196Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T22:02:26.196Z",
+      "totalViolations": 0,
+      "totalFiles": 1051,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T22-08-44-873Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T22:08:44.872Z",
+      "totalViolations": 0,
+      "totalFiles": 1051,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T22-16-02-577Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T22:16:02.577Z",
+      "totalViolations": 0,
+      "totalFiles": 1051,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T22-17-41-387Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T22:17:41.386Z",
+      "totalViolations": 0,
+      "totalFiles": 1051,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T22-20-37-204Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T22:20:37.203Z",
+      "totalViolations": 0,
+      "totalFiles": 1051,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T22-25-22-296Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T22:25:22.295Z",
+      "totalViolations": 0,
+      "totalFiles": 1050,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T22-26-19-129Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T22:26:19.127Z",
+      "totalViolations": 0,
+      "totalFiles": 1050,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T22-27-20-115Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T22:27:20.115Z",
+      "totalViolations": 0,
+      "totalFiles": 1050,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T22-28-06-877Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T22:28:06.874Z",
+      "totalViolations": 0,
+      "totalFiles": 1050,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T22-28-59-999Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T22:28:59.998Z",
+      "totalViolations": 0,
+      "totalFiles": 1050,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T22-30-33-229Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T22:30:33.227Z",
+      "totalViolations": 0,
+      "totalFiles": 1050,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T22-40-16-668Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T22:40:15.875Z",
+      "totalViolations": 0,
+      "totalFiles": 1052,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T22-41-10-035Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T22:41:10.032Z",
+      "totalViolations": 0,
+      "totalFiles": 1052,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T22-43-26-831Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T22:43:26.830Z",
+      "totalViolations": 0,
+      "totalFiles": 1052,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T22-51-28-983Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T22:51:28.981Z",
+      "totalViolations": 0,
+      "totalFiles": 1053,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T23-01-35-468Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T23:01:35.433Z",
+      "totalViolations": 0,
+      "totalFiles": 1053,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T23-01-47-809Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T23:01:47.808Z",
+      "totalViolations": 0,
+      "totalFiles": 1053,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T23-11-51-787Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T23:11:51.785Z",
+      "totalViolations": 0,
+      "totalFiles": 1056,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T23-15-22-836Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T23:15:22.835Z",
+      "totalViolations": 0,
+      "totalFiles": 1056,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T23-15-29-546Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T23:15:29.546Z",
+      "totalViolations": 0,
+      "totalFiles": 1056,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T23-17-01-538Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T23:17:01.537Z",
+      "totalViolations": 0,
+      "totalFiles": 1057,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T23-19-14-907Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T23:19:14.907Z",
+      "totalViolations": 0,
+      "totalFiles": 1057,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T23-22-02-865Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T23:22:02.864Z",
+      "totalViolations": 0,
+      "totalFiles": 1057,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T23-33-09-495Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T23:33:09.494Z",
+      "totalViolations": 0,
+      "totalFiles": 1057,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T23-38-50-732Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T23:38:50.732Z",
+      "totalViolations": 0,
+      "totalFiles": 1057,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T23-39-41-035Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T23:39:41.035Z",
+      "totalViolations": 0,
+      "totalFiles": 1057,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T23-41-49-045Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T23:41:49.044Z",
+      "totalViolations": 0,
+      "totalFiles": 1057,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T23-43-25-467Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T23:43:25.465Z",
+      "totalViolations": 0,
+      "totalFiles": 1057,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T23-45-14-931Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T23:45:14.931Z",
+      "totalViolations": 0,
+      "totalFiles": 1057,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T23-45-35-207Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T23:45:35.207Z",
+      "totalViolations": 0,
+      "totalFiles": 1057,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T23-47-23-375Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T23:47:23.374Z",
+      "totalViolations": 0,
+      "totalFiles": 1057,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T23-48-46-900Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T23:48:46.900Z",
+      "totalViolations": 0,
+      "totalFiles": 1057,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T23-50-22-997Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T23:50:22.997Z",
+      "totalViolations": 0,
+      "totalFiles": 1057,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-15T23-51-06-970Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-15T23:51:06.970Z",
+      "totalViolations": 0,
+      "totalFiles": 1057,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T00-01-03-882Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T00:01:03.881Z",
+      "totalViolations": 0,
+      "totalFiles": 1057,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T00-01-41-820Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T00:01:41.820Z",
+      "totalViolations": 0,
+      "totalFiles": 1057,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T00-02-55-983Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T00:02:55.981Z",
+      "totalViolations": 0,
+      "totalFiles": 1057,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T00-02-59-930Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T00:02:59.930Z",
+      "totalViolations": 0,
+      "totalFiles": 1057,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T00-03-46-619Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T00:03:46.619Z",
+      "totalViolations": 0,
+      "totalFiles": 1057,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T00-07-08-871Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T00:07:08.869Z",
+      "totalViolations": 0,
+      "totalFiles": 1057,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T00-15-20-541Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T00:15:20.540Z",
+      "totalViolations": 0,
+      "totalFiles": 1064,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T00-18-35-145Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T00:18:35.144Z",
+      "totalViolations": 0,
+      "totalFiles": 1064,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T01-19-38-820Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T01:19:38.818Z",
+      "totalViolations": 0,
+      "totalFiles": 1064,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T01-20-56-419Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T01:20:56.419Z",
+      "totalViolations": 0,
+      "totalFiles": 1064,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T01-22-36-485Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T01:22:36.485Z",
+      "totalViolations": 0,
+      "totalFiles": 1064,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T05-54-13-346Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T05:54:13.346Z",
+      "totalViolations": 0,
+      "totalFiles": 1064,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T11-46-54-154Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T11:46:54.153Z",
+      "totalViolations": 0,
+      "totalFiles": 1064,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T13-03-28-698Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T13:03:28.696Z",
+      "totalViolations": 0,
+      "totalFiles": 1064,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T13-06-14-457Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T13:06:14.457Z",
+      "totalViolations": 0,
+      "totalFiles": 1064,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T13-11-55-987Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T13:11:55.987Z",
+      "totalViolations": 0,
+      "totalFiles": 1064,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T13-14-45-990Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T13:14:45.990Z",
+      "totalViolations": 0,
+      "totalFiles": 1064,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T13-20-51-860Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T13:20:51.860Z",
+      "totalViolations": 0,
+      "totalFiles": 1064,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T13-22-08-479Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T13:22:08.478Z",
+      "totalViolations": 0,
+      "totalFiles": 1064,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T13-24-26-307Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T13:24:26.307Z",
+      "totalViolations": 0,
+      "totalFiles": 1064,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T13-26-12-371Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T13:26:12.371Z",
+      "totalViolations": 0,
+      "totalFiles": 1064,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T13-31-15-625Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T13:31:15.625Z",
+      "totalViolations": 0,
+      "totalFiles": 1064,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T13-46-38-617Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T13:46:38.616Z",
+      "totalViolations": 0,
+      "totalFiles": 1064,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T14-14-46-799Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T14:14:46.798Z",
+      "totalViolations": 0,
+      "totalFiles": 1064,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T14-16-24-942Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T14:16:24.941Z",
+      "totalViolations": 0,
+      "totalFiles": 1064,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T14-18-14-719Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T14:18:14.718Z",
+      "totalViolations": 0,
+      "totalFiles": 1064,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T14-58-35-002Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T14:58:35.001Z",
+      "totalViolations": 0,
+      "totalFiles": 1064,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-16T15-04-35-875Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-16T15:04:35.874Z",
+      "totalViolations": 0,
+      "totalFiles": 1065,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-17T10-16-15-549Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-17T10:16:15.548Z",
+      "totalViolations": 0,
+      "totalFiles": 1068,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-17T10-21-55-097Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-17T10:21:55.097Z",
+      "totalViolations": 0,
+      "totalFiles": 1068,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-17T10-29-21-320Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-17T10:29:21.320Z",
+      "totalViolations": 0,
+      "totalFiles": 1068,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-17T10-49-24-053Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-17T10:49:24.053Z",
+      "totalViolations": 0,
+      "totalFiles": 1068,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-17T11-46-14-643Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-17T11:46:14.642Z",
+      "totalViolations": 0,
+      "totalFiles": 1068,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-17T11-54-18-350Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-17T11:54:18.350Z",
+      "totalViolations": 0,
+      "totalFiles": 1068,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-17T11-59-37-681Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-17T11:59:37.680Z",
+      "totalViolations": 0,
+      "totalFiles": 1068,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-17T15-56-21-553Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-17T15:56:21.552Z",
+      "totalViolations": 0,
+      "totalFiles": 1068,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-17T16-05-00-838Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-17T16:05:00.838Z",
+      "totalViolations": 0,
+      "totalFiles": 1068,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-17T16-17-45-950Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-17T16:17:45.950Z",
+      "totalViolations": 0,
+      "totalFiles": 1068,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-17T16-20-55-774Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-17T16:20:55.774Z",
+      "totalViolations": 0,
+      "totalFiles": 1068,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-layer-calls-2026-07-17T16-24-59-667Z.json",
+      "scriptName": "audit-layer-calls",
+      "timestamp": "2026-07-17T16:24:59.667Z",
+      "totalViolations": 0,
+      "totalFiles": 1068,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "audit-quality-enhanced-2026-07-17T16-09-07-229Z.json",
+      "scriptName": "audit-quality-enhanced",
+      "timestamp": "2026-07-17T16:09:07.228Z",
+      "totalViolations": 0,
+      "totalFiles": 2,
+      "bySeverity": {},
+      "byRule": {}
+    },
+    {
+      "file": "audit-quality-enhanced-2026-07-17T16-15-08-448Z.json",
+      "scriptName": "audit-quality-enhanced",
+      "timestamp": "2026-07-17T16:15:08.447Z",
+      "totalViolations": 0,
+      "totalFiles": 2,
+      "bySeverity": {},
+      "byRule": {}
+    },
+    {
+      "file": "audit-quality-enhanced-2026-07-17T16-28-41-053Z.json",
+      "scriptName": "audit-quality-enhanced",
+      "timestamp": "2026-07-17T16:28:41.052Z",
+      "totalViolations": 0,
+      "totalFiles": 2,
+      "bySeverity": {},
+      "byRule": {}
+    },
+    {
+      "file": "audit-reserved-stores-2026-07-15T13-28-31-668Z.json",
+      "scriptName": "audit-reserved-stores",
+      "timestamp": "2026-07-15T13:28:31.666Z",
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "directory-audit-2026-07-17T09-27-34-343Z.json",
+      "scriptName": "directory-audit",
+      "timestamp": "2026-07-17T09:27:34.343Z",
+      "totalViolations": 0,
+      "totalFiles": 22,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "directory-audit-2026-07-17T10-15-41-738Z.json",
+      "scriptName": "directory-audit",
+      "timestamp": "2026-07-17T10:15:41.737Z",
+      "totalViolations": 0,
+      "totalFiles": 22,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "directory-audit-2026-07-17T10-21-54-551Z.json",
+      "scriptName": "directory-audit",
+      "timestamp": "2026-07-17T10:21:54.551Z",
+      "totalViolations": 0,
+      "totalFiles": 22,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "directory-audit-2026-07-17T10-29-20-712Z.json",
+      "scriptName": "directory-audit",
+      "timestamp": "2026-07-17T10:29:20.711Z",
+      "totalViolations": 0,
+      "totalFiles": 22,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "directory-audit-2026-07-17T10-49-23-266Z.json",
+      "scriptName": "directory-audit",
+      "timestamp": "2026-07-17T10:49:23.265Z",
+      "totalViolations": 0,
+      "totalFiles": 22,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "directory-audit-2026-07-17T11-46-13-980Z.json",
+      "scriptName": "directory-audit",
+      "timestamp": "2026-07-17T11:46:13.980Z",
+      "totalViolations": 0,
+      "totalFiles": 22,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "directory-audit-2026-07-17T11-54-17-755Z.json",
+      "scriptName": "directory-audit",
+      "timestamp": "2026-07-17T11:54:17.754Z",
+      "totalViolations": 0,
+      "totalFiles": 22,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "directory-audit-2026-07-17T11-59-37-035Z.json",
+      "scriptName": "directory-audit",
+      "timestamp": "2026-07-17T11:59:37.034Z",
+      "totalViolations": 0,
+      "totalFiles": 22,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "fix-doc-refs-p1-14-1.json",
+      "scriptName": "fix-doc-refs-p1-14-1",
+      "timestamp": null,
+      "totalViolations": 0,
+      "totalFiles": null,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "verify-all-routes-2026-07-15T12-47-02-360Z.json",
+      "scriptName": "verify-all-routes",
+      "timestamp": "2026-07-15T12:47:02.359Z",
+      "totalViolations": 0,
+      "totalFiles": 64,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "verify-all-routes-2026-07-15T12-52-56-991Z.json",
+      "scriptName": "verify-all-routes",
+      "timestamp": "2026-07-15T12:52:56.989Z",
+      "totalViolations": 0,
+      "totalFiles": 64,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "verify-all-routes-2026-07-15T14-22-01-406Z.json",
+      "scriptName": "verify-all-routes",
+      "timestamp": "2026-07-15T14:22:01.401Z",
+      "totalViolations": 0,
+      "totalFiles": 65,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "verify-all-routes-2026-07-15T14-31-56-696Z.json",
+      "scriptName": "verify-all-routes",
+      "timestamp": "2026-07-15T14:31:56.693Z",
+      "totalViolations": 0,
+      "totalFiles": 65,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "verify-all-routes-2026-07-15T14-38-40-256Z.json",
+      "scriptName": "verify-all-routes",
+      "timestamp": "2026-07-15T14:38:40.254Z",
+      "totalViolations": 0,
+      "totalFiles": 65,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "verify-all-routes-2026-07-15T14-39-06-533Z.json",
+      "scriptName": "verify-all-routes",
+      "timestamp": "2026-07-15T14:39:06.531Z",
+      "totalViolations": 0,
+      "totalFiles": 65,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "verify-all-routes-2026-07-15T14-41-06-689Z.json",
+      "scriptName": "verify-all-routes",
+      "timestamp": "2026-07-15T14:41:06.686Z",
+      "totalViolations": 0,
+      "totalFiles": 69,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "verify-all-routes-2026-07-15T14-41-35-440Z.json",
+      "scriptName": "verify-all-routes",
+      "timestamp": "2026-07-15T14:41:35.438Z",
+      "totalViolations": 0,
+      "totalFiles": 69,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "verify-all-routes-2026-07-15T15-26-55-598Z.json",
+      "scriptName": "verify-all-routes",
+      "timestamp": "2026-07-15T15:26:55.597Z",
+      "totalViolations": 0,
+      "totalFiles": 69,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "verify-all-routes-2026-07-15T15-44-51-428Z.json",
+      "scriptName": "verify-all-routes",
+      "timestamp": "2026-07-15T15:44:51.426Z",
+      "totalViolations": 0,
+      "totalFiles": 69,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "verify-all-routes-2026-07-15T17-13-22-684Z.json",
+      "scriptName": "verify-all-routes",
+      "timestamp": "2026-07-15T17:13:22.684Z",
+      "totalViolations": 0,
+      "totalFiles": 69,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "verify-all-routes-2026-07-15T22-26-20-640Z.json",
+      "scriptName": "verify-all-routes",
+      "timestamp": "2026-07-15T22:26:20.639Z",
+      "totalViolations": 0,
+      "totalFiles": 69,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "verify-all-routes-2026-07-15T22-28-12-798Z.json",
+      "scriptName": "verify-all-routes",
+      "timestamp": "2026-07-15T22:28:12.797Z",
+      "totalViolations": 0,
+      "totalFiles": 69,
+      "bySeverity": null,
+      "byRule": null
+    },
+    {
+      "file": "verify-all-routes-2026-07-16T00-02-47-034Z.json",
+      "scriptName": "verify-all-routes",
+      "timestamp": "2026-07-16T00:02:47.033Z",
+      "totalViolations": 0,
+      "totalFiles": 69,
+      "bySeverity": null,
+      "byRule": null
+    }
+  ]
+}

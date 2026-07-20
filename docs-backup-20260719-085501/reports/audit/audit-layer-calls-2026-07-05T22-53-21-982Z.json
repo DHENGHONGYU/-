@@ -1,0 +1,18 @@
+{
+  "violations": [],
+  "warnings": [],
+  "summary": {
+    "totalFiles": 628,
+    "totalViolations": 0,
+    "totalWarnings": 0,
+    "byViolationType": {},
+    "byWarningType": {}
+  },
+  "meta": {
+    "scriptName": "audit-layer-calls",
+    "version": "3.0",
+    "timestamp": "2026-07-05T22:53:21.979Z",
+    "durationMs": 1486,
+    "rootDir": "C:\\Users\\huawei\\Documents\\kimi\\Workspaces\\智能投研复盘系统V9"
+  }
+}
