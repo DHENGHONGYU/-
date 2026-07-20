@@ -9,6 +9,7 @@
   - 本次已配置 Tushare Token，外部数据源探测将优先走 Tushare 真实数据（经 `tushareProvider` 在 Node 环境直连 `https://api.tushare.pro`）。
   - 所有板块、市值、涨跌幅、热度、概念标签均直接来自 CSV（`csv`）。
   - 股东户数（stk_holdernumber）、公告（anns）、新闻（major_news）、行业（stock_basic）、研报（report_rc）等维度已尝试调用 `multiSourceFetcher` / `tushareProvider`，优先取 Tushare 真实数据；若某维度仍失败则标注 fallback 原因（如 `/api/proxy/*` 代理不可达或网络超时降级到爬虫/Mock）。
+  - P0 新增 LLM 联网搜索层（DeepSeek V3.2）：在爬虫失败后、代理兜底前，尝试通过 LLM 搜索公告/新闻/研报；无 Key 时优雅降级。
 
 ---
 
@@ -32,29 +33,29 @@
 |------|------|--------|------|------|
 | 行业竞品 | 601138 | tushare | success | 获取到 1 条行业竞品 |
 | 筹码/股东户数 | 601138 | tushare | success | 股东户数 722584 |
-| 公告 | 601138 | csv | fallback | Tushare 接口无权限(code=40203)，降级到 CSV |
-| 新闻 | 601138 | csv | fallback | Tushare 接口无权限(code=40203)，降级到 CSV |
-| 研报 | 601138 | tushare | success | 获取到 10 条研报 |
+| 公告 | 601138 | crawler | success | 获取到 10 条公告（来源: crawler） |
+| 新闻 | 601138 | llm | success | 获取到 5 条新闻（来源: llm） |
+| 研报 | 601138 | csv | fallback | Tushare 接口无权限(code=40203)，降级到 CSV |
 | 行业竞品 | 601689 | tushare | success | 获取到 1 条行业竞品 |
 | 筹码/股东户数 | 601689 | tushare | success | 股东户数 169226 |
-| 公告 | 601689 | csv | fallback | Tushare 接口无权限(code=40203)，降级到 CSV |
-| 新闻 | 601689 | csv | fallback | Tushare 接口无权限(code=40203)，降级到 CSV |
-| 研报 | 601689 | csv | fallback | Tushare 接口无权限(code=40203)，降级到 CSV |
+| 公告 | 601689 | crawler | success | 获取到 10 条公告（来源: crawler） |
+| 新闻 | 601689 | llm | success | 获取到 10 条新闻（来源: llm） |
+| 研报 | 601689 | llm | success | 获取到 2 条研报（来源: llm） |
 | 行业竞品 | 603986 | tushare | success | 获取到 1 条行业竞品 |
 | 筹码/股东户数 | 603986 | tushare | success | 股东户数 243737 |
-| 公告 | 603986 | csv | fallback | Tushare 接口无权限(code=40203)，降级到 CSV |
-| 新闻 | 603986 | csv | fallback | Tushare 接口无权限(code=40203)，降级到 CSV |
-| 研报 | 603986 | csv | fallback | Tushare 接口无权限(code=40203)，降级到 CSV |
+| 公告 | 603986 | crawler | success | 获取到 10 条公告（来源: crawler） |
+| 新闻 | 603986 | llm | success | 获取到 5 条新闻（来源: llm） |
+| 研报 | 603986 | llm | success | 获取到 2 条研报（来源: llm） |
 | 行业竞品 | 688036 | tushare | success | 获取到 1 条行业竞品 |
 | 筹码/股东户数 | 688036 | tushare | success | 股东户数 37351 |
-| 公告 | 688036 | csv | fallback | Tushare 接口无权限(code=40203)，降级到 CSV |
-| 新闻 | 688036 | csv | fallback | Tushare 接口无权限(code=40203)，降级到 CSV |
+| 公告 | 688036 | crawler | success | 获取到 10 条公告（来源: crawler） |
+| 新闻 | 688036 | llm | success | 获取到 5 条新闻（来源: llm） |
 | 研报 | 688036 | csv | fallback | Tushare 接口无权限(code=40203)，降级到 CSV |
 | 行业竞品 | 601127 | tushare | success | 获取到 1 条行业竞品 |
 | 筹码/股东户数 | 601127 | tushare | success | 股东户数 N/A |
-| 公告 | 601127 | csv | fallback | Tushare 接口无权限(code=40203)，降级到 CSV |
-| 新闻 | 601127 | csv | fallback | Tushare 接口无权限(code=40203)，降级到 CSV |
-| 研报 | 601127 | csv | fallback | Tushare 接口无权限(code=40203)，降级到 CSV |
+| 公告 | 601127 | crawler | success | 获取到 10 条公告（来源: crawler） |
+| 新闻 | 601127 | llm | success | 获取到 5 条新闻（来源: llm） |
+| 研报 | 601127 | llm | success | 获取到 1 条研报（来源: llm） |
 
 > 说明：本次已配置 Tushare Token，外部数据源探测优先走 Tushare 真实数据（`tushareProvider` Node 直连 `https://api.tushare.pro`）；若某维度因网络/配额/代理原因失败，已在上方追踪表中以 `fallback` 状态标注具体原因。
 
