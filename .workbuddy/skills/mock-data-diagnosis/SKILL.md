@@ -1,37 +1,21 @@
 ---
 skill_id: V9-SKILL-MOCK-DIAG
 name: mock-data-diagnosis
-description: 对前端/全栈项目做 Mock 数据残留全面诊断：数据传递链路残留、信息孤岛识别、Mock 与真实数据切换兼容性风险。适用场景：项目从开发后期/测试阶段向真实环境过渡前的 Mock 清理审计；数据流健康度检查；Mock→真实切换就绪度评估。输出遗留问题清单、风险等级（P0/P1/P2）及修复优先级建议。
 title: Mock 数据残留诊断与数据校对
-agent_created: true
-trigger:
-  - 排查Mock数据残留
-  - Mock到真实数据过渡
-  - 数据链路Mock残留
-  - 信息孤岛诊断
-  - Mock与真实数据兼容性
-  - 数据检查与校对
-  - mock data diagnosis
-  - mock audit
-  - 数据流健康度
-  - Mock→真实切换
-covers_docs: [V9-DOC-QA-053, V9-DOC-QA-069, V9-DOC-DATA-038, V9-DOC-DATA-048]
----9-SKILL-MOCK-DIAG
-name: mock-data-diagnosis
 description: 对前端/全栈项目做 Mock 数据残留全面诊断：数据传递链路残留、信息孤岛识别、Mock 与真实数据切换兼容性风险。适用场景：项目从开发后期/测试阶段向真实环境过渡前的 Mock 清理审计；数据流健康度检查；Mock→真实切换就绪度评估。输出遗留问题清单、风险等级（P0/P1/P2）及修复优先级建议。
-title: Mock 数据残留诊断与数据校对
 agent_created: true
-trigger:
-  - 排查Mock数据残留
-  - Mock到真实数据过渡
-  - 数据链路Mock残留
-  - 信息孤岛诊断
-  - Mock与真实数据兼容性
-  - 数据检查与校对
-  - mock data diagnosis
-  - mock audit
-  - 数据流健康度
-  - Mock→真实切换
+triggers:
+  keywords: [排查Mock数据残留, Mock到真实数据过渡, 数据链路Mock残留, 信息孤岛诊断, Mock与真实数据兼容性, 数据检查与校对, mock data diagnosis, mock audit, 数据流健康度, Mock→真实切换, 假数据, Mock残留]
+  files:
+    - "src/fixtures/**"
+    - "src/**/*.mock.ts"
+    - "src/**/mockData*.ts"
+    - "src/**/__mocks__/**"
+  events: [mock-switch, pre-release-audit]
+gates:
+  - 三维 Grep 扫描全部完成且每项产出 file:line 证据
+  - 产出 outputs/mock-diagnosis-report-YYYY-MM-DD.html 诊断报告
+mandatory: false
 covers_docs: [V9-DOC-QA-053, V9-DOC-QA-069, docs/archive/doc-auto-updater-diagnosis-and-score.md, V9-DOC-DATA-038, V9-DOC-DATA-048]
 ---
 

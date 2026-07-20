@@ -1,6 +1,8 @@
 ---
+skill_id: V9-PLUGIN-YAHOO
 name: yahoo_finance
 description: "Yahoo Finance provides stock information for a given ticker symbol, including stock price and trading information, company information, financial metrics, earnings and revenue, margins and returns, dividends, balance sheet data, ownership, analyst coverage, and risk metrics."
+covers_docs: [V9-DOC-PROJ-196, V9-DOC-PROJ-107, V9-DOC-BACK-040]
 ---
 
 # Yahoo Finance

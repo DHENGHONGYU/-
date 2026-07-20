@@ -1,6 +1,8 @@
 ---
+skill_id: V9-PLUGIN-SCHOLAR
 name: scholar
 description: "A freely accessible web search engine that indexes the full text or metadata of scholarly literature across an array of publishing formats and disciplines. It provides comprehensive academic research capabilities including paper search with keyword-based queries returning titles, authors, abstracts, citation counts, publication years and access links. Advanced search supports filtering by author names and publication year ranges. It also offers detailed author profile lookups with academic metrics including h-index, i10-index, total citations, research interests, and major publications. Suitable for academic research, literature reviews, citation analysis, and trend studies."
+covers_docs: [V9-DOC-PROJ-206, V9-DOC-BACK-011]
 ---
 
 # Scholar

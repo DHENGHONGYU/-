@@ -19,6 +19,18 @@
 - 推送 `origin/backup/auto` 阶段再次挂起：独立 `git ls-remote` 探针 15s 内无响应，确认远程在本时段不可达（连续第 3 次同现象）。后台推送进程继续等待连接超时，本地快照 `61929ac468` 已确认保留。
 - 结论：本次"已备份、推送未成功/挂起、本地快照已保留"。远程不可达为环境时段问题，非脚本缺陷。
 
+## 2026-07-20 03:05 执行
+- 运行 `backup-branch.ts --no-push`（npx tsx；repo 已预设 http.lowSpeedLimit 1000 / lowSpeedTime 20）。
+- 工作区有改动（368 项 → 快照 1119 项含未跟踪），已在 `backup/auto` 分支创建快照提交 `ffef12625b`（msg: `backup: auto-snapshot 2026-07-19T19-05-48-422Z`），当前分支 `feat/cross-index-20260719` 未受影响。
+- 推送前 `git ls-remote` 20s 内 "Connection was reset" 超时（连续第 5 次同现象）；独立 `git push --no-verify --force-with-lease`（60s 守护）立即 "Connection was reset" 失败（exit 128）。
+- 结论：本次"已备份、推送未成功（远程不可达）、本地快照 `ffef12625b` 已确认保留（branch 指向正确）"。远程不可达为环境时段问题，非脚本缺陷。
+
+## 2026-07-21 03:05 执行
+- 运行 `backup-branch.ts`（npx tsx；repo 已预设 http.lowSpeedLimit 1000 / lowSpeedTime 20）。
+- 工作区有改动（1832 项），已在 `backup/auto` 分支创建快照提交 `7406de2398`（msg: `backup: auto-snapshot 2026-07-20T19-...`），当前分支 `feat/cross-index-20260719` 未受影响。
+- 推送 `origin/backup/auto` 触发低速率超时（"Operation too slow, <1000 bytes/sec last 20s"，连续第 6 次远程不可达），本地快照 `7406de2398` 已确认保留（branch 指向正确）。
+- 结论：本次"已备份、推送未成功（远程不可达）、本地快照 `7406de2398` 已确认保留"。远程不可达为环境时段问题，非脚本缺陷。
+
 ## 2026-07-19 03:05 执行
 - 运行 `backup-branch.ts --no-push`（系统 Node24 直驱 tsx；repo 已预设 http.lowSpeedLimit 1000 / lowSpeedTime 20）。
 - 工作区有改动（1691 项），已在 `backup/auto` 分支创建快照提交 `28fd324108`（msg: `backup: auto-snapshot 2026-07-18T19-06-38...`），当前分支 `refactor/pr-6-module-split` 未受影响。

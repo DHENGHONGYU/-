@@ -1,35 +1,23 @@
 ---
 skill_id: V9-SKILL-DATAFLOW
+name: data-flow-integrity-audit
 title: "数据流完整性审计与修复标准工作流"
-summary: "覆盖数据采集板块内部数据传递、按钮-数据联动、跨板块数据传递、数据呈现全链路的完整性审计与修复流程。基于 FinSightV9 采集链路 ①-⑦+ACL 修复全流程的 20 条教训提炼，对标业界 WAP 模式与数据质量门禁最佳实践。"
+description: "覆盖数据采集板块内部数据传递、按钮-数据联动、跨板块数据传递、数据呈现全链路的完整性审计与修复流程。基于 FinSightV9 采集链路 ①-⑦+ACL 修复全流程的 20 条教训提炼，对标业界 WAP 模式与数据质量门禁最佳实践。"
 agent_created: true
-trigger:
-  - 排查按钮点击无响应/功能键不可点击
-  - 数据采集链路断裂诊断
-  - 板块间数据传递异常
-  - KPI/看板数据与实际不一致（假绿灯）
-  - 新增 EnvelopeAction 或写入新 store
-  - 修改 ACL_MATRIX 或 DataBridge handler
-  - Mock 数据切换到真实数据
-  - Vite 缓存导致代码更新不生效
-  - 数据流完整性审计
-  - 采集维度覆盖度验证
-covers_docs: [V9-DOC-DATA-008, V9-DOC-DATA-006, V9-DOC-BACK-002, V9-DOC-DATA-018, V9-DOC-DATA-002]
----9-SKILL-DATAFLOW
-title: "数据流完整性审计与修复标准工作流"
-summary: "覆盖数据采集板块内部数据传递、按钮-数据联动、跨板块数据传递、数据呈现全链路的完整性审计与修复流程。基于 FinSightV9 采集链路 ①-⑦+ACL 修复全流程的 20 条教训提炼，对标业界 WAP 模式与数据质量门禁最佳实践。"
-agent_created: true
-trigger:
-  - 排查按钮点击无响应/功能键不可点击
-  - 数据采集链路断裂诊断
-  - 板块间数据传递异常
-  - KPI/看板数据与实际不一致（假绿灯）
-  - 新增 EnvelopeAction 或写入新 store
-  - 修改 ACL_MATRIX 或 DataBridge handler
-  - Mock 数据切换到真实数据
-  - Vite 缓存导致代码更新不生效
-  - 数据流完整性审计
-  - 采集维度覆盖度验证
+triggers:
+  keywords: [按钮点击无响应, 功能键不可点击, 数据采集链路断裂, 板块间数据传递异常, 假绿灯, KPI 看板数据与实际不一致, 数据流完整性审计, 采集维度覆盖度验证, Vite 缓存, EnvelopeAction, ACL_MATRIX]
+  files:
+    - "src/core/databridge*.ts"
+    - "src/config/dbConfig.ts"
+    - "src/services/data-collector/**"
+    - "src/store/sevenDimConfigStore.ts"
+  events: [new-envelope-action, acl-matrix-change, mock-switch, kpi-inconsistent]
+gates:
+  - "npx tsc --noEmit"
+  - "npm run tsc:prod"
+  - "npm run audit:layers"
+  - "npm run audit:acl-consistency"
+mandatory: true
 covers_docs: [V9-DOC-DATA-008, V9-DOC-DATA-006, V9-DOC-BACK-002, V9-DOC-DATA-018, V9-DOC-DATA-002]
 ---
 

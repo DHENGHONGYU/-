@@ -48,3 +48,11 @@
 - 项目级 `G:/FinSightV9/.workbuddy/skills/devops-automation/`：`scripts/backup-branch.ts`（底层 plumbing 快照到 `backup/auto`，不污染主分支、自动排除敏感文件、`--force-with-lease` 推送）、`scripts/batch-deploy.ts`（构建+多目标增量复制+目标围栏）、`references/automation-guide.md`。
 - 已注册 2 个 ACTIVE 定时任务：每日 03:10 Git 备份（id `automation-1784135926736`）、每周日 04:00 构建部署 CloudStudio（id `automation-1784135926764`）。
 - **每周刷新 A+H 股字典（2026-07-19 新增）**：id `automation-1784399510483`，rrule 每周日 03:00；venv `C:/Users/DELL/.workbuddy/binaries/python/envs/default/Scripts/python.exe`（akshare 1.18.64）经 `npm run build:stock-dict` 再生 `src/services/stock/stockDictionary.ts`，`npm run build:stock-dict:verify` 校验四交易所分布与唯一性，有变更则 `--no-verify` 提交（不 push）。基线提交 `dba0aaf`（8331 条）。
+
+## 交互组件验收闸门 SOP（2026-07-19 沉淀）
+- **完整 SOP**：`G:/FinSightV9/outputs/interaction-component-qa-gate-SOP.md`（五步法 + 反假阳性案例库 + 关键命令 + 实战累计）
+- **五步法**：① Grep 命中 + **实读定标**（防假阳性） ② 写测试断言（先于修复） ③ 最小变更修真实问题 ④ 一档实跑验收（vitest + audit:docs 退出码 0） ⑤ 写报告 + 落盘记忆
+- **反假阳性案例库（FP-1/FP-2）**：FP-1 Grep 命中 onTouch 误判为 resize 风险（Slider 实为 mousedown 状态泄漏）；FP-2 凭直觉判 B2 hover 残留未看完整代码（B2 实为 PASS）
+- **实战累计**：5 个交互组件（standalone HTML 架构图 / 应用内架构图 / IndustryHeatmap / NewsCard / Slider）共 **41/41 一档实跑通过 + 0 文档违规 + 0 阻断**
+- **关键命令**：`node ./node_modules/vitest/vitest.mjs run <file>.test.tsx`（一档单测）+ `node ./node_modules/tsx/dist/cli.mjs scripts/audit/audit-doc-sync.ts`（一档文档门禁）
+- **相关 SKILL**：`interactive-diagram-qa-remediation`（已含铁律 #6 验收闸门，本 SOP 是其"组件级"扩展）

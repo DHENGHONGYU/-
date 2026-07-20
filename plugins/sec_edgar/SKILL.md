@@ -1,6 +1,8 @@
 ---
+skill_id: V9-PLUGIN-SEC
 name: sec_edgar
 description: "SEC EDGAR provides comprehensive US public company filings and financial data, including company info, filings, XBRL facts, financial statements, insider trades, institutional holdings, and material company events."
+covers_docs: [V9-DOC-PROJ-330, V9-DOC-AI-015, V9-DOC-QA-074]
 ---
 
 # SEC EDGAR
