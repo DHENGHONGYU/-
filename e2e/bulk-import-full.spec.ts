@@ -1,5 +1,7 @@
 /**
  * @test_id V9-TEST-E2E-005
+ * 批量导入功能已整合到录入看板 (InputDashboard) 的 Tabs 中，
+ * 导航到 /input 后点击"批量导入"Tab 进入批量导入面板。
  * @covers_docs []
  */
 import { test, expect } from '@playwright/test'
@@ -35,31 +37,36 @@ test.describe('批量导入完整流程测试', () => {
     await expect(page.locator('text=股票池看板')).toBeVisible({ timeout: 10000 })
   })
 
+  /** 辅助方法：点击"批量导入"Tab 切换到批量导入面板 */
+  async function switchToBulkImportTab(page: import('@playwright/test').Page) {
+    await page.getByRole('tab', { name: '批量导入' }).click()
+  }
+
   test.describe('入口与界面验证', () => {
-    test('应展示批量导入按钮', async ({ page }) => {
-      await expect(page.locator('main button:has-text("批量导入")')).toBeVisible()
+    test('应展示批量导入 Tab', async ({ page }) => {
+      await expect(page.getByRole('tab', { name: '批量导入' })).toBeVisible()
     })
 
     test('批量导入面板应包含输入模式切换', async ({ page }) => {
-      await page.locator('main button:has-text("批量导入")').click()
+      await switchToBulkImportTab(page)
       await expect(page.locator('button:has-text("粘贴文本")')).toBeVisible()
       await expect(page.locator('button:has-text("上传文件")')).toBeVisible()
     })
 
     test('应包含目标分组选择', async ({ page }) => {
-      await page.locator('main button:has-text("批量导入")').click()
+      await switchToBulkImportTab(page)
       await expect(page.getByLabel('批量导入目标分组')).toBeVisible()
     })
 
     test('应包含下载模板按钮', async ({ page }) => {
-      await page.locator('main button:has-text("批量导入")').click()
+      await switchToBulkImportTab(page)
       await expect(page.locator('button:has-text("下载模板")')).toBeVisible()
     })
   })
 
   test.describe('文本粘贴导入', () => {
     test('应正确解析带交易所后缀的格式', async ({ page }) => {
-      await page.locator('main button:has-text("批量导入")').click()
+      await switchToBulkImportTab(page)
 
       const importText = STOCK_DATA.map(s => `${s.code},${s.name}`).join('\n')
       await page.locator('textarea').fill(importText)
@@ -71,7 +78,7 @@ test.describe('批量导入完整流程测试', () => {
     })
 
     test('应正确解析纯代码格式（无交易所后缀）', async ({ page }) => {
-      await page.locator('main button:has-text("批量导入")').click()
+      await switchToBulkImportTab(page)
 
       const importText = STOCK_DATA.map(s => `${s.code.split('.')[0]},${s.name}`).join('\n')
       await page.locator('textarea').fill(importText)
@@ -81,7 +88,7 @@ test.describe('批量导入完整流程测试', () => {
     })
 
     test('预览表格应正确显示标准化代码', async ({ page }) => {
-      await page.locator('main button:has-text("批量导入")').click()
+      await switchToBulkImportTab(page)
 
       const importText = STOCK_DATA.slice(0, 3).map(s => `${s.code},${s.name}`).join('\n')
       await page.locator('textarea').fill(importText)
@@ -94,7 +101,7 @@ test.describe('批量导入完整流程测试', () => {
 
   test.describe('文件上传导入', () => {
     test('应支持 CSV 文件上传', async ({ page }) => {
-      await page.locator('main button:has-text("批量导入")').click()
+      await switchToBulkImportTab(page)
       await page.locator('button:has-text("上传文件")').click()
 
       const fileInput = page.locator('input[type="file"]')
@@ -114,7 +121,7 @@ test.describe('批量导入完整流程测试', () => {
 
   test.describe('导入执行与验证', () => {
     test('应成功导入有效股票到股票池', async ({ page }) => {
-      await page.locator('main button:has-text("批量导入")').click()
+      await switchToBulkImportTab(page)
 
       const importText = STOCK_DATA.slice(0, 5).map(s => `${s.code},${s.name}`).join('\n')
       await page.locator('textarea').fill(importText)
@@ -126,7 +133,7 @@ test.describe('批量导入完整流程测试', () => {
     })
 
     test('导入进度条应正确显示', async ({ page }) => {
-      await page.locator('main button:has-text("批量导入")').click()
+      await switchToBulkImportTab(page)
 
       const importText = STOCK_DATA.map(s => `${s.code},${s.name}`).join('\n')
       await page.locator('textarea').fill(importText)
@@ -141,7 +148,7 @@ test.describe('批量导入完整流程测试', () => {
 
   test.describe('重复检测与错误处理', () => {
     test('重复导入同一股票应被标记为重复', async ({ page }) => {
-      await page.locator('main button:has-text("批量导入")').click()
+      await switchToBulkImportTab(page)
 
       const importText = `${STOCK_DATA[0].code},${STOCK_DATA[0].name}\n${STOCK_DATA[0].code},${STOCK_DATA[0].name}`
       await page.locator('textarea').fill(importText)
@@ -151,7 +158,7 @@ test.describe('批量导入完整流程测试', () => {
     })
 
     test('已存在于股票池的股票应被标记为重复', async ({ page }) => {
-      await page.locator('main button:has-text("批量导入")').click()
+      await switchToBulkImportTab(page)
 
       const importText = `${STOCK_DATA[0].code},${STOCK_DATA[0].name}`
       await page.locator('textarea').fill(importText)
@@ -165,7 +172,7 @@ test.describe('批量导入完整流程测试', () => {
     })
 
     test('无效格式应被标记为无效', async ({ page }) => {
-      await page.locator('main button:has-text("批量导入")').click()
+      await switchToBulkImportTab(page)
 
       const importText = `无效代码,测试股票\n123,短代码\nabc123,字母代码`
       await page.locator('textarea').fill(importText)
@@ -177,14 +184,14 @@ test.describe('批量导入完整流程测试', () => {
 
   test.describe('边界情况测试', () => {
     test('空输入时确认导入按钮应禁用', async ({ page }) => {
-      await page.locator('main button:has-text("批量导入")').click()
+      await switchToBulkImportTab(page)
       
       const confirmButton = page.locator('button:has-text("确认导入")')
       await expect(confirmButton).toBeDisabled()
     })
 
     test('仅空格输入时确认导入按钮应禁用', async ({ page }) => {
-      await page.locator('main button:has-text("批量导入")').click()
+      await switchToBulkImportTab(page)
       await page.locator('textarea').fill('   \n\n  ')
       
       const confirmButton = page.locator('button:has-text("确认导入")')
@@ -192,7 +199,7 @@ test.describe('批量导入完整流程测试', () => {
     })
 
     test('混合有效与无效数据应正确分类', async ({ page }) => {
-      await page.locator('main button:has-text("批量导入")').click()
+      await switchToBulkImportTab(page)
 
       const importText = `${STOCK_DATA[0].code},${STOCK_DATA[0].name}\n无效代码,测试\n${STOCK_DATA[1].code},${STOCK_DATA[1].name}`
       await page.locator('textarea').fill(importText)
@@ -212,7 +219,7 @@ test.describe('批量导入完整流程测试', () => {
         }
       })
 
-      await page.locator('main button:has-text("批量导入")').click()
+      await switchToBulkImportTab(page)
       await page.locator('textarea').fill(`${STOCK_DATA[0].code},${STOCK_DATA[0].name}`)
       await page.locator('button:has-text("确认导入")').click()
 

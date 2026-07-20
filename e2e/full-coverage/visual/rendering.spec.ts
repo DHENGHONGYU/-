@@ -27,10 +27,10 @@ test.describe('输入舱渲染', () => {
     await expect(page.getByRole('button', { name: '仅录入' })).toBeVisible()
   })
 
-  test('批量导入面板渲染', async ({ page }) => {
+  test('批量导入 Tab 面板渲染', async ({ page }) => {
     await expect(page.locator('text=股票池看板')).toBeVisible({ timeout: 10000 })
-    // 打开批量导入面板
-    await page.locator('main button:has-text("批量导入")').click()
+    // 批量导入已整合到录入看板 Tabs 中，点击"批量导入"Tab 切换
+    await page.getByRole('tab', { name: '批量导入' }).click()
     // 验证粘贴文本和上传文件模式按钮可见
     await expect(page.locator('button:has-text("粘贴文本")')).toBeVisible({ timeout: 5000 })
     await expect(page.locator('button:has-text("上传文件")')).toBeVisible()

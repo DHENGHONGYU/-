@@ -14,7 +14,6 @@ export const ROUTES = {
   home: '/',
   cockpit: '/cockpit',
   input: '/input',
-  inputBulkImport: '/input/bulk-import',
   inputCollectTasks: '/input/collect-tasks',
   inputSevenDim: '/input/seven-dim',
   inputDataTest: '/input/data-test',
